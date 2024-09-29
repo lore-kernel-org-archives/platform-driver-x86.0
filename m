@@ -1,172 +1,115 @@
-Received: from fhigh-a2-smtp.messagingengine.com (fhigh-a2-smtp.messagingengine.com [103.168.172.153])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2BAFC136358;
-	Sat, 28 Sep 2024 21:03:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.153
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CDC3E469D;
+	Sun, 29 Sep 2024 00:57:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1727557394; cv=none; b=tsZvbLbfYdDZbJhSxKuBzuQWa2blmdF81ZRHz0+TUSdJH1EG1sZJwQUYSHOcc82SelXLnffiyHFyv3CKnOooLqj3KNEVZHigrQ7JAZuJG3nj7VWNXVYJ2Iypy4SwknfLJgCFC+pkuXqZW+WPGvJUraFKokdHDjknHG6U/PPBM1g=
+	t=1727571431; cv=none; b=jnpwz0XAnzluUJ4Aij+Q1ldZHO0zisneD75Umg1+BxJd2KIFroMcliHcr5/8BqB/wXv2QaC7Kt3wKqLPwqsC64qQshvyBE7V6uOBPznTs19Cen83xeGtjGIB4mUn3UWhDcZkR2cZh7c7MJIVu4eNEYz7YZ5HYFvPcXKNqPcoTCk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1727557394; c=relaxed/simple;
-	bh=nM6lhYbAbYyzwJyL80Y4bCQE2lgGp7MusIiz0feOPS0=;
-	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
-	 Subject:Content-Type; b=j5/G02CKeR88Up9s9baU3Lu0i/k/Fp/gg2tBuO4gMEJwwO7+oaU6hmWdLPldhxFMc++6kVeXzLGR6KmRsG2vf598SKLdUTKzxMgTs25ca+xJKlRo7XAKw+ntsVWuAy48wZKXFm5OtpH0fLpTk4k5YxVZF7OcqcMJV68JuvOlZik=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ljones.dev; spf=none smtp.mailfrom=ljones.dev; dkim=pass (2048-bit key) header.d=ljones.dev header.i=@ljones.dev header.b=PXeIxw1K; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=S15u3jKa; arc=none smtp.client-ip=103.168.172.153
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ljones.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=ljones.dev
+	s=arc-20240116; t=1727571431; c=relaxed/simple;
+	bh=NiLVv74q1BE9keWXYGZl2tbxpA/ZRjXFnF8/A2XkZTI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=CP0Pk6Y+bYewhLQ+xoFSI4szWuCMqb9s/PJnPpdC8anavOZTfuq5fWKSidUMxvDgsyj8usHMFiJJWvivpYqtMRIsO6rVQpDIEXcarWkCwalj+UJl+aliWFBgH1PwREOlJ7MOvsids6cPeYD3/suSlutpQ7Fkmk+HAeOHsmd9MKM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=IyzTwTTP; arc=none smtp.client-ip=192.198.163.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ljones.dev header.i=@ljones.dev header.b="PXeIxw1K";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="S15u3jKa"
-Received: from phl-compute-08.internal (phl-compute-08.phl.internal [10.202.2.48])
-	by mailfhigh.phl.internal (Postfix) with ESMTP id 4C43511401AA;
-	Sat, 28 Sep 2024 17:03:10 -0400 (EDT)
-Received: from phl-imap-01 ([10.202.2.91])
-  by phl-compute-08.internal (MEProxy); Sat, 28 Sep 2024 17:03:10 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ljones.dev; h=cc
-	:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to; s=fm3; t=1727557390;
-	 x=1727643790; bh=rt5vDgVI7RDPmKbUpmv/BiTTaPP95ZzA5dXtFam0jSY=; b=
-	PXeIxw1K2HIBGDuNu9VP0jGVGkDjGBGd//UcUOGd8F5jmDSqmw/Mkk2E0b/y2t3w
-	H0Bdmzg5ZL01v7le92cWxn3h5l9W0wM9KeLVdtwGjh3uJD42yz8z2ccUoXWTZfLf
-	ZB5o3De365qbRMW87nt8W7DLGfyn/4cf/S3yUfDpWxOJBNgYdt/iYgdsuiAip9dH
-	bTgsf+rRnH9vsNTX7cOVeRZJ2MMjfN2GOkwvedvhln1tvqYkb3WRnqFlVawD7yJR
-	GZStOkKa6uEZFR7YW9Qh1DPflU0TC8aujQlTOhlSpalotxFheoFqxdHziloJHpSZ
-	Ncm0l+IN6mbGJRnqqBL5wA==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to:x-me-proxy:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=1727557390; x=
-	1727643790; bh=rt5vDgVI7RDPmKbUpmv/BiTTaPP95ZzA5dXtFam0jSY=; b=S
-	15u3jKa4IR1BUjQkqBFFdE8bgzpxiLX1qva3mzwtmNDMt426N+WRqzn9/glhy1OU
-	bDFZ/eeIqBENxSuf8WbYflmi/Hld2MJPrJkrzoI40iFDMdKEyTFFTQDhsUOCdeNH
-	D2GhGPWMYqFoqY1YVzRaCk1oGNUx66vjePHx8sBpLNrU599GOcmU3Illo1GSZmlR
-	r9QVoOxozRuQUL2lh5JruEL53cVEu9VR+67+9b8NtuJe+dWdmt+eiRLYP/kfuvu5
-	uM0xaGkua/2Xhqaz/QpRv5KhEa4vm4GkkPxdBnMwC2FF9e58YMFL8uzB2ILyu2e8
-	sfGJl+jwo38eNrPLPmxnA==
-X-ME-Sender: <xms:DW_4ZvpJ0QOtFAj8IPYhKyWJGhHKh84nbFEivfOfMmriuJb_XUaMbQ>
-    <xme:DW_4Zpo3Ae-y08dFs-GDR2NkEKdPHecLypqZXdjJTj7458C8SYrqUY-lNTzE3mWJ7
-    FFCvl-usXnIVxEAP50>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeftddrvdduuddgudeffecutefuodetggdotefrod
-    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpggftfghnshhusghstghrihgsvgdp
-    uffrtefokffrpgfnqfghnecuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivg
-    hnthhsucdlqddutddtmdenucfjughrpefoggffhffvvefkjghfufgtgfesthejredtredt
-    tdenucfhrhhomhepfdfnuhhkvgculfhonhgvshdfuceolhhukhgvsehljhhonhgvshdrug
-    gvvheqnecuggftrfgrthhtvghrnhepkedvleetfeelfedufffgueekfeehueffveevveet
-    veegveejgedtleetffekffehnecuffhomhgrihhnpehgihhtqdhstghmrdgtohhmpdhgih
-    hthhhusgdrtghomhdpkhgvrhhnvghlrdhorhhgpddtuddrohhrghenucevlhhushhtvghr
-    ufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpehluhhkvgeslhhjohhnvghsrd
-    guvghvpdhnsggprhgtphhtthhopeduuddpmhhouggvpehsmhhtphhouhhtpdhrtghpthht
-    oheptghorhgvnhhtihhnrdgthhgrrhihsehgmhgrihhlrdgtohhmpdhrtghpthhtoheplh
-    hkphesihhnthgvlhdrtghomhdprhgtphhtthhopegsvghnthhishhssehkvghrnhgvlhdr
-    ohhrghdprhgtphhtthhopehjihhkohhssehkvghrnhgvlhdrohhrghdprhgtphhtthhope
-    hsuhhpvghrmhdusehkvghrnhgvlhdrohhrghdprhgtphhtthhopehilhhpohdrjhgrrhhv
-    ihhnvghnsehlihhnuhigrdhinhhtvghlrdgtohhmpdhrtghpthhtohepohgvqdhksghuih
-    hlugdqrghllheslhhishhtshdrlhhinhhugidruggvvhdprhgtphhtthhopehhuggvghho
-    vgguvgesrhgvughhrghtrdgtohhmpdhrtghpthhtoheplhhinhhugidqihhnphhuthesvh
-    hgvghrrdhkvghrnhgvlhdrohhrgh
-X-ME-Proxy: <xmx:DW_4ZsNg0aBU_ShRZJlhecDjmjT97Wpu5jCf-fi7JhYhkkv6U1ILyA>
-    <xmx:DW_4Zi7RvCjYrA3B97msssLj2zOAM5Zamp-YHKN3Y_MpP6hzqo17Xg>
-    <xmx:DW_4Zu4oAPORQm_9ObhQkrEGy6XId7wrH6XtxrdhF-flsuBo3WljjQ>
-    <xmx:DW_4ZqjdJTzz8fLvOiUUeRlFn15dzq__NHpBdVr5rMNU2eaNo1eMYA>
-    <xmx:Dm_4ZnGZgPcBoF2b5NHc-PXQaOfmAd6YoO3MMAYwto3vd5nIhNh7Yrr4>
-Feedback-ID: i5ec1447f:Fastmail
-Received: by mailuser.phl.internal (Postfix, from userid 501)
-	id A80453360077; Sat, 28 Sep 2024 17:03:09 -0400 (EDT)
-X-Mailer: MessagingEngine.com Webmail Interface
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="IyzTwTTP"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1727571430; x=1759107430;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=NiLVv74q1BE9keWXYGZl2tbxpA/ZRjXFnF8/A2XkZTI=;
+  b=IyzTwTTPOZULmB18dA0ukleP2H9M9H9fMh6eWwxRLV9wF/BOosXr1SLl
+   xxobyB/Y5XwGcCD7Z8VP00TVN9cOcVMb9C9Tgnkx7FuZfflYjtBFAAm/d
+   CHP4I7VrjuZZwrU9KYxbMEleE1hNtJJ71GyDWtpV0oSh2JtUrm/au5gm3
+   TcUY15sAdHI5Uy/vJsRp9yyChhz7OmkjBje3Re378CYfhRWhuDMH0gXF3
+   hgwZE9DMcx70tU8ZqMpI9FmzdtDo0HiDpRsZJWPA//nZn5juu2o4mJicp
+   jf3pyFkeJlw0Pf8VV9D7PgA4cJDF367CKO5MJgsW5Hir24i4vTKo4TAYC
+   w==;
+X-CSE-ConnectionGUID: q8TUixXSQWSz6xiuXzNo5A==
+X-CSE-MsgGUID: KWSOFkLIQqaaMqaGykgP1A==
+X-IronPort-AV: E=McAfee;i="6700,10204,11209"; a="38044598"
+X-IronPort-AV: E=Sophos;i="6.11,162,1725346800"; 
+   d="scan'208";a="38044598"
+Received: from fmviesa008.fm.intel.com ([10.60.135.148])
+  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Sep 2024 17:57:09 -0700
+X-CSE-ConnectionGUID: /wU22n8jQGS3lz6zq1CGAA==
+X-CSE-MsgGUID: p+KE2/Q7Sle4Xk2MbDO4IQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.11,162,1725346800"; 
+   d="scan'208";a="73068033"
+Received: from lkp-server01.sh.intel.com (HELO 53e96f405c61) ([10.239.97.150])
+  by fmviesa008.fm.intel.com with ESMTP; 28 Sep 2024 17:57:05 -0700
+Received: from kbuild by 53e96f405c61 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1suiFD-000Nmr-17;
+	Sun, 29 Sep 2024 00:57:03 +0000
+Date: Sun, 29 Sep 2024 08:56:39 +0800
+From: kernel test robot <lkp@intel.com>
+To: Werner Sembach <wse@tuxedocomputers.com>,
+	Hans de Goede <hdegoede@redhat.com>,
+	Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Cc: oe-kbuild-all@lists.linux.dev, bentiss@kernel.org,
+	dri-devel@lists.freedesktop.org, jelle@vdwaa.nl, jikos@kernel.org,
+	lee@kernel.org, linux-input@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org,
+	miguel.ojeda.sandonis@gmail.com, ojeda@kernel.org,
+	onitake@gmail.com, pavel@ucw.cz, cs@tuxedo.de,
+	platform-driver-x86@vger.kernel.org
+Subject: Re: [PATCH v2 1/1] platform/x86/tuxedo: Add virtual LampArray for
+ TUXEDO
+Message-ID: <202409290814.OGfHXRw7-lkp@intel.com>
+References: <20240927124152.139099-2-wse@tuxedocomputers.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Date: Sun, 29 Sep 2024 10:02:48 +1300
-From: "Luke Jones" <luke@ljones.dev>
-To: "kernel test robot" <lkp@intel.com>, linux-kernel@vger.kernel.org
-Cc: oe-kbuild-all@lists.linux.dev, linux-input@vger.kernel.org,
- "Benjamin Tissoires" <bentiss@kernel.org>, "Jiri Kosina" <jikos@kernel.org>,
- platform-driver-x86@vger.kernel.org,
- =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
- "Hans de Goede" <hdegoede@redhat.com>, corentin.chary@gmail.com,
- "Mario Limonciello" <superm1@kernel.org>
-Message-Id: <f5ce9899-a5b8-43e1-97cf-086f51230b8d@app.fastmail.com>
-In-Reply-To: <202409280735.meXnoMkl-lkp@intel.com>
-References: <20240926092952.1284435-10-luke@ljones.dev>
- <202409280735.meXnoMkl-lkp@intel.com>
-Subject: Re: [PATCH v4 9/9] platform/x86: asus-wmi: deprecate bios features
-Content-Type: text/plain
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240927124152.139099-2-wse@tuxedocomputers.com>
 
+Hi Werner,
 
+kernel test robot noticed the following build errors:
 
-On Sat, 28 Sep 2024, at 12:13 PM, kernel test robot wrote:
-> Hi Luke,
->
-> kernel test robot noticed the following build warnings:
->
-> [auto build test WARNING on hid/for-next]
-> [also build test WARNING on linus/master next-20240927]
-> [cannot apply to v6.11]
-> [If your patch is applied to the wrong git tree, kindly drop us a note.
-> And when submitting patch, we suggest to use '--base' as documented in
-> https://git-scm.com/docs/git-format-patch#_base_tree_information]
->
-> url:    
-> https://github.com/intel-lab-lkp/linux/commits/Luke-D-Jones/platform-x86-asus-wmi-export-symbols-used-for-read-write-WMI/20240926-173528
-> base:   https://git.kernel.org/pub/scm/linux/kernel/git/hid/hid.git 
-> for-next
-> patch link:    
-> https://lore.kernel.org/r/20240926092952.1284435-10-luke%40ljones.dev
-> patch subject: [PATCH v4 9/9] platform/x86: asus-wmi: deprecate bios 
-> features
-> config: i386-randconfig-061-20240928 
-> (https://download.01.org/0day-ci/archive/20240928/202409280735.meXnoMkl-lkp@intel.com/config)
-> compiler: clang version 18.1.8 (https://github.com/llvm/llvm-project 
-> 3b5b5c1ec4a3095ab096dd780e84d7ab81f3d7ff)
-> reproduce (this is a W=1 build): 
-> (https://download.01.org/0day-ci/archive/20240928/202409280735.meXnoMkl-lkp@intel.com/reproduce)
->
-> If you fix the issue in a separate patch/commit (i.e. not just a new 
-> version of
-> the same patch/commit), kindly add following tags
-> | Reported-by: kernel test robot <lkp@intel.com>
-> | Closes: 
-> https://lore.kernel.org/oe-kbuild-all/202409280735.meXnoMkl-lkp@intel.com/
->
-> All warnings (new ones prefixed by >>):
->
->>> drivers/platform/x86/asus-wmi.c:154:35: warning: unused variable 'asus_ally_mcu_quirk' [-Wunused-const-variable]
->      154 | static const struct dmi_system_id asus_ally_mcu_quirk[] = {
->          |                                   ^~~~~~~~~~~~~~~~~~~
->    1 warning generated.
+[auto build test ERROR on drm-misc/drm-misc-next]
+[also build test ERROR on drm-tip/drm-tip linus/master v6.11 next-20240927]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
 
+url:    https://github.com/intel-lab-lkp/linux/commits/Werner-Sembach/platform-x86-tuxedo-Add-virtual-LampArray-for-TUXEDO/20240927-214157
+base:   git://anongit.freedesktop.org/drm/drm-misc drm-misc-next
+patch link:    https://lore.kernel.org/r/20240927124152.139099-2-wse%40tuxedocomputers.com
+patch subject: [PATCH v2 1/1] platform/x86/tuxedo: Add virtual LampArray for TUXEDO
+config: x86_64-randconfig-161-20240928 (https://download.01.org/0day-ci/archive/20240929/202409290814.OGfHXRw7-lkp@intel.com/config)
+compiler: clang version 18.1.8 (https://github.com/llvm/llvm-project 3b5b5c1ec4a3095ab096dd780e84d7ab81f3d7ff)
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240929/202409290814.OGfHXRw7-lkp@intel.com/reproduce)
 
-Not sure where this is coming from but it can be cleaned up by https://lore.kernel.org/platform-driver-x86/c19f3530-a065-461f-a5bf-ccc3988cf24c@amd.com/T/#t v2
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202409290814.OGfHXRw7-lkp@intel.com/
 
->
-> vim +/asus_ally_mcu_quirk +154 drivers/platform/x86/asus-wmi.c
->
-> 0f0ac158d28ff7 Luke D. Jones 2021-10-24  153  
-> d2dfed310aae07 Luke D. Jones 2024-08-06 @154  static const struct 
-> dmi_system_id asus_ally_mcu_quirk[] = {
-> d2dfed310aae07 Luke D. Jones 2024-08-06  155  	{
-> d2dfed310aae07 Luke D. Jones 2024-08-06  156  		.matches = {
-> d2dfed310aae07 Luke D. Jones 2024-08-06  157  
-> 			DMI_MATCH(DMI_BOARD_NAME, "RC71L"),
-> d2dfed310aae07 Luke D. Jones 2024-08-06  158  		},
-> d2dfed310aae07 Luke D. Jones 2024-08-06  159  	},
-> d2dfed310aae07 Luke D. Jones 2024-08-06  160  	{
-> d2dfed310aae07 Luke D. Jones 2024-08-06  161  		.matches = {
-> d2dfed310aae07 Luke D. Jones 2024-08-06  162  
-> 			DMI_MATCH(DMI_BOARD_NAME, "RC72L"),
-> d2dfed310aae07 Luke D. Jones 2024-08-06  163  		},
-> d2dfed310aae07 Luke D. Jones 2024-08-06  164  	},
-> d2dfed310aae07 Luke D. Jones 2024-08-06  165  	{ },
-> d2dfed310aae07 Luke D. Jones 2024-08-06  166  };
-> d2dfed310aae07 Luke D. Jones 2024-08-06  167  
->
-> -- 
-> 0-DAY CI Kernel Test Service
-> https://github.com/intel/lkp-tests/wiki
+All errors (new ones prefixed by >>):
+
+>> ld.lld: error: undefined symbol: wmidev_evaluate_method
+   >>> referenced by tuxedo_nb04_wmi_util.c:26 (drivers/platform/x86/tuxedo/tuxedo_nb04_wmi_util.c:26)
+   >>>               vmlinux.o:(__wmi_method_buffer_out)
+--
+>> ld.lld: error: undefined symbol: __wmi_driver_register
+   >>> referenced by tuxedo_nb04_wmi_ab_init.c:86 (drivers/platform/x86/tuxedo/tuxedo_nb04_wmi_ab_init.c:86)
+   >>>               vmlinux.o:(tuxedo_nb04_wmi_ab_driver_init)
+--
+>> ld.lld: error: undefined symbol: wmi_driver_unregister
+   >>> referenced by tuxedo_nb04_wmi_ab_init.c:86 (drivers/platform/x86/tuxedo/tuxedo_nb04_wmi_ab_init.c:86)
+   >>>               vmlinux.o:(tuxedo_nb04_wmi_ab_driver_exit)
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
