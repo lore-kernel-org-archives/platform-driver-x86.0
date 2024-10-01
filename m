@@ -1,139 +1,180 @@
-Received: from mout.gmx.net (mout.gmx.net [212.227.17.22])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A0F721CEE89;
-	Tue,  1 Oct 2024 21:29:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.22
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A8C7C1CEEB5;
+	Tue,  1 Oct 2024 22:59:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1727818143; cv=none; b=Xyeh2wKw1TF4VE2DFD5LhrlqLrQ+2KZklGz2HSl6863RZW5ruRZlBK83vF3o6uCJrjhB0S/7E9EaTRXNYxCKaihTYK0fFHWraXooVOMUvALeHzygqZ2YNyVFCff7I5qFjx+APbGnaPuHG9mPNvdZj3tYZ2Equuv1gVVhlu3Md6A=
+	t=1727823552; cv=none; b=d48wXTZwc0+ny71hCfxKX6d7OfyezRBHoqBWwJqxmpkgu+tJ1Z5ELL6cxx+g2hVWhk2YgyY3wO2zrXjlwnEu83ZWUuJqOcJvi+Kr6sDw5XoasTB+Tgwxb3/l7o0ugZLzIR9FOQFBYSH8sK24FMdqV+3vKLLFomAqxgr/u7LFq1E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1727818143; c=relaxed/simple;
-	bh=E3ikZX/J9p7T+xtBjvUT5zEquGjOrUzgmRmz6mEQDAI=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=AmhFxiLXhXXaC+5YVxjE9wgyR43BXuZ8W3GdeEt1nP4HkV0fQaofw57bHx4C1tgByiERFFLDZGh1QdcH/1l6MBln/N3qni5O4xnQsn8ysj+05XFC6Jh/KxZGlIBb5GndftlDYtBEReQcqlK/sj2XyMBD+kqmQgiRByUAe6kutAg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b=CDk6aw15; arc=none smtp.client-ip=212.227.17.22
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
+	s=arc-20240116; t=1727823552; c=relaxed/simple;
+	bh=YLAvbo/FGLUh/8VxvI6dGnsAo7AT/XO1bfUSzRiyZmo=;
+	h=From:To:Subject:Date:Message-ID:MIME-Version; b=RM2iM4R0XrrDYMelGSFQ3a9/uyri5boB87eBPxvionBtY93OEKYENeftRXXcViQaIRn1H40hQ7tbRnMPlOsCGf1h9dw445E72LBAodbzm/yooFAOOxDJbjXuFqAhMaflvij4SiceGG5YQ5QqTEGFvOoUJIMs29v1G8qWcDrCRU4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=B8FGKgXA; arc=none smtp.client-ip=198.175.65.21
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b="CDk6aw15"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.de;
-	s=s31663417; t=1727818127; x=1728422927; i=w_armin@gmx.de;
-	bh=aU2UjlqRMRf3Xmr3GhmFWSRSgp7A5bWPS5sVfd5PE5A=;
-	h=X-UI-Sender-Class:From:To:Cc:Subject:Date:Message-Id:In-Reply-To:
-	 References:MIME-Version:Content-Type:Content-Transfer-Encoding:cc:
-	 content-transfer-encoding:content-type:date:from:message-id:
-	 mime-version:reply-to:subject:to;
-	b=CDk6aw151asrltm8pjpVN18xY+Hbw8n/OSVegBVRMmqAHNxlyXSsI9wtk83QKico
-	 cI88NE9kIFHvUyqaTTQc2Zm82MNz8CB+2AxmOrzKpq0wNJHDl5oW62QKebGVDjmme
-	 sFHABIGBXL9IUa3v/dFZDizbHBS6RoJIdG5FAdxYadky2fcAB6vvxQMSLtEK8Ju5y
-	 6T0Gu7BjYP7tIBGlXgxH6QSFxfDGc6UQLSfCC2bJx6TvQWPUO53DUmQuAC/xqoyDN
-	 8uxiQYsNy6s2gzjMFbBexn6XNorKZD2nactxbdXm7M8EW5tL/x5QgnXXiWmZaZ6aZ
-	 GAZFE0RYCfy3Y8FxQA==
-X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
-Received: from mx-amd-b650.users.agdsn.de ([141.30.226.129]) by mail.gmx.net
- (mrgmx105 [212.227.17.168]) with ESMTPSA (Nemesis) id
- 1Ma24y-1sPliV00IO-00RHYD; Tue, 01 Oct 2024 23:28:47 +0200
-From: Armin Wolf <W_Armin@gmx.de>
-To: pali@kernel.org,
-	dilinger@queued.net
-Cc: rafael@kernel.org,
-	lenb@kernel.org,
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="B8FGKgXA"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1727823551; x=1759359551;
+  h=from:to:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=YLAvbo/FGLUh/8VxvI6dGnsAo7AT/XO1bfUSzRiyZmo=;
+  b=B8FGKgXAovXDnKoYXwQSF6m6eRShtr5wqzEGmPxq1ZliLUL9d8kHmUv+
+   KcrvForj+Niw0SDvt0sxGHH4gt1zmlq4LgcwE1Ed1M/T9T0rAL9L6UPwq
+   AU+SFQs/h0WeYI1J2SR26oSySC6w4iN2oybvkrgN5lniUhBsEgIHkI7Ny
+   PH82tfK/x9NVbDakuuL/4kBUufGMPZTbEYdVRuLLPuvgfNHsZdwBsMucZ
+   ichYWyY9G7cRrtmmvVe5ZgUlYCMF8lQQ4D/5WlgdKD3eZBTkX6HBZQLhC
+   XObW1+AO/5TXBUGbyib1fbSqPKi0h/oiz6IjS2lMoPmmNTDzyzy+cGDvo
+   Q==;
+X-CSE-ConnectionGUID: 6/89CwUFQDiGB75M/3F0Pw==
+X-CSE-MsgGUID: 5YPkfJqLT7GkMt5j9w7GWw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11212"; a="26936074"
+X-IronPort-AV: E=Sophos;i="6.11,169,1725346800"; 
+   d="scan'208";a="26936074"
+Received: from orviesa005.jf.intel.com ([10.64.159.145])
+  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Oct 2024 15:59:10 -0700
+X-CSE-ConnectionGUID: T+UUANdXSumQyKOWMp8j1Q==
+X-CSE-MsgGUID: 7XLDfa76S7mV3P/vzOuV7A==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.11,169,1725346800"; 
+   d="scan'208";a="78576156"
+Received: from iherna2-mobl4.amr.corp.intel.com (HELO debox1-desk4.intel.com) ([10.125.109.6])
+  by orviesa005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Oct 2024 15:59:10 -0700
+From: "David E. Box" <david.e.box@linux.intel.com>
+To: david.e.box@intel.com,
 	hdegoede@redhat.com,
 	ilpo.jarvinen@linux.intel.com,
 	platform-driver-x86@vger.kernel.org,
-	linux-acpi@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH RESEND v3 3/3] platform/x86: dell-laptop: Do not fail when encountering unsupported batteries
-Date: Tue,  1 Oct 2024 23:28:35 +0200
-Message-Id: <20241001212835.341788-4-W_Armin@gmx.de>
-X-Mailer: git-send-email 2.39.5
-In-Reply-To: <20241001212835.341788-1-W_Armin@gmx.de>
-References: <20241001212835.341788-1-W_Armin@gmx.de>
+	linux-kernel@vger.kernel.org,
+	linux-pm@vger.kernel.org,
+	rjw@rjwysocki.net
+Subject: [PATCH] platform/x86/intel/pmc: Disable C1 auto-demotion during suspend
+Date: Tue,  1 Oct 2024 15:58:59 -0700
+Message-ID: <20241001225901.135564-1-david.e.box@linux.intel.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:14mEFumuCpmjAAMGTsp3PWmCbDT0sHWRQ/kjJkVIvHsVtObARcq
- ulQ8I4IMQ5jId6AYhPWvhhNi5zYfIlpB/rSaeDjwOd1Uro8mV1Ds6Den92us3aYHnWM7k53
- ieMZm3lLUzQnEB32T6PcEdq3rzBL8cybofll13jJE+cm9syDREX0G1+86EEajVZymDPm3b+
- LNQ7NTwxb2bpoX126P45g==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:7Kf5BdmY/Uo=;oWIcQ/9Vwys9hgaqnKN6IWZ5vaw
- tCUEtGb1gbntm+e9HhjWFn8A/PIEnTVYBPIW6vcFIb+ojY2vsdsybha8b/UrfyDaUbE4pD3YW
- Pa25+/0fRAtdrt+YqSSioXZTEcCNWusAIBYT5ovs+whwzz5rp6PhM/Hr3BXX3/Aq6GOnnYVNX
- QnOF/ZaBcomKCywZxcRo/v7EE4JlQVG6LosZhymZ5OwuBFnQnFK4cK3g2TdgV8SsCVeKr0EVB
- 4GfDLaxQgODOfs4cVVt9alcwgZwPpKji0wr75QQO6dCsvQ0kVyyT/Lt39ZYKzbTlfjUZZ/Zbq
- 8MWHapEzJwZGAMtRkRC0TbbVZOOi6nEf9oN3+V0r2FTlXiiJLLC6RuyxtbWQuvjgYwhQ9jQO1
- ht2VDb/5NNzk3mFVQ9+tzUKVnDpGfHxWIHsL8NBLPSGyb47sQMZgKr8DQpIYMEt+sGXKwlmD7
- HACAXFEjJLt8d4T5FvX/fyciEANeUJozwPUsbnWaUKgOhi7zm287ou5vCsV5U23+n1lSDqjJG
- sIhfMq8pg+ONwkPPao9z9OcwVwIPsryfEs+vw3E5esZrDom7iQ1XxX43mgp2L7NlB5IVIBSth
- 2dABElLe6OROBhUO6vRM/ey75bXbCdvhUw6vuVwDSzVrL8NmBB0KpLzM6Akj2PC6DWfXterls
- IIs44OKp3QtKZgbDlTxbX459MWfNv8DHeWLm80lJBkS+1vmlROhAiQTDJ7PIKa/jAqMne5ztu
- qvv1mKpNfJEX3tnH0gMqoSmaYY3l2HaLQebk+8bABZv+Qj33BhG8xUsy7CrlCCJ5eSwmVhKpq
- vpKu8EcjDNwZfwQRKhRURBlQ==
+Content-Transfer-Encoding: 8bit
 
-If the battery hook encounters a unsupported battery, it will
-return an error. This in turn will cause the battery driver to
-automatically unregister the battery hook.
+On some platforms, aggressive C1 auto-demotion may lead to failure to enter
+the deepest C-state during suspend-to-idle, causing high power consumption.
+To prevent this, disable C1 auto-demotion during suspend and re-enable on
+resume.
 
-On machines with multiple batteries however, this will prevent
-the battery hook from handling the primary battery, since it will
-always get unregistered upon encountering one of the unsupported
-batteries.
+Signed-off-by: David E. Box <david.e.box@linux.intel.com>
+---
+ drivers/platform/x86/intel/pmc/arl.c |  3 +--
+ drivers/platform/x86/intel/pmc/cnp.c | 28 +++++++++++++++++++++++++++-
+ drivers/platform/x86/intel/pmc/lnl.c |  3 +--
+ drivers/platform/x86/intel/pmc/mtl.c |  3 +--
+ 4 files changed, 30 insertions(+), 7 deletions(-)
 
-Fix this by simply ignoring unsupported batteries.
-
-Reviewed-by: Pali Roh=C3=A1r <pali@kernel.org>
-Fixes: ab58016c68cc ("platform/x86:dell-laptop: Add knobs to change batter=
-y charge settings")
-Signed-off-by: Armin Wolf <W_Armin@gmx.de>
-=2D--
- drivers/platform/x86/dell/dell-laptop.c | 15 ++++++++++++---
- 1 file changed, 12 insertions(+), 3 deletions(-)
-
-diff --git a/drivers/platform/x86/dell/dell-laptop.c b/drivers/platform/x8=
-6/dell/dell-laptop.c
-index a3cd0505f282..5671bd0deee7 100644
-=2D-- a/drivers/platform/x86/dell/dell-laptop.c
-+++ b/drivers/platform/x86/dell/dell-laptop.c
-@@ -2391,12 +2391,18 @@ static struct attribute *dell_battery_attrs[] =3D =
-{
+diff --git a/drivers/platform/x86/intel/pmc/arl.c b/drivers/platform/x86/intel/pmc/arl.c
+index e10527c4e3e0..05dec4f5019f 100644
+--- a/drivers/platform/x86/intel/pmc/arl.c
++++ b/drivers/platform/x86/intel/pmc/arl.c
+@@ -687,9 +687,8 @@ static void arl_d3_fixup(void)
+ static int arl_resume(struct pmc_dev *pmcdev)
+ {
+ 	arl_d3_fixup();
+-	pmc_core_send_ltr_ignore(pmcdev, 3, 0);
+ 
+-	return pmc_core_resume_common(pmcdev);
++	return cnl_resume(pmcdev);
+ }
+ 
+ int arl_core_init(struct pmc_dev *pmcdev)
+diff --git a/drivers/platform/x86/intel/pmc/cnp.c b/drivers/platform/x86/intel/pmc/cnp.c
+index 513c02670c5a..5b8b3ac7f061 100644
+--- a/drivers/platform/x86/intel/pmc/cnp.c
++++ b/drivers/platform/x86/intel/pmc/cnp.c
+@@ -7,7 +7,8 @@
+  * All Rights Reserved.
+  *
+  */
+-
++#define DEBUG
++#include <linux/suspend.h>
+ #include "core.h"
+ 
+ /* Cannon Lake: PGD PFET Enable Ack Status Register(s) bitmap */
+@@ -206,8 +207,24 @@ const struct pmc_reg_map cnp_reg_map = {
+ 	.etr3_offset = ETR3_OFFSET,
  };
- ATTRIBUTE_GROUPS(dell_battery);
-
-+static bool dell_battery_supported(struct power_supply *battery)
-+{
-+	/* We currently only support the primary battery */
-+	return strcmp(battery->desc->name, "BAT0") =3D=3D 0;
-+}
+ 
 +
- static int dell_battery_add(struct power_supply *battery,
- 		struct acpi_battery_hook *hook)
- {
--	/* this currently only supports the primary battery */
--	if (strcmp(battery->desc->name, "BAT0") !=3D 0)
--		return -ENODEV;
-+	/* Return 0 instead of an error to avoid being unloaded */
-+	if (!dell_battery_supported(battery))
-+		return 0;
-
- 	return device_add_groups(&battery->dev, dell_battery_groups);
- }
-@@ -2404,6 +2410,9 @@ static int dell_battery_add(struct power_supply *bat=
-tery,
- static int dell_battery_remove(struct power_supply *battery,
- 		struct acpi_battery_hook *hook)
- {
-+	if (!dell_battery_supported(battery))
-+		return 0;
++static DEFINE_PER_CPU(u64, pkg_cst_config);
 +
- 	device_remove_groups(&battery->dev, dell_battery_groups);
- 	return 0;
+ void cnl_suspend(struct pmc_dev *pmcdev)
+ {
++	if (!pm_suspend_via_firmware()) {
++		u64 val;
++		int cpunum;
++
++		for_each_online_cpu(cpunum) {
++			rdmsrl_on_cpu(cpunum, MSR_PKG_CST_CONFIG_CONTROL, &val);
++			per_cpu(pkg_cst_config, cpunum) = val;
++			val &= ~NHM_C1_AUTO_DEMOTE;
++			wrmsrl_on_cpu(cpunum, MSR_PKG_CST_CONFIG_CONTROL, val);
++			pr_debug("%s: cpu:%d cst %llx\n", __func__, cpunum, val);
++		}
++	}
++
+ 	/*
+ 	 * Due to a hardware limitation, the GBE LTR blocks PC10
+ 	 * when a cable is attached. To unblock PC10 during suspend,
+@@ -220,6 +237,15 @@ int cnl_resume(struct pmc_dev *pmcdev)
+ {
+ 	pmc_core_send_ltr_ignore(pmcdev, 3, 0);
+ 
++	if (!pm_suspend_via_firmware()) {
++		int cpunum;
++
++		for_each_online_cpu(cpunum) {
++			pr_debug("%s: cpu:%d cst %llx\n", __func__, cpunum, per_cpu(pkg_cst_config, cpunum));
++			wrmsrl_on_cpu(cpunum, MSR_PKG_CST_CONFIG_CONTROL, per_cpu(pkg_cst_config, cpunum));
++		}
++	}
++
+ 	return pmc_core_resume_common(pmcdev);
  }
-=2D-
-2.39.5
+ 
+diff --git a/drivers/platform/x86/intel/pmc/lnl.c b/drivers/platform/x86/intel/pmc/lnl.c
+index e7a8077d1a3e..be029f12cdf4 100644
+--- a/drivers/platform/x86/intel/pmc/lnl.c
++++ b/drivers/platform/x86/intel/pmc/lnl.c
+@@ -546,9 +546,8 @@ static void lnl_d3_fixup(void)
+ static int lnl_resume(struct pmc_dev *pmcdev)
+ {
+ 	lnl_d3_fixup();
+-	pmc_core_send_ltr_ignore(pmcdev, 3, 0);
+ 
+-	return pmc_core_resume_common(pmcdev);
++	return cnl_resume(pmcdev);
+ }
+ 
+ int lnl_core_init(struct pmc_dev *pmcdev)
+diff --git a/drivers/platform/x86/intel/pmc/mtl.c b/drivers/platform/x86/intel/pmc/mtl.c
+index 91f2fa728f5c..fc6a89b8979f 100644
+--- a/drivers/platform/x86/intel/pmc/mtl.c
++++ b/drivers/platform/x86/intel/pmc/mtl.c
+@@ -988,9 +988,8 @@ static void mtl_d3_fixup(void)
+ static int mtl_resume(struct pmc_dev *pmcdev)
+ {
+ 	mtl_d3_fixup();
+-	pmc_core_send_ltr_ignore(pmcdev, 3, 0);
+ 
+-	return pmc_core_resume_common(pmcdev);
++	return cnl_resume(pmcdev);
+ }
+ 
+ int mtl_core_init(struct pmc_dev *pmcdev)
+-- 
+2.43.0
 
