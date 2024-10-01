@@ -1,104 +1,190 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail.tuxedocomputers.com (mail.tuxedocomputers.com [157.90.84.7])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 070501BC9FE;
-	Tue,  1 Oct 2024 07:13:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1C4BB1BE23E;
+	Tue,  1 Oct 2024 12:23:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=157.90.84.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1727766784; cv=none; b=ZOWGsthUWjW3pqAgMlFMHS96C+mc+hsinnKwby4Popq68cTf5jKhOaaJz51lgddDHg2fKsbfkV6m7I68ZqBhD4E4oWrXCJeCVPDM1ezkmpWa1+XgB59Kxv36K/W3wbVF3359Z6SfZg5yBuRrgDy8xWekmLhrOYWuMFVKAtqsB+4=
+	t=1727785443; cv=none; b=WmbrGw1FSCgZZfDsDgKDroIDws9afs6Ef3aCLqQoEv7sQMjpielA8nZB26ljdyr+AcR4/4LfblCCvt3lQYbrVsXAKnanOyiHmpjoETw7kp7fjlKCM7XXOtZYea/GdUp5pegLCxaRRSKWD+bwyjkPkt8MwRsfGCA+o9a13rablgQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1727766784; c=relaxed/simple;
-	bh=oo0jhgcjQerWWWBHBdkvBF8qqrs8eFFKDatX+5p5lDA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=o5p5w0i9V62knpf3aSA2LSM41PZQsu1tfrzvjSIRzF6DVszDK3Ou2IxflR5DXQEIB0HVLAJIf4tqyFfRgO5blNSxwInhPpyVVnNoq/duESX8q5Df5MlqHYtmqP14MrCrwC5UjNjOmGxlpitJHODNHtDthM00/oDp9dqpK8RNcKk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=bvmlKSph; arc=none smtp.client-ip=198.175.65.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1727785443; c=relaxed/simple;
+	bh=Sp6G013EuOioR18dsjbhr2wwKlIFk/ih7InR1dpUIGA=;
+	h=Message-ID:Date:MIME-Version:From:Subject:To:Cc:References:
+	 In-Reply-To:Content-Type; b=Fx2R+MuSX7jDy6AD+8F9v1u9Wnsx/nERPI28/VciWpgHBOX3cHoeiNGMqkamgMMXO7qJKySYHh8yqo3S5BqaYpd5ToS3JY8MhRAXNibylEZdv7x9AxBSHQBkMOCzyiTa+3IkKoOEh2ZehpxKXSEqy7ddjyWqCcdWQG6fi5amDSU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=tuxedocomputers.com; spf=pass smtp.mailfrom=tuxedocomputers.com; dkim=pass (1024-bit key) header.d=tuxedocomputers.com header.i=@tuxedocomputers.com header.b=ZoURNHYy; arc=none smtp.client-ip=157.90.84.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=tuxedocomputers.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tuxedocomputers.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="bvmlKSph"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1727766782; x=1759302782;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=oo0jhgcjQerWWWBHBdkvBF8qqrs8eFFKDatX+5p5lDA=;
-  b=bvmlKSphuK0BZ9MuL+QImBlNgupsgR8Ft/POQjMFrvajjR6K2wo20vtH
-   VBT+db+oIx3ov5+KJ9uMQ4zheaqR2+aXRSaj60Y77Z2L7sW8QwugNRUqP
-   7zceoVhk2mul97u8P0yHEFuuwCLvqfE3KgCfnmul93AbsNhkPK9j6XNEN
-   g8TWddCls+HooUiQkzexMYQxX7yFpeJ7SAB7uSy3eXtmh5u2IyqRLqO4a
-   QnGDNB+HdEMupvZuLzAip17KMhc9d4JcoxEELhNlZeU6ApYeYsGuQend3
-   36WmUY3n262fJbQv2ZnV2B9C0t/m1fMwjsm7jGyacDTMzM+l1DAAKSNBm
-   w==;
-X-CSE-ConnectionGUID: 1nk1OnERSDKXghznbzFsMA==
-X-CSE-MsgGUID: sj0KkRmbQOGYgNgq0Rq3oQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11211"; a="30584195"
-X-IronPort-AV: E=Sophos;i="6.11,167,1725346800"; 
-   d="scan'208";a="30584195"
-Received: from orviesa004.jf.intel.com ([10.64.159.144])
-  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Oct 2024 00:13:01 -0700
-X-CSE-ConnectionGUID: oDf7UcsMS46wzIx+seWPgA==
-X-CSE-MsgGUID: 6iXj3I0DTamoZlAFF+V9Dg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.11,167,1725346800"; 
-   d="scan'208";a="78532287"
-Received: from lkp-server01.sh.intel.com (HELO 53e96f405c61) ([10.239.97.150])
-  by orviesa004.jf.intel.com with ESMTP; 01 Oct 2024 00:13:00 -0700
-Received: from kbuild by 53e96f405c61 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1svX45-000QMr-15;
-	Tue, 01 Oct 2024 07:12:57 +0000
-Date: Tue, 1 Oct 2024 15:12:26 +0800
-From: kernel test robot <lkp@intel.com>
-To: Maya Matuszczyk <maccraft123mc@gmail.com>,
-	Hans de Goede <hdegoede@redhat.com>,
-	Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	Bryan O'Donoghue <bryan.odonoghue@linaro.org>
-Cc: oe-kbuild-all@lists.linux.dev, linux-kernel@vger.kernel.org,
-	platform-driver-x86@vger.kernel.org
-Subject: Re: [PATCH 2/3] platform: arm64: Add driver for Lenovo Yoga Slim
- 7x's EC
-Message-ID: <202410011448.NB5fJNNX-lkp@intel.com>
-References: <20240927185345.3680-2-maccraft123mc@gmail.com>
+	dkim=pass (1024-bit key) header.d=tuxedocomputers.com header.i=@tuxedocomputers.com header.b="ZoURNHYy"
+Received: from [192.168.42.96] (pd9e59da1.dip0.t-ipconnect.de [217.229.157.161])
+	(Authenticated sender: wse@tuxedocomputers.com)
+	by mail.tuxedocomputers.com (Postfix) with ESMTPSA id BEA272FC0050;
+	Tue,  1 Oct 2024 14:23:57 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=tuxedocomputers.com;
+	s=default; t=1727785438;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=J9BRaS43VNCO0jEZG+GlrVHwvIo8h2VK94zwX476Pjs=;
+	b=ZoURNHYyb6UjMgBEWKTimqKNOY8jo/wnxC/s1Tn357vM7KPmXqe32v7QF1j+Bc/b7UdFPa
+	FvHrHc105CsRMsvZVsqwU6HWVP+WSyZ9ib+prpJjDETb9jQFysp3LXfEgX8M4ptpB01f1a
+	2aGjsa5gqOBy5eiwH83ryVLsWaEPFxY=
+Authentication-Results: mail.tuxedocomputers.com;
+	auth=pass smtp.auth=wse@tuxedocomputers.com smtp.mailfrom=wse@tuxedocomputers.com
+Message-ID: <84b629c6-5b26-4285-9b2f-66dd1afa99e5@tuxedocomputers.com>
+Date: Tue, 1 Oct 2024 14:23:57 +0200
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240927185345.3680-2-maccraft123mc@gmail.com>
+User-Agent: Mozilla Thunderbird
+From: Werner Sembach <wse@tuxedocomputers.com>
+Subject: Re: [PATCH 1/1] platform/x86/tuxedo: Add virtual LampArray for TUXEDO
+ NB04 devices
+To: Benjamin Tissoires <bentiss@kernel.org>
+Cc: Armin Wolf <W_Armin@gmx.de>, Pavel Machek <pavel@ucw.cz>,
+ Hans de Goede <hdegoede@redhat.com>,
+ =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+ dri-devel@lists.freedesktop.org, jelle@vdwaa.nl, jikos@kernel.org,
+ lee@kernel.org, linux-input@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-leds@vger.kernel.org, miguel.ojeda.sandonis@gmail.com,
+ ojeda@kernel.org, onitake@gmail.com, platform-driver-x86@vger.kernel.org
+References: <20240926174405.110748-1-wse@tuxedocomputers.com>
+ <20240926174405.110748-2-wse@tuxedocomputers.com>
+ <ZvcdNXQJmc8cjifw@amd.ucw.cz> <bea39077-6104-4b59-8757-9cbe0e703e5c@gmx.de>
+ <7r3zg4tcmp5ozjwyiusstgv7g4dha4wuh4kwssxpk3tkurpgo3@36laqab7lsxp>
+ <58cf1777-222f-4156-9079-bcbba4a32c96@tuxedocomputers.com>
+ <45qkbpaxhrv2r32hghjqoexkenktymzyjgpx2xnnxt6dmfawjt@44lrhgcnozh3>
+ <586a1c41-bbe0-4912-b7c7-1716d886c198@tuxedocomputers.com>
+ <5th4pisccud5s7dbia42glsnu7e5u3q7jszty6o3mjdedsd2bg@7nsvp6t2krnf>
+ <b6f2244d-7567-49ac-b2db-23b632a4e181@tuxedocomputers.com>
+ <cflor5mz4flekn44ttlbanfigmwn5mmp3p54gkeeznzmzkyjqz@p2c6q7gulrdl>
+Content-Language: en-US
+In-Reply-To: <cflor5mz4flekn44ttlbanfigmwn5mmp3p54gkeeznzmzkyjqz@p2c6q7gulrdl>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-Hi Maya,
+(sorry resend because thunderbird made it a html mail)
 
-kernel test robot noticed the following build errors:
+Hi,
 
-[auto build test ERROR on robh/for-next]
-[also build test ERROR on linus/master v6.12-rc1 next-20241001]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+Am 30.09.24 um 19:06 schrieb Benjamin Tissoires:
+> On Sep 30 2024, Werner Sembach wrote:
+>> [...]
+>> Thinking about it, maybe it's not to bad that it only changes once udev is
+>> ready, like this udev could decide if leds should be used or if it should
+>> directly be passed to OpenRGB for example, giving at least some consistency
+>> only changing once: i.e. firmware -> OpenRGB setting and not firmware->leds
+>> setting->OpenRGB setting.
+> That would work if OpenRGB gets to ship the LampArray bpf object (not
+> saying that it should). Because if OpenRGB is not installed, you'll get
+> a led class device, and if/when OpenRGB is installed, full LampArray
+> would be presented.
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Maya-Matuszczyk/platform-arm64-Add-driver-for-Lenovo-Yoga-Slim-7x-s-EC/20240928-025757
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/robh/linux.git for-next
-patch link:    https://lore.kernel.org/r/20240927185345.3680-2-maccraft123mc%40gmail.com
-patch subject: [PATCH 2/3] platform: arm64: Add driver for Lenovo Yoga Slim 7x's EC
-config: sh-randconfig-002-20241001 (https://download.01.org/0day-ci/archive/20241001/202410011448.NB5fJNNX-lkp@intel.com/config)
-compiler: sh4-linux-gcc (GCC) 14.1.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20241001/202410011448.NB5fJNNX-lkp@intel.com/reproduce)
+The idea in my head is still that there is some kind of sysfs switch to 
+enable/disable leds.
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202410011448.NB5fJNNX-lkp@intel.com/
+My idea is then that a udev rule shipped with OpenRGB sets this switch to 
+disable before loading the BPF driver so leds never get initialized for the 
+final LampArray device.
 
-All errors (new ones prefixed by >>, old ones prefixed by <<):
+> But anyway, BPF allows to dynamically change the behaviour of the
+> device, so that's IMO one bonus point of it.
+>
+>>> FWIW, the use of BPF only allows you to not corner yourself. If you
+>>> failed at your LampArray implementation, you'll have to deal with it
+>>> forever-ish. So it's perfectly sensible to use BPF as an intermediate step
+>>> where you develop both userspace and kernel space and then convert back
+>>> the BPF into a proper HID driver.
+>> I don't really see this point: The LampArray API is defined by the HID Usage
+>> Table and the report descriptor, so there is not API to mess up and
+>> everything else has to be parsed dynamically by userspace anyway, so it can
+>> easily be changed and userspace just adopts automatically.
+>>
+>> And for this case the proper HID driver is already ready.
+> Yeah, except we don't have the fallback LED class. If you are confident
+> enough with your implementation, then maybe yes we can include it as a
+> driver from day one, but that looks like looking for troubles from my
+> point of view.
 
->> ERROR: modpost: "devm_input_allocate_device" [drivers/platform/arm64/lenovo-yoga-slim7x.ko] undefined!
->> ERROR: modpost: "input_register_device" [drivers/platform/arm64/lenovo-yoga-slim7x.ko] undefined!
->> ERROR: modpost: "input_set_capability" [drivers/platform/arm64/lenovo-yoga-slim7x.ko] undefined!
->> ERROR: modpost: "input_event" [drivers/platform/arm64/lenovo-yoga-slim7x.ko] undefined!
+To be on the safe side that we don't talk about different things: My current 
+plan is that the leds subsystem builds on top of the LampArray implementation.
 
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+Like this the leds part has to be only implemented once for all LampArray 
+devices be it emulated via a driver or native via firmware in the device itself.
+
+And I feel confident that the UAPI should be that the userspace gets a hidraw 
+device with a LampArray HID descriptor, and every thing else is, by the HID 
+spec, dynamic anyway so I can still change my mind in implementation specifics 
+there, can't I?
+
+> After a second look at the LampArray code here... Aren't you forgetting
+> the to/from CPU conversions in case you are on a little endian system?
+Since this driver is for built in keyboards of x86 notebooks it isn't required 
+or is it?
+>> So the only point for me currently is: Is it ok to have key position/usage
+>> description tables in the kernel driver or not?
+> good question :)
+>
+> I would say, probably not in the WMI driver itself. I would rather have
+> a hid-tuxedo.c HID driver that does that. But even there, we already had
+> Linus complaining once regarding the report descriptors we sometimes
+> insert in drivers, which are looking like opaque blobs. So it might not be
+> the best either.
+Isn't tuxedo_nb04_wmi_ab_virtual_lamp_array.c not something like hid-tuxedo.c? 
+or should it be a separate file with just the arrays?
+> Sorry I don't have a clear yes/no answer.
+
+Hm... Well if it's no problem I would keep the current implementation with minor 
+adjustments because, like i described above, I don't see a benefit now that this 
+already works to rewrite it in BPF again.
+
+If it is a problem then i don't see another way then to rewrite it in BPF.
+
+Note: For future devices there might be more keyboard layouts added, basically 
+every time the chassis form factor changes.
+
+> Cheers,
+> Benjamin
+To sum up the architechture (not mutally exclusive technically)
+
+/- leds
+WMI <- WMI to LampArray Kernel driver <-switch-|
+                                                \- OpenRGB
+
+/- leds
+WMI <- WMI to Custom HID Kernel driver <- Custom HID to LampArray BPF 
+driver<-switch-|
+\- OpenRGB
+
+With the "switch" and "leds" implemented in hid core, automatically initialized 
+every time a LampArray device pops up (regardless if it is from native firmware, 
+a bpf driver or a kernel driver)
+
+Writing this down I think it was never decided how the switch should look like:
+
+It should not be a sysfs attribute of the leds device as the leds device should 
+disappear when the switch is set away from it, but should it be a sysfs variable 
+of the hid device? This would mean that hid core needs to add that switch 
+variable to every hid device having a LampArray section in the descriptor.
+
+>>> Being able to develop a kernel driver without having to reboot and
+>>> being sure you won't crash your kernel is a game changer ;)
+>>>
+>>> Cheers,
+>>> Benjamin
+
+Best regards and sorry for the many questions,
+
+Werner Sembach
+
+PS: on a side node: How does hid core handle HID devices with a broken HID 
+implementation fixed by bpf, if bpf is loaded after hid-core? Does the hid 
+device get reinitialized by hid core once the bpf driver got loaded? If yes, is 
+there a way to avoid side effects by this double initialization or is there a 
+way to avoid this double initialization, like marking the device id as broken so 
+that hid core- does not initialize it unless it's fixed by bpf?
+
