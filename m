@@ -1,205 +1,167 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
+Received: from mout.gmx.net (mout.gmx.net [212.227.15.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C0D4310A1F;
-	Wed,  2 Oct 2024 03:51:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5CD6933EC
+	for <platform-driver-x86@vger.kernel.org>; Wed,  2 Oct 2024 05:40:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1727841083; cv=none; b=JGU0OhYFPQgoGbDQympWFwB2hwD4PAhPUH9XxLYRaMVQ7dWEG91QyHFp6awkEQTmxJxC3Odzj6j0iLiwi4WfwFPa8CCjeE+OHZkbeFZgCgfeMev8BBYZi+/Iz5RirvGsctsfstJx4zZyXJ6VOCDA2vXoQvUO7ImigTLvkkUp8Ds=
+	t=1727847638; cv=none; b=MYrqxxcEipoVnicPICFNqjccRYQnEqstuoJ4/RRN6TuEjDFw0nA0XM0R4mH21HRN9nrFYOAB8UEYiCfmhKspi6AbYMUqTLKmKERatZpuLFKUZ4UyKvKDR29GlhksdQ7SWbJe4eh6qRZoRNcJA2h4CojJ93ZpyzfJsbp5fSAfaQw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1727841083; c=relaxed/simple;
-	bh=RDqxHX8PrONYcMMaJBTcc23hGfzdiYoekBhB7Nbi8Ts=;
-	h=Message-ID:Subject:From:To:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=OSnhsEkJsPGKVAE1b+kHxUwT0Ti1V9krvBK5pFfRPhmbE1YgbN3x4fBXeu7HcIvLhbkCvxdI9xnAdOBpjy7QogsbkwuP/KK5rJT7nqHxUMqhXZzWZbT4S1O4zxJwKVwfQ+4Fex23cm8Zumz+kIZUjEpggT9LlUCHUcr8TW7hOl4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=b7hqeUSL; arc=none smtp.client-ip=198.175.65.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1727847638; c=relaxed/simple;
+	bh=9iyJEaBAN1iIux+dDyFpOQLAg+enxnBNzNBIA5HbOGg=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=TTQZpHM+25wc68lhIrsydJNRwprb4V3xWoLA7VtLaOCIVclL/5a/oJRnIy6+UnwKlff8t8oJusG1zg2PjE3/wTeno6OCo4Xvb7/mvmD/shMkbUSJijxOlkfow8dlYmJUUlT6PfGM4ILsPxEsjGfqH1qvgkf78hM1UKr0VJDNjUk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b=n7fQk/5m; arc=none smtp.client-ip=212.227.15.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="b7hqeUSL"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1727841082; x=1759377082;
-  h=message-id:subject:from:reply-to:to:date:in-reply-to:
-   references:content-transfer-encoding:mime-version;
-  bh=RDqxHX8PrONYcMMaJBTcc23hGfzdiYoekBhB7Nbi8Ts=;
-  b=b7hqeUSLV2tVwdQA3g/dffBg9mhxoxTrayLAhuEvRcSRBDkfPwogq2bg
-   eieJ76NjdPN2iuok2IfWFs+V3FyODBvpP3e71tMZ8fL9xFSrL25SXV1tm
-   2ctPOU1W/PQ80nJb3ZvzrhEIgYsUNZ2MjZoZWt2dpgVdyvXLdsaf8NV++
-   5mn83vjLOM92WPm5vY+yOuLWbrlMelUlRLTVtdgnwP5K4qs62eGa0uvPS
-   Yqr00FV/swgkcX44TUXFaC5emPjyCeckbrdx02+6sYe9axzXfMAIbj00h
-   //lsEoo/Vr3Q8bjXdXe7Wi30tZCF3tf8PY22wqzNP9wffH2LC+vQPC01b
-   g==;
-X-CSE-ConnectionGUID: wa2TOJl2TbmBalsf8mZkmw==
-X-CSE-MsgGUID: KstMFsteQHqtQy//vAriDA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11212"; a="27133621"
-X-IronPort-AV: E=Sophos;i="6.11,170,1725346800"; 
-   d="scan'208";a="27133621"
-Received: from fmviesa008.fm.intel.com ([10.60.135.148])
-  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Oct 2024 20:51:22 -0700
-X-CSE-ConnectionGUID: JIhGbguMSVmv0PMxBbbZ3Q==
-X-CSE-MsgGUID: H8yzb9WATZKBP7gkh4rORw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.11,170,1725346800"; 
-   d="scan'208";a="73998799"
-Received: from iherna2-mobl4.amr.corp.intel.com ([10.125.109.6])
-  by fmviesa008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Oct 2024 20:51:21 -0700
-Message-ID: <678862b3ff8417f85fb0490ed23c5e814687caa4.camel@linux.intel.com>
-Subject: Re: [PATCH] platform/x86/intel/pmc: Disable C1 auto-demotion during
- suspend
-From: "David E. Box" <david.e.box@linux.intel.com>
-Reply-To: david.e.box@linux.intel.com
-To: Mario Limonciello <mario.limonciello@amd.com>, hdegoede@redhat.com, 
-	ilpo.jarvinen@linux.intel.com, platform-driver-x86@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, rjw@rjwysocki.net
-Date: Tue, 01 Oct 2024 20:51:20 -0700
-In-Reply-To: <996d51a3-80c5-4a56-8e17-baa87efed5ac@amd.com>
-References: <20241001225901.135564-1-david.e.box@linux.intel.com>
-	 <996d51a3-80c5-4a56-8e17-baa87efed5ac@amd.com>
-Organization: David E. Box
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.52.3-0ubuntu1 
+	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b="n7fQk/5m"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.de;
+	s=s31663417; t=1727847623; x=1728452423; i=w_armin@gmx.de;
+	bh=9iyJEaBAN1iIux+dDyFpOQLAg+enxnBNzNBIA5HbOGg=;
+	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:To:Cc:
+	 References:From:In-Reply-To:Content-Type:
+	 Content-Transfer-Encoding:cc:content-transfer-encoding:
+	 content-type:date:from:message-id:mime-version:reply-to:subject:
+	 to;
+	b=n7fQk/5mRx/SLXegJgXK8gdMZE59EXJLEC2I3z6tCbxSHLrV0RsU6AYDB3PJM8GV
+	 I6Uedt7LaVUyo5DwXCllBxR1zdA8y8OBNOsgwgADPJ+q0iXGF/8xOMAJ+Vs8V8ru+
+	 BG3L2EdWDln69+rSIwSALJ24OynCxdB4zM+3zp0yfZ6BK1ghtJetmJKho3NxgcSJT
+	 N3XvkuGVnFPli1ATm7oGuZt429d9Zaq6NC2QkKA1qZQfRGtIJvc9q28O351ep/fNI
+	 w0ItZT/tSP8v1+gztwDE+x6r+BDeTIfKsE27u4dVwOpIabsPE1zfN1qVnNJ5hGZ86
+	 1akado9eUDeJvnGL6A==
+X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
+Received: from [141.30.226.129] ([141.30.226.129]) by mail.gmx.net (mrgmx005
+ [212.227.17.190]) with ESMTPSA (Nemesis) id 1N49h5-1rwNYk0NAP-014uck; Wed, 02
+ Oct 2024 07:40:23 +0200
+Message-ID: <446996ed-8e5d-4d8f-9b82-248150723614@gmx.de>
+Date: Wed, 2 Oct 2024 07:40:21 +0200
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: acer-wmi: Improving WMI support for Predator/Nitro laptops
+To: Alexander <al.safonov@inbox.ru>
+Cc: "Lee, Chun-Yi" <jlee@suse.com>, Hans de Goede <hdegoede@redhat.com>,
+ =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+ platform-driver-x86@vger.kernel.org
+References: <d1a92068-2498-4892-8294-532222b4d94d@inbox.ru>
+Content-Language: en-US
+From: Armin Wolf <W_Armin@gmx.de>
+In-Reply-To: <d1a92068-2498-4892-8294-532222b4d94d@inbox.ru>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:T28V2DhwZXakEJcScQjA6uRBNH1/RGWXQm4G8/Chtg3sLvv8wIY
+ qjFElOKJvGk3ORdeRbs1vbqXxhD3JIimYL5BpNjQDdahBCSY1gQ8hcC+8qz82zgRNBFSEOV
+ yoeHCSQoexdcB+Is90aG4LyEESUiQSB9GMdcwLIIFILDlgANM6Stmzz6+gPOx8khf+90zOB
+ 4wV67jUC8k3Pj/SgYguuw==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:svpSAIy3V3o=;7wwSVTOdmkcuHwoEtaOiKWzmsPB
+ 5aXKQ+Yh4w1GK0Dv3xwKWSGcTANENJAzV2QlsFXzgvdigEpyMO6zEuzPLz+f3piABU9AYSJMC
+ 35+hzihrgRGaxzrW9wxROx19C06kC/gY+ve6m2v+QxkE8LFKdxRZG1fffD9N33HzFLJmNGLUK
+ 506Rk9OsVXUBYaWJRXZQB0GV+lahCuUo9JSeWWDQInw9xwWAZuG/2SSu5+y7/MQlJYwHZ+Hsl
+ D1szG9OjGujH78IUmRzJ3nQSpP7NoIHwHJ0mifAVxqQQno6tgwn0lSyaC+9xtWrogYrMgJ/mS
+ HuymhZRhM4cuIBoFV483bnpv4M/XYV/69Prh3/bUbSIJsbrX18CT8Z0flXmeg5WNud1gvXhBH
+ GwK6mVzpCkBeMjF+5i0mljnEqAEF3LAlgol5EfEMDJvo7GpJ3nVrQrFaIDyJW3fOaLLVVCciO
+ SxEJb3CO1jEQjbVQftZzj58AWMrxBefGkuiP/+ZiNPES4bMSQNkmrRwrF4eycSr7PUyz8BHrr
+ ervBAHEmL/SRjc3L8m4Ut5hQDHDSuKmlAnHa2WIrOrcXRbyAeqrCAzBVnnCvX7zgjSInjydGJ
+ 7+VRoBDOgA1eigOEmf2wS4Op+WvYr+w5JQAhojHibwa9hu3vJk7MI19hl3yjAB5br1+j3X6FL
+ OKXO2kZxJDVf3ZyJOR9B6kCafRtaYN7wpFCiO2fFMGXKK9TxPSNWixlHIRtSamXkaObBjqTOR
+ rUxhPSFwoB8W6p2iL1ERU5ofXZ9Qn8Fdd6UrJKDU3ZhxJjVUSKjXXXqYlAjDi21JsdqNwjtMV
+ 0Qow4+rYLCJtke+qdCnsH4ps6i+kkrveVWx0QDYEkEYfQ=
 
-On Tue, 2024-10-01 at 22:11 -0500, Mario Limonciello wrote:
-> On 10/1/2024 17:58, David E. Box wrote:
-> > On some platforms, aggressive C1 auto-demotion may lead to failure to e=
-nter
-> > the deepest C-state during suspend-to-idle, causing high power consumpt=
-ion.
-> > To prevent this, disable C1 auto-demotion during suspend and re-enable =
-on
-> > resume.
-> >=20
-> > Signed-off-by: David E. Box <david.e.box@linux.intel.com>
-> > ---
-> > =C2=A0 drivers/platform/x86/intel/pmc/arl.c |=C2=A0 3 +--
-> > =C2=A0 drivers/platform/x86/intel/pmc/cnp.c | 28 ++++++++++++++++++++++=
-+++++-
-> > =C2=A0 drivers/platform/x86/intel/pmc/lnl.c |=C2=A0 3 +--
-> > =C2=A0 drivers/platform/x86/intel/pmc/mtl.c |=C2=A0 3 +--
-> > =C2=A0 4 files changed, 30 insertions(+), 7 deletions(-)
-> >=20
-> > diff --git a/drivers/platform/x86/intel/pmc/arl.c
-> > b/drivers/platform/x86/intel/pmc/arl.c
-> > index e10527c4e3e0..05dec4f5019f 100644
-> > --- a/drivers/platform/x86/intel/pmc/arl.c
-> > +++ b/drivers/platform/x86/intel/pmc/arl.c
-> > @@ -687,9 +687,8 @@ static void arl_d3_fixup(void)
-> > =C2=A0 static int arl_resume(struct pmc_dev *pmcdev)
-> > =C2=A0 {
-> > =C2=A0=C2=A0	arl_d3_fixup();
-> > -	pmc_core_send_ltr_ignore(pmcdev, 3, 0);
-> > =C2=A0=20
-> > -	return pmc_core_resume_common(pmcdev);
-> > +	return cnl_resume(pmcdev);
-> > =C2=A0 }
-> > =C2=A0=20
-> > =C2=A0 int arl_core_init(struct pmc_dev *pmcdev)
-> > diff --git a/drivers/platform/x86/intel/pmc/cnp.c
-> > b/drivers/platform/x86/intel/pmc/cnp.c
-> > index 513c02670c5a..5b8b3ac7f061 100644
-> > --- a/drivers/platform/x86/intel/pmc/cnp.c
-> > +++ b/drivers/platform/x86/intel/pmc/cnp.c
-> > @@ -7,7 +7,8 @@
-> > =C2=A0=C2=A0 * All Rights Reserved.
-> > =C2=A0=C2=A0 *
-> > =C2=A0=C2=A0 */
-> > -
-> > +#define DEBUG
->=20
-> Did you mean to pull this out before submitting?
+Am 01.10.24 um 00:37 schrieb Alexander:
 
-Yep. Thanks.
+> Hi,
+>
+> I've recently been trying to add support for gaming features to my
+> Nitro AN17-41 laptop.
+> in particular, I was interested in the "mode/turbo" button, which change=
+s
+> the CPU/GPU overclocking and fan control from the HW.
+>
+> Looking through the ACPI tables and WMI methods, I realized that this
+> support
+> was already provided for Predator series in the `acer-wmi` driver.
+> But it currently ignores AC adapter plug/unplug events.
+>
+> I have found relevant WMI events that are currently ignored:
+>
+> [352418.426647] acer-wmi: Unknown function number - 8 - 0
+> [352418.426647]=C2=A0acer-wmi: Unknown function number - 9 - 0
+>
+> After fiddling a bit more, I now know how to trigger these events and
+> what
+> their values mean:
+>
+> * Event 8: triggered every time when AC adapter is plugged in or
+> unplugged.
+> It also triggered when charging via a USB PD adapter.
+> Values:
+> =C2=A0=C2=A0=C2=A0 0 - not charging
+> =C2=A0=C2=A0=C2=A0 1 - standard AC charging
+> =C2=A0=C2=A0=C2=A0 4 - charging via USB-PD
+>
+> * Event 9: triggered when HW detects that it is being powered via a
+> reliable adapter.
+> It also somehow coordinates with the result of the WMI method
+> `GetGamingSysInfo(ACER_WMID_CMD_GET_PREDATOR_V4_BAT_STATUS)`.
+> In most cases this event fires at the same time as the previous event,
+> but in some cases (USB-PD charging, or AC charging when the battery is
+> low)
+> this event fires later, when the battery is charged to a certain level
+> and
+> the AC adapter is connected. I assume this event means "allow turbo
+> mode".
+> Values:
+> =C2=A0=C2=A0=C2=A0 0 - turbo mode is not allowed
+> =C2=A0=C2=A0=C2=A0 1 - turbo mode is allowed.
+>
+> This can be used to automatically switch to the appropriate mode.
+> I can work on this and submit a patch, but I struggling to find what
+> has to be done here.
+>
+> Questions:
+>
+> 1. Is it allowed to change supported platform profile modes at runtime?
+> Suppose I set or clear bits in the `platform_profile_handler.choices`
+> when these events fire, so that userspace can know what modes are
+> currently available.
+> Is it allowed, and if so, do I need to use additional locking mechanisms=
+?
+>
+> 2. Do I even need to export this specific HW state
+> ("reliable-AC-adapter-and-good-battery")
+> via sysfs?
+>
+Hi,
 
->=20
-> > +#include <linux/suspend.h>
-> > =C2=A0 #include "core.h"
-> > =C2=A0=20
-> > =C2=A0 /* Cannon Lake: PGD PFET Enable Ack Status Register(s) bitmap */
-> > @@ -206,8 +207,24 @@ const struct pmc_reg_map cnp_reg_map =3D {
-> > =C2=A0=C2=A0	.etr3_offset =3D ETR3_OFFSET,
-> > =C2=A0 };
-> > =C2=A0=20
-> > +
-> > +static DEFINE_PER_CPU(u64, pkg_cst_config);
-> > +
-> > =C2=A0 void cnl_suspend(struct pmc_dev *pmcdev)
-> > =C2=A0 {
-> > +	if (!pm_suspend_via_firmware()) {
-> > +		u64 val;
-> > +		int cpunum;
-> > +
-> > +		for_each_online_cpu(cpunum) {
-> > +			rdmsrl_on_cpu(cpunum, MSR_PKG_CST_CONFIG_CONTROL,
-> > &val);
-> > +			per_cpu(pkg_cst_config, cpunum) =3D val;
-> > +			val &=3D ~NHM_C1_AUTO_DEMOTE;
-> > +			wrmsrl_on_cpu(cpunum, MSR_PKG_CST_CONFIG_CONTROL,
-> > val);
-> > +			pr_debug("%s: cpu:%d cst %llx\n", __func__, cpunum,
-> > val);
-> > +		}
-> > +	}
-> > +
-> > =C2=A0=C2=A0	/*
-> > =C2=A0=C2=A0	 * Due to a hardware limitation, the GBE LTR blocks PC10
-> > =C2=A0=C2=A0	 * when a cable is attached. To unblock PC10 during suspen=
-d,
-> > @@ -220,6 +237,15 @@ int cnl_resume(struct pmc_dev *pmcdev)
-> > =C2=A0 {
-> > =C2=A0=C2=A0	pmc_core_send_ltr_ignore(pmcdev, 3, 0);
-> > =C2=A0=20
-> > +	if (!pm_suspend_via_firmware()) {
-> > +		int cpunum;
-> > +
-> > +		for_each_online_cpu(cpunum) {
-> > +			pr_debug("%s: cpu:%d cst %llx\n", __func__, cpunum,
-> > per_cpu(pkg_cst_config, cpunum));
-> > +			wrmsrl_on_cpu(cpunum, MSR_PKG_CST_CONFIG_CONTROL,
-> > per_cpu(pkg_cst_config, cpunum));
-> > +		}
-> > +	}
-> > +
-> > =C2=A0=C2=A0	return pmc_core_resume_common(pmcdev);
-> > =C2=A0 }
-> > =C2=A0=20
-> > diff --git a/drivers/platform/x86/intel/pmc/lnl.c
-> > b/drivers/platform/x86/intel/pmc/lnl.c
-> > index e7a8077d1a3e..be029f12cdf4 100644
-> > --- a/drivers/platform/x86/intel/pmc/lnl.c
-> > +++ b/drivers/platform/x86/intel/pmc/lnl.c
-> > @@ -546,9 +546,8 @@ static void lnl_d3_fixup(void)
-> > =C2=A0 static int lnl_resume(struct pmc_dev *pmcdev)
-> > =C2=A0 {
-> > =C2=A0=C2=A0	lnl_d3_fixup();
-> > -	pmc_core_send_ltr_ignore(pmcdev, 3, 0);
-> > =C2=A0=20
-> > -	return pmc_core_resume_common(pmcdev);
-> > +	return cnl_resume(pmcdev);
-> > =C2=A0 }
-> > =C2=A0=20
-> > =C2=A0 int lnl_core_init(struct pmc_dev *pmcdev)
-> > diff --git a/drivers/platform/x86/intel/pmc/mtl.c
-> > b/drivers/platform/x86/intel/pmc/mtl.c
-> > index 91f2fa728f5c..fc6a89b8979f 100644
-> > --- a/drivers/platform/x86/intel/pmc/mtl.c
-> > +++ b/drivers/platform/x86/intel/pmc/mtl.c
-> > @@ -988,9 +988,8 @@ static void mtl_d3_fixup(void)
-> > =C2=A0 static int mtl_resume(struct pmc_dev *pmcdev)
-> > =C2=A0 {
-> > =C2=A0=C2=A0	mtl_d3_fixup();
-> > -	pmc_core_send_ltr_ignore(pmcdev, 3, 0);
-> > =C2=A0=20
-> > -	return pmc_core_resume_common(pmcdev);
-> > +	return cnl_resume(pmcdev);
-> > =C2=A0 }
-> > =C2=A0=20
-> > =C2=A0 int mtl_core_init(struct pmc_dev *pmcdev)
->=20
+the documentation at https://docs.kernel.org/userspace-api/sysfs-platform_=
+profile.html says:
+
+"It is explicitly NOT a goal of this API to let userspace know about any s=
+ub-optimal conditions
+which are impeding reaching the requested performance level."
+
+So i think the acer-wmi driver should automatically switch to turbo mode i=
+f:
+
+1. Turbo mode is currently selected.
+2. It receives event 9 indicating that it can switch to turbo mode.
+
+I think commit d23430233494 ("platform/x86: hp-wmi: Fix platform profile o=
+ption switch bug on Omen and Victus laptops")
+might be a good example on what to do in such a situation. Exporting the a=
+vailability of turbo mode via sysfs is optional.
+
+Please note that you cannot modify platform_profile_handler.choices at run=
+time, so you have to "hide" such things like
+"cannot reach turbo mode yet" from userspace.
+
+Thanks,
+Armin Wolf
+
 
