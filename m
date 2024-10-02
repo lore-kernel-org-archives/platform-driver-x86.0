@@ -1,107 +1,206 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF911195FE5;
-	Wed,  2 Oct 2024 08:42:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B3C7D155735;
+	Wed,  2 Oct 2024 08:52:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1727858544; cv=none; b=Sy8vHWiS990ov8W/4MNnxh2/kEuY258LA9un+MXUcuQIF4OuibFuGPfEYP0f30wtEYVDvv30vDQGP3fNb0Tk9NFGZcerfHeBnB6qWQ1XiX0FE0DUKBxr4KX1xZWxcnnF+NNZm/702kYXRNeLafrFoh8CmIGGZK5BauhFHC0C/lA=
+	t=1727859134; cv=none; b=pK7bXyc6qU/3D9Bu1cohKQsx8/3Zyx8xn15M+tYP8Nc5OGnoZcoEIVvIfhOIPeQEDyLks06OquLD5XXgot5b7MBuRlN6UtcMrWZJ3I9DBEMrzbhBVYpdrMNrcsfDql8GtdsqtqgWDGs5+KeSp9KsJBfF6uNkdbOL1O5k+FqeMSA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1727858544; c=relaxed/simple;
-	bh=3ueS52L8QZS2DfLyIS2b9kZP/6k4L0nHiCRuImoSG1k=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=B0vDo83KPzJ/ayp0NbnTR+RKUVVnPlKXEmyWVJVpzgSpYoOch6tbTAD5K9cFp6aLOBGUqelb/vdJi0Crd/YkyKJ6gTetkl6HvECyFFVehh5Z7PKp4ZN6qcP1XIBX3BzjiYa3rTtmOBwSf/8Xag40bW5nZL5+BaUaNiHTXZk+dg4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ARNjMQCZ; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1727859134; c=relaxed/simple;
+	bh=5+ziiLC6A4yJME60m/zYgegUux01ipdOi7FzldB4D7w=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=CZ5ltBI3DohgET1SDG+DjGsl+JZ59qqaluUWCvTGj63tWqd1/X/VIMxqwWQme1yP5B5i9KoKtTDNwush8OCEh4dwpnL33D9bmYAC7gBn/Tdiiszzvprmt6wRSMzETZ2WPfNKXR9VlRxNi8Zjx4vKpzwJN05fivloJ82kiXCuLKA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=kMEO8pPD; arc=none smtp.client-ip=198.175.65.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ARNjMQCZ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D1755C4CEC5;
-	Wed,  2 Oct 2024 08:42:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1727858544;
-	bh=3ueS52L8QZS2DfLyIS2b9kZP/6k4L0nHiCRuImoSG1k=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=ARNjMQCZBDs2S3m8ixpLZcLtNd4JwPeiEFMTnnouZ0Kmfkq6Lk0MBwaindxIq0YBu
-	 6kt9KuRmEfwEGdzGesI5EF+hTxO5bKbuNEJSgs5mklZlx0vwcpWBzOmDEtWXIOPorm
-	 IR6/0arBVeurFdxFJx7RBlnZe+zGA8Z0hy+ZnDvOb0MVFW6XL5PLUj+BJaiUTwLD+H
-	 mQvzskc2lfGL5DoR5g680Q5n5CfBcjEbpYvMZHMQGBDELzPDWZ83x7PC58h5kFTBba
-	 62aRUeaLr/ow4OGsmLVLyi8vwGMc0s1LouVAJ+izsjNz2dgfx4ntvJzz1Vms0KmnWm
-	 D6S95a3rVyyMg==
-Date: Wed, 2 Oct 2024 10:42:18 +0200
-From: Benjamin Tissoires <bentiss@kernel.org>
-To: Werner Sembach <wse@tuxedocomputers.com>
-Cc: Armin Wolf <W_Armin@gmx.de>, Pavel Machek <pavel@ucw.cz>, 
-	Hans de Goede <hdegoede@redhat.com>, Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>, 
-	dri-devel@lists.freedesktop.org, jelle@vdwaa.nl, jikos@kernel.org, lee@kernel.org, 
-	linux-input@vger.kernel.org, linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org, 
-	miguel.ojeda.sandonis@gmail.com, ojeda@kernel.org, onitake@gmail.com, 
-	platform-driver-x86@vger.kernel.org
-Subject: Re: [PATCH 1/1] platform/x86/tuxedo: Add virtual LampArray for
- TUXEDO NB04 devices
-Message-ID: <swb45gt3vvctsmwgevo3ay6vkwoksasc64poj3tnaxsapxlsbg@kkmactexmclj>
-References: <58cf1777-222f-4156-9079-bcbba4a32c96@tuxedocomputers.com>
- <45qkbpaxhrv2r32hghjqoexkenktymzyjgpx2xnnxt6dmfawjt@44lrhgcnozh3>
- <586a1c41-bbe0-4912-b7c7-1716d886c198@tuxedocomputers.com>
- <5th4pisccud5s7dbia42glsnu7e5u3q7jszty6o3mjdedsd2bg@7nsvp6t2krnf>
- <b6f2244d-7567-49ac-b2db-23b632a4e181@tuxedocomputers.com>
- <cflor5mz4flekn44ttlbanfigmwn5mmp3p54gkeeznzmzkyjqz@p2c6q7gulrdl>
- <84b629c6-5b26-4285-9b2f-66dd1afa99e5@tuxedocomputers.com>
- <zph6fnuaamhayivmzftowjw6klgcy2gb7vdub2v2yo7n665vpo@rkxtorfvmzph>
- <c4e0beb6-acd1-45fa-ad47-f5cf9df89b11@gmx.de>
- <74f8bd23-d85a-4f12-b8db-ebde59f3abe3@tuxedocomputers.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="kMEO8pPD"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1727859132; x=1759395132;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=5+ziiLC6A4yJME60m/zYgegUux01ipdOi7FzldB4D7w=;
+  b=kMEO8pPDJKonrXdtnTytfSo+q4/rUwfjcpKxdZek1xDAwfHnj/pOuG0K
+   l6VGYlIpT6q8jc/elt48h9kcRr7Z/ZJv01ULr1zFz3FqWizhdNzi+C8Gq
+   48MJf4OoKm+/AQ1UJkAeVMaEbgTsRgfQxaToLnK+OcK5BXVbSsWgqviSE
+   Vne59FUJ+wo+jApIMXAt4BZAA+9h3m6DzNWK+B6F5SHLeiSo/D/Qo3YED
+   MBdawlHzSFugLp7XsHtE1YEKPva+W4FpMNa0clHEQHjceUVssAkGHHMnk
+   1Cl3jR4Zcahe4A2IJ2DfDXrZcZCe079YKxsiUJwWdymQjaaOv7GyjOzfa
+   Q==;
+X-CSE-ConnectionGUID: 6Y/2ndPLQMe/HsqIZOJlJA==
+X-CSE-MsgGUID: mKynD2hmQgK/LDpHrU7QUg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11212"; a="38399085"
+X-IronPort-AV: E=Sophos;i="6.11,171,1725346800"; 
+   d="scan'208";a="38399085"
+Received: from fmviesa004.fm.intel.com ([10.60.135.144])
+  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Oct 2024 01:52:12 -0700
+X-CSE-ConnectionGUID: 7C/8hBmMREGyE6zLMmed/g==
+X-CSE-MsgGUID: svfZ9Zh5RyCH0ZJvLfUvgQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.11,171,1725346800"; 
+   d="scan'208";a="78474272"
+Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.31])
+  by fmviesa004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Oct 2024 01:52:09 -0700
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Wed, 2 Oct 2024 11:52:06 +0300 (EEST)
+To: "David E. Box" <david.e.box@linux.intel.com>, 
+    Hans de Goede <hdegoede@redhat.com>, 
+    Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+cc: david.e.box@intel.com, platform-driver-x86@vger.kernel.org, 
+    LKML <linux-kernel@vger.kernel.org>, linux-pm@vger.kernel.org, 
+    rjw@rjwysocki.net
+Subject: Re: [PATCH] platform/x86/intel/pmc: Disable C1 auto-demotion during
+ suspend
+In-Reply-To: <20241001225901.135564-1-david.e.box@linux.intel.com>
+Message-ID: <f621da34-32a7-c56e-2c99-54a5f03c7e6f@linux.intel.com>
+References: <20241001225901.135564-1-david.e.box@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <74f8bd23-d85a-4f12-b8db-ebde59f3abe3@tuxedocomputers.com>
+Content-Type: text/plain; charset=US-ASCII
 
-On Oct 01 2024, Werner Sembach wrote:
-> Hi Armin,
+On Tue, 1 Oct 2024, David E. Box wrote:
+
+> On some platforms, aggressive C1 auto-demotion may lead to failure to enter
+> the deepest C-state during suspend-to-idle, causing high power consumption.
+> To prevent this, disable C1 auto-demotion during suspend and re-enable on
+> resume.
 > 
-> Am 01.10.24 um 18:45 schrieb Armin Wolf:
-[...snipped...]
-> > Why not having a simple led driver for HID LampArray devices which exposes the
-> > whole LampArray as a single LED?
-> Yes that is my plan, but see my last reply to Benjamin, it might not be
-> trivial as different leds in the same LampArray might have different max
-> values for red, green, blue, and intensity. And the LampArray spec even
-> allows to mix RGB and non-RGB leds.
-> > 
-> > If userspace wants to have direct control over the underlying LampArray device,
-> > it just needs to unbind the default driver (maybe udev can be useful here?).
-> There was something in the last discussion why this might not work, but i
-> can't put my finger on it.
+> Signed-off-by: David E. Box <david.e.box@linux.intel.com>
+> ---
+>  drivers/platform/x86/intel/pmc/arl.c |  3 +--
+>  drivers/platform/x86/intel/pmc/cnp.c | 28 +++++++++++++++++++++++++++-
+>  drivers/platform/x86/intel/pmc/lnl.c |  3 +--
+>  drivers/platform/x86/intel/pmc/mtl.c |  3 +--
+>  4 files changed, 30 insertions(+), 7 deletions(-)
+> 
+> diff --git a/drivers/platform/x86/intel/pmc/arl.c b/drivers/platform/x86/intel/pmc/arl.c
+> index e10527c4e3e0..05dec4f5019f 100644
+> --- a/drivers/platform/x86/intel/pmc/arl.c
+> +++ b/drivers/platform/x86/intel/pmc/arl.c
+> @@ -687,9 +687,8 @@ static void arl_d3_fixup(void)
+>  static int arl_resume(struct pmc_dev *pmcdev)
+>  {
+>  	arl_d3_fixup();
+> -	pmc_core_send_ltr_ignore(pmcdev, 3, 0);
+>  
+> -	return pmc_core_resume_common(pmcdev);
+> +	return cnl_resume(pmcdev);
+>  }
+>  
+>  int arl_core_init(struct pmc_dev *pmcdev)
+> diff --git a/drivers/platform/x86/intel/pmc/cnp.c b/drivers/platform/x86/intel/pmc/cnp.c
+> index 513c02670c5a..5b8b3ac7f061 100644
+> --- a/drivers/platform/x86/intel/pmc/cnp.c
+> +++ b/drivers/platform/x86/intel/pmc/cnp.c
+> @@ -7,7 +7,8 @@
+>   * All Rights Reserved.
+>   *
+>   */
+> -
+> +#define DEBUG
 
-We recently have the exact same problem, so it's still fresh in my
-memory. And here are what is happening:
-- you can unbind the driver with a sysfs command for sure
-- but then the device is not attached to a driver so HID core doesn't
-  expose the hidraw node
-- you'd think "we can just rebind it to hid-generic", but that doesn't
-  work because hid-generic sees that there is already a loaded driver
-  that can handle the device and it'll reject itself because it gives
-  priority over the other driver
-- what works is that you might be able to unload the other driver, but
-  if it's already used by something else (like hid-multitouch), you
-  don't want to do that. And also if you unload that driver, whenever
-  the driver gets re-inserted, hid-generic will unbind itself, so back
-  to square one
+Debug leftover.
 
-So unless we find a way to forward the "manual" binding to hid-generic,
-and/or we can also quirk the device with
-HID_QUIRK_IGNORE_SPECIAL_DRIVER[0] just unbinding the device doesn't
-work.
+> +#include <linux/suspend.h>
+>  #include "core.h"
+>  
+>  /* Cannon Lake: PGD PFET Enable Ack Status Register(s) bitmap */
+> @@ -206,8 +207,24 @@ const struct pmc_reg_map cnp_reg_map = {
+>  	.etr3_offset = ETR3_OFFSET,
+>  };
+>  
+> +
 
-Cheers,
-Benjamin
+Extra newline.
 
-PS: brain fart:
-if HID LampArray support (whatever the implementation, through Pavel's
-new API or simple LED emulation) is in hid-input, we can also simply add
-a new HID quirk to enable this or not, and use that quirk dynamically
-(yes, with BPF :-P ) to rebind the device...
+> +static DEFINE_PER_CPU(u64, pkg_cst_config);
+> +
+>  void cnl_suspend(struct pmc_dev *pmcdev)
+>  {
+> +	if (!pm_suspend_via_firmware()) {
+> +		u64 val;
+> +		int cpunum;
+> +
+> +		for_each_online_cpu(cpunum) {
+> +			rdmsrl_on_cpu(cpunum, MSR_PKG_CST_CONFIG_CONTROL, &val);
+> +			per_cpu(pkg_cst_config, cpunum) = val;
 
-[0] https://lore.kernel.org/linux-input/20241001-hid-bpf-hid-generic-v3-0-2ef1019468df@kernel.org/T/#t
+I'm not sure about this. It feels abuse of per cpu stuff as here a single 
+thread is just recording something for every CPU (not the CPUs 
+themselves).
+
+(But my thinking of what's the purpose of per cpu stuff might be 
+incomplete so I'm open to changing my mind about this if proven 
+otherwise.)
+
+Any thoughts about this Hans? Or Andy?
+
+> +			val &= ~NHM_C1_AUTO_DEMOTE;
+> +			wrmsrl_on_cpu(cpunum, MSR_PKG_CST_CONFIG_CONTROL, val);
+> +			pr_debug("%s: cpu:%d cst %llx\n", __func__, cpunum, val);
+> +		}
+> +	}
+> +
+>  	/*
+>  	 * Due to a hardware limitation, the GBE LTR blocks PC10
+>  	 * when a cable is attached. To unblock PC10 during suspend,
+> @@ -220,6 +237,15 @@ int cnl_resume(struct pmc_dev *pmcdev)
+>  {
+>  	pmc_core_send_ltr_ignore(pmcdev, 3, 0);
+>  
+> +	if (!pm_suspend_via_firmware()) {
+> +		int cpunum;
+> +
+> +		for_each_online_cpu(cpunum) {
+> +			pr_debug("%s: cpu:%d cst %llx\n", __func__, cpunum, per_cpu(pkg_cst_config, cpunum));
+> +			wrmsrl_on_cpu(cpunum, MSR_PKG_CST_CONFIG_CONTROL, per_cpu(pkg_cst_config, cpunum));
+
+Is the set of onlined CPUs iterated by the suspend and resume handlers 
+guaranteed to be the same?
+
+-- 
+ i.
+
+> +		}
+> +	}
+> +
+>  	return pmc_core_resume_common(pmcdev);
+>  }
+>  
+> diff --git a/drivers/platform/x86/intel/pmc/lnl.c b/drivers/platform/x86/intel/pmc/lnl.c
+> index e7a8077d1a3e..be029f12cdf4 100644
+> --- a/drivers/platform/x86/intel/pmc/lnl.c
+> +++ b/drivers/platform/x86/intel/pmc/lnl.c
+> @@ -546,9 +546,8 @@ static void lnl_d3_fixup(void)
+>  static int lnl_resume(struct pmc_dev *pmcdev)
+>  {
+>  	lnl_d3_fixup();
+> -	pmc_core_send_ltr_ignore(pmcdev, 3, 0);
+>  
+> -	return pmc_core_resume_common(pmcdev);
+> +	return cnl_resume(pmcdev);
+>  }
+>  
+>  int lnl_core_init(struct pmc_dev *pmcdev)
+> diff --git a/drivers/platform/x86/intel/pmc/mtl.c b/drivers/platform/x86/intel/pmc/mtl.c
+> index 91f2fa728f5c..fc6a89b8979f 100644
+> --- a/drivers/platform/x86/intel/pmc/mtl.c
+> +++ b/drivers/platform/x86/intel/pmc/mtl.c
+> @@ -988,9 +988,8 @@ static void mtl_d3_fixup(void)
+>  static int mtl_resume(struct pmc_dev *pmcdev)
+>  {
+>  	mtl_d3_fixup();
+> -	pmc_core_send_ltr_ignore(pmcdev, 3, 0);
+>  
+> -	return pmc_core_resume_common(pmcdev);
+> +	return cnl_resume(pmcdev);
+>  }
+>  
+>  int mtl_core_init(struct pmc_dev *pmcdev)
+> 
