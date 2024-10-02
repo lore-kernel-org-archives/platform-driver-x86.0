@@ -1,250 +1,154 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C0FA13234;
-	Wed,  2 Oct 2024 10:21:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D118C18D65A;
+	Wed,  2 Oct 2024 12:06:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1727864490; cv=none; b=tYpVaCpDHgbHw8I1I856OzQZMLDGMeT070fb8shoY9HNlYCZWCXgSNVA5SgTAS4s4o16a5FGdyA8dJXHZdE8ce9wRAyUFRTU96Ko08ok9fD814EP6a1Z1hZOFeyh8dT0omAVbJzpDdfpRPGAYuefn4MZDgWJynakjpEyKJBbQak=
+	t=1727870818; cv=none; b=Gh3QbP4rfsf0occz9rNBtq4TdVlI9xrLUziLBJA+WCAO03bkw0ER68nX+s1tGXtVPVXy+PaKaThJ80Rt8tqcDzKwIEOEh4q2UoMMNXim192Lds8OJPZBu68eTPgtnxxEvLeFHcXWzSYyjd0Th/a0eUe4VH55EpxmXgc+13zlEqI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1727864490; c=relaxed/simple;
-	bh=+KbXQBTEnttmeTjZtiwlSGU3lx5UCSPyQIe7qGJO+bs=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=R+YAWtN0tM5eqvvN+1IIlsbunC13oX4+0eAMX+qFMS9xh54wFlYxEqubukH+GvvnhUmTZarSdhYeHTEwmRW1/xe0bIYigk7zj5SSzBr2IYgFXIWYAqtFclEJMnNvaYHDhSV4e7GRTXMHIOerohvjB/5G+J3ihCb2cxz5ihAS0aU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=aPXIcG32; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1727870818; c=relaxed/simple;
+	bh=b9GNYX2BI7qHHXFOFPCMaQHNT770RnHy1g3aVLCaAFk=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=kJ1nfRac6lB9f+XNOe8dF2XNvVfTWJ/of4J/ec3Z6Ij74CbiDzxAHTKeX9zj7JxHmhYn4HEI3QW1nQMEfbW64SClg286eaCQsloCkikqdsA/qImq4D6eQFahODC3WpEoVXi8xo8EYwfw80psP1GvSEKsQwM6c306GYuuWkWduPE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tIDDjI7w; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="aPXIcG32"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DFF0AC4CEC5;
-	Wed,  2 Oct 2024 10:21:26 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tIDDjI7w"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 659B9C4CECF;
+	Wed,  2 Oct 2024 12:06:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1727864490;
-	bh=+KbXQBTEnttmeTjZtiwlSGU3lx5UCSPyQIe7qGJO+bs=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=aPXIcG32HgxQOp2RQoeJmOMIVHnXHStdGizxI6uxqcgCJ3teztOPPpY/85oE3KBa7
-	 hSlTS2fKBsMeCTucs7HOvuTDlleAP63Cq1wvdQT0mV2RlxlNUMP54YFIJyNRwk6I7r
-	 8uYFpEjO3ZQLyHyanHwAwMrEfGIU5XH8zDq+6eL/bDLEfPfCPCpELUa+52IXv/RXUt
-	 jZKekeT41R/u0gyDMrz7UrlIGopKlSUcziXeGqgE2FL5kN2AF/yJiflYAUMHG45x37
-	 LUaidFOpxa/Cp+h9+7bf9QQjhH+/KJ5A/jhx+/vOzvw7Rj04vRwnP/lnqqjVWBo0n8
-	 ckjKoJAaGfc0g==
-Date: Wed, 2 Oct 2024 12:21:24 +0200
-From: Benjamin Tissoires <bentiss@kernel.org>
-To: Pavel Machek <pavel@ucw.cz>
-Cc: Werner Sembach <wse@tuxedocomputers.com>, Armin Wolf <W_Armin@gmx.de>, 
-	Hans de Goede <hdegoede@redhat.com>, Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>, 
-	dri-devel@lists.freedesktop.org, jelle@vdwaa.nl, jikos@kernel.org, lee@kernel.org, 
-	linux-input@vger.kernel.org, linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org, 
-	miguel.ojeda.sandonis@gmail.com, ojeda@kernel.org, onitake@gmail.com, 
-	platform-driver-x86@vger.kernel.org
-Subject: Re: [PATCH 1/1] platform/x86/tuxedo: Add virtual LampArray for
- TUXEDO NB04 devices
-Message-ID: <hdahq2vfi3bnvaqswwdtave2kc2qm3ngvcwn6cgfiirfjfbqnz@zk77mbs3yktp>
-References: <45qkbpaxhrv2r32hghjqoexkenktymzyjgpx2xnnxt6dmfawjt@44lrhgcnozh3>
- <586a1c41-bbe0-4912-b7c7-1716d886c198@tuxedocomputers.com>
- <5th4pisccud5s7dbia42glsnu7e5u3q7jszty6o3mjdedsd2bg@7nsvp6t2krnf>
- <b6f2244d-7567-49ac-b2db-23b632a4e181@tuxedocomputers.com>
- <cflor5mz4flekn44ttlbanfigmwn5mmp3p54gkeeznzmzkyjqz@p2c6q7gulrdl>
- <84b629c6-5b26-4285-9b2f-66dd1afa99e5@tuxedocomputers.com>
- <zph6fnuaamhayivmzftowjw6klgcy2gb7vdub2v2yo7n665vpo@rkxtorfvmzph>
- <Zvxjo/CYXmKw2jjM@duo.ucw.cz>
- <rdo2yyy5dxsxrfm7bweuuvsqjzjelyevo5xvufixuiyrdlf7pc@mprc7pzbpnla>
- <Zv0YI3qIEg88Dx4c@duo.ucw.cz>
+	s=k20201202; t=1727870818;
+	bh=b9GNYX2BI7qHHXFOFPCMaQHNT770RnHy1g3aVLCaAFk=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=tIDDjI7w3L7aF/z0MMA59dp5o4zjoXS41rZXNeTFFYMj8YMqxnBeVwi7GQjtV/q5E
+	 nMMK2qjQUBz5oFMPPYMSVOUVk3T0mXD3HZHyHQ2L8b8O/TfoodnwG20xmm5QHcZ3a3
+	 IOy9vnGEqrDOHPb8+5ACERTX3UKo4FGvy/rajY0JllTynzzjg3yCoWyO9+rFyj4EgY
+	 CsWexZ2KtYuqTOi6JOHnzG8gOd4n8+b3R+0nIEfrxkfPW0Jv6nLmYTPdMjwnu2ZSwc
+	 8jNESEnjyLL3JFLOH1tYwa6vCEtrDTq0PUSBR8BfdI+mRZFVyBc1DKqnu+Sn90vcah
+	 yQUE8j4Q9TSfg==
+Received: by mail-pj1-f47.google.com with SMTP id 98e67ed59e1d1-2e0894f1b14so4913864a91.1;
+        Wed, 02 Oct 2024 05:06:58 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCU2vI7YiU2NQZfXgYwO3AFFH69gAs5TOzCkeGqhADYGDverSi+jn/8jakx/COmHllWVD9SKeIJ6uFl7@vger.kernel.org, AJvYcCUriE9kpP6bVYkskXi0cPM+8FAUiF51rcm2uRo/SlzT5l+lLoVMTCgxrtmcClzWnLmf2g9bOMGAd7lEiMQfnXv+sShNvg==@vger.kernel.org, AJvYcCWFgTK1pCZCfM2cbG9vFxoJE5g4P6Dt/BFVPaCcpKxPMaB+t/wbwry9bdcPnLYv4lAoHo6ljVmQWw0vpmkK@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy+zpoeotzxj2g/E+dPeOhSuz32X9v6T07vLLVIgVajU3opZP77
+	mpWGKCMbYYXxxI12cIa++nXwx0KCbfzbUo8EzISQYhyX4vu65Ql20AlLl/MIPGj5wWwi18oAJ1X
+	dw4KeCTMvzj3PrxlJuU0L8RsCZGI=
+X-Google-Smtp-Source: AGHT+IEIUXLbHGbWwPhZw1CcY1eYZnn25hLs+4aWOCg3d6/TNPbck4rJI9zffDeJP2LoEVukfsf3Phi5izLkrXdBjfk=
+X-Received: by 2002:a17:90b:790:b0:2d3:c4d1:c95d with SMTP id
+ 98e67ed59e1d1-2e1846ca4f4mr3567708a91.21.1727870817979; Wed, 02 Oct 2024
+ 05:06:57 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Zv0YI3qIEg88Dx4c@duo.ucw.cz>
+References: <20241001212835.341788-1-W_Armin@gmx.de> <20241001212835.341788-2-W_Armin@gmx.de>
+In-Reply-To: <20241001212835.341788-2-W_Armin@gmx.de>
+From: "Rafael J. Wysocki" <rafael@kernel.org>
+Date: Wed, 2 Oct 2024 14:06:45 +0200
+X-Gmail-Original-Message-ID: <CAJZ5v0geqx92+XG-yxXnBFUeNBBygwvAbkxPBEtKi6f88_RYJA@mail.gmail.com>
+Message-ID: <CAJZ5v0geqx92+XG-yxXnBFUeNBBygwvAbkxPBEtKi6f88_RYJA@mail.gmail.com>
+Subject: Re: [PATCH RESEND v3 1/3] ACPI: battery: Simplify battery hook locking
+To: Armin Wolf <W_Armin@gmx.de>
+Cc: pali@kernel.org, dilinger@queued.net, rafael@kernel.org, lenb@kernel.org, 
+	hdegoede@redhat.com, ilpo.jarvinen@linux.intel.com, 
+	platform-driver-x86@vger.kernel.org, linux-acpi@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Oct 02 2024, Pavel Machek wrote:
-> On Wed 2024-10-02 10:13:10, Benjamin Tissoires wrote:
-> > On Oct 01 2024, Pavel Machek wrote:
-> > > Hi!
-> > > 
-> > > > PPS: sorry for pushing that hard on HID-BPF, but I can see that it fits
-> > > > all of the requirements here:
-> > > > - need to be dynamic
-> > > > - still unsure of the userspace implementation, meaning that userspace
-> > > >   might do something wrong, which might require kernel changes
-> > > > - possibility to extend later the kernel API
-> > > > - lots of fun :)
-> > > 
-> > > Please don't do this.
-> > > 
-> > > We have real drivers for framebuffers. We don't make them emulate
-> > > USB-display devices.
-> > 
-> > Except that they are not framebuffer for multiple reasons. I know you
-> > disagree, but the DRM maintainers gave a strong NACK already for a
-> 
-> Person not linking the DRM stuff was not a maintainer.
-> 
-> > DRM-like interface, and the auxdisplay would need some sort of tweaking
-> > that is going too far IMO (I'll explain below why I believe this).
-> 
-> 
-> 
-> > > Yes, this is a small display, and somewhat unusual with weird pixel
-> > > positions, but it is common enough that we should have real driver for
-> > > that, with real API.
-> > 
-> > It's not just weird pixel positions. It's also weird shapes. How are you
-> > going to fit the space bar in a grid, unless you start saying that it
-> > spans accross several pixels. But then users will want to address
-> > individual "grouped" pixels, and you'll end up with a weird API. The
-> > Enter key on non US layouts is also a problem: is it 1 or 2 pixels wide?
-> > Is is 2 pixel in heights?
-> 
-> Have you seen one of those keyboards?
+On Tue, Oct 1, 2024 at 11:28=E2=80=AFPM Armin Wolf <W_Armin@gmx.de> wrote:
+>
+> Move the conditional locking from __battery_hook_unregister()
+> into battery_hook_unregister() and rename the low-level function
+> to simplify the locking during battery hook removal.
+>
+> Reviewed-by: Ilpo J=C3=A4rvinen <ilpo.jarvinen@linux.intel.com>
+> Reviewed-by: Rafael J. Wysocki <rafael@kernel.org>
 
-I already refrain from mention this once or twice, but please, try not
-being aggressive in suggesting I'm dumb.
+Well, "looks good to me" doesn't usually mean "Reviewed-by", but you
+can retain the tag in this particular case.
 
-> 
-> (Hint: it is LEDs below regular keyboard.)
+But in the future please don't add Reviewed-by or Acked-by tags from
+people to patches if you have not actually received those tags.
 
-Yes, I know, and if you read this email and the few others, you'll read
-that I own a few of them already (for a long time), and I worked on a
-cross vendor userspace API to configure them. So I know what I am
-talking about.
-
-> 
-> > The positions of the pixels also depend on the physical layout of the
-> > keyboard itself. So with the same vendor ID/Product ID, you might have
-> > different pixel positions if the device is sold in Europe, or in the
-> > US.
-> 
-> If vendor sells different hardware with same IDs, well 1) that's a
-> nono, a 2) that's what kernel parameters are for.
-
-This is already the case (hello hid-uclogic), and no, kernel parameters
-are not helping. In that case (uclogic), we ask the device a specific
-USB string which has the information, but is not part of HID. This is
-dumb, but we don't control hardware makers.
-
-> 
-> > It's also luminance problem IIRC. Some keys might have a different range
-> > of luminance than others. I remember Bastien Nocera telling me we
-> 
-> Have you seen one of those keyboards?
-
-Again, please refrain any aggressive comments.
-
-> 
-> > But that's just the "easy" part. We can define a kernel API, for sure,
-> > but then we need users. And there are several problems here:
-> > 
-> > - first, users of this new kernel API need to be root to address the
-> >   LEDs. They probably won't, so they'll rely on a third party daemon for
-> >   that, or just use uaccess (yay!). But that part is easy
-> 
-> Eventually, desktop environment should talk the interface. (Plus, how
-> does HID or BPF craziness help with his?)
-
-HID helps because we already have the case with game controllers. Steam
-and SDL (both widely use), put rules giving uaccess to hidraw nodes on
-those controllers. So we finally made the jump and now provide in v6.12
-a new hidraw ioctl to allow logind to revoke the hidraw node. This
-should allow us to not give uaccess to those hidraw nodes.
-
-So in the near future, there will be a portal available, that says
-"please give me a fd for this hidraw node", the compositor will then ask
-logind to open the file for it and then will pass that fd to the final
-application. Once there is a vt-switch, logind will revoke the fd,
-meaning that the application will not have access to the device.
-
-> 
-> > - then, user sees a new kernel interface, and they have to implement it.
-> >   OK, fair enough, but more code to maintain
-> 
-> Yep. At least there's single interface to talk to.
-> 
-> > - but that new kernel API doesn't give enough information: all you have
-> >   is an approximation of the keyboard layout, which will not match
-> >   the
-> 
-> Have you seen OpenRGB? It already aproximates keyboard as a grid. Or
-> maybe we give them enough information.
-> 
-> Below you were just inventing problems.
-
-A simple "IMO" would makes this kind of comments acceptable. But this is
-really offensive TBH.
-
-> 
-> > - but then, even if you make everyones happy, the GUI project is
-> >   actually cross-platform (OpenRGB is, Steam is, SDL is). And what is
-> >   done on Windows is simple: raw access to the HID device. And the
-> >   raw
-> 
-> Yes, Windows is a mess. We don't want to emulate them.
-> 
-> > I've been through this exact same process with Input and game
-> > controllers, and even for libratbag for configuring gaming devices. In
-> > the end, the kernel developer never wins, but the userspace
-> 
-> Yes, we have been in this exact situation. Userland was directly
-> accessing mice. It was called "gpm" and we moved away from that for
-> good reasons.
-
-There is a slight difference between mouse support and LEDs on your
-keyboard. The former is actually required to bring up the machine and to
-use it, the latter is nice to have.
-
-And if you want to take that mouse comparison, we are already seeing the
-limits of the input subsystem, because we are running out of bits for
-defining usages. A few years ago we talked about creating evdev2, but we
-ended up nowhere. Now we are realizing that HID has way more
-inforamtions on the device that the kernel provides, so we also need a
-new way to export those information (pending proposal already).
-
-> 
-> > If you want a 100 lines of code program to control your keyboard, with
-> > LampArray, you can, as long as you don't require a GUI and don't require
-> > to be generic. Just write the values directly on the hidraw device,
-> > and
-> 
-> Haha, no. Kernel part was 400+ lines, no way you can parse that in 100
-> lines.
-
-I'm not saying "parsing", I mean adapt to your use case. If you know
-your device, your simple CLI is just writing a static array of bytes to
-the hidraw interface.
-
-> 
-> > You might agree with me or not, but this is actually not relevant to the
-> > discussion here IMO: all what Werner is doing (with crazy arrays) is to
-> > take a proprietary protocol and convert into a HID standard. He is
-> 
-> Yes, we should never have had input subsystem. We should simply
-> convert all mice to PS/2 standard protocol. ... And yes, we have that,
-> that's /dev/mice, yet input layer is very useful.
-
-Again, apple and oranges. Input is required for everything. The LEDs
-under a keyboard is not a vital component. And there is already a HID
-standard to it.
-
-> 
-> What is relevant that these crazy arrays are not going to be merged,
-> and better solution is needed.
-
-Again, you seemn to miss the point: those crazy arrays should have been
-in the firmware from day one. They are not, so the idea is to convert
-proprietary protocol into a standard. Then we can start thinking what
-comes next.
-
-> 
-> > I'm also under the impression that you are scared by BPF. BPF is just a
-> > tool here to "fix" the device with an easy path forward. BPF is
-> > safer
-> 
-> I should not need to run just-in-time compiler to get support for my
-> hardware. If you are not scared by BPF, take a look at modern CPU
-> design, with emphasis on speculation vulnerabilities such as Spectre
-> and Meltdown.
-> 
-
-Cheers,
-Benjamin
+> Reviewed-by: Pali Roh=C3=A1r <pali@kernel.org>
+> Signed-off-by: Armin Wolf <W_Armin@gmx.de>
+> ---
+>  drivers/acpi/battery.c | 18 +++++++++---------
+>  1 file changed, 9 insertions(+), 9 deletions(-)
+>
+> diff --git a/drivers/acpi/battery.c b/drivers/acpi/battery.c
+> index f4599261cfc3..dda59ee5a11e 100644
+> --- a/drivers/acpi/battery.c
+> +++ b/drivers/acpi/battery.c
+> @@ -703,28 +703,28 @@ static LIST_HEAD(acpi_battery_list);
+>  static LIST_HEAD(battery_hook_list);
+>  static DEFINE_MUTEX(hook_mutex);
+>
+> -static void __battery_hook_unregister(struct acpi_battery_hook *hook, in=
+t lock)
+> +static void battery_hook_unregister_unlocked(struct acpi_battery_hook *h=
+ook)
+>  {
+>         struct acpi_battery *battery;
+> +
+>         /*
+>          * In order to remove a hook, we first need to
+>          * de-register all the batteries that are registered.
+>          */
+> -       if (lock)
+> -               mutex_lock(&hook_mutex);
+>         list_for_each_entry(battery, &acpi_battery_list, list) {
+>                 if (!hook->remove_battery(battery->bat, hook))
+>                         power_supply_changed(battery->bat);
+>         }
+>         list_del(&hook->list);
+> -       if (lock)
+> -               mutex_unlock(&hook_mutex);
+> +
+>         pr_info("extension unregistered: %s\n", hook->name);
+>  }
+>
+>  void battery_hook_unregister(struct acpi_battery_hook *hook)
+>  {
+> -       __battery_hook_unregister(hook, 1);
+> +       mutex_lock(&hook_mutex);
+> +       battery_hook_unregister_unlocked(hook);
+> +       mutex_unlock(&hook_mutex);
+>  }
+>  EXPORT_SYMBOL_GPL(battery_hook_unregister);
+>
+> @@ -750,7 +750,7 @@ void battery_hook_register(struct acpi_battery_hook *=
+hook)
+>                          * hooks.
+>                          */
+>                         pr_err("extension failed to load: %s", hook->name=
+);
+> -                       __battery_hook_unregister(hook, 0);
+> +                       battery_hook_unregister_unlocked(hook);
+>                         goto end;
+>                 }
+>
+> @@ -804,7 +804,7 @@ static void battery_hook_add_battery(struct acpi_batt=
+ery *battery)
+>                          */
+>                         pr_err("error in extension, unloading: %s",
+>                                         hook_node->name);
+> -                       __battery_hook_unregister(hook_node, 0);
+> +                       battery_hook_unregister_unlocked(hook_node);
+>                 }
+>         }
+>         mutex_unlock(&hook_mutex);
+> @@ -837,7 +837,7 @@ static void __exit battery_hook_exit(void)
+>          * need to remove the hooks.
+>          */
+>         list_for_each_entry_safe(hook, ptr, &battery_hook_list, list) {
+> -               __battery_hook_unregister(hook, 1);
+> +               battery_hook_unregister(hook);
+>         }
+>         mutex_destroy(&hook_mutex);
+>  }
+> --
+> 2.39.5
+>
