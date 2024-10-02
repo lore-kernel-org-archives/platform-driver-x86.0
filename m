@@ -1,121 +1,103 @@
-Received: from jabberwock.ucw.cz (jabberwock.ucw.cz [46.255.230.98])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f169.google.com (mail-pl1-f169.google.com [209.85.214.169])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C79A1FA5;
-	Wed,  2 Oct 2024 10:05:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.255.230.98
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9CB9D1E2033;
+	Wed,  2 Oct 2024 10:07:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1727863539; cv=none; b=TEWRH4xp6BAEktiy92G4z4P3i/fwuaAOr3bFZiYdNkFYcDWY+vyeg4XA97lwo8ndIKvafgO1lWelEkPN3tEhEsm0wPbOIfHRisb9nsH4jwCYvlVCPMbV9Mu+Sr+ioepGzi3Ds522bY6m6S4CF7NrQe3zjZ1JWdSaE/DiuxmqGbc=
+	t=1727863681; cv=none; b=oupwLkG5XI0dJxJFKUEJg2zEpF0fIyYkGB3aIFxcxSf0nKIVh2pg2AUIcFDcSN+t1EDQxAzFKRvUjUzU2gOaQN2k0Pl72NwCSkaGUa4VbwCmqV23oxZjNrdU3ip3044ATCXdlJiBIIAvLMDNn0z627O8p2GI940jZUpu9jC5TjI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1727863539; c=relaxed/simple;
-	bh=wSJKyNpdkL036dWEGykRExVdPXWTw4kCHTji2makNVU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Imgqyq0ZlMn/tFpfFvk7JqLc4RxpvqgSdQZbO2o3BqOe0zPt+H0MyylklJ9XCI4jO/7VXYedCwWMmtt2UrjOsvYI0anc7P1WZk7Cu7vKVwd1Y+JoxMyThp9xwmLqrjO2fkw9/T5FWSxrwUFNICBqUrAwkBCzDGlSrcWtpxj96i0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ucw.cz; spf=pass smtp.mailfrom=ucw.cz; dkim=pass (1024-bit key) header.d=ucw.cz header.i=@ucw.cz header.b=loAw3P46; arc=none smtp.client-ip=46.255.230.98
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ucw.cz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ucw.cz
+	s=arc-20240116; t=1727863681; c=relaxed/simple;
+	bh=TO7/NutLSsI65V9enOm4GUYVHO36xIMAiuKNoj4iglg=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=Ybwn5W8mRKzg906xCIiVUT+oHOzsuOmNkbq6wirrgUBH/+fo/tXdEd5PYD0zZsE1ZuhSMis/7sEY59dhbfXhqxqpGOV5bVlPvCiL9axRjz2vv62P2nhdvXp/vrScIhgGmDIEQS5JKKmq1SZwcVW2MOvtRdZxG8QCausiW5NaEVc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=QeZvOE0g; arc=none smtp.client-ip=209.85.214.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ucw.cz header.i=@ucw.cz header.b="loAw3P46"
-Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
-	id 847221C00AB; Wed,  2 Oct 2024 12:05:35 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ucw.cz; s=gen1;
-	t=1727863535;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=VfuiRXRY0wqydTeH0MWxTZk7em8PH+gby0u5eY1neME=;
-	b=loAw3P467BCPE5Xmcz+Cvm2i8cXLQNjKYOguqWLT1/a8DJaWWP/ZC13lXWSVUM20zOFEoF
-	p+S9LPmrCK3eWvm7E35hH7fgBTjTH+FOPUsC8zPG7riywLgPRk29wK4EucUhx8I8Nqnh1w
-	2ZBF/AdSECKVIHnzJ17VkehK06yfdKY=
-Date: Wed, 2 Oct 2024 12:05:34 +0200
-From: Pavel Machek <pavel@ucw.cz>
-To: Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Cc: Werner Sembach <wse@tuxedocomputers.com>,
-	Hans de Goede <hdegoede@redhat.com>, bentiss@kernel.org,
-	dri-devel@lists.freedesktop.org, jelle@vdwaa.nl, jikos@kernel.org,
-	lee@kernel.org, linux-input@vger.kernel.org,
-	LKML <linux-kernel@vger.kernel.org>, linux-leds@vger.kernel.org,
-	miguel.ojeda.sandonis@gmail.com, ojeda@kernel.org,
-	onitake@gmail.com, cs@tuxedo.de,
-	platform-driver-x86@vger.kernel.org
-Subject: Re: [RFC PATCH v4 1/1] platform/x86/tuxedo: Add virtual LampArray
- for TUXEDO NB04 devices
-Message-ID: <Zv0a7pUQlZP44aB5@duo.ucw.cz>
-References: <20241001180658.76396-1-wse@tuxedocomputers.com>
- <20241001180658.76396-2-wse@tuxedocomputers.com>
- <bc3f5f2b-252e-0a66-df0f-f01197a5a17d@linux.intel.com>
- <Zv0YlxQOFVGRS/DB@duo.ucw.cz>
- <c2694d50-db7c-84ee-288a-06802e10ca8d@linux.intel.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QeZvOE0g"
+Received: by mail-pl1-f169.google.com with SMTP id d9443c01a7336-20aff65aa37so51658875ad.1;
+        Wed, 02 Oct 2024 03:07:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1727863679; x=1728468479; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=14Q+51lEtCMWPbPTU2z+ynVN1U+8L9MuSncBS1QlX9I=;
+        b=QeZvOE0gn5pAPpYmFDn0nfp26CLYM08Xgr1heIo9rkCJVitA0C/gHqrQjmmdf+S7LP
+         ypoxenEwyswAzYq8NiqvP6Vz4ndECqWlSD8aUJ1fIW9MyTuCdmCmPF7CGErx7D6pGZ6M
+         igXPDEZkn5PY9Tup7OCbjeU09h4LdF8PWO66YfkEmaNLCXOBgPHafLrJwDfxp1o0zfNM
+         o17fpSyRe5gR1gspVQ6TrmECMhZWmuXeTeO7cFfsWXM2cY16zZo1NZK3lNoyiq9nBG7+
+         lCFjbOEK+Os7WopTo4f78FU2q/hi24va9J0rX68sYaIaaUbBZD1Uqc3vxhQzpYuOotIG
+         CruA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1727863679; x=1728468479;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=14Q+51lEtCMWPbPTU2z+ynVN1U+8L9MuSncBS1QlX9I=;
+        b=cfx5kC3E1CAsBkeKxqJC0f/06xUX+21fMYhy1x1fRlB21eWp8J35tkjlQElkMEBihh
+         NncClJJ+aqQ0PbrliCwy7UxD5OHNKC3i1Kl5vAgyJXrH0J0voyIL4iNyveIILleM0sng
+         j2p4qVa8LXRiU4/mQhz0TfmwcdS2i/CvXv+XhA/TPqaNEk9glUiTTpcbmIPLdB89Eh2R
+         IEaLJgLC2jfu8OwjlrR3RzfvZduQECaHwB0JOb2l9FviqEOvIjvf6MmhusqZ0szeLsSF
+         q3uC3Q8f1oCby3t71p93x2H12iL6KRX7U9IZkpVXuUcc8DkYFb6qCq4M+4WPyrpmfyW5
+         PgxA==
+X-Forwarded-Encrypted: i=1; AJvYcCVPRFgX5Gm/WbwxJu4h52aQxg2LeAIJwCghTCwkYEN6FDmVyrZ33Sl/1/3e8+EMxYppVMAutn3hx80=@vger.kernel.org, AJvYcCWwtgdLAx+pTY6u36g8K8UOsbDLW+yy3MMHhgUztKWHojxgqd12XMH2QfhwpLC/rwdmqg5RuGMOkit3Mpc8@vger.kernel.org, AJvYcCX5DfI2TmfPw8qL5mx1G/yKhGD1dh1f9cslcsjtVqMzbX4tQ1vf1qMXJ1W1HuJNcRZSk0NNC3Td/RZM7zet5F9azZbebw==@vger.kernel.org
+X-Gm-Message-State: AOJu0YwDKRU0nuRxYQCw+cSmld2ry57Fqt9/Gn5APPBiS4vt49jX3dzz
+	pOajPXddFGoFhUdlu04iRdVY1wFc3gfUD0DurVzO4fPo4UUNyMwf
+X-Google-Smtp-Source: AGHT+IGQtiFLmEAMAssuq7f48Fg1bmraT3yPSxBoe/38vyWEV7PGlD6DLNCQ8tJP6+4GlTkklo61gA==
+X-Received: by 2002:a17:903:2451:b0:20b:b75d:e8c1 with SMTP id d9443c01a7336-20bc59f0750mr36585365ad.4.1727863678652;
+        Wed, 02 Oct 2024 03:07:58 -0700 (PDT)
+Received: from Tua.. ([2409:40f3:8:b90a:de56:8399:2f69:ff5e])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-20b37da22basm81561045ad.100.2024.10.02.03.07.55
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 02 Oct 2024 03:07:58 -0700 (PDT)
+From: Anaswara T Rajan <anaswaratrajan@gmail.com>
+To: W_Armin@gmx.de
+Cc: corbet@lwn.net,
+	platform-driver-x86@vger.kernel.org,
+	linux-doc@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Anaswara T Rajan <anaswaratrajan@gmail.com>
+Subject: [PATCH] fix typo in Documentation/wmi/devices/dell-wmi-ddv.rst
+Date: Wed,  2 Oct 2024 15:37:48 +0530
+Message-Id: <20241002100748.309707-1-anaswaratrajan@gmail.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="/5H51XUMUCryMJ4/"
-Content-Disposition: inline
-In-Reply-To: <c2694d50-db7c-84ee-288a-06802e10ca8d@linux.intel.com>
+Content-Transfer-Encoding: 8bit
 
+typo in word 'diagnostics'
 
---/5H51XUMUCryMJ4/
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Signed-off-by: Anaswara T Rajan <anaswaratrajan@gmail.com>
+---
+ Documentation/wmi/devices/dell-wmi-ddv.rst | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-On Wed 2024-10-02 13:01:05, Ilpo J=E4rvinen wrote:
-> On Wed, 2 Oct 2024, Pavel Machek wrote:
->=20
-> > Hi!
-> >=20
-> > > > +static struct wmi_driver tuxedo_nb04_wmi_ab_driver =3D {
-> > > > +	.driver =3D {
-> > > > +		.name =3D "tuxedo_nb04_wmi_ab",
-> > > > +		.probe_type =3D PROBE_PREFER_ASYNCHRONOUS,
-> > > > +	},
-> > > > +	.id_table =3D tuxedo_nb04_wmi_ab_device_ids,
-> > > > +	.probe =3D probe,
-> > > > +	.remove =3D remove,
-> > > > +	.no_singleton =3D true,
-> > > > +};
-> > > > +
-> > > > +// We don't know if the WMI API is stable and how unique the GUID =
-is for this ODM. To be on the safe
-> > > > +// side we therefore only run this driver on tested devices define=
-d by this list.
-> > >=20
-> > > Please limit comment length to 80 chars and since you need multiple l=
-ines=20
-> > > here anyway, use the usual /* */ multiline comment formatting.
-> >=20
-> > This driver needs to be split into generic part + hw specific part,
-> > and reasonable kernel/user API needs to be defined for the generic
-> > part. It is really too soon to tweak comment lengths.
->=20
-> Coding style is not something you add on top of everything after=20
-> everything else is done. It's much better to start with that right from=
-=20
-> the beginning.
+diff --git a/Documentation/wmi/devices/dell-wmi-ddv.rst b/Documentation/wmi/devices/dell-wmi-ddv.rst
+index 2fcdfcf03327..e0c20af30948 100644
+--- a/Documentation/wmi/devices/dell-wmi-ddv.rst
++++ b/Documentation/wmi/devices/dell-wmi-ddv.rst
+@@ -8,7 +8,7 @@ Introduction
+ ============
+ 
+ Many Dell notebooks made after ~2020 support a WMI-based interface for
+-retrieving various system data like battery temperature, ePPID, diagostic data
++retrieving various system data like battery temperature, ePPID, diagnostic data
+ and fan/thermal sensor data.
+ 
+ This interface is likely used by the `Dell Data Vault` software on Windows,
+@@ -277,7 +277,7 @@ Reverse-Engineering the DDV WMI interface
+ 4. Try to deduce the meaning of a certain WMI method by comparing the control
+    flow with other ACPI methods (_BIX or _BIF for battery related methods
+    for example).
+-5. Use the built-in UEFI diagostics to view sensor types/values for fan/thermal
++5. Use the built-in UEFI diagnostics to view sensor types/values for fan/thermal
+    related methods (sometimes overwriting static ACPI data fields can be used
+    to test different sensor type values, since on some machines this data is
+    not reinitialized upon a warm reset).
+-- 
+2.34.1
 
-And yes, this driver leaves something to be desired.
-
-OTOH if you comment on coding style only, it leaves impression of
-"everything else is ok with this", which easily leads to wasted work
-and frustration.
-
-Best regards,
-								Pavel
---=20
-People of Russia, stop Putin before his war on Ukraine escalates.
-
---/5H51XUMUCryMJ4/
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iF0EABECAB0WIQRPfPO7r0eAhk010v0w5/Bqldv68gUCZv0a7gAKCRAw5/Bqldv6
-8jInAKCTO0pfGpRohULY7qmHpbryLYpGAgCgvtfw76lxVOS/qGSzcnI5XQM7r6c=
-=nnrN
------END PGP SIGNATURE-----
-
---/5H51XUMUCryMJ4/--
