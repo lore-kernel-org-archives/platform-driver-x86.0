@@ -1,44 +1,46 @@
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A83812FB0A
-	for <platform-driver-x86@vger.kernel.org>; Thu,  3 Oct 2024 20:26:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F33681ABECB
+	for <platform-driver-x86@vger.kernel.org>; Thu,  3 Oct 2024 20:26:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1727987188; cv=none; b=e8xqvvLuaOiLBPGCwLJ05q4ZwsSvq+uXx5KpMKko3RMUhWEraZMnrG/4XwUGPFdkWPJyYUGZCvR+sGfhDbJmmReAV3S0JDnGNYQWVjYZiqVQNbBAnRzJ2Qg22+nAumOR9aWT7qpQPRn6NtP4x6jajUCLTJesQMjX/eLeRPxhac0=
+	t=1727987193; cv=none; b=P5JR1lFHz28booXCRmjKWq6Fke0mGqAKtIdYPmIj227ppfvp6XHOFHtJwtk86UZ8MZUepxUulS2/+Ciu9G5qNatqNxaVWwEUkCqrkeN7zsZft4Z+XC7JUS3Y82LuyWCC9gC0pUMSFfazKFQKkNBEH9XWu3kua4zs8j/jcfB2dD8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1727987188; c=relaxed/simple;
-	bh=C1DomCNmKMXLK6AlSoNquFyRw6DNT4QcSJTgcZD77Jg=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=kBHj7Kn36LiI9qNPjJzOBuIctFxw2Cua/s09Om1JnGeT0AaFLfSRkg3P/jMoD+vHhBzhbginwITXW5lJM20wRXpp8Clm9tz9LkQZ2V+Pd0q10au/KdBlitj0ayF1YN1cIbqt0kdNjzkIGl+XrnOVkTH8AcC04+oNIdkqL/+5D+0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=HhT7IpHn; arc=none smtp.client-ip=170.10.129.124
+	s=arc-20240116; t=1727987193; c=relaxed/simple;
+	bh=s3W8c6qcKyxUfG9k6Cc7K83ncqIQVch1STYPgum+C2c=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=WWTkbudh1V+iF120oPLxZY3kP98tKxgUyIqBvCbhFnqQ0sO5ka9AnljmGWQ/h9HEQERl5UooDkoRQ5vF1Kb+wXGYcLnbFRRBXKt31h3eKsvALO4hzdZ0dVvLflAwJMzHu23qovsXwzx2TZuEzpu6m64n+JhnWPqxhb4Kr4xCSKY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Hc6MI8VG; arc=none smtp.client-ip=170.10.129.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="HhT7IpHn"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Hc6MI8VG"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1727987185;
+	s=mimecast20190719; t=1727987191;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=HomQjpvcRTNve3Qu20rKbEEquqz5PRdVenr+JDr+mGA=;
-	b=HhT7IpHnUNeYldr9TV8T07QIWe7/1wqWY2/gO0jE6G+NeQ/l0oBQHvFp8Mhy1yOTLwZcou
-	sbHnqMcw4Mi3SJXEOWeo5WsSEH2zRb1JAnokHUUG9jd6gJx5Y3EJ+xn4OaoTTvMB+C2uzt
-	n2sMI+Hjqa3JI1FLHH0Qi0j+0ibFXa8=
-Received: from mx-prod-mc-04.mail-002.prod.us-west-2.aws.redhat.com
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=igBZH6mM9CKfKMsiV26eGd7LU5h+xeGLjVtbvEUEYvg=;
+	b=Hc6MI8VGD+sue+WRTurHNXl5JEXNfTN5A+nosAWRl685o8MnMKzOCVU2UpY+GpB6IcQ6KF
+	tNzhGS6uUv3itUWf87SM8FGi7jNniSMKf7g7y1N1mfJf2uPitsQQEgiX8RbWexaY7kPIY7
+	ZtlqKpvJKPmhcWdxXjNT1sGWOSNSg5c=
+Received: from mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com
  (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
  relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-595-8vBJlUzZOASJeUz3EiG93w-1; Thu,
- 03 Oct 2024 16:26:21 -0400
-X-MC-Unique: 8vBJlUzZOASJeUz3EiG93w-1
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-47-UMcOCj4MPki9xWtJyi9arg-1; Thu,
+ 03 Oct 2024 16:26:25 -0400
+X-MC-Unique: UMcOCj4MPki9xWtJyi9arg-1
 Received: from mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.40])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mx-prod-mc-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 34ABA19560A2;
-	Thu,  3 Oct 2024 20:26:19 +0000 (UTC)
+	by mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 1761A19772D8;
+	Thu,  3 Oct 2024 20:26:23 +0000 (UTC)
 Received: from shalem.redhat.com (unknown [10.39.192.16])
-	by mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 20A6119560AD;
-	Thu,  3 Oct 2024 20:26:14 +0000 (UTC)
+	by mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 759BC1956054;
+	Thu,  3 Oct 2024 20:26:19 +0000 (UTC)
 From: Hans de Goede <hdegoede@redhat.com>
 To: Rajneesh Bhardwaj <irenic.rajneesh@gmail.com>,
 	David E Box <david.e.box@intel.com>,
@@ -52,9 +54,11 @@ Cc: Hans de Goede <hdegoede@redhat.com>,
 	regressions@lists.linux.dev,
 	linux-pm@vger.kernel.org,
 	platform-driver-x86@vger.kernel.org
-Subject: [PATCH 0/1] platform/x86:intel/pmc: Disable ACPI PM Timer disabling on Sky and Kabe Lake
-Date: Thu,  3 Oct 2024 22:26:12 +0200
-Message-ID: <20241003202614.17181-1-hdegoede@redhat.com>
+Subject: [PATCH] platform/x86:intel/pmc: Disable ACPI PM Timer disabling on Sky and Kabe Lake
+Date: Thu,  3 Oct 2024 22:26:13 +0200
+Message-ID: <20241003202614.17181-2-hdegoede@redhat.com>
+In-Reply-To: <20241003202614.17181-1-hdegoede@redhat.com>
+References: <20241003202614.17181-1-hdegoede@redhat.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -64,36 +68,38 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Scanned-By: MIMEDefang 3.0 on 10.30.177.40
 
-Hi All,
+There have been multiple reports that the ACPI PM Timer disabling is
+causing Sky and Kabe Lake systems to hang on all suspend (s2idle, s3,
+hibernate) methods.
 
-There is now a second bug report about the suspend/resume issues on Kaby
-Lake platforms introduced by commit e86c8186d03a ("platform/x86:intel/pmc:
-Enable the ACPI PM Timer to be turned off when suspended"):
+Remove the acpi_pm_tmr_ctl_offset and acpi_pm_tmr_disable_bit settings from
+spt_reg_map to disable the ACPI PM Timer disabling on Sky and Kabe Lake to
+fix the hang on suspend.
 
-https://bugzilla.kernel.org/show_bug.cgi?id=219346
-
-This second bug report indicates that this also happens for s2idle and
-hibernate, for which my original fix does not help. Here is a new attempt
-at fixing this.
-
-Paul this replaces my previous fix:
-https://patchwork.kernel.org/project/platform-driver-x86/patch/20240919165349.235777-1-hdegoede@redhat.com/
-
-Can you retest this on your Dell XPS 13 9360 and confirm that this new
-fix also fixes things for you ?
-
-Regards,
-
-Hans
-
-
-Hans de Goede (1):
-  platform/x86:intel/pmc: Disable ACPI PM Timer disabling on Sky and
-    Kabe Lake
-
+Fixes: e86c8186d03a ("platform/x86:intel/pmc: Enable the ACPI PM Timer to be turned off when suspended")
+Reported-by: Paul Menzel <pmenzel@molgen.mpg.de>
+Closes: https://lore.kernel.org/linux-pm/18784f62-91ff-4d88-9621-6c88eb0af2b5@molgen.mpg.de/
+Reported-by: Todd Brandt <todd.e.brandt@intel.com>
+Closes: https://bugzilla.kernel.org/show_bug.cgi?id=219346
+Cc: Marek Maslanka <mmaslanka@google.com>
+Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+---
  drivers/platform/x86/intel/pmc/spt.c | 2 --
  1 file changed, 2 deletions(-)
 
+diff --git a/drivers/platform/x86/intel/pmc/spt.c b/drivers/platform/x86/intel/pmc/spt.c
+index 2cd2b3c68e46..ab993a69e33e 100644
+--- a/drivers/platform/x86/intel/pmc/spt.c
++++ b/drivers/platform/x86/intel/pmc/spt.c
+@@ -130,8 +130,6 @@ const struct pmc_reg_map spt_reg_map = {
+ 	.ppfear_buckets = SPT_PPFEAR_NUM_ENTRIES,
+ 	.pm_cfg_offset = SPT_PMC_PM_CFG_OFFSET,
+ 	.pm_read_disable_bit = SPT_PMC_READ_DISABLE_BIT,
+-	.acpi_pm_tmr_ctl_offset = SPT_PMC_ACPI_PM_TMR_CTL_OFFSET,
+-	.acpi_pm_tmr_disable_bit = SPT_PMC_BIT_ACPI_PM_TMR_DISABLE,
+ 	.ltr_ignore_max = SPT_NUM_IP_IGN_ALLOWED,
+ 	.pm_vric1_offset = SPT_PMC_VRIC1_OFFSET,
+ };
 -- 
 2.46.2
 
