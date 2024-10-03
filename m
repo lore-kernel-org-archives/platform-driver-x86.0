@@ -1,79 +1,91 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f45.google.com (mail-ej1-f45.google.com [209.85.218.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D612D19C56A;
-	Thu,  3 Oct 2024 16:03:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9973C433C1;
+	Thu,  3 Oct 2024 17:03:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1727971417; cv=none; b=LRlM23OjDS2YZuhDLp0FLd2rQm/bGk3AKdvoSLojO7vtmrdSkZV0aQIIbXOPaqSf7tn7LbesNJD2fikSZoyfUIEn07XJK2FNwv9s7FgCBtk0TKDcjS1rMy88jpnIJcCZeGu5GWLZMppSac8hbXdJLkQE1GE+218hd6JeHmhPI/o=
+	t=1727975040; cv=none; b=K+rXq0VwEOWiwGlSBenWNRc8Cfi7qwh07XX8zgy1EIXQbidHBPTb79VQq1dKWHSCwEmZmx0kxuB2d8Rp2AMGrO9KRmlCmsu8zgVyHPke3adstTXuOxLrw0KdLV/OZfKfqzZRDT7ZmA4f4svku6hAorfyVH7O7kx16IzxUfYmvvg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1727971417; c=relaxed/simple;
-	bh=3Oul6k2Gcg61VyyXjrrG7JbnVR+FCjlGRm+L8aDQ8dg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=lY8MpI0MKw6SR5D2pFqtjled5OYPQoP2IdP8zK7FN24nHSh0dHCWOMrmB1GQ0yhlTBZ3IbWyFqp/qHoEzbFgjDNvUajae6rH2WuszLK9FrnzaxsH7UJYCe30My/qzyHS3GiTjvcJC5C4oMueDu8xt6+V1yOKDO/tU6saaROgodM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=RN6YH4sQ; arc=none smtp.client-ip=192.198.163.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1727975040; c=relaxed/simple;
+	bh=ClZaY7fV4/H+BU6MJI7jaOoTebP/CYx/bRHt814WFw0=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=eEXRyhs6VcpdL4Si0hVOIbccSxgMeh5EbFyOAQKBdDKrN+N7Vj+5rgzbrIN5RzqkJlvpuJOgFNJ1xIMRE4MlClrFT3XiBVJVBh8Lk/RJpZPfTl1k/1Sojmh0GU1P1vRwGguNXlKZJ+xHj/xR5eXZaK7n3Xz5GCeUCT6eFjpbSPI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=dPU9eRsd; arc=none smtp.client-ip=209.85.218.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="RN6YH4sQ"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1727971415; x=1759507415;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=3Oul6k2Gcg61VyyXjrrG7JbnVR+FCjlGRm+L8aDQ8dg=;
-  b=RN6YH4sQk8TQTbF2wdKYkZSsfrEKx4odnypm4boYRBmzixCML9scpkNX
-   e6NVHwlowzZ2KFwAYLWfvhmvJzGd/O6LmJMHKne0xS0pTniC9bEEriVE3
-   1VaeCbUP/UYmtXwu4XBoP6hneqH/Qe9cpdGlufgWhSMRoLYrPiJ+x1VaG
-   unDU4e6mpDEMDleGtaTQ2NQSHsbk6b+mHwSLzXSHdxZPqVTrXrNYHZndT
-   YztOupsSvXYrlWeoGWYCj+TlR8Ut4w/2yZ/aZy2Z62g7nmAldlKU2tz6r
-   +l/H2yRMQAnsONBdD5lHODxx4R4ZuiqtPlthDtyHWb4dV3wNrFwYXRNOl
-   w==;
-X-CSE-ConnectionGUID: jFWnoM/iTdWww3wSvRniMw==
-X-CSE-MsgGUID: aYa2ytbXQQaOLjuyGTdi5Q==
-X-IronPort-AV: E=McAfee;i="6700,10204,11214"; a="37772208"
-X-IronPort-AV: E=Sophos;i="6.11,174,1725346800"; 
-   d="scan'208";a="37772208"
-Received: from orviesa008.jf.intel.com ([10.64.159.148])
-  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Oct 2024 09:03:34 -0700
-X-CSE-ConnectionGUID: 10keF7bcSMeasDwe5ABPwg==
-X-CSE-MsgGUID: WKwKq/DBQjCPy2/5l/zo6w==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.11,174,1725346800"; 
-   d="scan'208";a="75198114"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by orviesa008.jf.intel.com with ESMTP; 03 Oct 2024 09:03:33 -0700
-Received: by black.fi.intel.com (Postfix, from userid 1001)
-	id 1925437D; Thu, 03 Oct 2024 19:03:32 +0300 (EEST)
-Date: Thu, 3 Oct 2024 19:03:31 +0300
-From: Mika Westerberg <mika.westerberg@linux.intel.com>
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: Hans de Goede <hdegoede@redhat.com>, linux-kernel@vger.kernel.org,
-	platform-driver-x86@vger.kernel.org,
-	Andy Shevchenko <andy@kernel.org>,
-	Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>
-Subject: Re: [PATCH v1 1/1] platform/x86: intel_scu_ipc: Don't use "proxy"
- headers
-Message-ID: <20241003160331.GP275077@black.fi.intel.com>
-References: <20241003154819.1075141-1-andriy.shevchenko@linux.intel.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dPU9eRsd"
+Received: by mail-ej1-f45.google.com with SMTP id a640c23a62f3a-a8d2b24b7a8so438957666b.1;
+        Thu, 03 Oct 2024 10:03:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1727975037; x=1728579837; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=ClZaY7fV4/H+BU6MJI7jaOoTebP/CYx/bRHt814WFw0=;
+        b=dPU9eRsd+MRo1Or4SnWlOc3cTLqlhRBrqdwbs1oYOWJCYC9GII87USHEV1+4ZHaiix
+         aj1dAlsL75ja9QM9yPmcOsOySvN0313Yg7QJqU+X8Jm9fTRprUMqqxDxOgZTiv2LcWVi
+         kcAp32mbcF48i++Vk1jbCV0jpXcFT6rC7n6PRF1PpKXMdZZ8BL1hmgTK+WxdluTh8bo8
+         wK8si4v4vUFskhM5tQaGTon/QcvFDx0w7sD3irZ8gWKHLgDPkaLlNXx7u02q4wu+iDus
+         fpnjePn37Gxmv1W7nRkq5iDSkgnjlSlasZ1HewAPUeff6HlyzUfoajQ4KXcNA5oNlkCe
+         YLxQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1727975037; x=1728579837;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=ClZaY7fV4/H+BU6MJI7jaOoTebP/CYx/bRHt814WFw0=;
+        b=VVu/0Qmv+4rxXD7wFxSW5g2JCwh6NPj2w4CwbiRaNe0LsKDrm2DJ2vIOcRS9MSxS5v
+         2KHn3vUOLaXmNmiHYjVjoeYMB6Jilzc2NnPFw9AWiged0KDS6y4LSg1XC63qyooW7XO5
+         o1JFxapvo7bpLbhSUm7rSfnjOJCkdVQaKayz1cA95syc9nGXuT8W085+Y0IuoqsAsGQ6
+         680hr8CVOeoaRf8KQVb88f4YEoZjHR8S9+UcAhRNAiG7YzPtzLXEVlgRm3MEGVj44B9/
+         VgCj9y/0BFtZw1KOqkmqntt7M9Zfi2wYCJsAPpVK+j5kRykqWRnkPRfbaryfncpaQ60e
+         HfDA==
+X-Forwarded-Encrypted: i=1; AJvYcCUqpD95Y+G3xbK8dc97i31e35H2FfZy0B+Kxxb7mfjwOplpK28C0bTvSpPElimj8vb1tR7TQws2/Qi2uFhWPiRnQpXJ2A==@vger.kernel.org, AJvYcCW33SCwGvzb91A2l85VUeAEPbod6nos0CID8Dlp1lME9QirUknmr5Fh1A2/w1PiE2YZ4e6CRPrlvTDdqvw=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxnigVPRr1LekrnQj3dmGC6OTljvH8bO0dv+VIVUCg5kaAvzWjx
+	9jCiVLKPlp6T0LO/dVa3fQOKqYivR0OPIakWFBV4TWdwoeiBlvKRUeMcPVok4gN0HVwyFIRyheE
+	6BpBiuIXLEdkAodJH+OxmOKc17d+mroQAAGo=
+X-Google-Smtp-Source: AGHT+IGl7hO//9lvqHSD8lnOzYcIZPTUjXhnmjUnZn/V/JU3NEnx0lTbKI3857Zg8TUPTl+Ugin6caiVc/J4xrkpWHs=
+X-Received: by 2002:a17:907:1c05:b0:a98:c4b7:7971 with SMTP id
+ a640c23a62f3a-a990a23d7famr423372666b.32.1727975036845; Thu, 03 Oct 2024
+ 10:03:56 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20241003154819.1075141-1-andriy.shevchenko@linux.intel.com>
+References: <20241003154819.1075141-1-andriy.shevchenko@linux.intel.com> <20241003160331.GP275077@black.fi.intel.com>
+In-Reply-To: <20241003160331.GP275077@black.fi.intel.com>
+From: Andy Shevchenko <andy.shevchenko@gmail.com>
+Date: Thu, 3 Oct 2024 20:03:20 +0300
+Message-ID: <CAHp75VczZ=5jURRab0Psi1qDqbQmQNvgRwa3B2b+pG_LRapqCQ@mail.gmail.com>
+Subject: Re: [PATCH v1 1/1] platform/x86: intel_scu_ipc: Don't use "proxy" headers
+To: Mika Westerberg <mika.westerberg@linux.intel.com>
+Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Hans de Goede <hdegoede@redhat.com>, 
+	linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org, 
+	Andy Shevchenko <andy@kernel.org>, =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Thu, Oct 03, 2024 at 06:48:19PM +0300, Andy Shevchenko wrote:
-> Update header inclusions to follow IWYU (Include What You Use)
-> principle.
+On Thu, Oct 3, 2024 at 7:03=E2=80=AFPM Mika Westerberg
+<mika.westerberg@linux.intel.com> wrote:
+> On Thu, Oct 03, 2024 at 06:48:19PM +0300, Andy Shevchenko wrote:
+> > Update header inclusions to follow IWYU (Include What You Use)
+> > principle.
+>
+> Is this some new Coding Style thing?
 
-Is this some new Coding Style thing?
+It's useful to unravel a tangle of the dependency hell. Yet it needs
+to be documented.
 
-> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> Fine by me,
+>
+> Acked-by: Mika Westerberg <mika.westerberg@linux.intel.com>
 
-Fine by me,
+Thank you!
 
-Acked-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+--=20
+With Best Regards,
+Andy Shevchenko
