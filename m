@@ -1,74 +1,124 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mout.gmx.net (mout.gmx.net [212.227.15.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0FE54186E3D
-	for <platform-driver-x86@vger.kernel.org>; Thu,  3 Oct 2024 22:47:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 20F841AB52D;
+	Thu,  3 Oct 2024 23:03:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1727995663; cv=none; b=Ak/divZO4ZYALRrl/WnASoEufiEtZPLPbgyv8YkoHcNkyv+5UmLVcQK+2yTB8FdyETREKQCASVztNIqye/GT42nhF7Utwt/MwniYarKH0/fdj690GotTFUKmLu5/fjvLz4KxwggXeYVI//yHWTbRuJ6x5MbilMIE9TuZ+4OswU0=
+	t=1727996621; cv=none; b=TnEsp21aDJzxkDe3mSWkwc2YI33vvzTI/NyL3+ROXHGX1UjSRsavBzeSNihozq0W2HwaJHvxPudeCTq67d+NouZCZqQtsAaD6YtzsySOBlGMXe1XHllGkxCJAwd0Vjfz69wyFKVTvISjtTN4fOqgSt9IJaN63U3THurR8kZrSgk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1727995663; c=relaxed/simple;
-	bh=cBcQu/sV4TPUrHpJIQ+iibzkP9uOpNlccaG3VTwyYPI=;
-	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=b0Wk4BotdFp7NXUItL4kLRRJNFDU0DVeZgYPdF5qQe1Fad03LG5+gGvvDpMtbzbUNkSpZZSfTDPQyjKfW99+CzNjL9VJDTwaRDLrI/LHDWKjslOUQxwnhLQHD7A+bNxGEZHTjALixz7nr6BmLG96++uuFwgsO1Na52QjnNyu/kQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=eE6V3+Fd; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1727996621; c=relaxed/simple;
+	bh=RlBHWrkvPIdEMvHPzkeCP7Y0MeQke+gep+nbMAKkxPI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=UwkMsvX6GNg6noI5tSF/71tMTEHmDdrgGzdTbOcxBEoQZkvKD+x2ZxKucAY+o7Q7BzUYlT8jcsCuhvmHcPRGihZtgdtBZhofklykv4m1Z1RCxKAIIuZEWGd5Vhih221zj8Sa7YaPX9qAxEim9O/ub1Mu+zGSk39jv1Hg8nC5PnM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b=qk2H5B/t; arc=none smtp.client-ip=212.227.15.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="eE6V3+Fd"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 87346C4CEC7
-	for <platform-driver-x86@vger.kernel.org>; Thu,  3 Oct 2024 22:47:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1727995662;
-	bh=cBcQu/sV4TPUrHpJIQ+iibzkP9uOpNlccaG3VTwyYPI=;
-	h=From:To:Subject:Date:In-Reply-To:References:From;
-	b=eE6V3+FdKm2TErQYV9hsOlnyFnTi9siip0d/0TLFBS14HfNvlJP3r6OfKwLoKHsXt
-	 SwvGXPKrzAS9I/O5S//O8N4Pt3DDxCFLE17Vjm/VtlSUhOIZHTcarcZ4w37AqvuuE9
-	 X9pWLRev6Ov5PHqgn6+gMc4gSJqJexch2GLdsIFePQUsPvnFHaqHggSfb9iL9PwkgO
-	 gM7CXqD3HB8If8T6PfMS1n3eDL4+OnDrKOp2KpnNF0y/r4ltrdhl4SRtmYTlN0UUEU
-	 4gjOu9kPT8cD9ErqSeyCUxQbrFBJedXk54QxskEhzGi/TnEiD88zCxZoKtnRfnG5UQ
-	 KTTdFfaeFeBNQ==
-Received: by aws-us-west-2-korg-bugzilla-1.web.codeaurora.org (Postfix, from userid 48)
-	id 6C78EC53BC1; Thu,  3 Oct 2024 22:47:42 +0000 (UTC)
-From: bugzilla-daemon@kernel.org
-To: platform-driver-x86@vger.kernel.org
-Subject: [Bug 219346] [BISECTED] Disable ACPI PM Timer breaks suspend on all
- Amber Lake machines
-Date: Thu, 03 Oct 2024 22:47:42 +0000
-X-Bugzilla-Reason: None
-X-Bugzilla-Type: changed
-X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
-X-Bugzilla-Product: Drivers
-X-Bugzilla-Component: Platform_x86
-X-Bugzilla-Version: 2.5
-X-Bugzilla-Keywords: 
-X-Bugzilla-Severity: high
-X-Bugzilla-Who: todd.e.brandt@intel.com
-X-Bugzilla-Status: NEW
-X-Bugzilla-Resolution: 
-X-Bugzilla-Priority: P3
-X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
-X-Bugzilla-Flags: 
-X-Bugzilla-Changed-Fields: 
-Message-ID: <bug-219346-215701-NScL5kbfBo@https.bugzilla.kernel.org/>
-In-Reply-To: <bug-219346-215701@https.bugzilla.kernel.org/>
-References: <bug-219346-215701@https.bugzilla.kernel.org/>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Bugzilla-URL: https://bugzilla.kernel.org/
-Auto-Submitted: auto-generated
+	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b="qk2H5B/t"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.de;
+	s=s31663417; t=1727996610; x=1728601410; i=w_armin@gmx.de;
+	bh=nGQ2e3eWhWCnCEzigv0/+ogytIWxpyFa6ZW3FmJvq8E=;
+	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:To:Cc:
+	 References:From:In-Reply-To:Content-Type:
+	 Content-Transfer-Encoding:cc:content-transfer-encoding:
+	 content-type:date:from:message-id:mime-version:reply-to:subject:
+	 to;
+	b=qk2H5B/toLiXozMBVngIUDE44Jjo1bAVMGCk20qtWPIwqxkjOn0BhUAOikIgjrjF
+	 wlAyfhwiLLDIL4jRtnHhOvkuBoY5VtYjbuckO9TJKvHNVfMigwXb/M6tkd28Q634W
+	 GNW/Uve5KQDBX/fSmXOSayDcWpQuasfdipB38dFvnbjE2+y1IHlasHwQyY8GEGX7i
+	 1Oo8oRyt9VAujVqDSfLhRF3+l+UyaCPbZI5TC78jkKFmw8d1QjqeW+6oQJkjoW+/I
+	 UHUv/OGDFJVM/EIHjj7rvrbTlhkOMB9E4edFLLcWu8ZgYVQriNFsDO4nncsf7WRyo
+	 FrgWdfcC01cgcwJZ0w==
+X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
+Received: from [192.168.2.35] ([91.137.126.34]) by mail.gmx.net (mrgmx005
+ [212.227.17.190]) with ESMTPSA (Nemesis) id 1N0oBr-1s09Zv3HVd-00sqpX; Fri, 04
+ Oct 2024 01:03:30 +0200
+Message-ID: <17bc2698-9113-4cf0-b58b-4f9db1813753@gmx.de>
+Date: Fri, 4 Oct 2024 01:03:29 +0200
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] fix typo in Documentation/wmi/devices/dell-wmi-ddv.rst
+To: Anaswara T Rajan <anaswaratrajan@gmail.com>
+Cc: corbet@lwn.net, platform-driver-x86@vger.kernel.org,
+ linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20241002100748.309707-1-anaswaratrajan@gmail.com>
+Content-Language: en-US
+From: Armin Wolf <W_Armin@gmx.de>
+In-Reply-To: <20241002100748.309707-1-anaswaratrajan@gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:8NV1QISHBdcUWuIi9vy5D0xmjN0fZXEGGGvD9lT4oMCLKmD6H6C
+ RlA1ThF7r9oDSPqb4Up+5q1OSOrLkaYvXYipFJaGCQTiAApr4N/4hYhsvSTayPvSljEpKYL
+ 6tAv/PjeB18ecZFLhQ8KmqiPQrZANcrd3egkAfPSGUh6XoTnckcA9K+sPMFTHnd/0LBhldX
+ VChwiXks7GENusqzkE95Q==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:pLYzM+Qns9c=;T7hfbrlG61qcrBwYBn7Mxl6OLkS
+ Er3QJJH13MQ/F/EQRatzDimkJa4r15fsjo9pzT+vs2XrCwFtrt++0T12nhSTAMD+vT2YMlmMk
+ Nx6T9Z6GIZO+iLG3nT5zIzIAEzUtf7rrGaz3or+7tJWg2lsOWTgGzN6r4uHLqUUBM0/ob5fY9
+ lD/FAbZQlLLNkr/zaAcZeXuMeafRGa/CD1BxpzotUceicO3B6Ckypv2e8io3SKZLuSAFhBI02
+ 0kB61C1rjLuiDLcqDj/CuKzC3lEXbX9/5czBrpDECiUeQShyXK6m3nHHJz8LNeZzoUo+rLhnz
+ GmF35LBrkOg6l5qYEZVICkvXUv0GDdYWmG8oNNsoqC6BVWmrTZFKd6vglEn5ifeW0iLhcJvEH
+ NwUQIWdnm0VLXD/EsPAUCNMBa8XmLAZQOzZVaQpcY8Hs2kjFsOkMSfHQIiENLIRVd4u6AEoGa
+ LlIS2LJYmTe7Vss4VAvzR9x8quSU90q+jFmlR/XibUPqjxxPbTHsqJqUV3oRQv3W/NJ2xUQ7Q
+ ucPv/cXHbnWZTvyWf8FxLcXKr774t8KE+h178WTuy/30c6RVwcxMv3NBA8ZFqptHHbgPYkcbB
+ DoHMTRW2JLSFjQIODsyM+MFYOMgFu8LiimMiE1pTQwWJ76P45XB77qgqKfxIsy0tBWiYhpbHG
+ PyKaxcExHbuz6WtLQw84O+AbjKJZ2ZmsPEtkVVpGYbHdHbMoHB0oHGDD+UIDLXELTBva7TdQ0
+ I+Wk4UaynF1NFsT98e6AcLJuWh3bV4VnMo1TRd1dTUeudzck3JOuAMwb/6G/8d5Vb4pMtWDR9
+ YC9v2Mf5HapqDYg+nYZodYFUDa9xdcnPla9bL6pHvoiMY=
 
-https://bugzilla.kernel.org/show_bug.cgi?id=3D219346
+Am 02.10.24 um 12:07 schrieb Anaswara T Rajan:
 
---- Comment #7 from Todd Brandt (todd.e.brandt@intel.com) ---
-building it now, I'll have it tested in an hour or so, thanks.
+> typo in word 'diagnostics'
 
---=20
-You may reply to this email to add a comment.
+Please rename your patch to "platform/x86: dell-ddv: Fix typo in documenta=
+tion" and
+rework the patch description so it forms a full sentence.
 
-You are receiving this mail because:
-You are watching the assignee of the bug.=
+Other than that, the patch look fine.
+
+Thanks,
+Armin Wolf
+
+> Signed-off-by: Anaswara T Rajan <anaswaratrajan@gmail.com>
+> ---
+>   Documentation/wmi/devices/dell-wmi-ddv.rst | 4 ++--
+>   1 file changed, 2 insertions(+), 2 deletions(-)
+>
+> diff --git a/Documentation/wmi/devices/dell-wmi-ddv.rst b/Documentation/=
+wmi/devices/dell-wmi-ddv.rst
+> index 2fcdfcf03327..e0c20af30948 100644
+> --- a/Documentation/wmi/devices/dell-wmi-ddv.rst
+> +++ b/Documentation/wmi/devices/dell-wmi-ddv.rst
+> @@ -8,7 +8,7 @@ Introduction
+>   =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+>
+>   Many Dell notebooks made after ~2020 support a WMI-based interface for
+> -retrieving various system data like battery temperature, ePPID, diagost=
+ic data
+> +retrieving various system data like battery temperature, ePPID, diagnos=
+tic data
+>   and fan/thermal sensor data.
+>
+>   This interface is likely used by the `Dell Data Vault` software on Win=
+dows,
+> @@ -277,7 +277,7 @@ Reverse-Engineering the DDV WMI interface
+>   4. Try to deduce the meaning of a certain WMI method by comparing the =
+control
+>      flow with other ACPI methods (_BIX or _BIF for battery related meth=
+ods
+>      for example).
+> -5. Use the built-in UEFI diagostics to view sensor types/values for fan=
+/thermal
+> +5. Use the built-in UEFI diagnostics to view sensor types/values for fa=
+n/thermal
+>      related methods (sometimes overwriting static ACPI data fields can =
+be used
+>      to test different sensor type values, since on some machines this d=
+ata is
+>      not reinitialized upon a warm reset).
