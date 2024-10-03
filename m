@@ -1,102 +1,76 @@
-Received: from mx3.molgen.mpg.de (mx3.molgen.mpg.de [141.14.17.11])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 754DA1ABEAB;
-	Thu,  3 Oct 2024 23:17:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=141.14.17.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 851D2142E9F
+	for <platform-driver-x86@vger.kernel.org>; Thu,  3 Oct 2024 23:59:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1727997453; cv=none; b=lY/t7qbrEKuxEWQ4Jw1fpSY9GfAYAEsqsxpFh2y55dmnoU/6yZGEuIz2vOYvDnR/jRQNUKf4IODPGOgMj0hpBeUBxCewj1y2jOMBmr3wuk2+i3xo2WIQeF0mfexETEdliDs1qs/jjQOMwx4QbvIgoAWzn2vZJYahJY/dpaGc19U=
+	t=1727999957; cv=none; b=u33hs0QLPUl1TPfN7emgHbGM5LutfLkI8cY4ytIEJbX12YphHNwnC5XuRxCjh7mnWQYJIqzFKoWX4F76wqejzp4LgNOXH0nF8r5kYFto7SUtu7ls2iQfALrpHOu2uKb6owkUz183Z0jNTVnwPYRQNJjgIWAZjFJ6/tyn46T/Y+o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1727997453; c=relaxed/simple;
-	bh=P5UcpAipfbHxuw26N/La74wzuf3cWkCq92gj8uBLqhI=;
-	h=Message-ID:Date:MIME-Version:From:Subject:To:Cc:References:
-	 In-Reply-To:Content-Type; b=kNLb7RItqkMDJxsZn54dDxtbuEn3e1yUbv9JPRJHbX3as5OkYBbPTL8u/+VxM6yM4sl7/pRVaO/cVasN0adkPa0KyIuUEGNtGI+lIhZnimcJ6PrG5R09Wa7Pa7uHpYqwj7n9tcwThZyBtULIFKRBQ08aQvL5Y1Gk2fAe7ggoUXk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=molgen.mpg.de; spf=pass smtp.mailfrom=molgen.mpg.de; arc=none smtp.client-ip=141.14.17.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=molgen.mpg.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=molgen.mpg.de
-Received: from [192.168.1.164] (77-32-42-93.dyn.eolo.it [77.32.42.93])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: pmenzel)
-	by mx.molgen.mpg.de (Postfix) with ESMTPSA id 9600561E5FE05;
-	Fri,  4 Oct 2024 01:16:20 +0200 (CEST)
-Message-ID: <862f7737-c88b-4e19-a384-52a3ecb43111@molgen.mpg.de>
-Date: Fri, 4 Oct 2024 01:16:19 +0200
+	s=arc-20240116; t=1727999957; c=relaxed/simple;
+	bh=pVLbJTYCqOk5v81xiCOqhCyM/nYThklPPries88elgU=;
+	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=rvLkKNjv2Qu33n64oT4Zg92kJG/IJFfOutKzeCS+1KuLqfDnl9vStRS0r79SC7bdlPgKPQBw7/PjsorUMTZtDrSIN3JIL8PKtHNdi2OCSNv00dIHjZTxFVOaQTutk/CLw7u2+legIOJxmUJIY+sF1o4CoGNhRJRUI7n2DS5c1eo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QpqslMLX; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QpqslMLX"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 199ABC4CECF
+	for <platform-driver-x86@vger.kernel.org>; Thu,  3 Oct 2024 23:59:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1727999957;
+	bh=pVLbJTYCqOk5v81xiCOqhCyM/nYThklPPries88elgU=;
+	h=From:To:Subject:Date:In-Reply-To:References:From;
+	b=QpqslMLXFMxJLg1AqQ4U4fCjFwko8JkOZS/rArBD3IPFMqiiy/wHKpObFyFq5UN/z
+	 tguH4GTxvEpA+wEcDPsC4cwAYzvzFplGU2vcjiJU9y/3kJfNyBK6vS6JdUyVzn15jU
+	 1pHjEBS/Qz+U5Ki/VKXUZbyJFhU/7f/wvoyEojC75IpkDJTM96rcwViLEG3wvjDy6X
+	 Bz3WYZAOD+6p7aj3MDPDe64rAZU8fLJ4sqkzdaEfOIMXCCHN7paxAsYnb1G8OFaF5p
+	 ZfgQidb/8Zy17G3I3qB++96PeY9qDToSPYlZEkOA2aKhwyVJ0i78AG1/eJ3EyAzSYj
+	 zqoCyz0nilgFQ==
+Received: by aws-us-west-2-korg-bugzilla-1.web.codeaurora.org (Postfix, from userid 48)
+	id BCE7BC53BBF; Thu,  3 Oct 2024 23:59:16 +0000 (UTC)
+From: bugzilla-daemon@kernel.org
+To: platform-driver-x86@vger.kernel.org
+Subject: [Bug 219346] [BISECTED] Disable ACPI PM Timer breaks suspend on all
+ Amber Lake machines
+Date: Thu, 03 Oct 2024 23:59:16 +0000
+X-Bugzilla-Reason: None
+X-Bugzilla-Type: changed
+X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
+X-Bugzilla-Product: Drivers
+X-Bugzilla-Component: Platform_x86
+X-Bugzilla-Version: 2.5
+X-Bugzilla-Keywords: 
+X-Bugzilla-Severity: high
+X-Bugzilla-Who: todd.e.brandt@intel.com
+X-Bugzilla-Status: NEW
+X-Bugzilla-Resolution: 
+X-Bugzilla-Priority: P3
+X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
+X-Bugzilla-Flags: 
+X-Bugzilla-Changed-Fields: 
+Message-ID: <bug-219346-215701-w3bmt5APtf@https.bugzilla.kernel.org/>
+In-Reply-To: <bug-219346-215701@https.bugzilla.kernel.org/>
+References: <bug-219346-215701@https.bugzilla.kernel.org/>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Bugzilla-URL: https://bugzilla.kernel.org/
+Auto-Submitted: auto-generated
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-From: Paul Menzel <pmenzel@molgen.mpg.de>
-Subject: Re: [PATCH] platform/x86:intel/pmc: Disable ACPI PM Timer disabling
- on Sky and Kabe Lake
-To: Hans de Goede <hdegoede@redhat.com>
-Cc: Rajneesh Bhardwaj <irenic.rajneesh@gmail.com>,
- David E Box <david.e.box@intel.com>,
- =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
- Andy Shevchenko <andy@kernel.org>, Todd Brandt <todd.e.brandt@intel.com>,
- Marek Maslanka <mmaslanka@google.com>,
- Daniel Lezcano <daniel.lezcano@linaro.org>, regressions@lists.linux.dev,
- linux-pm@vger.kernel.org, platform-driver-x86@vger.kernel.org
-References: <20241003202614.17181-1-hdegoede@redhat.com>
- <20241003202614.17181-2-hdegoede@redhat.com>
-Content-Language: en-US
-In-Reply-To: <20241003202614.17181-2-hdegoede@redhat.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
 
-Dear Hans,
+https://bugzilla.kernel.org/show_bug.cgi?id=3D219346
 
+--- Comment #8 from Todd Brandt (todd.e.brandt@intel.com) ---
+ok I did a full stress run of S2idle, S3, and S4 and all 3 work just fine on
+both our AML machines. Looks like it works. Thanks. Go ahead and add me as
+Tested-By.
 
-Thank you for the patch.
+--=20
+You may reply to this email to add a comment.
 
-Am 03.10.24 um 22:26 schrieb Hans de Goede:
-> There have been multiple reports that the ACPI PM Timer disabling is
-> causing Sky and Kabe Lake systems to hang on all suspend (s2idle, s3,
-
-Kab*y* (also in the summary)
-
-> hibernate) methods.
-> 
-> Remove the acpi_pm_tmr_ctl_offset and acpi_pm_tmr_disable_bit settings from
-> spt_reg_map to disable the ACPI PM Timer disabling on Sky and Kabe Lake to
-
-Ditto.
-
-> fix the hang on suspend.
-> 
-> Fixes: e86c8186d03a ("platform/x86:intel/pmc: Enable the ACPI PM Timer to be turned off when suspended")
-> Reported-by: Paul Menzel <pmenzel@molgen.mpg.de>
-> Closes: https://lore.kernel.org/linux-pm/18784f62-91ff-4d88-9621-6c88eb0af2b5@molgen.mpg.de/
-> Reported-by: Todd Brandt <todd.e.brandt@intel.com>
-> Closes: https://bugzilla.kernel.org/show_bug.cgi?id=219346
-> Cc: Marek Maslanka <mmaslanka@google.com>
-> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
-> ---
->   drivers/platform/x86/intel/pmc/spt.c | 2 --
->   1 file changed, 2 deletions(-)
-> 
-> diff --git a/drivers/platform/x86/intel/pmc/spt.c b/drivers/platform/x86/intel/pmc/spt.c
-> index 2cd2b3c68e46..ab993a69e33e 100644
-> --- a/drivers/platform/x86/intel/pmc/spt.c
-> +++ b/drivers/platform/x86/intel/pmc/spt.c
-> @@ -130,8 +130,6 @@ const struct pmc_reg_map spt_reg_map = {
->   	.ppfear_buckets = SPT_PPFEAR_NUM_ENTRIES,
->   	.pm_cfg_offset = SPT_PMC_PM_CFG_OFFSET,
->   	.pm_read_disable_bit = SPT_PMC_READ_DISABLE_BIT,
-> -	.acpi_pm_tmr_ctl_offset = SPT_PMC_ACPI_PM_TMR_CTL_OFFSET,
-> -	.acpi_pm_tmr_disable_bit = SPT_PMC_BIT_ACPI_PM_TMR_DISABLE,
->   	.ltr_ignore_max = SPT_NUM_IP_IGN_ALLOWED,
->   	.pm_vric1_offset = SPT_PMC_VRIC1_OFFSET,
->   };
-
-Tested-by: Paul Menzel <pmenzel@molgen.mpg.de> # Dell XPS 13 
-9360/0596KF, BIOS 2.21.0 06/02/2022 (suspend/resume with deep and s2idle)
-
-
-Kind regards,
-
-Paul
+You are receiving this mail because:
+You are watching the assignee of the bug.=
