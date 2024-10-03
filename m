@@ -1,88 +1,111 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C0B014F123;
-	Thu,  3 Oct 2024 11:03:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D595213C3C2;
+	Thu,  3 Oct 2024 11:14:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1727953414; cv=none; b=CTBAZ+jxHA4SUcpNVTq7byMRAHdXJhrgVoNwn0Ai4qmTn5OYqVB4i8wQ4+/8DZLFLbVPaUuRco5VjHGFNJNXa5DXonZpUETa19BhW71d/Yxw0oh3H10QTvLCC1NE8hhF6fvwbLyHaK7+075aHiyM0cZ9b/evLptSdcotWd4sfeE=
+	t=1727954095; cv=none; b=qnjfCZCXhRgyg6Fr39bvnaUFlIG0Uv68uQ6ehvLrHK786QV8J57JIBStu1Sv37zioJY02gSb2mUh8+RNttMvpY2cZ1o2hDnc+o0UXPDywihuf17EGpmZM6YPq6u7BZHst2k7LBHE/7X3hQqDPiawv2eATriJnPBs7h7JOf0KEDA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1727953414; c=relaxed/simple;
-	bh=BHxKfe7cwR5dwKO9e3Otil+dngQy74VkLkbWJ+gQaeA=;
+	s=arc-20240116; t=1727954095; c=relaxed/simple;
+	bh=+kSGnXkoPKavIBGRDvSzfj5Pdagy64X694bm9u+MYDE=;
 	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=K2/Q/ivTUNpoOXhrbEp5YmHcBrKGvFPlZJR10Jg58JbgHHfq+ZBdKACogzaeoThWY/ihSGE9qtXNPXs+oAu4mRCIQAloaAZfS7MZdvKDZ1BAO02bPW6eblN//3jabq/HouGBWEjlzgWbryFxNFABLXFSwXQMvKxlqfrOaGwfioU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=YPW8Bl0z; arc=none smtp.client-ip=198.175.65.11
+	 MIME-Version:Content-Type; b=ZIphHMti1J6+VGPCUuMf3DqDB2ayg3KC/iky4bYPfhTWAcwdfsdD1kepvAZB860our5SvMGAPcHOietpTCiGXxwdvOmMNUDAtPgWrBnwdd64ZvcBFGDn6c27OLsgGCBOhO1D+62cb85+M3OwasUW4AmNTZgafy+mu4WfEcg2nSg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=dNjMm1OM; arc=none smtp.client-ip=198.175.65.9
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="YPW8Bl0z"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="dNjMm1OM"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1727953414; x=1759489414;
+  t=1727954094; x=1759490094;
   h=from:date:to:cc:subject:in-reply-to:message-id:
    references:mime-version;
-  bh=BHxKfe7cwR5dwKO9e3Otil+dngQy74VkLkbWJ+gQaeA=;
-  b=YPW8Bl0zxKI8za1Kdew3nVlaUezrlpq1QwLqly4rFqeCw+1st2p+Fg0H
-   1nFRE7t9LkUnHlm436Vz5PZNLGAy2Qz+IjWqbBUEqNNIzE+vjlhToZ4vz
-   eiby6j/e4EkcSogJptK+Q8C31yOH4FePcBVLypun6hiHltZ1lR8oD5xeN
-   uFpHKmPLL6wgo62ZUkdWDKJ3wl1wvFcJ14zXHRJwRI/kbepx+Ab+e6bVU
-   LXWPTIY0DeyOYLfZ91FVO2a48SOM8RhLF67jeI8vlFx43dWGGz9EaHr8P
-   R1k3V/yNPV51RfHoMYSUhmn30oQqOSqyDvuyUHEh1i/j+eOBdOolgoT+e
-   Q==;
-X-CSE-ConnectionGUID: tMXknGnhSBadwC7Pi044rA==
-X-CSE-MsgGUID: hIr5MRKZQVyOfXtVEm1KTg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11213"; a="37700196"
+  bh=+kSGnXkoPKavIBGRDvSzfj5Pdagy64X694bm9u+MYDE=;
+  b=dNjMm1OMVQrmEXvHb4rt6Dhn9MIddiVypSiM0Zcbrw5ZXCl1qCdEBIR3
+   GwGTCtMGNsiyLBw6kavn5i0kxUVEE1YYvlKdifFbav7I1uVDpDJVmYh2z
+   75z4mPaPj+8UhJ4oujZRqH7EzmWx/PQrdpSVv5309LpnoDWyN1Jp0I5Wi
+   SYdm7nWAIBlCYJ7lYcWaA3dOGaBZdcnd8rr4iKii/Kt6RFMY7sWyDasyu
+   s49SPiQlFgfELYMibqDD81ZYF97Qsa/o8xK2YM9hroIjuiV5Q0lm6rmrk
+   0Un5brUdGeC+rmaPahRwEnwOYIPExDcnlZ/3Jz1/CpOYutGIciAwpMrkG
+   A==;
+X-CSE-ConnectionGUID: zniEK7WpRfGs7zDuIfL9nw==
+X-CSE-MsgGUID: N0cUdwsbQR6lsTlPKGrh3Q==
+X-IronPort-AV: E=McAfee;i="6700,10204,11213"; a="49666184"
 X-IronPort-AV: E=Sophos;i="6.11,174,1725346800"; 
-   d="scan'208";a="37700196"
-Received: from fmviesa002.fm.intel.com ([10.60.135.142])
-  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Oct 2024 04:03:33 -0700
-X-CSE-ConnectionGUID: B+UNORwcQfmYK5Pgts6f+w==
-X-CSE-MsgGUID: wKG45aIRTLiVUETH2FIG6A==
+   d="scan'208";a="49666184"
+Received: from fmviesa005.fm.intel.com ([10.60.135.145])
+  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Oct 2024 04:14:54 -0700
+X-CSE-ConnectionGUID: CqugsmqbTOiLE5nN7WrH0Q==
+X-CSE-MsgGUID: /d/Pn8ncQRmMxWn5ljdUhA==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.11,174,1725346800"; 
-   d="scan'208";a="97644287"
+   d="scan'208";a="78734014"
 Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.198])
-  by fmviesa002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Oct 2024 04:03:29 -0700
+  by fmviesa005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Oct 2024 04:14:51 -0700
 From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Thu, 3 Oct 2024 14:03:25 +0300 (EEST)
-To: "Wang, Crag" <Crag.Wang@dell.com>
-cc: "Tudor, Laurentiu" <Laurentiu.Tudor1@dell.com>, 
-    Mario Limonciello <mario.limonciello@amd.com>, 
-    Crag Wang <crag0715@gmail.com>, "Ksr, Prasanth" <Prasanth.Ksr@dell.com>, 
-    Hans de Goede <hdegoede@redhat.com>, 
-    Dell Client Kernel <Dell.Client.Kernel@dell.com>, 
-    "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>, 
-    "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, 
-    "Wang, Berry" <Berry.Wang@dell.com>
-Subject: RE: [PATCHv2 1/1] platform/x86: dell-sysman: add support for alienware
- products
-In-Reply-To: <PH0PR19MB49884B9347569041F4EE234BE3682@PH0PR19MB4988.namprd19.prod.outlook.com>
-Message-ID: <7ec1d352-4059-e5f8-3ff4-ecc5737d8a6b@linux.intel.com>
-References: <20240923063658.411071-1-crag_wang@dell.com> <20240924050302.317522-2-crag_wang@dell.com> <0a31cb22-e3f9-4212-8fc1-77d6cafa7277@amd.com> <CY5PR19MB61479854D62CAD389C99BA15BA682@CY5PR19MB6147.namprd19.prod.outlook.com>
- <PH0PR19MB49884B9347569041F4EE234BE3682@PH0PR19MB4988.namprd19.prod.outlook.com>
+Date: Thu, 3 Oct 2024 14:14:47 +0300 (EEST)
+To: "David E. Box" <david.e.box@linux.intel.com>
+cc: Hans de Goede <hdegoede@redhat.com>, 
+    Andy Shevchenko <andriy.shevchenko@linux.intel.com>, david.e.box@intel.com, 
+    platform-driver-x86@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>, 
+    linux-pm@vger.kernel.org, rjw@rjwysocki.net
+Subject: Re: [PATCH] platform/x86/intel/pmc: Disable C1 auto-demotion during
+ suspend
+In-Reply-To: <f621da34-32a7-c56e-2c99-54a5f03c7e6f@linux.intel.com>
+Message-ID: <856e2489-d92a-4203-feae-b4f41af8ed04@linux.intel.com>
+References: <20241001225901.135564-1-david.e.box@linux.intel.com> <f621da34-32a7-c56e-2c99-54a5f03c7e6f@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: multipart/mixed; boundary="8323328-992593729-1727954088=:970"
 
-On Tue, 24 Sep 2024, Wang, Crag wrote:
+  This message is in MIME format.  The first part should be readable text,
+  while the remaining parts are likely unreadable without MIME-aware tools.
 
-> > Couple of newbie questions: what's the reason for dropping the URL check?
-> > Would it make sense to include the reason in the commit msg?
-> 
-> URL in type 11 is subject to change according to OEM ID Module specification, for
-> standard Dell and OEM inclusive the string 'Dell System' should be sufficient.
+--8323328-992593729-1727954088=:970
+Content-Type: text/plain; charset=ISO-8859-15
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 
-Please add such information into the commit message so it gets properly 
-recorded. But I'd prefer this to be split into two patches, one adding 
-the Alienware and another that removes the URL making it easier to revert 
-only the latter one if the need arises.
+On Wed, 2 Oct 2024, Ilpo J=E4rvinen wrote:
 
--- 
+> On Tue, 1 Oct 2024, David E. Box wrote:
+>=20
+> > On some platforms, aggressive C1 auto-demotion may lead to failure to e=
+nter
+> > the deepest C-state during suspend-to-idle, causing high power consumpt=
+ion.
+> > To prevent this, disable C1 auto-demotion during suspend and re-enable =
+on
+> > resume.
+> >=20
+> > Signed-off-by: David E. Box <david.e.box@linux.intel.com>
+> > ---
+
+> > @@ -220,6 +237,15 @@ int cnl_resume(struct pmc_dev *pmcdev)
+> >  {
+> >  =09pmc_core_send_ltr_ignore(pmcdev, 3, 0);
+> > =20
+> > +=09if (!pm_suspend_via_firmware()) {
+> > +=09=09int cpunum;
+> > +
+> > +=09=09for_each_online_cpu(cpunum) {
+> > +=09=09=09pr_debug("%s: cpu:%d cst %llx\n", __func__, cpunum, per_cpu(p=
+kg_cst_config, cpunum));
+> > +=09=09=09wrmsrl_on_cpu(cpunum, MSR_PKG_CST_CONFIG_CONTROL, per_cpu(pkg=
+_cst_config, cpunum));
+>=20
+> Is the set of onlined CPUs iterated by the suspend and resume handlers=20
+> guaranteed to be the same?
+
+I asked about this from more knowledgeable people than me and got a=20
+response that during suspend/resume userspace cannot offline any CPUs so=20
+it should be guaranteed to remain the same for resume.
+
+--=20
  i.
 
-> Internal Use - Confidential
-
+--8323328-992593729-1727954088=:970--
