@@ -1,85 +1,88 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 941991EEF9
-	for <platform-driver-x86@vger.kernel.org>; Thu,  3 Oct 2024 11:02:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C0B014F123;
+	Thu,  3 Oct 2024 11:03:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1727953349; cv=none; b=ZYV3epypNwcKLjXKzvxSs/vYvEafXH+0xBhLkTF8tr9EU4lPdwAXx2OnXxSAi3PCK8vB3iK1eiuRGYWhsEv6j11r0TX1zarg/DW8Iia3SFZ9z2/DA74kyvXVEy7gHBJ8QTXYcm6zhxnugpsYc+l7rAuZpvdf4h/ji3Eh6iSK3Gs=
+	t=1727953414; cv=none; b=CTBAZ+jxHA4SUcpNVTq7byMRAHdXJhrgVoNwn0Ai4qmTn5OYqVB4i8wQ4+/8DZLFLbVPaUuRco5VjHGFNJNXa5DXonZpUETa19BhW71d/Yxw0oh3H10QTvLCC1NE8hhF6fvwbLyHaK7+075aHiyM0cZ9b/evLptSdcotWd4sfeE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1727953349; c=relaxed/simple;
-	bh=K0UNlZLQkzlXFa68SKe7pWTZYneCkq2A/ayylAORZ9c=;
-	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=mm2zC9kaflgjYaeK+qwPeWk3RggnIzwq/etgdHsF3WVILwF5lwc6VLgLiiMYZI+4Pq4LecK/zIMJF7xjT3edVEQCn3O82okEH6Dtcpquhj7zmSsKXEY6aRr00ad0HAT6fq2E9VZ9qs3bZFmAFszpTqJaeDy+73DXmOjIcjChqVE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=A47BUAud; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1727953414; c=relaxed/simple;
+	bh=BHxKfe7cwR5dwKO9e3Otil+dngQy74VkLkbWJ+gQaeA=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=K2/Q/ivTUNpoOXhrbEp5YmHcBrKGvFPlZJR10Jg58JbgHHfq+ZBdKACogzaeoThWY/ihSGE9qtXNPXs+oAu4mRCIQAloaAZfS7MZdvKDZ1BAO02bPW6eblN//3jabq/HouGBWEjlzgWbryFxNFABLXFSwXQMvKxlqfrOaGwfioU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=YPW8Bl0z; arc=none smtp.client-ip=198.175.65.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="A47BUAud"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 3453DC4CEC7
-	for <platform-driver-x86@vger.kernel.org>; Thu,  3 Oct 2024 11:02:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1727953349;
-	bh=K0UNlZLQkzlXFa68SKe7pWTZYneCkq2A/ayylAORZ9c=;
-	h=From:To:Subject:Date:In-Reply-To:References:From;
-	b=A47BUAudOGORORAwUuR1eGCo9fc861cFViw80f+w+XbX7Gs3nyjb+Tkp4/8gHPQNn
-	 1A5mcUmzIkWI6SlSOyJa1YMItTVhwgBlFXPuWK90ACSOWbA2uOif3/N9Wy1ehDvUvJ
-	 LcvD7DR6cX1RcbdDOc1GCg525qenpf5QpUS5cgxqz0epQ1nVU3T/PGob34aCLEWhgI
-	 fIeQVj8SlcYkERlgUMZWuuAhOoHefe0BIrxh8eBIrAcVmUzhNj3BYPWeevU5+HcTFZ
-	 YcKtoJ7YxYEGtxMFWzJCAW4tNl8WW2K2ULMfiv9/Kw7YkSZcfbIG50ACRL7A8zlf4y
-	 ux/UHJKSg0jvw==
-Received: by aws-us-west-2-korg-bugzilla-1.web.codeaurora.org (Postfix, from userid 48)
-	id 15CC0C53BBF; Thu,  3 Oct 2024 11:02:29 +0000 (UTC)
-From: bugzilla-daemon@kernel.org
-To: platform-driver-x86@vger.kernel.org
-Subject: [Bug 219346] [BISECTED] Disable ACPI PM Timer breaks suspend on all
- Amber Lake machines
-Date: Thu, 03 Oct 2024 11:02:28 +0000
-X-Bugzilla-Reason: None
-X-Bugzilla-Type: changed
-X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
-X-Bugzilla-Product: Drivers
-X-Bugzilla-Component: Platform_x86
-X-Bugzilla-Version: 2.5
-X-Bugzilla-Keywords: 
-X-Bugzilla-Severity: high
-X-Bugzilla-Who: jwrdegoede@fedoraproject.org
-X-Bugzilla-Status: NEW
-X-Bugzilla-Resolution: 
-X-Bugzilla-Priority: P3
-X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
-X-Bugzilla-Flags: 
-X-Bugzilla-Changed-Fields: 
-Message-ID: <bug-219346-215701-mc6jYiuEvK@https.bugzilla.kernel.org/>
-In-Reply-To: <bug-219346-215701@https.bugzilla.kernel.org/>
-References: <bug-219346-215701@https.bugzilla.kernel.org/>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Bugzilla-URL: https://bugzilla.kernel.org/
-Auto-Submitted: auto-generated
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="YPW8Bl0z"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1727953414; x=1759489414;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=BHxKfe7cwR5dwKO9e3Otil+dngQy74VkLkbWJ+gQaeA=;
+  b=YPW8Bl0zxKI8za1Kdew3nVlaUezrlpq1QwLqly4rFqeCw+1st2p+Fg0H
+   1nFRE7t9LkUnHlm436Vz5PZNLGAy2Qz+IjWqbBUEqNNIzE+vjlhToZ4vz
+   eiby6j/e4EkcSogJptK+Q8C31yOH4FePcBVLypun6hiHltZ1lR8oD5xeN
+   uFpHKmPLL6wgo62ZUkdWDKJ3wl1wvFcJ14zXHRJwRI/kbepx+Ab+e6bVU
+   LXWPTIY0DeyOYLfZ91FVO2a48SOM8RhLF67jeI8vlFx43dWGGz9EaHr8P
+   R1k3V/yNPV51RfHoMYSUhmn30oQqOSqyDvuyUHEh1i/j+eOBdOolgoT+e
+   Q==;
+X-CSE-ConnectionGUID: tMXknGnhSBadwC7Pi044rA==
+X-CSE-MsgGUID: hIr5MRKZQVyOfXtVEm1KTg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11213"; a="37700196"
+X-IronPort-AV: E=Sophos;i="6.11,174,1725346800"; 
+   d="scan'208";a="37700196"
+Received: from fmviesa002.fm.intel.com ([10.60.135.142])
+  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Oct 2024 04:03:33 -0700
+X-CSE-ConnectionGUID: B+UNORwcQfmYK5Pgts6f+w==
+X-CSE-MsgGUID: wKG45aIRTLiVUETH2FIG6A==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.11,174,1725346800"; 
+   d="scan'208";a="97644287"
+Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.198])
+  by fmviesa002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Oct 2024 04:03:29 -0700
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Thu, 3 Oct 2024 14:03:25 +0300 (EEST)
+To: "Wang, Crag" <Crag.Wang@dell.com>
+cc: "Tudor, Laurentiu" <Laurentiu.Tudor1@dell.com>, 
+    Mario Limonciello <mario.limonciello@amd.com>, 
+    Crag Wang <crag0715@gmail.com>, "Ksr, Prasanth" <Prasanth.Ksr@dell.com>, 
+    Hans de Goede <hdegoede@redhat.com>, 
+    Dell Client Kernel <Dell.Client.Kernel@dell.com>, 
+    "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>, 
+    "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, 
+    "Wang, Berry" <Berry.Wang@dell.com>
+Subject: RE: [PATCHv2 1/1] platform/x86: dell-sysman: add support for alienware
+ products
+In-Reply-To: <PH0PR19MB49884B9347569041F4EE234BE3682@PH0PR19MB4988.namprd19.prod.outlook.com>
+Message-ID: <7ec1d352-4059-e5f8-3ff4-ecc5737d8a6b@linux.intel.com>
+References: <20240923063658.411071-1-crag_wang@dell.com> <20240924050302.317522-2-crag_wang@dell.com> <0a31cb22-e3f9-4212-8fc1-77d6cafa7277@amd.com> <CY5PR19MB61479854D62CAD389C99BA15BA682@CY5PR19MB6147.namprd19.prod.outlook.com>
+ <PH0PR19MB49884B9347569041F4EE234BE3682@PH0PR19MB4988.namprd19.prod.outlook.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
 
-https://bugzilla.kernel.org/show_bug.cgi?id=3D219346
+On Tue, 24 Sep 2024, Wang, Crag wrote:
 
---- Comment #2 from Hans de Goede (jwrdegoede@fedoraproject.org) ---
-Thank you for reporting this, there is a potential fix for this here:
+> > Couple of newbie questions: what's the reason for dropping the URL check?
+> > Would it make sense to include the reason in the commit msg?
+> 
+> URL in type 11 is subject to change according to OEM ID Module specification, for
+> standard Dell and OEM inclusive the string 'Dell System' should be sufficient.
 
-https://patchwork.kernel.org/project/platform-driver-x86/patch/202409191653=
-49.235777-1-hdegoede@redhat.com/
+Please add such information into the commit message so it gets properly 
+recorded. But I'd prefer this to be split into two patches, one adding 
+the Alienware and another that removes the URL making it easier to revert 
+only the latter one if the need arises.
 
-Which I plan to merge soon, this should at least fix the mem case, but I'm =
-not
-sure if it will help with the others.
+-- 
+ i.
 
-Maybe instead of not doing the ACPI PM Timer disable when using S3 suspend =
-we
-need to just not do it at all on Kaby / Amber Lake ?
+> Internal Use - Confidential
 
---=20
-You may reply to this email to add a comment.
-
-You are receiving this mail because:
-You are watching the assignee of the bug.=
