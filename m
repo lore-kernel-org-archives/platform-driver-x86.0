@@ -1,86 +1,76 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6C8311AD3F6
-	for <platform-driver-x86@vger.kernel.org>; Thu,  3 Oct 2024 20:29:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7CCB66A33F;
+	Thu,  3 Oct 2024 21:55:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1727987363; cv=none; b=AAlsDBSfX1zWJ42zWfOvP0xGB5piuwRHe86TleRH43FSzrFl43LIBbOD2n08NLxV8Rj/AvzdG/IZOGPcHcZ0iA5h7sZcpTreDtOi072CWanYooV6YESRePPLI4ncxSiY+f1/6AAYIViK7WRUB6HxdO4+BzMvbo9R+QOBJG3gFBY=
+	t=1727992558; cv=none; b=cX3BolV5PLHeV8uIcaFFznY9/WoTWCGnPFi3ZDRYXgzb6h6GVfL6VzQ0j9//kQZGCfeTZxcIASX84mjb7OSiUtDkgEyUKufgcYF2tJq/vniPA+j5TXeyHs8Cq64sRTweTyLEQal8i6WnyngswgFa+Dqxc4ZJzajp4K7zcaqAXoY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1727987363; c=relaxed/simple;
-	bh=CRZPjGHpFRzjMdemksU1s2zIHepXvuLiqVjufN/9C+c=;
-	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=bumJWUyYi97igX7Y+eEr5R53zw8HA8efrW2kNYGXTtdxP1kQIh05+TGYE1hx25xsVuq8O2A4l+BFiGM6+AHW0nA6CpYAtNA9pk44U0I8Vh807EKj/mdKbdn/iygQ7WWRl+DSeooIS1BBboIoRGzhIPI+qLgWNpXFG8+FaAQ5bV0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dA0emDsP; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1727992558; c=relaxed/simple;
+	bh=TFGsQDJKVVrsj0YlCzYhgMD3rH2pYye2cn3azF1C3hc=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=JpgBbkwdzDn6d1J1Gs5123ao4l8jET8oAlpOXWFyq+/cER+ergPRpr0juUlsN4q6XzV6EKYL1hIqgeoQvXPCnZpwwWTLQGAfc8RSHTUz71GA/eJCkZ/xFJWvwtMEFMUvg/qZOrNqH43mUbCZ3OPLJQ5+TYCl49wubvo+wuT+yiw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=IRdR7FKx; arc=none smtp.client-ip=192.198.163.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dA0emDsP"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id E11A9C4CEC5
-	for <platform-driver-x86@vger.kernel.org>; Thu,  3 Oct 2024 20:29:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1727987362;
-	bh=CRZPjGHpFRzjMdemksU1s2zIHepXvuLiqVjufN/9C+c=;
-	h=From:To:Subject:Date:In-Reply-To:References:From;
-	b=dA0emDsPdAWnA/NWvttg36T04k9fo8KvggeQ9O7PLdNWvNlBFlaEuzbAhCm4c/Bja
-	 iQnNfGvaE745dRB0fUlZNc112eORaLl5UB7GBnKJJZwmQE0dCCpbva13Sq/3PkWcoK
-	 j2bdat32ktwMxy7fCwA9zIQQsOjBdaQ3AWlMvNvwEBOHJ9teQF+tBRlBm0Fxbaoq41
-	 1T3XI/MrUsR0s0ltnru+mIdx2IEPdiVmd0HpwLPUQ9rTOe9Nqn1LifbA8v4e7wo02A
-	 +YLIYH6jQ+leBnzi1OtItbDwq8ZSQaxYjRCe5YqLS+VimkjNyWcVleFlEQPAIG6Az3
-	 1op+NMN8pZFeQ==
-Received: by aws-us-west-2-korg-bugzilla-1.web.codeaurora.org (Postfix, from userid 48)
-	id CE2B4C53BC1; Thu,  3 Oct 2024 20:29:22 +0000 (UTC)
-From: bugzilla-daemon@kernel.org
-To: platform-driver-x86@vger.kernel.org
-Subject: [Bug 219346] [BISECTED] Disable ACPI PM Timer breaks suspend on all
- Amber Lake machines
-Date: Thu, 03 Oct 2024 20:29:22 +0000
-X-Bugzilla-Reason: None
-X-Bugzilla-Type: changed
-X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
-X-Bugzilla-Product: Drivers
-X-Bugzilla-Component: Platform_x86
-X-Bugzilla-Version: 2.5
-X-Bugzilla-Keywords: 
-X-Bugzilla-Severity: high
-X-Bugzilla-Who: jwrdegoede@fedoraproject.org
-X-Bugzilla-Status: NEW
-X-Bugzilla-Resolution: 
-X-Bugzilla-Priority: P3
-X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
-X-Bugzilla-Flags: 
-X-Bugzilla-Changed-Fields: 
-Message-ID: <bug-219346-215701-C1yHsuBXeq@https.bugzilla.kernel.org/>
-In-Reply-To: <bug-219346-215701@https.bugzilla.kernel.org/>
-References: <bug-219346-215701@https.bugzilla.kernel.org/>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Bugzilla-URL: https://bugzilla.kernel.org/
-Auto-Submitted: auto-generated
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="IRdR7FKx"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1727992557; x=1759528557;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=TFGsQDJKVVrsj0YlCzYhgMD3rH2pYye2cn3azF1C3hc=;
+  b=IRdR7FKxiPxVdLGcCBIgBzqfzLscMI4GX0ko6o4NPxj4gMlZuXTa54DT
+   PiXSfS7TB93rRzlMUxpky9gBz/XqdtzBCwGcWt/s1G4z3UV1CWzuPcsQi
+   R+ZxXRKio48Mfc9jJGIwwWgd+gBWdcO8XzE0DMbTNQl9VeOLbyBrkeqQq
+   F+L+JstT0gkyL9KSackgVn3oUhzJjGjp25hTwOv9WEfoLDbbhk6EX4fix
+   YGYp7IuRH9tkfyygRiaETqHyFu1330kelosSamV1Szw9A5Ufh2LCr4V/z
+   u+/QhY94MW7DDYWZbccxl6tfi5hndtInrd5ho87QBFJGtUv/DyutYDQyl
+   A==;
+X-CSE-ConnectionGUID: OaixtHvtQqeeu36CAcHlQw==
+X-CSE-MsgGUID: GZOoviL9SbmZskVtVEbfMA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11214"; a="31094000"
+X-IronPort-AV: E=Sophos;i="6.11,175,1725346800"; 
+   d="scan'208";a="31094000"
+Received: from fmviesa008.fm.intel.com ([10.60.135.148])
+  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Oct 2024 14:55:56 -0700
+X-CSE-ConnectionGUID: 4pzfn94xSoiucW4XV/dIwg==
+X-CSE-MsgGUID: 3615OgBiROatImumWq481g==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.11,175,1725346800"; 
+   d="scan'208";a="74613932"
+Received: from spandruv-desk.jf.intel.com ([10.54.75.19])
+  by fmviesa008.fm.intel.com with ESMTP; 03 Oct 2024 14:55:55 -0700
+From: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+To: hdegoede@redhat.com,
+	ilpo.jarvinen@linux.intel.com
+Cc: platform-driver-x86@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+Subject: [PATCH 0/2] Diamond Rapids support
+Date: Thu,  3 Oct 2024 14:55:52 -0700
+Message-ID: <20241003215554.3013807-1-srinivas.pandruvada@linux.intel.com>
+X-Mailer: git-send-email 2.45.0
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-https://bugzilla.kernel.org/show_bug.cgi?id=3D219346
+Add CPU model of Diamond Rapids for SST and TPMI power domain
+mapping.
 
---- Comment #6 from Hans de Goede (jwrdegoede@fedoraproject.org) ---
-Thank you for testing my original patch.
+Srinivas Pandruvada (2):
+  platform/x86: ISST: Add Diamond Rapids to support list
+  platform/x86/intel: power-domains: Add Diamond Rapids support
 
-I have now submitted a patch which outright disables the ACPI PM timer
-disabling on any systems with a Sunrise or Union Point PCH:
+ drivers/platform/x86/intel/speed_select_if/isst_if_common.c | 1 +
+ drivers/platform/x86/intel/tpmi_power_domains.c             | 1 +
+ 2 files changed, 2 insertions(+)
 
-https://lore.kernel.org/platform-driver-x86/20241003202614.17181-1-hdegoede=
-@redhat.com/
+-- 
+2.46.1
 
-Please give this a test and let me know if it fixes things.
-
-Once I have confirmation that this patch works better I'll send it on its w=
-ay
-to Linus.
-
---=20
-You may reply to this email to add a comment.
-
-You are receiving this mail because:
-You are watching the assignee of the bug.=
