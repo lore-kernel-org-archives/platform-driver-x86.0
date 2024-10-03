@@ -1,103 +1,125 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C0D701D0F76;
-	Wed,  2 Oct 2024 17:54:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E8250148314
+	for <platform-driver-x86@vger.kernel.org>; Thu,  3 Oct 2024 10:17:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1727891686; cv=none; b=VPU3NJgbMfptxtFoabfRqji3Q53wfI1ZwiLWD1dInY9kUm+vW89C2v1Eq7tzBFDkyusD5sRRP4KBJlaJdcgufH7d/Bi6rxSgoPjZT65krAc5L9WZA7UfL1xElhgMOgGPdgOI/29+Apzjuyb7SR6UdfECAxoTneZQ1R1pHvm3z5w=
+	t=1727950639; cv=none; b=pIF5c7hPeEN2rsjL1mipxXArzBV6JEx3UogmdPkTGHnXl8VSxfdWMtZr0VI+pFothaSmLu64pywMXFJUriNN8GCReWCf0CkwpAA7f95HOJ3G+g0g4XKqqeFBDznGo3bED0xLlv8N3VIa8YO94z5Bxn2HhJL78gq7hhHXxtai+Nw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1727891686; c=relaxed/simple;
-	bh=7xDaKAd1Gk5ssNXKOGyvSeaQWuYxbSNB3jGW+izMmto=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=liJU31rDPcDmbF9N1nqYNwSoiy02Lg9pHMHzu8Y59bOs19s6lPM0umwgJ/avf0F4lXwbzFIkyLfL4laRPc7baPjuz0bqHFKOCx7UAoy99+qSX8yhLLpl1NOGffhIyFn7AYTetfzcPwUO8V5WS1eiPlOjp2CubRyy3J6cJnTzRYc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Sy6ZzNLy; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1727950639; c=relaxed/simple;
+	bh=tlCuhZYN+CAOn6rN7eUSqTbUITdhBqilLKLpEurb0iY=;
+	h=From:To:Subject:Date:Message-ID:Content-Type:MIME-Version; b=mCT4yaH+hNbCJ4IdhYGJ/t11Xk0vLujRMOQzicbnUV/gE/HMTO3qBuCA14A1vx4DHxU2opDa/NCTDazM9FQZZttBo4eTlYiZ0TSjXHz0oKDl1OkdUufBbQWPeh9BQH/HUmJ6bkTeFcqIpRM3SjX8dkdCasQbofJrHzBnDIIdx9Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=POfA+gB+; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Sy6ZzNLy"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5FD61C4CECF;
-	Wed,  2 Oct 2024 17:54:46 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="POfA+gB+"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 80465C4CEC7
+	for <platform-driver-x86@vger.kernel.org>; Thu,  3 Oct 2024 10:17:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1727891686;
-	bh=7xDaKAd1Gk5ssNXKOGyvSeaQWuYxbSNB3jGW+izMmto=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=Sy6ZzNLyja0QjqHb08UM+9Zj4lJ4ZpsIFpaoC9ma4QFh6xObnQyTQ2cOKO6xftaHu
-	 G2i8v843jMvuPXMeZy0VcybZNpgVIF6zqIIkJ9BQbavq9clpfrW219cfpibNvL2zab
-	 BjDuI2Z6riKqBieAAvsHcrGRanQJMU8izVVxTS+0hUa+ROS8bLeO8GLOItJiiXdWCl
-	 H5HUY5/sZN4PP/+ICIq7I5UGlQokq5cPbgeI2HVwIto3SDj0A43l61I8S+WZwMFeTG
-	 LB69YUQXK9UAp4RLpFaShXLUz+6+ajYtN+2RdsDlEcVy59wsBxenvCZKU/cvgikaJI
-	 GjwwENzfO3xBg==
-Received: by mail-oi1-f181.google.com with SMTP id 5614622812f47-3e2a1049688so98265b6e.1;
-        Wed, 02 Oct 2024 10:54:46 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCVeIGVbNIgEK+jJBaQ6dtANKZdd09y/sqBQaZ9da4IaAKilVWyKkwuiKdljnqZl1TEF8DPbzZbcAFbeeAaJ@vger.kernel.org, AJvYcCXB7lcbZvjuxeTFXK/QbNWj4sMi5b+zYhXIUm+giwjQZM9GJvz7pPPVr8V6MyzPMQ/HqgT23bthbOFB@vger.kernel.org, AJvYcCXCFX1674XY9z3nlm7eTCnUGZ/qxNVxSAzs1AowWhGAxNKgpYiHv7Kw++YCMW58YUHD3kC2grd4O+HD74UQ1duyOBynFw==@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxzg8cbcXq/z78IzcAYbBZyvcywJjXR5iFxPgvC4tS7tiBcumde
-	ogSup2BHe9IkVUvwHz/NKHeXDaAE3xutG8uoXvM4qwmwWsT0D3Q5eLjA4NmjHEjU211JGMhjIfn
-	Hc2bZZbr6uyln4ZtvZBEKwQCkO0A=
-X-Google-Smtp-Source: AGHT+IH0x7D7yugauhSHfUysPtt+dv8bueCHystfbujU+k/MkyvcAwGsTbJ81jp5J2eKcRYHCASyi5qvri65ar78iks=
-X-Received: by 2002:a05:6808:3006:b0:3e0:3d6c:116d with SMTP id
- 5614622812f47-3e3b4125dbbmr2813601b6e.26.1727891685683; Wed, 02 Oct 2024
- 10:54:45 -0700 (PDT)
+	s=k20201202; t=1727950638;
+	bh=tlCuhZYN+CAOn6rN7eUSqTbUITdhBqilLKLpEurb0iY=;
+	h=From:To:Subject:Date:From;
+	b=POfA+gB+mQgg81waHvlIrCURgNsm5ynLOaNG+qQFXRVcKHAMUWMsnWgpF7nYN889k
+	 /OMrH7CaRgoLBdVwp+ri9a7X7ifVLRsM6XWyRLhd4D9NGs3qDmeYOWE7AbGv2gXLOj
+	 +s0KCPSOXsyWLpXF//wrvkiYWprMjPQMTQzFD3017fyllpi2k7vq2Wei2cYLWqjKWx
+	 DdqPffmnii6A58ICWraLsIpJbaj+ftYQrh5icBPCId4ezOq+EBXdQ3ofNc+bGKRHc9
+	 PE0zmCIB1S1C/OXJdwF8TzL5Qak7Oxjm/cE3aUSzdMvlZG2FrXanBvMVrvynwGkJPx
+	 5f9/V4Z77nOyQ==
+Received: by aws-us-west-2-korg-bugzilla-1.web.codeaurora.org (Postfix, from userid 48)
+	id 6E34CC53BBF; Thu,  3 Oct 2024 10:17:18 +0000 (UTC)
+From: bugzilla-daemon@kernel.org
+To: platform-driver-x86@vger.kernel.org
+Subject: [Bug 219346] New: [BISECTED] Disable ACPI PM Timer breaks suspend on
+ all Amber Lake machines
+Date: Thu, 03 Oct 2024 10:17:18 +0000
+X-Bugzilla-Reason: None
+X-Bugzilla-Type: new
+X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
+X-Bugzilla-Product: Drivers
+X-Bugzilla-Component: Platform_x86
+X-Bugzilla-Version: 2.5
+X-Bugzilla-Keywords: 
+X-Bugzilla-Severity: high
+X-Bugzilla-Who: todd.e.brandt@intel.com
+X-Bugzilla-Status: NEW
+X-Bugzilla-Resolution: 
+X-Bugzilla-Priority: P3
+X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
+X-Bugzilla-Flags: 
+X-Bugzilla-Changed-Fields: bug_id short_desc product version rep_platform
+ op_sys bug_status bug_severity priority component assigned_to reporter cc
+ blocked cf_regression cf_bisect_commit
+Message-ID: <bug-219346-215701@https.bugzilla.kernel.org/>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Bugzilla-URL: https://bugzilla.kernel.org/
+Auto-Submitted: auto-generated
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20241001212835.341788-1-W_Armin@gmx.de> <20241001212835.341788-3-W_Armin@gmx.de>
- <CAJZ5v0gSYp5Umo-wsKvQ2Nff7YZ=_3-4bzG3TnKqMpHvxCmR5g@mail.gmail.com>
- <ab75a39e-94e2-4b1a-9406-e05ebc816b03@redhat.com> <CAJZ5v0jDFpzKRv=M=6nmyYON6FtEnCsO9K86HO9jKDraAXTYAg@mail.gmail.com>
-In-Reply-To: <CAJZ5v0jDFpzKRv=M=6nmyYON6FtEnCsO9K86HO9jKDraAXTYAg@mail.gmail.com>
-From: "Rafael J. Wysocki" <rafael@kernel.org>
-Date: Wed, 2 Oct 2024 19:54:34 +0200
-X-Gmail-Original-Message-ID: <CAJZ5v0jZtgYMwCyNJ8oW8bWiS-MAa5-WnUbzc1FgMR9tt43mmQ@mail.gmail.com>
-Message-ID: <CAJZ5v0jZtgYMwCyNJ8oW8bWiS-MAa5-WnUbzc1FgMR9tt43mmQ@mail.gmail.com>
-Subject: Re: [PATCH RESEND v3 2/3] ACPI: battery: Fix possible crash when
- unregistering a battery hook
-To: Hans de Goede <hdegoede@redhat.com>, Armin Wolf <w_armin@gmx.de>
-Cc: pali@kernel.org, dilinger@queued.net, lenb@kernel.org, 
-	ilpo.jarvinen@linux.intel.com, platform-driver-x86@vger.kernel.org, 
-	linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-On Wed, Oct 2, 2024 at 2:54=E2=80=AFPM Rafael J. Wysocki <rafael@kernel.org=
-> wrote:
->
-> On Wed, Oct 2, 2024 at 2:35=E2=80=AFPM Hans de Goede <hdegoede@redhat.com=
-> wrote:
-> >
-> > Hi,
-> >
-> > On 2-Oct-24 2:08 PM, Rafael J. Wysocki wrote:
-> > > On Tue, Oct 1, 2024 at 11:28=E2=80=AFPM Armin Wolf <W_Armin@gmx.de> w=
-rote:
-> > >>
-> > >> When a battery hook returns an error when adding a new battery, then
-> > >> the battery hook is automatically unregistered.
-> > >> However the battery hook provider cannot know that, so it will later
-> > >> call battery_hook_unregister() on the already unregistered battery
-> > >> hook, resulting in a crash.
-> > >>
-> > >> Fix this by using the list head to mark already unregistered battery
-> > >> hooks as already being unregistered so that they can be ignored by
-> > >> battery_hook_unregister().
-> > >>
-> > >> Fixes: fa93854f7a7e ("battery: Add the battery hooking API")
-> > >> Signed-off-by: Armin Wolf <W_Armin@gmx.de>
-> > >
-> > > Acked-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-> > >
-> > > Hans, are you going to take this series or should I apply it?
-> >
-> > AFAICT the patches don't really depend on each other,
->
-> OK
->
-> > so my plan was that you take patches 1-2 and I take patch 3 as a fix fo=
-r
-> > 6.12-rc# .
-> >
-> > Does that work for you ?
->
-> Yes, it does, thanks!
+https://bugzilla.kernel.org/show_bug.cgi?id=3D219346
 
-Now queued up for 6.12-rc along with the [1/3], thanks!
+            Bug ID: 219346
+           Summary: [BISECTED] Disable ACPI PM Timer breaks suspend on all
+                    Amber Lake machines
+           Product: Drivers
+           Version: 2.5
+          Hardware: All
+                OS: Linux
+            Status: NEW
+          Severity: high
+          Priority: P3
+         Component: Platform_x86
+          Assignee: drivers_platform_x86@kernel-bugs.osdl.org
+          Reporter: todd.e.brandt@intel.com
+                CC: jwrdegoede@fedoraproject.org
+            Blocks: 178231
+        Regression: Yes
+           Bisected e86c8186d03a6ba018e881ed45f0962ad553e861
+         commit-id:
+
+We have two amber lake machines in our lab that have started hanging on fre=
+eze
+in 6.12-rc1. I've bisected to this commit:
+
+commit e86c8186d03a6ba018e881ed45f0962ad553e861 (refs/bisect/bad)
+Author: Marek Maslanka <mmaslanka@google.com>
+Date:   Mon Aug 12 18:42:00 2024 +0000
+
+    platform/x86:intel/pmc: Enable the ACPI PM Timer to be turned off when
+suspended
+
+    Allow to disable ACPI PM Timer on suspend and enable on resume. A
+    disabled timer helps optimise power consumption when the system is
+    suspended. On resume the timer is only reactivated if it was activated
+    prior to suspend, so unless the ACPI PM timer is enabled in the BIOS,
+    this won't change anything.
+
+    The ACPI PM timer is used by Intel's iTCO/wdat_wdt watchdog to drive the
+    watchdog, so it doesn't need to run during suspend.
+
+    Signed-off-by: Marek Maslanka <mmaslanka@google.com>
+    Reviewed-by: Hans de Goede <hdegoede@redhat.com>
+    Link:
+https://lore.kernel.org/r/20240812184208.1080710-1-mmaslanka@google.com
+    Signed-off-by: Daniel Lezcano <daniel.lezcano@linaro.org>
+
+I understand there may already be a potential fix in the pipeline but I'd l=
+ike
+to track this issue here.
+
+
+Referenced Bugs:
+
+https://bugzilla.kernel.org/show_bug.cgi?id=3D178231
+[Bug 178231] Meta-bug: Linux suspend-to-mem and freeze performance optimiza=
+tion
+--=20
+You may reply to this email to add a comment.
+
+You are receiving this mail because:
+You are watching the assignee of the bug.=
