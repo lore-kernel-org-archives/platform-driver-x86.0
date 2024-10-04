@@ -1,112 +1,94 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D8E2079F3;
-	Fri,  4 Oct 2024 13:05:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 63B0A2101A7;
+	Fri,  4 Oct 2024 13:45:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728047151; cv=none; b=YbBp7XPPcf9in8B7fCneV3sETvF0GB8LKvtZ8MJCWL2eOjB03GBvInsh/Xbs5mS/e1E3dTgzlm88Tyye2Vr3CEmSEKC+u6KZ+mydlhl+1wE2z1qOIzHjeW7POfGgDHSTYUaJYA66+njyKPnB6A+kLkqNtHrLmiX2AkgQLUHATik=
+	t=1728049510; cv=none; b=JNxfo2wY4bOsuOkPwRTZGKOMAAGC9RaCIhkQjrsiKXAVeF90WfMwolaM3vsrUFoJkzxDU/IqwpFEJ9nFjK1mlgZlO4WR3KX4o6EaiW21xx3gXJk2S8FApbDQtACfL2CYMTy9R4B0c7YZTQ1MzYHaIRhcgw4akck/RZd4TYELlUk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728047151; c=relaxed/simple;
-	bh=EZEtQHswMoewld0YGGWf+H67wxGaKSpue9nbA4Dce4M=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Oud6SuUrNPKWU+V4ACuS3YKlVjiqOixnNzK7Pf2VR9FeB5HwQjzMjmA6WnbVLdQZVgEyL5iItvjrUySpkfZ2qXedHvk04UISjtMWXK3INKXkgJcKxWCMzzoqQz5qVk6yQnzd81dvvdh74+mRQ/bgaPwL43TwEYBXDt3mZhZzMRU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WbMf8Q5X; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1728049510; c=relaxed/simple;
+	bh=4xjpn1cjbsUT4BC0qUmd0788DGsHynkEwz3qlxz8VHU=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=DJByGnOILDA9jC6BX3Phape4luq+0LzIWylVxWh0Yxtiel7Fa/hXvE9/UYQpAhspeB4boL+bV2gPIoPvK+qu+w2BwXw5m+5j7s/+IRnINculE+sJzmFnbvkLe2hFteiWoHBNiHY9JgHw7IwlLRzpH3IRpZ5fiYxBWVATfb1it/I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=RTIkHCOG; arc=none smtp.client-ip=192.198.163.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WbMf8Q5X"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 75FDDC4CEC6;
-	Fri,  4 Oct 2024 13:05:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1728047151;
-	bh=EZEtQHswMoewld0YGGWf+H67wxGaKSpue9nbA4Dce4M=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=WbMf8Q5XTTJFPy0+xZyHsE4fii0rWKqZbJoBePK/FiRVc/Hbe/kuCVUwEdTWh8pYf
-	 ibTgSgCP1DgWQX6vJjj6KptIktOdQ1K+4M8wyuC/vore+X8UJDSUEZiAnvBut6CrgI
-	 V1oxMcYQ7pPejgcSGWd3e3NfJFWHA00zHp5CAbpcQMaPsfCXCiXzUYajwte0pw6jsH
-	 mG+tkjLJ29/z3ko+UM9o9RVAHdka62DONO0PCa4nurMsBbLzcPJJInMLDIi9g1xuAZ
-	 +HQvLBa4wC1fw8CMBQSmTm+ElUvy2Gs3gxgNLmNiZBVYkZOIoMsgiXNH3ITZPzJ5Zi
-	 BoAVp8Y6THsNA==
-Received: by mail-oo1-f51.google.com with SMTP id 006d021491bc7-5e77c6ed928so942604eaf.0;
-        Fri, 04 Oct 2024 06:05:51 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCV87JoI327vfOnoQLFR04vkn7oZm4NK6uxivTlfZD3FVnlE9gHNYTtTBjhmTGFSKt4558C1FM2XCZ519IqnEYjAw236hg==@vger.kernel.org, AJvYcCVeQnA3TCO/dFlXAYxRQTd4P8Ng5EPzQ0vWH7k+vSWE7eOw2I7mw+S1YidtmUTR4N3zCmfBR53fZA==@vger.kernel.org
-X-Gm-Message-State: AOJu0YzD5jNIHQubvm1kYTbmvpnnp+TnMX6AhkHqyjBUsL3Y2u6nyZL5
-	mJvYjy11YCV3mGawxiLYwu2Oy/T4A+6Q6ApRK5D9yOnqh7wOMWovPMZxukHUZokSl4WC7OZpE6F
-	LjKFQe0vWsLHp5VdARs7BnUJb7UQ=
-X-Google-Smtp-Source: AGHT+IF0FbTYTZOjT0OJHv+5ndCTq15dw56nW3BVMcSCsCYwBx3XIIshrxsMR+fZuSLG01Dr6Rjt0A4XJGTxTBJUUSc=
-X-Received: by 2002:a05:6820:270d:b0:5e1:e65d:5148 with SMTP id
- 006d021491bc7-5e7cc0a432fmr1124750eaf.6.1728047150778; Fri, 04 Oct 2024
- 06:05:50 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="RTIkHCOG"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1728049508; x=1759585508;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=4xjpn1cjbsUT4BC0qUmd0788DGsHynkEwz3qlxz8VHU=;
+  b=RTIkHCOGVpNgSoM7cteJbOjq04Pw8MYwfm76sExEjhD96VamEuWBOCQw
+   2po5aAVGZKq52P/jW3QKSie7n9jbDC6M7Jg0dDUoze3oBvNmARO5i6NjK
+   0GhIryGuyv54XUmA7m68W7lKOvR9+3GSOT2OBpbMz+Y6KZUaXl1cfEKJp
+   Hql28SY3fu2xwp4mIksFg0UfD2eSDS1Bo7McOHCv8SIXpySsCjm+CX6P2
+   aKEbosZ4hMTU8+73m1VujlYUaMjrI9Ybyb17M9jqnQij/pHlWmSwMYGA8
+   rDB2PLFnApqifB7Em/RhX37nS4rYrCFkluhJpx44CDTb7lb0ALEKAZgnt
+   A==;
+X-CSE-ConnectionGUID: /+3fc0EvQzm1XG8ub+eEYQ==
+X-CSE-MsgGUID: y2sYQbtqRt2d0bOy8ASzoA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11214"; a="52676068"
+X-IronPort-AV: E=Sophos;i="6.11,177,1725346800"; 
+   d="scan'208";a="52676068"
+Received: from fmviesa001.fm.intel.com ([10.60.135.141])
+  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Oct 2024 06:45:07 -0700
+X-CSE-ConnectionGUID: wsYMkoOtR16eh6tZtJ3edw==
+X-CSE-MsgGUID: gLED+iWsR2uW0MRjW36TVg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.11,177,1725346800"; 
+   d="scan'208";a="105451370"
+Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.148])
+  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Oct 2024 06:45:05 -0700
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Fri, 4 Oct 2024 16:45:01 +0300 (EEST)
+To: Crag Wang <crag0715@gmail.com>
+cc: mario.limonciello@amd.com, Prasanth Ksr <prasanth.ksr@dell.com>, 
+    Hans de Goede <hdegoede@redhat.com>, crag.wang@dell.com, 
+    Crag Wang <crag_wang@dell.com>, Dell.Client.Kernel@dell.com, 
+    platform-driver-x86@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCHv3 1/2] platform/x86: dell-sysman: remove match on
+ www.dell.com
+In-Reply-To: <20241004024209.201244-1-crag_wang@dell.com>
+Message-ID: <eb6c6347-e665-8057-f825-1acfec682ea3@linux.intel.com>
+References: <20241004024209.201244-1-crag_wang@dell.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20241003202614.17181-1-hdegoede@redhat.com> <20241003202614.17181-2-hdegoede@redhat.com>
-In-Reply-To: <20241003202614.17181-2-hdegoede@redhat.com>
-From: "Rafael J. Wysocki" <rafael@kernel.org>
-Date: Fri, 4 Oct 2024 15:05:37 +0200
-X-Gmail-Original-Message-ID: <CAJZ5v0gfMc==C9xcU0-OOSjo8=L46CKAbjf4YV3EZ-6+00EVkQ@mail.gmail.com>
-Message-ID: <CAJZ5v0gfMc==C9xcU0-OOSjo8=L46CKAbjf4YV3EZ-6+00EVkQ@mail.gmail.com>
-Subject: Re: [PATCH] platform/x86:intel/pmc: Disable ACPI PM Timer disabling
- on Sky and Kabe Lake
-To: Hans de Goede <hdegoede@redhat.com>
-Cc: Rajneesh Bhardwaj <irenic.rajneesh@gmail.com>, David E Box <david.e.box@intel.com>, 
-	=?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, 
-	Andy Shevchenko <andy@kernel.org>, Paul Menzel <pmenzel@molgen.mpg.de>, 
-	Todd Brandt <todd.e.brandt@intel.com>, Marek Maslanka <mmaslanka@google.com>, 
-	Daniel Lezcano <daniel.lezcano@linaro.org>, regressions@lists.linux.dev, 
-	linux-pm@vger.kernel.org, platform-driver-x86@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=US-ASCII
 
-On Thu, Oct 3, 2024 at 10:26=E2=80=AFPM Hans de Goede <hdegoede@redhat.com>=
- wrote:
->
-> There have been multiple reports that the ACPI PM Timer disabling is
-> causing Sky and Kabe Lake systems to hang on all suspend (s2idle, s3,
-> hibernate) methods.
+On Fri, 4 Oct 2024, Crag Wang wrote:
 
-It's Kaby Lake as pointed out  by Paul.
-
-Other than this
-
-Acked-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-
-> Remove the acpi_pm_tmr_ctl_offset and acpi_pm_tmr_disable_bit settings fr=
-om
-> spt_reg_map to disable the ACPI PM Timer disabling on Sky and Kabe Lake t=
-o
-> fix the hang on suspend.
->
-> Fixes: e86c8186d03a ("platform/x86:intel/pmc: Enable the ACPI PM Timer to=
- be turned off when suspended")
-> Reported-by: Paul Menzel <pmenzel@molgen.mpg.de>
-> Closes: https://lore.kernel.org/linux-pm/18784f62-91ff-4d88-9621-6c88eb0a=
-f2b5@molgen.mpg.de/
-> Reported-by: Todd Brandt <todd.e.brandt@intel.com>
-> Closes: https://bugzilla.kernel.org/show_bug.cgi?id=3D219346
-> Cc: Marek Maslanka <mmaslanka@google.com>
-> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+> The URL is dynamic and may change according to the OEM. It was mainly used
+> for old systems that do not have "Dell System" in the OEM String.
+> 
+> Signed-off-by: Crag Wang <crag_wang@dell.com>
 > ---
->  drivers/platform/x86/intel/pmc/spt.c | 2 --
->  1 file changed, 2 deletions(-)
->
-> diff --git a/drivers/platform/x86/intel/pmc/spt.c b/drivers/platform/x86/=
-intel/pmc/spt.c
-> index 2cd2b3c68e46..ab993a69e33e 100644
-> --- a/drivers/platform/x86/intel/pmc/spt.c
-> +++ b/drivers/platform/x86/intel/pmc/spt.c
-> @@ -130,8 +130,6 @@ const struct pmc_reg_map spt_reg_map =3D {
->         .ppfear_buckets =3D SPT_PPFEAR_NUM_ENTRIES,
->         .pm_cfg_offset =3D SPT_PMC_PM_CFG_OFFSET,
->         .pm_read_disable_bit =3D SPT_PMC_READ_DISABLE_BIT,
-> -       .acpi_pm_tmr_ctl_offset =3D SPT_PMC_ACPI_PM_TMR_CTL_OFFSET,
-> -       .acpi_pm_tmr_disable_bit =3D SPT_PMC_BIT_ACPI_PM_TMR_DISABLE,
->         .ltr_ignore_max =3D SPT_NUM_IP_IGN_ALLOWED,
->         .pm_vric1_offset =3D SPT_PMC_VRIC1_OFFSET,
->  };
-> --
-> 2.46.2
->
->
+>  drivers/platform/x86/dell/dell-wmi-sysman/sysman.c | 3 +--
+>  1 file changed, 1 insertion(+), 2 deletions(-)
+> 
+> diff --git a/drivers/platform/x86/dell/dell-wmi-sysman/sysman.c b/drivers/platform/x86/dell/dell-wmi-sysman/sysman.c
+> index 9def7983d7d6..c05474f1ed70 100644
+> --- a/drivers/platform/x86/dell/dell-wmi-sysman/sysman.c
+> +++ b/drivers/platform/x86/dell/dell-wmi-sysman/sysman.c
+> @@ -520,8 +520,7 @@ static int __init sysman_init(void)
+>  {
+>  	int ret = 0;
+>  
+> -	if (!dmi_find_device(DMI_DEV_TYPE_OEM_STRING, "Dell System", NULL) &&
+> -	    !dmi_find_device(DMI_DEV_TYPE_OEM_STRING, "www.dell.com", NULL)) {
+> +	if (!dmi_find_device(DMI_DEV_TYPE_OEM_STRING, "Dell System", NULL)) {
+
+I suggested making the changes in the opposite order, that was to 
+faciliate easy revert of the URL patch if needed which is not the case if
+things are changed in this order.
+
+-- 
+ i.
+
