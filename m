@@ -1,97 +1,123 @@
-Received: from mail-pj1-f41.google.com (mail-pj1-f41.google.com [209.85.216.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mout.gmx.net (mout.gmx.net [212.227.17.20])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3B65C215F51;
-	Fri,  4 Oct 2024 15:29:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 250801E3DE2;
+	Fri,  4 Oct 2024 15:33:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.20
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728055741; cv=none; b=hp8tkXPh5Eq8BPmMzrK+6Sf0pDnaJYWvyUpub0zNXhe+YvKRAtP5PoC636SqFT2q9iwU17xslX3LqJ4Dc1OTeYXUQ8PPfpABrbtv2+3eDboSHtV+AzlGov8AU+lJ7fYnnB26x3Y1D4B4ZtjTF3lyk4nybSwRk/ni/TXZCuUl/os=
+	t=1728056037; cv=none; b=YUu+RzCkd8b/jhWVxTeCYhOB95xvcTEQTVWgmG7BR8K7I1ujx8lpW5nbyrR/m8BKHpJgrz++zwkfiuXNJbqopT8LUPMaaog2FSItCFEYgiFZyrIQ2MHnvSeIlXIY6JqUbva0ubd7pygpe2GwjBVwWEuFUD02sNvYHIktlNKRlFE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728055741; c=relaxed/simple;
-	bh=pzFRJaB73DQRvH4PYh2FvNZnVu1f9fD7/4jK54rgdhE=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=StOqlUDqZEQ1a/AApp4B6eUbDE4H7l+PUrmP0q/gj5zIRIh8+Maj985kt7MJ1xT51Hy9OLBvH7K2smfn/WSFM9KdWxtZgtYqMBupWAMAAtPCyCaSVhVw/PdcAWleCMauNSFpei1EhSO4wuOSgxgTNP14ruFYWzVYvg/w8aN6xfo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ALorc0hf; arc=none smtp.client-ip=209.85.216.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1728056037; c=relaxed/simple;
+	bh=gjncOFNI91eE/i9qLENcL8qQ6qRD2jzz45Htiiwitc0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=E5hqwFjUgOd66nzYsiFOWuFQll2S/2PSkpX22w3Btc4NNLCgwfK6x8L9Oz56Aq6P34rZxseHE3j+bDt0j8lC9LNIlQGVMYd6020B36Peix2+h000eIFIDMReR+CfYM19M2nkhFIkXv2G6s5jOVnQtpw1l+7Wp9QWiIuUocckvDo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b=ftTsGfN4; arc=none smtp.client-ip=212.227.17.20
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ALorc0hf"
-Received: by mail-pj1-f41.google.com with SMTP id 98e67ed59e1d1-2e0752be2d1so319982a91.1;
-        Fri, 04 Oct 2024 08:29:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1728055739; x=1728660539; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=elgWMJSRvxz/8LNwzIN4oEajOoCI8mSzevRrZe29m1c=;
-        b=ALorc0hfpVBsSRzaf9URKtX3Mw+XFACaJrAOnbeYao4fRV39MxknWiAZUWj2IEd740
-         g9vYK4Oqj3NkA2PGRTcsMH13l/Rb1xOnxFcsmUP3Ze+kICj3xgwhfWJW5EVRv49pTnGv
-         ynXyT3JbKvDW8h51OUPoSQ9v5IYTmQ9b3DR6vGVId6GVyqPnm4X1Gx8ejk88QOrluMWG
-         iSO98NaKD08R/4bCKtG3jDhICwg01icaHW5KL57emYC8S0DRvhd03E7/q7F4+9IG4zcM
-         0A/KEqbckjXr55CgYQ366/bNE6dz3yn92tkW8cFlta7AOmb11WZnLCov3Ig6BSwRF+jf
-         oYGg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1728055739; x=1728660539;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=elgWMJSRvxz/8LNwzIN4oEajOoCI8mSzevRrZe29m1c=;
-        b=ej4/hZ5+uDl70TF185C2qp421xiOYeg2e7SUhZ4zABjLAmg2b4lyjHlgDcvO01bpFb
-         mtjnkFgANnhBrkMfogaM1p5hjCP6Vba3U3i12UhubdtERQMC5FcPKyIKp39iiMwg0tDR
-         HB68UAFc91psRj1CuRGZXNoLFNO8TypYbJExfwBwrJY7lvjvvDDA82IhXsmpIKSn6ux/
-         8vmp6bo03qBpPl52euVLNZPOrnpWnQymbW0tVDEU1EDgCnFmwVs9M2gztigNF/WqG9AD
-         od8u9AefDlqHtDxhdKwWqimIfosvA6JiDFyRZZfswHcnHc5dNodWzeX9nw0mk0BNVevB
-         D7sA==
-X-Forwarded-Encrypted: i=1; AJvYcCWOmXzBbtASISi/u8uXiZ0vbiNVfbCQbmFHjUaQTosd3EDw/wN+6ntp/HiveH2R30PxMPEeaNr/P8RJmrrBOn1xSVEVFw==@vger.kernel.org, AJvYcCXphY06CoY/1Anl8aKkwusPClkA5Fh53u4HhBooIxEWqm0lO4sy5X2ffRPwPtdQRQZ4t2PnrYzefOFHtiQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwV+Ul4M+E/GU1kwyYamhvmg0G79IvutIqUf40LFo6hjOgvHotD
-	S6DUCYCiOTaQRdgzHSkBmi81wtrKK2DtsbsE3FRjYWGSdxVd2geA
-X-Google-Smtp-Source: AGHT+IHtrHcvZ/PraWbgwRPW/foIPmkbsbfGKEhfCsqX0JSFOpGw5k3+5fj3zp3liYUP66yedZcl0w==
-X-Received: by 2002:a17:90a:7e87:b0:2da:6fc9:1a52 with SMTP id 98e67ed59e1d1-2e1e5dd215fmr1593740a91.0.1728055739378;
-        Fri, 04 Oct 2024 08:28:59 -0700 (PDT)
-Received: from crabo-Latitude-7350.. (1-34-73-169.hinet-ip.hinet.net. [1.34.73.169])
-        by smtp.googlemail.com with ESMTPSA id 98e67ed59e1d1-2e1e7ed58ffsm1189728a91.1.2024.10.04.08.28.57
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 04 Oct 2024 08:28:59 -0700 (PDT)
-From: Crag Wang <crag0715@gmail.com>
-X-Google-Original-From: Crag Wang <crag_wang@dell.com>
-To: mario.limonciello@amd.com,
-	Prasanth Ksr <prasanth.ksr@dell.com>,
-	Hans de Goede <hdegoede@redhat.com>,
-	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Cc: crag.wang@dell.com,
-	Crag Wang <crag_wang@dell.com>,
-	Dell.Client.Kernel@dell.com,
-	platform-driver-x86@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCHv4 1/1] platform/x86: dell-sysman: add support for alienware products
-Date: Fri,  4 Oct 2024 23:27:58 +0800
-Message-ID: <20241004152826.93992-1-crag_wang@dell.com>
-X-Mailer: git-send-email 2.43.0
+	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b="ftTsGfN4"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.de;
+	s=s31663417; t=1728056028; x=1728660828; i=w_armin@gmx.de;
+	bh=1Z1ETLMKssaKmHzYJoUrFeje1fnlvjKiRYyIrNRHGcA=;
+	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:To:Cc:
+	 References:From:In-Reply-To:Content-Type:
+	 Content-Transfer-Encoding:cc:content-transfer-encoding:
+	 content-type:date:from:message-id:mime-version:reply-to:subject:
+	 to;
+	b=ftTsGfN4uw9pdGsd0GGjYXV+PTq0MANkuCUYe+PTm6yNwGXlDkMfUdLn6kaAo1Tk
+	 d0oUStA6e0uP6O+uqGhnKmVb0VqoQC1AiVndloiQRRCvq91njss3YfDzTv1B3u2+/
+	 aTyOPeR2t5NYbHbnCmKG7z0xmezmVKv9ojWBwF4FucycwYbwP8JcNFQdMD+lno+ka
+	 y1emKFq8eY5dk6p5Z9p90YxayaQzixsyjhbeMDNGSvFzSXCtrp8F2ioUh9hX6NJeb
+	 wopwSphZ+j/l+kDcQNSJMTBxHtMi9vFUAJfnHHP1VCz+JGoRKwKB2Cu7Z5X1XT+QU
+	 yq0i5zDhEal0aLi8CA==
+X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
+Received: from [192.168.2.35] ([91.137.126.34]) by mail.gmx.net (mrgmx105
+ [212.227.17.168]) with ESMTPSA (Nemesis) id 1MxUnp-1tudFt1nCr-00uoSY; Fri, 04
+ Oct 2024 17:33:48 +0200
+Message-ID: <d42910eb-3353-46e1-9a20-ac68eb0160a6@gmx.de>
+Date: Fri, 4 Oct 2024 17:33:46 +0200
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2] platform/x86: dell-ddv: Fix typo in documentation
+To: Anaswara T Rajan <anaswaratrajan@gmail.com>
+Cc: corbet@lwn.net, platform-driver-x86@vger.kernel.org,
+ linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20241004083102.752344-1-anaswaratrajan@gmail.com>
+Content-Language: en-US
+From: Armin Wolf <W_Armin@gmx.de>
+In-Reply-To: <20241004083102.752344-1-anaswaratrajan@gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:SY3ZMVQCxoC30gbDbXqUe2kflh0gIYgXEtHE5yS1MjI25itLGrm
+ vPYahFG2Vd23pbRFE3kOByuIjgO8ARBL1svI7ianFLkpz5hzHT8gmZZAvcW/6poBNUuqEkn
+ Sj3p1le8fkYqSAKpvK/scl3lOo9AdaYBHzh+I6Zk3yeZhjU9BgYokBe9fYDdcuU6RWh+K2i
+ 2+rvuF/BlV02/Z3NiH6fg==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:lhuLdilrsUE=;+NscgoE3IoOVsmCteKWwn9kovhf
+ 3qLIXIHW00N7KhWX+0VirBrBXyVNeEMru5QosFrnS7U4mcjc6yXHn3zn0DNVeaOjHBsr9Tpz5
+ 5M40hIuyzGb/aGhY+Dg/AOyNorNnN+hadbsYAPsTOSTLHaRQAm1O8wvci8Y8bNa9gRk8mfNWT
+ uIH65tzyFKUv6KpEAA6+vcVB4bM+o5t9D1jgcF7fQnFo77ANgeTKM6CTUK6PMnhAZWMebGKqP
+ WCrzzyl6km5rFTsJYFIAtFfsT2S4AdSSxy3O7LjqZFfeo+idnLUKuY6oZiUphwNcmCI5Netel
+ OHyawbjkx+XteTvAG3nyqcM4c13+ubqAdca3bVJu2THkvPyvtvL7lJXPJT1jpokTtd/d/J+lo
+ bTaNy3rD9cOMSPx5cbh5Ef/ySGe4lfBzVYgH55K93Rvn1rVqeyfChq3jdbvghrZEjaGruW4Iy
+ B7bX0srFDC0/IG+Vcuc90EtakS8BS/XD8BYvUciqeTg6/HqLDNrjOwJM3P91BkQSnx3/dIklC
+ dNy44ALcwINnGG/hYcntN7QXfOjPkemROwgV1Pj0bQp+gLeT7w52HTBmhDmDczNyXZYsyfabh
+ OHXpi61sPLQ/BwhfANtw+vnvYKU6LpJBbzWro5KvOJK69U5Oa9h0pdM/+NGhrv17bIYnFIo+H
+ PKDbDcDQ2lZHQYBuVaQMunU0ZrF4T6MyekMLbIM+CwOtQTUg8JgTv3/MdoftnYw3B4y7nfRan
+ MPmtfRUk6NR6VcJ7fsQBZUisfvnixqrQeo/tVjeffYd4aFICjuZWk5FgN98xmPNw/Ohsooqn5
+ UZwSytA15NIQn1/Z801lALqyyq3vpxgwlqkC8EWizGdHU=
 
-Alienware supports firmware-attributes and has its own OEM string.
+Am 04.10.24 um 10:31 schrieb Anaswara T Rajan:
 
-Signed-off-by: Crag Wang <crag_wang@dell.com>
----
- drivers/platform/x86/dell/dell-wmi-sysman/sysman.c | 1 +
- 1 file changed, 1 insertion(+)
+> Fix typo in word 'diagnostics' in documentation
 
-diff --git a/drivers/platform/x86/dell/dell-wmi-sysman/sysman.c b/drivers/platform/x86/dell/dell-wmi-sysman/sysman.c
-index 9def7983d7d6..40ddc6eb7562 100644
---- a/drivers/platform/x86/dell/dell-wmi-sysman/sysman.c
-+++ b/drivers/platform/x86/dell/dell-wmi-sysman/sysman.c
-@@ -521,6 +521,7 @@ static int __init sysman_init(void)
- 	int ret = 0;
- 
- 	if (!dmi_find_device(DMI_DEV_TYPE_OEM_STRING, "Dell System", NULL) &&
-+	    !dmi_find_device(DMI_DEV_TYPE_OEM_STRING, "Alienware", NULL) &&
- 	    !dmi_find_device(DMI_DEV_TYPE_OEM_STRING, "www.dell.com", NULL)) {
- 		pr_err("Unable to run on non-Dell system\n");
- 		return -ENODEV;
--- 
-2.43.0
+Apart from the missing point at the end of the sentence:
 
+Reviewed-by: Armin Wolf <W_Armin@gmx.de>
+
+>
+> Signed-off-by: Anaswara T Rajan <anaswaratrajan@gmail.com>
+> ---
+> Changes in v2:
+>    - Make the commit title and description more clearer.
+>
+>   Documentation/wmi/devices/dell-wmi-ddv.rst | 4 ++--
+>   1 file changed, 2 insertions(+), 2 deletions(-)
+>
+> diff --git a/Documentation/wmi/devices/dell-wmi-ddv.rst b/Documentation/=
+wmi/devices/dell-wmi-ddv.rst
+> index 2fcdfcf03327..e0c20af30948 100644
+> --- a/Documentation/wmi/devices/dell-wmi-ddv.rst
+> +++ b/Documentation/wmi/devices/dell-wmi-ddv.rst
+> @@ -8,7 +8,7 @@ Introduction
+>   =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+>
+>   Many Dell notebooks made after ~2020 support a WMI-based interface for
+> -retrieving various system data like battery temperature, ePPID, diagost=
+ic data
+> +retrieving various system data like battery temperature, ePPID, diagnos=
+tic data
+>   and fan/thermal sensor data.
+>
+>   This interface is likely used by the `Dell Data Vault` software on Win=
+dows,
+> @@ -277,7 +277,7 @@ Reverse-Engineering the DDV WMI interface
+>   4. Try to deduce the meaning of a certain WMI method by comparing the =
+control
+>      flow with other ACPI methods (_BIX or _BIF for battery related meth=
+ods
+>      for example).
+> -5. Use the built-in UEFI diagostics to view sensor types/values for fan=
+/thermal
+> +5. Use the built-in UEFI diagnostics to view sensor types/values for fa=
+n/thermal
+>      related methods (sometimes overwriting static ACPI data fields can =
+be used
+>      to test different sensor type values, since on some machines this d=
+ata is
+>      not reinitialized upon a warm reset).
