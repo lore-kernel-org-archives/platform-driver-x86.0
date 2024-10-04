@@ -1,106 +1,112 @@
-Received: from mail-pj1-f45.google.com (mail-pj1-f45.google.com [209.85.216.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8A42E1802E;
-	Fri,  4 Oct 2024 08:31:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D8E2079F3;
+	Fri,  4 Oct 2024 13:05:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728030686; cv=none; b=Uqay0UeIp1T8Ce825xYQi+ZtwWkGQd3x0rj/KwqE6OGVJvHTGHASCLPy3fEaNhgoMiyv7c2c+8FPKQYt6ULQNjBlrIOynxE66FtkSMsepVh3Mi8QjbQ/E37dX0MkVbaL7eXXAeNgwef2okxcxF3KqFvmo0/EB3xQhGcNaTKuvwU=
+	t=1728047151; cv=none; b=YbBp7XPPcf9in8B7fCneV3sETvF0GB8LKvtZ8MJCWL2eOjB03GBvInsh/Xbs5mS/e1E3dTgzlm88Tyye2Vr3CEmSEKC+u6KZ+mydlhl+1wE2z1qOIzHjeW7POfGgDHSTYUaJYA66+njyKPnB6A+kLkqNtHrLmiX2AkgQLUHATik=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728030686; c=relaxed/simple;
-	bh=gl9YpbCSHOn4YQiJi6dPRroQK1BDuPkVG8r5ZxH/Hak=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=QSbQ40JECSXPOo7kgS4JNo/Z4cfsTSeLq3UivN8F1GSLSA26G2d2OhQosExadqVBymDxtiJ/deZqV/4CnbBLSwUzptc8XxNb9Mp17+4vNRQABrQ2VJz6xDpJlQUm2/PSiV6aFkISUTZMpY1JOHU16GOs0TMQaFjfK8YUi5QPM9Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=R3ipBqfp; arc=none smtp.client-ip=209.85.216.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1728047151; c=relaxed/simple;
+	bh=EZEtQHswMoewld0YGGWf+H67wxGaKSpue9nbA4Dce4M=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Oud6SuUrNPKWU+V4ACuS3YKlVjiqOixnNzK7Pf2VR9FeB5HwQjzMjmA6WnbVLdQZVgEyL5iItvjrUySpkfZ2qXedHvk04UISjtMWXK3INKXkgJcKxWCMzzoqQz5qVk6yQnzd81dvvdh74+mRQ/bgaPwL43TwEYBXDt3mZhZzMRU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WbMf8Q5X; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="R3ipBqfp"
-Received: by mail-pj1-f45.google.com with SMTP id 98e67ed59e1d1-2e0b0142bbfso2104477a91.1;
-        Fri, 04 Oct 2024 01:31:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1728030685; x=1728635485; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=aPFEQO564fwTGRK5Isb10xeqXfIGvDP5I6UFdrlBgGI=;
-        b=R3ipBqfpzrwswbn0X8BDliwHXLApQWx8ZBY2AUOlUE2iLgOK1YtPwmxF3tpJi6/RpR
-         1lFdQ3n77SKK74126SAI3edep5pBLtXrXC6u+HlADQln5EkD/CSBbDmdUllh+E+Khptd
-         TUD/DLHpw2FiaLghWMdTddAJxXFGGl9kZ7pR4XKPzhsE+TX0ve84XGnRicy4TbIy0U+J
-         KvPYuZLA9+9VMGowU3zt88kWL9KxSLYqM3hGl46l5+HEOYliRj0oWo/jbXczjS9+iv97
-         DLVr4lxT/oKHWEbjKMOhCI9qhsihrN7tq1wuRJxXzXEeK1UVUGIJO9rOy4yndXeEtOWR
-         gSPg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1728030685; x=1728635485;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=aPFEQO564fwTGRK5Isb10xeqXfIGvDP5I6UFdrlBgGI=;
-        b=CB8vxqum9lR48uwJ1k6soDVzljw0+T3imr9ijEVXRsuXpX4WviC4QOzR98KMNI78f9
-         VykZy9yw5MqdlybZU0SrnJ86h5ywV40npfRqDxvFbTzlW7B0gQwQsJ2TapsTW0JE7W/Y
-         E/siWSikXGMQsPiqNUUz45VNLGN9OoZVcrV/4G9XIcAubUqeh2dP4uq2zHfC8ALInfnF
-         mphm0wCKlzAb19AArRWaGmJSMj3obP++iWZrBSYG68jQFFATd/lH3+d+VtNArS8JY/jo
-         GHh3rWysxMOyqByhzaKY9tMrIXKkoaNfZmIgnhI8oT2ysaS1GlpfcqK7FnIta/DqahuF
-         cvTg==
-X-Forwarded-Encrypted: i=1; AJvYcCVt5uavxECxdfV51MLkO0Zzs33KvsCsVVGPBQCiCQh+9B6QSdonGTh8P4wK35ekOKiR4Qe4dBkDBc3JlHUSBplJYOT9+g==@vger.kernel.org, AJvYcCWn3BQEArvwlC26ay6qjug0oVnZeBKDjFgRbTscftUs95MjrxNemHNXJzec5mEs6QxItaIyRwUIMws=@vger.kernel.org, AJvYcCXdw3yCT8lPOny78xshma1sLaM41q8mvy8B4HNBTxhEaDqDL47BQFf/9xVIP0RRnrbnu5hOUYYaXs7sw4a0@vger.kernel.org
-X-Gm-Message-State: AOJu0YwSSjyQAUHSNaMBDBXD2hMB3JaZngxqKrkhTxRjwmuHOPkz6XoF
-	cQPgtO4WEUTuirbXlW0PaL6RlVeHTGqgG+unptzp+1lWhn9Xdwpwce/0M+I0ir65UA==
-X-Google-Smtp-Source: AGHT+IGlJEh6M7zOjemHNyTMhyWPU8d22wr0ZdsSHNmEXUmr0BLYpC/Isk+eRDZD2q56K5D6HxQb1w==
-X-Received: by 2002:a17:90a:10d0:b0:2e0:855b:9b21 with SMTP id 98e67ed59e1d1-2e1b38a3412mr8520434a91.8.1728030684732;
-        Fri, 04 Oct 2024 01:31:24 -0700 (PDT)
-Received: from Tua.. ([103.70.199.198])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-2e1e83caf89sm978410a91.8.2024.10.04.01.31.21
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 04 Oct 2024 01:31:24 -0700 (PDT)
-From: Anaswara T Rajan <anaswaratrajan@gmail.com>
-To: W_Armin@gmx.de
-Cc: corbet@lwn.net,
-	platform-driver-x86@vger.kernel.org,
-	linux-doc@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Anaswara T Rajan <anaswaratrajan@gmail.com>
-Subject: [PATCH v2] platform/x86: dell-ddv: Fix typo in documentation
-Date: Fri,  4 Oct 2024 14:01:02 +0530
-Message-Id: <20241004083102.752344-1-anaswaratrajan@gmail.com>
-X-Mailer: git-send-email 2.34.1
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WbMf8Q5X"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 75FDDC4CEC6;
+	Fri,  4 Oct 2024 13:05:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1728047151;
+	bh=EZEtQHswMoewld0YGGWf+H67wxGaKSpue9nbA4Dce4M=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=WbMf8Q5XTTJFPy0+xZyHsE4fii0rWKqZbJoBePK/FiRVc/Hbe/kuCVUwEdTWh8pYf
+	 ibTgSgCP1DgWQX6vJjj6KptIktOdQ1K+4M8wyuC/vore+X8UJDSUEZiAnvBut6CrgI
+	 V1oxMcYQ7pPejgcSGWd3e3NfJFWHA00zHp5CAbpcQMaPsfCXCiXzUYajwte0pw6jsH
+	 mG+tkjLJ29/z3ko+UM9o9RVAHdka62DONO0PCa4nurMsBbLzcPJJInMLDIi9g1xuAZ
+	 +HQvLBa4wC1fw8CMBQSmTm+ElUvy2Gs3gxgNLmNiZBVYkZOIoMsgiXNH3ITZPzJ5Zi
+	 BoAVp8Y6THsNA==
+Received: by mail-oo1-f51.google.com with SMTP id 006d021491bc7-5e77c6ed928so942604eaf.0;
+        Fri, 04 Oct 2024 06:05:51 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCV87JoI327vfOnoQLFR04vkn7oZm4NK6uxivTlfZD3FVnlE9gHNYTtTBjhmTGFSKt4558C1FM2XCZ519IqnEYjAw236hg==@vger.kernel.org, AJvYcCVeQnA3TCO/dFlXAYxRQTd4P8Ng5EPzQ0vWH7k+vSWE7eOw2I7mw+S1YidtmUTR4N3zCmfBR53fZA==@vger.kernel.org
+X-Gm-Message-State: AOJu0YzD5jNIHQubvm1kYTbmvpnnp+TnMX6AhkHqyjBUsL3Y2u6nyZL5
+	mJvYjy11YCV3mGawxiLYwu2Oy/T4A+6Q6ApRK5D9yOnqh7wOMWovPMZxukHUZokSl4WC7OZpE6F
+	LjKFQe0vWsLHp5VdARs7BnUJb7UQ=
+X-Google-Smtp-Source: AGHT+IF0FbTYTZOjT0OJHv+5ndCTq15dw56nW3BVMcSCsCYwBx3XIIshrxsMR+fZuSLG01Dr6Rjt0A4XJGTxTBJUUSc=
+X-Received: by 2002:a05:6820:270d:b0:5e1:e65d:5148 with SMTP id
+ 006d021491bc7-5e7cc0a432fmr1124750eaf.6.1728047150778; Fri, 04 Oct 2024
+ 06:05:50 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20241003202614.17181-1-hdegoede@redhat.com> <20241003202614.17181-2-hdegoede@redhat.com>
+In-Reply-To: <20241003202614.17181-2-hdegoede@redhat.com>
+From: "Rafael J. Wysocki" <rafael@kernel.org>
+Date: Fri, 4 Oct 2024 15:05:37 +0200
+X-Gmail-Original-Message-ID: <CAJZ5v0gfMc==C9xcU0-OOSjo8=L46CKAbjf4YV3EZ-6+00EVkQ@mail.gmail.com>
+Message-ID: <CAJZ5v0gfMc==C9xcU0-OOSjo8=L46CKAbjf4YV3EZ-6+00EVkQ@mail.gmail.com>
+Subject: Re: [PATCH] platform/x86:intel/pmc: Disable ACPI PM Timer disabling
+ on Sky and Kabe Lake
+To: Hans de Goede <hdegoede@redhat.com>
+Cc: Rajneesh Bhardwaj <irenic.rajneesh@gmail.com>, David E Box <david.e.box@intel.com>, 
+	=?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, 
+	Andy Shevchenko <andy@kernel.org>, Paul Menzel <pmenzel@molgen.mpg.de>, 
+	Todd Brandt <todd.e.brandt@intel.com>, Marek Maslanka <mmaslanka@google.com>, 
+	Daniel Lezcano <daniel.lezcano@linaro.org>, regressions@lists.linux.dev, 
+	linux-pm@vger.kernel.org, platform-driver-x86@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Fix typo in word 'diagnostics' in documentation
+On Thu, Oct 3, 2024 at 10:26=E2=80=AFPM Hans de Goede <hdegoede@redhat.com>=
+ wrote:
+>
+> There have been multiple reports that the ACPI PM Timer disabling is
+> causing Sky and Kabe Lake systems to hang on all suspend (s2idle, s3,
+> hibernate) methods.
 
-Signed-off-by: Anaswara T Rajan <anaswaratrajan@gmail.com>
----
-Changes in v2:
-  - Make the commit title and description more clearer.
+It's Kaby Lake as pointed out  by Paul.
 
- Documentation/wmi/devices/dell-wmi-ddv.rst | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+Other than this
 
-diff --git a/Documentation/wmi/devices/dell-wmi-ddv.rst b/Documentation/wmi/devices/dell-wmi-ddv.rst
-index 2fcdfcf03327..e0c20af30948 100644
---- a/Documentation/wmi/devices/dell-wmi-ddv.rst
-+++ b/Documentation/wmi/devices/dell-wmi-ddv.rst
-@@ -8,7 +8,7 @@ Introduction
- ============
- 
- Many Dell notebooks made after ~2020 support a WMI-based interface for
--retrieving various system data like battery temperature, ePPID, diagostic data
-+retrieving various system data like battery temperature, ePPID, diagnostic data
- and fan/thermal sensor data.
- 
- This interface is likely used by the `Dell Data Vault` software on Windows,
-@@ -277,7 +277,7 @@ Reverse-Engineering the DDV WMI interface
- 4. Try to deduce the meaning of a certain WMI method by comparing the control
-    flow with other ACPI methods (_BIX or _BIF for battery related methods
-    for example).
--5. Use the built-in UEFI diagostics to view sensor types/values for fan/thermal
-+5. Use the built-in UEFI diagnostics to view sensor types/values for fan/thermal
-    related methods (sometimes overwriting static ACPI data fields can be used
-    to test different sensor type values, since on some machines this data is
-    not reinitialized upon a warm reset).
--- 
-2.34.1
+Acked-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 
+> Remove the acpi_pm_tmr_ctl_offset and acpi_pm_tmr_disable_bit settings fr=
+om
+> spt_reg_map to disable the ACPI PM Timer disabling on Sky and Kabe Lake t=
+o
+> fix the hang on suspend.
+>
+> Fixes: e86c8186d03a ("platform/x86:intel/pmc: Enable the ACPI PM Timer to=
+ be turned off when suspended")
+> Reported-by: Paul Menzel <pmenzel@molgen.mpg.de>
+> Closes: https://lore.kernel.org/linux-pm/18784f62-91ff-4d88-9621-6c88eb0a=
+f2b5@molgen.mpg.de/
+> Reported-by: Todd Brandt <todd.e.brandt@intel.com>
+> Closes: https://bugzilla.kernel.org/show_bug.cgi?id=3D219346
+> Cc: Marek Maslanka <mmaslanka@google.com>
+> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+> ---
+>  drivers/platform/x86/intel/pmc/spt.c | 2 --
+>  1 file changed, 2 deletions(-)
+>
+> diff --git a/drivers/platform/x86/intel/pmc/spt.c b/drivers/platform/x86/=
+intel/pmc/spt.c
+> index 2cd2b3c68e46..ab993a69e33e 100644
+> --- a/drivers/platform/x86/intel/pmc/spt.c
+> +++ b/drivers/platform/x86/intel/pmc/spt.c
+> @@ -130,8 +130,6 @@ const struct pmc_reg_map spt_reg_map =3D {
+>         .ppfear_buckets =3D SPT_PPFEAR_NUM_ENTRIES,
+>         .pm_cfg_offset =3D SPT_PMC_PM_CFG_OFFSET,
+>         .pm_read_disable_bit =3D SPT_PMC_READ_DISABLE_BIT,
+> -       .acpi_pm_tmr_ctl_offset =3D SPT_PMC_ACPI_PM_TMR_CTL_OFFSET,
+> -       .acpi_pm_tmr_disable_bit =3D SPT_PMC_BIT_ACPI_PM_TMR_DISABLE,
+>         .ltr_ignore_max =3D SPT_NUM_IP_IGN_ALLOWED,
+>         .pm_vric1_offset =3D SPT_PMC_VRIC1_OFFSET,
+>  };
+> --
+> 2.46.2
+>
+>
