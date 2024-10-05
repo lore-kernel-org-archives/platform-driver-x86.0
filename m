@@ -1,65 +1,65 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 284FE14B94B
-	for <platform-driver-x86@vger.kernel.org>; Sat,  5 Oct 2024 14:21:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F3801B960
+	for <platform-driver-x86@vger.kernel.org>; Sat,  5 Oct 2024 14:25:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728138112; cv=none; b=drBe+5bikotcG+GFYPgbUlH9AQzcpdNXEKB0mwTlpukuCL/tIYoFyfq426rQgKb1bffB7ekhsHYv1U5ZRPa08TWid9zuBmXxWYlVDCGgq6K1HiPSXbxavH5g/kn66yrWbKiqAL7o7mFMAWROZdkNlwaEF5shjh0gWgZmrN6R9iE=
+	t=1728138310; cv=none; b=MJ7TKG6S85Ij4mI68UtKOFYlwswAYuJo3kofO7AUmixUHwM9GaAURJBPOua+wAWSi8iYhaAQZyDtrVfHTrq3d+BXoVH2B6H4VLqOJfFF3CiCO8onUFavsIm88xW+k6NUF+64VOWoXertRepxeIgEvk3aojxvVhtC7pXS+gQgqk4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728138112; c=relaxed/simple;
-	bh=x2MGenC9dWcWd4u6SMtCfuxLLZwMiAf5QnyZkcDNxOQ=;
+	s=arc-20240116; t=1728138310; c=relaxed/simple;
+	bh=pkph1iPyIODe1Sz/0WxdkJA30jq5yMomp3w6xQC33Rs=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=b4I4VLVyYV39IoeqbhFFBRPouSv1nt+XUrdqfU8W78nNuHpFPKrAGiV4ZT/qI7IZmj1ktZ/tosVdyIvtLbPsqFSDsigvFQqlw9QTH7jkMCd6Paqv2nFLMJXUdZ9A5xi7LXATHb/rNIHmxW+c2KvSA9GIsvYyob4FWsTvHFojxEE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=TbGHJmdK; arc=none smtp.client-ip=170.10.129.124
+	 In-Reply-To:Content-Type; b=QT65W5vpy4FTMddbadCW3LmG4fOaU1mJhSf2mBxRR83D5cpNITplyAx+t3V2KghGF1EBBDB7cO5206+i2f0dYlkKJpZa5tVZhB1p1q4Y19cPKc8OpfH9afuDWuwG2zLNxlnPioRDVvZS9kgXQk4Z0LlnfAmPvukDHL8Pd7hvQp0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=SiLzValL; arc=none smtp.client-ip=170.10.133.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="TbGHJmdK"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="SiLzValL"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1728138110;
+	s=mimecast20190719; t=1728138307;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=xPqVbGCbjIr9a+NpG93NtbvFHaodkJKm5MMZCUHR91E=;
-	b=TbGHJmdKxbugSLPb+JIoT9keNoPtwz0zfgbWFMQHtmsmk1kasP9PyPpSpkJvn84hGi9Kiw
-	Fak+C8p7/Jwama3pTwqDT8zpMycbfR2luloccvszj5Lv+tGthT3nznXEikJDaAMjRqOuaN
-	4EmVqOSriif8uxrPam+VQC3S23waLyo=
-Received: from mail-ej1-f72.google.com (mail-ej1-f72.google.com
- [209.85.218.72]) by relay.mimecast.com with ESMTP with STARTTLS
+	bh=GhK/pesZSBOa6zlYwUsiAg8PkkE7aF+Vxmqvu6r4InA=;
+	b=SiLzValL5KuE8QCsCbggUvQ6Q736Jftho2FucNRIhsKOTIwNtmgl834O/uN6cOv1DbOqwY
+	1JbExrA8pdfdxv90O47ceZcud6ptloXTHffWW0uuxgkb9d7tGu/ZuSH5KR49L1RsuymRjZ
+	wTkpBZRozIBJ2L8iBVV/ywKEXIcnPAc=
+Received: from mail-ed1-f72.google.com (mail-ed1-f72.google.com
+ [209.85.208.72]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-61-S2-PdwiRPTyhix1skQziZg-1; Sat, 05 Oct 2024 10:21:48 -0400
-X-MC-Unique: S2-PdwiRPTyhix1skQziZg-1
-Received: by mail-ej1-f72.google.com with SMTP id a640c23a62f3a-a8a84b60255so270218266b.1
-        for <platform-driver-x86@vger.kernel.org>; Sat, 05 Oct 2024 07:21:48 -0700 (PDT)
+ us-mta-146-Doxt7LENNUWwftHez2ccIA-1; Sat, 05 Oct 2024 10:25:06 -0400
+X-MC-Unique: Doxt7LENNUWwftHez2ccIA-1
+Received: by mail-ed1-f72.google.com with SMTP id 4fb4d7f45d1cf-5c88bc25005so2141998a12.0
+        for <platform-driver-x86@vger.kernel.org>; Sat, 05 Oct 2024 07:25:05 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1728138107; x=1728742907;
+        d=1e100.net; s=20230601; t=1728138305; x=1728743105;
         h=content-transfer-encoding:in-reply-to:from:content-language
          :references:cc:to:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=xPqVbGCbjIr9a+NpG93NtbvFHaodkJKm5MMZCUHR91E=;
-        b=Nlcs/NkLpsKdP+YLvBYwD2XV/SCztev6InJak9PVDFR31xTMqglVTkMtinGmeAj9Up
-         kUhhzXbILjsxwTg1Ngo454nbByPhVo1nMIJzH0NzVpd0MRtSe7wVlUYfXnnbCNDkLYoC
-         dNNnJorqaBDU0FPNmgbSk+Djc8BMm+Z3M+GCeGE/F8cpgviDyqEjSxd82MlcokY2F3po
-         HLDHIC7vKLRCATWXKvO1SGtfCzWfz2aYBXhvpLnAVspmKjzKEIYabvTaBsFu9mNzD6s/
-         ydlM88ZXW6GaG/Z356fmSVF5jsNR5kRC3XQf5HserG+nIiQeC2P9GZBilZLGRSRWOEC4
-         8gNg==
-X-Gm-Message-State: AOJu0YzvBzCh1pX2Mhdcw7iFlFmb1lM5+Vw/s4zBi6cFk0KA/1l/2A4Y
-	06a0KoOkzKPgs1Um1djIYwnojcAKKRXszS0VH29H8n9lWt8oGfHc4PT/ETiJ+T2k1HmExfQesvw
-	Vsy9plouRq9XjAWnrGi5xC5vVeF8ey45lBvXgdO40s1UAvtomHe+BBkGzUjMmxn63wXgQN6ECCK
-	No7+Ml2A==
-X-Received: by 2002:a17:907:9450:b0:a99:c0e:2430 with SMTP id a640c23a62f3a-a991bd09e85mr706342666b.19.1728138107408;
-        Sat, 05 Oct 2024 07:21:47 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IHoYdKRdo11pz2X6Ms7neemVs+JqkPqonSaAcL4z9PvsulAS7sYtIxUjsT2/oPRvtZ2pZgEww==
-X-Received: by 2002:a17:907:9450:b0:a99:c0e:2430 with SMTP id a640c23a62f3a-a991bd09e85mr706339366b.19.1728138106929;
-        Sat, 05 Oct 2024 07:21:46 -0700 (PDT)
+        bh=GhK/pesZSBOa6zlYwUsiAg8PkkE7aF+Vxmqvu6r4InA=;
+        b=wbfieVnmsASSOpc+ujanQtfnXHt1TFhPX5s444KzFQHAIuOXaxVXAZHAA9U3lJZnm2
+         qBllqwI+oOArWsWXb4yQZxhNXWptzyVzYXIBmcIRDgW+IK59yPyjgs5glWyg/XWkjv4K
+         mi3mBAsG6bTg8+4k72hlQDkluXnfbj83z+fXvc/XGeArefXMyu3LPnJM5XsDyWl9PmsF
+         2FxT6M7CazLSgrzr7eCadnnHJMsdJk/8hwTRb8qnF4u9ZtuVtheHoykJlpaMS9fXXo7g
+         +kHJuzGHYBR0m0guiFYBJWWPTKcD+Lh6NPnGn+hUTkQ5t39A8LiGgHyuHlTcGHb3XVc6
+         xJMw==
+X-Forwarded-Encrypted: i=1; AJvYcCVpiONZIRJynp4NEe6Ks+KNFrr7FwEcTvjjQct3I405mMHbfJ/de5uimR0EkT3m1EUmur8J/t54pFua2TywY3FS5Bg9@vger.kernel.org
+X-Gm-Message-State: AOJu0YxPKGucGTVgqe6Iglp+czdK/nQOWF7tzLy1zjRidK6gnTAM1mp6
+	GXxt1+WkDsYLVFYq7DaBgNfasNIz9He32RVtrNjwa2YWYSP9za/AQEbxYR3DFTYIAUfrgL0l82G
+	I/FUIJ4F/s0/03wE/wiZZgqPzFJy3WdZTnLVo33Q1TfTHlvicZ6MdcQE50vRcuV0/lDSW0u0=
+X-Received: by 2002:a05:6402:381a:b0:5c8:8d5e:18ad with SMTP id 4fb4d7f45d1cf-5c8d2e2c9ccmr4334282a12.18.1728138304698;
+        Sat, 05 Oct 2024 07:25:04 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IHOLH3E9euc3m6txZZ6pSksvQJlU9CdVm0LlE8Lq+Ckf7uLdImchrTvZ96rTcIoJ2eIQX2ebg==
+X-Received: by 2002:a05:6402:381a:b0:5c8:8d5e:18ad with SMTP id 4fb4d7f45d1cf-5c8d2e2c9ccmr4334259a12.18.1728138304109;
+        Sat, 05 Oct 2024 07:25:04 -0700 (PDT)
 Received: from ?IPV6:2001:1c00:c32:7800:5bfa:a036:83f0:f9ec? (2001-1c00-0c32-7800-5bfa-a036-83f0-f9ec.cable.dynamic.v6.ziggo.nl. [2001:1c00:c32:7800:5bfa:a036:83f0:f9ec])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a993d927706sm81921266b.146.2024.10.05.07.21.44
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5c8e05bd4e7sm1059778a12.47.2024.10.05.07.25.02
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 05 Oct 2024 07:21:45 -0700 (PDT)
-Message-ID: <134adbb7-06c5-4b6a-a8b9-abb973784f73@redhat.com>
-Date: Sat, 5 Oct 2024 16:21:43 +0200
+        Sat, 05 Oct 2024 07:25:03 -0700 (PDT)
+Message-ID: <87d40775-9bd4-4f22-81da-4e670236c15e@redhat.com>
+Date: Sat, 5 Oct 2024 16:25:02 +0200
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -67,156 +67,192 @@ List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 0/5] acpi/x86: s2idle: move Display off/on calls
- outside suspend (fixes ROG Ally suspend)
-To: Antheas Kapenekakis <lkml@antheas.dev>, linux-pm@vger.kernel.org,
- "Rafael J. Wysocki" <rafael@kernel.org>
-Cc: platform-driver-x86@vger.kernel.org,
- Mario Limonciello <mario.limonciello@amd.com>, luke@ljones.dev,
- me@kylegospodneti.ch, Denis Benato <benato.denis96@gmail.com>
-References: <20240922172258.48435-1-lkml@antheas.dev>
+Subject: Re: [PATCH v3] platform/x86/hp: Avoid spurious wakeup on HP ProOne
+ 440
+To: Kai-Heng Feng <kai.heng.feng@canonical.com>,
+ ilpo.jarvinen@linux.intel.com, gregkh@linuxfoundation.org,
+ jorge.lopez2@hp.com
+Cc: acelan.kao@canonical.com, platform-driver-x86@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org
+References: <20240906053047.459036-1-kai.heng.feng@canonical.com>
 Content-Language: en-US, nl
 From: Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <20240922172258.48435-1-lkml@antheas.dev>
+In-Reply-To: <20240906053047.459036-1-kai.heng.feng@canonical.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-Hi,
+Hi Kai-Heng,
 
-On 22-Sep-24 7:22 PM, Antheas Kapenekakis wrote:
-> The following series moves the Display off/on calls outside of the suspend
-> sequence, as they are performed in Windows. This fixes certain issues that appear
-> in devices that use the calls and expect the kernel to be active during their
-> call (especially in the case of the ROG Ally devices) and opens the possibility
-> of implementing a "Screen Off" state in the future (which mirrors Windows).
-> In addition, it adds a quirk table that will allow for adding delays between
-> Modern Standby transitions, to help resolve racing conditions.
+On 6-Sep-24 7:30 AM, Kai-Heng Feng wrote:
+> The HP ProOne 440 has a power saving design that when the display is
+> off, it also cuts the USB touchscreen device's power off.
 > 
-> This series requires a bit of background on how modern standby works in Windows.
-> Fundamentally, it is composed of four states: "Active", "Screen Off", "Sleep",
-> and "DRIPS". Here, I take the liberty of naming the state "Active", as it is
-> implied in Windows documentation.
+> This can cause system early wakeup because cutting the power off the
+> touchscreen device creates a disconnect event and prevent the system
+> from suspending:
+> [  445.814574] hub 2-0:1.0: hub_suspend
+> [  445.814652] usb usb2: bus suspend, wakeup 0
+> [  445.824629] xhci_hcd 0000:00:14.0: Port change event, 1-11, id 11, portsc: 0x202a0
+> [  445.824639] xhci_hcd 0000:00:14.0: resume root hub
+> [  445.824651] xhci_hcd 0000:00:14.0: handle_port_status: starting usb1 port polling.
+> [  445.844039] xhci_hcd 0000:00:14.0: PM: pci_pm_suspend(): hcd_pci_suspend+0x0/0x20 returns -16
+> [  445.844058] xhci_hcd 0000:00:14.0: PM: dpm_run_callback(): pci_pm_suspend+0x0/0x1c0 returns -16
+> [  445.844072] xhci_hcd 0000:00:14.0: PM: failed to suspend async: error -16
+> [  446.276101] PM: Some devices failed to suspend, or early wake event detected
 > 
-> When the user actively interacts with a device, it is in the "Active" state.
-> The screen is on, all devices are connected, and desired software is running.
-> The other 3 stages play a role once the user stops interacting with the device.
-> This is triggered in two main ways: either by pressing the power button or by
-> inactivity. Once either of those targets is met, the system enters Modern Standby.
+> So add a quirk to make sure the following is happening:
+> 1. Let the i915 driver suspend first, to ensure the display is off so
+>    system also cuts the USB touchscreen's power.
+> 2. Wait a while to let the USB disconnect event fire and get handled.
+> 3. Since the disconnect event already happened, the xhci's suspend
+>    routine won't be interrupted anymore.
 > 
-> Modern Standby consists of an orchestration of the "Screen Off", "Sleep", and
-> "DRIPS" states. Windows is free to move throughout these states until the user
-> interacts with the device again, where the device will transition to being
-> "Active". Moving between the states implies a transition, where Windows performs
-> a set of actions. In addition, Windows can only move between adjacent states
-> as follows:
-> 
-> "Active" <-> "Screen Off" <-> "Sleep" <-> "DRIPS"
-> 
-> "Screen Off" is the state where all active displays in the device (whether
-> *virtual* or real; this means unrelated to DRM) are off. The user might still
-> be interacting with the device or running programs (e.g., compiling a kernel).
-> 
-> "Sleep" is a newer state, in which the device turns off its fan and pulses its
-> power button, but still supports running software activities. As part of this,
-> and to avoid overheating the device a lot of manufacturers lower the TDP (PLx)
-> of the device [3; _DSM 9 description].
-> 
-> Finally, DRIPS stands for Deepest Runtime Idle Power State, i.e. suspend.
-> 
-> While Windows may transition from any state to any state, doing so implies
-> performing all transitions to reach that state. All states other than DRIPS
-> have a fully active kernel (Wifi, USB at least) and allow userspace activity.
-> What changes is the extent of the activity, and whether some power consuming
-> devices are turned off (this is done with Modern Standby aware drivers and
-> firmware notifications). The Windows kernel suspends during the transition from
-> the "Sleep" state to the "DRIPS" state. In all other states it is active.
-> 
-> After finishing each transition, the kernel performs a firmware notification,
-> described in the _DSM document [3]. Moving from left to right with function num.,
-> we have Display Off (3; Active -> Screen Off), Sleep Entry (7; Screen Off -> Sleep),
-> and Lowest Power State Entry Notification (5; LPSEN; Sleep -> DRIPS). Then, from
-> right to left, we have Lowest Power State Exit Notification (6; DRIPS -> Sleep),
-> Sleep Exit (8; Sleep -> Screen) and Display On (4; Screen Off -> Active).
-> 
-> The Linux kernel is not currently Modern Standby aware but will still make these
-> calls. Currently, the problem is that the kernel calls all of the firmware
-> notifications at the point LPSEN (5, 6) should be called, which is when the
-> kernel is mostly suspended. This is a clear deviation from Windows, and causes
-> undesirable behavior in certain devices, the main one focused in this patch
-> series being the ROG Ally. Although series patch is aimed at Modern Standby
-> devices in general.
-> 
-> The ROG Ally is a Modern Standby capable device (uses Secure Core too; really
-> ticks all the MS boxes) and in it, there are issues with both Display 3,4
-> calls and Sleep 7,8 calls cause issues (7,8 are suspected and todo).
-> 
-> The Display 3,4 calls are responsible for the controller. The Display Off call
-> disconnects (if powersave is off) or powers off (if powersave is on and on DC
-> power) the MCU(s) responsible for the controller and deactivates the RGB of the
-> device. Display On powers on or reconnects the controller respectively.
-> This controller, in the Ally X, is composed of 6 HID devices that register to
-> the kernel. From testing, it seems that the majority of the problem in the Ally
-> comes from Display Off being called way too late timewise, and Display
-> 
-> The Sleep 7,8 calls, in general, are responsible for setting a low power state
-> that is safe to use while the device is sleeping, making the suspend light
-> pulse, and turning off the fan. Due to a variety of race conditions, there is
-> a rare occasion where the Ally EC can get stuck in its Sleep mode, where the
-> TDP is 5W, and prevent increasing it until the device reboots. The sleep entries
-> contain actions in the Ally, so there is a suspicion that calling them during
-> DRIPS is causing issues. However, this is not the subject of this patch and
-> has not been verified yet.
-> 
-> This patch centers around moving the Display 3,4 calls outside the suspend
-> sequence (which is the transition from Sleep to DRIPS in Modern Standby terms),
-> and by implementing the proper locks necessary, opening up the possibility of
-> making these calls as part of a more elaborate "Modern Standby"-like userspace
-> suspend/wakelock implementation. As of this patch, they are only called before
-> the suspend sequence, including with the possibility of adding a delay.
-> 
-> This makes the intent of this patch primarily compatibility focused, as it aims
-> to fix issues by the current implementation. And to that end it works.
-> After moving the calls outside of the suspend sequence, my ROG Ally X test unit
-> can suspend more than 50 times without rebooting, both with powersave on or off,
-> regardless of whether it is plugged/unplugged during suspend, and still have the
-> controller work with full reliability. In V1, there was an unsolved race condition
-> that was dealt by (5) before Display Off triggers. Essentially, Linux suspends
-> too fast for the current version of the firmware to deal with. After adding a
-> quirk table, which delays suspend after the Display Off call, the controller
-> of the original Ally should power off properly (a lot of testing will be done).
+> Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
 
-Thank you for your work on this and thank you for the comprehensive write-up
-on how Windows does modern standby.
+I was wondering if there is any progress in trying to come up with
+a more generic fix at the USB hub level for this as discussed in
+other emails in this thread ?
 
-First of all may I suggest that you take the above write-up, minus the ROG
-Ally specific bits and turn this into a new documentation file under
-Documentation/power ?  And also document at which point Linux currently
-makes the various transitions.
+Also have you seen this series:
 
-And then in patches where you move the transitions, also update the docs
-on what Linux does to match.
+[PATCH v2 0/5] acpi/x86: s2idle: move Display off/on calls outside suspend (fixes ROG Ally suspend)
+https://lore.kernel.org/platform-driver-x86/20240922172258.48435-1-lkml@antheas.dev/
 
-I have read the discussion about tying the display on/off calls to CRTC state
-and/or exposing a userspace knob for that. I think that this needs more
-discussion / design work.
+?
 
-OTOH IMHO it would be good to take patches 1 - 3 . Certainly 1 + 2 would
-be good to have. 3 is a bit unfortunate and not necessary with the current
-special ROG Ally handling in the asus-wmi driver. It might be better to
-just keep the quirks there.
-
-IMHO it would be good to submit a v2 of just patches 1 - 3 run through
-checkpatch. Also the commit message of patch 3 should point to the existing
-quirk code in asus-wmi.c and mention that then is no longer necessary after
-patch 3, then we can discuss what is the best place for these quirks.
-
-Rafael, what do you think about at least taking patches 1 - 3 upstream?
-Reading through how Windows handles things making the display on/off
-calls before suspending devices sounds like it is the right thing to do
-to me.
+I wonder if that is relevant. If the touchscreen gets turned off when
+the GPU enters D3 then this will not help, but if it gets turned off
+by the system wide Display Off call as described in that series then
+that series + extending patch 3 to maybe also include the HP ProOne 440
+might be another (cleaner) way to fix this ?
 
 Regards,
 
 Hans
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+> ---
+> v3:
+>  - Use dev_dbg() instead of dev_info().
+> 
+> v2:
+>  - Remove the part that searching for the touchscreen device.
+>  - Wording.
+> 
+>  drivers/platform/x86/hp/hp-wmi.c | 59 +++++++++++++++++++++++++++++++-
+>  1 file changed, 58 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/platform/x86/hp/hp-wmi.c b/drivers/platform/x86/hp/hp-wmi.c
+> index 876e0a97cee1..92cb02b50dfc 100644
+> --- a/drivers/platform/x86/hp/hp-wmi.c
+> +++ b/drivers/platform/x86/hp/hp-wmi.c
+> @@ -30,6 +30,8 @@
+>  #include <linux/rfkill.h>
+>  #include <linux/string.h>
+>  #include <linux/dmi.h>
+> +#include <linux/delay.h>
+> +#include <linux/pci.h>
+>  
+>  MODULE_AUTHOR("Matthew Garrett <mjg59@srcf.ucam.org>");
+>  MODULE_DESCRIPTION("HP laptop WMI driver");
+> @@ -1708,6 +1710,14 @@ static void __exit hp_wmi_bios_remove(struct platform_device *device)
+>  		platform_profile_remove();
+>  }
+>  
+> +static int hp_wmi_suspend_handler(struct device *device)
+> +{
+> +	/* Let the xhci have time to handle disconnect event */
+> +	msleep(200);
+> +
+> +	return 0;
+> +}
+> +
+>  static int hp_wmi_resume_handler(struct device *device)
+>  {
+>  	/*
+> @@ -1745,7 +1755,7 @@ static int hp_wmi_resume_handler(struct device *device)
+>  	return 0;
+>  }
+>  
+> -static const struct dev_pm_ops hp_wmi_pm_ops = {
+> +static struct dev_pm_ops hp_wmi_pm_ops = {
+>  	.resume  = hp_wmi_resume_handler,
+>  	.restore  = hp_wmi_resume_handler,
+>  };
+> @@ -1871,6 +1881,51 @@ static int hp_wmi_hwmon_init(void)
+>  	return 0;
+>  }
+>  
+> +static int lg_usb_touchscreen_quirk(const struct dmi_system_id *id)
+> +{
+> +	struct pci_dev *vga, *xhci;
+> +	struct device_link *vga_link, *xhci_link;
+> +
+> +	vga = pci_get_class(PCI_CLASS_DISPLAY_VGA << 8, NULL);
+> +
+> +	xhci = pci_get_class(PCI_CLASS_SERIAL_USB_XHCI, NULL);
+> +
+> +	if (vga && xhci) {
+> +		xhci_link = device_link_add(&hp_wmi_platform_dev->dev, &xhci->dev,
+> +				      DL_FLAG_STATELESS);
+> +		if (xhci_link)
+> +			dev_dbg(&hp_wmi_platform_dev->dev, "Suspend before %s\n",
+> +				 pci_name(xhci));
+> +		else
+> +			return 1;
+> +
+> +		vga_link = device_link_add(&vga->dev, &hp_wmi_platform_dev->dev,
+> +					   DL_FLAG_STATELESS);
+> +		if (vga_link)
+> +			dev_dbg(&hp_wmi_platform_dev->dev, "Suspend after %s\n",
+> +				 pci_name(vga));
+> +		else {
+> +			device_link_del(xhci_link);
+> +			return 1;
+> +		}
+> +	}
+> +
+> +	hp_wmi_pm_ops.suspend = hp_wmi_suspend_handler;
+> +
+> +	return 1;
+> +}
+> +
+> +static const struct dmi_system_id hp_wmi_quirk_table[] = {
+> +	{
+> +		.callback = lg_usb_touchscreen_quirk,
+> +		.matches = {
+> +			DMI_MATCH(DMI_SYS_VENDOR, "HP"),
+> +			DMI_MATCH(DMI_PRODUCT_NAME, "HP ProOne 440 23.8 inch G9 All-in-One Desktop PC"),
+> +		},
+> +	},
+> +	{}
+> +};
+> +
+>  static int __init hp_wmi_init(void)
+>  {
+>  	int event_capable = wmi_has_guid(HPWMI_EVENT_GUID);
+> @@ -1909,6 +1964,8 @@ static int __init hp_wmi_init(void)
+>  			goto err_unregister_device;
+>  	}
+>  
+> +	dmi_check_system(hp_wmi_quirk_table);
+> +
+>  	return 0;
+>  
+>  err_unregister_device:
 
