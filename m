@@ -1,50 +1,49 @@
 Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 08F0716190B;
-	Sat,  5 Oct 2024 19:30:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3CC92166F11;
+	Sat,  5 Oct 2024 19:30:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.8
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728156640; cv=none; b=h7cMFAB58jCk5QMWxVGvrjS964zfCGhmUb7e1W+dC/UhS2rN81ooJMPyEe41+2C4uKMaBJjwG0pfs6TF5bzoxf/y3QqoHxpJBa/eA0VYxR7I9pqo1qpsmTDdUcAAMH+A4kO3VAFcq/vP4toV4058AK+ZRNNZEtVDyROu0k0TXhQ=
+	t=1728156641; cv=none; b=l2bSfLhWPve/uRo9eRQr5cZ8KHWD5iU5MGepEl6m3TXTK1M4UZ0UlxdI2FOy6BU7XWehsZW6bCuyMdLDzxr+MqqBKVYZyjyY9bCjnmGv+lLxfiKBYg1TdzRxBG4E9mk50ioKVN50CSOiPnqDA7PQ2+i6uWB52E2CUg+LWpIBA9I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728156640; c=relaxed/simple;
-	bh=3AiGtnG75PKSTtiH979M1yZh3PT8uAdBaY7xcXMoDm0=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=EntQTQxe1pHu7oP1RxT4A8YHdXtSMKQB4kSHP45A085WlPudo3rSbSEdAvkpPpFrFOLmwZH8lHz9SPTBuSvWv5UfcwXmk5ZuMXDsErFnheMZx7j26rBbRYP4JXpvKc609uXKCk2g+Z3u56d2+Rp3Lpu8AW1g3Bw4LA0lA9DBTJ8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Iov8dH2d; arc=none smtp.client-ip=192.198.163.8
+	s=arc-20240116; t=1728156641; c=relaxed/simple;
+	bh=DAZkK2w6uiaoPIH0NFXtrjeE8rlq8Uh2RD5oK2bm1jY=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=fGQMg3Ev3JQXVTbJSvMVuZPfbEbbeOv0/yUw7ZYmj4nxFtzLH/vHU1bk4o8HE8MyErW8Oke2byie1sgTkYZNykFfU+KAFbUms1x1/EV/NGgOw5Qyv3TVUbWkp3KeVIGFxVrIK39JbkWhXXpaXEwVb0a7eXbW2Upk/DThbJrsQSk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=SbZnZTL4; arc=none smtp.client-ip=192.198.163.8
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Iov8dH2d"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="SbZnZTL4"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1728156639; x=1759692639;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=3AiGtnG75PKSTtiH979M1yZh3PT8uAdBaY7xcXMoDm0=;
-  b=Iov8dH2dwyEUQmMRvl5g6dOi7BIJNP3D2hfwXGvOm+YDtsyFwILmEjA8
-   q1wAlwN5IwD0NAl29oAsGWQC/cYlTHIeW4cQyxd58K5Bha241AWgrNr6W
-   Sxh97ZUVm3Kw5dMKPmOF0BsPevArncwpC7nyvPBJXMLUR/qTqKGYbyL5+
-   r1ZypsHtv25LvtNcU/3psA+ZQr4IIj+YYPaG5wqkOx2rGQ3fZ8oM4ugPr
-   IjTRcZsLK5VHIQBSyXUuhHReML1xoXoNNVrjMlPHhoDzf5iWiVyOEVkpN
-   XI3gVVM5NvZWwLA5Y0OEBXeRdJoSIrI21GXS++y1o93EAYbMTun6QJD1w
-   w==;
-X-CSE-ConnectionGUID: UgSOsKraTneXkJ6U1c+USw==
-X-CSE-MsgGUID: 3FZWcdFTTKOlNcVDMRNJ2g==
-X-IronPort-AV: E=McAfee;i="6700,10204,11216"; a="44879470"
+  t=1728156640; x=1759692640;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=DAZkK2w6uiaoPIH0NFXtrjeE8rlq8Uh2RD5oK2bm1jY=;
+  b=SbZnZTL4jDcIGAMQkxBgHgWF4hphX+kj6L9yBGDtAKp1K02UnW22jyBG
+   4Cp4BU5DkeKZYE2FNs38Amnx8OXNz7G1MYhbdIQvWQF/cFkHZ52DGT80j
+   swUfqCMaNGqbj+mSdH4/PTKqfnDO3xS2bOPISm5u3Tn6+1uKgNLRDdUGL
+   cOzFML/q6Paiv+ZHA3Yg3MQev89bGYjXFIpbByWgxF6I8WOr8yU4wW8Wk
+   1ZP88WYUDvyVsMGKwajE2KTi+8+py374jPFsEFqYS+QA2MczPmjcw3aoM
+   kYistd724bNZjWOb6ptguCGgEb4dZVCByuzFBX8rpKvv3dJgdy1OKUlGj
+   g==;
+X-CSE-ConnectionGUID: 8DsdHRAwRna2cSZzXZiVVg==
+X-CSE-MsgGUID: Pk7vqWHPQzS0dsPVyV/TJQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11216"; a="44879472"
 X-IronPort-AV: E=Sophos;i="6.11,181,1725346800"; 
-   d="scan'208";a="44879470"
+   d="scan'208";a="44879472"
 Received: from orviesa010.jf.intel.com ([10.64.159.150])
   by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Oct 2024 12:30:36 -0700
-X-CSE-ConnectionGUID: 44lp5oojT8qwM1ceYeU8nw==
-X-CSE-MsgGUID: C8x2XNQrRGOgOMeZTFCFUw==
+X-CSE-ConnectionGUID: yXVhGMvfT0S0VdwxUXSYTQ==
+X-CSE-MsgGUID: qnOSeE/ZQ4yPUxGj/vYNuw==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.11,181,1725346800"; 
-   d="scan'208";a="74861626"
+   d="scan'208";a="74861628"
 Received: from black.fi.intel.com ([10.237.72.28])
   by orviesa010.jf.intel.com with ESMTP; 05 Oct 2024 12:30:33 -0700
 Received: by black.fi.intel.com (Postfix, from userid 1003)
-	id 0B12A4BB; Sat, 05 Oct 2024 22:30:32 +0300 (EEST)
+	id D0B86178; Sat, 05 Oct 2024 22:30:31 +0300 (EEST)
 From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
 	linux-kernel@vger.kernel.org,
@@ -55,14 +54,11 @@ Cc: Andy Shevchenko <andy@kernel.org>,
 	Hans de Goede <hdegoede@redhat.com>,
 	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
 	Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Zhang Ning <zhangn1985@outlook.com>
-Subject: [PATCH v2 3/4] mfd: intel_soc_pmic_bxtwc: Use IRQ domain for PMIC devices
-Date: Sat,  5 Oct 2024 22:27:06 +0300
-Message-ID: <20241005193029.1929139-4-andriy.shevchenko@linux.intel.com>
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: [PATCH v2 0/4] mfd: intel_soc_pmic_bxtwc: Fix IRQ domain usage
+Date: Sat,  5 Oct 2024 22:27:03 +0300
+Message-ID: <20241005193029.1929139-1-andriy.shevchenko@linux.intel.com>
 X-Mailer: git-send-email 2.43.0.rc1.1336.g36b5255a03ac
-In-Reply-To: <20241005193029.1929139-1-andriy.shevchenko@linux.intel.com>
-References: <20241005193029.1929139-1-andriy.shevchenko@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -71,109 +67,42 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-While design wise the idea of converting the driver to use
-the hierarchy of the IRQ chips is correct, the implementation
-has (inherited) flaws. This was unveiled when platform_get_irq()
-had started WARN() on IRQ 0 that is supposed to be a Linux
-IRQ number (also known as vIRQ).
+It appears that the driver has been developed without proper thinking
+of what the difference between HW IRQ and Linux IRQ (also known as vIRQ).
+This misunderstanding led to the 0 being used as vIRQ which is no-no and
+platform APIs unveil this after the commit a85a6c86c25b ("driver core:
+platform: Clarify that IRQ 0 is invalid"). With this the Intel Broxton
+Whiskey Cove PMIC driver has to be fixed all over the places.
 
-Rework the driver to respect IRQ domain when creating each MFD
-device separately, as the domain is not the same for all of them.
+In this series two immediate fixes as reported recently and we have
+drivers for (patches 1 & 2) followed by the patch that prepares the
+same fix for the devices that have no in-tree drivers yet. At the end
+it is a fix for IRQ domain debugging (when enabled), but it requires
+quite recent patches in IRQ domain and regmap IRQ subsystems, which is
+reflected in the Depends-on tag (I can't use Fixes, as this doesn't
+fix anything related to that).
 
-Fixes: 57129044f504 ("mfd: intel_soc_pmic_bxtwc: Use chained IRQs for second level IRQ chips")
-Tested-by: Zhang Ning <zhangn1985@outlook.com>
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
----
- drivers/mfd/intel_soc_pmic_bxtwc.c | 54 +++++++++++++++++-------------
- 1 file changed, 30 insertions(+), 24 deletions(-)
+The series touches a couple of subsystems as the respective drivers
+has to be fixed simultaneously. The idea is to proceed the series via
+MFD tree to where the main driver belongs.
 
-diff --git a/drivers/mfd/intel_soc_pmic_bxtwc.c b/drivers/mfd/intel_soc_pmic_bxtwc.c
-index 628108dcf545..fefbeb4164fd 100644
---- a/drivers/mfd/intel_soc_pmic_bxtwc.c
-+++ b/drivers/mfd/intel_soc_pmic_bxtwc.c
-@@ -230,21 +230,11 @@ static const struct resource tmu_resources[] = {
- };
- 
- static struct mfd_cell bxt_wc_dev[] = {
--	{
--		.name = "bxt_wcove_gpadc",
--		.num_resources = ARRAY_SIZE(adc_resources),
--		.resources = adc_resources,
--	},
- 	{
- 		.name = "bxt_wcove_thermal",
- 		.num_resources = ARRAY_SIZE(thermal_resources),
- 		.resources = thermal_resources,
- 	},
--	{
--		.name = "bxt_wcove_bcu",
--		.num_resources = ARRAY_SIZE(bcu_resources),
--		.resources = bcu_resources,
--	},
- 	{
- 		.name = "bxt_wcove_gpio",
- 		.num_resources = ARRAY_SIZE(gpio_resources),
-@@ -263,6 +253,22 @@ static const struct mfd_cell bxt_wc_tmu_dev[] = {
- 	},
- };
- 
-+static const struct mfd_cell bxt_wc_bcu_dev[] = {
-+	{
-+		.name = "bxt_wcove_bcu",
-+		.num_resources = ARRAY_SIZE(bcu_resources),
-+		.resources = bcu_resources,
-+	},
-+};
-+
-+static const struct mfd_cell bxt_wc_adc_dev[] = {
-+	{
-+		.name = "bxt_wcove_gpadc",
-+		.num_resources = ARRAY_SIZE(adc_resources),
-+		.resources = adc_resources,
-+	},
-+};
-+
- static struct mfd_cell bxt_wc_chgr_dev[] = {
- 	{
- 		.name = "bxt_wcove_usbc",
-@@ -508,23 +514,23 @@ static int bxtwc_probe(struct platform_device *pdev)
- 	if (ret)
- 		return dev_err_probe(dev, ret, "Failed to add PWRBTN IRQ chip\n");
- 
--	/* Add chained IRQ handler for BCU IRQs */
--	ret = bxtwc_add_chained_irq_chip(pmic, pmic->irq_chip_data,
--					 BXTWC_BCU_LVL1_IRQ,
--					 IRQF_ONESHOT,
--					 &bxtwc_regmap_irq_chip_bcu,
--					 &pmic->irq_chip_data_bcu);
-+	ret = bxtwc_add_chained_devices(pmic, bxt_wc_bcu_dev, ARRAY_SIZE(bxt_wc_bcu_dev),
-+					pmic->irq_chip_data,
-+					BXTWC_BCU_LVL1_IRQ,
-+					IRQF_ONESHOT,
-+					&bxtwc_regmap_irq_chip_bcu,
-+					&pmic->irq_chip_data_bcu);
- 	if (ret)
--		return dev_err_probe(dev, ret, "Failed to add BUC IRQ chip\n");
-+		return ret;
- 
--	/* Add chained IRQ handler for ADC IRQs */
--	ret = bxtwc_add_chained_irq_chip(pmic, pmic->irq_chip_data,
--					 BXTWC_ADC_LVL1_IRQ,
--					 IRQF_ONESHOT,
--					 &bxtwc_regmap_irq_chip_adc,
--					 &pmic->irq_chip_data_adc);
-+	ret = bxtwc_add_chained_devices(pmic, bxt_wc_adc_dev, ARRAY_SIZE(bxt_wc_adc_dev),
-+					pmic->irq_chip_data,
-+					BXTWC_ADC_LVL1_IRQ,
-+					IRQF_ONESHOT,
-+					&bxtwc_regmap_irq_chip_adc,
-+					&pmic->irq_chip_data_adc);
- 	if (ret)
--		return dev_err_probe(dev, ret, "Failed to add ADC IRQ chip\n");
-+		return ret;
- 
- 	ret = bxtwc_add_chained_devices(pmic, bxt_wc_chgr_dev, ARRAY_SIZE(bxt_wc_chgr_dev),
- 					pmic->irq_chip_data,
+I have tested this on Intel Joule SoM (Apollo Lake SoC).
+
+In v2:
+- added tags (Hans, Zhang)
+- fixed typo in the commit messages
+
+Andy Shevchenko (4):
+  mfd: intel_soc_pmic_bxtwc: Use IRQ domain for USB Type-C device
+  mfd: intel_soc_pmic_bxtwc: Use IRQ domain for TMU device
+  mfd: intel_soc_pmic_bxtwc: Use IRQ domain for PMIC devices
+  mfd: intel_soc_pmic_bxtwc: Fix IRQ domain names duplication
+
+ drivers/mfd/intel_soc_pmic_bxtwc.c     | 144 ++++++++++++++++---------
+ drivers/platform/x86/intel/bxtwc_tmu.c |  22 ++--
+ drivers/usb/typec/tcpm/wcove.c         |   4 -
+ 3 files changed, 97 insertions(+), 73 deletions(-)
+
 -- 
 2.43.0.rc1.1336.g36b5255a03ac
 
