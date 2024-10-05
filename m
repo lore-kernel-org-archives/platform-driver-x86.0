@@ -1,65 +1,65 @@
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B412413E898
-	for <platform-driver-x86@vger.kernel.org>; Sat,  5 Oct 2024 13:16:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 284FE14B94B
+	for <platform-driver-x86@vger.kernel.org>; Sat,  5 Oct 2024 14:21:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728134170; cv=none; b=kRWeOJihMAqehDGFyjALxMhbfOv9KKiSUVjI3it+kMl3uWFt2lczI7TeTpr7fZiuZU6yaJOyoXsP+dEwVsAnacZB9aXHVRsbNMHQIuSQkaep7YXAAzvdcJdtFxmy0JGxmkcPuNIo2x6urg2W5QqpLpWkLPKSGnga1VzqV52J5BU=
+	t=1728138112; cv=none; b=drBe+5bikotcG+GFYPgbUlH9AQzcpdNXEKB0mwTlpukuCL/tIYoFyfq426rQgKb1bffB7ekhsHYv1U5ZRPa08TWid9zuBmXxWYlVDCGgq6K1HiPSXbxavH5g/kn66yrWbKiqAL7o7mFMAWROZdkNlwaEF5shjh0gWgZmrN6R9iE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728134170; c=relaxed/simple;
-	bh=SnCouw/0CAfr+j4atpTs6tFU262mQXs1o9AF4aVWNIo=;
+	s=arc-20240116; t=1728138112; c=relaxed/simple;
+	bh=x2MGenC9dWcWd4u6SMtCfuxLLZwMiAf5QnyZkcDNxOQ=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=stzfSwLGf7OojWkjWZOC8vZlGSMVNsmuZEUzSyG7AC/6iRMWN8voiEwneZcqVvXJ5d5NC9gY/U1YvO1g/2aPxxrRGPuNRIAocSMpd28ct+UgYS6NnrVmqc7eLNJxJgBp7YfYuTbfdgoXhpS1yOhXUaz1NnGtex9btLRaAsBLP2I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=dYLI82jO; arc=none smtp.client-ip=170.10.129.124
+	 In-Reply-To:Content-Type; b=b4I4VLVyYV39IoeqbhFFBRPouSv1nt+XUrdqfU8W78nNuHpFPKrAGiV4ZT/qI7IZmj1ktZ/tosVdyIvtLbPsqFSDsigvFQqlw9QTH7jkMCd6Paqv2nFLMJXUdZ9A5xi7LXATHb/rNIHmxW+c2KvSA9GIsvYyob4FWsTvHFojxEE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=TbGHJmdK; arc=none smtp.client-ip=170.10.129.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="dYLI82jO"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="TbGHJmdK"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1728134167;
+	s=mimecast20190719; t=1728138110;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=NtXWlJU5HafQ0O79u3ZV8qo7ew1Goc3SkHZ1tqX1xb0=;
-	b=dYLI82jOQcziQ/YISSuliT2GbcFo1AgKOYlb/yJhS02vlJs6pcfvRt80FOcYZOFO+12UN+
-	9REQECMmFnOrz6ccWoG32sAGNDK1/78nxOT9EDetoCVoLny1Ti4my07ylRWSdjKjjiO+h1
-	2jrhapT7zE/yMe1oxkhE4UnA/HxEEcY=
-Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com
- [209.85.128.70]) by relay.mimecast.com with ESMTP with STARTTLS
+	bh=xPqVbGCbjIr9a+NpG93NtbvFHaodkJKm5MMZCUHR91E=;
+	b=TbGHJmdKxbugSLPb+JIoT9keNoPtwz0zfgbWFMQHtmsmk1kasP9PyPpSpkJvn84hGi9Kiw
+	Fak+C8p7/Jwama3pTwqDT8zpMycbfR2luloccvszj5Lv+tGthT3nznXEikJDaAMjRqOuaN
+	4EmVqOSriif8uxrPam+VQC3S23waLyo=
+Received: from mail-ej1-f72.google.com (mail-ej1-f72.google.com
+ [209.85.218.72]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-355-xq3EQwtTPuqrhLPkTpytpw-1; Sat, 05 Oct 2024 09:16:05 -0400
-X-MC-Unique: xq3EQwtTPuqrhLPkTpytpw-1
-Received: by mail-wm1-f70.google.com with SMTP id 5b1f17b1804b1-42cb6ed7f9dso30751745e9.3
-        for <platform-driver-x86@vger.kernel.org>; Sat, 05 Oct 2024 06:16:05 -0700 (PDT)
+ us-mta-61-S2-PdwiRPTyhix1skQziZg-1; Sat, 05 Oct 2024 10:21:48 -0400
+X-MC-Unique: S2-PdwiRPTyhix1skQziZg-1
+Received: by mail-ej1-f72.google.com with SMTP id a640c23a62f3a-a8a84b60255so270218266b.1
+        for <platform-driver-x86@vger.kernel.org>; Sat, 05 Oct 2024 07:21:48 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1728134165; x=1728738965;
+        d=1e100.net; s=20230601; t=1728138107; x=1728742907;
         h=content-transfer-encoding:in-reply-to:from:content-language
          :references:cc:to:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=NtXWlJU5HafQ0O79u3ZV8qo7ew1Goc3SkHZ1tqX1xb0=;
-        b=u8vdg4Wom9Z/wsCSvGFQyT42UzP49UGyWDO4BibGeCAl/36Jlfn9LEcG+63tAqJrrz
-         5+3l/BG0uD5uNncd8cFgPgQCIQ9u7gEreogt2JX0Yi/PCkhtX/26ep1h3t2YIvWGYdFh
-         N3lpOJO1Dsk851WLWTLzPrP7y1PLa391SV59WJOwwdRkaAO0XzanI5SuBujbgWL60U35
-         cYpyAoAKj76QuV/3vSFlbYGon9Oip0R1kiQ7piInG/vUfqZ7y98XHPcLYHIfZIPThJr6
-         MfM+FDCOL5S5H+/X9I6nrk5waIBmq7sB92FTHGei7oqgeu5GDDhEJGlcAGvz3B+CCgUL
-         47SA==
-X-Forwarded-Encrypted: i=1; AJvYcCUjJ7amSdi5zvtog2P9AKnfmE5F80Wq6tch6YcFzT/G1BxpYFtBFKCkB82tWWONL6zYn5b1ppBbB96kELcGa4mCBbXW@vger.kernel.org
-X-Gm-Message-State: AOJu0YzXoMaMqIZbUHW4UZdeIkTpeuXjR30JC3s1Yqf4bMszHBswy3mb
-	VuiUh3ZonL5NPMkTIEZyEWokLoBGDSrTVVM+WZa2S/BFeuKBJLh0Dtzj1TDwaGNR92XOW3d5kOe
-	dC2D/IKfnsmwXJnAicup2wDwVB9pCo308kkLgSTzIGBjhSr3E+aruy6GDwtS55K0QirXEXZ4=
-X-Received: by 2002:a05:6000:400d:b0:37c:cea2:826f with SMTP id ffacd0b85a97d-37d0e6ea949mr6837619f8f.2.1728134164627;
-        Sat, 05 Oct 2024 06:16:04 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IFHIVFOTI5XI6jlg/ZTrlk/dkgYkJ/jdRmq2oxhmffIjVYZZkCgnpltydn6NVaGkYR5Aejtig==
-X-Received: by 2002:a05:6000:400d:b0:37c:cea2:826f with SMTP id ffacd0b85a97d-37d0e6ea949mr6837593f8f.2.1728134164290;
-        Sat, 05 Oct 2024 06:16:04 -0700 (PDT)
+        bh=xPqVbGCbjIr9a+NpG93NtbvFHaodkJKm5MMZCUHR91E=;
+        b=Nlcs/NkLpsKdP+YLvBYwD2XV/SCztev6InJak9PVDFR31xTMqglVTkMtinGmeAj9Up
+         kUhhzXbILjsxwTg1Ngo454nbByPhVo1nMIJzH0NzVpd0MRtSe7wVlUYfXnnbCNDkLYoC
+         dNNnJorqaBDU0FPNmgbSk+Djc8BMm+Z3M+GCeGE/F8cpgviDyqEjSxd82MlcokY2F3po
+         HLDHIC7vKLRCATWXKvO1SGtfCzWfz2aYBXhvpLnAVspmKjzKEIYabvTaBsFu9mNzD6s/
+         ydlM88ZXW6GaG/Z356fmSVF5jsNR5kRC3XQf5HserG+nIiQeC2P9GZBilZLGRSRWOEC4
+         8gNg==
+X-Gm-Message-State: AOJu0YzvBzCh1pX2Mhdcw7iFlFmb1lM5+Vw/s4zBi6cFk0KA/1l/2A4Y
+	06a0KoOkzKPgs1Um1djIYwnojcAKKRXszS0VH29H8n9lWt8oGfHc4PT/ETiJ+T2k1HmExfQesvw
+	Vsy9plouRq9XjAWnrGi5xC5vVeF8ey45lBvXgdO40s1UAvtomHe+BBkGzUjMmxn63wXgQN6ECCK
+	No7+Ml2A==
+X-Received: by 2002:a17:907:9450:b0:a99:c0e:2430 with SMTP id a640c23a62f3a-a991bd09e85mr706342666b.19.1728138107408;
+        Sat, 05 Oct 2024 07:21:47 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IHoYdKRdo11pz2X6Ms7neemVs+JqkPqonSaAcL4z9PvsulAS7sYtIxUjsT2/oPRvtZ2pZgEww==
+X-Received: by 2002:a17:907:9450:b0:a99:c0e:2430 with SMTP id a640c23a62f3a-a991bd09e85mr706339366b.19.1728138106929;
+        Sat, 05 Oct 2024 07:21:46 -0700 (PDT)
 Received: from ?IPV6:2001:1c00:c32:7800:5bfa:a036:83f0:f9ec? (2001-1c00-0c32-7800-5bfa-a036-83f0-f9ec.cable.dynamic.v6.ziggo.nl. [2001:1c00:c32:7800:5bfa:a036:83f0:f9ec])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a992e784666sm131559566b.100.2024.10.05.06.16.03
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a993d927706sm81921266b.146.2024.10.05.07.21.44
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 05 Oct 2024 06:16:03 -0700 (PDT)
-Message-ID: <a2170a4a-d994-4729-9ade-aa20de4fefa1@redhat.com>
-Date: Sat, 5 Oct 2024 15:16:02 +0200
+        Sat, 05 Oct 2024 07:21:45 -0700 (PDT)
+Message-ID: <134adbb7-06c5-4b6a-a8b9-abb973784f73@redhat.com>
+Date: Sat, 5 Oct 2024 16:21:43 +0200
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -67,95 +67,156 @@ List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] platform/x86:intel/pmc: fix IS_ENABLED() check
-To: Lukas Bulwahn <lbulwahn@redhat.com>,
- Rajneesh Bhardwaj <irenic.rajneesh@gmail.com>,
- David E Box <david.e.box@intel.com>,
- =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
- Arnd Bergmann <arnd@arndb.de>, Daniel Lezcano <daniel.lezcano@linaro.org>,
- platform-driver-x86@vger.kernel.org
-Cc: kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org,
- Lukas Bulwahn <lukas.bulwahn@redhat.com>
-References: <20240924084056.48447-1-lukas.bulwahn@redhat.com>
+Subject: Re: [PATCH v2 0/5] acpi/x86: s2idle: move Display off/on calls
+ outside suspend (fixes ROG Ally suspend)
+To: Antheas Kapenekakis <lkml@antheas.dev>, linux-pm@vger.kernel.org,
+ "Rafael J. Wysocki" <rafael@kernel.org>
+Cc: platform-driver-x86@vger.kernel.org,
+ Mario Limonciello <mario.limonciello@amd.com>, luke@ljones.dev,
+ me@kylegospodneti.ch, Denis Benato <benato.denis96@gmail.com>
+References: <20240922172258.48435-1-lkml@antheas.dev>
 Content-Language: en-US, nl
 From: Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <20240924084056.48447-1-lukas.bulwahn@redhat.com>
+In-Reply-To: <20240922172258.48435-1-lkml@antheas.dev>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 Hi,
 
-Lukas, thank you for your patch.
-
-On 24-Sep-24 10:40 AM, Lukas Bulwahn wrote:
-> From: Lukas Bulwahn <lukas.bulwahn@redhat.com>
+On 22-Sep-24 7:22 PM, Antheas Kapenekakis wrote:
+> The following series moves the Display off/on calls outside of the suspend
+> sequence, as they are performed in Windows. This fixes certain issues that appear
+> in devices that use the calls and expect the kernel to be active during their
+> call (especially in the case of the ROG Ally devices) and opens the possibility
+> of implementing a "Screen Off" state in the future (which mirrors Windows).
+> In addition, it adds a quirk table that will allow for adding delays between
+> Modern Standby transitions, to help resolve racing conditions.
 > 
-> Commit d7a87891e2f5 ("platform/x86:intel/pmc: fix build regression with
-> pmtimer turned off") accidentally slips in some CONFIG_CONFIG_X86_PM_TIMER
-> (note the duplicated CONFIG prefix) in the IS_ENABLED() check.
+> This series requires a bit of background on how modern standby works in Windows.
+> Fundamentally, it is composed of four states: "Active", "Screen Off", "Sleep",
+> and "DRIPS". Here, I take the liberty of naming the state "Active", as it is
+> implied in Windows documentation.
 > 
-> Fortunately, ./scripts/checkkconfigsymbols.py notices this accident. Fix up
-> the IS_ENABLED() check with the intended config name.
+> When the user actively interacts with a device, it is in the "Active" state.
+> The screen is on, all devices are connected, and desired software is running.
+> The other 3 stages play a role once the user stops interacting with the device.
+> This is triggered in two main ways: either by pressing the power button or by
+> inactivity. Once either of those targets is met, the system enters Modern Standby.
 > 
-> Fixes: d7a87891e2f5 ("platform/x86:intel/pmc: fix build regression with pmtimer turned off")
-> Signed-off-by: Lukas Bulwahn <lukas.bulwahn@redhat.com>
+> Modern Standby consists of an orchestration of the "Screen Off", "Sleep", and
+> "DRIPS" states. Windows is free to move throughout these states until the user
+> interacts with the device again, where the device will transition to being
+> "Active". Moving between the states implies a transition, where Windows performs
+> a set of actions. In addition, Windows can only move between adjacent states
+> as follows:
+> 
+> "Active" <-> "Screen Off" <-> "Sleep" <-> "DRIPS"
+> 
+> "Screen Off" is the state where all active displays in the device (whether
+> *virtual* or real; this means unrelated to DRM) are off. The user might still
+> be interacting with the device or running programs (e.g., compiling a kernel).
+> 
+> "Sleep" is a newer state, in which the device turns off its fan and pulses its
+> power button, but still supports running software activities. As part of this,
+> and to avoid overheating the device a lot of manufacturers lower the TDP (PLx)
+> of the device [3; _DSM 9 description].
+> 
+> Finally, DRIPS stands for Deepest Runtime Idle Power State, i.e. suspend.
+> 
+> While Windows may transition from any state to any state, doing so implies
+> performing all transitions to reach that state. All states other than DRIPS
+> have a fully active kernel (Wifi, USB at least) and allow userspace activity.
+> What changes is the extent of the activity, and whether some power consuming
+> devices are turned off (this is done with Modern Standby aware drivers and
+> firmware notifications). The Windows kernel suspends during the transition from
+> the "Sleep" state to the "DRIPS" state. In all other states it is active.
+> 
+> After finishing each transition, the kernel performs a firmware notification,
+> described in the _DSM document [3]. Moving from left to right with function num.,
+> we have Display Off (3; Active -> Screen Off), Sleep Entry (7; Screen Off -> Sleep),
+> and Lowest Power State Entry Notification (5; LPSEN; Sleep -> DRIPS). Then, from
+> right to left, we have Lowest Power State Exit Notification (6; DRIPS -> Sleep),
+> Sleep Exit (8; Sleep -> Screen) and Display On (4; Screen Off -> Active).
+> 
+> The Linux kernel is not currently Modern Standby aware but will still make these
+> calls. Currently, the problem is that the kernel calls all of the firmware
+> notifications at the point LPSEN (5, 6) should be called, which is when the
+> kernel is mostly suspended. This is a clear deviation from Windows, and causes
+> undesirable behavior in certain devices, the main one focused in this patch
+> series being the ROG Ally. Although series patch is aimed at Modern Standby
+> devices in general.
+> 
+> The ROG Ally is a Modern Standby capable device (uses Secure Core too; really
+> ticks all the MS boxes) and in it, there are issues with both Display 3,4
+> calls and Sleep 7,8 calls cause issues (7,8 are suspected and todo).
+> 
+> The Display 3,4 calls are responsible for the controller. The Display Off call
+> disconnects (if powersave is off) or powers off (if powersave is on and on DC
+> power) the MCU(s) responsible for the controller and deactivates the RGB of the
+> device. Display On powers on or reconnects the controller respectively.
+> This controller, in the Ally X, is composed of 6 HID devices that register to
+> the kernel. From testing, it seems that the majority of the problem in the Ally
+> comes from Display Off being called way too late timewise, and Display
+> 
+> The Sleep 7,8 calls, in general, are responsible for setting a low power state
+> that is safe to use while the device is sleeping, making the suspend light
+> pulse, and turning off the fan. Due to a variety of race conditions, there is
+> a rare occasion where the Ally EC can get stuck in its Sleep mode, where the
+> TDP is 5W, and prevent increasing it until the device reboots. The sleep entries
+> contain actions in the Ally, so there is a suspicion that calling them during
+> DRIPS is causing issues. However, this is not the subject of this patch and
+> has not been verified yet.
+> 
+> This patch centers around moving the Display 3,4 calls outside the suspend
+> sequence (which is the transition from Sleep to DRIPS in Modern Standby terms),
+> and by implementing the proper locks necessary, opening up the possibility of
+> making these calls as part of a more elaborate "Modern Standby"-like userspace
+> suspend/wakelock implementation. As of this patch, they are only called before
+> the suspend sequence, including with the possibility of adding a delay.
+> 
+> This makes the intent of this patch primarily compatibility focused, as it aims
+> to fix issues by the current implementation. And to that end it works.
+> After moving the calls outside of the suspend sequence, my ROG Ally X test unit
+> can suspend more than 50 times without rebooting, both with powersave on or off,
+> regardless of whether it is plugged/unplugged during suspend, and still have the
+> controller work with full reliability. In V1, there was an unsolved race condition
+> that was dealt by (5) before Display Off triggers. Essentially, Linux suspends
+> too fast for the current version of the firmware to deal with. After adding a
+> quirk table, which delays suspend after the Display Off call, the controller
+> of the original Ally should power off properly (a lot of testing will be done).
 
-I see that d7a87891e2f5 ("platform/x86:intel/pmc: fix build
-regression with pmtimer turned off") does not exist in
-Torvald's tree yet.
+Thank you for your work on this and thank you for the comprehensive write-up
+on how Windows does modern standby.
 
-This comes from http://git.linaro.org/people/daniel.lezcano/linux.git/log/?h=timers/drivers/next
+First of all may I suggest that you take the above write-up, minus the ROG
+Ally specific bits and turn this into a new documentation file under
+Documentation/power ?  And also document at which point Linux currently
+makes the various transitions.
 
-Daniel, I appreciate you picking this up, but now that everything
-has been merged together again in v6.12-rc1 I would prefer to
-handle any further changes limited to drivers/platform/x86/intel/
-through the pdx86 tree.
+And then in patches where you move the transitions, also update the docs
+on what Linux does to match.
 
-Also since this is a build fix it really should be send as a fix
-fro the 6.12 cycle.
+I have read the discussion about tying the display on/off calls to CRTC state
+and/or exposing a userspace knob for that. I think that this needs more
+discussion / design work.
 
-Daniel judging by the timers/drivers/next branch name I guess these
-are not fixes targeting 6.12, right ?
+OTOH IMHO it would be good to take patches 1 - 3 . Certainly 1 + 2 would
+be good to have. 3 is a bit unfortunate and not necessary with the current
+special ROG Ally handling in the asus-wmi driver. It might be better to
+just keep the quirks there.
 
-In that case can you please drop d7a87891e2f5 ("platform/x86:intel/pmc:
-fix build regression with pmtimer turned off") ?  Then I'll pick that
-up and squash in this typo fix.
+IMHO it would be good to submit a v2 of just patches 1 - 3 run through
+checkpatch. Also the commit message of patch 3 should point to the existing
+quirk code in asus-wmi.c and mention that then is no longer necessary after
+patch 3, then we can discuss what is the best place for these quirks.
 
-Or if you do plan to send things out as fixes to Linus, then please
-add this patch too.
+Rafael, what do you think about at least taking patches 1 - 3 upstream?
+Reading through how Windows handles things making the display on/off
+calls before suspending devices sounds like it is the right thing to do
+to me.
 
 Regards,
 
 Hans
 
-
-
-
-
-> ---
->  drivers/platform/x86/intel/pmc/core.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/platform/x86/intel/pmc/core.c b/drivers/platform/x86/intel/pmc/core.c
-> index 0431a599ba26..4387b5103701 100644
-> --- a/drivers/platform/x86/intel/pmc/core.c
-> +++ b/drivers/platform/x86/intel/pmc/core.c
-> @@ -1546,7 +1546,7 @@ static int pmc_core_probe(struct platform_device *pdev)
->  			       pmc_core_adjust_slp_s0_step(primary_pmc, 1));
->  
->  	map = primary_pmc->map;
-> -	if (IS_ENABLED(CONFIG_CONFIG_X86_PM_TIMER) &&
-> +	if (IS_ENABLED(CONFIG_X86_PM_TIMER) &&
->  	    map->acpi_pm_tmr_ctl_offset)
->  		acpi_pmtmr_register_suspend_resume_callback(pmc_core_acpi_pm_timer_suspend_resume,
->  							 pmcdev);
-> @@ -1563,7 +1563,7 @@ static void pmc_core_remove(struct platform_device *pdev)
->  	const struct pmc *pmc = pmcdev->pmcs[PMC_IDX_MAIN];
->  	const struct pmc_reg_map *map = pmc->map;
->  
-> -	if (IS_ENABLED(CONFIG_CONFIG_X86_PM_TIMER) &&
-> +	if (IS_ENABLED(CONFIG_X86_PM_TIMER) &&
->  	    map->acpi_pm_tmr_ctl_offset)
->  		acpi_pmtmr_unregister_suspend_resume_callback();
->  
 
