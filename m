@@ -1,108 +1,172 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
+Received: from fout-a3-smtp.messagingengine.com (fout-a3-smtp.messagingengine.com [103.168.172.146])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3CC92166F11;
-	Sat,  5 Oct 2024 19:30:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.8
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF9BE154BEC;
+	Sat,  5 Oct 2024 19:49:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.146
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728156641; cv=none; b=l2bSfLhWPve/uRo9eRQr5cZ8KHWD5iU5MGepEl6m3TXTK1M4UZ0UlxdI2FOy6BU7XWehsZW6bCuyMdLDzxr+MqqBKVYZyjyY9bCjnmGv+lLxfiKBYg1TdzRxBG4E9mk50ioKVN50CSOiPnqDA7PQ2+i6uWB52E2CUg+LWpIBA9I=
+	t=1728157760; cv=none; b=Za38qLGmmAk2T+5W3mZcPlltI+JF6fvMWtS0OD2UQSpoP6et6vs1yOqSXYtUR9cp3TuI48dUDc6ZWqeJmqd6GeIFP9qfbqnFj8ORyS8IGeTcFvLbYXFIggCPOHfRH1FMVYc9mS/fJpWQ00R+JfLALUubfdgXqwnuQHabZ7GJ/q4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728156641; c=relaxed/simple;
-	bh=DAZkK2w6uiaoPIH0NFXtrjeE8rlq8Uh2RD5oK2bm1jY=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=fGQMg3Ev3JQXVTbJSvMVuZPfbEbbeOv0/yUw7ZYmj4nxFtzLH/vHU1bk4o8HE8MyErW8Oke2byie1sgTkYZNykFfU+KAFbUms1x1/EV/NGgOw5Qyv3TVUbWkp3KeVIGFxVrIK39JbkWhXXpaXEwVb0a7eXbW2Upk/DThbJrsQSk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=SbZnZTL4; arc=none smtp.client-ip=192.198.163.8
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1728157760; c=relaxed/simple;
+	bh=0NTJ5gmyS2VaB5jXMSQ/Gf7pJJxKuofxyR1z8Ta8m5g=;
+	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
+	 Subject:Content-Type; b=LDeWQO3nw7EWX+kZ5vS5B78RkOmYciVfz+O6A4KK+J9QPYIgms0HIwtrPpjtgFVUeaiksvz8pi/Xmg3W/tG70UWGrNb7P2C/q6EuB49uVGwHmhwghHoco4kvb9f+umS7KDUcNU30+88Km7owQyOTUR06mNXCm5hToZs9/ag4ueo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ljones.dev; spf=none smtp.mailfrom=ljones.dev; dkim=pass (2048-bit key) header.d=ljones.dev header.i=@ljones.dev header.b=eZGlAjsW; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=CZA6rd9l; arc=none smtp.client-ip=103.168.172.146
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ljones.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=ljones.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="SbZnZTL4"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1728156640; x=1759692640;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=DAZkK2w6uiaoPIH0NFXtrjeE8rlq8Uh2RD5oK2bm1jY=;
-  b=SbZnZTL4jDcIGAMQkxBgHgWF4hphX+kj6L9yBGDtAKp1K02UnW22jyBG
-   4Cp4BU5DkeKZYE2FNs38Amnx8OXNz7G1MYhbdIQvWQF/cFkHZ52DGT80j
-   swUfqCMaNGqbj+mSdH4/PTKqfnDO3xS2bOPISm5u3Tn6+1uKgNLRDdUGL
-   cOzFML/q6Paiv+ZHA3Yg3MQev89bGYjXFIpbByWgxF6I8WOr8yU4wW8Wk
-   1ZP88WYUDvyVsMGKwajE2KTi+8+py374jPFsEFqYS+QA2MczPmjcw3aoM
-   kYistd724bNZjWOb6ptguCGgEb4dZVCByuzFBX8rpKvv3dJgdy1OKUlGj
-   g==;
-X-CSE-ConnectionGUID: 8DsdHRAwRna2cSZzXZiVVg==
-X-CSE-MsgGUID: Pk7vqWHPQzS0dsPVyV/TJQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11216"; a="44879472"
-X-IronPort-AV: E=Sophos;i="6.11,181,1725346800"; 
-   d="scan'208";a="44879472"
-Received: from orviesa010.jf.intel.com ([10.64.159.150])
-  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Oct 2024 12:30:36 -0700
-X-CSE-ConnectionGUID: yXVhGMvfT0S0VdwxUXSYTQ==
-X-CSE-MsgGUID: qnOSeE/ZQ4yPUxGj/vYNuw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.11,181,1725346800"; 
-   d="scan'208";a="74861628"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by orviesa010.jf.intel.com with ESMTP; 05 Oct 2024 12:30:33 -0700
-Received: by black.fi.intel.com (Postfix, from userid 1003)
-	id D0B86178; Sat, 05 Oct 2024 22:30:31 +0300 (EEST)
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-	linux-kernel@vger.kernel.org,
-	platform-driver-x86@vger.kernel.org,
-	linux-usb@vger.kernel.org
-Cc: Andy Shevchenko <andy@kernel.org>,
-	Lee Jones <lee@kernel.org>,
-	Hans de Goede <hdegoede@redhat.com>,
-	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: [PATCH v2 0/4] mfd: intel_soc_pmic_bxtwc: Fix IRQ domain usage
-Date: Sat,  5 Oct 2024 22:27:03 +0300
-Message-ID: <20241005193029.1929139-1-andriy.shevchenko@linux.intel.com>
-X-Mailer: git-send-email 2.43.0.rc1.1336.g36b5255a03ac
+	dkim=pass (2048-bit key) header.d=ljones.dev header.i=@ljones.dev header.b="eZGlAjsW";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="CZA6rd9l"
+Received: from phl-compute-08.internal (phl-compute-08.phl.internal [10.202.2.48])
+	by mailfout.phl.internal (Postfix) with ESMTP id BFCE513801D0;
+	Sat,  5 Oct 2024 15:49:16 -0400 (EDT)
+Received: from phl-imap-01 ([10.202.2.91])
+  by phl-compute-08.internal (MEProxy); Sat, 05 Oct 2024 15:49:16 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ljones.dev; h=cc
+	:cc:content-transfer-encoding:content-type:content-type:date
+	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to; s=fm3; t=1728157756;
+	 x=1728244156; bh=7LLxQhrHX1VUf6OqCJXZ4+LiaLyEjOsRM0SGQWvrFZE=; b=
+	eZGlAjsW+KtBqpw942LsonRyJJmoG11zS/KAntrvie7MCqQ5mlqVjg1Bs0lxfZ13
+	MYz8MbOZ2CRqhB3nbHfuzMbLOhb9PVxGEFnje//j6GIuDlcYOJHLWMPC9S1d39O1
+	c7uXrpw/eUY7qncUhKDGMcrrLDQYF0Jod9PnZRVYJ477VsqQJySLKd5it+xWuVI/
+	Ngps01pbgd1EnPEwX8X2PwrAxO5Dd/mixP2gECJwSRyqSZKHBUcK0d5vCahD0RbX
+	FXcz4qmQVTXQ1NjCvr309EyPNj+x1P/i10VGyEkq/rOGCoeLM1Bj97WuEBwoba2f
+	K/pBOR1upCaxDPTfATSzEA==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:content-type:date:date:feedback-id:feedback-id
+	:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to:x-me-proxy:x-me-proxy
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=1728157756; x=
+	1728244156; bh=7LLxQhrHX1VUf6OqCJXZ4+LiaLyEjOsRM0SGQWvrFZE=; b=C
+	ZA6rd9ljJwAdisLlt/XWSgZiKcK8p9fw4WADCZP23Y3oNziPlZ0GAzL5yz68xs2R
+	G91h1u6D+RxTITwL0T4GmkKwR6syjJ4bWRAKViYXdOvIXOc6HmTPJPt3z3RXGgbv
+	iPPOJLbkl7ZNc1HxO3K/exQLuALu+5ZW6Q+FSxD77D9fLFQBmAsEJLrbUtybTeYv
+	l8QvA7umy0IOEeeUUJsEhFuuNleDJ1Twn3/9Do470AI9TS2fetP7n758K8NMMMzo
+	GGUN8kWP9ThfB3nHlZUeq0H13iEFA57BDGtKv5aa9rjoE28AAKbkJ56ywUcMp7N3
+	s+0Bmg4ljatC3uFz7uxyw==
+X-ME-Sender: <xms:PJgBZx_J761i-HPqS2mOPqn2rnhgA78aDv8FXhggg1Z13lOWFB3KdA>
+    <xme:PJgBZ1uYVBAo8yIUaLlzTe5F4W_i_gcmP8mPF4gOJD-_rPpu8eFiuyItTo6YBPsDs
+    xupWcJdd8nu24c_5rI>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeftddrvddvhedgudegvdcutefuodetggdotefrod
+    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpggftfghnshhusghstghrihgsvgdp
+    uffrtefokffrpgfnqfghnecuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivg
+    hnthhsucdlqddutddtmdenucfjughrpefoggffhffvvefkjghfufgtgfesthejredtredt
+    tdenucfhrhhomhepfdfnuhhkvgculfhonhgvshdfuceolhhukhgvsehljhhonhgvshdrug
+    gvvheqnecuggftrfgrthhtvghrnhepveetleekfeeuueeljeevteeuteevgffgueelvdfh
+    vdegvdehleefleekhffgteehnecuffhomhgrihhnpehkvghrnhgvlhdrohhrghenucevlh
+    hushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpehluhhkvgeslhhj
+    ohhnvghsrdguvghvpdhnsggprhgtphhtthhopeeipdhmohguvgepshhmthhpohhuthdprh
+    gtphhtthhopegtohhrvghnthhinhdrtghhrghrhiesghhmrghilhdrtghomhdprhgtphht
+    thhopehsuhhpvghrmhdusehkvghrnhgvlhdrohhrghdprhgtphhtthhopehilhhpohdrjh
+    grrhhvihhnvghnsehlihhnuhigrdhinhhtvghlrdgtohhmpdhrtghpthhtohephhguvghg
+    ohgvuggvsehrvgguhhgrthdrtghomhdprhgtphhtthhopehlihhnuhigqdhkvghrnhgvlh
+    esvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehplhgrthhfohhrmhdqughr
+    ihhvvghrqdigkeeisehvghgvrhdrkhgvrhhnvghlrdhorhhg
+X-ME-Proxy: <xmx:PJgBZ_D4KkrN9jVvxaObEb-cgRKWdicpCo36tzJ-isSinrcaDbwIag>
+    <xmx:PJgBZ1cKFxJXWPSv9H-14clxHcvuwd3PuqTpx3tB0MzGna8H2zyqPw>
+    <xmx:PJgBZ2NVkZ1E06HVQS4PYJ9D-T52dx2-avEnfQZ0uIZn5GZF1rjtfQ>
+    <xmx:PJgBZ3npwrvQY5cO4CL_nrdXsr-Fj6luERXDFYWF2viNXL9KPD3nFw>
+    <xmx:PJgBZzoV_-jiBddj6W_qQ9s8pMwnHGsB1Wg3rlB2o1Qhx3SBzWIVC8ok>
+Feedback-ID: i5ec1447f:Fastmail
+Received: by mailuser.phl.internal (Postfix, from userid 501)
+	id 2E9613360077; Sat,  5 Oct 2024 15:49:16 -0400 (EDT)
+X-Mailer: MessagingEngine.com Webmail Interface
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Date: Sun, 06 Oct 2024 08:48:55 +1300
+From: "Luke Jones" <luke@ljones.dev>
+To: "Hans de Goede" <hdegoede@redhat.com>, linux-kernel@vger.kernel.org
+Cc: platform-driver-x86@vger.kernel.org,
+ =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+ corentin.chary@gmail.com, "Mario Limonciello" <superm1@kernel.org>
+Message-Id: <e8107624-cb9c-4eaf-9760-073424b38b3c@app.fastmail.com>
+In-Reply-To: <5c21455c-c688-4287-a4ad-d047efa180eb@redhat.com>
+References: <20240926095344.1291013-1-luke@ljones.dev>
+ <5c21455c-c688-4287-a4ad-d047efa180eb@redhat.com>
+Subject: Re: [PATCH 0/3] platfom/x86: asus-wmi: revert ROG Ally quirks
+Content-Type: text/plain
+Content-Transfer-Encoding: 7bit
 
-It appears that the driver has been developed without proper thinking
-of what the difference between HW IRQ and Linux IRQ (also known as vIRQ).
-This misunderstanding led to the 0 being used as vIRQ which is no-no and
-platform APIs unveil this after the commit a85a6c86c25b ("driver core:
-platform: Clarify that IRQ 0 is invalid"). With this the Intel Broxton
-Whiskey Cove PMIC driver has to be fixed all over the places.
+Hi Hans,
 
-In this series two immediate fixes as reported recently and we have
-drivers for (patches 1 & 2) followed by the patch that prepares the
-same fix for the devices that have no in-tree drivers yet. At the end
-it is a fix for IRQ domain debugging (when enabled), but it requires
-quite recent patches in IRQ domain and regmap IRQ subsystems, which is
-reflected in the Depends-on tag (I can't use Fixes, as this doesn't
-fix anything related to that).
+On Sun, 6 Oct 2024, at 3:37 AM, Hans de Goede wrote:
+> Hi Luke,
+>
+> On 26-Sep-24 11:53 AM, Luke D. Jones wrote:
+>> The ASUS ROG Ally (and Ally X) quirks that I added over the last year
+>> are not required. I worked with ASUS to pinpoint the exact cause of
+>> the original issue (MCU USB dev missing every second resume) and the
+>> result is a new MCU firmware which will be released on approx 16/10/24.
+>
+> First of all let me say that it is great that you have gotten Asus
+> to come up with a fixed firmware, thank you.
+>
+> With that said I believe that it is way too early to revert these quirks,
+> users are usually not great at installing BIOS updates and that assumes
+> this will be handled as part of a BIOS update, if it requires running
+> a separate tool then the chances of users not installing the update
+> will likely be even worse.
+>
+> So IMHO for now we should keep these quirks around to avoid regressions
+> for users who don't have the MCU update.
 
-The series touches a couple of subsystems as the respective drivers
-has to be fixed simultaneously. The idea is to proceed the series via
-MFD tree to where the main driver belongs.
+I wasn't sure how best to handle it, mostly the intention was to publicise things. In any case the quirks don't affect the new FW update at all and most folks won't ever notice.
 
-I have tested this on Intel Joule SoM (Apollo Lake SoC).
+> Related, have you seen this series:
+>
+> https://lore.kernel.org/platform-driver-x86/20240922172258.48435-1-lkml@antheas.dev/
+>
+> that seems to fix the same issue ?
 
-In v2:
-- added tags (Hans, Zhang)
-- fixed typo in the commit messages
+The history of that is here https://lore.kernel.org/linux-pm/20240919171952.403745-1-lkml@antheas.dev/#t
 
-Andy Shevchenko (4):
-  mfd: intel_soc_pmic_bxtwc: Use IRQ domain for USB Type-C device
-  mfd: intel_soc_pmic_bxtwc: Use IRQ domain for TMU device
-  mfd: intel_soc_pmic_bxtwc: Use IRQ domain for PMIC devices
-  mfd: intel_soc_pmic_bxtwc: Fix IRQ domain names duplication
+> And it does so in another, arguably better way.
 
- drivers/mfd/intel_soc_pmic_bxtwc.c     | 144 ++++++++++++++++---------
- drivers/platform/x86/intel/bxtwc_tmu.c |  22 ++--
- drivers/usb/typec/tcpm/wcove.c         |   4 -
- 3 files changed, 97 insertions(+), 73 deletions(-)
+It is a variation of the many many things I've tried while building a comprehensive set of data for ASUS to work with. You can achieve a similar thing with only s2idle_pm callbacks and Mario's patches to export the DSM screen-off as an external symbol. Better is subjective since it still fails to fix the initial reason this work ever started - fixing the Ally - unless delays are added.
 
--- 
-2.43.0.rc1.1336.g36b5255a03ac
+> Although unfortunately as patch 3/5 shows just calling the global
+> "display off" callback before suspending devices is not enough
+> fixing things still requires inserting a sleep using a DMI quirk :|
 
+This is because the issue can only be fully fixed in FW. What is happening here is just another variation of the quirk and the things I mentioned above. It gets worse with different compiler such as clang, or different kernel config, or even distro. The cause of issues is that a particular signal the MCU is waiting on may not occur and that becomes wildly unpredictable depending on kernel config, compiler etc.
+
+Even Windows can have the issue we have here.
+
+> Still that series including the DMI quirk might be a cleaner way
+> to deal with this and if that is merged then dropping the quirks
+> from asus-wmi makes sense.
+
+All of this is fully negated by the coming firmware. Having said that, *if* there are any issues with these patches then those issues will never come to light with the new MCU FW either as it fixes the root cause of the issues seen.
+
+The mentioned patches achieve a similar result to using Mario's s2idle callback patches and using those in s2idle_pm_ops. But as seen above, the timing issue becomes apparent - and this is fixed only by using fixed FW.
+
+Kind regards,
+Luke.
+
+> Regards,
+>
+> Hans
+>
+>
+>
+>
+>> All users should update to MCU FW as soon as released to:
+>> - Ally 1: v319
+>> - Ally X: v313
+>> 
+>> Luke D. Jones (3):
+>>   Revert "platform/x86: asus-wmi: ROG Ally increase wait time, allow MCU
+>>     powersave"
+>>   Revert "platform/x86: asus-wmi: disable USB0 hub on ROG Ally before
+>>     suspend"
+>>   platfom/x86: asus-wmi: cleanup after Ally quirk reverts
+>> 
+>>  drivers/platform/x86/asus-wmi.c | 39 +--------------------------------
+>>  1 file changed, 1 insertion(+), 38 deletions(-)
+>>
