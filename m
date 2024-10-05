@@ -1,123 +1,109 @@
-Received: from mout.gmx.net (mout.gmx.net [212.227.17.20])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f173.google.com (mail-pf1-f173.google.com [209.85.210.173])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 250801E3DE2;
-	Fri,  4 Oct 2024 15:33:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.20
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BBC6E25634;
+	Sat,  5 Oct 2024 07:01:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728056037; cv=none; b=YUu+RzCkd8b/jhWVxTeCYhOB95xvcTEQTVWgmG7BR8K7I1ujx8lpW5nbyrR/m8BKHpJgrz++zwkfiuXNJbqopT8LUPMaaog2FSItCFEYgiFZyrIQ2MHnvSeIlXIY6JqUbva0ubd7pygpe2GwjBVwWEuFUD02sNvYHIktlNKRlFE=
+	t=1728111671; cv=none; b=A6sSskv2dnf3oTMSA0FPrLv7LZQWZt1BKJltPbwOtaAzpOzRwKdfiZ3dBS5zIvfYtK22pck0bqWdCgXOK3kVti3X/dtHcR/T/Qp7QQ8PiYLMx1rr2dVQwScU3Ir7/AHnn0FDYFLc+l8zTeAnsHyYC+LIMRV3iMsiP20r6QgoyGA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728056037; c=relaxed/simple;
-	bh=gjncOFNI91eE/i9qLENcL8qQ6qRD2jzz45Htiiwitc0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=E5hqwFjUgOd66nzYsiFOWuFQll2S/2PSkpX22w3Btc4NNLCgwfK6x8L9Oz56Aq6P34rZxseHE3j+bDt0j8lC9LNIlQGVMYd6020B36Peix2+h000eIFIDMReR+CfYM19M2nkhFIkXv2G6s5jOVnQtpw1l+7Wp9QWiIuUocckvDo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b=ftTsGfN4; arc=none smtp.client-ip=212.227.17.20
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
+	s=arc-20240116; t=1728111671; c=relaxed/simple;
+	bh=dxm3C4Om4s/OmaZ81xra3vKu4d1cwnsd0fgChYAMcCA=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=bP6PHEJxpCcWdrHzzjOKa1cj60nhKXpqZ9EI28/fxe/UsJZ2LoDS8rOc8zfzUmV2Smd4agjW31t6gteMu4/rqxZeRHI266xRx1HIDSjNfwc7+m4xXeHSSZEisRsVt1gY/x+wEcaGeFKJsrNVqna3iFe4xsR8FI+oMMX/arCoQqU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ZyDurwxI; arc=none smtp.client-ip=209.85.210.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b="ftTsGfN4"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.de;
-	s=s31663417; t=1728056028; x=1728660828; i=w_armin@gmx.de;
-	bh=1Z1ETLMKssaKmHzYJoUrFeje1fnlvjKiRYyIrNRHGcA=;
-	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:To:Cc:
-	 References:From:In-Reply-To:Content-Type:
-	 Content-Transfer-Encoding:cc:content-transfer-encoding:
-	 content-type:date:from:message-id:mime-version:reply-to:subject:
-	 to;
-	b=ftTsGfN4uw9pdGsd0GGjYXV+PTq0MANkuCUYe+PTm6yNwGXlDkMfUdLn6kaAo1Tk
-	 d0oUStA6e0uP6O+uqGhnKmVb0VqoQC1AiVndloiQRRCvq91njss3YfDzTv1B3u2+/
-	 aTyOPeR2t5NYbHbnCmKG7z0xmezmVKv9ojWBwF4FucycwYbwP8JcNFQdMD+lno+ka
-	 y1emKFq8eY5dk6p5Z9p90YxayaQzixsyjhbeMDNGSvFzSXCtrp8F2ioUh9hX6NJeb
-	 wopwSphZ+j/l+kDcQNSJMTBxHtMi9vFUAJfnHHP1VCz+JGoRKwKB2Cu7Z5X1XT+QU
-	 yq0i5zDhEal0aLi8CA==
-X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
-Received: from [192.168.2.35] ([91.137.126.34]) by mail.gmx.net (mrgmx105
- [212.227.17.168]) with ESMTPSA (Nemesis) id 1MxUnp-1tudFt1nCr-00uoSY; Fri, 04
- Oct 2024 17:33:48 +0200
-Message-ID: <d42910eb-3353-46e1-9a20-ac68eb0160a6@gmx.de>
-Date: Fri, 4 Oct 2024 17:33:46 +0200
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZyDurwxI"
+Received: by mail-pf1-f173.google.com with SMTP id d2e1a72fcca58-71df67c67fcso81352b3a.2;
+        Sat, 05 Oct 2024 00:01:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1728111669; x=1728716469; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=QtLSqplC9FV8nH8TMNgp/DH6Vy3umkDQiR0WE8bXh5k=;
+        b=ZyDurwxIieLrjweJCMCKU4W56/Z5g5x5AbkrfYQG/0Nh0XYLLQGfL0YDqNdKA7eNnS
+         CpoiVzne5XmuQaPOMjxZaNXdC6r6iy0ktREmZ/g5wmj2mzMa7c0e3UCPF6e4Tm6taJRw
+         wX+tRBmkxahShtPCtj9kmlbL+iYUzB4AqcRLgWX6ygR9+FcBui8n5Ce5+o8V+GiHLDbe
+         Kns5aZhsg6AmyLNE9H5UawShrpJEVU9O9pskj6dXczQPbc+yuhhvKLMH8W5KxKffxXUU
+         eXIEL1bknHMfufm34Q1NiROlS9nA8rqh2wGTRxTXNJgBmo8H3g7ISWESTShHQgoFv4Df
+         Va7g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1728111669; x=1728716469;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=QtLSqplC9FV8nH8TMNgp/DH6Vy3umkDQiR0WE8bXh5k=;
+        b=ihXmA57mQmU8IH/mDROd3HwX3zd/6AeR8zV4hGkrRl6dEIzi8TOjnmyzu7y/RBn0Pu
+         5yugYe7rEvjbEkXjfihq/gzJSQBSykQOEhsDq24fERdKtVpaPeYA0FGmo9cyw95fVfwY
+         +9p9AOMDR85lXM32tV+5CpG4FjCSOl49w3sXb9TqbvwYLrZWLF8lQp9q4qs3XQfHFfLR
+         lE3WzLoNdhYOduYiqL0lBm8Km0FiiuWgVoxxs0VWhlemUjfU5JJKzALsFVALPYI+2A4l
+         EFGasOsfuWNs1LaSV+zgItCiTsF0DMKS5DoHtdb9sshmG4F28GbdAufqOAfOrVb6Op/N
+         px3Q==
+X-Forwarded-Encrypted: i=1; AJvYcCXLVqe6qKpXRHbxOVZdd5CBTjcxhV4qsetAzWewudUfvBJ75kgSgtfcbWi/CGpykosH8fwq63/Ag6I=@vger.kernel.org, AJvYcCXU1O/KUdc/bhYY12jatPrdb08jkVsQnKNx/9RH5jsxHkAb4Nb7jMkhaReXcMnEaP8tNwV9DQknvMvqn2SEQYvZBx3N3g==@vger.kernel.org, AJvYcCXxPcHCGdIYK4viRm97tu9I233twHO82Xg44XRGHiQ0tYkrx8B2CwIQFVhE+/x48KQW6ymTmmiUNFFQTbyM@vger.kernel.org
+X-Gm-Message-State: AOJu0YyZ6bNMhyhFstTDLj9D8Ggx5L0bg8Ypp/fKXmDPuuoNWGBTJVQ7
+	7Vf5Fd+pd09CMdS4ThEuEP3v8zUTZ/aeYv9yYZIjvi/86+B77ETq
+X-Google-Smtp-Source: AGHT+IHDyw2CRlAmxK5hljDVThBX/Yp4zp+oRVi3CQGx6HqrSkrV4rDaTnwVGgArVsf5dcWx7rCLmw==
+X-Received: by 2002:a05:6a00:cc2:b0:70a:fb91:66d7 with SMTP id d2e1a72fcca58-71de2445487mr8375596b3a.20.1728111668933;
+        Sat, 05 Oct 2024 00:01:08 -0700 (PDT)
+Received: from Tua.. ([103.161.55.163])
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-7e9f6c4a66bsm1062870a12.92.2024.10.05.00.01.05
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 05 Oct 2024 00:01:08 -0700 (PDT)
+From: Anaswara T Rajan <anaswaratrajan@gmail.com>
+To: W_Armin@gmx.de
+Cc: corbet@lwn.net,
+	platform-driver-x86@vger.kernel.org,
+	linux-doc@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Anaswara T Rajan <anaswaratrajan@gmail.com>
+Subject: [PATCH v3] platform/x86: dell-ddv: Fix typo in documentation
+Date: Sat,  5 Oct 2024 12:30:56 +0530
+Message-Id: <20241005070056.16326-1-anaswaratrajan@gmail.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] platform/x86: dell-ddv: Fix typo in documentation
-To: Anaswara T Rajan <anaswaratrajan@gmail.com>
-Cc: corbet@lwn.net, platform-driver-x86@vger.kernel.org,
- linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20241004083102.752344-1-anaswaratrajan@gmail.com>
-Content-Language: en-US
-From: Armin Wolf <W_Armin@gmx.de>
-In-Reply-To: <20241004083102.752344-1-anaswaratrajan@gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:SY3ZMVQCxoC30gbDbXqUe2kflh0gIYgXEtHE5yS1MjI25itLGrm
- vPYahFG2Vd23pbRFE3kOByuIjgO8ARBL1svI7ianFLkpz5hzHT8gmZZAvcW/6poBNUuqEkn
- Sj3p1le8fkYqSAKpvK/scl3lOo9AdaYBHzh+I6Zk3yeZhjU9BgYokBe9fYDdcuU6RWh+K2i
- 2+rvuF/BlV02/Z3NiH6fg==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:lhuLdilrsUE=;+NscgoE3IoOVsmCteKWwn9kovhf
- 3qLIXIHW00N7KhWX+0VirBrBXyVNeEMru5QosFrnS7U4mcjc6yXHn3zn0DNVeaOjHBsr9Tpz5
- 5M40hIuyzGb/aGhY+Dg/AOyNorNnN+hadbsYAPsTOSTLHaRQAm1O8wvci8Y8bNa9gRk8mfNWT
- uIH65tzyFKUv6KpEAA6+vcVB4bM+o5t9D1jgcF7fQnFo77ANgeTKM6CTUK6PMnhAZWMebGKqP
- WCrzzyl6km5rFTsJYFIAtFfsT2S4AdSSxy3O7LjqZFfeo+idnLUKuY6oZiUphwNcmCI5Netel
- OHyawbjkx+XteTvAG3nyqcM4c13+ubqAdca3bVJu2THkvPyvtvL7lJXPJT1jpokTtd/d/J+lo
- bTaNy3rD9cOMSPx5cbh5Ef/ySGe4lfBzVYgH55K93Rvn1rVqeyfChq3jdbvghrZEjaGruW4Iy
- B7bX0srFDC0/IG+Vcuc90EtakS8BS/XD8BYvUciqeTg6/HqLDNrjOwJM3P91BkQSnx3/dIklC
- dNy44ALcwINnGG/hYcntN7QXfOjPkemROwgV1Pj0bQp+gLeT7w52HTBmhDmDczNyXZYsyfabh
- OHXpi61sPLQ/BwhfANtw+vnvYKU6LpJBbzWro5KvOJK69U5Oa9h0pdM/+NGhrv17bIYnFIo+H
- PKDbDcDQ2lZHQYBuVaQMunU0ZrF4T6MyekMLbIM+CwOtQTUg8JgTv3/MdoftnYw3B4y7nfRan
- MPmtfRUk6NR6VcJ7fsQBZUisfvnixqrQeo/tVjeffYd4aFICjuZWk5FgN98xmPNw/Ohsooqn5
- UZwSytA15NIQn1/Z801lALqyyq3vpxgwlqkC8EWizGdHU=
+Content-Transfer-Encoding: 8bit
 
-Am 04.10.24 um 10:31 schrieb Anaswara T Rajan:
+Fix typo in word 'diagnostics' in documentation.
 
-> Fix typo in word 'diagnostics' in documentation
+Signed-off-by: Anaswara T Rajan <anaswaratrajan@gmail.com>
+---
+Changes in v2:
+  - Make the commit title and description more clearer.
 
-Apart from the missing point at the end of the sentence:
+Changes in v3:
+  - Add missing full stop to commit description.
 
-Reviewed-by: Armin Wolf <W_Armin@gmx.de>
+ Documentation/wmi/devices/dell-wmi-ddv.rst | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
->
-> Signed-off-by: Anaswara T Rajan <anaswaratrajan@gmail.com>
-> ---
-> Changes in v2:
->    - Make the commit title and description more clearer.
->
->   Documentation/wmi/devices/dell-wmi-ddv.rst | 4 ++--
->   1 file changed, 2 insertions(+), 2 deletions(-)
->
-> diff --git a/Documentation/wmi/devices/dell-wmi-ddv.rst b/Documentation/=
-wmi/devices/dell-wmi-ddv.rst
-> index 2fcdfcf03327..e0c20af30948 100644
-> --- a/Documentation/wmi/devices/dell-wmi-ddv.rst
-> +++ b/Documentation/wmi/devices/dell-wmi-ddv.rst
-> @@ -8,7 +8,7 @@ Introduction
->   =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
->
->   Many Dell notebooks made after ~2020 support a WMI-based interface for
-> -retrieving various system data like battery temperature, ePPID, diagost=
-ic data
-> +retrieving various system data like battery temperature, ePPID, diagnos=
-tic data
->   and fan/thermal sensor data.
->
->   This interface is likely used by the `Dell Data Vault` software on Win=
-dows,
-> @@ -277,7 +277,7 @@ Reverse-Engineering the DDV WMI interface
->   4. Try to deduce the meaning of a certain WMI method by comparing the =
-control
->      flow with other ACPI methods (_BIX or _BIF for battery related meth=
-ods
->      for example).
-> -5. Use the built-in UEFI diagostics to view sensor types/values for fan=
-/thermal
-> +5. Use the built-in UEFI diagnostics to view sensor types/values for fa=
-n/thermal
->      related methods (sometimes overwriting static ACPI data fields can =
-be used
->      to test different sensor type values, since on some machines this d=
-ata is
->      not reinitialized upon a warm reset).
+diff --git a/Documentation/wmi/devices/dell-wmi-ddv.rst b/Documentation/wmi/devices/dell-wmi-ddv.rst
+index 2fcdfcf03327..e0c20af30948 100644
+--- a/Documentation/wmi/devices/dell-wmi-ddv.rst
++++ b/Documentation/wmi/devices/dell-wmi-ddv.rst
+@@ -8,7 +8,7 @@ Introduction
+ ============
+ 
+ Many Dell notebooks made after ~2020 support a WMI-based interface for
+-retrieving various system data like battery temperature, ePPID, diagostic data
++retrieving various system data like battery temperature, ePPID, diagnostic data
+ and fan/thermal sensor data.
+ 
+ This interface is likely used by the `Dell Data Vault` software on Windows,
+@@ -277,7 +277,7 @@ Reverse-Engineering the DDV WMI interface
+ 4. Try to deduce the meaning of a certain WMI method by comparing the control
+    flow with other ACPI methods (_BIX or _BIF for battery related methods
+    for example).
+-5. Use the built-in UEFI diagostics to view sensor types/values for fan/thermal
++5. Use the built-in UEFI diagnostics to view sensor types/values for fan/thermal
+    related methods (sometimes overwriting static ACPI data fields can be used
+    to test different sensor type values, since on some machines this data is
+    not reinitialized upon a warm reset).
+-- 
+2.34.1
+
