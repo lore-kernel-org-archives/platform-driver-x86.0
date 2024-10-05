@@ -1,181 +1,116 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from mout.gmx.net (mout.gmx.net [212.227.17.21])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 420CB18E1F
-	for <platform-driver-x86@vger.kernel.org>; Sat,  5 Oct 2024 21:33:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3BFAB154BEC;
+	Sat,  5 Oct 2024 21:38:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.21
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728164042; cv=none; b=MC9Rbw5KDWpMrFUO0DZoQrBstr0P1Kr3D+wmbyHKlqm1DplY+Qqq/NfyzoGvSDlNwk39U4JUk+jz3AEsqpLFOj9Ot7JNBlDLH7l5diQ4MfvQNc+prUVAICf0uRskFuZsJFj7OduHxK8sgj9MYegf37dc7drP3XKgyq55aPUk1Oc=
+	t=1728164325; cv=none; b=OqgZnkQ9SbTVyco89tVd4v4wYoAAerER0Xh/8wBeZtKQd/RgpQQhSW0A+DWs40vbjDibavT77IK0dB3aOlYmDkuAlcyyzbmak2sTSr17aMVpNVR5T3Q2U2VUN7YUHYKha8BHFDr1QtldrTZvfRKta5WyXGNkd7w627OrodpexKw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728164042; c=relaxed/simple;
-	bh=CayH1T2zeNlJxzLMzr31a5iHie8N/GAbZI3uoiRPhiY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=sGnSJ8POPsnVq9HJHTOLVUZLBuBktkSxjcdxOLsrr+4RRJcEhtlTTplx+XyPNHc4nYwE4vkknhCQdcg9KqZi5zNRJa6csRb0rr4RQv2oSSWJ+9dKMXbhDwGWfgLwBbWzGnlYD9RAE3Oe+WuVIc13BrXNG2ORTdoe2up8IyOTk80=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=YTFIaG3O; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1728164325; c=relaxed/simple;
+	bh=qqPMlqB0XMYZQQu9VIWJCIWJxdukqr1Q/bgQ3RYCAgo=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=IT+SEIJsFSDW0m0Z+1KkrzdSfyFHRFINcIyYXsSsNdlARfr4cRCJMwrPQ1/3TRbSldH2jzPc/sPAkYSMdFczxfhc/1MrG1J7D2azr3jFBu1TZKgEAaJYCOT9iy2Eh0mcVd7LjKrMUHLPqRAFFD9cdEo7MG+yhGrmuIr/yUE7obk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b=KqI5AArv; arc=none smtp.client-ip=212.227.17.21
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="YTFIaG3O"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1728164038;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=9XBg77PeCUq/Rx9J+4gYUVfPWAWbX2f9OKNFPezDePY=;
-	b=YTFIaG3O5LxvXYqCh0xZirgfE8butqXB+U7SI06sTCtSAiXIv2jJMtLdN513Hv4bUfiJgh
-	ipMmJWadJaozZ/DCznE0Q0Z/i21aM7/p0afyUTyq4skqaASxTs2VTnSlyjn8sxO3ngzcQ/
-	Ik3T8cEPbXdqR+ocff4DvIgX3ndbaFI=
-Received: from mail-ej1-f72.google.com (mail-ej1-f72.google.com
- [209.85.218.72]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-258-EcvVs5pgOYGkU3gpWN9eGA-1; Sat, 05 Oct 2024 17:33:56 -0400
-X-MC-Unique: EcvVs5pgOYGkU3gpWN9eGA-1
-Received: by mail-ej1-f72.google.com with SMTP id a640c23a62f3a-a8a8d9a2a12so310737766b.3
-        for <platform-driver-x86@vger.kernel.org>; Sat, 05 Oct 2024 14:33:56 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1728164035; x=1728768835;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=9XBg77PeCUq/Rx9J+4gYUVfPWAWbX2f9OKNFPezDePY=;
-        b=f2fgGQdK4Fu9LhCRziFQBFddp10i4xlBa0GG+32R0T/YdBeO/xeQaFtiktpx5TtmbJ
-         FJ2zMGMUV5J1WQWl87XTdLnE12xKDDZ7s/vadBZp3KA8aBxVybx2EiY0KHc+CygNaxAV
-         3dHAD3tyRhHZi7Nm9fKEld1i4D6Qy6niBBHui9xMxiw+BqEWASSC+NZrWplNqmaGyp8X
-         k5MygkF7M/EElPQ592i4ODZVqAphGyftv4p/YQBq3Ig1c6XQYz0Xk14/3nUuyWViPTkH
-         APaFaUjkMB9Wn1G4tp9kz7pdS8hTO0ihMx8BQrafd7bw1z7CRyRYs88S/9QzOpKZhVn7
-         bYOA==
-X-Forwarded-Encrypted: i=1; AJvYcCVorGHOqTyPON0gaLl4FQDBy08i9/YpOKqaJYcKgwqWT0Mw20fGj5EZufEBbGm/AFhWaaiVB+TEmh2d6tj6uv5T8ZUk@vger.kernel.org
-X-Gm-Message-State: AOJu0YzuV2e73gQ6Y5LHBaLfPwooSmyMhJh2Tl8XWOnlx8dCuA/pJxVg
-	XnNqYfDpUl2eqkkxPYjNWwIYts3OQUTxNq0spzsWsFrD/T4RsV4+mbJBhuPSL0U5uml5IBPFnhV
-	QME+33QNbWJYnyIdjJMudVfplSVo8VhcJIHq/WyFJRD+BQ7+FP+t33iqhU77esbImz2rS+sI=
-X-Received: by 2002:a17:907:3fa9:b0:a8a:87d5:2f5e with SMTP id a640c23a62f3a-a991bd7a1c2mr772882066b.34.1728164035456;
-        Sat, 05 Oct 2024 14:33:55 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IFC5eR1SOxMQH2ebvmH6i5G/us+KTbVgOj85h2qnyx8BHsBn4t0VBfM6rzSHFGmwGgcduSlKQ==
-X-Received: by 2002:a17:907:3fa9:b0:a8a:87d5:2f5e with SMTP id a640c23a62f3a-a991bd7a1c2mr772879466b.34.1728164034561;
-        Sat, 05 Oct 2024 14:33:54 -0700 (PDT)
-Received: from ?IPV6:2001:1c00:c32:7800:5bfa:a036:83f0:f9ec? (2001-1c00-0c32-7800-5bfa-a036-83f0-f9ec.cable.dynamic.v6.ziggo.nl. [2001:1c00:c32:7800:5bfa:a036:83f0:f9ec])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a9936e62450sm145836266b.46.2024.10.05.14.33.53
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 05 Oct 2024 14:33:54 -0700 (PDT)
-Message-ID: <660944cf-d239-4da8-aa29-fdcad82614e0@redhat.com>
-Date: Sat, 5 Oct 2024 23:33:53 +0200
+	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b="KqI5AArv"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.de;
+	s=s31663417; t=1728164310; x=1728769110; i=w_armin@gmx.de;
+	bh=Xc3gXdeaddE6/h3n+cyXwuqR9OvIcn79Fis7ERYbfM0=;
+	h=X-UI-Sender-Class:From:To:Cc:Subject:Date:Message-Id:
+	 MIME-Version:Content-Transfer-Encoding:cc:
+	 content-transfer-encoding:content-type:date:from:message-id:
+	 mime-version:reply-to:subject:to;
+	b=KqI5AArvct954vdx8WoUPV4YZ25CPonMY9i55YaHjw7PJ4vVreSRB/FPlGNhdnNz
+	 VpClL+e5/rHZrlnxm3e4Y8UzZfJ3MqUS7zftaHOto5yGE/aC/kLHcXcHgpd2x6pNb
+	 e0xdm9LTJMBNf4tv6Fm1KneV83vosSM1IfD7vE3XDMhc7J52A9IdBi/Tnn3Bk4cGu
+	 D5B7dwHCk41rJoO/6QKLL7jr9nR2VqLJoJfxQeyMv9KzhKwFWFhGunt7NvLqqQDhe
+	 xPecm+lcJPwR71Prr61A4ePoJLeKXwdQY0yqi3ygzcCkcDZl9zr73NVI1T4pBx6aC
+	 TBSacgNek20op/6YYg==
+X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
+Received: from mx-amd-b650.users.agdsn.de ([141.30.226.129]) by mail.gmx.net
+ (mrgmx104 [212.227.17.168]) with ESMTPSA (Nemesis) id
+ 1MG9g4-1tDf1V45YC-00D5oU; Sat, 05 Oct 2024 23:38:30 +0200
+From: Armin Wolf <W_Armin@gmx.de>
+To: hdegoede@redhat.com,
+	ilpo.jarvinen@linux.intel.com,
+	corbet@lwn.net
+Cc: platform-driver-x86@vger.kernel.org,
+	linux-doc@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH 1/2] platform/x86: wmi: Update WMI driver API documentation
+Date: Sat,  5 Oct 2024 23:38:24 +0200
+Message-Id: <20241005213825.701887-1-W_Armin@gmx.de>
+X-Mailer: git-send-email 2.39.5
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] Fix Asus B2402FBA internal keyboard and track point
-To: Stefan Blum <stefanblum2004@gmail.com>,
- platform-driver-x86@vger.kernel.org, "Rafael J. Wysocki" <rafael@kernel.org>
-References: <a983e6d5-c7ab-4758-be9b-7dcfc1b44ed3@gmail.com>
-Content-Language: en-US, nl
-From: Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <a983e6d5-c7ab-4758-be9b-7dcfc1b44ed3@gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:x4Cdm+DUid0ntpCzyP44tKz70IVW8M6YATczGKYBClRA/OWYvJ3
+ SnTRCs7xbJzCNdwsJVKN1Wxvyni+snG7cD8/87X5zNNDFFx8j1ljTj4M/hCFFxi2KxtTkF6
+ ixFR6vHZOwGf9ShikiTkcW4SrO1jm/nuRNqt14LVvuZwp8NN6snHgd0G85X24vsYy33EdUr
+ oDXEN5znKQv7uF82dHWWg==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:Wvc28mRAWnE=;9naCnTc1Lj9EZklzJbnqdfljuql
+ 9IbjzYjLV/erxWYHDWN6+22NRRHexJcZzuej5BfPZnpj/sGXgYsb3xIpaX6HeS3jkC1okQ0sV
+ eZiUooXbcXMf/rI/5srpxNKYP8XH3LrUnRdQ/eimttHxQSu6lrRtAtrhVQB/luCNFx7gIsWwy
+ 2oU+/GURmiy8Ij6KPBkboYLNPbYWo8qAJGiKkdoGt1OvtvOap0Si1oRZDAtntpMJ2lTGCjlmU
+ GQWsTXasXM17otNtuMIDcl1eWu4Le/jhi/p+n8DMI+7KzN+j2/XLaSr2uRzP64OMlrM82xb9F
+ 5g4gWIzbEf3FMWsknCMZlgsRBD7nO3LKQgCMlAAs/vyV/Ku2o9+5xPcopozUoDCKBQP/Cg8od
+ pQBKqO+aF1xOjPaHWudOUiP2i1QHw6mA9J8Be7odZ+Oz0C2Aqv1o95KO5UQIPv95rnYc2J/5n
+ SfHVuMuEt5AVn7OeByS4I/F5V+4s4deSQqiUYPSIVc73CPRsoKQ5HfGVIXDGWL3Px/1e1iZfd
+ yDoqb6KybB/x0AOjDZvcNGVwH4eX+15YvZGT2Zi9nQBL5GxGhLW4RfYtfZ7KxPPT5XoU8Xqh5
+ QkmDeCmJD46MeB7OJrCvQgk+wWGP/OqLQDUr4E/55kO5wjE1hFlXjh9JCvdVGAY0ngfimiujR
+ r1dXGoHAY/+D0FcXxKtZmD5/qJUznJCfMPEeCf1qBcdM56/9TAuJcKDNl369FK6Fmf7FspEyJ
+ SdJs4u96GcXZRiEHug0b8uFTM+k1frfh2sRcPLoLEl9yskqMQvCe9k+LLTWJuY+AGQhNtp6nH
+ yAywVeK/rTgoMpC7Fi0gEE/Q==
 
-Hi Stefan,
+The WMI driver core now passes the WMI event data to legacy notify
+handlers, so WMI devices sharing notification IDs are now being
+handled properly.
 
-Thank you for your patch.
+Fixes: e04e2b760ddb ("platform/x86: wmi: Pass event data directly to legac=
+y notify handlers")
+Signed-off-by: Armin Wolf <W_Armin@gmx.de>
+=2D--
+ Documentation/driver-api/wmi.rst | 11 +++++------
+ 1 file changed, 5 insertions(+), 6 deletions(-)
 
-Note you got the model wrong in the subject of this thread,
-I'm pretty sure you meant to put "B2402FVA" in the subject.
+diff --git a/Documentation/driver-api/wmi.rst b/Documentation/driver-api/w=
+mi.rst
+index 6ca58c8249e5..4e8dbdb1fc67 100644
+=2D-- a/Documentation/driver-api/wmi.rst
++++ b/Documentation/driver-api/wmi.rst
+@@ -7,12 +7,11 @@ WMI Driver API
+ The WMI driver core supports a more modern bus-based interface for intera=
+cting
+ with WMI devices, and an older GUID-based interface. The latter interface=
+ is
+ considered to be deprecated, so new WMI drivers should generally avoid it=
+ since
+-it has some issues with multiple WMI devices and events sharing the same =
+GUIDs
+-and/or notification IDs. The modern bus-based interface instead maps each
+-WMI device to a :c:type:`struct wmi_device <wmi_device>`, so it supports
+-WMI devices sharing GUIDs and/or notification IDs. Drivers can then regis=
+ter
+-a :c:type:`struct wmi_driver <wmi_driver>`, which will be bound to compat=
+ible
+-WMI devices by the driver core.
++it has some issues with multiple WMI devices sharing the same GUID.
++The modern bus-based interface instead maps each WMI device to a
++:c:type:`struct wmi_device <wmi_device>`, so it supports WMI devices shar=
+ing the
++same GUID. Drivers can then register a :c:type:`struct wmi_driver <wmi_dr=
+iver>`
++which will be bound to compatible WMI devices by the driver core.
 
-On 28-Sep-24 6:17 PM, Stefan Blum wrote:
-> By default the internal keyboard and track point on the Asus Expertbook
-> B2 Flip B2402FVA are not functional.
-> 
-> Similar to the Asus board B2402FBA, on the B2402FVA the internal keyboard
-> is only functional by adding it to the irq1_level_low_skip_override array.
-> 
-> For the internal elan track point, i have found out that setting the class to
-> MT_CLS_WIN_8_FORCE_MULTI_INPUT_NSM makes the track point function as expected.
-> 
-> Signed-off-by: Stefan Blum <stefan.blum@gmail.com>
-
-Currently this patch touches 2 completely unrelated files. Please
-submit a v2 patch series breaking this into 2 patches each for one file.
-
-For adding the "B2402FVA" to drivers/acpi/resource.c we already have
-"B2402CBA" (12th gen intel non flip) and "B2402FBA" (12th gen intel flip)
-listed. Your "B2402FVA" is the (13th gen intel flip) and there
-also exists a "B2402CVA" which is the 13th gen non flip.
-
-So I think it would be best to just fold the 2 existing entries
-into 1 entry covering all 4 matching on just "B2402".
-
-Actually writing this has made me take a closer look at all the existing
-Asus quirks and I have just posted a series which simplifies the quirks,
-dropping 8 quirk table entries while adding support for 3 more Asus
-models including your "B2402FVA" model, see:
-
-https://lore.kernel.org/linux-acpi/20241005212819.354681-1-hdegoede@redhat.com/
-
-So there is no need to include the drivers/acpi/resource.c bits in
-your v2.
-
-Please do send a v2 for the drivers/hid/hid-multitouch.c change and
-please make sure to use the right subject-prefix for that, e.g.
-use this as subject:
-
-HID: multitouch: Add support for B2402FBA touchpad
-
-and send that patch to the HID maintainers:
-
-[hans@shalem linux]$ scripts/get_maintainer.pl -f drivers/hid/hid-multitouch.c
-Jiri Kosina <jikos@kernel.org> (maintainer:HID CORE LAYER)
-Benjamin Tissoires <bentiss@kernel.org> (maintainer:HID CORE LAYER)
-linux-input@vger.kernel.org (open list:HID CORE LAYER)
-
-Regards,
-
-Hans
-
-
-
-
-
-> 
-> ---
->  drivers/acpi/resource.c      | 8 ++++++++
->  drivers/hid/hid-multitouch.c | 4 ++++
->  2 files changed, 12 insertions(+)
-> 
-> diff --git a/drivers/acpi/resource.c b/drivers/acpi/resource.c
-> index df5d5a554..c29e71401 100644
-> --- a/drivers/acpi/resource.c
-> +++ b/drivers/acpi/resource.c
-> @@ -489,6 +489,14 @@ static const struct dmi_system_id irq1_level_low_skip_override[] = {
->  			DMI_MATCH(DMI_BOARD_NAME, "B2402FBA"),
->  		},
->  	},
-> +	{
-> +		/* Asus ExpertBook B2402FVA */
-> +		.ident = "Asus ExpertBook B2402FVA",
-> +		.matches = {
-> +			DMI_MATCH(DMI_SYS_VENDOR, "ASUSTeK COMPUTER INC."),
-> +			DMI_MATCH(DMI_BOARD_NAME, "B2402FVA"),
-> +		},
-> +	},
->  	{
->  		/* Asus ExpertBook B2502 */
->  		.matches = {
-> diff --git a/drivers/hid/hid-multitouch.c b/drivers/hid/hid-multitouch.c
-> index 56fc78841..3f93c5ef6 100644
-> --- a/drivers/hid/hid-multitouch.c
-> +++ b/drivers/hid/hid-multitouch.c
-> @@ -1992,6 +1992,10 @@ static const struct hid_device_id mt_devices[] = {
->  		HID_DEVICE(BUS_I2C, HID_GROUP_MULTITOUCH_WIN_8,
->  			USB_VENDOR_ID_ELAN, 0x3148) },
->  
-> +	{ .driver_data = MT_CLS_WIN_8_FORCE_MULTI_INPUT_NSMU,
-> +		HID_DEVICE(BUS_I2C, HID_GROUP_MULTITOUCH_WIN_8,
-> +			USB_VENDOR_ID_ELAN, 0x32ae) },
-> +
->  	/* Elitegroup panel */
->  	{ .driver_data = MT_CLS_SERIAL,
->  		MT_USB_DEVICE(USB_VENDOR_ID_ELITEGROUP,
+ .. kernel-doc:: include/linux/wmi.h
+    :internal:
+=2D-
+2.39.5
 
