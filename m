@@ -1,65 +1,65 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 055F5166F34
-	for <platform-driver-x86@vger.kernel.org>; Sun,  6 Oct 2024 10:31:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E34D1714A8
+	for <platform-driver-x86@vger.kernel.org>; Sun,  6 Oct 2024 10:38:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728210702; cv=none; b=pvZ30+ZeNOEGzK3KQqzFkJBF8Kn4Xp1pea5/ztgj4jT59lGDqtQqDT6stwKEux13cdVsfBlWJOBPu73JtYldJ6+yyiZM2sew95goCriLDJk/UpzHb+Ous9MNBJiDBJAwZEvtIs7sabpv8pzbqzims+bQcultkBR2tRmThDeX+E0=
+	t=1728211088; cv=none; b=oFe3a1+K4d0my4WADWt1UMRCL+xUuQ0ol0p9Zimkg1FTT/NhHJ7H/Z+tQkyMMzBnFOLvQPihsGdJeRuhWRbdXlqhdlOI4KuNDC7R+B9ZtmSrlMXSvzBt7WIv1akbSB7thNvj2nLK1A9m5+1D69URd0E1CgOx3HfKvWHRsVua0gw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728210702; c=relaxed/simple;
-	bh=+1hMTw3yjrhtuWg/B41NsVCZVs0eLqPm2W6ekE6WIWo=;
+	s=arc-20240116; t=1728211088; c=relaxed/simple;
+	bh=Bq7Tz41q+fa0j+3ZQeIlm1+u4L9RWU0OmleWy7EWtKY=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=dcJ/1cFMzLmWShOoOLDRnkG1ws6dkp/liOYCIPZnkglTxjR7vcp77lscTziNuGtGEnQBbCUZ5uwapFtXMxtwOflM4NKDdJXJsRpd94Rip8WhpzwkN6guyfE7/ZN5Aop5wmLA/jB0130gnnb6u+v8GsQnm/xnBXZV8kZzZeh96BU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=L+yOCOO7; arc=none smtp.client-ip=170.10.133.124
+	 In-Reply-To:Content-Type; b=cXRn3Ps6oq+JAc5LjCv8zmczD9BHoDFlB3amqgtsSYTH87yRPKz+Mp1oZU8zezBjuT/BdVLlGIUPMK2AOT9qljkV40nlsGvdOQERuX47V9Auib/m864qDVE4Dp218adNYlKZpnNXBjO5Paxeeq+SX+7yH6i3mnvUaRgyOjy9TBY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Pg3Zmx7E; arc=none smtp.client-ip=170.10.129.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="L+yOCOO7"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Pg3Zmx7E"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1728210699;
+	s=mimecast20190719; t=1728211085;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=JCGr2POOT5uxbuD68RQ0lpX6z0IGw4KIWstExrGNdbk=;
-	b=L+yOCOO7ksXHrOwzZFsQCvHkQ34P10dJeuawEgw1zVjv35+TC+wXTXlkiKuPcYbykGYKzy
-	rr1VLRyxiM7A5id3DQYA+HEs1fzSLX0tLcfe1iQ9y+Ec3Oi5/d2iCBYk+aVMRIY56d1N5x
-	rqH9Od7LOigOAixL+EUI4OfUmIoTvTU=
-Received: from mail-ej1-f70.google.com (mail-ej1-f70.google.com
- [209.85.218.70]) by relay.mimecast.com with ESMTP with STARTTLS
+	bh=1ItPi/oOw2IPhVtK1a1NEvIYqd7WVKNv5sJgtuuovmM=;
+	b=Pg3Zmx7E6ivGHNO4qEBNzMfmnQIBvDRdErfBHDXCE2FKNJ0JokRLk6Bo4wLmIzmiBCLy2c
+	v05oEV2kGVJdZiYMzB/hBorlBzV04jm5UrIr/QrL7GpG8ET9dizvhzLcn6nmw2q+bGkVIY
+	gkAVHe0QPrSwspk5K1MGcQ6LB2akBek=
+Received: from mail-ej1-f71.google.com (mail-ej1-f71.google.com
+ [209.85.218.71]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-288-YysJIU0bMYKywUMzENX5_A-1; Sun, 06 Oct 2024 06:31:38 -0400
-X-MC-Unique: YysJIU0bMYKywUMzENX5_A-1
-Received: by mail-ej1-f70.google.com with SMTP id a640c23a62f3a-a8711c48990so369938366b.2
-        for <platform-driver-x86@vger.kernel.org>; Sun, 06 Oct 2024 03:31:38 -0700 (PDT)
+ us-mta-669-AHu_xSgEMBaTguR9MKN9OA-1; Sun, 06 Oct 2024 06:38:03 -0400
+X-MC-Unique: AHu_xSgEMBaTguR9MKN9OA-1
+Received: by mail-ej1-f71.google.com with SMTP id a640c23a62f3a-a7d2d414949so324091966b.0
+        for <platform-driver-x86@vger.kernel.org>; Sun, 06 Oct 2024 03:38:03 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1728210697; x=1728815497;
+        d=1e100.net; s=20230601; t=1728211083; x=1728815883;
         h=content-transfer-encoding:in-reply-to:from:content-language
          :references:cc:to:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=JCGr2POOT5uxbuD68RQ0lpX6z0IGw4KIWstExrGNdbk=;
-        b=R3jZyvio9Qx72s/2jQJbR39ZAcetOcinqwpG34YFNfonjNh8XOn0yxtpdXWXG+vuCi
-         NQCXz/xdhfQq5aHN8mUrF7RACHlA+23v67V1Suo+8pJfJBdaClyB3zjPGrDgKusec/m+
-         QqyRe9XNJkKaky+QzrWtE6cCYJwIS06Jqt2HrbDjwnN7UEGaZLKDHWLQw26FORJSqo13
-         dNvhAZykfI/1P+9OCyednvaxnDeUtA7sZeLr7XpCtC664XwQlmPm6/itiw0J9NfzTi3p
-         2BBXgJ/TQZIbnZ8j/cdcFiAONEjPyRYncJVZlQ51C0iOnhwvh9BZk2dZgwq2M4VRKRFi
-         p/jg==
-X-Forwarded-Encrypted: i=1; AJvYcCWEmnpwnXxOFRodsvCSxxN/jAFfsonAatbrY9rPRu4i0ZYH3E8exZRhv7xSSZWwv1u48J/asUd8qH7cZHlv5cZxPt2Q@vger.kernel.org
-X-Gm-Message-State: AOJu0YzcQgt2vVaK3lUVL9U0mnb3Dj5MM0hmPwfUEGrkpbIm4J6R9Fua
-	c5eBFKd4TQn0P42cxLZlpOvgXPFrYgr1ZFOSZnZVTWQws8iT4KSMzZBhyF9mK6DINRontmmk2WV
-	RvkXeXQQazpvEXkonyUX+Y4QC7cS39rlCwwJGHzZeNVEmW/8k125rnNbyL7X8w4XUl1cIlr0=
-X-Received: by 2002:a17:907:745:b0:a8d:caa:7fee with SMTP id a640c23a62f3a-a991bd04d9fmr915433466b.7.1728210697264;
-        Sun, 06 Oct 2024 03:31:37 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IGSx1R/LgYBtLI5vnf0Pf3LDe+dvGQmKU2skfmJeTA+eT0pHsSB2e/ggYoF1agP+LPkJ5N0lg==
-X-Received: by 2002:a17:907:745:b0:a8d:caa:7fee with SMTP id a640c23a62f3a-a991bd04d9fmr915431166b.7.1728210696829;
-        Sun, 06 Oct 2024 03:31:36 -0700 (PDT)
+        bh=1ItPi/oOw2IPhVtK1a1NEvIYqd7WVKNv5sJgtuuovmM=;
+        b=ZNx44sAq3JeQyKHHEuvUUzCVBEEw2P3oUVllm85+1ivDEtR9BM/78ucFEv3lT3gL2A
+         nvyoG/ZKJetBdtj9VRJOlISSxkFgZCQZpg4nI+aHhkd12pVYJHrwMQk6Qzy+fGefku6f
+         k+chJNWiuGQj6M7CVYSNXry0v9BkecsmtnAEhD+i8drpNauv+chca9wxb3wNV5TVvTTR
+         QgP7HYer4e0DOu5rMMkw5LJyr4EErLeYWcCVxVW6+U9m/A4axPvex1ooH3NgG0/UIEwl
+         o/hbBCIFOG/ZnOWVngDSD6y/GNugBZiTHq5wqavSfu/rxFzLdAaby4Dp96WCevfh8URu
+         V7Yg==
+X-Forwarded-Encrypted: i=1; AJvYcCVCEjAg+9YamtrayWXA8KNyUqRiXNgD8aoRVMY6tEIUIV4kT6X9HuJ05sq+iubdJbFZGp8+uoCI2IJnNzYK3pGj+mBo@vger.kernel.org
+X-Gm-Message-State: AOJu0YwMAecD28c2f0oxifMis1+iYLuXq6gKkdS4q+mPCr53hZ39MRm/
+	hUiAVFn8VRFnwHRk7WwUahEigKWDcoz0p6PkKQQ2nHTU9KQWvOvZVCZPuhTZTvOkw1QHYDjeJZX
+	/7Ic0Cw0IhIagK/VYeCnoOFgwv2itjtrZ1vIt3ekXT/frPeQEKlirlxmOoOYshE29YVtNUDU=
+X-Received: by 2002:a17:907:980a:b0:a99:4152:1cb4 with SMTP id a640c23a62f3a-a99415220a5mr372218566b.42.1728211082684;
+        Sun, 06 Oct 2024 03:38:02 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IEMr8aLIFGNj6c7j0ibRW7YvJlcGsorT3VikyA0OZXv+aCTbD1uwOyPVfMak4HF5NdQnAho6g==
+X-Received: by 2002:a17:907:980a:b0:a99:4152:1cb4 with SMTP id a640c23a62f3a-a99415220a5mr372216966b.42.1728211082275;
+        Sun, 06 Oct 2024 03:38:02 -0700 (PDT)
 Received: from ?IPV6:2001:1c00:c32:7800:5bfa:a036:83f0:f9ec? (2001-1c00-0c32-7800-5bfa-a036-83f0-f9ec.cable.dynamic.v6.ziggo.nl. [2001:1c00:c32:7800:5bfa:a036:83f0:f9ec])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5c8e0598947sm1867769a12.11.2024.10.06.03.31.35
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a9944839974sm125210766b.218.2024.10.06.03.38.01
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 06 Oct 2024 03:31:35 -0700 (PDT)
-Message-ID: <9cfb6e26-e3d1-403a-a894-4a0902905407@redhat.com>
-Date: Sun, 6 Oct 2024 12:31:34 +0200
+        Sun, 06 Oct 2024 03:38:01 -0700 (PDT)
+Message-ID: <7deea96e-61bd-4bb1-b478-d908ff735d70@redhat.com>
+Date: Sun, 6 Oct 2024 12:38:00 +0200
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -67,44 +67,45 @@ List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH RESEND v3 3/3] platform/x86: dell-laptop: Do not fail when
- encountering unsupported batteries
-To: Armin Wolf <W_Armin@gmx.de>, pali@kernel.org, dilinger@queued.net
-Cc: rafael@kernel.org, lenb@kernel.org, ilpo.jarvinen@linux.intel.com,
- platform-driver-x86@vger.kernel.org, linux-acpi@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <20241001212835.341788-1-W_Armin@gmx.de>
- <20241001212835.341788-4-W_Armin@gmx.de>
+Subject: Re: [PATCH] platform/x86:intel/pmc: Disable ACPI PM Timer disabling
+ on Sky and Kabe Lake
+To: Rajneesh Bhardwaj <irenic.rajneesh@gmail.com>,
+ David E Box <david.e.box@intel.com>,
+ =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+ Andy Shevchenko <andy@kernel.org>
+Cc: Paul Menzel <pmenzel@molgen.mpg.de>, Todd Brandt
+ <todd.e.brandt@intel.com>, Marek Maslanka <mmaslanka@google.com>,
+ Daniel Lezcano <daniel.lezcano@linaro.org>, regressions@lists.linux.dev,
+ linux-pm@vger.kernel.org, platform-driver-x86@vger.kernel.org
+References: <20241003202614.17181-1-hdegoede@redhat.com>
+ <20241003202614.17181-2-hdegoede@redhat.com>
 Content-Language: en-US, nl
 From: Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <20241001212835.341788-4-W_Armin@gmx.de>
+In-Reply-To: <20241003202614.17181-2-hdegoede@redhat.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 
 Hi,
 
-On 1-Oct-24 11:28 PM, Armin Wolf wrote:
-> If the battery hook encounters a unsupported battery, it will
-> return an error. This in turn will cause the battery driver to
-> automatically unregister the battery hook.
+On 3-Oct-24 10:26 PM, Hans de Goede wrote:
+> There have been multiple reports that the ACPI PM Timer disabling is
+> causing Sky and Kabe Lake systems to hang on all suspend (s2idle, s3,
+> hibernate) methods.
 > 
-> On machines with multiple batteries however, this will prevent
-> the battery hook from handling the primary battery, since it will
-> always get unregistered upon encountering one of the unsupported
-> batteries.
+> Remove the acpi_pm_tmr_ctl_offset and acpi_pm_tmr_disable_bit settings from
+> spt_reg_map to disable the ACPI PM Timer disabling on Sky and Kabe Lake to
+> fix the hang on suspend.
 > 
-> Fix this by simply ignoring unsupported batteries.
-> 
-> Reviewed-by: Pali Rohár <pali@kernel.org>
-> Fixes: ab58016c68cc ("platform/x86:dell-laptop: Add knobs to change battery charge settings")
-> Signed-off-by: Armin Wolf <W_Armin@gmx.de>
+> Fixes: e86c8186d03a ("platform/x86:intel/pmc: Enable the ACPI PM Timer to be turned off when suspended")
+> Reported-by: Paul Menzel <pmenzel@molgen.mpg.de>
+> Closes: https://lore.kernel.org/linux-pm/18784f62-91ff-4d88-9621-6c88eb0af2b5@molgen.mpg.de/
+> Reported-by: Todd Brandt <todd.e.brandt@intel.com>
+> Closes: https://bugzilla.kernel.org/show_bug.cgi?id=219346
+> Cc: Marek Maslanka <mmaslanka@google.com>
+> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
 
-Thank you for your patch/series, I've applied this patch
-(series) to my review-hans branch:
+I've now applied this patch to my review-hans branch:
 https://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git/log/?h=review-hans
-
-Note it will show up in the pdx86 review-hans branch once I've
-pushed my local branch there, which might take a while.
 
 I will include this patch in my next fixes pull-req to Linus
 for the current kernel development cycle.
@@ -115,48 +116,22 @@ Hans
 
 
 
+
 > ---
->  drivers/platform/x86/dell/dell-laptop.c | 15 ++++++++++++---
->  1 file changed, 12 insertions(+), 3 deletions(-)
+>  drivers/platform/x86/intel/pmc/spt.c | 2 --
+>  1 file changed, 2 deletions(-)
 > 
-> diff --git a/drivers/platform/x86/dell/dell-laptop.c b/drivers/platform/x86/dell/dell-laptop.c
-> index a3cd0505f282..5671bd0deee7 100644
-> --- a/drivers/platform/x86/dell/dell-laptop.c
-> +++ b/drivers/platform/x86/dell/dell-laptop.c
-> @@ -2391,12 +2391,18 @@ static struct attribute *dell_battery_attrs[] = {
+> diff --git a/drivers/platform/x86/intel/pmc/spt.c b/drivers/platform/x86/intel/pmc/spt.c
+> index 2cd2b3c68e46..ab993a69e33e 100644
+> --- a/drivers/platform/x86/intel/pmc/spt.c
+> +++ b/drivers/platform/x86/intel/pmc/spt.c
+> @@ -130,8 +130,6 @@ const struct pmc_reg_map spt_reg_map = {
+>  	.ppfear_buckets = SPT_PPFEAR_NUM_ENTRIES,
+>  	.pm_cfg_offset = SPT_PMC_PM_CFG_OFFSET,
+>  	.pm_read_disable_bit = SPT_PMC_READ_DISABLE_BIT,
+> -	.acpi_pm_tmr_ctl_offset = SPT_PMC_ACPI_PM_TMR_CTL_OFFSET,
+> -	.acpi_pm_tmr_disable_bit = SPT_PMC_BIT_ACPI_PM_TMR_DISABLE,
+>  	.ltr_ignore_max = SPT_NUM_IP_IGN_ALLOWED,
+>  	.pm_vric1_offset = SPT_PMC_VRIC1_OFFSET,
 >  };
->  ATTRIBUTE_GROUPS(dell_battery);
-> 
-> +static bool dell_battery_supported(struct power_supply *battery)
-> +{
-> +	/* We currently only support the primary battery */
-> +	return strcmp(battery->desc->name, "BAT0") == 0;
-> +}
-> +
->  static int dell_battery_add(struct power_supply *battery,
->  		struct acpi_battery_hook *hook)
->  {
-> -	/* this currently only supports the primary battery */
-> -	if (strcmp(battery->desc->name, "BAT0") != 0)
-> -		return -ENODEV;
-> +	/* Return 0 instead of an error to avoid being unloaded */
-> +	if (!dell_battery_supported(battery))
-> +		return 0;
-> 
->  	return device_add_groups(&battery->dev, dell_battery_groups);
->  }
-> @@ -2404,6 +2410,9 @@ static int dell_battery_add(struct power_supply *battery,
->  static int dell_battery_remove(struct power_supply *battery,
->  		struct acpi_battery_hook *hook)
->  {
-> +	if (!dell_battery_supported(battery))
-> +		return 0;
-> +
->  	device_remove_groups(&battery->dev, dell_battery_groups);
->  	return 0;
->  }
-> --
-> 2.39.5
-> 
-> 
 
