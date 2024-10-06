@@ -1,157 +1,68 @@
-Received: from linux1587.grserver.gr (linux1587.grserver.gr [185.138.42.100])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 16F104E1CA;
-	Sat,  5 Oct 2024 22:16:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.138.42.100
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 75A99156997;
+	Sun,  6 Oct 2024 08:38:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728166571; cv=none; b=WKOJRGY6jhYIpZDARPBx7Cb+xee7CORiLHzn0cJyv5wY2meiH9RN8klL9BeAASLgCzo012geotUMfxJRfup06KN4vN3MtRQZbUgfA8NhOVi9u/MTGwDTFr8+msFv98PVo2p+w7icnw6VsjHz/bzozNKDy+Hv09fB1Zm7Mq+4RaQ=
+	t=1728203885; cv=none; b=gs4cS1GzuIMItwqNiW4rPLzKow9nVlUpJ9/75f/IqGdsHOUlM+xjmyDzFwav101O9cPyk2Xd9sxTmGLV7nXgxyfuT3hEHpQZtOUx7sdJkioGAJnE78R3lynmslM1vuCQL9LqifZbthogI02pTS8UU4s+j8rl1Piyqv0yx8wnqFE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728166571; c=relaxed/simple;
-	bh=/zDwBqr1YcZcrLHfJXKpEaXDRKBq4cUxi1JobrekPaA=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=PYcbseClX55yMWo85ktKV95CPN9qaCr0OY1gu6YEXT5QwYGOhz0jHnDp8nnZ4J2Rli1BwjYQMwYwtRNLaZyuT5dQzD8hMBI1Y9Sx1798By4uRFTCd5Q6mJ8TU8CKQQFNq0d7JCbMRU/XkA/aJX4DAk0fCZJkmPRTOpvjxeemMys=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=antheas.dev; spf=pass smtp.mailfrom=antheas.dev; dkim=pass (1024-bit key) header.d=antheas.dev header.i=@antheas.dev header.b=3ze2R4oV; arc=none smtp.client-ip=185.138.42.100
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=antheas.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=antheas.dev
+	s=arc-20240116; t=1728203885; c=relaxed/simple;
+	bh=vAUzClAZZRruqQFwLmVxUaCwYeQTOQ2JSyzAxQvZ91w=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=sO3XCFQhbYt8WWjM38Os0ez16TY7rBhQaesmb0jJiKLkvoSGhu8tepyVM7RrCHKpvPiQgRCchStk4Bosgv7H7toI+PVxhg73lvxlf4p+uB76HAoLmiXGpKM+HJzoKW3lDBLmoSZQq3L+542UhjMAHh7Oum+dh/ENZhAcJxH/734=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=iEzyNvpi; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=antheas.dev header.i=@antheas.dev header.b="3ze2R4oV"
-Received: from mail-lj1-f173.google.com (mail-lj1-f173.google.com [209.85.208.173])
-	by linux1587.grserver.gr (Postfix) with ESMTPSA id BD5F72E02014;
-	Sun,  6 Oct 2024 01:16:03 +0300 (EEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=antheas.dev;
-	s=default; t=1728166564;
-	bh=/zDwBqr1YcZcrLHfJXKpEaXDRKBq4cUxi1JobrekPaA=;
-	h=Received:From:Subject:To;
-	b=3ze2R4oVbamPn9tlh61Bsch5cIiqLkZoalFUGBnEnNFFkiRXjvfvN8mQsD6G5Gv8w
-	 CEy1ntX2cll9MlKoDaYzVirQB6mwtWKoSBfFD7HHuT7gGNfKocUBGoTlwlW2j851ra
-	 lZW3EXc8/yUcugoJ5BdPAc02hnbXr42/pv1gR3d4=
-Authentication-Results: linux1587.grserver.gr;
-        spf=pass (sender IP is 209.85.208.173) smtp.mailfrom=lkml@antheas.dev smtp.helo=mail-lj1-f173.google.com
-Received-SPF: pass (linux1587.grserver.gr: connection is authenticated)
-Received: by mail-lj1-f173.google.com with SMTP id
- 38308e7fff4ca-2fad100dd9fso45752981fa.3;
-        Sat, 05 Oct 2024 15:16:03 -0700 (PDT)
-X-Forwarded-Encrypted: i=1;
- AJvYcCW76OzXr/bMAzZj67m3GbOVzW8MYTSG8IHKDqhpWkYIdWim5USY04vbEmsgzfM42pEX9jnbbXQCdCRTsNwEGCS1Zfq1@vger.kernel.org
-X-Gm-Message-State: AOJu0YyurfbrQzWHsTc2rVpU20gbC+m45784zI08TYvyefhhSTbOaqr8
-	0LvZ9HnNrIYzTZabbBe+JezKQ8SVJBYzUTRN4oghxhMNh/21LzQHeHtT6sjcp+tcnu3XrEATpsR
-	8Vvi6znC0SUxPuNSGR9Ljh0lmS6c=
-X-Google-Smtp-Source: 
- AGHT+IGpPEFXgJZu+u9+/Gz8Z9Al6yz2ynde5Sp5IYaQ+x5SfyFVIqf94L5lpYpHGF6P+kGvoN3iOEC1PFjkyFr3Ugk=
-X-Received: by 2002:a05:651c:1989:b0:2fa:d49d:45ae with SMTP id
- 38308e7fff4ca-2faf3c0c2bcmr48943331fa.8.1728166563050; Sat, 05 Oct 2024
- 15:16:03 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="iEzyNvpi"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5632DC4CEC5;
+	Sun,  6 Oct 2024 08:38:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1728203884;
+	bh=vAUzClAZZRruqQFwLmVxUaCwYeQTOQ2JSyzAxQvZ91w=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=iEzyNvpiavQalYighhMfRCMWF/xOVVuk42ieIZ2EFpSMkbvZwLP6jezhoAxJfz4+f
+	 jXyPE3dM8qWw+VEGhzAJiNfJf8pzjOoo96Z+jACu0SowqWkKSbT+PNnqzJe4Msj0Xo
+	 G3wnyqUkClsy21MAoBFxNmO/v6ziG/0DoGw+xVG0=
+Date: Sun, 6 Oct 2024 10:38:01 +0200
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org,
+	linux-usb@vger.kernel.org, Andy Shevchenko <andy@kernel.org>,
+	Lee Jones <lee@kernel.org>, Hans de Goede <hdegoede@redhat.com>,
+	Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+	Zhang Ning <zhangn1985@outlook.com>
+Subject: Re: [PATCH v2 1/4] mfd: intel_soc_pmic_bxtwc: Use IRQ domain for USB
+ Type-C device
+Message-ID: <2024100653-map-unequal-d687@gregkh>
+References: <20241005193029.1929139-1-andriy.shevchenko@linux.intel.com>
+ <20241005193029.1929139-2-andriy.shevchenko@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240922172258.48435-1-lkml@antheas.dev>
- <134adbb7-06c5-4b6a-a8b9-abb973784f73@redhat.com>
- <CAGwozwG49xkWoFVybsVzpa=eG1U2YVCMdr8qc-HwRWSqEKCv0g@mail.gmail.com>
- <c19490b6-dc4b-47b3-b422-d244a6b87e5e@redhat.com>
- <ede128c0-46e7-4c94-ac7f-39db0efa612d@redhat.com>
-In-Reply-To: <ede128c0-46e7-4c94-ac7f-39db0efa612d@redhat.com>
-From: Antheas Kapenekakis <lkml@antheas.dev>
-Date: Sun, 6 Oct 2024 00:15:51 +0200
-X-Gmail-Original-Message-ID: 
- <CAGwozwESYc=znHvgJidjxoUskRuzxgoVGY7=fnmPQyYOLJP_0w@mail.gmail.com>
-Message-ID: 
- <CAGwozwESYc=znHvgJidjxoUskRuzxgoVGY7=fnmPQyYOLJP_0w@mail.gmail.com>
-Subject: Re: [PATCH v2 0/5] acpi/x86: s2idle: move Display off/on calls
- outside suspend (fixes ROG Ally suspend)
-To: Hans de Goede <hdegoede@redhat.com>
-Cc: linux-pm@vger.kernel.org, "Rafael J. Wysocki" <rafael@kernel.org>,
-	platform-driver-x86@vger.kernel.org,
-	Mario Limonciello <mario.limonciello@amd.com>, luke@ljones.dev,
- me@kylegospodneti.ch,
-	Denis Benato <benato.denis96@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-PPP-Message-ID: 
- <172816656422.23588.9215590334041796372@linux1587.grserver.gr>
-X-PPP-Vhost: antheas.dev
-X-Virus-Scanned: clamav-milter 0.103.11 at linux1587.grserver.gr
-X-Virus-Status: Clean
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20241005193029.1929139-2-andriy.shevchenko@linux.intel.com>
 
-<skip>
+On Sat, Oct 05, 2024 at 10:27:04PM +0300, Andy Shevchenko wrote:
+> While design wise the idea of converting the driver to use
+> the hierarchy of the IRQ chips is correct, the implementation
+> has (inherited) flaws. This was unveiled when platform_get_irq()
+> had started WARN() on IRQ 0 that is supposed to be a Linux
+> IRQ number (also known as vIRQ).
+> 
+> Rework the driver to respect IRQ domain when creating each MFD
+> device separately, as the domain is not the same for all of them.
+> 
+> Fixes: 9c6235c86332 ("mfd: intel_soc_pmic_bxtwc: Add bxt_wcove_usbc device")
+> Fixes: d2061f9cc32d ("usb: typec: add driver for Intel Whiskey Cove PMIC USB Type-C PHY")
+> Fixes: 57129044f504 ("mfd: intel_soc_pmic_bxtwc: Use chained IRQs for second level IRQ chips")
+> Reported-by: Zhang Ning <zhangn1985@outlook.com>
+> Closes: https://lore.kernel.org/r/TY2PR01MB3322FEDCDC048B7D3794F922CDBA2@TY2PR01MB3322.jpnprd01.prod.outlook.com
+> Tested-by: Zhang Ning <zhangn1985@outlook.com>
+> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 
-> Thinking some more about this I am having second doubts about
-> moving the LPS0 display power off call to before devices are suspended,
-> doing so would mean that the display might still be on when that call
-> is made and that call could disable power-resources which are necessary
-> for the display causing issues when the display driver's suspend method
-> runs.
-
-Is there any device where that is used for display powersaving?
-
-> So I think that we need something closer to Mario's POC from:
->
-> https://git.kernel.org/pub/scm/linux/kernel/git/superm1/linux.git/log/?h=
-=3Dsuperm1/dsm-screen-on-off
->
-> here where the call is made when the last display is turned off.
->
-> IOW have the drm modesetting core call this.
-
-I can see two problems with this approach: 1) it would happen in a
-random point in the suspend sequence, introducing race conditions with
-sensitive modern standby devices (e.g., Ally). 2) It would not be
-gated and debounced properly, so a drm driver could call it 5 times
-when you e.g., plug in an HDMI cable.
-
-And indeed that is the case, that PR horribly breaks the Ally even
-while any asus-wmi quirk was active. Perhaps DRM can be consulted
-though, see below.
-
-> Maybe have something like a enabled_displays counter in the
-> drm-core which gets increased / decreased by helpers and
-> have the drm-core call platform_suspend_screen_off() /
-> platform_suspend_screen_on() when the counter goes from 1 -> 0
-> resp. 0 -> 1, ignoring the very first 0 -> 1 transition
-> which will be done when the first GPU with an enabled
-> output is found ?
-
-To quote Microsoft [1], "This _DSM Function will be invoked when the
-operating system has entered a state where all displays=E2=80=94local and
-*remote*, if any=E2=80=94have been turned off."
-
-Since it says remote, binding it to DRM could prove difficult. In
-addition, the call in Windows is made 5 seconds after the displays
-turn off due to inactivity. To mirror this behavior you would need
-userspace.
-
-If there is strong indication that the Display On/Off calls interfere
-with the DRM subsystem, e.g., turn off a GPU in certain laptops, the
-call could be gated with a counter similar to Mario's PR and error
-out. In that way, it is still controllable by userspace while ensuring
-the device display is off. Is there such an indication/do we know of
-such a device?
-
-The Ally and Legion Go which I tested happily had their display turn
-on after I yanked their display on and sleep exit callbacks. The
-Legion Go even had its suspend light blink while the screen was on.
-And both had disabled controllers. This behavior was sticky even after
-a reboot. I suppose this is due to the fact that the device might
-hibernate, so the EC would have to remember the last state before
-power off.
-
-> The idea being that the first increase() call gets made when
-> a drm/kms driver probes a display and finds outputs which are
-> light up during probe() and then further increase / decrease
-> calls are made either when all displays go off; or maybe
-> per crtc when the crtc gets enabled / disabled.
->
-> Anyways how best to do this at display off time should be
-> discussed with the drm/kms community on the dri-devel list.
-
-I can cc on the next version.
-
-Link: https://learn.microsoft.com/en-us/windows-hardware/design/device-expe=
-riences/modern-standby-firmware-notifications#display-off-notification-func=
-tion-3
-[1]
-
-Antheas
+Acked-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
