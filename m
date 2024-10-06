@@ -1,65 +1,65 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D564166F34
-	for <platform-driver-x86@vger.kernel.org>; Sun,  6 Oct 2024 10:30:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 055F5166F34
+	for <platform-driver-x86@vger.kernel.org>; Sun,  6 Oct 2024 10:31:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728210620; cv=none; b=bSns0Vg/p5QZATEBlCDJtDFEOckG9+Ka/s63VWCkeby067uVVBY+W2wZWZppj+T29ob7XVALIRHXB8nBTsm08gBltj7tU90Obi09zFO+K3V020Q85xuCj2wdamrL6FxnpVxwGParK1hNgLXtozhqPuxb6B+JlWYFkexja0RHX9c=
+	t=1728210702; cv=none; b=pvZ30+ZeNOEGzK3KQqzFkJBF8Kn4Xp1pea5/ztgj4jT59lGDqtQqDT6stwKEux13cdVsfBlWJOBPu73JtYldJ6+yyiZM2sew95goCriLDJk/UpzHb+Ous9MNBJiDBJAwZEvtIs7sabpv8pzbqzims+bQcultkBR2tRmThDeX+E0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728210620; c=relaxed/simple;
-	bh=/q5RSB3zXrOdqleEci0EsSo9N+y89Zu89ixbYXFAuuk=;
+	s=arc-20240116; t=1728210702; c=relaxed/simple;
+	bh=+1hMTw3yjrhtuWg/B41NsVCZVs0eLqPm2W6ekE6WIWo=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=RsE31bLmWq6DsNdPbY+lWMADbSpNi7TotRaljSU9sq/B/J8Wzitf7kMH7itTByLRA5B4M4oll5/xSkxNOUiBoF0SlWW56dq10W1Gn4i+NWOql8dvcT8KvIMJqMRMN1tV4YMDjghRks1nKFU4qiYUpGzF/lhKuu7j79efICD9yqo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=RoyyeYOb; arc=none smtp.client-ip=170.10.129.124
+	 In-Reply-To:Content-Type; b=dcJ/1cFMzLmWShOoOLDRnkG1ws6dkp/liOYCIPZnkglTxjR7vcp77lscTziNuGtGEnQBbCUZ5uwapFtXMxtwOflM4NKDdJXJsRpd94Rip8WhpzwkN6guyfE7/ZN5Aop5wmLA/jB0130gnnb6u+v8GsQnm/xnBXZV8kZzZeh96BU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=L+yOCOO7; arc=none smtp.client-ip=170.10.133.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="RoyyeYOb"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="L+yOCOO7"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1728210618;
+	s=mimecast20190719; t=1728210699;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=oulXyoLt0WKZ+UskwJ8Ah+v4BDE4agdwTAaApYR5Sz8=;
-	b=RoyyeYObveTrpqQRHXcTd6KUS4s4gHpLiSj1piV5A61kZPzki7m9Mr1bQkDMnYjA73mOb6
-	/wg/3sekpFkiAlh9n43jO3n2CMxSasaCkAkGbSqAsLTexEVZvkD/ojDD83qpSVXys6qnBd
-	2PFjgQm4v5RwKzlx9AbLvf8DRxrVaXs=
-Received: from mail-ej1-f71.google.com (mail-ej1-f71.google.com
- [209.85.218.71]) by relay.mimecast.com with ESMTP with STARTTLS
+	bh=JCGr2POOT5uxbuD68RQ0lpX6z0IGw4KIWstExrGNdbk=;
+	b=L+yOCOO7ksXHrOwzZFsQCvHkQ34P10dJeuawEgw1zVjv35+TC+wXTXlkiKuPcYbykGYKzy
+	rr1VLRyxiM7A5id3DQYA+HEs1fzSLX0tLcfe1iQ9y+Ec3Oi5/d2iCBYk+aVMRIY56d1N5x
+	rqH9Od7LOigOAixL+EUI4OfUmIoTvTU=
+Received: from mail-ej1-f70.google.com (mail-ej1-f70.google.com
+ [209.85.218.70]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-163-I-7BL5XfNU6oyGuJZKqU8g-1; Sun, 06 Oct 2024 06:30:16 -0400
-X-MC-Unique: I-7BL5XfNU6oyGuJZKqU8g-1
-Received: by mail-ej1-f71.google.com with SMTP id a640c23a62f3a-a9953730a3eso7431366b.3
-        for <platform-driver-x86@vger.kernel.org>; Sun, 06 Oct 2024 03:30:16 -0700 (PDT)
+ us-mta-288-YysJIU0bMYKywUMzENX5_A-1; Sun, 06 Oct 2024 06:31:38 -0400
+X-MC-Unique: YysJIU0bMYKywUMzENX5_A-1
+Received: by mail-ej1-f70.google.com with SMTP id a640c23a62f3a-a8711c48990so369938366b.2
+        for <platform-driver-x86@vger.kernel.org>; Sun, 06 Oct 2024 03:31:38 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1728210615; x=1728815415;
+        d=1e100.net; s=20230601; t=1728210697; x=1728815497;
         h=content-transfer-encoding:in-reply-to:from:content-language
          :references:cc:to:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=oulXyoLt0WKZ+UskwJ8Ah+v4BDE4agdwTAaApYR5Sz8=;
-        b=IiazXUDcIrC4F8W7ghryzuE6OeN+HcMRFU6VbJuo/9E2kk7z2l7RjIrAXTceupY5wq
-         +q8eOYudTlapNgFksvDdnYG4/zYYXfMIdolWPUSFvpW8Hndi6vehmRF7LcRPaBe0FTuP
-         KvhQd0cHPJCsEzYo1YWo0IOjooz+XWvMLXzDArbZsAZOJOZTS8KC1aYN5JIwMivd/yzQ
-         7n6OtRKfprgDQgJSudJquir0/SLUvuVjOVF7/h1UDZoIT7F6KsNsFIsc/EAKKCXa58vr
-         PTES6HfAp6iw7T3HNIOnQSaLbCQWc2W7/crWpFT3p8oYR1RDGVPppMSJ8ttx/9eQ3GWD
-         jabg==
-X-Forwarded-Encrypted: i=1; AJvYcCV7NbzCMm9bpvO26UBbW4bVsP32lEPR1t8HBt7nEIrk0i343nQu6hdYypbwe0oH0yuOoAUxyca3WEOhWZZ1JV0h/7Ek@vger.kernel.org
-X-Gm-Message-State: AOJu0YwwcWhccbOAAIjQwJFUKdV428FXwYKoqUOyB+b/vSTQMu43HvYO
-	aybnR7WztEYjQCJP7kU3qZDlFdFVlhiqfd2QgHIhRTKGauRaImePqFWiedZNxrdPgZpJR63n5lb
-	SMVNGItqk/WiozNMV03JTqDFW8WdeAA81OlSGAa/vGlnZkXwQzA6VzS0mqdEZHl+D5xdKnak=
-X-Received: by 2002:a17:907:6d0b:b0:a99:5466:2556 with SMTP id a640c23a62f3a-a9954662964mr4889166b.61.1728210615402;
-        Sun, 06 Oct 2024 03:30:15 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IFnspp1E51AID6UCwdFUYpbPtxjCzqz37ev9d/qB4+LC3pOdnudHEGJ+3lO8dzYGqI5hAlS1g==
-X-Received: by 2002:a17:907:6d0b:b0:a99:5466:2556 with SMTP id a640c23a62f3a-a9954662964mr4886666b.61.1728210614886;
-        Sun, 06 Oct 2024 03:30:14 -0700 (PDT)
+        bh=JCGr2POOT5uxbuD68RQ0lpX6z0IGw4KIWstExrGNdbk=;
+        b=R3jZyvio9Qx72s/2jQJbR39ZAcetOcinqwpG34YFNfonjNh8XOn0yxtpdXWXG+vuCi
+         NQCXz/xdhfQq5aHN8mUrF7RACHlA+23v67V1Suo+8pJfJBdaClyB3zjPGrDgKusec/m+
+         QqyRe9XNJkKaky+QzrWtE6cCYJwIS06Jqt2HrbDjwnN7UEGaZLKDHWLQw26FORJSqo13
+         dNvhAZykfI/1P+9OCyednvaxnDeUtA7sZeLr7XpCtC664XwQlmPm6/itiw0J9NfzTi3p
+         2BBXgJ/TQZIbnZ8j/cdcFiAONEjPyRYncJVZlQ51C0iOnhwvh9BZk2dZgwq2M4VRKRFi
+         p/jg==
+X-Forwarded-Encrypted: i=1; AJvYcCWEmnpwnXxOFRodsvCSxxN/jAFfsonAatbrY9rPRu4i0ZYH3E8exZRhv7xSSZWwv1u48J/asUd8qH7cZHlv5cZxPt2Q@vger.kernel.org
+X-Gm-Message-State: AOJu0YzcQgt2vVaK3lUVL9U0mnb3Dj5MM0hmPwfUEGrkpbIm4J6R9Fua
+	c5eBFKd4TQn0P42cxLZlpOvgXPFrYgr1ZFOSZnZVTWQws8iT4KSMzZBhyF9mK6DINRontmmk2WV
+	RvkXeXQQazpvEXkonyUX+Y4QC7cS39rlCwwJGHzZeNVEmW/8k125rnNbyL7X8w4XUl1cIlr0=
+X-Received: by 2002:a17:907:745:b0:a8d:caa:7fee with SMTP id a640c23a62f3a-a991bd04d9fmr915433466b.7.1728210697264;
+        Sun, 06 Oct 2024 03:31:37 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IGSx1R/LgYBtLI5vnf0Pf3LDe+dvGQmKU2skfmJeTA+eT0pHsSB2e/ggYoF1agP+LPkJ5N0lg==
+X-Received: by 2002:a17:907:745:b0:a8d:caa:7fee with SMTP id a640c23a62f3a-a991bd04d9fmr915431166b.7.1728210696829;
+        Sun, 06 Oct 2024 03:31:36 -0700 (PDT)
 Received: from ?IPV6:2001:1c00:c32:7800:5bfa:a036:83f0:f9ec? (2001-1c00-0c32-7800-5bfa-a036-83f0-f9ec.cable.dynamic.v6.ziggo.nl. [2001:1c00:c32:7800:5bfa:a036:83f0:f9ec])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a992e7860cbsm238402766b.120.2024.10.06.03.30.14
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5c8e0598947sm1867769a12.11.2024.10.06.03.31.35
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 06 Oct 2024 03:30:14 -0700 (PDT)
-Message-ID: <00f59e1b-0f43-457b-a7e0-6865934c4752@redhat.com>
-Date: Sun, 6 Oct 2024 12:30:13 +0200
+        Sun, 06 Oct 2024 03:31:35 -0700 (PDT)
+Message-ID: <9cfb6e26-e3d1-403a-a894-4a0902905407@redhat.com>
+Date: Sun, 6 Oct 2024 12:31:34 +0200
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -67,25 +67,37 @@ List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] MAINTAINERS: Update Intel In Field Scan(IFS) entry
-To: Jithu Joseph <jithu.joseph@intel.com>, ilpo.jarvinen@linux.intel.com
-Cc: linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org,
- tony.luck@intel.com, ashok.raj.linux@gmail.com
-References: <20241001170808.203970-1-jithu.joseph@intel.com>
+Subject: Re: [PATCH RESEND v3 3/3] platform/x86: dell-laptop: Do not fail when
+ encountering unsupported batteries
+To: Armin Wolf <W_Armin@gmx.de>, pali@kernel.org, dilinger@queued.net
+Cc: rafael@kernel.org, lenb@kernel.org, ilpo.jarvinen@linux.intel.com,
+ platform-driver-x86@vger.kernel.org, linux-acpi@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <20241001212835.341788-1-W_Armin@gmx.de>
+ <20241001212835.341788-4-W_Armin@gmx.de>
 Content-Language: en-US, nl
 From: Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <20241001170808.203970-1-jithu.joseph@intel.com>
+In-Reply-To: <20241001212835.341788-4-W_Armin@gmx.de>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
 Hi,
 
-On 1-Oct-24 7:08 PM, Jithu Joseph wrote:
-> Ashok is no longer with Intel and his e-mail address will start bouncing
-> soon.  Update his email address to the new one he provided to ensure
-> correct contact details in the MAINTAINERS file.
+On 1-Oct-24 11:28 PM, Armin Wolf wrote:
+> If the battery hook encounters a unsupported battery, it will
+> return an error. This in turn will cause the battery driver to
+> automatically unregister the battery hook.
 > 
-> Signed-off-by: Jithu Joseph <jithu.joseph@intel.com>
+> On machines with multiple batteries however, this will prevent
+> the battery hook from handling the primary battery, since it will
+> always get unregistered upon encountering one of the unsupported
+> batteries.
+> 
+> Fix this by simply ignoring unsupported batteries.
+> 
+> Reviewed-by: Pali Rohár <pali@kernel.org>
+> Fixes: ab58016c68cc ("platform/x86:dell-laptop: Add knobs to change battery charge settings")
+> Signed-off-by: Armin Wolf <W_Armin@gmx.de>
 
 Thank you for your patch/series, I've applied this patch
 (series) to my review-hans branch:
@@ -104,22 +116,47 @@ Hans
 
 
 > ---
->  MAINTAINERS | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+>  drivers/platform/x86/dell/dell-laptop.c | 15 ++++++++++++---
+>  1 file changed, 12 insertions(+), 3 deletions(-)
 > 
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index c27f3190737f..89fb731384ea 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -11496,7 +11496,7 @@ F:	include/uapi/linux/idxd.h
->  
->  INTEL IN FIELD SCAN (IFS) DEVICE
->  M:	Jithu Joseph <jithu.joseph@intel.com>
-> -R:	Ashok Raj <ashok.raj@intel.com>
-> +R:	Ashok Raj <ashok.raj.linux@gmail.com>
->  R:	Tony Luck <tony.luck@intel.com>
->  S:	Maintained
->  F:	drivers/platform/x86/intel/ifs
+> diff --git a/drivers/platform/x86/dell/dell-laptop.c b/drivers/platform/x86/dell/dell-laptop.c
+> index a3cd0505f282..5671bd0deee7 100644
+> --- a/drivers/platform/x86/dell/dell-laptop.c
+> +++ b/drivers/platform/x86/dell/dell-laptop.c
+> @@ -2391,12 +2391,18 @@ static struct attribute *dell_battery_attrs[] = {
+>  };
+>  ATTRIBUTE_GROUPS(dell_battery);
 > 
-> base-commit: 9852d85ec9d492ebef56dc5f229416c925758edc
+> +static bool dell_battery_supported(struct power_supply *battery)
+> +{
+> +	/* We currently only support the primary battery */
+> +	return strcmp(battery->desc->name, "BAT0") == 0;
+> +}
+> +
+>  static int dell_battery_add(struct power_supply *battery,
+>  		struct acpi_battery_hook *hook)
+>  {
+> -	/* this currently only supports the primary battery */
+> -	if (strcmp(battery->desc->name, "BAT0") != 0)
+> -		return -ENODEV;
+> +	/* Return 0 instead of an error to avoid being unloaded */
+> +	if (!dell_battery_supported(battery))
+> +		return 0;
+> 
+>  	return device_add_groups(&battery->dev, dell_battery_groups);
+>  }
+> @@ -2404,6 +2410,9 @@ static int dell_battery_add(struct power_supply *battery,
+>  static int dell_battery_remove(struct power_supply *battery,
+>  		struct acpi_battery_hook *hook)
+>  {
+> +	if (!dell_battery_supported(battery))
+> +		return 0;
+> +
+>  	device_remove_groups(&battery->dev, dell_battery_groups);
+>  	return 0;
+>  }
+> --
+> 2.39.5
+> 
+> 
 
