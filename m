@@ -1,105 +1,87 @@
-Received: from mail-pl1-f180.google.com (mail-pl1-f180.google.com [209.85.214.180])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9104918BBB2;
-	Mon,  7 Oct 2024 17:25:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2410E1DD9A8;
+	Mon,  7 Oct 2024 17:37:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728321901; cv=none; b=umkaxQ1ij4cECZu5F5+fMZq9VXQzEziyj9RTm+1Rq2eA2pegD79juIDpU0X2Eu32eUwX6R9QEDlWhv7JIHbV/4XcN5YkiJeEmYjMJy5ngnOJCaSupMH09NW/r8qoZwEaHlcQWgVqXyVd/iovG3nvOcFek9I1ZgO8Fj4TmjWFnP4=
+	t=1728322634; cv=none; b=lq6SN+CSfQrcEBWEevbzMS8DscEl9uGyp43kdUdqyO+qAJS8nYDD0cqgen1NE7Xc3fPYD3PsKNPQPrK48zdhZVb+sBaqlZCqOGLcsPXP/AyK29+h3lF4bNU8rQ8+XvyRrzhM5EggGjdmVgj+1BLT8g9CT+1aO9kNR9ecEaPYFck=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728321901; c=relaxed/simple;
-	bh=gzZh6G6aaWM+kJ1QWVNs6ivj9ZQtZ6wJYdHddcihf/Q=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=EDdXsNVOdlpFKfqYb/zFTJ1XQgCCRT5mZLkfj+91lG7R3DKrK5SyMZX3Zu+1ksbIMQnYwyAEnQ7MP6NCo9ORpwKZ1i9ZXUROuInuXS+uMD0dHFxYpnQIJzs9244kODWG5hJSveea3eMdLwMnxF+41qWo12cPZM4rdc72czStwrQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=I/m9Kt19; arc=none smtp.client-ip=209.85.214.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1728322634; c=relaxed/simple;
+	bh=AlK4P1UlbmMivBa60mCYivg9HM3F7snG3/v9gyigkbI=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=RG92MSUyhCqPlialk/o6tSPg2xkLXugEARIAcbRgPWvvxVKFpl2n0p0U8B5r8U+mYQKtKQCkMCU7Um7JSVRdqg4cj4AZwns0dPZhv44wy3oz1u4TcZkb6Cn0JGr9LzCkZNopGyRd56kCkoaTxlaf9giWarnNJ9fmuU7nQ86VDIw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=aHSWpsmW; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="I/m9Kt19"
-Received: by mail-pl1-f180.google.com with SMTP id d9443c01a7336-20b5affde14so35088025ad.3;
-        Mon, 07 Oct 2024 10:25:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1728321900; x=1728926700; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=gzZh6G6aaWM+kJ1QWVNs6ivj9ZQtZ6wJYdHddcihf/Q=;
-        b=I/m9Kt19ygjbmm6eXD7hkRpiaMX1jsx5R8kw7PACvhpEIR8EGbgAUznNp+lKNsJz6L
-         PERu12X/aqNP1mr1N3PsdUjOo6X41XhSM1bCjCwR0MfkmO0PximBTPSjbHVdQZrm2QXq
-         R/6K2VguR+mDgO5UQFpliAEZepFH4SZpdckgCzJsJMjfhZKo50KqDuZi+EndfbM9aiIw
-         kVxLvmSxbxUQc4LtTIbQ1bQ7fTH9mMl0bgm1guOePxQ9h7Wb0nPZvs6PQgGEY6wHPwqr
-         oK4A5SIvFFgcAkpFGu+YeZGE3AtAPtbRjotIjPvkl+U5oSlNMKOpYKDqE4M+E4vSHh6v
-         0K9g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1728321900; x=1728926700;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=gzZh6G6aaWM+kJ1QWVNs6ivj9ZQtZ6wJYdHddcihf/Q=;
-        b=svnrB2q2O26Eopy4LDVplF4mtexT/IkLbGP415zyKP8Ionvz7urEpfhelJVlkj98Bd
-         kHBf89ktHrcIktP2VwOKTzGSYwXGzc4eAcPdBenHVDwGRXCGlgiTGx9sKWdoce0hEetQ
-         TH3Yp/sSEBvn7JEzqTPNPB7CtPa+UvbkJ7HEdsyKaQdgBPuOMzzRujahzeHKFYcdiD8b
-         o/Kmg2X5gA/xsvpCC4neF0O9yIWklDUnIpI0mMnji3pZa5PuK8sdCWym4GUg6ZIEQykO
-         als/lutqOEWUySOUjejAYKXostfTxMkbeL11Eo3V0IbMUC+bnsCAtkBMJmIBqGPVQsv5
-         +0DA==
-X-Forwarded-Encrypted: i=1; AJvYcCUye2ov2jjthlM+c98Uu/4SmZRC73vE/egGOVVHyBoTuZcSSoBUxdhdq86ib0Em4cDkN+yiV5In9Z2TQbr351lrDW6Q3Q==@vger.kernel.org, AJvYcCXLa9YuZNVJiZmIONhJMI+oknTMyEilTiRYKikw241VEn4OJBlqCwpHOLzErIl4D0Ug7xQy7N6tJlF/euU=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx2BtBULcce1z33Gn8ERP2xDbtNmyptK0J0Iw5mDep5Xwnism0c
-	Euvyk4FM0rmMSTMt8ARW+FfOdS3PHgK9wvPvomcCUXqmmUnji3eUnyzkxXTN
-X-Google-Smtp-Source: AGHT+IFWi7UuQAkv4UcL3cUW3M+stG16cZo90q3iaHPYyo3TIS/MSMKgQCf+hv+m/yeoZbZVYNdTAw==
-X-Received: by 2002:a17:90b:1645:b0:2e0:a9e8:b9c1 with SMTP id 98e67ed59e1d1-2e1e6296d3fmr13961014a91.22.1728321899942;
-        Mon, 07 Oct 2024 10:24:59 -0700 (PDT)
-Received: from localhost.localdomain (host95.181-12-202.telecom.net.ar. [181.12.202.95])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-2e20b0f919csm5667297a91.44.2024.10.07.10.24.58
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 07 Oct 2024 10:24:59 -0700 (PDT)
-From: Kurt Borja <kuurtb@gmail.com>
-To: w_armin@gmx.de
-Cc: hdegoede@redhat.com,
-	ilpo.jarvinen@linux.intel.com,
-	kuurtb@gmail.com,
-	linux-kernel@vger.kernel.org,
-	platform-driver-x86@vger.kernel.org
-Subject: Re: [PATCH] Dell AWCC platform_profile support
-Date: Mon,  7 Oct 2024 14:24:56 -0300
-Message-ID: <20241007172456.8590-1-kuurtb@gmail.com>
-X-Mailer: git-send-email 2.46.2
-In-Reply-To: <771d20f1-ebf3-48d9-98ef-ec79b94c7949@gmx.de>
-References: <771d20f1-ebf3-48d9-98ef-ec79b94c7949@gmx.de>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="aHSWpsmW"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CA084C4CEC7;
+	Mon,  7 Oct 2024 17:37:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1728322633;
+	bh=AlK4P1UlbmMivBa60mCYivg9HM3F7snG3/v9gyigkbI=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=aHSWpsmWmRt+vx11Tj+agbL+mc5Z14msyWD3a8uuHTdYqzxx+XDjMQ1ANkCxS9AoH
+	 fDDhOx/q262IJwVDE6vRVjvhzFH0q1fUQ3M40BSlGdrwslLqBAR+KTy9XBDIxdYEm3
+	 0nbj/sefSACrB8DTYipL1rOION/daIY1jy74oRiNAX9NmNbX+aGoodnABpMvxoZCd3
+	 IHTKCMFzTwjT31Dq2Z3H7M0SEIXT/Jou6ODmXumsOqOxtI3IQLWueRprjUrnkCxw88
+	 V5otfvlL0CXSlf+VELthAQTf7ka69+v8Ncw0ZR4OWg07Uw5oxjW4vZuuvVl8gdwHk2
+	 wmy+CZiBL2wlQ==
+Received: by mail-oi1-f175.google.com with SMTP id 5614622812f47-3e3b79b4858so2655921b6e.2;
+        Mon, 07 Oct 2024 10:37:13 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCWiGioWI/UgxmO9B0TTF4MNYXLKn7vPuOjpMAVdsFGV7ei6XN3IS4XICIULUS+37bQcNlAWUG874S1i@vger.kernel.org, AJvYcCXXorONrXc2ntND7wtvoB/4qQ/q3LIAq3NKKUM/0dRAoM//AtQSKPrY37WRsTT0qsAsJqIHRQ263/vBqEq3Eyn6O75Cqw==@vger.kernel.org
+X-Gm-Message-State: AOJu0YwUueSIEm0hmEBItVomx2flUc2VHi1ZNCaaFQCxwvzGea2Fj7rl
+	NyMjZeOSypdX9QJ58q+nsNB5sexLS6ma0GsUfjA7ArNDMb0KO/TYpcJLkM05uOF1TRbsfT9rwWW
+	l27JrkE2OUk10kHy2wZQKXk41uVQ=
+X-Google-Smtp-Source: AGHT+IH7fINeVOserZn4p9MaX+Qa/NlZSjq4iaGm/7sDFZ/6pI0FMQhYRZkjd6HNAntaVex0FDYhD3ouDwsJ2oTTxGY=
+X-Received: by 2002:a05:6808:654c:b0:3e3:a319:4488 with SMTP id
+ 5614622812f47-3e3c10a2cb2mr9378594b6e.0.1728322633140; Mon, 07 Oct 2024
+ 10:37:13 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20241005212819.354681-1-hdegoede@redhat.com> <CAJZ5v0iewd+hmF6ZrXSPTs5_aKov57taaRKEoBM5VaRefrdM1Q@mail.gmail.com>
+In-Reply-To: <CAJZ5v0iewd+hmF6ZrXSPTs5_aKov57taaRKEoBM5VaRefrdM1Q@mail.gmail.com>
+From: "Rafael J. Wysocki" <rafael@kernel.org>
+Date: Mon, 7 Oct 2024 19:37:01 +0200
+X-Gmail-Original-Message-ID: <CAJZ5v0hQ=dDL5OQ+6JHv+=8iawcQaCDwR59xYZHuzO6GcbtTbQ@mail.gmail.com>
+Message-ID: <CAJZ5v0hQ=dDL5OQ+6JHv+=8iawcQaCDwR59xYZHuzO6GcbtTbQ@mail.gmail.com>
+Subject: Re: [PATCH 0/4] ACPI: resource: Improve Asus skip IRQ override quirks
+To: Hans de Goede <hdegoede@redhat.com>
+Cc: "Luke D . Jones" <luke@ljones.dev>, linux-acpi@vger.kernel.org, 
+	platform-driver-x86@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-
-On Mon, Oct 07, 2024 at 02:24:52PM +0200, Armin Wolf wrote:
-> Hi,
+On Mon, Oct 7, 2024 at 5:14=E2=80=AFPM Rafael J. Wysocki <rafael@kernel.org=
+> wrote:
 >
-> this WMI device is already handled by the alienware-wmi driver. Could you please integrate
-> this functionality into this driver instead of creating a new one?
+> Hi Hans,
 >
-> Thanks,
-> Armin Wolf
+> On Sat, Oct 5, 2024 at 11:28=E2=80=AFPM Hans de Goede <hdegoede@redhat.co=
+m> wrote:
+> >
+> > Hi Rafael,
+> >
+> > After receiving yet another Asus skip IRQ override bug report / patch:
+> > https://lore.kernel.org/platform-driver-x86/a983e6d5-c7ab-4758-be9b-7dc=
+fc1b44ed3@gmail.com/
+> >
+> > I have taken a closer look at the existing Asus quirks to see if they c=
+an
+> > be simplied to cover more models.
+> >
+> > This patch series removes 8 quirks by making the quirks match more mode=
+ls,
+> > while extending coverage with 3 new models which also need a skip IRQ
+> > override quirk for their keyboards to work (including the model from
+> > the new report).
+> >
+> > Please send these to Linus as 6.12-rc# fixes, since this fixes
+> > the keyboard not working on 3 more models.
+>
+> I will, thanks!
 
-Hi,
-
-Thank you for your feedback.
-
-Although they the same name and same GUID, both interfaces are very
-different. Alienware x15's WMAX method doesn't support any of the methods
-listed on alienware-wmi driver and the de-compiled MOF file on [1] which is
-an open source alternative to AWCC, makes me think this might be the case
-for various other newer models (G, M, X Series).
-
-Still I could implement it as a quirk of newer models. Would this be ok?
-
-My only worry was that it could make alienware-wmi's logic overly complex
-and cumbersome, as it would support two very different interfaces with the
-same GUID.
-
-
-Kurt
-
-[1] https://github.com/AlexIII/tcc-g15/blob/master/WMI-AWCC-doc.md
+Now applied as 6.12-rc material, thanks!
