@@ -1,124 +1,146 @@
-Received: from mail.tuxedocomputers.com (mail.tuxedocomputers.com [157.90.84.7])
+Received: from mail-ej1-f42.google.com (mail-ej1-f42.google.com [209.85.218.42])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7AA471DD555;
-	Mon,  7 Oct 2024 17:57:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=157.90.84.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8512C1D958F
+	for <platform-driver-x86@vger.kernel.org>; Mon,  7 Oct 2024 18:26:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728323833; cv=none; b=BYBz9VcGuXcvG7DGVEgeX2QwLWm1MTXLOak2LiKRGFVC2nObfBxaOKgZ6o8Mb7mANIeXSyCkvZXBMsE50tL96evTEHf6Xp/nEu5a5UT/rqEGqRT0cVUW70kCA0ZYeR5wo//8+u1s0sqaTahZq7azzVfqZY3ukKa+8EFzVYHjja4=
+	t=1728325577; cv=none; b=V4L6nZmtU3ym3vQGV0LO4/Nr1mLS3XnqXK373KXQT8F4FU1ODovc/oMSrkB2daioGqsZTct+0V+K9611Naf6FsroUQdLOtZoY7ojVuRdLxoLluWF9r8j2F5pIngplbgJ7CZ35q71LvdGlPB11U65gPPDci0tQ8NaWBfg0fcQzXc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728323833; c=relaxed/simple;
-	bh=h3L8IgVFMqKnfTBdmE7EdHq6WxEkfyAoyfaD5LEtvgE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=d5zou2y/9e76f002kPhOv9qInL9m+DOLdqTzx8EG3CijsUaSFkmPGmV6W2DCaoUtGGo1lu7RhJxuaUjGzQgOJTkSo1ijH0UclUeLVPynOo9YTYDxJzy7UejTaYhG2T8I+TurHXLXS70QnTrGvxD0BXLOHpPTCdq0cWgjTbDvpN4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=tuxedocomputers.com; spf=pass smtp.mailfrom=tuxedocomputers.com; dkim=pass (1024-bit key) header.d=tuxedocomputers.com header.i=@tuxedocomputers.com header.b=QUBNoX/2; arc=none smtp.client-ip=157.90.84.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=tuxedocomputers.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tuxedocomputers.com
+	s=arc-20240116; t=1728325577; c=relaxed/simple;
+	bh=iCR80LF1SKErs/2QgV/lJwxhT2ZmpU7o0BLmuE57/NQ=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=NBmCY3LC0Rqmy/ijl/TDMum/VG8kYdpZxma3v79jTM6PE0yAzHomcuC3g3jq76HFCJ8BQ4cIM0BcbcLd0ROF08F7KLz0TWR7BZ72U4823a7U/ELyfBVKLonpfxo19+P3Ikquojoe4ex2h26egmCJCA0wp3cAwB5EySPxBAm3YK8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=OjYqfUXJ; arc=none smtp.client-ip=209.85.218.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=tuxedocomputers.com header.i=@tuxedocomputers.com header.b="QUBNoX/2"
-Received: from [192.168.42.96] (p5de457db.dip0.t-ipconnect.de [93.228.87.219])
-	(Authenticated sender: wse@tuxedocomputers.com)
-	by mail.tuxedocomputers.com (Postfix) with ESMTPSA id B54F52FC004D;
-	Mon,  7 Oct 2024 19:57:05 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=tuxedocomputers.com;
-	s=default; t=1728323826;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=BdldwIyeD16eXrXCJmmOPyc0Ld6j2ynds8Z6PNLTWsE=;
-	b=QUBNoX/2cClS6EjpLosxp8Jv29RatROr1BsQQOBVfzg81bezfTWJ/hq5mgL1SYSAAePAAz
-	Pmgx2dISHwr74NocOwWEJ8TdgxNZz6WMiY1/YKZ46zkTm1wvo33eGZDpYXeQLqhhFwX8we
-	BzGaH1A6DV40AemSLQ7S5m3Bvz7hAJo=
-Authentication-Results: mail.tuxedocomputers.com;
-	auth=pass smtp.auth=wse@tuxedocomputers.com smtp.mailfrom=wse@tuxedocomputers.com
-Message-ID: <39f84cfe-bb89-4194-81a9-e178c93e5309@tuxedocomputers.com>
-Date: Mon, 7 Oct 2024 19:57:05 +0200
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OjYqfUXJ"
+Received: by mail-ej1-f42.google.com with SMTP id a640c23a62f3a-a995f56ea2dso129932666b.1
+        for <platform-driver-x86@vger.kernel.org>; Mon, 07 Oct 2024 11:26:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1728325574; x=1728930374; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=AA/+iSW0vVVFZpp20XhUygtEixwJMWt5I5lW8ycpbDA=;
+        b=OjYqfUXJihXdeI3Qwsy0n73mqPx5vZNMtxyGso6/tdsRGddjyDlsyYF3JFvLpaL7Ea
+         MbU2W6ka5Kydt6eeDmyOunl+eWwrFTDdWoobDoKsDbRdiJo8D31pv3zOTJAiyPYZBqln
+         y8hExtrS77F5xHE7vyPk6ziiVcxNLPFPNPC1NIc4Qkou2NuQOJ0vY3OD847cb6KKQtWL
+         ls4+j3IyobOIHVj7engOPCzuP7XdHmqPZJoClNElRiGbMBf7jpkqXZVXr4h1yua0tzH2
+         MhEkdSKo1zDcidWhVuGu47gpQwccV2CidozmuDflBzhUfGtv8L40VGsciEg1WECsCZ7e
+         CTIg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1728325574; x=1728930374;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=AA/+iSW0vVVFZpp20XhUygtEixwJMWt5I5lW8ycpbDA=;
+        b=sZ23kT5cejq42HdMq4sITyZGb0d54r7V8BRGlWpUdCKeDreBcNn6PmzbRSb8aHmYpV
+         hMR+pMfVsLVnW6mkt55xmTHPg9kMRf9TnWNbO/Zcfx0BGX1tz4boEigecyUGT4N0l30y
+         G8ZnjulNcBuDXjlvTzpXS5wOpLeDiT5lg5yavbsCehN6VQJ7hcBOdE08Mrx4oPsvqgrF
+         gOhcXrBLS+lSKxnCBm0fKG5HeG9C3vDiaBZMATNLksA0+ku6jrSKQCk3LMsS9EYejZg3
+         gFRIG9LIHx4BHm2KHaHe2jHdKnuzjT6xtjwNGNTCE8/ZtSHgLm5Lnuc4Q0G5szFBJQ7x
+         EwaA==
+X-Gm-Message-State: AOJu0YwJrrlCTu1FvpuZIzU2ax16QJsaAoYIUu+gsmOPZZdbWcT7ne2O
+	KT4P01IgGyAOIDs9CeM7anHfRs2KPZMqbCTvj8Hv9GVQiQBfsfPAzjVGNlGJTtKD+zjI32ydPnx
+	8B+th50UpBYjpVHmZlVYUn643lQ==
+X-Google-Smtp-Source: AGHT+IGpG2K/8tC7W8Dm+Ge20RL5OZZM7Cw+aZ/Iz3vjdPcaFpwLZU0+jt1gKlzmhoSBxP+KjBZC6kMhIJR4FjInhNw=
+X-Received: by 2002:a17:907:961d:b0:a8d:3085:a7b1 with SMTP id
+ a640c23a62f3a-a991bd989e0mr1602813266b.38.1728325573502; Mon, 07 Oct 2024
+ 11:26:13 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/1] platform/x86/tuxedo: Add virtual LampArray for TUXEDO
- NB04 devices
-To: Benjamin Tissoires <bentiss@kernel.org>
-Cc: Armin Wolf <W_Armin@gmx.de>, Pavel Machek <pavel@ucw.cz>,
- Hans de Goede <hdegoede@redhat.com>,
- =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
- dri-devel@lists.freedesktop.org, jelle@vdwaa.nl, jikos@kernel.org,
- lee@kernel.org, linux-input@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-leds@vger.kernel.org, miguel.ojeda.sandonis@gmail.com,
- ojeda@kernel.org, onitake@gmail.com, platform-driver-x86@vger.kernel.org
-References: <7r3zg4tcmp5ozjwyiusstgv7g4dha4wuh4kwssxpk3tkurpgo3@36laqab7lsxp>
- <58cf1777-222f-4156-9079-bcbba4a32c96@tuxedocomputers.com>
- <45qkbpaxhrv2r32hghjqoexkenktymzyjgpx2xnnxt6dmfawjt@44lrhgcnozh3>
- <586a1c41-bbe0-4912-b7c7-1716d886c198@tuxedocomputers.com>
- <5th4pisccud5s7dbia42glsnu7e5u3q7jszty6o3mjdedsd2bg@7nsvp6t2krnf>
- <b6f2244d-7567-49ac-b2db-23b632a4e181@tuxedocomputers.com>
- <cflor5mz4flekn44ttlbanfigmwn5mmp3p54gkeeznzmzkyjqz@p2c6q7gulrdl>
- <84b629c6-5b26-4285-9b2f-66dd1afa99e5@tuxedocomputers.com>
- <zph6fnuaamhayivmzftowjw6klgcy2gb7vdub2v2yo7n665vpo@rkxtorfvmzph>
- <7ce4470c-a502-416a-8472-a5b606bb8fd4@tuxedocomputers.com>
- <d7gk2mgihtg6242l3isnhw3xpdt745ehpu2kvim2xxgmxdhat7@g5cqei7uqujj>
-Content-Language: en-US
-From: Werner Sembach <wse@tuxedocomputers.com>
-In-Reply-To: <d7gk2mgihtg6242l3isnhw3xpdt745ehpu2kvim2xxgmxdhat7@g5cqei7uqujj>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+References: <20240908223505.21011-1-jerome.debretagne@gmail.com> <20240908223505.21011-4-jerome.debretagne@gmail.com>
+In-Reply-To: <20240908223505.21011-4-jerome.debretagne@gmail.com>
+From: =?UTF-8?B?SsOpcsO0bWUgZGUgQnJldGFnbmU=?= <jerome.debretagne@gmail.com>
+Date: Mon, 7 Oct 2024 20:25:37 +0200
+Message-ID: <CA+kEDGGJyHYy8T2GJgVA_t6BEqxdGCuovuu1aYuqQZz=Y4Cemw@mail.gmail.com>
+Subject: Fwd: [PATCH v2 3/5] platform/surface: aggregator_registry: Add
+ Surface Pro 9 5G
+To: Maximilian Luz <luzmaximilian@gmail.com>, Hans de Goede <hdegoede@redhat.com>, 
+	=?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Cc: platform-driver-x86@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
 Hi,
 
-Am 02.10.24 um 10:31 schrieb Benjamin Tissoires:
-> On Oct 01 2024, Werner Sembach wrote:
->> Hi Benjamin,
->>
->> Am 01.10.24 um 15:41 schrieb Benjamin Tissoires:
->>> [...]
->>> PPS: sorry for pushing that hard on HID-BPF, but I can see that it fits
->>> all of the requirements here:
->>> - need to be dynamic
->>> - still unsure of the userspace implementation, meaning that userspace
->>>     might do something wrong, which might require kernel changes
->> Well the reference implementetion for the arduiono macropad from microsoft
->> ignores the intensity (brightness) channel on rgb leds contrary to the HID
->> spec, soo yeah you have a point here ...
-> Heh :)
->
->>> - possibility to extend later the kernel API
->>> - lots of fun :)
->> You advertise it good ;). More work for me now but maybe less work for me
->> later, I will look into it.
-> Again, I'm pushing this because I see the benefits and because I can
-> probably reuse the same code on my Corsair and Logitech keyboards. But
-> also, keep in mind that it's not mandatory because you can actually
-> attach the BPF code on top of your existing driver to change the way it
-> behaves. It'll be slightly more complex if you don't let a couple of
-> vendor passthrough reports that we can use to directly talk to the
-> device without any tampering, but that's doable. But if you want to keep
-> the current implementation and have a different layout, this can easily
-> be done in BPF on top.
->
-> Cheers,
-> Benjamin
->
->
-> [0] https://lore.kernel.org/linux-input/20241001-hid-bpf-hid-generic-v3-0-2ef1019468df@kernel.org/T/#t
+I've not sent this specific patch to the correct recipients according
+to get_maintainer.pl, here is the forward to include you, Hans and
+Ilpo. Sorry for the mistake.
 
-Thinking about the minimal WMI to HID today, but found a problem: a HID feature 
-report is either strictly input or output afaik, but the WMI interface has both 
-in some functions.
+Regards,
+J=C3=A9r=C3=B4me
 
-How would I map that?
+---------- Forwarded message ---------
+De : J=C3=A9r=C3=B4me de Bretagne <jerome.debretagne@gmail.com>
+Date: lun. 9 sept. 2024 =C3=A0 00:40
+Subject: [PATCH v2 3/5] platform/surface: aggregator_registry: Add
+Surface Pro 9 5G
+To: Bjorn Andersson <andersson@kernel.org>, Konrad Dybcio
+<konradybcio@kernel.org>, Rob Herring <robh@kernel.org>, Krzysztof
+Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>
+Cc: Johan Hovold <johan+linaro@kernel.org>,
+<linux-arm-msm@vger.kernel.org>, <devicetree@vger.kernel.org>,
+<linux-kernel@vger.kernel.org>, Maximilian Luz
+<luzmaximilian@gmail.com>
 
-If I split everything in input and output the new interface wouldn't actually be 
-much smaller.
 
-Also what would I write for the usage for the reserved padding in the report 
-descriptor. Usage: 0x00?
+Add SAM client device nodes for the Surface Pro 9 5G, with the usual
+battery/AC and HID nodes for keyboard and touchpad support.
 
-best regards,
+Signed-off-by: J=C3=A9r=C3=B4me de Bretagne <jerome.debretagne@gmail.com>
+---
+ .../surface/surface_aggregator_registry.c       | 17 +++++++++++++++++
+ 1 file changed, 17 insertions(+)
 
-Werner
+diff --git a/drivers/platform/surface/surface_aggregator_registry.c
+b/drivers/platform/surface/surface_aggregator_registry.c
+index 25c8aa2131d6..8b34d7e465c2 100644
+--- a/drivers/platform/surface/surface_aggregator_registry.c
++++ b/drivers/platform/surface/surface_aggregator_registry.c
+@@ -390,6 +390,21 @@ static const struct software_node
+*ssam_node_group_sp9[] =3D {
+        NULL,
+ };
 
++/* Devices for Surface Pro 9 5G. */
++static const struct software_node *ssam_node_group_sp9_5G[] =3D {
++       &ssam_node_root,
++       &ssam_node_hub_kip,
++       &ssam_node_bat_ac,
++       &ssam_node_bat_main,
++       &ssam_node_tmp_sensors,
++       &ssam_node_hid_kip_keyboard,
++       &ssam_node_hid_kip_penstash,
++       &ssam_node_hid_kip_touchpad,
++       &ssam_node_hid_kip_fwupd,
++       &ssam_node_hid_sam_sensors,
++       &ssam_node_kip_tablet_switch,
++       NULL,
++};
+
+ /* -- SSAM platform/meta-hub driver.
+---------------------------------------- */
+
+@@ -462,6 +477,8 @@ static const struct acpi_device_id
+ssam_platform_hub_acpi_match[] =3D {
+ MODULE_DEVICE_TABLE(acpi, ssam_platform_hub_acpi_match);
+
+ static const struct of_device_id ssam_platform_hub_of_match[]
+__maybe_unused =3D {
++       /* Surface Pro 9 5G */
++       { .compatible =3D "microsoft,arcata", (void *)ssam_node_group_sp9_5=
+G },
+        /* Surface Laptop 7 */
+        { .compatible =3D "microsoft,romulus13", (void *)ssam_node_group_sl=
+7 },
+        { .compatible =3D "microsoft,romulus15", (void *)ssam_node_group_sl=
+7 },
+--
+2.45.2
