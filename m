@@ -1,119 +1,105 @@
-Received: from mail.tuxedocomputers.com (mail.tuxedocomputers.com [157.90.84.7])
+Received: from mail-pl1-f180.google.com (mail-pl1-f180.google.com [209.85.214.180])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 429871D434E;
-	Mon,  7 Oct 2024 16:17:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=157.90.84.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9104918BBB2;
+	Mon,  7 Oct 2024 17:25:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728317879; cv=none; b=i0DlrvwDrAqGwsRF3BXWvtLP9kU5NtVS01AbV+AvG6gMhOI5fyVWDy6BCgIx6UCIDoZqP9CFz5227SyhCA1f5u5qZcO+cskSKl3hXmp19qnOxpR2TXXQUTGSj8h3W+lVbfUnM4e1S7hQtmOJL053o5s/jrapsLQ1z/Gu+YNsGRI=
+	t=1728321901; cv=none; b=umkaxQ1ij4cECZu5F5+fMZq9VXQzEziyj9RTm+1Rq2eA2pegD79juIDpU0X2Eu32eUwX6R9QEDlWhv7JIHbV/4XcN5YkiJeEmYjMJy5ngnOJCaSupMH09NW/r8qoZwEaHlcQWgVqXyVd/iovG3nvOcFek9I1ZgO8Fj4TmjWFnP4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728317879; c=relaxed/simple;
-	bh=pAwrv/y5NT3G3VUR9WEeiKDGG4RLZNszvEX9MD5Ybc0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=akx6QBAWAaqs1gz4ShN2DZOUEHzheN2UI4QEY9BKOgsqykxk/8Oa+PpM7SMdKuTDtwe/ZModv/k4zhf0Q/x2FOXF9aHzU9kECMN+25IWED3ShsQrvZrtlpawREXI4RmpxVDabq2wQCUM1WfdXTF4U+BE9eC3oihwCcaSyZhEgng=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=tuxedocomputers.com; spf=pass smtp.mailfrom=tuxedocomputers.com; dkim=pass (1024-bit key) header.d=tuxedocomputers.com header.i=@tuxedocomputers.com header.b=VUnquY9M; arc=none smtp.client-ip=157.90.84.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=tuxedocomputers.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tuxedocomputers.com
+	s=arc-20240116; t=1728321901; c=relaxed/simple;
+	bh=gzZh6G6aaWM+kJ1QWVNs6ivj9ZQtZ6wJYdHddcihf/Q=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=EDdXsNVOdlpFKfqYb/zFTJ1XQgCCRT5mZLkfj+91lG7R3DKrK5SyMZX3Zu+1ksbIMQnYwyAEnQ7MP6NCo9ORpwKZ1i9ZXUROuInuXS+uMD0dHFxYpnQIJzs9244kODWG5hJSveea3eMdLwMnxF+41qWo12cPZM4rdc72czStwrQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=I/m9Kt19; arc=none smtp.client-ip=209.85.214.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=tuxedocomputers.com header.i=@tuxedocomputers.com header.b="VUnquY9M"
-Received: from [192.168.42.96] (p5de457db.dip0.t-ipconnect.de [93.228.87.219])
-	(Authenticated sender: wse@tuxedocomputers.com)
-	by mail.tuxedocomputers.com (Postfix) with ESMTPSA id C72112FC004D;
-	Mon,  7 Oct 2024 18:17:48 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=tuxedocomputers.com;
-	s=default; t=1728317869;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=KXCO8nk9dKyl6+T9Ci1UYd9mcP4/XTE0/Kr6tzc5qDg=;
-	b=VUnquY9MWox7I1OzpywCG2UbAbIvlqwLEvnewplFuE/POSjG2eswBZ7lU4XMRgz5Wd5+FS
-	qRZyi9AMsPiLNAieVVp1WaZvRI2ia7zbwvLiaRQsuW/HiUBa/z19SMV49c1rE0V948kyda
-	J9QRvcwYtFrOf9eZx1HplLEp8UU4LMQ=
-Authentication-Results: mail.tuxedocomputers.com;
-	auth=pass smtp.auth=wse@tuxedocomputers.com smtp.mailfrom=wse@tuxedocomputers.com
-Message-ID: <2392fa23-4823-4660-8b38-0f9dfe06c863@tuxedocomputers.com>
-Date: Mon, 7 Oct 2024 18:17:48 +0200
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="I/m9Kt19"
+Received: by mail-pl1-f180.google.com with SMTP id d9443c01a7336-20b5affde14so35088025ad.3;
+        Mon, 07 Oct 2024 10:25:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1728321900; x=1728926700; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=gzZh6G6aaWM+kJ1QWVNs6ivj9ZQtZ6wJYdHddcihf/Q=;
+        b=I/m9Kt19ygjbmm6eXD7hkRpiaMX1jsx5R8kw7PACvhpEIR8EGbgAUznNp+lKNsJz6L
+         PERu12X/aqNP1mr1N3PsdUjOo6X41XhSM1bCjCwR0MfkmO0PximBTPSjbHVdQZrm2QXq
+         R/6K2VguR+mDgO5UQFpliAEZepFH4SZpdckgCzJsJMjfhZKo50KqDuZi+EndfbM9aiIw
+         kVxLvmSxbxUQc4LtTIbQ1bQ7fTH9mMl0bgm1guOePxQ9h7Wb0nPZvs6PQgGEY6wHPwqr
+         oK4A5SIvFFgcAkpFGu+YeZGE3AtAPtbRjotIjPvkl+U5oSlNMKOpYKDqE4M+E4vSHh6v
+         0K9g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1728321900; x=1728926700;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=gzZh6G6aaWM+kJ1QWVNs6ivj9ZQtZ6wJYdHddcihf/Q=;
+        b=svnrB2q2O26Eopy4LDVplF4mtexT/IkLbGP415zyKP8Ionvz7urEpfhelJVlkj98Bd
+         kHBf89ktHrcIktP2VwOKTzGSYwXGzc4eAcPdBenHVDwGRXCGlgiTGx9sKWdoce0hEetQ
+         TH3Yp/sSEBvn7JEzqTPNPB7CtPa+UvbkJ7HEdsyKaQdgBPuOMzzRujahzeHKFYcdiD8b
+         o/Kmg2X5gA/xsvpCC4neF0O9yIWklDUnIpI0mMnji3pZa5PuK8sdCWym4GUg6ZIEQykO
+         als/lutqOEWUySOUjejAYKXostfTxMkbeL11Eo3V0IbMUC+bnsCAtkBMJmIBqGPVQsv5
+         +0DA==
+X-Forwarded-Encrypted: i=1; AJvYcCUye2ov2jjthlM+c98Uu/4SmZRC73vE/egGOVVHyBoTuZcSSoBUxdhdq86ib0Em4cDkN+yiV5In9Z2TQbr351lrDW6Q3Q==@vger.kernel.org, AJvYcCXLa9YuZNVJiZmIONhJMI+oknTMyEilTiRYKikw241VEn4OJBlqCwpHOLzErIl4D0Ug7xQy7N6tJlF/euU=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx2BtBULcce1z33Gn8ERP2xDbtNmyptK0J0Iw5mDep5Xwnism0c
+	Euvyk4FM0rmMSTMt8ARW+FfOdS3PHgK9wvPvomcCUXqmmUnji3eUnyzkxXTN
+X-Google-Smtp-Source: AGHT+IFWi7UuQAkv4UcL3cUW3M+stG16cZo90q3iaHPYyo3TIS/MSMKgQCf+hv+m/yeoZbZVYNdTAw==
+X-Received: by 2002:a17:90b:1645:b0:2e0:a9e8:b9c1 with SMTP id 98e67ed59e1d1-2e1e6296d3fmr13961014a91.22.1728321899942;
+        Mon, 07 Oct 2024 10:24:59 -0700 (PDT)
+Received: from localhost.localdomain (host95.181-12-202.telecom.net.ar. [181.12.202.95])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-2e20b0f919csm5667297a91.44.2024.10.07.10.24.58
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 07 Oct 2024 10:24:59 -0700 (PDT)
+From: Kurt Borja <kuurtb@gmail.com>
+To: w_armin@gmx.de
+Cc: hdegoede@redhat.com,
+	ilpo.jarvinen@linux.intel.com,
+	kuurtb@gmail.com,
+	linux-kernel@vger.kernel.org,
+	platform-driver-x86@vger.kernel.org
+Subject: Re: [PATCH] Dell AWCC platform_profile support
+Date: Mon,  7 Oct 2024 14:24:56 -0300
+Message-ID: <20241007172456.8590-1-kuurtb@gmail.com>
+X-Mailer: git-send-email 2.46.2
+In-Reply-To: <771d20f1-ebf3-48d9-98ef-ec79b94c7949@gmx.de>
+References: <771d20f1-ebf3-48d9-98ef-ec79b94c7949@gmx.de>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC PATCH v4 1/1] platform/x86/tuxedo: Add virtual LampArray for
- TUXEDO NB04 devices
-To: =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Cc: Hans de Goede <hdegoede@redhat.com>, bentiss@kernel.org,
- dri-devel@lists.freedesktop.org, jelle@vdwaa.nl, jikos@kernel.org,
- lee@kernel.org, linux-input@vger.kernel.org,
- LKML <linux-kernel@vger.kernel.org>, linux-leds@vger.kernel.org,
- miguel.ojeda.sandonis@gmail.com, ojeda@kernel.org, onitake@gmail.com,
- pavel@ucw.cz, cs@tuxedo.de, platform-driver-x86@vger.kernel.org
-References: <20241001180658.76396-1-wse@tuxedocomputers.com>
- <20241001180658.76396-2-wse@tuxedocomputers.com>
- <bc3f5f2b-252e-0a66-df0f-f01197a5a17d@linux.intel.com>
- <fdfaaad5-59e7-4825-bc06-db44831ac741@tuxedocomputers.com>
- <49beebf1-db73-a3a1-3376-e1822ce2e569@linux.intel.com>
- <98883fb1-c895-4aad-842b-ed525d4c42f6@tuxedocomputers.com>
- <07e29712-4c33-efa2-c8c6-ae19e21376fa@linux.intel.com>
-Content-Language: en-US
-From: Werner Sembach <wse@tuxedocomputers.com>
-In-Reply-To: <07e29712-4c33-efa2-c8c6-ae19e21376fa@linux.intel.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
 
 
-Am 04.10.24 um 16:46 schrieb Ilpo Järvinen:
-> On Fri, 4 Oct 2024, Werner Sembach wrote:
->> Am 03.10.24 um 12:54 schrieb Ilpo Järvinen:
->>> On Wed, 2 Oct 2024, Werner Sembach wrote:
->>>> Am 02.10.24 um 11:52 schrieb Ilpo Järvinen:
->>>>> On Tue, 1 Oct 2024, Werner Sembach wrote:
->>>>>
->>>>>> The TUXEDO Sirius 16 Gen1 and TUXEDO Sirius 16 Gen2 devices have a
->>>>>> per-key
->>>>>> controllable RGB keyboard backlight. The firmware API for it is
->>>>>> implemented
->>>>>> via WMI.
->>>>>>
->>>>>> To make the backlight userspace configurable this driver emulates a
->>>>>> LampArray HID device and translates the input from hidraw to the
->>>>>> corresponding WMI calls. This is a new approach as the leds subsystem
->>>>>> lacks
->>>>>> a suitable UAPI for per-key keyboard backlights, and like this no new
->>>>>> UAPI
->>>>>> needs to be established.
->>>>>>
->>>>>> v2: Integrated Armins feedback and fixed kernel test robot warnings.
->>>>>> v3: Fixed borked subject line of v2.
->>>>>> v4: Remove unrequired WMI mutex.
->>>>>>        Move device checking from probe to init.
->>>>>>        Fix device checking working exactly reverse as it should.
->>>>>>        Fix null pointer dereference because, hdev->driver_data !=
->>>>>> hdev->dev.driver_data.
->>>>>>
->>>>>> Co-developed-by: Christoffer Sandberg <cs@tuxedo.de>
->>>>>> Signed-off-by: Christoffer Sandberg <cs@tuxedo.de>
->>>>>> Signed-off-by: Werner Sembach <wse@tuxedocomputers.com>
->>>>>> Link:
->>>>>> https://lore.kernel.org/all/1fb08a74-62c7-4d0c-ba5d-648e23082dcb@tuxedocomputers.com/
->>>>>> ---
->>>> That why i choose the rather generic names of just the input and output
->>>> length
->>>> because there is no semantic connection between the wmi methods in
->>>> tuxedo_nb04_wmi_8_b_in_80_b_out and tuxedo_nb04_wmi_496_b_in_80_b_out
->>>> respectively that would make for a good name.
->>> So the only valuable characters are prefix + 8/496/80 the rest doesn't
->>> really tell much despite all its characters :-). Details like which of the
->>> numbers is in/out and that the numbers are in bytes could IMO be left to
->>> struct's comment without loss of much information value.
->>>
->> tuxedo_nb04_wmi_8_80 kinda looks strange to me, what about
->> tuxedo_nb04_wmi_8_in_80_out? but that's on 4 chars shorter.
-> Perhaps just tuxedo_nb04_wmi_8in_80out ?
-ok
+On Mon, Oct 07, 2024 at 02:24:52PM +0200, Armin Wolf wrote:
+> Hi,
 >
-> I can see you like to use underscores a lot so I can understand if that
-> feels a step too far :-) (no offence meant).
+> this WMI device is already handled by the alienware-wmi driver. Could you please integrate
+> this functionality into this driver instead of creating a new one?
 >
+> Thanks,
+> Armin Wolf
+
+Hi,
+
+Thank you for your feedback.
+
+Although they the same name and same GUID, both interfaces are very
+different. Alienware x15's WMAX method doesn't support any of the methods
+listed on alienware-wmi driver and the de-compiled MOF file on [1] which is
+an open source alternative to AWCC, makes me think this might be the case
+for various other newer models (G, M, X Series).
+
+Still I could implement it as a quirk of newer models. Would this be ok?
+
+My only worry was that it could make alienware-wmi's logic overly complex
+and cumbersome, as it would support two very different interfaces with the
+same GUID.
+
+
+Kurt
+
+[1] https://github.com/AlexIII/tcc-g15/blob/master/WMI-AWCC-doc.md
