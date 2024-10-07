@@ -1,202 +1,177 @@
-Received: from mail-ej1-f52.google.com (mail-ej1-f52.google.com [209.85.218.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from fhigh-a8-smtp.messagingengine.com (fhigh-a8-smtp.messagingengine.com [103.168.172.159])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D3C151865FC;
-	Mon,  7 Oct 2024 20:00:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD9514317E;
+	Mon,  7 Oct 2024 23:46:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.159
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728331229; cv=none; b=fk80x7Ebgs1umyvbuf5cKDDg3tkX3cKd2cNS5LqKnz4h9BeLk/W6NMvf2h2gnXN0fZfi2hor91rs4XLGAL1CMS2+PELtM2x/4AFY0H4K7DRcijKJq6pxqw7Gff93OMe6iS4eovOegkfquApJBxmcyDiWQEUZiyVPkT1wRw6m2rQ=
+	t=1728344774; cv=none; b=o618i5vi3MTobX0hkk/bYvqQor0gd0jH3JDCVamrXZWylzg5RWMjWloFMYJTF5hVSCR/XPvUgipuHRV0fv//azWQx3I6m2xKE+TIUe9AdIRKvYu1uB0Z8bx3TPczvnPrB29Z38G5RPIA95zyo3s/SblqGxRzBsd6ud9YCYyWkmg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728331229; c=relaxed/simple;
-	bh=TtJAzQM2NtR+aEQK2OIN2Vn/FJlu03Hlz0x+rB3C5eQ=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=rJ2EhC9SQvOsf+cx3aqcooEHYJx1ubA8epm0rYXOymHd1ANQTohYwQ17oChOGuMzY3J92gGfhfuH9Dbfg6oP0+XUZxX99JrukYOqMWTmyr5ccyeNvIUYnj2ygdvoqhCkNQgI7iapm5wTRHAphpGoJq2/e6Ipxm4CTM+ByKzDuDo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=CIzmc+uO; arc=none smtp.client-ip=209.85.218.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1728344774; c=relaxed/simple;
+	bh=yWXQ35yOAfJiT2fwzNDA4YeCmrGUf8Vo/6hgAZghj/4=;
+	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
+	 Subject:Content-Type; b=PWm2F7a4RsrXFz94ZLpVcCdP90vYXleyCSqqsOMD8qvAIGusOIocAAKkBgGfdl+Bj+oeLhbRxpSxb8KzRavc9m+xph/qU2G/IGG7/MAbU+xS+FIcMvmKYGJ1hgtHbsXobWHqXZ5dUIkls0SpLSLeQnIksxwNfjbKKYnrfZDPaok=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ljones.dev; spf=none smtp.mailfrom=ljones.dev; dkim=pass (2048-bit key) header.d=ljones.dev header.i=@ljones.dev header.b=naOxIQ4J; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=Aq7bLMd4; arc=none smtp.client-ip=103.168.172.159
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ljones.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=ljones.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CIzmc+uO"
-Received: by mail-ej1-f52.google.com with SMTP id a640c23a62f3a-a9963e47b69so84917466b.1;
-        Mon, 07 Oct 2024 13:00:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1728331226; x=1728936026; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=OT6xKH/kSeLVKNU9JNpMOg+05Q9qIAbICN9iB6I+k6g=;
-        b=CIzmc+uOZOeBALHeyJgbNDGuKWANrttG+bhVmfa4TmQFV44BVDFI4sx5AR29gyZsQ0
-         Dxah56TG+klX9NKgMB+EZuGQgH+qRVaKwtwO/u67gCOxyGwTeueHjWF4EVP5z6lzPMKC
-         AZzCkJlDp0cAeh//RzFhoB/TCpQfGCKVvpMG46ZL5Y8QjtMXWlMYrQbS+xeyT9hjEL3X
-         FjpI0Dha713Ev20zYn90cwuRL4UnZp+ZNhBahhe//c5zP3/ElJ73I33RsKJvkd/7+K2s
-         oc8Erwhf2GF4ozl+4WD5gckvpxkMKJppVbLhVTQt4A5cTesl0S/befEzoXyk5SlV4HDc
-         O8xQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1728331226; x=1728936026;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=OT6xKH/kSeLVKNU9JNpMOg+05Q9qIAbICN9iB6I+k6g=;
-        b=bkcQH5bf1Fn5E3EIjerFz8546XgAKs0ATnJQv8SC0y5O0/48U5eQCbUvLE6TBWb9L3
-         iSLNFyhxhSfwyZLk70xGAJ2iC7v9ZcYySBeqzis6pm0y/vvlMYfzW85Owe1dOcAnYSsk
-         gCswkxkY7ZY8izb3D0WWnMqrcDbT+OyNk1trz82keCJtwonUfm3ewqHwvBZhJQRwhVKG
-         LpqNzDE8TfI6ZMg7cwCiR2I1hNhBuWNkGoPLxdWGiYusmmRzrvg99b/TScx1SLR50Cnz
-         mBhNoHUl3SidVeRcfJeP0gH+7r8m67GcssUlhS5IKFbgBe+Q3qvKHlh5SLHhsaWtqbxH
-         2rSA==
-X-Forwarded-Encrypted: i=1; AJvYcCV2ZoLSByIKN+GIz3KoOzG8RM1dC8GOlsj6xKDek8N920SxyEndJ6sgr4KqHcWS2mtGtK4zmRfjCk/6NAiwPvjt59/+xQ==@vger.kernel.org, AJvYcCWcKIZ5JWXtbTts9cwknlDI2doo1gItYR5F30R2/OXXCsNtlol0mqrRR49EcebYIoB+biCK0nfSKLGEu8nW@vger.kernel.org, AJvYcCX+Dy8u+UDNUGvOLA+p2f3Mo675wtvvvLM4og2QKDvQKmBsq/VZbJCfFBe+7nWl+BzjybhQ9f8SUDnzjViygw==@vger.kernel.org, AJvYcCX+HR6qsNjLLvDhGEyrZlGaTb+vpzUlXqVm0fosc9Wlop/wVnbUJknpiJZEk62O9iyitICFQrVE85Ll@vger.kernel.org
-X-Gm-Message-State: AOJu0YxeUYxH1m8LKfXb6WbLjBLL3N8g/gDyJVIKogmzsKCb3Ifz/rb8
-	UOPVCUKTzaFtPyfXLWu176UhQTJORX/kh0oHImbruVjFkEg7dwuDDQwcJ55Fd+CYqbAqDVULUSc
-	D4f8FwTND/aHESZUXIm4pxkQq1w==
-X-Google-Smtp-Source: AGHT+IHSzR3rAqiy5pJIgwzaNywFeckBD2pUNplX4II9/i4ncSd1RgLLQujAJ9bVoefSp9M0aiuooG/0Ogm5Nkot8Yk=
-X-Received: by 2002:a17:907:3183:b0:a8d:29b7:ecf3 with SMTP id
- a640c23a62f3a-a991bce3fbcmr1478655766b.13.1728331225883; Mon, 07 Oct 2024
- 13:00:25 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=ljones.dev header.i=@ljones.dev header.b="naOxIQ4J";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="Aq7bLMd4"
+Received: from phl-compute-08.internal (phl-compute-08.phl.internal [10.202.2.48])
+	by mailfhigh.phl.internal (Postfix) with ESMTP id D6EB7114023C;
+	Mon,  7 Oct 2024 19:46:10 -0400 (EDT)
+Received: from phl-imap-01 ([10.202.2.91])
+  by phl-compute-08.internal (MEProxy); Mon, 07 Oct 2024 19:46:10 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ljones.dev; h=cc
+	:cc:content-transfer-encoding:content-type:content-type:date
+	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to; s=fm3; t=1728344770;
+	 x=1728431170; bh=IE5CyDnd4iSaQgSeOBprBhIuCHaR09gbrV75arL8ucc=; b=
+	naOxIQ4J8QrBfvek6Xo//Nu5/vqq0yI02TEcQ2mq91rC3NGqxEsQqwQQeHJJqmPT
+	JrrEQB/1mZUACatstj8vestxbn/KmUUS+aKv8eEmzNlvBRliHaauRignYq08yutt
+	0P4zcUS3p1auFe5SCXNYrM7YfnwiDrlvgMRo5Lb4xmJRyHbWOAiWLGO39zylNLaA
+	mmR3+3KNhQ7f8nHl6oDS1eldhHyUFpGGFyaVekb/yB5KUrXtXFK7GW61QxZzetkQ
+	QN2roL70bEYkk81jSuKT1+luBXVvnBTcvfzYnTw9wO/945Lk4zsGbwR+1lqy13Ga
+	RcunSoHou2UDamzkVAbHRw==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:content-type:date:date:feedback-id:feedback-id
+	:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to:x-me-proxy:x-me-proxy
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=1728344770; x=
+	1728431170; bh=IE5CyDnd4iSaQgSeOBprBhIuCHaR09gbrV75arL8ucc=; b=A
+	q7bLMd47lEAPpET+8Hd2NlkEh4A/c/KoJRvDFteX2yYzDb3+OahdTpyrBAoYG6TQ
+	DFyhW0kFg7J5js9Wg05g7FNUgYtIhigqKdbeKhmdPVaOnwGP2F1qARcg8iS51jNV
+	wootY84wUaoYnfuGOBrROuIayZgdRWx8ynsbV6qTGPYhVL7MKXpJRguj7b3HuIEV
+	Z0lzPaDvUn7w0NrlBd0KVTDln+qOyxtUF6cZjQdk9lDqadHCzPV6Z214D9t0Mgg4
+	oIfwgj1pd+cZCOc77iOc1cNeFe3rUhVkLvJ+aewDaE5yOOIUwJ07PmYw8Ke7eTyH
+	kbzESqgnSFqt84WqZNkTA==
+X-ME-Sender: <xms:wnIEZ-YfyWZTMp-xgnf4M7txY8-HK8iioDB8O1pwd25E9GLRdVji3Q>
+    <xme:wnIEZxZVSZoR6VVVefN1tzCCQBj0YKWXG2wS5b7nxu8Z62MB83SJKoBJadnYZ-Jvk
+    6dZY0EelDEj1ijspaQ>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeftddrvdeftddgvdehucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggvpdfu
+    rfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnh
+    htshculddquddttddmnecujfgurhepofggfffhvfevkfgjfhfutgfgsehtjeertdertddt
+    necuhfhrohhmpedfnfhukhgvucflohhnvghsfdcuoehluhhkvgeslhhjohhnvghsrdguvg
+    hvqeenucggtffrrghtthgvrhhnpefgieffhedtgffhtedtiedutdefkedvjefgveehhfff
+    vedthfejleegfeffkedvveenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmh
+    grihhlfhhrohhmpehluhhkvgeslhhjohhnvghsrdguvghvpdhnsggprhgtphhtthhopeeg
+    pdhmohguvgepshhmthhpohhuthdprhgtphhtthhopehrrghfrggvlheskhgvrhhnvghlrd
+    horhhgpdhrtghpthhtohephhguvghgohgvuggvsehrvgguhhgrthdrtghomhdprhgtphht
+    thhopehlihhnuhigqdgrtghpihesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtth
+    hopehplhgrthhfohhrmhdqughrihhvvghrqdigkeeisehvghgvrhdrkhgvrhhnvghlrdho
+    rhhg
+X-ME-Proxy: <xmx:wnIEZ49WUw_S_5w-SKcW_nhXYDDIRsD3AV_FjMrHrZ6p771usP6OrA>
+    <xmx:wnIEZwrB93hSYFGhXhZwBS7lGtozFACmzF75N0ZUta3t0Q8mtcVzPQ>
+    <xmx:wnIEZ5rxZ_YpPq9pGRbIA-dkF858VP_HP6IWC3gGuZaFS55y9KQUgw>
+    <xmx:wnIEZ-TWMBTHYfzLKlsfTmYs6zL_o9oXx6PywuR3F52L7FI9ltXPWg>
+    <xmx:wnIEZw3YgaBBDUnFlHyp_aLFzSVjXXdYjxGLuza_At8-yKcErlKsYkmZ>
+Feedback-ID: i5ec1447f:Fastmail
+Received: by mailuser.phl.internal (Postfix, from userid 501)
+	id 8E5AE3360026; Mon,  7 Oct 2024 19:46:10 -0400 (EDT)
+X-Mailer: MessagingEngine.com Webmail Interface
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240908223505.21011-1-jerome.debretagne@gmail.com>
- <20240908223505.21011-4-jerome.debretagne@gmail.com> <f9cbd1c3-eb05-4262-bdc6-6d37e83179e5@gmail.com>
- <CA+kEDGEdd_s+DGKsVNY6Jy870B72eHuaj2EgEnwP8J46ZGbxpQ@mail.gmail.com> <8370d062-b3d2-46f5-9e7b-8e16edde8480@redhat.com>
-In-Reply-To: <8370d062-b3d2-46f5-9e7b-8e16edde8480@redhat.com>
-From: =?UTF-8?B?SsOpcsO0bWUgZGUgQnJldGFnbmU=?= <jerome.debretagne@gmail.com>
-Date: Mon, 7 Oct 2024 21:59:49 +0200
-Message-ID: <CA+kEDGHfXa27HJ1KEcRfss9-FeQ-cCqrcQ8pYeWjWZf_N8YaHw@mail.gmail.com>
-Subject: Re: [PATCH v2 3/5] platform/surface: aggregator_registry: Add Surface
- Pro 9 5G
-To: Hans de Goede <hdegoede@redhat.com>
-Cc: Maximilian Luz <luzmaximilian@gmail.com>, 
-	=?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, 
-	Bjorn Andersson <andersson@kernel.org>, Konrad Dybcio <konradybcio@kernel.org>, 
-	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Johan Hovold <johan+linaro@kernel.org>, linux-arm-msm@vger.kernel.org, 
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	platform-driver-x86@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Date: Tue, 08 Oct 2024 12:45:50 +1300
+From: "Luke Jones" <luke@ljones.dev>
+To: "Hans de Goede" <hdegoede@redhat.com>,
+ "Rafael J . Wysocki" <rafael@kernel.org>
+Cc: linux-acpi@vger.kernel.org, platform-driver-x86@vger.kernel.org
+Message-Id: <c69b7d7a-37b4-4f80-a1e8-373cbf1212f2@app.fastmail.com>
+In-Reply-To: <20241005212819.354681-4-hdegoede@redhat.com>
+References: <20241005212819.354681-1-hdegoede@redhat.com>
+ <20241005212819.354681-4-hdegoede@redhat.com>
+Subject: Re: [PATCH 3/4] ACPI: resource: Fold Asus ExpertBook B1402C* and B1502C* DMI
+ quirks together
+Content-Type: text/plain
+Content-Transfer-Encoding: 7bit
 
-Le lun. 7 oct. 2024 =C3=A0 20:54, Hans de Goede <hdegoede@redhat.com> a =C3=
-=A9crit :
+On Sun, 6 Oct 2024, at 10:28 AM, Hans de Goede wrote:
+> Asus has 2 ExpertBook B1402C models:
 >
-> Hi J=C3=A9r=C3=B4me,
+> B1402CBA with 12th gen Intel CPUs
+> B1402CVA with 13th gen Intel CPUs
 >
-> On 7-Oct-24 8:44 PM, J=C3=A9r=C3=B4me de Bretagne wrote:
-> > Hi,
-> >
-> > I'm replying with Hans and Ilpo, who I initially forgot for this
-> > patch, sorry about that.
+> Fold the 2 DMI quirks for these into a single quirk to reduce the number
+> of quirks.
 >
-> No worries thank you for forwarding Maximilian's review.
+> Likewise Asus has 3 ExpertBook B1502C models:
 >
-> > Le mar. 10 sept. 2024 =C3=A0 23:29, Maximilian Luz
-> > <luzmaximilian@gmail.com> a =C3=A9crit :
-> >>
-> >> Looks good. Two very small nit-picks below, if this goes for a v3:
-> >
-> > Atm I'm not planning for a v3 as Bjorn has applied the other v2
-> > patches earlier today.
-> > Feel free to include the 2 small suggestions when applying this patch m=
-aybe?
-> >
-> >> On 9/9/24 12:35 AM, J=C3=A9r=C3=B4me de Bretagne wrote:
-> >>> Add SAM client device nodes for the Surface Pro 9 5G, with the usual
-> >>> battery/AC and HID nodes for keyboard and touchpad support.
-> >>>
-> >>> Signed-off-by: J=C3=A9r=C3=B4me de Bretagne <jerome.debretagne@gmail.=
-com>
-> >>> ---
-> >>>   .../surface/surface_aggregator_registry.c       | 17 ++++++++++++++=
-+++
-> >>>   1 file changed, 17 insertions(+)
-> >>>
-> >>> diff --git a/drivers/platform/surface/surface_aggregator_registry.c b=
-/drivers/platform/surface/surface_aggregator_registry.c
-> >>> index 25c8aa2131d6..8b34d7e465c2 100644
-> >>> --- a/drivers/platform/surface/surface_aggregator_registry.c
-> >>> +++ b/drivers/platform/surface/surface_aggregator_registry.c
-> >>> @@ -390,6 +390,21 @@ static const struct software_node *ssam_node_gro=
-up_sp9[] =3D {
-> >>>       NULL,
-> >>>   };
-> >>>
-> >>> +/* Devices for Surface Pro 9 5G. */
-> >>
-> >> Would be nice if you could change the comment on the SP9 node group to
-> >> "Surface Pro 9 (Intel/x86)" and the comment here to "Surface Pro 9 5G
-> >> (ARM/QCOM)" or something along those lines to make things a bit more
-> >> clear.
-> >>
-> >>> +static const struct software_node *ssam_node_group_sp9_5G[] =3D {
-> >>
-> >> (This is really just me being a bit obsessive:) It would be nice to ha=
-ve
-> >> all-lowercase variable names (regarding the 5G).
-> >
-> > :)
-> >
-> >>> +     &ssam_node_root,
-> >>> +     &ssam_node_hub_kip,
-> >>> +     &ssam_node_bat_ac,
-> >>> +     &ssam_node_bat_main,
-> >>> +     &ssam_node_tmp_sensors,
-> >>> +     &ssam_node_hid_kip_keyboard,
-> >>> +     &ssam_node_hid_kip_penstash,
-> >>> +     &ssam_node_hid_kip_touchpad,
-> >>> +     &ssam_node_hid_kip_fwupd,
-> >>> +     &ssam_node_hid_sam_sensors,
-> >>> +     &ssam_node_kip_tablet_switch,
-> >>> +     NULL,
-> >>> +};
-> >>>
-> >>>   /* -- SSAM platform/meta-hub driver. ------------------------------=
----------- */
-> >>>
-> >>> @@ -462,6 +477,8 @@ static const struct acpi_device_id ssam_platform_=
-hub_acpi_match[] =3D {
-> >>>   MODULE_DEVICE_TABLE(acpi, ssam_platform_hub_acpi_match);
-> >>>
-> >>>   static const struct of_device_id ssam_platform_hub_of_match[] __may=
-be_unused =3D {
-> >>> +     /* Surface Pro 9 5G */
-> >>> +     { .compatible =3D "microsoft,arcata", (void *)ssam_node_group_s=
-p9_5G },
-> >>>       /* Surface Laptop 7 */
-> >>>       { .compatible =3D "microsoft,romulus13", (void *)ssam_node_grou=
-p_sl7 },
-> >>>       { .compatible =3D "microsoft,romulus15", (void *)ssam_node_grou=
-p_sl7 },
-> >>
-> >> Thanks!
-> >>
-> >> Reviewed-by: Maximilian Luz <luzmaximilian@gmail.com>
-> >
-> > Thanks for your review and all the work about SSAM for Surface owners!
+> B1502CBA with 12th gen Intel CPUs
+> B1502CGA with 12th gen Intel N-series CPUs
+> B1502CVA with 13th gen Intel CPUs
 >
-> FWIW I agree with Maximilian's remarks and I would really like to
-> see these applied to clearly differentiate the x86 and ARM versions.
+> Fold the 3 DMI quirks for these into a single quirk to reduce the number
+> of quirks.
+>
+> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+> ---
+>  drivers/acpi/resource.c | 29 ++++-------------------------
+>  1 file changed, 4 insertions(+), 25 deletions(-)
+>
+> diff --git a/drivers/acpi/resource.c b/drivers/acpi/resource.c
+> index 0eb52e372467..2c17d3ea4d3c 100644
+> --- a/drivers/acpi/resource.c
+> +++ b/drivers/acpi/resource.c
+> @@ -448,40 +448,19 @@ static const struct dmi_system_id 
+> irq1_level_low_skip_override[] = {
+>  		},
+>  	},
+>  	{
+> -		/* Asus ExpertBook B1402CBA */
+> +		/* Asus ExpertBook B1402C* */
+>  		.matches = {
+>  			DMI_MATCH(DMI_SYS_VENDOR, "ASUSTeK COMPUTER INC."),
+> -			DMI_MATCH(DMI_BOARD_NAME, "B1402CBA"),
+> +			DMI_MATCH(DMI_BOARD_NAME, "B1402C"),
+>  		},
+>  	},
+>  	{
+> -		/* Asus ExpertBook B1402CVA */
+> +		/* Asus ExpertBook B1502C* */
+>  		.matches = {
+>  			DMI_MATCH(DMI_SYS_VENDOR, "ASUSTeK COMPUTER INC."),
+> -			DMI_MATCH(DMI_BOARD_NAME, "B1402CVA"),
+> +			DMI_MATCH(DMI_BOARD_NAME, "B1502C"),
+>  		},
+>  	},
+> -	{
+> -		/* Asus ExpertBook B1502CBA */
+> -		.matches = {
+> -			DMI_MATCH(DMI_SYS_VENDOR, "ASUSTeK COMPUTER INC."),
+> -			DMI_MATCH(DMI_BOARD_NAME, "B1502CBA"),
+> -		},
+> -	},
+> -	{
+> -		/* Asus ExpertBook B1502CGA */
+> -		.matches = {
+> -			DMI_MATCH(DMI_SYS_VENDOR, "ASUSTeK COMPUTER INC."),
+> -			DMI_MATCH(DMI_BOARD_NAME, "B1502CGA"),
+> -		},
+> -	},
+> -        {
+> -                /* Asus ExpertBook B1502CVA */
+> -                .matches = {
+> -                        DMI_MATCH(DMI_SYS_VENDOR, "ASUSTeK COMPUTER 
+> INC."),
+> -                        DMI_MATCH(DMI_BOARD_NAME, "B1502CVA"),
+> -                },
+> -        },
+>  	{
+>  		/* Asus ExpertBook B2402 (B2402CBA / B2402FBA / B2402CVA / B2402FVA) 
+> */
+>  		.matches = {
+> -- 
+> 2.46.2
 
-I stuck to the official names but they can be confusing as-is.
+All patch look good. This does make me wonder if perhaps there are more places still in the kernel where the DMI matching can be further reduced.
 
-> Normally I would pick up a patch like this which just adds hw-ids as
-> a fix for 6.12-rc# and squash in the suggested changes.
->
-> But looking at the test of the series this is more 6.13 material
-> since the rest is landing in 6.13, right ?
-
-The rest is in arm64-for-6.13 and drivers-for-6.13 in Bjorn's tree indeed.
-
-> Patches for linux-next / 6.13 are managed by Ilpo this cycle.
->
-> So I'll leave it up to Ilpo if he will squash in the suggested changes
-> or if he wants a new version (of just this patch, no need for a v3
-> of the already applied patches).
->
-> Regards,
->
-> Hans
-
-Sure, let's see what Ilpo prefers.
+My experience in the last 5 years of working on ASUS products is that they tend to be fairly consistent and not deviate from their model numbering scheme or the "base platform" that the variants are built on - the model number base does increment if the platform changes in some way (typically mobo or chip changes).
 
 Regards,
-J=C3=A9r=C3=B4me
+Luke.
