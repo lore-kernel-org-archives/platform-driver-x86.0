@@ -1,81 +1,119 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail.tuxedocomputers.com (mail.tuxedocomputers.com [157.90.84.7])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1CE401D2784;
-	Mon,  7 Oct 2024 15:15:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 429871D434E;
+	Mon,  7 Oct 2024 16:17:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=157.90.84.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728314110; cv=none; b=VjbVLHp9wQAk3k83+hA5LX/LfWpbTvtSyKBgxeNb7a204uk7x5XhnIRfT5pdmfbbR7oUq3VbM/bRKVFqQeVO7NpV3noxs+8T0eIjxg+uZpTZH2N3TfjOGtDJQS+SBGkiITPCuV8kC8h5ReLi77W38x+njHiWDpIwZ/xUgH35fvQ=
+	t=1728317879; cv=none; b=i0DlrvwDrAqGwsRF3BXWvtLP9kU5NtVS01AbV+AvG6gMhOI5fyVWDy6BCgIx6UCIDoZqP9CFz5227SyhCA1f5u5qZcO+cskSKl3hXmp19qnOxpR2TXXQUTGSj8h3W+lVbfUnM4e1S7hQtmOJL053o5s/jrapsLQ1z/Gu+YNsGRI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728314110; c=relaxed/simple;
-	bh=4LDuThyWdMNsyf1fyk29kDAVrzEcbQF1sfliAgr2Rsk=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=SoUbB+Y/LgiBtSCDZnL85nFWpXwpgPkQP5Rn8FitQZ1ZEJ14JKDH+APA6M0GsIkpMT1zeL1D52ha5ECG+DPnI0nSiNr6T+WHJQI1OypyJFIje+3euJ5Q7Y24mXLI73xrcTJabiRK7n+uz1lCmzt9Nc+jXMf5FHM/9GCq44vQEg4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bHnfPs3J; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1728317879; c=relaxed/simple;
+	bh=pAwrv/y5NT3G3VUR9WEeiKDGG4RLZNszvEX9MD5Ybc0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=akx6QBAWAaqs1gz4ShN2DZOUEHzheN2UI4QEY9BKOgsqykxk/8Oa+PpM7SMdKuTDtwe/ZModv/k4zhf0Q/x2FOXF9aHzU9kECMN+25IWED3ShsQrvZrtlpawREXI4RmpxVDabq2wQCUM1WfdXTF4U+BE9eC3oihwCcaSyZhEgng=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=tuxedocomputers.com; spf=pass smtp.mailfrom=tuxedocomputers.com; dkim=pass (1024-bit key) header.d=tuxedocomputers.com header.i=@tuxedocomputers.com header.b=VUnquY9M; arc=none smtp.client-ip=157.90.84.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=tuxedocomputers.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tuxedocomputers.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bHnfPs3J"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A77A5C4CECF;
-	Mon,  7 Oct 2024 15:15:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1728314109;
-	bh=4LDuThyWdMNsyf1fyk29kDAVrzEcbQF1sfliAgr2Rsk=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=bHnfPs3JovhKOPJia6Y1mU/V6rjGoWMcRq3E0lkEHGoMLuUs4rmImXB/3maati9zr
-	 CZwz+Mh7NVY6QjBNAmjCpl72xi9Az93LGWfr6gU1RsDVFnZTRnKDKOtk/36THh3+c2
-	 AKNC7hA+zz+2kyG14l7LiutmL41s6+iwdqIA5Dm9uzcZLw+XkzOgmyh3PKz3z4xiR+
-	 WCV2P/yV3saTvMli00m6UoFYSCHJgalP34HsyL1Nv9KouPZxW+2hx4KcwwjoaH9/I9
-	 G1otuaV/xUKCjkwPNJVRx2Auw70iFitkReefVlHYDmfrTFjCg/N5hbvTFIw8/8f9YL
-	 gbN3BIt4Z5zLQ==
-Received: by mail-oi1-f174.google.com with SMTP id 5614622812f47-3e0465e6bd5so1927418b6e.2;
-        Mon, 07 Oct 2024 08:15:09 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCVEj+S1g/1kAA+UmXljCVVk+t/IdO8ito18xJBx40X1/c43jzB9n00PxSvICnQ7QD2XCPk4Lo6kbdRZ/mnJtjw5KTejag==@vger.kernel.org, AJvYcCVMj/2Yeaa3HDJNbR5+MZVmphVENrZvCN0zq6nY6BjfIJ9nzVGju9vJKq9Zr5TlMQSBXB+rkp2Ytuud@vger.kernel.org
-X-Gm-Message-State: AOJu0YwqY1hgFmBJOA7sdk82SheGxcHGD+cKwmz9JdSogQmm4AGqtgDk
-	so6s7g3RBftNfkZIvwNSBek/a4RhrUt3nu7+7tbC1TuampnhO5JI3oq/7xuupHP4Il6R5gA0WPY
-	p9WyP8MSt0pLNWzM1IWqp0ox71uo=
-X-Google-Smtp-Source: AGHT+IHmku3lngjvNFQAQ4MNIc3A0Fzsojqg2B3RKxhVMeStHRmdpgbDqQ+g10BHOmCAhfnJzAXFQxTNeHpdBqOzLwQ=
-X-Received: by 2002:a05:6808:2388:b0:3de:16f1:7659 with SMTP id
- 5614622812f47-3e3c1329770mr7176728b6e.11.1728314109027; Mon, 07 Oct 2024
- 08:15:09 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=tuxedocomputers.com header.i=@tuxedocomputers.com header.b="VUnquY9M"
+Received: from [192.168.42.96] (p5de457db.dip0.t-ipconnect.de [93.228.87.219])
+	(Authenticated sender: wse@tuxedocomputers.com)
+	by mail.tuxedocomputers.com (Postfix) with ESMTPSA id C72112FC004D;
+	Mon,  7 Oct 2024 18:17:48 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=tuxedocomputers.com;
+	s=default; t=1728317869;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=KXCO8nk9dKyl6+T9Ci1UYd9mcP4/XTE0/Kr6tzc5qDg=;
+	b=VUnquY9MWox7I1OzpywCG2UbAbIvlqwLEvnewplFuE/POSjG2eswBZ7lU4XMRgz5Wd5+FS
+	qRZyi9AMsPiLNAieVVp1WaZvRI2ia7zbwvLiaRQsuW/HiUBa/z19SMV49c1rE0V948kyda
+	J9QRvcwYtFrOf9eZx1HplLEp8UU4LMQ=
+Authentication-Results: mail.tuxedocomputers.com;
+	auth=pass smtp.auth=wse@tuxedocomputers.com smtp.mailfrom=wse@tuxedocomputers.com
+Message-ID: <2392fa23-4823-4660-8b38-0f9dfe06c863@tuxedocomputers.com>
+Date: Mon, 7 Oct 2024 18:17:48 +0200
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20241005212819.354681-1-hdegoede@redhat.com>
-In-Reply-To: <20241005212819.354681-1-hdegoede@redhat.com>
-From: "Rafael J. Wysocki" <rafael@kernel.org>
-Date: Mon, 7 Oct 2024 17:14:54 +0200
-X-Gmail-Original-Message-ID: <CAJZ5v0iewd+hmF6ZrXSPTs5_aKov57taaRKEoBM5VaRefrdM1Q@mail.gmail.com>
-Message-ID: <CAJZ5v0iewd+hmF6ZrXSPTs5_aKov57taaRKEoBM5VaRefrdM1Q@mail.gmail.com>
-Subject: Re: [PATCH 0/4] ACPI: resource: Improve Asus skip IRQ override quirks
-To: Hans de Goede <hdegoede@redhat.com>
-Cc: "Rafael J . Wysocki" <rafael@kernel.org>, "Luke D . Jones" <luke@ljones.dev>, linux-acpi@vger.kernel.org, 
-	platform-driver-x86@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFC PATCH v4 1/1] platform/x86/tuxedo: Add virtual LampArray for
+ TUXEDO NB04 devices
+To: =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Cc: Hans de Goede <hdegoede@redhat.com>, bentiss@kernel.org,
+ dri-devel@lists.freedesktop.org, jelle@vdwaa.nl, jikos@kernel.org,
+ lee@kernel.org, linux-input@vger.kernel.org,
+ LKML <linux-kernel@vger.kernel.org>, linux-leds@vger.kernel.org,
+ miguel.ojeda.sandonis@gmail.com, ojeda@kernel.org, onitake@gmail.com,
+ pavel@ucw.cz, cs@tuxedo.de, platform-driver-x86@vger.kernel.org
+References: <20241001180658.76396-1-wse@tuxedocomputers.com>
+ <20241001180658.76396-2-wse@tuxedocomputers.com>
+ <bc3f5f2b-252e-0a66-df0f-f01197a5a17d@linux.intel.com>
+ <fdfaaad5-59e7-4825-bc06-db44831ac741@tuxedocomputers.com>
+ <49beebf1-db73-a3a1-3376-e1822ce2e569@linux.intel.com>
+ <98883fb1-c895-4aad-842b-ed525d4c42f6@tuxedocomputers.com>
+ <07e29712-4c33-efa2-c8c6-ae19e21376fa@linux.intel.com>
+Content-Language: en-US
+From: Werner Sembach <wse@tuxedocomputers.com>
+In-Reply-To: <07e29712-4c33-efa2-c8c6-ae19e21376fa@linux.intel.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-Hi Hans,
 
-On Sat, Oct 5, 2024 at 11:28=E2=80=AFPM Hans de Goede <hdegoede@redhat.com>=
- wrote:
+Am 04.10.24 um 16:46 schrieb Ilpo Järvinen:
+> On Fri, 4 Oct 2024, Werner Sembach wrote:
+>> Am 03.10.24 um 12:54 schrieb Ilpo Järvinen:
+>>> On Wed, 2 Oct 2024, Werner Sembach wrote:
+>>>> Am 02.10.24 um 11:52 schrieb Ilpo Järvinen:
+>>>>> On Tue, 1 Oct 2024, Werner Sembach wrote:
+>>>>>
+>>>>>> The TUXEDO Sirius 16 Gen1 and TUXEDO Sirius 16 Gen2 devices have a
+>>>>>> per-key
+>>>>>> controllable RGB keyboard backlight. The firmware API for it is
+>>>>>> implemented
+>>>>>> via WMI.
+>>>>>>
+>>>>>> To make the backlight userspace configurable this driver emulates a
+>>>>>> LampArray HID device and translates the input from hidraw to the
+>>>>>> corresponding WMI calls. This is a new approach as the leds subsystem
+>>>>>> lacks
+>>>>>> a suitable UAPI for per-key keyboard backlights, and like this no new
+>>>>>> UAPI
+>>>>>> needs to be established.
+>>>>>>
+>>>>>> v2: Integrated Armins feedback and fixed kernel test robot warnings.
+>>>>>> v3: Fixed borked subject line of v2.
+>>>>>> v4: Remove unrequired WMI mutex.
+>>>>>>        Move device checking from probe to init.
+>>>>>>        Fix device checking working exactly reverse as it should.
+>>>>>>        Fix null pointer dereference because, hdev->driver_data !=
+>>>>>> hdev->dev.driver_data.
+>>>>>>
+>>>>>> Co-developed-by: Christoffer Sandberg <cs@tuxedo.de>
+>>>>>> Signed-off-by: Christoffer Sandberg <cs@tuxedo.de>
+>>>>>> Signed-off-by: Werner Sembach <wse@tuxedocomputers.com>
+>>>>>> Link:
+>>>>>> https://lore.kernel.org/all/1fb08a74-62c7-4d0c-ba5d-648e23082dcb@tuxedocomputers.com/
+>>>>>> ---
+>>>> That why i choose the rather generic names of just the input and output
+>>>> length
+>>>> because there is no semantic connection between the wmi methods in
+>>>> tuxedo_nb04_wmi_8_b_in_80_b_out and tuxedo_nb04_wmi_496_b_in_80_b_out
+>>>> respectively that would make for a good name.
+>>> So the only valuable characters are prefix + 8/496/80 the rest doesn't
+>>> really tell much despite all its characters :-). Details like which of the
+>>> numbers is in/out and that the numbers are in bytes could IMO be left to
+>>> struct's comment without loss of much information value.
+>>>
+>> tuxedo_nb04_wmi_8_80 kinda looks strange to me, what about
+>> tuxedo_nb04_wmi_8_in_80_out? but that's on 4 chars shorter.
+> Perhaps just tuxedo_nb04_wmi_8in_80out ?
+ok
 >
-> Hi Rafael,
+> I can see you like to use underscores a lot so I can understand if that
+> feels a step too far :-) (no offence meant).
 >
-> After receiving yet another Asus skip IRQ override bug report / patch:
-> https://lore.kernel.org/platform-driver-x86/a983e6d5-c7ab-4758-be9b-7dcfc=
-1b44ed3@gmail.com/
->
-> I have taken a closer look at the existing Asus quirks to see if they can
-> be simplied to cover more models.
->
-> This patch series removes 8 quirks by making the quirks match more models=
-,
-> while extending coverage with 3 new models which also need a skip IRQ
-> override quirk for their keyboards to work (including the model from
-> the new report).
->
-> Please send these to Linus as 6.12-rc# fixes, since this fixes
-> the keyboard not working on 3 more models.
-
-I will, thanks!
