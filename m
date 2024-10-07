@@ -1,66 +1,65 @@
-Received: from NAM02-DM3-obe.outbound.protection.outlook.com (mail-dm3nam02on2050.outbound.protection.outlook.com [40.107.95.50])
+Received: from NAM12-BN8-obe.outbound.protection.outlook.com (mail-bn8nam12on2079.outbound.protection.outlook.com [40.107.237.79])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A45E412B64;
-	Mon,  7 Oct 2024 04:22:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.95.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2F2774C6D
+	for <platform-driver-x86@vger.kernel.org>; Mon,  7 Oct 2024 05:46:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.237.79
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728274934; cv=fail; b=mYxAeMEM3k6BZM4YcyQnBeI5CAlVhdQvBviK89c2s3jZUut+/rv0wKxpSedCcvgYVtiMSmYZOyvPj6PQ4AbaatA+/6m/3lyw+Iv54qw9fOHWRq4r5YIHjtr5/B9q/wVHWtw6vQcKpng/RAuW6BrgQPaxNlzG9CtT5VwL2NkkMxk=
+	t=1728279970; cv=fail; b=FX5KuDFeMO0hn+TpVq3CySXQjhqE9wixjGEkK7FFNAlecfUsY5wy3zLGE1veR74q1TqECF5CQYL6LP4ZASqXL6Rn9JEo32/l21rdI8K4+DaaOFCdO/h681/InTf5kbUp5c3rkCSZ9CCUwU3lfm/3GYui+xScdLbRTzB/closcrw=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728274934; c=relaxed/simple;
-	bh=U/TdnHdwAcdwwTeRPgO1WwVH9ed54irb0OPHdYeu6eE=;
+	s=arc-20240116; t=1728279970; c=relaxed/simple;
+	bh=k5arSPIKGN2BNmZ6VqBxILmxouVbL49SAKklx2bBhEc=;
 	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=aRqWtj/T3HK9pZRuZ2tG7yE7kcovDuUjDBhG1FDMIHp+sYDnK8ICGMNz1wk14gP4DliZeL2WkSxjxofLEGcWkR+CSzvM6YtacHxSko95Y046j+Vlwdn8k/0r5t+VqAiHLNXLATGyAxIuB9WVV2B5Rn1l4/nIKuRXRRS5Dny4pQE=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=A+IRqNbw; arc=fail smtp.client-ip=40.107.95.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+	 Content-Type:MIME-Version; b=u806X+NdR+pNGnm5fYseSD/34kpjCND/KkHQ3MoiAG5jc0VtR92GgsopOgdnMPcGPk1E2xQRFlpt4PtcmDuLX9yFg19jgtedhC3I65uRMOqz4mvpKEoUCEErFPR1FHdnX1e7wR48MI48lVp2hLuAdxs7TghSEyqlGbWqB6gMZwM=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=NYAhBMgX; arc=fail smtp.client-ip=40.107.237.79
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="A+IRqNbw"
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="NYAhBMgX"
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=rYYr0kzInyQhRKq+j5QYULgq79XtyPVColyEmjusYqyaWkl0VHMR/6p+HpSYW0Ro7EC65jlMgPzpDMtkSqdvomss6uZQWtLkPSXruqvFKUMh0PeS1FLcTEnzPxbHhU9c3XkGd+1JwKuTBamVaxHsS05BWpeDJ7jw8EAdYWhN1CD4Mdnq4vntnJ4ORbL+vcfeXdlxjmtrIVG4rYl0ktzINa5EiWZ8RLGDVY+le5z329kqbIYuijvuzYKgkp0gq6gPu+hKyvWMIwriRvqH14ik/YMf4M62UBclw7Ycp5w6wkrcJamiodWMF51G/1+BQzYffi+jVkMH8ir/JgMDiP5hxQ==
+ b=Qc8ove4wAh2Zkd4PjiCReVNjXSaCiRk8wND+tyq2QxfHMP5ewVurkXkIsLiAx6YBBs5HXCk4btc+SExo4rIs85eQoSY41cm2080ni6Qhr/j4BN5IYGX01yrevcPpqVC7/9+qVz3g5xPPsTVKq0c1zHqkEmGB3BG2ejLtlRr5RCM9USb2nldbXIn53TiSbr17fNQFdB024tx7v1xEuBG5tzNJbqdtVRQLFEC4d96D6lKmDPaAuOIhwKRIxIYKTUMzDNKRqRB1M1w9cUHlW5C6XwmsjwnsIZFlvGkK8dbN/rgmuh5gMHyx6Q12UegK46H0QIHjlM7t9EHPeQe2YH2Y4Q==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=KxQBYo3exzPFpf6lDlrUc9C+7QRkztAgM2vMJnzaY/M=;
- b=A33Cw2JNzV6RLAY2WbZrLoErjRlOpwKrpXfilZ28UcyCi1DbxnYXJSNFoL5P9VYYpXGVA3c4eURZmCASQFVjENficPtPw21RImdnNAEBOt7OYgw9ZSTcfq6V6lsYeMbVn5bEuMAvO/KdEfaixXL3q1HB4yvMjytr+hNJclaoDiB40IyjFUW9oW+B82D/cBhoYtRTt/AYu3ObdrXwo4B0ag0D1duhp3hMBTbhlfX0Q7/nmEiizxmUwZKpIcPJJtXh5u9upHz9BTmvesHXM8WoL9D9dh5/jOYoLl+QQ7H89Y7VQiXuabbKz8AQZHWXi/MN8jf6gn4s/YcHHtJ7sAQNjw==
+ bh=/6/oiBEfVCWgDd214mgonRdvXzjLmmv+Q5jhOPTSdlI=;
+ b=kXOcoFpBtqhWF0P6tUBLt/Lt9rmbQHzCYzy4RE2iuoFz3cylxdCLsy3Q2C53yJwcUvjUSMW048/otNVZT1uvkhIdpU4IAAdl5d8RAnx15BwNHTMsmUO9oHQr2tC1g2wVhCaDMToz48ygg6qusw+40rBs52DclxrFApfsNLhLYnZqxnQCZlUNPIqjLZlGP79lNhCZ89iB9TeJ37GfTs3yuxjz2rieY30qJS12QIPOZkeekk5JrPkGrRqXoiOcDzkUpFnwCwLDUtUyTaVPCLWchhguY7zXut1FW0759OV2/XZ1Eblwsd5pFzcam0YiVFoNXtLO7rurkg17Nvx0RyoO5Q==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=KxQBYo3exzPFpf6lDlrUc9C+7QRkztAgM2vMJnzaY/M=;
- b=A+IRqNbwS7VWZdGw54wmuQLhoVWXPI6OxMp+YNvRjNtOEFdXnWgDrw9Z6jGtS07sn1HUjLuUtD/2OyNh93XGHaxl6nDUnlRHt9GgMOCz9SfAIrXUOCuKcA85f/aRU2AhK5gIqcuN+AkI7UFeLpZk77bOOQKL9xPGnKJI/SXW6Pt7Pm++rFjoFCq0JgsGyKgI045ex1x8vazhHb6nIK3E0GJNJyDsmUSOTp3wdkNqou07KxmKWTeS2rghDgYzmLLcTxzF6I/urtYecQAJu7mV85vCkbjsxIBU2uGrFFREdOhqp/jqRB5Cm7ixR9WQUQB8LLWP457k1tB53RLLAbq/fg==
+ bh=/6/oiBEfVCWgDd214mgonRdvXzjLmmv+Q5jhOPTSdlI=;
+ b=NYAhBMgXCxlSV8VUJPG9aCh+51ce+uOEVjfZbsnUnzrY2evZUFuijJ+c6yiVqONccCQQQDNLQ/xq9/DJQDZQySfLVkLPCxY37cTmtMztuVkGai7d1UyJef1ZY9kM8oUU41UBopBTDw9UZ7LMCofLlwOcr3IZHNUuwE4dCIwRcf8=
 Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nvidia.com;
-Received: from PH7PR12MB7914.namprd12.prod.outlook.com (2603:10b6:510:27d::13)
- by PH7PR12MB7378.namprd12.prod.outlook.com (2603:10b6:510:20d::20) with
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from LV2PR12MB5966.namprd12.prod.outlook.com (2603:10b6:408:171::21)
+ by SN7PR12MB8148.namprd12.prod.outlook.com (2603:10b6:806:351::17) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8026.22; Mon, 7 Oct
- 2024 04:22:09 +0000
-Received: from PH7PR12MB7914.namprd12.prod.outlook.com
- ([fe80::8998:fe5c:833c:f378]) by PH7PR12MB7914.namprd12.prod.outlook.com
- ([fe80::8998:fe5c:833c:f378%4]) with mapi id 15.20.8026.020; Mon, 7 Oct 2024
- 04:22:08 +0000
-Message-ID: <f6b62a45-c44f-492f-8f79-96b4fd54555e@nvidia.com>
-Date: Mon, 7 Oct 2024 12:22:02 +0800
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8026.20; Mon, 7 Oct
+ 2024 05:46:02 +0000
+Received: from LV2PR12MB5966.namprd12.prod.outlook.com
+ ([fe80::7c1b:5fa1:7929:fd81]) by LV2PR12MB5966.namprd12.prod.outlook.com
+ ([fe80::7c1b:5fa1:7929:fd81%3]) with mapi id 15.20.8026.019; Mon, 7 Oct 2024
+ 05:46:02 +0000
+Message-ID: <b7d7af18-1100-4373-9f54-76276d6da0c1@amd.com>
+Date: Mon, 7 Oct 2024 11:15:56 +0530
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3] platform/x86/hp: Avoid spurious wakeup on HP ProOne
- 440
-To: Hans de Goede <hdegoede@redhat.com>, ilpo.jarvinen@linux.intel.com,
- gregkh@linuxfoundation.org, jorge.lopez2@hp.com
-Cc: acelan.kao@canonical.com, platform-driver-x86@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org
-References: <20240906053047.459036-1-kai.heng.feng@canonical.com>
- <87d40775-9bd4-4f22-81da-4e670236c15e@redhat.com>
+Subject: Re: [v9 08/11] platform/x86/amd/hsmp: Create separate ACPI, plat and
+ common drivers
+To: Hans de Goede <hdegoede@redhat.com>, platform-driver-x86@vger.kernel.org
+Cc: ilpo.jarvinen@linux.intel.com,
+ Naveen Krishna Chatradhi <naveenkrishna.chatradhi@amd.com>
+References: <20241003111515.2955700-1-suma.hegde@amd.com>
+ <20241003111515.2955700-8-suma.hegde@amd.com>
+ <dedcc48b-73a5-419d-b8b7-7d71453f2b2a@redhat.com>
 Content-Language: en-US
-From: Kai-Heng Feng <kaihengf@nvidia.com>
-In-Reply-To: <87d40775-9bd4-4f22-81da-4e670236c15e@redhat.com>
+From: Suma Hegde <Suma.Hegde@amd.com>
+In-Reply-To: <dedcc48b-73a5-419d-b8b7-7d71453f2b2a@redhat.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: SG2PR03CA0111.apcprd03.prod.outlook.com
- (2603:1096:4:91::15) To PH7PR12MB7914.namprd12.prod.outlook.com
- (2603:10b6:510:27d::13)
+X-ClientProxiedBy: PN2PR01CA0183.INDPRD01.PROD.OUTLOOK.COM
+ (2603:1096:c01:e8::9) To LV2PR12MB5966.namprd12.prod.outlook.com
+ (2603:10b6:408:171::21)
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -68,282 +67,215 @@ List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PH7PR12MB7914:EE_|PH7PR12MB7378:EE_
-X-MS-Office365-Filtering-Correlation-Id: 08c15b21-1f53-46d7-5828-08dce6879b9c
+X-MS-TrafficTypeDiagnostic: LV2PR12MB5966:EE_|SN7PR12MB8148:EE_
+X-MS-Office365-Filtering-Correlation-Id: 695a380f-b9c7-4d74-68eb-08dce69353fd
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|366016|1800799024;
+X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|1800799024|366016;
 X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?UWhJd25HUlFEa3hMRGJmaWNjTlhqL1JJNEN2N3FHS05mcXRxMEdCVnI0NzYx?=
- =?utf-8?B?ZC9lbUV1dHpRdGZjNzFNb1EyUjU0dnlqbERVQlFha2Nmc2g1cXAvY0RmNmVS?=
- =?utf-8?B?S0ZxbjkwTkJiaDZFRXRnVXhYczRtK0p4NG1HNTVPbm9scy9OUkVOYTY1ay9Z?=
- =?utf-8?B?YzZ4eGFpK0IvN2ZEaU1Wck5hQzBvckV3Wnc4OTJxYXRTVUZZUERSWjVOZFNl?=
- =?utf-8?B?Vm03eThjczEyNWFPNnJqcFBJZHdMUWVXZytWN2hGZ2VlYit0MU90Uy9tRWlq?=
- =?utf-8?B?bE50UmNFQUg2RDRrVXJaTlhiekxNYXprcG5MdkhVSFdiZHkvUmQ0Tm50Q1Z3?=
- =?utf-8?B?UW1FTVYvdFVwOVFGMDFVYWh4RkpKTW9MYzRZYkxGd2l6cDB2NWwyMjBCL1lT?=
- =?utf-8?B?WlFyYmdRK2ozRG5Zc1VrenZWd1ZDRlRYZmRyWkVIaWZZY0xLbzNtZjF4bUIz?=
- =?utf-8?B?bDBQdnBTUjhjdGRRTlQwaDVLK01PUS9oSUpQQ3g2UkpOSlpwK3ptSkJHYnJQ?=
- =?utf-8?B?ZHk4ODNZL2V3ekhFVWZDZzgyQnJRUWcvYmd0NnIyZENtL2JGZTJ0c3hlWTZJ?=
- =?utf-8?B?azAwcmVDREg3c29Tems5WTloaGZKZUNVdWt0V1Awd2kzd2JPVzEvelRxaDBH?=
- =?utf-8?B?SVg2K0dkZ2laVFhjd3kvaHMxNzZKZU5ZMTNuY3BidlVPN1N4V1FlVFB6QXBV?=
- =?utf-8?B?OEhENzFhOHpOaTlwSjRYUWNZbS9kQlVMdnZtaDUyWGhwOXRJQ1UybG5rQkVr?=
- =?utf-8?B?RCt5dnRIWEg3SlUxSFlPZEZWcnUyVUtUU3k3WmZyNmwyeDJKSFRZaThTdkp4?=
- =?utf-8?B?RzFicGRlV3NxbUtuSDNjRnQ3a2g0dUhybkVqSzdCdlpUQk9BVGtJdEhiYU9E?=
- =?utf-8?B?YmdzRTNxZXc0MkY3aUZIaVc3RlRBaXBaRUp6SHZFa01yWXA5ajlITzk1VHlX?=
- =?utf-8?B?OXZTVDg2NDJyMjY2S0xDbm1MUmd6MlJZTTlDUXRlTUl0ZDhKb2RtUlhoNjZK?=
- =?utf-8?B?eW8ramhEUWIwQ3NMeXppeXZlL0RmMHMyVGtZWGNSVHJ0MTNFOGkxdS9jelhB?=
- =?utf-8?B?WVJWZVY5RDJFbXprczJmeVAyT1hJSlJ1NS9GTlBHYXF1ZjFVMFBmQ1JhNkJn?=
- =?utf-8?B?d2V0bWFUWnJvaUVrbk9vSVdrb2Y2eTcyS0NpTnBZZlhqN3RHbVpaRVdJQUNq?=
- =?utf-8?B?aklwSmtyanRDMFh5c3VzYmV1MlJndU1jUDNGc3ZNV2w3ZVlWNTJDMWVpWFVV?=
- =?utf-8?B?NFZnbGZsNTN6YVVJVlpPYUttMEhFT1djRHdsVEhXdXYyakYzOGRjS2gvSEd0?=
- =?utf-8?B?bDA0V0J2eEIvTTFZaFBIMG5aRWVYUTh5a29qclh2UHp3Z3VKZnZmTW9XR2hl?=
- =?utf-8?B?RG9XRHlJajR3cFBUMjdRcWdnQjZYQ0ZrckdzUzZVTEdPYWpKV0pYaFdkRC9h?=
- =?utf-8?B?VjBFYlZvbEpZcllLVkdWWW1YRFVFSFJGZ21xUzVUK3ZMREJ0a2lvZ3pjZ3Vl?=
- =?utf-8?B?YVNWZHg2NUNwWC9BU1N0eDlKZjRGTTRPdjBRbnJlWkxnZW93eGF2MWVaOTlw?=
- =?utf-8?B?d0JxUGZtOWRDckg4SDBpSEtsQmtwT090L0UrOXBWZ2dIN0RQalRRMnpmYnBo?=
- =?utf-8?B?K0NZQ21sM1JnQlRSb1EvZGNkRXV1MXFoUjZuVW9sRHVGZ0UxbTFVQ3pjWUwx?=
- =?utf-8?B?b1lILzA2dWMzUjBYUEt1blNMYmxEbzFFdGlkdlNNdVhXanlZRnEyVEVnPT0=?=
+	=?utf-8?B?dGVOMXVIOE1LTmV4aTVvdzhZVC9MVjdqR3lRYzAzdGFkelJnU0tENlBGdWhK?=
+ =?utf-8?B?a0FteHl2ZDI1TFRUWG1tU01LS0xvT0EwVDBVSHJSSTljZ1hnSjlsUmpoUEMw?=
+ =?utf-8?B?NktCdXJZUFZNb1FTQU5LUEZTci84QWx3bEpqMDdLZzJsaGk0VlVuUVZsR2lU?=
+ =?utf-8?B?NWE1WlUyeDFpKytUcUI2d0FCWEJpVVBlMCt0YnpYTDVvUnNtOXNNc0czV0JB?=
+ =?utf-8?B?Sk41MDloYmEwdmlGUFhXM3VKODE3cWNPZTI1NHkyRnFxWnpQTkh4dGt3UHVU?=
+ =?utf-8?B?SGwzVlU4cFpxRDVXbU0rSkcrTmFiUUcvYVFCTW9mTWNtZjJOUjBmMlU0a1BI?=
+ =?utf-8?B?WDZreTk3aXRSRk9USktTbTY0TDJhZHlNN1hRS0QzWXpoUnZzZklDczg1YzZv?=
+ =?utf-8?B?QjRMa29RcTV2eU1sMUcwaHdBY01vbDZUSGdwVlUxcG13bTVZdGtyVElMdlZv?=
+ =?utf-8?B?VEtRVGZzNEJFaXp1bmFYbWRaeDVnTU5UQXMremRKeGNGa2kzU3FrY1BxNmZi?=
+ =?utf-8?B?cCs0M1ptNmJLWVRaRitVcC9JNDNmajZjRk5vN2I5cFRPS3BBV01iZG52QkRJ?=
+ =?utf-8?B?dDlCc0RYRHZEQnQvR1NHZHZmU3YwSzN1RlZITlhqQUpnR3ZBMzRYUmNCWlIx?=
+ =?utf-8?B?MzNGa0FCMHNHRlo0QUZEY1FJcEhkWThOVVprSks5ZjZFelpXU256eHBWcnlr?=
+ =?utf-8?B?ZUs2QjBWdWtSbkR4Z0RaT2hydmJNdGU2UUg2Y3p5djNySnU5cXgxaWhCRmpv?=
+ =?utf-8?B?endOVEtZa2U1MXdCbVkvTk5lNmZQOUtiRmVRem9rWFBlbzI0b0VvSmIrK2Zm?=
+ =?utf-8?B?MGkrU1hheU9Qa21ybzlsWlhvTjdrWWI1TGxFcU1QdVl1NUJPQ0Jza3pGbHFY?=
+ =?utf-8?B?d1lFeHgzRU1FRExFWGVOakVxblJEOEhrNlhRQldQdzdiRzdkb1c4U2FLSkNS?=
+ =?utf-8?B?cEtha1plOW9aN2M0TGVPd0k2S2Z6dlFVMUMweHdjTklRZVVaQXV1Q2RMRTB2?=
+ =?utf-8?B?dlU0VGpxQ1N6TnBod2ozb1ZBTFZoUlEzV2ZkQ3MrTlYydVNhcXVlTmpZL0Vq?=
+ =?utf-8?B?WU5odFNwSXBReTgwWkM3TGtvd01GT3VCTm5HQjNVTzNGTEgzelNrM2JjSVph?=
+ =?utf-8?B?MHZDUS9OWVUrVE1vU1doQXBzWmM2YWkwMkhtL0ptNjZLMWdCUjRPbzFKRzhL?=
+ =?utf-8?B?QXZIZS9DNm8vMk5UeWhlS0NzNWVSRE5Cd0VSc1h4RUZtbk56SDNQMVRTazJV?=
+ =?utf-8?B?M1J0L2ZXVDNCSUZmQmNVL3RyTm1mV1FNalNRM0NBVDNBOFVHMGY3UlVCZTNT?=
+ =?utf-8?B?ZGpqcFpvWWNWdmw1T2hyOXlGV08zMnBqcmJuWmdPdWNKc3R2dVV1Y0lWQk9o?=
+ =?utf-8?B?aW1DdWVMcEUrckNzbmJZaE9TbEJqaktFVndWeFd2OWNEMmtUR3hiRW5TTlo0?=
+ =?utf-8?B?SFF3MkhUWTBRNjlXbE9RQU1MV1RLWHZEdGxsYlZ6MlJPMXVlc2JUYjZXL2k4?=
+ =?utf-8?B?UWN2SU9RMWJQaVo0czdTNjVIdDNCSUpIdVRDZFh6N0dJdGJjazRKY2Z1VWRh?=
+ =?utf-8?B?Z2UvOWsvS0ltRUxRZ1pBVWkyR0J2UTdheGs0QzR3d1lLc3huWE5lc2d4OGhh?=
+ =?utf-8?B?RFo5ZE5HdVhBVXhiNVRzK09aaWFnblIvemNOVTREUjc0bGpGL1NVbmRJaEhX?=
+ =?utf-8?B?cnBzczNNc0xRRTZHNm5rV3RBWEdsZDgxMFZPL2VWVzE0cjYrMVZVdVF3PT0=?=
 X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH7PR12MB7914.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(366016)(1800799024);DIR:OUT;SFP:1101;
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:LV2PR12MB5966.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(1800799024)(366016);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?cEhYZm05RlBVekRZalQzUU16KzZaTVkxLzFjNUN1VlBkcEpkWWhxcXlwekhQ?=
- =?utf-8?B?YmJCc0ZNVFdsUDJ3OEhIMkozU0FjZzNtTUNVVUtUVlc2TFJxeHgzUWowSFZX?=
- =?utf-8?B?cjRCSzc0NXIyczBIL3FWeXczTmVHbFB1eis0TFR5WWtqeFkwdTFkSlh3K0RJ?=
- =?utf-8?B?WllPSk5PNGtQNGFnbmdBMFNzZ0p1aWxoOGdHRHVaTEJ6Q2c1clhGV0lsRjZs?=
- =?utf-8?B?MFBLakNYanJ6eEJCYU80Y1pvSTVrdDRYQjdjcWJoTXVnZGZobkFCVjk4SnRz?=
- =?utf-8?B?SHNSR3c3eCtzU29jQW5jUXdwMjVldng3by9idDdVNXBjaHBJNnExUHZTb1dH?=
- =?utf-8?B?RzdudTlMS3ZxNVNRU2hDenJOR1Y2Y0dEL2toampPeU01TjhXbHd5V3hhbUhy?=
- =?utf-8?B?KzVRTlFGNzVNUWlGRm9sbllQVnY0NktudkRRYlRzMnNXRTlaVjYvWlUyd2Yz?=
- =?utf-8?B?Y0tOeVNTa0h3TEVnaTdnZGZsVkpPN0xJODFucisxRXlnVWVuanIwYi92UVRP?=
- =?utf-8?B?WnRxRWIxeVV1WVVFb0lZWkY1RmRVNHQrYmNSTE9BRW81cUdCSzQxVSs4M091?=
- =?utf-8?B?R1dXUnBHTis2VndidU1WTmZZQnFrQitBemJKd2RieFlacktWbGRSRStJWVUr?=
- =?utf-8?B?VmhyVG9UeXN0ZEhTRXNpdXVmNy96NVl6S2o5aTFpRmtZVkpKOEVaZDczczgz?=
- =?utf-8?B?WWN5RGhTMmhYdFFleU4vTnFXbUJjWW9Namhza0VWWW9KS1cyWkxSNnFjTWpZ?=
- =?utf-8?B?a0NxVkM0bERZZ1FKWnN6UDBobGlwR1NKdzhyT05pTGJmVmlpbnorRUNIQ2hM?=
- =?utf-8?B?UWdHL2xWRWtYMlc1SG1wM2RXeWJ2ZzJzOVppdm9jbWVjOUVxUUNLSUN4eTBa?=
- =?utf-8?B?N29IOHN1ZnlzM0pQQTJYSXcwUldReFh2eGhJRVlWbGhnSThyN05mc2ZtVG41?=
- =?utf-8?B?Y2JLUnBUZzUrOHpjL3dicVlINXlzY2RKR3JtMEdZcGRQQWtqaFUrRGNmRHl1?=
- =?utf-8?B?czluRjlYckt5OU14eXhuTjl4NzE3ZHB3dmVKMFR5YlZpQkxkaDBSRnk3ck95?=
- =?utf-8?B?OUxFOU1Vall0b0NrNUx6Z29zaWRpY2Zhc1VYdlEyLy84R2lTemw5aFBkZGNn?=
- =?utf-8?B?clBEWjNwWno0c1U1ZGFjZjlKL2tYWG9oZW5OK3dHaHU0WktKeG5QTk5xcHVE?=
- =?utf-8?B?M2pNaUpXY3g4dUEyenhvenBNb0ZxVVJxOVVZTXEzdmdyZHZnQXE1emYrbDFo?=
- =?utf-8?B?a0F5bWxxek15Y2dXbVR0WTVPd2V3TzZXTWNEWjBBSHVrSy9aazlzZVAvdTQy?=
- =?utf-8?B?a3Q0YlZDZ3JFamZGdEdIZGM3Y3R3MXFHbElyZ1krOElBUWVKZkwzdlRPRmFn?=
- =?utf-8?B?eFFJZGVSMThicm9HSmJkd1l0eVB6UUtRQWQ5cXUzemduOUpFNHBsck03MURM?=
- =?utf-8?B?TUxtNDNPS1V5Y2tob3pKZExuTGtydGYxT1VlOHJBZ0NtNklYWDRLY2M0SzlO?=
- =?utf-8?B?ajhHM1BhQUJqdkpEUC8zNlF6bDZId0IyWjZjcEhRdnFaUGlpd3dyUUIyK05n?=
- =?utf-8?B?SjQ4UVVYLzVMRFVkcmRGYUx5VkdvQzVYZzlMcS9SQXRYaE1PcElzQngzTVBZ?=
- =?utf-8?B?RTc0M1hHTWxnbjlseVYrS2hnSU5jTFhSY2d4a3hnSko2SlNOUFA0bUNjM3lO?=
- =?utf-8?B?cXBFaldkakpQN3c0ZjZhWk91cjY5TllUN0JGdnZVTUMxTEdqSUF5TEYzMHI4?=
- =?utf-8?B?ZVNGc0hDT2RzZU9iQlNybWxoSWdLWm5OSUVEN0pkRWJpVWlHSnlvNEh4Sjlu?=
- =?utf-8?B?MXFuQnRzK21PUkNtdjJUalg4cHFEQ1o4NWNiYUd0QzdMM2htTURDZFZlYjJ2?=
- =?utf-8?B?UUpCZi9tT1NYcU04bUlYYnhTNUVRMUM5WG1KWG1WV3RpSUx1d1BSWjFiS1l5?=
- =?utf-8?B?dVh3ams2U3F6cVgwYkM5NUZPL0pjTGtoU2tNQlk1dkkzZjZ5M0VlUmVsc016?=
- =?utf-8?B?VXpuVU1aM0JwNUtGMU9CYjVqN0F4NjEvWWlCdENPbHpwU0xCeWxQNktJRlpP?=
- =?utf-8?B?M3JWVVZBOFFCT0MwRzNyUUJ1Wno3Q3dGUlM5YTZUcVFQbndoK1JRdHp6d2I1?=
- =?utf-8?Q?EUd2TIkHHaeu94s2N5g7f94Pq?=
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 08c15b21-1f53-46d7-5828-08dce6879b9c
-X-MS-Exchange-CrossTenant-AuthSource: PH7PR12MB7914.namprd12.prod.outlook.com
+	=?utf-8?B?M1g5azVmeDhybFZEUy9xNUxyZEd2elhudFl6SDJUN0o1dFJsYVgxU3hNcVIx?=
+ =?utf-8?B?andEa3JQT3I1dkYydUp5c3FVZ28xK2JQb2ZuYVE1Mks1UTU0NEhvUDAyR1hL?=
+ =?utf-8?B?RFoyU1Fid1NMSkdSeUc2ZkY4NkxES1c0SHVSZWhDL0FUVTEzSkVJN00rQkV4?=
+ =?utf-8?B?VlRwVytlR2VvZVp1R1cvb2hJV1Bta0x3cUpTRzlrZk5oRStoQlphTXJpR0l3?=
+ =?utf-8?B?MWRPWm9ya28yT1VFNXFLelpmeHN0VUtTWURhcDljZnVDTnZXRnBNYUF0aXdR?=
+ =?utf-8?B?UlZTZ2lTQTY0dEliVnAwZVpOZXRRajhTWkVzdW5pZ1laUnNyL3hnSi9qU1lO?=
+ =?utf-8?B?Rjg3YXVTc3J0N2lvcXk5Nkp6MDZtWU9mR0ovZUM5Rm9VeXlETVVtQlpxQXkr?=
+ =?utf-8?B?SDBIKzJ1VHRsdUZubm1ickNONExrL0tzYXA0M1RqSmZzQXd1L0RNbCtCc3lH?=
+ =?utf-8?B?cGV6Y3BCL2hzL2pDQm01OXJNdEtzbnR1a1ZYcFE5TWt4bUdFbWVkTkR0QUds?=
+ =?utf-8?B?b3BLLzhQOUcwS2ZManlWVU1NcWFuNjJXeENadUQrYk0za1lxNGJIZVVad2dx?=
+ =?utf-8?B?eklSeGFVZ1YxU2xCNnRoZzdKNFZwTEpZZHVxTEJJRGZUcVRRdjNDdUc1SzUz?=
+ =?utf-8?B?azg0TUdmaXZwUUVUUEVJeGROSy8xdkJUMzFVRzRhL0tJdGRuRlBDQmpmY3Jn?=
+ =?utf-8?B?bFFIK0ljMXN3NnNOek9TTE9pZENFN0NJTmJhaHEybVV6VHlESUEzSXlOK3NJ?=
+ =?utf-8?B?QngwYXpzaEJMOWhJT2ZNaGFNZm1EMVltc29ValNtMmxnYWFDMmxZYWJvd3Ur?=
+ =?utf-8?B?Ny95ejBpdjc4QU1MMUdvSExJSWUzTHhJVUhTcEFWQjdzTks5NnNSL2t3eElW?=
+ =?utf-8?B?eVpXZDYxNktNSmpPRHc0ajJYUWEzeUZWS3B6a2N1Wm44aXQvWHdZNHQ5Slpu?=
+ =?utf-8?B?WFZGYXRPWlRXbWhJUUlPaDNLSHcrQlVBYlJJNnZEZ3hNd1BsblA5N2hRVGp6?=
+ =?utf-8?B?aG02ZWNKUXZId28wdFZSTDBhcEJtVEJ2THFheWx4anFkb0xsZFllQktkMWg2?=
+ =?utf-8?B?d2MrVEp4UmxMU2RSVWFRTnJzZFVsY2JWRXA4dkxWdmU4QTYzME9RWC8vV1Fu?=
+ =?utf-8?B?dkhYd2V6VlAzQkVaQnNqWUxHVnRLcWxURHlvS1h6Vk5ZRldlVk1yY05tRVBM?=
+ =?utf-8?B?UzM5Um5UUGEveXorbEZtRFU2NExGT1RpWnd1VUNJckRYTDE4ZjhKbzJXRHcr?=
+ =?utf-8?B?eHpRVDNZYzUwdWc4RDk0Q2FCTm1Yb2FFMUZtVmtjYUhPMTFFT1NxMFRXZ3hL?=
+ =?utf-8?B?MXZORzBDUjJPbFQ3d0JUR3FFM3dPbGZ1NkpPNnc2ZW0wT0xrSi9kanNYdXkv?=
+ =?utf-8?B?Znh2R3lvbzFuRjVtdWh2MXpOSTZHQU1YNWRSR2luUklYM1BRUC9sQ0E5YlZp?=
+ =?utf-8?B?UGlPTWZEaFZISGp0V3laTVphY1JqcmVOd1cyaGsxcVh1MVNLYWhDQWQ0K0dl?=
+ =?utf-8?B?VWhJR2pURkNGeGlDM0k0Wjltc2c2YUlQS2FOSGJSaDJ3NGJ1NjZ5RDNKcllt?=
+ =?utf-8?B?RG5JQ3V3V29kSTlFbG8wMGVEaHdCMUpzYUswNHZwLzc1WTEzS2pEeS9zaGty?=
+ =?utf-8?B?Tk1Nd2t0WGhtN2poY2oyVXFHeVdVQms4L21hcTFTZFFJVE1KMllabmNnS3FX?=
+ =?utf-8?B?aUIrS1RRand0UFVSNjRYanZmaTlQRmtiWG9HMjB5RlJnR0JURmRwVVFyWFpP?=
+ =?utf-8?B?MG11dDdNYm1UU0w0eitBZW1YbTVwQVpOYnJJSDlMWENQcVdwY1JTdWdsUzRv?=
+ =?utf-8?B?Z3dTNnRxUDB4OFFUclN3K05zbkZ1VXk0bGlGdXhWQ1RBTG5SWGIxUWI0TXBP?=
+ =?utf-8?B?enM5Q213TUFUN0lkRkY3eUNVT2o4MGQ0VkNJS25uRGp6bXFUenpBTTFqdFdw?=
+ =?utf-8?B?Yk52T2Y3YnVUTnpwc1NtZmJPZkk3a0owcnN2Vk5ySGZPSGxMQmMwUk8zRGlE?=
+ =?utf-8?B?YUpMbEtVMnptVEZlVFY0VFVzaHFrdXp0WWcvOVNJK1VobGk4WW50bzZ6RHUz?=
+ =?utf-8?B?V2kyRlBDWSs4OFAyVjVoam01R3hyL2NaaGIzeTdaQXc1STQxTSt6S1JFWCs3?=
+ =?utf-8?Q?NUnMqbOVlns3zuSc6eTNuRJh2?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 695a380f-b9c7-4d74-68eb-08dce69353fd
+X-MS-Exchange-CrossTenant-AuthSource: LV2PR12MB5966.namprd12.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 07 Oct 2024 04:22:08.8342
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 07 Oct 2024 05:46:02.6289
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 01VIqtO2ipkBxUkDD9uic6Qt7rGSAnU0j/T2rz4CjnNqLrQ1gGgTISXcwhx5OZR0fJAnbw8+wBXivZC84wdRZw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH7PR12MB7378
+X-MS-Exchange-CrossTenant-UserPrincipalName: gvuTjbRAW6UiqDpf9CVquhl/JNqEMrVEoqYGlvYWYGOKYBVqYsrKFO1yJ80siiwI3wZYKLy36tcFnQdJZlSYPQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN7PR12MB8148
 
 Hi Hans,
 
-On 2024/10/5 10:25 PM, Hans de Goede wrote:
-> Hi Kai-Heng,
-> 
-> On 6-Sep-24 7:30 AM, Kai-Heng Feng wrote:
->> The HP ProOne 440 has a power saving design that when the display is
->> off, it also cuts the USB touchscreen device's power off.
+On 10/6/2024 3:39 AM, Hans de Goede wrote:
+> Caution: This message originated from an External Source. Use proper caution when opening attachments, clicking links, or responding.
+>
+>
+> Hi Suma,
+>
+> On 3-Oct-24 1:15 PM, Suma Hegde wrote:
+>> Separate the probes for HSMP ACPI and platform device drivers.
 >>
->> This can cause system early wakeup because cutting the power off the
->> touchscreen device creates a disconnect event and prevent the system
->> from suspending:
->> [  445.814574] hub 2-0:1.0: hub_suspend
->> [  445.814652] usb usb2: bus suspend, wakeup 0
->> [  445.824629] xhci_hcd 0000:00:14.0: Port change event, 1-11, id 11, portsc: 0x202a0
->> [  445.824639] xhci_hcd 0000:00:14.0: resume root hub
->> [  445.824651] xhci_hcd 0000:00:14.0: handle_port_status: starting usb1 port polling.
->> [  445.844039] xhci_hcd 0000:00:14.0: PM: pci_pm_suspend(): hcd_pci_suspend+0x0/0x20 returns -16
->> [  445.844058] xhci_hcd 0000:00:14.0: PM: dpm_run_callback(): pci_pm_suspend+0x0/0x1c0 returns -16
->> [  445.844072] xhci_hcd 0000:00:14.0: PM: failed to suspend async: error -16
->> [  446.276101] PM: Some devices failed to suspend, or early wake event detected
+>> Provide a Kconfig option to choose between ACPI or the platform device
+>> based driver. The common code which is the core part of the HSMP driver
+>> maintained at hsmp.c is guarded by AMD_HSMP config and is selected by
+>> these two driver configs. This will be built into separate hsmp_common.ko
+>> module and acpi as hsmp_acpi and plat as amd_hsmp respectively.
 >>
->> So add a quirk to make sure the following is happening:
->> 1. Let the i915 driver suspend first, to ensure the display is off so
->>     system also cuts the USB touchscreen's power.
->> 2. Wait a while to let the USB disconnect event fire and get handled.
->> 3. Since the disconnect event already happened, the xhci's suspend
->>     routine won't be interrupted anymore.
+>> Also add "|| COMPILE_TEST" clause in Kconfig to get build coverage for
+>> HSMP.
 >>
->> Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
-> 
-> I was wondering if there is any progress in trying to come up with
-> a more generic fix at the USB hub level for this as discussed in
-> other emails in this thread ?
-
-This patch fixes this issue and IMO quite generic:
-https://lore.kernel.org/linux-usb/20240906030548.845115-1-duanchenghao@kylinos.cn/
-
-> 
-> Also have you seen this series:
-> 
-> [PATCH v2 0/5] acpi/x86: s2idle: move Display off/on calls outside suspend (fixes ROG Ally suspend)
-> https://lore.kernel.org/platform-driver-x86/20240922172258.48435-1-lkml@antheas.dev/
-> 
-> ?
-> 
-> I wonder if that is relevant. If the touchscreen gets turned off when
-> the GPU enters D3 then this will not help, but if it gets turned off
-> by the system wide Display Off call as described in that series then
-> that series + extending patch 3 to maybe also include the HP ProOne 440
-> might be another (cleaner) way to fix this ?
-
-The series won't help. The display was turned off when i915 turning off 
-CRTCs, so it's much earlier than the LPI's Display Off.
-
-If the the touchsreen is turned off by Display Off, then the issue 
-shouldn't exist at all, as .suspend_noirq for xHCI is already called.
-
-Kai-Heng
-
-> 
-> Regards,
-> 
-> Hans
-> 
-> 
-> 
-> 
-> 
-> 
-> 
-> 
-> 
-> 
-> 
-> 
-> 
-> 
-> 
-> 
-> 
+>> Signed-off-by: Suma Hegde <suma.hegde@amd.com>
+>> Reviewed-by: Naveen Krishna Chatradhi <naveenkrishna.chatradhi@amd.com>
 >> ---
->> v3:
->>   - Use dev_dbg() instead of dev_info().
+>> Changes since v8:
+>> Removed unused hsmp_fops structure definition.
+>> | Reported-by: kernel test robot <lkp@intel.com>
+>> | Closes: https://lore.kernel.org/oe-kbuild-all/202410021345.okdVjjGy-lkp@intel.com/
 >>
->> v2:
->>   - Remove the part that searching for the touchscreen device.
->>   - Wording.
+>> Changes since v7:
+>> 1. Commit description is updated.
+>> 2. Makefile is updated to create 3 modules, hsmp_common, hsmp_acpi, amd_hsmp.
+>> 3. hsmp.c is modified to make it as a module and functions used by acpi.c and plat.c
+>>     are made as export symbols (hsmp_test(), hsmp_cache_proto_ver() etc).
+>> 4. "depends on AMD_HSMP_ACPI=n" is removed from Kconfig.
+>> 5. Documentation is updated to reflect new changes.
+>> 6. amd_hsmp.h is modified to remove  IS_ENABLED(CONFIG_AMD_HSMP_ACPI).
+> Thank you for the new version, the way the split is done now looks
+> good to me.
+>
+> One small remark below (I have not done a full review only checked
+> the Kconfig / Makefile bits) :
+>
+> <snip>
+>
+>> diff --git a/drivers/platform/x86/amd/hsmp/Kconfig b/drivers/platform/x86/amd/hsmp/Kconfig
+>> index b55d4ed9bceb..dc64b5b1165c 100644
+>> --- a/drivers/platform/x86/amd/hsmp/Kconfig
+>> +++ b/drivers/platform/x86/amd/hsmp/Kconfig
+>> @@ -4,14 +4,44 @@
+>>   #
 >>
->>   drivers/platform/x86/hp/hp-wmi.c | 59 +++++++++++++++++++++++++++++++-
->>   1 file changed, 58 insertions(+), 1 deletion(-)
+>>   config AMD_HSMP
+>> -     tristate "AMD HSMP Driver"
+>> -     depends on AMD_NB && X86_64 && ACPI
+>> +     tristate
+>> +
+>> +menu "AMD HSMP Driver"
+>> +     depends on AMD_NB || COMPILE_TEST
+>> +
+>> +config AMD_HSMP_ACPI
+>> +     tristate "AMD HSMP ACPI device driver"
+>> +     depends on ACPI
+>> +     select AMD_HSMP
+>>        help
+>> +       Host System Management Port (HSMP) interface is a mailbox interface
+>> +       between the x86 core and the System Management Unit (SMU) firmware.
+>>          The driver provides a way for user space tools to monitor and manage
+>> -       system management functionality on EPYC server CPUs from AMD.
+>> +       system management functionality on EPYC and MI300A server CPUs
+>> +       from AMD.
+>> +
+>> +       This option supports ACPI based probing.
+>> +       You may enable this, if your platform BIOS provides an ACPI object
+>> +       as described in amd_hsmp.rst document.
+>> +
+>> +       If you choose to compile this driver as a module the module will be
+>> +       called amd_hsmp.
+> This last line should be: "called hsmp_acpi.".
+Please pardon me for this error. I will address it in v10 after your 
+full review.
+>
+>> +config AMD_HSMP_PLAT
+>> +     tristate "AMD HSMP platform device driver"
+>> +     select AMD_HSMP
+>> +     help
+>>          Host System Management Port (HSMP) interface is a mailbox interface
+>>          between the x86 core and the System Management Unit (SMU) firmware.
+>> +       The driver provides a way for user space tools to monitor and manage
+>> +       system management functionality on EPYC and MI300A server CPUs
+>> +       from AMD.
+>> +
+>> +       This option supports platform device based probing.
+>> +       You may enable this, if your platform BIOS does not provide
+>> +       HSMP ACPI object.
 >>
->> diff --git a/drivers/platform/x86/hp/hp-wmi.c b/drivers/platform/x86/hp/hp-wmi.c
->> index 876e0a97cee1..92cb02b50dfc 100644
->> --- a/drivers/platform/x86/hp/hp-wmi.c
->> +++ b/drivers/platform/x86/hp/hp-wmi.c
->> @@ -30,6 +30,8 @@
->>   #include <linux/rfkill.h>
->>   #include <linux/string.h>
->>   #include <linux/dmi.h>
->> +#include <linux/delay.h>
->> +#include <linux/pci.h>
->>   
->>   MODULE_AUTHOR("Matthew Garrett <mjg59@srcf.ucam.org>");
->>   MODULE_DESCRIPTION("HP laptop WMI driver");
->> @@ -1708,6 +1710,14 @@ static void __exit hp_wmi_bios_remove(struct platform_device *device)
->>   		platform_profile_remove();
->>   }
->>   
->> +static int hp_wmi_suspend_handler(struct device *device)
->> +{
->> +	/* Let the xhci have time to handle disconnect event */
->> +	msleep(200);
+>>          If you choose to compile this driver as a module the module will be
+>>          called amd_hsmp.
 >> +
->> +	return 0;
->> +}
->> +
->>   static int hp_wmi_resume_handler(struct device *device)
->>   {
->>   	/*
->> @@ -1745,7 +1755,7 @@ static int hp_wmi_resume_handler(struct device *device)
->>   	return 0;
->>   }
->>   
->> -static const struct dev_pm_ops hp_wmi_pm_ops = {
->> +static struct dev_pm_ops hp_wmi_pm_ops = {
->>   	.resume  = hp_wmi_resume_handler,
->>   	.restore  = hp_wmi_resume_handler,
->>   };
->> @@ -1871,6 +1881,51 @@ static int hp_wmi_hwmon_init(void)
->>   	return 0;
->>   }
->>   
->> +static int lg_usb_touchscreen_quirk(const struct dmi_system_id *id)
->> +{
->> +	struct pci_dev *vga, *xhci;
->> +	struct device_link *vga_link, *xhci_link;
->> +
->> +	vga = pci_get_class(PCI_CLASS_DISPLAY_VGA << 8, NULL);
->> +
->> +	xhci = pci_get_class(PCI_CLASS_SERIAL_USB_XHCI, NULL);
->> +
->> +	if (vga && xhci) {
->> +		xhci_link = device_link_add(&hp_wmi_platform_dev->dev, &xhci->dev,
->> +				      DL_FLAG_STATELESS);
->> +		if (xhci_link)
->> +			dev_dbg(&hp_wmi_platform_dev->dev, "Suspend before %s\n",
->> +				 pci_name(xhci));
->> +		else
->> +			return 1;
->> +
->> +		vga_link = device_link_add(&vga->dev, &hp_wmi_platform_dev->dev,
->> +					   DL_FLAG_STATELESS);
->> +		if (vga_link)
->> +			dev_dbg(&hp_wmi_platform_dev->dev, "Suspend after %s\n",
->> +				 pci_name(vga));
->> +		else {
->> +			device_link_del(xhci_link);
->> +			return 1;
->> +		}
->> +	}
->> +
->> +	hp_wmi_pm_ops.suspend = hp_wmi_suspend_handler;
->> +
->> +	return 1;
->> +}
->> +
->> +static const struct dmi_system_id hp_wmi_quirk_table[] = {
->> +	{
->> +		.callback = lg_usb_touchscreen_quirk,
->> +		.matches = {
->> +			DMI_MATCH(DMI_SYS_VENDOR, "HP"),
->> +			DMI_MATCH(DMI_PRODUCT_NAME, "HP ProOne 440 23.8 inch G9 All-in-One Desktop PC"),
->> +		},
->> +	},
->> +	{}
->> +};
->> +
->>   static int __init hp_wmi_init(void)
->>   {
->>   	int event_capable = wmi_has_guid(HPWMI_EVENT_GUID);
->> @@ -1909,6 +1964,8 @@ static int __init hp_wmi_init(void)
->>   			goto err_unregister_device;
->>   	}
->>   
->> +	dmi_check_system(hp_wmi_quirk_table);
->> +
->>   	return 0;
->>   
->>   err_unregister_device:
-> 
+>> +endmenu
+>> diff --git a/drivers/platform/x86/amd/hsmp/Makefile b/drivers/platform/x86/amd/hsmp/Makefile
+>> index 0cc92865c0a2..3175d8885e87 100644
+>> --- a/drivers/platform/x86/amd/hsmp/Makefile
+>> +++ b/drivers/platform/x86/amd/hsmp/Makefile
+>> @@ -4,5 +4,9 @@
+>>   # AMD HSMP Driver
+>>   #
+>>
+>> -obj-$(CONFIG_AMD_HSMP)               += amd_hsmp.o
+>> -amd_hsmp-objs                        := hsmp.o plat.o acpi.o
+>> +obj-$(CONFIG_AMD_HSMP)                       += hsmp_common.o
+>> +hsmp_common-objs                     := hsmp.o
+>> +obj-$(CONFIG_AMD_HSMP_PLAT)          += amd_hsmp.o
+>> +amd_hsmp-objs                                := plat.o
+>> +obj-$(CONFIG_AMD_HSMP_ACPI)          += hsmp_acpi.o
+>> +hsmp_acpi-objs                               := acpi.o
+> Regards,
+>
+> Hans
 
+Thanks and Regards,
+
+Suma
+
+>
+>
