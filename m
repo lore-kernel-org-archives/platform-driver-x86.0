@@ -1,261 +1,293 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f173.google.com (mail-pg1-f173.google.com [209.85.215.173])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9DD171E04BA;
-	Tue,  8 Oct 2024 15:21:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 853471E0DCC;
+	Tue,  8 Oct 2024 19:34:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728400904; cv=none; b=PYViYk3f4/NuqHpj4ORbuK9nOPhugbOe6FMPz9dBDdqxsZ5LFo6XJtUJigLS123hjLYD3gz3Qh2+VNVqHjnC5DMVuhjE2BxKDRkLJ9BZGhjmp4ofSOH1uy8Aj0VR0FV2K26NY33t+/W+W8ybAd0InHBi8xw6uSKcjkGk8Dt18H4=
+	t=1728416064; cv=none; b=ErE2YLUhCsnSPgMdvbOZZWCmvImSN/2BZIMizsotQLdLINHAyPBSBmdg3feAK2Fg5c5KB8Fl+Edbwxxf9NJ1f/0KkyUUOj3nF88VLXjD5ST9NYh+KfRqmy3aCvEPVPCS2dPoDI/sfJhVJEwY9lgvpvXe1GXNAKSonAoLH71CjOs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728400904; c=relaxed/simple;
-	bh=UWc2qvCFSN/lJ4nXoiViC2Mk+bdUrVpTctmrpmU2MX0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=H7UMhtIq6fmUO6Clf0JroMQV1zgzifVeGwlADd1764vzBRh3uH7Irlr2NQiwNi7D33gGx0+bRuEbhvzBFdc4OxW6ysot7PpjYQz9pudrjk5ywFMKWA7CEI9RtajNHK8XA15wfoInDDoaMhvVMh0PXA3xbI1rPRc9ujXjIG+FA3U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YQbPZTKz; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1728416064; c=relaxed/simple;
+	bh=Rd9boGe0nKC89uzfPt+xG4ylB9eUDiqeBbQyLUB9xs0=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=twllq02VqekheaUm61BywRyGi6O7xoFwliuulzCppaioPWRkU1Imqjy3q1Pu29vhWucqzoE/l5TlJlkwWF2OmmVtaSddIydKZOl5v7ymVKKqZUfy2fUjvPPzhLYD91DczRV02hNNm60k64BuKjVmYl/nJJp7Qbp2xO5k/VeWHtY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Th/O9M4n; arc=none smtp.client-ip=209.85.215.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YQbPZTKz"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 110A0C4CEC7;
-	Tue,  8 Oct 2024 15:21:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1728400904;
-	bh=UWc2qvCFSN/lJ4nXoiViC2Mk+bdUrVpTctmrpmU2MX0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=YQbPZTKznkz7snGmIxfOlgvGNOndnoQnAWFbJQxWppnNqX6GBWTaH9DU7Urk7MzD8
-	 PY6pO2AqN0z2PzWkbsvnGiQ7qY95i2wXOsHRpjKmMLPUlbjJXSC07HFkKLpKc2sb9t
-	 c3uknU7lxFoX5PgFVyiKp0OC4fW8mYcfNPeDBooeLnhaaiOT9qfE7hk83ztTxrFMhq
-	 vC2dT9sF25uVaWxvmNV9cA3dMvB/iROZpxsj5L+CdXcT1MadHF74rRcM6+7lk0bHy6
-	 DSuqDRqXmgYllQ1DcDYFsPqZQlo7M5QlKyI7hUkSL1moYICCgI6FacPsKFHVpVc8em
-	 RE5NjkMyuWqtw==
-Date: Tue, 8 Oct 2024 17:21:38 +0200
-From: Benjamin Tissoires <bentiss@kernel.org>
-To: Werner Sembach <wse@tuxedocomputers.com>
-Cc: Armin Wolf <W_Armin@gmx.de>, Pavel Machek <pavel@ucw.cz>, 
-	Hans de Goede <hdegoede@redhat.com>, Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>, 
-	dri-devel@lists.freedesktop.org, jelle@vdwaa.nl, jikos@kernel.org, lee@kernel.org, 
-	linux-input@vger.kernel.org, linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org, 
-	miguel.ojeda.sandonis@gmail.com, ojeda@kernel.org, onitake@gmail.com, 
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Th/O9M4n"
+Received: by mail-pg1-f173.google.com with SMTP id 41be03b00d2f7-7cd8803fe0aso4109947a12.0;
+        Tue, 08 Oct 2024 12:34:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1728416062; x=1729020862; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=PmsAVkNPAVmhhcMAOduEmXLVJB9Wtdi3bsvXHQgiGSM=;
+        b=Th/O9M4nIAWJy6tMH00s4ELyvXLAkLfB8Zbxz9U6Uzn784DJOWvrnfPxyqnbiKORMv
+         /HCYG/VhMO3KdxciQQ8gXfZZI8p7EpJ7uZ2CltoEiMhqxC5Ry3PEOEQrHjX5XqZhpnLn
+         L4Qhjpfa9u8QuJQ0QuQCi6Pt3AF8GeCv24LghqU/hTmyf7GdEg8uJXbMWB1y7IhMJaEp
+         g6P7uespDoh60e7wma+rcKcWhYeV3YCsVgWO4qDQNqvyvEPQfKrWSBFhY7875+1AFYPg
+         XuhSDgqkgnySUg0W+5O036gI0VTlndU3BamoX+P4bFZCVFbEuT1mBXA11UhZdL16cpkv
+         H7Bw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1728416062; x=1729020862;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=PmsAVkNPAVmhhcMAOduEmXLVJB9Wtdi3bsvXHQgiGSM=;
+        b=D72o5RWf+zraOyKSqifmR9TW3A5xgN7O8CY0ZN47xEVMMRpoh6JM8ooDYGj+HL91Bn
+         VTAQvSNwWwiakKvIkvvU3wrwvFngQMh5lVAT32Gc0P8J6dxN6wmvASxEQK3f/5IkSdNy
+         P1yFaO1gj6MxOgn42nCE27HaaQxBxYziVB6Y2iYzMW5FkNsslb7ZaSjGDfU5fXaXS4Sw
+         fOBDtqx+P90W8uHRU+j9HDS6Zpah3dU83ZAo5XtyzQs2fUW2iDQTeFTEO81lTywpksnc
+         9hka0HykXsgY1ibIgU9dIBmA5DKv079RMEdZYbNUtPoS309PCRnqT8lcjI1ZYbI0LcJI
+         SPCA==
+X-Forwarded-Encrypted: i=1; AJvYcCUYndY4P0ZytBDHZefDfROGNPuysAAqxk/K+9WSo7LK5XJYS4LcuqkjwlYIdeSsUTtUdIkXIGb7sjTFlNtxVQtSo4PtMA==@vger.kernel.org, AJvYcCWzHd5995r9kPlij751XrNHqCTZ7jTsdUMyAuYzpUIalty492YcdyMXp+f10IqTFskXGTJPPDwBLynWK4U=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx5PbQzl8sfq52uklYuTGH0Cm/qqkglrlunn/rtyRPvSJ63jiu+
+	JCYBRsN2ruKU6oIzGB0OiePHe5lUxZxvxT9jovyWezRM1CTg0nfJhXLZYpUQ
+X-Google-Smtp-Source: AGHT+IHo7pOmCq1/90Q5LrgqrDPX0swDsHA5a36s+vA8hQNzo5ZhaDKuQk+b5RQUgRAOj3oV8yHvxA==
+X-Received: by 2002:a05:6a20:559f:b0:1cf:53ea:7fbc with SMTP id adf61e73a8af0-1d8a3bf042fmr44505637.18.1728416061760;
+        Tue, 08 Oct 2024 12:34:21 -0700 (PDT)
+Received: from localhost.localdomain (host95.181-12-202.telecom.net.ar. [181.12.202.95])
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-7e9f6c379efsm6054858a12.62.2024.10.08.12.34.20
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 08 Oct 2024 12:34:21 -0700 (PDT)
+From: Kurt Borja <kuurtb@gmail.com>
+To: ilpo.jarvinen@linux.intel.com
+Cc: Dell.Client.Kernel@dell.com,
+	hdegoede@redhat.com,
+	kuurtb@gmail.com,
+	linux-kernel@vger.kernel.org,
 	platform-driver-x86@vger.kernel.org
-Subject: Re: [PATCH 1/1] platform/x86/tuxedo: Add virtual LampArray for
- TUXEDO NB04 devices
-Message-ID: <rszv4p34oivysoyi337dxwooebipiikzd3pyq7rof5r3agbzce@xejutpd4jcfv>
-References: <cflor5mz4flekn44ttlbanfigmwn5mmp3p54gkeeznzmzkyjqz@p2c6q7gulrdl>
- <84b629c6-5b26-4285-9b2f-66dd1afa99e5@tuxedocomputers.com>
- <zph6fnuaamhayivmzftowjw6klgcy2gb7vdub2v2yo7n665vpo@rkxtorfvmzph>
- <7ce4470c-a502-416a-8472-a5b606bb8fd4@tuxedocomputers.com>
- <d7gk2mgihtg6242l3isnhw3xpdt745ehpu2kvim2xxgmxdhat7@g5cqei7uqujj>
- <39f84cfe-bb89-4194-81a9-e178c93e5309@tuxedocomputers.com>
- <sih5i2ausorlpiosifvj2vvlut4ok6bbgt6cympuxhdbjljjiw@gg2r5al552az>
- <82a6eca1-728c-436f-8c4d-073d8a43ee27@tuxedocomputers.com>
- <5crqia4gecxg62n2m2lf6haiifue4wlxrr3g35dyoaa3svjyuj@cd5bhouz5rlh>
- <4a761cd0-611a-4245-8353-5c66ba133715@tuxedocomputers.com>
+Subject: Re: [PATCH v2] alienware-wmi: Dell AWCC platform_profile support
+Date: Tue,  8 Oct 2024 16:34:18 -0300
+Message-ID: <20241008193418.34573-1-kuurtb@gmail.com>
+X-Mailer: git-send-email 2.46.2
+In-Reply-To: <4c2c29ad-924e-876b-70c3-256f4865fc88@linux.intel.com>
+References: <4c2c29ad-924e-876b-70c3-256f4865fc88@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <4a761cd0-611a-4245-8353-5c66ba133715@tuxedocomputers.com>
 
-On Oct 08 2024, Werner Sembach wrote:
+Removed.
+
+> > +static int platform_profile_get(struct platform_profile_handler *pprof,
+> > +				enum platform_profile_option *profile)
+> > +{
+> > +	acpi_status status;
+> > +	u32 in_args = 0x0B;
 > 
-> Am 08.10.24 um 14:18 schrieb Benjamin Tissoires:
-> > On Oct 08 2024, Werner Sembach wrote:
-> > > Am 08.10.24 um 11:53 schrieb Benjamin Tissoires:
-> > > > On Oct 07 2024, Werner Sembach wrote:
-> > > > > Hi,
-> > > > > 
-> > > > > Am 02.10.24 um 10:31 schrieb Benjamin Tissoires:
-> > > > > > On Oct 01 2024, Werner Sembach wrote:
-> > > > > > > Hi Benjamin,
-> > > > > > > 
-> > > > > > > Am 01.10.24 um 15:41 schrieb Benjamin Tissoires:
-> > > > > > > > [...]
-> > > > > > > > PPS: sorry for pushing that hard on HID-BPF, but I can see that it fits
-> > > > > > > > all of the requirements here:
-> > > > > > > > - need to be dynamic
-> > > > > > > > - still unsure of the userspace implementation, meaning that userspace
-> > > > > > > >       might do something wrong, which might require kernel changes
-> > > > > > > Well the reference implementetion for the arduiono macropad from microsoft
-> > > > > > > ignores the intensity (brightness) channel on rgb leds contrary to the HID
-> > > > > > > spec, soo yeah you have a point here ...
-> > > > > > Heh :)
-> > > > > > 
-> > > > > > > > - possibility to extend later the kernel API
-> > > > > > > > - lots of fun :)
-> > > > > > > You advertise it good ;). More work for me now but maybe less work for me
-> > > > > > > later, I will look into it.
-> > > > > > Again, I'm pushing this because I see the benefits and because I can
-> > > > > > probably reuse the same code on my Corsair and Logitech keyboards. But
-> > > > > > also, keep in mind that it's not mandatory because you can actually
-> > > > > > attach the BPF code on top of your existing driver to change the way it
-> > > > > > behaves. It'll be slightly more complex if you don't let a couple of
-> > > > > > vendor passthrough reports that we can use to directly talk to the
-> > > > > > device without any tampering, but that's doable. But if you want to keep
-> > > > > > the current implementation and have a different layout, this can easily
-> > > > > > be done in BPF on top.
-> > > > > > 
-> > > > > > Cheers,
-> > > > > > Benjamin
-> > > > > > 
-> > > > > > 
-> > > > > > [0] https://lore.kernel.org/linux-input/20241001-hid-bpf-hid-generic-v3-0-2ef1019468df@kernel.org/T/#t
-> > > > > Thinking about the minimal WMI to HID today, but found a problem: a HID
-> > > > > feature report is either strictly input or output afaik, but the WMI
-> > > > > interface has both in some functions.
-> > > > Not sure you are talking about feature reports, because they are
-> > > > read/write. It's just that they are synchronous over the USB control
-> > > > endpoint (on USB).
-> > > I'm confused about the split between get and send feature reports
-> > > https://www.kernel.org/doc/html/latest/hid/hidraw.html
-> > > 
-> > > I guess then a get feature report can also carry input data and the
-> > > difference is that a send feature report doesn't wait for a reply? but then
-> > > what is it's reason of existence in contrast to an output report?
-> > I'm under the impression you are mixing the 3 types of reports (just
-> > re-stating that here in case I wasn't clear).
-> > 
-> > - Input reports:
-> >    `Input()` in the report descriptor
-> >    -> data emitted by the device to the host, and notified through an IRQ
-> >    mechanism
-> >    -> obtained in hidraw through a blocking read() operation
-> > - Output reports:
-> >    `Output()` in the report descriptor
-> >    -> data sent asynchronously by the host to the device.
-> >    -> sent from hidraw by calling write() on the dev node (no feedback
-> >    except how many bytes were sent)
-> > - Feature reports:
-> >    `Feature()` in the report descriptor
-> >    -> way to synchronously configure the device. Think of it like a
-> >    register on the device: you can read it, write it, but you never get
-> >    an interrupt when there is a change
-> >    -> read/written by using an ioctl on the hidraw node
+> Use a named define instead of a magic number.
 > 
-> From userspace there are the HIDIOCSFEATURE and HIDIOCGFEATURE ioctls.
+
+Done
+
+> > +	u32 out_data;
+> > +
+> > +	status = alienware_wmax_command(&in_args, sizeof(in_args),
+> > +					WMAX_METHOD_THERMAL_INFORMATION, (u32 *) &out_data);
 > 
-> From the hid 1.11 spec:
+> Casting to the same type??
 > 
-> "
+> Also, alienware_wmax_command() inputs int * which makes the cast look even 
+> more odd?!?
 > 
-> 7.2.2 Set_Report Request
+> I can see there are pre-existing bogus (u32 *) casts too which would be 
+> nice to clean up in another patch.
 > 
-> [...]
+
+Yes I thought it was odd but added them just in case. I can submit a
+patch cleaning those up after this one.
+
+> > +
+> > +	if (ACPI_FAILURE(status) || out_data < 0)
 > 
-> The meaning of the request fields for the Set_Report request is the same as for
-> the Get_Report request, however the data direction is reversed and the Report
-> Data is sent from host to device.
+> u32 cannot be < 0??
 > 
-> "
+> Is this an indication of a problem in the error handling?
 > 
-> and from the hut 1.5, some of the LampArray feature reports are meant to be
-> used with set report and some with get report
 
-Yeah, it just means that you can query or send the data. You can also
-use HIDIOCGINPUT() and HIDIOCSOUTPUT() to get a current input report and
-set an output report through the hidraw ioctl...
+Yes it was, thank you for catching it.
 
-Internally, HIDIOCGINPUT() uses the same code path than
-HIDIOCGFEATURE(), but with the report type being an Input instead of a
-Feature. Same for HIDIOCSOUTPUT() and HIDIOCSFEATURE().
-
+> > +		return -EOPNOTSUPP;
+> > +
+> > +	switch (out_data) {
+> > +	case WMAX_THERMAL_LOW_POWER:
+> > +		*profile = PLATFORM_PROFILE_LOW_POWER;
+> > +		break;
+> > +	case WMAX_THERMAL_QUIET:
+> > +		*profile = PLATFORM_PROFILE_QUIET;
+> > +		break;
+> > +	case WMAX_THERMAL_BALANCED:
+> > +		*profile = PLATFORM_PROFILE_BALANCED;
+> > +		break;
+> > +	case WMAX_THERMAL_BALANCED_PERFORMANCE:
+> > +		*profile = PLATFORM_PROFILE_BALANCED_PERFORMANCE;
+> > +		break;
+> > +	case WMAX_THERMAL_PERFORMANCE:
+> > +	case WMAX_THERMAL_GMODE:
+> > +		*profile = PLATFORM_PROFILE_PERFORMANCE;
+> > +		break;
+> > +	default:
+> > +		return -ENODATA;
+> > +	}
+> > +
+> > +	return 0;
+> > +}
+> > +
+> > +#define SET_MASK(prof) ((prof << 8) | 1)
 > 
-> (well as far as I can tell the hut doesn't actual specify, if they need to
-> be feature reports, or am I missing something?)
-
-They can be both actually. The HUT is missing what's expected here :(.
-
-However, looking at the HUT RR 84:
-https://www.usb.org/sites/default/files/hutrr84_-_lighting_and_illumination_page.pdf
-
-There is an example of a report descriptor, and they are using Features.
-Not Input+Output.
-
-And looking even further (above), in 3.5 Usage Definitions:
-3.5.2, 3.5.3 and 3.5.5 all of them are meant to be a feature, like:
-LampArrayAttributesReport CL – Feature -
-LampAttributesRequestReport CL – Feature –
-LampAttributesResponseReport CL – Feature –
-LampArrayControlReport CL – Feature –
-
-3.5.4: can be either feature or output, like:
-LampMultiUpdateReport CL – Feature/Output –
-LampRangeUpdateReport CL – Feature/ Output –
-
-So I guess the MS implementation can handle Feature only for all but the
-update commands.
-
+> Name these with two defines. One define for naming that magic 1 and 
+> another for the profile field, use GENMASK() + FIELD_PREP() for it.
 > 
-> and there is the pair with LampAttributesRequestReport and
-> LampAttributesResponseReport.
-
-Yeah, not a big deal. The bold IN and OUT are just to say that calling a
-setReport on a LampAttributesResponseReport is just ignored AFAIU.
-
+> Also, there's no need for this to be macro so change it into a static 
+> function.
 > 
-> Sorry for my confusion over the hid spec.
 
-No worries. It is definitely confusing :)
+Done.
 
-Cheers,
-Benjamin
-
+> > +static int platform_profile_set(struct platform_profile_handler *pprof,
+> > +				enum platform_profile_option profile)
+> > +{
+> > +	acpi_status status;
+> > +	u32 in_args;
+> > +	u32 out_data;
+> > +
+> > +	switch (profile) {
+> > +	case PLATFORM_PROFILE_LOW_POWER:
+> > +		in_args = SET_MASK(WMAX_THERMAL_LOW_POWER);
+> > +		break;
+> > +	case PLATFORM_PROFILE_QUIET:
+> > +		in_args = SET_MASK(WMAX_THERMAL_QUIET);
+> > +		break;
+> > +	case PLATFORM_PROFILE_BALANCED:
+> > +		in_args = SET_MASK(WMAX_THERMAL_BALANCED);
+> > +		break;
+> > +	case PLATFORM_PROFILE_BALANCED_PERFORMANCE:
+> > +		in_args = SET_MASK(WMAX_THERMAL_BALANCED_PERFORMANCE);
+> > +		break;
+> > +	case PLATFORM_PROFILE_PERFORMANCE:
+> > +		in_args = SET_MASK(WMAX_THERMAL_PERFORMANCE);
+> > +		break;
+> > +	default:
+> > +		return -EOPNOTSUPP;
+> > +	}
+> > +
+> > +	status = alienware_wmax_command(&in_args, sizeof(in_args),
+> > +					WMAX_METHOD_THERMAL_CONTROL, (u32 *) &out_data);
 > 
-> > 
-> > And BTW, it's perfectly fine to have a dedicated report ID which has
-> > Input, Output and Feature attached to it :)
-> > 
-> > > > An input report is strictly directed from the device, and an output
-> > > > report is from the host to the device.
-> > > > 
-> > > > But a feature report is bidirectional.
-> > > > 
-> > > > > How would I map that?
-> > > > Depending on the WMI interface, if you want this to be synchronous,
-> > > > defining a Feature report is correct, otherwise (if you don't need
-> > > > feedback from WMI), you can declare the commands to WMI as Output
-> > > > reports.
-> > > Thanks for reminding me that output reports exist xD.
-> > hehe
-> > 
-> > > > > If I split everything in input and output the new interface wouldn't
-> > > > > actually be much smaller.
-> > > > The HID report descriptor doesn't need to be smaller. The fact that by
-> > > > default it exposes only one or two LEDs so we don't have the micrometers
-> > > > arrays is the only purpose.
-> > > > 
-> > > > But if we also implement a not-full HID implementation of LampArray, we
-> > > > should be able to strip out the parts that we don't care in the LED
-> > > > class implementation, like the exact positioning, or the multiupdate.
-> > > > 
-> > > > > Also what would I write for the usage for the reserved padding in the report
-> > > > > descriptor. Usage: 0x00?
-> > > > padding are ignored by HID. So whatever current usage you have is fine.
-> > > > 
-> > > > However, if you are talking about the custom WMI vendor access, I'd go
-> > > > with a vendor collection (usage page 0xff00, usage 0x08 for the 8 bytes
-> > > > long WMI command for instance, 0x10 for the 16 bytes long one).
-> > > > 
-> > > > Side note: in drivers/hid/bpf/progs/hid_report_helpers.h we have some
-> > > > autogenerated macros to help writing report descriptors (see
-> > > > drivers/hid/bpf/progs/Huion__Dial-2.bpf.c for an example of usage). It's
-> > > > in the hid-bpf tree but I think we might be able to include this in
-> > > > other drivers (or do a minimal rewrite/move into include).
-> > > > I'm not asking you to use it on your code right now, but this has the
-> > > > advantage of becoming less "binary blob" in your code, and prevent
-> > > > mistakes where you edit the comments but not the values.
-> > > I will look into it.
-> > > 
-> > > Since the interface is fixed I don't need to flesh out the whole descriptor
-> > > (which i thought i must do) and usage page (0xff42, because NB04 and the wmi
-> > > has 2 other ec controlling wmi interfaces besides the AB one), report usage
-> > > (matching the wmi comand id's) and report size should be enough.
-> > I'm a little confused by that last sentence. But yeah, I would expect
-> > some minimal sanity check before handing over the HID report to the WMI
-> > interface :)
-> > 
-> > Cheers,
-> > Benjamin
-> > 
+> Cast to same type.
+> 
+> > +
+> > +	if (ACPI_FAILURE(status) || out_data < 0)
+> 
+> u32 cannot be < 0.
+> 
+> > +		return -EOPNOTSUPP;
+> > +
+> > +	return 0;
+> > +}
+> > +
+> > +static int gmode_platform_profile_set(struct platform_profile_handler *pprof,
+> > +				      enum platform_profile_option profile)
+> > +{
+> > +	acpi_status status;
+> > +	u32 in_args;
+> > +	u32 out_data;
+> > +
+> > +	switch (profile) {
+> > +	case PLATFORM_PROFILE_LOW_POWER:
+> > +		in_args = SET_MASK(WMAX_THERMAL_LOW_POWER);
+> > +		break;
+> > +	case PLATFORM_PROFILE_QUIET:
+> > +		in_args = SET_MASK(WMAX_THERMAL_QUIET);
+> > +		break;
+> > +	case PLATFORM_PROFILE_BALANCED:
+> > +		in_args = SET_MASK(WMAX_THERMAL_BALANCED);
+> > +		break;
+> > +	case PLATFORM_PROFILE_BALANCED_PERFORMANCE:
+> > +		in_args = SET_MASK(WMAX_THERMAL_BALANCED_PERFORMANCE);
+> > +		break;
+> > +	case PLATFORM_PROFILE_PERFORMANCE:
+> > +		in_args = SET_MASK(WMAX_THERMAL_GMODE);
+> > +		break;
+> > +	default:
+> > +		return -EOPNOTSUPP;
+> > +	}
+> > +
+> > +	status = alienware_wmax_command(&in_args, sizeof(in_args),
+> 
+> > +					WMAX_METHOD_THERMAL_CONTROL, (u32 *) &out_data);
+> > +	if (ACPI_FAILURE(status) || out_data < 0)
+> 
+> The same two issues here with the types.
+> 
+> > +		return -EOPNOTSUPP;
+> > +
+> > +	return 0;
+> > +}
+> > +
+> > +static int create_platform_profile(void)
+> > +{
+> > +	pp_handler.profile_get = platform_profile_get;
+> > +
+> > +	if (quirks->gmode > 0)
+> > +		pp_handler.profile_set = gmode_platform_profile_set;
+> > +	else
+> > +		pp_handler.profile_set = platform_profile_set;
+> > +
+> > +	set_bit(PLATFORM_PROFILE_LOW_POWER, pp_handler.choices);
+> > +	set_bit(PLATFORM_PROFILE_QUIET, pp_handler.choices);
+> > +	set_bit(PLATFORM_PROFILE_BALANCED, pp_handler.choices);
+> > +	set_bit(PLATFORM_PROFILE_BALANCED_PERFORMANCE, pp_handler.choices);
+> > +	set_bit(PLATFORM_PROFILE_PERFORMANCE, pp_handler.choices);
+> > +
+> > +	return platform_profile_register(&pp_handler);
+> > +}
+> > +
+> >  static int __init alienware_wmi_init(void)
+> >  {
+> >  	int ret;
+> > @@ -807,6 +987,12 @@ static int __init alienware_wmi_init(void)
+> >  			goto fail_prep_deepsleep;
+> >  	}
+> >  
+> > +	if (quirks->thermal > 0) {
+> > +		ret = create_platform_profile();
+> > +		if (ret)
+> > +			goto fail_prep_thermal_profile;
+> > +	}
+> > +
+> >  	ret = alienware_zone_init(platform_device);
+> >  	if (ret)
+> >  		goto fail_prep_zones;
+> > @@ -817,6 +1003,7 @@ static int __init alienware_wmi_init(void)
+> >  	alienware_zone_exit(platform_device);
+> >  fail_prep_deepsleep:
+> >  fail_prep_amplifier:
+> > +fail_prep_thermal_profile:
+> >  fail_prep_hdmi:
+> >  	platform_device_del(platform_device);
+> >  fail_platform_device2:
+> > @@ -836,6 +1023,7 @@ static void __exit alienware_wmi_exit(void)
+> >  		remove_hdmi(platform_device);
+> >  		platform_device_unregister(platform_device);
+> >  		platform_driver_unregister(&platform_driver);
+> > +		platform_profile_remove();
+> 
+> IIRC, I once checked that this will lead to a crash if it wasn't created 
+> first (which in your driver isn't always the case).
+> 
+
+Fixed.
+
+> -- 
+>  i.
+
+Thank you for your feedback. I will submit v3 with the corrections soon.
+
+Kurt
