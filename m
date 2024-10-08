@@ -1,517 +1,251 @@
-Received: from mail-pg1-f174.google.com (mail-pg1-f174.google.com [209.85.215.174])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-00154904.pphosted.com (mx0b-00154904.pphosted.com [148.163.137.20])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1519D23A6;
-	Tue,  8 Oct 2024 05:06:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.174
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728363964; cv=none; b=iu/SNsHdrwbWTanUb5KsaYuEf8vxFasvsUTj4sm8Lt9efNSVfkyL6SFSEt2E4QlR1JRd8FksKoiVVccz9E/3901OrEQit9m/TU0LynLtohy6VtUWo6t4HEjefhAZtUdpL0IjKYLmOwiEZTdJK+/Xpx2V/vk/oEq0rEFQOX+CTtI=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728363964; c=relaxed/simple;
-	bh=6rCf3LpSw3nAiFLyzgyl/m45xH7/fF0tPgVe1VqwGzI=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=cgY4oEw2gXjFHBt+BW6km40AkFuyhjIYGF2rk2IdTeBfqDY3RXk47WY8r9IXKiqx1FSQvb6kW+1wBatqRCEw4M6AGmWJnaqjOPonNhIHfkCmuWpXMVLJZHxjr4cYIv0JqhEu2zcFK/5KEMMlqZeXK1DysZh52ncMooS0rgAxHSU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=QXkglbKV; arc=none smtp.client-ip=209.85.215.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4347013B2B8;
+	Tue,  8 Oct 2024 06:05:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=148.163.137.20
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1728367523; cv=fail; b=OwGDfRGoOSPLLe2wYUS7YJmEubumHpZyp95qTrxwQdFPGemiZHHNbdbYU/k2GsfKy9Dm6tXhxFUrLnr+P83BRy9uT8hrOUMlkm/IxVjpAKfoWCNCyYf+ueE1SKN8edA9zUI4RDQ1ylh077oHAZbdfFA+2+w/ZbgR1HbYckdaN/A=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1728367523; c=relaxed/simple;
+	bh=g9esarYQMEY/MRZ+ac3PKI3MfdJMDee2DWWcmr3m1vo=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=KhwrjMHpoirtSwg9u9+qr96GEG5JUqUi+KYT7EnqEsj2+/pLXjrk7xOj02r/+I1wTwf3fs9sR5zeolWUStGw7zGRMn1YrMyP1smKeRgqpQobFI7gBItiSQRVXP9dvq4PfHL6J0Dy7i2plMSH3u5lVNHGkzZNLMvcDCuzuu9cVD0=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=dell.com; spf=pass smtp.mailfrom=dell.com; dkim=pass (2048-bit key) header.d=dell.com header.i=@dell.com header.b=wWeQmL72; arc=fail smtp.client-ip=148.163.137.20
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=dell.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=dell.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QXkglbKV"
-Received: by mail-pg1-f174.google.com with SMTP id 41be03b00d2f7-7e9fd82f1a5so1504937a12.1;
-        Mon, 07 Oct 2024 22:06:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1728363962; x=1728968762; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=fs0vtPCwjQn6rNMZpPH2IWj8m+aFbwLafQtn97O1Pds=;
-        b=QXkglbKVn9LZfBb/SbZ+KiO08d6T0h9ZQNwoGJrTDZz/cfrWpEFXi0MwHIIFDe0VIw
-         Zbs8S0Rhh7IiA4C3eP4/1PnZ+8dBiijkozwvBy9UCwIS4IJhVg6Z7//Txfwh8zwP+3oT
-         EgnwIvMn4HpoSwCHQYm+dt1q4024DtxOTPXkN1X2QgtPGnrgn33uIHw8blUOCIRSR4Qi
-         1nGUL3LxlWw0NDsJWzVLIdeMxXiP6ZcBtg51Hq5VKhP82HCLbuAHK3NZk2BitNH3jrDN
-         vbczPxnxqf9DybGLTNLBTOxDdLUtHkH20Y6v498jNQ4GZVRmjDlBErEN+Z3QXUFfxhmE
-         kBpg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1728363962; x=1728968762;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=fs0vtPCwjQn6rNMZpPH2IWj8m+aFbwLafQtn97O1Pds=;
-        b=e5Yh29Lyf/Cr4KbgmUq9DokeHAyCyd3vl6yeb9AN7llB2VWV2bKv8t1xPKRnb7bEEt
-         uOEyP2N/VI0zSY2J65YI78MiKkt30+LqKgJqC3RcOqRrbjM33ZdVE2kdRhwz53JIJqoX
-         /ptRuTJHBiJGRVG7YzjsW/c7JVO6tj++OnqKIbB34K2ZOPQpNAzwiotoucksNoqwtiQ1
-         rwg9bEyHqjHDs/rJn9rlsSU24WiZHq6ZYXMmVKj2iQXXLwb1dVfpL1iCWIfaWTldm4CJ
-         GZASt7be2h9SLi2VokBtSfx7gyB/UF4zrgZ8wRzUrAW6XMWiCyDrZhnkJcg1jGGuxHLr
-         4CmQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUOaObuzASk6OKcnzyDVWIlqfEzuiSAeU6CO0ePycR4rrzWIGFNeSo56I+VtCy0whKi9as5MeNbyIqO6sQ=@vger.kernel.org, AJvYcCUYHuV2zznc2or/q0AiFu0IfqSRtR+/9dfCcEGnQVqJFDJid3uxZKmtwS/f4oQJz3nhTDJNB6C4+lxhCZB/cw6wvAOdYg==@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy1bS3xddFN2dLx1lW+bmdeClseHUaE3AZ7Kwte9NZf//sJerSy
-	sugPGnwKIIMhpzyKuzlGjz1NL/NLezGRbyqiV3dICqKlBslIzmA8
-X-Google-Smtp-Source: AGHT+IGHskScTOxPaK0y3iodKmIXEMvp+a2agH/zvai0N01spKFAKRK62R+zyZ0ssjKYG24TjnzrGQ==
-X-Received: by 2002:a17:90b:4a10:b0:2e0:a77e:8305 with SMTP id 98e67ed59e1d1-2e1e6391d38mr17309201a91.39.1728363962163;
-        Mon, 07 Oct 2024 22:06:02 -0700 (PDT)
-Received: from localhost.localdomain (host95.181-12-202.telecom.net.ar. [181.12.202.95])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-2e20ae7177esm6482617a91.3.2024.10.07.22.06.00
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 07 Oct 2024 22:06:01 -0700 (PDT)
-From: Kurt Borja <kuurtb@gmail.com>
-To: kuurtb@gmail.com
-Cc: hdegoede@redhat.com,
-	ilpo.jarvinen@linux.intel.com,
-	linux-kernel@vger.kernel.org,
-	platform-driver-x86@vger.kernel.org,
-	Dell.Client.Kernel@dell.com
-Subject: [PATCH v2] alienware-wmi: Dell AWCC platform_profile support
-Date: Tue,  8 Oct 2024 01:42:39 -0300
-Message-ID: <20241008044237.55146-3-kuurtb@gmail.com>
-X-Mailer: git-send-email 2.46.2
-In-Reply-To: <20241007093324.49631-3-kuurtb@gmail.com>
-References: <20241007093324.49631-3-kuurtb@gmail.com>
+	dkim=pass (2048-bit key) header.d=dell.com header.i=@dell.com header.b="wWeQmL72"
+Received: from pps.filterd (m0170395.ppops.net [127.0.0.1])
+	by mx0b-00154904.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 4983w5He009312;
+	Tue, 8 Oct 2024 00:32:50 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=dell.com; h=cc
+	:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=smtpout1; bh=I
+	Zg1pZ7Uo8z4KvwO+Nmga/42pNGTLYtf7zedxNsRZZ8=; b=wWeQmL720v+d7NQFs
+	jDFTa9MAoUlH5gK1m2XSEMP4aFjUcJTGfSLuK0BecgnJGrDH/T8h2sl8jUUy5cuT
+	oyHnBSMSkBTACzBd3wKZczfQcDUzkVu9FZ85IKBHsTAZ0dq86Q8ypQnODxsQz9cx
+	9RlwgwUtQfmF9xgJPIuIkABLd9N5rJYmWFQ2YiFRr2OiiWzQGC8fvC6RgXeS/5S8
+	KWBFMc/nQkT1+PRFGH+rORhb6ltbZjrEV5CtDpY1CIgUwK8UeCWMMwGmtwFIHP/v
+	IMNJ8LI57x4mFz8efEVNL/Ps5Io412mqaNNDsBpDPR3eFT9JtVI5UU3wdnmDDIuj
+	VQIhw==
+Received: from mx0b-00154901.pphosted.com (mx0b-00154901.pphosted.com [67.231.157.37])
+	by mx0b-00154904.pphosted.com (PPS) with ESMTPS id 42324ja14m-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 08 Oct 2024 00:32:49 -0400 (EDT)
+Received: from pps.filterd (m0393468.ppops.net [127.0.0.1])
+	by mx0a-00154901.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 4983Egj3021891;
+	Tue, 8 Oct 2024 00:32:49 -0400
+Received: from nam02-sn1-obe.outbound.protection.outlook.com (mail-sn1nam02lp2041.outbound.protection.outlook.com [104.47.57.41])
+	by mx0a-00154901.pphosted.com (PPS) with ESMTPS id 423hxfkyr8-2
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Tue, 08 Oct 2024 00:32:48 -0400 (EDT)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=IGU+hpLnhCyFhAfZsoTmwq0qAZ+mmhbbiCpIf5kKOtN8P5GTrJL9LMM/3g8lMud4XdglMnJkhs4P8HJxFA2gcox1XKxkkznv6vtDTSQ6mO4Jqy2XgmkevGyxC7/V57xA2IRsBwqBzjUd3R1nfaS8CyDLUNbasxMJ3WHcUX/sw838D0gricgAUx4/y7H9NJf1Htm4VUZPuzIoxy/DWNgaCVWAQURkH7Cve4y0B4pKZ+PBY/wGbudqFB8/HLHNMRK9PfW6tgE6JZZI95DH/5dF8k69edrsQZEcwgy4pwKT/zn+tXxNdFwRhpUzP60Zh1VdpDg9DDlq/kMtGHsVXtIiuA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=IZg1pZ7Uo8z4KvwO+Nmga/42pNGTLYtf7zedxNsRZZ8=;
+ b=lPW+gVjz0MkLr67oB9S+RpuNjvQ2LfTfSjkLvdZV7l77PwG666i/PZFK8XlgXuP8BGVEcv+PjWCbIJMJQ4l4oVQBZQPTPIMQUuK56Ji9DChCkteidA+auFPBG9yI4UGvrKG9u8vbdgrzWHNHkuxze03Zpa1iFT0R2RJK+iWywnhmp4yJ+dK2iw0VV0avW5MtTZxs84UetiMOAMXF4N8JJtWK6vHTCrWfJi3DZl3tXVXxBV4SlQA5s7ySr85TbF4iJytxFTtC27tNkGx7fD/Wck26iB6lFT2W/aeaZjRZH4CHQUk6iUmiDKn7AXI4BmxfMy6TUdS9zlrYYng0aLyl5w==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=dell.com; dmarc=pass action=none header.from=dell.com;
+ dkim=pass header.d=dell.com; arc=none
+Received: from CH4PR19MB8731.namprd19.prod.outlook.com (2603:10b6:610:22b::9)
+ by BY5PR19MB3779.namprd19.prod.outlook.com (2603:10b6:a03:220::15) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8026.23; Tue, 8 Oct
+ 2024 04:32:43 +0000
+Received: from CH4PR19MB8731.namprd19.prod.outlook.com
+ ([fe80::db43:d59d:5051:33d2]) by CH4PR19MB8731.namprd19.prod.outlook.com
+ ([fe80::db43:d59d:5051:33d2%6]) with mapi id 15.20.8026.020; Tue, 8 Oct 2024
+ 04:32:43 +0000
+From: "Ksr, Prasanth" <Prasanth.Ksr@dell.com>
+To: =?utf-7?B?SWxwbyBKK0FPUS1ydmluZW4=?= <ilpo.jarvinen@linux.intel.com>,
+        Crag
+ Wang <crag0715@gmail.com>
+CC: "Limonciello, Mario" <mario.limonciello@amd.com>,
+        Hans de Goede
+	<hdegoede@redhat.com>,
+        "Wang, Crag" <Crag.Wang@dell.com>, "Wang, Crag"
+	<Crag.Wang@dell.com>,
+        Dell Client Kernel <Dell.Client.Kernel@dell.com>,
+        "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Subject: RE: [PATCHv4 1/1] platform/x86: dell-sysman: add support for
+ alienware products
+Thread-Topic: [PATCHv4 1/1] platform/x86: dell-sysman: add support for
+ alienware products
+Thread-Index: AQHbFnIm6kdk5fVtIU6EfeQ/x4J7p7J7Aa6AgAFHWlA=
+Date: Tue, 8 Oct 2024 04:32:43 +0000
+Message-ID:
+ <CH4PR19MB87311D0754EC6DC5891428FB827E2@CH4PR19MB8731.namprd19.prod.outlook.com>
+References: <20241004152826.93992-1-crag_wang@dell.com>
+ <69e68ff4-da24-d4b0-498a-3be95b557a5a@linux.intel.com>
+In-Reply-To: <69e68ff4-da24-d4b0-498a-3be95b557a5a@linux.intel.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+msip_labels:
+ MSIP_Label_73dd1fcc-24d7-4f55-9dc2-c1518f171327_ActionId=81586157-89ad-428c-8ec1-813e26307945;MSIP_Label_73dd1fcc-24d7-4f55-9dc2-c1518f171327_ContentBits=0;MSIP_Label_73dd1fcc-24d7-4f55-9dc2-c1518f171327_Enabled=true;MSIP_Label_73dd1fcc-24d7-4f55-9dc2-c1518f171327_Method=Standard;MSIP_Label_73dd1fcc-24d7-4f55-9dc2-c1518f171327_Name=No
+ Protection (Label Only) - Internal
+ Use;MSIP_Label_73dd1fcc-24d7-4f55-9dc2-c1518f171327_SetDate=2024-10-08T04:31:37Z;MSIP_Label_73dd1fcc-24d7-4f55-9dc2-c1518f171327_SiteId=945c199a-83a2-4e80-9f8c-5a91be5752dd;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: CH4PR19MB8731:EE_|BY5PR19MB3779:EE_
+x-ms-office365-filtering-correlation-id: ef0b931f-c4d1-4be5-6927-08dce752405d
+x-ld-processed: 945c199a-83a2-4e80-9f8c-5a91be5752dd,ExtAddr
+x-exotenant: 2khUwGVqB6N9v58KS13ncyUmMJd8q4
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam:
+ BCL:0;ARA:13230040|376014|1800799024|366016|10070799003|38070700018;
+x-microsoft-antispam-message-info:
+ =?utf-7?B?RWl2NS82eXJ3TElHcHpHU2YySk9LN2ExZEFrNUEwMEZLVU9xTHNacUhGdUpP?=
+ =?utf-7?B?M3RJNVMxS0dNWjZYYmFsVy90TUt1L3VJQjEzTFBZQUNXblZmQXpFYUtYWTBk?=
+ =?utf-7?B?SkxXSkdNS2lCNHhuYzJXN3p2NlZTL1hic2VxbFZhTng0cDJIS3MrLVAxRnp2?=
+ =?utf-7?B?U2FMRjFBZCstQ3ZUS25GeFJyMmpGelNBQXJsb1J3THFEUWdJOWpncUZTYzRw?=
+ =?utf-7?B?bzJjek1pMEFtazN1cENJUkpiSllhTXRiZktJRGhuYTZPYXZHQVR0YkQvcGNT?=
+ =?utf-7?B?Z0JOWURaQ2FXWG5yMFRsUWZJb1Z1ZmhLNm93U1U3NU5zemhTV2N2WFlHQzFE?=
+ =?utf-7?B?MGFickx5bWlyUGh4aGhCdi9QQ3VyTmh4S1FRTkNJdVl5SGZnYTQ5ajlta0xr?=
+ =?utf-7?B?N0lienpJalh2aVRzVDBSYUowZXdnQ2llVFdYSlJvYVo5aTYxVHJMYUVPekg3?=
+ =?utf-7?B?V1V3WEN1SDdPUFpZVVZCSnVQalFtcXNraXJWeW0rLVdQVDFueFBGZzQwdVpx?=
+ =?utf-7?B?VHhYVWhHT2paMTVsRVBSR3FLdDI0eWlUSFVqOCstYjNjNFdKZlJ3OHZNS3py?=
+ =?utf-7?B?Z1FZOFFtOWdGTkNSemM0d3pqWFNHbFdXNHFSUGRiQmcxMkZwS0RUVVZlWkkz?=
+ =?utf-7?B?Zlk0YVRLYk1nMVBESDZEcHdzTkRtQzhvSVNHcDNQKy1GV2NHOW9kZ2lUSEdH?=
+ =?utf-7?B?TTdDNGhPbG1xNTJ2QWE5ME9Vem93YWxVMkNNN3cyeTVrWHV6N3grLUtxMzlQ?=
+ =?utf-7?B?RXdVbDFoM3hNRThHbkhiVFcvQ0crLSstR2ZVZTlFdmVRNDAyVXFkMUhveHlL?=
+ =?utf-7?B?d3ZFcExFSmcyVi95NXlpRlRoV2xZOTFtRzB0WE5CN1VOVkhjc3dLYUhvelNC?=
+ =?utf-7?B?REkvaHBpWlBNWmQ1d2ZwWjlHN21TV2lUZlVGODFqQ0dselEvTEwzalQvZnQ0?=
+ =?utf-7?B?c0ZUNFJza3NOS2lPaTMyRGtnS1FjNk10R0RPRDBZa2d2TWpydUlEVE9TUGtr?=
+ =?utf-7?B?V2F2L1d5anlxRmxNVGNTMXVOMFZWRistM2hmTm5aT3RlRnlIcXFQQk5ybndF?=
+ =?utf-7?B?VnVpY3o5cXhzRXdUMkl4TnNpYWVGY09OOEhya0wyY2tTbzBNdTMyVzJodlRS?=
+ =?utf-7?B?OVpjYngwNW9ielNWSU9rQ0VOd1JWMjh0cGhvSHVMVmhxWHJsbnlLSTZqNUhs?=
+ =?utf-7?B?d2dhM1hadE5rN01PRmZtZUl4MWJkMWg2MnBFdzlPdERXSTlwNTVGYTFoL3lX?=
+ =?utf-7?B?c25JWGxBdExkeVR0eHVQcEgrLUtHb1Uxc1FEOFhURjg4VHNMNjJCdGh3eTRY?=
+ =?utf-7?B?R2JOUUQrLVU5UVlXbko5d0F6LzdVL2FlTEtTNHJRZWM4U3F4aFMyRlJHTTJL?=
+ =?utf-7?B?NmFnWXBMbEFaSnJVRkhsT2NSMzExZjVQWERCVVp5Q1JLem9OeGVDWUY1cUFq?=
+ =?utf-7?B?NW8rLWVMYmlFTExkWWV3MHFrRURFbVppYUh3U0ZyZFNNRVRoajNidEYzZW9a?=
+ =?utf-7?B?T3NjcFN6aW5qa1RTWmg0RTdLRUVzeXh4VXRnV1VpUmdnVVhYbFdpbUhaeXhZ?=
+ =?utf-7?B?ajdsYi9hZ0l4VXdIT1BFeS9qcTRoWC9lb0VwWTVuL2ZISjJUUGRPeDJoWjJO?=
+ =?utf-7?B?VERRQ1A2bWN4U2VZREpKM0VOSTNSV25ENnJMdTlsekhBNTdoSm1uMGRJZk04?=
+ =?utf-7?B?OUNHZGV1cmhZeWtvTHNpN3BFNlM4bnk4RTZpM3c2YzBTQ3JleWZ6ZmhIbEww?=
+ =?utf-7?B?d2xOdXdDQWVRK0FEMEFQUS0=?=
+x-forefront-antispam-report:
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CH4PR19MB8731.namprd19.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(1800799024)(366016)(10070799003)(38070700018);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0:
+ =?utf-7?B?QUM0dkRlSkpqYistRTNEdXppTGJPeVZ2bk1kTEtkeWl2V2dwOUdVbkRyRTcx?=
+ =?utf-7?B?NjU3Smd0YjhQRGJlZHBROWVReDhhbEtETHFNSGxDWGdsMFJDakpNS3JUZmMx?=
+ =?utf-7?B?czJoNkovejlSUHJteFFIQ1d2V2ZScUt2blg5UDBPV0trSGdHeXU4UTFiZ1Ns?=
+ =?utf-7?B?V3ZKbUJlMXZLSjNodnZmUjh1Rnp2TzhWUEZ6dGpRamhoVkdRbElJSG5CcHFE?=
+ =?utf-7?B?NVBjNVBlS08zbzhneHFUbTZYbHV5RS9kR3NnaDE0ZVYzNjVwSDVuUmVRVzJx?=
+ =?utf-7?B?TkxqTXNOOSstdWQrLWNnSHdpVystNkpFMXc4b2xzTG53eU9jNTJtVjhsSEhp?=
+ =?utf-7?B?VW5Nb3BMV1R5OVdCSnFnZ0tDQVltRjlTbVF2dkRJTGVLUmI3bzBzZVNpQ2hh?=
+ =?utf-7?B?QjlkYTg5Y1pHNlpMaGJUYmk4c0Nva2NMamxtZ2tCQnF4cXJaMjRSZXR2N3NQ?=
+ =?utf-7?B?SUpQTHE5SVdpYS9vam1iaVZQVmlZVzFVWXcrLVRHVUJWUG5od0J6YXc0STJs?=
+ =?utf-7?B?b0ZvQjZ4STJlQzJ5WUNLUVVBa3RJdWIxVkh2ek1oNzZQa1NOeVozb2I0N2xD?=
+ =?utf-7?B?a3lqWkpORzJYNE9hUGo3STdpb2daVi84M016d0I4bEp1TWU5VmhPSTg3WmlS?=
+ =?utf-7?B?MUJpazBDMmZ0cGhyY3lkMW1wR2FBcWZsYkZLOGExOXhwQ0ZZRG00bkV5cnhh?=
+ =?utf-7?B?OE5ad0lLbkMyNkFWUnpVRTdhajlXbistZGFJZistWGFHajdmNjhGbCsteE9x?=
+ =?utf-7?B?c1lRSHVmOHc5MDFkZ3hWdEoyMlVjMjlJWklVc0RmYWRZaFdINkJYYWtjdnZx?=
+ =?utf-7?B?OU91NUs4blptTHdPRVlQa1IrLUNyaE1xb2wwU0VWSC9LWjNZZEI5WHJmM3Js?=
+ =?utf-7?B?L0Znc1BPWFJOWHlDUEJiSGw4bmtOWEhLWlQxVWhXZEs5eTk3aGVLd0NZNkFp?=
+ =?utf-7?B?NFdhVzdpWGlVMFovdFN4c3B2aHZJL2oyVld5YkJDVjhPaWg0dlMzQUowdzBH?=
+ =?utf-7?B?MHJZWW9GN2pVTzBUN1o1WmZ0b1FSaXlJeUErLU5KbFN4aWdSQzFOQkIwNkRB?=
+ =?utf-7?B?TWRMYjZqSGltSHFpTEVrdkw4M2xSMG9OSmFqUW5rSjZMNXZvTVBna0hBR29V?=
+ =?utf-7?B?WUs5eEJRY0d2UHNLb2VaaVFmNWYrLURUWjVXV1ViNWFscUJScXFKczNKWm00?=
+ =?utf-7?B?SllrQkFvaXMvV0dXSnZiMU1LMGhjSjZZbmd3Ky1jMjd2WHMwRkZUL2YrLXhk?=
+ =?utf-7?B?VklpbVhoVWdaU0hwN1ZvNEhZNTVNcEppNWRBeGlSZ0tTcEY2Yzhza3U2R2lL?=
+ =?utf-7?B?RU5GbXR1cFJlWnU3VjM2TTRjL0ptZ1lKQTJPQXB4czlHbzN0TlRVWlZ0UDVG?=
+ =?utf-7?B?NUNjZUJCZFd3R1ZtczFpcG5keDU0UmdwUDdNVVVQWUtEVkNQeGZiSkFpMzda?=
+ =?utf-7?B?NnZuQXExQWVSa0xrdlRyd3pya1Npcm5rVmhUSGRaWUFlR2tLdExRM1BOSVRM?=
+ =?utf-7?B?Ky1wODk4V0k2aldmMnEzWno4RndBYUgvKy11V3FjTVhTeDV6UkVxQmNDWnE=?=
+ =?utf-7?B?Ky1TNExHeVdDRWk3Qk92OGNjRWZFYzlTSkRCZE5YdEVsd3NtRURLKy03NSst?=
+ =?utf-7?B?ankxajU2bXJRcGxtWnR6Umx1My9vOWRVRUhiSHdrSk5McmZsWHFISzB6c1FM?=
+ =?utf-7?B?ampudC9QL3FHbnhjMTVHbTBHby9Pajh0MXV0dThzVjRuZnlFeEhCb3VENk1v?=
+ =?utf-7?B?amVYMjhPMFRJdDc5Uy94TmxFM3RpYXJpZTNoaW1PRVBrWVpNcUk2RTgxYzJv?=
+ =?utf-7?B?NmdLd0JuUXVlZHQrLWUyUElubzRvY05hOFErLTJDUEkyYTlpMEg1ZUR2aDBP?=
+ =?utf-7?B?M0FiS015TmRxZDN2a3NpbnNqZFp0ZEtwRFp5ODNXMHZKeSstSmZncE0wbGo4?=
+ =?utf-7?B?cnBXNmtTb2xpNExucmRvRHMwSDhRMy9MKy1tVkF2WmRTWW9oUDQyWUYwbEsx?=
+ =?utf-7?B?THU0VVd6YlNwNU9PRjZoZXB6eUdSKy1KTGh5SkVBcjJmSjVkWVkzcEhlNyst?=
+ =?utf-7?B?TVJGVE5aUVRaei9nanBSeTE0THJyZ2wvMGk0anVkbFErLUtrektoeVBRWEFY?=
+ =?utf-7?B?VkFFN0l2QkJqSkI4bHRkOHA5dUZDTVNtWHIyVkZwS1Y0Skp1aHQ1SVlDSVFi?=
+ =?utf-7?B?TkYyMVNVb1N6Q25yNjZzVystaGtzN25uZVZFQWdVd28vaVNXOVhSaDZHcUdw?=
+ =?utf-7?B?N09YWS9FKy1ibmo0T1pWU1ZPMlVFalFyVWJy?=
+Content-Type: text/plain; charset="utf-7"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-OriginatorOrg: Dell.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: CH4PR19MB8731.namprd19.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: ef0b931f-c4d1-4be5-6927-08dce752405d
+X-MS-Exchange-CrossTenant-originalarrivaltime: 08 Oct 2024 04:32:43.2635
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 945c199a-83a2-4e80-9f8c-5a91be5752dd
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: aJotsjk29mM635whjqwEgG57TuQVF7oHvB8MCUwv4mHSIumf20G/Tom56yl5MMKhncvS4KUGUxFVPnMN8m6dcQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BY5PR19MB3779
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1051,Hydra:6.0.680,FMLib:17.12.60.29
+ definitions=2024-09-27_02,2024-09-26_01,2024-09-02_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0 phishscore=0
+ priorityscore=1501 lowpriorityscore=0 mlxscore=0 malwarescore=0
+ spamscore=0 impostorscore=0 clxscore=1011 mlxlogscore=999 bulkscore=0
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2409260000 definitions=main-2410080027
+X-Proofpoint-GUID: wRJsmxu36mQrEnIGKK2qcs0chtfdHY3m
+X-Proofpoint-ORIG-GUID: wRJsmxu36mQrEnIGKK2qcs0chtfdHY3m
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 mlxscore=0
+ lowpriorityscore=0 bulkscore=0 mlxlogscore=999 suspectscore=0 phishscore=0
+ adultscore=0 priorityscore=1501 clxscore=1011 impostorscore=0
+ malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2409260000 definitions=main-2410080027
 
-This patch adds platform_profile support for Dell devices which implement
-User Selectable Thermal Tables (USTT) that are meant to be controlled by
-Alienware Command Center (AWCC). These devices may include newer Alienware
-M-Series, Alienware X-Series and Dell's G-Series. This patch, was tested
-by me on an Alienware x15 R1.
 
-It is suspected that Alienware Command Center manages thermal profiles
-through the WMI interface, specifically through a device with identifier
-\_SB_.AMW1.WMAX. This device was reverse engineered and the relevant
-functionality is documented here [1]. This driver interacts with this
-WMI device and thus is able to mimic AWCC's thermal profiles functionality
-through the platform_profile API. In consequence the user would be able
-to set and retrieve thermal profiles, which are just fan speed profiles.
++AFs-EXTERNAL EMAIL+AF0-
 
-This driver was heavily inspired on inspur_platform_profile, special
-thanks.
 
-Notes:
- - Performance (FullSpeed) profile is a special profile which has it's own
-   entry in the Firmware Settings of the Alienware x15 R1. It also changes
-   the color of the F1 key. I suspect this behavior would be replicated in
-   other X-Series or M-Series laptops.
- - G-Mode is a profile documented on [1] which mimics the behavior of
-   FullSpeed mode but it does not have an entry on the Firmware Settings of
-   the Alienware x15 R1, this may correspond to the G-Mode functionality on
-   G-Series laptops (activated by a special button) but I cannot test it. I
-   did not include this code in the driver as G-Mode causes unexpected
-   behavior on X-Series laptops.
+Internal Use - Confidential
+On Fri, 4 Oct 2024, Crag Wang wrote:
 
----
-v2:
- - Moved functionality to alienware-wmi driver
- - Added thermal and gmode quirks to add support based on dmi match
- - Performance profile is now GMODE for devices that support it
- - alienware_wmax_command now is insize agnostic to support new thermal
-   methods
----
- drivers/platform/x86/dell/Kconfig         |   1 +
- drivers/platform/x86/dell/alienware-wmi.c | 214 ++++++++++++++++++++--
- 2 files changed, 202 insertions(+), 13 deletions(-)
++AD4- Alienware supports firmware-attributes and has its own OEM string.
++AD4-
++AD4- Signed-off-by: Crag Wang +ADw-crag+AF8-wang+AEA-dell.com+AD4-
 
-diff --git a/drivers/platform/x86/dell/Kconfig b/drivers/platform/x86/dell/Kconfig
-index 68a49788a..b06d634cd 100644
---- a/drivers/platform/x86/dell/Kconfig
-+++ b/drivers/platform/x86/dell/Kconfig
-@@ -21,6 +21,7 @@ config ALIENWARE_WMI
- 	depends on LEDS_CLASS
- 	depends on NEW_LEDS
- 	depends on ACPI_WMI
-+	select ACPI_PLATFORM_PROFILE
- 	help
- 	 This is a driver for controlling Alienware BIOS driven
- 	 features.  It exposes an interface for controlling the AlienFX
-diff --git a/drivers/platform/x86/dell/alienware-wmi.c b/drivers/platform/x86/dell/alienware-wmi.c
-index f5ee62ce1..47abb533c 100644
---- a/drivers/platform/x86/dell/alienware-wmi.c
-+++ b/drivers/platform/x86/dell/alienware-wmi.c
-@@ -10,6 +10,7 @@
- #include <linux/acpi.h>
- #include <linux/module.h>
- #include <linux/platform_device.h>
-+#include <linux/platform_profile.h>
- #include <linux/dmi.h>
- #include <linux/leds.h>
- 
-@@ -25,6 +26,15 @@
- #define WMAX_METHOD_AMPLIFIER_CABLE	0x6
- #define WMAX_METHOD_DEEP_SLEEP_CONTROL	0x0B
- #define WMAX_METHOD_DEEP_SLEEP_STATUS	0x0C
-+#define WMAX_METHOD_THERMAL_INFORMATION	0x14
-+#define WMAX_METHOD_THERMAL_CONTROL	0x15
-+
-+#define WMAX_THERMAL_QUIET			0xA3
-+#define WMAX_THERMAL_BALANCED			0xA0
-+#define WMAX_THERMAL_BALANCED_PERFORMANCE	0xA1
-+#define WMAX_THERMAL_PERFORMANCE		0xA4
-+#define WMAX_THERMAL_GMODE			0xAB
-+#define WMAX_THERMAL_LOW_POWER			0xA5
- 
- MODULE_AUTHOR("Mario Limonciello <mario.limonciello@outlook.com>");
- MODULE_DESCRIPTION("Alienware special feature control");
-@@ -54,6 +64,8 @@ struct quirk_entry {
- 	u8 hdmi_mux;
- 	u8 amplifier;
- 	u8 deepslp;
-+	u8 thermal;
-+	u8 gmode;
- };
- 
- static struct quirk_entry *quirks;
-@@ -64,6 +76,8 @@ static struct quirk_entry quirk_inspiron5675 = {
- 	.hdmi_mux = 0,
- 	.amplifier = 0,
- 	.deepslp = 0,
-+	.thermal = 0,
-+	.gmode = 0,
- };
- 
- static struct quirk_entry quirk_unknown = {
-@@ -71,6 +85,8 @@ static struct quirk_entry quirk_unknown = {
- 	.hdmi_mux = 0,
- 	.amplifier = 0,
- 	.deepslp = 0,
-+	.thermal = 0,
-+	.gmode = 0,
- };
- 
- static struct quirk_entry quirk_x51_r1_r2 = {
-@@ -78,6 +94,8 @@ static struct quirk_entry quirk_x51_r1_r2 = {
- 	.hdmi_mux = 0,
- 	.amplifier = 0,
- 	.deepslp = 0,
-+	.thermal = 0,
-+	.gmode = 0,
- };
- 
- static struct quirk_entry quirk_x51_r3 = {
-@@ -85,6 +103,8 @@ static struct quirk_entry quirk_x51_r3 = {
- 	.hdmi_mux = 0,
- 	.amplifier = 1,
- 	.deepslp = 0,
-+	.thermal = 0,
-+	.gmode = 0,
- };
- 
- static struct quirk_entry quirk_asm100 = {
-@@ -92,6 +112,8 @@ static struct quirk_entry quirk_asm100 = {
- 	.hdmi_mux = 1,
- 	.amplifier = 0,
- 	.deepslp = 0,
-+	.thermal = 0,
-+	.gmode = 0,
- };
- 
- static struct quirk_entry quirk_asm200 = {
-@@ -99,6 +121,8 @@ static struct quirk_entry quirk_asm200 = {
- 	.hdmi_mux = 1,
- 	.amplifier = 0,
- 	.deepslp = 1,
-+	.thermal = 0,
-+	.gmode = 0,
- };
- 
- static struct quirk_entry quirk_asm201 = {
-@@ -106,6 +130,17 @@ static struct quirk_entry quirk_asm201 = {
- 	.hdmi_mux = 1,
- 	.amplifier = 1,
- 	.deepslp = 1,
-+	.thermal = 0,
-+	.gmode = 0,
-+};
-+
-+static struct quirk_entry quirk_x15_r1 = {
-+	.num_zones = 2,
-+	.hdmi_mux = 0,
-+	.amplifier = 0,
-+	.deepslp = 0,
-+	.thermal = 1,
-+	.gmode = 0,
- };
- 
- static int __init dmi_matched(const struct dmi_system_id *dmi)
-@@ -169,6 +204,15 @@ static const struct dmi_system_id alienware_quirks[] __initconst = {
- 		     },
- 	 .driver_data = &quirk_asm201,
- 	 },
-+	 {
-+	 .callback = dmi_matched,
-+	 .ident = "Alienware x15 R1",
-+	 .matches = {
-+		     DMI_MATCH(DMI_SYS_VENDOR, "Alienware"),
-+		     DMI_MATCH(DMI_PRODUCT_NAME, "Alienware x15 R1")
-+		    },
-+	 .driver_data = &quirk_x15_r1,
-+	},
- 	 {
- 	 .callback = dmi_matched,
- 	 .ident = "Dell Inc. Inspiron 5675",
-@@ -218,6 +262,7 @@ static struct platform_device *platform_device;
- static struct device_attribute *zone_dev_attrs;
- static struct attribute **zone_attrs;
- static struct platform_zone *zone_data;
-+static struct platform_profile_handler pp_handler;
- 
- static struct platform_driver platform_driver = {
- 	.driver = {
-@@ -500,7 +545,7 @@ static void alienware_zone_exit(struct platform_device *dev)
- 	kfree(zone_attrs);
- }
- 
--static acpi_status alienware_wmax_command(struct wmax_basic_args *in_args,
-+static acpi_status alienware_wmax_command(void *in_args, size_t insize,
- 					  u32 command, int *out_data)
- {
- 	acpi_status status;
-@@ -508,7 +553,7 @@ static acpi_status alienware_wmax_command(struct wmax_basic_args *in_args,
- 	struct acpi_buffer input;
- 	struct acpi_buffer output;
- 
--	input.length = (acpi_size) sizeof(*in_args);
-+	input.length = (acpi_size) insize;
- 	input.pointer = in_args;
- 	if (out_data) {
- 		output.length = ACPI_ALLOCATE_BUFFER;
-@@ -541,8 +586,8 @@ static ssize_t show_hdmi_cable(struct device *dev,
- 		.arg = 0,
- 	};
- 	status =
--	    alienware_wmax_command(&in_args, WMAX_METHOD_HDMI_CABLE,
--				   (u32 *) &out_data);
-+	    alienware_wmax_command(&in_args, sizeof(in_args),
-+				   WMAX_METHOD_HDMI_CABLE, (u32 *) &out_data);
- 	if (ACPI_SUCCESS(status)) {
- 		if (out_data == 0)
- 			return sysfs_emit(buf, "[unconnected] connected unknown\n");
-@@ -562,8 +607,8 @@ static ssize_t show_hdmi_source(struct device *dev,
- 		.arg = 0,
- 	};
- 	status =
--	    alienware_wmax_command(&in_args, WMAX_METHOD_HDMI_STATUS,
--				   (u32 *) &out_data);
-+	    alienware_wmax_command(&in_args, sizeof(in_args),
-+				   WMAX_METHOD_HDMI_STATUS, (u32 *) &out_data);
- 
- 	if (ACPI_SUCCESS(status)) {
- 		if (out_data == 1)
-@@ -589,7 +634,8 @@ static ssize_t toggle_hdmi_source(struct device *dev,
- 		args.arg = 3;
- 	pr_debug("alienware-wmi: setting hdmi to %d : %s", args.arg, buf);
- 
--	status = alienware_wmax_command(&args, WMAX_METHOD_HDMI_SOURCE, NULL);
-+	status = alienware_wmax_command(&args, sizeof(args),
-+					WMAX_METHOD_HDMI_SOURCE, NULL);
- 
- 	if (ACPI_FAILURE(status))
- 		pr_err("alienware-wmi: HDMI toggle failed: results: %u\n",
-@@ -642,8 +688,8 @@ static ssize_t show_amplifier_status(struct device *dev,
- 		.arg = 0,
- 	};
- 	status =
--	    alienware_wmax_command(&in_args, WMAX_METHOD_AMPLIFIER_CABLE,
--				   (u32 *) &out_data);
-+	    alienware_wmax_command(&in_args, sizeof(in_args),
-+				   WMAX_METHOD_AMPLIFIER_CABLE, (u32 *) &out_data);
- 	if (ACPI_SUCCESS(status)) {
- 		if (out_data == 0)
- 			return sysfs_emit(buf, "[unconnected] connected unknown\n");
-@@ -694,8 +740,8 @@ static ssize_t show_deepsleep_status(struct device *dev,
- 	struct wmax_basic_args in_args = {
- 		.arg = 0,
- 	};
--	status = alienware_wmax_command(&in_args, WMAX_METHOD_DEEP_SLEEP_STATUS,
--					(u32 *) &out_data);
-+	status = alienware_wmax_command(&in_args, sizeof(in_args),
-+					WMAX_METHOD_DEEP_SLEEP_STATUS, (u32 *) &out_data);
- 	if (ACPI_SUCCESS(status)) {
- 		if (out_data == 0)
- 			return sysfs_emit(buf, "[disabled] s5 s5_s4\n");
-@@ -723,8 +769,8 @@ static ssize_t toggle_deepsleep(struct device *dev,
- 		args.arg = 2;
- 	pr_debug("alienware-wmi: setting deep sleep to %d : %s", args.arg, buf);
- 
--	status = alienware_wmax_command(&args, WMAX_METHOD_DEEP_SLEEP_CONTROL,
--					NULL);
-+	status = alienware_wmax_command(&args, sizeof(args),
-+					WMAX_METHOD_DEEP_SLEEP_CONTROL, NULL);
- 
- 	if (ACPI_FAILURE(status))
- 		pr_err("alienware-wmi: deep sleep control failed: results: %u\n",
-@@ -760,6 +806,140 @@ static int create_deepsleep(struct platform_device *dev)
- 	return ret;
- }
- 
-+/*
-+ * Thermal Profile control
-+ *  - Provides thermal profile control through the Platform Profile API
-+ */
-+
-+static int platform_profile_get(struct platform_profile_handler *pprof,
-+				enum platform_profile_option *profile)
-+{
-+	acpi_status status;
-+	u32 in_args = 0x0B;
-+	u32 out_data;
-+
-+	status = alienware_wmax_command(&in_args, sizeof(in_args),
-+					WMAX_METHOD_THERMAL_INFORMATION, (u32 *) &out_data);
-+
-+	if (ACPI_FAILURE(status) || out_data < 0)
-+		return -EOPNOTSUPP;
-+
-+	switch (out_data) {
-+	case WMAX_THERMAL_LOW_POWER:
-+		*profile = PLATFORM_PROFILE_LOW_POWER;
-+		break;
-+	case WMAX_THERMAL_QUIET:
-+		*profile = PLATFORM_PROFILE_QUIET;
-+		break;
-+	case WMAX_THERMAL_BALANCED:
-+		*profile = PLATFORM_PROFILE_BALANCED;
-+		break;
-+	case WMAX_THERMAL_BALANCED_PERFORMANCE:
-+		*profile = PLATFORM_PROFILE_BALANCED_PERFORMANCE;
-+		break;
-+	case WMAX_THERMAL_PERFORMANCE:
-+	case WMAX_THERMAL_GMODE:
-+		*profile = PLATFORM_PROFILE_PERFORMANCE;
-+		break;
-+	default:
-+		return -ENODATA;
-+	}
-+
-+	return 0;
-+}
-+
-+#define SET_MASK(prof) ((prof << 8) | 1)
-+
-+static int platform_profile_set(struct platform_profile_handler *pprof,
-+				enum platform_profile_option profile)
-+{
-+	acpi_status status;
-+	u32 in_args;
-+	u32 out_data;
-+
-+	switch (profile) {
-+	case PLATFORM_PROFILE_LOW_POWER:
-+		in_args = SET_MASK(WMAX_THERMAL_LOW_POWER);
-+		break;
-+	case PLATFORM_PROFILE_QUIET:
-+		in_args = SET_MASK(WMAX_THERMAL_QUIET);
-+		break;
-+	case PLATFORM_PROFILE_BALANCED:
-+		in_args = SET_MASK(WMAX_THERMAL_BALANCED);
-+		break;
-+	case PLATFORM_PROFILE_BALANCED_PERFORMANCE:
-+		in_args = SET_MASK(WMAX_THERMAL_BALANCED_PERFORMANCE);
-+		break;
-+	case PLATFORM_PROFILE_PERFORMANCE:
-+		in_args = SET_MASK(WMAX_THERMAL_PERFORMANCE);
-+		break;
-+	default:
-+		return -EOPNOTSUPP;
-+	}
-+
-+	status = alienware_wmax_command(&in_args, sizeof(in_args),
-+					WMAX_METHOD_THERMAL_CONTROL, (u32 *) &out_data);
-+
-+	if (ACPI_FAILURE(status) || out_data < 0)
-+		return -EOPNOTSUPP;
-+
-+	return 0;
-+}
-+
-+static int gmode_platform_profile_set(struct platform_profile_handler *pprof,
-+				      enum platform_profile_option profile)
-+{
-+	acpi_status status;
-+	u32 in_args;
-+	u32 out_data;
-+
-+	switch (profile) {
-+	case PLATFORM_PROFILE_LOW_POWER:
-+		in_args = SET_MASK(WMAX_THERMAL_LOW_POWER);
-+		break;
-+	case PLATFORM_PROFILE_QUIET:
-+		in_args = SET_MASK(WMAX_THERMAL_QUIET);
-+		break;
-+	case PLATFORM_PROFILE_BALANCED:
-+		in_args = SET_MASK(WMAX_THERMAL_BALANCED);
-+		break;
-+	case PLATFORM_PROFILE_BALANCED_PERFORMANCE:
-+		in_args = SET_MASK(WMAX_THERMAL_BALANCED_PERFORMANCE);
-+		break;
-+	case PLATFORM_PROFILE_PERFORMANCE:
-+		in_args = SET_MASK(WMAX_THERMAL_GMODE);
-+		break;
-+	default:
-+		return -EOPNOTSUPP;
-+	}
-+
-+	status = alienware_wmax_command(&in_args, sizeof(in_args),
-+					WMAX_METHOD_THERMAL_CONTROL, (u32 *) &out_data);
-+
-+	if (ACPI_FAILURE(status) || out_data < 0)
-+		return -EOPNOTSUPP;
-+
-+	return 0;
-+}
-+
-+static int create_platform_profile(void)
-+{
-+	pp_handler.profile_get = platform_profile_get;
-+
-+	if (quirks->gmode > 0)
-+		pp_handler.profile_set = gmode_platform_profile_set;
-+	else
-+		pp_handler.profile_set = platform_profile_set;
-+
-+	set_bit(PLATFORM_PROFILE_LOW_POWER, pp_handler.choices);
-+	set_bit(PLATFORM_PROFILE_QUIET, pp_handler.choices);
-+	set_bit(PLATFORM_PROFILE_BALANCED, pp_handler.choices);
-+	set_bit(PLATFORM_PROFILE_BALANCED_PERFORMANCE, pp_handler.choices);
-+	set_bit(PLATFORM_PROFILE_PERFORMANCE, pp_handler.choices);
-+
-+	return platform_profile_register(&pp_handler);
-+}
-+
- static int __init alienware_wmi_init(void)
- {
- 	int ret;
-@@ -807,6 +987,12 @@ static int __init alienware_wmi_init(void)
- 			goto fail_prep_deepsleep;
- 	}
- 
-+	if (quirks->thermal > 0) {
-+		ret = create_platform_profile();
-+		if (ret)
-+			goto fail_prep_thermal_profile;
-+	}
-+
- 	ret = alienware_zone_init(platform_device);
- 	if (ret)
- 		goto fail_prep_zones;
-@@ -817,6 +1003,7 @@ static int __init alienware_wmi_init(void)
- 	alienware_zone_exit(platform_device);
- fail_prep_deepsleep:
- fail_prep_amplifier:
-+fail_prep_thermal_profile:
- fail_prep_hdmi:
- 	platform_device_del(platform_device);
- fail_platform_device2:
-@@ -836,6 +1023,7 @@ static void __exit alienware_wmi_exit(void)
- 		remove_hdmi(platform_device);
- 		platform_device_unregister(platform_device);
- 		platform_driver_unregister(&platform_driver);
-+		platform_profile_remove();
- 	}
- }
- 
--- 
-2.46.2
++AD4- Reviewed-by: Ilpo J+AOQ-rvinen +ADw-ilpo.jarvinen+AEA-linux.intel.com=
++AD4-
 
+Reviewed-by: Ksr, Prasanth +ADw-Prasanth+AF8-Ksr+AEA-Dell.com+AD4-
+
+--
+ i.
+
++AD4- ---
++AD4-  drivers/platform/x86/dell/dell-wmi-sysman/sysman.c +AHw- 1 +-
++AD4-  1 file changed, 1 insertion(+-)
++AD4-
++AD4- diff --git a/drivers/platform/x86/dell/dell-wmi-sysman/sysman.c b/dri=
+vers/platform/x86/dell/dell-wmi-sysman/sysman.c
++AD4- index 9def7983d7d6..40ddc6eb7562 100644
++AD4- --- a/drivers/platform/x86/dell/dell-wmi-sysman/sysman.c
++AD4- +-+-+- b/drivers/platform/x86/dell/dell-wmi-sysman/sysman.c
++AD4- +AEAAQA- -521,6 +-521,7 +AEAAQA- static int +AF8AXw-init sysman+AF8-i=
+nit(void)
++AD4-       int ret +AD0- 0+ADs-
++AD4-
++AD4-       if (+ACE-dmi+AF8-find+AF8-device(DMI+AF8-DEV+AF8-TYPE+AF8-OEM+A=
+F8-STRING, +ACI-Dell System+ACI-, NULL) +ACYAJg-
++AD4- +-         +ACE-dmi+AF8-find+AF8-device(DMI+AF8-DEV+AF8-TYPE+AF8-OEM+=
+AF8-STRING, +ACI-Alienware+ACI-, NULL) +ACYAJg-
++AD4-           +ACE-dmi+AF8-find+AF8-device(DMI+AF8-DEV+AF8-TYPE+AF8-OEM+A=
+F8-STRING, +ACI-www.dell.com+ACI-, NULL)) +AHs-
++AD4-               pr+AF8-err(+ACI-Unable to run on non-Dell system+AFw-n+=
+ACI-)+ADs-
++AD4-               return -ENODEV+ADs-
++AD4-
