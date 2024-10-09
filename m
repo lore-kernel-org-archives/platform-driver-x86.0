@@ -1,133 +1,108 @@
-Received: from fhigh-a5-smtp.messagingengine.com (fhigh-a5-smtp.messagingengine.com [103.168.172.156])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from sonic307-22.consmr.mail.sg3.yahoo.com (sonic307-22.consmr.mail.sg3.yahoo.com [106.10.241.39])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2DDDB18F2FC;
-	Wed,  9 Oct 2024 23:11:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.156
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1729917B500
+	for <platform-driver-x86@vger.kernel.org>; Wed,  9 Oct 2024 23:46:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=106.10.241.39
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728515486; cv=none; b=m6Q2S3k6C/kc+Iqw/HjdQb8FzT9dElvOBqs/Oo00Xr6zrv1QdokIIWDKvPkB+l5O7m+KLYyHuonwHz3+PIQueDzf3P2Jj5EvV/XMRaFoKgkhdqILhbKZjCPXxRsMl/9dsnusfCCNYpPMaPno6QxcgyJUion5LGIoOuGq8WydGXk=
+	t=1728517606; cv=none; b=TUj11EuePjedF+/Y2ylHv6tJOW03ygaHMz1f3VafTz9LtemAj1eyVwlyeSKFUZ0OWlZbMuaIQstAfcZYTn57zEo+axgrLzb0AWxaO9nU1G0XSGU9BTG5hnCQEdm4ybsU4cSIVMCyygncSPqMw3bzP5dxdfr3EurRoRpJFn2RdeU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728515486; c=relaxed/simple;
-	bh=l4oKUFrW4lmzGYDKWMYkL/e1BuB8+vTVtVHwhIhs7vo=;
-	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
-	 Subject:Content-Type; b=clU5N1ELNCl9T0TiFihYWS0dUece+a4HO3sRGdFUt5ITkTShho9BVslMTDNHHgKo9y1tus49ruvFzv8JAsFBcos5mgepdZzwLAACuKN/BE+SaS9wkBzISnALcHgAVLmtoIivHaHCgA2P4HorCWL/ceRSV9JjMumQBC+6RAcsgf4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ljones.dev; spf=none smtp.mailfrom=ljones.dev; dkim=pass (2048-bit key) header.d=ljones.dev header.i=@ljones.dev header.b=WivgpZJF; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=c7Vy/u3C; arc=none smtp.client-ip=103.168.172.156
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ljones.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=ljones.dev
+	s=arc-20240116; t=1728517606; c=relaxed/simple;
+	bh=cfaRjA3CqOTxRD7nUUWHlYZv23A9SpOnzpBVDTYyXQo=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:References; b=nmQJWvc/AjWf11PZvuv8T8aScs5zSDAlrsgwMaQgiI0aHo1Clc9qLFvL1Xq98/7podICIUHBjTdX0lxcq3JVnu3b1N3Lh4XKMUzZtP/2yzP8kr50CpuqOx6clvsYZUBA/H/snPI9XrOy4wQrP37tZmTkon6+ngt0FdjNAXzkO6M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=myyahoo.com; spf=pass smtp.mailfrom=myyahoo.com; dkim=pass (2048-bit key) header.d=myyahoo.com header.i=@myyahoo.com header.b=A4CS0ziy; arc=none smtp.client-ip=106.10.241.39
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=myyahoo.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=myyahoo.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ljones.dev header.i=@ljones.dev header.b="WivgpZJF";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="c7Vy/u3C"
-Received: from phl-compute-08.internal (phl-compute-08.phl.internal [10.202.2.48])
-	by mailfhigh.phl.internal (Postfix) with ESMTP id 3220C1140143;
-	Wed,  9 Oct 2024 19:11:23 -0400 (EDT)
-Received: from phl-imap-01 ([10.202.2.91])
-  by phl-compute-08.internal (MEProxy); Wed, 09 Oct 2024 19:11:23 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ljones.dev; h=cc
-	:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to; s=fm3; t=1728515483;
-	 x=1728601883; bh=Y0i7adaokPwtvUUCZ6jWeYXB53TyTzR0n+FD0+0wALA=; b=
-	WivgpZJFcguR3xdtSQhydWGGQP3/DV5YxsseXvHfiteyFx8zrxunoCoHeYvabZOJ
-	A3gPYfAcWkYmVZYFrJaFgP2l/bsEpCNMhM6PdkhZ8UPoiYgA+RMcosxy73P4/CW+
-	AGkrD5R3s+BwAS/zEPSOtkgz0Zv/WQ+TGRxpQgRYCRGPTEWC7nJRQ/3jmvqBBEw+
-	SeHDT+2MULjWAy2NoKKsTxbmG2poeNZ+DpAKw63W2WrO79IXQYTp3BV+M+0OxH8Y
-	k2WWYk18KxaSfE7t/t9mF6dL/Hc3X/KkzdQFB/c9iDwpPKzPcur5DpttcUig50bE
-	KC5nfpKXBRn54H7W98kSgw==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to:x-me-proxy:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=1728515483; x=
-	1728601883; bh=Y0i7adaokPwtvUUCZ6jWeYXB53TyTzR0n+FD0+0wALA=; b=c
-	7Vy/u3CBSZJA+M5xuJZeN/EUdeFX6TpVqBGTBZxnb3HIkxmeOAXtqLf/0O8txVED
-	4Km9+WTsLvkNEIuR/M+KIs5w69QHtxoSQyVVbb1mygfM64DGofbNAa2LqA/peQ2x
-	+A2ytCfz8VWmEKMWG3eOEXTFK13v3i6ZdvXk91kwkI7eap/syevoxHr1N4ACyLOL
-	bqFVCa7D2viEcAlETPkn6au0mV3ewpaYie0HKjRfjZeV3CTG4aQKbDlLZuGs15Fg
-	SRMrS6jtglurAC3GF61ZGkgcBn+0/6/HKR8Q9ldlo5DMILIRxy0iK/Q+LjYBL3zb
-	vMUj8M0lfGOzYmeyN0VeA==
-X-ME-Sender: <xms:mg0HZy7Zepu6JLU8-Bd0kcpb2DzDuz7OlSeBjGMN71ObGAwUzUvEvw>
-    <xme:mg0HZ77oy_Sano-utenRqNsyuIu0dPu-BewTuaVnNrORHtqjoeGWZOrDv35XVH9R0
-    gs_PhU8bw9ki612Vgc>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeftddrvdefgedgudekucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggvpdfu
-    rfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnh
-    htshculddquddttddmnecujfgurhepofggfffhvfevkfgjfhfutgfgsehtjeertdertddt
-    necuhfhrohhmpedfnfhukhgvucflohhnvghsfdcuoehluhhkvgeslhhjohhnvghsrdguvg
-    hvqeenucggtffrrghtthgvrhhnpeevteelkeefueeuleejveetueetvefggfeuledvhfdv
-    gedvheelfeelkefhgfetheenucffohhmrghinhepkhgvrhhnvghlrdhorhhgnecuvehluh
-    hsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomheplhhukhgvsehljhho
-    nhgvshdruggvvhdpnhgspghrtghpthhtohepiedpmhhouggvpehsmhhtphhouhhtpdhrtg
-    hpthhtoheptghorhgvnhhtihhnrdgthhgrrhihsehgmhgrihhlrdgtohhmpdhrtghpthht
-    ohepihhlphhordhjrghrvhhinhgvnheslhhinhhugidrihhnthgvlhdrtghomhdprhgtph
-    htthhopegrsgguuhhlrdhrrghhihhmsehmhiihrghhohhordgtohhmpdhrtghpthhtohep
-    hhguvghgohgvuggvsehrvgguhhgrthdrtghomhdprhgtphhtthhopehlihhnuhigqdhkvg
-    hrnhgvlhesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehplhgrthhfohhr
-    mhdqughrihhvvghrqdigkeeisehvghgvrhdrkhgvrhhnvghlrdhorhhg
-X-ME-Proxy: <xmx:mg0HZxcldbjKcve210pptAqe9nLDPXmMTwhKCkVfXkQF4ecUQtWzfA>
-    <xmx:mg0HZ_LgSjG1PoBRc9hwVYX9R7Sw2rWMjHcL7auMWa6aVQHv_MPwvQ>
-    <xmx:mg0HZ2L3VrryJKRgrkxFaREP_M75Kzr6ZPFXz1bnKKfPQjpHCE385A>
-    <xmx:mg0HZwz9hwQ8gDh6cQpbs_WGh6MkC8Fpa1Tjw2oi8X1XnX3zbJz03g>
-    <xmx:mw0HZ7E4mXmnUVUnOI0sF-imexg-XHfG4JFQVpQ4SQ6T58XWCszDeg-T>
-Feedback-ID: i5ec1447f:Fastmail
-Received: by mailuser.phl.internal (Postfix, from userid 501)
-	id 8FC403360077; Wed,  9 Oct 2024 19:11:22 -0400 (EDT)
-X-Mailer: MessagingEngine.com Webmail Interface
+	dkim=pass (2048-bit key) header.d=myyahoo.com header.i=@myyahoo.com header.b="A4CS0ziy"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=myyahoo.com; s=s2048; t=1728517603; bh=fCwkOM8TYV+wxIKhbJq9MIh4fDUJOApi7mvbAmFs+6I=; h=From:To:Cc:Subject:Date:References:From:Subject:Reply-To; b=A4CS0ziy5Z+FXJlpkVRituAwyVEHuyZJpICAWqYF7aROqulFBETIjK73D7A+ihJYZPW5VPpZY7PVBduVb+Ta5cjpfKcZ7iILQ9XDbq4whs38/9zoe4xQy72GTu70K0+nFLVx3/wgUU+MeiVzNQ8tXesB7+rMRijy65HfJCE1w0PGRJLUuVugRuxgfHuw7qHQfQR0RvQ7nOnthu6ZDitF9CoQdW5beaHV5rn9JGJxuiWDsuSB1M47Bc2udvfYIIeKev/6ci/f7YlJh15hzLBiJVUj+OxPLhTgn4lBR3yUy9lL/TD915FmUdkN7/4immDpbSxT0tBOBWVBWVsQWzwSRw==
+X-SONIC-DKIM-SIGN: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.com; s=s2048; t=1728517603; bh=dRIkfKUAE0uZe0vIzxe0W9UotEjX/W4+EfOpdTQ+is3=; h=X-Sonic-MF:From:To:Subject:Date:From:Subject; b=sN6x13YHbCmdY2LD+b826pZg2MmTESDvU1G5a7JI2wf7oT6r6pCiRXbQFYk9jk9mMSiFX9p5zkVvYuKUysXLo9chsUV37FGG87OBz0H1qCIsgZdsT6c8penccJrYrCWQeGieOvDxfnt411vswW6lZQTFRci3VcrorZ/3LSsey31WVKDd8rm3nQxmuBvG+mV/7YXvObq3Cf6Vgg8PfSShkJAjBo2cyS5U74u+3KXtb5VDJHGFRIagJhisTOuKgD6ajNoPU56mtNQHXslvc2gE1+mnmvVip9Z1f1dxJ8L6PbYtoexykbDP4sKanqy3Qs05IazzHRqpb8wZ7YvqKkHVtg==
+X-YMail-OSG: LAqXbcsVM1nw4.MA3icLGCWBMgxXA9bNb.NaHzjvCRm.LhHrDpB3T2VXNy0JdBQ
+ FvzvAuPOp_GmNhaQH64T.j9.2cpiBXJuYI5uGWCYhPtrA1O427LjcPPgcPjiJ3fSV1VvvgE2mAZb
+ uh_ay_MGdD9GjtlxygN3NQ1WsK2mToUcxASu1F6nXtLUTvuCQU0JfmIdcWMU8mYfy9I_lnmqpd1o
+ RoN0dc0RSU3OUPzCdS5bXVaL5cyh69fbgr72XGKEKG7qpBnCqWrBTwah4QUOgmiXQTJr0ucHm6cW
+ p.38n.K.Sgk1w4RxYsfq9.xrxnMIPRN5XGoXKz9y.ilThJmDxX.KMvWfsi4mAkEw74jsD2Iv_lE3
+ 4bOGHnKi8rrFmBlSCGtgJrQlMwBAHbkjGFhgxwPtXFzTMLHw07r1NoPEwO1mrWxHhQBUkFBFpGf1
+ 4HW2N9ojBS2MRXNn8_.hMupuz0fOsQmxrZ8M3z7qJlueWn_l63wOT2VP26jItoUKY3RYDAS6_u5s
+ 092kAZH0JjdMMLmhn1xxRFN.fvEwxJSuVCmdsJvWesgoyEoXct0ywRXgUr5Z.klPXXZGV6QHOVSP
+ x6DR8HZ_gZt9cm7vEBVBycdSzfAeLJsipd.y2A5rWEbEn2n6Ap0u.JuRCiZQVb55K2mqfajgbw2R
+ QJvB09GTD_Vvnau8_OSovoctzBPpsDYPj6olyVyX4ig5znf9zjQsWacdNwM5EPJ05O3duhpWvwtb
+ Aw0WC1v0cP7UmxzhTgxOwwFg8ocCuc3eEd0bdrtgXIoPBIb9GGjPfD5ZDbnzyE3mE3UWFvWACX9K
+ o3THHua2BUI4Ayi8UPCSzreR3EmZKjcoMeSAu6utGwYRSHfFYnjWI1NHgTRicaF9wIffUB3rjKNp
+ R7EAJCfb8dXi7wrjee2kWqzlzzOYKi0G_4kKPsh4PXlw0I5ARjyToHZAztZByeMwz3qE19qgPNXv
+ waUP5_oQDm3fY7UWz5IDLyFMtwNI8xGtGRWMI7.lyflgMyfjWz6smbH2ibWNXyj0M0qR7SMw84FV
+ G.SOpkv6MwDPkDTBZP7mLYK5580bagECkoU3sVlln8xTNWmvNIQyFt0U.YmjYy1eqs.VNl6MnOr_
+ evGyqpvcpWRBixqxnQUwg6fdu7Dg3AubIo6g9cxJ9XJ5gPZaZLphQ_Ne_hud7O33d9vRwNT.03IY
+ LgWedJQSlZmhleVzKtdD7fbuu_nnHJr0y5WnMHA7CZcixtDAbvxB9gJXhtvMtFTcRYEo0LS5I7t5
+ zciOTgB1YzyNXCYRwRA_dxYn2yzG3e_nIw_y_r_mcF1shNMb2yWzA8nKxSdQ_8isg6bCMmyVDxjt
+ SJN9bvf7upDlWHzxMCnUkQJiF7XMthl11PFK5jocccdGjtPGliHX6pSgZkpU7vIZZ26wTxlSfeeK
+ qT9BDqLtJzGOalw4.2jCgDecIdWnDQm0zc.oPyPkjw2JYP5ZtbxcFg_N3qyKCO3GFKIBCNMZoTjG
+ EeK2jPB3LUUYxiYNHc9rrabt4eRi8W5xFBBkvwcUdmYktjdgWRyQGFZnKDrw2ri_YLZogQxLcTuV
+ xgUs7VYaGlay45DcsA8kbzIOWZhcOLGx6S7V_BgOQY7M3o7_AQIMEUtkeWjn1qWigFGKwBPVckDn
+ WrWWNsMRXSIaL0B.VYyya4gbi3Ig2W_ivw3HxzrYWqo11ueqgjK8jZKneQqd9lQiX5UqB1y66OTf
+ ly3gEm11EdkuIx11gpSE.azHHSc6SRz5un0e4lY6L1.fnkzpM4mUtoZufEFTNt4ANQAAVtgeoQLS
+ 84ontRuD716iiNLbrNjByJRwWS3shaaL6x1Il.cwFOxSH0LJcU0DVS3Kmq4aPN.57b4I3pDyi.c8
+ D5bXpD54xIYNKKUrjjsTZ0OMjf0v8fax7BSukW1tTxyXPnpS93U9rFtRI_RFYMSXR4.mSsvx111v
+ O0GU9cyPdMHouIB8Tu5L1x_F2XYtdUBlU9XxOOKHkq5sIWlnEiAdJxhZz8A_KYZU8HZCWyMw1VSL
+ YSXd72K0juqRomEokkBN_wL0Hlms1J_ez237VR3YwXRyRYXeZcxAjkNsunBZvOxt0H3_ThDQkwqN
+ 3NpJxoyG__d8hsQkotEMt8pAcPYNK.4uGe2XP.oy330veJbPrR37o7TnIoYvl57pzbOq8RmoK0pN
+ QVt_w3NLWusMXuOmN7W2W3LfTuaohqcai4ChdU5uzlvHIUD9EbgviM9mev40ddNppQm1IPUclojQ
+ SgO7PQSLM3KeEG0wN5QjpdFvUpuC69UyUwYfX.r3hv7XLwp55PnbKt_b20OCyFQWsqA--
+X-Sonic-MF: <abdul.rahim@myyahoo.com>
+X-Sonic-ID: b416c6f4-eb5e-4393-99e5-d3f766167a5a
+Received: from sonic.gate.mail.ne1.yahoo.com by sonic307.consmr.mail.sg3.yahoo.com with HTTP; Wed, 9 Oct 2024 23:46:43 +0000
+Received: by hermes--production-sg3-fc85cddf6-qj99b (Yahoo Inc. Hermes SMTP Server) with ESMTPA ID b4e7dfb9ad5f3db34c6a2dfeb82ccf54;
+          Wed, 09 Oct 2024 23:06:09 +0000 (UTC)
+From: Abdul Rahim <abdul.rahim@myyahoo.com>
+To: corentin.chary@gmail.com,
+	luke@ljones.dev,
+	hdegoede@redhat.com,
+	ilpo.jarvinen@linux.intel.com
+Cc: platform-driver-x86@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Abdul Rahim <abdul.rahim@myyahoo.com>
+Subject: [PATCH] asus-laptop: prefer strscpy() over strcpy()
+Date: Thu, 10 Oct 2024 04:35:58 +0530
+Message-ID: <20241009230558.51892-1-abdul.rahim@myyahoo.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Date: Thu, 10 Oct 2024 12:10:48 +1300
-From: "Luke Jones" <luke@ljones.dev>
-To: "Abdul Rahim" <abdul.rahim@myyahoo.com>, corentin.chary@gmail.com,
- "Hans de Goede" <hdegoede@redhat.com>,
- =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-Message-Id: <5cb4ed29-0039-432a-be2f-629aa7e1278c@app.fastmail.com>
-In-Reply-To: <20241009230558.51892-1-abdul.rahim@myyahoo.com>
+Content-Transfer-Encoding: 8bit
 References: <20241009230558.51892-1-abdul.rahim.ref@myyahoo.com>
- <20241009230558.51892-1-abdul.rahim@myyahoo.com>
-Subject: Re: [PATCH] asus-laptop: prefer strscpy() over strcpy()
-Content-Type: text/plain
-Content-Transfer-Encoding: 7bit
 
-On Thu, 10 Oct 2024, at 12:05 PM, Abdul Rahim wrote:
-> The function strcpy() is depreciated and potentially unsafe. It performs
-> no bounds checking on the destination buffer. This could result in
-> linear overflows beyond the end of the buffer, leading to all kinds of
-> misbehaviors. The safe replacement is strscpy() [1].
->
-> this fixes checkpatch warning:
->     WARNING: Prefer strscpy over strcpy
->
-> Link: https://www.kernel.org/doc/html/latest/process/deprecated.html#strcpy [1]
-> Signed-off-by: Abdul Rahim <abdul.rahim@myyahoo.com>
-> ---
->  drivers/platform/x86/asus-laptop.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
->
-> diff --git a/drivers/platform/x86/asus-laptop.c 
-> b/drivers/platform/x86/asus-laptop.c
-> index 9d7e6b712abf..d460dd194f19 100644
-> --- a/drivers/platform/x86/asus-laptop.c
-> +++ b/drivers/platform/x86/asus-laptop.c
-> @@ -1832,8 +1832,8 @@ static int asus_acpi_add(struct acpi_device 
-> *device)
->  	if (!asus)
->  		return -ENOMEM;
->  	asus->handle = device->handle;
-> -	strcpy(acpi_device_name(device), ASUS_LAPTOP_DEVICE_NAME);
-> -	strcpy(acpi_device_class(device), ASUS_LAPTOP_CLASS);
-> +	strscpy(acpi_device_name(device), ASUS_LAPTOP_DEVICE_NAME);
-> +	strscpy(acpi_device_class(device), ASUS_LAPTOP_CLASS);
->  	device->driver_data = asus;
->  	asus->device = device;
-> 
-> -- 
-> 2.43.0
+The function strcpy() is depreciated and potentially unsafe. It performs
+no bounds checking on the destination buffer. This could result in
+linear overflows beyond the end of the buffer, leading to all kinds of
+misbehaviors. The safe replacement is strscpy() [1].
 
-Looks good, thank you for doing this.
+this fixes checkpatch warning:
+    WARNING: Prefer strscpy over strcpy
 
-Reviewed-by: Luke D. Jones <luke@ljones.dev>
+Link: https://www.kernel.org/doc/html/latest/process/deprecated.html#strcpy [1]
+Signed-off-by: Abdul Rahim <abdul.rahim@myyahoo.com>
+---
+ drivers/platform/x86/asus-laptop.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/platform/x86/asus-laptop.c b/drivers/platform/x86/asus-laptop.c
+index 9d7e6b712abf..d460dd194f19 100644
+--- a/drivers/platform/x86/asus-laptop.c
++++ b/drivers/platform/x86/asus-laptop.c
+@@ -1832,8 +1832,8 @@ static int asus_acpi_add(struct acpi_device *device)
+ 	if (!asus)
+ 		return -ENOMEM;
+ 	asus->handle = device->handle;
+-	strcpy(acpi_device_name(device), ASUS_LAPTOP_DEVICE_NAME);
+-	strcpy(acpi_device_class(device), ASUS_LAPTOP_CLASS);
++	strscpy(acpi_device_name(device), ASUS_LAPTOP_DEVICE_NAME);
++	strscpy(acpi_device_class(device), ASUS_LAPTOP_CLASS);
+ 	device->driver_data = asus;
+ 	asus->device = device;
+ 
+-- 
+2.43.0
+
