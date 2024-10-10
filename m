@@ -1,58 +1,45 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 810C11C462A;
-	Thu, 10 Oct 2024 12:25:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 442D11C5781;
+	Thu, 10 Oct 2024 16:19:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728563152; cv=none; b=g/F9Fv/+DqgB0pcAT4IlyyrHLauQ7/n/SdnBYlhW25VxlLgDsph6GJPOLeirBipzr9NTHDNnIWiAewDFjJiA5iaZhioHT6Aav6D/ntG48Z4lv1f1/nRWHxCZJo+eZmQelXl+RuulMj8ltLWDhbGIhY+3YfJIP8EZg6pW3S4o2Q0=
+	t=1728577152; cv=none; b=ox1cQgbiMRjaeKurfVUPuikXan2h2ZeOoa0uopmb9JW2jZRnlOERX06OUObfJlaNnlv+7odTNIg64eINKenlys1GGIB0xTb/MGIG8v53830pa4bxjtrvAuNxn+3J3V32+ckHN4Pb9TiReFHAbTjjf3PEYFyL40prfttLzikqav8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728563152; c=relaxed/simple;
-	bh=nm09FEO+6GkoggqETkjCn/NtWaoWHclU9qh4LQ4l3lA=;
+	s=arc-20240116; t=1728577152; c=relaxed/simple;
+	bh=bZF3l92VFF3sTRPd2QvKJgiWWBI1vZuFkAWAOS127Z4=;
 	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=FfiXFAS4KsnSWEp5o/2lirRq+0HEuPpQ0/a2HfUxe1BAv8ZlwhQx5siCBvWJv8HxsqpRmkxt+EXzLFuV66W8CyxfZn8YiO+yE9AEj1tezj6CIuvEl/Xqwj6OTd+pWUr0Q8PDt6EWc4wMIuDo7hzYo55ennVH4X9Be3gIN0gSd7w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=aD/6Qcgt; arc=none smtp.client-ip=192.198.163.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	 MIME-Version:Content-Type; b=Sf8Jvhrb9kpST+c52Wt7MZQIm4xDv0AclGcvbNRHF3mckoHFNn8QQ+wQmnBVlkcMlBE0GxaJ6e8ZahHIYoDw1OPWiBBP1EwsP+5ymc+xl9397N1ac4UlPrmKAoMhAO8ZIEJQUJLwuJG7nSh5YZ3CHMtkB8wUhX1Bv0x/wx7uNJ8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hUN3kgnT; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="aD/6Qcgt"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1728563151; x=1760099151;
-  h=from:to:cc:in-reply-to:references:subject:message-id:
-   date:mime-version:content-transfer-encoding;
-  bh=nm09FEO+6GkoggqETkjCn/NtWaoWHclU9qh4LQ4l3lA=;
-  b=aD/6QcgtszNQ1RX1galZmpejq5u0hX6FxU6GIL5xomF3DQAamWoTdNja
-   9lOTzg2n+iZtRHTOFyGDKnX1eBOUY302FIuPqfUdMO51NEVZDI4MfHqjn
-   w4N/23g5bZs1aBnG2bGcJTjkR9hF4TAryfAkxVCK5wdOnAN/gUFgEbULj
-   zMkd7t1kfQQ5TiPXi0WgDgIIhfYCH/B0WtvWkjap/bPTAg6lhAJusSRlh
-   /dN/oz4SAq+n+eQ7FovWjxG5CtzPQVTdDAooRPjjGemtHIzfzCkxH5Bpo
-   3Umf1RKJ7RHaBoWaT5n2DRDma9qOPUpJiLyp1jwlbQqyHOtNTVEiUt3gp
-   w==;
-X-CSE-ConnectionGUID: FLaz3lFvQz6jIKn56G18zA==
-X-CSE-MsgGUID: 5x2LWT66TpuWsJ4MtT2Gbw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11220"; a="27386099"
-X-IronPort-AV: E=Sophos;i="6.11,193,1725346800"; 
-   d="scan'208";a="27386099"
-Received: from fmviesa002.fm.intel.com ([10.60.135.142])
-  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Oct 2024 05:25:50 -0700
-X-CSE-ConnectionGUID: 6G2iYIBTSuSMPhLP6gUiIQ==
-X-CSE-MsgGUID: 3ppPgMquSvWf9SZHSP9sog==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.11,193,1725346800"; 
-   d="scan'208";a="99913528"
-Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.237])
-  by fmviesa002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Oct 2024 05:25:48 -0700
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-To: corentin.chary@gmail.com, luke@ljones.dev, hdegoede@redhat.com, 
- Abdul Rahim <abdul.rahim@myyahoo.com>
-Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-In-Reply-To: <20241009230558.51892-1-abdul.rahim@myyahoo.com>
-References: <20241009230558.51892-1-abdul.rahim.ref@myyahoo.com>
- <20241009230558.51892-1-abdul.rahim@myyahoo.com>
-Subject: Re: [PATCH] asus-laptop: prefer strscpy() over strcpy()
-Message-Id: <172856314314.1946.14702947705883158463.b4-ty@linux.intel.com>
-Date: Thu, 10 Oct 2024 15:25:43 +0300
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hUN3kgnT"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D7730C4CEC5;
+	Thu, 10 Oct 2024 16:19:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1728577151;
+	bh=bZF3l92VFF3sTRPd2QvKJgiWWBI1vZuFkAWAOS127Z4=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
+	b=hUN3kgnTo3eAnFiBJAWsRHhkzn9bCD19LvMM4ETzI1N16ftI/GiP8wHoETUeAh3Pc
+	 jsiL5RtB8wVTtlEdJu1kUS9p09nvyVvfMtrCTPSJIqFwYi+6+i8CBeuNaQo4G83Ejn
+	 4dHLAbH80NtEVNgDKwEQie40bH0OVXuukHsBcOMpcZmUGcP85h78ZiGIu32yoZl6Cc
+	 zxIfHyYu0PD46x0DhOXg2btApEcG80M9H5vyxdofRv44PDinMYObyxH3v2PSyTmrGm
+	 37VYc+Z4nWnd/YUULRfdE4BeL9kPlUqpIKn/BldhLFI8OSFz0ViSXNk+xUmBLC+pxU
+	 +4EZXLvfJLnLg==
+From: Lee Jones <lee@kernel.org>
+To: linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org, 
+ linux-usb@vger.kernel.org, 
+ Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: Andy Shevchenko <andy@kernel.org>, Lee Jones <lee@kernel.org>, 
+ Hans de Goede <hdegoede@redhat.com>, 
+ =?utf-8?q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, 
+ Heikki Krogerus <heikki.krogerus@linux.intel.com>, 
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+In-Reply-To: <20241005193029.1929139-1-andriy.shevchenko@linux.intel.com>
+References: <20241005193029.1929139-1-andriy.shevchenko@linux.intel.com>
+Subject: Re: [PATCH v2 0/4] mfd: intel_soc_pmic_bxtwc: Fix IRQ domain usage
+Message-Id: <172857714957.2687257.4921456811511949312.b4-ty@kernel.org>
+Date: Thu, 10 Oct 2024 17:19:09 +0100
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -60,31 +47,30 @@ List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 X-Mailer: b4 0.13.0
 
-On Thu, 10 Oct 2024 04:35:58 +0530, Abdul Rahim wrote:
-
-> The function strcpy() is depreciated and potentially unsafe. It performs
-> no bounds checking on the destination buffer. This could result in
-> linear overflows beyond the end of the buffer, leading to all kinds of
-> misbehaviors. The safe replacement is strscpy() [1].
-> 
-> this fixes checkpatch warning:
->     WARNING: Prefer strscpy over strcpy
+On Sat, 05 Oct 2024 22:27:03 +0300, Andy Shevchenko wrote:
+> It appears that the driver has been developed without proper thinking
+> of what the difference between HW IRQ and Linux IRQ (also known as vIRQ).
+> This misunderstanding led to the 0 being used as vIRQ which is no-no and
+> platform APIs unveil this after the commit a85a6c86c25b ("driver core:
+> platform: Clarify that IRQ 0 is invalid"). With this the Intel Broxton
+> Whiskey Cove PMIC driver has to be fixed all over the places.
 > 
 > [...]
 
+Applied, thanks!
 
-Thank you for your contribution, it has been applied to my local
-review-ilpo branch. Note it will show up in the public
-platform-drivers-x86/review-ilpo branch only once I've pushed my
-local branch there, which might take a while.
-
-The list of commits applied:
-[1/1] asus-laptop: prefer strscpy() over strcpy()
-      commit: 8150408bfdb2f9c17970295427cf91470189e6d0
+[1/4] mfd: intel_soc_pmic_bxtwc: Use IRQ domain for USB Type-C device
+      commit: 59703271a86fee0fb2087d3a9990068fa0f147fb
+[2/4] mfd: intel_soc_pmic_bxtwc: Use IRQ domain for TMU device
+      commit: e005ef9f90c045dc284589ece4d6d14af3462a32
+[3/4] mfd: intel_soc_pmic_bxtwc: Use IRQ domain for PMIC devices
+      commit: 8db3d3e5439808cd899d14fb80e0b01beb9f6379
+[4/4] mfd: intel_soc_pmic_bxtwc: Fix IRQ domain names duplication
+      commit: 673f0f9a8db71c94e1eb880d1a88204c334710c9
 
 --
- i.
+Lee Jones [李琼斯]
 
