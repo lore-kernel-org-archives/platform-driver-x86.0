@@ -1,111 +1,124 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 83134BE57;
-	Thu, 10 Oct 2024 03:44:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 82B9219F41D
+	for <platform-driver-x86@vger.kernel.org>; Thu, 10 Oct 2024 09:40:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728531887; cv=none; b=m18J47tB7yaCxFmgmCC+AssLATSVsQ3VLD8xJJMXvq8y8nqzTOYn45CdUFtxj2KzX7DOwiykZeTGJJXrEYmk3bVUEKIl7/3MfERSXaA07FGa7fc0FwRBXT2FK5XR7qHG6pEWEwfFXCEjdgJJ+uyMl+uspwBmX0/gbIpN5UPBP1s=
+	t=1728553252; cv=none; b=Ld5OIny/H7dRjMZXTfoX6PXyPUnYf8LFD3mgcESzKkkxqO+B7RCuN051gD636lcui1ceH2CtW2x59zfUbnOHljLgfMWWoIDU8RyVR6khF0KZBg2R3VtO1Ayhs+g6s3Je+VBuqRwxLvX8/P0p/G5rVAnjDAm0v/Tigm1tnfra/o0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728531887; c=relaxed/simple;
-	bh=PISRcAtaVQX0sH6brsB+BVG0siQZUE29JBaLN8+snY8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=SSiQHc4cIIYsrN+valGV9uIYdAHxyhdtef5vvIUNd2TTglQZN/tUaUIyDIXewuRdLS2BcXUJCjCPxemo/tnT9qkkOpigoZD0zMRlkMeHO8aI3OJCvxLx7w7GY3i2Aby6W8sBqmBovLk7dxaSJK6Vkf0GpDumQGGCSRR8Vao5YhA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=UCIOLnOs; arc=none smtp.client-ip=192.198.163.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1728553252; c=relaxed/simple;
+	bh=e8R74kM4mPG1ed1AIErXucQF2cYAg0bgQggJFQ4Numg=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=TX2p12GXFAC+N7HxKa2W3Sw7lVaDCgObkp/Yqw87AD/j1a2alqlzrPsYISZTov3q3ul0S/SfDIga79bm5gAOakDka/Nt3MBK9yyZZMFzt6l+rD/IqklHFB4+ut1jiIlO7WjkCPlbQY3RgQHVt/8j0iEKa6yAJDu9MuX6IDQZNdU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=hY3vnkI0; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="UCIOLnOs"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1728531886; x=1760067886;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=PISRcAtaVQX0sH6brsB+BVG0siQZUE29JBaLN8+snY8=;
-  b=UCIOLnOsrDKAkFzRuGvxiuOZiCHvQDzo19+0CjOXzXa4WRlbOS+s7jQZ
-   YDfVXCM6Ndh92MIGTGOgpPGIyky01C0AInu5cm+3PiJRr2LbA9EGJGYTA
-   GdNAiLCHVHgDJbjQj/3+1m5Qba+CmlRexEMaaod71kWGVaBiYbktD3nWN
-   Ec612LBL/DjxFkpII89SX3LkYGJfpJImFsfhTaIAa++5HpIs+FqQuJg9x
-   dDB615Womv+CznnXVuzVYmsB3666lowzwb5pdAvi6W4wK6FFHhc1iePDK
-   5j616bfKLmo8ZGGnXwPJgkfUiqwWKslp0IYjNQmjli9KYPXiLmvZX1Cel
-   Q==;
-X-CSE-ConnectionGUID: y6p4FOWOQsyzucpYC7j03g==
-X-CSE-MsgGUID: UY+Hb5umQ7O2YpHJuIx2rA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11220"; a="38452258"
-X-IronPort-AV: E=Sophos;i="6.11,191,1725346800"; 
-   d="scan'208";a="38452258"
-Received: from orviesa002.jf.intel.com ([10.64.159.142])
-  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Oct 2024 20:44:45 -0700
-X-CSE-ConnectionGUID: FkV0STOEQGyYN4z1B0EfpQ==
-X-CSE-MsgGUID: sXuUxQxMRleg1YYuo9Qs7A==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.11,191,1725346800"; 
-   d="scan'208";a="107298147"
-Received: from lkp-server01.sh.intel.com (HELO a48cf1aa22e8) ([10.239.97.150])
-  by orviesa002.jf.intel.com with ESMTP; 09 Oct 2024 20:44:43 -0700
-Received: from kbuild by a48cf1aa22e8 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1syk6S-000A7l-2c;
-	Thu, 10 Oct 2024 03:44:40 +0000
-Date: Thu, 10 Oct 2024 11:44:08 +0800
-From: kernel test robot <lkp@intel.com>
-To: Kurt Borja <kuurtb@gmail.com>
-Cc: oe-kbuild-all@lists.linux.dev, hdegoede@redhat.com,
-	ilpo.jarvinen@linux.intel.com, linux-kernel@vger.kernel.org,
-	platform-driver-x86@vger.kernel.org, Dell.Client.Kernel@dell.com
-Subject: Re: [PATCH v3] alienware-wmi: Dell AWCC platform_profile support
-Message-ID: <202410101120.w4OLAnaI-lkp@intel.com>
-References: <20241008195642.36677-2-kuurtb@gmail.com>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="hY3vnkI0"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1728553249;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=eXMNh8HkQHbT6f1Sbmj7JQ1SELTwJXctNZOXP79wsf0=;
+	b=hY3vnkI0q1XSd1NMQO0F5PbdAhM/wZUzUqOWyCuo7kKF/A/FIWJTaOtbXqMAvyJB/sL9dg
+	zGN40HlnwyJTgEDflT9hpQi9ElLZocu7lgxnDJmXri7tyHv+sRs/7o9ID7BxDnUPS75r8G
+	/I0CeCjO5jmsiELYjNFYhls9HKLiE8c=
+Received: from mail-ej1-f69.google.com (mail-ej1-f69.google.com
+ [209.85.218.69]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-35-nw08SQ8iMQu4bPoWD_c6rQ-1; Thu, 10 Oct 2024 05:40:48 -0400
+X-MC-Unique: nw08SQ8iMQu4bPoWD_c6rQ-1
+Received: by mail-ej1-f69.google.com with SMTP id a640c23a62f3a-a994fb94446so85847766b.1
+        for <platform-driver-x86@vger.kernel.org>; Thu, 10 Oct 2024 02:40:47 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1728553247; x=1729158047;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=eXMNh8HkQHbT6f1Sbmj7JQ1SELTwJXctNZOXP79wsf0=;
+        b=FprlrxhpcoxHjaCVBjAWXJE2kr3aMM9O6X5UZKGZjq0H6u+jYbgA4/aMeGujC4JaBe
+         kImFyylq7cvF1X7v+2v5O59MYcuZmd+7toiXMaZxC6zzkItnLWPYjeuz2X9Uq0/CyJ+6
+         /uZSP9dF63i6JieDNc1GCoZnzCFaUHX/Q6AMR12Nvb3DjTM+gaxTLWNp7bFxrS1NJknC
+         mBsOui0ZMIBbWARLF49LgIbj6tRog/UGw7QpICcly9RgIuouE4MvZQjUDx9IgHEUmgix
+         2fnHSvNHqGGP6AKSZtIf3i+YtrMjeV7qitsTCwCEenr/mQNrSlfr3eT6ESKMgfKmZsdg
+         +7ug==
+X-Gm-Message-State: AOJu0YyjegquTxpWHOGgwGa14kHwW4FNmPRrTt1NqVhAT+1Ye5fALXXK
+	qLkB9HmaNaH7EkTavfE3CLRboCHVQY8QFQaUy8VmwceauxRnvODIo5ZTJePxA+TCOZ10vM68lTp
+	b9f9fimAzHjUQw+iycujBPm3wBTrfCjiz4roHYTIYG7EQZ19fazPDVa+GEI3ZENyNqscCIMo=
+X-Received: by 2002:a17:907:d0c:b0:a98:f44d:a198 with SMTP id a640c23a62f3a-a99a0ebe7eemr258244966b.1.1728553246779;
+        Thu, 10 Oct 2024 02:40:46 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IFyPVLsovtIuKX040BgGyYevVIq+FVcn4t9AAjJD1tbqlLyZN1eCnrRWTnDDqHb+AmRsjeCFg==
+X-Received: by 2002:a17:907:d0c:b0:a98:f44d:a198 with SMTP id a640c23a62f3a-a99a0ebe7eemr258239666b.1.1728553246047;
+        Thu, 10 Oct 2024 02:40:46 -0700 (PDT)
+Received: from ?IPV6:2001:1c00:c32:7800:5bfa:a036:83f0:f9ec? (2001-1c00-0c32-7800-5bfa-a036-83f0-f9ec.cable.dynamic.v6.ziggo.nl. [2001:1c00:c32:7800:5bfa:a036:83f0:f9ec])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a99a7f27f05sm63046466b.83.2024.10.10.02.40.45
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 10 Oct 2024 02:40:45 -0700 (PDT)
+Message-ID: <d49c5a2d-3715-447f-9936-fadba12bb225@redhat.com>
+Date: Thu, 10 Oct 2024 11:40:44 +0200
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20241008195642.36677-2-kuurtb@gmail.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] asus-laptop: prefer strscpy() over strcpy()
+To: Abdul Rahim <abdul.rahim@myyahoo.com>, corentin.chary@gmail.com,
+ luke@ljones.dev, ilpo.jarvinen@linux.intel.com
+Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20241009230558.51892-1-abdul.rahim.ref@myyahoo.com>
+ <20241009230558.51892-1-abdul.rahim@myyahoo.com>
+Content-Language: en-US, nl
+From: Hans de Goede <hdegoede@redhat.com>
+In-Reply-To: <20241009230558.51892-1-abdul.rahim@myyahoo.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Hi Kurt,
+Hi,
 
-kernel test robot noticed the following build errors:
+On 10-Oct-24 1:05 AM, Abdul Rahim wrote:
+> The function strcpy() is depreciated and potentially unsafe. It performs
+> no bounds checking on the destination buffer. This could result in
+> linear overflows beyond the end of the buffer, leading to all kinds of
+> misbehaviors. The safe replacement is strscpy() [1].
+> 
+> this fixes checkpatch warning:
+>     WARNING: Prefer strscpy over strcpy
+> 
+> Link: https://www.kernel.org/doc/html/latest/process/deprecated.html#strcpy [1]
+> Signed-off-by: Abdul Rahim <abdul.rahim@myyahoo.com>
 
-[auto build test ERROR on linus/master]
-[also build test ERROR on v6.12-rc2 next-20241009]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+Thanks, patch looks good to me:
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Kurt-Borja/alienware-wmi-Dell-AWCC-platform_profile-support/20241009-040025
-base:   linus/master
-patch link:    https://lore.kernel.org/r/20241008195642.36677-2-kuurtb%40gmail.com
-patch subject: [PATCH v3] alienware-wmi: Dell AWCC platform_profile support
-config: i386-randconfig-r051-20241010 (https://download.01.org/0day-ci/archive/20241010/202410101120.w4OLAnaI-lkp@intel.com/config)
-compiler: clang version 18.1.8 (https://github.com/llvm/llvm-project 3b5b5c1ec4a3095ab096dd780e84d7ab81f3d7ff)
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20241010/202410101120.w4OLAnaI-lkp@intel.com/reproduce)
+Reviewed-by: Hans de Goede <hdegoede@redhat.com>
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202410101120.w4OLAnaI-lkp@intel.com/
+Regards,
 
-All errors (new ones prefixed by >>):
-
->> drivers/platform/x86/dell/alienware-wmi.c:822:9: error: call to undeclared function 'FIELD_PREP'; ISO C99 and later do not support implicit function declarations [-Wimplicit-function-declaration]
-     822 |         return FIELD_PREP(PROFILE_MASK, prof) | PROFILE_ACTIVATE;
-         |                ^
-   1 error generated.
+Hans
 
 
-vim +/FIELD_PREP +822 drivers/platform/x86/dell/alienware-wmi.c
 
-   819	
-   820	static u32 profile_to_wmax_arg(enum WMAX_THERMAL_PROFILE prof)
-   821	{
- > 822		return FIELD_PREP(PROFILE_MASK, prof) | PROFILE_ACTIVATE;
-   823	}
-   824	
+> ---
+>  drivers/platform/x86/asus-laptop.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/platform/x86/asus-laptop.c b/drivers/platform/x86/asus-laptop.c
+> index 9d7e6b712abf..d460dd194f19 100644
+> --- a/drivers/platform/x86/asus-laptop.c
+> +++ b/drivers/platform/x86/asus-laptop.c
+> @@ -1832,8 +1832,8 @@ static int asus_acpi_add(struct acpi_device *device)
+>  	if (!asus)
+>  		return -ENOMEM;
+>  	asus->handle = device->handle;
+> -	strcpy(acpi_device_name(device), ASUS_LAPTOP_DEVICE_NAME);
+> -	strcpy(acpi_device_class(device), ASUS_LAPTOP_CLASS);
+> +	strscpy(acpi_device_name(device), ASUS_LAPTOP_DEVICE_NAME);
+> +	strscpy(acpi_device_class(device), ASUS_LAPTOP_CLASS);
+>  	device->driver_data = asus;
+>  	asus->device = device;
+>  
 
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
