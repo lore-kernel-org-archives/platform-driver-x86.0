@@ -1,257 +1,111 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f43.google.com (mail-pj1-f43.google.com [209.85.216.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A80D4199932;
-	Fri, 11 Oct 2024 16:36:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF7C619E994;
+	Fri, 11 Oct 2024 16:57:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728664615; cv=none; b=kjhUTWQkNnj65IAs4VwvLoGsymhHIRMzPqFHhqvloC28KROP3nAZbY17ayHcNRQ1VJQVvgMVsICrWaAId70kSf4amp3fbcDSXVv7qlOpjJ//B37UCXWhxwkAWHnY83TaAKwBx5A/S++8m8Cq5HFCUbLa9iKXNphKa+nrhtl2Arc=
+	t=1728665823; cv=none; b=IhgPT9mHox6V06x9I3M2u8pRGkRIec0TinyTd2LezdyhKQCqBQywhY5WXFKFHmxDGaQb/5UIj7qrADelKObTPIdsDE9mBvFW0gGl4FSJhj0xNS9DOw6Y6ZthBpYhSX3RcK/PwkaGyK89qjryEZf3kZHVhuaGSM+A9qgjP3fvdrA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728664615; c=relaxed/simple;
-	bh=0DOctPhcXkXwaU6mc08w+rbLhDERb4wCWL/N4+tis1E=;
-	h=Message-ID:Subject:From:To:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=uda8mfLnU6GHx8Uw8bX0gA5Xvyqy9o/dUMY66/lZEanNxE5vSVstTWSj7NjdPBP1dMgYtp0VaSafwMqfTMB0AMDParmEvef1XCIuRlEQuEi1vdiNoI3QZP5YE9OYQmRW0qacpdMjG0rjcgu9eFcfbw/V8kRHNT0AkGiWVI0+NmA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=C/+2WHEP; arc=none smtp.client-ip=192.198.163.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1728665823; c=relaxed/simple;
+	bh=uoyLTAzHWcX0+EeCNu0jv/0Mt41gfAa8d/08EnTMBIo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=cQQ8/SpbsBAtZYW/idzyElFDG6OrC3PYCnqiq/Bh2kuLDCqxarwBDCP3/w7GIaZPEedmqEQl7QZHmPxKAVxM+JuMDay1I23qJ0QYgELpt25TiQVieG/NoOiqGcCZ1OgaK9qnMy8DiCRxQNN6wb9zn35cIWK2ZkoOsZ9wCDRc6w4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=KnOeV937; arc=none smtp.client-ip=209.85.216.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="C/+2WHEP"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1728664614; x=1760200614;
-  h=message-id:subject:from:to:date:in-reply-to:references:
-   content-transfer-encoding:mime-version;
-  bh=0DOctPhcXkXwaU6mc08w+rbLhDERb4wCWL/N4+tis1E=;
-  b=C/+2WHEPX7qXTQJwtRG4oCLsz2lhdj7jsiZ5XxSGy4znEkGvaSQ+q9x7
-   Urlwbv0fg8refzpGmPn/hlp42tPRSfBkbS9ivbEs/0wi0Gdm5+qVxEnou
-   2o5nX97C/+FvrVOLr7CiM965ZQd9LwDGwf+nKd59ttSsHcoF9br8mXjFD
-   eOONePExtSq5jICI7/JuUIwGdvOS92ytRlHO9v7Pj9BTYUj6U5+r4v8Qd
-   q9xjQWPR4aa4YYC10I34bT0yBGuryzFD1q1IkIQRmsKaJHCIv8I0ki4Si
-   XqF+IjlrPr5DMa2kdrHaIHBYh5pHIctFTpLdLH9BFT23H4tclbBiG7Q9W
-   w==;
-X-CSE-ConnectionGUID: teAb+/UpSXWr261THYdhwg==
-X-CSE-MsgGUID: 0G6d1uVXQumHVnbau1fqEw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11222"; a="28232824"
-X-IronPort-AV: E=Sophos;i="6.11,196,1725346800"; 
-   d="scan'208";a="28232824"
-Received: from orviesa005.jf.intel.com ([10.64.159.145])
-  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Oct 2024 09:36:53 -0700
-X-CSE-ConnectionGUID: lCFmQ9YCTWi1Aa1mt9+pKA==
-X-CSE-MsgGUID: cMQuFs0YQHCNTzvTehFA8g==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.11,196,1725346800"; 
-   d="scan'208";a="81738379"
-Received: from spandruv-desk1.amr.corp.intel.com ([10.125.111.157])
-  by orviesa005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Oct 2024 09:36:52 -0700
-Message-ID: <462d0bd9eb9c461e01ef27a8da9cd02f92ce8f9f.camel@linux.intel.com>
-Subject: Re: [PATCH V2 2/2] platform/x86/intel/pmc: Disable C1 auto-demotion
- during suspend
-From: srinivas pandruvada <srinivas.pandruvada@linux.intel.com>
-To: david.e.box@linux.intel.com, hdegoede@redhat.com, 
-	ilpo.jarvinen@linux.intel.com, rjw@rjwysocki.net, 
-	platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-pm@vger.kernel.org
-Date: Fri, 11 Oct 2024 09:36:52 -0700
-In-Reply-To: <c9410dd42e01c1ba26fbb43f97a8777f1c95b9af.camel@linux.intel.com>
-References: <20241011003640.1613812-1-david.e.box@linux.intel.com>
-	 <20241011003640.1613812-2-david.e.box@linux.intel.com>
-	 <c4513e7857b15ec9146a7b75d00e99987787ced4.camel@linux.intel.com>
-	 <c9410dd42e01c1ba26fbb43f97a8777f1c95b9af.camel@linux.intel.com>
-Autocrypt: addr=srinivas.pandruvada@linux.intel.com; prefer-encrypt=mutual;
- keydata=mQGNBGYHNAsBDAC7tv5u9cIsSDvdgBBEDG0/a/nTaC1GXOx5MFNEDL0LWia2p8Asl7igx
- YrB68fyfPNLSIgtCmps0EbRUkPtoN5/HTbAEZeJUTL8Xdoe6sTywf8/6/DMheEUzprE4Qyjt0HheW
- y1JGvdOA0f1lkxCnPXeiiDY4FUqQHr3U6X4FPqfrfGlrMmGvntpKzOTutlQl8eSAprtgZ+zm0Jiwq
- NSiSBOt2SlbkGu9bBYx7mTsrGv+x7x4Ca6/BO9o5dIvwJOcfK/cXC/yxEkr1ajbIUYZFEzQyZQXrT
- GUGn8j3/cXQgVvMYxrh3pGCq9Q0Q6PAwQYhm97ipXa86GcTpP5B2ip9xclPtDW99sihiL8euTWRfS
- TUsEI+1YzCyz5DU32w3WiXr3ITicaMV090tMg9phIZsjfFbnR8hY03n0kRNWWFXi/ch2MsZCCqXIB
- oY/SruNH9Y6mnFKW8HSH762C7On8GXBYJzH6giLGeSsbvis2ZmV/r+LmswwZ6ACcOKLlvvIukAEQE
- AAbQ5U3Jpbml2YXMgUGFuZHJ1dmFkYSA8c3Jpbml2YXMucGFuZHJ1dmFkYUBsaW51eC5pbnRlbC5j
- b20+iQHRBBMBCAA7FiEEdki2SeUi0wlk2xcjOqtdDMJyisMFAmYHNAsCGwMFCwkIBwICIgIGFQoJC
- AsCBBYCAwECHgcCF4AACgkQOqtdDMJyisMobAv+LLYUSKNuWhRN3wS7WocRPCi3tWeBml+qivCwyv
- oZbmE2LcxYFnkcj6YNoS4N1CHJCr7vwefWTzoKTTDYqz3Ma0D0SbR1p/dH0nDgN34y41HpIHf0tx0
- UxGMgOWJAInq3A7/mNkoLQQ3D5siG39X3bh9Ecg0LhMpYwP/AYsd8X1ypCWgo8SE0J/6XX/HXop2a
- ivimve15VklMhyuu2dNWDIyF2cWz6urHV4jmxT/wUGBdq5j87vrJhLXeosueRjGJb8/xzl34iYv08
- wOB0fP+Ox5m0t9N5yZCbcaQug3hSlgp9hittYRgIK4GwZtNO11bOzeCEMk+xFYUoa5V8JWK9/vxrx
- NZEn58vMJ/nxoJzkb++iV7KBtsqErbs5iDwFln/TRJAQDYrtHJKLLFB9BGUDuaBOmFummR70Rbo55
- J9fvUHc2O70qteKOt5A0zv7G8uUdIaaUHrT+VOS7o+MrbPQcSk+bl81L2R7TfWViCmKQ60sD3M90Y
- oOfCQxricddC
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.52.4 (3.52.4-1.fc40) 
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KnOeV937"
+Received: by mail-pj1-f43.google.com with SMTP id 98e67ed59e1d1-2e2b549799eso1675711a91.3;
+        Fri, 11 Oct 2024 09:57:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1728665821; x=1729270621; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:sender:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=i/gZ7WU3epDl0MNeUQNpbfA3Lo5bZa7Q463uEngrdlU=;
+        b=KnOeV937/OFkmFZiwhsHa/tETRCK4EMQILDF6gVcUtgpSz9IEJoeBLIv7PRcOaicrr
+         cPvUGLkeXom5xf7jSJ+7ebDsOum/uzB4nWSGusjP+Vc7rU6fNcP8jj4ubaoY7SD+/Ecj
+         6sv9EU3JFdZOF1+el8K+qeEu5dKDPk2jNU54aUrFLCDfynLWcgdBEos7E4JyjYT0q2I4
+         vrG0xo4GlVs1yEO7s5wdwDIPtlXUf0uNiG2ZszkHUJ/xOHOHcbpcBkKyZy3ydtNKA2a0
+         bMe8ARvBIUNce0UfaXm/7UUpqZXMmpOLQMDhMoiY+YKA7/cYLo6Ts9aZSRQV9GNlA9IO
+         JAbg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1728665821; x=1729270621;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:sender:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=i/gZ7WU3epDl0MNeUQNpbfA3Lo5bZa7Q463uEngrdlU=;
+        b=m1b+bEu7N38UetPvEz8rIiyb09hs6JNg0HA6PqB0BG3M0cFE4cqrddyTpk5SCmoeWG
+         710YGqTlJZVGzVAt8JhSAzjZPinlqWPpEBGVJadxRx5k+xOmKcS+wNY94PaefX1cJObl
+         jj8qxRXz2xIQrg+tvpLM2exSRFa2hoXNdOFoJFk2Z4lItfJ68/3H/Ga+FP4JDH8CA3bf
+         y/eA3naWYDvsBt0QIBJ7W+iGs1K7vd/hcLXwi1bzWrI5OQbFM6OrzaR4NCyIhYq+D+Y3
+         GL+t9d4qBLD1kEc0ancgkKPFkThndLyu+XwBgdLzewWGVo1eQzQVn80FOvM5JuQ9n9P4
+         dLAQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVLhkLWiUZZsC0CJiOfc13zifSwFPRGCVO0hjuidJTQ72pxuagCuy/MVAwKV2FtUyGrelTifomvG1ueuEIl@vger.kernel.org, AJvYcCWXlLqqzSg7jfjfv2gEuo8OANzm1y83q28OFc8z68k/U8m/wak3TpXa7e4+YchoZ2//+iVb29RdpxM59vakc6l3UlmmVg==@vger.kernel.org, AJvYcCWlvmfVmdfcgf8cm3UP9vYY75cZ5bJQSwa+qLRH74OT9hE7oN8rq3n2vLS8Qlk0W007p3KJ6IgOhxRuzCI=@vger.kernel.org, AJvYcCXxZF+TH2vhqMXA8jOhA4g81QqRakKl4vId6hmbTKS62bA7V5tjCUDDeHlPoIElhXKZoDM9V+VEYVIi@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxc2QoPOQpg90VmYFffi3OcBTA/JDoPj2WlZj0XY7PD+FWfbG9j
+	0CmEfoUPrmB24ixPvxLTWlTYhmDZDfPV30td1do2byPh1CbyJHBz
+X-Google-Smtp-Source: AGHT+IESG1hwpRHIPFN0MQ+z/WFeOm+Mh6P7QP6AxSbUvtNXisX6ZsJFLqUnhgLNECh/coDUZtLN4g==
+X-Received: by 2002:a17:90b:e8c:b0:2e0:a77e:8305 with SMTP id 98e67ed59e1d1-2e31536f27cmr39108a91.39.1728665821031;
+        Fri, 11 Oct 2024 09:57:01 -0700 (PDT)
+Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-2e2d5dd423asm3433210a91.4.2024.10.11.09.56.58
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 11 Oct 2024 09:56:59 -0700 (PDT)
+Sender: Guenter Roeck <groeck7@gmail.com>
+Date: Fri, 11 Oct 2024 09:56:57 -0700
+From: Guenter Roeck <linux@roeck-us.net>
+To: Arnd Bergmann <arnd@kernel.org>
+Cc: "Rafael J. Wysocki" <rafael@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
+	Len Brown <lenb@kernel.org>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Jean Delvare <jdelvare@suse.com>,
+	Hans de Goede <hdegoede@redhat.com>,
+	Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+	linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-hwmon@vger.kernel.org, platform-driver-x86@vger.kernel.org
+Subject: Re: [PATCH v2 1/3] acpi: make EC support compile-time conditional
+Message-ID: <3075ecd1-491b-477c-89a7-d8f8b081d0a1@roeck-us.net>
+References: <20241011061948.3211423-1-arnd@kernel.org>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20241011061948.3211423-1-arnd@kernel.org>
 
-On Thu, 2024-10-10 at 20:50 -0700, David E. Box wrote:
-> On Thu, 2024-10-10 at 19:09 -0700, srinivas pandruvada wrote:
-> > On Thu, 2024-10-10 at 17:36 -0700, David E. Box wrote:
-> > > On some platforms, aggressive C1 auto-demotion may lead to
-> > > failure to
-> > > enter
-> > > the deepest C-state during suspend-to-idle, causing high power
-> > > consumption.
-> > > To prevent this, disable C1 auto-demotion during suspend and re-
-> > > enable on
-> > > resume.
-> > >=20
-> > > Signed-off-by: David E. Box <david.e.box@linux.intel.com>
-> > > ---
-> > >=20
-> > > V2 - Remove #define DEBUG
-> > > =C2=A0=C2=A0 - Move refactor of cnl_resume() to separate patch
-> > > =C2=A0=C2=A0 - Use smp_call_function() to disable and restore
-> > > C1_AUTO_DEMOTE
-> > > =C2=A0=C2=A0 - Add comment that the MSR is per core, not per package.
-> > > =C2=A0=C2=A0 - Add comment that the online cpu mask remains unchanged
-> > > during
-> > > =C2=A0=C2=A0=C2=A0=C2=A0 suspend due to frozen userspace.
-> > >=20
-> > > =C2=A0drivers/platform/x86/intel/pmc/cnp.c | 53
-> > > ++++++++++++++++++++++++++++
-> > > =C2=A01 file changed, 53 insertions(+)
-> > >=20
-> > > diff --git a/drivers/platform/x86/intel/pmc/cnp.c
-> > > b/drivers/platform/x86/intel/pmc/cnp.c
-> > > index 513c02670c5a..f12d4f0f9e93 100644
-> > > --- a/drivers/platform/x86/intel/pmc/cnp.c
-> > > +++ b/drivers/platform/x86/intel/pmc/cnp.c
-> > > @@ -8,6 +8,8 @@
-> > > =C2=A0 *
-> > > =C2=A0 */
-> > > =C2=A0
-> > > +#include <linux/smp.h>
-> > > +#include <linux/suspend.h>
-> > > =C2=A0#include "core.h"
-> > > =C2=A0
-> > > =C2=A0/* Cannon Lake: PGD PFET Enable Ack Status Register(s) bitmap *=
-/
-> > > @@ -206,8 +208,52 @@ const struct pmc_reg_map cnp_reg_map =3D {
-> > > =C2=A0	.etr3_offset =3D ETR3_OFFSET,
-> > > =C2=A0};
-> > > =C2=A0
-> > > +
-> > > +/*
-> > > + * Disable C1 auto-demotion
-> > > + *
-> > > + * Aggressive C1 auto-demotion may lead to failure to enter the
-> > > deepest C-state
-> > > + * during suspend-to-idle, causing high power consumption. To
-> > > prevent this, we
-> > > + * disable C1 auto-demotion during suspend and re-enable on
-> > > resume.
-> > > + *
-> > > + * Note that, although MSR_PKG_CST_CONFIG_CONTROL has 'package'
-> > > in
-> > > its name, it
-> > > + * is actually a per-core MSR on client platforms, affecting
-> > > only a
-> > > single CPU.
-> > > + * Therefore, it must be configured on all online CPUs. The
-> > > online
-> > > cpu mask is
-> > > + * unchanged during the phase of suspend/resume as user space is
-> > > frozen.
-> > > + */
-> > > +
-> > > +static DEFINE_PER_CPU(u64, pkg_cst_config);
-> > > +
-> > > +static void disable_c1_auto_demote(void *unused)
-> > > +{
-> > > +	int cpunum =3D smp_processor_id();
-> > > +	u64 val;
-> > > +
-> > > +	rdmsrl(MSR_PKG_CST_CONFIG_CONTROL, val);
-> > > +	per_cpu(pkg_cst_config, cpunum) =3D val;
-> > > +	val &=3D ~NHM_C1_AUTO_DEMOTE;
-> > > +	wrmsrl(MSR_PKG_CST_CONFIG_CONTROL, val);
-> > > +	pr_debug("%s: cpu:%d cst %llx\n", __func__, cpunum,
-> > > val);
-> > Do you want to leave pr_debug?
->=20
-> Thought it could be useful but it can be removed.
->=20
-> >=20
-> > > +}
-> > > +
-> > > +static void restore_c1_auto_demote(void *unused)
-> > > +{
-> > > +	int cpunum =3D smp_processor_id();
-> > > +
-> > > +	pr_debug("%s: cpu:%d cst %llx\n", __func__, cpunum,
-> > > +		 per_cpu(pkg_cst_config, cpunum));
-> > > +	wrmsrl(MSR_PKG_CST_CONFIG_CONTROL,
-> > > per_cpu(pkg_cst_config,
-> > > cpunum));
-> > > +}
-> > > +
-> > > =C2=A0void cnl_suspend(struct pmc_dev *pmcdev)
-> > > =C2=A0{
-> > > +	if (!pm_suspend_via_firmware()) {
-> > > +		preempt_disable();
-> > Why do you need this?
->=20
-> To ensure that the cpu doesn't change between the next two calls.
+On Fri, Oct 11, 2024 at 06:18:17AM +0000, Arnd Bergmann wrote:
+> From: Arnd Bergmann <arnd@arndb.de>
+> 
+> The embedded controller code is mainly used on x86 laptops and cannot
+> work without PC style I/O port access.
+> 
+> Make this a user-visible configuration option that is default enabled
+> on x86 but otherwise disabled, and that can never be enabled unless
+> CONFIG_HAS_IOPORT is also available.
+> 
+> The empty stubs in internal.h help ignore the EC code in configurations
+> that don't support it. In order to see those stubs, the sbshc code also
+> has to include this header and drop duplicate declarations.
+> 
+> All the direct callers of ec_read/ec_write already had an x86
+> dependency and now also need to depend on APCI_EC.
+> 
+> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+> ---
+>  drivers/acpi/Kconfig               | 11 ++++++++++-
+>  drivers/acpi/Makefile              |  2 +-
+>  drivers/acpi/internal.h            | 25 +++++++++++++++++++++++++
+>  drivers/acpi/sbshc.c               |  9 +--------
+>  drivers/char/Kconfig               |  1 +
+>  drivers/hwmon/Kconfig              |  3 ++-
 
-Correct. You need for smp_processor_id()
+For hwmon:
 
-Generally for this avoiding issue with smp_processor_id(), you can use
-get_cpu(), which gives current cpu as return value and also disable
-preemption.
+Acked-by: Guenter Roeck <linux@roeck-us.net>
 
-Something like this
-
-                this_cpu =3D get_cpu();
-                disable_c1_auto_demote(&this_cpu);
-smp_call_function_many(cpu_online_mask, disable_c1_auto_demote, NULL,
-0);
-                put_cpu();
-
-
-But fine, this makes your code more complex as you have to pass now a
-param and use for local_cpu and use smp_procesor_id() for remote call
-via smp_call..
-
-
-Thanks,
-Srinivas
-
->=20
-> David
->=20
-> >=20
-> >=20
-> > Thanks,
-> > Srinivas
-> >=20
-> > > +		disable_c1_auto_demote(NULL);
-> > > +		smp_call_function(disable_c1_auto_demote, NULL,
-> > > 0);
-> > > +		preempt_enable();
-> > > +	}
-> > > +
-> > > =C2=A0	/*
-> > > =C2=A0	 * Due to a hardware limitation, the GBE LTR blocks PC10
-> > > =C2=A0	 * when a cable is attached. To unblock PC10 during
-> > > suspend,
-> > > @@ -218,6 +264,13 @@ void cnl_suspend(struct pmc_dev *pmcdev)
-> > > =C2=A0
-> > > =C2=A0int cnl_resume(struct pmc_dev *pmcdev)
-> > > =C2=A0{
-> > > +	if (!pm_suspend_via_firmware()) {
-> > > +		preempt_disable();
-> > > +		restore_c1_auto_demote(NULL);
-> > > +		smp_call_function(restore_c1_auto_demote, NULL,
-> > > 0);
-> > > +		preempt_enable();
-> > > +	}
-> > > +
-> > > =C2=A0	pmc_core_send_ltr_ignore(pmcdev, 3, 0);
-> > > =C2=A0
-> > > =C2=A0	return pmc_core_resume_common(pmcdev);
-> >=20
->=20
->=20
-
+Guenter
