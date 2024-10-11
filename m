@@ -1,448 +1,402 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.16])
+Received: from mout.gmx.net (mout.gmx.net [212.227.17.20])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DABA81CF291;
-	Fri, 11 Oct 2024 11:11:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C3EF42141AE
+	for <platform-driver-x86@vger.kernel.org>; Fri, 11 Oct 2024 11:21:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.20
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728645090; cv=none; b=TeRAA6d/iTTfzIJQOM4LuHxvVJgRb8bSzK+rf2Z9a1KkI8yIjfXDU63iNmONgQ3Clr9NvFGwd1rU2e2b8PLOCzUfPW2RTJbhmOQRM3T/8OdrHGP7qXkVHrzi2y/Fv02a4iEdsMpJs+3eYCamRkYFuuUjtpsLRwokL3pLeDAYgj0=
+	t=1728645702; cv=none; b=YrKqzNA270S0y28TlVIrEv5lHQPQQQUWHa01ectPkZJu2Q5bfev2fqPh171EQMJZJRYyXb28SUNKrAmP48EFq1KOAmFqdhIPpL34ysNlcoXcqlSVesVMLHOyHxAGcMdLBV5Uz7XC8gg4S17QFoAyuOqX5RpqPSOAg0GhTA8Wzo8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728645090; c=relaxed/simple;
-	bh=Fphm0rYuWXv3WiIqcAVFB6jMIH5f6niYJjofjwtsWKI=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=LwpdzdxF76wsedxH/OqR3bObG5YiFcJWi/NoWcVJZj+kBb9Y47pP40onRNNU9IEH3aIzrzv6JvKOn51a5NGD7yqdwJjgNEs6gT8nvf4V87NYJkXQCpd36Q9cM6jtZJ1BUTPAuzq35p3WfD7diwiukRY+J6o8e2aGv6mW7eVB414=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=kwyqLkNo; arc=none smtp.client-ip=198.175.65.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1728645702; c=relaxed/simple;
+	bh=wE1Ey99Dsp+T7sFQ9u7Tpv5Faz4WcKn43lFzLI1jK8M=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=BkBSrsssln98z8pACZLxCXIBqvEsUDbYnvAxxlWW2OYj3r2yr9wSIfE0M9zandO57y+EudpRq+Mb0kRbZgFWkIUALQH7wSNN8gghLCGRH7p3EW53NAcL8F1pYWqgae8HGpIsZIQc2r1Vzte/YlZ9i9nV49F2tmpqjiR0v/IGNLs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b=Zq/PRkao; arc=none smtp.client-ip=212.227.17.20
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="kwyqLkNo"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1728645090; x=1760181090;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=Fphm0rYuWXv3WiIqcAVFB6jMIH5f6niYJjofjwtsWKI=;
-  b=kwyqLkNoLqmddK6WFuR+oXjep75uavZuRZt19j457LU8duwwxrimVdfX
-   ZM8EJOpZmyCYl1hC/DzdkVkJBqNdlxFpSmLJntm5QOitJYGO8bzlKOwAK
-   70xQFhw01ZA/i6kLeGMdO9/RBf4zJiaJXnPShTCkijplbnE89COoIFwM9
-   yRox+lu6hzGiDPl5s8/8fyS2Z0sSm7w1fNZx1fE/y8OUAhW7NezRkdqZv
-   vIJ6DAudeSIN8mi++51DQ4OZXG0BmwU67BueIS2j0zZPwM7rhgbvlsRK6
-   w1WXOphESTPNaCBNXcIX5IpMTKqp4eJ4AejHggNujFTsJ+3tQ05AGtPPs
-   w==;
-X-CSE-ConnectionGUID: yoxIkf8TQW2rfu1ADXcrNw==
-X-CSE-MsgGUID: VojftRmFRi6lm6qNA+VEJA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11221"; a="28130198"
-X-IronPort-AV: E=Sophos;i="6.11,195,1725346800"; 
-   d="scan'208";a="28130198"
-Received: from fmviesa010.fm.intel.com ([10.60.135.150])
-  by orvoesa108.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Oct 2024 04:11:28 -0700
-X-CSE-ConnectionGUID: 3ZbenYbTTgu4nZJ/NrT1AQ==
-X-CSE-MsgGUID: koM6dhO/Sy2lgBLXoNrE5Q==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.11,195,1725346800"; 
-   d="scan'208";a="77186701"
-Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.164])
-  by fmviesa010-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Oct 2024 04:11:25 -0700
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Fri, 11 Oct 2024 14:11:21 +0300 (EEST)
-To: Kurt Borja <kuurtb@gmail.com>
-cc: Hans de Goede <hdegoede@redhat.com>, W_Armin@gmx.de, 
-    LKML <linux-kernel@vger.kernel.org>, platform-driver-x86@vger.kernel.org
-Subject: Re: [PATCH v4 4/4] alienware-wmi: WMAX interface documentation
-In-Reply-To: <20241011064837.307053-2-kuurtb@gmail.com>
-Message-ID: <75de8c01-e9d4-faef-692e-f9fa57c4b98c@linux.intel.com>
-References: <20241011064336.305795-2-kuurtb@gmail.com> <20241011064837.307053-2-kuurtb@gmail.com>
+	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b="Zq/PRkao"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.de;
+	s=s31663417; t=1728645686; x=1729250486; i=w_armin@gmx.de;
+	bh=MlFdMfUtMZU7NDE+3sGvT9AMuiAqfj7PHXm/ioD6TLU=;
+	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:To:Cc:
+	 References:From:In-Reply-To:Content-Type:
+	 Content-Transfer-Encoding:cc:content-transfer-encoding:
+	 content-type:date:from:message-id:mime-version:reply-to:subject:
+	 to;
+	b=Zq/PRkaoyoCQXsg/E9F4EJ6pKJfmW5DsjoRw46yJi0xiipfZhHbynjcAm5298LxS
+	 ncTO0hLZt6UdkEaWU9L5fHaZGvIITLXeMCgMMjYLeLO4Mr4UeKd8eEskU1lAfq4iz
+	 4yNQzhrtAt9K7ArKJGzGWKIyrLZaVHZd+zqUelJjoF7Gr4MBHSM/occiEocFRaKdp
+	 4nRcqaBpApROI2dxGNu+UIk1q4sSigVw/C3OH9Hqdlodb1MZCIblmaD/mU8iaDjNk
+	 xQpalIk6IY6yid3jFU5em2hpvywb9JdPwl9xaRJZNitBopfyZcm4B/n+wisNeQc5E
+	 sSX8Owc658aFfVcX6Q==
+X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
+Received: from [172.16.154.201] ([141.76.185.172]) by mail.gmx.net (mrgmx104
+ [212.227.17.168]) with ESMTPSA (Nemesis) id 1MrQJ5-1tnBVC46yt-00j7Tq; Fri, 11
+ Oct 2024 13:21:26 +0200
+Message-ID: <4bb99ff4-6c05-4087-9915-3420c36b15f2@gmx.de>
+Date: Fri, 11 Oct 2024 13:21:23 +0200
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/2] platform/x86/amd: amd_3d_vcache: Add AMD 3D V-Cache
+ optimizer driver
+To: Basavaraj Natikar <Basavaraj.Natikar@amd.com>, hdegoede@redhat.com,
+ ilpo.jarvinen@linux.intel.com, platform-driver-x86@vger.kernel.org
+Cc: perry.yuan@amd.com, mario.limonciello@amd.com, Shyam-sundar.S-k@amd.com
+References: <20241010094252.3892406-1-Basavaraj.Natikar@amd.com>
+ <20241010094252.3892406-2-Basavaraj.Natikar@amd.com>
+Content-Language: en-US
+From: Armin Wolf <W_Armin@gmx.de>
+In-Reply-To: <20241010094252.3892406-2-Basavaraj.Natikar@amd.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:msulJ9jsF6UFEPrzwyBEJom/ddmja02NPQRaof+TROWaDi8ZXeK
+ +OyBQgIx5IuP0Br8ytRhN77Fz4BFOPW9hDQadpgMP/TPVM/kTL76ErroRlgwyCA66P7D9BW
+ /u+xjyYXO529IqUKRuSfwZbxs8h3sRAJB7qswHETsOWUdnuuOGK/uuK+y+s+RiovPnx7VvU
+ T84aw+Rg+0vDNl4HjhIQA==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:/j/VaHzKdss=;E843qaeTxgzYwADcYCl2uWT2wAl
+ mJveTYVhJB1KOKrWGuBgMSWQHIkUupmiQQqoLxpfzLiqznT1vXYxv9qMCOwlbJ+U9uZAI0Foi
+ jps8tzJv2sUAybC/rEgQPM4lsDszUX5hto6uJG9DRGevYmAjv09JNq5/m/eUTk/v25ofxue5P
+ P/eX0upJl4dVWgHi0+PvCI70Jmc0c/n7dLakmgYp4jpO9YyWIheX+bjOWFciAODx5O63fdH/A
+ nQcOSCbJE7oJL3sJNJyLeiEYcFqSNtaEbiFIMM3Z5xrVShss4cGQNdN0GWj3vkKRILtDkgoOP
+ jK4vOOGjsuV8rNjCnLoAugoJ3oQt+ayiOi5nMus/ibiKt1yCPSfX+5CyvgyHoSJbQeyLnPI05
+ kxRMJBeTO4nSpRMq8ToHgn6FRz+GKB/mI/bz2PY1jXIWrrLv12u6UnTEK2E8EmT/IS9nGEOca
+ tmgBxZ2PbAud/clpyYFeaxR2fVYQe152SK8mhniE4XkSZeXpuUfabDQzdLTbCf9ZfYAnUxXjL
+ i5vOhlC3Qk4m/T76WccADsEQjdWkmWqg/UO4iYrRcOABu6JzOMLBrcLGOI1X6NrB7BAzRJgzr
+ vkrmF64/SSBB/F3AHB/CBc5sNZPgeeQN1UJTF4glBaYFDKhIuty7/Gh7GRDaEj19M9N/wWG9u
+ fZiI3sun+fjpq/N7UIdAkfCMDn7mphPZ2Vh619VrLsrWYfnQe0uAhnJGIqf/+D4aFVIvgEzyo
+ rt7kHyFF9ck8zWDXgkcb01ANHQV/5ks42UvB9LAbRZ6c5eo9qTmIAB5Se9SCLD7ULornwxXBt
+ fUhnraKuxBmBRRpI8wmFJLMFdfwwISPPIMpNE86v6pJa0=
 
-On Fri, 11 Oct 2024, Kurt Borja wrote:
+Am 10.10.24 um 11:42 schrieb Basavaraj Natikar:
 
-> Signed-off-by: Kurt Borja <kuurtb@gmail.com>
+> AMD X3D processors, also known as AMD 3D V-Cache, feature dual Core
+> Complex Dies (CCDs) and enlarged L3 cache, enabling dynamic mode
+> switching between Frequency and Cache modes. To optimize performance,
+> implement the AMD 3D V-Cache Optimizer, which allows selecting either:
+>
+> Frequency mode: cores within the faster CCD are prioritized before
+> those in the slower CCD.
+>
+> Cache mode: cores within the larger L3 CCD are prioritized before
+> those in the smaller L3 CCD.
+>
+> Co-developed-by: Perry Yuan <perry.yuan@amd.com>
+> Signed-off-by: Perry Yuan <perry.yuan@amd.com>
+> Co-developed-by: Mario Limonciello <mario.limonciello@amd.com>
+> Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
+> Reviewed-by: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
+> Signed-off-by: Basavaraj Natikar <Basavaraj.Natikar@amd.com>
 > ---
->  Documentation/wmi/devices/alienware-wmi.rst | 364 ++++++++++++++++++++
->  1 file changed, 364 insertions(+)
->  create mode 100644 Documentation/wmi/devices/alienware-wmi.rst
-> 
-> diff --git a/Documentation/wmi/devices/alienware-wmi.rst b/Documentation/wmi/devices/alienware-wmi.rst
+>   MAINTAINERS                           |   7 +
+>   drivers/platform/x86/amd/Kconfig      |  12 ++
+>   drivers/platform/x86/amd/Makefile     |   2 +
+>   drivers/platform/x86/amd/x3d_vcache.c | 193 ++++++++++++++++++++++++++
+>   4 files changed, 214 insertions(+)
+>   create mode 100644 drivers/platform/x86/amd/x3d_vcache.c
+>
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index a097afd76ded..61cb6a294f4c 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -972,6 +972,13 @@ Q:	https://patchwork.kernel.org/project/linux-rdma/=
+list/
+>   F:	drivers/infiniband/hw/efa/
+>   F:	include/uapi/rdma/efa-abi.h
+>
+> +AMD 3D V-CACHE PERFORMANCE OPTIMIZER DRIVER
+> +M:	Basavaraj Natikar <Basavaraj.Natikar@amd.com>
+> +R:	Mario Limonciello <mario.limonciello@amd.com>
+> +L:	platform-driver-x86@vger.kernel.org
+> +S:	Supported
+> +F:	drivers/platform/x86/amd/x3d_vcache.c
+> +
+>   AMD ADDRESS TRANSLATION LIBRARY (ATL)
+>   M:	Yazen Ghannam <Yazen.Ghannam@amd.com>
+>   L:	linux-edac@vger.kernel.org
+> diff --git a/drivers/platform/x86/amd/Kconfig b/drivers/platform/x86/amd=
+/Kconfig
+> index f88682d36447..d73f691020d0 100644
+> --- a/drivers/platform/x86/amd/Kconfig
+> +++ b/drivers/platform/x86/amd/Kconfig
+> @@ -6,6 +6,18 @@
+>   source "drivers/platform/x86/amd/pmf/Kconfig"
+>   source "drivers/platform/x86/amd/pmc/Kconfig"
+>
+> +config AMD_3D_VCACHE
+> +	tristate "AMD 3D V-Cache Performance Optimizer Driver"
+> +	depends on X86_64 && ACPI
+> +	help
+> +	  The driver provides a sysfs interface, enabling the setting of a bia=
+s
+> +	  that alters CPU core reordering. This bias prefers cores with higher
+> +	  frequencies or larger L3 caches on processors supporting AMD 3D V-Ca=
+che
+> +	  technology.
+> +
+> +	  If you choose to compile this driver as a module the module will be
+> +	  called amd_3d_vcache.
+> +
+>   config AMD_HSMP
+>   	tristate "AMD HSMP Driver"
+>   	depends on AMD_NB && X86_64 && ACPI
+> diff --git a/drivers/platform/x86/amd/Makefile b/drivers/platform/x86/am=
+d/Makefile
+> index dcec0a46f8af..16e4cce02242 100644
+> --- a/drivers/platform/x86/amd/Makefile
+> +++ b/drivers/platform/x86/amd/Makefile
+> @@ -4,6 +4,8 @@
+>   # AMD x86 Platform-Specific Drivers
+>   #
+>
+> +obj-$(CONFIG_AMD_3D_VCACHE)     +=3D amd_3d_vcache.o
+> +amd_3d_vcache-objs              :=3D x3d_vcache.o
+>   obj-$(CONFIG_AMD_PMC)		+=3D pmc/
+>   amd_hsmp-y			:=3D hsmp.o
+>   obj-$(CONFIG_AMD_HSMP)		+=3D amd_hsmp.o
+> diff --git a/drivers/platform/x86/amd/x3d_vcache.c b/drivers/platform/x8=
+6/amd/x3d_vcache.c
 > new file mode 100644
-> index 000000000..cf5d6259f
+> index 000000000000..679613d02b9a
 > --- /dev/null
-> +++ b/Documentation/wmi/devices/alienware-wmi.rst
-> @@ -0,0 +1,364 @@
-> +.. SPDX-License-Identifier: GPL-2.0-or-later
+> +++ b/drivers/platform/x86/amd/x3d_vcache.c
+> @@ -0,0 +1,193 @@
+> +// SPDX-License-Identifier: GPL-2.0-or-later
+> +/*
+> + * AMD 3D V-Cache Performance Optimizer Driver
+> + *
+> + * Copyright (c) 2024, Advanced Micro Devices, Inc.
+> + * All Rights Reserved.
+> + *
+> + * Authors: Basavaraj Natikar <Basavaraj.Natikar@amd.com>
+> + *          Perry Yuan <perry.yuan@amd.com>
+> + *          Mario Limonciello <mario.limonciello@amd.com>
+> + *
+> + */
 > +
-> +==============================================
-> +Dell AWCC WMI interface driver (alienware-wmi)
-> +==============================================
+> +#define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
 > +
-> +Introduction
-> +============
+> +#include <linux/acpi.h>
+> +#include <linux/device.h>
+> +#include <linux/errno.h>
+> +#include <linux/module.h>
+> +#include <linux/mutex.h>
+> +#include <linux/platform_device.h>
 > +
-> +The WMI device WMAX has been implemented for many Alienware and Dell's G-Series
-> +models. Throughout these models, two implementations have been identified. The
-> +first one, used by older systems, deals with HDMI, brightness, RGB, amplifier
-> +and deep sleep control. The second one used by newer systems deals primarily
-> +with thermal, overclocking, and GPIO control.
+> +static char *x3d_mode =3D "frequency";
+> +module_param(x3d_mode, charp, 0444);
+> +MODULE_PARM_DESC(x3d_mode, "Initial 3D-VCache mode; 'frequency' (defaul=
+t) or 'cache'");
 > +
-> +It is suspected that the latter is used by Alienware Command Center (AWCC) to
-> +manage manufacturer predefined thermal profiles. The alienware-wmi driver
-> +exposes Thermal_Information and Thermal_Control methods through the Platform
-> +Profile API to mimic AWCC's behavior.
+> +#define DSM_REVISION_ID			0
+> +#define DSM_GET_FUNCS_SUPPORTED		0
+> +#define DSM_SET_X3D_MODE		1
 > +
-> +This newer interface, named AWCCMethodFunction has been reverse engineered, as
-> +Dell has not provided any official documentation. We will try to describe to the
-> +best of our ability its discovered inner workings.
+> +static guid_t x3d_guid =3D GUID_INIT(0xdff8e55f, 0xbcfd, 0x46fb, 0xba, =
+0x0a,
+> +				   0xef, 0xd0, 0x45, 0x0f, 0x34, 0xee);
 > +
-> +.. note::
-> +   The following method description may vary between models.
+> +enum amd_x3d_mode_type {
+> +	MODE_INDEX_FREQ,
+> +	MODE_INDEX_CACHE,
+> +};
 > +
-> +WMI interface description
-> +-------------------------
+> +static const char * const amd_x3d_mode_strings[] =3D {
+> +	[MODE_INDEX_FREQ] =3D "frequency",
+> +	[MODE_INDEX_CACHE] =3D "cache",
+> +};
 > +
-> +The WMI interface description can be decoded from the embedded binary MOF (bmof)
-> +data using the `bmfdec <https://github.com/pali/bmfdec>`_ utility:
+> +struct amd_x3d_dev {
+> +	struct device *dev;
+> +	acpi_handle ahandle;
+> +	/* To protect x3d mode setting */
+> +	struct mutex lock;
+> +	enum amd_x3d_mode_type curr_mode;
+> +};
 > +
-> +::
+> +static int amd_x3d_mode_switch(struct amd_x3d_dev *data, int new_state)
+> +{
+> +	union acpi_object *out, argv;
 > +
-> + [WMI, Dynamic, Provider("WmiProv"), Locale("MS\\0x409"), Description("WMI Function"), guid("{A70591CE-A997-11DA-B012-B622A1EF5492}")]
-> + class AWCCWmiMethodFunction {
-> +   [key, read] string InstanceName;
-> +   [read] boolean Active;
+> +	guard(mutex)(&data->lock);
+> +	argv.type =3D ACPI_TYPE_INTEGER;
+> +	argv.integer.value =3D new_state;
 > +
-> +   [WmiMethodId(13), Implemented, read, write, Description("Return Overclocking Report.")] void Return_OverclockingReport([out] uint32 argr);
-> +   [WmiMethodId(14), Implemented, read, write, Description("Set OCUIBIOS Control.")] void Set_OCUIBIOSControl([in] uint32 arg2, [out] uint32 argr);
-> +   [WmiMethodId(15), Implemented, read, write, Description("Clear OC FailSafe Flag.")] void Clear_OCFailSafeFlag([out] uint32 argr);
-> +   [WmiMethodId(19), Implemented, read, write, Description("Get Fan Sensors.")] void GetFanSensors([in] uint32 arg2, [out] uint32 argr);
-> +   [WmiMethodId(20), Implemented, read, write, Description("Thermal Information.")] void Thermal_Information([in] uint32 arg2, [out] uint32 argr);
-> +   [WmiMethodId(21), Implemented, read, write, Description("Thermal Control.")] void Thermal_Control([in] uint32 arg2, [out] uint32 argr);
-> +   [WmiMethodId(23), Implemented, read, write, Description("MemoryOCControl.")] void MemoryOCControl([in] uint32 arg2, [out] uint32 argr);
-> +   [WmiMethodId(26), Implemented, read, write, Description("System Information.")] void SystemInformation([in] uint32 arg2, [out] uint32 argr);
-> +   [WmiMethodId(28), Implemented, read, write, Description("Power Information.")] void PowerInformation([in] uint32 arg2, [out] uint32 argr);
-> +   [WmiMethodId(32), Implemented, read, write, Description("FW Update GPIO toggle.")] void FWUpdateGPIOtoggle([in] uint32 arg2, [out] uint32 argr);
-> +   [WmiMethodId(33), Implemented, read, write, Description("Read Total of GPIOs.")] void ReadTotalofGPIOs([out] uint32 argr);
-> +   [WmiMethodId(34), Implemented, read, write, Description("Read GPIO pin Status.")] void ReadGPIOpPinStatus([in] uint32 arg2, [out] uint32 argr);
-> +   [WmiMethodId(35), Implemented, read, write, Description("Read Chassis Color.")] void ReadChassisColor([out] uint32 argr);
-> +   [WmiMethodId(36), Implemented, read, write, Description("Read Platform Properties.")] void ReadPlatformProperties([out] uint32 argr);
-> +   [WmiMethodId(128), Implemented, read, write, Description("Caldera SW installation.")] void CalderaSWInstallation([out] uint32 argr);
-> +   [WmiMethodId(129), Implemented, read, write, Description("Caldera SW is released.")] void CalderaSWReleased([out] uint32 argr);
-> +   [WmiMethodId(130), Implemented, read, write, Description("Caldera Connection Status.")] void CalderaConnectionStatus([in] uint32 arg2, [out] uint32 argr);
-> +   [WmiMethodId(131), Implemented, read, write, Description("Surprise Unplugged Flag Status.")] void SurpriseUnpluggedFlagStatus([out] uint32 argr);
-> +   [WmiMethodId(132), Implemented, read, write, Description("Clear Surprise Unplugged Flag.")] void ClearSurpriseUnpluggedFlag([out] uint32 argr);
-> +   [WmiMethodId(133), Implemented, read, write, Description("Cancel Undock Request.")] void CancelUndockRequest([out] uint32 argr);
-> +   [WmiMethodId(135), Implemented, read, write, Description("Devices in Caldera.")] void DevicesInCaldera([in] uint32 arg2, [out] uint32 argr);
-> +   [WmiMethodId(136), Implemented, read, write, Description("Notify BIOS for SW ready to disconnect Caldera.")] void NotifyBIOSForSWReadyToDisconnectCaldera([out] uint32 argr);
-> +   [WmiMethodId(160), Implemented, read, write, Description("Tobii SW installation.")] void TobiiSWinstallation([out] uint32 argr);
-> +   [WmiMethodId(161), Implemented, read, write, Description("Tobii SW Released.")] void TobiiSWReleased([out] uint32 argr);
-> +   [WmiMethodId(162), Implemented, read, write, Description("Tobii Camera Power Reset.")] void TobiiCameraPowerReset([out] uint32 argr);
-> +   [WmiMethodId(163), Implemented, read, write, Description("Tobii Camera Power On.")] void TobiiCameraPowerOn([out] uint32 argr);
-> +   [WmiMethodId(164), Implemented, read, write, Description("Tobii Camera Power Off.")] void TobiiCameraPowerOff([out] uint32 argr);
-> + };
+> +	out =3D acpi_evaluate_dsm(data->ahandle, &x3d_guid, DSM_REVISION_ID, D=
+SM_SET_X3D_MODE,
+> +				&argv);
+> +	if (!out) {
+> +		dev_err(data->dev, "failed to evaluate _DSM\n");
+> +		return -EINVAL;
+> +	}
 > +
-> +Some of these methods get quite intricate so we will describe them using
-> +pseudo-code that vaguely resembles the original ASL code.
+> +	data->curr_mode =3D new_state;
 > +
-> +Argument Structure
-> +------------------
-> +
-> +All input arguments have type **uint32** and their structure is very similar
-> +between methods. Usually, the first byte corresponds to a specific *operation*
-> +the method performs, and the subsequent bytes correspond to *arguments* passed
-> +to this *operation*. For example, if an operation has code 0x01 and requires an
-> +ID 0xA0, the argument you would pass to the method is 0xA001.
-> +
-> +
-> +Thermal Methods
-> +===============
-> +
-> +WMI method Thermal_Information([in] uint32 arg2, [out] uint32 argr)
-> +-------------------------------------------------------------------
-> +
-> +::
-> +
-> + if BYTE_0(arg2) == 0x01:
-> +         argr = 1
-> +
-> + if BYTE_0(arg2) == 0x02:
-> +         argr = UNKNOWN_CONSTANT
-> +
-> + if BYTE_0(arg2) == 0x03:
-> +         if BYTE_1(arg2) == 0x00:
-> +                 argr = FAN_ID_0
-> +
-> +         if BYTE_1(arg2) == 0x01:
-> +                 argr = FAN_ID_1
-> +
-> +         if BYTE_1(arg2) == 0x02:
-> +                 argr = FAN_ID_2
-> +
-> +         if BYTE_1(arg2) == 0x03:
-> +                 argr = FAN_ID_3
-> +
-> +         if BYTE_1(arg2) == 0x04:
-> +                 argr = SENSOR_ID_CPU | 0x0100
-> +
-> +         if BYTE_1(arg2) == 0x05:
-> +                 argr = SENSOR_ID_GPU | 0x0100
-> +
-> +         if BYTE_1(arg2) == 0x06:
-> +                 argr = THERMAL_MODE_QUIET_ID
-> +
-> +         if BYTE_1(arg2) == 0x07:
-> +                 argr = THERMAL_MODE_BALANCED_ID
-> +
-> +         if BYTE_1(arg2) == 0x08:
-> +                 argr = THERMAL_MODE_BALANCED_PERFORMANCE_ID
-> +
-> +         if BYTE_1(arg2) == 0x09:
-> +                 argr = THERMAL_MODE_PERFORMANCE_ID
-> +
-> +         if BYTE_1(arg2) == 0x0A:
-> +                 argr = THERMAL_MODE_LOW_POWER_ID
-> +
-> +         if BYTE_1(arg2) == 0x0B:
-> +                 argr = THERMAL_MODE_GMODE_ID
-> +
-> +         else:
-> +                 argr = 0xFFFFFFFF
-> +
-> + if BYTE_0(arg2) == 0x04:
-> +         if is_valid_sensor(BYTE_1(arg2)):
-> +                 argr = SENSOR_TEMP_C
-> +         else:
-> +                 argr = 0xFFFFFFFF
-> +
-> + if BYTE_0(arg2) == 0x05:
-> +         if is_valid_fan(BYTE_1(arg2)):
-> +                 argr = FAN_RPM()
-> +
-> + if BYTE_0(arg2) == 0x06:
-> +         skip
-> +
-> + if BYTE_0(arg2) == 0x07:
-> +         argr = 0
-> +
-> + If BYTE_0(arg2) == 0x08:
-> +         if is_valid_fan(BYTE_1(arg2)):
-> +                 argr = 0
-> +         else:
-> +                 argr = 0xFFFFFFFF
-> +
-> + if BYTE_0(arg2) == 0x09:
-> +         if is_valid_fan(BYTE_1(arg2)):
-> +                 argr = FAN_UNKNOWN_STAT_0()
-> +
-> +         else:
-> +                 argr = 0xFFFFFFFF
-> +
-> + if BYTE_0(arg2) == 0x0A:
-> +         argr = THERMAL_MODE_BALANCED_ID
-> +
-> + if BYTE_0(arg2) == 0x0B:
-> +         argr = CURRENT_THERMAL_MODE()
-> +
-> + if BYTE_0(arg2) == 0x0C:
-> +         if is_valid_fan(BYTE_1(arg2)):
-> +                 argr = FAN_UNKNOWN_STAT_1()
-> +         else:
-> +                 argr = 0xFFFFFFFF
-> +
-> +WMI method Thermal_Control([in] uint32 arg2, [out] uint32 argr)
-> +---------------------------------------------------------------
-> +
-> +::
-> +
-> + if BYTE_0(arg2) == 0x01:
-> +         if is_valid_thermal_profile(BYTE_1(arg2)):
-> +                 SET_THERMAL_PROFILE(BYTE_1(arg2))
-> +                 argr = 0
-> +
-> + if BYTE_0(arg2) == 0x02:
-> +         if is_valid_fan(BYTE_1(arg2)):
-> +                 SET_FAN_SPEED_MULTIPLIER(BYTE_2(arg2))
-> +                 argr = 0
-> +         else:
-> +                 argr = 0xFFFFFFFF
-> +
-> +.. note::
-> +   While you can manually change the fan speed multiplier with this method,
-> +   Dell's BIOS tends to overwrite this changes anyway.
-> +
-> +These are the known thermal profile codes:
-> +
-> +::
-> +
-> + CUSTOM                         0x00
-> +
-> + QUIET                          0x96
-> + BALANCED                       0x97
-> + BALANCED_PERFORMANCE           0x98
-> + PERFORMANCE                    0x99
-> +
-> + QUIET_USTT                     0xA3
-> + BALANCED_USTT                  0xA0
-> + BALANCED_PERFORMANCE_USTT      0xA1
-> + PERFORMANCE_USTT               0xA4
-> + LOW_POWER_USTT                 0xA5
-> +
-> + GMODE                          0xAB
-> +
-> +Usually if a model doesn't support the first four profiles they will support
-> +the User Selectable Thermal Tables (USTT) profiles and vice-versa.
-> +
-> +GMODE replaces PERFORMANCE in G-Series laptops.
-> +
-> +Very grateful to `AlexIII <https://github.com/AlexIII/tcc-g15>`_ for discovering
-> +some of the codes compatible with G-Series laptops.
+> +	ACPI_FREE(out);
 
-Maybe use some less personal wording to give kudos and perhaps put it into 
-the end of the doc.
+Hi,
 
--- 
- i.
+please use kfree() instead of ACPI_FREE().
 
+> +
+> +	return 0;
+> +}
+> +
+> +static ssize_t amd_x3d_mode_store(struct device *dev, struct device_att=
+ribute *attr,
+> +				  const char *buf, size_t count)
+> +{
+> +	struct amd_x3d_dev *data =3D dev_get_drvdata(dev);
+> +	int ret;
+> +
+> +	ret =3D sysfs_match_string(amd_x3d_mode_strings, buf);
+> +	if (ret < 0) {
+> +		dev_err(dev, "no matching mode to set %s\n", buf);
+> +		return ret;
+> +	}
+> +
+> +	ret =3D amd_x3d_mode_switch(data, ret);
+> +
+> +	return ret ? ret : count;
 
-> +WMI method GetFanSensors([in] uint32 arg2, [out] uint32 argr)
-> +-------------------------------------------------------------
+ret =3D amd_x3d_mode_switch(data, ret);
+if (ret < 0)
+	return ret;
+
+return count;
+
+> +}
 > +
-> +::
+> +static ssize_t amd_x3d_mode_show(struct device *dev, struct device_attr=
+ibute *attr, char *buf)
+> +{
+> +	struct amd_x3d_dev *data =3D dev_get_drvdata(dev);
 > +
-> + if BYTE_0(arg2) == 1:
-> +        if is_valid_fan(BYTE_1(arg2)):
-> +                argr = 1
-> +        else:
-> +                argr = 0
+> +	if (data->curr_mode > MODE_INDEX_CACHE || data->curr_mode < MODE_INDEX=
+_FREQ)
+> +		return -EINVAL;
+
+Can curr_mode ever leave this range of values?
+
 > +
-> + if BYTE_0(arg2) == 2:
-> +        if is_valid_fan(BYTE_1(arg2)):
-> +                if BYTE_2(arg2) == 0:
-> +                        argr == SENSOR_ID
-> +                else
-> +                        argr == 0xFFFFFFFF
-> +        else:
-> +                argr = 0
+> +	return sysfs_emit(buf, "%s\n", amd_x3d_mode_strings[data->curr_mode]);
+> +}
+> +static DEVICE_ATTR_RW(amd_x3d_mode);
 > +
-> +Overclocking Methods
-> +====================
+> +static struct attribute *amd_x3d_attrs[] =3D {
+> +	&dev_attr_amd_x3d_mode.attr,
+> +	NULL
+> +};
+> +ATTRIBUTE_GROUPS(amd_x3d);
 > +
-> +.. warning::
-> +   These methods have not been tested and are only partially reverse
-> +   engineered.
+> +static int amd_x3d_supported(struct amd_x3d_dev *data)
+> +{
+> +	union acpi_object *out;
 > +
-> +WMI method Return_OverclockingReport([out] uint32 argr)
-> +-------------------------------------------------------
+> +	out =3D acpi_evaluate_dsm(data->ahandle, &x3d_guid, DSM_REVISION_ID,
+> +				DSM_GET_FUNCS_SUPPORTED, NULL);
+
+Please use acpi_check_dsm().
+
+> +	if (!out) {
+> +		dev_err(data->dev, "failed to evaluate _DSM\n");
+> +		return -ENODEV;
+> +	}
 > +
-> +::
+> +	if (out->type !=3D ACPI_TYPE_BUFFER) {
+> +		dev_err(data->dev, "invalid type %d\n", out->type);
+> +		ACPI_FREE(out);
+> +		return -EINVAL;
+> +	}
 > +
-> + CSMI (0xE3, 0x99)
-> + argr = 0
+> +	ACPI_FREE(out);
+> +	return 0;
+> +}
 > +
-> +CSMI is an unknown operation.
+> +static const struct acpi_device_id amd_x3d_acpi_ids[] =3D {
+> +	{"AMDI0101"},
+> +	{ },
+> +};
+> +MODULE_DEVICE_TABLE(acpi, amd_x3d_acpi_ids);
 > +
-> +WMI method Set_OCUIBIOSControl([in] uint32 arg2, [out] uint32 argr)
-> +-------------------------------------------------------------------
+> +static void amd_x3d_remove(void *context)
+> +{
+> +	struct amd_x3d_dev *data =3D context;
 > +
-> +::
+> +	mutex_destroy(&data->lock);
+
+Please use devm_mutex_init().
+
+> +}
 > +
-> + CSMI (0xE3, 0x99)
-> + argr = 0
+> +static int amd_x3d_probe(struct platform_device *pdev)
+> +{
+> +	const struct acpi_device_id *id;
+> +	struct amd_x3d_dev *data;
+> +	acpi_handle handle;
+> +	int ret;
 > +
-> +CSMI is an unknown operation
+> +	handle =3D ACPI_HANDLE(&pdev->dev);
+> +	if (!handle)
+> +		return -ENODEV;
 > +
-> +WMI method Clear_OCFailSafeFlag([out] uint32 argr)
-> +--------------------------------------------------
+> +	id =3D acpi_match_device(amd_x3d_acpi_ids, &pdev->dev);
+> +	if (!id)
+> +		dev_err_probe(&pdev->dev, -ENODEV, "unable to match ACPI ID and data\=
+n");
+
+The driver core already takes care of that, please remove.
+
 > +
-> +::
+> +	data =3D devm_kzalloc(&pdev->dev, sizeof(*data), GFP_KERNEL);
+> +	if (!data)
+> +		return -ENOMEM;
 > +
-> + CSMI (0xE3, 0x99)
-> + argr = 0
+> +	data->dev =3D &pdev->dev;
+> +	data->ahandle =3D handle;
+> +	platform_set_drvdata(pdev, data);
 > +
-> +CSMI is an unknown operation
+> +	ret =3D amd_x3d_supported(data);
+> +	if (ret)
+> +		dev_err_probe(&pdev->dev, ret, "not supported on this platform\n");
 > +
+> +	ret =3D match_string(amd_x3d_mode_strings, ARRAY_SIZE(amd_x3d_mode_str=
+ings), x3d_mode);
+> +	if (ret < 0)
+> +		return dev_err_probe(&pdev->dev, -EINVAL, "invalid mode %s\n", x3d_mo=
+de);
 > +
-> +WMI method MemoryOCControl([in] uint32 arg2, [out] uint32 argr)
-> +---------------------------------------------------------------
+> +	mutex_init(&data->lock);
 > +
-> +AWCC supports memory overclocking, but this method is very intricate and has
-> +not been deciphered yet.
+> +	ret =3D amd_x3d_mode_switch(data, ret);
+> +	if (ret < 0)
+> +		return ret;
+
+You forgot to call mutex_destroy() here in case of an error. Using devm_mu=
+tex_init() would solve that.
+
+Thanks,
+Armin Wolf
+
 > +
-> +GPIO methods
-> +============
+> +	return devm_add_action_or_reset(&pdev->dev, amd_x3d_remove, data);
+> +}
 > +
-> +These methods are probably related to some kind of firmware update system,
-> +through a GPIO device.
+> +static struct platform_driver amd_3d_vcache_driver =3D {
+> +	.driver =3D {
+> +		.name =3D "amd_x3d_vcache",
+> +		.dev_groups =3D amd_x3d_groups,
+> +		.acpi_match_table =3D amd_x3d_acpi_ids,
+> +	},
+> +	.probe =3D amd_x3d_probe,
+> +};
+> +module_platform_driver(amd_3d_vcache_driver);
 > +
-> +.. warning::
-> +   These methods have not been tested and are only partially reverse
-> +   engineered.
-> +
-> +WMI method FWUpdateGPIOtoggle([in] uint32 arg2, [out] uint32 argr)
-> +------------------------------------------------------------------
-> +
-> +::
-> +
-> + if BYTE_0(arg2) == 0:
-> +         if BYTE_1(arg2) == 1:
-> +                 SET_PIN_A_HIGH()
-> +         else:
-> +                 SET_PIN_A_LOW()
-> +
-> + if BYTE_0(arg2) == 1:
-> +         if BYTE_1(arg2) == 1:
-> +                 SET_PIN_B_HIGH()
-> +
-> +         else:
-> +                 SET_PIN_B_LOW()
-> +
-> + else:
-> +         argr = 1
-> +
-> +WMI method ReadTotalofGPIOs([out] uint32 argr)
-> +----------------------------------------------
-> +
-> +::
-> +
-> + argr = 0x02
-> +
-> +WMI method ReadGPIOpPinStatus([in] uint32 arg2, [out] uint32 argr)
-> +------------------------------------------------------------------
-> +
-> +::
-> +
-> + if BYTE_0(arg2) == 0:
-> +         argr = PIN_A_STATUS
-> +
-> + if BYTE_0(arg2) == 1:
-> +         argr = PIN_B_STATUS
-> +
-> +
-> +Other information Methods
-> +=========================
-> +
-> +WMI method SystemInformation([in] uint32 arg2, [out] uint32 argr)
-> +-----------------------------------------------------------------
-> +
-> +Returns unknown information.
-> +
-> +WMI method PowerInformation([in] uint32 arg2, [out] uint32 argr)
-> +----------------------------------------------------------------
-> +
-> +Returns unknown information.
-> +
-> +WMI method ReadChassisColor([out] uint32 argr)
-> +----------------------------------------------
-> +
-> +::
-> +
-> + argr = CHASSIS_COLOR_ID
-> +
-> +WMI method ReadPlatformProperties([out] uint32 argr)
-> +----------------------------------------------------
-> +
-> +Returns unknown information.
-> +
-> 
+> +MODULE_DESCRIPTION("AMD 3D V-Cache Performance Optimizer Driver");
+> +MODULE_LICENSE("GPL");
