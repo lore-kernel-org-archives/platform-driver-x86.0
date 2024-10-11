@@ -1,195 +1,168 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 096A914293;
-	Fri, 11 Oct 2024 11:05:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F35A2141D6;
+	Fri, 11 Oct 2024 11:08:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728644731; cv=none; b=hN7Cllly3FVhZjVeZkAeyXjwN7GCjViGBxR+U6klxfcEkWMOenh6PqPDfiwmMFRLoBXFIc+R8eNPcyKPau0wI4p6tR52liWatscgija0+nvQpuJ3MUzuGSNfyKjzov7Z9zxr5KMCv3BfoUL1LT5wj5JiHmaEEkudc7evY+tJYgE=
+	t=1728644886; cv=none; b=qhS69pVnU6kQNVAAklTzqf9HtfyzEpVgJNXGufXSELnmAnDZmMhikI+bHchii4jCcVlEDu9qc3y58SnfEBEyh09OAHhjsCIwj7brI24oW5CWwd9chjLON5M4xCAgyixcEOERjjYQWyD3vGPI1hBHIQu34hx3UluhdUJ/gkp6K2E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728644731; c=relaxed/simple;
-	bh=pWaUK6oZz9+kh/mcn2cVY2AIOr66cZMGpSFQuPnLBBU=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=pX0RYHpEtp3oNiVE510U8zJU3AE4HmTiRm37UvlX9x7Eou/Gby0OnpHu143uKmwRv6OSkq5UMWKhZo/LIx7It/qVgXS/KubYGt/UO6RJ0aTKyrM1XzVkHB9tJeYsSSvLu+J8LRzUlq2U06K9y2wNVaVyCJYagTCLSm0gx+kDNOk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Oq/gXs7m; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1728644886; c=relaxed/simple;
+	bh=x5DKXx2zGLj8Z0SFGl9Ns91UnOPhG/Ub75VYlomXoTM=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=gZlGu12C22dRka+rzvSSoq7Jr0v0gz0GcV0vV0SRj7LBLV7aHv9PyKknHuf4BEtm9ZJE0B9PZQgMwwH1TxLPa6KRODD8Tvcut+AaNgnVXNMBmT/OOwxUJR3zJ9CJWUeJMAFC8P0C970vSMItgTy+vyRyvMsWKfvzB+6pd/+Bq4A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=eA2a8Unf; arc=none smtp.client-ip=198.175.65.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Oq/gXs7m"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7BF49C4AF09;
-	Fri, 11 Oct 2024 11:05:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1728644730;
-	bh=pWaUK6oZz9+kh/mcn2cVY2AIOr66cZMGpSFQuPnLBBU=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=Oq/gXs7mU4RKNiYT78CK9ANwbyf/NY5ld2EnY1toMMqv5L76B2usOJ99vsj1AD/89
-	 XL/Hg4F5QDGXNukUtX5lHRia8/NoHz9ti8EmMrooX9vSfzGjxUsvTse6b3jhiAqZPR
-	 Cc0Y51FbNBTy7NmPpE+MFW8gevqfFBv0hAOG3tG7VMbWtsS2jotLCl5MtgO7yAjli1
-	 U+xZ3YHVaMLAeEk0Hf9CLBMyAUusGkADGCOtvys+3V3OmYW31PBH70qZO64yT8NjKU
-	 192zv/M9Bj+lKJuLbpyspN85dGZJGn6QE0P6ZEVi0rJc3tbZHB16TouqrUWrjRMl24
-	 zEclR2YvVV9Vg==
-Received: by mail-oo1-f49.google.com with SMTP id 006d021491bc7-5e803a607f3so735517eaf.2;
-        Fri, 11 Oct 2024 04:05:30 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCUPSUkXNOgCyzqt8PthcuHDWh83CI6RKn+/KsfGgtsuK9V8oWjaSiMF7S2ayT6bRgpXbeLWXSnjYDvXi/M=@vger.kernel.org, AJvYcCXEphSmL2I3vVahIXTtas2FcRoZQS/N8CXxWMmiHUHiRoi/1yuLEmaLu+egWvBLp+4vmZJh1xi6p1nSHIc+Ew2K71dXuw==@vger.kernel.org, AJvYcCXOGE7d9w28mNkrqfQQIBS9pYO91a/cHwfAPcPM3I7tjTTsNAh9sAGprlXWJqvdpskZN59Adn2WnhU=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx0HNXcY1/5Jen6zPPj5PSt5hm12LFhu7ghBmKpRS0wg0FLpym8
-	RsRIXqt/1BD9qe84TOu2EmXJFLKYzH5YozJR05uWR0hJ7jW0nHl1Nq+SQGMsLvtGsVNWBGR1jti
-	BIVVAuPBXKNZeBUzUAKUSeSkJkAs=
-X-Google-Smtp-Source: AGHT+IHIXek8kNzmz8ZDbXKuZUg4I3LS7/jhn6vFJ/fxIC+tkCPgzzIGfol6kVCxgvSLASuLxB7nC2KExxoE+D8evqs=
-X-Received: by 2002:a05:6870:2c93:b0:277:f14c:9c0f with SMTP id
- 586e51a60fabf-2886df763e7mr1168852fac.32.1728644729753; Fri, 11 Oct 2024
- 04:05:29 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="eA2a8Unf"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1728644884; x=1760180884;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=x5DKXx2zGLj8Z0SFGl9Ns91UnOPhG/Ub75VYlomXoTM=;
+  b=eA2a8UnfHOKPN5dsuvojy6v3j54b/hxvu6q/p6OYUe9ZhXMX20BTqMTf
+   hsqcZCp7ngJair831wqwmTfoGNdQqgfSRYH893xiENSQ7TbCc2Ux6oiFW
+   +SCmhK2UbPaWm7xe2NpMJmB3gnWxkSCP+bVbMjNeW6gKLSwvmWO23dY88
+   V/I26IkemShHaTTS4HCP3e6RIk6dB9Tf7nQyB9RsaDo5Z6z02X1YWtB7N
+   3VTHtemhrhF/ynnylTRpO/BwMr41jZE8hjjhFaCVlUvo8rWGdURY6xisa
+   lxUx0P6QTCct1212J84dWEax4S+0QQPuFTuVfX7U07KN4S0I/h2FeE0wO
+   Q==;
+X-CSE-ConnectionGUID: z3mRUulSSoOujiKTZLCiaQ==
+X-CSE-MsgGUID: zr8hQahuQjeIoXo4jXuwng==
+X-IronPort-AV: E=McAfee;i="6700,10204,11221"; a="39169802"
+X-IronPort-AV: E=Sophos;i="6.11,195,1725346800"; 
+   d="scan'208";a="39169802"
+Received: from orviesa002.jf.intel.com ([10.64.159.142])
+  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Oct 2024 04:08:04 -0700
+X-CSE-ConnectionGUID: AHEP0UNeTkeuIpSRNper8Q==
+X-CSE-MsgGUID: fdbeuio6TxKMMOEHXO8YLw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.11,195,1725346800"; 
+   d="scan'208";a="107732736"
+Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.164])
+  by orviesa002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Oct 2024 04:08:02 -0700
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Fri, 11 Oct 2024 14:07:58 +0300 (EEST)
+To: Kurt Borja <kuurtb@gmail.com>
+cc: Hans de Goede <hdegoede@redhat.com>, W_Armin@gmx.de, 
+    LKML <linux-kernel@vger.kernel.org>, platform-driver-x86@vger.kernel.org
+Subject: Re: [PATCH v4 2/4] alienware-wmi: alienware_wmax_command() is now
+ input size agnostic
+In-Reply-To: <20241011064712.306484-2-kuurtb@gmail.com>
+Message-ID: <61bddc97-0fd0-8639-2df2-8b0b48f90695@linux.intel.com>
+References: <20241011064336.305795-2-kuurtb@gmail.com> <20241011064712.306484-2-kuurtb@gmail.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20241011003640.1613812-1-david.e.box@linux.intel.com> <20241011003640.1613812-2-david.e.box@linux.intel.com>
-In-Reply-To: <20241011003640.1613812-2-david.e.box@linux.intel.com>
-From: "Rafael J. Wysocki" <rafael@kernel.org>
-Date: Fri, 11 Oct 2024 13:05:18 +0200
-X-Gmail-Original-Message-ID: <CAJZ5v0haLjsM67QCVg-6i6i7GmBZjhZzFTmm3=r+8gmAfP4qxQ@mail.gmail.com>
-Message-ID: <CAJZ5v0haLjsM67QCVg-6i6i7GmBZjhZzFTmm3=r+8gmAfP4qxQ@mail.gmail.com>
-Subject: Re: [PATCH V2 2/2] platform/x86/intel/pmc: Disable C1 auto-demotion
- during suspend
-To: "David E. Box" <david.e.box@linux.intel.com>
-Cc: hdegoede@redhat.com, ilpo.jarvinen@linux.intel.com, rjw@rjwysocki.net, 
-	srinivas.pandruvada@linux.intel.com, platform-driver-x86@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=US-ASCII
 
-On Fri, Oct 11, 2024 at 2:36=E2=80=AFAM David E. Box
-<david.e.box@linux.intel.com> wrote:
->
-> On some platforms, aggressive C1 auto-demotion may lead to failure to ent=
-er
-> the deepest C-state during suspend-to-idle, causing high power consumptio=
-n.
-> To prevent this, disable C1 auto-demotion during suspend and re-enable on
-> resume.
->
-> Signed-off-by: David E. Box <david.e.box@linux.intel.com>
+On Fri, 11 Oct 2024, Kurt Borja wrote:
+
+As mentioned, please add the description of the change here.
+
+This change also does int * -> u32 *, which I think is fine but please 
+mention the justification here. If somebody looks this change 10 years 
+from now, it helps a lot when the reasoning is recorded into the change.
+
+-- 
+ i.
+
+> Signed-off-by: Kurt Borja <kuurtb@gmail.com>
 > ---
->
-> V2 - Remove #define DEBUG
->    - Move refactor of cnl_resume() to separate patch
->    - Use smp_call_function() to disable and restore C1_AUTO_DEMOTE
->    - Add comment that the MSR is per core, not per package.
->    - Add comment that the online cpu mask remains unchanged during
->      suspend due to frozen userspace.
->
->  drivers/platform/x86/intel/pmc/cnp.c | 53 ++++++++++++++++++++++++++++
->  1 file changed, 53 insertions(+)
->
-> diff --git a/drivers/platform/x86/intel/pmc/cnp.c b/drivers/platform/x86/=
-intel/pmc/cnp.c
-> index 513c02670c5a..f12d4f0f9e93 100644
-> --- a/drivers/platform/x86/intel/pmc/cnp.c
-> +++ b/drivers/platform/x86/intel/pmc/cnp.c
-> @@ -8,6 +8,8 @@
->   *
->   */
->
-> +#include <linux/smp.h>
-> +#include <linux/suspend.h>
->  #include "core.h"
->
->  /* Cannon Lake: PGD PFET Enable Ack Status Register(s) bitmap */
-> @@ -206,8 +208,52 @@ const struct pmc_reg_map cnp_reg_map =3D {
->         .etr3_offset =3D ETR3_OFFSET,
->  };
->
-> +
-> +/*
-> + * Disable C1 auto-demotion
-> + *
-> + * Aggressive C1 auto-demotion may lead to failure to enter the deepest =
-C-state
-> + * during suspend-to-idle, causing high power consumption. To prevent th=
-is, we
-> + * disable C1 auto-demotion during suspend and re-enable on resume.
-> + *
-> + * Note that, although MSR_PKG_CST_CONFIG_CONTROL has 'package' in its n=
-ame, it
-> + * is actually a per-core MSR on client platforms, affecting only a sing=
-le CPU.
-> + * Therefore, it must be configured on all online CPUs. The online cpu m=
-ask is
-> + * unchanged during the phase of suspend/resume as user space is frozen.
-> + */
-> +
-> +static DEFINE_PER_CPU(u64, pkg_cst_config);
-> +
-> +static void disable_c1_auto_demote(void *unused)
-> +{
-> +       int cpunum =3D smp_processor_id();
-> +       u64 val;
-> +
-> +       rdmsrl(MSR_PKG_CST_CONFIG_CONTROL, val);
-> +       per_cpu(pkg_cst_config, cpunum) =3D val;
-> +       val &=3D ~NHM_C1_AUTO_DEMOTE;
-> +       wrmsrl(MSR_PKG_CST_CONFIG_CONTROL, val);
-> +       pr_debug("%s: cpu:%d cst %llx\n", __func__, cpunum, val);
-> +}
-
-If you decide to retain the debug statements, I generally prefer to
-separate them from the rest of the code with empty lines, for clarity.
-
-> +
-> +static void restore_c1_auto_demote(void *unused)
-> +{
-> +       int cpunum =3D smp_processor_id();
-> +
-> +       pr_debug("%s: cpu:%d cst %llx\n", __func__, cpunum,
-> +                per_cpu(pkg_cst_config, cpunum));
-> +       wrmsrl(MSR_PKG_CST_CONFIG_CONTROL, per_cpu(pkg_cst_config, cpunum=
-));
-> +}
-> +
-
-I would add something like
-
-static void s2idle_cpu_quirk(smp_call_func_t func)
-{
-       if (pm_suspend_via_firmware())
-              return;
-
-       preempt_disable();
-       func();
-       smp_call_function(func, NULL, 0);
-       preempt_enable();
-}
-
->  void cnl_suspend(struct pmc_dev *pmcdev)
+>  drivers/platform/x86/dell/alienware-wmi.c | 29 ++++++++++++-----------
+>  1 file changed, 15 insertions(+), 14 deletions(-)
+> 
+> diff --git a/drivers/platform/x86/dell/alienware-wmi.c b/drivers/platform/x86/dell/alienware-wmi.c
+> index 16a3fe9ac..8f7a8bfef 100644
+> --- a/drivers/platform/x86/dell/alienware-wmi.c
+> +++ b/drivers/platform/x86/dell/alienware-wmi.c
+> @@ -500,15 +500,15 @@ static void alienware_zone_exit(struct platform_device *dev)
+>  	kfree(zone_attrs);
+>  }
+>  
+> -static acpi_status alienware_wmax_command(struct wmax_basic_args *in_args,
+> -					  u32 command, int *out_data)
+> +static acpi_status alienware_wmax_command(void *in_args, size_t insize,
+> +					  u32 command, u32 *out_data)
 >  {
-> +       if (!pm_suspend_via_firmware()) {
-> +               preempt_disable();
-> +               disable_c1_auto_demote(NULL);
-> +               smp_call_function(disable_c1_auto_demote, NULL, 0);
-> +               preempt_enable();
-> +       }
-> +
-
-And here I'd just do
-
-      s2idle_cpu_quirk(disable_c1_auto_demote);
-
-and analogously below.
-
->         /*
->          * Due to a hardware limitation, the GBE LTR blocks PC10
->          * when a cable is attached. To unblock PC10 during suspend,
-> @@ -218,6 +264,13 @@ void cnl_suspend(struct pmc_dev *pmcdev)
->
->  int cnl_resume(struct pmc_dev *pmcdev)
->  {
-> +       if (!pm_suspend_via_firmware()) {
-> +               preempt_disable();
-> +               restore_c1_auto_demote(NULL);
-> +               smp_call_function(restore_c1_auto_demote, NULL, 0);
-> +               preempt_enable();
-> +       }
-> +
->         pmc_core_send_ltr_ignore(pmcdev, 3, 0);
->
->         return pmc_core_resume_common(pmcdev);
-> --
+>  	acpi_status status;
+>  	union acpi_object *obj;
+>  	struct acpi_buffer input;
+>  	struct acpi_buffer output;
+>  
+> -	input.length = sizeof(*in_args);
+> +	input.length = insize;
+>  	input.pointer = in_args;
+>  	if (out_data) {
+>  		output.length = ACPI_ALLOCATE_BUFFER;
+> @@ -541,8 +541,8 @@ static ssize_t show_hdmi_cable(struct device *dev,
+>  		.arg = 0,
+>  	};
+>  	status =
+> -	    alienware_wmax_command(&in_args, WMAX_METHOD_HDMI_CABLE,
+> -				   &out_data);
+> +	    alienware_wmax_command(&in_args, sizeof(in_args),
+> +				   WMAX_METHOD_HDMI_CABLE, &out_data);
+>  	if (ACPI_SUCCESS(status)) {
+>  		if (out_data == 0)
+>  			return sysfs_emit(buf, "[unconnected] connected unknown\n");
+> @@ -562,8 +562,8 @@ static ssize_t show_hdmi_source(struct device *dev,
+>  		.arg = 0,
+>  	};
+>  	status =
+> -	    alienware_wmax_command(&in_args, WMAX_METHOD_HDMI_STATUS,
+> -				   &out_data);
+> +	    alienware_wmax_command(&in_args, sizeof(in_args),
+> +				   WMAX_METHOD_HDMI_STATUS, &out_data);
+>  
+>  	if (ACPI_SUCCESS(status)) {
+>  		if (out_data == 1)
+> @@ -589,7 +589,8 @@ static ssize_t toggle_hdmi_source(struct device *dev,
+>  		args.arg = 3;
+>  	pr_debug("alienware-wmi: setting hdmi to %d : %s", args.arg, buf);
+>  
+> -	status = alienware_wmax_command(&args, WMAX_METHOD_HDMI_SOURCE, NULL);
+> +	status = alienware_wmax_command(&args, sizeof(args),
+> +					WMAX_METHOD_HDMI_SOURCE, NULL);
+>  
+>  	if (ACPI_FAILURE(status))
+>  		pr_err("alienware-wmi: HDMI toggle failed: results: %u\n",
+> @@ -642,8 +643,8 @@ static ssize_t show_amplifier_status(struct device *dev,
+>  		.arg = 0,
+>  	};
+>  	status =
+> -	    alienware_wmax_command(&in_args, WMAX_METHOD_AMPLIFIER_CABLE,
+> -				   &out_data);
+> +	    alienware_wmax_command(&in_args, sizeof(in_args),
+> +				   WMAX_METHOD_AMPLIFIER_CABLE, &out_data);
+>  	if (ACPI_SUCCESS(status)) {
+>  		if (out_data == 0)
+>  			return sysfs_emit(buf, "[unconnected] connected unknown\n");
+> @@ -694,8 +695,8 @@ static ssize_t show_deepsleep_status(struct device *dev,
+>  	struct wmax_basic_args in_args = {
+>  		.arg = 0,
+>  	};
+> -	status = alienware_wmax_command(&in_args, WMAX_METHOD_DEEP_SLEEP_STATUS,
+> -					&out_data);
+> +	status = alienware_wmax_command(&in_args, sizeof(in_args),
+> +					WMAX_METHOD_DEEP_SLEEP_STATUS, &out_data);
+>  	if (ACPI_SUCCESS(status)) {
+>  		if (out_data == 0)
+>  			return sysfs_emit(buf, "[disabled] s5 s5_s4\n");
+> @@ -723,8 +724,8 @@ static ssize_t toggle_deepsleep(struct device *dev,
+>  		args.arg = 2;
+>  	pr_debug("alienware-wmi: setting deep sleep to %d : %s", args.arg, buf);
+>  
+> -	status = alienware_wmax_command(&args, WMAX_METHOD_DEEP_SLEEP_CONTROL,
+> -					NULL);
+> +	status = alienware_wmax_command(&args, sizeof(args),
+> +					WMAX_METHOD_DEEP_SLEEP_CONTROL, NULL);
+>  
+>  	if (ACPI_FAILURE(status))
+>  		pr_err("alienware-wmi: deep sleep control failed: results: %u\n",
+> 
