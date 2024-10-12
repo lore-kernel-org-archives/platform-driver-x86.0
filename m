@@ -1,266 +1,461 @@
-Received: from mail-pj1-f43.google.com (mail-pj1-f43.google.com [209.85.216.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E428A41;
-	Sat, 12 Oct 2024 03:53:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A90821531D2
+	for <platform-driver-x86@vger.kernel.org>; Sat, 12 Oct 2024 10:18:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728705202; cv=none; b=NXFaCizuvWsRDYVvpxB79vLJg3mrtlYM7ZACqSjm5yflBlHeSsFOdo0zRmjjGBFFMItgQ/AumlMMJIdf6kqA67s9l1bTNRiRZvxnuZ167vbvLIaL2jLDbU7Oya/8Dy4XEcXb6ntBbOLGyyl+dn9iuikouuU/HFIa7xkzFTXh7H8=
+	t=1728728329; cv=none; b=B1u/T4LGcXpdJYjV8G5FreFGBvuna35lhVIn45uAgLC7hCuqO8Oyuj2xwkNPJJ8MaQILH/uS352bPNqsAzdcLYhFiu9gJZKWix8i/147/eAnyT/eg7FgF2ZCbss8Tg1IUpesk1QWLqs4BL2yAgQ6pUnJldge09s7/udQn1dHT5I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728705202; c=relaxed/simple;
-	bh=AW5DZ/uxFTAsik+BDblAe2m6pQ/3cvs37Qf6PUBtKcU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Mspvjr6/mT0olBN5bxLZACJSn2a2N5TWXm6sKBqcJD9Ndgmdj1nfeCqz8GEmLhqPGZOzM42M34T7uVj1mBtYL2Df0UnJq9njcKRmZApCKER+DKb/8qL0n5UULsSLDItMu+fmrNFjPrf4BYzLQAfFC467AtnQsM2YIlo1X3iHzrU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=csDHdqpd; arc=none smtp.client-ip=209.85.216.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1728728329; c=relaxed/simple;
+	bh=4xOM8MC2EwyqmoD8ZTIT4Mo7EV8Znm3HaYlhK0DGMMM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=TE/PKlRTMmd4weTBUJYPMr0w+MezECiIPAmp1FUgl8dNjmLKxD1y9KbsW7CnGO3EmIEZ/uriZfet7ewtqp7bdUYG3Igr+zz3CeSwJB0zjBJt+d4weoGMxV5vipGsvhVDNmClINWl/DNBB2hQaHaS8qvPlKCtiesXSI/EkCtDM3s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=OsPofFzr; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="csDHdqpd"
-Received: by mail-pj1-f43.google.com with SMTP id 98e67ed59e1d1-2e221a7e7baso1809917a91.0;
-        Fri, 11 Oct 2024 20:53:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1728705198; x=1729309998; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=oFlRn4ys9Cl5MtaYHqxLNUhoFIlLy79+wr8gd8xYoFI=;
-        b=csDHdqpdCr36TA/eZ7vYhOxSKHDwsj5sWeuI4GgXBelufL+bkhpbH0iTYYPgKb5G0N
-         eZk0pFdWS+DbE1ES/LFqQgchfqC1/oq06hRu/ooSwhhgUqV0AKkLOp+rrS/Y0hnUwp9a
-         349z8ndd5Xx4JD22i/VWJKHn+5eg5LAgvEyE1/FSrIx4TGKzQ2ACaWDJd6IB/i3Xxab/
-         VPVMLKK4ZzvyZodR2jjgET9sVpnovudlgR0gXjzsUpwdF1kLSsskv67afCDJHjRM+m7B
-         hminNrvQEjkj+RGeByHeJR6fA5JB3GCQqcr8umGEsf2USY6xOW6Kb+mdYnUxrglq+gXD
-         ldbg==
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="OsPofFzr"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1728728326;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=2EGQy1IKdMVdQQEEg6lkanhZmI8siGes/J0zO83YsB0=;
+	b=OsPofFzrnRMnXnROFtAn4rF1biZ4tqkQe3V+TdVC2YmDjxw0Xi6jIv7TL1xto3VnvEZPkX
+	COyjQKRidlVBZPThBx2B8IjU8C5OjfyBjEg7h1Qj3zkwiRMSY3RlIb4WCbwLRytsBkgn54
+	xEl92FEOvtLKdaq5AhjzG4ofU/zmOrU=
+Received: from mail-ej1-f70.google.com (mail-ej1-f70.google.com
+ [209.85.218.70]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-13-fS9pFG5pMlyuabKrWmCUHw-1; Sat, 12 Oct 2024 06:18:43 -0400
+X-MC-Unique: fS9pFG5pMlyuabKrWmCUHw-1
+Received: by mail-ej1-f70.google.com with SMTP id a640c23a62f3a-a99efc7d881so25147166b.1
+        for <platform-driver-x86@vger.kernel.org>; Sat, 12 Oct 2024 03:18:43 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1728705198; x=1729309998;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=oFlRn4ys9Cl5MtaYHqxLNUhoFIlLy79+wr8gd8xYoFI=;
-        b=KDiKOi4H3XKQdrByIsqELzLdqnWLWdHfLAr3V6U2uZoPbzEHRzbB0hW3sjhNm7AdOK
-         jv04b5ZQiddZpouE5DzgRI1QsA9p8ygp+Ts+4QoIjCG6HHcA7+jAEB/6EU6n49VVuo9n
-         qycJt3SlPyAF937qHQ9NQ3Znp+h3YpdvVKg3uy5XeqpiBWWTv7aHwHa14HS56tkRQiNp
-         LW3ykiwwrnPKNTKYJnoHlqbPi0xP2qZoXwH6fLOCDu5Iz5gFR63I/FCB1joV9nATLpU+
-         HWF+xCAkUgTStpOHQWt54C6SlsILqldjXlizmnuB0lou6ZvNtlvwIqUxx3N9PDL94Yzr
-         zf+w==
-X-Forwarded-Encrypted: i=1; AJvYcCVgz5LuTj7M7qEMP3eYMOkWhrMSqarjRKHoSqFEAoYTSkJ4vKCUF/dGEVi/gPuVmF1YxMJyEASgwpc=@vger.kernel.org, AJvYcCVlc7V9K4RGEFj7ktQV35d9nr5adMNJuNYL3YDTgbd1P3CebdvordJg7EtmsxGRCWE7YNokT6L+SqMWoA8d@vger.kernel.org, AJvYcCVoh4HYCz9G8SDyqzyg424wSWiieQkJ54dK1jPJGcwflCI1LfRbFsZIkf+SYWs6JSsuKqTAI7BKHJqsYqFcFlmGSdpW7w==@vger.kernel.org, AJvYcCWkmZ4S45vQcClY6pPM026jFvbJV2jj5fGER19hv4IZAJ3hEVOcbI8iFlU06XruyjtyE9c7ybQZ8mo=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyMO7k3qbGSxWNwlJEHTmeWg8x0B+TRwp1vLYWRqmaz89U6HIxA
-	2q1hpSCjUUKsmQRc5H0GrB9a1+crwDoRTmiMlrT8ngY3SlFILamZKmOpjOmY
-X-Google-Smtp-Source: AGHT+IFBRR4v4JycUj40IR+Djj+Y51UpeKooSlN57VO1csE3pWQErWmVuCZBFo15g5B2LK1eZcDxUg==
-X-Received: by 2002:a17:90a:6845:b0:2e2:eba1:a1a1 with SMTP id 98e67ed59e1d1-2e2f0d9d935mr6606210a91.36.1728705197767;
-        Fri, 11 Oct 2024 20:53:17 -0700 (PDT)
-Received: from archie.me ([103.124.138.155])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-2e3060ba4besm1739046a91.19.2024.10.11.20.53.16
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 11 Oct 2024 20:53:16 -0700 (PDT)
-Received: by archie.me (Postfix, from userid 1000)
-	id D5D7345E17CA; Sat, 12 Oct 2024 10:53:13 +0700 (WIB)
-Date: Sat, 12 Oct 2024 10:53:13 +0700
-From: Bagas Sanjaya <bagasdotme@gmail.com>
-To: Mario Limonciello <mario.limonciello@amd.com>,
-	Borislav Petkov <bp@alien8.de>, Hans de Goede <hdegoede@redhat.com>,
-	Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>
-Cc: x86@kernel.org, "Gautham R . Shenoy" <gautham.shenoy@amd.com>,
-	Perry Yuan <perry.yuan@amd.com>, linux-kernel@vger.kernel.org,
-	linux-doc@vger.kernel.org, linux-pm@vger.kernel.org,
-	platform-driver-x86@vger.kernel.org,
-	Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
-Subject: Re: [PATCH v2 01/13] Documentation: x86: Add AMD Hardware Feedback
- Interface documentation
-Message-ID: <ZwnyqRF-j7Epd_kA@archie.me>
-References: <20241010193705.10362-1-mario.limonciello@amd.com>
- <20241010193705.10362-2-mario.limonciello@amd.com>
+        d=1e100.net; s=20230601; t=1728728322; x=1729333122;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=2EGQy1IKdMVdQQEEg6lkanhZmI8siGes/J0zO83YsB0=;
+        b=nUq2addjlUMCVrX6mW8slDLGAZ2w/9poYuKdmfpkZC0qV/mn/twrLiWBs7pe560MDy
+         pFpZ3jIX5SIFMheLMnmaNBml7CCsBbu+VGYmyVoH8VdsUZRmcw9ggGCO1VChj/wSAnhx
+         88Fc4Q5nd4rmFGOSt95vNKFeNoEktVKbL9dBt0R65bxvjFhuhA7SFI7OIetS9g63YXwz
+         8jgEXEcxlSKI/GsqoPYyxC73h/N/T+rszboxfrG5vtTx3EgtJZCC0cvyR1in1o0BP+O1
+         9RLo1aJKmnv8cGMdKJ8/RdzdFD9SIbFtr4PPkf7Go2vLuwE25qSlKE8e41f2nMdUc6BU
+         xvcQ==
+X-Forwarded-Encrypted: i=1; AJvYcCW5dcr3lkytJzVHV7Vxfs58spYx5N5i8BQANtO0B933gwcKaEdeVxFNYGC4tDD52Pc3VtRPoFXoXW81Z5KTUfRRgTPk@vger.kernel.org
+X-Gm-Message-State: AOJu0YzCDaK1kilFBHA6K8zYejoJw95wBTYzbsVhyWKRSzxaE9enTbj8
+	91U4fZ4QX6Vb1AneI70gXmM/AWREskWm3QIM4wris0iav7CWa64xIAdgNU3BM3Pj550RDwf5B5B
+	AWYzsYs1AwBqI0I5muMAEXJfbO3kVIGuJa6HB83zcU1yd4laCoZiVaIRxeuX3B7Yc+9d6Ayo=
+X-Received: by 2002:a17:906:f59b:b0:a99:f6ee:1ee3 with SMTP id a640c23a62f3a-a99f6ee218bmr24628566b.43.1728728321934;
+        Sat, 12 Oct 2024 03:18:41 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IFRlYyzh/lT/w96zA6tYryrsPaeMciJc2g9vf0Y81D3NpdcI+siPuUrgbFzloh58FkgpR5Vag==
+X-Received: by 2002:a17:906:f59b:b0:a99:f6ee:1ee3 with SMTP id a640c23a62f3a-a99f6ee218bmr24626566b.43.1728728321456;
+        Sat, 12 Oct 2024 03:18:41 -0700 (PDT)
+Received: from ?IPV6:2001:1c00:c32:7800:5bfa:a036:83f0:f9ec? (2001-1c00-0c32-7800-5bfa-a036-83f0-f9ec.cable.dynamic.v6.ziggo.nl. [2001:1c00:c32:7800:5bfa:a036:83f0:f9ec])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a99e79a5e10sm71696666b.187.2024.10.12.03.18.40
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sat, 12 Oct 2024 03:18:40 -0700 (PDT)
+Message-ID: <2c880375-a487-4965-be83-bcd67c616e34@redhat.com>
+Date: Sat, 12 Oct 2024 12:18:39 +0200
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="ScYld6gsAtJ/5B+U"
-Content-Disposition: inline
-In-Reply-To: <20241010193705.10362-2-mario.limonciello@amd.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 1/3] acpi: make EC support compile-time conditional
+To: Arnd Bergmann <arnd@kernel.org>, "Rafael J. Wysocki" <rafael@kernel.org>,
+ Arnd Bergmann <arnd@arndb.de>
+Cc: Len Brown <lenb@kernel.org>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ Jean Delvare <jdelvare@suse.com>, Guenter Roeck <linux@roeck-us.net>,
+ =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+ Jonathan Cameron <Jonathan.Cameron@huawei.com>, linux-acpi@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-hwmon@vger.kernel.org,
+ platform-driver-x86@vger.kernel.org
+References: <20241011061948.3211423-1-arnd@kernel.org>
+Content-Language: en-US, nl
+From: Hans de Goede <hdegoede@redhat.com>
+In-Reply-To: <20241011061948.3211423-1-arnd@kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+
+Hi,
+
+On 11-Oct-24 8:18 AM, Arnd Bergmann wrote:
+> From: Arnd Bergmann <arnd@arndb.de>
+> 
+> The embedded controller code is mainly used on x86 laptops and cannot
+> work without PC style I/O port access.
+> 
+> Make this a user-visible configuration option that is default enabled
+> on x86 but otherwise disabled, and that can never be enabled unless
+> CONFIG_HAS_IOPORT is also available.
+> 
+> The empty stubs in internal.h help ignore the EC code in configurations
+> that don't support it. In order to see those stubs, the sbshc code also
+> has to include this header and drop duplicate declarations.
+> 
+> All the direct callers of ec_read/ec_write already had an x86
+> dependency and now also need to depend on APCI_EC.
+> 
+> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+
+Thanks, patch looks good to me.
+
+For platform/driver/x86:
+
+Acked-by: Hans de Goede <hdegoede@redhat.com>
+
+Regards,
+
+Hans
 
 
---ScYld6gsAtJ/5B+U
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
 
-On Thu, Oct 10, 2024 at 02:36:53PM -0500, Mario Limonciello wrote:
-> +=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-> +Hardware Feedback Interface For Hetero Core Scheduling On AMD Platform
-> +=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+> ---
+>  drivers/acpi/Kconfig               | 11 ++++++++++-
+>  drivers/acpi/Makefile              |  2 +-
+>  drivers/acpi/internal.h            | 25 +++++++++++++++++++++++++
+>  drivers/acpi/sbshc.c               |  9 +--------
+>  drivers/char/Kconfig               |  1 +
+>  drivers/hwmon/Kconfig              |  3 ++-
+>  drivers/platform/x86/Kconfig       | 22 ++++++++++++----------
+>  drivers/platform/x86/dell/Kconfig  |  1 +
+>  drivers/platform/x86/hp/Kconfig    |  1 +
+>  drivers/platform/x86/intel/Kconfig |  2 +-
+>  include/linux/acpi.h               |  8 ++++++--
+>  11 files changed, 61 insertions(+), 24 deletions(-)
+> 
+> diff --git a/drivers/acpi/Kconfig b/drivers/acpi/Kconfig
+> index d67f63d93b2a..d65cd08ba8e1 100644
+> --- a/drivers/acpi/Kconfig
+> +++ b/drivers/acpi/Kconfig
+> @@ -132,8 +132,17 @@ config ACPI_REV_OVERRIDE_POSSIBLE
+>  	  makes it possible to force the kernel to return "5" as the supported
+>  	  ACPI revision via the "acpi_rev_override" command line switch.
+>  
+> +config ACPI_EC
+> +	bool "Embedded Controller"
+> +	depends on HAS_IOPORT
+> +	default X86
+> +	help
+> +	  This driver handles communication with the microcontroller
+> +	  on many x86 laptops and other machines.
 > +
-> +:Copyright (C) 2024 Advanced Micro Devices, Inc. All Rights Reserved.
+>  config ACPI_EC_DEBUGFS
+>  	tristate "EC read/write access through /sys/kernel/debug/ec"
+> +	depends on ACPI_EC
+>  	help
+>  	  Say N to disable Embedded Controller /sys/kernel/debug interface
+>  
+> @@ -433,7 +442,7 @@ config ACPI_HOTPLUG_IOAPIC
+>  
+>  config ACPI_SBS
+>  	tristate "Smart Battery System"
+> -	depends on X86
+> +	depends on X86 && ACPI_EC
+>  	select POWER_SUPPLY
+>  	help
+>  	  This driver supports the Smart Battery System, another
+> diff --git a/drivers/acpi/Makefile b/drivers/acpi/Makefile
+> index 61ca4afe83dc..40208a0f5dfb 100644
+> --- a/drivers/acpi/Makefile
+> +++ b/drivers/acpi/Makefile
+> @@ -41,7 +41,7 @@ acpi-y				+= resource.o
+>  acpi-y				+= acpi_processor.o
+>  acpi-y				+= processor_core.o
+>  acpi-$(CONFIG_ARCH_MIGHT_HAVE_ACPI_PDC) += processor_pdc.o
+> -acpi-y				+= ec.o
+> +acpi-$(CONFIG_ACPI_EC)		+= ec.o
+>  acpi-$(CONFIG_ACPI_DOCK)	+= dock.o
+>  acpi-$(CONFIG_PCI)		+= pci_root.o pci_link.o pci_irq.o
+>  obj-$(CONFIG_ACPI_MCFG)		+= pci_mcfg.o
+> diff --git a/drivers/acpi/internal.h b/drivers/acpi/internal.h
+> index ced7dff9a5db..00910ccd7eda 100644
+> --- a/drivers/acpi/internal.h
+> +++ b/drivers/acpi/internal.h
+> @@ -215,6 +215,8 @@ extern struct acpi_ec *first_ec;
+>  /* External interfaces use first EC only, so remember */
+>  typedef int (*acpi_ec_query_func) (void *data);
+>  
+> +#ifdef CONFIG_ACPI_EC
 > +
-> +:Author: Perry Yuan <perry.yuan@amd.com>
-
-Don't forget to correct the copyright reST field:
-
-diff --git a/Documentation/arch/x86/amd-hfi.rst b/Documentation/arch/x86/am=
-d-hfi.rst
-index 5ada5c5b79f4b5..82811be984799d 100644
---- a/Documentation/arch/x86/amd-hfi.rst
-+++ b/Documentation/arch/x86/amd-hfi.rst
-@@ -4,7 +4,7 @@
- Hardware Feedback Interface For Hetero Core Scheduling On AMD Platform
- =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-=20
--:Copyright (C) 2024 Advanced Micro Devices, Inc. All Rights Reserved.
-+:Copyright: 2024 Advanced Micro Devices, Inc. All Rights Reserved.
-=20
- :Author: Perry Yuan <perry.yuan@amd.com>
-=20
-
+>  void acpi_ec_init(void);
+>  void acpi_ec_ecdt_probe(void);
+>  void acpi_ec_dsdt_probe(void);
+> @@ -231,6 +233,29 @@ void acpi_ec_flush_work(void);
+>  bool acpi_ec_dispatch_gpe(void);
+>  #endif
+>  
+> +#else
 > +
-> +Overview
-> +--------
+> +static inline void acpi_ec_init(void) {}
+> +static inline void acpi_ec_ecdt_probe(void) {}
+> +static inline void acpi_ec_dsdt_probe(void) {}
+> +static inline void acpi_ec_block_transactions(void) {}
+> +static inline void acpi_ec_unblock_transactions(void) {}
+> +static inline int acpi_ec_add_query_handler(struct acpi_ec *ec, u8 query_bit,
+> +			      acpi_handle handle, acpi_ec_query_func func,
+> +			      void *data)
+> +{
+> +	return -ENXIO;
+> +}
+> +static inline void acpi_ec_remove_query_handler(struct acpi_ec *ec, u8 query_bit) {}
+> +static inline void acpi_ec_register_opregions(struct acpi_device *adev) {}
 > +
-> +AMD Heterogeneous Core implementations are comprised of more than one
-> +architectural class and CPUs are comprised of cores of various efficiency
-> +and power capabilities. Power management strategies must be designed to =
-accommodate
-> +the complexities introduced by incorporating different core types.
-> +Heterogeneous systems can also extend to more than two architectural cla=
-sses as well.
-> +The purpose of the scheduling feedback mechanism is to provide informati=
-on to
-> +the operating system scheduler in real time such that the scheduler can =
-direct
-> +threads to the optimal core.
+> +static inline void acpi_ec_flush_work(void) {}
+> +static inline bool acpi_ec_dispatch_gpe(void)
+> +{
+> +	return false;
+> +}
 > +
-> +``Classic cores`` are generally more performant and ``Dense cores`` are =
-generally more
-> +efficient.
-> +The goal of AMD's heterogeneous architecture is to attain power benefit =
-by sending
-> +background thread to the dense cores while sending high priority threads=
- to the classic
-> +cores. From a performance perspective, sending background threads to den=
-se cores can free
-> +up power headroom and allow the classic cores to optimally service deman=
-ding threads.
-> +Furthermore, the area optimized nature of the dense cores allows for an =
-increasing
-> +number of physical cores. This improved core density will have positive =
-multithreaded
-> +performance impact.
+> +#endif
+>  
+>  /*--------------------------------------------------------------------------
+>                                    Suspend/Resume
+> diff --git a/drivers/acpi/sbshc.c b/drivers/acpi/sbshc.c
+> index 16f2daaa2c45..2b63cd18cca2 100644
+> --- a/drivers/acpi/sbshc.c
+> +++ b/drivers/acpi/sbshc.c
+> @@ -14,6 +14,7 @@
+>  #include <linux/module.h>
+>  #include <linux/interrupt.h>
+>  #include "sbshc.h"
+> +#include "internal.h"
+>  
+>  #define ACPI_SMB_HC_CLASS	"smbus_host_ctl"
+>  #define ACPI_SMB_HC_DEVICE_NAME	"ACPI SMBus HC"
+> @@ -236,12 +237,6 @@ static int smbus_alarm(void *context)
+>  	return 0;
+>  }
+>  
+> -typedef int (*acpi_ec_query_func) (void *data);
+> -
+> -extern int acpi_ec_add_query_handler(struct acpi_ec *ec, u8 query_bit,
+> -			      acpi_handle handle, acpi_ec_query_func func,
+> -			      void *data);
+> -
+>  static int acpi_smbus_hc_add(struct acpi_device *device)
+>  {
+>  	int status;
+> @@ -278,8 +273,6 @@ static int acpi_smbus_hc_add(struct acpi_device *device)
+>  	return 0;
+>  }
+>  
+> -extern void acpi_ec_remove_query_handler(struct acpi_ec *ec, u8 query_bit);
+> -
+>  static void acpi_smbus_hc_remove(struct acpi_device *device)
+>  {
+>  	struct acpi_smb_hc *hc;
+> diff --git a/drivers/char/Kconfig b/drivers/char/Kconfig
+> index 7c8dd0abcfdf..8fb33c90482f 100644
+> --- a/drivers/char/Kconfig
+> +++ b/drivers/char/Kconfig
+> @@ -238,6 +238,7 @@ config APPLICOM
+>  config SONYPI
+>  	tristate "Sony Vaio Programmable I/O Control Device support"
+>  	depends on X86_32 && PCI && INPUT
+> +	depends on ACPI_EC || !ACPI
+>  	help
+>  	  This driver enables access to the Sony Programmable I/O Control
+>  	  Device which can be found in many (all ?) Sony Vaio laptops.
+> diff --git a/drivers/hwmon/Kconfig b/drivers/hwmon/Kconfig
+> index 65ea92529406..25ae0a00ea2c 100644
+> --- a/drivers/hwmon/Kconfig
+> +++ b/drivers/hwmon/Kconfig
+> @@ -1747,7 +1747,7 @@ source "drivers/hwmon/occ/Kconfig"
+>  
+>  config SENSORS_OXP
+>  	tristate "OneXPlayer EC fan control"
+> -	depends on ACPI
+> +	depends on ACPI_EC
+>  	depends on X86
+>  	help
+>  		If you say yes here you get support for fan readings and control over
+> @@ -2586,6 +2586,7 @@ config SENSORS_ASUS_WMI
+>  config SENSORS_ASUS_EC
+>  	tristate "ASUS EC Sensors"
+>  	depends on X86
+> +	depends on ACPI_EC
+>  	help
+>  	  If you say yes here you get support for the ACPI embedded controller
+>  	  hardware monitoring interface found in ASUS motherboards. The driver
+> diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
+> index 3875abba5a79..0258dd879d64 100644
+> --- a/drivers/platform/x86/Kconfig
+> +++ b/drivers/platform/x86/Kconfig
+> @@ -52,6 +52,7 @@ config WMI_BMOF
+>  config HUAWEI_WMI
+>  	tristate "Huawei WMI laptop extras driver"
+>  	depends on ACPI_BATTERY
+> +	depends on ACPI_EC
+>  	depends on ACPI_WMI
+>  	depends on INPUT
+>  	select INPUT_SPARSEKMAP
+> @@ -147,7 +148,7 @@ config YT2_1380
+>  
+>  config ACERHDF
+>  	tristate "Acer Aspire One temperature and fan driver"
+> -	depends on ACPI && THERMAL
+> +	depends on ACPI_EC && THERMAL
+>  	select THERMAL_GOV_BANG_BANG
+>  	help
+>  	  This is a driver for Acer Aspire One netbooks. It allows to access
+> @@ -186,6 +187,7 @@ config ACER_WMI
+>  	depends on SERIO_I8042
+>  	depends on INPUT
+>  	depends on RFKILL || RFKILL = n
+> +	depends on ACPI_EC
+>  	depends on ACPI_WMI
+>  	depends on ACPI_VIDEO || ACPI_VIDEO = n
+>  	depends on HWMON
+> @@ -334,7 +336,7 @@ config MERAKI_MX100
+>  
+>  config EEEPC_LAPTOP
+>  	tristate "Eee PC Hotkey Driver"
+> -	depends on ACPI
+> +	depends on ACPI_EC
+>  	depends on INPUT
+>  	depends on RFKILL || RFKILL = n
+>  	depends on ACPI_VIDEO || ACPI_VIDEO = n
+> @@ -503,7 +505,7 @@ config SENSORS_HDAPS
+>  
+>  config THINKPAD_ACPI
+>  	tristate "ThinkPad ACPI Laptop Extras"
+> -	depends on ACPI
+> +	depends on ACPI_EC
+>  	depends on ACPI_BATTERY
+>  	depends on INPUT
+>  	depends on RFKILL || RFKILL = n
+> @@ -682,7 +684,7 @@ config MEEGOPAD_ANX7428
+>  
+>  config MSI_EC
+>  	tristate "MSI EC Extras"
+> -	depends on ACPI
+> +	depends on ACPI_EC
+>  	depends on ACPI_BATTERY
+>  	help
+>  	  This driver allows various MSI laptops' functionalities to be
+> @@ -690,7 +692,7 @@ config MSI_EC
+>  
+>  config MSI_LAPTOP
+>  	tristate "MSI Laptop Extras"
+> -	depends on ACPI
+> +	depends on ACPI_EC
+>  	depends on BACKLIGHT_CLASS_DEVICE
+>  	depends on ACPI_VIDEO || ACPI_VIDEO = n
+>  	depends on RFKILL
+> @@ -796,7 +798,7 @@ config SAMSUNG_LAPTOP
+>  
+>  config SAMSUNG_Q10
+>  	tristate "Samsung Q10 Extras"
+> -	depends on ACPI
+> +	depends on ACPI_EC
+>  	select BACKLIGHT_CLASS_DEVICE
+>  	help
+>  	  This driver provides support for backlight control on Samsung Q10
+> @@ -804,7 +806,7 @@ config SAMSUNG_Q10
+>  
+>  config ACPI_TOSHIBA
+>  	tristate "Toshiba Laptop Extras"
+> -	depends on ACPI
+> +	depends on ACPI_EC
+>  	depends on ACPI_BATTERY
+>  	depends on ACPI_WMI
+>  	select LEDS_CLASS
+> @@ -904,7 +906,7 @@ config ACPI_CMPC
+>  
+>  config COMPAL_LAPTOP
+>  	tristate "Compal (and others) Laptop Extras"
+> -	depends on ACPI
+> +	depends on ACPI_EC
+>  	depends on BACKLIGHT_CLASS_DEVICE
+>  	depends on ACPI_VIDEO || ACPI_VIDEO = n
+>  	depends on RFKILL
+> @@ -949,7 +951,7 @@ config PANASONIC_LAPTOP
+>  
+>  config SONY_LAPTOP
+>  	tristate "Sony Laptop Extras"
+> -	depends on ACPI
+> +	depends on ACPI_EC
+>  	depends on ACPI_VIDEO || ACPI_VIDEO = n
+>  	depends on BACKLIGHT_CLASS_DEVICE
+>  	depends on INPUT
+> @@ -972,7 +974,7 @@ config SONYPI_COMPAT
+>  
+>  config SYSTEM76_ACPI
+>  	tristate "System76 ACPI Driver"
+> -	depends on ACPI
+> +	depends on ACPI_EC
+>  	depends on ACPI_BATTERY
+>  	depends on HWMON
+>  	depends on INPUT
+> diff --git a/drivers/platform/x86/dell/Kconfig b/drivers/platform/x86/dell/Kconfig
+> index 68a49788a396..dc21227dd66e 100644
+> --- a/drivers/platform/x86/dell/Kconfig
+> +++ b/drivers/platform/x86/dell/Kconfig
+> @@ -194,6 +194,7 @@ config DELL_WMI
+>  config DELL_WMI_PRIVACY
+>  	bool "Dell WMI Hardware Privacy Support"
+>  	depends on DELL_WMI
+> +	depends on ACPI_EC
+>  	help
+>  	  This option adds integration with the "Dell Hardware Privacy"
+>  	  feature of Dell laptops to the dell-wmi driver.
+> diff --git a/drivers/platform/x86/hp/Kconfig b/drivers/platform/x86/hp/Kconfig
+> index d776761cd5fd..dd51491b9bcd 100644
+> --- a/drivers/platform/x86/hp/Kconfig
+> +++ b/drivers/platform/x86/hp/Kconfig
+> @@ -37,6 +37,7 @@ config HP_ACCEL
+>  config HP_WMI
+>  	tristate "HP WMI extras"
+>  	default m
+> +	depends on ACPI_EC
+>  	depends on ACPI_WMI
+>  	depends on INPUT
+>  	depends on RFKILL || RFKILL = n
+> diff --git a/drivers/platform/x86/intel/Kconfig b/drivers/platform/x86/intel/Kconfig
+> index ad50bbabec61..eb698dcb9af9 100644
+> --- a/drivers/platform/x86/intel/Kconfig
+> +++ b/drivers/platform/x86/intel/Kconfig
+> @@ -62,7 +62,7 @@ config INTEL_INT0002_VGPIO
+>  
+>  config INTEL_OAKTRAIL
+>  	tristate "Intel Oaktrail Platform Extras"
+> -	depends on ACPI
+> +	depends on ACPI_EC
+>  	depends on ACPI_VIDEO || ACPI_VIDEO=n
+>  	depends on RFKILL && BACKLIGHT_CLASS_DEVICE && ACPI
+>  	help
+> diff --git a/include/linux/acpi.h b/include/linux/acpi.h
+> index 4d5ee84c468b..7dd24acd9ffe 100644
+> --- a/include/linux/acpi.h
+> +++ b/include/linux/acpi.h
+> @@ -1164,8 +1164,6 @@ int acpi_subsys_suspend_noirq(struct device *dev);
+>  int acpi_subsys_suspend(struct device *dev);
+>  int acpi_subsys_freeze(struct device *dev);
+>  int acpi_subsys_poweroff(struct device *dev);
+> -void acpi_ec_mark_gpe_for_wake(void);
+> -void acpi_ec_set_gpe_wake_mask(u8 action);
+>  int acpi_subsys_restore_early(struct device *dev);
+>  #else
+>  static inline int acpi_subsys_prepare(struct device *dev) { return 0; }
+> @@ -1176,6 +1174,12 @@ static inline int acpi_subsys_suspend(struct device *dev) { return 0; }
+>  static inline int acpi_subsys_freeze(struct device *dev) { return 0; }
+>  static inline int acpi_subsys_poweroff(struct device *dev) { return 0; }
+>  static inline int acpi_subsys_restore_early(struct device *dev) { return 0; }
+> +#endif
 > +
-> <snipped>...
-> +
-> +The mechanism used to trigger a table update like below events:
-> +    * Thermal Stress Events
-> +    * Silent Compute
-> +    * Extreme Low Battery Scenarios
+> +#if defined(CONFIG_ACPI_EC) && defined(CONFIG_PM_SLEEP)
+> +void acpi_ec_mark_gpe_for_wake(void);
+> +void acpi_ec_set_gpe_wake_mask(u8 action);
+> +#else
+>  static inline void acpi_ec_mark_gpe_for_wake(void) {}
+>  static inline void acpi_ec_set_gpe_wake_mask(u8 action) {}
+>  #endif
 
-What about below wording?
-
----- >8 ----
-diff --git a/Documentation/arch/x86/amd-hfi.rst b/Documentation/arch/x86/am=
-d-hfi.rst
-index 351641ce28213c..5ada5c5b79f4b5 100644
---- a/Documentation/arch/x86/amd-hfi.rst
-+++ b/Documentation/arch/x86/amd-hfi.rst
-@@ -12,16 +12,15 @@ Overview
- --------
-=20
- AMD Heterogeneous Core implementations are comprised of more than one
--architectural class and CPUs are comprised of cores of various efficiency
--and power capabilities. Power management strategies must be designed to ac=
-commodate
--the complexities introduced by incorporating different core types.
--Heterogeneous systems can also extend to more than two architectural class=
-es as well.
--The purpose of the scheduling feedback mechanism is to provide information=
- to
--the operating system scheduler in real time such that the scheduler can di=
-rect
--threads to the optimal core.
-+architectural class and CPUs are comprised of cores of various efficiency =
-and
-+power capabilities: performance-oriented *classic cores* and power-efficie=
-nt
-+*dense cores*. As such, power management strategies must be designed to
-+accommodate the complexities introduced by incorporating different core ty=
-pes.
-+Heterogeneous systems can also extend to more than two architectural class=
-es as
-+well. The purpose of the scheduling feedback mechanism is to provide
-+information to the operating system scheduler in real time such that the
-+scheduler can direct threads to the optimal core.
-=20
--``Classic cores`` are generally more performant and ``Dense cores`` are ge=
-nerally more
--efficient.
- The goal of AMD's heterogeneous architecture is to attain power benefit by=
- sending
- background thread to the dense cores while sending high priority threads t=
-o the classic
- cores. From a performance perspective, sending background threads to dense=
- cores can free
-@@ -78,7 +77,8 @@ Power Management FW is responsible for detecting events t=
-hat would require
- a reordering of the performance and efficiency ranking. Table updates would
- happen relatively infrequently and occur on the time scale of seconds or m=
-ore.
-=20
--The mechanism used to trigger a table update like below events:
-+The following events trigger a table update:
-+
-     * Thermal Stress Events
-     * Silent Compute
-     * Extreme Low Battery Scenarios
-
-> diff --git a/Documentation/arch/x86/index.rst b/Documentation/arch/x86/in=
-dex.rst
-> index 8ac64d7de4dc..7f47229f3104 100644
-> --- a/Documentation/arch/x86/index.rst
-> +++ b/Documentation/arch/x86/index.rst
-> @@ -43,3 +43,4 @@ x86-specific Documentation
->     features
->     elf_auxvec
->     xstate
-> +   amd_hfi
-
-Sphinx reports mismatched toctree entry name:
-
-Documentation/arch/x86/index.rst:7: WARNING: toctree contains reference to =
-nonexisting document 'arch/x86/amd_hfi'
-
-I have to fix it up:
-
----- >8 ----
-diff --git a/Documentation/arch/x86/index.rst b/Documentation/arch/x86/inde=
-x.rst
-index 7f47229f3104e1..56f2923f52597c 100644
---- a/Documentation/arch/x86/index.rst
-+++ b/Documentation/arch/x86/index.rst
-@@ -43,4 +43,4 @@ x86-specific Documentation
-    features
-    elf_auxvec
-    xstate
--   amd_hfi
-+   amd-hfi
-
-Thanks.
-
---=20
-An old man doll... just what I always wanted! - Clara
-
---ScYld6gsAtJ/5B+U
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYKAB0WIQSSYQ6Cy7oyFNCHrUH2uYlJVVFOowUCZwnypAAKCRD2uYlJVVFO
-o6+GAQDrEa+eXvEryM52GrfrRsgFJemg9iRNdruOpF5csqRb7QD/dIlwwqoqSq3N
-aEclgc9riuX7haD/M3JqTJcey6S7qQ0=
-=LzcE
------END PGP SIGNATURE-----
-
---ScYld6gsAtJ/5B+U--
