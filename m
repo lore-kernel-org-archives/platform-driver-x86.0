@@ -1,347 +1,150 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from NAM11-DM6-obe.outbound.protection.outlook.com (mail-dm6nam11on2084.outbound.protection.outlook.com [40.107.223.84])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 79B7B147C91
-	for <platform-driver-x86@vger.kernel.org>; Sun, 13 Oct 2024 15:50:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728834647; cv=none; b=lSb9wtsHlV/toGcD3X6eoX7IfEJj+62613zgUCDspAeJMtZfJuP2JNyw7Gl0AZ0jc1zwroJMfzkO5F/7UoVkzMemSX7cJ5tL4QrftLahXGqFCbuR890HxtZXJTterfEm3uhbyy/OyO1aOM9lfeLS2XM81TUAskQDNNf8BdNc45c=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728834647; c=relaxed/simple;
-	bh=0R/Y2b/MKDgIMJMSdx6mLaqnZefjKZia6qfp+HlKXAw=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=WCCeQIusvef4j2tMkkisxqiN7SWAaUMB+ErQUCX3vp/aZ+DpmTsSU9JdYtLb8URB8/gpa1qq1U81JooHhYCpQzsQlCm6f/GCz/JECmKGzGF5uwbGSAzeOt3OUHD6iuGCmiSdDe+cMZZzACFdty7cpoLKIULDr92sibEOhCPy57Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=CmlgCxA3; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 24A764A1C
+	for <platform-driver-x86@vger.kernel.org>; Mon, 14 Oct 2024 04:58:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.223.84
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1728881914; cv=fail; b=UYCAE7LuqH1u4ndtkG3rFpfrbKFpQF/eH0nt7+2GYaauBEI4M+0+Q5zhx35huZ6/GSdD/36t4JpCMJuXYRoUDItZpuziZLm+Hzbu1YbymCci1n+vx2SeiSSuIsGJsERK51X9OkGMvIHAJC/FZE1POW/Yg3cuYMYQT/YhzdX+HOU=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1728881914; c=relaxed/simple;
+	bh=/5jzwhdMSqme5oXhAUXxCaArEoi04ZiPyeQuP8l1zQ8=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=rSvu33MAdJv9bQ6Rw6FwuTXLqKo20AHuUJe3tGtyUGAzU4KCLMIcSCcBQLSrwX3zGFv3xF+tKpaU75+gTYMLGjlI20u3znpsYrM9Wdn0RsJUJGEIK9H9Jc35plPl2u7b91k3TmOw/IzrtFPE7w+Nxbj+6yCf/VufVYMGPM4Or1w=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=ihlNz4Ra; arc=fail smtp.client-ip=40.107.223.84
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="CmlgCxA3"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1728834643;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=G02ak1LzedJU2TKu9vLgoK07cp+hRCnOCGwnwVYqO00=;
-	b=CmlgCxA37reUXmDtHchAA5yl68B/egzaD8NSgsj/IDD9F2Pz375N3jsX4KqxeJfb0ESFsn
-	awbMCS5PxkADF0AhsV4ilSBo+ii2PhsjAsiUTvUlD4kCBEBDwf/T98CQRbuIAOpAubTYTt
-	zsj+7Y6/FIX9PVjCxezvOl00sC3KYrY=
-Received: from mail-ej1-f71.google.com (mail-ej1-f71.google.com
- [209.85.218.71]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-294-7w6O4ke8M025UlNk3Sj83Q-1; Sun, 13 Oct 2024 11:50:36 -0400
-X-MC-Unique: 7w6O4ke8M025UlNk3Sj83Q-1
-Received: by mail-ej1-f71.google.com with SMTP id a640c23a62f3a-a99f43c4c7bso85495566b.0
-        for <platform-driver-x86@vger.kernel.org>; Sun, 13 Oct 2024 08:50:36 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1728834635; x=1729439435;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=G02ak1LzedJU2TKu9vLgoK07cp+hRCnOCGwnwVYqO00=;
-        b=tfJXQDfoO5t1DSGISUcxV3FaEIurTJOCiImtT7yu9GoAUenv8rK9pbqXKQo303v+kD
-         /tpR7NFWUz8+2grJWtJ0ZwXg2/b6OqEIariZPcO3td1Hq5BNYXT3exTuUErmfumShelj
-         zAF4XNYLtxU5g0MYZL5JmmshBg0uJ1jvVe+eeQ6InTjA09npQqpOR29f7bdM1W4cNfYp
-         Md/9gSPzyftd9Kgxf5jrC2BOByF8u0T7gdi9hAcoHm6xTessLBASGm9Z4GQSX478ondd
-         MYouK7+QlPQQpdB5OjdeCeQRa7aUAM+QW7O9JXyXLYaLOKSab5CZrjYIz+1/3xwVZ0E0
-         HUDA==
-X-Forwarded-Encrypted: i=1; AJvYcCWy9ChrI9ga5VzouMHiWViYpwXN8rbNaaC+RjWPpNrvnLEp9RxAB7q1ddvXi5CIOCFpcbUkMALu0mJrDQ0kNHWdk5U0@vger.kernel.org
-X-Gm-Message-State: AOJu0Yyei0/5jo0p6PtpJmykZ/oPI9zBIbuwkatzAO7xV4gX6Rxazhn+
-	W8j5cn0lqT9eF1Q+oWTL1wmCG2qwQ8JX/89Tgd1KljFYdXLvgxYa8ZDK/NO4VeeaDcsBx8Z8tJD
-	sC9/z1K8Agcj56NYpYqAShMIX0/R7LP0bSlNjUa88uviIBcC5xcJvv5LYkdz1EvyWVOXAsIQ=
-X-Received: by 2002:a17:907:9495:b0:a9a:4a:284a with SMTP id a640c23a62f3a-a9a004a6282mr230089966b.26.1728834635024;
-        Sun, 13 Oct 2024 08:50:35 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IE45Z9ZWX6eQhaWsW6UaVDxeNfd+jRAF2cie1RmaSqS28Nwu3JJevSECi/R/MUILknaP5J0fA==
-X-Received: by 2002:a17:907:9495:b0:a9a:4a:284a with SMTP id a640c23a62f3a-a9a004a6282mr230085666b.26.1728834634546;
-        Sun, 13 Oct 2024 08:50:34 -0700 (PDT)
-Received: from ?IPV6:2001:1c00:c32:7800:5bfa:a036:83f0:f9ec? (2001-1c00-0c32-7800-5bfa-a036-83f0-f9ec.cable.dynamic.v6.ziggo.nl. [2001:1c00:c32:7800:5bfa:a036:83f0:f9ec])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a99a80dc5f5sm457709966b.161.2024.10.13.08.50.33
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 13 Oct 2024 08:50:34 -0700 (PDT)
-Message-ID: <b6374c77-b192-4c54-9504-5806f00a11da@redhat.com>
-Date: Sun, 13 Oct 2024 17:50:32 +0200
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="ihlNz4Ra"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=iPX5x2XL4WhAHdMfmKvsr/iDxuJT1AaCxgH2LsrDwyOGkGdq/I/JrEbI+mqkU/OvJLCMN2ruoLKipHUQdf5Ck1iHYc0jx/1mvEU5g/NuN/un4HzSCfbCwofLVwCwtnSkNrNCYTEj2M4YdfJhRZa26uSKI2tj6osAeUXLNblT/+m3H+jnCwDf2jFzgF6wiXj78YRXFq6kk5Z/plYnadObHzBrFoKePgMnlPjNIi7Zo6PXqqdfJY5melUBtnA47coeNS+3hXSWDLvtyXsRm7YsXYvqq8wxlvqWN4/HX4l81dJv7cmYJAzFhS+hc/QtX5YAsRGFcQN4Of9UsIYPCpTt1w==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=M0mmeRksuHl0WiGtE/LuqqrJ26V1dmQDaH7nkafBGEo=;
+ b=cGG+yDbjaDyg1wvMw+Vli1u7LTzOrj4qIwdq8GzTgv5+uGWnK3c7pKZxjdEjhTJDoFZ0ai3y2kywMpGQClbYO1LSp95TEGKJ5+xvebb1ctI9/tb3/bs4v4X77mXdyghb6DyOZomqVa/+dQ/CPX0TzwznRx4aEItKWMX3ad69kvikQYLSS+vS8ToOpEDqyA+WJVsHL7Qgp41YwMKqwX8A3L31w/Lv5luvS48lHkiItIy3tw5fbgeUzEAz5VNT6xxpbdK6lYoumj/KGTjkGkM+DeaWLuDBiGdv+hXQ/ZZ8J+nmFlQC4FhOTBY2Rm90JOfiBp6+sjqyAfte971L61fi7g==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=redhat.com smtp.mailfrom=amd.com; dmarc=pass
+ (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
+ dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=M0mmeRksuHl0WiGtE/LuqqrJ26V1dmQDaH7nkafBGEo=;
+ b=ihlNz4Ra4IUuTQDOZFzXZC3O3dTIgMm4gl7mHo1hxVHLZeBTgK3lJUSzbY+NbTkEYEgDq6NpVGWbNkGedZUUoPbKd0c/vikjtfL3KALjod58iuWqU6h3zPjPZEhBab/yDJ3uQWszGmCHwo5JaxrYmkckYePmKmxwsU9QBOauDr4=
+Received: from CH2PR19CA0017.namprd19.prod.outlook.com (2603:10b6:610:4d::27)
+ by CY8PR12MB7289.namprd12.prod.outlook.com (2603:10b6:930:56::12) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8048.25; Mon, 14 Oct
+ 2024 04:58:29 +0000
+Received: from CH2PEPF0000009A.namprd02.prod.outlook.com
+ (2603:10b6:610:4d:cafe::92) by CH2PR19CA0017.outlook.office365.com
+ (2603:10b6:610:4d::27) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8048.26 via Frontend
+ Transport; Mon, 14 Oct 2024 04:58:29 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
+Received: from SATLEXMB04.amd.com (165.204.84.17) by
+ CH2PEPF0000009A.mail.protection.outlook.com (10.167.244.22) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.8048.13 via Frontend Transport; Mon, 14 Oct 2024 04:58:29 +0000
+Received: from airavat.amd.com (10.180.168.240) by SATLEXMB04.amd.com
+ (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Sun, 13 Oct
+ 2024 23:58:26 -0500
+From: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
+To: <hdegoede@redhat.com>, <ilpo.jarvinen@linux.intel.com>
+CC: <platform-driver-x86@vger.kernel.org>, <Patil.Reddy@amd.com>, "Shyam
+ Sundar S K" <Shyam-sundar.S-k@amd.com>
+Subject: [PATCH 0/5] platform/x86/amd/pmf: Updates to AMD PMF driver
+Date: Mon, 14 Oct 2024 10:27:54 +0530
+Message-ID: <20241014045759.1517226-1-Shyam-sundar.S-k@amd.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v5 14/20] platform/x86: intel_atomisp2: Move to intel
- sub-directory
-To: Robert Mast <rn.mast@zonnet.nl>,
- Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
- Kate Hsuan <hpa@redhat.com>,
- Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
- linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org,
- Dell.Client.Kernel@dell.com, mchehab@redhat.com,
- laurent.pinchart@ideasonboard.com, kitakar@gmail.com
-Cc: Mark Gross <mgross@linux.intel.com>, Alex Hung <alex.hung@canonical.com>,
- Rajneesh Bhardwaj <irenic.rajneesh@gmail.com>,
- David E Box <david.e.box@intel.com>, Zha Qipeng <qipeng.zha@intel.com>,
- "David E. Box" <david.e.box@linux.intel.com>,
- AceLan Kao <acelan.kao@canonical.com>, Jithu Joseph
- <jithu.joseph@intel.com>, Maurice Ma <maurice.ma@intel.com>
-References: <20210820110458.73018-1-andriy.shevchenko@linux.intel.com>
- <20210820110458.73018-15-andriy.shevchenko@linux.intel.com>
- <e0c8c98f-64ec-4297-bbc8-de489414515c@zonnet.nl>
-Content-Language: en-US, nl
-From: Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <e0c8c98f-64ec-4297-bbc8-de489414515c@zonnet.nl>
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: SATLEXMB04.amd.com (10.181.40.145) To SATLEXMB04.amd.com
+ (10.181.40.145)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: CH2PEPF0000009A:EE_|CY8PR12MB7289:EE_
+X-MS-Office365-Filtering-Correlation-Id: 866b3057-7f6f-4740-6e2b-08dcec0cd848
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|82310400026|36860700013|376014|1800799024;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?bp+bjpYL4SCiIf5V6+Ukdgy4eDpe5RDduOicyQ2rYstYx2CrqBL8CDFmX23+?=
+ =?us-ascii?Q?g/UwoNfOK+dJJ4Fi84iFtzgy92byeYxyo2QzdJyNMC2koD5vnzvg9rU8Mm+B?=
+ =?us-ascii?Q?vsAojSwxUMDB4tQ2hEZ0aMEsVIZn8GQfh7Oe1Uxd4L7Q3mLhGIP3kkcNWTWU?=
+ =?us-ascii?Q?Ts3SqtWMLexPsCoHNGAw+bQ+HXdEHMfo6DqSF9GjUoO/loSUnUUjTs2SRykW?=
+ =?us-ascii?Q?P6Dsk4L7nfljaJEPyAQZI21f7XWecwCMAnPkUm1RNTug5dOf5fbVm9JdI4cK?=
+ =?us-ascii?Q?a54BeA8YiwJ6XVAcTrlyfPReoltjs2Hx3JeP7YlsH5SfOfGHY0TwkqqzHtGF?=
+ =?us-ascii?Q?61RRQ0cdBzDy6/Mhwk+qO3l5WgUQl8Wa9DXBhDsdwnsBTQuN8jfokprSbcFn?=
+ =?us-ascii?Q?2v59qnVsKcw8KxYL/kBPHzdm8pHumV3FeWZaeBhvPiA88Z29NO0fSaAdnvUz?=
+ =?us-ascii?Q?kE7pAAY1hOUy5YxVCMKHSL/qT3WAV8NCVVPHEWvwLtGIEdlAgVWLuV14zF3C?=
+ =?us-ascii?Q?L9Sdstr6LonWm4PSCBZ3BV3nrBk4ayLYVCSqs9beVhDwq1OqDn3s8Ki5e7kc?=
+ =?us-ascii?Q?DWGA2qYGV+3mEFVM6f9gSGG93PDQibl5vm1vafSjypC2Duq3WQAr86L15C6/?=
+ =?us-ascii?Q?J1m7+/vaHMSYIGpmue1PNN0FXVscYZfAYBVjHS2gmpJrIYndpILDa41PjFFi?=
+ =?us-ascii?Q?/L+7BcCTPmX61NiHmJ8UVPylcJ3Ql6yflpgwY/caSDd9zWQ1NonRfQ7EP/ft?=
+ =?us-ascii?Q?cO3Dglmn3NvmIbK8fblJSd95u8ORkbm2SERdCg6hw3O1orzh5KqnO3v1fuUy?=
+ =?us-ascii?Q?Tqd5eRmE6nyi25svdxUY1zvGKrnGGOmWf6n4jdKmy7u40EggausxzzH5vMus?=
+ =?us-ascii?Q?q+Z+rUA2FeRc8HkGDDMsnny0cEh6JiwsbYbW2BqrVTRHsstV6l6tPb4ol0jm?=
+ =?us-ascii?Q?N1kizUuset3EOv1kEjFLzir69n3Ze9E7oy75hQuFGNPo1oIzDZ+3TwDXXlJv?=
+ =?us-ascii?Q?rfdnb0+3q1AWS8TmOhTVNWgS9huMcKMNDEVvW4xW5jx4BEO/7W19aanV7XHk?=
+ =?us-ascii?Q?2hcyUxMIYRalGHmZTDBVOsfjwPLgLBLo2m3MzW7c1VdBn63/yvuMeey6YSDc?=
+ =?us-ascii?Q?QzztNZ5ajI3aJlxQCQex+B4ixouHRMnLa/I02sRJ/naMAxgL70+02RmHAn3o?=
+ =?us-ascii?Q?hLONv2f8yZib2j8jgSk/5ATpkYGEgZADquHsyzA0gk2e2tGh01luSKFvSP8N?=
+ =?us-ascii?Q?JIzGgLjfqdTiz+G9YsYbQzwvm5Q+GSDN/nZvtNmo4J+XJ8r6xFu4uyZ+Uu9L?=
+ =?us-ascii?Q?QdfWYzR2UiMucKjLIlo3pshUFCFRiQQppsdOtqLNDhdJ3eeJNmZ/3fXAJPda?=
+ =?us-ascii?Q?GVQQBHkIZO5gUYPYzCJhnRDuuluC?=
+X-Forefront-Antispam-Report:
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(82310400026)(36860700013)(376014)(1800799024);DIR:OUT;SFP:1101;
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 14 Oct 2024 04:58:29.1374
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 866b3057-7f6f-4740-6e2b-08dcec0cd848
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	CH2PEPF0000009A.namprd02.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY8PR12MB7289
 
-Hi Robert,
+Updates include:
 
-I have just Cc-ed you on a series which make streaming video
-from the mt9m114 sensor on the T100TA work.
+- Add support for newer platforms
+- Enhance the TA shared memory size to adapt to the updated TA
+- Update the MAINTAINERS record, and
+- Simplify certain code handling.
 
-On 6-Oct-24 6:54 PM, Robert Mast wrote:
-> Hi,
-> 
-> In an attempt to put the camera led on the T100ta (baytrail) back on to repeat the success of Mauro on the ov2680 on cherry trail for the MT9M114 I compiled this led-driver in the media-atomisp branch of hgoede to try to put the camera back on by writing 1 to /sys/class/leds/atomisp::camera/brightness
-> 
-> However nothing happened. At boot the camera led is on, but with my Debian 12.7 install of bootia32.efi and the like the camera is already off at the boot menu, so there is another trick used to shut it off even before the kernel has been boot. Does any of you have any clue how to get that camera back on for use in v4l? Mauro did so on the 20th of may 2020 for the ov2680 on Cherry Trail with a little help of Intel.
-> 
-> Or am I just too short sighted for trying to get light in /dev/video0 because of the lack of libcamera support?
-> 
-> Should v4l2-ctl have an answer about /dev/video0 as long as there is no userspace-driver, or should I test differently?
-> 
-> Here a blog of my progress: https://github.com/jfwells/linux-asus-t100ta/issues/4 with some dmesg and config dumps.
+Shyam Sundar S K (5):
+  platform/x86/amd/pmf: Add SMU metrics table support for 1Ah family 60h
+    model
+  platform/x86/amd/pmf: Use dev_err_probe() to simplify error handling
+  MAINTAINERS: Change AMD PMF driver status to "Supported"
+  platform/x86/amd/pmf: Switch to platform_get_resource() and
+    devm_ioremap_resource()
+  platform/x86/amd/pmf: Add PMF driver changes to make compatible with
+    PMF-TA
 
-About the [atomisp-]mt9m114 driver vs the intel_atomisp2_led driver,
-they control different GPIOs.
+ MAINTAINERS                           |  2 +-
+ drivers/platform/x86/amd/pmf/Kconfig  |  1 +
+ drivers/platform/x86/amd/pmf/acpi.c   | 37 ++++++++-------------------
+ drivers/platform/x86/amd/pmf/core.c   |  9 ++++---
+ drivers/platform/x86/amd/pmf/pmf.h    |  8 +++---
+ drivers/platform/x86/amd/pmf/spc.c    |  1 +
+ drivers/platform/x86/amd/pmf/tee-if.c |  8 +++---
+ 7 files changed, 28 insertions(+), 38 deletions(-)
 
-There appear to be 3 different GPIOs one to force the LED off and
-2 for turning the sensor on/off (reset and powerdown signals).
-
-The LED is initially off because the GPIO forcing it off is
-initially set to force it off. But as soon as asus-wmi loads
-and call the ACPI WMI init method the ACPI code run on init
-changes the GPIO causing the LED to turn on.
-
-The main purpose of intel_atomisp2_led is to turn it back off,
-I have now learned that this is only necessary because so far
-we have been lacking a working driver for the mt9m114. Once
-that has a driver and it is properly power-managed the LED
-will only turn on when the sensor is on (if we don't have
-intel_atomisp2_led).
-
-With intel_atomisp2_led the LED will stay off when using
-the sensor except when its brightness is set to 1, then it
-will follow the sensor state (with a working mt9m114 driver).
-
-The sensor will work fine independent of the state of
-the GPIO which can force the LED off (but not on it
-is only on when not forced off and the sensor is
-powered). So for now if the intel_atomisp2_led driver
-is build / used does not matter.
-
-We can figure out what to do with the intel_atomisp2_led
-driver once we have proper support for the mt9m114.
-
-Regards,
-
-Hans
-
-
-p.s.
-
-I did also see your private email to me, but I'm rather swamped with work so I did not
-get around to looking at this until today.
-
-
-
-> Op 20-8-2021 om 13:04 schreef Andy Shevchenko:
->> From: Kate Hsuan <hpa@redhat.com>
->>
->> Move Intel AtomISP v2 drivers to intel sub-directory
->> to improve readability.
->>
->> Signed-off-by: Kate Hsuan <hpa@redhat.com>
->> Reviewed-by: Hans de Goede <hdegoede@redhat.com>
->> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
->> ---
->>   MAINTAINERS                                   |  4 +-
->>   drivers/platform/x86/Kconfig                  | 34 ---------------
->>   drivers/platform/x86/Makefile                 |  2 -
->>   drivers/platform/x86/intel/Kconfig            |  1 +
->>   drivers/platform/x86/intel/Makefile           |  1 +
->>   drivers/platform/x86/intel/atomisp2/Kconfig   | 43 +++++++++++++++++++
->>   drivers/platform/x86/intel/atomisp2/Makefile  |  9 ++++
->>   .../atomisp2/led.c}                           |  0
->>   .../atomisp2/pm.c}                            |  0
->>   9 files changed, 56 insertions(+), 38 deletions(-)
->>   create mode 100644 drivers/platform/x86/intel/atomisp2/Kconfig
->>   create mode 100644 drivers/platform/x86/intel/atomisp2/Makefile
->>   rename drivers/platform/x86/{intel_atomisp2_led.c => intel/atomisp2/led.c} (100%)
->>   rename drivers/platform/x86/{intel_atomisp2_pm.c => intel/atomisp2/pm.c} (100%)
->>
->> diff --git a/MAINTAINERS b/MAINTAINERS
->> index cf29f7154889..429b8b5c5283 100644
->> --- a/MAINTAINERS
->> +++ b/MAINTAINERS
->> @@ -9212,13 +9212,13 @@ INTEL ATOMISP2 DUMMY / POWER-MANAGEMENT DRIVER
->>   M:    Hans de Goede <hdegoede@redhat.com>
->>   L:    platform-driver-x86@vger.kernel.org
->>   S:    Maintained
->> -F:    drivers/platform/x86/intel_atomisp2_pm.c
->> +F:    drivers/platform/x86/intel/atomisp2/pm.c
->>     INTEL ATOMISP2 LED DRIVER
->>   M:    Hans de Goede <hdegoede@redhat.com>
->>   L:    platform-driver-x86@vger.kernel.org
->>   S:    Maintained
->> -F:    drivers/platform/x86/intel_atomisp2_led.c
->> +F:    drivers/platform/x86/intel/atomisp2/led.c
->>     INTEL BIOS SAR INT1092 DRIVER
->>   M:    Shravan S <s.shravan@intel.com>
->> diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
->> index 55820fc60a63..81eaa00983bd 100644
->> --- a/drivers/platform/x86/Kconfig
->> +++ b/drivers/platform/x86/Kconfig
->> @@ -668,40 +668,6 @@ config THINKPAD_LMI
->>     source "drivers/platform/x86/intel/Kconfig"
->>   -config INTEL_ATOMISP2_LED
->> -    tristate "Intel AtomISP2 camera LED driver"
->> -    depends on GPIOLIB && LEDS_GPIO
->> -    help
->> -      Many Bay Trail and Cherry Trail devices come with a camera attached
->> -      to Intel's Image Signal Processor. Linux currently does not have a
->> -      driver for these, so they do not work as a camera. Some of these
->> -      camera's have a LED which is controlled through a GPIO.
->> -
->> -      Some of these devices have a firmware issue where the LED gets turned
->> -      on at boot. This driver will turn the LED off at boot and also allows
->> -      controlling the LED (repurposing it) through the sysfs LED interface.
->> -
->> -      Which GPIO is attached to the LED is usually not described in the
->> -      ACPI tables, so this driver contains per-system info about the GPIO
->> -      inside the driver, this means that this driver only works on systems
->> -      the driver knows about.
->> -
->> -      To compile this driver as a module, choose M here: the module
->> -      will be called intel_atomisp2_led.
->> -
->> -config INTEL_ATOMISP2_PM
->> -    tristate "Intel AtomISP2 dummy / power-management driver"
->> -    depends on PCI && IOSF_MBI && PM
->> -    depends on !INTEL_ATOMISP
->> -    help
->> -      Power-management driver for Intel's Image Signal Processor found on
->> -      Bay Trail and Cherry Trail devices. This dummy driver's sole purpose
->> -      is to turn the ISP off (put it in D3) to save power and to allow
->> -      entering of S0ix modes.
->> -
->> -      To compile this driver as a module, choose M here: the module
->> -      will be called intel_atomisp2_pm.
->> -
->>   config INTEL_HID_EVENT
->>       tristate "INTEL HID Event"
->>       depends on ACPI
->> diff --git a/drivers/platform/x86/Makefile b/drivers/platform/x86/Makefile
->> index 1b1f4337a77f..6c682114e4fe 100644
->> --- a/drivers/platform/x86/Makefile
->> +++ b/drivers/platform/x86/Makefile
->> @@ -71,8 +71,6 @@ obj-$(CONFIG_THINKPAD_LMI)    += think-lmi.o
->>   # Intel
->>   obj-$(CONFIG_X86_PLATFORM_DRIVERS_INTEL)        += intel/
->>   -obj-$(CONFIG_INTEL_ATOMISP2_LED)    += intel_atomisp2_led.o
->> -obj-$(CONFIG_INTEL_ATOMISP2_PM)        += intel_atomisp2_pm.o
->>   obj-$(CONFIG_INTEL_HID_EVENT)        += intel-hid.o
->>   obj-$(CONFIG_INTEL_INT0002_VGPIO)    += intel_int0002_vgpio.o
->>   obj-$(CONFIG_INTEL_OAKTRAIL)        += intel_oaktrail.o
->> diff --git a/drivers/platform/x86/intel/Kconfig b/drivers/platform/x86/intel/Kconfig
->> index 0c044b31e822..e8e1bad38113 100644
->> --- a/drivers/platform/x86/intel/Kconfig
->> +++ b/drivers/platform/x86/intel/Kconfig
->> @@ -16,6 +16,7 @@ menuconfig X86_PLATFORM_DRIVERS_INTEL
->>     if X86_PLATFORM_DRIVERS_INTEL
->>   +source "drivers/platform/x86/intel/atomisp2/Kconfig"
->>   source "drivers/platform/x86/intel/int1092/Kconfig"
->>   source "drivers/platform/x86/intel/int33fe/Kconfig"
->>   source "drivers/platform/x86/intel/int3472/Kconfig"
->> diff --git a/drivers/platform/x86/intel/Makefile b/drivers/platform/x86/intel/Makefile
->> index 9858657f3f39..8ce9894e5efe 100644
->> --- a/drivers/platform/x86/intel/Makefile
->> +++ b/drivers/platform/x86/intel/Makefile
->> @@ -4,6 +4,7 @@
->>   # Intel x86 Platform-Specific Drivers
->>   #
->>   +obj-$(CONFIG_INTEL_ATOMISP2_PDX86)    += atomisp2/
->>   obj-$(CONFIG_INTEL_SAR_INT1092)        += int1092/
->>   obj-$(CONFIG_INTEL_CHT_INT33FE)        += int33fe/
->>   obj-$(CONFIG_INTEL_SKL_INT3472)        += int3472/
->> diff --git a/drivers/platform/x86/intel/atomisp2/Kconfig b/drivers/platform/x86/intel/atomisp2/Kconfig
->> new file mode 100644
->> index 000000000000..35dd2be9d2a1
->> --- /dev/null
->> +++ b/drivers/platform/x86/intel/atomisp2/Kconfig
->> @@ -0,0 +1,43 @@
->> +# SPDX-License-Identifier: GPL-2.0-only
->> +#
->> +# Intel x86 Platform Specific Drivers
->> +#
->> +
->> +config INTEL_ATOMISP2_PDX86
->> +    bool
->> +
->> +config INTEL_ATOMISP2_LED
->> +    tristate "Intel AtomISP v2 camera LED driver"
->> +    depends on GPIOLIB && LEDS_GPIO
->> +    select INTEL_ATOMISP2_PDX86
->> +    help
->> +      Many Bay Trail and Cherry Trail devices come with a camera attached
->> +      to Intel's Image Signal Processor. Linux currently does not have a
->> +      driver for these, so they do not work as a camera. Some of these
->> +      camera's have a LED which is controlled through a GPIO.
->> +
->> +      Some of these devices have a firmware issue where the LED gets turned
->> +      on at boot. This driver will turn the LED off at boot and also allows
->> +      controlling the LED (repurposing it) through the sysfs LED interface.
->> +
->> +      Which GPIO is attached to the LED is usually not described in the
->> +      ACPI tables, so this driver contains per-system info about the GPIO
->> +      inside the driver, this means that this driver only works on systems
->> +      the driver knows about.
->> +
->> +      To compile this driver as a module, choose M here: the module
->> +      will be called intel_atomisp2_led.
->> +
->> +config INTEL_ATOMISP2_PM
->> +    tristate "Intel AtomISP v2 dummy / power-management driver"
->> +    depends on PCI && IOSF_MBI && PM
->> +    depends on !INTEL_ATOMISP
->> +    select INTEL_ATOMISP2_PDX86
->> +    help
->> +      Power-management driver for Intel's Image Signal Processor found on
->> +      Bay Trail and Cherry Trail devices. This dummy driver's sole purpose
->> +      is to turn the ISP off (put it in D3) to save power and to allow
->> +      entering of S0ix modes.
->> +
->> +      To compile this driver as a module, choose M here: the module
->> +      will be called intel_atomisp2_pm.
->> diff --git a/drivers/platform/x86/intel/atomisp2/Makefile b/drivers/platform/x86/intel/atomisp2/Makefile
->> new file mode 100644
->> index 000000000000..96b1e877d1f1
->> --- /dev/null
->> +++ b/drivers/platform/x86/intel/atomisp2/Makefile
->> @@ -0,0 +1,9 @@
->> +# SPDX-License-Identifier: GPL-2.0-only
->> +#
->> +# Intel x86 Platform Specific Drivers
->> +#
->> +
->> +intel_atomisp2_led-y            := led.o
->> +obj-$(CONFIG_INTEL_ATOMISP2_LED)    += intel_atomisp2_led.o
->> +intel_atomisp2_pm-y            += pm.o
->> +obj-$(CONFIG_INTEL_ATOMISP2_PM)        += intel_atomisp2_pm.o
->> diff --git a/drivers/platform/x86/intel_atomisp2_led.c b/drivers/platform/x86/intel/atomisp2/led.c
->> similarity index 100%
->> rename from drivers/platform/x86/intel_atomisp2_led.c
->> rename to drivers/platform/x86/intel/atomisp2/led.c
->> diff --git a/drivers/platform/x86/intel_atomisp2_pm.c b/drivers/platform/x86/intel/atomisp2/pm.c
->> similarity index 100%
->> rename from drivers/platform/x86/intel_atomisp2_pm.c
->> rename to drivers/platform/x86/intel/atomisp2/pm.c
-> 
+-- 
+2.34.1
 
