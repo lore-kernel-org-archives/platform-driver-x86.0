@@ -1,476 +1,295 @@
-Received: from mout.gmx.net (mout.gmx.net [212.227.17.21])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 49DCF12CD8B;
-	Mon, 14 Oct 2024 17:10:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.21
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC8E51CF5F7
+	for <platform-driver-x86@vger.kernel.org>; Mon, 14 Oct 2024 17:54:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728925828; cv=none; b=rjPmf4vMUSVTxnbICF+4AqP3O0iPs3VKYlrJ+Z9IW1+nAPbcaMQfQFeIWfauVdpQr/znEOg0L7jkI7iG0r4SlT8KPkL3TApIAWWAvSI8Zeqf1/wZ/KsEKd/mLDlEGcAsdvKdfKIehbYqNA6kEUCBkyOBEXpp59nfnc//PMtewT0=
+	t=1728928490; cv=none; b=LlHxbesl3eUyaUfl3kGp8c1xL90nBFIdzW0F8q/YRhCgMk3lJSMBmfqcyan0SjHvK1e8/jMgih3BPmWUSX9icITj+sYElBPikBCcGRhVF2cvaTHYm7ZPb1qthKo5k5MFfpIYuz46at0di6vpC9b6RM9GQfBZKmnWJsZ8JODwaGA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728925828; c=relaxed/simple;
-	bh=jhHrMaX45ADXoXNlHXae6vnpmhvCqL4ZTul9HKeSmmY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=OguBAGgSpkbJUXJpBQi7CgC6ly5mWUUZ757JaArx8uBXHKLWb7lfmwd1A3h8eNxetUu7aVzC70TiXuUIpfuMqi6pUmA9BS4dOVSdkEmjd1Nbq+JlMPNDiBFFeyvnYeFnBT0CDiSGj/gg1xSe2+4hniz9KKyak4NcSimC4jFIyxU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b=DsH6XQDW; arc=none smtp.client-ip=212.227.17.21
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
+	s=arc-20240116; t=1728928490; c=relaxed/simple;
+	bh=XzvbSc57qJ56ZQ5g9zpIEkviEj8lT2dmoaItng0z2xg=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=FkMGchNLR/Lh06UCGijdDnjuZ6Pzq/ggRwimBhqgPq+cPtJWUBq37S5q069QdlpwLOaT27H7+FUQE6DmWdv9ttQsEch3ROjrn39NIE6F4MjLelK7gtWZFWMynJIoc6Yn9yHk5qLxRB8JZJJAItPYJlNlJNZdfEi3sjuV666qPNo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=kdd0NDgY; arc=none smtp.client-ip=192.198.163.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b="DsH6XQDW"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.de;
-	s=s31663417; t=1728925817; x=1729530617; i=w_armin@gmx.de;
-	bh=7MTpWmdc/EdTHbaM73akHW9JZU1l+UeI/8FNYVTrG90=;
-	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:To:Cc:
-	 References:From:In-Reply-To:Content-Type:
-	 Content-Transfer-Encoding:cc:content-transfer-encoding:
-	 content-type:date:from:message-id:mime-version:reply-to:subject:
-	 to;
-	b=DsH6XQDW6YHBVWkhHmRsBpx9EPVnbTTEh0f2yyJrEm+BNxAHazWZMqfv74PvYh2r
-	 VGJGjlLHtypiX7MtvpR01gX8PEYE9tsWJLhXZeJg3PnC+3GDLIgI73gbHmenFb64g
-	 TpQAL07s9RywtWt3Iu9a6as4He5F8KUy3VT2sqMEHJcWB28McrvcbcMCGLPg7ktTJ
-	 9mmczWWq50mnH9EmWMb6Ag/smyFBwENzwoNUlauL4SC8dKrgOQ9J8NjW3B/IS+x7G
-	 axdyQj468YZCdvhsbMbIYUc7xW8A7iqGxj9dYLpCRm+UgLPX9lZkytYBZF6AE2YYT
-	 QzZZhUicJdfsRh6HWQ==
-X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
-Received: from [141.30.226.129] ([141.30.226.129]) by mail.gmx.net (mrgmx104
- [212.227.17.168]) with ESMTPSA (Nemesis) id 1N95iR-1u3eyU0Fa3-010nEo; Mon, 14
- Oct 2024 19:10:17 +0200
-Message-ID: <7737a2d6-8cdb-41f3-9666-2bdee6f1f450@gmx.de>
-Date: Mon, 14 Oct 2024 19:10:15 +0200
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="kdd0NDgY"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1728928489; x=1760464489;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=XzvbSc57qJ56ZQ5g9zpIEkviEj8lT2dmoaItng0z2xg=;
+  b=kdd0NDgYvEXu6I3m0+bBVqnIPgHm0/R3fm5lThUqfHqjVga+PZK0pHbM
+   wdH7i18geXjF7T7zH2D1PYoz00H13DYqz3+xzPTNXGMGFVJo+aRYSaSvh
+   AmQ9D7D5+aT8VH8toQjRNNASKH+FFtI+V3RSjODal9i3VBHJzmutRWrOF
+   wKXHKuBsyZUqxlgclSp0HQ3Cpt67QBu7gix73Uc6rImT1720LhsdvXQzJ
+   MJAmWQL1rGdVvrFg4zuAweHh6reUAE/Vvf6+w+4qLxNJeFdA327bIa1c1
+   YlJo9ZUe9yOmlaH0bA+j8VJ+ANK5EGUOMWes13EGJBLhL/PO2yGC/M1Z3
+   A==;
+X-CSE-ConnectionGUID: EaFg0IkzRUevxcrY0UBpOg==
+X-CSE-MsgGUID: d93NzUB5RTWpkp9avLBdyA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11225"; a="39666351"
+X-IronPort-AV: E=Sophos;i="6.11,203,1725346800"; 
+   d="scan'208";a="39666351"
+Received: from orviesa001.jf.intel.com ([10.64.159.141])
+  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Oct 2024 10:54:48 -0700
+X-CSE-ConnectionGUID: S5bW45pbTO2foJXGqe1x5A==
+X-CSE-MsgGUID: PteW7U37R9CNuFoS71+bCQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.11,203,1725346800"; 
+   d="scan'208";a="115095420"
+Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.179])
+  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Oct 2024 10:54:47 -0700
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Mon, 14 Oct 2024 20:54:43 +0300 (EEST)
+To: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
+cc: Hans de Goede <hdegoede@redhat.com>, platform-driver-x86@vger.kernel.org, 
+    Patil.Reddy@amd.com
+Subject: Re: [PATCH 4/5] platform/x86/amd/pmf: Switch to platform_get_resource()
+ and devm_ioremap_resource()
+In-Reply-To: <d160d900-d15c-4868-8f9e-d6477abca38d@amd.com>
+Message-ID: <b83b67b8-e1ca-7e9a-5205-d6d69c87be6c@linux.intel.com>
+References: <20241014045759.1517226-1-Shyam-sundar.S-k@amd.com> <20241014045759.1517226-5-Shyam-sundar.S-k@amd.com> <279d7dcd-2a94-1dd2-c34e-15b852dbceee@linux.intel.com> <d160d900-d15c-4868-8f9e-d6477abca38d@amd.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v5 4/4] alienware-wmi: WMAX interface documentation
-To: Kurt Borja <kuurtb@gmail.com>
-Cc: hdegoede@redhat.com, ilpo.jarvinen@linux.intel.com,
- linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org
-References: <20241012015849.19036-3-kuurtb@gmail.com>
- <20241012020330.20278-2-kuurtb@gmail.com>
-Content-Language: en-US
-From: Armin Wolf <W_Armin@gmx.de>
-In-Reply-To: <20241012020330.20278-2-kuurtb@gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Provags-ID: V03:K1:2SxuYGrm/B0Zh6/XyWlvVQGRUtQISq7VdK3/aPTmF6SCqDWsx3F
- O2VqYEVMYCgNxWOvO45fGfCHGa1oXgx4O3nyodKVmEavcYCDTOfRoV0+8O0qvZYndrmY/Qd
- xAZyRpja56SSu4ba4KDMESXrFn7QH3b3qAC1I0sj/b/kMvUIWYkZjAv3xJwYSq4l8rY4mcD
- XMDEImvlNthhitEDO8kgQ==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:QrPDCValVQo=;8pW3tq2ZJryH6DClnHp01ZMmoOS
- 0D1H4v0TBDjZ3K/QwXk2v8VIZfs4xEKdgCsE/81TmmzVr7XVOdJqo0ZRJZqhPbTHoSv8PzB2B
- 82BC/1hz8M0gMPubAbLr8jVWFu8oZxGPPR+UU/ZaC0T9p+VOCRo+Lerhn8ShslI7RhlEAbQ74
- qeVhUIvy2TAFdbj87JCq1dDX//NR/w4FmmX3BIvN5dMDG6O6DjT9GY2Eqewjl0tCqSkMTtejr
- AwOFFthSFc/ClqQ6/vhc1bxM0VPSTJAYM4C1QfA4BaWwXuVRZ1xic0hgi06w/zJEgxrkB56B7
- A8wH1MZjNae01rdWE938UilpO4pztqUrmz8lsRf8QgJ7MS/jo+E9pT7Yo2EHhwS4FAGpbNLFn
- 1YJjLKjqQngUxTr40DBKvF+aZtnPB6CMbSebJYfBIRaCNiSlUieKT2wy22RCi/b4ove1Bl+a0
- eVlok3Uagb8kDBD/TE2R9ADrlJZillPmRkSs7qxSxnm0093vBEBnPiejrFPtxfHQ9smgFGH/i
- 0+QVIg5SBq+GNALWx8KT23V/F6y7FgbuVucksy3BXPgdtfJ4PNqiNfinAkx127am7nPw/aMoX
- G+gM7cRw8+jrB0XGxVLuZThjdHG2bhuVADJ9wjWVhguEwUHv7ApTv0BKk1sDBvn2RWuMxdcTG
- 6YbuWKWYucuD1EGLkEZyUjBmrfa57hIZFc+P1NDohCnk0QjubuJRZ/JTd2Ra8jQK+zc0PG19u
- ZMsEwMvL8jrmrdj31JuHoWTu6HJ2TNWZ/mfKPSSA0Kdn8NyJ1cXTgI0CaeKTRr6cezC/jtC7x
- Es5Uc0HhMlLswgmrbx2ILHKoMat6h5WTr4DAp5LB3upMk=
+Content-Type: multipart/mixed; boundary="8323328-1109805362-1728928483=:1010"
 
-Am 12.10.24 um 04:03 schrieb Kurt Borja:
+  This message is in MIME format.  The first part should be readable text,
+  while the remaining parts are likely unreadable without MIME-aware tools.
 
-> Added documentation for new WMAX interface, present on some Alienware
-> X-Series, Alienware M-Series and Dell's G-Series laptops.
->
-> Signed-off-by: Kurt Borja <kuurtb@gmail.com>
-> ---
->   Documentation/wmi/devices/alienware-wmi.rst | 366 ++++++++++++++++++++
->   1 file changed, 366 insertions(+)
->   create mode 100644 Documentation/wmi/devices/alienware-wmi.rst
+--8323328-1109805362-1728928483=:1010
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 
-Please update the MAINTAINERS entry for the alienware-wmi driver to
-include this documentation file.
+On Mon, 14 Oct 2024, Shyam Sundar S K wrote:
 
->
-> diff --git a/Documentation/wmi/devices/alienware-wmi.rst b/Documentation/wmi/devices/alienware-wmi.rst
-> new file mode 100644
-> index 000000000..77460b91c
-> --- /dev/null
-> +++ b/Documentation/wmi/devices/alienware-wmi.rst
-> @@ -0,0 +1,366 @@
-> +.. SPDX-License-Identifier: GPL-2.0-or-later
-> +
-> +==============================================
-> +Dell AWCC WMI interface driver (alienware-wmi)
-> +==============================================
-> +
-> +Introduction
-> +============
-> +
-> +The WMI device WMAX has been implemented for many Alienware and Dell's G-Series
-> +models. Throughout these models, two implementations have been identified. The
-> +first one, used by older systems, deals with HDMI, brightness, RGB, amplifier
-> +and deep sleep control. The second one used by newer systems deals primarily
-> +with thermal, overclocking, and GPIO control.
-> +
-> +It is suspected that the latter is used by Alienware Command Center (AWCC) to
-> +manage manufacturer predefined thermal profiles. The alienware-wmi driver
-> +exposes Thermal_Information and Thermal_Control methods through the Platform
-> +Profile API to mimic AWCC's behavior.
-> +
-> +This newer interface, named AWCCMethodFunction has been reverse engineered, as
-> +Dell has not provided any official documentation. We will try to describe to the
-> +best of our ability its discovered inner workings.
-> +
-> +.. note::
-> +   The following method description may vary between models.
-> +
-> +WMI interface description
-> +-------------------------
-> +
-> +The WMI interface description can be decoded from the embedded binary MOF (bmof)
-> +data using the `bmfdec <https://github.com/pali/bmfdec>`_ utility:
-> +
-> +::
-> +
-> + [WMI, Dynamic, Provider("WmiProv"), Locale("MS\\0x409"), Description("WMI Function"), guid("{A70591CE-A997-11DA-B012-B622A1EF5492}")]
-> + class AWCCWmiMethodFunction {
-> +   [key, read] string InstanceName;
-> +   [read] boolean Active;
-> +
-> +   [WmiMethodId(13), Implemented, read, write, Description("Return Overclocking Report.")] void Return_OverclockingReport([out] uint32 argr);
-> +   [WmiMethodId(14), Implemented, read, write, Description("Set OCUIBIOS Control.")] void Set_OCUIBIOSControl([in] uint32 arg2, [out] uint32 argr);
-> +   [WmiMethodId(15), Implemented, read, write, Description("Clear OC FailSafe Flag.")] void Clear_OCFailSafeFlag([out] uint32 argr);
-> +   [WmiMethodId(19), Implemented, read, write, Description("Get Fan Sensors.")] void GetFanSensors([in] uint32 arg2, [out] uint32 argr);
-> +   [WmiMethodId(20), Implemented, read, write, Description("Thermal Information.")] void Thermal_Information([in] uint32 arg2, [out] uint32 argr);
-> +   [WmiMethodId(21), Implemented, read, write, Description("Thermal Control.")] void Thermal_Control([in] uint32 arg2, [out] uint32 argr);
-> +   [WmiMethodId(23), Implemented, read, write, Description("MemoryOCControl.")] void MemoryOCControl([in] uint32 arg2, [out] uint32 argr);
-> +   [WmiMethodId(26), Implemented, read, write, Description("System Information.")] void SystemInformation([in] uint32 arg2, [out] uint32 argr);
-> +   [WmiMethodId(28), Implemented, read, write, Description("Power Information.")] void PowerInformation([in] uint32 arg2, [out] uint32 argr);
-> +   [WmiMethodId(32), Implemented, read, write, Description("FW Update GPIO toggle.")] void FWUpdateGPIOtoggle([in] uint32 arg2, [out] uint32 argr);
-> +   [WmiMethodId(33), Implemented, read, write, Description("Read Total of GPIOs.")] void ReadTotalofGPIOs([out] uint32 argr);
-> +   [WmiMethodId(34), Implemented, read, write, Description("Read GPIO pin Status.")] void ReadGPIOpPinStatus([in] uint32 arg2, [out] uint32 argr);
-> +   [WmiMethodId(35), Implemented, read, write, Description("Read Chassis Color.")] void ReadChassisColor([out] uint32 argr);
-> +   [WmiMethodId(36), Implemented, read, write, Description("Read Platform Properties.")] void ReadPlatformProperties([out] uint32 argr);
-> +   [WmiMethodId(128), Implemented, read, write, Description("Caldera SW installation.")] void CalderaSWInstallation([out] uint32 argr);
-> +   [WmiMethodId(129), Implemented, read, write, Description("Caldera SW is released.")] void CalderaSWReleased([out] uint32 argr);
-> +   [WmiMethodId(130), Implemented, read, write, Description("Caldera Connection Status.")] void CalderaConnectionStatus([in] uint32 arg2, [out] uint32 argr);
-> +   [WmiMethodId(131), Implemented, read, write, Description("Surprise Unplugged Flag Status.")] void SurpriseUnpluggedFlagStatus([out] uint32 argr);
-> +   [WmiMethodId(132), Implemented, read, write, Description("Clear Surprise Unplugged Flag.")] void ClearSurpriseUnpluggedFlag([out] uint32 argr);
-> +   [WmiMethodId(133), Implemented, read, write, Description("Cancel Undock Request.")] void CancelUndockRequest([out] uint32 argr);
-> +   [WmiMethodId(135), Implemented, read, write, Description("Devices in Caldera.")] void DevicesInCaldera([in] uint32 arg2, [out] uint32 argr);
-> +   [WmiMethodId(136), Implemented, read, write, Description("Notify BIOS for SW ready to disconnect Caldera.")] void NotifyBIOSForSWReadyToDisconnectCaldera([out] uint32 argr);
-> +   [WmiMethodId(160), Implemented, read, write, Description("Tobii SW installation.")] void TobiiSWinstallation([out] uint32 argr);
-> +   [WmiMethodId(161), Implemented, read, write, Description("Tobii SW Released.")] void TobiiSWReleased([out] uint32 argr);
-> +   [WmiMethodId(162), Implemented, read, write, Description("Tobii Camera Power Reset.")] void TobiiCameraPowerReset([out] uint32 argr);
-> +   [WmiMethodId(163), Implemented, read, write, Description("Tobii Camera Power On.")] void TobiiCameraPowerOn([out] uint32 argr);
-> +   [WmiMethodId(164), Implemented, read, write, Description("Tobii Camera Power Off.")] void TobiiCameraPowerOff([out] uint32 argr);
-> + };
-> +
-> +Some of these methods get quite intricate so we will describe them using
-> +pseudo-code that vaguely resembles the original ASL code.
-> +
-> +Argument Structure
-> +------------------
-> +
-> +All input arguments have type **uint32** and their structure is very similar
-> +between methods. Usually, the first byte corresponds to a specific *operation*
-> +the method performs, and the subsequent bytes correspond to *arguments* passed
-> +to this *operation*. For example, if an operation has code 0x01 and requires an
-> +ID 0xA0, the argument you would pass to the method is 0xA001.
-> +
-> +
-> +Thermal Methods
-> +===============
-> +
-> +WMI method Thermal_Information([in] uint32 arg2, [out] uint32 argr)
-> +-------------------------------------------------------------------
-> +
-> +::
-> +
-> + if BYTE_0(arg2) == 0x01:
-> +         argr = 1
-> +
-> + if BYTE_0(arg2) == 0x02:
-> +         argr = UNKNOWN_CONSTANT
-> +
-> + if BYTE_0(arg2) == 0x03:
-> +         if BYTE_1(arg2) == 0x00:
-> +                 argr = FAN_ID_0
-> +
-> +         if BYTE_1(arg2) == 0x01:
-> +                 argr = FAN_ID_1
-> +
-> +         if BYTE_1(arg2) == 0x02:
-> +                 argr = FAN_ID_2
-> +
-> +         if BYTE_1(arg2) == 0x03:
-> +                 argr = FAN_ID_3
-> +
-> +         if BYTE_1(arg2) == 0x04:
-> +                 argr = SENSOR_ID_CPU | 0x0100
-> +
-> +         if BYTE_1(arg2) == 0x05:
-> +                 argr = SENSOR_ID_GPU | 0x0100
-> +
-> +         if BYTE_1(arg2) == 0x06:
-> +                 argr = THERMAL_MODE_QUIET_ID
-> +
-> +         if BYTE_1(arg2) == 0x07:
-> +                 argr = THERMAL_MODE_BALANCED_ID
-> +
-> +         if BYTE_1(arg2) == 0x08:
-> +                 argr = THERMAL_MODE_BALANCED_PERFORMANCE_ID
-> +
-> +         if BYTE_1(arg2) == 0x09:
-> +                 argr = THERMAL_MODE_PERFORMANCE_ID
-> +
-> +         if BYTE_1(arg2) == 0x0A:
-> +                 argr = THERMAL_MODE_LOW_POWER_ID
-> +
-> +         if BYTE_1(arg2) == 0x0B:
-> +                 argr = THERMAL_MODE_GMODE_ID
-> +
-> +         else:
-> +                 argr = 0xFFFFFFFF
-> +
-> + if BYTE_0(arg2) == 0x04:
-> +         if is_valid_sensor(BYTE_1(arg2)):
-> +                 argr = SENSOR_TEMP_C
-> +         else:
-> +                 argr = 0xFFFFFFFF
-> +
-> + if BYTE_0(arg2) == 0x05:
-> +         if is_valid_fan(BYTE_1(arg2)):
-> +                 argr = FAN_RPM()
-> +
-> + if BYTE_0(arg2) == 0x06:
-> +         skip
-> +
-> + if BYTE_0(arg2) == 0x07:
-> +         argr = 0
-> +
-> + If BYTE_0(arg2) == 0x08:
-> +         if is_valid_fan(BYTE_1(arg2)):
-> +                 argr = 0
-> +         else:
-> +                 argr = 0xFFFFFFFF
-> +
-> + if BYTE_0(arg2) == 0x09:
-> +         if is_valid_fan(BYTE_1(arg2)):
-> +                 argr = FAN_UNKNOWN_STAT_0()
-> +
-> +         else:
-> +                 argr = 0xFFFFFFFF
-> +
-> + if BYTE_0(arg2) == 0x0A:
-> +         argr = THERMAL_MODE_BALANCED_ID
-> +
-> + if BYTE_0(arg2) == 0x0B:
-> +         argr = CURRENT_THERMAL_MODE()
-> +
-> + if BYTE_0(arg2) == 0x0C:
-> +         if is_valid_fan(BYTE_1(arg2)):
-> +                 argr = FAN_UNKNOWN_STAT_1()
-> +         else:
-> +                 argr = 0xFFFFFFFF
-> +
-> +WMI method Thermal_Control([in] uint32 arg2, [out] uint32 argr)
-> +---------------------------------------------------------------
-> +
-> +::
-> +
-> + if BYTE_0(arg2) == 0x01:
-> +         if is_valid_thermal_profile(BYTE_1(arg2)):
-> +                 SET_THERMAL_PROFILE(BYTE_1(arg2))
-> +                 argr = 0
-> +
-> + if BYTE_0(arg2) == 0x02:
-> +         if is_valid_fan(BYTE_1(arg2)):
-> +                 SET_FAN_SPEED_MULTIPLIER(BYTE_2(arg2))
-> +                 argr = 0
-> +         else:
-> +                 argr = 0xFFFFFFFF
-> +
-> +.. note::
-> +   While you can manually change the fan speed multiplier with this method,
-> +   Dell's BIOS tends to overwrite this changes anyway.
-> +
-> +These are the known thermal profile codes:
-> +
-> +::
-> +
-> + CUSTOM                         0x00
-> +
-> + QUIET                          0x96
-> + BALANCED                       0x97
-> + BALANCED_PERFORMANCE           0x98
-> + PERFORMANCE                    0x99
-> +
-> + QUIET_USTT                     0xA3
-> + BALANCED_USTT                  0xA0
-> + BALANCED_PERFORMANCE_USTT      0xA1
-> + PERFORMANCE_USTT               0xA4
-> + LOW_POWER_USTT                 0xA5
-> +
-> + GMODE                          0xAB
-> +
-> +Usually if a model doesn't support the first four profiles they will support
-> +the User Selectable Thermal Tables (USTT) profiles and vice-versa.
-> +
-> +GMODE replaces PERFORMANCE in G-Series laptops.
-> +
-> +WMI method GetFanSensors([in] uint32 arg2, [out] uint32 argr)
-> +-------------------------------------------------------------
-> +
-> +::
-> +
-> + if BYTE_0(arg2) == 1:
-> +        if is_valid_fan(BYTE_1(arg2)):
-> +                argr = 1
-> +        else:
-> +                argr = 0
-> +
-> + if BYTE_0(arg2) == 2:
-> +        if is_valid_fan(BYTE_1(arg2)):
-> +                if BYTE_2(arg2) == 0:
-> +                        argr == SENSOR_ID
-> +                else
-> +                        argr == 0xFFFFFFFF
-> +        else:
-> +                argr = 0
-> +
-> +Overclocking Methods
-> +====================
-> +
-> +.. warning::
-> +   These methods have not been tested and are only partially reverse
-> +   engineered.
-> +
-> +WMI method Return_OverclockingReport([out] uint32 argr)
-> +-------------------------------------------------------
-> +
-> +::
-> +
-> + CSMI (0xE3, 0x99)
-> + argr = 0
-> +
-> +CSMI is an unknown operation.
-> +
-> +WMI method Set_OCUIBIOSControl([in] uint32 arg2, [out] uint32 argr)
-> +-------------------------------------------------------------------
-> +
-> +::
-> +
-> + CSMI (0xE3, 0x99)
-> + argr = 0
-> +
-> +CSMI is an unknown operation
+> Hi Ilpo,
+>=20
+> On 10/14/2024 13:26, Ilpo J=C3=A4rvinen wrote:
+> > On Mon, 14 Oct 2024, Shyam Sundar S K wrote:
+> >=20
+> >> Use platform_get_resource() to fetch the memory resource instead of
+> >> acpi_walk_resources() and devm_ioremap_resource() for mapping the
+> >> resources.
+> >>
+> >> Co-developed-by: Patil Rajesh Reddy <Patil.Reddy@amd.com>
+> >> Signed-off-by: Patil Rajesh Reddy <Patil.Reddy@amd.com>
+> >> Signed-off-by: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
+> >> ---
+> >>  drivers/platform/x86/amd/pmf/Kconfig  |  1 +
+> >>  drivers/platform/x86/amd/pmf/acpi.c   | 37 ++++++++------------------=
+-
+> >>  drivers/platform/x86/amd/pmf/pmf.h    |  6 +++--
+> >>  drivers/platform/x86/amd/pmf/tee-if.c |  8 +++---
+> >>  4 files changed, 20 insertions(+), 32 deletions(-)
+> >>
+> >> diff --git a/drivers/platform/x86/amd/pmf/Kconfig b/drivers/platform/x=
+86/amd/pmf/Kconfig
+> >> index f4fa8bd8bda8..99d67cdbd91e 100644
+> >> --- a/drivers/platform/x86/amd/pmf/Kconfig
+> >> +++ b/drivers/platform/x86/amd/pmf/Kconfig
+> >> @@ -11,6 +11,7 @@ config AMD_PMF
+> >>  =09select ACPI_PLATFORM_PROFILE
+> >>  =09depends on TEE && AMDTEE
+> >>  =09depends on AMD_SFH_HID
+> >> +=09depends on HAS_IOMEM
+> >>  =09help
+> >>  =09  This driver provides support for the AMD Platform Management Fra=
+mework.
+> >>  =09  The goal is to enhance end user experience by making AMD PCs sma=
+rter,
+> >> diff --git a/drivers/platform/x86/amd/pmf/acpi.c b/drivers/platform/x8=
+6/amd/pmf/acpi.c
+> >> index d5b496433d69..40f1c0e9ec6d 100644
+> >> --- a/drivers/platform/x86/amd/pmf/acpi.c
+> >> +++ b/drivers/platform/x86/amd/pmf/acpi.c
+> >> @@ -433,37 +433,22 @@ int apmf_install_handler(struct amd_pmf_dev *pmf=
+_dev)
+> >>  =09return 0;
+> >>  }
+> >> =20
+> >> -static acpi_status apmf_walk_resources(struct acpi_resource *res, voi=
+d *data)
+> >> +int apmf_check_smart_pc(struct amd_pmf_dev *pmf_dev)
+> >>  {
+> >> -=09struct amd_pmf_dev *dev =3D data;
+> >> +=09struct platform_device *pdev =3D to_platform_device(pmf_dev->dev);
+> >> =20
+> >> -=09switch (res->type) {
+> >> -=09case ACPI_RESOURCE_TYPE_ADDRESS64:
+> >> -=09=09dev->policy_addr =3D res->data.address64.address.minimum;
+> >> -=09=09dev->policy_sz =3D res->data.address64.address.address_length;
+> >> -=09=09break;
+> >> -=09case ACPI_RESOURCE_TYPE_FIXED_MEMORY32:
+> >> -=09=09dev->policy_addr =3D res->data.fixed_memory32.address;
+> >> -=09=09dev->policy_sz =3D res->data.fixed_memory32.address_length;
+> >> -=09=09break;
+> >> -=09}
+> >> -
+> >> -=09if (!dev->policy_addr || dev->policy_sz > POLICY_BUF_MAX_SZ || dev=
+->policy_sz =3D=3D 0) {
+> >> -=09=09pr_err("Incorrect Policy params, possibly a SBIOS bug\n");
+> >> -=09=09return AE_ERROR;
+> >> +=09pmf_dev->res =3D  platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> >=20
+> > Extra space.
+> >=20
+> >> +=09if (!pmf_dev->res) {
+> >> +=09=09dev_err(pmf_dev->dev, "Failed to get I/O memory resource\n");
+> >> +=09=09return -EINVAL;
+> >>  =09}
+> >> =20
+> >> -=09return AE_OK;
+> >> -}
+> >> +=09pmf_dev->policy_addr =3D pmf_dev->res->start;
+> >> +=09pmf_dev->policy_sz =3D resource_size(pmf_dev->res) - 1;
+> >=20
+> > If you have a resource, why you convert it into something custom like=
+=20
+> > this?
+> >=20
+>=20
+> I will address your comments in v2. But for this specific comment:
+>=20
+> the DSDT looks like this:
+>=20
+> Device (PMF)
+> {
+> =09...
+>=20
+> =09Method (_CRS, 0, NotSerialized)  // _CRS: Current Resource Settings
+> =09{
+> =09=09Name (RBUF, ResourceTemplate ()
+> =09=09{
+> =09=09=09QWordMemory (ResourceConsumer, PosDecode, MinNotFixed, MaxNotFix=
+ed,
+> NonCacheable, ReadOnly,
+> =09=09=09=090x0000000000000000, // Granularity
+> =09=09=09=090x000000FD00BC1000, // Range Minimum
+> =09=09=09=090x000000FD00C0C000, // Range Maximum
+> =09=09=09=090x0000000000000000, // Translation Offset
+> =09=09=09=090x000000000004B000, // Length=09
+> =09=09=09=09,, , AddressRangeMemory, TypeStatic)
+> =09=09}
+>=20
+> =09=09...
+> =09}
+> }
+>=20
+> But, resource_size() will do 'res->end - res->start + 1;'
+>=20
+> So, that will become 0x4B000 + 1 =3D 0x4B001 which will exceed
+> POLICY_BUF_MAX_SZ.
 
-Missing ".".
+That +1 is there to counter the -1 done on the set side. res->end is=20
+supposed to point last valid address of the resource, not the address=20
+after it. With round sizes, the end address is expected to end with lots=20
+of Fs (hex) but in your example it ends into zeros (if I interpret your=20
+numbers right)?
 
-> +
-> +WMI method Clear_OCFailSafeFlag([out] uint32 argr)
-> +--------------------------------------------------
-> +
-> +::
-> +
-> + CSMI (0xE3, 0x99)
-> + argr = 0
-> +
-> +CSMI is an unknown operation
+--=20
+ i.
 
-Missing ".".
-
-> +
-> +
-> +WMI method MemoryOCControl([in] uint32 arg2, [out] uint32 argr)
-> +---------------------------------------------------------------
-> +
-> +AWCC supports memory overclocking, but this method is very intricate and has
-> +not been deciphered yet.
-> +
-> +GPIO methods
-> +============
-> +
-> +These methods are probably related to some kind of firmware update system,
-> +through a GPIO device.
-> +
-> +.. warning::
-> +   These methods have not been tested and are only partially reverse
-> +   engineered.
-> +
-> +WMI method FWUpdateGPIOtoggle([in] uint32 arg2, [out] uint32 argr)
-> +------------------------------------------------------------------
-> +
-> +::
-> +
-> + if BYTE_0(arg2) == 0:
-> +         if BYTE_1(arg2) == 1:
-> +                 SET_PIN_A_HIGH()
-> +         else:
-> +                 SET_PIN_A_LOW()
-> +
-> + if BYTE_0(arg2) == 1:
-> +         if BYTE_1(arg2) == 1:
-> +                 SET_PIN_B_HIGH()
-> +
-> +         else:
-> +                 SET_PIN_B_LOW()
-> +
-> + else:
-> +         argr = 1
-> +
-> +WMI method ReadTotalofGPIOs([out] uint32 argr)
-> +----------------------------------------------
-> +
-> +::
-> +
-> + argr = 0x02
-> +
-> +WMI method ReadGPIOpPinStatus([in] uint32 arg2, [out] uint32 argr)
-> +------------------------------------------------------------------
-> +
-> +::
-> +
-> + if BYTE_0(arg2) == 0:
-> +         argr = PIN_A_STATUS
-> +
-> + if BYTE_0(arg2) == 1:
-> +         argr = PIN_B_STATUS
-> +
-> +Other information Methods
-> +=========================
-> +
-> +WMI method SystemInformation([in] uint32 arg2, [out] uint32 argr)
-> +-----------------------------------------------------------------
-> +
-> +Returns unknown information.
-> +
-> +WMI method PowerInformation([in] uint32 arg2, [out] uint32 argr)
-> +----------------------------------------------------------------
-> +
-> +Returns unknown information.
-> +
-> +WMI method ReadChassisColor([out] uint32 argr)
-> +----------------------------------------------
-> +
-> +::
-> +
-> + argr = CHASSIS_COLOR_ID
-> +
-> +WMI method ReadPlatformProperties([out] uint32 argr)
-> +----------------------------------------------------
-> +
-> +Returns unknown information.
-> +
-> +Acknowledgements
-> +================
-> +
-> +Kudos to `AlexIII <https://github.com/AlexIII/tcc-g15>`_ for documenting
-> +and testing avaliable thermal profile codes.
-
-avaliable -> available.
-
-Other than that this looks very good.
-
-Thanks,
-Armin Wolf
-
-> +
+> defined as:
+> #define POLICY_BUF_MAX_SZ=09=090x4b000
+>=20
+> Now, because of this, it would hit the failure case:
+>=20
+> if (!dev->policy_addr || dev->policy_sz > POLICY_BUF_MAX_SZ ||
+> dev->policy_sz =3D=3D 0) {
+> =09=09pr_err("Incorrect Policy params, possibly a SBIOS bug\n");
+> =09=09return AE_ERROR;
+> =09}
+>=20
+>=20
+> Would you like me to leave a note before using resource_size() on why
+> "-1" is being done?
+>=20
+> Let me know your thoughts?
+>=20
+> Thanks,
+> Shyam
+>=20
+> >> -int apmf_check_smart_pc(struct amd_pmf_dev *pmf_dev)
+> >> -{
+> >> -=09acpi_handle ahandle =3D ACPI_HANDLE(pmf_dev->dev);
+> >> -=09acpi_status status;
+> >> -
+> >> -=09status =3D acpi_walk_resources(ahandle, METHOD_NAME__CRS, apmf_wal=
+k_resources, pmf_dev);
+> >> -=09if (ACPI_FAILURE(status)) {
+> >> -=09=09dev_dbg(pmf_dev->dev, "acpi_walk_resources failed :%d\n", statu=
+s);
+> >> +=09if (!pmf_dev->policy_addr || pmf_dev->policy_sz > POLICY_BUF_MAX_S=
+Z ||
+> >> +=09    pmf_dev->policy_sz =3D=3D 0) {
+> >> +=09=09dev_err(pmf_dev->dev, "Incorrect policy params, possibly a SBIO=
+S bug\n");
+> >>  =09=09return -EINVAL;
+> >>  =09}
+> >> =20
+> >> diff --git a/drivers/platform/x86/amd/pmf/pmf.h b/drivers/platform/x86=
+/amd/pmf/pmf.h
+> >> index 8ce8816da9c1..a79808fda1d8 100644
+> >> --- a/drivers/platform/x86/amd/pmf/pmf.h
+> >> +++ b/drivers/platform/x86/amd/pmf/pmf.h
+> >> @@ -13,6 +13,7 @@
+> >> =20
+> >>  #include <linux/acpi.h>
+> >>  #include <linux/input.h>
+> >> +#include <linux/platform_device.h>
+> >>  #include <linux/platform_profile.h>
+> >> =20
+> >>  #define POLICY_BUF_MAX_SZ=09=090x4b000
+> >> @@ -355,19 +356,20 @@ struct amd_pmf_dev {
+> >>  =09/* Smart PC solution builder */
+> >>  =09struct dentry *esbin;
+> >>  =09unsigned char *policy_buf;
+> >> -=09u32 policy_sz;
+> >> +=09resource_size_t policy_sz;
+> >>  =09struct tee_context *tee_ctx;
+> >>  =09struct tee_shm *fw_shm_pool;
+> >>  =09u32 session_id;
+> >>  =09void *shbuf;
+> >>  =09struct delayed_work pb_work;
+> >>  =09struct pmf_action_table *prev_data;
+> >> -=09u64 policy_addr;
+> >> +=09resource_size_t policy_addr;
+> >>  =09void __iomem *policy_base;
+> >>  =09bool smart_pc_enabled;
+> >>  =09u16 pmf_if_version;
+> >>  =09struct input_dev *pmf_idev;
+> >>  =09size_t mtable_size;
+> >> +=09struct resource *res;
+> >>  };
+> >> =20
+> >>  struct apmf_sps_prop_granular_v2 {
+> >> diff --git a/drivers/platform/x86/amd/pmf/tee-if.c b/drivers/platform/=
+x86/amd/pmf/tee-if.c
+> >> index 19c27b6e4666..544c5ce08ff0 100644
+> >> --- a/drivers/platform/x86/amd/pmf/tee-if.c
+> >> +++ b/drivers/platform/x86/amd/pmf/tee-if.c
+> >> @@ -257,7 +257,7 @@ static int amd_pmf_invoke_cmd_init(struct amd_pmf_=
+dev *dev)
+> >>  =09=09return -ENODEV;
+> >>  =09}
+> >> =20
+> >> -=09dev_dbg(dev->dev, "Policy Binary size: %u bytes\n", dev->policy_sz=
+);
+> >> +=09dev_dbg(dev->dev, "Policy Binary size: %lld bytes\n", dev->policy_=
+sz);
+> >=20
+> > resource_size_t is unsigned type. However, it's not unsigned long long=
+=20
+> > either so this will trigger a warning without cast which is unacceptabl=
+e.
+> >=20
+>=20
+--8323328-1109805362-1728928483=:1010--
