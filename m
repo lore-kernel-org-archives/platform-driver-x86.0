@@ -1,347 +1,309 @@
-Received: from NAM10-BN7-obe.outbound.protection.outlook.com (mail-bn7nam10on2044.outbound.protection.outlook.com [40.107.92.44])
+Received: from mout.gmx.net (mout.gmx.net [212.227.17.21])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F0A4231CA4
-	for <platform-driver-x86@vger.kernel.org>; Mon, 14 Oct 2024 15:48:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.92.44
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728920885; cv=fail; b=uz7J6SlTPbD4g4K1C8KWuHrm9wdVQTcc4nSrFfeegVntXqocVhawlnYhRYNhuD3IRJJbsPPv12N8XYeetZtuG34UzVAeRMJaKTZKcAZv95RLulur7Q2qgzHXZfB5peyDCyRt1Ndzep2VY5R5jTF089a6gGmxVDs3VqLJ78CNaxc=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728920885; c=relaxed/simple;
-	bh=FnObEFG7liqbJLe8OsO+qS6wXIKgEAJsy6vjSYvugB4=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=YzZEGwB3ylwKOE+BG7ZPUmUdLOU2e2YjCRSbrMV+ICJtLeaUjQnHHYIjQ/RLOFCDldcR1FpBAKC298vDOSM1pXpba4DqDUhwymHVKGFvsMI5UFgF3QfKyA5Ca4AWquEAyfDCZP2pbt2owHWhqEVKsYCMotQyRZl5s4p7/howGQc=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=pQD/eclq; arc=fail smtp.client-ip=40.107.92.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B1A8C28FC;
+	Mon, 14 Oct 2024 16:26:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.21
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1728923217; cv=none; b=ZUvIqcN8r/Aw5WXZUh2TLLrmWGzPw3BeyIe9I8wE0vDdCoHqtwhPTdovNX9hhk/1hOwwYE84IJYJ3ZRxLs0Zdcla0J1p3jrNAxMPqh7gpEhPLP75N13rNJmz4jZcCFUJNIMWGC1dRiO/01zsGxW8kIRTdSchGiPJVAhGsk4U9V4=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1728923217; c=relaxed/simple;
+	bh=U30A7BPRrbdyRUqaxjptAW19OsPSGOMJiYV+YtVSQCs=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=VAhLDccXobehnYBSTEUrOoyGkcCBeQWbMMXuDHJHnTtSSB95Oh3P1nFFLfRJ3MjgPKY1FmlezUVakLcgc22jX7dN0madYGezetyU7/q7mlU40klzWpOlL6wF4Qyk73sjjyDyMA4ZPOjsnAZ7BUHDJiv5OBJxsADKWOdsVHQyAMo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b=i+CXAf+4; arc=none smtp.client-ip=212.227.17.21
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="pQD/eclq"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=v5lsOUENymBIM6ITp3hqPXiKIyMf+Z7uZLAb49ak0J7QB9M6Ne5oAMXpoP9NW8XFf5rlSXbUC+ek1kbOsrrosTn59pX3qqBHrT7/KdIGYgKHy1jVzDHsIpubNZ2Z/PYVRntwFbJA8SuAR8eqCIXHYya8BWdwnZ0S2bTC/kVFTalWjUsGW97A5sLEuc/7yiMwabkQjwF7X5rBPy0OY0ZS1L5qu23S4T74YfcQUNnTRXO+ZIrzwCJL3pMEwJWScosxzS2glT/MgLtLWy7LmpMiI/KDKCNkchIK8HodcLQt+iz8qoe/AUZOdkQGkNqMJFMn1sPBAOWdlB1eIqv855qEQQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=LT5ev7GMPbgtqdJ1hvnpChxGpoCu5KnpQ/KdOLz7VHM=;
- b=vM6ebG1N27rYSUGJE3igZOMj+b4I0DMxbl6EH0ZRSOEKkBKisEET2RsbHXRpDAoPOBc2/kdG5mTPOTeQ1gGeWgf3PqrbhGxesxhxs1CUEVRepsUgv95WVQDHOS8nzdv1yrMYwZeTLljkiQNAfoAimXWLPNnNFa1T+ZmhLj9MAP1NWDrkRYDHc6F2OODE6YdlPJ7jFyKJ/866O/z5Nm+2d25evqFZQ+wYPeW67vAZwH/KNCCA9s0HFAw76fqGyKxeiJc33EmCgDtoPa3rVp7N5EWe6U/miW3BfFFq5YDS0NW9lz3osbGQzPURnz+c9xcQM0XqLELqMZt8ENPYcGabBg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=LT5ev7GMPbgtqdJ1hvnpChxGpoCu5KnpQ/KdOLz7VHM=;
- b=pQD/eclqDZ0071fcxqbLKU3cKQdILR40+P/2qrMtnNrHdO7MjMhFzbG6GODXfonYjVPl31ocz9skM/5VPrOfIg2boJODBCAii5W3MG2/6XWasl6pBHL9pP0z+TCMmvvrKgg5oj9pCLk2t/+rDFOfihFGcnQz06lWA3HJw2UQNYQ=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from BL1PR12MB5176.namprd12.prod.outlook.com (2603:10b6:208:311::19)
- by CH3PR12MB8972.namprd12.prod.outlook.com (2603:10b6:610:169::11) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8048.26; Mon, 14 Oct
- 2024 15:48:01 +0000
-Received: from BL1PR12MB5176.namprd12.prod.outlook.com
- ([fe80::ed5b:dd2f:995a:bcf4]) by BL1PR12MB5176.namprd12.prod.outlook.com
- ([fe80::ed5b:dd2f:995a:bcf4%4]) with mapi id 15.20.8048.020; Mon, 14 Oct 2024
- 15:48:00 +0000
-Message-ID: <d160d900-d15c-4868-8f9e-d6477abca38d@amd.com>
-Date: Mon, 14 Oct 2024 21:17:53 +0530
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 4/5] platform/x86/amd/pmf: Switch to
- platform_get_resource() and devm_ioremap_resource()
-Content-Language: en-US
-To: =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Cc: Hans de Goede <hdegoede@redhat.com>, platform-driver-x86@vger.kernel.org,
- Patil.Reddy@amd.com
-References: <20241014045759.1517226-1-Shyam-sundar.S-k@amd.com>
- <20241014045759.1517226-5-Shyam-sundar.S-k@amd.com>
- <279d7dcd-2a94-1dd2-c34e-15b852dbceee@linux.intel.com>
-From: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
-In-Reply-To: <279d7dcd-2a94-1dd2-c34e-15b852dbceee@linux.intel.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: PN2PR01CA0100.INDPRD01.PROD.OUTLOOK.COM
- (2603:1096:c01:27::15) To BL1PR12MB5176.namprd12.prod.outlook.com
- (2603:10b6:208:311::19)
+	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b="i+CXAf+4"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.de;
+	s=s31663417; t=1728923206; x=1729528006; i=w_armin@gmx.de;
+	bh=NGewo8lqX5cHCvf2WJySa3l6Ye+MnvpY5Dy5n+Z+GY0=;
+	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:To:Cc:
+	 References:From:In-Reply-To:Content-Type:
+	 Content-Transfer-Encoding:cc:content-transfer-encoding:
+	 content-type:date:from:message-id:mime-version:reply-to:subject:
+	 to;
+	b=i+CXAf+42eaUTdvC1UV9ajGhWRVFsSfq41gHFt1z3l+skfvNFXWCSyD9LRbYzpHd
+	 fijSyN9jdm5NOj23Csw5sh1vWnQk2Fd6vYfWmsmtsoeo5z0ITPFtAmJxpMiVVmF/y
+	 mXgJMjv0L74gTuHKiRI2EKqzydxQd9GL7U2Uj283PV+ddZTkoq+H8s9Av7Rtnqty3
+	 lmLLfThsXIotEGxeN+GpO0Nlcn+RZaPv7lYVOGRe3TtDaSRFZL2bqGTVmQ8bfPV/c
+	 5RifKCjdPX0B7jiIZzivPRGLHsMCM0smVFwD+wdOS293dQpQTxBsmJtR3iNMF5azH
+	 5cx96KLLKmMaOuNSoQ==
+X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
+Received: from [141.30.226.129] ([141.30.226.129]) by mail.gmx.net (mrgmx105
+ [212.227.17.168]) with ESMTPSA (Nemesis) id 1N3bSt-1u0MGD3EJf-015HdX; Mon, 14
+ Oct 2024 18:26:46 +0200
+Message-ID: <2d685783-aef8-4774-b67c-8a8736b5a477@gmx.de>
+Date: Mon, 14 Oct 2024 18:26:45 +0200
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: BL1PR12MB5176:EE_|CH3PR12MB8972:EE_
-X-MS-Office365-Filtering-Correlation-Id: 71ea2aa7-a5e3-42b4-698c-08dcec6794cd
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|376014|1800799024;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?bGVyK3pWaWN3UGJ3WURhQi9jd1h0M29wUm9HRlNDRkVFeFlKcXRlaElybDRD?=
- =?utf-8?B?Mm12OTFia1dsTEVFVDRMdDFaV0VTWFBoamxXOW01eDVtQmZJbGFZejZHQWp2?=
- =?utf-8?B?Nm1oNlVuRzdMQlJOOHQvdWQ5YmNsNEphMVZZK0pKLzZxdVV2SVRCa3lNMTd3?=
- =?utf-8?B?VWdmWUhIU3NnSVFqaWo2K2JqSEdCdENuVVo5VEdBS1QxTmdsSi9Dck1McmNm?=
- =?utf-8?B?R3daN294UnVGS0tPSXhsbWpnSS9TRHlpQTRTRytzSS9wd0lHS1hJRThrbTFS?=
- =?utf-8?B?eFk5NU41VFRLdk9VYWxMdFNiZHF6aHJveGJ3RTdTSk93a3haM3VpV1pKS0ov?=
- =?utf-8?B?NWlBcGdsS3ZXK2dMVWF4VGoxZWZ1WEZoam9iSzU0WENMS1VDKzBGRUd0YVZV?=
- =?utf-8?B?T0h3VGgvV0VEK1d4bWJDTkhQbW43VDJxMTFvMUphV2U2U3NKS0dWelZLTTk5?=
- =?utf-8?B?UzhKWEwvb25BbGdoYmw0UHh5SDlNeVRmaVBycVFyUkQrLzlmN25PSzl2dVhQ?=
- =?utf-8?B?a0VUUDlHZ3d5TEZBZHlHemQrb1ZlMllhSnFMVUdsa0RSMW5yeWVjZGZsS0dB?=
- =?utf-8?B?VVRBY2ZLaEdGV09oUDJFSHJXTGVVdGdHZHRSUEh1OEVlNGNZUVdXeXFVSWtu?=
- =?utf-8?B?YzVSMzZ1QzBOYWNQY3g5N01sSXFTVXg3dTRyY0syaGtGS3MveHJNVm9YV0tP?=
- =?utf-8?B?eHNkcHBvRjZwM25mVGw0TjJDT0l2a2U4SlJiMnNieWVyTDliK2syZ0NyRExI?=
- =?utf-8?B?M0kveVFKdzk1eXJhUHZONnl4NlA4M3BvbG1QSjNGYkRuMXg1dTVSb0RHV0FE?=
- =?utf-8?B?YXRvQnlGZG42OXU2aHI1MGszQ25Kdzl2WHAybGpmN3NHbkc0UitxMDdPWWx3?=
- =?utf-8?B?MWJldlZMQmxvcTR5VmtrYlphWWRNNHdVTGk3SFhDMTVQdFlZV1VRa2tJcWFB?=
- =?utf-8?B?QS9DenZ6SHBhTFZkV2dlZTR3Zk1JMjZ3eGpiaEdwMm9OVWx4S2lwNWFtNVhO?=
- =?utf-8?B?RFJMQVhydzhSNjk0MXdSaDZJcW5ja3lwV0dJMzhDdjNMNnlCWmRkVnJkcm4x?=
- =?utf-8?B?bFRoazNQN1dIYlJDMjJLbHVXM0ZpMXZnRHo0K05GOVNGU21rTk1HRUdQMzMz?=
- =?utf-8?B?Qmh0bHJjTmx2clY4R1dwUVZMQ0hZQlJNZjJTa050aTJCSHJRbm8rc0s2V1Bk?=
- =?utf-8?B?VjNKUkkzcU1YYVQwdkJnekwycGNsdUNTb3U2Mldsa2E3QnpHWHhXMkNuZGlU?=
- =?utf-8?B?dmE1UjRwSzFMUkpCYUIxYXFDUVBTTWpKMjJSUFc5anBLaEFaMTRRUzF4TTVp?=
- =?utf-8?B?Y3JLb1VNN0JVdkZXZHg0cGlVenMyVWVzQjZ6UExiN3RHY0c1RXozYjFjWWFp?=
- =?utf-8?B?OEJ5UzlrOW1vRVlKbVI1dWpSYi91eTVCamxmS1Mxb1g4NVcwa0RtU2hhRGtj?=
- =?utf-8?B?c3Zsb2FreVRINDEwS1A1NW5IdG00N2pxVXVIMmVUa3d4Yk9SOFdBVFBiNFZZ?=
- =?utf-8?B?Y3QwR3YxY045WXFqQUh6YlU3WVJTYTdLeVdEZFh1c1Q0cnRGZUJSejBXSE1W?=
- =?utf-8?B?a3R4MTg3djQwUWozSzlEMTlEaFVZRXBXWXk4MWM0V1dSazdLc1NlQW9CWjFT?=
- =?utf-8?B?cGtsVzBRUnhDbmV3VEVRcE84VGY3OTNyU2c4NlVhV3lCVzQ0bFBCNmFWSkFz?=
- =?utf-8?B?MnlCeGgxYkdvbWFhdVlCNVZTakhvdDE2N3N4b1ZjdEpzUmFQTitmVmF3PT0=?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BL1PR12MB5176.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(376014)(1800799024);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?RkRwcWdBZlg1TGJJUUROVStCT3ZzQzY3ZkNYOE5aZFRIbzhTLy9qUURKcGhO?=
- =?utf-8?B?dUpkUUdqdUdxUzZzT01McUQ0V2x0WHRKRjViVGs3YVBtUytsQW1WWm5pc1kr?=
- =?utf-8?B?ekdONzNrbzdpazRucmtYcjcyVWRCR0tkT1lnSHJiME1PRFVLcW9pV2tlTEZE?=
- =?utf-8?B?Q1dEYy9kVEh2ZHArd3A4OVR2ek9CSjFnRWo3dTZKZEtvOW5wK1V5ZlIvaXJm?=
- =?utf-8?B?Q3JCY2Zmb2NXdnZGL1N1b3dzL29XOXI2cm84eTZwdnJ4MzVTNVZmaWxiOTJs?=
- =?utf-8?B?QVBYU1N2Y3pJRFJYODFiMzEvTkxhNUVmTFZWMzR1cWxMK0NKOE16MVRCT3V1?=
- =?utf-8?B?TklGRkpRU3dLT0dnd2RFeER3VWQyUWdvQlFnWHpHWEZYSzJ2STM5d3ZOTkRY?=
- =?utf-8?B?bURZZkk5UHRCMXpqeithSkRtMkRGdHYvUVZnVnpYQUZ6L1dzZ1dtUDVubHJT?=
- =?utf-8?B?YWlJS3ZPY2t2RG1IbUluTWFUWmxNejlNWnMyVXNVbE5zanlRc0xMckNSUWY0?=
- =?utf-8?B?blo1QTVZa3lpSEd3ODNZTTIxakM1VXVQeW9jeHVsQmJLeE1ucGcrYUo2L1F6?=
- =?utf-8?B?YkVNUDBUZVNpRjRtWEJQenJxQXdUL1dzZHRjZTlqblhzQUVIOGhUMUFXL21S?=
- =?utf-8?B?bnZmcDRjWWYzNkJEQk9kMCtTWWVWR2FYM1lFdUd2eEc5NmEvK2VudXZNQ2pu?=
- =?utf-8?B?TldHMTNoVm1Gc05xdnpGbU1ZMjJDWVlDV0h1T1d4M1NrS2w3UTZGZUVqRnlo?=
- =?utf-8?B?c2NCa0x4dmxjRXcxRnl6K3FOZkNsWUVncVhjUTJyL0RuT2VOMEtwTHlBZ2w5?=
- =?utf-8?B?d1U4Rkt1Vy9WRUpPNG5sVzBjR3gwWXNVWFVRQWlTQjVBRHBjQ3lmNFAvZk9M?=
- =?utf-8?B?NVRmRklpRmd1a1crZXphWlg0KzVWaDVkbG04WVB4QnhCRGdkYm43cGpkM1hW?=
- =?utf-8?B?a0NQOE9nT1hIZ09BSUx5MEhhRExCOCtqNVdzQTNoZUpKbWY3NTBab2FoNlJ3?=
- =?utf-8?B?bncxWEN6ZHFVR3BDUWZxak01Uk16WUxHV0FtemdoSlc3TW5HTXdhaVowRG9P?=
- =?utf-8?B?bWJLN0ZpYUlqV0pIRnpKMzVWcFhCK1NVQm96TDN4cUZlN2JEUHkxenVYVElk?=
- =?utf-8?B?dWJTWWRTcUR5QmVtcnVzMmxNc29XcXhvWURxUlRFWXJSdXRwQVFvc2JIVEYz?=
- =?utf-8?B?NSs5WWdaRWxRTDk0MzhnTmdMaU1VWW1QYmJVUzY1K0tkWTJLZnJoaFR1Ym16?=
- =?utf-8?B?Um9yVnViM2ZwQkJDQmVPN0o2SDJicFNCellMb2hJMWNmNlJlSCswTDJwVXpT?=
- =?utf-8?B?VlgwckNabUFYSktlaG91c1p0aGxhVmNja0g2cGMydWo5cmlwQ2dLQ2VWT1dj?=
- =?utf-8?B?WTFDeFpmR0g1UHkzRlY3VjQzNlJ6RXdrQVVEUnkySFdBNjQzcVJUY1o3ckxL?=
- =?utf-8?B?VEh6L0lWZ1UyaUJMM0ZRa3JKTk9pRlhVdFNwbXN2VW1rR09PZ0IrbGNsbURh?=
- =?utf-8?B?ZXlMRHhodWdBS2cvaldreFd6Z2EwckExSTZQSUdzeVVxMk8zcWliVjZTUlds?=
- =?utf-8?B?UFJBNkRzRkFNYjhHdHBKTDV0ZGVNcEhlaHdMajMveXdqald6TTEyczRmdGNI?=
- =?utf-8?B?Y0RGMFI4N3MxV0VmcHVTa3dma2VpdkdKZHVzcUkzODZZVmJzNzNjSWNEL3lN?=
- =?utf-8?B?V1NJVUh4UlNBVHhldkJNM3dMSUpsUDhreEU2QWd5WUtRQU84VWd4d0Rxc2dS?=
- =?utf-8?B?TmdJNjNJQ1U3bTVmcUwyeUZmZ3VKYmJncUtDRVdaZklSV0ZIZHl0ZkFacTBt?=
- =?utf-8?B?eHF6S3lOSHd5RW9DeVdmSXFzR2RIQnh1WENua3Zva2ZsdmZzM1lIS1Jjb3hD?=
- =?utf-8?B?RFB5SkpOS200WWF2dWR5M2Y0bFA3RytVOVZkVjg2M3NGZE9pcjREZ2x6dlNN?=
- =?utf-8?B?dWVoRGdOZmhjZXJVMGhyZGJxc2Zpa2UxdURXbjlrZk1GL29sZnQ2K0xYTDZz?=
- =?utf-8?B?eDYzT1JiZDBhVW9ydEFlcGNJNnlTeE5MSlBTQUduUUJtTjJJODFsbTFoV1Z0?=
- =?utf-8?B?RzB1TkYvQ01ybVN6TEowK1AxYkxxODhQRTRHdmVPS3lNOVAwVnMzSEtwR0Ft?=
- =?utf-8?Q?NzCTD+pSsUUNE9pRme0l9LC56?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 71ea2aa7-a5e3-42b4-698c-08dcec6794cd
-X-MS-Exchange-CrossTenant-AuthSource: BL1PR12MB5176.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 14 Oct 2024 15:48:00.5211
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: F8xHJbmhYErAYR5iuf2re+2CbepQlqStC0zQTrAFkggM/3fY2oNjKaNrKhWjKc2AP95FsdI7/ZsjTOJGkGeLqQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH3PR12MB8972
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v5 1/4] alienware-wmi: fixed indentation and clean up
+To: Kurt Borja <kuurtb@gmail.com>
+Cc: hdegoede@redhat.com, ilpo.jarvinen@linux.intel.com,
+ linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org
+References: <20241012015849.19036-3-kuurtb@gmail.com>
+ <20241012020124.19444-2-kuurtb@gmail.com>
+Content-Language: en-US
+From: Armin Wolf <W_Armin@gmx.de>
+In-Reply-To: <20241012020124.19444-2-kuurtb@gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:CEW9GjiaopWCsE9NtCF6TATRM0exmFfmxrQ0qODseC4sc3B4NGQ
+ 7O3oOcagj0lP188n7vIPrXQ6+uP18LTQBZwmiKPCsn3wJjmoetNuC/rdmOwXRHXzj/Z9qCd
+ 4iopjNjBwpF3cU9BEHuZqvbPAUVjxGpK7kE5i+mB8vq3WENAITGP08djt1uJl7LdW01hjWB
+ Adib85yBSvDUnQ5O/jlSA==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:rH/mVFQuNjA=;vynIc65mjijJv/iqq5hgSql3mAK
+ uopkBKLRlh5RfzsUYUY0/KqQGsR4WMv2DJnGbx1LalCdVSbd3zJ32x4YKeYNF/nE1M53iVSad
+ XBt+iaJ5wz0YDIy6aqVTpPt4PBCa0wjF1RfRFOOxNf27fzO/k9K77XQkpJEVYrgJP/uGX4K0H
+ 27dUtvuLu54kD3v9mLx3Rs/pw1u4F60UjMCqS2uBtWD031pffGXJdYfQmrKANADiML+s3SlhC
+ nWK9fYI6Y0vvPjEqUgraDQREc0Ju4E3lymr2hU9ixIZgkzFP6bXRxPF+qDoO4HTN5R2aDpV2t
+ KTjIUZfaTDRZ9TNUfXDVNIth6pTvUxR0w6f9JDvbycDiZMKahJNsbL1mAJkr5fzTiMqele0Rl
+ Ds4eIBXydYUdj+uSoJSVIilGgCy9i8hb/XlmlhP9XlXyLhEdZgvbY2ODbJYDj+XYyr4tK2IHK
+ OOon6JwbFlCC7jw5fD7AZrAC6cLIVlZPfMLBcHKzLkZWyWxkhPrdaF9GUiZrqQAw3CcKXZRNd
+ e/+YnQUtiAMaHHEmxMKFWxoc5YN8qhS09xVx9NePJkAteCNc4yr5JpNpWokPkHXP/NL3rKrIG
+ jLql6W0qT28AXIrOQUCmygIQ0UIIM0aZ63DpnUAj9b9H7jpg9UuZy5H9m3ll1srj5UJfUco0K
+ fFvV8gInCkb30bK03d0xR3RGUGrffx2n2nI3S+4VQIlwywaq+PJoP6gjs9rDTGOSA8zDKR+Sk
+ tdnDbaTsvmlI+ovJnu/U30m8Qe7Y7LVApASUV4AqNESxGbxGPxJKHWdMV6S9FagMqPqabN2ht
+ +HBSTZSCGR4dLx8Xgg9o3fkw==
 
-Hi Ilpo,
+Am 12.10.24 um 04:01 schrieb Kurt Borja:
 
-On 10/14/2024 13:26, Ilpo Järvinen wrote:
-> On Mon, 14 Oct 2024, Shyam Sundar S K wrote:
-> 
->> Use platform_get_resource() to fetch the memory resource instead of
->> acpi_walk_resources() and devm_ioremap_resource() for mapping the
->> resources.
->>
->> Co-developed-by: Patil Rajesh Reddy <Patil.Reddy@amd.com>
->> Signed-off-by: Patil Rajesh Reddy <Patil.Reddy@amd.com>
->> Signed-off-by: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
->> ---
->>  drivers/platform/x86/amd/pmf/Kconfig  |  1 +
->>  drivers/platform/x86/amd/pmf/acpi.c   | 37 ++++++++-------------------
->>  drivers/platform/x86/amd/pmf/pmf.h    |  6 +++--
->>  drivers/platform/x86/amd/pmf/tee-if.c |  8 +++---
->>  4 files changed, 20 insertions(+), 32 deletions(-)
->>
->> diff --git a/drivers/platform/x86/amd/pmf/Kconfig b/drivers/platform/x86/amd/pmf/Kconfig
->> index f4fa8bd8bda8..99d67cdbd91e 100644
->> --- a/drivers/platform/x86/amd/pmf/Kconfig
->> +++ b/drivers/platform/x86/amd/pmf/Kconfig
->> @@ -11,6 +11,7 @@ config AMD_PMF
->>  	select ACPI_PLATFORM_PROFILE
->>  	depends on TEE && AMDTEE
->>  	depends on AMD_SFH_HID
->> +	depends on HAS_IOMEM
->>  	help
->>  	  This driver provides support for the AMD Platform Management Framework.
->>  	  The goal is to enhance end user experience by making AMD PCs smarter,
->> diff --git a/drivers/platform/x86/amd/pmf/acpi.c b/drivers/platform/x86/amd/pmf/acpi.c
->> index d5b496433d69..40f1c0e9ec6d 100644
->> --- a/drivers/platform/x86/amd/pmf/acpi.c
->> +++ b/drivers/platform/x86/amd/pmf/acpi.c
->> @@ -433,37 +433,22 @@ int apmf_install_handler(struct amd_pmf_dev *pmf_dev)
->>  	return 0;
->>  }
->>  
->> -static acpi_status apmf_walk_resources(struct acpi_resource *res, void *data)
->> +int apmf_check_smart_pc(struct amd_pmf_dev *pmf_dev)
->>  {
->> -	struct amd_pmf_dev *dev = data;
->> +	struct platform_device *pdev = to_platform_device(pmf_dev->dev);
->>  
->> -	switch (res->type) {
->> -	case ACPI_RESOURCE_TYPE_ADDRESS64:
->> -		dev->policy_addr = res->data.address64.address.minimum;
->> -		dev->policy_sz = res->data.address64.address.address_length;
->> -		break;
->> -	case ACPI_RESOURCE_TYPE_FIXED_MEMORY32:
->> -		dev->policy_addr = res->data.fixed_memory32.address;
->> -		dev->policy_sz = res->data.fixed_memory32.address_length;
->> -		break;
->> -	}
->> -
->> -	if (!dev->policy_addr || dev->policy_sz > POLICY_BUF_MAX_SZ || dev->policy_sz == 0) {
->> -		pr_err("Incorrect Policy params, possibly a SBIOS bug\n");
->> -		return AE_ERROR;
->> +	pmf_dev->res =  platform_get_resource(pdev, IORESOURCE_MEM, 0);
-> 
-> Extra space.
-> 
->> +	if (!pmf_dev->res) {
->> +		dev_err(pmf_dev->dev, "Failed to get I/O memory resource\n");
->> +		return -EINVAL;
->>  	}
->>  
->> -	return AE_OK;
->> -}
->> +	pmf_dev->policy_addr = pmf_dev->res->start;
->> +	pmf_dev->policy_sz = resource_size(pmf_dev->res) - 1;
-> 
-> If you have a resource, why you convert it into something custom like 
-> this?
-> 
+> Fixed inconsistent indentation and removed unnecessary (acpi_size) and
+> (u32 *) casts.
 
-I will address your comments in v2. But for this specific comment:
+Reviewed-by: Armin Wolf <W_Armin@gmx.de
 
-the DSDT looks like this:
-
-Device (PMF)
-{
-	...
-
-	Method (_CRS, 0, NotSerialized)  // _CRS: Current Resource Settings
-	{
-		Name (RBUF, ResourceTemplate ()
-		{
-			QWordMemory (ResourceConsumer, PosDecode, MinNotFixed, MaxNotFixed,
-NonCacheable, ReadOnly,
-				0x0000000000000000, // Granularity
-				0x000000FD00BC1000, // Range Minimum
-				0x000000FD00C0C000, // Range Maximum
-				0x0000000000000000, // Translation Offset
-				0x000000000004B000, // Length	
-				,, , AddressRangeMemory, TypeStatic)
-		}
-
-		...
-	}
-}
-
-But, resource_size() will do 'res->end - res->start + 1;'
-
-So, that will become 0x4B000 + 1 = 0x4B001 which will exceed
-POLICY_BUF_MAX_SZ.
-
-defined as:
-#define POLICY_BUF_MAX_SZ		0x4b000
-
-Now, because of this, it would hit the failure case:
-
-if (!dev->policy_addr || dev->policy_sz > POLICY_BUF_MAX_SZ ||
-dev->policy_sz == 0) {
-		pr_err("Incorrect Policy params, possibly a SBIOS bug\n");
-		return AE_ERROR;
-	}
-
-
-Would you like me to leave a note before using resource_size() on why
-"-1" is being done?
-
-Let me know your thoughts?
-
-Thanks,
-Shyam
-
->> -int apmf_check_smart_pc(struct amd_pmf_dev *pmf_dev)
->> -{
->> -	acpi_handle ahandle = ACPI_HANDLE(pmf_dev->dev);
->> -	acpi_status status;
->> -
->> -	status = acpi_walk_resources(ahandle, METHOD_NAME__CRS, apmf_walk_resources, pmf_dev);
->> -	if (ACPI_FAILURE(status)) {
->> -		dev_dbg(pmf_dev->dev, "acpi_walk_resources failed :%d\n", status);
->> +	if (!pmf_dev->policy_addr || pmf_dev->policy_sz > POLICY_BUF_MAX_SZ ||
->> +	    pmf_dev->policy_sz == 0) {
->> +		dev_err(pmf_dev->dev, "Incorrect policy params, possibly a SBIOS bug\n");
->>  		return -EINVAL;
->>  	}
->>  
->> diff --git a/drivers/platform/x86/amd/pmf/pmf.h b/drivers/platform/x86/amd/pmf/pmf.h
->> index 8ce8816da9c1..a79808fda1d8 100644
->> --- a/drivers/platform/x86/amd/pmf/pmf.h
->> +++ b/drivers/platform/x86/amd/pmf/pmf.h
->> @@ -13,6 +13,7 @@
->>  
->>  #include <linux/acpi.h>
->>  #include <linux/input.h>
->> +#include <linux/platform_device.h>
->>  #include <linux/platform_profile.h>
->>  
->>  #define POLICY_BUF_MAX_SZ		0x4b000
->> @@ -355,19 +356,20 @@ struct amd_pmf_dev {
->>  	/* Smart PC solution builder */
->>  	struct dentry *esbin;
->>  	unsigned char *policy_buf;
->> -	u32 policy_sz;
->> +	resource_size_t policy_sz;
->>  	struct tee_context *tee_ctx;
->>  	struct tee_shm *fw_shm_pool;
->>  	u32 session_id;
->>  	void *shbuf;
->>  	struct delayed_work pb_work;
->>  	struct pmf_action_table *prev_data;
->> -	u64 policy_addr;
->> +	resource_size_t policy_addr;
->>  	void __iomem *policy_base;
->>  	bool smart_pc_enabled;
->>  	u16 pmf_if_version;
->>  	struct input_dev *pmf_idev;
->>  	size_t mtable_size;
->> +	struct resource *res;
->>  };
->>  
->>  struct apmf_sps_prop_granular_v2 {
->> diff --git a/drivers/platform/x86/amd/pmf/tee-if.c b/drivers/platform/x86/amd/pmf/tee-if.c
->> index 19c27b6e4666..544c5ce08ff0 100644
->> --- a/drivers/platform/x86/amd/pmf/tee-if.c
->> +++ b/drivers/platform/x86/amd/pmf/tee-if.c
->> @@ -257,7 +257,7 @@ static int amd_pmf_invoke_cmd_init(struct amd_pmf_dev *dev)
->>  		return -ENODEV;
->>  	}
->>  
->> -	dev_dbg(dev->dev, "Policy Binary size: %u bytes\n", dev->policy_sz);
->> +	dev_dbg(dev->dev, "Policy Binary size: %lld bytes\n", dev->policy_sz);
-> 
-> resource_size_t is unsigned type. However, it's not unsigned long long 
-> either so this will trigger a warning without cast which is unacceptable.
-> 
+>
+> Signed-off-by: Kurt Borja <kuurtb@gmail.com>
+> ---
+>   drivers/platform/x86/dell/alienware-wmi.c | 134 +++++++++++-----------
+>   1 file changed, 67 insertions(+), 67 deletions(-)
+>
+> diff --git a/drivers/platform/x86/dell/alienware-wmi.c b/drivers/platfor=
+m/x86/dell/alienware-wmi.c
+> index f5ee62ce1..16a3fe9ac 100644
+> --- a/drivers/platform/x86/dell/alienware-wmi.c
+> +++ b/drivers/platform/x86/dell/alienware-wmi.c
+> @@ -116,68 +116,68 @@ static int __init dmi_matched(const struct dmi_sys=
+tem_id *dmi)
+>
+>   static const struct dmi_system_id alienware_quirks[] __initconst =3D {
+>   	{
+> -	 .callback =3D dmi_matched,
+> -	 .ident =3D "Alienware X51 R3",
+> -	 .matches =3D {
+> -		     DMI_MATCH(DMI_SYS_VENDOR, "Alienware"),
+> -		     DMI_MATCH(DMI_PRODUCT_NAME, "Alienware X51 R3"),
+> -		     },
+> -	 .driver_data =3D &quirk_x51_r3,
+> -	 },
+> +		.callback =3D dmi_matched,
+> +		.ident =3D "Alienware X51 R3",
+> +		.matches =3D {
+> +			DMI_MATCH(DMI_SYS_VENDOR, "Alienware"),
+> +			DMI_MATCH(DMI_PRODUCT_NAME, "Alienware X51 R3"),
+> +		},
+> +		.driver_data =3D &quirk_x51_r3,
+> +	},
+>   	{
+> -	 .callback =3D dmi_matched,
+> -	 .ident =3D "Alienware X51 R2",
+> -	 .matches =3D {
+> -		     DMI_MATCH(DMI_SYS_VENDOR, "Alienware"),
+> -		     DMI_MATCH(DMI_PRODUCT_NAME, "Alienware X51 R2"),
+> -		     },
+> -	 .driver_data =3D &quirk_x51_r1_r2,
+> -	 },
+> +		.callback =3D dmi_matched,
+> +		.ident =3D "Alienware X51 R2",
+> +		.matches =3D {
+> +			DMI_MATCH(DMI_SYS_VENDOR, "Alienware"),
+> +			DMI_MATCH(DMI_PRODUCT_NAME, "Alienware X51 R2"),
+> +		},
+> +		.driver_data =3D &quirk_x51_r1_r2,
+> +	},
+>   	{
+> -	 .callback =3D dmi_matched,
+> -	 .ident =3D "Alienware X51 R1",
+> -	 .matches =3D {
+> -		     DMI_MATCH(DMI_SYS_VENDOR, "Alienware"),
+> -		     DMI_MATCH(DMI_PRODUCT_NAME, "Alienware X51"),
+> -		     },
+> -	 .driver_data =3D &quirk_x51_r1_r2,
+> -	 },
+> +		.callback =3D dmi_matched,
+> +		.ident =3D "Alienware X51 R1",
+> +		.matches =3D {
+> +			DMI_MATCH(DMI_SYS_VENDOR, "Alienware"),
+> +			DMI_MATCH(DMI_PRODUCT_NAME, "Alienware X51"),
+> +		},
+> +		.driver_data =3D &quirk_x51_r1_r2,
+> +	},
+>   	{
+> -	 .callback =3D dmi_matched,
+> -	 .ident =3D "Alienware ASM100",
+> -	 .matches =3D {
+> -		     DMI_MATCH(DMI_SYS_VENDOR, "Alienware"),
+> -		     DMI_MATCH(DMI_PRODUCT_NAME, "ASM100"),
+> -		     },
+> -	 .driver_data =3D &quirk_asm100,
+> -	 },
+> +		.callback =3D dmi_matched,
+> +		.ident =3D "Alienware ASM100",
+> +		.matches =3D {
+> +			DMI_MATCH(DMI_SYS_VENDOR, "Alienware"),
+> +			DMI_MATCH(DMI_PRODUCT_NAME, "ASM100"),
+> +		},
+> +		.driver_data =3D &quirk_asm100,
+> +	},
+>   	{
+> -	 .callback =3D dmi_matched,
+> -	 .ident =3D "Alienware ASM200",
+> -	 .matches =3D {
+> -		     DMI_MATCH(DMI_SYS_VENDOR, "Alienware"),
+> -		     DMI_MATCH(DMI_PRODUCT_NAME, "ASM200"),
+> -		     },
+> -	 .driver_data =3D &quirk_asm200,
+> -	 },
+> +		.callback =3D dmi_matched,
+> +		.ident =3D "Alienware ASM200",
+> +		.matches =3D {
+> +			DMI_MATCH(DMI_SYS_VENDOR, "Alienware"),
+> +			DMI_MATCH(DMI_PRODUCT_NAME, "ASM200"),
+> +		},
+> +		.driver_data =3D &quirk_asm200,
+> +	},
+>   	{
+> -	 .callback =3D dmi_matched,
+> -	 .ident =3D "Alienware ASM201",
+> -	 .matches =3D {
+> -		     DMI_MATCH(DMI_SYS_VENDOR, "Alienware"),
+> -		     DMI_MATCH(DMI_PRODUCT_NAME, "ASM201"),
+> -		     },
+> -	 .driver_data =3D &quirk_asm201,
+> -	 },
+> -	 {
+> -	 .callback =3D dmi_matched,
+> -	 .ident =3D "Dell Inc. Inspiron 5675",
+> -	 .matches =3D {
+> -		     DMI_MATCH(DMI_SYS_VENDOR, "Dell Inc."),
+> -		     DMI_MATCH(DMI_PRODUCT_NAME, "Inspiron 5675"),
+> -		     },
+> -	 .driver_data =3D &quirk_inspiron5675,
+> -	 },
+> +		.callback =3D dmi_matched,
+> +		.ident =3D "Alienware ASM201",
+> +		.matches =3D {
+> +			DMI_MATCH(DMI_SYS_VENDOR, "Alienware"),
+> +			DMI_MATCH(DMI_PRODUCT_NAME, "ASM201"),
+> +		},
+> +		.driver_data =3D &quirk_asm201,
+> +	},
+> +	{
+> +		.callback =3D dmi_matched,
+> +		.ident =3D "Dell Inc. Inspiron 5675",
+> +		.matches =3D {
+> +			DMI_MATCH(DMI_SYS_VENDOR, "Dell Inc."),
+> +			DMI_MATCH(DMI_PRODUCT_NAME, "Inspiron 5675"),
+> +		},
+> +		.driver_data =3D &quirk_inspiron5675,
+> +	},
+>   	{}
+>   };
+>
+> @@ -221,8 +221,8 @@ static struct platform_zone *zone_data;
+>
+>   static struct platform_driver platform_driver =3D {
+>   	.driver =3D {
+> -		   .name =3D "alienware-wmi",
+> -		   }
+> +		.name =3D "alienware-wmi",
+> +	}
+>   };
+>
+>   static struct attribute_group zone_attribute_group =3D {
+> @@ -292,7 +292,7 @@ static int alienware_update_led(struct platform_zone=
+ *zone)
+>   		guid =3D WMAX_CONTROL_GUID;
+>   		method_id =3D WMAX_METHOD_ZONE_CONTROL;
+>
+> -		input.length =3D (acpi_size) sizeof(wmax_basic_args);
+> +		input.length =3D sizeof(wmax_basic_args);
+>   		input.pointer =3D &wmax_basic_args;
+>   	} else {
+>   		legacy_args.colors =3D zone->colors;
+> @@ -306,7 +306,7 @@ static int alienware_update_led(struct platform_zone=
+ *zone)
+>   			guid =3D LEGACY_CONTROL_GUID;
+>   		method_id =3D zone->location + 1;
+>
+> -		input.length =3D (acpi_size) sizeof(legacy_args);
+> +		input.length =3D sizeof(legacy_args);
+>   		input.pointer =3D &legacy_args;
+>   	}
+>   	pr_debug("alienware-wmi: guid %s method %d\n", guid, method_id);
+> @@ -358,7 +358,7 @@ static int wmax_brightness(int brightness)
+>   		.led_mask =3D 0xFF,
+>   		.percentage =3D brightness,
+>   	};
+> -	input.length =3D (acpi_size) sizeof(args);
+> +	input.length =3D sizeof(args);
+>   	input.pointer =3D &args;
+>   	status =3D wmi_evaluate_method(WMAX_CONTROL_GUID, 0,
+>   				     WMAX_METHOD_BRIGHTNESS, &input, NULL);
+> @@ -508,7 +508,7 @@ static acpi_status alienware_wmax_command(struct wma=
+x_basic_args *in_args,
+>   	struct acpi_buffer input;
+>   	struct acpi_buffer output;
+>
+> -	input.length =3D (acpi_size) sizeof(*in_args);
+> +	input.length =3D sizeof(*in_args);
+>   	input.pointer =3D in_args;
+>   	if (out_data) {
+>   		output.length =3D ACPI_ALLOCATE_BUFFER;
+> @@ -542,7 +542,7 @@ static ssize_t show_hdmi_cable(struct device *dev,
+>   	};
+>   	status =3D
+>   	    alienware_wmax_command(&in_args, WMAX_METHOD_HDMI_CABLE,
+> -				   (u32 *) &out_data);
+> +				   &out_data);
+>   	if (ACPI_SUCCESS(status)) {
+>   		if (out_data =3D=3D 0)
+>   			return sysfs_emit(buf, "[unconnected] connected unknown\n");
+> @@ -563,7 +563,7 @@ static ssize_t show_hdmi_source(struct device *dev,
+>   	};
+>   	status =3D
+>   	    alienware_wmax_command(&in_args, WMAX_METHOD_HDMI_STATUS,
+> -				   (u32 *) &out_data);
+> +				   &out_data);
+>
+>   	if (ACPI_SUCCESS(status)) {
+>   		if (out_data =3D=3D 1)
+> @@ -643,7 +643,7 @@ static ssize_t show_amplifier_status(struct device *=
+dev,
+>   	};
+>   	status =3D
+>   	    alienware_wmax_command(&in_args, WMAX_METHOD_AMPLIFIER_CABLE,
+> -				   (u32 *) &out_data);
+> +				   &out_data);
+>   	if (ACPI_SUCCESS(status)) {
+>   		if (out_data =3D=3D 0)
+>   			return sysfs_emit(buf, "[unconnected] connected unknown\n");
+> @@ -695,7 +695,7 @@ static ssize_t show_deepsleep_status(struct device *=
+dev,
+>   		.arg =3D 0,
+>   	};
+>   	status =3D alienware_wmax_command(&in_args, WMAX_METHOD_DEEP_SLEEP_ST=
+ATUS,
+> -					(u32 *) &out_data);
+> +					&out_data);
+>   	if (ACPI_SUCCESS(status)) {
+>   		if (out_data =3D=3D 0)
+>   			return sysfs_emit(buf, "[disabled] s5 s5_s4\n");
