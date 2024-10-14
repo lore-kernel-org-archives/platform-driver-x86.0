@@ -1,41 +1,41 @@
 Received: from mout.gmx.net (mout.gmx.net [212.227.17.21])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B1A8C28FC;
-	Mon, 14 Oct 2024 16:26:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D22B2595;
+	Mon, 14 Oct 2024 16:30:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.21
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728923217; cv=none; b=ZUvIqcN8r/Aw5WXZUh2TLLrmWGzPw3BeyIe9I8wE0vDdCoHqtwhPTdovNX9hhk/1hOwwYE84IJYJ3ZRxLs0Zdcla0J1p3jrNAxMPqh7gpEhPLP75N13rNJmz4jZcCFUJNIMWGC1dRiO/01zsGxW8kIRTdSchGiPJVAhGsk4U9V4=
+	t=1728923432; cv=none; b=cC9/pDMOUj1ztDRqcyyuIQQb9KCrX+oX5p9ATQIT4iIOxZZWAuTHkBGa2Ehmj8XEuQtyWtchxgJy8QD65gqu+d/oDB8wW1pnED7IaWVUnbUh9yiO9unEMHLOa2lvceaswf2KXVrLl/8c+VtmpN5aQeiFYypI6xVlHz22C2UPFtM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728923217; c=relaxed/simple;
-	bh=U30A7BPRrbdyRUqaxjptAW19OsPSGOMJiYV+YtVSQCs=;
+	s=arc-20240116; t=1728923432; c=relaxed/simple;
+	bh=e8/3uxk2MTpVSNgKUiAWycXneXmQ7a/GiQDrcIGVaG8=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=VAhLDccXobehnYBSTEUrOoyGkcCBeQWbMMXuDHJHnTtSSB95Oh3P1nFFLfRJ3MjgPKY1FmlezUVakLcgc22jX7dN0madYGezetyU7/q7mlU40klzWpOlL6wF4Qyk73sjjyDyMA4ZPOjsnAZ7BUHDJiv5OBJxsADKWOdsVHQyAMo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b=i+CXAf+4; arc=none smtp.client-ip=212.227.17.21
+	 In-Reply-To:Content-Type; b=NwibnxlUeou5I3A4pb7HKOSGl9ZQkqZ6xNpC5QMfBSoDBP8V25HTESIEXrKwFKPOgOxWdgXH0Mg/F8LlmivmLdFLuIAjpknvDutmxmgvIO614I3fJacceFnAwNerJnsqiSZwOkJOzDvnzkYncMmYAJKRNAbhmd8YEVfLzBB48tk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b=hg+tPGH8; arc=none smtp.client-ip=212.227.17.21
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b="i+CXAf+4"
+	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b="hg+tPGH8"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.de;
-	s=s31663417; t=1728923206; x=1729528006; i=w_armin@gmx.de;
-	bh=NGewo8lqX5cHCvf2WJySa3l6Ye+MnvpY5Dy5n+Z+GY0=;
+	s=s31663417; t=1728923422; x=1729528222; i=w_armin@gmx.de;
+	bh=xPK992Gl04Ko7oieqDNyzfneYG2qaqjxZZEtGBl0bAY=;
 	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:To:Cc:
 	 References:From:In-Reply-To:Content-Type:
 	 Content-Transfer-Encoding:cc:content-transfer-encoding:
 	 content-type:date:from:message-id:mime-version:reply-to:subject:
 	 to;
-	b=i+CXAf+42eaUTdvC1UV9ajGhWRVFsSfq41gHFt1z3l+skfvNFXWCSyD9LRbYzpHd
-	 fijSyN9jdm5NOj23Csw5sh1vWnQk2Fd6vYfWmsmtsoeo5z0ITPFtAmJxpMiVVmF/y
-	 mXgJMjv0L74gTuHKiRI2EKqzydxQd9GL7U2Uj283PV+ddZTkoq+H8s9Av7Rtnqty3
-	 lmLLfThsXIotEGxeN+GpO0Nlcn+RZaPv7lYVOGRe3TtDaSRFZL2bqGTVmQ8bfPV/c
-	 5RifKCjdPX0B7jiIZzivPRGLHsMCM0smVFwD+wdOS293dQpQTxBsmJtR3iNMF5azH
-	 5cx96KLLKmMaOuNSoQ==
+	b=hg+tPGH8A+HgAQyirk6RsvJwrHvvjCJ5ScKbkeqCUuCtV+JErFVaX5BzrZ6xG/Tm
+	 oxvISrRwcQb4OZGyK2yKqbBQNpnrBqbsMcc1oUU/OksGuMbxkt8Ub3NT06Yd9egMS
+	 OZdt0aL4w4lzSwRyMcVy4mOO7KqN/uTZrTGAwqOTWK8hbNrzHo7ktHPQP4AcWMgE2
+	 E0s8BujkhK6DVlc/h33hp0KLKg7D7K9rP6SVYQpjdq8PUHCV10lENQJu4c31qF89i
+	 mrJvI4L6TnBRse4/3nKQ2DBWd+mkQTtnZ4rG1GfvfKS9L0yRBJkNfAh+48CuTIDHu
+	 KoXbyabjCKP0B5CmVw==
 X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
-Received: from [141.30.226.129] ([141.30.226.129]) by mail.gmx.net (mrgmx105
- [212.227.17.168]) with ESMTPSA (Nemesis) id 1N3bSt-1u0MGD3EJf-015HdX; Mon, 14
- Oct 2024 18:26:46 +0200
-Message-ID: <2d685783-aef8-4774-b67c-8a8736b5a477@gmx.de>
-Date: Mon, 14 Oct 2024 18:26:45 +0200
+Received: from [141.30.226.129] ([141.30.226.129]) by mail.gmx.net (mrgmx104
+ [212.227.17.168]) with ESMTPSA (Nemesis) id 1M3DNt-1swoWR2n5Z-008QJg; Mon, 14
+ Oct 2024 18:30:22 +0200
+Message-ID: <3fe7c4e0-c24a-4205-a870-0fcc6e76f1af@gmx.de>
+Date: Mon, 14 Oct 2024 18:30:21 +0200
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -43,267 +43,149 @@ List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v5 1/4] alienware-wmi: fixed indentation and clean up
+Subject: Re: [PATCH v5 2/4] alienware-wmi: alienware_wmax_command() is now
+ input size agnostic
 To: Kurt Borja <kuurtb@gmail.com>
 Cc: hdegoede@redhat.com, ilpo.jarvinen@linux.intel.com,
  linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org
 References: <20241012015849.19036-3-kuurtb@gmail.com>
- <20241012020124.19444-2-kuurtb@gmail.com>
+ <20241012020149.19700-3-kuurtb@gmail.com>
 Content-Language: en-US
 From: Armin Wolf <W_Armin@gmx.de>
-In-Reply-To: <20241012020124.19444-2-kuurtb@gmail.com>
+In-Reply-To: <20241012020149.19700-3-kuurtb@gmail.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:CEW9GjiaopWCsE9NtCF6TATRM0exmFfmxrQ0qODseC4sc3B4NGQ
- 7O3oOcagj0lP188n7vIPrXQ6+uP18LTQBZwmiKPCsn3wJjmoetNuC/rdmOwXRHXzj/Z9qCd
- 4iopjNjBwpF3cU9BEHuZqvbPAUVjxGpK7kE5i+mB8vq3WENAITGP08djt1uJl7LdW01hjWB
- Adib85yBSvDUnQ5O/jlSA==
+X-Provags-ID: V03:K1:hHWQ/FrJsNANXRgCw69KUAB7/JPXlrBoC/XB+drzswf8DQ3mrws
+ 2iBTtUgQbP+IP/C/2aplqfDn6YFdgSmFI2mdKyfYpOnRaDwEI0IzINudfLVVOGE69zbl7cC
+ pMCThraOgrMRK2s56kvaumKtGbmrDIvs7c6BZeabLF5mbRFVApCTfKwTXA37o21E0B09Y59
+ SguWcrn/G5VbkFgaUe8fg==
 X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:rH/mVFQuNjA=;vynIc65mjijJv/iqq5hgSql3mAK
- uopkBKLRlh5RfzsUYUY0/KqQGsR4WMv2DJnGbx1LalCdVSbd3zJ32x4YKeYNF/nE1M53iVSad
- XBt+iaJ5wz0YDIy6aqVTpPt4PBCa0wjF1RfRFOOxNf27fzO/k9K77XQkpJEVYrgJP/uGX4K0H
- 27dUtvuLu54kD3v9mLx3Rs/pw1u4F60UjMCqS2uBtWD031pffGXJdYfQmrKANADiML+s3SlhC
- nWK9fYI6Y0vvPjEqUgraDQREc0Ju4E3lymr2hU9ixIZgkzFP6bXRxPF+qDoO4HTN5R2aDpV2t
- KTjIUZfaTDRZ9TNUfXDVNIth6pTvUxR0w6f9JDvbycDiZMKahJNsbL1mAJkr5fzTiMqele0Rl
- Ds4eIBXydYUdj+uSoJSVIilGgCy9i8hb/XlmlhP9XlXyLhEdZgvbY2ODbJYDj+XYyr4tK2IHK
- OOon6JwbFlCC7jw5fD7AZrAC6cLIVlZPfMLBcHKzLkZWyWxkhPrdaF9GUiZrqQAw3CcKXZRNd
- e/+YnQUtiAMaHHEmxMKFWxoc5YN8qhS09xVx9NePJkAteCNc4yr5JpNpWokPkHXP/NL3rKrIG
- jLql6W0qT28AXIrOQUCmygIQ0UIIM0aZ63DpnUAj9b9H7jpg9UuZy5H9m3ll1srj5UJfUco0K
- fFvV8gInCkb30bK03d0xR3RGUGrffx2n2nI3S+4VQIlwywaq+PJoP6gjs9rDTGOSA8zDKR+Sk
- tdnDbaTsvmlI+ovJnu/U30m8Qe7Y7LVApASUV4AqNESxGbxGPxJKHWdMV6S9FagMqPqabN2ht
- +HBSTZSCGR4dLx8Xgg9o3fkw==
+UI-OutboundReport: notjunk:1;M01:P0:WMhy5ylRckg=;JWV9YaEWK+fcE1+H2gepZ1lceZJ
+ xFVviZdmknWmQIMXvcN30SOxQFcD3rThQQZ3Wk0wUktrUOINRWqxgZBGWRJCkQlUK2mfknpBu
+ MdI6SeF3ngAZkCjBkVuwgWbHTAlelrCe9EbxUKqUk8m/8yhchKD0CAyvOMfsy2CZ28yE9A/pI
+ 2mRSE23EsoZKd8Fr0ZspZ54NKKmYCYxMf0aS42pJhbT2oyM2dce7EY/otdePfD5odb0bUA/+R
+ n3dxhwIvkFDhKY8JjmEHPheK9RuF3ZYFkB0GfPmZHzylHTBhYLdLYcVVvBVRn+8bItB5wavgh
+ bHwqWJFQQU/3xC1B8Beg4IASXnAZNqHuaqMhhwZGxq+bWyqc4+3ZD4fyoLa5SqSYUrXGSTK9d
+ QrkLUjWmOn3s/9p9YGEiGWCkObPzguemwLu+ytFZU/nM4N2wHKMcmCuy2gn32nkrz8i5fo7ra
+ 3LLN58SSuUhtO21kkgsCxmQevc1Y2LtfuXxHVDsbrCkGkXON2pQ7YysTeu2mVTDfXIGCAIJU4
+ i2P5/BPtNf5mp2kbXKAILRZ2jerbaS3JScJtB2MW0fWGt4GsgDB4w1zC0LIDxMDS/7ogNVmu1
+ nCWhTNrD7olKkxWow0PETLskytsmD9FJ4fLlMjJP/rDu820e2kGSwLV7w1mlHW+OqL/DJD99p
+ BNBXgJVA7jebh2uALIIMzgthzIlpD86tuzq1X8vRPF2ooIkX16UFKD7ly1EIU8jACLr7nRCfO
+ zmLXmeXAxxu8TLpP8ouXy4F0lcTrGyjthVgMW5T/zzGDUmXey1ZMC8zbPaEKov4dk46e6Gkvj
+ KZd92g+ILNVtRIMhuxl4nHBw==
 
 Am 12.10.24 um 04:01 schrieb Kurt Borja:
 
-> Fixed inconsistent indentation and removed unnecessary (acpi_size) and
-> (u32 *) casts.
+> alienware_wmax_command() now takes void * and size_t instead of struct
+> wmax_basic_args to extend support to new WMAX methods. Also int *out_dat=
+a
+> was changed to u32 *out_data, because new interface specifies u32 as out=
+put
+> parameter and all previous callers would pass u32 * regardless.
 
-Reviewed-by: Armin Wolf <W_Armin@gmx.de
+Reviewed-by: Armin Wolf <W_Armin@gmx.de>
 
->
 > Signed-off-by: Kurt Borja <kuurtb@gmail.com>
 > ---
->   drivers/platform/x86/dell/alienware-wmi.c | 134 +++++++++++-----------
->   1 file changed, 67 insertions(+), 67 deletions(-)
+>   drivers/platform/x86/dell/alienware-wmi.c | 29 ++++++++++++-----------
+>   1 file changed, 15 insertions(+), 14 deletions(-)
 >
 > diff --git a/drivers/platform/x86/dell/alienware-wmi.c b/drivers/platfor=
 m/x86/dell/alienware-wmi.c
-> index f5ee62ce1..16a3fe9ac 100644
+> index 16a3fe9ac..b27f3b64c 100644
 > --- a/drivers/platform/x86/dell/alienware-wmi.c
 > +++ b/drivers/platform/x86/dell/alienware-wmi.c
-> @@ -116,68 +116,68 @@ static int __init dmi_matched(const struct dmi_sys=
-tem_id *dmi)
+> @@ -500,15 +500,15 @@ static void alienware_zone_exit(struct platform_de=
+vice *dev)
+>   	kfree(zone_attrs);
+>   }
 >
->   static const struct dmi_system_id alienware_quirks[] __initconst =3D {
->   	{
-> -	 .callback =3D dmi_matched,
-> -	 .ident =3D "Alienware X51 R3",
-> -	 .matches =3D {
-> -		     DMI_MATCH(DMI_SYS_VENDOR, "Alienware"),
-> -		     DMI_MATCH(DMI_PRODUCT_NAME, "Alienware X51 R3"),
-> -		     },
-> -	 .driver_data =3D &quirk_x51_r3,
-> -	 },
-> +		.callback =3D dmi_matched,
-> +		.ident =3D "Alienware X51 R3",
-> +		.matches =3D {
-> +			DMI_MATCH(DMI_SYS_VENDOR, "Alienware"),
-> +			DMI_MATCH(DMI_PRODUCT_NAME, "Alienware X51 R3"),
-> +		},
-> +		.driver_data =3D &quirk_x51_r3,
-> +	},
->   	{
-> -	 .callback =3D dmi_matched,
-> -	 .ident =3D "Alienware X51 R2",
-> -	 .matches =3D {
-> -		     DMI_MATCH(DMI_SYS_VENDOR, "Alienware"),
-> -		     DMI_MATCH(DMI_PRODUCT_NAME, "Alienware X51 R2"),
-> -		     },
-> -	 .driver_data =3D &quirk_x51_r1_r2,
-> -	 },
-> +		.callback =3D dmi_matched,
-> +		.ident =3D "Alienware X51 R2",
-> +		.matches =3D {
-> +			DMI_MATCH(DMI_SYS_VENDOR, "Alienware"),
-> +			DMI_MATCH(DMI_PRODUCT_NAME, "Alienware X51 R2"),
-> +		},
-> +		.driver_data =3D &quirk_x51_r1_r2,
-> +	},
->   	{
-> -	 .callback =3D dmi_matched,
-> -	 .ident =3D "Alienware X51 R1",
-> -	 .matches =3D {
-> -		     DMI_MATCH(DMI_SYS_VENDOR, "Alienware"),
-> -		     DMI_MATCH(DMI_PRODUCT_NAME, "Alienware X51"),
-> -		     },
-> -	 .driver_data =3D &quirk_x51_r1_r2,
-> -	 },
-> +		.callback =3D dmi_matched,
-> +		.ident =3D "Alienware X51 R1",
-> +		.matches =3D {
-> +			DMI_MATCH(DMI_SYS_VENDOR, "Alienware"),
-> +			DMI_MATCH(DMI_PRODUCT_NAME, "Alienware X51"),
-> +		},
-> +		.driver_data =3D &quirk_x51_r1_r2,
-> +	},
->   	{
-> -	 .callback =3D dmi_matched,
-> -	 .ident =3D "Alienware ASM100",
-> -	 .matches =3D {
-> -		     DMI_MATCH(DMI_SYS_VENDOR, "Alienware"),
-> -		     DMI_MATCH(DMI_PRODUCT_NAME, "ASM100"),
-> -		     },
-> -	 .driver_data =3D &quirk_asm100,
-> -	 },
-> +		.callback =3D dmi_matched,
-> +		.ident =3D "Alienware ASM100",
-> +		.matches =3D {
-> +			DMI_MATCH(DMI_SYS_VENDOR, "Alienware"),
-> +			DMI_MATCH(DMI_PRODUCT_NAME, "ASM100"),
-> +		},
-> +		.driver_data =3D &quirk_asm100,
-> +	},
->   	{
-> -	 .callback =3D dmi_matched,
-> -	 .ident =3D "Alienware ASM200",
-> -	 .matches =3D {
-> -		     DMI_MATCH(DMI_SYS_VENDOR, "Alienware"),
-> -		     DMI_MATCH(DMI_PRODUCT_NAME, "ASM200"),
-> -		     },
-> -	 .driver_data =3D &quirk_asm200,
-> -	 },
-> +		.callback =3D dmi_matched,
-> +		.ident =3D "Alienware ASM200",
-> +		.matches =3D {
-> +			DMI_MATCH(DMI_SYS_VENDOR, "Alienware"),
-> +			DMI_MATCH(DMI_PRODUCT_NAME, "ASM200"),
-> +		},
-> +		.driver_data =3D &quirk_asm200,
-> +	},
->   	{
-> -	 .callback =3D dmi_matched,
-> -	 .ident =3D "Alienware ASM201",
-> -	 .matches =3D {
-> -		     DMI_MATCH(DMI_SYS_VENDOR, "Alienware"),
-> -		     DMI_MATCH(DMI_PRODUCT_NAME, "ASM201"),
-> -		     },
-> -	 .driver_data =3D &quirk_asm201,
-> -	 },
-> -	 {
-> -	 .callback =3D dmi_matched,
-> -	 .ident =3D "Dell Inc. Inspiron 5675",
-> -	 .matches =3D {
-> -		     DMI_MATCH(DMI_SYS_VENDOR, "Dell Inc."),
-> -		     DMI_MATCH(DMI_PRODUCT_NAME, "Inspiron 5675"),
-> -		     },
-> -	 .driver_data =3D &quirk_inspiron5675,
-> -	 },
-> +		.callback =3D dmi_matched,
-> +		.ident =3D "Alienware ASM201",
-> +		.matches =3D {
-> +			DMI_MATCH(DMI_SYS_VENDOR, "Alienware"),
-> +			DMI_MATCH(DMI_PRODUCT_NAME, "ASM201"),
-> +		},
-> +		.driver_data =3D &quirk_asm201,
-> +	},
-> +	{
-> +		.callback =3D dmi_matched,
-> +		.ident =3D "Dell Inc. Inspiron 5675",
-> +		.matches =3D {
-> +			DMI_MATCH(DMI_SYS_VENDOR, "Dell Inc."),
-> +			DMI_MATCH(DMI_PRODUCT_NAME, "Inspiron 5675"),
-> +		},
-> +		.driver_data =3D &quirk_inspiron5675,
-> +	},
->   	{}
->   };
->
-> @@ -221,8 +221,8 @@ static struct platform_zone *zone_data;
->
->   static struct platform_driver platform_driver =3D {
->   	.driver =3D {
-> -		   .name =3D "alienware-wmi",
-> -		   }
-> +		.name =3D "alienware-wmi",
-> +	}
->   };
->
->   static struct attribute_group zone_attribute_group =3D {
-> @@ -292,7 +292,7 @@ static int alienware_update_led(struct platform_zone=
- *zone)
->   		guid =3D WMAX_CONTROL_GUID;
->   		method_id =3D WMAX_METHOD_ZONE_CONTROL;
->
-> -		input.length =3D (acpi_size) sizeof(wmax_basic_args);
-> +		input.length =3D sizeof(wmax_basic_args);
->   		input.pointer =3D &wmax_basic_args;
->   	} else {
->   		legacy_args.colors =3D zone->colors;
-> @@ -306,7 +306,7 @@ static int alienware_update_led(struct platform_zone=
- *zone)
->   			guid =3D LEGACY_CONTROL_GUID;
->   		method_id =3D zone->location + 1;
->
-> -		input.length =3D (acpi_size) sizeof(legacy_args);
-> +		input.length =3D sizeof(legacy_args);
->   		input.pointer =3D &legacy_args;
->   	}
->   	pr_debug("alienware-wmi: guid %s method %d\n", guid, method_id);
-> @@ -358,7 +358,7 @@ static int wmax_brightness(int brightness)
->   		.led_mask =3D 0xFF,
->   		.percentage =3D brightness,
->   	};
-> -	input.length =3D (acpi_size) sizeof(args);
-> +	input.length =3D sizeof(args);
->   	input.pointer =3D &args;
->   	status =3D wmi_evaluate_method(WMAX_CONTROL_GUID, 0,
->   				     WMAX_METHOD_BRIGHTNESS, &input, NULL);
-> @@ -508,7 +508,7 @@ static acpi_status alienware_wmax_command(struct wma=
-x_basic_args *in_args,
+> -static acpi_status alienware_wmax_command(struct wmax_basic_args *in_ar=
+gs,
+> -					  u32 command, int *out_data)
+> +static acpi_status alienware_wmax_command(void *in_args, size_t in_size=
+,
+> +					  u32 command, u32 *out_data)
+>   {
+>   	acpi_status status;
+>   	union acpi_object *obj;
 >   	struct acpi_buffer input;
 >   	struct acpi_buffer output;
 >
-> -	input.length =3D (acpi_size) sizeof(*in_args);
-> +	input.length =3D sizeof(*in_args);
+> -	input.length =3D sizeof(*in_args);
+> +	input.length =3D in_size;
 >   	input.pointer =3D in_args;
 >   	if (out_data) {
 >   		output.length =3D ACPI_ALLOCATE_BUFFER;
-> @@ -542,7 +542,7 @@ static ssize_t show_hdmi_cable(struct device *dev,
+> @@ -541,8 +541,8 @@ static ssize_t show_hdmi_cable(struct device *dev,
+>   		.arg =3D 0,
 >   	};
 >   	status =3D
->   	    alienware_wmax_command(&in_args, WMAX_METHOD_HDMI_CABLE,
-> -				   (u32 *) &out_data);
-> +				   &out_data);
+> -	    alienware_wmax_command(&in_args, WMAX_METHOD_HDMI_CABLE,
+> -				   &out_data);
+> +	    alienware_wmax_command(&in_args, sizeof(in_args),
+> +				   WMAX_METHOD_HDMI_CABLE, &out_data);
 >   	if (ACPI_SUCCESS(status)) {
 >   		if (out_data =3D=3D 0)
 >   			return sysfs_emit(buf, "[unconnected] connected unknown\n");
-> @@ -563,7 +563,7 @@ static ssize_t show_hdmi_source(struct device *dev,
+> @@ -562,8 +562,8 @@ static ssize_t show_hdmi_source(struct device *dev,
+>   		.arg =3D 0,
 >   	};
 >   	status =3D
->   	    alienware_wmax_command(&in_args, WMAX_METHOD_HDMI_STATUS,
-> -				   (u32 *) &out_data);
-> +				   &out_data);
+> -	    alienware_wmax_command(&in_args, WMAX_METHOD_HDMI_STATUS,
+> -				   &out_data);
+> +	    alienware_wmax_command(&in_args, sizeof(in_args),
+> +				   WMAX_METHOD_HDMI_STATUS, &out_data);
 >
 >   	if (ACPI_SUCCESS(status)) {
 >   		if (out_data =3D=3D 1)
-> @@ -643,7 +643,7 @@ static ssize_t show_amplifier_status(struct device *=
-dev,
->   	};
->   	status =3D
->   	    alienware_wmax_command(&in_args, WMAX_METHOD_AMPLIFIER_CABLE,
-> -				   (u32 *) &out_data);
-> +				   &out_data);
->   	if (ACPI_SUCCESS(status)) {
->   		if (out_data =3D=3D 0)
->   			return sysfs_emit(buf, "[unconnected] connected unknown\n");
-> @@ -695,7 +695,7 @@ static ssize_t show_deepsleep_status(struct device *=
+> @@ -589,7 +589,8 @@ static ssize_t toggle_hdmi_source(struct device *dev=
+,
+>   		args.arg =3D 3;
+>   	pr_debug("alienware-wmi: setting hdmi to %d : %s", args.arg, buf);
+>
+> -	status =3D alienware_wmax_command(&args, WMAX_METHOD_HDMI_SOURCE, NULL=
+);
+> +	status =3D alienware_wmax_command(&args, sizeof(args),
+> +					WMAX_METHOD_HDMI_SOURCE, NULL);
+>
+>   	if (ACPI_FAILURE(status))
+>   		pr_err("alienware-wmi: HDMI toggle failed: results: %u\n",
+> @@ -642,8 +643,8 @@ static ssize_t show_amplifier_status(struct device *=
 dev,
 >   		.arg =3D 0,
 >   	};
->   	status =3D alienware_wmax_command(&in_args, WMAX_METHOD_DEEP_SLEEP_ST=
-ATUS,
-> -					(u32 *) &out_data);
-> +					&out_data);
+>   	status =3D
+> -	    alienware_wmax_command(&in_args, WMAX_METHOD_AMPLIFIER_CABLE,
+> -				   &out_data);
+> +	    alienware_wmax_command(&in_args, sizeof(in_args),
+> +				   WMAX_METHOD_AMPLIFIER_CABLE, &out_data);
+>   	if (ACPI_SUCCESS(status)) {
+>   		if (out_data =3D=3D 0)
+>   			return sysfs_emit(buf, "[unconnected] connected unknown\n");
+> @@ -694,8 +695,8 @@ static ssize_t show_deepsleep_status(struct device *=
+dev,
+>   	struct wmax_basic_args in_args =3D {
+>   		.arg =3D 0,
+>   	};
+> -	status =3D alienware_wmax_command(&in_args, WMAX_METHOD_DEEP_SLEEP_STA=
+TUS,
+> -					&out_data);
+> +	status =3D alienware_wmax_command(&in_args, sizeof(in_args),
+> +					WMAX_METHOD_DEEP_SLEEP_STATUS, &out_data);
 >   	if (ACPI_SUCCESS(status)) {
 >   		if (out_data =3D=3D 0)
 >   			return sysfs_emit(buf, "[disabled] s5 s5_s4\n");
+> @@ -723,8 +724,8 @@ static ssize_t toggle_deepsleep(struct device *dev,
+>   		args.arg =3D 2;
+>   	pr_debug("alienware-wmi: setting deep sleep to %d : %s", args.arg, bu=
+f);
+>
+> -	status =3D alienware_wmax_command(&args, WMAX_METHOD_DEEP_SLEEP_CONTRO=
+L,
+> -					NULL);
+> +	status =3D alienware_wmax_command(&args, sizeof(args),
+> +					WMAX_METHOD_DEEP_SLEEP_CONTROL, NULL);
+>
+>   	if (ACPI_FAILURE(status))
+>   		pr_err("alienware-wmi: deep sleep control failed: results: %u\n",
