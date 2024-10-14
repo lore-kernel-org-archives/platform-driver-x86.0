@@ -1,46 +1,46 @@
-Received: from NAM10-MW2-obe.outbound.protection.outlook.com (mail-mw2nam10on2048.outbound.protection.outlook.com [40.107.94.48])
+Received: from NAM12-DM6-obe.outbound.protection.outlook.com (mail-dm6nam12on2065.outbound.protection.outlook.com [40.107.243.65])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C09A12CD96
-	for <platform-driver-x86@vger.kernel.org>; Mon, 14 Oct 2024 04:58:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.94.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0D75612CD96
+	for <platform-driver-x86@vger.kernel.org>; Mon, 14 Oct 2024 04:58:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.243.65
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728881923; cv=fail; b=LAjehxS9O+XxeRD00lAEn+hYY+8iUlomFwLYxOMagjjZsx5Aq6Y1iAQXhgD9JN/yEjEVJxPqNFYwbRfaN9G0fbLprA2Ch8BPb5V4Npm8N8eLEEUHTg8T9TYVl0z60HBfCI+Ffa7CKTk4TPnxnEToNxLrbpHSJ+SRgv5IATClszA=
+	t=1728881925; cv=fail; b=DlHjESqzSbE4HQ1vjVUeA3Wpfx03+SoA6AvHtTsvyAiX5W0dDT8r8Rhgl8atcHsbqOY/LzMwsOgcivxb1rX3Vtav2awpNGGIGwE+YX5QCm/kHI92eqIHDQV2lQeWCt+K2yyAbl8kzOtiT2Q84ZCw+NgTu+TTCy7ncQRaARkVots=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728881923; c=relaxed/simple;
-	bh=XmHY1RmgVhQGe80sacis1KZIanzQvOIyneY3VLkN9aA=;
+	s=arc-20240116; t=1728881925; c=relaxed/simple;
+	bh=je8fVkpVkgeDr7N+z/t8YzpswML6S+Sr410n06+TBX0=;
 	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=UDaLpjtiuY44vwoHODQXxrI/MYS1O6FSjZeS8wobI5+8TGOsp8vMrnFKpqGmCmf0KnY9ioRYaa8FVvL7iOT6aJVD7gtHqry2Xj1AP76rqdCQaoIJQJJ94TW2PVblFAWM5qJPBr1KAIbYeNGbjEZ6heis8tx5z03rvqoKkoaM2SI=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=Bio4Y1u3; arc=fail smtp.client-ip=40.107.94.48
+	 MIME-Version:Content-Type; b=c2GypCpAWdTJP8imqH/0xjpfPHupztuTm0yay50AuZ5p0saP//wg8B9uf92dZgq8GTVum+SJv7RbApBUqSlWOXgWYzaw4m7IonyF2KmZf37kRGbL0lURvshPCq9eAQ+0PrUGsSJUEILvgybOTYousBFibzb5QDgAkPgw3qnRI70=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=ty2wnMJm; arc=fail smtp.client-ip=40.107.243.65
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
 Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="Bio4Y1u3"
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="ty2wnMJm"
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=L47p9bbkLYy0PDCpUjVdw1Arq9Wr25/ATzzwJGladtg5srKLyOwnVr1BUHnA7iXcWtXPeoFSlzgFu9tUnpx361YJReN+ozFMuHSd3guhZShxsP3zM9kJ8sSYTyb/qJX5LPyu2iasLsGB6zCNEnxsN33b2M9apMUAI65veMNhFav/CYrO7iMTOXZQtJLE6b5DcF/zfLugtz4Haoh8bAbGSg7CMbroBmHWA+7JPoozoh4xf6YAoUJHHC1A9osvbGR/Dk2dDPC+nJ4/+DdEDH/tLwbU/6qOwClfX1N2JDvd4PATsJlEwEfPeb6e1ny+428p73DhrmQbvdJFGxtmH7UvVw==
+ b=NsY558ZtOdei/Rq6aQ7IpCrOowPnnfDj31rq2HTOqgy+X3XjAiIeW0yLelxHHGDX5LwyZIO1CB4OQekAQrtv9Nb3/vrIZs0oAlKzdDs5rDHu28PGIkN6KFRns4ExuNDBPa2+Pw6ay3DrB/8ZKHcZD1ZmvUbppjN2mIXshUFZFFwp9+D/IEDw06pMCUfbkmePCEbNw3+wqQ3bPvmnsd+HMRaNL01pMGPzdQuCnrLLmSx7zYQvTBYaen7ME9wIHAgcTMmyqqof4FrsO0+w/WAX2rDMK1u5OmV5gFNRcp6OEP68EN2q3Sm1srrGppp8xS+iLYJfAwzLnspJ4ABjPh/cNg==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=xx2LV4H55sra7R0mOBSgG89pQL5MStokV5igoBJ3mLA=;
- b=ku/XontKLIB+QH1Tte3I7gY227JTE9aHop4lfjEk7ftVXRMnY2wdXm+jjjwWEboxU+yFAmD7DMZwiC5YU2P5shGqJrcFbwx7ZqqHa+sN03qM5ZdEz/t0Dg87I6Dt0ebwL8kLzULRbCqBkTFLB8jjqKBwm9HpAtC8dCyn7+Og54Y+1pImJB7WcA1TOzjGk5xFVf0NgRLAkvfWIkAA0nJkYXWZE+MV6I4NYetuZjDTlSTXgKRtYvS9S88z0UAVeVtoxc++zR5S3jo+ZK8kpR5l+qwRePZZkYEnFATQstxRQZQc9Zhg8bdknDZ9FZ9n1VratzxUDb03VJGO2OPM2Eniug==
+ bh=DLo4vz4q9TpTcX1oYkIVPk7XG+r0Obo4aZBC5KDX6o4=;
+ b=TaTiX2jFmhd1UfefbspmTHKuSMlxjra+7KRtMs45DO2LVYgpv5Ru7Gr2USsi7yIi1iktpNl9AHGqZbRb3T32F1MEVpRKcHUgUgSn9BaqxO/KwuP9RCR2E2k7KaWTdy9DQm29oGLLBUa5EszLkE9JYOcbO8nb3DvVctjF6G9UpbeEe5tGgbD2KG/UZPH5rsXJTC3fR5t4q7M1Ac2yIJA+zWaks8PpK0NVFfD+dTy/uFBycQiSmbFOo/J8Y5HLyPCJbEp6nfeqgHH4jlyKAEUqUq3M/Wq5VSyg/y791LzgMVQ2SMD4P8RYh7oBJOo6VO9j0Pk0KKH4e2ZE3nZLv8/Uvw==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
  165.204.84.17) smtp.rcpttodomain=redhat.com smtp.mailfrom=amd.com; dmarc=pass
  (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
  dkim=none (message not signed); arc=none (0)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=xx2LV4H55sra7R0mOBSgG89pQL5MStokV5igoBJ3mLA=;
- b=Bio4Y1u36ZZcDdf9bdvdOKa3gvSMdgA4BcMFkA8YaCs1suqISEoRAYB76neAtz9Cy7EQ3ShQJgJbi34RgGP9/QrDhMTA7eGnJ6uTjFnO8SZHdaZt/gCewkLP5cmEU2lJhdK0nmd0+MncuPS2/tMR51+RYpObaD6WenEjhhIOBAk=
-Received: from CH2PR14CA0032.namprd14.prod.outlook.com (2603:10b6:610:56::12)
- by IA0PR12MB7603.namprd12.prod.outlook.com (2603:10b6:208:439::9) with
+ bh=DLo4vz4q9TpTcX1oYkIVPk7XG+r0Obo4aZBC5KDX6o4=;
+ b=ty2wnMJmEeK6dmH6rRE1qcpY0dJ4lnbTY+dfMhsf50d6QKS3YyKZSHt6zyGRNZOH6OSYzzl9r7RkkRBDf3mWVaaOnlhI5b0z+/lfmCDo7XVRuNkSY/iWVI0MUyu02JM3J2CMZupRJmFotqiZMTRH5W6tkgCiTuSlDJfAnp3xfxQ=
+Received: from CH0PR04CA0064.namprd04.prod.outlook.com (2603:10b6:610:74::9)
+ by PH7PR12MB6611.namprd12.prod.outlook.com (2603:10b6:510:211::11) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8048.26; Mon, 14 Oct
- 2024 04:58:37 +0000
-Received: from CH2PEPF0000009E.namprd02.prod.outlook.com
- (2603:10b6:610:56:cafe::ed) by CH2PR14CA0032.outlook.office365.com
- (2603:10b6:610:56::12) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8048.26 via Frontend
- Transport; Mon, 14 Oct 2024 04:58:36 +0000
+ 2024 04:58:39 +0000
+Received: from CH2PEPF00000099.namprd02.prod.outlook.com
+ (2603:10b6:610:74:cafe::3f) by CH0PR04CA0064.outlook.office365.com
+ (2603:10b6:610:74::9) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8048.27 via Frontend
+ Transport; Mon, 14 Oct 2024 04:58:38 +0000
 X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
  smtp.mailfrom=amd.com; dkim=none (message not signed)
  header.d=none;dmarc=pass action=none header.from=amd.com;
@@ -48,20 +48,20 @@ Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
  165.204.84.17 as permitted sender) receiver=protection.outlook.com;
  client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
 Received: from SATLEXMB04.amd.com (165.204.84.17) by
- CH2PEPF0000009E.mail.protection.outlook.com (10.167.244.27) with Microsoft
+ CH2PEPF00000099.mail.protection.outlook.com (10.167.244.20) with Microsoft
  SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.8048.13 via Frontend Transport; Mon, 14 Oct 2024 04:58:36 +0000
+ 15.20.8048.13 via Frontend Transport; Mon, 14 Oct 2024 04:58:38 +0000
 Received: from airavat.amd.com (10.180.168.240) by SATLEXMB04.amd.com
  (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Sun, 13 Oct
- 2024 23:58:34 -0500
+ 2024 23:58:36 -0500
 From: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
 To: <hdegoede@redhat.com>, <ilpo.jarvinen@linux.intel.com>
 CC: <platform-driver-x86@vger.kernel.org>, <Patil.Reddy@amd.com>, "Shyam
  Sundar S K" <Shyam-sundar.S-k@amd.com>
-Subject: [PATCH 4/5] platform/x86/amd/pmf: Switch to platform_get_resource() and devm_ioremap_resource()
-Date: Mon, 14 Oct 2024 10:27:58 +0530
-Message-ID: <20241014045759.1517226-5-Shyam-sundar.S-k@amd.com>
+Subject: [PATCH 5/5] platform/x86/amd/pmf: Add PMF driver changes to make compatible with PMF-TA
+Date: Mon, 14 Oct 2024 10:27:59 +0530
+Message-ID: <20241014045759.1517226-6-Shyam-sundar.S-k@amd.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20241014045759.1517226-1-Shyam-sundar.S-k@amd.com>
 References: <20241014045759.1517226-1-Shyam-sundar.S-k@amd.com>
@@ -77,191 +77,80 @@ X-ClientProxiedBy: SATLEXMB04.amd.com (10.181.40.145) To SATLEXMB04.amd.com
  (10.181.40.145)
 X-EOPAttributedMessage: 0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CH2PEPF0000009E:EE_|IA0PR12MB7603:EE_
-X-MS-Office365-Filtering-Correlation-Id: 6124191f-ec35-4fec-0acb-08dcec0cdce9
+X-MS-TrafficTypeDiagnostic: CH2PEPF00000099:EE_|PH7PR12MB6611:EE_
+X-MS-Office365-Filtering-Correlation-Id: 82d065f7-c43f-4ac8-32b1-08dcec0cde1a
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|1800799024|82310400026|376014|36860700013;
+	BCL:0;ARA:13230040|36860700013|1800799024|376014|82310400026;
 X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?yyAF+agYw3ee5lvNTaxzB/YT9MMM3Jsl5TiX9om3YVmYWaUEYZkGtxivhdQ/?=
- =?us-ascii?Q?F8muk+hkNx+DomKzbg0ck4Ah4JS4jbbxvCfAOEbeeC4YwMvxZ2kl6YSsarIp?=
- =?us-ascii?Q?YbnAVygYFqX6cFp5vZcGAYv5OV+Uq8GWyf4MCuNEMsyLB+aP+SuuGoQD94CM?=
- =?us-ascii?Q?pzPY3AtH1Di+8NkZSJl67QmBCvICHq5LNUCvke/INA8SJiqHQPPd6mOndN4a?=
- =?us-ascii?Q?lGpX1sH2HMi9KC/QdW3KGlEVc8dXRsKVlPw65nBDJNxfzP5xBBFeHV23jWJr?=
- =?us-ascii?Q?LnIbJ9M+PK9l0OSlYdTRgwx1k4w3etsnc0m4tVuMNlA6UCAiD68W0XDidSUt?=
- =?us-ascii?Q?g5W8Z8KPn8xBShtirheNy94lXuHAPMe2VVWCCXckrvbzRvVZL5u8wFTJ4U8G?=
- =?us-ascii?Q?Px3u4evqLIRy+SEl6a4WZnkcOo0s1FJhrhYUyZdxRhk6WZB09XLgSMrMjvID?=
- =?us-ascii?Q?7TuUFvkc5x0jOiarw4bmV65zryVVjUjfndQtAEuHwgV4nai892IimPtBqSl/?=
- =?us-ascii?Q?mxQw5uMTx+26srVAlQuatIdChzdnSoV7+8rufQFIutN1rm+4ghyteKrsftU1?=
- =?us-ascii?Q?lZXk/amwnk7DW3BzNfzpuF4OALYcJScghh75YRsHVWOsb7ZaFr5CJJejWDx8?=
- =?us-ascii?Q?OKhU93d704HMeG9JTccpdEeOGbstcd8qpDuMi3ol4X8U1kx6CAYPfevIEoJD?=
- =?us-ascii?Q?ZpWKu5XM86ubFXCF2n2Q6F/tHgCDLKGr8JICy4KFsvycltQ/R6iNPgP4SFxJ?=
- =?us-ascii?Q?Z5L1JvcxJLya+rrIGPSzE95VJ9X/K4pvzjJLJnlsPfJFQgb+Augr4o/JMrC7?=
- =?us-ascii?Q?lln2ODdawq3bRxxNgsYqEMVPyZumuGue3ohANDznxeZlhTNfPtQi1A/Gvu+s?=
- =?us-ascii?Q?BPfXss8MLJazg3JZ1WyJPy1CglGbPafFqzR8a8jCfigZ4K1YkSArkXe1cLA1?=
- =?us-ascii?Q?6NhRweTQ19hg+Bbo4ytQLZi//l7ni5QWhh9nMBzMXzF7M3AXh6cMt16wum/b?=
- =?us-ascii?Q?r56MmGk34gPv8CgiiadKErVZiOXXvGsT2kOQ/iQyDbe6+P/IQlEY4ZL0YlRq?=
- =?us-ascii?Q?eO80XMBCpIvQPKpBrgvipR2ai8Mq1mSizlWgoaiuaT/3kV5rvYLGhs5apTnh?=
- =?us-ascii?Q?jl8NTaBRfed/uAD9LPWp7n3BTMAnAl614+m7AA0E2kPnrycghgM6cWf2/4FR?=
- =?us-ascii?Q?W5m/A4birTO+n8rYxwZ5dGtgW6uZYOezUUt/b4HjoiTXeZrhmLaI/QaG8b2z?=
- =?us-ascii?Q?agGMFp6wxCZe6qs2xHG1M5cSv4rsGlKWNju2jqkRNTFBUTxzcUbIm2FKXM+w?=
- =?us-ascii?Q?d1+zYqnRFMi1X9U43vuVvW3RexQdFYA8Rpeiza9dXSW6lZI+0gEGFwxnOZ7w?=
- =?us-ascii?Q?JmSZys2eM4ftK0vzrMxNzev9oLrP?=
+	=?us-ascii?Q?GxHLJ1dNsrQZckJFEWQ9m4dSenN0yh33KRvO7FTn+JOv7ezHJZ4hcWrl+G06?=
+ =?us-ascii?Q?kwU24Orni8ZP1tMIF/pYnBifgnOiU2SiI9MVIe4mpwfOC09B+h+dx1N9QoCG?=
+ =?us-ascii?Q?Ou8K3FRA3huKONBCNRkD+6WeaxaODB6tqsLSlpssyUY6F2Vxw4rPXcPzqXy7?=
+ =?us-ascii?Q?v4htcLlhfipTOHyBeoDecWaHsQiE5XvNqGszO1z9eQLuqhYLaOl4XKe8NeDz?=
+ =?us-ascii?Q?JNoA65EhFHzADugChGRxugMwPtqW2SPQ+r3YRr5p539Re/1xKcej00esKwxv?=
+ =?us-ascii?Q?nxFSzaGE1B1dAvXmUSdlV6V2+uKCLA9bvvIUc0kiJgUwcU33cKv+RzTSta7g?=
+ =?us-ascii?Q?oMFtJ3GMAjXAnfj6+Gi4z9blHbxwEiXWXdkgq+gmwStczr1RkjlDzdPxTkoU?=
+ =?us-ascii?Q?NRt9wIXpn9jdqRHegXvtp3JQjCZXR/iBdgO5fjclBZZDEilKsS+jtT4RubQq?=
+ =?us-ascii?Q?uCT/+hStaYtQ5jSpI1GdFx+6Kia8LlLcXTesrBLrXP04WjSGhcNx4lzANDgw?=
+ =?us-ascii?Q?UFjr12jJR8HUp66s8+J+0SkdTCt5+zDBFR3Yk1Iq0WNwCkuoF5xrIPYPWPMK?=
+ =?us-ascii?Q?poClD1dL6CZ9LjHZwKEnfZCfCZoITkBdFmbUEDsSyOkp/c7dTjvM7OyF4AKv?=
+ =?us-ascii?Q?kXM8eRHcComky30jj+MqoUPzxowuP+hl/fuNVMirtTsthKAoS28450aEXR6/?=
+ =?us-ascii?Q?lxtvKujOk7UKSlEDAjCOo5qh6zWjcRyb683H1g4ZKsLxWoxA/D20qhgpPNX9?=
+ =?us-ascii?Q?vFzpe9gT627+k3F1CB78KUPwm8u7f8iKoPY7ikw769CiXmo22ajrShTktlIL?=
+ =?us-ascii?Q?5T4aae8rvpEkrbkytawxdUe7Mnv7vgGYxsHTvEvY4cN7ZNaMqW6+PQpu7VAn?=
+ =?us-ascii?Q?RbVhOaepknHFtExHFIDKPOTkAjKlYm8zpBP4PnxObHSezHY67UlnvWshbcv6?=
+ =?us-ascii?Q?qoQMC0STfblfX2MsYaGX7rP2CBaBJtC9J5EhHOQIQWrLcahdmMD1sw1lgyhT?=
+ =?us-ascii?Q?n+K991E2QdA0oV1tG/Q9LpT/0yGrOf3SPBq7GMCG7tbFV5SKHT8Ooe0rhDuj?=
+ =?us-ascii?Q?e+377k2P75JClWk7wIyio7CXy0E5d87J3JeNHbLSzK5EAbMEsR3aXt9Eekbb?=
+ =?us-ascii?Q?WzARncmSTJ+ji6ndvu5DdnEtmL3rrMaP/hug5uPSbR3X+ozbqQ/iGe1nyyre?=
+ =?us-ascii?Q?58tXPwnnS2veiypuwjFhpsxJIqkfqeyCsxxaFNFe4zpku67CdarMJu6um7f4?=
+ =?us-ascii?Q?qUjbRgQSbF55ruYb/ud2TKYW1BIyuOg8FuSkcUZhrZ0g4O354dYW14V6nB26?=
+ =?us-ascii?Q?1njzoLGNVtKwP6una57M3COCGjbE9riRmhZpTfVNQVmhdzhZXVIL2Vtj0umw?=
+ =?us-ascii?Q?PHTVAwk=3D?=
 X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(1800799024)(82310400026)(376014)(36860700013);DIR:OUT;SFP:1101;
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(36860700013)(1800799024)(376014)(82310400026);DIR:OUT;SFP:1101;
 X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 14 Oct 2024 04:58:36.8853
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 14 Oct 2024 04:58:38.7914
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 6124191f-ec35-4fec-0acb-08dcec0cdce9
+X-MS-Exchange-CrossTenant-Network-Message-Id: 82d065f7-c43f-4ac8-32b1-08dcec0cde1a
 X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
 X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
 X-MS-Exchange-CrossTenant-AuthSource:
-	CH2PEPF0000009E.namprd02.prod.outlook.com
+	CH2PEPF00000099.namprd02.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Anonymous
 X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA0PR12MB7603
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH7PR12MB6611
 
-Use platform_get_resource() to fetch the memory resource instead of
-acpi_walk_resources() and devm_ioremap_resource() for mapping the
-resources.
+The PMF driver will allocate shared buffer memory using the
+tee_shm_alloc_kernel_buf(). This allocated memory is located in the
+secure world and is used for communication with the PMF-TA.
+
+The latest PMF-TA version introduces new structures with OEM debug
+information and additional policy input conditions for evaluating the
+policy binary. Consequently, the shared memory size must be increased to
+ensure compatibility between the PMF driver and the updated PMF-TA.
 
 Co-developed-by: Patil Rajesh Reddy <Patil.Reddy@amd.com>
 Signed-off-by: Patil Rajesh Reddy <Patil.Reddy@amd.com>
 Signed-off-by: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
 ---
- drivers/platform/x86/amd/pmf/Kconfig  |  1 +
- drivers/platform/x86/amd/pmf/acpi.c   | 37 ++++++++-------------------
- drivers/platform/x86/amd/pmf/pmf.h    |  6 +++--
- drivers/platform/x86/amd/pmf/tee-if.c |  8 +++---
- 4 files changed, 20 insertions(+), 32 deletions(-)
+ drivers/platform/x86/amd/pmf/pmf.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/platform/x86/amd/pmf/Kconfig b/drivers/platform/x86/amd/pmf/Kconfig
-index f4fa8bd8bda8..99d67cdbd91e 100644
---- a/drivers/platform/x86/amd/pmf/Kconfig
-+++ b/drivers/platform/x86/amd/pmf/Kconfig
-@@ -11,6 +11,7 @@ config AMD_PMF
- 	select ACPI_PLATFORM_PROFILE
- 	depends on TEE && AMDTEE
- 	depends on AMD_SFH_HID
-+	depends on HAS_IOMEM
- 	help
- 	  This driver provides support for the AMD Platform Management Framework.
- 	  The goal is to enhance end user experience by making AMD PCs smarter,
-diff --git a/drivers/platform/x86/amd/pmf/acpi.c b/drivers/platform/x86/amd/pmf/acpi.c
-index d5b496433d69..40f1c0e9ec6d 100644
---- a/drivers/platform/x86/amd/pmf/acpi.c
-+++ b/drivers/platform/x86/amd/pmf/acpi.c
-@@ -433,37 +433,22 @@ int apmf_install_handler(struct amd_pmf_dev *pmf_dev)
- 	return 0;
- }
- 
--static acpi_status apmf_walk_resources(struct acpi_resource *res, void *data)
-+int apmf_check_smart_pc(struct amd_pmf_dev *pmf_dev)
- {
--	struct amd_pmf_dev *dev = data;
-+	struct platform_device *pdev = to_platform_device(pmf_dev->dev);
- 
--	switch (res->type) {
--	case ACPI_RESOURCE_TYPE_ADDRESS64:
--		dev->policy_addr = res->data.address64.address.minimum;
--		dev->policy_sz = res->data.address64.address.address_length;
--		break;
--	case ACPI_RESOURCE_TYPE_FIXED_MEMORY32:
--		dev->policy_addr = res->data.fixed_memory32.address;
--		dev->policy_sz = res->data.fixed_memory32.address_length;
--		break;
--	}
--
--	if (!dev->policy_addr || dev->policy_sz > POLICY_BUF_MAX_SZ || dev->policy_sz == 0) {
--		pr_err("Incorrect Policy params, possibly a SBIOS bug\n");
--		return AE_ERROR;
-+	pmf_dev->res =  platform_get_resource(pdev, IORESOURCE_MEM, 0);
-+	if (!pmf_dev->res) {
-+		dev_err(pmf_dev->dev, "Failed to get I/O memory resource\n");
-+		return -EINVAL;
- 	}
- 
--	return AE_OK;
--}
-+	pmf_dev->policy_addr = pmf_dev->res->start;
-+	pmf_dev->policy_sz = resource_size(pmf_dev->res) - 1;
- 
--int apmf_check_smart_pc(struct amd_pmf_dev *pmf_dev)
--{
--	acpi_handle ahandle = ACPI_HANDLE(pmf_dev->dev);
--	acpi_status status;
--
--	status = acpi_walk_resources(ahandle, METHOD_NAME__CRS, apmf_walk_resources, pmf_dev);
--	if (ACPI_FAILURE(status)) {
--		dev_dbg(pmf_dev->dev, "acpi_walk_resources failed :%d\n", status);
-+	if (!pmf_dev->policy_addr || pmf_dev->policy_sz > POLICY_BUF_MAX_SZ ||
-+	    pmf_dev->policy_sz == 0) {
-+		dev_err(pmf_dev->dev, "Incorrect policy params, possibly a SBIOS bug\n");
- 		return -EINVAL;
- 	}
- 
 diff --git a/drivers/platform/x86/amd/pmf/pmf.h b/drivers/platform/x86/amd/pmf/pmf.h
-index 8ce8816da9c1..a79808fda1d8 100644
+index a79808fda1d8..18f12aad46a9 100644
 --- a/drivers/platform/x86/amd/pmf/pmf.h
 +++ b/drivers/platform/x86/amd/pmf/pmf.h
-@@ -13,6 +13,7 @@
+@@ -106,7 +106,7 @@ struct cookie_header {
+ #define PMF_TA_IF_VERSION_MAJOR				1
+ #define TA_PMF_ACTION_MAX					32
+ #define TA_PMF_UNDO_MAX						8
+-#define TA_OUTPUT_RESERVED_MEM				906
++#define TA_OUTPUT_RESERVED_MEM				922
+ #define MAX_OPERATION_PARAMS					4
  
- #include <linux/acpi.h>
- #include <linux/input.h>
-+#include <linux/platform_device.h>
- #include <linux/platform_profile.h>
- 
- #define POLICY_BUF_MAX_SZ		0x4b000
-@@ -355,19 +356,20 @@ struct amd_pmf_dev {
- 	/* Smart PC solution builder */
- 	struct dentry *esbin;
- 	unsigned char *policy_buf;
--	u32 policy_sz;
-+	resource_size_t policy_sz;
- 	struct tee_context *tee_ctx;
- 	struct tee_shm *fw_shm_pool;
- 	u32 session_id;
- 	void *shbuf;
- 	struct delayed_work pb_work;
- 	struct pmf_action_table *prev_data;
--	u64 policy_addr;
-+	resource_size_t policy_addr;
- 	void __iomem *policy_base;
- 	bool smart_pc_enabled;
- 	u16 pmf_if_version;
- 	struct input_dev *pmf_idev;
- 	size_t mtable_size;
-+	struct resource *res;
- };
- 
- struct apmf_sps_prop_granular_v2 {
-diff --git a/drivers/platform/x86/amd/pmf/tee-if.c b/drivers/platform/x86/amd/pmf/tee-if.c
-index 19c27b6e4666..544c5ce08ff0 100644
---- a/drivers/platform/x86/amd/pmf/tee-if.c
-+++ b/drivers/platform/x86/amd/pmf/tee-if.c
-@@ -257,7 +257,7 @@ static int amd_pmf_invoke_cmd_init(struct amd_pmf_dev *dev)
- 		return -ENODEV;
- 	}
- 
--	dev_dbg(dev->dev, "Policy Binary size: %u bytes\n", dev->policy_sz);
-+	dev_dbg(dev->dev, "Policy Binary size: %lld bytes\n", dev->policy_sz);
- 	memset(dev->shbuf, 0, dev->policy_sz);
- 	ta_sm = dev->shbuf;
- 	in = &ta_sm->pmf_input.init_table;
-@@ -512,9 +512,9 @@ int amd_pmf_init_smart_pc(struct amd_pmf_dev *dev)
- 	if (ret)
- 		goto error;
- 
--	dev->policy_base = devm_ioremap(dev->dev, dev->policy_addr, dev->policy_sz);
--	if (!dev->policy_base) {
--		ret = -ENOMEM;
-+	dev->policy_base = devm_ioremap_resource(dev->dev, dev->res);
-+	if (IS_ERR(dev->policy_base)) {
-+		ret = PTR_ERR(dev->policy_base);
- 		goto error;
- 	}
- 
+ #define PMF_IF_V1		1
 -- 
 2.34.1
 
