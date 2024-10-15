@@ -1,222 +1,283 @@
-Received: from NAM10-MW2-obe.outbound.protection.outlook.com (mail-mw2nam10on2061.outbound.protection.outlook.com [40.107.94.61])
+Received: from juniper.fatooh.org (juniper.fatooh.org [173.255.221.30])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4ED9D1FAF1F;
-	Tue, 15 Oct 2024 18:09:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.94.61
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729015790; cv=fail; b=Frn7JB7jyUM9VXrtgFyF0SjVOJRwBS2j7qREckQTZLMHfRQ6NdD/sfgLCM5iXqPDtEMjUIQN36rPezgnsell75C3FZ2uvPRPDCOjYjWsmhxNlh2SBB0A4VCXz7H7ABJ/zsHjB2B4f+nFE072ZZCB8d56uiVmfdlz8EcVhoju40I=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729015790; c=relaxed/simple;
-	bh=xqQVgVhDX593Q9SlaT4heR2rInN/YHQEg4B9bkOg8mY=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=IDSMm3BsEPw8nq3dj6vWT5AWnczvj4pb2HMjwUwgcTtM68jQZvhc7kV/dxA+ElYza/KZE5JkxgirCCFPkYSiX87OJUDoo2+2lWv+WrD6Ccqt1+o8n3zrJIopifid1Jei0kWNiXTOApaPPmVNDRmFXP6bjZqLBWi6NBDdbZA/ZtQ=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=EHXZnsZS; arc=fail smtp.client-ip=40.107.94.61
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ABF411F80C3
+	for <platform-driver-x86@vger.kernel.org>; Tue, 15 Oct 2024 19:38:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=173.255.221.30
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1729021100; cv=none; b=eqLf6lsYv9ivA0HiA8Ke6lLU5O+FLxG7GvZ475T03zfkslx8etljleWCgNubS8e13HIreAzOMZv7+J3xDrJaglfv6e2PzEPsgpS0RrPAyqrEBRl7bRUN3FEapRapzeM6Ma4wGSal9ZV2SvYGXleNXSNQJoFKP2J47rwHHzTryFs=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1729021100; c=relaxed/simple;
+	bh=y++S5PvY7WR9ZqsqICdNhqGz14xLf35c8IgpQVnLUak=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=M8ORnYkvWOIdBomFBjnDHGPoZq/oCTB6yj4eUa7gZnUq/FXbxzSS2QyM1Wuan+gpHOBZXaWbRMS3yNGdct+oakFP28JmpSENkS3dPpiH0sRu48XeMMoHSkSOSFgbs5A1pCLNInbj0iiSogeW1juvcqlfY4zhLy0o7KTeQONvoJQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=fatooh.org; spf=pass smtp.mailfrom=fatooh.org; dkim=pass (1024-bit key) header.d=fatooh.org header.i=@fatooh.org header.b=kYmwFSVH; arc=none smtp.client-ip=173.255.221.30
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=fatooh.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fatooh.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="EHXZnsZS"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=CI5nq+MR3ZkwJgh0jttNt4aRPOS7zS1djHxmkGa1wEoghI5Q4S66SknyoKZrB9D8MzVJeyX0uJ0Rn5j8YBKldlhWwDyzINF1M52o6qFutaxCjeGH/heApb5NOhWXNqPLTaxe3J3jmCVo207R74y1i+jdN+LX6+Q4RktwFwMvIRyd9oQsKIp/prRrq8ULJ9t9om9ReLVtBoVrcfs3DJx6oehiUP+ZOUf7AVVaPjnYtYBTTvCEz3gHkXcltk3ZAx3l8YWTmDa/JWal8YdIW3wAGmdd9qE/iCwZw/PAbkxGbYVl4koIdh0NQVZa/ddvkC1Vm+6l//X6HK92zcXkYCbkrw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=g45mgsy4pAedlnStswzneaQZCospxe+t6PPDLQ/icr8=;
- b=R9CmEofitndpVSnR8o47DDyke4L5E4yuV9DmB71nnfvOHjD/6GFxgIOqibooumRR3425X+xoM9ZGfbHkkWfqC9n7eSyfPke4F7TM5VM3Ywn6zbOIpmRQIb3UB39vif3oTXoRy1JxSpEHRdt1NW7DhK5/c2/2pCnYz4RrXYpEQirfgB9+4oV3diB3Vm42kC/Z3fLWHS2cQJKTylhdTs9uvUbyg1AjTwp3IUt5y9HPM4Pl8D/rpzKplKZpMxWwt6nW1V2OC8/UozgWJ2D4DaKnnxFzRjdMDE8Vb92GYp2AmO/yOHFjsAAsKlowpYRnK3NoSCYTUw4qHNQEbjpvy8MKoQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=g45mgsy4pAedlnStswzneaQZCospxe+t6PPDLQ/icr8=;
- b=EHXZnsZSwBI9OM5vlhgPZFAWndg/02W/qzE2tnY4rZlsmk++dWahmIa1Qxq925XMy5aucKFCBq9obfJDnMYlBFfZIuyXM9isSQCiLbGu/ZUoRj/GbZqk9QgtLlW+LSh8u1MKpep++FX+iKzBmGjPJn17rodG0m24W+aFkIcGuks=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from MN0PR12MB6101.namprd12.prod.outlook.com (2603:10b6:208:3cb::10)
- by IA1PR12MB8285.namprd12.prod.outlook.com (2603:10b6:208:3f6::19) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8069.17; Tue, 15 Oct
- 2024 18:09:44 +0000
-Received: from MN0PR12MB6101.namprd12.prod.outlook.com
- ([fe80::37ee:a763:6d04:81ca]) by MN0PR12MB6101.namprd12.prod.outlook.com
- ([fe80::37ee:a763:6d04:81ca%6]) with mapi id 15.20.8048.020; Tue, 15 Oct 2024
- 18:09:44 +0000
-Message-ID: <1395bee1-95a7-4d14-a5e8-0e1dc71fadac@amd.com>
-Date: Tue, 15 Oct 2024 13:09:42 -0500
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 05/13] platform/x86: hfi: Introduce AMD Hardware
- Feedback Interface Driver
-To: Ricardo Neri <ricardo.neri-calderon@linux.intel.com>
-Cc: Borislav Petkov <bp@alien8.de>, Hans de Goede <hdegoede@redhat.com>,
- =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
- x86@kernel.org, "Gautham R . Shenoy" <gautham.shenoy@amd.com>,
- Perry Yuan <perry.yuan@amd.com>, linux-kernel@vger.kernel.org,
- linux-doc@vger.kernel.org, linux-pm@vger.kernel.org,
- platform-driver-x86@vger.kernel.org,
- Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
-References: <20241010193705.10362-1-mario.limonciello@amd.com>
- <20241010193705.10362-6-mario.limonciello@amd.com>
- <20241015035233.GA28522@ranerica-svr.sc.intel.com>
-Content-Language: en-US
-From: Mario Limonciello <mario.limonciello@amd.com>
-In-Reply-To: <20241015035233.GA28522@ranerica-svr.sc.intel.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: SA9P221CA0028.NAMP221.PROD.OUTLOOK.COM
- (2603:10b6:806:25::33) To MN0PR12MB6101.namprd12.prod.outlook.com
- (2603:10b6:208:3cb::10)
+	dkim=pass (1024-bit key) header.d=fatooh.org header.i=@fatooh.org header.b="kYmwFSVH"
+Received: from juniper.fatooh.org (juniper.fatooh.org [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by juniper.fatooh.org (Postfix) with ESMTPS id F01DD402A5;
+	Tue, 15 Oct 2024 12:38:16 -0700 (PDT)
+Received: from juniper.fatooh.org (juniper.fatooh.org [127.0.0.1])
+	by juniper.fatooh.org (Postfix) with ESMTP id CEE06402CF;
+	Tue, 15 Oct 2024 12:38:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha1; c=simple; d=fatooh.org; h=message-id
+	:date:mime-version:subject:to:references:from:in-reply-to
+	:content-type:content-transfer-encoding; s=dkim; bh=qhFew7fomqec
+	+JUKKMsR7rJAO0M=; b=kYmwFSVHN49Qh7AH0yEUGjlMuLsEUctHMZznUa6sjme4
+	iK3P6kAnx+kiAdFKGnZIQIKu84whdvZvlo2piv7SPSuvCu6+7NPWu8VcOuTlCGjU
+	Fs0s9C3j7x1Dm5gzgGAQUha7c2S6l4A9uHE5rZ1pOIgTNUZ0sYQyWQ5CNIeGf0w=
+DomainKey-Signature: a=rsa-sha1; c=simple; d=fatooh.org; h=message-id
+	:date:mime-version:subject:to:references:from:in-reply-to
+	:content-type:content-transfer-encoding; q=dns; s=dkim; b=Eb4KXb
+	NF74t690MgBE0CTN0S+fYya5XWRnH+s5GmZgKq9FtKaBWLe8ebeYiaSx+iTCoQ7+
+	//bEEWQBfONvVabudwykBO9IUHcw4p8dRwr8BDFLd8IN4zGfyVc3n3mzUnP8C2N/
+	4VBzTG2c3xFoA0nabkONKXZtj0XF/Y4gCPGa0=
+Received: from [198.18.0.3] (unknown [104.184.153.121])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by juniper.fatooh.org (Postfix) with ESMTPSA id BEAA3402A5;
+	Tue, 15 Oct 2024 12:38:16 -0700 (PDT)
+Message-ID: <f9937da3-6ce6-487c-8d4b-7001dfe212e3@fatooh.org>
+Date: Tue, 15 Oct 2024 12:38:16 -0700
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: MN0PR12MB6101:EE_|IA1PR12MB8285:EE_
-X-MS-Office365-Filtering-Correlation-Id: 9f23e480-91af-418a-2dcd-08dced448c29
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|376014|366016;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?VGUvcytNZmRRY2F5ZXlzRU5Xb001czRYbWVPdVdjdEtqTEViU3Q2dUd2Y1c0?=
- =?utf-8?B?dndNeVZpd3FISzcwbCtzOUFJSWxyWUJIRXFNcjdCTm1rVUxUS2E0UVBiWUh2?=
- =?utf-8?B?Ti93YXl1TGNzaXJoVzBWT1IveTJhQnQ0MmJ0WTR2OFFzb1dRUUE2alBxeFFl?=
- =?utf-8?B?Wng3ZVZNb2pCaXRjRnhSMnFVdTFsVVdhWk52c2IvZFBxL2twc200MHEzRUdT?=
- =?utf-8?B?eHIxeHM2OW91TG9zeXNrZEE5QXhDZVRKMGFERmRHelh6Ti9LbEFPRlRiK3JG?=
- =?utf-8?B?Nk1LeUczMHdlSU8rMjJacGE1TnpkUlN1d3hobVduYnFUclAzemtxSHhwNE00?=
- =?utf-8?B?djk4Rm5XVVZlNUJ3UUhSMFBwWThTNkF2RldTdXJMd1FJQWJzNWdzb3dsZGRM?=
- =?utf-8?B?bkRmUTZLUnloa2JxemV4OHoxNGNLTlE2WW5kRUZSSzgrazNsZVFIUGpTbVpw?=
- =?utf-8?B?Wi9NZEZsVnpBUExpNEhMaHIvTEtWWFpVbDNuYkJQMnE5Mm00QmtoWUJLOWVF?=
- =?utf-8?B?Rjl4SC82dXdId0p1QkV3Qm04WmcrUGNIaGlnb1lTUGt6SGJwVUR6RmhDbWhs?=
- =?utf-8?B?MEhwQjZ0MlhLdmZTVmYzTzBYN2pDYmUxMklhanlaZkVWd1BMM1VOVDUvdW5o?=
- =?utf-8?B?dExEZzlrY0VuaVprUjdZQ2J4UmVGa3NCQTBnSEtpNUxmZGJyY0lTb3N3Ny9o?=
- =?utf-8?B?TEJEQVFrNHlFaHhDUUZLS3ZlK2xPWXBQT3RFOHRmTWVGQ1BJcCtNbXBkVkda?=
- =?utf-8?B?dGEzejlyUWx3QllWMnE2QXVCNDlNSS9NRmkyRFpNYlp2ZDRjR2hVVlRjZEtG?=
- =?utf-8?B?TlRxTFE3VWI1U25aOTQ3b1dPOTdmMzhaMDZIU1Z6MVN1aVE2RlVBV3k5Qkl3?=
- =?utf-8?B?bUgvVHhpN1BkaWVuSWdMTDdJbGcweTQyMXkyMTBCWDdMUkx4M3NhV0MrcTdL?=
- =?utf-8?B?RDdKaDZtTDI1Y1hoMXBMRmxpTnhwYTZIdkdGWS9pbFV1U0YyV1FXYitCWGlW?=
- =?utf-8?B?ZGRzQlk5cjhuMElmZVVYQ1BBS1RLcVdCNXlsMTU3K2szUHNHRXFYcjVGQXhm?=
- =?utf-8?B?UXE4WTVjNHJQZVJvdGhOK0Q3K01zdVhHdC9WTEFQMTZ6UU02SFdScFM5R0ow?=
- =?utf-8?B?dUFQSWNxL1h2QTA0SDAvSEMzeW5HNjRLMHdydlNvMkJWSmkraE54RW05Uy9I?=
- =?utf-8?B?Yk1MaEZXMmNJd2U3a09nbkNLWmx1cmRzb0swNGF5QUZLeDFJdjJVRjBkc2Fo?=
- =?utf-8?B?TGZyMWZ2R1hVYnArNGJVbS92RE5KQVp6QkpiMzlVSDd2SEtoOEx0UmZCS3Jn?=
- =?utf-8?B?TTFmWFZObk1zdTJBM2xabUN3UUZnbytiNlgxbXlzZm9iMFlhamtueTFQRXh2?=
- =?utf-8?B?N1pydUY4TXg3ZllHRE9ZYmlPcTRFdkZSTDNNTXEwK2MwY2FLTnBBU3lQTGIy?=
- =?utf-8?B?Ymk5U2RwSVhrb3VMb3lHV2hOVmViNklBS1kwMUlIcHNQRzY0SUI3cDRTb3VM?=
- =?utf-8?B?a0hkeUkrdUc3NVJ5QXY1WFVSVUZjcGdUeng4T3BiZFd3UE5WM24wR3c1WlFB?=
- =?utf-8?B?MGV5Y1I1RUNXM1BXeVArcHYrWTVnOHcyRkdjVmxJZy9OSThWdVZtcU1FTW5j?=
- =?utf-8?B?bHkwczFHK2dnQWowelkxMUdyNGpvRXcwdjBRa3pXR2ZFcEd4NTFsNjRub2M4?=
- =?utf-8?B?SUZNYm1mbEsrbUNsdVFYSkV2cDZjZ0poRSs1bnFkK0RtdkpBaUkrb2xBPT0=?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MN0PR12MB6101.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(376014)(366016);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?aSs2cUU1Z2tQUmxBdjhWVmh6cEpPc0ZJM1ZpSUp3dDR2QWNnclRpcnRMckZs?=
- =?utf-8?B?djl6cHlCWnZ5K0h5OHZidXZsSXdGVGhTTnk2NFN0Q3Z0VmdWc24yRVA5N3RZ?=
- =?utf-8?B?UDR6Z3o5ZFFIckRVQUd5emhhRWtJcVFQenF3UnZXTXhuQzYwWTIvajE3TG5B?=
- =?utf-8?B?UVRVd1QrK3lOT3ZKa0R1S1BDUS8zYWp5MnMvMDUyMVJGQW1qTytMREM5bXh6?=
- =?utf-8?B?ejJNR2RJYUJyY0ZtS1I4Sm82YlRiSHk1cU4yd0tpU2pYSzlSUHdDYXJpRUZk?=
- =?utf-8?B?OGNML1MrN2JBV1BIbEZIbkFtT1FHNzhqQWEweWhTbjIrRDhqelZEek4vUmZJ?=
- =?utf-8?B?SU5LT28xQnM0d3FkQkYwdmxYN29YZzg2Q3FrYXFSa3ZGREV5TDVTQS8zMmdD?=
- =?utf-8?B?WEZkZ0tSaGRTZmdFamlYMmE1RGZSd1VuMUEvQ1dmNzc2K2V1a0FOQkZ2SnRO?=
- =?utf-8?B?WEFYZzFWRm9CQmxKcFdwaTkxYk1EWXJDcDdoMWUza01nN1hZTHFuMi9oTlA0?=
- =?utf-8?B?b0o3bEVWNW5tcnBRcDdkRm1SOTVKczNtdVRNc0ZFajRLSmVyTjNtRWJtZyt2?=
- =?utf-8?B?Q3FVWlV1enJLNFR3SVVydmpidjlUTW9lZ0ozTGJSK1NBL3lrMGVkdXpSVDJ1?=
- =?utf-8?B?ZEo3bXBFYUplRStIZTRvMUFIcFB5UnUvbEhjeTc2VUZXOG56Nmd6a3VYTkVB?=
- =?utf-8?B?WW52VGFDczdXeGhFdWw5SXFpcGh6SDhHY3huUVpOTGNSd2NFZ213M3hSVGQr?=
- =?utf-8?B?eUd3OS82b0pPQ096dHFVWm8rTzlIQ1ZVWm1WbTRUcStUVG5DRzZnVU4yVE5q?=
- =?utf-8?B?bnZNMngxVmFOL3JjaW1oMGY0TWRUcys5R283cjVKTHRRZTRDOVh1cFYvcUtY?=
- =?utf-8?B?Z1Q2Sm40ZTV0Rkw1aWJ4TmFZZ3NSQVBCclJKcE56cVZNQTV1dWQya01qNUt5?=
- =?utf-8?B?eVlwK2RORk9ablZjcHFsWGFnMGh2VGJ3c09WMkd1MzlUYmZUWFBEOWo3NXJL?=
- =?utf-8?B?NVRUQWp4RGQ2RXdDMzJ3Znhydm9VL082TE5meFpqN3NUeCtUNm8zTy9ndExu?=
- =?utf-8?B?QTcvVUV6Y0I0dGVhaWRwR2VKYmE3aWQ4dXc4RFdBaXpuQlk4THUwRUgxZHNk?=
- =?utf-8?B?eGRFT3o3MmRuTnAzM2lKL1NzbWtuaWFVSjNYRWZpZW9CYWR5dkRTdDVYVVNY?=
- =?utf-8?B?OVIwQVBIYVBwZFh6cGN6KzBNeE16cTBqWW5MaWFHTTdxbzhxT0ZvYlNxcjUv?=
- =?utf-8?B?SWxWRlNhcVNsV0Y0bXZ1dGNZdEplTThuaXhGSWc0WVlBcDVHM2c1MjNVVkJh?=
- =?utf-8?B?NGRsVVdQWnRPK3NHZmpKbXVzTTlFYzRqanAzeFhQUFRSelVRaWNSUERFV2NT?=
- =?utf-8?B?MFdPVlZTdXUrd1RQYlpFVDU3SjQrSUIwVXlTVVIzTlVxS2tTZzBocEpHVjRU?=
- =?utf-8?B?VUsvQnRPY0pCVThrZjRIMmxNRHBVeWdITFhyYWdqcEFDRlI1clBTLzFNK2hK?=
- =?utf-8?B?QmlMcjdUODd0NU15M0ViTnJRdlduZ2RkTXpjUW5KOXBLa3VVS1BTV2RRMnBQ?=
- =?utf-8?B?cFBneXpYRTNYRjIxREt6WWhnd1lRVTNpTXh2Ky9rSk5iZjcwYmJlOHJXVzFX?=
- =?utf-8?B?ZzhzRDlDS1FPMGYwZVprMlFRcldYM2xTU2ZjMWRVcHAzU0NOa3JtNkhMcmVK?=
- =?utf-8?B?QmRkdTJheHRkN29lTElNTHhUQlJyYi82a1JEZzhMcjBzcXA2cnNnbzNsSDNG?=
- =?utf-8?B?eFhjZ0NGVWpKWTFudWxlYURocmNOVVhDbHN2Ym5yQlB4bXdCbloxblVkcjVX?=
- =?utf-8?B?RHVaTjMrOUV3dXEzaGp1Q2FHRktkbHFqRUlnU3lHWnE5ZzF5c1ZiT1dSMk42?=
- =?utf-8?B?cHBkMUpHMm5PeVBTTEFrWW1SY1ErMHVQTU9OaFVIRXZJaTYveVl2Q0ZHSGlP?=
- =?utf-8?B?eXJzU29RMkFJMFJ5L0oyaEM4aXcwaFdtWkE5YW9FV2pwcWhQR3lyQWtjTkw2?=
- =?utf-8?B?SmJDMTBjalRUeVF3S3RaTXZwQUhaSW5majB0c3NGNnNiNUVVR09jdm80ZVVM?=
- =?utf-8?B?a1FEdnppNU5kM2RVdjVHTGpDaVBEanNmZ28vQ2RtVmh1L0pPZHZMRzN2OEFX?=
- =?utf-8?Q?GLL8uPAGp5xzgIPbtUgmVMWjg?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 9f23e480-91af-418a-2dcd-08dced448c29
-X-MS-Exchange-CrossTenant-AuthSource: MN0PR12MB6101.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 15 Oct 2024 18:09:44.6336
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: QcAL+EKbl2w0H7JC1T4BwpgDpIKGNgiu1S0u6PL4nuAJG/CVH1N68H6RQPViZDP2ywJkLeFRHLOf8LNZWue8Fw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA1PR12MB8285
+User-Agent: Mozilla Thunderbird
+Subject: Re: please help with intermittent s2idle problem on AMD laptop
+To: Mario Limonciello <mario.limonciello@amd.com>,
+ Shyam Sundar S K <Shyam-sundar.S-k@amd.com>,
+ "Goswami, Sanket" <Sanket.Goswami@amd.com>,
+ "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>
+References: <48c7aa22-7c0d-40af-80d4-538fd16327d1@fatooh.org>
+ <MN0PR12MB61028BD76B3F88121289BAAB9C442@MN0PR12MB6102.namprd12.prod.outlook.com>
+ <a6f7dc24-b56f-4f69-8065-d99dc43e7b06@amd.com>
+ <2252c724-fd5e-4c22-8696-c168e3830143@amd.com>
+ <d149b40c-c9dc-4db7-9cac-97b95f447321@fatooh.org>
+ <15cc08fb-5edc-46ce-982e-858ad31b671f@amd.com>
+Content-Language: en-US
+From: Corey Hickey <bugfood-ml@fatooh.org>
+In-Reply-To: <15cc08fb-5edc-46ce-982e-858ad31b671f@amd.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On 10/14/2024 22:52, Ricardo Neri wrote:
-> On Thu, Oct 10, 2024 at 02:36:57PM -0500, Mario Limonciello wrote:
->> From: Perry Yuan <Perry.Yuan@amd.com>
+On 2024-10-15 07:04, Mario Limonciello wrote:
+> On 10/14/2024 18:31, Corey Hickey wrote:
+>>> The STB functionality issue and your suspend issue are tangential issues.
 >>
->> The AMD Heterogeneous core design and Hardware Feedback Interface (HFI)
->> provide behavioral classification and a dynamically updated ranking table
->> for the scheduler to use when choosing cores for tasks.
->>
->> There are two CPU core types defined: `Classic Core` and `Dense Core`.
->> "Classic" cores are the standard performance cores, while "Dense" cores
->> are optimized for area and efficiency.
->>
->> Heterogeneous compute refers to CPU implementations that are comprised
->> of more than one architectural class, each with two capabilities. This
->> means each CPU reports two separate capabilities: "perf" and "eff".
->>
->> Each capability lists all core ranking numbers between 0 and 255, where
->> a higher number represents a higher capability.
->>
->> Heterogeneous systems can also extend to more than two architectural
->> classes.
->>
->> The purpose of the scheduling feedback mechanism is to provide information
->> to the operating system scheduler in real time, allowing the scheduler to
->> direct threads to the optimal core during task scheduling.
->>
->> All core ranking data are provided by the BIOS via a shared memory ranking
->> table, which the driver reads and uses to update core capabilities to the
->> scheduler. When the hardware updates the table, it generates a platform
->> interrupt to notify the OS to read the new ranking table.
->>
->> Link: https://bugzilla.kernel.org/show_bug.cgi?id=206537
+>> Yes, I was hoping to be able to use STB to help troubleshoot. I do not
+>> know if that is the right approach.
 > 
-> I tried to find the HFI details on the documents in this "bug" but I could
-> not find them. What document in specific could I look at?
+> I don't think it will help you in this context. Even if STB was enabled
+> by your BIOS you wouldn't be able to access it from Linux if the host
+> froze or rebooted for some reason.
+
+Ah ok. I did not know the STB was non-persistent.
+
+Anyhow, I reported the lack of AMD CBS to framework support and they
+logged it as a feature request.
+
+If there's any use of me testing anything for the STB further, I'm
+definitely willing to try, but otherwise, I'll move on.
+
+>>> Something I think notable about your system is you are using two SSDs
+>>> which is (relatively) uncommon.  Have you already updated the firmware
+>>> on both SSDs to the latest?
+>>
+>> I have not, it seems. The drives come with stock firmware:
+>> $ sudo nvme list
+>> Node                  Generic               SN
+>> Model                                    Namespace
+>> Usage                      Format           FW Rev
+>> --------------------- --------------------- --------------------
+>> ---------------------------------------- ----------
+>> -------------------------- ---------------- --------
+>> /dev/nvme0n1          /dev/ng0n1            241802800078
+>> WD_BLACK SN770 1TB                       0x1          1.00  TB /   1.00
+>> TB    512   B +  0 B   731100WD
+>> /dev/nvme1n1          /dev/ng1n1            24102U800015
+>> WD_BLACK SN770M 1TB                      0x1          1.00  TB /   1.00
+>> TB    512   B +  0 B   731100WD
+>>
+>> ...and it seems that version 731120WD is available for each. I can
+>> try upgrading later (one at a time, with maybe a day or so in between).
+>>
+>> For reference:
+>> https://community.wd.com/t/firmware-upgrade-utility-for-linux/210120/13
+>> https://community.frame.work/t/western-digital-drive-update-guide-
+>> without-windows-wd-dashboard/20616
+>> https://wddashboarddownloads.wdc.com/wdDashboard/firmware/
+>> WD_BLACK_SN770_1TB/731120WD/device_properties.xml
+>> https://wddashboarddownloads.wdc.com/wdDashboard/firmware/
+>> WD_BLACK_SN770M_1TB/731120WD/device_properties.xml
 > 
-> Thanks and BR,
-> Ricardo
+> Before you upgrade can you please also capture 'fwupdmgr get-devices
+> --json' output?  If the SSD upgrade helps you I do want to flag that
+> this issue in amd_s2idle.py for the future for anyone else with the same
+> SSD + SSD F/W to tell them they should upgrade too.
 
-Hi Ricardo,
+I already updated the SN770 SSD last night, but it had the same firmware
+as is still on the SN770M. The current output is below.
 
-It is spread out across multiple places.  This is part of the reason for 
-patch 1 in the series outlines details of how it works.
+     {
+       "Name" : "WD BLACK SN770 1TB",
+       "DeviceId" : "3743975ad7f64f8d6575a9ae49fb3a8856fe186f",
+       "InstanceIds" : [
+         "NVME\\VEN_15B7&DEV_5017",
+         "NVME\\VEN_15B7&DEV_5017&SUBSYS_15B75017",
+         "WD_BLACK SN770 1TB"
+       ],
+       "Guid" : [
+         "1524d43d-ed91-5130-8cb6-8b8478508bae",
+         "87cfda90-ce08-52c3-9bb5-0e0718b7e57e",
+         "914bfa00-b683-532c-8c3c-71a59e7ae800"
+       ],
+       "Serial" : "241802800078",
+       "Summary" : "NVM Express solid state drive",
+       "Plugin" : "nvme",
+       "Protocol" : "org.nvmexpress",
+       "Flags" : [
+         "internal",
+         "updatable",
+         "require-ac",
+         "registered",
+         "needs-reboot",
+         "usable-during-update"
+       ],
+       "Vendor" : "Sandisk Corp",
+       "VendorId" : "NVME:0x15B7",
+       "Version" : "731120WD",
+       "VersionFormat" : "plain",
+       "Icons" : [
+         "drive-harddisk"
+       ],
+       "Created" : 1729019306
+     },
+     {
+       "Name" : "WD BLACK SN770M 1TB",
+       "DeviceId" : "71b677ca0f1bc2c5b804fa1d59e52064ce589293",
+       "InstanceIds" : [
+         "NVME\\VEN_15B7&DEV_5042",
+         "NVME\\VEN_15B7&DEV_5042&SUBSYS_15B75042",
+         "WD_BLACK SN770M 1TB"
+       ],
+       "Guid" : [
+         "c3e81c2c-00bb-55d1-b384-b11e2b85146c",
+         "0e7ea477-bf9e-5d83-9b17-54fe83b54e01",
+         "f8a47d37-820f-5df1-a63d-0231d8c00de6"
+       ],
+       "Serial" : "24102U800015",
+       "Summary" : "NVM Express solid state drive",
+       "Plugin" : "nvme",
+       "Protocol" : "org.nvmexpress",
+       "Flags" : [
+         "internal",
+         "updatable",
+         "require-ac",
+         "registered",
+         "needs-reboot",
+         "usable-during-update"
+       ],
+       "Vendor" : "Sandisk Corp",
+       "VendorId" : "NVME:0x15B7",
+       "Version" : "731100WD",
+       "VersionFormat" : "plain",
+       "Icons" : [
+         "drive-harddisk"
+       ],
+       "Created" : 1729019306
+     }
 
-The reason for that "collect all" Bugzilla for documentation is because 
-the URLs for AMD documentation have undergone changes in the past and it 
-makes it difficult to put stable URLs in commit messages.  So teams that 
-want to reference documentation put it on a dump all bug for a stable 
-URL to reference.
 
-On that link you will find the APM, which will have some documentation 
-specifically for the CPUID leafs used for topology identification and 
-clearing history.
+This morning, I found the laptop unable to resume; this is still with
+the test kernel I've been using since I first reported the issue here. I
+have needed to roll back to 6.10.6-amd64 now, though, due to some
+graphical issues (which I have not yet investigated and presume are
+unrelated).
 
-Read patch 1 and let me know if it covers what specifically you're 
-looking for.  If it's still missing some info let me know what you would 
-like added.
+I did notice something else meanwhile:
 
-Also; I do want to note something; this is the first series to lay some 
-foundation for static information and not everything in patch 1 is 
-implemented in this first series.  There will be further follow-ups later.
+$ for i in nvme0 nvme1 ; do echo "-- $i --" ; sudo nvme smart-log "/dev/$i" ; done
+-- nvme0 --
+Smart Log for NVME device:nvme0 namespace-id:ffffffff
+critical_warning			: 0
+temperature				: 86 °F (303 K)
+available_spare				: 100%
+available_spare_threshold		: 10%
+percentage_used				: 0%
+endurance group critical warning summary: 0
+Data Units Read				: 5,322,091 (2.72 TB)
+Data Units Written			: 163,768 (83.85 GB)
+host_read_commands			: 12,838,207
+host_write_commands			: 1,674,918
+controller_busy_time			: 21
+power_cycles				: 157
+power_on_hours				: 8
+unsafe_shutdowns			: 8
+media_errors				: 0
+num_err_log_entries			: 0
+Warning Temperature Time		: 0
+Critical Composite Temperature Time	: 0
+Temperature Sensor 1			: 102 °F (312 K)
+Temperature Sensor 2			: 86 °F (303 K)
+Thermal Management T1 Trans Count	: 0
+Thermal Management T2 Trans Count	: 0
+Thermal Management T1 Total Time	: 0
+Thermal Management T2 Total Time	: 0
+-- nvme1 --
+Smart Log for NVME device:nvme1 namespace-id:ffffffff
+critical_warning			: 0
+temperature				: 86 °F (303 K)
+available_spare				: 100%
+available_spare_threshold		: 10%
+percentage_used				: 0%
+endurance group critical warning summary: 0
+Data Units Read				: 3,924,594 (2.01 TB)
+Data Units Written			: 3,422,763 (1.75 TB)
+host_read_commands			: 15,470,118
+host_write_commands			: 5,547,092
+controller_busy_time			: 38
+power_cycles				: 5,745
+power_on_hours				: 45
+unsafe_shutdowns			: 5,597
+media_errors				: 0
+num_err_log_entries			: 0
+Warning Temperature Time		: 0
+Critical Composite Temperature Time	: 0
+Temperature Sensor 1			: 105 °F (314 K)
+Temperature Sensor 2			: 86 °F (303 K)
+Thermal Management T1 Trans Count	: 0
+Thermal Management T2 Trans Count	: 0
+Thermal Management T1 Total Time	: 0
+Thermal Management T2 Total Time	: 0
+
+
+
+For nvme1, the power_cycles and unsafe_shutdowns values look very fishy,
+especially in comparison to nvme0. These two SSDs are new and have both
+been present in the laptop since I assembled it.
+
+I am unsure about the power_on_hours; 45 might be too high and 8 seems
+too low.
+
+The differences in reads and writes are (mostly?) explained by being in
+a RAID--one drive did the initial sync to the other drive.
+
+Unfortunately, I don't have a reading from right after installation, so
+I don't know if I received a bad drive (I bought it new and the
+packaging seemed intact). I also hesitate to blame the SSD for those
+values--it could be a victim of system trouble, I think.
+
+I will track these more as I go.
+
+
+Thank you,
+Corey
