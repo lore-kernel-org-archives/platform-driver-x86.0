@@ -1,186 +1,184 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
+Received: from fout-a8-smtp.messagingengine.com (fout-a8-smtp.messagingengine.com [103.168.172.151])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF2421E2850;
-	Tue, 15 Oct 2024 09:05:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 189E71E2841;
+	Tue, 15 Oct 2024 10:09:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.151
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728983153; cv=none; b=IsfqTyRAZFh7aspPBpP1wPk18CKMk426L7F+9xGjrZAGrhroIIy0LA9FaHxaIVN33n/8jU4txGiofaYSSZsL/W35boubm/N+QKN5u8UIvbwYjCDE0BqiWKfg+Evn0rBwDqd1TWwE6Jh+lIF5Z4Fe6uM/q1YUlmE4XvifvqoCErM=
+	t=1728986961; cv=none; b=RU3EIPm/7ma0oNo3UlbiAa4zVSKtnCKUJdt0ZFBdNJHOMs7yIBYWx+DIJ3jafT4atrQg+RijdC3NQzsOrEHl3FYEeJqhvZUulANtHUsguLR5X5ItlqJdFEBThN3cRq+YCoHulgD+m6RQ0kFEL2ipibPg/6SBakeMJm6xqqZWdGM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728983153; c=relaxed/simple;
-	bh=xpt5/P5gxckwngVS4eHLKkUF3nHcEvbihEL3m6a1BNA=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=CEeqpjWDE+VIHZUtu5SutqnMYH7zXxDugLZRuEEl6y7PS85G7JUQWaUhuBF84//6W4vHU2v9IvHzbJfHjcCjWkAfWTX0CTdCLUXKY2pZK6ZhJz+ZH2FR3kfXnQvXm74WCaZMVblWiEZrbRHMUjw1/cRuEfnx8OVwTzu+Sx0KM4A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ScLJNoIJ; arc=none smtp.client-ip=192.198.163.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1728986961; c=relaxed/simple;
+	bh=e/rNaI2oPtIgL6xcYyWnLvsQkvnuctXf8PjP48TaVRA=;
+	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
+	 Subject:Content-Type; b=gKEr7HlvNrWhd183wJVtp62QW11i5pT9jxByEOdgF+GtDLF55+Qmh3n4eY/pOHSlKyD4qdbH6rOx4Y4yIUlUGpFC2UfvxxFvwAEscydnxkD7K1pPGEBJoEoPBYjlm3EK70L0/G5VdAaEoC4iwzdkVohO/Quw7oM7upBhdTL/yTc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ljones.dev; spf=none smtp.mailfrom=ljones.dev; dkim=pass (2048-bit key) header.d=ljones.dev header.i=@ljones.dev header.b=fSawCpc6; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=IO6ZS/Uj; arc=none smtp.client-ip=103.168.172.151
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ljones.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=ljones.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ScLJNoIJ"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1728983152; x=1760519152;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=xpt5/P5gxckwngVS4eHLKkUF3nHcEvbihEL3m6a1BNA=;
-  b=ScLJNoIJqZrrqoUyP3zX4LbO0yYX06nLbO+sSwsWxS7TLvqt3I6tZfYr
-   oq+D9/O4mcVFPcodoIIVDxONavltFM+hU6j4noRyHmJGxs38Z/5/21q1g
-   nsJkxFLkehPvZyp3Gz2l6LjxyCoJ+rHqsmimDuWaOE04MK+Vc/+xnawG/
-   mBZP3yfXDdCHwxxsynDe6C0xe2VEh3hCfEae/iLl59QpDhW4ONACOuz6p
-   O2R+M9bV3/jbkS83b7TVtIPbE7XUaX1zsRI6FMXJhldu7C+qnL/y8utqb
-   BdRv40ZcCXq7M6Qa2byKqaGc1uhLd17IGJR3DEfxDu4XZk1ercBho0fGj
-   w==;
-X-CSE-ConnectionGUID: 3Jtg0LYPTwGxd5XoQeZPhA==
-X-CSE-MsgGUID: PNLorBRQTFqkndaOC0+BLA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11225"; a="38938132"
-X-IronPort-AV: E=Sophos;i="6.11,204,1725346800"; 
-   d="scan'208";a="38938132"
-Received: from fmviesa009.fm.intel.com ([10.60.135.149])
-  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Oct 2024 02:05:51 -0700
-X-CSE-ConnectionGUID: qWcthfRdTym9/EPxMYssig==
-X-CSE-MsgGUID: /yrrZ0CgRdymVI3tZzVSLw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.11,204,1725346800"; 
-   d="scan'208";a="77847197"
-Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.12])
-  by fmviesa009-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Oct 2024 02:05:48 -0700
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Tue, 15 Oct 2024 12:05:45 +0300 (EEST)
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>, 
-    linux-kbuild@vger.kernel.org
-cc: Tero Kristo <tero.kristo@linux.intel.com>, 
-    platform-driver-x86@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>, 
-    Hans de Goede <hdegoede@redhat.com>, 
-    Geert Uytterhoeven <geert@linux-m68k.org>, David Gow <davidgow@google.com>, 
-    Masahiro Yamada <masahiroy@kernel.org>
-Subject: Re: [rfc, PATCH v1 1/1] platform/x86: intel: Add 'intel' prefix to
- the modules automatically
-In-Reply-To: <20241011172531.3407093-1-andriy.shevchenko@linux.intel.com>
-Message-ID: <caa4b5e0-742b-a4f4-d4c8-8e14cc99eefc@linux.intel.com>
-References: <20241011172531.3407093-1-andriy.shevchenko@linux.intel.com>
+	dkim=pass (2048-bit key) header.d=ljones.dev header.i=@ljones.dev header.b="fSawCpc6";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="IO6ZS/Uj"
+Received: from phl-compute-08.internal (phl-compute-08.phl.internal [10.202.2.48])
+	by mailfout.phl.internal (Postfix) with ESMTP id 37059138034D;
+	Tue, 15 Oct 2024 06:09:18 -0400 (EDT)
+Received: from phl-imap-01 ([10.202.2.91])
+  by phl-compute-08.internal (MEProxy); Tue, 15 Oct 2024 06:09:18 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ljones.dev; h=cc
+	:cc:content-transfer-encoding:content-type:content-type:date
+	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to; s=fm1; t=1728986958;
+	 x=1729073358; bh=QzEMDpMMmY/WtmgU3DpHFajDSeKbnI9145m7YXl7kys=; b=
+	fSawCpc6JYq+pg8SRLbHcKgTqjbs3p8so5SweF/dVRszCtKIPGNi07ex29Azcp3X
+	MEq0gMVSvr22Y9fYGlyhDXIRvy8v/2gHwJzqehzG+sDoBPQEjQMqPJfEl76/9iNf
+	Wce1FVemgSeyMcOI9gE/y1vgiTtrZBKAPReV5AksQDNPtc6KJ0XAhE1sKDQ3P5fy
+	B5Beg/cb8kyzaLwSmPvC+6gnb1RmksV8zq4s/qNnTWSCg3tiXiLr+oQYljA1Afkx
+	UTjT1BK7/OomkL+yeZbz1HkXAdtLOyiuWjqhhH821D8LLdjN2+2Bmrgh48XbHS0D
+	Otc3gDoAH/JOR9ptjsWO0g==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:content-type:date:date:feedback-id:feedback-id
+	:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to:x-me-proxy:x-me-proxy
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=1728986958; x=
+	1729073358; bh=QzEMDpMMmY/WtmgU3DpHFajDSeKbnI9145m7YXl7kys=; b=I
+	O6ZS/Uj5r8CCkAe8jNNNGe3Zo2eARABwcgN5nTyYRNTzBWlDpCzgaND82SIZuwTS
+	wx/gbTcE/z0M1LFRV5NUIItUQTSaym2lfJcKEoRABukBkT2WIcrlRpgRcR7si5jL
+	gZ9Y8tc4fzb2PU19BAvk7oZ7hWi0XFu0se5hgKG5oTevaE7vR9UP/Mhy/wKaFR/G
+	//PaRRaEEUDJl1U5rz+SqQ9M1E+wDGSrlGkB08ByHBanO9HqH9ZEFD2kqvc3GwhI
+	ZJt+bdeNBOjqycJJwbCKURz5BXids9HoWIIl/UspA1VoN/92xg8B/r1QErf3tBLW
+	Lw6YBYcmir97dIg9oZeqw==
+X-ME-Sender: <xms:Tj8OZ99u8Pxn99ruk6eMMPnKPUscGaHd4raevtaGmUYNzpgwiOlobA>
+    <xme:Tj8OZxurhZVKtFWPjdxeJkdN7nRtQmETdqghHi5ghUWehrb6LLGtmAWtN-CjSY-Nd
+    1MIFYsggktTAB6MJ7M>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeftddrvdegjedgvdegucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggvpdfu
+    rfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnh
+    htshculddquddttddmnecujfgurhepofggfffhvfevkfgjfhfutgfgsehtjeertdertddt
+    necuhfhrohhmpedfnfhukhgvucflohhnvghsfdcuoehluhhkvgeslhhjohhnvghsrdguvg
+    hvqeenucggtffrrghtthgvrhhnpeevteelkeefueeuleejveetueetvefggfeuledvhfdv
+    gedvheelfeelkefhgfetheenucffohhmrghinhepkhgvrhhnvghlrdhorhhgnecuvehluh
+    hsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomheplhhukhgvsehljhho
+    nhgvshdruggvvhdpnhgspghrtghpthhtohepkedpmhhouggvpehsmhhtphhouhhtpdhrtg
+    hpthhtoheptghorhgvnhhtihhnrdgthhgrrhihsehgmhgrihhlrdgtohhmpdhrtghpthht
+    ohepjhhikhhosheskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepshhuphgvrhhmudeskh
+    gvrhhnvghlrdhorhhgpdhrtghpthhtohepihhlphhordhjrghrvhhinhgvnheslhhinhhu
+    gidrihhnthgvlhdrtghomhdprhgtphhtthhopehhuggvghhovgguvgesrhgvughhrghtrd
+    gtohhmpdhrtghpthhtoheplhhinhhugidqihhnphhuthesvhhgvghrrdhkvghrnhgvlhdr
+    ohhrghdprhgtphhtthhopehlihhnuhigqdhkvghrnhgvlhesvhhgvghrrdhkvghrnhgvlh
+    drohhrghdprhgtphhtthhopehplhgrthhfohhrmhdqughrihhvvghrqdigkeeisehvghgv
+    rhdrkhgvrhhnvghlrdhorhhg
+X-ME-Proxy: <xmx:Tj8OZ7B06N_tJzFMOcqe_nbq52dg5N49qlxiv8iAGhCPH_NnV_SwQw>
+    <xmx:Tj8OZxc786WosMY7bn2Vwe28W_jChupn_4CYW79uaKbLDkwGmj9qHw>
+    <xmx:Tj8OZyOXHtfN7xixASXow3HXnES62OoOS2Xm8az3nisDFqlpLzzy7w>
+    <xmx:Tj8OZzlo-kKYzGKLaTWxS-u1WJeI49gvJoP1X3Ey7ZYkg7xlnBZYCg>
+    <xmx:Tj8OZ-BJY6KdsczupYLOiCoWpWHQl9m-Okb8FVUP3ypX1azJOAg3sbxC>
+Feedback-ID: i5ec1447f:Fastmail
+Received: by mailuser.phl.internal (Postfix, from userid 501)
+	id EC4373360077; Tue, 15 Oct 2024 06:09:17 -0400 (EDT)
+X-Mailer: MessagingEngine.com Webmail Interface
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Date: Tue, 15 Oct 2024 12:08:57 +0200
+From: "Luke Jones" <luke@ljones.dev>
+To: linux-kernel@vger.kernel.org
+Cc: linux-input@vger.kernel.org, "Jiri Kosina" <jikos@kernel.org>,
+ platform-driver-x86@vger.kernel.org,
+ =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+ "Hans de Goede" <hdegoede@redhat.com>, corentin.chary@gmail.com,
+ "Mario Limonciello" <superm1@kernel.org>
+Message-Id: <a4c97b6a-9a79-4310-a37a-bf927b9ab924@app.fastmail.com>
+In-Reply-To: <20240930000046.51388-1-luke@ljones.dev>
+References: <20240930000046.51388-1-luke@ljones.dev>
+Subject: Re: [PATCH v6 0/9] platform/x86: introduce asus-armoury driver
+Content-Type: text/plain
+Content-Transfer-Encoding: 7bit
 
-On Fri, 11 Oct 2024, Andy Shevchenko wrote:
+Hi all, did I have anything left to do on this series? I'm quite certain I've covered everything now.
 
-> Rework Makefile to add 'intel' prefix to the modules automatically.
-> This removes a lot of boilerplate code in it and also makes robust
-> against mistypos in the prefix.
-> 
-> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> ---
-> 
-> Send as RFC because TBH I rather want to have something like this to be
-> available on the level of Kbuild for any of the subdirectories in
-> question. Also I haven't done any comprehensive build tests on this,
-> let's see what CIs think about this...
+Cheers,
+Luke.
 
-It feels useful to have this automatically available for the folder one 
-level towards root... (perhaps two levels).
 
-But you didn't include kbuild ML (now added).
-
->  drivers/platform/x86/intel/Makefile           | 68 ++++++++-----------
->  .../intel/{intel_plr_tpmi.c => plr_tpmi.c}    |  0
->  2 files changed, 29 insertions(+), 39 deletions(-)
->  rename drivers/platform/x86/intel/{intel_plr_tpmi.c => plr_tpmi.c} (100%)
-> 
-> diff --git a/drivers/platform/x86/intel/Makefile b/drivers/platform/x86/intel/Makefile
-> index 74db065c82d6..21e9e21e0142 100644
-> --- a/drivers/platform/x86/intel/Makefile
-> +++ b/drivers/platform/x86/intel/Makefile
-> @@ -17,50 +17,40 @@ obj-$(CONFIG_INTEL_UNCORE_FREQ_CONTROL)	+= uncore-frequency/
+On Mon, 30 Sep 2024, at 2:00 AM, Luke D. Jones wrote:
+> TL;DR:
+> 1. introduce new module to contain bios attributes, using fw_attributes_class
+> 2. deprecate all possible attributes from asus-wmi that were added ad-hoc
+> 3. remove those in the next LTS cycle
+>
+> The idea for this originates from a conversation with Mario Limonciello
+> https://lore.kernel.org/platform-driver-x86/371d4109-a3bb-4c3b-802f-4ec27a945c99@amd.com/
+>
+> It is without a doubt much cleaner to use, easier to discover, and the
+> API is well defined as opposed to the random clutter of attributes I had
+> been placing in the platform sysfs.
+>
+> There is some discussion on-going regarding the way tuning knobs such as
+> the PPT_* should work with platform_profile. This may result in the creation
+> of an extra profile type "Custom" to signify that the user has adjusted
+> things away from the defaults used by profiles such as "balanced" or "quiet".
+>
+> Regards,
+> Luke
+>
+> Changelog:
+> - v1
+>   - Initial submission
+> - v2
+>   - Too many changes to list, but all concerns raised in previous 
+> submission addressed.
+>   - History: 
+> https://lore.kernel.org/platform-driver-x86/20240716051612.64842-1-luke@ljones.dev/
+> - v3
+>   - All concerns addressed.
+>   - History: 
+> https://lore.kernel.org/platform-driver-x86/20240806020747.365042-1-luke@ljones.dev/
+> - v4
+>   - Use EXPORT_SYMBOL_NS_GPL() for the symbols required in this patch 
+> series
+>   - Add patch for hid-asus due to the use of EXPORT_SYMBOL_NS_GPL()
+>   - Split the PPT knobs out to a separate patch
+>   - Split the hd_panel setting out to a new patch
+>   - Clarify some of APU MEM configuration and convert int to hex
+>   - Rename deprecated Kconfig option to ASUS_WMI_DEPRECATED_ATTRS
+>   - Fixup cyclic dependency in Kconfig
+> - v5
+>   - deprecate patch: cleanup ``#if`, ``#endif` statements, edit kconfig 
+> detail, edit commit msg
+>   - cleanup ppt* tuning patch
+>   - proper error handling in module init, plus pr_err()
+>   - ppt tunables have a notice if there is no match to get defaults
+>   - better error handling in cpu core handling
+>     - don't continue if failure
+>   - use the mutex to gate WMI writes
+> - V6
+>   - correctly cleanup/unwind if module init fails
 >  
->  
->  # Intel input drivers
-> -intel-hid-y				:= hid.o
-> -obj-$(CONFIG_INTEL_HID_EVENT)		+= intel-hid.o
-> -intel-vbtn-y				:= vbtn.o
-> -obj-$(CONFIG_INTEL_VBTN)		+= intel-vbtn.o
-> +intel-target-$(CONFIG_INTEL_HID_EVENT)		+= hid.o
-> +intel-target-$(CONFIG_INTEL_VBTN)		+= vbtn.o
->  
->  # Intel miscellaneous drivers
-> -obj-$(CONFIG_INTEL_ISHTP_ECLITE)	+= ishtp_eclite.o
-> -intel_int0002_vgpio-y			:= int0002_vgpio.o
-> -obj-$(CONFIG_INTEL_INT0002_VGPIO)	+= intel_int0002_vgpio.o
-> -intel_oaktrail-y			:= oaktrail.o
-> -obj-$(CONFIG_INTEL_OAKTRAIL)		+= intel_oaktrail.o
-> -intel_sdsi-y				:= sdsi.o
-> -obj-$(CONFIG_INTEL_SDSI)		+= intel_sdsi.o
-> -intel_vsec-y				:= vsec.o
-> -obj-$(CONFIG_INTEL_VSEC)		+= intel_vsec.o
-> +intel-target-$(CONFIG_INTEL_ISHTP_ECLITE)	+= ishtp_eclite.o
-> +
-> +intel-target-$(CONFIG_INTEL_INT0002_VGPIO)	+= int0002_vgpio.o
-> +intel-target-$(CONFIG_INTEL_OAKTRAIL)		+= oaktrail.o
-> +intel-target-$(CONFIG_INTEL_SDSI)		+= sdsi.o
-> +intel-target-$(CONFIG_INTEL_VSEC)		+= vsec.o
->  
->  # Intel PMIC / PMC / P-Unit drivers
-> -intel_bxtwc_tmu-y			:= bxtwc_tmu.o
-> -obj-$(CONFIG_INTEL_BXTWC_PMIC_TMU)	+= intel_bxtwc_tmu.o
-> -intel_crystal_cove_charger-y		:= crystal_cove_charger.o
-> -obj-$(CONFIG_X86_ANDROID_TABLETS)	+= intel_crystal_cove_charger.o
-> -intel_bytcrc_pwrsrc-y			:= bytcrc_pwrsrc.o
-> -obj-$(CONFIG_INTEL_BYTCRC_PWRSRC)	+= intel_bytcrc_pwrsrc.o
-> -intel_chtdc_ti_pwrbtn-y			:= chtdc_ti_pwrbtn.o
-> -obj-$(CONFIG_INTEL_CHTDC_TI_PWRBTN)	+= intel_chtdc_ti_pwrbtn.o
-> -intel_chtwc_int33fe-y			:= chtwc_int33fe.o
-> -obj-$(CONFIG_INTEL_CHTWC_INT33FE)	+= intel_chtwc_int33fe.o
-> -intel_mrfld_pwrbtn-y			:= mrfld_pwrbtn.o
-> -obj-$(CONFIG_INTEL_MRFLD_PWRBTN)	+= intel_mrfld_pwrbtn.o
-> -intel_punit_ipc-y			:= punit_ipc.o
-> -obj-$(CONFIG_INTEL_PUNIT_IPC)		+= intel_punit_ipc.o
-> +intel-target-$(CONFIG_INTEL_BXTWC_PMIC_TMU)	+= bxtwc_tmu.o
-> +intel-target-$(CONFIG_X86_ANDROID_TABLETS)	+= crystal_cove_charger.o
-> +intel-target-$(CONFIG_INTEL_BYTCRC_PWRSRC)	+= bytcrc_pwrsrc.o
-> +intel-target-$(CONFIG_INTEL_CHTDC_TI_PWRBTN)	+= chtdc_ti_pwrbtn.o
-> +intel-target-$(CONFIG_INTEL_CHTWC_INT33FE)	+= chtwc_int33fe.o
-> +intel-target-$(CONFIG_INTEL_MRFLD_PWRBTN)	+= mrfld_pwrbtn.o
-> +intel-target-$(CONFIG_INTEL_PUNIT_IPC)		+= punit_ipc.o
->  
->  # TPMI drivers
-> -intel_vsec_tpmi-y			:= tpmi.o
-> -obj-$(CONFIG_INTEL_TPMI)		+= intel_vsec_tpmi.o
-> -obj-$(CONFIG_INTEL_PLR_TPMI)		+= intel_plr_tpmi.o
-> -
-> -intel_tpmi_power_domains-y		:= tpmi_power_domains.o
-> -obj-$(CONFIG_INTEL_TPMI_POWER_DOMAINS)	+= intel_tpmi_power_domains.o
-> +intel-target-$(CONFIG_INTEL_TPMI)		+= vsec_tpmi.o
-> +intel-target-$(CONFIG_INTEL_PLR_TPMI)		+= plr_tpmi.o
-> +intel-target-$(CONFIG_INTEL_TPMI_POWER_DOMAINS)	+= tpmi_power_domains.o
->  
->  # Intel Uncore drivers
-> -intel-rst-y				:= rst.o
-> -obj-$(CONFIG_INTEL_RST)			+= intel-rst.o
-> -intel-smartconnect-y			:= smartconnect.o
-> -obj-$(CONFIG_INTEL_SMARTCONNECT)	+= intel-smartconnect.o
-> -intel_turbo_max_3-y			:= turbo_max_3.o
-> -obj-$(CONFIG_INTEL_TURBO_MAX_3)		+= intel_turbo_max_3.o
-> +intel-target-$(CONFIG_INTEL_RST)		+= rst.o
-> +intel-target-$(CONFIG_INTEL_SMARTCONNECT)	+= smartconnect.o
-> +intel-target-$(CONFIG_INTEL_TURBO_MAX_3)	+= turbo_max_3.o
-> +
-> +define INTEL_OBJ_TARGET
-> +intel-$(1)-y := $(1).o
-> +obj-$(2) += intel-$(1).o
-> +endef
-> +
-> +$(foreach target-y, $(basename $(intel-target-m)), $(eval $(call INTEL_OBJ_TARGET,$(target-y),y)))
-> +$(foreach target-m, $(basename $(intel-target-m)), $(eval $(call INTEL_OBJ_TARGET,$(target-m),m)))
-> diff --git a/drivers/platform/x86/intel/intel_plr_tpmi.c b/drivers/platform/x86/intel/plr_tpmi.c
-> similarity index 100%
-> rename from drivers/platform/x86/intel/intel_plr_tpmi.c
-> rename to drivers/platform/x86/intel/plr_tpmi.c
-
-Why call these intel-target-*, wouldn't intel-obj-* be more consistent?
-
--- 
- i.
-
-
+> Luke D. Jones (9):
+>   platform/x86: asus-wmi: export symbols used for read/write WMI
+>   hid-asus: Add MODULE_IMPORT_NS(ASUS_WMI)
+>   platform/x86: asus-armoury: move existing tunings to asus-armoury
+>     module
+>   platform/x86: asus-armoury: add panel_hd_mode attribute
+>   platform/x86: asus-armoury: add the ppt_* and nv_* tuning knobs
+>   platform/x86: asus-armoury: add dgpu tgp control
+>   platform/x86: asus-armoury: add apu-mem control support
+>   platform/x86: asus-armoury: add core count control
+>   platform/x86: asus-wmi: deprecate bios features
+>
+>  .../ABI/testing/sysfs-platform-asus-wmi       |   17 +
+>  drivers/hid/hid-asus.c                        |    1 +
+>  drivers/platform/x86/Kconfig                  |   21 +
+>  drivers/platform/x86/Makefile                 |    1 +
+>  drivers/platform/x86/asus-armoury.c           | 1093 +++++++++++++++++
+>  drivers/platform/x86/asus-armoury.h           |  257 ++++
+>  drivers/platform/x86/asus-wmi.c               |  189 ++-
+>  include/linux/platform_data/x86/asus-wmi.h    |   22 +
+>  8 files changed, 1564 insertions(+), 37 deletions(-)
+>  create mode 100644 drivers/platform/x86/asus-armoury.c
+>  create mode 100644 drivers/platform/x86/asus-armoury.h
+>
+> -- 
+> 2.46.1
