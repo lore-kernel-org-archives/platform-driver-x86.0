@@ -1,66 +1,63 @@
-Received: from mail-pg1-f174.google.com (mail-pg1-f174.google.com [209.85.215.174])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 40365166F06;
-	Tue, 15 Oct 2024 02:26:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 946C546B8;
+	Tue, 15 Oct 2024 03:46:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728959191; cv=none; b=kGGMRiinv2LaAJomjt1P2hjOSFHnJhY5tKYWAycUJDD2AhgNt1d7G8Xua4uxOEdS3dWokUAuAIjoLQAfXnmrrDayPXipJM4kXq7GxgxIkDa3ih6J2awpn0HH4be2te6cGEwzPk5CqEJbfg1Wfg1vNsGP+xVkW+KTpWWxtWixHEk=
+	t=1728963998; cv=none; b=iWW/HIvdD5epifiTCMIwN6ZRgoESKUY7XC34pxWFmgYB9jmUffFxhgxC8wY9QN80I2TvLJ3qasNQu30aGGAlfj9x5PwbleUwitpL3xYHGGATyvGgVIyQGHmT7Q835VttEBuf1Cz5I8jHH1/vjE1/JGI1QSOuEGv/CPpfdJCee0c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728959191; c=relaxed/simple;
-	bh=WCSf/ppsJnoE3NQnmNB5PWxlvdIHa+G7QKCIcIgp2kE=;
+	s=arc-20240116; t=1728963998; c=relaxed/simple;
+	bh=VhP4ufTp43pJg/B1YzAD8L/O5ZhgPE90KANbJg7mQno=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=NppNl5RaAeVLHHx1g8MrUQI1MmCIqgxN6GQUomSmYoENatlNPAp+QkiS/cWWgfGb+8AT2vpxaKRyIiAxx48TDWMmmVFtFZkzI9fl/cLICCwfyDdRrLmdQntg0Za5ryoIpK8iRdL3zAmZPgEMxwQpwYSb1cBK2Y37aGXdnwPfLGQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=KrMBMHXN; arc=none smtp.client-ip=209.85.215.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=QVmBBOqjoWrCLEsINyPAniBcLZXfAS8EXPcArVLM6HJzQRMurUto8yjxp3ZHecgOkBNW2NPl1AgDTS1x3OfUHK6SmS6/lrEtvuVIQg4cg5NCubPVIXK3QT8/KdAcxfangze7eAhgftVRZhg1gQC0uMX7VHmDPuOu2yKHZXXNn+I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=lj6S8VVR; arc=none smtp.client-ip=198.175.65.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KrMBMHXN"
-Received: by mail-pg1-f174.google.com with SMTP id 41be03b00d2f7-7d4fa972cbeso3620089a12.2;
-        Mon, 14 Oct 2024 19:26:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1728959188; x=1729563988; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=AorIkQWt0jY7qdeJc9UL+1hjeMUjMwyGM6levNEeMFE=;
-        b=KrMBMHXN2f94qpuDqvzW70VMRld0zTkqfQ/ZqcY6IQxJtPd3nP322LpyGhuzwMcIcp
-         iGzzuoigRm6bhk7zRN9huv61s6xfRx750IE/p8PSGR3xqd7oNIHlJsSwTuWyz3Wt3VhM
-         luPmvcFCD7Ck+7L9BSMyMU46Tl9d1dQRM+ZMjNYMhWLOzScJ+9RQlG2YDe7Dy/Fw3KeI
-         wnMxxWN4IO+1m2q1tWK7hviySiihaJaIKvofg+8EU9TzFMMEvKqSNx96xvGnetQ51uhq
-         kZ2NK5evLNoc9O01mEUTfSJPPGaV45qOFzWTQvwGHtkHM6MdNXwZAfNNg3bL5ZOyoASN
-         iy1Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1728959188; x=1729563988;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=AorIkQWt0jY7qdeJc9UL+1hjeMUjMwyGM6levNEeMFE=;
-        b=edTJbP9VNA9yB+gPX/EFfGVlUrE4ald5y0gqsvkFXKPXi8KeMc3FZzjEi7qLFovpao
-         DkfmGszCUEkwImO6h7GD9MaM1vSC/nx7TVvHFdRNhkCuoJvkeP3SpaynlGUVuIdDf8Lg
-         xj/ywxy5OYnKBDMavFK07Na7LwiFYhAz+4ZCxC/PKeFcQD7rB4O5LL7/oags/kSLfg9J
-         nDowbuShlyuz+be6dRV6h662gbCR+8xHCIWyLzdXEgZtN+PNHhTIgzB3PnvTHZaWdgTN
-         andI+5nWW6Mweb9S2U5WvyiOfGC/G8WSPc8NfzgJU2er9UQdfQlT1E26kvf+gqtw3g+X
-         OeTA==
-X-Forwarded-Encrypted: i=1; AJvYcCULLhy5IOqpYwDccKWdZReM7qYK8aoCPm4aXzv0c7Jv799wCEwnzkzcCXBXfehKHqQOUbxXzPFam87Na6vWp2i3+x3CDw==@vger.kernel.org, AJvYcCUUqOD0BtJXCAdcKkNU1cUf32IbDdqs9B2nZyM6i4DMcytzndx3HhMfy2rolSkcuU0AGVZz2M9rr87UAPA=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yyd0HsaIGOhyLM+ZyRCx8sHCcoQYr34EtBDIhk67chcj9ZzYNlC
-	M7sRY/xJA+bDcYp907DhBZw8eYMzkTBUWrb1tcbXBW0W4varsuAH
-X-Google-Smtp-Source: AGHT+IGoFAK3iaHA5wusA2pSprRB/4dXw8Vql+GI0a8G/daINyY5QZgGU6HC3vSlkfy/e2ciztyivQ==
-X-Received: by 2002:a05:6a21:3946:b0:1cf:3677:1c4a with SMTP id adf61e73a8af0-1d8bcf2bfa2mr23518055637.16.1728959188314;
-        Mon, 14 Oct 2024 19:26:28 -0700 (PDT)
-Received: from alphacentauri (host95.181-12-202.telecom.net.ar. [181.12.202.95])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-71e77518a5fsm230947b3a.214.2024.10.14.19.26.26
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 14 Oct 2024 19:26:27 -0700 (PDT)
-Date: Mon, 14 Oct 2024 23:26:24 -0300
-From: Kurt Borja <kuurtb@gmail.com>
-To: Armin Wolf <W_Armin@gmx.de>
-Cc: hdegoede@redhat.com, ilpo.jarvinen@linux.intel.com, 
-	linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org
-Subject: Re: [PATCH v5 4/4] alienware-wmi: WMAX interface documentation
-Message-ID: <hie35vo2bixoayjgwsube5j56tuo6rqctjolearnpmvt3qgrui@6kg342mhg34w>
-References: <20241012015849.19036-3-kuurtb@gmail.com>
- <20241012020330.20278-2-kuurtb@gmail.com>
- <7737a2d6-8cdb-41f3-9666-2bdee6f1f450@gmx.de>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="lj6S8VVR"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1728963997; x=1760499997;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=VhP4ufTp43pJg/B1YzAD8L/O5ZhgPE90KANbJg7mQno=;
+  b=lj6S8VVRdFFlUF7DscBtUFidf+3J41dgXnmXrGdNT7S2LFC/Yq4nvuOY
+   1EbqYBpXzomDa/KWYuNPugK6Zhr3hr5kJ6liSiO3EJ0LqU49kRU9qhMQN
+   n9Lbx+4iRLsTVUSYQDDtuqkTYGCPO0t5O1pHtiw+ZKzv2qfvTbG5rc8uS
+   qUnjipaEms/oc+2CL9fdAFfUeqA1card6bAhOhC98BTO0veJtmCqgOicB
+   8B7kYEuGe5/7tTIaiCvQbjRe/qEt95T8iGDoIONjZzrKZ2gxGMD8+JmDb
+   l3I0cttwJe8WE6fbVfG9XL5JmpiaVSReZNeOrTurK4JZvRZUdJ11eAvTb
+   Q==;
+X-CSE-ConnectionGUID: zz9aVldMS7W5QtnNsSM5hQ==
+X-CSE-MsgGUID: ezzSmEbtSCiPO7RRgiFp6A==
+X-IronPort-AV: E=McAfee;i="6700,10204,11222"; a="32030702"
+X-IronPort-AV: E=Sophos;i="6.11,199,1725346800"; 
+   d="scan'208";a="32030702"
+Received: from orviesa004.jf.intel.com ([10.64.159.144])
+  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Oct 2024 20:46:36 -0700
+X-CSE-ConnectionGUID: bwm9j0/VTpKek/bv8SBTww==
+X-CSE-MsgGUID: xHSe1yZgSUWFVMsljU7kNg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.11,204,1725346800"; 
+   d="scan'208";a="82789775"
+Received: from ranerica-svr.sc.intel.com ([172.25.110.23])
+  by orviesa004.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Oct 2024 20:46:36 -0700
+Date: Mon, 14 Oct 2024 20:52:33 -0700
+From: Ricardo Neri <ricardo.neri-calderon@linux.intel.com>
+To: Mario Limonciello <mario.limonciello@amd.com>
+Cc: Borislav Petkov <bp@alien8.de>, Hans de Goede <hdegoede@redhat.com>,
+	Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	x86@kernel.org, "Gautham R . Shenoy" <gautham.shenoy@amd.com>,
+	Perry Yuan <perry.yuan@amd.com>, linux-kernel@vger.kernel.org,
+	linux-doc@vger.kernel.org, linux-pm@vger.kernel.org,
+	platform-driver-x86@vger.kernel.org,
+	Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
+Subject: Re: [PATCH v2 05/13] platform/x86: hfi: Introduce AMD Hardware
+ Feedback Interface Driver
+Message-ID: <20241015035233.GA28522@ranerica-svr.sc.intel.com>
+References: <20241010193705.10362-1-mario.limonciello@amd.com>
+ <20241010193705.10362-6-mario.limonciello@amd.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -69,415 +66,43 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <7737a2d6-8cdb-41f3-9666-2bdee6f1f450@gmx.de>
+In-Reply-To: <20241010193705.10362-6-mario.limonciello@amd.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 
-On Mon, Oct 14, 2024 at 07:10:15PM +0200, Armin Wolf wrote:
-> Am 12.10.24 um 04:03 schrieb Kurt Borja:
+On Thu, Oct 10, 2024 at 02:36:57PM -0500, Mario Limonciello wrote:
+> From: Perry Yuan <Perry.Yuan@amd.com>
 > 
-> > Added documentation for new WMAX interface, present on some Alienware
-> > X-Series, Alienware M-Series and Dell's G-Series laptops.
-> > 
-> > Signed-off-by: Kurt Borja <kuurtb@gmail.com>
-> > ---
-> >   Documentation/wmi/devices/alienware-wmi.rst | 366 ++++++++++++++++++++
-> >   1 file changed, 366 insertions(+)
-> >   create mode 100644 Documentation/wmi/devices/alienware-wmi.rst
+> The AMD Heterogeneous core design and Hardware Feedback Interface (HFI)
+> provide behavioral classification and a dynamically updated ranking table
+> for the scheduler to use when choosing cores for tasks.
 > 
-> Please update the MAINTAINERS entry for the alienware-wmi driver to
-> include this documentation file.
+> There are two CPU core types defined: `Classic Core` and `Dense Core`.
+> "Classic" cores are the standard performance cores, while "Dense" cores
+> are optimized for area and efficiency.
+> 
+> Heterogeneous compute refers to CPU implementations that are comprised
+> of more than one architectural class, each with two capabilities. This
+> means each CPU reports two separate capabilities: "perf" and "eff".
+> 
+> Each capability lists all core ranking numbers between 0 and 255, where
+> a higher number represents a higher capability.
+> 
+> Heterogeneous systems can also extend to more than two architectural
+> classes.
+> 
+> The purpose of the scheduling feedback mechanism is to provide information
+> to the operating system scheduler in real time, allowing the scheduler to
+> direct threads to the optimal core during task scheduling.
+> 
+> All core ranking data are provided by the BIOS via a shared memory ranking
+> table, which the driver reads and uses to update core capabilities to the
+> scheduler. When the hardware updates the table, it generates a platform
+> interrupt to notify the OS to read the new ranking table.
+> 
+> Link: https://bugzilla.kernel.org/show_bug.cgi?id=206537
 
-Ok.
+I tried to find the HFI details on the documents in this "bug" but I could
+not find them. What document in specific could I look at?
 
-> 
-> > 
-> > diff --git a/Documentation/wmi/devices/alienware-wmi.rst b/Documentation/wmi/devices/alienware-wmi.rst
-> > new file mode 100644
-> > index 000000000..77460b91c
-> > --- /dev/null
-> > +++ b/Documentation/wmi/devices/alienware-wmi.rst
-> > @@ -0,0 +1,366 @@
-> > +.. SPDX-License-Identifier: GPL-2.0-or-later
-> > +
-> > +==============================================
-> > +Dell AWCC WMI interface driver (alienware-wmi)
-> > +==============================================
-> > +
-> > +Introduction
-> > +============
-> > +
-> > +The WMI device WMAX has been implemented for many Alienware and Dell's G-Series
-> > +models. Throughout these models, two implementations have been identified. The
-> > +first one, used by older systems, deals with HDMI, brightness, RGB, amplifier
-> > +and deep sleep control. The second one used by newer systems deals primarily
-> > +with thermal, overclocking, and GPIO control.
-> > +
-> > +It is suspected that the latter is used by Alienware Command Center (AWCC) to
-> > +manage manufacturer predefined thermal profiles. The alienware-wmi driver
-> > +exposes Thermal_Information and Thermal_Control methods through the Platform
-> > +Profile API to mimic AWCC's behavior.
-> > +
-> > +This newer interface, named AWCCMethodFunction has been reverse engineered, as
-> > +Dell has not provided any official documentation. We will try to describe to the
-> > +best of our ability its discovered inner workings.
-> > +
-> > +.. note::
-> > +   The following method description may vary between models.
-> > +
-> > +WMI interface description
-> > +-------------------------
-> > +
-> > +The WMI interface description can be decoded from the embedded binary MOF (bmof)
-> > +data using the `bmfdec <https://github.com/pali/bmfdec>`_ utility:
-> > +
-> > +::
-> > +
-> > + [WMI, Dynamic, Provider("WmiProv"), Locale("MS\\0x409"), Description("WMI Function"), guid("{A70591CE-A997-11DA-B012-B622A1EF5492}")]
-> > + class AWCCWmiMethodFunction {
-> > +   [key, read] string InstanceName;
-> > +   [read] boolean Active;
-> > +
-> > +   [WmiMethodId(13), Implemented, read, write, Description("Return Overclocking Report.")] void Return_OverclockingReport([out] uint32 argr);
-> > +   [WmiMethodId(14), Implemented, read, write, Description("Set OCUIBIOS Control.")] void Set_OCUIBIOSControl([in] uint32 arg2, [out] uint32 argr);
-> > +   [WmiMethodId(15), Implemented, read, write, Description("Clear OC FailSafe Flag.")] void Clear_OCFailSafeFlag([out] uint32 argr);
-> > +   [WmiMethodId(19), Implemented, read, write, Description("Get Fan Sensors.")] void GetFanSensors([in] uint32 arg2, [out] uint32 argr);
-> > +   [WmiMethodId(20), Implemented, read, write, Description("Thermal Information.")] void Thermal_Information([in] uint32 arg2, [out] uint32 argr);
-> > +   [WmiMethodId(21), Implemented, read, write, Description("Thermal Control.")] void Thermal_Control([in] uint32 arg2, [out] uint32 argr);
-> > +   [WmiMethodId(23), Implemented, read, write, Description("MemoryOCControl.")] void MemoryOCControl([in] uint32 arg2, [out] uint32 argr);
-> > +   [WmiMethodId(26), Implemented, read, write, Description("System Information.")] void SystemInformation([in] uint32 arg2, [out] uint32 argr);
-> > +   [WmiMethodId(28), Implemented, read, write, Description("Power Information.")] void PowerInformation([in] uint32 arg2, [out] uint32 argr);
-> > +   [WmiMethodId(32), Implemented, read, write, Description("FW Update GPIO toggle.")] void FWUpdateGPIOtoggle([in] uint32 arg2, [out] uint32 argr);
-> > +   [WmiMethodId(33), Implemented, read, write, Description("Read Total of GPIOs.")] void ReadTotalofGPIOs([out] uint32 argr);
-> > +   [WmiMethodId(34), Implemented, read, write, Description("Read GPIO pin Status.")] void ReadGPIOpPinStatus([in] uint32 arg2, [out] uint32 argr);
-> > +   [WmiMethodId(35), Implemented, read, write, Description("Read Chassis Color.")] void ReadChassisColor([out] uint32 argr);
-> > +   [WmiMethodId(36), Implemented, read, write, Description("Read Platform Properties.")] void ReadPlatformProperties([out] uint32 argr);
-> > +   [WmiMethodId(128), Implemented, read, write, Description("Caldera SW installation.")] void CalderaSWInstallation([out] uint32 argr);
-> > +   [WmiMethodId(129), Implemented, read, write, Description("Caldera SW is released.")] void CalderaSWReleased([out] uint32 argr);
-> > +   [WmiMethodId(130), Implemented, read, write, Description("Caldera Connection Status.")] void CalderaConnectionStatus([in] uint32 arg2, [out] uint32 argr);
-> > +   [WmiMethodId(131), Implemented, read, write, Description("Surprise Unplugged Flag Status.")] void SurpriseUnpluggedFlagStatus([out] uint32 argr);
-> > +   [WmiMethodId(132), Implemented, read, write, Description("Clear Surprise Unplugged Flag.")] void ClearSurpriseUnpluggedFlag([out] uint32 argr);
-> > +   [WmiMethodId(133), Implemented, read, write, Description("Cancel Undock Request.")] void CancelUndockRequest([out] uint32 argr);
-> > +   [WmiMethodId(135), Implemented, read, write, Description("Devices in Caldera.")] void DevicesInCaldera([in] uint32 arg2, [out] uint32 argr);
-> > +   [WmiMethodId(136), Implemented, read, write, Description("Notify BIOS for SW ready to disconnect Caldera.")] void NotifyBIOSForSWReadyToDisconnectCaldera([out] uint32 argr);
-> > +   [WmiMethodId(160), Implemented, read, write, Description("Tobii SW installation.")] void TobiiSWinstallation([out] uint32 argr);
-> > +   [WmiMethodId(161), Implemented, read, write, Description("Tobii SW Released.")] void TobiiSWReleased([out] uint32 argr);
-> > +   [WmiMethodId(162), Implemented, read, write, Description("Tobii Camera Power Reset.")] void TobiiCameraPowerReset([out] uint32 argr);
-> > +   [WmiMethodId(163), Implemented, read, write, Description("Tobii Camera Power On.")] void TobiiCameraPowerOn([out] uint32 argr);
-> > +   [WmiMethodId(164), Implemented, read, write, Description("Tobii Camera Power Off.")] void TobiiCameraPowerOff([out] uint32 argr);
-> > + };
-> > +
-> > +Some of these methods get quite intricate so we will describe them using
-> > +pseudo-code that vaguely resembles the original ASL code.
-> > +
-> > +Argument Structure
-> > +------------------
-> > +
-> > +All input arguments have type **uint32** and their structure is very similar
-> > +between methods. Usually, the first byte corresponds to a specific *operation*
-> > +the method performs, and the subsequent bytes correspond to *arguments* passed
-> > +to this *operation*. For example, if an operation has code 0x01 and requires an
-> > +ID 0xA0, the argument you would pass to the method is 0xA001.
-> > +
-> > +
-> > +Thermal Methods
-> > +===============
-> > +
-> > +WMI method Thermal_Information([in] uint32 arg2, [out] uint32 argr)
-> > +-------------------------------------------------------------------
-> > +
-> > +::
-> > +
-> > + if BYTE_0(arg2) == 0x01:
-> > +         argr = 1
-> > +
-> > + if BYTE_0(arg2) == 0x02:
-> > +         argr = UNKNOWN_CONSTANT
-> > +
-> > + if BYTE_0(arg2) == 0x03:
-> > +         if BYTE_1(arg2) == 0x00:
-> > +                 argr = FAN_ID_0
-> > +
-> > +         if BYTE_1(arg2) == 0x01:
-> > +                 argr = FAN_ID_1
-> > +
-> > +         if BYTE_1(arg2) == 0x02:
-> > +                 argr = FAN_ID_2
-> > +
-> > +         if BYTE_1(arg2) == 0x03:
-> > +                 argr = FAN_ID_3
-> > +
-> > +         if BYTE_1(arg2) == 0x04:
-> > +                 argr = SENSOR_ID_CPU | 0x0100
-> > +
-> > +         if BYTE_1(arg2) == 0x05:
-> > +                 argr = SENSOR_ID_GPU | 0x0100
-> > +
-> > +         if BYTE_1(arg2) == 0x06:
-> > +                 argr = THERMAL_MODE_QUIET_ID
-> > +
-> > +         if BYTE_1(arg2) == 0x07:
-> > +                 argr = THERMAL_MODE_BALANCED_ID
-> > +
-> > +         if BYTE_1(arg2) == 0x08:
-> > +                 argr = THERMAL_MODE_BALANCED_PERFORMANCE_ID
-> > +
-> > +         if BYTE_1(arg2) == 0x09:
-> > +                 argr = THERMAL_MODE_PERFORMANCE_ID
-> > +
-> > +         if BYTE_1(arg2) == 0x0A:
-> > +                 argr = THERMAL_MODE_LOW_POWER_ID
-> > +
-> > +         if BYTE_1(arg2) == 0x0B:
-> > +                 argr = THERMAL_MODE_GMODE_ID
-> > +
-> > +         else:
-> > +                 argr = 0xFFFFFFFF
-> > +
-> > + if BYTE_0(arg2) == 0x04:
-> > +         if is_valid_sensor(BYTE_1(arg2)):
-> > +                 argr = SENSOR_TEMP_C
-> > +         else:
-> > +                 argr = 0xFFFFFFFF
-> > +
-> > + if BYTE_0(arg2) == 0x05:
-> > +         if is_valid_fan(BYTE_1(arg2)):
-> > +                 argr = FAN_RPM()
-> > +
-> > + if BYTE_0(arg2) == 0x06:
-> > +         skip
-> > +
-> > + if BYTE_0(arg2) == 0x07:
-> > +         argr = 0
-> > +
-> > + If BYTE_0(arg2) == 0x08:
-> > +         if is_valid_fan(BYTE_1(arg2)):
-> > +                 argr = 0
-> > +         else:
-> > +                 argr = 0xFFFFFFFF
-> > +
-> > + if BYTE_0(arg2) == 0x09:
-> > +         if is_valid_fan(BYTE_1(arg2)):
-> > +                 argr = FAN_UNKNOWN_STAT_0()
-> > +
-> > +         else:
-> > +                 argr = 0xFFFFFFFF
-> > +
-> > + if BYTE_0(arg2) == 0x0A:
-> > +         argr = THERMAL_MODE_BALANCED_ID
-> > +
-> > + if BYTE_0(arg2) == 0x0B:
-> > +         argr = CURRENT_THERMAL_MODE()
-> > +
-> > + if BYTE_0(arg2) == 0x0C:
-> > +         if is_valid_fan(BYTE_1(arg2)):
-> > +                 argr = FAN_UNKNOWN_STAT_1()
-> > +         else:
-> > +                 argr = 0xFFFFFFFF
-> > +
-> > +WMI method Thermal_Control([in] uint32 arg2, [out] uint32 argr)
-> > +---------------------------------------------------------------
-> > +
-> > +::
-> > +
-> > + if BYTE_0(arg2) == 0x01:
-> > +         if is_valid_thermal_profile(BYTE_1(arg2)):
-> > +                 SET_THERMAL_PROFILE(BYTE_1(arg2))
-> > +                 argr = 0
-> > +
-> > + if BYTE_0(arg2) == 0x02:
-> > +         if is_valid_fan(BYTE_1(arg2)):
-> > +                 SET_FAN_SPEED_MULTIPLIER(BYTE_2(arg2))
-> > +                 argr = 0
-> > +         else:
-> > +                 argr = 0xFFFFFFFF
-> > +
-> > +.. note::
-> > +   While you can manually change the fan speed multiplier with this method,
-> > +   Dell's BIOS tends to overwrite this changes anyway.
-> > +
-> > +These are the known thermal profile codes:
-> > +
-> > +::
-> > +
-> > + CUSTOM                         0x00
-> > +
-> > + QUIET                          0x96
-> > + BALANCED                       0x97
-> > + BALANCED_PERFORMANCE           0x98
-> > + PERFORMANCE                    0x99
-> > +
-> > + QUIET_USTT                     0xA3
-> > + BALANCED_USTT                  0xA0
-> > + BALANCED_PERFORMANCE_USTT      0xA1
-> > + PERFORMANCE_USTT               0xA4
-> > + LOW_POWER_USTT                 0xA5
-> > +
-> > + GMODE                          0xAB
-> > +
-> > +Usually if a model doesn't support the first four profiles they will support
-> > +the User Selectable Thermal Tables (USTT) profiles and vice-versa.
-> > +
-> > +GMODE replaces PERFORMANCE in G-Series laptops.
-> > +
-> > +WMI method GetFanSensors([in] uint32 arg2, [out] uint32 argr)
-> > +-------------------------------------------------------------
-> > +
-> > +::
-> > +
-> > + if BYTE_0(arg2) == 1:
-> > +        if is_valid_fan(BYTE_1(arg2)):
-> > +                argr = 1
-> > +        else:
-> > +                argr = 0
-> > +
-> > + if BYTE_0(arg2) == 2:
-> > +        if is_valid_fan(BYTE_1(arg2)):
-> > +                if BYTE_2(arg2) == 0:
-> > +                        argr == SENSOR_ID
-> > +                else
-> > +                        argr == 0xFFFFFFFF
-> > +        else:
-> > +                argr = 0
-> > +
-> > +Overclocking Methods
-> > +====================
-> > +
-> > +.. warning::
-> > +   These methods have not been tested and are only partially reverse
-> > +   engineered.
-> > +
-> > +WMI method Return_OverclockingReport([out] uint32 argr)
-> > +-------------------------------------------------------
-> > +
-> > +::
-> > +
-> > + CSMI (0xE3, 0x99)
-> > + argr = 0
-> > +
-> > +CSMI is an unknown operation.
-> > +
-> > +WMI method Set_OCUIBIOSControl([in] uint32 arg2, [out] uint32 argr)
-> > +-------------------------------------------------------------------
-> > +
-> > +::
-> > +
-> > + CSMI (0xE3, 0x99)
-> > + argr = 0
-> > +
-> > +CSMI is an unknown operation
-> 
-> Missing ".".
-> 
-> > +
-> > +WMI method Clear_OCFailSafeFlag([out] uint32 argr)
-> > +--------------------------------------------------
-> > +
-> > +::
-> > +
-> > + CSMI (0xE3, 0x99)
-> > + argr = 0
-> > +
-> > +CSMI is an unknown operation
-> 
-> Missing ".".
-> 
-> > +
-> > +
-> > +WMI method MemoryOCControl([in] uint32 arg2, [out] uint32 argr)
-> > +---------------------------------------------------------------
-> > +
-> > +AWCC supports memory overclocking, but this method is very intricate and has
-> > +not been deciphered yet.
-> > +
-> > +GPIO methods
-> > +============
-> > +
-> > +These methods are probably related to some kind of firmware update system,
-> > +through a GPIO device.
-> > +
-> > +.. warning::
-> > +   These methods have not been tested and are only partially reverse
-> > +   engineered.
-> > +
-> > +WMI method FWUpdateGPIOtoggle([in] uint32 arg2, [out] uint32 argr)
-> > +------------------------------------------------------------------
-> > +
-> > +::
-> > +
-> > + if BYTE_0(arg2) == 0:
-> > +         if BYTE_1(arg2) == 1:
-> > +                 SET_PIN_A_HIGH()
-> > +         else:
-> > +                 SET_PIN_A_LOW()
-> > +
-> > + if BYTE_0(arg2) == 1:
-> > +         if BYTE_1(arg2) == 1:
-> > +                 SET_PIN_B_HIGH()
-> > +
-> > +         else:
-> > +                 SET_PIN_B_LOW()
-> > +
-> > + else:
-> > +         argr = 1
-> > +
-> > +WMI method ReadTotalofGPIOs([out] uint32 argr)
-> > +----------------------------------------------
-> > +
-> > +::
-> > +
-> > + argr = 0x02
-> > +
-> > +WMI method ReadGPIOpPinStatus([in] uint32 arg2, [out] uint32 argr)
-> > +------------------------------------------------------------------
-> > +
-> > +::
-> > +
-> > + if BYTE_0(arg2) == 0:
-> > +         argr = PIN_A_STATUS
-> > +
-> > + if BYTE_0(arg2) == 1:
-> > +         argr = PIN_B_STATUS
-> > +
-> > +Other information Methods
-> > +=========================
-> > +
-> > +WMI method SystemInformation([in] uint32 arg2, [out] uint32 argr)
-> > +-----------------------------------------------------------------
-> > +
-> > +Returns unknown information.
-> > +
-> > +WMI method PowerInformation([in] uint32 arg2, [out] uint32 argr)
-> > +----------------------------------------------------------------
-> > +
-> > +Returns unknown information.
-> > +
-> > +WMI method ReadChassisColor([out] uint32 argr)
-> > +----------------------------------------------
-> > +
-> > +::
-> > +
-> > + argr = CHASSIS_COLOR_ID
-> > +
-> > +WMI method ReadPlatformProperties([out] uint32 argr)
-> > +----------------------------------------------------
-> > +
-> > +Returns unknown information.
-> > +
-> > +Acknowledgements
-> > +================
-> > +
-> > +Kudos to `AlexIII <https://github.com/AlexIII/tcc-g15>`_ for documenting
-> > +and testing avaliable thermal profile codes.
-> 
-> avaliable -> available.
-> 
-> Other than that this looks very good.
-> 
-> Thanks,
-> Armin Wolf
-
-I will fix the typos. Thanks.
-
-Kurt
-
-> 
-> > +
+Thanks and BR,
+Ricardo
