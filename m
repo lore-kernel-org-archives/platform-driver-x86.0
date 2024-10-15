@@ -1,66 +1,69 @@
-Received: from NAM12-DM6-obe.outbound.protection.outlook.com (mail-dm6nam12on2058.outbound.protection.outlook.com [40.107.243.58])
+Received: from NAM10-MW2-obe.outbound.protection.outlook.com (mail-mw2nam10on2061.outbound.protection.outlook.com [40.107.94.61])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D88E1FC7C2
-	for <platform-driver-x86@vger.kernel.org>; Tue, 15 Oct 2024 14:04:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.243.58
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4ED9D1FAF1F;
+	Tue, 15 Oct 2024 18:09:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.94.61
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729001095; cv=fail; b=DYbhj86fqyCf7kVWrhouUCaxXlrY6xccCNKklQBDbn3WO2Ujnt3BESfI92Jjj3v4Q1K3MzeZbBqjwqWJqp+iH+o1fLtXmBCcIfqS2G5vFKvPCI2vuQWju0HCEARDW6qKWhsTTDT/HuKSSt9BiRdJbk6JqmzouDe4rjjvNxOIolE=
+	t=1729015790; cv=fail; b=Frn7JB7jyUM9VXrtgFyF0SjVOJRwBS2j7qREckQTZLMHfRQ6NdD/sfgLCM5iXqPDtEMjUIQN36rPezgnsell75C3FZ2uvPRPDCOjYjWsmhxNlh2SBB0A4VCXz7H7ABJ/zsHjB2B4f+nFE072ZZCB8d56uiVmfdlz8EcVhoju40I=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729001095; c=relaxed/simple;
-	bh=1aUDQbiQswh1skmGdBIE53oK0AaRv5Wuw048NmVROTY=;
-	h=Message-ID:Date:Subject:To:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=LVrPaMPPJBqsf0RLuOqW1u2p/r30X8fhmwXPc2eut05Yw4w4cIqelBm/uzAeMv8Niy7Pw3n7I5bXCesMnzvZY6SqD7Tw13NAoIaR/cGnDGpcT41YMS2+4umTw1DfB2C4xWW1ATHTL7PpMEc42qRKMHNN3gUhX85rk3+sRLKwgKE=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=UegnDHYv; arc=fail smtp.client-ip=40.107.243.58
+	s=arc-20240116; t=1729015790; c=relaxed/simple;
+	bh=xqQVgVhDX593Q9SlaT4heR2rInN/YHQEg4B9bkOg8mY=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=IDSMm3BsEPw8nq3dj6vWT5AWnczvj4pb2HMjwUwgcTtM68jQZvhc7kV/dxA+ElYza/KZE5JkxgirCCFPkYSiX87OJUDoo2+2lWv+WrD6Ccqt1+o8n3zrJIopifid1Jei0kWNiXTOApaPPmVNDRmFXP6bjZqLBWi6NBDdbZA/ZtQ=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=EHXZnsZS; arc=fail smtp.client-ip=40.107.94.61
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
 Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="UegnDHYv"
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="EHXZnsZS"
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=w42xIsfWVEH6DYn+mf8twD61zbGyZGvLzC6GGjhv/AhFHOuxfMDOf3iFfHZeGVp3cWtexkfrNQLcbiKscj212sd0qMQztqGxm8oVOsqt62RYFYHcaY6Lln1mWf1eS21Lnbt9lh7glonsLE6phmvar6jpiXMoRacMGaJFmSFcdlMfhRAJe1sJZrRPlC5FqsUKwnKAfJbqrYvqPLAgupwN3ZiF528/k+W+XjMzOm9tEKNMYv20taazmXw0UekBzA8YL9Y9MCAOvR00aXVDEopPABmWKpVcFwDGhiOiwPNTmSWPOmPleZKC+W4uZbmxOPy4VoKnOaYcqFLRUr5L9yukug==
+ b=CI5nq+MR3ZkwJgh0jttNt4aRPOS7zS1djHxmkGa1wEoghI5Q4S66SknyoKZrB9D8MzVJeyX0uJ0Rn5j8YBKldlhWwDyzINF1M52o6qFutaxCjeGH/heApb5NOhWXNqPLTaxe3J3jmCVo207R74y1i+jdN+LX6+Q4RktwFwMvIRyd9oQsKIp/prRrq8ULJ9t9om9ReLVtBoVrcfs3DJx6oehiUP+ZOUf7AVVaPjnYtYBTTvCEz3gHkXcltk3ZAx3l8YWTmDa/JWal8YdIW3wAGmdd9qE/iCwZw/PAbkxGbYVl4koIdh0NQVZa/ddvkC1Vm+6l//X6HK92zcXkYCbkrw==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=2223mygsVptUAWG3DZSQh+kjLc+hIYoHYKvWT+TniS0=;
- b=nE5T8rDvTry9FEAweWViX03cQTd0G7lopRCd4Isqox1XBEPv7zWgnHzoGNVyBKxg655XuJ4nFyTSVihqaOkc++WKrLRzvPXPPTiqJtVtasCGpZMXJv3ylbV6kXw+d6NigTmwGWXFN5wRRwBA98EbH+xwcmQDBDRZv0EPeECIQw6BBKBvLgNtg3nSYGyNjR7Ruj+4WG7h/5kEdy86NJkkeLbjPkOhVXbK/fuSyTlZwPXr2fJdcPHb4P9ip8av9i3oQBAEbx5g5H8yaFSHWtdQs91fy3gf3MgQNlg5Nr3Oh24NE8Bt9xmKhI2Cr2nepWoXiAo/ffgFtjMpyvwTPI4ykg==
+ bh=g45mgsy4pAedlnStswzneaQZCospxe+t6PPDLQ/icr8=;
+ b=R9CmEofitndpVSnR8o47DDyke4L5E4yuV9DmB71nnfvOHjD/6GFxgIOqibooumRR3425X+xoM9ZGfbHkkWfqC9n7eSyfPke4F7TM5VM3Ywn6zbOIpmRQIb3UB39vif3oTXoRy1JxSpEHRdt1NW7DhK5/c2/2pCnYz4RrXYpEQirfgB9+4oV3diB3Vm42kC/Z3fLWHS2cQJKTylhdTs9uvUbyg1AjTwp3IUt5y9HPM4Pl8D/rpzKplKZpMxWwt6nW1V2OC8/UozgWJ2D4DaKnnxFzRjdMDE8Vb92GYp2AmO/yOHFjsAAsKlowpYRnK3NoSCYTUw4qHNQEbjpvy8MKoQ==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
  header.d=amd.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=2223mygsVptUAWG3DZSQh+kjLc+hIYoHYKvWT+TniS0=;
- b=UegnDHYvwjuCkVxKMEjbMHZ/aXGllLfekDsh9F4slB0G6ov01c4vSCkSNZVu6xNFH9nyFkc2EIF7H/2TpIrCDOFd24xXN2N26PHIqwPgBKE8MyydBXMpsC1jXcyz8FYN6zEdxS60mn87j+elAWiNY4yjrajEsS5X+UgUYVZx6m8=
+ bh=g45mgsy4pAedlnStswzneaQZCospxe+t6PPDLQ/icr8=;
+ b=EHXZnsZSwBI9OM5vlhgPZFAWndg/02W/qzE2tnY4rZlsmk++dWahmIa1Qxq925XMy5aucKFCBq9obfJDnMYlBFfZIuyXM9isSQCiLbGu/ZUoRj/GbZqk9QgtLlW+LSh8u1MKpep++FX+iKzBmGjPJn17rodG0m24W+aFkIcGuks=
 Authentication-Results: dkim=none (message not signed)
  header.d=none;dmarc=none action=none header.from=amd.com;
 Received: from MN0PR12MB6101.namprd12.prod.outlook.com (2603:10b6:208:3cb::10)
- by SJ0PR12MB6879.namprd12.prod.outlook.com (2603:10b6:a03:484::18) with
+ by IA1PR12MB8285.namprd12.prod.outlook.com (2603:10b6:208:3f6::19) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8048.18; Tue, 15 Oct
- 2024 14:04:48 +0000
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8069.17; Tue, 15 Oct
+ 2024 18:09:44 +0000
 Received: from MN0PR12MB6101.namprd12.prod.outlook.com
  ([fe80::37ee:a763:6d04:81ca]) by MN0PR12MB6101.namprd12.prod.outlook.com
  ([fe80::37ee:a763:6d04:81ca%6]) with mapi id 15.20.8048.020; Tue, 15 Oct 2024
- 14:04:48 +0000
-Message-ID: <15cc08fb-5edc-46ce-982e-858ad31b671f@amd.com>
-Date: Tue, 15 Oct 2024 09:04:46 -0500
+ 18:09:44 +0000
+Message-ID: <1395bee1-95a7-4d14-a5e8-0e1dc71fadac@amd.com>
+Date: Tue, 15 Oct 2024 13:09:42 -0500
 User-Agent: Mozilla Thunderbird
-Subject: Re: please help with intermittent s2idle problem on AMD laptop
-To: Corey Hickey <bugfood-ml@fatooh.org>,
- Shyam Sundar S K <Shyam-sundar.S-k@amd.com>,
- "Goswami, Sanket" <Sanket.Goswami@amd.com>,
- "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>
-References: <48c7aa22-7c0d-40af-80d4-538fd16327d1@fatooh.org>
- <MN0PR12MB61028BD76B3F88121289BAAB9C442@MN0PR12MB6102.namprd12.prod.outlook.com>
- <a6f7dc24-b56f-4f69-8065-d99dc43e7b06@amd.com>
- <2252c724-fd5e-4c22-8696-c168e3830143@amd.com>
- <d149b40c-c9dc-4db7-9cac-97b95f447321@fatooh.org>
+Subject: Re: [PATCH v2 05/13] platform/x86: hfi: Introduce AMD Hardware
+ Feedback Interface Driver
+To: Ricardo Neri <ricardo.neri-calderon@linux.intel.com>
+Cc: Borislav Petkov <bp@alien8.de>, Hans de Goede <hdegoede@redhat.com>,
+ =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+ x86@kernel.org, "Gautham R . Shenoy" <gautham.shenoy@amd.com>,
+ Perry Yuan <perry.yuan@amd.com>, linux-kernel@vger.kernel.org,
+ linux-doc@vger.kernel.org, linux-pm@vger.kernel.org,
+ platform-driver-x86@vger.kernel.org,
+ Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
+References: <20241010193705.10362-1-mario.limonciello@amd.com>
+ <20241010193705.10362-6-mario.limonciello@amd.com>
+ <20241015035233.GA28522@ranerica-svr.sc.intel.com>
 Content-Language: en-US
 From: Mario Limonciello <mario.limonciello@amd.com>
-In-Reply-To: <d149b40c-c9dc-4db7-9cac-97b95f447321@fatooh.org>
+In-Reply-To: <20241015035233.GA28522@ranerica-svr.sc.intel.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: SN7PR04CA0178.namprd04.prod.outlook.com
- (2603:10b6:806:125::33) To MN0PR12MB6101.namprd12.prod.outlook.com
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: SA9P221CA0028.NAMP221.PROD.OUTLOOK.COM
+ (2603:10b6:806:25::33) To MN0PR12MB6101.namprd12.prod.outlook.com
  (2603:10b6:208:3cb::10)
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
@@ -69,186 +72,151 @@ List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: MN0PR12MB6101:EE_|SJ0PR12MB6879:EE_
-X-MS-Office365-Filtering-Correlation-Id: c687ceb6-9e5a-4f26-18a0-08dced225470
+X-MS-TrafficTypeDiagnostic: MN0PR12MB6101:EE_|IA1PR12MB8285:EE_
+X-MS-Office365-Filtering-Correlation-Id: 9f23e480-91af-418a-2dcd-08dced448c29
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|366016|1800799024;
+X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|376014|366016;
 X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?VEZUZC9NRURGWFZHUTk4U0ZOVDJvZHFkN3o1aldrU2tzNFArSHd3ODdoSjIz?=
- =?utf-8?B?eGl4SHZRWURYaUJJbzZnNHFGaWJXeGN6VDFtUGlvUXJxb0Rma3ovNW5ub09C?=
- =?utf-8?B?aGszTE1ZaHE5bVlnd3J4UjZTWDRFNDJ2TElJeEFmVnM0ZDlVOHVqZi9tSFk2?=
- =?utf-8?B?bGF2bmNuNnpubkNLeU5rYlEvL2ZEK0wwQ01sUDM1dkUxaG1lUk4rNkNkSlNP?=
- =?utf-8?B?aW1LNkorTm9ZL2p2K2lWRHlzek9uT3AwaEtmS2thYzZOdGJyajBiMXJTYS9L?=
- =?utf-8?B?NGdhUGIxNlY2SlZTVmcrTUlBQ2ppMjBFNUdoY3BOZU0yc0JSRWFrQWc4aWlV?=
- =?utf-8?B?VUl3bVVCVHR6YVdzQjRSTzhRNjdJbTNuT2hZTnhIYXhoNEIrUmVwbmczZG8r?=
- =?utf-8?B?L2h6bSs2L3NGNUNGVm9kMm9nODhoT0czVjJyKzJEbmU2OHlkT09uNTZ5TW81?=
- =?utf-8?B?OExOMEppSk1DTUVoTkllOEJMWGRaVjNuNmt5VGJGQXpKMlY5TTdneXgyUE1n?=
- =?utf-8?B?b3poa0p6WVJ4bkwxb2lrZGZvTXVyNndydXJadDNVcGJJdVVBS29rOWk4Ykxi?=
- =?utf-8?B?bm9hakR1bEF2bm9zNjFWaVFRWEtXNEdxU2VTS1hxRWlXWE9za1EyYXlPeXph?=
- =?utf-8?B?anZVSE01RTVtNHhYeFRNYngzWmRvNWYxTjkyWkJ2c01GdjR2MVpWa1BjVDVj?=
- =?utf-8?B?ZmtuQXE1MThUUU5ob0xuS0NZeERSeXpNUGVtZzhFL1dkQ1Q3dndLTm81bkNk?=
- =?utf-8?B?d0ZJNTFLQ3hVRmhxcUhCMWkrVWxHdUNIZ2VWMFhMK1A4eC94dE00b0dhd0dZ?=
- =?utf-8?B?ZlczMmtIdWNRbHEwSWRrOStzeS9Qa0dEQS9UdVZ3UnJWSk03aGszbFA0UDhG?=
- =?utf-8?B?RGk4MnFjaGhTK1BOT0lxSUpvT3MrV2pwZmZidWFXSGFncFdnTlBjSDhvY3Jl?=
- =?utf-8?B?RjR0d21wSTU1bWEzWFJYZ0lqYy91RFBiSjBjajFUd3UxR05WVXFNdTVZMXAy?=
- =?utf-8?B?UCtwNFZsZG8reU1DVUxqeWdLakw1SE1iKzdsTXFBdC9DSEZoN0I2bHpDVDVq?=
- =?utf-8?B?NjlhRVFORXdyd0FvZGhRSkV3eVhGVzE1dDA4a0diOW12Nm9EWm4wWlk1SW5r?=
- =?utf-8?B?Ym5TanIvazBPc1VaYkZsNTBVdnR3NStraTZ3QzRhdWJJZFhoOUFCbWt2R3R2?=
- =?utf-8?B?SWRrV3NoQjAxK0UzQXJGdjlZUlBxbWVNT00yRXYyVXR1SzJ3aGlybVV6cVpx?=
- =?utf-8?B?aEJXS2Z6T1U3OFlCRlEyditQR0VkM3N3MDhzdGRJRk9uZnJyWlM5L09CMjBx?=
- =?utf-8?B?KzNoMXc4ZENlcC8rdUxCaksrN2VUVUs3cUtRdlpRb010dHVpTjJYVU9idGV0?=
- =?utf-8?B?N2FteHdQZmM3MTRaWDFjWlJIMVFXeHRZZmJubEpPbTAvT2UycmUxWVVwREFQ?=
- =?utf-8?B?aFdodkxqMkNJeXo2NGFtY0xMaXJtTGJtY3JpOG5jZjR0aDhRMU1pcEp5YnZh?=
- =?utf-8?B?QnMvT2dva3hFdzhXNFJPMHd0T05LUWE5eWU2eW5iUkx0Sm10cDBqYmVtN3Bi?=
- =?utf-8?B?Vy9RMWhkcitHTGVvVzZDYmIwTlNYWUdkcXdTZmpqamozamRsbDZRVW9MVEZz?=
- =?utf-8?Q?+kakqtqZR+926fnfndIouwVuffi3pkBRTJSfFQmsXZ8U=3D?=
+	=?utf-8?B?VGUvcytNZmRRY2F5ZXlzRU5Xb001czRYbWVPdVdjdEtqTEViU3Q2dUd2Y1c0?=
+ =?utf-8?B?dndNeVZpd3FISzcwbCtzOUFJSWxyWUJIRXFNcjdCTm1rVUxUS2E0UVBiWUh2?=
+ =?utf-8?B?Ti93YXl1TGNzaXJoVzBWT1IveTJhQnQ0MmJ0WTR2OFFzb1dRUUE2alBxeFFl?=
+ =?utf-8?B?Wng3ZVZNb2pCaXRjRnhSMnFVdTFsVVdhWk52c2IvZFBxL2twc200MHEzRUdT?=
+ =?utf-8?B?eHIxeHM2OW91TG9zeXNrZEE5QXhDZVRKMGFERmRHelh6Ti9LbEFPRlRiK3JG?=
+ =?utf-8?B?Nk1LeUczMHdlSU8rMjJacGE1TnpkUlN1d3hobVduYnFUclAzemtxSHhwNE00?=
+ =?utf-8?B?djk4Rm5XVVZlNUJ3UUhSMFBwWThTNkF2RldTdXJMd1FJQWJzNWdzb3dsZGRM?=
+ =?utf-8?B?bkRmUTZLUnloa2JxemV4OHoxNGNLTlE2WW5kRUZSSzgrazNsZVFIUGpTbVpw?=
+ =?utf-8?B?Wi9NZEZsVnpBUExpNEhMaHIvTEtWWFpVbDNuYkJQMnE5Mm00QmtoWUJLOWVF?=
+ =?utf-8?B?Rjl4SC82dXdId0p1QkV3Qm04WmcrUGNIaGlnb1lTUGt6SGJwVUR6RmhDbWhs?=
+ =?utf-8?B?MEhwQjZ0MlhLdmZTVmYzTzBYN2pDYmUxMklhanlaZkVWd1BMM1VOVDUvdW5o?=
+ =?utf-8?B?dExEZzlrY0VuaVprUjdZQ2J4UmVGa3NCQTBnSEtpNUxmZGJyY0lTb3N3Ny9o?=
+ =?utf-8?B?TEJEQVFrNHlFaHhDUUZLS3ZlK2xPWXBQT3RFOHRmTWVGQ1BJcCtNbXBkVkda?=
+ =?utf-8?B?dGEzejlyUWx3QllWMnE2QXVCNDlNSS9NRmkyRFpNYlp2ZDRjR2hVVlRjZEtG?=
+ =?utf-8?B?TlRxTFE3VWI1U25aOTQ3b1dPOTdmMzhaMDZIU1Z6MVN1aVE2RlVBV3k5Qkl3?=
+ =?utf-8?B?bUgvVHhpN1BkaWVuSWdMTDdJbGcweTQyMXkyMTBCWDdMUkx4M3NhV0MrcTdL?=
+ =?utf-8?B?RDdKaDZtTDI1Y1hoMXBMRmxpTnhwYTZIdkdGWS9pbFV1U0YyV1FXYitCWGlW?=
+ =?utf-8?B?ZGRzQlk5cjhuMElmZVVYQ1BBS1RLcVdCNXlsMTU3K2szUHNHRXFYcjVGQXhm?=
+ =?utf-8?B?UXE4WTVjNHJQZVJvdGhOK0Q3K01zdVhHdC9WTEFQMTZ6UU02SFdScFM5R0ow?=
+ =?utf-8?B?dUFQSWNxL1h2QTA0SDAvSEMzeW5HNjRLMHdydlNvMkJWSmkraE54RW05Uy9I?=
+ =?utf-8?B?Yk1MaEZXMmNJd2U3a09nbkNLWmx1cmRzb0swNGF5QUZLeDFJdjJVRjBkc2Fo?=
+ =?utf-8?B?TGZyMWZ2R1hVYnArNGJVbS92RE5KQVp6QkpiMzlVSDd2SEtoOEx0UmZCS3Jn?=
+ =?utf-8?B?TTFmWFZObk1zdTJBM2xabUN3UUZnbytiNlgxbXlzZm9iMFlhamtueTFQRXh2?=
+ =?utf-8?B?N1pydUY4TXg3ZllHRE9ZYmlPcTRFdkZSTDNNTXEwK2MwY2FLTnBBU3lQTGIy?=
+ =?utf-8?B?Ymk5U2RwSVhrb3VMb3lHV2hOVmViNklBS1kwMUlIcHNQRzY0SUI3cDRTb3VM?=
+ =?utf-8?B?a0hkeUkrdUc3NVJ5QXY1WFVSVUZjcGdUeng4T3BiZFd3UE5WM24wR3c1WlFB?=
+ =?utf-8?B?MGV5Y1I1RUNXM1BXeVArcHYrWTVnOHcyRkdjVmxJZy9OSThWdVZtcU1FTW5j?=
+ =?utf-8?B?bHkwczFHK2dnQWowelkxMUdyNGpvRXcwdjBRa3pXR2ZFcEd4NTFsNjRub2M4?=
+ =?utf-8?B?SUZNYm1mbEsrbUNsdVFYSkV2cDZjZ0poRSs1bnFkK0RtdkpBaUkrb2xBPT0=?=
 X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MN0PR12MB6101.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(366016)(1800799024);DIR:OUT;SFP:1101;
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MN0PR12MB6101.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(376014)(366016);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?RGJpa2tMYU1RQktWd0dVc3JtRk9zM3dlYXVkc20vK1ZjRHpWVnArUCs4TzBq?=
- =?utf-8?B?THhycWQ4aCtPT1BUL0dRL1FvcTZnSzlaalZBSnJkR215TzVXNUwxWUFnanh1?=
- =?utf-8?B?TFJOQ0c4Ny9pYkJxOFZhNGI2UWFwUXZSUGtJMGZVWGxUaG04Z0ZEaU1tMFUw?=
- =?utf-8?B?UDM2dXhZZlRFRjBtZTlKZlJBaFcycHZxeEdZUi9OWkxXVDNEc2trMzFVdmoz?=
- =?utf-8?B?NktwMDlOMUdIMG1URWZUUzlxYXNQa0x6YU9uVG1Yb0U0aDRvcVJiRFhiY2cz?=
- =?utf-8?B?ZVFIY0FtekU4VkI2TVlrUUVOMG82Y0dyY3hmaTFjbHJiY3VYeStiS1d3U2xk?=
- =?utf-8?B?ME5kbWJKWWxRdXNkdHo1NTM2UjFRQ2sydXM5R3V3ditXOEp6MU84dXZUNER3?=
- =?utf-8?B?UVJSRUFhSVNjZ3BjYnRvMnpaRDdTQWtXNWNuZUlpL0c4dnozaFJQVjd4b09m?=
- =?utf-8?B?YVhpam5KeWR0Z2R0MitqdFJ6aStaeEFDWkgwWCtyelVsUTNuVjU1QWZ4VWMv?=
- =?utf-8?B?cG5vUWdjY1ArdmdKc0t2c05rUm5ua0U0cElCMEpmMFpWb3Vpclh0Yk1kRDN0?=
- =?utf-8?B?Z2ZDYTlFbGlyMlRLQVVvWjlncDFrMTJMT0MzaHJQVHNlZDZBUHJEbDR2T1Bm?=
- =?utf-8?B?Uys0S0Z3cHp1QUpVcTRMNU5RcTNiQVdORjk5TGFwMkkxYVBJbzY0SEY3RmJS?=
- =?utf-8?B?VEo3SHVtREVYSXJvemc5aFhpdWlzblphTGpQZlRhV1l2WFN5bjQydG90L3FV?=
- =?utf-8?B?QTdPWjRjcmc5SlR4L2t0Yk1kcmdPb2NvYmMxWGtkOFBjVGwzYVRNekw2ZFhD?=
- =?utf-8?B?T25oWGVIQTU0dGVnaVY4UThjZW9NejdwWjVaV0I1M3RVV1RvUjlrcUVIY3oy?=
- =?utf-8?B?QkxLSmhyYnRnL1RwZGQ0RmExZ2JlaFNGNUZSYmdBQ2xYSWZsczdESzBXZU9m?=
- =?utf-8?B?cStIS0tVdjM1Zis1SlJIa1U3VFhJZ3V2UldsOVczQ1dJLzE5S2R5SGhHS3g3?=
- =?utf-8?B?OTR1WWtEZW02ZEdCQ0lyUU9HUDZMRjlDa3VOdUNqeE00TmoxTEVXQngzcVlQ?=
- =?utf-8?B?UTA4SVY5aEp4bjMzNGt1MzMydDVXRVVoeng3UmkwMmk5N05ucWdCWlJUamRy?=
- =?utf-8?B?QzZZWFZrRVZsb2FUckJ2VUNlRUs1U0ZKbnpnWHFMMHdLNTNtdVE3NHQvMndL?=
- =?utf-8?B?Q01PektYQVRha0w3WUZFMllJMHhuTTdRY1pxbW45REhzbmU5Q3NPb1BkeXcx?=
- =?utf-8?B?WkhXS2IrZUhnWEZVN0lKcXI1MXIxMkh3N29jYitjTXBBMks4blBiVFlmbG5k?=
- =?utf-8?B?Uk96a3VQc0pnVXNmWWlyYmlraUE2bGN5MjRoUmtBTktnTk1RTXFuOVRkQTM4?=
- =?utf-8?B?eW1neFRsaUc0UmlYd2tGcTIxTXg3Y2QraWlpVlRCRUx0eWlma2pudnZvcXR0?=
- =?utf-8?B?WDJLeG1LbzNDTUVpV2YzQXdDNkdrK3p2MjdHckZBVUhLZEk1bFg3VHIyMDZk?=
- =?utf-8?B?aGJRRG1pREkwYnBtTUcxTlhlMVlwV1Bva1pOL2dkU01hajk3Z1FUYTRDcDZQ?=
- =?utf-8?B?WDRrZ3MyUDgvQnp2aUZDNXozKzc3NFl4aHdJN01zQnVqNjdKYWRydG9GSENL?=
- =?utf-8?B?bFljcDN4a2NmeTdwcmwzYzc1SVI5SnpFNEVsVlNKQ0k5MURFbi9VMFRBMlBJ?=
- =?utf-8?B?NmJYYXZtOWJ1TW9VVVBwWWpFWXFSNkVIa2VUamQrd3BIeEY2ZmlKSC9IWlZj?=
- =?utf-8?B?RTZEVzZmd1VGdlRYSzJJVU9NTlBiZWpNaFFxOWZSUkxWWjlVc0hYeFh3VmtQ?=
- =?utf-8?B?RHZLOTRiZVMrSmkrWG5yc05neEpJTlVDZmtxUFg1azZJUXlGaXdUZ1o0L2VN?=
- =?utf-8?B?bTJERDdGVklUMzBPL016SVZ4dUlCZVNraXFEbDUxZWlIMjFvclFMVHQ4Z1Jp?=
- =?utf-8?B?WlRTNW1Rc1lXMFBoZ2JncEptRmRCUjhxTGprc1NicWZjay9CUmxZSC9LcE9L?=
- =?utf-8?B?UkZSS2RPWlpUYlNjQU5IY05NRjRrL1BaUjFvTWlqRlZuWWoxcnhUbUlxa2ZL?=
- =?utf-8?B?Tnh2OFBrMnJXTTFDVEQ1ZldYVUtjMVh0djNHa0hTNDNVQlc1elFXa3NFckF2?=
- =?utf-8?Q?sZacT/DwpQq5akFqqPy5Fdq1Z?=
+	=?utf-8?B?aSs2cUU1Z2tQUmxBdjhWVmh6cEpPc0ZJM1ZpSUp3dDR2QWNnclRpcnRMckZs?=
+ =?utf-8?B?djl6cHlCWnZ5K0h5OHZidXZsSXdGVGhTTnk2NFN0Q3Z0VmdWc24yRVA5N3RZ?=
+ =?utf-8?B?UDR6Z3o5ZFFIckRVQUd5emhhRWtJcVFQenF3UnZXTXhuQzYwWTIvajE3TG5B?=
+ =?utf-8?B?UVRVd1QrK3lOT3ZKa0R1S1BDUS8zYWp5MnMvMDUyMVJGQW1qTytMREM5bXh6?=
+ =?utf-8?B?ejJNR2RJYUJyY0ZtS1I4Sm82YlRiSHk1cU4yd0tpU2pYSzlSUHdDYXJpRUZk?=
+ =?utf-8?B?OGNML1MrN2JBV1BIbEZIbkFtT1FHNzhqQWEweWhTbjIrRDhqelZEek4vUmZJ?=
+ =?utf-8?B?SU5LT28xQnM0d3FkQkYwdmxYN29YZzg2Q3FrYXFSa3ZGREV5TDVTQS8zMmdD?=
+ =?utf-8?B?WEZkZ0tSaGRTZmdFamlYMmE1RGZSd1VuMUEvQ1dmNzc2K2V1a0FOQkZ2SnRO?=
+ =?utf-8?B?WEFYZzFWRm9CQmxKcFdwaTkxYk1EWXJDcDdoMWUza01nN1hZTHFuMi9oTlA0?=
+ =?utf-8?B?b0o3bEVWNW5tcnBRcDdkRm1SOTVKczNtdVRNc0ZFajRLSmVyTjNtRWJtZyt2?=
+ =?utf-8?B?Q3FVWlV1enJLNFR3SVVydmpidjlUTW9lZ0ozTGJSK1NBL3lrMGVkdXpSVDJ1?=
+ =?utf-8?B?ZEo3bXBFYUplRStIZTRvMUFIcFB5UnUvbEhjeTc2VUZXOG56Nmd6a3VYTkVB?=
+ =?utf-8?B?WW52VGFDczdXeGhFdWw5SXFpcGh6SDhHY3huUVpOTGNSd2NFZ213M3hSVGQr?=
+ =?utf-8?B?eUd3OS82b0pPQ096dHFVWm8rTzlIQ1ZVWm1WbTRUcStUVG5DRzZnVU4yVE5q?=
+ =?utf-8?B?bnZNMngxVmFOL3JjaW1oMGY0TWRUcys5R283cjVKTHRRZTRDOVh1cFYvcUtY?=
+ =?utf-8?B?Z1Q2Sm40ZTV0Rkw1aWJ4TmFZZ3NSQVBCclJKcE56cVZNQTV1dWQya01qNUt5?=
+ =?utf-8?B?eVlwK2RORk9ablZjcHFsWGFnMGh2VGJ3c09WMkd1MzlUYmZUWFBEOWo3NXJL?=
+ =?utf-8?B?NVRUQWp4RGQ2RXdDMzJ3Znhydm9VL082TE5meFpqN3NUeCtUNm8zTy9ndExu?=
+ =?utf-8?B?QTcvVUV6Y0I0dGVhaWRwR2VKYmE3aWQ4dXc4RFdBaXpuQlk4THUwRUgxZHNk?=
+ =?utf-8?B?eGRFT3o3MmRuTnAzM2lKL1NzbWtuaWFVSjNYRWZpZW9CYWR5dkRTdDVYVVNY?=
+ =?utf-8?B?OVIwQVBIYVBwZFh6cGN6KzBNeE16cTBqWW5MaWFHTTdxbzhxT0ZvYlNxcjUv?=
+ =?utf-8?B?SWxWRlNhcVNsV0Y0bXZ1dGNZdEplTThuaXhGSWc0WVlBcDVHM2c1MjNVVkJh?=
+ =?utf-8?B?NGRsVVdQWnRPK3NHZmpKbXVzTTlFYzRqanAzeFhQUFRSelVRaWNSUERFV2NT?=
+ =?utf-8?B?MFdPVlZTdXUrd1RQYlpFVDU3SjQrSUIwVXlTVVIzTlVxS2tTZzBocEpHVjRU?=
+ =?utf-8?B?VUsvQnRPY0pCVThrZjRIMmxNRHBVeWdITFhyYWdqcEFDRlI1clBTLzFNK2hK?=
+ =?utf-8?B?QmlMcjdUODd0NU15M0ViTnJRdlduZ2RkTXpjUW5KOXBLa3VVS1BTV2RRMnBQ?=
+ =?utf-8?B?cFBneXpYRTNYRjIxREt6WWhnd1lRVTNpTXh2Ky9rSk5iZjcwYmJlOHJXVzFX?=
+ =?utf-8?B?ZzhzRDlDS1FPMGYwZVprMlFRcldYM2xTU2ZjMWRVcHAzU0NOa3JtNkhMcmVK?=
+ =?utf-8?B?QmRkdTJheHRkN29lTElNTHhUQlJyYi82a1JEZzhMcjBzcXA2cnNnbzNsSDNG?=
+ =?utf-8?B?eFhjZ0NGVWpKWTFudWxlYURocmNOVVhDbHN2Ym5yQlB4bXdCbloxblVkcjVX?=
+ =?utf-8?B?RHVaTjMrOUV3dXEzaGp1Q2FHRktkbHFqRUlnU3lHWnE5ZzF5c1ZiT1dSMk42?=
+ =?utf-8?B?cHBkMUpHMm5PeVBTTEFrWW1SY1ErMHVQTU9OaFVIRXZJaTYveVl2Q0ZHSGlP?=
+ =?utf-8?B?eXJzU29RMkFJMFJ5L0oyaEM4aXcwaFdtWkE5YW9FV2pwcWhQR3lyQWtjTkw2?=
+ =?utf-8?B?SmJDMTBjalRUeVF3S3RaTXZwQUhaSW5majB0c3NGNnNiNUVVR09jdm80ZVVM?=
+ =?utf-8?B?a1FEdnppNU5kM2RVdjVHTGpDaVBEanNmZ28vQ2RtVmh1L0pPZHZMRzN2OEFX?=
+ =?utf-8?Q?GLL8uPAGp5xzgIPbtUgmVMWjg?=
 X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: c687ceb6-9e5a-4f26-18a0-08dced225470
+X-MS-Exchange-CrossTenant-Network-Message-Id: 9f23e480-91af-418a-2dcd-08dced448c29
 X-MS-Exchange-CrossTenant-AuthSource: MN0PR12MB6101.namprd12.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 15 Oct 2024 14:04:48.2770
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 15 Oct 2024 18:09:44.6336
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: fJHsAHQ3eq7DzyBB43g9K76lTAgWbuzOvgQQd51MAETKwWtdlK7G0VWAEQ+0ZWUTc/uAHPY/8xV1oWJMYUqVrg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ0PR12MB6879
+X-MS-Exchange-CrossTenant-UserPrincipalName: QcAL+EKbl2w0H7JC1T4BwpgDpIKGNgiu1S0u6PL4nuAJG/CVH1N68H6RQPViZDP2ywJkLeFRHLOf8LNZWue8Fw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA1PR12MB8285
 
-On 10/14/2024 18:31, Corey Hickey wrote:
->> The STB functionality issue and your suspend issue are tangential issues.
+On 10/14/2024 22:52, Ricardo Neri wrote:
+> On Thu, Oct 10, 2024 at 02:36:57PM -0500, Mario Limonciello wrote:
+>> From: Perry Yuan <Perry.Yuan@amd.com>
+>>
+>> The AMD Heterogeneous core design and Hardware Feedback Interface (HFI)
+>> provide behavioral classification and a dynamically updated ranking table
+>> for the scheduler to use when choosing cores for tasks.
+>>
+>> There are two CPU core types defined: `Classic Core` and `Dense Core`.
+>> "Classic" cores are the standard performance cores, while "Dense" cores
+>> are optimized for area and efficiency.
+>>
+>> Heterogeneous compute refers to CPU implementations that are comprised
+>> of more than one architectural class, each with two capabilities. This
+>> means each CPU reports two separate capabilities: "perf" and "eff".
+>>
+>> Each capability lists all core ranking numbers between 0 and 255, where
+>> a higher number represents a higher capability.
+>>
+>> Heterogeneous systems can also extend to more than two architectural
+>> classes.
+>>
+>> The purpose of the scheduling feedback mechanism is to provide information
+>> to the operating system scheduler in real time, allowing the scheduler to
+>> direct threads to the optimal core during task scheduling.
+>>
+>> All core ranking data are provided by the BIOS via a shared memory ranking
+>> table, which the driver reads and uses to update core capabilities to the
+>> scheduler. When the hardware updates the table, it generates a platform
+>> interrupt to notify the OS to read the new ranking table.
+>>
+>> Link: https://bugzilla.kernel.org/show_bug.cgi?id=206537
 > 
-> Yes, I was hoping to be able to use STB to help troubleshoot. I do not
-> know if that is the right approach.
+> I tried to find the HFI details on the documents in this "bug" but I could
+> not find them. What document in specific could I look at?
+> 
+> Thanks and BR,
+> Ricardo
 
-I don't think it will help you in this context. Even if STB was enabled 
-by your BIOS you wouldn't be able to access it from Linux if the host 
-froze or rebooted for some reason.
+Hi Ricardo,
 
-> 
->> You mentioned in the linked post that you didn't find any issues
->> reported from amd_s2idle.py [1] and also can't trigger this issue at
->> will.  Could you post your report generated by that script to a gist or
->> somewhere non-ephemeral?
-> 
-> Yes, I did a 10-cycle run today and posted that here:
-> 
-> https://fatooh.org/bugreports/2024-10-14-s2idle/ 
-> s2idle_report-2024-10-14.txt
+It is spread out across multiple places.  This is part of the reason for 
+patch 1 in the series outlines details of how it works.
 
-Yeah nothing particularly stands out here.
+The reason for that "collect all" Bugzilla for documentation is because 
+the URLs for AMD documentation have undergone changes in the past and it 
+makes it difficult to put stable URLs in commit messages.  So teams that 
+want to reference documentation put it on a dump all bug for a stable 
+URL to reference.
 
-> 
-> I also included the output of 'journalctl -b'.
-> 
-> https://fatooh.org/bugreports/2024-10-14-s2idle/journalctl-b
-> 
-> One thing I _have_ recently seen reproduced with amd_s2idle.py is that
-> the laptop sometimes ends up rebooting instead of automatically
-> resuming. I don't know if this is related; I mention it now just in
-> case. I saw this with 6.10.6 a few days ago and again with the test
-> kernel as originally reported (git 09f6b0c8904bf plus my debug patch).
-> 
-> 
-> I case they are useful, I posted the log from that run as well as
-> the output of 'journalctl -b -1'. There's probably not much to see,
-> though--the logs cut off, as expected.
-> 
-> https://fatooh.org/bugreports/2024-10-14-s2idle/ 
-> s2idle_report-2024-10-14.txt.rebooted
-> https://fatooh.org/bugreports/2024-10-14-s2idle/journalctl-b-1
-> 
-> 
->> Something I think notable about your system is you are using two SSDs
->> which is (relatively) uncommon.  Have you already updated the firmware
->> on both SSDs to the latest?
-> 
-> I have not, it seems. The drives come with stock firmware:
-> $ sudo nvme list
-> Node                  Generic               SN                   
-> Model                                    Namespace  
-> Usage                      Format           FW Rev
-> --------------------- --------------------- -------------------- 
-> ---------------------------------------- ---------- 
-> -------------------------- ---------------- --------
-> /dev/nvme0n1          /dev/ng0n1            241802800078         
-> WD_BLACK SN770 1TB                       0x1          1.00  TB /   1.00  
-> TB    512   B +  0 B   731100WD
-> /dev/nvme1n1          /dev/ng1n1            24102U800015         
-> WD_BLACK SN770M 1TB                      0x1          1.00  TB /   1.00  
-> TB    512   B +  0 B   731100WD
-> 
-> ...and it seems that version 731120WD is available for each. I can
-> try upgrading later (one at a time, with maybe a day or so in between).
-> 
-> For reference:
-> https://community.wd.com/t/firmware-upgrade-utility-for-linux/210120/13
-> https://community.frame.work/t/western-digital-drive-update-guide- 
-> without-windows-wd-dashboard/20616
-> https://wddashboarddownloads.wdc.com/wdDashboard/firmware/ 
-> WD_BLACK_SN770_1TB/731120WD/device_properties.xml
-> https://wddashboarddownloads.wdc.com/wdDashboard/firmware/ 
-> WD_BLACK_SN770M_1TB/731120WD/device_properties.xml
+On that link you will find the APM, which will have some documentation 
+specifically for the CPUID leafs used for topology identification and 
+clearing history.
 
-Before you upgrade can you please also capture 'fwupdmgr get-devices 
---json' output?  If the SSD upgrade helps you I do want to flag that 
-this issue in amd_s2idle.py for the future for anyone else with the same 
-SSD + SSD F/W to tell them they should upgrade too.
+Read patch 1 and let me know if it covers what specifically you're 
+looking for.  If it's still missing some info let me know what you would 
+like added.
 
-> 
->> If so; would it be possible try to run with just one SSD for a week or
->> so and see if this issue comes back?  If it doesn't come back there
->> could be a BIOS bug with how it's handling your combination of the 2x
->> SSDs and you should report it to Framework.
-> 
-> I'm running an MD RAID, so yes, I can try removing a drive for a while.
-> I'll try that if I still have trouble after the SSD firmware update.
-> The rarity of the problems (so far) means it will probably take some
-> weeks before I have useful information. I'll keep trying.
-
-OK.
-
-> 
-> Thank you for your help so far.
-
-Sure.
+Also; I do want to note something; this is the first series to lay some 
+foundation for static information and not everything in patch 1 is 
+implemented in this first series.  There will be further follow-ups later.
