@@ -1,184 +1,156 @@
-Received: from fout-a8-smtp.messagingengine.com (fout-a8-smtp.messagingengine.com [103.168.172.151])
+Received: from NAM10-BN7-obe.outbound.protection.outlook.com (mail-bn7nam10on2068.outbound.protection.outlook.com [40.107.92.68])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 189E71E2841;
-	Tue, 15 Oct 2024 10:09:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.151
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728986961; cv=none; b=RU3EIPm/7ma0oNo3UlbiAa4zVSKtnCKUJdt0ZFBdNJHOMs7yIBYWx+DIJ3jafT4atrQg+RijdC3NQzsOrEHl3FYEeJqhvZUulANtHUsguLR5X5ItlqJdFEBThN3cRq+YCoHulgD+m6RQ0kFEL2ipibPg/6SBakeMJm6xqqZWdGM=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728986961; c=relaxed/simple;
-	bh=e/rNaI2oPtIgL6xcYyWnLvsQkvnuctXf8PjP48TaVRA=;
-	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
-	 Subject:Content-Type; b=gKEr7HlvNrWhd183wJVtp62QW11i5pT9jxByEOdgF+GtDLF55+Qmh3n4eY/pOHSlKyD4qdbH6rOx4Y4yIUlUGpFC2UfvxxFvwAEscydnxkD7K1pPGEBJoEoPBYjlm3EK70L0/G5VdAaEoC4iwzdkVohO/Quw7oM7upBhdTL/yTc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ljones.dev; spf=none smtp.mailfrom=ljones.dev; dkim=pass (2048-bit key) header.d=ljones.dev header.i=@ljones.dev header.b=fSawCpc6; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=IO6ZS/Uj; arc=none smtp.client-ip=103.168.172.151
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ljones.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=ljones.dev
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 69C6C1E766D
+	for <platform-driver-x86@vger.kernel.org>; Tue, 15 Oct 2024 10:30:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.92.68
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1728988256; cv=fail; b=Vx+zKePmLpRWfk/E91b+jRjxo06kVZAc0KAYgJqVlWPHDfY5hVetl/9tATuw4GlG0xfp+9nMFPFOKyhRr0/g7W8Gs4WYMVP5YS/XWV0tWhgp817+IhnSz26fUFg3Ptx7LSUfFd0OFro/LpGpii5IQc0Gnl/3rAj1rBVKS0Bs4XY=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1728988256; c=relaxed/simple;
+	bh=7mJ3vYPAoZktUeNNSbZcFXsHm0I9Lr7o895d5hxWw1I=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=d97SjkbxkMe8KdIriCmYyOEgI+kYWgu+FvsA6WuUfNyvaMK8InMWOVvlRbv+2E1PnPgH9RTexsRhxPBv/D3OiBs473tkxuaW7/5IWCOz8otIihmDUT297gzr2JPbPjSdnvkbi/cxEdBhXozlCbERkUULnysX1uvLwiR6o100sDE=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=JlmVE7fo; arc=fail smtp.client-ip=40.107.92.68
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ljones.dev header.i=@ljones.dev header.b="fSawCpc6";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="IO6ZS/Uj"
-Received: from phl-compute-08.internal (phl-compute-08.phl.internal [10.202.2.48])
-	by mailfout.phl.internal (Postfix) with ESMTP id 37059138034D;
-	Tue, 15 Oct 2024 06:09:18 -0400 (EDT)
-Received: from phl-imap-01 ([10.202.2.91])
-  by phl-compute-08.internal (MEProxy); Tue, 15 Oct 2024 06:09:18 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ljones.dev; h=cc
-	:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to; s=fm1; t=1728986958;
-	 x=1729073358; bh=QzEMDpMMmY/WtmgU3DpHFajDSeKbnI9145m7YXl7kys=; b=
-	fSawCpc6JYq+pg8SRLbHcKgTqjbs3p8so5SweF/dVRszCtKIPGNi07ex29Azcp3X
-	MEq0gMVSvr22Y9fYGlyhDXIRvy8v/2gHwJzqehzG+sDoBPQEjQMqPJfEl76/9iNf
-	Wce1FVemgSeyMcOI9gE/y1vgiTtrZBKAPReV5AksQDNPtc6KJ0XAhE1sKDQ3P5fy
-	B5Beg/cb8kyzaLwSmPvC+6gnb1RmksV8zq4s/qNnTWSCg3tiXiLr+oQYljA1Afkx
-	UTjT1BK7/OomkL+yeZbz1HkXAdtLOyiuWjqhhH821D8LLdjN2+2Bmrgh48XbHS0D
-	Otc3gDoAH/JOR9ptjsWO0g==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to:x-me-proxy:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=1728986958; x=
-	1729073358; bh=QzEMDpMMmY/WtmgU3DpHFajDSeKbnI9145m7YXl7kys=; b=I
-	O6ZS/Uj5r8CCkAe8jNNNGe3Zo2eARABwcgN5nTyYRNTzBWlDpCzgaND82SIZuwTS
-	wx/gbTcE/z0M1LFRV5NUIItUQTSaym2lfJcKEoRABukBkT2WIcrlRpgRcR7si5jL
-	gZ9Y8tc4fzb2PU19BAvk7oZ7hWi0XFu0se5hgKG5oTevaE7vR9UP/Mhy/wKaFR/G
-	//PaRRaEEUDJl1U5rz+SqQ9M1E+wDGSrlGkB08ByHBanO9HqH9ZEFD2kqvc3GwhI
-	ZJt+bdeNBOjqycJJwbCKURz5BXids9HoWIIl/UspA1VoN/92xg8B/r1QErf3tBLW
-	Lw6YBYcmir97dIg9oZeqw==
-X-ME-Sender: <xms:Tj8OZ99u8Pxn99ruk6eMMPnKPUscGaHd4raevtaGmUYNzpgwiOlobA>
-    <xme:Tj8OZxurhZVKtFWPjdxeJkdN7nRtQmETdqghHi5ghUWehrb6LLGtmAWtN-CjSY-Nd
-    1MIFYsggktTAB6MJ7M>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeftddrvdegjedgvdegucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggvpdfu
-    rfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnh
-    htshculddquddttddmnecujfgurhepofggfffhvfevkfgjfhfutgfgsehtjeertdertddt
-    necuhfhrohhmpedfnfhukhgvucflohhnvghsfdcuoehluhhkvgeslhhjohhnvghsrdguvg
-    hvqeenucggtffrrghtthgvrhhnpeevteelkeefueeuleejveetueetvefggfeuledvhfdv
-    gedvheelfeelkefhgfetheenucffohhmrghinhepkhgvrhhnvghlrdhorhhgnecuvehluh
-    hsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomheplhhukhgvsehljhho
-    nhgvshdruggvvhdpnhgspghrtghpthhtohepkedpmhhouggvpehsmhhtphhouhhtpdhrtg
-    hpthhtoheptghorhgvnhhtihhnrdgthhgrrhihsehgmhgrihhlrdgtohhmpdhrtghpthht
-    ohepjhhikhhosheskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepshhuphgvrhhmudeskh
-    gvrhhnvghlrdhorhhgpdhrtghpthhtohepihhlphhordhjrghrvhhinhgvnheslhhinhhu
-    gidrihhnthgvlhdrtghomhdprhgtphhtthhopehhuggvghhovgguvgesrhgvughhrghtrd
-    gtohhmpdhrtghpthhtoheplhhinhhugidqihhnphhuthesvhhgvghrrdhkvghrnhgvlhdr
-    ohhrghdprhgtphhtthhopehlihhnuhigqdhkvghrnhgvlhesvhhgvghrrdhkvghrnhgvlh
-    drohhrghdprhgtphhtthhopehplhgrthhfohhrmhdqughrihhvvghrqdigkeeisehvghgv
-    rhdrkhgvrhhnvghlrdhorhhg
-X-ME-Proxy: <xmx:Tj8OZ7B06N_tJzFMOcqe_nbq52dg5N49qlxiv8iAGhCPH_NnV_SwQw>
-    <xmx:Tj8OZxc786WosMY7bn2Vwe28W_jChupn_4CYW79uaKbLDkwGmj9qHw>
-    <xmx:Tj8OZyOXHtfN7xixASXow3HXnES62OoOS2Xm8az3nisDFqlpLzzy7w>
-    <xmx:Tj8OZzlo-kKYzGKLaTWxS-u1WJeI49gvJoP1X3Ey7ZYkg7xlnBZYCg>
-    <xmx:Tj8OZ-BJY6KdsczupYLOiCoWpWHQl9m-Okb8FVUP3ypX1azJOAg3sbxC>
-Feedback-ID: i5ec1447f:Fastmail
-Received: by mailuser.phl.internal (Postfix, from userid 501)
-	id EC4373360077; Tue, 15 Oct 2024 06:09:17 -0400 (EDT)
-X-Mailer: MessagingEngine.com Webmail Interface
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="JlmVE7fo"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=Xm2FLPSlUC5AGtMc/xIaNGdHV0Y+F1drWVo3qtnSq9z314PnMHDXbtyODxm1m2x88OckdYFpvToom/QIBvWZ5P0ddh78TQe1kr3fIW4/OFSX7reKMgA1c2EIi8FA5jt/06Ir70/fEf2REKNLx/gOvMGLpu+ViVBurNgo9vlTF2fWMgKeqPe08LPseY7p3qDcTeMxfzyJnNFWC7R7k8DfPJZtUkzOTfIcihePO30XmePIHb0L+wPDf3+ZvfBLBhlTAXyETwGmSvbUliIdsmaejZnq6I68YG7CypRr0KHvdc/vhwILmJL4lwJjRhvAvomR6LmZkU3kXM6seMthVj4MaA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=ZZwhr30xqy7SGVVhjxeSTMKEesrJhYhdpzreb7jtcp0=;
+ b=wGgrWNVrC8dTU2rDFZRMJOyQy0ZcdhdJkh8pL1vsJEV3E7dSbyHwGNMszoqCj9c7XrDky65FSWkF73+O1aVy+QQ/nyUJBqaV6p5NrSC8RKSDyJ7tCTMXmYyijzsDgw9JzdaDXQB3WDeO4+xMv4N9fqbCl+TyKwP2IhgLuo8xEvldYDOuCeQGEBdRJk+WqgBOjQQL+T27xvP+wFpUJOcHX6UnQ5MDry0NbiAh15/Kgex0cvsUdZ/DdY8Q2F+IQ+J/y57jCg6STu5Pt06urWn3t4dIeZEJXXjCxvYdXfx3YIs5CsLpl7axVO1CpXjggS6HRsGjzTWdwGeZlz5XdWA2bw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=redhat.com smtp.mailfrom=amd.com; dmarc=pass
+ (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
+ dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=ZZwhr30xqy7SGVVhjxeSTMKEesrJhYhdpzreb7jtcp0=;
+ b=JlmVE7foDMd57YiMpkwnxUheNfi1nc+Z7fpIUFfhN9O3uhNgQk3RAgjInAhpaNmncEnnM2zv3rtCD/M3SaNd6MdrBhLzaOKDbUVNZUC5uq+wq4RJfdwM0FdCCpI7XQk/3l3/PtR4PLkhnRNuvLF+EyuzBn74BvMMKYfetpZ3LKY=
+Received: from SN4PR0501CA0071.namprd05.prod.outlook.com
+ (2603:10b6:803:41::48) by PH8PR12MB6892.namprd12.prod.outlook.com
+ (2603:10b6:510:1bc::17) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8048.27; Tue, 15 Oct
+ 2024 10:30:50 +0000
+Received: from SN1PEPF0002636E.namprd02.prod.outlook.com
+ (2603:10b6:803:41:cafe::ae) by SN4PR0501CA0071.outlook.office365.com
+ (2603:10b6:803:41::48) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8069.17 via Frontend
+ Transport; Tue, 15 Oct 2024 10:30:50 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
+Received: from SATLEXMB04.amd.com (165.204.84.17) by
+ SN1PEPF0002636E.mail.protection.outlook.com (10.167.241.139) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.8069.17 via Frontend Transport; Tue, 15 Oct 2024 10:30:50 +0000
+Received: from airavat.amd.com (10.180.168.240) by SATLEXMB04.amd.com
+ (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Tue, 15 Oct
+ 2024 05:30:48 -0500
+From: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
+To: <hdegoede@redhat.com>, <ilpo.jarvinen@linux.intel.com>
+CC: <platform-driver-x86@vger.kernel.org>, <Patil.Reddy@amd.com>, "Shyam
+ Sundar S K" <Shyam-sundar.S-k@amd.com>
+Subject: [PATCH v2 0/5] platform/x86/amd/pmf: Updates to AMD PMF driver
+Date: Tue, 15 Oct 2024 16:00:16 +0530
+Message-ID: <20241015103021.1843019-1-Shyam-sundar.S-k@amd.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Date: Tue, 15 Oct 2024 12:08:57 +0200
-From: "Luke Jones" <luke@ljones.dev>
-To: linux-kernel@vger.kernel.org
-Cc: linux-input@vger.kernel.org, "Jiri Kosina" <jikos@kernel.org>,
- platform-driver-x86@vger.kernel.org,
- =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
- "Hans de Goede" <hdegoede@redhat.com>, corentin.chary@gmail.com,
- "Mario Limonciello" <superm1@kernel.org>
-Message-Id: <a4c97b6a-9a79-4310-a37a-bf927b9ab924@app.fastmail.com>
-In-Reply-To: <20240930000046.51388-1-luke@ljones.dev>
-References: <20240930000046.51388-1-luke@ljones.dev>
-Subject: Re: [PATCH v6 0/9] platform/x86: introduce asus-armoury driver
+Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
-Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: SATLEXMB04.amd.com (10.181.40.145) To SATLEXMB04.amd.com
+ (10.181.40.145)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: SN1PEPF0002636E:EE_|PH8PR12MB6892:EE_
+X-MS-Office365-Filtering-Correlation-Id: 1be2704e-500d-4f7b-231c-08dced0470a5
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|1800799024|36860700013|376014|82310400026;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?WAMeNyNBjIoqZDuk7QnhELwRnXuXi7KviLS8LPA5UwW3m0XTjSXOGNmrV/v9?=
+ =?us-ascii?Q?vdgwxbpDBwPnkhhIzcpJMKdE5VfYH2Vyhf8KueWURBm3fal6gV1uEyR1SU8y?=
+ =?us-ascii?Q?YFM3dzk2PZGG5xDeMFNN/GQ3X9bMMeR8Qjhtxc4KECNAtmlEBvJg0eszrvND?=
+ =?us-ascii?Q?GL43J5/QIUpxHK8UeQUhI7M7QhPYX9f2981skKgTnUDNJ/tSfB8tGnhj5CUz?=
+ =?us-ascii?Q?7YmjQ7bCHZoRuvn7OqRzDe3o2Z1ignEqk5WFufqfBZq42NFG9X+/+EzO9b+p?=
+ =?us-ascii?Q?TQAIqar4fcHmGqxf0Smy3ptXtNZ+YIfFPhN6RUafPeb4sxFJKvwyNtIkd/NI?=
+ =?us-ascii?Q?ebYBH7Vt3YGe9Nz88zG9WoHlaYjAFWerBp+qGW9zV5Nurf+mEARTwqnSnHYy?=
+ =?us-ascii?Q?Rbn+d1PMlfMMazhdl8PQ2CkeSfDF6MxbdYkzB0ZLKtyva+CyupgZDr9xRZbV?=
+ =?us-ascii?Q?Xmg/EBI2+UrLAuqv1A4ExDJucKxeWIS9PHTHBJ446wo45sgRFdIY612VFNTD?=
+ =?us-ascii?Q?0iv+KWYczqVGrbUHE9H5VEsow/iqQzYKZ37cerwYYTZds9QsYLh1eoBQG9qg?=
+ =?us-ascii?Q?zvs7+wJJOrjYi0fWlNjbcF/yr69Rkyx61zJLzZCGfj0toMXtihPqzwoxTvcu?=
+ =?us-ascii?Q?sqoBE1gKVHG2+9f52q7/UWv5NyAgfi91NbgVDDjq/Df38WsSJ7UM7x51rvVB?=
+ =?us-ascii?Q?DjcuQlp2YTmC20MqbloSahy361Ej6TTAwhDXkTaB9HY5H10fe9L6N8VPatnd?=
+ =?us-ascii?Q?h86fc9wOsZqWRSPghdGKz0qC0WI5ncTYAwsrriNieiGk9tDpetmbTtG5ArHZ?=
+ =?us-ascii?Q?BAkndddRPjthlLKHT2ZKkqQHj+jT+6kBOkgAg1by0C0j/6FW/7srRluir4LS?=
+ =?us-ascii?Q?gv24X+CRKJvdlKTALs0Fy3a+qHjIL3QMPQHd6NnXfATduqkTfaXs0/0ueCQu?=
+ =?us-ascii?Q?Uj2Ut8dMwsINGG4MnkPFNzV6LlteXBenZU0lVItStiwvsZS/VphZrvZ5XmN8?=
+ =?us-ascii?Q?PzPDa4l6tkcXCBB/Hdw/iHALE2YuXgU0Xec/ONdFhPfQV38l4vjIdqeax6ii?=
+ =?us-ascii?Q?Vg7wFUtYLX6XR6XCyVCkiEpciq0OOjV2qnMwGSNoyIpx+n6szHeWupBAoWqg?=
+ =?us-ascii?Q?cDoo9mdbKeQJ3jeIUormDTes7TZ5zx3tpKw3u4ILIzXIda+RdWHnD9RT6uWg?=
+ =?us-ascii?Q?BhFyvAP6ObkV9s0BajL8gnDKAxCPvZDWxowiSpcg1UjWosO4CG6SV1HBhBAL?=
+ =?us-ascii?Q?6alc4uVaWLnwZX0Vf9/yflyo8my01B+zreSm+c7ppzO8ehnz5MjjIKPyzLWf?=
+ =?us-ascii?Q?omXp06X2ciFLOC1JHaxAx21LTQGMVsngzqvotYKbHDyI1a9qTpxaCemM3Gap?=
+ =?us-ascii?Q?6ZUe/s3KAk7mJemmjYn283DPMnvs?=
+X-Forefront-Antispam-Report:
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(1800799024)(36860700013)(376014)(82310400026);DIR:OUT;SFP:1101;
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 15 Oct 2024 10:30:50.4353
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 1be2704e-500d-4f7b-231c-08dced0470a5
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	SN1PEPF0002636E.namprd02.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH8PR12MB6892
 
-Hi all, did I have anything left to do on this series? I'm quite certain I've covered everything now.
+Updates include:
 
-Cheers,
-Luke.
+- Add support for newer platforms
+- Enhance the TA shared memory size to adapt to the updated TA
+- Update the MAINTAINERS record, and
+- Simplify certain code handling.
 
 
-On Mon, 30 Sep 2024, at 2:00 AM, Luke D. Jones wrote:
-> TL;DR:
-> 1. introduce new module to contain bios attributes, using fw_attributes_class
-> 2. deprecate all possible attributes from asus-wmi that were added ad-hoc
-> 3. remove those in the next LTS cycle
->
-> The idea for this originates from a conversation with Mario Limonciello
-> https://lore.kernel.org/platform-driver-x86/371d4109-a3bb-4c3b-802f-4ec27a945c99@amd.com/
->
-> It is without a doubt much cleaner to use, easier to discover, and the
-> API is well defined as opposed to the random clutter of attributes I had
-> been placing in the platform sysfs.
->
-> There is some discussion on-going regarding the way tuning knobs such as
-> the PPT_* should work with platform_profile. This may result in the creation
-> of an extra profile type "Custom" to signify that the user has adjusted
-> things away from the defaults used by profiles such as "balanced" or "quiet".
->
-> Regards,
-> Luke
->
-> Changelog:
-> - v1
->   - Initial submission
-> - v2
->   - Too many changes to list, but all concerns raised in previous 
-> submission addressed.
->   - History: 
-> https://lore.kernel.org/platform-driver-x86/20240716051612.64842-1-luke@ljones.dev/
-> - v3
->   - All concerns addressed.
->   - History: 
-> https://lore.kernel.org/platform-driver-x86/20240806020747.365042-1-luke@ljones.dev/
-> - v4
->   - Use EXPORT_SYMBOL_NS_GPL() for the symbols required in this patch 
-> series
->   - Add patch for hid-asus due to the use of EXPORT_SYMBOL_NS_GPL()
->   - Split the PPT knobs out to a separate patch
->   - Split the hd_panel setting out to a new patch
->   - Clarify some of APU MEM configuration and convert int to hex
->   - Rename deprecated Kconfig option to ASUS_WMI_DEPRECATED_ATTRS
->   - Fixup cyclic dependency in Kconfig
-> - v5
->   - deprecate patch: cleanup ``#if`, ``#endif` statements, edit kconfig 
-> detail, edit commit msg
->   - cleanup ppt* tuning patch
->   - proper error handling in module init, plus pr_err()
->   - ppt tunables have a notice if there is no match to get defaults
->   - better error handling in cpu core handling
->     - don't continue if failure
->   - use the mutex to gate WMI writes
-> - V6
->   - correctly cleanup/unwind if module init fails
->  
-> Luke D. Jones (9):
->   platform/x86: asus-wmi: export symbols used for read/write WMI
->   hid-asus: Add MODULE_IMPORT_NS(ASUS_WMI)
->   platform/x86: asus-armoury: move existing tunings to asus-armoury
->     module
->   platform/x86: asus-armoury: add panel_hd_mode attribute
->   platform/x86: asus-armoury: add the ppt_* and nv_* tuning knobs
->   platform/x86: asus-armoury: add dgpu tgp control
->   platform/x86: asus-armoury: add apu-mem control support
->   platform/x86: asus-armoury: add core count control
->   platform/x86: asus-wmi: deprecate bios features
->
->  .../ABI/testing/sysfs-platform-asus-wmi       |   17 +
->  drivers/hid/hid-asus.c                        |    1 +
->  drivers/platform/x86/Kconfig                  |   21 +
->  drivers/platform/x86/Makefile                 |    1 +
->  drivers/platform/x86/asus-armoury.c           | 1093 +++++++++++++++++
->  drivers/platform/x86/asus-armoury.h           |  257 ++++
->  drivers/platform/x86/asus-wmi.c               |  189 ++-
->  include/linux/platform_data/x86/asus-wmi.h    |   22 +
->  8 files changed, 1564 insertions(+), 37 deletions(-)
->  create mode 100644 drivers/platform/x86/asus-armoury.c
->  create mode 100644 drivers/platform/x86/asus-armoury.h
->
-> -- 
-> 2.46.1
+v2:
+----
+- drop resource_size() usage
+- use right format specifier
+
+Shyam Sundar S K (5):
+  platform/x86/amd/pmf: Add SMU metrics table support for 1Ah family 60h
+    model
+  platform/x86/amd/pmf: Use dev_err_probe() to simplify error handling
+  MAINTAINERS: Change AMD PMF driver status to "Supported"
+  platform/x86/amd/pmf: Switch to platform_get_resource() and
+    devm_ioremap_resource()
+  platform/x86/amd/pmf: Add PMF driver changes to make compatible with
+    PMF-TA
+
+ MAINTAINERS                           |  2 +-
+ drivers/platform/x86/amd/pmf/Kconfig  |  1 +
+ drivers/platform/x86/amd/pmf/acpi.c   | 37 ++++++++-------------------
+ drivers/platform/x86/amd/pmf/core.c   |  9 ++++---
+ drivers/platform/x86/amd/pmf/pmf.h    |  8 +++---
+ drivers/platform/x86/amd/pmf/spc.c    |  1 +
+ drivers/platform/x86/amd/pmf/tee-if.c |  8 +++---
+ 7 files changed, 28 insertions(+), 38 deletions(-)
+
+-- 
+2.34.1
+
