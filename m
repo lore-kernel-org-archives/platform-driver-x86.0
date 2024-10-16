@@ -1,65 +1,65 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.20])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C85A820605B;
-	Wed, 16 Oct 2024 11:02:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 76F81206059;
+	Wed, 16 Oct 2024 11:50:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.20
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729076538; cv=none; b=btrFc619U/caggv6KhxmA7jevCw8srOQo9q913oIrbvPuiMQQTJmpR99PIdEu14SEMenb7BpOJelzflm54jLHbKqyx7n47vTLx3SBZBhfDd3jCx+WGMIiiRv+eBymgktt+iXg9SHDPjBMKFU0lriBKFgwX+NMoBEte0iTr/Mf9E=
+	t=1729079439; cv=none; b=hMliwM8ceBTlDPQxZPcFwo6R79lv6iMUBPHCcufPIkX7nV7M/DnvS9rsOUfXkNTInMKdvHwqRWjAGb9o1W+/FWuK1cVcbXc7gfl8vpnRFcR+b+jbeMBCyQMtDR84QCQcu6JLScGr1Mj4kCZUZWv7605hPy3cyhOG4QQMoBK5ciI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729076538; c=relaxed/simple;
-	bh=am5o/KYY1etx3argiWIputsDa9TZyhUJ250fOWswMRM=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=BV0z/ev+LBlK7M7U6ejLUi6+tF0q9FQSW9d2dIr6PtfhPEgiJ7wPg9QvUs4dOeb/DnJQGIIUbOhtb7QhisGyXYULJtckvWJu8GE20v5c78jP/75qj4dT/o8LrA3sL6YXd/svXC8xUfzTP7XDc/y8zPr7e9VMiwCASe1kmglr5d4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=GNRExqbZ; arc=none smtp.client-ip=192.198.163.14
+	s=arc-20240116; t=1729079439; c=relaxed/simple;
+	bh=v1on7WxTr15BmwhGpIyMY+hnj/xt4RZUht8X+2KbXaY=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=ZroahIyADLjPT3t3EwA2zi1O3ssgOgTYJlcqiLvtCekTEJO43LpvepSbbAk2CA7I++yCAEqu+ji39dA9hnAfVcQout0utt2077wcLglW995Jy/UMSXNOxvKPcN2jxw/9M+K7VTsmm+GMxHV+oXFSZt9qMGCx24lK0mYOVyVO8Hg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=S/7AqyRj; arc=none smtp.client-ip=198.175.65.20
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="GNRExqbZ"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="S/7AqyRj"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1729076537; x=1760612537;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=am5o/KYY1etx3argiWIputsDa9TZyhUJ250fOWswMRM=;
-  b=GNRExqbZ439bFH0Zs1DexKyuWyjIqavyxDfmMX8pgGee+flGOIRdFnQd
-   IffyjmbZvWsd5/Sac3fg6QorXKdtW1RXNOllKU605jsFp0OIHgWDVQDTN
-   HXcTj+73973+V0ABLK3KaV7xPz6WWZGe2d6TmcU7d/+pZaKBasyvbKoxg
-   8h34V0umq/E1DKRvwreo3S0VZVL9g+CxFGvHElOnhx7om/thibMvWzJfE
-   ffayN1qGw/X0N01x4HRXqGQgpXfaQ19UNmMWMEd6gTlaqB3LasgIfSiZB
-   BR7nrDWISGVMRQvhH2wBi4uGLANCp+qq6vGFZeCGoDUDl4BFPe3AOXJ+9
-   Q==;
-X-CSE-ConnectionGUID: WYLQjZTzS0eCp8ifTYERqA==
-X-CSE-MsgGUID: uk0zDcj7QYu1A1p3HCr5yA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11226"; a="28717996"
-X-IronPort-AV: E=Sophos;i="6.11,207,1725346800"; 
-   d="scan'208";a="28717996"
-Received: from fmviesa007.fm.intel.com ([10.60.135.147])
-  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Oct 2024 04:02:16 -0700
-X-CSE-ConnectionGUID: mw/cg0N0QoyvOaYXhrs2zg==
-X-CSE-MsgGUID: 6rjdik0ETVOn85RinJUveQ==
+  t=1729079439; x=1760615439;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=v1on7WxTr15BmwhGpIyMY+hnj/xt4RZUht8X+2KbXaY=;
+  b=S/7AqyRjCD6wLlCkgkPvGV5WWDtfOPVfZAPXayf5jWNRzc3oNjQnshZN
+   ZQva85hN+OOGtDGf3r7lkR8HhZRrg8rURjcYFjUYqfkrrHtKwOgBUh3M2
+   df387cxhoXNbXtOM+zJMNlQu5ryCvoNjGM0tt7EGG4uTaI7ox69U3LgLU
+   BAJnweUPlNrgjAlEgIseEMzulPpXDu6RkqgkpT2wYEjoFtjguc1gObXTu
+   BZAHCYG90rJ9fPy0VMiX+YDd1tXzOzihoM7dJq8maHGkCrtYtDQvcODW8
+   acCymtVDxDDk7m8ft1ae2y/fHVgEe6virDyZBwdH3g4BXZVG1sWlj5983
+   A==;
+X-CSE-ConnectionGUID: GCAwVjo3TtqmnVrGB7o0FA==
+X-CSE-MsgGUID: rPlaU5BRTLCJb4REZs88Lg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11222"; a="28306990"
+X-IronPort-AV: E=Sophos;i="6.11,199,1725346800"; 
+   d="scan'208";a="28306990"
+Received: from fmviesa010.fm.intel.com ([10.60.135.150])
+  by orvoesa112.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Oct 2024 04:50:38 -0700
+X-CSE-ConnectionGUID: HZxH4/4NSnamAqUioHzpvw==
+X-CSE-MsgGUID: rREieHrfRymjLqCqutXcSw==
 X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.11,207,1725346800"; 
-   d="scan'208";a="77870298"
+X-IronPort-AV: E=Sophos;i="6.11,208,1725346800"; 
+   d="scan'208";a="78548799"
 Received: from black.fi.intel.com ([10.237.72.28])
-  by fmviesa007.fm.intel.com with ESMTP; 16 Oct 2024 04:02:12 -0700
+  by fmviesa010.fm.intel.com with ESMTP; 16 Oct 2024 04:50:36 -0700
 Received: by black.fi.intel.com (Postfix, from userid 1003)
-	id 7A57D1AC; Wed, 16 Oct 2024 14:02:11 +0300 (EEST)
+	id BD9C1159; Wed, 16 Oct 2024 14:50:34 +0300 (EEST)
 From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-	Tero Kristo <tero.kristo@linux.intel.com>,
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	linux-kernel@vger.kernel.org,
+	platform-driver-x86@vger.kernel.org
+Cc: Mika Westerberg <mika.westerberg@linux.intel.com>,
+	Andy Shevchenko <andy@kernel.org>,
 	Hans de Goede <hdegoede@redhat.com>,
-	Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
-	platform-driver-x86@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: linux-kbuild@vger.kernel.org,
-	Masahiro Yamada <masahiroy@kernel.org>,
-	Geert Uytterhoeven <geert@linux-m68k.org>,
-	David Gow <davidgow@google.com>
-Subject: [PATCH v2 1/1] platform/x86: intel: Add 'intel' prefix to the modules automatically
-Date: Wed, 16 Oct 2024 13:59:51 +0300
-Message-ID: <20241016105950.785820-2-andriy.shevchenko@linux.intel.com>
+	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	Ferry Toth <fntoth@gmail.com>
+Subject: [PATCH v1 1/3] platform/x86: intel_scu_ipc: Replace workaround by 32-bit IO
+Date: Wed, 16 Oct 2024 14:48:24 +0300
+Message-ID: <20241016115033.858574-2-andriy.shevchenko@linux.intel.com>
 X-Mailer: git-send-email 2.43.0.rc1.1336.g36b5255a03ac
+In-Reply-To: <20241016115033.858574-1-andriy.shevchenko@linux.intel.com>
+References: <20241016115033.858574-1-andriy.shevchenko@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -68,129 +68,51 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Rework Makefile to add 'intel' prefix to the modules automatically.
-This removes a lot of boilerplate code in it and also makes robust
-against mistypos in the prefix.
+The theory is that the so called workaround in pwr_reg_rdwr() is
+the actual reader of the data in 32-bit chunks. For some reason
+the 8-bit IO won't fail after that. Replace the workaround by using
+32-bit IO explicitly and then memcpy() as much data as was requested
+by the user. The same approach is already in use in
+intel_scu_ipc_dev_command_with_size().
 
 Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 ---
+ drivers/platform/x86/intel_scu_ipc.c | 15 ++++-----------
+ 1 file changed, 4 insertions(+), 11 deletions(-)
 
-v2: fixed obvious typos (LKP), Cc'ed to Kbuild ML (Ilpo), dropped RFC marker
-
-Note to Kbuild people: TBH I rather want to have something like this
-to be available on the level of Kbuild for any of the subdirectories
-in question.
-
- drivers/platform/x86/intel/Makefile           | 68 ++++++++-----------
- .../intel/{intel_plr_tpmi.c => plr_tpmi.c}    |  0
- .../x86/intel/{tpmi.c => vsec_tpmi.c}         |  2 +-
- 3 files changed, 30 insertions(+), 40 deletions(-)
- rename drivers/platform/x86/intel/{intel_plr_tpmi.c => plr_tpmi.c} (100%)
- rename drivers/platform/x86/intel/{tpmi.c => vsec_tpmi.c} (99%)
-
-diff --git a/drivers/platform/x86/intel/Makefile b/drivers/platform/x86/intel/Makefile
-index 74db065c82d6..78acb414e154 100644
---- a/drivers/platform/x86/intel/Makefile
-+++ b/drivers/platform/x86/intel/Makefile
-@@ -17,50 +17,40 @@ obj-$(CONFIG_INTEL_UNCORE_FREQ_CONTROL)	+= uncore-frequency/
+diff --git a/drivers/platform/x86/intel_scu_ipc.c b/drivers/platform/x86/intel_scu_ipc.c
+index 5b16d29c93d7..290b38627542 100644
+--- a/drivers/platform/x86/intel_scu_ipc.c
++++ b/drivers/platform/x86/intel_scu_ipc.c
+@@ -217,12 +217,6 @@ static inline u8 ipc_read_status(struct intel_scu_ipc_dev *scu)
+ 	return __raw_readl(scu->ipc_base + IPC_STATUS);
+ }
  
- 
- # Intel input drivers
--intel-hid-y				:= hid.o
--obj-$(CONFIG_INTEL_HID_EVENT)		+= intel-hid.o
--intel-vbtn-y				:= vbtn.o
--obj-$(CONFIG_INTEL_VBTN)		+= intel-vbtn.o
-+intel-target-$(CONFIG_INTEL_HID_EVENT)		+= hid.o
-+intel-target-$(CONFIG_INTEL_VBTN)		+= vbtn.o
- 
- # Intel miscellaneous drivers
--obj-$(CONFIG_INTEL_ISHTP_ECLITE)	+= ishtp_eclite.o
--intel_int0002_vgpio-y			:= int0002_vgpio.o
--obj-$(CONFIG_INTEL_INT0002_VGPIO)	+= intel_int0002_vgpio.o
--intel_oaktrail-y			:= oaktrail.o
--obj-$(CONFIG_INTEL_OAKTRAIL)		+= intel_oaktrail.o
--intel_sdsi-y				:= sdsi.o
--obj-$(CONFIG_INTEL_SDSI)		+= intel_sdsi.o
--intel_vsec-y				:= vsec.o
--obj-$(CONFIG_INTEL_VSEC)		+= intel_vsec.o
-+intel-target-$(CONFIG_INTEL_INT0002_VGPIO)	+= int0002_vgpio.o
-+intel-target-$(CONFIG_INTEL_ISHTP_ECLITE)	+= ishtp_eclite.o
-+intel-target-$(CONFIG_INTEL_OAKTRAIL)		+= oaktrail.o
-+intel-target-$(CONFIG_INTEL_SDSI)		+= sdsi.o
-+intel-target-$(CONFIG_INTEL_VSEC)		+= vsec.o
- 
- # Intel PMIC / PMC / P-Unit drivers
--intel_bxtwc_tmu-y			:= bxtwc_tmu.o
--obj-$(CONFIG_INTEL_BXTWC_PMIC_TMU)	+= intel_bxtwc_tmu.o
--intel_crystal_cove_charger-y		:= crystal_cove_charger.o
--obj-$(CONFIG_X86_ANDROID_TABLETS)	+= intel_crystal_cove_charger.o
--intel_bytcrc_pwrsrc-y			:= bytcrc_pwrsrc.o
--obj-$(CONFIG_INTEL_BYTCRC_PWRSRC)	+= intel_bytcrc_pwrsrc.o
--intel_chtdc_ti_pwrbtn-y			:= chtdc_ti_pwrbtn.o
--obj-$(CONFIG_INTEL_CHTDC_TI_PWRBTN)	+= intel_chtdc_ti_pwrbtn.o
--intel_chtwc_int33fe-y			:= chtwc_int33fe.o
--obj-$(CONFIG_INTEL_CHTWC_INT33FE)	+= intel_chtwc_int33fe.o
--intel_mrfld_pwrbtn-y			:= mrfld_pwrbtn.o
--obj-$(CONFIG_INTEL_MRFLD_PWRBTN)	+= intel_mrfld_pwrbtn.o
--intel_punit_ipc-y			:= punit_ipc.o
--obj-$(CONFIG_INTEL_PUNIT_IPC)		+= intel_punit_ipc.o
-+intel-target-$(CONFIG_INTEL_BYTCRC_PWRSRC)	+= bytcrc_pwrsrc.o
-+intel-target-$(CONFIG_INTEL_BXTWC_PMIC_TMU)	+= bxtwc_tmu.o
-+intel-target-$(CONFIG_INTEL_CHTDC_TI_PWRBTN)	+= chtdc_ti_pwrbtn.o
-+intel-target-$(CONFIG_INTEL_CHTWC_INT33FE)	+= chtwc_int33fe.o
-+intel-target-$(CONFIG_X86_ANDROID_TABLETS)	+= crystal_cove_charger.o
-+intel-target-$(CONFIG_INTEL_MRFLD_PWRBTN)	+= mrfld_pwrbtn.o
-+intel-target-$(CONFIG_INTEL_PUNIT_IPC)		+= punit_ipc.o
- 
- # TPMI drivers
--intel_vsec_tpmi-y			:= tpmi.o
--obj-$(CONFIG_INTEL_TPMI)		+= intel_vsec_tpmi.o
--obj-$(CONFIG_INTEL_PLR_TPMI)		+= intel_plr_tpmi.o
+-/* Read ipc byte data */
+-static inline u8 ipc_data_readb(struct intel_scu_ipc_dev *scu, u32 offset)
+-{
+-	return readb(scu->ipc_base + IPC_READ_BUFFER + offset);
+-}
 -
--intel_tpmi_power_domains-y		:= tpmi_power_domains.o
--obj-$(CONFIG_INTEL_TPMI_POWER_DOMAINS)	+= intel_tpmi_power_domains.o
-+intel-target-$(CONFIG_INTEL_PLR_TPMI)		+= plr_tpmi.o
-+intel-target-$(CONFIG_INTEL_TPMI_POWER_DOMAINS)	+= tpmi_power_domains.o
-+intel-target-$(CONFIG_INTEL_TPMI)		+= vsec_tpmi.o
+ /* Read ipc u32 data */
+ static inline u32 ipc_data_readl(struct intel_scu_ipc_dev *scu, u32 offset)
+ {
+@@ -325,11 +319,10 @@ static int pwr_reg_rdwr(struct intel_scu_ipc_dev *scu, u16 *addr, u8 *data,
+ 	}
  
- # Intel Uncore drivers
--intel-rst-y				:= rst.o
--obj-$(CONFIG_INTEL_RST)			+= intel-rst.o
--intel-smartconnect-y			:= smartconnect.o
--obj-$(CONFIG_INTEL_SMARTCONNECT)	+= intel-smartconnect.o
--intel_turbo_max_3-y			:= turbo_max_3.o
--obj-$(CONFIG_INTEL_TURBO_MAX_3)		+= intel_turbo_max_3.o
-+intel-target-$(CONFIG_INTEL_RST)		+= rst.o
-+intel-target-$(CONFIG_INTEL_SMARTCONNECT)	+= smartconnect.o
-+intel-target-$(CONFIG_INTEL_TURBO_MAX_3)	+= turbo_max_3.o
-+
-+# Add 'intel' prefix to each module listed in intel-target-*
-+define INTEL_OBJ_TARGET
-+intel-$(1)-y := $(1).o
-+obj-$(2) += intel-$(1).o
-+endef
-+
-+$(foreach target, $(basename $(intel-target-y)), $(eval $(call INTEL_OBJ_TARGET,$(target),y)))
-+$(foreach target, $(basename $(intel-target-m)), $(eval $(call INTEL_OBJ_TARGET,$(target),m)))
-diff --git a/drivers/platform/x86/intel/intel_plr_tpmi.c b/drivers/platform/x86/intel/plr_tpmi.c
-similarity index 100%
-rename from drivers/platform/x86/intel/intel_plr_tpmi.c
-rename to drivers/platform/x86/intel/plr_tpmi.c
-diff --git a/drivers/platform/x86/intel/tpmi.c b/drivers/platform/x86/intel/vsec_tpmi.c
-similarity index 99%
-rename from drivers/platform/x86/intel/tpmi.c
-rename to drivers/platform/x86/intel/vsec_tpmi.c
-index 486ddc9b3592..c637e32048a3 100644
---- a/drivers/platform/x86/intel/tpmi.c
-+++ b/drivers/platform/x86/intel/vsec_tpmi.c
-@@ -1,6 +1,6 @@
- // SPDX-License-Identifier: GPL-2.0-only
- /*
-- * intel-tpmi : Driver to enumerate TPMI features and create devices
-+ * Driver to enumerate TPMI features and create devices
-  *
-  * Copyright (c) 2023, Intel Corporation.
-  * All Rights Reserved.
+ 	err = intel_scu_ipc_check_status(scu);
+-	if (!err && id == IPC_CMD_PCNTRL_R) { /* Read rbuf */
+-		/* Workaround: values are read as 0 without memcpy_fromio */
+-		memcpy_fromio(cbuf, scu->ipc_base + 0x90, 16);
+-		for (nc = 0; nc < count; nc++)
+-			data[nc] = ipc_data_readb(scu, nc);
++	if (!err) { /* Read rbuf */
++		for (nc = 0, offset = 0; nc < 4; nc++, offset += 4)
++			wbuf[nc] = ipc_data_readl(scu, offset);
++		memcpy(data, wbuf, count);
+ 	}
+ 	mutex_unlock(&ipclock);
+ 	return err;
 -- 
 2.43.0.rc1.1336.g36b5255a03ac
 
