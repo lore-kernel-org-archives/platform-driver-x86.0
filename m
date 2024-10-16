@@ -1,177 +1,248 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 46DB2207A1E;
-	Wed, 16 Oct 2024 11:50:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4EB64206979;
+	Wed, 16 Oct 2024 11:58:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729079442; cv=none; b=oB7n/gzPrBYdyvUz7blxNrV3k9/9PbW/jdybJQTyyt7uqwwnuqc/enc3noWKF+DXW8T1kAixkNK0nI4dVwOdnaJM/KKsO/gIFQeXaAS2I7MXQa2rnk5jfbaFSjgJOw9Tf2JD3C7kwChD2RM1k3tRB2LC3KCS9NSIJBiR1gkfv0M=
+	t=1729079920; cv=none; b=hHkTl4odaFEJu3VibZIhp2M97zLi5h81xh3Crdd+0LIjbqp1YjY2GobeDYkkbIKi0q7QP3FABjiSwH9Q9jFL0SSEElw9Q4ugB3URlP2+GhsFJauSzhEn4DMasLdPDqqIVV6T8vfgF8UaKyoh09LQKWlvyuN6PQpDzeRnltqJepc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729079442; c=relaxed/simple;
-	bh=0u2TnzL2XRFhwUYIzbKAOkJS2xr/yU0W8afUZRGNPaE=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=ZoU5AFTMLyNtEktjlkZSLVNymB5xIp8odnpKWUutoX8az+1BspX2a/is7z6d8AIlN2uEJz8bBMXAIJ/34amx8a/kRtSdDfAhaEp+a+81oVaTgUjDDuVPwoZ6FN1q3yuyzLlsDamLh2DEJcxMTwDjUda/Xj74r7gRXGfgejnKV8E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=APiEVBuf; arc=none smtp.client-ip=198.175.65.11
+	s=arc-20240116; t=1729079920; c=relaxed/simple;
+	bh=29ovtOc0RitatdpSSFjl1CzXXX5nOX9JNLZZTNBkXSw=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=daM1pq2m37mVRnSECqL9CLKnGabAfeh2GZjgPmArxBFfxQZBVxIKQKYe3jHwA8h6Up6DNFJPqP8v2408XIxIZrHYFh15MhYton9vSZd8XEwL/7zfNrxhAJY8Jqc1oC1F1C3bMkhZ3t1qf8T+eI2b+tSv/C9SWiFvwJceMsUdYyc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=eF8He/ZI; arc=none smtp.client-ip=192.198.163.7
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="APiEVBuf"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="eF8He/ZI"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1729079441; x=1760615441;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=0u2TnzL2XRFhwUYIzbKAOkJS2xr/yU0W8afUZRGNPaE=;
-  b=APiEVBufGwnyTWDS4VHCPk3B4tS88INovbDQm2g07rerbPS3AcJ2OPGq
-   3Uw6Xkb4ttPk2X4GsqPcBHgy/kP+U+AozM/ZZOpeEFSl96i0zB9//9cH2
-   vxPFB5J9Wdo/jAyR6u6JuMpmSEM5nM5qgdEO+46IXPfLEjCzkcmW75MO8
-   JiGU0ILTKuaQJj3tSvkMwnR4WT1upOF6hkgq8/PagiOvXPDzcYMyHRX/b
-   K1icanqJ+gdWJfk+XAJRPsX5DsGMHFwMhulywYUilaHsQnhutSRKPq5wV
-   yFuE9wxJT1S1zZLntyHmGPeAJwwnrLb7Q8RRHa5a6hpoMX7BvEsQ7TVJP
-   w==;
-X-CSE-ConnectionGUID: xrOqo2lzTrCqDZ6+RzczqQ==
-X-CSE-MsgGUID: qm6H+QmBQEeud9u3Ir+mlQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11222"; a="39069928"
-X-IronPort-AV: E=Sophos;i="6.11,199,1725346800"; 
-   d="scan'208";a="39069928"
-Received: from orviesa005.jf.intel.com ([10.64.159.145])
-  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Oct 2024 04:50:38 -0700
-X-CSE-ConnectionGUID: tzkZgP1QT3qv7viCmFrrcw==
-X-CSE-MsgGUID: VxbUQNe0T56sbYSGfKY7wA==
+  t=1729079918; x=1760615918;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=29ovtOc0RitatdpSSFjl1CzXXX5nOX9JNLZZTNBkXSw=;
+  b=eF8He/ZI9s9YAzaF1JajQLIsNXamdhCUuPBpeP1izXXjQR2KgS37J1GF
+   1YwhYfZeRQfoy/MlT4nVqkNEl5YuVVdGhQ0m2ei1qBfkiG6k9ygaRkt5q
+   wSyAWMZKaWoeIHDW3wqPsAPhyN7r6NrKCX0NEWPdLUVnm6uJxn2STify+
+   HzF2ggpNDU4jVBdqWGooGq+YV8tWGBX+K4YGsM3QDeHL5pfzaxeFDxcw2
+   fIVR42z6fLPIfFc/Cc+Tsa2hyQFq5fN2RX42KR6AMygFHAB54SDU/YwuS
+   cLd9i+qbkght/zt0yTPrMwqpKAmSiD5amY2YZW9FfScFZSDcwnBPDpGhk
+   A==;
+X-CSE-ConnectionGUID: lM6sbtZvQ1qWm7m/soYCKA==
+X-CSE-MsgGUID: hCv0BajFQ2iF9mEn9s8/9g==
+X-IronPort-AV: E=McAfee;i="6700,10204,11226"; a="53936865"
+X-IronPort-AV: E=Sophos;i="6.11,208,1725346800"; 
+   d="scan'208";a="53936865"
+Received: from fmviesa003.fm.intel.com ([10.60.135.143])
+  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Oct 2024 04:58:31 -0700
+X-CSE-ConnectionGUID: HCbvZrMMQcOLFHbda+4DaA==
+X-CSE-MsgGUID: hyltfGc8RTOIvO/V/sJ4dQ==
 X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.11,207,1725346800"; 
-   d="scan'208";a="82974933"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by orviesa005.jf.intel.com with ESMTP; 16 Oct 2024 04:50:36 -0700
-Received: by black.fi.intel.com (Postfix, from userid 1003)
-	id D20C01C4; Wed, 16 Oct 2024 14:50:34 +0300 (EEST)
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-	linux-kernel@vger.kernel.org,
-	platform-driver-x86@vger.kernel.org
-Cc: Mika Westerberg <mika.westerberg@linux.intel.com>,
-	Andy Shevchenko <andy@kernel.org>,
-	Hans de Goede <hdegoede@redhat.com>,
-	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	Ferry Toth <fntoth@gmail.com>
-Subject: [PATCH v1 3/3] platform/x86: intel_scu_ipc: Save a copy of the entire struct intel_scu_ipc_data
-Date: Wed, 16 Oct 2024 14:48:26 +0300
-Message-ID: <20241016115033.858574-4-andriy.shevchenko@linux.intel.com>
-X-Mailer: git-send-email 2.43.0.rc1.1336.g36b5255a03ac
-In-Reply-To: <20241016115033.858574-1-andriy.shevchenko@linux.intel.com>
-References: <20241016115033.858574-1-andriy.shevchenko@linux.intel.com>
+X-IronPort-AV: E=Sophos;i="6.11,208,1725346800"; 
+   d="scan'208";a="82168928"
+Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.221])
+  by fmviesa003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Oct 2024 04:58:28 -0700
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Wed, 16 Oct 2024 14:58:25 +0300 (EEST)
+To: Daniel Scally <dan.scally@ideasonboard.com>
+cc: linux-media@vger.kernel.org, platform-driver-x86@vger.kernel.org, 
+    anders.ruke@gmail.com, sakari.ailus@linux.intel.com, 
+    Hans de Goede <hdegoede@redhat.com>, hverkuil-cisco@xs4all.nl
+Subject: Re: [PATCH 2/3] platform/x86: int3472: Add board data for Dell
+ 7212
+In-Reply-To: <20241015211958.1465909-3-dan.scally@ideasonboard.com>
+Message-ID: <fcb92c2d-f422-ef97-721e-f59b5e026474@linux.intel.com>
+References: <20241015211958.1465909-1-dan.scally@ideasonboard.com> <20241015211958.1465909-3-dan.scally@ideasonboard.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
 
-Save a copy of the entire struct intel_scu_ipc_data for easier
-maintenance in case of expanding (adding new members become simpler).
+On Tue, 15 Oct 2024, Daniel Scally wrote:
 
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
----
- drivers/platform/x86/intel_scu_ipc.c | 33 ++++++++++++++--------------
- 1 file changed, 17 insertions(+), 16 deletions(-)
+> The Dell 7212 Rugged Extreme Tablet pairs an OV5670 sensor with the
+> Intel IPU3 ISP. The sensor is powered by a TPS68470 PMIC, and so we
+> need some board data to describe how to configure the GPIOs and
+> regulators to run the sensor.
+> 
+> Signed-off-by: Daniel Scally <dan.scally@ideasonboard.com>
+> ---
+>  .../x86/intel/int3472/tps68470_board_data.c   | 128 ++++++++++++++++++
+>  1 file changed, 128 insertions(+)
+> 
+> diff --git a/drivers/platform/x86/intel/int3472/tps68470_board_data.c b/drivers/platform/x86/intel/int3472/tps68470_board_data.c
+> index 322237e056f3..d28053733bd2 100644
+> --- a/drivers/platform/x86/intel/int3472/tps68470_board_data.c
+> +++ b/drivers/platform/x86/intel/int3472/tps68470_board_data.c
+> @@ -129,6 +129,109 @@ static const struct tps68470_regulator_platform_data surface_go_tps68470_pdata =
+>  	},
+>  };
+>  
+> +/* Settings for Dell 7212 Tablet */
+> +
+> +static struct regulator_consumer_supply int3479_vsio_consumer_supplies[] = {
+> +	REGULATOR_SUPPLY("avdd", "i2c-INT3479:00"),
+> +};
+> +
+> +static struct regulator_consumer_supply int3479_aux1_consumer_supplies[] = {
+> +	REGULATOR_SUPPLY("dvdd", "i2c-INT3479:00"),
+> +};
+> +
+> +static struct regulator_consumer_supply int3479_aux2_consumer_supplies[] = {
+> +	REGULATOR_SUPPLY("dovdd", "i2c-INT3479:00"),
+> +};
+> +
+> +static const struct regulator_init_data dell_7212_tps68470_core_reg_init_data = {
+> +	.constraints = {
+> +		.min_uV = 1200000,
+> +		.max_uV = 1200000,
+> +		.apply_uV = 1,
+> +		.valid_ops_mask = REGULATOR_CHANGE_STATUS,
+> +	},
+> +	.num_consumer_supplies = 0,
+> +	.consumer_supplies = NULL
 
-diff --git a/drivers/platform/x86/intel_scu_ipc.c b/drivers/platform/x86/intel_scu_ipc.c
-index ffb0a2524388..e86a255f70ba 100644
---- a/drivers/platform/x86/intel_scu_ipc.c
-+++ b/drivers/platform/x86/intel_scu_ipc.c
-@@ -57,11 +57,11 @@
- 
- struct intel_scu_ipc_dev {
- 	struct device dev;
--	struct resource mem;
- 	struct module *owner;
--	int irq;
- 	void __iomem *ipc_base;
- 	struct completion cmd_complete;
-+
-+	struct intel_scu_ipc_data data;
- };
- 
- #define IPC_STATUS		0x04
-@@ -256,7 +256,7 @@ static inline int ipc_wait_for_interrupt(struct intel_scu_ipc_dev *scu)
- 
- static int intel_scu_ipc_check_status(struct intel_scu_ipc_dev *scu)
- {
--	return scu->irq > 0 ? ipc_wait_for_interrupt(scu) : busy_loop(scu);
-+	return scu->data.irq > 0 ? ipc_wait_for_interrupt(scu) : busy_loop(scu);
- }
- 
- static struct intel_scu_ipc_dev *intel_scu_ipc_get(struct intel_scu_ipc_dev *scu)
-@@ -536,13 +536,13 @@ static irqreturn_t ioc(int irq, void *dev_id)
- 
- static void intel_scu_ipc_release(struct device *dev)
- {
--	struct intel_scu_ipc_dev *scu;
-+	struct intel_scu_ipc_dev *scu = container_of(dev, struct intel_scu_ipc_dev, dev);
-+	struct intel_scu_ipc_data *data = &scu->data;
- 
--	scu = container_of(dev, struct intel_scu_ipc_dev, dev);
--	if (scu->irq > 0)
--		free_irq(scu->irq, scu);
-+	if (data->irq > 0)
-+		free_irq(data->irq, scu);
- 	iounmap(scu->ipc_base);
--	release_mem_region(scu->mem.start, resource_size(&scu->mem));
-+	release_mem_region(data->mem.start, resource_size(&data->mem));
- 	kfree(scu);
- }
- 
-@@ -563,6 +563,7 @@ __intel_scu_ipc_register(struct device *parent,
- 			 struct module *owner)
- {
- 	int err;
-+	struct intel_scu_ipc_data *data;
- 	struct intel_scu_ipc_dev *scu;
- 	void __iomem *ipc_base;
- 
-@@ -581,25 +582,25 @@ __intel_scu_ipc_register(struct device *parent,
- 	scu->dev.class = &intel_scu_ipc_class;
- 	scu->dev.release = intel_scu_ipc_release;
- 
--	if (!request_mem_region(scu_data->mem.start, resource_size(&scu_data->mem),
--				"intel_scu_ipc")) {
-+	memcpy(&scu->data, scu_data, sizeof(scu->data));
-+	data = &scu->data;
-+
-+	if (!request_mem_region(data->mem.start, resource_size(&data->mem), "intel_scu_ipc")) {
- 		err = -EBUSY;
- 		goto err_free;
- 	}
- 
--	ipc_base = ioremap(scu_data->mem.start, resource_size(&scu_data->mem));
-+	ipc_base = ioremap(data->mem.start, resource_size(&data->mem));
- 	if (!ipc_base) {
- 		err = -ENOMEM;
- 		goto err_release;
- 	}
- 
- 	scu->ipc_base = ipc_base;
--	scu->mem = scu_data->mem;
--	scu->irq = scu_data->irq;
- 	init_completion(&scu->cmd_complete);
- 
--	if (scu->irq > 0) {
--		err = request_irq(scu->irq, ioc, 0, "intel_scu_ipc", scu);
-+	if (data->irq > 0) {
-+		err = request_irq(data->irq, ioc, 0, "intel_scu_ipc", scu);
- 		if (err)
- 			goto err_unmap;
- 	}
-@@ -622,7 +623,7 @@ __intel_scu_ipc_register(struct device *parent,
- err_unmap:
- 	iounmap(ipc_base);
- err_release:
--	release_mem_region(scu_data->mem.start, resource_size(&scu_data->mem));
-+	release_mem_region(data->mem.start, resource_size(&data->mem));
- err_free:
- 	kfree(scu);
- 	return ERR_PTR(err);
+Add comma to any non-terminator entry.
+
+> +};
+> +
+> +static const struct regulator_init_data dell_7212_tps68470_ana_reg_init_data = {
+> +	.constraints = {
+> +		.min_uV = 2815200,
+> +		.max_uV = 2815200,
+> +		.apply_uV = 1,
+> +		.valid_ops_mask = REGULATOR_CHANGE_STATUS,
+> +	},
+> +	.num_consumer_supplies = 0,
+> +	.consumer_supplies = NULL
+> +};
+> +
+> +static const struct regulator_init_data dell_7212_tps68470_vcm_reg_init_data = {
+> +	.constraints = {
+> +		.min_uV = 2815200,
+> +		.max_uV = 2815200,
+> +		.apply_uV = 1,
+> +		.valid_ops_mask = REGULATOR_CHANGE_STATUS,
+> +	},
+> +	.num_consumer_supplies = 0,
+> +	.consumer_supplies = NULL
+> +};
+
+This looks exactly identical to dell_7212_tps68470_ana_reg_init_data.
+
+> +static const struct regulator_init_data dell_7212_tps68470_vio_reg_init_data = {
+> +	.constraints = {
+> +		.min_uV = 1800600,
+> +		.max_uV = 1800600,
+> +		.apply_uV = 1,
+> +		.valid_ops_mask = REGULATOR_CHANGE_STATUS,
+> +	},
+> +	.num_consumer_supplies = 0,
+> +	.consumer_supplies = NULL,
+> +};
+> +
+> +static const struct regulator_init_data dell_7212_tps68470_vsio_reg_init_data = {
+> +	.constraints = {
+> +		.min_uV = 1800600,
+> +		.max_uV = 1800600,
+> +		.apply_uV = 1,
+> +		.valid_ops_mask = REGULATOR_CHANGE_STATUS,
+> +	},
+> +	.num_consumer_supplies = ARRAY_SIZE(int3479_vsio_consumer_supplies),
+> +	.consumer_supplies = int3479_vsio_consumer_supplies,
+> +};
+> +
+> +static const struct regulator_init_data dell_7212_tps68470_aux1_reg_init_data = {
+> +	.constraints = {
+> +		.min_uV = 1213200,
+> +		.max_uV = 1213200,
+> +		.apply_uV = 1,
+> +		.valid_ops_mask = REGULATOR_CHANGE_STATUS,
+> +	},
+> +	.num_consumer_supplies = ARRAY_SIZE(int3479_aux1_consumer_supplies),
+> +	.consumer_supplies = int3479_aux1_consumer_supplies,
+> +};
+> +
+> +static const struct regulator_init_data dell_7212_tps68470_aux2_reg_init_data = {
+> +	.constraints = {
+> +		.min_uV = 1800600,
+> +		.max_uV = 1800600,
+> +		.apply_uV = 1,
+> +		.valid_ops_mask = REGULATOR_CHANGE_STATUS,
+> +	},
+> +	.num_consumer_supplies = ARRAY_SIZE(int3479_aux2_consumer_supplies),
+> +	.consumer_supplies = int3479_aux2_consumer_supplies,
+> +};
+> +
+> +static const struct tps68470_regulator_platform_data dell_7212_tps68470_pdata = {
+> +	.reg_init_data = {
+> +		[TPS68470_CORE] = &dell_7212_tps68470_core_reg_init_data,
+> +		[TPS68470_ANA]  = &dell_7212_tps68470_ana_reg_init_data,
+> +		[TPS68470_VCM]  = &dell_7212_tps68470_vcm_reg_init_data,
+> +		[TPS68470_VIO] = &dell_7212_tps68470_vio_reg_init_data,
+
+Inconsistent spaces.
+
 -- 
-2.43.0.rc1.1336.g36b5255a03ac
+ i.
 
+> +		[TPS68470_VSIO] = &dell_7212_tps68470_vsio_reg_init_data,
+> +		[TPS68470_AUX1] = &dell_7212_tps68470_aux1_reg_init_data,
+> +		[TPS68470_AUX2] = &dell_7212_tps68470_aux2_reg_init_data,
+> +	},
+> +};
+> +
+>  static struct gpiod_lookup_table surface_go_int347a_gpios = {
+>  	.dev_id = "i2c-INT347A:00",
+>  	.table = {
+> @@ -146,6 +249,15 @@ static struct gpiod_lookup_table surface_go_int347e_gpios = {
+>  	}
+>  };
+>  
+> +static struct gpiod_lookup_table dell_7212_int3479_gpios = {
+> +	.dev_id = "i2c-INT3479:00",
+> +	.table = {
+> +		GPIO_LOOKUP("tps68470-gpio", 3, "reset", GPIO_ACTIVE_LOW),
+> +		GPIO_LOOKUP("tps68470-gpio", 4, "powerdown", GPIO_ACTIVE_LOW),
+> +		{ }
+> +	}
+> +};
+> +
+>  static const struct int3472_tps68470_board_data surface_go_tps68470_board_data = {
+>  	.dev_name = "i2c-INT3472:05",
+>  	.tps68470_regulator_pdata = &surface_go_tps68470_pdata,
+> @@ -166,6 +278,15 @@ static const struct int3472_tps68470_board_data surface_go3_tps68470_board_data
+>  	},
+>  };
+>  
+> +static const struct int3472_tps68470_board_data dell_7212_tps68470_board_data = {
+> +	.dev_name = "i2c-INT3472:05",
+> +	.tps68470_regulator_pdata = &dell_7212_tps68470_pdata,
+> +	.n_gpiod_lookups = 1,
+> +	.tps68470_gpio_lookup_tables = {
+> +		&dell_7212_int3479_gpios,
+> +	},
+> +};
+> +
+>  static const struct dmi_system_id int3472_tps68470_board_data_table[] = {
+>  	{
+>  		.matches = {
+> @@ -188,6 +309,13 @@ static const struct dmi_system_id int3472_tps68470_board_data_table[] = {
+>  		},
+>  		.driver_data = (void *)&surface_go3_tps68470_board_data,
+>  	},
+> +	{
+> +		.matches = {
+> +			DMI_EXACT_MATCH(DMI_SYS_VENDOR, "Dell Inc."),
+> +			DMI_EXACT_MATCH(DMI_PRODUCT_NAME, "Latitude 7212 Rugged Extreme Tablet"),
+> +		},
+> +		.driver_data = (void *)&dell_7212_tps68470_board_data,
+> +	},
+>  	{ }
+>  };
+>  
+> 
