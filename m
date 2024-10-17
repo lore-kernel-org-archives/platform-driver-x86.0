@@ -1,477 +1,261 @@
-Received: from mail-pg1-f174.google.com (mail-pg1-f174.google.com [209.85.215.174])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.16])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8DD2842AB1;
-	Thu, 17 Oct 2024 08:17:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 257621D90B3;
+	Thu, 17 Oct 2024 09:29:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729153042; cv=none; b=uqvv/Jts9yRdaPhKomAPmka9qXticG8y4yOEmu6crv1yHuKLTrAX2F7DODeo8ZMR1xL1NljkX2HeJcshTcDIheZsQu+fembUBYv0GGu3n53Zu6JXI28BOgZqyUaBORzpfQsZcZwOTzgzVnHA8YOK8Z0Sr52RHbk/KrMjkyLHpiw=
+	t=1729157359; cv=none; b=JiCY3TwwxFKpxtvkZXicAZwSGXC7XpgUoav3iDuDgbeOgmfy0CipQJNG5vZh7s8/AZw4cN9LPfquW7rkoHfZQmZ2TLT4Zj5RZK6jSDt1MMNystcyeDoAZdJfnZJbl67y/jXFlOhwutvptmdYLVO28mFSq1jq1TnmQCBmbAVCQe4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729153042; c=relaxed/simple;
-	bh=toj5jT/N43JlUeUV49TzLbhT9WkKYYQ6zNyxOu2SUN4=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=fMNlbeN4n1dkgGf4KyZ+jQxJlwCU1AESwi7hx50yux/KQ9N42TDmELBLevbqeLn5bjEdfOLpJC00OqUc7Ara8K7N/iLy8tQPm70YKCB5jm4smBG5Y/PKnucI1RNMShssmqmiIXmu5hc3bdjJgqfTk9P4Lc8ze57eHqdX1b4VZjA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Or2Kt0md; arc=none smtp.client-ip=209.85.215.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1729157359; c=relaxed/simple;
+	bh=+mz2pLKCHqYO4uVnTxZqCJNaQb3FARZrYy4CMGQohVM=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=p4Y9MfWnvsE6/SDSi+F6FfHxTmw45xw6g+S2WqXc8aVsVa7h/s3yRNN17GpfS4UAKgdgeWNI7+bRALR3CEUiRnTMY/wj4el3VSoucW09J2PzYQbJCcuuXe1AtY5NWvWbkQiKGOHTaGazfk/WpVMoryA2uGdIKNFCIn05PQnoyTo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=TxNZITVd; arc=none smtp.client-ip=198.175.65.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Or2Kt0md"
-Received: by mail-pg1-f174.google.com with SMTP id 41be03b00d2f7-7ea6a4f287bso451607a12.3;
-        Thu, 17 Oct 2024 01:17:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1729153039; x=1729757839; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=vg7vd+fy/VzhW4y6/SWqvLzT/0RiOVGsypfe5+UKm/0=;
-        b=Or2Kt0mdZJWMPgfpchfd3q9Je/3djCsKbOnlpzG5xJ++x0cWFKqqrUlOkBee3yKlwb
-         eOL78oMPcCe57B7QWD6TOeTmFh+G15qE4k08BRq+JT8t9+DRLBJ+hS3VjUAG8omdkZc3
-         E5xCUtKV6IzVR73dWACrEnXAxSbAmVwBGicGSVTA/SOJTT0n8cRj166gwfACxVEyIsLa
-         IfA8J2BA0w14LkYw3dK/dgbwZtXi1/xzkk1QNO9vf1M4QHwn5gQxrWCK2Xyie6bCnMBb
-         Ngk3xV1vK9MAtoQvoXd1aaq4GJKhw1yXAY/HCrJA6JgpZdZXcuNmdwi38tYaltQcd+9+
-         msyg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1729153039; x=1729757839;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=vg7vd+fy/VzhW4y6/SWqvLzT/0RiOVGsypfe5+UKm/0=;
-        b=pE63oJ1ri9IEDy4KL/GqX5RKWNorjqT76rF4WMES8OZDEOtWAuVxQj8o4YrawYv7mx
-         a/5JelkiwnSjy3flcClyiMjRWfpLVvi6xgYCjO3q7jWWFQ9RKcxE2f/myjJQZEtPCTdw
-         Yn4Fbj6E2R01VOUiHGkiRLcPkjhRoIdnMuvdH7T+kUXKIiHXuYBipMDJuP4OOtIGuw0f
-         O5GeUojPHgmT2Hbe+O++DIERd7j2M72Rv7st/v2mmrHYwQA97/SXNttLtAF73a3yRy7f
-         spnNi68M9Q0w9bcjRAlFlU2oi+sZ7Rqm/awLaDbe3y29XJZDzGDrV2CwfrrQMHrHEbjY
-         RJbg==
-X-Forwarded-Encrypted: i=1; AJvYcCUkr2pQs4E2DHfXgGsVpIQKU5QPCT5TGzrVqsmbBuvfOfMf+eQVe53aJ5LUlML6iYRltXb9QZvndsl9JI6uEmb4/O1blg==@vger.kernel.org, AJvYcCWE0wEZqo/zn7I9ThM95T3ezjMJCqL+EKx9MmtBrn3kpuoo5QVXF+YHGL4Gr2KPVQf3xG0e9Qz/QovXzzk=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzpWrBBKpN+bj3BhYzlX5tc2KsNA72/Op25qnUbRnKtAQz2eWtn
-	uewgwb6g0tARvUDeEqGHdAdQFOyEDCCHjnm4U9CN9mCpNPUpVIaD
-X-Google-Smtp-Source: AGHT+IFZk/k+VKb1HMlKXhh84qODXbLqSodIV+3219ijitQb0DwyMVaz5QvDNyyNQn1syfDqz6+rcA==
-X-Received: by 2002:a05:6a20:2d22:b0:1d9:1783:6a2d with SMTP id adf61e73a8af0-1d917836bdemr5694242637.13.1729153038679;
-        Thu, 17 Oct 2024 01:17:18 -0700 (PDT)
-Received: from localhost.localdomain (host95.181-12-202.telecom.net.ar. [181.12.202.95])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-71e774cf125sm4208812b3a.155.2024.10.17.01.17.17
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 17 Oct 2024 01:17:18 -0700 (PDT)
-From: Kurt Borja <kuurtb@gmail.com>
-To: kuurtb@gmail.com
-Cc: W_Armin@gmx.de,
-	hdegoede@redhat.com,
-	ilpo.jarvinen@linux.intel.com,
-	linux-kernel@vger.kernel.org,
-	platform-driver-x86@vger.kernel.org
-Subject: [PATCH v6 5/5] alienware-wmi: WMAX interface documentation
-Date: Thu, 17 Oct 2024 05:17:09 -0300
-Message-ID: <20241017081708.127666-2-kuurtb@gmail.com>
-X-Mailer: git-send-email 2.47.0
-In-Reply-To: <20241017081211.126214-2-kuurtb@gmail.com>
-References: <20241017081211.126214-2-kuurtb@gmail.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="TxNZITVd"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1729157357; x=1760693357;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=+mz2pLKCHqYO4uVnTxZqCJNaQb3FARZrYy4CMGQohVM=;
+  b=TxNZITVdmrPMXckEokvJXoRQR0U2dovkp2mRIBkTKaNhNEYJELaU7o9h
+   8RrcQMXwBhrE0WAQ2lURSKu6E/JOCBAD5rBt1gIWSr/QcyIbpp1uQzS1o
+   q6Zrnp5+ln35p+5MZT1RtFx5IlmSWktdQpd2Rm2hTp90eCVsWv09EBwxX
+   8e3tkSETwwhE1l4af8KmAKd+VmF9mTmAoIhnRVgfJKB36fEYmlihepNCg
+   0EeWork6iuGonmOJRr8x5Ihn6ATn8+rzm6wnv8nQX8ip+DjGRjmj/jk8k
+   NoZJ2RdSZ0vA1giaagQDgGcoxkJZm/zcugUcXb2piPexFWCui0XBxS9j+
+   g==;
+X-CSE-ConnectionGUID: VFNMeJWVT1avcm+fHz4i1g==
+X-CSE-MsgGUID: NeS5tE7iSoO6pDK/nKMVLg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11222"; a="28732345"
+X-IronPort-AV: E=Sophos;i="6.11,199,1725346800"; 
+   d="scan'208";a="28732345"
+Received: from orviesa006.jf.intel.com ([10.64.159.146])
+  by orvoesa108.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Oct 2024 02:29:16 -0700
+X-CSE-ConnectionGUID: XkBqgi+URb+gponAfv0stQ==
+X-CSE-MsgGUID: mAZrHJuJSdqXdeNZKo3m5Q==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.11,210,1725346800"; 
+   d="scan'208";a="78647088"
+Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.91])
+  by orviesa006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Oct 2024 02:29:14 -0700
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Thu, 17 Oct 2024 12:29:10 +0300 (EEST)
+To: Vamsi Krishna Brahmajosyula <vamsikrishna.brahmajosyula@gmail.com>
+cc: irenic.rajneesh@gmail.com, david.e.box@intel.com, 
+    Hans de Goede <hdegoede@redhat.com>, david.e.box@linux.intel.com, 
+    skhan@linuxfoundation.org, platform-driver-x86@vger.kernel.org, 
+    LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] platform/x86/intel/pmc: Fix pmc_core_iounmap to call
+ iounmap for valid addresses
+In-Reply-To: <20241017041027.12785-1-vamsikrishna.brahmajosyula@gmail.com>
+Message-ID: <9026881c-d9d7-77ab-a907-ca8f286a4b6d@linux.intel.com>
+References: <20241017041027.12785-1-vamsikrishna.brahmajosyula@gmail.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/mixed; boundary="8323328-812179542-1729157350=:929"
 
-Added documentation for new WMAX interface, present on some Alienware
-X-Series, Alienware M-Series and Dell's G-Series laptops.
+  This message is in MIME format.  The first part should be readable text,
+  while the remaining parts are likely unreadable without MIME-aware tools.
 
-Signed-off-by: Kurt Borja <kuurtb@gmail.com>
+--8323328-812179542-1729157350=:929
+Content-Type: text/plain; charset=ISO-8859-15
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 
----
-v6:
- - Fixed typos
- - Included new file in MAINTAINERS
----
- Documentation/wmi/devices/alienware-wmi.rst | 366 ++++++++++++++++++++
- MAINTAINERS                                 |   1 +
- 2 files changed, 367 insertions(+)
- create mode 100644 Documentation/wmi/devices/alienware-wmi.rst
+On Thu, 17 Oct 2024, Vamsi Krishna Brahmajosyula wrote:
 
-diff --git a/Documentation/wmi/devices/alienware-wmi.rst b/Documentation/wmi/devices/alienware-wmi.rst
-new file mode 100644
-index 000000000..f2fb845d7
---- /dev/null
-+++ b/Documentation/wmi/devices/alienware-wmi.rst
-@@ -0,0 +1,366 @@
-+.. SPDX-License-Identifier: GPL-2.0-or-later
-+
-+==============================================
-+Dell AWCC WMI interface driver (alienware-wmi)
-+==============================================
-+
-+Introduction
-+============
-+
-+The WMI device WMAX has been implemented for many Alienware and Dell's G-Series
-+models. Throughout these models, two implementations have been identified. The
-+first one, used by older systems, deals with HDMI, brightness, RGB, amplifier
-+and deep sleep control. The second one used by newer systems deals primarily
-+with thermal, overclocking, and GPIO control.
-+
-+It is suspected that the latter is used by Alienware Command Center (AWCC) to
-+manage manufacturer predefined thermal profiles. The alienware-wmi driver
-+exposes Thermal_Information and Thermal_Control methods through the Platform
-+Profile API to mimic AWCC's behavior.
-+
-+This newer interface, named AWCCMethodFunction has been reverse engineered, as
-+Dell has not provided any official documentation. We will try to describe to the
-+best of our ability its discovered inner workings.
-+
-+.. note::
-+   The following method description may vary between models.
-+
-+WMI interface description
-+-------------------------
-+
-+The WMI interface description can be decoded from the embedded binary MOF (bmof)
-+data using the `bmfdec <https://github.com/pali/bmfdec>`_ utility:
-+
-+::
-+
-+ [WMI, Dynamic, Provider("WmiProv"), Locale("MS\\0x409"), Description("WMI Function"), guid("{A70591CE-A997-11DA-B012-B622A1EF5492}")]
-+ class AWCCWmiMethodFunction {
-+   [key, read] string InstanceName;
-+   [read] boolean Active;
-+
-+   [WmiMethodId(13), Implemented, read, write, Description("Return Overclocking Report.")] void Return_OverclockingReport([out] uint32 argr);
-+   [WmiMethodId(14), Implemented, read, write, Description("Set OCUIBIOS Control.")] void Set_OCUIBIOSControl([in] uint32 arg2, [out] uint32 argr);
-+   [WmiMethodId(15), Implemented, read, write, Description("Clear OC FailSafe Flag.")] void Clear_OCFailSafeFlag([out] uint32 argr);
-+   [WmiMethodId(19), Implemented, read, write, Description("Get Fan Sensors.")] void GetFanSensors([in] uint32 arg2, [out] uint32 argr);
-+   [WmiMethodId(20), Implemented, read, write, Description("Thermal Information.")] void Thermal_Information([in] uint32 arg2, [out] uint32 argr);
-+   [WmiMethodId(21), Implemented, read, write, Description("Thermal Control.")] void Thermal_Control([in] uint32 arg2, [out] uint32 argr);
-+   [WmiMethodId(23), Implemented, read, write, Description("MemoryOCControl.")] void MemoryOCControl([in] uint32 arg2, [out] uint32 argr);
-+   [WmiMethodId(26), Implemented, read, write, Description("System Information.")] void SystemInformation([in] uint32 arg2, [out] uint32 argr);
-+   [WmiMethodId(28), Implemented, read, write, Description("Power Information.")] void PowerInformation([in] uint32 arg2, [out] uint32 argr);
-+   [WmiMethodId(32), Implemented, read, write, Description("FW Update GPIO toggle.")] void FWUpdateGPIOtoggle([in] uint32 arg2, [out] uint32 argr);
-+   [WmiMethodId(33), Implemented, read, write, Description("Read Total of GPIOs.")] void ReadTotalofGPIOs([out] uint32 argr);
-+   [WmiMethodId(34), Implemented, read, write, Description("Read GPIO pin Status.")] void ReadGPIOpPinStatus([in] uint32 arg2, [out] uint32 argr);
-+   [WmiMethodId(35), Implemented, read, write, Description("Read Chassis Color.")] void ReadChassisColor([out] uint32 argr);
-+   [WmiMethodId(36), Implemented, read, write, Description("Read Platform Properties.")] void ReadPlatformProperties([out] uint32 argr);
-+   [WmiMethodId(128), Implemented, read, write, Description("Caldera SW installation.")] void CalderaSWInstallation([out] uint32 argr);
-+   [WmiMethodId(129), Implemented, read, write, Description("Caldera SW is released.")] void CalderaSWReleased([out] uint32 argr);
-+   [WmiMethodId(130), Implemented, read, write, Description("Caldera Connection Status.")] void CalderaConnectionStatus([in] uint32 arg2, [out] uint32 argr);
-+   [WmiMethodId(131), Implemented, read, write, Description("Surprise Unplugged Flag Status.")] void SurpriseUnpluggedFlagStatus([out] uint32 argr);
-+   [WmiMethodId(132), Implemented, read, write, Description("Clear Surprise Unplugged Flag.")] void ClearSurpriseUnpluggedFlag([out] uint32 argr);
-+   [WmiMethodId(133), Implemented, read, write, Description("Cancel Undock Request.")] void CancelUndockRequest([out] uint32 argr);
-+   [WmiMethodId(135), Implemented, read, write, Description("Devices in Caldera.")] void DevicesInCaldera([in] uint32 arg2, [out] uint32 argr);
-+   [WmiMethodId(136), Implemented, read, write, Description("Notify BIOS for SW ready to disconnect Caldera.")] void NotifyBIOSForSWReadyToDisconnectCaldera([out] uint32 argr);
-+   [WmiMethodId(160), Implemented, read, write, Description("Tobii SW installation.")] void TobiiSWinstallation([out] uint32 argr);
-+   [WmiMethodId(161), Implemented, read, write, Description("Tobii SW Released.")] void TobiiSWReleased([out] uint32 argr);
-+   [WmiMethodId(162), Implemented, read, write, Description("Tobii Camera Power Reset.")] void TobiiCameraPowerReset([out] uint32 argr);
-+   [WmiMethodId(163), Implemented, read, write, Description("Tobii Camera Power On.")] void TobiiCameraPowerOn([out] uint32 argr);
-+   [WmiMethodId(164), Implemented, read, write, Description("Tobii Camera Power Off.")] void TobiiCameraPowerOff([out] uint32 argr);
-+ };
-+
-+Some of these methods get quite intricate so we will describe them using
-+pseudo-code that vaguely resembles the original ASL code.
-+
-+Argument Structure
-+------------------
-+
-+All input arguments have type **uint32** and their structure is very similar
-+between methods. Usually, the first byte corresponds to a specific *operation*
-+the method performs, and the subsequent bytes correspond to *arguments* passed
-+to this *operation*. For example, if an operation has code 0x01 and requires an
-+ID 0xA0, the argument you would pass to the method is 0xA001.
-+
-+
-+Thermal Methods
-+===============
-+
-+WMI method Thermal_Information([in] uint32 arg2, [out] uint32 argr)
-+-------------------------------------------------------------------
-+
-+::
-+
-+ if BYTE_0(arg2) == 0x01:
-+         argr = 1
-+
-+ if BYTE_0(arg2) == 0x02:
-+         argr = UNKNOWN_CONSTANT
-+
-+ if BYTE_0(arg2) == 0x03:
-+         if BYTE_1(arg2) == 0x00:
-+                 argr = FAN_ID_0
-+
-+         if BYTE_1(arg2) == 0x01:
-+                 argr = FAN_ID_1
-+
-+         if BYTE_1(arg2) == 0x02:
-+                 argr = FAN_ID_2
-+
-+         if BYTE_1(arg2) == 0x03:
-+                 argr = FAN_ID_3
-+
-+         if BYTE_1(arg2) == 0x04:
-+                 argr = SENSOR_ID_CPU | 0x0100
-+
-+         if BYTE_1(arg2) == 0x05:
-+                 argr = SENSOR_ID_GPU | 0x0100
-+
-+         if BYTE_1(arg2) == 0x06:
-+                 argr = THERMAL_MODE_QUIET_ID
-+
-+         if BYTE_1(arg2) == 0x07:
-+                 argr = THERMAL_MODE_BALANCED_ID
-+
-+         if BYTE_1(arg2) == 0x08:
-+                 argr = THERMAL_MODE_BALANCED_PERFORMANCE_ID
-+
-+         if BYTE_1(arg2) == 0x09:
-+                 argr = THERMAL_MODE_PERFORMANCE_ID
-+
-+         if BYTE_1(arg2) == 0x0A:
-+                 argr = THERMAL_MODE_LOW_POWER_ID
-+
-+         if BYTE_1(arg2) == 0x0B:
-+                 argr = THERMAL_MODE_GMODE_ID
-+
-+         else:
-+                 argr = 0xFFFFFFFF
-+
-+ if BYTE_0(arg2) == 0x04:
-+         if is_valid_sensor(BYTE_1(arg2)):
-+                 argr = SENSOR_TEMP_C
-+         else:
-+                 argr = 0xFFFFFFFF
-+
-+ if BYTE_0(arg2) == 0x05:
-+         if is_valid_fan(BYTE_1(arg2)):
-+                 argr = FAN_RPM()
-+
-+ if BYTE_0(arg2) == 0x06:
-+         skip
-+
-+ if BYTE_0(arg2) == 0x07:
-+         argr = 0
-+
-+ If BYTE_0(arg2) == 0x08:
-+         if is_valid_fan(BYTE_1(arg2)):
-+                 argr = 0
-+         else:
-+                 argr = 0xFFFFFFFF
-+
-+ if BYTE_0(arg2) == 0x09:
-+         if is_valid_fan(BYTE_1(arg2)):
-+                 argr = FAN_UNKNOWN_STAT_0()
-+
-+         else:
-+                 argr = 0xFFFFFFFF
-+
-+ if BYTE_0(arg2) == 0x0A:
-+         argr = THERMAL_MODE_BALANCED_ID
-+
-+ if BYTE_0(arg2) == 0x0B:
-+         argr = CURRENT_THERMAL_MODE()
-+
-+ if BYTE_0(arg2) == 0x0C:
-+         if is_valid_fan(BYTE_1(arg2)):
-+                 argr = FAN_UNKNOWN_STAT_1()
-+         else:
-+                 argr = 0xFFFFFFFF
-+
-+WMI method Thermal_Control([in] uint32 arg2, [out] uint32 argr)
-+---------------------------------------------------------------
-+
-+::
-+
-+ if BYTE_0(arg2) == 0x01:
-+         if is_valid_thermal_profile(BYTE_1(arg2)):
-+                 SET_THERMAL_PROFILE(BYTE_1(arg2))
-+                 argr = 0
-+
-+ if BYTE_0(arg2) == 0x02:
-+         if is_valid_fan(BYTE_1(arg2)):
-+                 SET_FAN_SPEED_MULTIPLIER(BYTE_2(arg2))
-+                 argr = 0
-+         else:
-+                 argr = 0xFFFFFFFF
-+
-+.. note::
-+   While you can manually change the fan speed multiplier with this method,
-+   Dell's BIOS tends to overwrite this changes anyway.
-+
-+These are the known thermal profile codes:
-+
-+::
-+
-+ CUSTOM                         0x00
-+
-+ QUIET                          0x96
-+ BALANCED                       0x97
-+ BALANCED_PERFORMANCE           0x98
-+ PERFORMANCE                    0x99
-+
-+ QUIET_USTT                     0xA3
-+ BALANCED_USTT                  0xA0
-+ BALANCED_PERFORMANCE_USTT      0xA1
-+ PERFORMANCE_USTT               0xA4
-+ LOW_POWER_USTT                 0xA5
-+
-+ GMODE                          0xAB
-+
-+Usually if a model doesn't support the first four profiles they will support
-+the User Selectable Thermal Tables (USTT) profiles and vice-versa.
-+
-+GMODE replaces PERFORMANCE in G-Series laptops.
-+
-+WMI method GetFanSensors([in] uint32 arg2, [out] uint32 argr)
-+-------------------------------------------------------------
-+
-+::
-+
-+ if BYTE_0(arg2) == 1:
-+        if is_valid_fan(BYTE_1(arg2)):
-+                argr = 1
-+        else:
-+                argr = 0
-+
-+ if BYTE_0(arg2) == 2:
-+        if is_valid_fan(BYTE_1(arg2)):
-+                if BYTE_2(arg2) == 0:
-+                        argr == SENSOR_ID
-+                else
-+                        argr == 0xFFFFFFFF
-+        else:
-+                argr = 0
-+
-+Overclocking Methods
-+====================
-+
-+.. warning::
-+   These methods have not been tested and are only partially reverse
-+   engineered.
-+
-+WMI method Return_OverclockingReport([out] uint32 argr)
-+-------------------------------------------------------
-+
-+::
-+
-+ CSMI (0xE3, 0x99)
-+ argr = 0
-+
-+CSMI is an unknown operation.
-+
-+WMI method Set_OCUIBIOSControl([in] uint32 arg2, [out] uint32 argr)
-+-------------------------------------------------------------------
-+
-+::
-+
-+ CSMI (0xE3, 0x99)
-+ argr = 0
-+
-+CSMI is an unknown operation.
-+
-+WMI method Clear_OCFailSafeFlag([out] uint32 argr)
-+--------------------------------------------------
-+
-+::
-+
-+ CSMI (0xE3, 0x99)
-+ argr = 0
-+
-+CSMI is an unknown operation.
-+
-+
-+WMI method MemoryOCControl([in] uint32 arg2, [out] uint32 argr)
-+---------------------------------------------------------------
-+
-+AWCC supports memory overclocking, but this method is very intricate and has
-+not been deciphered yet.
-+
-+GPIO methods
-+============
-+
-+These methods are probably related to some kind of firmware update system,
-+through a GPIO device.
-+
-+.. warning::
-+   These methods have not been tested and are only partially reverse
-+   engineered.
-+
-+WMI method FWUpdateGPIOtoggle([in] uint32 arg2, [out] uint32 argr)
-+------------------------------------------------------------------
-+
-+::
-+
-+ if BYTE_0(arg2) == 0:
-+         if BYTE_1(arg2) == 1:
-+                 SET_PIN_A_HIGH()
-+         else:
-+                 SET_PIN_A_LOW()
-+
-+ if BYTE_0(arg2) == 1:
-+         if BYTE_1(arg2) == 1:
-+                 SET_PIN_B_HIGH()
-+
-+         else:
-+                 SET_PIN_B_LOW()
-+
-+ else:
-+         argr = 1
-+
-+WMI method ReadTotalofGPIOs([out] uint32 argr)
-+----------------------------------------------
-+
-+::
-+
-+ argr = 0x02
-+
-+WMI method ReadGPIOpPinStatus([in] uint32 arg2, [out] uint32 argr)
-+------------------------------------------------------------------
-+
-+::
-+
-+ if BYTE_0(arg2) == 0:
-+         argr = PIN_A_STATUS
-+
-+ if BYTE_0(arg2) == 1:
-+         argr = PIN_B_STATUS
-+
-+Other information Methods
-+=========================
-+
-+WMI method SystemInformation([in] uint32 arg2, [out] uint32 argr)
-+-----------------------------------------------------------------
-+
-+Returns unknown information.
-+
-+WMI method PowerInformation([in] uint32 arg2, [out] uint32 argr)
-+----------------------------------------------------------------
-+
-+Returns unknown information.
-+
-+WMI method ReadChassisColor([out] uint32 argr)
-+----------------------------------------------
-+
-+::
-+
-+ argr = CHASSIS_COLOR_ID
-+
-+WMI method ReadPlatformProperties([out] uint32 argr)
-+----------------------------------------------------
-+
-+Returns unknown information.
-+
-+Acknowledgements
-+================
-+
-+Kudos to `AlexIII <https://github.com/AlexIII/tcc-g15>`_ for documenting
-+and testing available thermal profile codes.
-+
-diff --git a/MAINTAINERS b/MAINTAINERS
-index c27f31907..25f6de4c2 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -792,6 +792,7 @@ F:	drivers/perf/alibaba_uncore_drw_pmu.c
- ALIENWARE WMI DRIVER
- L:	Dell.Client.Kernel@dell.com
- S:	Maintained
-+F:	Documentation/wmi/devices/alienware-wmi.rst
- F:	drivers/platform/x86/dell/alienware-wmi.c
- 
- ALLEGRO DVT VIDEO IP CORE DRIVER
--- 
-2.47.0
+> 50c6dbdfd introduced a WARN when adrress ranges of iounmap are
+> invalid. On Thinkpad P1 Gen 7 (Meteor Lake-P) this caused the
+> following warning to appear.
+>=20
+> WARNING: CPU: 7 PID: 713 at arch/x86/mm/ioremap.c:461 iounmap+0x58/0x1f0
+> Modules linked in: rfkill(+) snd_timer(+) fjes(+) snd soundcore intel_pmc=
+_core(+)
+> int3403_thermal(+) int340x_thermal_zone intel_vsec pmt_telemetry acpi_pad=
+ pmt_class
+> acpi_tad int3400_thermal acpi_thermal_rel joydev loop nfnetlink zram xe d=
+rm_suballoc_helper
+> nouveau i915 mxm_wmi drm_ttm_helper gpu_sched drm_gpuvm drm_exec drm_budd=
+y i2c_algo_bit
+> crct10dif_pclmul crc32_pclmul ttm crc32c_intel polyval_clmulni rtsx_pci_s=
+dmmc ucsi_acpi
+> polyval_generic mmc_core hid_multitouch drm_display_helper ghash_clmulni_=
+intel typec_ucsi
+> nvme sha512_ssse3 video sha256_ssse3 nvme_core intel_vpu sha1_ssse3 rtsx_=
+pci cec typec
+> nvme_auth i2c_hid_acpi i2c_hid wmi pinctrl_meteorlake serio_raw ip6_table=
+s ip_tables fuse
+> CPU: 7 UID: 0 PID: 713 Comm: (udev-worker) Not tainted 6.12.0-rc2iounmap+=
+ #42
+> Hardware name: LENOVO 21KWCTO1WW/21KWCTO1WW, BIOS N48ET19W (1.06 ) 07/18/=
+2024
+> RIP: 0010:iounmap+0x58/0x1f0
+> Code: 85 6a 01 00 00 48 8b 05 e6 e2 28 04 48 39 c5 72 19 eb 26 cc cc cc 4=
+8 ba 00 00 00 00 00 00 32 00 48 8d 44 02 ff 48 39 c5 72 23 <0f> 0b 48 83 c4=
+ 08 5b 5d 41 5c c3 cc cc cc cc 48 ba 00 00 00 00 00
+> RSP: 0018:ffff888131eff038 EFLAGS: 00010207
+> RAX: ffffc90000000000 RBX: 0000000000000000 RCX: ffff888e33b80000
+> RDX: dffffc0000000000 RSI: ffff888e33bc29c0 RDI: 0000000000000000
+> RBP: 0000000000000000 R08: ffff8881598a8000 R09: ffff888e2ccedc10
+> R10: 0000000000000003 R11: ffffffffb3367634 R12: 00000000fe000000
+> R13: ffff888101d0da28 R14: ffffffffc2e437e0 R15: ffff888110b03b28
+> FS:  00007f3c1d4b3980(0000) GS:ffff888e33b80000(0000) knlGS:0000000000000=
+000
+> CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> CR2: 00005651cfc93578 CR3: 0000000124e4c002 CR4: 0000000000f70ef0
+> DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+> DR3: 0000000000000000 DR6: 00000000ffff07f0 DR7: 0000000000000400
+> PKRU: 55555554
+> Call Trace:
+> <TASK>
+> ? __warn.cold+0xb6/0x176
+> ? iounmap+0x58/0x1f0
+> ? report_bug+0x1f4/0x2b0
+> ? handle_bug+0x58/0x90
+> ? exc_invalid_op+0x17/0x40
+> ? asm_exc_invalid_op+0x1a/0x20
+> ? iounmap+0x58/0x1f0
+> pmc_core_ssram_get_pmc+0x477/0x6c0 [intel_pmc_core]
+> ? __pfx_pmc_core_ssram_get_pmc+0x10/0x10 [intel_pmc_core]
+> ? __pfx_do_pci_enable_device+0x10/0x10
+> ? pci_wait_for_pending+0x60/0x110
+> ? pci_enable_device_flags+0x1e3/0x2e0
+> ? __pfx_mtl_core_init+0x10/0x10 [intel_pmc_core]
+> pmc_core_ssram_init+0x7f/0x110 [intel_pmc_core]
+> mtl_core_init+0xda/0x130 [intel_pmc_core]
+> ? __mutex_init+0xb9/0x130
+> pmc_core_probe+0x27e/0x10b0 [intel_pmc_core]
+> ? _raw_spin_lock_irqsave+0x96/0xf0
+> ? __pfx_pmc_core_probe+0x10/0x10 [intel_pmc_core]
+> ? __pfx_mutex_unlock+0x10/0x10
+> ? __pfx_mutex_lock+0x10/0x10
+> ? device_pm_check_callbacks+0x82/0x370
+> ? acpi_dev_pm_attach+0x234/0x2b0
+> platform_probe+0x9f/0x150
+> really_probe+0x1e0/0x8a0
+> __driver_probe_device+0x18c/0x370
+> ? __pfx___driver_attach+0x10/0x10
+> driver_probe_device+0x4a/0x120
+> __driver_attach+0x190/0x4a0
+> ? __pfx___driver_attach+0x10/0x10
+> bus_for_each_dev+0x103/0x180
+> ? __pfx_bus_for_each_dev+0x10/0x10
+> ? klist_add_tail+0x136/0x270
+> bus_add_driver+0x2fc/0x540
+> driver_register+0x1a5/0x360
+> ? __pfx_pmc_core_driver_init+0x10/0x10 [intel_pmc_core]
+> do_one_initcall+0xa4/0x380
+> ? __pfx_do_one_initcall+0x10/0x10
+> ? kasan_unpoison+0x44/0x70
+> do_init_module+0x296/0x800
+> load_module+0x5090/0x6ce0
+> ? __pfx_load_module+0x10/0x10
+> ? ima_post_read_file+0x193/0x200
+> ? __pfx_ima_post_read_file+0x10/0x10
+> ? rw_verify_area+0x152/0x4c0
+> ? kernel_read_file+0x257/0x750
+> ? __pfx_kernel_read_file+0x10/0x10
+> ? __pfx_filemap_get_read_batch+0x10/0x10
+> ? init_module_from_file+0xd1/0x130
+> init_module_from_file+0xd1/0x130
+> ? __pfx_init_module_from_file+0x10/0x10
+> ? __pfx__raw_spin_lock+0x10/0x10
+> ? __pfx_cred_has_capability.isra.0+0x10/0x10
+> idempotent_init_module+0x236/0x770
+> ? __pfx_idempotent_init_module+0x10/0x10
+> ? fdget+0x58/0x3f0
+> ? security_capable+0x7d/0x110
+> __x64_sys_finit_module+0xbe/0x130
+> do_syscall_64+0x82/0x160
+> ? __pfx_filemap_read+0x10/0x10
+> ? __pfx___fsnotify_parent+0x10/0x10
+> ? vfs_read+0x3a6/0xa30
+> ? vfs_read+0x3a6/0xa30
+> ? __seccomp_filter+0x175/0xc60
+> ? __pfx___seccomp_filter+0x10/0x10
+> ? fdget_pos+0x1ce/0x500
+> ? syscall_exit_to_user_mode_prepare+0x149/0x170
+> ? syscall_exit_to_user_mode+0x10/0x210
+> ? do_syscall_64+0x8e/0x160
+> ? switch_fpu_return+0xe3/0x1f0
+> ? syscall_exit_to_user_mode+0x1d5/0x210
+> ? do_syscall_64+0x8e/0x160
+> ? exc_page_fault+0x76/0xf0
+> entry_SYSCALL_64_after_hwframe+0x76/0x7e
+> RIP: 0033:0x7f3c1d6d155d
+> Code: ff c3 66 2e 0f 1f 84 00 00 00 00 00 90 f3 0f 1e fa 48 89 f8 48 89 f=
+7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff=
+ ff 73 01 c3 48 8b 0d 83 58 0f 00 f7 d8 64 89 01 48
+> RSP: 002b:00007ffe6309db38 EFLAGS: 00000246 ORIG_RAX: 0000000000000139
+> RAX: ffffffffffffffda RBX: 0000557c212550a0 RCX: 00007f3c1d6d155d
+> RDX: 0000000000000000 RSI: 00007f3c1cd943bd RDI: 0000000000000025
+> RBP: 00007ffe6309dbf0 R08: 00007f3c1d7c7b20 R09: 00007ffe6309db80
+> R10: 0000557c21255270 R11: 0000000000000246 R12: 00007f3c1cd943bd
+> R13: 0000000000020000 R14: 0000557c21255c80 R15: 0000557c21255240
+> </TASK>
+> ---[ end trace 0000000000000000 ]---
+>=20
+> pmc_core_iounmap calls iounmap unconditionally causing the above
+> warning to appear during boot.
+>=20
+> Fix it by checking for a valid address before calling iounmap.
+>=20
+> Also the function pmc_core_ssram_get_pmc,
+> =09ioremap(ssram_base, SSRAM_HDR_SIZE)
+> returns NULL on the same meteor lake machine even though the
+> ssram_base is valid, return -ENOMEM in such cases.
+>=20
+> Fixes: a01486dc4bb1 ("platform/x86/intel/pmc: Cleanup SSRAM discovery")
+> Signed-off-by: Vamsi Krishna Brahmajosyula <vamsikrishna.brahmajosyula@gm=
+ail.com>
+> ---
+>  drivers/platform/x86/intel/pmc/core_ssram.c | 4 +++-
+>  1 file changed, 3 insertions(+), 1 deletion(-)
+>=20
+> diff --git a/drivers/platform/x86/intel/pmc/core_ssram.c b/drivers/platfo=
+rm/x86/intel/pmc/core_ssram.c
+> index c259c96b7dfd..8504154b649f 100644
+> --- a/drivers/platform/x86/intel/pmc/core_ssram.c
+> +++ b/drivers/platform/x86/intel/pmc/core_ssram.c
+> @@ -29,7 +29,7 @@
+>  #define LPM_REG_COUNT=09=0928
+>  #define LPM_MODE_OFFSET=09=091
+> =20
+> -DEFINE_FREE(pmc_core_iounmap, void __iomem *, iounmap(_T));
+> +DEFINE_FREE(pmc_core_iounmap, void __iomem *, if (_T) iounmap(_T))
 
+Yeah, this "if (_T)" is a pattern to look for when reviewing=20
+DEFINE_FREE()s but it was so new back then and raised no alarms at least=20
+in my mind until seeing this fix. So thanks for the lesson :-).
+
+Reviewed-by: Ilpo J=E4rvinen <ilpo.jarvinen@linux.intel.com>
+
+--=20
+ i.
+
+>  static u32 pmc_core_find_guid(struct pmc_info *list, const struct pmc_re=
+g_map *map)
+>  {
+> @@ -262,6 +262,8 @@ pmc_core_ssram_get_pmc(struct pmc_dev *pmcdev, int pm=
+c_idx, u32 offset)
+> =20
+>  =09ssram_base =3D ssram_pcidev->resource[0].start;
+>  =09tmp_ssram =3D ioremap(ssram_base, SSRAM_HDR_SIZE);
+> +=09if (!tmp_ssram)
+> +=09=09return -ENOMEM;
+> =20
+>  =09if (pmc_idx !=3D PMC_IDX_MAIN) {
+>  =09=09/*
+>=20
+> base-commit: 2f87d0916ce0d2925cedbc9e8f5d6291ba2ac7b2
+>=20
+
+--8323328-812179542-1729157350=:929--
