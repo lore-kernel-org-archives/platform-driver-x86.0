@@ -1,225 +1,232 @@
-Received: from NAM10-BN7-obe.outbound.protection.outlook.com (mail-bn7nam10on2047.outbound.protection.outlook.com [40.107.92.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f178.google.com (mail-pl1-f178.google.com [209.85.214.178])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0876720F5B1;
-	Wed, 16 Oct 2024 16:09:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.92.47
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729094983; cv=fail; b=n+LjmRGGf2eT4eCG3/Wq6IXomFhQZdkXSOcvdx4HI5nNT7Sw8x4qVnEFcDWo55Iz5sk6VvwLagP/JfkjBMiafvOTXb0yMLY6Xy2otlxj8LaRckHOwbK7KeXcfT1HYLZFQmTF4BX7JhPsu8i8y5ed8ZrpH3KGrw0+D4IGRhEFeDk=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729094983; c=relaxed/simple;
-	bh=A8A+SJbbfbFRYCaMwMTBf2/xLzJeJANoFcE+WAvvESo=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=TXs3LVzZvyEBbkvOrf9xUCy/ruCUDhtPlQC+vKLPd9Ux/mwVGlZbYpz4BQxWCNzBIwDAuNm2XX2qXwQojynf+bANUnt7vtAGN9Xa1jPs8NuYm0qzZzkr+luTGxG7VKIG7QeCdO7hAu2sIBXE9iPMY10DSOszx0W41E++2/+UAmk=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=b2a+nhkR; arc=fail smtp.client-ip=40.107.92.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 81B2A20E3;
+	Thu, 17 Oct 2024 04:10:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.178
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1729138237; cv=none; b=bmpCPen42+yWfNBgnFP/PjNnaROLWZDtwago6YHwkt39KsemJubT1sUkMiBNJGDq9mfMxgTvvZ/S8T4v/E/QwB0VRevh9o5zfgmxdA0051/1xdV9erCjpww9uxXTYQ3c9HdJDcDyu6P+asrgt8BBT+KSv7uMWyblgZAxA/3NavM=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1729138237; c=relaxed/simple;
+	bh=Yt1K2WQAiKzgH7ZMWeLbWNt86ai9UwpfrishH/vpy08=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=afYmjwD8Kv5tkvvq6Wc91KiytkwlD2qBQ7b/1OwgP0i02di8M2Zc2llodDrxmnyrRVhQLEpOrrY8mh2fK0FkVKU3cdrIErlG7MA7AtOgKjMJTcsZ/arVc4Jg5UtFa3nUr3C920dJlkeKB3ZhZTDiEfuha59t9VMF8zikvxSE/GY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=TCtxg7xn; arc=none smtp.client-ip=209.85.214.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="b2a+nhkR"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=LwIURhIHBtKr9Y0vc23NMW9Gw9e0zQeG4FkMbSq4cqqNfz/d/qYQKubi7lWa3ulLNqhht7JwWNFp3b48jyV6cB46IbSBv29XMXyD6NQizinV8IurX6nuWevRHhiLFHHfQo8K05b0GRARM7uoUA17YEPsTkiCqtZFmG0yZxrqO2lq/chwHbIAr2kzoXxx/vStPf4PcCo4NEWG6rSacpoQqWH4wVM+/HRNo4BjHZRrCVRRWkLgDsBHqRDhtMhfpnZEvoY/uOzRq6r3F5wxbSJ9Yiugyv1EBXfvQkGcn/JdtlDy+vPGhs4LyxWCPO+7aEbCgnRldA+QFA27dYEWFRVvIg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=OuLPiA5/iY8hmINCjV2Xt4suJmJB9chWFgjkuncU+CU=;
- b=CvkifZqGIp+dh4UH2iupbr2hrKAjhuqjVVocmy9Q9pJV0jGNXjX14RUqANx3y8ZjpqjeDUQ41fv3TqeI4gWWFH+QO+Y9wbHBngMLhX0e1udUYHNC32qespAbA4qkD+uOrDI0gi9JXEz7hzX9uqsTog9p5dJ3DJXFChEIqeNtiKcfSZAiKWsJ6i0M+PQFs8cyeNvT8adMpw/6Uoso5lQHM//n6AAmwLDoEruZUwtgFbKD10ioWO8FFQNJbqAbVcUpeiFBPigOVArVHg47uVqE3Zl1vbuO3HW2bKVOnqtD3/a8gNmNjFCAJCgXlzypwroBfpXAuh7j3wF8z1XdLZ4IXg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=OuLPiA5/iY8hmINCjV2Xt4suJmJB9chWFgjkuncU+CU=;
- b=b2a+nhkREuIt15LY1WofVyYwN+9kDAbpgCVEVY8C/qmZFboD+OW8f/XyGtemNGnMFhE9jbq7A8kXEqYjjIMlsxhEQBdzCEc7YZo/ISBN7f9SKxXQmJCDnD+byOUa8uA17yN54mvnuK1X7IyTO7t6knJgyvyBAwjeNGc+csR7E08=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from MN0PR12MB6101.namprd12.prod.outlook.com (2603:10b6:208:3cb::10)
- by PH0PR12MB7982.namprd12.prod.outlook.com (2603:10b6:510:28d::5) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8069.19; Wed, 16 Oct
- 2024 16:09:38 +0000
-Received: from MN0PR12MB6101.namprd12.prod.outlook.com
- ([fe80::37ee:a763:6d04:81ca]) by MN0PR12MB6101.namprd12.prod.outlook.com
- ([fe80::37ee:a763:6d04:81ca%6]) with mapi id 15.20.8069.016; Wed, 16 Oct 2024
- 16:09:37 +0000
-Message-ID: <6b67a84b-eeb6-4b53-b3c7-2a0925c6bea0@amd.com>
-Date: Wed, 16 Oct 2024 11:09:35 -0500
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 14/14] platform/x86: hfi: Add debugfs support
-To: =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Cc: Borislav Petkov <bp@alien8.de>, Hans de Goede <hdegoede@redhat.com>,
- x86@kernel.org, "Gautham R . Shenoy" <gautham.shenoy@amd.com>,
- Perry Yuan <perry.yuan@amd.com>, LKML <linux-kernel@vger.kernel.org>,
- linux-doc@vger.kernel.org, linux-pm@vger.kernel.org,
- platform-driver-x86@vger.kernel.org,
- Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
-References: <20241015213645.1476-1-mario.limonciello@amd.com>
- <20241015213645.1476-15-mario.limonciello@amd.com>
- <7b3a2e3b-9c37-09a3-238a-9cc90726c929@linux.intel.com>
-Content-Language: en-US
-From: Mario Limonciello <mario.limonciello@amd.com>
-In-Reply-To: <7b3a2e3b-9c37-09a3-238a-9cc90726c929@linux.intel.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: SN7PR18CA0014.namprd18.prod.outlook.com
- (2603:10b6:806:f3::26) To MN0PR12MB6101.namprd12.prod.outlook.com
- (2603:10b6:208:3cb::10)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TCtxg7xn"
+Received: by mail-pl1-f178.google.com with SMTP id d9443c01a7336-20c77459558so4500245ad.0;
+        Wed, 16 Oct 2024 21:10:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1729138235; x=1729743035; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=Ux6SYxBDhxO8DGVq2zufumZVyMNrmutT9VAJWAbmOgk=;
+        b=TCtxg7xnJ27N2ejgnQxh1k6kPJ4R9vQceldsl+YIgUjx3r7QlbYwW6oc75AZ60XJ+Y
+         zB4ET2ziR8+NHghkshb6oRlp4GJ0abgNqkIW/9WMGU1V4vyjeBozUciF4AOUXlX0SkGD
+         xmWKaCI+5+oRZuFWKJEXv8hfNwBbe8o/1XCFqnJIs53xPEZiAEQBFFp+Ux5exl6NvKP+
+         qvMmdL8FwlWlZhWFA7nHZGBdf1SYNG6Twe2yI8cIXPr7Q2JCU40g7MXD+8ZvFpejdvdb
+         mJxl0NW1J9cg4nBfNsDlBf67UosuVAYv+iaFWMPpGRDqLafv3D4p8eBORDkxxncJAHxh
+         p1iA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1729138235; x=1729743035;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=Ux6SYxBDhxO8DGVq2zufumZVyMNrmutT9VAJWAbmOgk=;
+        b=YlP+DZn/LIP7pABVkfPIVfJaR1g5Qexe4A3BEQ9mNOT799Vwk3W5j0uZXHoFfzTkTQ
+         miWHkrMcspaH9e6lIcLTidH9Dhmpjzo4uW+AR9LTNHuYKXiCylhxCAyZr/ohEmmc1SBl
+         CB2s6f4a6iIZa2gWMU2/JT4UAx00o3m8uzFkXnVa9/yR8IYdk1D4mGwqTNprPLpSplmH
+         neYZ5pZ+6Qj2cwG1zsLF8D6Fi+Y5oVzaMPQet/dFyxw3U6IL8vVn9dMi0G/paXwAr2iT
+         +oF8QmyXd2zQ7ohipDKWCQTyFjsC2IHflEH+R73Weqe5bDPP27bXRJPyfRMgr3PliURs
+         ZSqA==
+X-Forwarded-Encrypted: i=1; AJvYcCVdkMZmuedzq0edfVtMvjMT+LJs9ZOCwaL5nmkmEBMdEhPFkAhc/TT809YeMwdfa/PAI+O8ImOTXTCTnoFDlIa/WQQD8g==@vger.kernel.org, AJvYcCX0edMzACg4zuIv6JaKli9Vd/wBMga0bOVDws3/fEwoSVNVWS5jjTbeGP05QgFYYVC4LkCN4QASb19qK2I=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxPYPg+9qWsfMnaoTHhzf9G0MIok1yaY5Yvk0pq1h9pwf5gkRQF
+	QgiGpXH4Z2VZ78+qKFjeWblyeJBfccUIXPjBLshkf17XOh5t9Vea
+X-Google-Smtp-Source: AGHT+IE41gL/wWgrnUh5J4/mGB5KzxG6XwXUKZeIR+ggkI23MMwlc2AAxxPgfxYPXomqOXqe0bTI7A==
+X-Received: by 2002:a17:902:dac7:b0:20d:f00:bd26 with SMTP id d9443c01a7336-20d0f00bd43mr133067745ad.36.1729138234451;
+        Wed, 16 Oct 2024 21:10:34 -0700 (PDT)
+Received: from fedora.. ([2405:201:d007:50c2:4888:86b4:6f32:9ae])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-20d1805bc66sm35705975ad.272.2024.10.16.21.10.30
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 16 Oct 2024 21:10:33 -0700 (PDT)
+From: Vamsi Krishna Brahmajosyula <vamsikrishna.brahmajosyula@gmail.com>
+To: irenic.rajneesh@gmail.com,
+	david.e.box@intel.com,
+	hdegoede@redhat.com,
+	ilpo.jarvinen@linux.intel.com,
+	david.e.box@linux.intel.com
+Cc: skhan@linuxfoundation.org,
+	platform-driver-x86@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH] platform/x86/intel/pmc: Fix pmc_core_iounmap to call iounmap for valid addresses
+Date: Thu, 17 Oct 2024 09:40:27 +0530
+Message-ID: <20241017041027.12785-1-vamsikrishna.brahmajosyula@gmail.com>
+X-Mailer: git-send-email 2.47.0
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: MN0PR12MB6101:EE_|PH0PR12MB7982:EE_
-X-MS-Office365-Filtering-Correlation-Id: c543c558-04a9-4dbd-57a8-08dcedfceedd
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|1800799024|366016;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?enpyY1RDT2hOOTQ4cVJHTXBvRGt3eUVsdHU4bS9YS2lNZ0pnR1VIckY5Q0lI?=
- =?utf-8?B?a3lBQWlRT2xWRUtCRWtZaVZjaHN1MmFpK2Y3eEZMQlA3eExadW9NaitIT09u?=
- =?utf-8?B?R2JleGltSWw2YWdkK2ZKQjN6eFBlWTZVZFl6V3U2c3JwcHVOZlc0WCs0cEJj?=
- =?utf-8?B?VlJhejNsWnBVNC9OdWN0ZDNzcE4xOEp6WHZXaVBwdlVWU243cWhwWUhlMys3?=
- =?utf-8?B?MWlOdm9MUVUvMEVRT01ydkt1VmU1Um5KMjhLYUF5SStCaERIWkJRS0RuaEUx?=
- =?utf-8?B?dmRqYmlkQ0VuUE9qTE9ISUJWQ1R6dTEwSFV4SktJa2tBMzZxM1lyd2xWa255?=
- =?utf-8?B?Q2tMRDBkWE5UY1V1WUVTZ2RVcVZiRTZtRjNEZXVhMU42c2pwdjd6VjM0MzdU?=
- =?utf-8?B?OVhYUitiQW5mSGRqOXhDcWQvVU9XQUJFbS8vci9XZUl0ZkJJN2EwRFZLZTF5?=
- =?utf-8?B?bFRPSzJWNkVlbzdvNjJDNGpVMkdUMFZwdEc0RmFoTjlkRzRxVHNpYkFWQldm?=
- =?utf-8?B?cXdua1BuL2tWWnNZSW9ObzhSa3A4S1FxS0Z4T1lHcHlFcjRLK3Y2STZIamZa?=
- =?utf-8?B?Z1RMRlFrL0JVRjQycUFXOGVqRUR3OUFRbTZTS21EUXNtOVVZVGlvc2tCcjZr?=
- =?utf-8?B?NmlCZFZmN080RVJxV1kxWXJjS3V3am56NGphc2llY2FmL3FtekduV1BmTFhn?=
- =?utf-8?B?K0EvYVU4OFplaklOdkR0WUhhMDMrWDBZUDhDWTVWdnFPZVpCblI0a25vNmJG?=
- =?utf-8?B?N1lvemwvak9IQ2F4SERNa3BOWjFJMno4WmxvZXlVUVZrMEhscUp3Q3paTjJu?=
- =?utf-8?B?OTNsemsrUWtaTDk3MWcxa0xIVGpBUDRVQWRXbTdkWHFkbkVXSHhwL2NBMXFn?=
- =?utf-8?B?aktXaGY1d1luTnNJWUFRVUpBMDkrREM2TnVsZXovRE1QanN4Q1VOY00yb0F6?=
- =?utf-8?B?WU9TSHhFbzhxaXByOXR1aGNVQXdmSUF6OThrMjc2VHJuMmw0TTNVNW13bTd1?=
- =?utf-8?B?TnN3VWZ4WmtEdGlwUUtnWTJDM0NXajRTZUlocnVRZ0tYU3hPUGJvc24rd3ZJ?=
- =?utf-8?B?MlQ5dmREc0hReSs0WWszcDBNamlKbXJtYXM4VG1XSFlvTHVIc3lUUmdNWXNX?=
- =?utf-8?B?MWhaeDNJeVZkSXg5aEZyWXg2ZzRzaTA4SHNrTFJ0Z3FmeE1rdmJ6OTJtU0RJ?=
- =?utf-8?B?ZkplOVpTRjk0L0ZZNHM4b0M2aXRVZG01eGJGK1pWZzRQQzc5WCtrNHI2UFk3?=
- =?utf-8?B?VVpBcUg5QnN2OHh1NStweVdpZm56Z05zVUhqeitmQlo2dkVUaGpzV0RnK0l0?=
- =?utf-8?B?cTgwRUt3SFBqaWc3VjFXbC81S05ZaUlTRWFDekRaZTRuSTlId3FiNGZYQXpE?=
- =?utf-8?B?VUQ1bnh5SVJWaThIL2RKSjJnUHQxYjFoZUszU2xxZlVLZjBYQzd1ZTVWTjJs?=
- =?utf-8?B?VHFaQnhVMCttelNVa2JXdWRPRFAzamdqUWpBVW5EblN2MnJOdVBpY3dvaEls?=
- =?utf-8?B?Rm96RDM1eVBZQWtQK0RVdFRjNTArQ2ZLOXZEVEVhQTUzMXJ0TFF0QnovVkdR?=
- =?utf-8?B?NE9QRnhNTUczVnc2Q1ZuMU92bDcxVDVzTjB3WkdEQlpNV3c2ZXdYTlVmYjI0?=
- =?utf-8?B?MWx3QXZlV2RnamhvVXJveHV2Ym01aHZmbmNpTEI4cWkzQ09LQTNldy9aWVEy?=
- =?utf-8?B?dEpHUFdLOWVCb1BJSk1GWW9idy9kVHMwOStCenZhZHE3NHpGanFBV2lnPT0=?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MN0PR12MB6101.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(1800799024)(366016);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?dW5aVWRsSUp1cyt5RzZlNkZ5SWFzT2kzYjU5YVhzTGxUbWtmcDhzTkhhYWxG?=
- =?utf-8?B?cTVhck93dDU5V2tqUWZyeFdTTjdGZUZnWUN2Nk1uQmhCeHZlU1NKcjJUYWhX?=
- =?utf-8?B?TzZaUDFkVDNOeXJxMlhHQ2VZSGhGTTRCVDFBQkJvVHVvUFZqQWdaN0lpWU5V?=
- =?utf-8?B?YXRRZ1BBM0VTYmlIVkdyQk1hSis0Z2ROZm1IaGVSY1FYaDBXR0U1VmxSdzJt?=
- =?utf-8?B?MytHalBOT1pWNGpJd253eGdkYjJXRmQ2SHczc20yT0JWMmRqR1cwQmo2RmxB?=
- =?utf-8?B?MUJrVkdJSTR2UVk1QWpEQWp6UkdiNTd1bG9uaUVobWNrR1lSc2prRlBGem1y?=
- =?utf-8?B?a0Q2U2daUnlrNDBOcUgybGM5dE9tU1VmaEh2RjJPblZZdmg5SnZwY2dzNmVj?=
- =?utf-8?B?T3pVb05aWjRFME9DMGNER084ZXkrek96T2d6dWJqR3F6dkFIeTJsOXRMb01E?=
- =?utf-8?B?bThjQ096OTE3TVJQVWhMWk94TlpPbUlYNGZTdlFlbVNEenh0MDhYcU5NYVpK?=
- =?utf-8?B?NkhER0RMNlQ1bXpFOWZwdEpxcDJyeWVCVC9adEYwNkZrZzJpbDhTc08rMEFI?=
- =?utf-8?B?VWFZV0p1elhLRnFldFJRQ2pCQy9TcUlGQ1ZkYVdDamh3ZzFLSUN0UGpidnNu?=
- =?utf-8?B?WDJINVVMN3RDYUozZlZNcGNreXovNTdNYlpEdVE4OHVNVlJiTTNGK09YNDBM?=
- =?utf-8?B?c3Q5dElVaVJ0c0Y0NC9sYUlnUWlOZHpacHo1d0NkUTVqWENLRi9WaU95VEhm?=
- =?utf-8?B?U25IRzY2UTBBNDU0Snh0TVdZS2tjZTBjOVdMbE9ObVhpbnM3cFhDQ0xxNUhm?=
- =?utf-8?B?cGFaTFU5S2xQYnJkUlVjVE11Z3kyR0lETnloTW5zSGg1OFJyYzZrT0liam9D?=
- =?utf-8?B?MDh5amRDdXNCaytqSVlsK2JwSmsxRFo5WGNRSjBpRFpaTXkvM295TVVFUUxR?=
- =?utf-8?B?U0tyTW5HcmhDTnNJZ0d2VnBLMnVVbklST1kreVUyQ2VuUHM1VENkdUlTd05t?=
- =?utf-8?B?ZEJ1azFEcUNpQjJBRWRpUDhuRUhYVzFGZklhNjZkU1JGTFdKUmZTM09YQ2RK?=
- =?utf-8?B?S2NJTlg1Sm5VazNIdUl5Tk1aR3FKa1VSVUJMZGtOQjNOaG5OM2JSdmtFdzJt?=
- =?utf-8?B?ZmJrZ2orbVMxWVl4RGdaVlNTTWhNemt2NVN2bGpWR2ExbkdiQ1ljcFRQb3Bq?=
- =?utf-8?B?OXkwWitPUUdFSXRaREVMWVFSaUgzT1JSQlMvTk40TzJmR3VIQndaVnVNOE1Y?=
- =?utf-8?B?dHpwSmRLR3htaUlJQnljMFBqNlZsamtoVkx0amd5RXVmSGNwd0RZMTJ2WjZS?=
- =?utf-8?B?UFh6V1dPOEQ3bGdtVDFMSEtrQlBzRkk2eit1NEFmU0QrQVpoN1hlS29zdHBL?=
- =?utf-8?B?MEhmY0FrQi9VM242WUkxSlZQK1lqOVZYUXhoWk5jZnF1aEU2emR1UFkrQWFE?=
- =?utf-8?B?UUIyd2FpVmF4cXpuL2lIQ0xWd2hndmJLUG5kRUt4eEJBQnNya2tlWE9WZVpE?=
- =?utf-8?B?WEp5ZEQzRVJxZ3dvVUozbDBMelBuTTJhNEo2RVpBV0FrR3FBV3p0a2ZxdGRG?=
- =?utf-8?B?TWJDZ0pNamxVMWk1MlFHWjhTQmQrOERvRE00bzlDU0FweVFkdWxwTXkvOTdi?=
- =?utf-8?B?dk5KdXplaGtIU0tubkNYdzRXTVBJa2tWNGtMc3dJWWtUbGlsc09nMnZXamdz?=
- =?utf-8?B?MkprMlNObmwreTR4UWZsVlB0MlJLVFZDcUFPZ2o5azF0SkVnR1lkSnFzVWZt?=
- =?utf-8?B?dUk5anlzbDZSeGVuYlZSMzFSZDZYUm9ZYVVKZWNKcXhvOXEzbWRXT3d0b09r?=
- =?utf-8?B?ekJiSHVEcXE5WDRrU0pYa2REcmlrODMrbTVUNFMyWUhmSTBGUVRQL09iQWY3?=
- =?utf-8?B?dnJIdm94b1dOSnFLS09yZDVjUkZYOGxJK1hrQkR4UWRrM1k2c1FqRkRqM1h5?=
- =?utf-8?B?bWZSNUdmR2hLMmRtSnd2a1l3bk1wclN6akJxVFJUYW9qZEl3Rlp2V2RwVUNz?=
- =?utf-8?B?M2FJSkZ2d211VWc0dEhYeFNSL3MrTi8zdjM4QjhIQlY0Zm1yZGRhdzgrM0lt?=
- =?utf-8?B?czFpdzhITHdmYVVJYXJ2ZnBaVFhoMlF5VkxSRTljbVJmcDdzVUJDdXE2QThv?=
- =?utf-8?Q?AD9FMaHi1GkZ0JDZ85iSaDySi?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: c543c558-04a9-4dbd-57a8-08dcedfceedd
-X-MS-Exchange-CrossTenant-AuthSource: MN0PR12MB6101.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 16 Oct 2024 16:09:37.6427
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: cPL3vPmI0krti5TV8GUM4Mxmt17a9tTXC7pnzubP4aKSgpmztwjsteU96m0e+0SZxN4emCZ5WoeEy0756xBs9g==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH0PR12MB7982
+Content-Transfer-Encoding: 8bit
 
-On 10/16/2024 07:38, Ilpo Järvinen wrote:
-> On Tue, 15 Oct 2024, Mario Limonciello wrote:
-> 
->> Add a dump of the class and capabilities table to debugfs to assist
->> with debugging scheduler issues.
->>
->> Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
->> ---
->> v2->v3:
->>    * New patch
->> ---
->>   drivers/platform/x86/amd/hfi/hfi.c | 31 ++++++++++++++++++++++++++++++
->>   1 file changed, 31 insertions(+)
->>
->> diff --git a/drivers/platform/x86/amd/hfi/hfi.c b/drivers/platform/x86/amd/hfi/hfi.c
->> index 6c90b50f0a40..6df80f6ac73c 100644
->> --- a/drivers/platform/x86/amd/hfi/hfi.c
->> +++ b/drivers/platform/x86/amd/hfi/hfi.c
->> @@ -13,6 +13,7 @@
->>   #include <linux/acpi.h>
->>   #include <linux/cpu.h>
->>   #include <linux/cpumask.h>
->> +#include <linux/debugfs.h>
->>   #include <linux/gfp.h>
->>   #include <linux/init.h>
->>   #include <linux/io.h>
->> @@ -79,6 +80,8 @@ struct amd_hfi_data {
->>   	void __iomem		*pcc_comm_addr;
->>   	struct acpi_subtable_header	*pcct_entry;
->>   	struct amd_shmem_info	*shmem;
->> +
->> +	struct dentry *dbgfs_dir;
->>   };
->>   
->>   /**
->> @@ -243,6 +246,8 @@ static void amd_hfi_remove(struct platform_device *pdev)
->>   {
->>   	struct amd_hfi_data *dev = platform_get_drvdata(pdev);
->>   
->> +	debugfs_remove_recursive(dev->dbgfs_dir);
->> +
->>   	mutex_destroy(&dev->lock);
->>   }
->>   
->> @@ -400,6 +405,28 @@ static int amd_hfi_metadata_parser(struct platform_device *pdev,
->>   	return ret;
->>   }
->>   
->> +static int class_capabilities_show(struct seq_file *s, void *unused)
->> +{
->> +	int cpu, idx;
->> +
->> +	seq_puts(s, "CPU #\tWLC\tPerf\tEff\n");
->> +	for_each_present_cpu(cpu) {
->> +		struct amd_hfi_cpuinfo *hfi_cpuinfo = per_cpu_ptr(&amd_hfi_cpuinfo, cpu);
->> +
->> +		seq_printf(s, "%d\t", cpu);
->> +		for (idx = 0; idx < hfi_cpuinfo->nr_class; idx++) {
->> +			seq_printf(s, "%s%d\t%d\t%d\n",
->> +				   idx == 0 ? "" : "\t",
-> 
-> Is this conditional printing really required? Why cannot you just print \t
-> always here and remove it from the cpu print line?
-> 
+50c6dbdfd introduced a WARN when adrress ranges of iounmap are
+invalid. On Thinkpad P1 Gen 7 (Meteor Lake-P) this caused the
+following warning to appear.
 
-Thanks for the suggestion, will include in v4.
+WARNING: CPU: 7 PID: 713 at arch/x86/mm/ioremap.c:461 iounmap+0x58/0x1f0
+Modules linked in: rfkill(+) snd_timer(+) fjes(+) snd soundcore intel_pmc_core(+)
+int3403_thermal(+) int340x_thermal_zone intel_vsec pmt_telemetry acpi_pad pmt_class
+acpi_tad int3400_thermal acpi_thermal_rel joydev loop nfnetlink zram xe drm_suballoc_helper
+nouveau i915 mxm_wmi drm_ttm_helper gpu_sched drm_gpuvm drm_exec drm_buddy i2c_algo_bit
+crct10dif_pclmul crc32_pclmul ttm crc32c_intel polyval_clmulni rtsx_pci_sdmmc ucsi_acpi
+polyval_generic mmc_core hid_multitouch drm_display_helper ghash_clmulni_intel typec_ucsi
+nvme sha512_ssse3 video sha256_ssse3 nvme_core intel_vpu sha1_ssse3 rtsx_pci cec typec
+nvme_auth i2c_hid_acpi i2c_hid wmi pinctrl_meteorlake serio_raw ip6_tables ip_tables fuse
+CPU: 7 UID: 0 PID: 713 Comm: (udev-worker) Not tainted 6.12.0-rc2iounmap+ #42
+Hardware name: LENOVO 21KWCTO1WW/21KWCTO1WW, BIOS N48ET19W (1.06 ) 07/18/2024
+RIP: 0010:iounmap+0x58/0x1f0
+Code: 85 6a 01 00 00 48 8b 05 e6 e2 28 04 48 39 c5 72 19 eb 26 cc cc cc 48 ba 00 00 00 00 00 00 32 00 48 8d 44 02 ff 48 39 c5 72 23 <0f> 0b 48 83 c4 08 5b 5d 41 5c c3 cc cc cc cc 48 ba 00 00 00 00 00
+RSP: 0018:ffff888131eff038 EFLAGS: 00010207
+RAX: ffffc90000000000 RBX: 0000000000000000 RCX: ffff888e33b80000
+RDX: dffffc0000000000 RSI: ffff888e33bc29c0 RDI: 0000000000000000
+RBP: 0000000000000000 R08: ffff8881598a8000 R09: ffff888e2ccedc10
+R10: 0000000000000003 R11: ffffffffb3367634 R12: 00000000fe000000
+R13: ffff888101d0da28 R14: ffffffffc2e437e0 R15: ffff888110b03b28
+FS:  00007f3c1d4b3980(0000) GS:ffff888e33b80000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 00005651cfc93578 CR3: 0000000124e4c002 CR4: 0000000000f70ef0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000ffff07f0 DR7: 0000000000000400
+PKRU: 55555554
+Call Trace:
+<TASK>
+? __warn.cold+0xb6/0x176
+? iounmap+0x58/0x1f0
+? report_bug+0x1f4/0x2b0
+? handle_bug+0x58/0x90
+? exc_invalid_op+0x17/0x40
+? asm_exc_invalid_op+0x1a/0x20
+? iounmap+0x58/0x1f0
+pmc_core_ssram_get_pmc+0x477/0x6c0 [intel_pmc_core]
+? __pfx_pmc_core_ssram_get_pmc+0x10/0x10 [intel_pmc_core]
+? __pfx_do_pci_enable_device+0x10/0x10
+? pci_wait_for_pending+0x60/0x110
+? pci_enable_device_flags+0x1e3/0x2e0
+? __pfx_mtl_core_init+0x10/0x10 [intel_pmc_core]
+pmc_core_ssram_init+0x7f/0x110 [intel_pmc_core]
+mtl_core_init+0xda/0x130 [intel_pmc_core]
+? __mutex_init+0xb9/0x130
+pmc_core_probe+0x27e/0x10b0 [intel_pmc_core]
+? _raw_spin_lock_irqsave+0x96/0xf0
+? __pfx_pmc_core_probe+0x10/0x10 [intel_pmc_core]
+? __pfx_mutex_unlock+0x10/0x10
+? __pfx_mutex_lock+0x10/0x10
+? device_pm_check_callbacks+0x82/0x370
+? acpi_dev_pm_attach+0x234/0x2b0
+platform_probe+0x9f/0x150
+really_probe+0x1e0/0x8a0
+__driver_probe_device+0x18c/0x370
+? __pfx___driver_attach+0x10/0x10
+driver_probe_device+0x4a/0x120
+__driver_attach+0x190/0x4a0
+? __pfx___driver_attach+0x10/0x10
+bus_for_each_dev+0x103/0x180
+? __pfx_bus_for_each_dev+0x10/0x10
+? klist_add_tail+0x136/0x270
+bus_add_driver+0x2fc/0x540
+driver_register+0x1a5/0x360
+? __pfx_pmc_core_driver_init+0x10/0x10 [intel_pmc_core]
+do_one_initcall+0xa4/0x380
+? __pfx_do_one_initcall+0x10/0x10
+? kasan_unpoison+0x44/0x70
+do_init_module+0x296/0x800
+load_module+0x5090/0x6ce0
+? __pfx_load_module+0x10/0x10
+? ima_post_read_file+0x193/0x200
+? __pfx_ima_post_read_file+0x10/0x10
+? rw_verify_area+0x152/0x4c0
+? kernel_read_file+0x257/0x750
+? __pfx_kernel_read_file+0x10/0x10
+? __pfx_filemap_get_read_batch+0x10/0x10
+? init_module_from_file+0xd1/0x130
+init_module_from_file+0xd1/0x130
+? __pfx_init_module_from_file+0x10/0x10
+? __pfx__raw_spin_lock+0x10/0x10
+? __pfx_cred_has_capability.isra.0+0x10/0x10
+idempotent_init_module+0x236/0x770
+? __pfx_idempotent_init_module+0x10/0x10
+? fdget+0x58/0x3f0
+? security_capable+0x7d/0x110
+__x64_sys_finit_module+0xbe/0x130
+do_syscall_64+0x82/0x160
+? __pfx_filemap_read+0x10/0x10
+? __pfx___fsnotify_parent+0x10/0x10
+? vfs_read+0x3a6/0xa30
+? vfs_read+0x3a6/0xa30
+? __seccomp_filter+0x175/0xc60
+? __pfx___seccomp_filter+0x10/0x10
+? fdget_pos+0x1ce/0x500
+? syscall_exit_to_user_mode_prepare+0x149/0x170
+? syscall_exit_to_user_mode+0x10/0x210
+? do_syscall_64+0x8e/0x160
+? switch_fpu_return+0xe3/0x1f0
+? syscall_exit_to_user_mode+0x1d5/0x210
+? do_syscall_64+0x8e/0x160
+? exc_page_fault+0x76/0xf0
+entry_SYSCALL_64_after_hwframe+0x76/0x7e
+RIP: 0033:0x7f3c1d6d155d
+Code: ff c3 66 2e 0f 1f 84 00 00 00 00 00 90 f3 0f 1e fa 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 8b 0d 83 58 0f 00 f7 d8 64 89 01 48
+RSP: 002b:00007ffe6309db38 EFLAGS: 00000246 ORIG_RAX: 0000000000000139
+RAX: ffffffffffffffda RBX: 0000557c212550a0 RCX: 00007f3c1d6d155d
+RDX: 0000000000000000 RSI: 00007f3c1cd943bd RDI: 0000000000000025
+RBP: 00007ffe6309dbf0 R08: 00007f3c1d7c7b20 R09: 00007ffe6309db80
+R10: 0000557c21255270 R11: 0000000000000246 R12: 00007f3c1cd943bd
+R13: 0000000000020000 R14: 0000557c21255c80 R15: 0000557c21255240
+</TASK>
+---[ end trace 0000000000000000 ]---
+
+pmc_core_iounmap calls iounmap unconditionally causing the above
+warning to appear during boot.
+
+Fix it by checking for a valid address before calling iounmap.
+
+Also the function pmc_core_ssram_get_pmc,
+	ioremap(ssram_base, SSRAM_HDR_SIZE)
+returns NULL on the same meteor lake machine even though the
+ssram_base is valid, return -ENOMEM in such cases.
+
+Fixes: a01486dc4bb1 ("platform/x86/intel/pmc: Cleanup SSRAM discovery")
+Signed-off-by: Vamsi Krishna Brahmajosyula <vamsikrishna.brahmajosyula@gmail.com>
+---
+ drivers/platform/x86/intel/pmc/core_ssram.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/platform/x86/intel/pmc/core_ssram.c b/drivers/platform/x86/intel/pmc/core_ssram.c
+index c259c96b7dfd..8504154b649f 100644
+--- a/drivers/platform/x86/intel/pmc/core_ssram.c
++++ b/drivers/platform/x86/intel/pmc/core_ssram.c
+@@ -29,7 +29,7 @@
+ #define LPM_REG_COUNT		28
+ #define LPM_MODE_OFFSET		1
+ 
+-DEFINE_FREE(pmc_core_iounmap, void __iomem *, iounmap(_T));
++DEFINE_FREE(pmc_core_iounmap, void __iomem *, if (_T) iounmap(_T))
+ 
+ static u32 pmc_core_find_guid(struct pmc_info *list, const struct pmc_reg_map *map)
+ {
+@@ -262,6 +262,8 @@ pmc_core_ssram_get_pmc(struct pmc_dev *pmcdev, int pmc_idx, u32 offset)
+ 
+ 	ssram_base = ssram_pcidev->resource[0].start;
+ 	tmp_ssram = ioremap(ssram_base, SSRAM_HDR_SIZE);
++	if (!tmp_ssram)
++		return -ENOMEM;
+ 
+ 	if (pmc_idx != PMC_IDX_MAIN) {
+ 		/*
+
+base-commit: 2f87d0916ce0d2925cedbc9e8f5d6291ba2ac7b2
+-- 
+2.47.0
+
