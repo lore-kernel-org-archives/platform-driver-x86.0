@@ -1,440 +1,711 @@
-Received: from NAM10-BN7-obe.outbound.protection.outlook.com (mail-bn7nam10on2068.outbound.protection.outlook.com [40.107.92.68])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f49.google.com (mail-wm1-f49.google.com [209.85.128.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 726B979FD;
-	Thu, 17 Oct 2024 06:07:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.92.68
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729145239; cv=fail; b=LIG+K0qtjgZKvCrGSqUCZbDVRB3Kbjhh5fienY35n2VLKggM6L7FTkPsnjSbg7ut9SuE/4aV9YIb1Min3Z0UPRAT+bwINRGTUmbbTqpx5YZSVozazOGuPrk++vLpl4U+yxECpFq0zMpMF8HSa/hz/grtz1kHbsD9Kpkqicq0hQ8=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729145239; c=relaxed/simple;
-	bh=zU0r5Z5NMHapE/CANgKTZPqkGlSZHrfOu43PuBGgs9k=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=d/sEWjXTWOgdcJVhBjBi4MmqW245IKoKxODQ6MZqWgr9jFh0IMPfXQlhZ0LyQhk6YRcu1BorOagAGJOD96FUwFC3cHzFNsAGSydA/d5mHFau1iWgAMlf7zPKg1INXPC0MlJg+yAZPwPvYBB2hn+ojcTdIhJhw0TipAYSmhlTUXs=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=wxuV1ItE; arc=fail smtp.client-ip=40.107.92.68
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4FB3939FE5
+	for <platform-driver-x86@vger.kernel.org>; Thu, 17 Oct 2024 07:38:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.49
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1729150699; cv=none; b=O1Qu5J9WnE5s65K6BLimwZ6U94SnfHq3Vmi+TODYitKk+56b8NtyJzeAJ8i3ka5Hlwzo9hvZnpLCuBQytat29s3CiYLIhWZPvZmyqoybvGe5hvEUFSzOhdfZOIWrmFpPt5Z/PvQW3ddXDzj46dQzeBQgQu6XlZpin8qHEKrGzi0=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1729150699; c=relaxed/simple;
+	bh=uC7PnZGu5D9LKGT6ynmBK292f6UCPB3Ii6w0PXaiBoY=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=d/qj608X8FC2VGBBXtfScxCUCbenBCOwkJt3l+g49m06mGfAgvo6d4F0tQjrgdUFy0HoIuDJTHXoOaCfTE461lSdY1UqRYbr7Fe4u3a3YGMF08kdZvPuVuGeqo9z59b/VI89OzG5+Z9p9PR6qs8YcrxYhx9GuSZE3mMS52mLyY0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=xhvFik7W; arc=none smtp.client-ip=209.85.128.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="wxuV1ItE"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=NhOXynmVFHfpwSx1uJQsbiTqccdq5ScfrJtFNql8FJcOoOk1iSPJPIKCihxMk+fwDdF5hd0rmn3HR+kdV12akiQy0Uc7lDDlC3WWGznJyC20G6lVg62ug1+tNrKTbYmnC7OKjkAqPBMmPWV39UIpG2IWZ3+5bDZTgoRerkiPIrWvCqRFuPC/q/jkcLQXRcrIvGvBl+8uD7FYKZZhNvjVr34NXbtTXLUsv4LdqJrKSSYfIBQ7OY/IpH2Tu8eWJK64qMa7vrANjd+v7CjW5oL93W8DoU647VUDltfuF4zdNpsHQMbnbGs4LwiKvk2EL+ggnlEDmn1CCtsR9HBiYMkIBg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=ak7waXA82QESIIPvIhehZX44Wft5xmsmXAM1jAPj6Is=;
- b=Yd1PKOZJQxsGOQUO+fdRS1Zu+ReX7N7OhrS/KEvvmN8jav1qCLy8ZAVAf2raW2JuXDwcA/LwCZQreRqccrOtesn6NzFq/fqOSj4lktPFjsIILrbUZZtgLgsU8+QLZzzz/ZpnCZw6CV5M2UN9ApKBlNcRHjq1osvuiAVEH9L1akpFIQ7oWug3q/7kwexC9g8UqgDJLbzt2BM+awz4RPtsBNd2UlvSdbjI65i/Ec04dp4HmB7fd2TYeBFofBlYk+jOu8iDep/jAfLgMaxVXcJRWPGLGbpPlFXcAetq1VA3OXJNTH2wIyFSB4WwJOoVed9yN/7z6dXQBLPU/WtTBnPxJg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=ak7waXA82QESIIPvIhehZX44Wft5xmsmXAM1jAPj6Is=;
- b=wxuV1ItEb6af5JhZy3XmFe1YJACzHUBKreyftiQAfg7UbnLcY/QlWXNgup4ibpSk/WI/wsP1GmrUhl2Qa2UjOkvOyDfcC64x+pOm2fsh988Y8NYdLo/aJ9DL++fjVvJbNxxJzdWzz93Zi4kSrllLO9DYBVAxbnL05Dxxpb7/bV0=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from DS7PR12MB8252.namprd12.prod.outlook.com (2603:10b6:8:ee::7) by
- SA0PR12MB4446.namprd12.prod.outlook.com (2603:10b6:806:71::18) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.8069.19; Thu, 17 Oct 2024 06:07:13 +0000
-Received: from DS7PR12MB8252.namprd12.prod.outlook.com
- ([fe80::2d0c:4206:cb3c:96b7]) by DS7PR12MB8252.namprd12.prod.outlook.com
- ([fe80::2d0c:4206:cb3c:96b7%5]) with mapi id 15.20.8069.019; Thu, 17 Oct 2024
- 06:07:13 +0000
-Date: Thu, 17 Oct 2024 11:37:04 +0530
-From: "Gautham R. Shenoy" <gautham.shenoy@amd.com>
-To: Mario Limonciello <mario.limonciello@amd.com>
-Cc: Borislav Petkov <bp@alien8.de>, Hans de Goede <hdegoede@redhat.com>,
-	Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	x86@kernel.org, Perry Yuan <perry.yuan@amd.com>,
-	linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
-	linux-pm@vger.kernel.org, platform-driver-x86@vger.kernel.org,
-	Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
-Subject: Re: [PATCH v3 05/14] platform/x86: hfi: Introduce AMD Hardware
- Feedback Interface Driver
-Message-ID: <ZxCpiMMm37Snt736@BLRRASHENOY1.amd.com>
-References: <20241015213645.1476-1-mario.limonciello@amd.com>
- <20241015213645.1476-6-mario.limonciello@amd.com>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20241015213645.1476-6-mario.limonciello@amd.com>
-X-ClientProxiedBy: PN3PR01CA0075.INDPRD01.PROD.OUTLOOK.COM
- (2603:1096:c01:9a::15) To DS7PR12MB8252.namprd12.prod.outlook.com
- (2603:10b6:8:ee::7)
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="xhvFik7W"
+Received: by mail-wm1-f49.google.com with SMTP id 5b1f17b1804b1-43117ed8adbso8762315e9.2
+        for <platform-driver-x86@vger.kernel.org>; Thu, 17 Oct 2024 00:38:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1729150693; x=1729755493; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=UD044ITu0TAofB4l1CB2/BmDd3ryWDjUZkagv0oOf0c=;
+        b=xhvFik7WdRpfcilM5LTFB/TkdPcXvVzUuqYidj29sWH1AYBVRSrPEd+QyMe30VkLi8
+         Gz62YDKxOVKgAAoyKUCBR72rK5nXq/46lPTUIjeKCUN9XvWTrhKfHT5Ug6frgZuvCMpA
+         jAeNbStlkp1fsH1z0HL9FDKhyABTIP6Y2y0IQj6WMPrOBNzpq5NHlSmxD3HL99YbY62u
+         dZYLQNr1W9j6M3WhcKlgFnFjrFqw2nm17rmuR/eCxeg+zZCeNk9PwII1vl68jSvnhyXW
+         g3khtI+RvJbWxr+8IATME4A/90t7r84dOhzhqCsem7v8LsUIy49aJLwWjcS9pZ6SwhLN
+         lZ/Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1729150693; x=1729755493;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=UD044ITu0TAofB4l1CB2/BmDd3ryWDjUZkagv0oOf0c=;
+        b=FUzL7XorIPcNGSC8gved4p4mcHsn1Yxq9mHzM2kPgsIHWSKRYy7KxnMv1orGxQHx0c
+         XHqcfjlvRNvaBSD3iHZM1Spo35RtJnpl5b47Hm1RwYc3LNO+tbq/i571jrNbqS0YrKac
+         gZ9TvCLRh7YnECQELzZ4PC18s5vjbSJTwRCCJxvo6+vh+NdwFSgVifqHlkTjmYZ13DcL
+         oOaNAdmbeGMMDimRJtLg6w+ArQyuOItIewRUvMsNrEVYyn/xVkVvNJEXXSlyNP2lMThv
+         QuVR1bkr9US7/bRkw15o//YmZkz4aBcM3dlMUF4edTq9h1gtFH5uE9Aoj8fpgVoom46F
+         ySkw==
+X-Gm-Message-State: AOJu0Yz6FBpue3pjeUUB0rYmwF+nugAe50iDO8UmrKXQodKt3UgJrYM5
+	BBJJkE0Yyd07o3ugNkPdKFbF5Dqp/s4RbTWO64qJU5UWAq1Y/VszM7cpscohV4IitKky8fHIdfT
+	vXxo=
+X-Google-Smtp-Source: AGHT+IEHiv0afBQaI8ZgQ+SE4i91UW6Ls2aYICpeOCgB7dlN5dLx34nWc4GQZpJ42MI+gX9d4gXhqg==
+X-Received: by 2002:a05:600c:1d20:b0:426:59fe:ac27 with SMTP id 5b1f17b1804b1-43125607be3mr196714675e9.26.1729150693369;
+        Thu, 17 Oct 2024 00:38:13 -0700 (PDT)
+Received: from localhost (p509151f9.dip0.t-ipconnect.de. [80.145.81.249])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43150455e30sm33141345e9.1.2024.10.17.00.38.12
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 17 Oct 2024 00:38:12 -0700 (PDT)
+From: =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>
+To: Hans de Goede <hdegoede@redhat.com>,
+	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Cc: platform-driver-x86@vger.kernel.org
+Subject: [PATCH] platform/x86: Switch back to struct platform_driver::remove()
+Date: Thu, 17 Oct 2024 09:38:03 +0200
+Message-ID: <20241017073802.53235-2-u.kleine-koenig@baylibre.com>
+X-Mailer: git-send-email 2.45.2
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DS7PR12MB8252:EE_|SA0PR12MB4446:EE_
-X-MS-Office365-Filtering-Correlation-Id: e39974f5-c0ab-46bc-bf67-08dcee71f1ae
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|366016|1800799024;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?r7S7PdsAe8n+SOgqU7Ea+juLGpLZ4RGjiSf5Tz0fzodaVdUj7ACLnDKEHJ0c?=
- =?us-ascii?Q?xRZkybhWRpe7Yx2ycP1n2aq9CQbgXgUonc2Tx9leZEx26WkLxuUaR+ObrTnq?=
- =?us-ascii?Q?iSwwGaTCsLysyAem5mWZpm/5ZGUVNPxvCq0SVHzDRmSODVqr4RmrBC+OneVe?=
- =?us-ascii?Q?1sctmaEz73H1zMqZHtr8nDH/up4myvionMTHaHmnn5S2i41XEPutzEzOBBrT?=
- =?us-ascii?Q?k0Jy9J4HD7glXrOcbCNIkhSdjZSC7RxtZnqZHiWFplN0rKL6ECp18vZ1Mom/?=
- =?us-ascii?Q?jhL2iRy+t+79AgE0rPtrw/oAt43sRncXWS9F9hIzRJydTlepee+36O+eem3C?=
- =?us-ascii?Q?Gcc/m5pa4FRbjhNrkdJUjjFVCN2vcvLED6plzYu0xQ6xuiJfE8m6/l/qf8zt?=
- =?us-ascii?Q?X2bi/IXwqFKJElLPiqMbRex6QF+nBWd+ZgpxvK+6RB+hUnBaWI9oXvvT4vN8?=
- =?us-ascii?Q?tZRrxJhp4JtVBJrTOYJr2oNJRfIk7oyyqoInBUNvPFLuF39qxIGcyudKLBoR?=
- =?us-ascii?Q?/qr36YR8V0lL1UhK4v7hCi1QRZjd4dx9Mb9wtdB8KE+WeEjLiWD0zD0987sr?=
- =?us-ascii?Q?N/RXE05+BaAuRvqGgWGSTBYGSA5NAG7aP/IeqgEw0A1ADZKOOe3iPAfmrD0j?=
- =?us-ascii?Q?yzVX41+h1El9bZ6aiiGurbQzgVBy63mcgipJ40xVAXUAjVuIgsf48mqCbkIl?=
- =?us-ascii?Q?PEU5NfkZKtfpN/pKjjKgHsZV5eHG00HET96YHWtLdn/GVcUVG59O4jQLUpZ3?=
- =?us-ascii?Q?Jc05pp29lhQrmz/9Gei76UBRM3HGgTUd3Kf5fQW/fpxfttjxx5AKZ8g0Mw4w?=
- =?us-ascii?Q?xxaFJWL/JxCGxKAvKuHc2Fgb9KU0PVd1iWRU0zcj54M78fXX7zRKwOpNaJdr?=
- =?us-ascii?Q?kmU7tN2b3CYZjEwoMPg/Z13y4xkvatgQg3PHOdAzNXb2/+7FUyIcelw0LBaR?=
- =?us-ascii?Q?PQJ1FDyeOinTaNgmhpU7yDFo6JO0Pb7QzMaxlQVDidPyprzwCb3PuRn5Ltm6?=
- =?us-ascii?Q?R5P+surbBwSBg+M73Y/Wg/0ipW03xJ05K3zFgW+lPKa8Dl4/q2tuT8ALhb30?=
- =?us-ascii?Q?BeM5wK828KYAN6y763KRAqjqyG6OQFwsAzPRtodk1xjSi73rI1Kmr7dc/+aE?=
- =?us-ascii?Q?EmTLgIDnwhL93EI6Tmtvx3/BU3mv2u+knBPfiFV5MSKBetS/tAQpGpCsI2AA?=
- =?us-ascii?Q?B99JN0vCoJWcgRdO/YpXmi0ByNHwOtLpyEapUJozl9eDB6B1XAYTUVF6gSrh?=
- =?us-ascii?Q?CRHFW/qn8EGVy69GArvPzBDuBg4Cs8+EnqQi0KFnC9rEhNa5I70osgC0qF2f?=
- =?us-ascii?Q?9eowOYNQ4V8jAgYuVWUfCpGu?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS7PR12MB8252.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(366016)(1800799024);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?Oa6RYIRVhr6sxSp/g9pxytZnZSfqA6bskK3YQ6e6X4ScvSGzdMMHilMHb1fj?=
- =?us-ascii?Q?2G2k6vs1SgYAwmFnPo3xuUsE/K5ZgFeU+E1mLCacL0WZlMjkLxvZrsA+E768?=
- =?us-ascii?Q?SoYT+s9Xn+bYmyh0R+8z0q014JcCAdtmB7TnT4KWFHOfcwpu5faHtHfcngUb?=
- =?us-ascii?Q?WMZgQE8RBBK3Bif5O7+O1+XvFkOJzfCwznl6oGzKLXR0Q74txScv8h3cUBLF?=
- =?us-ascii?Q?ZbTaVmC5NNunf/VGAr58RtsAJCkJx/fBgHAxAtPS7q+uLaMeSW4ib65RLNZO?=
- =?us-ascii?Q?fm0s7COcyUs0Q2614Fd4/ezwTY8/UVySozk2c8Lgp/9hvtWLGD+8bHJDyiPV?=
- =?us-ascii?Q?hVVfNrZrca8Skbl9XiUE8ARdpFjgMQtF2Mi1rIklzYcjFtrq5V2Tx5KsJBAI?=
- =?us-ascii?Q?ovJZ+yiQHKk3uKy6oIsUzCZ7XABpQ6lMkZDE/UyEnlyLOs8LldPaJ+/v36F0?=
- =?us-ascii?Q?YE/iWr45BxC5QwDGo9mYnvZ4k3svOx8iaQ6Ti9xxSZrqZiatoJdMV3rVcinz?=
- =?us-ascii?Q?J7a5feajQj5yB8ex9uGR9tRjdH7PwSVBiqZb528qPamNLl3sfRtUaTh6dCuU?=
- =?us-ascii?Q?OFdfR3ohg9Zf5o5QYWpanVV4eVTN06UElAGC4cPaIfeRqqJYc50GaQ0mYkmN?=
- =?us-ascii?Q?VvYIf2DjxXj/Ssk48bgKNAeXeF6p+WCMJORVbOVg3xRM2VNcP8GIpoHDdXxi?=
- =?us-ascii?Q?8HfxGuL4eZ+NkfO/smkseeh3y9cTYtGwkSUVi6fz+soWCK0Flpnj3onlDl38?=
- =?us-ascii?Q?0j7v2OpV9s31oihghWaH96rPJxjye5No62HQdTpOhazPu5Neh8z56py3c4GS?=
- =?us-ascii?Q?sgemxz1aEiHNZ1EpPRuzU88uucRfQxpB6PWykOhbEEKRq2V59wwyq+iMPMih?=
- =?us-ascii?Q?uSLgrEEQnrbqxcirtBzyaFTyBlMCP8aPaaIlhwo8HpNlqr/ejsRPIWFMQ5Yi?=
- =?us-ascii?Q?88xK+LEs08nzrt+t17mIjEOZqJU2Ow3fF2rDOLQD/43kojxrix+q5FzLJ4Px?=
- =?us-ascii?Q?VfWsyvetKnXjZVMHrb1qG3mi7B0X7Ky0kwTbUy/iEe1L6BSQobLgzYFQRcpV?=
- =?us-ascii?Q?CJzzceQfICHIaVkcu3IRx9msLFUCEvHLgByM6RIsWN+F8MxhsWJFTN812AC0?=
- =?us-ascii?Q?kqPpEcgM7d7ORkoB81bS9gcCvbLPx1Yy2obask1TW/0OaxyylsAmlxJe6iLl?=
- =?us-ascii?Q?oM5TxWicGZzfWXYqf5SoyBxz3d0sgFmfUBTpWaOAa7fxZjdK2J7yORFXdJFb?=
- =?us-ascii?Q?RfBUSX5679z1ISb8c3YiuK6QFaFhMt6U/DARQtKtIhJEojCUcIpJ3a04kinE?=
- =?us-ascii?Q?bCEN70PWJ6cwMQc4BUc+R4JnCfe54+x8F7B1H60GS8Tn107TQhRGXYRUNSKH?=
- =?us-ascii?Q?zqp+K52CxbcKqNiMCB+3tnjXBZZoTucRce0ZK1e80KhJQ3Zvnj6XDJOiMnV7?=
- =?us-ascii?Q?u37onFfCfCtWCoyzD9QXebdV4FoRRfRzoyjqO5rGVlgHPOb/A+Dcn0mofbYq?=
- =?us-ascii?Q?ess+sDlbzn3ex/5oN6Wo8NeW+79HrAbeZMfAT1I5SfHICX4asozco4O9T0wD?=
- =?us-ascii?Q?CkBrsTBGDR3VNNwPi2I/JRaSqJ7bT1O6Qmz+uGB4?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: e39974f5-c0ab-46bc-bf67-08dcee71f1ae
-X-MS-Exchange-CrossTenant-AuthSource: DS7PR12MB8252.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 17 Oct 2024 06:07:13.4589
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: lxjrr8J03IVNzg+41MQrw6bUp9+pctEmCxtJLCXyB+81YB+4jfrthHCkuPTucKxqMKmGT7OluyVs7GnMm4ca5w==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA0PR12MB4446
+Content-Type: text/plain; charset=UTF-8
+X-Developer-Signature: v=1; a=openpgp-sha256; l=26573; i=u.kleine-koenig@baylibre.com; h=from:subject; bh=uC7PnZGu5D9LKGT6ynmBK292f6UCPB3Ii6w0PXaiBoY=; b=owEBbQGS/pANAwAKAY+A+1h9Ev5OAcsmYgBnEL7aD+FP4E4jeynKiKHzy7aonQQmvZmye/asT ikqTYFGD+SJATMEAAEKAB0WIQQ/gaxpOnoeWYmt/tOPgPtYfRL+TgUCZxC+2gAKCRCPgPtYfRL+ Tv+CB/4i49Bkq/7pGtzEwFyuEoyICDVpjTPXWc7QG/855hC/nla46KWjlbuuI2dmbF5IyHTqCiK 0moLcjSokJEXYqnKlJ9PSLmv4wCCJLA9zortSuHKKabheD1Zo8lCEuUZKvP426wJnCXpcMky3Sz gLx/1c4uOdc420Gv4Vbbepjsee/v/HVEvEOMU0B5H2QyOo4xZPe/ZPcfJsdL0Vd7hZd2RwcsjWc Dx05Z0OwhaTbzmQHbLSjiQVEkInqI+tGP2/JOSUMOysqQfYCsXxQ+4LzD3ezEfLEqVb0EiZ94Oe 44UN54nRfu7PMomS1PWjmoTEhIwLIVq0J3ustLsS9LisRUVC
+X-Developer-Key: i=u.kleine-koenig@baylibre.com; a=openpgp; fpr=0D2511F322BFAB1C1580266BE2DCDD9132669BD6
+Content-Transfer-Encoding: 8bit
 
-On Tue, Oct 15, 2024 at 04:36:36PM -0500, Mario Limonciello wrote:
-> From: Perry Yuan <Perry.Yuan@amd.com>
-> 
-> The AMD Heterogeneous core design and Hardware Feedback Interface (HFI)
-> provide behavioral classification and a dynamically updated ranking table
-> for the scheduler to use when choosing cores for tasks.
-> 
-> There are two CPU core types defined: `Classic Core` and `Dense Core`.
-> "Classic" cores are the standard performance cores, while "Dense" cores
-> are optimized for area and efficiency.
-> 
-> Heterogeneous compute refers to CPU implementations that are comprised
-> of more than one architectural class, each with two capabilities. This
-> means each CPU reports two separate capabilities: "perf" and "eff".
-> 
-> Each capability lists all core ranking numbers between 0 and 255, where
-> a higher number represents a higher capability.
-> 
-> Heterogeneous systems can also extend to more than two architectural
-> classes.
-> 
-> The purpose of the scheduling feedback mechanism is to provide information
-> to the operating system scheduler in real time, allowing the scheduler to
-> direct threads to the optimal core during task scheduling.
-> 
-> All core ranking data are provided by the BIOS via a shared memory ranking
-> table, which the driver reads and uses to update core capabilities to the
-> scheduler. When the hardware updates the table, it generates a platform
-> interrupt to notify the OS to read the new ranking table.
-> 
-> Link: https://bugzilla.kernel.org/show_bug.cgi?id=206537
-> Signed-off-by: Perry Yuan <perry.yuan@amd.com>
-> Co-developed-by: Mario Limonciello <mario.limonciello@amd.com>
-> Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
+After commit 0edb555a65d1 ("platform: Make platform_driver::remove()
+return void") .remove() is (again) the right callback to implement for
+platform drivers.
 
-This patch looks good to me.
+Convert all platform drivers below drivers/platform/x86/ to use
+.remove(), with the eventual goal to drop struct
+platform_driver::remove_new(). As .remove() and .remove_new() have the
+same prototypes, conversion is done by just changing the structure
+member name in the driver initializer.
 
-Reviewed-by: Gautham R. Shenoy <gautham.shenoy@amd.com>
+While touching these files, make indention of the struct initializer
+consistent in several files.
 
---
-Thanks and Regards
-gautham.
+Signed-off-by: Uwe Kleine-König <u.kleine-koenig@baylibre.com>
+---
+Hello,
 
+given the simplicity of the individual changes I do this all in a single
+patch. I you don't agree, please tell and I will happily split it.
 
-> ---
-> v2->v3:
->  * Whitespace (Ilpo)
->  * kmalloc -> kzalloc (Ilpo)
->  * Drop needless include (Ilpo)
->  * Capitalization (Ilpo)
->  * Drop needless comment (Ilpo)
-> ---
->  drivers/platform/x86/amd/Kconfig      |   1 +
->  drivers/platform/x86/amd/Makefile     |   1 +
->  drivers/platform/x86/amd/hfi/Kconfig  |  20 +++
->  drivers/platform/x86/amd/hfi/Makefile |   7 ++
->  drivers/platform/x86/amd/hfi/hfi.c    | 168 ++++++++++++++++++++++++++
->  5 files changed, 197 insertions(+)
->  create mode 100644 drivers/platform/x86/amd/hfi/Kconfig
->  create mode 100644 drivers/platform/x86/amd/hfi/Makefile
->  create mode 100644 drivers/platform/x86/amd/hfi/hfi.c
-> 
-> diff --git a/drivers/platform/x86/amd/Kconfig b/drivers/platform/x86/amd/Kconfig
-> index f88682d36447..c3f69dbe3037 100644
-> --- a/drivers/platform/x86/amd/Kconfig
-> +++ b/drivers/platform/x86/amd/Kconfig
-> @@ -5,6 +5,7 @@
->  
->  source "drivers/platform/x86/amd/pmf/Kconfig"
->  source "drivers/platform/x86/amd/pmc/Kconfig"
-> +source "drivers/platform/x86/amd/hfi/Kconfig"
->  
->  config AMD_HSMP
->  	tristate "AMD HSMP Driver"
-> diff --git a/drivers/platform/x86/amd/Makefile b/drivers/platform/x86/amd/Makefile
-> index dcec0a46f8af..2676fc81fee5 100644
-> --- a/drivers/platform/x86/amd/Makefile
-> +++ b/drivers/platform/x86/amd/Makefile
-> @@ -9,3 +9,4 @@ amd_hsmp-y			:= hsmp.o
->  obj-$(CONFIG_AMD_HSMP)		+= amd_hsmp.o
->  obj-$(CONFIG_AMD_PMF)		+= pmf/
->  obj-$(CONFIG_AMD_WBRF)		+= wbrf.o
-> +obj-$(CONFIG_AMD_HFI)		+= hfi/
-> diff --git a/drivers/platform/x86/amd/hfi/Kconfig b/drivers/platform/x86/amd/hfi/Kconfig
-> new file mode 100644
-> index 000000000000..08051cd4f74d
-> --- /dev/null
-> +++ b/drivers/platform/x86/amd/hfi/Kconfig
-> @@ -0,0 +1,20 @@
-> +# SPDX-License-Identifier: GPL-2.0-only
-> +#
-> +# AMD Hardware Feedback Interface Driver
-> +#
-> +
-> +config AMD_HFI
-> +	bool "AMD Hetero Core Hardware Feedback Driver"
-> +	depends on ACPI
-> +	depends on CPU_SUP_AMD
-> +	help
-> +	 Select this option to enable the AMD Heterogeneous Core Hardware Feedback Interface. If
-> +	 selected, hardware provides runtime thread classification guidance to the operating system
-> +	 on the performance and energy efficiency capabilities of each heterogeneous CPU core.
-> +	 These capabilities may vary due to the inherent differences in the core types and can
-> +	 also change as a result of variations in the operating conditions of the system such
-> +	 as power and thermal limits. If selected, the kernel relays updates in heterogeneous
-> +	 CPUs' capabilities to userspace, allowing for more optimal task scheduling and
-> +	 resource allocation, leveraging the diverse set of cores available.
-> +
-> +
-> diff --git a/drivers/platform/x86/amd/hfi/Makefile b/drivers/platform/x86/amd/hfi/Makefile
-> new file mode 100644
-> index 000000000000..672c6ac106e9
-> --- /dev/null
-> +++ b/drivers/platform/x86/amd/hfi/Makefile
-> @@ -0,0 +1,7 @@
-> +# SPDX-License-Identifier: GPL-2.0
-> +#
-> +# AMD Hardware Feedback Interface Driver
-> +#
-> +
-> +obj-$(CONFIG_AMD_HFI) += amd_hfi.o
-> +amd_hfi-objs := hfi.o
-> diff --git a/drivers/platform/x86/amd/hfi/hfi.c b/drivers/platform/x86/amd/hfi/hfi.c
-> new file mode 100644
-> index 000000000000..fbbc2c119a64
-> --- /dev/null
-> +++ b/drivers/platform/x86/amd/hfi/hfi.c
-> @@ -0,0 +1,168 @@
-> +// SPDX-License-Identifier: GPL-2.0-or-later
-> +/*
-> + * AMD Hardware Feedback Interface Driver
-> + *
-> + * Copyright (C) 2024 Advanced Micro Devices, Inc. All Rights Reserved.
-> + *
-> + * Authors: Perry Yuan <Perry.Yuan@amd.com>
-> + *          Mario Limonciello <mario.limonciello@amd.com>
-> + */
-> +
-> +#define pr_fmt(fmt)  "amd-hfi: " fmt
-> +
-> +#include <linux/acpi.h>
-> +#include <linux/cpu.h>
-> +#include <linux/cpumask.h>
-> +#include <linux/gfp.h>
-> +#include <linux/init.h>
-> +#include <linux/io.h>
-> +#include <linux/kernel.h>
-> +#include <linux/module.h>
-> +#include <linux/mutex.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/printk.h>
-> +#include <linux/smp.h>
-> +
-> +#define AMD_HFI_DRIVER		"amd_hfi"
-> +#define AMD_HETERO_CPUID_27	0x80000027
-> +static struct platform_device *device;
-> +
-> +struct amd_hfi_data {
-> +	const char	*name;
-> +	struct device	*dev;
-> +	struct mutex	lock;
-> +};
-> +
-> +struct amd_hfi_classes {
-> +	u32	perf;
-> +	u32	eff;
-> +};
-> +
-> +/**
-> + * struct amd_hfi_cpuinfo - HFI workload class info per CPU
-> + * @cpu:		cpu index
-> + * @cpus:		mask of cpus associated with amd_hfi_cpuinfo
-> + * @class_index:	workload class ID index
-> + * @nr_class:		max number of workload class supported
-> + * @amd_hfi_classes:	current cpu workload class ranking data
-> + *
-> + * Parameters of a logical processor linked with hardware feedback class
-> + */
-> +struct amd_hfi_cpuinfo {
-> +	int		cpu;
-> +	cpumask_var_t	cpus;
-> +	s16		class_index;
-> +	u8		nr_class;
-> +	struct amd_hfi_classes	*amd_hfi_classes;
-> +};
-> +
-> +static DEFINE_PER_CPU(struct amd_hfi_cpuinfo, amd_hfi_cpuinfo) = {.class_index = -1};
-> +
-> +static int amd_hfi_alloc_class_data(struct platform_device *pdev)
-> +{
-> +	struct amd_hfi_cpuinfo *hfi_cpuinfo;
-> +	struct device *dev = &pdev->dev;
-> +	int idx;
-> +	int nr_class_id;
-> +
-> +	nr_class_id = cpuid_eax(AMD_HETERO_CPUID_27);
-> +	if (nr_class_id < 0 || nr_class_id > 255) {
-> +		dev_err(dev, "failed to get number of supported classes: %d\n",
-> +			nr_class_id);
-> +		return -EINVAL;
-> +	}
-> +
-> +	for_each_present_cpu(idx) {
-> +		struct amd_hfi_classes *classes;
-> +
-> +		classes = devm_kzalloc(dev,
-> +				       nr_class_id * sizeof(struct amd_hfi_classes),
-> +				       GFP_KERNEL);
-> +		if (!classes)
-> +			return -ENOMEM;
-> +		hfi_cpuinfo = per_cpu_ptr(&amd_hfi_cpuinfo, idx);
-> +		hfi_cpuinfo->amd_hfi_classes = classes;
-> +		hfi_cpuinfo->nr_class = nr_class_id;
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +static void amd_hfi_remove(struct platform_device *pdev)
-> +{
-> +	struct amd_hfi_data *dev = platform_get_drvdata(pdev);
-> +
-> +	mutex_destroy(&dev->lock);
-> +}
-> +
-> +static const struct acpi_device_id amd_hfi_platform_match[] = {
-> +	{ "AMDI0104", 0},
-> +	{ }
-> +};
-> +MODULE_DEVICE_TABLE(acpi, amd_hfi_platform_match);
-> +
-> +static int amd_hfi_probe(struct platform_device *pdev)
-> +{
-> +	struct amd_hfi_data *amd_hfi_data;
-> +	int ret;
-> +
-> +	if (!acpi_match_device(amd_hfi_platform_match, &pdev->dev))
-> +		return -ENODEV;
-> +
-> +	amd_hfi_data = devm_kzalloc(&pdev->dev, sizeof(*amd_hfi_data), GFP_KERNEL);
-> +	if (!amd_hfi_data)
-> +		return -ENOMEM;
-> +
-> +	amd_hfi_data->dev = &pdev->dev;
-> +	mutex_init(&amd_hfi_data->lock);
-> +	platform_set_drvdata(pdev, amd_hfi_data);
-> +
-> +	ret = amd_hfi_alloc_class_data(pdev);
-> +	if (ret)
-> +		return ret;
-> +
-> +	return 0;
-> +}
-> +
-> +static struct platform_driver amd_hfi_driver = {
-> +	.driver = {
-> +		.name = AMD_HFI_DRIVER,
-> +		.owner = THIS_MODULE,
-> +		.acpi_match_table = ACPI_PTR(amd_hfi_platform_match),
-> +	},
-> +	.probe = amd_hfi_probe,
-> +	.remove_new = amd_hfi_remove,
-> +};
-> +
-> +static int __init amd_hfi_init(void)
-> +{
-> +	int ret;
-> +
-> +	if (acpi_disabled ||
-> +	    !boot_cpu_has(X86_FEATURE_HETERO_CORE_TOPOLOGY) ||
-> +	    !boot_cpu_has(X86_FEATURE_WORKLOAD_CLASS))
-> +		return -ENODEV;
-> +
-> +	device = platform_device_register_simple(AMD_HFI_DRIVER, -1, NULL, 0);
-> +	if (IS_ERR(device)) {
-> +		pr_err("unable to register HFI platform device\n");
-> +		return PTR_ERR(device);
-> +	}
-> +
-> +	ret = platform_driver_register(&amd_hfi_driver);
-> +	if (ret)
-> +		pr_err("failed to register HFI driver\n");
-> +
-> +	return ret;
-> +}
-> +
-> +static __exit void amd_hfi_exit(void)
-> +{
-> +	platform_device_unregister(device);
-> +	platform_driver_unregister(&amd_hfi_driver);
-> +}
-> +module_init(amd_hfi_init);
-> +module_exit(amd_hfi_exit);
-> +
-> +MODULE_LICENSE("GPL");
-> +MODULE_DESCRIPTION("AMD Hardware Feedback Interface Driver");
-> -- 
-> 2.43.0
-> 
+It's based on yesterday's next. Feel free to drop changes that result in
+a conflict when you come around to apply this. I'll care for the fallout
+at a later time then. (Having said that, if you use b4 am -3 and git am
+-3, there should be hardly any conflict.)
+
+Note I didn't Cc: all the individual driver maintainers to not trigger
+sending limits and spam filters.
+
+Best regards
+Uwe
+
+ drivers/platform/x86/acer-wmi.c                             | 2 +-
+ drivers/platform/x86/adv_swbutton.c                         | 2 +-
+ drivers/platform/x86/amd/hsmp.c                             | 2 +-
+ drivers/platform/x86/amd/pmc/pmc.c                          | 2 +-
+ drivers/platform/x86/amd/pmf/core.c                         | 2 +-
+ drivers/platform/x86/amilo-rfkill.c                         | 6 +++---
+ drivers/platform/x86/asus-wmi.c                             | 2 +-
+ drivers/platform/x86/barco-p50-gpio.c                       | 2 +-
+ drivers/platform/x86/compal-laptop.c                        | 4 ++--
+ drivers/platform/x86/dell/dcdbas.c                          | 2 +-
+ drivers/platform/x86/dell/dell-smo8800.c                    | 2 +-
+ drivers/platform/x86/dell/dell-uart-backlight.c             | 2 +-
+ drivers/platform/x86/hp/hp-wmi.c                            | 2 +-
+ drivers/platform/x86/hp/hp_accel.c                          | 2 +-
+ drivers/platform/x86/hp/tc1100-wmi.c                        | 2 +-
+ drivers/platform/x86/huawei-wmi.c                           | 2 +-
+ drivers/platform/x86/ideapad-laptop.c                       | 2 +-
+ drivers/platform/x86/intel/bxtwc_tmu.c                      | 2 +-
+ drivers/platform/x86/intel/bytcrc_pwrsrc.c                  | 2 +-
+ drivers/platform/x86/intel/chtdc_ti_pwrbtn.c                | 2 +-
+ drivers/platform/x86/intel/chtwc_int33fe.c                  | 2 +-
+ drivers/platform/x86/intel/hid.c                            | 2 +-
+ drivers/platform/x86/intel/int0002_vgpio.c                  | 4 ++--
+ drivers/platform/x86/intel/int1092/intel_sar.c              | 2 +-
+ drivers/platform/x86/intel/int3472/discrete.c               | 2 +-
+ drivers/platform/x86/intel/mrfld_pwrbtn.c                   | 2 +-
+ drivers/platform/x86/intel/pmc/core.c                       | 2 +-
+ drivers/platform/x86/intel/telemetry/pltdrv.c               | 2 +-
+ drivers/platform/x86/intel/vbtn.c                           | 2 +-
+ .../platform/x86/lenovo-yoga-tab2-pro-1380-fastcharger.c    | 2 +-
+ drivers/platform/x86/lenovo-yogabook.c                      | 2 +-
+ drivers/platform/x86/mlx-platform.c                         | 2 +-
+ drivers/platform/x86/samsung-q10.c                          | 2 +-
+ drivers/platform/x86/sel3350-platform.c                     | 2 +-
+ drivers/platform/x86/serial-multi-instantiate.c             | 2 +-
+ drivers/platform/x86/siemens/simatic-ipc-batt-apollolake.c  | 2 +-
+ drivers/platform/x86/siemens/simatic-ipc-batt-elkhartlake.c | 2 +-
+ drivers/platform/x86/siemens/simatic-ipc-batt-f7188x.c      | 2 +-
+ drivers/platform/x86/siemens/simatic-ipc-batt.c             | 2 +-
+ drivers/platform/x86/wmi.c                                  | 2 +-
+ drivers/platform/x86/x86-android-tablets/core.c             | 2 +-
+ drivers/platform/x86/xo1-rfkill.c                           | 2 +-
+ 42 files changed, 46 insertions(+), 46 deletions(-)
+
+diff --git a/drivers/platform/x86/acer-wmi.c b/drivers/platform/x86/acer-wmi.c
+index 7169b84ccdb6..ba8accb2e47e 100644
+--- a/drivers/platform/x86/acer-wmi.c
++++ b/drivers/platform/x86/acer-wmi.c
+@@ -2641,7 +2641,7 @@ static struct platform_driver acer_platform_driver = {
+ 		.pm = &acer_pm,
+ 	},
+ 	.probe = acer_platform_probe,
+-	.remove_new = acer_platform_remove,
++	.remove = acer_platform_remove,
+ 	.shutdown = acer_platform_shutdown,
+ };
+ 
+diff --git a/drivers/platform/x86/adv_swbutton.c b/drivers/platform/x86/adv_swbutton.c
+index 6b23ba78e028..6fa60f3fc53c 100644
+--- a/drivers/platform/x86/adv_swbutton.c
++++ b/drivers/platform/x86/adv_swbutton.c
+@@ -110,7 +110,7 @@ static struct platform_driver adv_swbutton_driver = {
+ 		.acpi_match_table = button_device_ids,
+ 	},
+ 	.probe = adv_swbutton_probe,
+-	.remove_new = adv_swbutton_remove,
++	.remove = adv_swbutton_remove,
+ };
+ module_platform_driver(adv_swbutton_driver);
+ 
+diff --git a/drivers/platform/x86/amd/hsmp.c b/drivers/platform/x86/amd/hsmp.c
+index 8fcf38eed7f0..fe8948729bba 100644
+--- a/drivers/platform/x86/amd/hsmp.c
++++ b/drivers/platform/x86/amd/hsmp.c
+@@ -883,7 +883,7 @@ static void hsmp_pltdrv_remove(struct platform_device *pdev)
+ 
+ static struct platform_driver amd_hsmp_driver = {
+ 	.probe		= hsmp_pltdrv_probe,
+-	.remove_new	= hsmp_pltdrv_remove,
++	.remove		= hsmp_pltdrv_remove,
+ 	.driver		= {
+ 		.name	= DRIVER_NAME,
+ 		.acpi_match_table = amd_hsmp_acpi_ids,
+diff --git a/drivers/platform/x86/amd/pmc/pmc.c b/drivers/platform/x86/amd/pmc/pmc.c
+index bbb8edb62e00..71abc6276e89 100644
+--- a/drivers/platform/x86/amd/pmc/pmc.c
++++ b/drivers/platform/x86/amd/pmc/pmc.c
+@@ -1156,7 +1156,7 @@ static struct platform_driver amd_pmc_driver = {
+ 		.pm = pm_sleep_ptr(&amd_pmc_pm),
+ 	},
+ 	.probe = amd_pmc_probe,
+-	.remove_new = amd_pmc_remove,
++	.remove = amd_pmc_remove,
+ };
+ module_platform_driver(amd_pmc_driver);
+ 
+diff --git a/drivers/platform/x86/amd/pmf/core.c b/drivers/platform/x86/amd/pmf/core.c
+index d6af0ca036f1..47126abd13ca 100644
+--- a/drivers/platform/x86/amd/pmf/core.c
++++ b/drivers/platform/x86/amd/pmf/core.c
+@@ -496,7 +496,7 @@ static struct platform_driver amd_pmf_driver = {
+ 		.pm = pm_sleep_ptr(&amd_pmf_pm),
+ 	},
+ 	.probe = amd_pmf_probe,
+-	.remove_new = amd_pmf_remove,
++	.remove = amd_pmf_remove,
+ };
+ module_platform_driver(amd_pmf_driver);
+ 
+diff --git a/drivers/platform/x86/amilo-rfkill.c b/drivers/platform/x86/amilo-rfkill.c
+index 2423dc91debb..18397c527eab 100644
+--- a/drivers/platform/x86/amilo-rfkill.c
++++ b/drivers/platform/x86/amilo-rfkill.c
+@@ -132,10 +132,10 @@ static void amilo_rfkill_remove(struct platform_device *device)
+ 
+ static struct platform_driver amilo_rfkill_driver = {
+ 	.driver = {
+-		.name	= KBUILD_MODNAME,
++		.name = KBUILD_MODNAME,
+ 	},
+-	.probe	= amilo_rfkill_probe,
+-	.remove_new = amilo_rfkill_remove,
++	.probe = amilo_rfkill_probe,
++	.remove = amilo_rfkill_remove,
+ };
+ 
+ static int __init amilo_rfkill_init(void)
+diff --git a/drivers/platform/x86/asus-wmi.c b/drivers/platform/x86/asus-wmi.c
+index 7a48220b4f5a..2ccc23b259d3 100644
+--- a/drivers/platform/x86/asus-wmi.c
++++ b/drivers/platform/x86/asus-wmi.c
+@@ -5066,7 +5066,7 @@ int __init_or_module asus_wmi_register_driver(struct asus_wmi_driver *driver)
+ 		return -EBUSY;
+ 
+ 	platform_driver = &driver->platform_driver;
+-	platform_driver->remove_new = asus_wmi_remove;
++	platform_driver->remove = asus_wmi_remove;
+ 	platform_driver->driver.owner = driver->owner;
+ 	platform_driver->driver.name = driver->name;
+ 	platform_driver->driver.pm = &asus_pm_ops;
+diff --git a/drivers/platform/x86/barco-p50-gpio.c b/drivers/platform/x86/barco-p50-gpio.c
+index af566f712057..143d14548565 100644
+--- a/drivers/platform/x86/barco-p50-gpio.c
++++ b/drivers/platform/x86/barco-p50-gpio.c
+@@ -385,7 +385,7 @@ static struct platform_driver p50_gpio_driver = {
+ 		.name = DRIVER_NAME,
+ 	},
+ 	.probe = p50_gpio_probe,
+-	.remove_new = p50_gpio_remove,
++	.remove = p50_gpio_remove,
+ };
+ 
+ /* Board setup */
+diff --git a/drivers/platform/x86/compal-laptop.c b/drivers/platform/x86/compal-laptop.c
+index 5546fb189491..4e1d44670bd1 100644
+--- a/drivers/platform/x86/compal-laptop.c
++++ b/drivers/platform/x86/compal-laptop.c
+@@ -1023,8 +1023,8 @@ static struct platform_driver compal_driver = {
+ 	.driver = {
+ 		.name = DRIVER_NAME,
+ 	},
+-	.probe	= compal_probe,
+-	.remove_new = compal_remove,
++	.probe = compal_probe,
++	.remove = compal_remove,
+ };
+ 
+ static int __init compal_init(void)
+diff --git a/drivers/platform/x86/dell/dcdbas.c b/drivers/platform/x86/dell/dcdbas.c
+index a60e35056387..c7dcb5d2dc77 100644
+--- a/drivers/platform/x86/dell/dcdbas.c
++++ b/drivers/platform/x86/dell/dcdbas.c
+@@ -709,7 +709,7 @@ static struct platform_driver dcdbas_driver = {
+ 		.name	= DRIVER_NAME,
+ 	},
+ 	.probe		= dcdbas_probe,
+-	.remove_new	= dcdbas_remove,
++	.remove		= dcdbas_remove,
+ };
+ 
+ static const struct platform_device_info dcdbas_dev_info __initconst = {
+diff --git a/drivers/platform/x86/dell/dell-smo8800.c b/drivers/platform/x86/dell/dell-smo8800.c
+index f7ec17c56833..87fe03f23f24 100644
+--- a/drivers/platform/x86/dell/dell-smo8800.c
++++ b/drivers/platform/x86/dell/dell-smo8800.c
+@@ -179,7 +179,7 @@ MODULE_DEVICE_TABLE(acpi, smo8800_ids);
+ 
+ static struct platform_driver smo8800_driver = {
+ 	.probe = smo8800_probe,
+-	.remove_new = smo8800_remove,
++	.remove = smo8800_remove,
+ 	.driver = {
+ 		.name = DRIVER_NAME,
+ 		.acpi_match_table = smo8800_ids,
+diff --git a/drivers/platform/x86/dell/dell-uart-backlight.c b/drivers/platform/x86/dell/dell-uart-backlight.c
+index 3995f90add45..6e5dc7e3674f 100644
+--- a/drivers/platform/x86/dell/dell-uart-backlight.c
++++ b/drivers/platform/x86/dell/dell-uart-backlight.c
+@@ -393,7 +393,7 @@ static void dell_uart_bl_pdev_remove(struct platform_device *pdev)
+ 
+ static struct platform_driver dell_uart_bl_pdev_driver = {
+ 	.probe = dell_uart_bl_pdev_probe,
+-	.remove_new = dell_uart_bl_pdev_remove,
++	.remove = dell_uart_bl_pdev_remove,
+ 	.driver = {
+ 		.name = "dell-uart-backlight",
+ 	},
+diff --git a/drivers/platform/x86/hp/hp-wmi.c b/drivers/platform/x86/hp/hp-wmi.c
+index 8c05e0dd2a21..81ccc96ffe40 100644
+--- a/drivers/platform/x86/hp/hp-wmi.c
++++ b/drivers/platform/x86/hp/hp-wmi.c
+@@ -1748,7 +1748,7 @@ static struct platform_driver hp_wmi_driver __refdata = {
+ 		.pm = &hp_wmi_pm_ops,
+ 		.dev_groups = hp_wmi_groups,
+ 	},
+-	.remove_new = __exit_p(hp_wmi_bios_remove),
++	.remove = __exit_p(hp_wmi_bios_remove),
+ };
+ 
+ static umode_t hp_wmi_hwmon_is_visible(const void *data,
+diff --git a/drivers/platform/x86/hp/hp_accel.c b/drivers/platform/x86/hp/hp_accel.c
+index 52535576772a..39a6530f5072 100644
+--- a/drivers/platform/x86/hp/hp_accel.c
++++ b/drivers/platform/x86/hp/hp_accel.c
+@@ -372,7 +372,7 @@ static SIMPLE_DEV_PM_OPS(hp_accel_pm, lis3lv02d_suspend, lis3lv02d_resume);
+ /* For the HP MDPS aka 3D Driveguard */
+ static struct platform_driver lis3lv02d_driver = {
+ 	.probe	= lis3lv02d_probe,
+-	.remove_new = lis3lv02d_remove,
++	.remove	= lis3lv02d_remove,
+ 	.driver	= {
+ 		.name	= "hp_accel",
+ 		.pm	= &hp_accel_pm,
+diff --git a/drivers/platform/x86/hp/tc1100-wmi.c b/drivers/platform/x86/hp/tc1100-wmi.c
+index 5298b0f6804f..146716d81442 100644
+--- a/drivers/platform/x86/hp/tc1100-wmi.c
++++ b/drivers/platform/x86/hp/tc1100-wmi.c
+@@ -221,7 +221,7 @@ static struct platform_driver tc1100_driver = {
+ 		.pm = &tc1100_pm_ops,
+ #endif
+ 	},
+-	.remove_new = tc1100_remove,
++	.remove = tc1100_remove,
+ };
+ 
+ static int __init tc1100_init(void)
+diff --git a/drivers/platform/x86/huawei-wmi.c b/drivers/platform/x86/huawei-wmi.c
+index d81fd5df4a00..c3772df34679 100644
+--- a/drivers/platform/x86/huawei-wmi.c
++++ b/drivers/platform/x86/huawei-wmi.c
+@@ -842,7 +842,7 @@ static struct platform_driver huawei_wmi_driver = {
+ 		.name = "huawei-wmi",
+ 	},
+ 	.probe = huawei_wmi_probe,
+-	.remove_new = huawei_wmi_remove,
++	.remove = huawei_wmi_remove,
+ };
+ 
+ static __init int huawei_wmi_init(void)
+diff --git a/drivers/platform/x86/ideapad-laptop.c b/drivers/platform/x86/ideapad-laptop.c
+index c64dfc56651d..9d8c3f064050 100644
+--- a/drivers/platform/x86/ideapad-laptop.c
++++ b/drivers/platform/x86/ideapad-laptop.c
+@@ -2306,7 +2306,7 @@ MODULE_DEVICE_TABLE(acpi, ideapad_device_ids);
+ 
+ static struct platform_driver ideapad_acpi_driver = {
+ 	.probe = ideapad_acpi_add,
+-	.remove_new = ideapad_acpi_remove,
++	.remove = ideapad_acpi_remove,
+ 	.driver = {
+ 		.name   = "ideapad_acpi",
+ 		.pm     = &ideapad_pm,
+diff --git a/drivers/platform/x86/intel/bxtwc_tmu.c b/drivers/platform/x86/intel/bxtwc_tmu.c
+index 9ac801b929b9..99437b2ccc25 100644
+--- a/drivers/platform/x86/intel/bxtwc_tmu.c
++++ b/drivers/platform/x86/intel/bxtwc_tmu.c
+@@ -121,7 +121,7 @@ MODULE_DEVICE_TABLE(platform, bxt_wcove_tmu_id_table);
+ 
+ static struct platform_driver bxt_wcove_tmu_driver = {
+ 	.probe = bxt_wcove_tmu_probe,
+-	.remove_new = bxt_wcove_tmu_remove,
++	.remove = bxt_wcove_tmu_remove,
+ 	.driver = {
+ 		.name = "bxt_wcove_tmu",
+ 		.pm     = &bxtwc_tmu_pm_ops,
+diff --git a/drivers/platform/x86/intel/bytcrc_pwrsrc.c b/drivers/platform/x86/intel/bytcrc_pwrsrc.c
+index 418b71af27ff..3edc2a9dab38 100644
+--- a/drivers/platform/x86/intel/bytcrc_pwrsrc.c
++++ b/drivers/platform/x86/intel/bytcrc_pwrsrc.c
+@@ -167,7 +167,7 @@ static void crc_pwrsrc_remove(struct platform_device *pdev)
+ 
+ static struct platform_driver crc_pwrsrc_driver = {
+ 	.probe = crc_pwrsrc_probe,
+-	.remove_new = crc_pwrsrc_remove,
++	.remove = crc_pwrsrc_remove,
+ 	.driver = {
+ 		.name = "crystal_cove_pwrsrc",
+ 	},
+diff --git a/drivers/platform/x86/intel/chtdc_ti_pwrbtn.c b/drivers/platform/x86/intel/chtdc_ti_pwrbtn.c
+index 615f8d1a0c68..53f01e198047 100644
+--- a/drivers/platform/x86/intel/chtdc_ti_pwrbtn.c
++++ b/drivers/platform/x86/intel/chtdc_ti_pwrbtn.c
+@@ -84,7 +84,7 @@ static struct platform_driver chtdc_ti_pwrbtn_driver = {
+ 		.name	= KBUILD_MODNAME,
+ 	},
+ 	.probe		= chtdc_ti_pwrbtn_probe,
+-	.remove_new	= chtdc_ti_pwrbtn_remove,
++	.remove		= chtdc_ti_pwrbtn_remove,
+ 	.id_table	= chtdc_ti_pwrbtn_id_table,
+ };
+ module_platform_driver(chtdc_ti_pwrbtn_driver);
+diff --git a/drivers/platform/x86/intel/chtwc_int33fe.c b/drivers/platform/x86/intel/chtwc_int33fe.c
+index 11503b1c85f3..29e8b5432f4c 100644
+--- a/drivers/platform/x86/intel/chtwc_int33fe.c
++++ b/drivers/platform/x86/intel/chtwc_int33fe.c
+@@ -427,7 +427,7 @@ static struct platform_driver cht_int33fe_typec_driver = {
+ 		.acpi_match_table = ACPI_PTR(cht_int33fe_acpi_ids),
+ 	},
+ 	.probe = cht_int33fe_typec_probe,
+-	.remove_new = cht_int33fe_typec_remove,
++	.remove = cht_int33fe_typec_remove,
+ };
+ 
+ module_platform_driver(cht_int33fe_typec_driver);
+diff --git a/drivers/platform/x86/intel/hid.c b/drivers/platform/x86/intel/hid.c
+index 445e7a59beb4..97174834dc31 100644
+--- a/drivers/platform/x86/intel/hid.c
++++ b/drivers/platform/x86/intel/hid.c
+@@ -747,7 +747,7 @@ static struct platform_driver intel_hid_pl_driver = {
+ 		.pm = &intel_hid_pl_pm_ops,
+ 	},
+ 	.probe = intel_hid_probe,
+-	.remove_new = intel_hid_remove,
++	.remove = intel_hid_remove,
+ };
+ 
+ /*
+diff --git a/drivers/platform/x86/intel/int0002_vgpio.c b/drivers/platform/x86/intel/int0002_vgpio.c
+index 527d8fbc7cc1..0cc80603a8a9 100644
+--- a/drivers/platform/x86/intel/int0002_vgpio.c
++++ b/drivers/platform/x86/intel/int0002_vgpio.c
+@@ -266,13 +266,13 @@ static const struct acpi_device_id int0002_acpi_ids[] = {
+ MODULE_DEVICE_TABLE(acpi, int0002_acpi_ids);
+ 
+ static struct platform_driver int0002_driver = {
+-	.driver = {
++	.driver	= {
+ 		.name			= DRV_NAME,
+ 		.acpi_match_table	= int0002_acpi_ids,
+ 		.pm			= &int0002_pm_ops,
+ 	},
+ 	.probe	= int0002_probe,
+-	.remove_new = int0002_remove,
++	.remove	= int0002_remove,
+ };
+ 
+ module_platform_driver(int0002_driver);
+diff --git a/drivers/platform/x86/intel/int1092/intel_sar.c b/drivers/platform/x86/intel/int1092/intel_sar.c
+index 6246c066ade2..e526841aff60 100644
+--- a/drivers/platform/x86/intel/int1092/intel_sar.c
++++ b/drivers/platform/x86/intel/int1092/intel_sar.c
+@@ -308,7 +308,7 @@ static void sar_remove(struct platform_device *device)
+ 
+ static struct platform_driver sar_driver = {
+ 	.probe = sar_probe,
+-	.remove_new = sar_remove,
++	.remove = sar_remove,
+ 	.driver = {
+ 		.name = DRVNAME,
+ 		.acpi_match_table = ACPI_PTR(sar_device_ids)
+diff --git a/drivers/platform/x86/intel/int3472/discrete.c b/drivers/platform/x86/intel/int3472/discrete.c
+index 3de463c3d13b..d881b2cfcdfc 100644
+--- a/drivers/platform/x86/intel/int3472/discrete.c
++++ b/drivers/platform/x86/intel/int3472/discrete.c
+@@ -392,7 +392,7 @@ static struct platform_driver int3472_discrete = {
+ 		.acpi_match_table = int3472_device_id,
+ 	},
+ 	.probe = skl_int3472_discrete_probe,
+-	.remove_new = skl_int3472_discrete_remove,
++	.remove = skl_int3472_discrete_remove,
+ };
+ module_platform_driver(int3472_discrete);
+ 
+diff --git a/drivers/platform/x86/intel/mrfld_pwrbtn.c b/drivers/platform/x86/intel/mrfld_pwrbtn.c
+index 549a3f586f3b..6c43f801c467 100644
+--- a/drivers/platform/x86/intel/mrfld_pwrbtn.c
++++ b/drivers/platform/x86/intel/mrfld_pwrbtn.c
+@@ -97,7 +97,7 @@ static struct platform_driver mrfld_pwrbtn_driver = {
+ 		.name	= "mrfld_bcove_pwrbtn",
+ 	},
+ 	.probe		= mrfld_pwrbtn_probe,
+-	.remove_new	= mrfld_pwrbtn_remove,
++	.remove		= mrfld_pwrbtn_remove,
+ 	.id_table	= mrfld_pwrbtn_id_table,
+ };
+ module_platform_driver(mrfld_pwrbtn_driver);
+diff --git a/drivers/platform/x86/intel/pmc/core.c b/drivers/platform/x86/intel/pmc/core.c
+index 0431a599ba26..4e20fd37226e 100644
+--- a/drivers/platform/x86/intel/pmc/core.c
++++ b/drivers/platform/x86/intel/pmc/core.c
+@@ -1724,7 +1724,7 @@ static struct platform_driver pmc_core_driver = {
+ 		.dev_groups = pmc_dev_groups,
+ 	},
+ 	.probe = pmc_core_probe,
+-	.remove_new = pmc_core_remove,
++	.remove = pmc_core_remove,
+ };
+ 
+ module_platform_driver(pmc_core_driver);
+diff --git a/drivers/platform/x86/intel/telemetry/pltdrv.c b/drivers/platform/x86/intel/telemetry/pltdrv.c
+index 767a0bc6c7ad..9a499efa1e4d 100644
+--- a/drivers/platform/x86/intel/telemetry/pltdrv.c
++++ b/drivers/platform/x86/intel/telemetry/pltdrv.c
+@@ -1163,7 +1163,7 @@ static void telemetry_pltdrv_remove(struct platform_device *pdev)
+ 
+ static struct platform_driver telemetry_soc_driver = {
+ 	.probe		= telemetry_pltdrv_probe,
+-	.remove_new	= telemetry_pltdrv_remove,
++	.remove		= telemetry_pltdrv_remove,
+ 	.driver		= {
+ 		.name	= DRIVER_NAME,
+ 	},
+diff --git a/drivers/platform/x86/intel/vbtn.c b/drivers/platform/x86/intel/vbtn.c
+index a353e830b65f..232cd12e3c9f 100644
+--- a/drivers/platform/x86/intel/vbtn.c
++++ b/drivers/platform/x86/intel/vbtn.c
+@@ -387,7 +387,7 @@ static struct platform_driver intel_vbtn_pl_driver = {
+ 		.pm = &intel_vbtn_pm_ops,
+ 	},
+ 	.probe = intel_vbtn_probe,
+-	.remove_new = intel_vbtn_remove,
++	.remove = intel_vbtn_remove,
+ };
+ 
+ static acpi_status __init
+diff --git a/drivers/platform/x86/lenovo-yoga-tab2-pro-1380-fastcharger.c b/drivers/platform/x86/lenovo-yoga-tab2-pro-1380-fastcharger.c
+index d525bdc8ca9b..d2699ca24f34 100644
+--- a/drivers/platform/x86/lenovo-yoga-tab2-pro-1380-fastcharger.c
++++ b/drivers/platform/x86/lenovo-yoga-tab2-pro-1380-fastcharger.c
+@@ -298,7 +298,7 @@ static void yt2_1380_fc_pdev_remove(struct platform_device *pdev)
+ 
+ static struct platform_driver yt2_1380_fc_pdev_driver = {
+ 	.probe = yt2_1380_fc_pdev_probe,
+-	.remove_new = yt2_1380_fc_pdev_remove,
++	.remove = yt2_1380_fc_pdev_remove,
+ 	.driver = {
+ 		.name = YT2_1380_FC_PDEV_NAME,
+ 		.probe_type = PROBE_PREFER_ASYNCHRONOUS,
+diff --git a/drivers/platform/x86/lenovo-yogabook.c b/drivers/platform/x86/lenovo-yogabook.c
+index fd62bf746ebd..31b298dc5046 100644
+--- a/drivers/platform/x86/lenovo-yogabook.c
++++ b/drivers/platform/x86/lenovo-yogabook.c
+@@ -536,7 +536,7 @@ static void yogabook_pdev_remove(struct platform_device *pdev)
+ 
+ static struct platform_driver yogabook_pdev_driver = {
+ 	.probe = yogabook_pdev_probe,
+-	.remove_new = yogabook_pdev_remove,
++	.remove = yogabook_pdev_remove,
+ 	.driver = {
+ 		.name = YB_PDEV_NAME,
+ 		.pm = pm_sleep_ptr(&yogabook_pm_ops),
+diff --git a/drivers/platform/x86/mlx-platform.c b/drivers/platform/x86/mlx-platform.c
+index 9d70146fd742..671021cd1f59 100644
+--- a/drivers/platform/x86/mlx-platform.c
++++ b/drivers/platform/x86/mlx-platform.c
+@@ -6633,7 +6633,7 @@ static struct platform_driver mlxplat_driver = {
+ 		.probe_type = PROBE_FORCE_SYNCHRONOUS,
+ 	},
+ 	.probe		= mlxplat_probe,
+-	.remove_new	= mlxplat_remove,
++	.remove		= mlxplat_remove,
+ };
+ 
+ static int __init mlxplat_init(void)
+diff --git a/drivers/platform/x86/samsung-q10.c b/drivers/platform/x86/samsung-q10.c
+index 134e2c3d91ca..8160d45f8a23 100644
+--- a/drivers/platform/x86/samsung-q10.c
++++ b/drivers/platform/x86/samsung-q10.c
+@@ -78,7 +78,7 @@ static struct platform_driver samsungq10_driver = {
+ 		.name	= KBUILD_MODNAME,
+ 	},
+ 	.probe		= samsungq10_probe,
+-	.remove_new	= samsungq10_remove,
++	.remove		= samsungq10_remove,
+ };
+ 
+ static struct platform_device *samsungq10_device;
+diff --git a/drivers/platform/x86/sel3350-platform.c b/drivers/platform/x86/sel3350-platform.c
+index d09e976e7148..02e2081e2333 100644
+--- a/drivers/platform/x86/sel3350-platform.c
++++ b/drivers/platform/x86/sel3350-platform.c
+@@ -235,7 +235,7 @@ MODULE_DEVICE_TABLE(acpi, sel3350_device_ids);
+ 
+ static struct platform_driver sel3350_platform_driver = {
+ 	.probe = sel3350_probe,
+-	.remove_new = sel3350_remove,
++	.remove = sel3350_remove,
+ 	.driver = {
+ 		.name = "sel3350-platform",
+ 		.acpi_match_table = sel3350_device_ids,
+diff --git a/drivers/platform/x86/serial-multi-instantiate.c b/drivers/platform/x86/serial-multi-instantiate.c
+index 7c04cc9e5891..ed6b28505cd6 100644
+--- a/drivers/platform/x86/serial-multi-instantiate.c
++++ b/drivers/platform/x86/serial-multi-instantiate.c
+@@ -409,7 +409,7 @@ static struct platform_driver smi_driver = {
+ 		.acpi_match_table = smi_acpi_ids,
+ 	},
+ 	.probe = smi_probe,
+-	.remove_new = smi_remove,
++	.remove = smi_remove,
+ };
+ module_platform_driver(smi_driver);
+ 
+diff --git a/drivers/platform/x86/siemens/simatic-ipc-batt-apollolake.c b/drivers/platform/x86/siemens/simatic-ipc-batt-apollolake.c
+index 5edc294de6e4..6ff6f3de492b 100644
+--- a/drivers/platform/x86/siemens/simatic-ipc-batt-apollolake.c
++++ b/drivers/platform/x86/siemens/simatic-ipc-batt-apollolake.c
+@@ -37,7 +37,7 @@ static int simatic_ipc_batt_apollolake_probe(struct platform_device *pdev)
+ 
+ static struct platform_driver simatic_ipc_batt_driver = {
+ 	.probe = simatic_ipc_batt_apollolake_probe,
+-	.remove_new = simatic_ipc_batt_apollolake_remove,
++	.remove = simatic_ipc_batt_apollolake_remove,
+ 	.driver = {
+ 		.name = KBUILD_MODNAME,
+ 	},
+diff --git a/drivers/platform/x86/siemens/simatic-ipc-batt-elkhartlake.c b/drivers/platform/x86/siemens/simatic-ipc-batt-elkhartlake.c
+index e6a56d14b505..83f532498c8c 100644
+--- a/drivers/platform/x86/siemens/simatic-ipc-batt-elkhartlake.c
++++ b/drivers/platform/x86/siemens/simatic-ipc-batt-elkhartlake.c
+@@ -37,7 +37,7 @@ static int simatic_ipc_batt_elkhartlake_probe(struct platform_device *pdev)
+ 
+ static struct platform_driver simatic_ipc_batt_driver = {
+ 	.probe = simatic_ipc_batt_elkhartlake_probe,
+-	.remove_new = simatic_ipc_batt_elkhartlake_remove,
++	.remove = simatic_ipc_batt_elkhartlake_remove,
+ 	.driver = {
+ 		.name = KBUILD_MODNAME,
+ 	},
+diff --git a/drivers/platform/x86/siemens/simatic-ipc-batt-f7188x.c b/drivers/platform/x86/siemens/simatic-ipc-batt-f7188x.c
+index f8849d0e48a8..c6a79338f1d0 100644
+--- a/drivers/platform/x86/siemens/simatic-ipc-batt-f7188x.c
++++ b/drivers/platform/x86/siemens/simatic-ipc-batt-f7188x.c
+@@ -73,7 +73,7 @@ static int simatic_ipc_batt_f7188x_probe(struct platform_device *pdev)
+ 
+ static struct platform_driver simatic_ipc_batt_driver = {
+ 	.probe = simatic_ipc_batt_f7188x_probe,
+-	.remove_new = simatic_ipc_batt_f7188x_remove,
++	.remove = simatic_ipc_batt_f7188x_remove,
+ 	.driver = {
+ 		.name = KBUILD_MODNAME,
+ 	},
+diff --git a/drivers/platform/x86/siemens/simatic-ipc-batt.c b/drivers/platform/x86/siemens/simatic-ipc-batt.c
+index d9aff10608cf..7cfe991cba00 100644
+--- a/drivers/platform/x86/siemens/simatic-ipc-batt.c
++++ b/drivers/platform/x86/siemens/simatic-ipc-batt.c
+@@ -239,7 +239,7 @@ static int simatic_ipc_batt_io_probe(struct platform_device *pdev)
+ 
+ static struct platform_driver simatic_ipc_batt_driver = {
+ 	.probe = simatic_ipc_batt_io_probe,
+-	.remove_new = simatic_ipc_batt_io_remove,
++	.remove = simatic_ipc_batt_io_remove,
+ 	.driver = {
+ 		.name = KBUILD_MODNAME,
+ 	},
+diff --git a/drivers/platform/x86/wmi.c b/drivers/platform/x86/wmi.c
+index a01223c23d10..2d6885c67ac0 100644
+--- a/drivers/platform/x86/wmi.c
++++ b/drivers/platform/x86/wmi.c
+@@ -1328,7 +1328,7 @@ static struct platform_driver acpi_wmi_driver = {
+ 		.acpi_match_table = wmi_device_ids,
+ 	},
+ 	.probe = acpi_wmi_probe,
+-	.remove_new = acpi_wmi_remove,
++	.remove = acpi_wmi_remove,
+ };
+ 
+ static int __init acpi_wmi_init(void)
+diff --git a/drivers/platform/x86/x86-android-tablets/core.c b/drivers/platform/x86/x86-android-tablets/core.c
+index ef572b90e06b..1e93112972da 100644
+--- a/drivers/platform/x86/x86-android-tablets/core.c
++++ b/drivers/platform/x86/x86-android-tablets/core.c
+@@ -458,7 +458,7 @@ static struct platform_driver x86_android_tablet_driver = {
+ 	.driver = {
+ 		.name = KBUILD_MODNAME,
+ 	},
+-	.remove_new = x86_android_tablet_remove,
++	.remove = x86_android_tablet_remove,
+ };
+ 
+ static int __init x86_android_tablet_init(void)
+diff --git a/drivers/platform/x86/xo1-rfkill.c b/drivers/platform/x86/xo1-rfkill.c
+index 5fe68296501c..5fedb99b9d94 100644
+--- a/drivers/platform/x86/xo1-rfkill.c
++++ b/drivers/platform/x86/xo1-rfkill.c
+@@ -68,7 +68,7 @@ static struct platform_driver xo1_rfkill_driver = {
+ 		.name = "xo1-rfkill",
+ 	},
+ 	.probe		= xo1_rfkill_probe,
+-	.remove_new	= xo1_rfkill_remove,
++	.remove		= xo1_rfkill_remove,
+ };
+ 
+ module_platform_driver(xo1_rfkill_driver);
+
+base-commit: 15e7d45e786a62a211dd0098fee7c57f84f8c681
+-- 
+2.45.2
+
