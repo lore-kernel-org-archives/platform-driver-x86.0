@@ -1,98 +1,108 @@
-Received: from mail-lf1-f49.google.com (mail-lf1-f49.google.com [209.85.167.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B1C9C1EE022;
-	Thu, 17 Oct 2024 21:10:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 799251F428B;
+	Thu, 17 Oct 2024 23:27:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729199412; cv=none; b=NSjA3gzHEo4sVKtESZTXZa/G1y5saXeFlc24BC4GZ7nr06i6XZbyCEpF4GiKPE0YvF6o5TPT4eswG1EeW4OvoThjITwS28FFdPrwoF/70xwUCOsvrfy8kL2lK2zsf9V/acTR7LGIkgcpvPhiYAhsRztirQ6kqiznBjv3OAWCF9E=
+	t=1729207664; cv=none; b=DM1BfX0rKQ4Fm94FvIuIf25vYpCUZmCMKMSVaWfDoHIIqvoZgv2xetSpplg9CzM5xmaEQTFwekiN33JbDwxTU90LWfas1wv9MrzWSgiA1ndvgLs9cL1YlXHLnz9xnMfbN/SgQ4pAuiCRJbd3oO/QslZGwjFLQpjaaSGYEAdm64I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729199412; c=relaxed/simple;
-	bh=7f0RExRXih7zxFfG9mYRj/8yPVSBaFMqZ3qljFJhEw8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Ytawjqe77VROtj/vdfcMOUG5cOxxAJVuT5i/lku96jj1LhyTHsMFktzYHdyfYh7wTKtiQrczARHdranc7ol8qOYGW7pN4plQv6dXNS9HLp5YX7wF3AOYn8ShzFt3pNviO5dNParYGpMwgszsDVECxioGIgy2Q/3ErtTK5zeWaVA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=PRMpR++E; arc=none smtp.client-ip=209.85.167.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1729207664; c=relaxed/simple;
+	bh=ifz3yshYbLZ1aHxcRzTbeBb3kbz/UBxDdTmrzJaM2H4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=u2ibPnahS3G+IYn4tU5BDFGXgi156x9xlriSCK2mmLrtJ+LIOKOlAj8jjKlIF9f66DJK+usiFSPNfffqNPTTpKSDoDAYZ7R4z2j50nUdMre+DRagA1x22+rBEXvCZfNMmZurhoSKjMQVNeaCCGy3vLRfdD+GkXFbmpr2e7I+3uI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=QrNLxfmj; arc=none smtp.client-ip=198.175.65.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PRMpR++E"
-Received: by mail-lf1-f49.google.com with SMTP id 2adb3069b0e04-539e6c754bdso1467873e87.2;
-        Thu, 17 Oct 2024 14:10:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1729199409; x=1729804209; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=uumOThIh4B8vpzXdzAhjzFm80xhgepCJRIY9E1mr/Zs=;
-        b=PRMpR++EFBMC/jNSurk7dpEwXk4bcn5xhp82QWtjN8rRbIuOp6dmbTqggXK9775SOW
-         5cfdiSSwTP30lOC7+vWyOoTWCEld1hg2RgbSoHe59aaV9jbAHeQxpnupa/cahQehUe07
-         S1aCJQo+LiNQBC4MVJHGSkOBiY+/2S5SPEoKjnrl4Tl6P5BVNsiGz0Gtsa5NWrwfZf94
-         9Ig/j3vljdT7bB6Np1s+gafV9RApqt6iYR2+nLw16OFZjK9jSXGAM5A6wqxlXx9G7BqM
-         T/MHTQ4U6YgLEMwsTthe7599M4hyKOtTwb4QRbG/RbKrpKeKNweHzjXqUrm42sg89h9V
-         xExg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1729199409; x=1729804209;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=uumOThIh4B8vpzXdzAhjzFm80xhgepCJRIY9E1mr/Zs=;
-        b=IwEkgPdExyYKn84ZfGExHBXVdFbRkloKCDfUoNu3GPoWi63b7OOLLSvVgbUYv/SDsU
-         R42esLFfGaaiey1VWILSaWkX+frNhPrR7eQ5v+F40AM+GZkDf5ujJzJZwOVDwGqaspfJ
-         e8T04DtEHJZbstuTLm0sKCnGh5hupArvaIfFok3MitagDyIqpupBwOaY71aBYZTMVFaH
-         NjcxeaXb7GxOisR3Bz4T6GP+VLcjd8WR+v0TYZmvzPyjp3FAhb4+IywBIEKnnmejk102
-         tWNvpbBA7h0vVOveSRWT3PoSrvMALtDDUcIk3LPIaOtD71NUore1wUCLfLyKPU9JsKFH
-         dICQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWQk0SvZERE5BdgmQPOXijH7+3G3RfRwpB0hwAFUbwE7ahPo0WYfSVEdG48jHtvLGxXkDi/cVb0tT6rirg/y0ZvGIpIoQ==@vger.kernel.org, AJvYcCWVr37jNzUJewzOKPLd/DnvuqWXkDvDl2rl/OmfT+H4cvVYsMEbcTlUJAC3iCnFXFvosvfpoOT0u851X2o=@vger.kernel.org
-X-Gm-Message-State: AOJu0YygkwAKwPc+9SZirflvRMEHUIAICfuRLuVv2EhwcRzG+vmrf221
-	UG0wre9qJF5ZE0oeJJm+KZskZs1bPQJ3GknOFHKDwZgXYUIApx50
-X-Google-Smtp-Source: AGHT+IH9IuXFD84Kj2OeekLkVwkasGpWvwN7ejE5UpQdq+IRs56VOrjk1GXQc98GSa69t1E7h0gcZA==
-X-Received: by 2002:a05:6512:128f:b0:539:f1ce:5fa8 with SMTP id 2adb3069b0e04-53a1550b9e6mr151336e87.49.1729199408386;
-        Thu, 17 Oct 2024 14:10:08 -0700 (PDT)
-Received: from ?IPV6:2a02:a466:68ed:1:a5ad:82b9:3ea0:80bb? ([2a02:a466:68ed:1:a5ad:82b9:3ea0:80bb])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a9a68ae543csm13565266b.74.2024.10.17.14.10.07
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 17 Oct 2024 14:10:08 -0700 (PDT)
-Message-ID: <09999c3e-e03b-409a-a8c3-37849fe50878@gmail.com>
-Date: Thu, 17 Oct 2024 23:10:03 +0200
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="QrNLxfmj"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1729207662; x=1760743662;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=ifz3yshYbLZ1aHxcRzTbeBb3kbz/UBxDdTmrzJaM2H4=;
+  b=QrNLxfmjHcET3J6uGVH/pOXn+d/6vjm+RsR+enw/XTnosTMq3gPDDkZn
+   1WjM+D7j0OzTzGxy/oieGZ3hFzF3pUX3N98PXfiVarlQw39XM4PjD/s1c
+   NENIr15vKL05WM6WnSwKJNRyvw4v3YF0ohNAuImrQu0byXQGBEI3NUMfo
+   xP6NmLGf9quTNfJe8MoD9zkxUBbFG4EuGBKjG582tSTaTEDkzR7Sujw86
+   nkBdab+oGcsXrwDnOkYX/l3WE/Ql/VIf111Goq1oUhK03y6WzRsWrUlsD
+   YkkapQs3CGoRrT5/v94UnrioeXYcS3ZBcJCenC1U1eF4yKRxzmeXFu/pV
+   Q==;
+X-CSE-ConnectionGUID: HQJ6VIAIQ9G6sZh3obr6UA==
+X-CSE-MsgGUID: kBa+XAqcRlGJSdXEhvFwKg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11222"; a="28875879"
+X-IronPort-AV: E=Sophos;i="6.11,199,1725346800"; 
+   d="scan'208";a="28875879"
+Received: from orviesa002.jf.intel.com ([10.64.159.142])
+  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Oct 2024 16:27:42 -0700
+X-CSE-ConnectionGUID: CiYqMp44SOCRf5IA5M4PGw==
+X-CSE-MsgGUID: gErvNAL5QnW2fFCwIbd/GQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.11,212,1725346800"; 
+   d="scan'208";a="109518421"
+Received: from ranerica-svr.sc.intel.com ([172.25.110.23])
+  by orviesa002.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Oct 2024 16:27:42 -0700
+Date: Thu, 17 Oct 2024 16:33:43 -0700
+From: Ricardo Neri <ricardo.neri-calderon@linux.intel.com>
+To: Mario Limonciello <mario.limonciello@amd.com>
+Cc: Borislav Petkov <bp@alien8.de>, Hans de Goede <hdegoede@redhat.com>,
+	Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	x86@kernel.org, "Gautham R . Shenoy" <gautham.shenoy@amd.com>,
+	Perry Yuan <perry.yuan@amd.com>, linux-kernel@vger.kernel.org,
+	linux-doc@vger.kernel.org, linux-pm@vger.kernel.org,
+	platform-driver-x86@vger.kernel.org,
+	Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
+Subject: Re: [PATCH v2 05/13] platform/x86: hfi: Introduce AMD Hardware
+ Feedback Interface Driver
+Message-ID: <20241017233343.GA308@ranerica-svr.sc.intel.com>
+References: <20241010193705.10362-1-mario.limonciello@amd.com>
+ <20241010193705.10362-6-mario.limonciello@amd.com>
+ <20241015035233.GA28522@ranerica-svr.sc.intel.com>
+ <1395bee1-95a7-4d14-a5e8-0e1dc71fadac@amd.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v1 0/3] platform/x86: intel_scu_ipc: Avoid working around
- IO and cleanups
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
- linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org
-Cc: Mika Westerberg <mika.westerberg@linux.intel.com>,
- Andy Shevchenko <andy@kernel.org>, Hans de Goede <hdegoede@redhat.com>,
- =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
- Ferry Toth <fntoth@gmail.com>
-References: <20241016115033.858574-1-andriy.shevchenko@linux.intel.com>
-Content-Language: en-US
-From: Ferry Toth <fntoth@gmail.com>
-In-Reply-To: <20241016115033.858574-1-andriy.shevchenko@linux.intel.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1395bee1-95a7-4d14-a5e8-0e1dc71fadac@amd.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 
-Hi
+On Tue, Oct 15, 2024 at 01:09:42PM -0500, Mario Limonciello wrote:
+> > 
+> > > Link: https://bugzilla.kernel.org/show_bug.cgi?id=206537
+> > 
+> > I tried to find the HFI details on the documents in this "bug" but I could
+> > not find them. What document in specific could I look at?
+> > 
+> > Thanks and BR,
+> > Ricardo
+> 
+> Hi Ricardo,
+> 
+> It is spread out across multiple places.  This is part of the reason for
+> patch 1 in the series outlines details of how it works.
+> 
+> The reason for that "collect all" Bugzilla for documentation is because the
+> URLs for AMD documentation have undergone changes in the past and it makes
+> it difficult to put stable URLs in commit messages.  So teams that want to
+> reference documentation put it on a dump all bug for a stable URL to
+> reference.
+> 
+> On that link you will find the APM, which will have some documentation
+> specifically for the CPUID leafs used for topology identification and
+> clearing history.
+> 
+> Read patch 1 and let me know if it covers what specifically you're looking
+> for.  If it's still missing some info let me know what you would like added.
 
-Op 16-10-2024 om 13:48 schreef Andy Shevchenko:
-> The first patch avoids using a workaround for IO (which seems unneeded).
-> The rest is a batch of cleanups. Cc'ed to Ferry in hope of testing on
-> Intel Merrifield (the main platform that uses these APIs).
->
-> Andy Shevchenko (3):
->    platform/x86: intel_scu_ipc: Replace workaround by 32-bit IO
->    platform/x86: intel_scu_ipc: Simplify code with cleanup helpers
->    platform/x86: intel_scu_ipc: Save a copy of the entire struct
->      intel_scu_ipc_data
->
->   drivers/platform/x86/intel_scu_ipc.c | 142 ++++++++++++---------------
->   1 file changed, 61 insertions(+), 81 deletions(-)
->
-Tested iio_info (mrfld_bcove_adc), host/gadget switch, power button.
+Thank you for your reply! I read patch 1. I was wondering specifically about
+more details of the Class ID. I see that they have associated counters and
+desired scheduling behavior.
 
-Tested-by: Ferry Toth <fntoth@gmail.com> (Intel Edison-Arduino)
+I was also curious about the layout of the HFI table. I guess I can infer it
+from patches 5 and 6 but if there is a picture already, I wouldn't mind. ;)
 
