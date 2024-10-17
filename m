@@ -1,232 +1,189 @@
-Received: from mail-pl1-f178.google.com (mail-pl1-f178.google.com [209.85.214.178])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from NAM02-SN1-obe.outbound.protection.outlook.com (mail-sn1nam02on2086.outbound.protection.outlook.com [40.107.96.86])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 81B2A20E3;
-	Thu, 17 Oct 2024 04:10:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.178
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729138237; cv=none; b=bmpCPen42+yWfNBgnFP/PjNnaROLWZDtwago6YHwkt39KsemJubT1sUkMiBNJGDq9mfMxgTvvZ/S8T4v/E/QwB0VRevh9o5zfgmxdA0051/1xdV9erCjpww9uxXTYQ3c9HdJDcDyu6P+asrgt8BBT+KSv7uMWyblgZAxA/3NavM=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729138237; c=relaxed/simple;
-	bh=Yt1K2WQAiKzgH7ZMWeLbWNt86ai9UwpfrishH/vpy08=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=afYmjwD8Kv5tkvvq6Wc91KiytkwlD2qBQ7b/1OwgP0i02di8M2Zc2llodDrxmnyrRVhQLEpOrrY8mh2fK0FkVKU3cdrIErlG7MA7AtOgKjMJTcsZ/arVc4Jg5UtFa3nUr3C920dJlkeKB3ZhZTDiEfuha59t9VMF8zikvxSE/GY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=TCtxg7xn; arc=none smtp.client-ip=209.85.214.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F3B12F36;
+	Thu, 17 Oct 2024 04:47:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.96.86
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1729140462; cv=fail; b=DDXFouRxvElSG5EIhpFHz0rAgI4G1ObaxtjrIhiTeT98I0nqew8X0eJFlVBIB5m6aNydv2/WeYRqHkojprPPF6SJGtCo5MA5XDm0DwLrNnO9WmB88DZH3mHOtolfwyTsInQCOPLjMT5OYtkm9PasKSuShRISs6uSMHelHJtboaw=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1729140462; c=relaxed/simple;
+	bh=pscTndexECRmMyS02Vt6ha8Xzc6WO3UTrMGnurwsktY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=NBLNgsMAnOvq2AFhid7SBpzgoTgR0HZJnG4PCadz57MNLSnJFUdgpoGwTPpMZ3/xkUe0uUA1JI8mSNspbof0O0QQrZiJ/4M+0BBw5kBJcxO1cVOutTbCXJGYH0ChHTFjVIFBaLzTf7Gm+rCBVjwBeQTX2U2fkVdKVDmfSdoTMNQ=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=BGnrQrQA; arc=fail smtp.client-ip=40.107.96.86
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TCtxg7xn"
-Received: by mail-pl1-f178.google.com with SMTP id d9443c01a7336-20c77459558so4500245ad.0;
-        Wed, 16 Oct 2024 21:10:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1729138235; x=1729743035; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=Ux6SYxBDhxO8DGVq2zufumZVyMNrmutT9VAJWAbmOgk=;
-        b=TCtxg7xnJ27N2ejgnQxh1k6kPJ4R9vQceldsl+YIgUjx3r7QlbYwW6oc75AZ60XJ+Y
-         zB4ET2ziR8+NHghkshb6oRlp4GJ0abgNqkIW/9WMGU1V4vyjeBozUciF4AOUXlX0SkGD
-         xmWKaCI+5+oRZuFWKJEXv8hfNwBbe8o/1XCFqnJIs53xPEZiAEQBFFp+Ux5exl6NvKP+
-         qvMmdL8FwlWlZhWFA7nHZGBdf1SYNG6Twe2yI8cIXPr7Q2JCU40g7MXD+8ZvFpejdvdb
-         mJxl0NW1J9cg4nBfNsDlBf67UosuVAYv+iaFWMPpGRDqLafv3D4p8eBORDkxxncJAHxh
-         p1iA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1729138235; x=1729743035;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=Ux6SYxBDhxO8DGVq2zufumZVyMNrmutT9VAJWAbmOgk=;
-        b=YlP+DZn/LIP7pABVkfPIVfJaR1g5Qexe4A3BEQ9mNOT799Vwk3W5j0uZXHoFfzTkTQ
-         miWHkrMcspaH9e6lIcLTidH9Dhmpjzo4uW+AR9LTNHuYKXiCylhxCAyZr/ohEmmc1SBl
-         CB2s6f4a6iIZa2gWMU2/JT4UAx00o3m8uzFkXnVa9/yR8IYdk1D4mGwqTNprPLpSplmH
-         neYZ5pZ+6Qj2cwG1zsLF8D6Fi+Y5oVzaMPQet/dFyxw3U6IL8vVn9dMi0G/paXwAr2iT
-         +oF8QmyXd2zQ7ohipDKWCQTyFjsC2IHflEH+R73Weqe5bDPP27bXRJPyfRMgr3PliURs
-         ZSqA==
-X-Forwarded-Encrypted: i=1; AJvYcCVdkMZmuedzq0edfVtMvjMT+LJs9ZOCwaL5nmkmEBMdEhPFkAhc/TT809YeMwdfa/PAI+O8ImOTXTCTnoFDlIa/WQQD8g==@vger.kernel.org, AJvYcCX0edMzACg4zuIv6JaKli9Vd/wBMga0bOVDws3/fEwoSVNVWS5jjTbeGP05QgFYYVC4LkCN4QASb19qK2I=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxPYPg+9qWsfMnaoTHhzf9G0MIok1yaY5Yvk0pq1h9pwf5gkRQF
-	QgiGpXH4Z2VZ78+qKFjeWblyeJBfccUIXPjBLshkf17XOh5t9Vea
-X-Google-Smtp-Source: AGHT+IE41gL/wWgrnUh5J4/mGB5KzxG6XwXUKZeIR+ggkI23MMwlc2AAxxPgfxYPXomqOXqe0bTI7A==
-X-Received: by 2002:a17:902:dac7:b0:20d:f00:bd26 with SMTP id d9443c01a7336-20d0f00bd43mr133067745ad.36.1729138234451;
-        Wed, 16 Oct 2024 21:10:34 -0700 (PDT)
-Received: from fedora.. ([2405:201:d007:50c2:4888:86b4:6f32:9ae])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-20d1805bc66sm35705975ad.272.2024.10.16.21.10.30
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 16 Oct 2024 21:10:33 -0700 (PDT)
-From: Vamsi Krishna Brahmajosyula <vamsikrishna.brahmajosyula@gmail.com>
-To: irenic.rajneesh@gmail.com,
-	david.e.box@intel.com,
-	hdegoede@redhat.com,
-	ilpo.jarvinen@linux.intel.com,
-	david.e.box@linux.intel.com
-Cc: skhan@linuxfoundation.org,
-	platform-driver-x86@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] platform/x86/intel/pmc: Fix pmc_core_iounmap to call iounmap for valid addresses
-Date: Thu, 17 Oct 2024 09:40:27 +0530
-Message-ID: <20241017041027.12785-1-vamsikrishna.brahmajosyula@gmail.com>
-X-Mailer: git-send-email 2.47.0
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="BGnrQrQA"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=lPeA8moavXZgCBSQi/RAUArAi+/RkyLu/pQJjATf/5nd//MBk9ogHROG35GylDhqYt/xT+LiM+X6bDhNDA5yQKB/qJX2tz992dq+EfxIRiC1W/z31SUZqYXonDBuFCJv90WIlpNfzLqbRk87N3DMu535aVKTutOM8oHce6G+V/MucSNosmXMHsDQf1TBUy/lnvsoHbZNDn4sCLftti24a2CddDJsyhqwqPvtTewB6TDerbr6Zg7QGH/oKZR9+3tqloH430/kYAW703pvkf9B+j2LDX2i/vG0vXd0WAshXUIxV49Jt3Tap4mzBh02eNBD4G0rEYG2K9jJ1w3+ToCzgw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=2vFWP9I8IDehzlENdIh/AjeRQmHznunBY/X9y2CBMTc=;
+ b=PRqwcUkoT8f5oZm1Fl/+BY78/aZc9LwWXd0evzZb9okf9wqfMuGVgjBUEQIRxzDUf3JA6QbWUniX61ENEXzeg+7TJBonO1ESkQVTHb1ST2Tlrx4D6aptVJ+5z0Ju20tv83kmAjGZ4zz/V6l0Hwh89w0+YUQopw+lLuB1P5cB0ZDyiEt2lRDBdnlpOg7BUB0mCM41x4Z6lQ/MzkHIjTO0iexuGfrsw2mrmjZSeqvHrihZP6t+hykagPLUtqHFoTtGoZwCsyVkKjDgXG4kIO/ELtWMMU6tPokHVx5A/biuYkgayom29lIiklecvm0KZwuaEQd9ujgIAUObPBakRron4Q==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=2vFWP9I8IDehzlENdIh/AjeRQmHznunBY/X9y2CBMTc=;
+ b=BGnrQrQAEqBchlsEZTg6HIJBfWl+ia83EtH5CYLCR7LQXQ7zJHLHqsd1u+wYWKKc/MuAhLQ7DImEId2Ln/oyF+Ww/2tXGdb+8MHzRAsr1nVHX5IU7YoFSkvzO4aEY/3ay+jkc60tOhL8gfZnsk2H5XddCx11ytLqFSsNbSKmMBA=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from DS7PR12MB8252.namprd12.prod.outlook.com (2603:10b6:8:ee::7) by
+ MN2PR12MB4438.namprd12.prod.outlook.com (2603:10b6:208:267::23) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8069.17; Thu, 17 Oct
+ 2024 04:47:36 +0000
+Received: from DS7PR12MB8252.namprd12.prod.outlook.com
+ ([fe80::2d0c:4206:cb3c:96b7]) by DS7PR12MB8252.namprd12.prod.outlook.com
+ ([fe80::2d0c:4206:cb3c:96b7%5]) with mapi id 15.20.8069.019; Thu, 17 Oct 2024
+ 04:47:35 +0000
+Date: Thu, 17 Oct 2024 10:17:25 +0530
+From: "Gautham R. Shenoy" <gautham.shenoy@amd.com>
+To: Mario Limonciello <mario.limonciello@amd.com>
+Cc: Borislav Petkov <bp@alien8.de>, Hans de Goede <hdegoede@redhat.com>,
+	Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	x86@kernel.org, Perry Yuan <perry.yuan@amd.com>,
+	linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
+	linux-pm@vger.kernel.org, platform-driver-x86@vger.kernel.org,
+	Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
+Subject: Re: [PATCH v3 03/14] x86/cpufeatures: add X86_FEATURE_WORKLOAD_CLASS
+ feature bit
+Message-ID: <ZxCW3bLUQhMqv9Rp@BLRRASHENOY1.amd.com>
+References: <20241015213645.1476-1-mario.limonciello@amd.com>
+ <20241015213645.1476-4-mario.limonciello@amd.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20241015213645.1476-4-mario.limonciello@amd.com>
+X-ClientProxiedBy: PN3PR01CA0136.INDPRD01.PROD.OUTLOOK.COM
+ (2603:1096:c01:bf::23) To DS7PR12MB8252.namprd12.prod.outlook.com
+ (2603:10b6:8:ee::7)
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DS7PR12MB8252:EE_|MN2PR12MB4438:EE_
+X-MS-Office365-Filtering-Correlation-Id: 7f122e49-c3c8-49f5-2ea8-08dcee66d1d0
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|376014|1800799024;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?oVhEa6OLhkNIT4cvkNU6/w9UrmJkj2OKm0h8jspa1jqgix/pfSsThJhPVXdv?=
+ =?us-ascii?Q?nm+7hzoi3rMdZybHcZwaOfZsN/IbR5m4yHUzJLOWhCrNSaGBxq+GfPoNL3F+?=
+ =?us-ascii?Q?VbYknmBRgcucVk7aZiD3D1XroPp+6k5D/xFujKuhJZtbaIDjx74qUJQcRYo1?=
+ =?us-ascii?Q?RPyjX70TOzI5Yt8JlqacCZtelH9R8/aYb1TwqG1WjRoN6IWZtAWxDRTQOP1n?=
+ =?us-ascii?Q?3Pulv1mLtgD58CCRUBziOFBidJqs/hO/5oeybDWuv9J83USGHmnSNjmObl+T?=
+ =?us-ascii?Q?RExuLuIqw2B1KJmiRp7s+7bQO0zMuQeAwE14inMhNxmVx5MNrupmOlqVecZB?=
+ =?us-ascii?Q?1RpYf050d4ZCftpX+MEHnDGIKhDB87YHjLz9bdiTgEd+Bm7Q/9Vv0p+rA4/L?=
+ =?us-ascii?Q?a5YUg226oL+6QKUC9w07ojQbQ/ofdg8F/lydS7+FG8kfHuUr/dK+kpfE/n9g?=
+ =?us-ascii?Q?5xyLpwmIK0Z7CiDhM4AYAcv+fY6kFS+Rkv7Pg5BzzM1FGi4KswrnM1NnMucN?=
+ =?us-ascii?Q?CssKK2XOHloV31zWW3MHcutzKNoQvTQgnx7cTLWAgdoQV7ClSChmN81kN2ST?=
+ =?us-ascii?Q?2hD07dPHFQnT6mC2CtMXzJ5qDDhVft4M5qIgKndiMNpNyTce+z3RnZKiz/Gx?=
+ =?us-ascii?Q?GhMuRkGdAQM0qf6fl4o1R+7tzreaSRYpnXKJk4F630L5gxRwoTc/tVi0KwIT?=
+ =?us-ascii?Q?mZ5nIyuCX67W2A8tGx4RvUj+EbKLeOiHzYSVMnk2oZX6JYsPoYLpljiUw/OT?=
+ =?us-ascii?Q?QTKD4WEhJrTil5Zg9ZAblZUKaoCMEGXWCvJWYKMRmRRZjO3VW1wOxcQYiGK1?=
+ =?us-ascii?Q?h4a0DT0ydTOCn5ORERPpqN/NX6C1YS8+da0nUi7KPHgAlMiooYq5or5MrOV0?=
+ =?us-ascii?Q?PadwkiixWpfAGzUqNQfIQwmgex8oZV+EX2UbuIxyZX4A3kU2MLBmj3E+ktrO?=
+ =?us-ascii?Q?agyK2UIVw1SW2mYWZsky81dNDQgcykcRy0Yl5Oa8kUAFrmju+t0C9BB17EML?=
+ =?us-ascii?Q?SuXentjX9yH874ODOJUUQwfPbEXH/8yVqyN8LAZPEDnpDmwDvwEmGqXw6/1N?=
+ =?us-ascii?Q?+rO3L9rkFCIVuvm/sPQZeY4TfM0alzT0QrLFaOxJ5V+AW8ah3V+U11UxljTN?=
+ =?us-ascii?Q?ym96I9gdESsTmNpfFU2iuJpzdQENE24Cipu6nsaajsGkob3qI1LH6dBZV9gz?=
+ =?us-ascii?Q?krT1eciljS96RsRQAbaHbK2TGgl/+Fs35nSeb6RlF1ohJdj0AcoufOhPNpao?=
+ =?us-ascii?Q?EzoMINzFc7I7DMhgZqnPgugwfg7dy+dJR8qFCpRkfTLHMAGpSQ/NQvM2raYO?=
+ =?us-ascii?Q?9vTdAvox3tAHl77TxRok0Zo1?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS7PR12MB8252.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(376014)(1800799024);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?xpYVuMct5JsDmRdKaPWAxTwFvaDZHNoQNlKGEm2MCTzHN+UJHu4iiwTkHukq?=
+ =?us-ascii?Q?sS2Ox0nXrwb+L/N81cojYKx5x/XODjVuWcI/Tab5ERJDSl3XnFX8Ty4iSCGs?=
+ =?us-ascii?Q?v0yjWfSdNn1sYSwi3MO7dcalyWZF8k6XDo1slOERiMmN6kv8yLfB4+cig03T?=
+ =?us-ascii?Q?saQ1/xdnHSudr0f/YGwbCxA7yp0UPNV9+A6Ml9T9rA3YleaCJyI2I9fbDbR0?=
+ =?us-ascii?Q?pVSjGlkzsqTVblDymbFDqLcwCqeC4TB+h1aCTFWXDm/1IBsdM4YhEfEjAO1s?=
+ =?us-ascii?Q?sZJpno5K5AORNBSgsQ1rLyYCdny0bEYa2CiX2blh6/AKxbl0FT/Rt/4BjYSg?=
+ =?us-ascii?Q?+/XdAnlUSmyM+IAn/CdgdUVl0O/OHN71X7ZUoKrh3SW9T1p5nUbheRZiq2qK?=
+ =?us-ascii?Q?gWN+hhFSfAQuS1ScHBtIJOor9mPBhbLP0DjpEpwOR7miNdCxvFSpSAVugH6w?=
+ =?us-ascii?Q?W5YNNTT6Yv1xHNROsjMVx3KvCZb8xckiQ/UFzDcd0PW/+6RTy6901FVPqDU1?=
+ =?us-ascii?Q?2tWVD0qRSD1cjpa3m7bwn5dbj8naECdsZ8QH9kZvzVU/aY/+BAuWjvYQE5MO?=
+ =?us-ascii?Q?AZ7xJQoBYV5GRRR8ZboxV3KjELcVNlVdJLC4K6N9R2ynYyGr9CD7Q9ZKrYtD?=
+ =?us-ascii?Q?RTa0/Tb+Bt8ZPFVuqoRFKr85okU5f4QmTj3/a7hgnmcWr/TEpeoCt27rxdC/?=
+ =?us-ascii?Q?Lim58vfbqVs3J+w5fhH99lAUCYn4R9mWGoasdwIdsRTkir7wjj8/Qn/eg0QN?=
+ =?us-ascii?Q?MpZinurXFj9ex04IFuWY66D5hGpXjnVbCFGbG7BSFhe1wJ0CLJGdfgXRKY/0?=
+ =?us-ascii?Q?zsK0YRRQ6XXPURziVPFPEcIJxo+69dvsv+3O++D1UjDkx97wvoWudDBrrFEg?=
+ =?us-ascii?Q?TzSDb/CdFSL/bfRRWEpkqiNZ/Q5hZ8KUOewqU0lNZmHyE2HxqjLq0ULxhMWX?=
+ =?us-ascii?Q?UjRLx0fZoMTGSUNBar1ZpNzhZMKWlmVJYGsH/cRiaod0d6BIoYwrJ7QCzxPx?=
+ =?us-ascii?Q?FkQyqmwC+Fqzbo1SdmXYdCjT6eMRFBESjIJLXzjkno3EYIonys8cHNeySdIR?=
+ =?us-ascii?Q?1nZgfJhTKXxB2HtKWIfgNo80XmuUwaiTHiQlhQogfyiHmHzugIJcCYkG7jTs?=
+ =?us-ascii?Q?QKaVPwWuJTHRzAp1e13bOb/Qod59DjlDY0cNLVvQWzfoQ2G2QUkK0MApnpwB?=
+ =?us-ascii?Q?4Pdbo1Zoq+az/26hLcZRXRn07Oki7YTLIvU3gwGKDC33o+rnm1BPyKNK9op6?=
+ =?us-ascii?Q?CY+kEO4wz6rHNNSbA9iYcnmx6GT6TjVWjl6Cp62pNo/0ieIsf31n6y4Aqdgd?=
+ =?us-ascii?Q?MP84yP9aXNaVAHdKw18daSg0Rz0aNdmHh8IpUST8xvzC9g/K/68DzogVZ03x?=
+ =?us-ascii?Q?cQUBrA8NnUFfL6N44EjYJimgRlQz7Yh6eIsQfvRlhYmQJC6lyMdcAyHxlPnU?=
+ =?us-ascii?Q?aPKdKiyyMBhSbJsQ//smyOZsr5d32MvvV6uv7xV3dYcqm2nfN/V60h0OH29w?=
+ =?us-ascii?Q?+t5+B4Lgc2xibEHi8rV5dMurzoLj1SDOQH86vAUzEOUbEg7MKHhsGLi2D2ik?=
+ =?us-ascii?Q?M8ybe57G/XCLWAPMc5Lu8p7n4+HrGw/l4N/PlMEj?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 7f122e49-c3c8-49f5-2ea8-08dcee66d1d0
+X-MS-Exchange-CrossTenant-AuthSource: DS7PR12MB8252.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 17 Oct 2024 04:47:35.7555
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: c/TzsJGqvPOJ6yRweX50k+nLVXt1HyNvVQq32HynReB30B6pD6nQq0cMQ8vRTv7lelSt1UlCwY9pCm9IwO+F7w==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR12MB4438
 
-50c6dbdfd introduced a WARN when adrress ranges of iounmap are
-invalid. On Thinkpad P1 Gen 7 (Meteor Lake-P) this caused the
-following warning to appear.
+On Tue, Oct 15, 2024 at 04:36:34PM -0500, Mario Limonciello wrote:
+> From: Perry Yuan <perry.yuan@amd.com>
+> 
+> Add new feature bit that indicates support for workload based
+> heuristic feedback to OS for scheduling decisions.
+> When the bit set, threads are classified during runtime into
+> enumerated classes. The classes represent thread performance/power
+> characteristics that may benefit from special scheduling behaviors.
+> 
+> Signed-off-by: Perry Yuan <perry.yuan@amd.com>
+> Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
 
-WARNING: CPU: 7 PID: 713 at arch/x86/mm/ioremap.c:461 iounmap+0x58/0x1f0
-Modules linked in: rfkill(+) snd_timer(+) fjes(+) snd soundcore intel_pmc_core(+)
-int3403_thermal(+) int340x_thermal_zone intel_vsec pmt_telemetry acpi_pad pmt_class
-acpi_tad int3400_thermal acpi_thermal_rel joydev loop nfnetlink zram xe drm_suballoc_helper
-nouveau i915 mxm_wmi drm_ttm_helper gpu_sched drm_gpuvm drm_exec drm_buddy i2c_algo_bit
-crct10dif_pclmul crc32_pclmul ttm crc32c_intel polyval_clmulni rtsx_pci_sdmmc ucsi_acpi
-polyval_generic mmc_core hid_multitouch drm_display_helper ghash_clmulni_intel typec_ucsi
-nvme sha512_ssse3 video sha256_ssse3 nvme_core intel_vpu sha1_ssse3 rtsx_pci cec typec
-nvme_auth i2c_hid_acpi i2c_hid wmi pinctrl_meteorlake serio_raw ip6_tables ip_tables fuse
-CPU: 7 UID: 0 PID: 713 Comm: (udev-worker) Not tainted 6.12.0-rc2iounmap+ #42
-Hardware name: LENOVO 21KWCTO1WW/21KWCTO1WW, BIOS N48ET19W (1.06 ) 07/18/2024
-RIP: 0010:iounmap+0x58/0x1f0
-Code: 85 6a 01 00 00 48 8b 05 e6 e2 28 04 48 39 c5 72 19 eb 26 cc cc cc 48 ba 00 00 00 00 00 00 32 00 48 8d 44 02 ff 48 39 c5 72 23 <0f> 0b 48 83 c4 08 5b 5d 41 5c c3 cc cc cc cc 48 ba 00 00 00 00 00
-RSP: 0018:ffff888131eff038 EFLAGS: 00010207
-RAX: ffffc90000000000 RBX: 0000000000000000 RCX: ffff888e33b80000
-RDX: dffffc0000000000 RSI: ffff888e33bc29c0 RDI: 0000000000000000
-RBP: 0000000000000000 R08: ffff8881598a8000 R09: ffff888e2ccedc10
-R10: 0000000000000003 R11: ffffffffb3367634 R12: 00000000fe000000
-R13: ffff888101d0da28 R14: ffffffffc2e437e0 R15: ffff888110b03b28
-FS:  00007f3c1d4b3980(0000) GS:ffff888e33b80000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 00005651cfc93578 CR3: 0000000124e4c002 CR4: 0000000000f70ef0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000ffff07f0 DR7: 0000000000000400
-PKRU: 55555554
-Call Trace:
-<TASK>
-? __warn.cold+0xb6/0x176
-? iounmap+0x58/0x1f0
-? report_bug+0x1f4/0x2b0
-? handle_bug+0x58/0x90
-? exc_invalid_op+0x17/0x40
-? asm_exc_invalid_op+0x1a/0x20
-? iounmap+0x58/0x1f0
-pmc_core_ssram_get_pmc+0x477/0x6c0 [intel_pmc_core]
-? __pfx_pmc_core_ssram_get_pmc+0x10/0x10 [intel_pmc_core]
-? __pfx_do_pci_enable_device+0x10/0x10
-? pci_wait_for_pending+0x60/0x110
-? pci_enable_device_flags+0x1e3/0x2e0
-? __pfx_mtl_core_init+0x10/0x10 [intel_pmc_core]
-pmc_core_ssram_init+0x7f/0x110 [intel_pmc_core]
-mtl_core_init+0xda/0x130 [intel_pmc_core]
-? __mutex_init+0xb9/0x130
-pmc_core_probe+0x27e/0x10b0 [intel_pmc_core]
-? _raw_spin_lock_irqsave+0x96/0xf0
-? __pfx_pmc_core_probe+0x10/0x10 [intel_pmc_core]
-? __pfx_mutex_unlock+0x10/0x10
-? __pfx_mutex_lock+0x10/0x10
-? device_pm_check_callbacks+0x82/0x370
-? acpi_dev_pm_attach+0x234/0x2b0
-platform_probe+0x9f/0x150
-really_probe+0x1e0/0x8a0
-__driver_probe_device+0x18c/0x370
-? __pfx___driver_attach+0x10/0x10
-driver_probe_device+0x4a/0x120
-__driver_attach+0x190/0x4a0
-? __pfx___driver_attach+0x10/0x10
-bus_for_each_dev+0x103/0x180
-? __pfx_bus_for_each_dev+0x10/0x10
-? klist_add_tail+0x136/0x270
-bus_add_driver+0x2fc/0x540
-driver_register+0x1a5/0x360
-? __pfx_pmc_core_driver_init+0x10/0x10 [intel_pmc_core]
-do_one_initcall+0xa4/0x380
-? __pfx_do_one_initcall+0x10/0x10
-? kasan_unpoison+0x44/0x70
-do_init_module+0x296/0x800
-load_module+0x5090/0x6ce0
-? __pfx_load_module+0x10/0x10
-? ima_post_read_file+0x193/0x200
-? __pfx_ima_post_read_file+0x10/0x10
-? rw_verify_area+0x152/0x4c0
-? kernel_read_file+0x257/0x750
-? __pfx_kernel_read_file+0x10/0x10
-? __pfx_filemap_get_read_batch+0x10/0x10
-? init_module_from_file+0xd1/0x130
-init_module_from_file+0xd1/0x130
-? __pfx_init_module_from_file+0x10/0x10
-? __pfx__raw_spin_lock+0x10/0x10
-? __pfx_cred_has_capability.isra.0+0x10/0x10
-idempotent_init_module+0x236/0x770
-? __pfx_idempotent_init_module+0x10/0x10
-? fdget+0x58/0x3f0
-? security_capable+0x7d/0x110
-__x64_sys_finit_module+0xbe/0x130
-do_syscall_64+0x82/0x160
-? __pfx_filemap_read+0x10/0x10
-? __pfx___fsnotify_parent+0x10/0x10
-? vfs_read+0x3a6/0xa30
-? vfs_read+0x3a6/0xa30
-? __seccomp_filter+0x175/0xc60
-? __pfx___seccomp_filter+0x10/0x10
-? fdget_pos+0x1ce/0x500
-? syscall_exit_to_user_mode_prepare+0x149/0x170
-? syscall_exit_to_user_mode+0x10/0x210
-? do_syscall_64+0x8e/0x160
-? switch_fpu_return+0xe3/0x1f0
-? syscall_exit_to_user_mode+0x1d5/0x210
-? do_syscall_64+0x8e/0x160
-? exc_page_fault+0x76/0xf0
-entry_SYSCALL_64_after_hwframe+0x76/0x7e
-RIP: 0033:0x7f3c1d6d155d
-Code: ff c3 66 2e 0f 1f 84 00 00 00 00 00 90 f3 0f 1e fa 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 8b 0d 83 58 0f 00 f7 d8 64 89 01 48
-RSP: 002b:00007ffe6309db38 EFLAGS: 00000246 ORIG_RAX: 0000000000000139
-RAX: ffffffffffffffda RBX: 0000557c212550a0 RCX: 00007f3c1d6d155d
-RDX: 0000000000000000 RSI: 00007f3c1cd943bd RDI: 0000000000000025
-RBP: 00007ffe6309dbf0 R08: 00007f3c1d7c7b20 R09: 00007ffe6309db80
-R10: 0000557c21255270 R11: 0000000000000246 R12: 00007f3c1cd943bd
-R13: 0000000000020000 R14: 0000557c21255c80 R15: 0000557c21255240
-</TASK>
----[ end trace 0000000000000000 ]---
+Reviewed-by: Gautham R. Shenoy <gautham.shenoy@amd.com>
 
-pmc_core_iounmap calls iounmap unconditionally causing the above
-warning to appear during boot.
 
-Fix it by checking for a valid address before calling iounmap.
-
-Also the function pmc_core_ssram_get_pmc,
-	ioremap(ssram_base, SSRAM_HDR_SIZE)
-returns NULL on the same meteor lake machine even though the
-ssram_base is valid, return -ENOMEM in such cases.
-
-Fixes: a01486dc4bb1 ("platform/x86/intel/pmc: Cleanup SSRAM discovery")
-Signed-off-by: Vamsi Krishna Brahmajosyula <vamsikrishna.brahmajosyula@gmail.com>
----
- drivers/platform/x86/intel/pmc/core_ssram.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/platform/x86/intel/pmc/core_ssram.c b/drivers/platform/x86/intel/pmc/core_ssram.c
-index c259c96b7dfd..8504154b649f 100644
---- a/drivers/platform/x86/intel/pmc/core_ssram.c
-+++ b/drivers/platform/x86/intel/pmc/core_ssram.c
-@@ -29,7 +29,7 @@
- #define LPM_REG_COUNT		28
- #define LPM_MODE_OFFSET		1
- 
--DEFINE_FREE(pmc_core_iounmap, void __iomem *, iounmap(_T));
-+DEFINE_FREE(pmc_core_iounmap, void __iomem *, if (_T) iounmap(_T))
- 
- static u32 pmc_core_find_guid(struct pmc_info *list, const struct pmc_reg_map *map)
- {
-@@ -262,6 +262,8 @@ pmc_core_ssram_get_pmc(struct pmc_dev *pmcdev, int pmc_idx, u32 offset)
- 
- 	ssram_base = ssram_pcidev->resource[0].start;
- 	tmp_ssram = ioremap(ssram_base, SSRAM_HDR_SIZE);
-+	if (!tmp_ssram)
-+		return -ENOMEM;
- 
- 	if (pmc_idx != PMC_IDX_MAIN) {
- 		/*
-
-base-commit: 2f87d0916ce0d2925cedbc9e8f5d6291ba2ac7b2
--- 
-2.47.0
-
+> ---
+>  arch/x86/include/asm/cpufeatures.h | 1 +
+>  arch/x86/kernel/cpu/scattered.c    | 1 +
+>  2 files changed, 2 insertions(+)
+> 
+> diff --git a/arch/x86/include/asm/cpufeatures.h b/arch/x86/include/asm/cpufeatures.h
+> index cea1ed82aeb4..3e8e67b8ec7a 100644
+> --- a/arch/x86/include/asm/cpufeatures.h
+> +++ b/arch/x86/include/asm/cpufeatures.h
+> @@ -474,6 +474,7 @@
+>  #define X86_FEATURE_CLEAR_BHB_LOOP_ON_VMEXIT (21*32+ 4) /* Clear branch history at vmexit using SW loop */
+>  #define X86_FEATURE_FAST_CPPC		(21*32 + 5) /* AMD Fast CPPC */
+>  #define X86_FEATURE_HETERO_CORE_TOPOLOGY	(21*32 + 6) /* Heterogeneous Core Topology */
+> +#define X86_FEATURE_WORKLOAD_CLASS	(21*32 + 7) /* Workload Classification */
+>  
+>  /*
+>   * BUG word(s)
+> diff --git a/arch/x86/kernel/cpu/scattered.c b/arch/x86/kernel/cpu/scattered.c
+> index 3bba55323163..b6547bab9e23 100644
+> --- a/arch/x86/kernel/cpu/scattered.c
+> +++ b/arch/x86/kernel/cpu/scattered.c
+> @@ -49,6 +49,7 @@ static const struct cpuid_bit cpuid_bits[] = {
+>  	{ X86_FEATURE_MBA,		CPUID_EBX,  6, 0x80000008, 0 },
+>  	{ X86_FEATURE_SMBA,		CPUID_EBX,  2, 0x80000020, 0 },
+>  	{ X86_FEATURE_BMEC,		CPUID_EBX,  3, 0x80000020, 0 },
+> +	{ X86_FEATURE_WORKLOAD_CLASS,   CPUID_EAX,  22, 0x80000021, 0 },
+>  	{ X86_FEATURE_PERFMON_V2,	CPUID_EAX,  0, 0x80000022, 0 },
+>  	{ X86_FEATURE_AMD_LBR_V2,	CPUID_EAX,  1, 0x80000022, 0 },
+>  	{ X86_FEATURE_AMD_LBR_PMC_FREEZE,	CPUID_EAX,  2, 0x80000022, 0 },
+> -- 
+> 2.43.0
+> 
