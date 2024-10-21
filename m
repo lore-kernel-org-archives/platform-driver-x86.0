@@ -1,41 +1,41 @@
-Received: from mout.gmx.net (mout.gmx.net [212.227.17.21])
+Received: from mout.gmx.net (mout.gmx.net [212.227.17.22])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A1ACF1C8FDB;
-	Mon, 21 Oct 2024 20:27:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.21
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C17CA1DFE22
+	for <platform-driver-x86@vger.kernel.org>; Mon, 21 Oct 2024 20:35:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.22
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729542440; cv=none; b=mNBavwrokGaxgAoSVvXEg9eFKErf7Gd4cWEVOAlNJp3c5eQU+AMNF1B0bjyG5zYq7WKPGUs6i19WHAXrkFMHWyHEqHTUHaYDuMjkO0fM3wNATXpwBqVppw6BxtnUmNvpuxJxQPv8tm0DkgEVcG4a08/kxDhz9hl2ypIYfoh7cN4=
+	t=1729542931; cv=none; b=Q1SqKOhws3D3nL93BvaAbqC2T1gO9BZLCKK1rhKswPu+9dOw+2sndZsmvGNqqX91khgrjNU/3uTw7APJMSz7qsK1P699QnVs+sFWZofxK8NxUZlqXv0F8YOgMRdmlnmZuvdz52tGo73x7UR0Hie+Zk2SI55JaGVfMraXNqE6Fl0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729542440; c=relaxed/simple;
-	bh=3g3ulzUEILj6Ab6SKjBWHtGnUwVU/KgosIKltudjBYA=;
+	s=arc-20240116; t=1729542931; c=relaxed/simple;
+	bh=ZG3Y4Z+Y5kHgBEBckCqaAufy0d0Q3Ju2BPi+gscm/78=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=SjZvV0b/rNh+AWjEpcA90arMcLEZxefOs3AD7PJLnP4o+uIKAPEcaX7gXy4FxG04/okvBuIJEccVNfR1N3QCsXoM0p/KkTsMInlNRCTnRnHL1uvPPgsqeOYLXb97B05nU9mppgDNr79nZqTUEmo5kIqjT7tnHtQpPi59QZIkKNI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b=HBnoie6+; arc=none smtp.client-ip=212.227.17.21
+	 In-Reply-To:Content-Type; b=fucuhpP8RVkmsnvwZe2k+aTw0qXz//SuhnPCJ8LCKp9uj2yI4m5tmpBPyOXoPGSeNri+pDEIccVxokto1IwiiIXRfsAcRchtZ+UfPQAkd08+lPRtaq/bw+4yjLh+2/TtnnFqSkSxUTyCwe6kq6MRHQZJlxyYNlHTgRdjIh2He4w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b=OQgTDfhD; arc=none smtp.client-ip=212.227.17.22
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b="HBnoie6+"
+	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b="OQgTDfhD"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.de;
-	s=s31663417; t=1729542416; x=1730147216; i=w_armin@gmx.de;
-	bh=e9QbNuLAuXgzKvnSaHT2dAq3xYZ/W2rd0vmM7cmicmQ=;
+	s=s31663417; t=1729542918; x=1730147718; i=w_armin@gmx.de;
+	bh=LBwBa0dfkedihT+olYyMMoIAZyJBH6xx+6uM59F3sFQ=;
 	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:To:Cc:
 	 References:From:In-Reply-To:Content-Type:
 	 Content-Transfer-Encoding:cc:content-transfer-encoding:
 	 content-type:date:from:message-id:mime-version:reply-to:subject:
 	 to;
-	b=HBnoie6+Eni1+RAqebH7JvbR6KXTStsKsuLhcPhUNN/HBs5M4bMHPQ3O7Yy4f8aW
-	 2OyTuvfMadMULQBvI8s0b68cbFcL3um2IOhiSRpDA+7KeNJ/V44slXuQsTIltiLr5
-	 y9G+lHvF7TM1E+sADntfaz7vcFOsOCTFxpGR2Urh7j5OBOD6nX1WC/FlUadBFKAk9
-	 BJyZugpNBkj0nSHG/hikbExCkoa2dbfeWXuVF36W3HQZKyCB9GtBQPohuBuac7UuZ
-	 h8yqGTjU5ijpRIZClm89OJafN+Ze8hIlJcHc8Rr/5P0vT9r6VGhMAIAJAKlXruGcP
-	 bAH/TDavJlSK0KAHiQ==
+	b=OQgTDfhD4SUuzqvVMhxhWvu7RSPvFvYcT7Bpv0VMiRG77wXwJGcfsilcKRW1h+Tx
+	 +ONXuH8vth2s3DPFb5hsYoNGPkB7KNf8Pr3np0hxtchlbye4ONFV8eRoWzmSu7iC8
+	 1YcUZAkP2CUxg37O9H9SdncX2XqZSNxGPBsF6SPqClIXHMWkbg9g80FOC5Zi3Jjie
+	 KuTMEs1CTNPnaITRhhiyxYjvGiWrRVAjsGdskf45L1Wb6ib3IPhhFRZJPNTomQZlw
+	 hyluQRLnqvhPBL/jdSK8vPuAl9FDpPc/JYiOCuemsF6u+KCJIhPcm56bX9UdwEEeF
+	 QIM1UaK2MfGRSJsTQw==
 X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
-Received: from [141.30.226.129] ([141.30.226.129]) by mail.gmx.net (mrgmx104
- [212.227.17.168]) with ESMTPSA (Nemesis) id 1MysRu-1tokLq117a-00w12Z; Mon, 21
- Oct 2024 22:26:56 +0200
-Message-ID: <a796f0e7-47a8-40fa-a64e-9dd56117bf78@gmx.de>
-Date: Mon, 21 Oct 2024 22:26:54 +0200
+Received: from [141.30.226.129] ([141.30.226.129]) by mail.gmx.net (mrgmx105
+ [212.227.17.168]) with ESMTPSA (Nemesis) id 1Mkpap-1tld0s4B2d-00mH1E; Mon, 21
+ Oct 2024 22:35:18 +0200
+Message-ID: <72c0b021-9778-4bbe-aa54-c7ef887c04fa@gmx.de>
+Date: Mon, 21 Oct 2024 22:35:17 +0200
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -43,106 +43,320 @@ List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/1] platform/x86/tuxedo: Add virtual LampArray for TUXEDO
- NB04 devices
-To: Pavel Machek <pavel@ucw.cz>
-Cc: Werner Sembach <wse@tuxedocomputers.com>,
- Benjamin Tissoires <bentiss@kernel.org>, Hans de Goede
- <hdegoede@redhat.com>, =?UTF-8?Q?Ilpo_J=C3=A4rvinen?=
- <ilpo.jarvinen@linux.intel.com>, dri-devel@lists.freedesktop.org,
- jelle@vdwaa.nl, jikos@kernel.org, lee@kernel.org,
- linux-input@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-leds@vger.kernel.org, miguel.ojeda.sandonis@gmail.com,
- ojeda@kernel.org, onitake@gmail.com, platform-driver-x86@vger.kernel.org
-References: <7ce4470c-a502-416a-8472-a5b606bb8fd4@tuxedocomputers.com>
- <d7gk2mgihtg6242l3isnhw3xpdt745ehpu2kvim2xxgmxdhat7@g5cqei7uqujj>
- <39f84cfe-bb89-4194-81a9-e178c93e5309@tuxedocomputers.com>
- <sih5i2ausorlpiosifvj2vvlut4ok6bbgt6cympuxhdbjljjiw@gg2r5al552az>
- <82a6eca1-728c-436f-8c4d-073d8a43ee27@tuxedocomputers.com>
- <5crqia4gecxg62n2m2lf6haiifue4wlxrr3g35dyoaa3svjyuj@cd5bhouz5rlh>
- <4a761cd0-611a-4245-8353-5c66ba133715@tuxedocomputers.com>
- <rszv4p34oivysoyi337dxwooebipiikzd3pyq7rof5r3agbzce@xejutpd4jcfv>
- <06c58141-4aa9-4b54-8ae4-e27069561ac9@tuxedocomputers.com>
- <48a8d62f-ea3f-4f17-b917-ff3aaa83e89c@gmx.de> <ZwlDpCPhieF3tezX@duo.ucw.cz>
+Subject: Re: [PATCH v3 1/2] platform/x86/amd: amd_3d_vcache: Add AMD 3D
+ V-Cache optimizer driver
+To: Basavaraj Natikar <Basavaraj.Natikar@amd.com>, hdegoede@redhat.com,
+ ilpo.jarvinen@linux.intel.com, platform-driver-x86@vger.kernel.org
+Cc: perry.yuan@amd.com, mario.limonciello@amd.com, Shyam-sundar.S-k@amd.com
+References: <20241021165820.339567-1-Basavaraj.Natikar@amd.com>
+ <20241021165820.339567-2-Basavaraj.Natikar@amd.com>
 Content-Language: en-US
 From: Armin Wolf <W_Armin@gmx.de>
-In-Reply-To: <ZwlDpCPhieF3tezX@duo.ucw.cz>
+In-Reply-To: <20241021165820.339567-2-Basavaraj.Natikar@amd.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Provags-ID: V03:K1:3UMk7ZMRiG7KwkFqWRpMUf9HSa5Kej0YUjCRMm78uvohH0r57Db
- NagZcni7LAn/QyXuhwv5M3Mj7tDVTx0RNnEkYnM7QOeBRscIkVx4Y7n0AjicHLNAuRDYi45
- qrbUQd6FzewuS90QL4lsQBE7ApYx4+uzWisL9H8/gokYmwXheZ3PYed9n0raiMHbXj4S3aU
- q/QhfvfTgh9FFsvxOIvZA==
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:XxYcD4q2KnLvOjJJ287eBxj99whQwWc6cJL9LijOCElFTG+fATi
+ ox+mdZuf6wxuLbpHGpI2iP1vMlSU5K+Hi09+SUIrq1Esqh4Hmem49t8kbVuFQQ7Dgv8+8ho
+ +GMiDH3K3oDMHNxVspYrkjOEDczawxktILmL+GyUIPXT3lc8Eo68r81OWRH45gXSuExZ6eo
+ S1LCaD0LyaWIRTlmkxP1Q==
 X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:YkNcCmVhFIg=;TW3OJSZTcOHLE/RkcCQciQ7OVw9
- CFIxdo5Aoe6bYbK5ID+klKg7e5S6efm7oiCgvmUItL835L5FAD1ncJWdBVAEvwxnKYxA6aj6r
- hHfKJhwr02GhQ/XJ4HNOA+Bf+DD5Lvs8zZU6NYNEJXwNR99zA/QpcT0cLfM4luIWaHvvNhbL5
- Qj34WGp/1Ajq0SotkyOyfYu5X0KRSrkooA5ySIppPj6ghSmESgsml0ge1cf828seXOhWzgwfP
- LTUDb7+TlttV5+PQlRF8llDbg2z+sNHYI8iFXmQZe7H7iEkpAGcF6c6EnwzF08Cmhm0PuVlZ+
- 8r/yrBXlKQcc6djkb9vzXC7v4WSWdrGi5PL1JSWpi2+9cJU6WkLjsWZ9v4hU+HIuY0RnkFCov
- JjTpYL/2RlRhack6g8VE1CjJxO5TrHVlUXIX2SpknhxsVVazTBk2g+TQwPDnjUtCQb5dye+LC
- K9kDF7OXxe+hkqv2OvLsJy8WmhAXBkIwW66ah+Rm3WwaWhw9RQ5NRlXi6CLj7M6gkgX1M4Snh
- VaY0BvQVh33Q44U79yLehRyb3rkcJaeQP8x4Uby4+q9Jg+pb+Uamda/edV8eqN583lgawOdGK
- m2pozh0n9hwLla2Ip83zigs/DGdBSVUVb0P2ac5MKTHecUMh2wwZaiRVkWVuGzy7iZyWjGtIi
- Ct2EooV5PGaoXBlWFVtPzY9Xlp26h7/G5pLkPBmpxAZ3UuDF1ubVNaixfToBxOexSCbzWlJ+n
- 6OieTfsdUkhAWvfmbGEQZjEtsNX9KC+wElfjei3HwgE+Ifrq4deEy3F6Sfq07SGHy0NeqhDDw
- 7AkxX6ZRe8wg96COrLhplymqFwLN0Unw2M+teLY76xe3s=
+UI-OutboundReport: notjunk:1;M01:P0:xhspTlHbvUc=;oEDMjCHOqQ1km8dPEs4YCo4/JUx
+ 6ge3WPFMVJodvQhbe/4ZZnP/wkma8irJzUD1AulQHoBAvHIcpmuVKb8kY0wQxPN+uMfLqoxJI
+ de3Aw/TqTRaelBXfttdy8Wcq7PVjwUgTNKZn9vypgWfuLs+KX1KFQXUbSJrFVhzJTAVV5om2p
+ Fuo8CGtMNw2Go6bSxBlc11xTF5NlBOLa3zYCUQzW5ahZuMcsW/z68MuRCsGbkGxNaSyhl8gc1
+ ZSO+J+9rbN26CLUcaSP8H3cLasOoOXJu6WUGRyLC2kfNOnkppWzjCLkLi4X6Osr4UGmdAZZDd
+ L7uslpVYgG2EvO973aFAwQDAc6qnAc/eHAo/r0sR4LWHTjXnJPn6vAcdOzzPOf9DYtk13doO1
+ eDIiwr4sg6ViyVlxwXUNGszcRASK5dOlO2D1aj+sJPrCsNFkVOVRf3Ig3GRK/bbn3ukIf6w5S
+ MbhnLzU2gYA7du9BjO4q6LuHqDt1o3hg4bX8VpjsSeDlQ5I1/XUFO/f6fc8WOT3F7IOuqTVI6
+ DNRdf/9hx4IUZuR3vMYa+mGlpE3VqzWtsfKKTFZhYboqZXtW3vktz3ZOzwj8w9y+mTMXyIPR7
+ RGtPm1Fal5ITGwjN2GXCSxnxe+/9Ik95LMYb9Ug3Eu1pR3/fau8jSYX6Sb6kmx7g2BWQM7bkH
+ 3AWXs/z4PudDqcpQLHTnsvG1/fJu66S72dFWdYI9oJ8/DEz7keNCEkKkh5fw6eha7NfOAt4JN
+ bokgxg1NIHlePaZxj9G93EU2o8LXPEAw37i4leBJ3EoSdL1W0msype2JkUcpe6Gi3z/fS13gG
+ UNO/uRLSDFBjQR4Kzf+A0yKrSD3XCHtfyCFE6IBEoX7zg=
 
-Am 11.10.24 um 17:26 schrieb Pavel Machek:
+Am 21.10.24 um 18:58 schrieb Basavaraj Natikar:
 
-> Hi!
+> AMD X3D processors, also known as AMD 3D V-Cache, feature dual Core
+> Complex Dies (CCDs) and enlarged L3 cache, enabling dynamic mode
+> switching between Frequency and Cache modes. To optimize performance,
+> implement the AMD 3D V-Cache Optimizer, which allows selecting either:
 >
->>> 1.
->>> https://lore.kernel.org/all/6b32fb73-0544-4a68-95ba-e82406a4b188@gmx.de/
->>> -> Should be no problem? Because this is not generally exposing wmi
->>> calls, just mapping two explicitly with sanitized input (whitelisting
->>> basically).
->> It would be OK to expose a selected set of WMI calls to userspace and sanitizing the input of protect potentially buggy firmware from userspace.
->>
-> I don't believe this is good idea. Passthrough interfaces where
-> userland talks directly to hardware are very tricky.
+> Frequency mode: cores within the faster CCD are prioritized before
+> those in the slower CCD.
 >
->> Regarding the basic idea of having a virtual HID interface: i would prefer to create a illumination subsystem instead, but i have to agree that we should be doing this
->> only after enough drivers are inside the kernel, so we can design a
->> suitable interface for them. For now, creating a virtual HID
->> interface seems to be good enough.
-> I have an RGB keyboard, and would like to get it supported. I already
-> have kernel driver for LEDs (which breaks input functionality). I'd
-> like to cooperate on "illumination" subsystem.
+> Cache mode: cores within the larger L3 CCD are prioritized before
+> those in the smaller L3 CCD.
 >
-> Best regards,
-> 								Pavel
+> Co-developed-by: Perry Yuan <perry.yuan@amd.com>
+> Signed-off-by: Perry Yuan <perry.yuan@amd.com>
+> Co-developed-by: Mario Limonciello <mario.limonciello@amd.com>
+> Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
+> Reviewed-by: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
+> Signed-off-by: Basavaraj Natikar <Basavaraj.Natikar@amd.com>
+> ---
+>   MAINTAINERS                           |   7 ++
+>   drivers/platform/x86/amd/Kconfig      |  12 ++
+>   drivers/platform/x86/amd/Makefile     |   2 +
+>   drivers/platform/x86/amd/x3d_vcache.c | 174 ++++++++++++++++++++++++++
+>   4 files changed, 195 insertions(+)
+>   create mode 100644 drivers/platform/x86/amd/x3d_vcache.c
+>
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index e9659a5a7fb3..11b829956499 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -965,6 +965,13 @@ Q:	https://patchwork.kernel.org/project/linux-rdma/=
+list/
+>   F:	drivers/infiniband/hw/efa/
+>   F:	include/uapi/rdma/efa-abi.h
+>
+> +AMD 3D V-CACHE PERFORMANCE OPTIMIZER DRIVER
+> +M:	Basavaraj Natikar <Basavaraj.Natikar@amd.com>
+> +R:	Mario Limonciello <mario.limonciello@amd.com>
+> +L:	platform-driver-x86@vger.kernel.org
+> +S:	Supported
+> +F:	drivers/platform/x86/amd/x3d_vcache.c
+> +
+>   AMD ADDRESS TRANSLATION LIBRARY (ATL)
+>   M:	Yazen Ghannam <Yazen.Ghannam@amd.com>
+>   L:	linux-edac@vger.kernel.org
+> diff --git a/drivers/platform/x86/amd/Kconfig b/drivers/platform/x86/amd=
+/Kconfig
+> index f88682d36447..d73f691020d0 100644
+> --- a/drivers/platform/x86/amd/Kconfig
+> +++ b/drivers/platform/x86/amd/Kconfig
+> @@ -6,6 +6,18 @@
+>   source "drivers/platform/x86/amd/pmf/Kconfig"
+>   source "drivers/platform/x86/amd/pmc/Kconfig"
+>
+> +config AMD_3D_VCACHE
+> +	tristate "AMD 3D V-Cache Performance Optimizer Driver"
+> +	depends on X86_64 && ACPI
+> +	help
+> +	  The driver provides a sysfs interface, enabling the setting of a bia=
+s
+> +	  that alters CPU core reordering. This bias prefers cores with higher
+> +	  frequencies or larger L3 caches on processors supporting AMD 3D V-Ca=
+che
+> +	  technology.
+> +
+> +	  If you choose to compile this driver as a module the module will be
+> +	  called amd_3d_vcache.
+> +
+>   config AMD_HSMP
+>   	tristate "AMD HSMP Driver"
+>   	depends on AMD_NB && X86_64 && ACPI
+> diff --git a/drivers/platform/x86/amd/Makefile b/drivers/platform/x86/am=
+d/Makefile
+> index dcec0a46f8af..16e4cce02242 100644
+> --- a/drivers/platform/x86/amd/Makefile
+> +++ b/drivers/platform/x86/amd/Makefile
+> @@ -4,6 +4,8 @@
+>   # AMD x86 Platform-Specific Drivers
+>   #
+>
+> +obj-$(CONFIG_AMD_3D_VCACHE)     +=3D amd_3d_vcache.o
+> +amd_3d_vcache-objs              :=3D x3d_vcache.o
+>   obj-$(CONFIG_AMD_PMC)		+=3D pmc/
+>   amd_hsmp-y			:=3D hsmp.o
+>   obj-$(CONFIG_AMD_HSMP)		+=3D amd_hsmp.o
+> diff --git a/drivers/platform/x86/amd/x3d_vcache.c b/drivers/platform/x8=
+6/amd/x3d_vcache.c
+> new file mode 100644
+> index 000000000000..833e7704e6f9
+> --- /dev/null
+> +++ b/drivers/platform/x86/amd/x3d_vcache.c
+> @@ -0,0 +1,174 @@
+> +// SPDX-License-Identifier: GPL-2.0-or-later
+> +/*
+> + * AMD 3D V-Cache Performance Optimizer Driver
+> + *
+> + * Copyright (c) 2024, Advanced Micro Devices, Inc.
+> + * All Rights Reserved.
+> + *
+> + * Authors: Basavaraj Natikar <Basavaraj.Natikar@amd.com>
+> + *          Perry Yuan <perry.yuan@amd.com>
+> + *          Mario Limonciello <mario.limonciello@amd.com>
+> + *
+> + */
+> +
+> +#define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
+> +
+> +#include <linux/acpi.h>
+> +#include <linux/device.h>
+> +#include <linux/errno.h>
+> +#include <linux/module.h>
+> +#include <linux/mutex.h>
+> +#include <linux/platform_device.h>
+> +
+> +static char *x3d_mode =3D "frequency";
+> +module_param(x3d_mode, charp, 0);
+> +MODULE_PARM_DESC(x3d_mode, "Initial 3D-VCache mode; 'frequency' (defaul=
+t) or 'cache'");
+> +
+> +#define DSM_REVISION_ID			0
+> +#define DSM_SET_X3D_MODE		1
+> +
+> +static guid_t x3d_guid =3D GUID_INIT(0xdff8e55f, 0xbcfd, 0x46fb, 0xba, =
+0x0a,
+> +				   0xef, 0xd0, 0x45, 0x0f, 0x34, 0xee);
+> +
+> +enum amd_x3d_mode_type {
+> +	MODE_INDEX_FREQ,
+> +	MODE_INDEX_CACHE,
+> +};
+> +
+> +static const char * const amd_x3d_mode_strings[] =3D {
+> +	[MODE_INDEX_FREQ] =3D "frequency",
+> +	[MODE_INDEX_CACHE] =3D "cache",
+> +};
+> +
+> +struct amd_x3d_dev {
+> +	struct device *dev;
+> +	acpi_handle ahandle;
+> +	/* To protect x3d mode setting */
+> +	struct mutex lock;
+> +	enum amd_x3d_mode_type curr_mode;
+> +};
+> +
+> +static int amd_x3d_get_mode(struct amd_x3d_dev *data)
+> +{
+> +	guard(mutex)(&data->lock);
+> +
+> +	return data->curr_mode;
+> +}
+> +
+> +static int amd_x3d_mode_switch(struct amd_x3d_dev *data, int new_state)
+> +{
+> +	union acpi_object *out, argv;
+> +
+> +	guard(mutex)(&data->lock);
+> +	argv.type =3D ACPI_TYPE_INTEGER;
+> +	argv.integer.value =3D new_state;
+> +
+> +	out =3D acpi_evaluate_dsm(data->ahandle, &x3d_guid, DSM_REVISION_ID, D=
+SM_SET_X3D_MODE,
+> +				&argv);
+> +	if (!out) {
+> +		dev_err(data->dev, "failed to evaluate _DSM\n");
+> +		return -EINVAL;
+> +	}
+> +
+> +	data->curr_mode =3D new_state;
+> +
+> +	kfree(out);
+> +
+> +	return 0;
+> +}
+> +
+> +static ssize_t amd_x3d_mode_store(struct device *dev, struct device_att=
+ribute *attr,
+> +				  const char *buf, size_t count)
+> +{
+> +	struct amd_x3d_dev *data =3D dev_get_drvdata(dev);
+> +	int ret;
+> +
+> +	ret =3D sysfs_match_string(amd_x3d_mode_strings, buf);
+> +	if (ret < 0)
+> +		return ret;
+> +
+> +	ret =3D amd_x3d_mode_switch(data, ret);
+> +	if (ret < 0)
+> +		return ret;
+> +
+> +	return count;
+> +}
+> +
+> +static ssize_t amd_x3d_mode_show(struct device *dev, struct device_attr=
+ibute *attr, char *buf)
+> +{
+> +	struct amd_x3d_dev *data =3D dev_get_drvdata(dev);
+> +	int mode =3D amd_x3d_get_mode(data);
+> +
+> +	return sysfs_emit(buf, "%s\n", amd_x3d_mode_strings[mode]);
+> +}
+> +static DEVICE_ATTR_RW(amd_x3d_mode);
+> +
+> +static struct attribute *amd_x3d_attrs[] =3D {
+> +	&dev_attr_amd_x3d_mode.attr,
+> +	NULL
+> +};
+> +ATTRIBUTE_GROUPS(amd_x3d);
+> +
+> +static int amd_x3d_resume_handler(struct device *dev)
+> +{
+> +	struct amd_x3d_dev *data =3D dev_get_drvdata(dev);
+> +	int ret =3D amd_x3d_get_mode(data);
+> +
+> +	ret =3D amd_x3d_mode_switch(data, ret);
+> +	if (ret < 0)
+> +		return ret;
+> +
+> +	return 0;
 
-Sorry for taking a bit long to respond.
+Please directly return the result of amd_x3d_mode_switch() here.
 
-This "illumination" subsystem would (from my perspective) act like some sort of LED subsystem
-for devices with a high count of LEDs, like some RGB keyboards.
+Also i think that maybe there exists a way to avoid locking data->lock twi=
+ce
+during resume, but i will leave that to you.
+Other than that:
 
-This would allow us too:
-- provide an abstract interface for userspace applications like OpenRGB
-- provide an generic LED subsystem emulation on top of the illumination device (optional)
-- support future RGB controllers in a generic way
+Reviewed-by: Armin Wolf <W_Armin@gmx.de>
 
-Advanced features like RGB effects, etc can be added later should the need arise.
-
-I would suggest that we model it after the HID LampArray interface:
-
-- interface for querying:
-  - number of LEDs
-  - supported colors, etc of those LEDs
-  - position of those LEDs if available
-  - kind (keyboard, ...)
-  - latency, etc
-- interface for setting multiple LEDs at once
-- interface for setting a range of LEDs at once
-- interface for getting the current LED colors
-
-Since sysfs has a "one value per file" rule, i suggest that we use a chardev interface
-for querying per-LED data and for setting/getting LED colors.
-
-I do not know if mixing sysfs (for controller attributes like number of LEDs, etc) and IOCTL
-(for setting/getting LED colors) is a good idea, any thoughts?
-
-Thanks,
-Armin Wolf
-
+> +}
+> +
+> +static DEFINE_SIMPLE_DEV_PM_OPS(amd_x3d_pm, NULL, amd_x3d_resume_handle=
+r);
+> +
+> +static const struct acpi_device_id amd_x3d_acpi_ids[] =3D {
+> +	{"AMDI0101"},
+> +	{ },
+> +};
+> +MODULE_DEVICE_TABLE(acpi, amd_x3d_acpi_ids);
+> +
+> +static int amd_x3d_probe(struct platform_device *pdev)
+> +{
+> +	struct amd_x3d_dev *data;
+> +	acpi_handle handle;
+> +	int ret;
+> +
+> +	handle =3D ACPI_HANDLE(&pdev->dev);
+> +	if (!handle)
+> +		return -ENODEV;
+> +
+> +	if (!acpi_check_dsm(handle, &x3d_guid, DSM_REVISION_ID, BIT(DSM_SET_X3=
+D_MODE)))
+> +		return -ENODEV;
+> +
+> +	data =3D devm_kzalloc(&pdev->dev, sizeof(*data), GFP_KERNEL);
+> +	if (!data)
+> +		return -ENOMEM;
+> +
+> +	data->dev =3D &pdev->dev;
+> +	data->ahandle =3D handle;
+> +	platform_set_drvdata(pdev, data);
+> +
+> +	ret =3D match_string(amd_x3d_mode_strings, ARRAY_SIZE(amd_x3d_mode_str=
+ings), x3d_mode);
+> +	if (ret < 0)
+> +		return dev_err_probe(&pdev->dev, -EINVAL, "invalid mode %s\n", x3d_mo=
+de);
+> +
+> +	devm_mutex_init(data->dev, &data->lock);
+> +
+> +	return amd_x3d_mode_switch(data, ret);
+> +}
+> +
+> +static struct platform_driver amd_3d_vcache_driver =3D {
+> +	.driver =3D {
+> +		.name =3D "amd_x3d_vcache",
+> +		.dev_groups =3D amd_x3d_groups,
+> +		.acpi_match_table =3D amd_x3d_acpi_ids,
+> +		.pm =3D pm_sleep_ptr(&amd_x3d_pm),
+> +	},
+> +	.probe =3D amd_x3d_probe,
+> +};
+> +module_platform_driver(amd_3d_vcache_driver);
+> +
+> +MODULE_DESCRIPTION("AMD 3D V-Cache Performance Optimizer Driver");
+> +MODULE_LICENSE("GPL");
