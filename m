@@ -1,41 +1,66 @@
-Received: from mout.gmx.net (mout.gmx.net [212.227.17.22])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F24211F819F
-	for <platform-driver-x86@vger.kernel.org>; Mon, 21 Oct 2024 14:11:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.22
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D59601F8933
+	for <platform-driver-x86@vger.kernel.org>; Mon, 21 Oct 2024 14:15:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729519893; cv=none; b=HT3IfBVVRK7us/XQd4IRUScTB48f/ydgldiEV9wFb9ycZzoRoazsFt/Ug1JqzfeJRAYwxNEnONlUqtGgW10nfs+ahr7TkyDWRkLdQKgthxkz97g8QyaE6+Qvs+RycMpIVeYIBPsJkEC0K+HA2LfudCs8VrOE1+enZWd10B7M8cI=
+	t=1729520113; cv=none; b=NSjOnMr498zvDC1JMg7/1NZO1EsO0lz6ggKLQP1O5JWDXY/lcV0Pz5x9W0DonnGb2OF/HpzwF/wzWvaEtsPyyAPMhqRIvaA/w6KtGFbOdSu4T4hLjo89SpnxEHebYZjigSTBxqTId91WE67s7fLZt9rDh27Cx8dX0EsYdgACOqs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729519893; c=relaxed/simple;
-	bh=JF18tYPsQqVxAbKts7oP1MzMZ8i60IO6FY2VQX08NYM=;
+	s=arc-20240116; t=1729520113; c=relaxed/simple;
+	bh=dah3JuK6Qj6IQal1Ny+jb8WrCPXjvhvSomfNkrDZ96s=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=rw3L1PE2IvABSLwZuRAJqwqR6+9gDMG490kBecu7g75KSxudOdgR8n5SLG/k3/1GcXBOpeRBA/+d5y26TJpAHq6Z/2WLoRPnivFqp7C+dF3pUiHJkDI45gvdGfMVog8KDd6ICVdSfDAtH3wsO07QqH5FbotRAcmd73VoKgDB71M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b=Ssnk3cKq; arc=none smtp.client-ip=212.227.17.22
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
+	 In-Reply-To:Content-Type; b=PkC5dgv/Tg1t6pF5EFtRAslsdOuSLNImkNnWJqI9UrDYDPqgAxAYn9nL9Ab6hQSxnHF8Vxbgdg2dw2FTv1bPd0iERuS/yvWFSy7V5/hI5zZzj/L7w38QDH7sR5NIj3b5HtYDAW9iHE3HuJ51eX6geTyNb/er2f2Je0xrmsBxraI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=hCYHqI4d; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b="Ssnk3cKq"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.de;
-	s=s31663417; t=1729519880; x=1730124680; i=w_armin@gmx.de;
-	bh=V8m1b7K0SYd8NxKGbjA6x6T9sB3lbTM18vAT6F7c6aE=;
-	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:To:Cc:
-	 References:From:In-Reply-To:Content-Type:
-	 Content-Transfer-Encoding:cc:content-transfer-encoding:
-	 content-type:date:from:message-id:mime-version:reply-to:subject:
-	 to;
-	b=Ssnk3cKqHcqfsSY4zYXPgsFwuRbkG7kSAM25iUIwHxWOFWF7Cvp35zAY435PyAVr
-	 lj2jIh0pzxttqyqJdlzlznPhBf8vIBZu95YnffmuePWPY9rb6zZ62oPSreM72KoSC
-	 OJB5eXt3t9MgAZ4WB2oPpUdHUPir+vPqWE1FyQRNa7uqV35SY6tg0ANL08knhaESD
-	 oE6ZFrcvGkQ/4O0GuGAjjVRaSrlYGRhMqBDvKzx4CMqKk7AcSjuOYNDW0rI9CWSE+
-	 euVN8rvE15wxLTTwzIOylkwBbWpNwFqu14ZBULRWomwIG6T94DfpZjY4XC7o0JlUE
-	 DsseeHsUrDre3SOGXg==
-X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
-Received: from [141.30.226.129] ([141.30.226.129]) by mail.gmx.net (mrgmx105
- [212.227.17.168]) with ESMTPSA (Nemesis) id 1MJE27-1tMLx51mhf-00KjgZ; Mon, 21
- Oct 2024 16:11:20 +0200
-Message-ID: <c71c1e6d-539a-4647-aefb-fb2d901e36c9@gmx.de>
-Date: Mon, 21 Oct 2024 16:11:19 +0200
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="hCYHqI4d"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1729520110;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=8PfOG8qztLmjgi5lvFTsWGzlDXgKb6KxReuT7wFO8Gg=;
+	b=hCYHqI4dYjXoehHoGEO+qWRuf/9/xTeiqO+leIti/H28zpw433goRAc5AEQWIWceA61aue
+	KXwqhmRJ1r2CnGymBhkdKqWdkEfKTiNgUCNhMr7H2NMI6WiN1j//cKAiU2hWrwxf058PMr
+	ck5L4BF36qOMVlhZ/NrjjRM8ujNAwMQ=
+Received: from mail-ej1-f70.google.com (mail-ej1-f70.google.com
+ [209.85.218.70]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-634-GOt4aMvWOTC8dJQVV4ElXw-1; Mon, 21 Oct 2024 10:15:09 -0400
+X-MC-Unique: GOt4aMvWOTC8dJQVV4ElXw-1
+Received: by mail-ej1-f70.google.com with SMTP id a640c23a62f3a-a99e69deec5so148606466b.2
+        for <platform-driver-x86@vger.kernel.org>; Mon, 21 Oct 2024 07:15:09 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1729520108; x=1730124908;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=8PfOG8qztLmjgi5lvFTsWGzlDXgKb6KxReuT7wFO8Gg=;
+        b=IJPUxerUoCos5dnlpGGNnP73bBTD1qHniqIz1wBk0l7fG+qAn2wltlSE/2Justugp/
+         9xhJoFRzMx8628DGYGugJ6dTToKDlqf7ZgI/R9Qjjjq7QpZQYUKNsF8pwyOELhZSTi1j
+         TZ+Cbajn3rW4eSN5pSS/RJ7De+sjQ/fQXONcUZ4XTcWYoYAfUYNE5cjMLvpSxVhYEGva
+         aDJIGhaVxWFeaqZN3Vi7U14nXNAh+pjVv1CyIq6m/B+B0q40mhmNlGVe6RXqX/iKCJ3Q
+         xl6uEd2TRsQHnFPNLm0GOz0yOl3nrIbGqJqtWdEfoiM7W5EWFCjzV/QBpCJ6QeEc1a1f
+         SS8g==
+X-Forwarded-Encrypted: i=1; AJvYcCVTazP10jXtFFUuh2d/q1+4YuvQXC30fuEdEUozEC3KG6QQEI1rW/sEcsxCz2Xi+4DSd0wgxCmtk9anueJyiRC3HoUV@vger.kernel.org
+X-Gm-Message-State: AOJu0YzoPMFQs31Ndm106ZT/bkFk9Pc7dryFLgkGcddoGeBLZx4Zd0lU
+	G57RTgK+qeruk08Os0kXXrIieybvycS1FPuknw56Pv3O6rEidgI8TpDuRJz5/Mx22NYnhqbw5Wk
+	fYoC6Blck9VMmbDJfpy7D7o5Q9G/eVK72LWXe8sSaIm0dwDDX0+7gVXdVlA1XX6DaHP0sLOnL/D
+	1AEFOAwQ==
+X-Received: by 2002:a05:6402:34d2:b0:5c9:34b4:69a8 with SMTP id 4fb4d7f45d1cf-5ca0ac43878mr13644509a12.6.1729520107968;
+        Mon, 21 Oct 2024 07:15:07 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IGpHf1ZB3J/KEvQafvB1tnTT7FwOJUSP1MV6sNMAiA03xnWJxYSnp9+2nbFOJpBxlvs1EdTqw==
+X-Received: by 2002:a05:6402:34d2:b0:5c9:34b4:69a8 with SMTP id 4fb4d7f45d1cf-5ca0ac43878mr13644472a12.6.1729520107505;
+        Mon, 21 Oct 2024 07:15:07 -0700 (PDT)
+Received: from [10.40.98.157] ([78.108.130.194])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5cb66c6b1adsm1981914a12.69.2024.10.21.07.15.06
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 21 Oct 2024 07:15:07 -0700 (PDT)
+Message-ID: <c75fbe0f-f4b6-4003-8dea-2c9ddbab0f1a@redhat.com>
+Date: Mon, 21 Oct 2024 16:15:06 +0200
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -43,91 +68,81 @@ List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 2/2] platform/x86/amd: amd_3d_vcache: Add sysfs ABI
- documentation
-To: Basavaraj Natikar <Basavaraj.Natikar@amd.com>, hdegoede@redhat.com,
- ilpo.jarvinen@linux.intel.com, platform-driver-x86@vger.kernel.org
-Cc: perry.yuan@amd.com, mario.limonciello@amd.com, Shyam-sundar.S-k@amd.com
-References: <20241021134654.337368-1-Basavaraj.Natikar@amd.com>
- <20241021134654.337368-3-Basavaraj.Natikar@amd.com>
+Subject: Re: [PATCH] platform/x86:intel/pmc: fix IS_ENABLED() check
+To: Lukas Bulwahn <lbulwahn@redhat.com>,
+ Rajneesh Bhardwaj <irenic.rajneesh@gmail.com>,
+ David E Box <david.e.box@intel.com>,
+ =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+ Arnd Bergmann <arnd@arndb.de>, Daniel Lezcano <daniel.lezcano@linaro.org>,
+ platform-driver-x86@vger.kernel.org
+Cc: kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org,
+ Lukas Bulwahn <lukas.bulwahn@redhat.com>
+References: <20240924084056.48447-1-lukas.bulwahn@redhat.com>
 Content-Language: en-US
-From: Armin Wolf <W_Armin@gmx.de>
-In-Reply-To: <20241021134654.337368-3-Basavaraj.Natikar@amd.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:FpBquY8Yn+QraWjIhW5ccN6hRJQ7/KFzwq6Z/YtODNX9XHe1TyU
- PJZNtFiAld8TJJRSU97KLC1u4x9Jbx14UihNp/pZJ5BgM3GpfPiJ1OkjQdLtjcBhJNw9oun
- ln6vYt10SC7mGvSNV3ENX5yRPVziQaFs5RM5ilCBLb1hHWeBrzmqexgC0Ixp1rA+UpQiXdz
- b8Gb8FxKMW0/KJpwEzZHg==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:1TBd6S8FYMU=;r7wN+4TBAb84+zSUEyKKPjnquuJ
- 5SxU0ML19Z9BSkEcxtvByZt5nBFOZ1+yuHFck6tEqldYJPUiRbTupwIvmqwl+JpzIu156U8Mi
- QRZUzz/UaRkKtcDAZgipkIqlp2idxmsZv8dJoipyg/+xrBwfliRxJeMTyTP67tDBvsYX8Pr7Y
- c23QBUnWBswYB0ha4DQ33S9fzoxqEYnGLPi1deRVNlFTIkP/D+6H2/ECOhiZxNjveNWZv2C1o
- p+NO9cTY63TyzJ9I+dQMVOlDT/m9rt9r9gIFdC1EPtHvmjy1EQn+nRDGPkGr5b50oOgkwFPbJ
- mYY2DpGf/L8PCItjPGr+dLANhO10CITVZ1VPF4Vz5ZIEA5tDzGlrpEUJ+CtWGSUQZ9YI0/K2M
- qCc8YBS/FbiuZs0PBhHiLdq1AAPQbMplwwPE5k2p6K7U5w3RxInVmYkYEFRvx7Hwx3v+ueEkL
- pOqyMLYa3zCjASCgFT4iKm8L6rwYoOvV4s0/YEpQsvNgxbtqdPPjERmB/v/1Lk2biSQEP7/Hh
- O8lQLzAhUEVqo2WAqVwDm5EETqXObEDUA9td/s8JKooJVcpU3Fav7rrfiyxO9zaHVlMx4lQnX
- dB9Y/3rQTbQV/kFEKoHWPOBAwGKYiqfwISY574m5NZhTNLLt3ra046jb89hxqoUo/o/5Og36d
- njSi5POeQtYYCbtH9y0W0wtwaMguImfmu9OxsYm131pBi8Nq5fWKyF7ts04V8vpgFuWX2np9a
- A+PIaN8UVFYBVqzijQQvoHmROBzmoMwxf72UWWJXZRn2BQIsK5vFOsH/JLmMu3t+Jv6CfSlGl
- ldbT6Vwb/bplVBR8Dbo85AtVr2hlTyxwDFG1MO23BV8Lk=
+From: Hans de Goede <hdegoede@redhat.com>
+In-Reply-To: <20240924084056.48447-1-lukas.bulwahn@redhat.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Am 21.10.24 um 15:46 schrieb Basavaraj Natikar:
+Hi,
 
-> Add documentation for the amd_3d_vcache sysfs bus platform driver
-> interface so that userspace applications can use it to change mode
-> preferences, either frequency or cache.
+On 24-Sep-24 10:40 AM, Lukas Bulwahn wrote:
+> From: Lukas Bulwahn <lukas.bulwahn@redhat.com>
+> 
+> Commit d7a87891e2f5 ("platform/x86:intel/pmc: fix build regression with
+> pmtimer turned off") accidentally slips in some CONFIG_CONFIG_X86_PM_TIMER
+> (note the duplicated CONFIG prefix) in the IS_ENABLED() check.
+> 
+> Fortunately, ./scripts/checkkconfigsymbols.py notices this accident. Fix up
+> the IS_ENABLED() check with the intended config name.
+> 
+> Fixes: d7a87891e2f5 ("platform/x86:intel/pmc: fix build regression with pmtimer turned off")
+> Signed-off-by: Lukas Bulwahn <lukas.bulwahn@redhat.com>
 
-Reviewed-by: Armin Wolf <W_Armin@gmx.de>
+Note the code this modified is being reverted in the pdx86/fixes branch now, see:
 
->
-> Co-developed-by: Perry Yuan <perry.yuan@amd.com>
-> Signed-off-by: Perry Yuan <perry.yuan@amd.com>
-> Co-developed-by: Mario Limonciello <mario.limonciello@amd.com>
-> Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
-> Reviewed-by: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
-> Signed-off-by: Basavaraj Natikar <Basavaraj.Natikar@amd.com>
+https://patchwork.kernel.org/project/platform-driver-x86/patch/20241012182656.2107178-1-mmaslanka@google.com/
+
+which I have just applied to my review-hans branch and will be in my next pdx86 fixes
+PR to Linus.
+
+Daniel, this means that once the next pdx86 fixes PR is merged there will be a conflict
+with commit d7a87891e2f5 ("platform/x86:intel/pmc: fix build regression with
+pmtimer turned off") from timers/drivers/next. The correct conflict resolution is
+to just drop the changes since the code which this patches is removed by the revert.
+
+Since this will now no longer apply I'm dropping this from the pdx86 patch queue.
+
+Regards,
+
+Hans
+
+
+
 > ---
->   .../sysfs-bus-platform-drivers-amd_x3d_vcache        | 12 ++++++++++++
->   MAINTAINERS                                          |  1 +
->   2 files changed, 13 insertions(+)
->   create mode 100644 Documentation/ABI/testing/sysfs-bus-platform-driver=
-s-amd_x3d_vcache
->
-> diff --git a/Documentation/ABI/testing/sysfs-bus-platform-drivers-amd_x3=
-d_vcache b/Documentation/ABI/testing/sysfs-bus-platform-drivers-amd_x3d_vc=
-ache
-> new file mode 100644
-> index 000000000000..5ff1f1a8c9b6
-> --- /dev/null
-> +++ b/Documentation/ABI/testing/sysfs-bus-platform-drivers-amd_x3d_vcach=
-e
-> @@ -0,0 +1,12 @@
-> +What:		/sys/bus/platform/drivers/amd_x3d_vcache/AMDI0101:00/amd_x3d_mod=
-e
-> +Date:           October 2024
-> +KernelVersion:	6.13
-> +Contact:	Basavaraj Natikar <Basavaraj.Natikar@amd.com>
-> +Description:	(RW) AMD 3D V-Cache optimizer allows users to switch CPU c=
-ore
-> +		rankings dynamically.
-> +
-> +		This file switches between these two modes:
-> +		- "frequency" cores within the faster CCD are prioritized before
-> +		those in the slower CCD.
-> +		- "cache" cores within the larger L3 CCD are prioritized before
-> +		those in the smaller L3 CCD.
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index 11b829956499..ca9c666caf7f 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -970,6 +970,7 @@ M:	Basavaraj Natikar <Basavaraj.Natikar@amd.com>
->   R:	Mario Limonciello <mario.limonciello@amd.com>
->   L:	platform-driver-x86@vger.kernel.org
->   S:	Supported
-> +F:	Documentation/ABI/testing/sysfs-bus-platform-drivers-amd_x3d_vcache
->   F:	drivers/platform/x86/amd/x3d_vcache.c
->
->   AMD ADDRESS TRANSLATION LIBRARY (ATL)
+>  drivers/platform/x86/intel/pmc/core.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/platform/x86/intel/pmc/core.c b/drivers/platform/x86/intel/pmc/core.c
+> index 0431a599ba26..4387b5103701 100644
+> --- a/drivers/platform/x86/intel/pmc/core.c
+> +++ b/drivers/platform/x86/intel/pmc/core.c
+> @@ -1546,7 +1546,7 @@ static int pmc_core_probe(struct platform_device *pdev)
+>  			       pmc_core_adjust_slp_s0_step(primary_pmc, 1));
+>  
+>  	map = primary_pmc->map;
+> -	if (IS_ENABLED(CONFIG_CONFIG_X86_PM_TIMER) &&
+> +	if (IS_ENABLED(CONFIG_X86_PM_TIMER) &&
+>  	    map->acpi_pm_tmr_ctl_offset)
+>  		acpi_pmtmr_register_suspend_resume_callback(pmc_core_acpi_pm_timer_suspend_resume,
+>  							 pmcdev);
+> @@ -1563,7 +1563,7 @@ static void pmc_core_remove(struct platform_device *pdev)
+>  	const struct pmc *pmc = pmcdev->pmcs[PMC_IDX_MAIN];
+>  	const struct pmc_reg_map *map = pmc->map;
+>  
+> -	if (IS_ENABLED(CONFIG_CONFIG_X86_PM_TIMER) &&
+> +	if (IS_ENABLED(CONFIG_X86_PM_TIMER) &&
+>  	    map->acpi_pm_tmr_ctl_offset)
+>  		acpi_pmtmr_unregister_suspend_resume_callback();
+>  
+
