@@ -1,160 +1,123 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
+Received: from mailgw.kylinos.cn (mailgw.kylinos.cn [124.126.103.232])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B0C836124;
-	Sun, 20 Oct 2024 22:10:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 51B3D9463;
+	Mon, 21 Oct 2024 02:14:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=124.126.103.232
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729462216; cv=none; b=HgXxObuxAepZAl1Ez/f04b+4seIPVz5OhINdQDrmzR0lcJUFUi1MCx09/qAESTSZkrnRsM/y5SV4usgPVfTev37PqcHtP2o86ezuGGkr4zl4KW2QYPcxacCdsjVASLuzuhW8FQu9Sl25vum0SR0iOJqOp7hJph3oCUD8XHbkblo=
+	t=1729476893; cv=none; b=r/TvWtFvsBGl7GFQHihFIZ60nw5TvG84MXjKi1tuvrS9T9Zbmb+12aN+qvn6iHTIU5fBttM8KRy0LhyYxyxTaKIR6Y8bUFcO40iJMaejVQllDuUt4tFEdb+RazTZeIIxY/LEeZ+rVvGjjBvGa8TjZ0IDi3n3rn7Cf8RlrBwGNMk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729462216; c=relaxed/simple;
-	bh=orK88O5B1OE3fuixoCT2tIoGPe2dV1+Pk0OTqS7pe3A=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=br74b8A9EUkoHdI297xaWjH/omNjuDPiaEgV9qBtC26uAeiR1L3O6bKhsTSfvQkYJKb5csbRN8PPhcV2kKwowaFMUFBCIqXbVM35KBqZau9kM0nhMqptmqm69T4OpxYCY/anpWs03dBTBLXMGvJPmCrEDAhgM9ptsebDWzCkMDY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=gvUF2b8O; arc=none smtp.client-ip=198.175.65.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="gvUF2b8O"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1729462214; x=1760998214;
-  h=message-id:subject:from:to:cc:date:in-reply-to:
-   references:content-transfer-encoding:mime-version;
-  bh=orK88O5B1OE3fuixoCT2tIoGPe2dV1+Pk0OTqS7pe3A=;
-  b=gvUF2b8OsHdWACQe+u5/34D/yEFdSku9TjRS7+u3f02X2vwsSZ5jCrUp
-   aBqVw/zSK4cpUjQ71EpOcGClv9EKL25k/Ycqih8FDBdYWzsEc93uK098i
-   xVYhNUbZmJcVpOsmBvOVF6kdYxHcJhKvTy+wukVbbTbrSlAlRZ+wCu8sM
-   dK8ttXDnC0YOhOc7XbGdFsuLXJSQa92/z1sOroGLQIdWggC6+81jb6qzz
-   +xCdV7gU/qJdxX6CsKeQnaxf8D8sQvNqH70Ozcz5iekzHt2ST4M/sf1SW
-   kR2n6LhpLitPMmBN+U9QAM3WFExE4f9T/1iruxKgz566KlumJM8blRYvo
-   w==;
-X-CSE-ConnectionGUID: Xr7VOWJSS3yg0WU6eka9eQ==
-X-CSE-MsgGUID: Sj21dNtRQb2NePoZ/37eow==
-X-IronPort-AV: E=McAfee;i="6700,10204,11231"; a="29031457"
-X-IronPort-AV: E=Sophos;i="6.11,219,1725346800"; 
-   d="scan'208";a="29031457"
-Received: from orviesa004.jf.intel.com ([10.64.159.144])
-  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Oct 2024 15:10:13 -0700
-X-CSE-ConnectionGUID: AWCkhnulRd6M7QFB46MBgg==
-X-CSE-MsgGUID: nW2Y1RXMQW2WwXXhlba6RQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.11,219,1725346800"; 
-   d="scan'208";a="84410501"
-Received: from spandruv-desk1.amr.corp.intel.com ([10.125.110.18])
-  by orviesa004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Oct 2024 15:10:14 -0700
-Message-ID: <83af2aa34c08cc153649ef40fa5228efcfaddac8.camel@linux.intel.com>
-Subject: Re: [PATCH] platform/x86: asus-wmi: Support setting AIPT modes
-From: srinivas pandruvada <srinivas.pandruvada@linux.intel.com>
-To: Armin Wolf <W_Armin@gmx.de>, corentin.chary@gmail.com, luke@ljones.dev, 
-	hdegoede@redhat.com, ilpo.jarvinen@linux.intel.com
-Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, 
- Michael Larabel <Michael@phoronix.com>, Casey Bowman
- <casey.g.bowman@intel.com>
-Date: Sun, 20 Oct 2024 15:10:13 -0700
-In-Reply-To: <eee71aa0-d0db-48a7-ade9-4b444c087de5@gmx.de>
-References: <20241020065051.1724435-1-srinivas.pandruvada@linux.intel.com>
-	 <911ce141-8f20-48fb-bc43-e6d4262dbc81@gmx.de>
-	 <c5aee6fc77427daca6e009cd22c3637bffec0219.camel@linux.intel.com>
-	 <eee71aa0-d0db-48a7-ade9-4b444c087de5@gmx.de>
-Autocrypt: addr=srinivas.pandruvada@linux.intel.com; prefer-encrypt=mutual;
- keydata=mQGNBGYHNAsBDAC7tv5u9cIsSDvdgBBEDG0/a/nTaC1GXOx5MFNEDL0LWia2p8Asl7igx
- YrB68fyfPNLSIgtCmps0EbRUkPtoN5/HTbAEZeJUTL8Xdoe6sTywf8/6/DMheEUzprE4Qyjt0HheW
- y1JGvdOA0f1lkxCnPXeiiDY4FUqQHr3U6X4FPqfrfGlrMmGvntpKzOTutlQl8eSAprtgZ+zm0Jiwq
- NSiSBOt2SlbkGu9bBYx7mTsrGv+x7x4Ca6/BO9o5dIvwJOcfK/cXC/yxEkr1ajbIUYZFEzQyZQXrT
- GUGn8j3/cXQgVvMYxrh3pGCq9Q0Q6PAwQYhm97ipXa86GcTpP5B2ip9xclPtDW99sihiL8euTWRfS
- TUsEI+1YzCyz5DU32w3WiXr3ITicaMV090tMg9phIZsjfFbnR8hY03n0kRNWWFXi/ch2MsZCCqXIB
- oY/SruNH9Y6mnFKW8HSH762C7On8GXBYJzH6giLGeSsbvis2ZmV/r+LmswwZ6ACcOKLlvvIukAEQE
- AAbQ5U3Jpbml2YXMgUGFuZHJ1dmFkYSA8c3Jpbml2YXMucGFuZHJ1dmFkYUBsaW51eC5pbnRlbC5j
- b20+iQHRBBMBCAA7FiEEdki2SeUi0wlk2xcjOqtdDMJyisMFAmYHNAsCGwMFCwkIBwICIgIGFQoJC
- AsCBBYCAwECHgcCF4AACgkQOqtdDMJyisMobAv+LLYUSKNuWhRN3wS7WocRPCi3tWeBml+qivCwyv
- oZbmE2LcxYFnkcj6YNoS4N1CHJCr7vwefWTzoKTTDYqz3Ma0D0SbR1p/dH0nDgN34y41HpIHf0tx0
- UxGMgOWJAInq3A7/mNkoLQQ3D5siG39X3bh9Ecg0LhMpYwP/AYsd8X1ypCWgo8SE0J/6XX/HXop2a
- ivimve15VklMhyuu2dNWDIyF2cWz6urHV4jmxT/wUGBdq5j87vrJhLXeosueRjGJb8/xzl34iYv08
- wOB0fP+Ox5m0t9N5yZCbcaQug3hSlgp9hittYRgIK4GwZtNO11bOzeCEMk+xFYUoa5V8JWK9/vxrx
- NZEn58vMJ/nxoJzkb++iV7KBtsqErbs5iDwFln/TRJAQDYrtHJKLLFB9BGUDuaBOmFummR70Rbo55
- J9fvUHc2O70qteKOt5A0zv7G8uUdIaaUHrT+VOS7o+MrbPQcSk+bl81L2R7TfWViCmKQ60sD3M90Y
- oOfCQxricddC
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.52.4 (3.52.4-1.fc40) 
+	s=arc-20240116; t=1729476893; c=relaxed/simple;
+	bh=2VjWKIXAWHuHHC7RhYcuwK63hrbTsYS1nxgkeYa92Rc=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=s/kiZchojB7O4XiLKC929RV8YyfvPhCPUaefWMcJWqgni4Qu9l++kZw7hB9Wl8KLVba95yA90Xo7/v7kOH0w43N2UHZ8YVccVMUNQhe9kRFtKAdXet8sVoUyRUdqfx31HJK9xfljrpOTC/YYa+XJ4sQ4xomSXDd+r41miEs5010=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn; spf=pass smtp.mailfrom=kylinos.cn; arc=none smtp.client-ip=124.126.103.232
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kylinos.cn
+X-UUID: 3b31e80a8f5211efa216b1d71e6e1362-20241021
+X-CID-P-RULE: Release_Ham
+X-CID-O-INFO: VERSION:1.1.38,REQID:7727c2d3-5d38-4940-9ce9-8409a27534a6,IP:0,U
+	RL:0,TC:0,Content:-5,EDM:0,RT:0,SF:0,FILE:0,BULK:0,RULE:Release_Ham,ACTION
+	:release,TS:-5
+X-CID-META: VersionHash:82c5f88,CLOUDID:5dbac00cc02ee61ea71a56b997bc4fcd,BulkI
+	D:nil,BulkQuantity:0,Recheck:0,SF:102,TC:nil,Content:0,EDM:-3,IP:nil,URL:0
+	,File:nil,RT:nil,Bulk:nil,QS:nil,BEC:nil,COL:0,OSI:0,OSA:0,AV:0,LES:1,SPR:
+	NO,DKR:0,DKP:0,BRR:0,BRE:0
+X-CID-BVR: 0,NGT
+X-CID-BAS: 0,NGT,0,_
+X-CID-FACTOR: TF_CID_SPAM_SNR
+X-UUID: 3b31e80a8f5211efa216b1d71e6e1362-20241021
+Received: from node2.com.cn [(10.44.16.197)] by mailgw.kylinos.cn
+	(envelope-from <zenghongling@kylinos.cn>)
+	(Generic MTA)
+	with ESMTP id 267218282; Mon, 21 Oct 2024 10:14:41 +0800
+Received: from node2.com.cn (localhost [127.0.0.1])
+	by node2.com.cn (NSMail) with SMTP id 553B2B8075B2;
+	Mon, 21 Oct 2024 10:14:41 +0800 (CST)
+X-ns-mid: postfix-6715B911-209283303
+Received: from localhost.localdomain (unknown [172.25.120.36])
+	by node2.com.cn (NSMail) with ESMTPA id 703ECB8075B2;
+	Mon, 21 Oct 2024 02:14:40 +0000 (UTC)
+From: Hongling Zeng <zenghongling@kylinos.cn>
+To: linux-kernel@vger.kernel.org,
+	platform-driver-x86@vger.kernel.org
+Cc: stuart.w.hayes@gmail.com,
+	hdegoede@redhat.com,
+	ilpo.jarvinen@linux.intel.com,
+	zhongling0719@126.com,
+	Hongling Zeng <zenghongling@kylinos.cn>
+Subject: [PATCH] platform/x86: dell-dcdbase: Replace snprintf in show  functions with sysfs_emit
+Date: Mon, 21 Oct 2024 10:14:12 +0800
+Message-Id: <20241021021412.5728-1-zenghongling@kylinos.cn>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
 
-On Sun, 2024-10-20 at 21:54 +0200, Armin Wolf wrote:
-> Am 20.10.24 um 21:27 schrieb srinivas pandruvada:
->=20
-> > [...]
-> >=20
-> > > > +	adev =3D acpi_dev_get_first_match_dev("PNP0C14", "ATK",
-> > > > -1);
-> > > Is there really no way of changing the AIPT mode through the WMI
-> > > interface?
-> > > I would prefer using the WMI interface if available, since the
-> > > firmware might
-> > > assume that FANL is only called through the WMI interface.
-> > >=20
-> > I wish the same. Didn't find any. Asus is aware of this change
-> > which I
-> > submitted, they didn't suggest that there is alternative.
-> >=20
-> > > Do you have a acpidump from a affected device?
-> > >=20
-> > Will send you.
-> >=20
-> > Thanks,
-> > Srinivas
->=20
-> Thanks,
->=20
-> the return value of DSTS() on your device contains:
->=20
-> - 8-bit current AIPT mode
-> - 8-bit nothing
-> - 8-bit constant 0x07
-> - 8-bit constant 0x0a
->=20
-> Maybe you can try to find out more about the unknown constants. For
-> the rest, you can use
-> the helper functions provided by the driver.
+  show() must not use snprintf() when formatting the value to be
+returned to user space
 
-Thanks for looking into this. I will get help from Asus.
+Signed-off-by: Hongling Zeng <zenghongling@kylinos.cn>
+---
+ drivers/platform/x86/dell/dcdbas.c | 10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
 
--Srinivas
-
->=20
-> Thanks,
-> Armin Wolf
->=20
-> > > Thanks,
-> > > Armin Wolf
-> > >=20
-> > > > +	if (adev) {
-> > > > +		acpi_handle handle =3D acpi_device_handle(adev);
-> > > > +
-> > > > +		acpi_dev_put(adev);
-> > > > +
-> > > > +		if (!acpi_has_method(handle, "FANL"))
-> > > > +			return 0;
-> > > > +
-> > > > +		asus->acpi_mgmt_handle =3D handle;
-> > > > +		asus->asus_aipt_present =3D true;
-> > > > +		dev_info(dev, "ASUS Intelligent Performance
-> > > > Technology (AIPT) is present\n");
-> > > > +		/*
-> > > > +		 * Set the mode corresponding to default Linux
-> > > > platform power
-> > > > +		 * profile Balanced
-> > > > +		 */
-> > > > +		asus_wmi_write_aipt_mode(asus, AIPT_STANDARD);
-> > > > +	}
-> > > > +
-> > > > =C2=A0=C2=A0=C2=A0	return 0;
-> > > > =C2=A0=C2=A0 }
-> > > >=20
-> >=20
+diff --git a/drivers/platform/x86/dell/dcdbas.c b/drivers/platform/x86/de=
+ll/dcdbas.c
+index a60e350..143fd0a 100644
+--- a/drivers/platform/x86/dell/dcdbas.c
++++ b/drivers/platform/x86/dell/dcdbas.c
+@@ -132,14 +132,14 @@ static ssize_t smi_data_buf_phys_addr_show(struct d=
+evice *dev,
+ 					   struct device_attribute *attr,
+ 					   char *buf)
+ {
+-	return sprintf(buf, "%x\n", (u32)smi_buf.dma);
++	return sysfs_emit(buf, "%x\n", (u32)smi_buf.dma);
+ }
+=20
+ static ssize_t smi_data_buf_size_show(struct device *dev,
+ 				      struct device_attribute *attr,
+ 				      char *buf)
+ {
+-	return sprintf(buf, "%lu\n", smi_buf.size);
++	return sysfs_emit(buf, "%lu\n", smi_buf.size);
+ }
+=20
+ static ssize_t smi_data_buf_size_store(struct device *dev,
+@@ -200,7 +200,7 @@ static ssize_t host_control_action_show(struct device=
+ *dev,
+ 					struct device_attribute *attr,
+ 					char *buf)
+ {
+-	return sprintf(buf, "%u\n", host_control_action);
++	return sysfs_emit(buf, "%u\n", host_control_action);
+ }
+=20
+ static ssize_t host_control_action_store(struct device *dev,
+@@ -224,7 +224,7 @@ static ssize_t host_control_smi_type_show(struct devi=
+ce *dev,
+ 					  struct device_attribute *attr,
+ 					  char *buf)
+ {
+-	return sprintf(buf, "%u\n", host_control_smi_type);
++	return sysfs_emit(buf, "%u\n", host_control_smi_type);
+ }
+=20
+ static ssize_t host_control_smi_type_store(struct device *dev,
+@@ -239,7 +239,7 @@ static ssize_t host_control_on_shutdown_show(struct d=
+evice *dev,
+ 					     struct device_attribute *attr,
+ 					     char *buf)
+ {
+-	return sprintf(buf, "%u\n", host_control_on_shutdown);
++	return sysfs_emit(buf, "%u\n", host_control_on_shutdown);
+ }
+=20
+ static ssize_t host_control_on_shutdown_store(struct device *dev,
+--=20
+2.1.0
 
