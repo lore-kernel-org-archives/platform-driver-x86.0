@@ -1,66 +1,40 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from mout.gmx.net (mout.gmx.net [212.227.17.22])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D59601F8933
-	for <platform-driver-x86@vger.kernel.org>; Mon, 21 Oct 2024 14:15:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D88A11E573E
+	for <platform-driver-x86@vger.kernel.org>; Mon, 21 Oct 2024 14:20:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.22
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729520113; cv=none; b=NSjOnMr498zvDC1JMg7/1NZO1EsO0lz6ggKLQP1O5JWDXY/lcV0Pz5x9W0DonnGb2OF/HpzwF/wzWvaEtsPyyAPMhqRIvaA/w6KtGFbOdSu4T4hLjo89SpnxEHebYZjigSTBxqTId91WE67s7fLZt9rDh27Cx8dX0EsYdgACOqs=
+	t=1729520415; cv=none; b=qknCzjV1MUWOkljyfZJTFW4IPbVHDcIyJlcuysOyvjfVd277xWGXL6MxiAN9d+fe68tNRM7oSso9TuNpCfnul0TXhhWKiHCKoGZyZPTbB/OUttfow3IC9njM5YI86w8CYogqYEzSCIkPpk7cDwdjDGAnhWCtS66OQjhILoewajs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729520113; c=relaxed/simple;
-	bh=dah3JuK6Qj6IQal1Ny+jb8WrCPXjvhvSomfNkrDZ96s=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=PkC5dgv/Tg1t6pF5EFtRAslsdOuSLNImkNnWJqI9UrDYDPqgAxAYn9nL9Ab6hQSxnHF8Vxbgdg2dw2FTv1bPd0iERuS/yvWFSy7V5/hI5zZzj/L7w38QDH7sR5NIj3b5HtYDAW9iHE3HuJ51eX6geTyNb/er2f2Je0xrmsBxraI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=hCYHqI4d; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1729520415; c=relaxed/simple;
+	bh=hyNAEC3s65PhqRnrf4uD2v85gM82oiyhzSEx5NJ2zRc=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
+	 In-Reply-To:Content-Type; b=I+++pkCZVCA71/ZNaVF35UI99WwMedwAiNKmPY3U0X8nZFhHKQC0mBgYwK3NFUKb8/esfgKai4hmczfRdSf7qOwgJNk1yz5Vfq6UzjeH3Aul9D5Rm5gbKKKHNd5RL1yLPZU+Nn/RDGayIlr6gZMjc+umV0CmP4I8FrcMKdiIvds=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b=Bj3AEraW; arc=none smtp.client-ip=212.227.17.22
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="hCYHqI4d"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1729520110;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=8PfOG8qztLmjgi5lvFTsWGzlDXgKb6KxReuT7wFO8Gg=;
-	b=hCYHqI4dYjXoehHoGEO+qWRuf/9/xTeiqO+leIti/H28zpw433goRAc5AEQWIWceA61aue
-	KXwqhmRJ1r2CnGymBhkdKqWdkEfKTiNgUCNhMr7H2NMI6WiN1j//cKAiU2hWrwxf058PMr
-	ck5L4BF36qOMVlhZ/NrjjRM8ujNAwMQ=
-Received: from mail-ej1-f70.google.com (mail-ej1-f70.google.com
- [209.85.218.70]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-634-GOt4aMvWOTC8dJQVV4ElXw-1; Mon, 21 Oct 2024 10:15:09 -0400
-X-MC-Unique: GOt4aMvWOTC8dJQVV4ElXw-1
-Received: by mail-ej1-f70.google.com with SMTP id a640c23a62f3a-a99e69deec5so148606466b.2
-        for <platform-driver-x86@vger.kernel.org>; Mon, 21 Oct 2024 07:15:09 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1729520108; x=1730124908;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=8PfOG8qztLmjgi5lvFTsWGzlDXgKb6KxReuT7wFO8Gg=;
-        b=IJPUxerUoCos5dnlpGGNnP73bBTD1qHniqIz1wBk0l7fG+qAn2wltlSE/2Justugp/
-         9xhJoFRzMx8628DGYGugJ6dTToKDlqf7ZgI/R9Qjjjq7QpZQYUKNsF8pwyOELhZSTi1j
-         TZ+Cbajn3rW4eSN5pSS/RJ7De+sjQ/fQXONcUZ4XTcWYoYAfUYNE5cjMLvpSxVhYEGva
-         aDJIGhaVxWFeaqZN3Vi7U14nXNAh+pjVv1CyIq6m/B+B0q40mhmNlGVe6RXqX/iKCJ3Q
-         xl6uEd2TRsQHnFPNLm0GOz0yOl3nrIbGqJqtWdEfoiM7W5EWFCjzV/QBpCJ6QeEc1a1f
-         SS8g==
-X-Forwarded-Encrypted: i=1; AJvYcCVTazP10jXtFFUuh2d/q1+4YuvQXC30fuEdEUozEC3KG6QQEI1rW/sEcsxCz2Xi+4DSd0wgxCmtk9anueJyiRC3HoUV@vger.kernel.org
-X-Gm-Message-State: AOJu0YzoPMFQs31Ndm106ZT/bkFk9Pc7dryFLgkGcddoGeBLZx4Zd0lU
-	G57RTgK+qeruk08Os0kXXrIieybvycS1FPuknw56Pv3O6rEidgI8TpDuRJz5/Mx22NYnhqbw5Wk
-	fYoC6Blck9VMmbDJfpy7D7o5Q9G/eVK72LWXe8sSaIm0dwDDX0+7gVXdVlA1XX6DaHP0sLOnL/D
-	1AEFOAwQ==
-X-Received: by 2002:a05:6402:34d2:b0:5c9:34b4:69a8 with SMTP id 4fb4d7f45d1cf-5ca0ac43878mr13644509a12.6.1729520107968;
-        Mon, 21 Oct 2024 07:15:07 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IGpHf1ZB3J/KEvQafvB1tnTT7FwOJUSP1MV6sNMAiA03xnWJxYSnp9+2nbFOJpBxlvs1EdTqw==
-X-Received: by 2002:a05:6402:34d2:b0:5c9:34b4:69a8 with SMTP id 4fb4d7f45d1cf-5ca0ac43878mr13644472a12.6.1729520107505;
-        Mon, 21 Oct 2024 07:15:07 -0700 (PDT)
-Received: from [10.40.98.157] ([78.108.130.194])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5cb66c6b1adsm1981914a12.69.2024.10.21.07.15.06
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 21 Oct 2024 07:15:07 -0700 (PDT)
-Message-ID: <c75fbe0f-f4b6-4003-8dea-2c9ddbab0f1a@redhat.com>
-Date: Mon, 21 Oct 2024 16:15:06 +0200
+	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b="Bj3AEraW"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.de;
+	s=s31663417; t=1729520402; x=1730125202; i=w_armin@gmx.de;
+	bh=hyNAEC3s65PhqRnrf4uD2v85gM82oiyhzSEx5NJ2zRc=;
+	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:From:To:
+	 Cc:References:In-Reply-To:Content-Type:Content-Transfer-Encoding:
+	 cc:content-transfer-encoding:content-type:date:from:message-id:
+	 mime-version:reply-to:subject:to;
+	b=Bj3AEraWRyuVDYQsMV+ztWswHBZF3jgYjnEaXJf7K+LZCxnTtx4lsjo8BwZRopbb
+	 xubndu03ZGVt2WwrE+s6LUi0IonkCVH9SpMOJidaySXsnAhnTFY9+tdO+QGd5yOXb
+	 VHZeIzfBr2cB2OrDBNjqYCjacw6F3yj13v/kxThWQHK0QDqhcXkOak5m8jCeeh9Dt
+	 srRMDLFMt4rUr2r+c5s9pZBTmVrttEtxR17TPJQpzJyiv20YEkDsNYy3soIzgNGjY
+	 WgYqSMzPv3277dBZX/9UBi3n9qZo3e93usYTbBYM/bsigTTt+WdUznQNuAxSVDO7q
+	 bMrBVoEI7OZU+hO4dw==
+X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
+Received: from [141.30.226.129] ([141.30.226.129]) by mail.gmx.net (mrgmx104
+ [212.227.17.168]) with ESMTPSA (Nemesis) id 1N8obG-1twUWi2p54-015s9X; Mon, 21
+ Oct 2024 16:20:02 +0200
+Message-ID: <2a7efb5a-0db7-4787-b215-1bf865c2710c@gmx.de>
+Date: Mon, 21 Oct 2024 16:20:01 +0200
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -68,81 +42,385 @@ List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] platform/x86:intel/pmc: fix IS_ENABLED() check
-To: Lukas Bulwahn <lbulwahn@redhat.com>,
- Rajneesh Bhardwaj <irenic.rajneesh@gmail.com>,
- David E Box <david.e.box@intel.com>,
- =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
- Arnd Bergmann <arnd@arndb.de>, Daniel Lezcano <daniel.lezcano@linaro.org>,
- platform-driver-x86@vger.kernel.org
-Cc: kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org,
- Lukas Bulwahn <lukas.bulwahn@redhat.com>
-References: <20240924084056.48447-1-lukas.bulwahn@redhat.com>
+Subject: Re: [PATCH v2 1/2] platform/x86/amd: amd_3d_vcache: Add AMD 3D
+ V-Cache optimizer driver
+From: Armin Wolf <W_Armin@gmx.de>
+To: Basavaraj Natikar <Basavaraj.Natikar@amd.com>, hdegoede@redhat.com,
+ ilpo.jarvinen@linux.intel.com, platform-driver-x86@vger.kernel.org
+Cc: perry.yuan@amd.com, mario.limonciello@amd.com, Shyam-sundar.S-k@amd.com
+References: <20241021134654.337368-1-Basavaraj.Natikar@amd.com>
+ <20241021134654.337368-2-Basavaraj.Natikar@amd.com>
+ <83951889-daa2-4a26-98f6-361fd3d22019@gmx.de>
 Content-Language: en-US
-From: Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <20240924084056.48447-1-lukas.bulwahn@redhat.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+In-Reply-To: <83951889-daa2-4a26-98f6-361fd3d22019@gmx.de>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:X8U2zy7GxYRKWvwPODjMukSrzNCjfFkmAaGbXBrXC1L5ttsZW6F
+ 8QhTz/IRUc+p72sj5r3ZpWk1iH+w6XaW6GUIc5iiT9pxuLcZPdRm5LCdOwuFR99QVPnLg+1
+ PZKDJpBcfStjBoaZBHKjqkVHTAFk4G1/ZD7wdRw32LnQ2PfwyJTOdQd8W6eTIfPRYOQHf5n
+ yBHeMFvhP4d6NwPOe63LQ==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:xNCY4GswDq4=;SeXAP18GC/+d/ANgY/rqUtTl2GP
+ V/jkKQsm5C7XJKnnUtgI0RLsDMBYchgRMurMsFeRn9jUHYa0YavQxOYIFhMdXFbZU4uM0xb55
+ YuMeganDM27LMCGVmBlMBL+KeJubS6r4ci51Aa8oCz8Y4w5m5R3FMouPCzQH1MXxvGxJLqwX8
+ bJpCui6B8YGL60+BSlhx65Q3lqTKUjDtJoAfgRWsBxZkihaeEPk5zzWNOD7x9lSpTZ0O3Z+KH
+ Xk1rh2j8Gprt/OGT7NRMqKBOw8Afh7dFdDfHnj8Cd96/Eva2Ltpn1jB1eFrN7VcMtm4QhFt3V
+ 18rdYFcUbMvorS5rJQzrdlD2Rgvg7SnBiNbt9+QiPAmEWq3/9hq7KoQoiKkbeujGHZKmxplHX
+ QZjVPPMbH8xKeEm1RLPbpuqUfqDRNXskzaRqGeHHoafihTi76wX1Bo85bjmQdQHvzx+YmXZ28
+ jMjxTZ7LoF9lBjeBL7J8QOlTqi7KsgRIVFHakLjoeFPxWxIkLD8NZMOZmRNmS7vF9ohTJb+Ee
+ HH2NmJcWnSGpm0OzyYnEuH5HcDX1fnjZHwGHa0Ma0JHR91pEtbwmD1Hw3KBLvgcfPrEs99LSQ
+ 02jfyAsBQcyZZ8WoSIpaU3Ybi3J2exBOuO9iuQ1YqL7BG+TQ0SE/+5KgeHe/bD0qaArtWumIf
+ odxSKflCGQmlkxyJh3f7gmeTUEU3bMQeHMajbvSciJXuGrxJuO1ykc5ujx8LlwGTAzERBkDlr
+ oiEaMe9QmIGJte+balI5CMHF4oWtkk9aNbQspE1CHg1xZuCsM0RWBy5oNGCDw4wCm9/8Ta7Iz
+ z5tpZTlAWqoytTgb94P3NWJp+jshnjlo4yIxgwLlnGU3c=
 
-Hi,
+Am 21.10.24 um 16:10 schrieb Armin Wolf:
 
-On 24-Sep-24 10:40 AM, Lukas Bulwahn wrote:
-> From: Lukas Bulwahn <lukas.bulwahn@redhat.com>
-> 
-> Commit d7a87891e2f5 ("platform/x86:intel/pmc: fix build regression with
-> pmtimer turned off") accidentally slips in some CONFIG_CONFIG_X86_PM_TIMER
-> (note the duplicated CONFIG prefix) in the IS_ENABLED() check.
-> 
-> Fortunately, ./scripts/checkkconfigsymbols.py notices this accident. Fix up
-> the IS_ENABLED() check with the intended config name.
-> 
-> Fixes: d7a87891e2f5 ("platform/x86:intel/pmc: fix build regression with pmtimer turned off")
-> Signed-off-by: Lukas Bulwahn <lukas.bulwahn@redhat.com>
+> Am 21.10.24 um 15:46 schrieb Basavaraj Natikar:
+>
+>> AMD X3D processors, also known as AMD 3D V-Cache, feature dual Core
+>> Complex Dies (CCDs) and enlarged L3 cache, enabling dynamic mode
+>> switching between Frequency and Cache modes. To optimize performance,
+>> implement the AMD 3D V-Cache Optimizer, which allows selecting either:
+>>
+>> Frequency mode: cores within the faster CCD are prioritized before
+>> those in the slower CCD.
+>>
+>> Cache mode: cores within the larger L3 CCD are prioritized before
+>> those in the smaller L3 CCD.
+>>
+>> Co-developed-by: Perry Yuan <perry.yuan@amd.com>
+>> Signed-off-by: Perry Yuan <perry.yuan@amd.com>
+>> Co-developed-by: Mario Limonciello <mario.limonciello@amd.com>
+>> Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
+>> Reviewed-by: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
+>> Signed-off-by: Basavaraj Natikar <Basavaraj.Natikar@amd.com>
+>> ---
+>> =C2=A0 MAINTAINERS=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 |=C2=A0=C2=A0 7 ++
+>> =C2=A0 drivers/platform/x86/amd/Kconfig=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 |=
+=C2=A0 12 ++
+>> =C2=A0 drivers/platform/x86/amd/Makefile=C2=A0=C2=A0=C2=A0=C2=A0 |=C2=
+=A0=C2=A0 2 +
+>> =C2=A0 drivers/platform/x86/amd/x3d_vcache.c | 160 ++++++++++++++++++++=
+++++++
+>> =C2=A0 4 files changed, 181 insertions(+)
+>> =C2=A0 create mode 100644 drivers/platform/x86/amd/x3d_vcache.c
+>>
+>> diff --git a/MAINTAINERS b/MAINTAINERS
+>> index e9659a5a7fb3..11b829956499 100644
+>> --- a/MAINTAINERS
+>> +++ b/MAINTAINERS
+>> @@ -965,6 +965,13 @@ Q:
+>> https://patchwork.kernel.org/project/linux-rdma/list/
+>> =C2=A0 F:=C2=A0=C2=A0=C2=A0 drivers/infiniband/hw/efa/
+>> =C2=A0 F:=C2=A0=C2=A0=C2=A0 include/uapi/rdma/efa-abi.h
+>>
+>> +AMD 3D V-CACHE PERFORMANCE OPTIMIZER DRIVER
+>> +M:=C2=A0=C2=A0=C2=A0 Basavaraj Natikar <Basavaraj.Natikar@amd.com>
+>> +R:=C2=A0=C2=A0=C2=A0 Mario Limonciello <mario.limonciello@amd.com>
+>> +L:=C2=A0=C2=A0=C2=A0 platform-driver-x86@vger.kernel.org
+>> +S:=C2=A0=C2=A0=C2=A0 Supported
+>> +F:=C2=A0=C2=A0=C2=A0 drivers/platform/x86/amd/x3d_vcache.c
+>> +
+>> =C2=A0 AMD ADDRESS TRANSLATION LIBRARY (ATL)
+>> =C2=A0 M:=C2=A0=C2=A0=C2=A0 Yazen Ghannam <Yazen.Ghannam@amd.com>
+>> =C2=A0 L:=C2=A0=C2=A0=C2=A0 linux-edac@vger.kernel.org
+>> diff --git a/drivers/platform/x86/amd/Kconfig
+>> b/drivers/platform/x86/amd/Kconfig
+>> index f88682d36447..d73f691020d0 100644
+>> --- a/drivers/platform/x86/amd/Kconfig
+>> +++ b/drivers/platform/x86/amd/Kconfig
+>> @@ -6,6 +6,18 @@
+>> =C2=A0 source "drivers/platform/x86/amd/pmf/Kconfig"
+>> =C2=A0 source "drivers/platform/x86/amd/pmc/Kconfig"
+>>
+>> +config AMD_3D_VCACHE
+>> +=C2=A0=C2=A0=C2=A0 tristate "AMD 3D V-Cache Performance Optimizer Driv=
+er"
+>> +=C2=A0=C2=A0=C2=A0 depends on X86_64 && ACPI
+>> +=C2=A0=C2=A0=C2=A0 help
+>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 The driver provides a sysfs interface, =
+enabling the setting of
+>> a bias
+>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 that alters CPU core reordering. This b=
+ias prefers cores with
+>> higher
+>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 frequencies or larger L3 caches on proc=
+essors supporting AMD
+>> 3D V-Cache
+>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 technology.
+>> +
+>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 If you choose to compile this driver as=
+ a module the module
+>> will be
+>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 called amd_3d_vcache.
+>> +
+>> =C2=A0 config AMD_HSMP
+>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 tristate "AMD HSMP Driver"
+>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 depends on AMD_NB && X86_64 && ACPI
+>> diff --git a/drivers/platform/x86/amd/Makefile
+>> b/drivers/platform/x86/amd/Makefile
+>> index dcec0a46f8af..16e4cce02242 100644
+>> --- a/drivers/platform/x86/amd/Makefile
+>> +++ b/drivers/platform/x86/amd/Makefile
+>> @@ -4,6 +4,8 @@
+>> =C2=A0 # AMD x86 Platform-Specific Drivers
+>> =C2=A0 #
+>>
+>> +obj-$(CONFIG_AMD_3D_VCACHE)=C2=A0=C2=A0=C2=A0=C2=A0 +=3D amd_3d_vcache=
+.o
+>> +amd_3d_vcache-objs=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0 :=3D x3d_vcache.o
+>> =C2=A0 obj-$(CONFIG_AMD_PMC)=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 =
++=3D pmc/
+>> =C2=A0 amd_hsmp-y=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0 :=3D hsmp.o
+>> =C2=A0 obj-$(CONFIG_AMD_HSMP)=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+ +=3D amd_hsmp.o
+>> diff --git a/drivers/platform/x86/amd/x3d_vcache.c
+>> b/drivers/platform/x86/amd/x3d_vcache.c
+>> new file mode 100644
+>> index 000000000000..ec861e7b5e1e
+>> --- /dev/null
+>> +++ b/drivers/platform/x86/amd/x3d_vcache.c
+>> @@ -0,0 +1,160 @@
+>> +// SPDX-License-Identifier: GPL-2.0-or-later
+>> +/*
+>> + * AMD 3D V-Cache Performance Optimizer Driver
+>> + *
+>> + * Copyright (c) 2024, Advanced Micro Devices, Inc.
+>> + * All Rights Reserved.
+>> + *
+>> + * Authors: Basavaraj Natikar <Basavaraj.Natikar@amd.com>
+>> + *=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 Perry Yuan <p=
+erry.yuan@amd.com>
+>> + *=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 Mario Limonci=
+ello <mario.limonciello@amd.com>
+>> + *
+>> + */
+>> +
+>> +#define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
+>> +
+>> +#include <linux/acpi.h>
+>> +#include <linux/device.h>
+>> +#include <linux/errno.h>
+>> +#include <linux/module.h>
+>> +#include <linux/mutex.h>
+>> +#include <linux/platform_device.h>
+>> +
+>> +static char *x3d_mode =3D "frequency";
+>> +module_param(x3d_mode, charp, 0444);
+>
+> Hi,
+>
+> does userspace really need to know the value of this modparam? If no,
+> then please
+> change the visibility to 0.
+>
+>> +MODULE_PARM_DESC(x3d_mode, "Initial 3D-VCache mode; 'frequency'
+>> (default) or 'cache'");
+>> +
+>> +#define DSM_REVISION_ID=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0 0
+>> +#define DSM_SET_X3D_MODE=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 1
+>> +
+>> +static guid_t x3d_guid =3D GUID_INIT(0xdff8e55f, 0xbcfd, 0x46fb, 0xba,
+>> 0x0a,
+>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 0xef, 0xd0, 0x45, 0x0f, 0x34, 0xee=
+);
+>> +
+>> +enum amd_x3d_mode_type {
+>> +=C2=A0=C2=A0=C2=A0 MODE_INDEX_FREQ,
+>> +=C2=A0=C2=A0=C2=A0 MODE_INDEX_CACHE,
+>> +};
+>> +
+>> +static const char * const amd_x3d_mode_strings[] =3D {
+>> +=C2=A0=C2=A0=C2=A0 [MODE_INDEX_FREQ] =3D "frequency",
+>> +=C2=A0=C2=A0=C2=A0 [MODE_INDEX_CACHE] =3D "cache",
+>> +};
+>> +
+>> +struct amd_x3d_dev {
+>> +=C2=A0=C2=A0=C2=A0 struct device *dev;
+>> +=C2=A0=C2=A0=C2=A0 acpi_handle ahandle;
+>> +=C2=A0=C2=A0=C2=A0 /* To protect x3d mode setting */
+>> +=C2=A0=C2=A0=C2=A0 struct mutex lock;
+>> +=C2=A0=C2=A0=C2=A0 enum amd_x3d_mode_type curr_mode;
+>> +};
+>> +
+>> +static int amd_x3d_mode_switch(struct amd_x3d_dev *data, int new_state=
+)
+>> +{
+>> +=C2=A0=C2=A0=C2=A0 union acpi_object *out, argv;
+>> +
+>> +=C2=A0=C2=A0=C2=A0 guard(mutex)(&data->lock);
+>> +=C2=A0=C2=A0=C2=A0 argv.type =3D ACPI_TYPE_INTEGER;
+>> +=C2=A0=C2=A0=C2=A0 argv.integer.value =3D new_state;
+>> +
+>> +=C2=A0=C2=A0=C2=A0 out =3D acpi_evaluate_dsm(data->ahandle, &x3d_guid,
+>> DSM_REVISION_ID, DSM_SET_X3D_MODE,
+>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0 &argv);
+>> +=C2=A0=C2=A0=C2=A0 if (!out) {
+>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 dev_err(data->dev, "failed =
+to evaluate _DSM\n");
+>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 return -EINVAL;
+>> +=C2=A0=C2=A0=C2=A0 }
+>> +
+>> +=C2=A0=C2=A0=C2=A0 data->curr_mode =3D new_state;
+>> +
+>> +=C2=A0=C2=A0=C2=A0 kfree(out);
+>> +
+>> +=C2=A0=C2=A0=C2=A0 return 0;
+>> +}
+>> +
+>> +static ssize_t amd_x3d_mode_store(struct device *dev, struct
+>> device_attribute *attr,
+>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 const char *buf, size_t count)
+>> +{
+>> +=C2=A0=C2=A0=C2=A0 struct amd_x3d_dev *data =3D dev_get_drvdata(dev);
+>> +=C2=A0=C2=A0=C2=A0 int ret;
+>> +
+>> +=C2=A0=C2=A0=C2=A0 ret =3D sysfs_match_string(amd_x3d_mode_strings, bu=
+f);
+>> +=C2=A0=C2=A0=C2=A0 if (ret < 0) {
+>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 dev_err(dev, "no matching m=
+ode to set %s\n", buf);
+>
+> Maybe just return ret here without printing anything. Otherwise
+> userspace could spam
+> the kernel log by continuously writing invalid strings.
+>
+>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 return ret;
+>> +=C2=A0=C2=A0=C2=A0 }
+>> +
+>> +=C2=A0=C2=A0=C2=A0 ret =3D amd_x3d_mode_switch(data, ret);
+>> +=C2=A0=C2=A0=C2=A0 if (ret < 0)
+>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 return ret;
+>> +
+>> +=C2=A0=C2=A0=C2=A0 return count;
+>> +}
+>> +
+>> +static ssize_t amd_x3d_mode_show(struct device *dev, struct
+>> device_attribute *attr, char *buf)
+>> +{
+>> +=C2=A0=C2=A0=C2=A0 struct amd_x3d_dev *data =3D dev_get_drvdata(dev);
+>> +
+>> +=C2=A0=C2=A0=C2=A0 if (!(data->curr_mode =3D=3D MODE_INDEX_CACHE || da=
+ta->curr_mode =3D=3D
+>> MODE_INDEX_FREQ))
+>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 return -EINVAL;
+>
+> Can this error condition even be triggered?
+>
+>> +
+>> +=C2=A0=C2=A0=C2=A0 return sysfs_emit(buf, "%s\n",
+>> amd_x3d_mode_strings[data->curr_mode]);
+>
+> Please use data->lock here to protect accesses to data->curr_mode.
+>
+>> +}
+>> +static DEVICE_ATTR_RW(amd_x3d_mode);
+>> +
+>> +static struct attribute *amd_x3d_attrs[] =3D {
+>> +=C2=A0=C2=A0=C2=A0 &dev_attr_amd_x3d_mode.attr,
+>> +=C2=A0=C2=A0=C2=A0 NULL
+>> +};
+>> +ATTRIBUTE_GROUPS(amd_x3d);
+>> +
+>> +static const struct acpi_device_id amd_x3d_acpi_ids[] =3D {
+>> +=C2=A0=C2=A0=C2=A0 {"AMDI0101"},
+>> +=C2=A0=C2=A0=C2=A0 { },
+>> +};
+>> +MODULE_DEVICE_TABLE(acpi, amd_x3d_acpi_ids);
+>> +
+>> +static int amd_x3d_probe(struct platform_device *pdev)
+>> +{
+>> +=C2=A0=C2=A0=C2=A0 struct amd_x3d_dev *data;
+>> +=C2=A0=C2=A0=C2=A0 acpi_handle handle;
+>> +=C2=A0=C2=A0=C2=A0 int ret;
+>> +
+>> +=C2=A0=C2=A0=C2=A0 handle =3D ACPI_HANDLE(&pdev->dev);
+>> +=C2=A0=C2=A0=C2=A0 if (!handle)
+>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 return -ENODEV;
+>> +
+>> +=C2=A0=C2=A0=C2=A0 data =3D devm_kzalloc(&pdev->dev, sizeof(*data), GF=
+P_KERNEL);
+>> +=C2=A0=C2=A0=C2=A0 if (!data)
+>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 return -ENOMEM;
+>> +
+>> +=C2=A0=C2=A0=C2=A0 data->dev =3D &pdev->dev;
+>> +=C2=A0=C2=A0=C2=A0 data->ahandle =3D handle;
+>> +=C2=A0=C2=A0=C2=A0 platform_set_drvdata(pdev, data);
+>> +
+>> +=C2=A0=C2=A0=C2=A0 if (!acpi_check_dsm(handle, &x3d_guid, DSM_REVISION=
+_ID,
+>> BIT(DSM_SET_X3D_MODE)))
+>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 return dev_err_probe(&pdev-=
+>dev, -ENODEV, "not supported on
+>> this platform\n");
+>
+> Please do this check before allocating anything, because the driver
+> should bail out as soon as possible
+> when encountering unsupported hardware.
+>
+> Also maybe being silent and just returning -ENODEV is better as this
+> error message serves no purpose.
+>
+>> +
+>> +=C2=A0=C2=A0=C2=A0 ret =3D match_string(amd_x3d_mode_strings,
+>> ARRAY_SIZE(amd_x3d_mode_strings), x3d_mode);
+>> +=C2=A0=C2=A0=C2=A0 if (ret < 0)
+>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 return dev_err_probe(&pdev-=
+>dev, -EINVAL, "invalid mode
+>> %s\n", x3d_mode);
+>> +
+>> +=C2=A0=C2=A0=C2=A0 devm_mutex_init(data->dev, &data->lock);
+>> +
+>> +=C2=A0=C2=A0=C2=A0 ret =3D amd_x3d_mode_switch(data, ret);
+>> +=C2=A0=C2=A0=C2=A0 if (ret < 0)
+>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 return dev_err_probe(&pdev-=
+>dev, ret, "mode switch failed\n");
+>
+> amd_x3d_mode_switch() already prints an error when failing, so please
+> just return the result directly:
+>
+> =C2=A0=C2=A0=C2=A0=C2=A0return amd_x3d_mode_switch(data, ret);
+>
+> Other than that the driver look good.
+>
+> Thanks,
+> Armin Wolf
 
-Note the code this modified is being reverted in the pdx86/fixes branch now, see:
+I think i missed something: Maybe the setting should be reapplied after su=
+spend/resume?
+You certainly need to do this for S4 and maybe even for S3, depending whet=
+her or not this
+value is guaranteed to to remain stable during suspend.
 
-https://patchwork.kernel.org/project/platform-driver-x86/patch/20241012182656.2107178-1-mmaslanka@google.com/
+Thanks,
+Armin Wolf
 
-which I have just applied to my review-hans branch and will be in my next pdx86 fixes
-PR to Linus.
-
-Daniel, this means that once the next pdx86 fixes PR is merged there will be a conflict
-with commit d7a87891e2f5 ("platform/x86:intel/pmc: fix build regression with
-pmtimer turned off") from timers/drivers/next. The correct conflict resolution is
-to just drop the changes since the code which this patches is removed by the revert.
-
-Since this will now no longer apply I'm dropping this from the pdx86 patch queue.
-
-Regards,
-
-Hans
-
-
-
-> ---
->  drivers/platform/x86/intel/pmc/core.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/platform/x86/intel/pmc/core.c b/drivers/platform/x86/intel/pmc/core.c
-> index 0431a599ba26..4387b5103701 100644
-> --- a/drivers/platform/x86/intel/pmc/core.c
-> +++ b/drivers/platform/x86/intel/pmc/core.c
-> @@ -1546,7 +1546,7 @@ static int pmc_core_probe(struct platform_device *pdev)
->  			       pmc_core_adjust_slp_s0_step(primary_pmc, 1));
->  
->  	map = primary_pmc->map;
-> -	if (IS_ENABLED(CONFIG_CONFIG_X86_PM_TIMER) &&
-> +	if (IS_ENABLED(CONFIG_X86_PM_TIMER) &&
->  	    map->acpi_pm_tmr_ctl_offset)
->  		acpi_pmtmr_register_suspend_resume_callback(pmc_core_acpi_pm_timer_suspend_resume,
->  							 pmcdev);
-> @@ -1563,7 +1563,7 @@ static void pmc_core_remove(struct platform_device *pdev)
->  	const struct pmc *pmc = pmcdev->pmcs[PMC_IDX_MAIN];
->  	const struct pmc_reg_map *map = pmc->map;
->  
-> -	if (IS_ENABLED(CONFIG_CONFIG_X86_PM_TIMER) &&
-> +	if (IS_ENABLED(CONFIG_X86_PM_TIMER) &&
->  	    map->acpi_pm_tmr_ctl_offset)
->  		acpi_pmtmr_unregister_suspend_resume_callback();
->  
-
+>
+>> +
+>> +=C2=A0=C2=A0=C2=A0 return 0;
+>> +}
+>> +
+>> +static struct platform_driver amd_3d_vcache_driver =3D {
+>> +=C2=A0=C2=A0=C2=A0 .driver =3D {
+>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 .name =3D "amd_x3d_vcache",
+>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 .dev_groups =3D amd_x3d_gro=
+ups,
+>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 .acpi_match_table =3D amd_x=
+3d_acpi_ids,
+>> +=C2=A0=C2=A0=C2=A0 },
+>> +=C2=A0=C2=A0=C2=A0 .probe =3D amd_x3d_probe,
+>> +};
+>> +module_platform_driver(amd_3d_vcache_driver);
+>> +
+>> +MODULE_DESCRIPTION("AMD 3D V-Cache Performance Optimizer Driver");
+>> +MODULE_LICENSE("GPL");
+>
