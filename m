@@ -1,59 +1,59 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5FFCB194A74;
-	Mon, 21 Oct 2024 10:51:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D09BE55B;
+	Mon, 21 Oct 2024 10:54:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729507868; cv=none; b=IJslDpo6bSOD6jiSJ+p9rPs6Z5G6rsIn2j7bhEuzobx+nnYNpa4CCE3N2Jg0m4GUsb7h6IxUe4BBSjMNiL9rEe+ettibRyRguniqoK5TDMeu84D2wnDXxtVqST8GCdqQ8WJTE7D2rbyIXlkUMH7WmrGH9q3GO5n5eE4FLkSuPoM=
+	t=1729508047; cv=none; b=ZeZGcZETDPM2bPIlDKhvw7udTf7MahvWHV+84QM3vXIFhfdgtNQszrvB36wilfOc741ZrvNjT5SDYWmMIHkjoxyzc5FzEi7IMgd4SAE9z1WtBijfTFZznutXkJBbS72i1O3iMTxDGmDhPlVoJK/NpyMDtMJnjlPtsuMDDKPKLYw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729507868; c=relaxed/simple;
-	bh=TgyolvhVwv8fitRtIMfKtIsfY4sjGZH8mmcZRwhWC7g=;
+	s=arc-20240116; t=1729508047; c=relaxed/simple;
+	bh=b9FbXkE5pu8aHcs8QYvHaBCFDkSag9y7xanRzpEOVPo=;
 	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=So596hKoeYV7zRt7qtM0W+wxhrK6fx36KRCISgl3OW8cv5DWAkgdVr3UputifIwYUma4Sw8hs1RB3TAhFHJeZOfSo6apsCeu94GVeYYvJK+kpJDhcdK02oi/iFSWHI0k3gCnhYebpCG2QpAGbKBJ/BaHYvzFP5r2mx5YnVVzl4c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=eGO1hDlj; arc=none smtp.client-ip=198.175.65.14
+	 MIME-Version:Content-Type; b=PRnHUC6turjXA87rlbGv3bGFpwl+I6Kko5ecOLgyZNYmwMVDRwgqXRaWv+tSkJiPhMYU+d+OUfaIZtZibz++fNf/B7MpSByLg5TElPOX/L0Q0T1Jod8p4NKn+YDrZCM8l4y9SnGmOZzrZFLSUFxrQJ+s3rKOJjUK8a4s2Yya2DM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=H5rhc3Bf; arc=none smtp.client-ip=198.175.65.11
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="eGO1hDlj"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="H5rhc3Bf"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1729507867; x=1761043867;
+  t=1729508045; x=1761044045;
   h=from:date:to:cc:subject:in-reply-to:message-id:
    references:mime-version;
-  bh=TgyolvhVwv8fitRtIMfKtIsfY4sjGZH8mmcZRwhWC7g=;
-  b=eGO1hDlj6bm6MsfcwpErwoXfD3t8zMnhMewCWOJNr7xrh1Ys6uN6H45C
-   /EpplVxUDx32ltLaVuFLU+VTrvs8dqyIiwbOiPOIbiGuj2tKPQ9wnxwGv
-   IxO+5P7pyaiOL6F4UlLjOg1m+mWrUNU4rVeJvflkml+wYZxwf/nlQqLyd
-   ruS8tlRs+Krf/lsdS/0XOJaiFP/m+x5qfsy3xYxT3t9yywrREAhnrUYci
-   ZozVaF3ph8EEwr6VuvtThIIBr0dkNUF6FWGvR/UQoZGo5y4+0/CVBaK5F
-   75xKjrxxJImAqIRiMX/TELkq4fT0G4zLiZYwy2OzcfkuDGdYtGqQbrYUX
-   g==;
-X-CSE-ConnectionGUID: Ln3rj/YARXCTi8cH6oey+w==
-X-CSE-MsgGUID: oUttFyjSSsavbE/x213p+w==
-X-IronPort-AV: E=McAfee;i="6700,10204,11231"; a="32790428"
-X-IronPort-AV: E=Sophos;i="6.11,220,1725346800"; 
-   d="scan'208";a="32790428"
-Received: from fmviesa009.fm.intel.com ([10.60.135.149])
-  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Oct 2024 03:51:06 -0700
-X-CSE-ConnectionGUID: EB+9RMxVTcWQCH2JOPb67g==
-X-CSE-MsgGUID: MDcoQlByQiidbMDdefR8YQ==
+  bh=b9FbXkE5pu8aHcs8QYvHaBCFDkSag9y7xanRzpEOVPo=;
+  b=H5rhc3BfrkxcHzV8UGvSU34Y9pG37vK/Jn0HOm7RxRYhMvyoGnFIBjg4
+   N93Aukaq5GUEq3dS3T684CBgm9YHM079BSJ4fTcE6XQh84AOGSMdfqmSk
+   3MuoWKsHLO/jHy07HEy/wHHQelBfXZEp7A7mMdQYYWh1SuAfYctffLsjG
+   bhSftyRqr70Pm8AMcqOky/Tqi8RkYCrdKTcRSqMhF1BXcYKz+moph2nuv
+   K7RFFewRY1epTP6AeuNf4RCK7ofiMbPi8zpPcI3kEPecaFRQJ/utbo4fo
+   LXiWjIEE5sbk4rCRcqvMBMPnuX+sEuPeuSS10txBPFmd5Gc4/J/G3BidH
+   A==;
+X-CSE-ConnectionGUID: v9BIY/3dS7+MDPWEgdxJIQ==
+X-CSE-MsgGUID: CWxvlKP3RT6fErH5gY0T2Q==
+X-IronPort-AV: E=McAfee;i="6700,10204,11222"; a="39522552"
+X-IronPort-AV: E=Sophos;i="6.11,199,1725346800"; 
+   d="scan'208";a="39522552"
+Received: from orviesa007.jf.intel.com ([10.64.159.147])
+  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Oct 2024 03:54:04 -0700
+X-CSE-ConnectionGUID: hXfEpZ/rT6OZWWlLg5dJFQ==
+X-CSE-MsgGUID: b6hIArXrSaCX3KDZ5zq/og==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.11,220,1725346800"; 
-   d="scan'208";a="79493665"
+   d="scan'208";a="79895227"
 Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.201])
-  by fmviesa009-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Oct 2024 03:51:04 -0700
+  by orviesa007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Oct 2024 03:54:02 -0700
 From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Mon, 21 Oct 2024 13:51:01 +0300 (EEST)
+Date: Mon, 21 Oct 2024 13:53:59 +0300 (EEST)
 To: Hongling Zeng <zenghongling@kylinos.cn>
 cc: LKML <linux-kernel@vger.kernel.org>, platform-driver-x86@vger.kernel.org, 
-    cascardo@holoscopio.com, Hans de Goede <hdegoede@redhat.com>, 
+    stuart.w.hayes@gmail.com, Hans de Goede <hdegoede@redhat.com>, 
     zhongling0719@126.com
-Subject: Re: [PATCH v1] platform/x86: classmate-laptop: Replace snprintf in
- show functions with sysfs_emit
-In-Reply-To: <20241019054426.8182-1-zenghongling@kylinos.cn>
-Message-ID: <b584bfe3-59bd-f79c-c540-ec3f29eb7841@linux.intel.com>
-References: <20241019054426.8182-1-zenghongling@kylinos.cn>
+Subject: Re: [PATCH] platform/x86: dell-dcdbase: Replace snprintf in show 
+ functions with sysfs_emit
+In-Reply-To: <20241021021412.5728-1-zenghongling@kylinos.cn>
+Message-ID: <49db5473-c7cc-b4e5-6166-cb56ba3dd7b0@linux.intel.com>
+References: <20241021021412.5728-1-zenghongling@kylinos.cn>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -62,58 +62,76 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 
-On Sat, 19 Oct 2024, Hongling Zeng wrote:
+On Mon, 21 Oct 2024, Hongling Zeng wrote:
 
 >   show() must not use snprintf() when formatting the value to be
-> returned to user space.
-> 
+
+Please remove the extra spaces.
+
+> returned to user space
+
+Missing .
+
 > Signed-off-by: Hongling Zeng <zenghongling@kylinos.cn>
+> ---
+>  drivers/platform/x86/dell/dcdbas.c | 10 +++++-----
+>  1 file changed, 5 insertions(+), 5 deletions(-)
+> 
+> diff --git a/drivers/platform/x86/dell/dcdbas.c b/drivers/platform/x86/dell/dcdbas.c
+> index a60e350..143fd0a 100644
+> --- a/drivers/platform/x86/dell/dcdbas.c
+> +++ b/drivers/platform/x86/dell/dcdbas.c
+> @@ -132,14 +132,14 @@ static ssize_t smi_data_buf_phys_addr_show(struct device *dev,
+>  					   struct device_attribute *attr,
+>  					   char *buf)
+>  {
 
-Hi,
+Add #include <linux/sysfs.h> (I did this for you in the other patch when 
+I realized it's missing).
 
-I've applied this with modifications:
-
-- I had to cleanup the extra spaces before show() in the text above which
-  I had already earlier noted you should fix. :-(
-- Added #include <linux/sysfs.h>
+Once you've fixed those 3 issues mentioned above, please send v2.
 
 -- 
  i.
 
-> ---
->  drivers/platform/x86/classmate-laptop.c | 6 +++---
->  1 file changed, 3 insertions(+), 3 deletions(-)
+> -	return sprintf(buf, "%x\n", (u32)smi_buf.dma);
+> +	return sysfs_emit(buf, "%x\n", (u32)smi_buf.dma);
+>  }
+>  
+>  static ssize_t smi_data_buf_size_show(struct device *dev,
+>  				      struct device_attribute *attr,
+>  				      char *buf)
+>  {
+> -	return sprintf(buf, "%lu\n", smi_buf.size);
+> +	return sysfs_emit(buf, "%lu\n", smi_buf.size);
+>  }
+>  
+>  static ssize_t smi_data_buf_size_store(struct device *dev,
+> @@ -200,7 +200,7 @@ static ssize_t host_control_action_show(struct device *dev,
+>  					struct device_attribute *attr,
+>  					char *buf)
+>  {
+> -	return sprintf(buf, "%u\n", host_control_action);
+> +	return sysfs_emit(buf, "%u\n", host_control_action);
+>  }
+>  
+>  static ssize_t host_control_action_store(struct device *dev,
+> @@ -224,7 +224,7 @@ static ssize_t host_control_smi_type_show(struct device *dev,
+>  					  struct device_attribute *attr,
+>  					  char *buf)
+>  {
+> -	return sprintf(buf, "%u\n", host_control_smi_type);
+> +	return sysfs_emit(buf, "%u\n", host_control_smi_type);
+>  }
+>  
+>  static ssize_t host_control_smi_type_store(struct device *dev,
+> @@ -239,7 +239,7 @@ static ssize_t host_control_on_shutdown_show(struct device *dev,
+>  					     struct device_attribute *attr,
+>  					     char *buf)
+>  {
+> -	return sprintf(buf, "%u\n", host_control_on_shutdown);
+> +	return sysfs_emit(buf, "%u\n", host_control_on_shutdown);
+>  }
+>  
+>  static ssize_t host_control_on_shutdown_store(struct device *dev,
 > 
-> diff --git a/drivers/platform/x86/classmate-laptop.c b/drivers/platform/x86/classmate-laptop.c
-> index cb6fce6..14c238f 100644
-> --- a/drivers/platform/x86/classmate-laptop.c
-> +++ b/drivers/platform/x86/classmate-laptop.c
-> @@ -208,7 +208,7 @@ static ssize_t cmpc_accel_sensitivity_show_v4(struct device *dev,
->  	inputdev = dev_get_drvdata(&acpi->dev);
->  	accel = dev_get_drvdata(&inputdev->dev);
->  
-> -	return sprintf(buf, "%d\n", accel->sensitivity);
-> +	return sysfs_emit(buf, "%d\n", accel->sensitivity);
->  }
->  
->  static ssize_t cmpc_accel_sensitivity_store_v4(struct device *dev,
-> @@ -257,7 +257,7 @@ static ssize_t cmpc_accel_g_select_show_v4(struct device *dev,
->  	inputdev = dev_get_drvdata(&acpi->dev);
->  	accel = dev_get_drvdata(&inputdev->dev);
->  
-> -	return sprintf(buf, "%d\n", accel->g_select);
-> +	return sysfs_emit(buf, "%d\n", accel->g_select);
->  }
->  
->  static ssize_t cmpc_accel_g_select_store_v4(struct device *dev,
-> @@ -550,7 +550,7 @@ static ssize_t cmpc_accel_sensitivity_show(struct device *dev,
->  	inputdev = dev_get_drvdata(&acpi->dev);
->  	accel = dev_get_drvdata(&inputdev->dev);
->  
-> -	return sprintf(buf, "%d\n", accel->sensitivity);
-> +	return sysfs_emit(buf, "%d\n", accel->sensitivity);
->  }
->  
->  static ssize_t cmpc_accel_sensitivity_store(struct device *dev,
-> 
-
