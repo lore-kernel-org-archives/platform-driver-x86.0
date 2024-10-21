@@ -1,128 +1,93 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f51.google.com (mail-ej1-f51.google.com [209.85.218.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0529E192D69;
-	Mon, 21 Oct 2024 09:35:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7AB4D1E32A4;
+	Mon, 21 Oct 2024 09:43:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729503338; cv=none; b=YNEQ6SYLfbUubiNr4CDpNHjxJ7CfNP57HBlbbh/0Wnqz8Y1rgTfn6whXl38q/WiG/Ogop4E12g8xxt+ju0O62rBDcpN4LZokb5++IBJCZm/tupU9Ra0ueLjrmcdLH4iWsyJBXBdYz4XSIgNsi0E7/ReSucUc/VMiqQ47W1dHXwM=
+	t=1729503805; cv=none; b=iZXB+0zoAf2AOEWvxc24aH5zU5TVtzeYVr6AZQvY1jP5fJ6GuBJI9HKxMcjQKEKFyiyaLASen6t8SNzKm4/8Wr6moeKCMOYjHQuSUKA1ve38rj1f2pV/S05NGJHkgug13P8g9ImzlIvPaLDJM5uLOa4Kce0E0xunuQagI6Xt4/o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729503338; c=relaxed/simple;
-	bh=CmfmX/OlWgODNrVM0cSIY8L+Ta+eZHdD6TiroiEav/k=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=uujAqbL9VxJ71jH0wxgS0p+fjJGuAJOmtnXuKyCMb+F+5vtb5hf1RB1HGmWWXNKsyuXlhyUSmWTwNuGBqE0DM4BAgDd6V6k9uoWZukHeMieJTRFLjxLB3g87x79eCQCEpj8NYvSJe6gkIjq4RNPmJQd+d+q5FtOrv94jsjB/sTc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=VmkhrYi9; arc=none smtp.client-ip=192.198.163.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1729503805; c=relaxed/simple;
+	bh=WLQzzjkWn8BYyGnGkfYMIkyxT5MqPku5adLbUxRMOtM=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=O3khHft+WfQ+gPz5mDQvZJRm1NH6AsFivQRJapwJxBtbDv0QP/0a/CjJLIByOdKjCbGT8vQwjuaWhODh3ngYvNP/NJtd1wyZLhi0pPlyqZVbW8NGxgkGF4dUjzv2kRobCYGSUc206YMTu/Z5983te9mQrzqHthm0i8bv6zBIYow=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=kOxgJQ81; arc=none smtp.client-ip=209.85.218.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="VmkhrYi9"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1729503337; x=1761039337;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:content-transfer-encoding:in-reply-to;
-  bh=CmfmX/OlWgODNrVM0cSIY8L+Ta+eZHdD6TiroiEav/k=;
-  b=VmkhrYi9HZEpqXETtojoY86buoHfNP/55OV7x9dXHtkzz3Uoermmrnd6
-   WQluSlL3UYaFGNeG4aG0M4XD5KcUes3zPIjZvp4YlSkxWak1ihc8YfcEK
-   OMnw5wtrjvO9lGfuB09yE8id24PmCusyqUOEJe7A6YVSwb+dIItBJ2lBh
-   3mAI6S8RnUWqTCaje5dGTCQtHctZKG4b2A3SwQ9CtXfJlaEvuLI++myCb
-   Sr0aORmVi4DUnxlFmlRzybt6S3yMK/F6HjNS5l0Mic3GsBL/fqa7loZ+8
-   4gKns8hVO1QHwgs7hnIfh4CqCsOQukQlL8Tac1UIb6MsnqC/d+sbUWdzX
-   Q==;
-X-CSE-ConnectionGUID: KPCiCgPRT+abax1uD4NCag==
-X-CSE-MsgGUID: o0vvVvyARhilCiA9663wfg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11231"; a="39600065"
-X-IronPort-AV: E=Sophos;i="6.11,220,1725346800"; 
-   d="scan'208";a="39600065"
-Received: from fmviesa001.fm.intel.com ([10.60.135.141])
-  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Oct 2024 02:35:37 -0700
-X-CSE-ConnectionGUID: imbTtBNZS/mmpOiNR7MBFQ==
-X-CSE-MsgGUID: nYjZ3tG2RWGPgR0jeNQZ3Q==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.11,220,1725346800"; 
-   d="scan'208";a="110236155"
-Received: from smile.fi.intel.com ([10.237.72.154])
-  by fmviesa001.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Oct 2024 02:35:35 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.98)
-	(envelope-from <andriy.shevchenko@linux.intel.com>)
-	id 1t2op2-00000005Rr2-2ePf;
-	Mon, 21 Oct 2024 12:35:32 +0300
-Date: Mon, 21 Oct 2024 12:35:32 +0300
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Cc: LKML <linux-kernel@vger.kernel.org>,
-	platform-driver-x86@vger.kernel.org,
-	Mika Westerberg <mika.westerberg@linux.intel.com>,
-	Hans de Goede <hdegoede@redhat.com>, Ferry Toth <fntoth@gmail.com>
-Subject: Re: [PATCH v2 1/3] platform/x86: intel_scu_ipc: Replace workaround
- by 32-bit IO
-Message-ID: <ZxYgZGYTzINm2lpz@smile.fi.intel.com>
-References: <20241021084053.2443545-1-andriy.shevchenko@linux.intel.com>
- <20241021084053.2443545-2-andriy.shevchenko@linux.intel.com>
- <2708af18-da90-4021-bd1b-b0491b737d6b@linux.intel.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kOxgJQ81"
+Received: by mail-ej1-f51.google.com with SMTP id a640c23a62f3a-a99e3b3a411so852152166b.0;
+        Mon, 21 Oct 2024 02:43:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1729503802; x=1730108602; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=WLQzzjkWn8BYyGnGkfYMIkyxT5MqPku5adLbUxRMOtM=;
+        b=kOxgJQ81OWrsN2zQI/ww4RlluBh18BgUInzJxQ+6qDg14ROLwMr6ahyrwufFpcO9W6
+         mgsg9WVE2HQhaaumBujkAaMphOzxYdX0Zao3WZjNLxiaHcNytWE+AAOfDShU1sVPTyL+
+         5mbHuvdH6tSzhFUV7GtgETpSh25pWQZ3Yt+FmjBGLoa5uv2V6K/DvQisPM9dRoX6cReA
+         pi8ZFU1DjzWux6Tnx9LTNZ6m4wcGzVwmqHiGIN/kwF8cqu4fE+9i9FRrgXYp7VHvtBNv
+         +ArHlafEve5eBHwpgVG7LGBKiRh/0vop9wD4Nay4nmIsGVBaxKo6Cv2FwGA6RvxUvY7A
+         p7VA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1729503802; x=1730108602;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=WLQzzjkWn8BYyGnGkfYMIkyxT5MqPku5adLbUxRMOtM=;
+        b=OltAF5W06ka5kC15np/YwPxYJ5ju7Kxn2NTiKs8ZILV7+hYGyUixFB8bwOXENlR0p/
+         bgj7VaOXFFki2/aETfkM9nvpjSGLSE7HR7DgbT8/6QuEnsZ5YV+PmVxaiI546xAiej4+
+         DnUjD+dK+mqapem2et243l9GEskYNnMp396jQGz/cW+kgNInzfej/bJ/w/qVh172SViM
+         +AP0seU8w8D6g4O0UK9m5Sf4/4sHV6gv6e7wfHilnCqswboD5mUJeXodiFVBjePdbqGQ
+         1aa5i+vRKbIoj/2ogSX+9lv42VompFETCw8IR7Dw7H08XaJJrx/D+ZyRK31fJ5lGTGaG
+         AmpQ==
+X-Forwarded-Encrypted: i=1; AJvYcCW4YSe3Rifg0nArFHenNh0IuSKA3qheDI4KzIRBf7LUciuCsD1qWNDFnb1v4mcgaD7gLR0QrgXjvoN4Lvnal6xuYAmH9w==@vger.kernel.org, AJvYcCX/RItR3aeL4IAAisKk7yfdkYChq//jjGUM7Td6AAHQXOrDUGSNKqJtzDkd4tIqOfDD+FK/YQlmGuIzk7E=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzgiZ+V/25MiIagVfulRUNsIezrzR8DfTVvKchUn9DQyDkcC+05
+	YG298qWV1MnsfwpeL4rEV8iQ4Faxv5Y6f0shaDzSIOyFkq7dZlMgt3j/0nwggbqt9SfO8oRa5tS
+	QwOdyIUQqQtf7Ki3Hu9LGVW+QB+c=
+X-Google-Smtp-Source: AGHT+IHWVoHZzx66vm5XItIOnhAzewmvpF+TDxqDaHLETrmpDx200z2cbbDSQykdfAm3Kt0JjcWib7PCldbNCMcX9hM=
+X-Received: by 2002:a17:906:730b:b0:a99:d587:6046 with SMTP id
+ a640c23a62f3a-a9a4cc58f60mr1402633566b.32.1729503801298; Mon, 21 Oct 2024
+ 02:43:21 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <2708af18-da90-4021-bd1b-b0491b737d6b@linux.intel.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+References: <20241021084053.2443545-1-andriy.shevchenko@linux.intel.com>
+ <20241021084053.2443545-3-andriy.shevchenko@linux.intel.com> <28078013-a643-af8e-22be-f36c75790ba5@linux.intel.com>
+In-Reply-To: <28078013-a643-af8e-22be-f36c75790ba5@linux.intel.com>
+From: Andy Shevchenko <andy.shevchenko@gmail.com>
+Date: Mon, 21 Oct 2024 12:42:45 +0300
+Message-ID: <CAHp75VejavDObi4PMLPVCO==YCTRkOvV-uOOSyx_=74bOSrKxQ@mail.gmail.com>
+Subject: Re: [PATCH v2 2/3] platform/x86: intel_scu_ipc: Simplify code with
+ cleanup helpers
+To: =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>, LKML <linux-kernel@vger.kernel.org>, 
+	platform-driver-x86@vger.kernel.org, Andy Shevchenko <andy@kernel.org>, 
+	Mika Westerberg <mika.westerberg@linux.intel.com>, Hans de Goede <hdegoede@redhat.com>, 
+	Ferry Toth <fntoth@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Mon, Oct 21, 2024 at 12:24:57PM +0300, Ilpo Järvinen wrote:
+On Mon, Oct 21, 2024 at 12:32=E2=80=AFPM Ilpo J=C3=A4rvinen
+<ilpo.jarvinen@linux.intel.com> wrote:
 > On Mon, 21 Oct 2024, Andy Shevchenko wrote:
-> 
-> > The theory is that the so called workaround in pwr_reg_rdwr() is
-> > the actual reader of the data in 32-bit chunks. For some reason
-> > the 8-bit IO won't fail after that. Replace the workaround by using
-> > 32-bit IO explicitly and then memcpy() as much data as was requested
-> > by the user. The same approach is already in use in
-> > intel_scu_ipc_dev_command_with_size().
 
 ...
 
-> >  	err = intel_scu_ipc_check_status(scu);
-> > -	if (!err && id == IPC_CMD_PCNTRL_R) { /* Read rbuf */
-> > -		/* Workaround: values are read as 0 without memcpy_fromio */
-> > -		memcpy_fromio(cbuf, scu->ipc_base + 0x90, 16);
-> > -		for (nc = 0; nc < count; nc++)
-> > -			data[nc] = ipc_data_readb(scu, nc);
-> > +	if (!err) { /* Read rbuf */
-> 
-> What is the reason for the removal of that id check? This seems a clear 
-> logic change but why? And if you remove want to remove that check, what 
-> that comment then means?
+> IMO, this change is doing too many things at once and it's hard to justif=
+y
+> why those changes must be kept in the same patch. If the guard() change
+> is done first and only then the logic reversions, both patches would
+> probably be near trivial to review for correctness.
 
-Let me split this to a separate change with better explanation then.
+Are you insisting on this?
+Because that's how I have done similar changes in the past all over
+the kernel, and IIRC you are the first one asking for this :-)
 
-> > +		for (nc = 0, offset = 0; nc < 4; nc++, offset += 4)
-> > +			wbuf[nc] = ipc_data_readl(scu, offset);
-> > +		memcpy(data, wbuf, count);
-> 
-> So do we actually need to read more than
-> DIV_ROUND_UP(min(count, 16U), sizeof(u32))? Because that's the approach 
-> used in intel_scu_ipc_dev_command_with_size() which you referred to.
-
-I'm not sure I follow. We do IO for whole (16-bytes) buffer, but return only
-asked _bytes_ to the user.
-
-> >  	}
-> >  	mutex_unlock(&ipclock);
-> >  	return err;
-> 
-> FYI (unrelated to this patch), there seems to be some open-coded 
-> FIELD_PREP()s in pwr_reg_rdwr(), some of which is common code between 
-> those if branches too.
-
-This code is quite old and full of tricks that has to be tested. So, yes
-while it's possible to convert, I would like to do it in a small (baby)
-steps. This series is already quite intrusive from this perspective :-)
-
--- 
+--=20
 With Best Regards,
 Andy Shevchenko
-
-
