@@ -1,55 +1,55 @@
 Received: from fout-a7-smtp.messagingengine.com (fout-a7-smtp.messagingengine.com [103.168.172.150])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BEEBF1CF7A6;
-	Mon, 21 Oct 2024 19:38:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 013C61F7091;
+	Mon, 21 Oct 2024 19:38:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.150
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729539528; cv=none; b=SKN1E0XY8hbl1q4H1LE/wQVijMVX6ujSh8a78ovIcQGTnNBNU9YrNiqUcTqK41Kr8yyvtmGupx6QUrt3leVWQ+L6vCa88NDhBaO/sxddQL38/UdH7ebQlZLEyEFaV/0owbgmpIgMO4Lxt1JZVThfSIwKGZtS1WkmN6V6tXTlzNI=
+	t=1729539529; cv=none; b=l1+KxgfPGX+VHBWaKagTZJ615bhriQDD+W2iKF4cs01Oba6lRHd53RUaK+HUtuNsaxptAfU9xvkVq8KpB4WZSxliACNTcgXhRGb7H2QkPH92wwuKphQX06ivw1SWaQTSK31wes1Jo77L2RHGkQ+Dqt4MVCJlHCYDofSBAVqOtKs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729539528; c=relaxed/simple;
-	bh=54jwoouqgKE0bVqr3uFQHW/WkkHaCd/oyMvONoJ0cjU=;
+	s=arc-20240116; t=1729539529; c=relaxed/simple;
+	bh=lZwCDmTUI6g1I9S6SAz3J2/xTEjocHuMzIu/W4MxzkY=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Esgnmx8QUip6fMQ7pHdMKicQaSBQzQxVeXuNpfjFVaAJMCNXt8crAb8tvZd3KUUqTGUlUaeBjMzwAWHj96WoU9gAs1VSg65KrAHtkd3C1058fRD41Gq3GyyWmSeh4ixl8XJC+dmaA6sCBnfI//0pb412fTa2GoQ/S75KWSoTQqY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=squebb.ca; spf=pass smtp.mailfrom=squebb.ca; dkim=pass (2048-bit key) header.d=squebb.ca header.i=@squebb.ca header.b=B1suubmc; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=Z6zH1OIj; arc=none smtp.client-ip=103.168.172.150
+	 MIME-Version; b=QEzRp3vbkLHxf/C6CrMNPsgBrZZPubz/XzL77lRos8ALUKcPw7ewsx300JZm4l7D+6/FtCTYR2UGjIUp/mi0/cSrs8bp/MM3Zy2NlINU24krvDH4WxwoOH6u+FXjtmaA5KUfzvXAZk+FXBvlYWwCbq3SqzOoaoQJUATVPu5D48I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=squebb.ca; spf=pass smtp.mailfrom=squebb.ca; dkim=pass (2048-bit key) header.d=squebb.ca header.i=@squebb.ca header.b=kaQoGZz0; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=LmTpB6cj; arc=none smtp.client-ip=103.168.172.150
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=squebb.ca
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=squebb.ca
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=squebb.ca header.i=@squebb.ca header.b="B1suubmc";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="Z6zH1OIj"
-Received: from phl-compute-05.internal (phl-compute-05.phl.internal [10.202.2.45])
-	by mailfout.phl.internal (Postfix) with ESMTP id AA82813802EA;
-	Mon, 21 Oct 2024 15:38:44 -0400 (EDT)
+	dkim=pass (2048-bit key) header.d=squebb.ca header.i=@squebb.ca header.b="kaQoGZz0";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="LmTpB6cj"
+Received: from phl-compute-01.internal (phl-compute-01.phl.internal [10.202.2.41])
+	by mailfout.phl.internal (Postfix) with ESMTP id 0F7E613801D7;
+	Mon, 21 Oct 2024 15:38:46 -0400 (EDT)
 Received: from phl-mailfrontend-01 ([10.202.2.162])
-  by phl-compute-05.internal (MEProxy); Mon, 21 Oct 2024 15:38:44 -0400
+  by phl-compute-01.internal (MEProxy); Mon, 21 Oct 2024 15:38:46 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=squebb.ca; h=cc
 	:cc:content-transfer-encoding:content-type:date:date:from:from
 	:in-reply-to:in-reply-to:message-id:mime-version:references
-	:reply-to:subject:subject:to:to; s=fm1; t=1729539524; x=
-	1729625924; bh=LE2Hk0JKN4Kf5sI0bnT9emdXdEal6XnN2BMhL9CtIWs=; b=B
-	1suubmcTwhSmTm8CJzrBvOAAUvImE8mUJG0Z3n28qkFDJmWrfqgHpcGRcbolhWYL
-	H/jsOgPpkyrZOQJFsnG/kxxLVM4wB+ELsMpyHOGgjw0GXyou3KjZcwSdYI3CCNL3
-	t9hxZCfMUi98KfCGV1beM/OX1uwLfaJOqz11gME5ifvGPK4Z4TGo1Y2lqrRXi0jC
-	WeodFYgV1Iq/H9ZigHoyU6i5PobZfqspAdjlQzrtP4+KSqa2jUwR0+AnATi0imT2
-	3U72sM5DoCK+PMjjIVwxcEwAnQJ70Oq3OQdS9te3w0BWvW7mrbTZgkYezMzDJj67
-	mRr33ZJcq+c1Yhx6Tr6Ug==
+	:reply-to:subject:subject:to:to; s=fm1; t=1729539526; x=
+	1729625926; bh=X9MLRegjfbLwd211osFWUaLWw79vYWXYz6OILq6zoV4=; b=k
+	aQoGZz0nC7tJqwr+DOL1jZmfAtmsQ8YWsaasB2ZVHJrOA7wDl+j/lK7KpG749EHU
+	lCR+Y4saHQ+4vJOt6Mrz+AfQskwpR24NEcFh/tb0YtlSCaiCsh8PWglLUDALxG04
+	+gTEomO5dXDQPEudgTcOtz+EjsB5k5irOZSFw3rNWHHa4eaS2YjxeJz89/ZzOJiN
+	xOZknKFsLKXwCs0zIWQwP2os43BSCoDr/fe38a86UOXkYvYvTmcLrLFaHQshLKWM
+	3J3+Ds/s0xDgNMKo4WOMu+E/5uuEvCxtgyCoGojtrcdbI+hfBAupAvsVEY4TiWie
+	ilGRhwncSdbQxJv2Oj/HQ==
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
 	messagingengine.com; h=cc:cc:content-transfer-encoding
 	:content-type:date:date:feedback-id:feedback-id:from:from
 	:in-reply-to:in-reply-to:message-id:mime-version:references
 	:reply-to:subject:subject:to:to:x-me-proxy:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=1729539524; x=
-	1729625924; bh=LE2Hk0JKN4Kf5sI0bnT9emdXdEal6XnN2BMhL9CtIWs=; b=Z
-	6zH1OIjfdDjS5OhpBHWkd7j7a2ydqf+kDjpwcHONPlvFOzZvIFU7QLp16OiUiT4u
-	eey5suMIz86gSXHXfR/QBLcNxi+tYq/lwLtbno8gmD9vJIcdUKUTOWcSICGoOWuP
-	kUoeWM8DZxUz+zT8Uc7G46WExukXHcaYn369iLZg9dyG15M38mnQ5zxmqZLgqaSI
-	JDt0nakod5m1Wu+s56qjZ/hk33hWrPpiyNflYpV2fmw2D7N29p7sI/xBDcTDK2BG
-	C5I2V9T9l65Q2EIaSLWLCGobhoENgwm5kon9SBl4cN2hoxDQPpVERzmiJRemL4Gb
-	mVgeljUeVJxWZ2udAExzA==
-X-ME-Sender: <xms:xK0WZyQbOIWvI2CFDWbXJpeGq6QHdye3LjxGh44DUQRcce7mQESfdg>
-    <xme:xK0WZ3wCbKZS3UhuoTUQUXxJJqtkSy0HQcX5BBwOc0fHTR7XJUBSYxY-RQp1NHZmr
-    CvWh1f_g6olxs8sLAY>
-X-ME-Received: <xmr:xK0WZ_3O6K8ojBpJGgCvL3z0G2Xr6RmBtXcNSLyV-vdh1ZKUHV3r24r2MPvjzyFAJ9KL6KYxUpsEtv_k-kWRjeJ3K3m1FbAirfcIgxlF6rlcGfJ6WV-rgcch-jytdg>
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=1729539526; x=
+	1729625926; bh=X9MLRegjfbLwd211osFWUaLWw79vYWXYz6OILq6zoV4=; b=L
+	mTpB6cjzVkHZlOHhDugCPAggYMfxSE8MBEsppwNX7Zfy6JsqrFtElIeRCVWTNceQ
+	HZcfi5PMZUIwYt36c5OJ94XyttYtOL+gmAaVdqWdRECMsuT78LS5fz5QBPtzcCMP
+	VN03+9iH79tMo4Adntx5FzB/7TL//KwhYao2e2735VjR5mrg+6fbaRGFK+63HSOQ
+	5dLBNAt1/Aft67rEv6286PsX6Hmta7ZpLhfvptjVkyoq+AM6I4eAfsaL24kw/15P
+	da/odSzFr7p6mV25hW6btQBy3dbYabF/E7zVx0xSl5MLbe1pnQLRtTL5kBY/EBfL
+	mR4DFBP0tSYS0PcOcp8JQ==
+X-ME-Sender: <xms:xa0WZ0XaKdwS4gDwXmtn18osr1ZUX6DcDQLxbCYg_2NT9TNtzA2XMQ>
+    <xme:xa0WZ4kJfq3x-3QIizFYA56eT7PGRs4Xh4WrhEj2eM7EvyRuytdb-UMrIABgxero4
+    Ey07kviyI2MVzHej9w>
+X-ME-Received: <xmr:xa0WZ4Z956qr0lRlS7EnMZccPkicMUEzUxo5x9F44M1o27ZKtQTzxsAwUChvmS5geIC20QhoHnGhzTF_JkELOIoK35g5OBpHR9DolBdSEds2UlXsd6FYf99BPUokZg>
 X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeftddrvdehledgudegtdcutefuodetggdotefrod
     ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpggftfghnshhusghstghrihgsvgdp
     uffrtefokffrpgfnqfghnecuuegrihhlohhuthemuceftddtnecuogetfedtuddqtdduuc
@@ -64,26 +64,27 @@ X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeftddrvdehledgudegtdcutefuodetgg
     hnvghnsehlihhnuhigrdhinhhtvghlrdgtohhmpdhrtghpthhtohepphhlrghtfhhorhhm
     qdgurhhivhgvrhdqgiekieesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhope
     hlihhnuhigqdhkvghrnhgvlhesvhhgvghrrdhkvghrnhgvlhdrohhrgh
-X-ME-Proxy: <xmx:xK0WZ-DbNowvML_uJrB8rH-GYW6tBKA0Vk4crB-0pnSJirJY5QZSJw>
-    <xmx:xK0WZ7iiqiuOVF8xhWnlJoH9JgyJZUad9M-6HKADoqdoiCOnGgA2tg>
-    <xmx:xK0WZ6o0X_gEgNF5tC_pkgvErsmjmk-79tY9Yfa0rpTpXQrLPsklig>
-    <xmx:xK0WZ-i5L7VavWEn7qDRaYsPWKj2BWX3jkvel_C9cll8z6rieXzjkg>
-    <xmx:xK0WZxaHvXv-wCOUKtcGpyhIijNwnUbhJ8VKy72STZFXbdYm83N1seSb>
+X-ME-Proxy: <xmx:xa0WZzVCwu_-9slOPbaHdNHtu7mzrZpfMo9SmCk5IckzKYe3UtycjQ>
+    <xmx:xa0WZ-mSUdhdsc3h4e-8OjOFd-cLGYAdWB3p6bcd4l_mm-EsCGdKOA>
+    <xmx:xa0WZ4d_a2IZwZa1VZhITDGPz-ivvtdHGn8NJvcKcdeoym7Drvjy7A>
+    <xmx:xa0WZwEoapEhk90MqdzsI5L9nKFWTS2QkTHj2Wj1R5RJZdlBDC_RrA>
+    <xmx:xq0WZ1stKccSpkwBMge_wVdEy4aIaE0XBlpLXeXgNtlzMcT4lsCjjsTA>
 Feedback-ID: ibe194615:Fastmail
 Received: by mail.messagingengine.com (Postfix) with ESMTPA; Mon,
- 21 Oct 2024 15:38:43 -0400 (EDT)
+ 21 Oct 2024 15:38:45 -0400 (EDT)
 From: Mark Pearson <mpearson-lenovo@squebb.ca>
 To: mpearson-lenovo@squebb.ca
 Cc: hdegoede@redhat.com,
 	ilpo.jarvinen@linux.intel.com,
 	platform-driver-x86@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH 1/4] platform/x86: think-lmi: improve check if BIOS account security enabled
-Date: Mon, 21 Oct 2024 15:38:23 -0400
-Message-ID: <20241021193837.7641-1-mpearson-lenovo@squebb.ca>
+Subject: [PATCH 3/4] platform/x86: think-lmi: Allow empty admin password
+Date: Mon, 21 Oct 2024 15:38:25 -0400
+Message-ID: <20241021193837.7641-3-mpearson-lenovo@squebb.ca>
 X-Mailer: git-send-email 2.47.0
-In-Reply-To: <mpearson-lenovo@squebb.ca>
+In-Reply-To: <20241021193837.7641-1-mpearson-lenovo@squebb.ca>
 References: <mpearson-lenovo@squebb.ca>
+ <20241021193837.7641-1-mpearson-lenovo@squebb.ca>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -92,150 +93,36 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Improve determination of whether authentication account is enabled by
-checking if either password or certificate is enabled.
+SVP = BIOS Supervisor/Admin password
+SMP = BIOS System password
 
-Renamed valid to pwd_enabled for better readability.
+If SMP ACL is enabled in the BIOS then the system allows you to set the
+SMP without a SVP password configured. Change code to allow this.
+BIOS will return permissions error if SVP is required.
 
 Signed-off-by: Mark Pearson <mpearson-lenovo@squebb.ca>
 ---
- drivers/platform/x86/think-lmi.c | 26 +++++++++++++-------------
- drivers/platform/x86/think-lmi.h |  2 +-
- 2 files changed, 14 insertions(+), 14 deletions(-)
+ drivers/platform/x86/think-lmi.c | 7 ++++++-
+ 1 file changed, 6 insertions(+), 1 deletion(-)
 
 diff --git a/drivers/platform/x86/think-lmi.c b/drivers/platform/x86/think-lmi.c
-index 4cfb53206cb8..727a9400d406 100644
+index 46ab82fb2898..751e351dfc42 100644
 --- a/drivers/platform/x86/think-lmi.c
 +++ b/drivers/platform/x86/think-lmi.c
-@@ -391,7 +391,7 @@ static ssize_t is_enabled_show(struct kobject *kobj, struct kobj_attribute *attr
- {
- 	struct tlmi_pwd_setting *setting = to_tlmi_pwd_setting(kobj);
- 
--	return sysfs_emit(buf, "%d\n", setting->valid);
-+	return sysfs_emit(buf, "%d\n", setting->pwd_enabled || setting->cert_installed);
- }
- 
- static struct kobj_attribute auth_is_pass_set = __ATTR_RO(is_enabled);
-@@ -469,7 +469,7 @@ static ssize_t new_password_store(struct kobject *kobj,
+@@ -469,7 +469,12 @@ static ssize_t new_password_store(struct kobject *kobj,
  		if (ret)
  			goto out;
  
--		if (tlmi_priv.pwd_admin->valid) {
-+		if (tlmi_priv.pwd_admin->pwd_enabled) {
+-		if (tlmi_priv.pwd_admin->pwd_enabled) {
++		/*
++		 * Note admin password not always required if SMPControl enabled in BIOS,
++		 * So only set if it's configured.
++		 * Let BIOS figure it out - we'll get an error if operation not permitted
++		 */
++		if (tlmi_priv.pwd_admin->pwd_enabled && strlen(tlmi_priv.pwd_admin->password)) {
  			ret = tlmi_opcode_setting("WmiOpcodePasswordAdmin",
  					tlmi_priv.pwd_admin->password);
  			if (ret)
-@@ -777,7 +777,7 @@ static ssize_t certificate_store(struct kobject *kobj,
- 				new_cert, setting->signature);
- 	} else {
- 		/* This is a fresh install */
--		if (!setting->valid || !setting->password[0]) {
-+		if (!setting->pwd_enabled || !setting->password[0]) {
- 			kfree(new_cert);
- 			return -EACCES;
- 		}
-@@ -1019,7 +1019,7 @@ static ssize_t current_value_store(struct kobject *kobj,
- 		 * Workstation's require the opcode to be set before changing the
- 		 * attribute.
- 		 */
--		if (tlmi_priv.pwd_admin->valid && tlmi_priv.pwd_admin->password[0]) {
-+		if (tlmi_priv.pwd_admin->pwd_enabled && tlmi_priv.pwd_admin->password[0]) {
- 			ret = tlmi_opcode_setting("WmiOpcodePasswordAdmin",
- 						  tlmi_priv.pwd_admin->password);
- 			if (ret)
-@@ -1042,7 +1042,7 @@ static ssize_t current_value_store(struct kobject *kobj,
- 		else
- 			ret = tlmi_save_bios_settings("");
- 	} else { /* old non-opcode based authentication method (deprecated) */
--		if (tlmi_priv.pwd_admin->valid && tlmi_priv.pwd_admin->password[0]) {
-+		if (tlmi_priv.pwd_admin->pwd_enabled && tlmi_priv.pwd_admin->password[0]) {
- 			auth_str = kasprintf(GFP_KERNEL, "%s,%s,%s;",
- 					tlmi_priv.pwd_admin->password,
- 					encoding_options[tlmi_priv.pwd_admin->encoding],
-@@ -1215,7 +1215,7 @@ static ssize_t save_settings_store(struct kobject *kobj, struct kobj_attribute *
- 			if (ret)
- 				goto out;
- 		} else if (tlmi_priv.opcode_support) {
--			if (tlmi_priv.pwd_admin->valid && tlmi_priv.pwd_admin->password[0]) {
-+			if (tlmi_priv.pwd_admin->pwd_enabled && tlmi_priv.pwd_admin->password[0]) {
- 				ret = tlmi_opcode_setting("WmiOpcodePasswordAdmin",
- 							  tlmi_priv.pwd_admin->password);
- 				if (ret)
-@@ -1223,7 +1223,7 @@ static ssize_t save_settings_store(struct kobject *kobj, struct kobj_attribute *
- 			}
- 			ret = tlmi_save_bios_settings("");
- 		} else { /* old non-opcode based authentication method (deprecated) */
--			if (tlmi_priv.pwd_admin->valid && tlmi_priv.pwd_admin->password[0]) {
-+			if (tlmi_priv.pwd_admin->pwd_enabled && tlmi_priv.pwd_admin->password[0]) {
- 				auth_str = kasprintf(GFP_KERNEL, "%s,%s,%s;",
- 						     tlmi_priv.pwd_admin->password,
- 						     encoding_options[tlmi_priv.pwd_admin->encoding],
-@@ -1273,7 +1273,7 @@ static ssize_t debug_cmd_store(struct kobject *kobj, struct kobj_attribute *attr
- 	if (!new_setting)
- 		return -ENOMEM;
- 
--	if (tlmi_priv.pwd_admin->valid && tlmi_priv.pwd_admin->password[0]) {
-+	if (tlmi_priv.pwd_admin->pwd_enabled && tlmi_priv.pwd_admin->password[0]) {
- 		auth_str = kasprintf(GFP_KERNEL, "%s,%s,%s;",
- 				tlmi_priv.pwd_admin->password,
- 				encoding_options[tlmi_priv.pwd_admin->encoding],
-@@ -1637,14 +1637,14 @@ static int tlmi_analyze(void)
- 		goto fail_clear_attr;
- 
- 	if (tlmi_priv.pwdcfg.core.password_state & TLMI_PAP_PWD)
--		tlmi_priv.pwd_admin->valid = true;
-+		tlmi_priv.pwd_admin->pwd_enabled = true;
- 
- 	tlmi_priv.pwd_power = tlmi_create_auth("pop", "power-on");
- 	if (!tlmi_priv.pwd_power)
- 		goto fail_clear_attr;
- 
- 	if (tlmi_priv.pwdcfg.core.password_state & TLMI_POP_PWD)
--		tlmi_priv.pwd_power->valid = true;
-+		tlmi_priv.pwd_power->pwd_enabled = true;
- 
- 	if (tlmi_priv.opcode_support) {
- 		tlmi_priv.pwd_system = tlmi_create_auth("smp", "system");
-@@ -1652,7 +1652,7 @@ static int tlmi_analyze(void)
- 			goto fail_clear_attr;
- 
- 		if (tlmi_priv.pwdcfg.core.password_state & TLMI_SMP_PWD)
--			tlmi_priv.pwd_system->valid = true;
-+			tlmi_priv.pwd_system->pwd_enabled = true;
- 
- 		tlmi_priv.pwd_hdd = tlmi_create_auth("hdd", "hdd");
- 		if (!tlmi_priv.pwd_hdd)
-@@ -1670,7 +1670,7 @@ static int tlmi_analyze(void)
- 			/* Check if PWD is configured and set index to first drive found */
- 			if (tlmi_priv.pwdcfg.ext.hdd_user_password ||
- 					tlmi_priv.pwdcfg.ext.hdd_master_password) {
--				tlmi_priv.pwd_hdd->valid = true;
-+				tlmi_priv.pwd_hdd->pwd_enabled = true;
- 				if (tlmi_priv.pwdcfg.ext.hdd_master_password)
- 					tlmi_priv.pwd_hdd->index =
- 						ffs(tlmi_priv.pwdcfg.ext.hdd_master_password) - 1;
-@@ -1680,7 +1680,7 @@ static int tlmi_analyze(void)
- 			}
- 			if (tlmi_priv.pwdcfg.ext.nvme_user_password ||
- 					tlmi_priv.pwdcfg.ext.nvme_master_password) {
--				tlmi_priv.pwd_nvme->valid = true;
-+				tlmi_priv.pwd_nvme->pwd_enabled = true;
- 				if (tlmi_priv.pwdcfg.ext.nvme_master_password)
- 					tlmi_priv.pwd_nvme->index =
- 						ffs(tlmi_priv.pwdcfg.ext.nvme_master_password) - 1;
-diff --git a/drivers/platform/x86/think-lmi.h b/drivers/platform/x86/think-lmi.h
-index e1975ffebeb4..4728f40143a3 100644
---- a/drivers/platform/x86/think-lmi.h
-+++ b/drivers/platform/x86/think-lmi.h
-@@ -65,7 +65,7 @@ struct tlmi_pwdcfg {
- /* password setting details */
- struct tlmi_pwd_setting {
- 	struct kobject kobj;
--	bool valid;
-+	bool pwd_enabled;
- 	char password[TLMI_PWD_BUFSIZE];
- 	const char *pwd_type;
- 	const char *role;
 -- 
 2.47.0
 
