@@ -1,159 +1,216 @@
-Received: from mail-ed1-f50.google.com (mail-ed1-f50.google.com [209.85.208.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1179D1E5704
-	for <platform-driver-x86@vger.kernel.org>; Mon, 21 Oct 2024 10:45:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6BA9B1F1306
+	for <platform-driver-x86@vger.kernel.org>; Mon, 21 Oct 2024 10:48:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729507525; cv=none; b=D/67FtiOeIrpb/ccWgksDAxlnS4LtC9I1EySe/hfHX55jJ+Taadcak+HRdkMpl6yxVx+fm8uN/2EH5K+eWcA31dK22TU68msUAIqlYzdHk1HXjvN604NiWUlvCOrEGoJtmc36X3WrfhMInolBzbxP2IY+ZfChlIUUhi+ntFVy7s=
+	t=1729507715; cv=none; b=mB/xvoP7YHXR4jKrs/zPF3x1OL9Q2j4JABt78GVqs4AuzUXwoad8o6yTBnmNZ+IbFm+1lNZ1bL7v+zzFEV3fGr8faMkw6vKPEGAvZ5+B+iL6Desolx6McEtifkEA3/evp5AgPq/bLXKOgi1SQr745ErvycHy84x4pV9w+C7F9GY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729507525; c=relaxed/simple;
-	bh=WF27qBqFlxa47fR6RZgi2nrHC+6rRe7/Ai9CV0XlLus=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=XPZrG8c69EXwkg5fCcNFqFOE7m9d6O9I/Yvq3rAmMhGOcKdSHaHbag9pZE/1nfvmMf5voDL08Uitoc0ZVe6cEjFMF4CHlDqsLT3J68ywF4/DUna+4GaTdS2JC+IyyETCwhnQYc3jNQPCaVtlrSTyqs870FuPG3ibhOmN/lxLxLc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=DQ/VzsKu; arc=none smtp.client-ip=209.85.208.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
+	s=arc-20240116; t=1729507715; c=relaxed/simple;
+	bh=Za20hkWHb8g6xU/7pSHyeQEEEaKbg0SSCDIUOUGt7bM=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=WJFKV7LkBvKHA8bY5D+VROqFX8myAAdCRgqPb9DT2O+HMzWXr5hZznFvEBX4TbNsOI1n0Xyc8ruWXTkpPoUR5vnt+IXxGHNp0sdPO5myS+ydY/G3Th4PFrg2Pf0OX6m8TASdCvpaJD4nP7J9PJFGSGA6QM2nmCWphc/9Kxe0vK0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=iA/GypSd; arc=none smtp.client-ip=192.198.163.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="DQ/VzsKu"
-Received: by mail-ed1-f50.google.com with SMTP id 4fb4d7f45d1cf-5c957d8bce2so1993548a12.2
-        for <platform-driver-x86@vger.kernel.org>; Mon, 21 Oct 2024 03:45:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1729507520; x=1730112320; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=k3Cby4XV9gflu8W/UxOMiO5p42AshZvdOYCZUKwbt7o=;
-        b=DQ/VzsKuDUxw0swuadk8uxTH+gagVMXHbiqr8RIyFLOYzuIxbYVP08TJCJ1MsttCCk
-         mLa7rPsZM+944+JzqNlHb/0Y4E7L6jfPo0smcfcbGZP2dVsUbsjLmFnYe2O24G2KycH/
-         pkJtJA69wmJGwPqsEGTA9C5r0X/K53Dt49kWQOXtlw+8GHd4SNt0G0P6UPgyv3ojHdCp
-         EsEsjsxFC/ifp48sqxIZcS+tavjoD+dLcs31fwbtTMOYFukcoZRkS0gMG8rABmYV7UTh
-         wr8A9co6qCNwFxLXTlzRYZct9c2Q48etivH9WmySHjBYmhPJu9+fXCWzrw+0gnLyp5Tp
-         HG4Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1729507520; x=1730112320;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=k3Cby4XV9gflu8W/UxOMiO5p42AshZvdOYCZUKwbt7o=;
-        b=vyqfEfzCLbIs4SDjb7LAIV4rXdiytioK07k7pj0uUP6u/c1pE0Cn+nFwZXL/dzvXTk
-         7zqpPo18GfegtC7/HBOB+/1uWre6i3ymah+7MTCUyZj26cGHAEn9xltKyFn2yzlkwFFr
-         qmGZhl0EjhNieBaduPgl1nn+FHgRIC2hb24BEtY/vlC+eEZMVrQY1WAB7sMryEJgM9Wp
-         8DBneMapUCMJF619PBqTC1Ejx7B0B15bzhBHup4Q/PZ5yGdcvFXTIOHSab+HUWWwJA9L
-         Jig8/7ocEMf6lLj+gkYM/YL0+lI+HiCc7VXROF+V1wRqKElft059lhRfaO45kJIfa2fG
-         VUXw==
-X-Forwarded-Encrypted: i=1; AJvYcCXTsm/OeqoqP4uwHrGSQgYaNXCx0e5WIOdcSgNYcK7HSBRkE7WYzP6Q5wIl2XB/PqW5xvPGnCz1TJOdXPvfO6yGFESt@vger.kernel.org
-X-Gm-Message-State: AOJu0YwELuSoCwFFPxvnQaBPc9tkDs/uoD+ex8u/GYRRahQKf//Ybcrw
-	5g+GW3uLsExvITCXikldHMbU+PXHYA5xMggovjNUNIY5jLCpDGlfOpBRAiUF3RQ=
-X-Google-Smtp-Source: AGHT+IEhQ3lbc8bcTJ8PlVXWeGqp6K4dGB5VDI8ZZrvz+LFlAzQU+b1XSNKxL45fg2rsrolynjs5Iw==
-X-Received: by 2002:a05:6402:51ca:b0:5c9:5928:970 with SMTP id 4fb4d7f45d1cf-5ca0ac61c0bmr12512201a12.19.1729507520113;
-        Mon, 21 Oct 2024 03:45:20 -0700 (PDT)
-Received: from localhost (p50915d2d.dip0.t-ipconnect.de. [80.145.93.45])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5cb6696b4dcsm1900917a12.4.2024.10.21.03.45.19
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 21 Oct 2024 03:45:19 -0700 (PDT)
-From: =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>
-To: Arnd Bergmann <arnd@arndb.de>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Suraj Jitindar Singh <sjitindarsingh@gmail.com>,
-	Michael Ellerman <mpe@ellerman.id.au>,
-	Nicholas Piggin <npiggin@gmail.com>,
-	Christophe Leroy <christophe.leroy@csgroup.eu>,
-	Naveen N Rao <naveen@kernel.org>,
-	Madhavan Srinivasan <maddy@linux.ibm.com>,
-	Mattia Dongili <malattia@linux.it>,
-	Michal Simek <michal.simek@amd.com>,
-	Eli Billauer <eli.billauer@gmail.com>,
-	Javier Carrasco <javier.carrasco.cruz@gmail.com>,
-	Dan Carpenter <dan.carpenter@linaro.org>,
-	linuxppc-dev@lists.ozlabs.org,
-	platform-driver-x86@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org
-Subject: [PATCH] char: Switch back to struct platform_driver::remove()
-Date: Mon, 21 Oct 2024 12:45:10 +0200
-Message-ID: <20241021104511.405661-2-u.kleine-koenig@baylibre.com>
-X-Mailer: git-send-email 2.45.2
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="iA/GypSd"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1729507713; x=1761043713;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=Za20hkWHb8g6xU/7pSHyeQEEEaKbg0SSCDIUOUGt7bM=;
+  b=iA/GypSd3fxMAkA367GyKmI2ZzLERQvUzzgISI1dFGZ6eUDk8rPnESwX
+   sJfTSwU3XpgTNnmw6kAQD/RlDENmlN5KqSlmBUJm+DEmEO5kQGuGs0Pk8
+   VNA05aUZDtibtcx3a7mPkk7gYMaFkVQ8aRi8GkttSidBEZzTFn5F8lxw4
+   j51Jm2QaB/va1EUIUyckzTVaKZpxiaJXDkkCn0s+DGn7Ukmdbjuf8nC0F
+   F7IzHJezw9TNjstDg1ah0IYJcFl36N1GtTbSL/5EqJMeqReW0cHCVZBt0
+   z01e5VaFrJ2hU3k7Hi+FmAMC36/N0nongGgoZTyMASnSYnsJACrzr7AAz
+   A==;
+X-CSE-ConnectionGUID: NJ1mBt+FQE2sXvQbmu+19w==
+X-CSE-MsgGUID: 4DU0C9DzTseqzgOUD+qN/Q==
+X-IronPort-AV: E=McAfee;i="6700,10204,11231"; a="28862593"
+X-IronPort-AV: E=Sophos;i="6.11,220,1725346800"; 
+   d="scan'208";a="28862593"
+Received: from fmviesa008.fm.intel.com ([10.60.135.148])
+  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Oct 2024 03:48:33 -0700
+X-CSE-ConnectionGUID: 06A/00d3Qq69LmriHHziwg==
+X-CSE-MsgGUID: NQulh/FGS+qHvBkDx/EcxQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.11,220,1725346800"; 
+   d="scan'208";a="79562083"
+Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.201])
+  by fmviesa008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Oct 2024 03:48:31 -0700
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Mon, 21 Oct 2024 13:48:28 +0300 (EEST)
+To: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
+cc: Hans de Goede <hdegoede@redhat.com>, platform-driver-x86@vger.kernel.org, 
+    Patil.Reddy@amd.com
+Subject: Re: [PATCH v2 4/5] platform/x86/amd/pmf: Switch to platform_get_resource()
+ and devm_ioremap_resource()
+In-Reply-To: <20241015103021.1843019-5-Shyam-sundar.S-k@amd.com>
+Message-ID: <0067f1f8-1efa-a7a2-0d7d-2ed4fe144308@linux.intel.com>
+References: <20241015103021.1843019-1-Shyam-sundar.S-k@amd.com> <20241015103021.1843019-5-Shyam-sundar.S-k@amd.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2801; i=u.kleine-koenig@baylibre.com; h=from:subject; bh=WF27qBqFlxa47fR6RZgi2nrHC+6rRe7/Ai9CV0XlLus=; b=owEBbQGS/pANAwAKAY+A+1h9Ev5OAcsmYgBnFjC3w6Kl7S70XmAcoWOq+It3bPB4+g2z0+2EQ UtyssaTcPmJATMEAAEKAB0WIQQ/gaxpOnoeWYmt/tOPgPtYfRL+TgUCZxYwtwAKCRCPgPtYfRL+ TpT2B/46n9Xt4qU9Wegsv/T7RB51fpED9noRiefgHo+uEsifrm2IjxEOl7NfbxZ1GEvbx2QRl5t zUHmzaViAgRoGfCHyBR6RIC6a5ckq8ybHJPzSJVlooIaghhldpod0/yXf0ge1mwIDJ/YTti8pVR RvDv2uKKLc3GYlg3Zf2amGdXucKqjVyMBECi81cHSWHjqRMsIcWozcyMfYEe1Kl9nWX44oRawC7 JqfJC5sLZKcmEtpGorzapBcnpoLp2CtJPb/9sp14y9GuLKiCwsOo8KuZbLXmBfhTnFd13QUYz7y ll/KDOfBPY2cAyoXl1jq/7tC8FXXuph8AGLiUnUKRfFZRuKO
-X-Developer-Key: i=u.kleine-koenig@baylibre.com; a=openpgp; fpr=0D2511F322BFAB1C1580266BE2DCDD9132669BD6
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
 
-After commit 0edb555a65d1 ("platform: Make platform_driver::remove()
-return void") .remove() is (again) the right callback to implement for
-platform drivers.
+On Tue, 15 Oct 2024, Shyam Sundar S K wrote:
 
-Convert all platform drivers matched by the "CHAR and MISC DRIVERS"
-maintainer's entry to use .remove(), with the eventual goal to drop
-struct platform_driver::remove_new(). As .remove() and .remove_new()
-have the same prototypes, conversion is done by just changing the
-structure member name in the driver initializer.
+> Use platform_get_resource() to fetch the memory resource instead of
+> acpi_walk_resources() and devm_ioremap_resource() for mapping the
+> resources.
+> 
+> Co-developed-by: Patil Rajesh Reddy <Patil.Reddy@amd.com>
+> Signed-off-by: Patil Rajesh Reddy <Patil.Reddy@amd.com>
+> Signed-off-by: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
+> ---
+>  drivers/platform/x86/amd/pmf/Kconfig  |  1 +
+>  drivers/platform/x86/amd/pmf/acpi.c   | 37 ++++++++-------------------
+>  drivers/platform/x86/amd/pmf/pmf.h    |  6 +++--
+>  drivers/platform/x86/amd/pmf/tee-if.c |  8 +++---
+>  4 files changed, 20 insertions(+), 32 deletions(-)
+> 
+> diff --git a/drivers/platform/x86/amd/pmf/Kconfig b/drivers/platform/x86/amd/pmf/Kconfig
+> index f4fa8bd8bda8..99d67cdbd91e 100644
+> --- a/drivers/platform/x86/amd/pmf/Kconfig
+> +++ b/drivers/platform/x86/amd/pmf/Kconfig
+> @@ -11,6 +11,7 @@ config AMD_PMF
+>  	select ACPI_PLATFORM_PROFILE
+>  	depends on TEE && AMDTEE
+>  	depends on AMD_SFH_HID
+> +	depends on HAS_IOMEM
+>  	help
+>  	  This driver provides support for the AMD Platform Management Framework.
+>  	  The goal is to enhance end user experience by making AMD PCs smarter,
+> diff --git a/drivers/platform/x86/amd/pmf/acpi.c b/drivers/platform/x86/amd/pmf/acpi.c
+> index d5b496433d69..2d871ff74fa7 100644
+> --- a/drivers/platform/x86/amd/pmf/acpi.c
+> +++ b/drivers/platform/x86/amd/pmf/acpi.c
+> @@ -433,37 +433,22 @@ int apmf_install_handler(struct amd_pmf_dev *pmf_dev)
+>  	return 0;
+>  }
+>  
+> -static acpi_status apmf_walk_resources(struct acpi_resource *res, void *data)
+> +int apmf_check_smart_pc(struct amd_pmf_dev *pmf_dev)
+>  {
+> -	struct amd_pmf_dev *dev = data;
+> +	struct platform_device *pdev = to_platform_device(pmf_dev->dev);
+>  
+> -	switch (res->type) {
+> -	case ACPI_RESOURCE_TYPE_ADDRESS64:
+> -		dev->policy_addr = res->data.address64.address.minimum;
+> -		dev->policy_sz = res->data.address64.address.address_length;
+> -		break;
+> -	case ACPI_RESOURCE_TYPE_FIXED_MEMORY32:
+> -		dev->policy_addr = res->data.fixed_memory32.address;
+> -		dev->policy_sz = res->data.fixed_memory32.address_length;
+> -		break;
+> -	}
+> -
+> -	if (!dev->policy_addr || dev->policy_sz > POLICY_BUF_MAX_SZ || dev->policy_sz == 0) {
+> -		pr_err("Incorrect Policy params, possibly a SBIOS bug\n");
+> -		return AE_ERROR;
+> +	pmf_dev->res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> +	if (!pmf_dev->res) {
+> +		dev_err(pmf_dev->dev, "Failed to get I/O memory resource\n");
+> +		return -EINVAL;
+>  	}
+>  
+> -	return AE_OK;
+> -}
+> +	pmf_dev->policy_addr = pmf_dev->res->start;
+> +	pmf_dev->policy_sz = pmf_dev->res->end - pmf_dev->res->start;
 
-Signed-off-by: Uwe Kleine-König <u.kleine-koenig@baylibre.com>
----
- drivers/char/powernv-op-panel.c            | 2 +-
- drivers/char/sonypi.c                      | 2 +-
- drivers/char/xilinx_hwicap/xilinx_hwicap.c | 2 +-
- drivers/char/xillybus/xillybus_of.c        | 2 +-
- 4 files changed, 4 insertions(+), 4 deletions(-)
+A small thing still, I realized this should really have a comment because 
+it has a big risk of getting "fixed".
 
-diff --git a/drivers/char/powernv-op-panel.c b/drivers/char/powernv-op-panel.c
-index f2cff1a6fed5..53467b0a6187 100644
---- a/drivers/char/powernv-op-panel.c
-+++ b/drivers/char/powernv-op-panel.c
-@@ -213,7 +213,7 @@ static struct platform_driver oppanel_driver = {
- 		.of_match_table	= oppanel_match,
- 	},
- 	.probe	= oppanel_probe,
--	.remove_new = oppanel_remove,
-+	.remove	= oppanel_remove,
- };
- 
- module_platform_driver(oppanel_driver);
-diff --git a/drivers/char/sonypi.c b/drivers/char/sonypi.c
-index 0f8185e541ed..f887569fd3d0 100644
---- a/drivers/char/sonypi.c
-+++ b/drivers/char/sonypi.c
-@@ -1467,7 +1467,7 @@ static struct platform_driver sonypi_driver = {
- 		.pm	= SONYPI_PM,
- 	},
- 	.probe		= sonypi_probe,
--	.remove_new	= sonypi_remove,
-+	.remove		= sonypi_remove,
- 	.shutdown	= sonypi_shutdown,
- };
- 
-diff --git a/drivers/char/xilinx_hwicap/xilinx_hwicap.c b/drivers/char/xilinx_hwicap/xilinx_hwicap.c
-index 4f6c3cb8aa41..34a345dc5e72 100644
---- a/drivers/char/xilinx_hwicap/xilinx_hwicap.c
-+++ b/drivers/char/xilinx_hwicap/xilinx_hwicap.c
-@@ -738,7 +738,7 @@ MODULE_DEVICE_TABLE(of, hwicap_of_match);
- 
- static struct platform_driver hwicap_platform_driver = {
- 	.probe = hwicap_drv_probe,
--	.remove_new = hwicap_drv_remove,
-+	.remove = hwicap_drv_remove,
- 	.driver = {
- 		.name = DRIVER_NAME,
- 		.of_match_table = hwicap_of_match,
-diff --git a/drivers/char/xillybus/xillybus_of.c b/drivers/char/xillybus/xillybus_of.c
-index 8802e2a6fd20..1a1e64133315 100644
---- a/drivers/char/xillybus/xillybus_of.c
-+++ b/drivers/char/xillybus/xillybus_of.c
-@@ -74,7 +74,7 @@ static void xilly_drv_remove(struct platform_device *op)
- 
- static struct platform_driver xillybus_platform_driver = {
- 	.probe = xilly_drv_probe,
--	.remove_new = xilly_drv_remove,
-+	.remove = xilly_drv_remove,
- 	.driver = {
- 		.name = xillyname,
- 		.of_match_table = xillybus_of_match,
+Also please describe what's going on here in the changelog (answer "why?") 
+since this is such a thing that people who look this code from history 
+have zero chance on figuring out the reasoning on their own.
 
-base-commit: 63b3ff03d91ae8f875fe8747c781a521f78cde17
 -- 
-2.45.2
+ i.
 
+> -int apmf_check_smart_pc(struct amd_pmf_dev *pmf_dev)
+> -{
+> -	acpi_handle ahandle = ACPI_HANDLE(pmf_dev->dev);
+> -	acpi_status status;
+> -
+> -	status = acpi_walk_resources(ahandle, METHOD_NAME__CRS, apmf_walk_resources, pmf_dev);
+> -	if (ACPI_FAILURE(status)) {
+> -		dev_dbg(pmf_dev->dev, "acpi_walk_resources failed :%d\n", status);
+> +	if (!pmf_dev->policy_addr || pmf_dev->policy_sz > POLICY_BUF_MAX_SZ ||
+> +	    pmf_dev->policy_sz == 0) {
+> +		dev_err(pmf_dev->dev, "Incorrect policy params, possibly a SBIOS bug\n");
+>  		return -EINVAL;
+>  	}
+>  
+> diff --git a/drivers/platform/x86/amd/pmf/pmf.h b/drivers/platform/x86/amd/pmf/pmf.h
+> index 8ce8816da9c1..a79808fda1d8 100644
+> --- a/drivers/platform/x86/amd/pmf/pmf.h
+> +++ b/drivers/platform/x86/amd/pmf/pmf.h
+> @@ -13,6 +13,7 @@
+>  
+>  #include <linux/acpi.h>
+>  #include <linux/input.h>
+> +#include <linux/platform_device.h>
+>  #include <linux/platform_profile.h>
+>  
+>  #define POLICY_BUF_MAX_SZ		0x4b000
+> @@ -355,19 +356,20 @@ struct amd_pmf_dev {
+>  	/* Smart PC solution builder */
+>  	struct dentry *esbin;
+>  	unsigned char *policy_buf;
+> -	u32 policy_sz;
+> +	resource_size_t policy_sz;
+>  	struct tee_context *tee_ctx;
+>  	struct tee_shm *fw_shm_pool;
+>  	u32 session_id;
+>  	void *shbuf;
+>  	struct delayed_work pb_work;
+>  	struct pmf_action_table *prev_data;
+> -	u64 policy_addr;
+> +	resource_size_t policy_addr;
+>  	void __iomem *policy_base;
+>  	bool smart_pc_enabled;
+>  	u16 pmf_if_version;
+>  	struct input_dev *pmf_idev;
+>  	size_t mtable_size;
+> +	struct resource *res;
+>  };
+>  
+>  struct apmf_sps_prop_granular_v2 {
+> diff --git a/drivers/platform/x86/amd/pmf/tee-if.c b/drivers/platform/x86/amd/pmf/tee-if.c
+> index 19c27b6e4666..555b8d6314e0 100644
+> --- a/drivers/platform/x86/amd/pmf/tee-if.c
+> +++ b/drivers/platform/x86/amd/pmf/tee-if.c
+> @@ -257,7 +257,7 @@ static int amd_pmf_invoke_cmd_init(struct amd_pmf_dev *dev)
+>  		return -ENODEV;
+>  	}
+>  
+> -	dev_dbg(dev->dev, "Policy Binary size: %u bytes\n", dev->policy_sz);
+> +	dev_dbg(dev->dev, "Policy Binary size: %llu bytes\n", dev->policy_sz);
+>  	memset(dev->shbuf, 0, dev->policy_sz);
+>  	ta_sm = dev->shbuf;
+>  	in = &ta_sm->pmf_input.init_table;
+> @@ -512,9 +512,9 @@ int amd_pmf_init_smart_pc(struct amd_pmf_dev *dev)
+>  	if (ret)
+>  		goto error;
+>  
+> -	dev->policy_base = devm_ioremap(dev->dev, dev->policy_addr, dev->policy_sz);
+> -	if (!dev->policy_base) {
+> -		ret = -ENOMEM;
+> +	dev->policy_base = devm_ioremap_resource(dev->dev, dev->res);
+> +	if (IS_ERR(dev->policy_base)) {
+> +		ret = PTR_ERR(dev->policy_base);
+>  		goto error;
+>  	}
+>  
+> 
