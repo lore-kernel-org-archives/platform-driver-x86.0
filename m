@@ -1,361 +1,164 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 88AB51547EE;
-	Tue, 22 Oct 2024 08:14:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3EB2D14EC4E;
+	Tue, 22 Oct 2024 08:51:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729584887; cv=none; b=lZXP6OY6aZ/bcNrE8IH/9K4H8l4ld7965GhCx3vkUmNn9ejhXJ5xRozpmSLB/p0zJNyrHIVNFxivaZbX3PKTgd8F4GjBC52ax0gRnsevU8Zv8TrEx5y03qMn1I0oYV1KPgnGpSmxG1V4KGXOE+Y0XSV7q2h++LVfNbqQLk4c6p8=
+	t=1729587099; cv=none; b=rws0qHrh4qKovx3n2r8ixXKPcQhsaH/vUNikeJpNizbpYMiJlFugYme/wpKe7rRmmC9kSgloPxKt3iK1Y2vd52QRyf/ySdBP5ieCP3183VUZHTpi1qHWGjCyxce5/s7+LFRfHfI6zGwKvpsl4qMSldttnsn7BHYDnQTsjDZVCUY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729584887; c=relaxed/simple;
-	bh=z9H87Oo1rqWSGDogdLSAaNqoSibq86I+DEkflnrb8zM=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=tnQgmTMdlreQzh/ElKURV63qTHPFB6Yi9Jvq5cMzN7o5cKCroJNdfopfglxBfH+3T62VWWRLxonHRdxBSUeH5zu7130MT2kpJybST/qoP159ZrOKoCEmG2gwEz0fuekgCy/vJ6JA5VL0MWDQ/0JsK95ynSwAvCQyio9TcpVAxVE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=UA6D2yrL; arc=none smtp.client-ip=192.198.163.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1729587099; c=relaxed/simple;
+	bh=qqV0Cw4G1rGc92pDeHBVr7u8eN+MvnuOQbCULxR7YYc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=aN/fPvvgioiBKg3fEmwlxEl5yvojjy9F0A2T4GSUk6yOXe1mQJVVKM/XU7MgQ8C+rWHxJzrF4JFAUUynVehxWUiMt5KBI/7ZsNVmwMDK21c+50EpSbHI/N5LuE3P4k61WeZfixinSTjw21mSKiE/cxm5jQ4KjZdnwG36PfbYVdI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GwqCG5zN; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="UA6D2yrL"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1729584886; x=1761120886;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=z9H87Oo1rqWSGDogdLSAaNqoSibq86I+DEkflnrb8zM=;
-  b=UA6D2yrLZAj0auKN1G/jY88Vq2JFwcnja9jqOBck/+OOeyC6LcJJjYJj
-   BW9XhECq16hnf1Sz8fm4H/iDkCaHqaR99IhiOS6HTmsEsIuQwu/ysuNHX
-   DUC6Lu98XK0AlqD5gqDWi5CfuMY5gxp7njetlEULUekXDLLr+nmE/2fLw
-   QCdCTd03vaJUn1n4Fxr90HYDtPnusiQ+njRhMIUfu/++/uJtIAC65lul1
-   o+Sb0TUpxY0KrHTOW0oJ9Hr7dulO++uBueUFGPJ7UmQKtRBoiba4/oXN5
-   LYUfryJcXuuIXZDfhf48BJaF0mCMpaZ7ZZgUBB2bAUZlcVJopylNflgwn
-   w==;
-X-CSE-ConnectionGUID: 1Isop3qaQuCfEBI0ZS1ptQ==
-X-CSE-MsgGUID: pAe5qsbKSVKy00V554YZuA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11232"; a="29306602"
-X-IronPort-AV: E=Sophos;i="6.11,222,1725346800"; 
-   d="scan'208";a="29306602"
-Received: from fmviesa007.fm.intel.com ([10.60.135.147])
-  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Oct 2024 01:14:45 -0700
-X-CSE-ConnectionGUID: r57HXnrZR1uMo4Rj3glekA==
-X-CSE-MsgGUID: 0j7d1Y+ESb2Zp4RRuDa+8Q==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.11,222,1725346800"; 
-   d="scan'208";a="79424610"
-Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.146])
-  by fmviesa007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Oct 2024 01:14:43 -0700
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Tue, 22 Oct 2024 11:14:39 +0300 (EEST)
-To: Mark Pearson <mpearson-lenovo@squebb.ca>
-cc: Hans de Goede <hdegoede@redhat.com>, platform-driver-x86@vger.kernel.org, 
-    LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 4/4] platform/x86: think-lmi: Multi-certificate support
-In-Reply-To: <20241021193837.7641-4-mpearson-lenovo@squebb.ca>
-Message-ID: <3635398e-f810-c42b-9c6e-f9e0bb19e298@linux.intel.com>
-References: <mpearson-lenovo@squebb.ca> <20241021193837.7641-1-mpearson-lenovo@squebb.ca> <20241021193837.7641-4-mpearson-lenovo@squebb.ca>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GwqCG5zN"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B9EA6C4CEC3;
+	Tue, 22 Oct 2024 08:51:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1729587098;
+	bh=qqV0Cw4G1rGc92pDeHBVr7u8eN+MvnuOQbCULxR7YYc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=GwqCG5zNGfobP04GollHwemOFiANjht8MfZD3gxpn6uaLoUFbUbYSTiaPR4Wt3laM
+	 t07Y8I07CLJh1SAAZ0QP4iwPUk5eMpI/pQfu7tJkPDEJKel5WyRt485nf0jItrY/Bw
+	 5+Wl1O5ruAySb/iltex/+2c52o5dPeejaTP4YF1utDh27taZx0TZBPPp3KD//DFz9Q
+	 A0T1OTMxxSkNixYaeV820T4xhY/xr5ttvfqMx6v0KWPfqemzYgL07bPO/15SrFSSzB
+	 58zoVib349eXauKxN1a0iDAPNm3QkKrOVckmrTab5kf4mrKmtIsc2H8up/cs3wVWuq
+	 ef5wX85Bd77Fg==
+Date: Tue, 22 Oct 2024 10:51:33 +0200
+From: Benjamin Tissoires <bentiss@kernel.org>
+To: Hans de Goede <hdegoede@redhat.com>
+Cc: Armin Wolf <W_Armin@gmx.de>, Pavel Machek <pavel@ucw.cz>, 
+	Werner Sembach <wse@tuxedocomputers.com>, Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>, 
+	dri-devel@lists.freedesktop.org, jelle@vdwaa.nl, jikos@kernel.org, lee@kernel.org, 
+	linux-input@vger.kernel.org, linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org, 
+	miguel.ojeda.sandonis@gmail.com, ojeda@kernel.org, onitake@gmail.com, 
+	platform-driver-x86@vger.kernel.org
+Subject: Re: [PATCH 1/1] platform/x86/tuxedo: Add virtual LampArray for
+ TUXEDO NB04 devices
+Message-ID: <kywhqw5ef6hioemoydwub57dcmfuu3bwqpz3vjur4pkabboydo@2hrqj3zy4txv>
+References: <sih5i2ausorlpiosifvj2vvlut4ok6bbgt6cympuxhdbjljjiw@gg2r5al552az>
+ <82a6eca1-728c-436f-8c4d-073d8a43ee27@tuxedocomputers.com>
+ <5crqia4gecxg62n2m2lf6haiifue4wlxrr3g35dyoaa3svjyuj@cd5bhouz5rlh>
+ <4a761cd0-611a-4245-8353-5c66ba133715@tuxedocomputers.com>
+ <rszv4p34oivysoyi337dxwooebipiikzd3pyq7rof5r3agbzce@xejutpd4jcfv>
+ <06c58141-4aa9-4b54-8ae4-e27069561ac9@tuxedocomputers.com>
+ <48a8d62f-ea3f-4f17-b917-ff3aaa83e89c@gmx.de>
+ <ZwlDpCPhieF3tezX@duo.ucw.cz>
+ <a796f0e7-47a8-40fa-a64e-9dd56117bf78@gmx.de>
+ <c52019d7-01b4-4585-a2d1-b44b0a773fc9@redhat.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <c52019d7-01b4-4585-a2d1-b44b0a773fc9@redhat.com>
 
-On Mon, 21 Oct 2024, Mark Pearson wrote:
-
-> Lenovo are adding support for both Admin and System certificates to
-> the certificate based authentication feature
+On Oct 22 2024, Hans de Goede wrote:
+> Hi Armin,
 > 
-> This commit adds the support for this.
+> On 21-Oct-24 10:26 PM, Armin Wolf wrote:
+> > Am 11.10.24 um 17:26 schrieb Pavel Machek:
+> > 
+> >> Hi!
+> >>
+> >>>> 1.
+> >>>> https://lore.kernel.org/all/6b32fb73-0544-4a68-95ba-e82406a4b188@gmx.de/
+> >>>> -> Should be no problem? Because this is not generally exposing wmi
+> >>>> calls, just mapping two explicitly with sanitized input (whitelisting
+> >>>> basically).
+> >>> It would be OK to expose a selected set of WMI calls to userspace and sanitizing the input of protect potentially buggy firmware from userspace.
+> >>>
+> >> I don't believe this is good idea. Passthrough interfaces where
+> >> userland talks directly to hardware are very tricky.
+> >>
+> >>> Regarding the basic idea of having a virtual HID interface: i would prefer to create a illumination subsystem instead, but i have to agree that we should be doing this
+> >>> only after enough drivers are inside the kernel, so we can design a
+> >>> suitable interface for them. For now, creating a virtual HID
+> >>> interface seems to be good enough.
+> >> I have an RGB keyboard, and would like to get it supported. I already
+> >> have kernel driver for LEDs (which breaks input functionality). I'd
+> >> like to cooperate on "illumination" subsystem.
+> >>
+> >> Best regards,
+> >>                                 Pavel
+> > 
+> > Sorry for taking a bit long to respond.
+> > 
+> > This "illumination" subsystem would (from my perspective) act like some sort of LED subsystem
+> > for devices with a high count of LEDs, like some RGB keyboards.
+> > 
+> > This would allow us too:
+> > - provide an abstract interface for userspace applications like OpenRGB
+> > - provide an generic LED subsystem emulation on top of the illumination device (optional)
+> > - support future RGB controllers in a generic way
+> > 
+> > Advanced features like RGB effects, etc can be added later should the need arise.
+> > 
+> > I would suggest that we model it after the HID LampArray interface:
+> > 
+> > - interface for querying:
+> >  - number of LEDs
+> >  - supported colors, etc of those LEDs
+> >  - position of those LEDs if available
+> >  - kind (keyboard, ...)
+> >  - latency, etc
+> > - interface for setting multiple LEDs at once
+> > - interface for setting a range of LEDs at once
+> > - interface for getting the current LED colors
+> > 
+> > Since sysfs has a "one value per file" rule, i suggest that we use a chardev interface
+> > for querying per-LED data and for setting/getting LED colors.
+> > 
+> > I do not know if mixing sysfs (for controller attributes like number of LEDs, etc) and IOCTL
+> > (for setting/getting LED colors) is a good idea, any thoughts?
 > 
-> Signed-off-by: Mark Pearson <mpearson-lenovo@squebb.ca>
-> ---
->  .../testing/sysfs-class-firmware-attributes   |   1 +
->  drivers/platform/x86/think-lmi.c              | 141 ++++++++++++++----
->  drivers/platform/x86/think-lmi.h              |   4 +
->  3 files changed, 116 insertions(+), 30 deletions(-)
+> I wonder what the advantage of this approach is over simply using HID LampArray
+> (emulation), openRGB is already going to support HID LampArray and since Microsoft
+> is pushing this we will likely see it getting used more and more.
 > 
-> diff --git a/Documentation/ABI/testing/sysfs-class-firmware-attributes b/Documentation/ABI/testing/sysfs-class-firmware-attributes
-> index 1a8b59f5d6e3..2713efa509b4 100644
-> --- a/Documentation/ABI/testing/sysfs-class-firmware-attributes
-> +++ b/Documentation/ABI/testing/sysfs-class-firmware-attributes
-> @@ -303,6 +303,7 @@ Description:
->  					being configured allowing anyone to make changes.
->  					After any of these operations the system must reboot for the changes to
->  					take effect.
-> +					Admin and System certificates are supported from 2025 systems onward.
->  
->  		certificate_thumbprint:
->  					Read only attribute used to display the MD5, SHA1 and SHA256 thumbprints
-> diff --git a/drivers/platform/x86/think-lmi.c b/drivers/platform/x86/think-lmi.c
-> index 751e351dfc42..fca190232c24 100644
-> --- a/drivers/platform/x86/think-lmi.c
-> +++ b/drivers/platform/x86/think-lmi.c
-> @@ -169,11 +169,12 @@ MODULE_PARM_DESC(debug_support, "Enable debug command support");
->   */
->  #define LENOVO_CERT_THUMBPRINT_GUID "C59119ED-1C0D-4806-A8E9-59AA318176C4"
->  
-> -#define TLMI_POP_PWD BIT(0) /* Supervisor */
-> -#define TLMI_PAP_PWD BIT(1) /* Power-on */
-> -#define TLMI_HDD_PWD BIT(2) /* HDD/NVME */
-> -#define TLMI_SMP_PWD BIT(6) /* System Management */
-> -#define TLMI_CERT    BIT(7) /* Certificate Based */
-> +#define TLMI_POP_PWD  BIT(0) /* Supervisor */
-> +#define TLMI_PAP_PWD  BIT(1) /* Power-on */
-> +#define TLMI_HDD_PWD  BIT(2) /* HDD/NVME */
-> +#define TLMI_SMP_PWD  BIT(6) /* System Management */
-> +#define TLMI_CERT_SVC BIT(7) /* Admin Certificate Based */
-> +#define TLMI_CERT_SMC BIT(8) /* System Certificate Based */
->  
->  static const struct tlmi_err_codes tlmi_errs[] = {
->  	{"Success", 0},
-> @@ -678,18 +679,35 @@ static ssize_t cert_thumbprint(char *buf, const char *arg, int count)
->  	return count;
->  }
->  
-> +#define NUM_THUMBTYPES 3
-> +static char *thumbtypes[NUM_THUMBTYPES] = {"Md5", "Sha1", "Sha256"};
-> +
->  static ssize_t certificate_thumbprint_show(struct kobject *kobj, struct kobj_attribute *attr,
->  			 char *buf)
->  {
->  	struct tlmi_pwd_setting *setting = to_tlmi_pwd_setting(kobj);
-> -	int count = 0;
-> +	char *wmistr;
-> +	int count = 0, i;
-
-Reverse xmas-tree order.
-
->  
->  	if (!tlmi_priv.certificate_support || !setting->cert_installed)
->  		return -EOPNOTSUPP;
->  
-> -	count += cert_thumbprint(buf, "Md5", count);
-> -	count += cert_thumbprint(buf, "Sha1", count);
-> -	count += cert_thumbprint(buf, "Sha256", count);
-> +	for (i = 0; i < NUM_THUMBTYPES; i++) {
-
-Use ARRAY_SIZE() + add include for it.
-
-These days, the usual custom is to use unsigned int for loop variables 
-that are never meant to be negative.
-
-> +		if (tlmi_priv.pwdcfg.core.password_mode >= TLMI_PWDCFG_MODE_MULTICERT) {
-> +			/* Format: 'SVC | SMC, Thumbtype' */
-> +			wmistr = kasprintf(GFP_KERNEL, "%s,%s",
-> +					   setting == tlmi_priv.pwd_admin ? "SVC" : "SMC",
-> +					   thumbtypes[i]);
-> +		} else {
-> +			/* Format: 'Thumbtype' */
-> +			wmistr = kasprintf(GFP_KERNEL, "%s", thumbtypes[i]);
-> +		}
-> +		if (!wmistr)
-> +			return -ENOMEM;
-> +		count += cert_thumbprint(buf, wmistr, count);
-> +		kfree(wmistr);
-> +	}
-> +
->  	return count;
->  }
->  
-> @@ -720,8 +738,15 @@ static ssize_t cert_to_password_store(struct kobject *kobj,
->  	if (!passwd)
->  		return -ENOMEM;
->  
-> -	/* Format: 'Password,Signature' */
-> -	auth_str = kasprintf(GFP_KERNEL, "%s,%s", passwd, setting->signature);
-> +	if (tlmi_priv.pwdcfg.core.password_mode >= TLMI_PWDCFG_MODE_MULTICERT) {
-> +		/* Format: 'SVC | SMC, password, signature' */
-> +		auth_str = kasprintf(GFP_KERNEL, "%s,%s,%s",
-> +				     setting == tlmi_priv.pwd_admin ? "SVC" : "SMC",
-> +				     passwd, setting->signature);
-> +	} else {
-> +		/* Format: 'Password,Signature' */
-> +		auth_str = kasprintf(GFP_KERNEL, "%s,%s", passwd, setting->signature);
-> +	}
->  	if (!auth_str) {
->  		kfree_sensitive(passwd);
->  		return -ENOMEM;
-> @@ -735,12 +760,19 @@ static ssize_t cert_to_password_store(struct kobject *kobj,
->  
->  static struct kobj_attribute auth_cert_to_password = __ATTR_WO(cert_to_password);
->  
-> +enum cert_install_mode {
-> +	TLMI_CERT_INSTALL,
-> +	TLMI_CERT_UPDATE,
-> +};
-> +
->  static ssize_t certificate_store(struct kobject *kobj,
->  				  struct kobj_attribute *attr,
->  				  const char *buf, size_t count)
->  {
->  	struct tlmi_pwd_setting *setting = to_tlmi_pwd_setting(kobj);
-> +	enum cert_install_mode install_mode = TLMI_CERT_INSTALL;
->  	char *auth_str, *new_cert;
-> +	char *signature;
->  	char *guid;
->  	int ret;
->  
-> @@ -756,10 +788,18 @@ static ssize_t certificate_store(struct kobject *kobj,
->  		if (!setting->signature || !setting->signature[0])
->  			return -EACCES;
->  
-> -		/* Format: 'serial#, signature' */
-> -		auth_str = kasprintf(GFP_KERNEL, "%s,%s",
-> -				dmi_get_system_info(DMI_PRODUCT_SERIAL),
-> -				setting->signature);
-> +		if (tlmi_priv.pwdcfg.core.password_mode >= TLMI_PWDCFG_MODE_MULTICERT) {
-> +			/* Format: 'SVC | SMC, serial#, signature' */
-> +			auth_str = kasprintf(GFP_KERNEL, "%s,%s,%s",
-> +					     setting == tlmi_priv.pwd_admin ? "SVC" : "SMC",
-> +					     dmi_get_system_info(DMI_PRODUCT_SERIAL),
-> +					     setting->signature);
-> +		} else {
-> +			/* Format: 'serial#, signature' */
-> +			auth_str = kasprintf(GFP_KERNEL, "%s,%s",
-> +					     dmi_get_system_info(DMI_PRODUCT_SERIAL),
-> +					     setting->signature);
-> +		}
->  		if (!auth_str)
->  			return -ENOMEM;
->  
-> @@ -776,24 +816,59 @@ static ssize_t certificate_store(struct kobject *kobj,
->  
->  	if (setting->cert_installed) {
->  		/* Certificate is installed so this is an update */
-> -		if (!setting->signature || !setting->signature[0]) {
-> +		install_mode = TLMI_CERT_UPDATE;
-> +		/* If admin account enabled - need to use it's signature */
-> +		if (tlmi_priv.pwd_admin->pwd_enabled)
-> +			signature = tlmi_priv.pwd_admin->signature;
-> +		else
-> +			signature = setting->signature;
-> +	} else { /* Cert install */
-> +		/* Check if SMC and SVC already installed */
-> +		if ((setting == tlmi_priv.pwd_system) && tlmi_priv.pwd_admin->cert_installed) {
-> +			/* This gets treated as a cert update */
-> +			install_mode = TLMI_CERT_UPDATE;
-> +			signature = tlmi_priv.pwd_admin->signature;
-> +		} else { /* Regular cert install */
-> +			install_mode = TLMI_CERT_INSTALL;
-> +			signature = setting->signature;
-> +		}
-> +	}
-> +
-> +	if (install_mode == TLMI_CERT_UPDATE) {
-> +		/* This is a certificate update */
-> +		if (!signature || !signature[0]) {
->  			kfree(new_cert);
->  			return -EACCES;
->  		}
->  		guid = LENOVO_UPDATE_BIOS_CERT_GUID;
-> -		/* Format: 'Certificate,Signature' */
-> -		auth_str = kasprintf(GFP_KERNEL, "%s,%s",
-> -				new_cert, setting->signature);
-> +		if (tlmi_priv.pwdcfg.core.password_mode >= TLMI_PWDCFG_MODE_MULTICERT) {
-> +			/* Format: 'SVC | SMC, certificate, signature' */
-> +			auth_str = kasprintf(GFP_KERNEL, "%s,%s,%s",
-> +					     setting == tlmi_priv.pwd_admin ? "SVC" : "SMC",
-> +					     new_cert, signature);
-> +		} else {
-> +			/* Format: 'Certificate,Signature' */
-> +			auth_str = kasprintf(GFP_KERNEL, "%s,%s",
-> +					     new_cert, signature);
-> +		}
->  	} else {
->  		/* This is a fresh install */
-> -		if (!setting->pwd_enabled || !setting->password[0]) {
-> +		/* To set admin cert, a password must be enabled */
-> +		if ((setting == tlmi_priv.pwd_admin) &&
-> +		    (!setting->pwd_enabled || !setting->password[0])) {
->  			kfree(new_cert);
->  			return -EACCES;
->  		}
->  		guid = LENOVO_SET_BIOS_CERT_GUID;
-> -		/* Format: 'Certificate,Admin-password' */
-> -		auth_str = kasprintf(GFP_KERNEL, "%s,%s",
-> -				new_cert, setting->password);
-> +		if (tlmi_priv.pwdcfg.core.password_mode >= TLMI_PWDCFG_MODE_MULTICERT) {
-> +			/* Format: 'SVC | SMC, Certificate, password' */
-> +			auth_str = kasprintf(GFP_KERNEL, "%s,%s,%s",
-> +					     setting == tlmi_priv.pwd_admin ? "SVC" : "SMC",
-> +					     new_cert, setting->password);
-> +		} else {
-> +			/* Format: 'Certificate, password' */
-> +			auth_str = kasprintf(GFP_KERNEL, "%s,%s", new_cert, setting->password);
-> +		}
-
-Have you considered creating a helper for this if/else construct to create 
-the string? (you've basically repeated it multiple times by now with 
-limited change to only parameters AFAICT).
-
->  	}
->  	kfree(new_cert);
->  	if (!auth_str)
-> @@ -873,14 +948,19 @@ static umode_t auth_attr_is_visible(struct kobject *kobj,
->  		return 0;
->  	}
->  
-> -	/* We only display certificates on Admin account, if supported */
-> +	/* We only display certificates, if supported */
->  	if (attr == &auth_certificate.attr ||
->  	    attr == &auth_signature.attr ||
->  	    attr == &auth_save_signature.attr ||
->  	    attr == &auth_cert_thumb.attr ||
->  	    attr == &auth_cert_to_password.attr) {
-> -		if ((setting == tlmi_priv.pwd_admin) && tlmi_priv.certificate_support)
-> +		if (tlmi_priv.certificate_support) {
-> +			if (setting == tlmi_priv.pwd_admin)
-
-These two if()s combined look the same as the old ode, why are you redoing 
-it?
-
-> +				return attr->mode;
-> +		if ((tlmi_priv.pwdcfg.core.password_mode >= TLMI_PWDCFG_MODE_MULTICERT) &&
-> +		    (setting == tlmi_priv.pwd_system))
->  			return attr->mode;
-> +		}
->  		return 0;
->  	}
->  
-> @@ -1700,12 +1780,13 @@ static int tlmi_analyze(void)
->  		}
->  	}
->  
-> -	if (tlmi_priv.certificate_support &&
-> -		(tlmi_priv.pwdcfg.core.password_state & TLMI_CERT))
-> -		tlmi_priv.pwd_admin->cert_installed = true;
-> -
-> +	if (tlmi_priv.certificate_support) {
-> +		tlmi_priv.pwd_admin->cert_installed =
-> +			tlmi_priv.pwdcfg.core.password_state & TLMI_CERT_SVC;
-> +		tlmi_priv.pwd_system->cert_installed =
-> +			tlmi_priv.pwdcfg.core.password_state & TLMI_CERT_SMC;
-> +	}
->  	return 0;
-> -
-
-Stray change.
-
--- 
- i.
-
->  fail_clear_attr:
->  	for (i = 0; i < TLMI_SETTINGS_COUNT; ++i) {
->  		if (tlmi_priv.setting[i]) {
-> diff --git a/drivers/platform/x86/think-lmi.h b/drivers/platform/x86/think-lmi.h
-> index 4728f40143a3..f267d8b46957 100644
-> --- a/drivers/platform/x86/think-lmi.h
-> +++ b/drivers/platform/x86/think-lmi.h
-> @@ -41,6 +41,10 @@ enum save_mode {
->  };
->  
->  /* password configuration details */
-> +#define TLMI_PWDCFG_MODE_LEGACY    0
-> +#define TLMI_PWDCFG_MODE_PASSWORD  1
-> +#define TLMI_PWDCFG_MODE_MULTICERT 3
-> +
->  struct tlmi_pwdcfg_core {
->  	uint32_t password_mode;
->  	uint32_t password_state;
+> Using HID LampArray also has the advantage that work has landed and is landing
+> to allow safely handing over raw HID access to userspace programs or even
+> individual graphical apps with the option to revoke that access when it is
+> no longer desired for the app to have access.
 > 
+> HID LampArray gives us a well designed API + a safe way to give direct access
+> to e.g. games to control the lighting. I really don't see the advantage of
+> inventing our own API here only to then also have to design + code some way to
+> safely give access to sandboxed apps.
+> 
+> Note that giving access to sandboxed apps is a lot of work, it is not just
+> kernel API it also requires designing a portal interface + implementing
+> that portal for at least GNOME, KDE and wlroots.
+> 
+> Personally I really like the idea to just emulate a HID LampArray device
+> for this instead or rolling our own API.  I believe there need to be
+> strong arguments to go with some alternative NIH API and I have not
+> heard such arguments yet.
 
+Agreed on everything Hans said.
+
+I'll personnaly fight against any new "illumination" API as long as we
+don't have committed users. This is the same policy the DRM folks are
+applying and it makes a lot of sense:
+We can devise a lot about this new API, but if we don't have users for
+it, it's energy wasted.
+
+When I mean users, I'm not talking about an example in the kernel tree
+or some quick prototype. I mean talking to the existing folks already
+doing that and getting their stamp of approval and have an actual
+integrated prototype.
+
+We know that OpenRGB and probably others will implement LampArray, if
+not for Linux, at least for Mac and Windows. So we will have users for
+this protocol. A new Linux specific protocol should be discussed with
+them, but I doubt that they'll be happy writing an entirely new
+abstraction layer because of Linux.
+
+Cheers,
+Benjamin
