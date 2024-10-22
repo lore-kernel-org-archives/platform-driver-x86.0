@@ -1,67 +1,66 @@
-Received: from NAM10-DM6-obe.outbound.protection.outlook.com (mail-dm6nam10on2078.outbound.protection.outlook.com [40.107.93.78])
+Received: from NAM11-DM6-obe.outbound.protection.outlook.com (mail-dm6nam11on2083.outbound.protection.outlook.com [40.107.223.83])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA18813A899
-	for <platform-driver-x86@vger.kernel.org>; Tue, 22 Oct 2024 05:54:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.93.78
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C2D0A135A79;
+	Tue, 22 Oct 2024 05:59:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.223.83
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729576470; cv=fail; b=Um+gIiEsU1PV8Pv0BJW+g+UV4uxvvLfzw6Bs0u3CQfhrhvbDqcVD2H6jYFQNN3Gkia8jQFOL46OV8UL71B1uT6RV0veOWGjBI0kOQI942Z5CT7INkXZUJnZ4+wntG4nk6wQ35T3Z8+4AhcBsfLuCfCGvHPJo7bCy0hH7mufdAAE=
+	t=1729576770; cv=fail; b=GGfXeq/ngXJYb04aGULeZRl65T1ZyWOTXNxHD1ZgocdB9hh5CdILDpx7yYlLmRpI4gZ0uMcJt5fVI2n0IYDKM+q258UqnS+mhQw9pmVgXYvgTYdk2+lgn0h7UKf+S2CvxCtosvDC92xpcwu+hl4Z51IEP7z8iNJsUp/VOXeiB40=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729576470; c=relaxed/simple;
-	bh=A2Hvg9c1mFvDOu1ukGokUsH1Yebs1K29+3KuFrI0124=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=pGUTeEScXpuboyUveQvTa9o31m2hO13NAoixa5LU4kwYXgGmJX7xE3DvWLATtmX1JiAvyoHtEyhOKz4ZX955zFTs88keKPEoVCEEXdqnGIOTvRQujvSMl9Ft4IqSaPzxmJ0oestDXPLiapoMuNmltySy/xxsWcPeVzuLpD9dOT8=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=QHJQSshj; arc=fail smtp.client-ip=40.107.93.78
+	s=arc-20240116; t=1729576770; c=relaxed/simple;
+	bh=6Z3Ow94PThh4JWBT9Yj66+wl5Y83g2EJFXDhHsiYJ+w=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=Ux0guNIjnA6DAlxABTzLNf2GOCfPMBeagKK7CQoUa9zQRWbVZHDy+C8WIzGnUXKlT71X0KbkVQGZbM23qAniQXORzkxL58gILopjHla9iSeNNmPPfIyf9UU3nJkzlKHFUChVtvOj1hzBLpGM73pzQMuu4X6xvCY7cy5IFhbiEl4=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=EVlCzZLR; arc=fail smtp.client-ip=40.107.223.83
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
 Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="QHJQSshj"
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="EVlCzZLR"
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=RuTxns0P/MjC+xGSrnlZFtZaJprtUgFR4QiHNZIeI9y3ufw/2GRzmfK5Dpfgr6PhiSw8H1P3X6wzjuTbMXTc/Gf/EJwBWGEhB04Pgg2U3D/xWzS5c1lnMCsWSnNHhu32wGuzA/GyHjsQlU6ep+JrqMPt79gA9/O0sEv3IkAjQ8jVoLrnp9Ojzw+4hFdAnXrF+HHVxqeppMcRhwBKI7maSz8rwxv3srYjSbueoGZ+md4snCgUml0seKNmRydSwbtjUuvOzycYCTdMorGwP8YRMgMQhL8+ESEdpHXww1lTZkXzKl4HLDbRFfqxO21kt19d5r7/majhwM/Sm4u9R+y21A==
+ b=YVVV2BGqk8cJaic1PukHFH/2dkGSr0MJfBVcc4+b6D6VVMrfzULwluHWxZG092l7bVGDGhBAN/WLfJgO4y85pQYw384gZyEYa3vJcVaue6ygzQKjHL66MCa2yyodvnkl/1U68jlg1FiGBlkYUsFynlZrPYMqcCPImmjcKephtG0KTU3KXBhyV/vdUW52NpaqwU6q750NGjWSnB8fAsvNqF45dRSKaEmuLYDESjMf26pADHcSVbaFDf6GTuxaxz9/w9BMh2EaS+YrihYx9si09hTrRR4/Y5YB4d3YOJN+kMgwURysb4906mn6G86iDF3nZKBjbSwG/o8RKHFH8Y4OUQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=tbW9Nte7QQgkBVIjwauqsnmDvLuX3CQzbEAgn6Ni8b4=;
- b=vqfuWXPgRSQLGC6m1XMY3I4YAhLWZwj2oU8+oBsAtYDSdIpsLvlEMJOSzFTvxh3/MbQI3rwPaoCLX937YmeWn3KeYFE0dyVI6ZcPwn51FZ9d4nu8RMOwwjube36yKs4ddzv1C4+p3dvQzqf0s70EnXktMFv1Xq1RkMBtOUQsr8VEMiWYjYS58bIjBwfwwbR4ERpFeaLKmNgpqW0N2lIY7YTiKjlIOCwInBHXtifdvCVBcirUQmUc8ASLil8PbuETgSm+mWIWVcgkmRrt4cV9sTL3FJ6LE3eoV8ebLVXsnueYWuxaC9AqT7Zy3cyOIdPOhYLRUeqNoQNyF57rnNFg2w==
+ bh=a5XMRnKMJnvF5o8V4p0HMkERNM6E+FLeRnA03h3IgiY=;
+ b=EQJmm8htw2bHUbhKioAbAAaXHBEMzIB2J1kvux//6/n1fPTIn8aUJimo4w0vZJ6EFuAkQaQZbjl7P6LQhP7ct4ipwryCS7YnLBSicY8wXFg56K402PqRAzgMEkF5uK1TFTEg62BvciD329syULNIOAE9fVByZB+lAiunqMrv7d/AH14g8wUueDbQIjc7Afj6Tnlrze2EyH9+E5tqG4a6/Y7FByCRquMvqs0NT7DKYeFsC/yI6NgmI7V9UEM1hQ2lV5BlkzFErMQyWKBMKYXYN9kgb4ehHMs76NN66tJCADH4NOMeIRUqEtrC3vlSnKWwLjoNb0uLnaBRp2mYAPE4JQ==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
  header.d=amd.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=tbW9Nte7QQgkBVIjwauqsnmDvLuX3CQzbEAgn6Ni8b4=;
- b=QHJQSshjXwsuA8cCaDz+eVdbaTlYAl4xu9Z1KrfHQZUqpukis0rZhilQGbuFLxhhNf9FCTE9Ce5qsVgCQVhljKKoO5nCnLRD/+hTgEWzpGlpNXYFHluEjQXcvFU7sLc+uw5UiyZH97Y+FEN5g/kNsBhXroEkGad43FKwTq4OZp0=
+ bh=a5XMRnKMJnvF5o8V4p0HMkERNM6E+FLeRnA03h3IgiY=;
+ b=EVlCzZLRnW61Q+aoJwYZXymn3OTD7izC/8bOot0mWdo+HKvOrcDZaNVqmQFMv36xUH4RYh8se/A9lVBj1/sgwlIAdLQyPPcg5ohu7BO18JTox1Ss3W71K0ItIcbcguh8seIKqHeO4OvaKZKDMf2MiHbVnCCF1LXBxaT6wYZIixQ=
 Authentication-Results: dkim=none (message not signed)
  header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from DM4PR12MB5040.namprd12.prod.outlook.com (2603:10b6:5:38b::19)
- by MW5PR12MB5652.namprd12.prod.outlook.com (2603:10b6:303:1a0::15) with
+Received: from DS7PR12MB8252.namprd12.prod.outlook.com (2603:10b6:8:ee::7) by
+ PH8PR12MB6988.namprd12.prod.outlook.com (2603:10b6:510:1bf::20) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8069.28; Tue, 22 Oct
- 2024 05:54:24 +0000
-Received: from DM4PR12MB5040.namprd12.prod.outlook.com
- ([fe80::a3dc:7ea1:9cc7:ce0f]) by DM4PR12MB5040.namprd12.prod.outlook.com
- ([fe80::a3dc:7ea1:9cc7:ce0f%6]) with mapi id 15.20.8093.014; Tue, 22 Oct 2024
- 05:54:24 +0000
-Message-ID: <5dce0b9f-2b91-1cac-5150-899547cd042f@amd.com>
-Date: Tue, 22 Oct 2024 11:24:17 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.15.1
-Subject: Re: [PATCH v3 1/2] platform/x86/amd: amd_3d_vcache: Add AMD 3D
- V-Cache optimizer driver
-Content-Language: en-US
-To: Armin Wolf <W_Armin@gmx.de>, Basavaraj Natikar
- <Basavaraj.Natikar@amd.com>, hdegoede@redhat.com,
- ilpo.jarvinen@linux.intel.com, platform-driver-x86@vger.kernel.org
-Cc: perry.yuan@amd.com, mario.limonciello@amd.com, Shyam-sundar.S-k@amd.com
-References: <20241021165820.339567-1-Basavaraj.Natikar@amd.com>
- <20241021165820.339567-2-Basavaraj.Natikar@amd.com>
- <72c0b021-9778-4bbe-aa54-c7ef887c04fa@gmx.de>
-From: Basavaraj Natikar <bnatikar@amd.com>
-In-Reply-To: <72c0b021-9778-4bbe-aa54-c7ef887c04fa@gmx.de>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: PN3PEPF00000179.INDPRD01.PROD.OUTLOOK.COM
- (2603:1096:c04::44) To DM4PR12MB5040.namprd12.prod.outlook.com
- (2603:10b6:5:38b::19)
+ 2024 05:59:25 +0000
+Received: from DS7PR12MB8252.namprd12.prod.outlook.com
+ ([fe80::2d0c:4206:cb3c:96b7]) by DS7PR12MB8252.namprd12.prod.outlook.com
+ ([fe80::2d0c:4206:cb3c:96b7%6]) with mapi id 15.20.8069.027; Tue, 22 Oct 2024
+ 05:59:25 +0000
+Date: Tue, 22 Oct 2024 11:29:12 +0530
+From: "Gautham R. Shenoy" <gautham.shenoy@amd.com>
+To: Mario Limonciello <mario.limonciello@amd.com>
+Cc: Borislav Petkov <bp@alien8.de>, Hans de Goede <hdegoede@redhat.com>,
+	Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	x86@kernel.org, Perry Yuan <perry.yuan@amd.com>,
+	linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
+	linux-pm@vger.kernel.org, platform-driver-x86@vger.kernel.org,
+	Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
+Subject: Re: [PATCH v4 08/13] platform/x86: hfi: add online and offline
+ callback support
+Message-ID: <Zxc/MHYdFR/kTlbp@BLRRASHENOY1.amd.com>
+References: <20241021180252.3531-1-mario.limonciello@amd.com>
+ <20241021180252.3531-9-mario.limonciello@amd.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20241021180252.3531-9-mario.limonciello@amd.com>
+X-ClientProxiedBy: PN2PR01CA0171.INDPRD01.PROD.OUTLOOK.COM
+ (2603:1096:c01:26::26) To DS7PR12MB8252.namprd12.prod.outlook.com
+ (2603:10b6:8:ee::7)
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -69,389 +68,206 @@ List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DM4PR12MB5040:EE_|MW5PR12MB5652:EE_
-X-MS-Office365-Filtering-Correlation-Id: 47f253fb-3830-4f21-091f-08dcf25dfb72
+X-MS-TrafficTypeDiagnostic: DS7PR12MB8252:EE_|PH8PR12MB6988:EE_
+X-MS-Office365-Filtering-Correlation-Id: f9eebe01-a10b-4831-c642-08dcf25eaeb5
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|366016|376014;
+X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|366016|1800799024;
 X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?RmxVYUtoRkQzeWpBTzYrcWFaTDZuSFU4TFhyUmFxbkVWYlNVbWZ6eFNxM0ZK?=
- =?utf-8?B?T09SVm1NS2JQOW1WVUkvTnM3bmwza0hoaGc3dzhLeERrWDZnZ3lYZWlVeHhp?=
- =?utf-8?B?Q0ZlaC9IeG1pdHNTeVB0ODkvWkc2eHVnSGI1NFN0Uk1wNWVSZVQxazQveDFR?=
- =?utf-8?B?OFdVMEtiNHM5ZW9iNm0rNEJ5VjZ6TVRxTW5reGt0ZU5pRzJhV3p1bExTL0Fk?=
- =?utf-8?B?UDNuaDhvK3praG5rMTJNeEZsYWtPMTNrQlNYQ3BaQ2gzNWhxV0NKc2RkL0xO?=
- =?utf-8?B?a04veTZEbFZBTDZDRzFJcWNMN2VaR0FEOHVRWXBvVm5oVWIyVSt4S2ZVSVBp?=
- =?utf-8?B?T1VTKzh4ZC95QzE2emc0SmFZKzB3YTNQUm5xU2QxODhQaVJQZmNVT0RCMmpo?=
- =?utf-8?B?dkRNalVRV3Q2OWlmKzUyU2V0cTFNR2dCWS9DSGtKV201blFsZEhTT0ZKK2xG?=
- =?utf-8?B?UFFTbVlFSWRiZkxCZ1hOWDNGZ2EwUlhrVmJsZEhzRndyWUlQZllwdDVxQzdp?=
- =?utf-8?B?b2ZVU1kxL25hdkkreUZTQWJZQjl1ZEFzWEVnekx1SXh6RzlrbFN4SFJPUGRK?=
- =?utf-8?B?Z3BSazJvZW1XeitHVm9FNmZIMml5VVl4TDRVK2dQMFUybUdzY2NMa3FodmJw?=
- =?utf-8?B?ZW9XbXlVOUdnS1MxQ3NWUnRZUWh2eWZNR1F0WU9TeS9HL2dkays5b2NuSGNk?=
- =?utf-8?B?OC9RQjRkb0lhN0JDYWpIT0lIWHFCcFdhRFprV0NJZldPbFVzQmxVc1NVVFBT?=
- =?utf-8?B?S09QaGdMWjdQYnY0NGtDYlZQdW81Q2VKU3ZjZUsrbmJhNnJtVmt3SmNESEs5?=
- =?utf-8?B?MHJqTGsvOXhmUC9sTXJ0S0MvQ2xPNmVzblpDTHVqSzZFb2I5VnB0VmE5NlZX?=
- =?utf-8?B?T2xvNGYyeHprZmkzVko2aC8zZTByclQwWlhFTlV0NStYMlVsd2IvT2RyT3hD?=
- =?utf-8?B?M2NhNUU3MTU2Z1cyWlR6blo5TG55cnNoK2pNeWo0bkZTOS9LK0ErYWdWdUpo?=
- =?utf-8?B?VFBOOGF3OVpRSnlWdjYwRzJMTzRNeTR2dEcvQ1hYQ213NHNnV2pEdTNBYnky?=
- =?utf-8?B?SjBETWcvOGlia0xhSTlWYlR2eHhtYXpoN2ZJNXNXc3JjQzdMUEtQWnlxUzQ5?=
- =?utf-8?B?Z2RvSDA5MFRnUll2K1E5Sjlmd09QaUZtMyt0ZEFMRjljQXlqZERWbHBwcG9J?=
- =?utf-8?B?emQxS0hQQXNwV0k2MU5uNElKbWZkazNieUd2VXBZd1h5U0lkR2huQ21LYjNp?=
- =?utf-8?B?MmE0RUZSOCtYeEtoOWNDMk9JUGxWUFQrOURGZXRvS2RvWXpKYnptZlgyUU5t?=
- =?utf-8?B?d2ZGdTBPR2d2bDhiZUUxU2lXRmpNNlJKSllaWlBla3g3eFQrYVJrLzl4TTJq?=
- =?utf-8?B?b0xYL0tidTMycys5OTlBeXBjRDljUGhGSzBGejdtQVJ0RmdsN1VGdFMyMVJl?=
- =?utf-8?B?bnc0ajBKSXUxVjgwL1ZPQ1JGSVVQd0ZJdC9LdlZJUFNiaXRIM1kvekFQOVJm?=
- =?utf-8?B?S1p4UjVqUjd0bStaVzhBaythSkQzeUluMmp6aGQzOXhLTEIzNGU4cHBpWGl1?=
- =?utf-8?B?cEFHdFNLQkVBTll2R2FDZ3JSVWoveHhaNzhTa0hhdU00dE9TemFPekpvV1hs?=
- =?utf-8?B?bHMvbkxPbFJ4OGdTYlBKUW45SFdzY0FlNGZmYTZFTUEwdDh5Y0lZdjZ2ckR3?=
- =?utf-8?B?bDVBcExSYmV3QVE1ZXh3Si96dExYRW9iUWYvU1EvSncrTVdQM0krYmQvU3ZH?=
- =?utf-8?Q?+SxFK/y4WBBGSqvWbu8uzuYWCmx8DV4+7Ci7hA2?=
+	=?us-ascii?Q?uCUgqc7QzyLgPXMUdXIaEIXn0UniLAeUDUYYQFcef/WrRKPgRkNpmAA3oFXd?=
+ =?us-ascii?Q?UlWMyxfES9GvEpxNg5HLrMIQTfRyoy/pXC91pewwIDJw2DopDHqMO2uxnPPe?=
+ =?us-ascii?Q?jB6BYxIx4yNvN+dJaYT3el/I+c/PpuEgneGiWLrdMoc4SrkPU8rDrJdViv6h?=
+ =?us-ascii?Q?6wCfgxn3BTeyvCcNH+2dZ62Kr2r0xGsGDllYy1AWhCbQ75sDe8NHO/LWjDxp?=
+ =?us-ascii?Q?X4NLdlnRRov57HmWKIUAtXRhpZsJWg+j+SX82+A814hrL2ceCK1KNjTTDcIb?=
+ =?us-ascii?Q?tn7z4QUwYl321cVmJEcY6KGHS0yuqjlZii45k8QbLeXh1M0S/wpAMsrHADTW?=
+ =?us-ascii?Q?VRz1cnb7c0wL28w/+P2/JgOkzD+RZszqEVWNERw0ORCT+94AeiMrqynYTjoE?=
+ =?us-ascii?Q?Ozd01v40LWpP/KgLUv5kSLgBrt0pH8mSNeJSxG3OxpVBf/DlP+7XWaThXUSI?=
+ =?us-ascii?Q?Vq4qB1atZNCQs7XTc2Tseq/NJE2jnBMGKMinBRUY1NDE6z+jwRhdzk+QCjHR?=
+ =?us-ascii?Q?LagmnibptlhOAK80oppjum647yf5zn61GwvrqYPrunIgsBvkzMpCsMuLzBcb?=
+ =?us-ascii?Q?Im2h/EAWWoduKm5DFShEusGHqV8L421V7/k+SZh328CzyjTjeX24yJ2MFQij?=
+ =?us-ascii?Q?0wxDvgyLr1+NpXCqvd6EKJ7a7mUjAfaCIJCyMFd5zAA4e2NZuA+BBl1PIRlX?=
+ =?us-ascii?Q?JG5YFUZPfh79svePbrB0BjSMip4ZAbqIxhELEYH0ADA5O/KQhYc1+fTj4pbz?=
+ =?us-ascii?Q?kEXIL3C2KLKPn4nzRHcmT5svnH8cxrDwrLFJbs1nJFN9OaHulQFbQANZbqLG?=
+ =?us-ascii?Q?jdY4cHzp7ybdzjJgDpPFpc8ZYyqGfghdg5JN8k6NKL3Z5/ESM2ve5fJzXQ9s?=
+ =?us-ascii?Q?9TZdywat/Y4TZasJRqOl/ABcndx6KkATP5tAUogm7KYuLyu/lGb6OTzd6p1f?=
+ =?us-ascii?Q?WV7wNOGdKGxgqAHDQmvg/7tKJrFNwMN2KRUwDnQU7of6Gr01OCoxu+Aq4rNV?=
+ =?us-ascii?Q?04FeGMm/yk7XF1/NcO0U4rHtH5b020LHKC5UTasn/Q2/rUMvL/4m3mk4WzRN?=
+ =?us-ascii?Q?iUbIRByUqRHbj52X7mzBCaIf3XjQsovtQSRsNeTvPitPitC9z99E+wcGGX6U?=
+ =?us-ascii?Q?EHecPVJeYTC9iw+vxkjVI2Udi28cNtSBpEqRzhfSQ1ciAoCxCRCWvOrAGAIY?=
+ =?us-ascii?Q?Gao+P8IkgRfqku+teLwjgwSupUtD2S5BAVcNkTxAbN8OGfdAYxyI9oP4pqCj?=
+ =?us-ascii?Q?VX+3ufldSPitnS83yQWmCrJrqy3qbdAR5E6eNlqb7lBdcN6+85D8O+Fk3jff?=
+ =?us-ascii?Q?elu8C7sdYrtysWVmIDoWqmCr?=
 X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM4PR12MB5040.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(376014);DIR:OUT;SFP:1101;
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS7PR12MB8252.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(366016)(1800799024);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?clhLV052cTM1SlV4N0hIYnNGZmNqTG0rUlpCQVVhVlo1OHBNSXlWZ25hQ3p2?=
- =?utf-8?B?MWc1SUt4ZWRkZXo3M3liaDQ2YkNkaEhEdDQ3N082U2I3dDhXa1dWelBnejdy?=
- =?utf-8?B?bHRtUGhFb2tXS3BReG1DSVlHalVmSTBaeHh3WjRjRjVZMm5za21yelhDOTBC?=
- =?utf-8?B?ZzA2MUFxYzhqOHg3YVdJOXp5VjQ0MTJ4ZFVNNXA4UkszVDhUWTlUQTRBZlhS?=
- =?utf-8?B?R1dLTTNnQkpiOEpDbGN6RFZmZGkzS2N2cWkxNksvamZBWndQa0FTeENFazUy?=
- =?utf-8?B?THZRSEJqV2t4dmIza0F3NjJWM3Q3SUZ6ZWtSOEljUjZJUkUyWEVOSFFZUXpt?=
- =?utf-8?B?L2ZXbkZhVE9kYlFQMnRyVHBnTmg5LzBYZ2FlWEZOUGRWNXJMRk9ML0swbisr?=
- =?utf-8?B?VmZjbFNTZG1KRUtFcFNOSEw1UHozWlFsc2ZlR1BrRVpzTVpYM2xPdDFzYW41?=
- =?utf-8?B?K0pDMXA0VHhTWEZKNFExdkIyNDQ0alhTc0xYUzRHZUovVEdydmg1TkJ1TGNo?=
- =?utf-8?B?cVZlNTFyS1pZdFl1aXo2akN5KzFTNXJNYzY4cms4cDhSWUM3QnAyYUFaclQ1?=
- =?utf-8?B?VjVpcnVYUjJFamRWQUFVVG1zREJQUy8wMXBheklOYXVBNnJtaitBVWlqZWpp?=
- =?utf-8?B?MDRRaERmcjFwQ2JaQzRzcC9XN3VYWCs2d0ZHZllJZ2NlUmhNMXlVVzdnVmxN?=
- =?utf-8?B?Mkc1Ync1a1A1eHpXYmFDalU3SndadGJLOWpiWldZenoyZ3BvYWZIYUVxcEE5?=
- =?utf-8?B?dzUxUXZudUJhb3ZNZlBKNkV6WWpwT0Z5R0RJeThVeVRLWTB3ZDdRc0JPd2Zz?=
- =?utf-8?B?c3N5U1pHMmZ3M09hd1pHdlZjYXFTbkoxemFpNnV3QWlHNWJSKzlISEdxSDlH?=
- =?utf-8?B?U1d3NUpFdGNWa1dlN2hUSmVuQTNCb3lGM3Uzell0MUtFaW4zMVRMNkRvL29Z?=
- =?utf-8?B?Tk9FNHB2emtmcTV3SUJLRWZKRUtFcCsydy91NXp2TzJWVmlkVytTMjNUckJh?=
- =?utf-8?B?bHlod0VFcElsRnN4SUFLU29BQkE4eGxHeGtiTTRJTDBQc28rUGw4SjhrSVdh?=
- =?utf-8?B?NzVOVk8wbk5QdmxVOVFYcTdXWElvamdEakZNNXA5aHUybjhQWkhwRXp0aGRB?=
- =?utf-8?B?ZlZxWUVxSmg3cjF0L25aTmRZTkg0NlR0ZTU1Vlp6aWpUOWpRM0tsaGovMDhN?=
- =?utf-8?B?RFFXUEF3Sk9xTTBwSm0rNTNJWjk0LzBvdk5Rajd3L1ZTdGJlZnp4VXExSWw1?=
- =?utf-8?B?ZjRZelNZU0Zza2pya0o2RDd5WEczMnZ4WmJ2MnVYd1pCYVZFUmJxUlRvSnUv?=
- =?utf-8?B?aGhwalVVMks0cStOZVBzNGFyMSs5dWFUd1ZvSDNFdTlqaDRaaUEzZ2w3TFdx?=
- =?utf-8?B?YWlBLy85ZjVsVW9tUmpyVjdHSUVxanRsbnA3TElCN2hDbXg3b0krMDdzS2pY?=
- =?utf-8?B?UXVlN3d6b29Kck41bGZJOVI0NnJIZkNQSFdCcUwwVzVwaXJlakRpNDIyeVN3?=
- =?utf-8?B?VnZqa1J0b2ZwZXFET0duc0RMYWVuVExGSnkrUjFrdFFsMTFvRGlIS1c1aVVM?=
- =?utf-8?B?aFVJSSttbGdsdUZHVFhqMHJjeU1xRncva0ZIY2FlMHNzOVdzRzBVaEdEaHA2?=
- =?utf-8?B?ZkZ0dFpZcElqNExnamlRaFNBV2VkRjhHUmdDdEttU2dFbkJ5cGVwbVhZaUFW?=
- =?utf-8?B?b1ljUEkwR1Nuak9NeEEralBoOEZKNVRUNVh5elB5ejRLTUx2SGhHV1pnWVNL?=
- =?utf-8?B?VXNJblFZTUZoK2I4RUNrUXA5MU9pMmN3WDhzT1NUSzNKYStrTzcxSVpldWdk?=
- =?utf-8?B?RUVHRjlNSmZjREdHOU05bTBWaFRoQWZVYTVoTzhlc21NeEJhTVhqT0FaWGhE?=
- =?utf-8?B?VFA3L2tBemVKTThjTTExbXFzVFQ2RzVOUTFlMVE5c29IY3hxRVgrcmt1dlJP?=
- =?utf-8?B?U01oaFFYZkJKdklER1A0ZHFyOUtQd0JVZ2hJZmpPMHU5Q3VXV0p0OStYU3R6?=
- =?utf-8?B?NVowVUgzS2U5QWF3UXhnelBpdVVveW45UlpGeEJINmRmc0M2T2lUa245QmVN?=
- =?utf-8?B?WE15ZE94U01xWUVGdW0wclJ5TWlZbTFUOE53QzRSbnMxNzFVR25ZcU1KVnd5?=
- =?utf-8?Q?eAZ+lypi2Ify8PTGyj4WsPaQz?=
+	=?us-ascii?Q?QnheZaOuLk9sEeqFyk74qkB9A6rQwrgp1uXgy+8Nb7wuyxe6uytx0TsmWQre?=
+ =?us-ascii?Q?Zcgql27Bv+X7z2JFsj35R75w9SZQfjd0PJgJ7QXFvGz+89Si7PnN9glXIEGW?=
+ =?us-ascii?Q?xnaVL4ega+f2VfH8BGsubFQKKOyxWz7F0uvqOxcHmBBOI99khbu6em2kEljp?=
+ =?us-ascii?Q?0G59vf+pnwppNTRsCxtEJYKtZQS+Y8KSAgMKx7Inv4YW41lnx1nTU/cZz15D?=
+ =?us-ascii?Q?O9Ze1Iok1EAAiluMtjDyYQscsmJln8oS43c3al9dNaay1sanA7GSGjrCLtlH?=
+ =?us-ascii?Q?yk+jvjuFKOx751gMrYLmDSZKpR1N91fX2pzj52nLG1JpgVhvXuHTFtQHq3lu?=
+ =?us-ascii?Q?m4fWOKpuoGl3Fuv1nCkBy1ki1I2s7bLPOYWBOLkg/ceNSPfa/BZgcNY7PvxI?=
+ =?us-ascii?Q?oq5RC2qq0xX2RygApKEuw9sUKikki+6ITddkcr1zwW/0nusHg74TucpzQDnl?=
+ =?us-ascii?Q?PfxtzLfxBp7ixXJBKador2rtdkFUczmLWDos9Li1LsHVH2FwmChnnEO0LC5q?=
+ =?us-ascii?Q?1ayoDSNWXin8wqk1mf+s6lGL0/5PJjlnDFVB+5YEuh10yqvWuWTFbMafEO61?=
+ =?us-ascii?Q?eUQI02jbDSw82vg8eJ6d0+6e4LM3VTm2wyTMnbsIf9WH7uCS0cnbBRS3e2l5?=
+ =?us-ascii?Q?QrRJt3Oi3Ab+wbs9hvoUuFap25HBGadNyFS2+UbvKLQfmd4O/subfn+RPZz2?=
+ =?us-ascii?Q?UKMS9zieukVTjktliq8M2jVkmtm0OxYC0E1Ec4RrP0MvgON4CTQfduXWB53v?=
+ =?us-ascii?Q?UDS+27a10EpYB6crxieE7FXH1b23weDJnEQtlG8iuUAG78nceQHo2nFshhxU?=
+ =?us-ascii?Q?o+yisbXt11hLwwMECQlNkykRUsPQs/sqGdHX2KkHf5a7uZrn0fI3NriaPdjV?=
+ =?us-ascii?Q?lgbQZblEW5vgxFNwP+dfPMv/Vj1X0RKtuBeQ2xH2cyht9so1t663dCG+/HkZ?=
+ =?us-ascii?Q?bNuFApr1NEJk57shU0Hxb6xPkk9tzPV0+PAsE1MQZ290yH2VSHzIuwtSZODP?=
+ =?us-ascii?Q?NMndwiIa+NwlgaXUgG+Mfxd6yBmFQZgwjU1xMqipvKbBN2IVI611der+8qJj?=
+ =?us-ascii?Q?aunUirfAabKH45vc4PSkPB2eaE8ID9SlI3NcEPEQ6SXkaK9WcG8AxL+5eD1A?=
+ =?us-ascii?Q?8T5iuQGXKxCjpxZgLQx32q83gTB57tRsaBm6oRE5OCpdK8QA5dtGZ05XjbPc?=
+ =?us-ascii?Q?R/grDUCtlTM3TR6IzeOSsKK4KlJAie2zXVOlrPy/pJfFeGJTLvaAQS1Wvigx?=
+ =?us-ascii?Q?2dUu83bIHmpQOKhpJhMs/SpEnIy/mbtLCsKOK0xpdD5MN5Go+7S0g3Qvn27o?=
+ =?us-ascii?Q?JkBcoXDhPJBZSKIxNL9lPb84oYd7HOcSh0pqaOGduMCL8fVhDWC6LvZ3TOap?=
+ =?us-ascii?Q?YxBggN5IY5dwlevfHhIdSWr3YvasnEyoa3POJYug0dEDopa1GGylOC2lX/eP?=
+ =?us-ascii?Q?7TaaOiTRHs8zbPnGV3iHdJEFVI74EDGUBydE9IT1fsoPAyGq0083pay3PSwG?=
+ =?us-ascii?Q?87vdtLGJReUGyJCprPmVYFp9R9AlPw0fzzB1zWJb80iN0A2IH3NOSzKr0XeZ?=
+ =?us-ascii?Q?KTVucDD9Tb9NvaYm5MNXwGXQpX09wUg1QiuEnZfq?=
 X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 47f253fb-3830-4f21-091f-08dcf25dfb72
-X-MS-Exchange-CrossTenant-AuthSource: DM4PR12MB5040.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: f9eebe01-a10b-4831-c642-08dcf25eaeb5
+X-MS-Exchange-CrossTenant-AuthSource: DS7PR12MB8252.namprd12.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 22 Oct 2024 05:54:24.7593
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 22 Oct 2024 05:59:25.5562
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 4UYr2sQgZLrdDjqSl5XqackezwcCpw2fCEyaH1C92a51Yf2PyIz6YDWigFwVWbVz0E9t414mgNFs4TFv6UWP0A==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW5PR12MB5652
+X-MS-Exchange-CrossTenant-UserPrincipalName: 4b2WLQKcafhMLFHt3m18DX9tbhWBnUjmZ/l44wnbCwQN8fBK7bSe+AdAZ5eHLx5mfUzsnQyNLdIrHM96Swm0RA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH8PR12MB6988
+
+On Mon, Oct 21, 2024 at 01:02:47PM -0500, Mario Limonciello wrote:
+> From: Perry Yuan <Perry.Yuan@amd.com>
+> 
+> There are some firmware parameters that need to be configured
+> when a CPU core is brought online or offline.
+> 
+> when CPU is online, it will initialize the workload classification
+> parameters to CPU firmware which will trigger the workload class ID
+> updating function.
+> 
+> Once the CPU is going to offline, it will need to disable the workload
+> classification function and clear the history.
+> 
+> Signed-off-by: Perry Yuan <Perry.Yuan@amd.com>
+> Co-developed-by: Mario Limonciello <mario.limonciello@amd.com>
+> Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
+> ---
+> v3->v4:
+>  * cpu -> CPU (Ilpo)
+> v2->v3:
+>  * Use guard() (Ilpo)
+>  * Whitespace changes (Ilpo)
+>  * Remove labels for unwind (Ilpo)
+> ---
+>  drivers/platform/x86/amd/hfi/hfi.c | 79 ++++++++++++++++++++++++++++++
+>  1 file changed, 79 insertions(+)
+> 
+> diff --git a/drivers/platform/x86/amd/hfi/hfi.c b/drivers/platform/x86/amd/hfi/hfi.c
+> index 986ea056fa022..70ddde37f283f 100644
+> --- a/drivers/platform/x86/amd/hfi/hfi.c
+> +++ b/drivers/platform/x86/amd/hfi/hfi.c
+> @@ -245,6 +245,80 @@ static int amd_set_hfi_ipcc_score(struct amd_hfi_cpuinfo *hfi_cpuinfo, int cpu)
+>  	return 0;
+>  }
+>  
+> +static int amd_hfi_set_state(unsigned int cpu, bool state)
+> +{
+> +	int ret;
+> +
+> +	ret = wrmsrl_on_cpu(cpu, AMD_WORKLOAD_CLASS_CONFIG, state);
+> +	if (ret)
+> +		return ret;
+> +
+> +	return wrmsrl_on_cpu(cpu, AMD_WORKLOAD_HRST, 0x1);
+> +}
+> +
+> +/**
+> + * amd_hfi_online() - Enable workload classification on @cpu
+> + * @cpu: CPU in which the workload classification will be enabled
+> + *
+> + * Return: 0 on success, negative error code on failure
+> + */
+> +static int amd_hfi_online(unsigned int cpu)
+> +{
+> +	struct amd_hfi_cpuinfo *hfi_info = per_cpu_ptr(&amd_hfi_cpuinfo, cpu);
+> +	struct amd_hfi_classes *hfi_classes;
+> +	int ret;
+> +
+> +	if (WARN_ON_ONCE(!hfi_info))
+> +		return -EINVAL;
+> +
+> +	/*
+> +	 * Check if @cpu as an associated, initialized and ranking data must be filled
+> +	 */
+> +	hfi_classes = hfi_info->amd_hfi_classes;
+> +	if (!hfi_classes)
+> +		return -EINVAL;
+> +
+> +	guard(mutex)(&hfi_cpuinfo_lock);
+> +
+> +	if (!zalloc_cpumask_var(&hfi_info->cpus, GFP_KERNEL))
+> +		return -ENOMEM;
+> +
+> +	cpumask_set_cpu(cpu, hfi_info->cpus);
+> +
+> +	ret = amd_hfi_set_state(cpu, true);
+> +	if (ret)
+> +		pr_err("WCT enable failed for CPU %d\n", cpu);
+> +
+> +	return ret;
+> +}
+> +
+> +/**
+> + * amd_hfi_offline() - Disable workload classification on @cpu
+> + * @cpu: CPU in which the workload classification will be disabled
+> + *
+> + * Remove @cpu from those covered by its HFI instance.
+> + *
+> + * Return: 0 on success, negative error code on failure
+> + */
+> +static int amd_hfi_offline(unsigned int cpu)
+> +{
+> +	struct amd_hfi_cpuinfo *hfi_info = &per_cpu(amd_hfi_cpuinfo, cpu);
+> +	int ret;
+> +
+> +	if (WARN_ON_ONCE(!hfi_info))
+> +		return -EINVAL;
+> +
+> +	guard(mutex)(&hfi_cpuinfo_lock);
+> +
+> +	ret = amd_hfi_set_state(cpu, false);
+> +	if (ret)
+> +		pr_err("WCT disable failed for CPU %d\n", cpu);
+> +
+> +	free_cpumask_var(hfi_info->cpus);
+> +
+> +	return ret;
+> +}
+> +
+>  static int update_hfi_ipcc_scores(void)
+>  {
+>  	int cpu;
+> @@ -348,6 +422,11 @@ static int amd_hfi_probe(struct platform_device *pdev)
+>  	if (ret)
+>  		return ret;
+>  
+> +	ret = cpuhp_setup_state(CPUHP_AP_ONLINE_DYN, "x86/amd_hfi:online",
+> +				amd_hfi_online, amd_hfi_offline);
+> +	if (ret < 0)
+> +		return ret;
+> +
+>  	return 0;
+
+Looks good to me.
+
+Reviewed-by: Gautham R. Shenoy <gautham.shenoy@amd.com>
 
 
-On 10/22/2024 2:05 AM, Armin Wolf wrote:
-> Am 21.10.24 um 18:58 schrieb Basavaraj Natikar:
->
->> AMD X3D processors, also known as AMD 3D V-Cache, feature dual Core
->> Complex Dies (CCDs) and enlarged L3 cache, enabling dynamic mode
->> switching between Frequency and Cache modes. To optimize performance,
->> implement the AMD 3D V-Cache Optimizer, which allows selecting either:
->>
->> Frequency mode: cores within the faster CCD are prioritized before
->> those in the slower CCD.
->>
->> Cache mode: cores within the larger L3 CCD are prioritized before
->> those in the smaller L3 CCD.
->>
->> Co-developed-by: Perry Yuan <perry.yuan@amd.com>
->> Signed-off-by: Perry Yuan <perry.yuan@amd.com>
->> Co-developed-by: Mario Limonciello <mario.limonciello@amd.com>
->> Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
->> Reviewed-by: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
->> Signed-off-by: Basavaraj Natikar <Basavaraj.Natikar@amd.com>
->> ---
->>   MAINTAINERS                           |   7 ++
->>   drivers/platform/x86/amd/Kconfig      |  12 ++
->>   drivers/platform/x86/amd/Makefile     |   2 +
->>   drivers/platform/x86/amd/x3d_vcache.c | 174 ++++++++++++++++++++++++++
->>   4 files changed, 195 insertions(+)
->>   create mode 100644 drivers/platform/x86/amd/x3d_vcache.c
->>
->> diff --git a/MAINTAINERS b/MAINTAINERS
->> index e9659a5a7fb3..11b829956499 100644
->> --- a/MAINTAINERS
->> +++ b/MAINTAINERS
->> @@ -965,6 +965,13 @@ Q: 
->> https://patchwork.kernel.org/project/linux-rdma/list/
->>   F:    drivers/infiniband/hw/efa/
->>   F:    include/uapi/rdma/efa-abi.h
->>
->> +AMD 3D V-CACHE PERFORMANCE OPTIMIZER DRIVER
->> +M:    Basavaraj Natikar <Basavaraj.Natikar@amd.com>
->> +R:    Mario Limonciello <mario.limonciello@amd.com>
->> +L:    platform-driver-x86@vger.kernel.org
->> +S:    Supported
->> +F:    drivers/platform/x86/amd/x3d_vcache.c
->> +
->>   AMD ADDRESS TRANSLATION LIBRARY (ATL)
->>   M:    Yazen Ghannam <Yazen.Ghannam@amd.com>
->>   L:    linux-edac@vger.kernel.org
->> diff --git a/drivers/platform/x86/amd/Kconfig 
->> b/drivers/platform/x86/amd/Kconfig
->> index f88682d36447..d73f691020d0 100644
->> --- a/drivers/platform/x86/amd/Kconfig
->> +++ b/drivers/platform/x86/amd/Kconfig
->> @@ -6,6 +6,18 @@
->>   source "drivers/platform/x86/amd/pmf/Kconfig"
->>   source "drivers/platform/x86/amd/pmc/Kconfig"
->>
->> +config AMD_3D_VCACHE
->> +    tristate "AMD 3D V-Cache Performance Optimizer Driver"
->> +    depends on X86_64 && ACPI
->> +    help
->> +      The driver provides a sysfs interface, enabling the setting of 
->> a bias
->> +      that alters CPU core reordering. This bias prefers cores with 
->> higher
->> +      frequencies or larger L3 caches on processors supporting AMD 
->> 3D V-Cache
->> +      technology.
->> +
->> +      If you choose to compile this driver as a module the module 
->> will be
->> +      called amd_3d_vcache.
->> +
->>   config AMD_HSMP
->>       tristate "AMD HSMP Driver"
->>       depends on AMD_NB && X86_64 && ACPI
->> diff --git a/drivers/platform/x86/amd/Makefile 
->> b/drivers/platform/x86/amd/Makefile
->> index dcec0a46f8af..16e4cce02242 100644
->> --- a/drivers/platform/x86/amd/Makefile
->> +++ b/drivers/platform/x86/amd/Makefile
->> @@ -4,6 +4,8 @@
->>   # AMD x86 Platform-Specific Drivers
->>   #
->>
->> +obj-$(CONFIG_AMD_3D_VCACHE)     += amd_3d_vcache.o
->> +amd_3d_vcache-objs              := x3d_vcache.o
->>   obj-$(CONFIG_AMD_PMC)        += pmc/
->>   amd_hsmp-y            := hsmp.o
->>   obj-$(CONFIG_AMD_HSMP)        += amd_hsmp.o
->> diff --git a/drivers/platform/x86/amd/x3d_vcache.c 
->> b/drivers/platform/x86/amd/x3d_vcache.c
->> new file mode 100644
->> index 000000000000..833e7704e6f9
->> --- /dev/null
->> +++ b/drivers/platform/x86/amd/x3d_vcache.c
->> @@ -0,0 +1,174 @@
->> +// SPDX-License-Identifier: GPL-2.0-or-later
->> +/*
->> + * AMD 3D V-Cache Performance Optimizer Driver
->> + *
->> + * Copyright (c) 2024, Advanced Micro Devices, Inc.
->> + * All Rights Reserved.
->> + *
->> + * Authors: Basavaraj Natikar <Basavaraj.Natikar@amd.com>
->> + *          Perry Yuan <perry.yuan@amd.com>
->> + *          Mario Limonciello <mario.limonciello@amd.com>
->> + *
->> + */
->> +
->> +#define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
->> +
->> +#include <linux/acpi.h>
->> +#include <linux/device.h>
->> +#include <linux/errno.h>
->> +#include <linux/module.h>
->> +#include <linux/mutex.h>
->> +#include <linux/platform_device.h>
->> +
->> +static char *x3d_mode = "frequency";
->> +module_param(x3d_mode, charp, 0);
->> +MODULE_PARM_DESC(x3d_mode, "Initial 3D-VCache mode; 'frequency' 
->> (default) or 'cache'");
->> +
->> +#define DSM_REVISION_ID            0
->> +#define DSM_SET_X3D_MODE        1
->> +
->> +static guid_t x3d_guid = GUID_INIT(0xdff8e55f, 0xbcfd, 0x46fb, 0xba, 
->> 0x0a,
->> +                   0xef, 0xd0, 0x45, 0x0f, 0x34, 0xee);
->> +
->> +enum amd_x3d_mode_type {
->> +    MODE_INDEX_FREQ,
->> +    MODE_INDEX_CACHE,
->> +};
->> +
->> +static const char * const amd_x3d_mode_strings[] = {
->> +    [MODE_INDEX_FREQ] = "frequency",
->> +    [MODE_INDEX_CACHE] = "cache",
->> +};
->> +
->> +struct amd_x3d_dev {
->> +    struct device *dev;
->> +    acpi_handle ahandle;
->> +    /* To protect x3d mode setting */
->> +    struct mutex lock;
->> +    enum amd_x3d_mode_type curr_mode;
->> +};
->> +
->> +static int amd_x3d_get_mode(struct amd_x3d_dev *data)
->> +{
->> +    guard(mutex)(&data->lock);
->> +
->> +    return data->curr_mode;
->> +}
->> +
->> +static int amd_x3d_mode_switch(struct amd_x3d_dev *data, int new_state)
->> +{
->> +    union acpi_object *out, argv;
->> +
->> +    guard(mutex)(&data->lock);
->> +    argv.type = ACPI_TYPE_INTEGER;
->> +    argv.integer.value = new_state;
->> +
->> +    out = acpi_evaluate_dsm(data->ahandle, &x3d_guid, 
->> DSM_REVISION_ID, DSM_SET_X3D_MODE,
->> +                &argv);
->> +    if (!out) {
->> +        dev_err(data->dev, "failed to evaluate _DSM\n");
->> +        return -EINVAL;
->> +    }
->> +
->> +    data->curr_mode = new_state;
->> +
->> +    kfree(out);
->> +
->> +    return 0;
->> +}
->> +
->> +static ssize_t amd_x3d_mode_store(struct device *dev, struct 
->> device_attribute *attr,
->> +                  const char *buf, size_t count)
->> +{
->> +    struct amd_x3d_dev *data = dev_get_drvdata(dev);
->> +    int ret;
->> +
->> +    ret = sysfs_match_string(amd_x3d_mode_strings, buf);
->> +    if (ret < 0)
->> +        return ret;
->> +
->> +    ret = amd_x3d_mode_switch(data, ret);
->> +    if (ret < 0)
->> +        return ret;
->> +
->> +    return count;
->> +}
->> +
->> +static ssize_t amd_x3d_mode_show(struct device *dev, struct 
->> device_attribute *attr, char *buf)
->> +{
->> +    struct amd_x3d_dev *data = dev_get_drvdata(dev);
->> +    int mode = amd_x3d_get_mode(data);
->> +
->> +    return sysfs_emit(buf, "%s\n", amd_x3d_mode_strings[mode]);
->> +}
->> +static DEVICE_ATTR_RW(amd_x3d_mode);
->> +
->> +static struct attribute *amd_x3d_attrs[] = {
->> +    &dev_attr_amd_x3d_mode.attr,
->> +    NULL
->> +};
->> +ATTRIBUTE_GROUPS(amd_x3d);
->> +
->> +static int amd_x3d_resume_handler(struct device *dev)
->> +{
->> +    struct amd_x3d_dev *data = dev_get_drvdata(dev);
->> +    int ret = amd_x3d_get_mode(data);
->> +
->> +    ret = amd_x3d_mode_switch(data, ret);
->> +    if (ret < 0)
->> +        return ret;
->> +
->> +    return 0;
->
-> Please directly return the result of amd_x3d_mode_switch() here.
->
-> Also i think that maybe there exists a way to avoid locking data->lock 
-> twice
-> during resume, but i will leave that to you.
-
-I will leave as it is.
-
-> Other than that:
->
-> Reviewed-by: Armin Wolf <W_Armin@gmx.de>
-
-Thanks for the feedback. I will re-spin a new version after looking for 
-more feedback from others. Thanks, -- Basavaraj
-
->
->> +}
->> +
->> +static DEFINE_SIMPLE_DEV_PM_OPS(amd_x3d_pm, NULL, 
->> amd_x3d_resume_handler);
->> +
->> +static const struct acpi_device_id amd_x3d_acpi_ids[] = {
->> +    {"AMDI0101"},
->> +    { },
->> +};
->> +MODULE_DEVICE_TABLE(acpi, amd_x3d_acpi_ids);
->> +
->> +static int amd_x3d_probe(struct platform_device *pdev)
->> +{
->> +    struct amd_x3d_dev *data;
->> +    acpi_handle handle;
->> +    int ret;
->> +
->> +    handle = ACPI_HANDLE(&pdev->dev);
->> +    if (!handle)
->> +        return -ENODEV;
->> +
->> +    if (!acpi_check_dsm(handle, &x3d_guid, DSM_REVISION_ID, 
->> BIT(DSM_SET_X3D_MODE)))
->> +        return -ENODEV;
->> +
->> +    data = devm_kzalloc(&pdev->dev, sizeof(*data), GFP_KERNEL);
->> +    if (!data)
->> +        return -ENOMEM;
->> +
->> +    data->dev = &pdev->dev;
->> +    data->ahandle = handle;
->> +    platform_set_drvdata(pdev, data);
->> +
->> +    ret = match_string(amd_x3d_mode_strings, 
->> ARRAY_SIZE(amd_x3d_mode_strings), x3d_mode);
->> +    if (ret < 0)
->> +        return dev_err_probe(&pdev->dev, -EINVAL, "invalid mode 
->> %s\n", x3d_mode);
->> +
->> +    devm_mutex_init(data->dev, &data->lock);
->> +
->> +    return amd_x3d_mode_switch(data, ret);
->> +}
->> +
->> +static struct platform_driver amd_3d_vcache_driver = {
->> +    .driver = {
->> +        .name = "amd_x3d_vcache",
->> +        .dev_groups = amd_x3d_groups,
->> +        .acpi_match_table = amd_x3d_acpi_ids,
->> +        .pm = pm_sleep_ptr(&amd_x3d_pm),
->> +    },
->> +    .probe = amd_x3d_probe,
->> +};
->> +module_platform_driver(amd_3d_vcache_driver);
->> +
->> +MODULE_DESCRIPTION("AMD 3D V-Cache Performance Optimizer Driver");
->> +MODULE_LICENSE("GPL");
-
+--
+Thanks and Regards
+gautham.
