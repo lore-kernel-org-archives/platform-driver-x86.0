@@ -1,131 +1,120 @@
-Received: from mout.gmx.net (mout.gmx.net [212.227.15.15])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f182.google.com (mail-pf1-f182.google.com [209.85.210.182])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 132DD1A256B;
-	Mon, 21 Oct 2024 21:05:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6344E360;
+	Tue, 22 Oct 2024 00:45:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729544751; cv=none; b=fZADY63KpSrkMXkTnCARO1hk27MQoA/BsJUI1DdudfZySdauuq6jrDR/3WiPu+oOmgLF3SfvphvC+eEVDpwdJHN81kbJ1lIB4JNGMk4KlVnNM7xIKzRTSNY45ckkSkXB8vSYbtQNaT0f5yEWVlUpymi5P2870FUc7rczv1MZWL0=
+	t=1729557932; cv=none; b=iiB035pKt+6Vc6EyGYFoO+3fCFV1cMEdRT3HgVtJLJVxYfwWPD35UQOpVDqbB/cQn6mQMWmb9E2DeIWLpzkPoaVR+q+5Wa3eTe5wb/1zdfs1AmnL5yDEr2juHqvy/gw8VWq2ZvWWdfI/qfzomETlFVZhXcyjjELB9iU/yDNl/HY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729544751; c=relaxed/simple;
-	bh=Smd8t82w9m3mCyHmKUSvSk1Z+qczq1yELOAf47WKppU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=S5s0fNb9mX0vaxtzQO9l7iiG2ZecNme1ZsPMKit0o0ljxkPIK3K83gVrtg8EmX5xTyfmUMxlwcuvQ7mNFCpsRGgJv7W3yZXuOGmS/S8QStXlOi0l7cBp+/r3NKo5bcedHYuaGcz2RMzorohEGiZNd9mbiqURUqVNoITZ6RUYGbo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b=Sc1KRoNj; arc=none smtp.client-ip=212.227.15.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
+	s=arc-20240116; t=1729557932; c=relaxed/simple;
+	bh=rkO4HQM7SizrGfprQ3ljcA2cJGSWdKVoqleXtchmey4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=sp2E40HyMrppgwQEO485yulKHVyQo5bVf9sjk2BteY68cF7O/KmqCxCvxu/HlXPltcgArUT3/cx7L7DApuH8KIGdKl9cEWBx+qb4+NCi4Qoj5OdK7WpXvDQV50EyvPTNG8lzBAR1W6A+RPGjJi9yY9MS2T//DmxDRFVElfLScCE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=B86wTg8t; arc=none smtp.client-ip=209.85.210.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b="Sc1KRoNj"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.de;
-	s=s31663417; t=1729544736; x=1730149536; i=w_armin@gmx.de;
-	bh=q59TIsh8rTZbf71iz3CnokQM71XdNJfMqkOzlbZ158A=;
-	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:To:Cc:
-	 References:From:In-Reply-To:Content-Type:
-	 Content-Transfer-Encoding:cc:content-transfer-encoding:
-	 content-type:date:from:message-id:mime-version:reply-to:subject:
-	 to;
-	b=Sc1KRoNjjAysjgJuDvcoWJyBHsY97VuJh4tz1mjFdolDN09iZrzNrlcclhSmTc9F
-	 N2q5jKlqSI0QrRYCfkh8sJKj4e37Ioh4kKlSfXePj6X5Tmh6GaErtkFsHXT3O7cgu
-	 zHebvbB+GzD5/KPfQ08ZJC8PNp+YL3L5m20F+2yJbvGs6cTUPzyFaCdDgQcFvbWzp
-	 wQ23ys9MY6FPFUrVa3sCodSYhuAd5S9g2sldwoWKHmKbko9Ake953WFUkin2PFgDS
-	 /DxB8GW460fW5h4spPCbkErgjPKfrnMyNLOwzU9dt7xl+mMajyaJeaULuMuyoFwmt
-	 +NHA8aUUumNpsoEkDg==
-X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
-Received: from [141.30.226.129] ([141.30.226.129]) by mail.gmx.net (mrgmx004
- [212.227.17.190]) with ESMTPSA (Nemesis) id 1M5wPh-1t0Xgx2EOZ-00F7EU; Mon, 21
- Oct 2024 23:05:36 +0200
-Message-ID: <82773fea-5d0a-49a8-b7d7-0c41b5d51ca9@gmx.de>
-Date: Mon, 21 Oct 2024 23:05:35 +0200
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="B86wTg8t"
+Received: by mail-pf1-f182.google.com with SMTP id d2e1a72fcca58-718e9c8bd83so4162874b3a.1;
+        Mon, 21 Oct 2024 17:45:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1729557931; x=1730162731; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=rkO4HQM7SizrGfprQ3ljcA2cJGSWdKVoqleXtchmey4=;
+        b=B86wTg8ty3WBYLGSfHx4LHwBIUlP/Czjl004eHXuItPJ1ObpMAk9voWFnTUTrIw0bR
+         wFPK8FGtKoN72vQKjTOPYG6yftL8U1+0idZoZnI6CDItH2OE04pCYFJ6YlumRLZjdotX
+         CLZ56ZUVZqQ4J6Stlr71k4d4ol8nW6HLEtVOHNT99xcJLDDlnUNEbR9jCki5WP5F7Ya2
+         y4Mebg9FHV3t2Gb5k1JGCW1OLZBH9z8HqNFi8Q6r3OzjypornliezXD8TS8Ui8V5FGoy
+         483mQFQ+qaEsYv+QoGGzEfC3e/Mhn8io4fzxy8PEa1qwAtAg7XyCeMRqlF/Lz2stnPDU
+         oshw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1729557931; x=1730162731;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=rkO4HQM7SizrGfprQ3ljcA2cJGSWdKVoqleXtchmey4=;
+        b=L1n8xy12xhkHyBJt8TP0KSNQaUVNHHHZ+9zZAOatzR0WY8SYtoQMSZ4yVDrVMnQqZW
+         P57O+DRxk+Yf+qgdn8uhn8mfJgDPkn1K3t+icEbJn+NGFL5HN53O/HTDVetPAyMgwFda
+         sHoYEuttBfD8pUYISt/9Ir7O9J7vNfRKYLuKiQSaHX1zO6GU6pWNfuJgNC6mvoNPRtCG
+         jwlEBHUeSgZoox1RFaTC3v0KAjW3VazvbY6z1fxjF7MNI49mPtAiSbmd/GxZLwFkvm99
+         fCcirvjdrUIpf9ZFPQxsb5zc2RZHTcaFUvj0jUVvay3mfCEEuo6KxEgpUbLIKhi+zMCR
+         RsrQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUH1RT4jjWiQUQogW31Zu+USfcKJHtstOyxzkSx1F42vM4nV9OIgFNAPAV9M0NyVQTw3Jl/q38FOtFEe9/EMoSUBzDtIA==@vger.kernel.org, AJvYcCWNXKUsGwJRREjgtAFdv9cCYBcUEzIFfEZqf7VyEy3d6wck4FoberjtQIYqgLpX+twt+VuS5ZIHMtM=@vger.kernel.org, AJvYcCXTOBRDpbxIRAfJDC8+JMCBoCxQuJ7m4zyLbGkIiO/eGvK490AG/xnEYIViEXg2K3fyfodSy/LIOqM=@vger.kernel.org, AJvYcCXsrPgevuPNqDhhNdFlGticfo4AEr0dHTmQBOuMalyxPd3x/Vc3gvbQE5o63Eaaj10FBQ7GmgDKDmLyfFTQ@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz2Gn9ZbrFQhY5LALGxitCgcF3ylRJW9nulhPI8IRaZh7YvsSYL
+	HBU2K68grsSqZx0JklpAXbLURZIfuZ8B9uR4RpocuWaurLZ38C2T
+X-Google-Smtp-Source: AGHT+IEaN4XZFPrN3nD/QTLshZZNGUJSk1MAp7HuzF4HK7yRgsWTvFrVsHwAp9zDfAAIOEuKojXEuQ==
+X-Received: by 2002:aa7:8e06:0:b0:71e:674b:474 with SMTP id d2e1a72fcca58-71edc15f84fmr2018208b3a.8.1729557930342;
+        Mon, 21 Oct 2024 17:45:30 -0700 (PDT)
+Received: from archie.me ([103.124.138.155])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-71ec13d767esm3515322b3a.114.2024.10.21.17.45.28
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 21 Oct 2024 17:45:29 -0700 (PDT)
+Received: by archie.me (Postfix, from userid 1000)
+	id 810F8425A747; Tue, 22 Oct 2024 07:45:26 +0700 (WIB)
+Date: Tue, 22 Oct 2024 07:45:26 +0700
+From: Bagas Sanjaya <bagasdotme@gmail.com>
+To: Mario Limonciello <mario.limonciello@amd.com>,
+	Borislav Petkov <bp@alien8.de>, Hans de Goede <hdegoede@redhat.com>,
+	Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>
+Cc: x86@kernel.org, "Gautham R . Shenoy" <gautham.shenoy@amd.com>,
+	Perry Yuan <perry.yuan@amd.com>, linux-kernel@vger.kernel.org,
+	linux-doc@vger.kernel.org, linux-pm@vger.kernel.org,
+	platform-driver-x86@vger.kernel.org,
+	Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
+Subject: Re: [PATCH v4 01/13] Documentation: x86: Add AMD Hardware Feedback
+ Interface documentation
+Message-ID: <Zxb1psmK05_xSXYH@archie.me>
+References: <20241021180252.3531-1-mario.limonciello@amd.com>
+ <20241021180252.3531-2-mario.limonciello@amd.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] platform/x86: dell-wmi: Ignore suspend notifications
-To: Hans de Goede <hdegoede@redhat.com>, pali@kernel.org
-Cc: ilpo.jarvinen@linux.intel.com, platform-driver-x86@vger.kernel.org,
- linux-kernel@vger.kernel.org, siddharth.manthan@gmail.com
-References: <20241014220529.397390-1-W_Armin@gmx.de>
- <40a76a97-b3e4-42cb-bee2-ca54731cc8ef@redhat.com>
-Content-Language: en-US
-From: Armin Wolf <W_Armin@gmx.de>
-In-Reply-To: <40a76a97-b3e4-42cb-bee2-ca54731cc8ef@redhat.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Provags-ID: V03:K1:9Xgtzb780cTuQfEHfyZ8y97jegEKjzq3rz2eAzHxNFUQHPJCAqo
- K/kxj18nmaZKqCluVqMt2UYD3rafebeWBQSOjUUaAQw5iksCvxc8I1sAeOJ9uRmCaoMXA7M
- k9YKu49aJfKKQ6MYQ3VPAzBZHYWMXLFXfiU0/F0cuyzfjR+0nKW+J8IpxV8FUBINvIXev7x
- uahb/hZObvaK54SgU4sRA==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:ofOFg3X4ey8=;46HlejFl2gDjqkBgodnCMs7GW0G
- SB0t9X4Ole8cz71jKWkUCqa4E0veD7qxtP3WuXXMN9c4lbyWcXXAG0pd2jgQlTs551B0CHbjg
- IlMmobkJVGFWt26VDfNdA/7YIUoLlcHfDj9bchNDz5nNm2fyLbubs/dLHdY+tzWmAZ8VUR9xw
- WpVcFcbE41+xDHY9/QqApNIf8j0Nn2mJ7l0x+di4hxBh6wn+OSStrTm/h10SFd2oDOJE11jGK
- RhFNhVyf+TB/hgEm0hY5gCXJPbh79Vx8wZIOTEEeeVEDFoVuBnIHr2nB9XCJPNEwJEIqed7TG
- 3Uxcwqg3ozVyjxLPVUki0kX27Y+IIKrSlWjlHRm7O/0ANXzk5We8dsQIn08v5KEQezdlmopNA
- 7QF3qhwECJ4GxSdHFUzWuJ6EyLG8vxYMKgzMI0xgW31z4MiIzpCVIcqFdxAYJzGVjGQrqPxrD
- 06nkiLvAG+3nSrczhudzgX8bC29wXsNt7Eayi9bKp3nVf80leOmVLj4/Ur/Quj7KEl6F3R41V
- gxc5hFn1nZVegtfVt0V414OAEer0xSlp6yyJzHSvu2SQaoDWNDsOFEr9SJ8idmY1iLASGOB4s
- wQGTX0sm51c8HiHlFiBCJ4gaTE7IFMefvRcnU6FcA57XMOWOdneZbx+Ev/37fItdEnPJlTFPK
- quQEOgFWKpWqXPgWGFbPP/g2yg65h/9GOoDKvFmgh8iHs0/HUNaLXB0mRZD6HqJmarQwjIjTy
- n9oYQSPr9iYSxO53a8nI8ZjgTdgr+jfrCVQdFuxSkjet7p+Yan47xsama1MciLAYsw1GYxI5l
- 4yNYP5w6WGw/+ryb7Z5HTwNw==
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="EiFZ20l18MgsAYaW"
+Content-Disposition: inline
+In-Reply-To: <20241021180252.3531-2-mario.limonciello@amd.com>
 
-Am 21.10.24 um 16:23 schrieb Hans de Goede:
 
-> Hi,
->
-> On 15-Oct-24 12:05 AM, Armin Wolf wrote:
->> Some machines like the Dell G15 5155 emit WMI events when
->> suspending/resuming. Ignore those WMI events.
->>
->> Tested-by: siddharth.manthan@gmail.com
->> Signed-off-by: Armin Wolf <W_Armin@gmx.de>
-> Thank you for your patch, I've applied this patch to my review-hans
-> branch:
-> https://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git/log/?h=review-hans
->
-> Note it will show up in my review-hans branch once I've pushed my
-> local branch there, which might take a while.
->
-> I will include this patch in my next fixes pull-req to Linus
-> for the current kernel development cycle.
->
-> Regards,
->
-> Hans
+--EiFZ20l18MgsAYaW
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Thanks :)
+On Mon, Oct 21, 2024 at 01:02:40PM -0500, Mario Limonciello wrote:
+> From: Perry Yuan <Perry.Yuan@amd.com>
+>=20
+> Introduce a new documentation file, `amd_hfi.rst`, which delves into the
+> implementation details of the AMD Hardware Feedback Interface and its
+> associated driver, `amd_hfi`. This documentation describes how the
+> driver provides hint to the OS scheduling which depends on the capability
+> of core performance and efficiency ranking data.
+>=20
+> This documentation describes
+> * The design of the driver
+> * How the driver provides hints to the OS scheduling
+> * How the driver interfaces with the kernel for efficiency ranking data.
 
->> ---
->> For some reason mjg59@srcf.ucam.org causes a local error in processing.
->> ---
->>   drivers/platform/x86/dell/dell-wmi-base.c | 9 +++++++++
->>   1 file changed, 9 insertions(+)
->>
->> diff --git a/drivers/platform/x86/dell/dell-wmi-base.c b/drivers/platform/x86/dell/dell-wmi-base.c
->> index 502783a7adb1..24fd7ffadda9 100644
->> --- a/drivers/platform/x86/dell/dell-wmi-base.c
->> +++ b/drivers/platform/x86/dell/dell-wmi-base.c
->> @@ -264,6 +264,15 @@ static const struct key_entry dell_wmi_keymap_type_0010[] = {
->>   	/*Speaker Mute*/
->>   	{ KE_KEY, 0x109, { KEY_MUTE} },
->>
->> +	/* S2Idle screen off */
->> +	{ KE_IGNORE, 0x120, { KEY_RESERVED }},
->> +
->> +	/* Leaving S4 or S2Idle suspend */
->> +	{ KE_IGNORE, 0x130, { KEY_RESERVED }},
->> +
->> +	/* Entering S2Idle suspend */
->> +	{ KE_IGNORE, 0x140, { KEY_RESERVED }},
->> +
->>   	/* Mic mute */
->>   	{ KE_KEY, 0x150, { KEY_MICMUTE } },
->>
->> --
->> 2.39.5
->>
->
+The doc LGTM, thanks!
+
+Reviewed-by: Bagas Sanjaya <bagasdotme@gmail.com>
+
+--=20
+An old man doll... just what I always wanted! - Clara
+
+--EiFZ20l18MgsAYaW
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYKAB0WIQSSYQ6Cy7oyFNCHrUH2uYlJVVFOowUCZxb1oQAKCRD2uYlJVVFO
+o2W5AP9eArac6T9AE3et/1yG+qIYjyEo74c7IJg5uJzRKTUa6QEAiMnYPsaLTJ1K
+92Vz9xCv2BZme+lqTyZrz1gMUbJXwgM=
+=qVoF
+-----END PGP SIGNATURE-----
+
+--EiFZ20l18MgsAYaW--
