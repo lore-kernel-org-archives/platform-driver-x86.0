@@ -1,453 +1,305 @@
-Received: from fhigh-b7-smtp.messagingengine.com (fhigh-b7-smtp.messagingengine.com [202.12.124.158])
+Received: from NAM10-DM6-obe.outbound.protection.outlook.com (mail-dm6nam10on2051.outbound.protection.outlook.com [40.107.93.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D3E31494CE;
-	Tue, 22 Oct 2024 19:30:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.158
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729625442; cv=none; b=b/cDD9QikfxsyQfbrgzL2lM4LJPB64fmGV3WQEX1BYANT8sRZp9MlgdfYcEDhbdk4FtyIx3JzhC3YedoKIO3BD/woxhAgQGz5ZWX/bEBha3P8lYSgpYswY7RCvHNxpRumPQRnBC9Mv5u6p6Wt3lRmtyykjpVKtxNMhaiO+zw7ls=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729625442; c=relaxed/simple;
-	bh=mu9NEAF4GH7X9+Dq/UFSihjdnU5ET9r0rkngSkX0RYg=;
-	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
-	 Subject:Content-Type; b=aJRNATTa4rLUVu+FSzUjkJ8g0jcxgUr7a5vQmltKMvyrTSwJmz9K5TcEA/Ns34XePUdlUqkc7Bzc+KSllePmap9r1odm2RpgswLLnfl+T7HzWAO9MBmkU//lQYNtbXxNXrW/frGW8amxMTo0y3pKvtF5QmWdlH2SljDT1vW9IQM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=squebb.ca; spf=pass smtp.mailfrom=squebb.ca; dkim=pass (2048-bit key) header.d=squebb.ca header.i=@squebb.ca header.b=LqgJCOLg; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=emMiLoka; arc=none smtp.client-ip=202.12.124.158
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=squebb.ca
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=squebb.ca
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 688E613AA2B;
+	Tue, 22 Oct 2024 20:02:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.93.51
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1729627338; cv=fail; b=PqsDza+vkIgSLSGbUKujYuAiBPRc6+DKr81kY99rrqysnWVHc/xFh8TBTLonGEgHGcNJS7Zep1++/sBSItJiSBIX0NvuT0GQCJK9KjMHjqMa5w761TC1o+PSQhi6RaeOHqBZpau73hyYe/ZoCVlMCZ23p570pJ1Bqg+va6nB090=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1729627338; c=relaxed/simple;
+	bh=K8EK+4gdc48e2Cv/28L6VEy3r9gJFvqhWMqBi9+kD0U=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=s4qqUng753bZDEl6VV6lTy+OkMLPfIb/jagMiwoooMom2rIkRNbZ2/glDwnAMycdMuDts18uSuQrfQ/7uOeaXSoKljZ8pBynDexciEH7u0wS6vuIBAWTu4/ccYRXuiB3y7UmCElARC/0UByXna43jVbFhV0wCJBXHRmsru+Pwl8=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=pE4WltK3; arc=fail smtp.client-ip=40.107.93.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=squebb.ca header.i=@squebb.ca header.b="LqgJCOLg";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="emMiLoka"
-Received: from phl-compute-02.internal (phl-compute-02.phl.internal [10.202.2.42])
-	by mailfhigh.stl.internal (Postfix) with ESMTP id B2A6525400E5;
-	Tue, 22 Oct 2024 15:30:39 -0400 (EDT)
-Received: from phl-imap-10 ([10.202.2.85])
-  by phl-compute-02.internal (MEProxy); Tue, 22 Oct 2024 15:30:39 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=squebb.ca; h=cc
-	:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to; s=fm1; t=1729625439;
-	 x=1729711839; bh=Zye2GdwIvJkPNjXAQSWrqToem6eNUlfkvWe1pGHqEu0=; b=
-	LqgJCOLgP4y8RhQoJRminjFDcHK8ReRoXlHTXT+MWAL6gh4aIzFH2RSQUtwjKvF3
-	bopChy57i1uu8GIKKGvdHjyGNv3uRY3XrN+lQ7Z+UduaTVbmClIqi7Sx8ly9bd3C
-	yDwHw2jyQxaN35rbP+WtmOcY1vGyCSnBzN4XaZTAlZ2+51KmBsB8oCg/WhKYsUCA
-	REyVctWlRp7LtlKOmohkDn0EqLjaDpLcRwQjt8CQSvaR/gg4j9IaOSC8b/MoRRvT
-	JcqjjMqLw6OnLGRkshjMmYceQPQGdc/4emsW9sSUpykiyUBSXnjtjqarJHTaV8yP
-	FX9YCIaaKwGAvJzYJhpbdg==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to:x-me-proxy:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=1729625439; x=
-	1729711839; bh=Zye2GdwIvJkPNjXAQSWrqToem6eNUlfkvWe1pGHqEu0=; b=e
-	mMiLokaryWE/nSBi9L7SVjY15bNgY4Dr4prkNKHJsxUKiQsv0wsGHcTPZWLg9/MM
-	7X7IZvr/FBcRs2T69nCMJrcWykzYuSXolxKUVXo9vrR7mx7OeBkSJr4GVBAzDU57
-	K/Q2yNzHkHxurnWnOOaithnyZh13H0cw1HX+lGZggtbSurxwYavtX8GknXnFq294
-	TP9IrLFkeRvQJqGC+ZB4/uXC78Yq1a7TMQ6OhOi6NEwUs7rCx4Jhh9uBJD5/gHuc
-	Tw/aYCTVgkQ474hIdz1xsHMVbddg7DYw/ukWPFH9po1NexfVqG6CwzqvG3SfE297
-	HoEqkvSTslQ9Mt+fFg0wA==
-X-ME-Sender: <xms:X_0XZ4ctZjqP7MmRnfXzzmXPn04Q_U7JLJ_yqe2gZcmyAhsGg2JW5g>
-    <xme:X_0XZ6PI0vwWCiJYrBigtHWCb3Bb6qX0SSxOjlpbkjMvI6ewsdmZY5LjtbwFs8eSu
-    f7YgFkP5VPzxl-JyTg>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeftddrvdeihedgudefkecutefuodetggdotefrod
-    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpggftfghnshhusghstghrihgsvgdp
-    uffrtefokffrpgfnqfghnecuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivg
-    hnthhsucdlqddutddtmdenucfjughrpefoggffhffvvefkjghfufgtgfesthhqredtredt
-    jeenucfhrhhomhepfdforghrkhcurfgvrghrshhonhdfuceomhhpvggrrhhsohhnqdhlvg
-    hnohhvohesshhquhgvsggsrdgtrgeqnecuggftrfgrthhtvghrnhephfevkeejueeukeef
-    hfelleejheeuudfgteffvdetkeffjeduleffvdejkeefhedvnecuvehluhhsthgvrhfuih
-    iivgeptdenucfrrghrrghmpehmrghilhhfrhhomhepmhhpvggrrhhsohhnqdhlvghnohhv
-    ohesshhquhgvsggsrdgtrgdpnhgspghrtghpthhtohepgedpmhhouggvpehsmhhtphhouh
-    htpdhrtghpthhtohepihhlphhordhjrghrvhhinhgvnheslhhinhhugidrihhnthgvlhdr
-    tghomhdprhgtphhtthhopehhuggvghhovgguvgesrhgvughhrghtrdgtohhmpdhrtghpth
-    htoheplhhinhhugidqkhgvrhhnvghlsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghp
-    thhtohepphhlrghtfhhorhhmqdgurhhivhgvrhdqgiekieesvhhgvghrrdhkvghrnhgvlh
-    drohhrgh
-X-ME-Proxy: <xmx:X_0XZ5g3pk3lQ_a3p5XRYwf_V9zJ4u3wT3Bpqu__OPBBvXBy0mtwng>
-    <xmx:X_0XZ9-nu7pzJ0_1_-gY0f9zOskP_bHir-Q1ir_I6ShVmP-fWS-MPg>
-    <xmx:X_0XZ0uYkHorNsG0rmTJS5D9FEGfYuZdtHiwNo9-b6tcO9b4D6RnXg>
-    <xmx:X_0XZ0HWbgjvHHj49oKYAt5JH8rbIIAN317KsXTr0kcu03I2ZctdEQ>
-    <xmx:X_0XZwJjaSljeqYJCzJ16Gd3f5VBv2sgWBcGjINgkPLKB7wQZUiIr4J5>
-Feedback-ID: ibe194615:Fastmail
-Received: by mailuser.phl.internal (Postfix, from userid 501)
-	id 3978A3C0066; Tue, 22 Oct 2024 15:30:39 -0400 (EDT)
-X-Mailer: MessagingEngine.com Webmail Interface
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="pE4WltK3"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=us0LKSsJJ3EKDEyMsRgHwxIobqNVKe+VPan35fXPfjEyRWEYuwMiaSn+jIsqu5t7KuhZH5bwNBVjzxGmngokwIeiutUNMhCZrWeoTAXFy45fiUYrLJxScA8j7tyPZ+EhFQuEZvjbfDmu7tqI0SaXrsgu8Yjf0lNMjp8Vkwb8pCpVGaaJnh9y+yVIE3TsywsJjPJ6E/g6WtUn/UXyYvAHS3OISHW6Yq7mUujPebin4FBkIbhSovM7PysApQEOw3AIcWOdKWovcUfVQegS1bGEzA1ZgvObAoXWzh/MMwfWVBGK941LW2UMHA16go9xMqNTeL0is/tZ5E9Tb3yMw3Ek2A==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=meHHftdT1GpdBt4pLUoJPnqpyGpAuC+vnMYjzxX3Acg=;
+ b=WWEKiot8zLQMHUc719PonxKL/07JOr8QFbDFSkcN2flCOx7c3ixBJOvQaNOosYKhNcHRvLyIJY3X0p3lAn64GLUvC44Qdz/BRTCJj4ImfgN9gsOGcU8/ecTklwbLQKflLVnjz1YTzPJK90zj4BkWvf7uSTq63YJe6ysqUqJhpE7erSrJXXeGsXueyoOsHz3dqEQ9v5FjOcehSmrle4YhJDzgkMa0Qe1ANE82ewl4/1t/TkRseTtMed03xUSM4PBElxswAzRywQWeV3JZSusPYMxW7GRHYAPBE9vQ669prhbDNyyJuHgs5lAv/6HtztCq/Ypnx/ZIZ6eL/Rz955yhzA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=meHHftdT1GpdBt4pLUoJPnqpyGpAuC+vnMYjzxX3Acg=;
+ b=pE4WltK3+JMwUZ+OI2CMyl5Fin82eTNBUH1F/T1TPBxQvoodAKDMc7dw++OYVCINkQMwf0zhziiykN3MabimBZfR0OATk5kNf4fdr0sGdob//aX8NpkaB7HM2ps0Q4RUq4Q9OkAkFtpic4wF3s5gnAZCHB2AK3dlmtQPxF8+WIw=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from MN0PR12MB6101.namprd12.prod.outlook.com (2603:10b6:208:3cb::10)
+ by SJ0PR12MB8092.namprd12.prod.outlook.com (2603:10b6:a03:4ee::12) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8069.28; Tue, 22 Oct
+ 2024 20:02:11 +0000
+Received: from MN0PR12MB6101.namprd12.prod.outlook.com
+ ([fe80::37ee:a763:6d04:81ca]) by MN0PR12MB6101.namprd12.prod.outlook.com
+ ([fe80::37ee:a763:6d04:81ca%6]) with mapi id 15.20.8069.027; Tue, 22 Oct 2024
+ 20:02:09 +0000
+Message-ID: <b50d9b7b-dccd-451e-91bc-fde0c467977c@amd.com>
+Date: Tue, 22 Oct 2024 15:02:07 -0500
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 10/13] x86/process: Clear hardware feedback history for
+ AMD processors
+To: "Gautham R. Shenoy" <gautham.shenoy@amd.com>
+Cc: Borislav Petkov <bp@alien8.de>, Hans de Goede <hdegoede@redhat.com>,
+ =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+ x86@kernel.org, Perry Yuan <perry.yuan@amd.com>,
+ linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
+ linux-pm@vger.kernel.org, platform-driver-x86@vger.kernel.org,
+ Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
+References: <20241021180252.3531-1-mario.limonciello@amd.com>
+ <20241021180252.3531-11-mario.limonciello@amd.com>
+ <ZxdGIFv5MPMX1HPo@BLRRASHENOY1.amd.com>
+Content-Language: en-US
+From: Mario Limonciello <mario.limonciello@amd.com>
+In-Reply-To: <ZxdGIFv5MPMX1HPo@BLRRASHENOY1.amd.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: SN6PR2101CA0008.namprd21.prod.outlook.com
+ (2603:10b6:805:106::18) To MN0PR12MB6101.namprd12.prod.outlook.com
+ (2603:10b6:208:3cb::10)
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Date: Tue, 22 Oct 2024 15:30:02 -0400
-From: "Mark Pearson" <mpearson-lenovo@squebb.ca>
-To: =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Cc: "Hans de Goede" <hdegoede@redhat.com>,
- "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>,
- LKML <linux-kernel@vger.kernel.org>
-Message-Id: <26b3d2dc-5a3e-46dd-8321-a04ba25dbf4f@app.fastmail.com>
-In-Reply-To: <3635398e-f810-c42b-9c6e-f9e0bb19e298@linux.intel.com>
-References: <mpearson-lenovo@squebb.ca>
- <20241021193837.7641-1-mpearson-lenovo@squebb.ca>
- <20241021193837.7641-4-mpearson-lenovo@squebb.ca>
- <3635398e-f810-c42b-9c6e-f9e0bb19e298@linux.intel.com>
-Subject: Re: [PATCH 4/4] platform/x86: think-lmi: Multi-certificate support
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: MN0PR12MB6101:EE_|SJ0PR12MB8092:EE_
+X-MS-Office365-Filtering-Correlation-Id: 56878bea-ad71-4814-d67d-08dcf2d46908
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|376014|366016;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?L3ppWjA5R01iUkZoTFZlRDhPRjN5c2ExSnVmUEExNlVwVFdpeVRualQwcXc3?=
+ =?utf-8?B?QUtjZFJSTTluV0RXVU5yaHlZTXN1TXdhajExb2IzRkVPenp4YkV2Mkc4TGt0?=
+ =?utf-8?B?bGg4S29LcmdNRENDOHZBNnl0Y2w1RXF0UU9RTnFOWlAvc2VPRkxNU3pZVE80?=
+ =?utf-8?B?UlFFbm9RNFJWNldjR2hTOUVUUlVaeGs3Q2MyL3paVy9zWjdEU1RJOWkzVG92?=
+ =?utf-8?B?Yi9HM0tZSHpEeTFhdS83Q21LLzZnMkUwWXdaTUU4NnJQbFBXSEU3M2d4L0FX?=
+ =?utf-8?B?T0lwZ1VJY0MxRXRTWHFtUW04ZHR2UjVvS2RpYk1BdG1OWS9yTWxVUCtDaDZz?=
+ =?utf-8?B?bWo3QUpobVdDT2VqR2JWUXlMTC9XTWw1cWp6VXA0K2Q4ZXJTMVo4R0dEUE5M?=
+ =?utf-8?B?SEpxWXJDZ3BqSlBRdElyV215di8va2JxY1JKRllEN2tpeW1aUjhlZGNVcXVN?=
+ =?utf-8?B?WmFqNTlieXVyNXVlTE9qWEkrYUZ5bHZET3BVZ1R4WlpYaXpBM1ZWcEhYc1dn?=
+ =?utf-8?B?dTl6ZFJHNFMwWG9qTDBVbnRXRmlLTk1DMStSanVFTVRDUTVVTXRDbXNybkJH?=
+ =?utf-8?B?OENTTDB5UEMwdGtwZzJ6aVVCL3BWZnc2d3FQZ3FrNjI3NWxmakRqQzlzOE9o?=
+ =?utf-8?B?VlhsVHIrQm53eWNJTVhBYkZQTGJhMENndXhpNlBzanpvVy9FTnVUSjRVbmpv?=
+ =?utf-8?B?WFBBQWlyODd4L3BSWXZ1RDZjNkh2dUZyU1pwckhNTHpqa1JXQXZPMER6Mktp?=
+ =?utf-8?B?eXdyTVJvUHh5d1BCdTBUNkg3Q2taMGZscWh5Wm1UcmRBenRDNlhlcmFrdXR5?=
+ =?utf-8?B?OFdQdHVmUVVZN0poTmRwcjBQNEQ4U2NjcC9FR1JCMG5iL1dkb2h4VUlrcU5O?=
+ =?utf-8?B?a1M0aXFoTTZWcTcwSm5vMnlzbmZmQVJWWHh0R0xXNkx5OUhxNmpONnJscmo2?=
+ =?utf-8?B?SXYzWVpXTVlsT3ZPQXFUWUpBcm9jV1FGQlQyWWhQd3NiTG9GeVI2Z0xyZU5l?=
+ =?utf-8?B?WVF0c1ZheXBRR0syMWRodWJoeFYxMFBrU0V5dGRDbmxvTlFYemRPK0JRYllM?=
+ =?utf-8?B?NHJMU2pWVlVodWpQY1VJRHdaVFVYb0IyV3E4K1BMSkMxRzJUOXpXTldNUmxK?=
+ =?utf-8?B?Z242d296TkpnQVo5QmtEOVdWOENmYS9VYkNCdXJUa1Qra2tnVGYyU0hvZ2U1?=
+ =?utf-8?B?WUhHZmRYd203eEpodjBkVHJtVlJNRVpvU3VEY2ZqV0JLbU43TDhVQnF1NGM4?=
+ =?utf-8?B?aHNkWDhUNkxPdWxEdzRYbWNDeFA5RGZnMWR4cWtPVUdONXo2Y0pFNkJESmx0?=
+ =?utf-8?B?Tis1MWx5VXRnNmhZZnVDTVB5N0tiTmprYS9LNm5tSmJqcCtmSktoTktOSXRC?=
+ =?utf-8?B?T3NaejRHL3Y4UEg1T3FKVjczMDlkcmowZExGcE1tcHVOLy81UHZyL2xHWWJJ?=
+ =?utf-8?B?VnFpaGxsOFptcnY3TVdlWWdDaERBOGdIT3YxVkVUNUxlRGhFUkhmdlhjVnp6?=
+ =?utf-8?B?RElGbU1oeUpQUTNjMnh3RDVSYmt5QmRMVDJTc3pWajJpUFR0RnByWU5KTmdN?=
+ =?utf-8?B?Y01ORk14WDNwUHpjbTFMV1gvSmYyYVY1NHNDNjNERlNzbHc1Q3NTRm12VmR4?=
+ =?utf-8?B?NlJ6bmNwNURXcDhHUlNxUmRITlJvYmg2ZENXMFp4MENqSlp6TVRyT2ErUGx0?=
+ =?utf-8?B?ckhTd1p3MllWL2laeGpXUG1JZGNwVWxXQUpzbXFvTFZiRGFIWXZNdjd0UlNy?=
+ =?utf-8?Q?czhm4cQNhzzxgDMTembsFwz/VTtcxd4FCBaX6zP?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MN0PR12MB6101.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(376014)(366016);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?U0l5ODNuSEJuSmxmQWFrdHZFemRMbDJpUHJuUGUrSGQzTEl2U1pQZzFOZ3h4?=
+ =?utf-8?B?eHFNUUJuckhsRjZSR0lSQ0M5Z1NLbVhiRTNOMGt5ZzJjU2EwNXZBSEpoS3hm?=
+ =?utf-8?B?R0NhV0FIVENLaHdlditNYmhhL2FzeG9ocXRiVGJ6SjV3Z1FiZlNOemNsVEcw?=
+ =?utf-8?B?eFFSdzFqUTdFeUNKendnNW5ocFpLRjNjckQwazdFTitoaEZxcDdkcWVIYU5K?=
+ =?utf-8?B?YlRIL2IzZ3ZCTEJqTGRmWm93RUY3UU01NlhCcmt0TU9MWnlEbnJXL1BBNk5L?=
+ =?utf-8?B?dkh2Q0c0ZzMzQlBLZG1EMWtIQlNNVTZTV0g5U2NrSFptSnJoZzkyWGZRSVYv?=
+ =?utf-8?B?Zk5pQzZoMWFXc2M3WWsrRWpDR1J6RTU1SjVBQU9PT1VqRUxBMXMvRnVMMkZT?=
+ =?utf-8?B?V2YxS3hreFZqVXBFU1NXSUpkaU95NVdTcTVLazdrZjJFT1R6WnUrY2MrOUVl?=
+ =?utf-8?B?eWh6NmplODJrSFF1RG01ei9wZlBka2ErSndJYWdmWTRXM3R5c2wzK2NZdC92?=
+ =?utf-8?B?ZHZQaE1NbWoyaEcvV1lQK0I2U3BHeE1UWjRnbzZ6UzVuaVFBdFRzTGI0b3pH?=
+ =?utf-8?B?SXhGVmtkTjIvNmNrMHBUdGtWbHgrTU94cVMzNEQ1NEtvRTF2K2FwZ2dyS09D?=
+ =?utf-8?B?Y1U0dmNOdXdGWUsxR3lQR3BPT0lOY0twSWhNSFRxODI1V2EybjM5WElKM1pZ?=
+ =?utf-8?B?cHBLRWJOenQrUTlkOUJLOGtrS3BLamRma0JaZ1hSZ3ZUSXVrckhLbHFHMldJ?=
+ =?utf-8?B?N0FJVFR1R2ZIUVdMdXVMMTUyVGgzQWJVUGF0dWZzVG9SRnlkOGR2bEM0ZGN4?=
+ =?utf-8?B?QXd6UDJlaVZnL2ZscEVkMTJjV0NOM0lHTVVrTnJwNG4yQmxsSFlHRkxRLzJj?=
+ =?utf-8?B?aXRYZnRvNHNzNW1aVmxiZCtFcWNPWm9iWlJ1bDlPZGhybkliMnlnQWY4VnUz?=
+ =?utf-8?B?WGdFMFJFVWo0Tms0eXRwdlR4c2VsOGpVRmJVTVovRWxKUmV0R01uM0xiRnkr?=
+ =?utf-8?B?OHd3THJYeGZzSUZRWWtPZUpvdVNEU2M0SUVIMCtOb285cnYrTzFKTDQ4OEU5?=
+ =?utf-8?B?RFgwVkZwV1VrOHIzUzZ5dFZzNFNIZnA5aHNnYVdyN2cxZjBQdjQ1UTlWbjRJ?=
+ =?utf-8?B?alFGYUZIVVgrVHNPMlNoVHhsbWltcktZRG01dnJVRVR5c1o1bHh4RnNaMkJ2?=
+ =?utf-8?B?WGJmZjdzeFA2WCt2U2JzVkVZQllJNGZyZVdXUVN1K1VMUW5rVGY1dVMzcjdx?=
+ =?utf-8?B?ZnQ5S1lkS3dScjR1UTU5akFLN2w4ZS9NK244V0t6Mlc4WnR4S0FiSVFHekEr?=
+ =?utf-8?B?eVJUUFNqSE5YKzBOemNheVJYYWdZVm9NZ3liam5QTWxhbkd5UHJZZDZsZmlE?=
+ =?utf-8?B?Y2dQc2liT2EzNTBDWWRtdU1pMERUVFVKd3E2U2JWbzI1UHVIVm5KbHgyeHlD?=
+ =?utf-8?B?MW5sNEFWSW5Yc2NVeWptWVhlaXNLTCtUTmdZUnVxNmFFcGpvOFluViszRWk5?=
+ =?utf-8?B?azdYNkllbTlZN2FMQkRpTWJ3RFhnSU54V0dkam51ZDZITm1BYmVRUjJaRlFR?=
+ =?utf-8?B?ZlRwM0g4dWJhcTZSem1NNFBFZHpJZVF5Szl5T3NaSzRTMDdsSHd1MUhBMjN3?=
+ =?utf-8?B?Y1lBNVdNZ0dCK2hLbngxVk85OGNVMzJTZ0xnYXpoQ09CS0JrdzZ4ZnBUNVFo?=
+ =?utf-8?B?RlkyZkZaS3U3Uzl3TGJzcXQ1MTBMQjBWUlF2U0lDV3BlVXdTNkloQVRLbDM3?=
+ =?utf-8?B?TjltQ0lDZ010c0lMeVhyMHdLWEVSSGJHSjB0TjBNS0pqZEQ0NUd0NklkL0tS?=
+ =?utf-8?B?cjQyWnpGYmhvR3g1YW90NTJHdmhtMXMzU0ZCbHZSTUdPU2RyVzlMSHhWVnN3?=
+ =?utf-8?B?SmRFUFMyMGZuc0RGZnl2TlJVT1U5ZytLRDJPeHNDOVEybk5TUDNZMEVQVEFO?=
+ =?utf-8?B?NUtLMU54SlpDL2pENXBlVTBjSit2TGxEWVlLbHo1dVFkR3Z3VGVFOThvY3dL?=
+ =?utf-8?B?UDBlRERaNStIZGtodDVkVkluNjJ0UDZQVVVENDNBOHFlY05naXlkNTZ3cjR0?=
+ =?utf-8?B?SS9HNjRuaFVzNjB1R08wK2dJVzZyWTZIZXE4MkdybjlUMWdiWFJmTm9acXcz?=
+ =?utf-8?Q?4ApIeu5FIwtyc+/ZTmBrOnpNx?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 56878bea-ad71-4814-d67d-08dcf2d46908
+X-MS-Exchange-CrossTenant-AuthSource: MN0PR12MB6101.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 22 Oct 2024 20:02:09.0947
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: JcBIzjck3VC6g4RD5hNfb2qcnCobBWquaRZEe6CGWu3d3seFZEWu7WMsA3jsJHpXbVRlf5F4BSD0iR5/DkhVwQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ0PR12MB8092
 
-Hi Ilpo,
-
-Thanks for the review.
-
-On Tue, Oct 22, 2024, at 4:14 AM, Ilpo J=C3=A4rvinen wrote:
-> On Mon, 21 Oct 2024, Mark Pearson wrote:
->
->> Lenovo are adding support for both Admin and System certificates to
->> the certificate based authentication feature
->>=20
->> This commit adds the support for this.
->>=20
->> Signed-off-by: Mark Pearson <mpearson-lenovo@squebb.ca>
+On 10/22/2024 01:28, Gautham R. Shenoy wrote:
+> Hello Mario,
+> 
+> On Mon, Oct 21, 2024 at 01:02:49PM -0500, Mario Limonciello wrote:
+>> From: Perry Yuan <perry.yuan@amd.com>
+>>
+>> Incorporate a mechanism within the context switching code to reset
+>> the hardware history for AMD processors. Specifically, when a task
+>> is switched in, the class ID was read and reset the hardware workload
+>> classification history of CPU firmware and then it start to trigger
+>> workload classification for the next running thread.
+>>
+>> Signed-off-by: Perry Yuan <perry.yuan@amd.com>
+>> Co-developed-by: Mario Limonciello <mario.limonciello@amd.com>
+>> Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
 >> ---
->>  .../testing/sysfs-class-firmware-attributes   |   1 +
->>  drivers/platform/x86/think-lmi.c              | 141 ++++++++++++++--=
---
->>  drivers/platform/x86/think-lmi.h              |   4 +
->>  3 files changed, 116 insertions(+), 30 deletions(-)
->>=20
->> diff --git a/Documentation/ABI/testing/sysfs-class-firmware-attribute=
-s b/Documentation/ABI/testing/sysfs-class-firmware-attributes
->> index 1a8b59f5d6e3..2713efa509b4 100644
->> --- a/Documentation/ABI/testing/sysfs-class-firmware-attributes
->> +++ b/Documentation/ABI/testing/sysfs-class-firmware-attributes
->> @@ -303,6 +303,7 @@ Description:
->>  					being configured allowing anyone to make changes.
->>  					After any of these operations the system must reboot for the ch=
-anges to
->>  					take effect.
->> +					Admin and System certificates are supported from 2025 systems o=
-nward.
->> =20
->>  		certificate_thumbprint:
->>  					Read only attribute used to display the MD5, SHA1 and SHA256 th=
-umbprints
->> diff --git a/drivers/platform/x86/think-lmi.c b/drivers/platform/x86/=
-think-lmi.c
->> index 751e351dfc42..fca190232c24 100644
->> --- a/drivers/platform/x86/think-lmi.c
->> +++ b/drivers/platform/x86/think-lmi.c
->> @@ -169,11 +169,12 @@ MODULE_PARM_DESC(debug_support, "Enable debug c=
-ommand support");
->>   */
->>  #define LENOVO_CERT_THUMBPRINT_GUID "C59119ED-1C0D-4806-A8E9-59AA318=
-176C4"
->> =20
->> -#define TLMI_POP_PWD BIT(0) /* Supervisor */
->> -#define TLMI_PAP_PWD BIT(1) /* Power-on */
->> -#define TLMI_HDD_PWD BIT(2) /* HDD/NVME */
->> -#define TLMI_SMP_PWD BIT(6) /* System Management */
->> -#define TLMI_CERT    BIT(7) /* Certificate Based */
->> +#define TLMI_POP_PWD  BIT(0) /* Supervisor */
->> +#define TLMI_PAP_PWD  BIT(1) /* Power-on */
->> +#define TLMI_HDD_PWD  BIT(2) /* HDD/NVME */
->> +#define TLMI_SMP_PWD  BIT(6) /* System Management */
->> +#define TLMI_CERT_SVC BIT(7) /* Admin Certificate Based */
->> +#define TLMI_CERT_SMC BIT(8) /* System Certificate Based */
->> =20
->>  static const struct tlmi_err_codes tlmi_errs[] =3D {
->>  	{"Success", 0},
->> @@ -678,18 +679,35 @@ static ssize_t cert_thumbprint(char *buf, const=
- char *arg, int count)
->>  	return count;
->>  }
->> =20
->> +#define NUM_THUMBTYPES 3
->> +static char *thumbtypes[NUM_THUMBTYPES] =3D {"Md5", "Sha1", "Sha256"=
-};
+>>   arch/x86/include/asm/hreset.h |  6 ++++++
+>>   arch/x86/kernel/cpu/common.c  | 15 +++++++++++++++
+>>   arch/x86/kernel/process_32.c  |  3 +++
+>>   arch/x86/kernel/process_64.c  |  3 +++
+>>   4 files changed, 27 insertions(+)
+>>   create mode 100644 arch/x86/include/asm/hreset.h
+>>
+>> diff --git a/arch/x86/include/asm/hreset.h b/arch/x86/include/asm/hreset.h
+>> new file mode 100644
+>> index 0000000000000..ae1f72602bbd0
+>> --- /dev/null
+>> +++ b/arch/x86/include/asm/hreset.h
+>> @@ -0,0 +1,6 @@
+>> +/* SPDX-License-Identifier: GPL-2.0 */
+>> +#ifndef _ASM_X86_HRESET_H
 >> +
->>  static ssize_t certificate_thumbprint_show(struct kobject *kobj, str=
-uct kobj_attribute *attr,
->>  			 char *buf)
->>  {
->>  	struct tlmi_pwd_setting *setting =3D to_tlmi_pwd_setting(kobj);
->> -	int count =3D 0;
->> +	char *wmistr;
->> +	int count =3D 0, i;
->
-> Reverse xmas-tree order.
-
-Ack
-
->
->> =20
->>  	if (!tlmi_priv.certificate_support || !setting->cert_installed)
->>  		return -EOPNOTSUPP;
->> =20
->> -	count +=3D cert_thumbprint(buf, "Md5", count);
->> -	count +=3D cert_thumbprint(buf, "Sha1", count);
->> -	count +=3D cert_thumbprint(buf, "Sha256", count);
->> +	for (i =3D 0; i < NUM_THUMBTYPES; i++) {
->
-> Use ARRAY_SIZE() + add include for it.
->
-> These days, the usual custom is to use unsigned int for loop variables=20
-> that are never meant to be negative.
->
-Will update.
-
->> +		if (tlmi_priv.pwdcfg.core.password_mode >=3D TLMI_PWDCFG_MODE_MULT=
-ICERT) {
->> +			/* Format: 'SVC | SMC, Thumbtype' */
->> +			wmistr =3D kasprintf(GFP_KERNEL, "%s,%s",
->> +					   setting =3D=3D tlmi_priv.pwd_admin ? "SVC" : "SMC",
->> +					   thumbtypes[i]);
->> +		} else {
->> +			/* Format: 'Thumbtype' */
->> +			wmistr =3D kasprintf(GFP_KERNEL, "%s", thumbtypes[i]);
->> +		}
->> +		if (!wmistr)
->> +			return -ENOMEM;
->> +		count +=3D cert_thumbprint(buf, wmistr, count);
->> +		kfree(wmistr);
->> +	}
+>> +void reset_hardware_history_hetero(void);
 >> +
->>  	return count;
->>  }
->> =20
->> @@ -720,8 +738,15 @@ static ssize_t cert_to_password_store(struct kob=
-ject *kobj,
->>  	if (!passwd)
->>  		return -ENOMEM;
->> =20
->> -	/* Format: 'Password,Signature' */
->> -	auth_str =3D kasprintf(GFP_KERNEL, "%s,%s", passwd, setting->signat=
-ure);
->> +	if (tlmi_priv.pwdcfg.core.password_mode >=3D TLMI_PWDCFG_MODE_MULTI=
-CERT) {
->> +		/* Format: 'SVC | SMC, password, signature' */
->> +		auth_str =3D kasprintf(GFP_KERNEL, "%s,%s,%s",
->> +				     setting =3D=3D tlmi_priv.pwd_admin ? "SVC" : "SMC",
->> +				     passwd, setting->signature);
->> +	} else {
->> +		/* Format: 'Password,Signature' */
->> +		auth_str =3D kasprintf(GFP_KERNEL, "%s,%s", passwd, setting->signa=
-ture);
->> +	}
->>  	if (!auth_str) {
->>  		kfree_sensitive(passwd);
->>  		return -ENOMEM;
->> @@ -735,12 +760,19 @@ static ssize_t cert_to_password_store(struct ko=
-bject *kobj,
->> =20
->>  static struct kobj_attribute auth_cert_to_password =3D __ATTR_WO(cer=
-t_to_password);
->> =20
->> +enum cert_install_mode {
->> +	TLMI_CERT_INSTALL,
->> +	TLMI_CERT_UPDATE,
->> +};
+>> +#endif /* _ASM_X86_HRESET_H */
+>> diff --git a/arch/x86/kernel/cpu/common.c b/arch/x86/kernel/cpu/common.c
+>> index 07a34d7235057..658c8fb4e25df 100644
+>> --- a/arch/x86/kernel/cpu/common.c
+>> +++ b/arch/x86/kernel/cpu/common.c
+>> @@ -57,6 +57,7 @@
+>>   #include <asm/mce.h>
+>>   #include <asm/msr.h>
+>>   #include <asm/cacheinfo.h>
+>> +#include <asm/hreset.h>
+>>   #include <asm/memtype.h>
+>>   #include <asm/microcode.h>
+>>   #include <asm/intel-family.h>
+>> @@ -403,6 +404,7 @@ static const unsigned long cr4_pinned_mask = X86_CR4_SMEP | X86_CR4_SMAP | X86_C
+>>   					     X86_CR4_FSGSBASE | X86_CR4_CET | X86_CR4_FRED;
+>>   static DEFINE_STATIC_KEY_FALSE_RO(cr_pinning);
+>>   static unsigned long cr4_pinned_bits __ro_after_init;
+>> +static DEFINE_STATIC_KEY_FALSE_RO(hardware_history_features);
+>>   
+>>   void native_write_cr0(unsigned long val)
+>>   {
+>> @@ -481,6 +483,12 @@ void cr4_init(void)
+>>   	this_cpu_write(cpu_tlbstate.cr4, cr4);
+>>   }
+>>   
+>> +static void __init setup_hreset(struct cpuinfo_x86 *c)
+>> +{
+>> +	if (cpu_feature_enabled(X86_FEATURE_AMD_WORKLOAD_CLASS))
+>> +		static_key_enable_cpuslocked(&hardware_history_features.key);
+>> +}
 >> +
->>  static ssize_t certificate_store(struct kobject *kobj,
->>  				  struct kobj_attribute *attr,
->>  				  const char *buf, size_t count)
->>  {
->>  	struct tlmi_pwd_setting *setting =3D to_tlmi_pwd_setting(kobj);
->> +	enum cert_install_mode install_mode =3D TLMI_CERT_INSTALL;
->>  	char *auth_str, *new_cert;
->> +	char *signature;
->>  	char *guid;
->>  	int ret;
->> =20
->> @@ -756,10 +788,18 @@ static ssize_t certificate_store(struct kobject=
- *kobj,
->>  		if (!setting->signature || !setting->signature[0])
->>  			return -EACCES;
->> =20
->> -		/* Format: 'serial#, signature' */
->> -		auth_str =3D kasprintf(GFP_KERNEL, "%s,%s",
->> -				dmi_get_system_info(DMI_PRODUCT_SERIAL),
->> -				setting->signature);
->> +		if (tlmi_priv.pwdcfg.core.password_mode >=3D TLMI_PWDCFG_MODE_MULT=
-ICERT) {
->> +			/* Format: 'SVC | SMC, serial#, signature' */
->> +			auth_str =3D kasprintf(GFP_KERNEL, "%s,%s,%s",
->> +					     setting =3D=3D tlmi_priv.pwd_admin ? "SVC" : "SMC",
->> +					     dmi_get_system_info(DMI_PRODUCT_SERIAL),
->> +					     setting->signature);
->> +		} else {
->> +			/* Format: 'serial#, signature' */
->> +			auth_str =3D kasprintf(GFP_KERNEL, "%s,%s",
->> +					     dmi_get_system_info(DMI_PRODUCT_SERIAL),
->> +					     setting->signature);
->> +		}
->>  		if (!auth_str)
->>  			return -ENOMEM;
->> =20
->> @@ -776,24 +816,59 @@ static ssize_t certificate_store(struct kobject=
- *kobj,
->> =20
->>  	if (setting->cert_installed) {
->>  		/* Certificate is installed so this is an update */
->> -		if (!setting->signature || !setting->signature[0]) {
->> +		install_mode =3D TLMI_CERT_UPDATE;
->> +		/* If admin account enabled - need to use it's signature */
->> +		if (tlmi_priv.pwd_admin->pwd_enabled)
->> +			signature =3D tlmi_priv.pwd_admin->signature;
->> +		else
->> +			signature =3D setting->signature;
->> +	} else { /* Cert install */
->> +		/* Check if SMC and SVC already installed */
->> +		if ((setting =3D=3D tlmi_priv.pwd_system) && tlmi_priv.pwd_admin->=
-cert_installed) {
->> +			/* This gets treated as a cert update */
->> +			install_mode =3D TLMI_CERT_UPDATE;
->> +			signature =3D tlmi_priv.pwd_admin->signature;
->> +		} else { /* Regular cert install */
->> +			install_mode =3D TLMI_CERT_INSTALL;
->> +			signature =3D setting->signature;
->> +		}
->> +	}
+>>   /*
+>>    * Once CPU feature detection is finished (and boot params have been
+>>    * parsed), record any of the sensitive CR bits that are set, and
+>> @@ -1844,6 +1852,7 @@ static void identify_cpu(struct cpuinfo_x86 *c)
+>>   	setup_smep(c);
+>>   	setup_smap(c);
+>>   	setup_umip(c);
+>> +	setup_hreset(c);
+> 
+> Since setup_hreset() just enables the static key once when the
+> AMD_WORKLOAD_CLASS feature is enabled, does it make sense to call
+> setup_hreset() in identify_boot_cpu() instead of in identify_cpu() ?
+> 
+
+Good suggestion.  I'll change this for the next revision.
+
+> --
+> Thanks and Regards
+> gautham.
+> 
+>>   
+>>   	/* Enable FSGSBASE instructions if available. */
+>>   	if (cpu_has(c, X86_FEATURE_FSGSBASE)) {
+>> @@ -2410,3 +2419,9 @@ void __init arch_cpu_finalize_init(void)
+>>   	 */
+>>   	mem_encrypt_init();
+>>   }
 >> +
->> +	if (install_mode =3D=3D TLMI_CERT_UPDATE) {
->> +		/* This is a certificate update */
->> +		if (!signature || !signature[0]) {
->>  			kfree(new_cert);
->>  			return -EACCES;
->>  		}
->>  		guid =3D LENOVO_UPDATE_BIOS_CERT_GUID;
->> -		/* Format: 'Certificate,Signature' */
->> -		auth_str =3D kasprintf(GFP_KERNEL, "%s,%s",
->> -				new_cert, setting->signature);
->> +		if (tlmi_priv.pwdcfg.core.password_mode >=3D TLMI_PWDCFG_MODE_MULT=
-ICERT) {
->> +			/* Format: 'SVC | SMC, certificate, signature' */
->> +			auth_str =3D kasprintf(GFP_KERNEL, "%s,%s,%s",
->> +					     setting =3D=3D tlmi_priv.pwd_admin ? "SVC" : "SMC",
->> +					     new_cert, signature);
->> +		} else {
->> +			/* Format: 'Certificate,Signature' */
->> +			auth_str =3D kasprintf(GFP_KERNEL, "%s,%s",
->> +					     new_cert, signature);
->> +		}
->>  	} else {
->>  		/* This is a fresh install */
->> -		if (!setting->pwd_enabled || !setting->password[0]) {
->> +		/* To set admin cert, a password must be enabled */
->> +		if ((setting =3D=3D tlmi_priv.pwd_admin) &&
->> +		    (!setting->pwd_enabled || !setting->password[0])) {
->>  			kfree(new_cert);
->>  			return -EACCES;
->>  		}
->>  		guid =3D LENOVO_SET_BIOS_CERT_GUID;
->> -		/* Format: 'Certificate,Admin-password' */
->> -		auth_str =3D kasprintf(GFP_KERNEL, "%s,%s",
->> -				new_cert, setting->password);
->> +		if (tlmi_priv.pwdcfg.core.password_mode >=3D TLMI_PWDCFG_MODE_MULT=
-ICERT) {
->> +			/* Format: 'SVC | SMC, Certificate, password' */
->> +			auth_str =3D kasprintf(GFP_KERNEL, "%s,%s,%s",
->> +					     setting =3D=3D tlmi_priv.pwd_admin ? "SVC" : "SMC",
->> +					     new_cert, setting->password);
->> +		} else {
->> +			/* Format: 'Certificate, password' */
->> +			auth_str =3D kasprintf(GFP_KERNEL, "%s,%s", new_cert, setting->pa=
-ssword);
->> +		}
->
-> Have you considered creating a helper for this if/else construct to cr=
-eate=20
-> the string? (you've basically repeated it multiple times by now with=20
-> limited change to only parameters AFAICT).
->
-
-I hadn't considered it, but yeah, it probably makes sense.
-Not completely sure how I would do it to be honest - if you've got any s=
-uggestions let me know, but I will look into it and see if I can improve=
- it.
-
->>  	}
->>  	kfree(new_cert);
->>  	if (!auth_str)
->> @@ -873,14 +948,19 @@ static umode_t auth_attr_is_visible(struct kobj=
-ect *kobj,
->>  		return 0;
->>  	}
->> =20
->> -	/* We only display certificates on Admin account, if supported */
->> +	/* We only display certificates, if supported */
->>  	if (attr =3D=3D &auth_certificate.attr ||
->>  	    attr =3D=3D &auth_signature.attr ||
->>  	    attr =3D=3D &auth_save_signature.attr ||
->>  	    attr =3D=3D &auth_cert_thumb.attr ||
->>  	    attr =3D=3D &auth_cert_to_password.attr) {
->> -		if ((setting =3D=3D tlmi_priv.pwd_admin) && tlmi_priv.certificate_=
-support)
->> +		if (tlmi_priv.certificate_support) {
->> +			if (setting =3D=3D tlmi_priv.pwd_admin)
->
-> These two if()s combined look the same as the old ode, why are you red=
-oing=20
-> it?
-
-My indenting here is somehow messed up...not sure how that happened (wil=
-l fix).
-The block below should be indented too...and then I think it makes more =
-sense.
-Let me know if you disagree.
-
->
->> +				return attr->mode;
->> +		if ((tlmi_priv.pwdcfg.core.password_mode >=3D TLMI_PWDCFG_MODE_MUL=
-TICERT) &&
->> +		    (setting =3D=3D tlmi_priv.pwd_system))
->>  			return attr->mode;
->> +		}
->>  		return 0;
->>  	}
->> =20
->> @@ -1700,12 +1780,13 @@ static int tlmi_analyze(void)
->>  		}
->>  	}
->> =20
->> -	if (tlmi_priv.certificate_support &&
->> -		(tlmi_priv.pwdcfg.core.password_state & TLMI_CERT))
->> -		tlmi_priv.pwd_admin->cert_installed =3D true;
->> -
->> +	if (tlmi_priv.certificate_support) {
->> +		tlmi_priv.pwd_admin->cert_installed =3D
->> +			tlmi_priv.pwdcfg.core.password_state & TLMI_CERT_SVC;
->> +		tlmi_priv.pwd_system->cert_installed =3D
->> +			tlmi_priv.pwdcfg.core.password_state & TLMI_CERT_SMC;
->> +	}
->>  	return 0;
->> -
->
-> Stray change.
-
-Oops. Will fix.
-
->
-> --=20
->  i.
->
->>  fail_clear_attr:
->>  	for (i =3D 0; i < TLMI_SETTINGS_COUNT; ++i) {
->>  		if (tlmi_priv.setting[i]) {
->> diff --git a/drivers/platform/x86/think-lmi.h b/drivers/platform/x86/=
-think-lmi.h
->> index 4728f40143a3..f267d8b46957 100644
->> --- a/drivers/platform/x86/think-lmi.h
->> +++ b/drivers/platform/x86/think-lmi.h
->> @@ -41,6 +41,10 @@ enum save_mode {
->>  };
->> =20
->>  /* password configuration details */
->> +#define TLMI_PWDCFG_MODE_LEGACY    0
->> +#define TLMI_PWDCFG_MODE_PASSWORD  1
->> +#define TLMI_PWDCFG_MODE_MULTICERT 3
+>> +__always_inline void reset_hardware_history_hetero(void)
+>> +{
+>> +	if (static_branch_unlikely(&hardware_history_features))
+>> +		wrmsrl(AMD_WORKLOAD_HRST, 0x1);
+>> +}
+>> diff --git a/arch/x86/kernel/process_32.c b/arch/x86/kernel/process_32.c
+>> index 0917c7f25720b..6a3a1339f7a77 100644
+>> --- a/arch/x86/kernel/process_32.c
+>> +++ b/arch/x86/kernel/process_32.c
+>> @@ -52,6 +52,7 @@
+>>   #include <asm/switch_to.h>
+>>   #include <asm/vm86.h>
+>>   #include <asm/resctrl.h>
+>> +#include <asm/hreset.h>
+>>   #include <asm/proto.h>
+>>   
+>>   #include "process.h"
+>> @@ -213,6 +214,8 @@ __switch_to(struct task_struct *prev_p, struct task_struct *next_p)
+>>   	/* Load the Intel cache allocation PQR MSR. */
+>>   	resctrl_sched_in(next_p);
+>>   
+>> +	reset_hardware_history_hetero();
 >> +
->>  struct tlmi_pwdcfg_core {
->>  	uint32_t password_mode;
->>  	uint32_t password_state;
+>>   	return prev_p;
+>>   }
+>>   
+>> diff --git a/arch/x86/kernel/process_64.c b/arch/x86/kernel/process_64.c
+>> index 226472332a70d..ea7f765c6262a 100644
+>> --- a/arch/x86/kernel/process_64.c
+>> +++ b/arch/x86/kernel/process_64.c
+>> @@ -54,6 +54,7 @@
+>>   #include <asm/xen/hypervisor.h>
+>>   #include <asm/vdso.h>
+>>   #include <asm/resctrl.h>
+>> +#include <asm/hreset.h>
+>>   #include <asm/unistd.h>
+>>   #include <asm/fsgsbase.h>
+>>   #include <asm/fred.h>
+>> @@ -709,6 +710,8 @@ __switch_to(struct task_struct *prev_p, struct task_struct *next_p)
+>>   	/* Load the Intel cache allocation PQR MSR. */
+>>   	resctrl_sched_in(next_p);
+>>   
+>> +	reset_hardware_history_hetero();
+>> +
+>>   	return prev_p;
+>>   }
+>>   
+>> -- 
+>> 2.43.0
 >>
 
-Mark
