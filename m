@@ -1,120 +1,113 @@
-Received: from mail-pf1-f182.google.com (mail-pf1-f182.google.com [209.85.210.182])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mailgw.kylinos.cn (mailgw.kylinos.cn [124.126.103.232])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6344E360;
-	Tue, 22 Oct 2024 00:45:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A7D084D34;
+	Tue, 22 Oct 2024 02:58:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=124.126.103.232
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729557932; cv=none; b=iiB035pKt+6Vc6EyGYFoO+3fCFV1cMEdRT3HgVtJLJVxYfwWPD35UQOpVDqbB/cQn6mQMWmb9E2DeIWLpzkPoaVR+q+5Wa3eTe5wb/1zdfs1AmnL5yDEr2juHqvy/gw8VWq2ZvWWdfI/qfzomETlFVZhXcyjjELB9iU/yDNl/HY=
+	t=1729565914; cv=none; b=TPFg6ygRRITCL3AivN+89KujB1oDUQL4ld8fkwdLY9L2iFRCW58pCL5YtAi6Kb2ebR2SzKx1dmESBF5MAn0znSI22PCfgTD5AkJkJvdnuQqECFlPGTw4E1ZkN4Kwn387eBMgyx8+Ojv4558Ju/EdIbEqTPyMmBc5g1mef8MnTuE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729557932; c=relaxed/simple;
-	bh=rkO4HQM7SizrGfprQ3ljcA2cJGSWdKVoqleXtchmey4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=sp2E40HyMrppgwQEO485yulKHVyQo5bVf9sjk2BteY68cF7O/KmqCxCvxu/HlXPltcgArUT3/cx7L7DApuH8KIGdKl9cEWBx+qb4+NCi4Qoj5OdK7WpXvDQV50EyvPTNG8lzBAR1W6A+RPGjJi9yY9MS2T//DmxDRFVElfLScCE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=B86wTg8t; arc=none smtp.client-ip=209.85.210.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="B86wTg8t"
-Received: by mail-pf1-f182.google.com with SMTP id d2e1a72fcca58-718e9c8bd83so4162874b3a.1;
-        Mon, 21 Oct 2024 17:45:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1729557931; x=1730162731; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=rkO4HQM7SizrGfprQ3ljcA2cJGSWdKVoqleXtchmey4=;
-        b=B86wTg8ty3WBYLGSfHx4LHwBIUlP/Czjl004eHXuItPJ1ObpMAk9voWFnTUTrIw0bR
-         wFPK8FGtKoN72vQKjTOPYG6yftL8U1+0idZoZnI6CDItH2OE04pCYFJ6YlumRLZjdotX
-         CLZ56ZUVZqQ4J6Stlr71k4d4ol8nW6HLEtVOHNT99xcJLDDlnUNEbR9jCki5WP5F7Ya2
-         y4Mebg9FHV3t2Gb5k1JGCW1OLZBH9z8HqNFi8Q6r3OzjypornliezXD8TS8Ui8V5FGoy
-         483mQFQ+qaEsYv+QoGGzEfC3e/Mhn8io4fzxy8PEa1qwAtAg7XyCeMRqlF/Lz2stnPDU
-         oshw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1729557931; x=1730162731;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=rkO4HQM7SizrGfprQ3ljcA2cJGSWdKVoqleXtchmey4=;
-        b=L1n8xy12xhkHyBJt8TP0KSNQaUVNHHHZ+9zZAOatzR0WY8SYtoQMSZ4yVDrVMnQqZW
-         P57O+DRxk+Yf+qgdn8uhn8mfJgDPkn1K3t+icEbJn+NGFL5HN53O/HTDVetPAyMgwFda
-         sHoYEuttBfD8pUYISt/9Ir7O9J7vNfRKYLuKiQSaHX1zO6GU6pWNfuJgNC6mvoNPRtCG
-         jwlEBHUeSgZoox1RFaTC3v0KAjW3VazvbY6z1fxjF7MNI49mPtAiSbmd/GxZLwFkvm99
-         fCcirvjdrUIpf9ZFPQxsb5zc2RZHTcaFUvj0jUVvay3mfCEEuo6KxEgpUbLIKhi+zMCR
-         RsrQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUH1RT4jjWiQUQogW31Zu+USfcKJHtstOyxzkSx1F42vM4nV9OIgFNAPAV9M0NyVQTw3Jl/q38FOtFEe9/EMoSUBzDtIA==@vger.kernel.org, AJvYcCWNXKUsGwJRREjgtAFdv9cCYBcUEzIFfEZqf7VyEy3d6wck4FoberjtQIYqgLpX+twt+VuS5ZIHMtM=@vger.kernel.org, AJvYcCXTOBRDpbxIRAfJDC8+JMCBoCxQuJ7m4zyLbGkIiO/eGvK490AG/xnEYIViEXg2K3fyfodSy/LIOqM=@vger.kernel.org, AJvYcCXsrPgevuPNqDhhNdFlGticfo4AEr0dHTmQBOuMalyxPd3x/Vc3gvbQE5o63Eaaj10FBQ7GmgDKDmLyfFTQ@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz2Gn9ZbrFQhY5LALGxitCgcF3ylRJW9nulhPI8IRaZh7YvsSYL
-	HBU2K68grsSqZx0JklpAXbLURZIfuZ8B9uR4RpocuWaurLZ38C2T
-X-Google-Smtp-Source: AGHT+IEaN4XZFPrN3nD/QTLshZZNGUJSk1MAp7HuzF4HK7yRgsWTvFrVsHwAp9zDfAAIOEuKojXEuQ==
-X-Received: by 2002:aa7:8e06:0:b0:71e:674b:474 with SMTP id d2e1a72fcca58-71edc15f84fmr2018208b3a.8.1729557930342;
-        Mon, 21 Oct 2024 17:45:30 -0700 (PDT)
-Received: from archie.me ([103.124.138.155])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-71ec13d767esm3515322b3a.114.2024.10.21.17.45.28
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 21 Oct 2024 17:45:29 -0700 (PDT)
-Received: by archie.me (Postfix, from userid 1000)
-	id 810F8425A747; Tue, 22 Oct 2024 07:45:26 +0700 (WIB)
-Date: Tue, 22 Oct 2024 07:45:26 +0700
-From: Bagas Sanjaya <bagasdotme@gmail.com>
-To: Mario Limonciello <mario.limonciello@amd.com>,
-	Borislav Petkov <bp@alien8.de>, Hans de Goede <hdegoede@redhat.com>,
-	Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>
-Cc: x86@kernel.org, "Gautham R . Shenoy" <gautham.shenoy@amd.com>,
-	Perry Yuan <perry.yuan@amd.com>, linux-kernel@vger.kernel.org,
-	linux-doc@vger.kernel.org, linux-pm@vger.kernel.org,
-	platform-driver-x86@vger.kernel.org,
-	Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
-Subject: Re: [PATCH v4 01/13] Documentation: x86: Add AMD Hardware Feedback
- Interface documentation
-Message-ID: <Zxb1psmK05_xSXYH@archie.me>
-References: <20241021180252.3531-1-mario.limonciello@amd.com>
- <20241021180252.3531-2-mario.limonciello@amd.com>
+	s=arc-20240116; t=1729565914; c=relaxed/simple;
+	bh=jtBug8ONzyE+kgGa52pv+JdSpoMjZthiSSGGuBkAA1o=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=MI13+B0Xd1c1nomifstp4E+GLOzlV9xuWCZY9QUYk8nQUWCMdy/yJT+9OBUkM3dtOpD76/c43s33JtZT6rAzlE50K5jAfz9itzT+Rfnf/Ob9DYWsJ6yhwBHsvWEZKJuTBS6hZ52hdJ1jexGibfX9VQgSAaH6x9g/dYc7dUrwmFU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn; spf=pass smtp.mailfrom=kylinos.cn; arc=none smtp.client-ip=124.126.103.232
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kylinos.cn
+X-UUID: c11631e6902011efa216b1d71e6e1362-20241022
+X-CID-P-RULE: Release_Ham
+X-CID-O-INFO: VERSION:1.1.38,REQID:0c6b36cb-c30b-4b21-ae72-df23d343b5a7,IP:0,U
+	RL:0,TC:0,Content:0,EDM:0,RT:0,SF:0,FILE:0,BULK:0,RULE:Release_Ham,ACTION:
+	release,TS:0
+X-CID-META: VersionHash:82c5f88,CLOUDID:b1f2c70976c0514a32db13af13aaec06,BulkI
+	D:nil,BulkQuantity:0,Recheck:0,SF:102,TC:nil,Content:0,EDM:-3,IP:nil,URL:0
+	,File:nil,RT:nil,Bulk:nil,QS:nil,BEC:nil,COL:0,OSI:0,OSA:0,AV:0,LES:1,SPR:
+	NO,DKR:0,DKP:0,BRR:0,BRE:0
+X-CID-BVR: 0,NGT
+X-CID-BAS: 0,NGT,0,_
+X-CID-FACTOR: TF_CID_SPAM_SNR
+X-UUID: c11631e6902011efa216b1d71e6e1362-20241022
+Received: from node2.com.cn [(10.44.16.197)] by mailgw.kylinos.cn
+	(envelope-from <zenghongling@kylinos.cn>)
+	(Generic MTA)
+	with ESMTP id 50847325; Tue, 22 Oct 2024 10:53:02 +0800
+Received: from node2.com.cn (localhost [127.0.0.1])
+	by node2.com.cn (NSMail) with SMTP id 49AF8B803C9E;
+	Tue, 22 Oct 2024 10:53:02 +0800 (CST)
+X-ns-mid: postfix-6717138E-155168618
+Received: from localhost.localdomain (unknown [172.25.120.36])
+	by node2.com.cn (NSMail) with ESMTPA id EDCBBB803C9E;
+	Tue, 22 Oct 2024 02:53:00 +0000 (UTC)
+From: Hongling Zeng <zenghongling@kylinos.cn>
+To: linux-kernel@vger.kernel.org,
+	platform-driver-x86@vger.kernel.org
+Cc: cascardo@holoscopio.com,
+	hdegoede@redhat.com,
+	ilpo.jarvinen@linux.intel.com,
+	zhongling0719@126.com,
+	Hongling Zeng <zenghongling@kylinos.cn>
+Subject: [PATCH v2] platform/x86: classmate-laptop: Replace snprintf in show functions with sysfs_emit
+Date: Tue, 22 Oct 2024 10:52:59 +0800
+Message-Id: <20241022025259.9255-1-zenghongling@kylinos.cn>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="EiFZ20l18MgsAYaW"
-Content-Disposition: inline
-In-Reply-To: <20241021180252.3531-2-mario.limonciello@amd.com>
-
-
---EiFZ20l18MgsAYaW
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Mon, Oct 21, 2024 at 01:02:40PM -0500, Mario Limonciello wrote:
-> From: Perry Yuan <Perry.Yuan@amd.com>
->=20
-> Introduce a new documentation file, `amd_hfi.rst`, which delves into the
-> implementation details of the AMD Hardware Feedback Interface and its
-> associated driver, `amd_hfi`. This documentation describes how the
-> driver provides hint to the OS scheduling which depends on the capability
-> of core performance and efficiency ranking data.
->=20
-> This documentation describes
-> * The design of the driver
-> * How the driver provides hints to the OS scheduling
-> * How the driver interfaces with the kernel for efficiency ranking data.
+show() must not use snprintf() when formatting the value to be
+returned to user space.
 
-The doc LGTM, thanks!
+Signed-off-by: Hongling Zeng<zenghongling@kylinos.cn>
+---
+ drivers/platform/x86/classmate-laptop.c | 7 ++++---
+ 1 file changed, 4 insertions(+), 3 deletions(-)
 
-Reviewed-by: Bagas Sanjaya <bagasdotme@gmail.com>
-
+diff --git a/drivers/platform/x86/classmate-laptop.c b/drivers/platform/x=
+86/classmate-laptop.c
+index cb6fce6..6b1b8e4 100644
+--- a/drivers/platform/x86/classmate-laptop.c
++++ b/drivers/platform/x86/classmate-laptop.c
+@@ -12,6 +12,7 @@
+ #include <linux/backlight.h>
+ #include <linux/input.h>
+ #include <linux/rfkill.h>
++#include <linux/sysfs.h>
+=20
+ struct cmpc_accel {
+ 	int sensitivity;
+@@ -208,7 +209,7 @@ static ssize_t cmpc_accel_sensitivity_show_v4(struct =
+device *dev,
+ 	inputdev =3D dev_get_drvdata(&acpi->dev);
+ 	accel =3D dev_get_drvdata(&inputdev->dev);
+=20
+-	return sprintf(buf, "%d\n", accel->sensitivity);
++	return sysfs_emit(buf, "%d\n", accel->sensitivity);
+ }
+=20
+ static ssize_t cmpc_accel_sensitivity_store_v4(struct device *dev,
+@@ -257,7 +258,7 @@ static ssize_t cmpc_accel_g_select_show_v4(struct dev=
+ice *dev,
+ 	inputdev =3D dev_get_drvdata(&acpi->dev);
+ 	accel =3D dev_get_drvdata(&inputdev->dev);
+=20
+-	return sprintf(buf, "%d\n", accel->g_select);
++	return sysfs_emit(buf, "%d\n", accel->g_select);
+ }
+=20
+ static ssize_t cmpc_accel_g_select_store_v4(struct device *dev,
+@@ -550,7 +551,7 @@ static ssize_t cmpc_accel_sensitivity_show(struct dev=
+ice *dev,
+ 	inputdev =3D dev_get_drvdata(&acpi->dev);
+ 	accel =3D dev_get_drvdata(&inputdev->dev);
+=20
+-	return sprintf(buf, "%d\n", accel->sensitivity);
++	return sysfs_emit(buf, "%d\n", accel->sensitivity);
+ }
+=20
+ static ssize_t cmpc_accel_sensitivity_store(struct device *dev,
 --=20
-An old man doll... just what I always wanted! - Clara
+2.1.0
 
---EiFZ20l18MgsAYaW
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYKAB0WIQSSYQ6Cy7oyFNCHrUH2uYlJVVFOowUCZxb1oQAKCRD2uYlJVVFO
-o2W5AP9eArac6T9AE3et/1yG+qIYjyEo74c7IJg5uJzRKTUa6QEAiMnYPsaLTJ1K
-92Vz9xCv2BZme+lqTyZrz1gMUbJXwgM=
-=qVoF
------END PGP SIGNATURE-----
-
---EiFZ20l18MgsAYaW--
