@@ -1,164 +1,198 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3EB2D14EC4E;
-	Tue, 22 Oct 2024 08:51:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 90284191F65;
+	Tue, 22 Oct 2024 08:56:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729587099; cv=none; b=rws0qHrh4qKovx3n2r8ixXKPcQhsaH/vUNikeJpNizbpYMiJlFugYme/wpKe7rRmmC9kSgloPxKt3iK1Y2vd52QRyf/ySdBP5ieCP3183VUZHTpi1qHWGjCyxce5/s7+LFRfHfI6zGwKvpsl4qMSldttnsn7BHYDnQTsjDZVCUY=
+	t=1729587419; cv=none; b=X/oOTK6pojsQbNNYK3XfzpcilMs0VQBQxGbhIMugYoGc3QXOs8dTQ7bxVIsurZuPrZDSfRnsboK3QvGuLl2bXklZ87zzP9cjqR3d9cE0vQFeV+GKwMPSRbiOBfJyHgFeCL+OLyM2t2wGeUThCvYBw77aBOwTKIs4PA0ZUQB7Ld4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729587099; c=relaxed/simple;
-	bh=qqV0Cw4G1rGc92pDeHBVr7u8eN+MvnuOQbCULxR7YYc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=aN/fPvvgioiBKg3fEmwlxEl5yvojjy9F0A2T4GSUk6yOXe1mQJVVKM/XU7MgQ8C+rWHxJzrF4JFAUUynVehxWUiMt5KBI/7ZsNVmwMDK21c+50EpSbHI/N5LuE3P4k61WeZfixinSTjw21mSKiE/cxm5jQ4KjZdnwG36PfbYVdI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GwqCG5zN; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1729587419; c=relaxed/simple;
+	bh=PBS6patg8orzXZGMN84nPmy0cveg0QjRKx5CAIpZy8k=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=mnK/BUXlMqrh7n/BRRF/d8mXy3p72tbSVNZ0OnRgedZ6P6YaScpXhxHgwAUTpWFTSkSoVvCqWb4eGe+qpfcIjr/UCmr+k61RHtEzGiJIXyDURebAIbNdtQ+0JHODkoTKVLX4JzObzkDGYVnfe+KK7tnTjeIXJTw92p6gkE3gAkE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=KtA4ToSH; arc=none smtp.client-ip=192.198.163.19
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GwqCG5zN"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B9EA6C4CEC3;
-	Tue, 22 Oct 2024 08:51:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1729587098;
-	bh=qqV0Cw4G1rGc92pDeHBVr7u8eN+MvnuOQbCULxR7YYc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=GwqCG5zNGfobP04GollHwemOFiANjht8MfZD3gxpn6uaLoUFbUbYSTiaPR4Wt3laM
-	 t07Y8I07CLJh1SAAZ0QP4iwPUk5eMpI/pQfu7tJkPDEJKel5WyRt485nf0jItrY/Bw
-	 5+Wl1O5ruAySb/iltex/+2c52o5dPeejaTP4YF1utDh27taZx0TZBPPp3KD//DFz9Q
-	 A0T1OTMxxSkNixYaeV820T4xhY/xr5ttvfqMx6v0KWPfqemzYgL07bPO/15SrFSSzB
-	 58zoVib349eXauKxN1a0iDAPNm3QkKrOVckmrTab5kf4mrKmtIsc2H8up/cs3wVWuq
-	 ef5wX85Bd77Fg==
-Date: Tue, 22 Oct 2024 10:51:33 +0200
-From: Benjamin Tissoires <bentiss@kernel.org>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="KtA4ToSH"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1729587418; x=1761123418;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=PBS6patg8orzXZGMN84nPmy0cveg0QjRKx5CAIpZy8k=;
+  b=KtA4ToSHfHncqAVLHnG7C5l7EUk39Oiwb7mTTABRlEl/OaG4r8AG+nB7
+   R/UPB2uu42uHwqDpYHbxlaEM5moOj9/ByJY1giQ7PnBmNkA45/gXq1r0C
+   8cC+H09Muq+Dy/esGLDMcZl0u4PZNYb9w4DbY1hDZaglwVBLbZR8Myx8q
+   I+ajGF65VwC+tbJtNMvKWRKYbxyQhWaJqODzE0aN5ZdLrdQBEUF4QaaHy
+   PQuTVNPYwwo2lC9CBXJ4uZASNNxtF5bgQfIz0OByoyYml45+rk1J+S2ml
+   l42aWr1PvfqGgzZPmnivF5b7Rw808/rq2ycxn5lS6ClTwK7g/pDM4Ub7A
+   Q==;
+X-CSE-ConnectionGUID: EeqNBb3yS3uYQ/ldFc9PXQ==
+X-CSE-MsgGUID: 1/ydBne2Qb2aYKrhrBaFTw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11232"; a="28564714"
+X-IronPort-AV: E=Sophos;i="6.11,222,1725346800"; 
+   d="scan'208";a="28564714"
+Received: from orviesa002.jf.intel.com ([10.64.159.142])
+  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Oct 2024 01:56:57 -0700
+X-CSE-ConnectionGUID: 0MU8dnb7QXGk+MiEJrRF7A==
+X-CSE-MsgGUID: KJGFvjYHSeq84FJ84h6e9Q==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.11,222,1725346800"; 
+   d="scan'208";a="110616118"
+Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.146])
+  by orviesa002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Oct 2024 01:56:53 -0700
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Tue, 22 Oct 2024 11:56:49 +0300 (EEST)
 To: Hans de Goede <hdegoede@redhat.com>
-Cc: Armin Wolf <W_Armin@gmx.de>, Pavel Machek <pavel@ucw.cz>, 
-	Werner Sembach <wse@tuxedocomputers.com>, Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>, 
-	dri-devel@lists.freedesktop.org, jelle@vdwaa.nl, jikos@kernel.org, lee@kernel.org, 
-	linux-input@vger.kernel.org, linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org, 
-	miguel.ojeda.sandonis@gmail.com, ojeda@kernel.org, onitake@gmail.com, 
-	platform-driver-x86@vger.kernel.org
-Subject: Re: [PATCH 1/1] platform/x86/tuxedo: Add virtual LampArray for
- TUXEDO NB04 devices
-Message-ID: <kywhqw5ef6hioemoydwub57dcmfuu3bwqpz3vjur4pkabboydo@2hrqj3zy4txv>
-References: <sih5i2ausorlpiosifvj2vvlut4ok6bbgt6cympuxhdbjljjiw@gg2r5al552az>
- <82a6eca1-728c-436f-8c4d-073d8a43ee27@tuxedocomputers.com>
- <5crqia4gecxg62n2m2lf6haiifue4wlxrr3g35dyoaa3svjyuj@cd5bhouz5rlh>
- <4a761cd0-611a-4245-8353-5c66ba133715@tuxedocomputers.com>
- <rszv4p34oivysoyi337dxwooebipiikzd3pyq7rof5r3agbzce@xejutpd4jcfv>
- <06c58141-4aa9-4b54-8ae4-e27069561ac9@tuxedocomputers.com>
- <48a8d62f-ea3f-4f17-b917-ff3aaa83e89c@gmx.de>
- <ZwlDpCPhieF3tezX@duo.ucw.cz>
- <a796f0e7-47a8-40fa-a64e-9dd56117bf78@gmx.de>
- <c52019d7-01b4-4585-a2d1-b44b0a773fc9@redhat.com>
+cc: =?ISO-8859-15?Q?J=E9r=F4me_de_Bretagne?= <jerome.debretagne@gmail.com>, 
+    Maximilian Luz <luzmaximilian@gmail.com>, 
+    Bjorn Andersson <andersson@kernel.org>, 
+    Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>, 
+    Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+    Conor Dooley <conor+dt@kernel.org>, Johan Hovold <johan+linaro@kernel.org>, 
+    linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, 
+    LKML <linux-kernel@vger.kernel.org>, platform-driver-x86@vger.kernel.org
+Subject: Re: [PATCH v2 3/5] platform/surface: aggregator_registry: Add Surface
+ Pro 9 5G
+In-Reply-To: <8370d062-b3d2-46f5-9e7b-8e16edde8480@redhat.com>
+Message-ID: <555f8a3a-ae5e-57e7-f176-96c52e1a5d45@linux.intel.com>
+References: <20240908223505.21011-1-jerome.debretagne@gmail.com> <20240908223505.21011-4-jerome.debretagne@gmail.com> <f9cbd1c3-eb05-4262-bdc6-6d37e83179e5@gmail.com> <CA+kEDGEdd_s+DGKsVNY6Jy870B72eHuaj2EgEnwP8J46ZGbxpQ@mail.gmail.com>
+ <8370d062-b3d2-46f5-9e7b-8e16edde8480@redhat.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <c52019d7-01b4-4585-a2d1-b44b0a773fc9@redhat.com>
+Content-Type: multipart/mixed; boundary="8323328-1015361985-1729587409=:969"
 
-On Oct 22 2024, Hans de Goede wrote:
-> Hi Armin,
-> 
-> On 21-Oct-24 10:26 PM, Armin Wolf wrote:
-> > Am 11.10.24 um 17:26 schrieb Pavel Machek:
-> > 
-> >> Hi!
+  This message is in MIME format.  The first part should be readable text,
+  while the remaining parts are likely unreadable without MIME-aware tools.
+
+--8323328-1015361985-1729587409=:969
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+
+On Mon, 7 Oct 2024, Hans de Goede wrote:
+
+> Hi J=C3=A9r=C3=B4me,
+>=20
+> On 7-Oct-24 8:44 PM, J=C3=A9r=C3=B4me de Bretagne wrote:
+> > Hi,
+> >=20
+> > I'm replying with Hans and Ilpo, who I initially forgot for this
+> > patch, sorry about that.
+>=20
+> No worries thank you for forwarding Maximilian's review.
+>=20
+> > Le mar. 10 sept. 2024 =C3=A0 23:29, Maximilian Luz
+> > <luzmaximilian@gmail.com> a =C3=A9crit :
 > >>
-> >>>> 1.
-> >>>> https://lore.kernel.org/all/6b32fb73-0544-4a68-95ba-e82406a4b188@gmx.de/
-> >>>> -> Should be no problem? Because this is not generally exposing wmi
-> >>>> calls, just mapping two explicitly with sanitized input (whitelisting
-> >>>> basically).
-> >>> It would be OK to expose a selected set of WMI calls to userspace and sanitizing the input of protect potentially buggy firmware from userspace.
+> >> Looks good. Two very small nit-picks below, if this goes for a v3:
+> >=20
+> > Atm I'm not planning for a v3 as Bjorn has applied the other v2
+> > patches earlier today.
+> > Feel free to include the 2 small suggestions when applying this patch m=
+aybe?
+> >=20
+> >> On 9/9/24 12:35 AM, J=C3=A9r=C3=B4me de Bretagne wrote:
+> >>> Add SAM client device nodes for the Surface Pro 9 5G, with the usual
+> >>> battery/AC and HID nodes for keyboard and touchpad support.
 > >>>
-> >> I don't believe this is good idea. Passthrough interfaces where
-> >> userland talks directly to hardware are very tricky.
+> >>> Signed-off-by: J=C3=A9r=C3=B4me de Bretagne <jerome.debretagne@gmail.=
+com>
+> >>> ---
+> >>>   .../surface/surface_aggregator_registry.c       | 17 ++++++++++++++=
++++
+> >>>   1 file changed, 17 insertions(+)
+> >>>
+> >>> diff --git a/drivers/platform/surface/surface_aggregator_registry.c b=
+/drivers/platform/surface/surface_aggregator_registry.c
+> >>> index 25c8aa2131d6..8b34d7e465c2 100644
+> >>> --- a/drivers/platform/surface/surface_aggregator_registry.c
+> >>> +++ b/drivers/platform/surface/surface_aggregator_registry.c
+> >>> @@ -390,6 +390,21 @@ static const struct software_node *ssam_node_gro=
+up_sp9[] =3D {
+> >>>       NULL,
+> >>>   };
+> >>>
+> >>> +/* Devices for Surface Pro 9 5G. */
 > >>
-> >>> Regarding the basic idea of having a virtual HID interface: i would prefer to create a illumination subsystem instead, but i have to agree that we should be doing this
-> >>> only after enough drivers are inside the kernel, so we can design a
-> >>> suitable interface for them. For now, creating a virtual HID
-> >>> interface seems to be good enough.
-> >> I have an RGB keyboard, and would like to get it supported. I already
-> >> have kernel driver for LEDs (which breaks input functionality). I'd
-> >> like to cooperate on "illumination" subsystem.
+> >> Would be nice if you could change the comment on the SP9 node group to
+> >> "Surface Pro 9 (Intel/x86)" and the comment here to "Surface Pro 9 5G
+> >> (ARM/QCOM)" or something along those lines to make things a bit more
+> >> clear.
 > >>
-> >> Best regards,
-> >>                                 Pavel
-> > 
-> > Sorry for taking a bit long to respond.
-> > 
-> > This "illumination" subsystem would (from my perspective) act like some sort of LED subsystem
-> > for devices with a high count of LEDs, like some RGB keyboards.
-> > 
-> > This would allow us too:
-> > - provide an abstract interface for userspace applications like OpenRGB
-> > - provide an generic LED subsystem emulation on top of the illumination device (optional)
-> > - support future RGB controllers in a generic way
-> > 
-> > Advanced features like RGB effects, etc can be added later should the need arise.
-> > 
-> > I would suggest that we model it after the HID LampArray interface:
-> > 
-> > - interface for querying:
-> >  - number of LEDs
-> >  - supported colors, etc of those LEDs
-> >  - position of those LEDs if available
-> >  - kind (keyboard, ...)
-> >  - latency, etc
-> > - interface for setting multiple LEDs at once
-> > - interface for setting a range of LEDs at once
-> > - interface for getting the current LED colors
-> > 
-> > Since sysfs has a "one value per file" rule, i suggest that we use a chardev interface
-> > for querying per-LED data and for setting/getting LED colors.
-> > 
-> > I do not know if mixing sysfs (for controller attributes like number of LEDs, etc) and IOCTL
-> > (for setting/getting LED colors) is a good idea, any thoughts?
-> 
-> I wonder what the advantage of this approach is over simply using HID LampArray
-> (emulation), openRGB is already going to support HID LampArray and since Microsoft
-> is pushing this we will likely see it getting used more and more.
-> 
-> Using HID LampArray also has the advantage that work has landed and is landing
-> to allow safely handing over raw HID access to userspace programs or even
-> individual graphical apps with the option to revoke that access when it is
-> no longer desired for the app to have access.
-> 
-> HID LampArray gives us a well designed API + a safe way to give direct access
-> to e.g. games to control the lighting. I really don't see the advantage of
-> inventing our own API here only to then also have to design + code some way to
-> safely give access to sandboxed apps.
-> 
-> Note that giving access to sandboxed apps is a lot of work, it is not just
-> kernel API it also requires designing a portal interface + implementing
-> that portal for at least GNOME, KDE and wlroots.
-> 
-> Personally I really like the idea to just emulate a HID LampArray device
-> for this instead or rolling our own API.  I believe there need to be
-> strong arguments to go with some alternative NIH API and I have not
-> heard such arguments yet.
+> >>> +static const struct software_node *ssam_node_group_sp9_5G[] =3D {
+> >>
+> >> (This is really just me being a bit obsessive:) It would be nice to ha=
+ve
+> >> all-lowercase variable names (regarding the 5G).
+> >=20
+> > :)
+> >=20
+> >>> +     &ssam_node_root,
+> >>> +     &ssam_node_hub_kip,
+> >>> +     &ssam_node_bat_ac,
+> >>> +     &ssam_node_bat_main,
+> >>> +     &ssam_node_tmp_sensors,
+> >>> +     &ssam_node_hid_kip_keyboard,
+> >>> +     &ssam_node_hid_kip_penstash,
+> >>> +     &ssam_node_hid_kip_touchpad,
+> >>> +     &ssam_node_hid_kip_fwupd,
+> >>> +     &ssam_node_hid_sam_sensors,
+> >>> +     &ssam_node_kip_tablet_switch,
+> >>> +     NULL,
+> >>> +};
+> >>>
+> >>>   /* -- SSAM platform/meta-hub driver. ------------------------------=
+---------- */
+> >>>
+> >>> @@ -462,6 +477,8 @@ static const struct acpi_device_id ssam_platform_=
+hub_acpi_match[] =3D {
+> >>>   MODULE_DEVICE_TABLE(acpi, ssam_platform_hub_acpi_match);
+> >>>
+> >>>   static const struct of_device_id ssam_platform_hub_of_match[] __may=
+be_unused =3D {
+> >>> +     /* Surface Pro 9 5G */
+> >>> +     { .compatible =3D "microsoft,arcata", (void *)ssam_node_group_s=
+p9_5G },
+> >>>       /* Surface Laptop 7 */
+> >>>       { .compatible =3D "microsoft,romulus13", (void *)ssam_node_grou=
+p_sl7 },
+> >>>       { .compatible =3D "microsoft,romulus15", (void *)ssam_node_grou=
+p_sl7 },
+> >>
+> >> Thanks!
+> >>
+> >> Reviewed-by: Maximilian Luz <luzmaximilian@gmail.com>
+> >=20
+> > Thanks for your review and all the work about SSAM for Surface owners!
+>=20
+> FWIW I agree with Maximilian's remarks and I would really like to
+> see these applied to clearly differentiate the x86 and ARM versions.
+>=20
+> Normally I would pick up a patch like this which just adds hw-ids as
+> a fix for 6.12-rc# and squash in the suggested changes.
+>=20
+> But looking at the test of the series this is more 6.13 material
+> since the rest is landing in 6.13, right ?
+>=20
+> Patches for linux-next / 6.13 are managed by Ilpo this cycle.
+>=20
+> So I'll leave it up to Ilpo if he will squash in the suggested changes
+> or if he wants a new version (of just this patch, no need for a v3
+> of the already applied patches).
 
-Agreed on everything Hans said.
+Hi all,
 
-I'll personnaly fight against any new "illumination" API as long as we
-don't have committed users. This is the same policy the DRM folks are
-applying and it makes a lot of sense:
-We can devise a lot about this new API, but if we don't have users for
-it, it's energy wasted.
+I've now applied patch 3 to review-ilpo branch in pdx86 repo.
 
-When I mean users, I'm not talking about an example in the kernel tree
-or some quick prototype. I mean talking to the existing folks already
-doing that and getting their stamp of approval and have an actual
-integrated prototype.
+I'd appreciate if somebody confirms I got those comment edits right.
 
-We know that OpenRGB and probably others will implement LampArray, if
-not for Linux, at least for Mac and Windows. So we will have users for
-this protocol. A new Linux specific protocol should be discussed with
-them, but I doubt that they'll be happy writing an entirely new
-abstraction layer because of Linux.
+--=20
+ i.
 
-Cheers,
-Benjamin
+--8323328-1015361985-1729587409=:969--
