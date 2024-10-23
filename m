@@ -1,39 +1,59 @@
-Received: from mail.tuxedocomputers.com (mail.tuxedocomputers.com [157.90.84.7])
+Received: from mail-wm1-f42.google.com (mail-wm1-f42.google.com [209.85.128.42])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2855E1CEEA5;
-	Wed, 23 Oct 2024 17:23:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=157.90.84.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF46C1D0148;
+	Wed, 23 Oct 2024 17:26:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729704233; cv=none; b=nc3GZCG0uXBljdmX3th+5oOr2aZcpVpLQjWHhtREe9ZMg9easc4b8hMFUBkcydOqmu+9KPLmNa0BYYgOVC1Bd3FggTAnashQMiu/LjI8zpSmN4dbYsvxyk9qZb2jKEqztRNIS82mqgJEX+7XoHu4RPUWb++6iO7TueeQ/4n4YHk=
+	t=1729704362; cv=none; b=D2nue9Ltlhwfps9IlIZFYuIhkDW9rxtQb4pNUvUkyXaqVg/OMc48cxdV8IPul5lbYt3ROtdHrhU0wU9xwvRHCPmjzWlYSOVQ+ahnlr38dRAvUvgArqZJ/9Mduo48FBM0QVAlbLvMihysZqvDHHUYjjE0TYibvbolb8IyQ6nVfeY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729704233; c=relaxed/simple;
-	bh=/wChc769FrveyeULbUu5VMoq4qEYqPg7P/TBfq06GWA=;
+	s=arc-20240116; t=1729704362; c=relaxed/simple;
+	bh=ExKSSArRGdy7bRdVoF8OmsrxTfnz4ONUWKTYnBGexz8=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=RNP2ejVlXJHDegCSztLuFSAm7oqWCRcXlnwYc9GtxxkycZ51/0O9CTzQHUdhYgfYP0sduX3+VmrnlXPYuxkJywUmPTQhCMe+dffi1CSQ8/L9+LsQuiUne28+NZvky6yGpmFl0nDYbWFxkcrmiPatN11fq4NizyCrkynE85U8hAI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=tuxedocomputers.com; spf=pass smtp.mailfrom=tuxedocomputers.com; dkim=pass (1024-bit key) header.d=tuxedocomputers.com header.i=@tuxedocomputers.com header.b=GPlu6sm8; arc=none smtp.client-ip=157.90.84.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=tuxedocomputers.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tuxedocomputers.com
+	 In-Reply-To:Content-Type; b=A3ljGjN3TOhreoKeUho795sfch0ENimqZwDwUIxzVajS7XhKWdOwhSnELH/1o28DXxckaT52EP7aKr1PcDJfeATFVhdAjM4qAC9dnvqL+RGsbgRd0KFuezZ96a19d5IKqBRJ6pj97zv3pJGpfRwJ4lZmQMPop4wfoI/pIZlsmro=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=JvDO/zTb; arc=none smtp.client-ip=209.85.128.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=tuxedocomputers.com header.i=@tuxedocomputers.com header.b="GPlu6sm8"
-Received: from [192.168.42.96] (p5de457db.dip0.t-ipconnect.de [93.228.87.219])
-	(Authenticated sender: wse@tuxedocomputers.com)
-	by mail.tuxedocomputers.com (Postfix) with ESMTPSA id A620B2FC0059;
-	Wed, 23 Oct 2024 19:23:47 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=tuxedocomputers.com;
-	s=default; t=1729704227;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=fJwTogCAjFhCy8eCThBMn1RkHaHuUfiNHPMBTOKIILs=;
-	b=GPlu6sm8GuelVPPVuLeLFkLKO8qJLLY79vKP3JFRI0xISXc0sA2zjxZF8VDXKK7u/ASgbH
-	Lza1Vb+iDHrfylWM0a+w1kLKzDNwrKEUT9tnUlMdg58TZXPOTM/5BgRG1MPMzGhZ0/FMRf
-	rI8c5GadKgO7iWpHKZsrmZABGpws+y0=
-Authentication-Results: mail.tuxedocomputers.com;
-	auth=pass smtp.auth=wse@tuxedocomputers.com smtp.mailfrom=wse@tuxedocomputers.com
-Message-ID: <8331d2e5-ab27-4aa4-8de8-f81ecbe1c958@tuxedocomputers.com>
-Date: Wed, 23 Oct 2024 19:23:47 +0200
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JvDO/zTb"
+Received: by mail-wm1-f42.google.com with SMTP id 5b1f17b1804b1-43163667f0eso239935e9.0;
+        Wed, 23 Oct 2024 10:26:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1729704358; x=1730309158; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=kb9i9zUsNMVUYPzfr+JSRlA9YASTj0l4XU9VARfF+lg=;
+        b=JvDO/zTbvhM//Q7lss6FbwkjzjS5DJsgi+86XUOuqsBTMVeKKdicCtU9J5YIT1k42U
+         AIJxvvei8W12O8CyezWz21bEdIaQ9/H49VOWaTWSxaJ8WVY0mBCvDnSsU1vikqZNR3RG
+         gNgXnds6gWN4OjDVjDABWe+N6+3fv9ykJF43lJDkD4GAkcyZFgSwAR9JowsLxrBzILXR
+         gY4Op9HckUwMIej8O1XzvG9fDDduY3D8omisOvwwh5BHNFdg68CXG3PFfunBd9aLMfVO
+         9zJfAhsPHWXNbF7N92KsR7NDLKvlydinyWb2p2f+1ia+k6qcRNWz99PyLSn+eJzE700y
+         wgzQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1729704358; x=1730309158;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=kb9i9zUsNMVUYPzfr+JSRlA9YASTj0l4XU9VARfF+lg=;
+        b=KO2yxjbc/Vofsvugv6dxEIuWeYNkf8aUHvZTV4Tn5kEzWhCKskAdOJrn2+pdv/PQJ3
+         uc8IWPeHR0AjwEhOkscEsXw8eAEOcXnXRV7iJ8u1d8gia4eB7Qikt600Eeu5SQkDg012
+         zteotSq6LJcSNSqOsX8717x0zbbQ/WX2pEVG7fb5fsRfzy+9qDdDnBiHxv8dxFQhJIaE
+         WPO7K0dYRSK3KgOgpGuIvARL2eIiNJ+UyCZBP9WOvc4G18ERiLXrmmJzU1LM+baFiZrr
+         W47ZWd1BiIMz6ygZOZ+pfCx24Z/epDQ3epSPmjLoLir4DdkDH4iocL5DqhA3LOrFuclc
+         CuOg==
+X-Forwarded-Encrypted: i=1; AJvYcCUFkxz5/C/REyFkaJdcyJjwM/k2subj6+NWoIdutEa34yzbQszO+6L7iFh+WTkbiwWo9fNRYgE+m/XQ7lqOeoNaHUp/ww==@vger.kernel.org, AJvYcCUhSLJ448pt2Mcf+EurLrkNTTw6fvj7s57tAF4miCWx6IvkwZRdo4mheZMu0jyNJ5fgya7XJAyDv0v1loks@vger.kernel.org, AJvYcCWZ90wTKpHVQWlwn6hLHOex3c5HympYCW/CJs9IQZsl9SSs198t7dAU414PKx8nRcaYPD0Df3/t/F4F@vger.kernel.org, AJvYcCX0QSM0vQQfssFFvKeDM3Zdqvu6Gy6Vx09W06QPL7Tfp6lTQgQWk1ebjcqCNjG8zx4/G4IqEJON9clCQ+UG/A==@vger.kernel.org
+X-Gm-Message-State: AOJu0YzoDteE3+2627KIxg3AtaClMiZGgBx525j/iPkb2wlR5n04H7oE
+	PwPbh4aUUkUDDqFpcYvOhcw6bwie7iKM/fnPYaBiewM3nWxPp0qE
+X-Google-Smtp-Source: AGHT+IEbJlcbMDXNmFlVO5YLPk7N+x59kLpszwlxBi60Qf5wpQvKuK0j3CdPszBmP5ozz2mfUuD2Og==
+X-Received: by 2002:a05:600c:34d4:b0:431:5533:8f0b with SMTP id 5b1f17b1804b1-43184246647mr34064505e9.32.1729704358419;
+        Wed, 23 Oct 2024 10:25:58 -0700 (PDT)
+Received: from ?IPV6:2a02:8071:b783:140:927c:82ba:d32d:99c1? ([2a02:8071:b783:140:927c:82ba:d32d:99c1])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43186be509dsm21671835e9.16.2024.10.23.10.25.57
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 23 Oct 2024 10:25:57 -0700 (PDT)
+Message-ID: <ad9fa9f2-7f97-401a-8e8f-ae633ab1932b@gmail.com>
+Date: Wed, 23 Oct 2024 19:25:56 +0200
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -41,156 +61,43 @@ List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/1] platform/x86/tuxedo: Add virtual LampArray for TUXEDO
- NB04 devices
-To: Benjamin Tissoires <bentiss@kernel.org>
-Cc: Armin Wolf <W_Armin@gmx.de>, Pavel Machek <pavel@ucw.cz>,
- Hans de Goede <hdegoede@redhat.com>,
- =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
- dri-devel@lists.freedesktop.org, jelle@vdwaa.nl, jikos@kernel.org,
- lee@kernel.org, linux-input@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-leds@vger.kernel.org, miguel.ojeda.sandonis@gmail.com,
- ojeda@kernel.org, onitake@gmail.com, platform-driver-x86@vger.kernel.org
-References: <zph6fnuaamhayivmzftowjw6klgcy2gb7vdub2v2yo7n665vpo@rkxtorfvmzph>
- <7ce4470c-a502-416a-8472-a5b606bb8fd4@tuxedocomputers.com>
- <d7gk2mgihtg6242l3isnhw3xpdt745ehpu2kvim2xxgmxdhat7@g5cqei7uqujj>
- <39f84cfe-bb89-4194-81a9-e178c93e5309@tuxedocomputers.com>
- <sih5i2ausorlpiosifvj2vvlut4ok6bbgt6cympuxhdbjljjiw@gg2r5al552az>
- <82a6eca1-728c-436f-8c4d-073d8a43ee27@tuxedocomputers.com>
- <5crqia4gecxg62n2m2lf6haiifue4wlxrr3g35dyoaa3svjyuj@cd5bhouz5rlh>
- <4a761cd0-611a-4245-8353-5c66ba133715@tuxedocomputers.com>
- <rszv4p34oivysoyi337dxwooebipiikzd3pyq7rof5r3agbzce@xejutpd4jcfv>
- <06c58141-4aa9-4b54-8ae4-e27069561ac9@tuxedocomputers.com>
- <zmecavqq5iztb5pkdkk6q52lupolpnufisid4ljydesqh2dtoe@qynhfo3n2i6q>
+Subject: Re: [PATCH v2 3/5] platform/surface: aggregator_registry: Add Surface
+ Pro 9 5G
+To: =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+ Hans de Goede <hdegoede@redhat.com>
+Cc: =?UTF-8?Q?J=C3=A9r=C3=B4me_de_Bretagne?= <jerome.debretagne@gmail.com>,
+ Bjorn Andersson <andersson@kernel.org>,
+ Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Johan Hovold <johan+linaro@kernel.org>,
+ linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+ LKML <linux-kernel@vger.kernel.org>, platform-driver-x86@vger.kernel.org
+References: <20240908223505.21011-1-jerome.debretagne@gmail.com>
+ <20240908223505.21011-4-jerome.debretagne@gmail.com>
+ <f9cbd1c3-eb05-4262-bdc6-6d37e83179e5@gmail.com>
+ <CA+kEDGEdd_s+DGKsVNY6Jy870B72eHuaj2EgEnwP8J46ZGbxpQ@mail.gmail.com>
+ <8370d062-b3d2-46f5-9e7b-8e16edde8480@redhat.com>
+ <555f8a3a-ae5e-57e7-f176-96c52e1a5d45@linux.intel.com>
 Content-Language: en-US
-From: Werner Sembach <wse@tuxedocomputers.com>
-In-Reply-To: <zmecavqq5iztb5pkdkk6q52lupolpnufisid4ljydesqh2dtoe@qynhfo3n2i6q>
+From: Maximilian Luz <luzmaximilian@gmail.com>
+In-Reply-To: <555f8a3a-ae5e-57e7-f176-96c52e1a5d45@linux.intel.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
 
+On 10/22/24 10:56 AM, Ilpo Järvinen wrote:
 
-Am 22.10.24 um 11:05 schrieb Benjamin Tissoires:
-> Sorry I should have answered earlier...
->
-> On Oct 09 2024, Werner Sembach wrote:
->> Resend because HTML mail ..., but I think I now know when Thunderbird does
->> it: Every time I include a link it gets converted.
->>
->> Hi
->>
->> Am 08.10.24 um 17:21 schrieb Benjamin Tissoires:
->>> On Oct 08 2024, Werner Sembach wrote:
->>>> [...]
->>> Yeah, it just means that you can query or send the data. You can also
->>> use HIDIOCGINPUT() and HIDIOCSOUTPUT() to get a current input report and
->>> set an output report through the hidraw ioctl...
->>>
->>> Internally, HIDIOCGINPUT() uses the same code path than
->>> HIDIOCGFEATURE(), but with the report type being an Input instead of a
->>> Feature. Same for HIDIOCSOUTPUT() and HIDIOCSFEATURE().
->> Ok so just a difference in definition not in implementation.
->>
->> Then I use a get feature report for the device status function and use it as
->> input and output at the same time, and use a set output report for the led
->> update function (which technically has a return value but i think it's
->> always 0 anyway).
-> not quite. You can not use a get feature to set something on the device.
->
-> The semantic is:
-> Set -> "write" something on the device (from host to device)
-> Get -> "read" something from the device (from device to host)
->
-> Features can be set/get.
-> Input can only be get.
-> Output can only be set.
->
-> The implementation in the kernel should enforce that.
->
->> I scoured the old thread about exposing WMI calls to userspace, because I
->> remembered that something here came up already.
->>
->> 1. https://lore.kernel.org/all/6b32fb73-0544-4a68-95ba-e82406a4b188@gmx.de/
->> -> Should be no problem? Because this is not generally exposing wmi calls,
->> just mapping two explicitly with sanitized input (whitelisting basically).
->>
->> 2.
->> https://lore.kernel.org/all/b6d79727-ae94-44b1-aa88-069416435c14@redhat.com/
->> -> Do this concerns this apply here? The actual API to be used is LampArray
->> and the HID mapped WMI calls are just an "internal" interface for the BPF
->> driver, but technically UAPI.
->>
->> Also at Armin and Hans: Do you have comments on this approach?
->>
->>>> (well as far as I can tell the hut doesn't actual specify, if they need to
->>>> be feature reports, or am I missing something?)
->>> They can be both actually. The HUT is missing what's expected here :(.
->>>
->>> However, looking at the HUT RR 84:
->>> https://www.usb.org/sites/default/files/hutrr84_-_lighting_and_illumination_page.pdf
->>>
->>> There is an example of a report descriptor, and they are using Features.
->>> Not Input+Output.
->>>
->>> And looking even further (above), in 3.5 Usage Definitions:
->>> 3.5.2, 3.5.3 and 3.5.5 all of them are meant to be a feature, like:
->>> LampArrayAttributesReport CL – Feature -
->>> LampAttributesRequestReport CL – Feature –
->>> LampAttributesResponseReport CL – Feature –
->>> LampArrayControlReport CL – Feature –
->>>
->>> 3.5.4: can be either feature or output, like:
->>> LampMultiUpdateReport CL – Feature/Output –
->>> LampRangeUpdateReport CL – Feature/ Output –
->>>
->>> So I guess the MS implementation can handle Feature only for all but the
->>> update commands.
->> Thanks for the link, I guess for the BPF driver I will stick to feature
->> reports for the LampArray part until there is actually a hid descriptor
->> spotted in the wild defining LampMultiUpdateReport and LampRangeUpdateReport
->> as Output and not feature.
->>>> and there is the pair with LampAttributesRequestReport and
->>>> LampAttributesResponseReport.
->>> Yeah, not a big deal. The bold IN and OUT are just to say that calling a
->>> setReport on a LampAttributesResponseReport is just ignored AFAIU.
->>>
->>>> Sorry for my confusion over the hid spec.
->>> No worries. It is definitely confusing :)
->> On this note as I fathom:
->>
->> Input Report (usually always get report): Interrupts (the ioctl just there
->> to repeat the last one?)
-> yeah, but from hidraw the kernel calls the device directly to query the
-> report, so some device don't like that and just hang.
->
-> Rule of thumbs: never use get_report on an input report, unless the
-> specification explicitely says that the device is supposed to support
-> it for the given usage.
->
->> Output Report (usually always set report): Async write, no return value
->> (Buffer should stay untouched)
-> yep
->
->> Feature report set: Sync write, no return value (Buffer should stay untouched)
-> yep
->
->> Feature report get: Sync read/write (intended only for read, but not limited
->> to it, uses singular buffer for both input and output)
-> sync read only, no write. The existing values in the incoming buffer are
-> just overwritten.
-Sorry I'm still confused: You said i could do input and output in a singular 
-feature report, but now you say i can't do input or i can't do output, so i 
-still need to use 2?
->
->> I kind of don't get why feature report set exists, but well it's the specs ^^.
-> if "feature report set" doesn't exist, you can not write a vlaue to a
-> feature on a device (because get doesn't allow you to write).
->
-> Anyway, it's a USB implementation detail: input/output are using URB, so
-> direct USB read/write, when Features are using the control endpoint,
-> which allows for a slightly different approach.
->
-> And this transfered as output being async, when features are
-> synchronous.
->
-> Cheers,
-> Benjamin
+[...]
+
+> Hi all,
+> 
+> I've now applied patch 3 to review-ilpo branch in pdx86 repo.
+> 
+> I'd appreciate if somebody confirms I got those comment edits right.
+> 
+
+Hi Ilpo,
+
+looks good to me. Thanks for fixing this up!
+
+Best regards,
+Max
