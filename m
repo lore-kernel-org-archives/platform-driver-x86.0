@@ -1,143 +1,435 @@
-Received: from mout.gmx.net (mout.gmx.net [212.227.17.21])
+Received: from fout-a6-smtp.messagingengine.com (fout-a6-smtp.messagingengine.com [103.168.172.149])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 20F983A8D0;
-	Wed, 23 Oct 2024 07:03:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.21
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C1EEC1C2BD;
+	Wed, 23 Oct 2024 08:15:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.149
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729667032; cv=none; b=dq/ZB/5nWsVQwVNGZeJncwFMN8QBE3BYqCqit4kuk3m4lUI7oWxRowHZ777tP3XwW4OXkIIMmUpOQ4vkiRVITHUUz3p9n7Adja2f8GXqYFg4x6EMUbo0g/Uid6NJ9L4wNspVd/7Z4dz3SULKbOJx8/h62aSSuTg5JSa4NQdQLCY=
+	t=1729671349; cv=none; b=eRK7JQ4EwIZ6Oel03CX9RQCqTnfMtjXsk885Zh+NUoZPYfGJVburoOXZG1JQ5dzkFBFvbu5VxjISXjgrw7xeONkh8AKRb9hPmddO5XspQFSO+d/ak9akg+r7TTBgaXJ7nkkScMg+5ntm/08pi0PorUShOPyy4fF8ms06skeRVUM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729667032; c=relaxed/simple;
-	bh=kXnezDBNSe442Wp0C9s+qIN4YJtpiOtN2RsiZGhRlms=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=j92oDKACPynwClZSf5JYthyYDlLBSqqyCn6ktQglLp/T6e/KEwXO8dM1Pl2pB5b2bfzwdVthXNI1pb0580GIjLa2PcYHoIZdZDsxewaCRyS14MLoS926epgFgDw12q8dqGGJyLkxjh67efkTwl2RE4G8qJYY/99bwMBbQXvajrs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b=T4GWh7sj; arc=none smtp.client-ip=212.227.17.21
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
+	s=arc-20240116; t=1729671349; c=relaxed/simple;
+	bh=keqyoGxTGCop3S+33pegqN9kzIXjLkGFnHSGgAKVVtg=;
+	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
+	 Subject:Content-Type; b=U28hzXSokPG2r1WEBGOFBVVpuYXurCmwvXNZaC4AUgxhoMu09BaTu8i+zUbVDXnSBALtVyd97rwOLU6AdOZoaLDwyuV9YhWz2pUEQqpBCXVSwDOqhTSPlTppAh8sl3mk05AwZxUmD9cbqwNymWDW1DYFjdPKFe1neiivTzJKxNk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ljones.dev; spf=none smtp.mailfrom=ljones.dev; dkim=pass (2048-bit key) header.d=ljones.dev header.i=@ljones.dev header.b=lvpbz4kt; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=neFiLzpd; arc=none smtp.client-ip=103.168.172.149
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ljones.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=ljones.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b="T4GWh7sj"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.de;
-	s=s31663417; t=1729667008; x=1730271808; i=w_armin@gmx.de;
-	bh=lITTQi1+xpDe/eRs5y9aBbZ20hdHWc0TWoYNWU0Bu/k=;
-	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:To:Cc:
-	 References:From:In-Reply-To:Content-Type:
-	 Content-Transfer-Encoding:cc:content-transfer-encoding:
-	 content-type:date:from:message-id:mime-version:reply-to:subject:
-	 to;
-	b=T4GWh7sj0kt2R+sHcQgs/R5eo+U2lAtSWTdSHhXN7lg8aUmRCtJ3Vi3Zf0cslCh8
-	 gir/069k0TZTC9YoXPbKdLw6RZ/+ef+c7mO1FH3lzytJQS7Dsexq+xo4S1v2UQ9Zf
-	 MLrWKAa875uMO75y5ppO7/inH5SAmh5yyYnF0BD9T6OrjmeG5QOouxx/bYR9YEgxF
-	 lZQ23hhM2aqb9X/cdi8E32lyls0Rt29+xbT7F3DV7FEUotQfkeiZy5XMga0kO2jKL
-	 fh8FGLygIDzvD/0rzWCu2CnDtYTtPWsj1vFZl/Pzb4R7408kkvmvDwbtSdgJmVO6P
-	 gk7hJcGyA4G+r05g6Q==
-X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
-Received: from [141.30.226.129] ([141.30.226.129]) by mail.gmx.net (mrgmx105
- [212.227.17.168]) with ESMTPSA (Nemesis) id 1MVvLB-1tVNOX2WnN-00RqJg; Wed, 23
- Oct 2024 09:03:28 +0200
-Message-ID: <e029404c-88f7-4e8a-affa-40d589412e61@gmx.de>
-Date: Wed, 23 Oct 2024 09:03:25 +0200
+	dkim=pass (2048-bit key) header.d=ljones.dev header.i=@ljones.dev header.b="lvpbz4kt";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="neFiLzpd"
+Received: from phl-compute-08.internal (phl-compute-08.phl.internal [10.202.2.48])
+	by mailfout.phl.internal (Postfix) with ESMTP id E4FB6138059A;
+	Wed, 23 Oct 2024 04:15:45 -0400 (EDT)
+Received: from phl-imap-01 ([10.202.2.91])
+  by phl-compute-08.internal (MEProxy); Wed, 23 Oct 2024 04:15:45 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ljones.dev; h=cc
+	:cc:content-transfer-encoding:content-type:content-type:date
+	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to; s=fm1; t=1729671345;
+	 x=1729757745; bh=U8dyB79jhYfmUMSHL6RcsVZ3tGE5j/VEcT9woIlZiHI=; b=
+	lvpbz4kt72MNuPaQHlI2MdlwWJHL2Y88q+/8q/AMGP6eJK7iOB/I+y+46zYdWU10
+	mXkMqV+MgWuyX6R52o/pluSh6dp92xWOw2frwOQ0iiHFgWWR5r5Aey3yVZ6z/TaC
+	lPUpvfBQ27TIKcHrgtJAHLgtbS6ObnkgidJr92VLhGaLePFdiX6XsrVCVw04KFlq
+	8tD2o3gzma6131HxcUpsuZcSzbRoKQlEY5YWX6hBdEqbDzpsMd9z3vXdEgbPbFJk
+	mBUKBdXvFCEnaoNh1FbfM9fuGkzvuxyl6QHaBT50b+9rdvkuKemZHrrv1S/e4tOX
+	6+2T+3Md80ZTOIkagHOtOA==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:content-type:date:date:feedback-id:feedback-id
+	:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to:x-me-proxy:x-me-proxy
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=1729671345; x=
+	1729757745; bh=U8dyB79jhYfmUMSHL6RcsVZ3tGE5j/VEcT9woIlZiHI=; b=n
+	eFiLzpdtZzsR0XZcLMTK06KLlzc70IN/EG593K6fRCSaxE1+gSP7XK6w9NxHvcwO
+	WGTXVznZV7sX67njSODn7QmP+ysvsllR1TMbNI7K30AsRhr3X22M+cV1yEzJiNzL
+	Qk44LC6jsWDPLF9v+kOcwKEnhjbhb43LXnJbIkTl+efaGKBP//aH+YVuKjhRU33W
+	1tOv6TDN46lYYTOPV8EREeHenomOxTl+K8Qr8TZlHX9xNfrUoA2E9aNQZil4i7/x
+	2xLfNn50GB6DwBn5yanFXMpXIzIhXl9ZwSoI2g0gyBtz7zv0lmwK0u1mx+BMlIlk
+	NlTqPgYZiF05YGiWwIcSg==
+X-ME-Sender: <xms:sbAYZ6yPB7AMa-r4QGwLET1XCrPY9D0qCQy8affNT6UAl4BiFjIpIQ>
+    <xme:sbAYZ2TQ0qBDM7vwSiXFHC_0Ic0naRVvdDqlf_r-dAmUu04ATUZFWbAk9Ab34rt7d
+    CVVEv8ZkbpuVe7CuFY>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeftddrvdeijecutefuodetggdotefrodftvfcurf
+    hrohhfihhlvgemucfhrghsthforghilhdpggftfghnshhusghstghrihgsvgdpuffrtefo
+    kffrpgfnqfghnecuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsuc
+    dlqddutddtmdenucfjughrpefoggffhffvvefkjghfufgtgfesthhqredtredtjeenucfh
+    rhhomhepfdfnuhhkvgculfhonhgvshdfuceolhhukhgvsehljhhonhgvshdruggvvheqne
+    cuggftrfgrthhtvghrnheptedvheeiuefftedutdehteelffejueettdejudduhfefieev
+    vdehgeektdetkedvnecuffhomhgrihhnpegrshhushdrtghomhdpphhhohhrohhnihigrd
+    gtohhmpdhgihhthhhusgdrtghomhdpghhithhlrggsrdgtohhmpdifmhhipghsphgvtgdr
+    mhgunecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomheplh
+    hukhgvsehljhhonhgvshdruggvvhdpnhgspghrtghpthhtohepledpmhhouggvpehsmhht
+    phhouhhtpdhrtghpthhtoheptghorhgvnhhtihhnrdgthhgrrhihsehgmhgrihhlrdgtoh
+    hmpdhrtghpthhtohepfigprghrmhhinhesghhmgidruggvpdhrtghpthhtoheptggrshgv
+    hidrghdrsghofihmrghnsehinhhtvghlrdgtohhmpdhrtghpthhtohepihhlphhordhjrg
+    hrvhhinhgvnheslhhinhhugidrihhnthgvlhdrtghomhdprhgtphhtthhopehsrhhinhhi
+    vhgrshdrphgrnhgurhhuvhgruggrsehlihhnuhigrdhinhhtvghlrdgtohhmpdhrtghpth
+    htohepmhhitghhrggvlhesphhhohhrohhnihigrdgtohhmpdhrtghpthhtohephhguvghg
+    ohgvuggvsehrvgguhhgrthdrtghomhdprhgtphhtthhopehlihhnuhigqdhkvghrnhgvlh
+    esvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehplhgrthhfohhrmhdqughr
+    ihhvvghrqdigkeeisehvghgvrhdrkhgvrhhnvghlrdhorhhg
+X-ME-Proxy: <xmx:sbAYZ8XqjKz6V9dpN2p7rLlIqnUfZd_biYahk_N2dyKNOyos1oxEPA>
+    <xmx:sbAYZwhgbJuPM9_TIUo7A5CJ-QxyjUCxGk-1qd9LnUQuQIGVcGN41w>
+    <xmx:sbAYZ8DXDz-5xVREf1rfn64hBvXZo1934mygeT7WhDXrOvz6c-1a1Q>
+    <xmx:sbAYZxL5e_tmmnMnk99uyHrKPPSBi-FBoBtg-9Zm3ChfC06ho4cNCg>
+    <xmx:sbAYZ6A74Vps67kdBfS1wdW784kPR3y0gFDy2_tSPn08PX9T9mDbiqFT>
+Feedback-ID: i5ec1447f:Fastmail
+Received: by mailuser.phl.internal (Postfix, from userid 501)
+	id 7DA313360079; Wed, 23 Oct 2024 04:15:45 -0400 (EDT)
+X-Mailer: MessagingEngine.com Webmail Interface
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/1] platform/x86/tuxedo: Add virtual LampArray for TUXEDO
- NB04 devices
-To: Pavel Machek <pavel@ucw.cz>
-Cc: Hans de Goede <hdegoede@redhat.com>,
- Werner Sembach <wse@tuxedocomputers.com>,
- Benjamin Tissoires <bentiss@kernel.org>,
- =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
- dri-devel@lists.freedesktop.org, jelle@vdwaa.nl, jikos@kernel.org,
- lee@kernel.org, linux-input@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-leds@vger.kernel.org, miguel.ojeda.sandonis@gmail.com,
- ojeda@kernel.org, onitake@gmail.com, platform-driver-x86@vger.kernel.org
-References: <5crqia4gecxg62n2m2lf6haiifue4wlxrr3g35dyoaa3svjyuj@cd5bhouz5rlh>
- <4a761cd0-611a-4245-8353-5c66ba133715@tuxedocomputers.com>
- <rszv4p34oivysoyi337dxwooebipiikzd3pyq7rof5r3agbzce@xejutpd4jcfv>
- <06c58141-4aa9-4b54-8ae4-e27069561ac9@tuxedocomputers.com>
- <48a8d62f-ea3f-4f17-b917-ff3aaa83e89c@gmx.de> <ZwlDpCPhieF3tezX@duo.ucw.cz>
- <a796f0e7-47a8-40fa-a64e-9dd56117bf78@gmx.de>
- <c52019d7-01b4-4585-a2d1-b44b0a773fc9@redhat.com>
- <Zxd0ou7GpCRu0K5a@duo.ucw.cz> <35a98b67-d1eb-4aa9-9d3f-025c94cd6b0f@gmx.de>
- <Zxf5u9jgmt9vpz2u@duo.ucw.cz>
-Content-Language: en-US
-From: Armin Wolf <W_Armin@gmx.de>
-In-Reply-To: <Zxf5u9jgmt9vpz2u@duo.ucw.cz>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Provags-ID: V03:K1:cuXi8m4Br6nrlYzivR7wZJwXSlMK5QyjD1PQlgXa70bII4xYI1U
- kJda8SCxdeZiizmfIeODCMFWO/j6fI0IVQkYygtQ8SjLfdkbXvvkPWwkEOnuJBwSmi0tnFo
- kw0TqdoX7Q5sxqq3XY65CHUnLle9h+2hGP6AKyILbxYu41yYOr2wmPaa8Ukx4sPokK13SCH
- 7MAiATwmgVrq1uqCTqLtA==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:jTr3/4093ac=;w0fY4nHWFtbC/hjK2YYpqhZXS+3
- ZRWHmBZQwTsgcwbKsgeZSaq6I3MKbSTJMNkr4v+fdzZOPGHlZZ/BdfCJe19zxp9/tRyoXG2e6
- syfVfCQJwOdnhWUhzQ9t+Omgjr0k7qG/b/vj82iiDiV9Fo1qdKuVLFpigjdTJKwsvmYTksJp1
- x7d4QaphkRTL5Nj30Y3zNyECkrbVisLdEyJHop5D1Tue2qNx3D/5Qie2PQXeivDobZAEXqU6o
- R+wPWDtoU2df2ulGBTFFDYCdSSOVAnUIuQnv1y2K/vDqnaRN5AjUOXRgvUkaGhRnCjkRaLmYe
- hWZs/UZ/WhCu1n4+w9r7mJfXXimp1X73ALsp1YdN8HNmrQkO4jEaP2uZviFSIFJmbpOjTX4Gg
- JjOgLAtxRmUgX6Nw5XUT/fhS0eyizJg0K53ishDAESdizDXKaUes2by97id917zGXK4ArdzkZ
- n49fzkAsh4nhZEOmdKbY3a1uXPast54gfYTygBTe4FiCVlV8U3IYiHDPkC6cGD4C7nfw+TrBN
- 4wbIV8bkoUwYbqlcrE8hQxQBqTO8e9fHyYgSI19pYcW2NWn9BWEQcIP0C0CRjx3bygPUJ64nM
- prt+bV6A4VLcsmh79kyN+NiQLOYTAYJnOIQOqpV5QtyNNHOn1yWL3hjPnoAzA2eHIfAz9IWWM
- qvc+C8JiHFKQbLMtXXcwpd3pgf39vdoFR1fuf5o3hWgj2RjRLO5jbsv18mh8MfKSugRwhUecY
- lkKfxnBtrBOG/T8Jg9RRRzGEUdzB7Wf51DQA+SxJJ5CizIvkuR/58txj83Caw6+ZOtFYfy2fo
- CnRKDGt+XBgGU8crz5B9OL/FHAa1ygdXRKj8Gl0tGkR7Y=
+Date: Wed, 23 Oct 2024 10:15:24 +0200
+From: "Luke Jones" <luke@ljones.dev>
+To: "Armin Wolf" <W_Armin@gmx.de>,
+ "Srinivas Pandruvada" <srinivas.pandruvada@linux.intel.com>,
+ corentin.chary@gmail.com, "Hans de Goede" <hdegoede@redhat.com>,
+ =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
+ "Michael Larabel" <Michael@phoronix.com>,
+ "Casey Bowman" <casey.g.bowman@intel.com>
+Message-Id: <e5016c07-05e1-4b05-9f1a-bf664135dbdf@app.fastmail.com>
+In-Reply-To: <911ce141-8f20-48fb-bc43-e6d4262dbc81@gmx.de>
+References: <20241020065051.1724435-1-srinivas.pandruvada@linux.intel.com>
+ <911ce141-8f20-48fb-bc43-e6d4262dbc81@gmx.de>
+Subject: Re: [PATCH] platform/x86: asus-wmi: Support setting AIPT modes
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-Am 22.10.24 um 21:15 schrieb Pavel Machek:
+On Sun, 20 Oct 2024, at 9:05 PM, Armin Wolf wrote:
+> Am 20.10.24 um 08:50 schrieb Srinivas Pandruvada:
+>
+>> Some recent Asus laptops are supporting ASUS Intelligent Performance
+>> Technology (AIPT). This solution allows users to have maximized CPU
+>> performance in models with a chassis providing more thermal head room.
+>> Refer to [1].
+>>
+>> There are major performance issues when Linux is installed on these
+>> laptops compared to Windows install. One such report is published for
+>> Graphics benchmarks on Asus ASUS Zenbook S 14 with Lunar Lake
+>> processors [2].
+>>
+>> By default, these laptops are booting in "Whisper Mode" till OS power
+>> management or tools change this to other AIPT mode. This "Whisper" mo=
+de
+>> calls to set lower maximum and minimum RAPL (Running Average Power Li=
+mit)
+>> via thermal tables. On Linux this leads to lower performance even when
+>> platform power profile is "balanced". This "Whisper" mode should
+>> correspond to "quiet" mode.
+>>
+>> So, when AIPT is present change the default mode to "Standard" during
+>> boot. Map the three platform power profile modes as follows:
+>>
+>> Power Profile Mode      AIPT mode
+>> -----------------------------------
+>> quiet			Whisper
+>> balanced		Standard
+>> performance		Performance
+>> ------------------------------------
+>>
+>> Here AIPT mode can be detected by checking presese of "FANL" method u=
+nder
+>> PNP HID "PNP0C14" and UID "ATK". If AIPT mode is present, this takes
+>> precedence over the existing VIVO thermal policy. These modes are set
+>> using "FANL" method.
+>>
+>> Although this =E2=80=9CFANL=E2=80=9D method is not used in the Asus W=
+MI driver, users
+>> have used this method from user space [3] to set AIPT modes. Used this
+>> as a reference.
+>>
+>> Link: https://www.asus.com/content/laptop-asus-intelligent-performanc=
+e-technology-aipt/ # [1]
+>> Reported-by: Michael Larabel <Michael@phoronix.com>
+>> Closes: https://www.phoronix.com/review/lunar-lake-xe2/5 # [2]
+>> Link: https://github.com/dominiksalvet/asus-fan-control/issues/151 # =
+[3]
+>> Tested-by: Casey Bowman <casey.g.bowman@intel.com>
+>> Signed-off-by: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.c=
+om>
+>> ---
+>>   drivers/platform/x86/asus-wmi.c | 93 ++++++++++++++++++++++++++++++=
++--
+>>   1 file changed, 89 insertions(+), 4 deletions(-)
+>>
+>> diff --git a/drivers/platform/x86/asus-wmi.c b/drivers/platform/x86/a=
+sus-wmi.c
+>> index 7a48220b4f5a..06689d0f98c7 100644
+>> --- a/drivers/platform/x86/asus-wmi.c
+>> +++ b/drivers/platform/x86/asus-wmi.c
+>> @@ -100,6 +100,11 @@ module_param(fnlock_default, bool, 0444);
+>>   #define ASUS_THROTTLE_THERMAL_POLICY_SILENT_VIVO	1
+>>   #define ASUS_THROTTLE_THERMAL_POLICY_OVERBOOST_VIVO	2
+>>
+>> +#define AIPT_STANDARD				0
+>> +#define AIPT_WHISPER				1
+>> +#define AIPT_PERFORMANCE			2
+>> +#define AIPT_FULL_SPEED				3
+>> +
+>>   #define PLATFORM_PROFILE_MAX 2
+>>
+>>   #define USB_INTEL_XUSB2PR		0xD0
+>> @@ -333,6 +338,9 @@ struct asus_wmi {
+>>   	struct asus_wmi_debug debug;
+>>
+>>   	struct asus_wmi_driver *driver;
+>> +	acpi_handle acpi_mgmt_handle;
+>> +	int asus_aipt_mode;
+>> +	bool asus_aipt_present;
+>>   };
+>>
+>>   /* WMI ************************************************************=
+************/
+>> @@ -3804,6 +3812,19 @@ static ssize_t throttle_thermal_policy_store(s=
+truct device *dev,
+>>   static DEVICE_ATTR_RW(throttle_thermal_policy);
+>>
+>>   /* Platform profile ***********************************************=
+************/
+>> +static int asus_wmi_write_aipt_mode(struct asus_wmi *asus, int aipt_=
+mode)
+>> +{
+>> +	int status;
+>> +
+>> +	status =3D acpi_execute_simple_method(asus->acpi_mgmt_handle, "FANL=
+", aipt_mode);
+>> +	if (ACPI_FAILURE(status)) {
+>> +		acpi_handle_info(asus->acpi_mgmt_handle, "FANL execute failed\n");
+>> +		return -EIO;
+>> +	}
+>> +
+>> +	return 0;
+>> +}
+>> +
+>>   static int asus_wmi_platform_profile_to_vivo(struct asus_wmi *asus,=
+ int mode)
+>>   {
+>>   	bool vivo;
+>> @@ -3844,6 +3865,26 @@ static int asus_wmi_platform_profile_mode_from=
+_vivo(struct asus_wmi *asus, int m
+>>   	return mode;
+>>   }
+>>
+>> +static int asus_wmi_aipt_platform_profile_get(struct asus_wmi *asus,
+>> +					      enum platform_profile_option *profile)
+>> +{
+>> +	switch (asus->asus_aipt_mode) {
+>> +	case AIPT_STANDARD:
+>> +		*profile =3D PLATFORM_PROFILE_BALANCED;
+>> +		break;
+>> +	case AIPT_PERFORMANCE:
+>> +		*profile =3D PLATFORM_PROFILE_PERFORMANCE;
+>> +		break;
+>> +	case AIPT_WHISPER:
+>> +		*profile =3D PLATFORM_PROFILE_QUIET;
+>> +		break;
+>> +	default:
+>> +		return -EINVAL;
+>> +	}
+>> +
+>> +	return 0;
+>> +}
+>> +
+>>   static int asus_wmi_platform_profile_get(struct platform_profile_ha=
+ndler *pprof,
+>>   					enum platform_profile_option *profile)
+>>   {
+>> @@ -3851,6 +3892,10 @@ static int asus_wmi_platform_profile_get(struc=
+t platform_profile_handler *pprof,
+>>   	int tp;
+>>
+>>   	asus =3D container_of(pprof, struct asus_wmi, platform_profile_han=
+dler);
+>> +
+>> +	if (asus->asus_aipt_present)
+>> +		return asus_wmi_aipt_platform_profile_get(asus, profile);
+>> +
+>>   	tp =3D asus->throttle_thermal_policy_mode;
+>>
+>>   	switch (asus_wmi_platform_profile_mode_from_vivo(asus, tp)) {
+>> @@ -3874,26 +3919,42 @@ static int asus_wmi_platform_profile_set(stru=
+ct platform_profile_handler *pprof,
+>>   					enum platform_profile_option profile)
+>>   {
+>>   	struct asus_wmi *asus;
+>> -	int tp;
+>> +	int ret =3D 0, tp, aipt_mode;
+>>
+>>   	asus =3D container_of(pprof, struct asus_wmi, platform_profile_han=
+dler);
+>>
+>>   	switch (profile) {
+>>   	case PLATFORM_PROFILE_PERFORMANCE:
+>>   		tp =3D ASUS_THROTTLE_THERMAL_POLICY_OVERBOOST;
+>> +		aipt_mode =3D AIPT_PERFORMANCE;
+>>   		break;
+>>   	case PLATFORM_PROFILE_BALANCED:
+>>   		tp =3D ASUS_THROTTLE_THERMAL_POLICY_DEFAULT;
+>> +		aipt_mode =3D AIPT_STANDARD;
+>>   		break;
+>>   	case PLATFORM_PROFILE_QUIET:
+>>   		tp =3D ASUS_THROTTLE_THERMAL_POLICY_SILENT;
+>> +		aipt_mode =3D AIPT_WHISPER;
+>>   		break;
+>>   	default:
+>>   		return -EOPNOTSUPP;
+>>   	}
+>>
+>> -	asus->throttle_thermal_policy_mode =3D asus_wmi_platform_profile_to=
+_vivo(asus, tp);
+>> -	return throttle_thermal_policy_write(asus);
+>> +	if (asus->asus_aipt_present) {
+>> +		ret =3D asus_wmi_write_aipt_mode(asus, aipt_mode);
+>> +		if (!ret) {
+>> +			asus->asus_aipt_mode =3D aipt_mode;
+>> +			goto skip_vivo;
+>> +		}
+>> +	}
+>> +
+>> +	if (asus->throttle_thermal_policy_dev) {
+>> +		asus->throttle_thermal_policy_mode =3D asus_wmi_platform_profile_t=
+o_vivo(asus, tp);
+>> +		ret =3D throttle_thermal_policy_write(asus);
+>> +	}
+>> +
+>> +skip_vivo:
+>> +	return ret;
+>>   }
+>>
+>>   static int platform_profile_setup(struct asus_wmi *asus)
+>> @@ -3905,7 +3966,7 @@ static int platform_profile_setup(struct asus_w=
+mi *asus)
+>>   	 * Not an error if a component platform_profile relies on is unava=
+ilable
+>>   	 * so early return, skipping the setup of platform_profile.
+>>   	 */
+>> -	if (!asus->throttle_thermal_policy_dev)
+>> +	if (!asus->throttle_thermal_policy_dev && !asus->asus_aipt_present)
+>>   		return 0;
+>>
+>>   	dev_info(dev, "Using throttle_thermal_policy for platform_profile =
+support\n");
+>> @@ -4538,6 +4599,7 @@ static int asus_wmi_sysfs_init(struct platform_=
+device *device)
+>>   static int asus_wmi_platform_init(struct asus_wmi *asus)
+>>   {
+>>   	struct device *dev =3D &asus->platform_device->dev;
+>> +	struct acpi_device *adev;
+>>   	char *wmi_uid;
+>>   	int rv;
+>>
+>> @@ -4593,6 +4655,29 @@ static int asus_wmi_platform_init(struct asus_=
+wmi *asus)
+>>   		asus_wmi_set_devstate(ASUS_WMI_DEVID_CWAP,
+>>   				      asus->driver->quirks->wapf, NULL);
+>>
+>> +	/*
+>> +	 * Check presence of Intelligent Performance Technology (AIPT).
+>> +	 * If present store acpi handle and set asus_aipt_present to true.
+>> +	 */
+>> +	adev =3D acpi_dev_get_first_match_dev("PNP0C14", "ATK", -1);
+>
+> Is there really no way of changing the AIPT mode through the WMI inter=
+face?
+> I would prefer using the WMI interface if available, since the firmwar=
+e might
+> assume that FANL is only called through the WMI interface.
+>
+> Do you have a acpidump from a affected device?
+>
+> Thanks,
+> Armin Wolf
+>
+>> +	if (adev) {
+>> +		acpi_handle handle =3D acpi_device_handle(adev);
+>> +
+>> +		acpi_dev_put(adev);
+>> +
+>> +		if (!acpi_has_method(handle, "FANL"))
+>> +			return 0;
 
-> Hi!
->
->>>>> - interface for setting multiple LEDs at once
->>>>> - interface for setting a range of LEDs at once
->>> How are LEDs ordered? I don't believe range makes much sense.
->> Range would allow for efficiently changing the color of all LEDs. But i agree
->> that this can be considered optional and can be added later.
-> Yep, setting all of them makes sense. We should probably provide
-> backward-compatible interface for keyboards with single backlight, so
-> this would likely be LED class.
->
-Good idea, the LED device could also be provided by the illumination subsystem code.
+Quite a few laptops have this method available, but may not actually do =
+anything. Such as the following:
 
->>>> Personally I really like the idea to just emulate a HID LampArray device
->>>> for this instead or rolling our own API.  I believe there need to be
->>>> strong arguments to go with some alternative NIH API and I have not
->>>> heard such arguments yet.
->>> If you don't want "some alternative API", we already have perfectly
->>> working API for 2D arrays of LEDs. I believe I mentioned it before
->>> :-). Senzrohssre.
->> We may have to support 3D arrays of LEDs, so using a simple framebuffer
->> would likely cause trouble.
-> Do you have pointer for device that is 3D?
+FX517ZM-dsdt.dsl
+92885:        Method (FANL, 1, Serialized)
+92886-        {
+92887-            Return (One)
+92888-        }
 
-Maybe a PC case with LEDs on each corner.
+While this one does (zenbook duo):
 
->
-> OpenRGB manages to map keyboard into plane... so what I'd propose is
-> this:
->
-> Framebuffer
-> Information for each pixel:
-> 	    present ? (displays with missing pixels are pretty common)
-> 	    list of keys related to this pixel
-> 	    width, height, length (if we know them)
->
-> Pixels map to keys M:N.
->
-> Yes, we'll have some number of non-present pixels, but again, I
-> believe that's not uncommon due to round screens, etc.
->
-> (But I'm fine with other interfaces, as long as they are "normal")
->
-> Best regards,
-> 								Pavel
+UX8402.dsl
+88837:                Method (FANL, 1, Serialized)
+88838-                {
+88839-                    ODV0 =3D Arg0
+88840-                    If ((^^PC00.PEG1.PXP._STA =3D=3D One))
+--
+89041:                    Return (FANL (IIA0))
+89042-                }
+89043-
+89044-                If ((Local0 =3D=3D 0x4647574D))
+--
+89604:                        FANL (IIA1)
+89605-                        Return (One)
+89606-                    }
+89607-
 
-Using an ID-based interface would allow for more flexibility and allow
-us to support 3D-arrays.
+I've discovered the majority of WMI methods, you can see them here: http=
+s://gitlab.com/asus-linux/reverse-engineering/-/blob/master/WMI_SPEC.md?=
+ref_type=3Dheads
 
-Thanks,
-Armin Wolf
+There is a "whisper mode" WMI  method, but I've not done much around it.
 
+I also have a large collection of DSL if that is helpful https://gitlab.=
+com/asus-linux/reverse-engineering/-/tree/master/dsl-collection?ref_type=
+=3Dheads
+
+It seems that because I have access only to the ROG dlls at this time I =
+may have missed the WMI method: 0x00110019, this is likely what you need=
+ as it gets FANF, and sets FANL
+
+=E2=9D=AF rg 0x00110019 -B3 -A3 UX8402.dsl=20
+89281-                        Return (0x00010000)
+89282-                    }
+89283-
+89284:                    If ((IIA0 =3D=3D 0x00110019))
+89285-                    {
+89286-                        Local0 =3D FANF /* \_SB_.FANF */
+89287-                        Local1 =3D 0x00070000
+--
+89599-                        Return (One)
+89600-                    }
+89601-
+89602:                    If ((IIA0 =3D=3D 0x00110019))
+89603-                    {
+89604-                        FANL (IIA1)
+89605-                        Return (One)
+
+Hopefully this is helpful,
+
+Regards,
+Luke.
+
+P.S: If any info is discovered that I am lacking in my repo it would be =
+highly appreciated if a PR added it.
+
+>> +		asus->acpi_mgmt_handle =3D handle;
+>> +		asus->asus_aipt_present =3D true;
+>> +		dev_info(dev, "ASUS Intelligent Performance Technology (AIPT) is p=
+resent\n");
+>> +		/*
+>> +		 * Set the mode corresponding to default Linux platform power
+>> +		 * profile Balanced
+>> +		 */
+>> +		asus_wmi_write_aipt_mode(asus, AIPT_STANDARD);
+>> +	}
+>> +
+>>   	return 0;
+>>   }
+>>
