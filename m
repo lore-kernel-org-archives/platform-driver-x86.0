@@ -1,103 +1,145 @@
-Received: from mail-wm1-f42.google.com (mail-wm1-f42.google.com [209.85.128.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from jabberwock.ucw.cz (jabberwock.ucw.cz [46.255.230.98])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF46C1D0148;
-	Wed, 23 Oct 2024 17:26:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CDB971BD038;
+	Wed, 23 Oct 2024 17:47:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.255.230.98
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729704362; cv=none; b=D2nue9Ltlhwfps9IlIZFYuIhkDW9rxtQb4pNUvUkyXaqVg/OMc48cxdV8IPul5lbYt3ROtdHrhU0wU9xwvRHCPmjzWlYSOVQ+ahnlr38dRAvUvgArqZJ/9Mduo48FBM0QVAlbLvMihysZqvDHHUYjjE0TYibvbolb8IyQ6nVfeY=
+	t=1729705672; cv=none; b=f71wZ08z22Zx/ZXzl40DVhRqkv0xMuNTc1oxCAJzEOK6zubAFCr6L9U4rvDRNVmPgjNFyTizV6Ti2Wqp9/oGB5zdTfMvb9HDnkwmfDdsBjMXyk0zM4qfjrnzQ7NEvgwDLV2hLGgCW3jq6ybf56jmMNIckCU+XuOQ2113Mzojme4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729704362; c=relaxed/simple;
-	bh=ExKSSArRGdy7bRdVoF8OmsrxTfnz4ONUWKTYnBGexz8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=A3ljGjN3TOhreoKeUho795sfch0ENimqZwDwUIxzVajS7XhKWdOwhSnELH/1o28DXxckaT52EP7aKr1PcDJfeATFVhdAjM4qAC9dnvqL+RGsbgRd0KFuezZ96a19d5IKqBRJ6pj97zv3pJGpfRwJ4lZmQMPop4wfoI/pIZlsmro=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=JvDO/zTb; arc=none smtp.client-ip=209.85.128.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1729705672; c=relaxed/simple;
+	bh=KAUSLOsN0KAxGbYMY0+t7tPfjFlq0tlRgDTIp8mqDVE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=W6LmDnhRGy8l65eB4tIL4yNoiUIF1kNmOls0P8CreZSUyN0IrwLwhTR8CZwAIib2KlP7/QfX/pSGb6WBj6v4xxUnSu4+Uipdl3keskErWb1hA25iFRLzi2IjpOF3JST7qScYW10RTc1tE8psOUhYtZ+FEWqZBUKn9wiJ9rwAIKQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ucw.cz; spf=pass smtp.mailfrom=ucw.cz; dkim=pass (1024-bit key) header.d=ucw.cz header.i=@ucw.cz header.b=CFUVwxDN; arc=none smtp.client-ip=46.255.230.98
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ucw.cz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ucw.cz
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JvDO/zTb"
-Received: by mail-wm1-f42.google.com with SMTP id 5b1f17b1804b1-43163667f0eso239935e9.0;
-        Wed, 23 Oct 2024 10:26:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1729704358; x=1730309158; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=kb9i9zUsNMVUYPzfr+JSRlA9YASTj0l4XU9VARfF+lg=;
-        b=JvDO/zTbvhM//Q7lss6FbwkjzjS5DJsgi+86XUOuqsBTMVeKKdicCtU9J5YIT1k42U
-         AIJxvvei8W12O8CyezWz21bEdIaQ9/H49VOWaTWSxaJ8WVY0mBCvDnSsU1vikqZNR3RG
-         gNgXnds6gWN4OjDVjDABWe+N6+3fv9ykJF43lJDkD4GAkcyZFgSwAR9JowsLxrBzILXR
-         gY4Op9HckUwMIej8O1XzvG9fDDduY3D8omisOvwwh5BHNFdg68CXG3PFfunBd9aLMfVO
-         9zJfAhsPHWXNbF7N92KsR7NDLKvlydinyWb2p2f+1ia+k6qcRNWz99PyLSn+eJzE700y
-         wgzQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1729704358; x=1730309158;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=kb9i9zUsNMVUYPzfr+JSRlA9YASTj0l4XU9VARfF+lg=;
-        b=KO2yxjbc/Vofsvugv6dxEIuWeYNkf8aUHvZTV4Tn5kEzWhCKskAdOJrn2+pdv/PQJ3
-         uc8IWPeHR0AjwEhOkscEsXw8eAEOcXnXRV7iJ8u1d8gia4eB7Qikt600Eeu5SQkDg012
-         zteotSq6LJcSNSqOsX8717x0zbbQ/WX2pEVG7fb5fsRfzy+9qDdDnBiHxv8dxFQhJIaE
-         WPO7K0dYRSK3KgOgpGuIvARL2eIiNJ+UyCZBP9WOvc4G18ERiLXrmmJzU1LM+baFiZrr
-         W47ZWd1BiIMz6ygZOZ+pfCx24Z/epDQ3epSPmjLoLir4DdkDH4iocL5DqhA3LOrFuclc
-         CuOg==
-X-Forwarded-Encrypted: i=1; AJvYcCUFkxz5/C/REyFkaJdcyJjwM/k2subj6+NWoIdutEa34yzbQszO+6L7iFh+WTkbiwWo9fNRYgE+m/XQ7lqOeoNaHUp/ww==@vger.kernel.org, AJvYcCUhSLJ448pt2Mcf+EurLrkNTTw6fvj7s57tAF4miCWx6IvkwZRdo4mheZMu0jyNJ5fgya7XJAyDv0v1loks@vger.kernel.org, AJvYcCWZ90wTKpHVQWlwn6hLHOex3c5HympYCW/CJs9IQZsl9SSs198t7dAU414PKx8nRcaYPD0Df3/t/F4F@vger.kernel.org, AJvYcCX0QSM0vQQfssFFvKeDM3Zdqvu6Gy6Vx09W06QPL7Tfp6lTQgQWk1ebjcqCNjG8zx4/G4IqEJON9clCQ+UG/A==@vger.kernel.org
-X-Gm-Message-State: AOJu0YzoDteE3+2627KIxg3AtaClMiZGgBx525j/iPkb2wlR5n04H7oE
-	PwPbh4aUUkUDDqFpcYvOhcw6bwie7iKM/fnPYaBiewM3nWxPp0qE
-X-Google-Smtp-Source: AGHT+IEbJlcbMDXNmFlVO5YLPk7N+x59kLpszwlxBi60Qf5wpQvKuK0j3CdPszBmP5ozz2mfUuD2Og==
-X-Received: by 2002:a05:600c:34d4:b0:431:5533:8f0b with SMTP id 5b1f17b1804b1-43184246647mr34064505e9.32.1729704358419;
-        Wed, 23 Oct 2024 10:25:58 -0700 (PDT)
-Received: from ?IPV6:2a02:8071:b783:140:927c:82ba:d32d:99c1? ([2a02:8071:b783:140:927c:82ba:d32d:99c1])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43186be509dsm21671835e9.16.2024.10.23.10.25.57
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 23 Oct 2024 10:25:57 -0700 (PDT)
-Message-ID: <ad9fa9f2-7f97-401a-8e8f-ae633ab1932b@gmail.com>
-Date: Wed, 23 Oct 2024 19:25:56 +0200
+	dkim=pass (1024-bit key) header.d=ucw.cz header.i=@ucw.cz header.b="CFUVwxDN"
+Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
+	id 0DE661C00A3; Wed, 23 Oct 2024 19:47:41 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ucw.cz; s=gen1;
+	t=1729705661;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=kU9n7eT3lhEsHYkrEomNkv21bTRvaegj4/JZP474ohU=;
+	b=CFUVwxDNrqIWF0pGYifru9eA8xVj5v/SQhJMhHDLc04y1PIS8ujS+DOASUuR6IuJj9msOw
+	M6HaXTedzm0tzRTkHGUtbWCa/FjQRlPvvy/rCbACsBSx4+oX4+BSPoscCA3EUp+zGI8/8r
+	ltqqqQz4RjperDIJG/jatGa9I+lBWUo=
+Date: Wed, 23 Oct 2024 19:47:40 +0200
+From: Pavel Machek <pavel@ucw.cz>
+To: Werner Sembach <wse@tuxedocomputers.com>
+Cc: Armin Wolf <W_Armin@gmx.de>, Hans de Goede <hdegoede@redhat.com>,
+	Benjamin Tissoires <bentiss@kernel.org>,
+	Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	dri-devel@lists.freedesktop.org, jelle@vdwaa.nl, jikos@kernel.org,
+	lee@kernel.org, linux-input@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org,
+	miguel.ojeda.sandonis@gmail.com, ojeda@kernel.org,
+	onitake@gmail.com, platform-driver-x86@vger.kernel.org
+Subject: Re: [PATCH 1/1] platform/x86/tuxedo: Add virtual LampArray for
+ TUXEDO NB04 devices
+Message-ID: <Zxk2vD5FHA2w2jTL@duo.ucw.cz>
+References: <rszv4p34oivysoyi337dxwooebipiikzd3pyq7rof5r3agbzce@xejutpd4jcfv>
+ <06c58141-4aa9-4b54-8ae4-e27069561ac9@tuxedocomputers.com>
+ <48a8d62f-ea3f-4f17-b917-ff3aaa83e89c@gmx.de>
+ <ZwlDpCPhieF3tezX@duo.ucw.cz>
+ <a796f0e7-47a8-40fa-a64e-9dd56117bf78@gmx.de>
+ <c52019d7-01b4-4585-a2d1-b44b0a773fc9@redhat.com>
+ <Zxd0ou7GpCRu0K5a@duo.ucw.cz>
+ <35a98b67-d1eb-4aa9-9d3f-025c94cd6b0f@gmx.de>
+ <Zxf5u9jgmt9vpz2u@duo.ucw.cz>
+ <c0791e1d-a63f-40fd-bcb8-5f2eec15c59e@tuxedocomputers.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 3/5] platform/surface: aggregator_registry: Add Surface
- Pro 9 5G
-To: =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
- Hans de Goede <hdegoede@redhat.com>
-Cc: =?UTF-8?Q?J=C3=A9r=C3=B4me_de_Bretagne?= <jerome.debretagne@gmail.com>,
- Bjorn Andersson <andersson@kernel.org>,
- Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Johan Hovold <johan+linaro@kernel.org>,
- linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
- LKML <linux-kernel@vger.kernel.org>, platform-driver-x86@vger.kernel.org
-References: <20240908223505.21011-1-jerome.debretagne@gmail.com>
- <20240908223505.21011-4-jerome.debretagne@gmail.com>
- <f9cbd1c3-eb05-4262-bdc6-6d37e83179e5@gmail.com>
- <CA+kEDGEdd_s+DGKsVNY6Jy870B72eHuaj2EgEnwP8J46ZGbxpQ@mail.gmail.com>
- <8370d062-b3d2-46f5-9e7b-8e16edde8480@redhat.com>
- <555f8a3a-ae5e-57e7-f176-96c52e1a5d45@linux.intel.com>
-Content-Language: en-US
-From: Maximilian Luz <luzmaximilian@gmail.com>
-In-Reply-To: <555f8a3a-ae5e-57e7-f176-96c52e1a5d45@linux.intel.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="5GlMUOsLquiBPieb"
+Content-Disposition: inline
+In-Reply-To: <c0791e1d-a63f-40fd-bcb8-5f2eec15c59e@tuxedocomputers.com>
 
-On 10/22/24 10:56 AM, Ilpo Järvinen wrote:
 
-[...]
+--5GlMUOsLquiBPieb
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-> Hi all,
-> 
-> I've now applied patch 3 to review-ilpo branch in pdx86 repo.
-> 
-> I'd appreciate if somebody confirms I got those comment edits right.
-> 
+Hi!
 
-Hi Ilpo,
+> > > > > Personally I really like the idea to just emulate a HID LampArray=
+ device
+> > > > > for this instead or rolling our own API.  I believe there need to=
+ be
+> > > > > strong arguments to go with some alternative NIH API and I have n=
+ot
+> > > > > heard such arguments yet.
+> > > > If you don't want "some alternative API", we already have perfectly
+> > > > working API for 2D arrays of LEDs. I believe I mentioned it before
+> > > > :-). Senzrohssre.
+> > > We may have to support 3D arrays of LEDs, so using a simple framebuff=
+er
+> > > would likely cause trouble.
+> > Do you have pointer for device that is 3D?
+>=20
+> The example from the spec is a keyboard with lightbars on the side, the we
+> actually sell notebooks with similar led configurations (mostly on the fr=
+ont
+> and not on the side). Example is the Sirius I implemented which has a not
+> yet implemented lightbar on the front.
 
-looks good to me. Thanks for fixing this up!
+I also have lightbar on the keyboard. Put it is still close-enough to
+2D. As would be bars on side or bar in front.
+
+> > OpenRGB manages to map keyboard into plane... so what I'd propose is
+> > this:
+> >=20
+> > Framebuffer
+> > Information for each pixel:
+> > 	    present ? (displays with missing pixels are pretty common)
+> > 	    list of keys related to this pixel
+> > 	    width, height, length (if we know them)
+> >=20
+> > Pixels map to keys M:N.
+>=20
+> How would iso-enter be mapped here?
+
+I guess it depends on number of LEDs under the enter. I have one LED
+under it, so it would be one pixel.
+
+> How would the q-key be mapped relative the the 1-key? (they are exactly
+> halve a key offset)
+
+That would have to be decided. I remember this from openrgb:
+
+https://www.gamingonlinux.com/2022/01/openrgb-gets-greately-expanded-hardwa=
+re-support-in-the-07-release/
+
+and that's one option.
+
+> ~,1,2
+> tab,missing pixel,q
+
+I'd go with this one. OpenRGB does it on one screenshot, but there are
+other screenshots. Advantage is that if someone does TAB with two
+LEDs, we'll have place for it.
 
 Best regards,
-Max
+							Pavel
+--=20
+People of Russia, stop Putin before his war on Ukraine escalates.
+
+--5GlMUOsLquiBPieb
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iF0EABECAB0WIQRPfPO7r0eAhk010v0w5/Bqldv68gUCZxk2vAAKCRAw5/Bqldv6
+8vmMAJsESJ1FBGkIBcQMWxWbEH5vkbx9OgCfVS7mQ1P/Vg76qa7u8w64nAfCKjg=
+=h2uG
+-----END PGP SIGNATURE-----
+
+--5GlMUOsLquiBPieb--
