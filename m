@@ -1,67 +1,63 @@
-Received: from NAM02-DM3-obe.outbound.protection.outlook.com (mail-dm3nam02on2085.outbound.protection.outlook.com [40.107.95.85])
+Received: from NAM11-DM6-obe.outbound.protection.outlook.com (mail-dm6nam11on2068.outbound.protection.outlook.com [40.107.223.68])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 748101804E
-	for <platform-driver-x86@vger.kernel.org>; Wed, 23 Oct 2024 15:14:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.95.85
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF3141A0AF1
+	for <platform-driver-x86@vger.kernel.org>; Wed, 23 Oct 2024 15:18:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.223.68
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729696466; cv=fail; b=mjUSjnnop38iID+e57VDi35KxUPT4jH6qmDxrqm4E2UjbrqLRsXw9hHboMKfmwPwFgpTyJ2v6GLn5RlQcljRZRDGPNUPxRUi953pS/CePccaiVr2XePaKkESB6tVZRM3+FZ9tg0psBkuT0EVjKRd0SY77U++4+zomCyPJjY5HW4=
+	t=1729696719; cv=fail; b=YTNrP48yVTQMr9YCeBgQr25X9txTT4I/OXy7/R89Yy2+UdTqwBcYlLrbE8airb0aXWsxOKp0p5RFXMrLJMJWpgakv+fPv7A4hB0VPouRHeaPhwkawxWR7KTTDrYJlfbEvzvRKytJYqv8LASjGday+kcdJULz30jUsrPypZXZPmE=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729696466; c=relaxed/simple;
-	bh=v0ZXyKZFZDVZlU7+swjZSfZTA0LxJjFCXnVZ4DUDdaU=;
+	s=arc-20240116; t=1729696719; c=relaxed/simple;
+	bh=wHRBArETRiQx4oHG/fGrYDpI/TwVfgYaZhzBjMpOYMM=;
 	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=Z3yk15GWRidYxDun/zj/YzalEEAFwfDmAjesTENBEox/t7eFMYdxSRGaf1pfE5EEQtSnwYTQg4q9gO8uwhq0Jbanke3ajeToLInfX0SN8qSfDwIOMsB7D3B+r0ksbwlqMD3z6tFKq2kUFjkci1DZCm6RyXJ5sHucp3OxLcaOmKc=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=Ur1Z4q0/; arc=fail smtp.client-ip=40.107.95.85
+	 Content-Type:MIME-Version; b=NZSw3KiA9SeWw0AWa94eRkkQZki79Mclz7VOwD7ZUCFdYFLzE05qrsJPma4jlXW/i4bMexoGJb5uvbUuaD8Cbk4r+u37UBntDHig34piz2PIaNquBjPid1ObUpiVZMxJYqVb+hfI+uEFdFcJKKWEO8SsXqjZzEGhkWXV8Rn8Tqc=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=jxeE8O+w; arc=fail smtp.client-ip=40.107.223.68
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
 Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="Ur1Z4q0/"
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="jxeE8O+w"
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=RewYcVPEYKpPGA07IY4/cna+gCc+iZtkVIDQE0ErVJndEqWqTYz2lU+s6iS3gz4QbwIfuUuAU7RrZ8z3WMJIc+EKtKVAGZ9bGUU/ow0JQaI6noCTxjwKhnJh00OPAMZIu5USuV/I7Fhg8WE7YgTpnMNt+47DzYicAFzv6NsnstMtxhEO54z5T3se8rSPC3URlrlEubzF1ZSRG3yVzdazOffg6GkaoYHG2AOziAlGP2/flHlchs1z6AEqsL7RnN1hHRCuJb866c9dQ9U4fSNseITIobL/irnSXeMfPDe9unuWZ0wZ4YkETtiYNrKPBzT8oSUl9BwupjvAbutYGaEISQ==
+ b=Z4ydaHMO3ByRSyr0OfVbbUEGA8gXJLzcwh3uC19DpNxiGmScJfKdttXwmgIxuXWb262Nt0YPv8eZVr27j/Z8wwkjc/HPRo5ekkpaA+RDy7BCEOdBbMgpRWlcrR9oR9vbY+V4hKq7pqUMiSh1Xy3ggnkTof8216S1l4ED4knv68wgZmbrMQDScyxHZ3bY95gwij4pKqCZRMntlkNSJP6VDQ+mX/AAsOJ/G4zEschjEuRHYGEE9ar9bcCC3TBAk4QOSu1JW5ATsNLRnwe1ERqdPd1mfkJr4j/Fe+pde+7jhGRxxC+Kct0CA0Rh316etD1RE+e3/ksOmpcS7XMSDrNadQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=7gRtsp9lM6s9wzexBv0BbPz7WiM01YLNN14ZB0466a4=;
- b=dDTwtf5p9/6HD1t/DjL3BzFK2aKwWcs0Hn8M8I3cMv9Zu3ZyKXCu77dZYyuDXWEQkkI7E/1bBVBQXbb6JdhChpj3cfcpXO92WYNfFLHZvgXiDFrV61QM1tqHb+z2n/PV14VGHCgln5tsEqoUFPisxnTwba8MS6TZWdepZ2hJYIy+zVr67LRV0MB98S5CMGh7+N79Xnyri5Yciv0qCFShXHEOhM3JqAzTgLvIKQhD+F9Y/Zp/qwdzBC9JOD5KmnY3TRO773MQ2dRPbXOCTiqjn+4pmH3EsUOFgVH/GhzNp1F4TyJUNBKwt5KfGWbvCgkX3E+Bko/iAyiTDqiLeAUFMQ==
+ bh=0EXZ1HPnmOtXahfS15PB3RqHd9HF2Q7btXyIho/HxYM=;
+ b=erm6G/SvL2wgaTU5f3sFy++7bVFH5fDHs6s+aK3XHvVQq+ee261N5cVepB+d1DX9ozfj2k1+gngJ02/qsDH5D21VYio3pHLupUxikpcmHTuM2BdpxelkZPYkY2MDD0K64J2DEls+Et8DmesokNs7vJD/Xw1uvBodavyJY8bIFXIu5bKyq0rY+HkEPmtvIHPmEsREr/qcCKUMLQ2uLZ97hNMdndhy3VE+9ONru5rp9LaDswpk8kVf/0i4u5Bo6vDSJAXTGWNTdttHUfDyr3pZRkv02lcrVzwi97kNgOzAew+CCjG4yAVr+WsiIsnmC9e7Tj73mS5xNPD6MPWxKaIk+w==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
  header.d=amd.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=7gRtsp9lM6s9wzexBv0BbPz7WiM01YLNN14ZB0466a4=;
- b=Ur1Z4q0/gGrMIplyG5gfPUSO+Q8FRmsWj6Y8CR+3+lhzc+7SJkGaRjchEI5mol6Aj3vsgb8N54k8K3JUhwPCTl8CNGGg4LJOhUmtl8QyWtcvdi+xdlWDNG85k2HDM8O7Jjl7OZ5HOrsYX7aOZh1JJXNm9qSottdgfmP4zyfqSQ4=
+ bh=0EXZ1HPnmOtXahfS15PB3RqHd9HF2Q7btXyIho/HxYM=;
+ b=jxeE8O+wIYbuIUc2NJl8+5Ucp0brUS5zaTg2Rt2xcB3EMy5NDxt0iOKS5KSRYCT/6S/8ocz3WrsuOGJmrjCAvcOO1VVLGYvSEX4KbxlrjjWmE6zjFwtCvzNL9Dp77nVWf3ky1p5dBqoTCNrWikHcBBbH/afqd9slTc0wKuBn2K8=
 Authentication-Results: dkim=none (message not signed)
  header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from BL1PR12MB5176.namprd12.prod.outlook.com (2603:10b6:208:311::19)
- by SA1PR12MB6776.namprd12.prod.outlook.com (2603:10b6:806:25b::14) with
+Received: from MN0PR12MB6101.namprd12.prod.outlook.com (2603:10b6:208:3cb::10)
+ by DM6PR12MB4220.namprd12.prod.outlook.com (2603:10b6:5:21d::7) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8069.28; Wed, 23 Oct
- 2024 15:14:21 +0000
-Received: from BL1PR12MB5176.namprd12.prod.outlook.com
- ([fe80::ed5b:dd2f:995a:bcf4]) by BL1PR12MB5176.namprd12.prod.outlook.com
- ([fe80::ed5b:dd2f:995a:bcf4%5]) with mapi id 15.20.8093.014; Wed, 23 Oct 2024
- 15:14:21 +0000
-Message-ID: <76c7df3c-1db2-4eb7-8156-4f13a3694168@amd.com>
-Date: Wed, 23 Oct 2024 20:44:14 +0530
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8093.16; Wed, 23 Oct
+ 2024 15:18:35 +0000
+Received: from MN0PR12MB6101.namprd12.prod.outlook.com
+ ([fe80::37ee:a763:6d04:81ca]) by MN0PR12MB6101.namprd12.prod.outlook.com
+ ([fe80::37ee:a763:6d04:81ca%6]) with mapi id 15.20.8093.018; Wed, 23 Oct 2024
+ 15:18:35 +0000
+Message-ID: <0281e6f7-4ccd-4369-9182-d1580c9e6bc5@amd.com>
+Date: Wed, 23 Oct 2024 10:18:33 -0500
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 4/5] platform/x86/amd/pmf: Switch to
- platform_get_resource() and devm_ioremap_resource()
+Subject: Re: amdgpu 4k@120Hz / HDMI 2.1
+To: Mischa Baars <mjbaars1977.backup@gmail.com>
+Cc: platform-driver-x86@vger.kernel.org
+References: <CA+b5WFEXPJ==vruf-6DHrhS7j3pnTaj_EQE08BimxqyaNvktQQ@mail.gmail.com>
+ <d1028755-6a7a-4db4-bd4b-e5a2d682af61@amd.com>
+ <CA+b5WFFa4hMeGnN0J2xd=FpU2Cxe_AjapWBpTFjfNhzUSOUAzA@mail.gmail.com>
 Content-Language: en-US
-To: Mario Limonciello <mario.limonciello@amd.com>, hdegoede@redhat.com,
- ilpo.jarvinen@linux.intel.com
-Cc: platform-driver-x86@vger.kernel.org, Patil.Reddy@amd.com
-References: <20241023063245.1404420-1-Shyam-sundar.S-k@amd.com>
- <20241023063245.1404420-5-Shyam-sundar.S-k@amd.com>
- <e4163be3-1b42-4d28-b025-91734e9bff5c@amd.com>
- <b58cf10b-e3de-489f-b5b9-fa0daa407d7b@amd.com>
- <a039c086-b733-4af7-b031-8c19cafdccb1@amd.com>
-From: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
-In-Reply-To: <a039c086-b733-4af7-b031-8c19cafdccb1@amd.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: PN2PR01CA0212.INDPRD01.PROD.OUTLOOK.COM
- (2603:1096:c01:ea::11) To BL1PR12MB5176.namprd12.prod.outlook.com
- (2603:10b6:208:311::19)
+From: Mario Limonciello <mario.limonciello@amd.com>
+In-Reply-To: <CA+b5WFFa4hMeGnN0J2xd=FpU2Cxe_AjapWBpTFjfNhzUSOUAzA@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: SA1PR02CA0006.namprd02.prod.outlook.com
+ (2603:10b6:806:2cf::15) To MN0PR12MB6101.namprd12.prod.outlook.com
+ (2603:10b6:208:3cb::10)
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -69,341 +65,154 @@ List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: BL1PR12MB5176:EE_|SA1PR12MB6776:EE_
-X-MS-Office365-Filtering-Correlation-Id: cd3aa323-acc6-429f-59eb-08dcf3755ec5
+X-MS-TrafficTypeDiagnostic: MN0PR12MB6101:EE_|DM6PR12MB4220:EE_
+X-MS-Office365-Filtering-Correlation-Id: 6f342641-170f-40da-215b-08dcf375f657
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|366016|1800799024;
+X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|1800799024|366016;
 X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?YVJCZ0E2QmxKOFRBRDJGUlBWbHpWTVBTblRGaG5oRmJlQ0pSeUxycW9CSFRB?=
- =?utf-8?B?QWpXQUpvVVlNTTVGQytOWHVoa1N0U1J3TzloNDMyNEg1WWQyVzFVMHFiL3ZE?=
- =?utf-8?B?aEpsdFdMT1JkRU40UkVYU3F6SkVzNmg0ZkVIL0JHeGdBTURzOXhIdktMdmMy?=
- =?utf-8?B?SU0wWlh5NHR5UGVXTWIvaFdXZWxxdERZbDNRWFh2dnVmTlFQMU5ScVIwWWkr?=
- =?utf-8?B?bnRiNlY2Qlgva09EQjg0ZFMrZlNlekg5MTRDNnlsUlJ1eVkwYVpFaXFtTzlO?=
- =?utf-8?B?ZmpraXUxV3pSdWsxdTZJNjJydzBRRlNMS1dEVmhBN1E4bUxBTmdXdC9FZ3I5?=
- =?utf-8?B?b0k2Y1pKNllyUU1KZDdkdkgrdUxBYmR2NFVMMGE1d1NVRHBPMEJDMk9hcVpq?=
- =?utf-8?B?WStHNFBEeEFUMEdqdkhRakxmajhnWEZEd3lDbytmWE4rOFZJd0hFSHY5RTlJ?=
- =?utf-8?B?NzZuNjlmeTNmT0dFVWJWYTdVMEQ2RzRQWnA1QXhyaUw4YmFNWUVHMm9Ub2Yz?=
- =?utf-8?B?a2wySktycHpiVWE3MXhldklpaW44cFJ1VWV4Q2pJVFJjNGZkbkdFbjhvbTFs?=
- =?utf-8?B?RXJFemNBZmswajFFSzBNSzFrQXd0MzJXM0UyU3krOHZPSzJkNWZoZmFCTHFS?=
- =?utf-8?B?QUhKYWRlNWNxekh4MElmRkkxTVYxU0JhVEJwRWo4V2hOZEFlMVFnVDFaVVda?=
- =?utf-8?B?dGRoVjJEQnlPNEZaYWpBOEtKSG9ZVW1aZUZYT3lSQXhTVzhzSTVGSUQ1aXJZ?=
- =?utf-8?B?TVVLaC9WUUM2R1JDWS9YSytLa005WE1iSExFQzN6R0UzWGdLdTJHS25oL0JG?=
- =?utf-8?B?STNqdVRNUFdUYklUVFg4WW1LR0ZrK0JGTnBZa2RTblZPT21WellLTG8raVFJ?=
- =?utf-8?B?K1pCVHcydE9TR2tpdnZFYm83Q3lSSnZtMUxTL0xwaWUxQ1JVSnRmbnZnaisw?=
- =?utf-8?B?QXRGOVRJaERpVWtkSDY4ek91VmRQbldjOWRJVDUwbkF2dVN2SDY3aXZzQno5?=
- =?utf-8?B?aU5sdFVUQVNzU2NhZDFJNkxhZXphUWlKckUxeERsb3UvYzgwVFR6T0JyeU9V?=
- =?utf-8?B?RkkzODBxakJ1enVxT2tZbVFYQVJ1TlNJVHJlUGpWc2ZsS2JCWTJPc0lyZlZ4?=
- =?utf-8?B?cG0rdW5BL0MzeXkxdkJjUE9CT0lXc2s4NHBDRnRNbDF2Q29RUFh5YU00V3NM?=
- =?utf-8?B?WkdxOWpwM21KdStNUXZ5aXAyOHpieDB0c3ZsTmxyTm80ZVZzYXAvRkErZjN0?=
- =?utf-8?B?eG1RV1c1djFZVFZhaUUxVXhra3Q2TTIzUGNBNFVUY3VkcXNOekltYkhvb2NS?=
- =?utf-8?B?VEkzNmlwdmNOeWpRL2NUWSs5VlhhdkJFcFpjZE1WeUw0emU1Y1Bxay92b3hW?=
- =?utf-8?B?SERkWDdCQUxGN2Z0aXE0RTM0aU5NMlhaSEV2TlBhUldpR243WDcxMHFDZFlu?=
- =?utf-8?B?czRzTGkvQU42NzdXMG5nR09Ga1ZQaWVPUGVKM0dkK1pjbnZrQlJPSnRCVWRZ?=
- =?utf-8?B?U1l5cG84RmtFTTlGdnYvS1AzdFl2UVovVHpqUUtFckRHVVhFNEpESDZVL2VY?=
- =?utf-8?B?UnUxSlp2dTJjWWpsdWkxSHNQellZS1pGdk4vb0F1NkFkZVAvRTQ4WnllRVJ0?=
- =?utf-8?B?YkdaVW9tZTdZcDRXTGpFVlZDeWUvUkpCRDdpaTl5MTYvb1JqaVVrd0lGZGM5?=
- =?utf-8?B?T3pLc2F5aWlWY1Vqd1Z6STFZb2lGYVFKQnVCM1hqQW40eEFLLzh5L0xkODEv?=
- =?utf-8?Q?q27Mam2REMxhFjDA06R0yse7h2toT7lIRJ+iAQU?=
+	=?utf-8?B?TTdMdWZPRUxVSDlKdlV2bWIvT3cvdU4wbTd6ZmhYVmNLL0NZWWpBU1ZoYkRU?=
+ =?utf-8?B?VktrZWNRSlp1bUNHUWxiZzZlZ00wZ0xnRkVxR0hvOE9iWTRsakxsM2F6Mzlu?=
+ =?utf-8?B?c0IrYnc0aEhuNE9sd0trVkZ6SEhybC9OL3NhQUtvWlNmZHJmcTBUN3p2UmNB?=
+ =?utf-8?B?ZmE2VEkxV1dzaktzOWJRM3U4RU0xdVlEZzFabzdDczlsRlpOejJkdXpFSDNL?=
+ =?utf-8?B?Vk8rMXJVTngwWXFuSnkrOHY1dGVEaTN4T01VNzQzTkNhZU01bk5NN2JWR0pz?=
+ =?utf-8?B?N3JLY1UvL29ITXA0MUU3ei9MYnQrT0E0NEk0aEpRN3I4Z0NWOG1sN0Jwayt6?=
+ =?utf-8?B?WXMwUnl6YUt6bTZsMGp1M053eDVyclFhM29BRjUwWEVjVGsydFZFN0krVTVU?=
+ =?utf-8?B?Ty9MaWVONFE1YWNjQTNCbTFxT3UzbTdlYVhmWXlBZ1NSMWpGNlZ1ajZpOGxj?=
+ =?utf-8?B?aVY1NGtOcGtUSGJjdnpHL0ozanlnaVJESzhPSkNFY1VjS3p2ZUF2R3dtRU5k?=
+ =?utf-8?B?ZmEzZDM5NFFJVDNjenNGajhMMFJEYkZJWTJuWnlYaTk1MEl5dDhIbmFuMGVQ?=
+ =?utf-8?B?bWNITTE4cE9mdlh4T3MweEcvaU81bWM4ajlMMGt6OWg4Tm5kWU5WTVRQYXVN?=
+ =?utf-8?B?MkRCakhOOTRqM2drUW95TmN2RnRoc1F0V3pqY00xdWQ4Q1Z4dlRXUWhGbU1Q?=
+ =?utf-8?B?NnZqOFh2ZEcvNEdpSkxVMk5zSGxNYjFJVEVRR1lDQ3J1MXdLUCtpeUExVXdn?=
+ =?utf-8?B?a0lOdjhSM0E3bVY4M1haOEdRRlFhZUtDNzRVbjBiZnBER09zUTM2amxhOXA4?=
+ =?utf-8?B?ZHZlTmFOdWs1WDZlTVhmL28vbHgreXdnektGYzVTTmhHZVM1WEZ0bjI5N0F1?=
+ =?utf-8?B?WDhyR0pCMURkcDhKR2dOL0g3SnQ0OUZhWXUwMzFoYmhLOGRYNXVjaE4vb0xT?=
+ =?utf-8?B?dWxDMzNnVVd5SGkxclo3Nk9mT0hTZXlxWk4yRDFFUHlJTEIrYVVuQkFwSFl4?=
+ =?utf-8?B?MEtTYmtqWmJDcWhxL3NDQ2Iwb25HendXY2l5allVZCtReVNxZmQwT3RETDF5?=
+ =?utf-8?B?Sjl0a0FLUmNEbE1qQnZiSnNZcHpGS0g1RDdHTHBka2N4SGhyV2UvdjNBNTFx?=
+ =?utf-8?B?azJ4NHBYS1VGRlk2ZHBGcnFnekdnUnVUR1B5Wm4rTTUrQkVscEtyRWlMYTJU?=
+ =?utf-8?B?Rnh1RWc1ZlhvYll4aWNIOFBPWTRlM1R3ajNPYkxmZmNibkorMjdXdFlEa1hV?=
+ =?utf-8?B?MXJMb2N6V2pyWnArVTQzUEYxS25YaTB2Nyt4SDB4akxxT00rRWQ2WmI1OUlB?=
+ =?utf-8?B?cER3ZjZ5aFhKTmRHMEhnamVyK21kZEFoOEJqMDNEMk1JRHVGWG56Rjg3K1hq?=
+ =?utf-8?B?bVNLaU9LNUd3d2t0aE84ZllEUlZkNmszQlhqREJyTGxWdFVLcFcxeXlKcllv?=
+ =?utf-8?B?QzhmMHhXSk1ZNGYxejhmdWNXNlhNell6aStwckZPSEprL3dDZzZsc0pxamdL?=
+ =?utf-8?B?RFFrSzUwV3JSZll0dW5KK3F0aTJPSStBdzlVVVNSVEFFNjB5eHk3bmxXajRP?=
+ =?utf-8?B?aGR0dUMxOU5MTy9hTTJCY0xScU1xMzFCQk1GTlBhblFoZVZkdk00Rm4zM3h1?=
+ =?utf-8?B?RFZmdnlLeTBKeUdLd1ZnOFcwZzBONFh1QVd2aDgzUUZ1bTNtRmJwK0FxWTFJ?=
+ =?utf-8?B?U2p5cldNUUYySER2cVpoSS9QUUtOTFI3WVkzQnVVY3VDSzBEMTBpbjR2UTIy?=
+ =?utf-8?Q?GLB+b5y3vS0CF69Qhka1nX+eG5RFnXOsuVk2AQR?=
 X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BL1PR12MB5176.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(366016)(1800799024);DIR:OUT;SFP:1101;
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MN0PR12MB6101.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(1800799024)(366016);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?Q2wxNFV1M1RrTTh2cFhpencyWnpuVVRiWEpXME5YZnRyWXdHTCswRVhhQk9t?=
- =?utf-8?B?cDIrSzFsU1V6ZlVSa3pCTjdzcXYxQnJvSXFtVnNwMTBCNkN2TEdtMDRVMDAy?=
- =?utf-8?B?Z2NtNDFTWkY2bjliQnZ4S2JLWjh5YTdZdDN0U2RyckFPSEJQdE9yb3hOenBZ?=
- =?utf-8?B?cDgvR09hMnVNWlZqemJKSC9DcHVmbWlPZ3NGbmtyQy81dm9RSXNBcWxnOS9m?=
- =?utf-8?B?RlIvclpYNWkyVWRWTUdxdVFLc0ZrcnQ3MGtuSGJSejZ6UTNsUXJxOXh6OHlq?=
- =?utf-8?B?ak5hYklNSzBYa09VaWxiUGdib3M2ODN3UWxIc0M3UWJQWjZqUXc2emdDc25k?=
- =?utf-8?B?K24vcmJHUmJsZUtYK0pTREg2SjdzeFN3Y1h5TW1tU3lTVTJ3RVVKV2NrMHRa?=
- =?utf-8?B?MDJtcUlGTnRaR29kV1V5R3dETm5Ta3RNcXFkZHpDMFhpc1V5QzlWdWY2VlZw?=
- =?utf-8?B?YWFKWVhuMFVkR1ZpanQ0Rnk0RlFrMVNDVkFQV2tXbUFZMzlHTHpsam5CNDJn?=
- =?utf-8?B?WkZDQlRVZjJGV2VVL0dRN204T0hycDNDTHdZZU9hYlpndThnWVBQeExYYVp0?=
- =?utf-8?B?Q1lrS1I2OVp0TEo5NlFlUk05TlhhVXdvZVpNVGhlZER4RWRpMy9uWTVXRkVk?=
- =?utf-8?B?cHdJT0FSNnJSM2hBUmNmMkZka20yS0MyVFU3NndIdnFhMTNvTHpLRXJ2eWRC?=
- =?utf-8?B?RjNwNmUvTTROU1hiY3lvczB2RVR6YzByQnM4d29tbEZiMkxRc0Z6a29JNDVS?=
- =?utf-8?B?ejQvU2xid3hKdjN1ZWUrSGhXUW9saWZHaWdkMUJSUktJeHJZenk0VXdPTUE4?=
- =?utf-8?B?SGF6UkpZZURNZXUrajJoU0dFQW15bEhrU2hHUEJCcmN0MEp4a2h3TlBIZ0dq?=
- =?utf-8?B?cWg0MExqVm52dEtIRXY4RHVFVmdOMzI0aWkxdDZZL3lCVDc0L2RDSmJVQ3Q5?=
- =?utf-8?B?RUVGMTlQTW9KeTlwdE1TdW5TdE9adURTY3NJbk51Yk9DT0lzdHhBSVh0OCs5?=
- =?utf-8?B?Ty9RVnBmZlpLcTZsU2FpT09URXNJUW91V3FKT2lxUTZsWkRMdS9BYVVVVEc5?=
- =?utf-8?B?M2ZwamdXU1Z1N09iSU1ablorZytFU2ozYUx3Q1hPUVVVVUJXS2FhUHdNdnBX?=
- =?utf-8?B?MDNVdGNIQmZYNHlTUWFJa1ZaSncrQXkyR3IySHBqVXh6by9MclR5aW1NR0kr?=
- =?utf-8?B?ZXBlSUFHRWlXQUdJOHdMNmtMZ0Z0UWpiQ3pIVFloN0ZwTDJxb3hxTlhDQnhG?=
- =?utf-8?B?TWtsVGUrSFJrWGJ3VmpnNkNBQ0JlMmV6WkpjZU9NaDhoQy9LWnNHWVVyS2NI?=
- =?utf-8?B?WDVxakZEV0xGLzlSUWQrMktJNGowN2JqYm9mT0g4cFNRbGVHK0xrWWNvRVQz?=
- =?utf-8?B?bFQxSERSYXVPaFNNbXZRQlk0OWd5UURlbktxY2kxM1UvQW5jV1lSSkkxR0dm?=
- =?utf-8?B?cWdtb2ZWQXZuaGdLRnRzaFB6VW1PdzNjNjBNU1czZ1RZektQdEhUNmVYOUR2?=
- =?utf-8?B?ZVBUQjVxYVZ1N0EwY2gxcDdkSllKNnEzWE1sT2l0WjkreTI4WXA3MnpMejhy?=
- =?utf-8?B?UllmN3lGWVJZRk1sc3JZT1VFbVNMeUdqYWF4Y3Era2ZHRThacmRsUHZIVXp5?=
- =?utf-8?B?K0YrcERWaUloR01wdGZaYnBNTTBZZEV5NmluckdLQnBtbTY1NGJ2Uzc0aURl?=
- =?utf-8?B?VnFZRUxVM25oQmVvKzRrbnZ1TnNMSmhNYStsdzJGaCszR1hKclBFSXhMbjhH?=
- =?utf-8?B?c2tKb2JIQUJXRkVaeG1uWStFUmRVS3MyVWNiS3FuQmI0RnRyeVNhN09YTzZ3?=
- =?utf-8?B?OUIrQUp6Z2c0RjFmNzVodktmQkUzbnZ2YTdsRUxZQ05oblVHOHZYMUpLeVQ3?=
- =?utf-8?B?OGJWMFd3NlNzMUNhdDlZTDFPMEdrdjJLSXB1RW0yM25EcmVSWGRNWHJTWXky?=
- =?utf-8?B?bmpZWit4OGk1ZnNVOEpJclN6ZWVReEFneWZzQ2tIWGZYSlY5Y01FVDZjejd2?=
- =?utf-8?B?bUIyM3ZjLzdFL2liOGx5ZjM2S2JxWnlHenB6OU8zckJITTJqNXNpcDI3djhU?=
- =?utf-8?B?OXR4NUI3QStJdXJJbDU5cC8zWWRzbmF5OHR1SFZ2Nk1BSEJhZjRxT1hOc0xG?=
- =?utf-8?Q?YB9id6DkRjcD1hAnLrTrWlUt7?=
+	=?utf-8?B?RklFK3VVVXozd3RGVUpGbmhKVkJjd0s5Q2ZwSnpOcFRLN2VJS0JYdEVlUmNy?=
+ =?utf-8?B?TUZ3K0xmZ3pGNWdaeVdSejF2dmVHT2REck80SEtPRWlwUjhEc2lLRXg5cnZa?=
+ =?utf-8?B?WnVNaTNOcWdtV0Q0NzZDakFITGZhQm10WEtaTW1nQ2ZneXNjNSsrTHgwR3k1?=
+ =?utf-8?B?VFJjZUJ2cGMvVy9vK1dpYUdoUlpqQmVmdWZKOWlzblhXZnpxNUdNczBLN05S?=
+ =?utf-8?B?Qk1WQ0FORTNtcDNQcDVkem15cCswUktEY1AxQVFOcDV4UjlVVjBCS1YrdW53?=
+ =?utf-8?B?bDdvLzdTaWk2L2p2czA0QzBxb1EyblJTK2NDZ0xwTmVqS1UzMVRNSUZGM2JV?=
+ =?utf-8?B?OW91MmlIK1BkL0w5K1Y2QUoxU2ZoK3JkdklScVFvdEowSTNYVno2c2ZqSnBo?=
+ =?utf-8?B?eVhCcTV6bnMzeCtQdVNWRytQbUg3UDBQbUh4bkRYZStXS3cyUGs2SDlHMlNa?=
+ =?utf-8?B?SndxN0RrU2pQWDMxNzE2UHl3Q1FZOFFQTVNkRzVXODM2VS9hdHhGLzBwSFhv?=
+ =?utf-8?B?ZTZGdElrNDAxQkswZDNlbjUvdHZaTVRVZlBxckZyaTAybkRkRUV3cy9KL2Zh?=
+ =?utf-8?B?R0N2MUFaVVlKN0pWbmJEZXlTQ0dROG4wNzhSVW5TRi9IbGJOTVpabWRQQmNp?=
+ =?utf-8?B?UStGbnJ1bmtXQTVMYUxrTnFKQThUKzltOUJGUEhVUWlyOUZJZGF1VmFMSWhl?=
+ =?utf-8?B?WFBYY2VhYWhiZEtPaEUyY3hCaWVJYmVaajVsRnVyR216c1FzZjA4MmZ3RE5s?=
+ =?utf-8?B?WFN1TytBQXZnSDQ1YjgvVXdZUEx3c1BCL09tUTdrTnBlOTZXalJ3WDBIeVJF?=
+ =?utf-8?B?TkN3b0NRWVE5eXFRa2RNa2JGOEhmU1RjL1FnTUVRK01lbnN1RE51dXc1VUJH?=
+ =?utf-8?B?aVh5RHJ6eHRjMi9idFJWTWU5SUVEUWw0UndESVhBVTRDNUJwM1VTUWpvU2NF?=
+ =?utf-8?B?ck5Oa1YrNkhucFlWSHhsUTVVNDdVZXo2MFNXN01DRTY2VGF3NnJ2Q21acDZl?=
+ =?utf-8?B?eWQ5NTdtUkpkYXA1WW4zSGx1SmtIdjdLU1Fra2NrOWRWRWdKQ0NuRVJoR01n?=
+ =?utf-8?B?OVhDakxrdDhldGYvNHdnc3hhRTFRVkhiMWJrNWJWTmp2dU5hdFR6RGtpYWRK?=
+ =?utf-8?B?cFQvQXlxTmRvRUVob01CUmhvUzM3UHg0MWdRTGhnSjd0ZDZFai9FUDc2Tzlt?=
+ =?utf-8?B?NUJrcFdBU0w2Ym10Q1ZIZndIaWN0RlpMdUoxMWpSbzJHNGVJVHZmT1R4Z0Mz?=
+ =?utf-8?B?b3VUeHgyYkQ0dk9NL2Y0TTJRMmRmK2Z4OVhkTFd2ZDhROXg3ZXREMTB6cHQz?=
+ =?utf-8?B?a0ZFSWhxNXl4alk4YlRyeVA4Ky81bURzb0xTRnRRRUNkN3VkaEhiTDc5SUhv?=
+ =?utf-8?B?UnBpdWszQ2JjUFlOdUpsVk1GdmlrVUpCQmlZeTFNMFg0YXd3K2szQjlIcXVw?=
+ =?utf-8?B?U2NKVXYxZFI0aXFGcnZoV2tOTzhWVG1PMGNTWGp5TXJpQVdQUkVxNTZSNlhp?=
+ =?utf-8?B?TEhwWHNuNXN2MGN5WVYzRGtWVVZneDRCWStBaDJEemtHM1ExRVNsUXJzK2tW?=
+ =?utf-8?B?ZU1FaEdGRWxKUW15RGMzK09kOVpBSHJFcHhMdGdmZjlyNTZ6akpxdHltdm16?=
+ =?utf-8?B?N1RObitwL3BJK1AxRHFrcm9uZG5URUdLK2pnbDZzMHVnQmtneDM3alFMUGhq?=
+ =?utf-8?B?N1JZSlRUaFRFa09Pckpic0Z4VEIwVjJJbFh0ZXRIeU1ld0hqU1JpeWtkdHli?=
+ =?utf-8?B?ZjBpZmFYbW9Cc1lWWmtWYVBWcVNiblR2ejBlZFRZbkd0OHBjV2ZaZitwQk9i?=
+ =?utf-8?B?Vk1zcUVBWlBZY09jYmZFaFlDMUJZZ3BlYWs3ZUREdTRUbTF3MzlDeUVXR0lv?=
+ =?utf-8?B?ZnBXNGxrSDc4L3JiU1B0djNMTkQrWWw1dkJiK2kzY08rbmIrZzNCZjVQempy?=
+ =?utf-8?B?b0VwYXdKYjZwWFBKRFZ4dHN5MTdQM2o4bURxTUVkYUx3UXN3WlFZTE5FK2dY?=
+ =?utf-8?B?SEpmV29jdU1ZaDFQNlVSbXkvb2lzZUNKZW5RaXZEaVB5Q1BZejNHZFhHOUlx?=
+ =?utf-8?B?clhhaFB2WmhaVXNjTXJpL2xzZ1NEM3dPVkRqc2VoWWdhVGlTU250LzRvYjl3?=
+ =?utf-8?Q?H6DVoYr89tOy3LW21obbb8GNs?=
 X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: cd3aa323-acc6-429f-59eb-08dcf3755ec5
-X-MS-Exchange-CrossTenant-AuthSource: BL1PR12MB5176.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 6f342641-170f-40da-215b-08dcf375f657
+X-MS-Exchange-CrossTenant-AuthSource: MN0PR12MB6101.namprd12.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 23 Oct 2024 15:14:20.9678
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 23 Oct 2024 15:18:35.0587
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: PxOJFW/JrPnIQRj0XUbttXA+EIpAiUwwZl3rb7ZeOd6sSllUj3TFXl922sNkZ50nexrD8Qsh3s48HZPf3VZvOw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA1PR12MB6776
+X-MS-Exchange-CrossTenant-UserPrincipalName: MjDsR0nxTWXTKoereoPKZRLq4nEiD2Ij/R843FE3r03pBSy8WLgl5x/JeE3sHxL6gppszOgvqbqSif3Q2cV90A==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR12MB4220
 
-
-
-On 10/23/2024 20:20, Mario Limonciello wrote:
-> On 10/23/2024 09:37, Shyam Sundar S K wrote:
->>
->>
->> On 10/23/2024 19:35, Mario Limonciello wrote:
->>> On 10/23/2024 01:32, Shyam Sundar S K wrote:
->>>> Use platform_get_resource() to fetch the memory resource instead of
->>>> acpi_walk_resources() and devm_ioremap_resource() for mapping the
->>>> resources.
->>>>
->>>> PS: We cannot use resource_size() here because it adds an extra byte
->>>> to round
->>>> off the size. In the case of PMF ResourceTemplate(), this rounding is
->>>> already handled within the _CRS. Using resource_size() would
->>>> increase the
->>>> resource size by 1, causing a mismatch with the length field and
->>>> leading
->>>> to issues. Therefore, simply use end-start of the ACPI resource to
->>>> obtain
->>>> the actual length.
->>>>
->>>> Co-developed-by: Patil Rajesh Reddy <Patil.Reddy@amd.com>
->>>> Signed-off-by: Patil Rajesh Reddy <Patil.Reddy@amd.com>
->>>> Signed-off-by: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
->>>> ---
->>>>    drivers/platform/x86/amd/pmf/Kconfig  |  1 +
->>>>    drivers/platform/x86/amd/pmf/acpi.c   | 46
->>>> +++++++++++----------------
->>>>    drivers/platform/x86/amd/pmf/pmf.h    |  6 ++--
->>>>    drivers/platform/x86/amd/pmf/tee-if.c |  8 ++---
->>>>    4 files changed, 28 insertions(+), 33 deletions(-)
->>>>
->>>> diff --git a/drivers/platform/x86/amd/pmf/Kconfig
->>>> b/drivers/platform/x86/amd/pmf/Kconfig
->>>> index f4fa8bd8bda8..99d67cdbd91e 100644
->>>> --- a/drivers/platform/x86/amd/pmf/Kconfig
->>>> +++ b/drivers/platform/x86/amd/pmf/Kconfig
->>>> @@ -11,6 +11,7 @@ config AMD_PMF
->>>>        select ACPI_PLATFORM_PROFILE
->>>>        depends on TEE && AMDTEE
->>>>        depends on AMD_SFH_HID
->>>> +    depends on HAS_IOMEM
->>>>        help
->>>>          This driver provides support for the AMD Platform Management
->>>> Framework.
->>>>          The goal is to enhance end user experience by making AMD PCs
->>>> smarter,
->>>> diff --git a/drivers/platform/x86/amd/pmf/acpi.c
->>>> b/drivers/platform/x86/amd/pmf/acpi.c
->>>> index d5b496433d69..62f984fe40c6 100644
->>>> --- a/drivers/platform/x86/amd/pmf/acpi.c
->>>> +++ b/drivers/platform/x86/amd/pmf/acpi.c
->>>> @@ -433,37 +433,29 @@ int apmf_install_handler(struct amd_pmf_dev
->>>> *pmf_dev)
->>>>        return 0;
->>>>    }
->>>>    -static acpi_status apmf_walk_resources(struct acpi_resource *res,
->>>> void *data)
->>>> +int apmf_check_smart_pc(struct amd_pmf_dev *pmf_dev)
->>>>    {
->>>> -    struct amd_pmf_dev *dev = data;
->>>> +    struct platform_device *pdev = to_platform_device(pmf_dev->dev);
->>>>    -    switch (res->type) {
->>>> -    case ACPI_RESOURCE_TYPE_ADDRESS64:
->>>> -        dev->policy_addr = res->data.address64.address.minimum;
->>>> -        dev->policy_sz = res->data.address64.address.address_length;
->>>> -        break;
->>>> -    case ACPI_RESOURCE_TYPE_FIXED_MEMORY32:
->>>> -        dev->policy_addr = res->data.fixed_memory32.address;
->>>> -        dev->policy_sz = res->data.fixed_memory32.address_length;
->>>> -        break;
->>>> -    }
->>>> -
->>>> -    if (!dev->policy_addr || dev->policy_sz > POLICY_BUF_MAX_SZ ||
->>>> dev->policy_sz == 0) {
->>>> -        pr_err("Incorrect Policy params, possibly a SBIOS bug\n");
->>>> -        return AE_ERROR;
->>>> +    pmf_dev->res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
->>>> +    if (!pmf_dev->res) {
->>>> +        dev_err(pmf_dev->dev, "Failed to get I/O memory
->>>> resource\n");
->>
->> here        ^^^^^^^
->>
->>>> +        return -EINVAL;
->>>>        }
->>>>    -    return AE_OK;
->>>> -}
->>>> -
->>>> -int apmf_check_smart_pc(struct amd_pmf_dev *pmf_dev)
->>>> -{
->>>> -    acpi_handle ahandle = ACPI_HANDLE(pmf_dev->dev);
->>>> -    acpi_status status;
->>>> -
->>>> -    status = acpi_walk_resources(ahandle, METHOD_NAME__CRS,
->>>> apmf_walk_resources, pmf_dev);
->>>> -    if (ACPI_FAILURE(status)) {
->>>> -        dev_dbg(pmf_dev->dev, "acpi_walk_resources failed :%d\n",
->>>> status);
->>>> +    pmf_dev->policy_addr = pmf_dev->res->start;
->>>> +    /*
->>>> +     * We cannot use resource_size() here because it adds an extra
->>>> byte to round off the size.
->>>> +     * In the case of PMF ResourceTemplate(), this rounding is
->>>> already handled within the _CRS.
->>>> +     * Using resource_size() would increase the resource size by 1,
->>>> causing a mismatch with the
->>>> +     * length field and leading to issues. Therefore, simply use
->>>> end-start of the ACPI resource
->>>> +     * to obtain the actual length.
->>>> +     */
->>>> +    pmf_dev->policy_sz = pmf_dev->res->end - pmf_dev->res->start;
->>>> +
->>>> +    if (!pmf_dev->policy_addr || pmf_dev->policy_sz >
->>>> POLICY_BUF_MAX_SZ ||
->>>> +        pmf_dev->policy_sz == 0) {
->>>> +        dev_err(pmf_dev->dev, "Incorrect policy params, possibly a
->>>> SBIOS bug\n");
->>>
->>> This upgrades the previous message from debug to error.
->>
->> It is dev_err() even before this change.
->>
->>>
->>> TL;DR I feel this error should stay as dev_dbg() if no function checks
->>> are present for Smart PC.
->>>
->>> I don't think it's necessarily an error though.
->>> Smart PC checks are a bit different than the other checks.  There
->>> isn't a check for a bit being set to indicate the function is
->>> supported.
->>>
->>> So if the BIOS has the declaration for the region but it's not
->>> populated it might not have a Smart PC policy and this shouldn't be
->>> reported as a BIOS bug.
->>
->> This should be included in the CPM package, and the BIOS team is
->> responsible for packaging a policy binary.
->>
->>  From a driver design standpoint, the absence of the policy binary
->> should be treated as an error, as there's no reason for the BIOS to
->> advertise the Smart PC bits without providing the policy binary.
->>
->> Therefore, this should trigger a `dev_err()` and be considered a
->> BIOS bug.
->>
+On 10/23/2024 10:12, Mischa Baars wrote:
+> Hi Mario,
 > 
-> OK I agree with this specific error, but I took a closer look at the
-> bug associated with
-> 03cea821b82cb ("platform/x86/amd: pmf: Decrease error message to debug")
+> Why would this be the wrong mailing list?
 
-ah! but your comment was just inline to:
-
-dev_err(pmf_dev->dev, "Incorrect policy params, possibly a SBIOS bug\n");
-
-So, I was thinking you are saying to downgrade this to dev_dbg() and
-hence the above clarification.
-
-if the comment is for:
-dev_err(pmf_dev->dev, "Failed to get I/O memory resource\n");
-
-then Yes, I agree we should have dev_dbg() and I will respin a new
-version.
-
-Thanks,
-Shyam
-
+The correct list would be the amd-gfx mailing list.
 
 > 
-> As _CRS is patched out by BIOS I suspect that system will now start
-> showing:
+> I understood it exactly as the article tells us: there is an issue
+> with the HDMI 2.1 specifications and its intellectual property that
+> prevents the driver from being implemented as an open source driver in
+> its entirety, but that certain aspects could be implemented closed
+> source through the firmware.
 > 
-> dev_err(pmf_dev->dev, "Failed to get I/O memory resource\n");
+> What's holding the kernel driver developers / AMD back to take this road?
+
+The architecture of amdgpu can't support it.  The applicable code needs 
+to be open source.
+
 > 
-> So how exactly is a platform designer supposed to not advertise smart
-> PC bits?  It seems the only check is the presence of that resource.
+> Kind regards,
+> Mischa.
 > 
->> Thanks,
->> Shyam
+> On Wed, 23 Oct 2024, 15:12 Mario Limonciello, <mario.limonciello@amd.com> wrote:
 >>
+>> On 10/23/2024 03:36, Mischa Baars wrote:
+>>> Hi,
 >>>
->>>>            return -EINVAL;
->>>>        }
->>>>    diff --git a/drivers/platform/x86/amd/pmf/pmf.h
->>>> b/drivers/platform/x86/amd/pmf/pmf.h
->>>> index 8ce8816da9c1..a79808fda1d8 100644
->>>> --- a/drivers/platform/x86/amd/pmf/pmf.h
->>>> +++ b/drivers/platform/x86/amd/pmf/pmf.h
->>>> @@ -13,6 +13,7 @@
->>>>      #include <linux/acpi.h>
->>>>    #include <linux/input.h>
->>>> +#include <linux/platform_device.h>
->>>>    #include <linux/platform_profile.h>
->>>>      #define POLICY_BUF_MAX_SZ        0x4b000
->>>> @@ -355,19 +356,20 @@ struct amd_pmf_dev {
->>>>        /* Smart PC solution builder */
->>>>        struct dentry *esbin;
->>>>        unsigned char *policy_buf;
->>>> -    u32 policy_sz;
->>>> +    resource_size_t policy_sz;
->>>>        struct tee_context *tee_ctx;
->>>>        struct tee_shm *fw_shm_pool;
->>>>        u32 session_id;
->>>>        void *shbuf;
->>>>        struct delayed_work pb_work;
->>>>        struct pmf_action_table *prev_data;
->>>> -    u64 policy_addr;
->>>> +    resource_size_t policy_addr;
->>>>        void __iomem *policy_base;
->>>>        bool smart_pc_enabled;
->>>>        u16 pmf_if_version;
->>>>        struct input_dev *pmf_idev;
->>>>        size_t mtable_size;
->>>> +    struct resource *res;
->>>>    };
->>>>      struct apmf_sps_prop_granular_v2 {
->>>> diff --git a/drivers/platform/x86/amd/pmf/tee-if.c
->>>> b/drivers/platform/x86/amd/pmf/tee-if.c
->>>> index 19c27b6e4666..555b8d6314e0 100644
->>>> --- a/drivers/platform/x86/amd/pmf/tee-if.c
->>>> +++ b/drivers/platform/x86/amd/pmf/tee-if.c
->>>> @@ -257,7 +257,7 @@ static int amd_pmf_invoke_cmd_init(struct
->>>> amd_pmf_dev *dev)
->>>>            return -ENODEV;
->>>>        }
->>>>    -    dev_dbg(dev->dev, "Policy Binary size: %u bytes\n",
->>>> dev->policy_sz);
->>>> +    dev_dbg(dev->dev, "Policy Binary size: %llu bytes\n",
->>>> dev->policy_sz);
->>>>        memset(dev->shbuf, 0, dev->policy_sz);
->>>>        ta_sm = dev->shbuf;
->>>>        in = &ta_sm->pmf_input.init_table;
->>>> @@ -512,9 +512,9 @@ int amd_pmf_init_smart_pc(struct amd_pmf_dev
->>>> *dev)
->>>>        if (ret)
->>>>            goto error;
->>>>    -    dev->policy_base = devm_ioremap(dev->dev, dev->policy_addr,
->>>> dev->policy_sz);
->>>> -    if (!dev->policy_base) {
->>>> -        ret = -ENOMEM;
->>>> +    dev->policy_base = devm_ioremap_resource(dev->dev, dev->res);
->>>> +    if (IS_ERR(dev->policy_base)) {
->>>> +        ret = PTR_ERR(dev->policy_base);
->>>>            goto error;
->>>>        }
->>>>    
+>>> I recently purchased a new television that is capable of 4k@120Hz
+>>> resolution and refresh rate, but when connected with the proper cables
+>>> to an AMD Radeon RX 6500 XT that does support HDMI 2.1, the maximum
+>>> resolution and refresh rate I get is 4k@60Hz.
 >>>
-> 
+>>> I've 'spoken' to AMD about this, and all they do is recommend
+>>> switching to Red Hat / Suse / Ubuntu and using the official closed
+>>> source AMD drivers. If it is supposed to work after that, remains
+>>> unclear.
+>>>
+>>> Did someone get the desired 4k@120Hz / HDMI 2.1 resolution and refresh
+>>> rate to work using the in-kernel amdgpu driver? If not, why does it
+>>> not work or when will it work? I have other vendors with other
+>>> hardware that have different restraints on the number of operating
+>>> systems that I can use, and they do not go well together.
+>>>
+>>> Kind regards,
+>>> Michael J. Baars, the Netherlands.
+>>>
+>>
+>> Hi,
+>>
+>> Your inquiry has come to the wrong mailing list, but I would mention a
+>> few things because I happen to be subscribed here too.
+>>
+>> 1) AMD doesn't have a closed source driver.  AMD has a packaged driver
+>> that is a DKMS package for use in older kernels before support has
+>> landed upstream.  With all AMD products on the market right now there is
+>> support in mainline kernel and with most products in LTS kernel too.
+>>
+>> 2) HDMI 2.1 covered in the past, and AMD's hands are tied.  Here's some
+>> recent press on it.
+>>
+>> https://www.tomshardware.com/pc-components/gpus/hdmi-forum-rejects-amds-hdmi-21-open-source-driver
+
