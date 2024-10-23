@@ -1,81 +1,87 @@
-Received: from mail-wr1-f43.google.com (mail-wr1-f43.google.com [209.85.221.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 74A1D15ECDF
-	for <platform-driver-x86@vger.kernel.org>; Wed, 23 Oct 2024 08:36:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 55DB11AAE31;
+	Wed, 23 Oct 2024 12:39:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729672619; cv=none; b=QMsMN71cakjZ6vpG7N97mkq8DGu23YMaw55LKJ1wofUwzygragGOq/fYgqCyiQvdURknY8X3mN2plnHTABjb1M9O0WWzNyp4iBcfB3xaNFsbuWcxbWsP44y/6CRlz7dUmFygfWu7JWviTGdq6L/l7bUmkkdidLDmDULr6x8MLzI=
+	t=1729687153; cv=none; b=ZVGAEY/uQ9garhixS7nxCIGpujJIM20sP09PJBd3ngUrOF/H9e3idjMIdEkDol2wmadX90T5DhF3ku2NWIegmOKvcU1kmq0fDn6db9mMk69hphyIpzJRIZdC56zOZNOdd8dB/JiJk/WA078mDGOO0LBGqY4G8fae287r0c0mAnA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729672619; c=relaxed/simple;
-	bh=3Bu1KXEDCF3c3c5kulhmDYB2gdDiQ5wwcgs8n6YN+Zw=;
-	h=MIME-Version:From:Date:Message-ID:Subject:To:Content-Type; b=tmF7C1m0dF9yW+zmrFrWPHYhhDa4s2NYcCFbEL7m6pSxuYmOmNyr8PWTshZUX1CTS90cAKqZkfhkn2/ztmOCSSDwBXcAZam2h6nF+K9JeVkLpA6P+SZjuEjE/0beL3ZtQog0lWmrI89X4CQ6/tQQv96/71XgrcvwqW44K4gRouI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=eR932j7I; arc=none smtp.client-ip=209.85.221.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1729687153; c=relaxed/simple;
+	bh=VDN6RmHlM10MurxZo+azDyhajBN9ot8KBsxyMd8i8J4=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=WFWp0hZtP2pm9zo2wPy18KZNC5s/mPJ+82awjCg3HMsMSJAgYo7rPTO5wIQGx/qC2SY8gbGuRMPDOacjAyzD+cQ4VcvFPxmugeutD5SZBcvdpPv5fgwNs+Y5CjNfD77kBmoGqyRT67dk9rPxGoBR2sTFgvLl6gr2fLsghDiuad4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ZdEM8BFF; arc=none smtp.client-ip=198.175.65.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eR932j7I"
-Received: by mail-wr1-f43.google.com with SMTP id ffacd0b85a97d-37d6ff1cbe1so5026814f8f.3
-        for <platform-driver-x86@vger.kernel.org>; Wed, 23 Oct 2024 01:36:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1729672616; x=1730277416; darn=vger.kernel.org;
-        h=to:subject:message-id:date:from:mime-version:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=3Bu1KXEDCF3c3c5kulhmDYB2gdDiQ5wwcgs8n6YN+Zw=;
-        b=eR932j7I7FysGOFLLNYwRXliGAra2pCWceHteFue+dhnqeh+uNJJPDtN/Yf//2dN3F
-         iui2AWjXNbwSIjVrO7U2IDFQulF/aSPOj+u1f+AZACaU5epeesj7eC4jh3+AptXnpbCK
-         kJLHjGFjTP9ud3PaqkgA5xLrhp9SpsupyTP0KMk4KRw8Js6N7GRWGfqf/xI3tB6RQQOn
-         Wu/6YmRmipirGdecsc3NNJfB6tF2YVpycxByXP5a0IYgjVbgyGnZQC70dDBAy46s60XZ
-         O5/RLzfncQmmvav94i0p9nkgXZxybmb3edeSPwcnllNla+rWPEiFimWyqqtZnNjScepV
-         g1pA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1729672616; x=1730277416;
-        h=to:subject:message-id:date:from:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=3Bu1KXEDCF3c3c5kulhmDYB2gdDiQ5wwcgs8n6YN+Zw=;
-        b=DGiTJMN2i/VY7TdiaRmlPZaKPciEwSjopPvCGE0mYLZG5RUKjHJYWYPBMGwK17nMCk
-         9sR46YMHUN8wPbpqC/8/Xk9hqJXnVL8pj7UE8nN0o5pV0Wf36tkTtGnZSL5mAR3lKjuF
-         bGIEROBCjeCOQqf3aoFj765yXORFmWWJ9OHcVdIEVVrOen04RdkPr7tSO6C2ecUjnnhj
-         Cj284mZDdoGNbpP2y6EIdrYboj8BcwKclS0oKkqRtMKMXvjbJfkArz0Tb/0pqH/c6AmS
-         mH9VOYh4b5B8cbbtnmWMQlOmnPmOzKOCxgU8av+ojpXDxvcd7azjr02nP2hcjMlWx0h4
-         mnNA==
-X-Gm-Message-State: AOJu0YyTTtkedsIjYYdL6jSOVS1uz7S3F674j7YZkxEGfvw1dWQ35S17
-	mvtupPE+2Dr8bKOOdtNuR/kIArzzzHbCPehCCcgONUj136mB7jXYBS0ZwMUPemZEExrCynpGVWx
-	AIZ7oF7oEbHO1Ct89evQVDIB8GXHFacor
-X-Google-Smtp-Source: AGHT+IE2rrQrQVgALVNR1xB5917O3cxU6YjQw9OagvFulRmNTMekCat2l2R3tZFSEMn+yYJYcsPdPkVcwg7usamiUas=
-X-Received: by 2002:a5d:4ec9:0:b0:37d:4cd6:6f2b with SMTP id
- ffacd0b85a97d-37efcf0c694mr1090784f8f.14.1729672615553; Wed, 23 Oct 2024
- 01:36:55 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ZdEM8BFF"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1729687153; x=1761223153;
+  h=from:to:cc:in-reply-to:references:subject:message-id:
+   date:mime-version:content-transfer-encoding;
+  bh=VDN6RmHlM10MurxZo+azDyhajBN9ot8KBsxyMd8i8J4=;
+  b=ZdEM8BFFh3G886vl8Kl78GZtNA0CM5pDJ9/bOT6hO02fIq/vSxJPefAO
+   YAGTlfbNJlBQzrDpG4Wy8bkwLTKotuuMKpZOmINqw5T4+oGrRmL5T7tzS
+   K5llvxSoa03Mrm5KC0J1ip33B2BU6SzPiWX1cYDU4IBFya8LnUz8Zzodq
+   nn9nxMSbrRjpCH6wfrQITiYkuuI3sN1O2/FE/C4dD1jFEiytMZSBtqBmy
+   EuWwdffXVL6usVJ49ml29NUMVWTeu2yso9r0aqs+IgTJ7nftGgBB7qokZ
+   Q7YJaftfrM4oTAC/ZEghdCU7gm2um/PMAGCqi2DfsTj+eVDMh8h7QqRzs
+   A==;
+X-CSE-ConnectionGUID: Werb1QW6QUGCtFazPgyYBg==
+X-CSE-MsgGUID: o2P8/KB/RECcx42TUM8+XQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11234"; a="40661919"
+X-IronPort-AV: E=Sophos;i="6.11,226,1725346800"; 
+   d="scan'208";a="40661919"
+Received: from orviesa005.jf.intel.com ([10.64.159.145])
+  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Oct 2024 05:39:12 -0700
+X-CSE-ConnectionGUID: /5nfGDkhT6eagWSelHZm0w==
+X-CSE-MsgGUID: Knq80YSSRwiR+gEnFtHv8Q==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.11,226,1725346800"; 
+   d="scan'208";a="84982950"
+Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.40])
+  by orviesa005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Oct 2024 05:39:09 -0700
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+To: hdegoede@redhat.com, corentin.chary@gmail.com, luke@ljones.dev, 
+ chen zhang <chenzhang@kylinos.cn>
+Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ chenzhang_0901@163.com
+In-Reply-To: <20241023012905.15551-1-chenzhang@kylinos.cn>
+References: <20241023012905.15551-1-chenzhang@kylinos.cn>
+Subject: Re: [PATCH v2] platform/x86: eeepc-laptop: use sysfs_emit()
+ instead of sprintf()
+Message-Id: <172968714145.1753.6784354782646325704.b4-ty@linux.intel.com>
+Date: Wed, 23 Oct 2024 15:39:01 +0300
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: Mischa Baars <mjbaars1977.backup@gmail.com>
-Date: Wed, 23 Oct 2024 10:36:44 +0200
-Message-ID: <CA+b5WFEXPJ==vruf-6DHrhS7j3pnTaj_EQE08BimxqyaNvktQQ@mail.gmail.com>
-Subject: amdgpu 4k@120Hz / HDMI 2.1
-To: platform-driver-x86@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Mailer: b4 0.13.0
 
-Hi,
+On Wed, 23 Oct 2024 09:29:05 +0800, chen zhang wrote:
 
-I recently purchased a new television that is capable of 4k@120Hz
-resolution and refresh rate, but when connected with the proper cables
-to an AMD Radeon RX 6500 XT that does support HDMI 2.1, the maximum
-resolution and refresh rate I get is 4k@60Hz.
+> Follow the advice in Documentation/filesystems/sysfs.rst:
+> show() should only use sysfs_emit() or sysfs_emit_at() when formatting
+> the value to be returned to user space.
+> 
+> 
 
-I've 'spoken' to AMD about this, and all they do is recommend
-switching to Red Hat / Suse / Ubuntu and using the official closed
-source AMD drivers. If it is supposed to work after that, remains
-unclear.
 
-Did someone get the desired 4k@120Hz / HDMI 2.1 resolution and refresh
-rate to work using the in-kernel amdgpu driver? If not, why does it
-not work or when will it work? I have other vendors with other
-hardware that have different restraints on the number of operating
-systems that I can use, and they do not go well together.
+Thank you for your contribution, it has been applied to my local
+review-ilpo branch. Note it will show up in the public
+platform-drivers-x86/review-ilpo branch only once I've pushed my
+local branch there, which might take a while.
 
-Kind regards,
-Michael J. Baars, the Netherlands.
+The list of commits applied:
+[1/1] platform/x86: eeepc-laptop: use sysfs_emit() instead of sprintf()
+      commit: 5f70c9a756ee131b0ad4368ce16804e9ed123f69
+
+--
+ i.
+
