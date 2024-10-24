@@ -1,106 +1,141 @@
-Received: from mail-ed1-f51.google.com (mail-ed1-f51.google.com [209.85.208.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mailgw.kylinos.cn (mailgw.kylinos.cn [124.126.103.232])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7261A155757;
-	Wed, 23 Oct 2024 21:11:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E3CC154279;
+	Thu, 24 Oct 2024 01:56:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=124.126.103.232
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729717881; cv=none; b=dIZFfYqYLjHgaQ5tOvHnZSz9QaX9DknUFZZ4YOEeq5HAoAh71wue3nFVgrQVRs5sCbaM8KZKmNgSXhgMg5iundngqPgglL/EYyHr8QYhOpZyoOXQi8MD73AUA8YYMsJae97jR7hjfJ3D8ZNVrrSKrvtpTcw3szFBarAxRt2KwC4=
+	t=1729734984; cv=none; b=PYvyZthJIGio+U0j/ln7vyuLftXNp6RoB6r6DX8wdNe4ElMjqFrO9+iPJ1/5w8cwf7fsA71OEt+hAC8SO7e4uhJTAtfhnRzgxVRabee493pfgXpdVOEIRUlQ7xt1FRhRZBj0eOIIB8gUfzgvmDKek65F9MuP/sRS8durO3vdJqI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729717881; c=relaxed/simple;
-	bh=jKAyw/EopyQhKfZWtFJ71aOI/ZTyS19O39wXWbS1TjI=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=ky5YGDkQEZIwCSldpA3I+5LKadSfDg7KvnIyPCwBgKRRuDehupRd3LzshsfNBQ7J9iFsKWv4Nexpak97EemufTuZ+x287EUN81dWmz5Z5u5iW94NFmk91BjQqnY/MRy35uKqmoqQWHNgDqr5joG6QGmi1A3iViRgz+1GlwOpQVM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=TOrnarJa; arc=none smtp.client-ip=209.85.208.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TOrnarJa"
-Received: by mail-ed1-f51.google.com with SMTP id 4fb4d7f45d1cf-5c96936065dso208824a12.3;
-        Wed, 23 Oct 2024 14:11:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1729717877; x=1730322677; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=jKAyw/EopyQhKfZWtFJ71aOI/ZTyS19O39wXWbS1TjI=;
-        b=TOrnarJatshEFKHqo6VKxiSctB452ndjbbdUwzwdqMeBItQpnd62cjZ3MWvc0seIXX
-         6gj0F7MMOC6tb6DMb5XDQ3TAG0Luhrjn9Eq+0AH73EdTswN1ejRHpLIUUOZHtcIEO3TC
-         kW/nIedJUXtkKHhi9c1e1urm170RC5q1yebMSsR49txllHdqzrG4tlDdgp5C2HTc+aaW
-         uHNLnjyTM1gzYiuwetvz3cNw59/KcgoFowcZxD+5RcUg1TcDSDIY1a4q+j4AltgEq7SH
-         Nl8sP4pbNvlzJDnldtQAYkRKzsioj34FB61WfuPiUoi363i7K7lXjiD95U3GmM5h/iw+
-         q5Qw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1729717877; x=1730322677;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=jKAyw/EopyQhKfZWtFJ71aOI/ZTyS19O39wXWbS1TjI=;
-        b=EI9ekZFnQ6OuUR0jtKEbxoX3FwdnnLbWHp7huoRBQmTFoti04oVpdhQ7e9SstDM0I7
-         BhuMhr3srRfm2OKe+AmIQWuVqpeZwD/oe6qcOpiIvNVwTzkJwzZFFbzaQY7eXMP+IXer
-         C2zfps12rgGbRkLXgA5MlKNhAPQ5bo35ljNzLFCybIAfgswdcrwsYNZzJ7boPyLhv1L2
-         n4K67SbqdPHKGCkQRPdTes0czagpDG0E6jx7GoKk6vYUPvQ8dT5ekQz4ZNTgdPg1kdQU
-         VyWXkGVtJBt8Ta3qJbJg77Ua54T/A73aq81ob3qFGty0G3eO+JCRb3ncsXgWbNzDSpg2
-         x6lA==
-X-Forwarded-Encrypted: i=1; AJvYcCUMwtCYDF88gJ5EQj7duhOlF9tvHzMcJQkT2CPn/RjpWfac6E7A9D7Oi/0gr7qjB8wmLWZL4MT/8CgwZYzsqw==@vger.kernel.org, AJvYcCUT6IHJOYBym4N6kh3ny74w8J7AU3YfZr8WHRrzA/9nYf+1T+qHOUil4uGmfuJpGWaZRS8csvh84x7v@vger.kernel.org, AJvYcCXC0R8ju2bNolFXcZ8fpqwvKa462s9u8ehQXp+l1QogL5os9o0bJB2PRjibZOXt8f3k0o0RACaDHzZprO3r@vger.kernel.org, AJvYcCXNwaeVRV5/CPNnf1UvQ0XMQrYpTi71VSM2VZzyYu9EpfVyiyhdfIYSBp0/VAGq7z29SLucOH7BlLauSjMapP2P/voGIw==@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw30mHhfizor9xPxNoYioQlOmIu9qWWyrbbtf0hcoZCsbwEqb6v
-	R549cqsgK+ZjoZS+L4+g1elQyt9dOniFvcOWYe/1USq169LAPzHkqblnW0HLZPT3YWm5Ntjs8eh
-	6XEVa0baF8gljgZyx1IsCVw8QcQ==
-X-Google-Smtp-Source: AGHT+IGjp5BWHI7BjiYEHOH7h326K2upWWA5FR/BygFMnRkS/IYWnITIfOZ2A1SOsXlzq+/uRMmOdvSxYlQdyW9kq1c=
-X-Received: by 2002:a17:906:c10f:b0:a99:f0f4:463d with SMTP id
- a640c23a62f3a-a9abf875c8amr385483366b.26.1729717876612; Wed, 23 Oct 2024
- 14:11:16 -0700 (PDT)
+	s=arc-20240116; t=1729734984; c=relaxed/simple;
+	bh=qLU4ktEs/jHfI/FoWNYf/WyMSJ07wCoMaOwaxHLhpjA=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=o4fUGgXBd50NJjWdvcmxf4wKgC9UdNBPhinIrHyLJLAwnatPHcWPkHshIC0Ken/XuNFdS2MeS09zWpzwlbISeeITqDJmlXG+kpoBcYjlgALPKaKEBYocm/C3v0F5r2CVW3I37YrK4CMwPEOhdVqIcLP1rw4anii3OZyvlrQRKME=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn; spf=pass smtp.mailfrom=kylinos.cn; arc=none smtp.client-ip=124.126.103.232
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kylinos.cn
+X-UUID: 23df304e91ab11efa216b1d71e6e1362-20241024
+X-CID-P-RULE: Release_Ham
+X-CID-O-INFO: VERSION:1.1.38,REQID:eb1bd097-51cc-468a-b6fd-7f37766bd15a,IP:0,U
+	RL:0,TC:0,Content:-25,EDM:25,RT:0,SF:0,FILE:0,BULK:0,RULE:Release_Ham,ACTI
+	ON:release,TS:0
+X-CID-META: VersionHash:82c5f88,CLOUDID:eaf0a6cccdbafce1ebfd4f0a8a50f78b,BulkI
+	D:nil,BulkQuantity:0,Recheck:0,SF:102,TC:nil,Content:0,EDM:5,IP:nil,URL:0,
+	File:nil,RT:nil,Bulk:nil,QS:nil,BEC:nil,COL:0,OSI:0,OSA:0,AV:0,LES:1,SPR:N
+	O,DKR:0,DKP:0,BRR:0,BRE:0
+X-CID-BVR: 0,NGT
+X-CID-BAS: 0,NGT,0,_
+X-CID-FACTOR: TF_CID_SPAM_SNR
+X-UUID: 23df304e91ab11efa216b1d71e6e1362-20241024
+Received: from node2.com.cn [(10.44.16.197)] by mailgw.kylinos.cn
+	(envelope-from <chenzhang@kylinos.cn>)
+	(Generic MTA)
+	with ESMTP id 586799034; Thu, 24 Oct 2024 09:56:09 +0800
+Received: from node2.com.cn (localhost [127.0.0.1])
+	by node2.com.cn (NSMail) with SMTP id B5C42B804841;
+	Thu, 24 Oct 2024 09:56:09 +0800 (CST)
+X-ns-mid: postfix-6719A939-58800610031
+Received: from localhost.localdomain (unknown [172.25.120.42])
+	by node2.com.cn (NSMail) with ESMTPA id B62BDB804841;
+	Thu, 24 Oct 2024 01:56:08 +0000 (UTC)
+From: chen zhang <chenzhang@kylinos.cn>
+To: hdegoede@redhat.com,
+	ilpo.jarvinen@linux.intel.com,
+	cezary.jackiewicz@gmail.com
+Cc: platform-driver-x86@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	chenzhang_0901@163.com,
+	chen zhang <chenzhang@kylinos.cn>
+Subject: [PATCH] platform/x86: compal-laptop: use sysfs_emit() instead of sprintf()
+Date: Thu, 24 Oct 2024 09:56:05 +0800
+Message-Id: <20241024015605.15238-1-chenzhang@kylinos.cn>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240908223505.21011-1-jerome.debretagne@gmail.com>
- <20240908223505.21011-4-jerome.debretagne@gmail.com> <f9cbd1c3-eb05-4262-bdc6-6d37e83179e5@gmail.com>
- <CA+kEDGEdd_s+DGKsVNY6Jy870B72eHuaj2EgEnwP8J46ZGbxpQ@mail.gmail.com>
- <8370d062-b3d2-46f5-9e7b-8e16edde8480@redhat.com> <555f8a3a-ae5e-57e7-f176-96c52e1a5d45@linux.intel.com>
- <ad9fa9f2-7f97-401a-8e8f-ae633ab1932b@gmail.com>
-In-Reply-To: <ad9fa9f2-7f97-401a-8e8f-ae633ab1932b@gmail.com>
-From: =?UTF-8?B?SsOpcsO0bWUgZGUgQnJldGFnbmU=?= <jerome.debretagne@gmail.com>
-Date: Wed, 23 Oct 2024 23:10:40 +0200
-Message-ID: <CA+kEDGE+fv3FJYGi=xR-agFiM-rGhDKAqhgL8dJN8GeJkw415w@mail.gmail.com>
-Subject: Re: [PATCH v2 3/5] platform/surface: aggregator_registry: Add Surface
- Pro 9 5G
-To: Maximilian Luz <luzmaximilian@gmail.com>
-Cc: =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, 
-	Hans de Goede <hdegoede@redhat.com>, Bjorn Andersson <andersson@kernel.org>, 
-	Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Johan Hovold <johan+linaro@kernel.org>, linux-arm-msm@vger.kernel.org, 
-	devicetree@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>, 
-	platform-driver-x86@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On 10/23/24 7:25 PM, Maximilian Luz wrote:
->
-> On 10/22/24 10:56 AM, Ilpo J=C3=A4rvinen wrote:
->
-> [...]
->
-> > Hi all,
-> >
-> > I've now applied patch 3 to review-ilpo branch in pdx86 repo.
-> >
-> > I'd appreciate if somebody confirms I got those comment edits right.
-> >
->
-> Hi Ilpo,
->
-> looks good to me. Thanks for fixing this up!
->
-> Best regards,
-> Max
+Follow the advice in Documentation/filesystems/sysfs.rst:
+show() should only use sysfs_emit() or sysfs_emit_at() when formatting
+the value to be returned to user space.
 
-Hi Ilpo, hi Max,
+Signed-off-by: chen zhang <chenzhang@kylinos.cn>
+---
+ drivers/platform/x86/compal-laptop.c | 13 +++++++------
+ 1 file changed, 7 insertions(+), 6 deletions(-)
 
-It looks good to me too.
+diff --git a/drivers/platform/x86/compal-laptop.c b/drivers/platform/x86/=
+compal-laptop.c
+index 5546fb189491..ba95f342fd59 100644
+--- a/drivers/platform/x86/compal-laptop.c
++++ b/drivers/platform/x86/compal-laptop.c
+@@ -67,6 +67,7 @@
+ #include <linux/rfkill.h>
+ #include <linux/hwmon.h>
+ #include <linux/hwmon-sysfs.h>
++#include <linux/sysfs.h>
+ #include <linux/power_supply.h>
+ #include <linux/fb.h>
+ #include <acpi/video.h>
+@@ -368,7 +369,7 @@ static const struct rfkill_ops compal_rfkill_ops =3D =
+{
+ static ssize_t NAME##_show(struct device *dev,				\
+ 	struct device_attribute *attr, char *buf)			\
+ {									\
+-	return sprintf(buf, "%d\n", ((ec_read_u8(ADDR) & MASK) !=3D 0));	\
++	return sysfs_emit(buf, "%d\n", ((ec_read_u8(ADDR) & MASK) !=3D 0));	\
+ }									\
+ static ssize_t NAME##_store(struct device *dev,				\
+ 	struct device_attribute *attr, const char *buf, size_t count)	\
+@@ -393,7 +394,7 @@ static ssize_t pwm_enable_show(struct device *dev,
+ 		struct device_attribute *attr, char *buf)
+ {
+ 	struct compal_data *data =3D dev_get_drvdata(dev);
+-	return sprintf(buf, "%d\n", data->pwm_enable);
++	return sysfs_emit(buf, "%d\n", data->pwm_enable);
+ }
+=20
+ static ssize_t pwm_enable_store(struct device *dev,
+@@ -432,7 +433,7 @@ static ssize_t pwm_show(struct device *dev, struct de=
+vice_attribute *attr,
+ 		char *buf)
+ {
+ 	struct compal_data *data =3D dev_get_drvdata(dev);
+-	return sprintf(buf, "%hhu\n", data->curr_pwm);
++	return sysfs_emit(buf, "%hhu\n", data->curr_pwm);
+ }
+=20
+ static ssize_t pwm_store(struct device *dev, struct device_attribute *at=
+tr,
+@@ -460,7 +461,7 @@ static ssize_t pwm_store(struct device *dev, struct d=
+evice_attribute *attr,
+ static ssize_t fan_show(struct device *dev, struct device_attribute *att=
+r,
+ 		char *buf)
+ {
+-	return sprintf(buf, "%d\n", get_fan_rpm());
++	return sysfs_emit(buf, "%d\n", get_fan_rpm());
+ }
+=20
+=20
+@@ -469,12 +470,12 @@ static ssize_t fan_show(struct device *dev, struct =
+device_attribute *attr,
+ static ssize_t temp_##POSTFIX(struct device *dev,			\
+ 		struct device_attribute *attr, char *buf)		\
+ {									\
+-	return sprintf(buf, "%d\n", 1000 * (int)ec_read_s8(ADDRESS));	\
++	return sysfs_emit(buf, "%d\n", 1000 * (int)ec_read_s8(ADDRESS));	\
+ }									\
+ static ssize_t label_##POSTFIX(struct device *dev,			\
+ 		struct device_attribute *attr, char *buf)		\
+ {									\
+-	return sprintf(buf, "%s\n", LABEL);				\
++	return sysfs_emit(buf, "%s\n", LABEL);				\
+ }
+=20
+ /* Labels as in service guide */
+--=20
+2.25.1
 
-Thank you both,
-J=C3=A9r=C3=B4me
