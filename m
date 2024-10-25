@@ -1,105 +1,108 @@
-Received: from juniper.fatooh.org (juniper.fatooh.org [173.255.221.30])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9FE6281ADA
-	for <platform-driver-x86@vger.kernel.org>; Fri, 25 Oct 2024 05:17:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=173.255.221.30
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 91E641D89E5
+	for <platform-driver-x86@vger.kernel.org>; Fri, 25 Oct 2024 09:43:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729833474; cv=none; b=P590HiDOd9hXveaIC0j1tx+Hi6MTzCo/plslmbjMZtByeNpZSURX7NJdBHpRsnGiUFzQjGqX6s12DxWh/0pP8U2NSS3NEIFh+2A6QNQdNNpEN+qUEOD0Iz9GdbTwVueNZ6AqrmEctvr3ntmtBYg13qY33pvWh96BTpBb9vbjcIo=
+	t=1729849422; cv=none; b=PS2TTzGJCqp5VmH1kTnNNtBtmOA6B3n4y0ZBjHqJkI32q1DpxD3ydYvmgVGYwjdwnnVaQ51TAxUg2aNJjsqh54yiDDwGimN1TinUFDq+NXiP+ugKbiBWZsB6o6T3Sn8mjaX1GSfAHd6oj0r+gteJvEen0vVc8IlI4epmDwlefJs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729833474; c=relaxed/simple;
-	bh=tazo0QLTKrqw+wMVuKxzm0R7z7/g+AVw1s/FkXLqzAw=;
-	h=From:To:Subject:Date:Message-ID:MIME-Version; b=R575PIDGZR8LXBkWZf+gxYS5HYegp6T5t8S8PRye3mD3NkzedVXBWb39heseQmFy6Ta+cNgSBvvJ4r0Ppd3M7S+kSu3VjWRmWpyN3Ck5Vybc6+s0IcprEbsPgt3Fo3X38Kw9Y/GfmGUG0GK705ZFNmKdP0EFcstiN0STtO+mGOA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=fatooh.org; spf=pass smtp.mailfrom=fatooh.org; dkim=pass (1024-bit key) header.d=fatooh.org header.i=@fatooh.org header.b=C5CAAW80; arc=none smtp.client-ip=173.255.221.30
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=fatooh.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fatooh.org
+	s=arc-20240116; t=1729849422; c=relaxed/simple;
+	bh=nagfTAJuB5FFBRM1pUr2qBoOY9wBbsEoUvYUa0iMTN8=;
+	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=O8tnggvaw+oRafQgjJDV5ebMTMEQ7vj1km0sKSCgI74fK7lkHpCt9p+HQZ8vxELUgWuFh205B5qp31axhQrYFoYOXeFmG67Q5ysoHmNEi6CIotF6f0lRlfLsaKDTLqUUBjabjglZgpQrO2t+SgjDyT2Yw9wGbZUoObGpLLPk70M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=flh05RwY; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=fatooh.org header.i=@fatooh.org header.b="C5CAAW80"
-Received: from juniper.fatooh.org (juniper.fatooh.org [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by juniper.fatooh.org (Postfix) with ESMTPS id D5A2140254;
-	Thu, 24 Oct 2024 22:11:41 -0700 (PDT)
-Received: from juniper.fatooh.org (juniper.fatooh.org [127.0.0.1])
-	by juniper.fatooh.org (Postfix) with ESMTP id B94A440366;
-	Thu, 24 Oct 2024 22:11:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha1; c=simple; d=fatooh.org; h=from:to
-	:subject:date:message-id:mime-version:content-transfer-encoding;
-	 s=dkim; bh=1dqAAv0pzxjxWiUoxquw3RWPGtI=; b=C5CAAW80P77yWDG77SLm
-	PdOmfpHSsIBVKvxAWHqQrL9NbCpr7Qbufai+4ekkx+OYJy0zfSWUfCaHQx8/fI+i
-	4PyI6DwP5kt3js/8ybp1IKYgjQ6Iq9ZhNKlzxWhv5gLqUOmCipgp69H3XejCtgWC
-	kKqlnyA02+XILvTB9Kv7YVA=
-DomainKey-Signature: a=rsa-sha1; c=simple; d=fatooh.org; h=from:to
-	:subject:date:message-id:mime-version:content-transfer-encoding;
-	 q=dns; s=dkim; b=BuyFsE8TvLQwPSnSGhFxrKiiwHPPbu2Cz/W5R2R0mBJUbu
-	TjG/qa8PZZBshfsclGb2ru36Ap5vGs3jkSa8WFl+GDiTwcIakZxO7Bxf5XShuDco
-	s3wRP9Ab2lNHfuzXATj3S82l4qW4rVQ8mnAJICinbLGnrE/Wv8FxsAHgMrPds=
-Received: from bugfood.local (unknown [104.184.153.121])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by juniper.fatooh.org (Postfix) with ESMTPSA id B234C40254;
-	Thu, 24 Oct 2024 22:11:41 -0700 (PDT)
-Received: by bugfood.local (Postfix, from userid 1000)
-	id 841EB2C020A; Thu, 24 Oct 2024 22:11:41 -0700 (PDT)
-From: Corey Hickey <bugfood-ml@fatooh.org>
-To: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>,
-	platform-driver-x86@vger.kernel.org
-Subject: [PATCH] platform/x86/amd/pmc: Detect when STB is not available
-Date: Thu, 24 Oct 2024 22:11:41 -0700
-Message-ID: <20241025051141.924760-1-bugfood-ml@fatooh.org>
-X-Mailer: git-send-email 2.45.2
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="flh05RwY"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 21117C4CECC
+	for <platform-driver-x86@vger.kernel.org>; Fri, 25 Oct 2024 09:43:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1729849422;
+	bh=nagfTAJuB5FFBRM1pUr2qBoOY9wBbsEoUvYUa0iMTN8=;
+	h=From:To:Subject:Date:In-Reply-To:References:From;
+	b=flh05RwYhvsH6Zkz0359eoe97sBRxQVcAlXTbwpkVKfQeBn3Vv59vWgAKafctYD2e
+	 Sf0jRMAjcehIxn2HHC8NUMiTHhavISDXk3soDzrLz4+eOcx7KilsGseptJn8P61eV2
+	 zsNzhvoB9I6U4Actef2I2/m17ESqeDefR38xXe/lz5bNG7b/ayj0U/Thx1QbcGBI9I
+	 R/ebTEnQnRvHd30wMgMFf5j9x/grRyfvZqkNEYaJ4ufA9JXaxkU9Yb4pvWaGeyPNlx
+	 tqNmAvY/gnuxSSVAVR5w+couTkmRwSVEtAkN7mVJO4781HCWTEStUzCp9aaVNQ85KC
+	 s0MiVBRJgAKuA==
+Received: by aws-us-west-2-korg-bugzilla-1.web.codeaurora.org (Postfix, from userid 48)
+	id 18A34C53BC4; Fri, 25 Oct 2024 09:43:42 +0000 (UTC)
+From: bugzilla-daemon@kernel.org
+To: platform-driver-x86@vger.kernel.org
+Subject: [Bug 204807] Hardware monitoring sensor nct6798d doesn't work unless
+ acpi_enforce_resources=lax is enabled
+Date: Fri, 25 Oct 2024 09:43:38 +0000
+X-Bugzilla-Reason: None
+X-Bugzilla-Type: changed
+X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
+X-Bugzilla-Product: Drivers
+X-Bugzilla-Component: Platform_x86
+X-Bugzilla-Version: 2.5
+X-Bugzilla-Keywords: 
+X-Bugzilla-Severity: high
+X-Bugzilla-Who: aaron@planetab.com
+X-Bugzilla-Status: RESOLVED
+X-Bugzilla-Resolution: CODE_FIX
+X-Bugzilla-Priority: P1
+X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
+X-Bugzilla-Flags: 
+X-Bugzilla-Changed-Fields: cc attachments.created
+Message-ID: <bug-204807-215701-Fow5XAqe3A@https.bugzilla.kernel.org/>
+In-Reply-To: <bug-204807-215701@https.bugzilla.kernel.org/>
+References: <bug-204807-215701@https.bugzilla.kernel.org/>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Bugzilla-URL: https://bugzilla.kernel.org/
+Auto-Submitted: auto-generated
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
 
-From: Corey Hickey <bugfood-c@fatooh.org>
+https://bugzilla.kernel.org/show_bug.cgi?id=3D204807
 
-Loading the amd_pmc module as:
+Aaron (aaron@planetab.com) changed:
 
-    amd_pmc enable_stb=1
+           What    |Removed                     |Added
+----------------------------------------------------------------------------
+                 CC|                            |aaron@planetab.com
 
-...can result in the following messages in the kernel ring buffer:
+--- Comment #341 from Aaron (aaron@planetab.com) ---
+Created attachment 307070
+  --> https://bugzilla.kernel.org/attachment.cgi?id=3D307070&action=3Dedit
+ASUS Maximus VIII GENE DSDT.DAT
 
-    amd_pmc AMDI0009:00: SMU cmd failed. err: 0xff
-    ioremap on RAM at 0x0000000000000000 - 0x0000000000ffffff
-    WARNING: CPU: 10 PID: 2151 at arch/x86/mm/ioremap.c:217 __ioremap_caller+0x2cd/0x340
+Hi,
 
-Additional debug shows that this happens when the calls to obtain
-S2D_PHYS_ADDR_LOW and S2D_PHYS_ADDR_HIGH return 0.
+Please add. My board is:
 
-Per discussion on platform-driver-x86@vger.kernel.org, this condition
-indicates that the STB is not available.
+# grep -e ''  -n /sys/class/dmi/id/board_{name,vendor}
+/sys/class/dmi/id/board_name:1:MAXIMUS VIII GENE
+/sys/class/dmi/id/board_vendor:1:ASUSTeK COMPUTER INC.
 
-In order to avoid the ioremap warning, and to help the user understand
-the situation, catch the invalid address and print an error.
+# dmidecode -t baseboard
+# dmidecode 3.3
+Getting SMBIOS data from sysfs.
+SMBIOS 3.0.0 present.
 
-Signed-off-by: Corey Hickey <bugfood-c@fatooh.org>
----
- drivers/platform/x86/amd/pmc/pmc.c | 5 +++++
- 1 file changed, 5 insertions(+)
+Handle 0x0002, DMI type 2, 15 bytes
+Base Board Information
+        Manufacturer: ASUSTeK COMPUTER INC.
+        Product Name: MAXIMUS VIII GENE
+        Version: Rev 1.xx
 
-diff --git a/drivers/platform/x86/amd/pmc/pmc.c b/drivers/platform/x86/amd/pmc/pmc.c
-index bbb8edb62e00..72b1dfc64bf1 100644
---- a/drivers/platform/x86/amd/pmc/pmc.c
-+++ b/drivers/platform/x86/amd/pmc/pmc.c
-@@ -998,6 +998,11 @@ static int amd_pmc_s2d_init(struct amd_pmc_dev *dev)
- 	amd_pmc_send_cmd(dev, S2D_PHYS_ADDR_LOW, &phys_addr_low, dev->s2d_msg_id, true);
- 	amd_pmc_send_cmd(dev, S2D_PHYS_ADDR_HIGH, &phys_addr_hi, dev->s2d_msg_id, true);
- 
-+	if (!phys_addr_hi && !phys_addr_low) {
-+		dev_err(dev->dev, "amd_pmc: STB is not enabled on the system; disable enable_stb or contact system vendor\n");
-+		return -EINVAL;
-+	}
-+
- 	stb_phys_addr = ((u64)phys_addr_hi << 32 | phys_addr_low);
- 
- 	/* Clear msg_port for other SMU operation */
--- 
-2.45.2
+# dmesg | grep nct6775
+[    5.001289] nct6775: Found NCT6793D or compatible chip at 0x2e:0x290
 
+
+
+Thanks
+
+--=20
+You may reply to this email to add a comment.
+
+You are receiving this mail because:
+You are watching the assignee of the bug.=
