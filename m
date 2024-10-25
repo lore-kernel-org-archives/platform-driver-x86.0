@@ -1,55 +1,57 @@
-Received: from mail-pf1-f172.google.com (mail-pf1-f172.google.com [209.85.210.172])
+Received: from mail-ot1-f47.google.com (mail-ot1-f47.google.com [209.85.210.47])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF3711173F;
-	Fri, 25 Oct 2024 01:39:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 427135588B;
+	Fri, 25 Oct 2024 01:40:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729820357; cv=none; b=aLnCKcOEi9vhecVZejGi0Y3P7pvIXR4ivHR9si1HjXh0hD7KZ1jEMQ/5uiBmTSp7fW+GbUbv2lJJDED+ttYImA3JU72+3ieREfWyW0ZZcUspRzi5SxMojZT7Pf88ks9uNSK1pi73JR7q/67vwuYkQ83sU5yzxO2hGOQrt3Re9WY=
+	t=1729820450; cv=none; b=XKlHU5i/9Rb83loRcqG6syGlWPoejWSkr1Uq+eHJe7IVk22sqQenUBbOg4jSgp7Wo3bedOV7GhM/tctS8rwKLKr0BYASzO64f591/ZSg+zi3D9hTd8La9iQCENoYxSnh88WHCc5nm9m85LnMTxMriluTixCPxB8QFjwy7eZDivo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729820357; c=relaxed/simple;
-	bh=MWD6xrVE76U25/D9XmLYC3i3s+hR6lHJmgwBuSibn1o=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=YxGIOKcXEJ0qLecq+p4YQ/5ospHp0sFane89rkZQZo3jqXRTvEczZJlDx4SgNxqKIBfFIgtDm0deFJ2+bgWROXwGk4o7t2mXBw2gWbs4Eou4PAp9QysGvs7QKhwBt+BFVMUc3bkd5Hz8/XrUktCz/9TXrG/02tkMS3jHiiCug04=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=mhOYe+ky; arc=none smtp.client-ip=209.85.210.172
+	s=arc-20240116; t=1729820450; c=relaxed/simple;
+	bh=zhL7t3AugMi3pNT9/kNXcL7AgYv2eRMyt5OX/Ks8oTU=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=pPM5bNcCOs44LVbrCzFE6quoSxACOXlmAtKhHjt3+6qK/5KF+tLC9jPoYNogHPjOjsUYy+0g7c+y55cCVBv0Kkqwm5+xL4lv5yTsZehuU3Rf96kCRojeieUNFvBHc9mkUJNp45y3tKf6exeRiBVYBcSjxZ7rsdQnvNTzwixHxBI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=LWqbVM7b; arc=none smtp.client-ip=209.85.210.47
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mhOYe+ky"
-Received: by mail-pf1-f172.google.com with SMTP id d2e1a72fcca58-71e93d551a3so1103304b3a.1;
-        Thu, 24 Oct 2024 18:39:15 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LWqbVM7b"
+Received: by mail-ot1-f47.google.com with SMTP id 46e09a7af769-718066adb47so930506a34.0;
+        Thu, 24 Oct 2024 18:40:47 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1729820355; x=1730425155; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=mYnD3ml2ldfmwD1lxKH73BM8pCdVtdACHlhM+jRAINw=;
-        b=mhOYe+kyc1crTWovPcx6bogPSiC/Oxzrg+5tER206z50QRQEO5rtYoHB6ytQ/ihqtF
-         d1dC2/gRsdpYXMh/3D2oYBRtQciNfTjR0p9mDT+FYJTnsfVBRwk/qDlZG89/vm3jHt2b
-         7/jZNs+ZqQvJVKNIjye5r3X4lkMUn+1lVk/JIRZuOQkdSJp6AkTrs4agEd9Kqj0LBIz4
-         Wrq4Wsk7LclomPRZcREuF1C4xFsVbSNoyYUXehuNEbQyw3y1o1JBwhLurvYi6BGDaoGm
-         Zz18hWD5nfEZcGFOcum+jr7xxAy4T9u+365+VtO7d+tXXk+Ed2+Zda0+4+X2F5RbVzRH
-         rWLQ==
+        d=gmail.com; s=20230601; t=1729820447; x=1730425247; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=qYCPmx6mUPSspZotT6B7w+SDVO1LigP5ym7s3WSFR30=;
+        b=LWqbVM7b4N+Q6W9vNEns0n32QsK5Me9ChnvAM+FgLbRuXh8fzopyN+pVqNsz79GpEG
+         DRt7zHz6fQ+o5p5b2Uvu7Ky5zodhTstsDXVDgZOYeApUiRqiSa2GGAECeQfwf04GmCHB
+         lkhdzRNA2IA/PmR0Y1mHnLjFYjlt5wQyAA4WubVBWxAiP/cgRQZlBJ5HyGEjT/MDLGb9
+         zqjPgWK8wZhLhE3zza15k6IdRESmnNxBz9lE1K8n0wc0Fos8qmBujD1KuvA2r7s0aBKX
+         GoJy/r/ugD+japEDFlR02x5ZyX0E3rLhI2aU3MYaIqvqOvMBj81ig+fdyUjN5zEZZK8F
+         ZZOQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1729820355; x=1730425155;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=mYnD3ml2ldfmwD1lxKH73BM8pCdVtdACHlhM+jRAINw=;
-        b=SPtRPiJ31PW7LZYoXDquVIqEmugnXcCXJpxyR8OL0IaUYgExJqpoOJpLicDNPafqXo
-         fDOJbrvzWWlbMDWmxxwFXo4mSKH+fGYoeqi3IyhLEYPxmgsyTu4OAb2cBia9YN4/wXJd
-         WsLANtQ0ZBWYREuLGX37T+OBi8VBBS9KM3NX2xvbLObkCjd6jvrUTNRTbgV7bkDsNQqC
-         4s9dMPYCrB4aByazomZine2qS9+hNQ7zBpzKKhkLtTDE2N6iLf45Ekt0YaoPBvuYoB1R
-         uipfrcNJ9Ew5QolTtN9r3YcMiusTKe9IxFoEteWBDt6cDI/KJU6AMxnjI6LGOKLra8is
-         2CoA==
-X-Forwarded-Encrypted: i=1; AJvYcCUER753WSgybAb/Gqs9jPaIU8/YbIC7to2S53rqvWJ+n3tpliF5+zf6KzgVpc38h4V4XhNemDMEUhUP6/W72aDNG8XuJA==@vger.kernel.org, AJvYcCWrJK0FVgYa3ZYvMd+PZgIsCgqSKSFx0tbxsJpztalw2qYNb7s6q6+sxzOKcWcNqKTRBY3zfruDefVlQKg=@vger.kernel.org
-X-Gm-Message-State: AOJu0YydhLnWqzc3pNZ05P8nW+I6WanqknI1KRk5twMpTLew4se8ZSpx
-	XDTQ7Z+kQJk2Gmld7O5DrLoxskrHS6Xr8wLu1yz0Xdtm5v1cXT4Y
-X-Google-Smtp-Source: AGHT+IFoy9+pJJlj+/1zvTFpYCfrmkT6FHiktlZNcmBFlbaqh9eVWnMIA7KxjAsSDHsZg+kH8yyzIQ==
-X-Received: by 2002:a05:6a00:4f90:b0:71d:f64d:ec60 with SMTP id d2e1a72fcca58-72030babcb0mr11467886b3a.7.1729820355119;
-        Thu, 24 Oct 2024 18:39:15 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1729820447; x=1730425247;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=qYCPmx6mUPSspZotT6B7w+SDVO1LigP5ym7s3WSFR30=;
+        b=Vh4igNtbKpJ5dYyEXM9jlV8atSDZK7xv/QEQGKpIong8eEjqG2wjmi7P/aDrCZ8Lcd
+         iSVghFlefDPsu6igMduGaZR4OZ94lk34fFvD4zIukYaG8c9dINvMOR6i3DuJSls/cqJP
+         ZqvdOBNMtrMhsE+/SYXxSQrhNMtMcrCkOBqKPU2TWA9cvuiyGtGE5TFEzT5Tr03pPD0t
+         fZe5NcU0Pi+LaT7doLyGJXpayH0z3g2qKyNP4IdMz4tm5gxOzKtaGgoPwS09YfbppA5i
+         K8KGjyCwBCMK/oHdk2uB+S815pBxo2qMtA2uxi5VQzsGpRAPD+TaY3Hl+lb/1+YHtW1/
+         0vrw==
+X-Forwarded-Encrypted: i=1; AJvYcCVRDZYL7BN2roCxdSOqBvCYpqA/mVLLAbzvhzkA2rFJ1AaqYepPEb92YcnLC4fKg6E9a2s2la9PKgU3jktAPDKQW3/0iQ==@vger.kernel.org, AJvYcCVSwJwd5uR2hHnXl7q63JantE6s0gofOIDiJocCEiy2HDs+XyQJBt3NwIav1LZYH6GsKCxXc/qS3LmdWhU=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzi1u4QR0Duf9qo2l8/bv++6zRLud761Rrmyetnzw598evq0sx2
+	0SeqVqZMPXBEDrM6VNaUx9nlcv7ITNxPH+T7w0N2KKKjIieSJP8HC2sIM98F
+X-Google-Smtp-Source: AGHT+IGInXuckqVl9bUW1ABsYzlwnOD6uf7WvTA3qIOhbeVjYy1XJqywTUaXo4p5Rjx7RWr9phU0bQ==
+X-Received: by 2002:a05:6830:2a05:b0:718:118d:2be8 with SMTP id 46e09a7af769-7184b4479d3mr8222978a34.28.1729820447113;
+        Thu, 24 Oct 2024 18:40:47 -0700 (PDT)
 Received: from localhost.localdomain (host95.181-12-202.telecom.net.ar. [181.12.202.95])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-72057a1fe82sm72245b3a.164.2024.10.24.18.39.12
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-7edc8a6e5acsm70992a12.90.2024.10.24.18.40.45
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 24 Oct 2024 18:39:14 -0700 (PDT)
+        Thu, 24 Oct 2024 18:40:46 -0700 (PDT)
 From: Kurt Borja <kuurtb@gmail.com>
 To: kuurtb@gmail.com
 Cc: W_Armin@gmx.de,
@@ -57,10 +59,12 @@ Cc: W_Armin@gmx.de,
 	ilpo.jarvinen@linux.intel.com,
 	linux-kernel@vger.kernel.org,
 	platform-driver-x86@vger.kernel.org
-Subject: [PATCH v8 0/4] Dell AWCC platform_profile support
-Date: Thu, 24 Oct 2024 22:38:57 -0300
-Message-ID: <20241025013856.4729-2-kuurtb@gmail.com>
+Subject: [PATCH v8 1/4] alienware-wmi: fixed indentation and clean up
+Date: Thu, 24 Oct 2024 22:40:17 -0300
+Message-ID: <20241025014016.4927-2-kuurtb@gmail.com>
 X-Mailer: git-send-email 2.47.0
+In-Reply-To: <20241025013856.4729-2-kuurtb@gmail.com>
+References: <20241025013856.4729-2-kuurtb@gmail.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -69,73 +73,235 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-This patch adds platform_profile support for Dell devices which implement
-WMAX thermal interface, that are meant to be controlled by Alienware Command
-Center (AWCC). These devices may include newer Alienware M-Series, Alienware
-X-Series and Dell's G-Series.
+Fixed inconsistent indentation and removed unnecessary (acpi_size) and
+(u32 *) casts.
 
-Tested on an Alienware x15 R1.
+Signed-off-by: Kurt Borja <kuurtb@gmail.com>
+Reviewed-by: Armin Wolf <W_Armin@gmx.de>
 ---
 v8:
- - Aesthetic and readibility fixes on patch 3/4
- - Better commit message for patch 3/4
+ - Unchanged
 v7:
- - Platform profile implementation refactored in order to efficently
-   autodetect available thermal profiles
- - Added GameShiftStatus method to documentation
- - Implemented GameShiftStatus switch for devices that support it 
+ - Unchanged
 v6:
- - Removed quirk thermal_ustt.
- - Now quirk thermal can take canonical thermal profile _tables_ defined
-   in enum WMAX_THERMAL_TABLES
- - Added autodetect_thermal_profile
- - Proper removal of thermal profile
-v5:
- - Better commit messages
- - insize renamed to in_size in alienware_wmax_command() to match other
-   arguments.
- - Kudos in documentation now at the end of the file
-v4:
- - Fixed indentation on previous code
- - Removed unnecessary (acpi_size) and (u32 *) casts
- - Return -EIO on ACPI_FAILURE
- - Appropiate prefixes given to macros
- - 0xFFFFFFFF named WMAX_FAILURE_CODE
- - Added support for a new set of thermal codes. Old ones now have USTT
-   in their names
- - A new quirk has been added to differantiate between the two sets.
-   thermal and thermal_ustt are mutually exclusive
- - Added documentation for WMAX interface
-v3:
- - Removed extra empty line
- - 0x0B named WMAX_ARG_GET_CURRENT_PROF
- - Removed casts to the same type on functions added in this patch
- - Thermal profile to WMAX argument is now an static function and makes
-   use of in-built kernel macros
- - Platform profile is now removed only if it was created first
- - create_platform_profile is now create_thermal_profile to avoid
-   confusion
- - profile_get and profile_set functions renamed too to match the above
-v2:
- - Moved functionality to alienware-wmi driver
- - Added thermal and gmode quirks to add support based on dmi match
- - Performance profile is now GMODE for devices that support it
- - alienware_wmax_command now is insize agnostic to support new thermal
-   methods
+ - Unchanged
+---
+ drivers/platform/x86/dell/alienware-wmi.c | 134 +++++++++++-----------
+ 1 file changed, 67 insertions(+), 67 deletions(-)
 
-Kurt Borja (4):
-  alienware-wmi: fixed indentation and clean up
-  alienware-wmi: alienware_wmax_command() is now input size agnostic
-  alienware-wmi: added platform profile support
-  alienware-wmi: WMAX interface documentation
-
- Documentation/wmi/devices/alienware-wmi.rst | 388 ++++++++++++++++++
- MAINTAINERS                                 |   1 +
- drivers/platform/x86/dell/Kconfig           |   1 +
- drivers/platform/x86/dell/alienware-wmi.c   | 433 ++++++++++++++++----
- 4 files changed, 747 insertions(+), 76 deletions(-)
- create mode 100644 Documentation/wmi/devices/alienware-wmi.rst
-
+diff --git a/drivers/platform/x86/dell/alienware-wmi.c b/drivers/platform/x86/dell/alienware-wmi.c
+index f5ee62ce1..16a3fe9ac 100644
+--- a/drivers/platform/x86/dell/alienware-wmi.c
++++ b/drivers/platform/x86/dell/alienware-wmi.c
+@@ -116,68 +116,68 @@ static int __init dmi_matched(const struct dmi_system_id *dmi)
+ 
+ static const struct dmi_system_id alienware_quirks[] __initconst = {
+ 	{
+-	 .callback = dmi_matched,
+-	 .ident = "Alienware X51 R3",
+-	 .matches = {
+-		     DMI_MATCH(DMI_SYS_VENDOR, "Alienware"),
+-		     DMI_MATCH(DMI_PRODUCT_NAME, "Alienware X51 R3"),
+-		     },
+-	 .driver_data = &quirk_x51_r3,
+-	 },
++		.callback = dmi_matched,
++		.ident = "Alienware X51 R3",
++		.matches = {
++			DMI_MATCH(DMI_SYS_VENDOR, "Alienware"),
++			DMI_MATCH(DMI_PRODUCT_NAME, "Alienware X51 R3"),
++		},
++		.driver_data = &quirk_x51_r3,
++	},
+ 	{
+-	 .callback = dmi_matched,
+-	 .ident = "Alienware X51 R2",
+-	 .matches = {
+-		     DMI_MATCH(DMI_SYS_VENDOR, "Alienware"),
+-		     DMI_MATCH(DMI_PRODUCT_NAME, "Alienware X51 R2"),
+-		     },
+-	 .driver_data = &quirk_x51_r1_r2,
+-	 },
++		.callback = dmi_matched,
++		.ident = "Alienware X51 R2",
++		.matches = {
++			DMI_MATCH(DMI_SYS_VENDOR, "Alienware"),
++			DMI_MATCH(DMI_PRODUCT_NAME, "Alienware X51 R2"),
++		},
++		.driver_data = &quirk_x51_r1_r2,
++	},
+ 	{
+-	 .callback = dmi_matched,
+-	 .ident = "Alienware X51 R1",
+-	 .matches = {
+-		     DMI_MATCH(DMI_SYS_VENDOR, "Alienware"),
+-		     DMI_MATCH(DMI_PRODUCT_NAME, "Alienware X51"),
+-		     },
+-	 .driver_data = &quirk_x51_r1_r2,
+-	 },
++		.callback = dmi_matched,
++		.ident = "Alienware X51 R1",
++		.matches = {
++			DMI_MATCH(DMI_SYS_VENDOR, "Alienware"),
++			DMI_MATCH(DMI_PRODUCT_NAME, "Alienware X51"),
++		},
++		.driver_data = &quirk_x51_r1_r2,
++	},
+ 	{
+-	 .callback = dmi_matched,
+-	 .ident = "Alienware ASM100",
+-	 .matches = {
+-		     DMI_MATCH(DMI_SYS_VENDOR, "Alienware"),
+-		     DMI_MATCH(DMI_PRODUCT_NAME, "ASM100"),
+-		     },
+-	 .driver_data = &quirk_asm100,
+-	 },
++		.callback = dmi_matched,
++		.ident = "Alienware ASM100",
++		.matches = {
++			DMI_MATCH(DMI_SYS_VENDOR, "Alienware"),
++			DMI_MATCH(DMI_PRODUCT_NAME, "ASM100"),
++		},
++		.driver_data = &quirk_asm100,
++	},
+ 	{
+-	 .callback = dmi_matched,
+-	 .ident = "Alienware ASM200",
+-	 .matches = {
+-		     DMI_MATCH(DMI_SYS_VENDOR, "Alienware"),
+-		     DMI_MATCH(DMI_PRODUCT_NAME, "ASM200"),
+-		     },
+-	 .driver_data = &quirk_asm200,
+-	 },
++		.callback = dmi_matched,
++		.ident = "Alienware ASM200",
++		.matches = {
++			DMI_MATCH(DMI_SYS_VENDOR, "Alienware"),
++			DMI_MATCH(DMI_PRODUCT_NAME, "ASM200"),
++		},
++		.driver_data = &quirk_asm200,
++	},
+ 	{
+-	 .callback = dmi_matched,
+-	 .ident = "Alienware ASM201",
+-	 .matches = {
+-		     DMI_MATCH(DMI_SYS_VENDOR, "Alienware"),
+-		     DMI_MATCH(DMI_PRODUCT_NAME, "ASM201"),
+-		     },
+-	 .driver_data = &quirk_asm201,
+-	 },
+-	 {
+-	 .callback = dmi_matched,
+-	 .ident = "Dell Inc. Inspiron 5675",
+-	 .matches = {
+-		     DMI_MATCH(DMI_SYS_VENDOR, "Dell Inc."),
+-		     DMI_MATCH(DMI_PRODUCT_NAME, "Inspiron 5675"),
+-		     },
+-	 .driver_data = &quirk_inspiron5675,
+-	 },
++		.callback = dmi_matched,
++		.ident = "Alienware ASM201",
++		.matches = {
++			DMI_MATCH(DMI_SYS_VENDOR, "Alienware"),
++			DMI_MATCH(DMI_PRODUCT_NAME, "ASM201"),
++		},
++		.driver_data = &quirk_asm201,
++	},
++	{
++		.callback = dmi_matched,
++		.ident = "Dell Inc. Inspiron 5675",
++		.matches = {
++			DMI_MATCH(DMI_SYS_VENDOR, "Dell Inc."),
++			DMI_MATCH(DMI_PRODUCT_NAME, "Inspiron 5675"),
++		},
++		.driver_data = &quirk_inspiron5675,
++	},
+ 	{}
+ };
+ 
+@@ -221,8 +221,8 @@ static struct platform_zone *zone_data;
+ 
+ static struct platform_driver platform_driver = {
+ 	.driver = {
+-		   .name = "alienware-wmi",
+-		   }
++		.name = "alienware-wmi",
++	}
+ };
+ 
+ static struct attribute_group zone_attribute_group = {
+@@ -292,7 +292,7 @@ static int alienware_update_led(struct platform_zone *zone)
+ 		guid = WMAX_CONTROL_GUID;
+ 		method_id = WMAX_METHOD_ZONE_CONTROL;
+ 
+-		input.length = (acpi_size) sizeof(wmax_basic_args);
++		input.length = sizeof(wmax_basic_args);
+ 		input.pointer = &wmax_basic_args;
+ 	} else {
+ 		legacy_args.colors = zone->colors;
+@@ -306,7 +306,7 @@ static int alienware_update_led(struct platform_zone *zone)
+ 			guid = LEGACY_CONTROL_GUID;
+ 		method_id = zone->location + 1;
+ 
+-		input.length = (acpi_size) sizeof(legacy_args);
++		input.length = sizeof(legacy_args);
+ 		input.pointer = &legacy_args;
+ 	}
+ 	pr_debug("alienware-wmi: guid %s method %d\n", guid, method_id);
+@@ -358,7 +358,7 @@ static int wmax_brightness(int brightness)
+ 		.led_mask = 0xFF,
+ 		.percentage = brightness,
+ 	};
+-	input.length = (acpi_size) sizeof(args);
++	input.length = sizeof(args);
+ 	input.pointer = &args;
+ 	status = wmi_evaluate_method(WMAX_CONTROL_GUID, 0,
+ 				     WMAX_METHOD_BRIGHTNESS, &input, NULL);
+@@ -508,7 +508,7 @@ static acpi_status alienware_wmax_command(struct wmax_basic_args *in_args,
+ 	struct acpi_buffer input;
+ 	struct acpi_buffer output;
+ 
+-	input.length = (acpi_size) sizeof(*in_args);
++	input.length = sizeof(*in_args);
+ 	input.pointer = in_args;
+ 	if (out_data) {
+ 		output.length = ACPI_ALLOCATE_BUFFER;
+@@ -542,7 +542,7 @@ static ssize_t show_hdmi_cable(struct device *dev,
+ 	};
+ 	status =
+ 	    alienware_wmax_command(&in_args, WMAX_METHOD_HDMI_CABLE,
+-				   (u32 *) &out_data);
++				   &out_data);
+ 	if (ACPI_SUCCESS(status)) {
+ 		if (out_data == 0)
+ 			return sysfs_emit(buf, "[unconnected] connected unknown\n");
+@@ -563,7 +563,7 @@ static ssize_t show_hdmi_source(struct device *dev,
+ 	};
+ 	status =
+ 	    alienware_wmax_command(&in_args, WMAX_METHOD_HDMI_STATUS,
+-				   (u32 *) &out_data);
++				   &out_data);
+ 
+ 	if (ACPI_SUCCESS(status)) {
+ 		if (out_data == 1)
+@@ -643,7 +643,7 @@ static ssize_t show_amplifier_status(struct device *dev,
+ 	};
+ 	status =
+ 	    alienware_wmax_command(&in_args, WMAX_METHOD_AMPLIFIER_CABLE,
+-				   (u32 *) &out_data);
++				   &out_data);
+ 	if (ACPI_SUCCESS(status)) {
+ 		if (out_data == 0)
+ 			return sysfs_emit(buf, "[unconnected] connected unknown\n");
+@@ -695,7 +695,7 @@ static ssize_t show_deepsleep_status(struct device *dev,
+ 		.arg = 0,
+ 	};
+ 	status = alienware_wmax_command(&in_args, WMAX_METHOD_DEEP_SLEEP_STATUS,
+-					(u32 *) &out_data);
++					&out_data);
+ 	if (ACPI_SUCCESS(status)) {
+ 		if (out_data == 0)
+ 			return sysfs_emit(buf, "[disabled] s5 s5_s4\n");
 -- 
 2.47.0
 
