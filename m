@@ -1,83 +1,87 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8106113B584;
-	Fri, 25 Oct 2024 14:11:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC1E41173F;
+	Fri, 25 Oct 2024 14:12:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729865483; cv=none; b=rkcoxGBY1V142jjkEsBvBkdxtUNvCZnQFzKzLsHHVLCIYi+9MlJpb9Jha5VRCOPAgji52GfaaoiaJXHDouaFWgGmnOrr5TJ/0bVuBzaBiIqdzvAgPoEsyXnsYUjSR1DuyPc33J6819bz9snGTU1VCS1NDoPzQej9qxeJaDKQOc0=
+	t=1729865535; cv=none; b=op5o+lqrr9jTrRIGqx4hcEg/VQ8lqrwKzm1R5Enp/r2T3eD1pXGTbA3MlFc2SmB3KM1byV1/djNFsGIO9WCaYthvIt+I8gKHDud478gMsdgUEMkVsXgGXrTGpLBoYVdSuxhRwNrvPbh1h0Pjsyc+0F/QuIolsi8X3QRcQON3d2g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729865483; c=relaxed/simple;
-	bh=xAV+1gr9q7aMx1tiVqz0CbPaRZ63Q9kmsicir3h6vTQ=;
+	s=arc-20240116; t=1729865535; c=relaxed/simple;
+	bh=bBUDfwxHOSTXWsEHAFL/6zzCQPfVbtVA7ZxbvpXXEwk=;
 	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=LSIG6n6CGHkVUl2rCRsbzKyrRvApkhca+gQK3G0wWhGccFFfbsBWAvDneTaGfWc44JeJxKPEsILggzQsoRSGseuDgeM/91N2bIF9vdxXbLNx9SW4JshyYyiBWXWgDwsAtgvNxyyLBOTMFr5zlQFEVc7wwVS4Fybyf8RKo3Q1aGU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=NopL/FBy; arc=none smtp.client-ip=198.175.65.14
+	 MIME-Version:Content-Type; b=BgvugBrCYnJWf90W0Rv+9u+v++SdkLLynwJpxF3inI62Xg57GtssmE3cvV9GpMh1V5b5y+KCou3z7ke6vTDMlttgwa2EXTOEd8qYIOD0kEmGpx/Bhxm6eaQmQCZAS585ucJRMGNrEzFTx9JDTAIE9zyojbDlcXvv2clt1WNRM1Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=jAWUfHFS; arc=none smtp.client-ip=198.175.65.21
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="NopL/FBy"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="jAWUfHFS"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1729865480; x=1761401480;
+  t=1729865533; x=1761401533;
   h=from:date:to:cc:subject:in-reply-to:message-id:
    references:mime-version;
-  bh=xAV+1gr9q7aMx1tiVqz0CbPaRZ63Q9kmsicir3h6vTQ=;
-  b=NopL/FByMggxNMk2bUDcXOD1at9yFABplPenaPJOZSVBlcAQafKNwrji
-   d1BWnQFm9zXKkKcPvkoKRd5R+T3Oo+9DnzkLCj/VKHwot2kqXp6Z7HQfw
-   4NiF6IAJN//mtVl625tC6Po1WDM/tXRpEvkcqNMiDjlbkX23cEM/OovXP
-   XJEzVWce1duVr4Wi/BZ//1nQYBBykaQuL1fjw1XzklY8Atw22zHQFQ9HK
-   TypTW+Tfbu7fxZcZ3p2GygnoRj3yReky6i+oEe94MGg10y12OFdIHUSWq
-   RckSIxYhTg1V0UiroLPJeTu+kpSZbmiC/qdsZukefogOjDHWv3xu1coQe
-   w==;
-X-CSE-ConnectionGUID: BHqHMLhWQ2azSF0+849z9A==
-X-CSE-MsgGUID: FpL04xIaTzmiktUudCGVhg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11236"; a="33339367"
-X-IronPort-AV: E=Sophos;i="6.11,232,1725346800"; 
-   d="scan'208";a="33339367"
-Received: from fmviesa008.fm.intel.com ([10.60.135.148])
-  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Oct 2024 07:11:20 -0700
-X-CSE-ConnectionGUID: MxDC1G0MQ/WjCgBco82PJg==
-X-CSE-MsgGUID: E5lpoBx+Th+lXf5DDPXBVw==
+  bh=bBUDfwxHOSTXWsEHAFL/6zzCQPfVbtVA7ZxbvpXXEwk=;
+  b=jAWUfHFSIfQe0k3rXzfH7GcpG74mK2wpELxeLvJ65DMFDw88JgRPO3Oo
+   mqq2urOueKkJE62rRRV5l4vlvy8D3HHn4Qex95c/O2y4zD24/yfHOUjsf
+   y6VaAXpR0TC+hpZHmMDRyMG0FEzCtcGI17AckLsPGZI5RYziVwQ4eobt4
+   J6jK2Ro3j1DUwH4aN0xh6guedZ70wPpevTLxe03D2jtD4+qNg4Ug5e+hK
+   mIw/fvuf/SSyJDB/ve+Mkx9aX/4hMzkImnIlXBDmQ3RaxGbWQK5U7lbzc
+   5q3UNn7jVnmlYx0ZqZB/4kz7haXMZhrk2dmSVzOSicwUgFzDMp6VkCNnW
+   Q==;
+X-CSE-ConnectionGUID: UJJT4O46QuGui8x5HUV51g==
+X-CSE-MsgGUID: arP/pUK6SJ6iX1Ape0zmmA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11222"; a="29480205"
+X-IronPort-AV: E=Sophos;i="6.11,199,1725346800"; 
+   d="scan'208";a="29480205"
+Received: from fmviesa005.fm.intel.com ([10.60.135.145])
+  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Oct 2024 07:12:12 -0700
+X-CSE-ConnectionGUID: SQcDvA4yRQiXIkEs8NtlUw==
+X-CSE-MsgGUID: 2NyAD6vBSgOk23QdvneC7g==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.11,232,1725346800"; 
-   d="scan'208";a="81033280"
+   d="scan'208";a="85481009"
 Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.225])
-  by fmviesa008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Oct 2024 07:11:17 -0700
+  by fmviesa005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Oct 2024 07:12:10 -0700
 From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Fri, 25 Oct 2024 17:11:14 +0300 (EEST)
+Date: Fri, 25 Oct 2024 17:12:05 +0300 (EEST)
 To: Kurt Borja <kuurtb@gmail.com>
 cc: W_Armin@gmx.de, Hans de Goede <hdegoede@redhat.com>, 
     LKML <linux-kernel@vger.kernel.org>, platform-driver-x86@vger.kernel.org
-Subject: Re: [PATCH v8 1/4] alienware-wmi: fixed indentation and clean up
-In-Reply-To: <20241025014016.4927-2-kuurtb@gmail.com>
-Message-ID: <18792d2f-f848-eb37-87dc-b7cd5b73925b@linux.intel.com>
-References: <20241025013856.4729-2-kuurtb@gmail.com> <20241025014016.4927-2-kuurtb@gmail.com>
+Subject: Re: [PATCH v8 2/4] alienware-wmi: alienware_wmax_command() is now
+ input size agnostic
+In-Reply-To: <20241025014108.5096-2-kuurtb@gmail.com>
+Message-ID: <a727f802-9a8b-5e3c-d86f-63fbb7876cac@linux.intel.com>
+References: <20241025013856.4729-2-kuurtb@gmail.com> <20241025014108.5096-2-kuurtb@gmail.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="8323328-1430041361-1729865474=:946"
+Content-Type: multipart/mixed; boundary="8323328-1519611876-1729865525=:946"
 
   This message is in MIME format.  The first part should be readable text,
   while the remaining parts are likely unreadable without MIME-aware tools.
 
---8323328-1430041361-1729865474=:946
+--8323328-1519611876-1729865525=:946
 Content-Type: text/plain; charset=ISO-8859-15
 Content-Transfer-Encoding: QUOTED-PRINTABLE
 
 On Thu, 24 Oct 2024, Kurt Borja wrote:
 
-> Fixed inconsistent indentation and removed unnecessary (acpi_size) and
-> (u32 *) casts.
+> alienware_wmax_command() now takes void * and size_t instead of struct
+> wmax_basic_args to extend support to new WMAX methods. Also int *out_data
+> was changed to u32 *out_data, because new interface specifies u32 as outp=
+ut
+> parameter and all previous callers would pass u32 * regardless.
 >=20
 > Signed-off-by: Kurt Borja <kuurtb@gmail.com>
 > Reviewed-by: Armin Wolf <W_Armin@gmx.de>
 
 Reviewed-by: Ilpo J=E4rvinen <ilpo.jarvinen@linux.intel.com>
 
---
+--=20
  i.
 
 > ---
@@ -88,229 +92,105 @@ Reviewed-by: Ilpo J=E4rvinen <ilpo.jarvinen@linux.intel.com>
 > v6:
 >  - Unchanged
 > ---
->  drivers/platform/x86/dell/alienware-wmi.c | 134 +++++++++++-----------
->  1 file changed, 67 insertions(+), 67 deletions(-)
+>  drivers/platform/x86/dell/alienware-wmi.c | 29 ++++++++++++-----------
+>  1 file changed, 15 insertions(+), 14 deletions(-)
 >=20
 > diff --git a/drivers/platform/x86/dell/alienware-wmi.c b/drivers/platform=
 /x86/dell/alienware-wmi.c
-> index f5ee62ce1..16a3fe9ac 100644
+> index 16a3fe9ac..b27f3b64c 100644
 > --- a/drivers/platform/x86/dell/alienware-wmi.c
 > +++ b/drivers/platform/x86/dell/alienware-wmi.c
-> @@ -116,68 +116,68 @@ static int __init dmi_matched(const struct dmi_syst=
-em_id *dmi)
+> @@ -500,15 +500,15 @@ static void alienware_zone_exit(struct platform_dev=
+ice *dev)
+>  =09kfree(zone_attrs);
+>  }
 > =20
->  static const struct dmi_system_id alienware_quirks[] __initconst =3D {
->  =09{
-> -=09 .callback =3D dmi_matched,
-> -=09 .ident =3D "Alienware X51 R3",
-> -=09 .matches =3D {
-> -=09=09     DMI_MATCH(DMI_SYS_VENDOR, "Alienware"),
-> -=09=09     DMI_MATCH(DMI_PRODUCT_NAME, "Alienware X51 R3"),
-> -=09=09     },
-> -=09 .driver_data =3D &quirk_x51_r3,
-> -=09 },
-> +=09=09.callback =3D dmi_matched,
-> +=09=09.ident =3D "Alienware X51 R3",
-> +=09=09.matches =3D {
-> +=09=09=09DMI_MATCH(DMI_SYS_VENDOR, "Alienware"),
-> +=09=09=09DMI_MATCH(DMI_PRODUCT_NAME, "Alienware X51 R3"),
-> +=09=09},
-> +=09=09.driver_data =3D &quirk_x51_r3,
-> +=09},
->  =09{
-> -=09 .callback =3D dmi_matched,
-> -=09 .ident =3D "Alienware X51 R2",
-> -=09 .matches =3D {
-> -=09=09     DMI_MATCH(DMI_SYS_VENDOR, "Alienware"),
-> -=09=09     DMI_MATCH(DMI_PRODUCT_NAME, "Alienware X51 R2"),
-> -=09=09     },
-> -=09 .driver_data =3D &quirk_x51_r1_r2,
-> -=09 },
-> +=09=09.callback =3D dmi_matched,
-> +=09=09.ident =3D "Alienware X51 R2",
-> +=09=09.matches =3D {
-> +=09=09=09DMI_MATCH(DMI_SYS_VENDOR, "Alienware"),
-> +=09=09=09DMI_MATCH(DMI_PRODUCT_NAME, "Alienware X51 R2"),
-> +=09=09},
-> +=09=09.driver_data =3D &quirk_x51_r1_r2,
-> +=09},
->  =09{
-> -=09 .callback =3D dmi_matched,
-> -=09 .ident =3D "Alienware X51 R1",
-> -=09 .matches =3D {
-> -=09=09     DMI_MATCH(DMI_SYS_VENDOR, "Alienware"),
-> -=09=09     DMI_MATCH(DMI_PRODUCT_NAME, "Alienware X51"),
-> -=09=09     },
-> -=09 .driver_data =3D &quirk_x51_r1_r2,
-> -=09 },
-> +=09=09.callback =3D dmi_matched,
-> +=09=09.ident =3D "Alienware X51 R1",
-> +=09=09.matches =3D {
-> +=09=09=09DMI_MATCH(DMI_SYS_VENDOR, "Alienware"),
-> +=09=09=09DMI_MATCH(DMI_PRODUCT_NAME, "Alienware X51"),
-> +=09=09},
-> +=09=09.driver_data =3D &quirk_x51_r1_r2,
-> +=09},
->  =09{
-> -=09 .callback =3D dmi_matched,
-> -=09 .ident =3D "Alienware ASM100",
-> -=09 .matches =3D {
-> -=09=09     DMI_MATCH(DMI_SYS_VENDOR, "Alienware"),
-> -=09=09     DMI_MATCH(DMI_PRODUCT_NAME, "ASM100"),
-> -=09=09     },
-> -=09 .driver_data =3D &quirk_asm100,
-> -=09 },
-> +=09=09.callback =3D dmi_matched,
-> +=09=09.ident =3D "Alienware ASM100",
-> +=09=09.matches =3D {
-> +=09=09=09DMI_MATCH(DMI_SYS_VENDOR, "Alienware"),
-> +=09=09=09DMI_MATCH(DMI_PRODUCT_NAME, "ASM100"),
-> +=09=09},
-> +=09=09.driver_data =3D &quirk_asm100,
-> +=09},
->  =09{
-> -=09 .callback =3D dmi_matched,
-> -=09 .ident =3D "Alienware ASM200",
-> -=09 .matches =3D {
-> -=09=09     DMI_MATCH(DMI_SYS_VENDOR, "Alienware"),
-> -=09=09     DMI_MATCH(DMI_PRODUCT_NAME, "ASM200"),
-> -=09=09     },
-> -=09 .driver_data =3D &quirk_asm200,
-> -=09 },
-> +=09=09.callback =3D dmi_matched,
-> +=09=09.ident =3D "Alienware ASM200",
-> +=09=09.matches =3D {
-> +=09=09=09DMI_MATCH(DMI_SYS_VENDOR, "Alienware"),
-> +=09=09=09DMI_MATCH(DMI_PRODUCT_NAME, "ASM200"),
-> +=09=09},
-> +=09=09.driver_data =3D &quirk_asm200,
-> +=09},
->  =09{
-> -=09 .callback =3D dmi_matched,
-> -=09 .ident =3D "Alienware ASM201",
-> -=09 .matches =3D {
-> -=09=09     DMI_MATCH(DMI_SYS_VENDOR, "Alienware"),
-> -=09=09     DMI_MATCH(DMI_PRODUCT_NAME, "ASM201"),
-> -=09=09     },
-> -=09 .driver_data =3D &quirk_asm201,
-> -=09 },
-> -=09 {
-> -=09 .callback =3D dmi_matched,
-> -=09 .ident =3D "Dell Inc. Inspiron 5675",
-> -=09 .matches =3D {
-> -=09=09     DMI_MATCH(DMI_SYS_VENDOR, "Dell Inc."),
-> -=09=09     DMI_MATCH(DMI_PRODUCT_NAME, "Inspiron 5675"),
-> -=09=09     },
-> -=09 .driver_data =3D &quirk_inspiron5675,
-> -=09 },
-> +=09=09.callback =3D dmi_matched,
-> +=09=09.ident =3D "Alienware ASM201",
-> +=09=09.matches =3D {
-> +=09=09=09DMI_MATCH(DMI_SYS_VENDOR, "Alienware"),
-> +=09=09=09DMI_MATCH(DMI_PRODUCT_NAME, "ASM201"),
-> +=09=09},
-> +=09=09.driver_data =3D &quirk_asm201,
-> +=09},
-> +=09{
-> +=09=09.callback =3D dmi_matched,
-> +=09=09.ident =3D "Dell Inc. Inspiron 5675",
-> +=09=09.matches =3D {
-> +=09=09=09DMI_MATCH(DMI_SYS_VENDOR, "Dell Inc."),
-> +=09=09=09DMI_MATCH(DMI_PRODUCT_NAME, "Inspiron 5675"),
-> +=09=09},
-> +=09=09.driver_data =3D &quirk_inspiron5675,
-> +=09},
->  =09{}
->  };
-> =20
-> @@ -221,8 +221,8 @@ static struct platform_zone *zone_data;
-> =20
->  static struct platform_driver platform_driver =3D {
->  =09.driver =3D {
-> -=09=09   .name =3D "alienware-wmi",
-> -=09=09   }
-> +=09=09.name =3D "alienware-wmi",
-> +=09}
->  };
-> =20
->  static struct attribute_group zone_attribute_group =3D {
-> @@ -292,7 +292,7 @@ static int alienware_update_led(struct platform_zone =
-*zone)
->  =09=09guid =3D WMAX_CONTROL_GUID;
->  =09=09method_id =3D WMAX_METHOD_ZONE_CONTROL;
-> =20
-> -=09=09input.length =3D (acpi_size) sizeof(wmax_basic_args);
-> +=09=09input.length =3D sizeof(wmax_basic_args);
->  =09=09input.pointer =3D &wmax_basic_args;
->  =09} else {
->  =09=09legacy_args.colors =3D zone->colors;
-> @@ -306,7 +306,7 @@ static int alienware_update_led(struct platform_zone =
-*zone)
->  =09=09=09guid =3D LEGACY_CONTROL_GUID;
->  =09=09method_id =3D zone->location + 1;
-> =20
-> -=09=09input.length =3D (acpi_size) sizeof(legacy_args);
-> +=09=09input.length =3D sizeof(legacy_args);
->  =09=09input.pointer =3D &legacy_args;
->  =09}
->  =09pr_debug("alienware-wmi: guid %s method %d\n", guid, method_id);
-> @@ -358,7 +358,7 @@ static int wmax_brightness(int brightness)
->  =09=09.led_mask =3D 0xFF,
->  =09=09.percentage =3D brightness,
->  =09};
-> -=09input.length =3D (acpi_size) sizeof(args);
-> +=09input.length =3D sizeof(args);
->  =09input.pointer =3D &args;
->  =09status =3D wmi_evaluate_method(WMAX_CONTROL_GUID, 0,
->  =09=09=09=09     WMAX_METHOD_BRIGHTNESS, &input, NULL);
-> @@ -508,7 +508,7 @@ static acpi_status alienware_wmax_command(struct wmax=
-_basic_args *in_args,
+> -static acpi_status alienware_wmax_command(struct wmax_basic_args *in_arg=
+s,
+> -=09=09=09=09=09  u32 command, int *out_data)
+> +static acpi_status alienware_wmax_command(void *in_args, size_t in_size,
+> +=09=09=09=09=09  u32 command, u32 *out_data)
+>  {
+>  =09acpi_status status;
+>  =09union acpi_object *obj;
 >  =09struct acpi_buffer input;
 >  =09struct acpi_buffer output;
 > =20
-> -=09input.length =3D (acpi_size) sizeof(*in_args);
-> +=09input.length =3D sizeof(*in_args);
+> -=09input.length =3D sizeof(*in_args);
+> +=09input.length =3D in_size;
 >  =09input.pointer =3D in_args;
 >  =09if (out_data) {
 >  =09=09output.length =3D ACPI_ALLOCATE_BUFFER;
-> @@ -542,7 +542,7 @@ static ssize_t show_hdmi_cable(struct device *dev,
+> @@ -541,8 +541,8 @@ static ssize_t show_hdmi_cable(struct device *dev,
+>  =09=09.arg =3D 0,
 >  =09};
 >  =09status =3D
->  =09    alienware_wmax_command(&in_args, WMAX_METHOD_HDMI_CABLE,
-> -=09=09=09=09   (u32 *) &out_data);
-> +=09=09=09=09   &out_data);
+> -=09    alienware_wmax_command(&in_args, WMAX_METHOD_HDMI_CABLE,
+> -=09=09=09=09   &out_data);
+> +=09    alienware_wmax_command(&in_args, sizeof(in_args),
+> +=09=09=09=09   WMAX_METHOD_HDMI_CABLE, &out_data);
 >  =09if (ACPI_SUCCESS(status)) {
 >  =09=09if (out_data =3D=3D 0)
 >  =09=09=09return sysfs_emit(buf, "[unconnected] connected unknown\n");
-> @@ -563,7 +563,7 @@ static ssize_t show_hdmi_source(struct device *dev,
+> @@ -562,8 +562,8 @@ static ssize_t show_hdmi_source(struct device *dev,
+>  =09=09.arg =3D 0,
 >  =09};
 >  =09status =3D
->  =09    alienware_wmax_command(&in_args, WMAX_METHOD_HDMI_STATUS,
-> -=09=09=09=09   (u32 *) &out_data);
-> +=09=09=09=09   &out_data);
+> -=09    alienware_wmax_command(&in_args, WMAX_METHOD_HDMI_STATUS,
+> -=09=09=09=09   &out_data);
+> +=09    alienware_wmax_command(&in_args, sizeof(in_args),
+> +=09=09=09=09   WMAX_METHOD_HDMI_STATUS, &out_data);
 > =20
 >  =09if (ACPI_SUCCESS(status)) {
 >  =09=09if (out_data =3D=3D 1)
-> @@ -643,7 +643,7 @@ static ssize_t show_amplifier_status(struct device *d=
-ev,
->  =09};
->  =09status =3D
->  =09    alienware_wmax_command(&in_args, WMAX_METHOD_AMPLIFIER_CABLE,
-> -=09=09=09=09   (u32 *) &out_data);
-> +=09=09=09=09   &out_data);
->  =09if (ACPI_SUCCESS(status)) {
->  =09=09if (out_data =3D=3D 0)
->  =09=09=09return sysfs_emit(buf, "[unconnected] connected unknown\n");
-> @@ -695,7 +695,7 @@ static ssize_t show_deepsleep_status(struct device *d=
+> @@ -589,7 +589,8 @@ static ssize_t toggle_hdmi_source(struct device *dev,
+>  =09=09args.arg =3D 3;
+>  =09pr_debug("alienware-wmi: setting hdmi to %d : %s", args.arg, buf);
+> =20
+> -=09status =3D alienware_wmax_command(&args, WMAX_METHOD_HDMI_SOURCE, NUL=
+L);
+> +=09status =3D alienware_wmax_command(&args, sizeof(args),
+> +=09=09=09=09=09WMAX_METHOD_HDMI_SOURCE, NULL);
+> =20
+>  =09if (ACPI_FAILURE(status))
+>  =09=09pr_err("alienware-wmi: HDMI toggle failed: results: %u\n",
+> @@ -642,8 +643,8 @@ static ssize_t show_amplifier_status(struct device *d=
 ev,
 >  =09=09.arg =3D 0,
 >  =09};
->  =09status =3D alienware_wmax_command(&in_args, WMAX_METHOD_DEEP_SLEEP_ST=
+>  =09status =3D
+> -=09    alienware_wmax_command(&in_args, WMAX_METHOD_AMPLIFIER_CABLE,
+> -=09=09=09=09   &out_data);
+> +=09    alienware_wmax_command(&in_args, sizeof(in_args),
+> +=09=09=09=09   WMAX_METHOD_AMPLIFIER_CABLE, &out_data);
+>  =09if (ACPI_SUCCESS(status)) {
+>  =09=09if (out_data =3D=3D 0)
+>  =09=09=09return sysfs_emit(buf, "[unconnected] connected unknown\n");
+> @@ -694,8 +695,8 @@ static ssize_t show_deepsleep_status(struct device *d=
+ev,
+>  =09struct wmax_basic_args in_args =3D {
+>  =09=09.arg =3D 0,
+>  =09};
+> -=09status =3D alienware_wmax_command(&in_args, WMAX_METHOD_DEEP_SLEEP_ST=
 ATUS,
-> -=09=09=09=09=09(u32 *) &out_data);
-> +=09=09=09=09=09&out_data);
+> -=09=09=09=09=09&out_data);
+> +=09status =3D alienware_wmax_command(&in_args, sizeof(in_args),
+> +=09=09=09=09=09WMAX_METHOD_DEEP_SLEEP_STATUS, &out_data);
 >  =09if (ACPI_SUCCESS(status)) {
 >  =09=09if (out_data =3D=3D 0)
 >  =09=09=09return sysfs_emit(buf, "[disabled] s5 s5_s4\n");
+> @@ -723,8 +724,8 @@ static ssize_t toggle_deepsleep(struct device *dev,
+>  =09=09args.arg =3D 2;
+>  =09pr_debug("alienware-wmi: setting deep sleep to %d : %s", args.arg, bu=
+f);
+> =20
+> -=09status =3D alienware_wmax_command(&args, WMAX_METHOD_DEEP_SLEEP_CONTR=
+OL,
+> -=09=09=09=09=09NULL);
+> +=09status =3D alienware_wmax_command(&args, sizeof(args),
+> +=09=09=09=09=09WMAX_METHOD_DEEP_SLEEP_CONTROL, NULL);
+> =20
+>  =09if (ACPI_FAILURE(status))
+>  =09=09pr_err("alienware-wmi: deep sleep control failed: results: %u\n",
 >=20
---8323328-1430041361-1729865474=:946--
+--8323328-1519611876-1729865525=:946--
