@@ -1,145 +1,143 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.15])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f178.google.com (mail-pg1-f178.google.com [209.85.215.178])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7DF9C290F;
-	Fri, 25 Oct 2024 15:00:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F209C13B58B;
+	Fri, 25 Oct 2024 15:09:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729868422; cv=none; b=S8lFkafrSmGzPHlwoaqltEzb5PBH83Qj6EA7mJqLC5izyp7VQNVY4yzgyIwFygmMDwt6fPZbuhSYEB8wRyrlbJ5SArQvi1E96y2lYsH/TMm2oRmgkqi7xc+8RjffRh/Q5Qnr/w8m7p6M/JfqvK44vOxyuEya279oTtx6g19SVEA=
+	t=1729868980; cv=none; b=srtOb1FgNFVAwpcpDMvjEcFxxcf8TlSPw/j+6K8nCdkrHB/dCrX7u8z1rjASy/vtZu1oZwKfSCnIrsjYSfAR7s1l/ZAZwba2KqljXy83nXuQUqLu/zcHl3ffRhkGryPJEb0rC8lwdbLVYjcij/47eo3uh08ou70LVmsznXROXSM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729868422; c=relaxed/simple;
-	bh=jcuOBnTQ9nGR8T/gweEpKZFTk3dIJqfKF1aIEMo8e6o=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=WZPLvKb8KgoVrWme84q3VHb5XFIFdhPCLkBYSyF3PtXwpO8cX/oTYy5UZAkYkov5hpfIfxp5OJA8ByDgZ1JhMIiKPYGoZM7XxTw4n5hnnj/5P1uuLVzpEpHghGMKG58px3qLbSfu4KRs7ICCzwZ6CM8UY4/SpUjlabi0ShE6phA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Aps3RB1f; arc=none smtp.client-ip=192.198.163.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1729868980; c=relaxed/simple;
+	bh=1RmGyCC7xFcxha+iZTUHKP2cHQyqM10VhqLeYFhDvMI=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=nCpyXYElRoUpOpSgLtVLwVZKuCAizo16oZl+kirK7PHYGUmbUV3ATLHLPJf+LF9oqGx22jAuMZTAJds0D/yOL4jTowv/6/KP3NhpJVE/0rgOxmdXd9EANy1621Kd1NYT4Fpz3JiTFAov+0wmWBwc85G9Z7K9ozeTiVjcAoD2iQo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Nh27OIu/; arc=none smtp.client-ip=209.85.215.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Aps3RB1f"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1729868421; x=1761404421;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=jcuOBnTQ9nGR8T/gweEpKZFTk3dIJqfKF1aIEMo8e6o=;
-  b=Aps3RB1fYECyi0+JzpIort8K3NliHbr3UVLgWlSGBx6pdyHctqJZGJrf
-   BpprefoHRYuJtcMAUtk887QMcNqeU6vTT6FAKorRL571YYOsiLLy/9sTW
-   W4aXSwVNyF1UbMYP5tuZIdDh2X15t0EsTJLueSATL5YmYHJRkHQTOKz3M
-   KrTCl768UbB9j08/Rrt5YjLWr2txjIAL6gHcQQify8munwSbniDSRjAsQ
-   KCMwAONc99qv1Yz8xX9uuMFAiRnAue3SrnUnr9DR+AuTbqQ/YwbUSEK1a
-   0RXGSA+9LOwUiuDfVfXUK8R60Fbi/pz38ulCkyHrrOZ+6xTSvXZPptjqb
-   Q==;
-X-CSE-ConnectionGUID: iTSbyf7YSDuO0AEptsvYQg==
-X-CSE-MsgGUID: n/nOVaFvQLWRioK/dNKJnw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11236"; a="29657354"
-X-IronPort-AV: E=Sophos;i="6.11,232,1725346800"; 
-   d="scan'208";a="29657354"
-Received: from orviesa002.jf.intel.com ([10.64.159.142])
-  by fmvoesa109.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Oct 2024 08:00:06 -0700
-X-CSE-ConnectionGUID: WvqHZtgVT8mjvZZ+WqGcSA==
-X-CSE-MsgGUID: VpUANam/RnOTNdcOodH2Ig==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.11,232,1725346800"; 
-   d="scan'208";a="111766739"
-Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.225])
-  by orviesa002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Oct 2024 08:00:03 -0700
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Fri, 25 Oct 2024 18:00:00 +0300 (EEST)
-To: chen zhang <chenzhang@kylinos.cn>
-cc: Hans de Goede <hdegoede@redhat.com>, cezary.jackiewicz@gmail.com, 
-    platform-driver-x86@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>, 
-    chenzhang_0901@163.com
-Subject: Re: [PATCH] platform/x86: compal-laptop: use sysfs_emit() instead
- of sprintf()
-In-Reply-To: <20241024015605.15238-1-chenzhang@kylinos.cn>
-Message-ID: <d85ddd5d-df2c-75fe-2ec8-3444969014b3@linux.intel.com>
-References: <20241024015605.15238-1-chenzhang@kylinos.cn>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Nh27OIu/"
+Received: by mail-pg1-f178.google.com with SMTP id 41be03b00d2f7-7ed9c16f687so1494593a12.0;
+        Fri, 25 Oct 2024 08:09:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1729868978; x=1730473778; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=4kEDX3VX0lJ7Y1euvUERu5sAYhFEMjFPoZUkr45HNg4=;
+        b=Nh27OIu/sI60+AM5SU/tPuJXovUTIQavendBUPDlP5xfIgDDWTw/vAhrewTYGITvLV
+         7ldtXR63QJRKWDqBBlQqmg+BJZuKhR74Q+5/6cQaqrvehqwEsVZojHK+Z3MgfzHEcqL7
+         As8Nx/2L8MzeFvysiyfHeiVOmerkerdSf3EA/bgw9VVzIm78rpG6gb4OCaHlgZDARD91
+         cn02NH9xcd6SfyvJX8jyhomH+5oqfIjnf0zwKaFhVhAxPWtltS7imartP6gsy7XxZk6W
+         hga0L7OKW3+AO8UkpfRu3jsQq0NNwaRDHKER6RdIIlWbgBg8L769JXMxVrW4TZN0j/WD
+         Q/uQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1729868978; x=1730473778;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=4kEDX3VX0lJ7Y1euvUERu5sAYhFEMjFPoZUkr45HNg4=;
+        b=vKmo49nVUkAoAdO7DNpILFmnVJ0Z5ulNbMqN7+Ux+ujz4cuDbhYKzlnqfyBvYUlja/
+         v1PBw2RUTTsK5Zl7XSTRukruoBvgNvUNlJVUiDWuUlcIImKcj+Af3aQ73PtxJFjo42Nx
+         lzWQqjmZxTrgTnneP9ACQDzs9aR6mb1nttO/gbdMsI3dgcCTLPJI2vAbaMUnbXCZMtjh
+         PTBcOJAlKFU5wU7MpHVQ2lYcXsfboDSFgDAXedUxVQNY3f0rBQV/Shy4rZ2AQ3NhvAOL
+         AcER+5QFjXG9toDhdF5/FADo6IOWhXhPZ7CGDnP2iZgolLTuVwmmvVRLfco3AaiKJnjG
+         xUfQ==
+X-Forwarded-Encrypted: i=1; AJvYcCV27+sNlvMF3yzk+QFn1YsnqHZ3ULX7NpMxD6ROAwnp3zzPKMeNrfoa9YeZbubj+MvUnV1Pu1KQ7Qd9U/0=@vger.kernel.org, AJvYcCVMXv6YYf6YPE4MapHvBxBuCuPCr9mKKXx8dlR+gvJp02oKQiBL9UnmAyKAiJtDgaKeoJHeFS1kjxys1P2KQElwFO8I3g==@vger.kernel.org
+X-Gm-Message-State: AOJu0YxWGyKmaddd1Jgse4wgiEVpxWEUgbtj6QXw59zLoi5RbatHVDU/
+	ubGbPWFmFj24GpavZkUWHekkLfCR5T5sSt8tfNFErU5Bh8FgU4bI
+X-Google-Smtp-Source: AGHT+IGRnvUSPE6mhlSYvyOP2tmIWMrCG8/eqS5fDv9kZu7I3EIg+silMau+oSOifU9sRreghRCjNw==
+X-Received: by 2002:a05:6a20:cf8e:b0:1d5:125f:feb0 with SMTP id adf61e73a8af0-1d978af82e4mr10724716637.18.1729868978188;
+        Fri, 25 Oct 2024 08:09:38 -0700 (PDT)
+Received: from localhost.localdomain (host95.181-12-202.telecom.net.ar. [181.12.202.95])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-72057a0b956sm1158685b3a.116.2024.10.25.08.09.36
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 25 Oct 2024 08:09:37 -0700 (PDT)
+From: Kurt Borja <kuurtb@gmail.com>
+To: kuurtb@gmail.com
+Cc: W_Armin@gmx.de,
+	hdegoede@redhat.com,
+	ilpo.jarvinen@linux.intel.com,
+	linux-kernel@vger.kernel.org,
+	platform-driver-x86@vger.kernel.org
+Subject: [PATCH v9 0/4] Dell AWCC platform_profile support
+Date: Fri, 25 Oct 2024 12:09:17 -0300
+Message-ID: <20241025150916.3618-2-kuurtb@gmail.com>
+X-Mailer: git-send-email 2.47.0
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 8bit
 
-On Thu, 24 Oct 2024, chen zhang wrote:
+This patch adds platform_profile support for Dell devices which implement
+WMAX thermal interface, that are meant to be controlled by Alienware Command
+Center (AWCC). These devices may include newer Alienware M-Series, Alienware
+X-Series and Dell's G-Series.
 
-> Follow the advice in Documentation/filesystems/sysfs.rst:
-> show() should only use sysfs_emit() or sysfs_emit_at() when formatting
-> the value to be returned to user space.
-> 
-> Signed-off-by: chen zhang <chenzhang@kylinos.cn>
-> ---
->  drivers/platform/x86/compal-laptop.c | 13 +++++++------
->  1 file changed, 7 insertions(+), 6 deletions(-)
-> 
-> diff --git a/drivers/platform/x86/compal-laptop.c b/drivers/platform/x86/compal-laptop.c
-> index 5546fb189491..ba95f342fd59 100644
-> --- a/drivers/platform/x86/compal-laptop.c
-> +++ b/drivers/platform/x86/compal-laptop.c
-> @@ -67,6 +67,7 @@
->  #include <linux/rfkill.h>
->  #include <linux/hwmon.h>
->  #include <linux/hwmon-sysfs.h>
-> +#include <linux/sysfs.h>
->  #include <linux/power_supply.h>
->  #include <linux/fb.h>
->  #include <acpi/video.h>
-> @@ -368,7 +369,7 @@ static const struct rfkill_ops compal_rfkill_ops = {
->  static ssize_t NAME##_show(struct device *dev,				\
->  	struct device_attribute *attr, char *buf)			\
->  {									\
-> -	return sprintf(buf, "%d\n", ((ec_read_u8(ADDR) & MASK) != 0));	\
-> +	return sysfs_emit(buf, "%d\n", ((ec_read_u8(ADDR) & MASK) != 0));	\
->  }									\
->  static ssize_t NAME##_store(struct device *dev,				\
->  	struct device_attribute *attr, const char *buf, size_t count)	\
+Tested on an Alienware x15 R1.
+---
+v9:
+ - Minor changes on patch 3/4
+v8:
+ - Aesthetic and readibility fixes on patch 3/4
+ - Better commit message for patch 3/4
+v7:
+ - Platform profile implementation refactored in order to efficently
+   autodetect available thermal profiles
+ - Added GameShiftStatus method to documentation
+ - Implemented GameShiftStatus switch for devices that support it 
+v6:
+ - Removed quirk thermal_ustt.
+ - Now quirk thermal can take canonical thermal profile _tables_ defined
+   in enum WMAX_THERMAL_TABLES
+ - Added autodetect_thermal_profile
+ - Proper removal of thermal profile
+v5:
+ - Better commit messages
+ - insize renamed to in_size in alienware_wmax_command() to match other
+   arguments.
+ - Kudos in documentation now at the end of the file
+v4:
+ - Fixed indentation on previous code
+ - Removed unnecessary (acpi_size) and (u32 *) casts
+ - Return -EIO on ACPI_FAILURE
+ - Appropiate prefixes given to macros
+ - 0xFFFFFFFF named WMAX_FAILURE_CODE
+ - Added support for a new set of thermal codes. Old ones now have USTT
+   in their names
+ - A new quirk has been added to differantiate between the two sets.
+   thermal and thermal_ustt are mutually exclusive
+ - Added documentation for WMAX interface
+v3:
+ - Removed extra empty line
+ - 0x0B named WMAX_ARG_GET_CURRENT_PROF
+ - Removed casts to the same type on functions added in this patch
+ - Thermal profile to WMAX argument is now an static function and makes
+   use of in-built kernel macros
+ - Platform profile is now removed only if it was created first
+ - create_platform_profile is now create_thermal_profile to avoid
+   confusion
+ - profile_get and profile_set functions renamed too to match the above
+v2:
+ - Moved functionality to alienware-wmi driver
+ - Added thermal and gmode quirks to add support based on dmi match
+ - Performance profile is now GMODE for devices that support it
+ - alienware_wmax_command now is insize agnostic to support new thermal
+   methods
 
-The macro line continuation backslashes should be aligned.
+Kurt Borja (4):
+  alienware-wmi: fixed indentation and clean up
+  alienware-wmi: alienware_wmax_command() is now input size agnostic
+  alienware-wmi: added platform profile support
+  alienware-wmi: WMAX interface documentation
 
---
- i.
+ Documentation/wmi/devices/alienware-wmi.rst | 388 ++++++++++++++++++
+ MAINTAINERS                                 |   1 +
+ drivers/platform/x86/dell/Kconfig           |   1 +
+ drivers/platform/x86/dell/alienware-wmi.c   | 433 ++++++++++++++++----
+ 4 files changed, 747 insertions(+), 76 deletions(-)
+ create mode 100644 Documentation/wmi/devices/alienware-wmi.rst
 
-> @@ -393,7 +394,7 @@ static ssize_t pwm_enable_show(struct device *dev,
->  		struct device_attribute *attr, char *buf)
->  {
->  	struct compal_data *data = dev_get_drvdata(dev);
-> -	return sprintf(buf, "%d\n", data->pwm_enable);
-> +	return sysfs_emit(buf, "%d\n", data->pwm_enable);
->  }
->  
->  static ssize_t pwm_enable_store(struct device *dev,
-> @@ -432,7 +433,7 @@ static ssize_t pwm_show(struct device *dev, struct device_attribute *attr,
->  		char *buf)
->  {
->  	struct compal_data *data = dev_get_drvdata(dev);
-> -	return sprintf(buf, "%hhu\n", data->curr_pwm);
-> +	return sysfs_emit(buf, "%hhu\n", data->curr_pwm);
->  }
->  
->  static ssize_t pwm_store(struct device *dev, struct device_attribute *attr,
-> @@ -460,7 +461,7 @@ static ssize_t pwm_store(struct device *dev, struct device_attribute *attr,
->  static ssize_t fan_show(struct device *dev, struct device_attribute *attr,
->  		char *buf)
->  {
-> -	return sprintf(buf, "%d\n", get_fan_rpm());
-> +	return sysfs_emit(buf, "%d\n", get_fan_rpm());
->  }
->  
->  
-> @@ -469,12 +470,12 @@ static ssize_t fan_show(struct device *dev, struct device_attribute *attr,
->  static ssize_t temp_##POSTFIX(struct device *dev,			\
->  		struct device_attribute *attr, char *buf)		\
->  {									\
-> -	return sprintf(buf, "%d\n", 1000 * (int)ec_read_s8(ADDRESS));	\
-> +	return sysfs_emit(buf, "%d\n", 1000 * (int)ec_read_s8(ADDRESS));	\
->  }									\
->  static ssize_t label_##POSTFIX(struct device *dev,			\
->  		struct device_attribute *attr, char *buf)		\
->  {									\
-> -	return sprintf(buf, "%s\n", LABEL);				\
-> +	return sysfs_emit(buf, "%s\n", LABEL);				\
->  }
->  
->  /* Labels as in service guide */
-> 
+-- 
+2.47.0
+
