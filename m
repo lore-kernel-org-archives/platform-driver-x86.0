@@ -1,88 +1,140 @@
-Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 201D521A4AA;
-	Fri, 25 Oct 2024 15:59:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2929E20C313
+	for <platform-driver-x86@vger.kernel.org>; Fri, 25 Oct 2024 17:47:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729871947; cv=none; b=tmrguTD6StEAXgoFhZD/+amaBvROJz5sD/rq5IqPoTkxuUOzZtxRgE0nlLIPfIMVEeLtdJuPOUmhboTE1LJNB58NyoxtxIVBWydJRhxfYiqnRokEEywVYXFzAJhUJQyjUKFmUtrytOpeDsPC/dO9cb2AFyCW41LkNdnD55ZQj4A=
+	t=1729878452; cv=none; b=k9uU8xIKxYPYsV/hLIxdKTAviwRDnsX3v1J1FfM520HpVZ/sKClQAdLOD8aQkg5J+vaBEEOv5UUvz1QyVAhxtA6ifKyF8YL7WMk8vIP8EVgr2ordSMf/+/A2fUF9MYVlXQ/6Bpcwb0tV+izZtdToWouARc8oYvENS/hCUQdgoDs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729871947; c=relaxed/simple;
-	bh=AvkYH+hW9tresKrMteUdveA2LbEIBtWYSDRUa1vdvNY=;
+	s=arc-20240116; t=1729878452; c=relaxed/simple;
+	bh=1rQdgS2GBXxxmbQP6sTDBEEY5WaXBOITvoWOmkxTJIA=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=KUp9AKK90QzCZ6aIrEIHFWlZnuMJCqjOaKhExlzg54sCryqF1hMKbUCV+QOCIcBkrI7EZmEfWr0hFKKgkWRodumshOUN2WdXRW6+ZWQtqcKNK1LCmOuTRMes62g6HzsusMiBYMKwu41aEU+qTCQ3R/n71RonZ0TyH6xH6PdWGX0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=TopFVnXw; arc=none smtp.client-ip=65.109.113.108
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="TopFVnXw"
-Received: from localhost (localhost.localdomain [127.0.0.1])
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id A60BE40E0191;
-	Fri, 25 Oct 2024 15:59:01 +0000 (UTC)
-X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
-Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
-	header.d=alien8.de
-Received: from mail.alien8.de ([127.0.0.1])
-	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id x1RYJmiQrgXh; Fri, 25 Oct 2024 15:58:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
-	t=1729871937; bh=KgwsroPMB6szToFuiVCMidfCzRwZJN3VNHPp6aYpWP4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=TopFVnXwRxunlnliPoYE9HEgcpvkZc+rGjOSm7SOSR9LswhO0BBck/2cvg7BiPmfL
-	 /TotwacduBzJRd7JCfhdSOwMcm+4oKCujmCtXJP37rmEWwsD9CS/ZZgBkvW6v67Ke0
-	 rKtl4UMDRimvcmFt6QffhwnvZ58f0zItGJXkSwGf6gfc694o+pedOqVtu+Bk7lrJuK
-	 5W9tNkb2KojGEBQ4/McRpI1o7VhfliGNR8Rvx7IQXaGReSrBCN8G5E+hriYjOFx1+7
-	 dBnSjb9nK2r6okA5M6mgWPAoG1ns8b6PlxDwqDG700jMT+IkvcTxDXiryzmDzAnII/
-	 jUvzhE9UdWCUpIQYpdbZJ4tNrtbkHE+3kFK5YP5WtCsnRSmA9+QrILhN+NoWwd3FJ0
-	 hMfic90UaUCtvFsXzGP6q1Sdjlv48gNNwTdyUqCyYSGS571EGFF85Te1vmz1fG7Xrg
-	 IOqoejar9Qi2ySf4GhqTqRf4KK23fMu0q9wQSfJQMiNZiDw4ClwdVHwTVNvWGxVsVp
-	 OpAAHvyycRqElJFVZHkqXh01FcjT4SjGrgreSTX4ATtKokEhrGUrBkkve70ryzOZ+P
-	 ygt01gNwhZzpR6AHospmDcTrog9UkrfBDldCRe6BcWsmVHRZOng1wKtabbyUGNAvFS
-	 C2W/gZt3nv+BDtsv7aKxEU2k=
-Received: from zn.tnic (p5de8e8eb.dip0.t-ipconnect.de [93.232.232.235])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
-	(No client certificate requested)
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id E24A640E0284;
-	Fri, 25 Oct 2024 15:58:35 +0000 (UTC)
-Date: Fri, 25 Oct 2024 17:58:30 +0200
-From: Borislav Petkov <bp@alien8.de>
-To: Yazen Ghannam <yazen.ghannam@amd.com>
-Cc: linux-edac@vger.kernel.org, linux-kernel@vger.kernel.org,
-	tony.luck@intel.com, x86@kernel.org, avadhut.naik@amd.com,
-	john.allen@amd.com, mario.limonciello@amd.com, bhelgaas@google.com,
-	Shyam-sundar.S-k@amd.com, richard.gong@amd.com, jdelvare@suse.com,
-	linux@roeck-us.net, clemens@ladisch.de, hdegoede@redhat.com,
-	ilpo.jarvinen@linux.intel.com, linux-pci@vger.kernel.org,
-	linux-hwmon@vger.kernel.org, platform-driver-x86@vger.kernel.org,
-	naveenkrishna.chatradhi@amd.com, carlos.bilbao.osdev@gmail.com
-Subject: Re: [PATCH 03/16] x86/amd_nb: Clean up early_is_amd_nb()
-Message-ID: <20241025155830.GQZxvAJkJnfLfNpSRx@fat_crate.local>
-References: <20241023172150.659002-1-yazen.ghannam@amd.com>
- <20241023172150.659002-4-yazen.ghannam@amd.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=K5M9nqMzPrx7ukOOUvdFl2HhtrUvDtdIfz1HrhcKHdCEoVVVkU7tIeG7pdVqkDjop5uN4D8whwzD3yJ7P7tLTKmdyAIfbO087LRoAcKyPqQdy5vtUgKNN7bgdvtvhvpzuo/AmtcWsKljFTqAk/0VyU/0tiUvloR7NjzJRz/SH9w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=kernel.org; spf=fail smtp.mailfrom=kernel.org; arc=none smtp.client-ip=192.198.163.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=kernel.org
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=kernel.org
+X-CSE-ConnectionGUID: lrUMTL9XS0eJHUEZPpUp9Q==
+X-CSE-MsgGUID: BCZBi/30SJ6YDoXEgkw9bA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11236"; a="54966242"
+X-IronPort-AV: E=Sophos;i="6.11,232,1725346800"; 
+   d="scan'208";a="54966242"
+Received: from orviesa008.jf.intel.com ([10.64.159.148])
+  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Oct 2024 10:47:29 -0700
+X-CSE-ConnectionGUID: AlBW6P7fSHW62yw6icnXPA==
+X-CSE-MsgGUID: sw0o0UCISHCr8TSnIF7L2w==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.11,232,1725346800"; 
+   d="scan'208";a="81803110"
+Received: from smile.fi.intel.com ([10.237.72.154])
+  by orviesa008.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Oct 2024 10:47:28 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.98)
+	(envelope-from <andy@kernel.org>)
+	id 1t4OPF-000000070Fp-3pJa;
+	Fri, 25 Oct 2024 20:47:25 +0300
+Date: Fri, 25 Oct 2024 20:47:25 +0300
+From: Andy Shevchenko <andy@kernel.org>
+To: Hans de Goede <hdegoede@redhat.com>
+Cc: Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	platform-driver-x86@vger.kernel.org
+Subject: Re: [PATCH 2/2] platform/x86: x86-android-tablets: Add support for
+ Vexia EDU ATLA 10 tablet
+Message-ID: <ZxvZrb4bgbD1C-y9@smile.fi.intel.com>
+References: <20241025094435.71718-1-hdegoede@redhat.com>
+ <20241025094435.71718-2-hdegoede@redhat.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <20241023172150.659002-4-yazen.ghannam@amd.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20241025094435.71718-2-hdegoede@redhat.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-On Wed, Oct 23, 2024 at 05:21:37PM +0000, Yazen Ghannam wrote:
-> @@ -393,11 +392,11 @@ bool __init early_is_amd_nb(u32 device)
->  	    boot_cpu_data.x86_vendor != X86_VENDOR_HYGON)
->  		return false;
->  
-> -	if (boot_cpu_data.x86_vendor == X86_VENDOR_HYGON)
-> -		misc_ids = hygon_nb_misc_ids;
-> +	if (boot_cpu_has(X86_FEATURE_ZEN))
+On Fri, Oct 25, 2024 at 11:44:35AM +0200, Hans de Goede wrote:
+> Add support for the Vexia EDU ATLA 10 tablet, Android 4.2/4.4 + Guadalinex
+> Ubuntu tablet distributed to schools in the Spanish Andalucía region.
+> 
+> Besides the usual broken DSDT issues this tablet is special because all
+> its LPSS island peripherals are enumerated as PCI devices rather then as
+> ACPI devices as they typically are.
 
-check_for_deprecated_apis: WARNING: arch/x86/kernel/amd_nb.c:395: Do not use boot_cpu_has() - use cpu_feature_enabled() instead.
+Just wondering if you investigated the possibility to switch this via
+(most likely hidden or absent) BIOS options? On the prototypes we have
+a switch in the firmware on how to enumerate LPSS, so it's possible
+to get them enumerated as ACPI ones.
+
+> At the same time there are disabled (_STA=0) ACPI devices for
+> the peripherals and child ACPI devices for e.g. attached I2C/SDIO devices
+> are children of these disabled ACPI devices and thus will not be used
+> by Linux since the parent is disabled.
+> 
+> So besides the usual manual i2c-client instantiation for accel/touchscreen
+> this tablet also requires manual i2c-client instantiation for the codec
+> and for the PMIC.
+> 
+> Also it seems the mainboard was designed for Windows not Android, so
+> it has an I2C attached embedded controller instead of allowing direct
+> access to the charger + fuel-gauge chips as is usual with Android boards.
+> 
+> Normally when there is an embedded controller, there also is ACPI battery
+> support, but since this shipped with Android that is missing and Linux
+> needs to have a power_supply class driver talking directly to the EC.
+
+...
+
+>  	depends on I2C && SPI && SERIAL_DEV_BUS && ACPI && EFI && GPIOLIB && PMIC_OPREGION
+> +	depends on PCI
+
+Maybe it's time to rearrange this a bit?
+
+	depends on I2C && SPI && SERIAL_DEV_BUS
+	depends on GPIOLIB && PMIC_OPREGION
+	depends on ACPI && EFI && PCI
+
+?
+
+...
+
+> +#include <linux/device.h>
+> +#include <linux/device/bus.h>
+
+device.h is enough.
+
+...
+
+> +static int __init vexia_edu_atla10_init(struct device *dev)
+> +{
+> +	struct device *pdev;
+> +	int ret;
+> +
+> +	/* Enable the Wifi module by setting the wifi_enable pin to 1 */
+> +	ret = x86_android_tablet_get_gpiod("INT33FC:02", 20, "wifi_enable",
+> +					   false, GPIOD_OUT_HIGH, NULL);
+> +	if (ret)
+> +		return ret;
+> +
+> +	/* Reprobe the SDIO controller to enumerate the now enabled Wifi module */
+> +	pdev = bus_find_device_by_name(&pci_bus_type, NULL, "0000:00:11.0");
+> +	if (!pdev)
+> +		return -EPROBE_DEFER;
+
+Why? Can't the pci_get_domain_bus_and_slot() give you the same result more
+effectively?
+
+> +	ret = device_reprobe(pdev);
+> +	if (ret)
+> +		dev_warn(pdev, "Reprobing 0000:00:11.0 error: %d\n", ret);
+> +
+> +	put_device(pdev);
+> +	return 0;
+> +}
 
 -- 
-Regards/Gruss,
-    Boris.
+With Best Regards,
+Andy Shevchenko
 
-https://people.kernel.org/tglx/notes-about-netiquette
+
