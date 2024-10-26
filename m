@@ -1,147 +1,139 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA33C70839;
-	Sat, 26 Oct 2024 04:23:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B5932217F22
+	for <platform-driver-x86@vger.kernel.org>; Sat, 26 Oct 2024 09:53:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729916596; cv=none; b=MHXjgWoUpKjsJ18mqwXJHMfGRvHzOg4G6Rh74+CvtonyuM5Bq/aC0cakKgo1IC8HUfsCn1nGq/3P2vBXQek+ja+eLoKwyawR8qdZ4q43DH/IjOH/tk8dt5fW3FJRZRGU6FfwR5dVPeeVpc9tanIYy2bPjCTzJwUHX3ja5e+UhQc=
+	t=1729936442; cv=none; b=bhE+zTA8LjtWhsrPf1VNvKiZTIl/T9W2sp+YmVzpnVHJ+O569S9yA2xTHAw49Zym85blRjVW2jsM6SP0eHghveHxz9z9CMrKPLIBHRtvn+1Xila9StSdYQkv/SoJUc7UvFGDRfJQLp2HDLRyi56Yae54Qmz2AuLRGEq9LaZx1Bo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729916596; c=relaxed/simple;
-	bh=X21TLeYhcXvW58llg52+J1SUg3VKOChJ9BmpKkQqgig=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=iG2dd7vD2Wf7By0KPBB2jPE6tfdb6w37UhAPmOFwgtoeJGpuq3AZna5o+mRuDXZYHx0RNzw6y3h1wRw6yQmooVg/1c/X1mgF9twUOo8b978+e8YLRcWqUU9cCs3PHiy2l3nLY+EA5AESkrGUshKkUzCF/lwWG0beiGSHakTHdHU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=QPbPdLd8; arc=none smtp.client-ip=192.198.163.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1729936442; c=relaxed/simple;
+	bh=tdykJwDjjUc6RlmYBwAgbKMSsCDo4jhYpFXAs9pnO3k=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=ZKUb+BwWQZb3JeBkzGbwZBhofgzjDWur85yapHYykGpIrcEGb3RQtFwOyazdFo+S9dhni0V5l16js09KAifpXawcu7f/PeKMhCFJm3aLUFEjsBK2UG+kY/rv2HN4VCnNJ0mC6UO5JtPJ100RF4yCBpKwZGva8sqKxPZlHIusCvA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=ACuWCGul; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="QPbPdLd8"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1729916594; x=1761452594;
-  h=message-id:subject:from:to:cc:date:in-reply-to:
-   references:content-transfer-encoding:mime-version;
-  bh=X21TLeYhcXvW58llg52+J1SUg3VKOChJ9BmpKkQqgig=;
-  b=QPbPdLd8ZbKUzDmna2d8vU/utyJoKs4ZAbR21nbi5jX6HqJ456a153LU
-   pSY3ySfv0NFngaIe3DJUoUQFMI1dJ7hkUJtwqoiBF1rHkwhrSrY8Fhkdl
-   B95YxBmJsieP8i5bCJm7CCI14mJePMob3a3PuUeIthgLddj8VqEjnbL+m
-   ZsqqARKfbpUdNAHgJeQTe2YeX+yxAn3nlaENQ4Vdjphh+K6Qii1Nivn6J
-   0SfKlv3kMNC8rJAPP+rWxRw57JsUXMWen/rdtQLYHlcZv4KZIlxHkRvn8
-   geSZZASF4TC2mtg8ljOJpmlQA+mTJ70rM4n5g69/kp1PkdWVniPJVi8g3
-   w==;
-X-CSE-ConnectionGUID: mjF4X6CrT7C8XvOtFrNrhw==
-X-CSE-MsgGUID: z/AqL/N2Rtmkp+iwfzLivQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11236"; a="29809882"
-X-IronPort-AV: E=Sophos;i="6.11,234,1725346800"; 
-   d="scan'208";a="29809882"
-Received: from orviesa004.jf.intel.com ([10.64.159.144])
-  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Oct 2024 21:23:13 -0700
-X-CSE-ConnectionGUID: BKJpeE/TSCK0oOAYDr9vMg==
-X-CSE-MsgGUID: a1WlinRTTz2fxdeZcHDSzQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.11,234,1725346800"; 
-   d="scan'208";a="86219176"
-Received: from spandruv-desk.jf.intel.com ([10.54.75.21])
-  by orviesa004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Oct 2024 21:23:14 -0700
-Message-ID: <e93008e918a807096ebf8b204b1c2750593f7d8e.camel@linux.intel.com>
-Subject: Re: [PATCH 1/2] platform/x86: asus-wmi: Fix thermal profile
- initialization
-From: srinivas pandruvada <srinivas.pandruvada@linux.intel.com>
-To: Armin Wolf <W_Armin@gmx.de>, corentin.chary@gmail.com, luke@ljones.dev, 
-	mohamed.ghanmi@supcom.tn
-Cc: hdegoede@redhat.com, ilpo.jarvinen@linux.intel.com,
- Michael@phoronix.com,  casey.g.bowman@intel.com,
- platform-driver-x86@vger.kernel.org,  linux-kernel@vger.kernel.org
-Date: Fri, 25 Oct 2024 21:23:12 -0700
-In-Reply-To: <20241025191514.15032-2-W_Armin@gmx.de>
-References: <20241025191514.15032-1-W_Armin@gmx.de>
-	 <20241025191514.15032-2-W_Armin@gmx.de>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.48.4 (3.48.4-1.fc38) 
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ACuWCGul"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1729936438;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Mnjqp6uY2F6lf7q1X7RSsH54Ybe3GgWi0/vIEHoY1bA=;
+	b=ACuWCGulG/j6u4VR4bDJ4JtOh9TErWD7b3D7NoPqTAM334qZKHoQ9yOB+Kr2+e8SaCie9Q
+	w39pZ0tKxPys8Zp0ZAVNpOMUBDWTyjd74scR7KvE2J0Ga1bsHqo6BH04EgMVlNuSxhImR2
+	Ps0ZozaxIYRUS0qQYe6V++dwCL+jYkA=
+Received: from mail-ej1-f69.google.com (mail-ej1-f69.google.com
+ [209.85.218.69]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-641-rsJelCv4OXqmsti2_DS8tw-1; Sat, 26 Oct 2024 05:53:57 -0400
+X-MC-Unique: rsJelCv4OXqmsti2_DS8tw-1
+Received: by mail-ej1-f69.google.com with SMTP id a640c23a62f3a-a9a2593e9e9so194460966b.0
+        for <platform-driver-x86@vger.kernel.org>; Sat, 26 Oct 2024 02:53:56 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1729936436; x=1730541236;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=Mnjqp6uY2F6lf7q1X7RSsH54Ybe3GgWi0/vIEHoY1bA=;
+        b=kftX8WVbEJ4/a4T+H/ndLddZaeOWPta3ci772EoqRzj0LFxoF4Oh9w4x8x7qDtPPji
+         NHeYTeYZqzcDaB7n26BwjTdX25lnzvX/FagOTCNJxrOSFGISHaZSsHV2wuM6dytdZGZ6
+         7eJ/3Aj/T2gkh9kPn8hxTRI8H18Iy54jQRKHV/v379XsnTC+5UqbYvm+KHivGO5Pb4P/
+         w9EYcfUFcCJKRgXAc4qzYSlW8Hvcg09FHgnDo6IYC4VkkNKusxxmBGBZDrUHumH4ls5m
+         5OpToISzM+GQPDypQdMIXwBXM4lxyV4MfGSKzy4MDol1+vOI2ZXOViuAF6WjiuJXtvwv
+         H+Iw==
+X-Forwarded-Encrypted: i=1; AJvYcCUaNggoIRiB7dbKQRKeV79sd+mKY1pJyJRlOSBI3J362ihiZqcUKWsrrvNKRMvATxr04p9HC4+5f5OkoZI+TXjDzcvv@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx6LkQaQsBThrBPjV6RfUVSvfv1N/NZM2/C8JDgfJsPnOsVnxk2
+	uiL9086Z2bzh0uxg1Llz5lYJ5JLf/TinV8+wboKME8WA4kV0rSDRmdMqTCvCaBwkVKoaCaCHLZ0
+	uNVZIHA+cNyDAbTlitfh/dueD1TNemylFIYRzJxXSvsCRWUH1Vd/+I6gjDwEO07LOCRdue4M=
+X-Received: by 2002:a17:907:74b:b0:a99:37f5:de59 with SMTP id a640c23a62f3a-a9de619182amr134740566b.53.1729936435659;
+        Sat, 26 Oct 2024 02:53:55 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IEQqMOL1ZFWcf453dgqb7oobR+mCmwgih8sbvKP1B1FGHkeWNTgKvWr3jCjIjQi4ZR9SKDWng==
+X-Received: by 2002:a17:907:74b:b0:a99:37f5:de59 with SMTP id a640c23a62f3a-a9de619182amr134738566b.53.1729936435185;
+        Sat, 26 Oct 2024 02:53:55 -0700 (PDT)
+Received: from ?IPV6:2001:1c00:c32:7800:5bfa:a036:83f0:f9ec? (2001-1c00-0c32-7800-5bfa-a036-83f0-f9ec.cable.dynamic.v6.ziggo.nl. [2001:1c00:c32:7800:5bfa:a036:83f0:f9ec])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a9b30c7b5a9sm159784166b.171.2024.10.26.02.53.54
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sat, 26 Oct 2024 02:53:54 -0700 (PDT)
+Message-ID: <0156ec27-e076-4c6e-9bad-b7d64bb08a59@redhat.com>
+Date: Sat, 26 Oct 2024 11:53:53 +0200
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 0/2] platform/x86: asus-wmi: Fix thermal profile handling
+To: Armin Wolf <W_Armin@gmx.de>, corentin.chary@gmail.com, luke@ljones.dev,
+ mohamed.ghanmi@supcom.tn
+Cc: srinivas.pandruvada@linux.intel.com, ilpo.jarvinen@linux.intel.com,
+ Michael@phoronix.com, casey.g.bowman@intel.com,
+ platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20241025191514.15032-1-W_Armin@gmx.de>
+Content-Language: en-US, nl
+From: Hans de Goede <hdegoede@redhat.com>
+In-Reply-To: <20241025191514.15032-1-W_Armin@gmx.de>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Fri, 2024-10-25 at 21:15 +0200, Armin Wolf wrote:
-> When support for vivobook fan profiles was added, the initial
-> call to throttle_thermal_policy_set_default() was removed, which
-> however is necessary for full initialization.
->=20
-> Fix this by calling throttle_thermal_policy_set_default() again
-> when setting up the platform profile.
->=20
-> Fixes: bcbfcebda2cb ("platform/x86: asus-wmi: add support for
-> vivobook fan profiles")
-> Reported-by: Michael Larabel <Michael@phoronix.com>
+Hi All,
 
-For Michael to understand how this patch is related:
+On 25-Oct-24 9:15 PM, Armin Wolf wrote:
+> When support for Vivobook fan profiles was added, two mistakes where
+> made:
+> 
+> 1. throttle_thermal_policy_set_default() was not called anymore during
+> probe.
+> 
+> 2. The new thermal profiles where used inconsistently.
+> 
+> This patch series aims to fix both issues. Compile-tested only.
+> 
+> Armin Wolf (2):
+>   platform/x86: asus-wmi: Fix thermal profile initialization
+>   platform/x86: asus-wmi: Fix inconsistent use of thermal policies
 
-When Michael did test on 6.11 based kernel, there was no platform
-profile support for the new Asus laptop. So the default boot Whisper
-mode was active all the time.
-My AIPT patch addressed that issue using FANL method.
+Taking another look at the vivobook stuff because of this series this
+pre-existing code stands out to me:
 
-But for 6.12 cycle, Mohamed added VIVO profile, which will also work
-with the new laptop with AIPT even though the names of the profiles
-don't match with the AIPT modes. But that patch removed the setting of
-default policy in hardware to AIPT "standard" or 0 for VIVO default. So
-mode was still whisper.
+static int fan_curve_get_factory_default(struct asus_wmi *asus, u32 fan_dev)
+{
+        struct fan_curve_data *curves;
+        u8 buf[FAN_CURVE_BUF_LEN];
+        int err, fan_idx;
+        u8 mode = 0;
 
-So this patch will address that.
+        if (asus->throttle_thermal_policy_dev)
+                mode = asus->throttle_thermal_policy_mode;
+        /* DEVID_<C/G>PU_FAN_CURVE is switched for OVERBOOST vs SILENT */
+        if (mode == 2)
+                mode = 1;
+        else if (mode == 1)
+                mode = 2;
 
-Thanks,
-Srinivas
+
+Since the vivobook has silent and overboost swapped I wonder if we should
+do this on vivobook to ?
+
+Also note that patch 2/2 of this series impacts this code too. Until
+now we were storing the swapped vivobook values in asus->throttle_thermal_policy_dev
+and then here we are swapping them a second time, in essence using unswapped
+non vivobook values here due to the double swapping.
+
+Where as after Armin's changes from 2/2 we now store unswapped standard
+asus laptop values in asus->throttle_thermal_policy_dev and swap them
+here, using the same mode values as with normal asus laptops on vivobooks
+now ( mode is swapped from non vivo throttle_thermal_policy_dev values).
+
+Does anyone have any insight what we should do here ?
+
+Regards,
+
+Hans
 
 
-
-
-> Closes: https://www.phoronix.com/review/lunar-lake-xe2/5
-> Signed-off-by: Armin Wolf <W_Armin@gmx.de>
-> ---
-> =C2=A0drivers/platform/x86/asus-wmi.c | 10 ++++++++++
-> =C2=A01 file changed, 10 insertions(+)
->=20
-> diff --git a/drivers/platform/x86/asus-wmi.c
-> b/drivers/platform/x86/asus-wmi.c
-> index 2ccc23b259d3..ab9342a01a48 100644
-> --- a/drivers/platform/x86/asus-wmi.c
-> +++ b/drivers/platform/x86/asus-wmi.c
-> @@ -3908,6 +3908,16 @@ static int platform_profile_setup(struct
-> asus_wmi *asus)
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0if (!asus->throttle_therm=
-al_policy_dev)
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0return 0;
->=20
-> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0/*
-> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 * We need to set the default =
-thermal profile during probe or
-> otherwise
-> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 * the system will often remai=
-n in silent mode, causing low
-> performance.
-> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 */
-> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0err =3D throttle_thermal_polic=
-y_set_default(asus);
-> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0if (err < 0) {
-> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0pr_warn("Failed to set default thermal profile\n");
-> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0return err;
-> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0}
-> +
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0dev_info(dev, "Using thro=
-ttle_thermal_policy for
-> platform_profile support\n");
->=20
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0asus->platform_profile_ha=
-ndler.profile_get =3D
-> asus_wmi_platform_profile_get;
-> --
-> 2.39.5
->=20
 
