@@ -1,65 +1,65 @@
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3542F1D26E6
-	for <platform-driver-x86@vger.kernel.org>; Sat, 26 Oct 2024 10:07:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 830FB1CFEAE
+	for <platform-driver-x86@vger.kernel.org>; Sat, 26 Oct 2024 10:07:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729937247; cv=none; b=ejPXH4CXqLBEBqowpf4FWdr/CxPUbtFBQju9tGJQh3tDlMA8rvQB1zNJyQN4miPP2B7KXVCCO5dEjMaqYhL9tFg4KIuPKYAMwCrhYHYgp/FQJgkrDPyWv3axiKHIXEFgGmVFMlS2pX09GE90zZXFsbVVUqs6r0jZwED5juUAepk=
+	t=1729937261; cv=none; b=pn3uxdfJYQuF91R/6xwEShXIZvfGe+VYpOU6XhXPA//FgThQiQfyJabYPo88MZwVpc6pDj0yvwNoaD0apRt2FVXGBrjyaKFiWLNzM5mgUq/WW9gw80mpEm6PweLhakTwuajCBhF+3WbBrAnRPx+CDD7EUQNV14rojzkQEyEfpAI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729937247; c=relaxed/simple;
-	bh=VO9AbrOdA0msDkWqGRKaTRapJpiYZcNyx8a1W9Z6wr8=;
+	s=arc-20240116; t=1729937261; c=relaxed/simple;
+	bh=KBmP0nO8LLhW1rNmvh8diNerp2LuvfZNzwxEdjqWeho=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=KulJC1k/Wp+CafkGTzg9onZttPkfaUBSxBEYyWTVsr264sieax1Q9sq6TW9VyqIN0AEPNTbZ26TcO+W+uHaGCPy5WgiNHuzJemRwnJkSfL4HCE+PsPrIpL7OQ+4erXWL4gj3/tcyJM0CLpU638N+7OKRPHAbqv77Ak+Hldya5X8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=TGlO7bOX; arc=none smtp.client-ip=170.10.129.124
+	 In-Reply-To:Content-Type; b=rmuYJ13cSwnryFjn6B3vuFa9FVwC+TAsiL2NhdT5LlZ1l3Fiel04DNcPubbKrrlF6uacuobg1tuHs0JC/vi9xNFkRF0hK0546mb3mUEfFHHxpfuglVI5f1y6NcE3wkmgyv5+tGBCa2ShagZZaAGYM3ARBCIlikWLy6yUCpd67y0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Grn5zq3T; arc=none smtp.client-ip=170.10.129.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="TGlO7bOX"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Grn5zq3T"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1729937244;
+	s=mimecast20190719; t=1729937258;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=hJlGYIZ2ZF/J/o37/9Owky4ZqndhKDqZ37hsXKaaOtI=;
-	b=TGlO7bOXDnp5m1M2Rb6qgPHN+GykjAIDFhVmD+MrsViWuaB8PZqL2PWCNV4pcuE6ePDTqU
-	uywWebwDgb5swoefxxsnTr7zmGmPfihfcX7nFPSVMl5F4qKZQDJHuG+38g5LKj1V/z0QQN
-	c2/Ka2wwLx1N9Qq6lZgwCt8olnTPKuU=
-Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com
- [209.85.128.71]) by relay.mimecast.com with ESMTP with STARTTLS
+	bh=86pihVpFCTMFYss1/Iltby9/esixmfhGJjvS5+uk3X8=;
+	b=Grn5zq3TPRQzst72tWSuS9rUuthMZF7xgF6BeE/ZeSew+pv3YWDoZX5JV7ay2tAwisEE48
+	K4CR4Ofwxn5yYYkqhqmhzfIw7pXPEkrKDFTshn+E2aoh1hjUhGZ6sZrLQOF98S8x/bdd0h
+	nE3Qjes4YwxzSRYiu0fCmLk3AUcYC/U=
+Received: from mail-ej1-f72.google.com (mail-ej1-f72.google.com
+ [209.85.218.72]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-561-mw1rMDw-M1qRzWCPRjZDcQ-1; Sat, 26 Oct 2024 06:07:22 -0400
-X-MC-Unique: mw1rMDw-M1qRzWCPRjZDcQ-1
-Received: by mail-wm1-f71.google.com with SMTP id 5b1f17b1804b1-43159c07193so25567645e9.0
-        for <platform-driver-x86@vger.kernel.org>; Sat, 26 Oct 2024 03:07:22 -0700 (PDT)
+ us-mta-325-3obLtsyIP0C5cPleqUD8ug-1; Sat, 26 Oct 2024 06:07:37 -0400
+X-MC-Unique: 3obLtsyIP0C5cPleqUD8ug-1
+Received: by mail-ej1-f72.google.com with SMTP id a640c23a62f3a-a9a01cba9f7so192478866b.3
+        for <platform-driver-x86@vger.kernel.org>; Sat, 26 Oct 2024 03:07:37 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1729937241; x=1730542041;
+        d=1e100.net; s=20230601; t=1729937256; x=1730542056;
         h=content-transfer-encoding:in-reply-to:from:content-language
          :references:cc:to:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=hJlGYIZ2ZF/J/o37/9Owky4ZqndhKDqZ37hsXKaaOtI=;
-        b=t8KmVkL5DtkDx/AstNp5vaJLiM1lBAKNbUa9QKtvlwFGQ0ASlFBsCSqwieFGMJ4SIs
-         YXHn9lO1gadQ3Qh7Mx8EoqvJz787bT+Pli2lkCOBXaoMWE22ey4T5lZqG0OZ+RJM6t0Q
-         qB5AIgz7OBHZabTU3z9XQJEQopUKrCSpII4cIP0tIEotwRbsW7ikuDa5nfca9hFjnH69
-         bbNKjVF3nCzaAhf+N93PwAqnLvbzfBPsX59hom1HS/2ebhk99Pu4vvYEzovxuwkDpTVB
-         7+bw8IS2Qwfbz8TKv1qz6o6v5qtuentEEsmOCKfWeIV9d1Jr+I0CahC7eRcBdq6fTm7P
-         zG3w==
-X-Forwarded-Encrypted: i=1; AJvYcCVrRIkyN/C7lwLiiflXJQXbm/QmpJM/aysCtsNa89UqHLMaOL54zIT7AsNiZQcfK3TgS03a2K8n2Lf9SvZTBYfDE6Me@vger.kernel.org
-X-Gm-Message-State: AOJu0YwpB6mQ/xHIZVpmoMza2qNtQmA28M62axFXjFeeVd0JCivej8yD
-	s49jNv2qvaJk3r0ZRzGw+fgXafiq8qeFFiElDRPYVJnzfHPUySJR3HRxIMLsPadRx045JPyQjkF
-	f/Jjg5NiYk1kkCKPSaW4E+mcJD8RCGuEi13BZkAWh4VyVZU+Ca4qKy1eeIrHx/ta60MhpxkM=
-X-Received: by 2002:adf:ff86:0:b0:37c:d2e3:1298 with SMTP id ffacd0b85a97d-380612475d5mr2002239f8f.55.1729937241350;
-        Sat, 26 Oct 2024 03:07:21 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IEWz8jQCbczQY1pIa/BTZuS+AN8DQuG9MqmGw6yTkV5fY3mqJbhjU3xrUt8/z0htouCksMjtQ==
-X-Received: by 2002:adf:ff86:0:b0:37c:d2e3:1298 with SMTP id ffacd0b85a97d-380612475d5mr2002195f8f.55.1729937240932;
-        Sat, 26 Oct 2024 03:07:20 -0700 (PDT)
+        bh=86pihVpFCTMFYss1/Iltby9/esixmfhGJjvS5+uk3X8=;
+        b=QqhViWTeQIcZxIY9j7igdIU73Iaiwkx26aGSgNJ6CLfC2F+OJ2uo0TR4+li7+enJ1a
+         oH88HpYicjIHAV6ELajxfE2i8sXbU3NkySj5t0ebleU5hUl0PA9CQh9ersQ7JRJh/1LI
+         8BwGseB+rG34WYFAZgddF1QceTakwblOswt8FxOQvF8n8IyuNjftEpgf/AlwI3N9mjZK
+         TEy21ex2Ho/791+26o6ndthjxI6g5v+KYWgr4Ay58u67yqqrgs0tR7IsL+dcfN5u1R5T
+         T8yuZ9nkqLK0zDZtY3IhwcuJPez4bmFrBFDMdcIrAagFDMd2XaHzWfI1kEmdQaYdzOpo
+         YwbA==
+X-Forwarded-Encrypted: i=1; AJvYcCW7locYqM1NjPUM9VIhGCBne2/1gufihc3LHtYu9fRpVa/iY2Q58fK9M8OE9F5Kjnw1MKDTRrJ01vW4Elc565fr45Wc@vger.kernel.org
+X-Gm-Message-State: AOJu0YyUZz16l2RHrER26i9GFPPiqTnbC9Jjm6jzr5WTxC8MWyWaGHa5
+	UOcfMEe8RgLEvpzkus4+m346aRSoBxoLanrsAHqUHAdWuO228UuEFS3I0ECm2rOdDv0WcwYk7Vj
+	TbbMKwi2QagWghJscaekw//KXLfb3M7u+qEmPu2LDXS4m6/igf49I1DHBO801oscexYh4jBw=
+X-Received: by 2002:a17:907:9727:b0:a9a:230b:ff2c with SMTP id a640c23a62f3a-a9de5f2226dmr168739366b.30.1729937256131;
+        Sat, 26 Oct 2024 03:07:36 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IGugRUzTiO3bQ3RT5C4neQOCWw/sRdC3diGmPwKsQoYtVGLDDEjNj2gnVCayaCXt7maanra6g==
+X-Received: by 2002:a17:907:9727:b0:a9a:230b:ff2c with SMTP id a640c23a62f3a-a9de5f2226dmr168735166b.30.1729937255762;
+        Sat, 26 Oct 2024 03:07:35 -0700 (PDT)
 Received: from ?IPV6:2001:1c00:c32:7800:5bfa:a036:83f0:f9ec? (2001-1c00-0c32-7800-5bfa-a036-83f0-f9ec.cable.dynamic.v6.ziggo.nl. [2001:1c00:c32:7800:5bfa:a036:83f0:f9ec])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a9b1f0277b7sm160237066b.50.2024.10.26.03.07.18
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a9b1f0298cfsm159302066b.74.2024.10.26.03.07.34
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 26 Oct 2024 03:07:19 -0700 (PDT)
-Message-ID: <dc490fa5-c02b-46d9-a9ef-271181756407@redhat.com>
-Date: Sat, 26 Oct 2024 12:07:18 +0200
+        Sat, 26 Oct 2024 03:07:35 -0700 (PDT)
+Message-ID: <e302a05d-cea1-4004-8727-8beee52dc112@redhat.com>
+Date: Sat, 26 Oct 2024 12:07:34 +0200
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -67,8 +67,8 @@ List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 4/8] ACPI: platform_profile: Add a list to platform
- profile handler
+Subject: Re: [PATCH 5/8] ACPI: platform_profile: Use guard(mutex) for
+ register/unregister
 To: Mario Limonciello <mario.limonciello@amd.com>,
  =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
 Cc: "Rafael J . Wysocki" <rafael@kernel.org>, Len Brown <lenb@kernel.org>,
@@ -89,19 +89,18 @@ Cc: "Rafael J . Wysocki" <rafael@kernel.org>, Len Brown <lenb@kernel.org>,
  Mark Pearson <mpearson-lenovo@squebb.ca>,
  Matthew Schwartz <matthew.schwartz@linux.dev>
 References: <20241025193055.2235-1-mario.limonciello@amd.com>
- <20241025193055.2235-5-mario.limonciello@amd.com>
+ <20241025193055.2235-6-mario.limonciello@amd.com>
 Content-Language: en-US, nl
 From: Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <20241025193055.2235-5-mario.limonciello@amd.com>
+In-Reply-To: <20241025193055.2235-6-mario.limonciello@amd.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 Hi,
 
 On 25-Oct-24 9:30 PM, Mario Limonciello wrote:
-> In order to prepare for having support for multiple platform handlers
-> a list will be needed to iterate over them for various platform
-> profile handler calls.
+> guard(mutex) can be used to automatically release mutexes when going
+> out of scope.
 > 
 > Tested-by: Matthew Schwartz <matthew.schwartz@linux.dev>
 > Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
@@ -117,51 +116,59 @@ Hans
 
 
 > ---
->  drivers/acpi/platform_profile.c  | 5 ++++-
->  include/linux/platform_profile.h | 1 +
->  2 files changed, 5 insertions(+), 1 deletion(-)
+>  drivers/acpi/platform_profile.c | 19 ++++++-------------
+>  1 file changed, 6 insertions(+), 13 deletions(-)
 > 
 > diff --git a/drivers/acpi/platform_profile.c b/drivers/acpi/platform_profile.c
-> index c24744da20916..0c60fc970b6e8 100644
+> index 0c60fc970b6e8..81928adccfade 100644
 > --- a/drivers/acpi/platform_profile.c
 > +++ b/drivers/acpi/platform_profile.c
-> @@ -10,6 +10,7 @@
->  #include <linux/sysfs.h>
+> @@ -180,41 +180,34 @@ int platform_profile_register(struct platform_profile_handler *pprof)
+>  {
+>  	int err;
 >  
->  static struct platform_profile_handler *cur_profile;
-> +static LIST_HEAD(platform_profile_handler_list);
->  static DEFINE_MUTEX(profile_lock);
+> -	mutex_lock(&profile_lock);
+> +	guard(mutex)(&profile_lock);
+>  	/* We can only have one active profile */
+> -	if (cur_profile) {
+> -		mutex_unlock(&profile_lock);
+> +	if (cur_profile)
+>  		return -EEXIST;
+> -	}
 >  
->  static const char * const profile_names[] = {
-> @@ -198,6 +199,7 @@ int platform_profile_register(struct platform_profile_handler *pprof)
->  		mutex_unlock(&profile_lock);
+>  	/* Sanity check the profile handler field are set */
+>  	if (!pprof || bitmap_empty(pprof->choices, PLATFORM_PROFILE_LAST) ||
+> -		!pprof->profile_set || !pprof->profile_get) {
+> -		mutex_unlock(&profile_lock);
+> +		!pprof->profile_set || !pprof->profile_get)
+>  		return -EINVAL;
+> -	}
+>  
+>  	err = sysfs_create_group(acpi_kobj, &platform_profile_group);
+> -	if (err) {
+> -		mutex_unlock(&profile_lock);
+> +	if (err)
 >  		return err;
->  	}
-> +	list_add_tail(&pprof->list, &platform_profile_handler_list);
+> -	}
+>  	list_add_tail(&pprof->list, &platform_profile_handler_list);
 >  
 >  	cur_profile = pprof;
->  	mutex_unlock(&profile_lock);
-> @@ -207,8 +209,9 @@ EXPORT_SYMBOL_GPL(platform_profile_register);
+> -	mutex_unlock(&profile_lock);
+>  	return 0;
+>  }
+>  EXPORT_SYMBOL_GPL(platform_profile_register);
 >  
 >  int platform_profile_remove(struct platform_profile_handler *pprof)
 >  {
-> -	sysfs_remove_group(acpi_kobj, &platform_profile_group);
-> +	list_del(&pprof->list);
+> +	guard(mutex)(&profile_lock);
+> +
+>  	list_del(&pprof->list);
 >  
-> +	sysfs_remove_group(acpi_kobj, &platform_profile_group);
->  	mutex_lock(&profile_lock);
+>  	sysfs_remove_group(acpi_kobj, &platform_profile_group);
+> -	mutex_lock(&profile_lock);
 >  	cur_profile = NULL;
->  	mutex_unlock(&profile_lock);
-> diff --git a/include/linux/platform_profile.h b/include/linux/platform_profile.h
-> index 58279b76d740e..9ded63a9ae6f1 100644
-> --- a/include/linux/platform_profile.h
-> +++ b/include/linux/platform_profile.h
-> @@ -29,6 +29,7 @@ enum platform_profile_option {
->  struct platform_profile_handler {
->  	const char *name;
->  	unsigned long choices[BITS_TO_LONGS(PLATFORM_PROFILE_LAST)];
-> +	struct list_head list;
->  	int (*profile_get)(struct platform_profile_handler *pprof,
->  				enum platform_profile_option *profile);
->  	int (*profile_set)(struct platform_profile_handler *pprof,
+> -	mutex_unlock(&profile_lock);
+>  	return 0;
+>  }
+>  EXPORT_SYMBOL_GPL(platform_profile_remove);
 
