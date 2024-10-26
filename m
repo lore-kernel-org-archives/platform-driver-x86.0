@@ -1,64 +1,41 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from mout.gmx.net (mout.gmx.net [212.227.17.20])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3007C1D2B37
-	for <platform-driver-x86@vger.kernel.org>; Sat, 26 Oct 2024 11:52:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E7461D4342;
+	Sat, 26 Oct 2024 11:54:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.20
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729943553; cv=none; b=XKWfpIaNimrNFgJXwwxoDqO59v9GkMmIXgN2DiDJ7aTvCeb8ycOkhC1hO4G61YhhBFdxYIhFb0f5MPTEduVOXKTaxGf7CNxBqiYeZtOVGxwgRa53Rch9w4+keUURIaGdjAnEqnEdtCHfCezkoDOh8DVXsD3LyG9YD4VD1+b1nVc=
+	t=1729943652; cv=none; b=sHogwIpgy4q/4EdT3df7sbGzyk+lGm8+VDcCsIhJnw/FudVDTnQ80HRxU0eltoKPmogcMwjCp/OqPiDOcIUa8XwEq2M+GNC3otI13KpTnIujG+w9QDnyJH5P5n6MH2JTt9MO2WW+g+yJYPtsdLatVABr7M8ds2VjqkX1Jyu90xQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729943553; c=relaxed/simple;
-	bh=MphIURdCjiW0NEo0bx6DHrqkknsDKHxnpMDrVItzUFA=;
-	h=Message-ID:Date:MIME-Version:From:Subject:To:Cc:Content-Type; b=JFAwSIZcu9ouwSX/dmJ/WSsElW+Hfk9CqxzoqByrkZkzKMl2GUhTEhr/1o6JG/Jk64fml5uDRN7hcbJV9SxLSQoq+IpY7fOkxQLKuAnZKhasS9BEmrdHSnXE98JMq9d1apIW3mq2854xm7K0c2oEE5gAdVd7dhTWJDBI1Yq+82g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=KagtL2lg; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1729943652; c=relaxed/simple;
+	bh=BT7PtyaOIMKeIJAQZjgG13K7ve44IpZWba8hscqzEw0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=mSEFK44g62fzlvClnAdsK9adzjwYMxMsZ+71AmwyC/9aqBV/PIROtEJEfsU0rILq8Hf2nydYc2TYSAC/W0q4vIG5CikAYdP2uXfpNTAo8CypkmNfjGnpJT6EKLmmOg6LSf/KH/XKSDkQkI51o+0CMFFcFk7DxfY+tZB4awJi2J8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b=mpC1dTq6; arc=none smtp.client-ip=212.227.17.20
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="KagtL2lg"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1729943549;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=QtzZktEu9avuwDKeUy+G3IcD5daRVFERadBqCe8g8CM=;
-	b=KagtL2lgszGZZLpOVXTiNovUhMdPF1x2bZe0VX586veOJp/zkwT39c/yVIDh65fQM1A49H
-	+7W1ViYjh9zulo3+G0ncFZMn+4CqFk51XutL/wjjUalECgX6UNFy9KTYq2U1GKIzU9kwqp
-	sHmreG79z6FMkANAA4Z4zWCTuDOAdDM=
-Received: from mail-ed1-f70.google.com (mail-ed1-f70.google.com
- [209.85.208.70]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-669-EPAnPYDxNDSwN_7f-ctawA-1; Sat, 26 Oct 2024 07:52:27 -0400
-X-MC-Unique: EPAnPYDxNDSwN_7f-ctawA-1
-Received: by mail-ed1-f70.google.com with SMTP id 4fb4d7f45d1cf-5cbad9b3ca2so1212299a12.3
-        for <platform-driver-x86@vger.kernel.org>; Sat, 26 Oct 2024 04:52:27 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1729943546; x=1730548346;
-        h=content-transfer-encoding:content-language:cc:to:subject:from
-         :user-agent:mime-version:date:message-id:x-gm-message-state:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=QtzZktEu9avuwDKeUy+G3IcD5daRVFERadBqCe8g8CM=;
-        b=r35Z14XvwIx29uwAa3fPDD1m/ezKGTbWYNg8vskpH8hwUHo9tEUm54yupWhhyNbdjm
-         q47ohGkU9IBmI3F4kI2XGa8aSSv4xff2CZkzZonGEZ/hmTFrNZbryG68+h+5/Tj5eex9
-         TncSiTmtH5Y3BVKulkjdh1uK4J8aFCbQg5CPnpEO0NB1xnW5/m2ssdJH8RDrOvZFeWc/
-         mT31z4Db6lsywcKNaEDDrUq4UB5JIy7KB6mkNUt7j3VW3NXBJtFjaSSsl8Vzq27u/M3m
-         GABvJxhQJXkk0ih9rtOOKNWM3e3+HVzs2+IZBCGyDwAd7yxUTrRwalzX3RO3rn0LeuKY
-         lYEA==
-X-Forwarded-Encrypted: i=1; AJvYcCWWaXQgmztQCqzAFI4G4IHN8HcmT4svNPEEWq29H0f0qyjcqUFAchzfx34fp5Zgr7I31jyo9spRch0KYKDA/g6ksPOg@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx5K9GO0YdRhiVcqFpPO7G6JlxKOQXNcLtdgNmF1gZ1G16tgY3w
-	SQgTZ4JBJKBA5wWzFpBeAtpBfeXN3uhgsNddhc990OjgnIMuJYIpLGKLHOKixytZvchUUAH+uMj
-	sACt4hfbo4+0qzzHWu0zXXAz09p1NlYKUW0xw807qxGdt/QojaJo+UBe1gGzuz9EOIuLY+cvaXD
-	JHLBY=
-X-Received: by 2002:a05:6402:d09:b0:5c8:8d5e:19b0 with SMTP id 4fb4d7f45d1cf-5cbbfa74da6mr1478946a12.30.1729943545862;
-        Sat, 26 Oct 2024 04:52:25 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IF3+JE4gpJZaQ1HaEFJyiJ8LCXJx9mu5O68c5w8T8EW7iW9hGjHq0ii+QE257w339vAnW1JNw==
-X-Received: by 2002:a05:6402:d09:b0:5c8:8d5e:19b0 with SMTP id 4fb4d7f45d1cf-5cbbfa74da6mr1478934a12.30.1729943545360;
-        Sat, 26 Oct 2024 04:52:25 -0700 (PDT)
-Received: from ?IPV6:2001:1c00:c32:7800:5bfa:a036:83f0:f9ec? (2001-1c00-0c32-7800-5bfa-a036-83f0-f9ec.cable.dynamic.v6.ziggo.nl. [2001:1c00:c32:7800:5bfa:a036:83f0:f9ec])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5cbb629d587sm1474785a12.30.2024.10.26.04.52.23
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 26 Oct 2024 04:52:24 -0700 (PDT)
-Message-ID: <b220d6bc-41da-4ae6-8f69-4f008f15d540@redhat.com>
-Date: Sat, 26 Oct 2024 13:52:22 +0200
+	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b="mpC1dTq6"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.de;
+	s=s31663417; t=1729943592; x=1730548392; i=w_armin@gmx.de;
+	bh=GjJsqXmQyXNRHcgWrs1cGWgjW2lKyfNm8NPvWdIgBCY=;
+	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:To:Cc:
+	 References:From:In-Reply-To:Content-Type:
+	 Content-Transfer-Encoding:cc:content-transfer-encoding:
+	 content-type:date:from:message-id:mime-version:reply-to:subject:
+	 to;
+	b=mpC1dTq6SLMyan2VNh6Zd+wGDRrMkZGJh2rr7RG3cYaLGaXmqiadrWa60/0OVzaC
+	 /BNI6RLBwMKMotwbWK33CrslPQ9TSGXEGBNdaXmMQN7zsFD8u5M4NZ1OIFViAKVAt
+	 xbQvzxkE9ZBFsySrtAb78hZYXV1rGzz5DM0DmcabYgLPvxMyK5f8U1QmvFCdtiEUX
+	 WmIQxOiT4hvPh+FafVv6XoOI+lUBflK7oQ6UBlFw6Q1nJ+c8cJoWTReK5o4mIf3kn
+	 ZJibZdTMKDeTM726+oXeDGlxaBLFtH0DA9rnXnJHg79xVmjz5iWGsefuUU/gFiexK
+	 tPZ3b63h86B4IH0vNw==
+X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
+Received: from [141.30.226.129] ([141.30.226.129]) by mail.gmx.net (mrgmx104
+ [212.227.17.168]) with ESMTPSA (Nemesis) id 1MbAci-1tbWCG16xk-00lDwT; Sat, 26
+ Oct 2024 13:53:12 +0200
+Message-ID: <f67de80e-4897-4655-bf8c-064d91943447@gmx.de>
+Date: Sat, 26 Oct 2024 13:53:10 +0200
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -66,84 +43,88 @@ List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-From: Hans de Goede <hdegoede@redhat.com>
-Subject: [GIT PULL] platform-drivers-x86 for 6.12-3
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
- platform-driver-x86@vger.kernel.org,
- =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Content-Language: en-US, nl
-Content-Type: text/plain; charset=UTF-8
+Subject: Re: [PATCH 2/2] platform/x86: asus-wmi: Fix inconsistent use of
+ thermal policies
+To: Mohamed Ghanmi <mohamed.ghanmi@supcom.tn>
+Cc: corentin.chary@gmail.com, luke@ljones.dev,
+ srinivas.pandruvada@linux.intel.com, hdegoede@redhat.com,
+ ilpo.jarvinen@linux.intel.com, Michael@phoronix.com,
+ casey.g.bowman@intel.com, platform-driver-x86@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <20241025191514.15032-1-W_Armin@gmx.de>
+ <20241025191514.15032-3-W_Armin@gmx.de> <ZxzIMsffFj2lvScb@laptop>
+Content-Language: en-US
+From: Armin Wolf <W_Armin@gmx.de>
+In-Reply-To: <ZxzIMsffFj2lvScb@laptop>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
+X-Provags-ID: V03:K1:tV1cnoXyNhfQeuv2i3UnLLWLbxE+wHjrnmRzAPILhT1Z9B08jid
+ M9YdJYuSpelX6JTiB16GG21lu9LNYOgqrS5T90+bJxjcYE448FgzzkYsw4js86Uk+KzAwTg
+ BMsruvVqq211ioanUfVQdoBQRiIjkkHj1LJ0ItbPavQINnIXuwEwgVj0RBL7qat+oWb2VPo
+ HgxOJNcJJWPwItcBa7DTg==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:Ud3+sZlTSZg=;2m4fuIG5E0LeC6w9vz/AKi+28tJ
+ XO34WDvWXn0XSTopmxenrax60MSmO0tXrcDhfXKqEgFJugHUG4skqKIAcfzcLMIQJ22y4xTyJ
+ v0iMjqt74yF4Bj6f2zo4awKbiWb7qBVmBJEkD3Me5UBIUgDbPFGFe/n9oE/LxvHtW/LKVkwoy
+ ywPevMct9JwQl1GtLtnTs4+I9+7q3KaYbQYNjuZBhVpu0Zmal+YNOSNUG0Pm3w8Nu86IAsDU9
+ uItTWPxXtlneO2IpwAwiN4bQiUvnw5pG21P3bArLd1OjGwyX8FH4bQS0BFIxhHxy2ECm8lPyb
+ OaLXQcyCieuie9FOrZOEcjkGc7QQICC8VmJk4GMxpswHzrL9mfGVLjudtbbEL6QvDEpgegIbn
+ Bw3KC1I412j9zjXKkp8Yl1feqaALNo6vEkPn0wpZYxdSCvmWG2mZF4/2X8nCAlrjHNWuI9HgB
+ OO0lB+op2CvVBYDMZMh/OF2FnfBF65VgY16hVFKLDk9JnPgiW0jI53Yhba7EJfkD745yiHEsB
+ 4fCwBC0UcjUDD1xpEAbKYhAk47M07q/8VCQufSXr00+8LDx/BkRBk7JurgZaQ/NqxtPsXevmM
+ 3LyHDJRtPmpbZ6geZ6kxFNLP58cV9JBEID4ADLNJas7Va0M6xytfPWsHOZeYKI5srY3QgPMvC
+ gqvUkY54Mz2dBfAtwzMjXDNZ+HgeOyEcbE/zNp7vmMTdUPGcRrCDuhzawNiDm36ZnFK4mKFNu
+ 4oYplMh7ft5Mj/IiJE37yVV5bfeqcyHOjKN4dSwfOgT6rTYHEiaXITflULABo9kcfu7fIpPZy
+ 305G2FlxwSx9Me8aqNz+i7+Fb+Y9yr7tiO9kIIodaOMyo=
 
-Hi Linus,
+Am 26.10.24 um 12:45 schrieb Mohamed Ghanmi:
 
-Here is the second round of fixes for platform-drivers-x86 for 6.12.
+> On Fri, Oct 25, 2024 at 09:15:14PM +0200, Armin Wolf wrote:
+>> When changing the thermal policy using the platform profile API,
+>> a Vivobook thermal policy is stored in throttle_thermal_policy_mode.
+>>
+>> However everywhere else a normal thermal policy is stored inside this
+>> variable, potentially confusing the platform profile.
+>>
+>> Fix this by always storing normal thermal policy values inside
+>> throttle_thermal_policy_mode and only do the conversion when writing
+>> the thermal policy to hardware.
+>>
+>> Fixes: bcbfcebda2cb ("platform/x86: asus-wmi: add support for vivobook fan profiles")
+>> Signed-off-by: Armin Wolf <W_Armin@gmx.de>
+>> ---
+>>   drivers/platform/x86/asus-wmi.c | 64 +++++++++++----------------------
+>>   1 file changed, 21 insertions(+), 43 deletions(-)
+> the original patch that i submitted did actually have the remapping
+> of the different fan profiles in the throttle_thermal_policy_write() methods
+> because it was the cleaner solution [1]. however after having a discussion with luke,
+> he shared that he might be planning to remove the throttle_thermal_policy sysfs interface
+> in favour of platform_profiles [2] because of a refactoring he had been working on.
+>
+> currently to control fan profiles through this driver you could use
+> either /sys/devices/platform/asus-nb-wmi/throttle_thermal_policy
+> (redundant and might get removed in the future) or through platform profiles which is the
+> better way of doing things.
+>
+> for the reasons mentionned above, I decided to keep
+> throttle_therma_policy_write() unchanged and to move the remapping logic
+> to the asus_wmi_platform_profile_set(). this adopts the approach of
+> having a logical mapping stored in asus_wmi struct that has to be
+> converted to a physical mapping whenever needed [3].
+>
+> so, if luke thinks that this won't cause any merge conflicts with his
+> work [4] then i see no problem with this approach even though it might cause an
+> order change when calling throttle_thermal_policy_switch_next()
 
-Highlights:
- - Asus thermal profile fix, fixing performance issues on Lunar Lake
- - Intel PMC: 1 revert for a lockdep issue + 1 bugfix
- - Dell WMI: Ignore some WMI events on suspend/resume to silence warnings
+Ok, i will wait for Luke to give feedback on this series. In my opinion the order change is
+ok since users likely expect the "old" Asus switching order.
 
-Regards,
-
-Hans
-
-
-The following changes since commit 2fae3129c0c08e72b1fe93e61fd8fd203252094a:
-
-  platform/x86: x86-android-tablets: Fix use after free on platform_device_register() errors (2024-10-06 12:50:50 +0200)
-
-are available in the Git repository at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git tags/platform-drivers-x86-v6.12-3
-
-for you to fetch changes up to b012170fed282151f7ba8988a347670c299f5ab3:
-
-  platform/x86: asus-wmi: Fix thermal profile initialization (2024-10-26 13:03:10 +0200)
-
-----------------------------------------------------------------
-platform-drivers-x86 for v6.12-3
-
-Highlights:
- - Asus thermal profile fix, fixing performance issues on Lunar Lake
- - Intel PMC: 1 revert for a lockdep issue + 1 bugfix
- - Dell WMI: Ignore some WMI events on suspend/resume to silence warnings
-
-The following is an automated git shortlog grouped by driver:
-
-asus-wmi:
- -  Fix thermal profile initialization
-
-dell-wmi:
- -  Ignore suspend notifications
-
-intel/pmc:
- -  Revert "Enable the ACPI PM Timer to be turned off when suspended"
-
-platform/x86/intel/pmc:
- -  Fix pmc_core_iounmap to call iounmap for valid addresses
-
-----------------------------------------------------------------
-Armin Wolf (2):
-      platform/x86: dell-wmi: Ignore suspend notifications
-      platform/x86: asus-wmi: Fix thermal profile initialization
-
-Marek Maslanka (1):
-      platform/x86:intel/pmc: Revert "Enable the ACPI PM Timer to be turned off when suspended"
-
-Vamsi Krishna Brahmajosyula (1):
-      platform/x86/intel/pmc: Fix pmc_core_iounmap to call iounmap for valid addresses
-
- drivers/platform/x86/asus-wmi.c             | 10 +++++++
- drivers/platform/x86/dell/dell-wmi-base.c   |  9 ++++++
- drivers/platform/x86/intel/pmc/adl.c        |  2 --
- drivers/platform/x86/intel/pmc/cnp.c        |  2 --
- drivers/platform/x86/intel/pmc/core.c       | 46 -----------------------------
- drivers/platform/x86/intel/pmc/core.h       |  8 -----
- drivers/platform/x86/intel/pmc/core_ssram.c |  4 ++-
- drivers/platform/x86/intel/pmc/icl.c        |  2 --
- drivers/platform/x86/intel/pmc/mtl.c        |  2 --
- drivers/platform/x86/intel/pmc/tgl.c        |  2 --
- 10 files changed, 22 insertions(+), 65 deletions(-)
-
+>
+> Best Regards,
+> Mohamed G.
+>
+> Link: https://lore.kernel.org/platform-driver-x86/20240421194320.48258-2-mohamed.ghanmi@supcom.tn/ # [1]
+> Link: https://lore.kernel.org/platform-driver-x86/4de768c5-aae5-4fda-a139-a8b73c8495a1@app.fastmail.com/ # [2]
+> Link: https://lore.kernel.org/platform-driver-x86/ZnlEuiP4Dgqpf51C@laptop/ # [3]
+> Link: https://lore.kernel.org/platform-driver-x86/20240930000046.51388-1-luke@ljones.dev/ # [4]
+>
