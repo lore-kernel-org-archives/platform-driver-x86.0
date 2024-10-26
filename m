@@ -1,510 +1,190 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from EUR02-VI1-obe.outbound.protection.outlook.com (mail-vi1eur02on2139.outbound.protection.outlook.com [40.107.241.139])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 42DEE1D1F71
-	for <platform-driver-x86@vger.kernel.org>; Sat, 26 Oct 2024 10:30:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729938612; cv=none; b=bLxPSSM50JLnNrco3J9d28Cxd5j3diKdkRcia0+Nc1etjwSUf9sETLDl/Z6Wh0fHBvrWT49hTGOEnfB3boBiQzYvGkHayQFs2IgfaFDDtIBUNapNcBP19T8g9pIYsdM23iWtJ2N2SQAySw/GGMTpYUkqa40Cyj6FbgO36kOhYpc=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729938612; c=relaxed/simple;
-	bh=NxOXEe0foHSAXrRFK0GPtB9fsfJ6AN2mC8K1jBY6tJ0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=PIzIw0uT8Ryl7fi3Oxd3wS7B/RSJyATzanXutm53+COsTzUCWK7lNGqB70NRymNWhqOPtWecoOF0WHI+eG2Hil6VpzfwZwOzILkZpXix+cbkCMjZHy0URjj5uSfKC7r8frYr0+xqxBkdL4wC1Nrl/m883/pn7C0AwUY0Qj2JO3A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=CXKgIXbm; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 611A918800D;
+	Sat, 26 Oct 2024 10:45:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.241.139
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1729939520; cv=fail; b=YS4ZfJziWg8P5nVbsmsaOpfF6Gq+qvPst5J9PN9jhwgP3y2R0NlmEfF7rDlQdxpi8sTccnwD3lkv6tmHmVygAXCP9iEdkIxeXgZET95Ui/6x88+sX1YRBzgjMnoNChfrCsoNMosCYcziH/8JN+pGy1xzmZ0XorjHzJtz222aukA=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1729939520; c=relaxed/simple;
+	bh=p/txUdHC8BbDYroEJPA2iFVsTeCw9jLVEA0NKBldo0U=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=YAOEqMPuRb/RT8XxrI/jXbLxtsMFIQTP9k2mLdRcDDA2mRx8hGhi0MAPWU79sxgNPiqZt8aa2ARqwvW91qGlYFFHvabjAdX1AV446K1Ntf3xwUoRPub6ieC7jUStJEei55Bibltja5vW7w3nOhm2rimRt9lENomFDDFJi+tlTGY=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=supcom.tn; spf=pass smtp.mailfrom=supcom.tn; dkim=pass (1024-bit key) header.d=supcom.onmicrosoft.com header.i=@supcom.onmicrosoft.com header.b=bHPJoovg; arc=fail smtp.client-ip=40.107.241.139
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=supcom.tn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=supcom.tn
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="CXKgIXbm"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1729938608;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=eAcll/GbuhmxSQ0AC5//ynEg6Ydw9YGmEuIHqlE+MUI=;
-	b=CXKgIXbmH1LOqfi64zABUl5axv5b6aikLbvPIlXec9v5wa1h4nLsl6cAg9H/77dMutu8pm
-	oz5OClqEu6etutUoHqSeU11bAPRtNp+aaDi41INs2EmRVcayD7dPO+m4BEctJTMLMflwdv
-	dN4ydxeKV248AdXCBtgWNpoABRTqeNs=
-Received: from mail-ej1-f69.google.com (mail-ej1-f69.google.com
- [209.85.218.69]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-61-JtzcRTn1PNGoknpcQmkAxg-1; Sat, 26 Oct 2024 06:30:06 -0400
-X-MC-Unique: JtzcRTn1PNGoknpcQmkAxg-1
-Received: by mail-ej1-f69.google.com with SMTP id a640c23a62f3a-a99efc7d881so202595866b.1
-        for <platform-driver-x86@vger.kernel.org>; Sat, 26 Oct 2024 03:30:06 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1729938605; x=1730543405;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=eAcll/GbuhmxSQ0AC5//ynEg6Ydw9YGmEuIHqlE+MUI=;
-        b=ScpRK/B8yCNUW/CtPxIbL8356W3W3VZeEn5sKpVamupKO4SBytQWW8Q/72S6bI/6wC
-         AiI3buH7GTGPhT57ijwain8jgB8kZfFIdDf/yYfUKU7nx2y5V0rxKu7bvCq0sgafWwvw
-         yK8VqFCE5M0YO5GZJ0sAPc9oj3y3x0SFw6KjRz2Kb6esGQBzpifeNqSTTy2lKrBaG3qV
-         io3dRKYUA1S/vJUnovOPwQvXCx1+p2QPRapH0563qcTtj9koOQDZFLcm5VgTwpMlE/f7
-         foJeUGtHe/2bIm9F+hsc/bjgue/qvoXefAqShm7pW1mMXAn/5vehC7mNO+SgilTsSSnI
-         aUVQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVzVJjkRWaq7AvpMUryw7M5WmIOnHu2c+m3wQL/ukN9T6cU9yPboXsJLZdtwY3IspIFv00bLG5psbEgfnd0cY0nyopb@vger.kernel.org
-X-Gm-Message-State: AOJu0Yyn4veAiJtF79XifnTEJxfLcSt/96IBiTsJ7rfghBMsc1IzerQA
-	n+7h87avfJ1di8Pm27obf4x7oIM2C7zXA/nJ6r71HDwKZOr6Ng2WG98eu0WqSpE+Hh14JfCE23C
-	TSwlyKB5dBJMfLL/AHJiC66cr3RlFYNfJTC3GG4tOZc1ZJqSTanHGsuG3LOpNHMBD5PbpRbA=
-X-Received: by 2002:a17:906:f5a3:b0:a9a:61d:7084 with SMTP id a640c23a62f3a-a9de615f82amr149981066b.50.1729938605395;
-        Sat, 26 Oct 2024 03:30:05 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IFaiatCGjTBn7qZNMoQTinlg9kse4Dblmgk8YaMr/rZi1epzMBQ+2rYzED2AzoeAKDif3BHAg==
-X-Received: by 2002:a17:906:f5a3:b0:a9a:61d:7084 with SMTP id a640c23a62f3a-a9de615f82amr149974966b.50.1729938604903;
-        Sat, 26 Oct 2024 03:30:04 -0700 (PDT)
-Received: from ?IPV6:2001:1c00:c32:7800:5bfa:a036:83f0:f9ec? (2001-1c00-0c32-7800-5bfa-a036-83f0-f9ec.cable.dynamic.v6.ziggo.nl. [2001:1c00:c32:7800:5bfa:a036:83f0:f9ec])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a9b1f0277b7sm161957966b.50.2024.10.26.03.30.02
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 26 Oct 2024 03:30:03 -0700 (PDT)
-Message-ID: <bcf83d6a-2e8d-4829-9c38-17459a2687ed@redhat.com>
-Date: Sat, 26 Oct 2024 12:30:02 +0200
+	dkim=pass (1024-bit key) header.d=supcom.onmicrosoft.com header.i=@supcom.onmicrosoft.com header.b="bHPJoovg"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=Z1QigqTjyaQ7bWcaP35ZUaRsvM1YYSjlQKZr4sC2jK7YIp8WAOqLu2wUm4IvQruj3JgGeAzOQrtVmL4hMdJuNaKpFbSzZeJmpgb6EUOR1EhKzeXu5wGE3oDSankzrplTKiiM33TZpW5ma06LsWBpLpJZLuoqma6IygYStMU51y3zCNQIhhHwLCnmXw1x8s3csWQGMvSgBYdjV3Vr+9+VIcDsiipqqQLLdERcv2YNpJZCrFn5Fs27Oz+biSH1S81L2iK6WbW58/qpQxDZmdk/K6vd1FetNahgDGMVRiTC8MHAY/20DUQ19Wf9PFtnbv2GdaLRDJP6+nmiS/7K6Bv4RA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=+G6M7bJJfaKaFy5ZoAe3+uB9N9WDxDq1nxzaTyqyGFI=;
+ b=zMRWV/fBCC5aaqIDWufnee4YEmcjQqMc4SxDM7hL/S2zoQuDU52/b/MQ9QSXKgO9TNJKDA7vOIfu/4Md6+6fOvNSQi9fNewejgGPg7vVl+uCUwLqyUUUAqqlg/dvsU1Asd/XESG7V2pvgxX4Vth99+aFdikEbSEDouXfX8I6MjXcIDoYjw9rE/hFBhO0tbNVfbn22nB/yswpnmlgjclXKIAASuxKAoRhrjxJ2/iai438A08Q3GNLRT0B6IipEOtCshk6yp3pqKx7VgSZ7sWMqlKEKIxDd6lJiVSmtpd6Y7LJQBXRrZSlAg4PcdjHoQhHzsIEjq68/F3IrKuOfTNc2Q==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=supcom.tn; dmarc=pass action=none header.from=supcom.tn;
+ dkim=pass header.d=supcom.tn; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=supcom.onmicrosoft.com; s=selector2-supcom-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=+G6M7bJJfaKaFy5ZoAe3+uB9N9WDxDq1nxzaTyqyGFI=;
+ b=bHPJoovglHTjc+qovBjqELWErrlJYpL7weZ8TxwPWI0PJf3siPpwZomli9sjM0L/PZ3Gty4OB6BMyXMl3c+ilAiJc/bY4pqc9r2U/D0nybxLmPYBwDda1E3oHtujYWPRMDL+mFP2Dtq4R7887FSLxOVWCqDn1qbGGnmC7DB488E=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=supcom.tn;
+Received: from AS8PR04MB7910.eurprd04.prod.outlook.com (2603:10a6:20b:288::15)
+ by AM0PR04MB7107.eurprd04.prod.outlook.com (2603:10a6:208:1a0::7) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8093.18; Sat, 26 Oct
+ 2024 10:45:10 +0000
+Received: from AS8PR04MB7910.eurprd04.prod.outlook.com
+ ([fe80::7acd:fca0:f5c0:4e99]) by AS8PR04MB7910.eurprd04.prod.outlook.com
+ ([fe80::7acd:fca0:f5c0:4e99%7]) with mapi id 15.20.8093.014; Sat, 26 Oct 2024
+ 10:45:10 +0000
+Date: Sat, 26 Oct 2024 11:45:06 +0100
+From: Mohamed Ghanmi <mohamed.ghanmi@supcom.tn>
+To: Armin Wolf <W_Armin@gmx.de>
+Cc: corentin.chary@gmail.com, luke@ljones.dev,
+	srinivas.pandruvada@linux.intel.com, hdegoede@redhat.com,
+	ilpo.jarvinen@linux.intel.com, Michael@phoronix.com,
+	casey.g.bowman@intel.com, platform-driver-x86@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 2/2] platform/x86: asus-wmi: Fix inconsistent use of
+ thermal policies
+Message-ID: <ZxzIMsffFj2lvScb@laptop>
+References: <20241025191514.15032-1-W_Armin@gmx.de>
+ <20241025191514.15032-3-W_Armin@gmx.de>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20241025191514.15032-3-W_Armin@gmx.de>
+X-ClientProxiedBy: MI2P293CA0007.ITAP293.PROD.OUTLOOK.COM
+ (2603:10a6:290:45::7) To AS8PR04MB7910.eurprd04.prod.outlook.com
+ (2603:10a6:20b:288::15)
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 7/8] ACPI: platform_profile: Add support for multiple
- handlers
-To: Mario Limonciello <mario.limonciello@amd.com>,
- =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Cc: "Rafael J . Wysocki" <rafael@kernel.org>, Len Brown <lenb@kernel.org>,
- Maximilian Luz <luzmaximilian@gmail.com>, Lee Chun-Yi <jlee@suse.com>,
- Shyam Sundar S K <Shyam-sundar.S-k@amd.com>,
- Corentin Chary <corentin.chary@gmail.com>, "Luke D . Jones"
- <luke@ljones.dev>, Ike Panhc <ike.pan@canonical.com>,
- Henrique de Moraes Holschuh <hmh@hmh.eng.br>,
- Alexis Belmonte <alexbelm48@gmail.com>,
- =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>,
- Ai Chao <aichao@kylinos.cn>, Gergo Koteles <soyer@irl.hu>,
- open list <linux-kernel@vger.kernel.org>,
- "open list:ACPI" <linux-acpi@vger.kernel.org>,
- "open list:MICROSOFT SURFACE PLATFORM PROFILE DRIVER"
- <platform-driver-x86@vger.kernel.org>,
- "open list:THINKPAD ACPI EXTRAS DRIVER"
- <ibm-acpi-devel@lists.sourceforge.net>,
- Mark Pearson <mpearson-lenovo@squebb.ca>,
- Matthew Schwartz <matthew.schwartz@linux.dev>
-References: <20241025193055.2235-1-mario.limonciello@amd.com>
- <20241025193055.2235-8-mario.limonciello@amd.com>
-Content-Language: en-US, nl
-From: Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <20241025193055.2235-8-mario.limonciello@amd.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: AS8PR04MB7910:EE_|AM0PR04MB7107:EE_
+X-MS-Office365-Filtering-Correlation-Id: 07f98555-e9ce-4656-fcf9-08dcf5ab439f
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|1800799024|376014|52116014|7416014|41320700013|366016|38350700014;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?Tr3b8kxAZEJ6YMcOdyB6pjKJw1yHvcGN/DpGHqtY4UQKUtemyVbOH/9k1XxO?=
+ =?us-ascii?Q?hlAiFWvFDejrwUCoEtdEGFXT+17f5ypzJ6b/cEmAz2M/o9E+AYC3iuK3Y+OR?=
+ =?us-ascii?Q?asnpNPpQ781I2ei9saknTQTM5EPc0Vko9CA4e2KGH78pT2TXojdXOVlaCD5t?=
+ =?us-ascii?Q?32MiDBiw/f2KIcpbWJiARbAgd1ZgQ26cBOCxkdHQj3ca7cZbVzUgLqBcCQpg?=
+ =?us-ascii?Q?Fa22w/V4BZp57oU8B4O+RuPlwlJcgmU9SK6GXp+vpSzOwqTJQvXSuk2Puk5f?=
+ =?us-ascii?Q?VHgrutmkqkJyu0hpBE0EooKr+OUtZmm0LqYhpeq6F5KnA34Sfkug4T/7PxRE?=
+ =?us-ascii?Q?KMuuA++yW6H29ec1kFqDciFihq9RABlSaoP5M5RLyx+G9ORSf5ovGlvtlI5y?=
+ =?us-ascii?Q?IdgZHTyn9otm3C0Kbpb1JUjY772oFlEYCDlS7LBcTrpp7K1O6oyhxfjGreEP?=
+ =?us-ascii?Q?JTVaejIOv7vMLLFjHQUjClhx5JFJUK77bwa/oE/kYuVA19RdL93uSK1f1ZJg?=
+ =?us-ascii?Q?v6ss0cRyuOB/62Eh1sxKEwSbrpnVFnwFRY7o0opTvb+Bzo6rZG956IeCCnlx?=
+ =?us-ascii?Q?MfhydmcPt/oOY7ORQLmW4p327vdzu21tg1E5aB+/rNf3xyX0I/W37/Vq8tsy?=
+ =?us-ascii?Q?o5vwAA8yMhLtZBKARTQZ1Vz8WCDSvW0rzUWLIxncCUv5E5nJUrSZSwdcdBJG?=
+ =?us-ascii?Q?kcAt3nUYLJtzUiip0epdcs1wbhGNfIuy0iND5v8HZuqbDBuCddVokuaD/eOt?=
+ =?us-ascii?Q?79+xwZH9qPLzoaqvt9VBZDDorfVmO4oinQ6U7St4q2mlbsJ8TYf7cRunJLZW?=
+ =?us-ascii?Q?IebLrxBOfmyzRm6eTgKV7PflwufU39NYGKD01yPtLRdNZbynNzjmc7t5l7dG?=
+ =?us-ascii?Q?2aQG09UmLw+7XiJOqNXoHqJDxSt6HDVAjd8CnHyR2QAfLrVxtobpjXHhGHXS?=
+ =?us-ascii?Q?rLJs7I7VLtJmnKeGjEFTm8q6ZH01XEpqA9UutPb0vgysCV3xFA6/eMGqnvp2?=
+ =?us-ascii?Q?WMGXHVefavpHIKq6ZQVnb6tLDfNW/cwKJIfEFQalLB5jrNDTIflfNznxqTyy?=
+ =?us-ascii?Q?C0Dwu97mbIcWp5B2Ts0TviPSd5I/wx/vxuPhmvIGxqZgYOfSCmKouZYGVQFV?=
+ =?us-ascii?Q?TiS0ltBKK41a9MXjpu4846g21Kfam9XJ48jA5iQ2ViSnFTXEHk2oQquN+K3s?=
+ =?us-ascii?Q?MHi0o6nSPRz7vbkgowFOvOsZ5jowgeI6SiEeBJv5hJSflw8WetlEMN6O56CW?=
+ =?us-ascii?Q?9Na0emdF0K7lyCQiazXmDYWaTwQHQ9yrUJy8WBQq8PdjKaxmjMYG/gal2F7a?=
+ =?us-ascii?Q?SN4/IwGVx6wJJETP7FZc+5FBvRcBdkp9cOFD/1ENwHrNajRwNmux4qnTjno0?=
+ =?us-ascii?Q?64qwXiEgIwjEoAdFv8ciYa5yM0Gh?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AS8PR04MB7910.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(376014)(52116014)(7416014)(41320700013)(366016)(38350700014);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?sVl3hJJAW5/pG8UQ85fP1qqeL6t87x9yxeN67xU2LdgnZDOsiDPJ5Qqs6mzV?=
+ =?us-ascii?Q?jh2LtWTQF7ZhlpvNI9aaPm1J+PqpLqPSHkWpZGFwG69nrnFm6Y5qxIn0Lhqe?=
+ =?us-ascii?Q?p4msh7qxVVOToUB3scD+KJ+rrezVHmHkVPezJPbkNXg4r4HQiD8ZmkWAsK/f?=
+ =?us-ascii?Q?c0GIpOZy3B30ioqNAGx4JNTP2P7Xy5TZZ6lWG5LPlxW7CfJhAOf2UDsuBe30?=
+ =?us-ascii?Q?jfN4OIQNRbfZt82FKYerIkGl5DLeu5CQhAslUk8bE/Wevm/Hnp1yJthDFRTS?=
+ =?us-ascii?Q?EW5XkgOJOHbOXUkruYgYgUWzDYJ0K+Y08hhNCs9zu3AZ+fpAkMT3X4YjxORP?=
+ =?us-ascii?Q?GkacvqSoCpVBc30e5KCNVQn6CVoxzE6K0Vn2GUJoI5f1b2nxeRAC7ihbLrWv?=
+ =?us-ascii?Q?Nc6T+ZrFt/sSzapC9XhZ6VlSefgfyj8Gh5DXbpNXUl0Z1OVerQ6KnXcczwzN?=
+ =?us-ascii?Q?ICXTwLP6DFAU3V8hn32slL54S061ha3EFAPFywSznvZU80fPrt8eH2H1QbUI?=
+ =?us-ascii?Q?EuTlxwi5MCQ2ZWTsTajfJ6PE6JiXeS9eDUhPhNm89+ByksyA7cCiXAc10+OL?=
+ =?us-ascii?Q?owgv2AlPatj6H9n3cqQViHkAEmeRO69GC70CuA9fVaouyiP1A0Hi9NnSff22?=
+ =?us-ascii?Q?YCK6gnrEgfSfYKK8hxkm/h7xDa5Z8hTC8em2lK/HAuNWO7oj3KwnsgZZTnhd?=
+ =?us-ascii?Q?Xky0WCsKhzk0tHyFDOdOlAExBUPAej6fDNU2amVLzaLkr52l+/yPoP5WsJIB?=
+ =?us-ascii?Q?+ZoqxIHCcuRy2A4a4k7naBCrQqqe53cQHpBzA+WJL/nKNZ/kFHi22lSpCugU?=
+ =?us-ascii?Q?cH40qBebQeClon8xKnIW1+JTyEtKrXseRVMld2ThXvpf7hRSUxgehEXgetXj?=
+ =?us-ascii?Q?qu7pGsTvAvBshtTcupcMoxc/JvOaUGeSLOrwMZDFij6a71YH0YlecocymYDw?=
+ =?us-ascii?Q?3pAjrOsvJp1fMVXz0Ooy3+P48gRK6zD0y/eCue3SyuEnK/KW4R21gD+ntUoU?=
+ =?us-ascii?Q?WRrP7wnTnC3CDsyR/X7OW1ScBQh6gPeF8/xvWtfK7N6zS7wYyXGPFKhnTdoe?=
+ =?us-ascii?Q?+Dn4luMcle+MJJ8f1rQpYOOiXxFAz9DsP24yxBcp4QhgMSR9cnZgFhNc7EPo?=
+ =?us-ascii?Q?GyqidxJVafqJa7z03lTSgaflWYZYQLuR7uGA5OOwUgVX4MiwevOJIh6ANHxX?=
+ =?us-ascii?Q?VCDli4ImkarxxJNUMbz8c6sRghZOiJgkN16CFl81tEojMQ4OWmaBh0VN/+CW?=
+ =?us-ascii?Q?s1Y+C4y8otMjEdhj12LOJe6KenVfohB6iAEYL/onZDpoBDrsBvlW6FthiNAI?=
+ =?us-ascii?Q?svEmGM6GDpDmJ3HXEWc9z0iWyO9x1mhZZHfEqilS4UEyyQSCjnm9MGtsixtC?=
+ =?us-ascii?Q?b0t6x4IJjMr4SUUCrhTPf0ekIIoEgvoDz3CjaClBKIG8TLkEl4d+oGlViuQA?=
+ =?us-ascii?Q?dqBgKJyakikZOpb3PsXWBb7/XeFjiSyd7lpyJ4mStpAr1debhPfs9qI620kB?=
+ =?us-ascii?Q?/LcQo6+dMRz+MOk0wucYKVy0DfGN8rilqXJPqkfMqWa0AoDZlXlO6BIYwZRN?=
+ =?us-ascii?Q?/GWz1ZUItlU7vMTJEMCcNFDQkIdJV5lcz2QFrVRBuOvHU3yIM/KoPV0rmDBE?=
+ =?us-ascii?Q?7A=3D=3D?=
+X-OriginatorOrg: supcom.tn
+X-MS-Exchange-CrossTenant-Network-Message-Id: 07f98555-e9ce-4656-fcf9-08dcf5ab439f
+X-MS-Exchange-CrossTenant-AuthSource: AS8PR04MB7910.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 26 Oct 2024 10:45:10.3494
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 8f85f528-6195-4e97-8e41-f5a9ad3bed4a
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: PrTCyi48B/dm5HWIS4GfCbhVI8/K3gjmzSFc1EAfBS524YgbPslUQRT0iCzWDIQpVJnkZXTc5HcFZHIMPQeV4H3MPucqq2Nu6dj1fZqJYkE=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR04MB7107
 
-Hi Mario,
-
-On 25-Oct-24 9:30 PM, Mario Limonciello wrote:
-> Multiple drivers may attempt to register platform profile handlers,
-> but only one may be registered and the behavior is non-deterministic
-> for which one wins.  It's mostly controlled by probing order.
+On Fri, Oct 25, 2024 at 09:15:14PM +0200, Armin Wolf wrote:
+> When changing the thermal policy using the platform profile API,
+> a Vivobook thermal policy is stored in throttle_thermal_policy_mode.
 > 
-> This can be problematic if one driver changes CPU settings and another
-> driver notifies the EC for changing fan curves.
+> However everywhere else a normal thermal policy is stored inside this
+> variable, potentially confusing the platform profile.
 > 
-> Modify the ACPI platform profile handler to let multiple drivers
-> register platform profile handlers and abstract this detail from userspace.
+> Fix this by always storing normal thermal policy values inside
+> throttle_thermal_policy_mode and only do the conversion when writing
+> the thermal policy to hardware.
 > 
-> From userspace perspective the user will see profiles available across
-> both drivers.  However to avoid chaos only allow changing to profiles
-> that are common in both drivers.
-> 
-> If any problems occur when changing profiles for any driver, then revert
-> back to the previous profile.
-> 
-> Tested-by: Matthew Schwartz <matthew.schwartz@linux.dev>
-> Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
+> Fixes: bcbfcebda2cb ("platform/x86: asus-wmi: add support for vivobook fan profiles")
+> Signed-off-by: Armin Wolf <W_Armin@gmx.de>
 > ---
->  drivers/acpi/platform_profile.c | 203 ++++++++++++++++++--------------
->  1 file changed, 117 insertions(+), 86 deletions(-)
-> 
-> diff --git a/drivers/acpi/platform_profile.c b/drivers/acpi/platform_profile.c
-> index 091ca6941a925..915e3c49f0b5f 100644
-> --- a/drivers/acpi/platform_profile.c
-> +++ b/drivers/acpi/platform_profile.c
-> @@ -9,7 +9,6 @@
->  #include <linux/platform_profile.h>
->  #include <linux/sysfs.h>
->  
-> -static struct platform_profile_handler *cur_profile;
->  static LIST_HEAD(platform_profile_handler_list);
->  static DEFINE_MUTEX(profile_lock);
->  
-> @@ -36,26 +35,26 @@ static ssize_t platform_profile_choices_show(struct device *dev,
->  					struct device_attribute *attr,
->  					char *buf)
->  {
-> +	struct platform_profile_handler *handler;
-> +	unsigned long seen = 0;
->  	int len = 0;
-> -	int err, i;
-> -
-> -	err = mutex_lock_interruptible(&profile_lock);
-> -	if (err)
-> -		return err;
-> -
-> -	if (!cur_profile) {
-> -		mutex_unlock(&profile_lock);
-> -		return -ENODEV;
-> +	int i;
-> +
-> +	scoped_cond_guard(mutex_intr, return -ERESTARTSYS, &profile_lock) {
-> +		list_for_each_entry(handler, &platform_profile_handler_list, list) {
-> +			for_each_set_bit(i, handler->choices, PLATFORM_PROFILE_LAST) {
-> +				if (seen & BIT(i))
-> +					continue;
-> +				if (len == 0)
-> +					len += sysfs_emit_at(buf, len, "%s", profile_names[i]);
-> +				else
-> +					len += sysfs_emit_at(buf, len, " %s", profile_names[i]);
-> +				seen |= BIT(i);
-> +			}
-> +		}
->  	}
+>  drivers/platform/x86/asus-wmi.c | 64 +++++++++++----------------------
+>  1 file changed, 21 insertions(+), 43 deletions(-)
 
-Since only choices that are available in all registered handlers will be accepted,
-should the output not be limited to only those choices ?
+the original patch that i submitted did actually have the remapping
+of the different fan profiles in the throttle_thermal_policy_write() methods 
+because it was the cleaner solution [1]. however after having a discussion with luke, 
+he shared that he might be planning to remove the throttle_thermal_policy sysfs interface 
+in favour of platform_profiles [2] because of a refactoring he had been working on.
 
-E.g.:
+currently to control fan profiles through this driver you could use
+either /sys/devices/platform/asus-nb-wmi/throttle_thermal_policy
+(redundant and might get removed in the future) or through platform profiles which is the
+better way of doing things.
 
-	unsigned long choices = 0;
-	bool first = true;
+for the reasons mentionned above, I decided to keep
+throttle_therma_policy_write() unchanged and to move the remapping logic
+to the asus_wmi_platform_profile_set(). this adopts the approach of
+having a logical mapping stored in asus_wmi struct that has to be
+converted to a physical mapping whenever needed [3].
 
-	scoped_cond_guard(mutex_intr, return -ERESTARTSYS, &profile_lock) {
-		list_for_each_entry(handler, &platform_profile_handler_list, list) {
-			if (first) {
-				choices = handler->choices;
-				first = false;
-			} else {
-				choices &= handler->choices;
-			}
-		}
-	}
+so, if luke thinks that this won't cause any merge conflicts with his
+work [4] then i see no problem with this approach even though it might cause an
+order change when calling throttle_thermal_policy_switch_next()
 
-	for_each_set_bit(i, choices, PLATFORM_PROFILE_LAST) {
-		if (len == 0)
-			len += sysfs_emit_at(buf, len, "%s", profile_names[i]);
-		else
-			len += sysfs_emit_at(buf, len, " %s", profile_names[i]);
-	}
-  	len += sysfs_emit_at(buf, len, "\n");
-  	return len;
-}
+Best Regards,
+Mohamed G.
 
-?
-
-Also this means that choices can change now as drivers get loaded /
-removed. I believe that power-profiles-daemon matches has some hotplug
-handling for the sysfs files showing up? How would that work with choices
-changing ?
-
-Or am I misremembering and does p-p-d simply assume all drivers are loaded
-when it starts ?
-
-> @@ -64,22 +63,20 @@ static ssize_t platform_profile_show(struct device *dev,
->  					char *buf)
->  {
->  	enum platform_profile_option profile = PLATFORM_PROFILE_BALANCED;
-> +	struct platform_profile_handler *handler;
->  	int err;
->  
-> -	err = mutex_lock_interruptible(&profile_lock);
-> -	if (err)
-> -		return err;
->  
-> -	if (!cur_profile) {
-> -		mutex_unlock(&profile_lock);
-> -		return -ENODEV;
-> +	scoped_cond_guard(mutex_intr, return -ERESTARTSYS, &profile_lock) {
-> +		if (!platform_profile_is_registered())
-> +			return -ENODEV;
-> +		list_for_each_entry(handler, &platform_profile_handler_list, list) {
-> +			err = handler->profile_get(handler, &profile);
-> +			if (err)
-> +				return err;
-> +		}
->  	}
-
-Hmm this just goes with the platform returned by the last handler
-called ?
-
-Maybe compare results and log some warning if there are different
-results between handlers ?
-
-And maybe also:
-
-1. New patch enforcing that all handlers must support plain balanced
-at registration time.
-
-2. Check that all handlers agree when a new handler gets registered
-and if not then force all handlers to balanced, together with
-a sysfs_notify() ?
-
-
->  
-> -	err = cur_profile->profile_get(cur_profile, &profile);
-> -	mutex_unlock(&profile_lock);
-> -	if (err)
-> -		return err;
-> -
->  	/* Check that profile is valid index */
->  	if (WARN_ON((profile < 0) || (profile >= ARRAY_SIZE(profile_names))))
->  		return -EIO;
-> @@ -91,37 +88,48 @@ static ssize_t platform_profile_store(struct device *dev,
->  			    struct device_attribute *attr,
->  			    const char *buf, size_t count)
->  {
-> +	struct platform_profile_handler *handler;
-> +	enum platform_profile_option profile;
->  	int err, i;
->  
-> -	err = mutex_lock_interruptible(&profile_lock);
-> -	if (err)
-> -		return err;
-> -
-> -	if (!cur_profile) {
-> -		mutex_unlock(&profile_lock);
-> -		return -ENODEV;
-> -	}
-> -
->  	/* Scan for a matching profile */
->  	i = sysfs_match_string(profile_names, buf);
->  	if (i < 0) {
-> -		mutex_unlock(&profile_lock);
->  		return -EINVAL;
->  	}
->  
-> -	/* Check that platform supports this profile choice */
-> -	if (!test_bit(i, cur_profile->choices)) {
-> -		mutex_unlock(&profile_lock);
-> -		return -EOPNOTSUPP;
-> +	scoped_cond_guard(mutex_intr, return -ERESTARTSYS, &profile_lock) {
-> +		if (!platform_profile_is_registered())
-> +			return -ENODEV;
-> +
-> +		/* Check that all handlers support this profile choice */
-> +		list_for_each_entry(handler, &platform_profile_handler_list, list) {
-> +			if (!test_bit(i, handler->choices))
-> +				return -EOPNOTSUPP;
-> +
-> +			/* save the profile so that it can be reverted if necessary */
-> +			err = handler->profile_get(handler, &profile);
-> +			if (err)
-> +				return err;
-> +		}
-
-Same issue as before, you are only saving the profile of the last handler called here,
-which might even be a profile not supported by all handlers...
-
-Might be easiest to just enforce all handlers support plain balanced
-as I suggested above and then on errors revert all handlers to balanced.
-
-This may seem like it is not nice to do, but errors should not happen
-so I think this is ok. And if errors do happen then we need to fix
-the errors :)
-
-> +
-> +		list_for_each_entry(handler, &platform_profile_handler_list, list) {
-> +			err = handler->profile_set(handler, i);
-> +			if (err) {
-> +				pr_err("Failed to set profile for handler %s\n", handler->name);
-> +				break;
-> +			}
-> +		}
-> +		if (err) {
-> +			list_for_each_entry_continue_reverse(handler, &platform_profile_handler_list, list) {
-> +				if (handler->profile_set(handler, profile))
-> +					pr_err("Failed to revert profile for handler %s\n", handler->name);
-> +			}
-> +			return err;
-> +		}
->  	}
->  
-> -	err = cur_profile->profile_set(cur_profile, i);
-> -	if (!err)
-> -		sysfs_notify(acpi_kobj, NULL, "platform_profile");
-> -
-> -	mutex_unlock(&profile_lock);
-> -	if (err)
-> -		return err;
-> +	sysfs_notify(acpi_kobj, NULL, "platform_profile");
->  	return count;
->  }
->  
-> @@ -140,7 +148,8 @@ static const struct attribute_group platform_profile_group = {
->  
->  void platform_profile_notify(void)
->  {
-> -	if (!cur_profile)
-> +	guard(mutex)(&profile_lock);
-> +	if (!platform_profile_is_registered())
->  		return;
->  	sysfs_notify(acpi_kobj, NULL, "platform_profile");
->  }
-> @@ -148,40 +157,65 @@ EXPORT_SYMBOL_GPL(platform_profile_notify);
->  
->  int platform_profile_cycle(void)
->  {
-> +	struct platform_profile_handler *handler;
->  	enum platform_profile_option profile;
-> -	enum platform_profile_option next;
-> +	enum platform_profile_option next = PLATFORM_PROFILE_LAST;
-> +	enum platform_profile_option next2 = PLATFORM_PROFILE_LAST;
->  	int err;
->  
-> -	err = mutex_lock_interruptible(&profile_lock);
-> -	if (err)
-> -		return err;
-> -
-> -	if (!cur_profile) {
-> -		mutex_unlock(&profile_lock);
-> -		return -ENODEV;
-> -	}
-> -
-> -	err = cur_profile->profile_get(cur_profile, &profile);
-> -	if (err) {
-> -		mutex_unlock(&profile_lock);
-> -		return err;
-> -	}
-> -
-> -	next = find_next_bit_wrap(cur_profile->choices, PLATFORM_PROFILE_LAST,
-> -				  profile + 1);
-> -
-> -	if (WARN_ON(next == PLATFORM_PROFILE_LAST)) {
-> -		mutex_unlock(&profile_lock);
-> -		return -EINVAL;
-> +	scoped_cond_guard(mutex_intr, return -ERESTARTSYS, &profile_lock) {
-> +		/* first pass, make sure all handlers agree on the definition of "next" profile */
-> +		list_for_each_entry(handler, &platform_profile_handler_list, list) {
-> +
-> +			err = handler->profile_get(handler, &profile);
-> +			if (err)
-> +				return err;
-> +
-> +			if (next == PLATFORM_PROFILE_LAST)
-> +				next = find_next_bit_wrap(handler->choices,
-> +							  PLATFORM_PROFILE_LAST,
-> +							  profile + 1);
-> +			else
-> +				next2 = find_next_bit_wrap(handler->choices,
-> +							   PLATFORM_PROFILE_LAST,
-> +							   profile + 1);
-> +
-> +			if (WARN_ON(next == PLATFORM_PROFILE_LAST))
-> +				return -EINVAL;
-> +
-> +			if (next2 == PLATFORM_PROFILE_LAST)
-> +				continue;
-> +
-> +			if (next != next2) {
-> +				pr_warn("Next profile to cycle to is ambiguous between platform_profile handlers\n");
-> +				return -EINVAL;
-> +			}
-> +			next = next2;
-> +		}
-
-Hmm, this seems complicated, I would suggest to factor out the code
-to "and" together all the handler's choices which I suggested above
-for platform_profile_choices_show() into a helper (with the locking
-to be done by the caller) and then call that helper here to get
-a choices which is the result if all the choices and-ed together and
-simply call find_next_bit_wrap() on the resulting and-ed value ?
-
-Ah I guess another issue is that the handlers may also differ on
-which profile they return from handler->profile_get(), so same
-issue as in platform_profile_show(). I think this requires
-another factored out helper to get a single consistent profile
-value for all handlers. Then this helper can be used both in
-platform_profile_show() and here to get a "truth" value for the
-current active profile and show that / use that as base to pick
-the next value.
-
-Note the above approach definitely is going to have issues
-if handlers mismatch on which profiles are supported since
-you do not skip choices which are only available in one of
-the handlers.
-
-> +
-> +		/*
-> +		 * Second pass: apply "next" to each handler
-> +		 * If any failures occur unwind and revert all back to the original profile
-> +		 */
-> +		list_for_each_entry(handler, &platform_profile_handler_list, list) {
-> +			err = handler->profile_set(handler, next);
-> +			if (err) {
-> +				pr_err("Failed to set profile for handler %s\n", handler->name);
-> +				break;
-> +			}
-> +		}
-> +		if (err) {
-> +			list_for_each_entry_continue_reverse(handler, &platform_profile_handler_list, list) {
-> +				err = handler->profile_set(handler, profile);
-
-Same issue as before, profile contains the profile of the last handler
-in the list only.
-
-
-> +				if (err)
-> +					pr_err("Failed to revert profile for handler %s\n", handler->name);
-> +			}
-> +		}
->  	}
->  
-> -	err = cur_profile->profile_set(cur_profile, next);
-> -	mutex_unlock(&profile_lock);
-> -
-> -	if (!err)
-> -		sysfs_notify(acpi_kobj, NULL, "platform_profile");
-> +	sysfs_notify(acpi_kobj, NULL, "platform_profile");
->  
-> -	return err;
-> +	return 0;
->  }
->  EXPORT_SYMBOL_GPL(platform_profile_cycle);
->  
-> @@ -190,21 +224,19 @@ int platform_profile_register(struct platform_profile_handler *pprof)
->  	int err;
->  
->  	guard(mutex)(&profile_lock);
-> -	/* We can only have one active profile */
-> -	if (cur_profile)
-> -		return -EEXIST;
->  
->  	/* Sanity check the profile handler field are set */
->  	if (!pprof || bitmap_empty(pprof->choices, PLATFORM_PROFILE_LAST) ||
->  		!pprof->profile_set || !pprof->profile_get)
->  		return -EINVAL;
->  
-> -	err = sysfs_create_group(acpi_kobj, &platform_profile_group);
-> -	if (err)
-> -		return err;
-> +	if (!platform_profile_is_registered()) {
-> +		err = sysfs_create_group(acpi_kobj, &platform_profile_group);
-> +		if (err)
-> +			return err;
-> +	}
->  	list_add_tail(&pprof->list, &platform_profile_handler_list);
->  
-> -	cur_profile = pprof;
->  	return 0;
->  }
->  EXPORT_SYMBOL_GPL(platform_profile_register);
-> @@ -215,7 +247,6 @@ int platform_profile_remove(struct platform_profile_handler *pprof)
->  
->  	list_del(&pprof->list);
->  
-> -	cur_profile = NULL;
->  	if (!platform_profile_is_registered())
->  		sysfs_remove_group(acpi_kobj, &platform_profile_group);
->  
-
-
-Regards,
-
-Hans
-
-
+Link: https://lore.kernel.org/platform-driver-x86/20240421194320.48258-2-mohamed.ghanmi@supcom.tn/ # [1]
+Link: https://lore.kernel.org/platform-driver-x86/4de768c5-aae5-4fda-a139-a8b73c8495a1@app.fastmail.com/ # [2]
+Link: https://lore.kernel.org/platform-driver-x86/ZnlEuiP4Dgqpf51C@laptop/ # [3]
+Link: https://lore.kernel.org/platform-driver-x86/20240930000046.51388-1-luke@ljones.dev/ # [4] 
