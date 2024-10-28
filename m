@@ -1,98 +1,98 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0715D2022FD;
-	Mon, 28 Oct 2024 10:53:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9EEC91D5CD3;
+	Mon, 28 Oct 2024 10:58:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730112803; cv=none; b=Vj90s/z+RCiz+wZB3LrMHYsF4ShFq95DyqgyK4CKsFOChqFmRCEEz3Vy8Esuhb6qELKMli17vr6cWQix7g+OGHiVu7N5vnzfDApZYakV0e5sYZWpKfMRsoxoN5byf4FDVsTGGeBXEJZlr48yyy3qgz6CYZClgv9zvXThUiORZO0=
+	t=1730113104; cv=none; b=O0XcW48XNQ10gtiuTcWctGXUz1y8QiEJswBg6EfQJgqy0BMHH5km2gkXPMNf2HIX+O6Shf0ShhNjMT6/qQiwvUenwD5TKzGMEkN2GAZejBaKl3LbnzMXWkZbyIYaw03i84MoHHYqpKjzLzGs+H4m41qUfcnPo3DrOUrNslEDR+w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730112803; c=relaxed/simple;
-	bh=VYqLdh0SrCfBhnzcPJjG59pEAxcMxbvyfIIXODPpQHM=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=kRX2H7sciSmmh9lBwqJJ96VYTpmI6JG603vOVrQwLKbn5M1EOJZKeENAPgHRBeRCiMmqoBrOmHZT38nzytMEkIC0tTiTYhvwI9fmvz0cJ43gxdh4EoTUuPnQwVkXJ/TTKGnmHmLAu6sQtgeuhbMF/6NrqW/Y8eZy0x6Eax40NFE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dj3m275c; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1730113104; c=relaxed/simple;
+	bh=B+KjeCsXxwZWAdYZAfeBkrJopsMVECXbceBduFTZdBk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=sFup0qeaUZgnTNwb4asumUM24ttYmomuM9E1HT+nvC7K9dVK3DaIgvldB+ggDuvawf3oUpwfuXq8CDjLL4H4A/xmpCdSygEzFcIKWmVt8Z14xCYZPcI3H01+zSx/IDw3O6f7LdXGJT0gaD/Jn2xXyK6nZ8j3LFs62O4U+8tMDUk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=dbvh8JFn; arc=none smtp.client-ip=198.175.65.9
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dj3m275c"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AFE44C4CEC3;
-	Mon, 28 Oct 2024 10:53:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1730112802;
-	bh=VYqLdh0SrCfBhnzcPJjG59pEAxcMxbvyfIIXODPpQHM=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=dj3m275c1A5aqf37Be0R8DdGD8XJcOaYv6wM016H9gkba7BXBjxOFdo9KMz8KUFNc
-	 LcK+m5CQfMAzzYggylDSubZFKsoT8WibOo2DwAf5TH2B8la1IY3mZ6D61HWQSlvmMR
-	 mZ3lkv5sOCCCy1ShIbMiVqY4pJ03ShCK865rWQ8KkdsAhsK/Y0fa1nJkBoXHUHIyVy
-	 LwJH1y42Ze3C2WTSUTl3IgwgU+WgGdz52Qy7q65n+WN6JnpFAvtwrtAqquiNqtDQ+v
-	 WMgV3PXjWtaRYUUHj4ge+v0KBRvMMpV9beW0kztzk33W7X4/+lP91ws1tVw90qBQ7D
-	 Z6uA08miZTznw==
-From: Sasha Levin <sashal@kernel.org>
-To: linux-kernel@vger.kernel.org,
-	stable@vger.kernel.org
-Cc: Armin Wolf <W_Armin@gmx.de>,
-	siddharth.manthan@gmail.com,
-	=?UTF-8?q?Pali=20Roh=C3=A1r?= <pali@kernel.org>,
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="dbvh8JFn"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1730113103; x=1761649103;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=B+KjeCsXxwZWAdYZAfeBkrJopsMVECXbceBduFTZdBk=;
+  b=dbvh8JFnS2TeVGGFcYfZfzq868arHq2i0XyflNtZMSbyy5nFABgeilV1
+   W2lG5h1xXzdG9eSbc3v6Y1sRaMwbnq7quTRTpdEcuoqUlhbVbzO+yH6+M
+   IjK+y5cf6HzVbGGAsLSZ6ridJfvKW7dCRTOA+OGYU3bSnShIDIhzg7GIG
+   FtcDmMXxA3XfHsIeJKdtPAomuprnrFJY2j6VQ7D7w1Ti9y1gNafp3bTWf
+   Yl+5Cxc8LY9LC36RyuhliHf2J8y0sGkjfpAiDqX9pYY+tryrSTzQ3zhqk
+   /4hM+XLrOnGWUQM4zsSFIlcTos6qaUWeJOuxa1KC9f6YEAmLxAyW6zJqY
+   w==;
+X-CSE-ConnectionGUID: ne4ExaFKST+6AABoprM5xw==
+X-CSE-MsgGUID: jVgCX6UeR+aPpd4RrjVNtA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11222"; a="52256479"
+X-IronPort-AV: E=Sophos;i="6.11,199,1725346800"; 
+   d="scan'208";a="52256479"
+Received: from fmviesa005.fm.intel.com ([10.60.135.145])
+  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Oct 2024 03:58:22 -0700
+X-CSE-ConnectionGUID: D8J/N7OAS3WvSVWALB/CTw==
+X-CSE-MsgGUID: /Q08lrUJQWOtM1NvI4edKg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.11,239,1725346800"; 
+   d="scan'208";a="86158696"
+Received: from smile.fi.intel.com ([10.237.72.154])
+  by fmviesa005.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Oct 2024 03:58:20 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.98)
+	(envelope-from <andriy.shevchenko@linux.intel.com>)
+	id 1t5NRw-00000007v9B-3Yr3;
+	Mon, 28 Oct 2024 12:58:16 +0200
+Date: Mon, 28 Oct 2024 12:58:16 +0200
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	Tero Kristo <tero.kristo@linux.intel.com>,
 	Hans de Goede <hdegoede@redhat.com>,
-	Sasha Levin <sashal@kernel.org>,
-	mjg59@srcf.ucam.org,
-	ilpo.jarvinen@linux.intel.com,
-	platform-driver-x86@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.15 6/7] platform/x86: dell-wmi: Ignore suspend notifications
-Date: Mon, 28 Oct 2024 06:53:08 -0400
-Message-ID: <20241028105311.3560419-6-sashal@kernel.org>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20241028105311.3560419-1-sashal@kernel.org>
-References: <20241028105311.3560419-1-sashal@kernel.org>
+	Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+	platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: linux-kbuild@vger.kernel.org, Masahiro Yamada <masahiroy@kernel.org>,
+	Geert Uytterhoeven <geert@linux-m68k.org>,
+	David Gow <davidgow@google.com>
+Subject: Re: [PATCH v2 1/1] platform/x86: intel: Add 'intel' prefix to the
+ modules automatically
+Message-ID: <Zx9uSIWOwTgclmBF@smile.fi.intel.com>
+References: <20241016105950.785820-2-andriy.shevchenko@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-X-stable: review
-X-Patchwork-Hint: Ignore
-X-stable-base: Linux 5.15.169
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20241016105950.785820-2-andriy.shevchenko@linux.intel.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-From: Armin Wolf <W_Armin@gmx.de>
+On Wed, Oct 16, 2024 at 01:59:51PM +0300, Andy Shevchenko wrote:
+> Rework Makefile to add 'intel' prefix to the modules automatically.
+> This removes a lot of boilerplate code in it and also makes robust
+> against mistypos in the prefix.
 
-[ Upstream commit a7990957fa53326fe9b47f0349373ed99bb69aaa ]
+> ---
+> 
+> v2: fixed obvious typos (LKP), Cc'ed to Kbuild ML (Ilpo), dropped RFC marker
+> 
+> Note to Kbuild people: TBH I rather want to have something like this
+> to be available on the level of Kbuild for any of the subdirectories
+> in question.
 
-Some machines like the Dell G15 5155 emit WMI events when
-suspending/resuming. Ignore those WMI events.
+Anyone, any comments on this?
+This already passed a CI tests without failure so far. Perhaps it's good
+to apply to show the demand of such a feature in Kbuild in the future?
+Because I want to do the same for various */tests/ folders where we have
+tons of test*, *kunit modules effectively duplicating the folder name.
 
-Tested-by: siddharth.manthan@gmail.com
-Signed-off-by: Armin Wolf <W_Armin@gmx.de>
-Acked-by: Pali Rohár <pali@kernel.org>
-Link: https://lore.kernel.org/r/20241014220529.397390-1-W_Armin@gmx.de
-Reviewed-by: Hans de Goede <hdegoede@redhat.com>
-Signed-off-by: Hans de Goede <hdegoede@redhat.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/platform/x86/dell/dell-wmi-base.c | 9 +++++++++
- 1 file changed, 9 insertions(+)
-
-diff --git a/drivers/platform/x86/dell/dell-wmi-base.c b/drivers/platform/x86/dell/dell-wmi-base.c
-index b83d6fa6e39b3..b12e6ebd10dd6 100644
---- a/drivers/platform/x86/dell/dell-wmi-base.c
-+++ b/drivers/platform/x86/dell/dell-wmi-base.c
-@@ -263,6 +263,15 @@ static const struct key_entry dell_wmi_keymap_type_0010[] = {
- 	/*Speaker Mute*/
- 	{ KE_KEY, 0x109, { KEY_MUTE} },
- 
-+	/* S2Idle screen off */
-+	{ KE_IGNORE, 0x120, { KEY_RESERVED }},
-+
-+	/* Leaving S4 or S2Idle suspend */
-+	{ KE_IGNORE, 0x130, { KEY_RESERVED }},
-+
-+	/* Entering S2Idle suspend */
-+	{ KE_IGNORE, 0x140, { KEY_RESERVED }},
-+
- 	/* Mic mute */
- 	{ KE_KEY, 0x150, { KEY_MICMUTE } },
- 
 -- 
-2.43.0
+With Best Regards,
+Andy Shevchenko
+
 
