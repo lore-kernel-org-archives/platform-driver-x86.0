@@ -1,46 +1,46 @@
-Received: from NAM11-CO1-obe.outbound.protection.outlook.com (mail-co1nam11on2067.outbound.protection.outlook.com [40.107.220.67])
+Received: from NAM11-DM6-obe.outbound.protection.outlook.com (mail-dm6nam11on2062.outbound.protection.outlook.com [40.107.223.62])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D48A018E047
-	for <platform-driver-x86@vger.kernel.org>; Mon, 28 Oct 2024 07:05:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.220.67
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4401C18FDA9
+	for <platform-driver-x86@vger.kernel.org>; Mon, 28 Oct 2024 07:05:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.223.62
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730099117; cv=fail; b=A9tO8dTP/LkQxEiZzdwEq0pqGPeU6J6RhZVDURgsB9KXU4p+2EG9PC+0nOw0Zf8iYAHDZCC2644sWxk/5hHhXLb4Eu+B5U0jtsrF2SibJ/DLO9Mw0ZRDb+cg1krNOyYvmgkAYR3ND55EbnlVBMcZGM+qUnM7PIUPOrZs1JDo3zM=
+	t=1730099118; cv=fail; b=P4e8komjMhS7kYSKjWeyGGprO2LWDUY1imCbdFmGh8np5jR7lJOVqlLFQwxSYJ0YH4f1+gM+5hr1VATQSeVP3rs2Wkt7AaZhOgNc9sdR6g3NIUNKNjDZMVf5BjSftuTIJlPaH0hDRM95/LMuXjzVyEmANj/DM3KZGW+72AItmk0=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730099117; c=relaxed/simple;
-	bh=G4LcT2tQX5DF0ur2VNPWmfsfU8PsSWOJSxEnnzoN/Ro=;
+	s=arc-20240116; t=1730099118; c=relaxed/simple;
+	bh=CSBAXidFgMOCvEEUtdfATHeu2eGvy8A4XS0DZ1Hw4Io=;
 	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=ZXTEGTLU3IsfXQ5V1dCya1e8MS3wuClwhUDMLrd57HHlnduqQ1kcjRnSmnq39AUunF0WfX7/a7slsG4E63VmJD18QRramGPHC6l+GLeLbcF+v7Ph7nk7pJQHqggqT1dSRu2YLteyFTpfLhmB71ho2icp4+pCdFW9wJivwezfqdk=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=zJFcRcjp; arc=fail smtp.client-ip=40.107.220.67
+	 MIME-Version:Content-Type; b=IdLIGYJxA8m5/IJQ+PuOMO1YejFBtNZNblTGi5YmeWsahvkJpdTaro5KVCEx0YsyyPhPInIa84QfN3e2f9oIbJb31BXIJwdrqE9HEXAxOJ7I2UIroFfUbZTrK4V0iqAlHlM9GFmpmoQ2zIQb/DAey3Kfrpr/6nNi32RVFbzin3A=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=1Pgrc79B; arc=fail smtp.client-ip=40.107.223.62
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
 Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="zJFcRcjp"
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="1Pgrc79B"
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=x+ckVIJP6qO/yiqz1/Te8UTkNpK+z3GhrwcAhmp84ab53FJPCPpeER/POgSiRc/NbTozOUkpfyYayFhDtKq/VFY61BtCF/Q+fTdHKWGM887UEy1Yc5W+jbBy6awuyqxzXkv82GM+uJaFra4yI5C1xOc8QGuE57BfgpZP1QzB8pt6PuAKST532uYRoXB/pPD7pv/a9EcgzAgZQJywVs3N1cmUJrk+x9e8TtJYcXBCHnHGwT+qJLuZiiaUYbof8FppgLAuBkhaeS/KhmWKgtd+S5pG1qysXGFuxE7xsMaZL1u8Gi47gMwxsD7XKxghLG9+0lMfuGpjuIB8c09v/p/fqw==
+ b=DHfDAawU4NOlq5n4S7hT/baqmEmDxQ9U4Xjt8EJJ8nQJh1qrjsq8X3iI3R3phAbjeoLCCBP5cPDWKMn8a3+3lYizNBAkMQnmfsBiraCLVB7ix54/tAnHdMtmFCC0SwfWoJw5twdMe5r+etNg3m8zTZmidpVrOInmgAX4bmyL04/RJof+ysllQQxwwb4JYMUsNGYUaq85rPqgpr2kdbB4JlRGOjAGSwvOSyKH3zLOLp48/OiDi8sncSCmESTkw04u007YnAfhJPy8L+qK+mcmx3dnUWMih3kfQY+Oqtatq7TDdarxi/PnwM3+r0eMJcDCQFcmUd91VWVa+PHmyA0Jrw==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=iDgoRkwlU8VQJMwAOkUbdHafnhGo2SlZg/zP2plwvWs=;
- b=hfcvTxmXKMLKyojrOva1wGMs5HRhJ/AS+3X148n5ZBZ2qpzNAii2VWspQWX0RzmY0pJO9b7uJKozEswiOmiAzRqjxc/2LXrpHwg1Aa0mhyLiHFP4Fi+0rbeW1nawOKuDOi46iXFPEe1FrL+x/NMw7+xRAXBut5rbWOiH4wlhp1u4lp9669lEWAsP7+DGsqigo5SFNBjrH7JilE2BhGqWwg+1WkiHQD1Tcpt76nZC9FirguMhU7ppr/1Da3cJjw3LjQYPcWVTlKARqY+CC0+VyWQ0hpZDVlqBn5nuBSThV6L08p4Ee0ZjuUdvlu5zVQ2n+yU7GY+/D0tIEEuzFaRyDQ==
+ bh=F2VVgrnDR/J+lx+trSxoDgKMPvQ7821oEf1GiG/5vUQ=;
+ b=lbJ0Jfc8shZ5pui1uiXVlTVjPRpLTPxdd0D1ByC8yfCL7dwDV5+gKiet9HH07j6ZC2YAvtLgabn/ztx4XrHrJdts1kuVuzqTNfo/fdTZU56WWhZpVlRXEBFtZIAHyn3Nk98UQwlpvngoZIPHD8HSXin/5I6F7qXkgiE3pcj6t0RuAwGsjDVc+bcfZ78OR4M8OPJlgqbp0t7sMwpyurdCXJiiNxxtz9gBhlom8xbWBbW2IWzl1TG5D4TcLyJg5O4IJE18VP4VElKNqk4CkgYauuH6iZhogMeOp4vjj0NNEI9Vlgsbn+hBs3ajxOPApxwi/vkYC9D75ykrJWj/batmgQ==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
  165.204.84.17) smtp.rcpttodomain=redhat.com smtp.mailfrom=amd.com; dmarc=pass
  (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
  dkim=none (message not signed); arc=none (0)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=iDgoRkwlU8VQJMwAOkUbdHafnhGo2SlZg/zP2plwvWs=;
- b=zJFcRcjp48gzwKpfgYl8TY4nxvj9MHBrjuW8qBRQwRMTWYcuSLlvxCuKUsLe0qT520hbo7tD2c9CtXXGf8UoaTP504VBr3Rf4KaKf+sv86ykMB+hhofRy564f24sJodAF6VL568R9nAelmyeCxbODXhMPGfsCXUXyJ15e9M/Rmk=
-Received: from SJ0PR03CA0125.namprd03.prod.outlook.com (2603:10b6:a03:33c::10)
- by MW6PR12MB8835.namprd12.prod.outlook.com (2603:10b6:303:240::7) with
+ bh=F2VVgrnDR/J+lx+trSxoDgKMPvQ7821oEf1GiG/5vUQ=;
+ b=1Pgrc79By/vgs8HEOd4eOcaVH+gs3hx7bI0/gL3AA0I/0T2FefHkMrBKphbQtqBPNPO+60a3VgTYtINRRBbvwapaiFQrW/xG1l8cawC+3xWXjbo1eWCtm3cm1J8gb0LIZ4Ol2GHKgCDdJLUV++Ekc2leCkneyAOpOh5zcxpeHww=
+Received: from SJ0PR03CA0132.namprd03.prod.outlook.com (2603:10b6:a03:33c::17)
+ by CH2PR12MB4214.namprd12.prod.outlook.com (2603:10b6:610:aa::21) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8048.18; Mon, 28 Oct
- 2024 07:05:12 +0000
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8093.24; Mon, 28 Oct
+ 2024 07:05:13 +0000
 Received: from CO1PEPF000075EF.namprd03.prod.outlook.com
- (2603:10b6:a03:33c:cafe::b2) by SJ0PR03CA0125.outlook.office365.com
- (2603:10b6:a03:33c::10) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8093.18 via Frontend
- Transport; Mon, 28 Oct 2024 07:05:12 +0000
+ (2603:10b6:a03:33c:cafe::9d) by SJ0PR03CA0132.outlook.office365.com
+ (2603:10b6:a03:33c::17) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8093.21 via Frontend
+ Transport; Mon, 28 Oct 2024 07:05:13 +0000
 X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
  smtp.mailfrom=amd.com; dkim=none (message not signed)
  header.d=none;dmarc=pass action=none header.from=amd.com;
@@ -50,18 +50,18 @@ Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
 Received: from SATLEXMB04.amd.com (165.204.84.17) by
  CO1PEPF000075EF.mail.protection.outlook.com (10.167.249.38) with Microsoft
  SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.8093.14 via Frontend Transport; Mon, 28 Oct 2024 07:05:11 +0000
+ 15.20.8093.14 via Frontend Transport; Mon, 28 Oct 2024 07:05:12 +0000
 Received: from airavat.amd.com (10.180.168.240) by SATLEXMB04.amd.com
  (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Mon, 28 Oct
- 2024 02:05:08 -0500
+ 2024 02:05:10 -0500
 From: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
 To: <hdegoede@redhat.com>, <ilpo.jarvinen@linux.intel.com>
 CC: <Sanket.Goswami@amd.com>, <platform-driver-x86@vger.kernel.org>, "Shyam
  Sundar S K" <Shyam-sundar.S-k@amd.com>
-Subject: [PATCH 4/8] platform/x86/amd/pmc: Isolate STB code changes to a new file
-Date: Mon, 28 Oct 2024 12:34:34 +0530
-Message-ID: <20241028070438.1548737-5-Shyam-sundar.S-k@amd.com>
+Subject: [PATCH 5/8] platform/x86/amd/pmc: Update IP information structure for newer SoCs
+Date: Mon, 28 Oct 2024 12:34:35 +0530
+Message-ID: <20241028070438.1548737-6-Shyam-sundar.S-k@amd.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20241028070438.1548737-1-Shyam-sundar.S-k@amd.com>
 References: <20241028070438.1548737-1-Shyam-sundar.S-k@amd.com>
@@ -77,224 +77,134 @@ X-ClientProxiedBy: SATLEXMB04.amd.com (10.181.40.145) To SATLEXMB04.amd.com
  (10.181.40.145)
 X-EOPAttributedMessage: 0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CO1PEPF000075EF:EE_|MW6PR12MB8835:EE_
-X-MS-Office365-Filtering-Correlation-Id: cec908c2-45ee-4acf-b3d5-08dcf71eddb9
+X-MS-TrafficTypeDiagnostic: CO1PEPF000075EF:EE_|CH2PR12MB4214:EE_
+X-MS-Office365-Filtering-Correlation-Id: 77d6b0b1-95b2-4ff7-4a25-08dcf71ede52
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam:
 	BCL:0;ARA:13230040|376014|1800799024|82310400026|36860700013;
 X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?4ARQEB9Nb7GKYPpFEB9Q6k2gHbaM9quyBg6oYuSz9U+qyINXQ0XYp5U6KE8f?=
- =?us-ascii?Q?hnOlaI+65Fyodij8iifZIOCf2i4nbosKWsU7USp2go4lADYz3Ac99jhZgMak?=
- =?us-ascii?Q?jSmcDAsyFH57CB+nYutCIBx75vnMI5efESQ5Qi00+hBJH/THKqefXAONxQI1?=
- =?us-ascii?Q?8alnZ+xZcwZwmKHEJE7Spn9MHouZ/W30On0F3wBsp8bu2C/NL7rzjuaw66ST?=
- =?us-ascii?Q?US9WpY+KcDYJa2R0G09522uGGAKMR9E5kjgTbLCsJTnpRwTDP2Da/28IOCtm?=
- =?us-ascii?Q?i/mm37fTzokG1/rc6AGhIf8v1YIGk6jlSXU0R2pN149p4tjK002hqbAktbbQ?=
- =?us-ascii?Q?Q+IVwErRKG+dhvWRtMj3BdYlWNY6B8qt11l++uHzfxO0UZx4T5CcgzV73Rxz?=
- =?us-ascii?Q?duUurPlTwatcjJrJ+7q1lYIR54Q+zguRIGm/F25VxUZD70E5iI//Gd/QiWT7?=
- =?us-ascii?Q?PtuCaMt5fqM5qI93JKVXbU8K5mFcntFQlDVENouYbvoZSpXkCi305QFZrxX/?=
- =?us-ascii?Q?A2ScGfPXJXAsHigHkCPyQTWT2gYMMxyTXBP2yakki7wGp6+sS/czOFfJqoD3?=
- =?us-ascii?Q?KwKHMLE4ZhRMAKQB2rrZANXg9R8gWGfp8Cc5jXczppvGqGsbgOiAe7NXHsAY?=
- =?us-ascii?Q?nqEeA5NVrp0TybSMilqx4UMwMY5tCXIaE+ZWEdCoYuTNTEfTimp3Sfyf3EWp?=
- =?us-ascii?Q?ZgoP3axQ4i/eExSyEhgBe7mME9nxVkNL5Bio2OJOronyZmXkBi5wt+9s0PC4?=
- =?us-ascii?Q?x98mkyX0Ex369lU9pYL4MOiyxxtHPu4UQPwfuVpexES7P5s3P7Q7bPx5dz3E?=
- =?us-ascii?Q?WuG1M9AMZoxZc40/lUY2zLMp/PQFo6jN++DBbCMBHAJNkPJ453JUfcuVORli?=
- =?us-ascii?Q?p/pHwYPvIJGXd3ximvlYbPXipE1tZCymO9+7Yz7FX5kNZQrLNGPNyUPm7TQc?=
- =?us-ascii?Q?C9gwgFW+SL1jX0wHATPoXNv9iafek+GZ3VjyeM7i5G7z5w4jJDMjofGQwMKY?=
- =?us-ascii?Q?W7Vnoiy/VgnQXcnz+ajSINxD4f/ZuTwv+XoORhc+k3zmxqa21ARexVxg/+9G?=
- =?us-ascii?Q?aIVEOtMlbThttcXkr86SOKQTY8A7EH0sdxh6GlQL/DSt8yP6J7dN1+56+a6/?=
- =?us-ascii?Q?+lHdpqO3qzTrg7UZNxM1/Ivb8WVeVRkOcOzoenn22XIU7Y0e5k0G7zTzJO0v?=
- =?us-ascii?Q?Olk4vlDVp0Mqru16xyGAcxzgc0H+twaKHRvgk5ym9WzZJet0zfhoO2Gq4mGi?=
- =?us-ascii?Q?LaDeFAl34X44Bm5GguZGvN0HPzpaW/3IdrGCWKf+S63oPYDBxs0jx8DNubPH?=
- =?us-ascii?Q?J36Jc/ot4DcN7PBvsZrNjPcW6zS3DNeVJTubO1WoNEYiQx3ZUX3dutcc5oS/?=
- =?us-ascii?Q?rBfidBLonK9Xl7jqq9pBmrRfa+s5557GYlkJ7tEOefk4HA7W9Q=3D=3D?=
+	=?us-ascii?Q?imNYkDumhJm+RfC2t7EBWNXORMKFtQpHMQJTsIXRc3oGnd59r0ETALnChwOk?=
+ =?us-ascii?Q?Nekuac8vwf8Yy0dgEqG9EHacQm5IdCj6pDX1SaUkSfb9iEI7pLZLPrDQNNmr?=
+ =?us-ascii?Q?cZzTw0jSY9bBiTbeHv9TfRPnr189GrfVgneeGnlFL8E16PKTp3OClI68VLZO?=
+ =?us-ascii?Q?qOo9E0+Op7VdLMnY8ummQmjOLHNFqtlt0b6tUlmYXVoAe6aCb09l6fDMZjXB?=
+ =?us-ascii?Q?YO5nOfIjX8cFekNXbL2NSFjSnsoKJERzwLpIyOkBvJi3MakHTPn89pD/1a4R?=
+ =?us-ascii?Q?qSsmYbbLZU/tvojvXWK9Xkdyxn8bOOVAqE+XofZ7+U6mVPngm99bmSpd5pWR?=
+ =?us-ascii?Q?s7etPXOC9Rk6th3ZmUnZXY8fpYpM2JHxTWKCk3JFVsroTNe2HQI1LMFkQxb5?=
+ =?us-ascii?Q?fW/jnUa7Hid6+w5QjD4SLb+mm6aoEXMEgpZK87q5jHcNeCcao//4UAb+kt5e?=
+ =?us-ascii?Q?RpudpH1rnHUvhyRJMQ7bTHs9BIEqTp1Vi7o9WUIfEyXxsGlgy4FradASBVcy?=
+ =?us-ascii?Q?O7i/aN4yzAk0uJqkwXNaR4g7ocRpKXDrssX8xs7R2vPjl7ecah1feHbQPuzJ?=
+ =?us-ascii?Q?t8h1Rm12eScYFShaSjE7SnbIufsmsJc5lLA7zyowsCTOdg60RYlPM8/Z8J40?=
+ =?us-ascii?Q?9+e4iRwkx7Br+HqMnBWsSeMXFlkFCLDSGDAwcLgLi7cMOLJ/6bikJjO6LfnQ?=
+ =?us-ascii?Q?uAYZWE9ESWVGvhgS8XqgteQX41nPiVNIEQP5awR0FcVOPNe5IxjJeYY+aSjs?=
+ =?us-ascii?Q?JgRFs0QSFbWEVZvSSrGkTw2KmsBTgFpzZFAV7s2RlQoG1fFqgr7CEdvzU3iq?=
+ =?us-ascii?Q?RJWAvez/TEyblK+Wjp1KJKXxnEjd047M9APt0ne4j5yEnakp376kAs6DjVXv?=
+ =?us-ascii?Q?rqreqxnpMHpLpSEMsKzEh1uM3VZsy8qKLxgvgdfhWQq56T6x9GqavsJqDBxt?=
+ =?us-ascii?Q?whil5lJDor2tV7OCm1NPX8dk5l+RZcW8BSpV+INHs693icfxbxPYvmta01LP?=
+ =?us-ascii?Q?PVNdpW747jnkpbrfU8rHqUvUhvyCUDiSMEh+bNPOHfrTTNjDGhY5nIdyjbjs?=
+ =?us-ascii?Q?KF2X+KqGjxfmz9jHDdh0hZdOezd+KB8qP95Wjsm7hb/yTYzYIGjxjsXgF6hL?=
+ =?us-ascii?Q?lIo6un9L9l7vQMI1mP9ZwBXGkZA87UuMp/ldtILn1d5qtSdPpzHN4G7KI9Y0?=
+ =?us-ascii?Q?y462uhMhPCh4Pyhm1xyvVuL5EWqc7moqfIFzx77WNmt2cD5PZRAPreKkglUW?=
+ =?us-ascii?Q?5hgPnroR0+kAqUix86KCh15QzF+JqBScCtTi5KkXvgH8vLoer0LGcFE3GIwn?=
+ =?us-ascii?Q?/nSpd2HCM1CcFn3ShjfLLqLnTI0PDZlcBkNDL3LWviU2NDx9VTDPd6BWejYn?=
+ =?us-ascii?Q?juQHQPXCQKVDTZT+OOgwovlSJIVH/zSXXJC7zSAfFGWhCzGU6Q=3D=3D?=
 X-Forefront-Antispam-Report:
 	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(376014)(1800799024)(82310400026)(36860700013);DIR:OUT;SFP:1101;
 X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 28 Oct 2024 07:05:11.9219
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 28 Oct 2024 07:05:12.9844
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: cec908c2-45ee-4acf-b3d5-08dcf71eddb9
+X-MS-Exchange-CrossTenant-Network-Message-Id: 77d6b0b1-95b2-4ff7-4a25-08dcf71ede52
 X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
 X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
 X-MS-Exchange-CrossTenant-AuthSource:
 	CO1PEPF000075EF.namprd03.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Anonymous
 X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW6PR12MB8835
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH2PR12MB4214
 
-Since S2D (Spill to DRAM) uses different message port offsets compared to
-PMC message offsets for communication with PMFW, relocate the S2D macros
-from pmc.c to a new file, mp1_stb.c, for better code organization.
-
-Following this change, it is logical to introduce a new structure,
-"struct stb_arg," to pass the message, argument, and response offset
-details to PMFW via the amd_pmc_send_cmd() call. Additionally, move the
-s2d_msg_id member from amd_pmc_dev into the new structure.
+The latest AMD processors include additional IP blocks that must be turned
+off before transitioning to low power. PMFW provides an interface to
+retrieve debug information from each IP block, which is useful for
+diagnosing issues if the system fails to enter or exit low power states,
+or for profiling which IP block takes more time. Add support for using
+this information within the driver.
 
 Co-developed-by: Sanket Goswami <Sanket.Goswami@amd.com>
 Signed-off-by: Sanket Goswami <Sanket.Goswami@amd.com>
 Signed-off-by: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
 ---
- drivers/platform/x86/amd/pmc/mp1_stb.c | 33 +++++++++++++++++---------
- drivers/platform/x86/amd/pmc/pmc.c     | 12 +++++-----
- drivers/platform/x86/amd/pmc/pmc.h     | 14 ++++++-----
- 3 files changed, 36 insertions(+), 23 deletions(-)
+ drivers/platform/x86/amd/pmc/pmc.c | 42 ++++++++++++++++++++++++++++--
+ 1 file changed, 40 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/platform/x86/amd/pmc/mp1_stb.c b/drivers/platform/x86/amd/pmc/mp1_stb.c
-index 2b06861c479b..1501793b9281 100644
---- a/drivers/platform/x86/amd/pmc/mp1_stb.c
-+++ b/drivers/platform/x86/amd/pmc/mp1_stb.c
-@@ -31,6 +31,11 @@
- #define STB_FORCE_FLUSH_DATA	0xCF
- #define FIFO_SIZE		4096
- 
-+/* STB S2D(Spill to DRAM) has different message port offset */
-+#define AMD_S2D_REGISTER_MESSAGE	0xA20
-+#define AMD_S2D_REGISTER_RESPONSE	0xA80
-+#define AMD_S2D_REGISTER_ARGUMENT	0xA88
-+
- static bool enable_stb;
- module_param(enable_stb, bool, 0644);
- MODULE_PARM_DESC(enable_stb, "Enable the STB debug mechanism");
-@@ -176,7 +181,7 @@ static int amd_stb_debugfs_open_v2(struct inode *inode, struct file *filp)
- 		return amd_stb_handle_efr(filp);
- 
- 	/* Get the num_samples to calculate the last push location */
--	ret = amd_pmc_send_cmd(dev, S2D_NUM_SAMPLES, &num_samples, dev->s2d_msg_id, true);
-+	ret = amd_pmc_send_cmd(dev, S2D_NUM_SAMPLES, &num_samples, dev->stb_arg.s2d_msg_id, true);
- 	/* Clear msg_port for other SMU operation */
- 	dev->msg_port = MSG_PORT_PMC;
- 	if (ret) {
-@@ -239,18 +244,24 @@ static bool amd_is_stb_supported(struct amd_pmc_dev *dev)
- 	switch (dev->cpu_id) {
- 	case AMD_CPU_ID_YC:
- 	case AMD_CPU_ID_CB:
--		dev->s2d_msg_id = 0xBE;
--		return true;
-+		dev->stb_arg.s2d_msg_id = 0xBE;
-+		break;
- 	case AMD_CPU_ID_PS:
--		dev->s2d_msg_id = 0x85;
--		return true;
-+		dev->stb_arg.s2d_msg_id = 0x85;
-+		break;
- 	case PCI_DEVICE_ID_AMD_1AH_M20H_ROOT:
- 	case PCI_DEVICE_ID_AMD_1AH_M60H_ROOT:
--		dev->s2d_msg_id = 0xDE;
--		return true;
-+		dev->stb_arg.s2d_msg_id = 0xDE;
-+		break;
- 	default:
- 		return false;
- 	}
-+
-+	dev->stb_arg.msg = AMD_S2D_REGISTER_MESSAGE;
-+	dev->stb_arg.arg = AMD_S2D_REGISTER_ARGUMENT;
-+	dev->stb_arg.resp = AMD_S2D_REGISTER_RESPONSE;
-+
-+	return true;
- }
- 
- int amd_s2d_init(struct amd_pmc_dev *dev)
-@@ -273,18 +284,18 @@ int amd_s2d_init(struct amd_pmc_dev *dev)
- 	/* Spill to DRAM feature uses separate SMU message port */
- 	dev->msg_port = MSG_PORT_S2D;
- 
--	amd_pmc_send_cmd(dev, S2D_TELEMETRY_SIZE, &size, dev->s2d_msg_id, true);
-+	amd_pmc_send_cmd(dev, S2D_TELEMETRY_SIZE, &size, dev->stb_arg.s2d_msg_id, true);
- 	if (size != S2D_TELEMETRY_BYTES_MAX)
- 		return -EIO;
- 
- 	/* Get DRAM size */
--	ret = amd_pmc_send_cmd(dev, S2D_DRAM_SIZE, &dev->dram_size, dev->s2d_msg_id, true);
-+	ret = amd_pmc_send_cmd(dev, S2D_DRAM_SIZE, &dev->dram_size, dev->stb_arg.s2d_msg_id, true);
- 	if (ret || !dev->dram_size)
- 		dev->dram_size = S2D_TELEMETRY_DRAMBYTES_MAX;
- 
- 	/* Get STB DRAM address */
--	amd_pmc_send_cmd(dev, S2D_PHYS_ADDR_LOW, &phys_addr_low, dev->s2d_msg_id, true);
--	amd_pmc_send_cmd(dev, S2D_PHYS_ADDR_HIGH, &phys_addr_hi, dev->s2d_msg_id, true);
-+	amd_pmc_send_cmd(dev, S2D_PHYS_ADDR_LOW, &phys_addr_low, dev->stb_arg.s2d_msg_id, true);
-+	amd_pmc_send_cmd(dev, S2D_PHYS_ADDR_HIGH, &phys_addr_hi, dev->stb_arg.s2d_msg_id, true);
- 
- 	stb_phys_addr = ((u64)phys_addr_hi << 32 | phys_addr_low);
- 
 diff --git a/drivers/platform/x86/amd/pmc/pmc.c b/drivers/platform/x86/amd/pmc/pmc.c
-index 8e7c87505327..f9900a03391a 100644
+index f9900a03391a..0bf4065153da 100644
 --- a/drivers/platform/x86/amd/pmc/pmc.c
 +++ b/drivers/platform/x86/amd/pmc/pmc.c
-@@ -450,9 +450,9 @@ static void amd_pmc_dump_registers(struct amd_pmc_dev *dev)
- 	u32 value, message, argument, response;
- 
- 	if (dev->msg_port) {
--		message = AMD_S2D_REGISTER_MESSAGE;
--		argument = AMD_S2D_REGISTER_ARGUMENT;
--		response = AMD_S2D_REGISTER_RESPONSE;
-+		message = dev->stb_arg.msg;
-+		argument = dev->stb_arg.arg;
-+		response = dev->stb_arg.resp;
- 	} else {
- 		message = dev->smu_msg;
- 		argument = AMD_PMC_REGISTER_ARGUMENT;
-@@ -477,9 +477,9 @@ int amd_pmc_send_cmd(struct amd_pmc_dev *dev, u32 arg, u32 *data, u8 msg, bool r
- 	mutex_lock(&dev->lock);
- 
- 	if (dev->msg_port) {
--		message = AMD_S2D_REGISTER_MESSAGE;
--		argument = AMD_S2D_REGISTER_ARGUMENT;
--		response = AMD_S2D_REGISTER_RESPONSE;
-+		message = dev->stb_arg.msg;
-+		argument = dev->stb_arg.arg;
-+		response = dev->stb_arg.resp;
- 	} else {
- 		message = dev->smu_msg;
- 		argument = AMD_PMC_REGISTER_ARGUMENT;
-diff --git a/drivers/platform/x86/amd/pmc/pmc.h b/drivers/platform/x86/amd/pmc/pmc.h
-index 7e7f9170124c..d3c6730ebcd7 100644
---- a/drivers/platform/x86/amd/pmc/pmc.h
-+++ b/drivers/platform/x86/amd/pmc/pmc.h
-@@ -25,6 +25,13 @@ struct amd_mp2_dev {
- 	bool is_stb_data;
+@@ -95,6 +95,35 @@ struct amd_pmc_bit_map {
+ 	u32 bit_mask;
  };
  
-+struct stb_arg {
-+	u32 s2d_msg_id;
-+	u32 msg;
-+	u32 arg;
-+	u32 resp;
++static const struct amd_pmc_bit_map soc15_ip_blk_v2[] = {
++	{"DISPLAY",     BIT(0)},
++	{"CPU",         BIT(1)},
++	{"GFX",         BIT(2)},
++	{"VDD",         BIT(3)},
++	{"VDD_CCX",     BIT(4)},
++	{"ACP",         BIT(5)},
++	{"VCN_0",       BIT(6)},
++	{"VCN_1",       BIT(7)},
++	{"ISP",         BIT(8)},
++	{"NBIO",        BIT(9)},
++	{"DF",          BIT(10)},
++	{"USB3_0",      BIT(11)},
++	{"USB3_1",      BIT(12)},
++	{"LAPIC",       BIT(13)},
++	{"USB3_2",      BIT(14)},
++	{"USB4_RT0",	BIT(15)},
++	{"USB4_RT1",	BIT(16)},
++	{"USB4_0",      BIT(17)},
++	{"USB4_1",      BIT(18)},
++	{"MPM",         BIT(19)},
++	{"JPEG_0",      BIT(20)},
++	{"JPEG_1",      BIT(21)},
++	{"IPU",         BIT(22)},
++	{"UMSCH",       BIT(23)},
++	{"VPE",         BIT(24)},
++	{}
 +};
 +
- struct amd_pmc_dev {
- 	void __iomem *regbase;
- 	void __iomem *smu_virt_addr;
-@@ -36,7 +43,6 @@ struct amd_pmc_dev {
- 	u32 active_ips;
- 	u32 dram_size;
- 	u32 num_ips;
--	u32 s2d_msg_id;
- 	u32 smu_msg;
- /* SMU version information */
- 	u8 smu_program;
-@@ -50,6 +56,7 @@ struct amd_pmc_dev {
- 	struct quirk_entry *quirks;
- 	bool disable_8042_wakeup;
- 	struct amd_mp2_dev *mp2;
-+	struct stb_arg stb_arg;
- };
+ static const struct amd_pmc_bit_map soc15_ip_blk[] = {
+ 	{"DISPLAY",	BIT(0)},
+ 	{"CPU",		BIT(1)},
+@@ -170,7 +199,10 @@ static void amd_pmc_get_ip_info(struct amd_pmc_dev *dev)
+ 		break;
+ 	case PCI_DEVICE_ID_AMD_1AH_M20H_ROOT:
+ 	case PCI_DEVICE_ID_AMD_1AH_M60H_ROOT:
+-		dev->num_ips = 22;
++		if (boot_cpu_data.x86_model == 0x70)
++			dev->num_ips = 25;
++		else
++			dev->num_ips = 22;
+ 		dev->smu_msg = 0x938;
+ 		break;
+ 	}
+@@ -338,9 +370,15 @@ static int smu_fw_info_show(struct seq_file *s, void *unused)
  
- void amd_pmc_process_restore_quirks(struct amd_pmc_dev *dev);
-@@ -70,11 +77,6 @@ void amd_mp2_stb_deinit(struct amd_pmc_dev *dev);
- #define PCI_DEVICE_ID_AMD_1AH_M60H_ROOT 0x1122
- #define PCI_DEVICE_ID_AMD_MP2_STB	0x172c
+ 	seq_puts(s, "\n=== Active time (in us) ===\n");
+ 	for (idx = 0 ; idx < dev->num_ips ; idx++) {
+-		if (soc15_ip_blk[idx].bit_mask & dev->active_ips)
++		if (dev->cpu_id == PCI_DEVICE_ID_AMD_1AH_M20H_ROOT &&
++		    boot_cpu_data.x86_model == 0x70) {
++			if (soc15_ip_blk_v2[idx].bit_mask & dev->active_ips)
++				seq_printf(s, "%-8s : %lld\n", soc15_ip_blk_v2[idx].name,
++					   table.timecondition_notmet_lastcapture[idx]);
++		} else if (soc15_ip_blk[idx].bit_mask & dev->active_ips) {
+ 			seq_printf(s, "%-8s : %lld\n", soc15_ip_blk[idx].name,
+ 				   table.timecondition_notmet_lastcapture[idx]);
++		}
+ 	}
  
--/* STB S2D(Spill to DRAM) has different message port offset */
--#define AMD_S2D_REGISTER_MESSAGE	0xA20
--#define AMD_S2D_REGISTER_RESPONSE	0xA80
--#define AMD_S2D_REGISTER_ARGUMENT	0xA88
--
- int amd_s2d_init(struct amd_pmc_dev *dev);
- int amd_write_stb(struct amd_pmc_dev *dev, u32 data);
- int amd_pmc_send_cmd(struct amd_pmc_dev *dev, u32 arg, u32 *data, u8 msg, bool ret);
+ 	return 0;
 -- 
 2.34.1
 
