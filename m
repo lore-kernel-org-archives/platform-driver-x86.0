@@ -1,210 +1,131 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.15])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2F8561DF985;
-	Tue, 29 Oct 2024 10:43:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E5C991DF960
+	for <platform-driver-x86@vger.kernel.org>; Tue, 29 Oct 2024 12:17:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730198612; cv=none; b=mrSKsv4B6kigbJ7NM7eS7D84CttdZRlavTshJlvMK1FEsWrOcO5eCsyogv1kvsu+8JEUP33VILyHR0aecBxgPZWlAyXlWcIZOUqTuB1RRE2XQBIJzxxAVL6iYgH4lA6zKkbb4qOfh4TnHa+ye+VmwhnMbFK7Xe0fIElXn/OKWxk=
+	t=1730204269; cv=none; b=gi3goCLayDt/UWrOYTRz0xwQUgqHjezforcsEUTjePoMMkPLDtnqYgmSPPMkkQaNI4QYz8dmAHnrwbwEvW/M9fU6psc7ImMOa9YSB4M0TeM18dBLZsvM9u7LqmrL6C9vVCpEyXcLxyvCJoP6rCeM68rhUOmc9Onsjo0nD2DV654=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730198612; c=relaxed/simple;
-	bh=fCHg+USXVzv55vvKlBlous6qKMSJtzt3sWEWLEln7lo=;
+	s=arc-20240116; t=1730204269; c=relaxed/simple;
+	bh=VFNbXhglNxzpzYBpPIKqdlixUVxyR3893X7rTQ6GR2E=;
 	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=Gj/ADwxKFRtjYzZA8KbaAjaMMfNx4YE1RFhI5CWFX2SYHZejWE5SG+KuIWxf+vPQ9L16zVsBfuvpHwlPH05yjfKNz+bS4VFHgh+wLH6/FbcMEC6ebf1TKb76uwEfm5VKGF+WYPkFQjFhcoTw9sJY7CvtqJkMx/NVWAwM134FDh8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=edmfA/gn; arc=none smtp.client-ip=192.198.163.15
+	 MIME-Version:Content-Type; b=Mdafhz6zDMs4x1RTDHF7Ljc0JzjJjL0N+H7Za5H+VWcLSjmOf9YFw8atTaepkLdBwr4J0b65uOm+WCgXOXXQrGs2IOxcyDB3Kf+zfApnSh/R8s+zBZKWqRjXTlhBMatMai/tWwXJoKdwFeNag9fBFej2IyP8QjctNCrcerm+P1U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=JCeIbq+k; arc=none smtp.client-ip=198.175.65.13
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="edmfA/gn"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="JCeIbq+k"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1730198610; x=1761734610;
+  t=1730204268; x=1761740268;
   h=from:date:to:cc:subject:in-reply-to:message-id:
    references:mime-version;
-  bh=fCHg+USXVzv55vvKlBlous6qKMSJtzt3sWEWLEln7lo=;
-  b=edmfA/gntf2g6KWQEMVxwrR9rOD2oSwTzHrezLiYHcxGYvgFtcKJPij5
-   GohiAS5/0DkIBBzkPt5VVFBfIyO0Pgav8Q3bcXNjFkgIB80QtomMcMSF3
-   8jeN4EqSUmy7hvtGw6MjHG68G6SsY6+P3VQ4+l7nxkzT1AYT/R7mp2SeL
-   SY9N88nlG21qQSzx2iTqyXBCNMDe7BQ7+/M/zyN0PwBAGeqAx/sM9KnQx
-   /MyZ4cKNV+dqIYC7DhnjPUATCOex5BFdtLQy6OPSbrWETTKaDsgw4UUR1
-   0WlEAnGdvIujab+bscN3HYiXKoOxk6Blk+P3tYZ0ehiYi2S9THuzl6OFL
-   A==;
-X-CSE-ConnectionGUID: kQ/OR1LBR3mVwhSErYY0KQ==
-X-CSE-MsgGUID: jeFiTvfKSHqvGYgBqH74Tg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11239"; a="29938249"
-X-IronPort-AV: E=Sophos;i="6.11,241,1725346800"; 
-   d="scan'208";a="29938249"
-Received: from fmviesa002.fm.intel.com ([10.60.135.142])
-  by fmvoesa109.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Oct 2024 03:43:29 -0700
-X-CSE-ConnectionGUID: hwa4kfISQk2Yt3IyfJj9SQ==
-X-CSE-MsgGUID: uuHoB4mXT4eVdpxNbr9g8A==
+  bh=VFNbXhglNxzpzYBpPIKqdlixUVxyR3893X7rTQ6GR2E=;
+  b=JCeIbq+kxBlpdfljTJH7WLyC3Gm2b4fjOGhAadX4ir2QP1rnrslNAQ0M
+   feFrAorSc9FywBs8n4eUSB3F7m7DsnpFV6kBFj2fxU/fFVRXEv1NQoaKd
+   BuGch2FuWgU53nC/Z3WfVg7MGeAs9DhzDrPDXOWhAtpBZ2TZ0dy50esDE
+   aYTY/wH87imC+pw0SG9TaglYmSz8e0iTcA3DVlWL+rduR74U6FFIdAKvl
+   DfKbuU7PqD5/yZ42k4dx5laR1kumTi6xEGFWD84PtQRNFRKvYZJjUsHet
+   2JxdHm23AsffPJLIu+87+5oJL/hWkW70zFt/zRZx9xGA5AFkWVxMzsTwQ
+   Q==;
+X-CSE-ConnectionGUID: lzvH+BrNRqK82P3pIyCokQ==
+X-CSE-MsgGUID: N3+r3y1ORBG0pK+yTe9YFQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11222"; a="40938933"
+X-IronPort-AV: E=Sophos;i="6.11,199,1725346800"; 
+   d="scan'208";a="40938933"
+Received: from orviesa007.jf.intel.com ([10.64.159.147])
+  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Oct 2024 05:17:47 -0700
+X-CSE-ConnectionGUID: /+DXXN7lSnSEroL4YjTUhg==
+X-CSE-MsgGUID: 5SRXl3WjS26+DE77Ofl2Gg==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.11,241,1725346800"; 
-   d="scan'208";a="105263664"
+   d="scan'208";a="82373059"
 Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.83])
-  by fmviesa002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Oct 2024 03:43:22 -0700
+  by orviesa007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Oct 2024 05:17:46 -0700
 From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Tue, 29 Oct 2024 12:43:18 +0200 (EET)
-To: Mario Limonciello <mario.limonciello@amd.com>
-cc: Hans de Goede <hdegoede@redhat.com>, 
-    "Rafael J . Wysocki" <rafael@kernel.org>, Len Brown <lenb@kernel.org>, 
-    Maximilian Luz <luzmaximilian@gmail.com>, Lee Chun-Yi <jlee@suse.com>, 
-    Shyam Sundar S K <Shyam-sundar.S-k@amd.com>, 
-    Corentin Chary <corentin.chary@gmail.com>, 
-    "Luke D . Jones" <luke@ljones.dev>, Ike Panhc <ike.pan@canonical.com>, 
-    Henrique de Moraes Holschuh <hmh@hmh.eng.br>, 
-    Alexis Belmonte <alexbelm48@gmail.com>, 
-    =?ISO-8859-15?Q?Uwe_Kleine-K=F6nig?= <u.kleine-koenig@pengutronix.de>, 
-    Ai Chao <aichao@kylinos.cn>, Gergo Koteles <soyer@irl.hu>, 
-    open list <linux-kernel@vger.kernel.org>, 
-    "open list:ACPI" <linux-acpi@vger.kernel.org>, 
-    "open list:MICROSOFT SURFACE PLATFORM PROFILE DRIVER" <platform-driver-x86@vger.kernel.org>, 
-    "open list:THINKPAD ACPI EXTRAS DRIVER" <ibm-acpi-devel@lists.sourceforge.net>, 
-    Mark Pearson <mpearson-lenovo@squebb.ca>, 
-    Matthew Schwartz <matthew.schwartz@linux.dev>
-Subject: Re: [PATCH v2 12/15] ACPI: platform_profile: Make sure all profile
- handlers agree on profile
-In-Reply-To: <20241028020131.8031-13-mario.limonciello@amd.com>
-Message-ID: <4eaa085a-3cc8-b359-9f70-c4a6b7742389@linux.intel.com>
-References: <20241028020131.8031-1-mario.limonciello@amd.com> <20241028020131.8031-13-mario.limonciello@amd.com>
+Date: Tue, 29 Oct 2024 14:17:42 +0200 (EET)
+To: Corey Hickey <bugfood-ml@fatooh.org>
+cc: platform-driver-x86@vger.kernel.org, 
+    Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
+Subject: Re: [PATCH v3] platform/x86/amd/pmc: Detect when STB is not
+ available
+In-Reply-To: <20241028180241.1341624-1-bugfood-ml@fatooh.org>
+Message-ID: <75f43cee-1b12-5e4c-9f8b-5b47e8653a3b@linux.intel.com>
+References: <20241025051141.924760-1-bugfood-ml@fatooh.org> <20241028180241.1341624-1-bugfood-ml@fatooh.org>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: multipart/mixed; boundary="8323328-714823922-1730204262=:951"
 
-On Sun, 27 Oct 2024, Mario Limonciello wrote:
+  This message is in MIME format.  The first part should be readable text,
+  while the remaining parts are likely unreadable without MIME-aware tools.
 
-> If for any reason multiple profile handlers don't agree on the profile
-> set for the system then the value shown in sysfs can be wrong.
-> 
-> Explicitly check that they match.
-> 
-> Tested-by: Matthew Schwartz <matthew.schwartz@linux.dev>
-> Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
+--8323328-714823922-1730204262=:951
+Content-Type: text/plain; charset=ISO-8859-15
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+
+On Mon, 28 Oct 2024, Corey Hickey wrote:
+
+> From: Corey Hickey <bugfood-c@fatooh.org>
+>=20
+> Loading the amd_pmc module as:
+>=20
+>     amd_pmc enable_stb=3D1
+>=20
+> ...can result in the following messages in the kernel ring buffer:
+>=20
+>     amd_pmc AMDI0009:00: SMU cmd failed. err: 0xff
+>     ioremap on RAM at 0x0000000000000000 - 0x0000000000ffffff
+>     WARNING: CPU: 10 PID: 2151 at arch/x86/mm/ioremap.c:217 __ioremap_cal=
+ler+0x2cd/0x340
+>=20
+> Further debugging reveals that this occurs when the requests for
+> S2D_PHYS_ADDR_LOW and S2D_PHYS_ADDR_HIGH return a value of 0,
+> indicating that the STB is inaccessible. To prevent the ioremap
+> warning and provide clarity to the user, handle the invalid address
+> and display an error message.
+>=20
+> Link: https://lore.kernel.org/platform-driver-x86/c588ff5d-3e04-4549-9a86=
+-284b9b4419ba@amd.com
+> Fixes: 3d7d407dfb05 ("platform/x86: amd-pmc: Add support for AMD Spill to=
+ DRAM STB feature")
+> Acked-by: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
+> Signed-off-by: Corey Hickey <bugfood-c@fatooh.org>
 > ---
->  drivers/acpi/platform_profile.c | 61 ++++++++++++++++++++++++---------
->  1 file changed, 45 insertions(+), 16 deletions(-)
-> 
-> diff --git a/drivers/acpi/platform_profile.c b/drivers/acpi/platform_profile.c
-> index db2ebd0393cf7..d22c4eb5f0c36 100644
-> --- a/drivers/acpi/platform_profile.c
-> +++ b/drivers/acpi/platform_profile.c
-> @@ -51,6 +51,45 @@ static unsigned long platform_profile_get_choices(void)
->  	return seen;
->  }
->  
-> +/* expected to be called under mutex */
-
-Don't add comments like this but enforce it with a lockdep annotation.
-
-"mutex" would have been too vague anyway :-).
-
-> +static int platform_profile_get_active(enum platform_profile_option *profile)
-> +{
-> +	struct platform_profile_handler *handler;
-> +	enum platform_profile_option active = PLATFORM_PROFILE_LAST;
-> +	enum platform_profile_option active2 = PLATFORM_PROFILE_LAST;
-> +	int err;
+>  drivers/platform/x86/amd/pmc/pmc.c | 5 +++++
+>  1 file changed, 5 insertions(+)
+>=20
+> diff --git a/drivers/platform/x86/amd/pmc/pmc.c b/drivers/platform/x86/am=
+d/pmc/pmc.c
+> index bbb8edb62e00..5669f94c3d06 100644
+> --- a/drivers/platform/x86/amd/pmc/pmc.c
+> +++ b/drivers/platform/x86/amd/pmc/pmc.c
+> @@ -998,6 +998,11 @@ static int amd_pmc_s2d_init(struct amd_pmc_dev *dev)
+>  =09amd_pmc_send_cmd(dev, S2D_PHYS_ADDR_LOW, &phys_addr_low, dev->s2d_msg=
+_id, true);
+>  =09amd_pmc_send_cmd(dev, S2D_PHYS_ADDR_HIGH, &phys_addr_hi, dev->s2d_msg=
+_id, true);
+> =20
+> +=09if (!phys_addr_hi && !phys_addr_low) {
+> +=09=09dev_err(dev->dev, "STB is not enabled on the system; disable enabl=
+e_stb or contact system vendor\n");
+> +=09=09return -EINVAL;
+> +=09}
 > +
-> +	list_for_each_entry(handler, &platform_profile_handler_list, list) {
-> +		if (active == PLATFORM_PROFILE_LAST)
-> +			err = handler->profile_get(handler, &active);
-> +		else
-> +			err = handler->profile_get(handler, &active2);
-> +		if (err) {
-> +			pr_err("Failed to get profile for handler %s\n", handler->name);
-> +			return err;
-> +		}
-> +
-> +		if (WARN_ON(active == PLATFORM_PROFILE_LAST))
-> +			return -EINVAL;
-> +		if (active2 == PLATFORM_PROFILE_LAST)
-> +			continue;
-> +
-> +		if (active != active2) {
-> +			pr_warn("Profile handlers don't agree on current profile\n");
-> +			return -EINVAL;
-> +		}
-> +		active = active2;
+>  =09stb_phys_addr =3D ((u64)phys_addr_hi << 32 | phys_addr_low);
+> =20
+>  =09/* Clear msg_port for other SMU operation */
+>=20
 
-This looked very confusing (IMO). How about this:
+Thanks for the update,
 
-	enum platform_profile_option active = PLATFORM_PROFILE_LAST;
-	enum platform_profile_option val;
-	...
+Reviewed-by: Ilpo J=E4rvinen <ilpo.jarvinen@linux.intel.com>
 
-		err = handler->profile_get(handler, &val);
-		if (err) {
-			pr_err(...);
-			return err;
-		}
-
-		if (WARN_ON(val == PLATFORM_PROFILE_LAST))
-			return -EINVAL;
-
-		if (active != val && active != PLATFORM_PROFILE_LAST) {
-			pr_warn("Profile handlers don't agree on current profile\n");
-			return -EINVAL;
-		}
-		active = val;
-
-> +	}
-> +
-> +	/* Check that profile is valid index */
-> +	if (WARN_ON((active < 0) || (active >= ARRAY_SIZE(profile_names))))
-
-What does that < 0 check do? Should it be checked right after reading 
-profile_get()? Or perhaps check both of these right there?
-
-> +		return -EIO;
-> +
-> +	*profile = active;
-> +
-> +	return 0;
-> +}
-> +
->  static ssize_t platform_profile_choices_show(struct device *dev,
->  					struct device_attribute *attr,
->  					char *buf)
-> @@ -80,24 +119,14 @@ static ssize_t platform_profile_show(struct device *dev,
->  	enum platform_profile_option profile = PLATFORM_PROFILE_BALANCED;
->  	int err;
->  
-> -	err = mutex_lock_interruptible(&profile_lock);
-> -	if (err)
-> -		return err;
-> -
-> -	if (!cur_profile) {
-> -		mutex_unlock(&profile_lock);
-> -		return -ENODEV;
-> +	scoped_cond_guard(mutex_intr, return -ERESTARTSYS, &profile_lock) {
-
-scoped_cond_guard() conversion should be made in the guard patch?
-
-> +		if (!platform_profile_is_registered())
-> +			return -ENODEV;
-> +		err = platform_profile_get_active(&profile);
-> +		if (err)
-> +			return err;
->  	}
->  
-> -	err = cur_profile->profile_get(cur_profile, &profile);
-> -	mutex_unlock(&profile_lock);
-> -	if (err)
-> -		return err;
-> -
-> -	/* Check that profile is valid index */
-> -	if (WARN_ON((profile < 0) || (profile >= ARRAY_SIZE(profile_names))))
-> -		return -EIO;
-> -
->  	return sysfs_emit(buf, "%s\n", profile_names[profile]);
->  }
->  
-> 
-
--- 
+--=20
  i.
 
+--8323328-714823922-1730204262=:951--
