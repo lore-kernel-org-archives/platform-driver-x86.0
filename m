@@ -1,59 +1,57 @@
 Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 239BC18E379;
-	Tue, 29 Oct 2024 15:04:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F34C192B95;
+	Tue, 29 Oct 2024 15:04:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730214277; cv=none; b=NBdd+lUG3DUCpV2ri3UyFWL2DrYKDeg6o2Nb0c29i6rFNq+lvCt/o4GAs4N6P2BVsZ/ZQ5WSEwSUNTw2v7l52YqZugyrYXvjj7KPgOAT9N3kEVdx/rNC3vnV+qCEEFzS+uWc9/nV358mAG7sx/KziPewTutbSdRpNqiM5PVb4UE=
+	t=1730214278; cv=none; b=TbT0Ib5WL6bMzRDFt4VyuTHi2qPI+yr7D33bQ+tDQ4Xk05PPnVIfUVTUmk963iQaSwNIjkAxhiyBBOJ8B84vRcVhsRnhnS88DLUP6zCYKuQSwNV4nRbQRtu9qx1+5658CEl6XCQ7c6FCBxHH6Jddu+ZHQF55YJAbXi+99K3JWvA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730214277; c=relaxed/simple;
-	bh=k8vZB2zfkufZ7zzIxx3CqNg55GVr56oHwvNMqQiWuV8=;
+	s=arc-20240116; t=1730214278; c=relaxed/simple;
+	bh=NfmD68x1xHWzB0oNQ2YFY4K/YnAEEUd4ugxIBTU+hqk=;
 	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=fDJGM+DW8/oNfdkmwM6G0605dwI7/WXrmI/TnNNsRNAx9lGQjUDH/R8Jx7gyKnl0/lXyjLbOdj4v0kRge69L4RCNQmmxShH20eVLTwujN8T7ZAyIoFUKYvEkrrBetz2zA0PfTVHYPMA2+SxO8wZDbYaI/4PuWK0RjqZpBYXYR2k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=LSWpH/Cm; arc=none smtp.client-ip=192.198.163.15
+	 MIME-Version:Content-Type; b=dzqwFnOzfVr9VvNcCWeOiY8aBK41S2dHS65dkQg86Sdvfis/1nd/UEAJVIr4C4ilfWUOGdI+rp78LcL9BiloL/YGPsGLMbh25ic3hQxpHNYTBUjZD9x/ZrH9zhEVNTx1gi8uZChMf8C1WyQOByNDCXYOlk3ynKgulT7oKWYEHZQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Au7j5G2c; arc=none smtp.client-ip=192.198.163.15
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="LSWpH/Cm"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Au7j5G2c"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1730214276; x=1761750276;
+  t=1730214277; x=1761750277;
   h=from:to:cc:in-reply-to:references:subject:message-id:
    date:mime-version:content-transfer-encoding;
-  bh=k8vZB2zfkufZ7zzIxx3CqNg55GVr56oHwvNMqQiWuV8=;
-  b=LSWpH/CmQ6pArSCbyHOFS8lQNyWGIAV4J2ZIBpUP9waSnqz7f42bYqKQ
-   fBrH36fl5uCfSvRP2J7wcC7v2Oy+wFTira8hii/sK1Id+SUIzSI8rE4WJ
-   gDxdy+o2Vka3r6zprG8UJ816CxxVlQ4iRwYM6+njm6jyHM1VmwPzABjJc
-   FO2oj85HU4Jd8Lh0wOMIzvDPqaRjQ1Ph6pTr8tWWJX3QlWkw4c+4zpHgZ
-   syKebN1wFzKcuDekN0EDJGeMNEtLN2/pmOstg4SzHqysI8/+eJr2LmsKd
-   XKr1q3qJbtGBa/Ga4sU0zFht4yhrDikdKT4mFnlWPtYX2hE+lnbDKEjY2
-   g==;
-X-CSE-ConnectionGUID: nCUyh8woT5eAmXxcIxa8WQ==
-X-CSE-MsgGUID: tO1j3W/TRKieOpxXxjzfRQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11240"; a="29968423"
+  bh=NfmD68x1xHWzB0oNQ2YFY4K/YnAEEUd4ugxIBTU+hqk=;
+  b=Au7j5G2ctwDOQIcpWRJ+EvTNo59vy4EP7jLzLFOzpd/hc0LRQMmPK/ad
+   4G5eTiRIYBbGlrO9iiQ0feLdtwBiILlZFEWiDnP/fmrqIlknOVHwFt/e7
+   BoqTwJmn9tsC3vG18yk+5dG78OvvLGxpKn+UnhYnSBRVfjOj1lBGzCtI9
+   tBH6zS9Ve5sqQ4bdec+xYJv9JSIOWpEfUd1hZGZaZrYU3quYxHY2HSkT/
+   5/Xy8BuVaimJSDGLEy6mTsWpazX5HV+0YgVKkp/gaKbqCsDfXSQxRm2DR
+   bEiS2fQN0OctYRE9bEnsL5FnVIR7otc/l0RpV5ImMSekBlh758JAuN8uo
+   A==;
+X-CSE-ConnectionGUID: h1LYpBr2RYCAXVPBYzi9yg==
+X-CSE-MsgGUID: keyZE3cISreabXbq7Y0ehA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11240"; a="29968451"
 X-IronPort-AV: E=Sophos;i="6.11,241,1725346800"; 
-   d="scan'208";a="29968423"
+   d="scan'208";a="29968451"
 Received: from fmviesa010.fm.intel.com ([10.60.135.150])
-  by fmvoesa109.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Oct 2024 08:02:49 -0700
-X-CSE-ConnectionGUID: SuWoVbrqQk2Ly+Ny50JVmQ==
-X-CSE-MsgGUID: 04wXhnrmSzW3FXxstkRD1w==
+  by fmvoesa109.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Oct 2024 08:02:56 -0700
+X-CSE-ConnectionGUID: E2alJhzjQdyNuCNk6/d1dA==
+X-CSE-MsgGUID: AoHYHcrSTVipS8akjRd2qg==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.11,241,1725346800"; 
-   d="scan'208";a="82315533"
+   d="scan'208";a="82315544"
 Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.83])
-  by fmviesa010-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Oct 2024 08:02:47 -0700
+  by fmviesa010-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Oct 2024 08:02:53 -0700
 From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-To: Mark Pearson <mpearson-lenovo@squebb.ca>
-Cc: hdegoede@redhat.com, platform-driver-x86@vger.kernel.org, 
+To: hdegoede@redhat.com, corbet@lwn.net, Armin Wolf <W_Armin@gmx.de>
+Cc: platform-driver-x86@vger.kernel.org, linux-doc@vger.kernel.org, 
  linux-kernel@vger.kernel.org
-In-Reply-To: <20241024195536.6992-1-mpearson-lenovo@squebb.ca>
-References: <mpearson-lenovo@squebb.ca>
- <20241024195536.6992-1-mpearson-lenovo@squebb.ca>
-Subject: Re: [PATCH v2 1/4] platform/x86: think-lmi: improve check if BIOS
- account security enabled
-Message-Id: <173021416235.2801.3490963798776930826.b4-ty@linux.intel.com>
-Date: Tue, 29 Oct 2024 17:02:42 +0200
+In-Reply-To: <20241026193803.8802-1-W_Armin@gmx.de>
+References: <20241026193803.8802-1-W_Armin@gmx.de>
+Subject: Re: [PATCH 1/3] platform/x86: wmi: Remove wmi_block_list
+Message-Id: <173021416876.2801.15156306724313702863.b4-ty@linux.intel.com>
+Date: Tue, 29 Oct 2024 17:02:48 +0200
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -64,12 +62,12 @@ Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
 X-Mailer: b4 0.13.0
 
-On Thu, 24 Oct 2024 15:55:21 -0400, Mark Pearson wrote:
+On Sat, 26 Oct 2024 21:38:01 +0200, Armin Wolf wrote:
 
-> Improve determination of whether authentication account is enabled by
-> checking if either password or certificate is enabled.
+> The wmi_block_list is only used by guid_count() and without proper
+> protection. It also duplicates some of the WMI bus functionality.
 > 
-> Renamed valid to pwd_enabled for better readability.
+> Remove the wmi_block_list and use bus_for_each_dev() instead.
 > 
 > 
 
@@ -80,14 +78,12 @@ platform-drivers-x86/review-ilpo branch only once I've pushed my
 local branch there, which might take a while.
 
 The list of commits applied:
-[1/4] platform/x86: think-lmi: improve check if BIOS account security enabled
-      commit: b39e8ece931a4b4f64cdf9e75fffd6e82828e471
-[2/4] platform/x86: think-lmi: Add certificate as mechanism
-      commit: c7842e69e4508bef0920030340093f128722964e
-[3/4] platform/x86: think-lmi: Allow empty admin password
-      commit: 7c0bbf1ae6502dfcd0df5d50013e55a71021c819
-[4/4] platform/x86: think-lmi: Multi-certificate support
-      commit: 5dcb5ef125907d09806509a9db8c6705041e0026
+[1/3] platform/x86: wmi: Remove wmi_block_list
+      commit: 049571ce7678221767ec3ee5d522bc3de7d57ed3
+[2/3] platform/x86: wmi: Replace dev_to_wdev() with to_wmi_device()
+      commit: c382429b587ac49bd179d768f13e7fa5e7ed1787
+[3/3] platform/x86: wmi: Introduce to_wmi_driver()
+      commit: e001341a984e709e377b275123aecb5a763eaef9
 
 --
  i.
