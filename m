@@ -1,348 +1,655 @@
-Received: from NAM10-MW2-obe.outbound.protection.outlook.com (mail-mw2nam10on2054.outbound.protection.outlook.com [40.107.94.54])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6EE8C1885BD
-	for <platform-driver-x86@vger.kernel.org>; Tue, 29 Oct 2024 15:10:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.94.54
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730214637; cv=fail; b=teMPx6Zy6XtoQxh/2vnsx5gpIXNGBCV0M4effeg4WkrpeWJgIkKwVoheQOyrfpEhZEoJRpFsu9mJ4OX0CuJmXNJGlMO79c5ezmhzTHl95iYUePKK4MNkzp5OZv0iejpC8KpgeYAhKishbtMdpPzk+zL4EcCs6QFp9x7lJpm9N9c=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730214637; c=relaxed/simple;
-	bh=RRIf1hoW/2FaI4co3AYpzRaogLL2VHzui7vMSxDK7mQ=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=u+ct4yIi1QtCeb9+O0dx5h8EEt5qGeh141f8r+jvbFwYKTXGchqu3ElG7SktJd7jhfOTatyAWB5wfThSG9Q65seTALVI6GcslnYIj795zso8Tig72p6ySovPAbOMZFE/9Z5rLZHtwCYFL6B6e7Y1CsuWH+WS9yENzUyuRQC88jQ=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=r53TqCsr; arc=fail smtp.client-ip=40.107.94.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B4C9C194AD6;
+	Tue, 29 Oct 2024 15:44:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.8
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1730216656; cv=none; b=ZfXMO3knQ4G39W+CeuLSgEYzfUeI+rmeRdYTlcqYAsY6zKTbIsW8COCO3DpuFnEQA/0MeJfcCubPd4jFhPOBsfaz+QnYl7GSyinFK5r10qwGKYb5QklkXrpb8IFo2Sn/HZKSLcTdssQ2jH3ZqlOglCd9KZNb2kjymPWIgu5tY24=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1730216656; c=relaxed/simple;
+	bh=nmy5s3zv0/z2BAjom6ZfBqtq4TbyyLclyHG6cYUimtI=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=hGyQ3gTe3FxTSxZhmYW0y7F+AaHt0Rua4HNwpgrjtuV9GQ4Wg4fXtxGfoAeIsIvbu/fLo+RY1WOXxL9hGhUvdl8GsoOIEMA0Dn6HzfkHrbYw+Acj6PpkCpYuQka13eTGO8CcGe76qfT+2+FdJhptutfq7Psr0PF2Wb+/TuPuDVY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=l6WTzwZ5; arc=none smtp.client-ip=192.198.163.8
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="r53TqCsr"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=INvWs1JSHM88MzI64Kvs6snYj8yIYmlIrqiXIPI9QW93QxgcyjjCthV7C1xu4SlL59SKWLnuzTHJk27cIvBsZgkTQw0owRUI+xms5RlyvZtWv0W85Uwq3OKxcXvMkNx1kqaESbjm+K4RyzMa5/BQEEcmQWKlICPwOm5Uew8kJxoBD9LJqc5ryglDxA7oHnHIpmjvpOvDrxSP0FZ0aKvT3Y+QXCFc/UKwU6r8yPBdp4MrQ8LjfwbxKL4O4ZHtBVjCmeD9Os3eiKXncra/mYBwoacbkE0A5yLY8+EXzy3PQPP1xtzJn3xsWQ7vlQtyUTIDapbpNNaih3kGLIsal1evoA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=4chH/cj2pchlYXIiSRKJAUgb75AfGCIJlEGEy0sajS8=;
- b=EG+O229wfe9kNOgrbjA/NcDl4C2wHzyOy1poz7fpkxWY9usQLyIHAxUAq9m73fYUBhE5vHDh+yXZrKwVLKg3MImvk9k9q0Jj6XT/PIhUpl0guutsQOCEqAInt1FA0EnqmwPMl/Tz5Ul/E7x9f8ayGFR4IC+Hw3HgHjfDHjGO87YjMhwQf577RtQgr09Fvn8Z9rne8NciTT0IYmq4VDIJunA3H5m09Uig2xhir8CJmYOSys7u3o6vrP/LCVN/iBl98wGP9vrpeTDPT30QG16neOskHEIr+k15W6pRSBZ8rTSfDTQW9XJsZxsoo09l1VpzCO6jZzGtsqnZIn87YAC17Q==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=4chH/cj2pchlYXIiSRKJAUgb75AfGCIJlEGEy0sajS8=;
- b=r53TqCsrXR4VD4VxJ/+SwNwLpoGF6d7TqAgJIQ/7nQIdQTDpcceiJQOOiQrhNJ74Z9HtZsr18aHFkcYlszuz9ynf8Q/zjkxwcuoDAl74DBGhBQVZmy5W1tLkPhTznqmPWnd5PUjVAYzz86cWOcDUGKMRHnbB9/JcBMo8CoXHfBE=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from BL1PR12MB5176.namprd12.prod.outlook.com (2603:10b6:208:311::19)
- by PH8PR12MB6985.namprd12.prod.outlook.com (2603:10b6:510:1bc::20) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8093.24; Tue, 29 Oct
- 2024 15:10:31 +0000
-Received: from BL1PR12MB5176.namprd12.prod.outlook.com
- ([fe80::ed5b:dd2f:995a:bcf4]) by BL1PR12MB5176.namprd12.prod.outlook.com
- ([fe80::ed5b:dd2f:995a:bcf4%5]) with mapi id 15.20.8114.015; Tue, 29 Oct 2024
- 15:10:30 +0000
-Message-ID: <29139f25-95ce-42a8-a1c7-00846257d2b4@amd.com>
-Date: Tue, 29 Oct 2024 20:40:24 +0530
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 7/8] platform/x86/amd/pmc: Add STB support for AMD Desktop
- variants
-Content-Language: en-US
-To: Mario Limonciello <mario.limonciello@amd.com>, hdegoede@redhat.com,
- ilpo.jarvinen@linux.intel.com
-Cc: Sanket.Goswami@amd.com, platform-driver-x86@vger.kernel.org
-References: <20241028070438.1548737-1-Shyam-sundar.S-k@amd.com>
- <20241028070438.1548737-8-Shyam-sundar.S-k@amd.com>
- <b1a97ede-3201-4b04-96b0-9a5df92254f8@amd.com>
- <5b2e7143-97f3-4907-96c0-21a513058df5@amd.com>
- <cd26a6d1-a9fb-405f-878d-4b47a2095fca@amd.com>
-From: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
-In-Reply-To: <cd26a6d1-a9fb-405f-878d-4b47a2095fca@amd.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: PN2PR01CA0035.INDPRD01.PROD.OUTLOOK.COM
- (2603:1096:c01:22::10) To BL1PR12MB5176.namprd12.prod.outlook.com
- (2603:10b6:208:311::19)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="l6WTzwZ5"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1730216654; x=1761752654;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=nmy5s3zv0/z2BAjom6ZfBqtq4TbyyLclyHG6cYUimtI=;
+  b=l6WTzwZ5qZoJFvrx3POiDjVxECEN5gxV4yWxRLkExIOEDhMMIMmcb8n6
+   fKd+CJcY4YUF3z2dvMMci8OPWQ4n0o1LVNFVyu/QOXt5uMQWjOlFcUGo2
+   sDD0U+saYDUcnXumRT6h824TwfZdTmUucSsJ7h4VRmIRcDB8oTjDHXfKC
+   GbcryMkq+Ne8qPEoXLkLiRWC9K6i8CtTDTDtlh4XwvOD+uPaC5uMU3MzC
+   hs3JF8AxvdTsLzAort21edwpbirpM0oXcNe2RLKwEyj2ZCCl66NQ9qUUp
+   wBQdbkm69dBmLtt0OIIRvOWhb9nQhhJZ57xx1StgjW/m/wvsRiNUgFlJu
+   A==;
+X-CSE-ConnectionGUID: n7GKcSDjSh+sJppNIM4CKQ==
+X-CSE-MsgGUID: eb7cwYM7QceqwB9NfqI7og==
+X-IronPort-AV: E=McAfee;i="6700,10204,11240"; a="47349067"
+X-IronPort-AV: E=Sophos;i="6.11,241,1725346800"; 
+   d="scan'208";a="47349067"
+Received: from orviesa008.jf.intel.com ([10.64.159.148])
+  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Oct 2024 08:44:11 -0700
+X-CSE-ConnectionGUID: rjwNP3i2QvqVQJ+/shsHHg==
+X-CSE-MsgGUID: EI9xok8kSGmFBhJ2soBq+Q==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.11,241,1725346800"; 
+   d="scan'208";a="82810452"
+Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.83])
+  by orviesa008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Oct 2024 08:44:08 -0700
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Tue, 29 Oct 2024 17:44:05 +0200 (EET)
+To: Kurt Borja <kuurtb@gmail.com>
+cc: W_Armin@gmx.de, Hans de Goede <hdegoede@redhat.com>, 
+    LKML <linux-kernel@vger.kernel.org>, platform-driver-x86@vger.kernel.org
+Subject: Re: [PATCH v10 3/5] alienware-wmi: added platform profile support
+In-Reply-To: <20241029135341.5906-1-kuurtb@gmail.com>
+Message-ID: <9caaa4f1-9605-da2a-9afd-8f40ed33719f@linux.intel.com>
+References: <20241029135107.5582-2-kuurtb@gmail.com> <20241029135341.5906-1-kuurtb@gmail.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: BL1PR12MB5176:EE_|PH8PR12MB6985:EE_
-X-MS-Office365-Filtering-Correlation-Id: e47e9b87-c08a-4ee5-530b-08dcf82bd3ee
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|366016|1800799024;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?YWJSMFk0Q2QwYmt2WUdQU3JTNFg3RkpWRGZJRlUxbXh0QmxYUEpVa05vOXYw?=
- =?utf-8?B?R2JDcUh2MmYrMS80ZFBuck0rTEZ1eEdnNDA5TFhiUDhlOVdJYXNyMzRHVXFs?=
- =?utf-8?B?MWFic1NNKzYrZVBVem1yb2FySU5JT2JkTS9oalJDd1hweTE5U2R0RHVIWTVp?=
- =?utf-8?B?c1R6Ukhvc1FvTFUvRlRHNnFOQXJIVDFFOWE3Y20zRyt5b1dLdGFURmdvb3dQ?=
- =?utf-8?B?a3NrRHdEdFBERFdBVUZPcVBHcnNFY21kZGxNdkZUNmhySzV5ZTdEeS9Ub2pU?=
- =?utf-8?B?cEJmRUNvMXBCbEY0a0J1Sll0NUpJWklLb1d1QVdxTnNOQlJVMmlNVjhhY1NR?=
- =?utf-8?B?b3lkSmwwRC95WFJjUFpPZXRMTjdCZUpnYVJZeVFhTXhhUTRCQSttSTlQQlYr?=
- =?utf-8?B?K0lCSFRtT0VSVGN1ZUFvQUVuUDdiQmFCaVIvNUdTaElwTyt3SnMzeldvVFA0?=
- =?utf-8?B?SWNFRVFUNDBwVEpITXJOOWNCaHFENlVxOTBIRU01a1JEMWpKMkpGMlRzRFRL?=
- =?utf-8?B?VnpHK1BhKzYyTk82QjQvRTUyeWFqMlF6RzlTMkFTZktZWlhqcWx0SkJHeEk1?=
- =?utf-8?B?Wjd2Ui91cVR3ZW9Fc24rSll4M2xXQ1pOcUJvbDRFUVZGbGVqQ3BBcTEwd0cz?=
- =?utf-8?B?b3lMVTJUNFNOT25PREtHQ2I3V2VNWC9xYnd4R3N4Rjl5VjB0NER0TSsrOWJq?=
- =?utf-8?B?TnJJTnBmRGI0YU45NEEvcWtXNW9xdDh5cmg4WEZ3WmdtWDBDbVNDcnlxemZI?=
- =?utf-8?B?QUlkYnVGV2c0WjFYeE80VHNXc2Evd2xCUGcwMTl2cit6YXhVSVA2TUZoVWM2?=
- =?utf-8?B?c0RmUmtFbGlUaGRSOXhiSDJySkQ2ckQ4d2h0MDBtd0hHcGo5RXZPMVNZS3lq?=
- =?utf-8?B?WDVFTGdvekUzQXlIemxhMlNmeEhmdjVoM1IyK0dGS0lQSFdqWEsrNmVONzdj?=
- =?utf-8?B?a2NTanV3bjZBNnhZWlNob3M4ckg2ZmxtTFV0TWZ6Rm5oazRNTnRvQWZRdndj?=
- =?utf-8?B?NHZ3NFgySzcvbU5YcFBUNG1STTdFN3hwaW5yOEVCMW1QWkJpVUx1bEVDUStr?=
- =?utf-8?B?L1NlYVZoemFVbCtSWWYzdlliUWxuYkZJOVR4bzFZUlByUGpyS1IwbTduYkdB?=
- =?utf-8?B?emt0YlYrZTVabmV2VFV4NkVTa0o5L1BzWWdWQVk1STNjTGpZWXhzS25kd0ln?=
- =?utf-8?B?N3QvR2R3M2V1STJLekJheVBHL2s1RWFsS0t3VEVmeE53SHRpOVFRbWJiMnpS?=
- =?utf-8?B?YVJ1QXdzRGVsNmUzWjJITCtTdUFRNXVyYTlwQ0RXK2VWdC9rMlpwd29yYmF5?=
- =?utf-8?B?dkJBVEh0MkFMUURPRFZLL2NhZ0h3NkVFd2d3YjhZRjhhTFZjQXdnU1JpYndG?=
- =?utf-8?B?Ry9pUUhmekxMdHA0Umh5OWUwQkIzeFlreWo0NWVtQ1VEdm1mQUovUk5ydmww?=
- =?utf-8?B?NzhNVFZpa1NYRUM4dFU4RlJxSEYyWnp1cWh3VkhkWWZ1K1IrSUVNMXFDN3R4?=
- =?utf-8?B?VzB0c1B6Tk9wMmZSNjRYbHJYOGdOenJodWt5dGRjMGYvdmVDSE51NVpvRVh0?=
- =?utf-8?B?VVkybE1GLzVDby83N3BBQkJ4U3hicVEvalVScVB2L0hxNFdadzkwZHpMZXBi?=
- =?utf-8?B?eWRLVHg5bE5wWEtRK3ozYjJ0QjRuczBLS2d1UkFqc2RjTlNPUXUzbU5nNWl5?=
- =?utf-8?B?aDdieVFoRE5iUmVyMVIvTjNPV0tPRnJiSGpyeVI0UHRXYnluRWlKRFpLUDRo?=
- =?utf-8?Q?HgAyErBaLH/hf21FzbxfDDsMRNuhNGXJQ61Z1Jp?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BL1PR12MB5176.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(366016)(1800799024);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?QU4weG9PclZ5T25aSWRCRWY2eCs5bVVpVVVhV3ROKzNoL0RiTkQ3c0ZsVzZI?=
- =?utf-8?B?ZDJsdW5TU0FHdDFvcnk1MEp5YzZORjVwdXBVZC8zUi9lRkJBbUtZSnlJb1BW?=
- =?utf-8?B?RkY2bld2R3lJcHJySGk4d2gxUVdBeGVFZEEySHZsSE9aU25qM0UyNE9NVzJH?=
- =?utf-8?B?V1FoYVl4R1FESFF2TUk3Umx3TDQrUlV2dUg3K1NNanBRNE9kNVcvUUQxcFU5?=
- =?utf-8?B?aFhsdWFaU0N0dkZUVlVsb0xJTnplZzhaa2I5N1djemlxSjhZbVZDbG94SHJS?=
- =?utf-8?B?QTRoQXhqbVBUUi9IZno3MXhUMzJrOS9DTG4ramlmN2V2MGljZC9PY282WnBn?=
- =?utf-8?B?WTFMdW5CVDkrRjdoWmRRcm1URm05WnFrQ1FsdWxFcW9Zb2R6TWFIWnFzcHFD?=
- =?utf-8?B?amptdzZHRktxYnY2WG1qRmdxeDR2TmFkY0J1STdERkMyRGIvcWIyNFBNbUtz?=
- =?utf-8?B?VjZuQ0ljZjhEeHNjOTlZQk9aQ3Q1OWJZczB6bk9mMFVtMFQ5S0VHTEJkQkox?=
- =?utf-8?B?YnN3NUxoelZGU056dEgrd1lOZnUyWEptTnQ2LzBHa3hVT2k5Z1BkenhZb0pz?=
- =?utf-8?B?NHoxemlMME8yMEtNbUtaQnQwVUJpbENhQzhrN2tST1hpaG1mcGcvN2dmVkRj?=
- =?utf-8?B?TnFFenFVbWg5OUljeUVnSHRGYWN3KytYVDRXWDc3K0xmbUNXamVCbjBPSWRE?=
- =?utf-8?B?bWRBdWJIbFBSdy9pVUpFMmR0ZlVWUUtnNjlSdEN2SGlBd1JOTmhsaEJnZ3hG?=
- =?utf-8?B?Tm9aTzBrS0JtM2d3TU9UL01MVmo5V2Y4UlpBSlFPR1R4N0hVQUFRRDd3Vldi?=
- =?utf-8?B?U1U2cGhTcVdzRjl5dnY1R081T2FSVWJWMmo0bnhQdWZKRzkwcXJmclhaaFVx?=
- =?utf-8?B?clBPKzNCWm1Pelk3cVptS29TYUhLQlp2ZDV1dVBodW1ZeXB0WlNzblF6cEF1?=
- =?utf-8?B?R3dOU2dISTVSRmNuV3J4ZHY3aWRMd1o5aHZVa0x6QytGekQweU1ZTHd0bzY2?=
- =?utf-8?B?VTFteU9WeTFQL3BVTEROZ25DTGpMWVRNMnZ5dzEyeXRTWjFLTXlITUE5S1Jk?=
- =?utf-8?B?LzF5S2F1TkhtUVRibDlnYkNUSkVUOXVyeXNiNG05Umc3TGo0RHpKb21RUXhH?=
- =?utf-8?B?T3VON0RYcU9uL3I2TDhnNXhCVlg4bVB2S3k2dGxkTkh3eEJ5VTRzWTFDdmNp?=
- =?utf-8?B?ZHZIaTJiNExMVU1MaXkxeDFlcXppVzFBUEFNRE9xWHoyVGVKZHhvdGFnWXVh?=
- =?utf-8?B?MUtuZ1ZBKy9FakZKZ0VEMjg1aUI2OGtKNGxxdnRRV3lZZFU2cWxCdGJqSzZh?=
- =?utf-8?B?cWxQS1hTK0lLKzVZY3ZyMXNoU3ZpSHRaTUNkakUrUE8wWlFodURsK1lFMGJx?=
- =?utf-8?B?T3h5VkZwZWNLN2Y5cld3c1VvOU1vcVBQWUhrMU5PYi80akE2UUd6T1hMM2lq?=
- =?utf-8?B?S1BnV3FxeGc0MGxhTnBvQVg4d0drbUtKcXlxbXJDVEw3MWFJMVZWTiszRVYx?=
- =?utf-8?B?YmZGblRoT0ZpTDFSaWU5NDg1OFdKR0JFNFo2bHpLT2dVZm40SktwaDZCU3hH?=
- =?utf-8?B?SkNmQlFDUHFSS1UzanVVM3JNYkVRUXV2ZUROTllZV2Ira2Jtd296MnNIVUNl?=
- =?utf-8?B?R3dzTnJSWTA4emJyYVByUVNzZjk4aDBvOFFOYlRZci9JZEJ6N3A3dmtzT0pD?=
- =?utf-8?B?VWRHYVUxdlM1dXRDYmhhTW9qTnZydUpTQ2Nkd0dmc3Zhc1VnUm5VSlFPMGxt?=
- =?utf-8?B?RlBweVFJOEhOdXJXclREM1B3Q2lJYkRUVG00MUt4OFZxZzc2WS9XODh4RFRZ?=
- =?utf-8?B?MWpqaUNkYk1vTnhzNFhsSjRKN2FnTnoxZ3lvTm55enY4RmdFYXh1dU0vQUdL?=
- =?utf-8?B?RnZPenBHRUFsNitBa2Z1MmtYbjN6WVV2QmFmVDZqb0lqYWJnR0JjZHRhLzRE?=
- =?utf-8?B?NitiYnF1M0JyanQySGFQNHM2MHpZMldmU1IxSnpwTk00UkNLYmRnem05bkVr?=
- =?utf-8?B?MlNSNGFUZCt2RHRCNlR6SllYSnQ5VEZUUUMxZllxdTBQZk4xMmpyNTdvdk0x?=
- =?utf-8?B?alRtWGg2YjBaN2orcjZneXp1ZXRhVGZTMko1NmtxWTNhL01QMkNVTndKRWMw?=
- =?utf-8?Q?YvJCYGu8TgZqGjW4Ah8j37VDB?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: e47e9b87-c08a-4ee5-530b-08dcf82bd3ee
-X-MS-Exchange-CrossTenant-AuthSource: BL1PR12MB5176.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 29 Oct 2024 15:10:30.6340
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: KEoknJFl4dCOG1vF9yHvp1q2NdyE9WGF3W3Pg0lLPkjKGTwIUd3pVoRhwA6lKv+DlkUquEXdAnbROWNO+6Q09Q==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH8PR12MB6985
+Content-Type: multipart/mixed; boundary="8323328-1073594778-1730216645=:951"
 
+  This message is in MIME format.  The first part should be readable text,
+  while the remaining parts are likely unreadable without MIME-aware tools.
 
+--8323328-1073594778-1730216645=:951
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 
-On 10/29/2024 19:45, Mario Limonciello wrote:
-> On 10/29/2024 09:09, Shyam Sundar S K wrote:
->>
->>
->> On 10/28/2024 22:18, Mario Limonciello wrote:
->>> On 10/28/2024 02:04, Shyam Sundar S K wrote:
->>>> Previously, AMD's Ryzen Desktop SoCs did not include support for STB.
->>>> However, to accommodate this recent change, PMFW has implemented a
->>>> new
->>>> message port pair mechanism for handling messages, arguments, and
->>>> responses, specifically designed for distinguishing from Mobile SoCs.
->>>> Therefore, it is necessary to update the driver to properly handle
->>>> this
->>>> incoming change.
->>>>
->>>> Co-developed-by: Sanket Goswami <Sanket.Goswami@amd.com>
->>>> Signed-off-by: Sanket Goswami <Sanket.Goswami@amd.com>
->>>> Signed-off-by: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
->>>> ---
->>>>    drivers/platform/x86/amd/pmc/mp1_stb.c | 12 ++++++++++++
->>>>    1 file changed, 12 insertions(+)
->>>>
->>>> diff --git a/drivers/platform/x86/amd/pmc/mp1_stb.c
->>>> b/drivers/platform/x86/amd/pmc/mp1_stb.c
->>>> index 917c111b31c9..bafc07556283 100644
->>>> --- a/drivers/platform/x86/amd/pmc/mp1_stb.c
->>>> +++ b/drivers/platform/x86/amd/pmc/mp1_stb.c
->>>> @@ -36,6 +36,11 @@
->>>>    #define AMD_S2D_REGISTER_RESPONSE    0xA80
->>>>    #define AMD_S2D_REGISTER_ARGUMENT    0xA88
->>>>    +/* STB S2D(Spill to DRAM) message port offset for 44h model */
->>>> +#define AMD_GNR_REGISTER_MESSAGE    0x524
->>>> +#define AMD_GNR_REGISTER_RESPONSE    0x570
->>>> +#define AMD_GNR_REGISTER_ARGUMENT    0xA40
->>>> +
->>>>    static bool enable_stb;
->>>>    module_param(enable_stb, bool, 0644);
->>>>    MODULE_PARM_DESC(enable_stb, "Enable the STB debug mechanism");
->>>> @@ -244,6 +249,13 @@ static bool amd_is_stb_supported(struct
->>>> amd_pmc_dev *dev)
->>>>        switch (dev->cpu_id) {
->>>>        case AMD_CPU_ID_YC:
->>>>        case AMD_CPU_ID_CB:
->>>> +        if (boot_cpu_data.x86_model == 0x44) {
->>>
->>> It's unfortunate that this information can't be discovered from the
->>> F/W, because this code is now turning into:
->>>
->>
->> That's true.
->>
->>> switch(dev->cpu_id)
->>> case FOO:
->>>      if (boot_cpu_data.x86_model == BAR)
->>>
->>> That's pretty ugly IMO.
->>>
->>> If you're doing to have a check like that, I think it's better to just
->>> ditch the cpu_id (root port PCI ID detection) and go all in on x86
->>> checks like this instead:
->>>
->>> if (cpu_feature_enabled(X86_FEATURE_ZEN4)) {
->>>      switch (boot_cpu_data.x86_model)
->>>      case 0x60 .. 0x6f:
->>>          //set up args
->>>          break;
->>>      default:
->>>          break;
->>> } else if (cpu_feature_enabled(X86_FEATURE_ZEN5)) {
->>>      switch (boot_cpu_data.x86_model)
->>>      case 0x40 .. 0x44:
->>>          //set up args
->>>          break;
->>>      default:
->>>          break;
->>> }
->>
->> The only benefit I see is instead of using cpu_id, using
->> cpu_feature_enabled() to know the underlying generation.
->>
->> We have to update two things with the evolution of family, i.e.
->> s2d_msg_id that is changed (and getting changed..) from each
->> generation/family/model and next is the passing the right arguments to
->> PMFW (i.e. msg/arg/resp).
->>
->> But the catch is, the s2d_msg_id is tied to the model, for which we
->> will still have to depend of boot_cpu_data.x86_model() to get to know
->> the information.
->>
->> So, the code will turn something like this:
->>
->> {
->> if (cpu_feature_enabled(X86_FEATURE_ZEN2)) {
->>         dev->stb_arg.s2d_msg_id = 0xBE;
->> } else if (cpu_feature_enabled(X86_FEATURE_ZEN3)) {
->>         dev->stb_arg.s2d_msg_id = 0xBE;
->> } else if (cpu_feature_enabled(X86_FEATURE_ZEN4)) {
->>         switch (boot_cpu_data.x86_model) {
->>         case 0x60:
->>                 dev->stb_arg.s2d_msg_id = 0xBE;
->>                 break;
->>         default:
->>                 dev->stb_arg.s2d_msg_id = 0x85;
->>                 break;
->>         }
->> } else if (cpu_feature_enabled(X86_FEATURE_ZEN5)) {
->>         switch (boot_cpu_data.x86_model) {
->>         case 0x24:
->>                 dev->stb_arg.s2d_msg_id = 0xDE;
->>                 break;
->>         case 0x70:
-> 
-> Can you double check hardware documentation?  I believe these should
-> generally be ranges, IE:
-> 
-> case 0x70 .. 0x7f:
+On Tue, 29 Oct 2024, Kurt Borja wrote:
 
-Yes. I double checked it. The range would be applicable only for
-kicker programs and not all generations may have a kicker.
+> Implements platform profile support for Dell laptops with new WMAX therma=
+l
+> interface, present on some Alienware X-Series, Alienware M-Series and
+> Dell's G-Series laptops. This interface is suspected to be used by
+> Alienware Command Center (AWCC), which is not available for linux
+> systems, to manage thermal profiles.
+>=20
+> This implementation makes use of three WMI methods, namely
+> THERMAL_CONTROL, THERMAL_INFORMATION and GAME_SHIFT_STATUS, which take
+> u32 as input and output arguments. Each method has a set of supported
+> operations specified in their respective enums.
+>=20
+> Not all models with WMAX WMI interface support these methods. Because of
+> this, models have to manually declare support through new quirks
+> `thermal` for THERMAL_CONTROL and THERMAL_INFORMATION and `gmode` for
+> GAME_SHIFT_STATUS.
+>=20
+> Wrappers written for these methods support multiple operations.
+>=20
+> THERMAL_CONTROL switches thermal modes through operation
+> ACTIVATE_PROFILE. Available thermal codes are auto-detected at runtime
+> and matched against a list of known thermal codes:
+>=20
+> Thermal Table "User Selectable Thermal Tables" (USTT):
+> =09BALANCED=09=09=090xA0
+> =09BALANCED_PERFORMANCE=09=090xA1
+> =09COOL=09=09=09=090xA2
+> =09QUIET=09=09=09=090xA3
+> =09PERFORMANCE=09=09=090xA4
+> =09LOW_POWER=09=09=090xA5
+>=20
+> Thermal Table Basic:
+> =09QUIET=09=09=09=090x96
+> =09BALANCED=09=09=090x97
+> =09BALANCED_PERFORMANCE=09=090x98
+> =09PERFORMANCE=09=09=090x99
+>=20
+> Devices are known to implement only one of these tables without mixing
+> their thermal codes.
+>=20
+> The fact that the least significant digit of every thermal code is
+> consecutive of one another is exploited to efficiently match codes
+> through arrays.
+>=20
+> Autodetection of available codes is done through operation LIST_IDS of
+> method THERMAL_INFORMATION. This operation lists fan IDs, CPU sensor ID,
+> GPU sensor ID and available thermal profile codes, *in that order*. As
+> number of fans and thermal codes is very model dependent, almost every
+> ID is scanned and matched based on conditions found on
+> is_wmax_thermal_code(). The known upper bound for the number of IDs is
+> 13, corresponding to a device that have 4 fans, 2 sensors and 7 thermal
+> codes.
+>=20
+> Additionally G-Series laptops have a key called G-key, which (with AWCC
+> proprietary driver) switches the thermal mode to an special mode named
+> GMODE with code 0xAB and changes Game Shift Status to 1. Game Shift is a
+> mode the manufacturer claims, increases gaming performance.
+>=20
+> GAME_SHIFT_STATUS method is used to mimic this behavior when selecting
+> PLATFORM_PROFILE_PERFORMANCE option.
+>=20
+> All of these profiles are known to only change fan speed profiles,
+> although there are untested claims that some of them also change power
+> profiles.
+>=20
+> Activating a thermal mode with method THERMAL_CONTROL may cause short
+> hangs. This is a known problem present on every platform.
+>=20
+> Signed-off-by: Kurt Borja <kuurtb@gmail.com>
+> Reviewed-by: Ilpo J=C3=A4rvinen <ilpo.jarvinen@linux.intel.com>
+> ---
+> v10:
+>  - Corrected THERMAL_MODE_BASIC_BALANCED -> THERMAL_MODE_BASIC_QUIET in
+>    is_wmax_thermal_code() logic
+>  - `thermal` and `gmode` quirks now have to be manually selected,
+>    because not all Dell devices posses the new WMI thermal methods.
+>  - Because of the above reason, errors in create_thermal_profile are now
+>    propagated
+> v9:
+>  - Bool comparisons are now coherent with their type
+> v8:
+>  - Fixed alignment in wmax_mode_to_platform_profile[]
+>  - Quirk thermal and gmode changed from u8 -> bool
+>  - Autodetected quirk entries are not initialized
+>  - is_wmax_thermal_code refactored to increase readibility
+>  - is_wmax_thermal_code now covers all possibilities
+>  - Better commit message
+> v7:
+>  - Method operations are now clearly listed as separate enums
+>  - wmax_thermal_modes are now listed without codes in order to support
+>    autodetection, as well as getting and setting thermal profiles
+>    cleanly through arrays
+>  - Added wmax_mode_to_platform_profile[]
+>  - Added struct wmax_u32_args to replace bit mask approach of
+>    constructing arguments for wmax methods
+>  - create_thermal_profile now autodetects available thermal codes
+>    through operation 0x03 of THERMAL_INFORMATION method. These are
+>    codes are stored in supported_thermal_profiles[]
+>  - thermal_profile_get now uses wmax_mode_to_platform_profile[] instead o=
+f
+>    switch-case approach
+>  - thermal_profile_set now uses supported_thermal_profiles[] instead of
+>    switch-case approach
+>  - When gmode is autodetected, thermal_profile_set also sets Game Shift
+>    status accordingly
+> v6:
+>  - Fixed alignment on some function definitions
+>  - Fixed braces on if statment
+>  - Removed quirk thermal_ustt
+>  - Now quirk thermal can take values defined in enum WMAX_THERMAL_TABLE.
+>  - Proper removal of thermal_profile
+> ---
+>  drivers/platform/x86/dell/Kconfig         |   1 +
+>  drivers/platform/x86/dell/alienware-wmi.c | 306 ++++++++++++++++++++++
+>  2 files changed, 307 insertions(+)
+>=20
+> diff --git a/drivers/platform/x86/dell/Kconfig b/drivers/platform/x86/del=
+l/Kconfig
+> index 68a49788a..b06d634cd 100644
+> --- a/drivers/platform/x86/dell/Kconfig
+> +++ b/drivers/platform/x86/dell/Kconfig
+> @@ -21,6 +21,7 @@ config ALIENWARE_WMI
+>  =09depends on LEDS_CLASS
+>  =09depends on NEW_LEDS
+>  =09depends on ACPI_WMI
+> +=09select ACPI_PLATFORM_PROFILE
+>  =09help
+>  =09 This is a driver for controlling Alienware BIOS driven
+>  =09 features.  It exposes an interface for controlling the AlienFX
+> diff --git a/drivers/platform/x86/dell/alienware-wmi.c b/drivers/platform=
+/x86/dell/alienware-wmi.c
+> index b27f3b64c..1d62c2ce7 100644
+> --- a/drivers/platform/x86/dell/alienware-wmi.c
+> +++ b/drivers/platform/x86/dell/alienware-wmi.c
+> @@ -8,8 +8,11 @@
+>  #define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
+> =20
+>  #include <linux/acpi.h>
+> +#include <linux/bitfield.h>
+> +#include <linux/bits.h>
+>  #include <linux/module.h>
+>  #include <linux/platform_device.h>
+> +#include <linux/platform_profile.h>
+>  #include <linux/dmi.h>
+>  #include <linux/leds.h>
+> =20
+> @@ -25,6 +28,13 @@
+>  #define WMAX_METHOD_AMPLIFIER_CABLE=090x6
+>  #define WMAX_METHOD_DEEP_SLEEP_CONTROL=090x0B
+>  #define WMAX_METHOD_DEEP_SLEEP_STATUS=090x0C
+> +#define WMAX_METHOD_THERMAL_INFORMATION=090x14
+> +#define WMAX_METHOD_THERMAL_CONTROL=090x15
+> +#define WMAX_METHOD_GAME_SHIFT_STATUS=090x25
+> +
+> +#define WMAX_THERMAL_MODE_GMODE=09=090xAB
+> +
+> +#define WMAX_FAILURE_CODE=09=090xFFFFFFFF
+> =20
+>  MODULE_AUTHOR("Mario Limonciello <mario.limonciello@outlook.com>");
+>  MODULE_DESCRIPTION("Alienware special feature control");
+> @@ -49,11 +59,59 @@ enum WMAX_CONTROL_STATES {
+>  =09WMAX_SUSPEND =3D 3,
+>  };
+> =20
+> +enum WMAX_THERMAL_INFORMATION_OPERATIONS {
+> +=09WMAX_OPERATION_LIST_IDS=09=09=09=3D 0x03,
+> +=09WMAX_OPERATION_CURRENT_PROFILE=09=09=3D 0x0B,
+> +};
+> +
+> +enum WMAX_THERMAL_CONTROL_OPERATIONS {
+> +=09WMAX_OPERATION_ACTIVATE_PROFILE=09=09=3D 0x01,
+> +};
+> +
+> +enum WMAX_GAME_SHIFT_STATUS_OPERATIONS {
+> +=09WMAX_OPERATION_TOGGLE_GAME_SHIFT=09=3D 0x01,
+> +=09WMAX_OPERATION_GET_GAME_SHIFT_STATUS=09=3D 0x02,
+> +};
+> +
+> +enum WMAX_THERMAL_TABLES {
+> +=09WMAX_THERMAL_TABLE_BASIC=09=09=3D 0x90,
+> +=09WMAX_THERMAL_TABLE_USTT=09=09=09=3D 0xA0,
+> +};
+> +
+> +enum wmax_thermal_mode {
+> +=09THERMAL_MODE_USTT_BALANCED,
+> +=09THERMAL_MODE_USTT_BALANCED_PERFORMANCE,
+> +=09THERMAL_MODE_USTT_COOL,
+> +=09THERMAL_MODE_USTT_QUIET,
+> +=09THERMAL_MODE_USTT_PERFORMANCE,
+> +=09THERMAL_MODE_USTT_LOW_POWER,
+> +=09THERMAL_MODE_BASIC_QUIET,
+> +=09THERMAL_MODE_BASIC_BALANCED,
+> +=09THERMAL_MODE_BASIC_BALANCED_PERFORMANCE,
+> +=09THERMAL_MODE_BASIC_PERFORMANCE,
+> +=09THERMAL_MODE_LAST,
+> +};
+> +
+> +static const enum platform_profile_option wmax_mode_to_platform_profile[=
+THERMAL_MODE_LAST] =3D {
+> +=09[THERMAL_MODE_USTT_BALANCED]=09=09=09=3D PLATFORM_PROFILE_BALANCED,
+> +=09[THERMAL_MODE_USTT_BALANCED_PERFORMANCE]=09=3D PLATFORM_PROFILE_BALAN=
+CED_PERFORMANCE,
+> +=09[THERMAL_MODE_USTT_COOL]=09=09=09=3D PLATFORM_PROFILE_COOL,
+> +=09[THERMAL_MODE_USTT_QUIET]=09=09=09=3D PLATFORM_PROFILE_QUIET,
+> +=09[THERMAL_MODE_USTT_PERFORMANCE]=09=09=09=3D PLATFORM_PROFILE_PERFORMA=
+NCE,
+> +=09[THERMAL_MODE_USTT_LOW_POWER]=09=09=09=3D PLATFORM_PROFILE_LOW_POWER,
+> +=09[THERMAL_MODE_BASIC_QUIET]=09=09=09=3D PLATFORM_PROFILE_QUIET,
+> +=09[THERMAL_MODE_BASIC_BALANCED]=09=09=09=3D PLATFORM_PROFILE_BALANCED,
+> +=09[THERMAL_MODE_BASIC_BALANCED_PERFORMANCE]=09=3D PLATFORM_PROFILE_BALA=
+NCED_PERFORMANCE,
+> +=09[THERMAL_MODE_BASIC_PERFORMANCE]=09=09=3D PLATFORM_PROFILE_PERFORMANC=
+E,
+> +};
+> +
+>  struct quirk_entry {
+>  =09u8 num_zones;
+>  =09u8 hdmi_mux;
+>  =09u8 amplifier;
+>  =09u8 deepslp;
+> +=09bool thermal;
+> +=09bool gmode;
+>  };
+> =20
+>  static struct quirk_entry *quirks;
+> @@ -64,6 +122,8 @@ static struct quirk_entry quirk_inspiron5675 =3D {
+>  =09.hdmi_mux =3D 0,
+>  =09.amplifier =3D 0,
+>  =09.deepslp =3D 0,
+> +=09.thermal =3D false,
+> +=09.gmode =3D false,
+>  };
+> =20
+>  static struct quirk_entry quirk_unknown =3D {
+> @@ -71,6 +131,8 @@ static struct quirk_entry quirk_unknown =3D {
+>  =09.hdmi_mux =3D 0,
+>  =09.amplifier =3D 0,
+>  =09.deepslp =3D 0,
+> +=09.thermal =3D false,
+> +=09.gmode =3D false,
+>  };
+> =20
+>  static struct quirk_entry quirk_x51_r1_r2 =3D {
+> @@ -78,6 +140,8 @@ static struct quirk_entry quirk_x51_r1_r2 =3D {
+>  =09.hdmi_mux =3D 0,
+>  =09.amplifier =3D 0,
+>  =09.deepslp =3D 0,
+> +=09.thermal =3D false,
+> +=09.gmode =3D false,
+>  };
+> =20
+>  static struct quirk_entry quirk_x51_r3 =3D {
+> @@ -85,6 +149,8 @@ static struct quirk_entry quirk_x51_r3 =3D {
+>  =09.hdmi_mux =3D 0,
+>  =09.amplifier =3D 1,
+>  =09.deepslp =3D 0,
+> +=09.thermal =3D false,
+> +=09.gmode =3D false,
+>  };
+> =20
+>  static struct quirk_entry quirk_asm100 =3D {
+> @@ -92,6 +158,8 @@ static struct quirk_entry quirk_asm100 =3D {
+>  =09.hdmi_mux =3D 1,
+>  =09.amplifier =3D 0,
+>  =09.deepslp =3D 0,
+> +=09.thermal =3D false,
+> +=09.gmode =3D false,
+>  };
+> =20
+>  static struct quirk_entry quirk_asm200 =3D {
+> @@ -99,6 +167,8 @@ static struct quirk_entry quirk_asm200 =3D {
+>  =09.hdmi_mux =3D 1,
+>  =09.amplifier =3D 0,
+>  =09.deepslp =3D 1,
+> +=09.thermal =3D false,
+> +=09.gmode =3D false,
+>  };
+> =20
+>  static struct quirk_entry quirk_asm201 =3D {
+> @@ -106,6 +176,17 @@ static struct quirk_entry quirk_asm201 =3D {
+>  =09.hdmi_mux =3D 1,
+>  =09.amplifier =3D 1,
+>  =09.deepslp =3D 1,
+> +=09.thermal =3D false,
+> +=09.gmode =3D false,
+> +};
+> +
+> +static struct quirk_entry quirk_x_series =3D {
+> +=09.num_zones =3D 2,
+> +=09.hdmi_mux =3D 0,
+> +=09.amplifier =3D 0,
+> +=09.deepslp =3D 0,
+> +=09.thermal =3D true,
+> +=09.gmode =3D false,
+>  };
 
-Also, not all BIOSes support STB/S2D. So, these models have to be
-added only on need basis.
+So now gmode is always false unless the module parameter from patch 4 is=20
+given?
 
-Thanks,
-Shyam
+--
+ i.
 
-> 
->>                 dev->stb_arg.s2d_msg_id = 0xF1;
->>                 break;
->>         case 0x44:
->>                 dev->stb_arg.s2d_msg_id = 0x9B;
->>                 //update stb args
->>                 break;
->>         default:
->>                 break;
->>         }
->> }
->>
->> //update stb args
->> }
->>
->> IMO, this still looks clumsy. 
-> 
-> Yeah but it is closer to how all the arch/x86 code works too and at
-> least logical to a bystander.
-> 
->> So, I will take your input of using
->> cpu_feature_enabled() and drop cpu_id from root port..
->>
->> but, I have a code simplification that will be addressed in v2.
-> 
-> Great thanks!
-> 
->>
->>>
->>> if (!dev->stb_arg.s2d_msg_id) {
->>>      pr_warn("unsupported platform");
->>>      return false;
->>> }
->>>
->>
->> This is not required, as we will end up having unnecessary spew when
->> this function gets triggered on platforms that wont support Spill to
->> DRAM, i.e Cezzane or lower.
->>
->> I have looked your comments on 6/8. Will address them with
->> cpu_feature_enabled() + code simplification.
->>
->> Thanks,
->> Shyam
->>
->>> return true;
->>>
->>> Then each time a new one is added it's a lot easier to follow what
->>> it's really matching.
->>>
->>>> +            dev->stb_arg.s2d_msg_id = 0x9B;
->>>> +            dev->stb_arg.msg = AMD_GNR_REGISTER_MESSAGE;
->>>> +            dev->stb_arg.arg = AMD_GNR_REGISTER_ARGUMENT;
->>>> +            dev->stb_arg.resp = AMD_GNR_REGISTER_RESPONSE;
->>>> +            return true;
->>>> +        }
->>>>            dev->stb_arg.s2d_msg_id = 0xBE;
->>>>            break;
->>>>        case AMD_CPU_ID_PS:
->>>
-> 
+>  static int __init dmi_matched(const struct dmi_system_id *dmi)
+> @@ -178,6 +259,15 @@ static const struct dmi_system_id alienware_quirks[]=
+ __initconst =3D {
+>  =09=09},
+>  =09=09.driver_data =3D &quirk_inspiron5675,
+>  =09},
+> +=09{
+> +=09=09.callback =3D dmi_matched,
+> +=09=09.ident =3D "Alienware x15 R1",
+> +=09=09.matches =3D {
+> +=09=09=09DMI_MATCH(DMI_SYS_VENDOR, "Alienware"),
+> +=09=09=09DMI_MATCH(DMI_PRODUCT_NAME, "Alienware x15 R1"),
+> +=09=09},
+> +=09=09.driver_data =3D &quirk_x_series,
+> +=09},
+>  =09{}
+>  };
+> =20
+> @@ -214,10 +304,19 @@ struct wmax_led_args {
+>  =09u8 state;
+>  } __packed;
+> =20
+> +struct wmax_u32_args {
+> +=09u8 operation;
+> +=09u8 arg1;
+> +=09u8 arg2;
+> +=09u8 arg3;
+> +};
+> +
+>  static struct platform_device *platform_device;
+>  static struct device_attribute *zone_dev_attrs;
+>  static struct attribute **zone_attrs;
+>  static struct platform_zone *zone_data;
+> +static struct platform_profile_handler pp_handler;
+> +static enum wmax_thermal_mode supported_thermal_profiles[PLATFORM_PROFIL=
+E_LAST];
+> =20
+>  static struct platform_driver platform_driver =3D {
+>  =09.driver =3D {
+> @@ -761,6 +860,204 @@ static int create_deepsleep(struct platform_device =
+*dev)
+>  =09return ret;
+>  }
+> =20
+> +/*
+> + * Thermal Profile control
+> + *  - Provides thermal profile control through the Platform Profile API
+> + */
+> +#define WMAX_THERMAL_TABLE_MASK=09=09GENMASK(7, 4)
+> +#define WMAX_THERMAL_MODE_MASK=09=09GENMASK(3, 0)
+> +#define WMAX_SENSOR_ID_MASK=09=09BIT(8)
+> +
+> +static bool is_wmax_thermal_code(u32 code)
+> +{
+> +=09if (code & WMAX_SENSOR_ID_MASK)
+> +=09=09return false;
+> +
+> +=09if ((code & WMAX_THERMAL_MODE_MASK) >=3D THERMAL_MODE_LAST)
+> +=09=09return false;
+> +
+> +=09if ((code & WMAX_THERMAL_TABLE_MASK) =3D=3D WMAX_THERMAL_TABLE_BASIC =
+&&
+> +=09    (code & WMAX_THERMAL_MODE_MASK) >=3D THERMAL_MODE_BASIC_QUIET)
+> +=09=09return true;
+> +
+> +=09if ((code & WMAX_THERMAL_TABLE_MASK) =3D=3D WMAX_THERMAL_TABLE_USTT &=
+&
+> +=09    (code & WMAX_THERMAL_MODE_MASK) <=3D THERMAL_MODE_USTT_LOW_POWER)
+> +=09=09return true;
+> +
+> +=09return false;
+> +}
+> +
+> +static int wmax_thermal_information(u8 operation, u8 arg, u32 *out_data)
+> +{
+> +=09acpi_status status;
+> +=09struct wmax_u32_args in_args =3D {
+> +=09=09.operation =3D operation,
+> +=09=09.arg1 =3D arg,
+> +=09=09.arg2 =3D 0,
+> +=09=09.arg3 =3D 0,
+> +=09};
+> +
+> +=09status =3D alienware_wmax_command(&in_args, sizeof(in_args),
+> +=09=09=09=09=09WMAX_METHOD_THERMAL_INFORMATION,
+> +=09=09=09=09=09out_data);
+> +
+> +=09if (ACPI_FAILURE(status))
+> +=09=09return -EIO;
+> +
+> +=09if (*out_data =3D=3D WMAX_FAILURE_CODE)
+> +=09=09return -EBADRQC;
+> +
+> +=09return 0;
+> +}
+> +
+> +static int wmax_thermal_control(u8 profile)
+> +{
+> +=09acpi_status status;
+> +=09struct wmax_u32_args in_args =3D {
+> +=09=09.operation =3D WMAX_OPERATION_ACTIVATE_PROFILE,
+> +=09=09.arg1 =3D profile,
+> +=09=09.arg2 =3D 0,
+> +=09=09.arg3 =3D 0,
+> +=09};
+> +=09u32 out_data;
+> +
+> +=09status =3D alienware_wmax_command(&in_args, sizeof(in_args),
+> +=09=09=09=09=09WMAX_METHOD_THERMAL_CONTROL,
+> +=09=09=09=09=09&out_data);
+> +
+> +=09if (ACPI_FAILURE(status))
+> +=09=09return -EIO;
+> +
+> +=09if (out_data =3D=3D WMAX_FAILURE_CODE)
+> +=09=09return -EBADRQC;
+> +
+> +=09return 0;
+> +}
+> +
+> +static int wmax_game_shift_status(u8 operation, u32 *out_data)
+> +{
+> +=09acpi_status status;
+> +=09struct wmax_u32_args in_args =3D {
+> +=09=09.operation =3D operation,
+> +=09=09.arg1 =3D 0,
+> +=09=09.arg2 =3D 0,
+> +=09=09.arg3 =3D 0,
+> +=09};
+> +
+> +=09status =3D alienware_wmax_command(&in_args, sizeof(in_args),
+> +=09=09=09=09=09WMAX_METHOD_GAME_SHIFT_STATUS,
+> +=09=09=09=09=09out_data);
+> +
+> +=09if (ACPI_FAILURE(status))
+> +=09=09return -EIO;
+> +
+> +=09if (*out_data =3D=3D WMAX_FAILURE_CODE)
+> +=09=09return -EOPNOTSUPP;
+> +
+> +=09return 0;
+> +}
+> +
+> +static int thermal_profile_get(struct platform_profile_handler *pprof,
+> +=09=09=09       enum platform_profile_option *profile)
+> +{
+> +=09u32 out_data;
+> +=09int ret;
+> +
+> +=09ret =3D wmax_thermal_information(WMAX_OPERATION_CURRENT_PROFILE,
+> +=09=09=09=09       0, &out_data);
+> +
+> +=09if (ret < 0)
+> +=09=09return ret;
+> +
+> +=09if (out_data =3D=3D WMAX_THERMAL_MODE_GMODE) {
+> +=09=09*profile =3D PLATFORM_PROFILE_PERFORMANCE;
+> +=09=09return 0;
+> +=09}
+> +
+> +=09if (!is_wmax_thermal_code(out_data))
+> +=09=09return -ENODATA;
+> +
+> +=09out_data &=3D WMAX_THERMAL_MODE_MASK;
+> +=09*profile =3D wmax_mode_to_platform_profile[out_data];
+> +
+> +=09return 0;
+> +}
+> +
+> +static int thermal_profile_set(struct platform_profile_handler *pprof,
+> +=09=09=09       enum platform_profile_option profile)
+> +{
+> +=09if (quirks->gmode) {
+> +=09=09u32 gmode_status;
+> +=09=09int ret;
+> +
+> +=09=09ret =3D wmax_game_shift_status(WMAX_OPERATION_GET_GAME_SHIFT_STATU=
+S,
+> +=09=09=09=09=09     &gmode_status);
+> +
+> +=09=09if (ret < 0)
+> +=09=09=09return ret;
+> +
+> +=09=09if ((profile =3D=3D PLATFORM_PROFILE_PERFORMANCE && !gmode_status)=
+ ||
+> +=09=09    (profile !=3D PLATFORM_PROFILE_PERFORMANCE && gmode_status)) {
+> +=09=09=09ret =3D wmax_game_shift_status(WMAX_OPERATION_TOGGLE_GAME_SHIFT=
+,
+> +=09=09=09=09=09=09     &gmode_status);
+> +
+> +=09=09=09if (ret < 0)
+> +=09=09=09=09return ret;
+> +=09=09}
+> +=09}
+> +
+> +=09return wmax_thermal_control(supported_thermal_profiles[profile]);
+> +}
+> +
+> +static int create_thermal_profile(void)
+> +{
+> +=09u32 out_data;
+> +=09enum wmax_thermal_mode mode;
+> +=09enum platform_profile_option profile;
+> +=09int ret;
+> +
+> +=09for (u8 i =3D 0x2; i <=3D 0xD; i++) {
+> +=09=09ret =3D wmax_thermal_information(WMAX_OPERATION_LIST_IDS,
+> +=09=09=09=09=09       i, &out_data);
+> +
+> +=09=09if (ret =3D=3D -EIO)
+> +=09=09=09return ret;
+> +
+> +=09=09if (ret =3D=3D -EBADRQC)
+> +=09=09=09break;
+> +
+> +=09=09if (!is_wmax_thermal_code(out_data))
+> +=09=09=09continue;
+> +
+> +=09=09mode =3D out_data & WMAX_THERMAL_MODE_MASK;
+> +=09=09profile =3D wmax_mode_to_platform_profile[mode];
+> +=09=09supported_thermal_profiles[profile] =3D out_data;
+> +
+> +=09=09set_bit(profile, pp_handler.choices);
+> +=09}
+> +
+> +=09if (bitmap_empty(pp_handler.choices, PLATFORM_PROFILE_LAST))
+> +=09=09return -ENODEV;
+> +
+> +=09if (quirks->gmode) {
+> +=09=09supported_thermal_profiles[PLATFORM_PROFILE_PERFORMANCE] =3D
+> +=09=09=09WMAX_THERMAL_MODE_GMODE;
+> +
+> +=09=09set_bit(PLATFORM_PROFILE_PERFORMANCE, pp_handler.choices);
+> +=09}
+> +
+> +=09pp_handler.profile_get =3D thermal_profile_get;
+> +=09pp_handler.profile_set =3D thermal_profile_set;
+> +
+> +=09return platform_profile_register(&pp_handler);
+> +}
+> +
+> +static void remove_thermal_profile(void)
+> +{
+> +=09if (quirks->thermal)
+> +=09=09platform_profile_remove();
+> +}
+> +
+>  static int __init alienware_wmi_init(void)
+>  {
+>  =09int ret;
+> @@ -808,6 +1105,12 @@ static int __init alienware_wmi_init(void)
+>  =09=09=09goto fail_prep_deepsleep;
+>  =09}
+> =20
+> +=09if (quirks->thermal) {
+> +=09=09ret =3D create_thermal_profile();
+> +=09=09if (ret)
+> +=09=09=09goto fail_prep_thermal_profile;
+> +=09}
+> +
+>  =09ret =3D alienware_zone_init(platform_device);
+>  =09if (ret)
+>  =09=09goto fail_prep_zones;
+> @@ -816,6 +1119,8 @@ static int __init alienware_wmi_init(void)
+> =20
+>  fail_prep_zones:
+>  =09alienware_zone_exit(platform_device);
+> +=09remove_thermal_profile();
+> +fail_prep_thermal_profile:
+>  fail_prep_deepsleep:
+>  fail_prep_amplifier:
+>  fail_prep_hdmi:
+> @@ -835,6 +1140,7 @@ static void __exit alienware_wmi_exit(void)
+>  =09if (platform_device) {
+>  =09=09alienware_zone_exit(platform_device);
+>  =09=09remove_hdmi(platform_device);
+> +=09=09remove_thermal_profile();
+>  =09=09platform_device_unregister(platform_device);
+>  =09=09platform_driver_unregister(&platform_driver);
+>  =09}
+>=20
+--8323328-1073594778-1730216645=:951--
