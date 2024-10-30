@@ -1,192 +1,169 @@
-Received: from NAM02-SN1-obe.outbound.protection.outlook.com (mail-sn1nam02on2085.outbound.protection.outlook.com [40.107.96.85])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f181.google.com (mail-pg1-f181.google.com [209.85.215.181])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B20BC13C;
-	Wed, 30 Oct 2024 14:21:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.96.85
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730298109; cv=fail; b=YYKJEGK89cXtWinuIWOjSB1HbVenFxOiUXJQbS6lHu2P6L8F3sxaosQX+M3zOV5I93TjjeCLzrniYDiPhx36aYUuUA+anom2M1zjd938PWwE/eLqqYzXjQKY61ix81RgsWcIcyzbzBF/YHVU5E0qdm3T/VXA9D4mmsO6IfwRtwk=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730298109; c=relaxed/simple;
-	bh=zdLwCHFKiraE/GCr9Kgj5NW6dydYrR/HZ6WK2wuJciw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=aTMjHCga7j0fiEg/L9AAxrQmP8pHNf4G5KIfMDNitEisLS9urikggt466o8kJ2G7yX6vKoNPDu79Ny2FnQ+V0BB3bnK9dvlYdWxV0A/kkqHdXCsMbrDDJi2rXbnYs4IEtIEGKb2DIG4Sl1GN+HZP01OUCUMYhj9x3u1bJ0uGy78=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=EAiCpQ7f; arc=fail smtp.client-ip=40.107.96.85
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 81BC6B672;
+	Wed, 30 Oct 2024 14:41:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.181
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1730299290; cv=none; b=AzlWqi7J7i5Ib248OPgo8NyNp1/B58xMv8wGdrhLrURCx4cGKZjS58OJzba8w/ioLUrVHmiKkLreKrpfNnVytOcV6+upUsOU+Ucga6p67vl/K9I0ePEXeAiw222q0NED2Dm8hY16kIw7/T5DcwbLXWmQ9/+IEetlzzRTHzPtSPU=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1730299290; c=relaxed/simple;
+	bh=cMntFuay/+OuCHddp1vPDruFIwvBjcus6L1u3WPvA34=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=aSoeeVajW4So8rxTbcgXdrXG8Gco6n97RD6UT25emNrcf+qVDnr/kIoYIRKe6ylWSD61XREwQ446IoWCqS1gpwb5KfstkZy2E0mMybR4CqK5ZPXF2Vgeaf9FeRAAzhoopoemARsHlfPfmxCJ7PzdGWX0XEEulJx7TJhSQgvkuOg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=EpaBYszs; arc=none smtp.client-ip=209.85.215.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="EAiCpQ7f"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=MMOguOrzx5vcGNEjIInn+P+3z8jjcXJ1jUg8LGlrLxfPZTd2Qcemz5NB2Kk9R9WYauO9QPcdkdcK3Zzm0lcXQb6wCyw7RnEvSwekzESox+X+Wamgc92dR0yRWS5CY9KtyHXInVo/FuflIdxUAyUNUPVVGBfkqW5AvN6Q9f+VM0l8wO5QAXctefwcIOM1u9rWEzieP6f0dWlAwRx9Kig+6MA6NM2fX76Aj+W8yC16cBQDT42hLIUK4APqV0aI2VrTRKGEuLGwOtPmc6FjQAXR57ZYV3mE7as7HKXo2/AyGyAKnP9INANj5wJ0XoWQTk+t3KdZO1i4yMaFOIkZAhvOKQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=wtHqkzhYEMn3bgG7iWC24dUxF7wi96bcCpohvLc3nVA=;
- b=oV1YS/n+uVfAG4zF420GIOIlTJ8F6V7HApcwj5rR9zCokHlgm5wWXI2vhFxgzy1xA22l2Xch2APX3kNPq1fxaNOgsdFarpCbyvIF6qy8xaiQDCaK6hP0Ot1MO7BbQHixcLh7rwAaDRc205Qoa4oLjXrzNlRyi24KQ8WpbBpECAFP67UdExnkp69zgUiHUCl1wbt8QWjSF3GSfgHeR82dzbj1kTgeCv8mPZsMvI24kUOZUxhYvGDUlqwK6bdL+y0N4jky3W9fmHdVAIuYxSVQgk8H/Hv09L0o3w6YUdEa0hhdL3z8H17kMVCAUP0cnnPmvXV9Rf9si3F7qbRH5/DagA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=wtHqkzhYEMn3bgG7iWC24dUxF7wi96bcCpohvLc3nVA=;
- b=EAiCpQ7feOOTQg0bhdM89AYh2nwwQTzG9or1CB1LjKKAVtAN/BgDaMMbKCWJIg++bmM2BMuu0NtycWRHUmpx0e+YbazFDsjDIyNjs9/EopqgwRBzDsWKtEphpdjw+Cy/q1ZdFmI0NkdfRqwUX9pNOiWveul+6mXnyEfOQOIOb80=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from DM4PR12MB6373.namprd12.prod.outlook.com (2603:10b6:8:a4::7) by
- DS0PR12MB6630.namprd12.prod.outlook.com (2603:10b6:8:d2::22) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.8093.24; Wed, 30 Oct 2024 14:21:44 +0000
-Received: from DM4PR12MB6373.namprd12.prod.outlook.com
- ([fe80::12f7:eff:380b:589f]) by DM4PR12MB6373.namprd12.prod.outlook.com
- ([fe80::12f7:eff:380b:589f%5]) with mapi id 15.20.8093.023; Wed, 30 Oct 2024
- 14:21:44 +0000
-Date: Wed, 30 Oct 2024 10:21:38 -0400
-From: Yazen Ghannam <yazen.ghannam@amd.com>
-To: "Luck, Tony" <tony.luck@intel.com>
-Cc: Borislav Petkov <bp@alien8.de>, Andy Whitcroft <apw@canonical.com>,
-	Joe Perches <joe@perches.com>,
-	"linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"x86@kernel.org" <x86@kernel.org>,
-	"avadhut.naik@amd.com" <avadhut.naik@amd.com>,
-	"john.allen@amd.com" <john.allen@amd.com>,
-	"mario.limonciello@amd.com" <mario.limonciello@amd.com>,
-	"bhelgaas@google.com" <bhelgaas@google.com>,
-	"Shyam-sundar.S-k@amd.com" <Shyam-sundar.S-k@amd.com>,
-	"richard.gong@amd.com" <richard.gong@amd.com>,
-	"jdelvare@suse.com" <jdelvare@suse.com>,
-	"linux@roeck-us.net" <linux@roeck-us.net>,
-	"clemens@ladisch.de" <clemens@ladisch.de>,
-	"hdegoede@redhat.com" <hdegoede@redhat.com>,
-	"ilpo.jarvinen@linux.intel.com" <ilpo.jarvinen@linux.intel.com>,
-	"linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-	"linux-hwmon@vger.kernel.org" <linux-hwmon@vger.kernel.org>,
-	"platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>,
-	"naveenkrishna.chatradhi@amd.com" <naveenkrishna.chatradhi@amd.com>,
-	"carlos.bilbao.osdev@gmail.com" <carlos.bilbao.osdev@gmail.com>
-Subject: Re: [PATCH 03/16] x86/amd_nb: Clean up early_is_amd_nb()
-Message-ID: <20241030142138.GA1304646@yaz-khff2.amd.com>
-References: <20241023172150.659002-1-yazen.ghannam@amd.com>
- <20241023172150.659002-4-yazen.ghannam@amd.com>
- <20241025155830.GQZxvAJkJnfLfNpSRx@fat_crate.local>
- <20241029143928.GA1011322@yaz-khff2.amd.com>
- <20241029150847.GLZyD6f-Hk6pRTEt2c@fat_crate.local>
- <SJ1PR11MB6083AA7B2E28F2DA24E4B456FC4B2@SJ1PR11MB6083.namprd11.prod.outlook.com>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <SJ1PR11MB6083AA7B2E28F2DA24E4B456FC4B2@SJ1PR11MB6083.namprd11.prod.outlook.com>
-X-ClientProxiedBy: BN9PR03CA0455.namprd03.prod.outlook.com
- (2603:10b6:408:139::10) To DM4PR12MB6373.namprd12.prod.outlook.com
- (2603:10b6:8:a4::7)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EpaBYszs"
+Received: by mail-pg1-f181.google.com with SMTP id 41be03b00d2f7-7ede82dbb63so2431640a12.2;
+        Wed, 30 Oct 2024 07:41:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1730299288; x=1730904088; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=VqINzm/Uq9ITTZ9RS871UPqEpz7DSchwIIh/S/Jb1NU=;
+        b=EpaBYszsOlr2uUg+H0llsfIoJ6xmNV0IP+cNV8XQ04uFsOkbqYWIIrI4YXGLUSE9ZL
+         PNkiDWatxYKb+NgIMrPULxLTsbWi/Z0f9ssrPLA2wu/fWCRTvKwq9lQ6/TghFZZOt1We
+         fGDqAHmhOHncp3pLhJiGWPhBBBY5t2w2Tnn6hlW15gPQwNqLj6j169R8ordVy9cp1eES
+         Ii7tQW8fXjeEEJ58vRHUObuYqr2XeXfgJIt86rmgZWkoBBKHOjnnXQNDGFyf2+kjxUky
+         PdWIjmVs6oFfqHKIB5eRWiiu1v4xkUJVZa+duatXUQMyp953Z5hbQVSA+VoFa8DrsCMy
+         1jMA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1730299288; x=1730904088;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=VqINzm/Uq9ITTZ9RS871UPqEpz7DSchwIIh/S/Jb1NU=;
+        b=nZdgxDChl2OMAqkSqZpe0l6kjO6rcHQcwT2wHqiHXqbNZlEOQOoRl3tCyTpx7jqGf5
+         PHdQXmPih2QXRotdaE6y6rVm+ktFwLoxT7/qYJZNQ2URQdH4DwocO4csTOiiFeCsKPUW
+         N69vDC/XOil08nIXDNmF2Ascze70F6PyprEhkbLS99rUAzv5EZgP49xnh7LEYJjKHwV1
+         R3MuK4HJjtEIv+x16ITV5MXiwAWLLVLaJBJSZDmBa7VevN8oKYB5JbOpT8l29WkY+T47
+         Al/y9RFuKTjaED51ZsbhCSNCLxyva/WLxXMc80LtVcnnB35q09O10MT/cpVTDGAGymzU
+         oEJA==
+X-Forwarded-Encrypted: i=1; AJvYcCW7ilwl2YFI5EPrkx4OVatJltZCxnOrTacNsaexdE6VPJJ95wkK0EEkYWfuHgAI7KoVZlB9eeR/Xl1eQlbembrMKAehsQ==@vger.kernel.org, AJvYcCXf3pCGUK5qoPxOSL2JQ7KeNnHKAGgDhKdCWFDiR5HaDwfiqgrgI2gOSoVeTwpHkGu28R0sfp+R/0+ZkDs=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxxR5c2POhhVODPKFYyoDzMoZfcqiWsh8wLu1qRZsVbv5bsAEGy
+	4lIruJTLNOUF+pXDuCZ2+22IbN+W6jrZaXAgrR+clX8myz3LOofwbPWvjw==
+X-Google-Smtp-Source: AGHT+IEd98Viu8Exlkn5qwqv5xTZzZAEGmGXHxNMd06bUge0Zgu09Af5vy6BPe1aYOgIC4425YYRNg==
+X-Received: by 2002:a05:6a21:680d:b0:1d5:10c1:49c1 with SMTP id adf61e73a8af0-1d9a83a3dabmr20522814637.9.1730299287692;
+        Wed, 30 Oct 2024 07:41:27 -0700 (PDT)
+Received: from alphacentauri (host95.181-12-202.telecom.net.ar. [181.12.202.95])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-72057950457sm9593155b3a.95.2024.10.30.07.41.25
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 30 Oct 2024 07:41:27 -0700 (PDT)
+Date: Wed, 30 Oct 2024 11:41:24 -0300
+From: Kurt Borja <kuurtb@gmail.com>
+To: Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>
+Cc: W_Armin@gmx.de, Hans de Goede <hdegoede@redhat.com>, 
+	LKML <linux-kernel@vger.kernel.org>, platform-driver-x86@vger.kernel.org
+Subject: Re: [PATCH v11 0/5] Dell AWCC platform_profile support
+Message-ID: <nx53tryrtpewjlxvckrcsnormfr6toy27fsj55kr7zxus6onsm@jojeyg22clgp>
+References: <20241030000904.7205-2-kuurtb@gmail.com>
+ <f972eabf-58b5-3b0b-ea5f-930894ac840b@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DM4PR12MB6373:EE_|DS0PR12MB6630:EE_
-X-MS-Office365-Filtering-Correlation-Id: 9913450e-3150-4923-e576-08dcf8ee2e05
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|7416014|376014|366016;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?rHLlJfhonTob3KJSb9TVyfL7c/3Eb7qWs20YBK3Vn0VX082eS/2n0udz2C4f?=
- =?us-ascii?Q?5hxJDGzV8K2+EKo2Tj9KhaKdyOtGlCGFs6qg8sVUfCfpohwRR6G9+yxBpEaC?=
- =?us-ascii?Q?ZmGEkMEFvuAYKEInZAG85HXsySF1fd/0FMOzmw6gbXV/tVmNWBjAjX9wDfCi?=
- =?us-ascii?Q?aOBmrWwpSXaSdAK8/4QLwZbhOv5MJ2KaPMjdaVVC83fbPzT0xuiIi9Xx+sDI?=
- =?us-ascii?Q?M9spJYNn+jl8KqsJDEPNxNwsMTBepEz55WwS4YKbPrn1rKoCvozmVH1vavRw?=
- =?us-ascii?Q?KV0ZXKVEW4X+I4CR3LrV1WspqdTOENSXuLC1W+j9LDGNDmv1OvmSWkpA/010?=
- =?us-ascii?Q?vNR0XJcGsBkODZupm7UdYDNvM6mf3iVNG2H5/rJhbP5ukHp7A3bcLo1tHJxl?=
- =?us-ascii?Q?gGyqoHSkAHyQMcdj5dELN3nIbwd0+NsjXIYgHOb7RMnbbTpe8IvqSLUiFLR3?=
- =?us-ascii?Q?drFxZnCaQAAPhUM0o/fR6PfVOjsZdmGzXZr6Q15PrchsENbhSIf9lQlHm3XR?=
- =?us-ascii?Q?YO+FnHILnHjwDhntdrsikoCqvIAlDdIc/EDn3xfJZqm3rcS2tMzRvbNlDM8A?=
- =?us-ascii?Q?RMSTBrd9YjxHOXKEIn/jCczGYK2hXD7hHhaTo+2H+iVE2fYZTikrRVoVNa2/?=
- =?us-ascii?Q?7RrhcCjmSflfvS+sbf6bwHyFvMY7nq11/OLC2k9BiYPS5clqV4OAwuAvIm6X?=
- =?us-ascii?Q?Vw3yn5YdI5aCorXNnQFxmJpEthTCRME90PR/MOc+tNTxE+q4IIUFhITbig8M?=
- =?us-ascii?Q?HVz7J8/zgSUyNkkWJavrFFoLkYrj3Is6KOSzUskCmM2tAR0swdgUNzU1M0Wf?=
- =?us-ascii?Q?djQMuRsjMAwFS/LVmdd12in5l4WtTIIpRQKgbib9mDE9ksuhRurSp9T10R4r?=
- =?us-ascii?Q?PPj0Nuaz9nf1RJVLBb5FDbeiyEAt3DgfWi+wd3vEL++CvEAcHQPwec5x/y0N?=
- =?us-ascii?Q?PkTsLiSrJYmNsVG4uXyg9JSMezGeLnJztGZzopXgGA6Pohcn8d/2jrfalak9?=
- =?us-ascii?Q?stc1jnvRHOeJpa4AxZuqFEX2bDaNMh1zbtdOdEaf3jYoTkleHlsZjlt/Cd7M?=
- =?us-ascii?Q?w38x8t1UxxqkP42pBZJJ5O9M1jG0lvnPgsFqzzzyLm1Barvz4E2UnJrqO8L6?=
- =?us-ascii?Q?tpoBT5ow0e3ywqC3EwgUScv2s5y3W55ZnyVIyGqoFL/l6dmeFEODrH5gmjsQ?=
- =?us-ascii?Q?kAuSPyEzwBc2vYce8ciljsFfiqReY1+NmEFcIRXhNRVWjR/0CU5zVgAfGZ/k?=
- =?us-ascii?Q?oqpzVxWj4oa8l4mFRrFTUnjm5cvJf8UWmIgpaYimtfkmQuQhsvYIOHMzBT6z?=
- =?us-ascii?Q?qnnQOCPjgxWZhzsbUD789xg6?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM4PR12MB6373.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(7416014)(376014)(366016);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?WafwMQ5/YXva000ketpZr9ktU5H2saD8C2ujSukSRRK7NsuTDRddMv1kakDQ?=
- =?us-ascii?Q?mTIzN5kfrTHtEf/P64Sy3mIhPQUXmhC1+egbgBkD6bnW+pL0TbdeuiSaTXPD?=
- =?us-ascii?Q?onOQ7MOYreZVbAET3UzvicbIwHCbnRl6h8KDNCx+dJbRUL1TjRYEYbRzrBG/?=
- =?us-ascii?Q?ofruE7ndXYkGbmfEQBGHfO0t4vzotMIZIj1aI7bS2IJOww1NlbIPBQlc/EYv?=
- =?us-ascii?Q?4vj7epo913ACG+yVMcrMCOYyTVNNwmXh5b+u+O7QwBkbjAWgt1doHuRGFm9m?=
- =?us-ascii?Q?TmM2qlhjdc4Lrk4uFJzMPnYIKTKgwDiGWC+lfIcUYyHaSMyo5JAmGuee3ocD?=
- =?us-ascii?Q?MFJf/+7yrYTCAfpD4gGzj46MkF9x/VCVtgPQ5tXmCu5hak5OK+wtg+3Iaoeh?=
- =?us-ascii?Q?vqbyHnKt8Udj3BozOu0ZQ5HiSq30+ooGq+WvwhI7F75LkCGU9ofXNorfmc/v?=
- =?us-ascii?Q?q3k6Yx7jNhefIkQOnMtDHTBTAVmS1/O7vELvRgW6l0PP9H4Gy9RbdKV7wLy0?=
- =?us-ascii?Q?qonh6T7VMbwpimohnkk3nOJ0BtSHXRqhCy0xO3NcoRsNH+5y+hqYJtzSxpfL?=
- =?us-ascii?Q?XZWvY/B0djUF0Fukxo4oVJiP2rAgFrqWanfboQBFdl2J6IVOzsaLNhznNLlO?=
- =?us-ascii?Q?b2rwGffe5K5KoGo1gdRmkCbOUYMAHJfAlRzBFgjTgFuUu4V8yGZfupTwjDSJ?=
- =?us-ascii?Q?RCn+ld48ct2eEPzE4XK3Y7FoSgazw/9azJVcCIXlPmODcEnXYCd960x0e+S9?=
- =?us-ascii?Q?VWzV9sSNd/T01HuL30TdPm3hEYovTT/sHWqzzlfLxt6GvTeLo9qk57y9HmN3?=
- =?us-ascii?Q?bCkGsisDcpWqKTvuCb3GcUl8zspqMeJy6Mfr5KtwsFkWxrxFVa1qUL23Ak+f?=
- =?us-ascii?Q?cCtAa8pXigBbfkrNsPaEDXPEbJR0N+ZHyF06J05k1z0Pbq9OUGJZUzhKx5w7?=
- =?us-ascii?Q?QgFVn6XzNyTtXhp6/3z3226AuWsaWd3FfamOsb/X5o5HaDQOKRHp6M+F6I5r?=
- =?us-ascii?Q?nPLd9FqgaFNRoj1Cyt7dH3sBbTdNg/6XU2otN3mbEZ9jARBJwCLpJdhAPqZB?=
- =?us-ascii?Q?2inv39vZHbls1UuJxT++waN30Fj25ePDGCFPBx84K12NYMOyVHmkX3IbI9T+?=
- =?us-ascii?Q?A1HuwtLPbIagmgthkg3AE5UgFExiBQ8BfU82sczivnc5Q69Al5Gd4n8wDnZY?=
- =?us-ascii?Q?R+3ldULJkjlZW72WeuZjwNES6rRLZXx/dWJI6nw+AyR6NH2zleBlazgfWIKW?=
- =?us-ascii?Q?ciD3qKGa7uV1iOtHEjbeluPjACTlV/kJVej6V70HPEOsnsUHO4MGzFw6e/bB?=
- =?us-ascii?Q?JGe/4hvPcCCDCoPW+AWqJeFhmp9Qbm8i6x1d23BI1qRmTwoEeC8SPqqJv5FA?=
- =?us-ascii?Q?unODEzuct5+uj1pewuNMdzwhcxRkmkh3RUP0/Jb8vSb3mG8oD7PNIYqq9a13?=
- =?us-ascii?Q?7ykvI0LKUIYh4vow7dS0CFOOgSYKVLqnPjGEi9YGarAeTqi8xznk9twKxP6N?=
- =?us-ascii?Q?D5lQ4fqZGHEO+sBVxlVdwEqYcVL2EoWpTBqFqzWVaGomRWGU1uW59r6pHIb7?=
- =?us-ascii?Q?oFMM+W8bGtJ7wevNtZPkwReCtlqwd7pdxQG3LUZ3?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 9913450e-3150-4923-e576-08dcf8ee2e05
-X-MS-Exchange-CrossTenant-AuthSource: DM4PR12MB6373.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 30 Oct 2024 14:21:44.0306
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: Npu8G4P2Ot+oTSfnkz7700cLp0mY491954gaZneqQsJH9FHF2IhnaM0N9NXnUVvhvMHeZTJQ9Wrbq/yonJyn6A==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS0PR12MB6630
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <f972eabf-58b5-3b0b-ea5f-930894ac840b@linux.intel.com>
 
-On Tue, Oct 29, 2024 at 04:15:33PM +0000, Luck, Tony wrote:
-> > > > > -       if (boot_cpu_data.x86_vendor == X86_VENDOR_HYGON)
-> > > > > -               misc_ids = hygon_nb_misc_ids;
-> > > > > +       if (boot_cpu_has(X86_FEATURE_ZEN))
-> > > >
-> > > > check_for_deprecated_apis: WARNING: arch/x86/kernel/amd_nb.c:395: Do not use boot_cpu_has() - use cpu_feature_enabled() instead.
-> > >
-> > > Sure thing.
-> > >
-> > > How can I enable this check myself?
-> > It is part of my silly patch checking script:
-> >
-> > https://git.kernel.org/pub/scm/linux/kernel/git/bp/bp.git/log/?h=vp
-> >
-> > in here:
-> >
-> > https://git.kernel.org/pub/scm/linux/kernel/git/bp/bp.git/tree/.tip/bin/vp.py?h=vp
-> >
-> > but it probably isn't ready for public consumption yet.
-> >
-> > I probably should try to package it properly when there's time...
+On Wed, Oct 30, 2024 at 02:10:24PM +0200, Ilpo Järvinen wrote:
+> On Tue, 29 Oct 2024, Kurt Borja wrote:
 > 
-> Sounds like it would be a valuable addition to checkpatch.
+> > This patch adds platform_profile support for Dell devices which implement
+> > WMAX thermal interface, that are meant to be controlled by Alienware Command
+> > Center (AWCC). These devices may include newer Alienware M-Series, Alienware
+> > X-Series and Dell's G-Series.
+> > 
+> > Tested on an Alienware x15 R1.
+> > ---
+> > v11:
+> >  - Minor changes on patch 4/5
+> > v10:
+> >  - `thermal` and `gmode` quirks are now manually selected because some
+> >    models with the WMAX interface don't have the necessary thermal
+> >    methods.
+> >  - Added force_platform_profile and force_gmode patch for a better user
+> >    experience
+> > v9:
+> >  - Minor changes on patch 3/4
+> > v8:
+> >  - Aesthetic and readibility fixes on patch 3/4
+> >  - Better commit message for patch 3/4
+> > v7:
+> >  - Platform profile implementation refactored in order to efficently
+> >    autodetect available thermal profiles
+> >  - Added GameShiftStatus method to documentation
+> >  - Implemented GameShiftStatus switch for devices that support it 
+> > v6:
+> >  - Removed quirk thermal_ustt.
+> >  - Now quirk thermal can take canonical thermal profile _tables_ defined
+> >    in enum WMAX_THERMAL_TABLES
+> >  - Added autodetect_thermal_profile
+> >  - Proper removal of thermal profile
+> > v5:
+> >  - Better commit messages
+> >  - insize renamed to in_size in alienware_wmax_command() to match other
+> >    arguments.
+> >  - Kudos in documentation now at the end of the file
+> > v4:
+> >  - Fixed indentation on previous code
+> >  - Removed unnecessary (acpi_size) and (u32 *) casts
+> >  - Return -EIO on ACPI_FAILURE
+> >  - Appropiate prefixes given to macros
+> >  - 0xFFFFFFFF named WMAX_FAILURE_CODE
+> >  - Added support for a new set of thermal codes. Old ones now have USTT
+> >    in their names
+> >  - A new quirk has been added to differantiate between the two sets.
+> >    thermal and thermal_ustt are mutually exclusive
+> >  - Added documentation for WMAX interface
+> > v3:
+> >  - Removed extra empty line
+> >  - 0x0B named WMAX_ARG_GET_CURRENT_PROF
+> >  - Removed casts to the same type on functions added in this patch
+> >  - Thermal profile to WMAX argument is now an static function and makes
+> >    use of in-built kernel macros
+> >  - Platform profile is now removed only if it was created first
+> >  - create_platform_profile is now create_thermal_profile to avoid
+> >    confusion
+> >  - profile_get and profile_set functions renamed too to match the above
+> > v2:
+> >  - Moved functionality to alienware-wmi driver
+> >  - Added thermal and gmode quirks to add support based on dmi match
+> >  - Performance profile is now GMODE for devices that support it
+> >  - alienware_wmax_command now is insize agnostic to support new thermal
+> >    methods
+> > 
+> > Kurt Borja (5):
+> >   alienware-wmi: fixed indentation and clean up
+> >   alienware-wmi: alienware_wmax_command() is now input size agnostic
+> >   alienware-wmi: added platform profile support
+> >   alienware-wmi: added force module parameters
+> >   alienware-wmi: WMAX interface documentation
+> > 
+> >  Documentation/wmi/devices/alienware-wmi.rst | 388 ++++++++++++++++
+> >  MAINTAINERS                                 |   1 +
+> >  drivers/platform/x86/dell/Kconfig           |   1 +
+> >  drivers/platform/x86/dell/alienware-wmi.c   | 477 ++++++++++++++++----
+> >  4 files changed, 791 insertions(+), 76 deletions(-)
+> >  create mode 100644 Documentation/wmi/devices/alienware-wmi.rst
 > 
-> Maybe Joe or Andy will find time before you do.
->
+> Huge thanks to you both Kurt and Armin for all the work done to improve 
+> this series! :-)
+> 
+> I've applied this series to the review-ilpo branch now.
+> 
+> -- 
+>  i.
 
-And if not to checkpatch, then maybe it can be included in the TIP
-maintainers' handbook? That is, if others are using it or something
-similar.
+Huge thanks to you both :). I learnt a lot.
 
-Thanks,
-Yazen
+Regards,
+Kurt
+
+> 
