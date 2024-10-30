@@ -1,129 +1,154 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f174.google.com (mail-pl1-f174.google.com [209.85.214.174])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E71AF1D12ED;
-	Wed, 30 Oct 2024 20:20:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D9CC1BD9EF;
+	Wed, 30 Oct 2024 20:33:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730319638; cv=none; b=BSLvnHgTycaGbiDIb4rYnuEflgHrnNmEtGDckgYrE45MUpOmalYCECEpTsdSJw6WWVR4unRcd29t3VeLxUw36AiQguBDsWLPVnD6Uc5NlWGBTf05t5ysVvTIMMovK/QG8r9qyWaLSDFsFUtSiGeMEdw3sIws6KnQGoN36SlQBOY=
+	t=1730320432; cv=none; b=I7HckNyqLXFsjhkxrT9W+Peh+o9iO2el+oB8yVxU1yExfifiRc1sfMNGgfuWGUSDu9jKqS8tnwGDZQ3ChqPYzM3C5+H/bpzCPiFSW1+2qH3PGKDff8/cX/cUG1KidGBZJb1x1ulejzN6nsmYxt7kR7gw16p6rwktvfeM3JMd7To=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730319638; c=relaxed/simple;
-	bh=CuBZ7a5jZNesEjvm4P0cJ7WsRpENx9Ukmf3FByacUNo=;
+	s=arc-20240116; t=1730320432; c=relaxed/simple;
+	bh=Z+iil6GQLbvqX00aPArukj2KBQPSS8z1Rwalkm6Rwmg=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=c79f6HkIVLFG8tMECfC7JYqAIzThBviixxXlmaPjCgMkvRAyMkZVwOxpc3iW01oNpul0COcICYESdUrY7yo2QHMhoMQ8YEIaNw8GS68pwzXI8aAUMiBUTaa5EIhrEwDjwtAL5400nVTJk6/YMFRjSLEMuFPW884knLUoWXjwduY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oTaUTCqq; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=bxqJSIDr2j5eTkfjHBQzWrFkvvTEZ21DZyEd3NxyYjU583755Lxv8tycKWByLKagyGpEmzjsN27JTOAyClL4kXRDAV4UTg4GMNW4NSXXfLccxLGqIiOwzSTxwsrxvuuns12xe+gEerraMGC5AHDDecLZ5XPtYPxCh5YTrWnM4mI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=fOHEZoiT; arc=none smtp.client-ip=209.85.214.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oTaUTCqq"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 36248C4CECE;
-	Wed, 30 Oct 2024 20:20:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1730319637;
-	bh=CuBZ7a5jZNesEjvm4P0cJ7WsRpENx9Ukmf3FByacUNo=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=oTaUTCqq5kay8J3AvHvGGwA0iYKKKXWuV/NPR5DZmv+HzTwjY+75jJ1cc9eqYtaZH
-	 SeLlz7UhdNipKLn1yX0FLRRBDsOK27e5N4r59q0o8YyrN5R6/G81UamYilbLdCBgmq
-	 2KGIsw8fzc3YgiHejETp8lZO2/KNd2zm+9YBUvUNhy2frcwb/jdCWPaYEeVbiRkxvr
-	 r3FdT/Oi4RtagtYJWYsxtR9Ebnl0s1OqnYWck8faS5fs4xzJs/kkC0IK7i7uYDMF/I
-	 HtuwfCeg8tV+EAi+qq8Rb8tYfSJr/iEEAs2ONuPOnQUiPjTx1/hIaBSKW0SaX9DZ51
-	 jx6x3hI9h6bKA==
-Received: by pali.im (Postfix)
-	id 151DD9D2; Wed, 30 Oct 2024 21:20:30 +0100 (CET)
-Date: Wed, 30 Oct 2024 21:20:29 +0100
-From: Pali =?utf-8?B?Um9ow6Fy?= <pali@kernel.org>
-To: Kurt Borja <kuurtb@gmail.com>
-Cc: Dell.Client.Kernel@dell.com, hdegoede@redhat.com,
-	ilpo.jarvinen@linux.intel.com, linux-kernel@vger.kernel.org,
-	platform-driver-x86@vger.kernel.org, w_armin@gmx.de
-Subject: Re: [PATCH 2/2] dell-wmi-base: Handle Win-key Lock/Unlock events
-Message-ID: <20241030202029.3ugz75wiautw6ewt@pali>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fOHEZoiT"
+Received: by mail-pl1-f174.google.com with SMTP id d9443c01a7336-20cbcd71012so3056435ad.3;
+        Wed, 30 Oct 2024 13:33:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1730320430; x=1730925230; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=Qb3qMdYA0/SEfdeZoaEXoDe8oViNJ3e5nLqVZx/qRGc=;
+        b=fOHEZoiT78qVX4ZWAm36dRXnRdIjF5L04sBsAMKuWWKiGwupHH6Y1ZeyCiJtDcDBsX
+         Gk2bPlT+p1pqnsrNinHTUcy5si/MZJ/SZHdOFeXcKp7aAtMBpteZKLw0zyfMDHPWRwke
+         mZNy1SbEg6+Jr3vNBaLMGcZ4oG7Namph6NNS7aErqND8PaE2PPO0/El8FjSSlXmVVLS2
+         vC3I+8+Ua496RtAk6bkcIo2c9Kdfa89wU53oWcg3ctzh4pyprek++0a3zt2kzJwEqC/d
+         LGgIRCxBKsNSOroKI3U6JF3TYIRP7A1hzypxdd7mS8zeW/D4Iwe7JPxGNdNO+5ViAP//
+         YQOg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1730320430; x=1730925230;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=Qb3qMdYA0/SEfdeZoaEXoDe8oViNJ3e5nLqVZx/qRGc=;
+        b=u00/nl4wfwQNkNBeO06TOi0cR6YMp53UCrtKdrRCaSRBwgJoKwliueHE31ZhpDvIu2
+         QphiMf61srS/FWtDjNBmKM+F5OcQiHjVYZxzvoQ9GYsiROBnxvZf6fYsV1POy3pGbQqp
+         FV8aeBqfjqeGgLuZ4E1Er6a5P3/tj3Zh5p72QlZ5Sb8WNP/LdesHbgoeXmRaKiBRNIGA
+         YYF1KAscQ/gn0iWQOocdx2VDxe8jpoQBtJduFONZOf6+5xeD4+ag4JSFOL1c3ZZbT9Ow
+         SYG9PSo/2GypNwv0tF/39wlx4TZHAu8OeANkx1+9CF+gXvW/+S/BJh3H7FDCbbotd+mW
+         5aeA==
+X-Forwarded-Encrypted: i=1; AJvYcCUSTfT+IIc0aRSHiJAwsVhmnJYaQkep40kOuuNcEFGQVkvXo/h6ob25vqv/48Ck/WIhDWRorsq0xf+fXpyuZky7EQGj/A==@vger.kernel.org, AJvYcCUuk9D1Apn9sJ0Tj0ZWgxQRgAZf7ZFHnOz051ETjk16HbhsFFvOBk0Hj545L9jkzUBRb0oxI1ZNw1idyIE=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxbtHEgmwvia8uIUrargTeCuNIbEUZDvR9tjSxCkYuYFf2CO2Dh
+	DQzI2alENY6Z5ZOoMKPSp42ib6AoUlkyfCC6kIP84UhPvj7O0UkY4eAaaEQ8
+X-Google-Smtp-Source: AGHT+IGk1LbMrIX3TQr9Wbd5bDqlW1+lLpA+tjGnzCQaeNNEgzkp/zcMPFk19jA6bihXxe9gGvSgfA==
+X-Received: by 2002:a17:902:d58c:b0:20c:ab2d:a664 with SMTP id d9443c01a7336-210c6cd11f6mr256385935ad.59.1730320429688;
+        Wed, 30 Oct 2024 13:33:49 -0700 (PDT)
+Received: from alphacentauri (host95.181-12-202.telecom.net.ar. [181.12.202.95])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-2e93da98480sm65778a91.7.2024.10.30.13.33.47
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 30 Oct 2024 13:33:49 -0700 (PDT)
+Date: Wed, 30 Oct 2024 17:33:45 -0300
+From: Kurt Borja <kuurtb@gmail.com>
+To: Pali =?utf-8?B?Um9ow6Fy?= <pali@kernel.org>
+Cc: ilpo.jarvinen@linux.intel.com, hdegoede@redhat.com, w_armin@gmx.de, 
+	platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, Dell.Client.Kernel@dell.com
+Subject: Re: [PATCH 1/2] dell-smbios-base: Extends support to Alienware
+ products
+Message-ID: <7dp62mqmqqgcjb4pyoszdmpml4vi364uui233iyspibah7qbbl@hgwc7vc2xyxd>
 References: <20241030181244.3272-2-kuurtb@gmail.com>
- <20241030181532.3594-2-kuurtb@gmail.com>
- <20241030183436.3w5po6kcg6jmqigb@pali>
- <hj6jurton7ll4i475cwcqvk6dzjjire2briawxmuemnliofpyo@kpjdxpwflekm>
+ <20241030182613.xn3tl2khzuhft4sr@pali>
+ <7kx45jrxlzo6vhaknkxlrpxfs6w4ijwee3qdb7mavz2rtxqetk@vpknhvcpfgwl>
+ <20241030200729.7klmmwvpnwxq326z@pali>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <hj6jurton7ll4i475cwcqvk6dzjjire2briawxmuemnliofpyo@kpjdxpwflekm>
-User-Agent: NeoMutt/20180716
+In-Reply-To: <20241030200729.7klmmwvpnwxq326z@pali>
 
-On Wednesday 30 October 2024 17:11:40 Kurt Borja wrote:
-> On Wed, Oct 30, 2024 at 07:34:36PM +0100, Pali RohÃ¡r wrote:
-> > On Wednesday 30 October 2024 15:15:33 Kurt Borja wrote:
-> > > Some Alienware devices have a key that locks/unlocks the Win-key. This
-> > 
-> > Please specify (in comment / commit message) which devices. It would
-> > help other developers in future to track for which device is this event
-> > needed.
-> 
-> I will!
-> 
-> > 
-> > > key triggers a WMI event that should be ignored, as it's handled
-> > > internally by the firmware.
-> > 
-> > Can be this handling in FW ignored? So OS can use this key for any other
-> > functionality?
-> 
-> Probably not. FW locks the Win-key regardless of how the event is
-> handled.
-> 
-> > 
-> > Anyway, what is that Win-key and its lock?
-> 
-> Win-key is the LEFTMETA key and the lock key is the RIGHTMETA key.
-
-Ok, thanks for info.
-
-So if the firmware handles and process RIGHTMETA key, it means that the
-RIGHTMETA key is not usable for generic purposes on this machine?
-
-> > 
-> > > Signed-off-by: Kurt Borja <kuurtb@gmail.com>
-> > > ---
-> > >  drivers/platform/x86/dell/dell-wmi-base.c | 6 ++++++
-> > >  1 file changed, 6 insertions(+)
+On Wed, Oct 30, 2024 at 09:07:29PM +0100, Pali Rohár wrote:
+> On Wednesday 30 October 2024 17:01:11 Kurt Borja wrote:
+> > On Wed, Oct 30, 2024 at 07:26:13PM +0100, Pali Rohár wrote:
+> > > On Wednesday 30 October 2024 15:12:45 Kurt Borja wrote:
+> > > > Fixes the following error:
+> > > > 
+> > > > dell_smbios: Unable to run on non-Dell system
+> > > > 
+> > > > Which is triggered after dell-wmi driver fails to initialize on
+> > > > Alienware systems, as it depends on dell-smbios.
+> > > > 
+> > > > This effectively adds dell-wmi and dell-smbios support to Alienware
+> > > > products.
+> > > > 
+> > > > Signed-off-by: Kurt Borja <kuurtb@gmail.com>
+> > > > ---
+> > > >  drivers/platform/x86/dell/dell-smbios-base.c | 1 +
+> > > >  1 file changed, 1 insertion(+)
+> > > > 
+> > > > diff --git a/drivers/platform/x86/dell/dell-smbios-base.c b/drivers/platform/x86/dell/dell-smbios-base.c
+> > > > index 73e41eb69..01c72b91a 100644
+> > > > --- a/drivers/platform/x86/dell/dell-smbios-base.c
+> > > > +++ b/drivers/platform/x86/dell/dell-smbios-base.c
+> > > > @@ -576,6 +576,7 @@ static int __init dell_smbios_init(void)
+> > > >  	int ret, wmi, smm;
+> > > >  
+> > > >  	if (!dmi_find_device(DMI_DEV_TYPE_OEM_STRING, "Dell System", NULL) &&
+> > > > +	    !dmi_find_device(DMI_DEV_TYPE_OEM_STRING, "Alienware", NULL) &&
 > > > 
-> > > diff --git a/drivers/platform/x86/dell/dell-wmi-base.c b/drivers/platform/x86/dell/dell-wmi-base.c
-> > > index 502783a7a..37fc0371a 100644
-> > > --- a/drivers/platform/x86/dell/dell-wmi-base.c
-> > > +++ b/drivers/platform/x86/dell/dell-wmi-base.c
-> > > @@ -80,6 +80,12 @@ static const struct dmi_system_id dell_wmi_smbios_list[] __initconst = {
-> > >  static const struct key_entry dell_wmi_keymap_type_0000[] = {
-> > >  	{ KE_IGNORE, 0x003a, { KEY_CAPSLOCK } },
-> > >  
-> > > +	/* Win-key Lock */
-> > > +	{ KE_IGNORE, 0xe000, {KEY_RESERVED} },
+> > > Are we sure that all devices with "Alienware" OEM string supports this SMBIOS API?
 > > 
-> > nit: code style: spaces around KEY_RESERVED.
-> 
-> I will fix it.
-> 
+> > No, I am not sure.
 > > 
-> > Is not there some better constant for this KEY_*?
-> 
-> We could assign it KEY_RIGHTMETA.
-
-Just to note that if the key is marked with KE_IGNORE, its value is not
-used. But for documentation purposes it is a good idea to have written
-there something other than KEY_RESERVED -- if it is possible.
-
-For example it can be useful if somebody in future figure out how to
-turn off processing of this key in firmware...
-
+> > However, I believe this driver is intended for general Dell SMBIOS 
+> > implementations and automatically checks for support. I know this doesn't
+> > necessarily extend to Alienware, so I hope some of the Dell maintainers
+> > could shine some light on us.
 > > 
-> > > +
-> > > +	/* Win-key Unlock */
-> > > +	{ KE_IGNORE, 0xe001, {KEY_RESERVED} },
-> > > +
-> > >  	/* Key code is followed by brightness level */
-> > >  	{ KE_KEY,    0xe005, { KEY_BRIGHTNESSDOWN } },
-> > >  	{ KE_KEY,    0xe006, { KEY_BRIGHTNESSUP } },
-> > > -- 
-> > > 2.47.0
+> > I tested this on an Alienware x15 R1 and only some SMBIOS features
+> > work, but no errors and dell-wmi-base works perfectly.
+> 
+> This is good to know. You should write into commit message on which
+> platform you have tested this change. In case there would be some issues
+> in future, it will help to for example whitelist working machines.
+
+Perfect. I will.
+
+> 
+> I asked for this because for example dell hwmon driver has explicit list
+> of working and non-working devices. And on some dell some machines just
+> calling hwmon API cause issues...
+> 
+> So it is not just theoretical problem that allowing all devices from
+> Dell with some generic OEM string can cause issues.
+
+Yes, makes sense.
+
+Also it is worth to mention that I checked a bunch of acpidumps of
+different Dell models. I found three main ACPI implementations shared
+between Dell's G-Series (which uses OEM STRING "Dell System") and 
+Alienware X and M-Series. Obviously there might be some key differences I'm
+ignoring, but it tells me the SMBIOS interface is probably implemented
+similarily.
+
+These three laptop series are all relatively new, this probably doesn't
+apply to older Alienware devices.
+
+Kurt
+
+> 
 > > > 
+> > > >  	    !dmi_find_device(DMI_DEV_TYPE_OEM_STRING, "www.dell.com", NULL)) {
+> > > >  		pr_err("Unable to run on non-Dell system\n");
+> > > >  		return -ENODEV;
+> > > > -- 
+> > > > 2.47.0
+> > > > 
