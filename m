@@ -1,105 +1,152 @@
-Received: from mout.gmx.net (mout.gmx.net [212.227.17.22])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f176.google.com (mail-pl1-f176.google.com [209.85.214.176])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7815618D
-	for <platform-driver-x86@vger.kernel.org>; Wed, 30 Oct 2024 00:06:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.22
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 93DED1FB4;
+	Wed, 30 Oct 2024 00:09:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730246809; cv=none; b=ZIbZXP0bUZaeevv2L5M0QdevsP6KZTM/hA/sQ76sDDKst6kAhohgqDOlTRikhVk2qg+ajDwPhhibB6NTtcb2su1z18k7ktbigt2locwYhKJUPZxaAkvXnnVi3TfN98ltoO60uA+imOyGY4MJ5NTQm7SQpKJ4DJ48XouCTfC1hFE=
+	t=1730246974; cv=none; b=jaFfM8UEx7Vo6cSEv8utVYn/xt14aoSrw+qxJ1AMrFFNmhz+n7/v07SygMNYKWH+FNzoJeeEyw59swRVq5TO/GTu2xqC8cqgS7/72KVwjKpZHjYF+awYnCY4mx62FsoRarYJ7ANBogVupwbQJKw+6pBxnOe9yxCmdx6zOVTdG/E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730246809; c=relaxed/simple;
-	bh=QWKN7PM0Cc5U6JiYuYBlm1a+DrkINfRgEeaGoF3sXGY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=eSGIADHW3MyvjDo0EjtHxGSKdZJC+2k3/nbraSkpdgkM5vcUhsICuwDSDMqJNLfp04Cw6vJY7rvgJ9XqHQI6aF4MRQp5MKFLfVBoFvFcDokSQ/YJ4BLFPgZldXunCOvJbRuw5Km/EDk7ztYOb789FRO53SwifnaqJRWtjouws5I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b=G3YEmCDU; arc=none smtp.client-ip=212.227.17.22
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
+	s=arc-20240116; t=1730246974; c=relaxed/simple;
+	bh=G1PkH1UqztosHEF0QChWfxVBbtE1GtH8KTH8GzJyuQE=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=eEpN/TQrKvtti4V7IEVzeb3DV2Ar0fuO6ClZHzxZ/+IehPzqdxkpS3Q0vQHbwwE+BocKzURFoD+Rl12EyR3+4SCdPTCHOwxHmleDGzjo22p+B6dn3CQT4wnqXUeanOToY3eQhnKKV/nlkIGVM+QT0U5CcuLESKTSyz6XObAmxtU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=iogunstX; arc=none smtp.client-ip=209.85.214.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b="G3YEmCDU"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.de;
-	s=s31663417; t=1730246798; x=1730851598; i=w_armin@gmx.de;
-	bh=QWKN7PM0Cc5U6JiYuYBlm1a+DrkINfRgEeaGoF3sXGY=;
-	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:To:Cc:
-	 References:From:In-Reply-To:Content-Type:
-	 Content-Transfer-Encoding:cc:content-transfer-encoding:
-	 content-type:date:from:message-id:mime-version:reply-to:subject:
-	 to;
-	b=G3YEmCDU0sarzzbkHoNa92Pd9/8XmNieoPve0q2vPe/mUkmYclD7d38bnVh+sTMn
-	 HTPVmenz2cdElnl9SeEA6ykOUPuwXDJBDtCk8rybQBazTsJGyvp6UTOXSPfhiVpdd
-	 PYTAYnWWNMTixWlbvWrUryOuafRU6JsKGMUONznMpLH4+a6arkacbbWqTC3kgKyQT
-	 lcPAvH6ltGIxIe2+KpiMRr4hxj0XXtx1+Sh485gsPMSH2gZrXYrtLqhnyRtkfJwHX
-	 ace9eg9AknLU3qciWzfEsGkVO1ttffX3QNrDITWDY1mvQsTIOgozOq5MguV2ahrIH
-	 j5m9LOY0CXGp6adl4w==
-X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
-Received: from [141.30.226.129] ([141.30.226.129]) by mail.gmx.net (mrgmx104
- [212.227.17.168]) with ESMTPSA (Nemesis) id 1MyKDU-1u4TuE1uvs-018MiX; Wed, 30
- Oct 2024 01:06:38 +0100
-Message-ID: <6131c8e6-5a25-492f-a296-2ed56a9db360@gmx.de>
-Date: Wed, 30 Oct 2024 01:06:37 +0100
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iogunstX"
+Received: by mail-pl1-f176.google.com with SMTP id d9443c01a7336-20c767a9c50so55281505ad.1;
+        Tue, 29 Oct 2024 17:09:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1730246972; x=1730851772; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=hYmx3Imo6THljZa+s7wQTWidNlfbfWZkmtY6Iazs7Cs=;
+        b=iogunstXNi0V6kOrgh5LJBl7fUESn3TC5dshh92Gdj5Z5+bAsZXtC8XPJ+qOXonjiQ
+         SINsmpsxwO89srHRY6xMr3r1Hae69O5wQhjLEU1emiOgTQDJMHXm5OcloHTlKn8ENOqy
+         kUP4CPcItYnNEt12Oy4OCU1ks9PQwkME11q2QEiSVAk+wj2p1Ct5641wpzDKUCdO2uMS
+         HuIsK6MI4cBzclON5781VmuaMIN7tpuAnydO7Gd8phbvi5Ua1QUJVVmr0XUiDFjWwmQW
+         8i9YhmCGC8EPMq7oPuCOmlZ5MggnJ1e7G774op22EhoDUTT+GhZnLGSRqKO3x6YePG/0
+         bwvA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1730246972; x=1730851772;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=hYmx3Imo6THljZa+s7wQTWidNlfbfWZkmtY6Iazs7Cs=;
+        b=JqIM+DNMlijhksQ5EtZpb/E6jSsYbWbx3It5qzChi8Nmv3cOlWMEDYxUZRBT/oH4Gs
+         lcaYSAUj8GpCxdaVQsDeQJvgUJQWT/zEfqrz4ovPlvCzp4uhlqb4uBgTgr1Ptmfx0kHa
+         LVA7UdAiJor8YvS9HtxadMMxzztK1CexLhQiFGgyV+HR8mLBEoOvU8jEQmT94tGj69h0
+         inywV8b+xDNT0Nu7OTk6igChhk6NsTOrtURr8VXoW+LrkLP834/zAHnVyyiNrSc/yIF9
+         qsJouMMyzK2kNLAck04kUVABMnp+7sJP0sflVjk2wiWQkln8AWbKOpit3CvRMcigHJA0
+         nvNw==
+X-Forwarded-Encrypted: i=1; AJvYcCU6EcCmd4e4rLwnFTTeyDgJc/jT6oCFGl5AusYnZ07h+X68fQR6i+sHpZl7O9A+ca6xvGuz5FNdg8OloFcorkGKo1NEtQ==@vger.kernel.org, AJvYcCX13eldA1+XFzl/gvDSBC81ZczpSzQA+gQuhWb/SDOHyr1f8Fxp0zxXDK6fmcS6B8COhMIupDD0doiUKKA=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy1snpzYgtlJQMXEtfuFczGZfFx3sa7c+xBMkKxDZeiJKwy9IMz
+	e4xNO6cllixMt1XBuq5objrnZQ/GO1UHbQ0YdolUdv0LMWcqcxE2
+X-Google-Smtp-Source: AGHT+IFlA5aRj4o1iHxm5yrZvF5jyKmVhYK/d2oKSPGLgW9QtMUDsRf23eYusuhjo5WTVq6yqNZyeQ==
+X-Received: by 2002:a17:902:ec88:b0:20c:763e:d9cc with SMTP id d9443c01a7336-210c68a1a50mr230676095ad.7.1730246971749;
+        Tue, 29 Oct 2024 17:09:31 -0700 (PDT)
+Received: from localhost.localdomain (host95.181-12-202.telecom.net.ar. [181.12.202.95])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-210bc082736sm71626415ad.288.2024.10.29.17.09.29
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 29 Oct 2024 17:09:31 -0700 (PDT)
+From: Kurt Borja <kuurtb@gmail.com>
+To: kuurtb@gmail.com
+Cc: W_Armin@gmx.de,
+	hdegoede@redhat.com,
+	ilpo.jarvinen@linux.intel.com,
+	linux-kernel@vger.kernel.org,
+	platform-driver-x86@vger.kernel.org
+Subject: [PATCH v11 0/5] Dell AWCC platform_profile support
+Date: Tue, 29 Oct 2024 21:09:05 -0300
+Message-ID: <20241030000904.7205-2-kuurtb@gmail.com>
+X-Mailer: git-send-email 2.47.0
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: "asus_wmi: Unknown key code 0xcf" when plugging in charger to
- laptop
-To: Pau Espin Pedrol <pespin@espeweb.net>,
- Corentin Chary <corentin.chary@gmail.com>, "Luke D. Jones" <luke@ljones.dev>
-Cc: platform-driver-x86@vger.kernel.org
-References: <54d4860b-ec9c-4992-acf6-db3f90388293@espeweb.net>
-Content-Language: en-US
-From: Armin Wolf <W_Armin@gmx.de>
-In-Reply-To: <54d4860b-ec9c-4992-acf6-db3f90388293@espeweb.net>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:GKulBr/c2V/XbKWJJM2IDbnhsDheNsZ8hbr0kVtyXKSncQyL+7G
- 26tMPUEa4g9Evaz6bCv3Ex0kKRtdmHr7YxduMmig7Wk5xQOCTZVeUr4RrIc/oGrTKM3brkl
- eyZ98uuG5aBukTrq/9SF1MTV7nQcc7tm+w73E56Pai9k76HY0tCHJuITnBl2aslpNTgzeu6
- DO/YwU/X41FZPtCiXxaDw==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:cXnzRz9NcCA=;lTKlo5YRqxe8N2szjZOWol9TOvz
- APj+qJ8S2ieuG95m0+R9/ja7gbHb7x0BKv/iCM/119p257Vt1NtmS6XAg0oc+jLs0ykuw+P9a
- +NeWbewiERlwcG2a70q9qa6EDgBgYQOCUAca79+kGZIchZN5UYPvhWHuUG85Ieslgi3csM+7c
- nCloh6Y8hCU5SOjgPJqgfGUlGRI8rG/wBD06+y1ayb6xUkUG1DQc5VdJMbmsUbhJFyI2/vCAX
- Kl/EwcPkLHf2pUV0wyuY7euJjuQ5Wygzo6nG6ua4tENKx9I9s2ixbgayXjePaMYYkbnpkiYPD
- 9xnKzha8VatkksqqX0Y/gF/noKvDdLo2aF4GSeZUgs2/4lDMtvSmbgWm6AWSecU9GT0pjCGyw
- qs6sVAkiHJAdJ49teXQpKY5DuVyHmH1sAQv73zCU2jd8OZEm3YPJ2fu4Nx6IU6jW2+AWEavGn
- ORSt7tMpkQPqwjKnoCFPCrwTPNZ1ynew3+dgR4vYvOzySV/laLrg6uDwAOV4ZqGW8G89zB1dg
- VVdNgHN12vp7JGlNZcF3hkV2w0/39O/x5PWGLwm07xwRxjXklrSlfyIxhadA77tlx+lvKlIXw
- /X7lGFIL2RScVwJQFHGpydPLAKI3db4pR2h4G2aPatxqO6nrwz1kiV+uBA+O1EDyfbN7ZtP/Z
- dcXTO4WZYD+icplOH3TFjil3JotQFNFLCt4Tlpf8W+jtDUNaoFRzve2MpBT2hCCWOcTJEgin3
- edbfueNy9nQEGSGweaGD7JX19gHGLLTEGquS2DhVjb7CEDrge8fQ00PukqNQN39S6+DnWuREy
- LwJEIpi89XMeUmhkPV3vP+8g==
+Content-Transfer-Encoding: 8bit
 
-Am 30.10.24 um 00:37 schrieb Pau Espin Pedrol:
+This patch adds platform_profile support for Dell devices which implement
+WMAX thermal interface, that are meant to be controlled by Alienware Command
+Center (AWCC). These devices may include newer Alienware M-Series, Alienware
+X-Series and Dell's G-Series.
 
-> Hi all,
->
-> I was using an Asus laptop today running Ubuntu 24.10 (kernel 6.11.5),
-> and I noticed that every time I plug in the laptop charger I get the
-> following message in dmesg:
->
-> "asus_wmi: Unknown key code 0xcf"
->
-> Having a quick look at current linux master
-> drivers/platform/x86/asus-wmi.c, I couldn't find any reference to such
-> code, so I guess specific handling for it is still missing in there.=C2=
-=A0
-> I don't know how that code should be handled or ignored, so sharing
-> here in case somebody familiar with it wants to make the message
-> disappear.
->
-> Regards,
->
-> Pau
->
->
-Hi,
+Tested on an Alienware x15 R1.
+---
+v11:
+ - Minor changes on patch 4/5
+v10:
+ - `thermal` and `gmode` quirks are now manually selected because some
+   models with the WMAX interface don't have the necessary thermal
+   methods.
+ - Added force_platform_profile and force_gmode patch for a better user
+   experience
+v9:
+ - Minor changes on patch 3/4
+v8:
+ - Aesthetic and readibility fixes on patch 3/4
+ - Better commit message for patch 3/4
+v7:
+ - Platform profile implementation refactored in order to efficently
+   autodetect available thermal profiles
+ - Added GameShiftStatus method to documentation
+ - Implemented GameShiftStatus switch for devices that support it 
+v6:
+ - Removed quirk thermal_ustt.
+ - Now quirk thermal can take canonical thermal profile _tables_ defined
+   in enum WMAX_THERMAL_TABLES
+ - Added autodetect_thermal_profile
+ - Proper removal of thermal profile
+v5:
+ - Better commit messages
+ - insize renamed to in_size in alienware_wmax_command() to match other
+   arguments.
+ - Kudos in documentation now at the end of the file
+v4:
+ - Fixed indentation on previous code
+ - Removed unnecessary (acpi_size) and (u32 *) casts
+ - Return -EIO on ACPI_FAILURE
+ - Appropiate prefixes given to macros
+ - 0xFFFFFFFF named WMAX_FAILURE_CODE
+ - Added support for a new set of thermal codes. Old ones now have USTT
+   in their names
+ - A new quirk has been added to differantiate between the two sets.
+   thermal and thermal_ustt are mutually exclusive
+ - Added documentation for WMAX interface
+v3:
+ - Removed extra empty line
+ - 0x0B named WMAX_ARG_GET_CURRENT_PROF
+ - Removed casts to the same type on functions added in this patch
+ - Thermal profile to WMAX argument is now an static function and makes
+   use of in-built kernel macros
+ - Platform profile is now removed only if it was created first
+ - create_platform_profile is now create_thermal_profile to avoid
+   confusion
+ - profile_get and profile_set functions renamed too to match the above
+v2:
+ - Moved functionality to alienware-wmi driver
+ - Added thermal and gmode quirks to add support based on dmi match
+ - Performance profile is now GMODE for devices that support it
+ - alienware_wmax_command now is insize agnostic to support new thermal
+   methods
 
-can you share the output of "acpidump"?
+Kurt Borja (5):
+  alienware-wmi: fixed indentation and clean up
+  alienware-wmi: alienware_wmax_command() is now input size agnostic
+  alienware-wmi: added platform profile support
+  alienware-wmi: added force module parameters
+  alienware-wmi: WMAX interface documentation
 
-Thanks,
-Armin Wolf
+ Documentation/wmi/devices/alienware-wmi.rst | 388 ++++++++++++++++
+ MAINTAINERS                                 |   1 +
+ drivers/platform/x86/dell/Kconfig           |   1 +
+ drivers/platform/x86/dell/alienware-wmi.c   | 477 ++++++++++++++++----
+ 4 files changed, 791 insertions(+), 76 deletions(-)
+ create mode 100644 Documentation/wmi/devices/alienware-wmi.rst
+
+-- 
+2.47.0
 
