@@ -1,282 +1,261 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from NAM11-CO1-obe.outbound.protection.outlook.com (mail-co1nam11on2061.outbound.protection.outlook.com [40.107.220.61])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6CF681E2603
-	for <platform-driver-x86@vger.kernel.org>; Wed, 30 Oct 2024 14:00:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730296838; cv=none; b=qhL53PajY0SbAce6U/2KOY07qMfEFtwP3vTTJ4Mn4ehl6BZAKtBUz8X10+NKM5fEAcLegaK0K9oDf2g4+qp/Z5ERFfROfg5XPYQLvx4t+8W5duYUkMc3XnCoetOzFuRxZ6jkW0JmvgUevlwBqPOLr7Kz1dg3XtL+mwHAg2mlrPM=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730296838; c=relaxed/simple;
-	bh=ziu275Y7j9Ff4FU84Dpy7KBnVbDvx6PgmZcuI8tjT10=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=TfmUOCLFjC2mh9/bFvqzOTQrMjNIzULpJvFVMBhoqZSPk8a6rbESLscwOKR3BRNNLaKD/7yLfeoys6UvTsSwKFRyjzTe7/Xxhu1hukSowFGWCXA6AXfJ1XzyrpMRrAuugeXQ/y3VRTm2MpbKbpa3sd4tcJn9RcFzKeEurHvORpw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=aV0xEAhu; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A7971EE021;
+	Wed, 30 Oct 2024 14:08:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.220.61
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1730297322; cv=fail; b=RR9BFeeKThaNU5A2lc3b68OMd5qr7euNLskIkeHKUaaREIYqRX/BhvOuzs0Ed1L9A7B4XQzBS7glV9u9Mm3hAj6zKR6lfzEuLohCs0+YQzjBoXbhxRXUYwJAwhmKGht3m82NRZZHjqDBQWm2W4hXx904lHABwsBF0gIJrJ6D7nw=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1730297322; c=relaxed/simple;
+	bh=2EVfykzGV07YTSIIQKnopaz66Jz+bJIh9Q17dZUDNMs=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=gcKqVa6LniNpqjUkHfJwiqzKKCgjwLBnC9aCBm/iy5W7FQ4uyssmk+Ih8vVRuNfnszM4TtkmPWO1OuzRi5jaQja/kgMUGMR5GdrN9Lsgv7V40+wG0+BQhME2BEXAO/VacEc5sBAwWBJxYWwbKzZ+qCJ83W8ITTk5/r9YhgivUeI=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=E5UtVk+q; arc=fail smtp.client-ip=40.107.220.61
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="aV0xEAhu"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1730296834;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=bm9rFAMPrc9yyyJRfYP4Yshx4h/njir1BXKVa80220Q=;
-	b=aV0xEAhu/aOj+81ybIWp5kKvHS6NPx3Ni3kGIbVw9CR7ult0u7F4MJ0JuvQSF4GFKtpU8O
-	QRJYJz2Wkb19Kwhp0/iYEUSkJVkU+kCJ6hN35QlMGFRhokpHFdAFMS7hs0kg7RMUuyrsTk
-	eYr17bWFpgatxtxtLtThFM4LQyKXkmw=
-Received: from mail-lj1-f199.google.com (mail-lj1-f199.google.com
- [209.85.208.199]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-175-auDoXASGNsyEqCF8s08_vw-1; Wed, 30 Oct 2024 10:00:32 -0400
-X-MC-Unique: auDoXASGNsyEqCF8s08_vw-1
-Received: by mail-lj1-f199.google.com with SMTP id 38308e7fff4ca-2fb55e102b6so48092671fa.1
-        for <platform-driver-x86@vger.kernel.org>; Wed, 30 Oct 2024 07:00:32 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1730296831; x=1730901631;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=bm9rFAMPrc9yyyJRfYP4Yshx4h/njir1BXKVa80220Q=;
-        b=YQxH3TaaxuP1CEvuVCX/0PPfhsuPRw9LV0Q+mHyoZmG53hAEL8wQbFhQHYgAmcI94I
-         eS9TSJLTyeAMTYjQp8s+irhv96ItXJ7YtmFTnvSPBiYbwO5s3apZ88njjDi6GasJIgTH
-         T8i3h/AkqFG9nYxWIi7rHl5V0mX1YajKb3NCBtSqyomCRe2C4ko6PsGo0z6csS1DQPq4
-         9+f0GzT5sc1gHg5fRuweNxt7Ymsogcgww8AOpkDHOdQc4pkdBK2idjCPJ7TVEy+adejd
-         JzWXzBMZuga7g2r7WcAzDAo9P+g4LwVgRLarRmCgxzBuxcuYR9+xBQzsnVoT/09Cx1se
-         2wWA==
-X-Forwarded-Encrypted: i=1; AJvYcCXUQAO7CSyKLFBB4vyCpA8/EeNlextTUGh5twBsbGNLD27ldoam2Ve1qPyjLBMkElotst0OWRuFBfoyjLVj75HnAfRF@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz+UHjXKTCOgcHHdifDqvldNAP8yTdQA2czh3I3PTSeDQAIAAH1
-	IQyA3nDex+L1fBDx//pTDiOz/IU6+B1IrSgdUst7IScTBYgsQEnB1P5HOgKrg2S0VwgM4Jfx7/0
-	E8XuNcG5W/cnq8F9Wy9I2rA9w5cRKCpCXXl63yoj57qydZMtCdyIrPf/VcdMNVNKhdtEvlxU=
-X-Received: by 2002:a2e:b8c3:0:b0:2fb:3445:a4af with SMTP id 38308e7fff4ca-2fcbdfe8b81mr74999011fa.21.1730296829082;
-        Wed, 30 Oct 2024 07:00:29 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IGvPuRCMp/YqxDsH3DbD876Co4fx8dUYmnxsksem0XHhw4djzJa5NMkKHuMC5aXi0hMAEO+sw==
-X-Received: by 2002:a2e:b8c3:0:b0:2fb:3445:a4af with SMTP id 38308e7fff4ca-2fcbdfe8b81mr74997821fa.21.1730296827092;
-        Wed, 30 Oct 2024 07:00:27 -0700 (PDT)
-Received: from ?IPV6:2001:1c00:c32:7800:5bfa:a036:83f0:f9ec? (2001-1c00-0c32-7800-5bfa-a036-83f0-f9ec.cable.dynamic.v6.ziggo.nl. [2001:1c00:c32:7800:5bfa:a036:83f0:f9ec])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5cbb62c803asm5059456a12.56.2024.10.30.07.00.26
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 30 Oct 2024 07:00:26 -0700 (PDT)
-Message-ID: <63ac59dd-a33b-4bc8-b35c-7bf9329351b7@redhat.com>
-Date: Wed, 30 Oct 2024 15:00:25 +0100
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="E5UtVk+q"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=m7aD+Qh/B0tW6jXzOZToqkQyATBz6zIOKn4yURQ1Q7UTGFlAERVfFpgevgKQCgnkg+3/I/3nwIvQ+ca0OaKh5cLta2NB2XahoFkTQInVEglM64gNcN0DGS5Y4174Cresd3FZe9l34wRYFHmnGyV/XUg2vvdr7lXt2xQWO29vBMsG64RXcWUA8fOSnBR3/X4H9OdxWk65WFRSWesS8gDovZqbqCyoeo/jXOPZucQXFqv8CjJXu0Gpn55yardfH73b3WPG5Z9fYTRC+6LkZzGJj2KNqoKqfbiUvMNC+oF4RI7gNKyPooerfBlRH/jAsZ/OauaWs91v72atXqqcrdytIg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=h8kNaSaeRQ0PdN+B6YZFMdmV2vOF1DDuAFwlpbcvSwc=;
+ b=bFAfocFLUCGhIC8xMKtFPfPrJ6vXuwKKxcV5OUFOXCSz7cnSwrFapVNFtmFyD9SkYkmAu0ZjJJzEVw9Udg7vdADZ+jD7XH45ayJGoK3P2kG0l+TJYNzWCy2LWYCYRV/7+iavSHrmgMkRMKm4gp6Qa0tFojzIsQ7qyd2gpWNzbiig0Y62Od8G3CX72XxYXeY2ldbAF/eWAHhs9YJaX3bBnKoJlE3C1LOmhIQOgZJjsQyCOolU/Pr88sgU5cZtl+OVDUgJdlgB1oyI0LB7bEgVPEIYWpM67+KdlTJMDGluKqGPs9ZtsRSojd8h87lp0lsTXOf5sZzJu8j5YyyAyf5a5Q==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=h8kNaSaeRQ0PdN+B6YZFMdmV2vOF1DDuAFwlpbcvSwc=;
+ b=E5UtVk+qYFBPX5TmMmzYEXAosnS70ET0RKCbxltniwt+QJ8ETj2NgCP9FFoU+Bi1pgXVOUfO7ZWjTX9tgUu6zMwFSjKz0gOknwgvPoLj+Gl8xj4XHStgMvpb/8TNZweTTVIHEQ1+e9b7rrzu6amDY9i1x/ygekeTm/3qTS0/eaE=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from MN0PR12MB6101.namprd12.prod.outlook.com (2603:10b6:208:3cb::10)
+ by DS0PR12MB7898.namprd12.prod.outlook.com (2603:10b6:8:14c::20) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8093.32; Wed, 30 Oct
+ 2024 14:08:36 +0000
+Received: from MN0PR12MB6101.namprd12.prod.outlook.com
+ ([fe80::37ee:a763:6d04:81ca]) by MN0PR12MB6101.namprd12.prod.outlook.com
+ ([fe80::37ee:a763:6d04:81ca%4]) with mapi id 15.20.8114.015; Wed, 30 Oct 2024
+ 14:08:36 +0000
+Message-ID: <30d78044-c658-4ef7-bd56-bc0badd86a91@amd.com>
+Date: Wed, 30 Oct 2024 09:08:34 -0500
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 00/15] Add support for binding ACPI platform profile to
+ multiple drivers
+To: Hans de Goede <hdegoede@redhat.com>,
+ =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Cc: "Rafael J . Wysocki" <rafael@kernel.org>, Len Brown <lenb@kernel.org>,
+ Maximilian Luz <luzmaximilian@gmail.com>, Lee Chun-Yi <jlee@suse.com>,
+ Shyam Sundar S K <Shyam-sundar.S-k@amd.com>,
+ Corentin Chary <corentin.chary@gmail.com>, "Luke D . Jones"
+ <luke@ljones.dev>, Ike Panhc <ike.pan@canonical.com>,
+ Henrique de Moraes Holschuh <hmh@hmh.eng.br>,
+ Alexis Belmonte <alexbelm48@gmail.com>,
+ =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>,
+ Ai Chao <aichao@kylinos.cn>, Gergo Koteles <soyer@irl.hu>,
+ open list <linux-kernel@vger.kernel.org>,
+ "open list:ACPI" <linux-acpi@vger.kernel.org>,
+ "open list:MICROSOFT SURFACE PLATFORM PROFILE DRIVER"
+ <platform-driver-x86@vger.kernel.org>,
+ "open list:THINKPAD ACPI EXTRAS DRIVER"
+ <ibm-acpi-devel@lists.sourceforge.net>,
+ Mark Pearson <mpearson-lenovo@squebb.ca>,
+ Matthew Schwartz <matthew.schwartz@linux.dev>
+References: <20241028020131.8031-1-mario.limonciello@amd.com>
+ <3e0064cb-b8cc-4126-aa4f-92cd4a676937@redhat.com>
+Content-Language: en-US
+From: Mario Limonciello <mario.limonciello@amd.com>
+In-Reply-To: <3e0064cb-b8cc-4126-aa4f-92cd4a676937@redhat.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: SN6PR2101CA0004.namprd21.prod.outlook.com
+ (2603:10b6:805:106::14) To MN0PR12MB6101.namprd12.prod.outlook.com
+ (2603:10b6:208:3cb::10)
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 5/5] platform/x86/amd/pmf: Add PMF driver changes to
- make compatible with PMF-TA
-To: =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
- Mario Limonciello <mario.limonciello@amd.com>
-Cc: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>,
- platform-driver-x86@vger.kernel.org, Patil.Reddy@amd.com
-References: <20241023063245.1404420-1-Shyam-sundar.S-k@amd.com>
- <20241023063245.1404420-6-Shyam-sundar.S-k@amd.com>
- <733dbf68-a1a7-43d8-acc2-7f1b8d222427@amd.com>
- <84fe3b9b-cf98-4f49-ae2b-ec1a8759af4f@amd.com>
- <02bf47e4-f39e-4799-bda4-5a65e7f948f2@amd.com>
- <41d66544-6b49-4f22-8c1c-38f14ca47fbd@amd.com>
- <9260af45-4c7a-4e8e-8ab4-16b83ed51ee9@amd.com>
- <02a2c321-33f9-4bcd-9507-3b0788acc287@amd.com>
- <e1502166-88db-4900-8f2d-ef9adfab42d1@amd.com>
- <d7b8d58b-be23-179e-0618-9bcfc54b8d0b@linux.intel.com>
-Content-Language: en-US, nl
-From: Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <d7b8d58b-be23-179e-0618-9bcfc54b8d0b@linux.intel.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: MN0PR12MB6101:EE_|DS0PR12MB7898:EE_
+X-MS-Office365-Filtering-Correlation-Id: 78fe1205-8b10-4aab-1fc3-08dcf8ec5886
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|376014|366016|7416014;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?MFpwdi9xSzYvSVZlNUk0M2Z3VnQ1dU13cHVseVRmM2kxbHA2WnZmSDNrYU02?=
+ =?utf-8?B?aEVLL0d5MVg0THovSElRdGg2V1dzTE4zNlJUWlpUNzJpdzVCY0VQVEdocHo3?=
+ =?utf-8?B?TW1halNURlRUemtRcVV1L3lBN1FzQWVwcWNLOFBlQ09KRG5nNWpuSldJMHEr?=
+ =?utf-8?B?c2ZSWUIrOVpWNTNBL3ArWGhMTXJDRHVOa3dEVHJPWUpNaW1xb1o5VlVKRzZK?=
+ =?utf-8?B?SGVEY2dsV09JYmZMcE9nRStMMDROcEJBR1FRWlk2WWVyODh2RGFhOUpyRnh2?=
+ =?utf-8?B?L2k5MlNWUGVPNVVHNWJLUW0rUFJMSE44NzFDNzU5MFpUUWZkUnFPVFl4aktO?=
+ =?utf-8?B?SVNXL3d0ZHdCNWtGMEhFTGlWZUIvakdXYmsyVXVjbWcrZTFTcWdrUUUyQUlq?=
+ =?utf-8?B?QmRiOVZMZ3VvOVE5Q1lWVENnSndYQkN3dWwzdG9reVB0QkFwTThQNCtOVXEw?=
+ =?utf-8?B?RFhXdGpmd05ENFBybFpJZ05GQmlUY3JDVEZNbWlTYmYrY29WRDNQa2FteC9m?=
+ =?utf-8?B?R3laVXF3SnRUTDltMnhOVjdORW9aNTFUTnhteXd0Z0JNSU9tY0sybzBiM1Bn?=
+ =?utf-8?B?YS9ZVEdWZUQ3OTJrMUF3OXdGWkpraElIUVdDWHRpRTE1MlY0L0ZLZVR3VGNP?=
+ =?utf-8?B?R2gwYitYRFlaSENmSUhtUk4yc1B3NkVwb3oyaUJPVHBTUTErTkVJbGd0emo3?=
+ =?utf-8?B?THk5T01EWW9yRE5JMVJXVnhWMU1ZNlNaKzdLRkpHL0c4S2tUMTJoUG5PbDgx?=
+ =?utf-8?B?Sll5enIvdHhHM3h5SitXcGZTZ0JDZWhGQUhlallxZ24wM2V5VVZ3NHA0MTRi?=
+ =?utf-8?B?OEszeTFicG9DZkg0cHNCSXI1UkJmZVFHWmsxVXgzSlZ1aU5LWGhoRUdZUTla?=
+ =?utf-8?B?RXNqUG1PbWlaY2R1YWdqT0d5amljTk0zdjZJYmVvU0RTOHl2Q2RlckRMV2JV?=
+ =?utf-8?B?VllWT3I0WW9LbG5SajdCdlc3eW1tZm1GSDhYd2o5NkMwakNqZnA1Mjc2RkhB?=
+ =?utf-8?B?WjBJT1ppYlRrUkphSFRkbHh6MkVhcE02ZXpPenZwSG9MNTVxQ2QyN2VLVWNF?=
+ =?utf-8?B?M1ljMUdKZkV4M0NtOCs4WDZKTnVrVmdWRVN6Z3JNZ3c0K0FrcjNDSVMySzJ0?=
+ =?utf-8?B?d21qbWZMY25tbHVxZUhkNmZuUEZkd3VpaEVYQk4rcUx5ZjUvRVVGZlhmNU1N?=
+ =?utf-8?B?YlViZGNrRmVxY091VGl2emhCdUJMU3dzSE1oVmNVNDlEM1RwdVJ5aGpZTXJj?=
+ =?utf-8?B?MEJPTlRIajFXaGxudXllVGpsclFkTFpUeVBSRlNaLytSN3doaDRKWmRUSUZa?=
+ =?utf-8?B?RXRMNFZZS0NxaU9nMjVIN1VHSUVPY0RaS0xNa0pNcDRFOVNVNk11SjAwQW1U?=
+ =?utf-8?B?NFpqL3JFb2NNTXhCcFlMSi9BRDV0T3o3T3dybmgxN0plcnlQek9oRmlOd3Ay?=
+ =?utf-8?B?ZUNWVUNWb25qNGNPNDVWRklSaDZlbFpsazVBL3hwMGRhR2dCZWxIdkFPYkpy?=
+ =?utf-8?B?bHVHM29JdUtpZVdXTSt1aWM0T1ZxeElla1FLK1d4bUJyMUhxbThpSHVlcGM3?=
+ =?utf-8?B?YWhkTmJMRXQxbXBJRTJvVjhlaThLMDRBRXJzUEIyMzV6WkROTTVpZkVkTHVl?=
+ =?utf-8?B?bzQxN3lEdWNWTStreWx6a0tGNUNTTHpkNEFncW14cTFTbEdZQ0pPemttUk80?=
+ =?utf-8?B?aTZKbjh5VHQrK3IvcmhYUGE2bFNtSEc5cGQ4eHRsZHRmVVo2SUxQNW00WFRM?=
+ =?utf-8?Q?14H4zMb43Dh232BtfHuxjY0KMOfqaWnJ3UYx6/4?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MN0PR12MB6101.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(376014)(366016)(7416014);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?QWUxSytxdG42UzVvSjVpOGQ4MHdhdkpkdWFOQnJFWStmcGllTEQxcHZDWTQz?=
+ =?utf-8?B?cVVtdmNET2xZWnZ5L2JDRERYQjZSUWs1LzZURTcyQWwwNm12NXN0WVpwYkI2?=
+ =?utf-8?B?REl3MExWU0ZGbndkTE1qamhyVEdJUk53cVlmYWR0NjdJWWR5QTA5MHpPNENR?=
+ =?utf-8?B?L0N5SElyY3BjZmZqdUtZSHdxUjgwRUIwdFJhc3NpM1JwT1FzY2RsYURWV1ht?=
+ =?utf-8?B?QmxSK2ZaTmZHQUxHejhzNFNna2lNVWZDaGhCWHdDWmJDUy9EeStMeGJiT1R2?=
+ =?utf-8?B?WmV0Z1MrdUg1SVpkcHZJeFUveCtDK2JGby91QWNnVStCemx0T21BR2lJN3B6?=
+ =?utf-8?B?YS9CWGVpOTBGaUNFcDhjVTZuMG9kMS9iQWF4bHZobVMyQjFGT1ZDeFVteVZW?=
+ =?utf-8?B?OHA3ZVlJM0wzZlI0VWI3aXV3MS9lZVl6RUFYdUgyK1oxUjVNYXcrZmFEUVM4?=
+ =?utf-8?B?QVRDekF1Qml0MGsxZzh5NDJNbXpwQXF4QlRHdlRZMnRvWGNKbjByaFF0eERv?=
+ =?utf-8?B?M1NuU3FsRlphL2xLOS9sOXRXRk05MjlTMXZyVDZXOTRocGdCckdVN21nOThl?=
+ =?utf-8?B?Nzc4cEVIMzhxS0Q5K3BEaTRhQVVZTXRMSldlNDdpQ2V6ZFV0bEdoVTQySnlX?=
+ =?utf-8?B?c3B3TGt3RVFGN2lBVjRXVlpIWWpiTWRrMHU3Mmo2NVJFZ052c1RVN25VRlZN?=
+ =?utf-8?B?RnZLOHo0emd5d2ZHWlgvSHpTV05ZWjQ3bGdNN0pSQ3U0SDZydVdiUHNCdmVw?=
+ =?utf-8?B?eDBMdWxlWHhMWWRVa1FzTmhFQTFzZDVHOXpBSWFFSm1vbFFIczNWd3pON085?=
+ =?utf-8?B?WUtQd2FrL05CcTZhQ2NSTFFDazZYRzJPVWFOb3EzcE1yenlkZWpCMFo2aUU3?=
+ =?utf-8?B?Y2lkYjczY25RL1VDVmQwcmE4UEJzelRKcUUrY1JxbndjUTJNeGxaNEd1WVIw?=
+ =?utf-8?B?eU5PRlp4Ylh4US8rcC8vTmIzb2NSMGhCajZyNk4wWmRKRThyVDZVMVNmb1pO?=
+ =?utf-8?B?OTBuVCswTGVoNnRNSUowVDZKWnpXMnJHZW1hVnJvUG5qL0J4U2VEOFJvWmJJ?=
+ =?utf-8?B?eUt4Q2pDL2pVWVhOZkFRQWd5dWJqWTIxNjlSTmR0bGY1WnlwSStVZ2ZKU0Vi?=
+ =?utf-8?B?a3JaN3htVmJDNXR1T3J1VzNjS3ZDUGpLNmlaVTJGdUdJdmNhVG1FUVpqU2Jx?=
+ =?utf-8?B?YkYybFdqbTM3TERmek1KYXpyR3IrTG12T3dIclZFNVlLVEVldm9aU2hRdUwy?=
+ =?utf-8?B?dEdzRzRzR1E2UVlUUHhPTEZyY3c4dXdEQTczYnp4Q2ZubTFkakk3MnlIWUhs?=
+ =?utf-8?B?TDhOaDJUOFRjZlBMVXhySkVPcFBPR05FNVF0UFJLMEJ0UXJGMEtyM1FaRzJn?=
+ =?utf-8?B?cDB1SDIvV1h2ejNsTnk4V1JzclFKWW1IMzQyOGxyekdRSG8yeUJReHpUaFFH?=
+ =?utf-8?B?MzhOOXRKdVA5NGVPODh1Y0VSc3drMjJLeVBYRi9TYVZyL2pVTHhMKzhMaDI5?=
+ =?utf-8?B?bWo3U014L3JLWERNUGQ2Rm1UejZGVFhKeW44K0k2ZjNnT3BXOUlBTldHNm1o?=
+ =?utf-8?B?RlVydkx0SGhMTytxWHBUeVZXMWJNOTBKNmNGV1RHN0h2bU1vVUJpaTFTL3U3?=
+ =?utf-8?B?Zm9UcFRwRU1WcGxwT3FmTUlLd2V3aEdpMGV5T3BJWTZ0d2UwdWRhR3BDa0po?=
+ =?utf-8?B?Y3g2MC90VG5DZlhSdjQwTzE4OVM3aU9lTTAwdFZLdW9keXR1c09sQ1NOdEtw?=
+ =?utf-8?B?ZjE4L0NuVkpCZk81elRhTXUzbEJjV1NBb3UzZEVTVm15d1FtWE9CRnkxWFRE?=
+ =?utf-8?B?eVFxSkVjWFRlb0htTlpzWlFFbVU0MnF6RXdoTVFZUW53VmtGVE1aRUFLTkIw?=
+ =?utf-8?B?VFk3WmtzaFJpZ3BmdkVKZ3NEQy9JOGtDR0xIcmFvcGFibVRNMVpvOEdQVE91?=
+ =?utf-8?B?bUpkc3FTamdCdFVFVHlETFdyTDZkZEM4cCtsZnQ3SlIyUUVoQUNCUTBoYkwx?=
+ =?utf-8?B?UU94KzFvL1N6MVpnakxQVFVOSzRURjVRMm9ia2tKTVRORFE3bFh3dkZXeVVw?=
+ =?utf-8?B?ZEQrRVpVYUdHckhXOU1ucitVSlNjTTdLU0tpam5GVmJVRDVCRDljSENZNWRY?=
+ =?utf-8?Q?bAEws9/pijpHpXyFRARYaDKXb?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 78fe1205-8b10-4aab-1fc3-08dcf8ec5886
+X-MS-Exchange-CrossTenant-AuthSource: MN0PR12MB6101.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 30 Oct 2024 14:08:36.2630
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: Hpt2P5oaLdHzI1f+tla/eEYrkzI0RRIyoGtE68TsDpVrHKEQz9V+t2qqyxa+djUCm/2+yUDFZEBN74s4ZL1wcA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS0PR12MB7898
 
-Hi,
-
-On 29-Oct-24 3:07 PM, Ilpo Järvinen wrote:
-> Hi Hens,
+On 10/30/2024 08:41, Hans de Goede wrote:
+> Hi Mario,
 > 
-> There a question / item needing your input below.
-> 
-> On Wed, 23 Oct 2024, Mario Limonciello wrote:
->> On 10/23/2024 10:52, Shyam Sundar S K wrote:
->>> On 10/23/2024 21:10, Mario Limonciello wrote:
->>>> On 10/23/2024 10:32, Shyam Sundar S K wrote:
->>>>> On 10/23/2024 20:04, Mario Limonciello wrote:
->>>>>> On 10/23/2024 09:29, Shyam Sundar S K wrote:
->>>>>>> On 10/23/2024 19:41, Mario Limonciello wrote:
->>>>>>>> On 10/23/2024 01:32, Shyam Sundar S K wrote:
->>>>>>>>> The PMF driver will allocate shared buffer memory using the
->>>>>>>>> tee_shm_alloc_kernel_buf(). This allocated memory is located in
->>>>>>>>> the
->>>>>>>>> secure world and is used for communication with the PMF-TA.
->>>>>>>>>
->>>>>>>>> The latest PMF-TA version introduces new structures with OEM
->>>>>>>>> debug
->>>>>>>>> information and additional policy input conditions for
->>>>>>>>> evaluating the
->>>>>>>>> policy binary. Consequently, the shared memory size must be
->>>>>>>>> increased to
->>>>>>>>> ensure compatibility between the PMF driver and the updated
->>>>>>>>> PMF-TA.
->>>>>>>>>
->>>>>>>>> Co-developed-by: Patil Rajesh Reddy <Patil.Reddy@amd.com>
->>>>>>>>> Signed-off-by: Patil Rajesh Reddy <Patil.Reddy@amd.com>
->>>>>>>>> Signed-off-by: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
->>>>>>>>
->>>>>>>> How does this present to a user?  From what you describe it seems
->>>>>>>> to
->>>>>>>> me like this means a new TA will fail on older kernel in some way.
->>>>>>>
->>>>>>> Newer TA will not fail on older systems. This change is just about
->>>>>>> the
->>>>>>> increase in TA reserved memory that is presented as "shared memory",
->>>>>>> as TA needs the additional memory for its own debug data structures.
->>>>>>
->>>>>> Thx for comments. But so if you use new TA with older kernel driver,
->>>>>> what will happen?  Can TA do a buffer overrun because the presented
->>>>>> shared memory was too small?
->>>>>>
->>>>>
->>>>> New TA will fail on older kernel and hence this change will be
->>>>> required for new TA to work.
->>>>
->>>> OK, that's what I was worried about.
->>>>
->>>>>
->>>>>>>
->>>>>>>    From user standpoint, always be on latest FW, irrespective of the
->>>>>>> platform. At this point in time, I don't see a need for FW
->>>>>>> versioning
->>>>>>> name (in the future, if there is a need for having a limited support
->>>>>>> to older platforms, we can carve out a logic to do versioning
->>>>>>> stuff).
->>>>>>
->>>>>> I wish we could enforce this, but In the Linux world there is an
->>>>>> expectation that these two trains don't need to arrive at station at
->>>>>> the same time.
->>>>>>
->>>>>>>
->>>>>>>> Some ideas:
->>>>>>>>
->>>>>>>> 1) Should there be header version check on the TA and dynamically
->>>>>>>> allocate the structure size based on the version of the F/W?
->>>>>>>>
->>>>>>>
->>>>>>> This can be done, when the TA versioning upgrade happens, like from
->>>>>>> 1.3 to 1.4, apart from that there is no header stuff association.
->>>>>>>
->>>>>>>> 2) Or is there a command to the TA that can query the expected
->>>>>>>> output
->>>>>>>> size?
->>>>>>>>
->>>>>>>
->>>>>>> No, this is just the initial shared memory that the driver allocates
->>>>>>> to pass the inputs and the commands to TA.
->>>>>>>
->>>>>>>> 3) Or should the new TA filename be versioned, and the driver has
->>>>>>>> a
->>>>>>>> fallback policy?
->>>>>>>>
->>>>>>>> Whatever the outcome is; I think it's best that if possible this
->>>>>>>> change goes back to stable to try to minimize regressions to
->>>>>>>> users as
->>>>>>>> distros update linux-firmware.  For example Fedora updates this
->>>>>>>> monthly, but also tracks stable kernels.
->>>>>>>>
->>>>>>>
->>>>>>> Advisory to distros should be to pick the latest PMF TA (note that,
->>>>>>> I
->>>>>>> have not still submitted to new TA FW).
->>>>>>
->>>>>> Yeah we can advise distros to pick it up when upstreamed as long as
->>>>>> there isn't tight dependency on this patch being present.
->>>>>>
->>>>>
->>>>> That is the reason I am waiting for this change to land. Once that is
->>>>> done, I will submit the new TA, you can send out a advisory to upgrade
->>>>> the kernel or this change has to be back-ported to stable/oem kernels
->>>>> for their enablement.
->>>>>
->>>>> Makes sense?
->>>>>
->>>>
->>>> I think we need Hans' and Ilpo's comments here to decide what to do.
->>>>
->>>
->>> Sure.
->>>
->>>> I will say that when we had this happen in amdgpu for a breaking
->>>> reason there was a new firmware binary filename created/upstreamed for
->>>> the breaking version (IIRC foo.bin -> foo_1.bin) and amdgpu had to
->>>> have fallback code so it could be compatible with either binary.
->>>>
->>>
->>> True. In case of amdgpu, the FW loading is part of the amdgpu driver.
->>> But in case of PMF, the PMF TA gets picked from the AMD TEE driver
->>> through the TEE commands.
->>>
->>> So, there is no need for FW versioning logic in PMF driver.
->>>
+> On 28-Oct-24 3:01 AM, Mario Limonciello wrote:
+>> Currently there are a number of ASUS products on the market that happen to
+>> have ACPI objects for amd-pmf to bind to as well as an ACPI platform profile
+>> provided by asus-wmi.
 >>
->> That's a very good point, and this is a lot of complexity then.
+>> The ACPI platform profile support created by amd-pmf on these ASUS products is "Function 9"
+>> which is specifically for "BIOS or EC notification" of power slider position.
+>> This feature is actively used by some designs such as Framework 13 and Framework 16.
 >>
->>>
->>>> * If user on older kernel took newer linux-firmware package they used
->>>> older binary.
->>>> * If user on newer kernel took older linux-firmware package they used
->>>> older binary.
->>>> * If user on newer kernel took newer linux-firmware package they used
->>>> newer binary.
->>>>
->>>> If the decision is this goes in "as is" it definitely needs to go back
->>>> to stable kernels.
->>>>
->>>
->>> IMHO, let's not put too many fallback mechanisms. The philosophy
->>> should be use latest driver and latest FW that avoids a lot of
->>> confusion and yeah for that to happen this change has to go to stable.
->>>
->>> Thanks,
->>> Shyam
+>> On these ASUS designs we keep on quirking more and more of them to turn off this
+>> notification so that asus-wmi can bind.
 >>
->> Of course Hans and Ilpo make the final call, but I think from our discussions
->> here it would be ideal that patch 1 and patch 5 from this series go into 6.12
->> and have stable tags, the rest would be 6.13 material.
+>> This however isn't how Windows works.  "Multiple" things are notified for the power
+>> slider position. This series adjusts Linux to behave similarly.
+>>
+>> Multiple drivers can now register an ACPI platform profile and will react to set requests.
+>>
+>> To avoid chaos, only positions that are common to both drivers are accepted.
+>>
+>> This also allows dropping all of the PMF quirks from amd-pmf.
+>>
+>> v2:
+>>   * Split to many more patches
+>>   * Account for feedback from M/L
 > 
-> Distros and SW component management challenges are more in the domain of 
-> Hans' expertise so I'd prefer to hear his opinion on this.
+> Thank you for the new version. I just did a quick check of
+> patches 8 - 13 and this looks much better.
 > 
-> Personally I feel though that the commit message is not entirely honest 
-> on all the impact as is. The wordings are sounding quite innocent while if 
-> I infer the above right, an incorrect combination will cause a 
-> non-gracious failure.
+> I see from various discussions that a v3 is incoming so I've
+> not done a full review of patches 8 - 13.
+> 
 
-There are basically 4 possible scenarios and to me it
-is only clear from this thread what will happen in 3 of
-the 4 scenarios :
+Yeah no problem waiting for v3 for more complete review, I haven't 
+decided if I'm squashing the class stuff in or doing it in separate 
+patches.  Once I have it all working in a satisfactory way I'll decide.
 
-1. Old TA fw, Old kernel (TA_OUTPUT_RESERVED_MEM=906) -> works
-2. New TA fw, Old kernel (TA_OUTPUT_RESERVED_MEM=906) -> broken
-3. Old TA fw, new kernel (TA_OUTPUT_RESERVED_MEM=922) -> ???
-4. New TA fw, new kernel (TA_OUTPUT_RESERVED_MEM=922) -> works
-
-If the answer to 3 is: "works" then I agree that this patch
-should be submitted to Linus as a fix with Cc: stable ASAP
-and then once that has hit most stable series it should be
-ok to upgrade the fw in linux-firmware
-
-Note this is still not ideal but IMHO it would be ok.
-
-But if the answer is "broken" then we will really need to
-find some way to unbreak this, which could be as simple
-as querying the fw-version and basing the size on this,
-but having a kernel change which will regress things for
-users who do not have the old firmware yet is simply
-not acceptable.
-
-Regards,
-
-Hans
-
-
-
+> Regards,
+> 
+> Hans
+> 
+> 
+> 
+> 
+> 
+>>
+>> Mario Limonciello (15):
+>>    ACPI: platform-profile: Add a name member to handlers
+>>    platform/surface: aggregator: Add platform handler pointer to device
+>>    ACPI: platform_profile: Add platform handler argument to
+>>      platform_profile_remove()
+>>    ACPI: platform_profile: Add a list to platform profile handler
+>>    ACPI: platform_profile: Move sanity check out of the mutex
+>>    ACPI: platform_profile: Use guard(mutex) for register/unregister
+>>    ACPI: platform_profile: Only remove group when no more handler
+>>      registered
+>>    ACPI: platform_profile: Require handlers to support balanced profile
+>>    ACPI: platform_profile: Notify change events on register and
+>>      unregister
+>>    ACPI: platform_profile: Only show profiles common for all handlers
+>>    ACPI: platform_profile: Set profile for all registered handlers
+>>    ACPI: platform_profile: Make sure all profile handlers agree on
+>>      profile
+>>    ACPI: platform_profile: Check all profile handler to calculate next
+>>    ACPI: platform_profile: Allow multiple handlers
+>>    platform/x86/amd: pmf: Drop all quirks
+>>
+>>   drivers/acpi/platform_profile.c               | 258 +++++++++++-------
+>>   .../surface/surface_platform_profile.c        |   7 +-
+>>   drivers/platform/x86/acer-wmi.c               |   5 +-
+>>   drivers/platform/x86/amd/pmf/Makefile         |   2 +-
+>>   drivers/platform/x86/amd/pmf/core.c           |   1 -
+>>   drivers/platform/x86/amd/pmf/pmf-quirks.c     |  66 -----
+>>   drivers/platform/x86/amd/pmf/pmf.h            |   3 -
+>>   drivers/platform/x86/amd/pmf/sps.c            |   3 +-
+>>   drivers/platform/x86/asus-wmi.c               |   5 +-
+>>   drivers/platform/x86/dell/dell-pc.c           |   3 +-
+>>   drivers/platform/x86/hp/hp-wmi.c              |   3 +-
+>>   drivers/platform/x86/ideapad-laptop.c         |   3 +-
+>>   .../platform/x86/inspur_platform_profile.c    |   5 +-
+>>   drivers/platform/x86/thinkpad_acpi.c          |   3 +-
+>>   include/linux/platform_profile.h              |   4 +-
+>>   15 files changed, 190 insertions(+), 181 deletions(-)
+>>   delete mode 100644 drivers/platform/x86/amd/pmf/pmf-quirks.c
+>>
+> 
 
