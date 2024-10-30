@@ -1,139 +1,182 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C1D01F426B;
-	Wed, 30 Oct 2024 14:14:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F07211EF0A2
+	for <platform-driver-x86@vger.kernel.org>; Wed, 30 Oct 2024 14:16:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730297668; cv=none; b=uobH/TsVClA2Wysy3CkJOYwjJ+vdGycKFlVQRJbe5w/frmC9RlRDR9BuRDtumfK/2JY3rzCVNTeYCYrIIZFPPVfLiuzy7/82YUDQU8+wdIUZ7rmtNXIYBR0wdCgkZrpm1qcEXel8NB6J94y0OV6fQKV+jy4Y/C7oW1AKvgTvvZw=
+	t=1730297821; cv=none; b=AJoi++9HtTaSCURTCBouBXKdhsblzuIPH1Bd5H5YQuwHQn4NFCzkV4Z8lqactv/G2YHgau3yiVMbi5oGXNsmfy3vaXSWeQYeKjNmJByZiG/qza5RwbwlA5+Pb1qmadSc3QhuzZS2mYMCeBsrT+0NlHR742g9QbLd84uAat1f77k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730297668; c=relaxed/simple;
-	bh=6v75jJwn1usL0U/z2NWIu7iTTkCo+bQoG4AhWCrAXsc=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=WD0eK83vq5IFWhjobToJwCCynx5cW/JnrTCj1s5owhygH3x9PtTiBpKyytCvLJSi63yrHtfRs3UGWPo6WzN19sm3pPenScTFpULq4PjtrOJ4JnAtgMgSzfzKCyJzDgWt6q050QVITUmtM/s97ez7sQO2zGSsrtJv7NXbjvX0jU0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=FPjSa31H; arc=none smtp.client-ip=198.175.65.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1730297821; c=relaxed/simple;
+	bh=emBaMnXHFsEFJaNPDftsqZ+5Gk4w9RSC62uoAF8ptfE=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=ALhxouU60JHz6B921AOAseTIOnUWZwU18Axy9BokT6qEa8d/ZNyWqAYkitlRAN3XExg5dEbw3Z16I2AhhgBhNtt/c3KExnI3+yGYMkW836w2yTsA+BtLUKYFVOP+TILsFHrAJgcq36gNjXR982Eausye0pgVDduh/rj3CICdFDI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=PjsTfcPs; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="FPjSa31H"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1730297666; x=1761833666;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=6v75jJwn1usL0U/z2NWIu7iTTkCo+bQoG4AhWCrAXsc=;
-  b=FPjSa31Hy6w9NMkz9PQ8BO8WZFz35LjLqCPf0TNH38q/r/6l/aHQhlyL
-   XOieSnKTkz9wSpqas/LQ64IDeym2dpMr/rH/Qgov2Xx0w1n6mIIXvzne/
-   gSEk+NirUq6wzZGCG3MR1EfZhsSmP5KbXJT66FfHzW8aU5aetr48V4xOc
-   jAByYfGrxBBEv41mmP7ch6Xr4pFtjZmjrCtIyv1GIfSqq3hQFe/Ho91P8
-   9va0MM/KETckNl2BRcrkrWXlkcpbENhN7tdxFxeDu/58YtGLCgKiE9Vqq
-   qQ1KVIvkaox4eBvL1nFtXIJE58LByV+CC17dgz2bjuD83AUjw/SOYi63b
-   w==;
-X-CSE-ConnectionGUID: hTqjNE2zTk2JMgzdBsabLA==
-X-CSE-MsgGUID: cpkgU1yZSn+YeWRCi26EVw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11222"; a="41101012"
-X-IronPort-AV: E=Sophos;i="6.11,199,1725346800"; 
-   d="scan'208";a="41101012"
-Received: from orviesa004.jf.intel.com ([10.64.159.144])
-  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Oct 2024 07:14:26 -0700
-X-CSE-ConnectionGUID: ECyDvW95SBKYn6Ar5jXJEQ==
-X-CSE-MsgGUID: bd/VU3EXQW6oyY/1LRxOrQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.11,245,1725346800"; 
-   d="scan'208";a="87472530"
-Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.22])
-  by orviesa004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Oct 2024 07:14:23 -0700
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Wed, 30 Oct 2024 16:14:20 +0200 (EET)
-To: Luke Jones <luke@ljones.dev>
-cc: LKML <linux-kernel@vger.kernel.org>, linux-input@vger.kernel.org, 
-    Jiri Kosina <jikos@kernel.org>, platform-driver-x86@vger.kernel.org, 
-    Hans de Goede <hdegoede@redhat.com>, corentin.chary@gmail.com, 
-    Mario Limonciello <superm1@kernel.org>, 
-    Mario Limonciello <mario.limonciello@amd.com>
-Subject: Re: [PATCH v6 8/9] platform/x86: asus-armoury: add core count
- control
-In-Reply-To: <46cd22c7-e63a-4dde-aa97-f76ac9bb6b8e@app.fastmail.com>
-Message-ID: <cb374d84-c29b-de0d-21d8-c711ccf3ea80@linux.intel.com>
-References: <20240930000046.51388-1-luke@ljones.dev> <20240930000046.51388-9-luke@ljones.dev> <33f4f13f-c5ed-ac89-9243-4356976cc042@linux.intel.com> <46cd22c7-e63a-4dde-aa97-f76ac9bb6b8e@app.fastmail.com>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="PjsTfcPs"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1730297817;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=2kVt6Jf0mlrFlKgj91AyuwPJLKq+gBRTfZHaemWVr3Y=;
+	b=PjsTfcPsPCOvLEXK29jefo6FnWqVARhzh02DLyoYsVqr2sDZDHEMn2jVZRGVe4VKpTTXCa
+	1DbldhzAzcH7vOPxAGrUCE1nLVcu2ucls6+ENQRzP/7WmvCijoyJ3doCc9hqEYPoRpCcC/
+	tXqrHBswpwtq9ULjQmT4PC5ET2ktraw=
+Received: from mail-ej1-f72.google.com (mail-ej1-f72.google.com
+ [209.85.218.72]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-275-ea5GD1rOM_6DyfVwffBzMA-1; Wed, 30 Oct 2024 10:16:56 -0400
+X-MC-Unique: ea5GD1rOM_6DyfVwffBzMA-1
+Received: by mail-ej1-f72.google.com with SMTP id a640c23a62f3a-a99fc3e2285so424214766b.0
+        for <platform-driver-x86@vger.kernel.org>; Wed, 30 Oct 2024 07:16:56 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1730297815; x=1730902615;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=2kVt6Jf0mlrFlKgj91AyuwPJLKq+gBRTfZHaemWVr3Y=;
+        b=GEe7zN3UT+JprT9L3AVqZLwvssJhuLnrN8DWCr9sckucV9/9KWrFQxZTmDhv1SrtiQ
+         +rQXL8FVvZXSAZRnHW6EDDof+XCz7CBwvV6TMUeH2IUp7vf03WwKb4x2JSk1MkPYtl+q
+         IxY5EJntqeEM4JVaZX+bXuhhuo0Lh5Nwx2INdfw4t5sxK49hqyg9lYhfanc5Ll9d9U4v
+         zE+nLO9gefybPaUW3WjhoJPMX0HzkPtlwloPWspCzU0ZeIFczinayFIwmjKzAIoITKoy
+         KDpX5Atua5jmENwZL0t/ENM+0YHEtWoMmfyTHQj/1OlO+/9dZwueBW7qevW4mBSnWJGa
+         muiA==
+X-Forwarded-Encrypted: i=1; AJvYcCXe0olxmCKKC9Vca7mW4sdnfslur6TdAvrVSijO5Ws1Kq4DP1Dn/GyoTfb3pmCDM9JrOtMbFfemTpZCJPOJ+nRh98Im@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz5RUaKWy7GfV3uFIaxjP8bLVhrzfilPQPOn+i0Pc4pBwy4Ykwl
+	nLkdOjl1qYxcZOZd0epjMkYYvT9KvGnrYvoOpE4yWQvIiGXz2oK4z8PHxB4RVGitOo1blcM93Fx
+	hwY+zhfT3ovSWGym2MkGYN+V2jdSqN8C1b5aJJko3BAVSRIJtEijkQO170507RcXQgdvjXO4=
+X-Received: by 2002:a17:907:9611:b0:a9a:eca:f7c4 with SMTP id a640c23a62f3a-a9de6199b4bmr1567151966b.54.1730297815177;
+        Wed, 30 Oct 2024 07:16:55 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IERlYVhvULgkJGMdtzuVMS0R74v+lxpi11wCzSuhqdKM6DR//Na3xUdI0tEKUGJ/zSd+AHpHQ==
+X-Received: by 2002:a17:907:9611:b0:a9a:eca:f7c4 with SMTP id a640c23a62f3a-a9de6199b4bmr1567148666b.54.1730297814701;
+        Wed, 30 Oct 2024 07:16:54 -0700 (PDT)
+Received: from ?IPV6:2001:1c00:c32:7800:5bfa:a036:83f0:f9ec? (2001-1c00-0c32-7800-5bfa-a036-83f0-f9ec.cable.dynamic.v6.ziggo.nl. [2001:1c00:c32:7800:5bfa:a036:83f0:f9ec])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a9b1f2994ddsm567904766b.110.2024.10.30.07.16.53
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 30 Oct 2024 07:16:54 -0700 (PDT)
+Message-ID: <5bee1158-537f-4fb2-bde3-e86b5dce3fee@redhat.com>
+Date: Wed, 30 Oct 2024 15:16:53 +0100
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="8323328-1690526318-1730297660=:1102"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] platform/x86/amd/hsmp: mark hsmp_msg_desc_table[] as
+ maybe_unused
+To: =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+ Arnd Bergmann <arnd@kernel.org>, Suma Hegde <suma.hegde@amd.com>
+Cc: Naveen Krishna Chatradhi <naveenkrishna.chatradhi@amd.com>,
+ Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
+ Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>,
+ x86@kernel.org, Arnd Bergmann <arnd@arndb.de>,
+ Carlos Bilbao <carlos.bilbao.osdev@gmail.com>, "H. Peter Anvin"
+ <hpa@zytor.com>, Randy Dunlap <rdunlap@infradead.org>,
+ Bjorn Helgaas <bhelgaas@google.com>, platform-driver-x86@vger.kernel.org,
+ LKML <linux-kernel@vger.kernel.org>
+References: <20241028163553.2452486-1-arnd@kernel.org>
+ <8aa437c2-43be-4ecf-88c4-f733b1e7f243@linux.intel.com>
+Content-Language: en-US, nl
+From: Hans de Goede <hdegoede@redhat.com>
+In-Reply-To: <8aa437c2-43be-4ecf-88c4-f733b1e7f243@linux.intel.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
+Hi,
 
---8323328-1690526318-1730297660=:1102
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+On 29-Oct-24 1:55 PM, Ilpo Järvinen wrote:
+> On Mon, 28 Oct 2024, Arnd Bergmann wrote:
+> 
+> + Hans
+> 
+>> From: Arnd Bergmann <arnd@arndb.de>
+>>
+>> After the file got split, there are now W=1 warnings for users that
+>> include it without referencing hsmp_msg_desc_table:
+>>
+>> In file included from arch/x86/include/asm/amd_hsmp.h:6,
+>>                  from drivers/platform/x86/amd/hsmp/plat.c:12:
+>> arch/x86/include/uapi/asm/amd_hsmp.h:91:35: error: 'hsmp_msg_desc_table' defined but not used [-Werror=unused-const-variable=]
+>>    91 | static const struct hsmp_msg_desc hsmp_msg_desc_table[] = {
+>>       |                                   ^~~~~~~~~~~~~~~~~~~
+>>
+>> Mark it as __attribute__((maybe_unused)) to shut up the warning but
+>> keep it in the file in case it is used from userland. The __maybe_unused
+>> shorthand unfurtunately isn't available in userspace, so this has to
+> 
+> unfortunately
+> 
+>> be the long form.
+>>
+>> Fixes: e47c018a0ee6 ("platform/x86/amd/hsmp: Move platform device specific code to plat.c")
+>> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+>> ---
+>> Ideally this array wouldn't be part of the UAPI at all, since it is
+>> not really a interface, but it's hard to know what part  of the header
+>> is actually used outside of the kernel.
+> 
+> Sadly this slipped through during review even if it was brought up by 
+> somebody back then. The (rather weak) reasoning for having it as a part of 
+> UAPI was seemingly accepted uncontested :-(.
+> 
+>> ---
+>>  arch/x86/include/uapi/asm/amd_hsmp.h | 3 ++-
+>>  1 file changed, 2 insertions(+), 1 deletion(-)
+>>
+>> diff --git a/arch/x86/include/uapi/asm/amd_hsmp.h b/arch/x86/include/uapi/asm/amd_hsmp.h
+>> index e5d182c7373c..4a7cace06204 100644
+>> --- a/arch/x86/include/uapi/asm/amd_hsmp.h
+>> +++ b/arch/x86/include/uapi/asm/amd_hsmp.h
+>> @@ -88,7 +88,8 @@ struct hsmp_msg_desc {
+>>   *
+>>   * Not supported messages would return -ENOMSG.
+>>   */
+>> -static const struct hsmp_msg_desc hsmp_msg_desc_table[] = {
+>> +static const struct hsmp_msg_desc hsmp_msg_desc_table[]
+>> +				__attribute__((unused)) = {
+> 
+> It seems that the main goal why it was put into UAPI was "to give the user 
+> some reference about proper num_args and response_size for each message":
+> 
+> https://lore.kernel.org/all/CAPhsuW5V0BJT+YSwv1U=hRG0k9zBWXeRd=E1n4U5hvcnwEV3mQ@mail.gmail.com/
+> 
+> Are we actually expecting userspace to benefit from this in C form?
+> Suma? Hans?
 
-On Wed, 30 Oct 2024, Luke Jones wrote:
+I can see how having this available in the uapi header as documentation
+of sorts is somewhat useful.
 
-> Hello,
->=20
-> On Thu, 17 Oct 2024, at 4:41 PM, Ilpo J=C3=A4rvinen wrote:
-> > On Mon, 30 Sep 2024, Luke D. Jones wrote:
-> >
-> >> Implement Intel core enablement under the asus-armoury module using th=
-e
-> >> fw_attributes class.
-> >>=20
-> >> This allows users to enable or disable preformance or efficiency cores
-> >> depending on their requirements. After change a reboot is required.
-> >>=20
-> >> Signed-off-by: Luke D. Jones <luke@ljones.dev>
-> >> Reviewed-by: Mario Limonciello <mario.limonciello@amd.com>
-> >> ---
-> >>  drivers/platform/x86/asus-armoury.c        | 227 ++++++++++++++++++++=
-+
-> >>  drivers/platform/x86/asus-armoury.h        |  28 +++
-> >>  include/linux/platform_data/x86/asus-wmi.h |   4 +
-> >>  3 files changed, 259 insertions(+)
-> >>=20
-> >> diff --git a/drivers/platform/x86/asus-armoury.c b/drivers/platform/x8=
-6/asus-armoury.c
-> >> index 09e0cbf24f25..caaa55219946 100644
-> >> --- a/drivers/platform/x86/asus-armoury.c
-> >> +++ b/drivers/platform/x86/asus-armoury.c
-> >> @@ -40,6 +40,24 @@
-> >>  #define ASUS_MINI_LED_2024_STRONG 0x01
-> >>  #define ASUS_MINI_LED_2024_OFF 0x02
-> >> =20
-> >> +#define ASUS_POWER_CORE_MASK GENMASK(15, 8)
-> >> +#define ASUS_PERF_CORE_MASK GENMASK(7, 0)
-> >
-> > Align GENMASK()s.
->=20
-> That is how clang-format put them using the .clang-format in the repo.=20
-> I'm not keen on maintaining style manually as it inevitably develops=20
-> inconsistency.=20
+OTOH I do agree that this array should probably not be used by userspace.
 
-Hi Luke,
+And there is only 1 way to find out if it is actually used (which I do not
+expect) and that is to just drop it and find out (and to be willing to
+revert the change if it breaks things).
 
-Then you simply create your own clang-format and put=20
-AlignConsecutiveMacros into it.
+So we can either move the array in its entirety to the c-code consuming it,
+which I think would be best; or we can go with Arnd's patch + add
 
-I'm not buying using a kernel-wide .clang-format as an argument because=20
-there are per subsystem variations in various coding style aspects a=20
-single file is never going to capture. It also has ColumnLimit: 80 which
-is explicitly stated by Linus to not be a rigid rule so that alone proves=
-=20
-your argument is on very shallow grounds.
+#ifdef __KERNEL__ 
 
-The commit that introduced the file states: "Like most tools, it is not=20
-perfect nor covers every single case, but it is good enough to be=20
-helpful." It's a big set from "being helpful" to "I want to strictly=20
-follow what it outputs". I believe that file is there to help you out if=20
-you want to get started with the style but it does not guaranteed its=20
-output is accepted as is, you will have to tweak its configuration to get=
-=20
-the desired output here and there if you want to use on daily basis.
+around the array so that it is there for people reading the header, but
+it is no longer exposed as uapi.
 
---=20
- i.
+Regards,
 
---8323328-1690526318-1730297660=:1102--
+Hans
+
+
+
+
+
+
+> 
+>>  	/* RESERVED */
+>>  	{0, 0, HSMP_RSVD},
+> 
+> 
+
