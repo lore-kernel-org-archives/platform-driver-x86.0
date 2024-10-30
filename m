@@ -1,129 +1,179 @@
-Received: from fout-a8-smtp.messagingengine.com (fout-a8-smtp.messagingengine.com [103.168.172.151])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E81831E1023;
-	Wed, 30 Oct 2024 12:40:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.151
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 662711EC000
+	for <platform-driver-x86@vger.kernel.org>; Wed, 30 Oct 2024 13:41:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730292044; cv=none; b=Lg6v0DVz5fZjoZJZD2L6Jvck8zRpv4ZhgIgQk/qSQn+pltJqp9eXQeWe/a1jzSScEqe6CMDgrN8GkJgr6nvkLM6jNAVbU8i5mXuGISZeVvUNQVgPKB5rUQgF4LlK9zQmuKi9DEQkE3ScDVBMhgTDplXnfSpujWXSINRgCdPYEKg=
+	t=1730295691; cv=none; b=JALWwXa4wPDHsMnxilc93ppw/97q37RMlU+da8JnFE9pa1UoJr1rGQHAbMT8EotEoiPQ38L63YSkV0jTzxsqzp04jbDJt25igp7gXIPjtNSOXFn4pA8A1WMMcvlesX+e2uOhM3jpumXZyZKWk/wczro/9lcdWNUIMMc50ta/JWc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730292044; c=relaxed/simple;
-	bh=0qAAzGekVtowe4cps1erqjPh++mnzXN1zf/BuEP3m4U=;
-	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
-	 Subject:Content-Type; b=h6r/pABxOTnhPl6S1QVEXGpVRkCC8fpvWlRMG+BatohQSMhDlifn48fnXa85hUsjND5MkdnLWddhWVpih7GQAzSZPI5XjJgiJGbTLT0FZVsCCRNPSQRhbHz3kYSWkTyuXZoU66gZarGMCQ3+vbZ88lwKsLBezOWiQvv7b2G5j8w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de; spf=pass smtp.mailfrom=arndb.de; dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b=D+QsQA4F; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=KQ345wXD; arc=none smtp.client-ip=103.168.172.151
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arndb.de
+	s=arc-20240116; t=1730295691; c=relaxed/simple;
+	bh=2B5Ia70QWSyxCyjXEfvbfDL7WJs6J1nxOhpTZUF1ERM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=BTwpXUipMzB9Fw1uEZ+0WGQfQQgXDIyLSAE/WTL+oDjAnTQsAA2foK5mR3lpZVmHhZ9nf/oi6zETFaokCZqWbRaLnkb5a2uGqpEvJoH7w8L76L7xNwdlCTGrQT6l9Tv/kFdVADL1dB0VzjEhM01pwHlYr24qo2odbbDIPkeS0kc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=MnTaMswp; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="D+QsQA4F";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="KQ345wXD"
-Received: from phl-compute-10.internal (phl-compute-10.phl.internal [10.202.2.50])
-	by mailfout.phl.internal (Postfix) with ESMTP id C90CE138021D;
-	Wed, 30 Oct 2024 08:40:39 -0400 (EDT)
-Received: from phl-imap-11 ([10.202.2.101])
-  by phl-compute-10.internal (MEProxy); Wed, 30 Oct 2024 08:40:39 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
-	:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to; s=fm2; t=1730292039;
-	 x=1730378439; bh=3/PyFIXHNwwlaFvxYykZOeb+fLtobP6/CYzQcrA2KAg=; b=
-	D+QsQA4FRY/8ASWL5YsRhv+9koR30qp+3O9GDYhtfannboPHAlDxTItLzipaT0Ay
-	jLEVuzVtnuQOgZrIPlF88mHICVocgbkPQWOofmbEKMfCjCImLWdVg7aSNu17CEI8
-	XjvXPR8w3w0OGOv1J++B06ed80CuwSSebh9JzT7kyHV2vk1vd/nQZD8fPe1ljMdr
-	KbF+Odgbp/9f51m4YM9GT7ZQlkXTXvaTRbRFV7I8yAaXQDL+/mFkDoC1LJtZ41nF
-	bRG+1dXvy65ZlJZruNwSNmJqLLYeVTX+gUpNIGsbKpbBpOaQTbvUbF18dU2rbSZo
-	h42CxIeSV1o0SHsiKeI7Hw==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=1730292039; x=
-	1730378439; bh=3/PyFIXHNwwlaFvxYykZOeb+fLtobP6/CYzQcrA2KAg=; b=K
-	Q345wXDk/nPB3d/CqCW52yCIm+RpLnpA5NKv9NaEjvOH3RkR5xaB1AQ1HSVgWkzP
-	74vDHkfTXkeUcJ7ZjEkHZyaO4ODNZ3KddPage1n0G/U/OuSmM1gyK0AMENUrtUik
-	tjyRcY6X6otN09Ml1QxZsxqjEDiyIjaw5GrCR4k4e/KMhpXh1g2Nw6WjjQQdVsb9
-	UGrBqYjVqE9qKtoM7251gMvOiOddEOgoZdnJP9CEJ7HAXUJPvj5TMaFO29iLUtt2
-	XTeqwd9JEaB/vBzZSHCkZAxxJ2OCDkFlnM8GlH0ynWZMplXZfvPHz7IMENG4a5hH
-	K1a2XEg6M5BkCHMj2CpkA==
-X-ME-Sender: <xms:RykiZ2f3IqHF9f5UT5p3s9lpyCWltVEMbe3XL9fWSbYb_qoEMsqeMg>
-    <xme:RykiZwP9E7Oo1IsLrRus_PQkVuzpgBmliUqTEvGss4e8DbDtnBAsYaRJ3Ixzaiv3e
-    bFpev9tQ4Bk6KobH3o>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeftddrvdekfedggedvucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggvpdfu
-    rfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnh
-    htshculddquddttddmnecujfgurhepofggfffhvfevkfgjfhfutgfgsehtqhertdertdej
-    necuhfhrohhmpedftehrnhguuceuvghrghhmrghnnhdfuceorghrnhgusegrrhhnuggsrd
-    guvgeqnecuggftrfgrthhtvghrnhepvdfhvdekueduveffffetgfdvveefvdelhedvvdeg
-    jedvfeehtdeggeevheefleejnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpe
-    hmrghilhhfrhhomheprghrnhgusegrrhhnuggsrdguvgdpnhgspghrtghpthhtohepudef
-    pdhmohguvgepshhmthhpohhuthdprhgtphhtthhopehjohhnrghthhgrnhdrtggrmhgvrh
-    honheshhhurgifvghirdgtohhmpdhrtghpthhtoheprghrnhgusehkvghrnhgvlhdrohhr
-    ghdprhgtphhtthhopehlvghnsgeskhgvrhhnvghlrdhorhhgpdhrtghpthhtoheprhgrfh
-    grvghlsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehilhhpohdrjhgrrhhvihhnvghn
-    sehlihhnuhigrdhinhhtvghlrdgtohhmpdhrtghpthhtohepghhrvghgkhhhsehlihhnuh
-    igfhhouhhnuggrthhiohhnrdhorhhgpdhrtghpthhtohephhguvghgohgvuggvsehrvggu
-    hhgrthdrtghomhdprhgtphhtthhopehlihhnuhigsehrohgvtghkqdhushdrnhgvthdprh
-    gtphhtthhopehjuggvlhhvrghrvgesshhushgvrdgtohhm
-X-ME-Proxy: <xmx:RykiZ3jE9wRvtMd7ykr9VA2jmaLtOIsUhT6X8S8mv1MTQKJOcWBBoA>
-    <xmx:RykiZz_jhStJmuADBQwO0N0-CAgcF54ooRyRGTIuQpadK65hSGNt0w>
-    <xmx:RykiZysghC6avGitncwY5ua74hKtCta3CXNaUEkdc8Rg6COJlxevMA>
-    <xmx:RykiZ6HwsvUWHgN6hJDO2E0KmT-ZgV6s7V1zefHJypnNqCVzU01nDw>
-    <xmx:RykiZzHXtXVCf-1-f7KdRUW9WpB1zhtavEXzHr3-4j-lTezpRj77Gkzg>
-Feedback-ID: i56a14606:Fastmail
-Received: by mailuser.phl.internal (Postfix, from userid 501)
-	id 58DF52220071; Wed, 30 Oct 2024 08:40:39 -0400 (EDT)
-X-Mailer: MessagingEngine.com Webmail Interface
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="MnTaMswp"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1730295688;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=lEqCXp1zzf8LQ1zW1l4BdUOYON0z7P059fI6PC8eKkY=;
+	b=MnTaMswpOwJXoGEAXib31M/Eq7Bt829MMn41sXnyxOF6dSV9bOktDSvodTvRSTrcucOdPH
+	F7c/FSSvFxjMDm8wwXfGtYzAao49TZyKO4KM8FhLtlZrBAxjaWAEFzvqW0zt+1EPjeUiOb
+	HsBncyk9j4OFmxdnHpYVqOLrfjhRTDw=
+Received: from mail-ej1-f69.google.com (mail-ej1-f69.google.com
+ [209.85.218.69]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-613-Ghai0Z01PQipN7C0IZWUag-1; Wed, 30 Oct 2024 09:41:27 -0400
+X-MC-Unique: Ghai0Z01PQipN7C0IZWUag-1
+Received: by mail-ej1-f69.google.com with SMTP id a640c23a62f3a-a9a1e429a8fso145332266b.0
+        for <platform-driver-x86@vger.kernel.org>; Wed, 30 Oct 2024 06:41:26 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1730295686; x=1730900486;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=lEqCXp1zzf8LQ1zW1l4BdUOYON0z7P059fI6PC8eKkY=;
+        b=VD1W4cWtjEF1QUqmMUJd/fSzogdU/YrHjwBzcPulwkkKpqxmWDBRwbVWHsPzFV1Iqw
+         Q//p80U6EiYINCWxiqoX2OTMMuBMg3tICv96YhD7ddCxnOxHl6LbcX7urP1tdr/3rgY5
+         iD8TroT3z+2TdF/tNWTFLsCT3EZUkng00YFGPO7Hi6V7AaAvLVL0pcImSwQDUc5uN7SP
+         9Bl1frE1UZxDxc5BtKNqu3KxgEpKlOxc/U6vkM28P6BCbhwANaIdpGrjKdBwegoZa+Rp
+         tu8U4WbjnHKaEWyh+ZvCsp3XB22qaNJmkhwy+zILD0TEoKbiWI402t1IMGvvoNc5nKei
+         U1Hw==
+X-Forwarded-Encrypted: i=1; AJvYcCWM70Uf+bD0sdXUX7BcUic2UI0g7jwYprx4Iv9l5a2/3pO+9+r2bINvlWNe8QaM/npfhF1NTRw67bvJY/Dsc2C7E2Ln@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx/vBI3CJo0yctBDKrEyfvc6UGy993GE0xoLkmuk0LrmLuzEQFt
+	MOD7Bf8lzhqyHuyRr82rf4itiKURylcYNbhMxLoqiwOxHvf4lYV+24qfkwMmEW42r9wgouHVWtw
+	OgofQhazShcEU0nK8vjFLr2NGMEUD7jO1rQrKHBCUJhcvqmvdLRPU2EghO9m3hP9pey+ZPss=
+X-Received: by 2002:a17:907:86a5:b0:a9a:6847:e82c with SMTP id a640c23a62f3a-a9de5d95e17mr1437915666b.15.1730295685784;
+        Wed, 30 Oct 2024 06:41:25 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IH/rdw+jYEnis344grPffbYAyM8RixmJ8zHSQVK9MbS3tzd1IDtYf02RcIzlI27fi3JRB64Lg==
+X-Received: by 2002:a17:907:86a5:b0:a9a:6847:e82c with SMTP id a640c23a62f3a-a9de5d95e17mr1437910866b.15.1730295685313;
+        Wed, 30 Oct 2024 06:41:25 -0700 (PDT)
+Received: from ?IPV6:2001:1c00:c32:7800:5bfa:a036:83f0:f9ec? (2001-1c00-0c32-7800-5bfa-a036-83f0-f9ec.cable.dynamic.v6.ziggo.nl. [2001:1c00:c32:7800:5bfa:a036:83f0:f9ec])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a9b1f029564sm574219766b.51.2024.10.30.06.41.24
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 30 Oct 2024 06:41:24 -0700 (PDT)
+Message-ID: <3e0064cb-b8cc-4126-aa4f-92cd4a676937@redhat.com>
+Date: Wed, 30 Oct 2024 14:41:23 +0100
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Date: Wed, 30 Oct 2024 12:40:18 +0000
-From: "Arnd Bergmann" <arnd@arndb.de>
-To: "Rafael J . Wysocki" <rafael@kernel.org>,
- "Arnd Bergmann" <arnd@kernel.org>
-Cc: "Len Brown" <lenb@kernel.org>,
- "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>,
- "Jean Delvare" <jdelvare@suse.com>, "Guenter Roeck" <linux@roeck-us.net>,
- "Hans de Goede" <hdegoede@redhat.com>,
- =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
- "Jonathan Cameron" <Jonathan.Cameron@huawei.com>, linux-acpi@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-hwmon@vger.kernel.org,
- platform-driver-x86@vger.kernel.org
-Message-Id: <43b6bbd9-ef5e-4031-9322-fecfa2a5c5cd@app.fastmail.com>
-In-Reply-To: 
- <CAJZ5v0iCvPuey3EN5D5+0QNt5ZkQN5TtfKhA7Qod0_JBFbsB=g@mail.gmail.com>
-References: <20241011061948.3211423-1-arnd@kernel.org>
- <CAJZ5v0jX1Ga9g8BweYJT2GQsJh03pD_imrY7tCP-Xg_gq0EbOA@mail.gmail.com>
- <CAJZ5v0iCvPuey3EN5D5+0QNt5ZkQN5TtfKhA7Qod0_JBFbsB=g@mail.gmail.com>
-Subject: Re: [PATCH v2 1/3] acpi: make EC support compile-time conditional
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 00/15] Add support for binding ACPI platform profile to
+ multiple drivers
+To: Mario Limonciello <mario.limonciello@amd.com>,
+ =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Cc: "Rafael J . Wysocki" <rafael@kernel.org>, Len Brown <lenb@kernel.org>,
+ Maximilian Luz <luzmaximilian@gmail.com>, Lee Chun-Yi <jlee@suse.com>,
+ Shyam Sundar S K <Shyam-sundar.S-k@amd.com>,
+ Corentin Chary <corentin.chary@gmail.com>, "Luke D . Jones"
+ <luke@ljones.dev>, Ike Panhc <ike.pan@canonical.com>,
+ Henrique de Moraes Holschuh <hmh@hmh.eng.br>,
+ Alexis Belmonte <alexbelm48@gmail.com>,
+ =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>,
+ Ai Chao <aichao@kylinos.cn>, Gergo Koteles <soyer@irl.hu>,
+ open list <linux-kernel@vger.kernel.org>,
+ "open list:ACPI" <linux-acpi@vger.kernel.org>,
+ "open list:MICROSOFT SURFACE PLATFORM PROFILE DRIVER"
+ <platform-driver-x86@vger.kernel.org>,
+ "open list:THINKPAD ACPI EXTRAS DRIVER"
+ <ibm-acpi-devel@lists.sourceforge.net>,
+ Mark Pearson <mpearson-lenovo@squebb.ca>,
+ Matthew Schwartz <matthew.schwartz@linux.dev>
+References: <20241028020131.8031-1-mario.limonciello@amd.com>
+Content-Language: en-US, nl
+From: Hans de Goede <hdegoede@redhat.com>
+In-Reply-To: <20241028020131.8031-1-mario.limonciello@amd.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Thu, Oct 24, 2024, at 15:49, Rafael J. Wysocki wrote:
-> On Mon, Oct 21, 2024 at 1:39=E2=80=AFPM Rafael J. Wysocki <rafael@kern=
-el.org> wrote:
->> On Fri, Oct 11, 2024 at 8:19=E2=80=AFAM Arnd Bergmann <arnd@kernel.or=
-g> wrote:
->> >
->> > All the direct callers of ec_read/ec_write already had an x86
->> > dependency and now also need to depend on APCI_EC.
->> >
->> > Signed-off-by: Arnd Bergmann <arnd@arndb.de>
->>
->> I think I can pick up this one as the other two patches in the series
->> don't depend on it.
->>
->> Any concerns about doing that?
->
-> No concerns, so applied (as 6.13 material, with minor edits in the sub=
-ject).
->
-> The other two patches in the series need to be updated AFAICS.
+Hi Mario,
 
-Thanks for picking up the first patch, I sent the other
-updated patches as well now.
+On 28-Oct-24 3:01 AM, Mario Limonciello wrote:
+> Currently there are a number of ASUS products on the market that happen to
+> have ACPI objects for amd-pmf to bind to as well as an ACPI platform profile
+> provided by asus-wmi.
+> 
+> The ACPI platform profile support created by amd-pmf on these ASUS products is "Function 9"
+> which is specifically for "BIOS or EC notification" of power slider position.
+> This feature is actively used by some designs such as Framework 13 and Framework 16.
+> 
+> On these ASUS designs we keep on quirking more and more of them to turn off this
+> notification so that asus-wmi can bind.
+> 
+> This however isn't how Windows works.  "Multiple" things are notified for the power
+> slider position. This series adjusts Linux to behave similarly.
+> 
+> Multiple drivers can now register an ACPI platform profile and will react to set requests.
+> 
+> To avoid chaos, only positions that are common to both drivers are accepted.
+> 
+> This also allows dropping all of the PMF quirks from amd-pmf.
+> 
+> v2:
+>  * Split to many more patches
+>  * Account for feedback from M/L
 
-    ARnd
+Thank you for the new version. I just did a quick check of
+patches 8 - 13 and this looks much better.
+
+I see from various discussions that a v3 is incoming so I've
+not done a full review of patches 8 - 13.
+
+Regards,
+
+Hans
+
+
+
+
+
+> 
+> Mario Limonciello (15):
+>   ACPI: platform-profile: Add a name member to handlers
+>   platform/surface: aggregator: Add platform handler pointer to device
+>   ACPI: platform_profile: Add platform handler argument to
+>     platform_profile_remove()
+>   ACPI: platform_profile: Add a list to platform profile handler
+>   ACPI: platform_profile: Move sanity check out of the mutex
+>   ACPI: platform_profile: Use guard(mutex) for register/unregister
+>   ACPI: platform_profile: Only remove group when no more handler
+>     registered
+>   ACPI: platform_profile: Require handlers to support balanced profile
+>   ACPI: platform_profile: Notify change events on register and
+>     unregister
+>   ACPI: platform_profile: Only show profiles common for all handlers
+>   ACPI: platform_profile: Set profile for all registered handlers
+>   ACPI: platform_profile: Make sure all profile handlers agree on
+>     profile
+>   ACPI: platform_profile: Check all profile handler to calculate next
+>   ACPI: platform_profile: Allow multiple handlers
+>   platform/x86/amd: pmf: Drop all quirks
+> 
+>  drivers/acpi/platform_profile.c               | 258 +++++++++++-------
+>  .../surface/surface_platform_profile.c        |   7 +-
+>  drivers/platform/x86/acer-wmi.c               |   5 +-
+>  drivers/platform/x86/amd/pmf/Makefile         |   2 +-
+>  drivers/platform/x86/amd/pmf/core.c           |   1 -
+>  drivers/platform/x86/amd/pmf/pmf-quirks.c     |  66 -----
+>  drivers/platform/x86/amd/pmf/pmf.h            |   3 -
+>  drivers/platform/x86/amd/pmf/sps.c            |   3 +-
+>  drivers/platform/x86/asus-wmi.c               |   5 +-
+>  drivers/platform/x86/dell/dell-pc.c           |   3 +-
+>  drivers/platform/x86/hp/hp-wmi.c              |   3 +-
+>  drivers/platform/x86/ideapad-laptop.c         |   3 +-
+>  .../platform/x86/inspur_platform_profile.c    |   5 +-
+>  drivers/platform/x86/thinkpad_acpi.c          |   3 +-
+>  include/linux/platform_profile.h              |   4 +-
+>  15 files changed, 190 insertions(+), 181 deletions(-)
+>  delete mode 100644 drivers/platform/x86/amd/pmf/pmf-quirks.c
+> 
+
