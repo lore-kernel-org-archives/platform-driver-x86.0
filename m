@@ -1,63 +1,63 @@
-Received: from NAM11-CO1-obe.outbound.protection.outlook.com (mail-co1nam11on2068.outbound.protection.outlook.com [40.107.220.68])
+Received: from NAM04-DM6-obe.outbound.protection.outlook.com (mail-dm6nam04on2080.outbound.protection.outlook.com [40.107.102.80])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CFD8D136664;
-	Thu, 31 Oct 2024 15:51:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.220.68
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6AA8A1A76D1;
+	Thu, 31 Oct 2024 15:53:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.102.80
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730389886; cv=fail; b=ZZB5WrKla45MVsGnS0hL9ac03V/7WC74kKC/FBgRkaPQMXfXFs7aRkKcz+gCFU5WnGvHDJ7qAzaO7szp0zi7+QkNN61Zj+jW8GQpt6l6BZgsbufqsCwEFKbRSYaL0ZeYU2lzK/e50k+1yeyXDOiseXhXp2jySUJ5P/3ToBywi6c=
+	t=1730390034; cv=fail; b=JR2U0LjkRdZZuc4OfQaHLQbyGX0tLcrdKBXUpUUIY0/r/rNzWHu7AEJLR3osq4aIVOJ8i7ljRu5lyVryWVX+Mq9+Vsc0pbUq6lD4mmRyYZXAMCfrNcn1Obw1xZ3M+ZRrEMD/20DpfhGmC3x2cFXk6/2F4PO94qj2eQY5ygbp8+4=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730389886; c=relaxed/simple;
-	bh=H7D9iAEAz6TusxfFi1O6Xd6T6HgaPfEDOTGjpsWNl3Y=;
+	s=arc-20240116; t=1730390034; c=relaxed/simple;
+	bh=B2eS6G4Wpe/Mn54kJHzoVutbLnrXN2TzuAB/8AxsVQ4=;
 	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=a+1z0DZBl4QCf6iPTrJa42ad3iuc0pfdOGXWq/tycnbiAlX2neu5Hnz9jg/8c0H0P7TaIiQ9LPPdLsU/DrJqDXwqrU1cFPUNSt7MsnrOTigAW4KmiM2d5I7CarxbLxg7CJF9mkIv+45ol8GDss8+6F+EbpWMskq+eVFbFMlznZ4=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=xAL/gbG+; arc=fail smtp.client-ip=40.107.220.68
+	 Content-Type:MIME-Version; b=EYmP22L16HtbUqAlFKaroy80VuSJW6PgRngKarSIFEMyJSgQY/TR4PVPSrSHOC5dZusCzX8E6rIC1DD4/hl1JZi4QwSsDygyqrBiSSHVHhL4kMTcxpurkTnO6zYzcL26kOkOdph67DFK2j1oqg04b33eDF2FplGZgUKlroCqazU=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=uXeSizGr; arc=fail smtp.client-ip=40.107.102.80
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
 Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="xAL/gbG+"
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="uXeSizGr"
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=iEAQ2J0PMscWJLXwY1JCPos2jYw7qaCH3TtQNIRwMcpnpiKjarE33y1Bxzp0jxo2oxc93U2xsF6/YVG4vIVBI2zrmIML51zRUN/LGJPKkm+zS2Ukkkg4rlcd8kKogT1fxfGZjQFtMPyYYSZO9SJYmXJLjjNf7H9yQh5GRzkFESkjD2iIViqfPd7i++FYWLTcV40+avOHZkjL2iX5fX422gzO1aypC0U8FKcm44+Ep0IpSGP655H0r4aK1CgO8jpDdf9PCaERV0/52ThntLn6uLw9rFGSoNyzjvs51/nHLPvM8fXfsMteldtgDrmSl2PjJnRZ5icMOCr6bBnydYiM/Q==
+ b=G8Xx3VDtETAM2c/mB2f9OxeLxpQD/YOz3M/pnDT6XKn/6HjZ4s9GUNrtb1as5rdRXxYNY8ZG1rcgXSfFyCNWj1c76LtpPJe4KW5bhsyTFoMBQ/72jdkt/Lm+yIvcnK/7nZwdZr2/yC/sgEqK9qxYAh5aRVN0bm1mAD/3Mxyqq0p//tSkg0t5LptgL+VuXtHktTE3a/ZRBAnAeXXerYyi3wEGLnxT35NUHEjaXkQrjzBdSTnOhgSogS3AiJ9SQmKKsX3D/Dl561LGPfAn8SyzFfkgzsGBcq56XQhso7SR1uxuoUJFpGhqvfvbZgT5wfv2nah33R/a7KRbigoAl9xSPA==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=BdlfjdrE178eUu1M65yFykoPvlmDhW9q78bx4aLA/pg=;
- b=eesyn/t72gl0C1kGrTeZD3eTKsw8Yli7iC550kSgiXc5JE702ak10GE5uoZSumK642EGZaB0rLKPV2qMZ99vTTKhigBXg4F6fFK5Y+JtPcFnVbGpCJo6Dci9Thed7AsIWlCIyH3MCT8NeuvdlJYOI64iKqXcdiAnZ2B6BEpYsYC3q31X6AogXty52FbmVvgHi4xCpyZrezVD45x2LQscXDsnb/GhvF82P4gIrelQTtScYyaMNdJabanDA7ePagnO1Awsmn4axrj8BHFgdHJpyqHSe6IyhRn8fknRF7ARWpaX5xRCsNeWj2Ey4/285DlIQIPRm4ir2GhQVdbWNYUJEg==
+ bh=9jY23PKTPkngLkKhaHhK+S7PkZMvhqjHmbZEi1Q8VH0=;
+ b=nSsewpIrVKVsotIpjMifULI1MJTG/7+Ov7q7Q3X7lQuZaBbTX+wIg+HQrqD3hNKb8tNxY20TXxxekYutGtf0DY9JbKB4dULXiSoCcCiuNDn5+mjNgNvJNRTpekpcooTNRXfafkIx8wvGmoyfMbRtRAOdvDvXo5hXR2t8ygGmesteRt0+CZITY5X5n/ENeErNmZZjXhNLJq8OE9TX+HphvH23JEvHfRn/jEaViYGHGrMNUCPRlWHpk65C9VlRnQ9HpuChg7t3r4idHs5iKpDb8dfCDZzcp/elpnEJN9XPtNLC/L7qZGcpb0ij2XLFErPKN02jyLSxwa2dKwKIBPgNcg==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
  header.d=amd.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=BdlfjdrE178eUu1M65yFykoPvlmDhW9q78bx4aLA/pg=;
- b=xAL/gbG+RXHWZ+kYtFBFBSkRmtGl/O62x5w/mfoOuYb3wIEVzXfvT/N2t6TCB4xM08ZKT2sQVdB7lIXwxETDtyr7VJt+SQ/+pMYRW7pQ79htV+1IWxGw2f9EGdHAtk4v/3sIrdOl+l8EJJVIPyFaYaig1p7ATToaXV4OXqTAFOU=
+ bh=9jY23PKTPkngLkKhaHhK+S7PkZMvhqjHmbZEi1Q8VH0=;
+ b=uXeSizGrUriBvVOZWFlqho7XsfrkpvUMK5/OCMLHVLgHOG1J+LgeezDTYTLXetWQykVtyPrQGKvVDSfzQWtsW00mjgR8Gf2jZyVR+DkcpLq2fLEblDu6Ni/AbDgbX6y1svlB2tsPL3Ex4fk8jDteaz5opu9Xs89VR+iKI+2GEaM=
 Authentication-Results: dkim=none (message not signed)
  header.d=none;dmarc=none action=none header.from=amd.com;
 Received: from MN0PR12MB6101.namprd12.prod.outlook.com (2603:10b6:208:3cb::10)
- by IA0PR12MB7721.namprd12.prod.outlook.com (2603:10b6:208:433::20) with
+ by DS7PR12MB6261.namprd12.prod.outlook.com (2603:10b6:8:97::20) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8114.20; Thu, 31 Oct
- 2024 15:51:20 +0000
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8093.25; Thu, 31 Oct
+ 2024 15:53:48 +0000
 Received: from MN0PR12MB6101.namprd12.prod.outlook.com
  ([fe80::37ee:a763:6d04:81ca]) by MN0PR12MB6101.namprd12.prod.outlook.com
  ([fe80::37ee:a763:6d04:81ca%4]) with mapi id 15.20.8114.015; Thu, 31 Oct 2024
- 15:51:20 +0000
-Message-ID: <0e4d68a3-2e27-4fb8-af07-e11ae6b844dc@amd.com>
-Date: Thu, 31 Oct 2024 10:51:17 -0500
+ 15:53:48 +0000
+Message-ID: <f236aea8-de6a-418e-9008-26f9505362c0@amd.com>
+Date: Thu, 31 Oct 2024 10:53:46 -0500
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 1/2] dell-smbios-base: Extends support to Alienware
- products
+Subject: Re: [PATCH v2 2/2] dell-wmi-base: Handle META key Lock/Unlock events
 To: Kurt Borja <kuurtb@gmail.com>
 Cc: Dell.Client.Kernel@dell.com, hdegoede@redhat.com,
  ilpo.jarvinen@linux.intel.com, linux-kernel@vger.kernel.org,
  pali@kernel.org, platform-driver-x86@vger.kernel.org, w_armin@gmx.de
 References: <20241031154023.6149-2-kuurtb@gmail.com>
+ <20241031154441.6663-2-kuurtb@gmail.com>
 Content-Language: en-US
 From: Mario Limonciello <mario.limonciello@amd.com>
-In-Reply-To: <20241031154023.6149-2-kuurtb@gmail.com>
+In-Reply-To: <20241031154441.6663-2-kuurtb@gmail.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: SA9PR13CA0138.namprd13.prod.outlook.com
- (2603:10b6:806:27::23) To MN0PR12MB6101.namprd12.prod.outlook.com
+X-ClientProxiedBy: SA0PR11CA0085.namprd11.prod.outlook.com
+ (2603:10b6:806:d2::30) To MN0PR12MB6101.namprd12.prod.outlook.com
  (2603:10b6:208:3cb::10)
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
@@ -66,137 +66,136 @@ List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: MN0PR12MB6101:EE_|IA0PR12MB7721:EE_
-X-MS-Office365-Filtering-Correlation-Id: 6e1b445a-615c-49ea-b899-08dcf9c3dd15
+X-MS-TrafficTypeDiagnostic: MN0PR12MB6101:EE_|DS7PR12MB6261:EE_
+X-MS-Office365-Filtering-Correlation-Id: 25fc35d9-3844-4051-15c1-08dcf9c4355f
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|1800799024|376014;
+X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|376014|1800799024;
 X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?SUFzRTZ3YlpiT1MwRzVnZHZnWVV5VjNEM0NzcmxPL210TnNUQ0dyL0V2VThC?=
- =?utf-8?B?dHJ3V1B4OGRjcHh4U0MxalViOVZZZmQ2WFhkUkJxRWVEcHJESnAwU3NlWFFD?=
- =?utf-8?B?T1p4VmZnOS91Qi9ZUjZOVUdFaDA0SkNjYm5aT2drRWFDZTdiZUk4a3VIZWJL?=
- =?utf-8?B?TkxxRWpGUFUwWjBxU1grWFN6NnRQanpmQmNBbEV4ampmYzNNT3pKZjhIT2lW?=
- =?utf-8?B?V1EvNDEzRTNYNjRjOTg2QlhnSzExZzAwZ3NFNVRMM3NuNGFFaERzMU12clc4?=
- =?utf-8?B?S3pXUzAvdFFRTDZCVERsU1MzdWt2OGVZU3FjZnV1U0ZyZU1ZNXJzbHJUNTV3?=
- =?utf-8?B?NEg4UzEvWWdmMGwvS3gxdE9yTWkyOGY0TFFyT0tGSjZQRE1VMHFKaHgrY2xL?=
- =?utf-8?B?TnVYMWtGZFlpUzRSRGMrY0ZiUytRRWcxVFZyTkpFRDhicVJxekIxcWxlN1hi?=
- =?utf-8?B?MXNYRElUQ3dEMWZEZXc2cXhlbXFOMW9DN1RQNDF2RzNadWVxUG1nYnBkQk8v?=
- =?utf-8?B?UzRkcVZITFlGQXlJdURPM0g3UE1ZSUhaeFEzcXNYbUk1b3NlelFZRTFiSVlW?=
- =?utf-8?B?VTJQZ0F3dDRsUW9rRklDeEhndUl6ZkxXVis2M0hqZkMzZllVWld4dzdHd3Fn?=
- =?utf-8?B?dExtTmpEaXl5U0oxS0xXWG14T1B1YjljQ0hJc0dSc3JxNzF5LzRiQUt5WlBh?=
- =?utf-8?B?NnZqQnJPZE1rQU91Wm1xK3lOVUl2T1BXK1VBS0lGcFMxODBoQ3VWUTR2ZGNR?=
- =?utf-8?B?REpkUnZVcUhhenp5V0xGamU2U29IdnJIQXZRRS9oVWpMVm8raVNZYVBXajY4?=
- =?utf-8?B?YXdtY2FPYmJ2bUEzemZrME5UZWlvcXEyRFpHR3JoUDdaYnFFTnlwa3c0Njg4?=
- =?utf-8?B?eUVFVjh6TDhmQVJicFh1QzBKNUFSRFR4bExFTDlFTUFOT2x3ZUlnakhRWUs5?=
- =?utf-8?B?cW4xSnRwanBpSFp4VDJDYWJNZStvZG9LeGdia2FvbEJjdFFjMlk1SVFVVytP?=
- =?utf-8?B?aXJvd1RtU2Rjc2RYWU5jcWVPRG0vYjlpbnpuTzh5eC96NzVMeVFPeXhRcEl4?=
- =?utf-8?B?dGxEdW1pYmVuUThXbWtNTUk3VnFRdW9heGdwSC92SUUrVGlKNVJnblJPRVRw?=
- =?utf-8?B?K1hHamNXRjVWMW84OWJZdVZ0OEJrakpqOVNNRjRLS2lrc01aOG8zUnRBWTVy?=
- =?utf-8?B?YVFhQmU4QVdVMFVIWnBnSWxnUWcrcjE5bFNUNW80YVlodTc1b25wcUdDendD?=
- =?utf-8?B?bUU1MmFBbHdCcmkyME44d1duWUswY1BacU9GVUxXemlOWlhiRFNsb3RJekh1?=
- =?utf-8?B?SWsyQ0E5eHEycU9LQmhKclB2VzRWYlExUjlHWEZqRDkreXZSaTh6QXBGMFFh?=
- =?utf-8?B?cU5aUXpjd2FydHEyeE1IaVBUSUtYakY4UUlhSHVFU1BDYnZtZTBSeGNkZG14?=
- =?utf-8?B?RVRFdldOa0ZDQ3k0VktNWHVlcWNzc09Ob0x3dk9Ld0s4dUhXVUVzVzdxa3R2?=
- =?utf-8?B?VmRnUXIvVTVPTXduTjdVQWx6N1lEaDZIbWVZMFpMek9Hb042VmM0R2dYREVx?=
- =?utf-8?B?UFFUdi9QejM0OE01UVpPVHRITTl0VDhoVU01UG51MWJhM3FvcjNZWXg4RVJN?=
- =?utf-8?B?dWdZSDdmRDV4NytMeXhwdHozUlhyeE5odmdJemd6Vk5Zb1V1TUk4WWpmYXph?=
- =?utf-8?B?QjZLLzVyUnBCdytWN0VPNnNUUmQ3S0JMd0gzaHdGeXgvS3JoQnZIa1ZBPT0=?=
+	=?utf-8?B?OEdlVi9EVTg1WkcrcXdxOGkzUHJyaTU5S0d0aDJ6dDdmNnlNZno4cVJ6ZEhH?=
+ =?utf-8?B?cittb2RGZWlMRWRtM2tpd2llR3NJd0FxSGFUalpHaGRJZ0ovQUlUN1Fzd25j?=
+ =?utf-8?B?V3RMdEJUa29LaWV3VWo0dlBGbW4wei9iaWNvRzF2VTVIVDVneEZ5TkpoRnpQ?=
+ =?utf-8?B?SmFyT2xyNEtOSWJIMksweEdENUZVR1A1bmpZdTdsV1VuNHAyZHhxcllWTVJN?=
+ =?utf-8?B?ejdMcmxscjJWcm8zUGRmU1AyaHZRb1NzRm04ZXZ0UnBsVDN0TGpwZ3BsbDNR?=
+ =?utf-8?B?U1RXRWJXbTB6UkE3Yjlsa0pvZXltWDBOWGJYTDhGTlB0bk9yZUViUEtkekRn?=
+ =?utf-8?B?Z3dOYkZxSXpIdWZZak9LamZ2azd0RFowYW5EaS9laHh1emZjRitmV1VEZkha?=
+ =?utf-8?B?QmZkVDdBQXI2OWJYNHBkQjZXQnlzRnJEdUQ4VXNzWlVPcGxHeERJZ1A4Qk1r?=
+ =?utf-8?B?TlBGeWNvSUx0SUhaN0VFOE9pV2V4K0ttYU9oVHFJWUc4bG16OGw1V0J0UTZS?=
+ =?utf-8?B?NUMzcXN0Nk1NcGJPTVNwZG1jenNhd2xSVTlQY0hjS3UwYmFnZG56aWp1Ukd0?=
+ =?utf-8?B?d3VnMlpkS1V4Y0x6K2cveFo3R2NNa0Y4MWJ1c081UnV6UFI4N2JvOTZEZHZp?=
+ =?utf-8?B?emlHSjVtZ3FQa2RXcFZmdC84NWx6Z1psZ0FQdVordmp0Q2RwUVR1a0s2OTk4?=
+ =?utf-8?B?VVp1TnBhbUJtWXlsbnhTajJ3aHNwTEhoT0pPK3FFWXVvNjBtOVE3VnlFMHV6?=
+ =?utf-8?B?dTlBVEZMMzkwNHhFU2FzRkpEUHg4S0Ird2ZQV1B6OUoyZDBHekQ1Y3h0QnBv?=
+ =?utf-8?B?cmJoWnRNek5QY0hYeDZocnBZZ29nSXZwUkZpajBkaDFlblBRZzNwWGRoS2VT?=
+ =?utf-8?B?Yzd1R0I3S0pmUitJVTgwc3FSY2J1U0RGK3ZVaGdoZ1ZrNjNOdzZaNEZMR0s2?=
+ =?utf-8?B?YUt4WEpWY21GMU5ySStZU2U2MUtQUUhDUnlGWFdwOEFOazhBNHRPdmZrZkxo?=
+ =?utf-8?B?MHBTbVdqbXFlbGd0T0JBUW8wR3BnempGdnJhbjQwdXBmdFFaVkFocGY4YVVS?=
+ =?utf-8?B?NCtXMFNsTG9MTVBwN0ZNcVpQM3Y4TnpIYkVKb0tXNEk1NExXU2M1ajBDamFx?=
+ =?utf-8?B?ZFBsM3hCZER5WEozOHAxS25uSDhRa2JreFJ5TlJicGJDdUIyWm1sK1Q5SVJs?=
+ =?utf-8?B?QTF0emNWM0lDUFNGWDhSU1lZblZpWkZSQXkvT2d5cG1vbzFqZG11eFozZzVt?=
+ =?utf-8?B?elFTT05lSUVjUXNETEwyb0JpMnZBSllnNTVrYTdhcDJLdFVRak0zOGwwcFlC?=
+ =?utf-8?B?VEJuc2MrdFRUZnZuRU4wWHRSOU1mNW9Rc0dmbGZFMjVEcEdRaVRVbmFrazdj?=
+ =?utf-8?B?bDJjOTdiVUdNTHU5by9HYVdmUXRaMmVMdGljQzRtSGorRldPVkVKa3pTVUp4?=
+ =?utf-8?B?SFdUcDJEbXZvdXgvTEFsNnBnSmZITkd3RGxucmlOL2hoak9lN2YwLzJQK2s1?=
+ =?utf-8?B?eFJjRnppMGx3N2V1V2xTRXZCL000ZHV4U2FwZG5IQS8wd0s3bXljVUxnd0ZX?=
+ =?utf-8?B?cjNNdG10QmdzZDlWTmE2dVhDMHJudGFhUXNlTkhsbzg3Vk1RS0VKbDNmYk1a?=
+ =?utf-8?B?L3pEM2M1bjg0U2tOd0t1Uk5ibFlHNlkzZGZlaDFxZUxkbk8yTlBtNis1UGN5?=
+ =?utf-8?B?NnJzWE1mRG9UUVhsWWJqclp3aU1qb3FyZGpEWm9MV05WVEdaMkNFamNoVVpv?=
+ =?utf-8?Q?FxNFPIAe+iLe3Nf9Kw=3D?=
 X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MN0PR12MB6101.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(376014);DIR:OUT;SFP:1101;
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MN0PR12MB6101.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(376014)(1800799024);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?ZjU5WjlubnZkVVcrWmhWUGdrSlh2NE9CdHVRQ1BXbktPVDhwQmNMZTd6ZEFR?=
- =?utf-8?B?VklkMklLbEtuN0x5MGlpdU1JYjY0K3BrS0NpWWkrckdBM2FUK0JhYjcyWXE4?=
- =?utf-8?B?bFV6TSt5ZzVZNk5pVCt6OXpHMS9QRk8wOXJZaklOWHFmd2hmWUZHOXVlRGpW?=
- =?utf-8?B?RUJXYWpnVkp1c1dabW1QOGo3RDBYL1dWaWlrcHJGVWRqSW5iU3NEOS9nTjBz?=
- =?utf-8?B?R0FtSW1yVG9LVlJUODdicE9TRXdVTzk0UmxKcGF0clNvbTV6WENpTXZ0YUpx?=
- =?utf-8?B?bklMTyt4NHZCWEZFempGUGl2emttRU5aNzJNT1BNeUVjZlBhUDVXc3RWM1B3?=
- =?utf-8?B?QmhJdktOSFBWVzdjelpTbTN6M3dKT2JBdWFaVy9zZ0pNc0tlSnVYMEYrNzBX?=
- =?utf-8?B?NDYyVU1yT1o5YW1ZZkN4M2lVYUpxbStCLy8xcjY0MlNZajZLRjR1bmErdFZv?=
- =?utf-8?B?K3R1YmVwb2lTSDBzcFJUdDlqalpHUVBIVVROMHJ4aFJGOC9NTWQ5VEJKUzB0?=
- =?utf-8?B?VFZsMnFtQnE4NHdWd2k0b0E0Q3BscC9EY01HWHZKKzlZZFhuSm9vaGpQdWFH?=
- =?utf-8?B?KzF3djVXQ2VNQ2k2NmlqMHM1NStxTm16WHNLRWJabTFrZTgyQ0lXYVo0V1hK?=
- =?utf-8?B?bG9raVRiMGpDQTdTZlZaZXowVGh1RDhrS0p5blM0WWZBcm5aL0JvdWgwclRZ?=
- =?utf-8?B?S3VUSGJyL3I1bjBrRGxUdno3S1ltWFA3ZlN1cEtoNXZCTTRkWklSM2lLMjZ3?=
- =?utf-8?B?eGhsZmx2b0tMM2daQVN2RFhqNG45WWVwZkdQUXJTR084WU43R0tmbXBoSFVj?=
- =?utf-8?B?LytqRlE5ZWlLYTNpQW1nZkhhaTZsSDZXdEI5S2IyOHgxcnpCV1VOQ0V3cnBx?=
- =?utf-8?B?TlRiNklVN0JxTFlzYmJOTkpyNGVHa3FZNUNqdnJRalVsMHpzcTJPY2g4Tjg0?=
- =?utf-8?B?MXpQd2QzdlMwR256QXRnNnNsejE5VHFkNWNrRFJzVDRjUkJwN1QvNWZURlVa?=
- =?utf-8?B?TkY5UUxwb05zUTUyWmFZWis5dTMvUDFKbW1QSk9UVDBrbk54dE9MdUdLcGFX?=
- =?utf-8?B?WDdJdjVubmw0NnNBMXJZcGpCc3AwU0RLRC9FZnR3UEVoajE1ZzlpNlhVRWcv?=
- =?utf-8?B?WTU0bU42LzkzdVplRDhuVEpkUmc1TFFBQnFra1lkVk5YdVJWajJZMEtQdUY5?=
- =?utf-8?B?VzNiQy90MDREN3ZBZHpJdHpnUTZuL1dRZWlJNFJZenA4YisweGErRG9jc2ZN?=
- =?utf-8?B?OWR1RjNyMjVzNy9QaDU3M2g0VXNZWk5jYVdzYzNjeTVBbjhDSGVBR0VLOEM4?=
- =?utf-8?B?N21MYTFDUmtoZTREc0dPenVIK2Uzc2t5cGFiQWcrREZrR0xqN01NVUp4SitZ?=
- =?utf-8?B?WGI3R2hnTzE2OE5jazdWdWpTdGtaMVJtK2xJaVFUWmlhTWgvMkNaeEhLbjRn?=
- =?utf-8?B?YnBQb0xlVG5kOHo3MmQyRFBCbzlIWHBpZkRTQmVDa2ZKdUhZZXQ3OUc4Rjhr?=
- =?utf-8?B?UmZFenI4K1dsQ29BY01UdkNNZHkrOWZOQndwUnZoR2ZZUk5UODU4ZVJqR3BR?=
- =?utf-8?B?QWlneWp3TWltV0xNZ2dqZDNNalFrMVlUclJURmFSeHZ0MDJlWXl0cWVIcXBX?=
- =?utf-8?B?OVFLZVJCbGVhdFlCbDdKVnhXc0pPcTk1UlZ1NEpFUDNFMnczcTNQaDliYmZY?=
- =?utf-8?B?RzFBTnhPbS9pT1BzMFh1Z3dVbjZISVR6L29XdEIwRzQwbkROTzhjc3hrMm44?=
- =?utf-8?B?NXdxQmdQZWJvbWx5VGNFUTJyU1pwbHhpUkJLRUI3M2dNVC8zZXU1aWF6Q1dH?=
- =?utf-8?B?ZzZGaTEza3grdlMwc0o0dzdFd29QUkNnamVHbzROVjFSUkVkdjFlVUZPelhI?=
- =?utf-8?B?K1FOcWE1Nk1oaFpFbjBkNE5WL0hSc2hRbVkxeWVNUTMzYkc3Ymd6cW8zM2gv?=
- =?utf-8?B?b2pLcm55SVVka0VBQ0N1UHRHbnhPMzhHS1VkZ05tNDZSV1Q4eUVnajZQdURJ?=
- =?utf-8?B?eTZrMFp3RlczeEJSTUlVclVDQlZZQmNsV3IvUzBubmZCQ0ppNVBsTFgweXgy?=
- =?utf-8?B?TXhCUms2eGlMMFpaNm9YazJEdlY1QTJxQW9WQTdSY1RZMmdZQVNtbE4vNlFn?=
- =?utf-8?Q?s6WaLzwpbkTuOF9ChX6IvB9za?=
+	=?utf-8?B?MVFlZTh0MXV2aDVWdERZN08zYjlBRkQ3SnlnNWZnSVhEYjdYb2I2cWEveStt?=
+ =?utf-8?B?ZWhqZDZNV1ltVlJpbDJ0WEU3bjJ3ak5Zd05peWdpeXVjc0hoc0RvVFVMUGhT?=
+ =?utf-8?B?Y1dqb1RBSE1Gd3h2ck5OUjdKNldvOXVSYzF5L1VPQnRiaS83bUsyZGtUL25G?=
+ =?utf-8?B?elRRMkRzZFdOQ0JZQUhseWQ5WXNyR1JlVnQrZmVGMnVHcmI3S1hGTlkxYW4r?=
+ =?utf-8?B?OE4yL1Y1M24vTVgxankyejV0cEgxWFhGNUJmQ1orLzE2MGlQaUJwR1RhQWtX?=
+ =?utf-8?B?MzR0aXZTdERaQkFuQXhDSnU2Vm1CNlFERFdVZ0hSc2hCemNxcit2K3hLTXpH?=
+ =?utf-8?B?ZUxuOVQycEFkVUsrUmhBV1NtTk5QOW5hSk0zcUZabG5tdWN5ZU9sUDZJcVh1?=
+ =?utf-8?B?UHRjb0QvTHduTmYxZjh4dVM2WTQxckVQQ3U3Yno3WDk3dmt3ZDlUWExVQTRZ?=
+ =?utf-8?B?QlhMSFlTVGhhcHl4Q0RHNTNTZEVLRjNOV3FOa2FXcjltRGd2cGN4M1Ewd3BH?=
+ =?utf-8?B?cEV0Q0lWREV1VUZjTHJyNWtYRnFIUVlhUlJVZHFuVm1seDZiSnZDcjF1cWlW?=
+ =?utf-8?B?YnRteEN5TU10eUpGR2FGOWROR2Q3NUM2VDVLS3RDNGNWM1VyOCs1djR1eDhy?=
+ =?utf-8?B?ZUIvYVVLTm1JNTdaNnFTamduRmcyTW5Hc09UUjN6Q1BNSXdvaWt2ZmROU0xK?=
+ =?utf-8?B?M0lSZWlSdmJZa3N5QlpkcFRLbE5LVDNrZUl3UGJpVlY2cU9JTlRtVjdWWWxl?=
+ =?utf-8?B?TlN0czRKbWY4c0djaWhlRDNwSnd3dVphU0lJMTBGd05tdVVxbHZKRE5LWFlU?=
+ =?utf-8?B?VXBnRFVrSlRjQitxeWdYMWF1TkF1MGhocGt3MnRoV0dZUzlhcmVldXA2bThu?=
+ =?utf-8?B?VkI0QzJ0dHpjUDhDMjlzeW1WWnV1Wi8wYzlrU1VRblZZNVVJakcxNTNURXFD?=
+ =?utf-8?B?QlN5eWxyTVQzWWdXZFp6RXYrRjlLbldITXFZNGRpQTdPZ1NMU2R3MHVxS2V2?=
+ =?utf-8?B?YVJHVzNyTkZSUVlEbTlwalE5RmlhV3BScER4aWRrYldLZGxqdFpGNWhRdENw?=
+ =?utf-8?B?ZncxMWxjSHlMMHQyc1ZWbms2L0dPR2hIek5VYjgzb0pNZ1B3UkxvYitvK1hD?=
+ =?utf-8?B?UEZ1ajJBaEtqNCtiaTc4TitSZHlQZitDbUIzNmpRTHlCVVorZ0hwd0pEK0d6?=
+ =?utf-8?B?T2NkclJvZ1l5dWQzN1ZrakV6TnI2VDYrZDhHa3lIeGZKbllxWkNkbklwalIz?=
+ =?utf-8?B?dTJxR2ZmUXovMlMvRUtUK2t1MXl3ZnRtUXJtOFF2d2EzWjlNdHF0U3lpLzN5?=
+ =?utf-8?B?RkVqZzJjdmg2KzNVWUVMbUlZcDRybzRGQjZhSmJObnlyYitNZmNhK2JYZkZm?=
+ =?utf-8?B?UVZYTW5HYUJyNFlTZDFXTUxTTm1aVFpkVWRjTlE1UVowQjEzalFGUzRvNThR?=
+ =?utf-8?B?eFdvZjJ3UGV1ZjBIWmFNM3hWVGt5K3pDLzlmU1NHYUh1U003NU5uSlhKbmw3?=
+ =?utf-8?B?Q1FqRklQWnhNd3Y3MWg0WUYvQjhUL3NTd09jUmtvRDhlRmhVbXYydTFYd1hD?=
+ =?utf-8?B?Mjh0Wm9YVTIvRHVZOExLc0FvMEUvZW9hWTRrdEF1VElqSi9PSmtVdjRsOGlZ?=
+ =?utf-8?B?NFpkclpiTmFxajV0aFY1RlM3S09LMTZRdG8rdi8vSGV4aUVGbmpiRzBwalZu?=
+ =?utf-8?B?WURLSGhZQk1pM2dXMjEwa01KY0s4YVN2bktMNzM0UTNZa2ErMThBamwzQWlz?=
+ =?utf-8?B?Z3VhelhxdkEweSt6VVpSVHIrM3hZTU1PbFZJU2xnQS85TXB5L2hZTld3NWlX?=
+ =?utf-8?B?Q01FVkhUK0xPTFVlSFFNdjI0aElubnJiR1RDTkhJdnFMWmVWVnRyVit5WGFj?=
+ =?utf-8?B?RHhpc0FnRHByNTZGVFJncXAwZDJkUDJPMUVjRHZqcTFqZTMzMnVYUGNrbFlI?=
+ =?utf-8?B?eEh6S2dXR05EL2FKL3RaNWpWRExqbWlyVjZFeURHbnpWaE5aSUxRd0FGRUFM?=
+ =?utf-8?B?SU1kb3o3dlFUQVpXVUJlV016WHlJdTRzWUtZVURWQTZ5YVNvZ005dm5sK3FL?=
+ =?utf-8?B?eTFOZU1jcURsd3lHaW1uRFFnSURSdUFaUk9OdlFKMXF1MnFHZVhOelI2djJ2?=
+ =?utf-8?Q?LZ6Xe6qrgSXJbhdrTOc+OAyzV?=
 X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 6e1b445a-615c-49ea-b899-08dcf9c3dd15
+X-MS-Exchange-CrossTenant-Network-Message-Id: 25fc35d9-3844-4051-15c1-08dcf9c4355f
 X-MS-Exchange-CrossTenant-AuthSource: MN0PR12MB6101.namprd12.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 31 Oct 2024 15:51:20.4404
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 31 Oct 2024 15:53:48.5483
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: cVWHd++avLLh0qZftWOfHlLldcTTg/foF/xMPYtJ8C+DULqeR9NSca+OPDuXBTJY8/iGDoojK/vLqEMopciU2g==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA0PR12MB7721
+X-MS-Exchange-CrossTenant-UserPrincipalName: Vb8KeoJCMjH0LEkKle50Xfc9ZA/gEqXkq5jsP5ofMv/ySLeZlbbVcvjzT+N3UppgyqMTpd65uwk5xqR1jofB1w==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS7PR12MB6261
 
-On 10/31/2024 10:40, Kurt Borja wrote:
-> Fixes the following error:
+On 10/31/2024 10:44, Kurt Borja wrote:
+> Some Alienware devices have a key that locks/unlocks the Meta key. This
+> key triggers a WMI event that should be ignored by the kernel, as it's
+> handled by internally the firmware.
 > 
-> dell_smbios: Unable to run on non-Dell system
+> There is no known way of changing this default behavior. The firmware
+> would lock/unlock the Meta key, regardless of how the event is handled.
 > 
-> Which is triggered after dell-wmi driver fails to initialize on
-> Alienware systems, as it depends on dell-smbios.
-> 
-> This effectively extends dell-wmi, dell-smbios and dcdbas support to
-> Alienware devices, that might share some features of the SMBIOS intereface
-> calling interface with other Dell products.
-> 
-> Tested on an Alienware X15 R1.
-> 
-> Signed-off-by: Kurt Borja <kuurtb@gmail.com>
+
+Thinking through why this event exists, it's probably so that there can 
+be a toast message or popup or something similar in Windows to show an 
+icon that it was changed, which doesn't currently exist in Linux.
 
 Reviewed-by: Mario Limonciello <mario.limonciello@amd.com>
 
+> Tested on an Alienware x15 R1.
+> 
+> Signed-off-by: Kurt Borja <kuurtb@gmail.com>
 > ---
 > v2:
->   - Commit message reflects Alienware devices may not necessarily support
->     the SMBIOS interface
+>   - Fixed entry style
+>   - Commit message clarifies firmware behavior
 >   - Commit message now has "Tested on"
 > ---
->   drivers/platform/x86/dell/dell-smbios-base.c | 1 +
->   1 file changed, 1 insertion(+)
+>   drivers/platform/x86/dell/dell-wmi-base.c | 6 ++++++
+>   1 file changed, 6 insertions(+)
 > 
-> diff --git a/drivers/platform/x86/dell/dell-smbios-base.c b/drivers/platform/x86/dell/dell-smbios-base.c
-> index 73e41eb69..01c72b91a 100644
-> --- a/drivers/platform/x86/dell/dell-smbios-base.c
-> +++ b/drivers/platform/x86/dell/dell-smbios-base.c
-> @@ -576,6 +576,7 @@ static int __init dell_smbios_init(void)
->   	int ret, wmi, smm;
+> diff --git a/drivers/platform/x86/dell/dell-wmi-base.c b/drivers/platform/x86/dell/dell-wmi-base.c
+> index 502783a7a..ce421e51b 100644
+> --- a/drivers/platform/x86/dell/dell-wmi-base.c
+> +++ b/drivers/platform/x86/dell/dell-wmi-base.c
+> @@ -80,6 +80,12 @@ static const struct dmi_system_id dell_wmi_smbios_list[] __initconst = {
+>   static const struct key_entry dell_wmi_keymap_type_0000[] = {
+>   	{ KE_IGNORE, 0x003a, { KEY_CAPSLOCK } },
 >   
->   	if (!dmi_find_device(DMI_DEV_TYPE_OEM_STRING, "Dell System", NULL) &&
-> +	    !dmi_find_device(DMI_DEV_TYPE_OEM_STRING, "Alienware", NULL) &&
->   	    !dmi_find_device(DMI_DEV_TYPE_OEM_STRING, "www.dell.com", NULL)) {
->   		pr_err("Unable to run on non-Dell system\n");
->   		return -ENODEV;
+> +	/* Meta key lock */
+> +	{ KE_IGNORE, 0xe000, { KEY_RIGHTMETA } },
+> +
+> +	/* Meta key unlock */
+> +	{ KE_IGNORE, 0xe001, { KEY_RIGHTMETA } },
+> +
+>   	/* Key code is followed by brightness level */
+>   	{ KE_KEY,    0xe005, { KEY_BRIGHTNESSDOWN } },
+>   	{ KE_KEY,    0xe006, { KEY_BRIGHTNESSUP } },
 
-There was a really similar change that got committed recently to 
-dell-wmi-sysman:
-
-https://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git/commit/?h=fixes&id=a561509b4187a8908eb7fbb2d1bf35bbc20ec74b
-
-The lines are identical now.  Is it also worth splitting out to a 
-helper?  Not sure.
