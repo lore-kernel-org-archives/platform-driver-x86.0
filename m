@@ -1,74 +1,72 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.16])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE3F7195FEC;
-	Thu, 31 Oct 2024 10:08:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 504B813A25F;
+	Thu, 31 Oct 2024 10:15:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730369311; cv=none; b=dWwEJ0PsJmdwIe5ss27hzmJWBjVjwFNJBi1Ejk7lvU+zHEp83/EMxl9YfQy87b9Ah+cXAUSiR1dJYfzcw4a3ePawpd2Io7p0v1e9tMfY9PpQmr2aqN+U3JaisfZurO5fZekpED2PjhOlH1LVb0JAkCPmxMNTKoPw0DO/4qE58O8=
+	t=1730369750; cv=none; b=d6L3Vq8LNHXxGelvuiC9FzhkUsBN57JSCb2Rl2f5YxWO2ipaNLZii56LfQ15q1dj9ZAPzWH56NOa4toU0zNM7Ruxd0KD2nxww8Bl7C4JgOYNa8R3VOI1sSSvffmpAdQ5zS0JWHaeiuesyRZRqGWo7S/Rx5jxDdAnfc7yescxx3U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730369311; c=relaxed/simple;
-	bh=i+hteVqCnXc++rzyU2MY4vtu6c9jhIdsix/DJbeDlZE=;
+	s=arc-20240116; t=1730369750; c=relaxed/simple;
+	bh=XCXgN4lPnIAPqejxYbv7v0HSBCur4c0ci9vAjAXjYSo=;
 	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=orR7RuFhQatmCps9fdNUkAk6OB/YmmoYlsfYEaDLVri7sNtPfaoIBPb9GtlCrDYUVOgXw7Bi9SuU3MEyATebw5TNQsxxLXK82Um2xBnLtDfvQhjTIYjjgyF3dPauSp/ARDOV0b2t81jRzDHZMGEgI3XVIs4ajZ6NHKnlwoEUD6A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=e6vK9Blq; arc=none smtp.client-ip=198.175.65.19
+	 MIME-Version:Content-Type; b=Zveg86DjDjIDcts0b8mzsLXn0ZGbskKoG6KS2pzEKWFViPo67ubvu4kBfNjYjMJlDzR2q7jUN5y+/n4Um4Iks0m9a4vN6ikU5tmqJIwWNY8abZFuqrloGIHwn94tff+/Q2dwVQkJaQu6MP8xabMMOU0WpKuYn8Y7d6BI7QPpmgs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=NwOOnEz7; arc=none smtp.client-ip=198.175.65.16
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="e6vK9Blq"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="NwOOnEz7"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1730369309; x=1761905309;
+  t=1730369748; x=1761905748;
   h=from:date:to:cc:subject:in-reply-to:message-id:
    references:mime-version;
-  bh=i+hteVqCnXc++rzyU2MY4vtu6c9jhIdsix/DJbeDlZE=;
-  b=e6vK9BlqsET8X8Rf5hpK1F5pLbmoB3bkfSDL8bCC/XNJqGwlcmGneWjd
-   Tscmx/eQLYq5nzGNQeJbaIPMtFT8bMpsMP5eFiv7/kaumckvM/w0nfJea
-   ud2rmmvepuIJWLkm3lJGtny6Qbjn5fNRWsYQGV8DrvEij7EfbPN+4M/sm
-   sQPogrGXrdf3ClVecn8mpzeF1eXpsxXdlJOQaZJWw0aaUDWV2O6y+F5aF
-   2FNrp2XnnKD7OlBdlQI5EDbRbiWsAcBGoHeeVQ5kmSzkFRUgC3AALBTs/
-   G+lwXvQc/6dDyEmnTHuzoD68JQH7nDq2Psik7Z3EjDl7TuA0nrlD7WtIr
-   Q==;
-X-CSE-ConnectionGUID: tJnErQwRQMmaiEnPWko7ow==
-X-CSE-MsgGUID: zFBxadd7TqquUNoPu9C1aA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11222"; a="29955805"
+  bh=XCXgN4lPnIAPqejxYbv7v0HSBCur4c0ci9vAjAXjYSo=;
+  b=NwOOnEz7qO+HT01IxotFTKH7TN2Holx+9SbJOb1O80qPkXFtz8OTPFUZ
+   3X+syTHENhXXtznm5iGuG/MT9jYTsLW6P7nHj5oDcXDBUhfZVHyFqSijl
+   pla/xX0MlSYm4SAQcGt24YmifPNNSRNzxflBObhjJlbS0N3u7nrNdrYjh
+   QK/1zgTIPS//lD/EpI79Bx1Rl9ljrQ/z1F/PA/yrt3iR+p9fTvpif6b+P
+   0MQEvAoguIlK1t2vWZUiHL1fYknnAL+3gz97NKa3vXgfIPkPW1pGo/4uz
+   1V728KzCayqirJxSiSaRNGgZVEIou/D4NAcKgQPZ15X+dDaZotRc8Nba7
+   A==;
+X-CSE-ConnectionGUID: +Zt7EsOgQ8aFhdSxvHyidg==
+X-CSE-MsgGUID: 0BwvzwlQQx+YCFV8tGZQOw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11222"; a="30265468"
 X-IronPort-AV: E=Sophos;i="6.11,199,1725346800"; 
-   d="scan'208";a="29955805"
-Received: from orviesa006.jf.intel.com ([10.64.159.146])
-  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Oct 2024 03:08:29 -0700
-X-CSE-ConnectionGUID: W6SPskMlQiyn/wK1TPI9qw==
-X-CSE-MsgGUID: dWkMTl2ZTguOT55YPzXk+A==
+   d="scan'208";a="30265468"
+Received: from fmviesa004.fm.intel.com ([10.60.135.144])
+  by orvoesa108.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Oct 2024 03:15:47 -0700
+X-CSE-ConnectionGUID: O5pELUPfSdeP+n0yEBPT+w==
+X-CSE-MsgGUID: se/5rftLQm+9b55fu3U2eg==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.11,247,1725346800"; 
-   d="scan'208";a="82742336"
+   d="scan'208";a="87184783"
 Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.160])
-  by orviesa006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Oct 2024 03:08:23 -0700
+  by fmviesa004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Oct 2024 03:15:42 -0700
 From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Thu, 31 Oct 2024 12:08:20 +0200 (EET)
-To: "Zhuo, Qiuxu" <qiuxu.zhuo@intel.com>, 
-    Yazen Ghannam <yazen.ghannam@amd.com>
-cc: "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>, 
-    "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, 
-    "Luck, Tony" <tony.luck@intel.com>, "x86@kernel.org" <x86@kernel.org>, 
-    "avadhut.naik@amd.com" <avadhut.naik@amd.com>, 
-    "john.allen@amd.com" <john.allen@amd.com>, 
-    "mario.limonciello@amd.com" <mario.limonciello@amd.com>, 
-    "bhelgaas@google.com" <bhelgaas@google.com>, 
-    "Shyam-sundar.S-k@amd.com" <Shyam-sundar.S-k@amd.com>, 
-    "richard.gong@amd.com" <richard.gong@amd.com>, 
-    "jdelvare@suse.com" <jdelvare@suse.com>, 
-    "linux@roeck-us.net" <linux@roeck-us.net>, 
-    "clemens@ladisch.de" <clemens@ladisch.de>, 
-    "hdegoede@redhat.com" <hdegoede@redhat.com>, 
-    "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, 
-    "linux-hwmon@vger.kernel.org" <linux-hwmon@vger.kernel.org>, 
-    "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>, 
-    "naveenkrishna.chatradhi@amd.com" <naveenkrishna.chatradhi@amd.com>, 
-    "carlos.bilbao.osdev@gmail.com" <carlos.bilbao.osdev@gmail.com>
-Subject: RE: [PATCH 06/16] x86/amd_nb: Simplify root device search
-In-Reply-To: <CY8PR11MB7134D716377B0C5E40E5C8FF89552@CY8PR11MB7134.namprd11.prod.outlook.com>
-Message-ID: <77c96d66-02b9-965d-4c43-c588aedd1d48@linux.intel.com>
-References: <20241023172150.659002-1-yazen.ghannam@amd.com> <20241023172150.659002-7-yazen.ghannam@amd.com> <CY8PR11MB7134D716377B0C5E40E5C8FF89552@CY8PR11MB7134.namprd11.prod.outlook.com>
+Date: Thu, 31 Oct 2024 12:15:38 +0200 (EET)
+To: Mario Limonciello <mario.limonciello@amd.com>
+cc: Hans de Goede <hdegoede@redhat.com>, 
+    "Rafael J . Wysocki" <rafael@kernel.org>, Len Brown <lenb@kernel.org>, 
+    Maximilian Luz <luzmaximilian@gmail.com>, Lee Chun-Yi <jlee@suse.com>, 
+    Shyam Sundar S K <Shyam-sundar.S-k@amd.com>, 
+    Corentin Chary <corentin.chary@gmail.com>, 
+    "Luke D . Jones" <luke@ljones.dev>, Ike Panhc <ike.pan@canonical.com>, 
+    Henrique de Moraes Holschuh <hmh@hmh.eng.br>, 
+    Alexis Belmonte <alexbelm48@gmail.com>, 
+    =?ISO-8859-15?Q?Uwe_Kleine-K=F6nig?= <u.kleine-koenig@pengutronix.de>, 
+    Ai Chao <aichao@kylinos.cn>, Gergo Koteles <soyer@irl.hu>, 
+    open list <linux-kernel@vger.kernel.org>, 
+    "open list:ACPI" <linux-acpi@vger.kernel.org>, 
+    "open list:MICROSOFT SURFACE PLATFORM PROFILE DRIVER" <platform-driver-x86@vger.kernel.org>, 
+    "open list:THINKPAD ACPI EXTRAS DRIVER" <ibm-acpi-devel@lists.sourceforge.net>, 
+    Mark Pearson <mpearson-lenovo@squebb.ca>, 
+    Matthew Schwartz <matthew.schwartz@linux.dev>
+Subject: Re: [PATCH v3 10/22] ACPI: platform_profile: Use `scoped_cond_guard`
+ for platform_profile_show()
+In-Reply-To: <20241031040952.109057-11-mario.limonciello@amd.com>
+Message-ID: <64f0b33b-3345-d9a6-d174-2a823adee216@linux.intel.com>
+References: <20241031040952.109057-1-mario.limonciello@amd.com> <20241031040952.109057-11-mario.limonciello@amd.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -77,57 +75,77 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 
-On Thu, 31 Oct 2024, Zhuo, Qiuxu wrote:
+On Wed, 30 Oct 2024, Mario Limonciello wrote:
 
-> > From: Yazen Ghannam <yazen.ghannam@amd.com>
-> > [...]
-> > +struct pci_dev *amd_node_get_root(u16 node) {
-> > +	struct pci_dev *df_f0 __free(pci_dev_put) = NULL;
+> Migrate away from using an interruptible mutex to scoped_cond_guard.
+> Also move the sysfs string match out of the mutex as it's not needed.
 > 
-> NULL pointer initialization is not necessary.
+> Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
 
-It is, because __free() is used...
-
-> > +	struct pci_dev *root;
-> > +	u16 cntl_off;
-> > +	u8 bus;
-> > +
-> > +	if (!boot_cpu_has(X86_FEATURE_ZEN))
-> > +		return NULL;
-
-...This would try to free() whatever garbage df_f0 holds...
-
-> > +	/*
-> > +	 * D18F0xXXX [Config Address Control] (DF::CfgAddressCntl)
-> > +	 * Bits [7:0] (SecBusNum) holds the bus number of the root device for
-> > +	 * this Data Fabric instance. The segment, device, and function will be
-> > 0.
-> > +	 */
-> > +	df_f0 = amd_node_get_func(node, 0);
-
-...However, the recommended practice when using __free() is this (as 
-documented in include/linux/cleanup.h):
-
- * Given that the "__free(...) = NULL" pattern for variables defined at
- * the top of the function poses this potential interdependency problem
- * the recommendation is to always define and assign variables in one
- * statement and not group variable definitions at the top of the
- * function when __free() is used.
-
-I know the outcome will look undesirable to some, me included, but 
-there's little that can be done to that because there's no other way for 
-the compiler to infer the order.
-
-That being said, strictly speaking it isn't causing issue in this function 
-as is but it's still a bad pattern to initialize to = NULL because in 
-other instances it will cause problems. So better to steer away from the
-pattern entirely rather than depend on reviewers noticing the a cleaup 
-ordering problem gets introduced by some later change to the function.
-
-> > +	if (!df_f0)
-> > +		return NULL;
-
+I'd have expected all the mutex_lock_interruptible() -> 
+scoped_cond_guard() changes in the same patch. Although this also moves 
+the sysfs stuff out which in this smaller form is kind of okay but if it's 
+part of larger patch merging all scoped guard conversions, it should be 
+in a different change.
 
 -- 
  i.
 
+> ---
+>  drivers/acpi/platform_profile.c | 36 ++++++++++++---------------------
+>  1 file changed, 13 insertions(+), 23 deletions(-)
+> 
+> diff --git a/drivers/acpi/platform_profile.c b/drivers/acpi/platform_profile.c
+> index b48dd34301f13..63a5f5ac33898 100644
+> --- a/drivers/acpi/platform_profile.c
+> +++ b/drivers/acpi/platform_profile.c
+> @@ -75,35 +75,25 @@ static ssize_t platform_profile_store(struct device *dev,
+>  {
+>  	int err, i;
+>  
+> -	err = mutex_lock_interruptible(&profile_lock);
+> -	if (err)
+> -		return err;
+> -
+> -	if (!cur_profile) {
+> -		mutex_unlock(&profile_lock);
+> -		return -ENODEV;
+> -	}
+> -
+>  	/* Scan for a matching profile */
+>  	i = sysfs_match_string(profile_names, buf);
+> -	if (i < 0) {
+> -		mutex_unlock(&profile_lock);
+> +	if (i < 0)
+>  		return -EINVAL;
+> -	}
+>  
+> -	/* Check that platform supports this profile choice */
+> -	if (!test_bit(i, cur_profile->choices)) {
+> -		mutex_unlock(&profile_lock);
+> -		return -EOPNOTSUPP;
+> -	}
+> +	scoped_cond_guard(mutex_intr, return -ERESTARTSYS, &profile_lock) {
+> +		if (!cur_profile)
+> +			return -ENODEV;
+>  
+> -	err = cur_profile->profile_set(cur_profile, i);
+> -	if (!err)
+> -		sysfs_notify(acpi_kobj, NULL, "platform_profile");
+> +		/* Check that platform supports this profile choice */
+> +		if (!test_bit(i, cur_profile->choices))
+> +			return -EOPNOTSUPP;
+>  
+> -	mutex_unlock(&profile_lock);
+> -	if (err)
+> -		return err;
+> +		err = cur_profile->profile_set(cur_profile, i);
+> +		if (err)
+> +			return err;
+> +	}
+> +
+> +	sysfs_notify(acpi_kobj, NULL, "platform_profile");
+>  	return count;
+>  }
+>  
+> 
