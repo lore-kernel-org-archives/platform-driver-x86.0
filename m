@@ -1,153 +1,102 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
+Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 68B8813A25F;
-	Thu, 31 Oct 2024 10:16:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1C2421990BD;
+	Thu, 31 Oct 2024 10:24:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730369797; cv=none; b=hsOjGxYQfet+6HdSkVwqraz6f1YyN3pI7vyLTKb9VvNR//0Gh2AypbdjcK+C4VnHZ4lK+yzuNZ5KMr8ET6C6JYNCPNhoNUfIWqVoKCfEbwmNKev92+FH81Zs6P4vTqrodu2kB6BZREWHcYP3SfIlBbMlIY5YJAlAOgLkrEcxI1A=
+	t=1730370290; cv=none; b=a6PMp6EpBgbC23P3amjDsRKlTJqiJvxkuAhUmJBGAciDMp91ic6jn2L/qof5yVJ98n8DMcYG2Gvl002r3Jmmc1PdrH98AjZ+tg/ZfuJZM4gn+BTITj9vN3MjBvNjGBzR/P2/BbrAF1YubHsph6qO0waFoiAFgfWnQb6kE3smRm4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730369797; c=relaxed/simple;
-	bh=R45U818TsTT439/28WfuENUkuMgXATy9yx7t0VaBemk=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=Sqh9Qdw7E1DURjs1HDbe7FKZkH48dI68//YvNLJ//hJwkQthTPuXHSPXzVfyyrgRHlCUjFaraEPoIiTifS9FVh3wEpBEq0G3tBegZqOlzQ4V3zsNRQZYrUh9FGIkaryhCCIwxDOGZMG6IIShNdyuDmdPXR/QNCnyLaj3IYL5b1Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=S3NsXq98; arc=none smtp.client-ip=198.175.65.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1730370290; c=relaxed/simple;
+	bh=Dcs8uezQDu8TIPzq+x7EHDomq/ErpK9DELbZnXFkW00=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ESz2j+7Ga/f36A3w71gSeEXMfu6+/zpiElgkw3qUW7Ve0vPt+gp3rqHTu3QEquevkh8olSxwQ2Thelxua1iKM5tgJkH4hWcfDqXVCNEy7JrTs7scOZ2EtDdQzBDiaaakgwogNr8biQtNM0DxhXch9KGIEK2LHe/EyvMGPSQAiPM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=I8ynmJwP; arc=none smtp.client-ip=65.109.113.108
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="S3NsXq98"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1730369796; x=1761905796;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=R45U818TsTT439/28WfuENUkuMgXATy9yx7t0VaBemk=;
-  b=S3NsXq98dimWaMSV4yPLVIMViJe+oQpHH+ywhA1eyTD/QAJ6tMdtEKVB
-   mzmNQR3HrYxgDswYBWvPKBdTktj0APJPM9YpaYgaMyKehCel5LXRjWuhk
-   ABboDv2oCH4yREzWbqF70a74DGIYhmVKl5a3+2qVTj492LtsaTjC6Rq0P
-   PaN4T0cIlCN0HOvigDuRNOuJEQxJRHRGthgM09AnuUSK6UFAY6IIsjmte
-   pWFiwqK7TVHC2RioZHHhajadfUePhnBZ4HT3tGsETGficPzvZUyFskAx3
-   iiHQD2wBMJ0ucuo66kot+F7LK4Af6KG5/zvMY9DSWxXEaVyacOPHGuP5K
-   w==;
-X-CSE-ConnectionGUID: G0UNEwo1Q1Gd8bzzy3n96g==
-X-CSE-MsgGUID: M+WUBqkSRkqBChKVscuXlA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11222"; a="47559642"
-X-IronPort-AV: E=Sophos;i="6.11,199,1725346800"; 
-   d="scan'208";a="47559642"
-Received: from orviesa005.jf.intel.com ([10.64.159.145])
-  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Oct 2024 03:16:35 -0700
-X-CSE-ConnectionGUID: z/3Q3sipTRa4f6OKD8+nyA==
-X-CSE-MsgGUID: Xfp3OHcSRNOtCzOF9Trmow==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.11,247,1725346800"; 
-   d="scan'208";a="87379401"
-Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.160])
-  by orviesa005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Oct 2024 03:16:29 -0700
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Thu, 31 Oct 2024 12:16:24 +0200 (EET)
-To: Mario Limonciello <mario.limonciello@amd.com>
-cc: Hans de Goede <hdegoede@redhat.com>, 
-    "Rafael J . Wysocki" <rafael@kernel.org>, Len Brown <lenb@kernel.org>, 
-    Maximilian Luz <luzmaximilian@gmail.com>, Lee Chun-Yi <jlee@suse.com>, 
-    Shyam Sundar S K <Shyam-sundar.S-k@amd.com>, 
-    Corentin Chary <corentin.chary@gmail.com>, 
-    "Luke D . Jones" <luke@ljones.dev>, Ike Panhc <ike.pan@canonical.com>, 
-    Henrique de Moraes Holschuh <hmh@hmh.eng.br>, 
-    Alexis Belmonte <alexbelm48@gmail.com>, 
-    =?ISO-8859-15?Q?Uwe_Kleine-K=F6nig?= <u.kleine-koenig@pengutronix.de>, 
-    Ai Chao <aichao@kylinos.cn>, Gergo Koteles <soyer@irl.hu>, 
-    open list <linux-kernel@vger.kernel.org>, 
-    "open list:ACPI" <linux-acpi@vger.kernel.org>, 
-    "open list:MICROSOFT SURFACE PLATFORM PROFILE DRIVER" <platform-driver-x86@vger.kernel.org>, 
-    "open list:THINKPAD ACPI EXTRAS DRIVER" <ibm-acpi-devel@lists.sourceforge.net>, 
-    Mark Pearson <mpearson-lenovo@squebb.ca>, 
-    Matthew Schwartz <matthew.schwartz@linux.dev>
-Subject: Re: [PATCH v3 07/22] ACPI: platform_profile: Use guard(mutex) for
- register/unregister
-In-Reply-To: <20241031040952.109057-8-mario.limonciello@amd.com>
-Message-ID: <63acd502-bee4-ab00-1446-0f76686737ef@linux.intel.com>
-References: <20241031040952.109057-1-mario.limonciello@amd.com> <20241031040952.109057-8-mario.limonciello@amd.com>
+	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="I8ynmJwP"
+Received: from localhost (localhost.localdomain [127.0.0.1])
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id 5883D40E0219;
+	Thu, 31 Oct 2024 10:24:45 +0000 (UTC)
+X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
+Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
+	header.d=alien8.de
+Received: from mail.alien8.de ([127.0.0.1])
+	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
+	with ESMTP id rYHAt8XQxasY; Thu, 31 Oct 2024 10:24:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
+	t=1730370281; bh=rkquCrs7fPqx+/X745GkwcUDl28gCwCs1bKo0rGbyUs=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=I8ynmJwPYjyktq43Ws7uS5sT4KiRaxNWcvK5R3XyhO7iRaUPJ7Qnnspot0tsbi7ql
+	 YZx+MW5tybq5kVpCsYAaL+cewgEj1jwrBfb9zPCVcID4FWGlfwTciqxSgGbmrSBz0C
+	 wWQD+MUQpLh0Hs5MI3vxFO7kQGmqQrzH59jHgQDeGo31PlPQ+yh0FzW7Ma7hKaSTWl
+	 tdKBFZrmLN/a56OA+8dfy/5jg2e0OBmiNhyl9gvdt6/zSc0rPERH9CAnMwrZdU0dhy
+	 hMsak4p2oYBY8abg9keeFSy2imVqbKkQxGdMqLeseD9dlxoZdQvAD92tZffq0Kdshc
+	 vii78EOylmd/j8t+CigEJOpTwjwvbeCcVtGHoI7GR3uedud/4cgexg5ElrRE8lX/5O
+	 F+svAjGCsP22PsjZY/cvssoqCBaqTmROeQn5jYDOTcUYaGlTxYQP3zFPlDlQx1QSiz
+	 YIJzOzZlvUN/l42lR5l3uj8pn9srOfT9eb6kLGb6GX79YRC2AWbuFmme5Rkz1yN7ZB
+	 dnNsWEopbEjLjMgKp1MV5SBQgYzqlmL+QjMMMxQJk5qHeqUxd8egjiWe6SsfcYhwnM
+	 e031nWp5uI8+2/w5HwYokuCtMfzSOEBEzolmhslpFaP7+OCj+pDdeaij7m/pk9jDES
+	 jxcthzi/MMg1wO5fNPtJ1p4I=
+Received: from zn.tnic (p5de8e8eb.dip0.t-ipconnect.de [93.232.232.235])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
+	(No client certificate requested)
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id EB30940E0028;
+	Thu, 31 Oct 2024 10:24:17 +0000 (UTC)
+Date: Thu, 31 Oct 2024 11:24:17 +0100
+From: Borislav Petkov <bp@alien8.de>
+To: Yazen Ghannam <yazen.ghannam@amd.com>
+Cc: "Luck, Tony" <tony.luck@intel.com>, Andy Whitcroft <apw@canonical.com>,
+	Joe Perches <joe@perches.com>,
+	"linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"x86@kernel.org" <x86@kernel.org>,
+	"avadhut.naik@amd.com" <avadhut.naik@amd.com>,
+	"john.allen@amd.com" <john.allen@amd.com>,
+	"mario.limonciello@amd.com" <mario.limonciello@amd.com>,
+	"bhelgaas@google.com" <bhelgaas@google.com>,
+	"Shyam-sundar.S-k@amd.com" <Shyam-sundar.S-k@amd.com>,
+	"richard.gong@amd.com" <richard.gong@amd.com>,
+	"jdelvare@suse.com" <jdelvare@suse.com>,
+	"linux@roeck-us.net" <linux@roeck-us.net>,
+	"clemens@ladisch.de" <clemens@ladisch.de>,
+	"hdegoede@redhat.com" <hdegoede@redhat.com>,
+	"ilpo.jarvinen@linux.intel.com" <ilpo.jarvinen@linux.intel.com>,
+	"linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+	"linux-hwmon@vger.kernel.org" <linux-hwmon@vger.kernel.org>,
+	"platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>,
+	"naveenkrishna.chatradhi@amd.com" <naveenkrishna.chatradhi@amd.com>,
+	"carlos.bilbao.osdev@gmail.com" <carlos.bilbao.osdev@gmail.com>
+Subject: Re: [PATCH 03/16] x86/amd_nb: Clean up early_is_amd_nb()
+Message-ID: <20241031102417.GAZyNa0fyqCSG5txaz@fat_crate.local>
+References: <20241023172150.659002-1-yazen.ghannam@amd.com>
+ <20241023172150.659002-4-yazen.ghannam@amd.com>
+ <20241025155830.GQZxvAJkJnfLfNpSRx@fat_crate.local>
+ <20241029143928.GA1011322@yaz-khff2.amd.com>
+ <20241029150847.GLZyD6f-Hk6pRTEt2c@fat_crate.local>
+ <SJ1PR11MB6083AA7B2E28F2DA24E4B456FC4B2@SJ1PR11MB6083.namprd11.prod.outlook.com>
+ <20241030142138.GA1304646@yaz-khff2.amd.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="8323328-231554225-1730369784=:939"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20241030142138.GA1304646@yaz-khff2.amd.com>
 
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
+On Wed, Oct 30, 2024 at 10:21:38AM -0400, Yazen Ghannam wrote:
+> And if not to checkpatch, then maybe it can be included in the TIP
+> maintainers' handbook? That is, if others are using it or something
+> similar.
 
---8323328-231554225-1730369784=:939
-Content-Type: text/plain; charset=ISO-8859-15
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Nah, this needs to be a normal janitor task. tglx is working on it. :)
 
-On Wed, 30 Oct 2024, Mario Limonciello wrote:
+-- 
+Regards/Gruss,
+    Boris.
 
-> guard(mutex) can be used to automatically release mutexes when going
-> out of scope.
->=20
-> Tested-by: Matthew Schwartz <matthew.schwartz@linux.dev>
-> Reviewed-by: Hans de Goede <hdegoede@redhat.com>
-> Reviewed-by: Mark Pearson <mpearson-lenovo@squebb.ca>
-> Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
-> ---
->  drivers/acpi/platform_profile.c | 15 +++++----------
->  1 file changed, 5 insertions(+), 10 deletions(-)
->=20
-> diff --git a/drivers/acpi/platform_profile.c b/drivers/acpi/platform_prof=
-ile.c
-> index f2f2274e4d83e..cc2037147c0fd 100644
-> --- a/drivers/acpi/platform_profile.c
-> +++ b/drivers/acpi/platform_profile.c
-> @@ -191,34 +191,29 @@ int platform_profile_register(struct platform_profi=
-le_handler *pprof)
->  =09=09return -EINVAL;
->  =09}
-> =20
-> -=09mutex_lock(&profile_lock);
-> +=09guard(mutex)(&profile_lock);
->  =09/* We can only have one active profile */
-> -=09if (cur_profile) {
-> -=09=09mutex_unlock(&profile_lock);
-> +=09if (cur_profile)
->  =09=09return -EEXIST;
-> -=09}
-> =20
->  =09err =3D sysfs_create_group(acpi_kobj, &platform_profile_group);
-> -=09if (err) {
-> -=09=09mutex_unlock(&profile_lock);
-> +=09if (err)
->  =09=09return err;
-> -=09}
->  =09list_add_tail(&pprof->list, &platform_profile_handler_list);
-> =20
->  =09cur_profile =3D pprof;
-> -=09mutex_unlock(&profile_lock);
->  =09return 0;
->  }
->  EXPORT_SYMBOL_GPL(platform_profile_register);
-> =20
->  int platform_profile_remove(struct platform_profile_handler *pprof)
->  {
-> +=09guard(mutex)(&profile_lock);
-> +
->  =09list_del(&pprof->list);
-> =20
->  =09sysfs_remove_group(acpi_kobj, &platform_profile_group);
-> -=09mutex_lock(&profile_lock);
->  =09cur_profile =3D NULL;
-> -=09mutex_unlock(&profile_lock);
->  =09return 0;
->  }
->  EXPORT_SYMBOL_GPL(platform_profile_remove);
->=20
-
-For patches 1-7,
-
-Reviewed-by: Ilpo J=E4rvinen <ilpo.jarvinen@linux.intel.com>
-
---=20
- i.
-
---8323328-231554225-1730369784=:939--
+https://people.kernel.org/tglx/notes-about-netiquette
