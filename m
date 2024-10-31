@@ -1,97 +1,130 @@
-Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
+Received: from mout.gmx.net (mout.gmx.net [212.227.15.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7791E347C7;
-	Thu, 31 Oct 2024 19:15:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B270197A6C;
+	Thu, 31 Oct 2024 20:40:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730402154; cv=none; b=U4CbbPH3KHqOX1f3SeutZfuTk0KfHLbyw935gJG+RADZ+MTslZmzQEXEdI3phFYEcRzFH3OpLyNGySahL5PDiO+0F5wfBlgNAEQvkPQsXwVKEbXr0ZzWaDoGMssIqfFbdJszWe9Kynx5c0H1r3yxIiq8dPeIZ7UygqLUqxdPL5M=
+	t=1730407231; cv=none; b=pGUVgtCnnT8syW5JsDfADDWwprYlza4MQxqqTQeFXOCD9dncpj8yZbOkoRoXA5AwYrX5zD9VmtCFciSZORW2AkdD0NQTB0MO3ijXErSRKZnK2953Nqo+fDyRjC9j0N3OlNGuJ7T5urb0PwWR/9e881qzLEvtzZddeh2vL5kjJZY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730402154; c=relaxed/simple;
-	bh=iz/mcCGKzKAF+54183Qep4jiiK7skiftWfkF3ZQ9fck=;
-	h=Date:From:To:CC:Subject:In-Reply-To:References:Message-ID:
-	 MIME-Version:Content-Type; b=D+BEr9nHiDAecP0GwEd3JjuWA6q0kTApWXSMY9vngc25MwiDPfsvyM5CKcVibLp8URtchZc2G7yBjw0Bsux1HjWbrTIznmay7GL3wPyFgTRMsRLXOpeGp2TMa9Q8stkdLWzkt9K9MRpPRTGDB5wnIPAk9E+196DfDIz9NFy+Cs0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=HAO/lXId; arc=none smtp.client-ip=65.109.113.108
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
+	s=arc-20240116; t=1730407231; c=relaxed/simple;
+	bh=MV2PZMdCgyZVwxQqXYwbEL4UaF0wRJVB3Wcckw8d4vo=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=DdtJ1zsJKkcw2tZi2dL2DNJIPX1IgKvjYH3nXOeONe0VyajFObE+G1DV/sTrcaJ5jJVyjIcHb6czeWGt/4o8OP+zqZYSGNtyKDWKE1NJpOCW4b6f+yMSH3Qzuf5gbCc/BhzVT6B77NHuRo4/J9PkJaAGnhVq+HGs+Z1RKFPMMlQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b=Sx49+CvE; arc=none smtp.client-ip=212.227.15.19
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="HAO/lXId"
-Received: from localhost (localhost.localdomain [127.0.0.1])
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id 8E54E40E021C;
-	Thu, 31 Oct 2024 19:15:48 +0000 (UTC)
-X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
-Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
-	header.d=alien8.de
-Received: from mail.alien8.de ([127.0.0.1])
-	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id ODtb6AuBZVDC; Thu, 31 Oct 2024 19:15:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
-	t=1730402142; bh=TjBac+vUXA/VaGYTwTi6FQkjFjIMoAJ+klVbchu+St0=;
-	h=Date:From:To:CC:Subject:In-Reply-To:References:From;
-	b=HAO/lXIdBMw3mLgc3LD9+uFBFW9EQDK2KX2jeJPdfe92n1O18NX440RAsMqu2qUmY
-	 J7DvHEU0App/3VYoCssSdJ/NrxFFZEdVW8sIhgfmoy6CwM0Iuqfj+ZCG6ivc8J72cV
-	 10ihGjL/FAFv1GH2Wi5EIz5P/oBuEHPnsO358Dc3Dm6DYXy06zBqGL5VSmmDIDvYNC
-	 l2GXMMAN56VMz3X/kYfU8FNLrLHKgyAkqnNJwnmztwRAlPTBNRfko79Aty0+JR9Xwt
-	 YBkwfJL92K+pRbcmvP9d6INbvsUb+pUVE2+ywlrhfWYP2KYRn9zcR/1BaiLpfvWY/x
-	 P0YXcmi45qC5jjwhDKvn1uzUTvUdPZfpaUhcZSu5VOtDZ6ylssbBuU1fovpvZe+x5K
-	 4Bsh/fWrnItoPSymNIaTMQm0noPkM5fW78zxq71os9XkbycSh0HzVpEtnSImIjjf8S
-	 /vZTn66Kzkyo04GAzIRZfiBUvWjRsDCxwKJcQKLG3gH/tX6XUL9VevKnSwrlncQMeR
-	 W96nGkXqaHuxtoRisIo5EHzIOCPcNJ3T5EPsh2401NKSrsp+irERAFk1+cOhrQ8+Yt
-	 9YM57SRGpAUxb6fO4wEzdgm19sVqS1uT0P2T6M0nPFrsLp1xym/Qhi5yRaI1iSwztx
-	 Cu8EgO60eyhxE5dQT77PGhGs=
-Received: from [IPv6:::1] (unknown [IPv6:2a02:3033:209:eccc:5132:adc4:8c65:1ae1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (P-256) server-digest SHA256)
-	(No client certificate requested)
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 4B42940E0219;
-	Thu, 31 Oct 2024 19:15:18 +0000 (UTC)
-Date: Thu, 31 Oct 2024 20:15:11 +0100
-From: Borislav Petkov <bp@alien8.de>
-To: Sohil Mehta <sohil.mehta@intel.com>
-CC: Yazen Ghannam <yazen.ghannam@amd.com>, "Luck, Tony" <tony.luck@intel.com>,
- Andy Whitcroft <apw@canonical.com>, Joe Perches <joe@perches.com>,
- "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>,
- "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
- "x86@kernel.org" <x86@kernel.org>,
- "avadhut.naik@amd.com" <avadhut.naik@amd.com>,
- "john.allen@amd.com" <john.allen@amd.com>,
- "mario.limonciello@amd.com" <mario.limonciello@amd.com>,
- "bhelgaas@google.com" <bhelgaas@google.com>,
- "Shyam-sundar.S-k@amd.com" <Shyam-sundar.S-k@amd.com>,
- "richard.gong@amd.com" <richard.gong@amd.com>,
- "jdelvare@suse.com" <jdelvare@suse.com>,
- "linux@roeck-us.net" <linux@roeck-us.net>,
- "clemens@ladisch.de" <clemens@ladisch.de>,
- "hdegoede@redhat.com" <hdegoede@redhat.com>,
- "ilpo.jarvinen@linux.intel.com" <ilpo.jarvinen@linux.intel.com>,
- "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
- "linux-hwmon@vger.kernel.org" <linux-hwmon@vger.kernel.org>,
- "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>,
- "naveenkrishna.chatradhi@amd.com" <naveenkrishna.chatradhi@amd.com>,
- "carlos.bilbao.osdev@gmail.com" <carlos.bilbao.osdev@gmail.com>
-Subject: =?US-ASCII?Q?Re=3A_=5BPATCH=5D_x86/cpufeature=3A_Document_cpu?=
- =?US-ASCII?Q?=5Ffeature=5Fenabled=28=29_as_the_default_to_use?=
-User-Agent: K-9 Mail for Android
-In-Reply-To: <f9cd603d-8a3f-43fc-a670-75b4d9a6c729@intel.com>
-References: <20241023172150.659002-1-yazen.ghannam@amd.com> <20241023172150.659002-4-yazen.ghannam@amd.com> <20241025155830.GQZxvAJkJnfLfNpSRx@fat_crate.local> <20241029143928.GA1011322@yaz-khff2.amd.com> <20241029150847.GLZyD6f-Hk6pRTEt2c@fat_crate.local> <SJ1PR11MB6083AA7B2E28F2DA24E4B456FC4B2@SJ1PR11MB6083.namprd11.prod.outlook.com> <20241030142138.GA1304646@yaz-khff2.amd.com> <c2894e47-f902-4603-84e7-a9aca545b18c@intel.com> <20241031103401.GBZyNdGQ-ZyXKyzC_z@fat_crate.local> <f9cd603d-8a3f-43fc-a670-75b4d9a6c729@intel.com>
-Message-ID: <74D1358D-952F-4D33-8A5A-1D6F87B49443@alien8.de>
+	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b="Sx49+CvE"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.de;
+	s=s31663417; t=1730407150; x=1731011950; i=w_armin@gmx.de;
+	bh=BXG43c4ilcZXIfs6uhHqCHjCjELoxxdYvZiqLVDmo/M=;
+	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:To:Cc:
+	 References:From:In-Reply-To:Content-Type:
+	 Content-Transfer-Encoding:cc:content-transfer-encoding:
+	 content-type:date:from:message-id:mime-version:reply-to:subject:
+	 to;
+	b=Sx49+CvEpA1KmgUAoDY71gw3MySZfBSPPwuvxH7mXXvOFeugVuDwsi/Vt1jR8ueB
+	 dKiE0OV07v9Nz4CweI6fks+GZOYbo/kKS8kzp8RQ1YP9PtR1JXFwP3CI0KKPRtVvh
+	 shPA9z5/ZRoBynL184fKdoCZId0A9c2HVjMsmaCB/jNP9cAymYHpVuwbYgKttryPe
+	 oEl2K4iMn+IdY2nWHtPy7WB6dbyPdwV1fG7qszpJ68+ykWdAikVK5MudLhQOEVSzM
+	 PglRzG6jD2wsJPJ8QS0fbSb3NEo2mnRtD6t74EoVeQuhTAvdwYD3xYAEFzSBlo5iA
+	 BcB/d/2jBmOPobd1uA==
+X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
+Received: from [141.30.226.129] ([141.30.226.129]) by mail.gmx.net (mrgmx005
+ [212.227.17.190]) with ESMTPSA (Nemesis) id 1MGQjH-1t5DQh2ISz-009IZ2; Thu, 31
+ Oct 2024 21:39:10 +0100
+Message-ID: <40b52d41-e3d6-4223-b9e9-0db6b2a19265@gmx.de>
+Date: Thu, 31 Oct 2024 21:39:05 +0100
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 13/22] ACPI: platform_profile: Require handlers to
+ support balanced profile
+To: Mario Limonciello <mario.limonciello@amd.com>,
+ Hans de Goede <hdegoede@redhat.com>,
+ =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Cc: "Rafael J . Wysocki" <rafael@kernel.org>, Len Brown <lenb@kernel.org>,
+ Maximilian Luz <luzmaximilian@gmail.com>, Lee Chun-Yi <jlee@suse.com>,
+ Shyam Sundar S K <Shyam-sundar.S-k@amd.com>,
+ Corentin Chary <corentin.chary@gmail.com>, "Luke D . Jones"
+ <luke@ljones.dev>, Ike Panhc <ike.pan@canonical.com>,
+ Henrique de Moraes Holschuh <hmh@hmh.eng.br>,
+ Alexis Belmonte <alexbelm48@gmail.com>,
+ =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>,
+ Ai Chao <aichao@kylinos.cn>, Gergo Koteles <soyer@irl.hu>,
+ open list <linux-kernel@vger.kernel.org>,
+ "open list:ACPI" <linux-acpi@vger.kernel.org>,
+ "open list:MICROSOFT SURFACE PLATFORM PROFILE DRIVER"
+ <platform-driver-x86@vger.kernel.org>,
+ "open list:THINKPAD ACPI EXTRAS DRIVER"
+ <ibm-acpi-devel@lists.sourceforge.net>,
+ Mark Pearson <mpearson-lenovo@squebb.ca>,
+ Matthew Schwartz <matthew.schwartz@linux.dev>
+References: <20241031040952.109057-1-mario.limonciello@amd.com>
+ <20241031040952.109057-14-mario.limonciello@amd.com>
+Content-Language: en-US
+From: Armin Wolf <W_Armin@gmx.de>
+In-Reply-To: <20241031040952.109057-14-mario.limonciello@amd.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Provags-ID: V03:K1:9zQAKx0lk662rnl5CmEQRvMpMRajJCGH1oxs7owsE6gIQ6QBDJu
+ R1xPtxAIVX8LvLVwPX0Ryw6MXqZvUXhWZGdWd77LpjMcP5kd1EXMqXDOo0KBseV6VpA4XHG
+ AoZz1o8KX0Xf6Jav9WRWfv/flQeOVorWOa3tv9nL8DDsCMMYm9aLKXhyoVzzGS9aqvejdev
+ sTgUTU2uR6xLjKD+86+sg==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:woXGqM+HeUU=;rAsgkzCdSQPkIiKVBZ8ELlIGNA0
+ ad2TN95RxXYCaQHi5re4V03ES3MmMgIS2fAI5RQ6y5mOt9pEtmNrR09ynUGdAFBZTlutRyREP
+ 4lKLiMXaGkrxgZSJK0KldHKcCpRg71js+MYvOtyhaiige+Uyxu1gO6r//8uOSTOpNNz1ItBtF
+ hgh05YhOUuP6DE03kJpdmMNLD/iTK7+VadT3VdvHyC/cVKlX42sV7PT3JaRKaRWPFg2OAmwGD
+ rpiTMoYizNDpLs+g6Eik7LHATLWH346LKT+Jc/gOi4qwqhb3beHEqOcwnRadqQ+YLtoKRx5kC
+ dFry1ryhhzng/0s5sdyyzvvA95d4JkB/QJuqZOFKk2VrVTRwMvTCFuYA+VciA/jGmz/e50G8Y
+ GyYySX8f1hcdn4FBuTgV4bSyePsK7oB0Ud7chfjWWmdUTtUh1yPUffUQa6pY/ogW0sF41vOtk
+ WYJkdG1UR3/KyHmlY7dFa/Eah1f3//8GMri+ltldvqjwOX1PGvVhhB5nZzUvuwIDN4Li2+0vO
+ dSiu71Pu9YPtwkgZnljh2Ex39oKNs80WdKKtA9F79Fikr/l2wK3coQeL0+lF//+4vdK2jfKXD
+ rez5oYofBJy7LTtog5yN88Sebe0ARqDh8ojPeF3OhOuD170txjkOJH0Ae4X99OoAPAs6tdUeq
+ pLg459TtF7yvYjrf9KgBHNFqcBkuICUfJRysQhxmYBidzZQcIGwOC9rol9W8KdrQinuBNoICM
+ ETqdYV5Mbnry6jn3QOoPj+g8xdDD5LKZ19hCtJkQEsv0qwR1K9Ex7DQzFtdOYDlHHo3GuZRzn
+ qUuPS9/30Se7172+Gsu56oew==
 
-On October 31, 2024 7:26:27 PM GMT+01:00, Sohil Mehta <sohil=2Emehta@intel=
-=2Ecom> wrote:
->Does "default CPU feature testing macro" roll better than "default CPU
->features testing macro"?
+Am 31.10.24 um 05:09 schrieb Mario Limonciello:
 
-Waaay too finicky to me=2E No one cares, I'd say=2E =F0=9F=A4=97=F0=9F=98=
-=82
+> As support for multiple simultaneous platform handers is introduced it's
+> important they have at least the balanced profile in common.
+>
+> This will be used as a fallback in case setting the profile across one of the
+> handlers happens to fail.
 
---=20
-Sent from a small device: formatting sucks and brevity is inevitable=2E 
+Do we actually need this patch anymore now that we have the "custom" platform profile?
+If setting the platform profile fails for some handlers, then we simply display the current
+platform profile as "custom".
+
+Thanks,
+Armin Wolf
+
+> Tested-by: Matthew Schwartz <matthew.schwartz@linux.dev>
+> Suggested-by: Hans de Goede <hdegoede@redhat.com>
+> Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
+> ---
+>   drivers/acpi/platform_profile.c | 4 ++++
+>   1 file changed, 4 insertions(+)
+>
+> diff --git a/drivers/acpi/platform_profile.c b/drivers/acpi/platform_profile.c
+> index b70ceb11947d0..57c66d7dbf827 100644
+> --- a/drivers/acpi/platform_profile.c
+> +++ b/drivers/acpi/platform_profile.c
+> @@ -164,6 +164,10 @@ int platform_profile_register(struct platform_profile_handler *pprof)
+>   		pr_err("platform_profile: handler is invalid\n");
+>   		return -EINVAL;
+>   	}
+> +	if (!test_bit(PLATFORM_PROFILE_BALANCED, pprof->choices)) {
+> +		pr_err("platform_profile: handler does not support balanced profile\n");
+> +		return -EINVAL;
+> +	}
+>   	if (!pprof->dev) {
+>   		pr_err("platform_profile: handler device is not set\n");
+>   		return -EINVAL;
