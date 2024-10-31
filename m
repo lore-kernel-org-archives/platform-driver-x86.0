@@ -1,165 +1,154 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.16])
+Received: from fout-b2-smtp.messagingengine.com (fout-b2-smtp.messagingengine.com [202.12.124.145])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C60518593C;
-	Thu, 31 Oct 2024 10:40:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 46D2F13A25F
+	for <platform-driver-x86@vger.kernel.org>; Thu, 31 Oct 2024 10:55:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.145
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730371238; cv=none; b=tx5+jP552+PCGWhl9vSPiQ/5W/Xqdca1gsbiui5S8e9V8ZRqqXcHAcxTqwkkrOgnEPhUUCruZIY7Jg/gly1NQSbkE8hXUmUZpKmYFcQ2hGnCibaMG9GIVL2OcU/CvJkQyYuoMuch/RRA5uC5yvKX1/TlgUQ+K9aaTvVTsUrtreE=
+	t=1730372150; cv=none; b=kHOW0zHTnGfvhiKFB6gnXjJ4lD6quZxbr1mICWUL2WgTHLvdzR0z3py56+2LQXYBSOotTixuJ+Eb47iRCqK+yOHO8O4yGf5nWLWDBGZHxmFSx/Ms7AO3n7ij88z9vyiVgtFZaK0S0ukFDwSR/FFDg0Nmxf97gLw+ArO8AG5rY48=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730371238; c=relaxed/simple;
-	bh=9pxHDuQFnahO7h4g4uLSVfsqa6hZ0lzOKmSrX1WNWDg=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=i2vJ6fXQq9LORvPhKbnNrluBnt3b0NBWskh7DX4jhFe38kf2jO8Z1oMO0lfp2b80eC2gbFU64OUR2dBkJ661VDkf/1Zri+DWMLZ1FW0MXP+YkKPwYl5d8toaSHYAjQ0F8B+1kwleH9idWywwmrgEpPxG5FZYPQqr2vpaWiBxeYI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=LT8Q80Eq; arc=none smtp.client-ip=198.175.65.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1730372150; c=relaxed/simple;
+	bh=Y9tHr6QUMGdOZY6JoMrsxciwdOh2To+N+QDE6XUH70Y=;
+	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
+	 Subject:Content-Type; b=mXLR0hfF7wV/iebkBgnyDxhSlCAzdimTI1L2eS3dgsXE5EZufq3ATiYCoflfgUFsYKPVdZJpd4mLneu+OWezHRPBww0Qu8LQq0vfyjkNtwlBYKM0nM1IjVXTvhqSSu3MG04o2etcJbuyxiNnUWY7Jv7MhCh1wONgf9u4bamkln0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ljones.dev; spf=none smtp.mailfrom=ljones.dev; dkim=pass (2048-bit key) header.d=ljones.dev header.i=@ljones.dev header.b=UgeBirQh; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=jIEjKrph; arc=none smtp.client-ip=202.12.124.145
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ljones.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=ljones.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="LT8Q80Eq"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1730371236; x=1761907236;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=9pxHDuQFnahO7h4g4uLSVfsqa6hZ0lzOKmSrX1WNWDg=;
-  b=LT8Q80Eqz8z7kU+a4TfKsdsCjNKJUqdSVkIdnzMhmlIR3Z8mLrgm5YlQ
-   PE5ra7PhvMR696GrgNJxkcpX1B/ig+DTxqmv7AiIATixQnUgoM2aHgQBQ
-   cCG9O0QIVjhTtA1gOsz9nXkqrNu9XU273mrYXspwrvOXsbBWgPee9BbPB
-   GTFOxE2CHTT8IVJGo/1JNMY0tsgZZD1V8pVznb1loB92epoul3aTm8bdz
-   CpN6dnXyHLzdii2y/HouhHvZ7mhHsN7vHPOYGiJzu3hUcnpvuFeUJm1EJ
-   XCRwwoECNSr7rCf3Tj7GYqL2aOp5o3LVo3E6dygixaStzMKBI7QiAe8XS
-   w==;
-X-CSE-ConnectionGUID: nwtlbhs+T1mb6ci7nYuvwg==
-X-CSE-MsgGUID: RTuv/nKNQyuEBPCLMSVBQQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11222"; a="30268133"
-X-IronPort-AV: E=Sophos;i="6.11,199,1725346800"; 
-   d="scan'208";a="30268133"
-Received: from fmviesa005.fm.intel.com ([10.60.135.145])
-  by orvoesa108.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Oct 2024 03:40:35 -0700
-X-CSE-ConnectionGUID: Qz2aoTdeS/+2QhzzpvKwvg==
-X-CSE-MsgGUID: tZ1v9YUhQtmW+KRDt4DLHg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.11,247,1725346800"; 
-   d="scan'208";a="87133136"
-Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.160])
-  by fmviesa005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Oct 2024 03:40:28 -0700
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Thu, 31 Oct 2024 12:40:26 +0200 (EET)
-To: Mario Limonciello <mario.limonciello@amd.com>
-cc: Hans de Goede <hdegoede@redhat.com>, 
-    "Rafael J . Wysocki" <rafael@kernel.org>, Len Brown <lenb@kernel.org>, 
-    Maximilian Luz <luzmaximilian@gmail.com>, Lee Chun-Yi <jlee@suse.com>, 
-    Shyam Sundar S K <Shyam-sundar.S-k@amd.com>, 
-    Corentin Chary <corentin.chary@gmail.com>, 
-    "Luke D . Jones" <luke@ljones.dev>, Ike Panhc <ike.pan@canonical.com>, 
-    Henrique de Moraes Holschuh <hmh@hmh.eng.br>, 
-    Alexis Belmonte <alexbelm48@gmail.com>, 
-    =?ISO-8859-15?Q?Uwe_Kleine-K=F6nig?= <u.kleine-koenig@pengutronix.de>, 
-    Ai Chao <aichao@kylinos.cn>, Gergo Koteles <soyer@irl.hu>, 
-    open list <linux-kernel@vger.kernel.org>, 
-    "open list:ACPI" <linux-acpi@vger.kernel.org>, 
-    "open list:MICROSOFT SURFACE PLATFORM PROFILE DRIVER" <platform-driver-x86@vger.kernel.org>, 
-    "open list:THINKPAD ACPI EXTRAS DRIVER" <ibm-acpi-devel@lists.sourceforge.net>, 
-    Mark Pearson <mpearson-lenovo@squebb.ca>, 
-    Matthew Schwartz <matthew.schwartz@linux.dev>
-Subject: Re: [PATCH v3 19/22] ACPI: platform_profile: Check all profile
- handler to calculate next
-In-Reply-To: <20241031040952.109057-20-mario.limonciello@amd.com>
-Message-ID: <86d94339-3651-c4ea-306c-05589bee0040@linux.intel.com>
-References: <20241031040952.109057-1-mario.limonciello@amd.com> <20241031040952.109057-20-mario.limonciello@amd.com>
+	dkim=pass (2048-bit key) header.d=ljones.dev header.i=@ljones.dev header.b="UgeBirQh";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="jIEjKrph"
+Received: from phl-compute-08.internal (phl-compute-08.phl.internal [10.202.2.48])
+	by mailfout.stl.internal (Postfix) with ESMTP id 36887114014A;
+	Thu, 31 Oct 2024 06:55:47 -0400 (EDT)
+Received: from phl-imap-01 ([10.202.2.91])
+  by phl-compute-08.internal (MEProxy); Thu, 31 Oct 2024 06:55:47 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ljones.dev; h=cc
+	:cc:content-transfer-encoding:content-type:content-type:date
+	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to; s=fm1; t=1730372147;
+	 x=1730458547; bh=EN44bblL8GFLPJWVJpFG7c9gLjx7inCz7lcP7dZM2TY=; b=
+	UgeBirQhEfLlgVtinw/qhrzx7R9bluCtwI1qQ3gSi6o58aQSC6cW90UP9CUmrddi
+	eUxsf5P1XdIQ5LWUDXYjiA8f5jO1R1kUoayilvRpTeUaZ7nMEoxu81QWm4/izsY8
+	mo8An8Q06BYToQrviveXORdgXqKKMqglcskktzEitY38XmiK2nlPUX1Ehcdb6nda
+	eWklGw/s40Bs3fvG9tbdqeG3zFjWQXPicxPa6pMtrA5RF0wO1EDu+ALqA1QKOCx0
+	scqQpL7ttUWJGlaANgwj9teIQ80YdP3+ce7/IsNajFofd3UW3xx9TTlRyN4ISQ1x
+	0SOKBku5fYYQi2lHaV7hUg==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:content-type:date:date:feedback-id:feedback-id
+	:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to:x-me-proxy
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=1730372147; x=
+	1730458547; bh=EN44bblL8GFLPJWVJpFG7c9gLjx7inCz7lcP7dZM2TY=; b=j
+	IEjKrphf5gG6ypNc+heQBMxoQc8smv07Hs1xUVrdYLUg6vpRUJlE9cHRO8/DGwBq
+	6wc/J+6DBH8fnnH38DXqI4xzJa45H6Jk8rDGssQjWDks0dbZTdvmtGOgFT+wMBo6
+	LjqzeiugG5Zb3K6WAlUpVXJ+rCTZStIdrswxlczYGmyrvoTDGC+S3Ga5sI2WBd90
+	CJSU11FY6beefedDfRHf9vs7TGPleeEH/3/jpy7zJW9gfNeNrxLrLkai0HgaZfa/
+	geWM+9K5MCfvLe6ktodLDX8HBZhLLinvzJZ1XkyraXYQyTacCUuB2hH3z5pfAxVA
+	eIVJ0suhNBvu4GL53wWzQ==
+X-ME-Sender: <xms:MmIjZ24k20MXm4FlXGCOxgHrwPegAfgsqtchTsNPLvRA3T68ReabRg>
+    <xme:MmIjZ_5yZwgRnybEJ_Xn6EQQF1zRxUzOw3L568jxL3y9VQOgZ-9GYeylUdiLKySdM
+    fbW_zoBU1XP-fkyDUg>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeftddrvdekhedgudelucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggvpdfu
+    rfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnh
+    htshculddquddttddmnecujfgurhepofggfffhvfevkfgjfhfutgfgsehtjeertdertddt
+    necuhfhrohhmpedfnfhukhgvucflohhnvghsfdcuoehluhhkvgeslhhjohhnvghsrdguvg
+    hvqeenucggtffrrghtthgvrhhnpeejleegjeekieeluefggeetgfffvdelffeiieejffff
+    gedtueduteeufeduvdektdenucffohhmrghinhepvghsphgvfigvsgdrnhgvthenucevlh
+    hushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpehluhhkvgeslhhj
+    ohhnvghsrdguvghvpdhnsggprhgtphhtthhopeegpdhmohguvgepshhmthhpohhuthdprh
+    gtphhtthhopehpvghsphhinhesvghsphgvfigvsgdrnhgvthdprhgtphhtthhopegtohhr
+    vghnthhinhdrtghhrghrhiesghhmrghilhdrtghomhdprhgtphhtthhopeifpggrrhhmih
+    hnsehgmhigrdguvgdprhgtphhtthhopehplhgrthhfohhrmhdqughrihhvvghrqdigkeei
+    sehvghgvrhdrkhgvrhhnvghlrdhorhhg
+X-ME-Proxy: <xmx:MmIjZ1eC5MI7WiNzD-NQK_Uy1IE3jGDjgWpky_f-dF6LomL8fo-LMw>
+    <xmx:MmIjZzIVfSfkX6mrirjPq9KjEbkQ_D74p0gh0JsO13QJjWh_CEQ2PQ>
+    <xmx:MmIjZ6K2qFOEAZqeT7VwoBuzXpCd_KwT3JqFZUwTS3bTLh7dPqtJWw>
+    <xmx:MmIjZ0zrKY0cDfkN6MlEHt0f5ifrwp5jqK86RwaZz5pgYeJOLPmhIQ>
+    <xmx:M2IjZxU2Y1Kko5rH4zCNtEX6epMBbj6Dd83F_w4mXZlLWhbR_M_ywvy3>
+Feedback-ID: i5ec1447f:Fastmail
+Received: by mailuser.phl.internal (Postfix, from userid 501)
+	id B10713360079; Thu, 31 Oct 2024 06:55:46 -0400 (EDT)
+X-Mailer: MessagingEngine.com Webmail Interface
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Date: Thu, 31 Oct 2024 11:55:26 +0100
+From: "Luke Jones" <luke@ljones.dev>
+To: "Armin Wolf" <W_Armin@gmx.de>, "Pau Espin Pedrol" <pespin@espeweb.net>,
+ "Corentin Chary" <corentin.chary@gmail.com>
+Cc: platform-driver-x86@vger.kernel.org
+Message-Id: <542d3ca9-5b63-431e-b711-39f7ab387204@app.fastmail.com>
+In-Reply-To: <8cbc8310-7533-40e4-ab2b-b8c3c9e1911e@gmx.de>
+References: <54d4860b-ec9c-4992-acf6-db3f90388293@espeweb.net>
+ <6131c8e6-5a25-492f-a296-2ed56a9db360@gmx.de>
+ <7557c282-2521-40d5-a499-48b260c7db4c@espeweb.net>
+ <8cbc8310-7533-40e4-ab2b-b8c3c9e1911e@gmx.de>
+Subject: Re: "asus_wmi: Unknown key code 0xcf" when plugging in charger to laptop
+Content-Type: text/plain
+Content-Transfer-Encoding: 7bit
 
-On Wed, 30 Oct 2024, Mario Limonciello wrote:
 
-> As multiple platform profile handlers might not all support the same
-> profile, cycling to the next profile could have a different result
-> depending on what handler are registered.
-> 
-> Check what is active and supported by all handlers to decide what
-> to do.
-> 
-> Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
-> ---
->  drivers/acpi/platform_profile.c | 35 ++++++++++++++++++++++-----------
->  1 file changed, 23 insertions(+), 12 deletions(-)
-> 
-> diff --git a/drivers/acpi/platform_profile.c b/drivers/acpi/platform_profile.c
-> index 5baac1f9a9c0e..9b681884ae324 100644
-> --- a/drivers/acpi/platform_profile.c
-> +++ b/drivers/acpi/platform_profile.c
-> @@ -187,30 +187,41 @@ EXPORT_SYMBOL_GPL(platform_profile_notify);
->  
->  int platform_profile_cycle(void)
->  {
-> +	enum platform_profile_option next = PLATFORM_PROFILE_LAST;
-> +	struct platform_profile_handler *handler;
->  	enum platform_profile_option profile;
-> -	enum platform_profile_option next;
-> +	unsigned long choices;
->  	int err;
->  
->  	scoped_cond_guard(mutex_intr, return -ERESTARTSYS, &profile_lock) {
-> -		if (!cur_profile)
-> -			return -ENODEV;
-> -
-> -		err = cur_profile->profile_get(cur_profile, &profile);
-> +		err = platform_profile_get_active(&profile);
 
-If platform_profile_cycle() is called without any profiles registered, 
-platform_profile_get_active() will return success.
+On Thu, 31 Oct 2024, at 12:28 AM, Armin Wolf wrote:
+> Am 30.10.24 um 22:44 schrieb Pau Espin Pedrol:
+>
+>> Hi,
+>>
+>> On 10/30/24 1:06 AM, Armin Wolf wrote:
+>>>
+>>> can you share the output of "acpidump"?
+>>
+>>
+>> Find it here:
+>> https://pespin.espeweb.net/~pespin/tmp/asus_wmi/acpidump.txt.bz2
+>>
+>>
+>> regards,
+>>
+>> Pau
+>>
+>>
+> Thank you. The event seems to be causes by this piece of AML code:
+>
+> 	If (ACPS ())
+> 	{
+> 		ACPF = One
+> 		Local0 = 0x58
+> 		If (ATKP)
+> 		{
+> 			^^^^ATKD.IANE (0xCF)
+> 		}
+> 	}
+> 	Else
+> 	{
+> 		ACPF = Zero
+> 		Local0 = 0x57
+> 	}
+>
+> 	Notify (AC0, 0x80) // Status Change
+> 	If (ATKP)
+> 	{
+> 		^^^^ATKD.IANE (Local0)
+> 	}
+>
+> 	Sleep (0x64)
+> 	PNOT ()
+> 	Sleep (0x0A)
+> 	NBAT (0x80)
+>
+> Since the event codes 0x67/0x58 are used to signal battery/ac mode, i 
+> think that the 0xCF event
+> might be an alias for event 0x58. Maybe we can just map it as 
+> KEY_IGNORE to silence the warning?
 
-I suppose you'd want check first that there is one registered and return 
--EINVAL if none are, especially since this is an exported function.
+Do we know which laptop exactly? The "gamer" laptops along with I think the ProArt ones use an MCU on USB to do keyboard I/O. Others use I2C.
 
->  		if (err)
->  			return err;
->  
-> -		next = find_next_bit_wrap(cur_profile->choices, PLATFORM_PROFILE_LAST,
-> -					  profile + 1);
-> +		choices = platform_profile_get_choices();
->  
-> -		if (WARN_ON(next == PLATFORM_PROFILE_LAST))
-> -			return -EINVAL;
-> +		next = find_next_bit_wrap(&choices,
-> +					  PLATFORM_PROFILE_LAST,
-> +					  profile + 1);
->  
-> -		err = cur_profile->profile_set(cur_profile, next);
-> -		if (err)
-> -			return err;
-> +		list_for_each_entry(handler, &platform_profile_handler_list, list) {
-> +			err = handler->profile_set(handler, next);
-> +			if (err) {
-> +				pr_err("Failed to set profile for handler %s\n", handler->name);
-> +				break;
-> +			}
-> +		}
-> +		if (err) {
+Not all that relevant if all we need to do is ignore the event but there might be something additional in code already that can be used.
 
-Same here, instead of break you could goto to a rollback label to 
-deindent the rollback loop a lot and make the code flow more obvious too.
-
-> +			list_for_each_entry_continue_reverse(handler, &platform_profile_handler_list, list) {
-> +				err = handler->profile_set(handler, PLATFORM_PROFILE_BALANCED);
-> +				if (err)
-> +					pr_err("Failed to revert profile for handler %s\n", handler->name);
-> +			}
-> +		}
->  	}
->  
->  	sysfs_notify(acpi_kobj, NULL, "platform_profile");
-> +
->  	return 0;
->  }
->  EXPORT_SYMBOL_GPL(platform_profile_cycle);
-> 
-
--- 
- i.
-
+> Thanks,
+> Armin Wolf
