@@ -1,98 +1,165 @@
-Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.16])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4CBDA198E83;
-	Thu, 31 Oct 2024 10:37:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C60518593C;
+	Thu, 31 Oct 2024 10:40:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730371034; cv=none; b=eqETrnEb/kc9uR2y+50iLgbOYSAaiRLdjAfLz/IX2H+AhfM1i5J2N+zH1w6G1vgo1M0poaUkfoTNCH3Alxq3NZ+RtR9DNSKTEkJJKmB3boBfX21MfLCVViCUCeOac2cDQasP+ijlpz3GGoF4WCbCVf0JUV1t4RsujfFk47GTjpM=
+	t=1730371238; cv=none; b=tx5+jP552+PCGWhl9vSPiQ/5W/Xqdca1gsbiui5S8e9V8ZRqqXcHAcxTqwkkrOgnEPhUUCruZIY7Jg/gly1NQSbkE8hXUmUZpKmYFcQ2hGnCibaMG9GIVL2OcU/CvJkQyYuoMuch/RRA5uC5yvKX1/TlgUQ+K9aaTvVTsUrtreE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730371034; c=relaxed/simple;
-	bh=W62nW6o6roRgMZ6ptHYz8UTa1gqyavSGW73urSteeZQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=jTSDnTNt6XSl7XSave/He3OgJFUsPaorbfXIJYaWoqQkYv8EQpfsh+YL9+EN6muGkTKOiEZXvSKc+ys31sJDNQm5D0r6N7UUlpsHTzIhhCS+uaXf9jiRrwhhONts8eRFZafkTGXQISEa1byvv1F8vTiwaHkgX76JZsV2Iga+8Zc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=jGyx9i3X; arc=none smtp.client-ip=65.109.113.108
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
+	s=arc-20240116; t=1730371238; c=relaxed/simple;
+	bh=9pxHDuQFnahO7h4g4uLSVfsqa6hZ0lzOKmSrX1WNWDg=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=i2vJ6fXQq9LORvPhKbnNrluBnt3b0NBWskh7DX4jhFe38kf2jO8Z1oMO0lfp2b80eC2gbFU64OUR2dBkJ661VDkf/1Zri+DWMLZ1FW0MXP+YkKPwYl5d8toaSHYAjQ0F8B+1kwleH9idWywwmrgEpPxG5FZYPQqr2vpaWiBxeYI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=LT8Q80Eq; arc=none smtp.client-ip=198.175.65.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="jGyx9i3X"
-Received: from localhost (localhost.localdomain [127.0.0.1])
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id AA6C940E015F;
-	Thu, 31 Oct 2024 10:37:09 +0000 (UTC)
-X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
-Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
-	header.d=alien8.de
-Received: from mail.alien8.de ([127.0.0.1])
-	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id m9VOAnQDlvFp; Thu, 31 Oct 2024 10:37:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
-	t=1730371026; bh=Zoic+05z1WWqcWTpj/byU2dnEVpHhQVwPQpp8yGsvFM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=jGyx9i3XA2zDPhvjxO8Pbo8QDnQo4jKeeV35GnVMO1YQFXHF2R1NhW9SD5QGNX9jA
-	 b0ISQVdT2RbepTV/FBA2HmhiTutn8ivVBMePT0pCy9TbIMcq80iqP6sWRNFjLiiLO8
-	 i9S32o8IFOsYzEilbQoTppu3G7pTPwTysIpz3V0MRCXClOFbkY99TAuHIuPrNbVxXi
-	 hytf7Gw6Cb6YDouFXPnVp6j44ifzJ+s7Ihytu7HjoCesvLy2jxFJXX+HiGAvoJAWrn
-	 V9hKCjYK8ZWaDEwLpXQLu/lulEXVMGgDAOsdtnbBNqiAaNGWx5ti0+rVu1IAui9Mn8
-	 xKuEvij5Ig0Gr/U3G69wrAIwRE+iau68JrW1GPO5LrFzkxFbhPGN0VKTD5B1/jMr/d
-	 9F/9dywo4Ljij1FqpAOBfHfbPw37OWueSaGv3SlN/pE0ldWABD9Yy7rrYmbBlntnys
-	 FQolom8Wzqxrlr0tY3IS1HppV699YWFV8eGPiDTS5TE3VW2FywfijGVQAyjJKbHJAJ
-	 vYSYs29Mo/IOBZiP586sL22mEwnsMubEEc/eGlA+hHysDZirYst50a+02ElHc01BPY
-	 EslxuwMrfaaUkGdUNCr7Fqnxuo5u3G9IFFs3XEFzfA8zDfiJKwZBON6y93xhJ5eYJs
-	 V/AwSV+dPWWLU/9VKtbX3d4A=
-Received: from zn.tnic (p5de8e8eb.dip0.t-ipconnect.de [93.232.232.235])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
-	(No client certificate requested)
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id DDDBA40E019C;
-	Thu, 31 Oct 2024 10:36:43 +0000 (UTC)
-Date: Thu, 31 Oct 2024 11:36:42 +0100
-From: Borislav Petkov <bp@alien8.de>
-To: "Zhuo, Qiuxu" <qiuxu.zhuo@intel.com>
-Cc: Yazen Ghannam <yazen.ghannam@amd.com>,
-	"linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"Luck, Tony" <tony.luck@intel.com>,
-	"x86@kernel.org" <x86@kernel.org>,
-	"avadhut.naik@amd.com" <avadhut.naik@amd.com>,
-	"john.allen@amd.com" <john.allen@amd.com>,
-	"mario.limonciello@amd.com" <mario.limonciello@amd.com>,
-	"bhelgaas@google.com" <bhelgaas@google.com>,
-	"Shyam-sundar.S-k@amd.com" <Shyam-sundar.S-k@amd.com>,
-	"richard.gong@amd.com" <richard.gong@amd.com>,
-	"jdelvare@suse.com" <jdelvare@suse.com>,
-	"linux@roeck-us.net" <linux@roeck-us.net>,
-	"clemens@ladisch.de" <clemens@ladisch.de>,
-	"hdegoede@redhat.com" <hdegoede@redhat.com>,
-	"ilpo.jarvinen@linux.intel.com" <ilpo.jarvinen@linux.intel.com>,
-	"linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-	"linux-hwmon@vger.kernel.org" <linux-hwmon@vger.kernel.org>,
-	"platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>,
-	"naveenkrishna.chatradhi@amd.com" <naveenkrishna.chatradhi@amd.com>,
-	"carlos.bilbao.osdev@gmail.com" <carlos.bilbao.osdev@gmail.com>
-Subject: Re: [PATCH 02/16] x86/amd_nb: Restrict init function to AMD-based
- systems
-Message-ID: <20241031103642.GCZyNdumQSdi76CA3w@fat_crate.local>
-References: <20241023172150.659002-1-yazen.ghannam@amd.com>
- <20241023172150.659002-3-yazen.ghannam@amd.com>
- <CY8PR11MB71340D079448528FD548F73289552@CY8PR11MB7134.namprd11.prod.outlook.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="LT8Q80Eq"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1730371236; x=1761907236;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=9pxHDuQFnahO7h4g4uLSVfsqa6hZ0lzOKmSrX1WNWDg=;
+  b=LT8Q80Eqz8z7kU+a4TfKsdsCjNKJUqdSVkIdnzMhmlIR3Z8mLrgm5YlQ
+   PE5ra7PhvMR696GrgNJxkcpX1B/ig+DTxqmv7AiIATixQnUgoM2aHgQBQ
+   cCG9O0QIVjhTtA1gOsz9nXkqrNu9XU273mrYXspwrvOXsbBWgPee9BbPB
+   GTFOxE2CHTT8IVJGo/1JNMY0tsgZZD1V8pVznb1loB92epoul3aTm8bdz
+   CpN6dnXyHLzdii2y/HouhHvZ7mhHsN7vHPOYGiJzu3hUcnpvuFeUJm1EJ
+   XCRwwoECNSr7rCf3Tj7GYqL2aOp5o3LVo3E6dygixaStzMKBI7QiAe8XS
+   w==;
+X-CSE-ConnectionGUID: nwtlbhs+T1mb6ci7nYuvwg==
+X-CSE-MsgGUID: RTuv/nKNQyuEBPCLMSVBQQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11222"; a="30268133"
+X-IronPort-AV: E=Sophos;i="6.11,199,1725346800"; 
+   d="scan'208";a="30268133"
+Received: from fmviesa005.fm.intel.com ([10.60.135.145])
+  by orvoesa108.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Oct 2024 03:40:35 -0700
+X-CSE-ConnectionGUID: Qz2aoTdeS/+2QhzzpvKwvg==
+X-CSE-MsgGUID: tZ1v9YUhQtmW+KRDt4DLHg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.11,247,1725346800"; 
+   d="scan'208";a="87133136"
+Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.160])
+  by fmviesa005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Oct 2024 03:40:28 -0700
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Thu, 31 Oct 2024 12:40:26 +0200 (EET)
+To: Mario Limonciello <mario.limonciello@amd.com>
+cc: Hans de Goede <hdegoede@redhat.com>, 
+    "Rafael J . Wysocki" <rafael@kernel.org>, Len Brown <lenb@kernel.org>, 
+    Maximilian Luz <luzmaximilian@gmail.com>, Lee Chun-Yi <jlee@suse.com>, 
+    Shyam Sundar S K <Shyam-sundar.S-k@amd.com>, 
+    Corentin Chary <corentin.chary@gmail.com>, 
+    "Luke D . Jones" <luke@ljones.dev>, Ike Panhc <ike.pan@canonical.com>, 
+    Henrique de Moraes Holschuh <hmh@hmh.eng.br>, 
+    Alexis Belmonte <alexbelm48@gmail.com>, 
+    =?ISO-8859-15?Q?Uwe_Kleine-K=F6nig?= <u.kleine-koenig@pengutronix.de>, 
+    Ai Chao <aichao@kylinos.cn>, Gergo Koteles <soyer@irl.hu>, 
+    open list <linux-kernel@vger.kernel.org>, 
+    "open list:ACPI" <linux-acpi@vger.kernel.org>, 
+    "open list:MICROSOFT SURFACE PLATFORM PROFILE DRIVER" <platform-driver-x86@vger.kernel.org>, 
+    "open list:THINKPAD ACPI EXTRAS DRIVER" <ibm-acpi-devel@lists.sourceforge.net>, 
+    Mark Pearson <mpearson-lenovo@squebb.ca>, 
+    Matthew Schwartz <matthew.schwartz@linux.dev>
+Subject: Re: [PATCH v3 19/22] ACPI: platform_profile: Check all profile
+ handler to calculate next
+In-Reply-To: <20241031040952.109057-20-mario.limonciello@amd.com>
+Message-ID: <86d94339-3651-c4ea-306c-05589bee0040@linux.intel.com>
+References: <20241031040952.109057-1-mario.limonciello@amd.com> <20241031040952.109057-20-mario.limonciello@amd.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <CY8PR11MB71340D079448528FD548F73289552@CY8PR11MB7134.namprd11.prod.outlook.com>
+Content-Type: text/plain; charset=US-ASCII
 
-On Thu, Oct 31, 2024 at 08:09:14AM +0000, Zhuo, Qiuxu wrote:
-> This function could fail and return an error.
-> Is an early return with an error code needed if this function fails?
+On Wed, 30 Oct 2024, Mario Limonciello wrote:
 
-No, grep for amd_northbridges.num checks in the code.
+> As multiple platform profile handlers might not all support the same
+> profile, cycling to the next profile could have a different result
+> depending on what handler are registered.
+> 
+> Check what is active and supported by all handlers to decide what
+> to do.
+> 
+> Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
+> ---
+>  drivers/acpi/platform_profile.c | 35 ++++++++++++++++++++++-----------
+>  1 file changed, 23 insertions(+), 12 deletions(-)
+> 
+> diff --git a/drivers/acpi/platform_profile.c b/drivers/acpi/platform_profile.c
+> index 5baac1f9a9c0e..9b681884ae324 100644
+> --- a/drivers/acpi/platform_profile.c
+> +++ b/drivers/acpi/platform_profile.c
+> @@ -187,30 +187,41 @@ EXPORT_SYMBOL_GPL(platform_profile_notify);
+>  
+>  int platform_profile_cycle(void)
+>  {
+> +	enum platform_profile_option next = PLATFORM_PROFILE_LAST;
+> +	struct platform_profile_handler *handler;
+>  	enum platform_profile_option profile;
+> -	enum platform_profile_option next;
+> +	unsigned long choices;
+>  	int err;
+>  
+>  	scoped_cond_guard(mutex_intr, return -ERESTARTSYS, &profile_lock) {
+> -		if (!cur_profile)
+> -			return -ENODEV;
+> -
+> -		err = cur_profile->profile_get(cur_profile, &profile);
+> +		err = platform_profile_get_active(&profile);
+
+If platform_profile_cycle() is called without any profiles registered, 
+platform_profile_get_active() will return success.
+
+I suppose you'd want check first that there is one registered and return 
+-EINVAL if none are, especially since this is an exported function.
+
+>  		if (err)
+>  			return err;
+>  
+> -		next = find_next_bit_wrap(cur_profile->choices, PLATFORM_PROFILE_LAST,
+> -					  profile + 1);
+> +		choices = platform_profile_get_choices();
+>  
+> -		if (WARN_ON(next == PLATFORM_PROFILE_LAST))
+> -			return -EINVAL;
+> +		next = find_next_bit_wrap(&choices,
+> +					  PLATFORM_PROFILE_LAST,
+> +					  profile + 1);
+>  
+> -		err = cur_profile->profile_set(cur_profile, next);
+> -		if (err)
+> -			return err;
+> +		list_for_each_entry(handler, &platform_profile_handler_list, list) {
+> +			err = handler->profile_set(handler, next);
+> +			if (err) {
+> +				pr_err("Failed to set profile for handler %s\n", handler->name);
+> +				break;
+> +			}
+> +		}
+> +		if (err) {
+
+Same here, instead of break you could goto to a rollback label to 
+deindent the rollback loop a lot and make the code flow more obvious too.
+
+> +			list_for_each_entry_continue_reverse(handler, &platform_profile_handler_list, list) {
+> +				err = handler->profile_set(handler, PLATFORM_PROFILE_BALANCED);
+> +				if (err)
+> +					pr_err("Failed to revert profile for handler %s\n", handler->name);
+> +			}
+> +		}
+>  	}
+>  
+>  	sysfs_notify(acpi_kobj, NULL, "platform_profile");
+> +
+>  	return 0;
+>  }
+>  EXPORT_SYMBOL_GPL(platform_profile_cycle);
+> 
 
 -- 
-Regards/Gruss,
-    Boris.
+ i.
 
-https://people.kernel.org/tglx/notes-about-netiquette
