@@ -1,97 +1,160 @@
-Received: from mail-wm1-f53.google.com (mail-wm1-f53.google.com [209.85.128.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 962ED2A1B2;
-	Fri,  1 Nov 2024 11:02:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 407C786252
+	for <platform-driver-x86@vger.kernel.org>; Fri,  1 Nov 2024 12:04:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.8
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730458956; cv=none; b=t0IaTDs1OSoTd6FmiaMvL7CnMihr9p9tx0XdqGR1vNimkG9VtLJgTatPokbRZPNvN0MD8NZs9h1bK51c8DRt2fdLsaZQfT649/dUtqcb/3lu49Zvr8daXY/rwcsKCl8njRXX7P2f2yjLCCY6AZoAU63UMuW1NF3+1Qzl36tirYk=
+	t=1730462664; cv=none; b=hXssdJmmjQQqWkawoMJ/FSnyjowiOwCBdnLR41PIRaC891vBrf9xoGrT/ceL80ZihsJ5SSvhisiwO5/n8qi+0mMzGDMRGILM59rZI10l+zfqthfA/2m2imvDYKo2P7bDC0xEm74pszK/nCrTJZ+E/mvPPWXNBwotYKhTrfVg9ag=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730458956; c=relaxed/simple;
-	bh=SL1acbncjPLxtjg0ZmvMhHjeJZVn1j5RtS+TyX6Deks=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=hkZC78je5lImq2WLFRhjUCiKq0oBFHSXvC9sg88QQn5WBmFoMqJaGYblp+3qniRxzZdD8FRVCk8JvuKCEzxqDCWM1ltFDuMr8h0fHWZJw9GjZSOz/2dUzMmGd6hH1drz6eWLfBLjmJNoFmvPW/bjj0C5WMtmG96XBHXId+xnYPo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=k+/Bp2HH; arc=none smtp.client-ip=209.85.128.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1730462664; c=relaxed/simple;
+	bh=//E8v2JYkElT8S736tK/mwUUhSoGSJG/zdP26n7uPGU=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=hA2Banq9phKBmIGM3ULMHMtegH48en0GFqLUHUfjMEHvovJGvPlBmRwLlsp+z0Qkpl2kLUoCVuCtz/+/xkcKGX0QG1A0Ehu4DxRSHfJMSKUze9QmQ/rBGtefCwhV3FQRGIA3w5D05zH8kZMZlo/SvuY7u6xLPMFAr0PwI6szrSo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Y2uA0Uoa; arc=none smtp.client-ip=192.198.163.8
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="k+/Bp2HH"
-Received: by mail-wm1-f53.google.com with SMTP id 5b1f17b1804b1-43162cf1eaaso20161385e9.0;
-        Fri, 01 Nov 2024 04:02:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1730458952; x=1731063752; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=PwPYMRGElaeiG6JSq5bTqnaG3KidHyWvWEm+AiFn5jM=;
-        b=k+/Bp2HHyPs98e8+CmpvLYZNUEtk9AbAFa1+ct0ddL/3kgMFUN52ReNwvEAXkAPza8
-         CGwbCDOSGlks986zDaGNJzV7evh2MvxBcsRkTqhNw/haXb01209vWh/mEoDQ2Y8n7bmg
-         iG0SzzfeuaHBDmbgtVBa4E6JooQ+flugtWuy4oG6e5Ura+5wORXVYs/dickn2E6ep1SM
-         mz3IkY8Y7Wxe28lSPI6Sz7SeHsPn3Fidmg948LJHKOmGaE22PmT+XDameGFMI50jGnBk
-         6rr1VVKp98F4gFpZfPQ8LdK84J5wOnDmH/3TBgNXjxsiAYIjhVlbvyfKpyrXKSugpbXG
-         5KKA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1730458952; x=1731063752;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=PwPYMRGElaeiG6JSq5bTqnaG3KidHyWvWEm+AiFn5jM=;
-        b=byeX1/eRVz352w/+Y2Eu3c5yfCIYOPpWzcHR6Nwqw38mdjmpdL9lkp8UjJEJGCfekZ
-         mbJHvOWYUvyqfGeT5Pesv2XthBSBT5QgaBjUl6wfa+eb0hPb0eWXMrT+wP/ShDh4m3UE
-         rmr3FuDGZs0MSYCGz9oSv+UQfd0TIoXiCf51jfzF20RCRbmB2KoDZyC/MqfoeqgcQNAY
-         hmMTCwkbGutzr8mfPYXOKAr7p3aIkMsUyi4d4ctF4OP2oEb/wZnEU9FuSUEAFDId4y7N
-         Th5ulKyYOLtKGyYgX2/XisuGH3wlSbiGqEm9DLqmQ9TiA7Op3warZCRb8h4dt/A3PG8I
-         iAhg==
-X-Forwarded-Encrypted: i=1; AJvYcCU+8K8lYd96pdkAk5qwoGVuoo7EmEJMAGHy3OF+Okf0EQK3Lukko8qPhIw+6lt+pH9HV4wguW0/WUjP3KI=@vger.kernel.org, AJvYcCWsTgkkZhYqB/oJuOg/5mZS7vqSKMqL600v0vGOCu/2u4/IS7mVGax0OrLemssMHNgViDYKcB//WzBDiTI5AQLA5XOKNQ==@vger.kernel.org
-X-Gm-Message-State: AOJu0YyRdgu1hf1uwkHrbvtz2x8BhJnqTqGwYZbBoY0hHGCIAxRjGjeP
-	KRQoyVSdVf11nCpl4NCtgMZts5Pcay+tf7iChoRUpoRA+0JuxJiL
-X-Google-Smtp-Source: AGHT+IGPpN1k7U8dhuPazlyTNVRyQKtUMxHMlMvnkH+Bz9BObQigNk4a5upkXSy7J090IGXyvmqNfg==
-X-Received: by 2002:a05:600c:3b22:b0:42c:a387:6a6f with SMTP id 5b1f17b1804b1-4328325638emr27908205e9.20.1730458952168;
-        Fri, 01 Nov 2024 04:02:32 -0700 (PDT)
-Received: from localhost ([194.120.133.65])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-431bd8e8471sm88708965e9.4.2024.11.01.04.02.31
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 01 Nov 2024 04:02:31 -0700 (PDT)
-From: Colin Ian King <colin.i.king@gmail.com>
-To: Hans de Goede <hdegoede@redhat.com>,
-	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	Armin Wolf <W_Armin@gmx.de>,
-	Kurt Borja <kuurtb@gmail.com>,
-	Dell.Client.Kernel@dell.com,
-	platform-driver-x86@vger.kernel.org
-Cc: kernel-janitors@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH][next] alienware-wmi: Fix spelling mistake "requieres" -> "requires"
-Date: Fri,  1 Nov 2024 11:02:30 +0000
-Message-Id: <20241101110230.3303197-1-colin.i.king@gmail.com>
-X-Mailer: git-send-email 2.39.5
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Y2uA0Uoa"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1730462662; x=1761998662;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=//E8v2JYkElT8S736tK/mwUUhSoGSJG/zdP26n7uPGU=;
+  b=Y2uA0Uoa7fHq4EgNTFrAdpakyaysOt2BYfhUz4Z13ayafOgdo8eSsyZJ
+   Ji3t8DC6Zz5FC2DTy5RDuaE8EAS3hyth1lm4N8KZLQuWAPGF0rfE0UUia
+   RFhp2THsclNm1j/HqjY7Q2dTw6pQDsmIS50eOGy/HDj66v/p4D8Hkh57p
+   1m94O21IQa353fZJsyFD+WgYVRYeATyyKyt1jK9NPVXX9SHL/tJYqBZtP
+   UwbDAQgidc3Ga5MQNmegqRdufzjMoV8NrExF+6TJmtK8XACYjwYr8AppA
+   4vADui2kVePhbdfPGv4y4nj8du+nPGwkTg2+rnPA0Yd6VM0x2dm5xI5EO
+   A==;
+X-CSE-ConnectionGUID: 7aXAUBfLSsiy2F1ZssCrZw==
+X-CSE-MsgGUID: 5SGG8h1wR+KAyMl+UCTEEQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11242"; a="47710745"
+X-IronPort-AV: E=Sophos;i="6.11,249,1725346800"; 
+   d="scan'208";a="47710745"
+Received: from fmviesa008.fm.intel.com ([10.60.135.148])
+  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Nov 2024 05:04:21 -0700
+X-CSE-ConnectionGUID: DGTJUeT3Q3CKTRbVxiXbmQ==
+X-CSE-MsgGUID: i0JWqD7MTFOBk+f4sYl6Og==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.11,249,1725346800"; 
+   d="scan'208";a="83070985"
+Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.38])
+  by fmviesa008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Nov 2024 05:04:19 -0700
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Fri, 1 Nov 2024 14:04:15 +0200 (EET)
+To: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
+cc: Hans de Goede <hdegoede@redhat.com>, Sanket.Goswami@amd.com, 
+    platform-driver-x86@vger.kernel.org
+Subject: Re: [PATCH v2 5/8] platform/x86/amd/pmc: Update IP information
+ structure for newer SoCs
+In-Reply-To: <20241029155440.3499273-6-Shyam-sundar.S-k@amd.com>
+Message-ID: <c31b8002-75bc-2d24-7a07-1bb7d8638e85@linux.intel.com>
+References: <20241029155440.3499273-1-Shyam-sundar.S-k@amd.com> <20241029155440.3499273-6-Shyam-sundar.S-k@amd.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
 
-There is a spelling mistake in a pr_warn message. Fix it.
+On Tue, 29 Oct 2024, Shyam Sundar S K wrote:
 
-Signed-off-by: Colin Ian King <colin.i.king@gmail.com>
----
- drivers/platform/x86/dell/alienware-wmi.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+> The latest AMD processors include additional IP blocks that must be turned
+> off before transitioning to low power. PMFW provides an interface to
+> retrieve debug information from each IP block, which is useful for
+> diagnosing issues if the system fails to enter or exit low power states,
+> or for profiling which IP block takes more time. Add support for using
+> this information within the driver.
+> 
+> Co-developed-by: Sanket Goswami <Sanket.Goswami@amd.com>
+> Signed-off-by: Sanket Goswami <Sanket.Goswami@amd.com>
+> Signed-off-by: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
+> ---
+>  drivers/platform/x86/amd/pmc/pmc.c | 42 ++++++++++++++++++++++++++++--
+>  1 file changed, 40 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/platform/x86/amd/pmc/pmc.c b/drivers/platform/x86/amd/pmc/pmc.c
+> index f9900a03391a..0bf4065153da 100644
+> --- a/drivers/platform/x86/amd/pmc/pmc.c
+> +++ b/drivers/platform/x86/amd/pmc/pmc.c
+> @@ -95,6 +95,35 @@ struct amd_pmc_bit_map {
+>  	u32 bit_mask;
+>  };
+>  
+> +static const struct amd_pmc_bit_map soc15_ip_blk_v2[] = {
+> +	{"DISPLAY",     BIT(0)},
+> +	{"CPU",         BIT(1)},
+> +	{"GFX",         BIT(2)},
+> +	{"VDD",         BIT(3)},
+> +	{"VDD_CCX",     BIT(4)},
+> +	{"ACP",         BIT(5)},
+> +	{"VCN_0",       BIT(6)},
+> +	{"VCN_1",       BIT(7)},
+> +	{"ISP",         BIT(8)},
+> +	{"NBIO",        BIT(9)},
+> +	{"DF",          BIT(10)},
+> +	{"USB3_0",      BIT(11)},
+> +	{"USB3_1",      BIT(12)},
+> +	{"LAPIC",       BIT(13)},
+> +	{"USB3_2",      BIT(14)},
+> +	{"USB4_RT0",	BIT(15)},
+> +	{"USB4_RT1",	BIT(16)},
+> +	{"USB4_0",      BIT(17)},
+> +	{"USB4_1",      BIT(18)},
+> +	{"MPM",         BIT(19)},
+> +	{"JPEG_0",      BIT(20)},
+> +	{"JPEG_1",      BIT(21)},
+> +	{"IPU",         BIT(22)},
+> +	{"UMSCH",       BIT(23)},
+> +	{"VPE",         BIT(24)},
+> +	{}
+> +};
+> +
+>  static const struct amd_pmc_bit_map soc15_ip_blk[] = {
+>  	{"DISPLAY",	BIT(0)},
+>  	{"CPU",		BIT(1)},
+> @@ -170,7 +199,10 @@ static void amd_pmc_get_ip_info(struct amd_pmc_dev *dev)
+>  		break;
+>  	case PCI_DEVICE_ID_AMD_1AH_M20H_ROOT:
+>  	case PCI_DEVICE_ID_AMD_1AH_M60H_ROOT:
+> -		dev->num_ips = 22;
+> +		if (boot_cpu_data.x86_model == 0x70)
+> +			dev->num_ips = 25;
+> +		else
+> +			dev->num_ips = 22;
 
-diff --git a/drivers/platform/x86/dell/alienware-wmi.c b/drivers/platform/x86/dell/alienware-wmi.c
-index 62cb81750573..a800c28bb4d5 100644
---- a/drivers/platform/x86/dell/alienware-wmi.c
-+++ b/drivers/platform/x86/dell/alienware-wmi.c
-@@ -1090,7 +1090,7 @@ static int __init alienware_wmi_init(void)
- 		if (quirks->thermal)
- 			quirks->gmode = true;
- 		else
--			pr_warn("force_gmode requieres platform profile support\n");
-+			pr_warn("force_gmode requires platform profile support\n");
- 	}
- 
- 	ret = platform_driver_register(&platform_driver);
+Could these use ARRAY_SIZE()? They're related to that array, aren't they?
+
+>  		dev->smu_msg = 0x938;
+>  		break;
+>  	}
+> @@ -338,9 +370,15 @@ static int smu_fw_info_show(struct seq_file *s, void *unused)
+>  
+>  	seq_puts(s, "\n=== Active time (in us) ===\n");
+>  	for (idx = 0 ; idx < dev->num_ips ; idx++) {
+> -		if (soc15_ip_blk[idx].bit_mask & dev->active_ips)
+> +		if (dev->cpu_id == PCI_DEVICE_ID_AMD_1AH_M20H_ROOT &&
+> +		    boot_cpu_data.x86_model == 0x70) {
+> +			if (soc15_ip_blk_v2[idx].bit_mask & dev->active_ips)
+> +				seq_printf(s, "%-8s : %lld\n", soc15_ip_blk_v2[idx].name,
+> +					   table.timecondition_notmet_lastcapture[idx]);
+> +		} else if (soc15_ip_blk[idx].bit_mask & dev->active_ips) {
+>  			seq_printf(s, "%-8s : %lld\n", soc15_ip_blk[idx].name,
+>  				   table.timecondition_notmet_lastcapture[idx]);
+> +		}
+
+Why not have amd_pmc_get_ip_info() prepare a pointer into 'dev' to the 
+relevant soc15_ip_blk_v2/soc15_ip_blk rather than trying to pick one here?
+
+>  	}
+>  
+>  	return 0;
+> 
+
 -- 
-2.39.5
+ i.
 
