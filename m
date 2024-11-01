@@ -1,162 +1,86 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 150F819CC0A
-	for <platform-driver-x86@vger.kernel.org>; Fri,  1 Nov 2024 12:11:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2BCC422097;
+	Fri,  1 Nov 2024 12:36:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730463094; cv=none; b=L8svRzzr6YOA1g4XKMynWkI+r2SAYaJldWkGKwLLQlsndEMqe8qbT2EOz2NtZyg7PTcgmdiBnHPN7HIatvf8pNhLH22aMa/Soack+P8Zd6bb/YvAlk9UOUq1cuXRtYWALRugPKYjEPjiI601pXCxyw5RwBTNq+jIcbhpyGWm9bQ=
+	t=1730464592; cv=none; b=iKFQyJ/gHw7kRo11xp7Rx3XWX743o9u40oKJjZlP2A+93fXWogNjrtP8VXP1hckH9PTBipVYF11u69GRzATH9yScEGdzSBZuxgJIVk6jWvYOND0wNdDsC15f7+qAcFYuQSygkFFarLGI1DtOEppTAhht55+BaXhnYT8Gk3kKE74=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730463094; c=relaxed/simple;
-	bh=pvSoi3PocIyYMrqd3NpDDd0mS78WTxyD+YJnq0g3uS0=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=ZG2aGDZ/G7IfDsZJIxlZXUe8kul6jQl1L3Sb6bpz1ZODeRX6vbLm2aJEkpOI6b1wnDyT6epcYPHGku4XeACrumSAD/hVW8Unx42oHOcOxFlj87ftD5BaVL+v3Rd1K9ocAiiHQkwbgJCQ75X+jDZ851nGwO945rTSq4+foAi+okk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=DfVtNUMC; arc=none smtp.client-ip=192.198.163.14
+	s=arc-20240116; t=1730464592; c=relaxed/simple;
+	bh=gRP6MN8zkcU6CaP595Krk9eoXpXecFjEFluVBdHI6Dw=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=iLwzUbsS5dZqYnLvmFw8wlOx8j9VGBPJnmG5XVU+I6JSRogzmqPxQ9u6n8XfStb7ZwOiC7ziRLic2ipF3CQJ8RuqwUPKIsh0xTM+buGxK1NUyDVpcGAxc6zDxkyER+M/seoXaxqjYfXzLb/wMg8dePy2NqRTdS1u3Fq09tZfsvM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=R7uKhahJ; arc=none smtp.client-ip=192.198.163.18
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="DfVtNUMC"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="R7uKhahJ"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1730463092; x=1761999092;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=pvSoi3PocIyYMrqd3NpDDd0mS78WTxyD+YJnq0g3uS0=;
-  b=DfVtNUMCAdYWtCi4NsiORTMqZZxYrqXsPG++D/GDobf9fQWbZ+gqnf1S
-   1xMvgrGwQR1osfS4V1LgW+NdUVXiXrlLZbED9VVPpRSm+2HRv5PShjbCc
-   FJt4RNAn1/7eue6HRQCbdwE1oNdbGBU6NzWzoqoXntr/XnPPVxzDRef99
-   CiFM1+unrQXJdVjiSW/qL1U5kzpJRH1wdcMRQMToAgXbsSKzI6aj2Js38
-   BYPbMcZB1fdh3fPMyyQndfZQ6zq93NpuRoyPsP+SQdJpFx2+1BhcqM8I0
-   oRQcXtOudteLPcyaLZlPXXqZkcBfmuK3fKGpgxLVtF5tnIfRQxoSHvD5/
+  t=1730464590; x=1762000590;
+  h=from:to:cc:in-reply-to:references:subject:message-id:
+   date:mime-version:content-transfer-encoding;
+  bh=gRP6MN8zkcU6CaP595Krk9eoXpXecFjEFluVBdHI6Dw=;
+  b=R7uKhahJyPUgwWAMShBxRPUxfZ15oAqBA+HUVaTNreUbpwNPT+4ZxGob
+   62gPAzz3zBjfXbOa9kllbFmJ7+rCqxM94Fck0TdC+3mGABk1sgBX7zgUg
+   kELqbIeBx0RASmTEsMO1v/ZDi87VLcOvgzRP+u8h4TeMh2MRo6wNDI3Op
+   G3ub7+VZ+MTnnN0F97YedlERytxieQdJBqWVJAKnUvFWFurgAOm8P8EZu
+   4iUT0rG3UnwqQAjzGwefefQf9yDe6dtYdofGR1XR9LtxB6L54oIiI0HXo
+   Fi9k0rJ92zifAXSqo17T06QjBWpWRsjXNT/szmoPc20Omj8nAcQL7bsNi
    Q==;
-X-CSE-ConnectionGUID: tNoHjZlrRQ+LMwL7M9BjKA==
-X-CSE-MsgGUID: MPUztEVvQi+04YXLoTrFTw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11242"; a="30440534"
+X-CSE-ConnectionGUID: gSGLJBhJR6K5mUIPTpAS7g==
+X-CSE-MsgGUID: n3IhfjNVRDC4XVsfyFmRPw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11242"; a="29647782"
 X-IronPort-AV: E=Sophos;i="6.11,249,1725346800"; 
-   d="scan'208";a="30440534"
-Received: from fmviesa005.fm.intel.com ([10.60.135.145])
-  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Nov 2024 05:11:32 -0700
-X-CSE-ConnectionGUID: TpVaSwI9QOy05quUWUmUDQ==
-X-CSE-MsgGUID: Q9Cys2BqQzCqCjotRtD69A==
+   d="scan'208";a="29647782"
+Received: from orviesa007.jf.intel.com ([10.64.159.147])
+  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Nov 2024 05:36:25 -0700
+X-CSE-ConnectionGUID: VSxhE1D4Rv6k16aZfJE9gQ==
+X-CSE-MsgGUID: ZFqSEMFsQqy8Ka+VNR1QDA==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.11,249,1725346800"; 
-   d="scan'208";a="87487494"
+   d="scan'208";a="83386198"
 Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.38])
-  by fmviesa005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Nov 2024 05:11:30 -0700
+  by orviesa007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Nov 2024 05:36:23 -0700
 From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Fri, 1 Nov 2024 14:11:26 +0200 (EET)
-To: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
-cc: Hans de Goede <hdegoede@redhat.com>, Sanket.Goswami@amd.com, 
-    platform-driver-x86@vger.kernel.org
-Subject: Re: [PATCH v2 7/8] platform/x86/amd/pmc: Add STB support for AMD
- Desktop variants
-In-Reply-To: <20241029155440.3499273-8-Shyam-sundar.S-k@amd.com>
-Message-ID: <f16a0977-0f3b-cdee-880e-fdffc69ac84b@linux.intel.com>
-References: <20241029155440.3499273-1-Shyam-sundar.S-k@amd.com> <20241029155440.3499273-8-Shyam-sundar.S-k@amd.com>
+To: Hans de Goede <hdegoede@redhat.com>, Armin Wolf <W_Armin@gmx.de>, 
+ Kurt Borja <kuurtb@gmail.com>, Dell.Client.Kernel@dell.com, 
+ platform-driver-x86@vger.kernel.org, 
+ Colin Ian King <colin.i.king@gmail.com>
+Cc: kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
+In-Reply-To: <20241101110230.3303197-1-colin.i.king@gmail.com>
+References: <20241101110230.3303197-1-colin.i.king@gmail.com>
+Subject: Re: [PATCH][next] alienware-wmi: Fix spelling mistake "requieres"
+ -> "requires"
+Message-Id: <173046457722.1736.12073152593852757455.b4-ty@linux.intel.com>
+Date: Fri, 01 Nov 2024 14:36:17 +0200
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Mailer: b4 0.13.0
 
-On Tue, 29 Oct 2024, Shyam Sundar S K wrote:
+On Fri, 01 Nov 2024 11:02:30 +0000, Colin Ian King wrote:
 
-> Previously, AMD's Ryzen Desktop SoCs did not include support for STB.
-> However, to accommodate this recent change, PMFW has implemented a new
-> message port pair mechanism for handling messages, arguments, and
-> responses, specifically designed for distinguishing from Mobile SoCs.
-> Therefore, it is necessary to update the driver to properly handle this
-> incoming change.
+> There is a spelling mistake in a pr_warn message. Fix it.
 > 
-> Add a new function amd_stb_update_args() to simply the arguments that
-> needs to be passed between S2D supported Mobile SoCs vs Desktop SoCs.
 > 
-> Co-developed-by: Sanket Goswami <Sanket.Goswami@amd.com>
-> Signed-off-by: Sanket Goswami <Sanket.Goswami@amd.com>
-> Signed-off-by: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
-> ---
->  drivers/platform/x86/amd/pmc/mp1_stb.c | 31 +++++++++++++++++++++-----
->  1 file changed, 26 insertions(+), 5 deletions(-)
-> 
-> diff --git a/drivers/platform/x86/amd/pmc/mp1_stb.c b/drivers/platform/x86/amd/pmc/mp1_stb.c
-> index 917c111b31c9..6a3cfcbb614e 100644
-> --- a/drivers/platform/x86/amd/pmc/mp1_stb.c
-> +++ b/drivers/platform/x86/amd/pmc/mp1_stb.c
-> @@ -36,6 +36,11 @@
->  #define AMD_S2D_REGISTER_RESPONSE	0xA80
->  #define AMD_S2D_REGISTER_ARGUMENT	0xA88
->  
-> +/* STB S2D(Spill to DRAM) message port offset for 44h model */
 
-Add space before (
 
-I know there might be some older ones lying around with the incorrect 
-spacing but lets not add any new ones.
+Thank you for your contribution, it has been applied to my local
+review-ilpo branch. Note it will show up in the public
+platform-drivers-x86/review-ilpo branch only once I've pushed my
+local branch there, which might take a while.
 
-> +#define AMD_GNR_REGISTER_MESSAGE	0x524
-> +#define AMD_GNR_REGISTER_RESPONSE	0x570
-> +#define AMD_GNR_REGISTER_ARGUMENT	0xA40
-> +
->  static bool enable_stb;
->  module_param(enable_stb, bool, 0644);
->  MODULE_PARM_DESC(enable_stb, "Enable the STB debug mechanism");
-> @@ -239,12 +244,31 @@ static const struct file_operations amd_stb_debugfs_fops_v2 = {
->  	.release = amd_stb_debugfs_release_v2,
->  };
->  
-> +static void amd_stb_update_args(struct amd_pmc_dev *dev)
-> +{
-> +	if (cpu_feature_enabled(X86_FEATURE_ZEN5))
-> +		switch (boot_cpu_data.x86_model) {
-> +		case 0x44:
-> +			dev->stb_arg.msg = AMD_GNR_REGISTER_MESSAGE;
-> +			dev->stb_arg.arg = AMD_GNR_REGISTER_ARGUMENT;
-> +			dev->stb_arg.resp = AMD_GNR_REGISTER_RESPONSE;
-> +			return;
+The list of commits applied:
+[1/1] alienware-wmi: Fix spelling mistake "requieres" -> "requires"
+      commit: d68cb6023356af3bd3193983ad4ec03954a0b3e2
 
-default branch missing.
-
-> +	}
-
-Eh? That's a weird indentation for sure. :-)
-
-Both levels of this nested construct need braces, please.
-
--- 
+--
  i.
-
-> +
-> +	dev->stb_arg.msg = AMD_S2D_REGISTER_MESSAGE;
-> +	dev->stb_arg.arg = AMD_S2D_REGISTER_ARGUMENT;
-> +	dev->stb_arg.resp = AMD_S2D_REGISTER_RESPONSE;
-> +}
-> +
->  static bool amd_is_stb_supported(struct amd_pmc_dev *dev)
->  {
->  	switch (dev->cpu_id) {
->  	case AMD_CPU_ID_YC:
->  	case AMD_CPU_ID_CB:
-> -		dev->stb_arg.s2d_msg_id = 0xBE;
-> +		if (boot_cpu_data.x86_model == 0x44)
-> +			dev->stb_arg.s2d_msg_id = 0x9B;
-> +		else
-> +			dev->stb_arg.s2d_msg_id = 0xBE;
->  		break;
->  	case AMD_CPU_ID_PS:
->  		dev->stb_arg.s2d_msg_id = 0x85;
-> @@ -260,10 +284,7 @@ static bool amd_is_stb_supported(struct amd_pmc_dev *dev)
->  		return false;
->  	}
->  
-> -	dev->stb_arg.msg = AMD_S2D_REGISTER_MESSAGE;
-> -	dev->stb_arg.arg = AMD_S2D_REGISTER_ARGUMENT;
-> -	dev->stb_arg.resp = AMD_S2D_REGISTER_RESPONSE;
-> -
-> +	amd_stb_update_args(dev);
->  	return true;
->  }
->  
-> 
 
