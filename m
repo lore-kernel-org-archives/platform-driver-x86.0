@@ -1,234 +1,177 @@
 Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3176A175A5
-	for <platform-driver-x86@vger.kernel.org>; Mon,  4 Nov 2024 13:19:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B4D0111A8;
+	Mon,  4 Nov 2024 13:25:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730726381; cv=none; b=sZ35E9PVOyp8oIEdvmvvn7SAbY/C+HY+ZO7DIcGmfMQfmrzSkC5ZO8M04tOuG972df2Zi92D5ydaB0WDN1e15DHh+stvbpC1eTZUSve4wegSAQQeN2vp8vKPqUztkA3epHQt13jj467canXH+EUSEjgIRHRSqA1WREEuaeA6jcQ=
+	t=1730726738; cv=none; b=oyJTY1LRLkUKznARzWSc/xodL+lgQd3ogPyvJy4boX52eli9svNlbgZuG4Qim8A7b7wpKPZPEP8nHmyYcM519tqWeS+V+9gKTC7EolY3WulvkqkiuI9Z8hadKimzqig5IJyYl45igL2t0o/Q9ellCAyvr49JfMpPCu8MwLA8Nec=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730726381; c=relaxed/simple;
-	bh=2l3gxFq58oX5fmm8Pgbj7OK0VTyAPoB5UKnOgYS8alI=;
+	s=arc-20240116; t=1730726738; c=relaxed/simple;
+	bh=oPBklUbvKL8bSKRIlaEBq6Ena9N6JHRIUOBA6mqrZ6c=;
 	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=W+/Hcb7CafeOOp+nJvycAnV+ANtRxHI6glzLJWphd4e57fGtB3eiGDtACSjWKnXdQqKfCq2/4nBaZPBiJ5OZVHG8QCPxIraa2yVFo9ITI3KClvr8pWNsgxQAnLSMgeLeBu67vhlhqUW8HTNmMf9KFF77XxzPtR6Ox4255cf8by8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=MMxZxr+N; arc=none smtp.client-ip=198.175.65.19
+	 MIME-Version:Content-Type; b=Ms9sUT3HFzOAlu6wH76v4GIo5JPQx0XTjONKbQ47BlriN2pLIMwJAo5252ZIX2Ppql95twB+dvHHo0JbJtqCgjcyX2H3UlIYI1BKJrU7RHPRHEftWLATKG1jY16RiPjfo+n8+4AEr7sGFKHHVOmY3+hnC+TMt2bINuK6GPmhicI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=V6M9zpgg; arc=none smtp.client-ip=198.175.65.19
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="MMxZxr+N"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="V6M9zpgg"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1730726380; x=1762262380;
+  t=1730726736; x=1762262736;
   h=from:date:to:cc:subject:in-reply-to:message-id:
    references:mime-version;
-  bh=2l3gxFq58oX5fmm8Pgbj7OK0VTyAPoB5UKnOgYS8alI=;
-  b=MMxZxr+NtlyWFW33MlbQR8Mn/ETg+ED06ctqxpMg0V66r0s13b5H5t7M
-   dTsrvYHke4wrc0hfjVnR3YCmPqEvZFoN/EXETuFghKBuv5rBYkOeJNRZJ
-   GLjeKOdR79T9jtK7OnWfdiOK43aSbW6xAkSNJq/9HOjxqZCulJL/baXLY
-   5WCP5yxkNgZAbkrftXuqE7MUjahfC+jUGvdDrMwpbvfTpdBzi2p1OWuFm
-   jphZOS4+m98/SfInhQ/6HRCSGLx7w6G4zrdX38SS7nmzDfl1zxRRY0bsP
-   WeAWmGro+6w/zmwtbCTx9KGuRZNVzDpGswv/pL5MFASykYFIz/VPH1SoK
-   A==;
-X-CSE-ConnectionGUID: IPWOvk8QR/iN3+EL3IeTVg==
-X-CSE-MsgGUID: ir6AYtKPR56i0gOxcruuYg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11222"; a="30274586"
+  bh=oPBklUbvKL8bSKRIlaEBq6Ena9N6JHRIUOBA6mqrZ6c=;
+  b=V6M9zpgg7MJtwljFRnQo2x+DXoviRvspP0NVDmRyAtFeIj1U6uUBzGB6
+   q7dNJz0Mm05awQeWH8RA0JBJ3xtkyAbcFrqW9EEV304wTBZGFMtiITI3O
+   jwn4ciqJCJu3V5LPn0sWATTqONxaNJs3BWl/sJ6S/8fUL5bIcvGYGqivl
+   /uATz2ZiJN8IG4KzLVgHrDm3hJHXWeT+ZFOZK2sISMZ49yW53xM/tz2jb
+   UG2dFYBlKmezQ9IrfIzt6ks+mBSCGwhXg+5rLE8axKJ6g70k/yaZpkdB3
+   JgUxVFXUX+CYe0er6i/JI7A100P/ObQ3VrnZh2f0Ov104dcp7n3gAI7Qv
+   Q==;
+X-CSE-ConnectionGUID: r5aOVlEITJe0ReUEquHbsQ==
+X-CSE-MsgGUID: DbG8CzipQOGfdLFcg6HSdQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11222"; a="30275394"
 X-IronPort-AV: E=Sophos;i="6.11,199,1725346800"; 
-   d="scan'208";a="30274586"
+   d="scan'208";a="30275394"
 Received: from orviesa009.jf.intel.com ([10.64.159.149])
-  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Nov 2024 05:19:39 -0800
-X-CSE-ConnectionGUID: gdp7CJboQu6kDy5ZeBMymg==
-X-CSE-MsgGUID: YEtwM76dQBSiLZh6d6roRw==
+  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Nov 2024 05:25:32 -0800
+X-CSE-ConnectionGUID: v9JmlMoUQFaNhWF7H45gGQ==
+X-CSE-MsgGUID: 4K1oV5FuTuelLKT3nBONXg==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.11,257,1725346800"; 
-   d="scan'208";a="83540799"
+   d="scan'208";a="83542204"
 Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.33])
-  by orviesa009-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Nov 2024 05:19:38 -0800
+  by orviesa009-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Nov 2024 05:25:17 -0800
 From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Mon, 4 Nov 2024 15:19:35 +0200 (EET)
-To: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
-cc: Hans de Goede <hdegoede@redhat.com>, platform-driver-x86@vger.kernel.org, 
-    Patil.Reddy@amd.com
-Subject: Re: [PATCH v4 3/3] platform/x86/amd/pmf: Switch to platform_get_resource()
- and devm_ioremap_resource()
-In-Reply-To: <20241104054829.620858-4-Shyam-sundar.S-k@amd.com>
-Message-ID: <021403b7-29ea-173c-2251-62a8e9476cdc@linux.intel.com>
-References: <20241104054829.620858-1-Shyam-sundar.S-k@amd.com> <20241104054829.620858-4-Shyam-sundar.S-k@amd.com>
+Date: Mon, 4 Nov 2024 15:25:13 +0200 (EET)
+To: =?ISO-8859-15?Q?Thomas_Wei=DFschuh?= <linux@weissschuh.net>
+cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+    "Rafael J. Wysocki" <rafael@kernel.org>, 
+    Bjorn Helgaas <bhelgaas@google.com>, 
+    Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, 
+    Davidlohr Bueso <dave@stgolabs.net>, 
+    Jonathan Cameron <jonathan.cameron@huawei.com>, 
+    Dave Jiang <dave.jiang@intel.com>, 
+    Alison Schofield <alison.schofield@intel.com>, 
+    Vishal Verma <vishal.l.verma@intel.com>, Ira Weiny <ira.weiny@intel.com>, 
+    Alex Deucher <alexander.deucher@amd.com>, 
+    =?ISO-8859-15?Q?Christian_K=F6nig?= <christian.koenig@amd.com>, 
+    Xinhui Pan <Xinhui.Pan@amd.com>, David Airlie <airlied@gmail.com>, 
+    Simona Vetter <simona@ffwll.ch>, 
+    Dennis Dalessandro <dennis.dalessandro@cornelisnetworks.com>, 
+    Jason Gunthorpe <jgg@ziepe.ca>, Leon Romanovsky <leon@kernel.org>, 
+    Tudor Ambarus <tudor.ambarus@linaro.org>, 
+    Pratyush Yadav <pratyush@kernel.org>, Michael Walle <mwalle@kernel.org>, 
+    Miquel Raynal <miquel.raynal@bootlin.com>, 
+    Richard Weinberger <richard@nod.at>, Vignesh Raghavendra <vigneshr@ti.com>, 
+    Naveen Krishna Chatradhi <naveenkrishna.chatradhi@amd.com>, 
+    Carlos Bilbao <carlos.bilbao.osdev@gmail.com>, 
+    Hans de Goede <hdegoede@redhat.com>, 
+    =?ISO-8859-15?Q?Ilpo_J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>, 
+    "David E. Box" <david.e.box@linux.intel.com>, 
+    "James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>, 
+    "Martin K. Petersen" <martin.petersen@oracle.com>, 
+    Richard Henderson <richard.henderson@linaro.org>, 
+    Matt Turner <mattst88@gmail.com>, Frederic Barrat <fbarrat@linux.ibm.com>, 
+    Andrew Donnellan <ajd@linux.ibm.com>, Arnd Bergmann <arnd@arndb.de>, 
+    Logan Gunthorpe <logang@deltatee.com>, 
+    "K. Y. Srinivasan" <kys@microsoft.com>, 
+    Haiyang Zhang <haiyangz@microsoft.com>, Wei Liu <wei.liu@kernel.org>, 
+    Dexuan Cui <decui@microsoft.com>, Dan Williams <dan.j.williams@intel.com>, 
+    LKML <linux-kernel@vger.kernel.org>, linux-pci@vger.kernel.org, 
+    linux-cxl@vger.kernel.org, amd-gfx@lists.freedesktop.org, 
+    dri-devel@lists.freedesktop.org, linux-rdma@vger.kernel.org, 
+    linux-mtd@lists.infradead.org, platform-driver-x86@vger.kernel.org, 
+    linux-scsi@vger.kernel.org, linux-usb@vger.kernel.org, 
+    linux-alpha@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, 
+    linux-hyperv@vger.kernel.org
+Subject: Re: [PATCH v2 05/10] sysfs: treewide: constify attribute callback
+ of bin_is_visible()
+In-Reply-To: <20241103-sysfs-const-bin_attr-v2-5-71110628844c@weissschuh.net>
+Message-ID: <65f4dc4e-3b48-2baa-a13b-3cc34dd51ce1@linux.intel.com>
+References: <20241103-sysfs-const-bin_attr-v2-0-71110628844c@weissschuh.net> <20241103-sysfs-const-bin_attr-v2-5-71110628844c@weissschuh.net>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: multipart/mixed; boundary="8323328-559502379-1730726713=:989"
 
-On Mon, 4 Nov 2024, Shyam Sundar S K wrote:
+  This message is in MIME format.  The first part should be readable text,
+  while the remaining parts are likely unreadable without MIME-aware tools.
 
-> Use platform_get_resource() to fetch the memory resource instead of
-> acpi_walk_resources() and devm_ioremap_resource() for mapping the
-> resources.
-> 
-> PS: We cannot use resource_size() here because it adds an extra byte to
-> round off the size. In the case of PMF ResourceTemplate(), this rounding
-> is already handled within the _CRS. Using resource_size() would increase
-> the resource size by 1, causing a mismatch with the length field and
-> leading to issues. Therefore, simply use end-start of the ACPI resource to
-> obtain the actual length.
-> 
-> Co-developed-by: Patil Rajesh Reddy <Patil.Reddy@amd.com>
-> Signed-off-by: Patil Rajesh Reddy <Patil.Reddy@amd.com>
-> Signed-off-by: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
+--8323328-559502379-1730726713=:989
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+
+On Sun, 3 Nov 2024, Thomas Wei=C3=9Fschuh wrote:
+
+> The is_bin_visible() callbacks should not modify the struct
+> bin_attribute passed as argument.
+> Enforce this by marking the argument as const.
+>=20
+> As there are not many callback implementers perform this change
+> throughout the tree at once.
+>=20
+> Signed-off-by: Thomas Wei=C3=9Fschuh <linux@weissschuh.net>
 > ---
->  drivers/platform/x86/amd/pmf/Kconfig  |  1 +
->  drivers/platform/x86/amd/pmf/acpi.c   | 46 +++++++++++----------------
->  drivers/platform/x86/amd/pmf/pmf.h    |  6 ++--
->  drivers/platform/x86/amd/pmf/tee-if.c |  8 ++---
->  4 files changed, 28 insertions(+), 33 deletions(-)
-> 
-> diff --git a/drivers/platform/x86/amd/pmf/Kconfig b/drivers/platform/x86/amd/pmf/Kconfig
-> index f4fa8bd8bda8..99d67cdbd91e 100644
-> --- a/drivers/platform/x86/amd/pmf/Kconfig
-> +++ b/drivers/platform/x86/amd/pmf/Kconfig
-> @@ -11,6 +11,7 @@ config AMD_PMF
->  	select ACPI_PLATFORM_PROFILE
->  	depends on TEE && AMDTEE
->  	depends on AMD_SFH_HID
-> +	depends on HAS_IOMEM
->  	help
->  	  This driver provides support for the AMD Platform Management Framework.
->  	  The goal is to enhance end user experience by making AMD PCs smarter,
-> diff --git a/drivers/platform/x86/amd/pmf/acpi.c b/drivers/platform/x86/amd/pmf/acpi.c
-> index d5b496433d69..1b9c7acf0ddf 100644
-> --- a/drivers/platform/x86/amd/pmf/acpi.c
-> +++ b/drivers/platform/x86/amd/pmf/acpi.c
-> @@ -433,37 +433,29 @@ int apmf_install_handler(struct amd_pmf_dev *pmf_dev)
->  	return 0;
+>  drivers/cxl/port.c                      |  2 +-
+>  drivers/gpu/drm/amd/amdgpu/amdgpu_psp.c |  2 +-
+>  drivers/infiniband/hw/qib/qib_sysfs.c   |  2 +-
+>  drivers/mtd/spi-nor/sysfs.c             |  2 +-
+>  drivers/nvmem/core.c                    |  3 ++-
+>  drivers/pci/pci-sysfs.c                 |  2 +-
+>  drivers/pci/vpd.c                       |  2 +-
+>  drivers/platform/x86/amd/hsmp.c         |  2 +-
+>  drivers/platform/x86/intel/sdsi.c       |  2 +-
+>  drivers/scsi/scsi_sysfs.c               |  2 +-
+>  drivers/usb/core/sysfs.c                |  2 +-
+>  include/linux/sysfs.h                   | 30 +++++++++++++++------------=
+---
+>  12 files changed, 27 insertions(+), 26 deletions(-)
+
+> diff --git a/drivers/platform/x86/amd/hsmp.c b/drivers/platform/x86/amd/h=
+smp.c
+> index 8fcf38eed7f00ee01aade6e3e55e20402458d5aa..8f00850c139fa8d419bc1c140=
+c1832bf84b2c3bd 100644
+> --- a/drivers/platform/x86/amd/hsmp.c
+> +++ b/drivers/platform/x86/amd/hsmp.c
+> @@ -620,7 +620,7 @@ static int hsmp_get_tbl_dram_base(u16 sock_ind)
 >  }
->  
-> -static acpi_status apmf_walk_resources(struct acpi_resource *res, void *data)
-> +int apmf_check_smart_pc(struct amd_pmf_dev *pmf_dev)
->  {
-> -	struct amd_pmf_dev *dev = data;
-> +	struct platform_device *pdev = to_platform_device(pmf_dev->dev);
->  
-> -	switch (res->type) {
-> -	case ACPI_RESOURCE_TYPE_ADDRESS64:
-> -		dev->policy_addr = res->data.address64.address.minimum;
-> -		dev->policy_sz = res->data.address64.address.address_length;
-> -		break;
-> -	case ACPI_RESOURCE_TYPE_FIXED_MEMORY32:
-> -		dev->policy_addr = res->data.fixed_memory32.address;
-> -		dev->policy_sz = res->data.fixed_memory32.address_length;
-> -		break;
-> -	}
-> -
-> -	if (!dev->policy_addr || dev->policy_sz > POLICY_BUF_MAX_SZ || dev->policy_sz == 0) {
-> -		pr_err("Incorrect Policy params, possibly a SBIOS bug\n");
-> -		return AE_ERROR;
-> +	pmf_dev->res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-> +	if (!pmf_dev->res) {
-> +		dev_dbg(pmf_dev->dev, "Failed to get I/O memory resource\n");
-> +		return -EINVAL;
->  	}
->  
-> -	return AE_OK;
-> -}
-> -
-> -int apmf_check_smart_pc(struct amd_pmf_dev *pmf_dev)
-> -{
-> -	acpi_handle ahandle = ACPI_HANDLE(pmf_dev->dev);
-> -	acpi_status status;
-> -
-> -	status = acpi_walk_resources(ahandle, METHOD_NAME__CRS, apmf_walk_resources, pmf_dev);
-> -	if (ACPI_FAILURE(status)) {
-> -		dev_dbg(pmf_dev->dev, "acpi_walk_resources failed :%d\n", status);
-> +	pmf_dev->policy_addr = pmf_dev->res->start;
-> +	/*
-> +	 * We cannot use resource_size() here because it adds an extra byte to round off the size.
-> +	 * In the case of PMF ResourceTemplate(), this rounding is already handled within the _CRS.
-> +	 * Using resource_size() would increase the resource size by 1, causing a mismatch with the
-> +	 * length field and leading to issues. Therefore, simply use end-start of the ACPI resource
-> +	 * to obtain the actual length.
-> +	 */
-> +	pmf_dev->policy_sz = pmf_dev->res->end - pmf_dev->res->start;
-> +
-> +	if (!pmf_dev->policy_addr || pmf_dev->policy_sz > POLICY_BUF_MAX_SZ ||
-> +	    pmf_dev->policy_sz == 0) {
-> +		dev_err(pmf_dev->dev, "Incorrect policy params, possibly a SBIOS bug\n");
->  		return -EINVAL;
->  	}
->  
-> diff --git a/drivers/platform/x86/amd/pmf/pmf.h b/drivers/platform/x86/amd/pmf/pmf.h
-> index 8ce8816da9c1..a79808fda1d8 100644
-> --- a/drivers/platform/x86/amd/pmf/pmf.h
-> +++ b/drivers/platform/x86/amd/pmf/pmf.h
-> @@ -13,6 +13,7 @@
->  
->  #include <linux/acpi.h>
->  #include <linux/input.h>
-> +#include <linux/platform_device.h>
->  #include <linux/platform_profile.h>
->  
->  #define POLICY_BUF_MAX_SZ		0x4b000
-> @@ -355,19 +356,20 @@ struct amd_pmf_dev {
->  	/* Smart PC solution builder */
->  	struct dentry *esbin;
->  	unsigned char *policy_buf;
-> -	u32 policy_sz;
-> +	resource_size_t policy_sz;
->  	struct tee_context *tee_ctx;
->  	struct tee_shm *fw_shm_pool;
->  	u32 session_id;
->  	void *shbuf;
->  	struct delayed_work pb_work;
->  	struct pmf_action_table *prev_data;
-> -	u64 policy_addr;
-> +	resource_size_t policy_addr;
->  	void __iomem *policy_base;
->  	bool smart_pc_enabled;
->  	u16 pmf_if_version;
->  	struct input_dev *pmf_idev;
->  	size_t mtable_size;
-> +	struct resource *res;
->  };
->  
->  struct apmf_sps_prop_granular_v2 {
-> diff --git a/drivers/platform/x86/amd/pmf/tee-if.c b/drivers/platform/x86/amd/pmf/tee-if.c
-> index 19c27b6e4666..555b8d6314e0 100644
-> --- a/drivers/platform/x86/amd/pmf/tee-if.c
-> +++ b/drivers/platform/x86/amd/pmf/tee-if.c
-> @@ -257,7 +257,7 @@ static int amd_pmf_invoke_cmd_init(struct amd_pmf_dev *dev)
->  		return -ENODEV;
->  	}
->  
-> -	dev_dbg(dev->dev, "Policy Binary size: %u bytes\n", dev->policy_sz);
-> +	dev_dbg(dev->dev, "Policy Binary size: %llu bytes\n", dev->policy_sz);
+> =20
+>  static umode_t hsmp_is_sock_attr_visible(struct kobject *kobj,
+> -=09=09=09=09=09 struct bin_attribute *battr, int id)
+> +=09=09=09=09=09 const struct bin_attribute *battr, int id)
 
-Hi,
+Hi Thomas,
 
-I applied these to review-ilpo. While applying, I added cast to this line 
-since %llu and resource_size_t are not guaranteed to be same.
+This driver is reworked in pdx86/for-next.
 
-I should really find time to look at adding a printf formatter for 
-resource sizes as Andy once suggested.
-
--- 
+--=20
  i.
 
->  	memset(dev->shbuf, 0, dev->policy_sz);
->  	ta_sm = dev->shbuf;
->  	in = &ta_sm->pmf_input.init_table;
-> @@ -512,9 +512,9 @@ int amd_pmf_init_smart_pc(struct amd_pmf_dev *dev)
->  	if (ret)
->  		goto error;
->  
-> -	dev->policy_base = devm_ioremap(dev->dev, dev->policy_addr, dev->policy_sz);
-> -	if (!dev->policy_base) {
-> -		ret = -ENOMEM;
-> +	dev->policy_base = devm_ioremap_resource(dev->dev, dev->res);
-> +	if (IS_ERR(dev->policy_base)) {
-> +		ret = PTR_ERR(dev->policy_base);
->  		goto error;
->  	}
->  
-> 
 
+>  {
+>  =09if (plat_dev.proto_ver =3D=3D HSMP_PROTO_VER6)
+>  =09=09return battr->attr.mode;
+> diff --git a/drivers/platform/x86/intel/sdsi.c b/drivers/platform/x86/int=
+el/sdsi.c
+> index 9d137621f0e6e7a23be0e0bbc6175c51c403169f..33f33b1070fdc949c1373251c=
+3bca4234d9da119 100644
+> --- a/drivers/platform/x86/intel/sdsi.c
+> +++ b/drivers/platform/x86/intel/sdsi.c
+> @@ -541,7 +541,7 @@ static struct bin_attribute *sdsi_bin_attrs[] =3D {
+>  };
+> =20
+>  static umode_t
+> -sdsi_battr_is_visible(struct kobject *kobj, struct bin_attribute *attr, =
+int n)
+> +sdsi_battr_is_visible(struct kobject *kobj, const struct bin_attribute *=
+attr, int n)
+>  {
+>  =09struct device *dev =3D kobj_to_dev(kobj);
+>  =09struct sdsi_priv *priv =3D dev_get_drvdata(dev);
+
+--8323328-559502379-1730726713=:989--
