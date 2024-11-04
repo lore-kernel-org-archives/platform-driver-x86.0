@@ -1,315 +1,201 @@
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 08A731D3584
-	for <platform-driver-x86@vger.kernel.org>; Mon,  4 Nov 2024 20:09:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 28F901F5845
+	for <platform-driver-x86@vger.kernel.org>; Mon,  4 Nov 2024 20:36:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730750947; cv=none; b=VALeQyCeeUoY2Dcb5kNU8DJGh98vKb2uMQjl81sImnH7QMhCv6lUbEvJR2liB6UQqxVwU6LUQXkYs3XIgUHIJ8NG6DaFLnBLrMEScY9IObX5nDjMG01IrvVsGsag/uBCyCFP6mzi/kaV0PUDDGbrTmfQDsLP7V5rNyiwzNIKJOs=
+	t=1730752566; cv=none; b=fZilFuKH3e0dokwTar2wnzZyQlhON93/Rw424YwhuaQy9+YCGg13H4hJtJLm3RvY3FJVUgUpeZVds5yPamk0mEVxfqyR9vpFIYb8EMDn7EJavcxly62f7dWTHSLjfy/SnoeUrxv36YooRwP9lVYZcjYUgXv1SI0t6IHHJUvVKjE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730750947; c=relaxed/simple;
-	bh=rjsom35kmNTa3VL35eTTpr6vzxaJ4gGSAcuRIyOvlIw=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=cHAjAwA4Z+BbLHlXjiG/t+gqBMA57MXYmH56b0BirrCoRQPV9e+/A7lGPbrxqRXviuasaTh5BtUqkJL65KimqS9es/coM1cXNdBffxDUNWmAEfRSWjJOJI8+WbaJuzbSmIGtgUJKEtaKq6L4MKiipl6BElA4EO05SOy75rEMp9A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=hRsxSUZj; arc=none smtp.client-ip=170.10.133.124
+	s=arc-20240116; t=1730752566; c=relaxed/simple;
+	bh=SNq5/zZUoR19vQeAU1UXhniDK6FAgLJjzgLwY24ifDE=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=LD/YJHpN0PCLdg4T409vopTRG1ZecmN4pJt3/h4aBZ0apKySX4xQiYknE/bMon+ddojwGRksyXg/TVmJ+XLb0kPk8spTReVykSIAZWljERGTqX2XCgI1M/WE6LqrubiUWBM7PP5d+NR61TyqrtYzizuITzWqThq5QItwrxmHK3I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=bmWgTTI/; arc=none smtp.client-ip=170.10.133.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="hRsxSUZj"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="bmWgTTI/"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1730750944;
+	s=mimecast20190719; t=1730752563;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=SgTSyDA6GA/65i9ggZr3ncjbapeLM4CHQql9tTmOryk=;
-	b=hRsxSUZjGeu2J41Zf3/1rOlNvNfDQmSi885vxtPwUDpdaYouqR6Fj5AL7fkV+PTgJIPQik
-	UuuxRvR8PZTSl0tDJdLgZZON1qL0mlK+tqffYiJEb2TPkUdjvj6TXINmYv3Ai7tHCB37RM
-	zKEHmzCEywwHM/OssjEunWzzV11hISk=
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=cVLEjSy3FWeZ2vaXcWNTXsbLKfM4wEH6iHi1Mgx6u8U=;
+	b=bmWgTTI/jwvSA86gbdTetmq7G80uRSRFf/n9PFZd9BRiu2bwkFDheg+n+WgOPfdaGAaAlc
+	M5tW+CiURpnN1zJUqP8AE6burtFbfEYSAzjnw2b1Wmp7O7LQsxVYbbGRRCKiccM2XK9WfS
+	7eGK17G3uzxyYE5dIpXVVDt4ig1Ddc4=
 Received: from mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com
  (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
  relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-492-nCVsV7cTPmu78XA3rnjiGg-1; Mon,
- 04 Nov 2024 15:09:00 -0500
-X-MC-Unique: nCVsV7cTPmu78XA3rnjiGg-1
-Received: from mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.15])
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-120-N0NNGcnCPU2NR3ddKp9kdA-1; Mon,
+ 04 Nov 2024 15:35:59 -0500
+X-MC-Unique: N0NNGcnCPU2NR3ddKp9kdA-1
+Received: from mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.12])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id AB83D1955EA9;
-	Mon,  4 Nov 2024 20:08:56 +0000 (UTC)
+	by mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 9FD861955E70;
+	Mon,  4 Nov 2024 20:35:58 +0000 (UTC)
 Received: from shalem.redhat.com (unknown [10.39.192.64])
-	by mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 523CD1956086;
-	Mon,  4 Nov 2024 20:08:55 +0000 (UTC)
+	by mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id C737D19560A2;
+	Mon,  4 Nov 2024 20:35:56 +0000 (UTC)
 From: Hans de Goede <hdegoede@redhat.com>
 To: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	Andy Shevchenko <andy@kernel.org>
+	Andy Shevchenko <andy@kernel.org>,
+	Sebastian Reichel <sre@kernel.org>
 Cc: Hans de Goede <hdegoede@redhat.com>,
-	platform-driver-x86@vger.kernel.org
-Subject: [PATCH v2 3/3] platform/x86: x86-android-tablets: Add support for Vexia EDU ATLA 10 tablet
-Date: Mon,  4 Nov 2024 21:08:48 +0100
-Message-ID: <20241104200848.58693-4-hdegoede@redhat.com>
-In-Reply-To: <20241104200848.58693-1-hdegoede@redhat.com>
-References: <20241104200848.58693-1-hdegoede@redhat.com>
+	platform-driver-x86@vger.kernel.org,
+	linux-pm@vger.kernel.org
+Subject: [PATCH 1/2] platform/x86/intel: bytcrc_pwrsrc: Optionally register a power_supply dev
+Date: Mon,  4 Nov 2024 21:35:54 +0100
+Message-ID: <20241104203555.61104-1-hdegoede@redhat.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.15
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.12
 
-Add support for the Vexia EDU ATLA 10 tablet, Android 4.2/4.4 + Guadalinex
-Ubuntu tablet distributed to schools in the Spanish Andalucía region.
+On some Android tablets with Crystal Cove PMIC the DSDT lacks an ACPI AC
+device to indicate whether a charger is plugged in or not.
 
-Besides the usual broken DSDT issues this tablet is special because all
-its LPSS island peripherals are enumerated as PCI devices rather then as
-ACPI devices as they typically are.
+Add support for registering a "crystal_cove_pwrsrc" power_supply class
+device to indicate charger online status. This is made conditional on
+a "linux,register-pwrsrc-power_supply" boolean device-property to avoid
+registering a duplicate power_supply class device on devices where this
+is already handled by an ACPI AC device.
 
-At the same time there are disabled (_STA=0) ACPI devices for
-the peripherals and child ACPI devices for e.g. attached I2C/SDIO devices
-are children of these disabled ACPI devices and thus will not be used
-by Linux since the parent is disabled.
-
-So besides the usual manual i2c-client instantiation for accel/touchscreen
-this tablet also requires manual i2c-client instantiation for the codec
-and for the PMIC.
-
-Also it seems the mainboard was designed for Windows not Android, so
-it has an I2C attached embedded controller instead of allowing direct
-access to the charger + fuel-gauge chips as is usual with Android boards.
-
-Normally when there is an embedded controller, there also is ACPI battery
-support, but since this shipped with Android that is missing and Linux
-needs to have a power_supply class driver talking directly to the EC.
+Note the "linux,register-pwrsrc-power_supply" property is only used on
+x86/ACPI (non devicetree) devs and the devicetree-bindings maintainers
+have requested properties like these to not be added to the devicetree
+bindings, so the new property is deliberately not added to any bindings.
 
 Signed-off-by: Hans de Goede <hdegoede@redhat.com>
 ---
-Changes in v2:
-- Use pci_get_domain_bus_and_slot()
-- Move "depends on PCI" to patch adding get_i2c_adap_by_pci_parent() helper
----
- .../platform/x86/x86-android-tablets/dmi.c    |  10 ++
- .../platform/x86/x86-android-tablets/other.c  | 163 ++++++++++++++++++
- .../x86-android-tablets/x86-android-tablets.h |   1 +
- 3 files changed, 174 insertions(+)
+ drivers/platform/x86/intel/bytcrc_pwrsrc.c | 76 +++++++++++++++++++++-
+ 1 file changed, 75 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/platform/x86/x86-android-tablets/dmi.c b/drivers/platform/x86/x86-android-tablets/dmi.c
-index 17f6da96aa01..3e5fa3b6e2fd 100644
---- a/drivers/platform/x86/x86-android-tablets/dmi.c
-+++ b/drivers/platform/x86/x86-android-tablets/dmi.c
-@@ -179,6 +179,16 @@ const struct dmi_system_id x86_android_tablet_ids[] __initconst = {
- 		},
- 		.driver_data = (void *)&peaq_c1010_info,
- 	},
-+	{
-+		/* Vexia Edu Atla 10 tablet 9V version */
-+		.matches = {
-+			DMI_MATCH(DMI_BOARD_VENDOR, "AMI Corporation"),
-+			DMI_MATCH(DMI_BOARD_NAME, "Aptio CRB"),
-+			/* Above strings are too generic, also match on BIOS date */
-+			DMI_MATCH(DMI_BIOS_DATE, "08/25/2014"),
-+		},
-+		.driver_data = (void *)&vexia_edu_atla10_info,
-+	},
- 	{
- 		/* Whitelabel (sold as various brands) TM800A550L */
- 		.matches = {
-diff --git a/drivers/platform/x86/x86-android-tablets/other.c b/drivers/platform/x86/x86-android-tablets/other.c
-index 7db8aa58b907..3ed808ac5b6b 100644
---- a/drivers/platform/x86/x86-android-tablets/other.c
-+++ b/drivers/platform/x86/x86-android-tablets/other.c
-@@ -12,6 +12,7 @@
- #include <linux/gpio/machine.h>
- #include <linux/input.h>
- #include <linux/leds.h>
-+#include <linux/pci.h>
+diff --git a/drivers/platform/x86/intel/bytcrc_pwrsrc.c b/drivers/platform/x86/intel/bytcrc_pwrsrc.c
+index 418b71af27ff..98b5057d4c68 100644
+--- a/drivers/platform/x86/intel/bytcrc_pwrsrc.c
++++ b/drivers/platform/x86/intel/bytcrc_pwrsrc.c
+@@ -8,13 +8,21 @@
+  * Copyright (C) 2013 Intel Corporation
+  */
+ 
++#include <linux/bits.h>
+ #include <linux/debugfs.h>
++#include <linux/interrupt.h>
+ #include <linux/mfd/intel_soc_pmic.h>
+ #include <linux/module.h>
  #include <linux/platform_device.h>
- #include <linux/pwm.h>
++#include <linux/power_supply.h>
++#include <linux/property.h>
+ #include <linux/regmap.h>
  
-@@ -597,6 +598,168 @@ const struct x86_dev_info whitelabel_tm800a550l_info __initconst = {
- 	.gpiod_lookup_tables = whitelabel_tm800a550l_gpios,
- };
++#define CRYSTALCOVE_PWRSRC_IRQ		0x03
+ #define CRYSTALCOVE_SPWRSRC_REG		0x1E
++#define CRYSTALCOVE_SPWRSRC_USB		BIT(0)
++#define CRYSTALCOVE_SPWRSRC_DC		BIT(1)
++#define CRYSTALCOVE_SPWRSRC_BATTERY	BIT(2)
+ #define CRYSTALCOVE_RESETSRC0_REG	0x20
+ #define CRYSTALCOVE_RESETSRC1_REG	0x21
+ #define CRYSTALCOVE_WAKESRC_REG		0x22
+@@ -22,6 +30,7 @@
+ struct crc_pwrsrc_data {
+ 	struct regmap *regmap;
+ 	struct dentry *debug_dentry;
++	struct power_supply *psy;
+ 	unsigned int resetsrc0;
+ 	unsigned int resetsrc1;
+ 	unsigned int wakesrc;
+@@ -118,11 +127,57 @@ static int crc_pwrsrc_read_and_clear(struct crc_pwrsrc_data *data,
+ 	return regmap_write(data->regmap, reg, *val);
+ }
  
-+/*
-+ * Vexia EDU ATLA 10 tablet, Android 4.2 / 4.4 + Guadalinex Ubuntu tablet
-+ * distributed to schools in the Spanish Andalucía region.
-+ */
-+const char * const crystal_cove_pwrsrc_psy[] = { "crystal_cove_pwrsrc" };
-+
-+static const struct property_entry vexia_edu_atla10_ulpmc_props[] = {
-+	PROPERTY_ENTRY_STRING_ARRAY("supplied-from", crystal_cove_pwrsrc_psy),
-+	{ }
-+};
-+
-+const struct software_node vexia_edu_atla10_ulpmc_node = {
-+	.properties = vexia_edu_atla10_ulpmc_props,
-+};
-+
-+static const char * const vexia_edu_atla10_accel_mount_matrix[] = {
-+	"0", "-1", "0",
-+	"1", "0", "0",
-+	"0", "0", "1"
-+};
-+
-+static const struct property_entry vexia_edu_atla10_accel_props[] = {
-+	PROPERTY_ENTRY_STRING_ARRAY("mount-matrix", vexia_edu_atla10_accel_mount_matrix),
-+	{ }
-+};
-+
-+static const struct software_node vexia_edu_atla10_accel_node = {
-+	.properties = vexia_edu_atla10_accel_props,
-+};
-+
-+static const struct property_entry vexia_edu_atla10_touchscreen_props[] = {
-+	PROPERTY_ENTRY_U32("hid-descr-addr", 0x0000),
-+	PROPERTY_ENTRY_U32("post-reset-deassert-delay-ms", 120),
-+	{ }
-+};
-+
-+static const struct software_node vexia_edu_atla10_touchscreen_node = {
-+	.properties = vexia_edu_atla10_touchscreen_props,
-+};
-+
-+static const struct property_entry vexia_edu_atla10_pmic_props[] = {
-+	PROPERTY_ENTRY_BOOL("linux,register-pwrsrc-power_supply"),
-+	{ }
-+};
-+
-+static const struct software_node vexia_edu_atla10_pmic_node = {
-+	.properties = vexia_edu_atla10_pmic_props,
-+};
-+
-+static const struct x86_i2c_client_info vexia_edu_atla10_i2c_clients[] __initconst = {
-+	{	/* I2C attached embedded controller, used to access fuel-gauge */
-+		.board_info = {
-+			.type = "vexia_atla10_ec",
-+			.addr = 0x76,
-+			.dev_name = "ulpmc",
-+			.swnode = &vexia_edu_atla10_ulpmc_node,
-+		},
-+		.adapter_path = "0000:00:18.1",
-+	},
-+	{	/* RT5642 audio codec */
-+		.board_info = {
-+			.type = "rt5640",
-+			.addr = 0x1c,
-+			.dev_name = "rt5640",
-+		},
-+		.adapter_path = "0000:00:18.2",
-+		.irq_data = {
-+			.type = X86_ACPI_IRQ_TYPE_GPIOINT,
-+			.chip = "INT33FC:02",
-+			.index = 4,
-+			.trigger = ACPI_EDGE_SENSITIVE,
-+			.polarity = ACPI_ACTIVE_HIGH,
-+			.con_id = "rt5640_irq",
-+		},
-+	},
-+	{
-+		/* kxtj21009 accelerometer */
-+		.board_info = {
-+			.type = "kxtj21009",
-+			.addr = 0x0f,
-+			.dev_name = "kxtj21009",
-+			.swnode = &vexia_edu_atla10_accel_node,
-+		},
-+		.adapter_path = "0000:00:18.5",
-+	}, {
-+		/* FT5416DQ9 touchscreen controller */
-+		.board_info = {
-+			.type = "hid-over-i2c",
-+			.addr = 0x38,
-+			.dev_name = "FTSC1000",
-+			.swnode = &vexia_edu_atla10_touchscreen_node,
-+		},
-+		.adapter_path = "0000:00:18.6",
-+		.irq_data = {
-+			.type = X86_ACPI_IRQ_TYPE_APIC,
-+			.index = 0x45,
-+			.trigger = ACPI_LEVEL_SENSITIVE,
-+			.polarity = ACPI_ACTIVE_HIGH,
-+		},
-+	}, {
-+		/* Crystal Cove PMIC */
-+		.board_info = {
-+			.type = "intel_soc_pmic_crc",
-+			.addr = 0x6e,
-+			.dev_name = "intel_soc_pmic_crc",
-+			.swnode = &vexia_edu_atla10_pmic_node,
-+		},
-+		.adapter_path = "0000:00:18.7",
-+		.irq_data = {
-+			.type = X86_ACPI_IRQ_TYPE_APIC,
-+			.index = 0x43,
-+			.trigger = ACPI_LEVEL_SENSITIVE,
-+			.polarity = ACPI_ACTIVE_HIGH,
-+		},
-+	}
-+};
-+
-+static struct gpiod_lookup_table vexia_edu_atla10_ft5416_gpios = {
-+	.dev_id = "i2c-FTSC1000",
-+	.table = {
-+		GPIO_LOOKUP("INT33FC:00", 60, "reset", GPIO_ACTIVE_LOW),
-+		{ }
-+	},
-+};
-+
-+static struct gpiod_lookup_table * const vexia_edu_atla10_gpios[] = {
-+	&vexia_edu_atla10_ft5416_gpios,
-+	NULL
-+};
-+
-+static int __init vexia_edu_atla10_init(struct device *dev)
++static irqreturn_t crc_pwrsrc_irq_handler(int irq, void *_data)
 +{
-+	struct pci_dev *pdev;
++	struct crc_pwrsrc_data *data = _data;
++	unsigned int irq_mask;
++
++	if (regmap_read(data->regmap, CRYSTALCOVE_PWRSRC_IRQ, &irq_mask))
++		return IRQ_NONE;
++
++	regmap_write(data->regmap, CRYSTALCOVE_PWRSRC_IRQ, irq_mask);
++
++	power_supply_changed(data->psy);
++	return IRQ_HANDLED;
++}
++
++static int crc_pwrsrc_psy_get_property(struct power_supply *psy,
++				       enum power_supply_property psp,
++				       union power_supply_propval *val)
++{
++	struct crc_pwrsrc_data *data = power_supply_get_drvdata(psy);
++	unsigned int pwrsrc;
 +	int ret;
 +
-+	/* Enable the Wifi module by setting the wifi_enable pin to 1 */
-+	ret = x86_android_tablet_get_gpiod("INT33FC:02", 20, "wifi_enable",
-+					   false, GPIOD_OUT_HIGH, NULL);
++	if (psp != POWER_SUPPLY_PROP_ONLINE)
++		return -EINVAL;
++
++	ret = regmap_read(data->regmap, CRYSTALCOVE_SPWRSRC_REG, &pwrsrc);
 +	if (ret)
 +		return ret;
 +
-+	/* Reprobe the SDIO controller to enumerate the now enabled Wifi module */
-+	pdev = pci_get_domain_bus_and_slot(0, 0, PCI_DEVFN(0x11, 0));
-+	if (!pdev)
-+		return -EPROBE_DEFER;
-+
-+	ret = device_reprobe(&pdev->dev);
-+	if (ret)
-+		pci_warn(pdev, "Reprobing error: %d\n", ret);
-+
-+	pci_dev_put(pdev);
++	val->intval = !!(pwrsrc & (CRYSTALCOVE_SPWRSRC_USB |
++				   CRYSTALCOVE_SPWRSRC_DC));
 +	return 0;
 +}
 +
-+const struct x86_dev_info vexia_edu_atla10_info __initconst = {
-+	.i2c_client_info = vexia_edu_atla10_i2c_clients,
-+	.i2c_client_count = ARRAY_SIZE(vexia_edu_atla10_i2c_clients),
-+	.gpiod_lookup_tables = vexia_edu_atla10_gpios,
-+	.init = vexia_edu_atla10_init,
-+	.use_pci_devname = true,
++static const enum power_supply_property crc_pwrsrc_psy_props[] = {
++	POWER_SUPPLY_PROP_ONLINE,
 +};
 +
- /*
-  * The firmware node for ktd2026 on Xaomi pad2. It composed of a RGB LED node
-  * with three subnodes for each color (B/G/R). The RGB LED node is named
-diff --git a/drivers/platform/x86/x86-android-tablets/x86-android-tablets.h b/drivers/platform/x86/x86-android-tablets/x86-android-tablets.h
-index d26a4792eb0e..0fc7e8cff672 100644
---- a/drivers/platform/x86/x86-android-tablets/x86-android-tablets.h
-+++ b/drivers/platform/x86/x86-android-tablets/x86-android-tablets.h
-@@ -120,6 +120,7 @@ extern const struct x86_dev_info nextbook_ares8_info;
- extern const struct x86_dev_info nextbook_ares8a_info;
- extern const struct x86_dev_info peaq_c1010_info;
- extern const struct x86_dev_info whitelabel_tm800a550l_info;
-+extern const struct x86_dev_info vexia_edu_atla10_info;
- extern const struct x86_dev_info xiaomi_mipad2_info;
- extern const struct dmi_system_id x86_android_tablet_ids[];
++static const struct power_supply_desc crc_pwrsrc_psy_desc = {
++	.name = "crystal_cove_pwrsrc",
++	.type = POWER_SUPPLY_TYPE_MAINS,
++	.properties = crc_pwrsrc_psy_props,
++	.num_properties = ARRAY_SIZE(crc_pwrsrc_psy_props),
++	.get_property = crc_pwrsrc_psy_get_property,
++};
++
+ static int crc_pwrsrc_probe(struct platform_device *pdev)
+ {
+ 	struct intel_soc_pmic *pmic = dev_get_drvdata(pdev->dev.parent);
+ 	struct crc_pwrsrc_data *data;
+-	int ret;
++	int irq, ret;
  
+ 	data = devm_kzalloc(&pdev->dev, sizeof(*data), GFP_KERNEL);
+ 	if (!data)
+@@ -149,6 +204,25 @@ static int crc_pwrsrc_probe(struct platform_device *pdev)
+ 	if (ret)
+ 		return ret;
+ 
++	if (device_property_read_bool(pdev->dev.parent, "linux,register-pwrsrc-power_supply")) {
++		struct power_supply_config psy_cfg = { .drv_data = data };
++
++		irq = platform_get_irq(pdev, 0);
++		if (irq < 0)
++			return dev_err_probe(&pdev->dev, irq, "getting IRQ\n");
++
++		data->psy = devm_power_supply_register(&pdev->dev, &crc_pwrsrc_psy_desc, &psy_cfg);
++		if (IS_ERR(data->psy))
++			return dev_err_probe(&pdev->dev, PTR_ERR(data->psy),
++					     "registering power-supply\n");
++
++		ret = devm_request_threaded_irq(&pdev->dev, irq, NULL,
++						crc_pwrsrc_irq_handler,
++						IRQF_ONESHOT, KBUILD_MODNAME, data);
++		if (ret)
++			return dev_err_probe(&pdev->dev, ret, "requesting IRQ\n");
++	}
++
+ 	data->debug_dentry = debugfs_create_dir(KBUILD_MODNAME, NULL);
+ 	debugfs_create_file("pwrsrc", 0444, data->debug_dentry, data, &pwrsrc_fops);
+ 	debugfs_create_file("resetsrc", 0444, data->debug_dentry, data, &resetsrc_fops);
 -- 
 2.47.0
 
