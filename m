@@ -1,93 +1,90 @@
-Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 586A418EB1;
-	Mon,  4 Nov 2024 18:00:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AAA4A1D3584
+	for <platform-driver-x86@vger.kernel.org>; Mon,  4 Nov 2024 20:08:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730743237; cv=none; b=k58yCBmQUurnTBF9sdpuX5gkJI9nC5ZG1kR+aXMkgymY9ocuYaULKTpmqfJfslZBX0jiLMF0rqDH/aUikSCw3azkhGVsn/EbQ09J1i0S7y+w18T4W+kdErmpTea/cIDrMeDAPYk3XCP0tiuPy81JCiNX3fTr1hNS2xInwNTNttI=
+	t=1730750938; cv=none; b=lAa4cXNBtwADCIzuvrOiyIlUmiAhAl4DCiTWloLSyFrokKhQ3+UeEzRdb+vZPonjZx99YPBCptXgaBUKxhkSmBY6ORdBb12abOy1SelOftP5So5j0j18OIcKpFCIS+jxnLdo2/VgXgtEd4XEOtK8mur3cvfalYm33FhVaEKunrE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730743237; c=relaxed/simple;
-	bh=l4ClbwKLAAUCIKk+H9sLcRUgk+8DLPI9VAyS+KjeJy4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=bEZrEQsKbdpcyQknsv3oBYpPPIvJgTk0lEk0pfhBFrtDCSTns6M9aGbnKn4TRt39bRsu67XhPCoP5UnYtoEYsctlIghoany0d9vsaWRxd1ILMGWZ/GcOcGdaD5n5JiB1jm1+CZ1xtkuzn4g/o5atKp0OMaUyHmGoHuIoF1QN3EM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=kqmmFoFZ; arc=none smtp.client-ip=90.155.92.199
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	s=arc-20240116; t=1730750938; c=relaxed/simple;
+	bh=l/Qx0sEJ7w/piQy59ZC+YPMXDaInrZS9g7u5DNYHHzk=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=FxpteE87agvpN3RQZTt4wCC5UwrtBNqY0w+TmqpfUAHSwp/45OxC0B2wHjE6L1tyi3gIxa6vxz5ncKTQIKNXifuI3QPfqH6pKDJzxMq1ORF2muRTyaVNqmJ3n+Ike5dU60el7DGnJCYbhrwFhC/vSRDtpbuCPSrv9u1QFZXF+p0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=ibeXdgBj; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="kqmmFoFZ"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=desiato.20200630; h=Content-Transfer-Encoding:Content-Type
-	:In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:
-	Sender:Reply-To:Content-ID:Content-Description;
-	bh=E1fQfudbR4NO1VNaKqotSsHuPMFHOb9T1HzqpLDUDRk=; b=kqmmFoFZlMBxlNL7guu+uAEGuL
-	CjAyvw2Y3uIngSJsfQMhpP9DlavupameoKxseM32OJwZ0E5vc2BYSj5MwMWbbb+XV7bzXeb1tPGeb
-	S9LlE+t0jLMEeH/2ctqWtCGHdcIwti/YvYNXvJ2m3nsYYquI5vZ1XX0nqU1EK7qmT2n0XKm8S8xA+
-	co72pHyJ3NW4idW/a02gi65wk7NG4Tt2J/NOuwOmQ3u1iA39NT+PmW2wahcejC+goy5xTh6cHoQhp
-	mnWDOwacTaSKc/46mL+gdcWNFJ8u3cjkg9rFN9ziwcBQ+7Un+0iPK8oshD0JU4rh5VTdf4wbxXM7F
-	TQYkdxAw==;
-Received: from [50.53.2.24] (helo=[192.168.254.17])
-	by desiato.infradead.org with esmtpsa (Exim 4.98 #2 (Red Hat Linux))
-	id 1t81NL-0000000BOXx-36QD;
-	Mon, 04 Nov 2024 18:00:28 +0000
-Message-ID: <123bd610-03d7-4c08-9314-616c0d3349d2@infradead.org>
-Date: Mon, 4 Nov 2024 10:00:21 -0800
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ibeXdgBj"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1730750935;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=4TzQyP2OdStKw7hGJFijbK/KyZZ0HUyyFmf9saFuYpk=;
+	b=ibeXdgBjBt/rW7I7LI0pn679cnMRlacdznrDGYMn3FPiBBOksaF17wa58eiDkra7pqtZsp
+	ydycsDDYmTRCUFWhKmp0raD+ZdTBZx509l9/fyXEhEFwBoEuHSw97s8nnbBEtLFiTvGj/7
+	b3AsXZ1m7D4/P6S56ddt2A1uU3Q5Cyo=
+Received: from mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-124-CMr8VVHPMC6IeEK2jBFdsw-1; Mon,
+ 04 Nov 2024 15:08:52 -0500
+X-MC-Unique: CMr8VVHPMC6IeEK2jBFdsw-1
+Received: from mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.15])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id C4B2519560A3;
+	Mon,  4 Nov 2024 20:08:50 +0000 (UTC)
+Received: from shalem.redhat.com (unknown [10.39.192.64])
+	by mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 627121955F42;
+	Mon,  4 Nov 2024 20:08:49 +0000 (UTC)
+From: Hans de Goede <hdegoede@redhat.com>
+To: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	Andy Shevchenko <andy@kernel.org>
+Cc: Hans de Goede <hdegoede@redhat.com>,
+	platform-driver-x86@vger.kernel.org
+Subject: [PATCH v2 0/3] platform/x86: x86-android-tablets: Add support for Vexia EDU ATLA 10 tablet
+Date: Mon,  4 Nov 2024 21:08:45 +0100
+Message-ID: <20241104200848.58693-1-hdegoede@redhat.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v6 04/12] platform/x86: hfi: Introduce AMD Hardware
- Feedback Interface Driver
-To: Mario Limonciello <mario.limonciello@amd.com>,
- Borislav Petkov <bp@alien8.de>, Hans de Goede <hdegoede@redhat.com>,
- =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Cc: x86@kernel.org, "Gautham R . Shenoy" <gautham.shenoy@amd.com>,
- Perry Yuan <perry.yuan@amd.com>, linux-kernel@vger.kernel.org,
- linux-doc@vger.kernel.org, linux-pm@vger.kernel.org,
- platform-driver-x86@vger.kernel.org,
- Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
-References: <20241104175407.19546-1-mario.limonciello@amd.com>
- <20241104175407.19546-5-mario.limonciello@amd.com>
-Content-Language: en-US
-From: Randy Dunlap <rdunlap@infradead.org>
-In-Reply-To: <20241104175407.19546-5-mario.limonciello@amd.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.15
+
+Hi All,
+
+Here is v2 of my patch series to add support for the Vexia EDU ATLA 10
+tablet.
+
+Changes in v2:
+- Add get_i2c_adap_by_handle() and get_i2c_adap_by_pci_parent()
+  helpers as suggested by Andy
+
+Regards,
+
+Hans
 
 
+Hans de Goede (3):
+  platform/x86: x86-android-tablets: Add get_i2c_adap_by_handle() helper
+  platform/x86: x86-android-tablets: Add support for getting i2c_adapter
+    by PCI parent devname()
+  platform/x86: x86-android-tablets: Add support for Vexia EDU ATLA 10
+    tablet
 
-On 11/4/24 9:53 AM, Mario Limonciello wrote:
-> diff --git a/drivers/platform/x86/amd/hfi/Kconfig b/drivers/platform/x86/amd/hfi/Kconfig
-> new file mode 100644
-> index 0000000000000..79e3b0073275c
-> --- /dev/null
-> +++ b/drivers/platform/x86/amd/hfi/Kconfig
-> @@ -0,0 +1,18 @@
-> +# SPDX-License-Identifier: GPL-2.0-only
-> +#
-> +# AMD Hardware Feedback Interface Driver
-> +#
-> +
-> +config AMD_HFI
-> +	bool "AMD Hetero Core Hardware Feedback Driver"
-> +	depends on ACPI
-> +	depends on CPU_SUP_AMD
-> +	help
-> +	 Select this option to enable the AMD Heterogeneous Core Hardware Feedback Interface. If
-> +	 selected, hardware provides runtime thread classification guidance to the operating system
-> +	 on the performance and energy efficiency capabilities of each heterogeneous CPU core.
-> +	 These capabilities may vary due to the inherent differences in the core types and can
-> +	 also change as a result of variations in the operating conditions of the system such
-> +	 as power and thermal limits. If selected, the kernel relays updates in heterogeneous
-> +	 CPUs' capabilities to userspace, allowing for more optimal task scheduling and
-> +	 resource allocation, leveraging the diverse set of cores available.
-
-Please adjust the help text to fit in 80 columns.
-Thanks.
+ .../platform/x86/x86-android-tablets/Kconfig  |   1 +
+ .../platform/x86/x86-android-tablets/core.c   |  60 ++++++-
+ .../platform/x86/x86-android-tablets/dmi.c    |  20 +++
+ .../platform/x86/x86-android-tablets/other.c  | 165 ++++++++++++++++++
+ .../x86-android-tablets/x86-android-tablets.h |   2 +
+ 5 files changed, 239 insertions(+), 9 deletions(-)
 
 -- 
-~Randy
+2.47.0
 
