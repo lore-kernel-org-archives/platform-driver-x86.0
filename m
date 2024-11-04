@@ -1,175 +1,206 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from NAM11-BN8-obe.outbound.protection.outlook.com (mail-bn8nam11on2079.outbound.protection.outlook.com [40.107.236.79])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1C57E70816
-	for <platform-driver-x86@vger.kernel.org>; Mon,  4 Nov 2024 15:55:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730735701; cv=none; b=EWIkdk4+21epRhTkLmWgzDtfuQFDnhAppPdXUkY1hQzY7zHvyMxQdE//ocUIu0+cCgZk9FjpUQ/dGSqJ7IzMbiwnuFPo3Pmn0jL6IWhE2M/k/OasJQKP3GPJVL99n1i/GTvJproH2nWpGR2Vs2aepwDZRssnElnXM23cq93soZg=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730735701; c=relaxed/simple;
-	bh=jIexCp4WJxKYLIwk/cW+5jDuV3Oee1nIKjrOHlsJTWo=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=jph0LDc4LJPschz54NQmeZeVou584S8J3Ia/Odafrd1tZilvvMJ3oYwWMJ2GDZ2+snlnHsN7j8iB+w6X2fnRSUcuSeKHWYSm5+67j+AwCrToeOminLE6Vc8kcqtMt3O6+obIlBi2ALAv5vfevebK4xxoFIwRFoh+2vjvD6d+Gbw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=ONw6UW3D; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0006913D53B;
+	Mon,  4 Nov 2024 17:54:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.236.79
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1730742884; cv=fail; b=lcIf5HamuHam51wgpXv/DvpxK8RX6o6fepB24xu+IaTH2pmXXpk8U5kaSFmyW0kCR+dKvn5Xoa97OlJLDc66JMBELAcTcTDbnrz6ltJfA6JuiqVEa7fZz/F0ozlyP+RG86pzjm9hzD5dQ0nZbjO7M3LJqCRnv6wOYuoSQgB/PIE=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1730742884; c=relaxed/simple;
+	bh=abKHVqcob6MsIVrzPFq/wVW672akzDEtsTRrcF6OSp4=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=RK5IYzjIDCnhoDxZIQmA6jgiMiMn/YsLamtSGYagJPkk9jshnL+OgUPEwIzx83jIrMEafeO42S909u1eurqQztiiRM+bvVsf7nzaQ0FNJgU1nSZfcqTg+r/pkFcZ6XFCdwByr9ptzx3KGtlPZCFWqRYbqASoDXclQ5EqkuS/yvo=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=MGishXpx; arc=fail smtp.client-ip=40.107.236.79
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ONw6UW3D"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1730735699;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=QvfbzRHiaTs4bzRIVW/DqvVFwzsLjyP8y/Pf7UEmR4Y=;
-	b=ONw6UW3DRtENs5H1EVRJjgx4gPXCOTQ1bV+Lazagp86wSZ9njBCx8IOUMlIJdTfdRhMPUH
-	N0axK5Bo1gjjLaLmK9rZOXYleopkyqcu//AaKId2BoRVW3ojCnIATOHcOFKJXVsIe0G1E1
-	VVXm8dVfqfs6w8Sgay1xSLjGRe2A7Vk=
-Received: from mail-ej1-f70.google.com (mail-ej1-f70.google.com
- [209.85.218.70]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-570-8G1uJUFjO1Ot1HnSTrRO7A-1; Mon, 04 Nov 2024 10:54:57 -0500
-X-MC-Unique: 8G1uJUFjO1Ot1HnSTrRO7A-1
-Received: by mail-ej1-f70.google.com with SMTP id a640c23a62f3a-a99fff1ad9cso382587566b.2
-        for <platform-driver-x86@vger.kernel.org>; Mon, 04 Nov 2024 07:54:56 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1730735696; x=1731340496;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=QvfbzRHiaTs4bzRIVW/DqvVFwzsLjyP8y/Pf7UEmR4Y=;
-        b=srpHYdwP4VTk5VSVQ6lEtbCVqbLEHjilLLGHrN9mkflfkOJZ3myVwri7PdQ2oyLNFH
-         0qfG85WdUACvJDEl0jngsnjyUScpmbpshXdS6uRAiFWmWwWGp8cctR+H/S2PN+lihTGR
-         u6nf49LgzY+nNqDtzquIdVlD8mbXMJc9CaNXArCg1Q2Nv2P/gGQo8pquyW15ko9Rvqx6
-         eknsD/XL4aq0VTQPYMcIy7gYy8M2EoHTvtzlLDERTisdHADuPP+0BrE9o8YKRjlaIFrN
-         eYXHtrQjuqAybMR9Cr+aEuLF1h5K/t9nPFFivWDFLidKVIQPrxBGQxpU30ELPvn/P9fE
-         44LQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWTCuSaap5Z4o4p4+LHhbor9A4V9kSYQVn1vd4qweSQBNWNT1bYkUJ7cDutYRcCKoQGoGGzFmrQ20hKLYNn1COMMv8g@vger.kernel.org
-X-Gm-Message-State: AOJu0YwU9beyyHiRqVsjffpsmJYPv4asOQkD5EFMeOTMGSOv0m5tb8Pd
-	qUYqb22OhIGuAfR2m89LoryIruztSsEAjV8cJhqFnOvnnjNbDrLrDPHQGi7EYAmrRFQHKk28WkW
-	oqch/K/lcj4tR5HCSJ1hHvIgQZYCCzXC2k/3VL9dMXUatXwdJ3AseqGxUsRH2aVys+kRctbwRJL
-	pcCos=
-X-Received: by 2002:a17:907:74d:b0:a9a:1792:f05 with SMTP id a640c23a62f3a-a9e3a620de8mr2068309866b.31.1730735695611;
-        Mon, 04 Nov 2024 07:54:55 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IFj80DrqcpKlG7VTIr/gs2UT9+Gi53XfrCX8fHakOcQ8nJ5seWwrdL53xm1Q6Oy4gRWdwDsHw==
-X-Received: by 2002:a17:907:74d:b0:a9a:1792:f05 with SMTP id a640c23a62f3a-a9e3a620de8mr2068307966b.31.1730735695266;
-        Mon, 04 Nov 2024 07:54:55 -0800 (PST)
-Received: from [192.168.100.203] ([109.37.147.87])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a9e564c5348sm565179966b.49.2024.11.04.07.54.54
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 04 Nov 2024 07:54:54 -0800 (PST)
-Message-ID: <53a26418-e2dd-426b-b144-32dac8837221@redhat.com>
-Date: Mon, 4 Nov 2024 16:54:53 +0100
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="MGishXpx"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=KOSbrAD8xM62Z/R3r3e5bw7IwH20wdXwyjZP/PDx44FQKbmO9LfOfu9D4NB8b0SQhWJDthBKv+nw5n2cBPCEW3uLmTMKP04qePSA5TgTYE6OjCVL8xIp6I6FefJceCKsNFp3aJiwnTztf5HvyuKInpEq4xusrDE99wlAWBIdsfeniRuibXGoAPK5J53X0cqFFXN6VpjDVxrqPun43owoCXgIUs4kcYMkMBrUCrCe4Jc51IhhbyID2JwRwRHMl034yXShZB8TsSLV4uBcYSkbsP1Cu8fsYS4yCggccrUgo4PtriN30kjwtiicJoWFUGz4QcmgrTMXoStQk6G0c3sGzQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=vPEsvSbtO+aCrSCL56aEafSf0p+uCfEbbfU2zowipnU=;
+ b=FLMq27fqeZ5ie77AK5/EcfGNr8CohwoeOipProRkWXwY7/Npxno50ijjU/E5ztHwC8qOCSLMy7bVxKVFVHqxitMH0AdFLII9IdXqnkn0ISfOG8WpRpP2Kk/dWMvlcPqwQb9cy1wQ8a1/oICa3/8ze9EhynhqCl4+Kz6SWKKS3SeUihzJucN0d8cQclgZHdB+mt9Jir//1N69fUrGrrsQM3knKwPPaeClOhLFWN6yRXXa23zLGXm5poPxaDZbpv195LHxB2TEIhOzJpWs2mz2QtMbxk9tsP/WlXH1D5dWPF1W6SwtzrdcpjvGgLFvzHAWB8LWWQgbzYknh01RFqH88w==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=alien8.de smtp.mailfrom=amd.com; dmarc=pass
+ (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
+ dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=vPEsvSbtO+aCrSCL56aEafSf0p+uCfEbbfU2zowipnU=;
+ b=MGishXpx2nAZItHiv+M5XcyVduTxKgOSLtp+O7MMSqGeSBNFMOrj0KuD1jtI/vXb/6Jw6Nz02ECub2dr+OndVtcv8dM6xylQHo89ED85wY3pXrhGpWqGdUXLv0yy12ni8ncViUtqaDMw/UI1QfwEkZsfLMkOwjEJ8ulbJK5n6gQ=
+Received: from BY3PR03CA0028.namprd03.prod.outlook.com (2603:10b6:a03:39a::33)
+ by CH2PR12MB4294.namprd12.prod.outlook.com (2603:10b6:610:a9::11) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8114.31; Mon, 4 Nov
+ 2024 17:54:40 +0000
+Received: from SJ1PEPF00002312.namprd03.prod.outlook.com
+ (2603:10b6:a03:39a:cafe::67) by BY3PR03CA0028.outlook.office365.com
+ (2603:10b6:a03:39a::33) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8114.30 via Frontend
+ Transport; Mon, 4 Nov 2024 17:54:39 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
+Received: from SATLEXMB04.amd.com (165.204.84.17) by
+ SJ1PEPF00002312.mail.protection.outlook.com (10.167.242.166) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.8137.17 via Frontend Transport; Mon, 4 Nov 2024 17:54:39 +0000
+Received: from AUS-P9-MLIMONCI.amd.com (10.180.168.240) by SATLEXMB04.amd.com
+ (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Mon, 4 Nov
+ 2024 11:54:37 -0600
+From: Mario Limonciello <mario.limonciello@amd.com>
+To: Borislav Petkov <bp@alien8.de>, Hans de Goede <hdegoede@redhat.com>,
+	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+CC: <x86@kernel.org>, "Gautham R . Shenoy" <gautham.shenoy@amd.com>, "Mario
+ Limonciello" <mario.limonciello@amd.com>, Perry Yuan <perry.yuan@amd.com>,
+	<linux-kernel@vger.kernel.org>, <linux-doc@vger.kernel.org>,
+	<linux-pm@vger.kernel.org>, <platform-driver-x86@vger.kernel.org>, "Shyam
+ Sundar S K" <Shyam-sundar.S-k@amd.com>
+Subject: [PATCH v6 00/12] Add support for AMD hardware feedback interface
+Date: Mon, 4 Nov 2024 11:53:55 -0600
+Message-ID: <20241104175407.19546-1-mario.limonciello@amd.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/2] platform/x86: x86-android-tablets: Add support for
- getting i2c_adapter by PCI parent devname()
-To: Andy Shevchenko <andy@kernel.org>
-Cc: =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
- platform-driver-x86@vger.kernel.org
-References: <20241025094435.71718-1-hdegoede@redhat.com>
- <Zxu5_VAe2NLeR-2s@smile.fi.intel.com>
-Content-Language: en-US
-From: Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <Zxu5_VAe2NLeR-2s@smile.fi.intel.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: SATLEXMB04.amd.com (10.181.40.145) To SATLEXMB04.amd.com
+ (10.181.40.145)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: SJ1PEPF00002312:EE_|CH2PR12MB4294:EE_
+X-MS-Office365-Filtering-Correlation-Id: f55094fe-a8d0-43d1-9a67-08dcfcf9c0f0
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|376014|1800799024|36860700013|82310400026;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?+pjS2VuozRSfRuoKRc4x2Qvxihp8IXXEt0aBlIWeZwMSzrdgXgL839rcYM+L?=
+ =?us-ascii?Q?iOJjYp8IfgX4SV9lRyI6b/kh6WF6JmY4RWT/UfRyws+THRfw6GL9FNJnOLPE?=
+ =?us-ascii?Q?i/yDZJtm3nUZiOI/DUGQY8YynD+VlDIhIl1NZPIvMZxBCh9XqyjeOC8r8kjt?=
+ =?us-ascii?Q?IhJ9KJi6r9J+E8JR7Tsl7XxJhNB7PCvnmfyOqW2tDH9yIw6MyVcrYnlKiYJg?=
+ =?us-ascii?Q?Z0ypgs8AvrmTM9NkEAEotps2IXoaJdvxmoiW55KGeI1iNKSlqdqGDOuz07kI?=
+ =?us-ascii?Q?ouSKrYJ8In2Qu7Q1bnz5OEDvu8q8/DqkKA7APEEH3Nbx0W5uMMJdEsdFBkoJ?=
+ =?us-ascii?Q?mYxeSsIZMM7pu96M7SOBvrlX25QabYq/9mdlOlU/ACNfTYvkjQ+FgAIWFzFJ?=
+ =?us-ascii?Q?emUlO75K1wXibYR3pfF8a/zj5+Ci8TWyAE5VaCfOyCILRpt1PLP0iMLzOxst?=
+ =?us-ascii?Q?JjjcypPytxeOUrjV0yoCY1fYmJDxk/dF2lZ+DEAiLJff5UgIf7ZIhUhCm356?=
+ =?us-ascii?Q?gK2iCJwaj7CezAKbJejv8AeZUBVSdGAMC3LRPdr27SCesnomhxG473kKKExN?=
+ =?us-ascii?Q?WW0lEEtT1Q3OFu29RPLbvxwId/Pf6YbT38SMpnOy8spywSZ9z+80NCiA3UDp?=
+ =?us-ascii?Q?EbUfuVoTF8eYNZa9Ya0+m413zAjqAImluULmDLbUMTeXTSkPCqWN8KRM5xyj?=
+ =?us-ascii?Q?AOLAnlDSEa36k7mNtCE8x+ZxOmEEOvMst7wre4/5QaIE0ktiknHHgS6INl80?=
+ =?us-ascii?Q?sTxihkBe+0haxyJTPEw/iAye+t3TbLT2YxZlz9xCrH6gIxQfmI2FbheWwrN7?=
+ =?us-ascii?Q?W11ZhGdha3IQsDLB7dA/9rQqK73emuTBZ6uHlbgCXGBlcc987zp3Aq4LyYqx?=
+ =?us-ascii?Q?7cDwj/1XdiZAso+lPpmFPBGbU/HnrPQ2oLAjlhFclWkEWYSroo5v7cn+ULtK?=
+ =?us-ascii?Q?80E4V7kEgQHSedE4vEEZMuh7E1RBskDw/X9wMlAHQNHoFYxxhk/LkNXo+72w?=
+ =?us-ascii?Q?L2g04WEDZD6V/rC+YcGSf7AHf4q6oRLJEbPYYMSpC8p/9amP9NISzTD+3szm?=
+ =?us-ascii?Q?nCYn5yuH+hd0oqn4Ln+IK3yIxiDc7PLrGz+pHTxYvicwHT2Bfr5QKXpIK4PR?=
+ =?us-ascii?Q?uPMTpJikyXNeIApFwQa6wupmdA9kBgMDK1jSb568j1fszx2vPF5tYApwAC9Y?=
+ =?us-ascii?Q?/KlvfLopqxtWTDvONmDPT8EAKobBMiGDiGT2mEqeJe++dUPPGXAIL2vP/AoF?=
+ =?us-ascii?Q?HyfBPoKRi37dk0Br5XOwhCVP3Y56vtE9N5sNt4fMXW1vNudmBpoVfpCB3Mxb?=
+ =?us-ascii?Q?y2t34mAHFrUUta9dWY4LLYLeuxmVxl/RcgH0KVmBZvNziJ9xs7h9PBQeKu3p?=
+ =?us-ascii?Q?darG2/kqbAJ3TvDqRZrRMVIwiDlYKpXMwFw8WDsN7jGpUhKeiw=3D=3D?=
+X-Forefront-Antispam-Report:
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(376014)(1800799024)(36860700013)(82310400026);DIR:OUT;SFP:1101;
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 04 Nov 2024 17:54:39.2255
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: f55094fe-a8d0-43d1-9a67-08dcfcf9c0f0
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	SJ1PEPF00002312.namprd03.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH2PR12MB4294
 
-Hi,
+The AMD Heterogeneous core design and Hardware Feedback Interface (HFI)
+provide behavioral classification and a dynamically updated ranking table
+for the scheduler to use when choosing cores for tasks.
 
-On 25-Oct-24 5:32 PM, Andy Shevchenko wrote:
-> On Fri, Oct 25, 2024 at 11:44:34AM +0200, Hans de Goede wrote:
->> On the Vexia EDU ATLA 10 tablet, which ships with Android + a custom Linux
->> (guadalinex) using the custom Android kernel the I2C controllers are not
->> enumerated as ACPI devices as they typically are.
->>
->> Instead they are enumerated as PCI devices which do not have ACPI firmware
->> nodes associated with them, so getting the i2c_adapter by the ACPI path of
->> its firmware node does not work.
->>
->> Add support for getting the i2c_adapter by the devname() of its PCI parent
->> instead.
-> 
-> ...
-> 
->>  #include <linux/acpi.h>
->> +#include <linux/device.h>
-> 
->> +#include <linux/device/bus.h>
-> 
-> The above is enough. but if you want go with this, I would swap them:
-> 
-> #include <linux/device/bus.h>
-> #include <linux/device.h>
-> 
->>  #include <linux/dmi.h>
->>  #include <linux/gpio/consumer.h>
->>  #include <linux/gpio/machine.h>
->>  #include <linux/irq.h>
->>  #include <linux/module.h>
->> +#include <linux/pci.h>
->>  #include <linux/platform_device.h>
->>  #include <linux/serdev.h>
->>  #include <linux/string.h>
-> 
-> ...
-> 
->> +static __init int match_parent(struct device *dev, const void *data)
->> +{
->> +	return dev->parent == data;
->> +}
-> 
-> To me it sounds like a candidate to be in drivers/base/core.c and bus.h.
-> 
-> ...
-> 
->> -	status = acpi_get_handle(NULL, client_info->adapter_path, &handle);
->> -	if (ACPI_FAILURE(status)) {
->> -		pr_err("Error could not get %s handle\n", client_info->adapter_path);
->> -		return -ENODEV;
->> +	if (dev_info->use_pci_devname) {
->> +		struct device *pdev, *adap_dev;
->> +
->> +		pdev = bus_find_device_by_name(&pci_bus_type, NULL, client_info->adapter_path);
->> +		if (!pdev) {
->> +			pr_err("Error could not find %s PCI device\n", client_info->adapter_path);
->> +			return -ENODEV;
->> +		}
->> +
->> +		adap_dev = bus_find_device(&i2c_bus_type, NULL, pdev, match_parent);
->> +		if (adap_dev) {
->> +			adap = i2c_verify_adapter(adap_dev);
->> +			if (!adap)
->> +				put_device(adap_dev);
->> +		}
->> +
->> +		put_device(pdev);
->> +	} else {
->> +		acpi_handle handle;
->> +		acpi_status status;
->> +
->> +		status = acpi_get_handle(NULL, client_info->adapter_path, &handle);
->> +		if (ACPI_FAILURE(status)) {
->> +			pr_err("Error could not get %s handle\n", client_info->adapter_path);
->> +			return -ENODEV;
->> +		}
->> +
->> +		adap = i2c_acpi_find_adapter_by_handle(handle);
-> 
-> Can we rather have two patches:
-> 1) create a helper out of the existing code;
-> 2) added the new approach also using a separate helper?
+Threads are classified during runtime into enumerated classes.
+Currently, the driver supports 3 classes (0 through 2). These classes
+represent thread performance/power characteristics that may benefit from
+special scheduling behaviors. The real-time thread classification is
+consumed by the operating system and is used to inform the scheduler of
+where the thread should be placed for optimal performance or energy efficiency.
 
-Ack done for v2.
+The thread classification helps to select CPU from a ranking table that describes
+an efficiency and performance ranking for each classification from two dimensions.
 
-Regards,
+The ranking data provided by the ranking table are numbers ranging from 0 to 255,
+where a higher performance value indicates higher performance capability and a higher
+efficiency value indicates greater efficiency. All the CPU cores are ranked into
+different class IDs. Within each class ranking, the cores may have different ranking
+values. Therefore, picking from each classification ID will later allow the scheduler
+to select the best core while threads are classified into the specified workload class.
 
-Hans
+This series was originally submitted by Perry Yuan [1] but he is now doing a different
+role and he asked me to take over.
 
+Link: https://lore.kernel.org/all/cover.1724748733.git.perry.yuan@amd.com/
+
+On applicable hardware this series has between a 2% and 5% improvement across various
+benchmarks.
+
+There is however a cost associated with clearing history on the process context switch.
+On average it increases the delay by 119ns, and also has a wider range in delays
+(the standard deviation is 25% greater).
+
+Although this series most prominently has changes to platform-x86 it is based
+off of tip x86/cpu due to changes queued up for 6.13-rc1 that are dependencies.
+
+v5->v6:
+ * boot_cpu_has() -> cpu_feature_enabled()
+ * Simplify process switch patch
+ * Use managed resources
+
+Mario Limonciello (4):
+  MAINTAINERS: Add maintainer entry for AMD Hardware Feedback Driver
+  cpufreq/amd-pstate: Disable preferred cores on designs with workload
+    classification
+  platform/x86/amd: hfi: Set ITMT priority from ranking data
+  platform/x86/amd: hfi: Add debugfs support
+
+Perry Yuan (8):
+  Documentation: x86: Add AMD Hardware Feedback Interface documentation
+  x86/msr-index: define AMD heterogeneous CPU related MSR
+  platform/x86: hfi: Introduce AMD Hardware Feedback Interface Driver
+  platform/x86: hfi: parse CPU core ranking data from shared memory
+  platform/x86: hfi: init per-cpu scores for each class
+  platform/x86: hfi: add online and offline callback support
+  platform/x86: hfi: add power management callback
+  x86/process: Clear hardware feedback history for AMD processors
+
+ Documentation/arch/x86/amd-hfi.rst    | 127 ++++++
+ Documentation/arch/x86/index.rst      |   1 +
+ MAINTAINERS                           |   9 +
+ arch/x86/include/asm/msr-index.h      |   5 +
+ arch/x86/kernel/process_32.c          |   3 +
+ arch/x86/kernel/process_64.c          |   4 +
+ drivers/cpufreq/amd-pstate.c          |   6 +
+ drivers/platform/x86/amd/Kconfig      |   1 +
+ drivers/platform/x86/amd/Makefile     |   1 +
+ drivers/platform/x86/amd/hfi/Kconfig  |  19 +
+ drivers/platform/x86/amd/hfi/Makefile |   7 +
+ drivers/platform/x86/amd/hfi/hfi.c    | 546 ++++++++++++++++++++++++++
+ 12 files changed, 729 insertions(+)
+ create mode 100644 Documentation/arch/x86/amd-hfi.rst
+ create mode 100644 drivers/platform/x86/amd/hfi/Kconfig
+ create mode 100644 drivers/platform/x86/amd/hfi/Makefile
+ create mode 100644 drivers/platform/x86/amd/hfi/hfi.c
+
+
+base-commit: 110213b8f0e7021819d4db273facb27701bc3381
+-- 
+2.43.0
 
