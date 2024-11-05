@@ -1,151 +1,149 @@
-Received: from mail-lf1-f46.google.com (mail-lf1-f46.google.com [209.85.167.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 812591C1738;
-	Tue,  5 Nov 2024 08:51:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E018F18132A
+	for <platform-driver-x86@vger.kernel.org>; Tue,  5 Nov 2024 09:37:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730796712; cv=none; b=jr1fCSgDmsBaG86pC35zqc4ZBeyN/QxU6wAOMMV4AJuG/VOLyLI2f8RUEpeV3jwH6VIvZ1RTU4CEZD7KHhDziE8b6iRD341jImL88FCceUdtTYT97bchGz5wRK8wC8BRHtYNuaw2Go+TXZXSes9Ec0H6CoJNj9G2PRTwkA1EteE=
+	t=1730799459; cv=none; b=U0TG9gtxi4fX0jDHAwbzh4P+Pd9cUOrZAUozLkbfsHbTV4OPzJdWXSNj/t6k8Z57Ojffym5BRlC/qEgk4YSmChyyrfdEC/Jv1RAllS5pW2cNGpd3x1X3oHhrnr+OQHWVjrvjpifOAhlO8SW7lN4sRR1FHfg1xKjrppKSv9GlCK4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730796712; c=relaxed/simple;
-	bh=f1f++oseP5z53a8EZBwl3wZQyH58MDK1VM4I4c5ws5s=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=KsvDh5F3ej8vqG2NDmUYRS/RKqjEwo19X41uObso+CHYNQYCjML20DTsjAs3kBDjwdubqBFW263KUQ9cu0R33LwbWktWaB9EUXGJZ1IsxI9ex0xixRLaNqD73y8IFWnhAFhb4LZZ6sCQsdNH9CybnpQRkik2ntRzpRKdB6SU2Z8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=QRvcu9eY; arc=none smtp.client-ip=209.85.167.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1730799459; c=relaxed/simple;
+	bh=f3wIbKrVQOQuK3wGOKUuwA6ik+aPFA5MDCZuW/2nXF8=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=R5eQc25el/o8MZyBfAzcs1ehc/3dF0d4EXbFujCHz118SnQka4mkGS8NYOWfr+2mUqcXzk2lI4hZmafE0B2VBtQZWQDXTXnVPsyV9IScFyQ+WISFidHTI3NKcCXSOahvroEFOQnOtp4nKHD2AxY98OSUahI4ojxJLksr0VPN7lE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=e/eBcxin; arc=none smtp.client-ip=192.198.163.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QRvcu9eY"
-Received: by mail-lf1-f46.google.com with SMTP id 2adb3069b0e04-539f2b95775so5858948e87.1;
-        Tue, 05 Nov 2024 00:51:50 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1730796709; x=1731401509; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=YJEtfstV+NvZnqlt/Dxh46XLJUgR+ECVmBD0MQzuU9Q=;
-        b=QRvcu9eY05bl6I4Eo8X/W0+n6pSiCJ+/asb9Uxwl+Duc1L9QKx96qPx6O13YSaju6q
-         5r4iiSxs+VFwa8QGWRo/Ij+ZbnnTUd2ViRSxC9Px8PEUsEePnK5hGv4lKcFqkx8Ozksw
-         8vsOfKEdd+WOvbzamMcFHd4ZmQAglmwsyu7M5umMVgKDf5TJqvaMVDEUtkXVDF3NKOwx
-         9Pj4gQ8W2i2KsHPLCcPlz618OMUE5JeVhzv1NpjOPso2DnrnYXATF/M5SHwMz3ugQ/rF
-         G0HfFQfCr0F3YKT3iFJyz4KirizFFtpWNjiukmac4nlx4RuwwkN87NZfOQqk+YCW0ZLV
-         Kn7g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1730796709; x=1731401509;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=YJEtfstV+NvZnqlt/Dxh46XLJUgR+ECVmBD0MQzuU9Q=;
-        b=n8yta+E43Og8pral6Bh+yLwWOXlw6d5XnCrc7WFAK6HNtkTiIL7f3f1CsMvbulGJyi
-         nkByeeP9CiOp7mBHCDEtvmUTeDx+qCrvC7yx5H0/sqdPMoi4yNOKyDovJCZOGyZPrAX1
-         Rto6+pmxCfTM6aKxTy1kak8NElaCbScaJyt7EB84zpmlTXPvRZrD1lvap5j2Enfbz3v7
-         jHmZfZMxwIRz1BLBKUKLPtnYc77Gl29qssuRcWw2zHsVJN0/cITLcrBw7zwzJPSeOEWI
-         M4rCeHm/+yvgyPlKKyDafU06hZ0I1KJqrvaUqsGEzxXqrvDfuXc6Nt8kPkyHOErGW+hv
-         ItKw==
-X-Forwarded-Encrypted: i=1; AJvYcCXLQd3dbO+Yl3fwPZEjThG28iUA1JTKEyooDnRUsr8IW0gRYIROEpIdMgaz9T9zsOM/C42e4jks/A==@vger.kernel.org, AJvYcCXX+aL8dTZRk+cSZdrurhC6mDwASw8xICCNFlDM9F3cKqiX/2QJfeo8h2EAIbt/Y1bMo57WPFdfzxR+o7/CRx+5KbZhNA==@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw93jTjCR19IGUBDmIRkLZPmFHBxHb/B4vnW7Ez2LuBtvh/Wxiu
-	zMQvGDoTIMmORGfJKHa5l5s1P5NQ1lghUe8KaO7Jld2VXaBFffp7JCBKY9MzZ2qZiNb7LzSHALL
-	v1PdM/NlbqhNOY562UfO/dveOXai6MBGSxf0vkA==
-X-Google-Smtp-Source: AGHT+IH7pRC9jatDhIceNks3WrokjgSdUgzF0/V0AOFS/A960Brva7gvEjBbHcDxj+l5njGKTSvGHyr0i+AmrN8PRKU=
-X-Received: by 2002:a05:6512:2350:b0:53b:7ecc:5ddf with SMTP id
- 2adb3069b0e04-53d65df1a08mr10770837e87.26.1730796708287; Tue, 05 Nov 2024
- 00:51:48 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="e/eBcxin"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1730799458; x=1762335458;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=f3wIbKrVQOQuK3wGOKUuwA6ik+aPFA5MDCZuW/2nXF8=;
+  b=e/eBcxin8aEE/LZ7qmhjtb3N4tS+OVuBEzUnHpo6TfCWG0VW7Rqewrjl
+   bAYleSCFhKAruSaUQBZz0qh9dovJOVG4Hj/RgGt7wgu5/GPZhGelEaRMS
+   ajCr07twvrDLM7h6pWEufKMt6xi3BTO7QcvKfRJurPwlirliIsKwqhWA6
+   6xhUHRDBxgGUTUrJA8aOdEk/a9AOhdgafZfDicvk/TmsvTJGc3Cmg/KHo
+   vi/+I0SLcNxKU3UVhJ0GuDh0W2pSGRtLDipT7Uunocvgqd39wjgpYYtrg
+   w6xRrWqZBjSOdpbHWeNrzJsE9/OoqW/HVjyN08Uu0g51DnTgVXuLMSRmL
+   Q==;
+X-CSE-ConnectionGUID: 00kEM7LGQP6r7FYrNMt9YA==
+X-CSE-MsgGUID: Xu4xhbLuQhmq9vwHNvX5cw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11246"; a="30758020"
+X-IronPort-AV: E=Sophos;i="6.11,259,1725346800"; 
+   d="scan'208";a="30758020"
+Received: from fmviesa009.fm.intel.com ([10.60.135.149])
+  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Nov 2024 01:37:31 -0800
+X-CSE-ConnectionGUID: 3K+TYzgrQ5yjiwwpR3v4aA==
+X-CSE-MsgGUID: MrwUxJaZRF2aA6VGV+g21A==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.11,259,1725346800"; 
+   d="scan'208";a="84056341"
+Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.201])
+  by fmviesa009-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Nov 2024 01:37:29 -0800
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Tue, 5 Nov 2024 11:37:26 +0200 (EET)
+To: Hans de Goede <hdegoede@redhat.com>
+cc: Andy Shevchenko <andy@kernel.org>, platform-driver-x86@vger.kernel.org
+Subject: Re: [PATCH v2 1/3] platform/x86: x86-android-tablets: Add
+ get_i2c_adap_by_handle() helper
+In-Reply-To: <20241104200848.58693-2-hdegoede@redhat.com>
+Message-ID: <2027eeb6-f5c6-4ad3-042e-2cf3daf683db@linux.intel.com>
+References: <20241104200848.58693-1-hdegoede@redhat.com> <20241104200848.58693-2-hdegoede@redhat.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20241104203555.61104-1-hdegoede@redhat.com>
-In-Reply-To: <20241104203555.61104-1-hdegoede@redhat.com>
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Date: Tue, 5 Nov 2024 10:51:10 +0200
-Message-ID: <CAHp75Vete6HoHRRef-n2VNTZOawwMeULqH_a-ZD-z-K1iJDiFw@mail.gmail.com>
-Subject: Re: [PATCH 1/2] platform/x86/intel: bytcrc_pwrsrc: Optionally
- register a power_supply dev
-To: Hans de Goede <hdegoede@redhat.com>
-Cc: =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, 
-	Andy Shevchenko <andy@kernel.org>, Sebastian Reichel <sre@kernel.org>, platform-driver-x86@vger.kernel.org, 
-	linux-pm@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: multipart/mixed; boundary="8323328-2089002903-1730799446=:949"
 
-On Mon, Nov 4, 2024 at 10:36=E2=80=AFPM Hans de Goede <hdegoede@redhat.com>=
- wrote:
->
-> On some Android tablets with Crystal Cove PMIC the DSDT lacks an ACPI AC
-> device to indicate whether a charger is plugged in or not.
->
-> Add support for registering a "crystal_cove_pwrsrc" power_supply class
-> device to indicate charger online status. This is made conditional on
-> a "linux,register-pwrsrc-power_supply" boolean device-property to avoid
-> registering a duplicate power_supply class device on devices where this
-> is already handled by an ACPI AC device.
->
-> Note the "linux,register-pwrsrc-power_supply" property is only used on
-> x86/ACPI (non devicetree) devs and the devicetree-bindings maintainers
-> have requested properties like these to not be added to the devicetree
-> bindings, so the new property is deliberately not added to any bindings.
+  This message is in MIME format.  The first part should be readable text,
+  while the remaining parts are likely unreadable without MIME-aware tools.
 
-Reviewed-by: Andy Shevchenko <andy@kernel.org>
+--8323328-2089002903-1730799446=:949
+Content-Type: text/plain; charset=ISO-8859-15
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 
-...
+On Mon, 4 Nov 2024, Hans de Goede wrote:
 
-+ array_size.h
-
-> +#include <linux/bits.h>
->  #include <linux/debugfs.h>
-> +#include <linux/interrupt.h>
->  #include <linux/mfd/intel_soc_pmic.h>
->  #include <linux/module.h>
->  #include <linux/platform_device.h>
-> +#include <linux/power_supply.h>
-> +#include <linux/property.h>
->  #include <linux/regmap.h>
-
-...
-
-> +       if (device_property_read_bool(pdev->dev.parent, "linux,register-p=
-wrsrc-power_supply")) {
-
-Btw, is that property type of boolean? If not,
-device_property_present() has to be used.
-
-...
-
-> +               irq =3D platform_get_irq(pdev, 0);
-> +               if (irq < 0)
-> +                       return dev_err_probe(&pdev->dev, irq, "getting IR=
-Q\n");
-
-This dups the embedded error message.
-
-...
-
-> +               data->psy =3D devm_power_supply_register(&pdev->dev, &crc=
-_pwrsrc_psy_desc, &psy_cfg);
-> +               if (IS_ERR(data->psy))
-> +                       return dev_err_probe(&pdev->dev, PTR_ERR(data->ps=
-y),
-> +                                            "registering power-supply\n"=
-);
+> Add get_i2c_adap_by_handle() helper function, this is a preparation patch
+> for adding support for getting i2c_adapter-s by PCI parent devname().
+>=20
+> Suggested-by: Andy Shevchenko <andy@kernel.org>
+> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+> ---
+> Changes in v2:
+> - New patch in v2 of this series
+> ---
+>  .../platform/x86/x86-android-tablets/core.c   | 25 ++++++++++++-------
+>  1 file changed, 16 insertions(+), 9 deletions(-)
+>=20
+> diff --git a/drivers/platform/x86/x86-android-tablets/core.c b/drivers/pl=
+atform/x86/x86-android-tablets/core.c
+> index ef572b90e06b..4154395c60bb 100644
+> --- a/drivers/platform/x86/x86-android-tablets/core.c
+> +++ b/drivers/platform/x86/x86-android-tablets/core.c
+> @@ -155,26 +155,33 @@ static struct gpiod_lookup_table * const *gpiod_loo=
+kup_tables;
+>  static const struct software_node *bat_swnode;
+>  static void (*exit_handler)(void);
+> =20
+> +static struct i2c_adapter *
+> +get_i2c_adap_by_handle(const struct x86_i2c_client_info *client_info)
+> +{
+> +=09acpi_handle handle;
+> +=09acpi_status status;
 > +
-> +               ret =3D devm_request_threaded_irq(&pdev->dev, irq, NULL,
-> +                                               crc_pwrsrc_irq_handler,
-> +                                               IRQF_ONESHOT, KBUILD_MODN=
-AME, data);
-> +               if (ret)
-> +                       return dev_err_probe(&pdev->dev, ret, "requesting=
- IRQ\n");
+> +=09status =3D acpi_get_handle(NULL, client_info->adapter_path, &handle);
+> +=09if (ACPI_FAILURE(status)) {
+> +=09=09pr_err("Error could not get %s handle\n", client_info->adapter_pat=
+h);
+> +=09=09return NULL;
+> +=09}
+> +
+> +=09return i2c_acpi_find_adapter_by_handle(handle);
+> +}
+> +
+>  static __init int x86_instantiate_i2c_client(const struct x86_dev_info *=
+dev_info,
+>  =09=09=09=09=09     int idx)
+>  {
+>  =09const struct x86_i2c_client_info *client_info =3D &dev_info->i2c_clie=
+nt_info[idx];
+>  =09struct i2c_board_info board_info =3D client_info->board_info;
+>  =09struct i2c_adapter *adap;
+> -=09acpi_handle handle;
+> -=09acpi_status status;
+> =20
+>  =09board_info.irq =3D x86_acpi_irq_helper_get(&client_info->irq_data);
+>  =09if (board_info.irq < 0)
+>  =09=09return board_info.irq;
+> =20
+> -=09status =3D acpi_get_handle(NULL, client_info->adapter_path, &handle);
+> -=09if (ACPI_FAILURE(status)) {
+> -=09=09pr_err("Error could not get %s handle\n", client_info->adapter_pat=
+h);
+> -=09=09return -ENODEV;
+> -=09}
+> -
+> -=09adap =3D i2c_acpi_find_adapter_by_handle(handle);
+> +=09adap =3D get_i2c_adap_by_handle(client_info);
+>  =09if (!adap) {
+>  =09=09pr_err("error could not get %s adapter\n", client_info->adapter_pa=
+th);
+>  =09=09return -ENODEV;
 
-With
+Reviewed-by: Ilpo J=E4rvinen <ilpo.jarvinen@linux.intel.com>
 
-    struct device *dev =3D &pdev->dev;
-
-at the top of the function you may make lines shorten and neater.
-
-> +       }
+Not a big deal, but you might want to consider if printing both error=20
+messages is fine or if the error printing should be somehow modified when=
+=20
+that other print moves into the inner function.
 
 --=20
-With Best Regards,
-Andy Shevchenko
+ i.
+
+--8323328-2089002903-1730799446=:949--
