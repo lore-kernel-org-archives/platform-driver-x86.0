@@ -1,370 +1,255 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from mx0a-00069f02.pphosted.com (mx0a-00069f02.pphosted.com [205.220.165.32])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB7051F5847
-	for <platform-driver-x86@vger.kernel.org>; Mon,  4 Nov 2024 20:36:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730752569; cv=none; b=OFoyIbXVD8cLIViC9/Vw9aol1nB+VDD9eCz2ogH7Yn/z4QQzy3rNMpN9/+YpPyj6UFqP9s5Xi4X1bKvLljRlaJJ1Ioee87yiDN2eHb60/KMlN8P7xeI+gsdqKgYh0pnta36bDYA9FNNqGp/YdMw90QD+YDOSIVr+kdeLYXCH0F4=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730752569; c=relaxed/simple;
-	bh=/0cPqiCpFuaNgNsl2UTf4KRjxyQT96G84MVwhoOAHsI=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=JQUHD/d7DkzotOBDsZRzmTYwaLZXY6pdyRa0dIVoIlEgzI4rw9NCQJeUgMS4URwxEw9906cuFHwdWIldiRZ8etgcmfRtPpfG3iLWX4u9B6lZ03yDqar5hhpWrspJimX/Uy7KN24UHkkfHnxt1tqNZKWHthqXW4fZSXtws8U9hOQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=httzVWQL; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 34BC911CA9;
+	Tue,  5 Nov 2024 01:26:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.165.32
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1730770014; cv=fail; b=WXcuhEdHRCOS3haHrgTcauf1ZIVRJej1bk/ZLFtm1osX5Y3nkF0myKX2LzUYYu+rFNTvoyJnRogxTHRS3V/bhAlFNoq13qqUqwZWQ3KFfU61TfeatCkAp/+HWj/+nQiA3/jlQ6g+QMSyea9+9F4D7X5bF+zJGF72r4JEzBh+4RE=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1730770014; c=relaxed/simple;
+	bh=y7F3fkEMejeZ0PxevVforkm7UhlJoyr1UHEZv5rFMRI=;
+	h=To:Cc:Subject:From:In-Reply-To:Message-ID:References:Date:
+	 Content-Type:MIME-Version; b=OIg6vlumKz6tBOhszXqdmzjm8Ol6oKzLCAG2Tm8dMYK+tZhaFzf7tlRAvKNbzHR2MCE9yaGu3sGjT7WWQ8gXswZ1P/z8JtzZ07Emr1EeDc1QECfh79idAYPTdZD3I4k8FnqACAS0NShSbyxVZ1BV7CTvRFho2EXyHqTGzj0sNN8=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=XQERhgit; dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b=IIS/g3HP; arc=fail smtp.client-ip=205.220.165.32
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="httzVWQL"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1730752566;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=xH0t4+nyF9Q5FXWl2SqVt5nxvgzaXqU0aJjMD6PecgM=;
-	b=httzVWQL20QZJqGRxjw8uN0Uii4BqxOLxzVoNe/h0TIOaW/sfkskDGdo2H5tHE53rJvhf6
-	m6g7Njy+np9AbVpowzcm3G0xR3cRjcr/hDYRhoLq/NndLPQSkQAvuOetaT4EgiHTyQOev+
-	VZcge9s6HzPgyN0V/48+Z2mxHQX9bPM=
-Received: from mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-494-0EfoMvDrMIG_zFkINwoD3Q-1; Mon,
- 04 Nov 2024 15:36:02 -0500
-X-MC-Unique: 0EfoMvDrMIG_zFkINwoD3Q-1
-Received: from mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.12])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id D2DCC1956096;
-	Mon,  4 Nov 2024 20:36:00 +0000 (UTC)
-Received: from shalem.redhat.com (unknown [10.39.192.64])
-	by mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 125731956046;
-	Mon,  4 Nov 2024 20:35:58 +0000 (UTC)
-From: Hans de Goede <hdegoede@redhat.com>
-To: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	Andy Shevchenko <andy@kernel.org>,
-	Sebastian Reichel <sre@kernel.org>
-Cc: Hans de Goede <hdegoede@redhat.com>,
-	platform-driver-x86@vger.kernel.org,
-	linux-pm@vger.kernel.org
-Subject: [PATCH 2/2] platform/x86: x86-android-tablets: Add Vexia EDU ATLA 10 EC battery driver
-Date: Mon,  4 Nov 2024 21:35:55 +0100
-Message-ID: <20241104203555.61104-2-hdegoede@redhat.com>
-In-Reply-To: <20241104203555.61104-1-hdegoede@redhat.com>
-References: <20241104203555.61104-1-hdegoede@redhat.com>
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="XQERhgit";
+	dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b="IIS/g3HP"
+Received: from pps.filterd (m0246629.ppops.net [127.0.0.1])
+	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 4A50fw5n004265;
+	Tue, 5 Nov 2024 01:26:08 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=cc
+	:content-type:date:from:in-reply-to:message-id:mime-version
+	:references:subject:to; s=corp-2023-11-20; bh=gGzgFNZRE/uuzsqIr/
+	e2RBNFNS7HhUAa8z1wQ0CXDVk=; b=XQERhgitiGxjjsSehzKrQFPH7DfJrEnH0W
+	V12SuwqVCXPRWg8RHq5aApoPXzzLmeaWnpMB0PQRcOKg9/l5HOuU3+TN4CPgZHFI
+	dc4cv5WvB3KzFuKlN/zvz5385fLDkwUr+yHjYQSVIgHL6A5wEHtljKSAmGZsquQA
+	GomivjhkQBeqqM3ySkjKFRuQPDLGQccBGaAVqiIiCMFuS7F/wZNQsN3aiSDgrI/H
+	PjYu8ieyxFMOigsvrLgONK3AxhoJ8FegafJdhyHoo973qTiUBAImsdETTQSxKnKO
+	ixk0PbBRC2g0wLEK7DfyPC7wWa1rofunmm5KNM3C45RGAux2hLhQ==
+Received: from phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta02.appoci.oracle.com [147.154.114.232])
+	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 42nby8v5be-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Tue, 05 Nov 2024 01:26:08 +0000 (GMT)
+Received: from pps.filterd (phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
+	by phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 4A4N96EL008674;
+	Tue, 5 Nov 2024 01:26:07 GMT
+Received: from nam11-dm6-obe.outbound.protection.outlook.com (mail-dm6nam11lp2176.outbound.protection.outlook.com [104.47.57.176])
+	by phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 42nah6hgt2-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Tue, 05 Nov 2024 01:26:07 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=eQHT2coXiBsJxlPN9qP92BqxzCF4f7A9L59D/mwXbXkBP0DPjRLjwCZFdvdwcF/Rydoyd68b/R+MQ2vWEgK6DZWr9qS4VhxW4V/zPqV+cL7mo/aa0HImUY35ktbSLEUW7Ai3hjTl4jbjno6WTQqmmxJxaaBSg1NlCG4lVGHLapTsFPpQfHPPPBWXqbZ6h0ESobfFzdvCY/sFffPIr7+3Vc3oWa3pn79h+4u+Pffwyeqgk0WR/0wBcyPN4Et4kkdiVfYdgTYqnlD8htWSgZVWZNBT+fPfiXAmk4xCLv9xhbNBtXNoa8dlyZ9LSp/y+Rk0SAH644uo+kWTfP/cYth9gg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=gGzgFNZRE/uuzsqIr/e2RBNFNS7HhUAa8z1wQ0CXDVk=;
+ b=xzOZC/gt/MbVgfKO2GW0ajYlFSlQQIIxK8mVmFnNXSwzyQqGJSNT7JPZ9jUeYrRi0WTgggSc0N7HrvZwi0aWwOzylZ5tkcBT+jlJ3luaPVb+tSGh4lfRnSoat4tHItjPPFtMW/TV7Hi0rNP+U3ZWZ9+Ii6TmUpk2hY2pveomY1T1FMZQXb93prLQ7W+CPSFo8UWz37MvA525sTeSqhAYTyFTj9+nohqgUEt1jFun5ib29giOJgRkIONiIycUMp6rv51ezpyuzz9mEUqTKI67I6mr2t3wzuH/jbJ7Ul/moyRyQLZsaXiss688Ek/eJ0UdAWBMsSocWhhhqTe1X9RaWA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
+ dkim=pass header.d=oracle.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=gGzgFNZRE/uuzsqIr/e2RBNFNS7HhUAa8z1wQ0CXDVk=;
+ b=IIS/g3HPunVBWHHcE7Mdr4xYD3frkSJ3zgPBPpUebkPwfZ4avBPodlJF7lnlkfzzMMOra+rIRIjwv95+XSUH7c+RjNIgVdYrl3ChfvdOXHRZU/lo0QS0PDWmz+FqNOuiw1AMPDbjs7kuy150cGmQTG6VZBvaLCGuUqO1eu74IEQ=
+Received: from SN6PR10MB2957.namprd10.prod.outlook.com (2603:10b6:805:cb::19)
+ by DM4PR10MB7451.namprd10.prod.outlook.com (2603:10b6:8:18e::21) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8114.30; Tue, 5 Nov
+ 2024 01:26:01 +0000
+Received: from SN6PR10MB2957.namprd10.prod.outlook.com
+ ([fe80::72ff:b8f4:e34b:18c]) by SN6PR10MB2957.namprd10.prod.outlook.com
+ ([fe80::72ff:b8f4:e34b:18c%4]) with mapi id 15.20.8114.015; Tue, 5 Nov 2024
+ 01:26:01 +0000
+To: Thomas =?utf-8?Q?Wei=C3=9Fschuh?= <linux@weissschuh.net>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Rafael J. Wysocki"
+ <rafael@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Srinivas
+ Kandagatla <srinivas.kandagatla@linaro.org>,
+        Davidlohr Bueso
+ <dave@stgolabs.net>,
+        Jonathan Cameron <jonathan.cameron@huawei.com>,
+        Dave Jiang <dave.jiang@intel.com>,
+        Alison Schofield
+ <alison.schofield@intel.com>,
+        Vishal Verma <vishal.l.verma@intel.com>,
+        Ira Weiny <ira.weiny@intel.com>,
+        Alex Deucher
+ <alexander.deucher@amd.com>,
+        Christian =?utf-8?Q?K=C3=B6nig?=
+ <christian.koenig@amd.com>,
+        Xinhui Pan <Xinhui.Pan@amd.com>, David Airlie <airlied@gmail.com>,
+        Simona Vetter <simona@ffwll.ch>,
+        Dennis Dalessandro
+ <dennis.dalessandro@cornelisnetworks.com>,
+        Jason Gunthorpe
+ <jgg@ziepe.ca>, Leon Romanovsky <leon@kernel.org>,
+        Tudor Ambarus
+ <tudor.ambarus@linaro.org>,
+        Pratyush Yadav <pratyush@kernel.org>,
+        Michael Walle <mwalle@kernel.org>,
+        Miquel Raynal
+ <miquel.raynal@bootlin.com>,
+        Richard Weinberger <richard@nod.at>,
+        Vignesh Raghavendra <vigneshr@ti.com>,
+        Naveen Krishna Chatradhi
+ <naveenkrishna.chatradhi@amd.com>,
+        Carlos Bilbao
+ <carlos.bilbao.osdev@gmail.com>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Ilpo =?utf-8?Q?J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+        "David E.
+ Box"
+ <david.e.box@linux.intel.com>,
+        "James E.J. Bottomley"
+ <James.Bottomley@HansenPartnership.com>,
+        "Martin K. Petersen"
+ <martin.petersen@oracle.com>,
+        Richard Henderson
+ <richard.henderson@linaro.org>,
+        Matt Turner <mattst88@gmail.com>,
+        Frederic Barrat <fbarrat@linux.ibm.com>,
+        Andrew Donnellan
+ <ajd@linux.ibm.com>, Arnd Bergmann <arnd@arndb.de>,
+        Logan Gunthorpe
+ <logang@deltatee.com>,
+        "K. Y. Srinivasan" <kys@microsoft.com>,
+        Haiyang
+ Zhang <haiyangz@microsoft.com>, Wei Liu <wei.liu@kernel.org>,
+        Dexuan Cui
+ <decui@microsoft.com>,
+        Dan Williams <dan.j.williams@intel.com>, linux-kernel@vger.kernel.org,
+        linux-pci@vger.kernel.org, linux-cxl@vger.kernel.org,
+        amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
+        linux-rdma@vger.kernel.org, linux-mtd@lists.infradead.org,
+        platform-driver-x86@vger.kernel.org, linux-scsi@vger.kernel.org,
+        linux-usb@vger.kernel.org, linux-alpha@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, linux-hyperv@vger.kernel.org
+Subject: Re: [PATCH v2 05/10] sysfs: treewide: constify attribute callback
+ of bin_is_visible()
+From: "Martin K. Petersen" <martin.petersen@oracle.com>
+In-Reply-To: <20241103-sysfs-const-bin_attr-v2-5-71110628844c@weissschuh.net>
+	("Thomas =?utf-8?Q?Wei=C3=9Fschuh=22's?= message of "Sun, 03 Nov 2024
+ 17:03:34 +0000")
+Organization: Oracle Corporation
+Message-ID: <yq1h68m5v5q.fsf@ca-mkp.ca.oracle.com>
+References: <20241103-sysfs-const-bin_attr-v2-0-71110628844c@weissschuh.net>
+	<20241103-sysfs-const-bin_attr-v2-5-71110628844c@weissschuh.net>
+Date: Mon, 04 Nov 2024 20:25:59 -0500
+Content-Type: text/plain
+X-ClientProxiedBy: BN8PR03CA0017.namprd03.prod.outlook.com
+ (2603:10b6:408:94::30) To SN6PR10MB2957.namprd10.prod.outlook.com
+ (2603:10b6:805:cb::19)
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.12
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: SN6PR10MB2957:EE_|DM4PR10MB7451:EE_
+X-MS-Office365-Filtering-Correlation-Id: 1115d897-72b8-4026-8afd-08dcfd38cf02
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|1800799024|376014|7416014;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?8JlNNHxUgQOOx/wGCPnA8kRl/YI2u5+wqohNareR/E5DeLjDCWMIrSNp/foS?=
+ =?us-ascii?Q?9jLcQJsdC4Z56feldh5nydh5DtUjLPHtOgXrNAXm5z99NqyBgx1pkMtEkMkF?=
+ =?us-ascii?Q?KbcWr+C9WzyQqYa1fgV7v3laI4wxUlqonVzpQZaT+iLogTIcEe2XHxVsHIWX?=
+ =?us-ascii?Q?If27VrXVPxqJJ4xACw3jQFd3i7wWsp7JZl9OCmCdwlUVvNIBuVpy+3g+x6+N?=
+ =?us-ascii?Q?fn2gJEe8g5V0bVffGlDHkYwrMSVHk6t712Wr8iNQHi1/NfWRoUXyF2RFZj2T?=
+ =?us-ascii?Q?EX/1+zVwiehEZV2kqjbKD2qL4SYtuY+6gIkbcnIGwReTENdXhgQNMVgXj6oP?=
+ =?us-ascii?Q?ChucY6GquqFqxuXYvgnddYrsxgeOqztgmNQXfvmpnD/PyN8+HWLg+UN6fw8Q?=
+ =?us-ascii?Q?yelnNf9YOhR7MKwH9LGxEZP+NM63sfKCUjEm+OKM4H90kYfe3cftFcIkk7h+?=
+ =?us-ascii?Q?Ulf8+7TT7FyCekSsC1fkqz5MVtc/WUJqFcCl7TixSNIDvmskZWtWoB+MOT3Z?=
+ =?us-ascii?Q?pZ6I0HsUDPltZvLNeqDFpN59lzoysYAwa5swihyn4qd37M120xq3dn5wfS/E?=
+ =?us-ascii?Q?Q140B/Heis486A7Y5QtpirTZoJFmmE7YBISlyCopOPcNo2X27AK0JkuDLkFJ?=
+ =?us-ascii?Q?GtgGl2MOzD4e+lH8AihaJ/ksT4qPiig0ZQ+nFCgeHKqZyoNIBWZ+PXEW+894?=
+ =?us-ascii?Q?OIl0/a9BJfxUXXoyro5RUMIEkFdD4pgzqV6azp5H8zpEhvplf3D3vYSzNG+U?=
+ =?us-ascii?Q?jXv5O4uxvuOFsqGLl2P1IbjGxpkhZt8IY1wRwT3I8oAFSdbL1hfG9zjXaDUq?=
+ =?us-ascii?Q?eO+zv17HNITR0z1cbzQLcpAqojE9hZgR0okQsqtXRxy7p6d8KLmu+Uh8QDhz?=
+ =?us-ascii?Q?vB5/LQ1G8MhOg8nwEbxT7px2tc9Jp9RzPhJHQJBDiByz0CioQAwMU7lmSB7H?=
+ =?us-ascii?Q?SpZiWe/LiWP3LkXh2OkINp4JZeaaM2sWwhQY5TnSPZNUXORnSWegwzqy2Rds?=
+ =?us-ascii?Q?paFgezM7dDe6WVopE4TFd0s9TUE85StI4fDAWh/m1cTJ6jzPuazVN0tURmpt?=
+ =?us-ascii?Q?wd0teH2RxHcJ2dNCwl+cICfIHxNwCjAgeR6NhX1oqnmCtvq18e+4xRFhjnuA?=
+ =?us-ascii?Q?hUVIQSmNzoSrCtcxpncZVdL08eFgEawjQr203U+K79jDQWKybIJH+7Sv7mlp?=
+ =?us-ascii?Q?rVwW6zKr+I4dOVehgOoHRi2Y6PDQAr9kl0wpo0vxjUkGyK3XIzmNe5gKRR+j?=
+ =?us-ascii?Q?k/11E5xJqqAe6/GnGv9Tl0f/2yVHhyNkXDYRSitOeeFt3AXGlmwhv4iFbuQJ?=
+ =?us-ascii?Q?wbDCCrPMq6MU4m2ZYnUxAGsk?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SN6PR10MB2957.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(376014)(7416014);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?wAzTCY7NmgkQEkBp+rPfMWsogGaOcF2jk0MwN2tNerE6T69LdgpRxJ/kGvRc?=
+ =?us-ascii?Q?FRA9ZikaVmPTdndgt2DacZB8gY3Vf7zjLuf0vpNSZ+BCNCw28XE+/xB6nVgt?=
+ =?us-ascii?Q?ipDHNkEmGZvGKWFZnc2Q1sBoUojWjSiynB5PufPp7P3d12TCS+JH1A+jRSVU?=
+ =?us-ascii?Q?WEGFWbNkTvUkmyO3zCZbjJnzVpauqosvuLDRW63GqxnpxnEw9wI2qpDkcN6C?=
+ =?us-ascii?Q?G1zpdPwKPUHUouQLQGJnw1q2pOg/+pDDBEpIZikQ5Yq5UYJDAjhYAHzT5nUy?=
+ =?us-ascii?Q?SR5hXktkXIWCAwy0+OOuteeioSj1F7ZJ+HP2glnh0/HXkIc7kPG0eP8AIyDX?=
+ =?us-ascii?Q?PGtrPXg3ys2F7lvXSZj+fWI6EqR9DCbInkC570Rg6iVCnA0Ggfj2aGsEuzd7?=
+ =?us-ascii?Q?AXFzxdOjQQG5VOWfgLIR03LWoKYF6n6/3ysjFlCwua3y22YUNHdnXCyjWBRj?=
+ =?us-ascii?Q?8iwvRFOIBEUQFTXF8RuS1MDFeefRe0q+LgIQwYA1nZPj0lEQ6zKRifh9Kyqm?=
+ =?us-ascii?Q?2mrPQPasgpzbyLRamQUIFkUcZcy2z5Oioadl9ARwtx+LLIQG5wd+lRWDh3SK?=
+ =?us-ascii?Q?zSDjMlX9IKB9YTxO7MNtn+Vyd08Gf7SMWMO75upVk5ickm7xJeGQXmeK5KVz?=
+ =?us-ascii?Q?urPgOGD3cjN20r/E18OpBa70fqxyjJfDhjy6jx1EpkdouEouIghxjW7tl6zO?=
+ =?us-ascii?Q?7tqKJP+HtvBguhMlgXdXLNcGE15BxkYMXLnUbQoIwU+NTVLtpHDcQaRnJ9gV?=
+ =?us-ascii?Q?wEFZGbv3FB0WynMMjwYK26OUfGIkcnHiUtNFJDt4S3EhZwpxyI8qPWCOKzyo?=
+ =?us-ascii?Q?eC/8VlzGN23AFuKoZM28AO9iAmewzQSh9hUyt1fkv6DXc2fRPYKWSVYe7LiJ?=
+ =?us-ascii?Q?fueFSpJv+KKDMYEtvsrFMrurtQGlv/5/p4Us6SREx7KxM4h4UVYDDoCSRGeZ?=
+ =?us-ascii?Q?b+oTXCZWL3OT/5WLUPCQONVgG+udmNhTFI+Gp47cgY/gwtCHpiuY1ri59wrC?=
+ =?us-ascii?Q?w6ePA/E4z1lCbcSRDt+wA/DZ6q8l99/4kOu9PbOeh3SLRkCDKma0SVG47Y8H?=
+ =?us-ascii?Q?olkY7iA43nNQ6SJGrpHxL0SecdDp1DqY/sj6AqMV81kQ8XZucawxUFy2qr+6?=
+ =?us-ascii?Q?aomzD6X7s7gost44eLc7qamx8TbmsXGMK4xaZZQEMr8e90ZuPilsaq6zjoKG?=
+ =?us-ascii?Q?w8YZNYm9/SSJLP2PCJJeecGUj3eZyrbULR8criP+4vm9sYQWUZzWGKC6SAgY?=
+ =?us-ascii?Q?ryvkyv5W5TS5AVjgj0Ueqiki6dTNZ0aBPRpxUaJK49UVi4kdaUwB63IIpjMz?=
+ =?us-ascii?Q?uEK1Uk8m+MBaZ9G6iAJNbKdhS+12IoyXBaRS4aB0c5/49dQRZcVbzL6yB8/4?=
+ =?us-ascii?Q?+KLGcrAXuVzoKBYeo2C8SzMJ3FrAGe+mmz5Mz21vafx7PGG6IzFFg2NHiH0M?=
+ =?us-ascii?Q?RjM7DUyVcwX2tfL8ekdBzD8yOzUT9qhiD3lfAH3ImzMLT2vy94Tp1mghVsz1?=
+ =?us-ascii?Q?Oj+GgAooX79rZ1pp1huKhGG+CI0bKOz8N25Y/DASM0vG84dQvsG86rX/fOWk?=
+ =?us-ascii?Q?uGTfYhAUk+7uacfFk0DcjpGuSh7TiXZgllurc2J6J8PxBwn7/kQGyLFrJUrl?=
+ =?us-ascii?Q?KA=3D=3D?=
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0:
+	lktBQ6ttR2/pY3qLvBGVLCLGDAn4LJMtzYnZfoW3YluovouaAuJbvx+GMECsTFZCGMKYDEG4I9fOnwgP3/YP2z7brfoqpp9HrPXN//yyz8xEd22YW2lA3M7beSs5Z4/BlCxZ3T4ZPxTvaWnh266W+cZ5+S1jYSR9kPVB3mEDbNIClYSpo2LvqgMZ1JsK8s/Q+W9KIkXllYWGyBUWwAXp8slPdZl7Ucgp3UCrKiC0hs7x5rn0RytSwQ3tbH0Aae/cWW4r2VSoLRdJ7VcDCDkrxUExOmC/s0H9NdGniL4oZNSpivM3Rdx+P8SzOywglk7jUllEzfoBE9FfdhOTQYexF0t8iDRAixxsMejkHtYPuOc+3nSxo0uZLwi/cvz+M48LzX9qnLEE+q0jXUq656FkpGRcn+ap6vWhGP008BuPma4RKBccEPITaGhOXAgXugwaoLiMToE7QPmZUdHEGWIhxOIze8lMhf0lEcDMzAE+Z95rGD7mW/WyuqSWruPkuUlvNZkjNcWXDrUNlvtYow+OaklMUr9cdmgY2MV4LNLEvnsdLByCPq1NDtut7tXhN3E2ur1w3HQ5KJGME65Ot2ppKoEbi2kXNobaRRUwSBfNWWk=
+X-OriginatorOrg: oracle.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 1115d897-72b8-4026-8afd-08dcfd38cf02
+X-MS-Exchange-CrossTenant-AuthSource: SN6PR10MB2957.namprd10.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 05 Nov 2024 01:26:01.4181
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: VLeACfNSIrXc0SHxglPRfCmk42fYbWaal4s2idGcoau2yPDF1mQqvgB3dHbD6AXvwWl01pufXK0/JRkagpdTOFnlEGQ1t2RUBvrvcePJbTw=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM4PR10MB7451
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.62.30
+ definitions=2024-11-04_22,2024-11-04_01,2024-09-30_01
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=999 bulkscore=0 spamscore=0
+ adultscore=0 phishscore=0 suspectscore=0 malwarescore=0 mlxscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2409260000
+ definitions=main-2411050009
+X-Proofpoint-ORIG-GUID: gP9D6kUH2AMQSDhU8_rAC_Iaia2dcK9r
+X-Proofpoint-GUID: gP9D6kUH2AMQSDhU8_rAC_Iaia2dcK9r
 
-The Vexia EDU ATLA 10 tablet has an embedded controller instead of
-giving the os direct access to the charger + fuel-gauge ICs as is normal
-on tablets designed for Android.
 
-There is ACPI Battery device in the DSDT using the EC which should work
-expect that it expects the I2C controller to be enumerated as an ACPI
-device and the tablet's BIOS enumerates all LPSS devices as PCI devices
-(and changing the LPSS BIOS settings from PCI -> ACPI does not work).
+Thomas,
 
-Add a power_supply class driver for the Atla 10 EC to expert battery info
-to userspace. This is made part of the x86-android-tablets directory and
-Kconfig option because the i2c_client it binds to is instantiated by
-the x86-android-tablets kmod.
+> The is_bin_visible() callbacks should not modify the struct
+> bin_attribute passed as argument. Enforce this by marking the argument
+> as const.
+>
+> As there are not many callback implementers perform this change
+> throughout the tree at once.
 
-Signed-off-by: Hans de Goede <hdegoede@redhat.com>
----
- .../platform/x86/x86-android-tablets/Makefile |   1 +
- .../x86/x86-android-tablets/vexia_atla10_ec.c | 264 ++++++++++++++++++
- 2 files changed, 265 insertions(+)
- create mode 100644 drivers/platform/x86/x86-android-tablets/vexia_atla10_ec.c
+For scsi:
 
-diff --git a/drivers/platform/x86/x86-android-tablets/Makefile b/drivers/platform/x86/x86-android-tablets/Makefile
-index 41ece5a37137..bc505ffcd2bf 100644
---- a/drivers/platform/x86/x86-android-tablets/Makefile
-+++ b/drivers/platform/x86/x86-android-tablets/Makefile
-@@ -4,6 +4,7 @@
- #
- 
- obj-$(CONFIG_X86_ANDROID_TABLETS) += x86-android-tablets.o
-+obj-$(CONFIG_X86_ANDROID_TABLETS) += vexia_atla10_ec.o
- 
- x86-android-tablets-y := core.o dmi.o shared-psy-info.o \
- 			 asus.o lenovo.o other.o
-diff --git a/drivers/platform/x86/x86-android-tablets/vexia_atla10_ec.c b/drivers/platform/x86/x86-android-tablets/vexia_atla10_ec.c
-new file mode 100644
-index 000000000000..c5e6656d24fc
---- /dev/null
-+++ b/drivers/platform/x86/x86-android-tablets/vexia_atla10_ec.c
-@@ -0,0 +1,264 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * power_supply class (battery) driver for the I2C attached embedded controller
-+ * found on Vexia EDU ATLA 10 (9V version) tablets.
-+ *
-+ * This is based on the ACPI Battery device in the DSDT which should work
-+ * expect that it expects the I2C controller to be enumerated as an ACPI
-+ * device and the tablet's BIOS enumerates all LPSS devices as PCI devices
-+ * (and changing the LPSS BIOS settings from PCI -> ACPI does not work).
-+ *
-+ * Copyright (c) 2024 Hans de Goede <hansg@kernel.org>
-+ */
-+
-+#include <linux/bits.h>
-+#include <linux/devm-helpers.h>
-+#include <linux/i2c.h>
-+#include <linux/module.h>
-+#include <linux/power_supply.h>
-+#include <linux/types.h>
-+#include <linux/workqueue.h>
-+
-+#include <asm/byteorder.h>
-+
-+/* State field uses ACPI Battery spec status bits */
-+#define ACPI_BATTERY_STATE_DISCHARGING		BIT(0)
-+#define ACPI_BATTERY_STATE_CHARGING		BIT(1)
-+
-+#define ATLA10_EC_BATTERY_STATE_COMMAND		0x87
-+#define ATLA10_EC_BATTERY_INFO_COMMAND		0x88
-+
-+/* From broken ACPI battery device in DSDT */
-+#define ATLA10_EC_VOLTAGE_MIN_DESIGN		3750000
-+
-+struct atla10_ec_battery_state {
-+	u8 len;				/* Struct length excluding the len field, always 12 */
-+	u8 status;			/* Using ACPI Battery spec status bits */
-+	u8 capacity;			/* Percent */
-+	__le16 charge_now;		/* mAh */
-+	__le16 voltage_now;		/* mV */
-+	__le16 current_now;		/* mA */
-+	__le16 charge_full;		/* mAh */
-+	__le16 temp;			/* centi degrees celcius */
-+} __packed;
-+
-+struct atla10_ec_battery_info {
-+	u8 len;				/* Struct length excluding the len field, always 6 */
-+	__le16 charge_full_design;	/* mAh */
-+	__le16 voltage_now;		/* mV, should be design voltage, but is not ? */
-+	__le16 charge_full_design2;	/* mAh */
-+} __packed;
-+
-+struct atla10_ec_data {
-+	struct i2c_client *client;
-+	struct power_supply *psy;
-+	struct delayed_work work;
-+	struct mutex update_lock;
-+	struct atla10_ec_battery_info info;
-+	struct atla10_ec_battery_state state;
-+	bool valid;			/* true if state is valid */
-+	unsigned long last_update;	/* In jiffies */
-+};
-+
-+static int atla10_ec_cmd(struct atla10_ec_data *data, u8 cmd, u8 len, u8 *values)
-+{
-+	struct device *dev = &data->client->dev;
-+	int ret;
-+
-+	ret = i2c_smbus_read_i2c_block_data(data->client, cmd, len, values);
-+	if (ret != len) {
-+		dev_err(dev, "I2C command 0x%02x error: %d\n", cmd, ret);
-+		return -EIO;
-+	}
-+
-+	if (values[0] != (len - 1)) {
-+		dev_err(dev, "I2C command 0x%02x header length mismatch expected %u got %u\n",
-+			cmd, len - 1, values[0]);
-+		return -EIO;
-+	}
-+
-+	return 0;
-+}
-+
-+static int atla10_ec_update(struct atla10_ec_data *data)
-+{
-+	int ret;
-+
-+	/* Cache data for 5 seconds */
-+	if (data->valid && time_before(jiffies, data->last_update + 5 * HZ))
-+		return 0;
-+
-+	ret = atla10_ec_cmd(data, ATLA10_EC_BATTERY_STATE_COMMAND,
-+			    sizeof(data->state), (u8 *)&data->state);
-+	if (ret)
-+		return ret;
-+
-+	data->last_update = jiffies;
-+	data->valid = true;
-+	return 0;
-+}
-+
-+static int atla10_ec_psy_get_property(struct power_supply *psy,
-+				      enum power_supply_property psp,
-+				      union power_supply_propval *val)
-+{
-+	struct atla10_ec_data *data = power_supply_get_drvdata(psy);
-+	int charge_now, charge_full, ret;
-+
-+	guard(mutex)(&data->update_lock);
-+
-+	ret = atla10_ec_update(data);
-+	if (ret)
-+		return ret;
-+
-+	switch (psp) {
-+	case POWER_SUPPLY_PROP_STATUS:
-+		if (data->state.status & ACPI_BATTERY_STATE_DISCHARGING)
-+			val->intval = POWER_SUPPLY_STATUS_DISCHARGING;
-+		else if (data->state.status & ACPI_BATTERY_STATE_CHARGING)
-+			val->intval = POWER_SUPPLY_STATUS_CHARGING;
-+		else if (data->state.capacity == 100)
-+			val->intval = POWER_SUPPLY_STATUS_FULL;
-+		else
-+			val->intval = POWER_SUPPLY_STATUS_NOT_CHARGING;
-+		break;
-+	case POWER_SUPPLY_PROP_CAPACITY:
-+		val->intval = data->state.capacity;
-+		break;
-+	case POWER_SUPPLY_PROP_CHARGE_NOW:
-+		/*
-+		 * The EC has a bug where it reports charge-full-design as
-+		 * charge-now when the battery is full. Clamp charge-now to
-+		 * charge-full to workaround this.
-+		 */
-+		charge_now = le16_to_cpu(data->state.charge_now);
-+		charge_full = le16_to_cpu(data->state.charge_full);
-+		val->intval = min(charge_now, charge_full) * 1000;
-+		break;
-+	case POWER_SUPPLY_PROP_VOLTAGE_NOW:
-+		val->intval = le16_to_cpu(data->state.voltage_now) * 1000;
-+		break;
-+	case POWER_SUPPLY_PROP_CURRENT_NOW:
-+		val->intval = le16_to_cpu(data->state.current_now) * 1000;
-+		/*
-+		 * Documentation/ABI/testing/sysfs-class-power specifies
-+		 * negative current for discharing.
-+		 */
-+		if (data->state.status & ACPI_BATTERY_STATE_DISCHARGING)
-+			val->intval = -val->intval;
-+		break;
-+	case POWER_SUPPLY_PROP_CHARGE_FULL:
-+		val->intval = le16_to_cpu(data->state.charge_full) * 1000;
-+		break;
-+	case POWER_SUPPLY_PROP_TEMP:
-+		val->intval = le16_to_cpu(data->state.temp) / 10;
-+		break;
-+	case POWER_SUPPLY_PROP_CHARGE_FULL_DESIGN:
-+		val->intval = le16_to_cpu(data->info.charge_full_design) * 1000;
-+		break;
-+	case POWER_SUPPLY_PROP_VOLTAGE_MIN_DESIGN:
-+		val->intval = ATLA10_EC_VOLTAGE_MIN_DESIGN;
-+		break;
-+	case POWER_SUPPLY_PROP_PRESENT:
-+		val->intval = 1;
-+		break;
-+	case POWER_SUPPLY_PROP_TECHNOLOGY:
-+		val->intval = POWER_SUPPLY_TECHNOLOGY_LIPO;
-+		break;
-+	default:
-+		return -EINVAL;
-+	}
-+
-+	return 0;
-+}
-+
-+static void atla10_ec_external_power_changed_work(struct work_struct *work)
-+{
-+	struct atla10_ec_data *data = container_of(work, struct atla10_ec_data, work.work);
-+
-+	dev_dbg(&data->client->dev, "External power changed\n");
-+	data->valid = false;
-+	power_supply_changed(data->psy);
-+}
-+
-+static void atla10_ec_external_power_changed(struct power_supply *psy)
-+{
-+	struct atla10_ec_data *data = power_supply_get_drvdata(psy);
-+
-+	/* After charger plug in/out wait 0.5s for things to stabilize */
-+	mod_delayed_work(system_wq, &data->work, HZ / 2);
-+}
-+
-+static const enum power_supply_property atla10_ec_psy_props[] = {
-+	POWER_SUPPLY_PROP_STATUS,
-+	POWER_SUPPLY_PROP_CAPACITY,
-+	POWER_SUPPLY_PROP_CHARGE_NOW,
-+	POWER_SUPPLY_PROP_VOLTAGE_NOW,
-+	POWER_SUPPLY_PROP_CURRENT_NOW,
-+	POWER_SUPPLY_PROP_CHARGE_FULL,
-+	POWER_SUPPLY_PROP_TEMP,
-+	POWER_SUPPLY_PROP_CHARGE_FULL_DESIGN,
-+	POWER_SUPPLY_PROP_VOLTAGE_MIN_DESIGN,
-+	POWER_SUPPLY_PROP_PRESENT,
-+	POWER_SUPPLY_PROP_TECHNOLOGY,
-+};
-+
-+static const struct power_supply_desc atla10_ec_psy_desc = {
-+	.name = "atla10_ec_battery",
-+	.type = POWER_SUPPLY_TYPE_BATTERY,
-+	.properties = atla10_ec_psy_props,
-+	.num_properties = ARRAY_SIZE(atla10_ec_psy_props),
-+	.get_property = atla10_ec_psy_get_property,
-+	.external_power_changed = atla10_ec_external_power_changed,
-+};
-+
-+static int atla10_ec_probe(struct i2c_client *client)
-+{
-+	struct power_supply_config psy_cfg = { };
-+	struct device *dev = &client->dev;
-+	struct atla10_ec_data *data;
-+	int ret;
-+
-+	data = devm_kzalloc(dev, sizeof(*data), GFP_KERNEL);
-+	if (!data)
-+		return -ENOMEM;
-+
-+	psy_cfg.drv_data = data;
-+	data->client = client;
-+
-+	ret = devm_mutex_init(dev, &data->update_lock);
-+	if (ret)
-+		return ret;
-+
-+	ret = devm_delayed_work_autocancel(dev, &data->work,
-+					   atla10_ec_external_power_changed_work);
-+	if (ret)
-+		return ret;
-+
-+	ret = atla10_ec_cmd(data, ATLA10_EC_BATTERY_INFO_COMMAND,
-+			    sizeof(data->info), (u8 *)&data->info);
-+	if (ret)
-+		return ret;
-+
-+	data->psy = devm_power_supply_register(dev, &atla10_ec_psy_desc, &psy_cfg);
-+	return PTR_ERR_OR_ZERO(data->psy);
-+}
-+
-+static const struct i2c_device_id atla10_ec_id_table[] = {
-+	{ "vexia_atla10_ec" },
-+	{ }
-+};
-+MODULE_DEVICE_TABLE(i2c, atla10_ec_id_table);
-+
-+static struct i2c_driver atla10_ec_driver = {
-+	.driver = {
-+		.name = "vexia_atla10_ec",
-+	},
-+	.probe = atla10_ec_probe,
-+	.id_table = atla10_ec_id_table,
-+};
-+module_i2c_driver(atla10_ec_driver);
-+
-+MODULE_AUTHOR("Hans de Goede <hdegoede@redhat.com>");
-+MODULE_DESCRIPTION("Battery driver for Vexia EDU ATLA 10 tablet EC");
-+MODULE_LICENSE("GPL");
+Acked-by: Martin K. Petersen <martin.petersen@oracle.com>
+
 -- 
-2.47.0
-
+Martin K. Petersen	Oracle Linux Engineering
