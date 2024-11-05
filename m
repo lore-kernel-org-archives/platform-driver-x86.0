@@ -1,125 +1,150 @@
-Received: from mail-ej1-f48.google.com (mail-ej1-f48.google.com [209.85.218.48])
+Received: from mail-lf1-f46.google.com (mail-lf1-f46.google.com [209.85.167.46])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DEA5018CC1B
-	for <platform-driver-x86@vger.kernel.org>; Tue,  5 Nov 2024 08:29:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 812591C1738;
+	Tue,  5 Nov 2024 08:51:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730795359; cv=none; b=EMObW/wyy5WYmeAShMzjjmSxZ+pHSD4O76yE0aGKxR8oIiGkk15MrheHATHSKfnEaMPfEf9os9gakIIO/Vwj3tsp9bIV3zUieaaOtbuFJZX8QhHNLmApyzTKsbZd96/AamsCZhxhzC8YGFOAuHltQ5pKWnuMgZEAKfPn1Q59gF0=
+	t=1730796712; cv=none; b=jr1fCSgDmsBaG86pC35zqc4ZBeyN/QxU6wAOMMV4AJuG/VOLyLI2f8RUEpeV3jwH6VIvZ1RTU4CEZD7KHhDziE8b6iRD341jImL88FCceUdtTYT97bchGz5wRK8wC8BRHtYNuaw2Go+TXZXSes9Ec0H6CoJNj9G2PRTwkA1EteE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730795359; c=relaxed/simple;
-	bh=zIxTJdNa0ttgIKYmRh7vYr/w823TU7H2rUZo3oG+L3Y=;
+	s=arc-20240116; t=1730796712; c=relaxed/simple;
+	bh=f1f++oseP5z53a8EZBwl3wZQyH58MDK1VM4I4c5ws5s=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=od8jaj3w9ov7cCiSEqjVSTJDq3VShmndXKvRM6KkpFyPM4Q4G5c99z8C1jenQ1kIEVkdFETZ13BgWgX2wcQ5Nmx/H86cwHiTEwQzX/JpJJOmIeJsr82GxiETRtUSFViEVTXQmTBWNSEGXSSC/KqcgsKJldX9Emj+BlUb0OVVXjA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=E1Ku0Nm4; arc=none smtp.client-ip=209.85.218.48
+	 To:Cc:Content-Type; b=KsvDh5F3ej8vqG2NDmUYRS/RKqjEwo19X41uObso+CHYNQYCjML20DTsjAs3kBDjwdubqBFW263KUQ9cu0R33LwbWktWaB9EUXGJZ1IsxI9ex0xixRLaNqD73y8IFWnhAFhb4LZZ6sCQsdNH9CybnpQRkik2ntRzpRKdB6SU2Z8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=QRvcu9eY; arc=none smtp.client-ip=209.85.167.46
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="E1Ku0Nm4"
-Received: by mail-ej1-f48.google.com with SMTP id a640c23a62f3a-a9a2cdc6f0cso775810266b.2
-        for <platform-driver-x86@vger.kernel.org>; Tue, 05 Nov 2024 00:29:17 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QRvcu9eY"
+Received: by mail-lf1-f46.google.com with SMTP id 2adb3069b0e04-539f2b95775so5858948e87.1;
+        Tue, 05 Nov 2024 00:51:50 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1730795356; x=1731400156; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1730796709; x=1731401509; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=HInRBjIhTFw/88QEvkjbsC1xsfk6X1zNSQSTtKxO3/4=;
-        b=E1Ku0Nm4NUrWN93rtFcU5wxGkkoG/Nw86htxWZX7VEXvDYOAodYTYX4G4Ec9NiW/B/
-         JlnZ5bAlEJN3LYfU6fhe6TFDAP/AVyD16dR+506jrPmu9lCTrHU7G2Wy44QkVmNRqzSR
-         ZDhlirQLC3mw9GBdiZlqUyrK1v9PK31WQ8Shh0U2Zuya4n8X1Pll8yJ4yiTweFpOUb6Y
-         6LXt6MBUdOUf9bi3B8SgNSECDyDf+mWVCIn1s3NvUiSv0La+0nOzZspsWYq5jta4ZUOy
-         vk3OtOui/8s1yj4x/p5+Xq+iMYntv6T2WRDrw8TieoBQ5xDN/pviJqZ1vkF91G+ivzER
-         AKmA==
+        bh=YJEtfstV+NvZnqlt/Dxh46XLJUgR+ECVmBD0MQzuU9Q=;
+        b=QRvcu9eY05bl6I4Eo8X/W0+n6pSiCJ+/asb9Uxwl+Duc1L9QKx96qPx6O13YSaju6q
+         5r4iiSxs+VFwa8QGWRo/Ij+ZbnnTUd2ViRSxC9Px8PEUsEePnK5hGv4lKcFqkx8Ozksw
+         8vsOfKEdd+WOvbzamMcFHd4ZmQAglmwsyu7M5umMVgKDf5TJqvaMVDEUtkXVDF3NKOwx
+         9Pj4gQ8W2i2KsHPLCcPlz618OMUE5JeVhzv1NpjOPso2DnrnYXATF/M5SHwMz3ugQ/rF
+         G0HfFQfCr0F3YKT3iFJyz4KirizFFtpWNjiukmac4nlx4RuwwkN87NZfOQqk+YCW0ZLV
+         Kn7g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1730795356; x=1731400156;
+        d=1e100.net; s=20230601; t=1730796709; x=1731401509;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=HInRBjIhTFw/88QEvkjbsC1xsfk6X1zNSQSTtKxO3/4=;
-        b=SCc8wrITzebS4XhvHdxNKyLxx4lZjPvN88EzqjX1kNipfdrRcAfyaz27Owkyp6wwjJ
-         4luaLtg/6LImHbBAzdrDOA5SlH65m9vWDi35enm/rU0D1i2vfFDkYLVBXOhxVGr9gLdO
-         uy2WOhTKAvWZeZXHNF3O3eyBp8MfNBxN8ItoFLvBxu/IDa2FwTHwFB07ZQYtWPNsfTIW
-         g0g351h4qE88b3MWBNafqz1ZPHbEreUDoww6M+ZgnxCKAX4tvnmctbovKwtod210k7Ja
-         i4IjVFRkZGWc5hH4VsYAam7QwDWKgM8hVZslTfE41yUXokwYgMqScGvvKhWhtxSaX4c5
-         j00A==
-X-Forwarded-Encrypted: i=1; AJvYcCWdRT4xrayzX7/4EgZ5Ag52uqLBGd/Bdnb//TYh4wB3bMTrUsQ532Bv/zPFROZ7j1Octw35C5ww8cGuIJVPHVjC9tHs@vger.kernel.org
-X-Gm-Message-State: AOJu0YxEoVNliuYaA3vh4prNR78NXULYhRSnVSQI7UPjj6Xz9svRqAM/
-	XMbTOk1LG63LL9c5Mbxf1DtYWyxIEyvd9tLI40pqmagWe9GRDZzRv8fDdLI+EqaDP7VbQvwGW4S
-	l/xO4ras+TbD+atqVZtRIGwBU9BA=
-X-Google-Smtp-Source: AGHT+IF8cQumpoiSSBBtZ4J73XzrLo5OIZG8Jx17MPGvHixZIY9aRzkfbr7eLIc+y5QWUG4oZMIhizBTVRICop1ZUQE=
-X-Received: by 2002:a17:907:97c8:b0:a9a:3d5b:dc1a with SMTP id
- a640c23a62f3a-a9e508d5ba5mr1805311766b.15.1730795355797; Tue, 05 Nov 2024
- 00:29:15 -0800 (PST)
+        bh=YJEtfstV+NvZnqlt/Dxh46XLJUgR+ECVmBD0MQzuU9Q=;
+        b=n8yta+E43Og8pral6Bh+yLwWOXlw6d5XnCrc7WFAK6HNtkTiIL7f3f1CsMvbulGJyi
+         nkByeeP9CiOp7mBHCDEtvmUTeDx+qCrvC7yx5H0/sqdPMoi4yNOKyDovJCZOGyZPrAX1
+         Rto6+pmxCfTM6aKxTy1kak8NElaCbScaJyt7EB84zpmlTXPvRZrD1lvap5j2Enfbz3v7
+         jHmZfZMxwIRz1BLBKUKLPtnYc77Gl29qssuRcWw2zHsVJN0/cITLcrBw7zwzJPSeOEWI
+         M4rCeHm/+yvgyPlKKyDafU06hZ0I1KJqrvaUqsGEzxXqrvDfuXc6Nt8kPkyHOErGW+hv
+         ItKw==
+X-Forwarded-Encrypted: i=1; AJvYcCXLQd3dbO+Yl3fwPZEjThG28iUA1JTKEyooDnRUsr8IW0gRYIROEpIdMgaz9T9zsOM/C42e4jks/A==@vger.kernel.org, AJvYcCXX+aL8dTZRk+cSZdrurhC6mDwASw8xICCNFlDM9F3cKqiX/2QJfeo8h2EAIbt/Y1bMo57WPFdfzxR+o7/CRx+5KbZhNA==@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw93jTjCR19IGUBDmIRkLZPmFHBxHb/B4vnW7Ez2LuBtvh/Wxiu
+	zMQvGDoTIMmORGfJKHa5l5s1P5NQ1lghUe8KaO7Jld2VXaBFffp7JCBKY9MzZ2qZiNb7LzSHALL
+	v1PdM/NlbqhNOY562UfO/dveOXai6MBGSxf0vkA==
+X-Google-Smtp-Source: AGHT+IH7pRC9jatDhIceNks3WrokjgSdUgzF0/V0AOFS/A960Brva7gvEjBbHcDxj+l5njGKTSvGHyr0i+AmrN8PRKU=
+X-Received: by 2002:a05:6512:2350:b0:53b:7ecc:5ddf with SMTP id
+ 2adb3069b0e04-53d65df1a08mr10770837e87.26.1730796708287; Tue, 05 Nov 2024
+ 00:51:48 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20241104200848.58693-1-hdegoede@redhat.com> <20241104200848.58693-4-hdegoede@redhat.com>
-In-Reply-To: <20241104200848.58693-4-hdegoede@redhat.com>
+References: <20241104203555.61104-1-hdegoede@redhat.com>
+In-Reply-To: <20241104203555.61104-1-hdegoede@redhat.com>
 From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Date: Tue, 5 Nov 2024 10:28:39 +0200
-Message-ID: <CAHp75Ve+gJQLRjh0=ck96tDJ_KWY8tRu3dQht62QrKU7K36MDA@mail.gmail.com>
-Subject: Re: [PATCH v2 3/3] platform/x86: x86-android-tablets: Add support for
- Vexia EDU ATLA 10 tablet
+Date: Tue, 5 Nov 2024 10:51:10 +0200
+Message-ID: <CAHp75Vete6HoHRRef-n2VNTZOawwMeULqH_a-ZD-z-K1iJDiFw@mail.gmail.com>
+Subject: Re: [PATCH 1/2] platform/x86/intel: bytcrc_pwrsrc: Optionally
+ register a power_supply dev
 To: Hans de Goede <hdegoede@redhat.com>
 Cc: =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, 
-	Andy Shevchenko <andy@kernel.org>, platform-driver-x86@vger.kernel.org
+	Andy Shevchenko <andy@kernel.org>, Sebastian Reichel <sre@kernel.org>, platform-driver-x86@vger.kernel.org, 
+	linux-pm@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Mon, Nov 4, 2024 at 10:09=E2=80=AFPM Hans de Goede <hdegoede@redhat.com>=
+On Mon, Nov 4, 2024 at 10:36=E2=80=AFPM Hans de Goede <hdegoede@redhat.com>=
  wrote:
 >
-> Add support for the Vexia EDU ATLA 10 tablet, Android 4.2/4.4 + Guadaline=
-x
-> Ubuntu tablet distributed to schools in the Spanish Andaluc=C3=ADa region=
-.
+> On some Android tablets with Crystal Cove PMIC the DSDT lacks an ACPI AC
+> device to indicate whether a charger is plugged in or not.
 >
-> Besides the usual broken DSDT issues this tablet is special because all
-> its LPSS island peripherals are enumerated as PCI devices rather then as
-> ACPI devices as they typically are.
+> Add support for registering a "crystal_cove_pwrsrc" power_supply class
+> device to indicate charger online status. This is made conditional on
+> a "linux,register-pwrsrc-power_supply" boolean device-property to avoid
+> registering a duplicate power_supply class device on devices where this
+> is already handled by an ACPI AC device.
 >
-> At the same time there are disabled (_STA=3D0) ACPI devices for
-> the peripherals and child ACPI devices for e.g. attached I2C/SDIO devices
-> are children of these disabled ACPI devices and thus will not be used
-> by Linux since the parent is disabled.
->
-> So besides the usual manual i2c-client instantiation for accel/touchscree=
-n
-> this tablet also requires manual i2c-client instantiation for the codec
-> and for the PMIC.
->
-> Also it seems the mainboard was designed for Windows not Android, so
-> it has an I2C attached embedded controller instead of allowing direct
-> access to the charger + fuel-gauge chips as is usual with Android boards.
->
-> Normally when there is an embedded controller, there also is ACPI battery
-> support, but since this shipped with Android that is missing and Linux
-> needs to have a power_supply class driver talking directly to the EC.
+> Note the "linux,register-pwrsrc-power_supply" property is only used on
+> x86/ACPI (non devicetree) devs and the devicetree-bindings maintainers
+> have requested properties like these to not be added to the devicetree
+> bindings, so the new property is deliberately not added to any bindings.
 
 Reviewed-by: Andy Shevchenko <andy@kernel.org>
 
 ...
 
-> +               .adapter_path =3D "0000:00:18.1",
++ array_size.h
 
-> +               .adapter_path =3D "0000:00:18.2",
-
-> +               .adapter_path =3D "0000:00:18.5",
-
-> +               .adapter_path =3D "0000:00:18.6",
-
-> +               .adapter_path =3D "0000:00:18.7",
+> +#include <linux/bits.h>
+>  #include <linux/debugfs.h>
+> +#include <linux/interrupt.h>
+>  #include <linux/mfd/intel_soc_pmic.h>
+>  #include <linux/module.h>
+>  #include <linux/platform_device.h>
+> +#include <linux/power_supply.h>
+> +#include <linux/property.h>
+>  #include <linux/regmap.h>
 
 ...
 
-> +       .use_pci_devname =3D true,
+> +       if (device_property_read_bool(pdev->dev.parent, "linux,register-p=
+wrsrc-power_supply")) {
 
-Just realized that you may do something like this to the above and
-also use pci_get_...() instead of iterating over the I2C type of
-devices. But you can do it later.
+Btw, is that property type of boolean? If not,
+device_property_present() has to be used.
+
+...
+
+> +               irq =3D platform_get_irq(pdev, 0);
+> +               if (irq < 0)
+> +                       return dev_err_probe(&pdev->dev, irq, "getting IR=
+Q\n");
+
+This dups the embedded error message.
+
+...
+
+> +               data->psy =3D devm_power_supply_register(&pdev->dev, &crc=
+_pwrsrc_psy_desc, &psy_cfg);
+> +               if (IS_ERR(data->psy))
+> +                       return dev_err_probe(&pdev->dev, PTR_ERR(data->ps=
+y),
+> +                                            "registering power-supply\n"=
+);
+> +
+> +               ret =3D devm_request_threaded_irq(&pdev->dev, irq, NULL,
+> +                                               crc_pwrsrc_irq_handler,
+> +                                               IRQF_ONESHOT, KBUILD_MODN=
+AME, data);
+> +               if (ret)
+> +                       return dev_err_probe(&pdev->dev, ret, "requesting=
+ IRQ\n");
+
+With
+
+    struct device *dev =3D &pdev->dev;
+
+at the top of the function you may make lines shorten and neater.
+
+> +       }
 
 --=20
 With Best Regards,
