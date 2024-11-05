@@ -1,136 +1,93 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3663513A409;
-	Tue,  5 Nov 2024 15:38:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD7CF45027;
+	Tue,  5 Nov 2024 15:43:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730821141; cv=none; b=dQwICqTtRBPzH3BCWdgfHn9Zgcfc4YVjk8GQhw3pW+Kd3fWRcn+Tv0M61wPdvJxIk4jjY0PEX6FbBbouOZha1teXzNbSdTwevy16px/68x6DHgWfMFdNwY5Xbd+gb13N5hWpm1t7wLyjTzaGWEoyEJmdXH20fRF3ylST2PIssmQ=
+	t=1730821421; cv=none; b=mruZTtL90Wyxphcw9T3fziTCgOCO4NcaJC2wtJWtZcHVZpHg7LWwHIKzgJezceZrsjUyYcq7TwXl088qC3htfDfXPnAS4obZr+vMIYgKeKy2d+QFvjmJWIgGJYm+ysEsh6lKg0symorBfKYFGBRrC3oLvELqwyDkfgP10Q/1hfA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730821141; c=relaxed/simple;
-	bh=lSYMITN9xGOGlPjRYwyC90WrOfPVKQ6Nh+LwhhwSiiI=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=hNUTDiMrq0MBQKGG+G2vOlqQ+Dwt1ORTv6+iOvHIjXDhDd4RI5Pg0KId7FBE+QwKh/knuIK91GTFX7U288Xvoq2WD4lmid1yy9IzOurv+i0TFqBRZvg3/ecOC+2Qg455xmkoS7uAgHFnODwZpqHZ8+Qo6i9laeUtN0pRLxuz9aM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=BC+t4IwR; arc=none smtp.client-ip=192.198.163.13
+	s=arc-20240116; t=1730821421; c=relaxed/simple;
+	bh=U7N4Tas2wjzfxhfgpGb23nqSUHuBo7MwtvH/7ZhJMH8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=OLeRQB7SGw//T1TzmwSSTTypWcM9AHsYdA/Yl/1QBzsi4BTr9UIaSka2Shh8AiaN7yeURx+FhIz3K1yyAEvlkeEyX3ver1uLnumD2H1KG2iQ6elHvnaaCgCx4dWbJmefD+WC5KmQ6nbbclZ0jDJPkf5GZUhs1ww4CMXLnw87+RI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=io+J4iQR; arc=none smtp.client-ip=192.198.163.7
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="BC+t4IwR"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="io+J4iQR"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1730821140; x=1762357140;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=lSYMITN9xGOGlPjRYwyC90WrOfPVKQ6Nh+LwhhwSiiI=;
-  b=BC+t4IwRom6fZ77n3uja/GR1mcE4VkM1WED6kZh8ZQi9wZeNYndPtOjA
-   SN+hf/sHfi6JNs5ov6uJpfjdZsL+Mws+MavXwWiY3qbMagCrkLoL7NpWt
-   kfH6BJA74bx3Rj9rqjdzNprxPO13JBSI8hknZP4LlWjjHCJ05t84auQ9m
-   KFdi572TTJY0P3j+ScqRTXIKbQl3dAZVx/rFzGFKavcA0AiJ4KX1HTOHP
-   WkMGF5KYIepiNmq27nB/+G2P3a6j//VHkmkV2ZgvmN7LrBIX9kGzAtH78
-   iIoY5RjZmuUlWw/bXtzguQiAyggZOaqlDlOWdFMWn7AqjRB3PXjLA4gSA
-   w==;
-X-CSE-ConnectionGUID: /AB6LK5GRVaCYcA/VXE97A==
-X-CSE-MsgGUID: irvNXktYTyW6v/DKqt6rtw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11247"; a="33415958"
+  t=1730821420; x=1762357420;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=U7N4Tas2wjzfxhfgpGb23nqSUHuBo7MwtvH/7ZhJMH8=;
+  b=io+J4iQRTTAXJlS9uSdLv+uVG8zkiU53+ZiouvAF0c2x9b+snqPdhr06
+   odOAoVY19xgfTX2Ln8NjcYPs4PS76C/DDKKNRgPpLIBSU/NN+8+JV9d3Z
+   XKtlFImyVRugNAKxerNkepTK5KGJmNnRy08GBpTLTU+8yf2UGFrm0Ptmy
+   J0Bfsa3NIkukZ+AcFTgAnNbDC5QusILs61J+ObNYe7RHzTJ14AH5hfk+Y
+   InJ9AcybX2SEDQbU0X2VT/WO91PwqAfCWs4RpIayuvDe2ORfWWn91eKnf
+   TURRJIfesV1P+NFR289vP5A2slxnHMhjlro3eisYg5acqLJfbp1jSCwIt
+   g==;
+X-CSE-ConnectionGUID: vOjX3nQUSg+ClW/jPo4flQ==
+X-CSE-MsgGUID: dxP36uJ8RnOAnL1xitwTUA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11247"; a="55974204"
 X-IronPort-AV: E=Sophos;i="6.11,260,1725346800"; 
-   d="scan'208";a="33415958"
-Received: from fmviesa001.fm.intel.com ([10.60.135.141])
-  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Nov 2024 07:38:58 -0800
-X-CSE-ConnectionGUID: WW/vFsOZSfCs9cj29Y6WxA==
-X-CSE-MsgGUID: LW6KXejcS4K1NpgNofDbDQ==
+   d="scan'208";a="55974204"
+Received: from fmviesa009.fm.intel.com ([10.60.135.149])
+  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Nov 2024 07:43:39 -0800
+X-CSE-ConnectionGUID: /B2vCChZRa2je0Fr3dO0Jw==
+X-CSE-MsgGUID: UjHQNn/ZQmS2ud7EScLyfA==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.11,260,1725346800"; 
-   d="scan'208";a="114860359"
-Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.201])
-  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Nov 2024 07:38:53 -0800
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Tue, 5 Nov 2024 17:38:50 +0200 (EET)
-To: Mario Limonciello <mario.limonciello@amd.com>
-cc: Hans de Goede <hdegoede@redhat.com>, 
-    "Rafael J . Wysocki" <rafael@kernel.org>, Len Brown <lenb@kernel.org>, 
-    Maximilian Luz <luzmaximilian@gmail.com>, Lee Chun-Yi <jlee@suse.com>, 
-    Shyam Sundar S K <Shyam-sundar.S-k@amd.com>, 
-    Corentin Chary <corentin.chary@gmail.com>, 
-    "Luke D . Jones" <luke@ljones.dev>, Ike Panhc <ike.pan@canonical.com>, 
-    Henrique de Moraes Holschuh <hmh@hmh.eng.br>, 
-    Alexis Belmonte <alexbelm48@gmail.com>, 
-    =?ISO-8859-15?Q?Uwe_Kleine-K=F6nig?= <u.kleine-koenig@pengutronix.de>, 
-    Ai Chao <aichao@kylinos.cn>, Gergo Koteles <soyer@irl.hu>, 
-    open list <linux-kernel@vger.kernel.org>, 
-    "open list:ACPI" <linux-acpi@vger.kernel.org>, 
-    "open list:MICROSOFT SURFACE PLATFORM PROFILE DRIVER" <platform-driver-x86@vger.kernel.org>, 
-    "open list:THINKPAD ACPI EXTRAS DRIVER" <ibm-acpi-devel@lists.sourceforge.net>, 
-    Mark Pearson <mpearson-lenovo@squebb.ca>, 
-    Matthew Schwartz <matthew.schwartz@linux.dev>
-Subject: Re: [PATCH v4 06/20] ACPI: platform_profile: Move matching string
- for new profile out of mutex
-In-Reply-To: <20241105153316.378-7-mario.limonciello@amd.com>
-Message-ID: <47780252-0d09-ec4a-9e4b-924939e0df4a@linux.intel.com>
-References: <20241105153316.378-1-mario.limonciello@amd.com> <20241105153316.378-7-mario.limonciello@amd.com>
+   d="scan'208";a="84186161"
+Received: from smile.fi.intel.com ([10.237.72.154])
+  by fmviesa009.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Nov 2024 07:43:37 -0800
+Received: from andy by smile.fi.intel.com with local (Exim 4.98)
+	(envelope-from <andriy.shevchenko@linux.intel.com>)
+	id 1t8LiQ-0000000BSMv-3jdE;
+	Tue, 05 Nov 2024 17:43:34 +0200
+Date: Tue, 5 Nov 2024 17:43:34 +0200
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Lukas Bulwahn <lbulwahn@redhat.com>
+Cc: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+	Hans de Goede <hdegoede@redhat.com>,
+	Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	platform-driver-x86@vger.kernel.org,
+	kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Lukas Bulwahn <lukas.bulwahn@redhat.com>
+Subject: Re: [PATCH] MAINTAINERS: adjust file entry in INTEL TPMI DRIVER
+Message-ID: <Zyo9JmxZt2lm9J6A@smile.fi.intel.com>
+References: <20241105152813.60823-1-lukas.bulwahn@redhat.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="8323328-259802314-1730821130=:949"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20241105152813.60823-1-lukas.bulwahn@redhat.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
+On Tue, Nov 05, 2024 at 04:28:13PM +0100, Lukas Bulwahn wrote:
+> From: Lukas Bulwahn <lukas.bulwahn@redhat.com>
+> 
+> Commit df7f9acd8646 ("platform/x86: intel: Add 'intel' prefix to the
+> modules automatically") renames tpmi.c to vsec_tpmi.c in
+> drivers/platform/x86/intel/, but misses to adjust the INTEL TPMI DRIVER
+> section, which is referring to this file.
+> 
+> Hence, ./scripts/get_maintainer.pl --self-test=patterns complains about a
+> broken reference.
+> 
+> Adjust the file entry to this file renaming.
 
---8323328-259802314-1730821130=:949
-Content-Type: text/plain; charset=ISO-8859-15
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Oh, right. Thanks for fixing this.
+Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 
-On Tue, 5 Nov 2024, Mario Limonciello wrote:
-
-> Holding the mutex is not necessary while scanning the string passed into
-> platform_profile_store().
->=20
-> Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
-> ---
->  drivers/acpi/platform_profile.c | 12 +++++-------
->  1 file changed, 5 insertions(+), 7 deletions(-)
->=20
-> diff --git a/drivers/acpi/platform_profile.c b/drivers/acpi/platform_prof=
-ile.c
-> index 4e8a155589c21..70e7f1ba68676 100644
-> --- a/drivers/acpi/platform_profile.c
-> +++ b/drivers/acpi/platform_profile.c
-> @@ -83,6 +83,11 @@ static ssize_t platform_profile_store(struct device *d=
-ev,
->  {
->  =09int err, i;
-> =20
-> +=09/* Scan for a matching profile */
-> +=09i =3D sysfs_match_string(profile_names, buf);
-> +=09if (i < 0)
-> +=09=09return -EINVAL;
-> +
->  =09err =3D mutex_lock_interruptible(&profile_lock);
->  =09if (err)
->  =09=09return err;
-> @@ -92,13 +97,6 @@ static ssize_t platform_profile_store(struct device *d=
-ev,
->  =09=09return -ENODEV;
->  =09}
-> =20
-> -=09/* Scan for a matching profile */
-> -=09i =3D sysfs_match_string(profile_names, buf);
-> -=09if (i < 0) {
-> -=09=09mutex_unlock(&profile_lock);
-> -=09=09return -EINVAL;
-> -=09}
-> -
->  =09/* Check that platform supports this profile choice */
->  =09if (!test_bit(i, cur_profile->choices)) {
->  =09=09mutex_unlock(&profile_lock);
->=20
-
-Reviewed-by: Ilpo J=E4rvinen <ilpo.jarvinen@linux.intel.com>
+-- 
+With Best Regards,
+Andy Shevchenko
 
 
---=20
- i.
-
---8323328-259802314-1730821130=:949--
