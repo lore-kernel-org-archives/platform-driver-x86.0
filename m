@@ -1,221 +1,168 @@
-Received: from mail-ej1-f44.google.com (mail-ej1-f44.google.com [209.85.218.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF3BA1D2F7E;
-	Tue,  5 Nov 2024 10:39:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F0D4D1D174E
+	for <platform-driver-x86@vger.kernel.org>; Tue,  5 Nov 2024 10:45:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730803198; cv=none; b=Ggxm80rNsnMaKnhBJWliLgn/3lbtDlFX73QpyAw59NmJVbtn4Y366W1ddln9mmfuRoNkhh1N6OcTA/uBDxF7HeK7Om7eqK7uNxeUpquQ+QTY7gKqu8Y0YUtvwR4FF/pWQf5UrrEH7y7CYvk6sNz3tSPq1//iR4IQdSQkVLyfECw=
+	t=1730803556; cv=none; b=H/CG6La3V+6gEPCmsZ2za/BP9B9y+Gpf0IB2vty8V0oN42dByNK5aAXD8wnPod9bClBbkOWvqcjElcYvR3wFpZN6dO57IzDq8EFfhQLAWytWyZQRCEOl5lDPtHAVysoVedoTgkpwIPJnPeyW3ub+1IngjrUWZG1Ks3KBkjhq7Ro=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730803198; c=relaxed/simple;
-	bh=4lI34dvKHgNHOUkI/vFnhgPHUreRbzGpQEDeHHGi/w4=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=GhxBiCj4D1+HPocAysYKTGNluSs7QOGbURwv/O5TebGELN1kRgh7Ei3Ss6/askfvLcUvbTqVadgSOmVS1ck3SLi+Bi37S2ggwj8W8IOwkkfPca1dc1yjlK1KLKFowIQaQSxXPqGi29OMLgNbM2dj5jiE2JmyKK6nyZbz858UK6s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ZUbYyhJT; arc=none smtp.client-ip=209.85.218.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1730803556; c=relaxed/simple;
+	bh=petNDYqpO9lInOwN0aeXn7foYpIJFc8N4dNPAHim0A4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=WhbSfnPgSzp5UkJFPnB8aW6m+607ti80Yj+aoa1Y+3VDi/kUWXMrYflnohxjPGwNsHBaxRqOKU7LKmOxlhL5NJ1C0p4owHmWyL28NPbXHNEGGZ/n0YHoWk/3OvioRgGyeMEHYgxPsj7BZ4MgbwJSTreIFT0dusIq5Ds9L0UNdCk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=i52YRUot; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZUbYyhJT"
-Received: by mail-ej1-f44.google.com with SMTP id a640c23a62f3a-a9acafdb745so908092466b.0;
-        Tue, 05 Nov 2024 02:39:56 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1730803195; x=1731407995; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=2zXg7Guy64cNzZb/hZAgtsvKuiNGSRMYLjM/cGzZqmE=;
-        b=ZUbYyhJTuAhdAXva5us6TwFNVWUCEega8ghivBQJ1el41Yhg+1QbgsFk0i/1C60ddH
-         LmEUv1/lP9Ve9wK3ffhDHgorx5yXJ848TdaZpMnhaTMx7F+SyYZmkPofd45gVRNd05gL
-         quln56AtwUhwZzlzO/2VrZ2tMPyMQ4XimWpTlArGWv98U8/pJ4bIsSWcUi5zn5K0i3Fd
-         aGOPzUMc7STYmO07498KOSfTzOX/ofAddvrzqxH4LmbxpoJVhPHKUm9B+TQOdYrP8wyM
-         wPZpNZkO7vZNC7+qUdbsgcQMBs7rutOO1Am6/E4d6C4MCoZXtsIsbfMNB0gVSIJ31HMg
-         L+XQ==
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="i52YRUot"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1730803554;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=6yDYMQCJFtsroc/rmuHc1u3vxQFcvTWVkWEPeSyhlQg=;
+	b=i52YRUotDcrl1eahkon9/B79fCgBTjuwoDFlm9Ex7SL6ojDXubBq90UoX0kJVy0ljpT3qa
+	dKUR91puVpPLxP7Q/nFB9XR+eDO5RQZrvjCNV8S0SdXGqR/7xQJaCO9X+dcbKOrFS/snvA
+	Kg2AkIdZSXvP7Thzfibd5Cg2vOfyL7I=
+Received: from mail-ej1-f69.google.com (mail-ej1-f69.google.com
+ [209.85.218.69]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-378-m_DTp570MN2AFb0l83XKkg-1; Tue, 05 Nov 2024 05:45:52 -0500
+X-MC-Unique: m_DTp570MN2AFb0l83XKkg-1
+Received: by mail-ej1-f69.google.com with SMTP id a640c23a62f3a-a99f084683fso29696366b.3
+        for <platform-driver-x86@vger.kernel.org>; Tue, 05 Nov 2024 02:45:52 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1730803195; x=1731407995;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=2zXg7Guy64cNzZb/hZAgtsvKuiNGSRMYLjM/cGzZqmE=;
-        b=v+tFdOApShyFewIXwoy4o7qWoOSXwIJULLXGm7Vz2eqpWkT7AuDsHtK2sdoHIjXcub
-         +22OJ54D1Uq3GnWAJQ56OSaxT2YSjVFk9T1g/uO70/FNW4PfWHuO8H0RqkkxAbvlE9Gq
-         plSe1sRnIsdCAI0A6a6ymfKJGAFmUiOtdnuLEOQRp9jPN77S7OPHGQTRmtwVEHd7SCBV
-         7flS5qrYmn6aInq8AORSo5vpYgCAKZko54tCozDh4cbQaieteTl41OFFFPcSQ56Lzd/O
-         BWqQ4un/BpYt247X8A9NgkMeZWKvF2ysfVK8fACv+B+m3aIvj6pmsfD6ZzIPZ2DvW8vQ
-         98ew==
-X-Forwarded-Encrypted: i=1; AJvYcCUAXmuG3NXDGCMVdE5skJIrLSrG6h2qeSmww58XPPp9d7tookE6SJ1cwaN6V9EL/MlXE0HRdrFAxA==@vger.kernel.org, AJvYcCWLcTgWEy8NSuB7ftY++aXWYi309eXa/jCf6SjudDgDUdRBZa2WS+qNYCKFOV0ozyswRx/X66JiKvCO2ys4aYrNKN4Hng==@vger.kernel.org
-X-Gm-Message-State: AOJu0YwqN0DZpuhLEZf+SOKMQ/Ta1xMG212K1q4ZR26/SzRjdQ12OEDG
-	o0FVGk0ytPS1o3lEjeNYDvJAKxPGxSW9qdA+0O9/ASrs3pTO4sytB/rZOZP/v7WR1KdlBf5KxFx
-	eahKJEXjhjnrbl4h/iijykVW6PnRf616ZrSs=
-X-Google-Smtp-Source: AGHT+IGyp5qs3OGjZBYXe62SjBEm9TG3IE0LldEbihnyb53iVdCylwWMrR/gWOo3N4VcWuryr9/BUtAQGE/fVMQK/08=
-X-Received: by 2002:a17:906:c116:b0:a9a:616c:459e with SMTP id
- a640c23a62f3a-a9e55ae0414mr1808433466b.27.1730803194219; Tue, 05 Nov 2024
- 02:39:54 -0800 (PST)
+        d=1e100.net; s=20230601; t=1730803552; x=1731408352;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=6yDYMQCJFtsroc/rmuHc1u3vxQFcvTWVkWEPeSyhlQg=;
+        b=bYEmi8vAli+LvEuhwfXue6ze4CPlZCHUPB8iXGRevMBJyRrOr4rDx9aV4xsvbs/Fpt
+         aml+u5JuT6mrKK7xTuWKLRXMl0qMc76P9m2zXGlcdGgYO0J13xAchK7kV1ZuJ2NjhGtr
+         m4/tOxMjtuloQ2AfSQbRAjmiLP0+4GUq6insH8HWQpyrC1XFGX7kjfcHAzNrj6yIEnSE
+         tt/X1oJ9wP6tsIGdP1JSGhPjivozq/xYnvKkQQm6yvg0ltplFsLGQXP3dt1FmmwjPtQ8
+         I3O0VaM6MpRcM5wjzuyHHOOcc4JPrVemIwJ12l28uoP6fTq7j/6vtHixKXF02Iu6sSaZ
+         kxHQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWUmCyY0f5lVYGl5H771vv9C9sgIAfyAG8n7VlGOdxaO7v1Hhfr8jHcptgpLnwzpJp3Ztd+cei79H7PiSp6l6Alykzl@vger.kernel.org
+X-Gm-Message-State: AOJu0YxD5j04mLSDYxS9aVoOmI/OPvu+qFf7aJXTp33N93e+9w0KWmSC
+	b7FuWan39bpl9UuPWRwo9WJdOolqJl18PwovGEBepZPBWYcnqapfGXDpYrvdhVWQ/9YUkLdRbuV
+	HAvD0pK7RMvN/hvWOjt8wHJ4PSewz5Rs7wiuB3E0S8Qpv24oo004hVjY2rab4Cs3qjvWMDkM=
+X-Received: by 2002:a17:907:9407:b0:a9a:4d1:c628 with SMTP id a640c23a62f3a-a9de6166babmr3718416766b.45.1730803551724;
+        Tue, 05 Nov 2024 02:45:51 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IEo2Py+Mp1ulk4Z9nvkh5azGxfln7FUviynZhmm511tcNUI2P9QIbkj2sD+zHmfqEbacOVBKA==
+X-Received: by 2002:a17:907:9407:b0:a9a:4d1:c628 with SMTP id a640c23a62f3a-a9de6166babmr3718414666b.45.1730803551331;
+        Tue, 05 Nov 2024 02:45:51 -0800 (PST)
+Received: from ?IPV6:2001:1c00:c32:7800:5bfa:a036:83f0:f9ec? (2001-1c00-0c32-7800-5bfa-a036-83f0-f9ec.cable.dynamic.v6.ziggo.nl. [2001:1c00:c32:7800:5bfa:a036:83f0:f9ec])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a9eb17cecedsm117164066b.128.2024.11.05.02.45.50
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 05 Nov 2024 02:45:50 -0800 (PST)
+Message-ID: <1b60b0ff-bbc9-4d14-9b3f-ebec0d1743b6@redhat.com>
+Date: Tue, 5 Nov 2024 11:45:50 +0100
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20241104203555.61104-1-hdegoede@redhat.com> <20241104203555.61104-2-hdegoede@redhat.com>
-In-Reply-To: <20241104203555.61104-2-hdegoede@redhat.com>
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Date: Tue, 5 Nov 2024 12:39:18 +0200
-Message-ID: <CAHp75Vdkwg4pUs=k-GNv9wxuecVpMromh_F49bbfhYL7sxjwDg@mail.gmail.com>
-Subject: Re: [PATCH 2/2] platform/x86: x86-android-tablets: Add Vexia EDU ATLA
- 10 EC battery driver
-To: Hans de Goede <hdegoede@redhat.com>
-Cc: =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, 
-	Andy Shevchenko <andy@kernel.org>, Sebastian Reichel <sre@kernel.org>, platform-driver-x86@vger.kernel.org, 
-	linux-pm@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 1/3] platform/x86: x86-android-tablets: Add
+ get_i2c_adap_by_handle() helper
+To: =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Cc: Andy Shevchenko <andy@kernel.org>, platform-driver-x86@vger.kernel.org
+References: <20241104200848.58693-1-hdegoede@redhat.com>
+ <20241104200848.58693-2-hdegoede@redhat.com>
+ <2027eeb6-f5c6-4ad3-042e-2cf3daf683db@linux.intel.com>
+Content-Language: en-US, nl
+From: Hans de Goede <hdegoede@redhat.com>
+In-Reply-To: <2027eeb6-f5c6-4ad3-042e-2cf3daf683db@linux.intel.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Mon, Nov 4, 2024 at 10:36=E2=80=AFPM Hans de Goede <hdegoede@redhat.com>=
- wrote:
->
-> The Vexia EDU ATLA 10 tablet has an embedded controller instead of
-> giving the os direct access to the charger + fuel-gauge ICs as is normal
-> on tablets designed for Android.
->
-> There is ACPI Battery device in the DSDT using the EC which should work
-> expect that it expects the I2C controller to be enumerated as an ACPI
+Hi Ilpo,
 
-expect --> except
+On 5-Nov-24 10:37 AM, Ilpo Järvinen wrote:
+> On Mon, 4 Nov 2024, Hans de Goede wrote:
+> 
+>> Add get_i2c_adap_by_handle() helper function, this is a preparation patch
+>> for adding support for getting i2c_adapter-s by PCI parent devname().
+>>
+>> Suggested-by: Andy Shevchenko <andy@kernel.org>
+>> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+>> ---
+>> Changes in v2:
+>> - New patch in v2 of this series
+>> ---
+>>  .../platform/x86/x86-android-tablets/core.c   | 25 ++++++++++++-------
+>>  1 file changed, 16 insertions(+), 9 deletions(-)
+>>
+>> diff --git a/drivers/platform/x86/x86-android-tablets/core.c b/drivers/platform/x86/x86-android-tablets/core.c
+>> index ef572b90e06b..4154395c60bb 100644
+>> --- a/drivers/platform/x86/x86-android-tablets/core.c
+>> +++ b/drivers/platform/x86/x86-android-tablets/core.c
+>> @@ -155,26 +155,33 @@ static struct gpiod_lookup_table * const *gpiod_lookup_tables;
+>>  static const struct software_node *bat_swnode;
+>>  static void (*exit_handler)(void);
+>>  
+>> +static struct i2c_adapter *
+>> +get_i2c_adap_by_handle(const struct x86_i2c_client_info *client_info)
+>> +{
+>> +	acpi_handle handle;
+>> +	acpi_status status;
+>> +
+>> +	status = acpi_get_handle(NULL, client_info->adapter_path, &handle);
+>> +	if (ACPI_FAILURE(status)) {
+>> +		pr_err("Error could not get %s handle\n", client_info->adapter_path);
+>> +		return NULL;
+>> +	}
+>> +
+>> +	return i2c_acpi_find_adapter_by_handle(handle);
+>> +}
+>> +
+>>  static __init int x86_instantiate_i2c_client(const struct x86_dev_info *dev_info,
+>>  					     int idx)
+>>  {
+>>  	const struct x86_i2c_client_info *client_info = &dev_info->i2c_client_info[idx];
+>>  	struct i2c_board_info board_info = client_info->board_info;
+>>  	struct i2c_adapter *adap;
+>> -	acpi_handle handle;
+>> -	acpi_status status;
+>>  
+>>  	board_info.irq = x86_acpi_irq_helper_get(&client_info->irq_data);
+>>  	if (board_info.irq < 0)
+>>  		return board_info.irq;
+>>  
+>> -	status = acpi_get_handle(NULL, client_info->adapter_path, &handle);
+>> -	if (ACPI_FAILURE(status)) {
+>> -		pr_err("Error could not get %s handle\n", client_info->adapter_path);
+>> -		return -ENODEV;
+>> -	}
+>> -
+>> -	adap = i2c_acpi_find_adapter_by_handle(handle);
+>> +	adap = get_i2c_adap_by_handle(client_info);
+>>  	if (!adap) {
+>>  		pr_err("error could not get %s adapter\n", client_info->adapter_path);
+>>  		return -ENODEV;
+> 
+> Reviewed-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
+> 
+> Not a big deal, but you might want to consider if printing both error 
+> messages is fine or if the error printing should be somehow modified when 
+> that other print moves into the inner function.
 
-> device and the tablet's BIOS enumerates all LPSS devices as PCI devices
-> (and changing the LPSS BIOS settings from PCI -> ACPI does not work).
->
-> Add a power_supply class driver for the Atla 10 EC to expert battery info
-> to userspace. This is made part of the x86-android-tablets directory and
-> Kconfig option because the i2c_client it binds to is instantiated by
-> the x86-android-tablets kmod.
+I already considered this and since this should never happen
+printing both messages if it does happen is fine IMHO.
 
-Reviewed-by: Andy Shevchenko <andy@kernel.org>
+Basically the idea is if the acpi_get_handle() fails print both
+messages, if the i2c_acpi_find_adapter_by_handle() fails only
+print the latter message. This way one can tell one scenario
+from the other while keeping the logic simple.
 
-...
+The same applies to the get_i2c_adap_by_pci_parent() helper
+added in patch 2.
 
->  obj-$(CONFIG_X86_ANDROID_TABLETS) +=3D x86-android-tablets.o
-> +obj-$(CONFIG_X86_ANDROID_TABLETS) +=3D vexia_atla10_ec.o
+Regards,
 
-This splits the original (compound) object lines, please move it
-either before (and this seems even better with ordering by name in
-mind) or after this block.
->
+Hans
 
-Actually this blank line gives the false impression that the
-originally two lines are not related. I would drop this blank line as
-well.
-
->  x86-android-tablets-y :=3D core.o dmi.o shared-psy-info.o \
->                          asus.o lenovo.o other.o
-
-...
-
-> +#include <linux/bits.h>
-> +#include <linux/devm-helpers.h>
-
-+ err.h
-
-> +#include <linux/i2c.h>
-> +#include <linux/module.h>
-> +#include <linux/power_supply.h>
-> +#include <linux/types.h>
-> +#include <linux/workqueue.h>
-> +
-> +#include <asm/byteorder.h>
-
-...
-
-> +/* From broken ACPI battery device in DSDT */
-> +#define ATLA10_EC_VOLTAGE_MIN_DESIGN           3750000
-
-_uV ?
-
-...
-
-> +struct atla10_ec_battery_state {
-> +       u8 len;                         /* Struct length excluding the le=
-n field, always 12 */
-> +       u8 status;                      /* Using ACPI Battery spec status=
- bits */
-> +       u8 capacity;                    /* Percent */
-> +       __le16 charge_now;              /* mAh */
-> +       __le16 voltage_now;             /* mV */
-> +       __le16 current_now;             /* mA */
-> +       __le16 charge_full;             /* mAh */
-> +       __le16 temp;                    /* centi degrees celcius */
-
-Celsius / celsius
-
-> +} __packed;
-> +
-> +struct atla10_ec_battery_info {
-> +       u8 len;                         /* Struct length excluding the le=
-n field, always 6 */
-> +       __le16 charge_full_design;      /* mAh */
-> +       __le16 voltage_now;             /* mV, should be design voltage, =
-but is not ? */
-> +       __le16 charge_full_design2;     /* mAh */
-> +} __packed;
-
-Instead I would add the respective units to the variable names:
-_mAh
-_mV
-...etc.
-
-(* yes, with the capital letters to follow the proper spelling)
-
-...
-
-> +static int atla10_ec_cmd(struct atla10_ec_data *data, u8 cmd, u8 len, u8=
- *values)
-> +{
-> +       struct device *dev =3D &data->client->dev;
-> +       int ret;
-> +
-> +       ret =3D i2c_smbus_read_i2c_block_data(data->client, cmd, len, val=
-ues);
-> +       if (ret !=3D len) {
-> +               dev_err(dev, "I2C command 0x%02x error: %d\n", cmd, ret);
-> +               return -EIO;
-> +       }
-
-> +       if (values[0] !=3D (len - 1)) {
-
-Hmm... AFAIU this is part of SMBus protocol. Why do we need to care
-about this? Or is this an additional header on top of that?
-
-> +               dev_err(dev, "I2C command 0x%02x header length mismatch e=
-xpected %u got %u\n",
-> +                       cmd, len - 1, values[0]);
-> +               return -EIO;
-> +       }
-> +
-> +       return 0;
-> +}
-
-...
-
-> +               val->intval =3D min(charge_now, charge_full) * 1000;
-
-MILLI (here and below)?
-
-> +               break;
-> +       case POWER_SUPPLY_PROP_VOLTAGE_NOW:
-> +               val->intval =3D le16_to_cpu(data->state.voltage_now) * 10=
-00;
-> +               break;
-> +       case POWER_SUPPLY_PROP_CURRENT_NOW:
-> +               val->intval =3D le16_to_cpu(data->state.current_now) * 10=
-00;
-> +               /*
-> +                * Documentation/ABI/testing/sysfs-class-power specifies
-> +                * negative current for discharing.
-
-discharging
-
-> +                */
-
---
-With Best Regards,
-Andy Shevchenko
