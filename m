@@ -1,188 +1,211 @@
-Received: from NAM11-DM6-obe.outbound.protection.outlook.com (mail-dm6nam11on2081.outbound.protection.outlook.com [40.107.223.81])
+Received: from fout-b3-smtp.messagingengine.com (fout-b3-smtp.messagingengine.com [202.12.124.146])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B06E3D81;
-	Tue,  5 Nov 2024 20:53:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.223.81
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730839994; cv=fail; b=pnx3G6Uu6LDPzAYK4LaxEuQJEup/ucenNJ6S35lxL+VYlSD8f7+5oUv2ICduMDSR84BFC8Rb1JUt6LpgD8DxH+nAwxN7WxTL5N6G1guSGxObUNHHLPOi9v+w+05PXjw9dxI3+TgPzYLiRIT7RTLJTZASIL4vZfkhspJUtLhp5dw=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730839994; c=relaxed/simple;
-	bh=Fa/AN6M6UHolkMpyJF/9mPYh78gDnBfiO73TYKR2xlI=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=IOqq/xS2fnU05CEqaPY0dSK+pCq31fm8d4pJtN0eGNCnz/rBrrQkRkWt3tpfnJgrj7KEcGdzCn5U41FPcTnoNlOuXq4KeprRBQvyUAYO+bxxr6Eh60NP/+XMHV93ZiiZ2ZIDReBE4JfcKBHMhteJH+33ok4KLLHQuCMf4hdfNac=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=crD3Lp57; arc=fail smtp.client-ip=40.107.223.81
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9BC3A216452;
+	Tue,  5 Nov 2024 22:47:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.146
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1730846872; cv=none; b=NYdiDBzmyZmRzYQ38f9AoR1lnA/c9DTVJO/3D0sJ00Cko4d6KwkkgsuzS5dz+nKpMR8TGKtNgBt7Z9eMIJHxZipkkH7uDD16qR2rvL/nprKda4nq7pI6IOnGrbyOGmcZ2FyQ4XQ8w1xawpouVoyelOruLzSqMEJnvHtGV74PpSM=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1730846872; c=relaxed/simple;
+	bh=iihAQ/0XfqQbsuVCqT+9AN1HLBl/26QRQ1HxqkML6N8=;
+	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
+	 Subject:Content-Type; b=bCvJxVmySZZa4w8ijEHtiUGGs+4BBqAF2DzkG8M9CU5hoDG0ZCZf145ZcH0jdirOptJ1eG0xFwCWgmxUDf9zyQv75zeARdY5ldglNdupDDt4lfYUDXaUM+UalvE9r3xOYJPz2mBUDrfvofVoMoTx+dUKDDVLYCKd/zPBry2crc8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=squebb.ca; spf=pass smtp.mailfrom=squebb.ca; dkim=pass (2048-bit key) header.d=squebb.ca header.i=@squebb.ca header.b=VRXMZIhw; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=Kwq900+F; arc=none smtp.client-ip=202.12.124.146
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=squebb.ca
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=squebb.ca
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="crD3Lp57"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=IASpMHGXrndF1UZWz6MIK+Ej3nU8H7yqIkDo9k6lfj24P8FfiirIPBFj1Q3pB1NKKBzq9I6T0M6AOXbSwlRzwz8aSjHbAYcjWITfiItsGKbWiewOzU8HFljM1jv6vLqPsyWzejfxEr//TPXkr+0ZFHSUK9vIRlJZ4sQ5OhKEH1bK25Cok1/mgfQMZyDfKUNFeD3T/b4eCCLvceJZuSmWML2VK4DSTeWXr8jaiLd6Zci0r7m3QM2LKHdZKmYL80yMYa5a2LgXC6wJjGaiKAQ688FJhc7lux/pV6j0jXyXvW6+omUnN+a+XDpUrrgZfd5pRqtJGV5aVsnMX2AuQRVkNQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=i9VFV0CtZXtV5PZBl3IfVb2WIg7Bduy1vY8woHmjbMY=;
- b=qGe1hDswQ+CCZ3T1H94lPlLl5IBkW6us56IoRovwzRvQ9mqDdRrt8wxXDFh7smNAF4SzjT8ua8r5cGXuU/0AWo420lG1mDTUkGMQmteBjZPRtv4zwrIkzM5OxNCJxryA9qkVk1Hmx+hS83/VVcfmOKpDL6qjVpRRSL2acYHZxavthw21s9rviAqWzY162UgRcWsB3n9dlYM7gbY8dwEMrrnzFSiB3hZOdgP5d27h2YZ8rBs+cctxieGa/+77ufBTjrIdemP2yd9TAuzb+fBG+cC9VDvBmuinAd9R6lbB9mxsU+1EB/NwEAgP8INRWjHgFFeOelzCeGY0oSPRjBOIsw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=i9VFV0CtZXtV5PZBl3IfVb2WIg7Bduy1vY8woHmjbMY=;
- b=crD3Lp57sgFMX5XZpx4ho5Z3sGy8slVCRa1UwfYDBys1caGGdtYBN1ahtqhU8591Tus0xyxnRbY3u8JlFVgH8zpPc8RDXA36xVcdPBsYsYv7RdbA9+nQm4m3iuVy4Gy2wTfVn3uOyMEsHQO/qbAWXdKCLiuonLIX3SXAE0EF1Pk=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from MN0PR12MB6101.namprd12.prod.outlook.com (2603:10b6:208:3cb::10)
- by PH7PR12MB5685.namprd12.prod.outlook.com (2603:10b6:510:13c::22) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8114.28; Tue, 5 Nov
- 2024 20:53:10 +0000
-Received: from MN0PR12MB6101.namprd12.prod.outlook.com
- ([fe80::37ee:a763:6d04:81ca]) by MN0PR12MB6101.namprd12.prod.outlook.com
- ([fe80::37ee:a763:6d04:81ca%4]) with mapi id 15.20.8114.028; Tue, 5 Nov 2024
- 20:53:10 +0000
-Message-ID: <f4b2c3b7-187c-4339-a82b-c6126edbd3ee@amd.com>
-Date: Tue, 5 Nov 2024 14:53:07 -0600
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 16/16] x86/amd_smn: Add support for debugfs access to SMN
- registers
-To: Borislav Petkov <bp@alien8.de>
-Cc: Bjorn Helgaas <bhelgaas@google.com>, Yazen Ghannam
- <yazen.ghannam@amd.com>, linux-edac@vger.kernel.org,
- linux-kernel@vger.kernel.org, tony.luck@intel.com, x86@kernel.org,
- avadhut.naik@amd.com, john.allen@amd.com, Shyam-sundar.S-k@amd.com,
- richard.gong@amd.com, jdelvare@suse.com, linux@roeck-us.net,
- clemens@ladisch.de, hdegoede@redhat.com, ilpo.jarvinen@linux.intel.com,
- linux-pci@vger.kernel.org, linux-hwmon@vger.kernel.org,
- platform-driver-x86@vger.kernel.org, naveenkrishna.chatradhi@amd.com,
- carlos.bilbao.osdev@gmail.com
-References: <20241023172150.659002-1-yazen.ghannam@amd.com>
- <20241023172150.659002-17-yazen.ghannam@amd.com>
- <20241105192124.GXZypwNJ26qqahcpOZ@fat_crate.local>
- <2b539169-8acd-40c6-9261-47c0252df91a@amd.com>
- <20241105195329.GHZyp3uVMKHAF3BEmV@fat_crate.local>
- <9137b724-d342-4f35-b554-0e56ef37b2d9@amd.com>
- <20241105195924.GIZyp5HLel7Pi2oAo3@fat_crate.local>
-Content-Language: en-US
-From: Mario Limonciello <mario.limonciello@amd.com>
-In-Reply-To: <20241105195924.GIZyp5HLel7Pi2oAo3@fat_crate.local>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: SA9PR03CA0019.namprd03.prod.outlook.com
- (2603:10b6:806:20::24) To MN0PR12MB6101.namprd12.prod.outlook.com
- (2603:10b6:208:3cb::10)
+	dkim=pass (2048-bit key) header.d=squebb.ca header.i=@squebb.ca header.b="VRXMZIhw";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="Kwq900+F"
+Received: from phl-compute-02.internal (phl-compute-02.phl.internal [10.202.2.42])
+	by mailfout.stl.internal (Postfix) with ESMTP id 116C71140101;
+	Tue,  5 Nov 2024 17:47:48 -0500 (EST)
+Received: from phl-imap-10 ([10.202.2.85])
+  by phl-compute-02.internal (MEProxy); Tue, 05 Nov 2024 17:47:48 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=squebb.ca; h=cc
+	:cc:content-transfer-encoding:content-type:content-type:date
+	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to; s=fm1; t=1730846867;
+	 x=1730933267; bh=esmOeO6X/9K+eyjXtUhTaCxoQ7oYKW2J2hxdgEDXFK4=; b=
+	VRXMZIhwFfYfcQwSW3Unfc3T/MquS3j1YV20lXker3XXuXi11Up5feS7fseMHrbd
+	eaMh3YRby04WtWLi9Q6ULv+NDEplqAK9IF2bKDs5XPXWFzXd4UrzVJH+Ak5lzcIY
+	jM1xjI52DHz4csVkHirql9B0C3Fx/jL6I92VnlXwCvGTNFMDIr4En3ThqLLm1MiX
+	sn6hWwbQ0tyjfE/LSNDBLo2/pt6KKtIsjoX5IyXCgtTxEaHudqAgVbs0MKtBpxB+
+	41qEmP+iFMYintghxRZbsGngUBGNFY+InmsEtkP/hQdD/Uk5IuEj76zT9zrscUUH
+	vVg0oEBaSFE7y8rjL4+eOg==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:content-type:date:date:feedback-id:feedback-id
+	:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to:x-me-proxy
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=1730846867; x=
+	1730933267; bh=esmOeO6X/9K+eyjXtUhTaCxoQ7oYKW2J2hxdgEDXFK4=; b=K
+	wq900+FKA9/VVVrbuct+Bh1NOdVHEVq/7wXKH3CgvmlB6WxfJ8JDzDRAbZFnS/Yx
+	PUYxa2RkBWb4Qn09xhJ+Csm/m9GoIkcGgrW9QR3DguouTS49DyFgZINYvKUgcjg1
+	/c/e2M6yT8Lr8wsyMQE6LvSvh1d08efyJTZJ8o1AN/VPebdjQx/rpiCeDBv+HvRy
+	to+FsR4YXedj2AavdOF5F6Mc8Su20bTX0CKMzGcbXxErhGD0uKeTyrKr2agJCxQ2
+	P0dyJbay9BUt/J7VcLdXzm/v9U0rfNte2SeTYc5HqrzsjS0Nks8xJcS3fORwKtQm
+	GSlBTyUvh1gsTY6vu9paQ==
+X-ME-Sender: <xms:kaAqZ6kjNuGqnUz48pmVC2v9eEbfGGBU1hKpNnGebTEnu6zeJZ7t9w>
+    <xme:kaAqZx0h2T1ZgqeUG1PdxdL2fatLvJB-32L9XUZOoC2cAT1q-UWpz1iywzYsghONq
+    6x4p4GPqg74kJ3hSbA>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefuddrtddugddtfecutefuodetggdotefrodftvf
+    curfhrohhfihhlvgemucfhrghsthforghilhdpggftfghnshhusghstghrihgsvgdpuffr
+    tefokffrpgfnqfghnecuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnth
+    hsucdlqddutddtmdenucfjughrpefoggffhffvvefkjghfufgtgfesthejredtredttden
+    ucfhrhhomhepfdforghrkhcurfgvrghrshhonhdfuceomhhpvggrrhhsohhnqdhlvghnoh
+    hvohesshhquhgvsggsrdgtrgeqnecuggftrfgrthhtvghrnhephfeuvdehteeghedthedt
+    veehuddvjeejgffgieejvdegkefhfeelheekhedvffehnecuvehluhhsthgvrhfuihiivg
+    eptdenucfrrghrrghmpehmrghilhhfrhhomhepmhhpvggrrhhsohhnqdhlvghnohhvohes
+    shhquhgvsggsrdgtrgdpnhgspghrtghpthhtohepvddupdhmohguvgepshhmthhpohhuth
+    dprhgtphhtthhopehshhihrghmqdhsuhhnuggrrhdrshdqkhesrghmugdrtghomhdprhgt
+    phhtthhopehmrghrihhordhlihhmohhntghivghllhhosegrmhgurdgtohhmpdhrtghpth
+    htohepihhkvgdrphgrnhestggrnhhonhhitggrlhdrtghomhdprhgtphhtthhopegrlhgv
+    gigsvghlmhegkeesghhmrghilhdrtghomhdprhgtphhtthhopegtohhrvghnthhinhdrtg
+    hhrghrhiesghhmrghilhdrtghomhdprhgtphhtthhopehluhiimhgrgihimhhilhhirghn
+    sehgmhgrihhlrdgtohhmpdhrtghpthhtohephhhmhheshhhmhhdrvghnghdrsghrpdhrtg
+    hpthhtohepshhohigvrhesihhrlhdrhhhupdhrtghpthhtoheplhgvnhgssehkvghrnhgv
+    lhdrohhrgh
+X-ME-Proxy: <xmx:kaAqZ4p_Tw3SaEL7xphiSA9NcGmZcLWYNpGC8ofhustJRdTqPelyiw>
+    <xmx:kaAqZ-m1iptkUeZYGfTiGrM4h0yxd0dFLocJNJPyA3yG6h4-H5M3zA>
+    <xmx:kaAqZ42OjtYTrNwkm4faA5c-QhvBhcevMYSGMo9UCnPePs7wzR4vTA>
+    <xmx:kaAqZ1v8p59t_dqKwcqkxNYxp_KT0490wOUY1NLwPrqpqQ6LnD6WXA>
+    <xmx:k6AqZyWu_6f-4XtOV_I5AVJz_tUh556HPG7itv28mOH8XGD1tqhEsE88>
+Feedback-ID: ibe194615:Fastmail
+Received: by mailuser.phl.internal (Postfix, from userid 501)
+	id B81163C0068; Tue,  5 Nov 2024 17:47:45 -0500 (EST)
+X-Mailer: MessagingEngine.com Webmail Interface
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: MN0PR12MB6101:EE_|PH7PR12MB5685:EE_
-X-MS-Office365-Filtering-Correlation-Id: 104d420a-c7d1-452d-1840-08dcfddbdb59
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|1800799024|7416014|376014;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?NUg1RTk5N1F5YXVFN3g0NGpER3lVSDYzbEFXcG5GRVdwUlJTeUNyc3VaNjBJ?=
- =?utf-8?B?TXZiYWd1TTlYa1BqdGhlTTdzV0wwTEliNFlaWVF6dkZRMnR4dG1TS3hscEpM?=
- =?utf-8?B?ZFFSeFp6dVBVK0pNS0o0SXFDZDBYaVVJVDQ3UzhDME9HdDdFeHFRNVZKajRS?=
- =?utf-8?B?dTFCL25zTm93emJkU0o3dWN5a2NnZEtMTzNLNTJZcndXQURvRXB5YitZa2Nn?=
- =?utf-8?B?OEtTRHRYUVBxRll6dzVOUzBWNjZ6TDRsVW94RXpmc3gzUGJjWi8wcG5MKzV6?=
- =?utf-8?B?ZlBuRGhjSGg2c2YxNVY4TlhNNkFITEsrc2JZVHN4eGFHaW8reHVYS0l6S3Zo?=
- =?utf-8?B?TXpEL0FML0w0Y0lySldYVWE1RjI3bGpnZFZXb0Z0YkZIRXZTa2l6SERsbmtz?=
- =?utf-8?B?eE8rZXJoRUdXM3JMVzA1T3F3V0RVSXh0U0pnSzM2eVB1akZjV0JLbnJKMGlo?=
- =?utf-8?B?Z0liTjN6Q0lkZ1lOaUt3M0RUR3M3L0xTbjhZWmpBY1JxdGNhVE5BNFBVQWNH?=
- =?utf-8?B?T2VNSVdDOUlWTE9ZU0J4QmVhTjhiRGhlblFTeVNiL1JrekJjOThVbE5zUnNZ?=
- =?utf-8?B?aGxUT2V0dE5TcEdqZ1VrRlQxcEdCNDRzUGFSNVlaTnBZNVhiZUxDc1RFUlZR?=
- =?utf-8?B?S2NwL1oxVkVpb1hGNW5tT1BmbkhaZnZraWpXSDI1Y29uODdkeERybEZ5L2l5?=
- =?utf-8?B?RU56MEJmY3NPOVIvR0FCclBDbDl1eXFpcnBITk9HNjUyS2xvVlBubFZXcEJr?=
- =?utf-8?B?emxQbE5pcHRkcUJOZnJOLzJLNzBZMEZDZFZRN1RmeWxXNDlzcUpVTThFOTRp?=
- =?utf-8?B?YzJuNEpFZHpnRm5MeHVlNTlqWjdsOGVtTU1FaUlsZVpTZkV5RXZUbkIyczF5?=
- =?utf-8?B?SG03RXFHbHRvRTMwZ1crVDhCRStIWE1WK1FhODN6a3hiWkk3c2RMZ0Y1SXhT?=
- =?utf-8?B?eWRHaDZGZ015Ri91R3FnVmNmSzdWS0lYbC9IUHpNUGkySEhGUmcyUVl5MXE0?=
- =?utf-8?B?MUZYdDBUa1JuVnVoWCt1UGdWRVY2emJGUVYwWUNQaSs4QjRmRUpZRWVTL2NW?=
- =?utf-8?B?RzR3MktkUUVLR041cUM5alhqdUdFc2FRVjdHQ2lTN0E2VEw4WVpRWVNkU0tP?=
- =?utf-8?B?blh3U21UMStDeVFhK2hTVWVTSVJEbUZ0YXYzcWVjTjZKbkFsSHZ5dTduRG1z?=
- =?utf-8?B?ZzZ2eVdXZnBhQWtpTUR5RzQ1aTNSL1NkbFNhaFVWNlJxWGdKbG52UnBGWWlC?=
- =?utf-8?B?SUlNVkdPNVdkS0ptWU04TmxyVnFEWjJPdWtndnlMTkpqRWl2ZlhhWHJVRFMw?=
- =?utf-8?B?NDJnSWlQZ0dDd0dYcXlJRldUUWFUYm1aL3hHZUxHWEszUE9ucytkUSt2WGJ4?=
- =?utf-8?B?Vi90UDdVVjFvRTJyOWRWQ3hHZEpXSXNDenJRTmNQTTZmb2ZPckFXR25EeTFu?=
- =?utf-8?B?VjdqYXdENGV2eGt0aXo1bXVFZWNHcjJBV21oQktpWU5Yb0tLejR2Ty9EVDEz?=
- =?utf-8?B?TmozZDd5NWc5Ykw2c2JsYzk3WCt2ZWlVYjc1djNFVCs0MjlDS29PTHFQMWNQ?=
- =?utf-8?B?NmwzaEVmZnUrUzlxYnpZcWIvd3lLZ2JsWENLb3lIL0dxWjZJUk0yOWJnMzBH?=
- =?utf-8?B?aXBqTmV0YlVoYzNnSXhka2tmMlR0K24xdUUyaVdmTkJyMVZIbGFQcWRyVEYy?=
- =?utf-8?B?b1ZoMnZmUU1TUms4VnBQYnVpOVc1UGJNaGxZQ2VQZHJRNEdGQzlCN1Y2b0ZX?=
- =?utf-8?Q?/JMu7VlBOyVy6cklFzCoSL0UOc2LekKm4LKpkPZ?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MN0PR12MB6101.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(7416014)(376014);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?a1RBOU9UMXh4cDlnOUEzdlRlYXd2U3ovSXhEd2RTZVFyQno0RHRrWmRVYkNZ?=
- =?utf-8?B?QnA2NzRKc1RXRFM1OE9hV0svQmFGTU9BbndjUjI3UVRLQlB0SmRLajdVeTRp?=
- =?utf-8?B?NnQ3cDJDMlhjdHZIQWdjeEJ4WTZTZk5naUZKaHd2S3k0QlplbGF5c1hObS9p?=
- =?utf-8?B?ZTdMOTF0Tk8wSVJGUnE5cVlzV1FtWmFrNExFd3ozaG93OHh4TTJ6UU9IQm9m?=
- =?utf-8?B?b0s3ZjFsa0VRWk52U3NWY25tNklnN1R4anp0Y201bmNoTng1S0JCRFhPOE1a?=
- =?utf-8?B?blJWQ1JRTTlma0xCMFZWY1lRR3VHcXVlbFcwYWttNVRjZmUxaE91WnZjZXBt?=
- =?utf-8?B?cnQ0QVBOQU43RGpmKzNKSmdkU25TaTFrZWxYSndHenh6Y3k5dEhsWk9kR2xH?=
- =?utf-8?B?SDVYbTRXSkhjZVV0K2VxRTcxZW1aYVFYd0xpUDhGRlNQWnhJQ3l5SmFuRzBN?=
- =?utf-8?B?TjNFZVRTTnZ4VXBGQzlJNk9aWkFOTi9qdEZycktHNm5yS0dlOXJiRzBuSkcz?=
- =?utf-8?B?cndhMVF0bUF5R21EWXBmS3pPOHNlUlpJUnlORzBiMktub3l5WW96VDRPZnRU?=
- =?utf-8?B?djdEcXRKaGNsTURlOVNibmN6SHM2WWw4Skd6K0tHamJxaytoUUtOQXhPSndz?=
- =?utf-8?B?alFzRjRxd1M0cFNERXN1VGJVOXBjUGtYN2tnYnlNd2x4WkwvZjk5WW93cWdp?=
- =?utf-8?B?SkFSSkNCSFNhZ1Z0SU9RRzdtZ3VrS0NjTEZ3dkEzbDVPUmpKS3QzUG92b0o5?=
- =?utf-8?B?RUJuTUM2c0N5UXFZWnQvckxiQ1hoMTZXcTVRZlg4U2FiK2ZBZEhHRi9QVmVu?=
- =?utf-8?B?MVRnaFFsdFZVcFhEZHE3Ukt6MGJmNkljMllQNWl6czJWMHQwUGsxNG11YlJa?=
- =?utf-8?B?Zi9mTjQrTUROaEJvNVJtTEtpQUZRMGpqakd2TStyeVR5SGpWa1lEdlhESVZI?=
- =?utf-8?B?YU9qTS9kSjl4aUdpL0ZEREZzWWRReksveEtaOXpuWXcveE9PRW5SejIzd1Q2?=
- =?utf-8?B?YW9lWlJQd1JUV1dlbjBOdklYR2FXNEYyeVdGeVhxOEoydGZKazFoVmVkTk5a?=
- =?utf-8?B?bVNWNXVQSHZFQnh1TVNuSzdXbEd6V0pTNGQ4OVRYMG1jZW9YNFFSNGdraWkz?=
- =?utf-8?B?MXhJcXUrWjNGL0VnVDdaMExJT2YzbHFUcjMrVXY1bmdxUU5YTTdUSnRHK1Qy?=
- =?utf-8?B?c00wR3VmSUNwSFBYQWgzUDVQVVdMV1ZZQktNOW1KdjlqUHhKT3Z4RUJtdVpy?=
- =?utf-8?B?S3BSRzFQS0dIM09TV2tYSGkxM1FIM1g3cVo3cXQxS0dpWFN1a1pzOVRFVVVY?=
- =?utf-8?B?Q01YVExTRmM5MXBEdFJWYTMyQzBtWTVscnBPUFpnejNkbVVOcDRLSjFOQWxP?=
- =?utf-8?B?VFZKSDBUSWZtM0lGR3hDVU5hUVpLbkVBSmE4UDVadWNTSXowY1BZTG9RNC8v?=
- =?utf-8?B?WXRwZnMwVUprR2xTbUNXRWIzNG1WMFFDVUIyYTdJelg4WmtGYmdMbEJrN0Q5?=
- =?utf-8?B?OE40RndkMmpOSlBhc1dPei82MUxjcnJpcmhWbWcwTGQzYVpMZmlDblpYWFJW?=
- =?utf-8?B?WGhmSnJRS2wzREx5Um9ZUU90bTFGblRFc2dhWTZqK01NRVlmU1RvL3k2akxh?=
- =?utf-8?B?Sm9ZeTF0QXZUa0dUNDNZRmZVUDhsUFBjMlJYM2lvTndUZXY1bFd1WlBxQWFT?=
- =?utf-8?B?R1MwcGpNbXNtR1JYQnV5dGV6WUQ1Vmh6ZTBBZE1FYXkrY1c3UHp5eEkzV01G?=
- =?utf-8?B?YW9HRXZDVW1NN05saFBRVlJWVXZaaFU2WllFSm1XcVY5Wjd0eit6enl5WTBJ?=
- =?utf-8?B?cVh1NHY5M1dtSnI4MUZRdmtBcElpaHZiZ3Nmb1hUdWhHemdwYjdUTlBXdWYr?=
- =?utf-8?B?czZDREFsU2xzZmRhRDEwUzgyY2x4ZGU2YXdSS1JKeDNoeGhhSW1ETGxVS3ox?=
- =?utf-8?B?eGVYQ2pkR3l3MnZYVnMrczVhcTBUQkhRRDI2Mk9qYkdoSjdRMmQ4TVg1bFYz?=
- =?utf-8?B?aERwZkpWV1pSSGs2MHE3NU1laDZqRFY0NWNyRi9iV2VvcG53OEszb21RR0VB?=
- =?utf-8?B?TlJ0SUVIY3BlVkppcUlhR1J0ZzVrdnJMdDR1eFN0dDNtVk0zb0xXbjRTVDlR?=
- =?utf-8?Q?OB6U2mg4KZnTYan8hlxUYuct6?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 104d420a-c7d1-452d-1840-08dcfddbdb59
-X-MS-Exchange-CrossTenant-AuthSource: MN0PR12MB6101.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 05 Nov 2024 20:53:10.2071
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 1mAcqDRWkV/vQZgEMLCwnp9Qj5YKNSrmHDZlqcQTsnsrI7h/opEaM5XWk/5k3vqbbVIkjqTqnKJF4MWttqQihA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH7PR12MB5685
+Date: Tue, 05 Nov 2024 17:47:25 -0500
+From: "Mark Pearson" <mpearson-lenovo@squebb.ca>
+To: "Limonciello, Mario" <mario.limonciello@amd.com>,
+ "Hans de Goede" <hdegoede@redhat.com>,
+ =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Cc: "Rafael J. Wysocki" <rafael@kernel.org>, "Len Brown" <lenb@kernel.org>,
+ "Maximilian Luz" <luzmaximilian@gmail.com>, "Lee Chun-Yi" <jlee@suse.com>,
+ "Shyam Sundar S K" <Shyam-sundar.S-k@amd.com>,
+ "Corentin Chary" <corentin.chary@gmail.com>,
+ "Luke D . Jones" <luke@ljones.dev>, "Ike Panhc" <ike.pan@canonical.com>,
+ "Henrique de Moraes Holschuh" <hmh@hmh.eng.br>,
+ "Alexis Belmonte" <alexbelm48@gmail.com>,
+ =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>,
+ "Ai Chao" <aichao@kylinos.cn>, "Gergo Koteles" <soyer@irl.hu>,
+ "open list" <linux-kernel@vger.kernel.org>,
+ "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>,
+ "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>,
+ "open list:THINKPAD ACPI EXTRAS DRIVER" <ibm-acpi-devel@lists.sourceforge.net>,
+ "Matthew Schwartz" <matthew.schwartz@linux.dev>
+Message-Id: <26a494ee-d929-4aee-9c2e-d184e0efb842@app.fastmail.com>
+In-Reply-To: <20241105153316.378-1-mario.limonciello@amd.com>
+References: <20241105153316.378-1-mario.limonciello@amd.com>
+Subject: Re: [PATCH v4 00/20] Add support for binding ACPI platform profile to multiple
+ drivers
+Content-Type: text/plain
+Content-Transfer-Encoding: 7bit
 
-On 11/5/2024 13:59, Borislav Petkov wrote:
-> On Tue, Nov 05, 2024 at 01:56:23PM -0600, Mario Limonciello wrote:
->> OK got it.  Considering that I think after this series lands we need to
->> re-open the conversation about PCI config space access to userspace;
->> particularly on regions that have been marked as exclusions.
-> 
-> I could imagine a patch that goes and requests those regions exclusively if
-> luserspace has no business poking there.
-> 
+Hi Mario,
 
-Take look at what pci_write_config() does today.  It basically shows a 
-warning and taints but lets userspace proceed.
+On Tue, Nov 5, 2024, at 10:32 AM, Mario Limonciello wrote:
+> Currently there are a number of ASUS products on the market that happen to
+> have ACPI objects for amd-pmf to bind to as well as an ACPI platform
+> profile provided by asus-wmi.
+>
+> The ACPI platform profile support created by amd-pmf on these ASUS
+> products is "Function 9" which is specifically for "BIOS or EC
+> notification" of power slider position. This feature is actively used
+> by some designs such as Framework 13 and Framework 16.
+>
+> On these ASUS designs we keep on quirking more and more of them to turn
+> off this notification so that asus-wmi can bind.
+>
+> This however isn't how Windows works.  "Multiple" things are notified for
+> the power slider position. This series adjusts Linux to behave similarly.
+>
+> Multiple drivers can now register an ACPI platform profile and will react
+> to set requests.
+>
+> To avoid chaos, only positions that are common to both drivers are
+> accepted when the legacy /sys/firmware/acpi/platform_profile interface
+> is used.
+>
+> This series also adds a new concept of a "custom" profile.  This allows
+> userspace to discover that there are multiple driver handlers that are
+> configured differently.
+>
+> This series also allows dropping all of the PMF quirks from amd-pmf.
+>
+> v4:
+>  * Drop the list; iterate classes
+>  * Drop patches that didn't make sense without list
+>  * Cover alienware-wmi as well (recently merged to platform-x86/for-next)
+>  * Drop requirement for balanced
+>  * Rename platform-profile class members to 'profile', 'options', 'name'
+>  * Drop the name in /sys/class/platform-profile and just use ida value.
+>    IE platform-profile-0
+>
+> Mario Limonciello (20):
+>   ACPI: platform-profile: Add a name member to handlers
+>   platform/x86/dell: dell-pc: Create platform device
+>   ACPI: platform_profile: Add device pointer into platform profile
+>     handler
+>   ACPI: platform_profile: Add platform handler argument to
+>     platform_profile_remove()
+>   ACPI: platform_profile: Move sanity check out of the mutex
+>   ACPI: platform_profile: Move matching string for new profile out of
+>     mutex
+>   ACPI: platform_profile: Use guard(mutex) for register/unregister
+>   ACPI: platform_profile: Use `scoped_cond_guard`
+>   ACPI: platform_profile: Create class for ACPI platform profile
+>   ACPI: platform_profile: Add name attribute to class interface
+>   ACPI: platform_profile: Add choices attribute for class interface
+>   ACPI: platform_profile: Add profile attribute for class interface
+>   ACPI: platform_profile: Notify change events on register and
+>     unregister
+>   ACPI: platform_profile: Only show profiles common for all handlers
+>   ACPI: platform_profile: Add concept of a "custom" profile
+>   ACPI: platform_profile: Make sure all profile handlers agree on
+>     profile
+>   ACPI: platform_profile: Check all profile handler to calculate next
+>   ACPI: platform_profile: Allow multiple handlers
+>   platform/x86/amd: pmf: Drop all quirks
+>   Documentation: Add documentation about class interface for platform
+>     profiles
+>
+>  .../userspace-api/sysfs-platform_profile.rst  |  28 ++
+>  drivers/acpi/platform_profile.c               | 446 ++++++++++++++----
+>  .../surface/surface_platform_profile.c        |   8 +-
+>  drivers/platform/x86/acer-wmi.c               |  10 +-
+>  drivers/platform/x86/amd/pmf/Makefile         |   2 +-
+>  drivers/platform/x86/amd/pmf/core.c           |   1 -
+>  drivers/platform/x86/amd/pmf/pmf-quirks.c     |  66 ---
+>  drivers/platform/x86/amd/pmf/pmf.h            |   3 -
+>  drivers/platform/x86/amd/pmf/sps.c            |   4 +-
+>  drivers/platform/x86/asus-wmi.c               |   6 +-
+>  drivers/platform/x86/dell/alienware-wmi.c     |   8 +-
+>  drivers/platform/x86/dell/dell-pc.c           |  39 +-
+>  drivers/platform/x86/hp/hp-wmi.c              |   8 +-
+>  drivers/platform/x86/ideapad-laptop.c         |   4 +-
+>  .../platform/x86/inspur_platform_profile.c    |   7 +-
+>  drivers/platform/x86/thinkpad_acpi.c          |   4 +-
+>  include/linux/platform_profile.h              |   7 +-
+>  17 files changed, 456 insertions(+), 195 deletions(-)
+>  delete mode 100644 drivers/platform/x86/amd/pmf/pmf-quirks.c
+>
+>
+> base-commit: d68cb6023356af3bd3193983ad4ec03954a0b3e2
+> -- 
+> 2.43.0
 
-commit 278294798ac91 ("PCI: Allow drivers to request exclusive config 
-regions") and the matching mailing list thread linked from the commit 
-message have some history from it.
+For the series - I tried it out on my T14s G6 AMD, and it all looks to be working nicely and as expected.
+The thinkpad-acpi and amd-pmf classes show up. I can tweak them individually and 'custom' shows up under firmware/acpi/platform_profile.
+I tried various combo's and didn't see any issues.
+If you have any recommendations of things to try let me know.
 
-I'd personally like to see that taint turned into an "return -EACCES" 
-instead. But given the discussion linked in that commit, I think it 
-should be a follow up rather than part of this series.
+Tested-by: Mark Pearson <mpearson-lenovo@squebb.ca>
+
+Mark
