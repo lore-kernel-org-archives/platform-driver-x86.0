@@ -1,90 +1,95 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 32C1314A4DC;
-	Tue,  5 Nov 2024 15:55:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 63DEA1514C9
+	for <platform-driver-x86@vger.kernel.org>; Tue,  5 Nov 2024 16:04:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730822127; cv=none; b=kNnj3G9IwVyl6e1Ahl/kE5XyVgH8ZP1sh3k/HaRgTmOQbUWraDNcrB+YtFNqqLYV7kEzoUncRbSyTZKIwtRbFSxNJVulnNDDhykRkM5S1QD2bECcKZgImgoCUBXWV2AGvC2kWZDq1rtqiSuqoLlIFdpqlW+9lh3+6jvWf10xan4=
+	t=1730822648; cv=none; b=pOAvTqLBYFepbChtBkgIiXKfceHxdnukJYA/wHY8RgoUZkR+ONicqn4pjePeN0Smds4gLsVuZJnZ8P+1klWBcf+QRtmfJ1FXR//OMCfA83TlsbKRqCepgG270xgL7D9L69QgGDjSQyKkLHhW4PiusFB8DyagXrTrDldppBHUPCw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730822127; c=relaxed/simple;
-	bh=cMvTh8PxTSmZ112HIDfP6ZSowBcMCKVJTesKcB3gvwk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=U5GiDGKT8rHId67/i4sGE1pOzg9S1q1IVe/Wv2s0XP1MPBdDS558fT+B5IdnvrIWBdnXvzS/cWfz2dfXuQJL4QYPuMkYlx+wALE3TJQfAz1TITjwYV4n9xknT0OakI2KsqcK51xYpFBFjxOpd19VcHhULnvDimDTbtuty/3gywk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=H1y7x+Ny; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1730822648; c=relaxed/simple;
+	bh=iiPJ0C4NXTbVKdY57cVNW8TgkMPKWSxxBGysKIeNhFg=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=dphrot1g6KbAMMspVEtEBIgdfazoI0Q4LxzMwfw0/YxDR3n1DmkvVsiNTEa42pI4IddsLhfSbLdMbtQoHCoNcb8XrY9HAHnb9LpFBx2Wmtjj5Rj6ulysvs9hBvFmU2gbchaONBHvwJiHgy66dIyXr5LaVylMShy1UwIunkbyfeE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=CjNCOIhR; arc=none smtp.client-ip=192.198.163.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="H1y7x+Ny"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8686AC4CECF;
-	Tue,  5 Nov 2024 15:55:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1730822126;
-	bh=cMvTh8PxTSmZ112HIDfP6ZSowBcMCKVJTesKcB3gvwk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=H1y7x+NyhnuuyB5F85fhewQ2GPZQXp7zTj5nyJz/ECA8hH1QUxx5PW6fwWEKnW7fH
-	 1G8sTZek5eZ+kwBpCOBfg24Am0Frdtdxg/+PLjpyhjy8XYOaqC5CrlaaSU68crFl1c
-	 EjYclJ5GBgx0kUmRjDwgtZu8yz1xJevhzsHGsW5kyJQNlf0TrG+g/JUdZpV7alVkQh
-	 I2vFAcPfmwejx+xjYiS14ScmQc1SUt3jC5wRo0+1yTnWsgu+JMJhErOuej/IE1KsKl
-	 5q+h9OR7BtYrmxdJfYEY8/sonX2GPLy0v97KyEJnkL3xGF8hYR9mTVlAif/XqJqaRV
-	 teMxarrdIZ6UA==
-Date: Tue, 5 Nov 2024 15:55:20 +0000
-From: Lee Jones <lee@kernel.org>
-To: Hans de Goede <hdegoede@redhat.com>
-Cc: konstantin@linuxfoundation.org, baocheng.su@siemens.com,
-	tobias.schaffner@siemens.com, pavel@ucw.cz,
-	ilpo.jarvinen@linux.intel.com, wim@linux-watchdog.org,
-	linux@roeck-us.net,
-	Benedikt Niedermayr <benedikt.niedermayr@siemens.com>,
-	linux-leds@vger.kernel.org, linux-kernel@vger.kernel.org,
-	platform-driver-x86@vger.kernel.org, linux-watchdog@vger.kernel.org,
-	felix.moessbauer@siemens.com, christian.storm@siemens.com,
-	quirin.gylstorff@siemens.com, chao.zeng@siemens.com
-Subject: Re: (subset) [PATCH 1/1] MAINTAINERS: replace bouncing maintainers
-Message-ID: <20241105155520.GC1807686@google.com>
-References: <20241028112359.3333152-1-benedikt.niedermayr@siemens.com>
- <20241028112359.3333152-2-benedikt.niedermayr@siemens.com>
- <173048213838.1966999.11456105703949125929.b4-ty@kernel.org>
- <0f27f32e-bf00-4f9d-a0b6-0625a6dae203@redhat.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="CjNCOIhR"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1730822646; x=1762358646;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=iiPJ0C4NXTbVKdY57cVNW8TgkMPKWSxxBGysKIeNhFg=;
+  b=CjNCOIhRxPtdqDH45AlHovfD3pTkOjnWd07U/RJfyT/w2ZSjRV2esh6v
+   kWOy/b5UGNCbTMHn4nFCpUYRqkCR0NCOkjHmFO1cZfp4R6RpeNPc6TowI
+   Qzy8raHAkHF5+kE8Vmph/M1OksRhze2wwoDFuLLW4Xa0rG07rU9ONRmpr
+   akjOX2YCEUrsFFmH+6AcL4bg5L9B+oMxJ92aw+k/TOyGM+XL4Ql3wCcBr
+   P3VdRMmX3b0hGJ4kFolexfgpYUh4z6FbzS1zBi930vI82BuCVeKpi85ao
+   Hc/FBaDC0nycAVGP85I0kg1yCcXHXhhJMPL/8+KmHCiMfqq/YE535wO9p
+   A==;
+X-CSE-ConnectionGUID: RAuIdzrhSYuZlPUzXwJY+w==
+X-CSE-MsgGUID: SKnJNgyqTQWi33I/2TQJGw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11247"; a="30688797"
+X-IronPort-AV: E=Sophos;i="6.11,260,1725346800"; 
+   d="scan'208";a="30688797"
+Received: from orviesa008.jf.intel.com ([10.64.159.148])
+  by fmvoesa109.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Nov 2024 08:04:05 -0800
+X-CSE-ConnectionGUID: ObFF+IxzRBm0Dy0KNqllwA==
+X-CSE-MsgGUID: /SlD75uTRFOXo+UYwzkeEQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.11,260,1725346800"; 
+   d="scan'208";a="84886925"
+Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.201])
+  by orviesa008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Nov 2024 08:04:03 -0800
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Tue, 5 Nov 2024 18:04:00 +0200 (EET)
+To: Yuan Can <yuancan@huawei.com>
+cc: jithu.joseph@intel.com, ashok.raj.linux@gmail.com, tony.luck@intel.com, 
+    Hans de Goede <hdegoede@redhat.com>, darcari@redhat.com, 
+    platform-driver-x86@vger.kernel.org
+Subject: Re: [PATCH] platform/x86/intel/ifs: Add missing
+ destroy_work_on_stack()
+In-Reply-To: <20241105120728.21646-1-yuancan@huawei.com>
+Message-ID: <f7172ced-57a2-4048-dc3b-23bcbb323b35@linux.intel.com>
+References: <20241105120728.21646-1-yuancan@huawei.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <0f27f32e-bf00-4f9d-a0b6-0625a6dae203@redhat.com>
+Content-Type: text/plain; charset=US-ASCII
 
-On Mon, 04 Nov 2024, Hans de Goede wrote:
+On Tue, 5 Nov 2024, Yuan Can wrote:
 
-> Hi Lee,
-> 
-> On 1-Nov-24 6:28 PM, Lee Jones wrote:
-> > On Mon, 28 Oct 2024 12:23:59 +0100, Benedikt Niedermayr wrote:
-> >> Since complaints about bouncing maintainers raised [1] we have now a
-> >> replacement for maintainers that stepped away from their duties.
-> >>
-> >> [1] https://www.spinics.net/lists/platform-driver-x86/msg47105.html
-> >>
-> >>
-> > 
-> > Applied, thanks!
-> > 
-> > [1/1] MAINTAINERS: replace bouncing maintainers
-> >       commit: 64dd44a658065ab5595bbfe2cb4d8fd30c9e34a2
-> 
-> I'm not seeing this on either of:
-> 
-> https://git.kernel.org/pub/scm/linux/kernel/git/lee/leds.git/log/?h=for-leds-next
-> https://git.kernel.org/pub/scm/linux/kernel/git/lee/mfd.git/log/?h=for-mfd-next
-> 
-> ?
-> 
-> Note I'm fine with you picking this up, I just want to make sure that
-> it does not fall through the cracks and drop it from my own patch queue
-> since it also touches pdx86 MAINTAINERS entries.
+> This commit add missed destroy_work_on_stack() operations for
+> local_work.w in scan_chunks_sanity_check().
 
-I'm pushing it through the LEDs tree.  It'll be in -next tomorrow.
+The commit 3279decb2c3c ("platform/x86/intel/ifs: Annotate work queue on 
+stack so object debug does not complain") missed calling 
+destroy_work_on_stack() for ...
 
 -- 
-Lee Jones [李琼斯]
+ i.
+
+> Fixes: 3279decb2c3c ("platform/x86/intel/ifs: Annotate work queue on stack so object debug does not complain")
+> Signed-off-by: Yuan Can <yuancan@huawei.com>
+> ---
+>  drivers/platform/x86/intel/ifs/load.c | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/drivers/platform/x86/intel/ifs/load.c b/drivers/platform/x86/intel/ifs/load.c
+> index de54bd1a5970..2faeb1ffbd92 100644
+> --- a/drivers/platform/x86/intel/ifs/load.c
+> +++ b/drivers/platform/x86/intel/ifs/load.c
+> @@ -347,6 +347,7 @@ static int scan_chunks_sanity_check(struct device *dev)
+>  		INIT_WORK_ONSTACK(&local_work.w, copy_hashes_authenticate_chunks);
+>  		schedule_work_on(cpu, &local_work.w);
+>  		wait_for_completion(&ifs_done);
+> +		destroy_work_on_stack(&local_work.w);
+>  		if (ifsd->loading_error) {
+>  			ret = -EIO;
+>  			goto out;
+> 
