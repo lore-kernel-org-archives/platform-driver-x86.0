@@ -1,155 +1,315 @@
-Received: from NAM11-DM6-obe.outbound.protection.outlook.com (mail-dm6nam11on2059.outbound.protection.outlook.com [40.107.223.59])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0214C1D9669;
-	Tue,  5 Nov 2024 14:59:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.223.59
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730818770; cv=fail; b=O8sQIYfXQYq5N++8F5yPlTLQC5HjoBoxggUDkRKBeBV04g0vOE712sbQM4kzrUj9s3wgrR4zVVc2HXLHFQRmxDTMFCCsIvtzWr5ALbA+AFxZs/3erH1vXZUT7fWp385KjdHVpUWMXiM08nhkUIh2YhqTeZqVkGhwiNS0XnGAnTw=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730818770; c=relaxed/simple;
-	bh=DozEQXjISEf4qUIS1VuhI+Qcb6B1PAxbQfnh8V9RU2M=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=RtEps10ay05QDRPi2UkOeiU6Z3TDWk22M5J+/khD8apjTzLWtB8/dqp+GN8b/PQtlcIHEmWrhh6SIPS9kpwc1uzmh3upI3nWbV3ZOcZhlI7rlZiyCzIzwBBgT4SItSAbv3AryOjlU6tuG6gB/IgU4sQfywsCUMu0zkP4D1fV3dk=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=P64YaKK3; arc=fail smtp.client-ip=40.107.223.59
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF60C1D90B4;
+	Tue,  5 Nov 2024 15:26:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1730820412; cv=none; b=qyj1t80dOmVeFMxN8Jx8HePNO6FdLUUet4rC6QqUDKLu2f9/2PLZX0XEoFKu7Pm7Iggl068WxQnrCNvquaG3aeYK5ZXj/DGUNCykZyzASTgfY1r0u8B6mlxdmx50Etmhp1FpG7K9BhtJp8lk8533SHkRnAeXIy7h47AbyYIvgYU=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1730820412; c=relaxed/simple;
+	bh=OyFK8z5qd2PX1b2mFjzhp33XMWRNRnaVbtklFXmouuA=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=blpYLj1d0isR+/P3b/MGLtTvLzmJvlnsW5w0OgZw4ydvca4mfRiI2epHTIWok48n/O7qH2aSdiwig3GFvJ661p3MissXHOL9pgSkICygtdWDRqTjyaS7HGXZk6NuYnzyjyyU1msHsDrQDws2H3W7megnXKNhNn3s2+sjuEp08Eo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=S9Iq4Wg+; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="P64YaKK3"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=dZm+KaURDIux2qnXYO1uUyjyiNq4qQFaIZUynRXlq9vJTJNhrqNOxxF3EDjze1rz9dtR49Ycpb3uUFpc2dMmt9HfBRL92MlXIxwxzCjEd+JSGW/41B4iE+sbJOmGDU16XnL+Zp0wGGhD3fpt+71e0uACR8CmBvogjdbl7Zg07//x5oig8nIGQG9gbdyX90gPyDvnOgNu4Riaeo9BM3q9jiNq0FbsyCMsGTN6bo9j70wvZyDNwXYnlrYp8MupXQltSF3Gc55YbKNbGX/xa/WsFXLHBhApkJlP571RJaYDgnI0rGwjpjhUIn74/ht0QQTMykDS8nqnSH+9iMT7URg/zA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=2EDniKeOF8kiVDeNZ73n6lz2BvonZ/opuGTa6ETxfvI=;
- b=GXjtY2vLasxQb7AhF1HvrkWZfrpjP4nkuI1ex72CrFup85W8ZAjlixeDw8YeiZrHYbHujO/pu/CZNSwHFAmTLDbnV6ylMeMuFpR7wpDKw8Tr0SGj7HwBTj9KlllaKciowhK0LEjHM5YmonSQZF/MSuX8ZD9gUSOYjPTP5coHIyqZoCTjeZVtCgacRJ/ANrEsjoicb27QEv1UVUj/SrsRzG9xAIkWrLyXaw7j7NZTkbJvP6QlHzMjAj2IEeakX17oBAjxyV0VBmbal6re+A+DpFrX7KU2mUu473n/dVpyujXLyPBI5iDBFS59mudhLIGfweNDB7bPSMZaOegpnIC+hw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=2EDniKeOF8kiVDeNZ73n6lz2BvonZ/opuGTa6ETxfvI=;
- b=P64YaKK3Y5vBAaKUVlxn/xbMZ44YWp+cczcx3m5UlV7ZzNg8dYSAgSgMSsTPci8oZg1S4lUAwXzyr7h+fe4CEn1v2LP8JULOW0OWcHA6UZkQPg2y0MD89LIg2WdGXqn1q61r9CO6WkE/AA6sO8VFQrYbiknLf5YeOke/DnD7P2M=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from DM4PR12MB6373.namprd12.prod.outlook.com (2603:10b6:8:a4::7) by
- BY5PR12MB4179.namprd12.prod.outlook.com (2603:10b6:a03:211::8) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.8137.18; Tue, 5 Nov 2024 14:59:25 +0000
-Received: from DM4PR12MB6373.namprd12.prod.outlook.com
- ([fe80::12f7:eff:380b:589f]) by DM4PR12MB6373.namprd12.prod.outlook.com
- ([fe80::12f7:eff:380b:589f%5]) with mapi id 15.20.8137.018; Tue, 5 Nov 2024
- 14:59:25 +0000
-Date: Tue, 5 Nov 2024 09:59:20 -0500
-From: Yazen Ghannam <yazen.ghannam@amd.com>
-To: Borislav Petkov <bp@alien8.de>
-Cc: linux-edac@vger.kernel.org, linux-kernel@vger.kernel.org,
-	tony.luck@intel.com, x86@kernel.org, avadhut.naik@amd.com,
-	john.allen@amd.com, mario.limonciello@amd.com, bhelgaas@google.com,
-	Shyam-sundar.S-k@amd.com, richard.gong@amd.com, jdelvare@suse.com,
-	linux@roeck-us.net, clemens@ladisch.de, hdegoede@redhat.com,
-	ilpo.jarvinen@linux.intel.com, linux-pci@vger.kernel.org,
-	linux-hwmon@vger.kernel.org, platform-driver-x86@vger.kernel.org,
-	naveenkrishna.chatradhi@amd.com, carlos.bilbao.osdev@gmail.com,
-	Tom Lendacky <thomas.lendacky@amd.com>
-Subject: Re: [PATCH 11/16] x86/amd_smn: Fixup __amd_smn_rw()
-Message-ID: <20241105145920.GD916505@yaz-khff2.amd.com>
-References: <20241023172150.659002-1-yazen.ghannam@amd.com>
- <20241023172150.659002-12-yazen.ghannam@amd.com>
- <20241104143212.GWZyja7AqB07hVa__h@fat_crate.local>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20241104143212.GWZyja7AqB07hVa__h@fat_crate.local>
-X-ClientProxiedBy: BL1PR13CA0087.namprd13.prod.outlook.com
- (2603:10b6:208:2b8::32) To DM4PR12MB6373.namprd12.prod.outlook.com
- (2603:10b6:8:a4::7)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="S9Iq4Wg+"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 55F5CC4CECF;
+	Tue,  5 Nov 2024 15:26:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1730820411;
+	bh=OyFK8z5qd2PX1b2mFjzhp33XMWRNRnaVbtklFXmouuA=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=S9Iq4Wg+y13VlLFXaCQFBHoEgqCWwKO3J18E6ea4A9GXtutCKimycjyX2UFxyAhoF
+	 V4zfgXb+m4cZ7L2DVprXpqm4toiyK4X3fHoT0bFJC1hfvM+d29JMkfSCUtDadGZ1mM
+	 gT0lycJy0BIpkCVswsVeI1OtIeIJ6mh/cAV5ueBJEksXiYYTLfI2txEbP+TVdv+InM
+	 k+R+IoMimw7bxRmY3j+VQL++psf2Y8wUojmN2FH2obDVCN3oClU+GQmcZHilH7wLQo
+	 Uq5K49ASfVd1DC1B9B9WpCVygRAayMBQMhrPc0fqW+EnQJzM392ryKWN7Ckjb77xSI
+	 s/iv9g17O3mZw==
+Date: Tue, 5 Nov 2024 09:26:50 -0600
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: Thomas =?utf-8?Q?Wei=C3=9Fschuh?= <linux@weissschuh.net>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+	Davidlohr Bueso <dave@stgolabs.net>,
+	Jonathan Cameron <jonathan.cameron@huawei.com>,
+	Dave Jiang <dave.jiang@intel.com>,
+	Alison Schofield <alison.schofield@intel.com>,
+	Vishal Verma <vishal.l.verma@intel.com>,
+	Ira Weiny <ira.weiny@intel.com>,
+	Alex Deucher <alexander.deucher@amd.com>,
+	Christian =?utf-8?B?S8O2bmln?= <christian.koenig@amd.com>,
+	Xinhui Pan <Xinhui.Pan@amd.com>, David Airlie <airlied@gmail.com>,
+	Simona Vetter <simona@ffwll.ch>,
+	Dennis Dalessandro <dennis.dalessandro@cornelisnetworks.com>,
+	Jason Gunthorpe <jgg@ziepe.ca>, Leon Romanovsky <leon@kernel.org>,
+	Tudor Ambarus <tudor.ambarus@linaro.org>,
+	Pratyush Yadav <pratyush@kernel.org>,
+	Michael Walle <mwalle@kernel.org>,
+	Miquel Raynal <miquel.raynal@bootlin.com>,
+	Richard Weinberger <richard@nod.at>,
+	Vignesh Raghavendra <vigneshr@ti.com>,
+	Naveen Krishna Chatradhi <naveenkrishna.chatradhi@amd.com>,
+	Carlos Bilbao <carlos.bilbao.osdev@gmail.com>,
+	Hans de Goede <hdegoede@redhat.com>,
+	Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>,
+	"David E. Box" <david.e.box@linux.intel.com>,
+	"James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>,
+	"Martin K. Petersen" <martin.petersen@oracle.com>,
+	Richard Henderson <richard.henderson@linaro.org>,
+	Matt Turner <mattst88@gmail.com>,
+	Frederic Barrat <fbarrat@linux.ibm.com>,
+	Andrew Donnellan <ajd@linux.ibm.com>, Arnd Bergmann <arnd@arndb.de>,
+	Logan Gunthorpe <logang@deltatee.com>,
+	"K. Y. Srinivasan" <kys@microsoft.com>,
+	Haiyang Zhang <haiyangz@microsoft.com>,
+	Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
+	Dan Williams <dan.j.williams@intel.com>,
+	linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
+	linux-cxl@vger.kernel.org, amd-gfx@lists.freedesktop.org,
+	dri-devel@lists.freedesktop.org, linux-rdma@vger.kernel.org,
+	linux-mtd@lists.infradead.org, platform-driver-x86@vger.kernel.org,
+	linux-scsi@vger.kernel.org, linux-usb@vger.kernel.org,
+	linux-alpha@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+	linux-hyperv@vger.kernel.org
+Subject: Re: [PATCH v2 05/10] sysfs: treewide: constify attribute callback of
+ bin_is_visible()
+Message-ID: <20241105152650.GA1472729@bhelgaas>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DM4PR12MB6373:EE_|BY5PR12MB4179:EE_
-X-MS-Office365-Filtering-Correlation-Id: a316875b-281e-4092-0626-08dcfdaa7077
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|376014|7416014|1800799024;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?pNC+wH/I306bpD3ayMqg4/G9awuW0a3ORzgn5YyYYu/D/BMeAwqbXc+exOYO?=
- =?us-ascii?Q?VFVCqrvdaApwbFerr+jKsBXbA7ZU+7C++d7rqBqZ1MVMAc5HrgJQj3xi8ZRG?=
- =?us-ascii?Q?gjAFUAYvS2uS4Riu27v26knlpNHTzcusdmcZaLAlUu5WYjDiiZ0o038GzwEC?=
- =?us-ascii?Q?4eZy91Cz59rrBIiV118yk12aUbJmRoRsBcGioWKrGJ4aazswiDq969JsHd3t?=
- =?us-ascii?Q?wjYqisxhtGjc+MDDDR9gq2KPubEYgUApXXfJfC25FAWODhRNMa1JGQUaBI0r?=
- =?us-ascii?Q?0jt+qe8BKmluM9UJM7Yiq3wsYKGrednGZA5qevCPtndIkrEPdipB4hrivaiC?=
- =?us-ascii?Q?tR8w/HQeGuyVj7OunFLQaOI+3tFp/fMiU33NDP3wBCTitj+C2i8wwi3kZBh0?=
- =?us-ascii?Q?81yYjdU7iU2j5Z2wzcL+Bo1ulKWj4ECy1JwctlUdmVpELxKNaQwhXdEIdL/f?=
- =?us-ascii?Q?af90y4QjouFwrIQkQ+25KC/kasN0HEGkdv0sHjBzBzLTz2ZWRhtXz0gj7Qc4?=
- =?us-ascii?Q?25mGiWl80ByXKa0EGW1v1Y/YCwXdicGt8qWkKbr5fPYfPfNn/tBoAFKZ7mPD?=
- =?us-ascii?Q?OYtHNtw6Qmd3hN+ml80fnatR2w+yjT1UGuanv4uUrvlMBnCqQ2li2rFwqees?=
- =?us-ascii?Q?7YAOMEaLvvpn1NvYQ5+r3OxJVPNvyIjGEQSCQwfczMZG93rM6QHTCOEz7joU?=
- =?us-ascii?Q?SoSM4j9B3OvuTgDSHh54KvusoJk/d0BogwscmMldDoopLFA97Ko35JvCNOmA?=
- =?us-ascii?Q?8ZQvFVnrJHV1O3R0BOZFHGOznctZUOr8r5lOGznBSirx6vGGikkf6M7B3Mmv?=
- =?us-ascii?Q?lWKWZa7q4JGQvEfIcThjuc7DbNajetLSIqSxGEn92B+ARlDEhzgnBLJ/d1I+?=
- =?us-ascii?Q?LCXclue+z9DyG0EIaPwTpLZCPmdZTu4mGldUeyslwhNEG+QtXD37VAuZYa9S?=
- =?us-ascii?Q?m2+RZavQ+hFeKHpJNoaATdxi3okLJSrmzul64SvbLYvC93kLLstGbAkL3nTt?=
- =?us-ascii?Q?2KAFH0CevkRnRygwhj13uGIJRQFmDVK3MUbdXAwXdvG7euBJigol+nEZ3u63?=
- =?us-ascii?Q?7pPUzG2qL4zio82YzcU9Fg058T1uJ50d+BYfxBczenTnzgJg20M7RqBsTCzf?=
- =?us-ascii?Q?nbw39FMPzpC0nF+rAxQHu0cC1nDaAL6zW3E3Jacs0ISRFTQnerxep5c9AnFJ?=
- =?us-ascii?Q?tHG0FRTKktnjDNcLCxzlwqyhp5/BVjPbuUCW1hYa3zcOjOZs0n3m4nKsLFTl?=
- =?us-ascii?Q?6Df36EMc1C98gnsDCMAHY75ZmIjZnfHUGDQE5D81Vzw2aZKlE3biW4j6ZBKF?=
- =?us-ascii?Q?hGUD3Ce4s2XXbnEzialF/vgj?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM4PR12MB6373.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(376014)(7416014)(1800799024);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?DTKFqf5qBVUUQJhKbu+iqc3AWjyksO4z6UHB6q4a9t8AiCcBMxRBNwrbX1Pj?=
- =?us-ascii?Q?ETDQGZn29/neJ/vk/suj+6xkEkA3fxMJ1zOg/n+dJ1OWb/ShkE2qVbC8i72g?=
- =?us-ascii?Q?v7aE+QB+Kq0g6Yq+tS3KWIMy2RpEe06fcAze2T9YCr0RT+PDDR+rmrTTCiZ7?=
- =?us-ascii?Q?yrWa/vMQxlVSxyx+8p3loxO3cYdxtwmx8un8F6HxsQboJor1uUAchZ/IgWJY?=
- =?us-ascii?Q?cuYJnWRVcFKl9c6nlemy6C82AEkPvCrTMuRSvN/B6Z9lWHjLDsCxYjR/X3Wx?=
- =?us-ascii?Q?5FpP9wTRYS/AJUDnhZhfqQRv3Fa5Me0j/Gwcuze/SkbH/rvOEB2ugS0uC3qi?=
- =?us-ascii?Q?iwQtfyno2A4B2X1pE7lnrKoTxyA8ZIKvfiS0N+ayAy1mV+aa/t3fD+eXstmn?=
- =?us-ascii?Q?OIHdDJpvPEt9HvdEa+WL4kx6cpRO0VWJm4E5xRbA93u/HB4KSZQ7fX6U3L6q?=
- =?us-ascii?Q?cprnQ9Ojh37UyWkso/86NQKQRzSsV2wbhLzlCu9+417LTdJU40uhHXvB4jGB?=
- =?us-ascii?Q?nPirlT+zB8qbdaWaMNNuA+qXpeKIDaP5M8rjb9iSl6IYwKb8iIafXK9JXgO/?=
- =?us-ascii?Q?APZJfiaSa7BHYjqn5mj4paAdVRg8jcyLMVSg0rR8944H9XBWtSqJ/80Pitps?=
- =?us-ascii?Q?NTcGsBqWKCwxM+VPnKoc0qWVAL1eazNrybdmNU3ox9zUAmsHyRRUobH+b58P?=
- =?us-ascii?Q?vjpWn+4QSVIuLf/IBeYM5ywr5m/T+n/uBLlK6VHs2rHdOsAHZxhKGGAzXRXY?=
- =?us-ascii?Q?PS98I5akDo1sbVHOUu7KkLZxjD97lBjYiuZAiZdSPQV6V+iD8v+mja7Tz/04?=
- =?us-ascii?Q?jL8lAojXHK3gl56dOY602V4QewxdpzouZp19vGLSu3akPE1+BRyVe2hF0e8i?=
- =?us-ascii?Q?sZTrxKqX7V0a/ldhgY2sHRbX2HIRtLJ2RWzbPAbfRjqjt0+7l3YhHf5Xhdie?=
- =?us-ascii?Q?SFxylvBAHcShA6wwmW7vd4Vy93K1Pl9PWDKMDjkQWMW82yGt7LxTknhm9cQG?=
- =?us-ascii?Q?29Yj91LCK/QSObGD0IyzySpHkZi/I1txTv7TH01gc7ZA3nxBII6xOnrR43+M?=
- =?us-ascii?Q?zMmY6ljbnbYCP+OSNgcaP3CifxhkiPCSGKDeZaevw9zea326FJ62Z+hkHVwf?=
- =?us-ascii?Q?NrQyLb/sqjkAsmnWt+j57I+Y+f9mzKJY2iORhncRoO8DXFxSG01NG5n1xtO+?=
- =?us-ascii?Q?xRULmE8Qainl4Tt6I9Nsrc+L/d+WBxSIU0FvzVvWYSpS2KIMRX5BNp/p6sQV?=
- =?us-ascii?Q?ArBVLrYA+8FjPQ4P0CGql0bWaN2DviOVauQUFuMo5oCQCLRMveROG/o36dMp?=
- =?us-ascii?Q?08PXNV9V+5GNiHjKFCrMS6iu+CE/UC/znforyYHv1ho56InkofMh9vzBe1iR?=
- =?us-ascii?Q?o3BpRZowlHC+FB5cDnKeSGymYX+i5vg3CQExz3Vs0oKFPCS9xF6u6y1glkKC?=
- =?us-ascii?Q?tJQgJUe6MWEH4AihoJ2vTpaIRTbIQV1nEU4jSgDctEF8K49ydWXIeT7Aa1OK?=
- =?us-ascii?Q?vV0RCc/60v/rEdTlyA4dnHzBsZQ36Z0L1J8xews0nhGYyq1HLhOphEWOF1nO?=
- =?us-ascii?Q?5vEPhCZRwGzY40t/UZZh9orc4PQNXMH5RwLAHAZ7?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: a316875b-281e-4092-0626-08dcfdaa7077
-X-MS-Exchange-CrossTenant-AuthSource: DM4PR12MB6373.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 05 Nov 2024 14:59:25.4995
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: njj88dnMx1cKNQN3r7l2IpVIDf5PSIRoJUUrTKamC0cn3sPNAspgtZNTgsE2N0zX1/83yh0zk8uebPd7KOa7gg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BY5PR12MB4179
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20241103-sysfs-const-bin_attr-v2-5-71110628844c@weissschuh.net>
 
-On Mon, Nov 04, 2024 at 03:32:12PM +0100, Borislav Petkov wrote:
-> On Wed, Oct 23, 2024 at 05:21:45PM +0000, Yazen Ghannam wrote:
-> > Subject: Re: [PATCH 11/16] x86/amd_smn: Fixup __amd_smn_rw()
+On Sun, Nov 03, 2024 at 05:03:34PM +0000, Thomas Weißschuh wrote:
+> The is_bin_visible() callbacks should not modify the struct
+> bin_attribute passed as argument.
+> Enforce this by marking the argument as const.
 > 
-> Needs a more descriptive title...
->
+> As there are not many callback implementers perform this change
+> throughout the tree at once.
+> 
+> Signed-off-by: Thomas Weißschuh <linux@weissschuh.net>
 
-Okay, will update it.
+Acked-by: Bjorn Helgaas <bhelgaas@google.com>	# drivers/pci
 
-Thanks,
-Yazen
+> ---
+>  drivers/cxl/port.c                      |  2 +-
+>  drivers/gpu/drm/amd/amdgpu/amdgpu_psp.c |  2 +-
+>  drivers/infiniband/hw/qib/qib_sysfs.c   |  2 +-
+>  drivers/mtd/spi-nor/sysfs.c             |  2 +-
+>  drivers/nvmem/core.c                    |  3 ++-
+>  drivers/pci/pci-sysfs.c                 |  2 +-
+>  drivers/pci/vpd.c                       |  2 +-
+>  drivers/platform/x86/amd/hsmp.c         |  2 +-
+>  drivers/platform/x86/intel/sdsi.c       |  2 +-
+>  drivers/scsi/scsi_sysfs.c               |  2 +-
+>  drivers/usb/core/sysfs.c                |  2 +-
+>  include/linux/sysfs.h                   | 30 +++++++++++++++---------------
+>  12 files changed, 27 insertions(+), 26 deletions(-)
+> 
+> diff --git a/drivers/cxl/port.c b/drivers/cxl/port.c
+> index 9dc394295e1fcd1610813837b2f515b66995eb25..24041cf85cfbe6c54c467ac325e48c775562b938 100644
+> --- a/drivers/cxl/port.c
+> +++ b/drivers/cxl/port.c
+> @@ -173,7 +173,7 @@ static ssize_t CDAT_read(struct file *filp, struct kobject *kobj,
+>  static BIN_ATTR_ADMIN_RO(CDAT, 0);
+>  
+>  static umode_t cxl_port_bin_attr_is_visible(struct kobject *kobj,
+> -					    struct bin_attribute *attr, int i)
+> +					    const struct bin_attribute *attr, int i)
+>  {
+>  	struct device *dev = kobj_to_dev(kobj);
+>  	struct cxl_port *port = to_cxl_port(dev);
+> diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_psp.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_psp.c
+> index 0b28b2cf1517d130da01989df70b9dff6433edc4..c1c329eb920b52af100a93bdf00df450e25608c4 100644
+> --- a/drivers/gpu/drm/amd/amdgpu/amdgpu_psp.c
+> +++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_psp.c
+> @@ -3999,7 +3999,7 @@ static umode_t amdgpu_flash_attr_is_visible(struct kobject *kobj, struct attribu
+>  }
+>  
+>  static umode_t amdgpu_bin_flash_attr_is_visible(struct kobject *kobj,
+> -						struct bin_attribute *attr,
+> +						const struct bin_attribute *attr,
+>  						int idx)
+>  {
+>  	struct device *dev = kobj_to_dev(kobj);
+> diff --git a/drivers/infiniband/hw/qib/qib_sysfs.c b/drivers/infiniband/hw/qib/qib_sysfs.c
+> index 53ec7510e4ebfb144e79884ca7dd7d0c873bd8a7..ba2cd68b53e6c240f1afc65c64012c75ccf488e0 100644
+> --- a/drivers/infiniband/hw/qib/qib_sysfs.c
+> +++ b/drivers/infiniband/hw/qib/qib_sysfs.c
+> @@ -283,7 +283,7 @@ static struct bin_attribute *port_ccmgta_attributes[] = {
+>  };
+>  
+>  static umode_t qib_ccmgta_is_bin_visible(struct kobject *kobj,
+> -				 struct bin_attribute *attr, int n)
+> +				 const struct bin_attribute *attr, int n)
+>  {
+>  	struct qib_pportdata *ppd = qib_get_pportdata_kobj(kobj);
+>  
+> diff --git a/drivers/mtd/spi-nor/sysfs.c b/drivers/mtd/spi-nor/sysfs.c
+> index 96064e4babf01f6950c81586764386e7671cbf97..5e9eb268073d18e0a46089000f18a3200b4bf13d 100644
+> --- a/drivers/mtd/spi-nor/sysfs.c
+> +++ b/drivers/mtd/spi-nor/sysfs.c
+> @@ -87,7 +87,7 @@ static umode_t spi_nor_sysfs_is_visible(struct kobject *kobj,
+>  }
+>  
+>  static umode_t spi_nor_sysfs_is_bin_visible(struct kobject *kobj,
+> -					    struct bin_attribute *attr, int n)
+> +					    const struct bin_attribute *attr, int n)
+>  {
+>  	struct spi_device *spi = to_spi_device(kobj_to_dev(kobj));
+>  	struct spi_mem *spimem = spi_get_drvdata(spi);
+> diff --git a/drivers/nvmem/core.c b/drivers/nvmem/core.c
+> index 63370c76394ee9b8d514da074779617cef67c311..73e44d724f90f4cd8fe8cafb9fa0c0fb23078e61 100644
+> --- a/drivers/nvmem/core.c
+> +++ b/drivers/nvmem/core.c
+> @@ -298,7 +298,8 @@ static umode_t nvmem_bin_attr_get_umode(struct nvmem_device *nvmem)
+>  }
+>  
+>  static umode_t nvmem_bin_attr_is_visible(struct kobject *kobj,
+> -					 struct bin_attribute *attr, int i)
+> +					 const struct bin_attribute *attr,
+> +					 int i)
+>  {
+>  	struct device *dev = kobj_to_dev(kobj);
+>  	struct nvmem_device *nvmem = to_nvmem_device(dev);
+> diff --git a/drivers/pci/pci-sysfs.c b/drivers/pci/pci-sysfs.c
+> index 040f01b2b999175e8d98b05851edc078bbabbe0d..13912940ed2bb66c0086e5bea9a3cb6417ac14dd 100644
+> --- a/drivers/pci/pci-sysfs.c
+> +++ b/drivers/pci/pci-sysfs.c
+> @@ -1326,7 +1326,7 @@ static struct bin_attribute *pci_dev_rom_attrs[] = {
+>  };
+>  
+>  static umode_t pci_dev_rom_attr_is_visible(struct kobject *kobj,
+> -					   struct bin_attribute *a, int n)
+> +					   const struct bin_attribute *a, int n)
+>  {
+>  	struct pci_dev *pdev = to_pci_dev(kobj_to_dev(kobj));
+>  
+> diff --git a/drivers/pci/vpd.c b/drivers/pci/vpd.c
+> index e4300f5f304f3ca55a657fd25a1fa5ed919737a7..a469bcbc0da7f7677485c7f999f8dfb58b8ae8a3 100644
+> --- a/drivers/pci/vpd.c
+> +++ b/drivers/pci/vpd.c
+> @@ -325,7 +325,7 @@ static struct bin_attribute *vpd_attrs[] = {
+>  };
+>  
+>  static umode_t vpd_attr_is_visible(struct kobject *kobj,
+> -				   struct bin_attribute *a, int n)
+> +				   const struct bin_attribute *a, int n)
+>  {
+>  	struct pci_dev *pdev = to_pci_dev(kobj_to_dev(kobj));
+>  
+> diff --git a/drivers/platform/x86/amd/hsmp.c b/drivers/platform/x86/amd/hsmp.c
+> index 8fcf38eed7f00ee01aade6e3e55e20402458d5aa..8f00850c139fa8d419bc1c140c1832bf84b2c3bd 100644
+> --- a/drivers/platform/x86/amd/hsmp.c
+> +++ b/drivers/platform/x86/amd/hsmp.c
+> @@ -620,7 +620,7 @@ static int hsmp_get_tbl_dram_base(u16 sock_ind)
+>  }
+>  
+>  static umode_t hsmp_is_sock_attr_visible(struct kobject *kobj,
+> -					 struct bin_attribute *battr, int id)
+> +					 const struct bin_attribute *battr, int id)
+>  {
+>  	if (plat_dev.proto_ver == HSMP_PROTO_VER6)
+>  		return battr->attr.mode;
+> diff --git a/drivers/platform/x86/intel/sdsi.c b/drivers/platform/x86/intel/sdsi.c
+> index 9d137621f0e6e7a23be0e0bbc6175c51c403169f..33f33b1070fdc949c1373251c3bca4234d9da119 100644
+> --- a/drivers/platform/x86/intel/sdsi.c
+> +++ b/drivers/platform/x86/intel/sdsi.c
+> @@ -541,7 +541,7 @@ static struct bin_attribute *sdsi_bin_attrs[] = {
+>  };
+>  
+>  static umode_t
+> -sdsi_battr_is_visible(struct kobject *kobj, struct bin_attribute *attr, int n)
+> +sdsi_battr_is_visible(struct kobject *kobj, const struct bin_attribute *attr, int n)
+>  {
+>  	struct device *dev = kobj_to_dev(kobj);
+>  	struct sdsi_priv *priv = dev_get_drvdata(dev);
+> diff --git a/drivers/scsi/scsi_sysfs.c b/drivers/scsi/scsi_sysfs.c
+> index 32f94db6d6bf5d2bd289c1a121da7ffc6a7cb2ff..f3a1ecb42128a2b221ca5c362e041eb59dba0f20 100644
+> --- a/drivers/scsi/scsi_sysfs.c
+> +++ b/drivers/scsi/scsi_sysfs.c
+> @@ -1274,7 +1274,7 @@ static umode_t scsi_sdev_attr_is_visible(struct kobject *kobj,
+>  }
+>  
+>  static umode_t scsi_sdev_bin_attr_is_visible(struct kobject *kobj,
+> -					     struct bin_attribute *attr, int i)
+> +					     const struct bin_attribute *attr, int i)
+>  {
+>  	struct device *dev = kobj_to_dev(kobj);
+>  	struct scsi_device *sdev = to_scsi_device(dev);
+> diff --git a/drivers/usb/core/sysfs.c b/drivers/usb/core/sysfs.c
+> index 61b6d978892c799e213018bed22d9fb12a19d429..b4cba23831acd2d7d395b9f7683cd3ee3a8623c8 100644
+> --- a/drivers/usb/core/sysfs.c
+> +++ b/drivers/usb/core/sysfs.c
+> @@ -925,7 +925,7 @@ static struct bin_attribute *dev_bin_attrs[] = {
+>  };
+>  
+>  static umode_t dev_bin_attrs_are_visible(struct kobject *kobj,
+> -		struct bin_attribute *a, int n)
+> +		const struct bin_attribute *a, int n)
+>  {
+>  	struct device *dev = kobj_to_dev(kobj);
+>  	struct usb_device *udev = to_usb_device(dev);
+> diff --git a/include/linux/sysfs.h b/include/linux/sysfs.h
+> index 4746cccb95898b24df6f53de9421ea7649b5568f..d1b22d56198b55ee39fe4c4fc994f5b753641992 100644
+> --- a/include/linux/sysfs.h
+> +++ b/include/linux/sysfs.h
+> @@ -101,7 +101,7 @@ struct attribute_group {
+>  	umode_t			(*is_visible)(struct kobject *,
+>  					      struct attribute *, int);
+>  	umode_t			(*is_bin_visible)(struct kobject *,
+> -						  struct bin_attribute *, int);
+> +						  const struct bin_attribute *, int);
+>  	size_t			(*bin_size)(struct kobject *,
+>  					    const struct bin_attribute *,
+>  					    int);
+> @@ -199,22 +199,22 @@ struct attribute_group {
+>   * attributes, the group visibility is determined by the function
+>   * specified to is_visible() not is_bin_visible()
+>   */
+> -#define DEFINE_SYSFS_BIN_GROUP_VISIBLE(name)                             \
+> -	static inline umode_t sysfs_group_visible_##name(                \
+> -		struct kobject *kobj, struct bin_attribute *attr, int n) \
+> -	{                                                                \
+> -		if (n == 0 && !name##_group_visible(kobj))               \
+> -			return SYSFS_GROUP_INVISIBLE;                    \
+> -		return name##_attr_visible(kobj, attr, n);               \
+> +#define DEFINE_SYSFS_BIN_GROUP_VISIBLE(name)                                   \
+> +	static inline umode_t sysfs_group_visible_##name(                      \
+> +		struct kobject *kobj, const struct bin_attribute *attr, int n) \
+> +	{                                                                      \
+> +		if (n == 0 && !name##_group_visible(kobj))                     \
+> +			return SYSFS_GROUP_INVISIBLE;                          \
+> +		return name##_attr_visible(kobj, attr, n);                     \
+>  	}
+>  
+> -#define DEFINE_SIMPLE_SYSFS_BIN_GROUP_VISIBLE(name)                   \
+> -	static inline umode_t sysfs_group_visible_##name(             \
+> -		struct kobject *kobj, struct bin_attribute *a, int n) \
+> -	{                                                             \
+> -		if (n == 0 && !name##_group_visible(kobj))            \
+> -			return SYSFS_GROUP_INVISIBLE;                 \
+> -		return a->mode;                                       \
+> +#define DEFINE_SIMPLE_SYSFS_BIN_GROUP_VISIBLE(name)                         \
+> +	static inline umode_t sysfs_group_visible_##name(                   \
+> +		struct kobject *kobj, const struct bin_attribute *a, int n) \
+> +	{                                                                   \
+> +		if (n == 0 && !name##_group_visible(kobj))                  \
+> +			return SYSFS_GROUP_INVISIBLE;                       \
+> +		return a->mode;                                             \
+>  	}
+>  
+>  #define SYSFS_GROUP_VISIBLE(fn) sysfs_group_visible_##fn
+> 
+> -- 
+> 2.47.0
+> 
