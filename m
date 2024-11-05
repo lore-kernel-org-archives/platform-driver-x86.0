@@ -1,184 +1,172 @@
-Received: from fhigh-b6-smtp.messagingengine.com (fhigh-b6-smtp.messagingengine.com [202.12.124.157])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f182.google.com (mail-pl1-f182.google.com [209.85.214.182])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8BC2E1F8EE4;
-	Tue,  5 Nov 2024 22:49:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.157
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C7DF121620A;
+	Tue,  5 Nov 2024 23:56:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730846988; cv=none; b=W7CYS9XZsKlT70mQxeJtHhNprpDhcdonFptC4zYW5YZpYRVKHJx1KmDtNk9geUFH8w1gwFYyJszfJ7EALZ1ztaxmrSarMFge3twkTVL+ddEQz3z/NFGRqZ0UEWKspNC6KMX7XhIl2VGWozE6+d2zXea+ALCe1Wz861ArJE2PFhg=
+	t=1730850979; cv=none; b=Y0WMDCtrcXslx7jpuG1gEYDrSxS0dUPAUZiESMHFxXv3Vs/OZzvxpmWj0zVmbNw+BOb1fPNKzVwB4me0W40c/zqL1Pn7lA2a1dRQjr7dj2z0JALOqdCP7xKCP2Qhy26FBYpv2qpHq94j4Cop/WE1cE2G+8ww0q+KqZShQc/ID3g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730846988; c=relaxed/simple;
-	bh=+qrt0SnHMoXax5cx51hAMaNMH9X+fYL3dIuvoqA1Ph8=;
-	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
-	 Subject:Content-Type; b=TaVeT3keiKH8heP4T+tY7sEXLrEZgCFO7gcCdPQPCo/hBq5Y9N9lYNnoM95dLkUSRGN8abCk5KSmlohxcBumB3z3TDgsjz0Zqb7aFMx+qPbT07YTu0MXlcwzqw/OQDiVp9WFj8Q+fNCIU3rBcyMPbBPIekHdXgyvVrvzvYz341I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=squebb.ca; spf=pass smtp.mailfrom=squebb.ca; dkim=pass (2048-bit key) header.d=squebb.ca header.i=@squebb.ca header.b=Otca8lJL; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=BpfhZV8R; arc=none smtp.client-ip=202.12.124.157
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=squebb.ca
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=squebb.ca
+	s=arc-20240116; t=1730850979; c=relaxed/simple;
+	bh=rVYY7hUS0/8px9P9VMyTF6luP4EveFr+K2h7mJPt0zY=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=nDrUDGmScACvp9QLAOj09ezj0SkZ65/GxBZYvk92t+RpVdakYZqZfFzIS1Hqo9BMwrBRDFYKpW3DOijurks6eKAyMnrR0ov4Y6SM+/v+0hzCysUpN3baT/fzJ0aj6umcjmeHD6LVIP9Uqh8xXOClvyQ4fNEHDsDNGNvBNlue+ow=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=dZfgzGqL; arc=none smtp.client-ip=209.85.214.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=squebb.ca header.i=@squebb.ca header.b="Otca8lJL";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="BpfhZV8R"
-Received: from phl-compute-02.internal (phl-compute-02.phl.internal [10.202.2.42])
-	by mailfhigh.stl.internal (Postfix) with ESMTP id 356F52540167;
-	Tue,  5 Nov 2024 17:49:45 -0500 (EST)
-Received: from phl-imap-10 ([10.202.2.85])
-  by phl-compute-02.internal (MEProxy); Tue, 05 Nov 2024 17:49:45 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=squebb.ca; h=cc
-	:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to; s=fm1; t=1730846985;
-	 x=1730933385; bh=iUEnUbiKHm7hBg4xQi/z/U9mNVNxeKdQypXGGIH3KZs=; b=
-	Otca8lJLeoySiSUIS2wTsg2ijN0G2lGe05lUHAhThP6VP4GKQUj6X8prXwdbOACS
-	FxryAWHdTLyoG3+hJrXw1klaFfI5Sj2MdPKKY2Wms98fCqDi97c0q0QITHPhataH
-	TOhZLxcvYNtJ4JLlH2eMdggjIapq+w8GDBmPsWVbB0Xd5pjTQefulrdbawrL+u8o
-	+3+8DQZTf1bnYwVeQrgqy3wD4u3TOkFLHpX2jtxBi5tZ9myhf7+6GYHfNBqjwPj+
-	4Q1Vbo98GaAX7Hq5aHyfelpzjsNxtcql/lVbO4Mdpa9/TWltVbkdDNImch4RqOnH
-	4gRIJQdEGden8FB4pfYjMQ==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=1730846985; x=
-	1730933385; bh=iUEnUbiKHm7hBg4xQi/z/U9mNVNxeKdQypXGGIH3KZs=; b=B
-	pfhZV8RhBiTDKAPIagIdHMCA2XCO7hW1Z2EyIO1pExpkmwyGPSARx70DHieozEeU
-	Shfc9hjpPLqKHmH/leZQQK2aZRoQCiPHIwmEBdO77qxhY+2QCt2c7QbK7IUt5afV
-	P1souhqQyMnuyxIvW3cTtThQG2ISt17xHMAvdX43r2ArcYgQS4IOnCRl2nFOX2t2
-	c4uTtF5QQS+TynXLm2hI4xSwe45CGQezyjaLHSM35lc7DOxqbTCK3amb6g5ZRTSR
-	/Ojcz/N4v23EqQxMpPUZMCGkabC7Up6FXxrx/9BRX2N9bLcJSWTbW08xYHBg5IZm
-	DuiiE52rBZ9SZImrdQjMQ==
-X-ME-Sender: <xms:B6EqZ7JuMiZZkN_YUWWr1mgetoP6YbT8ygPff_CE9-cAZido3u2utg>
-    <xme:B6EqZ_Ip-0JKwFN-ly5V0jYQgvG0k0DGmX8ffIS7wxiObXyYOMk-6iy1qzwyNrFZ6
-    WpB_z8KAGisv2uq4iU>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefuddrtddugddtfecutefuodetggdotefrodftvf
-    curfhrohhfihhlvgemucfhrghsthforghilhdpggftfghnshhusghstghrihgsvgdpuffr
-    tefokffrpgfnqfghnecuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnth
-    hsucdlqddutddtmdenucfjughrpefoggffhffvvefkjghfufgtgfesthejredtredttden
-    ucfhrhhomhepfdforghrkhcurfgvrghrshhonhdfuceomhhpvggrrhhsohhnqdhlvghnoh
-    hvohesshhquhgvsggsrdgtrgeqnecuggftrfgrthhtvghrnhephfeuvdehteeghedthedt
-    veehuddvjeejgffgieejvdegkefhfeelheekhedvffehnecuvehluhhsthgvrhfuihiivg
-    epudenucfrrghrrghmpehmrghilhhfrhhomhepmhhpvggrrhhsohhnqdhlvghnohhvohes
-    shhquhgvsggsrdgtrgdpnhgspghrtghpthhtohepvddupdhmohguvgepshhmthhpohhuth
-    dprhgtphhtthhopehshhihrghmqdhsuhhnuggrrhdrshdqkhesrghmugdrtghomhdprhgt
-    phhtthhopehmrghrihhordhlihhmohhntghivghllhhosegrmhgurdgtohhmpdhrtghpth
-    htohepihhkvgdrphgrnhestggrnhhonhhitggrlhdrtghomhdprhgtphhtthhopegrlhgv
-    gigsvghlmhegkeesghhmrghilhdrtghomhdprhgtphhtthhopegtohhrvghnthhinhdrtg
-    hhrghrhiesghhmrghilhdrtghomhdprhgtphhtthhopehluhiimhgrgihimhhilhhirghn
-    sehgmhgrihhlrdgtohhmpdhrtghpthhtohephhhmhheshhhmhhdrvghnghdrsghrpdhrtg
-    hpthhtohepshhohigvrhesihhrlhdrhhhupdhrtghpthhtoheplhgvnhgssehkvghrnhgv
-    lhdrohhrgh
-X-ME-Proxy: <xmx:B6EqZzugGKsIQBZiZsoGbZiYOU_kL2pm2lhoWFQYJqWCfsMdEl8fuA>
-    <xmx:B6EqZ0anuB4vF9-bBX9i2lNPOOPO-tDFq1jf1_ACtLJzoRCTMfr4GA>
-    <xmx:B6EqZybhsx_O5afOsUh6b9LMAOfMzIG9GVOBqAnr1w84DFkwDi3doA>
-    <xmx:B6EqZ4CdzR9OOU9DVVt53_JDQ-FObiVGCTIdiUGcSPbizRxas-MgUg>
-    <xmx:CaEqZ0b6ol7zOnfVvjwtrFIguck8vclh8egUKEaaQrd4eQ4_riV96KPM>
-Feedback-ID: ibe194615:Fastmail
-Received: by mailuser.phl.internal (Postfix, from userid 501)
-	id AD6153C0066; Tue,  5 Nov 2024 17:49:43 -0500 (EST)
-X-Mailer: MessagingEngine.com Webmail Interface
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dZfgzGqL"
+Received: by mail-pl1-f182.google.com with SMTP id d9443c01a7336-20ca388d242so61343585ad.2;
+        Tue, 05 Nov 2024 15:56:17 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1730850977; x=1731455777; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=ppYLRGxLF+7dK9BYL9ECT/GDpoTltO8iXIjQIhx/+g4=;
+        b=dZfgzGqLS7YPmIf6wkkCQfXC3IMtv2k21u4Ctkyf0ViIxB5hHurebOiykAKxTGS0gp
+         hPYvWX8rImW/wsJhO41TmTY7r2Jqrn4Xmf9HqjRy5o13px6iYoaWpefqECWTf/PW375k
+         HWEK3nghWCa940raBS/wZrQ3qiPjqzZaUaE+HUmi+fnWIkEvmls2cP6eW0hSgb8XPc3w
+         /I/NH2+0ToLOuojdPsN7kMDAMHQiq7fME2evXDsVorJ+TX9CxzqfS5fF2i1NVY/p1CKq
+         3NrwwHTxW2EOcVrj0z0aSyq/c9mHKYIyxZB+Rx0KnUA/qmhaikv3Soj3gD7BtJAKTtMT
+         jwvA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1730850977; x=1731455777;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=ppYLRGxLF+7dK9BYL9ECT/GDpoTltO8iXIjQIhx/+g4=;
+        b=veBL7el5U7BFeoYn47kG5b5wJVD6YfFroB/CDNdVQfXKqspgYpFfPCSq21rI+QHI/F
+         2kAR8HlDw1vNOu1XBdq+zRjk7+ezdvrHhBxyRgIzeyMeqEPCLFlJ5ahXloMU5JcZZO1y
+         WmDwscx2Mn+Zd7ub1KJc+gh+Wt0CrZuklTMVZ9gi9jMNOyF0g9/jwfMhXO9/RkRlV9JP
+         9WxCXQki+3uWbduXHY7EFa/UMwyeTOLDTc+pjsjQJkul5LUoWQrdp9s/Sp7X3cwJYvTO
+         u21sEhcajq0ZWw8q/5lK1XwQthXSSZNxf19W7w7oXhbNFS6IeEvLLq5UJPw3S9XF69nP
+         8s5w==
+X-Forwarded-Encrypted: i=1; AJvYcCUBJBreWnN0qqxeuikDeRHpMbmROd/GPcRgv/fhLM4naXDxmpcU3JHx7azlbFc8D3R5hPUbZk41wKI4Myw=@vger.kernel.org, AJvYcCWN5IapIJnROPPZcCTzHn7Zbzvvsu2VQICGc7mIfcuXGWt2hmvXX/Y6MAjIjwYnnq4RK7GX/GI5HZCvGSLrh7R0l9kgpQ==@vger.kernel.org
+X-Gm-Message-State: AOJu0YzuUW4l5N62XyhuhCw5Tbp3B2RwkWnZ8ux0OA2V+BmVpwAh0ti6
+	fzyDHZnCCnvYQKI7t0n0h4Zwh4ZHGr+A6DIwfIGwIG2Nl+qr/vILZkzLQG8yNxM=
+X-Google-Smtp-Source: AGHT+IHJ1qg3Kz8hDFI5CbCYN8LAEKa52h1TO5mfYWSg2JRUQOuScn+FGukQF04qzxKxU8OIBZCLZA==
+X-Received: by 2002:a17:902:ccc9:b0:20b:8642:9863 with SMTP id d9443c01a7336-2111af3fbf0mr239959115ad.18.1730850977030;
+        Tue, 05 Nov 2024 15:56:17 -0800 (PST)
+Received: from test-linux-ThinkPad-L480.. ([2404:7a80:b9a1:7100:c22a:afd1:3ca1:23bb])
+        by smtp.googlemail.com with ESMTPSA id d9443c01a7336-21105729894sm83954785ad.119.2024.11.05.15.56.14
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 05 Nov 2024 15:56:16 -0800 (PST)
+From: Vishnu Sankar <vishnuocv@gmail.com>
+To: hdegoede@redhat.com,
+	ilpo.jarvinen@linux.intel.com,
+	ibm-acpi-devel@lists.sourceforge.net,
+	platform-driver-x86@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Cc: Vishnu Sankar <vishnuocv@gmail.com>,
+	Vishnu Sankar <vsankar@lenovo.com>,
+	Mark Pearson <mpearson-lenovo@squebb.ca>
+Subject: [PATCH] Thinkpad_acpi: Fix for ThinkPad's with ECFW showing incorrect fan speed
+Date: Wed,  6 Nov 2024 08:55:05 +0900
+Message-ID: <20241105235505.8493-1-vishnuocv@gmail.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Date: Tue, 05 Nov 2024 17:49:23 -0500
-From: "Mark Pearson" <mpearson-lenovo@squebb.ca>
-To: "Limonciello, Mario" <mario.limonciello@amd.com>,
- "Hans de Goede" <hdegoede@redhat.com>,
- =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Cc: "Rafael J. Wysocki" <rafael@kernel.org>, "Len Brown" <lenb@kernel.org>,
- "Maximilian Luz" <luzmaximilian@gmail.com>, "Lee Chun-Yi" <jlee@suse.com>,
- "Shyam Sundar S K" <Shyam-sundar.S-k@amd.com>,
- "Corentin Chary" <corentin.chary@gmail.com>,
- "Luke D . Jones" <luke@ljones.dev>, "Ike Panhc" <ike.pan@canonical.com>,
- "Henrique de Moraes Holschuh" <hmh@hmh.eng.br>,
- "Alexis Belmonte" <alexbelm48@gmail.com>,
- =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>,
- "Ai Chao" <aichao@kylinos.cn>, "Gergo Koteles" <soyer@irl.hu>,
- "open list" <linux-kernel@vger.kernel.org>,
- "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>,
- "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>,
- "open list:THINKPAD ACPI EXTRAS DRIVER" <ibm-acpi-devel@lists.sourceforge.net>,
- "Matthew Schwartz" <matthew.schwartz@linux.dev>
-Message-Id: <ab676d6e-30aa-45ac-85c8-32d093eeb5e3@app.fastmail.com>
-In-Reply-To: <20241105153316.378-21-mario.limonciello@amd.com>
-References: <20241105153316.378-1-mario.limonciello@amd.com>
- <20241105153316.378-21-mario.limonciello@amd.com>
-Subject: Re: [PATCH v4 20/20] Documentation: Add documentation about class interface
- for platform profiles
-Content-Type: text/plain
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-Hi Mario,
+Fix for Thinkpad's with ECFW showing incorrect fan speed.
+Some models use decimal instead of hexadecimal for the fan speed stored
+in the EC registers.
+for eg: the rpm register will have 0x4200 instead of 0x1068.
+Here the actual RPM is "4200" in decimal.
 
-On Tue, Nov 5, 2024, at 10:33 AM, Mario Limonciello wrote:
-> The class interface allows changing multiple platform profiles on a system
-> to different values. The semantics of it are similar to the legacy
-> interface.
->
-> Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
-> ---
->  .../userspace-api/sysfs-platform_profile.rst  | 28 +++++++++++++++++++
->  1 file changed, 28 insertions(+)
->
-> diff --git a/Documentation/userspace-api/sysfs-platform_profile.rst 
-> b/Documentation/userspace-api/sysfs-platform_profile.rst
-> index 4fccde2e45639..418c61b096304 100644
-> --- a/Documentation/userspace-api/sysfs-platform_profile.rst
-> +++ b/Documentation/userspace-api/sysfs-platform_profile.rst
-> @@ -40,3 +40,31 @@ added. Drivers which wish to introduce new profile 
-> names must:
->   1. Explain why the existing profile names cannot be used.
->   2. Add the new profile name, along with a clear description of the
->      expected behaviour, to the sysfs-platform_profile ABI 
-> documentation.
-> +
-> +Multiple driver support
-> +=======================
-> +When multiple drivers on a system advertise a platform profile 
-> handler, the
-> +platform profile handler core will only advertise the profiles that are
-> +commong between all drivers to the ``/sys/firmware/acpi`` interfaces.
+A quirk added to handle this.
 
-Typo (commong)
+Signed-off-by: Vishnu Sankar <vishnuocv@gmail.com>
+Signed-off-by: Vishnu Sankar <vsankar@lenovo.com>
+Suggested-by: Mark Pearson <mpearson-lenovo@squebb.ca>
+---
+ drivers/platform/x86/thinkpad_acpi.c | 28 +++++++++++++++++++++++++---
+ 1 file changed, 25 insertions(+), 3 deletions(-)
 
-> +
-> +This is to ensure there is no ambiguity on what the profile names mean 
-> when
-> +all handlers don't support a profile.
-> +
-> +Individual drivers will register a 'platform_profile' class device 
-> that has
-> +similar semantics as the ``/sys/firmware/acpi/platform_profile`` 
-> interface.
-> +
-> +To discover available profiles from the class interface the user can 
-> read the
-> +``choices`` attribute.
-> +
-> +If a user wants to select a profile for a specific driver, they can do 
-> so
-> +by writing to the ``profile`` attribute of the driver's class device.
-> +
-> +This will allow users to set different profiles for different drivers 
-> on the
-> +same system. If the selected profile by individual drivers differes the
+diff --git a/drivers/platform/x86/thinkpad_acpi.c b/drivers/platform/x86/thinkpad_acpi.c
+index 4c1b0553f872..6371a9f765c1 100644
+--- a/drivers/platform/x86/thinkpad_acpi.c
++++ b/drivers/platform/x86/thinkpad_acpi.c
+@@ -7936,6 +7936,7 @@ static u8 fan_control_resume_level;
+ static int fan_watchdog_maxinterval;
+ 
+ static bool fan_with_ns_addr;
++static bool ecfw_with_fan_dec_rpm;
+ 
+ static struct mutex fan_mutex;
+ 
+@@ -8682,7 +8683,11 @@ static ssize_t fan_fan1_input_show(struct device *dev,
+ 	if (res < 0)
+ 		return res;
+ 
+-	return sysfs_emit(buf, "%u\n", speed);
++	/* Check for fan speeds displayed in hexadecimal */
++	if (!ecfw_with_fan_dec_rpm)
++		return sysfs_emit(buf, "%u\n", speed);
++	else
++		return sysfs_emit(buf, "%x\n", speed);
+ }
+ 
+ static DEVICE_ATTR(fan1_input, S_IRUGO, fan_fan1_input_show, NULL);
+@@ -8699,7 +8704,11 @@ static ssize_t fan_fan2_input_show(struct device *dev,
+ 	if (res < 0)
+ 		return res;
+ 
+-	return sysfs_emit(buf, "%u\n", speed);
++	/* Check for fan speeds displayed in hexadecimal */
++	if (!ecfw_with_fan_dec_rpm)
++		return sysfs_emit(buf, "%u\n", speed);
++	else
++		return sysfs_emit(buf, "%x\n", speed);
+ }
+ 
+ static DEVICE_ATTR(fan2_input, S_IRUGO, fan_fan2_input_show, NULL);
+@@ -8775,6 +8784,7 @@ static const struct attribute_group fan_driver_attr_group = {
+ #define TPACPI_FAN_2CTL		0x0004		/* selects fan2 control */
+ #define TPACPI_FAN_NOFAN	0x0008		/* no fan available */
+ #define TPACPI_FAN_NS		0x0010		/* For EC with non-Standard register addresses */
++#define TPACPI_FAN_DECRPM	0x0020		/* For ECFW's with RPM in register as decimal */
+ 
+ static const struct tpacpi_quirk fan_quirk_table[] __initconst = {
+ 	TPACPI_QEC_IBM('1', 'Y', TPACPI_FAN_Q1),
+@@ -8803,6 +8813,7 @@ static const struct tpacpi_quirk fan_quirk_table[] __initconst = {
+ 	TPACPI_Q_LNV3('R', '1', 'D', TPACPI_FAN_NS),	/* 11e Gen5 GL-R */
+ 	TPACPI_Q_LNV3('R', '0', 'V', TPACPI_FAN_NS),	/* 11e Gen5 KL-Y */
+ 	TPACPI_Q_LNV3('N', '1', 'O', TPACPI_FAN_NOFAN),	/* X1 Tablet (2nd gen) */
++	TPACPI_Q_LNV3('R', '0', 'Q', TPACPI_FAN_DECRPM),/* L480 */
+ };
+ 
+ static int __init fan_init(struct ibm_init_struct *iibm)
+@@ -8847,6 +8858,13 @@ static int __init fan_init(struct ibm_init_struct *iibm)
+ 		tp_features.fan_ctrl_status_undef = 1;
+ 	}
+ 
++	/* Check for the EC/BIOS with RPM reported in decimal*/
++	if (quirks & TPACPI_FAN_DECRPM) {
++		pr_info("ECFW with fan RPM as decimal in EC register\n");
++		ecfw_with_fan_dec_rpm = 1;
++		tp_features.fan_ctrl_status_undef = 1;
++	}
++
+ 	if (gfan_handle) {
+ 		/* 570, 600e/x, 770e, 770x */
+ 		fan_status_access_mode = TPACPI_FAN_RD_ACPI_GFAN;
+@@ -9067,7 +9085,11 @@ static int fan_read(struct seq_file *m)
+ 		if (rc < 0)
+ 			return rc;
+ 
+-		seq_printf(m, "speed:\t\t%d\n", speed);
++		/* Check for fan speeds displayed in hexadecimal */
++		if (!ecfw_with_fan_dec_rpm)
++			seq_printf(m, "speed:\t\t%d\n", speed);
++		else
++			seq_printf(m, "speed:\t\t%x\n", speed);
+ 
+ 		if (fan_status_access_mode == TPACPI_FAN_RD_TPEC_NS) {
+ 			/*
+-- 
+2.43.0
 
-typo (differes)
-
-> +platform profile handler core will display the profile 'custom' to 
-> indicate
-> +that the profiles are not the same.
-> +
-> +While the ``platform_profile`` attribute has the value ``custom``, 
-> writing a
-> +common profile from ``platform_profile_choices`` to the 
-> platform_profile
-> +attribute of the platform profile handler core will set the profile 
-> for all
-> +drivers.
-> -- 
-> 2.43.0
-
-Thanks
-Mark
