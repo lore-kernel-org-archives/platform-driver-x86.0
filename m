@@ -1,163 +1,119 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 96C581DEFF5
-	for <platform-driver-x86@vger.kernel.org>; Wed,  6 Nov 2024 12:06:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9CB731DF97A
+	for <platform-driver-x86@vger.kernel.org>; Wed,  6 Nov 2024 13:26:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730894797; cv=none; b=HIfDgsJCf/yoEVBe396ssqJrIbrTAGraHl/xfCWhLNFGuyYJ1lY/Cc8dyTcny/m2uwqassqkQ3pJEGtGjkgK+miTAUK0HcmA/NLqE4FgSsWuNWjATqHBKOklZnaHc2p5e2QQ1q16qtTpNQmqh8rTNMWCl5zAg4y+doOtkU6hP8I=
+	t=1730899567; cv=none; b=geDhnq6hH0jqvP1CVpc04fZ/kNtF0b/XUeuFnPB4PkldIC2yXjLGMOcAXPFgTzIpJtv5e+oDoeoe1dPtwE5L5Gzfgs+u4dwf3MjZhQUUkoVvu3lFjbQkoMhmhoT9jSrYuL2En5RQleioleOloaqPRefyYW06ENDkrKvCVO4FgtM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730894797; c=relaxed/simple;
-	bh=Yy/+mSJcBc7tyuo5LXH1ldEPxnUnvjR7l0iv2NzqSpw=;
-	h=Message-ID:Date:MIME-Version:From:Subject:To:Cc:Content-Type; b=Zk4geQrenMEbntPrNV6gh7shtJP2qnoGuoe9Je44HxXstmXqCexsOF5vPaLt1wesPphKY78Q+/MHwV0NB2p0Z5dS1qu5WHFxOCe2ycObc/C/D0/CiMiDlv7zlzZr3mQ2KM1wa0Zf+6ekLC1q7FP+hZ7gQaArbnSJ1YQqFnPP1G4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=ZxMXs5vK; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1730899567; c=relaxed/simple;
+	bh=6TJ3NxpjHMP1SfVTGrtmM+C9upWeOVtOCeDh+NjYYnc=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=pRlOQzVLTrOSCTdYbFhfqwr8ec62Tp6bTHiA/nFwZ84vAw+PnTdrgDtrditMbguH4GVtMxNWcR9khKxN1d5usoFq0MdpsOewecAnDza1+jbiaRpDq01winE4lKee4TwBXyL6/Llg2eRc0T1SE4jpX29rVX5nwFYXYGdfxLV8NkY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=LYSPs067; arc=none smtp.client-ip=198.175.65.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ZxMXs5vK"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1730894794;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=I4uByD/scs2lHdN8SG8oJgSjpalWT5ZD06eUL1OlA/Q=;
-	b=ZxMXs5vK56r6iziRzlCWtXLVVqv+llXvg301FL7qxO//biUa15DFnCcc2riDD9rPSn+NjB
-	RIeW7tJGEPoXGvfJBi/A3bVkD2qaBVYKHI3xolfjALCalwWLXT11Xqe8eZ3nJcSawGZ9f6
-	Qeythk/nuW7gC8nCV5FrQuITUcqjcmE=
-Received: from mail-lf1-f69.google.com (mail-lf1-f69.google.com
- [209.85.167.69]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-591-jn5toyOyPS-D6cjGuIaBtA-1; Wed, 06 Nov 2024 07:06:33 -0500
-X-MC-Unique: jn5toyOyPS-D6cjGuIaBtA-1
-X-Mimecast-MFC-AGG-ID: jn5toyOyPS-D6cjGuIaBtA
-Received: by mail-lf1-f69.google.com with SMTP id 2adb3069b0e04-539e294566dso4031995e87.3
-        for <platform-driver-x86@vger.kernel.org>; Wed, 06 Nov 2024 04:06:33 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1730894792; x=1731499592;
-        h=content-transfer-encoding:content-language:cc:to:subject:from
-         :user-agent:mime-version:date:message-id:x-gm-message-state:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=I4uByD/scs2lHdN8SG8oJgSjpalWT5ZD06eUL1OlA/Q=;
-        b=GmKoRn6N8WEjbG5oSWfJ78q7PBp3pAkIieaRgaQo7P4rlTA0mDRBHcsV4feoQeobl6
-         j/ZpFIm1Cu5UFTIheH6TbC33RvHz3Ihzh9FGB1u6sKmKHO3/+Dv35Y1AtINs8hZnA2od
-         e5Q6Ikd+RiKD8ZRt5U/DZIDzTHs3iUc5qBJfC7PWGntvX+bKrDdYJYSFuUk0nwiLMHfR
-         k4PT6XoCdwQcA+zFL12dQxZUGTPQUGZtkoorHa4/FU6Sj7lPsgRUyYIctc5yTEIp69Ls
-         d9yuyv8/XjgULiZk7Nngg0f71Z5bIDUve50wnxAYeCNbTL1kz9vjOo7qNCIlJxZt+qOr
-         SScg==
-X-Forwarded-Encrypted: i=1; AJvYcCWcaBnyswki8NDAUNGs2UPw9w9uL2Q+2VtBGKnZWeGqxJx1Za2CPOJVf1KgLxYofgPB/j6Sd25KQ50UjwTuq0I4DhEE@vger.kernel.org
-X-Gm-Message-State: AOJu0Yysd3BBjmibGCFLqubO8oK+FonNfVS1m0VZbUyNdFI3fh5Qlwze
-	/9d1StyPWTBEaU+I2N87B11r0J6FY6d2KfcJt896/prEknKRggDvAyDiewrJO/r2O1B1SoWNR88
-	PvxpzTdlVo30AahaCvHz/lmEJgY1vbS8nLyAXiJxEcl39pnTAnZ9S6PuY8DVR6x82uEsTBdW+go
-	4qUJ8=
-X-Received: by 2002:a05:6512:33c8:b0:539:896e:46c9 with SMTP id 2adb3069b0e04-53c79e913famr12119925e87.45.1730894791671;
-        Wed, 06 Nov 2024 04:06:31 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IFJ8viotvbBZwWDeDBorwxrisTXP4YltWh4HSUAoXaKvMmYyBhXlRWwJiNtBfJ4MwMsXB58SA==
-X-Received: by 2002:a05:6512:33c8:b0:539:896e:46c9 with SMTP id 2adb3069b0e04-53c79e913famr12119905e87.45.1730894791238;
-        Wed, 06 Nov 2024 04:06:31 -0800 (PST)
-Received: from ?IPV6:2001:1c00:c32:7800:5bfa:a036:83f0:f9ec? (2001-1c00-0c32-7800-5bfa-a036-83f0-f9ec.cable.dynamic.v6.ziggo.nl. [2001:1c00:c32:7800:5bfa:a036:83f0:f9ec])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5cee6aae22esm2648579a12.20.2024.11.06.04.06.29
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 06 Nov 2024 04:06:30 -0800 (PST)
-Message-ID: <24e9383b-bc82-48bd-9de5-da0b8ae9b1f6@redhat.com>
-Date: Wed, 6 Nov 2024 13:06:28 +0100
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="LYSPs067"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1730899566; x=1762435566;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=6TJ3NxpjHMP1SfVTGrtmM+C9upWeOVtOCeDh+NjYYnc=;
+  b=LYSPs067MrB1V/Jb06uQ51SMCuIkcDI7BcS2bmSuUt65hj4tGDDiDeoW
+   nZViQfJQQ03JnvdOsrfQtgUbuCsHnHraAenND9tvRv88OTKSd56BxCjz9
+   oQHlc4ciTwZwu5dgMNC1HEd1r07A57TNvvzP+Xh7E9XvtUc2hgkVKYuwT
+   Foc2JA4yLVzotk8mMNf5UNluToRXm1ZPW9Glwv7gNUFILB6Ss1LI5NcH9
+   PD76t8Fa5YnTN4KoQHjmfhrNz8UF3Lhft4kzvQmC9OeAI9hyCGR9v0bYg
+   w550aCNa6I9VrT3ON/5PzwLYKtDGb7e6MtTsQNheqaRrkYzgMC3ne4sPo
+   w==;
+X-CSE-ConnectionGUID: WILgd31+T2uPJvFsbGfVVQ==
+X-CSE-MsgGUID: wm7V4WpRTNqlscRrDqSkew==
+X-IronPort-AV: E=McAfee;i="6700,10204,11222"; a="41245262"
+X-IronPort-AV: E=Sophos;i="6.11,199,1725346800"; 
+   d="scan'208";a="41245262"
+Received: from fmviesa008.fm.intel.com ([10.60.135.148])
+  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Nov 2024 05:26:06 -0800
+X-CSE-ConnectionGUID: jb3j7NneSPqNt5DLtyBMag==
+X-CSE-MsgGUID: FCIkQFKtReyPwGfQqdtq8g==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.11,262,1725346800"; 
+   d="scan'208";a="84638560"
+Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.110])
+  by fmviesa008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Nov 2024 05:26:03 -0800
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Wed, 6 Nov 2024 15:25:59 +0200 (EET)
+To: Hans de Goede <hdegoede@redhat.com>
+cc: Andy Shevchenko <andy.shevchenko@gmail.com>, 
+    Andy Shevchenko <andy@kernel.org>, platform-driver-x86@vger.kernel.org
+Subject: Re: [PATCH v2 2/3] platform/x86: x86-android-tablets: Add support
+ for getting i2c_adapter by PCI parent devname()
+In-Reply-To: <20b471ed-2e49-4a45-9b1c-25d9c2a181dd@redhat.com>
+Message-ID: <f1911338-37fb-931e-5045-20029a5897f0@linux.intel.com>
+References: <20241104200848.58693-1-hdegoede@redhat.com> <20241104200848.58693-3-hdegoede@redhat.com> <CAHp75VdJZeVmAjceMYQ-QZf-+RHAY5Y0nuyXgtVFzSiQ4yMPag@mail.gmail.com> <20b471ed-2e49-4a45-9b1c-25d9c2a181dd@redhat.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-From: Hans de Goede <hdegoede@redhat.com>
-Subject: [GIT PULL] platform-drivers-x86 for 6.12-4
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
- platform-driver-x86@vger.kernel.org,
- =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Content-Language: en-US, nl
+Content-Type: multipart/mixed; boundary="8323328-2029054700-1730899559=:928"
+
+  This message is in MIME format.  The first part should be readable text,
+  while the remaining parts are likely unreadable without MIME-aware tools.
+
+--8323328-2029054700-1730899559=:928
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 
-Hi Linus,
+On Tue, 5 Nov 2024, Hans de Goede wrote:
 
-Here is another round of fixes for platform-drivers-x86 for 6.12.
+> Hi,
+>=20
+> On 5-Nov-24 9:22 AM, Andy Shevchenko wrote:
+> > On Mon, Nov 4, 2024 at 10:09=E2=80=AFPM Hans de Goede <hdegoede@redhat.=
+com> wrote:
+> >>
+> >> On the Vexia EDU ATLA 10 tablet, which ships with Android + a custom L=
+inux
+> >> (guadalinex) using the custom Android kernel the I2C controllers are n=
+ot
+> >> enumerated as ACPI devices as they typically are.
+> >>
+> >> Instead they are enumerated as PCI devices which do not have ACPI firm=
+ware
+> >> nodes associated with them, so getting the i2c_adapter by the ACPI pat=
+h of
+> >> its firmware node does not work.
+> >>
+> >> Add support for getting the i2c_adapter by the devname() of its PCI pa=
+rent
+> >> instead.
+> >=20
+> > Reviewed-by: Andy Shevchenko <andy@kernel.org>
+> >=20
+> > ...
+> >=20
+> >>         struct i2c_board_info board_info =3D client_info->board_info;
+> >> -       struct i2c_adapter *adap;
+> >> +       struct i2c_adapter *adap =3D NULL;
+> >=20
+> > Unneeded change.
+>=20
+> Ack I noticed this myself and I thought I had dropped this change,
+> but apparently I did not.
+>=20
+> Ilpo can you fix this up while merging or do you want a v3 series?
 
-Highlights:
- - AMD PMF: Add new hardware id
- - AMD PMC: Fix crash when loaded with enable_stb=1 on devices without STB
- - Dell: Add Alienware hwid for Alienware systems with Dell WMI interface
- - thinkpad_acpi: Quirk to fix wrong fan speed readings on L480
- - New hotkey mappings for Dell and Lenovo laptops
+Thanks both.
 
-Regards,
+I removed this change while applying. I also made minor adjustments to the=
+=20
+braces in the patch 3 for stylish consistency.
 
-Hans
+--=20
+ i.
 
-
-The following changes since commit b012170fed282151f7ba8988a347670c299f5ab3:
-
-  platform/x86: asus-wmi: Fix thermal profile initialization (2024-10-26 13:03:10 +0200)
-
-are available in the Git repository at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git tags/platform-drivers-x86-v6.12-4
-
-for you to fetch changes up to 1be765b292577c752e0b87bf8c0e92aff6699d8e:
-
-  platform/x86: thinkpad_acpi: Fix for ThinkPad's with ECFW showing incorrect fan speed (2024-11-06 12:48:42 +0100)
-
-----------------------------------------------------------------
-platform-drivers-x86 for v6.12-4
-
-Highlights:
- - AMD PMF: Add new hardware id
- - AMD PMC: Fix crash when loaded with enable_stb=1 on devices without STB
- - Dell: Add Alienware hwid for Alienware systems with Dell WMI interface
- - thinkpad_acpi: Quirk to fix wrong fan speed readings on L480
- - New hotkey mappings for Dell and Lenovo laptops
-
-The following is an automated git shortlog grouped by driver:
-
-dell-smbios-base:
- -  Extends support to Alienware products
-
-dell-wmi-base:
- -  Handle META key Lock/Unlock events
-
-ideapad-laptop:
- -  add missing Ideapad Pro 5 fn keys
-
-platform/x86/amd/pmc:
- -  Detect when STB is not available
-
-platform/x86/amd/pmf:
- -  Add SMU metrics table support for 1Ah family 60h model
-
-thinkpad_acpi:
- -  Fix for ThinkPad's with ECFW showing incorrect fan speed
-
-----------------------------------------------------------------
-Corey Hickey (1):
-      platform/x86/amd/pmc: Detect when STB is not available
-
-Kurt Borja (2):
-      platform/x86: dell-smbios-base: Extends support to Alienware products
-      platform/x86: dell-wmi-base: Handle META key Lock/Unlock events
-
-Renato Caldas (1):
-      platform/x86: ideapad-laptop: add missing Ideapad Pro 5 fn keys
-
-Shyam Sundar S K (1):
-      platform/x86/amd/pmf: Add SMU metrics table support for 1Ah family 60h model
-
-Vishnu Sankar (1):
-      platform/x86: thinkpad_acpi: Fix for ThinkPad's with ECFW showing incorrect fan speed
-
- drivers/platform/x86/amd/pmc/pmc.c           |  5 +++++
- drivers/platform/x86/amd/pmf/core.c          |  1 +
- drivers/platform/x86/amd/pmf/spc.c           |  1 +
- drivers/platform/x86/dell/dell-smbios-base.c |  1 +
- drivers/platform/x86/dell/dell-wmi-base.c    |  6 ++++++
- drivers/platform/x86/ideapad-laptop.c        |  3 +++
- drivers/platform/x86/thinkpad_acpi.c         | 28 +++++++++++++++++++++++++---
- 7 files changed, 42 insertions(+), 3 deletions(-)
-
+--8323328-2029054700-1730899559=:928--
