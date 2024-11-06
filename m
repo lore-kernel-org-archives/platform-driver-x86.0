@@ -1,46 +1,45 @@
-Received: from NAM11-DM6-obe.outbound.protection.outlook.com (mail-dm6nam11on2058.outbound.protection.outlook.com [40.107.223.58])
+Received: from NAM12-MW2-obe.outbound.protection.outlook.com (mail-mw2nam12on2086.outbound.protection.outlook.com [40.107.244.86])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE13A57333
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 09A6C1D415B
 	for <platform-driver-x86@vger.kernel.org>; Wed,  6 Nov 2024 11:30:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.223.58
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.244.86
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730892651; cv=fail; b=EpMi/077VjQf/2N/bYM9wNZEcpTblSa25YwemRdVBE0LHhEdSnxrEa4PoGNM+yh5SBmsvXqq9SQirNJkTVLdQ71UsmtMwf7EhAbzN1LZwPx8DMNvkK3gIgU5esMa6tIJdnZp8bGR77C36e27PdGuuGaG/06BkvaqHGNSfsUwCcY=
+	t=1730892651; cv=fail; b=Ki9watSOre976f8j2KJkldKbGsc19CSND7oWxtWDSCzyWd10pnxNdnmiltDnmIA7VkbEWTYx0tOFEPYwc0pvXoDYvtlOT+bxDrmxPdSQ1mMVx7dNYvVunqXORZedjYLgelr3wxCTfiPyduyzwak0lhTi0u0jIHivEnNmi5/g4v4=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1730892651; c=relaxed/simple;
-	bh=PHNWlNHGKZm7Q2Kg5YGfugL0G775rbeLdv3Fg7MPSf8=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=ITAjOExtG12DY0yveFybNFPCdrwarsN6Prtx1Tv2ypt3OUWDvWXVbmJ6YEbsuiG02xxnTDhsFpYGF35t+nWlTsDYC8Bh9V1q29nQMLs8HuPKjpcl/G0XuhiHuUlHaLYSQB0ClClfWfiienBrxsVzYBs3yFR/9kc79WMQw52Hx9I=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=lMP3iQat; arc=fail smtp.client-ip=40.107.223.58
+	bh=OX0yyBt/ROd+2pK6AUvtF9NuCQHNCAOsY7V0CNTrARg=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=EQdWdfbbZBqB4PMvIP8SzpHdsKoOnXnYkiMdZ7pY9uqYZMAqUItVCDvcEtoLp2vHKOfcK17UuJruFwA26cVfX7yhxSIdgluK6P6chBRcIExcAiXHv9fKTdZItj8IVDDoTkFEqixn2bU7jMUdUvBrHk188k4VbFvm2qaJFgWBLQI=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=ZvoK/YVw; arc=fail smtp.client-ip=40.107.244.86
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
 Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="lMP3iQat"
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="ZvoK/YVw"
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=udGRUi9m+NIYwRvZxKJWMwRzW+qUrYoUkZKGpJ+i+RNe1+vcwxmKdaJeDP+yT+C2q+uQyhjTWFf6M4KdSexzzoCMz2nNhN8MsEfEOM8A0l8MuFYJze9Rho+77r6EJfO9vjT5NzHs3472gpkIQw3KKI5YG+KlCOMK6+aeAn40ihHNCWXkDiCnKpgHxJr9s+PmK1S3PP/1hDiaFSHfPz9Vr8i+wxKOJscu/KqosYZEvkehfedtqVocc6b5/zttxm+9gG96jpEci5JYzx4F39FQXSTqOVenwp93R7Ycou1HRbpDytznvo5xcEa3+A4Ad7CdKcSpvmYHkBPblIv+FU5gKA==
+ b=B3XBUNE/nD5XNdeGqzcfUpgCTzZEIiWlq76Q4KPbGpoGC6NwV7GoU4Xl338Dxu6HdtyfUfL0DbZISELR7gd5AfPtbqMdFQDswkCkR1XmKICKd+QJYBkpXS9Fij1wgNbaG7RWvUPFiL4colAk8RRmqYE/zGCOSrpWLSQQCrA4ddl11DCeYZJXo6JA4ZrbIroopxCfNMTPsZwGZH0eXRDoG8hNbKUY54wbIgaXJvwMNt9CggXDcaxd97WAuaYcdK0qpD6ZBSvfojJAM9IGGYvi7frv9vsYkyrL9swlRHNwHG9fOaUidTtSwzTyr+8Mj5bxtPp3bNEQmP1s6cVPrhT9Ww==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=Rg2G3dRTbxdkm9kHUMnLi+gkD7U8U/szxyBuoUIWjx8=;
- b=GTCnOlakexlb7Q1Du6WRbaCRcGtN150yqwIawxO6ab8s0pk7U6siY/prZWmTgDCAP0cgyO1UPAlqAEgRxjMBE+Wq5fzIJgi+8G3sRBR0kf+WNUFyhsOZt4P2EypTPTQOGfISz/bZeX3+0Guo6N9Pm9rtSMR0zWmttQEh7CmZMnGEXsv+9VWYld0Iuj6uQl6274hkcaVyTJtjE97mZprwOYLk+Zj2LsFMDaroOWLXsHnUZOnoGk13bSPw6mCsmpuqcYBkfb+G9vil+5UQdKuIMTG1RVra+/zsBCOyYWpoKPHv/lzCPu5bUnTyOH6ojVlTuAwW/IPCFj7/FR+9Bj803Q==
+ bh=M6lZ03+YnvSbn7n3iHy6j/J+ZSR/p4VuJAnxGcoGKP8=;
+ b=u8bf8x6xcvcqKuVHn5A0bHVAFJCcBR+J8a2pYT2n6Db4eZ9aG8TxWa/3pWzpmh2cRavHsiYnXr0ZBdMW7xBGEziiJ5MBEbikKgxBAjJtRCkiPfHTZOGSp+/qDDsD4rytFbvjlZwXG0PDMHileJrILBYYy406U+UP0E8mO83AnswHEEWCzEvlcQJfKGxrSU6s5cE8GQyYr12ch2rrOak361Zn0UM9hsFSSdkHoPKyFsCl5O56nmb1WvUc1KCqm20efSwYNjVqqAu2g01ZEgaBSkS7T8KFZkgMMOVmijhzuRHPIAh99G9yWfXfHeQ9Anh73BgcRe0ukvl6zp7n7bde6A==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
  165.204.84.17) smtp.rcpttodomain=redhat.com smtp.mailfrom=amd.com; dmarc=pass
  (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
  dkim=none (message not signed); arc=none (0)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Rg2G3dRTbxdkm9kHUMnLi+gkD7U8U/szxyBuoUIWjx8=;
- b=lMP3iQattbScVUitWqNN1tPPmA/zSACL9GNSqV7/iSgjHg5bqZs/aL8yBiWgYCu89oBjbi8IY6oL8OJa1YE4AgOepowe48q9hFu1+6nrxu3Ohm7xTtVPjACbsosXsIWc2/kxYMcKlmQYhXfO5jRXDHzGxY5AQzm9bnS9bq1VB4o=
-Received: from MW4P221CA0029.NAMP221.PROD.OUTLOOK.COM (2603:10b6:303:8b::34)
- by CY5PR12MB6599.namprd12.prod.outlook.com (2603:10b6:930:41::11) with
+ bh=M6lZ03+YnvSbn7n3iHy6j/J+ZSR/p4VuJAnxGcoGKP8=;
+ b=ZvoK/YVwBjqdY3UIcsCLGZTk/DDtzzEQveEtvgtfpvo44eYO7ntUTD1i2iqezdUwa08I9VwyOQzhI/xLTd2pPtzroRHzZDxJB4V89NyE1G1x904Lwchgx5RZI+SAMqXYHvRuq0EgGOmzeFaMND+jpJ9tSoEw/8lA8rHoEFKpk4g=
+Received: from BYAPR11CA0077.namprd11.prod.outlook.com (2603:10b6:a03:f4::18)
+ by DM6PR12MB4138.namprd12.prod.outlook.com (2603:10b6:5:220::21) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8114.30; Wed, 6 Nov
- 2024 11:30:47 +0000
-Received: from SJ5PEPF000001D1.namprd05.prod.outlook.com
- (2603:10b6:303:8b:cafe::6c) by MW4P221CA0029.outlook.office365.com
- (2603:10b6:303:8b::34) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8114.30 via Frontend
- Transport; Wed, 6 Nov 2024 11:30:47 +0000
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8114.31; Wed, 6 Nov
+ 2024 11:30:45 +0000
+Received: from SJ5PEPF000001D4.namprd05.prod.outlook.com
+ (2603:10b6:a03:f4:cafe::ab) by BYAPR11CA0077.outlook.office365.com
+ (2603:10b6:a03:f4::18) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8137.18 via Frontend
+ Transport; Wed, 6 Nov 2024 11:30:45 +0000
 X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
  smtp.mailfrom=amd.com; dkim=none (message not signed)
  header.d=none;dmarc=pass action=none header.from=amd.com;
@@ -48,129 +47,134 @@ Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
  165.204.84.17 as permitted sender) receiver=protection.outlook.com;
  client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
 Received: from SATLEXMB04.amd.com (165.204.84.17) by
- SJ5PEPF000001D1.mail.protection.outlook.com (10.167.242.53) with Microsoft
+ SJ5PEPF000001D4.mail.protection.outlook.com (10.167.242.56) with Microsoft
  SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.8137.17 via Frontend Transport; Wed, 6 Nov 2024 11:30:46 +0000
+ 15.20.8137.17 via Frontend Transport; Wed, 6 Nov 2024 11:30:18 +0000
 Received: from jatayu.amd.com (10.180.168.240) by SATLEXMB04.amd.com
  (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Wed, 6 Nov
- 2024 05:29:49 -0600
+ 2024 05:28:39 -0600
 From: Basavaraj Natikar <Basavaraj.Natikar@amd.com>
 To: <hdegoede@redhat.com>, <ilpo.jarvinen@linux.intel.com>,
 	<platform-driver-x86@vger.kernel.org>
 CC: <perry.yuan@amd.com>, <mario.limonciello@amd.com>,
 	<Shyam-sundar.S-k@amd.com>, <W_Armin@gmx.de>, Basavaraj Natikar
 	<Basavaraj.Natikar@amd.com>
-Subject: [PATCH v4 2/2] platform/x86/amd: amd_3d_vcache: Add sysfs ABI documentation
-Date: Wed, 6 Nov 2024 16:58:21 +0530
-Message-ID: <20241106112821.1012452-3-Basavaraj.Natikar@amd.com>
+Subject: [PATCH v4 0/2] Add support of AMD 3D V-Cache optimizer driver
+Date: Wed, 6 Nov 2024 16:58:19 +0530
+Message-ID: <20241106112821.1012452-1-Basavaraj.Natikar@amd.com>
 X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20241106112821.1012452-1-Basavaraj.Natikar@amd.com>
-References: <20241106112821.1012452-1-Basavaraj.Natikar@amd.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset="'"
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
 X-ClientProxiedBy: SATLEXMB04.amd.com (10.181.40.145) To SATLEXMB04.amd.com
  (10.181.40.145)
 X-EOPAttributedMessage: 0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SJ5PEPF000001D1:EE_|CY5PR12MB6599:EE_
-X-MS-Office365-Filtering-Correlation-Id: a4e9391f-2e24-4109-2e64-08dcfe56757d
+X-MS-TrafficTypeDiagnostic: SJ5PEPF000001D4:EE_|DM6PR12MB4138:EE_
+X-MS-Office365-Filtering-Correlation-Id: bd61e8c4-7787-4cef-8ac1-08dcfe567456
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|36860700013|376014|1800799024|82310400026;
+	BCL:0;ARA:13230040|1800799024|376014|82310400026|36860700013;
 X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?j0xXTjPCuEPHfaDhsP0/KwnbPww3El0gJicuGRV2+znCCjOzP/R623bP8Z7J?=
- =?us-ascii?Q?rD5AMQAjPcLH4G/39GkE9/RnTv+8a2RxSHJ4GlKMftXY9yPTIXF4aY29bHtt?=
- =?us-ascii?Q?3E2EU2wt0OD96ps6DFljo4pLf5lLmgtGiYT3qd4sLqg/OVdUYKxAPCuS64Rb?=
- =?us-ascii?Q?qo+ogkrz+JUGG5vULbNwDM23XEzkx8FOf2xEBb6V8fEIBeAfTfB2FlWUdspf?=
- =?us-ascii?Q?MlWNRSXAdfXijCHW7xM30hddhL1MSKdhUUzZqXNzB8HFdEWBouMYPtpHQn1k?=
- =?us-ascii?Q?eNaTRkOF6DOmmrDLE8snOvw2cE6wKmL0V2v0pBDA2OQFDTv8zVWF1bbElzOm?=
- =?us-ascii?Q?UeV8X2yyOTTE08uy9mI/mQyaBj0qpJtdYvEcYuh8DFkj6ZeZzz+hCS9JIiaC?=
- =?us-ascii?Q?YFVz93zxcRpZQeOG7NicCFP/YjCPa/34ON4w+Gxu7fie1gwEl7QmxfocQ8n0?=
- =?us-ascii?Q?2ngKbqodI9pLPFNWuLwv8pb41w2LJVMh3Cbl7YSIbogAuwK23ACtTXyAFej6?=
- =?us-ascii?Q?UzzenZ49Cldv1NF/ifNWu6ad8QXgOpUuu1mry4oYaU31Q569aM0uK7VfD+Ry?=
- =?us-ascii?Q?y1+TS68GCWovDyowYvHH3FFRtlgusJ5Zyp+r25+Jyf+1NOwXlgM6ZWjsYeZj?=
- =?us-ascii?Q?I862iyA8uqlqcpYQp3yhpZQ9Gj8v782jNg3w16M7jKyMiP+GfZlPmHhbs/Bk?=
- =?us-ascii?Q?v8y1rs+hzO8KXjIpG4JL5r36gwYHNtwUepgKtX/6cOulT2MAUA9wKxs6WvMS?=
- =?us-ascii?Q?H7QAu1/Ru3/QVxPsCxGC+yXAeVDE8oQJsok4Qb3jKPN86YJH7M1dO1N6m8DO?=
- =?us-ascii?Q?pW6hOsxJWUdI+I+2/bgb6aUaKqXO7tQjs4PlK3i2hUp2jEMjvAP+R5M0mY31?=
- =?us-ascii?Q?IgQjezm1LorZOO2MEauMIAyPl1s9znrkyvnokiNnz9QNvHzV1XUKe532U+yK?=
- =?us-ascii?Q?EW3V9PwU9CtKarBYbYqqou1rsGm9ppAAhBDQJQM0PkjgDBSu2zHtyVLN5AYI?=
- =?us-ascii?Q?/c9O1C4BMaesWLMbN88EtU/hyswpKYB8xcat+1aPX+O43oESlmqAd/gO/Ilq?=
- =?us-ascii?Q?dwPJNOsOReEJfnXDGBLsHYj+QSIjCefKKbu69p1IDF9VN09pZiBMRFBWSIAG?=
- =?us-ascii?Q?sapScC82Z3DVdQ0nlw03KwQJzXgCJ8vlqHo0+1SuxFpmNslCuFbShYf6UCBc?=
- =?us-ascii?Q?bQxpMKG8JZk7ZGXexwmi/DVHHsOZmt+ze7594WKNSGUC95ejNhYUZI98I0Vf?=
- =?us-ascii?Q?CtkiVXNIioMX1wQ/JGDGjT3vNeJ+mMeboKgPjzDkWCgQP2z9SJ8pqjBYg/w2?=
- =?us-ascii?Q?a0T82sV4fUbOWg7fgjjzBX3+g6zTP3/ETKnjI9teLmvWJXCNHK8fAMkou/Zn?=
- =?us-ascii?Q?Ct0tEHN/F5O7dn8yJTZOpK5n0tWiy+LNm0cAy8K65H14x6dd7w=3D=3D?=
+	=?us-ascii?Q?MbNemO4frY6ZryF1yzRMeanL+cQpxcR8By7SjrNqLiZoQu62nDaagIlJmRtH?=
+ =?us-ascii?Q?2J3Ph4blwzNUsS2y5ZORYPPCavCa0SNIlI10/n9cpTnNFZjuuLPV9B60eQME?=
+ =?us-ascii?Q?8lBjVdPmG+8+dnaqEmXGYYMQR+NI3nBhagiq9Bif1ba0SzUrWO8zt1UKNKwa?=
+ =?us-ascii?Q?sKe7V0hqiVGYG6XfB5uCufJlx/6qSA5KjtVlACAtH2zTEFyOdajWkISR4J3V?=
+ =?us-ascii?Q?JOOIxAlVIBExlbxoJ5VEJFj79vUUunU1k4jAUn6VNVpNzD3O5QdoR31H41GH?=
+ =?us-ascii?Q?CruyqzhwNuq8Dj+rRtLf3BQj8m++0vetCcWCwJ3cDoWY3RqmJtS6MgKZsfpD?=
+ =?us-ascii?Q?bqiPr2dHXeRZ6q2x6P6Fj/garOd+cNijLlcUFDGztClQUyL+XDceXPqPgbrj?=
+ =?us-ascii?Q?pd4KnPqcCptN2LEbEX5uL0HGm50n0XDUJgLbS0tiKmxG9970ZuZMtJYau/m6?=
+ =?us-ascii?Q?USTQpo7xYuK74Ae13rcvS7pVq3iJUWq7FkxTYl5wzETnhQ9JzBGzITGuQJSf?=
+ =?us-ascii?Q?ndwBI20RTs73P8eLMB3pNhtg7kX2RJFb75q4xYeayuaPz739ReqeDOT9KFNQ?=
+ =?us-ascii?Q?gR2G6+8iIdqNRnPDIzGwisMlRQsUe6MAWx66Qo9V8iob59yuACReV0pjKdrW?=
+ =?us-ascii?Q?GGJDT06fsG0sqNzLWeo4gbbkkVwz9pRXi5AmFkv09m4e7U9O+Pb3QKDgfCe/?=
+ =?us-ascii?Q?0DvOFvDUWXMTdIN+St3+FUzBN8mLlIeaEkr8RBq4aT91sgc6O7V5WGRh/0Z6?=
+ =?us-ascii?Q?sHY8TgnZjc78mIj8xVEN/FPZFqT0SXkCjl2wtvrOYm/Gl80qEofLNyJ+0mNP?=
+ =?us-ascii?Q?xRd8W8J6764uoL7jJKE2nJn8lPNFdCi27lvUbgrUGTrjQKNZ/JlYjFdiiGcP?=
+ =?us-ascii?Q?i0LPuxT/KyH8o8wAPNo7ALCJZ6l/F/xUFyTZaPgPc8aAtGe0xf/dY2Q2hO0T?=
+ =?us-ascii?Q?TYTZgaI3uoUV++loURNkNe1qZpis3T3GrS+Pr46W82766FM/3KiIw83rYByF?=
+ =?us-ascii?Q?RjY0sIwVQY+US+aKe85jA0xcQMy759fF0U/n1r46NCcZ+QN+n0ZGtbhtvxB7?=
+ =?us-ascii?Q?Pt46JjvqeS6JjdBTcIEY7dZfrBPM8BztOWDaSCyw6/QWMrCa6fJviXPWCAbZ?=
+ =?us-ascii?Q?7QZlJVWUb+wdKjiSWYkUYma5LE+hiWhi+kdeefz+bWHiU/iVmv+E5pGfomC3?=
+ =?us-ascii?Q?4v53Dol/CvXwgF92/Cm53LrDomLKaN5dysHNp0+vT2mdzkhTaG2PON9ba7ec?=
+ =?us-ascii?Q?vnPbL/GAUdhG/X1MGt5usLm7sh4aWNbhGVPAuYxkGssxIEn6ex5L5bdAzdpO?=
+ =?us-ascii?Q?gq4htk/N0MuFQ+pDGIO6tZk+CM0dAPEuP1zr5jFYqax9KdNJW1bpICArDGFg?=
+ =?us-ascii?Q?guv8It3Gt4s0gH0ipvvOJYm3/iO0ewQUstyL5NH1llRkuRP9tg=3D=3D?=
 X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(36860700013)(376014)(1800799024)(82310400026);DIR:OUT;SFP:1101;
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(1800799024)(376014)(82310400026)(36860700013);DIR:OUT;SFP:1101;
 X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 06 Nov 2024 11:30:46.9986
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 06 Nov 2024 11:30:18.6297
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: a4e9391f-2e24-4109-2e64-08dcfe56757d
+X-MS-Exchange-CrossTenant-Network-Message-Id: bd61e8c4-7787-4cef-8ac1-08dcfe567456
 X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
 X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
 X-MS-Exchange-CrossTenant-AuthSource:
-	SJ5PEPF000001D1.namprd05.prod.outlook.com
+	SJ5PEPF000001D4.namprd05.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Anonymous
 X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY5PR12MB6599
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR12MB4138
 
-Add documentation for the amd_3d_vcache sysfs bus platform driver
-interface so that userspace applications can use it to change mode
-preferences, either frequency or cache.
+AMD 3D V-Cache Technology significantly enhances per-core performance by
+increasing the amount of L3 cache available—up to three times compared
+to traditional architectures. This large cache allows for quicker access
+to frequently used data, minimizing latency and boosting overall
+efficiency in tasks that depend heavily on rapid data retrieval.
 
-Co-developed-by: Perry Yuan <perry.yuan@amd.com>
-Signed-off-by: Perry Yuan <perry.yuan@amd.com>
-Co-developed-by: Mario Limonciello <mario.limonciello@amd.com>
-Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
-Reviewed-by: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
-Reviewed-by: Armin Wolf <W_Armin@gmx.de>
-Signed-off-by: Basavaraj Natikar <Basavaraj.Natikar@amd.com>
----
- .../sysfs-bus-platform-drivers-amd_x3d_vcache        | 12 ++++++++++++
- MAINTAINERS                                          |  1 +
- 2 files changed, 13 insertions(+)
+To fully leverage this technology, the AMD 3D V-Cache Optimizer has been
+developed. This patch series introduces two distinct modes: Frequency
+mode and Cache mode.
+
+Frequency Mode: In this setting, the optimizer prioritizes boosting the
+clock speed of the cores. This is particularly advantageous for
+applications and workloads that benefit from higher clock frequencies,
+enabling faster processing of tasks that are less reliant on cache size.
+
+Cache Mode: Conversely, this mode focuses on maximizing the usage of the
+expanded L3 cache. For workloads that are cache-sensitive—such as
+certain gaming applications, data analytics, and other compute-intensive
+processes—this mode allows the system to take full advantage of the
+increased cache capacity, improving data throughput and reducing
+bottlenecks.
+
+Changes in v4:
+	- Directly returned the result of function.
+
+Changes in v3:
+	- Changed the module parameter visibility to 0.
+	- Removed the error log message.
+	- Removed the error condition that will not be triggered.
+	- Protected the data read case.
+	- Moved the acpi_check_dsm check before allocation.
+	- Added PM operations.
+
+Changes in v2:
+	- Used kfree() instead of ACPI_FREE(). 
+	- Changed the ternary operator to an if statement.
+	- Used acpi_check_dsm().
+	- Used devm_mutex_init().
+	- Removed acpi_match_device().
+	- Removed the string format.
+
+Basavaraj Natikar (2):
+  platform/x86/amd: amd_3d_vcache: Add AMD 3D V-Cache optimizer driver
+  platform/x86/amd: amd_3d_vcache: Add sysfs ABI documentation
+
+ .../sysfs-bus-platform-drivers-amd_x3d_vcache |  12 ++
+ MAINTAINERS                                   |   8 +
+ drivers/platform/x86/amd/Kconfig              |  12 ++
+ drivers/platform/x86/amd/Makefile             |   2 +
+ drivers/platform/x86/amd/x3d_vcache.c         | 170 ++++++++++++++++++
+ 5 files changed, 204 insertions(+)
  create mode 100644 Documentation/ABI/testing/sysfs-bus-platform-drivers-amd_x3d_vcache
+ create mode 100644 drivers/platform/x86/amd/x3d_vcache.c
 
-diff --git a/Documentation/ABI/testing/sysfs-bus-platform-drivers-amd_x3d_vcache b/Documentation/ABI/testing/sysfs-bus-platform-drivers-amd_x3d_vcache
-new file mode 100644
-index 000000000000..5ff1f1a8c9b6
---- /dev/null
-+++ b/Documentation/ABI/testing/sysfs-bus-platform-drivers-amd_x3d_vcache
-@@ -0,0 +1,12 @@
-+What:		/sys/bus/platform/drivers/amd_x3d_vcache/AMDI0101:00/amd_x3d_mode
-+Date:           October 2024
-+KernelVersion:	6.13
-+Contact:	Basavaraj Natikar <Basavaraj.Natikar@amd.com>
-+Description:	(RW) AMD 3D V-Cache optimizer allows users to switch CPU core
-+		rankings dynamically.
-+
-+		This file switches between these two modes:
-+		- "frequency" cores within the faster CCD are prioritized before
-+		those in the slower CCD.
-+		- "cache" cores within the larger L3 CCD are prioritized before
-+		those in the smaller L3 CCD.
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 60155effead9..5c29cdc6c1a4 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -970,6 +970,7 @@ M:	Basavaraj Natikar <Basavaraj.Natikar@amd.com>
- R:	Mario Limonciello <mario.limonciello@amd.com>
- L:	platform-driver-x86@vger.kernel.org
- S:	Supported
-+F:	Documentation/ABI/testing/sysfs-bus-platform-drivers-amd_x3d_vcache
- F:	drivers/platform/x86/amd/x3d_vcache.c
- 
- AMD ADDRESS TRANSLATION LIBRARY (ATL)
 -- 
 2.25.1
 
