@@ -1,294 +1,216 @@
-Received: from mout.gmx.net (mout.gmx.net [212.227.15.19])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f41.google.com (mail-pj1-f41.google.com [209.85.216.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2818520C303;
-	Wed,  6 Nov 2024 21:32:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8DE95201110;
+	Wed,  6 Nov 2024 23:20:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730928751; cv=none; b=tFcvWQstdJAgp6P8M1YaRtgJSdZQR4l6YwoKqPKT0DsGGQ7LzGN3mJ6C9iMr0uTZ0Z1u5rl3svgZMg7EA0IBjAljYStKN8ATcF3g/Q+RBgdK7nlwZUZk+7QEyAZyOiG6pYd8R+D7A/RwtHAQ555EOCbqvU2KrdPwewQUfco+O4Q=
+	t=1730935256; cv=none; b=phh1CWuJWRBsJqdjhm6xXJcZ//ALsF8dhKt48qf7CPGLZJan3tB+Qj2wVFfXtd36MrjEStwuNzgV6Jwyx80/oTCa4GGmWBAfc9JZtFw6Yp7u+ct4DlCSQ87BR16VhHPMqFKs82rVONaLlNVMN3xAoS9alwG1R9kczZLrShak3KM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730928751; c=relaxed/simple;
-	bh=gwhlm0CCnwYi/tqwFOQv659Bi7VoLJYF96hPb74QQoI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=kocL0LFZJe16EW0pFb0g+NwDOQvs74daEeIDLhIGVeAvyz+1JaodtoX22GW2l3JZsll55qacv2ywegJM2ResqPZ8XXSfL/tVE2phy5lm2K7AHwyfN8ZCJQfGxnTbnMqTNtU6G29uqz4f5YGDgvDzMPbNH073To7yty05jkzkhLY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b=JhD4jIlJ; arc=none smtp.client-ip=212.227.15.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
+	s=arc-20240116; t=1730935256; c=relaxed/simple;
+	bh=QYFVfPVttD6bKYWbid/Cc+HJWPnXtf/0yYKtU24Vvh0=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=ot2CeuzKxyUjjAhfMODMNkF8GOpFk17BtVD8h9cxHeIGgFKRka8Vv3mbkdV6ex3Q6T6ooOHDaDlxPnSjeVntsXavdurW0xgjpdq/IdO00s65rEETe57KCkBbzO33Jmo7OWgtkTAbzC6XKAmcl3jOU1XQEmVKPtmUBojoKcRevEk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=DmVUMFjj; arc=none smtp.client-ip=209.85.216.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b="JhD4jIlJ"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.de;
-	s=s31663417; t=1730928686; x=1731533486; i=w_armin@gmx.de;
-	bh=gwhlm0CCnwYi/tqwFOQv659Bi7VoLJYF96hPb74QQoI=;
-	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:To:Cc:
-	 References:From:In-Reply-To:Content-Type:
-	 Content-Transfer-Encoding:cc:content-transfer-encoding:
-	 content-type:date:from:message-id:mime-version:reply-to:subject:
-	 to;
-	b=JhD4jIlJSSYBbguusVBxMeuMst0Lo4r7MixN2nq2erM2Yw4E/WvXLWAmbcG9QoBq
-	 RpFsnxq91NGGPg/8TuqmnW8B8cFn3OcJf17rJbbXHqUKsLMhDLCxE3rMH9dyqMy2T
-	 Q4mOSIhW40mSFmyZ/Eg9sWAQz7ECUVbAVx6EtiR3F2RjyaDLE8WQ26NEMKCxkDELb
-	 XiU2MJW7B/Oyza/W/j3x6n0KrHTspWHeglIY308CesKUZOfObMP4t3cAzUyeTaU46
-	 QaMub3GcJiubFiUfcwGXi0SFEW0MUi1OgH3HranpYSfolsQ5VVP87GNOR3YTP+ITV
-	 nva4MXH9OZO1+lzSAw==
-X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
-Received: from [141.30.226.129] ([141.30.226.129]) by mail.gmx.net (mrgmx005
- [212.227.17.190]) with ESMTPSA (Nemesis) id 1M8ykW-1tDlyC2SRi-003165; Wed, 06
- Nov 2024 22:31:26 +0100
-Message-ID: <ffae13ae-ed92-44a0-ae15-b6b941620c8a@gmx.de>
-Date: Wed, 6 Nov 2024 22:31:23 +0100
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DmVUMFjj"
+Received: by mail-pj1-f41.google.com with SMTP id 98e67ed59e1d1-2e2b549799eso286484a91.3;
+        Wed, 06 Nov 2024 15:20:54 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1730935254; x=1731540054; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=204I192wZq57uv/twISUsqu7G8IXzQ6X9WInp1dTzqI=;
+        b=DmVUMFjjcDcgYNrxMG+Rrzd2jfm1XH2jiAgXe9Rgvdhrg4IiM5UUDqu66kLcqOwVYZ
+         ItaJvTXAanxnSuD9ODPqrVolJ2p124FFd5qIpVKbt0FIXBOEMfvnM2cPFnRtiO/QCvFa
+         /J/VlOQW1QNlz9cbmmVD1EkDygCeoWgjGuaKVqwaPB9BybQw1Y3k+DjIhrSIPyGyYz7t
+         lnHdVpkAt0AAbl6WDHvT32/ivS9sG7nY2qJj4DVb+WHJCsnAuSFMJFjL0bVmmhvXVywV
+         GRFgRzLoJ9zc36ZdsHEgSjA4DqOWLSb8946Me4MFnLk2k8/N4uCFnUdmuGRKqYmHNAVt
+         d2vg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1730935254; x=1731540054;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=204I192wZq57uv/twISUsqu7G8IXzQ6X9WInp1dTzqI=;
+        b=cgFe8IsuAtsNq+VrZgXZCFjjrbs6p555lgab4uwDBrRUqteJzuwyjoMIjRLFr45mvc
+         3egTxQO6xVobCHpJUIWsxsDChpHL7wrLyPTTKl3EIcfcIYWGTJ3+8ODV8ofllzEHw71X
+         6f9w4TgHNhUFILUiIUdtGeHz2U+WTeRPbVRnVSZHzV6prMRI0kqXwdcPF8rheb6QAvOX
+         p/1OOPaJrNHzMKPjowUaCYv0rCwK58Dp00uhLGifRc+7MpEUsNQEc8UpJ0hYaHgmbbvO
+         KBaaFeq7PTMsdY42dKvxFgEdZDzEy0le8oGJ8FrrVnRcyUN29MZa8jChWtg7FTOS5yxe
+         ootg==
+X-Forwarded-Encrypted: i=1; AJvYcCUSc8HjGUsXf4ejs7n54Lx99revhDGoB3N97c4LnDl7KQqqMdq4ud8W0t82JtZGqntIXzjAPp0X6c+x4tU=@vger.kernel.org, AJvYcCXtXcupZjBzyoqBSA6xaB5klA4ojL+r8PPwL/w47nyftMzBFCbuJeDGe4IZljQ2E7x+vs8FmfvJ0spRPT7DL8PSg7q1Kw==@vger.kernel.org
+X-Gm-Message-State: AOJu0YxmJZL0YNun8pjndQYMxXvAduusBqLzevNlvHZ/15nZTWp6b+wl
+	AsZgdGoImIj6++GjaPXEX7Nk63eEQWvLNc8zBp5yoaEVvzAKVJe4f6N5dAFeS/Ylnpjz1pb/YuE
+	g1glMg7P/7EbyVbWYr8dgO1mZzIs=
+X-Google-Smtp-Source: AGHT+IHAG8gKLSuZQfbAvvV3qyphofMRiOQ8lRzggSaM5XMmTSeYZMvPa8rkRpndDbwCuNCRzXjDuskhRcs63GCtkok=
+X-Received: by 2002:a17:90b:1c85:b0:2e2:9e64:c481 with SMTP id
+ 98e67ed59e1d1-2e94c2e2caamr30858391a91.22.1730935253822; Wed, 06 Nov 2024
+ 15:20:53 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 16/20] ACPI: platform_profile: Make sure all profile
- handlers agree on profile
-To: Mario Limonciello <mario.limonciello@amd.com>,
- Hans de Goede <hdegoede@redhat.com>,
- =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Cc: "Rafael J . Wysocki" <rafael@kernel.org>, Len Brown <lenb@kernel.org>,
- Maximilian Luz <luzmaximilian@gmail.com>, Lee Chun-Yi <jlee@suse.com>,
- Shyam Sundar S K <Shyam-sundar.S-k@amd.com>,
- Corentin Chary <corentin.chary@gmail.com>, "Luke D . Jones"
- <luke@ljones.dev>, Ike Panhc <ike.pan@canonical.com>,
- Henrique de Moraes Holschuh <hmh@hmh.eng.br>,
- Alexis Belmonte <alexbelm48@gmail.com>,
- =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>,
- Ai Chao <aichao@kylinos.cn>, Gergo Koteles <soyer@irl.hu>,
- open list <linux-kernel@vger.kernel.org>,
- "open list:ACPI" <linux-acpi@vger.kernel.org>,
- "open list:MICROSOFT SURFACE PLATFORM PROFILE DRIVER"
- <platform-driver-x86@vger.kernel.org>,
- "open list:THINKPAD ACPI EXTRAS DRIVER"
- <ibm-acpi-devel@lists.sourceforge.net>,
- Mark Pearson <mpearson-lenovo@squebb.ca>,
- Matthew Schwartz <matthew.schwartz@linux.dev>
-References: <20241105153316.378-1-mario.limonciello@amd.com>
- <20241105153316.378-17-mario.limonciello@amd.com>
- <a2bde9c6-6aa3-445b-b27b-2338d78d132d@gmx.de>
- <3cbbecf7-bba4-4a45-97da-ec461609b2f9@amd.com>
-Content-Language: en-US
-From: Armin Wolf <W_Armin@gmx.de>
-In-Reply-To: <3cbbecf7-bba4-4a45-97da-ec461609b2f9@amd.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+References: <20241105235505.8493-1-vishnuocv@gmail.com> <f3a50d1a-aa0c-4cf5-9138-a1da4ebdc671@redhat.com>
+In-Reply-To: <f3a50d1a-aa0c-4cf5-9138-a1da4ebdc671@redhat.com>
+From: Vishnu Sankar <vishnuocv@gmail.com>
+Date: Thu, 7 Nov 2024 08:20:16 +0900
+Message-ID: <CABxCQKsR=uyxAHnk0S10i8bXQ_5aivQj61s06BKFCOhu7uggLA@mail.gmail.com>
+Subject: Re: [PATCH] Thinkpad_acpi: Fix for ThinkPad's with ECFW showing
+ incorrect fan speed
+To: Hans de Goede <hdegoede@redhat.com>
+Cc: ilpo.jarvinen@linux.intel.com, ibm-acpi-devel@lists.sourceforge.net, 
+	platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Vishnu Sankar <vsankar@lenovo.com>, Mark Pearson <mpearson-lenovo@squebb.ca>
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:rdO59OfRmgLFb0o/Ei2QWw43xNjk+/uC3OsbcLVnL5+STiOAsX6
- ptwFPk1YkC4G5gByAxH1OWXd3GlukMXON4v9T3zVxe811NY59ugSFDe+qQBq9A1hUKzFVlp
- 05IMIMlBwRpteaQIauIP+uE5LTlNzdcTY+JkFBEbCc7VZ5hDAt/OlclojgGkHanabWTxAqB
- RWhqhdZgVFTM3vSa2xwsg==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:S9DIC7RETd8=;SnmWkfpFKp6edPvDdCtfQ8H33qf
- Z+RqYzn+ARQQWAlCEAvuhRP2q7DdA9y/EAogWBDvTHRYyIBd1BDiWtSH4IZSkRjCieuiPkogM
- StJ8Extc5BFJH0bVD80KayRI+MhJw2SDdJ6EuvWQLoXpLZVdgfcUWldWZ+8SZrwrKArWk1WX+
- P3favAkqeqmv7Kbqwpck4N77mX6+stK0hLydabnf/LyIWDys9SS+SOSGwkup0a65Pr4ofnuY+
- I+DUfgNnLiP9dHaWX3L8SvOVyGTcZwXVQcpbrPl+k+G5ZDGG+HvJ4fPWHHrSdeJAdvx1aWZHb
- R5fL1/oLjaQ2geq6Q6MGd8W/LyRTikpZrELrmH83Z4tYffnVZTMa4rbv9o+c7ZbNZKQ5dRG3t
- YhcaeTIz4ToIXrJxU1QgUN8ylxHckJy5eR5ZDwc1D4aMPcc305aUmMiOlupDbp0R9q4CieOVx
- pQENO49UnhEB6nF3/YJ/XMlQEyAimI712S5/XKIdJtNBzsu2X8jbNQwa2NqNzIs5+m4LjYSRq
- cuxAO7i5/IUeZ/igjzsfUdosBMSaR5vc03tWvFQdFlqJOWdLqZG/GygWpEmhuMAcMkN1Wr4FG
- C2E9GykEzEHmA7K6LibKHG/ROQyCsnaewxKcwxQzVafptVNspH4ig2+eDK7wSWzW/dgIO3408
- y64k9Lfm7wZq/UikJVcoN22NzsYDz9qqO00hzNx/liDgKnz73BNGvwMYUwlIq/T1y8C2xjdAu
- m3uFtp7VwCMBmK7f3biKhpaCTV35vuumQE148yLwmYFTFstjTuVL42RRd81//Kdr45xBxSkDy
- 1USXJSFXkToQV0jmz9atQ98jwj4MGGVgF/6DFZI3dgwdk=
 
-Am 06.11.24 um 22:25 schrieb Mario Limonciello:
+Thanks a lot for accepting this!
 
-> On 11/6/2024 14:58, Armin Wolf wrote:
->> Am 05.11.24 um 16:33 schrieb Mario Limonciello:
->>
->>> If for any reason multiple profile handlers don't agree on the profile
->>> return the custom profile.
->>>
->>> Reviewed-by: Mark Pearson <mpearson-lenovo@squebb.ca>
->>> Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
->>> ---
->>> =C2=A0 drivers/acpi/platform_profile.c | 84
->>> +++++++++++++++++++++------------
->>> =C2=A0 1 file changed, 53 insertions(+), 31 deletions(-)
->>>
->>> diff --git a/drivers/acpi/platform_profile.c b/drivers/acpi/
->>> platform_profile.c
->>> index d8c2d195106c2..7861fccc2e58c 100644
->>> --- a/drivers/acpi/platform_profile.c
->>> +++ b/drivers/acpi/platform_profile.c
->>> @@ -280,55 +280,77 @@ static ssize_t
->>> platform_profile_choices_show(struct device *dev,
->>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 return _commmon_choices_show(aggregate,=
- buf);
->>> =C2=A0 }
->>>
->>> -static ssize_t platform_profile_show(struct device *dev,
->>> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 struct device_attribute *att=
-r,
->>> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 char *buf)
->>> +/**
->>> + * _aggregate_profiles - Aggregate the profiles for legacy sysfs
->>> interface
->>> + * @dev: The device
->>> + * @data: The profile to return
->>> + * Return: 0 on success, -errno on failure
->>> + */
->>> +static int _aggregate_profiles(struct device *dev, void *data)
->>> =C2=A0 {
->>> -=C2=A0=C2=A0=C2=A0 enum platform_profile_option profile =3D PLATFORM_=
-PROFILE_BALANCED;
->>> +=C2=A0=C2=A0=C2=A0 enum platform_profile_option *profile =3D data;
->>> +=C2=A0=C2=A0=C2=A0 enum platform_profile_option val;
->>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 int err;
->>>
->>> -=C2=A0=C2=A0=C2=A0 scoped_cond_guard(mutex_intr, return -ERESTARTSYS,
->>> &profile_lock) {
->>> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (!cur_profile)
->>> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 re=
-turn -ENODEV;
->>> +=C2=A0=C2=A0=C2=A0 err =3D get_class_profile(dev, &val);
->>> +=C2=A0=C2=A0=C2=A0 if (err)
->>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 return err;
->>>
->>> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 err =3D cur_profile->profi=
-le_get(cur_profile, &profile);
->>> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (err)
->>> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 re=
-turn err;
->>> -=C2=A0=C2=A0=C2=A0 }
->>> +=C2=A0=C2=A0=C2=A0 if (*profile !=3D PLATFORM_PROFILE_LAST && *profil=
-e !=3D val)
->>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 *profile =3D PLATFORM_PROF=
-ILE_CUSTOM;
->>> +=C2=A0=C2=A0=C2=A0 else
->>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 *profile =3D val;
->>>
->>> -=C2=A0=C2=A0=C2=A0 /* Check that profile is valid index */
->>> -=C2=A0=C2=A0=C2=A0 if (WARN_ON((profile < 0) || (profile >=3D
->>> ARRAY_SIZE(profile_names))))
->>> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 return -EIO;
->>
->> Please check the returned value from profile_get() first before doing
->> the custom platform
->> profile check.
+On Wed, Nov 6, 2024 at 9:02=E2=80=AFPM Hans de Goede <hdegoede@redhat.com> =
+wrote:
 >
-> You might have missed it - that's part of get_class_profile() already.
+> Hi,
 >
-You are right, my bad.
+> On 6-Nov-24 12:55 AM, Vishnu Sankar wrote:
+> > Fix for Thinkpad's with ECFW showing incorrect fan speed.
+> > Some models use decimal instead of hexadecimal for the fan speed stored
+> > in the EC registers.
+> > for eg: the rpm register will have 0x4200 instead of 0x1068.
+> > Here the actual RPM is "4200" in decimal.
+> >
+> > A quirk added to handle this.
+>
+> Thank you for your patch/series, I've applied this patch
+> (series) to my review-hans branch:
+> https://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x8=
+6.git/log/?h=3Dreview-hans
+>
+> > Signed-off-by: Vishnu Sankar <vishnuocv@gmail.com>
+> > Signed-off-by: Vishnu Sankar <vsankar@lenovo.com>
+>
+> Note I have dropped this second duplicate Signed-off-by,
+> I have kept the first one since that matches the From:
+> from this email / the git commit author field.
+Acked.
+>
+> I will include this patch in my next fixes pull-req to Linus
+> for the current kernel development cycle.
+Thank you!
+>
+> Regards,
+>
+> Hans
+>
+>
+>
+>
+>
+> > Suggested-by: Mark Pearson <mpearson-lenovo@squebb.ca>
+> > ---
+> >  drivers/platform/x86/thinkpad_acpi.c | 28 +++++++++++++++++++++++++---
+> >  1 file changed, 25 insertions(+), 3 deletions(-)
+> >
+> > diff --git a/drivers/platform/x86/thinkpad_acpi.c b/drivers/platform/x8=
+6/thinkpad_acpi.c
+> > index 4c1b0553f872..6371a9f765c1 100644
+> > --- a/drivers/platform/x86/thinkpad_acpi.c
+> > +++ b/drivers/platform/x86/thinkpad_acpi.c
+> > @@ -7936,6 +7936,7 @@ static u8 fan_control_resume_level;
+> >  static int fan_watchdog_maxinterval;
+> >
+> >  static bool fan_with_ns_addr;
+> > +static bool ecfw_with_fan_dec_rpm;
+> >
+> >  static struct mutex fan_mutex;
+> >
+> > @@ -8682,7 +8683,11 @@ static ssize_t fan_fan1_input_show(struct device=
+ *dev,
+> >       if (res < 0)
+> >               return res;
+> >
+> > -     return sysfs_emit(buf, "%u\n", speed);
+> > +     /* Check for fan speeds displayed in hexadecimal */
+> > +     if (!ecfw_with_fan_dec_rpm)
+> > +             return sysfs_emit(buf, "%u\n", speed);
+> > +     else
+> > +             return sysfs_emit(buf, "%x\n", speed);
+> >  }
+> >
+> >  static DEVICE_ATTR(fan1_input, S_IRUGO, fan_fan1_input_show, NULL);
+> > @@ -8699,7 +8704,11 @@ static ssize_t fan_fan2_input_show(struct device=
+ *dev,
+> >       if (res < 0)
+> >               return res;
+> >
+> > -     return sysfs_emit(buf, "%u\n", speed);
+> > +     /* Check for fan speeds displayed in hexadecimal */
+> > +     if (!ecfw_with_fan_dec_rpm)
+> > +             return sysfs_emit(buf, "%u\n", speed);
+> > +     else
+> > +             return sysfs_emit(buf, "%x\n", speed);
+> >  }
+> >
+> >  static DEVICE_ATTR(fan2_input, S_IRUGO, fan_fan2_input_show, NULL);
+> > @@ -8775,6 +8784,7 @@ static const struct attribute_group fan_driver_at=
+tr_group =3D {
+> >  #define TPACPI_FAN_2CTL              0x0004          /* selects fan2 c=
+ontrol */
+> >  #define TPACPI_FAN_NOFAN     0x0008          /* no fan available */
+> >  #define TPACPI_FAN_NS                0x0010          /* For EC with no=
+n-Standard register addresses */
+> > +#define TPACPI_FAN_DECRPM    0x0020          /* For ECFW's with RPM in=
+ register as decimal */
+> >
+> >  static const struct tpacpi_quirk fan_quirk_table[] __initconst =3D {
+> >       TPACPI_QEC_IBM('1', 'Y', TPACPI_FAN_Q1),
+> > @@ -8803,6 +8813,7 @@ static const struct tpacpi_quirk fan_quirk_table[=
+] __initconst =3D {
+> >       TPACPI_Q_LNV3('R', '1', 'D', TPACPI_FAN_NS),    /* 11e Gen5 GL-R =
+*/
+> >       TPACPI_Q_LNV3('R', '0', 'V', TPACPI_FAN_NS),    /* 11e Gen5 KL-Y =
+*/
+> >       TPACPI_Q_LNV3('N', '1', 'O', TPACPI_FAN_NOFAN), /* X1 Tablet (2nd=
+ gen) */
+> > +     TPACPI_Q_LNV3('R', '0', 'Q', TPACPI_FAN_DECRPM),/* L480 */
+> >  };
+> >
+> >  static int __init fan_init(struct ibm_init_struct *iibm)
+> > @@ -8847,6 +8858,13 @@ static int __init fan_init(struct ibm_init_struc=
+t *iibm)
+> >               tp_features.fan_ctrl_status_undef =3D 1;
+> >       }
+> >
+> > +     /* Check for the EC/BIOS with RPM reported in decimal*/
+> > +     if (quirks & TPACPI_FAN_DECRPM) {
+> > +             pr_info("ECFW with fan RPM as decimal in EC register\n");
+> > +             ecfw_with_fan_dec_rpm =3D 1;
+> > +             tp_features.fan_ctrl_status_undef =3D 1;
+> > +     }
+> > +
+> >       if (gfan_handle) {
+> >               /* 570, 600e/x, 770e, 770x */
+> >               fan_status_access_mode =3D TPACPI_FAN_RD_ACPI_GFAN;
+> > @@ -9067,7 +9085,11 @@ static int fan_read(struct seq_file *m)
+> >               if (rc < 0)
+> >                       return rc;
+> >
+> > -             seq_printf(m, "speed:\t\t%d\n", speed);
+> > +             /* Check for fan speeds displayed in hexadecimal */
+> > +             if (!ecfw_with_fan_dec_rpm)
+> > +                     seq_printf(m, "speed:\t\t%d\n", speed);
+> > +             else
+> > +                     seq_printf(m, "speed:\t\t%x\n", speed);
+> >
+> >               if (fan_status_access_mode =3D=3D TPACPI_FAN_RD_TPEC_NS) =
+{
+> >                       /*
+>
 
->>
->>> +=C2=A0=C2=A0=C2=A0 return 0;
->>> +}
->>> +
->>> +/**
->>> + * platform_profile_show - Show the current profile for legacy
->>> sysfs interface
->>> + * @dev: The device
->>> + * @attr: The attribute
->>> + * @buf: The buffer to write to
->>> + * Return: The number of bytes written
->>> + */
->>> +static ssize_t platform_profile_show(struct device *dev,
->>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 struct device_attribut=
-e *attr,
->>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 char *buf)
->>> +{
->>> +=C2=A0=C2=A0=C2=A0 enum platform_profile_option profile =3D PLATFORM_=
-PROFILE_LAST;
->>> +=C2=A0=C2=A0=C2=A0 int err;
->>> +
->>> +=C2=A0=C2=A0=C2=A0 err =3D class_for_each_device(&platform_profile_cl=
-ass, NULL,
->>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 &profile, _aggregate_profile=
-s);
->>
->> Missing error handling.
->>
->
-> Right, got it.
->
->>>
->>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 return sysfs_emit(buf, "%s\n", profile_=
-names[profile]);
->>> =C2=A0 }
->>>
->>> +/**
->>> + * platform_profile_store - Set the profile for legacy sysfs interfac=
-e
->>> + * @dev: The device
->>> + * @attr: The attribute
->>> + * @buf: The buffer to read from
->>> + * @count: The number of bytes to read
->>> + * Return: The number of bytes read
->>> + */
->>> =C2=A0 static ssize_t platform_profile_store(struct device *dev,
->>> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0 struct device_attribute *attr,
->>> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0 const char *buf, size_t count)
->>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 struct device_at=
-tribute *attr,
->>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 const char *buf,=
- size_t count)
->>> =C2=A0 {
->>> -=C2=A0=C2=A0=C2=A0 int err, i;
->>> +=C2=A0=C2=A0=C2=A0 int ret;
->>> +=C2=A0=C2=A0=C2=A0 int i;
->>>
->>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 /* Scan for a matching profile */
->>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 i =3D sysfs_match_string(profile_names,=
- buf);
->>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (i < 0)
->>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 return -EINVAL;
->>> -
->>> -=C2=A0=C2=A0=C2=A0 scoped_cond_guard(mutex_intr, return -ERESTARTSYS,
->>> &profile_lock) {
->>> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (!cur_profile)
->>> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 re=
-turn -ENODEV;
->>> -
->>> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 /* Check that platform sup=
-ports this profile choice */
->>> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (!test_bit(i, cur_profi=
-le->choices))
->>> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 re=
-turn -EOPNOTSUPP;
->>> -
->>> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 err =3D cur_profile->profi=
-le_set(cur_profile, i);
->>> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (err)
->>> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 re=
-turn err;
->>> +=C2=A0=C2=A0=C2=A0 if (i =3D=3D PLATFORM_PROFILE_CUSTOM) {
->>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 pr_warn("Custom profile no=
-t supported for legacy sysfs
->>> interface\n");
->>
->> This would allow userspace applications to spam the kernel log. Please
->> just return -EINVAL here
->> and document this special case inside the interface specification.
->>
-> OK.
->
->> Thanks,
->> Armin Wolf
->>
->>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 return -EINVAL;
->>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 }
->>>
->>> -=C2=A0=C2=A0=C2=A0 sysfs_notify(acpi_kobj, NULL, "platform_profile");
->>> -=C2=A0=C2=A0=C2=A0 return count;
->>> +=C2=A0=C2=A0=C2=A0 ret =3D class_for_each_device(&platform_profile_cl=
-ass, NULL, &i,
->>> _store_class_profile);
->>> +
->>> +=C2=A0=C2=A0=C2=A0 return ret ? ret : count;
->>> =C2=A0 }
->>>
->>> =C2=A0 static DEVICE_ATTR_RO(platform_profile_choices);
->
->
+
+--
