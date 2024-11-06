@@ -1,133 +1,173 @@
-Received: from mail-pl1-f182.google.com (mail-pl1-f182.google.com [209.85.214.182])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mout.gmx.net (mout.gmx.net [212.227.15.15])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A6B2F209F38;
-	Wed,  6 Nov 2024 20:05:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC4EC14F9D9;
+	Wed,  6 Nov 2024 20:56:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730923519; cv=none; b=WPfdJQzs+bGYcw4DrPKVHv0CJHJekHF4ejGtyQvxYmKFRBDYFs1bM/H2yJi+amwdh1g0Copmf/VBH/TwxHd5JBfObn5Yl2b4mesOWgnceP3qj0vkTF44D0u03EAynGF1RnldNtsPpevjZZbIssfj8hLnO5az3eadUI7wqiRjZWY=
+	t=1730926612; cv=none; b=L65mq2+XOLSjvl6d4MXDNS5F7rwPIufYjF/MtH918VwnctyYxxQnzvB0PvxHtEpTT6vDhdh/xCRZlu4UvkLVjHY+S+Qtx8jknLkT+kV/LOkHOlH0Ef3+Y6VpUSfx58ZQKtQlzyECpb79gL5IY5o2vUtOdc8vIVAPCat0ZusTzyE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730923519; c=relaxed/simple;
-	bh=EQyA/ww37V7yAawtBTPhDySHgSA0BwaQRKu2lAhQyPE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=RNC5YuEtsXnctuBFhL5irfpmG4aU0PFZs1scf1DNmq5T1gZyiUZQs97ACDLywuaBbAPtP6u/k6lkd5i6WZflbK4PJ5AX2qkAhDvHXx6EikLT1RZ/IYGOG0gBQw2E5bvcEWOssYsue9DGU10dmZrT5aZDQgYxvi2kTxKCWWBM1oQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=linux.com; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.214.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=linux.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pl1-f182.google.com with SMTP id d9443c01a7336-2113da91b53so1654785ad.3;
-        Wed, 06 Nov 2024 12:05:16 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1730923516; x=1731528316;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=57haWgxVK3Bhz2CTFQJdY/J31Debho+HXpt9b6frcmw=;
-        b=qfQaU53HzKBFTrK0c6g7QuZTQZcv0eDF0o/puRxunjb5tSd1zbHdzDcE7hqEAO+UFp
-         PxZQgwfoN+0lyimRni4rZvwOWdp6xZuNJV3JCY+85JRh1/Heq9nyN0FK7m1RKdv0BvvV
-         GRM6WNNjBwOkDM9xbZ/Y8eXlD0YFBhio0OE10qmrKgu4Qx/8Hh6tMKyrKpOC/P1cwTtI
-         DWxdv45irbyihb3lhvqa8b5gCfiMgissLtxHPnA/mJYzB4y3m3xyBuQ9f1Yf2dOkEdjJ
-         22VXGDmGaQXZ56RcMDkBKuYhPzmG2AmBTqttjDylsmp5TscccQgb8H5CBvjZMvdOseiR
-         aO0A==
-X-Forwarded-Encrypted: i=1; AJvYcCU0GDEsAiWFCEst9CSN9/DmbbxduKYZZk7rhqGFukbdKq1TCX7Gf0ouH6aW3xON+HbZzV6P+51AL4lggnM0@vger.kernel.org, AJvYcCU3bK/dnS61xtactLsUT/H8ceWq2QAY9X5ttnwMR6MLthbsACW1vMC5bvgp3WGjx88B8CXFEi7HHX3+VVdsc61bewfeXg==@vger.kernel.org, AJvYcCUTWrBxj8Vtryya959PAL1lt/E8WgcXQoXN9o2r5PLabJpHEjLKo4AKZZzsTyrgKqyOGtkOEaC5CuNS@vger.kernel.org, AJvYcCUmWVTlNwrWN6pKVgypvY5Q89csehOTfRkPaRI103wotpJsHYP8o9vWWOGFRqvOtl2TGsl2vq1UQEgx@vger.kernel.org, AJvYcCVKJ139WZ9zOvaUcuEOBoS/OYD3vxot8UDqchV+ZsU4YsFkYlHreuxaucdHC91NLD9S3G5MBMI3HcY70g==@vger.kernel.org, AJvYcCWyWpKjacsMLD2XKDtaRNGwD3uS1Hz3FH3g0415XD1NylBv+jHhxbx5QT//lndYw7nNo+5IF+Wb6W5cUg==@vger.kernel.org, AJvYcCX/RGyludkZbuL0ELUN5L/nMt5WQ+bUcX7Gul+KuIisNTSm5Bhnu7TjrBzmSryLkxNp3aDM/rTD1lEjKA==@vger.kernel.org, AJvYcCXBeghjvHd/iZVVl9GSUb00OGlFIfDYHghaZHijw/+7fQ/EL2PMww96L1scKGB78gCySbaZJ/hQ8bQr@vger.kernel.org, AJvYcCXb5VHrjkRtCQ6CNtuQ36/NhyfIrMJNGLQQs22D/PcpyNbCrFoVSldaiPopIw9TxsTMjES1j+zdq30JFlh+@vger.kernel.org
-X-Gm-Message-State: AOJu0Yyk4xaEQeTM8S2Ack0oUZV412sLvANUkNCJ3VS5NDapaKXm7oZm
-	WNaTVw9e/07eEb3zVwkNkAtfpuIwf7OPDGUGJmOzY3KvcpoJeqhP
-X-Google-Smtp-Source: AGHT+IFmoIbZw8g1IipDn3Lp+ri/9C7OdJSPor3hPH1pRa7RYRF3y6lGuH/8ZaeEQ1eFo8eAFPaCWQ==
-X-Received: by 2002:a17:902:cecd:b0:20c:a97d:cc7f with SMTP id d9443c01a7336-210c6c3ec78mr567878865ad.41.1730923515866;
-        Wed, 06 Nov 2024 12:05:15 -0800 (PST)
-Received: from localhost (fpd11144dd.ap.nuro.jp. [209.17.68.221])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-211057c076bsm99997795ad.197.2024.11.06.12.05.14
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 06 Nov 2024 12:05:15 -0800 (PST)
-Date: Thu, 7 Nov 2024 05:05:13 +0900
-From: Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>
-To: Thomas =?utf-8?Q?Wei=C3=9Fschuh?= <linux@weissschuh.net>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
-	Davidlohr Bueso <dave@stgolabs.net>,
-	Jonathan Cameron <jonathan.cameron@huawei.com>,
-	Dave Jiang <dave.jiang@intel.com>,
-	Alison Schofield <alison.schofield@intel.com>,
-	Vishal Verma <vishal.l.verma@intel.com>,
-	Ira Weiny <ira.weiny@intel.com>,
-	Alex Deucher <alexander.deucher@amd.com>,
-	Christian =?utf-8?B?S8O2bmln?= <christian.koenig@amd.com>,
-	Xinhui Pan <Xinhui.Pan@amd.com>, David Airlie <airlied@gmail.com>,
-	Simona Vetter <simona@ffwll.ch>,
-	Dennis Dalessandro <dennis.dalessandro@cornelisnetworks.com>,
-	Jason Gunthorpe <jgg@ziepe.ca>, Leon Romanovsky <leon@kernel.org>,
-	Tudor Ambarus <tudor.ambarus@linaro.org>,
-	Pratyush Yadav <pratyush@kernel.org>,
-	Michael Walle <mwalle@kernel.org>,
-	Miquel Raynal <miquel.raynal@bootlin.com>,
-	Richard Weinberger <richard@nod.at>,
-	Vignesh Raghavendra <vigneshr@ti.com>,
-	Naveen Krishna Chatradhi <naveenkrishna.chatradhi@amd.com>,
-	Carlos Bilbao <carlos.bilbao.osdev@gmail.com>,
-	Hans de Goede <hdegoede@redhat.com>,
-	Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>,
-	"David E. Box" <david.e.box@linux.intel.com>,
-	"James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>,
-	"Martin K. Petersen" <martin.petersen@oracle.com>,
-	Richard Henderson <richard.henderson@linaro.org>,
-	Matt Turner <mattst88@gmail.com>,
-	Frederic Barrat <fbarrat@linux.ibm.com>,
-	Andrew Donnellan <ajd@linux.ibm.com>, Arnd Bergmann <arnd@arndb.de>,
-	Logan Gunthorpe <logang@deltatee.com>,
-	"K. Y. Srinivasan" <kys@microsoft.com>,
-	Haiyang Zhang <haiyangz@microsoft.com>,
-	Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
-	Dan Williams <dan.j.williams@intel.com>,
-	linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
-	linux-cxl@vger.kernel.org, amd-gfx@lists.freedesktop.org,
-	dri-devel@lists.freedesktop.org, linux-rdma@vger.kernel.org,
-	linux-mtd@lists.infradead.org, platform-driver-x86@vger.kernel.org,
-	linux-scsi@vger.kernel.org, linux-usb@vger.kernel.org,
-	linux-alpha@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-	linux-hyperv@vger.kernel.org
-Subject: Re: [PATCH v2 02/10] sysfs: introduce callback
- attribute_group::bin_size
-Message-ID: <20241106200513.GB174958@rocinante>
-References: <20241103-sysfs-const-bin_attr-v2-0-71110628844c@weissschuh.net>
- <20241103-sysfs-const-bin_attr-v2-2-71110628844c@weissschuh.net>
+	s=arc-20240116; t=1730926612; c=relaxed/simple;
+	bh=emDfYC5gsNT0ZkPmo70caNBsgspO/o843GkMMi2Sc5M=;
+	h=Message-ID:Date:MIME-Version:From:Subject:To:Cc:References:
+	 In-Reply-To:Content-Type; b=fuQxa19eSIdS2PLe3Yt4g+RMBsFjO78AjmptSngbzTORr7RR2e7r7o/dtgsFqkBOY724vPMTT6ewpt8nK4hg7N5m+fI1vlwBF7XOmAaMGEF2VMDtDYEIgrD7dctRuaVnVd5EsGqbLfWgTknqueg3pw3iV5woM+oypc4UgknlEOk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b=WCKKsTn5; arc=none smtp.client-ip=212.227.15.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b="WCKKsTn5"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.de;
+	s=s31663417; t=1730926543; x=1731531343; i=w_armin@gmx.de;
+	bh=7gLnTY8NsEwYaE8L+E3HF94pvqFpm0jDrjzUD9d3p5g=;
+	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:From:Subject:To:
+	 Cc:References:In-Reply-To:Content-Type:Content-Transfer-Encoding:
+	 cc:content-transfer-encoding:content-type:date:from:message-id:
+	 mime-version:reply-to:subject:to;
+	b=WCKKsTn5HO/lJStk7LCXkocpUcy9uj/f3rzvrO+M1mq2Dk0rTQDVUI0u8uJfcQ3Z
+	 Ulr8hSqOb159NfweSpLdpROarVy9Yn4MZHkXSi2aBCCFO0QPYw1hjm499x34Hb7Us
+	 8WgddsBKzumz44QDh0Nzd7CnKh/fvTyfAl6YUfvSvuZzlMglxOdPszr7HBTExVQrg
+	 v6Di12v5knWSDcWlm63XTJEPGmC6q0lPVgQ5H7Owa8+8os4sRORGqtsU+xjD4PMRJ
+	 EDTjIPyk3iaO+/rn1hwlHfjZdP6Xk6rS9xHegZVGLiyd2qkwzTluUQDR0vy9hs3CB
+	 zPtMl04zMq+MuH5eZA==
+X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
+Received: from [141.30.226.129] ([141.30.226.129]) by mail.gmx.net (mrgmx005
+ [212.227.17.190]) with ESMTPSA (Nemesis) id 1MrhUE-1teYzT2C2O-00kIaB; Wed, 06
+ Nov 2024 21:55:43 +0100
+Message-ID: <2d9e5ff1-1e4b-4e50-86bd-970c652c39c7@gmx.de>
+Date: Wed, 6 Nov 2024 21:55:40 +0100
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20241103-sysfs-const-bin_attr-v2-2-71110628844c@weissschuh.net>
+User-Agent: Mozilla Thunderbird
+From: Armin Wolf <W_Armin@gmx.de>
+Subject: Re: [PATCH v4 17/20] ACPI: platform_profile: Check all profile
+ handler to calculate next
+To: Mario Limonciello <mario.limonciello@amd.com>,
+ Hans de Goede <hdegoede@redhat.com>,
+ =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Cc: "Rafael J . Wysocki" <rafael@kernel.org>, Len Brown <lenb@kernel.org>,
+ Maximilian Luz <luzmaximilian@gmail.com>, Lee Chun-Yi <jlee@suse.com>,
+ Shyam Sundar S K <Shyam-sundar.S-k@amd.com>,
+ Corentin Chary <corentin.chary@gmail.com>, "Luke D . Jones"
+ <luke@ljones.dev>, Ike Panhc <ike.pan@canonical.com>,
+ Henrique de Moraes Holschuh <hmh@hmh.eng.br>,
+ Alexis Belmonte <alexbelm48@gmail.com>,
+ =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>,
+ Ai Chao <aichao@kylinos.cn>, Gergo Koteles <soyer@irl.hu>,
+ open list <linux-kernel@vger.kernel.org>,
+ "open list:ACPI" <linux-acpi@vger.kernel.org>,
+ "open list:MICROSOFT SURFACE PLATFORM PROFILE DRIVER"
+ <platform-driver-x86@vger.kernel.org>,
+ "open list:THINKPAD ACPI EXTRAS DRIVER"
+ <ibm-acpi-devel@lists.sourceforge.net>,
+ Mark Pearson <mpearson-lenovo@squebb.ca>,
+ Matthew Schwartz <matthew.schwartz@linux.dev>
+References: <20241105153316.378-1-mario.limonciello@amd.com>
+ <20241105153316.378-18-mario.limonciello@amd.com>
+Content-Language: en-US
+In-Reply-To: <20241105153316.378-18-mario.limonciello@amd.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:6T44JRw88vFGOMiDnicxFdYWi3AFF8XZYz2jm6IoJecfW0MTqyb
+ UUXLkU9Dy7igZOWeyOIFHujSEizR6xzbakuu5lQ5TveTuQ5q5VrETF1HacqIyWjCDXANXw/
+ 4T5j2HI53xpWt7TRnqS79KZHYxfoZym6+E2gSRYF1IsyRHbhKEBqMKY6kSyX6fUBVJPB1Cn
+ yaYbSc2uLzGQXJdDW5Zdg==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:zaUN1DBUT/U=;7XwXDYxkycQdkmvGQlIt0biBN5h
+ sKXVsc9EZpLNH1olIFhKQXTF0NKu0KeXTc408msvt2F7GfcnWYd2i+e4uLnX04+LdGxfu5pK4
+ lEFumusQDAC73dqvXyvqyOMZnoArvH0hBAeZkOJSV8Wv8PftovDtbj/qF6lJRGY3a4n3QApvZ
+ jZlb6MaHx3YdLSJh3rPs5p9aP7nojgmakB9iFUE7g+k0lIKrZjBF+TrltHK+bMOCoLKSErms7
+ 6nMrm0ZPSFrVMFb7I8A5tFfDQra9FxIMMdOELWsREmjgqRBTIBZ+9FSxexakIOQJyyH03iMeR
+ Lddy+gjqkjbkjuDCzI1zwh865w5r/5tgQVQSFaH3QRojzW5P5D11OUm9NOAHqlIKRbBLMoVtu
+ uRdxu/6nMI/Teaofl/sVNCGWxTUXhQVdZz/UHm/v9VS3I1XMg0DWV0w8G+KCrL6oYbPtA3PbQ
+ sIo2Q2Q6pm2xGcfQy5OcuJ1mpaNSyLfiB2882Q6iXTlorneWReVPbLYvRDyvXDt/p7yf5Ya9r
+ NZn7aByib01vq512wYb6GPiXShQw/BjowfAK2Y6YmaGvbfHmthKv1RPF+p/bYYmZAM4ySxROM
+ Av685fY24SBKgzb9MV9mObOMgC19CcqO7qAV3cUIAEjZb8NHlUVhG28+5vwwYH8fmb9PAyEWc
+ HfFm6zgyk8eAXRMPVZVnDNxnmam9rSWqvTbXnKjQBDfOACV8YNgul+50evetc/DhvxQMWGuR/
+ evk6ZfmosOaQ1KmWAOuMSSDdE4mtA7uVNNhwtaKGMsANwaIVkwl7NBBr/Q5oG6CJwMBXNbVgJ
+ +/SLqZkNgKDOU6pvdZNHi6gOZeFzrcof1eu+NJhi91P6g=
 
-Hello,
+Am 05.11.24 um 16:33 schrieb Mario Limonciello:
 
-> Several drivers need to dynamically calculate the size of an binary
-> attribute. Currently this is done by assigning attr->size from the
-> is_bin_visible() callback.
-> 
-> This has drawbacks:
-> * It is not documented.
-> * A single attribute can be instantiated multiple times, overwriting the
->   shared size field.
-> * It prevents the structure to be moved to read-only memory.
-> 
-> Introduce a new dedicated callback to calculate the size of the
-> attribute.
+> As multiple platform profile handlers might not all support the same
+> profile, cycling to the next profile could have a different result
+> depending on what handler are registered.
+>
+> Check what is active and supported by all handlers to decide what
+> to do.
+>
+> Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
+> ---
+>   drivers/acpi/platform_profile.c | 35 ++++++++++++++++++---------------
+>   1 file changed, 19 insertions(+), 16 deletions(-)
+>
+> diff --git a/drivers/acpi/platform_profile.c b/drivers/acpi/platform_pro=
+file.c
+> index 7861fccc2e58c..568485e285061 100644
+> --- a/drivers/acpi/platform_profile.c
+> +++ b/drivers/acpi/platform_profile.c
+> @@ -378,34 +378,37 @@ EXPORT_SYMBOL_GPL(platform_profile_notify);
+>
+>   int platform_profile_cycle(void)
+>   {
+> +	enum platform_profile_option next =3D PLATFORM_PROFILE_LAST;
+>   	enum platform_profile_option profile;
+> -	enum platform_profile_option next;
+> +	unsigned long choices;
+>   	int err;
+>
+>   	if (!class_is_registered(&platform_profile_class))
+>   		return -ENODEV;
+>
+> -	scoped_cond_guard(mutex_intr, return -ERESTARTSYS, &profile_lock) {
 
-Would it be possible to have a helper that when run against a specific
-kobject reference, then it would refresh or re-run the size callbacks?
+Since the aggregated choices might change at any moment, we still need
+some locking here.
 
-We have an use case where we resize BARs on demand via sysfs, and currently
-the only way to update the size of each resource sysfs object is to remove
-and added them again, which is a bit crude, and can also be unsafe.
+Thanks,
+Armin Wolf
 
-Hence the question.
-
-There exist the sysfs_update_groups(), but the BAR resource sysfs objects
-are currently, at least not yet, added to any attribute group.
-
-Thank you!
-
-	Krzysztof
+> -		if (!cur_profile)
+> -			return -ENODEV;
+> +	err =3D class_for_each_device(&platform_profile_class, NULL,
+> +				    &profile, _aggregate_profiles);
+> +	if (err)
+> +		return err;
+>
+> -		err =3D cur_profile->profile_get(cur_profile, &profile);
+> -		if (err)
+> -			return err;
+> +	err =3D class_for_each_device(&platform_profile_class, NULL,
+> +				    &choices, _aggregate_choices);
+> +	if (err)
+> +		return err;
+>
+> -		next =3D find_next_bit_wrap(cur_profile->choices, PLATFORM_PROFILE_LA=
+ST,
+> -					  profile + 1);
+> +	next =3D find_next_bit_wrap(&choices,
+> +				  PLATFORM_PROFILE_LAST,
+> +				  profile + 1);
+>
+> -		if (WARN_ON(next =3D=3D PLATFORM_PROFILE_LAST))
+> -			return -EINVAL;
+> +	err =3D class_for_each_device(&platform_profile_class, NULL, &next,
+> +				    _store_class_profile);
+>
+> -		err =3D cur_profile->profile_set(cur_profile, next);
+> -		if (err)
+> -			return err;
+> -	}
+> +	if (err)
+> +		return err;
+>
+>   	sysfs_notify(acpi_kobj, NULL, "platform_profile");
+> -	return 0;
+> +
+> +	return err;
+>   }
+>   EXPORT_SYMBOL_GPL(platform_profile_cycle);
+>
