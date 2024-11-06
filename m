@@ -1,172 +1,137 @@
-Received: from mail-pl1-f182.google.com (mail-pl1-f182.google.com [209.85.214.182])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.15])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C7DF121620A;
-	Tue,  5 Nov 2024 23:56:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A1AF13C918;
+	Wed,  6 Nov 2024 01:10:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730850979; cv=none; b=Y0WMDCtrcXslx7jpuG1gEYDrSxS0dUPAUZiESMHFxXv3Vs/OZzvxpmWj0zVmbNw+BOb1fPNKzVwB4me0W40c/zqL1Pn7lA2a1dRQjr7dj2z0JALOqdCP7xKCP2Qhy26FBYpv2qpHq94j4Cop/WE1cE2G+8ww0q+KqZShQc/ID3g=
+	t=1730855402; cv=none; b=ZfSEBhgPyj+vRbZjNwX0pH0D6IW3hoGlJko6xGqyHPgPIkRmSEjvSPJDhF0PNPwoCiMHCGtdjMkqT77hwRBuC6ThOfgAgCz0Dobdpos0R8glYkozNBVZ96Wxtmqam9pub8eU19jcgjKx3SkKJ3PbhJyLJWV7v+bsePa8JZTsFTE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730850979; c=relaxed/simple;
-	bh=rVYY7hUS0/8px9P9VMyTF6luP4EveFr+K2h7mJPt0zY=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=nDrUDGmScACvp9QLAOj09ezj0SkZ65/GxBZYvk92t+RpVdakYZqZfFzIS1Hqo9BMwrBRDFYKpW3DOijurks6eKAyMnrR0ov4Y6SM+/v+0hzCysUpN3baT/fzJ0aj6umcjmeHD6LVIP9Uqh8xXOClvyQ4fNEHDsDNGNvBNlue+ow=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=dZfgzGqL; arc=none smtp.client-ip=209.85.214.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1730855402; c=relaxed/simple;
+	bh=8wkwyTaOOs9Q5NnvxbQhqZPtZs3GJ1PNsILlDFMD+Ic=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=WEq4OGTe5xVIYATfV/ux+H37ztPUKT6xcq1AvWPhCGdCxmtA+8h7tsTAjfwSpIST27U5cjcf90W7TSVwwI2DgKJpytrCABznG0qgpWxeO508n4PvzPVK9u7Pt7nYqlWQmVKYIUp8J1taUmbMDGQGF+c8qmmpDOjPPLyGh+6VlmE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=f1jkwQoD; arc=none smtp.client-ip=192.198.163.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dZfgzGqL"
-Received: by mail-pl1-f182.google.com with SMTP id d9443c01a7336-20ca388d242so61343585ad.2;
-        Tue, 05 Nov 2024 15:56:17 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1730850977; x=1731455777; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=ppYLRGxLF+7dK9BYL9ECT/GDpoTltO8iXIjQIhx/+g4=;
-        b=dZfgzGqLS7YPmIf6wkkCQfXC3IMtv2k21u4Ctkyf0ViIxB5hHurebOiykAKxTGS0gp
-         hPYvWX8rImW/wsJhO41TmTY7r2Jqrn4Xmf9HqjRy5o13px6iYoaWpefqECWTf/PW375k
-         HWEK3nghWCa940raBS/wZrQ3qiPjqzZaUaE+HUmi+fnWIkEvmls2cP6eW0hSgb8XPc3w
-         /I/NH2+0ToLOuojdPsN7kMDAMHQiq7fME2evXDsVorJ+TX9CxzqfS5fF2i1NVY/p1CKq
-         3NrwwHTxW2EOcVrj0z0aSyq/c9mHKYIyxZB+Rx0KnUA/qmhaikv3Soj3gD7BtJAKTtMT
-         jwvA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1730850977; x=1731455777;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=ppYLRGxLF+7dK9BYL9ECT/GDpoTltO8iXIjQIhx/+g4=;
-        b=veBL7el5U7BFeoYn47kG5b5wJVD6YfFroB/CDNdVQfXKqspgYpFfPCSq21rI+QHI/F
-         2kAR8HlDw1vNOu1XBdq+zRjk7+ezdvrHhBxyRgIzeyMeqEPCLFlJ5ahXloMU5JcZZO1y
-         WmDwscx2Mn+Zd7ub1KJc+gh+Wt0CrZuklTMVZ9gi9jMNOyF0g9/jwfMhXO9/RkRlV9JP
-         9WxCXQki+3uWbduXHY7EFa/UMwyeTOLDTc+pjsjQJkul5LUoWQrdp9s/Sp7X3cwJYvTO
-         u21sEhcajq0ZWw8q/5lK1XwQthXSSZNxf19W7w7oXhbNFS6IeEvLLq5UJPw3S9XF69nP
-         8s5w==
-X-Forwarded-Encrypted: i=1; AJvYcCUBJBreWnN0qqxeuikDeRHpMbmROd/GPcRgv/fhLM4naXDxmpcU3JHx7azlbFc8D3R5hPUbZk41wKI4Myw=@vger.kernel.org, AJvYcCWN5IapIJnROPPZcCTzHn7Zbzvvsu2VQICGc7mIfcuXGWt2hmvXX/Y6MAjIjwYnnq4RK7GX/GI5HZCvGSLrh7R0l9kgpQ==@vger.kernel.org
-X-Gm-Message-State: AOJu0YzuUW4l5N62XyhuhCw5Tbp3B2RwkWnZ8ux0OA2V+BmVpwAh0ti6
-	fzyDHZnCCnvYQKI7t0n0h4Zwh4ZHGr+A6DIwfIGwIG2Nl+qr/vILZkzLQG8yNxM=
-X-Google-Smtp-Source: AGHT+IHJ1qg3Kz8hDFI5CbCYN8LAEKa52h1TO5mfYWSg2JRUQOuScn+FGukQF04qzxKxU8OIBZCLZA==
-X-Received: by 2002:a17:902:ccc9:b0:20b:8642:9863 with SMTP id d9443c01a7336-2111af3fbf0mr239959115ad.18.1730850977030;
-        Tue, 05 Nov 2024 15:56:17 -0800 (PST)
-Received: from test-linux-ThinkPad-L480.. ([2404:7a80:b9a1:7100:c22a:afd1:3ca1:23bb])
-        by smtp.googlemail.com with ESMTPSA id d9443c01a7336-21105729894sm83954785ad.119.2024.11.05.15.56.14
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 05 Nov 2024 15:56:16 -0800 (PST)
-From: Vishnu Sankar <vishnuocv@gmail.com>
-To: hdegoede@redhat.com,
-	ilpo.jarvinen@linux.intel.com,
-	ibm-acpi-devel@lists.sourceforge.net,
-	platform-driver-x86@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: Vishnu Sankar <vishnuocv@gmail.com>,
-	Vishnu Sankar <vsankar@lenovo.com>,
-	Mark Pearson <mpearson-lenovo@squebb.ca>
-Subject: [PATCH] Thinkpad_acpi: Fix for ThinkPad's with ECFW showing incorrect fan speed
-Date: Wed,  6 Nov 2024 08:55:05 +0900
-Message-ID: <20241105235505.8493-1-vishnuocv@gmail.com>
-X-Mailer: git-send-email 2.43.0
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="f1jkwQoD"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1730855401; x=1762391401;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=8wkwyTaOOs9Q5NnvxbQhqZPtZs3GJ1PNsILlDFMD+Ic=;
+  b=f1jkwQoDTBYlKXY8YTuAysaBWintcHbhfmuZqKioP1/mm7gANIVTVIXv
+   ClRJoZCzSAJ09bQ3g1+hWTLF0OQaW49MVtMYcXjQsWVMHNSTqGq8lOGla
+   aNJF6k35AFoeXC2vVd02mNFJ0CfSkq4kd/XRLL1PLaFbfnk7L543g894r
+   q4cSQfMHGzg15iRfLFmvVgWsFW2AbxYQkTKZSj5ufxwsTYYKoctzyjtz6
+   7KycIHm7wrv/HKy26ECV7tTv8N1v//TMGW26l3twjCtF8d5h5fVlTMNEl
+   br9a1H8hGgfCf/tu5XHEcs4iyh+gf6ItKTOWybUDrDZDF20t1k8b8Gcm3
+   A==;
+X-CSE-ConnectionGUID: 2zVQhq9PSDithnQ/yf+5sw==
+X-CSE-MsgGUID: cWE8+CeCQmmg2eoerDW4PA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11247"; a="30740728"
+X-IronPort-AV: E=Sophos;i="6.11,261,1725346800"; 
+   d="scan'208";a="30740728"
+Received: from orviesa004.jf.intel.com ([10.64.159.144])
+  by fmvoesa109.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Nov 2024 17:10:00 -0800
+X-CSE-ConnectionGUID: 8QkttW8lSlGJTh+nJBv2Tw==
+X-CSE-MsgGUID: nvQubyb8SZOi3RncHdWtHg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.11,261,1725346800"; 
+   d="scan'208";a="89395669"
+Received: from lkp-server01.sh.intel.com (HELO a48cf1aa22e8) ([10.239.97.150])
+  by orviesa004.jf.intel.com with ESMTP; 05 Nov 2024 17:09:56 -0800
+Received: from kbuild by a48cf1aa22e8 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1t8UYS-000mgP-3B;
+	Wed, 06 Nov 2024 01:09:52 +0000
+Date: Wed, 6 Nov 2024 09:09:38 +0800
+From: kernel test robot <lkp@intel.com>
+To: Mario Limonciello <mario.limonciello@amd.com>,
+	Hans de Goede <hdegoede@redhat.com>,
+	Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Cc: oe-kbuild-all@lists.linux.dev, "Rafael J . Wysocki" <rafael@kernel.org>,
+	Len Brown <lenb@kernel.org>,
+	Maximilian Luz <luzmaximilian@gmail.com>,
+	Lee Chun-Yi <jlee@suse.com>,
+	Shyam Sundar S K <Shyam-sundar.S-k@amd.com>,
+	Corentin Chary <corentin.chary@gmail.com>,
+	"Luke D . Jones" <luke@ljones.dev>,
+	Ike Panhc <ike.pan@canonical.com>,
+	Henrique de Moraes Holschuh <hmh@hmh.eng.br>,
+	Alexis Belmonte <alexbelm48@gmail.com>,
+	Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <u.kleine-koenig@pengutronix.de>,
+	Ai Chao <aichao@kylinos.cn>, Gergo Koteles <soyer@irl.hu>,
+	open list <linux-kernel@vger.kernel.org>,
+	"open list:ACPI" <linux-acpi@vger.kernel.org>,
+	"open list:MICROSOFT SURFACE PLATFORM PROFILE DRIVER" <platform-driver-x86@vger.kernel.org>,
+	"open list:THINKPAD ACPI EXTRAS DRIVER" <ibm-acpi-devel@lists.sourceforge.net>,
+	Mark Pearson <mpearson-lenovo@squebb.ca>,
+	Matthew Schwartz <matthew.schwartz@linux.dev>,
+	Mario Limonciello <mario.limonciello@amd.com>
+Subject: Re: [PATCH v4 11/20] ACPI: platform_profile: Add choices attribute
+ for class interface
+Message-ID: <202411060835.GlMKVSsy-lkp@intel.com>
+References: <20241105153316.378-12-mario.limonciello@amd.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20241105153316.378-12-mario.limonciello@amd.com>
 
-Fix for Thinkpad's with ECFW showing incorrect fan speed.
-Some models use decimal instead of hexadecimal for the fan speed stored
-in the EC registers.
-for eg: the rpm register will have 0x4200 instead of 0x1068.
-Here the actual RPM is "4200" in decimal.
+Hi Mario,
 
-A quirk added to handle this.
+kernel test robot noticed the following build warnings:
 
-Signed-off-by: Vishnu Sankar <vishnuocv@gmail.com>
-Signed-off-by: Vishnu Sankar <vsankar@lenovo.com>
-Suggested-by: Mark Pearson <mpearson-lenovo@squebb.ca>
----
- drivers/platform/x86/thinkpad_acpi.c | 28 +++++++++++++++++++++++++---
- 1 file changed, 25 insertions(+), 3 deletions(-)
+[auto build test WARNING on d68cb6023356af3bd3193983ad4ec03954a0b3e2]
 
-diff --git a/drivers/platform/x86/thinkpad_acpi.c b/drivers/platform/x86/thinkpad_acpi.c
-index 4c1b0553f872..6371a9f765c1 100644
---- a/drivers/platform/x86/thinkpad_acpi.c
-+++ b/drivers/platform/x86/thinkpad_acpi.c
-@@ -7936,6 +7936,7 @@ static u8 fan_control_resume_level;
- static int fan_watchdog_maxinterval;
- 
- static bool fan_with_ns_addr;
-+static bool ecfw_with_fan_dec_rpm;
- 
- static struct mutex fan_mutex;
- 
-@@ -8682,7 +8683,11 @@ static ssize_t fan_fan1_input_show(struct device *dev,
- 	if (res < 0)
- 		return res;
- 
--	return sysfs_emit(buf, "%u\n", speed);
-+	/* Check for fan speeds displayed in hexadecimal */
-+	if (!ecfw_with_fan_dec_rpm)
-+		return sysfs_emit(buf, "%u\n", speed);
-+	else
-+		return sysfs_emit(buf, "%x\n", speed);
- }
- 
- static DEVICE_ATTR(fan1_input, S_IRUGO, fan_fan1_input_show, NULL);
-@@ -8699,7 +8704,11 @@ static ssize_t fan_fan2_input_show(struct device *dev,
- 	if (res < 0)
- 		return res;
- 
--	return sysfs_emit(buf, "%u\n", speed);
-+	/* Check for fan speeds displayed in hexadecimal */
-+	if (!ecfw_with_fan_dec_rpm)
-+		return sysfs_emit(buf, "%u\n", speed);
-+	else
-+		return sysfs_emit(buf, "%x\n", speed);
- }
- 
- static DEVICE_ATTR(fan2_input, S_IRUGO, fan_fan2_input_show, NULL);
-@@ -8775,6 +8784,7 @@ static const struct attribute_group fan_driver_attr_group = {
- #define TPACPI_FAN_2CTL		0x0004		/* selects fan2 control */
- #define TPACPI_FAN_NOFAN	0x0008		/* no fan available */
- #define TPACPI_FAN_NS		0x0010		/* For EC with non-Standard register addresses */
-+#define TPACPI_FAN_DECRPM	0x0020		/* For ECFW's with RPM in register as decimal */
- 
- static const struct tpacpi_quirk fan_quirk_table[] __initconst = {
- 	TPACPI_QEC_IBM('1', 'Y', TPACPI_FAN_Q1),
-@@ -8803,6 +8813,7 @@ static const struct tpacpi_quirk fan_quirk_table[] __initconst = {
- 	TPACPI_Q_LNV3('R', '1', 'D', TPACPI_FAN_NS),	/* 11e Gen5 GL-R */
- 	TPACPI_Q_LNV3('R', '0', 'V', TPACPI_FAN_NS),	/* 11e Gen5 KL-Y */
- 	TPACPI_Q_LNV3('N', '1', 'O', TPACPI_FAN_NOFAN),	/* X1 Tablet (2nd gen) */
-+	TPACPI_Q_LNV3('R', '0', 'Q', TPACPI_FAN_DECRPM),/* L480 */
- };
- 
- static int __init fan_init(struct ibm_init_struct *iibm)
-@@ -8847,6 +8858,13 @@ static int __init fan_init(struct ibm_init_struct *iibm)
- 		tp_features.fan_ctrl_status_undef = 1;
- 	}
- 
-+	/* Check for the EC/BIOS with RPM reported in decimal*/
-+	if (quirks & TPACPI_FAN_DECRPM) {
-+		pr_info("ECFW with fan RPM as decimal in EC register\n");
-+		ecfw_with_fan_dec_rpm = 1;
-+		tp_features.fan_ctrl_status_undef = 1;
-+	}
-+
- 	if (gfan_handle) {
- 		/* 570, 600e/x, 770e, 770x */
- 		fan_status_access_mode = TPACPI_FAN_RD_ACPI_GFAN;
-@@ -9067,7 +9085,11 @@ static int fan_read(struct seq_file *m)
- 		if (rc < 0)
- 			return rc;
- 
--		seq_printf(m, "speed:\t\t%d\n", speed);
-+		/* Check for fan speeds displayed in hexadecimal */
-+		if (!ecfw_with_fan_dec_rpm)
-+			seq_printf(m, "speed:\t\t%d\n", speed);
-+		else
-+			seq_printf(m, "speed:\t\t%x\n", speed);
- 
- 		if (fan_status_access_mode == TPACPI_FAN_RD_TPEC_NS) {
- 			/*
+url:    https://github.com/intel-lab-lkp/linux/commits/Mario-Limonciello/ACPI-platform-profile-Add-a-name-member-to-handlers/20241105-233922
+base:   d68cb6023356af3bd3193983ad4ec03954a0b3e2
+patch link:    https://lore.kernel.org/r/20241105153316.378-12-mario.limonciello%40amd.com
+patch subject: [PATCH v4 11/20] ACPI: platform_profile: Add choices attribute for class interface
+config: x86_64-rhel-8.3 (https://download.01.org/0day-ci/archive/20241106/202411060835.GlMKVSsy-lkp@intel.com/config)
+compiler: gcc-12 (Debian 12.2.0-14) 12.2.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20241106/202411060835.GlMKVSsy-lkp@intel.com/reproduce)
+
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202411060835.GlMKVSsy-lkp@intel.com/
+
+All warnings (new ones prefixed by >>):
+
+>> drivers/acpi/platform_profile.c:55: warning: Function parameter or struct member 'choices' not described in '_get_class_choices'
+
+
+vim +55 drivers/acpi/platform_profile.c
+
+    48	
+    49	/**
+    50	 * _get_class_choices - Get the available profile choices for a class device
+    51	 * @dev: The class device
+    52	 * Return: The available profile choices
+    53	 */
+    54	static int _get_class_choices(struct device *dev, unsigned long *choices)
+  > 55	{
+    56		struct platform_profile_handler *handler;
+    57		int i;
+    58	
+    59		scoped_cond_guard(mutex_intr, return -ERESTARTSYS, &profile_lock) {
+    60			handler = dev_get_drvdata(dev);
+    61			for_each_set_bit(i, handler->choices, PLATFORM_PROFILE_LAST)
+    62				*choices |= BIT(i);
+    63		}
+    64	
+    65		return 0;
+    66	}
+    67	
+
 -- 
-2.43.0
-
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
