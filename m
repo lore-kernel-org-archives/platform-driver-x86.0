@@ -1,59 +1,59 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0B50F1EE017
-	for <platform-driver-x86@vger.kernel.org>; Thu,  7 Nov 2024 10:40:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0316A1EE033
+	for <platform-driver-x86@vger.kernel.org>; Thu,  7 Nov 2024 10:43:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730976042; cv=none; b=YnFie7JRyrh++bEor5mIjJwQf7cAT7mFS3EkPFN3pAOB9N9HlL8OFP5ULQS8xHXLrKbVopebSkEF7+g94wo/XRQdDZMdXrxz7xToY9ck3nkMrV8Idvi39UiDIHD4LNQYZCLACGjIHjKkmlE79zvE0SEBVcMOV6eEaI+WNcPPKVs=
+	t=1730976202; cv=none; b=jqVKDNx1ZhgM0lqJiE9w+B5z+wVyc8FCZC9iW99LBRTBuJ7Qjgua9JqJDIpF5mvyK4K7SP+zXJ5LzbHpWTc7L4kRnCTiaqBuBE2DDuBGoErjJiTgpS8CVFXoshXUTEPf7+6ic4tQowVsCFWNHhjmgGvODVQUI2gYGjwILXKNXjM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730976042; c=relaxed/simple;
-	bh=FLEbpz0t4D6wxgKAhZACnB3g3cX6NxnzO52Vu8pl4vA=;
+	s=arc-20240116; t=1730976202; c=relaxed/simple;
+	bh=UcA+xSb8wFlt/ndBJ5qdW6UWF9sfX25R2gaTSLRB4/0=;
 	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=H/qcXKRuib1PZwLFu5ujAhaQLz5/o1IE8McO90IopxhuL0jWZFXWL7EgzCtAu7/upMPoZVREvT8Vp+GNo8sxI5tsrIe5zD5L6KgWnERztYvArgVO8DFTQZMZSGPVJADdPAl6FziUuFluphfKMHKagPJyKG6JunEzhkXLQViwlck=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Wx3uE7vq; arc=none smtp.client-ip=192.198.163.13
+	 MIME-Version:Content-Type; b=t51ugttDqgNByv4DMiS9gYvwedz1kwZma3quMwXScHsb2Uleq3zRUCvTthrWDFXXvy9ZIDUmqAiS+lw2D1l7fNwW/p4ddiuvH4acXKQMLKhK9I9Ref9vqTQLxE06Vv2oIEwqG46MiPZM4MPqKNRWU4v2k4TVcRBDWTrtoL5VfNo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=OzLjEL/u; arc=none smtp.client-ip=198.175.65.18
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Wx3uE7vq"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="OzLjEL/u"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1730976041; x=1762512041;
+  t=1730976201; x=1762512201;
   h=from:date:to:cc:subject:in-reply-to:message-id:
    references:mime-version;
-  bh=FLEbpz0t4D6wxgKAhZACnB3g3cX6NxnzO52Vu8pl4vA=;
-  b=Wx3uE7vq9DFv42kyk710+4pcH2pdPpQ/Pl/r4lI5EjhqImQ3Pbtpm75Y
-   HY8FVwnalHYUYKZy7qbZ2JKrShb9xcXGdZS6xWWdXzeHROqVa8cmnXHc8
-   iFza5KWJj3DoygQwKDQx0AB0GUZmcp28oKwEmQ1RfLPX81kTEyKJWiIj7
-   FVibWseP+mxlxTQq26FPhxItrEfzGL4TTuZLdfAKcZqd774+R+i7wX/Ki
-   fJcF8dz16vnkIng6T047HrYCKmsPRbe3mVLsLVxt3YQB9zf+qGwW5Uje+
-   FkKOZWzmU6/GyZHOQ2UQjsg6lbgwwyCtEr1U3YLegnpx9czm1GhHlYCo3
+  bh=UcA+xSb8wFlt/ndBJ5qdW6UWF9sfX25R2gaTSLRB4/0=;
+  b=OzLjEL/u9IxcyiwW6zQbA1gO1Va5bfNHVsp/tpeBRfKjH90r8PWdw6u4
+   mlKJxz6BHJgKkHdONV/sOUIo6iMEGsv3voshnH1QFHg8CKnLjnB5JduRT
+   dMHjDLC7KkKoQVid6omS8+h319c4lHBhltBsMKwuvnSNzaGJGcOsqavdf
+   Y+0quSppmjMlgoI9y15WNf6vpMhQflTF1iB24lfs3S0PHCOMT8Wbiqe+6
+   HsOihD27HBeN6s3BK8Y8azU+kNd3/b9Ll5BKbvweI5qLQp8bag6M5Xykc
+   0iCruLgA3a+cgeGpqPVmHzthWGgwAJKzb6193XDhIRJB9d27L7HgaJjmy
    Q==;
-X-CSE-ConnectionGUID: syw0iY3FRcOTEDD9+qdinw==
-X-CSE-MsgGUID: brr0ru0XS+qzsuka+HrmGA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11248"; a="33654260"
-X-IronPort-AV: E=Sophos;i="6.11,265,1725346800"; 
-   d="scan'208";a="33654260"
-Received: from fmviesa009.fm.intel.com ([10.60.135.149])
-  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Nov 2024 02:40:40 -0800
-X-CSE-ConnectionGUID: IlMyjS60QzSouSaLkr5/mA==
-X-CSE-MsgGUID: nz+mr0zESjinKo+mSHv0IA==
+X-CSE-ConnectionGUID: K3aYfn60TLaleid3BNoaOA==
+X-CSE-MsgGUID: PzSpe3A9S965QmGwSNa+uQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11222"; a="30985699"
+X-IronPort-AV: E=Sophos;i="6.11,199,1725346800"; 
+   d="scan'208";a="30985699"
+Received: from orviesa006.jf.intel.com ([10.64.159.146])
+  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Nov 2024 02:43:21 -0800
+X-CSE-ConnectionGUID: VArmQv4bS6ueLGcBzyaBJw==
+X-CSE-MsgGUID: r5yvCGxfS9qhEEbWGO7Z0w==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.11,265,1725346800"; 
-   d="scan'208";a="85211981"
+   d="scan'208";a="85123532"
 Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.4])
-  by fmviesa009-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Nov 2024 02:40:38 -0800
+  by orviesa006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Nov 2024 02:43:18 -0800
 From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Thu, 7 Nov 2024 12:40:34 +0200 (EET)
+Date: Thu, 7 Nov 2024 12:43:15 +0200 (EET)
 To: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
 cc: Hans de Goede <hdegoede@redhat.com>, Sanket.Goswami@amd.com, 
     platform-driver-x86@vger.kernel.org, 
     Mario Limonciello <mario.limonciello@amd.com>
-Subject: Re: [PATCH v4 01/11] platform/x86/amd/pmc: Move STB block into
- amd_pmc_s2d_init()
-In-Reply-To: <20241107072714.943423-2-Shyam-sundar.S-k@amd.com>
-Message-ID: <abb0a98b-9563-2259-efff-63c3bc555748@linux.intel.com>
-References: <20241107072714.943423-1-Shyam-sundar.S-k@amd.com> <20241107072714.943423-2-Shyam-sundar.S-k@amd.com>
+Subject: Re: [PATCH v4 05/11] platform/x86/amd/pmc: Define enum for S2D/PMC
+ msg_port and add helper function
+In-Reply-To: <20241107072714.943423-6-Shyam-sundar.S-k@amd.com>
+Message-ID: <ab525157-a530-ac5e-8f57-2d18e2a62d6f@linux.intel.com>
+References: <20241107072714.943423-1-Shyam-sundar.S-k@amd.com> <20241107072714.943423-6-Shyam-sundar.S-k@amd.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -64,73 +64,137 @@ Content-Type: text/plain; charset=US-ASCII
 
 On Thu, 7 Nov 2024, Shyam Sundar S K wrote:
 
-> Transfer the support for STB-related file operations to the
-> amd_pmc_s2d_init() function, thereby consolidating the STB and S2D
-> (Spill to DRAM) functionality in one location.
+> To distinguish between the PMC message port and the S2D (Spill to DRAM)
+> message port, replace the use of 0 and 1 with an enum.
 > 
-> For older platforms that supported S2D, exit immediately after creating
-> debugfs. These platforms may not support the PMFW messages available on
-> newer platforms. This adjustment is necessary due to the relocation of
-> debugfs creation into amd_pmc_s2d_init().
+> To avoid printing the S2D or PMC port multiple times in debug print,
+> add new routine to retrieve the message port information, which can be
+> used to print the right msg_port getting used.
 > 
 > Reviewed-by: Mario Limonciello <mario.limonciello@amd.com>
 > Co-developed-by: Sanket Goswami <Sanket.Goswami@amd.com>
 > Signed-off-by: Sanket Goswami <Sanket.Goswami@amd.com>
 > Signed-off-by: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
 > ---
->  drivers/platform/x86/amd/pmc/pmc.c | 18 +++++++++---------
->  1 file changed, 9 insertions(+), 9 deletions(-)
+>  drivers/platform/x86/amd/pmc/mp1_stb.c |  8 ++++----
+>  drivers/platform/x86/amd/pmc/pmc.c     | 15 ++++++++++-----
+>  drivers/platform/x86/amd/pmc/pmc.h     |  5 +++++
+>  3 files changed, 19 insertions(+), 9 deletions(-)
 > 
+> diff --git a/drivers/platform/x86/amd/pmc/mp1_stb.c b/drivers/platform/x86/amd/pmc/mp1_stb.c
+> index 5c03ac92558f..9ee629db9af9 100644
+> --- a/drivers/platform/x86/amd/pmc/mp1_stb.c
+> +++ b/drivers/platform/x86/amd/pmc/mp1_stb.c
+> @@ -155,7 +155,7 @@ static int amd_stb_debugfs_open_v2(struct inode *inode, struct file *filp)
+>  		dev_err(dev->dev, "error writing to STB: %d\n", ret);
+>  
+>  	/* Spill to DRAM num_samples uses separate SMU message port */
+> -	dev->msg_port = 1;
+> +	dev->msg_port = MSG_PORT_S2D;
+>  
+>  	ret = amd_pmc_send_cmd(dev, 0, &val, STB_FORCE_FLUSH_DATA, 1);
+>  	if (ret)
+> @@ -172,7 +172,7 @@ static int amd_stb_debugfs_open_v2(struct inode *inode, struct file *filp)
+>  	/* Get the num_samples to calculate the last push location */
+>  	ret = amd_pmc_send_cmd(dev, S2D_NUM_SAMPLES, &num_samples, dev->s2d_msg_id, true);
+>  	/* Clear msg_port for other SMU operation */
+> -	dev->msg_port = 0;
+> +	dev->msg_port = MSG_PORT_PMC;
+>  	if (ret) {
+>  		dev_err(dev->dev, "error: S2D_NUM_SAMPLES not supported : %d\n", ret);
+>  		return ret;
+> @@ -267,7 +267,7 @@ int amd_stb_s2d_init(struct amd_pmc_dev *dev)
+>  	}
+>  
+>  	/* Spill to DRAM feature uses separate SMU message port */
+> -	dev->msg_port = 1;
+> +	dev->msg_port = MSG_PORT_S2D;
+>  
+>  	amd_pmc_send_cmd(dev, S2D_TELEMETRY_SIZE, &size, dev->s2d_msg_id, true);
+>  	if (size != S2D_TELEMETRY_BYTES_MAX)
+> @@ -285,7 +285,7 @@ int amd_stb_s2d_init(struct amd_pmc_dev *dev)
+>  	stb_phys_addr = ((u64)phys_addr_hi << 32 | phys_addr_low);
+>  
+>  	/* Clear msg_port for other SMU operation */
+> -	dev->msg_port = 0;
+> +	dev->msg_port = MSG_PORT_PMC;
+>  
+>  	dev->stb_virt_addr = devm_ioremap(dev->dev, stb_phys_addr, dev->dram_size);
+>  	if (!dev->stb_virt_addr)
 > diff --git a/drivers/platform/x86/amd/pmc/pmc.c b/drivers/platform/x86/amd/pmc/pmc.c
-> index bbb8edb62e00..54ceb2f9bf56 100644
+> index 7726a05091a5..ce0050699a5a 100644
 > --- a/drivers/platform/x86/amd/pmc/pmc.c
 > +++ b/drivers/platform/x86/amd/pmc/pmc.c
-> @@ -648,15 +648,6 @@ static void amd_pmc_dbgfs_register(struct amd_pmc_dev *dev)
->  			    &s0ix_stats_fops);
->  	debugfs_create_file("amd_pmc_idlemask", 0644, dev->dbgfs_dir, dev,
+> @@ -449,11 +449,16 @@ static void amd_pmc_dbgfs_register(struct amd_pmc_dev *dev)
 >  			    &amd_pmc_idlemask_fops);
-> -	/* Enable STB only when the module_param is set */
-> -	if (enable_stb) {
-> -		if (amd_pmc_is_stb_supported(dev))
-> -			debugfs_create_file("stb_read", 0644, dev->dbgfs_dir, dev,
-> -					    &amd_pmc_stb_debugfs_fops_v2);
-> -		else
-> -			debugfs_create_file("stb_read", 0644, dev->dbgfs_dir, dev,
-> -					    &amd_pmc_stb_debugfs_fops);
-> -	}
 >  }
 >  
->  static void amd_pmc_dump_registers(struct amd_pmc_dev *dev)
-> @@ -982,6 +973,15 @@ static int amd_pmc_s2d_init(struct amd_pmc_dev *dev)
->  	u32 size = 0;
->  	int ret;
->  
-> +	if (amd_pmc_is_stb_supported(dev)) {
-> +		debugfs_create_file("stb_read", 0644, dev->dbgfs_dir, dev,
-> +				    &amd_pmc_stb_debugfs_fops_v2);
-> +	} else {
-> +		debugfs_create_file("stb_read", 0644, dev->dbgfs_dir, dev,
-> +				    &amd_pmc_stb_debugfs_fops);
-> +		return 0;
-> +	}
+> +static char *amd_pmc_print_msg_port(struct amd_pmc_dev *dev)
+
+Change name as this doesn't print anything.
+
+> +{
+> +	return dev->msg_port ? "S2D" : "PMC";
+
+== ...
+
+Although a switch/case might be preferrable here (return "invalid" or 
+something in default branch).
+
+> +}
 > +
->  	/* Spill to DRAM feature uses separate SMU message port */
->  	dev->msg_port = 1;
-
-This now runs afoul the other issue you even mentioned yourself (IIRC), 
-that is, dev->dbgfs_dir is initialized inside amd_pmc_dbgfs_register() 
-which is only called after amd_pmc_s2d_init() until it is moved in patch 
-2.
-
-Thus, you need to combine patches 1 & 2 so you don't get a broken kernel
-after this patch.
-
-Please also move the enable_stb check inside amd_pmc_s2d_init() in this 
-patch since that's another thing you've now broken in between patches 1 & 
-3.
-
-So to reiterate, in the first patch combine: Patch 1 + 2 + the if () logic 
-move from amd_pmc_probe() into amd_pmc_s2d_init().
+>  static void amd_pmc_dump_registers(struct amd_pmc_dev *dev)
+>  {
+>  	u32 value, message, argument, response;
+>  
+> -	if (dev->msg_port) {
+> +	if (dev->msg_port == MSG_PORT_S2D) {
+>  		message = AMD_S2D_REGISTER_MESSAGE;
+>  		argument = AMD_S2D_REGISTER_ARGUMENT;
+>  		response = AMD_S2D_REGISTER_RESPONSE;
+> @@ -464,13 +469,13 @@ static void amd_pmc_dump_registers(struct amd_pmc_dev *dev)
+>  	}
+>  
+>  	value = amd_pmc_reg_read(dev, response);
+> -	dev_dbg(dev->dev, "AMD_%s_REGISTER_RESPONSE:%x\n", dev->msg_port ? "S2D" : "PMC", value);
+> +	dev_dbg(dev->dev, "AMD_%s_REGISTER_RESPONSE:%x\n", amd_pmc_print_msg_port(dev), value);
+>  
+>  	value = amd_pmc_reg_read(dev, argument);
+> -	dev_dbg(dev->dev, "AMD_%s_REGISTER_ARGUMENT:%x\n", dev->msg_port ? "S2D" : "PMC", value);
+> +	dev_dbg(dev->dev, "AMD_%s_REGISTER_ARGUMENT:%x\n", amd_pmc_print_msg_port(dev), value);
+>  
+>  	value = amd_pmc_reg_read(dev, message);
+> -	dev_dbg(dev->dev, "AMD_%s_REGISTER_MESSAGE:%x\n", dev->msg_port ? "S2D" : "PMC", value);
+> +	dev_dbg(dev->dev, "AMD_%s_REGISTER_MESSAGE:%x\n", amd_pmc_print_msg_port(dev), value);
+>  }
+>  
+>  int amd_pmc_send_cmd(struct amd_pmc_dev *dev, u32 arg, u32 *data, u8 msg, bool ret)
+> @@ -480,7 +485,7 @@ int amd_pmc_send_cmd(struct amd_pmc_dev *dev, u32 arg, u32 *data, u8 msg, bool r
+>  
+>  	mutex_lock(&dev->lock);
+>  
+> -	if (dev->msg_port) {
+> +	if (dev->msg_port == MSG_PORT_S2D) {
+>  		message = AMD_S2D_REGISTER_MESSAGE;
+>  		argument = AMD_S2D_REGISTER_ARGUMENT;
+>  		response = AMD_S2D_REGISTER_RESPONSE;
+> diff --git a/drivers/platform/x86/amd/pmc/pmc.h b/drivers/platform/x86/amd/pmc/pmc.h
+> index 188284feca72..8252d3a52849 100644
+> --- a/drivers/platform/x86/amd/pmc/pmc.h
+> +++ b/drivers/platform/x86/amd/pmc/pmc.h
+> @@ -14,6 +14,11 @@
+>  #include <linux/types.h>
+>  #include <linux/mutex.h>
+>  
+> +enum s2d_msg_port {
+> +	MSG_PORT_PMC,
+> +	MSG_PORT_S2D,
+> +};
+> +
+>  struct amd_mp2_dev {
+>  	void __iomem *mmio;
+>  	void __iomem *vslbase;
+> 
 
 -- 
  i.
