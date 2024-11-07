@@ -1,172 +1,103 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C2C832170BD;
-	Thu,  7 Nov 2024 16:27:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 97D7E20FA88
+	for <platform-driver-x86@vger.kernel.org>; Thu,  7 Nov 2024 16:36:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730996830; cv=none; b=f+9Kxs+ilEXX4QvtaynQsB1mecl0VxRFh7WguluD6TbAkH2Nto3b9YLyQ9eQWTOzRzGY7XoGTugqQtrqwKUhKwU3VSu1l4BTNcnIAJGn2KsZEjeyW5xvr0+RfSSVg1UB9sMRAJSDewdVYyxLDYSD34Lcqm6j8PMxkNtKIhPq+gI=
+	t=1730997398; cv=none; b=TdDincnhrAyFsJYgZnLt0PwHK7YwGlCd7oqGfftQDf1F4stF4u1b0wA8bwXy9q6djiFTmG+YvP0r5FcssKFcmaVWehpx+ZcYezuKI+f7YKGDwaxIFddfkWa2QhlvLy1b2nM8CL7HrxslFGNWT5a356lDIdImu0KekzODGZ9Wayw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730996830; c=relaxed/simple;
-	bh=RaF/yzDkwC/xI3JHS3wDYezLNgto4gJR15z4QCLcIec=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=SZxyKhBoI2WFa147IqtftwwHumxbvE8NGplrGaDPb4AsLbR8DH1dlLY8HZlcP94cAzUVWwTKLYIBd1c1CnBkRPmkKV8Xp/Ukt2E/PDCe0Y2mGXizcUc9dU/njwkDu/hu34a55bvUlxkpCyBQWpTZIrFcDCwpRgiEH2s4051cAGg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sgq9DuN9; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1730997398; c=relaxed/simple;
+	bh=IYzR66GtsFo8I/vZ0LiG7As1h6oOgmpSDL1msQ2UTIQ=;
+	h=Message-ID:Date:MIME-Version:To:From:Subject:Content-Type; b=YFRXkVaGJCRMwFwwcvPxXHlBr8+ngIT+P3RI60yM7DK3KI3eCItbNVQJDx97wtZMbaMxguey+hp+38ETyEezvWUSNwu0p/aPL98urQgXiQXy5gRWoJQAnRG5Qn/PR6pK1RQCybJlVcFY90ZHfajHXtlm9twLZ2N/e9eTGJ1f9qA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=KpRocPyf; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sgq9DuN9"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1B3AFC4CECC;
-	Thu,  7 Nov 2024 16:27:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1730996829;
-	bh=RaF/yzDkwC/xI3JHS3wDYezLNgto4gJR15z4QCLcIec=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=sgq9DuN999fo+gF31O1Sog3B6QwMV6OvcPe7VPqi8sJ1TCzU/W1Ez/tliuLSn6HZv
-	 H6WJr617Z9ho3vOtVhPzMb0TyqS+gb2SI7mq/C0wytQj+BYrK8SHegywRApVWEjefm
-	 VrP+Uq41/kYqyiwmALEKXPYG2sF+9dXoP558MEULT3X9CJ2qlfOgYo5XQQ/akQ/Li+
-	 8PC//m2NPppcQqPE5AwaE9VZUm8GEStHJrNdsbBXQj3zX2/Uw70Eqzdl18ZXk0ykpu
-	 Nv3hNeVLx2kThS8Iy5jvLz2TwdYaK/p8look0JzKdaIO94mqldL4oshBd2UJ53q8QV
-	 LBGXXQk7Ujmww==
-Date: Thu, 7 Nov 2024 10:27:07 -0600
-From: Bjorn Helgaas <helgaas@kernel.org>
-To: Thomas =?utf-8?Q?Wei=C3=9Fschuh?= <linux@weissschuh.net>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
-	Davidlohr Bueso <dave@stgolabs.net>,
-	Jonathan Cameron <jonathan.cameron@huawei.com>,
-	Dave Jiang <dave.jiang@intel.com>,
-	Alison Schofield <alison.schofield@intel.com>,
-	Vishal Verma <vishal.l.verma@intel.com>,
-	Ira Weiny <ira.weiny@intel.com>,
-	Alex Deucher <alexander.deucher@amd.com>,
-	Christian =?utf-8?B?S8O2bmln?= <christian.koenig@amd.com>,
-	Xinhui Pan <Xinhui.Pan@amd.com>, David Airlie <airlied@gmail.com>,
-	Simona Vetter <simona@ffwll.ch>,
-	Dennis Dalessandro <dennis.dalessandro@cornelisnetworks.com>,
-	Jason Gunthorpe <jgg@ziepe.ca>, Leon Romanovsky <leon@kernel.org>,
-	Tudor Ambarus <tudor.ambarus@linaro.org>,
-	Pratyush Yadav <pratyush@kernel.org>,
-	Michael Walle <mwalle@kernel.org>,
-	Miquel Raynal <miquel.raynal@bootlin.com>,
-	Richard Weinberger <richard@nod.at>,
-	Vignesh Raghavendra <vigneshr@ti.com>,
-	Naveen Krishna Chatradhi <naveenkrishna.chatradhi@amd.com>,
-	Carlos Bilbao <carlos.bilbao.osdev@gmail.com>,
-	Hans de Goede <hdegoede@redhat.com>,
-	Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>,
-	"David E. Box" <david.e.box@linux.intel.com>,
-	"James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>,
-	"Martin K. Petersen" <martin.petersen@oracle.com>,
-	Richard Henderson <richard.henderson@linaro.org>,
-	Matt Turner <mattst88@gmail.com>,
-	Frederic Barrat <fbarrat@linux.ibm.com>,
-	Andrew Donnellan <ajd@linux.ibm.com>, Arnd Bergmann <arnd@arndb.de>,
-	Logan Gunthorpe <logang@deltatee.com>,
-	"K. Y. Srinivasan" <kys@microsoft.com>,
-	Haiyang Zhang <haiyangz@microsoft.com>,
-	Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
-	Dan Williams <dan.j.williams@intel.com>,
-	linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
-	linux-cxl@vger.kernel.org, amd-gfx@lists.freedesktop.org,
-	dri-devel@lists.freedesktop.org, linux-rdma@vger.kernel.org,
-	linux-mtd@lists.infradead.org, platform-driver-x86@vger.kernel.org,
-	linux-scsi@vger.kernel.org, linux-usb@vger.kernel.org,
-	linux-alpha@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-	linux-hyperv@vger.kernel.org
-Subject: Re: [PATCH v2 03/10] PCI/sysfs: Calculate bin_attribute size through
- bin_size()
-Message-ID: <20241107162707.GA1618544@bhelgaas>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="KpRocPyf"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1730997395;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=IYzR66GtsFo8I/vZ0LiG7As1h6oOgmpSDL1msQ2UTIQ=;
+	b=KpRocPyfCm1liHVQYqpsfil/iH7mf8h7m+wNy2wPDfDLY22g/md3mQYujt3JTmh9BQoeuf
+	L7EZRaqyRJJqlZS20WZ0ew3UV+fX1xrwDGvIeoUkCQlmfUrMn/tM5W4ydc2x5spWWMaxaU
+	zbGA8smvOrITFScTQTpAeElShrfy+9U=
+Received: from mail-ej1-f71.google.com (mail-ej1-f71.google.com
+ [209.85.218.71]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-308-sXAHZ1guM_a5WkavPw3lpg-1; Thu, 07 Nov 2024 11:36:34 -0500
+X-MC-Unique: sXAHZ1guM_a5WkavPw3lpg-1
+X-Mimecast-MFC-AGG-ID: sXAHZ1guM_a5WkavPw3lpg
+Received: by mail-ej1-f71.google.com with SMTP id a640c23a62f3a-a9a2ccb77ceso95524066b.2
+        for <platform-driver-x86@vger.kernel.org>; Thu, 07 Nov 2024 08:36:34 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1730997392; x=1731602192;
+        h=content-transfer-encoding:subject:from:to:content-language
+         :user-agent:mime-version:date:message-id:x-gm-message-state:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=IYzR66GtsFo8I/vZ0LiG7As1h6oOgmpSDL1msQ2UTIQ=;
+        b=nBjwztzAOowLRJW5FSkFZTFqbAAPp8pjavwf4FDlVXBVFXvx7KbZGq00hRlagE2Z0y
+         PtXzQCyLkqRhetbpTk+V293vUaJEC3rRhSaZQCHIjcAWAemEpfZjt5apRdjX2nwM7tSc
+         FQMqv7n1FwCYuopnZMXCRpeETD36WZzXYs5ZbP/V0t6jGQIpxtuw50pzP+GNbb+vhfGf
+         YhQm2KWkvHrtnMSf7MG9MY/CIFM1W/fY/yB0O2S40sUBY5aUgCcWi1ZlBihTqPhwWqZ9
+         WhYidGSJmGksUqiV74+YMk/sU/e05RkPrzfY7FaxTcr32nBckg9igzimjcDi6AftxYy1
+         MyeA==
+X-Gm-Message-State: AOJu0Yz2NxzqwP3t2FAlIt7SqRR8v7X3vqwzh+BVCc8q9iZt/NsHTDKJ
+	Ps+mDAbAwwdhDbsynj0AKGOoYGItNo8vLBv2v8Xncfaz0C05/2tYDb5EnMBC5q30zePNodLxQn1
+	uzxLLK+bTKSgpYby33T0CntLSWAyiLYj62LEVtCEk+SJ0dXWRVf3bJBkEQUawoaVk+vWJLJeR8Y
+	qEYt7zDdxGFGXY0i1fA5n59BubLotzFqGUfhe5xv7cikrhUyT/Qdt9xpA=
+X-Received: by 2002:a17:907:1b92:b0:a9e:45e6:42cb with SMTP id a640c23a62f3a-a9e45e69b52mr1957060166b.18.1730997391959;
+        Thu, 07 Nov 2024 08:36:31 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IGGBQhUDFGRrHyAwibL3Z9JDW3IACwFmKd8ORxLFVdhethWtmDkls9SBIyj1VNIYUtZsAAHew==
+X-Received: by 2002:a17:907:1b92:b0:a9e:45e6:42cb with SMTP id a640c23a62f3a-a9e45e69b52mr1957058166b.18.1730997391528;
+        Thu, 07 Nov 2024 08:36:31 -0800 (PST)
+Received: from ?IPV6:2001:1c00:c32:7800:5bfa:a036:83f0:f9ec? (2001-1c00-0c32-7800-5bfa-a036-83f0-f9ec.cable.dynamic.v6.ziggo.nl. [2001:1c00:c32:7800:5bfa:a036:83f0:f9ec])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a9ee0e2d7absm111922766b.179.2024.11.07.08.36.30
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 07 Nov 2024 08:36:30 -0800 (PST)
+Message-ID: <02b4c051-ea11-4fe9-876d-070d18cd84bf@redhat.com>
+Date: Thu, 7 Nov 2024 17:36:30 +0100
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20241103-sysfs-const-bin_attr-v2-3-71110628844c@weissschuh.net>
+User-Agent: Mozilla Thunderbird
+Content-Language: en-US, nl
+To: "platform-driver-x86@vger.kernel.org"
+ <platform-driver-x86@vger.kernel.org>,
+ =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+From: Hans de Goede <hdegoede@redhat.com>
+Subject: Reducing my involvement in platform-driver-x86 maintenance
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Sun, Nov 03, 2024 at 05:03:32PM +0000, Thomas Weißschuh wrote:
-> Stop abusing the is_bin_visible() callback to calculate the attribute
-> size. Instead use the new, dedicated bin_size() one.
-> 
-> Signed-off-by: Thomas Weißschuh <linux@weissschuh.net>
+Hi All,
 
-Acked-by: Bjorn Helgaas <bhelgaas@google.com>
+With all the camera hw-enablement work I'm doing I have been spending
+most of my time on that and I have less and less bandwidth for pdx86
+maintenance.
 
-Thanks for doing this!
+Ilpo has agreed to become the primary pdx86 maintainer with me moving
+to more of a backup role, instead of us splitting the load 50/50.
 
-> ---
->  drivers/pci/pci-sysfs.c | 28 ++++++++++++++++------------
->  1 file changed, 16 insertions(+), 12 deletions(-)
-> 
-> diff --git a/drivers/pci/pci-sysfs.c b/drivers/pci/pci-sysfs.c
-> index 5d0f4db1cab78674c5e5906f321bf7a57b742983..040f01b2b999175e8d98b05851edc078bbabbe0d 100644
-> --- a/drivers/pci/pci-sysfs.c
-> +++ b/drivers/pci/pci-sysfs.c
-> @@ -818,21 +818,20 @@ static struct bin_attribute *pci_dev_config_attrs[] = {
->  	NULL,
->  };
->  
-> -static umode_t pci_dev_config_attr_is_visible(struct kobject *kobj,
-> -					      struct bin_attribute *a, int n)
-> +static size_t pci_dev_config_attr_bin_size(struct kobject *kobj,
-> +					   const struct bin_attribute *a,
-> +					   int n)
->  {
->  	struct pci_dev *pdev = to_pci_dev(kobj_to_dev(kobj));
->  
-> -	a->size = PCI_CFG_SPACE_SIZE;
->  	if (pdev->cfg_size > PCI_CFG_SPACE_SIZE)
-> -		a->size = PCI_CFG_SPACE_EXP_SIZE;
-> -
-> -	return a->attr.mode;
-> +		return PCI_CFG_SPACE_EXP_SIZE;
-> +	return PCI_CFG_SPACE_SIZE;
->  }
->  
->  static const struct attribute_group pci_dev_config_attr_group = {
->  	.bin_attrs = pci_dev_config_attrs,
-> -	.is_bin_visible = pci_dev_config_attr_is_visible,
-> +	.bin_size = pci_dev_config_attr_bin_size,
->  };
->  
->  /*
-> @@ -1330,21 +1329,26 @@ static umode_t pci_dev_rom_attr_is_visible(struct kobject *kobj,
->  					   struct bin_attribute *a, int n)
->  {
->  	struct pci_dev *pdev = to_pci_dev(kobj_to_dev(kobj));
-> -	size_t rom_size;
->  
->  	/* If the device has a ROM, try to expose it in sysfs. */
-> -	rom_size = pci_resource_len(pdev, PCI_ROM_RESOURCE);
-> -	if (!rom_size)
-> +	if (!pci_resource_end(pdev, PCI_ROM_RESOURCE))
->  		return 0;
->  
-> -	a->size = rom_size;
-> -
->  	return a->attr.mode;
->  }
->  
-> +static size_t pci_dev_rom_attr_bin_size(struct kobject *kobj,
-> +					const struct bin_attribute *a, int n)
-> +{
-> +	struct pci_dev *pdev = to_pci_dev(kobj_to_dev(kobj));
-> +
-> +	return pci_resource_len(pdev, PCI_ROM_RESOURCE);
-> +}
-> +
->  static const struct attribute_group pci_dev_rom_attr_group = {
->  	.bin_attrs = pci_dev_rom_attrs,
->  	.is_bin_visible = pci_dev_rom_attr_is_visible,
-> +	.bin_size = pci_dev_rom_attr_bin_size,
->  };
->  
->  static ssize_t reset_store(struct device *dev, struct device_attribute *attr,
-> 
-> -- 
-> 2.47.0
-> 
+I'm not going anywhere and I will still be around to ask questions and
+I will likely also still get involved in some discussions, but I won't
+be as active as before.
+
+If you have any questions specifically for me, please send me a direct
+ping at hdegoede@redhat.com *without* Cc-ing the list. Then I'll reply
+on the list of course.
+
+Everything with the list in the Cc will get filtered into a mailfolder
+for pdx86, which I'm not going to be watching as actively as before.
+So a direct ping should work best to get my attention.
+
+Regards,
+
+Hans
+
+
