@@ -1,155 +1,137 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A7481EE00E
-	for <platform-driver-x86@vger.kernel.org>; Thu,  7 Nov 2024 09:52:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0B50F1EE017
+	for <platform-driver-x86@vger.kernel.org>; Thu,  7 Nov 2024 10:40:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730973132; cv=none; b=S+yCgzermqFTW9LS+U/fnjIaFn0zWVBHq0x1CpqT52REiB8PxTtl2P0pEOHL3krDC16zEfAWZxl2fqlvBxBj373SIsI99XJKCSzreFx09Cti8FT/ZSLQk+azjvkKwSqPCl1z4pwMVMBiMTCv/m1QgJeqPNSf0PFN7tkLg4mgWdo=
+	t=1730976042; cv=none; b=YnFie7JRyrh++bEor5mIjJwQf7cAT7mFS3EkPFN3pAOB9N9HlL8OFP5ULQS8xHXLrKbVopebSkEF7+g94wo/XRQdDZMdXrxz7xToY9ck3nkMrV8Idvi39UiDIHD4LNQYZCLACGjIHjKkmlE79zvE0SEBVcMOV6eEaI+WNcPPKVs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730973132; c=relaxed/simple;
-	bh=lXItsEWUXZFt109+Ui6NjhDPYawsgqJMEGuIDDt4Iso=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=BKlB/JXszxxuV0teixBLUW/u0iWgQePf4s7FY+m2lOcCifMH71o7kKtHchm+AWmXaY5YhuQt2D3hBRFDV1O60O1uq2mjYnskuiLtj953N1Iwdop/mNKCGimtNwdci9Ly6XXf7+tUHK5AgcolqiLY+koKLr0PaEt92LjYPrhKYhg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=FKWL0XQr; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1730976042; c=relaxed/simple;
+	bh=FLEbpz0t4D6wxgKAhZACnB3g3cX6NxnzO52Vu8pl4vA=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=H/qcXKRuib1PZwLFu5ujAhaQLz5/o1IE8McO90IopxhuL0jWZFXWL7EgzCtAu7/upMPoZVREvT8Vp+GNo8sxI5tsrIe5zD5L6KgWnERztYvArgVO8DFTQZMZSGPVJADdPAl6FziUuFluphfKMHKagPJyKG6JunEzhkXLQViwlck=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Wx3uE7vq; arc=none smtp.client-ip=192.198.163.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="FKWL0XQr"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1730973130;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=VEUV28AwOvWa6u7nd82oecUGAe8DexY8QGwvcMosJck=;
-	b=FKWL0XQrlnkgfE2TFoiSPiabNvtd2v9+we95BNyHBToAxI324nt3qsCbIeG7bYF5VtJrrf
-	5XaL6F8+hKxku3Cva3+GWrxnJWfK8YRmt4UjGwwdi26dFuJUGevLV7IeJEFM839pugh3HU
-	/hqAndaSSBZZ/SwgSjMxlNU0+mtcspA=
-Received: from mail-ej1-f70.google.com (mail-ej1-f70.google.com
- [209.85.218.70]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-691-Ppgp-7YEO6Ow4BJa7KSqsA-1; Thu, 07 Nov 2024 04:52:07 -0500
-X-MC-Unique: Ppgp-7YEO6Ow4BJa7KSqsA-1
-X-Mimecast-MFC-AGG-ID: Ppgp-7YEO6Ow4BJa7KSqsA
-Received: by mail-ej1-f70.google.com with SMTP id a640c23a62f3a-a99efc7d881so50559166b.1
-        for <platform-driver-x86@vger.kernel.org>; Thu, 07 Nov 2024 01:52:06 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1730973126; x=1731577926;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=VEUV28AwOvWa6u7nd82oecUGAe8DexY8QGwvcMosJck=;
-        b=DLGM4XEZBx53VIBwkbqLxesA+n9EQCMwMSrhzWNIDDc6JenSpwCJIVy/IzuBud29gy
-         5shwdCFJbewifjTEykcyEdEWHHS62Hm5kAmDvMDqXybkexnmb5+I2Ud5pVSwmVQ+1Blb
-         zv+sihEFtSx0NAA85ll5lerTdZ6Ncz1APYVGpKTDBlXwUePkIJporHeBVqss9WSfwkFQ
-         VmFWqTdQqfNLcqFTRdFsV1YzpI4EMKCP6qljOPvJJ2vkYC0W72gicPBGSbfJgPI15mx0
-         hNOEyqUZOxdN7/vF+cSlhkx0tVLsPPfRzA78ASdt2HbbgsWHMh+J3X52N3Y7lsQar9xS
-         sf/Q==
-X-Forwarded-Encrypted: i=1; AJvYcCWbpWAZYdajAf4eeXLchXG52/j1XZpkbaIyKImHbjz1Z57fGRyCo48U/5REFww9iL5XBfN56rsQYZVoMZ5N/78IAuoP@vger.kernel.org
-X-Gm-Message-State: AOJu0Yzb0ramAkG1e5nTFEOsHmkLVUavxWdx5CcxRi9CSVjH6aOW8OEY
-	gsKNI9mFh/82cUnGqJuMlYa1SjnnFa7LeB7jOy7Qwj8o9ov5PhkGRwbOJPDp0DKTZgEw0BWzCrf
-	ZoIUaU2qASfxNxEtO15+Z6+EfQOy0LGggVViIeGG7sqyd1BaKOUmPYH27UrtyZZj2uJXMtR8=
-X-Received: by 2002:a17:907:7b8c:b0:a99:f91e:4abb with SMTP id a640c23a62f3a-a9ee74c45a5mr33909466b.27.1730973125745;
-        Thu, 07 Nov 2024 01:52:05 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IH/D+Goumtn5kexsx3EjigJMrNxwxMpZhpEgJ5ovlt1GNGtnNirFQ2WOtraU1wN/4QnVQoDbQ==
-X-Received: by 2002:a17:907:7b8c:b0:a99:f91e:4abb with SMTP id a640c23a62f3a-a9ee74c45a5mr33907466b.27.1730973125315;
-        Thu, 07 Nov 2024 01:52:05 -0800 (PST)
-Received: from ?IPV6:2001:1c00:c32:7800:5bfa:a036:83f0:f9ec? (2001-1c00-0c32-7800-5bfa-a036-83f0-f9ec.cable.dynamic.v6.ziggo.nl. [2001:1c00:c32:7800:5bfa:a036:83f0:f9ec])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a9ee0dc4c6fsm68706766b.132.2024.11.07.01.52.04
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 07 Nov 2024 01:52:04 -0800 (PST)
-Message-ID: <73f56b53-f02c-49ca-bfc5-67eb51e852b6@redhat.com>
-Date: Thu, 7 Nov 2024 10:52:04 +0100
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Wx3uE7vq"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1730976041; x=1762512041;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=FLEbpz0t4D6wxgKAhZACnB3g3cX6NxnzO52Vu8pl4vA=;
+  b=Wx3uE7vq9DFv42kyk710+4pcH2pdPpQ/Pl/r4lI5EjhqImQ3Pbtpm75Y
+   HY8FVwnalHYUYKZy7qbZ2JKrShb9xcXGdZS6xWWdXzeHROqVa8cmnXHc8
+   iFza5KWJj3DoygQwKDQx0AB0GUZmcp28oKwEmQ1RfLPX81kTEyKJWiIj7
+   FVibWseP+mxlxTQq26FPhxItrEfzGL4TTuZLdfAKcZqd774+R+i7wX/Ki
+   fJcF8dz16vnkIng6T047HrYCKmsPRbe3mVLsLVxt3YQB9zf+qGwW5Uje+
+   FkKOZWzmU6/GyZHOQ2UQjsg6lbgwwyCtEr1U3YLegnpx9czm1GhHlYCo3
+   Q==;
+X-CSE-ConnectionGUID: syw0iY3FRcOTEDD9+qdinw==
+X-CSE-MsgGUID: brr0ru0XS+qzsuka+HrmGA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11248"; a="33654260"
+X-IronPort-AV: E=Sophos;i="6.11,265,1725346800"; 
+   d="scan'208";a="33654260"
+Received: from fmviesa009.fm.intel.com ([10.60.135.149])
+  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Nov 2024 02:40:40 -0800
+X-CSE-ConnectionGUID: IlMyjS60QzSouSaLkr5/mA==
+X-CSE-MsgGUID: nz+mr0zESjinKo+mSHv0IA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.11,265,1725346800"; 
+   d="scan'208";a="85211981"
+Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.4])
+  by fmviesa009-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Nov 2024 02:40:38 -0800
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Thu, 7 Nov 2024 12:40:34 +0200 (EET)
+To: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
+cc: Hans de Goede <hdegoede@redhat.com>, Sanket.Goswami@amd.com, 
+    platform-driver-x86@vger.kernel.org, 
+    Mario Limonciello <mario.limonciello@amd.com>
+Subject: Re: [PATCH v4 01/11] platform/x86/amd/pmc: Move STB block into
+ amd_pmc_s2d_init()
+In-Reply-To: <20241107072714.943423-2-Shyam-sundar.S-k@amd.com>
+Message-ID: <abb0a98b-9563-2259-efff-63c3bc555748@linux.intel.com>
+References: <20241107072714.943423-1-Shyam-sundar.S-k@amd.com> <20241107072714.943423-2-Shyam-sundar.S-k@amd.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 2/2] platform/x86: asus-wmi: Use
- platform_profile_cycle()
-To: Armin Wolf <W_Armin@gmx.de>, corentin.chary@gmail.com, luke@ljones.dev,
- mohamed.ghanmi@supcom.tn
-Cc: srinivas.pandruvada@linux.intel.com, ilpo.jarvinen@linux.intel.com,
- Michael@phoronix.com, casey.g.bowman@intel.com,
- platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20241107003811.615574-1-W_Armin@gmx.de>
- <20241107003811.615574-3-W_Armin@gmx.de>
-Content-Language: en-US, nl
-From: Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <20241107003811.615574-3-W_Armin@gmx.de>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=US-ASCII
 
-Hi,
+On Thu, 7 Nov 2024, Shyam Sundar S K wrote:
 
-On 7-Nov-24 1:38 AM, Armin Wolf wrote:
-> Replace throttle_thermal_policy_switch_next() with
-> platform_profile_cycle() to reduce code duplication and avoid a
-> potential race condition with the platform profile handler.
+> Transfer the support for STB-related file operations to the
+> amd_pmc_s2d_init() function, thereby consolidating the STB and S2D
+> (Spill to DRAM) functionality in one location.
 > 
-> Suggested-by: Hans de Goede <hdegoede@redhat.com>
-> Signed-off-by: Armin Wolf <W_Armin@gmx.de>
-
-Thanks, patch looks good to me:
-
-Reviewed-by: Hans de Goede <hdegoede@redhat.com>
-
-Regards,
-
-Hans
-
-
-
+> For older platforms that supported S2D, exit immediately after creating
+> debugfs. These platforms may not support the PMFW messages available on
+> newer platforms. This adjustment is necessary due to the relocation of
+> debugfs creation into amd_pmc_s2d_init().
+> 
+> Reviewed-by: Mario Limonciello <mario.limonciello@amd.com>
+> Co-developed-by: Sanket Goswami <Sanket.Goswami@amd.com>
+> Signed-off-by: Sanket Goswami <Sanket.Goswami@amd.com>
+> Signed-off-by: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
 > ---
->  drivers/platform/x86/asus-wmi.c | 24 +-----------------------
->  1 file changed, 1 insertion(+), 23 deletions(-)
+>  drivers/platform/x86/amd/pmc/pmc.c | 18 +++++++++---------
+>  1 file changed, 9 insertions(+), 9 deletions(-)
 > 
-> diff --git a/drivers/platform/x86/asus-wmi.c b/drivers/platform/x86/asus-wmi.c
-> index ce60835d0303..ba8b6d028f9f 100644
-> --- a/drivers/platform/x86/asus-wmi.c
-> +++ b/drivers/platform/x86/asus-wmi.c
-> @@ -3755,28 +3755,6 @@ static int throttle_thermal_policy_set_default(struct asus_wmi *asus)
->  	return throttle_thermal_policy_write(asus);
+> diff --git a/drivers/platform/x86/amd/pmc/pmc.c b/drivers/platform/x86/amd/pmc/pmc.c
+> index bbb8edb62e00..54ceb2f9bf56 100644
+> --- a/drivers/platform/x86/amd/pmc/pmc.c
+> +++ b/drivers/platform/x86/amd/pmc/pmc.c
+> @@ -648,15 +648,6 @@ static void amd_pmc_dbgfs_register(struct amd_pmc_dev *dev)
+>  			    &s0ix_stats_fops);
+>  	debugfs_create_file("amd_pmc_idlemask", 0644, dev->dbgfs_dir, dev,
+>  			    &amd_pmc_idlemask_fops);
+> -	/* Enable STB only when the module_param is set */
+> -	if (enable_stb) {
+> -		if (amd_pmc_is_stb_supported(dev))
+> -			debugfs_create_file("stb_read", 0644, dev->dbgfs_dir, dev,
+> -					    &amd_pmc_stb_debugfs_fops_v2);
+> -		else
+> -			debugfs_create_file("stb_read", 0644, dev->dbgfs_dir, dev,
+> -					    &amd_pmc_stb_debugfs_fops);
+> -	}
 >  }
-> 
-> -static int throttle_thermal_policy_switch_next(struct asus_wmi *asus)
-> -{
-> -	u8 new_mode = asus->throttle_thermal_policy_mode + 1;
-> -	int err;
-> -
-> -	if (new_mode > PLATFORM_PROFILE_MAX)
-> -		new_mode = ASUS_THROTTLE_THERMAL_POLICY_DEFAULT;
-> -
-> -	asus->throttle_thermal_policy_mode = new_mode;
-> -	err = throttle_thermal_policy_write(asus);
-> -	if (err)
-> -		return err;
-> -
-> -	/*
-> -	 * Ensure that platform_profile updates userspace with the change to ensure
-> -	 * that platform_profile and throttle_thermal_policy_mode are in sync.
-> -	 */
-> -	platform_profile_notify();
-> -
-> -	return 0;
-> -}
-> -
->  static ssize_t throttle_thermal_policy_show(struct device *dev,
->  				   struct device_attribute *attr, char *buf)
->  {
-> @@ -4301,7 +4279,7 @@ static void asus_wmi_handle_event_code(int code, struct asus_wmi *asus)
->  		if (asus->fan_boost_mode_available)
->  			fan_boost_mode_switch_next(asus);
->  		if (asus->throttle_thermal_policy_dev)
-> -			throttle_thermal_policy_switch_next(asus);
-> +			platform_profile_cycle();
->  		return;
-> 
->  	}
-> --
-> 2.39.5
-> 
+>  
+>  static void amd_pmc_dump_registers(struct amd_pmc_dev *dev)
+> @@ -982,6 +973,15 @@ static int amd_pmc_s2d_init(struct amd_pmc_dev *dev)
+>  	u32 size = 0;
+>  	int ret;
+>  
+> +	if (amd_pmc_is_stb_supported(dev)) {
+> +		debugfs_create_file("stb_read", 0644, dev->dbgfs_dir, dev,
+> +				    &amd_pmc_stb_debugfs_fops_v2);
+> +	} else {
+> +		debugfs_create_file("stb_read", 0644, dev->dbgfs_dir, dev,
+> +				    &amd_pmc_stb_debugfs_fops);
+> +		return 0;
+> +	}
+> +
+>  	/* Spill to DRAM feature uses separate SMU message port */
+>  	dev->msg_port = 1;
+
+This now runs afoul the other issue you even mentioned yourself (IIRC), 
+that is, dev->dbgfs_dir is initialized inside amd_pmc_dbgfs_register() 
+which is only called after amd_pmc_s2d_init() until it is moved in patch 
+2.
+
+Thus, you need to combine patches 1 & 2 so you don't get a broken kernel
+after this patch.
+
+Please also move the enable_stb check inside amd_pmc_s2d_init() in this 
+patch since that's another thing you've now broken in between patches 1 & 
+3.
+
+So to reiterate, in the first patch combine: Patch 1 + 2 + the if () logic 
+move from amd_pmc_probe() into amd_pmc_s2d_init().
+
+-- 
+ i.
 
