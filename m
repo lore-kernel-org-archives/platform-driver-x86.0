@@ -1,103 +1,119 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 97D7E20FA88
-	for <platform-driver-x86@vger.kernel.org>; Thu,  7 Nov 2024 16:36:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F7A2216A3D;
+	Thu,  7 Nov 2024 17:20:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730997398; cv=none; b=TdDincnhrAyFsJYgZnLt0PwHK7YwGlCd7oqGfftQDf1F4stF4u1b0wA8bwXy9q6djiFTmG+YvP0r5FcssKFcmaVWehpx+ZcYezuKI+f7YKGDwaxIFddfkWa2QhlvLy1b2nM8CL7HrxslFGNWT5a356lDIdImu0KekzODGZ9Wayw=
+	t=1731000046; cv=none; b=KL9YtFCH28bzxEf2osqHXgYgeJnEz0G7dL/+51SWnjahq9Sah9GLbHDLRPsB0AuMcGS3dOJL2Zjp5KlHTPSBjicy/PG3+4VTcvpqETK+Pp8Ep+vxIQq8juLvCTjPG2Ycdpctzo+EpJyJUC0kstoFKTraBcyXMLC6v8CJkGsng1s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730997398; c=relaxed/simple;
-	bh=IYzR66GtsFo8I/vZ0LiG7As1h6oOgmpSDL1msQ2UTIQ=;
-	h=Message-ID:Date:MIME-Version:To:From:Subject:Content-Type; b=YFRXkVaGJCRMwFwwcvPxXHlBr8+ngIT+P3RI60yM7DK3KI3eCItbNVQJDx97wtZMbaMxguey+hp+38ETyEezvWUSNwu0p/aPL98urQgXiQXy5gRWoJQAnRG5Qn/PR6pK1RQCybJlVcFY90ZHfajHXtlm9twLZ2N/e9eTGJ1f9qA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=KpRocPyf; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1731000046; c=relaxed/simple;
+	bh=cADn4ARQkTOhflqlIHhNxtca9L54H5LHvOrTgQwQP8c=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=UT2Tkse7N2/fMJXyzMZIfnDM/7LJFyO7c7WniqZH1xaXzCEvDeIWJWld3fJitl5CFCJdLF70brs2TYA+H3VB8UNRSe8IRlXXUIXhdEBdE53bXbGCBvNpZRTHsyK7h91XXAxh6+mWNmWBGDe5B124QKO9/FcA0BIzjkj0SktJdWY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=uirXLcMy; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="KpRocPyf"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1730997395;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=IYzR66GtsFo8I/vZ0LiG7As1h6oOgmpSDL1msQ2UTIQ=;
-	b=KpRocPyfCm1liHVQYqpsfil/iH7mf8h7m+wNy2wPDfDLY22g/md3mQYujt3JTmh9BQoeuf
-	L7EZRaqyRJJqlZS20WZ0ew3UV+fX1xrwDGvIeoUkCQlmfUrMn/tM5W4ydc2x5spWWMaxaU
-	zbGA8smvOrITFScTQTpAeElShrfy+9U=
-Received: from mail-ej1-f71.google.com (mail-ej1-f71.google.com
- [209.85.218.71]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-308-sXAHZ1guM_a5WkavPw3lpg-1; Thu, 07 Nov 2024 11:36:34 -0500
-X-MC-Unique: sXAHZ1guM_a5WkavPw3lpg-1
-X-Mimecast-MFC-AGG-ID: sXAHZ1guM_a5WkavPw3lpg
-Received: by mail-ej1-f71.google.com with SMTP id a640c23a62f3a-a9a2ccb77ceso95524066b.2
-        for <platform-driver-x86@vger.kernel.org>; Thu, 07 Nov 2024 08:36:34 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1730997392; x=1731602192;
-        h=content-transfer-encoding:subject:from:to:content-language
-         :user-agent:mime-version:date:message-id:x-gm-message-state:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=IYzR66GtsFo8I/vZ0LiG7As1h6oOgmpSDL1msQ2UTIQ=;
-        b=nBjwztzAOowLRJW5FSkFZTFqbAAPp8pjavwf4FDlVXBVFXvx7KbZGq00hRlagE2Z0y
-         PtXzQCyLkqRhetbpTk+V293vUaJEC3rRhSaZQCHIjcAWAemEpfZjt5apRdjX2nwM7tSc
-         FQMqv7n1FwCYuopnZMXCRpeETD36WZzXYs5ZbP/V0t6jGQIpxtuw50pzP+GNbb+vhfGf
-         YhQm2KWkvHrtnMSf7MG9MY/CIFM1W/fY/yB0O2S40sUBY5aUgCcWi1ZlBihTqPhwWqZ9
-         WhYidGSJmGksUqiV74+YMk/sU/e05RkPrzfY7FaxTcr32nBckg9igzimjcDi6AftxYy1
-         MyeA==
-X-Gm-Message-State: AOJu0Yz2NxzqwP3t2FAlIt7SqRR8v7X3vqwzh+BVCc8q9iZt/NsHTDKJ
-	Ps+mDAbAwwdhDbsynj0AKGOoYGItNo8vLBv2v8Xncfaz0C05/2tYDb5EnMBC5q30zePNodLxQn1
-	uzxLLK+bTKSgpYby33T0CntLSWAyiLYj62LEVtCEk+SJ0dXWRVf3bJBkEQUawoaVk+vWJLJeR8Y
-	qEYt7zDdxGFGXY0i1fA5n59BubLotzFqGUfhe5xv7cikrhUyT/Qdt9xpA=
-X-Received: by 2002:a17:907:1b92:b0:a9e:45e6:42cb with SMTP id a640c23a62f3a-a9e45e69b52mr1957060166b.18.1730997391959;
-        Thu, 07 Nov 2024 08:36:31 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IGGBQhUDFGRrHyAwibL3Z9JDW3IACwFmKd8ORxLFVdhethWtmDkls9SBIyj1VNIYUtZsAAHew==
-X-Received: by 2002:a17:907:1b92:b0:a9e:45e6:42cb with SMTP id a640c23a62f3a-a9e45e69b52mr1957058166b.18.1730997391528;
-        Thu, 07 Nov 2024 08:36:31 -0800 (PST)
-Received: from ?IPV6:2001:1c00:c32:7800:5bfa:a036:83f0:f9ec? (2001-1c00-0c32-7800-5bfa-a036-83f0-f9ec.cable.dynamic.v6.ziggo.nl. [2001:1c00:c32:7800:5bfa:a036:83f0:f9ec])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a9ee0e2d7absm111922766b.179.2024.11.07.08.36.30
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 07 Nov 2024 08:36:30 -0800 (PST)
-Message-ID: <02b4c051-ea11-4fe9-876d-070d18cd84bf@redhat.com>
-Date: Thu, 7 Nov 2024 17:36:30 +0100
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uirXLcMy"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E8DA9C4CECC;
+	Thu,  7 Nov 2024 17:20:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1731000045;
+	bh=cADn4ARQkTOhflqlIHhNxtca9L54H5LHvOrTgQwQP8c=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+	b=uirXLcMy1Qn//p7lSBnbOlzSbCL5aIT0TqEnGpIZm6Rx23BQJKj1JIwJAP4R6CQ3Y
+	 BGW5ysKmLw5HxKe9TW2Kb0/MrhrtH+FEMuRdl+3jaHMQQkHCavjZQ9xWr31Ghy5ARf
+	 J2TiGOLT8c6IMr+E/gnELx0660oj7VCoNS9utcB0Gb41g2oymp/+1G/7KVgOzIPwxq
+	 q5/0lzC969ZrJFg9aKvlY1ckSKQVQp4pt0o8irIOJAq56q9MDR85uEDv3iCGEqltvk
+	 QeOfANjQFk8pt3o4hyDqn3DINTzEn9s+ZnpBLM2/xaYcEN2lpP63yM+3MX3zh3CiMr
+	 Amp7lQpjSOJ2g==
+From: Pratyush Yadav <pratyush@kernel.org>
+To: Thomas =?utf-8?Q?Wei=C3=9Fschuh?= <linux@weissschuh.net>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,  "Rafael J. Wysocki"
+ <rafael@kernel.org>,  Bjorn Helgaas <bhelgaas@google.com>,  Srinivas
+ Kandagatla <srinivas.kandagatla@linaro.org>,  Davidlohr Bueso
+ <dave@stgolabs.net>,  Jonathan Cameron <jonathan.cameron@huawei.com>,
+  Dave Jiang <dave.jiang@intel.com>,  Alison Schofield
+ <alison.schofield@intel.com>,  Vishal Verma <vishal.l.verma@intel.com>,
+  Ira Weiny <ira.weiny@intel.com>,  Alex Deucher
+ <alexander.deucher@amd.com>,  Christian =?utf-8?Q?K=C3=B6nig?=
+ <christian.koenig@amd.com>,
+  Xinhui Pan <Xinhui.Pan@amd.com>,  David Airlie <airlied@gmail.com>,
+  Simona Vetter <simona@ffwll.ch>,  Dennis Dalessandro
+ <dennis.dalessandro@cornelisnetworks.com>,  Jason Gunthorpe
+ <jgg@ziepe.ca>,  Leon Romanovsky <leon@kernel.org>,  Tudor Ambarus
+ <tudor.ambarus@linaro.org>,  Pratyush Yadav <pratyush@kernel.org>,
+  Michael Walle <mwalle@kernel.org>,  Miquel Raynal
+ <miquel.raynal@bootlin.com>,  Richard Weinberger <richard@nod.at>,
+  Vignesh Raghavendra <vigneshr@ti.com>,  Naveen Krishna Chatradhi
+ <naveenkrishna.chatradhi@amd.com>,  Carlos Bilbao
+ <carlos.bilbao.osdev@gmail.com>,  Hans de Goede <hdegoede@redhat.com>,
+  Ilpo =?utf-8?Q?J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,  "David E.
+ Box"
+ <david.e.box@linux.intel.com>,  "James E.J. Bottomley"
+ <James.Bottomley@HansenPartnership.com>,  "Martin K. Petersen"
+ <martin.petersen@oracle.com>,  Richard Henderson
+ <richard.henderson@linaro.org>,  Matt Turner <mattst88@gmail.com>,
+  Frederic Barrat <fbarrat@linux.ibm.com>,  Andrew Donnellan
+ <ajd@linux.ibm.com>,  Arnd Bergmann <arnd@arndb.de>,  Logan Gunthorpe
+ <logang@deltatee.com>,  "K. Y. Srinivasan" <kys@microsoft.com>,  Haiyang
+ Zhang <haiyangz@microsoft.com>,  Wei Liu <wei.liu@kernel.org>,  Dexuan Cui
+ <decui@microsoft.com>,  Dan Williams <dan.j.williams@intel.com>,
+  linux-kernel@vger.kernel.org,  linux-pci@vger.kernel.org,
+  linux-cxl@vger.kernel.org,  amd-gfx@lists.freedesktop.org,
+  dri-devel@lists.freedesktop.org,  linux-rdma@vger.kernel.org,
+  linux-mtd@lists.infradead.org,  platform-driver-x86@vger.kernel.org,
+  linux-scsi@vger.kernel.org,  linux-usb@vger.kernel.org,
+  linux-alpha@vger.kernel.org,  linuxppc-dev@lists.ozlabs.org,
+  linux-hyperv@vger.kernel.org
+Subject: Re: [PATCH v2 05/10] sysfs: treewide: constify attribute callback
+ of bin_is_visible()
+In-Reply-To: <20241103-sysfs-const-bin_attr-v2-5-71110628844c@weissschuh.net>
+	("Thomas =?utf-8?Q?Wei=C3=9Fschuh=22's?= message of "Sun, 03 Nov 2024
+ 17:03:34 +0000")
+References: <20241103-sysfs-const-bin_attr-v2-0-71110628844c@weissschuh.net>
+	<20241103-sysfs-const-bin_attr-v2-5-71110628844c@weissschuh.net>
+Date: Thu, 07 Nov 2024 17:20:37 +0000
+Message-ID: <mafs08qtv7yfu.fsf@kernel.org>
+User-Agent: Gnus/5.13 (Gnus v5.13)
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Content-Language: en-US, nl
-To: "platform-driver-x86@vger.kernel.org"
- <platform-driver-x86@vger.kernel.org>,
- =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-From: Hans de Goede <hdegoede@redhat.com>
-Subject: Reducing my involvement in platform-driver-x86 maintenance
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-Hi All,
+On Sun, Nov 03 2024, Thomas Wei=C3=9Fschuh wrote:
 
-With all the camera hw-enablement work I'm doing I have been spending
-most of my time on that and I have less and less bandwidth for pdx86
-maintenance.
+> The is_bin_visible() callbacks should not modify the struct
+> bin_attribute passed as argument.
+> Enforce this by marking the argument as const.
+>
+> As there are not many callback implementers perform this change
+> throughout the tree at once.
+>
+> Signed-off-by: Thomas Wei=C3=9Fschuh <linux@weissschuh.net>
+> ---
+> diff --git a/drivers/mtd/spi-nor/sysfs.c b/drivers/mtd/spi-nor/sysfs.c
+> index 96064e4babf01f6950c81586764386e7671cbf97..5e9eb268073d18e0a46089000=
+f18a3200b4bf13d 100644
+> --- a/drivers/mtd/spi-nor/sysfs.c
+> +++ b/drivers/mtd/spi-nor/sysfs.c
+> @@ -87,7 +87,7 @@ static umode_t spi_nor_sysfs_is_visible(struct kobject =
+*kobj,
+>  }
+>=20=20
+>  static umode_t spi_nor_sysfs_is_bin_visible(struct kobject *kobj,
+> -					    struct bin_attribute *attr, int n)
+> +					    const struct bin_attribute *attr, int n)
 
-Ilpo has agreed to become the primary pdx86 maintainer with me moving
-to more of a backup role, instead of us splitting the load 50/50.
+Acked-by: Pratyush Yadav <pratyush@kernel.org> # for spi-nor
 
-I'm not going anywhere and I will still be around to ask questions and
-I will likely also still get involved in some discussions, but I won't
-be as active as before.
+>  {
+>  	struct spi_device *spi =3D to_spi_device(kobj_to_dev(kobj));
+>  	struct spi_mem *spimem =3D spi_get_drvdata(spi);
 
-If you have any questions specifically for me, please send me a direct
-ping at hdegoede@redhat.com *without* Cc-ing the list. Then I'll reply
-on the list of course.
-
-Everything with the list in the Cc will get filtered into a mailfolder
-for pdx86, which I'm not going to be watching as actively as before.
-So a direct ping should work best to get my attention.
-
+--=20
 Regards,
-
-Hans
-
-
+Pratyush Yadav
