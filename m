@@ -1,46 +1,46 @@
-Received: from NAM12-DM6-obe.outbound.protection.outlook.com (mail-dm6nam12on2086.outbound.protection.outlook.com [40.107.243.86])
+Received: from NAM12-MW2-obe.outbound.protection.outlook.com (mail-mw2nam12on2040.outbound.protection.outlook.com [40.107.244.40])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B8782196D9D
-	for <platform-driver-x86@vger.kernel.org>; Thu,  7 Nov 2024 07:27:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.243.86
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E049196D9D
+	for <platform-driver-x86@vger.kernel.org>; Thu,  7 Nov 2024 07:27:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.244.40
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730964466; cv=fail; b=QjMtQZO3ryUSErM8odeUD57vONaafcepEbjOiUBgE0rh0x98b9Z6PGvZHKlyIoY3D7p8bZvd5B+xPrznBvZwsKHCQWvVL7max2eyJzvMAY0SNyOrd35j7pTeGGP+gM2Yi+HgVBpug6xR6yJipgTYvrR7dspY6j7Edw5vhALkXqY=
+	t=1730964470; cv=fail; b=Zt/qyBHnInogsJj1uF1O3uIyApf4VkrxhJleS/AHAVgBGd8ozbkO2v/2DvSdWg91ln8IwInN29L0Fok8Y/NpPRtMhGjMlHHNzQhQOfYotGL4BgnkXvgWoI+qZcI/VM26MvkZ7PaDtFc4g1Dqamjvvee1YVf5IWBY5z0ttUD8IAE=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730964466; c=relaxed/simple;
-	bh=5mLaW8LB+pSaQ6oeo/KkCfZpRjKmIIKWuN4UOVmQHsk=;
+	s=arc-20240116; t=1730964470; c=relaxed/simple;
+	bh=+SV20//5/2FSCa70rdlb2J0x8rJU1agb1DWSUbjafkk=;
 	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=cR2+pN+Y8hxM3FL5CAEfYFE7qv+rdn4fhR5XdMQnke6fwLKtZmBSEoygGYVNxPH4aLo+46kbxpb63wkMls45zzgb+vKJLmublNgKZ68DIOkIVYxm9rXki3ykNcHkIphmgYms0HPMNwLU9uuhforohiZn0Ky8le+NadbV5bcin1g=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=38nwqva9; arc=fail smtp.client-ip=40.107.243.86
+	 MIME-Version:Content-Type; b=IU6MN5YX0JG9IXkRSLS8ZQWQx4zf8xkaPvcr3iur9ew2PVemkmVvTr+7M7L/P+skwf9Bhrpyo36BoFfVCDxAukKZ6xqiJSeInEvTaiPb9tqGzYeCsQKNmvSmqfOWK+CaJj/EuvdssDes/BE42pCZbP3GH+JCRmO1tmuXIoVYoaw=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=fdA8bz8n; arc=fail smtp.client-ip=40.107.244.40
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
 Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="38nwqva9"
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="fdA8bz8n"
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=zE89i5vqi+PwFbhsmR3O73yWJ9vPmV3k1H7pKU4XUAVylP5hR+lZCJDuDXycvOO3zjITBkFf/nBtZv8Wivk3x+DfjEvIVaguIN8/ZFEh591BVCUpXByZ85MwRfZT03cp92RqF1iJS69sfDWvsW24C0W9kvusXKD9LAIkcJEViFRgtOXKJFrS69IHC3iQm8LZjys27pKVvx8YiCNAc+pZNok6mzyLX8ktqctDCgzJCo7Vq3yYh19EChV1iY3aPqMYvvsacYhZNqco+ObGy+QAOYeBWtBpKzuEJpp+Gr8svSKMjce1ixe3W/7WCLfOqYlNJDVYCk0lW/spBWZehzTwJg==
+ b=p3vNTiYj3lCmbIufz7IhaAkdr22tlkLO48B01Xwv+F4y3oG/0CAmynRjvnAe8XLR1exK40nZgx9Egq8bHuuHAOEHTlSOOhOJK7Zo7CvfHE9Exn24XY5WheLdZx7QNNbfKcmjKZmsJLX2v8cuNmPWhI8u76grGnyNNNk+wuc1IipCZE/+sTJZ6jnwWD1OmbyNFbQMOcYJkYqbBQS6KenJojx0vIYjo5bskMjs1j4gKP1470nfMzb2+czJpKXdjaOYDNXyfvmtzRL874oiaXF9XEKh230/WE1a4ARGCMS6xBO/xf30agkJvnzeZXKaDSBT1/G44e9IZQNKeFNTPV9H3Q==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=jzYZZp2PuY7Q/QQBTiphlUU1N0aAtLylUqALyE7O8Io=;
- b=QgTDuyiwnG0toWWAX4HsuXmmToiI/RehUJ/6P7IsryrnH1tfR0mFDWcEcnlcgFuJtddI/4UUGx8735lkfIWFMmQafqN8CqRlmiJzfLfUg4blu+5WJRpSpMqgeYOpap6SwScR5C/01E7cSliuEZwH7BoFdTMmToGXA/5fgrcZ+8RvZJywjWqjEXKl9IfEuBUNB/YoAxinEEuWvKHHbst41Q3NimCOe9QBqdyZWjTz8Y5y8uw2JpNKU9TAygaNrqK5YkdkGHPiGarWijEty9XSPwAHeBo8JjdNjGxoSCQgkuo6/M2S23YPRNRD22KBzxoVdHYeTdOUm9b5MJZi3jxflg==
+ bh=5Nfs1iPRop5rBgboI5kCaKWCFGYohKwWE73GHr/0E1c=;
+ b=ByX5TPhFbWBRkM+WfGticP3d2+69dboiVYrHP7oGWQlO9UTysslgS3N0cC403eAnAadnA0h6fUDA+w2oyKZ5nsFEwcYK58ksxKQtsWowfEOUbYoodXZdgB2QrZGng9EkYTES9KjIbuct1FIBx74qHes5f+MRFQOdQal/dPpJmkovOXBFNjswld/hYuFq1ybBvzAIgHbvAKn51tmhgucje/iqva5yTWdwODUQ372hQUPUtYe6Mf/+PlReV229u9HKepDam3xzwsWto3MhStZr8w/WtieSu1NwOm5SY8lzlMKNfLTyZlF/dSQLEA3RxOf9Glm802fZ7uZb17Q6Qc+Z8Q==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
  165.204.84.17) smtp.rcpttodomain=redhat.com smtp.mailfrom=amd.com; dmarc=pass
  (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
  dkim=none (message not signed); arc=none (0)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=jzYZZp2PuY7Q/QQBTiphlUU1N0aAtLylUqALyE7O8Io=;
- b=38nwqva9En2d4ovSr/zF+bHqF3noZ8MU+9c9QTmgiEoltL6pLcGVzPzsYlaEpRI+0ENbMkA+HY4JaPAtwsV4KF1KLtKJ3W2t7dFcQNXopah4mPOUNlfpMZOMBnmy75yb4AXCFZLYTJBk4nPKWsY7uaygxjVmnSoL3YJMPgWMd3c=
-Received: from PH0PR07CA0023.namprd07.prod.outlook.com (2603:10b6:510:5::28)
- by PH7PR12MB9074.namprd12.prod.outlook.com (2603:10b6:510:2f4::16) with
+ bh=5Nfs1iPRop5rBgboI5kCaKWCFGYohKwWE73GHr/0E1c=;
+ b=fdA8bz8nZq7fMiNurimDgG1HBe64kkezlZZDybYsxIWZYDT16zi2uKlatOlLI+Ujtcz+OVmzuP4ZzOyayRxdA7ddQIZxXhiBg99Z15kXW10uahtOZIsOoqLAmMhQYn7If7ajRbEoIlDLzaC3mv9kFGwXrfFdM6u1EyDrNNhAWoM=
+Received: from PH0PR07CA0009.namprd07.prod.outlook.com (2603:10b6:510:5::14)
+ by SN7PR12MB6932.namprd12.prod.outlook.com (2603:10b6:806:260::14) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8137.18; Thu, 7 Nov
- 2024 07:27:39 +0000
-Received: from SN1PEPF00036F3D.namprd05.prod.outlook.com
- (2603:10b6:510:5:cafe::9) by PH0PR07CA0023.outlook.office365.com
- (2603:10b6:510:5::28) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8137.19 via Frontend
- Transport; Thu, 7 Nov 2024 07:27:39 +0000
+ 2024 07:27:44 +0000
+Received: from SN1PEPF00036F41.namprd05.prod.outlook.com
+ (2603:10b6:510:5:cafe::c5) by PH0PR07CA0009.outlook.office365.com
+ (2603:10b6:510:5::14) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8137.18 via Frontend
+ Transport; Thu, 7 Nov 2024 07:27:44 +0000
 X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
  smtp.mailfrom=amd.com; dkim=none (message not signed)
  header.d=none;dmarc=pass action=none header.from=amd.com;
@@ -48,21 +48,21 @@ Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
  165.204.84.17 as permitted sender) receiver=protection.outlook.com;
  client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
 Received: from SATLEXMB04.amd.com (165.204.84.17) by
- SN1PEPF00036F3D.mail.protection.outlook.com (10.167.248.21) with Microsoft
+ SN1PEPF00036F41.mail.protection.outlook.com (10.167.248.25) with Microsoft
  SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.8137.17 via Frontend Transport; Thu, 7 Nov 2024 07:27:39 +0000
+ 15.20.8137.17 via Frontend Transport; Thu, 7 Nov 2024 07:27:43 +0000
 Received: from airavat.amd.com (10.180.168.240) by SATLEXMB04.amd.com
  (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Thu, 7 Nov
- 2024 01:27:37 -0600
+ 2024 01:27:41 -0600
 From: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
 To: <hdegoede@redhat.com>, <ilpo.jarvinen@linux.intel.com>
 CC: <Sanket.Goswami@amd.com>, <platform-driver-x86@vger.kernel.org>, "Shyam
  Sundar S K" <Shyam-sundar.S-k@amd.com>, Mario Limonciello
 	<mario.limonciello@amd.com>
-Subject: [PATCH v4 04/11] platform/x86/amd/pmc: Update function names to align with new STB file
-Date: Thu, 7 Nov 2024 12:57:07 +0530
-Message-ID: <20241107072714.943423-5-Shyam-sundar.S-k@amd.com>
+Subject: [PATCH v4 06/11] platform/x86/amd/pmc: Isolate STB code changes to a new file
+Date: Thu, 7 Nov 2024 12:57:09 +0530
+Message-ID: <20241107072714.943423-7-Shyam-sundar.S-k@amd.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20241107072714.943423-1-Shyam-sundar.S-k@amd.com>
 References: <20241107072714.943423-1-Shyam-sundar.S-k@amd.com>
@@ -78,325 +78,225 @@ X-ClientProxiedBy: SATLEXMB03.amd.com (10.181.40.144) To SATLEXMB04.amd.com
  (10.181.40.145)
 X-EOPAttributedMessage: 0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SN1PEPF00036F3D:EE_|PH7PR12MB9074:EE_
-X-MS-Office365-Filtering-Correlation-Id: 051cd0bd-5a71-4ade-e247-08dcfefda8f2
+X-MS-TrafficTypeDiagnostic: SN1PEPF00036F41:EE_|SN7PR12MB6932:EE_
+X-MS-Office365-Filtering-Correlation-Id: 2bd7fcc3-12a9-468c-8212-08dcfefdab90
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|82310400026|1800799024|36860700013|376014;
+	BCL:0;ARA:13230040|376014|1800799024|36860700013|82310400026;
 X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?HkvJN88Bm9TPqMlAw4gFQ0SOz2ga8AtF0yOWOtObq5BncvcqHslW9Y5OoTlo?=
- =?us-ascii?Q?Ws+v7t5rSivamb+VGjCL6kJGwF1lW5vmZhzXOxFezxnq8lP2EVCRY7monc9m?=
- =?us-ascii?Q?q0LkcY6iaFh/89BA9N6ejTctXaNOku+F24tBTFRWmPo/hE4nPBM9BjAf2H6f?=
- =?us-ascii?Q?zFvK6Yti8zFGwZZLuFhkMKH8ojMmXyhKVAuLZLCO1VnZ5gCwZHW3kYvCadxd?=
- =?us-ascii?Q?S3dPJSo0x41RGaDxiJbpyddt73Drfys3Bdhxz/iIRbmqyKZYb+TzIhD0qNMS?=
- =?us-ascii?Q?U+df0PPAlzXp1xYIv15GZuQaHyZhjfcH/YtiJp+u981bRFciXcetPWQgfXWX?=
- =?us-ascii?Q?Dj/W5QKJQsmJe37VAULbFqfdnjcyiMAvMBPsfAvRLfNhmFxW26bK09iMGga+?=
- =?us-ascii?Q?SAfnWfL2jWJuKmlG9eLI7atpocKBkKKwIYg7jkTRgsxQthkWNV9TrOfSa+lW?=
- =?us-ascii?Q?m7tnuAddHbmDNOlo+LZMmEcV5YxsZmZyMfgmeP+9h7F95amnQ8bSQfTjJ41B?=
- =?us-ascii?Q?WAL0sDPQw38sdM06TYKYeKth4U8wr5FWJNz0C3bfaG6KWuSIqw0h7GEvnWmA?=
- =?us-ascii?Q?T2lUiC6QAEUmo/BktzdFC4BJ4oKb1pMDIPVWow5JfBLDdDUljLEi8gUo2G/R?=
- =?us-ascii?Q?sCoHb+ruAjtIZmSAlqsE9fbuK0l2f/125TrwK8YQwE2wtJoA6C1rzFtAlida?=
- =?us-ascii?Q?gsgxMVgCZUa0Q4oq0EsvvK/YE89xllOXVQ2ESmm/z5vVTsk/MpZKJehI/jhD?=
- =?us-ascii?Q?o8jdab6ImdJ44bZyjWMKPcooGaBhlzngj3vIerdtQkMxOAg915lqqnKgicqC?=
- =?us-ascii?Q?ielzB7OygURl5wPFUz69IstsQNVkNlVdgaq3+zruwk1aRAxDBDNraLNHfbkZ?=
- =?us-ascii?Q?rcCWQ2t8QBKcYQk+kiaiJ9xPTh9qkSqX9j6Z3NMAB8mFxz1pqG7WnnNXg7SA?=
- =?us-ascii?Q?KOysDDQF7gVYIg/M3XeZKTkas5TgC5gvb7RQiCHDsqClrsCx5l3ZFWeVy6s9?=
- =?us-ascii?Q?ESJlfadWif1Nqn5R2ygf+Z6g+a5vGz07iKrp0vku4vb4id9Kw44DR/sr7pjf?=
- =?us-ascii?Q?vfI+3VaVgpKT9jihEbWoLJGPudDzJJCrBkHmWqyoa3e7VnXmoKSFkUbBAaht?=
- =?us-ascii?Q?JxZpQw33+1sRpCsxX3D0+xQNVVQJMhgPlLxZK4/nN/08RtKrvkTVFEhHis+P?=
- =?us-ascii?Q?rGxPuAPv380ds6dtV6wwvHg3qxfTaV3UCr9NHDhGs6iIS5Yh+WFPyLWz0GfU?=
- =?us-ascii?Q?BTMrHbZX7HH5AysT3WuY1RD7/+qmMu6V0R9UkHdxsLGrbvZ6hJg2K5KOisa/?=
- =?us-ascii?Q?U8gxW7Z/aX7knZtdMinpJ9HHxDPCLya6xUiTAZNzu4b7gqbi1ZM26N1FSb9y?=
- =?us-ascii?Q?8LwHUllUjw/Sf7MY5OihzHJIGD2XeJla8V0D6sXdybtmhd4mtg=3D=3D?=
+	=?us-ascii?Q?C+3Wuf2TaRCUiCFkv27NG4i54nz3rdhHysIem4X2s+iPz54UJqcTeKFWuLjw?=
+ =?us-ascii?Q?Z8LFWfzO6YC6/LeZnDyr1DpSWb3/mWW5pjeucquJS44sfGLlIcuouazJrV0q?=
+ =?us-ascii?Q?tHhDCCni150EzSNXFi/hXixhcRHS0xLOFBWIvJ1TF6Cll8yTuRkEnzq0XB84?=
+ =?us-ascii?Q?kAMPFmAyEXf89Fs6+2TXEfjn517/99SxYzyT7VYm0Tv9pB0tgrZZ6i58ryxQ?=
+ =?us-ascii?Q?LsSsMvNCxPAn6+aWhDxoOwDRN0s8+6o+Y4gczL0bkBvRnwh02xk15B5lx4S+?=
+ =?us-ascii?Q?ENFDkN4Org23YeMWohOD+UAK0ch3C6vbAiV0jX4WD6vWOrYooJQOxIh3A0+l?=
+ =?us-ascii?Q?07v+mFE3a1QnDwIJF4XJzZmk5tn7lwWjAPN+M+ItjWCjo0Hq88H43JpU5DGt?=
+ =?us-ascii?Q?wNeIygJXWZfKFcTKplZo5c4GJYbhYM80mFi8M70OUJBVzT0BhH2cSk4hyOXg?=
+ =?us-ascii?Q?rPKQQXJ1sCqfb3mkr24I8Koz87X2eoe7kg5feP3uxl6kngzr+1pg7qUmQ1gl?=
+ =?us-ascii?Q?Nkm7rK0I0CFlOxGGydPX87ZP2XJTlDV951gtBgnzU2iSgZNtqEmANe/P1Hs2?=
+ =?us-ascii?Q?ifV4w98Kxh/wTQlBxiyWF96Tz/42fIvn7sFNXEy/iLDMh6F4a2jWGvL1UJDm?=
+ =?us-ascii?Q?roBYlQ60vw2i0iePo2IRSPzZtKTlzOj0RaHmmu2khWzhnQiluoGgn6bvTn1G?=
+ =?us-ascii?Q?Zt/6yXH9LqkRnzBOFS+gwK7C+RuIyluSnyHITnoYF3KWOkxNS8/ub54uCIv5?=
+ =?us-ascii?Q?BrDvBAVsxQGHr5CLY/nf1QqW0H1nBUV238pMNxV2lxhKWLQ6hhggIrYlWunA?=
+ =?us-ascii?Q?l2ebW4g7Dmyp/2CcSQQiUwjT0tNHWWLSW3OnOCLnP77oibihX3uzFPXXzDb2?=
+ =?us-ascii?Q?bznpWIQQGHNRNoH9UrpVhI/K4YHLuOr7a7VVwLu6xLtXCywenyhcw93wu+cC?=
+ =?us-ascii?Q?nPntSxk2TEd1yphM1Zp1yFNZaVXWIWfEf0Ddc4jF4VHZkBI8MRP9kM3m6FXQ?=
+ =?us-ascii?Q?Aa8wpMuiJJXySSqFqFwNswM5rDMfnKgH/HnhbA8yZ74SGxgS4MvofEth/RPA?=
+ =?us-ascii?Q?vmBnDsQg1uq5GybcjM2xTL0nM7Ub1XkJYGNa6ioTcURLTQgnKbD56mptsS+2?=
+ =?us-ascii?Q?+C8bscoaRbF/VUdPd9G6Q/5mjiHYA/YJ/Fh3WyVtlihKCCwQhSt4NpKNRaF/?=
+ =?us-ascii?Q?Seymvc+QcRZzjut7j8++XMUJTn0T+wcZ5czQh/z7K6oo/CmK3Crn6uH6CQ51?=
+ =?us-ascii?Q?aCjJr7ZQyNkQkNq2IUkdIOFkSu4lYfQ8opeOA3jyN7fOnOzafgx8xSA/toN5?=
+ =?us-ascii?Q?X/hLoi38OXOoacsNNwCCT/Xj3bVn93s2KF3/dwD7/b6svBGo33dVe2ASVRjw?=
+ =?us-ascii?Q?nLCrV3nXPPUPfa1ZYbAEPcHlHxWdR0ehwoL21Wht3EAYC+1PIw=3D=3D?=
 X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(82310400026)(1800799024)(36860700013)(376014);DIR:OUT;SFP:1101;
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(376014)(1800799024)(36860700013)(82310400026);DIR:OUT;SFP:1101;
 X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 07 Nov 2024 07:27:39.3657
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 07 Nov 2024 07:27:43.7541
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 051cd0bd-5a71-4ade-e247-08dcfefda8f2
+X-MS-Exchange-CrossTenant-Network-Message-Id: 2bd7fcc3-12a9-468c-8212-08dcfefdab90
 X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
 X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
 X-MS-Exchange-CrossTenant-AuthSource:
-	SN1PEPF00036F3D.namprd05.prod.outlook.com
+	SN1PEPF00036F41.namprd05.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Anonymous
 X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH7PR12MB9074
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN7PR12MB6932
 
-With STB now in a separate file, update the function names to match the
-correct naming schema by removing the _pmc_ prefix where needed.
+Since S2D (Spill to DRAM) uses different message port offsets compared to
+PMC message offsets for communication with PMFW, relocate the S2D macros
+from pmc.c to a new file, mp1_stb.c, for better code organization.
+
+Following this change, it is logical to introduce a new structure,
+"struct stb_arg," to pass the message, argument, and response offset
+details to PMFW via the amd_pmc_send_cmd() call. Additionally, move the
+s2d_msg_id member from amd_pmc_dev into the new structure.
 
 Reviewed-by: Mario Limonciello <mario.limonciello@amd.com>
 Co-developed-by: Sanket Goswami <Sanket.Goswami@amd.com>
 Signed-off-by: Sanket Goswami <Sanket.Goswami@amd.com>
 Signed-off-by: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
 ---
- drivers/platform/x86/amd/pmc/mp1_stb.c | 71 +++++++++++++-------------
- drivers/platform/x86/amd/pmc/pmc.c     |  8 +--
- drivers/platform/x86/amd/pmc/pmc.h     |  6 +--
- 3 files changed, 42 insertions(+), 43 deletions(-)
+ drivers/platform/x86/amd/pmc/mp1_stb.c | 33 +++++++++++++++++---------
+ drivers/platform/x86/amd/pmc/pmc.c     | 17 +++++--------
+ drivers/platform/x86/amd/pmc/pmc.h     |  9 ++++++-
+ 3 files changed, 36 insertions(+), 23 deletions(-)
 
 diff --git a/drivers/platform/x86/amd/pmc/mp1_stb.c b/drivers/platform/x86/amd/pmc/mp1_stb.c
-index 29e0241190e4..5c03ac92558f 100644
+index 9ee629db9af9..6a54dd3e7f4c 100644
 --- a/drivers/platform/x86/amd/pmc/mp1_stb.c
 +++ b/drivers/platform/x86/amd/pmc/mp1_stb.c
-@@ -24,7 +24,7 @@
- #define S2D_RSVD_RAM_SPACE		0x100000
+@@ -31,6 +31,11 @@
+ #define STB_FORCE_FLUSH_DATA		0xCF
+ #define FIFO_SIZE		4096
  
- /* STB Registers */
--#define AMD_PMC_STB_PMI_0		0x03E30600
-+#define AMD_STB_PMI_0			0x03E30600
- #define AMD_PMC_STB_DUMMY_PC	0xC6000007
- 
- /* STB Spill to DRAM Message Definition */
-@@ -47,32 +47,32 @@ enum s2d_arg {
- 	S2D_DRAM_SIZE,
- };
- 
--struct amd_pmc_stb_v2_data {
-+struct amd_stb_v2_data {
- 	size_t size;
- 	u8 data[] __counted_by(size);
- };
- 
--int amd_pmc_write_stb(struct amd_pmc_dev *dev, u32 data)
-+int amd_stb_write(struct amd_pmc_dev *dev, u32 data)
- {
- 	int err;
- 
--	err = amd_smn_write(0, AMD_PMC_STB_PMI_0, data);
-+	err = amd_smn_write(0, AMD_STB_PMI_0, data);
- 	if (err) {
--		dev_err(dev->dev, "failed to write data in stb: 0x%X\n", AMD_PMC_STB_PMI_0);
-+		dev_err(dev->dev, "failed to write data in stb: 0x%X\n", AMD_STB_PMI_0);
- 		return pcibios_err_to_errno(err);
- 	}
- 
- 	return 0;
- }
- 
--int amd_pmc_read_stb(struct amd_pmc_dev *dev, u32 *buf)
-+int amd_stb_read(struct amd_pmc_dev *dev, u32 *buf)
- {
- 	int i, err;
- 
- 	for (i = 0; i < FIFO_SIZE; i++) {
--		err = amd_smn_read(0, AMD_PMC_STB_PMI_0, buf++);
-+		err = amd_smn_read(0, AMD_STB_PMI_0, buf++);
- 		if (err) {
--			dev_err(dev->dev, "error reading data from stb: 0x%X\n", AMD_PMC_STB_PMI_0);
-+			dev_err(dev->dev, "error reading data from stb: 0x%X\n", AMD_STB_PMI_0);
- 			return pcibios_err_to_errno(err);
- 		}
- 	}
-@@ -80,7 +80,7 @@ int amd_pmc_read_stb(struct amd_pmc_dev *dev, u32 *buf)
- 	return 0;
- }
- 
--static int amd_pmc_stb_debugfs_open(struct inode *inode, struct file *filp)
-+static int amd_stb_debugfs_open(struct inode *inode, struct file *filp)
- {
- 	struct amd_pmc_dev *dev = filp->f_inode->i_private;
- 	u32 size = FIFO_SIZE * sizeof(u32);
-@@ -91,7 +91,7 @@ static int amd_pmc_stb_debugfs_open(struct inode *inode, struct file *filp)
- 	if (!buf)
- 		return -ENOMEM;
- 
--	rc = amd_pmc_read_stb(dev, buf);
-+	rc = amd_stb_read(dev, buf);
- 	if (rc) {
- 		kfree(buf);
- 		return rc;
-@@ -101,8 +101,7 @@ static int amd_pmc_stb_debugfs_open(struct inode *inode, struct file *filp)
- 	return rc;
- }
- 
--static ssize_t amd_pmc_stb_debugfs_read(struct file *filp, char __user *buf, size_t size,
--					loff_t *pos)
-+static ssize_t amd_stb_debugfs_read(struct file *filp, char __user *buf, size_t size, loff_t *pos)
- {
- 	if (!filp->private_data)
- 		return -EINVAL;
-@@ -111,24 +110,24 @@ static ssize_t amd_pmc_stb_debugfs_read(struct file *filp, char __user *buf, siz
- 				       FIFO_SIZE * sizeof(u32));
- }
- 
--static int amd_pmc_stb_debugfs_release(struct inode *inode, struct file *filp)
-+static int amd_stb_debugfs_release(struct inode *inode, struct file *filp)
- {
- 	kfree(filp->private_data);
- 	return 0;
- }
- 
--static const struct file_operations amd_pmc_stb_debugfs_fops = {
-+static const struct file_operations amd_stb_debugfs_fops = {
- 	.owner = THIS_MODULE,
--	.open = amd_pmc_stb_debugfs_open,
--	.read = amd_pmc_stb_debugfs_read,
--	.release = amd_pmc_stb_debugfs_release,
-+	.open = amd_stb_debugfs_open,
-+	.read = amd_stb_debugfs_read,
-+	.release = amd_stb_debugfs_release,
- };
- 
- /* Enhanced STB Firmware Reporting Mechanism */
--static int amd_pmc_stb_handle_efr(struct file *filp)
-+static int amd_stb_handle_efr(struct file *filp)
- {
- 	struct amd_pmc_dev *dev = filp->f_inode->i_private;
--	struct amd_pmc_stb_v2_data *stb_data_arr;
-+	struct amd_stb_v2_data *stb_data_arr;
- 	u32 fsize;
- 
- 	fsize = dev->dram_size - S2D_RSVD_RAM_SPACE;
-@@ -143,15 +142,15 @@ static int amd_pmc_stb_handle_efr(struct file *filp)
- 	return 0;
- }
- 
--static int amd_pmc_stb_debugfs_open_v2(struct inode *inode, struct file *filp)
-+static int amd_stb_debugfs_open_v2(struct inode *inode, struct file *filp)
- {
- 	struct amd_pmc_dev *dev = filp->f_inode->i_private;
- 	u32 fsize, num_samples, val, stb_rdptr_offset = 0;
--	struct amd_pmc_stb_v2_data *stb_data_arr;
-+	struct amd_stb_v2_data *stb_data_arr;
- 	int ret;
- 
- 	/* Write dummy postcode while reading the STB buffer */
--	ret = amd_pmc_write_stb(dev, AMD_PMC_STB_DUMMY_PC);
-+	ret = amd_stb_write(dev, AMD_PMC_STB_DUMMY_PC);
- 	if (ret)
- 		dev_err(dev->dev, "error writing to STB: %d\n", ret);
- 
-@@ -168,7 +167,7 @@ static int amd_pmc_stb_debugfs_open_v2(struct inode *inode, struct file *filp)
- 	 * platforms that support enhanced dram size reporting.
- 	 */
- 	if (dump_custom_stb)
--		return amd_pmc_stb_handle_efr(filp);
-+		return amd_stb_handle_efr(filp);
++/* STB S2D(Spill to DRAM) has different message port offset */
++#define AMD_S2D_REGISTER_MESSAGE	0xA20
++#define AMD_S2D_REGISTER_RESPONSE	0xA80
++#define AMD_S2D_REGISTER_ARGUMENT	0xA88
++
+ static bool enable_stb;
+ module_param(enable_stb, bool, 0644);
+ MODULE_PARM_DESC(enable_stb, "Enable the STB debug mechanism");
+@@ -170,7 +175,7 @@ static int amd_stb_debugfs_open_v2(struct inode *inode, struct file *filp)
+ 		return amd_stb_handle_efr(filp);
  
  	/* Get the num_samples to calculate the last push location */
- 	ret = amd_pmc_send_cmd(dev, S2D_NUM_SAMPLES, &num_samples, dev->s2d_msg_id, true);
-@@ -208,28 +207,28 @@ static int amd_pmc_stb_debugfs_open_v2(struct inode *inode, struct file *filp)
- 	return 0;
- }
- 
--static ssize_t amd_pmc_stb_debugfs_read_v2(struct file *filp, char __user *buf, size_t size,
--					   loff_t *pos)
-+static ssize_t amd_stb_debugfs_read_v2(struct file *filp, char __user *buf, size_t size,
-+				       loff_t *pos)
- {
--	struct amd_pmc_stb_v2_data *data = filp->private_data;
-+	struct amd_stb_v2_data *data = filp->private_data;
- 
- 	return simple_read_from_buffer(buf, size, pos, data->data, data->size);
- }
- 
--static int amd_pmc_stb_debugfs_release_v2(struct inode *inode, struct file *filp)
-+static int amd_stb_debugfs_release_v2(struct inode *inode, struct file *filp)
- {
- 	kfree(filp->private_data);
- 	return 0;
- }
- 
--static const struct file_operations amd_pmc_stb_debugfs_fops_v2 = {
-+static const struct file_operations amd_stb_debugfs_fops_v2 = {
- 	.owner = THIS_MODULE,
--	.open = amd_pmc_stb_debugfs_open_v2,
--	.read = amd_pmc_stb_debugfs_read_v2,
--	.release = amd_pmc_stb_debugfs_release_v2,
-+	.open = amd_stb_debugfs_open_v2,
-+	.read = amd_stb_debugfs_read_v2,
-+	.release = amd_stb_debugfs_release_v2,
- };
- 
--static bool amd_pmc_is_stb_supported(struct amd_pmc_dev *dev)
-+static bool amd_is_stb_supported(struct amd_pmc_dev *dev)
- {
+-	ret = amd_pmc_send_cmd(dev, S2D_NUM_SAMPLES, &num_samples, dev->s2d_msg_id, true);
++	ret = amd_pmc_send_cmd(dev, S2D_NUM_SAMPLES, &num_samples, dev->stb_arg.s2d_msg_id, true);
+ 	/* Clear msg_port for other SMU operation */
+ 	dev->msg_port = MSG_PORT_PMC;
+ 	if (ret) {
+@@ -233,18 +238,24 @@ static bool amd_is_stb_supported(struct amd_pmc_dev *dev)
  	switch (dev->cpu_id) {
  	case AMD_CPU_ID_YC:
-@@ -248,7 +247,7 @@ static bool amd_pmc_is_stb_supported(struct amd_pmc_dev *dev)
+ 	case AMD_CPU_ID_CB:
+-		dev->s2d_msg_id = 0xBE;
+-		return true;
++		dev->stb_arg.s2d_msg_id = 0xBE;
++		break;
+ 	case AMD_CPU_ID_PS:
+-		dev->s2d_msg_id = 0x85;
+-		return true;
++		dev->stb_arg.s2d_msg_id = 0x85;
++		break;
+ 	case PCI_DEVICE_ID_AMD_1AH_M20H_ROOT:
+ 	case PCI_DEVICE_ID_AMD_1AH_M60H_ROOT:
+-		dev->s2d_msg_id = 0xDE;
+-		return true;
++		dev->stb_arg.s2d_msg_id = 0xDE;
++		break;
+ 	default:
+ 		return false;
  	}
++
++	dev->stb_arg.msg = AMD_S2D_REGISTER_MESSAGE;
++	dev->stb_arg.arg = AMD_S2D_REGISTER_ARGUMENT;
++	dev->stb_arg.resp = AMD_S2D_REGISTER_RESPONSE;
++
++	return true;
  }
  
--int amd_pmc_s2d_init(struct amd_pmc_dev *dev)
-+int amd_stb_s2d_init(struct amd_pmc_dev *dev)
- {
- 	u32 phys_addr_low, phys_addr_hi;
- 	u64 stb_phys_addr;
-@@ -258,12 +257,12 @@ int amd_pmc_s2d_init(struct amd_pmc_dev *dev)
- 	if (!enable_stb)
- 		return 0;
+ int amd_stb_s2d_init(struct amd_pmc_dev *dev)
+@@ -269,18 +280,18 @@ int amd_stb_s2d_init(struct amd_pmc_dev *dev)
+ 	/* Spill to DRAM feature uses separate SMU message port */
+ 	dev->msg_port = MSG_PORT_S2D;
  
--	if (amd_pmc_is_stb_supported(dev)) {
-+	if (amd_is_stb_supported(dev)) {
- 		debugfs_create_file("stb_read", 0644, dev->dbgfs_dir, dev,
--				    &amd_pmc_stb_debugfs_fops_v2);
-+				    &amd_stb_debugfs_fops_v2);
- 	} else {
- 		debugfs_create_file("stb_read", 0644, dev->dbgfs_dir, dev,
--				    &amd_pmc_stb_debugfs_fops);
-+				    &amd_stb_debugfs_fops);
- 		return 0;
- 	}
+-	amd_pmc_send_cmd(dev, S2D_TELEMETRY_SIZE, &size, dev->s2d_msg_id, true);
++	amd_pmc_send_cmd(dev, S2D_TELEMETRY_SIZE, &size, dev->stb_arg.s2d_msg_id, true);
+ 	if (size != S2D_TELEMETRY_BYTES_MAX)
+ 		return -EIO;
+ 
+ 	/* Get DRAM size */
+-	ret = amd_pmc_send_cmd(dev, S2D_DRAM_SIZE, &dev->dram_size, dev->s2d_msg_id, true);
++	ret = amd_pmc_send_cmd(dev, S2D_DRAM_SIZE, &dev->dram_size, dev->stb_arg.s2d_msg_id, true);
+ 	if (ret || !dev->dram_size)
+ 		dev->dram_size = S2D_TELEMETRY_DRAMBYTES_MAX;
+ 
+ 	/* Get STB DRAM address */
+-	amd_pmc_send_cmd(dev, S2D_PHYS_ADDR_LOW, &phys_addr_low, dev->s2d_msg_id, true);
+-	amd_pmc_send_cmd(dev, S2D_PHYS_ADDR_HIGH, &phys_addr_hi, dev->s2d_msg_id, true);
++	amd_pmc_send_cmd(dev, S2D_PHYS_ADDR_LOW, &phys_addr_low, dev->stb_arg.s2d_msg_id, true);
++	amd_pmc_send_cmd(dev, S2D_PHYS_ADDR_HIGH, &phys_addr_hi, dev->stb_arg.s2d_msg_id, true);
+ 
+ 	stb_phys_addr = ((u64)phys_addr_hi << 32 | phys_addr_low);
  
 diff --git a/drivers/platform/x86/amd/pmc/pmc.c b/drivers/platform/x86/amd/pmc/pmc.c
-index 6ebb9123ba00..7726a05091a5 100644
+index ce0050699a5a..e03b576105a5 100644
 --- a/drivers/platform/x86/amd/pmc/pmc.c
 +++ b/drivers/platform/x86/amd/pmc/pmc.c
-@@ -671,7 +671,7 @@ static void amd_pmc_s2idle_prepare(void)
- 		return;
- 	}
+@@ -44,11 +44,6 @@
+ #define AMD_PMC_STB_S2IDLE_RESTORE	0xC6000002
+ #define AMD_PMC_STB_S2IDLE_CHECK	0xC6000003
  
--	rc = amd_pmc_write_stb(pdev, AMD_PMC_STB_S2IDLE_PREPARE);
-+	rc = amd_stb_write(pdev, AMD_PMC_STB_S2IDLE_PREPARE);
- 	if (rc)
- 		dev_err(pdev->dev, "error writing to STB: %d\n", rc);
- }
-@@ -690,7 +690,7 @@ static void amd_pmc_s2idle_check(void)
- 	/* Dump the IdleMask before we add to the STB */
- 	amd_pmc_idlemask_read(pdev, pdev->dev, NULL);
+-/* STB S2D(Spill to DRAM) has different message port offset */
+-#define AMD_S2D_REGISTER_MESSAGE	0xA20
+-#define AMD_S2D_REGISTER_RESPONSE	0xA80
+-#define AMD_S2D_REGISTER_ARGUMENT	0xA88
+-
+ /* Base address of SMU for mapping physical address to virtual address */
+ #define AMD_PMC_MAPPING_SIZE		0x01000
+ #define AMD_PMC_BASE_ADDR_OFFSET	0x10000
+@@ -459,9 +454,9 @@ static void amd_pmc_dump_registers(struct amd_pmc_dev *dev)
+ 	u32 value, message, argument, response;
  
--	rc = amd_pmc_write_stb(pdev, AMD_PMC_STB_S2IDLE_CHECK);
-+	rc = amd_stb_write(pdev, AMD_PMC_STB_S2IDLE_CHECK);
- 	if (rc)
- 		dev_err(pdev->dev, "error writing to STB: %d\n", rc);
- }
-@@ -717,7 +717,7 @@ static void amd_pmc_s2idle_restore(void)
- 	/* Let SMU know that we are looking for stats */
- 	amd_pmc_dump_data(pdev);
+ 	if (dev->msg_port == MSG_PORT_S2D) {
+-		message = AMD_S2D_REGISTER_MESSAGE;
+-		argument = AMD_S2D_REGISTER_ARGUMENT;
+-		response = AMD_S2D_REGISTER_RESPONSE;
++		message = dev->stb_arg.msg;
++		argument = dev->stb_arg.arg;
++		response = dev->stb_arg.resp;
+ 	} else {
+ 		message = dev->smu_msg;
+ 		argument = AMD_PMC_REGISTER_ARGUMENT;
+@@ -486,9 +481,9 @@ int amd_pmc_send_cmd(struct amd_pmc_dev *dev, u32 arg, u32 *data, u8 msg, bool r
+ 	mutex_lock(&dev->lock);
  
--	rc = amd_pmc_write_stb(pdev, AMD_PMC_STB_S2IDLE_RESTORE);
-+	rc = amd_stb_write(pdev, AMD_PMC_STB_S2IDLE_RESTORE);
- 	if (rc)
- 		dev_err(pdev->dev, "error writing to STB: %d\n", rc);
- 
-@@ -832,7 +832,7 @@ static int amd_pmc_probe(struct platform_device *pdev)
- 	}
- 
- 	amd_pmc_dbgfs_register(dev);
--	err = amd_pmc_s2d_init(dev);
-+	err = amd_stb_s2d_init(dev);
- 	if (err)
- 		goto err_pci_dev_put;
- 
+ 	if (dev->msg_port == MSG_PORT_S2D) {
+-		message = AMD_S2D_REGISTER_MESSAGE;
+-		argument = AMD_S2D_REGISTER_ARGUMENT;
+-		response = AMD_S2D_REGISTER_RESPONSE;
++		message = dev->stb_arg.msg;
++		argument = dev->stb_arg.arg;
++		response = dev->stb_arg.resp;
+ 	} else {
+ 		message = dev->smu_msg;
+ 		argument = AMD_PMC_REGISTER_ARGUMENT;
 diff --git a/drivers/platform/x86/amd/pmc/pmc.h b/drivers/platform/x86/amd/pmc/pmc.h
-index 8f939ab32510..188284feca72 100644
+index 8252d3a52849..69870013c0fc 100644
 --- a/drivers/platform/x86/amd/pmc/pmc.h
 +++ b/drivers/platform/x86/amd/pmc/pmc.h
-@@ -70,9 +70,9 @@ void amd_mp2_stb_deinit(struct amd_pmc_dev *dev);
- #define PCI_DEVICE_ID_AMD_1AH_M60H_ROOT 0x1122
- #define PCI_DEVICE_ID_AMD_MP2_STB	0x172c
+@@ -30,6 +30,13 @@ struct amd_mp2_dev {
+ 	bool is_stb_data;
+ };
  
--int amd_pmc_s2d_init(struct amd_pmc_dev *dev);
--int amd_pmc_read_stb(struct amd_pmc_dev *dev, u32 *buf);
--int amd_pmc_write_stb(struct amd_pmc_dev *dev, u32 data);
-+int amd_stb_s2d_init(struct amd_pmc_dev *dev);
-+int amd_stb_read(struct amd_pmc_dev *dev, u32 *buf);
-+int amd_stb_write(struct amd_pmc_dev *dev, u32 data);
- int amd_pmc_send_cmd(struct amd_pmc_dev *dev, u32 arg, u32 *data, u8 msg, bool ret);
++struct stb_arg {
++	u32 s2d_msg_id;
++	u32 msg;
++	u32 arg;
++	u32 resp;
++};
++
+ struct amd_pmc_dev {
+ 	void __iomem *regbase;
+ 	void __iomem *smu_virt_addr;
+@@ -41,7 +48,6 @@ struct amd_pmc_dev {
+ 	u32 active_ips;
+ 	u32 dram_size;
+ 	u32 num_ips;
+-	u32 s2d_msg_id;
+ 	u32 smu_msg;
+ /* SMU version information */
+ 	u8 smu_program;
+@@ -55,6 +61,7 @@ struct amd_pmc_dev {
+ 	struct quirk_entry *quirks;
+ 	bool disable_8042_wakeup;
+ 	struct amd_mp2_dev *mp2;
++	struct stb_arg stb_arg;
+ };
  
- #endif /* PMC_H */
+ void amd_pmc_process_restore_quirks(struct amd_pmc_dev *dev);
 -- 
 2.34.1
 
