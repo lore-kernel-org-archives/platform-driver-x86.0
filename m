@@ -1,139 +1,277 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from NAM02-BN1-obe.outbound.protection.outlook.com (mail-bn1nam02on2089.outbound.protection.outlook.com [40.107.212.89])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A7BC521892F
-	for <platform-driver-x86@vger.kernel.org>; Thu,  7 Nov 2024 21:55:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1731016539; cv=none; b=TnJrwDz9jvIUYkClRtGx4AmGVYzATWmbg+BAzCXLJxPQdxg9S8Ln6jEytsryvLScEho0hZlXO1uu/rrDO+mfvYwtA7hC7RwOlK46HwIXZvQMb8zAyNrONWaP+H5c2eriEgWU5f+j7yoHF4348VQFIxchRXNeMdaz44DkY0p8DQk=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1731016539; c=relaxed/simple;
-	bh=nc9ucCfhR2wIZEpLkpxJr1fEetHhto7BrMg2FeuxNeY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=KsrJb+VkrbJHYdpPG49oMNAPCMQT25JvsTcvLE5eVGq87A0goq8L6YGJB3If9Fx9SYRwOiFTRpU/ELSM/YO3VPTGiHwJl4dYzVuRgZxR99NpQ8TBqmHTlQMQsjPEu382nay4L9+l1Ybe+OqB/zmUAJd0nuUIzcwsiG3JxamWL9s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=CIeEUDts; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 34BA1217465;
+	Thu,  7 Nov 2024 22:05:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.212.89
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1731017113; cv=fail; b=PG+VGqmNikmqjNbfyCbWHyrYrxGNLGNctnThdLFmkXpqRkmjVaQoHQaagxZlkm9DKKO34zJPAZUf+QzzMCa9yd05FlhvTOh6k51ct/ya0MqAgd4vsCq+QK4Pb55TIWvce8hDh51YmJCq7pvGyQw58XOd92LJFxzDEbwVGCWqu9A=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1731017113; c=relaxed/simple;
+	bh=Db0gKfbB9k19Ak+Rr9HHkiLcS3asGdPur27Wg1JPx1s=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=EQVv3OpvHiPtgSV7LPENh4/+in8tc15m3s6hYx8X3YC+5FVpNaaowo4f2GXaDns6wG7CTmY2uU3zLkftUpO4CRGfQUtZSJguEezc8JvXdYt4RVox0oaQJ1qqx9LOZA7C5RS7UPB58H2iY5zaUPBMv8nBOO0335YX0fJK4HtnLCc=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=EVi/IgJn; arc=fail smtp.client-ip=40.107.212.89
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="CIeEUDts"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1731016536;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Qug7OvgZTlqxoJAL+oiITmZ07W0vBoe+U4mALXwX0Nw=;
-	b=CIeEUDtsp3tG7i5WBewOtqXvwewQcq2Ijadt7t7nAmXI8PYMcQBYxRp3DnPh7ZFAryO55m
-	6a/H6feDv7hbKhzOznfMI8dewKJai3vWm8g5ZPS1sfzIv40uD6zi4mFDqsUxboqRWV1Ntl
-	UYHsel+SKwlFAkCpYu+RHO/axW7GcO0=
-Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com
- [209.85.221.70]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-148-IeHoULiONBWKv1K95GKdNQ-1; Thu, 07 Nov 2024 16:55:35 -0500
-X-MC-Unique: IeHoULiONBWKv1K95GKdNQ-1
-X-Mimecast-MFC-AGG-ID: IeHoULiONBWKv1K95GKdNQ
-Received: by mail-wr1-f70.google.com with SMTP id ffacd0b85a97d-37d47127e69so640649f8f.1
-        for <platform-driver-x86@vger.kernel.org>; Thu, 07 Nov 2024 13:55:35 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1731016534; x=1731621334;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Qug7OvgZTlqxoJAL+oiITmZ07W0vBoe+U4mALXwX0Nw=;
-        b=CK36xbSIKWsW5oO8S/JJVLtD6IYknh60jk8L0EM5hM4kuT2uFxBzrdSiiARNixkv85
-         CwNdrfgd47HJU7tIQ8hXN02mHdffovoDVRcyryoVcUyRG20lZBOOPvX3iby5+NpHD/hU
-         YQSY8leOdvXQ3QexkBKbnv8wDIUO5ab+CqUI2BdAWSmPfwMSyChmIMhYLuVLBaV2s5dI
-         +4WuE3ES+n7/eKw8fjMqrq96gv/XLBtQl9MBB+49XljE7vavV/eT5Ssia14vyLHFMTxJ
-         7B7iMJpgFu8rgI37Ntz+M4YAJb9I1XchsWDPl+WBc80fcyDIKY6c+RsLCoN4H/wFeMSc
-         +7Vw==
-X-Forwarded-Encrypted: i=1; AJvYcCVkSVYx0OmLRgx4X0UOXVoer95ceKeie2fQIeiqskLVNWK2ceg/7wP4OUOECK1ClQD/aUihEIl9T3tTyEPZW5OGgsO3@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy3KH75pVmOfHe0grxSzRIpO/F8qpu/OrNwJBKq9g5JDwf0V38E
-	hBE2+C7vkq7fN6ctxZd4/Fd1JkY4joFp2PO1U1/mVU97Dx3secAzw0PoZgLMYj0EU2vDjabe0cd
-	oGBUYPLjEESTae/FCMIRNiudR59t2kzL9O2pjy/mRzlGSZN8GonGAmg+0pxXEu0qRsVaNfco=
-X-Received: by 2002:a5d:584f:0:b0:37d:5436:49b with SMTP id ffacd0b85a97d-381f186ad10mr446441f8f.13.1731016534124;
-        Thu, 07 Nov 2024 13:55:34 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IEqA6+IjO1vc84OA9xDTf/zCcjLkow+qcTKg8MpI3DEHWK4CeLkm1oELLXCx5s9qeUCMcnY+g==
-X-Received: by 2002:a5d:584f:0:b0:37d:5436:49b with SMTP id ffacd0b85a97d-381f186ad10mr446435f8f.13.1731016533732;
-        Thu, 07 Nov 2024 13:55:33 -0800 (PST)
-Received: from ?IPV6:2001:1c00:c32:7800:5bfa:a036:83f0:f9ec? (2001-1c00-0c32-7800-5bfa-a036-83f0-f9ec.cable.dynamic.v6.ziggo.nl. [2001:1c00:c32:7800:5bfa:a036:83f0:f9ec])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5cf03bb6a2fsm1290987a12.40.2024.11.07.13.55.31
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 07 Nov 2024 13:55:32 -0800 (PST)
-Message-ID: <32b477e7-27b7-4468-b506-2c565b2010e1@redhat.com>
-Date: Thu, 7 Nov 2024 22:55:30 +0100
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="EVi/IgJn"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=JqxN2NF9GG5b/saNVB9tJWk3S8E6fv5bhl1YPYPDxQ6//K9kuRwV0KuwAd9FGTn92OUMWowtqSKzo/uBLNguzT4t03yZhslnS2hbVGiOF4kYwoKJXuhzhmjeXUmGhbFapaeBTwhVzGErAHNqjyYc1gm+dStfSEfh0ushhx/sJwpAnmn1LElEosh2Hn+dbM6bq7nCzoO1svdZs8N7AR0MvTQci2TtxgwY/ORPvR//tW1Dk7S/m8GhXGjywle7tR9EKgNpFCnj8MJXf1U3ddZdgmkqfosVkMhc0s+eg+vgvo5QGG1Pswl4oDDIIYlsT9LRLfTJtzXYPRhC25Vh8IGaxg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=uF35CYqioND6Ghm77pDrZ71mQAnPtXgJsHg0cWOS90E=;
+ b=t9FkNkCaMkYxDeVcycZd0ioJaVHuRTl+6QCn+YLbd4RW/s5phG8wBdivyhyYtDzg/0i9C5cVEJgQYbaZAF+KNulgJfdhZX3jhDW698F6o5fuIOTLWoH9G7tshM3dh27Sk56L2my74BNsJl1Wtdn1fLkNXmwWwVchMJP98812UC8ETlMsNlM6T+RF7Iba2nAANdSDYAGlszzSL5pNxRR7v3FHV76diCjowucCYQugAY1NCpApmztF9VLEeF73zTPiG+aNBnaeSK+1l3Z4x6bn7VsBY/J2IKCCcD8K/Oy9FwzsyI+SE9m0L4iJvQbLnl+ViKUUAO+GD0GRyEy2TIwcRg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=uF35CYqioND6Ghm77pDrZ71mQAnPtXgJsHg0cWOS90E=;
+ b=EVi/IgJnurDCJgBFwxCuxem2hFwKshDRchbiArbtixhOYixjvapmQviwYXe4jXqP6RUGK1Hzth2S5pzwQ6dFdmHm/Aykk/7tu7m18TxVVA6JI5+VAUe3JxDpjLHplSmvrQesv+PtJNbAxN3ifs2Dxf1BOBRL9iiH9rrLkvWJzVw=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from MN0PR12MB6101.namprd12.prod.outlook.com (2603:10b6:208:3cb::10)
+ by SA3PR12MB7857.namprd12.prod.outlook.com (2603:10b6:806:31e::16) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8137.19; Thu, 7 Nov
+ 2024 22:05:08 +0000
+Received: from MN0PR12MB6101.namprd12.prod.outlook.com
+ ([fe80::37ee:a763:6d04:81ca]) by MN0PR12MB6101.namprd12.prod.outlook.com
+ ([fe80::37ee:a763:6d04:81ca%4]) with mapi id 15.20.8137.019; Thu, 7 Nov 2024
+ 22:05:08 +0000
+Message-ID: <cbdc6ff5-627e-4237-a053-bbf2e77499da@amd.com>
+Date: Thu, 7 Nov 2024 16:05:05 -0600
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v5 17/20] ACPI: platform_profile: Check all profile
+ handler to calculate next
+To: Armin Wolf <W_Armin@gmx.de>, Hans de Goede <hdegoede@redhat.com>,
+ =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Cc: "Rafael J . Wysocki" <rafael@kernel.org>, Len Brown <lenb@kernel.org>,
+ Maximilian Luz <luzmaximilian@gmail.com>, Lee Chun-Yi <jlee@suse.com>,
+ Shyam Sundar S K <Shyam-sundar.S-k@amd.com>,
+ Corentin Chary <corentin.chary@gmail.com>, "Luke D . Jones"
+ <luke@ljones.dev>, Ike Panhc <ike.pan@canonical.com>,
+ Henrique de Moraes Holschuh <hmh@hmh.eng.br>,
+ Alexis Belmonte <alexbelm48@gmail.com>,
+ =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>,
+ Ai Chao <aichao@kylinos.cn>, Gergo Koteles <soyer@irl.hu>,
+ open list <linux-kernel@vger.kernel.org>,
+ "open list:ACPI" <linux-acpi@vger.kernel.org>,
+ "open list:MICROSOFT SURFACE PLATFORM PROFILE DRIVER"
+ <platform-driver-x86@vger.kernel.org>,
+ "open list:THINKPAD ACPI EXTRAS DRIVER"
+ <ibm-acpi-devel@lists.sourceforge.net>,
+ Mark Pearson <mpearson-lenovo@squebb.ca>,
+ Matthew Schwartz <matthew.schwartz@linux.dev>
+References: <20241107060254.17615-1-mario.limonciello@amd.com>
+ <20241107060254.17615-18-mario.limonciello@amd.com>
+ <989e7297-97f9-4d55-be28-78128572fed2@gmx.de>
+Content-Language: en-US
+From: Mario Limonciello <mario.limonciello@amd.com>
+In-Reply-To: <989e7297-97f9-4d55-be28-78128572fed2@gmx.de>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: SN1PR12CA0052.namprd12.prod.outlook.com
+ (2603:10b6:802:20::23) To MN0PR12MB6101.namprd12.prod.outlook.com
+ (2603:10b6:208:3cb::10)
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] intel-hid: fix volume buttons on Thinkpad X12 Detachable
- Tablet Gen 1
-To: Cole Stowell <cole@stowell.pro>, platform-driver-x86@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org, ilpo.jarvinen@linux.intel.com,
- alexhung@gmail.com, Mary Strodl <mstrodl@csh.rit.edu>
-References: <20241107205908.69279-1-cole@stowell.pro>
-Content-Language: en-US, nl
-From: Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <20241107205908.69279-1-cole@stowell.pro>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: MN0PR12MB6101:EE_|SA3PR12MB7857:EE_
+X-MS-Office365-Filtering-Correlation-Id: 1ca633c8-7c1f-40f6-8de0-08dcff783e3a
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|7416014|366016|1800799024;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?SkpDbGV4TWhQYjY3bkVvOCsrK3Y0N2lNUGVLUExDd0REdzlCOVBwQ0V0Vm1v?=
+ =?utf-8?B?cE5hNURWWkxDRWlYTjZrVG9YRnFWNzBPak1pWGE1SThTdk9oTDVuT2RSNkVG?=
+ =?utf-8?B?cVFFYzV2MktKT3Z0YklPeTI5ZjRzYk4vQVgyVXFjMkovQTVDZDVEZDlJNGZy?=
+ =?utf-8?B?VEZBMXF6QThyNWZjWUV4emdVQXlaRFl0cVF4NnB4MmgvSE9BMXlPQ0lpT3Rs?=
+ =?utf-8?B?MEVxcHh4V25PKzUyQlZYZUF6dVV5V2lYdjh6YUQ3aEdZdzNJelIxcm1DT0Q2?=
+ =?utf-8?B?QzJMb1J6QWJUcUNWNmhGcUwzenZGYzVwUDRkcEg2d2wvajcvanRpaHp5ZDJi?=
+ =?utf-8?B?U24yd21mYVRwd05IU0ViWmU2dHFoM1pwWllHUHkyT25lVVovRnVvTlEzUTNa?=
+ =?utf-8?B?dC9qL2NsLytnWkNzenZQSllXTG9nS2ZjYzBnVHk4UGswZVpWRkNlb2gzRFFl?=
+ =?utf-8?B?MnpZQzVpajl5S1MxMTBBOEFiWks0cGtBUzdjS284cGcvbEhpMldPUUdMVXRu?=
+ =?utf-8?B?dzlaN2VYaDRiZHJja0c1a20wTHl3c3ZobTZKRDEycE14a3FOVHpWdVJ5SU5R?=
+ =?utf-8?B?Z1NGR3VrMkhqNW1PT3ExUU11cnkwR255YmIvVjkrOWhha3JqSVoxMVQ3QVRL?=
+ =?utf-8?B?S0tGZ0F6N2xmUEtWaW42SGNxMmNTNk9RRWhxRW1nc3NIZWxzVW9xWXBIcU1o?=
+ =?utf-8?B?cWdXYXZnWE02WWJFaUFaWVRjUjRlai9OV3hlTFVVS2cxT3AwSm9BeGlLdUZ6?=
+ =?utf-8?B?dmRZT0k5MFZvSTBVN0UwczA2b1d4K2F4VVQ0cStxTEhuMEpXendrRW4xallV?=
+ =?utf-8?B?TjBuM05adXJTakdjR2ZtL2wrVzlFZUVZdmhBNUNMTmRua2Z0VUlHU3ZtSzdZ?=
+ =?utf-8?B?YkppUGlsWFVRSzhIa0Rhb29lWVhmMG5MRnd3QkwvVWNocm9JMW9aRTA0cWtZ?=
+ =?utf-8?B?WjN5ZlVCUmpRZUpvR1poZG9mWUtNVVhCcm5BdDQ4T1pCMmxXU1BqeUo1SVpT?=
+ =?utf-8?B?V2ptWXZ0TlZTeXl5R29XZ1U1UWhkQ0Y3YURFdWNGVUNXT09YdG45eEJ0R0kr?=
+ =?utf-8?B?bDBzeHUrc3J2MnYxbU16MEpBQndqaWUzaGNtd0FPcWx3WlN1SndNcW1INTcz?=
+ =?utf-8?B?TmdYWlF3UE16bTE1emd1Q3J0WUdhRFpDNTFzZ2RvMkpIZVdmYUErT2hQNjZv?=
+ =?utf-8?B?ZXAwUEZtMko3OTVZbmNjNEp1MEFWaFM4T0oyVDd5T0R5VEkxZzhDMDZQVXBI?=
+ =?utf-8?B?RTV0bWluUEIzRHlqRS9HS2gwL0VDQkVpd04rWllqOHZhU2lqZEFJaGR0UERO?=
+ =?utf-8?B?MUZPN3NzbVpSWEdCa1J4ajhQM3hvV0VlSU05QTZCMGZDbUwwdVEvdFNaenRh?=
+ =?utf-8?B?Z1BJUzNrZjRiSU5aYnNaUmd5aVFkNXZOaW1PK0ZnOUFadmZ0SGpJcUVJUWhr?=
+ =?utf-8?B?NXNQQ1k1UTBMTjJIRklZMHhnU29yUnFjYllZUVB1UERkV3FIalJLTVRwdHNw?=
+ =?utf-8?B?TjR4SjBnRXdRdHcvVGRYQkc4eGtXNzI2WFdndjUvTktQUkFERkJrTUdFSXN5?=
+ =?utf-8?B?bUFQWmIzYjZQLzhxdVdyRFZCUFFFZ2Z3TE1weXAwU2xPdjJIckdqbzI2UERS?=
+ =?utf-8?B?MUdPMitwUVYvejNqNGRabXlVSDgwOXpWcDV5aDJLRm90Z3dacytuMm43MVdK?=
+ =?utf-8?B?OFhTVkVaSDlVTzlYYzk0RWJEUGZWU1d0SmJOWEFlMUFxei8yVWNzekpXN2Y4?=
+ =?utf-8?Q?WGvfCC1NdjcDpgL4v1Sk4IgiShYb85wV/GUpzUc?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MN0PR12MB6101.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(7416014)(366016)(1800799024);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?Zi9hM05IN2FydXorODVvZFRYd01tWW9pSHA2R1dNdTBkKytENFJCbVc0N1dH?=
+ =?utf-8?B?L21tMDBGSVhkd0hyRGFPaDY0T1llRFZRK1QydXFmSTZnNE03WldVL3dDR3py?=
+ =?utf-8?B?VmQvWHN0QmRBMlgwMVFka2wxTkJiMGEvYTZGMk0yZS9iVVRDMHY4eWg0Vm9J?=
+ =?utf-8?B?dU1zbW5KN0YrdDloQnhGYUc3aFIyTG13WVBqME53MkRYNk9vQmpCVEVrOHRD?=
+ =?utf-8?B?dE5yOVB2T3d3QXl6SVpzOVEzaWFkYmFrWDNUejdJTUpZRWEzZklvZ2xVbGRl?=
+ =?utf-8?B?OHIwcjJ0Q201VUtmQkVyNFJtRzhBN0pndlZGZmdHbmNWUGkyc2pHSS9FTDJt?=
+ =?utf-8?B?ZUxiMGNBUHVGM0h4aGo1bksvZDl5YzFTcmdVNTdSbjc1RmtUaDZKamFuL09T?=
+ =?utf-8?B?Tk5qZnMrZjZrVzBJSjE5bmFOK3B6Z0s0Si9hVDJaMXRGSml1QkU5dkNDckdF?=
+ =?utf-8?B?bGtQVERReFBuVEZiN1gxWEJWTU9PbmxHU2s4dCs0V0xoU0FZM21PLzBvbmRT?=
+ =?utf-8?B?dTF5dDNZOUt3Ynd3ck9DSHV3SmwvNEJJVUdWMWdMdVg5Sis5QXRDcDlFeGti?=
+ =?utf-8?B?TDE0eTd3UVZ6eGUyaUZSQXdML3dXaENkZ3dsb3g4dGZWZEFBN0pON1hzWm5Z?=
+ =?utf-8?B?cWYzZG5zZkJnOU5oK2djdHB1K2kvMW5MdVROZ3o2WFlTREZPSzJuV3IxVXhT?=
+ =?utf-8?B?RUZ3TC9HREdjUU1oejV0ZnBIaWxuYk9hWGZ3akk2aFZMcGVPZlJ3YVNaNlV4?=
+ =?utf-8?B?QlJaZkJ6U05vUktvQk1jdldrWDc3blRZNXE3dmppb1hEejJibUVQWDZDK0lF?=
+ =?utf-8?B?TlB0Z2VGSjF2d2hkc0dWaGpwb0dmNTVjcGsybzVXZ0FMMTU5WUR6NmE1dnFI?=
+ =?utf-8?B?V1FNQUxUbE9pOGgzU1hTYjFIaWhqUGRiMmt3OEoxQmlMcTdvUTFxRWxzMTZU?=
+ =?utf-8?B?UVpRcUJyOVZwSU9IeG1JSy9CWEJCcDAxdEk4ZSt1Q1Iwa1orajdpVkh5VWtj?=
+ =?utf-8?B?WmwwMEhEVWNMR21Ncy95WjFZMlVBRkI1K1VEcnFXdzM5ZXRvTldFdEJJWXVV?=
+ =?utf-8?B?S1RMZmkvMEN2VFVjcVBKM2NVM0xpdXNrWitEa1ZHaVBRTTd1clcvSmtibGsx?=
+ =?utf-8?B?dytjaFlPSkYyeFJLK2VJRlJtaXJYODhLMmQ1V2YvakxiWituRUFOWWt1cjZ0?=
+ =?utf-8?B?LzhhQUxzc0RXUjIrdkY1dnl4Z2duUTNxSlVOK1hUbnEvRGt1eVpuTUNHUWFh?=
+ =?utf-8?B?WFZJVVdwNU9CNEZRQ3N3VnpWWU1LMWdLVFl3WHkxRExkdEVlcGtUMWloY3hJ?=
+ =?utf-8?B?aUMzTE1iaFkrZnpzVzR0aVY5N2IvelVjb040eUcwT1NjRVlTME5LSGk0Vno5?=
+ =?utf-8?B?WHArK2wydkpodjlmQm9qK1JCL1RETkZtOGFhZkpIYWpQR3JGQ25adXBtME44?=
+ =?utf-8?B?QWx5VWUvZit0T1I4amY2RU13T3Q3R01jMU0vYkNodEJCRlE3UVM2V2F6bWlD?=
+ =?utf-8?B?WDRjN0I2Z0dsRS9uTDE1T3BEb0k4UW1WMkNJTDhLNi9aNXEvUnRkZmVyNkVk?=
+ =?utf-8?B?dngyYzJ6SGdHeUcybkM2YlkrNVdWbjBzTEcvcm84ZWJrbkgvbVJTQ2VtN3Fx?=
+ =?utf-8?B?bFNZejVjWUVxYTRzaDRsNldIeFkyTlU2TTRPY3R4QWZmakZPb0VTOFpRZU1P?=
+ =?utf-8?B?azkxWXhMaXdtME00YnpOWnp0bjlLMi9VWHVweGZlQnB6L2pqYTROMzZwWU5O?=
+ =?utf-8?B?aG1BZmIrOHptVElNT2NNQXhVY1NPdld4R1VFRG8vMFdFakUwNE1uZWxTeW1R?=
+ =?utf-8?B?Q3JrQU1ndWgwTHlGek9Ydm9hZ29VZVBmdURxUkpzUjRxWlhNbndzLzFPdFFB?=
+ =?utf-8?B?NVRkVEY2eDVGanlHNTFZSTlMRWF4TnlNQzRPNXl1S01wV0JRY0hMZHQzVXN6?=
+ =?utf-8?B?MnZSM3dKVG5TOVh1ekxQRlpBcXVwV2p3TmRRTk44UTEyb2gwZ0dtN2RuM0dY?=
+ =?utf-8?B?N0NGTklrdHRwZGxQSyttZnlucVlZVktTaEk0dU5XUDFYU3NybVlZZFV6MGtj?=
+ =?utf-8?B?Y01aNjhVUFN0Q3R6UU9zbmRvbm5ENkNOMTNSOUFoNmhJYUgvZnUrUFQ0aHV1?=
+ =?utf-8?Q?fPHsYKfY3GX3ZFcK3i0k51qtI?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 1ca633c8-7c1f-40f6-8de0-08dcff783e3a
+X-MS-Exchange-CrossTenant-AuthSource: MN0PR12MB6101.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 07 Nov 2024 22:05:08.6348
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: KRMqdOheXYl5IpMwSVCypFWS7kt22MUnWXsXmiSlq71PyyLAW50og25wh8Ti9ovh1Gm3IHI/iCsij5821ia3Lg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA3PR12MB7857
 
-Hi,
-
-Thank you for the patch.
-
-On 7-Nov-24 9:59 PM, Cole Stowell wrote:
-> Volume buttons on Lenovo Thinkpad X12 Detachable Tablet Gen 1 did not
-> send any input events when pressed. When loading intel-hid with the 5
-> Button Array explicitly enabled, the buttons functioned normally.
+On 11/7/2024 02:58, Armin Wolf wrote:
+> Am 07.11.24 um 07:02 schrieb Mario Limonciello:
 > 
-> Adds the X12 Detachable Tablet Gen 1 to the `button_array_table`.
+>> As multiple platform profile handlers might not all support the same
+>> profile, cycling to the next profile could have a different result
+>> depending on what handler are registered.
+>>
+>> Check what is active and supported by all handlers to decide what
+>> to do.
+>>
+>> Tested-by: Mark Pearson <mpearson-lenovo@squebb.ca>
+>> Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
+>> ---
+>> v5:
+>>   * Adjust mutex use
+>> ---
+>>   drivers/acpi/platform_profile.c | 23 ++++++++++++++---------
+>>   1 file changed, 14 insertions(+), 9 deletions(-)
+>>
+>> diff --git a/drivers/acpi/platform_profile.c b/drivers/acpi/ 
+>> platform_profile.c
+>> index 7f302ac4d3779..2c466f2d16b42 100644
+>> --- a/drivers/acpi/platform_profile.c
+>> +++ b/drivers/acpi/platform_profile.c
+>> @@ -411,34 +411,39 @@ EXPORT_SYMBOL_GPL(platform_profile_notify);
+>>
+>>   int platform_profile_cycle(void)
+>>   {
+>> +    enum platform_profile_option next = PLATFORM_PROFILE_LAST;
+>>       enum platform_profile_option profile;
+>> -    enum platform_profile_option next;
+>> +    unsigned long choices;
+>>       int err;
+>>
+>>       if (!class_is_registered(&platform_profile_class))
+>>           return -ENODEV;
+>>
+>>       scoped_cond_guard(mutex_intr, return -ERESTARTSYS, &profile_lock) {
+>> -        if (!cur_profile)
+>> -            return -ENODEV;
+>> +        err = class_for_each_device(&platform_profile_class, NULL,
+>> +                        &profile, _aggregate_profiles);
+>> +        if (err)
+>> +            return err;
+>>
+>> -        err = cur_profile->profile_get(cur_profile, &profile);
+>> +        err = class_for_each_device(&platform_profile_class, NULL,
+>> +                        &choices, _aggregate_choices);
+>>           if (err)
+>>               return err;
+>>
+>> -        next = find_next_bit_wrap(cur_profile->choices, 
+>> PLATFORM_PROFILE_LAST,
+>> +        next = find_next_bit_wrap(&choices,
+>> +                      PLATFORM_PROFILE_LAST,
+>>                         profile + 1);
 > 
-> However, the driver is unable to call INTEL_HID_DSM_BTNE_FN and prints
-> the warning "failed to set button capability" when attempting to enable
-> or disable the 5 Button Array. I'm not sure if this is normal,
-> but the warning seems harmless.
+> Could it be that this would lead to be "custom" profile being selected 
+> under some conditions?
 
-Yes the warning should be harmless and adding more special handling
-is not worth it IMHO.
+Yeah, you're right.  If all drivers supported custom then this could 
+happen.  I'll clear custom like this:
 
-Patch looks good to me:
+		choices &= ~BIT(PLATFORM_PROFILE_CUSTOM);
 
-Reviewed-by: Hans de Goede <hdegoede@redhat.com>
+> Also _aggregate_profiles() expects profile to be initialized with 
+> PLATFORM_PROFILE_LAST.
 
-Regards,
+Will correct initialization in platform_profile_cycle() to this.
 
-Hans
+	enum platform_profile_option profile = PLATFORM_PROFILE_LAST;
 
-
-
-
-> Co-developed-by: Mary Strodl <mstrodl@csh.rit.edu>
-> Signed-off-by: Mary Strodl <mstrodl@csh.rit.edu>
-> Signed-off-by: Cole Stowell <cole@stowell.pro>
-> ---
->  drivers/platform/x86/intel/hid.c | 7 +++++++
->  1 file changed, 7 insertions(+)
+But this also raises a good point.  If _aggregate_profiles() returns
+custom then this should be an error because next profile is undefined.
+So I'll catch that like this.
+		err = class_for_each_device()
+		if (err)
+			return err;
+		if (profile == PLATFORM_PROFILE_CUSTOM)
+			return -EINVAL;
 > 
-> diff --git a/drivers/platform/x86/intel/hid.c b/drivers/platform/x86/intel/hid.c
-> index 445e7a59beb4..48ad75a56199 100644
-> --- a/drivers/platform/x86/intel/hid.c
-> +++ b/drivers/platform/x86/intel/hid.c
-> @@ -118,6 +118,13 @@ static const s
-> truct dmi_system_id button_array_table[] = {
->  			DMI_MATCH(DMI_PRODUCT_NAME, "HP Spectre x2 Detachable"),
->  		},
->  	},
-> +	{
-> +		.ident = "Lenovo ThinkPad X1 Tablet Gen 1",
-> +		.matches = {
-> +			DMI_MATCH(DMI_SYS_VENDOR, "LENOVO"),
-> +			DMI_MATCH(DMI_PRODUCT_FAMILY, "ThinkPad X12 Detachable Gen 1"),
-> +		},
-> +	},
->  	{
->  		.ident = "Lenovo ThinkPad X1 Tablet Gen 2",
->  		.matches = {
+> Thanks,
+> Armin Wolf
+> 
+>>
+>> -        if (WARN_ON(next == PLATFORM_PROFILE_LAST))
+>> -            return -EINVAL;
+>> +        err = class_for_each_device(&platform_profile_class, NULL, 
+>> &next,
+>> +                        _store_class_profile);
+>>
+>> -        err = cur_profile->profile_set(cur_profile, next);
+>>           if (err)
+>>               return err;
+>>       }
+>>
+>>       sysfs_notify(acpi_kobj, NULL, "platform_profile");
+>> -    return 0;
+>> +
+>> +    return err;
+>>   }
+>>   EXPORT_SYMBOL_GPL(platform_profile_cycle);
+>>
 
