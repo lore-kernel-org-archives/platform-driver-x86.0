@@ -1,203 +1,164 @@
-Received: from mout.gmx.net (mout.gmx.net [212.227.15.15])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8BA17233D72;
-	Fri,  8 Nov 2024 19:45:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7374E192D66
+	for <platform-driver-x86@vger.kernel.org>; Fri,  8 Nov 2024 20:20:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1731095149; cv=none; b=gUb4VZwhAwxZCXEoipUTzJTFgfmL6vfuxafhymdmmTWQU9tFfSfW8hkPfVIHzVcOZ+sSy2iHShQ3Ql/N5RyL1y8k9oYT5Z/4SvHwddkxrxqUy9cpsucoRwGWHnZEZpRrkzcml1wf/cN1wPHZ3GYNBUdEKQYGSNVUUuSYlHb6VKE=
+	t=1731097216; cv=none; b=PAwuIYzaSCTlLRVFPxaoSAMhgcN6cZHzWkwN3SbTd0hDQ1mM9Tv9a7LJW2DvViPvNTdGailBaH2k1nS9J+ARTXC8FasVTkwoDDHkw2xzI/diIXCVYFoLHDtlXax8YHmzoSqVq+6J1vPuSro5Y4aoABmo4GgnTnxwuRoi+0giG00=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1731095149; c=relaxed/simple;
-	bh=3VAAVHOXBGjYM2CZOnUc49zsY3SSDo4fE0VLAaSkItA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=n03CELErtuw3XJ1AvAuk9J/J4cMHHv1sQcHypf4zSdad7jFhSFu8v2KAu8gNq2sVYVSd8Vbh+5wueR8a/NWoUgwQSY83hYFSmtyAz1OFx0IXwZ6Y5z6YuYoqYkZVAgjcaNYaemgsqoSYYJtRgHoF97Df7uEh1GpRNIkh2K1/62o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b=pfLquFoY; arc=none smtp.client-ip=212.227.15.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
+	s=arc-20240116; t=1731097216; c=relaxed/simple;
+	bh=uqVJx4w6xbG8GmuHbGzKfOF/BKGueMuyc80S+XS93vA=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=iwd6JwGBmWFN2GJQA1Epu/grZKtf5Aj3wuI4StIyiVQgSFKUvTw6eGJ9Ra1p8yPGiB8Y7Soui9249+tDUiKeO7Fkc9sg9OwogmQ/ixZO57J8gJr9NpMyWTnwbTuYFxgc9JOK5mZLuMlHHWFzkgaFX2uZ83qN6U5HxK+viVmroU8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ko7cN3dL; arc=none smtp.client-ip=198.175.65.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b="pfLquFoY"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.de;
-	s=s31663417; t=1731095075; x=1731699875; i=w_armin@gmx.de;
-	bh=3VAAVHOXBGjYM2CZOnUc49zsY3SSDo4fE0VLAaSkItA=;
-	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:To:Cc:
-	 References:From:In-Reply-To:Content-Type:
-	 Content-Transfer-Encoding:cc:content-transfer-encoding:
-	 content-type:date:from:message-id:mime-version:reply-to:subject:
-	 to;
-	b=pfLquFoYvCW6mbqJJriNEPGooSXUVCxcEDbwaogBtWPpJTde1n/DqNBY8fNFeD4z
-	 hCKe5NNFkkbrj5uABeEJQ49+pdO1t3i8+CkHPtZn63pJX9wZ/4xgLi9yfNX3jI+ry
-	 z6w/YE98LbCZhLm249RhoqxdrCyVrcTnCxucNnl1W4K0ugG2c6Ok8wXbmG7TWuLKp
-	 WusM2wfkL1aEAW1P+vzqf/JQsTjRkhWAnhz7bJV5YcA/4fIhrQGl1Vwr9xYdo0ms6
-	 2hbWGLq6rbG1IItfEEtCZVi/EBVROGM8KOoX8JIZMamh3kb2E7GdK6tKM2dk4UPg1
-	 FVxdiqI8GUQI2Jjwxg==
-X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
-Received: from [141.30.226.129] ([141.30.226.129]) by mail.gmx.net (mrgmx004
- [212.227.17.190]) with ESMTPSA (Nemesis) id 1MCKBc-1t06yG3Les-007if1; Fri, 08
- Nov 2024 20:44:34 +0100
-Message-ID: <ba57628a-91d1-4e7c-8ebc-c5dc9db3d195@gmx.de>
-Date: Fri, 8 Nov 2024 20:44:30 +0100
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ko7cN3dL"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1731097214; x=1762633214;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=uqVJx4w6xbG8GmuHbGzKfOF/BKGueMuyc80S+XS93vA=;
+  b=ko7cN3dL+hU+4ydHyY15focPWxHNb0po9/AVqh7jMT1yoR+R7QOMmpNK
+   gHF+doLfWn0ohCG3gY2geyPqk+jI+vRTOQpd12pOVVPTK9Uh7XxAPFPYj
+   kS08H53kjENmksNZ0XsMfES78M93O1TrPU6z/sPxjtmF5PWXjVbl2FuqS
+   8oJ+ZB0bywaNlENsB1X42JfcGKU5ilSs3psObamPbo7e+vCldJ22ZEsGm
+   Q5S2Y1GSRV9bHvd1i2b+r+SCaCw68+UWsWsS/N62tJG4QgJM68EcGLJxV
+   DRwK/hpwsAnL4bI7h14WV5EqoXUUjw+/aAWNJlsYATIArgXAOGqcJKGFf
+   A==;
+X-CSE-ConnectionGUID: kYbvpr5uSiOp2nqVjUPhEw==
+X-CSE-MsgGUID: h+goRrUpQKmPamh4OxF8Pw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11250"; a="31097795"
+X-IronPort-AV: E=Sophos;i="6.12,138,1728975600"; 
+   d="scan'208";a="31097795"
+Received: from orviesa001.jf.intel.com ([10.64.159.141])
+  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Nov 2024 12:20:14 -0800
+X-CSE-ConnectionGUID: TXJlvwvrQHGP2F3UE0W2Vg==
+X-CSE-MsgGUID: VsXok8z1RfSLFHRCGbGZ3Q==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.12,138,1728975600"; 
+   d="scan'208";a="123245972"
+Received: from awvttdev-05.aw.intel.com ([10.228.212.156])
+  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Nov 2024 12:20:13 -0800
+From: "Michael J. Ruhl" <michael.j.ruhl@intel.com>
+To: intel-xe@lists.freedesktop.org,
+	platform-driver-x86@vger.kernel.org,
+	david.e.box@linux.intel.com,
+	ilpo.jarvinen@linux.intel.com,
+	andriy.shevchenko@linux.intel.com,
+	hdegoede@redhat.com,
+	rodrigo.vivi@intel.com,
+	lucas.demarchi@intel.com
+Cc: michael.j.ruhl@intel.com
+Subject: [PATCH 1/2] platform/x86/intel/pmt: allow user offset for PMT callbacks
+Date: Fri,  8 Nov 2024 15:19:53 -0500
+Message-ID: <20241108201955.2048085-1-michael.j.ruhl@intel.com>
+X-Mailer: git-send-email 2.44.0
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v5 11/20] ACPI: platform_profile: Add choices attribute
- for class interface
-To: Mario Limonciello <mario.limonciello@amd.com>,
- Hans de Goede <hdegoede@redhat.com>,
- =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Cc: "Rafael J . Wysocki" <rafael@kernel.org>, Len Brown <lenb@kernel.org>,
- Maximilian Luz <luzmaximilian@gmail.com>, Lee Chun-Yi <jlee@suse.com>,
- Shyam Sundar S K <Shyam-sundar.S-k@amd.com>,
- Corentin Chary <corentin.chary@gmail.com>, "Luke D . Jones"
- <luke@ljones.dev>, Ike Panhc <ike.pan@canonical.com>,
- Henrique de Moraes Holschuh <hmh@hmh.eng.br>,
- Alexis Belmonte <alexbelm48@gmail.com>,
- =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>,
- Ai Chao <aichao@kylinos.cn>, Gergo Koteles <soyer@irl.hu>,
- open list <linux-kernel@vger.kernel.org>,
- "open list:ACPI" <linux-acpi@vger.kernel.org>,
- "open list:MICROSOFT SURFACE PLATFORM PROFILE DRIVER"
- <platform-driver-x86@vger.kernel.org>,
- "open list:THINKPAD ACPI EXTRAS DRIVER"
- <ibm-acpi-devel@lists.sourceforge.net>,
- Mark Pearson <mpearson-lenovo@squebb.ca>,
- Matthew Schwartz <matthew.schwartz@linux.dev>
-References: <20241107060254.17615-1-mario.limonciello@amd.com>
- <20241107060254.17615-12-mario.limonciello@amd.com>
- <7e302f04-cb4d-4ecd-b1a1-4b89f09e692b@gmx.de>
- <9dd1709c-de87-4aa3-aa33-8a520a305545@amd.com>
- <0ffe9b8b-814e-4b5a-a960-22797e327b4a@gmx.de>
- <22fdc5d1-c082-4e60-a6c9-c67bad295fed@amd.com>
-Content-Language: en-US
-From: Armin Wolf <W_Armin@gmx.de>
-In-Reply-To: <22fdc5d1-c082-4e60-a6c9-c67bad295fed@amd.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:lIEYHbNB4R/fgBEMz2UOAJgojN3PwXPzWR1uK9ND5PpBYPMpgVB
- bkcLlPHTp9AfohwuOAAiIGuaUnjOjHLDeGaAkkB5iZVm8zKkeo3FjJe3aCR9jkWm81nQx/3
- i6T4WDZ+xYTrMWgriQnri6hlIH9cuEc9jICgOUNfz+AKbkkzP7av7rwxLKrWdMhvKxc1p4/
- 2o6d8GaDQaUoM7Ykbwa4w==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:qeoBuJIKW5U=;y9E5JNl2n8TCyxG8Z6FgzAbpMRL
- u/9u4ABbGDwqaG0lgSYvNpqd3AnbEbELElX5cfh7o7YDBucQgCazfsRjbOLcfi335/pcuQHvs
- lPDCFkdb1z8MU+rJ4hkpj8U+aD4rpoKLPermXbIwp0e9RNpzBZWtrBAunhqZ5OxiD0tu3LMSY
- hzBUCKg61r3GJnjpJgia4lVyeIXDD93VO67DyTTQpUATEGeGhwN3Ol5yOyQFetdJJd5KpbE+z
- E+L1kwT55JWIIM6LBAA88GEBFsnUGMYP9WIGy+jzq/cF3CifaRNMYucnhcUcOyW00Q8nV0VP5
- yChXo1NZ6bh0hDHvcZb7QW5kssRJ9IbwtI3AHfCNSPi62/yrcPRcvIWMpY+xgWf6XizJ/MbJ9
- KhAxsGqpyV2IvIkSGq0xEIcteljQv4W9uMBw1sWSaRfXvEyM/trRb00gFWnLEEc4ZSxcSLcZC
- Yx+3Fl4hi/NcfXWbXjrUoSW7QYBsAGCrlMpPK7Z9qbK66ughCa3L/TMn7+w8Ij4jPxPoxcEiO
- YfYjZLRFvgwghE1CctQ6pKN9bDxABrRu6rTGfq7eim2pWzJ0wawQ0RGgzdBqDb4hMjiRlwPuN
- RS1LbUgI94gohuNznIqNiL2/Kzrc8dq7+ovYS1bJNZ3gKJF0iIsX2GcIYrvCkiI4zr5mhmhmK
- WwJ4AytNEmWygL53+jfHs6jX+BhaKVed9t9B0++9MnoRMszjaHhJ7Lqo6jj80no+hMOctxgKC
- JAS6RiTHV0oTS1IRHI1vfKCNFU6nZi6Cv7dFgbfYsdCsTd28K1QlaQtbXVyIiFgiCB+hp01dF
- bG8hCw9Kad554td10YnEFLsWhkFuliXTzhcvhGe6OaJPzBJrwOC1vQwxTXMh/TexYDr19fExj
- jC29CJdbKrpkGSLmvI9U3hPGOSoNcanJxg1x+m6gzt5pFvrxv7wovaNmR
+Content-Transfer-Encoding: 8bit
 
-Am 08.11.24 um 20:25 schrieb Mario Limonciello:
+Usage of the telem sysfs file allows for partial reads at
+an offset.
 
-> On 11/8/2024 12:06, Armin Wolf wrote:
->> Am 07.11.24 um 23:09 schrieb Mario Limonciello:
->>
->>> On 11/7/2024 02:28, Armin Wolf wrote:
->>>> Am 07.11.24 um 07:02 schrieb Mario Limonciello:
->>>>
->>>>> The `choices` file will show all possible choices that a given
->>>>> platform
->>>>> profile handler can support.
->>>>>
->>>>> Tested-by: Mark Pearson <mpearson-lenovo@squebb.ca>
->>>>> Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
->>>>> ---
->>>>> v5:
->>>>> =C2=A0 * Fix kdoc
->>>>> =C2=A0 * Add tag
->>>>> =C2=A0 * Fix whitespace
->>>>> =C2=A0 * Adjust mutex use
->>>>> ---
->>>>> =C2=A0 drivers/acpi/platform_profile.c | 65
->>>>> +++++++++++++++++++++++++++++++++
->>>>> =C2=A0 1 file changed, 65 insertions(+)
->>>>>
->>>>> diff --git a/drivers/acpi/platform_profile.c b/drivers/acpi/
->>>>> platform_profile.c
->>>>> index f605c2bd35c68..5e0bb91c5f451 100644
->>>>> --- a/drivers/acpi/platform_profile.c
->>>>> +++ b/drivers/acpi/platform_profile.c
->>>>> @@ -25,6 +25,46 @@ static_assert(ARRAY_SIZE(profile_names) =3D=3D
->>>>> PLATFORM_PROFILE_LAST);
->>>>>
->>>>> =C2=A0 static DEFINE_IDA(platform_profile_ida);
->>>>>
->>>>> +/**
->>>>> + * _commmon_choices_show - Show the available profile choices
->>>>> + * @choices: The available profile choices
->>>>> + * @buf: The buffer to write to
->>>>> + * Return: The number of bytes written
->>>>> + */
->>>>> +static ssize_t _commmon_choices_show(unsigned long choices, char
->>>>> *buf)
->>>>> +{
->>>>> +=C2=A0=C2=A0=C2=A0 int i, len =3D 0;
->>>>> +
->>>>> +=C2=A0=C2=A0=C2=A0 for_each_set_bit(i, &choices, PLATFORM_PROFILE_L=
-AST) {
->>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (len =3D=3D 0)
->>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 =
-len +=3D sysfs_emit_at(buf, len, "%s", profile_names[i]);
->>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 else
->>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 =
-len +=3D sysfs_emit_at(buf, len, " %s", profile_names[i]);
->>>>> +=C2=A0=C2=A0=C2=A0 }
->>>>> +=C2=A0=C2=A0=C2=A0 len +=3D sysfs_emit_at(buf, len, "\n");
->>>>> +
->>>>> +=C2=A0=C2=A0=C2=A0 return len;
->>>>> +}
->>>>> +
->>>>> +/**
->>>>> + * _get_class_choices - Get the available profile choices for a
->>>>> class device
->>>>> + * @dev: The class device
->>>>> + * @choices: Pointer to return the available profile choices
->>>>> + * Return: The available profile choices
->>>>> + */
->>>>> +static int _get_class_choices(struct device *dev, unsigned long
->>>>> *choices)
->>>>> +{
->>>>> +=C2=A0=C2=A0=C2=A0 struct platform_profile_handler *handler;
->>>>> +=C2=A0=C2=A0=C2=A0 int i;
->>>>> +
->>>>> +=C2=A0=C2=A0=C2=A0 lockdep_assert_held(&profile_lock);
->>>>> +=C2=A0=C2=A0=C2=A0 handler =3D dev_get_drvdata(dev);
->>>>> +=C2=A0=C2=A0=C2=A0 for_each_set_bit(i, handler->choices, PLATFORM_P=
-ROFILE_LAST)
->>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 *choices |=3D BIT(i);
->>>>
->>>> Maybe just copying the bitmask would be enough here? In this case we
->>>> could also drop
->>>> this function as well.
->>>
->>> Right now this could work, but choices and the use of it has gone
->>> through great lengths to ensure that once there are too many profiles
->>> it automatically becomes a bigger variable.
->>>
->>> =C2=A0=C2=A0=C2=A0=C2=A0unsigned long choices[BITS_TO_LONGS(PLATFORM_P=
-ROFILE_LAST)];
->>>
->>> So I would rather keep this as is.
->>>
->> I think users of this function can do the locking themself and
->> instead use the functions from bitmap.h. Because _get_class_choices()
->> will break once "choices" becomes bigger.
->>
->
-> I am thinking it's better to just switch explicitly to an 'unsigned
-> long' and add a static check that all profiles fit.=C2=A0 If ever they
-> don't fit, the code can be overhauled at that point.
->
-> And yes _get_class_choices can go away then, and this is a lot simpler.
+The current callback method returns the buffer starting
+from offset 0 only.
 
-Ok.
+Include the requested offset in the callback.
+Update the necsessary address calculations with the offset.
+
+Fixes: e92affc74cd8 ("platform/x86/intel/vsec: Add PMT read callbacks")
+Signed-off-by: Michael J. Ruhl <michael.j.ruhl@intel.com>
+---
+ drivers/platform/x86/intel/pmt/class.c     | 10 +++++-----
+ drivers/platform/x86/intel/pmt/class.h     |  2 +-
+ drivers/platform/x86/intel/pmt/telemetry.c |  2 +-
+ include/linux/intel_vsec.h                 |  3 ++-
+ 4 files changed, 9 insertions(+), 8 deletions(-)
+
+diff --git a/drivers/platform/x86/intel/pmt/class.c b/drivers/platform/x86/intel/pmt/class.c
+index c04bb7f97a4d..657d72b9e675 100644
+--- a/drivers/platform/x86/intel/pmt/class.c
++++ b/drivers/platform/x86/intel/pmt/class.c
+@@ -59,16 +59,16 @@ pmt_memcpy64_fromio(void *to, const u64 __iomem *from, size_t count)
+ }
+ 
+ int pmt_telem_read_mmio(struct pci_dev *pdev, struct pmt_callbacks *cb, u32 guid, void *buf,
+-			void __iomem *addr, u32 count)
++			void __iomem *addr, loff_t off, u32 count)
+ {
+ 	if (cb && cb->read_telem)
+-		return cb->read_telem(pdev, guid, buf, count);
++		return cb->read_telem(pdev, guid, buf, off, count);
+ 
+ 	if (guid == GUID_SPR_PUNIT)
+ 		/* PUNIT on SPR only supports aligned 64-bit read */
+-		return pmt_memcpy64_fromio(buf, addr, count);
++		return pmt_memcpy64_fromio(buf, addr + off, count);
+ 
+-	memcpy_fromio(buf, addr, count);
++	memcpy_fromio(buf, addr + off, count);
+ 
+ 	return count;
+ }
+@@ -96,7 +96,7 @@ intel_pmt_read(struct file *filp, struct kobject *kobj,
+ 		count = entry->size - off;
+ 
+ 	count = pmt_telem_read_mmio(entry->ep->pcidev, entry->cb, entry->header.guid, buf,
+-				    entry->base + off, count);
++				    entry->base, off, count);
+ 
+ 	return count;
+ }
+diff --git a/drivers/platform/x86/intel/pmt/class.h b/drivers/platform/x86/intel/pmt/class.h
+index a267ac964423..b2006d57779d 100644
+--- a/drivers/platform/x86/intel/pmt/class.h
++++ b/drivers/platform/x86/intel/pmt/class.h
+@@ -62,7 +62,7 @@ struct intel_pmt_namespace {
+ };
+ 
+ int pmt_telem_read_mmio(struct pci_dev *pdev, struct pmt_callbacks *cb, u32 guid, void *buf,
+-			void __iomem *addr, u32 count);
++			void __iomem *addr, loff_t off, u32 count);
+ bool intel_pmt_is_early_client_hw(struct device *dev);
+ int intel_pmt_dev_create(struct intel_pmt_entry *entry,
+ 			 struct intel_pmt_namespace *ns,
+diff --git a/drivers/platform/x86/intel/pmt/telemetry.c b/drivers/platform/x86/intel/pmt/telemetry.c
+index c9feac859e57..0cea617c6c2e 100644
+--- a/drivers/platform/x86/intel/pmt/telemetry.c
++++ b/drivers/platform/x86/intel/pmt/telemetry.c
+@@ -219,7 +219,7 @@ int pmt_telem_read(struct telem_endpoint *ep, u32 id, u64 *data, u32 count)
+ 	if (offset + NUM_BYTES_QWORD(count) > size)
+ 		return -EINVAL;
+ 
+-	pmt_telem_read_mmio(ep->pcidev, ep->cb, ep->header.guid, data, ep->base + offset,
++	pmt_telem_read_mmio(ep->pcidev, ep->cb, ep->header.guid, data, ep->base, offset,
+ 			    NUM_BYTES_QWORD(count));
+ 
+ 	return ep->present ? 0 : -EPIPE;
+diff --git a/include/linux/intel_vsec.h b/include/linux/intel_vsec.h
+index 11ee185566c3..b94beab64610 100644
+--- a/include/linux/intel_vsec.h
++++ b/include/linux/intel_vsec.h
+@@ -74,10 +74,11 @@ enum intel_vsec_quirks {
+  * @pdev:  PCI device reference for the callback's use
+  * @guid:  ID of data to acccss
+  * @data:  buffer for the data to be copied
++ * @off:   offset into the requested buffer
+  * @count: size of buffer
+  */
+ struct pmt_callbacks {
+-	int (*read_telem)(struct pci_dev *pdev, u32 guid, u64 *data, u32 count);
++	int (*read_telem)(struct pci_dev *pdev, u32 guid, u64 *data, loff_t off, u32 count);
+ };
+ 
+ /**
+-- 
+2.44.0
 
