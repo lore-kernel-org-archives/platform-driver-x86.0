@@ -1,59 +1,41 @@
-Received: from mail-lf1-f54.google.com (mail-lf1-f54.google.com [209.85.167.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mout.gmx.net (mout.gmx.net [212.227.17.22])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C7211E25EB
-	for <platform-driver-x86@vger.kernel.org>; Fri,  8 Nov 2024 09:58:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5743222B3AD;
+	Fri,  8 Nov 2024 17:36:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.22
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1731059906; cv=none; b=cz+MXI8mlWOjtWiUux2kHxofkEskTgh9EMCFVWXtsLZBmr02wW/SeMt/f5z5sv7qq4l1nW6JvbMUaRCKZLeZ623uEVi2g//9E9SmzMdzdKTbaPYmXJdCNt8r40ra/CPZ98hUXevx5ZDTH9JXkS1+J5VUsB9Ns2A4MzkpYBkR+Cw=
+	t=1731087375; cv=none; b=fkTs1Hly3TuROLJHL72ykV8Yq+jx5dxTiF8L42jjvQNbndORwWkPy6sBNTqGB+ySXqxLdEaWxR3Cot5JHoNcNAWH4+qd6tTI1L3FyR0GWp4AvKhOveOV4Oza71eN/CUtKih4BfV4+I1kY00fGO6WIZZeMU/jNJVTGPrb1QiBU4Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1731059906; c=relaxed/simple;
-	bh=yyYnt0zeYcifOtxkWb1a/lLSCIHVxKRnsZk+5f+PJTY=;
+	s=arc-20240116; t=1731087375; c=relaxed/simple;
+	bh=8OJq7HGD9qwWprJsJNrfBtO5OY2CfqkAFAanuuCmDr4=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=po5Rkn6h/U0fJSP8FWZIddOazNkHUfrjSNMqTGVgtmDEOZiERc6P9lHG5wAQVDB3WqjOmx9McDeXIGLV3d/C/1UTI9jJpNtjVGKwncMbUlEfnJxnpu4a8bUfDgwCaWejqxR2EPcaxuPdEUrAj7wD2kavHHjlKdRK9ZIF7BsV2bs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=I4g+M9JO; arc=none smtp.client-ip=209.85.167.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	 In-Reply-To:Content-Type; b=eGqWUmjtQ1nNLlUDKXCNbM5nsZ4mnwMCbzqtNcTi4xPvBqqMvHjgm+d1UjLaNCKTmlFoTPXX9dZWHr29YdOVzMstc9I8tzkBvcUlKntbpjEXkO5Izv++Fc8YRfd7PfqdM3vTUviLOCPVcjXUXTtSizCP4UG1vq4jClWtWld9Wjw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b=qYkRcYTF; arc=none smtp.client-ip=212.227.17.22
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="I4g+M9JO"
-Received: by mail-lf1-f54.google.com with SMTP id 2adb3069b0e04-539e690479cso1862585e87.3
-        for <platform-driver-x86@vger.kernel.org>; Fri, 08 Nov 2024 01:58:23 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1731059901; x=1731664701; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=5H92Szh7zfoJ1X3k0f3O/M8Kef9HnGfDZM9F62PdTF8=;
-        b=I4g+M9JOrF1xRMDWUEXb+hV0tfimai65+InH3ry2IPlAT0QkdpzJ1/j6ZAuyk3/M7g
-         QQYVl1HUQXROfyYmkP8WOLaDd+2pnly52JWiF2NaKuX44xxPmSl8hyV6R/XVDtNG3wGU
-         i4WQCbln+zJEnXwqEl5Zqmq/YlrHeu0bQy0po6hV3Pqs4TZ7vfsVW+8O0sDyugKhZ09D
-         oVx3yGexBkLcsSrYd6Flzzte0UZnaLQ7cHw0YECP2GanbEASaCVSLJuYjUrhlGMAfZwX
-         6YdfI4KsC1NRPptpbimRBoRu1DmQ1iVmkr0/cAciRhm0Oow4HpF0O1KihQSdeqoeAwE5
-         lGCA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1731059901; x=1731664701;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=5H92Szh7zfoJ1X3k0f3O/M8Kef9HnGfDZM9F62PdTF8=;
-        b=KxqqBQShBwrwdHwy72r16O9v9Lx/aV0opQD+PcLaaceGK0eyEiq4jXCyx31fACye8N
-         q8l+d4I5XDX0s341AuG63GmoJWGupahZFT1Xt2i9SrCGbW/mHPA6DDjn34QCLemVH0Ds
-         ZK4LEWlDbt5XZKdQVnSFBje6b5cGCWblHmwCxEvdFsM5U0x8f2+WUm8fF2YDEHzGsGVS
-         xERi/sOFyXBubO+4hPqmfDYZNQ2msLaLla8p6ld0kbx3lySVXUkGu7EzuCw2sTYwZ8Ca
-         +bCphjyz9cHQfjt+z3aBECYClicWja5Xopia5A3PLHaqmre2ZqGVLLx4N/6E/WXkSjKB
-         thSw==
-X-Forwarded-Encrypted: i=1; AJvYcCUgo4xj8R3nYTG7/TsFE0uOiuLcfBw/DmomvA+PlQ6slvjRAY+cv/rgDn8WwrubjcIc8fsd91F6A4MX1P2PFXawJj+L@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywij8ov5YcnJ0GkkOXBFXoeBZKMzjzvBKpCcvnvLgvPxwXXQgUV
-	zpbEWEa9lhrlnyYPX54jbQuDrQqLIkNqcGMKVfrEm/WAblqWKI8iG1WumVejoHk=
-X-Google-Smtp-Source: AGHT+IFRdqMG06HtkdzkHICdIIWrY7d6GXyCPZ8Qa2uAHGCAECQ9+blFxeuQwDqlNWgVG3erwh8s3g==
-X-Received: by 2002:a05:6512:2256:b0:539:905c:15ab with SMTP id 2adb3069b0e04-53d862e3e86mr1089619e87.32.1731059901467;
-        Fri, 08 Nov 2024 01:58:21 -0800 (PST)
-Received: from [172.20.143.194] ([154.14.63.34])
-        by smtp.googlemail.com with ESMTPSA id 5b1f17b1804b1-432b05e6042sm57204805e9.44.2024.11.08.01.58.17
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 08 Nov 2024 01:58:21 -0800 (PST)
-Message-ID: <fe2f0356-ef90-4fc4-85c1-6a42da209b88@linaro.org>
-Date: Fri, 8 Nov 2024 09:58:16 +0000
+	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b="qYkRcYTF"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.de;
+	s=s31663417; t=1731087298; x=1731692098; i=w_armin@gmx.de;
+	bh=8OJq7HGD9qwWprJsJNrfBtO5OY2CfqkAFAanuuCmDr4=;
+	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:To:Cc:
+	 References:From:In-Reply-To:Content-Type:
+	 Content-Transfer-Encoding:cc:content-transfer-encoding:
+	 content-type:date:from:message-id:mime-version:reply-to:subject:
+	 to;
+	b=qYkRcYTFgroAyxnw4KKajQSR+3mjvjz3rJwnrY65wQ21Cw45R+5wuRP/T2HrR3sQ
+	 /Ku/u122z23fDtizdTUHECXM/k/hdVTLLtf3VDbVVy1FuqDG4rwPhyZbUluNfDYHu
+	 +bzqRtBirLScpSYxFPVO2/fhFmClby00RZIZuXfqAQZwCzA6NWW7i7AmtvKxY8Vx8
+	 SdpD3qWGiL/AFD6hD3x7kCqz7Kp+1y8BrbUGC8JiIFP/RoaxGy84s32ThgXpjStwk
+	 4TTXIlwiJ4WrDQ1SDhA6ajGSxt01ZIMlJWoLxd6xkrlI65RydRqkIZ68uvmYgGsmO
+	 oNxyYARZTxk8nA7u8Q==
+X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
+Received: from [141.30.226.129] ([141.30.226.129]) by mail.gmx.net (mrgmx104
+ [212.227.17.168]) with ESMTPSA (Nemesis) id 1MSKu0-1tG1O609kW-00QmZV; Fri, 08
+ Nov 2024 18:34:58 +0100
+Message-ID: <b334d8b9-64ea-4808-a51f-45ee8da2aae0@gmx.de>
+Date: Fri, 8 Nov 2024 18:34:52 +0100
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -61,105 +43,260 @@ List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 04/10] nvmem: core: calculate bin_attribute size
- through bin_size()
-To: =?UTF-8?Q?Thomas_Wei=C3=9Fschuh?= <linux@weissschuh.net>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- "Rafael J. Wysocki" <rafael@kernel.org>, Bjorn Helgaas
- <bhelgaas@google.com>, Davidlohr Bueso <dave@stgolabs.net>,
- Jonathan Cameron <jonathan.cameron@huawei.com>,
- Dave Jiang <dave.jiang@intel.com>,
- Alison Schofield <alison.schofield@intel.com>,
- Vishal Verma <vishal.l.verma@intel.com>, Ira Weiny <ira.weiny@intel.com>,
- Alex Deucher <alexander.deucher@amd.com>,
- =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>,
- Xinhui Pan <Xinhui.Pan@amd.com>, David Airlie <airlied@gmail.com>,
- Simona Vetter <simona@ffwll.ch>,
- Dennis Dalessandro <dennis.dalessandro@cornelisnetworks.com>,
- Jason Gunthorpe <jgg@ziepe.ca>, Leon Romanovsky <leon@kernel.org>,
- Tudor Ambarus <tudor.ambarus@linaro.org>,
- Pratyush Yadav <pratyush@kernel.org>, Michael Walle <mwalle@kernel.org>,
- Miquel Raynal <miquel.raynal@bootlin.com>,
- Richard Weinberger <richard@nod.at>, Vignesh Raghavendra <vigneshr@ti.com>,
- Naveen Krishna Chatradhi <naveenkrishna.chatradhi@amd.com>,
- Carlos Bilbao <carlos.bilbao.osdev@gmail.com>,
+Subject: Re: [PATCH v5 08/20] ACPI: platform_profile: Create class for ACPI
+ platform profile
+To: Mario Limonciello <mario.limonciello@amd.com>,
  Hans de Goede <hdegoede@redhat.com>,
- =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
- "David E. Box" <david.e.box@linux.intel.com>,
- "James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>,
- "Martin K. Petersen" <martin.petersen@oracle.com>,
- Richard Henderson <richard.henderson@linaro.org>,
- Matt Turner <mattst88@gmail.com>, Frederic Barrat <fbarrat@linux.ibm.com>,
- Andrew Donnellan <ajd@linux.ibm.com>, Arnd Bergmann <arnd@arndb.de>,
- Logan Gunthorpe <logang@deltatee.com>, "K. Y. Srinivasan"
- <kys@microsoft.com>, Haiyang Zhang <haiyangz@microsoft.com>,
- Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>
-Cc: Dan Williams <dan.j.williams@intel.com>, linux-kernel@vger.kernel.org,
- linux-pci@vger.kernel.org, linux-cxl@vger.kernel.org,
- amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
- linux-rdma@vger.kernel.org, linux-mtd@lists.infradead.org,
- platform-driver-x86@vger.kernel.org, linux-scsi@vger.kernel.org,
- linux-usb@vger.kernel.org, linux-alpha@vger.kernel.org,
- linuxppc-dev@lists.ozlabs.org, linux-hyperv@vger.kernel.org
-References: <20241103-sysfs-const-bin_attr-v2-0-71110628844c@weissschuh.net>
- <20241103-sysfs-const-bin_attr-v2-4-71110628844c@weissschuh.net>
+ =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Cc: "Rafael J . Wysocki" <rafael@kernel.org>, Len Brown <lenb@kernel.org>,
+ Maximilian Luz <luzmaximilian@gmail.com>, Lee Chun-Yi <jlee@suse.com>,
+ Shyam Sundar S K <Shyam-sundar.S-k@amd.com>,
+ Corentin Chary <corentin.chary@gmail.com>, "Luke D . Jones"
+ <luke@ljones.dev>, Ike Panhc <ike.pan@canonical.com>,
+ Henrique de Moraes Holschuh <hmh@hmh.eng.br>,
+ Alexis Belmonte <alexbelm48@gmail.com>,
+ =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>,
+ Ai Chao <aichao@kylinos.cn>, Gergo Koteles <soyer@irl.hu>,
+ open list <linux-kernel@vger.kernel.org>,
+ "open list:ACPI" <linux-acpi@vger.kernel.org>,
+ "open list:MICROSOFT SURFACE PLATFORM PROFILE DRIVER"
+ <platform-driver-x86@vger.kernel.org>,
+ "open list:THINKPAD ACPI EXTRAS DRIVER"
+ <ibm-acpi-devel@lists.sourceforge.net>,
+ Mark Pearson <mpearson-lenovo@squebb.ca>,
+ Matthew Schwartz <matthew.schwartz@linux.dev>
+References: <20241107060254.17615-1-mario.limonciello@amd.com>
+ <20241107060254.17615-9-mario.limonciello@amd.com>
+ <84a647ba-50ec-4d60-b4be-758ff50335bd@gmx.de>
+ <67f147a9-9c4c-4923-95fb-6186f8b51d77@amd.com>
 Content-Language: en-US
-From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-In-Reply-To: <20241103-sysfs-const-bin_attr-v2-4-71110628844c@weissschuh.net>
+From: Armin Wolf <W_Armin@gmx.de>
+In-Reply-To: <67f147a9-9c4c-4923-95fb-6186f8b51d77@amd.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:3D9m/5wKJr1h25IK/pB102QSnMzneqQEtTNMzpt6NdPjm5haZ4m
+ ydN8I+g+EDzSDpy21kfQkOxo1B+Qow9M3ZPu7INOogId5uzbnPJQemQssJ3hgpLPcTPr4Vm
+ jKl4r4PNPh/EG4scmsJsprCSTpmdmErCnR9OTMxEdLpI+zFKhNa/BDxj2uE3vja0/0P/h/o
+ Yqp8Kjb+c2hf+PhK4L8Fg==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:phirCFRhYfw=;CYFd7KQAdtW1Fmrfct+VDvFYvwY
+ Sn0SxFfp7/zaxy/6UIgNsqrVqaXEsZDvnrMB7ImnVfXqj08ETsMyKft+z1ieC1gdbSdmxz5cJ
+ FNup97UT4h0wl+uOMQsguoE81I1YrZmbX729XOgd004remm2QDNMdUThBKnapoo4nmoJm75F8
+ 3yOU26+uWv84bAc0mnJVBnXKCsCWSHjTPUb/Mym9WtGfsiekm5UdqO6Bs0Z1rZpUwSXguvL2P
+ sWnvJB+dov0/dZgfMPSmewF6+EAZr1JtyZIrXvfBqW2RTAJogDP2WQcnnFJyGjhoF1ZTQTeos
+ mjEdpl3EbHS6TnGaWBly7nfZMi0AYCgx9Rx58VnVzNAfn5am8bwlRzJHBu5Yf1SbZwNTPytKg
+ PsTatuTyTCygfwOAsqKB91P41JwUAhHAo+wit59mADdMwUrK9mVxOcV13aEL785AthOxwkVvI
+ uhIuHCxLWkcYW85wN5yzLE4hx35v/bT38m8H8w2djmoJpFSlMrO2XL9UV5QGyEcpQpz6+OQSv
+ l5Tc+e6pjNurC7RNsSAVA8XvAzzquqX+/dxr5+VPyRjX5Bhvaur9EGR70cGIvGqyVhNcjPT4I
+ BzokPhSH7WGpCzrD9O8KnF9YR6AQr0tcaMvcyHy2klXLtVKwqzwhrSnb0ID66eN+0OkWUUoAZ
+ +j8UKcjvazBVa4u4jtzDVf81Ufg75B8pDGK1BcxN+Ur0yHyf1aw5gPPg9VjMRGSutoQr2oLun
+ 6R7y1MmqrSUwQ52Y/obv65t/709Pe4Q6Qxa9ioWgfyM8cL3J/bKvpGiMk4Xwce/zi++crW0qc
+ 7t/G6AvFC/hy2pJGGofYWRmja6rmMO0EjnZPw31dJuNzhEAlvg+zpAb8RahL0i93p1ulKrsTq
+ 8Y4V2SMBrHA/qyxr+5sf7Z6c4S6Km9Fr8Kra6puslM5LB3fpRm7xUfj2U
 
+Am 07.11.24 um 22:09 schrieb Mario Limonciello:
 
+> On 11/7/2024 02:16, Armin Wolf wrote:
+>> Am 07.11.24 um 07:02 schrieb Mario Limonciello:
+>>
+>>> When registering a platform profile handler create a class device
+>>> that will allow changing a single platform profile handler.
+>>>
+>>> Tested-by: Mark Pearson <mpearson-lenovo@squebb.ca>
+>>> Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
+>>> ---
+>>> v5:
+>>> =C2=A0 * Use ida instead of idr
+>>> =C2=A0 * Use device_unregister instead of device_destroy()
+>>> =C2=A0 * MKDEV (0, 0)
+>>> ---
+>>> =C2=A0 drivers/acpi/platform_profile.c=C2=A0 | 50
+>>> +++++++++++++++++++++++++++++---
+>>> =C2=A0 include/linux/platform_profile.h |=C2=A0 2 ++
+>>> =C2=A0 2 files changed, 48 insertions(+), 4 deletions(-)
+>>>
+>>> diff --git a/drivers/acpi/platform_profile.c b/drivers/acpi/
+>>> platform_profile.c
+>>> index 0450bdae7c88b..652034b71ee9b 100644
+>>> --- a/drivers/acpi/platform_profile.c
+>>> +++ b/drivers/acpi/platform_profile.c
+>>> @@ -5,6 +5,7 @@
+>>> =C2=A0 #include <linux/acpi.h>
+>>> =C2=A0 #include <linux/bits.h>
+>>> =C2=A0 #include <linux/init.h>
+>>> +#include <linux/kdev_t.h>
+>>> =C2=A0 #include <linux/mutex.h>
+>>> =C2=A0 #include <linux/platform_profile.h>
+>>> =C2=A0 #include <linux/sysfs.h>
+>>> @@ -22,6 +23,12 @@ static const char * const profile_names[] =3D {
+>>> =C2=A0 };
+>>> =C2=A0 static_assert(ARRAY_SIZE(profile_names) =3D=3D PLATFORM_PROFILE=
+_LAST);
+>>>
+>>> +static DEFINE_IDA(platform_profile_ida);
+>>> +
+>>> +static const struct class platform_profile_class =3D {
+>>> +=C2=A0=C2=A0=C2=A0 .name =3D "platform-profile",
+>>> +};
+>>> +
+>>> =C2=A0 static ssize_t platform_profile_choices_show(struct device *dev=
+,
+>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 struct device_at=
+tribute *attr,
+>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 char *buf)
+>>> @@ -113,6 +120,8 @@ void platform_profile_notify(void)
+>>> =C2=A0 {
+>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (!cur_profile)
+>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 return;
+>>> +=C2=A0=C2=A0=C2=A0 if (!class_is_registered(&platform_profile_class))
+>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 return;
+>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 sysfs_notify(acpi_kobj, NULL, "platform=
+_profile");
+>>> =C2=A0 }
+>>> =C2=A0 EXPORT_SYMBOL_GPL(platform_profile_notify);
+>>> @@ -123,6 +132,9 @@ int platform_profile_cycle(void)
+>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 enum platform_profile_option next;
+>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 int err;
+>>>
+>>> +=C2=A0=C2=A0=C2=A0 if (!class_is_registered(&platform_profile_class))
+>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 return -ENODEV;
+>>> +
+>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 scoped_cond_guard(mutex_intr, return -E=
+RESTARTSYS,
+>>> &profile_lock) {
+>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (!cur_profil=
+e)
+>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0 return -ENODEV;
+>>> @@ -163,20 +175,50 @@ int platform_profile_register(struct
+>>> platform_profile_handler *pprof)
+>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (cur_profile)
+>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 return -EEXIST;
+>>>
+>>> -=C2=A0=C2=A0=C2=A0 err =3D sysfs_create_group(acpi_kobj, &platform_pr=
+ofile_group);
+>>> -=C2=A0=C2=A0=C2=A0 if (err)
+>>> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 return err;
+>>> +=C2=A0=C2=A0=C2=A0 if (!class_is_registered(&platform_profile_class))=
+ {
+>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 /* class for individual ha=
+ndlers */
+>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 err =3D class_register(&pl=
+atform_profile_class);
+>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (err)
+>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 re=
+turn err;
+>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 /* legacy sysfs files */
+>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 err =3D sysfs_create_group=
+(acpi_kobj, &platform_profile_group);
+>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (err)
+>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 go=
+to cleanup_class;
+>>> +=C2=A0=C2=A0=C2=A0 }
+>>> +
+>>> +=C2=A0=C2=A0=C2=A0 /* create class interface for individual handler *=
+/
+>>> +=C2=A0=C2=A0=C2=A0 pprof->minor =3D ida_alloc(&platform_profile_ida, =
+GFP_KERNEL);
+>>
+>> Missing error handling.
+>
+> Ack.
+>
+>>
+>>> +=C2=A0=C2=A0=C2=A0 pprof->class_dev =3D device_create(&platform_profi=
+le_class, NULL,
+>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 MKDEV(0, 0), NULL, "pl=
+atform-profile-%d",
+>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 pprof->minor);
+>>
+>> Two things:
+>>
+>> 1. Please allow drivers to pass in their struct device so the
+>> resulting class device
+>> has a parent device. This would allow userspace applications to
+>> determine which device
+>> handles which platform profile device. This parameter is optional and
+>> can be NULL.
+>>
+>
+> I previously did this indirectly by letting them set it in the
+> "struct platform_profile_handler *pprof" and then used that value.
+>
+> You had said that wasn't necessary so I dropped that patch.=C2=A0 I woul=
+d
+> rather go back to including that then having another argument to
+> platform_profile_register().
+>
+I meant that requiring "dev" to be set is not necessary. Having a "dev" fi=
+eld inside struct platform_profile_handler is fine.
 
-On 03/11/2024 17:03, Thomas Weißschuh wrote:
-> Stop abusing the is_bin_visible() callback to calculate the attribute
-> size. Instead use the new, dedicated bin_size() one.
-> 
-> Signed-off-by: Thomas Weißschuh <linux@weissschuh.net>
-> ---
-Thanks for the patch,
+Thanks,
+Armin Wolf
 
-LGTM.
-
-Acked-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-
---srini
-
->   drivers/nvmem/core.c | 13 +++++++++++--
->   1 file changed, 11 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/nvmem/core.c b/drivers/nvmem/core.c
-> index 33ffa2aa4c1152398ec66b8dd7b30384c5346a6e..63370c76394ee9b8d514da074779617cef67c311 100644
-> --- a/drivers/nvmem/core.c
-> +++ b/drivers/nvmem/core.c
-> @@ -303,11 +303,19 @@ static umode_t nvmem_bin_attr_is_visible(struct kobject *kobj,
->   	struct device *dev = kobj_to_dev(kobj);
->   	struct nvmem_device *nvmem = to_nvmem_device(dev);
->   
-> -	attr->size = nvmem->size;
-> -
->   	return nvmem_bin_attr_get_umode(nvmem);
->   }
->   
-> +static size_t nvmem_bin_attr_size(struct kobject *kobj,
-> +				  const struct bin_attribute *attr,
-> +				  int i)
-> +{
-> +	struct device *dev = kobj_to_dev(kobj);
-> +	struct nvmem_device *nvmem = to_nvmem_device(dev);
-> +
-> +	return nvmem->size;
-> +}
-> +
->   static umode_t nvmem_attr_is_visible(struct kobject *kobj,
->   				     struct attribute *attr, int i)
->   {
-> @@ -383,6 +391,7 @@ static const struct attribute_group nvmem_bin_group = {
->   	.bin_attrs	= nvmem_bin_attributes,
->   	.attrs		= nvmem_attrs,
->   	.is_bin_visible = nvmem_bin_attr_is_visible,
-> +	.bin_size	= nvmem_bin_attr_size,
->   	.is_visible	= nvmem_attr_is_visible,
->   };
->   
-> 
+>> 2. Please use the fourth argument of device_create() instead of
+>> dev_set_drvdata().
+>
+> OK.
+>
+>>
+>> Thanks,
+>> Armin Wolf
+>>
+>>> +=C2=A0=C2=A0=C2=A0 if (IS_ERR(pprof->class_dev)) {
+>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 err =3D PTR_ERR(pprof->cla=
+ss_dev);
+>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 goto cleanup_ida;
+>>> +=C2=A0=C2=A0=C2=A0 }
+>>> +=C2=A0=C2=A0=C2=A0 dev_set_drvdata(pprof->class_dev, pprof);
+>>>
+>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 cur_profile =3D pprof;
+>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 return 0;
+>>> +
+>>> +cleanup_ida:
+>>> +=C2=A0=C2=A0=C2=A0 ida_free(&platform_profile_ida, pprof->minor);
+>>> +
+>>> +cleanup_class:
+>>> +=C2=A0=C2=A0=C2=A0 class_unregister(&platform_profile_class);
+>>> +
+>>> +=C2=A0=C2=A0=C2=A0 return err;
+>>> =C2=A0 }
+>>> =C2=A0 EXPORT_SYMBOL_GPL(platform_profile_register);
+>>>
+>>> =C2=A0 int platform_profile_remove(struct platform_profile_handler *pp=
+rof)
+>>> =C2=A0 {
+>>> +=C2=A0=C2=A0=C2=A0 int id;
+>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 guard(mutex)(&profile_lock);
+>>>
+>>> -=C2=A0=C2=A0=C2=A0 sysfs_remove_group(acpi_kobj, &platform_profile_gr=
+oup);
+>>> +=C2=A0=C2=A0=C2=A0 id =3D pprof->minor;
+>>> +=C2=A0=C2=A0=C2=A0 device_unregister(pprof->class_dev);
+>>> +=C2=A0=C2=A0=C2=A0 ida_free(&platform_profile_ida, id);
+>>> +
+>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 cur_profile =3D NULL;
+>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 return 0;
+>>> =C2=A0 }
+>>> diff --git a/include/linux/platform_profile.h b/include/linux/
+>>> platform_profile.h
+>>> index 58279b76d740e..d92a035e6ba6a 100644
+>>> --- a/include/linux/platform_profile.h
+>>> +++ b/include/linux/platform_profile.h
+>>> @@ -28,6 +28,8 @@ enum platform_profile_option {
+>>>
+>>> =C2=A0 struct platform_profile_handler {
+>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 const char *name;
+>>> +=C2=A0=C2=A0=C2=A0 struct device *class_dev;
+>>> +=C2=A0=C2=A0=C2=A0 int minor;
+>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 unsigned long choices[BITS_TO_LONGS(PLA=
+TFORM_PROFILE_LAST)];
+>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 int (*profile_get)(struct platform_prof=
+ile_handler *pprof,
+>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 enum platform_profile_option *profile);
+>
