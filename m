@@ -1,218 +1,339 @@
-Received: from NAM11-DM6-obe.outbound.protection.outlook.com (mail-dm6nam11on2067.outbound.protection.outlook.com [40.107.223.67])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f45.google.com (mail-wm1-f45.google.com [209.85.128.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C3CB6DDA8
-	for <platform-driver-x86@vger.kernel.org>; Fri,  8 Nov 2024 07:13:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.223.67
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1731049998; cv=fail; b=OlMd4SLk0WjubFejfKZ2zGLq7/x8eKQXsJXAuqJL5KKUVf9EyxZVeIhQRpPBjEOsKuVEtQIaYBvltHbamEl/CTQ5tIvBBAPf9DhE7QnDnKoJRdt/IBErKWYODtsdbzKo82Rh2aO6YrdoxZgWNCdH7ht8DIYctraAEx91d5uc0Po=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1731049998; c=relaxed/simple;
-	bh=13whtE53U5VXtw49oU3lBj9DnLor+zLAs0q0unDnNOE=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=VLVs/DDRuPBAxBwmGGKiBG2fmZZ/0zy+bXLF1UQhGAM7NHSPNQSheZH4c6XtLiFM6IpxBLYHNUpqSOmciOHNadzGSK1ESevQwaYLzfheKMp/aUwtI5bliiWjEq75feQ0B57Vi9UcYhgZQOI2n9dIYy9K4y4AyUXOX86z+/VneUE=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=wdBDqM56; arc=fail smtp.client-ip=40.107.223.67
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 78C5D1E1A1F
+	for <platform-driver-x86@vger.kernel.org>; Fri,  8 Nov 2024 09:57:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.45
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1731059852; cv=none; b=Yj8f33y9CMjFNQo7W98+iys1Gz04Ge+bR+7hXDLoEqJjtCd0FchbLS82w0h0Pu9Tjb3XZ/GcWokVs0LRgJRQkdHkPKdFDFpjJuQ9iYxT2wdQxNtsKr3G/LamBF7mPmJ0TzMA1EZbo6EwQbfSBw23XSq0VBzXMLGtb/4v9bTjhcA=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1731059852; c=relaxed/simple;
+	bh=8fI1kWvz6hGfQzWAO2sB4JOqTLhejAN4OfQdn+uncMU=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=F3uRpGJSzwoiwYu24MYfwBeD/RVEYehEA/rwat44cyW6enmHW8vB77dGR4iT7bjXrxzd4pVod7D7CBtx2N1yiuD8sIlATdlT4GguigqtTdmdAXXzjEP2MAb82ETyHdn7csf8vXXi6w8vwWXp0M4Y6ThdVPB6McVXNBiejLCiIVU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=r+EmRHg9; arc=none smtp.client-ip=209.85.128.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="wdBDqM56"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=wAqcZfmLtcwwUvQSsyg788Bng6F83aNTn/XPVJlOpXyVEPjSotU0pvGXJv7k1Rk5WCDdnUkgfpmglbKUx2Y0B0i3i9AeEWb9xFg+KOPbNZR7VGZvT+JoMzcd9y8pAAoIhxuxhnDELIT8hAjx0SsvErxkvHaHja5PSoMup6BUz0W9R5sxDLxfLknkfkSIOTXTChnwMYrU/jcicdHbktkEOPIL4fxmevnEwlIkcHKR0lBPiyuei+0JHJ2nMHfVX2QG+0gF8fpGEBBch/bMb1S3l1Y6dzEwy1rx6mZvspiOkq/gNiSpZ3oU8Aji7aptKGHjWrZB7u+qypH+cjEYYeXvvw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=FMgrvVCjKgqZWHemsIn+u7oR2pwPxWFpLHn2d4Tk/Xc=;
- b=cXmiBzrY1BE40/gUu9oILF/airmq/uc7voeX6hF2o6DadEMkfmdjWbG7BGgXmgCug1CZHSGO2WZ23rlaCpzk7EBPQ5yxl10Ehb1ewmVcFz9uzlZbYLwz8HBBSq+78HlkBrCyeKqENqcdn8UTkJSVs9xOqWSBON2lUN2Mr26iMZWUAoLxYulqJg30e6eSIA98Ss++3UN3PR+Y3XtCOJ8bTZeEI2rwSQamyXNx7YCBa2M8/+0R1TDzW3ibompv7PHbnpV9bpUcEZNEiijfnKkWiHBE8yWgHReikNgpK9q2PvBTomHGpb80+IC0meMehca5pkf24B/fhZ5FXCeJGlvFkw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=FMgrvVCjKgqZWHemsIn+u7oR2pwPxWFpLHn2d4Tk/Xc=;
- b=wdBDqM56fkJuyFAWcrtQjmKVWw4iHv5AWnDSYNh6CdAMh6vOBi8xHz4ibqiyCCGWZNFUX6ukDeGu1MAn3dwGY2uaRAZlbrZpRJtjVC2DEOOVmqR9Tw1k63/QMNpm2C9OjFBqzC/SOrBoXLRkgI0OfN89jwHo2752u4vNkzDGO/0=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from BL1PR12MB5176.namprd12.prod.outlook.com (2603:10b6:208:311::19)
- by DM4PR12MB7600.namprd12.prod.outlook.com (2603:10b6:8:108::5) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8137.19; Fri, 8 Nov
- 2024 07:13:12 +0000
-Received: from BL1PR12MB5176.namprd12.prod.outlook.com
- ([fe80::ed5b:dd2f:995a:bcf4]) by BL1PR12MB5176.namprd12.prod.outlook.com
- ([fe80::ed5b:dd2f:995a:bcf4%5]) with mapi id 15.20.8137.021; Fri, 8 Nov 2024
- 07:13:11 +0000
-Message-ID: <1c6a5ea8-742d-42c1-8687-20927a5ba2b2@amd.com>
-Date: Fri, 8 Nov 2024 12:43:04 +0530
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v5 00/10] platform/x86/amd/pmc: Updates to AMD PMC driver
-Content-Language: en-US
-To: hdegoede@redhat.com, ilpo.jarvinen@linux.intel.com
-Cc: Sanket.Goswami@amd.com, platform-driver-x86@vger.kernel.org
-References: <20241108070822.3912689-1-Shyam-sundar.S-k@amd.com>
-From: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
-In-Reply-To: <20241108070822.3912689-1-Shyam-sundar.S-k@amd.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: PN2PR01CA0077.INDPRD01.PROD.OUTLOOK.COM
- (2603:1096:c01:23::22) To BL1PR12MB5176.namprd12.prod.outlook.com
- (2603:10b6:208:311::19)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="r+EmRHg9"
+Received: by mail-wm1-f45.google.com with SMTP id 5b1f17b1804b1-43152b79d25so16196585e9.1
+        for <platform-driver-x86@vger.kernel.org>; Fri, 08 Nov 2024 01:57:30 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1731059849; x=1731664649; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=1qvSjFgT9QigLmSV7E1Bd8DDsmjWl8PjqBY+cyP/Rbk=;
+        b=r+EmRHg9Wio3I2CXfbejiEK7TYa+vBhJNccbX2yRyz5L8tYR8b4YkVDkmJF2rSAGqf
+         yeKCEEXSR22yA+MxHXnIm78RcdKuowWxl4t3MjX+EfSlc20OZ64o39uogROjxOGr0Kmf
+         jS5vf2OYMNmBmP9hA8owbCs2/R+M4peff78zfaoDuX14zWwruWkV2SnjZlvB8nFSaiB8
+         W0S/B/LpgIsEEBgyNN5GHcRUMu92u2yNWaffZYnTezcfGPCbtgAJb5/f/Ziva4/vqOLc
+         7+wkQI+cpjUTjXb5Vvr9zSI+oVslva2iTYPsodGIuPguPl1jgEVbl8nj/NKy9PxjsSA+
+         qQew==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1731059849; x=1731664649;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=1qvSjFgT9QigLmSV7E1Bd8DDsmjWl8PjqBY+cyP/Rbk=;
+        b=R73hZHLpnAckCeRpLRJCckiup33P4TCJ5SaLITJ7w+IPYNCEOEQseS5IUgGuIrOHo7
+         YdY3Hxk87PyeK9lCeSU5lM94GU6BOWcXOp4SCCL6xXLr0yGniEQVbaHbIHEHJQjbdWdj
+         s0ZJRowMoTJcewbCa8sRR+OWLcJax2zny26hyhovVL8EcFQjFgzk+RWh28vkDen8LUCe
+         2V1ebf5/pLCld10qpN3sJF2gT8mj0NpvdQ3xorZ19jDkpOYGmsHJcZwnmJT+FlSZ7hyK
+         NZkD2/ZubX+0g1TfyPUztzBQYfiQwUfYRP4zAPySOx2tLFc2/F535HzOtNI5Uz8Vo1jG
+         BrLQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWzZg2Kf2bQn07bATsAGU90d7MMdHOZCdir6vENNeofqSCvEK/9UFor6Gjx/vCcCiOcavyP/noJdg+0AYY7LkEZhVkH@vger.kernel.org
+X-Gm-Message-State: AOJu0YwPNkljUCCWe2EXS6s9JTYoLs8biGrT+0gAwgY4R73unbdohLif
+	owN/1IqwGFgsOniyWRb/kjdDBVoujE79qvoGmuOZvWtzL5K6PfkLPVKrp5+BHb0=
+X-Google-Smtp-Source: AGHT+IGSM0YIoIJwn4bQFLUSfQjkco2eSXc7cP/BCeCrt62cX0r5HN3g5uOpTFuxNeCM9lxmmGx4PQ==
+X-Received: by 2002:a05:600c:4448:b0:430:52ec:1e41 with SMTP id 5b1f17b1804b1-432b7509c5fmr17646005e9.17.1731059848755;
+        Fri, 08 Nov 2024 01:57:28 -0800 (PST)
+Received: from [172.20.143.194] ([89.101.134.25])
+        by smtp.googlemail.com with ESMTPSA id 5b1f17b1804b1-432aa70a234sm94913735e9.34.2024.11.08.01.57.25
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 08 Nov 2024 01:57:28 -0800 (PST)
+Message-ID: <5bd704c3-88c1-4b6f-82ec-25f9d7a6e92b@linaro.org>
+Date: Fri, 8 Nov 2024 09:57:23 +0000
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: BL1PR12MB5176:EE_|DM4PR12MB7600:EE_
-X-MS-Office365-Filtering-Correlation-Id: 4dab354f-d95c-40f9-a29d-08dcffc4cde1
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|1800799024|376014;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?allzbTlRMURORUZmeHUvaVlOSzZ5bnAyQWhGeGV1Yzl1UG5RTjQrUVJod1ZR?=
- =?utf-8?B?R0V0N0NsODZZT1prYnoxc0ZVdTdIOTl4SGFmZWIzR2JuWE9DMkM0N3pOZll4?=
- =?utf-8?B?Mlk4SHBHN1BockJqMEhOaFBibitNRDNiWHZUV1loZW1FU0swTGdpclFTREd0?=
- =?utf-8?B?dVA2OGQ1dWJXOGlpOXpZbEdPUnE2WENvVUNBSHNndHBGZnM5cGhLWlEzTDZZ?=
- =?utf-8?B?YUs4azNNY1Q3T1JITjZ4R3pxTURDcWdkRlBUY0NlUHB0cW85Z2NwUWVHUXVR?=
- =?utf-8?B?dGZ5bE5tR3d2NGFmS2FwbTBaUzZUaEcwcGltVXZKQ205Y0J2TEovb0NZSzB1?=
- =?utf-8?B?c2FkajVWRFBVdnlLc0Q2ZmFZd3Q5cjBzSmt5NEd3YVN4ZTlxelliUW5ITGRt?=
- =?utf-8?B?ckgxZEY1MGIwa0JBRVg5SUFJeFQ1OS9DbXIvMWJpMlpST0x6Zk51S1JUTURv?=
- =?utf-8?B?VjZyRC8rUmVMTGtpd2o0eE11eXJIYmY2bU5HYkMxbDYyZ1JFRGljbFpSaEFk?=
- =?utf-8?B?YXduZDU1R3VyZmdOS1kwcEVsNjIwbS8wRkk2cStJNDR3WDBoMzZrQjQxT3Yr?=
- =?utf-8?B?cXFUNEZKL3hrRkg1eU9qNFVhejBqZDloSmsvQWh1ZE1LaThJT0hoZ1VzSHBI?=
- =?utf-8?B?RDNOU3dLbjhSV005SUlCQk5SdTJndjk0VlJNNGRIbERqcm5XcDYwTjRENlFv?=
- =?utf-8?B?dE5CSXQycmJETnRiNU13LzBVTkpUdWtLYVRqOVpydkhTdnZQZlpSeHdhWGsz?=
- =?utf-8?B?OVBVbGluOVZrQUNPcFhLalNYYlBEWUlXamJjb3dkNU4zODN6dVBnMjlKSUpE?=
- =?utf-8?B?LzlieU9WVkVkYzY2M25rOHdnUTR6OHp0a2hITEg3cksxRmt1NTFmazlaT2Rz?=
- =?utf-8?B?NnlJc0JTaDBuZVR1dUV0VU95ZnVHK2RRdjFuV1ROOHc5Nll2QWhUVUlUU0Z4?=
- =?utf-8?B?MHdZNDBQZElrU1drZjdlZnFYM3NHM3JhalIvSEthQnRnYklIdDZZc010MnFy?=
- =?utf-8?B?ZjQ1ZUZiR25lVXloU1BYOEptRWtOTFkyZjF3MXVnUDcySGZ2WStIcHpWQitm?=
- =?utf-8?B?dUFYbGluM01DZEtaMU1YVjFQNFZPanJIZExJY0FJa2JvWi9CbFRxNGlMS0p3?=
- =?utf-8?B?S3lkWmoxODNML0l6QmF3MzJ3NWhsZ0JQYlBnS3pHYVhsS21HeXlYUWttZENL?=
- =?utf-8?B?bU1ncTNMM3ZnY1haMzlDNXBFWDdYQ0tkVk9CZVhPdE5oWkhsN0V5dE1TN25H?=
- =?utf-8?B?Ynd3MzRvVmhRUWg2V0JhTmtscjBjVkk4L3BUbVE5aklvSWNMbkpzaUk5UFVC?=
- =?utf-8?B?L01zQzZqMFFwbVdoYUViVDIybW5IRGRVQ0o2M2c1cVoxTWtsWTNaUWNEaUt1?=
- =?utf-8?B?bUlycUl2ZVVTWEt3TUVqOTdERGx3Y0M4eTR3QTV4NTBEWnJDMDlxM01PNEpQ?=
- =?utf-8?B?VVJFM21BQ0tqeWZBNlA1MzVZcVR0ZUp2bHVuVWdzdGF6S20zdXZ6TUdyRFN5?=
- =?utf-8?B?VUxxTWRxSXl5QjlyNTJXbGJUS01CcjQ5d0Z3M2ZPRktxUFd2SWUyK1BjQkRl?=
- =?utf-8?B?cEtuRVNUWGZnclBrOVMrMjMvYS9INUlMSDRETUxBYlpJK1J2bEt3Y1FDMHVL?=
- =?utf-8?B?bkZLbUw0ME9JakVlQjIrWHBNdEQ1RkU2NHB2OUk3TGg3MVZWa1M4MUJFd29X?=
- =?utf-8?B?LzBtT053RzNTZ3oxRFFRZXBPWlVwZHE0eVVzTjdYQzloSk5NUitpNGxkYm1j?=
- =?utf-8?Q?WHB2Uea3mPdxJfK5i3slEeBccZfDGxTpiLyAiSD?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BL1PR12MB5176.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(376014);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?eGh3ckFoSTBCWkZQdjhDUVUrZXhObU5DVEtISzdXUmJSd1JubHBNclc2VVBO?=
- =?utf-8?B?bFNzZU50OVUrWXkxU1dWdEZKbHdhd3IyNFlwZlVydFhHRDRNUlNzaE9aN3hq?=
- =?utf-8?B?YmZXNWNkU21xMlpxQitXUzh0eG1vSGQvK0UyNlJGY1k0Tnc4eWVZeE1ITXBZ?=
- =?utf-8?B?V0JkY3hOTWtWSm05alV5TUNZWFd4R2xRcHdOVUp3Mit3VTg3L2JCMzRGT051?=
- =?utf-8?B?Mnd1YTBIR24zeUNaZkFINGVXN3dSSE5LaEJ4TmkwdkdVT2hSNXBlUUpQSEJJ?=
- =?utf-8?B?TEM5UGVpa01uTGViZ05xdkRFZmdEdEd0SWc2aFUzUE1helVsZER3cUgrYnhl?=
- =?utf-8?B?R2JVVlJMUHpRZ3BqQzBmMm1CaFNiNTNOcUE3U2h0SXVoYTJUajNzSVZUenpl?=
- =?utf-8?B?TmFDZERpTXBKNXNuYkNpQ2VrdnVabFpKbDkyUkx4MjkwK2ZtcDBXREszTXoz?=
- =?utf-8?B?YnVtaDBQV1ZCK1dBTHN5RFRsM2hERmg5NE9BTDRleWszK2lyZlhSRXhLZGFE?=
- =?utf-8?B?V0VBTzJjK1NES3pMUlBVaXpRWHJXMldNVGJZWjJzQStiQWdwQmpmUGU3OXdB?=
- =?utf-8?B?bzBXOUVLbmlVR05PQ2xTc09EL2xmSE9vMzBPay9oYXdQZ2VuVksyTDFlbnhi?=
- =?utf-8?B?dVdnVThZOU4xakFDbUFrV3I4UXlkdm9HWTg1ZEZZVFRUQlgvb3ZMOXZJSFEz?=
- =?utf-8?B?YU1QcWRsQVVzTnF6RVdqUkZMTGQ0Zm9BMXdSZEdoV0Y1NEJRZktLSll5SFM5?=
- =?utf-8?B?Y2ZhU2JRVEhGMkkxQlJheXVQNlpUQVM2cmhQaStMN2VHWGRIK25TVmF5cFdu?=
- =?utf-8?B?bFlmanliWDhnVWIwZVY1NVlNYzBMM3ZUeXpZT1E3RWZXcWU4U2hpcTVIZUVS?=
- =?utf-8?B?aWJWYUQ1UGdRQlhXSWtOZzk4L1VpbmlNb24ra1NGeW4xRHQ3TWhmSHhBM0M4?=
- =?utf-8?B?UjFHOFlVYkwvWkJPRVhibkZXQUthelgzUUFjTGNwVE1WVVk5dEN2bTRSOXFZ?=
- =?utf-8?B?TUY1Yno0aHJDeWVTdVR4aG5ZSXBHL3VtellUcnJSVWRhQlVUZ2Z6YnNVU0xH?=
- =?utf-8?B?Mm5wSXRjd2dSVkg4K1d4VzlaNldFbUtkaElDME4xS25hbkkyQkNVc2NRTG1T?=
- =?utf-8?B?NXh4WEVPZDRLWmw2VXVRT0VIMkxjWDVURnZlNkNGd0hwZmxFcU9aMGdQUDNR?=
- =?utf-8?B?cHhaNk1oTW1FOVRzRmd3amZiZ3lXUjd0U05oRzlYOXRzcmFKT084d0lLdkdT?=
- =?utf-8?B?WXlrMG9kRm1HOUtwOHRKanZEMVZHcmUxUEVPb2xKdUxoblVVbkQ1RWkzS1ZV?=
- =?utf-8?B?aXY1VFV6cG9Gd0RzS1lWQXNjN3pxalhIcFA1alcyWXhFbGVPY0NvZTZ0ZWpz?=
- =?utf-8?B?M2VscmIrYm1lZ01KZUhSeVhNenFOZ3ZDOVZLTGh0Y3NkNnV1ZmYrTzhtQW42?=
- =?utf-8?B?RXR5RmVtaVVXR1ZWQzJWbjZRQ0xKeGdtRGFtL2ZIZUpVeE4xa3o2Ty9BRXV0?=
- =?utf-8?B?K3JSOVZSOHlqcjVES0VEUGZjb0dwdnFhOHRPenVRUm1ZY0ZlVUdUMEozRjlN?=
- =?utf-8?B?ait0dHJ5TEJodmJ3VG53dmJxVEJYbHEzMkFUb29qNEh4TGN3RVhIRzZybGVQ?=
- =?utf-8?B?eCt6MmFxVFpEc0ZuMjlKVlRPeDBQVzhTVFA3R2JMU0k2VDBPT2NBWndaU29I?=
- =?utf-8?B?Sm02bGFJeXoxcDBIRUdKSVE3SDVPcDdSL056TStZWHhXcE1NenZkcG5NQ2RX?=
- =?utf-8?B?dVJxTTJCcytFblU4b2wxWWVTZlI5bG5zSnN6Wm9Mc3dMaGdiSUJKblhYU1gw?=
- =?utf-8?B?S2cySzVYWEJQRGRqMHo2ZGQrSDFOcXpxeGpPU2tTb3lUbDlac3gvSEVnbnJQ?=
- =?utf-8?B?cWZ6YWZZVlFNYmZaR2VWMUJ6aHBGQndQZW16UVRJQWt1U3M3YWZQeng0OFVQ?=
- =?utf-8?B?cFZaVlo0NjJKK05WWHdEOUpNNHR3aTFlNVQzRHAzUjdxK0Z3OE1hY3hnRnBI?=
- =?utf-8?B?V1NaYURBZXEra3ZsZFVHKy8xZzhIbjZBdGk2UnhJUmJmcVQ5S0kyQTVueGpa?=
- =?utf-8?B?ejgrdjJxSGFsZlZNTWIydlBHNkJZWUsvdTd0N05NQ3lqbFBhWkRrbkJnVURp?=
- =?utf-8?Q?4UGVw3YQG3ytj7w920TbOE8JO?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 4dab354f-d95c-40f9-a29d-08dcffc4cde1
-X-MS-Exchange-CrossTenant-AuthSource: BL1PR12MB5176.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 08 Nov 2024 07:13:11.5419
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: Hl4x2sPIyWBzcjU3elXyHuXF80q6rYK6DC3orDtNELMsX1bRFB9UJF0TEW4Ss6cQd1cbPnxAMARAo0zFqXixuA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM4PR12MB7600
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 05/10] sysfs: treewide: constify attribute callback of
+ bin_is_visible()
+To: =?UTF-8?Q?Thomas_Wei=C3=9Fschuh?= <linux@weissschuh.net>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ "Rafael J. Wysocki" <rafael@kernel.org>, Bjorn Helgaas
+ <bhelgaas@google.com>, Davidlohr Bueso <dave@stgolabs.net>,
+ Jonathan Cameron <jonathan.cameron@huawei.com>,
+ Dave Jiang <dave.jiang@intel.com>,
+ Alison Schofield <alison.schofield@intel.com>,
+ Vishal Verma <vishal.l.verma@intel.com>, Ira Weiny <ira.weiny@intel.com>,
+ Alex Deucher <alexander.deucher@amd.com>,
+ =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>,
+ Xinhui Pan <Xinhui.Pan@amd.com>, David Airlie <airlied@gmail.com>,
+ Simona Vetter <simona@ffwll.ch>,
+ Dennis Dalessandro <dennis.dalessandro@cornelisnetworks.com>,
+ Jason Gunthorpe <jgg@ziepe.ca>, Leon Romanovsky <leon@kernel.org>,
+ Tudor Ambarus <tudor.ambarus@linaro.org>,
+ Pratyush Yadav <pratyush@kernel.org>, Michael Walle <mwalle@kernel.org>,
+ Miquel Raynal <miquel.raynal@bootlin.com>,
+ Richard Weinberger <richard@nod.at>, Vignesh Raghavendra <vigneshr@ti.com>,
+ Naveen Krishna Chatradhi <naveenkrishna.chatradhi@amd.com>,
+ Carlos Bilbao <carlos.bilbao.osdev@gmail.com>,
+ Hans de Goede <hdegoede@redhat.com>,
+ =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+ "David E. Box" <david.e.box@linux.intel.com>,
+ "James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>,
+ "Martin K. Petersen" <martin.petersen@oracle.com>,
+ Richard Henderson <richard.henderson@linaro.org>,
+ Matt Turner <mattst88@gmail.com>, Frederic Barrat <fbarrat@linux.ibm.com>,
+ Andrew Donnellan <ajd@linux.ibm.com>, Arnd Bergmann <arnd@arndb.de>,
+ Logan Gunthorpe <logang@deltatee.com>, "K. Y. Srinivasan"
+ <kys@microsoft.com>, Haiyang Zhang <haiyangz@microsoft.com>,
+ Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>
+Cc: Dan Williams <dan.j.williams@intel.com>, linux-kernel@vger.kernel.org,
+ linux-pci@vger.kernel.org, linux-cxl@vger.kernel.org,
+ amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
+ linux-rdma@vger.kernel.org, linux-mtd@lists.infradead.org,
+ platform-driver-x86@vger.kernel.org, linux-scsi@vger.kernel.org,
+ linux-usb@vger.kernel.org, linux-alpha@vger.kernel.org,
+ linuxppc-dev@lists.ozlabs.org, linux-hyperv@vger.kernel.org
+References: <20241103-sysfs-const-bin_attr-v2-0-71110628844c@weissschuh.net>
+ <20241103-sysfs-const-bin_attr-v2-5-71110628844c@weissschuh.net>
+Content-Language: en-US
+From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+In-Reply-To: <20241103-sysfs-const-bin_attr-v2-5-71110628844c@weissschuh.net>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-Hi Ilpo,
 
-On 11/8/2024 12:38, Shyam Sundar S K wrote:
-> Updates include:
-> - Rework STB code and move into a separate file
-> - Update the code with new IP block information for newer SoCs
-> - Add STB support for new generation
-> - Add STB support for Ryzen desktop variants
-> - Updates to MAINTAINERS record.
-> 
 
-Note that this version is based on mainline (git head: 906bd684e4b1)
+On 03/11/2024 17:03, Thomas Weißschuh wrote:
+> The is_bin_visible() callbacks should not modify the struct
+> bin_attribute passed as argument.
+> Enforce this by marking the argument as const.
+> 
+> As there are not many callback implementers perform this change
+> throughout the tree at once.
+> 
+> Signed-off-by: Thomas Weißschuh <linux@weissschuh.net>
+> ---
+>   drivers/cxl/port.c                      |  2 +-
+>   drivers/gpu/drm/amd/amdgpu/amdgpu_psp.c |  2 +-
+>   drivers/infiniband/hw/qib/qib_sysfs.c   |  2 +-
+>   drivers/mtd/spi-nor/sysfs.c             |  2 +-
 
-Thanks,
-Shyam
+thanks for the patch.
 
-> v5:
-> ----
->  - Merge patch1 and 2 of v4
->  - Update Ilpo tags
->  - drop explicit typecasting.
->  - Use switch() for getting the message port
->  - Rename function names
+Acked-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org> #nvmem
+
+
+--srini
+>   drivers/nvmem/core.c                    |  3 ++-
+>   drivers/pci/pci-sysfs.c                 |  2 +-
+>   drivers/pci/vpd.c                       |  2 +-
+>   drivers/platform/x86/amd/hsmp.c         |  2 +-
+>   drivers/platform/x86/intel/sdsi.c       |  2 +-
+>   drivers/scsi/scsi_sysfs.c               |  2 +-
+>   drivers/usb/core/sysfs.c                |  2 +-
+>   include/linux/sysfs.h                   | 30 +++++++++++++++---------------
+>   12 files changed, 27 insertions(+), 26 deletions(-)
 > 
-> v4:
-> ----
->   - Reorder patches as suggested by Mario and Ilpo
->   - Squash patches
->   - Update tags
-> 
-> v3:
-> ----
->  - Split patch 1/8 of v2 into two more patches
->  - Add helper for printing S2D/PMC ports
->  - Use ARRAY_SIZE() for getting the number of IPs
->  - Address other remarks from Ilpo.
-> 
-> v2:
-> ----
->  - Add Mario's Reviewed-by tags
->  - Add amd_stb_update_args() to simplify code handling
->  - use cpu_feature_enabled() instead of root port's cpu_id information.
-> 
-> Shyam Sundar S K (10):
->   platform/x86/amd/pmc: Move STB block into amd_pmc_s2d_init()
->   platform/x86/amd/pmc: Move STB functionality to a new file for better
->     code organization
->   platform/x86/amd/pmc: Update function names to align with new STB file
->   platform/x86/amd/pmc: Define enum for S2D/PMC msg_port and add helper
->     function
->   platform/x86/amd/pmc: Isolate STB code changes to a new file
->   platform/x86/amd/pmc: Use ARRAY_SIZE() to fill num_ips information
->   platform/x86/amd/pmc: Update IP information structure for newer SoCs
->   platform/x86/amd/pmc: Update S2D message id for 1Ah Family 70h model
->   platform/x86/amd/pmc: Add STB support for AMD Desktop variants
->   MAINTAINERS: Change AMD PMC driver status to "Supported"
-> 
->  MAINTAINERS                            |   2 +-
->  drivers/platform/x86/amd/pmc/Makefile  |   2 +-
->  drivers/platform/x86/amd/pmc/mp1_stb.c | 332 ++++++++++++++++++++++
->  drivers/platform/x86/amd/pmc/pmc.c     | 377 +++++--------------------
->  drivers/platform/x86/amd/pmc/pmc.h     |  22 +-
->  5 files changed, 424 insertions(+), 311 deletions(-)
->  create mode 100644 drivers/platform/x86/amd/pmc/mp1_stb.c
+> diff --git a/drivers/cxl/port.c b/drivers/cxl/port.c
+> index 9dc394295e1fcd1610813837b2f515b66995eb25..24041cf85cfbe6c54c467ac325e48c775562b938 100644
+> --- a/drivers/cxl/port.c
+> +++ b/drivers/cxl/port.c
+> @@ -173,7 +173,7 @@ static ssize_t CDAT_read(struct file *filp, struct kobject *kobj,
+>   static BIN_ATTR_ADMIN_RO(CDAT, 0);
+>   
+>   static umode_t cxl_port_bin_attr_is_visible(struct kobject *kobj,
+> -					    struct bin_attribute *attr, int i)
+> +					    const struct bin_attribute *attr, int i)
+>   {
+>   	struct device *dev = kobj_to_dev(kobj);
+>   	struct cxl_port *port = to_cxl_port(dev);
+> diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_psp.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_psp.c
+> index 0b28b2cf1517d130da01989df70b9dff6433edc4..c1c329eb920b52af100a93bdf00df450e25608c4 100644
+> --- a/drivers/gpu/drm/amd/amdgpu/amdgpu_psp.c
+> +++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_psp.c
+> @@ -3999,7 +3999,7 @@ static umode_t amdgpu_flash_attr_is_visible(struct kobject *kobj, struct attribu
+>   }
+>   
+>   static umode_t amdgpu_bin_flash_attr_is_visible(struct kobject *kobj,
+> -						struct bin_attribute *attr,
+> +						const struct bin_attribute *attr,
+>   						int idx)
+>   {
+>   	struct device *dev = kobj_to_dev(kobj);
+> diff --git a/drivers/infiniband/hw/qib/qib_sysfs.c b/drivers/infiniband/hw/qib/qib_sysfs.c
+> index 53ec7510e4ebfb144e79884ca7dd7d0c873bd8a7..ba2cd68b53e6c240f1afc65c64012c75ccf488e0 100644
+> --- a/drivers/infiniband/hw/qib/qib_sysfs.c
+> +++ b/drivers/infiniband/hw/qib/qib_sysfs.c
+> @@ -283,7 +283,7 @@ static struct bin_attribute *port_ccmgta_attributes[] = {
+>   };
+>   
+>   static umode_t qib_ccmgta_is_bin_visible(struct kobject *kobj,
+> -				 struct bin_attribute *attr, int n)
+> +				 const struct bin_attribute *attr, int n)
+>   {
+>   	struct qib_pportdata *ppd = qib_get_pportdata_kobj(kobj);
+>   
+> diff --git a/drivers/mtd/spi-nor/sysfs.c b/drivers/mtd/spi-nor/sysfs.c
+> index 96064e4babf01f6950c81586764386e7671cbf97..5e9eb268073d18e0a46089000f18a3200b4bf13d 100644
+> --- a/drivers/mtd/spi-nor/sysfs.c
+> +++ b/drivers/mtd/spi-nor/sysfs.c
+> @@ -87,7 +87,7 @@ static umode_t spi_nor_sysfs_is_visible(struct kobject *kobj,
+>   }
+>   
+>   static umode_t spi_nor_sysfs_is_bin_visible(struct kobject *kobj,
+> -					    struct bin_attribute *attr, int n)
+> +					    const struct bin_attribute *attr, int n)
+>   {
+>   	struct spi_device *spi = to_spi_device(kobj_to_dev(kobj));
+>   	struct spi_mem *spimem = spi_get_drvdata(spi);
+> diff --git a/drivers/nvmem/core.c b/drivers/nvmem/core.c
+> index 63370c76394ee9b8d514da074779617cef67c311..73e44d724f90f4cd8fe8cafb9fa0c0fb23078e61 100644
+> --- a/drivers/nvmem/core.c
+> +++ b/drivers/nvmem/core.c
+> @@ -298,7 +298,8 @@ static umode_t nvmem_bin_attr_get_umode(struct nvmem_device *nvmem)
+>   }
+>   
+>   static umode_t nvmem_bin_attr_is_visible(struct kobject *kobj,
+> -					 struct bin_attribute *attr, int i)
+> +					 const struct bin_attribute *attr,
+> +					 int i)
+>   {
+>   	struct device *dev = kobj_to_dev(kobj);
+>   	struct nvmem_device *nvmem = to_nvmem_device(dev);
+> diff --git a/drivers/pci/pci-sysfs.c b/drivers/pci/pci-sysfs.c
+> index 040f01b2b999175e8d98b05851edc078bbabbe0d..13912940ed2bb66c0086e5bea9a3cb6417ac14dd 100644
+> --- a/drivers/pci/pci-sysfs.c
+> +++ b/drivers/pci/pci-sysfs.c
+> @@ -1326,7 +1326,7 @@ static struct bin_attribute *pci_dev_rom_attrs[] = {
+>   };
+>   
+>   static umode_t pci_dev_rom_attr_is_visible(struct kobject *kobj,
+> -					   struct bin_attribute *a, int n)
+> +					   const struct bin_attribute *a, int n)
+>   {
+>   	struct pci_dev *pdev = to_pci_dev(kobj_to_dev(kobj));
+>   
+> diff --git a/drivers/pci/vpd.c b/drivers/pci/vpd.c
+> index e4300f5f304f3ca55a657fd25a1fa5ed919737a7..a469bcbc0da7f7677485c7f999f8dfb58b8ae8a3 100644
+> --- a/drivers/pci/vpd.c
+> +++ b/drivers/pci/vpd.c
+> @@ -325,7 +325,7 @@ static struct bin_attribute *vpd_attrs[] = {
+>   };
+>   
+>   static umode_t vpd_attr_is_visible(struct kobject *kobj,
+> -				   struct bin_attribute *a, int n)
+> +				   const struct bin_attribute *a, int n)
+>   {
+>   	struct pci_dev *pdev = to_pci_dev(kobj_to_dev(kobj));
+>   
+> diff --git a/drivers/platform/x86/amd/hsmp.c b/drivers/platform/x86/amd/hsmp.c
+> index 8fcf38eed7f00ee01aade6e3e55e20402458d5aa..8f00850c139fa8d419bc1c140c1832bf84b2c3bd 100644
+> --- a/drivers/platform/x86/amd/hsmp.c
+> +++ b/drivers/platform/x86/amd/hsmp.c
+> @@ -620,7 +620,7 @@ static int hsmp_get_tbl_dram_base(u16 sock_ind)
+>   }
+>   
+>   static umode_t hsmp_is_sock_attr_visible(struct kobject *kobj,
+> -					 struct bin_attribute *battr, int id)
+> +					 const struct bin_attribute *battr, int id)
+>   {
+>   	if (plat_dev.proto_ver == HSMP_PROTO_VER6)
+>   		return battr->attr.mode;
+> diff --git a/drivers/platform/x86/intel/sdsi.c b/drivers/platform/x86/intel/sdsi.c
+> index 9d137621f0e6e7a23be0e0bbc6175c51c403169f..33f33b1070fdc949c1373251c3bca4234d9da119 100644
+> --- a/drivers/platform/x86/intel/sdsi.c
+> +++ b/drivers/platform/x86/intel/sdsi.c
+> @@ -541,7 +541,7 @@ static struct bin_attribute *sdsi_bin_attrs[] = {
+>   };
+>   
+>   static umode_t
+> -sdsi_battr_is_visible(struct kobject *kobj, struct bin_attribute *attr, int n)
+> +sdsi_battr_is_visible(struct kobject *kobj, const struct bin_attribute *attr, int n)
+>   {
+>   	struct device *dev = kobj_to_dev(kobj);
+>   	struct sdsi_priv *priv = dev_get_drvdata(dev);
+> diff --git a/drivers/scsi/scsi_sysfs.c b/drivers/scsi/scsi_sysfs.c
+> index 32f94db6d6bf5d2bd289c1a121da7ffc6a7cb2ff..f3a1ecb42128a2b221ca5c362e041eb59dba0f20 100644
+> --- a/drivers/scsi/scsi_sysfs.c
+> +++ b/drivers/scsi/scsi_sysfs.c
+> @@ -1274,7 +1274,7 @@ static umode_t scsi_sdev_attr_is_visible(struct kobject *kobj,
+>   }
+>   
+>   static umode_t scsi_sdev_bin_attr_is_visible(struct kobject *kobj,
+> -					     struct bin_attribute *attr, int i)
+> +					     const struct bin_attribute *attr, int i)
+>   {
+>   	struct device *dev = kobj_to_dev(kobj);
+>   	struct scsi_device *sdev = to_scsi_device(dev);
+> diff --git a/drivers/usb/core/sysfs.c b/drivers/usb/core/sysfs.c
+> index 61b6d978892c799e213018bed22d9fb12a19d429..b4cba23831acd2d7d395b9f7683cd3ee3a8623c8 100644
+> --- a/drivers/usb/core/sysfs.c
+> +++ b/drivers/usb/core/sysfs.c
+> @@ -925,7 +925,7 @@ static struct bin_attribute *dev_bin_attrs[] = {
+>   };
+>   
+>   static umode_t dev_bin_attrs_are_visible(struct kobject *kobj,
+> -		struct bin_attribute *a, int n)
+> +		const struct bin_attribute *a, int n)
+>   {
+>   	struct device *dev = kobj_to_dev(kobj);
+>   	struct usb_device *udev = to_usb_device(dev);
+> diff --git a/include/linux/sysfs.h b/include/linux/sysfs.h
+> index 4746cccb95898b24df6f53de9421ea7649b5568f..d1b22d56198b55ee39fe4c4fc994f5b753641992 100644
+> --- a/include/linux/sysfs.h
+> +++ b/include/linux/sysfs.h
+> @@ -101,7 +101,7 @@ struct attribute_group {
+>   	umode_t			(*is_visible)(struct kobject *,
+>   					      struct attribute *, int);
+>   	umode_t			(*is_bin_visible)(struct kobject *,
+> -						  struct bin_attribute *, int);
+> +						  const struct bin_attribute *, int);
+>   	size_t			(*bin_size)(struct kobject *,
+>   					    const struct bin_attribute *,
+>   					    int);
+> @@ -199,22 +199,22 @@ struct attribute_group {
+>    * attributes, the group visibility is determined by the function
+>    * specified to is_visible() not is_bin_visible()
+>    */
+> -#define DEFINE_SYSFS_BIN_GROUP_VISIBLE(name)                             \
+> -	static inline umode_t sysfs_group_visible_##name(                \
+> -		struct kobject *kobj, struct bin_attribute *attr, int n) \
+> -	{                                                                \
+> -		if (n == 0 && !name##_group_visible(kobj))               \
+> -			return SYSFS_GROUP_INVISIBLE;                    \
+> -		return name##_attr_visible(kobj, attr, n);               \
+> +#define DEFINE_SYSFS_BIN_GROUP_VISIBLE(name)                                   \
+> +	static inline umode_t sysfs_group_visible_##name(                      \
+> +		struct kobject *kobj, const struct bin_attribute *attr, int n) \
+> +	{                                                                      \
+> +		if (n == 0 && !name##_group_visible(kobj))                     \
+> +			return SYSFS_GROUP_INVISIBLE;                          \
+> +		return name##_attr_visible(kobj, attr, n);                     \
+>   	}
+>   
+> -#define DEFINE_SIMPLE_SYSFS_BIN_GROUP_VISIBLE(name)                   \
+> -	static inline umode_t sysfs_group_visible_##name(             \
+> -		struct kobject *kobj, struct bin_attribute *a, int n) \
+> -	{                                                             \
+> -		if (n == 0 && !name##_group_visible(kobj))            \
+> -			return SYSFS_GROUP_INVISIBLE;                 \
+> -		return a->mode;                                       \
+> +#define DEFINE_SIMPLE_SYSFS_BIN_GROUP_VISIBLE(name)                         \
+> +	static inline umode_t sysfs_group_visible_##name(                   \
+> +		struct kobject *kobj, const struct bin_attribute *a, int n) \
+> +	{                                                                   \
+> +		if (n == 0 && !name##_group_visible(kobj))                  \
+> +			return SYSFS_GROUP_INVISIBLE;                       \
+> +		return a->mode;                                             \
+>   	}
+>   
+>   #define SYSFS_GROUP_VISIBLE(fn) sysfs_group_visible_##fn
 > 
