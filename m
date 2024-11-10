@@ -1,106 +1,116 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f41.google.com (mail-ed1-f41.google.com [209.85.208.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8EACF1A0B12
-	for <platform-driver-x86@vger.kernel.org>; Sat,  9 Nov 2024 22:05:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 54825D2FA;
+	Sun, 10 Nov 2024 11:42:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1731189957; cv=none; b=EzhW1jTBL1nskZtr5CDUvmB39kL8YMyers+RUVHvi7RoxhlLLGPYOXvtQGM3k2kKkOLxUGjJWF5tJpGc97lJLJdM8t+9WlCpLI+C3T2zRuv2T9Hxekrm/E821PT68ea3u1Svx0/RJg5I1PjgOMZMLJ5N6iJothL5CJ+IZAeTbKE=
+	t=1731238979; cv=none; b=s4oApTA43hyfuCD+zMwQkpcKfYduKKKtiYVnqIuzCj/osL1oYGk4H4XFQ1Q2wr7xbshnFFcY6oxirGXK3XbFNzWcVaAUhpe/6tO4WgFi/t8fveumvuqMwlb0LdnjcHQ0C1zYpXPS1fk3aeVIt01R8KThJeVK7HQzhc8bpRkGsVI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1731189957; c=relaxed/simple;
-	bh=wGjay0XXEHMMg1cHLWXT5TvMZj/O02jEoYIhxtlw5GM=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Z+fE/QngqoigpZvlU4OnkB41K/CnpLb8nkdMYC9AV+6jsqV+31qodvVrHd5A6oRvxLtYod8qh3OypsorSbfcABETS/QCvfpInhN9Ub9Z00QIMaFs9/S8/BxOYsFY7/Lp9EYaAcbCtIP7jOKcrmyB5Xm1ZIVfdmdAfxnmEiV4jd8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Ol/nAw+x; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1731238979; c=relaxed/simple;
+	bh=edHqBeuazC7savw2xRfuCinqUK1Wn7+euXOOOo70ubo=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=WmdObf8MrmkrazSztLIib69d4i8B8P6MnOTCVJRx1gAe+JFoeZpVfzzLxBzDRNLVuJT9olVXVFB8kxi01pfulgXWKCmnFtIUNzr8iwCL8pBTZ7s8NdhudAyAdhum/eFgvGZdfPa20Q1rsah33ILruZ8ceE3vcM23TiFKXa+UNWc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=O5X/0ZOb; arc=none smtp.client-ip=209.85.208.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Ol/nAw+x"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1731189954;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=eLsIBzB1nVrQ3HFXQrE9g9jpr/O8NrZg9Omehom/Mqo=;
-	b=Ol/nAw+xAfyJOW7EarwAvUV7us7dWidhr2RWdTgmXQ3zhp1ZYYnmTtZi2Hm1s2QF+qGvgJ
-	m0lE/gIOAaWN2+SyLCV2E53dNZf050mqogQ4qnlI97TrGuvShe+79sxUZoykWw3lakrQLE
-	He+tPqU4/ozr9dDc+hjuNVpKzGrQCRE=
-Received: from mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-35-ja_hyaE4PeecTY9yfMXw1w-1; Sat,
- 09 Nov 2024 17:05:51 -0500
-X-MC-Unique: ja_hyaE4PeecTY9yfMXw1w-1
-X-Mimecast-MFC-AGG-ID: ja_hyaE4PeecTY9yfMXw1w
-Received: from mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.17])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 4DE8E1955EE9;
-	Sat,  9 Nov 2024 22:05:50 +0000 (UTC)
-Received: from localhost.localdomain (unknown [10.39.192.21])
-	by mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id F2C801956056;
-	Sat,  9 Nov 2024 22:05:48 +0000 (UTC)
-From: Hans de Goede <hdegoede@redhat.com>
-To: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	Andy Shevchenko <andy@kernel.org>
-Cc: Hans de Goede <hdegoede@redhat.com>,
-	platform-driver-x86@vger.kernel.org
-Subject: [PATCH 5/5] platform/x86: x86-android-tablets: Add Bluetooth support for Vexia EDU ATLA 10
-Date: Sat,  9 Nov 2024 23:05:30 +0100
-Message-ID: <20241109220530.83394-6-hdegoede@redhat.com>
-In-Reply-To: <20241109220530.83394-1-hdegoede@redhat.com>
-References: <20241109220530.83394-1-hdegoede@redhat.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="O5X/0ZOb"
+Received: by mail-ed1-f41.google.com with SMTP id 4fb4d7f45d1cf-5c941623a5aso8215661a12.0;
+        Sun, 10 Nov 2024 03:42:58 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1731238975; x=1731843775; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=S4kkuPDOO/3WKsglZ4wrSF/jnvWBXQ+SYAYfz/uqq4o=;
+        b=O5X/0ZObosIOVlsNxacODHoRSouqwaei8jTInbo+rSp1xIFC1VGebtEo1slCvMJ2zC
+         s82axNkuOg18aygaoRe6ao4EdiJy7JFH0KqhEzTmblYaGDLtYxWJICXwwM/bC/dkRcKx
+         EHfQ0qUNYh1iKjrcwpmfqY4IGJbCHKVk0z7WFUq8Qo5wxDWLgVFQSA8tGsmSTMDxoKmB
+         DszBBL+pmXVBzXMREX6Uhw7vfuKAStFGiWNxkUhz5lFbhUu9gL0rN6H8gfpqiShTrWii
+         qYjOfOCf5zH9M2IhJmFBZhiuorMznNCXUPhgzdDYIHx61MOI8mivQbtphXEW05+HZcwb
+         x/LA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1731238975; x=1731843775;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=S4kkuPDOO/3WKsglZ4wrSF/jnvWBXQ+SYAYfz/uqq4o=;
+        b=LZQunwUo2exCBtq/V8vceyHB27kwnK+dHmLTqQXvkYFMxPqjRdMCju59iZLMvHQkQL
+         wmyTI228BTQ08TKzHEopIzzao2jh7xiiPs+aDKhIftZnagwsSPQ+h1Ur5fMB9MUHC4ks
+         +HAo0KeAFoiC0eQSRfL92s70C9scNGCPQTddkMnYBAXsBSgbeqj8f4tXkNB4EH0yZoOn
+         zZ9NV+YstGKSHVquPivGeRdbR81SmYIJK4C46z99E2gCY/xT3xiT5wxhLE54U1TlHUaD
+         OwA05357G3KIW0GbH55SZAyjNGX8+7kF2/iJ/+hZxIP9oF5xXTbgpp4bIa8/i6VheiIJ
+         tOAw==
+X-Forwarded-Encrypted: i=1; AJvYcCUHMB96Y2bN40qgShwVsr6ScIoirBqfplShdzUpxMc6KNMnhKZWdPppcmtnMKdBzEIDOSjm8dhMYEiNhpzb4UjOCp/PKQ==@vger.kernel.org, AJvYcCXwC+QP1pM2rP6rdqce09ey5MlN08Rac/WEOvT73F3F3MqnhQzLGk4EMMy8nIaCnOAOUf6hPgk3DQ==@vger.kernel.org
+X-Gm-Message-State: AOJu0YwPV3CMz4k/EJ9TA7Zl+eYaawcPC9sP17CiCVmnpvdECa6VLWOK
+	MtO0amf/U6eKvmzTTP4VOpvYAyWGe7kRSM8z1MM5QmfBlhjAndF+DmgWCdc58psHGr3w50yyD08
+	hCXkvzUxNUxYDdV+n7UEZFgtP7Tw=
+X-Google-Smtp-Source: AGHT+IHVFHhUUaLil21QTfeZfYcZ0hEZnph8wlttmquEGWl7OC5MSKnrl7EoNXEOAoPbeod2nYs7q9igchb3U5JnSds=
+X-Received: by 2002:a17:906:4fd4:b0:a9e:e1a5:755f with SMTP id
+ a640c23a62f3a-a9eec767f2emr893325066b.1.1731238975327; Sun, 10 Nov 2024
+ 03:42:55 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.17
+References: <20241108232438.269156-1-hdegoede@redhat.com> <20241108232438.269156-2-hdegoede@redhat.com>
+ <CAHp75VfxCEk1OhQZX8SEk8Enyf6mz1Tt0qxsTX9Xfouw8WOL-g@mail.gmail.com> <2ae4400b-fa14-4292-af41-9ad091a0c1ce@redhat.com>
+In-Reply-To: <2ae4400b-fa14-4292-af41-9ad091a0c1ce@redhat.com>
+From: Andy Shevchenko <andy.shevchenko@gmail.com>
+Date: Sun, 10 Nov 2024 13:42:18 +0200
+Message-ID: <CAHp75VcwO7p--dvaJ5jcxT91qqBmWFcnnZM87Pk3Z5X6WP6TPg@mail.gmail.com>
+Subject: Re: [PATCH v2 1/4] power: supply: power_supply_show_enum_with_available():
+ Replace spaces with '_'
+To: Hans de Goede <hdegoede@redhat.com>
+Cc: =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, 
+	Andy Shevchenko <andy@kernel.org>, Sebastian Reichel <sre@kernel.org>, platform-driver-x86@vger.kernel.org, 
+	=?UTF-8?Q?Thomas_Wei=C3=9Fschuh?= <linux@weissschuh.net>, 
+	Jelle van der Waa <jelle@vdwaa.nl>, linux-pm@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-The UART used for the Bluetooth HCI on the Vexia EDU ATLA 10 is enumerated
-as a PCI device, but the ODBA7823 ACPI fwnode for the HCI expects it to
-use the more standard ACPI enumeration mode.
+On Sat, Nov 9, 2024 at 12:52=E2=80=AFPM Hans de Goede <hdegoede@redhat.com>=
+ wrote:
+> On 9-Nov-24 5:30 AM, Andy Shevchenko wrote:
+> > On Sat, Nov 9, 2024 at 1:24=E2=80=AFAM Hans de Goede <hdegoede@redhat.c=
+om> wrote:
 
-So Bluetooth does not work out of the box. Add x86_serdev_info to make
-the x86-android-tablets manually associate the fwnode with the UART.
+...
 
-Signed-off-by: Hans de Goede <hdegoede@redhat.com>
----
- drivers/platform/x86/x86-android-tablets/other.c | 10 ++++++++++
- 1 file changed, 10 insertions(+)
+> >> +static void power_supply_escape_spaces(const char *str, char *buf, si=
+ze_t bufsize)
+> >> +{
+> >> +       strscpy(buf, str, bufsize);
+> >> +       strreplace(buf, ' ', '_');
+> >> +}
+> >
+> > The bufsize in all cases here is sizeof(buf), making the above to be a
+> > macro we may switch to 2-argument strscpy(). FTR, it embeds the check
+> > that buf is an array.
+>
+> I did think about this already, but using a macro makes this harder
+> to read just to save 2 sizeof() calls. So I prefer doing things
+> this way.
 
-diff --git a/drivers/platform/x86/x86-android-tablets/other.c b/drivers/platform/x86/x86-android-tablets/other.c
-index f5140d5ce61a..9b8353dec7b6 100644
---- a/drivers/platform/x86/x86-android-tablets/other.c
-+++ b/drivers/platform/x86/x86-android-tablets/other.c
-@@ -715,6 +715,14 @@ static const struct x86_i2c_client_info vexia_edu_atla10_i2c_clients[] __initcon
- 	}
- };
- 
-+static const struct x86_serdev_info vexia_edu_atla10_serdevs[] __initconst = {
-+	{
-+		.ctrl_devfn = PCI_DEVFN(0x1e, 3),
-+		.ctrl_devname = "serial0",
-+		.serdev_hid = "OBDA8723",
-+	},
-+};
-+
- static struct gpiod_lookup_table vexia_edu_atla10_ft5416_gpios = {
- 	.dev_id = "i2c-FTSC1000",
- 	.table = {
-@@ -755,6 +763,8 @@ static int __init vexia_edu_atla10_init(struct device *dev)
- const struct x86_dev_info vexia_edu_atla10_info __initconst = {
- 	.i2c_client_info = vexia_edu_atla10_i2c_clients,
- 	.i2c_client_count = ARRAY_SIZE(vexia_edu_atla10_i2c_clients),
-+	.serdev_info = vexia_edu_atla10_serdevs,
-+	.serdev_count = ARRAY_SIZE(vexia_edu_atla10_serdevs),
- 	.gpiod_lookup_tables = vexia_edu_atla10_gpios,
- 	.init = vexia_edu_atla10_init,
- 	.use_pci = true,
--- 
-2.47.0
+...
 
+> >> +       char escaped_label[32];
+> >
+> > Even more, the but size seems also the same, can we have buf defined
+> > inside the above?
+>
+> No not really, its address would need to be returned then, requiring
+> it to be static, at which point we get race conditions when multiple
+> threads use the same function at the same time.
+
+I meant a macro case, but it's not a big deal after all. Perhaps we
+can evolve a macro in the generic headers if there are enough users,
+like
+#define str_copy_and_replace(...) ...
+
+--=20
+With Best Regards,
+Andy Shevchenko
