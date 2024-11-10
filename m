@@ -1,68 +1,68 @@
-Received: from mail-ej1-f44.google.com (mail-ej1-f44.google.com [209.85.218.44])
+Received: from mail-wr1-f41.google.com (mail-wr1-f41.google.com [209.85.221.41])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B2D17149C7A
-	for <platform-driver-x86@vger.kernel.org>; Sun, 10 Nov 2024 11:52:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CDB28347C7
+	for <platform-driver-x86@vger.kernel.org>; Sun, 10 Nov 2024 14:54:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1731239541; cv=none; b=tnYAL5T2xUkxWaBzwToXaNJNp/X7VOglkxlQ6esdD7mjnYlg248kwzToDbAtHJVvE79BGAUE26hh583ZDFgK2IzgQaTllMpZi8LM6m7GQ16l4Jz77KqOe75oJ7QkU8eASUTni6r5GUZfTmTa/BwiIuABAJikacEtMpHrS1BvVVY=
+	t=1731250472; cv=none; b=Uu1vld+m4mRma+CsNr//vtowWoHw8/KroiKG15PAlFivgYRC/1tDGlvsz5YLJZdtCZlC++pRwRGIqelILCicm2zdy+Q5WK6qUt8mZ65zVFRvRpnoj9ILRCjyI+nyKzbmEXCdt8FLwLBQAXCuB9ekkkESiLZ/Hd/+uTnRDhOP7PI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1731239541; c=relaxed/simple;
-	bh=0ACRMFzNDcrCJft81NhF9+si56p/MmWbPpGjSWKPepU=;
+	s=arc-20240116; t=1731250472; c=relaxed/simple;
+	bh=kWw4wSi8bvuDMOKm+lTLJwHNVj7JsUG3QPb6/0RKBzY=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=BVWA3cPXiNn3ku/uBVk5mluzw7w2P0zhioZhOx/4aSUsTi1JoGEIx0zAs8Ao07bAK+2Uc6HWrh68gXtY+m5yQj0i43naOuyMwy2sWzh5tnRLVj77nhzmhVR1DluGvc+0Sqpr/A6Mny+KGR39DSahmhvmlTLZuco6p4Rf8SJXSWg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=QVY5yGkp; arc=none smtp.client-ip=209.85.218.44
+	 To:Cc:Content-Type; b=dA11A2ZVolQOQ3ggJaCcvDb9bW+W2CCNPio9MXulreJ1oVzPZaEUMuEI3p4BfzeUUr/5HAV7oXqRZ+uXjZTNQjxLUCl+zDDob6161sN30KqUy5FaVgExQa22CLzEr//MUL+FCG92hR6GQgaVdvF5B4UXePdw+yCMYZcwOG9SCnc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=lUs1ETfE; arc=none smtp.client-ip=209.85.221.41
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QVY5yGkp"
-Received: by mail-ej1-f44.google.com with SMTP id a640c23a62f3a-a9a628b68a7so652553666b.2
-        for <platform-driver-x86@vger.kernel.org>; Sun, 10 Nov 2024 03:52:19 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lUs1ETfE"
+Received: by mail-wr1-f41.google.com with SMTP id ffacd0b85a97d-3807dd08cfcso3547047f8f.1
+        for <platform-driver-x86@vger.kernel.org>; Sun, 10 Nov 2024 06:54:30 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1731239538; x=1731844338; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1731250469; x=1731855269; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=HmXSn2dgeP5HSEdbhXxnf+do9GbZYQHUMbsS78m10DM=;
-        b=QVY5yGkpRvHP/CEO1AAyeEmjpG+/foKkJnESW2zwlNMwq5vqJh9VJnAAJvxDWFQ51z
-         yegJEtHNiUC7hyFxyjrdTJvXb35wlrPYOO27CIT9n4dP4Ky3MX8tfR363gXBGFuZMKZv
-         oTt/JpKpuHc10TvuwxrZMLCZ0qCKh3Yf0Tn/+F/YJhppUfyLS0H7pbAyrUt2k5xeGWJT
-         RhV3izj131QsX28Qg6Vl8qYA4ATnTTSck5oBxmVJkiogrLUHAoS3ILV6qxcgVKOQtV7z
-         EJpAsgMDEkxD8OzIR9F3Q2wf0mgJiBuiPi2wvEnJcJlfGgFwvBzd2IqHVhb5HEHcA4Iw
-         ST9g==
+        bh=kWw4wSi8bvuDMOKm+lTLJwHNVj7JsUG3QPb6/0RKBzY=;
+        b=lUs1ETfEJwBg84DGo2DlqziJy93aGqfHxpKAR8/TBNmVUg0SqkXufrLqZdHM0Dv9/x
+         Wuz75nXq6Swbv2ZF2TvPrtzHZIPq7+syzcG4dmNzIizltqkksKR0y2DdYCPHQFoOEKwg
+         DuoW+/33nub4J6Krg9ctbP/lbleZ8QygxGvg+ATwwcPIqhciTMyie5tCZ/BlD5zpwRr2
+         SROEUcqs/yV1b4fafB8GmGkEHtAaAHLh/2tqiH57M2lNipS8h82GNrkczQ1WfiPS/vjL
+         +HEx6ZR30MluEnJsHuEwRnZpkAhoPNOuHfR9UdH2kYdDmgJ47bZQDOPobv3lDUxPTdIh
+         2+Tw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1731239538; x=1731844338;
+        d=1e100.net; s=20230601; t=1731250469; x=1731855269;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=HmXSn2dgeP5HSEdbhXxnf+do9GbZYQHUMbsS78m10DM=;
-        b=TqPA7pMOo4pTuODyhBtgl57N2zVIPxsQ3AkreIl3tLghd+p4leksNoa3u0HSGSqin6
-         57amCk4JItaVUT6yLlWEYKybaeWv0n6SqzgHzVoKdYc0WZczpP/igm9a/1tDcK10fH54
-         rlnXzUK6nQ1xCiYtzwfGhWtJzhURPZ573zMVMIzgLj2R/EDtc4mE+/Be7B4vVaB/ibf8
-         5/mM46edUtVFXtXRavTVcT3ibaqK2EKg0kwdLuZFMef/1LdcVHA3FGzr/nQ9MwHHYxph
-         EbyYAlQy5rxACvTV4LMP/c4/36QbTUmh+hRT99CKzOIuG5JQD+ypk5cSI4NTWk2Bgj7J
-         m9mA==
-X-Forwarded-Encrypted: i=1; AJvYcCXsMCeAK0UnS6yADhHNpgJXfp3qGrdEcFMmXWx+B+Uiv0FX2XHYyYlzK3x3O1V2iOCOMgvlnWbA98jBerw2nD04YRTD@vger.kernel.org
-X-Gm-Message-State: AOJu0YwPgbEtg9IjogQeSFIjBrlx7Ui1wLIdBPt58trQ4A01Xc3foDy8
-	AD0OnmC/6TKId6qQC5xZF/eQc5731I7x5inSW/r2m+v9WCDUmOZVPQRhLGsO+Oanc3fPgL4YrmV
-	MaQSR/PFUvO/eryd24eaXVd2ioDM=
-X-Google-Smtp-Source: AGHT+IEQ7D1RvjU0QbHr+v0s3YjdrsDhvgIQiMeQPfGmiV9rm8CdWNzxSdNwaZ98X3w7vO9NRl/38YHIZ2l7OF2ZisE=
-X-Received: by 2002:a17:906:5651:b0:a9f:508:592b with SMTP id
- a640c23a62f3a-a9f05085c51mr333884666b.38.1731239537556; Sun, 10 Nov 2024
- 03:52:17 -0800 (PST)
+        bh=kWw4wSi8bvuDMOKm+lTLJwHNVj7JsUG3QPb6/0RKBzY=;
+        b=O5c0RG+pqy2XJzbTZMvEiGYSPoEGzcjtDMELBCflnFrbqkjB+qo4OH+8q4jmWaj5ln
+         HlXRwirhiN/nGVgwdoDlcPE8PKTcw19pveuqppoSqd9ubzDnMZsCQihyfLT/Of/1mMjH
+         K8x/mbtJO0j85RZLJznkEEFrHkrMepuGyeHKQ5XFHlmdW3XO12eIv8eS87BgMYQwYfni
+         HGmmkMM3YmsBtDJpTRRGO30ehGcmea2LnYu+0itNudqX7zx/jwksbMS1DnNX4p2S+lnz
+         GiFdzl0/0rn4O5jqeoPpMtDgvtHSGTu+Hqrbw9nYO5Rlcyfg0r0WYMDosUSE+MajxsXm
+         ofBw==
+X-Forwarded-Encrypted: i=1; AJvYcCWVIBLk7+FCCIlF2SCHIJvjOrMxqFZpxBrcFY8hA9Q2gjHYHPvRtFAienXNhBo34+emHmzYYRiLM/H+NMQ0aahiOznk@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw+Ssvf8F+0TsQytac+dhA0Vf2pApkQ9DAnnrMloYr1CbPcVnuL
+	C7k1NLdRQZMeklJEn0psiNvAIRK4Rl1E0U3R6Vlgv2vShPXo9T5XYDOnb5iO1BNBL9gkiudv9n0
+	LWYfebTOserPETbYbe7OXQPHIEmY=
+X-Google-Smtp-Source: AGHT+IEUZZ3D5R/8JgXIpEAOOz59aH2J6ckoqF+YubJFDwxXLlPupmoGcSBGriX74GxkrzO8zOuLaAmnF5B6KNxHnK8=
+X-Received: by 2002:a05:6000:699:b0:37d:43d4:88b7 with SMTP id
+ ffacd0b85a97d-381f1866b62mr9615360f8f.3.1731250468948; Sun, 10 Nov 2024
+ 06:54:28 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20241109220530.83394-1-hdegoede@redhat.com> <20241109220530.83394-5-hdegoede@redhat.com>
-In-Reply-To: <20241109220530.83394-5-hdegoede@redhat.com>
+References: <20241109220530.83394-1-hdegoede@redhat.com>
+In-Reply-To: <20241109220530.83394-1-hdegoede@redhat.com>
 From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Date: Sun, 10 Nov 2024 13:51:41 +0200
-Message-ID: <CAHp75Vcp1AxcZcAqoA9e-YXerHPaRAxsoGT34R41aQeaMUrgCg@mail.gmail.com>
-Subject: Re: [PATCH 4/5] platform/x86: x86-android-tablets: Add support for
- getting serdev-controller by PCI parent
+Date: Sun, 10 Nov 2024 16:53:52 +0200
+Message-ID: <CAHp75VctE1TYr-vREv+3CQOpNRpuS9XD+HhEAMze9GDJCskVBw@mail.gmail.com>
+Subject: Re: [PATCH 0/5] platform/x86: x86-android-tablets: Add Bluetooth
+ support for Vexia EDU ATLA 10
 To: Hans de Goede <hdegoede@redhat.com>
 Cc: =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, 
 	Andy Shevchenko <andy@kernel.org>, platform-driver-x86@vger.kernel.org
@@ -72,46 +72,24 @@ Content-Transfer-Encoding: quoted-printable
 On Sun, Nov 10, 2024 at 12:05=E2=80=AFAM Hans de Goede <hdegoede@redhat.com=
 > wrote:
 >
-> On the Vexia EDU ATLA 10 tablet, which ships with Android + a custom Linu=
-x
-> (guadalinex) using the custom Android kernel the UART controllers are not
-> enumerated as ACPI devices as they typically are.
+> Hi All,
 >
-> Instead they are enumerated through PCI and getting the serdev-controller
-> by ACPI HID + UID does not work.
+> Here is a patch-series for adding Bluetooth support for the Vexia EDU ATL=
+A
+> 10 tablet to x86-android-tablets.
 >
-> Add support for getting the serdev-controller by the PCI devfn of its
-> parent instead.
->
-> This also renames the use_pci_devname flag to use_pci since the former
-> name now no longer is accurate.
+> Due to the LPSS UARTs being enumerated through PCI rather then through
 
-...
+rather than
 
-> +       if (dev_info->use_pci)
-> +               ctrl_dev =3D get_serdev_controller_by_pci_parent(info);
-> +       else
-> +               ctrl_dev =3D get_serdev_controller(info->ctrl_hid, info->=
-ctrl_uid, 0,
-> +                                                info->ctrl_devname);
+> ACPI, this is somewhat involved. Just like how this special case needed
+> some extra work for instantiating the various i2c-clients.
 
-I would expect that they both take info as an argument...
+All seem reasonable to me
+Reviewed-by: Andy Shevchenko <andy@kernel.org>
 
->         if (IS_ERR(ctrl_dev))
->                 return PTR_ERR(ctrl_dev);
-
-...
-
->  struct x86_serdev_info {
-> +       /* For ACPI enumerated controllers */
->         const char *ctrl_hid;
->         const char *ctrl_uid;
-> +       /* For PCI enumerated controllers */
-> +       unsigned int ctrl_devfn;
-> +       /* Typically "serial0" */
->         const char *ctrl_devname;
-
-Why not union as we have a type selector, i.e. use_pci ?
+One patch got a few comments, and I still think it's better to move
+the rather long functions to the C file at some point.
 
 --=20
 With Best Regards,
