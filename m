@@ -1,67 +1,40 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from mout.gmx.net (mout.gmx.net [212.227.15.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 17C78158214
-	for <platform-driver-x86@vger.kernel.org>; Sun, 10 Nov 2024 22:27:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C2A51BC4E;
+	Mon, 11 Nov 2024 07:01:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1731277661; cv=none; b=kl6Q0o9zU6RJ2U7PBdOh/u4qRQIDCsutxeSsNZEuSGiC7lNU83AoMy+vcBaXgdDeBUJFXG09Quq30zXdpcBNH6LUKIKc3tWKacAhj/UAEHE9NzPs5l8zeZ2H5hTg6pleOFT90+LBolRa7kM6HBqM0qrTx9i9IDXq5MeHOVHte7w=
+	t=1731308484; cv=none; b=jeRysQmKbie/mGO8Z2A1Kn18SxGxt9ftb5dnYNu5MyjWqncTb74AR2CNLWMOy5Yl/5ThjjyTVFtsEkSN2iMAMJ6qtnfQLUb/4V2yQ+PUyOlNInj2IUz9we37kQPNnPTrk+Ni9dnPvxh51sufxLAbe2/Rw1Nf4VWjaIADYs+30jI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1731277661; c=relaxed/simple;
-	bh=4HQmFCpy1v0e/eVOIsz7BXEMy9y8P8ZpvYfelafaUyA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=r9bFPEqYXKffwbwhFI/IbV9o/DSWq08nsLGXwM3XXquauoVw7c1vVKggG3CVx4Ww2hU4avn6mOj7MTkAIInnEGEg1wgXE4ESIHPymaktd81WzF8uDI8taGwtfGjCUKvGo/4u5ZJBMpJhu7VtF6nbCgVQ7tuG4A39aUa1n7Gid6E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=f++73YZp; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1731308484; c=relaxed/simple;
+	bh=74vSH8jCobkm++QUMiqDjqjUNoYfF8wPfC9bI7z4j/Q=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
+	 In-Reply-To:Content-Type; b=lBFYImTYbZHd0oHJxjFedvDPoX0TVToX+vlNM1rngbRgBbidjzMW21P3VwngrgXAVnAuEjpUDYiNQAHhKiMAVSD9E/D14/Ts/pBcWNNeXhorBP/1c+bnhfwsfgsn7CnnXuwxmt49FBUla/4Ncqj3HzXzdM3qbwwcUld0JpwFW1s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b=r+63b0K0; arc=none smtp.client-ip=212.227.15.19
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="f++73YZp"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1731277657;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=xZzxAKDhWWNzmD5tkd0ByXqOOZ8LIAMYacStp2Df0Xw=;
-	b=f++73YZpIb7SF6T8+YZ42vqUsrcAiM/kXcei06Ji3azKczQyTy5dyPilHTV9MY1M07tADe
-	1UWVy98+R9vcTFCzHXRJZz2AiAkHKE6imSlhZHLfYyaUZ/nIrrDpx2pikl3UuXs+wQCZ8f
-	IzfVD5+Bqb5pUp+FtoedB0Xgtj8HLbM=
-Received: from mail-ed1-f71.google.com (mail-ed1-f71.google.com
- [209.85.208.71]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-684-rUUvXuw8PnutgSb5mbZoHQ-1; Sun, 10 Nov 2024 17:27:36 -0500
-X-MC-Unique: rUUvXuw8PnutgSb5mbZoHQ-1
-X-Mimecast-MFC-AGG-ID: rUUvXuw8PnutgSb5mbZoHQ
-Received: by mail-ed1-f71.google.com with SMTP id 4fb4d7f45d1cf-5cd50bf580cso2777952a12.0
-        for <platform-driver-x86@vger.kernel.org>; Sun, 10 Nov 2024 14:27:36 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1731277655; x=1731882455;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=xZzxAKDhWWNzmD5tkd0ByXqOOZ8LIAMYacStp2Df0Xw=;
-        b=jEeNCqK0u2HI3Zyrywro4e+wEKL+95VzJZWKRHn0sjPK6vxeb6RR5f8cIp4+0m8lkE
-         yEMBGmemLsS5Ad/yzsESJLNAbrfSkaVMDfqnpg9GYUWKMGVH5XGhf8Uo7h1NNJhm349p
-         J6Nu6Mqrz7mogIZD8+xMBZYoor81IeqnPyHlufhGsMZyzzCFgtz0bBOI+8KdRaWO+po1
-         nmPu3scAsH3EHyS0cdJgX+fh3Dvw2g8Sn2M9M3RhOn4YorpHt33D5u8+Z32ZbcAleja8
-         ucBy2kRoizVHGDLM1EOy2D426lT4R30CCLk5xRYGspRI+QwPLrZGYduTOszLF6InKPM1
-         7qEQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUEAGv+qmJc1MiH2xiLWTcIssKxKN0eQ3Fdyb/cGcgZL5l6BYhfsyqXEQ31PeJxHXcoEb0yfy07uqU0AmyhIrnxzFNB@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy0Z8iWVTEETjYVuDy/jpnYAxKqEDIaKONuzH1/rNf63w5jWilM
-	r9e/H1q3+K+qMdi2s7umCMah14JaXYnC5kbxAS9VdJSXQbn8G28Gq5wBnyErJi3OHaPeR+IdKlM
-	6W9p46Ze33CbNmsB0hHtoFLKQRm7VrGlywKoKdrVjnM8POa+8Zte3eC+K6Yxl0BtsV+ozkuajHa
-	VnhrzxQg==
-X-Received: by 2002:a05:6402:2690:b0:5c9:39d8:58b3 with SMTP id 4fb4d7f45d1cf-5cf0a447552mr8468413a12.23.1731277655121;
-        Sun, 10 Nov 2024 14:27:35 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IHiU0+ynfDHMGRaM1T6yG2bj4szoljDRRNocXhL2H99vw/bdh2mewycOmn5L08hyY9ehaEhmw==
-X-Received: by 2002:a05:6402:2690:b0:5c9:39d8:58b3 with SMTP id 4fb4d7f45d1cf-5cf0a447552mr8468400a12.23.1731277654662;
-        Sun, 10 Nov 2024 14:27:34 -0800 (PST)
-Received: from ?IPV6:2001:1c00:c32:7800:5bfa:a036:83f0:f9ec? (2001-1c00-0c32-7800-5bfa-a036-83f0-f9ec.cable.dynamic.v6.ziggo.nl. [2001:1c00:c32:7800:5bfa:a036:83f0:f9ec])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5cf03c4ede3sm4265318a12.55.2024.11.10.14.27.32
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 10 Nov 2024 14:27:33 -0800 (PST)
-Message-ID: <b8340169-5832-4aa2-8713-9639b7f7aec4@redhat.com>
-Date: Sun, 10 Nov 2024 23:27:31 +0100
+	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b="r+63b0K0"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.de;
+	s=s31663417; t=1731308422; x=1731913222; i=w_armin@gmx.de;
+	bh=zNhs8knv1TCaWn97GwAPPU6qGMOy7JbpyIodoN/c8QU=;
+	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:From:To:
+	 Cc:References:In-Reply-To:Content-Type:Content-Transfer-Encoding:
+	 cc:content-transfer-encoding:content-type:date:from:message-id:
+	 mime-version:reply-to:subject:to;
+	b=r+63b0K0P/0U822PPvBcdwoKSfYLY6jp24GrRIA179qU8ezuVLXYFEMqpUMiLobZ
+	 hwGZ3VG55oq9n8IwptrUkDzbVG9iaZbEGa5IOP0hKvht+uiLbV4n6zEKflCPcMpiX
+	 hqc9mKYaQKpaOpcwdJogJoQwAfHI3wkAaBOpN78o35XFI9VB3s/slo4rwKMvRE7xc
+	 are//8jab7jRnlVrC2G72FYN+EDQHDVfhQGImUxTR6uHWiAw9FCBQTx24vl7T+j0f
+	 JFIL+HQUqRHDdGIioycReXzY0+UPcS0CxZSJtOhu7WLPuRTN9FZdYTJp15/QgU3tg
+	 +OHc6z5OXqPDyq8KQQ==
+X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
+Received: from [141.30.226.129] ([141.30.226.129]) by mail.gmx.net (mrgmx005
+ [212.227.17.190]) with ESMTPSA (Nemesis) id 1N1wlv-1tuCZr1VhB-015N07; Mon, 11
+ Nov 2024 08:00:22 +0100
+Message-ID: <ec54d642-3aba-4e7b-954a-8fba79e73e31@gmx.de>
+Date: Mon, 11 Nov 2024 08:00:20 +0100
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -69,79 +42,63 @@ List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 4/5] platform/x86: x86-android-tablets: Add support for
- getting serdev-controller by PCI parent
-To: Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc: =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
- Andy Shevchenko <andy@kernel.org>, platform-driver-x86@vger.kernel.org
-References: <20241109220530.83394-1-hdegoede@redhat.com>
- <20241109220530.83394-5-hdegoede@redhat.com>
- <CAHp75Vcp1AxcZcAqoA9e-YXerHPaRAxsoGT34R41aQeaMUrgCg@mail.gmail.com>
-Content-Language: en-US, nl
-From: Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <CAHp75Vcp1AxcZcAqoA9e-YXerHPaRAxsoGT34R41aQeaMUrgCg@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Subject: Re: [PATCH v2 0/2] Fix thermal profile handling
+From: Armin Wolf <W_Armin@gmx.de>
+To: corentin.chary@gmail.com, luke@ljones.dev, mohamed.ghanmi@supcom.tn
+Cc: srinivas.pandruvada@linux.intel.com, hdegoede@redhat.com,
+ ilpo.jarvinen@linux.intel.com, Michael@phoronix.com,
+ casey.g.bowman@intel.com, platform-driver-x86@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <20241107003811.615574-1-W_Armin@gmx.de>
+Content-Language: en-US
+In-Reply-To: <20241107003811.615574-1-W_Armin@gmx.de>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Provags-ID: V03:K1:HjN1o2zjOt7nusRjgNryQIspf3nQlnHJ20jI+aY6jUCCHOWxJTX
+ fUDA24rsPsXLpURTTf9ACOpoV3H7gnGTsrDLybtFoN3SNx9Di9OODiN7BJjIWlB5VOBse6O
+ 2588EUC1hvFNfphUd1yRJLg8qUd47PGwm2TnZnhx5QMfjbT6fpmwUw4kClkcP+QF2k98jtg
+ glgnVXxHe6NhBx6RhhphA==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:sZOy9ODJwEA=;ZK1mtjO4E5uQQjd27Zlj9JP7vXv
+ v2NJQggl/ijGXS2YYhi1bDJQZm1Vhg/iBvnt86UZP0+bCf9ltilgLijXASS7MpLEqy06NvOsn
+ 5QzqoE1NkF1+y+hXQyjLD5LJ0aoh1bA8DEKiomBoAFGB/lsPSXw6wBXOsAz62isj8g3HzKY8I
+ iU2Q8H725Zz15tmZeV9r3YoyyWJeRqowgLPFAHmOsEPuYSrn4ck3D23ra+A7tIp/cA+BlgyiZ
+ rSP5DnjcVU12YQCaXJm+yLk7Y/qe4NRvQ2UTTCWP+4vbgpHemV//st+wCfA5uKnh+6kUeFS6L
+ YwD9RDdE3l9FOViTecda1g2bfMjemiFF5dDj+RKajYxhRHREXG2QYJXSXdsL2KoTJPayO6i40
+ KlOGmLLnRbeSA4OTbKYHY/y2cvulG3x98d+IORXZL12A/IFtSVWQC5hZ+1IJl/S5DsZcCMBHC
+ ibefX+L/lJrQXKVoVZ6FjMxc95eZynSIwo65oLA987vPyxNJrfX60y25Wv9mpZjJSZm5PQrfC
+ TzDV08XQwQno0ezjYqLZ56txy2bcOkz81r6+iwovPD/ve1x0PZDoMajXJNCKQj/whFCd/QiR6
+ 8nRwIjt0p1XEtWL427v2q9D4aIP7AqE8c7FvrXunqeGYY8IYEkMT5KOZxwOa2Gyf3X7ex+EkW
+ u6lzrNRaAqFe/LffQ9YrUUX1DzdLeVmNqjC1p2kIZsCO+gAKUbhEbMa0pdfP3X3qJOmwnruXb
+ P/48w8cWsMNN/Ktbf21TY7kcqdRd3m0XTelDs6WRnBotElYMCdKIrPEZlrlJKDQP6c3m0Z3rl
+ vgOxBNUpxLvJixbgZVfwTrlQ==
 
-Hi,
+Am 07.11.24 um 01:38 schrieb Armin Wolf:
 
-On 10-Nov-24 12:51 PM, Andy Shevchenko wrote:
-> On Sun, Nov 10, 2024 at 12:05 AM Hans de Goede <hdegoede@redhat.com> wrote:
->>
->> On the Vexia EDU ATLA 10 tablet, which ships with Android + a custom Linux
->> (guadalinex) using the custom Android kernel the UART controllers are not
->> enumerated as ACPI devices as they typically are.
->>
->> Instead they are enumerated through PCI and getting the serdev-controller
->> by ACPI HID + UID does not work.
->>
->> Add support for getting the serdev-controller by the PCI devfn of its
->> parent instead.
->>
->> This also renames the use_pci_devname flag to use_pci since the former
->> name now no longer is accurate.
-> 
-> ...
-> 
->> +       if (dev_info->use_pci)
->> +               ctrl_dev = get_serdev_controller_by_pci_parent(info);
->> +       else
->> +               ctrl_dev = get_serdev_controller(info->ctrl_hid, info->ctrl_uid, 0,
->> +                                                info->ctrl_devname);
-> 
-> I would expect that they both take info as an argument...
+> When support for Vivobook fan profiles was added, the new thermal
+> profiles where used inconsistently.
+>
+> This patch series aims to fix this issue. Compile-tested only.
 
-The "old" get_serdev_controller() helper for getting the controller
-by ACPI HID + UID is also used outside of the x86-android-tablets code
-and struct x86_serdev_info is x86-android-tablets specific.
+Whats your opinion on this, Ilpo? The first patch was already tested by Casey, and
+the second patch should be low risk despite being only compile-tested by me.
 
->>         if (IS_ERR(ctrl_dev))
->>                 return PTR_ERR(ctrl_dev);
-> 
-> ...
-> 
->>  struct x86_serdev_info {
->> +       /* For ACPI enumerated controllers */
->>         const char *ctrl_hid;
->>         const char *ctrl_uid;
->> +       /* For PCI enumerated controllers */
->> +       unsigned int ctrl_devfn;
->> +       /* Typically "serial0" */
->>         const char *ctrl_devname;
-> 
-> Why not union as we have a type selector, i.e. use_pci ?
+Thanks,
+Armin Wolf
 
-A union would be possible. I simply did not think of that.
-
-Not sure if it is worth the trouble though, since it saves
-only 8 bytes on a struct which is currently used only 3 
-times in the driver.
-
-Regards,
-
-Hans
-
-
-
-
-
+> Changes since v1:
+> - drop already applied patch
+> - change commit description of first patch
+> - add second patch based on a suggestion of Hans
+>
+> Armin Wolf (2):
+>    platform/x86: asus-wmi: Fix inconsistent use of thermal policies
+>    platform/x86: asus-wmi: Use platform_profile_cycle()
+>
+>   drivers/platform/x86/asus-wmi.c | 88 +++++++++------------------------
+>   1 file changed, 22 insertions(+), 66 deletions(-)
+>
+> --
+> 2.39.5
+>
+>
