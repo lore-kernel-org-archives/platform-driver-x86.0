@@ -1,221 +1,223 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.16])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE14518D63E
-	for <platform-driver-x86@vger.kernel.org>; Mon, 11 Nov 2024 11:26:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C34661A76C4
+	for <platform-driver-x86@vger.kernel.org>; Mon, 11 Nov 2024 12:59:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1731324416; cv=none; b=F9Umd+Pb1QMLjpSl1QtD2gEy7RlY49tiLC3OEyYT4iDZAqsCqKEIlJ9vFxuMhGyzkxdX815E6jCE3IfeLDotnGHmmL5MKoebClJ1t5HwtOoi1JUfCqOrIBysD7KSbwsA5fwS8QFrcrE/a8BcDm4t6Gr+FC2lm6XRs/EGjCdX2pI=
+	t=1731329985; cv=none; b=j1PNhr2ZBgMVyQN5acIn+IWuUhRq7oqVvqI5Kuq03LXwV6JQvfkMragvW+phCaPUyOm49PpP8oMO6p0Q50XIq1/Zw78T24/sMlNC3TfDtl+/t/KGP/nrZhi44ym0qiqPAy09UJ8NaFr+cBGXaQKvpoutFf0YPvI0OTSMLLb/6Sk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1731324416; c=relaxed/simple;
-	bh=fXaMuwkmemBa4+Zj7G7INWhS+1n6WmABuJdQ4hRsn0Q=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=A5++iJEKLi984vYKYw45nOMqH8j/PE2HDRf/pcgEUYiSgPl+YoapJVfpy9rmZfDkb6sP6uxgMzt0q2Cx67V0SD7Cp5kZWnuflwr38UU09fSkdrZW0py6eULlErWGX/BzLe0zxToTJSdjBLiR/p2k1m6zyKiyt4vjN+Zq7wrknMI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=kjbYnWMN; arc=none smtp.client-ip=198.175.65.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1731329985; c=relaxed/simple;
+	bh=MDntdSSuq+qIjKSBQotnQVTsym0JGVLG/tWfoQbOR48=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=fRPKy9PziSl4Bb6vVczOugYe/QG0Lm6h94WOAKWT9GKkgLxUJwp3iE4m5ZhcALe8d1hZFwwV3sEC8eWgDCaLxZrUS6l3mUiRA2phnkCm8E5SMbLqN9WbXCDRag67PDvmQ72QR4pcrL+R6OZ7O421k8pZK+KWtKdt2dLLDljDETY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=BrsDClwK; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="kjbYnWMN"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1731324415; x=1762860415;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=fXaMuwkmemBa4+Zj7G7INWhS+1n6WmABuJdQ4hRsn0Q=;
-  b=kjbYnWMNUgWCS1qVdGZuImGekTBMJi+ZqpzFeQVrjrThsas/PflxFTH8
-   dt8k7AEY5cpujbH43hLmZe8UpQqhU4M22jPPtSOLMl/McYn3GivfEYJwW
-   WgIMv0EHLwf31WocSjBZf9C2blYGe7NO+alXUUEgJHNbc43o6BXZnSobq
-   SNPPD26TcMJvnbl/jLRMuBJ75O6IVhVtoqvgSQCSq1Nc04yZnuhATQ54D
-   xD8Qzp9UgX8cEQx6XuLGAcjEP45O9a4Kqq4XABmRKJrRew5txoX2ZvOid
-   WmMnNZPfnBkuimyyJMya249+Opoyj8Vq252z/1jco5Gfbimjh6r4txUbM
-   w==;
-X-CSE-ConnectionGUID: nxz5wNuiQOaa+FoW1+tCnQ==
-X-CSE-MsgGUID: Zob83X5fTiacCRnRRyANUA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11222"; a="31285219"
-X-IronPort-AV: E=Sophos;i="6.11,199,1725346800"; 
-   d="scan'208";a="31285219"
-Received: from orviesa003.jf.intel.com ([10.64.159.143])
-  by orvoesa108.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Nov 2024 03:26:54 -0800
-X-CSE-ConnectionGUID: XV96EnJ7TaOEcYOLLykRLQ==
-X-CSE-MsgGUID: YxcdfOoBRH2bvHtGyvTNGQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.11,199,1725346800"; 
-   d="scan'208";a="91802626"
-Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.107])
-  by ORVIESA003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Nov 2024 03:26:52 -0800
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Mon, 11 Nov 2024 13:26:49 +0200 (EET)
-To: Suma Hegde <suma.hegde@amd.com>
-cc: platform-driver-x86@vger.kernel.org, Hans de Goede <hdegoede@redhat.com>, 
-    Naveen Krishna Chatradhi <naveenkrishna.chatradhi@amd.com>
-Subject: Re: [PATCH] platform/x86/amd/hsmp: Add new error code and error
- logs
-In-Reply-To: <20241111091722.1565061-1-suma.hegde@amd.com>
-Message-ID: <c3b8fe12-ba3e-cf1e-034a-8e7b37709778@linux.intel.com>
-References: <20241111091722.1565061-1-suma.hegde@amd.com>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="BrsDClwK"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1731329982;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=V9aDFUyPXN4swinBMMlYQwHMgntWvhLuJqrPNub41cI=;
+	b=BrsDClwKLCPt4SZpNYHiGNuZkcKyOU2Aa3YmhnXg3yvG/z/7gTDCMb3Ou/vSKA5/fQ0jHN
+	cjlXN7OBbkfQPphyhal7nG8CYk7E1W7zHi0kaDA39ZZZ5NVYP5GaNR7ROcOvHp9bgF1imS
+	gPn1IDrUGoDiFd+We4BsdG0TWnp+S+8=
+Received: from mail-ed1-f70.google.com (mail-ed1-f70.google.com
+ [209.85.208.70]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-493-xCI95hJFNjSxyvC-SlZhXg-1; Mon, 11 Nov 2024 07:59:41 -0500
+X-MC-Unique: xCI95hJFNjSxyvC-SlZhXg-1
+X-Mimecast-MFC-AGG-ID: xCI95hJFNjSxyvC-SlZhXg
+Received: by mail-ed1-f70.google.com with SMTP id 4fb4d7f45d1cf-5cf3d144791so945163a12.3
+        for <platform-driver-x86@vger.kernel.org>; Mon, 11 Nov 2024 04:59:41 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1731329980; x=1731934780;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=V9aDFUyPXN4swinBMMlYQwHMgntWvhLuJqrPNub41cI=;
+        b=wyHfEPkQa/h2ODUkNP4uh3zZJqtyGey9BsAzUk3E/rbLxwRbchgEmwRgSJOIcUD1gl
+         xmQXNmJjI2jv0EpDQP6YuDDgwb+R9z2DHjRO0P2pX0oFgrMUUp2Mx9DLkL3h8XaFbvI0
+         xE/l+INKLdV8vKqFuwBO4FB42JfJFAdg17iYKDEHS//+x08fHNLhLAYWWObLDHeBeObU
+         fMydt23JzWRo5eUYQb7QV5OPLYRS5FGyXYdafFGgqr1CXmcyNDBJYEpl1u5ZqpRfCbvw
+         cBavuGhhq5HVDOykWVegVIb66ap/mab4wftX5u/g2JmSoP8L38j36w7Q1qKedHikKfZG
+         e9tw==
+X-Forwarded-Encrypted: i=1; AJvYcCW/kt15vtFZqKbhDDCt0uNE+5L1+5d3BE1zFuJ6h5ZsA3hpTQ2H7rZTv87KxJmSwQ2rAhfQDZMpKH9+0u/Y8C982Ipl@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxdl+YRN6pjEzIvZ/NfGOi3EVlAT78bwspmPZs9E06vqMYxcVcN
+	zie5D1G0SI9F30QxFadPn5M+UIrZ8k3TrCxrawkWD6FN0QnkvR+rV55EBcNoXOPMdKmdBFKWLOI
+	XWjSmnGqdXdE/bWMBQDAZvPsdt/WIqF9vCLCiTw7FZlOdEm4mkxy2f+dOcXR1rK2e0Mz0YHM=
+X-Received: by 2002:a05:6402:3482:b0:5cf:1b53:1bf1 with SMTP id 4fb4d7f45d1cf-5cf1b531ccdmr6307124a12.15.1731329980190;
+        Mon, 11 Nov 2024 04:59:40 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IHPwjxjj0wGbO0wl9WwHLB1afUwUXWU8VX68uhPYP/vCxXyLaEHn6NN8d3IbmeRxUaJQkMg5A==
+X-Received: by 2002:a05:6402:3482:b0:5cf:1b53:1bf1 with SMTP id 4fb4d7f45d1cf-5cf1b531ccdmr6307111a12.15.1731329979757;
+        Mon, 11 Nov 2024 04:59:39 -0800 (PST)
+Received: from ?IPV6:2001:1c00:c32:7800:5bfa:a036:83f0:f9ec? (2001-1c00-0c32-7800-5bfa-a036-83f0-f9ec.cable.dynamic.v6.ziggo.nl. [2001:1c00:c32:7800:5bfa:a036:83f0:f9ec])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5cf03b7f0f9sm5122110a12.27.2024.11.11.04.59.38
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 11 Nov 2024 04:59:39 -0800 (PST)
+Message-ID: <a644fed4-aff5-4514-8e35-d6cab642d3dd@redhat.com>
+Date: Mon, 11 Nov 2024 13:59:38 +0100
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 0/6] media: uvcvideo: Implement the Privacy GPIO as a
+ subdevice
+To: Ricardo Ribalda <ribalda@chromium.org>,
+ Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+ Mauro Carvalho Chehab <mchehab@kernel.org>,
+ Sakari Ailus <sakari.ailus@linux.intel.com>
+Cc: linux-kernel@vger.kernel.org, linux-media@vger.kernel.org,
+ Yunke Cao <yunkec@chromium.org>, Hans Verkuil <hverkuil@xs4all.nl>,
+ "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>
+References: <20241108-uvc-subdev-v2-0-85d8a051a3d3@chromium.org>
+Content-Language: en-US, nl
+From: Hans de Goede <hdegoede@redhat.com>
+In-Reply-To: <20241108-uvc-subdev-v2-0-85d8a051a3d3@chromium.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Mon, 11 Nov 2024, Suma Hegde wrote:
+Hi Ricardo, Et al.,
 
-> Firmware is updated to send HSMP_ERR_PREREQ_NOT_SATISFIED(0xFD) and
-> HSMP_ERR_SMU_BUSY(0xFC) error codes. Add them here.
+On 8-Nov-24 9:25 PM, Ricardo Ribalda wrote:
+> Some notebooks have a button to disable the camera (not to be mistaken
+> with the mechanical cover). This is a standard GPIO linked to the
+> camera via the ACPI table.
 > 
-> Add error logs to make it easy to understand the failure reason for
-> different error conditions.
-> 
-> Replace pr_err() with dev_err() to identify the driver printing the
-> error.
-> 
-> When file is opened in WRITE mode, then GET messages are not allowed
-> and when file is opened in READ mode, SET messages are not allowed.
-> In these scenerios, return EPERM error to userspace instead of
-> EINVALID.
+> 4 years ago we added support for this button in UVC via the Privacy control.
+> This has two issues:
+> - If the camera has its own privacy control, it will be masked
+> - We need to power-up the camera to read the privacy control gpio.
 
-Hi Suma,
+Thinking more about this I think we need to start with looking at the userspace
+API for privacy controls, define how we want that to look and then go from
+there.
 
-Please split UAPI change into own patch as it's something that might have 
-to be reverted so I prefer to have that as minimal as possible.
+The reason I'm writing this is because due to my work in drivers/platform/x86
+(pdx86) on EC / ACPI / WMI drivers for non chromebooks I am aware of at least
+4 different methods camera on/off (aka privacy) toggles are being reported
+to userspace at the moment. Adding a v4l2-ctrl on a subdev instead of directly
+on /dev/video# would be adding a 5th method which seems highly undesirable.
 
--- 
- i.
+Instead I would like to first focus on fixing these userspace API
+inconsistencies agreeing on a single API we want to use everywhere
+going forward. We don't need to fix all drivers at once, but IMHO we
+should agree on what the API should look like and document that and
+any future drivers implementing camera privacy control related code
+then must use the new API.
 
-> Signed-off-by: Suma Hegde <suma.hegde@amd.com>
-> Reviewed-by: Naveen Krishna Chatradhi <naveenkrishna.chatradhi@amd.com>
-> ---
->  drivers/platform/x86/amd/hsmp/hsmp.c | 40 +++++++++++++++++++---------
->  1 file changed, 27 insertions(+), 13 deletions(-)
-> 
-> diff --git a/drivers/platform/x86/amd/hsmp/hsmp.c b/drivers/platform/x86/amd/hsmp/hsmp.c
-> index 82d8ba2e1204..f29dd93fbf0b 100644
-> --- a/drivers/platform/x86/amd/hsmp/hsmp.c
-> +++ b/drivers/platform/x86/amd/hsmp/hsmp.c
-> @@ -7,8 +7,6 @@
->   * This file provides a device implementation for HSMP interface
->   */
->  
-> -#define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
-> -
->  #include <asm/amd_hsmp.h>
->  #include <asm/amd_nb.h>
->  
-> @@ -25,6 +23,8 @@
->  #define HSMP_STATUS_OK		0x01
->  #define HSMP_ERR_INVALID_MSG	0xFE
->  #define HSMP_ERR_INVALID_INPUT	0xFF
-> +#define HSMP_ERR_PREREQ_NOT_SATISFIED	0xFD
-> +#define HSMP_ERR_SMU_BUSY		0xFC
->  
->  /* Timeout in millsec */
->  #define HSMP_MSG_TIMEOUT	100
-> @@ -61,7 +61,7 @@ static int __hsmp_send_message(struct hsmp_socket *sock, struct hsmp_message *ms
->  	mbox_status = HSMP_STATUS_NOT_READY;
->  	ret = sock->amd_hsmp_rdwr(sock, mbinfo->msg_resp_off, &mbox_status, HSMP_WR);
->  	if (ret) {
-> -		pr_err("Error %d clearing mailbox status register\n", ret);
-> +		dev_err(sock->dev, "Error %d clearing mailbox status register\n", ret);
->  		return ret;
->  	}
->  
-> @@ -71,7 +71,7 @@ static int __hsmp_send_message(struct hsmp_socket *sock, struct hsmp_message *ms
->  		ret = sock->amd_hsmp_rdwr(sock, mbinfo->msg_arg_off + (index << 2),
->  					  &msg->args[index], HSMP_WR);
->  		if (ret) {
-> -			pr_err("Error %d writing message argument %d\n", ret, index);
-> +			dev_err(sock->dev, "Error %d writing message argument %d\n", ret, index);
->  			return ret;
->  		}
->  		index++;
-> @@ -80,7 +80,7 @@ static int __hsmp_send_message(struct hsmp_socket *sock, struct hsmp_message *ms
->  	/* Write the message ID which starts the operation */
->  	ret = sock->amd_hsmp_rdwr(sock, mbinfo->msg_id_off, &msg->msg_id, HSMP_WR);
->  	if (ret) {
-> -		pr_err("Error %d writing message ID %u\n", ret, msg->msg_id);
-> +		dev_err(sock->dev, "Error %d writing message ID %u\n", ret, msg->msg_id);
->  		return ret;
->  	}
->  
-> @@ -97,7 +97,7 @@ static int __hsmp_send_message(struct hsmp_socket *sock, struct hsmp_message *ms
->  	while (time_before(jiffies, timeout)) {
->  		ret = sock->amd_hsmp_rdwr(sock, mbinfo->msg_resp_off, &mbox_status, HSMP_RD);
->  		if (ret) {
-> -			pr_err("Error %d reading mailbox status\n", ret);
-> +			dev_err(sock->dev, "Error %d reading mailbox status\n", ret);
->  			return ret;
->  		}
->  
-> @@ -110,14 +110,28 @@ static int __hsmp_send_message(struct hsmp_socket *sock, struct hsmp_message *ms
->  	}
->  
->  	if (unlikely(mbox_status == HSMP_STATUS_NOT_READY)) {
-> +		dev_err(sock->dev, "Message ID 0x%X failure : SMU tmeout (status = 0x%X)\n",
-> +			msg->msg_id, mbox_status);
->  		return -ETIMEDOUT;
->  	} else if (unlikely(mbox_status == HSMP_ERR_INVALID_MSG)) {
-> +		dev_err(sock->dev, "Message ID 0x%X failure : Invalid message (status = 0x%X)\n",
-> +			msg->msg_id, mbox_status);
->  		return -ENOMSG;
->  	} else if (unlikely(mbox_status == HSMP_ERR_INVALID_INPUT)) {
-> +		dev_err(sock->dev, "Message ID 0x%X failure : Invalid arguments (status = 0x%X)\n",
-> +			msg->msg_id, mbox_status);
->  		return -EINVAL;
-> +	} else if (unlikely(mbox_status == HSMP_ERR_PREREQ_NOT_SATISFIED)) {
-> +		dev_err(sock->dev, "Message ID 0x%X failure : Prerequisite not satisfied (status = 0x%X)\n",
-> +			msg->msg_id, mbox_status);
-> +		return -EREMOTEIO;
-> +	} else if (unlikely(mbox_status == HSMP_ERR_SMU_BUSY)) {
-> +		dev_err(sock->dev, "Message ID 0x%X failure : SMU BUSY (status = 0x%X)\n",
-> +			msg->msg_id, mbox_status);
-> +		return -EBUSY;
->  	} else if (unlikely(mbox_status != HSMP_STATUS_OK)) {
-> -		pr_err("Message ID %u unknown failure (status = 0x%X)\n",
-> -		       msg->msg_id, mbox_status);
-> +		dev_err(sock->dev, "Message ID 0x%X unknown failure (status = 0x%X)\n",
-> +			msg->msg_id, mbox_status);
->  		return -EIO;
->  	}
->  
-> @@ -133,8 +147,8 @@ static int __hsmp_send_message(struct hsmp_socket *sock, struct hsmp_message *ms
->  		ret = sock->amd_hsmp_rdwr(sock, mbinfo->msg_arg_off + (index << 2),
->  					  &msg->args[index], HSMP_RD);
->  		if (ret) {
-> -			pr_err("Error %d reading response %u for message ID:%u\n",
-> -			       ret, index, msg->msg_id);
-> +			dev_err(sock->dev, "Error %d reading response %u for message ID:%u\n",
-> +				ret, index, msg->msg_id);
->  			break;
->  		}
->  		index++;
-> @@ -248,7 +262,7 @@ long hsmp_ioctl(struct file *fp, unsigned int cmd, unsigned long arg)
->  		 * Execute only set/configure commands
->  		 */
->  		if (hsmp_msg_desc_table[msg.msg_id].type != HSMP_SET)
-> -			return -EINVAL;
-> +			return -EPERM;
->  		break;
->  	case FMODE_READ:
->  		/*
-> @@ -256,7 +270,7 @@ long hsmp_ioctl(struct file *fp, unsigned int cmd, unsigned long arg)
->  		 * Execute only get/monitor commands
->  		 */
->  		if (hsmp_msg_desc_table[msg.msg_id].type != HSMP_GET)
-> -			return -EINVAL;
-> +			return -EPERM;
->  		break;
->  	case FMODE_READ | FMODE_WRITE:
->  		/*
-> @@ -265,7 +279,7 @@ long hsmp_ioctl(struct file *fp, unsigned int cmd, unsigned long arg)
->  		 */
->  		break;
->  	default:
-> -		return -EINVAL;
-> +		return -EPERM;
->  	}
->  
->  	ret = hsmp_send_message(&msg);
-> 
+Lets start with the 3 APIs I'm currently aware of:
+
+1. uvcvideo driver exporting V4L2_CID_PRIVACY on /dev/video#
+uvcvideo seems to be the only user of this CID (i)
+
+2. pdx86 drivers exporting an input evdev with EV_SW,
+SW_CAMERA_LENS_COVER. This is somewhat of a special case
+for some Dell laptops with an electro-mechanical shutter
+operated by the EC. But this is not also used by
+hp-wmi.c where it does not necessarily indicate the
+status of a mechanical cover, but also possibly simply
+disconnecting the camera from the USB bus.
+
+3. pdx86 drivers exporting an input evdev with EV_KEY,
+KEY_CAMERA_ACCESS_ENABLE, KEY_CAMERA_ACCESS_DISABLE
+These KEY codes are based on offical the HUTRR72 HID/HUT
+extension and as such may also be send by USB/I2C/BT HID
+devices.
+
+The only user outside of hid-input.c is the recently added
+drivers/platform/x86/lenovo-wmi-camera.c driver and I'm
+wondering if that should not use SW_CAMERA_LENS_COVER
+instead. I'll ask the driver author about how this 
+
+4. pdx86 drivers exporting an input evdev with EV_KEY,
+KEY_CAMERA. Note this 4th method lacks information on if
+the camera was enabled or disabled. In many cases this
+is send to indicate that the EC has either dropped
+a UVC camera of the bus, or added it to the bus.
+Ideally we would have some helper checking for internal
+UVC camera presence and turn this into 2 or 3.
+
+TL;DR: it a mess.
+
+Circling back to this patch-set, note how 3 of the 4
+currently in use variants today use in input evdev.
+
+I think that using an input evdev (shared with the
+snapshot button if present) will give us a nice out for
+the power-management issue with the V4L2_CID_PRIVACY,
+while at the same time giving a nice opportunity to
+standardize on a single userspace API.
+
+My proposal would be to standardize on SW_CAMERA_LENS_COVER
+I realize that the GPIO does not always indicate a lens
+cover, but the resulting black frames are the same result
+as if there were a lens cover and looking at:
+
+https://support.hp.com/ie-en/document/ish_3960099-3335046-16
+
+and then the second picture when expanding "Locate and use
+the webcam privacy switch" that does look like it may be
+an actual cover which reports back its state through a GPIO.
+
+The reason why I'm not in favor of using
+KEY_CAMERA_ACCESS_ENABLE + KEY_CAMERA_ACCESS_DISABLE is that
+looking at the HUTRR72 it talks about:
+"Enables programmatic access to camera device"
+which suggests that it is a request to the OS / desktop-
+environment to block camera access at the software level,
+rather then reporting back that a hw-level block is in place.
+
+And since these may be used by any HID device we are not of
+control in how these will be used.
+
+Ricardo, what do you think of instead of using a v4l-subdev,
+using an input evdev (shared with the existing one) reporting
+SW_CAMERA_LENS_COVER ?  The v4l-subdev approach will need
+userspace changes anyways and if we are going to make userspace
+changes we might as well use the best API available.
+
+One downside of going the evdev route is that it is a bit
+harder for userspace to map the evdev to a camera:
+
+1. For the various WMI interfaces this already is impossible,
+and just to show a notification it is not necessary (using
+an external cam will make things weird though).
+
+2. For UVC cameras mapping the evdev to the /dev/video#
+node can still be done by looking if they share a parent
+USB interface. This is e.g. already done in apps like
+xawtv looking at the PCI parent to pair up /dev/video#
+for video capture with the ALSA interface exposed for
+sound by bttv cards.
+
+3. We can maybe do something at the media-controller
+level to help userspace linking a camera to its evdev node.
+This would also be helpful for the existing WMI interfaces.
+
+Regards,
+
+Hans
+
+
+
+i) With the exception of drivers/media/pci/intel/ivsc/mei_csi.c
+which has a V4L2_CID_PRIVACY control which always reads 0, so
+I guess we can / should probably drop that.
+
+
+
+p.s.
+
+I do plan to also get back to you on the actually powermanagement
+discussion. But only so many hours in a day, so it will probably
+be a couple of days.
+
+
