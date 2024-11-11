@@ -1,104 +1,93 @@
-Received: from mout.gmx.net (mout.gmx.net [212.227.15.19])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C2A51BC4E;
-	Mon, 11 Nov 2024 07:01:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 255BE42A8A
+	for <platform-driver-x86@vger.kernel.org>; Mon, 11 Nov 2024 08:34:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1731308484; cv=none; b=jeRysQmKbie/mGO8Z2A1Kn18SxGxt9ftb5dnYNu5MyjWqncTb74AR2CNLWMOy5Yl/5ThjjyTVFtsEkSN2iMAMJ6qtnfQLUb/4V2yQ+PUyOlNInj2IUz9we37kQPNnPTrk+Ni9dnPvxh51sufxLAbe2/Rw1Nf4VWjaIADYs+30jI=
+	t=1731314061; cv=none; b=sy4uRa2M9XjAJfHazySsS3sAPxlKSuW0RNfaebT1ShTN8Pq1Lp3ZMTt89iWpgUoRn/1HaQmag34zVH/+WywXytwjVaNL4R06lYrC0Y1GIQccl1mFDfqkd7VZW114y15l2GoLShtv+mXa+lfZ7OfXNDTXBCaycEofHTEbfUWUHkc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1731308484; c=relaxed/simple;
-	bh=74vSH8jCobkm++QUMiqDjqjUNoYfF8wPfC9bI7z4j/Q=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
-	 In-Reply-To:Content-Type; b=lBFYImTYbZHd0oHJxjFedvDPoX0TVToX+vlNM1rngbRgBbidjzMW21P3VwngrgXAVnAuEjpUDYiNQAHhKiMAVSD9E/D14/Ts/pBcWNNeXhorBP/1c+bnhfwsfgsn7CnnXuwxmt49FBUla/4Ncqj3HzXzdM3qbwwcUld0JpwFW1s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b=r+63b0K0; arc=none smtp.client-ip=212.227.15.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
+	s=arc-20240116; t=1731314061; c=relaxed/simple;
+	bh=Qw0waPHKzeQvDumySVfRMRtmqdeBiISBP2VPbW8KQAY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=bTCHb2f0JG6Xliif84JJRPYMyOVCL47DJJwLs7QY3P9MXT8ple7R4jvYzwYAGRIJKcVeUm0ckkatUwxPGxP1wp6vt676cStH3SXgotrC2cFKoi5tM52r0155DNTBPT0yUP1/5+TBd2FHT8/5lbK8somB+GV+KaBx/uQnZpTrGsg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=N4Hp0c/A; arc=none smtp.client-ip=192.198.163.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b="r+63b0K0"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.de;
-	s=s31663417; t=1731308422; x=1731913222; i=w_armin@gmx.de;
-	bh=zNhs8knv1TCaWn97GwAPPU6qGMOy7JbpyIodoN/c8QU=;
-	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:From:To:
-	 Cc:References:In-Reply-To:Content-Type:Content-Transfer-Encoding:
-	 cc:content-transfer-encoding:content-type:date:from:message-id:
-	 mime-version:reply-to:subject:to;
-	b=r+63b0K0P/0U822PPvBcdwoKSfYLY6jp24GrRIA179qU8ezuVLXYFEMqpUMiLobZ
-	 hwGZ3VG55oq9n8IwptrUkDzbVG9iaZbEGa5IOP0hKvht+uiLbV4n6zEKflCPcMpiX
-	 hqc9mKYaQKpaOpcwdJogJoQwAfHI3wkAaBOpN78o35XFI9VB3s/slo4rwKMvRE7xc
-	 are//8jab7jRnlVrC2G72FYN+EDQHDVfhQGImUxTR6uHWiAw9FCBQTx24vl7T+j0f
-	 JFIL+HQUqRHDdGIioycReXzY0+UPcS0CxZSJtOhu7WLPuRTN9FZdYTJp15/QgU3tg
-	 +OHc6z5OXqPDyq8KQQ==
-X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
-Received: from [141.30.226.129] ([141.30.226.129]) by mail.gmx.net (mrgmx005
- [212.227.17.190]) with ESMTPSA (Nemesis) id 1N1wlv-1tuCZr1VhB-015N07; Mon, 11
- Nov 2024 08:00:22 +0100
-Message-ID: <ec54d642-3aba-4e7b-954a-8fba79e73e31@gmx.de>
-Date: Mon, 11 Nov 2024 08:00:20 +0100
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="N4Hp0c/A"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1731314060; x=1762850060;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=Qw0waPHKzeQvDumySVfRMRtmqdeBiISBP2VPbW8KQAY=;
+  b=N4Hp0c/Af/AWRfl+m4AS2u+Cb+/Q8G4ktClOD9PIEjIj1BVWRmKYZD7u
+   Ni/Kb2oXweLZ3rq6RuOTc+WZfMgsk7YmvoyzIRnFyw/PVlrjS+sh7S7xt
+   2WIjS9Fi9oTgixtMfpeCAf10Uxc12r5+NWDh2F8mmMi/xRdKlprkszLfC
+   Onj/of30PDf5K6yY14fZ04BpOkpT/XlU1Ub9QgPWDyztucFkBalvMP+N2
+   yOKNZnBNV8OXh6cfqEbOOo26QCA57faljiiIGT6jlYH7uwgE9SoPNJm/P
+   jBZh9smFLsQSWL4fTkmOyvxxhs1RlamWfepqg+hdQpeR44dbRz9KPZ08X
+   Q==;
+X-CSE-ConnectionGUID: EV8asvAIR2yJD0If/5p1oA==
+X-CSE-MsgGUID: GyX0TwWeQQevrt26E/91Qg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11252"; a="31333999"
+X-IronPort-AV: E=Sophos;i="6.12,144,1728975600"; 
+   d="scan'208";a="31333999"
+Received: from orviesa009.jf.intel.com ([10.64.159.149])
+  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Nov 2024 00:34:19 -0800
+X-CSE-ConnectionGUID: LghEgWQ1RoajO+Z8pKmSQQ==
+X-CSE-MsgGUID: X+6Xkdf4SuKbeKmf3KhkAg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.12,144,1728975600"; 
+   d="scan'208";a="86771188"
+Received: from smile.fi.intel.com ([10.237.72.154])
+  by orviesa009.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Nov 2024 00:34:18 -0800
+Received: from andy by smile.fi.intel.com with local (Exim 4.98)
+	(envelope-from <andriy.shevchenko@linux.intel.com>)
+	id 1tAPsE-0000000DWsb-2KT1;
+	Mon, 11 Nov 2024 10:34:14 +0200
+Date: Mon, 11 Nov 2024 10:34:14 +0200
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: "Michael J. Ruhl" <michael.j.ruhl@intel.com>
+Cc: intel-xe@lists.freedesktop.org, platform-driver-x86@vger.kernel.org,
+	david.e.box@linux.intel.com, ilpo.jarvinen@linux.intel.com,
+	hdegoede@redhat.com, rodrigo.vivi@intel.com,
+	lucas.demarchi@intel.com
+Subject: Re: [PATCH 1/2] platform/x86/intel/pmt: allow user offset for PMT
+ callbacks
+Message-ID: <ZzHBhsJ_J3ARhLu9@smile.fi.intel.com>
+References: <20241108201955.2048085-1-michael.j.ruhl@intel.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 0/2] Fix thermal profile handling
-From: Armin Wolf <W_Armin@gmx.de>
-To: corentin.chary@gmail.com, luke@ljones.dev, mohamed.ghanmi@supcom.tn
-Cc: srinivas.pandruvada@linux.intel.com, hdegoede@redhat.com,
- ilpo.jarvinen@linux.intel.com, Michael@phoronix.com,
- casey.g.bowman@intel.com, platform-driver-x86@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <20241107003811.615574-1-W_Armin@gmx.de>
-Content-Language: en-US
-In-Reply-To: <20241107003811.615574-1-W_Armin@gmx.de>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Provags-ID: V03:K1:HjN1o2zjOt7nusRjgNryQIspf3nQlnHJ20jI+aY6jUCCHOWxJTX
- fUDA24rsPsXLpURTTf9ACOpoV3H7gnGTsrDLybtFoN3SNx9Di9OODiN7BJjIWlB5VOBse6O
- 2588EUC1hvFNfphUd1yRJLg8qUd47PGwm2TnZnhx5QMfjbT6fpmwUw4kClkcP+QF2k98jtg
- glgnVXxHe6NhBx6RhhphA==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:sZOy9ODJwEA=;ZK1mtjO4E5uQQjd27Zlj9JP7vXv
- v2NJQggl/ijGXS2YYhi1bDJQZm1Vhg/iBvnt86UZP0+bCf9ltilgLijXASS7MpLEqy06NvOsn
- 5QzqoE1NkF1+y+hXQyjLD5LJ0aoh1bA8DEKiomBoAFGB/lsPSXw6wBXOsAz62isj8g3HzKY8I
- iU2Q8H725Zz15tmZeV9r3YoyyWJeRqowgLPFAHmOsEPuYSrn4ck3D23ra+A7tIp/cA+BlgyiZ
- rSP5DnjcVU12YQCaXJm+yLk7Y/qe4NRvQ2UTTCWP+4vbgpHemV//st+wCfA5uKnh+6kUeFS6L
- YwD9RDdE3l9FOViTecda1g2bfMjemiFF5dDj+RKajYxhRHREXG2QYJXSXdsL2KoTJPayO6i40
- KlOGmLLnRbeSA4OTbKYHY/y2cvulG3x98d+IORXZL12A/IFtSVWQC5hZ+1IJl/S5DsZcCMBHC
- ibefX+L/lJrQXKVoVZ6FjMxc95eZynSIwo65oLA987vPyxNJrfX60y25Wv9mpZjJSZm5PQrfC
- TzDV08XQwQno0ezjYqLZ56txy2bcOkz81r6+iwovPD/ve1x0PZDoMajXJNCKQj/whFCd/QiR6
- 8nRwIjt0p1XEtWL427v2q9D4aIP7AqE8c7FvrXunqeGYY8IYEkMT5KOZxwOa2Gyf3X7ex+EkW
- u6lzrNRaAqFe/LffQ9YrUUX1DzdLeVmNqjC1p2kIZsCO+gAKUbhEbMa0pdfP3X3qJOmwnruXb
- P/48w8cWsMNN/Ktbf21TY7kcqdRd3m0XTelDs6WRnBotElYMCdKIrPEZlrlJKDQP6c3m0Z3rl
- vgOxBNUpxLvJixbgZVfwTrlQ==
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20241108201955.2048085-1-michael.j.ruhl@intel.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-Am 07.11.24 um 01:38 schrieb Armin Wolf:
+On Fri, Nov 08, 2024 at 03:19:53PM -0500, Michael J. Ruhl wrote:
+> Usage of the telem sysfs file allows for partial reads at
+> an offset.
+> 
+> The current callback method returns the buffer starting
+> from offset 0 only.
+> 
+> Include the requested offset in the callback.
+> Update the necsessary address calculations with the offset.
 
-> When support for Vivobook fan profiles was added, the new thermal
-> profiles where used inconsistently.
->
-> This patch series aims to fix this issue. Compile-tested only.
+...
 
-Whats your opinion on this, Ilpo? The first patch was already tested by Casey, and
-the second patch should be low risk despite being only compile-tested by me.
+> -	memcpy_fromio(buf, addr, count);
+> +	memcpy_fromio(buf, addr + off, count);
 
-Thanks,
-Armin Wolf
+This will give an unaligned IO access in some cases. Is it a problem?
 
-> Changes since v1:
-> - drop already applied patch
-> - change commit description of first patch
-> - add second patch based on a suggestion of Hans
->
-> Armin Wolf (2):
->    platform/x86: asus-wmi: Fix inconsistent use of thermal policies
->    platform/x86: asus-wmi: Use platform_profile_cycle()
->
->   drivers/platform/x86/asus-wmi.c | 88 +++++++++------------------------
->   1 file changed, 22 insertions(+), 66 deletions(-)
->
-> --
-> 2.39.5
->
->
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
