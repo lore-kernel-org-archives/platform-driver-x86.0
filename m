@@ -1,335 +1,731 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.16])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B600420F5DD
-	for <platform-driver-x86@vger.kernel.org>; Tue, 12 Nov 2024 10:00:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6BF6F21441D;
+	Tue, 12 Nov 2024 10:19:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1731405639; cv=none; b=ZvUo43KbzvBH8PCHE0yJhiUWx059RToqSfzYHxHx3j97ZQqIZ3BMz9ZQkbaJJOjmlvsuBZ4kJQ1cbPNOnVvb7M9JMCLlSIiSdG4B6dDC3/mkqL/q4gKjYQDHgRp6jGRhQw6p74Kroje8VampvhSSXW8B0CsH2pU3QWS/yStOC6E=
+	t=1731406788; cv=none; b=WZWq7+Rkv48/7hehiG6r02p9f/Z9nGdb3Qm8uPdj8lsVIu/EjbVtv7v+gqE2KOh+4putqWfxt+fj0G72BeYhaT6o7kFRADHmisLEigXHEk5so2EZh4juhUvFAJ23HAEmqKV7DcL9hgPZZRvVq+GqfmF5QOMY4iCrMPpSFhXOaJo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1731405639; c=relaxed/simple;
-	bh=5vfeYN6IylAhM1K1pL2/w2zwYaYn1sIGQMXDwq29Bzs=;
+	s=arc-20240116; t=1731406788; c=relaxed/simple;
+	bh=KwSrUpFEqvOnd6VotMijoA8CBoz5ElYLUEX5k5rtjVU=;
 	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=sCYILOl9DeS2fZGVhR/Mp3ytIAjATWdZofAn1Y1oPdFVWF83IfCBs+FabD6s3HD5DrssJnbCgjX0PdPYvNF0PbrVQpkRQaNd1kJhXZ6Q1GVBBmoUI8DWokngbvjBkl9h8hczClKgIhCXE+cPbIU55LAAJIz9v9mFdl+LiFlbDco=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=dBjIte4p; arc=none smtp.client-ip=198.175.65.16
+	 MIME-Version:Content-Type; b=GHrolZBgckxluWiqxPGlXqfFHovFYGX800Zf5FziscKYEGzuhU5klxVdZWaIjtcZ5i3DXfLQS1tHlMifDDjpylpdtT6pdfqC1cyo9S3oqQ7HWPi+fio1N0Rlls2TyoWbFhokNPaFgbx823zMs+ByWA78ow3PzgUPV3Y/tc6DKiM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ctn1FXj3; arc=none smtp.client-ip=198.175.65.17
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="dBjIte4p"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ctn1FXj3"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1731405638; x=1762941638;
+  t=1731406786; x=1762942786;
   h=from:date:to:cc:subject:in-reply-to:message-id:
    references:mime-version;
-  bh=5vfeYN6IylAhM1K1pL2/w2zwYaYn1sIGQMXDwq29Bzs=;
-  b=dBjIte4pgPQ4xV/8bCuFD/dG3s4c/PAPggoGbbGdTdRjAcZxdff2/RYY
-   Jk3vPhhqe0r8pnO7Pt+RB6oMMnxMCzD3Wd/bdAiUrha0TpboqtAOdm9Lm
-   fOf1LhV1LEMjtbRL0MW47UDSurRL4tc1wT811X3i1Tiu7nrh+RJLE8XeP
-   piXIjYdubM2kC+0bnzqkHRuR5baDjRAqOjvDmKzX63ioItdVBQpCDshTY
-   +VjYPSqjecfsgISd4D6dWSHia/DOsyrdyy1C4Sa5kEJovaaHrqB2w2XB7
-   96tIBmQaAUX+7jAaRb3ZOzXgmoIjqwyBLgzP+mSlLWAp3GeO4rxKFqUaC
+  bh=KwSrUpFEqvOnd6VotMijoA8CBoz5ElYLUEX5k5rtjVU=;
+  b=ctn1FXj3ZApIA3Df4O3FVuCBu/w7slqNfmk7AweBAi3myJzlc2suSaV/
+   qJTeQfgHJFnOEKKx+GlCtrdioNAp4+pFT93tt4br8Dp343eADDF67Hk+D
+   AOnT3+XYenXpfTQwgzW5A+n6IQqWi56C9Xshc4UvorgWN0SF4AjyCUJM2
+   A2UwAzjzr/JqPYFb185ukqDHtzytMuI1kA8F3sZViRIDxxd5LZEH7/j4X
+   sVgoxC8oMWV9T2B08JooBwo5fYny+UTylWMkkWOI3rOyBd5ShT3dHwA3f
+   AB9/Rgl5aqQeX3YgP7Ja6+ody90nOQUBg9JxEuwjxD1lenLOv2/H/Oilm
    g==;
-X-CSE-ConnectionGUID: zvjQ1eyxTD+AJMwqLagA5Q==
-X-CSE-MsgGUID: MRLC/A4RTsSB1OmeibExIQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11222"; a="31385707"
-X-IronPort-AV: E=Sophos;i="6.11,199,1725346800"; 
-   d="scan'208";a="31385707"
-Received: from orviesa009.jf.intel.com ([10.64.159.149])
-  by orvoesa108.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Nov 2024 02:00:38 -0800
-X-CSE-ConnectionGUID: QZZKHeAoTUyutuCDZ/eVaw==
-X-CSE-MsgGUID: woTqKD5XQG+THE2US/DPqg==
+X-CSE-ConnectionGUID: LsZYMiHoRRear6MyOd7Vtg==
+X-CSE-MsgGUID: N77MEFaeSGmaET24Ivgzgg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11253"; a="31328126"
+X-IronPort-AV: E=Sophos;i="6.12,147,1728975600"; 
+   d="scan'208";a="31328126"
+Received: from fmviesa010.fm.intel.com ([10.60.135.150])
+  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Nov 2024 02:19:45 -0800
+X-CSE-ConnectionGUID: ypB9yLikQ8apBRutXdtttg==
+X-CSE-MsgGUID: qPsMIZQ8SymCKTh+OxxAUA==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.12,147,1728975600"; 
-   d="scan'208";a="87325053"
+   d="scan'208";a="87811319"
 Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.234])
-  by orviesa009-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Nov 2024 02:00:34 -0800
+  by fmviesa010-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Nov 2024 02:19:40 -0800
 From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Tue, 12 Nov 2024 12:00:31 +0200 (EET)
-To: Basavaraj Natikar <Basavaraj.Natikar@amd.com>
-cc: Hans de Goede <hdegoede@redhat.com>, platform-driver-x86@vger.kernel.org, 
-    perry.yuan@amd.com, mario.limonciello@amd.com, Shyam-sundar.S-k@amd.com, 
-    W_Armin@gmx.de
-Subject: Re: [PATCH v5 1/2] platform/x86/amd: amd_3d_vcache: Add AMD 3D
- V-Cache optimizer driver
-In-Reply-To: <20241111104632.2213773-2-Basavaraj.Natikar@amd.com>
-Message-ID: <8b02f131-b38c-d263-b8a2-9cbe94fdc883@linux.intel.com>
-References: <20241111104632.2213773-1-Basavaraj.Natikar@amd.com> <20241111104632.2213773-2-Basavaraj.Natikar@amd.com>
+Date: Tue, 12 Nov 2024 12:19:37 +0200 (EET)
+To: Suma Hegde <Suma.Hegde@amd.com>
+cc: Arnd Bergmann <arnd@kernel.org>, Hans de Goede <hdegoede@redhat.com>, 
+    Arnd Bergmann <arnd@arndb.de>, 
+    Naveen Krishna Chatradhi <naveenkrishna.chatradhi@amd.com>, 
+    Carlos Bilbao <carlos.bilbao.osdev@gmail.com>, 
+    Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, 
+    Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>, 
+    x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>, 
+    platform-driver-x86@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>, 
+    song@kernel.org
+Subject: Re: [PATCH] [v2] platform/x86/amd/hsmp: move hsmp_msg_desc_table[]
+ to hsmp.c
+In-Reply-To: <e7a45f09-16fb-4d15-b1e4-0a3ef3f25dda@amd.com>
+Message-ID: <39140d31-7cf3-fca0-ad84-1cb033b045c7@linux.intel.com>
+References: <20241030210019.2858358-1-arnd@kernel.org> <582e3574-1823-0c1b-25a8-6a4a6bf73f63@linux.intel.com> <e7a45f09-16fb-4d15-b1e4-0a3ef3f25dda@amd.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: multipart/mixed; boundary="8323328-1493538551-1731406777=:961"
 
-On Mon, 11 Nov 2024, Basavaraj Natikar wrote:
+  This message is in MIME format.  The first part should be readable text,
+  while the remaining parts are likely unreadable without MIME-aware tools.
 
-> AMD X3D processors, also known as AMD 3D V-Cache, feature dual Core
-> Complex Dies (CCDs) and enlarged L3 cache, enabling dynamic mode
-> switching between Frequency and Cache modes. To optimize performance,
-> implement the AMD 3D V-Cache Optimizer, which allows selecting either:
-> 
-> Frequency mode: cores within the faster CCD are prioritized before
-> those in the slower CCD.
-> 
-> Cache mode: cores within the larger L3 CCD are prioritized before
-> those in the smaller L3 CCD.
-> 
-> Co-developed-by: Perry Yuan <perry.yuan@amd.com>
-> Signed-off-by: Perry Yuan <perry.yuan@amd.com>
-> Co-developed-by: Mario Limonciello <mario.limonciello@amd.com>
-> Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
-> Reviewed-by: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
-> Reviewed-by: Armin Wolf <W_Armin@gmx.de>
-> Signed-off-by: Basavaraj Natikar <Basavaraj.Natikar@amd.com>
-> ---
->  MAINTAINERS                           |   7 ++
->  drivers/platform/x86/amd/Kconfig      |  12 ++
->  drivers/platform/x86/amd/Makefile     |   2 +
->  drivers/platform/x86/amd/x3d_vcache.c | 173 ++++++++++++++++++++++++++
->  4 files changed, 194 insertions(+)
->  create mode 100644 drivers/platform/x86/amd/x3d_vcache.c
-> 
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index 21fdaa19229a..429ac6496f42 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -965,6 +965,13 @@ Q:	https://patchwork.kernel.org/project/linux-rdma/list/
->  F:	drivers/infiniband/hw/efa/
->  F:	include/uapi/rdma/efa-abi.h
->  
-> +AMD 3D V-CACHE PERFORMANCE OPTIMIZER DRIVER
-> +M:	Basavaraj Natikar <Basavaraj.Natikar@amd.com>
-> +R:	Mario Limonciello <mario.limonciello@amd.com>
-> +L:	platform-driver-x86@vger.kernel.org
-> +S:	Supported
-> +F:	drivers/platform/x86/amd/x3d_vcache.c
-> +
->  AMD ADDRESS TRANSLATION LIBRARY (ATL)
->  M:	Yazen Ghannam <Yazen.Ghannam@amd.com>
->  L:	linux-edac@vger.kernel.org
-> diff --git a/drivers/platform/x86/amd/Kconfig b/drivers/platform/x86/amd/Kconfig
-> index f88682d36447..d73f691020d0 100644
-> --- a/drivers/platform/x86/amd/Kconfig
-> +++ b/drivers/platform/x86/amd/Kconfig
-> @@ -6,6 +6,18 @@
->  source "drivers/platform/x86/amd/pmf/Kconfig"
->  source "drivers/platform/x86/amd/pmc/Kconfig"
->  
-> +config AMD_3D_VCACHE
-> +	tristate "AMD 3D V-Cache Performance Optimizer Driver"
-> +	depends on X86_64 && ACPI
-> +	help
-> +	  The driver provides a sysfs interface, enabling the setting of a bias
-> +	  that alters CPU core reordering. This bias prefers cores with higher
-> +	  frequencies or larger L3 caches on processors supporting AMD 3D V-Cache
-> +	  technology.
-> +
-> +	  If you choose to compile this driver as a module the module will be
-> +	  called amd_3d_vcache.
-> +
->  config AMD_HSMP
+--8323328-1493538551-1731406777=:961
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 
-Hi,
+On Mon, 4 Nov 2024, Suma Hegde wrote:
 
-This doesn't apply cleanly to pxd86/for-next branch. Please 
-rebase.
+> Hi,
+>=20
+>=20
+> On 10/31/2024 3:22 PM, Ilpo J=C3=A4rvinen wrote:
+> > Caution: This message originated from an External Source. Use proper ca=
+ution
+> > when opening attachments, clicking links, or responding.
+> >=20
+> >=20
+> > On Wed, 30 Oct 2024, Arnd Bergmann wrote:
+> >=20
+> > > From: Arnd Bergmann <arnd@arndb.de>
+> > >=20
+> > > After the file got split, there are now W=3D1 warnings for users that
+> > > include it without referencing hsmp_msg_desc_table:
+> > >=20
+> > > In file included from arch/x86/include/asm/amd_hsmp.h:6,
+> > >                   from drivers/platform/x86/amd/hsmp/plat.c:12:
+> > > arch/x86/include/uapi/asm/amd_hsmp.h:91:35: error: 'hsmp_msg_desc_tab=
+le'
+> > > defined but not used [-Werror=3Dunused-const-variable=3D]
+> > >     91 | static const struct hsmp_msg_desc hsmp_msg_desc_table[] =3D =
+{
+> > >        |                                   ^~~~~~~~~~~~~~~~~~~
+> > >=20
+> > > The array was never meant to be used by userspace code, but was
+> > > left in the header as a reference for userspace programmers.
+> > >=20
+> > > Move the contents of the array into the one file that actually needs
+> > > it, and instead leave the URL of the new location in the uapi header
+> > > in case anyone is looking for it.
+> > >=20
+> > > Fixes: e47c018a0ee6 ("platform/x86/amd/hsmp: Move platform device spe=
+cific
+> > > code to plat.c")
+> > > Suggested-by: Hans de Goede <hdegoede@redhat.com>
+> > > Link:
+> > > https://lore.kernel.org/lkml/046687d8-1e2d-435b-adcb-26897bfd29f7@red=
+hat.com/
+> > > Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+> > Reviewed-by: Ilpo J=C3=A4rvinen <ilpo.jarvinen@linux.intel.com>
+> >=20
+> > I'll leave it into patchwork for a few days if somebody has some still
+> > unvoiced opinions on this.
+> AFAIK, Song Liu might be having some user space tool which makes use of t=
+his
+> hsmp_msg_desc_table[].
+>=20
+> Please refer
+> https://lore.kernel.org/platform-driver-x86/bfee54fe-1779-fea2-8365-31167=
+cc06972@amd.com/T/#mb563e1e07183e6bb5f85ab2cba4afe0deca1d3c3
+>=20
+> for the discussions on having this table in UAPI header.
+>=20
+> @Song Liu, this table is moved to hsmp.c now.=C2=A0 Please raise your con=
+cern here
+> if any.
 
--- 
+Given what that thread says about tests, I've decided to take careful=20
+approach of v1 instead of v2.
+
+I'd still appreciate if Song Liu could confirm if this is relevant for=20
+some tests or not. We can proceed with the move to .c file later if it=20
+turns out unused.
+
+--=20
  i.
 
->  	tristate "AMD HSMP Driver"
->  	depends on AMD_NB && X86_64 && ACPI
-> diff --git a/drivers/platform/x86/amd/Makefile b/drivers/platform/x86/amd/Makefile
-> index dcec0a46f8af..16e4cce02242 100644
-> --- a/drivers/platform/x86/amd/Makefile
-> +++ b/drivers/platform/x86/amd/Makefile
-> @@ -4,6 +4,8 @@
->  # AMD x86 Platform-Specific Drivers
->  #
->  
-> +obj-$(CONFIG_AMD_3D_VCACHE)     += amd_3d_vcache.o
-> +amd_3d_vcache-objs              := x3d_vcache.o
->  obj-$(CONFIG_AMD_PMC)		+= pmc/
->  amd_hsmp-y			:= hsmp.o
->  obj-$(CONFIG_AMD_HSMP)		+= amd_hsmp.o
-> diff --git a/drivers/platform/x86/amd/x3d_vcache.c b/drivers/platform/x86/amd/x3d_vcache.c
-> new file mode 100644
-> index 000000000000..a1a147277814
-> --- /dev/null
-> +++ b/drivers/platform/x86/amd/x3d_vcache.c
-> @@ -0,0 +1,173 @@
-> +// SPDX-License-Identifier: GPL-2.0-or-later
-> +/*
-> + * AMD 3D V-Cache Performance Optimizer Driver
-> + *
-> + * Copyright (c) 2024, Advanced Micro Devices, Inc.
-> + * All Rights Reserved.
-> + *
-> + * Authors: Basavaraj Natikar <Basavaraj.Natikar@amd.com>
-> + *          Perry Yuan <perry.yuan@amd.com>
-> + *          Mario Limonciello <mario.limonciello@amd.com>
-> + */
-> +
-> +#define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
-> +
-> +#include <linux/acpi.h>
-> +#include <linux/array_size.h>
-> +#include <linux/device.h>
-> +#include <linux/errno.h>
-> +#include <linux/module.h>
-> +#include <linux/mutex.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/pm.h>
-> +#include <linux/sysfs.h>
-> +#include <linux/uuid.h>
-> +
-> +static char *x3d_mode = "frequency";
-> +module_param(x3d_mode, charp, 0);
-> +MODULE_PARM_DESC(x3d_mode, "Initial 3D-VCache mode; 'frequency' (default) or 'cache'");
-> +
-> +#define DSM_REVISION_ID			0
-> +#define DSM_SET_X3D_MODE		1
-> +
-> +static guid_t x3d_guid = GUID_INIT(0xdff8e55f, 0xbcfd, 0x46fb, 0xba, 0x0a,
-> +				   0xef, 0xd0, 0x45, 0x0f, 0x34, 0xee);
-> +
-> +enum amd_x3d_mode_type {
-> +	MODE_INDEX_FREQ,
-> +	MODE_INDEX_CACHE,
-> +};
-> +
-> +static const char * const amd_x3d_mode_strings[] = {
-> +	[MODE_INDEX_FREQ] = "frequency",
-> +	[MODE_INDEX_CACHE] = "cache",
-> +};
-> +
-> +struct amd_x3d_dev {
-> +	struct device *dev;
-> +	acpi_handle ahandle;
-> +	/* To protect x3d mode setting */
-> +	struct mutex lock;
-> +	enum amd_x3d_mode_type curr_mode;
-> +};
-> +
-> +static int amd_x3d_get_mode(struct amd_x3d_dev *data)
-> +{
-> +	guard(mutex)(&data->lock);
-> +
-> +	return data->curr_mode;
-> +}
-> +
-> +static int amd_x3d_mode_switch(struct amd_x3d_dev *data, int new_state)
-> +{
-> +	union acpi_object *out, argv;
-> +
-> +	guard(mutex)(&data->lock);
-> +	argv.type = ACPI_TYPE_INTEGER;
-> +	argv.integer.value = new_state;
-> +
-> +	out = acpi_evaluate_dsm(data->ahandle, &x3d_guid, DSM_REVISION_ID,
-> +				DSM_SET_X3D_MODE, &argv);
-> +	if (!out) {
-> +		dev_err(data->dev, "failed to evaluate _DSM\n");
-> +		return -EINVAL;
-> +	}
-> +
-> +	data->curr_mode = new_state;
-> +
-> +	kfree(out);
-> +
-> +	return 0;
-> +}
-> +
-> +static ssize_t amd_x3d_mode_store(struct device *dev, struct device_attribute *attr,
-> +				  const char *buf, size_t count)
-> +{
-> +	struct amd_x3d_dev *data = dev_get_drvdata(dev);
-> +	int ret;
-> +
-> +	ret = sysfs_match_string(amd_x3d_mode_strings, buf);
-> +	if (ret < 0)
-> +		return ret;
-> +
-> +	ret = amd_x3d_mode_switch(data, ret);
-> +	if (ret < 0)
-> +		return ret;
-> +
-> +	return count;
-> +}
-> +
-> +static ssize_t amd_x3d_mode_show(struct device *dev, struct device_attribute *attr, char *buf)
-> +{
-> +	struct amd_x3d_dev *data = dev_get_drvdata(dev);
-> +	int mode = amd_x3d_get_mode(data);
-> +
-> +	return sysfs_emit(buf, "%s\n", amd_x3d_mode_strings[mode]);
-> +}
-> +static DEVICE_ATTR_RW(amd_x3d_mode);
-> +
-> +static struct attribute *amd_x3d_attrs[] = {
-> +	&dev_attr_amd_x3d_mode.attr,
-> +	NULL
-> +};
-> +ATTRIBUTE_GROUPS(amd_x3d);
-> +
-> +static int amd_x3d_resume_handler(struct device *dev)
-> +{
-> +	struct amd_x3d_dev *data = dev_get_drvdata(dev);
-> +	int ret = amd_x3d_get_mode(data);
-> +
-> +	return amd_x3d_mode_switch(data, ret);
-> +}
-> +
-> +static DEFINE_SIMPLE_DEV_PM_OPS(amd_x3d_pm, NULL, amd_x3d_resume_handler);
-> +
-> +static const struct acpi_device_id amd_x3d_acpi_ids[] = {
-> +	{"AMDI0101"},
-> +	{ },
-> +};
-> +MODULE_DEVICE_TABLE(acpi, amd_x3d_acpi_ids);
-> +
-> +static int amd_x3d_probe(struct platform_device *pdev)
-> +{
-> +	struct amd_x3d_dev *data;
-> +	acpi_handle handle;
-> +	int ret;
-> +
-> +	handle = ACPI_HANDLE(&pdev->dev);
-> +	if (!handle)
-> +		return -ENODEV;
-> +
-> +	if (!acpi_check_dsm(handle, &x3d_guid, DSM_REVISION_ID, BIT(DSM_SET_X3D_MODE)))
-> +		return -ENODEV;
-> +
-> +	data = devm_kzalloc(&pdev->dev, sizeof(*data), GFP_KERNEL);
-> +	if (!data)
-> +		return -ENOMEM;
-> +
-> +	data->dev = &pdev->dev;
-> +	data->ahandle = handle;
-> +	platform_set_drvdata(pdev, data);
-> +
-> +	ret = match_string(amd_x3d_mode_strings, ARRAY_SIZE(amd_x3d_mode_strings), x3d_mode);
-> +	if (ret < 0)
-> +		return dev_err_probe(&pdev->dev, -EINVAL, "invalid mode %s\n", x3d_mode);
-> +
-> +	devm_mutex_init(data->dev, &data->lock);
-> +
-> +	return amd_x3d_mode_switch(data, ret);
-> +}
-> +
-> +static struct platform_driver amd_3d_vcache_driver = {
-> +	.driver = {
-> +		.name = "amd_x3d_vcache",
-> +		.dev_groups = amd_x3d_groups,
-> +		.acpi_match_table = amd_x3d_acpi_ids,
-> +		.pm = pm_sleep_ptr(&amd_x3d_pm),
-> +	},
-> +	.probe = amd_x3d_probe,
-> +};
-> +module_platform_driver(amd_3d_vcache_driver);
-> +
-> +MODULE_DESCRIPTION("AMD 3D V-Cache Performance Optimizer Driver");
-> +MODULE_LICENSE("GPL");
-> 
+> > >   arch/x86/include/uapi/asm/amd_hsmp.h | 255 ++----------------------=
+---
+> > >   drivers/platform/x86/amd/hsmp/hsmp.c | 245 ++++++++++++++++++++++++=
++
+> > >   2 files changed, 255 insertions(+), 245 deletions(-)
+> > >=20
+> > > diff --git a/arch/x86/include/uapi/asm/amd_hsmp.h
+> > > b/arch/x86/include/uapi/asm/amd_hsmp.h
+> > > index e5d182c7373c..dfa6aa985ac4 100644
+> > > --- a/arch/x86/include/uapi/asm/amd_hsmp.h
+> > > +++ b/arch/x86/include/uapi/asm/amd_hsmp.h
+> > > @@ -1,5 +1,15 @@
+> > >   /* SPDX-License-Identifier: GPL-2.0 WITH Linux-syscall-note */
+> > >=20
+> > > +/*
+> > > + * See hsmp_msg_desc_table[] in:
+> > > + *
+> > > https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tr=
+ee/drivers/platform/x86/amd/hsmp.c
+> > > + *
+> > > + * for some information on number of input- and output arguments
+> > > + * for the various functions.
+> > > + *
+> > > + * Please find the supported list of messages and message definition
+> > > + * in the HSMP chapter of respective family/model PPR.
+> > > + */
+> > >   #ifndef _UAPI_ASM_X86_AMD_HSMP_H_
+> > >   #define _UAPI_ASM_X86_AMD_HSMP_H_
+> > >=20
+> > > @@ -81,251 +91,6 @@ struct hsmp_msg_desc {
+> > >        enum hsmp_msg_type type;
+> > >   };
+> > >=20
+> > > -/*
+> > > - * User may use these comments as reference, please find the
+> > > - * supported list of messages and message definition in the
+> > > - * HSMP chapter of respective family/model PPR.
+> > > - *
+> > > - * Not supported messages would return -ENOMSG.
+> > > - */
+> > > -static const struct hsmp_msg_desc hsmp_msg_desc_table[] =3D {
+> > > -     /* RESERVED */
+> > > -     {0, 0, HSMP_RSVD},
+> > > -
+> > > -     /*
+> > > -      * HSMP_TEST, num_args =3D 1, response_sz =3D 1
+> > > -      * input:  args[0] =3D xx
+> > > -      * output: args[0] =3D xx + 1
+> > > -      */
+> > > -     {1, 1, HSMP_GET},
+> > > -
+> > > -     /*
+> > > -      * HSMP_GET_SMU_VER, num_args =3D 0, response_sz =3D 1
+> > > -      * output: args[0] =3D smu fw ver
+> > > -      */
+> > > -     {0, 1, HSMP_GET},
+> > > -
+> > > -     /*
+> > > -      * HSMP_GET_PROTO_VER, num_args =3D 0, response_sz =3D 1
+> > > -      * output: args[0] =3D proto version
+> > > -      */
+> > > -     {0, 1, HSMP_GET},
+> > > -
+> > > -     /*
+> > > -      * HSMP_GET_SOCKET_POWER, num_args =3D 0, response_sz =3D 1
+> > > -      * output: args[0] =3D socket power in mWatts
+> > > -      */
+> > > -     {0, 1, HSMP_GET},
+> > > -
+> > > -     /*
+> > > -      * HSMP_SET_SOCKET_POWER_LIMIT, num_args =3D 1, response_sz =3D=
+ 0
+> > > -      * input: args[0] =3D power limit value in mWatts
+> > > -      */
+> > > -     {1, 0, HSMP_SET},
+> > > -
+> > > -     /*
+> > > -      * HSMP_GET_SOCKET_POWER_LIMIT, num_args =3D 0, response_sz =3D=
+ 1
+> > > -      * output: args[0] =3D socket power limit value in mWatts
+> > > -      */
+> > > -     {0, 1, HSMP_GET},
+> > > -
+> > > -     /*
+> > > -      * HSMP_GET_SOCKET_POWER_LIMIT_MAX, num_args =3D 0, response_sz=
+ =3D 1
+> > > -      * output: args[0] =3D maximuam socket power limit in mWatts
+> > > -      */
+> > > -     {0, 1, HSMP_GET},
+> > > -
+> > > -     /*
+> > > -      * HSMP_SET_BOOST_LIMIT, num_args =3D 1, response_sz =3D 0
+> > > -      * input: args[0] =3D apic id[31:16] + boost limit value in MHz=
+[15:0]
+> > > -      */
+> > > -     {1, 0, HSMP_SET},
+> > > -
+> > > -     /*
+> > > -      * HSMP_SET_BOOST_LIMIT_SOCKET, num_args =3D 1, response_sz =3D=
+ 0
+> > > -      * input: args[0] =3D boost limit value in MHz
+> > > -      */
+> > > -     {1, 0, HSMP_SET},
+> > > -
+> > > -     /*
+> > > -      * HSMP_GET_BOOST_LIMIT, num_args =3D 1, response_sz =3D 1
+> > > -      * input: args[0] =3D apic id
+> > > -      * output: args[0] =3D boost limit value in MHz
+> > > -      */
+> > > -     {1, 1, HSMP_GET},
+> > > -
+> > > -     /*
+> > > -      * HSMP_GET_PROC_HOT, num_args =3D 0, response_sz =3D 1
+> > > -      * output: args[0] =3D proc hot status
+> > > -      */
+> > > -     {0, 1, HSMP_GET},
+> > > -
+> > > -     /*
+> > > -      * HSMP_SET_XGMI_LINK_WIDTH, num_args =3D 1, response_sz =3D 0
+> > > -      * input: args[0] =3D min link width[15:8] + max link width[7:0=
+]
+> > > -      */
+> > > -     {1, 0, HSMP_SET},
+> > > -
+> > > -     /*
+> > > -      * HSMP_SET_DF_PSTATE, num_args =3D 1, response_sz =3D 0
+> > > -      * input: args[0] =3D df pstate[7:0]
+> > > -      */
+> > > -     {1, 0, HSMP_SET},
+> > > -
+> > > -     /* HSMP_SET_AUTO_DF_PSTATE, num_args =3D 0, response_sz =3D 0 *=
+/
+> > > -     {0, 0, HSMP_SET},
+> > > -
+> > > -     /*
+> > > -      * HSMP_GET_FCLK_MCLK, num_args =3D 0, response_sz =3D 2
+> > > -      * output: args[0] =3D fclk in MHz, args[1] =3D mclk in MHz
+> > > -      */
+> > > -     {0, 2, HSMP_GET},
+> > > -
+> > > -     /*
+> > > -      * HSMP_GET_CCLK_THROTTLE_LIMIT, num_args =3D 0, response_sz =
+=3D 1
+> > > -      * output: args[0] =3D core clock in MHz
+> > > -      */
+> > > -     {0, 1, HSMP_GET},
+> > > -
+> > > -     /*
+> > > -      * HSMP_GET_C0_PERCENT, num_args =3D 0, response_sz =3D 1
+> > > -      * output: args[0] =3D average c0 residency
+> > > -      */
+> > > -     {0, 1, HSMP_GET},
+> > > -
+> > > -     /*
+> > > -      * HSMP_SET_NBIO_DPM_LEVEL, num_args =3D 1, response_sz =3D 0
+> > > -      * input: args[0] =3D nbioid[23:16] + max dpm level[15:8] + min=
+ dpm
+> > > level[7:0]
+> > > -      */
+> > > -     {1, 0, HSMP_SET},
+> > > -
+> > > -     /*
+> > > -      * HSMP_GET_NBIO_DPM_LEVEL, num_args =3D 1, response_sz =3D 1
+> > > -      * input: args[0] =3D nbioid[23:16]
+> > > -      * output: args[0] =3D max dpm level[15:8] + min dpm level[7:0]
+> > > -      */
+> > > -     {1, 1, HSMP_GET},
+> > > -
+> > > -     /*
+> > > -      * HSMP_GET_DDR_BANDWIDTH, num_args =3D 0, response_sz =3D 1
+> > > -      * output: args[0] =3D max bw in Gbps[31:20] + utilised bw in
+> > > Gbps[19:8] +
+> > > -      * bw in percentage[7:0]
+> > > -      */
+> > > -     {0, 1, HSMP_GET},
+> > > -
+> > > -     /*
+> > > -      * HSMP_GET_TEMP_MONITOR, num_args =3D 0, response_sz =3D 1
+> > > -      * output: args[0] =3D temperature in degree celsius. [15:8] in=
+teger
+> > > part +
+> > > -      * [7:5] fractional part
+> > > -      */
+> > > -     {0, 1, HSMP_GET},
+> > > -
+> > > -     /*
+> > > -      * HSMP_GET_DIMM_TEMP_RANGE, num_args =3D 1, response_sz =3D 1
+> > > -      * input: args[0] =3D DIMM address[7:0]
+> > > -      * output: args[0] =3D refresh rate[3] + temperature range[2:0]
+> > > -      */
+> > > -     {1, 1, HSMP_GET},
+> > > -
+> > > -     /*
+> > > -      * HSMP_GET_DIMM_POWER, num_args =3D 1, response_sz =3D 1
+> > > -      * input: args[0] =3D DIMM address[7:0]
+> > > -      * output: args[0] =3D DIMM power in mW[31:17] + update rate in
+> > > ms[16:8] +
+> > > -      * DIMM address[7:0]
+> > > -      */
+> > > -     {1, 1, HSMP_GET},
+> > > -
+> > > -     /*
+> > > -      * HSMP_GET_DIMM_THERMAL, num_args =3D 1, response_sz =3D 1
+> > > -      * input: args[0] =3D DIMM address[7:0]
+> > > -      * output: args[0] =3D temperature in degree celsius[31:21] + u=
+pdate
+> > > rate in ms[16:8] +
+> > > -      * DIMM address[7:0]
+> > > -      */
+> > > -     {1, 1, HSMP_GET},
+> > > -
+> > > -     /*
+> > > -      * HSMP_GET_SOCKET_FREQ_LIMIT, num_args =3D 0, response_sz =3D =
+1
+> > > -      * output: args[0] =3D frequency in MHz[31:16] + frequency
+> > > source[15:0]
+> > > -      */
+> > > -     {0, 1, HSMP_GET},
+> > > -
+> > > -     /*
+> > > -      * HSMP_GET_CCLK_CORE_LIMIT, num_args =3D 1, response_sz =3D 1
+> > > -      * input: args[0] =3D apic id [31:0]
+> > > -      * output: args[0] =3D frequency in MHz[31:0]
+> > > -      */
+> > > -     {1, 1, HSMP_GET},
+> > > -
+> > > -     /*
+> > > -      * HSMP_GET_RAILS_SVI, num_args =3D 0, response_sz =3D 1
+> > > -      * output: args[0] =3D power in mW[31:0]
+> > > -      */
+> > > -     {0, 1, HSMP_GET},
+> > > -
+> > > -     /*
+> > > -      * HSMP_GET_SOCKET_FMAX_FMIN, num_args =3D 0, response_sz =3D 1
+> > > -      * output: args[0] =3D fmax in MHz[31:16] + fmin in MHz[15:0]
+> > > -      */
+> > > -     {0, 1, HSMP_GET},
+> > > -
+> > > -     /*
+> > > -      * HSMP_GET_IOLINK_BANDWITH, num_args =3D 1, response_sz =3D 1
+> > > -      * input: args[0] =3D link id[15:8] + bw type[2:0]
+> > > -      * output: args[0] =3D io bandwidth in Mbps[31:0]
+> > > -      */
+> > > -     {1, 1, HSMP_GET},
+> > > -
+> > > -     /*
+> > > -      * HSMP_GET_XGMI_BANDWITH, num_args =3D 1, response_sz =3D 1
+> > > -      * input: args[0] =3D link id[15:8] + bw type[2:0]
+> > > -      * output: args[0] =3D xgmi bandwidth in Mbps[31:0]
+> > > -      */
+> > > -     {1, 1, HSMP_GET},
+> > > -
+> > > -     /*
+> > > -      * HSMP_SET_GMI3_WIDTH, num_args =3D 1, response_sz =3D 0
+> > > -      * input: args[0] =3D min link width[15:8] + max link width[7:0=
+]
+> > > -      */
+> > > -     {1, 0, HSMP_SET},
+> > > -
+> > > -     /*
+> > > -      * HSMP_SET_PCI_RATE, num_args =3D 1, response_sz =3D 1
+> > > -      * input: args[0] =3D link rate control value
+> > > -      * output: args[0] =3D previous link rate control value
+> > > -      */
+> > > -     {1, 1, HSMP_SET},
+> > > -
+> > > -     /*
+> > > -      * HSMP_SET_POWER_MODE, num_args =3D 1, response_sz =3D 0
+> > > -      * input: args[0] =3D power efficiency mode[2:0]
+> > > -      */
+> > > -     {1, 0, HSMP_SET},
+> > > -
+> > > -     /*
+> > > -      * HSMP_SET_PSTATE_MAX_MIN, num_args =3D 1, response_sz =3D 0
+> > > -      * input: args[0] =3D min df pstate[15:8] + max df pstate[7:0]
+> > > -      */
+> > > -     {1, 0, HSMP_SET},
+> > > -
+> > > -     /*
+> > > -      * HSMP_GET_METRIC_TABLE_VER, num_args =3D 0, response_sz =3D 1
+> > > -      * output: args[0] =3D metrics table version
+> > > -      */
+> > > -     {0, 1, HSMP_GET},
+> > > -
+> > > -     /*
+> > > -      * HSMP_GET_METRIC_TABLE, num_args =3D 0, response_sz =3D 0
+> > > -      */
+> > > -     {0, 0, HSMP_GET},
+> > > -
+> > > -     /*
+> > > -      * HSMP_GET_METRIC_TABLE_DRAM_ADDR, num_args =3D 0, response_sz=
+ =3D 2
+> > > -      * output: args[0] =3D lower 32 bits of the address
+> > > -      * output: args[1] =3D upper 32 bits of the address
+> > > -      */
+> > > -     {0, 2, HSMP_GET},
+> > > -};
+> > > -
+> > >   /* Metrics table (supported only with proto version 6) */
+> > >   struct hsmp_metric_table {
+> > >        __u32 accumulation_counter;
+> > > diff --git a/drivers/platform/x86/amd/hsmp/hsmp.c
+> > > b/drivers/platform/x86/amd/hsmp/hsmp.c
+> > > index 82d8ba2e1204..5d21bc8b2fd7 100644
+> > > --- a/drivers/platform/x86/amd/hsmp/hsmp.c
+> > > +++ b/drivers/platform/x86/amd/hsmp/hsmp.c
+> > > @@ -37,6 +37,251 @@
+> > >=20
+> > >   static struct hsmp_plat_device hsmp_pdev;
+> > >=20
+> > > +/*
+> > > + * User may use these comments as reference, please find the
+> > > + * supported list of messages and message definition in the
+> > > + * HSMP chapter of respective family/model PPR.
+> > > + *
+> > > + * Not supported messages would return -ENOMSG.
+> > > + */
+> > > +static const struct hsmp_msg_desc hsmp_msg_desc_table[] =3D {
+> > > +     /* RESERVED */
+> > > +     {0, 0, HSMP_RSVD},
+> > > +
+> > > +     /*
+> > > +      * HSMP_TEST, num_args =3D 1, response_sz =3D 1
+> > > +      * input:  args[0] =3D xx
+> > > +      * output: args[0] =3D xx + 1
+> > > +      */
+> > > +     {1, 1, HSMP_GET},
+> > > +
+> > > +     /*
+> > > +      * HSMP_GET_SMU_VER, num_args =3D 0, response_sz =3D 1
+> > > +      * output: args[0] =3D smu fw ver
+> > > +      */
+> > > +     {0, 1, HSMP_GET},
+> > > +
+> > > +     /*
+> > > +      * HSMP_GET_PROTO_VER, num_args =3D 0, response_sz =3D 1
+> > > +      * output: args[0] =3D proto version
+> > > +      */
+> > > +     {0, 1, HSMP_GET},
+> > > +
+> > > +     /*
+> > > +      * HSMP_GET_SOCKET_POWER, num_args =3D 0, response_sz =3D 1
+> > > +      * output: args[0] =3D socket power in mWatts
+> > > +      */
+> > > +     {0, 1, HSMP_GET},
+> > > +
+> > > +     /*
+> > > +      * HSMP_SET_SOCKET_POWER_LIMIT, num_args =3D 1, response_sz =3D=
+ 0
+> > > +      * input: args[0] =3D power limit value in mWatts
+> > > +      */
+> > > +     {1, 0, HSMP_SET},
+> > > +
+> > > +     /*
+> > > +      * HSMP_GET_SOCKET_POWER_LIMIT, num_args =3D 0, response_sz =3D=
+ 1
+> > > +      * output: args[0] =3D socket power limit value in mWatts
+> > > +      */
+> > > +     {0, 1, HSMP_GET},
+> > > +
+> > > +     /*
+> > > +      * HSMP_GET_SOCKET_POWER_LIMIT_MAX, num_args =3D 0, response_sz=
+ =3D 1
+> > > +      * output: args[0] =3D maximuam socket power limit in mWatts
+> > > +      */
+> > > +     {0, 1, HSMP_GET},
+> > > +
+> > > +     /*
+> > > +      * HSMP_SET_BOOST_LIMIT, num_args =3D 1, response_sz =3D 0
+> > > +      * input: args[0] =3D apic id[31:16] + boost limit value in MHz=
+[15:0]
+> > > +      */
+> > > +     {1, 0, HSMP_SET},
+> > > +
+> > > +     /*
+> > > +      * HSMP_SET_BOOST_LIMIT_SOCKET, num_args =3D 1, response_sz =3D=
+ 0
+> > > +      * input: args[0] =3D boost limit value in MHz
+> > > +      */
+> > > +     {1, 0, HSMP_SET},
+> > > +
+> > > +     /*
+> > > +      * HSMP_GET_BOOST_LIMIT, num_args =3D 1, response_sz =3D 1
+> > > +      * input: args[0] =3D apic id
+> > > +      * output: args[0] =3D boost limit value in MHz
+> > > +      */
+> > > +     {1, 1, HSMP_GET},
+> > > +
+> > > +     /*
+> > > +      * HSMP_GET_PROC_HOT, num_args =3D 0, response_sz =3D 1
+> > > +      * output: args[0] =3D proc hot status
+> > > +      */
+> > > +     {0, 1, HSMP_GET},
+> > > +
+> > > +     /*
+> > > +      * HSMP_SET_XGMI_LINK_WIDTH, num_args =3D 1, response_sz =3D 0
+> > > +      * input: args[0] =3D min link width[15:8] + max link width[7:0=
+]
+> > > +      */
+> > > +     {1, 0, HSMP_SET},
+> > > +
+> > > +     /*
+> > > +      * HSMP_SET_DF_PSTATE, num_args =3D 1, response_sz =3D 0
+> > > +      * input: args[0] =3D df pstate[7:0]
+> > > +      */
+> > > +     {1, 0, HSMP_SET},
+> > > +
+> > > +     /* HSMP_SET_AUTO_DF_PSTATE, num_args =3D 0, response_sz =3D 0 *=
+/
+> > > +     {0, 0, HSMP_SET},
+> > > +
+> > > +     /*
+> > > +      * HSMP_GET_FCLK_MCLK, num_args =3D 0, response_sz =3D 2
+> > > +      * output: args[0] =3D fclk in MHz, args[1] =3D mclk in MHz
+> > > +      */
+> > > +     {0, 2, HSMP_GET},
+> > > +
+> > > +     /*
+> > > +      * HSMP_GET_CCLK_THROTTLE_LIMIT, num_args =3D 0, response_sz =
+=3D 1
+> > > +      * output: args[0] =3D core clock in MHz
+> > > +      */
+> > > +     {0, 1, HSMP_GET},
+> > > +
+> > > +     /*
+> > > +      * HSMP_GET_C0_PERCENT, num_args =3D 0, response_sz =3D 1
+> > > +      * output: args[0] =3D average c0 residency
+> > > +      */
+> > > +     {0, 1, HSMP_GET},
+> > > +
+> > > +     /*
+> > > +      * HSMP_SET_NBIO_DPM_LEVEL, num_args =3D 1, response_sz =3D 0
+> > > +      * input: args[0] =3D nbioid[23:16] + max dpm level[15:8] + min=
+ dpm
+> > > level[7:0]
+> > > +      */
+> > > +     {1, 0, HSMP_SET},
+> > > +
+> > > +     /*
+> > > +      * HSMP_GET_NBIO_DPM_LEVEL, num_args =3D 1, response_sz =3D 1
+> > > +      * input: args[0] =3D nbioid[23:16]
+> > > +      * output: args[0] =3D max dpm level[15:8] + min dpm level[7:0]
+> > > +      */
+> > > +     {1, 1, HSMP_GET},
+> > > +
+> > > +     /*
+> > > +      * HSMP_GET_DDR_BANDWIDTH, num_args =3D 0, response_sz =3D 1
+> > > +      * output: args[0] =3D max bw in Gbps[31:20] + utilised bw in
+> > > Gbps[19:8] +
+> > > +      * bw in percentage[7:0]
+> > > +      */
+> > > +     {0, 1, HSMP_GET},
+> > > +
+> > > +     /*
+> > > +      * HSMP_GET_TEMP_MONITOR, num_args =3D 0, response_sz =3D 1
+> > > +      * output: args[0] =3D temperature in degree celsius. [15:8] in=
+teger
+> > > part +
+> > > +      * [7:5] fractional part
+> > > +      */
+> > > +     {0, 1, HSMP_GET},
+> > > +
+> > > +     /*
+> > > +      * HSMP_GET_DIMM_TEMP_RANGE, num_args =3D 1, response_sz =3D 1
+> > > +      * input: args[0] =3D DIMM address[7:0]
+> > > +      * output: args[0] =3D refresh rate[3] + temperature range[2:0]
+> > > +      */
+> > > +     {1, 1, HSMP_GET},
+> > > +
+> > > +     /*
+> > > +      * HSMP_GET_DIMM_POWER, num_args =3D 1, response_sz =3D 1
+> > > +      * input: args[0] =3D DIMM address[7:0]
+> > > +      * output: args[0] =3D DIMM power in mW[31:17] + update rate in
+> > > ms[16:8] +
+> > > +      * DIMM address[7:0]
+> > > +      */
+> > > +     {1, 1, HSMP_GET},
+> > > +
+> > > +     /*
+> > > +      * HSMP_GET_DIMM_THERMAL, num_args =3D 1, response_sz =3D 1
+> > > +      * input: args[0] =3D DIMM address[7:0]
+> > > +      * output: args[0] =3D temperature in degree celsius[31:21] + u=
+pdate
+> > > rate in ms[16:8] +
+> > > +      * DIMM address[7:0]
+> > > +      */
+> > > +     {1, 1, HSMP_GET},
+> > > +
+> > > +     /*
+> > > +      * HSMP_GET_SOCKET_FREQ_LIMIT, num_args =3D 0, response_sz =3D =
+1
+> > > +      * output: args[0] =3D frequency in MHz[31:16] + frequency
+> > > source[15:0]
+> > > +      */
+> > > +     {0, 1, HSMP_GET},
+> > > +
+> > > +     /*
+> > > +      * HSMP_GET_CCLK_CORE_LIMIT, num_args =3D 1, response_sz =3D 1
+> > > +      * input: args[0] =3D apic id [31:0]
+> > > +      * output: args[0] =3D frequency in MHz[31:0]
+> > > +      */
+> > > +     {1, 1, HSMP_GET},
+> > > +
+> > > +     /*
+> > > +      * HSMP_GET_RAILS_SVI, num_args =3D 0, response_sz =3D 1
+> > > +      * output: args[0] =3D power in mW[31:0]
+> > > +      */
+> > > +     {0, 1, HSMP_GET},
+> > > +
+> > > +     /*
+> > > +      * HSMP_GET_SOCKET_FMAX_FMIN, num_args =3D 0, response_sz =3D 1
+> > > +      * output: args[0] =3D fmax in MHz[31:16] + fmin in MHz[15:0]
+> > > +      */
+> > > +     {0, 1, HSMP_GET},
+> > > +
+> > > +     /*
+> > > +      * HSMP_GET_IOLINK_BANDWITH, num_args =3D 1, response_sz =3D 1
+> > > +      * input: args[0] =3D link id[15:8] + bw type[2:0]
+> > > +      * output: args[0] =3D io bandwidth in Mbps[31:0]
+> > > +      */
+> > > +     {1, 1, HSMP_GET},
+> > > +
+> > > +     /*
+> > > +      * HSMP_GET_XGMI_BANDWITH, num_args =3D 1, response_sz =3D 1
+> > > +      * input: args[0] =3D link id[15:8] + bw type[2:0]
+> > > +      * output: args[0] =3D xgmi bandwidth in Mbps[31:0]
+> > > +      */
+> > > +     {1, 1, HSMP_GET},
+> > > +
+> > > +     /*
+> > > +      * HSMP_SET_GMI3_WIDTH, num_args =3D 1, response_sz =3D 0
+> > > +      * input: args[0] =3D min link width[15:8] + max link width[7:0=
+]
+> > > +      */
+> > > +     {1, 0, HSMP_SET},
+> > > +
+> > > +     /*
+> > > +      * HSMP_SET_PCI_RATE, num_args =3D 1, response_sz =3D 1
+> > > +      * input: args[0] =3D link rate control value
+> > > +      * output: args[0] =3D previous link rate control value
+> > > +      */
+> > > +     {1, 1, HSMP_SET},
+> > > +
+> > > +     /*
+> > > +      * HSMP_SET_POWER_MODE, num_args =3D 1, response_sz =3D 0
+> > > +      * input: args[0] =3D power efficiency mode[2:0]
+> > > +      */
+> > > +     {1, 0, HSMP_SET},
+> > > +
+> > > +     /*
+> > > +      * HSMP_SET_PSTATE_MAX_MIN, num_args =3D 1, response_sz =3D 0
+> > > +      * input: args[0] =3D min df pstate[15:8] + max df pstate[7:0]
+> > > +      */
+> > > +     {1, 0, HSMP_SET},
+> > > +
+> > > +     /*
+> > > +      * HSMP_GET_METRIC_TABLE_VER, num_args =3D 0, response_sz =3D 1
+> > > +      * output: args[0] =3D metrics table version
+> > > +      */
+> > > +     {0, 1, HSMP_GET},
+> > > +
+> > > +     /*
+> > > +      * HSMP_GET_METRIC_TABLE, num_args =3D 0, response_sz =3D 0
+> > > +      */
+> > > +     {0, 0, HSMP_GET},
+> > > +
+> > > +     /*
+> > > +      * HSMP_GET_METRIC_TABLE_DRAM_ADDR, num_args =3D 0, response_sz=
+ =3D 2
+> > > +      * output: args[0] =3D lower 32 bits of the address
+> > > +      * output: args[1] =3D upper 32 bits of the address
+> > > +      */
+> > > +     {0, 2, HSMP_GET},
+> > > +};
+> > > +
+> > >   /*
+> > >    * Send a message to the HSMP port via PCI-e config space registers
+> > >    * or by writing to MMIO space.
+>=20
+> Thanks and Regards,
+>=20
+> Suma
+>=20
+--8323328-1493538551-1731406777=:961--
