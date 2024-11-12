@@ -1,70 +1,68 @@
-Received: from NAM12-DM6-obe.outbound.protection.outlook.com (mail-dm6nam12on2082.outbound.protection.outlook.com [40.107.243.82])
+Received: from NAM02-SN1-obe.outbound.protection.outlook.com (mail-sn1nam02on2082.outbound.protection.outlook.com [40.107.96.82])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 294F52309A8
-	for <platform-driver-x86@vger.kernel.org>; Tue, 12 Nov 2024 12:05:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.243.82
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 465FC1F7785
+	for <platform-driver-x86@vger.kernel.org>; Tue, 12 Nov 2024 12:05:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.96.82
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1731413143; cv=fail; b=UEXYTshyGciLEKhrOV27oJpYTUpog2WOboRVWBCZcP7lo3zfK44GqCNzrd7xafO1HXg4zqoxevJM7Tv3LzIOQUnQGskDnWvkQfieAoPzvWcJ6bVPxqfzCi9Uv0kABhWF3z84qcIute4dKsNeZN6fmDwq93tuOJym3h/z3y/Ci+I=
+	t=1731413145; cv=fail; b=LeQAp1X/vGTKFm3bHquzq7B6LXxGOTsHVZMdzrSLhZgapqSx6ECaBeoB2NZpmHvYNNeI9KOXwS88XDLTO9/Mp28y535vtFCCRuu8ZWeoVYxt3R9qCen981Iv/gLxc0GRumTJcwOMNx61IlnNFe3FSkMVt8C5F+IxZr40weKli+4=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1731413143; c=relaxed/simple;
-	bh=xXbGtObNc+o0qUYXTYOKgkiMKunS0FGjly1E6A8WMDU=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=E1h7IMOBRJ1CkOLEIeR5A1+yF0RRAgReW8ZPploM740pRGE0n7eeAtdaC10UggbVBtCzdd0uTmT8sTi9sh3usr9/7aQJG8k5/ekcYxJdJsVV2gUfatHwxJkETD8l4wpgtk9z5vvxonciUDajIqZJFx/sSLHbKHmhanflKFzWe+k=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=xNzxB/yA; arc=fail smtp.client-ip=40.107.243.82
+	s=arc-20240116; t=1731413145; c=relaxed/simple;
+	bh=uHar14TLvBTK9oahdYL04rGLPEUfcIOtmM0q3ZsIhzc=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=PtBupDbMeX0jdAD2sXztTy0gDQaaKxcH7ufBGmFW9X28zFZOjPHnHmKsKOZ6A3cK8fjLIlMNw9DcqcBUz++q+vr2sKwZv7S9oGKKFalzMnwzrCsGRXPCnN2kXU5BrtluEAmZE8t6JD0lt9Eyiagn8h/ZU/FsnlVUbTmssHaeYI0=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=MnQYOjSq; arc=fail smtp.client-ip=40.107.96.82
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
 Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="xNzxB/yA"
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="MnQYOjSq"
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=yj3H240IhqAM5ZJtv4MTM0BwZvVSd2Ud4IDu1VyMzmHjS3em8LvQBMIbGSj3Wio1JoHBRD0o/9rTn7vXnVlAY+x7N+6mkYbGUPpcKIecOhb/r1yslqi+CyU6T7pMiyX9XMtgpmTPJ090R4evAIpkc8eyFg2YTLsHX60AFxGH14nhJrzn1Z73bvxoX3pgGUbS4436dbN8UQd4fTXGlm8Gml/GndOQ8bSbniw6TLz/KEfLFijAlqTtSzP0PHklh+iP5JPZjohlLQO0q8IDmcFKGiBHV1AYB6IYShS2gqzPBWlvbSTqcT6PP5h/49efDW3v2sSFD6MTh0h0LMbDnMbHCw==
+ b=CTixpgC32f3zDZbgqVl+j4AeXNw0vbJmbX5VYKRpipqD2XubWKnNC1P+M/QT+4U8J8e/nRF2Vt0Eo1iQoEnmk/P3jgKqozRjauajANPlsfhJ0x0db3GYLbgoeXLTWJSaW1fDhWS3Z+RmMcOH2iu2Ze7FDRrN5k+VKukBadRHu/SArnHyT0YsSpM2zn631FGx55EDBuVRI2sMEHk6yo9Se7nNCHdQiFcu9ckYxTPdC5ky1Sv9L+dffyUV39YugwYpCUHRcL8/GgDrLmf7WGxvYGkXiYruf9gRC1DM1mkMsx96XnBuPQ9JcuPCKBIG/wRiG29u2DIlztfEbJrhwbtHtA==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=dHaMh6KllCW61gKrju6d7FNke66/hSSsvBxVOthg1cE=;
- b=mYU5ltbw2Cht6myMIIfIXc1mNDsDAI/L8ji0a/k6/bXbW7bsaDYBuhmBdZI0ICUEYb0KOrZ5EtBSAXMGDfPiIp4pv7vcezlYejfDC0syQbpV8iSeJpauc7NUAmQ8UPI/0tR85HBxgF4fw51QaY7LqjamRiTb0XLT73eokyUO7Net8l3SkDEyP1+517rEnLtevHEcazUWOBYmk0PcPoFsb5pAcjMUv3kxLwYbLOPZea2/x7j7kxCwHA4pL5UgKxKpEztWNxJomQmIjFJ4asgmc6delnruure1ku51/eK3qXy6cIpqG0J0PAzeMAYhjqTGnwOMZSjupCma0x+RfAW9Kg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=temperror (sender ip
- is 165.204.84.17) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=amd.com;
- dmarc=temperror action=none header.from=amd.com; dkim=none (message not
- signed); arc=none (0)
+ bh=hxdYHHDEjlGCOOAvAIeefxAKH3G2HyDyqQimqDi6cGs=;
+ b=oPRhPXsYagXEQ3FhZ2g3VZ/G0ZB3x+Jm7RD7UzVkgmgVou0oAC2xZQPC3Tj189NVRrsth+LnUDCZVhVr9XMBWkczxC2xqTl6Sr8Krkg2Qi4j4hWbT42kcyEsyfpbVGu0JzVImkrWrDnWSqK1DGG9ONVSHFbujgZG6DaAsRcUcr0C3wcTehUVUFYf+UyUc5rMZ9GDG1RP9qgifPdToxVV9p23WnHXSS9Vv+FLJdelEekj+VJwmh5CQgpJI6Q2tlkQkwx4JQfMQsXa/T8hn2IHVYlkP50FROJWexh87QOO2kxSAZU1yVByVBOUuB882LsFUgFcNga+VA/3D9C8Q6h6PA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=amd.com;
+ dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
+ header.from=amd.com; dkim=none (message not signed); arc=none (0)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=dHaMh6KllCW61gKrju6d7FNke66/hSSsvBxVOthg1cE=;
- b=xNzxB/yAw8kbYsaZkyfUrRIF89cAOaByya3Nxh/QoaWEd2QwCWHoajaC4FlD9u04j02VUeslKBD1yzHULjRnrpITL3vrIhqbDaclYckLP2CRnk7IpFFlWaLIZXBcEbY7s0AHkoQMxnGohBaNDqNWJOdgbMXCMnzzseJ01BNUGZk=
-Received: from PH7P221CA0050.NAMP221.PROD.OUTLOOK.COM (2603:10b6:510:33c::13)
- by MW3PR12MB4395.namprd12.prod.outlook.com (2603:10b6:303:5c::23) with
+ bh=hxdYHHDEjlGCOOAvAIeefxAKH3G2HyDyqQimqDi6cGs=;
+ b=MnQYOjSqw2leO2ENpbkuZ/IxA7G5YBVRBvH2wm7RVTBdrMG3pz3z4+mB3ie2Z7VdhWCgX54mDKZz83LmSgdaBgdlRa4aFnkfM/xbMQgYnlHZHNMiLAEN67a+4SwKxebojSHMpM1/wPhDIWx7ODG2rXKwm4aQfULKdN5VKI96+mA=
+Received: from CY5PR16CA0016.namprd16.prod.outlook.com (2603:10b6:930:10::26)
+ by CY8PR12MB8265.namprd12.prod.outlook.com (2603:10b6:930:72::8) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8158.17; Tue, 12 Nov
- 2024 12:05:20 +0000
-Received: from CY4PEPF0000E9DA.namprd05.prod.outlook.com
- (2603:10b6:510:33c:cafe::8c) by PH7P221CA0050.outlook.office365.com
- (2603:10b6:510:33c::13) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8137.29 via Frontend
- Transport; Tue, 12 Nov 2024 12:05:20 +0000
-X-MS-Exchange-Authentication-Results: spf=temperror (sender IP is
- 165.204.84.17) smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=temperror action=none header.from=amd.com;
-Received-SPF: TempError (protection.outlook.com: error in processing during
- lookup of amd.com: DNS Timeout)
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8137.27; Tue, 12 Nov
+ 2024 12:05:17 +0000
+Received: from CY4PEPF0000E9D7.namprd05.prod.outlook.com
+ (2603:10b6:930:10:cafe::fd) by CY5PR16CA0016.outlook.office365.com
+ (2603:10b6:930:10::26) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8158.16 via Frontend
+ Transport; Tue, 12 Nov 2024 12:05:17 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
 Received: from SATLEXMB04.amd.com (165.204.84.17) by
- CY4PEPF0000E9DA.mail.protection.outlook.com (10.167.241.73) with Microsoft
+ CY4PEPF0000E9D7.mail.protection.outlook.com (10.167.241.70) with Microsoft
  SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.8158.14 via Frontend Transport; Tue, 12 Nov 2024 12:05:18 +0000
+ 15.20.8158.14 via Frontend Transport; Tue, 12 Nov 2024 12:05:17 +0000
 Received: from amd.amd.com (10.180.168.240) by SATLEXMB04.amd.com
  (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Tue, 12 Nov
- 2024 06:05:16 -0600
+ 2024 06:05:14 -0600
 From: Suma Hegde <suma.hegde@amd.com>
 To: <platform-driver-x86@vger.kernel.org>
 CC: <ilpo.jarvinen@linux.intel.com>, <hdegoede@redhat.com>, Suma Hegde
 	<suma.hegde@amd.com>, Naveen Krishna Chatradhi
 	<naveenkrishna.chatradhi@amd.com>
-Subject: [v2 2/2] platform/x86/amd/hsmp: Change the error type
-Date: Tue, 12 Nov 2024 12:04:50 +0000
-Message-ID: <20241112120450.2407125-2-suma.hegde@amd.com>
+Subject: [v2 1/2] platform/x86/amd/hsmp: Add new error code and error logs
+Date: Tue, 12 Nov 2024 12:04:49 +0000
+Message-ID: <20241112120450.2407125-1-suma.hegde@amd.com>
 X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20241112120450.2407125-1-suma.hegde@amd.com>
-References: <20241112120450.2407125-1-suma.hegde@amd.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -77,95 +75,169 @@ X-ClientProxiedBy: SATLEXMB03.amd.com (10.181.40.144) To SATLEXMB04.amd.com
  (10.181.40.145)
 X-EOPAttributedMessage: 0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CY4PEPF0000E9DA:EE_|MW3PR12MB4395:EE_
-X-MS-Office365-Filtering-Correlation-Id: 643600a7-f278-4581-272d-08dd031246eb
+X-MS-TrafficTypeDiagnostic: CY4PEPF0000E9D7:EE_|CY8PR12MB8265:EE_
+X-MS-Office365-Filtering-Correlation-Id: a6baa36f-bf72-4958-b6db-08dd031245d1
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|36860700013|376014|82310400026|1800799024;
+	BCL:0;ARA:13230040|1800799024|36860700013|376014|82310400026;
 X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?w0up2Y6GituNvdZRrFfjMLqez81GLWOBB9DX7MJVWziYjIJXgmlIv+CmXs3/?=
- =?us-ascii?Q?1oLsIvCba9Lmr/zc5MndXtN4NRUIfW4/8/nxld7yhxG852sMYJrtIYTxNAyl?=
- =?us-ascii?Q?o+wKoaO46l74cF+fM1vCnp5jmBPAXymHpUT+gyMCcMyrXdqVctBfz/LcClSr?=
- =?us-ascii?Q?s+5KZ1RdCLgyTqWzLRpeV/ZGS0ANY9IcI8rp6SXU/MssH0x1XM90ZOHNwqrr?=
- =?us-ascii?Q?K6P3eqnVR3sjfwGJo99D4NonLf4t5Oo7FMf9oIV7K/CMirB1+3aVh0lclSET?=
- =?us-ascii?Q?XdLt4JFG948a54uQtTvPivyjLpjWGyY//d9jCM97Y0uPG3qJgaF+musX/mUh?=
- =?us-ascii?Q?jqu2AD0krb4G5Ap8Ca5Qy9f8OC5uEpxgstBnFMm7q+Zx96NzCCy9BE9UCzmP?=
- =?us-ascii?Q?xN20HgtFWmQDO6Wco5WM1NbeimOvRcuM2oMyo7FCCArdznekVIQFiyr1WlgS?=
- =?us-ascii?Q?sI4izN5ZwIQosfM0fbaWe4l02tmYn+UtiGWdu6sgT8nt/WOE23WdvOd1KUCg?=
- =?us-ascii?Q?z2Vq83pEY7L3ciKaIQLVTA2dvWtVzDry0wNy585KkjoVjwdlbWO0N7x1fZRl?=
- =?us-ascii?Q?lqm+oOyNb+vJ/5yGeNOYQEmpsFG6RprpjOEXRh40HbbqCpDHY/UpXOCcd44y?=
- =?us-ascii?Q?neSyzEAn7Y057AmVQU+6d12h0OFBNqf09JmWr+uau9yk6hPIyH+MjEHiY0CD?=
- =?us-ascii?Q?78JhtahCsXnDew9nP65KziLdqr1Xa8X6ON9H/NnflUoYdnIr/5lR3FyFjkY4?=
- =?us-ascii?Q?zy2QWWmwfoF9QAtDydfkMPLq/0XOf53SvkjDeCVJ4enoS8g71Olx5gTpnW/h?=
- =?us-ascii?Q?w7tHoKXnSvqhGqDld+fN+gn3ARuD0H6YYG0O8PTk4BONoJWVEHTF8eqK+ENq?=
- =?us-ascii?Q?hwItTmj883+rD8Y1jgxkIreUHhhtI0bwF0lDT1noTDR5KtJC4/knb4UxCmCy?=
- =?us-ascii?Q?i455BFbXe427rNtc8MGiu28cJF/Y2aXsGn9wddLChM/r2o5CRSnPlWXk6lnJ?=
- =?us-ascii?Q?7d4d8ulNAYwOiCHRu9ZEW9xFCvCUCxje2A8HDWA7jPvVHsYSySQZHIeZad0t?=
- =?us-ascii?Q?2YaiPis45jtrfyHbSQe20jvrDPz9efZT70c0RWRvWQabgkK9RhWJgkDB4PPl?=
- =?us-ascii?Q?Ink3jzqXEGrKR6mw8GtJ8P8cVl2LSRJ1EzN8Nt0gYqZb09JoNzJv1FTbQDU+?=
- =?us-ascii?Q?x4MVHEZL0q4Qmm0A+M+pn2WzqyhczEp7tmZOoniJYvd3RyITY0QAKpT08EXc?=
- =?us-ascii?Q?8xNV3AR86BLLLqNELeb4cLMtGe0EkkpV5CawM77T1Q896DLoaXONriq5jemT?=
- =?us-ascii?Q?c93lXGVVWQFxf8qjvd8fl1KsUAMuaVbDd0A9/52JKveV+75rsyctrqqr6RFC?=
- =?us-ascii?Q?Q0ERez//twxXg9XeDr8a2r75W1TjmqW3vrU5QPMsy2pjK/5CBg=3D=3D?=
+	=?us-ascii?Q?TJmMWNZlU3uy+Y4AkdNHIGveIOPb/v1r6db3Pfnr9ermqAmD9uoHregWOMek?=
+ =?us-ascii?Q?OsoZP85/04DCWGCXWKXpAJr5ndm8WWE6LeWLSvv/zTf8rOzy/CkQKBJtiLF8?=
+ =?us-ascii?Q?9Zy/sAbUH/ljLUIHf9jJnOY0yWV1ZPxO1ibhZcUplecBbS1EULCjy5rUBfFf?=
+ =?us-ascii?Q?kRvC8kTZMO7xbVJL8fbaStFEIU3FyajKd6nGkbvouxdawICxRGodyO0reOXm?=
+ =?us-ascii?Q?vn+Z9Y6b+1+n9cbjmy/ohbOAfkYWoUFfL1zMq7zJf7x8wI5YyYxkbNIF6Quo?=
+ =?us-ascii?Q?UdIHqSLZjYqH4wjW6mU01H0WZfUOI7m5Hjzj+QLjEwwOShkm5bqtYAI1tHmx?=
+ =?us-ascii?Q?nBAhfEv7jOF+/IRB0TPNGv8QhDoi4ybZdBu72/A61ZQJEf0TEptPwKEq675u?=
+ =?us-ascii?Q?gJl1GqF9ZzQ1KeOe2aPzUaxzHKxB3IGt7JNlzmlFRN5CNXvbsNsXh0ckyyc6?=
+ =?us-ascii?Q?KRi7smHS0KtLHgZD1c8Dh2+VwSmFPvmBodVdqVy2VtRshdmxx2v069ooxTLl?=
+ =?us-ascii?Q?Yy7scyT8DYBjH8TJ+wP6RA+SQ8tRVNYAy+JQiTQlXF/wDG1gcO0S532XfyhV?=
+ =?us-ascii?Q?vDG9qoOhKZ18YTIcK43b0g5eFQgDxCXYRr3J24hl1TUU+0RSzPwXAU3WVRXM?=
+ =?us-ascii?Q?9GHNbWcKJZ7ASlRRPtB8bTMKaN23jOyRnBCvKjknNgR9GUbWAznYddTOe3tX?=
+ =?us-ascii?Q?hzBTpQIRvzvQd8qO/D0Hq9r64sfLdkWW0LTIqYCU51deF6yqGAyLu56Q2C0i?=
+ =?us-ascii?Q?757bXcZ8m9k0l12JB9BQDsOByx50sEW3x2xvqOTEp4oelIuNXiJZk05nZS2g?=
+ =?us-ascii?Q?w2rSK/dG2seX5Z+AwF7SlPoUhkizTlFNKSqUoVbvYVzgMs3m2GLrc1m1g+zJ?=
+ =?us-ascii?Q?xG8dpWlgdjtr1PfGf+VSb2kgs5SeTj36ZEtAo6l1RKxkcCx80RX3k+OyOE74?=
+ =?us-ascii?Q?fL4lSVPtIq5jc/3F5dvzTIrVFc80cx1z6R6nYFtbBFUegL4hQBYSdF4kFlme?=
+ =?us-ascii?Q?YHnvQ397mQ2d3RAAMasdmwSF/0n4ucq2ui+z8dDcwijIW7mY9VOdXMAY/tmL?=
+ =?us-ascii?Q?4vY0sbIDRwcIWQ6HPM71iFVf/pknNUnnOL0uUESLABYCXdF8FslBCMgoH3ZT?=
+ =?us-ascii?Q?apKgGRMtto52l4TyaiIM6gz2QOr+oj0Ko9XWdT93tqImPL/vznkSoI+f/+0k?=
+ =?us-ascii?Q?WwwAse7RFjG8niFq6u804qBSar2JwFZzoTj9hplsFU2od+ozhbrNbVXaTtQ0?=
+ =?us-ascii?Q?B9mtmebrWUZY6NCZLzg1UNSk8Ae9bhnwCLWgkfCOxY4wi7lAQvZ4m/E19W3b?=
+ =?us-ascii?Q?U9gLZP8bmc1HLlxRqnFWx9+htSV5gjDwAW1ylRKL99cM/w4voWjJleNbl4ho?=
+ =?us-ascii?Q?/4bMxstsmVK0fkbTZzi5rMZoSucNdPraukNbWGZz33GGKjJyuw=3D=3D?=
 X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(36860700013)(376014)(82310400026)(1800799024);DIR:OUT;SFP:1101;
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(1800799024)(36860700013)(376014)(82310400026);DIR:OUT;SFP:1101;
 X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 12 Nov 2024 12:05:18.8870
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 12 Nov 2024 12:05:17.0426
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 643600a7-f278-4581-272d-08dd031246eb
+X-MS-Exchange-CrossTenant-Network-Message-Id: a6baa36f-bf72-4958-b6db-08dd031245d1
 X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
 X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
 X-MS-Exchange-CrossTenant-AuthSource:
-	CY4PEPF0000E9DA.namprd05.prod.outlook.com
+	CY4PEPF0000E9D7.namprd05.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Anonymous
 X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW3PR12MB4395
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY8PR12MB8265
 
-When file is opened in WRITE only mode, then GET messages are not allowed
-and when file is opened in READ only mode, SET messages are not allowed.
-In these scenerios, return error EPERM to userspace instead of EINVALID.
+Firmware is updated to send HSMP_ERR_PREREQ_NOT_SATISFIED(0xFD) and
+HSMP_ERR_SMU_BUSY(0xFC) error codes. Add them here.
+
+Add error logs to make it easy to understand the failure reason for
+different error conditions.
+
+Replace pr_err() with dev_err() to identify the driver printing the
+error.
 
 Signed-off-by: Suma Hegde <suma.hegde@amd.com>
 Reviewed-by: Naveen Krishna Chatradhi <naveenkrishna.chatradhi@amd.com>
 ---
 Changes from v1:
-None, new patch(after splitting the 1st patch).
+EPERM error return code is moved to next patch as per Ilpo's suggestion.
 
- drivers/platform/x86/amd/hsmp/hsmp.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ drivers/platform/x86/amd/hsmp/hsmp.c | 34 ++++++++++++++++++++--------
+ 1 file changed, 24 insertions(+), 10 deletions(-)
 
 diff --git a/drivers/platform/x86/amd/hsmp/hsmp.c b/drivers/platform/x86/amd/hsmp/hsmp.c
-index ce91b2cefca2..f29dd93fbf0b 100644
+index 82d8ba2e1204..ce91b2cefca2 100644
 --- a/drivers/platform/x86/amd/hsmp/hsmp.c
 +++ b/drivers/platform/x86/amd/hsmp/hsmp.c
-@@ -262,7 +262,7 @@ long hsmp_ioctl(struct file *fp, unsigned int cmd, unsigned long arg)
- 		 * Execute only set/configure commands
- 		 */
- 		if (hsmp_msg_desc_table[msg.msg_id].type != HSMP_SET)
--			return -EINVAL;
-+			return -EPERM;
- 		break;
- 	case FMODE_READ:
- 		/*
-@@ -270,7 +270,7 @@ long hsmp_ioctl(struct file *fp, unsigned int cmd, unsigned long arg)
- 		 * Execute only get/monitor commands
- 		 */
- 		if (hsmp_msg_desc_table[msg.msg_id].type != HSMP_GET)
--			return -EINVAL;
-+			return -EPERM;
- 		break;
- 	case FMODE_READ | FMODE_WRITE:
- 		/*
-@@ -279,7 +279,7 @@ long hsmp_ioctl(struct file *fp, unsigned int cmd, unsigned long arg)
- 		 */
- 		break;
- 	default:
--		return -EINVAL;
-+		return -EPERM;
+@@ -7,8 +7,6 @@
+  * This file provides a device implementation for HSMP interface
+  */
+ 
+-#define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
+-
+ #include <asm/amd_hsmp.h>
+ #include <asm/amd_nb.h>
+ 
+@@ -25,6 +23,8 @@
+ #define HSMP_STATUS_OK		0x01
+ #define HSMP_ERR_INVALID_MSG	0xFE
+ #define HSMP_ERR_INVALID_INPUT	0xFF
++#define HSMP_ERR_PREREQ_NOT_SATISFIED	0xFD
++#define HSMP_ERR_SMU_BUSY		0xFC
+ 
+ /* Timeout in millsec */
+ #define HSMP_MSG_TIMEOUT	100
+@@ -61,7 +61,7 @@ static int __hsmp_send_message(struct hsmp_socket *sock, struct hsmp_message *ms
+ 	mbox_status = HSMP_STATUS_NOT_READY;
+ 	ret = sock->amd_hsmp_rdwr(sock, mbinfo->msg_resp_off, &mbox_status, HSMP_WR);
+ 	if (ret) {
+-		pr_err("Error %d clearing mailbox status register\n", ret);
++		dev_err(sock->dev, "Error %d clearing mailbox status register\n", ret);
+ 		return ret;
  	}
  
- 	ret = hsmp_send_message(&msg);
+@@ -71,7 +71,7 @@ static int __hsmp_send_message(struct hsmp_socket *sock, struct hsmp_message *ms
+ 		ret = sock->amd_hsmp_rdwr(sock, mbinfo->msg_arg_off + (index << 2),
+ 					  &msg->args[index], HSMP_WR);
+ 		if (ret) {
+-			pr_err("Error %d writing message argument %d\n", ret, index);
++			dev_err(sock->dev, "Error %d writing message argument %d\n", ret, index);
+ 			return ret;
+ 		}
+ 		index++;
+@@ -80,7 +80,7 @@ static int __hsmp_send_message(struct hsmp_socket *sock, struct hsmp_message *ms
+ 	/* Write the message ID which starts the operation */
+ 	ret = sock->amd_hsmp_rdwr(sock, mbinfo->msg_id_off, &msg->msg_id, HSMP_WR);
+ 	if (ret) {
+-		pr_err("Error %d writing message ID %u\n", ret, msg->msg_id);
++		dev_err(sock->dev, "Error %d writing message ID %u\n", ret, msg->msg_id);
+ 		return ret;
+ 	}
+ 
+@@ -97,7 +97,7 @@ static int __hsmp_send_message(struct hsmp_socket *sock, struct hsmp_message *ms
+ 	while (time_before(jiffies, timeout)) {
+ 		ret = sock->amd_hsmp_rdwr(sock, mbinfo->msg_resp_off, &mbox_status, HSMP_RD);
+ 		if (ret) {
+-			pr_err("Error %d reading mailbox status\n", ret);
++			dev_err(sock->dev, "Error %d reading mailbox status\n", ret);
+ 			return ret;
+ 		}
+ 
+@@ -110,14 +110,28 @@ static int __hsmp_send_message(struct hsmp_socket *sock, struct hsmp_message *ms
+ 	}
+ 
+ 	if (unlikely(mbox_status == HSMP_STATUS_NOT_READY)) {
++		dev_err(sock->dev, "Message ID 0x%X failure : SMU tmeout (status = 0x%X)\n",
++			msg->msg_id, mbox_status);
+ 		return -ETIMEDOUT;
+ 	} else if (unlikely(mbox_status == HSMP_ERR_INVALID_MSG)) {
++		dev_err(sock->dev, "Message ID 0x%X failure : Invalid message (status = 0x%X)\n",
++			msg->msg_id, mbox_status);
+ 		return -ENOMSG;
+ 	} else if (unlikely(mbox_status == HSMP_ERR_INVALID_INPUT)) {
++		dev_err(sock->dev, "Message ID 0x%X failure : Invalid arguments (status = 0x%X)\n",
++			msg->msg_id, mbox_status);
+ 		return -EINVAL;
++	} else if (unlikely(mbox_status == HSMP_ERR_PREREQ_NOT_SATISFIED)) {
++		dev_err(sock->dev, "Message ID 0x%X failure : Prerequisite not satisfied (status = 0x%X)\n",
++			msg->msg_id, mbox_status);
++		return -EREMOTEIO;
++	} else if (unlikely(mbox_status == HSMP_ERR_SMU_BUSY)) {
++		dev_err(sock->dev, "Message ID 0x%X failure : SMU BUSY (status = 0x%X)\n",
++			msg->msg_id, mbox_status);
++		return -EBUSY;
+ 	} else if (unlikely(mbox_status != HSMP_STATUS_OK)) {
+-		pr_err("Message ID %u unknown failure (status = 0x%X)\n",
+-		       msg->msg_id, mbox_status);
++		dev_err(sock->dev, "Message ID 0x%X unknown failure (status = 0x%X)\n",
++			msg->msg_id, mbox_status);
+ 		return -EIO;
+ 	}
+ 
+@@ -133,8 +147,8 @@ static int __hsmp_send_message(struct hsmp_socket *sock, struct hsmp_message *ms
+ 		ret = sock->amd_hsmp_rdwr(sock, mbinfo->msg_arg_off + (index << 2),
+ 					  &msg->args[index], HSMP_RD);
+ 		if (ret) {
+-			pr_err("Error %d reading response %u for message ID:%u\n",
+-			       ret, index, msg->msg_id);
++			dev_err(sock->dev, "Error %d reading response %u for message ID:%u\n",
++				ret, index, msg->msg_id);
+ 			break;
+ 		}
+ 		index++;
 -- 
 2.25.1
 
