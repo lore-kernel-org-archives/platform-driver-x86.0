@@ -1,59 +1,59 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 75A852076BB;
-	Tue, 12 Nov 2024 17:17:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4894E20EA35;
+	Tue, 12 Nov 2024 17:17:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1731431848; cv=none; b=TUAYMb3EeX7IbNEg63FS7p0SbdTvlZx6TrLKqgtIfcOXgElqtKgABPNrN0/NGLlu/vtGffM4yJJmtJOY75ubK2+mB7FgYP2y72VXlvoJnJAYiHnP6LAXLfizxX72tYSMetmZsFdXIk0rVkJEwIkAa28ZOqLh9t8sFbyJGj4L+Qc=
+	t=1731431856; cv=none; b=X8rVIfUWTce4NLlEwz6y9hZYkhItgCyTJaQfGXKV1uGx9kRnyaECVy4X6DZ7sTQH38raPcFDOIvYVVypJVdom1gwRP0t1a+bJYrli0W8zhIT+N0+EZtdZm8Ro/43+UW0CV4wdzisd9D4bng0emmaz4F1O1Ryopj+hknpgEDI5nw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1731431848; c=relaxed/simple;
-	bh=JwYWuXfpSL5AkdZAREAFkweuJZUY7ozAMJNysu17CHE=;
+	s=arc-20240116; t=1731431856; c=relaxed/simple;
+	bh=GZKG9Pbj0+4eT/ivxamB+9n9eEVLqN3qcppg/sgMfpo=;
 	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=XZ6v6dXZaffXdhbKAzcCmIYmjwm5weNKVAExtd3YWAhfcm4CgiGt4xV0prz2aMceky1HINKqQQFtIkhYvLMHkHwv9q0C4yWig0OjFSooiUK93FFDxOgS8ko2+YP+rWK3Kq7WzeJqv/wG8gCP/DjfDYTP7c6JSrAyC5foZxrBqrQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=QrnNtRDq; arc=none smtp.client-ip=192.198.163.17
+	 MIME-Version:Content-Type; b=YmB2TTZgVSfk1O3+divYjeJ4VjfCEr2j4x0pyHhtMb1hqrdX4QtwAUo87MpL1LZKmLnvcgMXxLJTRYqwJ7hfLFh4rGIlZ3V/L9yBfRHCIuqDR8Yv3YkuwktfVz32eFjhhw17fTpwMM/m7oOwAWBypkcm/TLkj25w/TEXS2Y8tT8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=eVjLXuoO; arc=none smtp.client-ip=198.175.65.14
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="QrnNtRDq"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="eVjLXuoO"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1731431847; x=1762967847;
+  t=1731431855; x=1762967855;
   h=from:to:cc:in-reply-to:references:subject:message-id:
    date:mime-version:content-transfer-encoding;
-  bh=JwYWuXfpSL5AkdZAREAFkweuJZUY7ozAMJNysu17CHE=;
-  b=QrnNtRDqfZ9BWGB4im5jO7yjEP1nUWTKMFytUOM6/EcTXJ87xU/ZvHMK
-   GtCKr2lT4dXrCHl0d88HdC9gXOlZPoR+4kiN9oQvJEv9GcPdyj5YVONSS
-   ouk/9WBREuNGRpDXQw/axWvh4KIzgdGqoTG9jEbpOl76n1rIsVQMyNhGZ
-   r/60dSSC4uXNX23gdJGQ/crXLoRZK27T2IBWnhxEe2RILXy5nUOU8JzWD
-   a8SVc1A64Vtf7fw6q8odLSlMuxi5SD7jjzGva/me8qWwd2tKVH6+AK3dy
-   Y+5h1QmZWuVRy2MDrxSIggjfXUNhPDZHkLRnZeZ3LoM5je2BM7fOFzoUN
-   w==;
-X-CSE-ConnectionGUID: WVAKl+egSkSKR0ljmWYoJA==
-X-CSE-MsgGUID: PiIVNmzgSTu2QnWs/8dKUA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11254"; a="31157146"
+  bh=GZKG9Pbj0+4eT/ivxamB+9n9eEVLqN3qcppg/sgMfpo=;
+  b=eVjLXuoOiGK7ngQ8ozG71cxhGjfmw44TXtbPJPDucdihuvNqBDnj4YTT
+   hMWhYodKi7qWHzd8pdTPQ2aM8yN5uRlqjgEK/OTbBS9aHkziWJUlK+r5S
+   /OLr+ANNN0Pvyi/Zh4P0ENmgrTw4WHZwhG0D2O18h2nwV95phdboAtMEJ
+   VvwYpXJ+pNubvhBLYYjgD2BFSgFum9/ooAeQrh+e9xZ2X4ZeQR4dkKcCc
+   Ca1llyWwFEn4tCgLQBBebBKRIB2GctmVIBl633XxGQLzMMv4YlltpefQT
+   UaX2b7fzxQJiMFgN/aL2VjfYxt77ZdRWxGw6UcmbRH9u1c0nNsxQSDpju
+   Q==;
+X-CSE-ConnectionGUID: OJ499uXQSkqtEreVp7Pdlw==
+X-CSE-MsgGUID: 5wad2HqSQ0+Iqw/wTF6rWQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11254"; a="35071951"
 X-IronPort-AV: E=Sophos;i="6.12,148,1728975600"; 
-   d="scan'208";a="31157146"
-Received: from fmviesa006.fm.intel.com ([10.60.135.146])
-  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Nov 2024 09:17:26 -0800
-X-CSE-ConnectionGUID: k35N3V1lQfye7DmzF1Vj9w==
-X-CSE-MsgGUID: oxbK1Tq4T+6eyFQnuLacWw==
+   d="scan'208";a="35071951"
+Received: from orviesa001.jf.intel.com ([10.64.159.141])
+  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Nov 2024 09:17:34 -0800
+X-CSE-ConnectionGUID: auCj78WUToGliQmGEobpAQ==
+X-CSE-MsgGUID: CfUO/TH9QReCsPLIdw935Q==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.12,148,1728975600"; 
-   d="scan'208";a="87141279"
+   d="scan'208";a="125070090"
 Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.234])
-  by fmviesa006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Nov 2024 09:17:24 -0800
+  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Nov 2024 09:17:31 -0800
 From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-To: Jorge Lopez <jorge.lopez2@hp.com>, Hans de Goede <hdegoede@redhat.com>, 
- platform-driver-x86@vger.kernel.org, 
- Colin Ian King <colin.i.king@gmail.com>
-Cc: kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
-In-Reply-To: <20241107113543.17137-1-colin.i.king@gmail.com>
-References: <20241107113543.17137-1-colin.i.king@gmail.com>
-Subject: Re: [PATCH][next] platform/x86: hp: hp-bioscfg: remove redundant
- if statement
-Message-Id: <173143183902.3180.9868160429476963926.b4-ty@linux.intel.com>
-Date: Tue, 12 Nov 2024 19:17:19 +0200
+To: corentin.chary@gmail.com, luke@ljones.dev, mohamed.ghanmi@supcom.tn, 
+ Armin Wolf <W_Armin@gmx.de>
+Cc: srinivas.pandruvada@linux.intel.com, hdegoede@redhat.com, 
+ Michael@phoronix.com, casey.g.bowman@intel.com, 
+ platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+In-Reply-To: <20241107003811.615574-1-W_Armin@gmx.de>
+References: <20241107003811.615574-1-W_Armin@gmx.de>
+Subject: Re: [PATCH v2 0/2] Fix thermal profile handling
+Message-Id: <173143184661.3180.9800918282337612221.b4-ty@linux.intel.com>
+Date: Tue, 12 Nov 2024 19:17:26 +0200
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -64,14 +64,19 @@ Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
 X-Mailer: b4 0.13.0
 
-On Thu, 07 Nov 2024 11:35:43 +0000, Colin Ian King wrote:
+On Thu, 07 Nov 2024 01:38:09 +0100, Armin Wolf wrote:
 
-> The if statement performs the same action if the strcmp result is
-> true or false since there is identical code on both branches. The
-> if statement is redundant and can be replaced with just one call
-> to sysfs_remove_group.
+> When support for Vivobook fan profiles was added, the new thermal
+> profiles where used inconsistently.
 > 
+> This patch series aims to fix this issue. Compile-tested only.
 > 
+> Changes since v1:
+> - drop already applied patch
+> - change commit description of first patch
+> - add second patch based on a suggestion of Hans
+> 
+> [...]
 
 
 Thank you for your contribution, it has been applied to my local
@@ -80,8 +85,10 @@ platform-drivers-x86/review-ilpo branch only once I've pushed my
 local branch there, which might take a while.
 
 The list of commits applied:
-[1/1] platform/x86: hp: hp-bioscfg: remove redundant if statement
-      commit: 4ceb681f1822819f78b747ddc189479fead43be2
+[1/2] platform/x86: asus-wmi: Fix inconsistent use of thermal policies
+      commit: 895085ec3f2ed7a26389943729e2904df1f88dc0
+[2/2] platform/x86: asus-wmi: Use platform_profile_cycle()
+      commit: b0955ce555478e24ed34c7d14f62fdf9c07b15cb
 
 --
  i.
