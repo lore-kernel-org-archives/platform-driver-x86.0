@@ -1,153 +1,120 @@
-Received: from mail.tuxedocomputers.com (mail.tuxedocomputers.com [157.90.84.7])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6761443AA1
-	for <platform-driver-x86@vger.kernel.org>; Tue, 12 Nov 2024 15:10:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=157.90.84.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 00A9A200BBA
+	for <platform-driver-x86@vger.kernel.org>; Tue, 12 Nov 2024 15:27:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1731424239; cv=none; b=R8QjS6ei4qcJZ5VjFDlPdjFbULQL/x71QgnwLWzZJHivY/eMUaHmLnF6FCoUr4MvwYwvoFok674TqVaKs+9opAxeajm4P8Yn0UMP8MkB0f4jQDDQJkQtRiVxjIMn8A6IP5Ro7EdZGi87Ezzo4CYsT5+n4k8P3WFJV7ysRsMLZSo=
+	t=1731425280; cv=none; b=sTbhDM+91q+raVoEKe+mw0alEd6fh/BAiQJ5v8hsxxpjArX4xt1v+TDfKVEyWWSZLhtInwuk0tcoDwNdil1e2JVZOlaA9kjBookgIXkCZJ3qbhNLHGICLpYmGI87HhOrhLcwJ2Y2p/Jb4YEKk2IxjFX27jqVAar3xRlDA6JQ1Xc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1731424239; c=relaxed/simple;
-	bh=ZKWbq4yaZcLMMZ3+UMPbeebHCit8w6MjP3YcVJAXXHg=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=TndcUMAqHleZS7oJAPZKQWKrSeyZoobsIVunEPlzGd507EFjdPA3BFibBFWOWEqQtYp8YdY9hjXdraJg1oifaqF7Rrky7ATJET23DGjgXTBx0NWzgOe5Re9tk5HMRZfPxjXhwEWzQ6mXtB6zcalEs/eODH6rjGHaSVJjWTI4ZdA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=tuxedocomputers.com; spf=pass smtp.mailfrom=tuxedocomputers.com; dkim=pass (1024-bit key) header.d=tuxedocomputers.com header.i=@tuxedocomputers.com header.b=HC0I2n06; arc=none smtp.client-ip=157.90.84.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=tuxedocomputers.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tuxedocomputers.com
+	s=arc-20240116; t=1731425280; c=relaxed/simple;
+	bh=kix+tDXd/OHa3nrcLUpos2J4yobEUJHVLRoofvoqD+4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=DIw+uXtwNmxXDpC47Cl76NIs8NsvpxVMd6Nj3+vl0f8HE0/lk1kIYqUFa0lKVi8osvD20V2XGBzeMNq42CTNhKu2E0MON7iHq6Z7Vb4j/UA78D87MBvRToLLX6LQnUR9/0TKdYT7/CY/ta2G6sB9fr2pjLWEIubIwDnpJiEoLEo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=YtJP0Uly; arc=none smtp.client-ip=198.175.65.21
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=tuxedocomputers.com header.i=@tuxedocomputers.com header.b="HC0I2n06"
-Received: from [192.168.42.96] (p5de457db.dip0.t-ipconnect.de [93.228.87.219])
-	(Authenticated sender: wse@tuxedocomputers.com)
-	by mail.tuxedocomputers.com (Postfix) with ESMTPSA id 2714E2FC004D;
-	Tue, 12 Nov 2024 16:10:33 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=tuxedocomputers.com;
-	s=default; t=1731424233;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=9kDfsAYxer88lMWAll/xX2zfrK/dIwEY77N5PGUaRkY=;
-	b=HC0I2n06aJOBNKTSKeRG9UZkgg1tnKvpLz+KpnupF+VKGtWx4hSwgb7i62RSQN8UparYGc
-	A6ZMMAjKXzD1/ywhg2tuq/Ctpq/CjXTkoB76DbQgfsqm/kSfG/cWv1VV604GHPiPf9Ar0W
-	7oXgXq8kCfYNy+7kfj/qNsKH8h3s4vU=
-Authentication-Results: mail.tuxedocomputers.com;
-	auth=pass smtp.auth=wse@tuxedocomputers.com smtp.mailfrom=wse@tuxedocomputers.com
-Message-ID: <cc1721a1-bb2f-4dde-a8a5-3d4928439520@tuxedocomputers.com>
-Date: Tue, 12 Nov 2024 16:10:32 +0100
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="YtJP0Uly"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1731425279; x=1762961279;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=kix+tDXd/OHa3nrcLUpos2J4yobEUJHVLRoofvoqD+4=;
+  b=YtJP0UlyRRrrWRAk6wscQqsTxKkIYJTJ5JVN68BHpDteyzUg7RvTLoK7
+   GTaUJrSjLyroyeQtNLcFN+e3F9S5l+5PH58G40IQVqDV1ahB8yPQkrA4S
+   JM96ijXFHlDpsFdpU8NxVML3ipoijMiN5OATYcRa3DGr+juRlCB9zV3Oa
+   fYhQL8/51GotFasYkfLzt5sDuM1J6CpZ2MN9KdO1qkEki9vzP8FUUbTJV
+   iCxmWDVV2o6Ew+50K1QypaoR6PRK1ZNvlLwT6ADdHRXINllmbIoj2+kt6
+   0qBC5+kql/XcbqpGkoUWDpOCdjslebA0752vYfkxVFxUKo9C4XMx4jO6w
+   w==;
+X-CSE-ConnectionGUID: NOcksUztSbS5SgYJ0tGTvg==
+X-CSE-MsgGUID: 9i/lmyoVQry8KufCjBGZ8A==
+X-IronPort-AV: E=McAfee;i="6700,10204,11222"; a="31227977"
+X-IronPort-AV: E=Sophos;i="6.11,199,1725346800"; 
+   d="scan'208";a="31227977"
+Received: from fmviesa010.fm.intel.com ([10.60.135.150])
+  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Nov 2024 07:27:58 -0800
+X-CSE-ConnectionGUID: YiOyrTEVTJeVJ7mZQ64pYg==
+X-CSE-MsgGUID: X0pDeDitQs61A1hjAIETeA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.12,148,1728975600"; 
+   d="scan'208";a="87931761"
+Received: from smile.fi.intel.com ([10.237.72.154])
+  by fmviesa010.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Nov 2024 07:27:56 -0800
+Received: from andy by smile.fi.intel.com with local (Exim 4.98)
+	(envelope-from <andriy.shevchenko@linux.intel.com>)
+	id 1tAso5-0000000E2ey-3ZM1;
+	Tue, 12 Nov 2024 17:27:53 +0200
+Date: Tue, 12 Nov 2024 17:27:53 +0200
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: "Ruhl, Michael J" <michael.j.ruhl@intel.com>
+Cc: "intel-xe@lists.freedesktop.org" <intel-xe@lists.freedesktop.org>,
+	"platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>,
+	"david.e.box@linux.intel.com" <david.e.box@linux.intel.com>,
+	"ilpo.jarvinen@linux.intel.com" <ilpo.jarvinen@linux.intel.com>,
+	"hdegoede@redhat.com" <hdegoede@redhat.com>,
+	"Vivi, Rodrigo" <rodrigo.vivi@intel.com>,
+	"De Marchi, Lucas" <lucas.demarchi@intel.com>
+Subject: Re: [PATCH 1/2] platform/x86/intel/pmt: allow user offset for PMT
+ callbacks
+Message-ID: <ZzNz-ckhzRSCezRD@smile.fi.intel.com>
+References: <20241108201955.2048085-1-michael.j.ruhl@intel.com>
+ <ZzHBhsJ_J3ARhLu9@smile.fi.intel.com>
+ <IA1PR11MB64184E52DA33ABC36329A2FDC1592@IA1PR11MB6418.namprd11.prod.outlook.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: Why is wmi_bus_type not exported?
-To: Armin Wolf <W_Armin@gmx.de>, platform-driver-x86@vger.kernel.org
-References: <8847423c-22ec-4775-9119-de3e0ddb5204@tuxedocomputers.com>
- <c4315d31-7bc6-4bd9-a7eb-3e53356d55e9@gmx.de>
- <bf3dae8b-7f1f-4438-9cbe-525825d70752@tuxedocomputers.com>
- <aa129cb8-2b1d-4912-b731-74e959b99da6@gmx.de>
-Content-Language: en-US
-From: Werner Sembach <wse@tuxedocomputers.com>
-In-Reply-To: <aa129cb8-2b1d-4912-b731-74e959b99da6@gmx.de>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <IA1PR11MB64184E52DA33ABC36329A2FDC1592@IA1PR11MB6418.namprd11.prod.outlook.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+
+On Tue, Nov 12, 2024 at 02:38:06PM +0000, Ruhl, Michael J wrote:
+> > -----Original Message-----
+> > From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> > Sent: Monday, November 11, 2024 3:34 AM
+> > To: Ruhl, Michael J <michael.j.ruhl@intel.com>
+> > Cc: intel-xe@lists.freedesktop.org; platform-driver-x86@vger.kernel.org;
+> > david.e.box@linux.intel.com; ilpo.jarvinen@linux.intel.com;
+> > hdegoede@redhat.com; Vivi, Rodrigo <rodrigo.vivi@intel.com>; De Marchi,
+> > Lucas <lucas.demarchi@intel.com>
+> > Subject: Re: [PATCH 1/2] platform/x86/intel/pmt: allow user offset for PMT
+> > callbacks
+> > 
+> > On Fri, Nov 08, 2024 at 03:19:53PM -0500, Michael J. Ruhl wrote:
+> > > Usage of the telem sysfs file allows for partial reads at an offset.
+> > >
+> > > The current callback method returns the buffer starting from offset 0
+> > > only.
+> > >
+> > > Include the requested offset in the callback.
+> > > Update the necsessary address calculations with the offset.
+> > 
+> > ...
+> > 
+> > > -	memcpy_fromio(buf, addr, count);
+> > > +	memcpy_fromio(buf, addr + off, count);
+> 
+> Hi Andy,
+> 
+> > This will give an unaligned IO access in some cases. Is it a problem?
+> 
+> That is a good question.
+> 
+> I moved this value from the caller to this location.
+> 
+> So essentially it is "unchanged" from the current usage.  Does that answer
+> the question?
+
+Probably. Please, mention this in the commit message.
+
+-- 
+With Best Regards,
+Andy Shevchenko
 
 
-Am 12.11.24 um 13:51 schrieb Armin Wolf:
-> Am 12.11.24 um 13:42 schrieb Werner Sembach:
->
->> Hi,
->>
->> Am 12.11.24 um 13:01 schrieb Armin Wolf:
->>> Am 12.11.24 um 12:52 schrieb Werner Sembach:
->>>
->>>> Hi,
->>>>
->>>> quick learning question: Why is wmi_bus_type not exported unlike, for
->>>> example, acpi_bus_type, and platform_bus_type?
->>>>
->>>> Wanted to use bus_find_device_by_name in an acpi driver that might
->>>> need additional infos from a wmi interface that might or might not be
->>>> present.
->>>>
->>>> Kind regards,
->>>>
->>>> Werner Sembach
->>>>
->>>>
->>> What kind of information do you have in mind? wmi_bus_type is not
->>> being exported for historic reasons, i can change that if necessary.
->>
->> It's for the tuxedo-drivers part for the Sirius 16 Gen 1 & 2 which has
->> a slow wmi and a quick acpi interface, however the quick acpi
->> interface can not get the max rpm of the cooling fans, but the wmi
->> interface can.
->>
->> Thing is for the acpi driver we might plan an earlier upstream date
->> and it might get multi-odm support, while the wmi interface is and
->> stays odm specific. So my idea was to only couple both drivers in a
->> dynamic way using bus_find_device_by_name.
->>
-> Interesting, how is the ACPI interface not ODM specific? Can you elaborate a 
-> bit on how the ACPI and the WMI interfaces work?
-
-We have an ODM that was willing to include ACPI code by us in their BIOS blob 
-and we hope that in the future we can carry that API over to other ODMs for 
-future TUXEDO devices.
-
-In pseudocode that API looks like this:
-
-v1:
-
-void SMOD(bool mode): Toggle firmware controlled fans vs manually (aka via the 
-commands below) controlled fans
-bool GMOD(): Get current SMOD setting
-int GCNT(): Get number of fans
-enum GTYP(int index): Returns "CPU-fan" or "GPU-fan"
-void SSPD(int index, int value): Set fan speed target as a fraction of max speed
-int GSPD(int index): Get current fan speed target as a fraction of max speed
-
-v2 same as v1 but with added:
-
-int GRPM(int index): Get current actual fan speed in revolutions per minute
-int GTMP(int index): Get temperature of thing fan with respective index is 
-pointed at (CPU or GPU die, see GTYP)
-
-Like I said, what is missing is a "Get Max RPM" function even in v2, which we 
-might add a future iteration, but, well this bios is now out in the wild. 
-However these released devices have a "get info" function in the wmi code which 
-returns the v2 infos and the max rpm.
-
-I want to write the code in a way that it probes the acpi interface for function 
-existence and wherever something is missing tries to fall back to infos gathered 
-from the wmi interface, but that one is implemented in a stand alone module (the 
-tuxedo_nb04_* stuff in tuxedo-drivers) and I would like to keep it that way in 
-honor of KISS.
-
-My plan is that the first time max rpm is pulled the acpi driver uses 
-bus_find_device_* to get the wmi device, if present, and pulls max rpm from the 
-driver data there and copies it over to it's own driver data. If not possible it 
-returns a dummy value or falls back to another method. Maybe a hard coded list 
-of max rpm values, currently only 2 devices have the new interface, so it 
-wouldn't be a long list. Directly going to the hard coded list is our current 
-fallback plan, but it is not an elegant solution as the info is actually there, 
-if you know what i mean?
-
-Kind regards,
-
-Werner
-
->
-> Thanks,
-> Armin Wolf
->
->>>
->>> Thanks,
->>> Armin Wolf
->>>
->> Kind regards,
->>
->> Werner
->>
->>
