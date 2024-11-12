@@ -1,153 +1,92 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail.tuxedocomputers.com (mail.tuxedocomputers.com [157.90.84.7])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B2DB984D2B;
-	Tue, 12 Nov 2024 12:17:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3DE8D1CD1F1
+	for <platform-driver-x86@vger.kernel.org>; Tue, 12 Nov 2024 12:43:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=157.90.84.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1731413822; cv=none; b=Kk6HJkt+j4bBzeOISx0DMLPUC4V5Um3pu5zBufgHRpPY5LVMEYFXDMbZkkTEFTbuezqXPO4hHNiNFiNbCiCugkqlUfvWHyZzHHy4jObkNnofT5K3ivRq/NbNolSO99Sga+Wjmf5MU3yXuhQaZY6KcT4oYfxTbYyCFn/AToOsTWI=
+	t=1731415390; cv=none; b=L+T6uV3QplrBKZDbZm7p74NhLgL0gBV6t62Zb7CYzmJpTPxwPVFezBSTBqMHgfIJpNOT8PwoIrzE9cai9TePRviPQKwma5Lr7VkoyZm2yPDBEbYY/v/crgylSUc5IJ/D69uLGbwSUifv0sJuZlDv1OUip4VRoMM67T2qk4qtxHA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1731413822; c=relaxed/simple;
-	bh=s3xLRKr3f419fYPU6PB/kHAOhOABMEaamyvZW4/7k6M=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=Jz1VyqB8NppF3m76Uro+VFqLhRBNT/U/KiD34CY2cExgL6N4icqpdz+MvwxygO511EKDk43mcqQL2LRxG7vrQ2tfdOnf5RDwiPgrY06XDgfaUfCNuzotTU51Fbflq9l3cUmze7sq/qctrjjP51OQTF57GZuStpa1eEocW8f5Kl4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Sc4MF+Wk; arc=none smtp.client-ip=198.175.65.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1731415390; c=relaxed/simple;
+	bh=fKlTA8djIcIbmuvj9ueHqHErNYwfKsce1G9c7pcnAxY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=UYaC6xnKy2yheYorfq8AvtYbopH1tQS3Yace/VghtUEch+XI8FqUsN32cJrw1hTKNvjp7F8e8eyJJ1/Be9baWYGyudNXS0jMbb5znDHR4bJOMwx04jlwI6fW2vgwhF6xA5oZr873zOVtFpYvfpGp1TmkY9QkRkfK1XvxGpOYR5Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=tuxedocomputers.com; spf=pass smtp.mailfrom=tuxedocomputers.com; dkim=pass (1024-bit key) header.d=tuxedocomputers.com header.i=@tuxedocomputers.com header.b=CGHvGz5T; arc=none smtp.client-ip=157.90.84.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=tuxedocomputers.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tuxedocomputers.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Sc4MF+Wk"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1731413821; x=1762949821;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=s3xLRKr3f419fYPU6PB/kHAOhOABMEaamyvZW4/7k6M=;
-  b=Sc4MF+WkpY0SenT22CUfw786G3+GP0iJQY98evfijMB9NKqJa0Jh5luS
-   Gm8KJfa6Qf7aCj4SquNXKyzT9beYuN15FkQh4C49CEzranePncskwoJJy
-   vVSfye8hAMhovnGx3OLtPmrZRyoO8O2EXuByDJuO4jVA8vtzmTDhJhXvV
-   U4TVg46h5Oxk6tWO3l/6lU+ViJlCVaVrzQAPx/80HzRm9hT5e+4It7iMr
-   tV8GUOy8Wkc4pXMnbwHXd9+D6lR9qjZFQywdBnOyDaj3YQyUnGexDkhDe
-   NdYON1VvibaaLJ3EReeDTkLKVg797TloS9B+4hwiP5JnQ4qV1kn89Lx4Y
-   g==;
-X-CSE-ConnectionGUID: D+u5sGEnQeOgguk8emCxJQ==
-X-CSE-MsgGUID: 5N09NnycT72CoKrDuDa+EA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11222"; a="48699694"
-X-IronPort-AV: E=Sophos;i="6.11,199,1725346800"; 
-   d="scan'208";a="48699694"
-Received: from fmviesa008.fm.intel.com ([10.60.135.148])
-  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Nov 2024 04:17:01 -0800
-X-CSE-ConnectionGUID: tS7BO2LFRleFpECaFnqibg==
-X-CSE-MsgGUID: OlATpCQtTNOM99rxgsUCzA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.12,148,1728975600"; 
-   d="scan'208";a="87549164"
-Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.234])
-  by fmviesa008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Nov 2024 04:16:55 -0800
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Tue, 12 Nov 2024 14:16:52 +0200 (EET)
-To: Mario Limonciello <mario.limonciello@amd.com>
-cc: Borislav Petkov <bp@alien8.de>, Hans de Goede <hdegoede@redhat.com>, 
-    x86@kernel.org, "Gautham R . Shenoy" <gautham.shenoy@amd.com>, 
-    Perry Yuan <perry.yuan@amd.com>, LKML <linux-kernel@vger.kernel.org>, 
-    linux-doc@vger.kernel.org, linux-pm@vger.kernel.org, 
-    platform-driver-x86@vger.kernel.org, 
-    Shyam Sundar S K <Shyam-sundar.S-k@amd.com>, 
-    Perry Yuan <Perry.Yuan@amd.com>
-Subject: Re: [PATCH v6 06/12] platform/x86: hfi: init per-cpu scores for each
- class
-In-Reply-To: <20241104175407.19546-7-mario.limonciello@amd.com>
-Message-ID: <7fa961b4-894d-8805-8a23-2ed8ef04fe7f@linux.intel.com>
-References: <20241104175407.19546-1-mario.limonciello@amd.com> <20241104175407.19546-7-mario.limonciello@amd.com>
+	dkim=pass (1024-bit key) header.d=tuxedocomputers.com header.i=@tuxedocomputers.com header.b="CGHvGz5T"
+Received: from [192.168.42.27] (p5de457db.dip0.t-ipconnect.de [93.228.87.219])
+	(Authenticated sender: wse@tuxedocomputers.com)
+	by mail.tuxedocomputers.com (Postfix) with ESMTPSA id 2B7AC2FC0048;
+	Tue, 12 Nov 2024 13:43:04 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=tuxedocomputers.com;
+	s=default; t=1731415384;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=cSe/jh5ECAxigPGPSC9YLo142FFNriKmsY47CZGQCWs=;
+	b=CGHvGz5TinKLmoBoxTSdxyocVC5mLttUWsZXggP9ijugXCO47mNm+SYvAZPbJPg/ZZIH2i
+	8P3sUuH5f0Dy/aOFpnSX8BL7fy1m0BMwAOXSH0aq0sUfjTJgln5yY9XxuTCX1bsVccSw8F
+	GaZt16fdJrgGmU7mGpBtSsvSBEVvY3c=
+Authentication-Results: mail.tuxedocomputers.com;
+	auth=pass smtp.auth=wse@tuxedocomputers.com smtp.mailfrom=wse@tuxedocomputers.com
+Message-ID: <bf3dae8b-7f1f-4438-9cbe-525825d70752@tuxedocomputers.com>
+Date: Tue, 12 Nov 2024 13:42:53 +0100
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+User-Agent: Mozilla Thunderbird
+Subject: Re: Why is wmi_bus_type not exported?
+To: Armin Wolf <W_Armin@gmx.de>, platform-driver-x86@vger.kernel.org
+References: <8847423c-22ec-4775-9119-de3e0ddb5204@tuxedocomputers.com>
+ <c4315d31-7bc6-4bd9-a7eb-3e53356d55e9@gmx.de>
+Content-Language: de-DE, en-US
+From: Werner Sembach <wse@tuxedocomputers.com>
+In-Reply-To: <c4315d31-7bc6-4bd9-a7eb-3e53356d55e9@gmx.de>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Mon, 4 Nov 2024, Mario Limonciello wrote:
+Hi,
 
-> From: Perry Yuan <Perry.Yuan@amd.com>
-> 
-> Initialize per cpu score `amd_hfi_ipcc_scores` which store energy score
-> and performance score data for each class.
-> 
-> `Classic core` and `Dense core` are ranked according to those values as
-> energy efficiency capability or performance capability.
-> OS scheduler will pick cores from the ranking list on each class ID for
-> the thread which provide the class id got from hardware feedback
-> interface.
-> 
-> Reviewed-by: Gautham R. Shenoy <gautham.shenoy@amd.com>
-> Signed-off-by: Perry Yuan <Perry.Yuan@amd.com>
-> Co-developed-by: Mario Limonciello <mario.limonciello@amd.com>
-> Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
-> ---
->  drivers/platform/x86/amd/hfi/hfi.c | 31 ++++++++++++++++++++++++++++++
->  1 file changed, 31 insertions(+)
-> 
-> diff --git a/drivers/platform/x86/amd/hfi/hfi.c b/drivers/platform/x86/amd/hfi/hfi.c
-> index 708d7d18fe2f2..9bdd9d9a615b8 100644
-> --- a/drivers/platform/x86/amd/hfi/hfi.c
-> +++ b/drivers/platform/x86/amd/hfi/hfi.c
-> @@ -113,6 +113,8 @@ struct amd_hfi_cpuinfo {
->  
->  static DEFINE_PER_CPU(struct amd_hfi_cpuinfo, amd_hfi_cpuinfo) = {.class_index = -1};
->  
-> +static DEFINE_MUTEX(hfi_cpuinfo_lock);
+Am 12.11.24 um 13:01 schrieb Armin Wolf:
+> Am 12.11.24 um 12:52 schrieb Werner Sembach:
+>
+>> Hi,
+>>
+>> quick learning question: Why is wmi_bus_type not exported unlike, for
+>> example, acpi_bus_type, and platform_bus_type?
+>>
+>> Wanted to use bus_find_device_by_name in an acpi driver that might
+>> need additional infos from a wmi interface that might or might not be
+>> present.
+>>
+>> Kind regards,
+>>
+>> Werner Sembach
+>>
+>>
+> What kind of information do you have in mind? wmi_bus_type is not 
+> being exported for historic reasons, i can change that if necessary.
 
-No users in this patch?
+It's for the tuxedo-drivers part for the Sirius 16 Gen 1 & 2 which has a 
+slow wmi and a quick acpi interface, however the quick acpi interface 
+can not get the max rpm of the cooling fans, but the wmi interface can.
 
--- 
- i.
+Thing is for the acpi driver we might plan an earlier upstream date and 
+it might get multi-odm support, while the wmi interface is and stays odm 
+specific. So my idea was to only couple both drivers in a dynamic way 
+using bus_find_device_by_name.
 
+>
+> Thanks,
+> Armin Wolf
+>
+Kind regards,
 
-> +
->  static int find_cpu_index_by_apicid(unsigned int target_apicid)
->  {
->  	int cpu_index;
-> @@ -226,6 +228,31 @@ static int amd_hfi_alloc_class_data(struct platform_device *pdev)
->  	return 0;
->  }
->  
-> +static int amd_set_hfi_ipcc_score(struct amd_hfi_cpuinfo *hfi_cpuinfo, int cpu)
-> +{
-> +	for (int i = 0; i < hfi_cpuinfo->nr_class; i++)
-> +		WRITE_ONCE(hfi_cpuinfo->ipcc_scores[i],
-> +			   hfi_cpuinfo->amd_hfi_classes[i].perf);
-> +
-> +	return 0;
-> +}
-> +
-> +static int update_hfi_ipcc_scores(void)
-> +{
-> +	int cpu;
-> +	int ret;
-> +
-> +	for_each_present_cpu(cpu) {
-> +		struct amd_hfi_cpuinfo *hfi_cpuinfo = per_cpu_ptr(&amd_hfi_cpuinfo, cpu);
-> +
-> +		ret = amd_set_hfi_ipcc_score(hfi_cpuinfo, cpu);
-> +		if (ret)
-> +			return ret;
-> +	}
-> +
-> +	return 0;
-> +}
-> +
->  static int amd_hfi_metadata_parser(struct platform_device *pdev,
->  				   struct amd_hfi_data *amd_hfi_data)
->  {
-> @@ -311,6 +338,10 @@ static int amd_hfi_probe(struct platform_device *pdev)
->  	if (ret)
->  		return ret;
->  
-> +	ret = update_hfi_ipcc_scores();
-> +	if (ret)
-> +		return ret;
-> +
->  	return 0;
->  }
->  
-> 
+Werner
+
