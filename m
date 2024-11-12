@@ -1,219 +1,198 @@
-Received: from mail.tuxedocomputers.com (mail.tuxedocomputers.com [157.90.84.7])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from NAM11-BN8-obe.outbound.protection.outlook.com (mail-bn8nam11on2085.outbound.protection.outlook.com [40.107.236.85])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E21FA206951
-	for <platform-driver-x86@vger.kernel.org>; Tue, 12 Nov 2024 16:43:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=157.90.84.7
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1731429843; cv=none; b=c0PNOYJOqTsEAqwnO4TYSDgAc3TmjGT8F4HronzTFT0VynLWRlvl+DLfl5IBcr74A3S5/jTv0Aj4WhJwA5SI8ebyp0Qn6w3QJGkIhS25zrCrd0yPu0ECxEY9h3Y/00xgXHpe+OKmFFwlC7rB0R5becMlRp0A9RgMxTO7LsMkDTY=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1731429843; c=relaxed/simple;
-	bh=1gia6nK8eqGhMiydW2ka/J9gv6zg/z4fTn4RMqZ+16U=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:Cc:From:
-	 In-Reply-To:Content-Type; b=oK1sP3FxGUyEXCFtgo/0HutlF0ypo4NT+ilzY+EOWo5aMbNDAoBmHdsRHiKOcOPorn4+itqvji6VyfOQd//d1+ge1nUpix+QLYACPZEN4ja3ltHjS8A5cyBR7mmbG3WflNhzBWZHaATxr778g/ilmk86mj4LMGpr/IHT18B+OSs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=tuxedocomputers.com; spf=pass smtp.mailfrom=tuxedocomputers.com; dkim=pass (1024-bit key) header.d=tuxedocomputers.com header.i=@tuxedocomputers.com header.b=q2fwY0As; arc=none smtp.client-ip=157.90.84.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=tuxedocomputers.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tuxedocomputers.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 618E12123ED
+	for <platform-driver-x86@vger.kernel.org>; Tue, 12 Nov 2024 17:03:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.236.85
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1731431014; cv=fail; b=CxYtz7A7NHAvnqM5PaHsCoDOp+I0HEZ1h0jxJT+jb2Xb+l8EsFT8q0Yi2GQXyFmNxxj7JRr1vkpxzhP1Seb5YViI4kZHExrc8EZYjV81C/B6tI/63uTIdGvb8tBPKrlji3q7sjZVhN22F2lgvNCNEXqT0FcoJA4kfG6uJbDEqdI=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1731431014; c=relaxed/simple;
+	bh=af4CeV1vE4gXAPAlecNc2J6Ladgj4uND9UkVph8SYPg=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=EV/U2WPtU5xeGmPbjTIIvnw1lmqmiBgxPK5zsGEOnUvFKNety1/4nmyDey5vdWBdodLzlQIvk1Q6raz3P5DtEV1up1Arnn15IfmWmLw5n7F8K4AGc6EAmwwsSvC78VvkDxfcSbofy04rjoXrzoXIhQ0jVi8ttbV1by4FyMs7KzY=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=DY77G6Lv; arc=fail smtp.client-ip=40.107.236.85
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=tuxedocomputers.com header.i=@tuxedocomputers.com header.b="q2fwY0As"
-Received: from [192.168.42.96] (p5de457db.dip0.t-ipconnect.de [93.228.87.219])
-	(Authenticated sender: wse@tuxedocomputers.com)
-	by mail.tuxedocomputers.com (Postfix) with ESMTPSA id 7D1322FC0050;
-	Tue, 12 Nov 2024 17:43:56 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=tuxedocomputers.com;
-	s=default; t=1731429836;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=GiEZ5CmcIpKxX6QgYf6xyKnErxpwOEXpqaV4Ko8aeRo=;
-	b=q2fwY0AsZuL34PD8PayduJpxGqFPP9tXoenESmr+Tmt7rLUNbjdY5LKaBzxLCjMlB+YFSe
-	yHzHoyLATxd5om7R01ddFC7luVDrHJ1pAKL3gwV8y/o5uOLCG0UrHn/9L2H7/b1Jsbvmj6
-	H/g9XhC/LOBCiYfwQLNNL4QnjKwmMbk=
-Authentication-Results: mail.tuxedocomputers.com;
-	auth=pass smtp.auth=wse@tuxedocomputers.com smtp.mailfrom=wse@tuxedocomputers.com
-Message-ID: <663b2c15-d03e-4ff3-b0f3-54ae8403c133@tuxedocomputers.com>
-Date: Tue, 12 Nov 2024 17:43:56 +0100
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="DY77G6Lv"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=BJVQmFr6AnwBbp12XRdyOUsfVS07tTE+Dgfgwf0/d2QwvFY1n9XgLj/ygIDlhezcc9O3jzRJJxhTy2olOuJM986Mttk9RA9dl5fo44QufphfqfMElwa9W2jg6PLWpC+1QCX5ESyns7+R6o4CLDmb5GcWbB7bSH1QaUSJ2jlE1G8TBLX9I4C2w/3AaDKsuJfzmkalV1h/mTI2cJplPlHb7nt5gFq7SpYyXkToAoojyMtsEqHFXLlUT62D/irkMU7++09icMekjSLQA00d7ntD/1YFE4d8vT0dYwaMpcTrxAVn0BLrZc79wiucDRZo/YSVmhFOe78HYEaDc4Ml2996dw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=EcyAUsGp0OUS28O+kt+I7NrGn4qnF6vEmOnVyFe/f6k=;
+ b=FMul+IuuR6Uw5f+k15XAMPF+TuYPxK03BWdHznisMukDft3Xp9lAMypstAJ0u9u7PCMvGCuUO00jNY/tW9Kd2cHpx+rkMsg7eUe174OpW+X3GGJm8mSkW50LpQM4Vg9xT/YyQv8ygm2Xy9uFnaEniNQzVuhB8zOgANCf4Jv80NdefVSuEZHV6opZ+UqMM9INvzeP/biTpQXe1/CEr9rr36kKGPU18+RuUcUPQlMuREz0E2gm856xuLk/S5w38CdyUJW6zGu406f3FKZPNFpWnwijsYh1+gUCJpxwS0VWyX5B/tg92vlfl5bozYdCnptBwMoVfRFhCMLG15SdQyIeLA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=redhat.com smtp.mailfrom=amd.com; dmarc=pass
+ (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
+ dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=EcyAUsGp0OUS28O+kt+I7NrGn4qnF6vEmOnVyFe/f6k=;
+ b=DY77G6LvBSRqJOMhoAglk9NoXNxm0DGcGFywshQG5yPT3zU+Zz8kR5qMwE1tyMyY1fX4KrveHhJPJOwZJXOtfxfubSH57xM5z5ff/YzeQKfu9csUxZ5suIf7zXfsK0aZcAT4P2F72hJw9109AKu4pclUiQtBRZmAYFtJN1aD1sM=
+Received: from CH0PR03CA0385.namprd03.prod.outlook.com (2603:10b6:610:119::20)
+ by CH3PR12MB7761.namprd12.prod.outlook.com (2603:10b6:610:153::7) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8158.17; Tue, 12 Nov
+ 2024 17:03:25 +0000
+Received: from CH2PEPF00000142.namprd02.prod.outlook.com
+ (2603:10b6:610:119:cafe::44) by CH0PR03CA0385.outlook.office365.com
+ (2603:10b6:610:119::20) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8137.28 via Frontend
+ Transport; Tue, 12 Nov 2024 17:03:25 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
+Received: from SATLEXMB04.amd.com (165.204.84.17) by
+ CH2PEPF00000142.mail.protection.outlook.com (10.167.244.75) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.8158.14 via Frontend Transport; Tue, 12 Nov 2024 17:03:25 +0000
+Received: from jatayu.amd.com (10.180.168.240) by SATLEXMB04.amd.com
+ (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Tue, 12 Nov
+ 2024 11:03:22 -0600
+From: Basavaraj Natikar <Basavaraj.Natikar@amd.com>
+To: <hdegoede@redhat.com>, <ilpo.jarvinen@linux.intel.com>,
+	<platform-driver-x86@vger.kernel.org>
+CC: <perry.yuan@amd.com>, <mario.limonciello@amd.com>,
+	<Shyam-sundar.S-k@amd.com>, <W_Armin@gmx.de>, Basavaraj Natikar
+	<Basavaraj.Natikar@amd.com>
+Subject: [PATCH v6 0/2] Add support of AMD 3D V-Cache optimizer driver
+Date: Tue, 12 Nov 2024 22:33:05 +0530
+Message-ID: <20241112170307.3745777-1-Basavaraj.Natikar@amd.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: Why is wmi_bus_type not exported?
-To: Armin Wolf <W_Armin@gmx.de>, platform-driver-x86@vger.kernel.org
-References: <8847423c-22ec-4775-9119-de3e0ddb5204@tuxedocomputers.com>
- <c4315d31-7bc6-4bd9-a7eb-3e53356d55e9@gmx.de>
- <bf3dae8b-7f1f-4438-9cbe-525825d70752@tuxedocomputers.com>
- <aa129cb8-2b1d-4912-b731-74e959b99da6@gmx.de>
- <cc1721a1-bb2f-4dde-a8a5-3d4928439520@tuxedocomputers.com>
- <b2c8616e-7097-4e27-b5e4-b1fb1790857e@gmx.de>
-Content-Language: en-US
-Cc: Christoffer Sandberg <cs@tuxedo.de>
-From: Werner Sembach <wse@tuxedocomputers.com>
-In-Reply-To: <b2c8616e-7097-4e27-b5e4-b1fb1790857e@gmx.de>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: SATLEXMB03.amd.com (10.181.40.144) To SATLEXMB04.amd.com
+ (10.181.40.145)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: CH2PEPF00000142:EE_|CH3PR12MB7761:EE_
+X-MS-Office365-Filtering-Correlation-Id: aaefc1d9-db09-48b3-c9d0-08dd033bec1f
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|1800799024|36860700013|82310400026|376014;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?T05UNTJhUTlQNUMyRGhEaTVIcS9kNFR5Uko0cE5qV2EwdlJLblI1aVdkWmxO?=
+ =?utf-8?B?UGMyWEpWbW0vYWk0QTJIeXJyeXU0SHpxdmtUOUttcnFZVWUrSmZnZ1UvbG5z?=
+ =?utf-8?B?dVRCRWVDeUYybjlwV3FTbTNoWUZmTnVWbzlGeGMzVWl0UldHY1hQci9pNDNu?=
+ =?utf-8?B?R1EyNGZEQUJNZXVqemxWL3UweUV6WHY0eHFCMXhEUnc0cG5vdC94MjBhYXMr?=
+ =?utf-8?B?MUMwNkErQlF0NlhnamlWMGgxc1ptckcyWTJtbFpmUmdXbEsxMk4xdjFDdXow?=
+ =?utf-8?B?a2gxS0xIUzZYU0Jpazl5Z01SYURaS3g1UVB2cDFVTG9iY0g4bE9NMHFROXBs?=
+ =?utf-8?B?U0hCS0wvSWdraFVCbEJYMG9ONEpHc05LUXh6ZFdONUZlb01pMUNhcHp2Rk1n?=
+ =?utf-8?B?TS8zQXRPR0ZySWVPMGFYWFlYM2VlTTc1ZzV6UmFwMGpMa1RNVWdKVThQbXo2?=
+ =?utf-8?B?NDFGbjVlTmNYd1NMT0JQazBZaGpVWis3Y1RVQVFGMVRpbkxDN1RIdTNNaGlQ?=
+ =?utf-8?B?cEdRaStoRGFJNkhEay93dW9GZi9SeHhQWjJMTWM0aXRXMHBRWEVIVGREaWRt?=
+ =?utf-8?B?a1pjYVJVL1RIQWQ0eHpCWk5TaFJkUk4rVEJsaVhveDZGVmVBY0lRN0R5ZG9U?=
+ =?utf-8?B?Q2FPWW5YTUYzWGpidTBUNFpXeVpKTWwzczBmVmEyUEEveTFEWEIwdFdZMVBl?=
+ =?utf-8?B?SStkRHN4dGo4N2haSGlKYmtpcGdGbDNCb09GSUFtdzFMQmcxcTNBTHh4VkhU?=
+ =?utf-8?B?eUlYRU5QMy92WnRoSk8xQVp4WUxtaWJwMzI2TjBVUW5vbHpzY2k5akcybDRQ?=
+ =?utf-8?B?QTh4Vkh5QVhhcTBuQ1RROXlrSGZkN1Z2UStPd2dPZ2xMQ0J6Y0wrSXVHTHdn?=
+ =?utf-8?B?Y2I4YytSYVRENUJSMDR4OWxWUFZ0T2JiOTZFU2tGZ3VOTmw2L0VRbGF0ejFh?=
+ =?utf-8?B?akxsN0Z1RHFIc3d1ZFJEQ1pDclFMd1RiV014TkRUWW1WUmtvZkhRVER3UjJP?=
+ =?utf-8?B?Q0dMaWNnQ2xVOE9tQVdQczcxdDMwWWJKUkxTdWRQOXRXMWx2Sm5haFZVSjda?=
+ =?utf-8?B?SGZ0TTBxTngzVUpXbzJNakwycS94VkdGWGlmRThSQkFuSVY3amFXYkFIUTBP?=
+ =?utf-8?B?UjhiUnNJN0YwYVBnaktpRWE4M3M1cmV0SVRuMW5jQkEzV2xTSm90MU1oVnJr?=
+ =?utf-8?B?SVcrdVFBTzNYbnZ6WHZiRWljVENWWFpMVURwQWRKdnMvdGQ3RWQ1a2JxQkJE?=
+ =?utf-8?B?eUtIQVVtUUl0TDhneHFzcnhkY2EzVEN3V3hkTjN4NC9iT2pYaitpVUJ1cGl5?=
+ =?utf-8?B?NnRncVNhOXhoNk1NVTNQNTNaZjJnVkhRNklnNjZzd1lMZFA2OFNMRGVLQUhH?=
+ =?utf-8?B?MU5nNC9GbTlCU2VMSWcwSDZYelV4RUVyVzFCUjhIYmdCUDU4NWU1VGRUOWhW?=
+ =?utf-8?B?STZXMFZ3Rjc2dGNiK1M5a1VNVW5LcjdQRktmYXBDNDBGRGJxNlJ2eDhTSm0w?=
+ =?utf-8?B?MGNMc0xRcjhiaDQyNy81QUJ0WURDdXJpL09CMk9MVVhESGIvZGQ2SjNnaFhH?=
+ =?utf-8?B?b1hXNXRBc2laUHhKU3Y3Mjh3ZjgxSFZpb3VuN2RUYlR2UkVyUFUzanc5YUVB?=
+ =?utf-8?B?blIvSmdaejVWSys3clZhQlBKVDBJeDhBV3RvUE9aSW1rRWFMOFBEOFNMV2NU?=
+ =?utf-8?B?WkdOVGRsS2xnV2RnUWMwSkQxWHBJRlJubVJoMVFDTjVHSWxTNVI2ZHpTMU1q?=
+ =?utf-8?B?RGZab3NSRlNqMk52Rm13bGFNR3cxYUlUZVZsT0xjU21VeDkwVE1FYXhaWVNv?=
+ =?utf-8?B?RXltaTg2MWcyVTBvVm1UaDc1NmZPdktGcGpJMVBWaDJ0Z0l4N2FUa1h4YU94?=
+ =?utf-8?B?Ull4Nnd2Rno5NmVLUENPTi9ueEtSMEtMbElvYmhoUkRwanc9PQ==?=
+X-Forefront-Antispam-Report:
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(1800799024)(36860700013)(82310400026)(376014);DIR:OUT;SFP:1101;
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 12 Nov 2024 17:03:25.5000
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: aaefc1d9-db09-48b3-c9d0-08dd033bec1f
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	CH2PEPF00000142.namprd02.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH3PR12MB7761
 
-Am 12.11.24 um 17:31 schrieb Armin Wolf:
-> Am 12.11.24 um 16:10 schrieb Werner Sembach:
->
->>
->> Am 12.11.24 um 13:51 schrieb Armin Wolf:
->>> Am 12.11.24 um 13:42 schrieb Werner Sembach:
->>>
->>>> Hi,
->>>>
->>>> Am 12.11.24 um 13:01 schrieb Armin Wolf:
->>>>> Am 12.11.24 um 12:52 schrieb Werner Sembach:
->>>>>
->>>>>> Hi,
->>>>>>
->>>>>> quick learning question: Why is wmi_bus_type not exported unlike, for
->>>>>> example, acpi_bus_type, and platform_bus_type?
->>>>>>
->>>>>> Wanted to use bus_find_device_by_name in an acpi driver that might
->>>>>> need additional infos from a wmi interface that might or might not be
->>>>>> present.
->>>>>>
->>>>>> Kind regards,
->>>>>>
->>>>>> Werner Sembach
->>>>>>
->>>>>>
->>>>> What kind of information do you have in mind? wmi_bus_type is not
->>>>> being exported for historic reasons, i can change that if necessary.
->>>>
->>>> It's for the tuxedo-drivers part for the Sirius 16 Gen 1 & 2 which has
->>>> a slow wmi and a quick acpi interface, however the quick acpi
->>>> interface can not get the max rpm of the cooling fans, but the wmi
->>>> interface can.
->>>>
->>>> Thing is for the acpi driver we might plan an earlier upstream date
->>>> and it might get multi-odm support, while the wmi interface is and
->>>> stays odm specific. So my idea was to only couple both drivers in a
->>>> dynamic way using bus_find_device_by_name.
->>>>
->>> Interesting, how is the ACPI interface not ODM specific? Can you
->>> elaborate a bit on how the ACPI and the WMI interfaces work?
->>
->> We have an ODM that was willing to include ACPI code by us in their
->> BIOS blob and we hope that in the future we can carry that API over to
->> other ODMs for future TUXEDO devices.
->>
->> In pseudocode that API looks like this:
->>
->> v1:
->>
->> void SMOD(bool mode): Toggle firmware controlled fans vs manually (aka
->> via the commands below) controlled fans
->> bool GMOD(): Get current SMOD setting
->> int GCNT(): Get number of fans
->> enum GTYP(int index): Returns "CPU-fan" or "GPU-fan"
->> void SSPD(int index, int value): Set fan speed target as a fraction of
->> max speed
->> int GSPD(int index): Get current fan speed target as a fraction of max
->> speed
->>
->> v2 same as v1 but with added:
->>
->> int GRPM(int index): Get current actual fan speed in revolutions per
->> minute
->> int GTMP(int index): Get temperature of thing fan with respective
->> index is pointed at (CPU or GPU die, see GTYP)
->>
->> Like I said, what is missing is a "Get Max RPM" function even in v2,
->> which we might add a future iteration, but, well this bios is now out
->> in the wild. However these released devices have a "get info" function
->> in the wmi code which returns the v2 infos and the max rpm.
->>
->> I want to write the code in a way that it probes the acpi interface
->> for function existence and wherever something is missing tries to fall
->> back to infos gathered from the wmi interface, but that one is
->> implemented in a stand alone module (the tuxedo_nb04_* stuff in
->> tuxedo-drivers) and I would like to keep it that way in honor of KISS.
->>
->> My plan is that the first time max rpm is pulled the acpi driver uses
->> bus_find_device_* to get the wmi device, if present, and pulls max rpm
->> from the driver data there and copies it over to it's own driver data.
->> If not possible it returns a dummy value or falls back to another
->> method. Maybe a hard coded list of max rpm values, currently only 2
->> devices have the new interface, so it wouldn't be a long list.
->> Directly going to the hard coded list is our current fallback plan,
->> but it is not an elegant solution as the info is actually there, if
->> you know what i mean?
->>
->> Kind regards,
->>
->> Werner
->>
-> I see, we once had a similar case with the dell-wmi driver, see commit 
-> f97e058cfe80 ("platform/x86: wmi: Don't allow drivers to get each other's 
-> GUIDs"):
->
->     The only driver using this was dell-wmi, and it really was a hack.
->         The driver was getting a data attribute from another driver and this
->         type of action should not be encouraged.
->
->         Rather drivers that need to interact with one another should pass
->         data back and forth via exported functions.
->
-> I would be quite unhappy with drivers interacting with WMI devices without a 
-> proper WMI driver, but i can see your point here.
->
-> Maybe we can keep the retrieval of the fanX_max values out of the kernel? I 
-> propose the following:
->
-> - have a driver for your generic ACPI interface
-> - have a driver for the WMI interface (with fanX_max hwmon attributes)
->
-> The driver for the generic ACPI interface exposes the fan speed controls as 
-> pwmX attributes if the interface does not support
-> the "Get Max RPM" function. The userspace application in this case searches 
-> for the hwmon chip exposed by the WMI driver and
-> reads the fanX_max attributes there. Then the application can convert the 
-> target fan speed into values for the pwmX attributes
-> itself.
-> If the ACPI interface however supports the "Get Max RPM" function, then it 
-> exposes fanX_max and fanX_target hwmon attributes
-> themself and the userspace application uses them directly.
->
-> This would keep the kernel drivers simple.
->
-> I suppose you provide some sort of OEM application for fan control?
+AMD 3D V-Cache Technology significantly enhances per-core performance by
+increasing the amount of L3 cache available—up to three times compared
+to traditional architectures. This large cache allows for quicker access
+to frequently used data, minimizing latency and boosting overall
+efficiency in tasks that depend heavily on rapid data retrieval.
 
-Yes we do.
+To fully leverage this technology, the AMD 3D V-Cache Optimizer has been
+developed. This patch series introduces two distinct modes: Frequency
+mode and Cache mode.
 
-It would be a little bit harder for 3rd parties wanting to implement the hwmon 
-interface then and i'm also thinking of implementing it in the thermal subsystem 
-(albeit i did not do a proper readup on that system yet so maybe it wont work).
+Frequency Mode: In this setting, the optimizer prioritizes boosting the
+clock speed of the cores. This is particularly advantageous for
+applications and workloads that benefit from higher clock frequencies,
+enabling faster processing of tasks that are less reliant on cache size.
 
-> In this case having the fanX_max handling here also gives
-> you full control and allows you to stay independent from the kernel 
-> development in that regard. For example you might decide
-> independently to hardcode the max. RPM values on some machines (like the two 
-> new machines) or use a different hwmon chip on
-> some other machine.
->
-> Aside from that, i really like your approach with having a generic ACPI 
-> interface, it can potentially save you a lot of work
-> once you have the initial driver.
-Knock on wood that the generic acpi interface works out ^^.
->
-> Thanks,
-> Armin Wolf
->
->>>
->>> Thanks,
->>> Armin Wolf
->>>
->>>>>
->>>>> Thanks,
->>>>> Armin Wolf
->>>>>
->>>> Kind regards,
->>>>
->>>> Werner
->>>>
->>>>
+Cache Mode: Conversely, this mode focuses on maximizing the usage of the
+expanded L3 cache. For workloads that are cache-sensitive—such as
+certain gaming applications, data analytics, and other compute-intensive
+processes—this mode allows the system to take full advantage of the
+increased cache capacity, improving data throughput and reducing
+bottlenecks.
+
+Changes in v6:
+	- Added error checking for devm_mutex_init.
+	- Rebased onto the pxd86/for-next branch.
+
+Changes in v5:
+	- Removed the extra line.
+	- Added the missing #include directives.
+	- Modified the splitting of the line.
+	- Changed spaces to tabs.
+
+Changes in v4:
+	- Directly returned the result of function.
+
+Changes in v3:
+	- Changed the module parameter visibility to 0.
+	- Removed the error log message.
+	- Removed the error condition that will not be triggered.
+	- Protected the data read case.
+	- Moved the acpi_check_dsm check before allocation.
+	- Added PM operations.
+
+Changes in v2:
+	- Used kfree() instead of ACPI_FREE(). 
+	- Changed the ternary operator to an if statement.
+	- Used acpi_check_dsm().
+	- Used devm_mutex_init().
+	- Removed acpi_match_device().
+	- Removed the string format.
+
+Basavaraj Natikar (2):
+  platform/x86/amd: amd_3d_vcache: Add AMD 3D V-Cache optimizer driver
+  platform/x86/amd: amd_3d_vcache: Add sysfs ABI documentation
+
+ .../sysfs-bus-platform-drivers-amd_x3d_vcache |  12 ++
+ MAINTAINERS                                   |   8 +
+ drivers/platform/x86/amd/Kconfig              |  12 ++
+ drivers/platform/x86/amd/Makefile             |   2 +
+ drivers/platform/x86/amd/x3d_vcache.c         | 176 ++++++++++++++++++
+ 5 files changed, 210 insertions(+)
+ create mode 100644 Documentation/ABI/testing/sysfs-bus-platform-drivers-amd_x3d_vcache
+ create mode 100644 drivers/platform/x86/amd/x3d_vcache.c
+
+-- 
+2.25.1
+
