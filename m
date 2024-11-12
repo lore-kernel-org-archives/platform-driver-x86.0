@@ -1,161 +1,102 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9612822461F;
-	Tue, 12 Nov 2024 10:37:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA4DE22C73C;
+	Tue, 12 Nov 2024 10:37:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1731407851; cv=none; b=oPWvIJN2ZzQd4qFFUc0R2+9cALZAoi91KAxDDDpeGazbtl+hDO+fCedsd3Rdy33IRuu7gv+Akt4agVcLSJjK4i4WBfX/CXABt+3u/jrqL8j5CoDJSxbhBtUVidjsQAB9a60seBGvIRuihyBXbRmWAOemYwZBZ1HX2SOcVCTZNfs=
+	t=1731407871; cv=none; b=dGntCpP5147iTy5Wuv/C3K6wF88sDFx+LalCxpR7c1DrzUxS2blKKBsInOsxWLfyHPMPZ1u5zxoTQ8HgGcT+NupD46IfhK71DsndMQ+4jDp8sFJhxMe+wP6ggeJ24uwRLUCp+cnuoBYjo+Xko0J9qHeDzCVchZXs7V1ai2oKNOA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1731407851; c=relaxed/simple;
-	bh=6oXqxVNzb22esr4Pq/c2HABoV5wcIRYCadwjZZPLfiA=;
+	s=arc-20240116; t=1731407871; c=relaxed/simple;
+	bh=QOvCdirU6UWPL06gwZZcW/ucIk4crvlQX68eUGa+UJI=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=BLDKrXx8iHDcKqMx5esEQhDtUFOQ502Bu08tAVNyqjT0k95exo8d9mg5hD1a8iZ0dDN7Y3MDhfJCa5JVaqW2uzCH7C7jqX2gekdheDi6Mb87FMzlKZo9tXAWsR+AFvMRxbL0e/o0LXi6KFiCVAKbFV1XS82bheGMzzn6jti1DkE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=srcSC2l6; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version:Content-Type; b=XEotvUClOSpe++5fzENuUf3DCIGIqlO8dmjYmAH1HTLS8/tsYRZWqRYbG57RLPRhcHaoBkrMdq0Vq8RG4BbkiEZOqIkUaaDERvSNxzh8XaSmCRUeZYO8IpAd10q5xrlx+CXfae4v57vN1lpSg5rvr3KyX4vgHSO/qq21W3FUYzM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=uaXaG7tb; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="srcSC2l6"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 529F6C4CED7;
-	Tue, 12 Nov 2024 10:37:30 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uaXaG7tb"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3151DC4CED7;
+	Tue, 12 Nov 2024 10:37:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1731407851;
-	bh=6oXqxVNzb22esr4Pq/c2HABoV5wcIRYCadwjZZPLfiA=;
+	s=k20201202; t=1731407871;
+	bh=QOvCdirU6UWPL06gwZZcW/ucIk4crvlQX68eUGa+UJI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=srcSC2l6y5wFr0Fx0zUa9IbpPrDQlq6DN9VLLhS3Qx/fAFbq10d1Ur63j4IRfkkji
-	 2wrQAzYgVZKg24X76g+0tKd0sPRHiO6ROfsz3WhWsJgw8J9ra8uzEc3BpfVNjr0p2Q
-	 hwfNeui9F/meuzxH1SqBek1gyAPpKd2z4i/LDrX6IcPYQIanAtZQKEp4diXQIdlOqu
-	 uT6dYwiSwCy06HlTq1o71Viw1lclVfUQuyGQcFgurq902kaZlsAoW5W/C3DaloG8u3
-	 kcCVC5t0P8kIMWxXU/aa4kcT39L7xZsGHtqsdt5PEe1Yc6XNpF595yIJfJn6cbGR0w
-	 4dBJgT643g+bA==
+	b=uaXaG7tbTh40FeN/qRv7UgEovF77ON/AKLzRZS91lqFZMGRH2jH6U4SndMPqc6d78
+	 2CoJPl//U7wau6/hLn4UYJeBuyf1JE51+mRP9ITH5aUR138YZESHL7EFP0TcLTq14s
+	 UA9rHIBd0zH2EqSL25sP85ifoF/b/UwxS9wUry0mlPLH2MQUq5MD/vunCRab5DrVT8
+	 Y2UgYHvGZmnTjSQX/+Ur/rcDktsaKcn42VdN2CN0geY1ixNSQJ/qC9nUOxkXKKw17Y
+	 Y9o+1Mn8RhK8jKUKj3/YIoPhuwF+mV6fVKYZXgUS8iHSlx1rGP8QqQwTOa8zjzl0op
+	 H/jTaZmiW+x0g==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Vishnu Sankar <vishnuocv@gmail.com>,
-	Mark Pearson <mpearson-lenovo@squebb.ca>,
+Cc: Kurt Borja <kuurtb@gmail.com>,
+	Mario Limonciello <mario.limonciello@amd.com>,
+	=?UTF-8?q?Pali=20Roh=C3=A1r?= <pali@kernel.org>,
 	Hans de Goede <hdegoede@redhat.com>,
 	Sasha Levin <sashal@kernel.org>,
-	hmh@hmh.eng.br,
 	ilpo.jarvinen@linux.intel.com,
-	ibm-acpi-devel@lists.sourceforge.net,
+	lsanche@lyndeno.ca,
+	W_Armin@gmx.de,
+	amishin@t-argos.ru,
 	platform-driver-x86@vger.kernel.org
-Subject: [PATCH AUTOSEL 6.1 07/12] platform/x86: thinkpad_acpi: Fix for ThinkPad's with ECFW showing incorrect fan speed
-Date: Tue, 12 Nov 2024 05:37:09 -0500
-Message-ID: <20241112103718.1653723-7-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.15 3/8] platform/x86: dell-smbios-base: Extends support to Alienware products
+Date: Tue, 12 Nov 2024 05:37:37 -0500
+Message-ID: <20241112103745.1653994-3-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20241112103718.1653723-1-sashal@kernel.org>
-References: <20241112103718.1653723-1-sashal@kernel.org>
+In-Reply-To: <20241112103745.1653994-1-sashal@kernel.org>
+References: <20241112103745.1653994-1-sashal@kernel.org>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
-X-stable-base: Linux 6.1.116
+X-stable-base: Linux 5.15.171
 Content-Transfer-Encoding: 8bit
 
-From: Vishnu Sankar <vishnuocv@gmail.com>
+From: Kurt Borja <kuurtb@gmail.com>
 
-[ Upstream commit 1be765b292577c752e0b87bf8c0e92aff6699d8e ]
+[ Upstream commit a36b8b84ac4327b90ef5a22bc97cc96a92073330 ]
 
-Fix for Thinkpad's with ECFW showing incorrect fan speed. Some models use
-decimal instead of hexadecimal for the speed stored in the EC registers.
-For example the rpm register will have 0x4200 instead of 0x1068, here
-the actual RPM is "4200" in decimal.
+Fixes the following error:
 
-Add a quirk to handle this.
+dell_smbios: Unable to run on non-Dell system
 
-Signed-off-by: Vishnu Sankar <vishnuocv@gmail.com>
-Suggested-by: Mark Pearson <mpearson-lenovo@squebb.ca>
-Link: https://lore.kernel.org/r/20241105235505.8493-1-vishnuocv@gmail.com
+Which is triggered after dell-wmi driver fails to initialize on
+Alienware systems, as it depends on dell-smbios.
+
+This effectively extends dell-wmi, dell-smbios and dcdbas support to
+Alienware devices, that might share some features of the SMBIOS intereface
+calling interface with other Dell products.
+
+Tested on an Alienware X15 R1.
+
+Signed-off-by: Kurt Borja <kuurtb@gmail.com>
+Reviewed-by: Mario Limonciello <mario.limonciello@amd.com>
+Acked-by: Pali Rohár <pali@kernel.org>
+Link: https://lore.kernel.org/r/20241031154023.6149-2-kuurtb@gmail.com
 Reviewed-by: Hans de Goede <hdegoede@redhat.com>
 Signed-off-by: Hans de Goede <hdegoede@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/platform/x86/thinkpad_acpi.c | 28 +++++++++++++++++++++++++---
- 1 file changed, 25 insertions(+), 3 deletions(-)
+ drivers/platform/x86/dell/dell-smbios-base.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/platform/x86/thinkpad_acpi.c b/drivers/platform/x86/thinkpad_acpi.c
-index c2fb19af10705..bedc6cd51f399 100644
---- a/drivers/platform/x86/thinkpad_acpi.c
-+++ b/drivers/platform/x86/thinkpad_acpi.c
-@@ -8213,6 +8213,7 @@ static u8 fan_control_resume_level;
- static int fan_watchdog_maxinterval;
+diff --git a/drivers/platform/x86/dell/dell-smbios-base.c b/drivers/platform/x86/dell/dell-smbios-base.c
+index b19c5ff31a703..5b8783a7b0455 100644
+--- a/drivers/platform/x86/dell/dell-smbios-base.c
++++ b/drivers/platform/x86/dell/dell-smbios-base.c
+@@ -543,6 +543,7 @@ static int __init dell_smbios_init(void)
+ 	int ret, wmi, smm;
  
- static bool fan_with_ns_addr;
-+static bool ecfw_with_fan_dec_rpm;
- 
- static struct mutex fan_mutex;
- 
-@@ -8856,7 +8857,11 @@ static ssize_t fan_fan1_input_show(struct device *dev,
- 	if (res < 0)
- 		return res;
- 
--	return sysfs_emit(buf, "%u\n", speed);
-+	/* Check for fan speeds displayed in hexadecimal */
-+	if (!ecfw_with_fan_dec_rpm)
-+		return sysfs_emit(buf, "%u\n", speed);
-+	else
-+		return sysfs_emit(buf, "%x\n", speed);
- }
- 
- static DEVICE_ATTR(fan1_input, S_IRUGO, fan_fan1_input_show, NULL);
-@@ -8873,7 +8878,11 @@ static ssize_t fan_fan2_input_show(struct device *dev,
- 	if (res < 0)
- 		return res;
- 
--	return sysfs_emit(buf, "%u\n", speed);
-+	/* Check for fan speeds displayed in hexadecimal */
-+	if (!ecfw_with_fan_dec_rpm)
-+		return sysfs_emit(buf, "%u\n", speed);
-+	else
-+		return sysfs_emit(buf, "%x\n", speed);
- }
- 
- static DEVICE_ATTR(fan2_input, S_IRUGO, fan_fan2_input_show, NULL);
-@@ -8949,6 +8958,7 @@ static const struct attribute_group fan_driver_attr_group = {
- #define TPACPI_FAN_2CTL		0x0004		/* selects fan2 control */
- #define TPACPI_FAN_NOFAN	0x0008		/* no fan available */
- #define TPACPI_FAN_NS		0x0010		/* For EC with non-Standard register addresses */
-+#define TPACPI_FAN_DECRPM	0x0020		/* For ECFW's with RPM in register as decimal */
- 
- static const struct tpacpi_quirk fan_quirk_table[] __initconst = {
- 	TPACPI_QEC_IBM('1', 'Y', TPACPI_FAN_Q1),
-@@ -8970,6 +8980,7 @@ static const struct tpacpi_quirk fan_quirk_table[] __initconst = {
- 	TPACPI_Q_LNV3('R', '1', 'F', TPACPI_FAN_NS),	/* L13 Yoga Gen 2 */
- 	TPACPI_Q_LNV3('N', '2', 'U', TPACPI_FAN_NS),	/* X13 Yoga Gen 2*/
- 	TPACPI_Q_LNV3('N', '1', 'O', TPACPI_FAN_NOFAN),	/* X1 Tablet (2nd gen) */
-+	TPACPI_Q_LNV3('R', '0', 'Q', TPACPI_FAN_DECRPM),/* L480 */
- };
- 
- static int __init fan_init(struct ibm_init_struct *iibm)
-@@ -9010,6 +9021,13 @@ static int __init fan_init(struct ibm_init_struct *iibm)
- 		tp_features.fan_ctrl_status_undef = 1;
- 	}
- 
-+	/* Check for the EC/BIOS with RPM reported in decimal*/
-+	if (quirks & TPACPI_FAN_DECRPM) {
-+		pr_info("ECFW with fan RPM as decimal in EC register\n");
-+		ecfw_with_fan_dec_rpm = 1;
-+		tp_features.fan_ctrl_status_undef = 1;
-+	}
-+
- 	if (gfan_handle) {
- 		/* 570, 600e/x, 770e, 770x */
- 		fan_status_access_mode = TPACPI_FAN_RD_ACPI_GFAN;
-@@ -9221,7 +9239,11 @@ static int fan_read(struct seq_file *m)
- 		if (rc < 0)
- 			return rc;
- 
--		seq_printf(m, "speed:\t\t%d\n", speed);
-+		/* Check for fan speeds displayed in hexadecimal */
-+		if (!ecfw_with_fan_dec_rpm)
-+			seq_printf(m, "speed:\t\t%d\n", speed);
-+		else
-+			seq_printf(m, "speed:\t\t%x\n", speed);
- 
- 		if (fan_status_access_mode == TPACPI_FAN_RD_TPEC_NS) {
- 			/*
+ 	if (!dmi_find_device(DMI_DEV_TYPE_OEM_STRING, "Dell System", NULL) &&
++	    !dmi_find_device(DMI_DEV_TYPE_OEM_STRING, "Alienware", NULL) &&
+ 	    !dmi_find_device(DMI_DEV_TYPE_OEM_STRING, "www.dell.com", NULL)) {
+ 		pr_err("Unable to run on non-Dell system\n");
+ 		return -ENODEV;
 -- 
 2.43.0
 
