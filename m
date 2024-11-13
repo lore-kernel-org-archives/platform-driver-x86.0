@@ -1,240 +1,124 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 778B413D8B1
-	for <platform-driver-x86@vger.kernel.org>; Wed, 13 Nov 2024 18:39:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 67746202630
+	for <platform-driver-x86@vger.kernel.org>; Wed, 13 Nov 2024 18:40:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1731523157; cv=none; b=Pjl/0RA7c/mjgK2lLlKrAn8H/QiNl16oWxiSHrlv9cuzeP4CiLPbpdBEcpf3cgWi1m9RAjfWkh6pG1r5dRKB5/Ov+2r91mHJLI3Jkv9TEkUPIowA5RJ7FCVEA4c6Tb/mvVu0Ju8OcV4cRvKsDwEtgiiSlHzBF5O9TiagdfmHPr8=
+	t=1731523245; cv=none; b=oNJHAAbwYKCJu5wXyZT3FMz9DkP0em4T4aKDeoouUNya2XwA+wFZJVnw7Dp4QHu3q4Y+DEPk8WYXC7etCFEOQ4Ez6N6Fy/Eb+gFNrOzV0/WYu5fM2LpRegCvp0U9bCbkq+wc7yOzzTorlBYXTm9ouqbk/vMsrz3q2mIMLqhQWps=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1731523157; c=relaxed/simple;
-	bh=jjuVdWU7zSVeYxbOflUlo5CQAJpwgAMude4YJp+CV+s=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=k1oMEZcRd+wxA7+88yKmDLa/L3jyfEF6dRuu4bor/3/tUX8AuGBWljl0WyLK+4w74H3O/L19bNPmbSK1OT1POrMiq6mXdl+RWFXkfXGNy8v+K9tiWTAeqgS7hdBYue9IbrKcrRy1CZu+ENtE37pXV4vED48iIQSAQmREKe2W/Wk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=beBquw/T; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1731523245; c=relaxed/simple;
+	bh=/aLAoab8zZ/hwUS1A5+RAugz7lXWkG8v6QZ80f/cbqc=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=l1VR/XAIkNJhrn+++Ip2G26wfEehOQQN/1x6xoJtR0uAxMFFYNkTIYCSp6Ie3qY58mYCgsT5bKCLiyXVU4uKoMGbTsWMiD2rQzMGXL+dNUdt6OWziFNmT8A+DYISCfTINc1VVLXob25OC5mjmSMUWJaSAgclZDkSk+1GBiQkIFw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Pc3abxcV; arc=none smtp.client-ip=198.175.65.21
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="beBquw/T"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1731523154;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=mcbkjwECU8Y7+6lafe9yZ7pyaau+st73Hne50Zv2aPo=;
-	b=beBquw/TyDUyaihWyBlE4QrbF+8hL+YCUtsnGXky+Xft3cB0BfyTClXeUf7aLo+YjjFCHN
-	91dRWBN//0iHUvTMoFBf1Shg6nqwy9NjSEZVv9+OeHUsxQT+6k6YgXttvqUW6bMqKcvKat
-	zZA2UrM69oHHfMZ9iEUmUFZzy5zYF6w=
-Received: from mail-ed1-f72.google.com (mail-ed1-f72.google.com
- [209.85.208.72]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-449-yrJtUc_uOWa-2eK56t3HPg-1; Wed, 13 Nov 2024 13:39:12 -0500
-X-MC-Unique: yrJtUc_uOWa-2eK56t3HPg-1
-X-Mimecast-MFC-AGG-ID: yrJtUc_uOWa-2eK56t3HPg
-Received: by mail-ed1-f72.google.com with SMTP id 4fb4d7f45d1cf-5c947d9afc9so5878136a12.1
-        for <platform-driver-x86@vger.kernel.org>; Wed, 13 Nov 2024 10:39:12 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1731523152; x=1732127952;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=mcbkjwECU8Y7+6lafe9yZ7pyaau+st73Hne50Zv2aPo=;
-        b=HrO6ObP+XD+jMdf4fCKJ3xcQ2rbxvtKeGkizN4q9tBTTFBRP3SxUnmQxm4Aeq7z4zs
-         Lt4zxUVf04hmcR+hTgs/vgOGXh0dbyTryOgB/n1B0nb8GVafXjiefLKzMV5c17EF/GTt
-         qikUXUwwtSRa5B1A1Q37sPsuz7dewNvzifuKNw6gtoXR+edo5GQOOCuYcpQrqhnKmcwK
-         aSHVVrplgklluuy7EyI2tQcAM77YICIRA7x1J58xMUzx5dYHDH42usNUuS6ImU3BhXP1
-         ZqbqlzOM8JRoDK3H3Zjg10Gl8VWWAqBLXkxpnSTtaeZXSP+Uqy0/mrxDW7vi2ZsVK8TM
-         mZmA==
-X-Forwarded-Encrypted: i=1; AJvYcCW97k85We/tRZWJacqxIDg/UAb4bbDJaN9jQBhNmOOutGeD8yB1aqEhgWXtZ5PAZuQ5uMGNhQv/8HZVFlqCVZ1ekN9w@vger.kernel.org
-X-Gm-Message-State: AOJu0YzbLz+hl/oV5ljYXbctLjqpJzgxa8WcWq3cfUTiNkhrGP9SP15G
-	OHuheXTEnsPGacrdTFdKBLv9OBoDNo5CLXzsoybvFNfWVEu/Ub7I6nB7atiAGn7CjvvZVAUV5tt
-	Z4AchVgF6r5Y2JbWxDfBSB6BAAyWFz1eKYzPROJ63Djx3wcdqL4KcI62Mr27OFbQfIhmg3v0=
-X-Received: by 2002:a17:907:3e8e:b0:a99:f6ee:1ee3 with SMTP id a640c23a62f3a-aa1f8106245mr365405866b.43.1731523151661;
-        Wed, 13 Nov 2024 10:39:11 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IEUVqwY6xWiWiUm7kVlrB9M1MSKlS/Lxxyf3kAHg+T0yi0Jz5WlRcSbeJOz0PbOdM7PimsReQ==
-X-Received: by 2002:a17:907:3e8e:b0:a99:f6ee:1ee3 with SMTP id a640c23a62f3a-aa1f8106245mr365404466b.43.1731523151268;
-        Wed, 13 Nov 2024 10:39:11 -0800 (PST)
-Received: from ?IPV6:2001:1c00:c32:7800:5bfa:a036:83f0:f9ec? (2001-1c00-0c32-7800-5bfa-a036-83f0-f9ec.cable.dynamic.v6.ziggo.nl. [2001:1c00:c32:7800:5bfa:a036:83f0:f9ec])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a9ee0a17684sm905969266b.34.2024.11.13.10.39.10
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 13 Nov 2024 10:39:10 -0800 (PST)
-Message-ID: <8d666b0a-a33e-4ee2-9f7f-fbb0a5ffc365@redhat.com>
-Date: Wed, 13 Nov 2024 19:39:10 +0100
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Pc3abxcV"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1731523243; x=1763059243;
+  h=message-id:subject:from:reply-to:to:cc:date:in-reply-to:
+   references:content-transfer-encoding:mime-version;
+  bh=/aLAoab8zZ/hwUS1A5+RAugz7lXWkG8v6QZ80f/cbqc=;
+  b=Pc3abxcVMPJtdUKiUubd/xKqMN9CCk3SHwmrqQWhzGWQs66lqDgHZ8UE
+   g3ZOPT7AVIZJti15Ma3aWtdNC8u+3eoK7jdPopZ8mwcR5vx739k02Gj/I
+   ExCi1HlTRWyIFLupruAadE5a/j/bh4vxZjUNGR+9JQgTCj526Ex3Z/0tv
+   wlafboHMlCYOTXQN495ZWh212AFV2wBQBKtiIr0ot1MmbeufDzaXxR5kl
+   Iy4RnH3BoOy8DjOxVI26dsiS+w/9jTk+1FNkDi6SUGujHOrhlYrQyi1PK
+   JDderSXJO1E08UCYe5Qevw6n+TP47Wq4RI+1+op+DHGrIm9gAXnABDct8
+   w==;
+X-CSE-ConnectionGUID: UJRSGgERSAOlrOsRas7iJg==
+X-CSE-MsgGUID: WYUvGJxaQ/GtFl0mKxkhsw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11222"; a="31398020"
+X-IronPort-AV: E=Sophos;i="6.11,199,1725346800"; 
+   d="scan'208";a="31398020"
+Received: from orviesa001.jf.intel.com ([10.64.159.141])
+  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Nov 2024 10:40:43 -0800
+X-CSE-ConnectionGUID: MKZGoaaqSn2tiGd7jRWfXA==
+X-CSE-MsgGUID: 5bj9g0tmQJaImklWbHV9uQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.12,151,1728975600"; 
+   d="scan'208";a="125470038"
+Received: from dnelso2-mobl.amr.corp.intel.com ([10.125.111.242])
+  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Nov 2024 10:40:43 -0800
+Message-ID: <7e22fc28bd8d81d42c75166b8792eaf0d856a413.camel@linux.intel.com>
+Subject: Re: [PATCH v2 0/2] Support BMG PMT features for Xe
+From: "David E. Box" <david.e.box@linux.intel.com>
+Reply-To: david.e.box@linux.intel.com
+To: Ilpo =?ISO-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>, Andy
+ Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: "Michael J. Ruhl" <michael.j.ruhl@intel.com>, 
+ intel-xe@lists.freedesktop.org, platform-driver-x86@vger.kernel.org, Hans
+ de Goede <hdegoede@redhat.com>, rodrigo.vivi@intel.com,
+ lucas.demarchi@intel.com
+Date: Wed, 13 Nov 2024 10:40:42 -0800
+In-Reply-To: <23fe9eca-ebd3-4098-22ab-d21434026273@linux.intel.com>
+References: <20241112163035.2282499-1-michael.j.ruhl@intel.com>
+	 <ZzSBpq2IakMrvV6h@smile.fi.intel.com>
+	 <23fe9eca-ebd3-4098-22ab-d21434026273@linux.intel.com>
+Organization: David E. Box
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.52.3-0ubuntu1 
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 2/2] platform/x86: x86-android-tablets: Add Vexia EDU ATLA
- 10 EC battery driver
-To: Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc: =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
- Andy Shevchenko <andy@kernel.org>, Sebastian Reichel <sre@kernel.org>,
- platform-driver-x86@vger.kernel.org, linux-pm@vger.kernel.org
-References: <20241104203555.61104-1-hdegoede@redhat.com>
- <20241104203555.61104-2-hdegoede@redhat.com>
- <CAHp75Vdkwg4pUs=k-GNv9wxuecVpMromh_F49bbfhYL7sxjwDg@mail.gmail.com>
-Content-Language: en-US, nl
-From: Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <CAHp75Vdkwg4pUs=k-GNv9wxuecVpMromh_F49bbfhYL7sxjwDg@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
 
-Hi Andy,
+On Wed, 2024-11-13 at 15:52 +0200, Ilpo J=C3=A4rvinen wrote:
+> On Wed, 13 Nov 2024, Andy Shevchenko wrote:
+>=20
+> > On Tue, Nov 12, 2024 at 11:30:33AM -0500, Michael J. Ruhl wrote:
+> > > Updates for PMT to support user offsets from the sysfs API.
+> > >=20
+> > > Addressed review comments for the Xe driver udpates.
+> >=20
+> > FWIW,
+> > Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> >=20
+> > If you have wish and time, there are problems with the drivers of diffe=
+rent
+> > severities (from "fine as is" to "good to be fixed, but okay as is") I =
+have
+> > noticed so far:
+> > - it uses s*printf() instead of sysfs_emit*()
+> > - it most likely never tested the corner cases. e.g.,
+> >=20
+> > 	if (disc_res->start >=3D pci_resource_start(pci_dev, i) &&
+> > 	=C2=A0=C2=A0=C2=A0 (disc_res->start <=3D pci_resource_end(pci_dev, i))=
+) {
+> >=20
+> > =C2=A0 what is this supposed to mean? Probably someone wanted resource_=
+contains()
+> > or
+> > =C2=A0 alike to be called here.
 
-On 5-Nov-24 11:39 AM, Andy Shevchenko wrote:
-> On Mon, Nov 4, 2024 at 10:36 PM Hans de Goede <hdegoede@redhat.com> wrote:
->>
->> The Vexia EDU ATLA 10 tablet has an embedded controller instead of
->> giving the os direct access to the charger + fuel-gauge ICs as is normal
->> on tablets designed for Android.
->>
->> There is ACPI Battery device in the DSDT using the EC which should work
->> expect that it expects the I2C controller to be enumerated as an ACPI
-> 
-> expect --> except
-> 
->> device and the tablet's BIOS enumerates all LPSS devices as PCI devices
->> (and changing the LPSS BIOS settings from PCI -> ACPI does not work).
->>
->> Add a power_supply class driver for the Atla 10 EC to expert battery info
->> to userspace. This is made part of the x86-android-tablets directory and
->> Kconfig option because the i2c_client it binds to is instantiated by
->> the x86-android-tablets kmod.
-> 
-> Reviewed-by: Andy Shevchenko <andy@kernel.org>
+This is a corner case that occurs for devices that are non-compliant, in th=
+is
+case meaning devices that don't follow our PMT spec convention of specifyin=
+g
+which BAR an address belongs to. Without this information, we have to deduc=
+e the
+BAR manually to access other needed registers that are offset from the base=
+ of
+that BAR.
 
-Thank you for the reviews for both patches. I'll try to prepare a v2
-series addressing the small remarks you had tomorrow.
+I can change this to use resource_contains().
 
-Regards,
+> > - slightly above the above piece the for-loop
+> >=20
+> > 	for (i =3D 0; i < 6; i++)
+> >=20
+> > =C2=A0 which probably want to use PCI_STD_RESOURCE_END)
+>=20
+> While both work, in practice PCI_STD_NUM_BARS is way more common than=20
+> PCI_STD_RESOURCE_END.
+>=20
 
-Hans
+Will change this too. Thanks.
 
-
-
-
-> 
-> ...
-> 
->>  obj-$(CONFIG_X86_ANDROID_TABLETS) += x86-android-tablets.o
->> +obj-$(CONFIG_X86_ANDROID_TABLETS) += vexia_atla10_ec.o
-> 
-> This splits the original (compound) object lines, please move it
-> either before (and this seems even better with ordering by name in
-> mind) or after this block.
->>
-> 
-> Actually this blank line gives the false impression that the
-> originally two lines are not related. I would drop this blank line as
-> well.
-> 
->>  x86-android-tablets-y := core.o dmi.o shared-psy-info.o \
->>                          asus.o lenovo.o other.o
-> 
-> ...
-> 
->> +#include <linux/bits.h>
->> +#include <linux/devm-helpers.h>
-> 
-> + err.h
-> 
->> +#include <linux/i2c.h>
->> +#include <linux/module.h>
->> +#include <linux/power_supply.h>
->> +#include <linux/types.h>
->> +#include <linux/workqueue.h>
->> +
->> +#include <asm/byteorder.h>
-> 
-> ...
-> 
->> +/* From broken ACPI battery device in DSDT */
->> +#define ATLA10_EC_VOLTAGE_MIN_DESIGN           3750000
-> 
-> _uV ?
-> 
-> ...
-> 
->> +struct atla10_ec_battery_state {
->> +       u8 len;                         /* Struct length excluding the len field, always 12 */
->> +       u8 status;                      /* Using ACPI Battery spec status bits */
->> +       u8 capacity;                    /* Percent */
->> +       __le16 charge_now;              /* mAh */
->> +       __le16 voltage_now;             /* mV */
->> +       __le16 current_now;             /* mA */
->> +       __le16 charge_full;             /* mAh */
->> +       __le16 temp;                    /* centi degrees celcius */
-> 
-> Celsius / celsius
-> 
->> +} __packed;
->> +
->> +struct atla10_ec_battery_info {
->> +       u8 len;                         /* Struct length excluding the len field, always 6 */
->> +       __le16 charge_full_design;      /* mAh */
->> +       __le16 voltage_now;             /* mV, should be design voltage, but is not ? */
->> +       __le16 charge_full_design2;     /* mAh */
->> +} __packed;
-> 
-> Instead I would add the respective units to the variable names:
-> _mAh
-> _mV
-> ...etc.
-> 
-> (* yes, with the capital letters to follow the proper spelling)
-> 
-> ...
-> 
->> +static int atla10_ec_cmd(struct atla10_ec_data *data, u8 cmd, u8 len, u8 *values)
->> +{
->> +       struct device *dev = &data->client->dev;
->> +       int ret;
->> +
->> +       ret = i2c_smbus_read_i2c_block_data(data->client, cmd, len, values);
->> +       if (ret != len) {
->> +               dev_err(dev, "I2C command 0x%02x error: %d\n", cmd, ret);
->> +               return -EIO;
->> +       }
-> 
->> +       if (values[0] != (len - 1)) {
-> 
-> Hmm... AFAIU this is part of SMBus protocol. Why do we need to care
-> about this? Or is this an additional header on top of that?
-> 
->> +               dev_err(dev, "I2C command 0x%02x header length mismatch expected %u got %u\n",
->> +                       cmd, len - 1, values[0]);
->> +               return -EIO;
->> +       }
->> +
->> +       return 0;
->> +}
-> 
-> ...
-> 
->> +               val->intval = min(charge_now, charge_full) * 1000;
-> 
-> MILLI (here and below)?
-> 
->> +               break;
->> +       case POWER_SUPPLY_PROP_VOLTAGE_NOW:
->> +               val->intval = le16_to_cpu(data->state.voltage_now) * 1000;
->> +               break;
->> +       case POWER_SUPPLY_PROP_CURRENT_NOW:
->> +               val->intval = le16_to_cpu(data->state.current_now) * 1000;
->> +               /*
->> +                * Documentation/ABI/testing/sysfs-class-power specifies
->> +                * negative current for discharing.
-> 
-> discharging
-> 
->> +                */
-> 
-> --
-> With Best Regards,
-> Andy Shevchenko
-> 
-
+David
