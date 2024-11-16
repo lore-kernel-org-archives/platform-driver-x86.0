@@ -1,250 +1,207 @@
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC58718A931
-	for <platform-driver-x86@vger.kernel.org>; Sat, 16 Nov 2024 10:43:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D8BD710E9
+	for <platform-driver-x86@vger.kernel.org>; Sat, 16 Nov 2024 12:17:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1731753820; cv=none; b=WbEPiGqsmBd8xDaJJDAPQjDmGzJMVr8lhVMGu5di6bwmafHDzw2wLCWOvxlu0YyaXexRtCYd0O+5ZKwPFj0sgNw8IWudkTwtQOrgTTW37ImXY3qRLy/nLVqzCoxdGudfHdAIUlLFT8/h9ew/vhsH1EcUe8xChScCpfaHFGJRHJo=
+	t=1731759430; cv=none; b=S0HbKgZkNv426s9kq7fO+0X0Aa5KayyxPQxbZrl0QhjoThhuxPCDyRiDXu+MxfTR/xkiwLNW7/eHvFmLsUUQ3FVK2g5XrIt+WmfxwwIrphALncse2+PPCUTsrvYXfisS3Yq4fxrDW1fNloFzWiS5WbjKjeu7NYwAuV9n8gblwSc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1731753820; c=relaxed/simple;
-	bh=kjk+3v5Y/1GXI1rVV2hj5frxGNVNRarI1Q0cTetzVZ0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=RS44zVmPVf/0FvcBi2rP/lb/iZ7w2hs07aRvSDK+CN/sZkBuRHzYcswfAowhqMANQcWSDpT9XiFRy7kbIB+cPx6xngoRxNU6E+Cdmoc+8dINng28AXuIPE8BuDcW4a8Vfy1lz9CT486trAMhAvdoy9FtWWhXS6YUBVJcZdglKQo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=MeWQSxNV; arc=none smtp.client-ip=170.10.133.124
+	s=arc-20240116; t=1731759430; c=relaxed/simple;
+	bh=142W4TAZyioQTaokBXzKmJDC5FOjnFtcys3x+LZDPh8=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=B+w2C/V3d/tlYawnPf70zAGMG63uQrRPv5S7k+lGcw1JG/5lbWbi0VQqLSu4vX8q3Iky1P/JeKnwhgx96nMwZ0dIy06wbroU4aA83UBMT46PsdezJh+dbCet67dcMv7rAJXpMBETAA2r39OMJrgmVH4u+q1TOwrMLbQIJtAhdWY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=M/yFwEZe; arc=none smtp.client-ip=170.10.133.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="MeWQSxNV"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="M/yFwEZe"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1731753817;
+	s=mimecast20190719; t=1731759427;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=lgkpmPxBG0aTg3aGWwQ0D5/NyeWXzd+9Y9QxfhnYPWE=;
-	b=MeWQSxNVxS6cfVevPZltaBySpyOoLBrKeQYe29KSjCobs5YMAjigUHqurq56NoAe49nSa0
-	Mi5XfoTcEz9Qa157SVq+v/ndU+fGQYQ8Ea1fD9jvxyEB0Nxu2tUrFAaPRaiNxYN5ex1tOn
-	priwjrZTB3RvcDtGF/6Ooj7l67dv/84=
-Received: from mail-ej1-f69.google.com (mail-ej1-f69.google.com
- [209.85.218.69]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-2-FZrs9rJ6Oym7resr8X5Owg-1; Sat, 16 Nov 2024 05:43:36 -0500
-X-MC-Unique: FZrs9rJ6Oym7resr8X5Owg-1
-X-Mimecast-MFC-AGG-ID: FZrs9rJ6Oym7resr8X5Owg
-Received: by mail-ej1-f69.google.com with SMTP id a640c23a62f3a-a9a2593e9e9so31754266b.0
-        for <platform-driver-x86@vger.kernel.org>; Sat, 16 Nov 2024 02:43:35 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1731753815; x=1732358615;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=lgkpmPxBG0aTg3aGWwQ0D5/NyeWXzd+9Y9QxfhnYPWE=;
-        b=Wo9dWYdcGGpHCIbfogHpuhqPi1GM1F6OGEiDEqKXGCqLH7MPkjmmmlJ5U+SwTOe6xP
-         uZQDpVytyen0z3q48kOFHpJV3O6MSxuLxEBR1kQaOXLrRxruz6kgsyi9oSpyOW7ThVNu
-         ATNje9OVlNZ3l4lfT9qVdiKv3S/A/nhIqMYGM4toZLZ6024RjVbxBRinDG40K79JR/4E
-         +39uYTC7DG4uWvk/kQXg3cTuC1+KWzUvzlMOLdoZab/vZ6aq+jPuBtj2fbc6pMPaKoKB
-         CfO3PBc9seFFwkTh3u5onJGaTl9yKgh3tO3HILnUioDQ2iC5CA/FnfCuXPQetBXdyhwK
-         N53Q==
-X-Forwarded-Encrypted: i=1; AJvYcCVWVxvsmWc5ooWaqdZIL7y/HXezzT22fu0Td5veEukwFdZN0maPOKbVXm946cLMDc3gZbiK5aSRugBfWT0AmkfcxsU5@vger.kernel.org
-X-Gm-Message-State: AOJu0YwqGmlf+GLZwH4P/af5T3SVXcfQQMyYbKpCXzqtjR2EhT7hGuw/
-	MU2ca2Bv6uE/McKlnRCKAN3WCsOJrPdCsvZs/unFZvXSkctj1zSTV4k5HCHQqgX7bpcP593J3Tu
-	AAc6VexUtRQVHvS8dj6gnFGZbFooQtkqFPws+34S7dYt6HnuO4y/e2t73xwvybOdcwD8eCH0=
-X-Received: by 2002:a17:907:3e0f:b0:a99:8a0e:8710 with SMTP id a640c23a62f3a-aa48342150amr490839666b.14.1731753814815;
-        Sat, 16 Nov 2024 02:43:34 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IGxPhQOkobuQKyTorxWn0xOeeBNX0GF2EKdVxhHtau6hXOkxkZ+c+iey8xNWiWIHBtbHuSRYg==
-X-Received: by 2002:a17:907:3e0f:b0:a99:8a0e:8710 with SMTP id a640c23a62f3a-aa48342150amr490838166b.14.1731753814340;
-        Sat, 16 Nov 2024 02:43:34 -0800 (PST)
-Received: from ?IPV6:2001:1c00:c32:7800:5bfa:a036:83f0:f9ec? (2001-1c00-0c32-7800-5bfa-a036-83f0-f9ec.cable.dynamic.v6.ziggo.nl. [2001:1c00:c32:7800:5bfa:a036:83f0:f9ec])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5cfaca26fdesm351899a12.47.2024.11.16.02.43.32
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 16 Nov 2024 02:43:33 -0800 (PST)
-Message-ID: <92301b83-b388-4559-bf26-3a2d281b0c5d@redhat.com>
-Date: Sat, 16 Nov 2024 11:43:31 +0100
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=9DVhXOz3MLrfEVfAdSc5VPuiEozz1gajD1ozhChVmJg=;
+	b=M/yFwEZeYZ7UCjQytTPJrxA31d2gv4BVijFj+GivhNZ9TY95HM8/cmZgTAoNI0fXp5j+eO
+	GKunRIsbjfv4wsFPo6JTsrE/sSWUfTLc3MKlO/Gu1rvkPm4I3wonE3lTCov5kv2JJgL3Jq
+	+FACUgQvEivVV9MDlwOOKvtGWchS/M8=
+Received: from mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-350-bKSXtBw9OAqGE1YolNyuYg-1; Sat,
+ 16 Nov 2024 07:17:03 -0500
+X-MC-Unique: bKSXtBw9OAqGE1YolNyuYg-1
+X-Mimecast-MFC-AGG-ID: bKSXtBw9OAqGE1YolNyuYg
+Received: from mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.40])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 52A5319560AF;
+	Sat, 16 Nov 2024 12:17:02 +0000 (UTC)
+Received: from shalem.redhat.com (unknown [10.39.192.52])
+	by mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id D41C71956054;
+	Sat, 16 Nov 2024 12:17:00 +0000 (UTC)
+From: Hans de Goede <hdegoede@redhat.com>
+To: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	Andy Shevchenko <andy@kernel.org>
+Cc: Hans de Goede <hdegoede@redhat.com>,
+	platform-driver-x86@vger.kernel.org
+Subject: [PATCH v2 1/2] platform/x86/intel: bytcrc_pwrsrc: Optionally register a power_supply dev
+Date: Sat, 16 Nov 2024 13:16:58 +0100
+Message-ID: <20241116121659.57487-1-hdegoede@redhat.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 2/2] platform/x86: x86-android-tablets: Add Vexia EDU ATLA
- 10 EC battery driver
-To: Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc: =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
- Andy Shevchenko <andy@kernel.org>, Sebastian Reichel <sre@kernel.org>,
- platform-driver-x86@vger.kernel.org, linux-pm@vger.kernel.org
-References: <20241104203555.61104-1-hdegoede@redhat.com>
- <20241104203555.61104-2-hdegoede@redhat.com>
- <CAHp75Vdkwg4pUs=k-GNv9wxuecVpMromh_F49bbfhYL7sxjwDg@mail.gmail.com>
-Content-Language: en-US, nl
-From: Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <CAHp75Vdkwg4pUs=k-GNv9wxuecVpMromh_F49bbfhYL7sxjwDg@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.40
 
-Hi,
+On some Android tablets with Crystal Cove PMIC the DSDT lacks an ACPI AC
+device to indicate whether a charger is plugged in or not.
 
-Thank you for the reviews.
+Add support for registering a "crystal_cove_pwrsrc" power_supply class
+device to indicate charger online status. This is made conditional on
+a "linux,register-pwrsrc-power_supply" boolean device-property to avoid
+registering a duplicate power_supply class device on devices where this
+is already handled by an ACPI AC device.
 
-On 5-Nov-24 11:39 AM, Andy Shevchenko wrote:
-> On Mon, Nov 4, 2024 at 10:36 PM Hans de Goede <hdegoede@redhat.com> wrote:
->>
->> The Vexia EDU ATLA 10 tablet has an embedded controller instead of
->> giving the os direct access to the charger + fuel-gauge ICs as is normal
->> on tablets designed for Android.
->>
->> There is ACPI Battery device in the DSDT using the EC which should work
->> expect that it expects the I2C controller to be enumerated as an ACPI
-> 
-> expect --> except
-> 
->> device and the tablet's BIOS enumerates all LPSS devices as PCI devices
->> (and changing the LPSS BIOS settings from PCI -> ACPI does not work).
->>
->> Add a power_supply class driver for the Atla 10 EC to expert battery info
->> to userspace. This is made part of the x86-android-tablets directory and
->> Kconfig option because the i2c_client it binds to is instantiated by
->> the x86-android-tablets kmod.
-> 
-> Reviewed-by: Andy Shevchenko <andy@kernel.org>
-> 
-> ...
-> 
->>  obj-$(CONFIG_X86_ANDROID_TABLETS) += x86-android-tablets.o
->> +obj-$(CONFIG_X86_ANDROID_TABLETS) += vexia_atla10_ec.o
-> 
-> This splits the original (compound) object lines, please move it
-> either before (and this seems even better with ordering by name in
-> mind) or after this block.
->>
-> 
-> Actually this blank line gives the false impression that the
-> originally two lines are not related. I would drop this blank line as
-> well.
+Note the "linux,register-pwrsrc-power_supply" property is only used on
+x86/ACPI (non devicetree) devs and the devicetree-bindings maintainers
+have requested properties like these to not be added to the devicetree
+bindings, so the new property is deliberately not added to any bindings.
 
-Ack, both fixed for v2.
+Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+---
+Changes in v2:
+- Adress a few small review remarks
+---
+ drivers/platform/x86/intel/bytcrc_pwrsrc.c | 79 +++++++++++++++++++++-
+ 1 file changed, 77 insertions(+), 2 deletions(-)
 
->>  x86-android-tablets-y := core.o dmi.o shared-psy-info.o \
->>                          asus.o lenovo.o other.o
-> 
-> ...
-> 
->> +#include <linux/bits.h>
->> +#include <linux/devm-helpers.h>
-> 
-> + err.h
-> 
->> +#include <linux/i2c.h>
->> +#include <linux/module.h>
->> +#include <linux/power_supply.h>
->> +#include <linux/types.h>
->> +#include <linux/workqueue.h>
->> +
->> +#include <asm/byteorder.h>
-> 
-> ...
-> 
->> +/* From broken ACPI battery device in DSDT */
->> +#define ATLA10_EC_VOLTAGE_MIN_DESIGN           3750000
-> 
-> _uV ?
-> 
-> ...
-> 
->> +struct atla10_ec_battery_state {
->> +       u8 len;                         /* Struct length excluding the len field, always 12 */
->> +       u8 status;                      /* Using ACPI Battery spec status bits */
->> +       u8 capacity;                    /* Percent */
->> +       __le16 charge_now;              /* mAh */
->> +       __le16 voltage_now;             /* mV */
->> +       __le16 current_now;             /* mA */
->> +       __le16 charge_full;             /* mAh */
->> +       __le16 temp;                    /* centi degrees celcius */
-> 
-> Celsius / celsius
-> 
->> +} __packed;
->> +
->> +struct atla10_ec_battery_info {
->> +       u8 len;                         /* Struct length excluding the len field, always 6 */
->> +       __le16 charge_full_design;      /* mAh */
->> +       __le16 voltage_now;             /* mV, should be design voltage, but is not ? */
->> +       __le16 charge_full_design2;     /* mAh */
->> +} __packed;
-> 
-> Instead I would add the respective units to the variable names:
-> _mAh
-> _mV
-> ...etc.
-> 
-> (* yes, with the capital letters to follow the proper spelling)
-
-Done for v2.
-
-> ...
-> 
->> +static int atla10_ec_cmd(struct atla10_ec_data *data, u8 cmd, u8 len, u8 *values)
->> +{
->> +       struct device *dev = &data->client->dev;
->> +       int ret;
->> +
->> +       ret = i2c_smbus_read_i2c_block_data(data->client, cmd, len, values);
->> +       if (ret != len) {
->> +               dev_err(dev, "I2C command 0x%02x error: %d\n", cmd, ret);
->> +               return -EIO;
->> +       }
-> 
->> +       if (values[0] != (len - 1)) {
-> 
-> Hmm... AFAIU this is part of SMBus protocol. Why do we need to care
-> about this? Or is this an additional header on top of that?
-
-Good point, I can indeed switch to i2c_smbus_read_block_data()
-having it interpret the first read byte as len and drop the len field
-from the struct definitions.
-
-Done for v2.
-
->> +               dev_err(dev, "I2C command 0x%02x header length mismatch expected %u got %u\n",
->> +                       cmd, len - 1, values[0]);
->> +               return -EIO;
->> +       }
->> +
->> +       return 0;
->> +}
-> 
-> ...
-> 
->> +               val->intval = min(charge_now, charge_full) * 1000;
-> 
-> MILLI (here and below)?
-
-But this is not about converting from millis this is about going
-from milles to micros.
-
-Writing MILLI there is multiplying millis by milles_per_1 which
-feels wrong. Now if there was a MILLIS_PER_MICRO that would make sense.
-
-So I have kept this as is.
-
->> +               break;
->> +       case POWER_SUPPLY_PROP_VOLTAGE_NOW:
->> +               val->intval = le16_to_cpu(data->state.voltage_now) * 1000;
->> +               break;
->> +       case POWER_SUPPLY_PROP_CURRENT_NOW:
->> +               val->intval = le16_to_cpu(data->state.current_now) * 1000;
->> +               /*
->> +                * Documentation/ABI/testing/sysfs-class-power specifies
->> +                * negative current for discharing.
-> 
-> discharging
-
-Ack.
-
-Regards,
-
-Hans
-
-
+diff --git a/drivers/platform/x86/intel/bytcrc_pwrsrc.c b/drivers/platform/x86/intel/bytcrc_pwrsrc.c
+index 418b71af27ff..73121f77c017 100644
+--- a/drivers/platform/x86/intel/bytcrc_pwrsrc.c
++++ b/drivers/platform/x86/intel/bytcrc_pwrsrc.c
+@@ -8,13 +8,22 @@
+  * Copyright (C) 2013 Intel Corporation
+  */
+ 
++#include <linux/array_size.h>
++#include <linux/bits.h>
+ #include <linux/debugfs.h>
++#include <linux/interrupt.h>
+ #include <linux/mfd/intel_soc_pmic.h>
+ #include <linux/module.h>
+ #include <linux/platform_device.h>
++#include <linux/power_supply.h>
++#include <linux/property.h>
+ #include <linux/regmap.h>
+ 
++#define CRYSTALCOVE_PWRSRC_IRQ		0x03
+ #define CRYSTALCOVE_SPWRSRC_REG		0x1E
++#define CRYSTALCOVE_SPWRSRC_USB		BIT(0)
++#define CRYSTALCOVE_SPWRSRC_DC		BIT(1)
++#define CRYSTALCOVE_SPWRSRC_BATTERY	BIT(2)
+ #define CRYSTALCOVE_RESETSRC0_REG	0x20
+ #define CRYSTALCOVE_RESETSRC1_REG	0x21
+ #define CRYSTALCOVE_WAKESRC_REG		0x22
+@@ -22,6 +31,7 @@
+ struct crc_pwrsrc_data {
+ 	struct regmap *regmap;
+ 	struct dentry *debug_dentry;
++	struct power_supply *psy;
+ 	unsigned int resetsrc0;
+ 	unsigned int resetsrc1;
+ 	unsigned int wakesrc;
+@@ -118,13 +128,60 @@ static int crc_pwrsrc_read_and_clear(struct crc_pwrsrc_data *data,
+ 	return regmap_write(data->regmap, reg, *val);
+ }
+ 
++static irqreturn_t crc_pwrsrc_irq_handler(int irq, void *_data)
++{
++	struct crc_pwrsrc_data *data = _data;
++	unsigned int irq_mask;
++
++	if (regmap_read(data->regmap, CRYSTALCOVE_PWRSRC_IRQ, &irq_mask))
++		return IRQ_NONE;
++
++	regmap_write(data->regmap, CRYSTALCOVE_PWRSRC_IRQ, irq_mask);
++
++	power_supply_changed(data->psy);
++	return IRQ_HANDLED;
++}
++
++static int crc_pwrsrc_psy_get_property(struct power_supply *psy,
++				       enum power_supply_property psp,
++				       union power_supply_propval *val)
++{
++	struct crc_pwrsrc_data *data = power_supply_get_drvdata(psy);
++	unsigned int pwrsrc;
++	int ret;
++
++	if (psp != POWER_SUPPLY_PROP_ONLINE)
++		return -EINVAL;
++
++	ret = regmap_read(data->regmap, CRYSTALCOVE_SPWRSRC_REG, &pwrsrc);
++	if (ret)
++		return ret;
++
++	val->intval = !!(pwrsrc & (CRYSTALCOVE_SPWRSRC_USB |
++				   CRYSTALCOVE_SPWRSRC_DC));
++	return 0;
++}
++
++static const enum power_supply_property crc_pwrsrc_psy_props[] = {
++	POWER_SUPPLY_PROP_ONLINE,
++};
++
++static const struct power_supply_desc crc_pwrsrc_psy_desc = {
++	.name = "crystal_cove_pwrsrc",
++	.type = POWER_SUPPLY_TYPE_MAINS,
++	.properties = crc_pwrsrc_psy_props,
++	.num_properties = ARRAY_SIZE(crc_pwrsrc_psy_props),
++	.get_property = crc_pwrsrc_psy_get_property,
++};
++
+ static int crc_pwrsrc_probe(struct platform_device *pdev)
+ {
+ 	struct intel_soc_pmic *pmic = dev_get_drvdata(pdev->dev.parent);
++	struct device *dev = &pdev->dev;
+ 	struct crc_pwrsrc_data *data;
+-	int ret;
++	int irq, ret;
+ 
+-	data = devm_kzalloc(&pdev->dev, sizeof(*data), GFP_KERNEL);
++	data = devm_kzalloc(dev, sizeof(*data), GFP_KERNEL);
+ 	if (!data)
+ 		return -ENOMEM;
+ 
+@@ -149,6 +206,24 @@ static int crc_pwrsrc_probe(struct platform_device *pdev)
+ 	if (ret)
+ 		return ret;
+ 
++	if (device_property_read_bool(dev->parent, "linux,register-pwrsrc-power_supply")) {
++		struct power_supply_config psy_cfg = { .drv_data = data };
++
++		irq = platform_get_irq(pdev, 0);
++		if (irq < 0)
++			return irq;
++
++		data->psy = devm_power_supply_register(dev, &crc_pwrsrc_psy_desc, &psy_cfg);
++		if (IS_ERR(data->psy))
++			return dev_err_probe(dev, PTR_ERR(data->psy), "registering power-supply\n");
++
++		ret = devm_request_threaded_irq(dev, irq, NULL,
++						crc_pwrsrc_irq_handler,
++						IRQF_ONESHOT, KBUILD_MODNAME, data);
++		if (ret)
++			return dev_err_probe(dev, ret, "requesting IRQ\n");
++	}
++
+ 	data->debug_dentry = debugfs_create_dir(KBUILD_MODNAME, NULL);
+ 	debugfs_create_file("pwrsrc", 0444, data->debug_dentry, data, &pwrsrc_fops);
+ 	debugfs_create_file("resetsrc", 0444, data->debug_dentry, data, &resetsrc_fops);
+-- 
+2.47.0
 
