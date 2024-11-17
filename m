@@ -1,58 +1,41 @@
-Received: from mail-pg1-f175.google.com (mail-pg1-f175.google.com [209.85.215.175])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mout.gmx.net (mout.gmx.net [212.227.15.19])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2A7DD3EA9A
-	for <platform-driver-x86@vger.kernel.org>; Sun, 17 Nov 2024 07:45:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B522DCA64
+	for <platform-driver-x86@vger.kernel.org>; Sun, 17 Nov 2024 16:22:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1731829532; cv=none; b=XXa8XilL7BZvHBLr1QvxgddCYqyVZGhWwAt5ZDpqR2n2MmMCZ/SicBGrcFmT1o+/MhuK0+cNxMSSIlHZe5K6LO+oGfbl5Z6ncz8aN/QO5LZi0Rc2T9unRJpMCVZ+Mwd4PDtCg2vijVUriNvo7PeCy0njYc5rcx3jHPnSKic+oLU=
+	t=1731860523; cv=none; b=qAVWnDhDHyMM/Sc8RUWSM2HZyhacXLVPN1VhjHtQQhbRxcnMzgbw2P7TIASnveHMN2SHEMU8lcd3lHJ4nNOK+gc/O9qwiRNINWUB3Q/Lw/dG086McbwocNouNUTbuKawayUlEYjuIkB+8ut1UHai92waRSuFBKrW+o3KWwrYcGQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1731829532; c=relaxed/simple;
-	bh=h1Ud+lO4X3Rr+rFD/7FeY+2TPcWnC3aIQXyEc0V5ONQ=;
-	h=Message-ID:Date:MIME-Version:To:Cc:From:Subject:Content-Type; b=R5+ayOANR6wbadW+hHT6g3zswQz35ppO3B6JDOOq6/9PO6aX0etPHeazSuByfqu7rk6+jxiVNVRAtusvUMo1LCdB869pBlDmGLegE2hgy46qRliyyvQ0dX36NxVrh9oUS9Gme3Q4y6+Fsz2N1VhhIXGWA8HUGBDXByHCl3gUIMI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=T6U1f4R5; arc=none smtp.client-ip=209.85.215.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1731860523; c=relaxed/simple;
+	bh=2qKu9p3+IC3vQZD/JESy10h3BLNMza5h0ympuwjDCPM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=glKuW0l2cCfbAjzE9aQT6Mvc+E7l6f4icyUqT0y5BC5JzYE4X/l2wCic3RmwDGgdHXNl7YNMh4UEVhob19lEHEv7vnr159D399q1V2SqEROwqBeCmicV6er9TMnV1KO4wP5vGL+h6NXE/o6NsSXRc73Jqr34g3NoOmiktUvHtTA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b=ivftn8NA; arc=none smtp.client-ip=212.227.15.19
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="T6U1f4R5"
-Received: by mail-pg1-f175.google.com with SMTP id 41be03b00d2f7-7ea9739647bso2301453a12.0
-        for <platform-driver-x86@vger.kernel.org>; Sat, 16 Nov 2024 23:45:31 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1731829530; x=1732434330; darn=vger.kernel.org;
-        h=content-transfer-encoding:subject:from:reply-to:cc:content-language
-         :to:user-agent:mime-version:date:message-id:sender:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=MXmZGUQ9dv8Dh9JxxY5+T1DeE82tU9ToyglJs0admA8=;
-        b=T6U1f4R5rmRG83+eTpSUcRO9B3beTDfnna+0O8fBM00ZrZ0ASlAI3OXYd2NYOPKCPb
-         P0KLeHtQDVgsMyB7AtbmUnACECL02O/NDSrJuPMV6TFdSyHWXsOD1SkHuPfSMy4v2MJB
-         YN8qSSNCIo9Q8u08OQKZjrPVn46Rvdo49ennf/5NjelUwSYbgtp/SGON9hbRCchJOeQM
-         O07CiObwKBtsEi8lieCJEubDxPXvMx3nPeGvK7NF05rUNqmyNL/Ou+VvZSzzTmxN2/cG
-         N0CGkxjShRt2nZaJP3Mv239YCfVovWsjxe7bkglA4HqBTImFrUI5YVQaa9IsQCdDak3J
-         IkTw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1731829530; x=1732434330;
-        h=content-transfer-encoding:subject:from:reply-to:cc:content-language
-         :to:user-agent:mime-version:date:message-id:sender
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=MXmZGUQ9dv8Dh9JxxY5+T1DeE82tU9ToyglJs0admA8=;
-        b=shQ6sPu/T6JauYSBnnKU0Fu43On+F334vQbhDtDQ9JKLOndyAlDjeo20qvNI38sHnp
-         AKQ3Z0p3bBX7leoV+OqUVU4fPqGmvB52StoftAVXT1naIdS6cyU8kOn5WcLJCzBpYWdt
-         DxyemjsKJyPp76k62IeUGQ6UuLHrNUgO/BIKpGdiNQnRoHA7HikEnkU8U3CgiYw/FjW/
-         IJ1CJCV09XS7QchZPM5pmyejLXUVV5qt47tt8sIXw9y0XaSiWajItkmNSdyEH8fS5Mqc
-         1vxTXySeO3UuzZgE6U744LEE4LA4O84knHEBIR4Aqakied3hNpreYfOkLygG9f5zKGnM
-         AQCw==
-X-Gm-Message-State: AOJu0YwxeR5CzGPGdNuTuyHrEdVhkvCr6zqx8P6EGc++D7yo9D+WGgYw
-	+yH8f2RmA91drwIDrXtkgzA0lwy2WnuMpLGoLU3jRm6hLG/n8HzM
-X-Google-Smtp-Source: AGHT+IFyDCaBEJrOavGWv3+9OEtnHgUGA3LpyJOYdM2E4/wANmOKJ1hCjipGVguqJB9ynp3Q/fZ3dA==
-X-Received: by 2002:a17:902:f651:b0:20d:345a:9641 with SMTP id d9443c01a7336-211d0d8444cmr115122895ad.27.1731829530486;
-        Sat, 16 Nov 2024 23:45:30 -0800 (PST)
-Received: from ?IPV6:2403:a080:c04:9c06:a330:1453:5c70:849b? ([2403:a080:c04:9c06:a330:1453:5c70:849b])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-2ea06f9c677sm5991764a91.36.2024.11.16.23.45.29
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 16 Nov 2024 23:45:30 -0800 (PST)
-Sender: Farhan A <farhananwar8@gmail.com>
-Message-ID: <2ffb529d-e7c8-4026-a3b8-120c8e7afec8@gmail.com>
-Date: Sun, 17 Nov 2024 13:15:26 +0530
+	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b="ivftn8NA"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.de;
+	s=s31663417; t=1731860518; x=1732465318; i=w_armin@gmx.de;
+	bh=2qKu9p3+IC3vQZD/JESy10h3BLNMza5h0ympuwjDCPM=;
+	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:To:Cc:
+	 References:From:In-Reply-To:Content-Type:
+	 Content-Transfer-Encoding:cc:content-transfer-encoding:
+	 content-type:date:from:message-id:mime-version:reply-to:subject:
+	 to;
+	b=ivftn8NA6ODWizLxQjMHHjUUZ508Fpd0w+AgQTfSEW45VDIVrOGSmsTgWIi3IhXG
+	 sk+bglaGe0evIVQ7c7P/9SMUYVpbaq6StzMYcSQuPhDamjns739cgsYdcQbFdjfuY
+	 OMjEutOtC20UhWi/Hut5+6yv7TB7fUQYz1bmd9mUmSnO7nCW+YX4SbmeTQZFwplIj
+	 FAkvlVwKM9pblpIOrJit7tBGvRNZ7r14IOlvC11gWDNYt2dN1lOZvxQUXBBoBSRm0
+	 s+79bqqwPwLhPuGauFsYgbomOujU0LEQQRArv7d+cyYJX7446ZSq+2oDN3dxp21zg
+	 YQs3wUsBrv+UgU5Jnw==
+X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
+Received: from [192.168.0.14] ([141.30.226.119]) by mail.gmx.net (mrgmx004
+ [212.227.17.190]) with ESMTPSA (Nemesis) id 1MryXH-1taF8q3UHt-00cOFB; Sun, 17
+ Nov 2024 17:21:58 +0100
+Message-ID: <ba283df4-a0ed-4759-a8b5-384666f1a5c7@gmx.de>
+Date: Sun, 17 Nov 2024 17:21:56 +0100
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -60,27 +43,67 @@ List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-To: w_armin@gmx.de
-Content-Language: en-US
-Cc: platform-driver-x86@vger.kernel.org, rayanmargham4@gmail.com
-Reply-To: bbc42008-f121-4710-a27d-f32b9deabcac@gmx.de
-From: Farhan Anwar <farhan.anwar8@gmail.com>
 Subject: Re: Add Support for the Acer Predator Triton PT14-51
+To: bbc42008-f121-4710-a27d-f32b9deabcac@gmx.de
+Cc: platform-driver-x86@vger.kernel.org, rayanmargham4@gmail.com
+References: <2ffb529d-e7c8-4026-a3b8-120c8e7afec8@gmail.com>
+Content-Language: en-US
+From: Armin Wolf <W_Armin@gmx.de>
+In-Reply-To: <2ffb529d-e7c8-4026-a3b8-120c8e7afec8@gmail.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:vOuJ6Oh5NDJRyKyYYrEz4wLrkMfY90HBPLZ8ufDnlgcKpbL/Yk4
+ 2d7ADiS1mY8zN61oowTy48mCmArFOXEYkoZc2jqpykM+bntTl5953fpkSM1B1eHxjCTOXli
+ xfCgC3vKkTii3qtIHT9DdjTP1WozlHA0jJagpYf984p+Q7uBi1u9RhUtiRUrKymyBJ6s6N+
+ 3yz1z4Iu+JLTazeBJwPNw==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:bI6NSmqogEk=;NbOVF42fvdSLUfYNawzOLGUYVVj
+ vA8ZmyPgzDHKWwP4FivdtkPV0vmkunq6EC10fqKI7KsOZiUMWvGtLKgMd08ACOm1kb1t+yWqZ
+ 7e6SXLNt0xfxyJAZQdrVJoYga1F8kexx7GQIJvPtOkeVf+MUTZAy9liSPJeY2bGbvA3UXZPpm
+ yZkOnTSv4qVNxohvSg6V21Zu3SIDcY4CdB20Y0ApQZPynxbjt3ls3lwUpZ2VK+69IrsReVpag
+ V0BxxZCzXyBEdpjRruKXTiY8ikeLwvrqoTbH2WKcQZ0R4RKndqRE7gegkxSJifwztUbWTEbF8
+ 0gWo9HnEgIgVVN6WOImgsK++xB8fMCvM4VOdP2/YohjQFIXr3SMguCDVIslhMrGVCTMXM8zKf
+ OmLci5qY0mIVt39tMzJSq0+Qh9EAIRL0JMKMzZyCm8OSMkzCTWlBYrF+I8O3sGrP/uXsEhZO/
+ ViIiNJyE8/SyEeN6zXT2jAsxCa1u2K2lJLKH/hoBcG4bNtoYHMElal4bUxWILgOncQ97UnArL
+ fqVPDCUmFPyTLxa33+qRKb/FHidIK9nOWOQ1q7b2Exe9oMMi88LPi0yCgOGKNYcvOCtmLpwRw
+ 41gyCA6SbOObQsBeg8qJa6k6Q51ssM0+1nOAUXPG/J1jNSeIOHwQB7BRCwtr9yEq2hmTRhcIr
+ BP+YMbdFB/a4BHD40599osLP/ZHWiQtLGxa+Ido7M5ASKFliK/YHQMEanS5qyz2atDOd+vO6O
+ TVlDPNJaXSrxgt0QDUIIH2egvUvhJtx3/frQuc3YUUqXVf2ME6HlCWtQtDSVp6gXKJ9Ekelba
+ TBAmao0vAkB+Qb6fTe/jlXympLnzmuIpfMX4lenW4jH64EclxOqp8dyYSTzQGvi4XvNSKvmM8
+ hghsakElA4rRXjJ+kwpOsjtjFQ4N5kQXV8jke6HmBZXB1tnYDnWeAF9ZG
 
-Although I'm using Swift SFG14-41, I have noticed the same events on my laptop as well.
+Am 17.11.24 um 08:45 schrieb Farhan Anwar:
 
-Connect AC adapter    : acer_wmi: Unknown function number - 8 - 1
-Disconnect AC adapter : acer_wmi: Unknown function number - 8 - 0
+> Although I'm using Swift SFG14-41, I have noticed the same events on
+> my laptop as well.
+>
+> Connect AC adapter=C2=A0=C2=A0=C2=A0 : acer_wmi: Unknown function number=
+ - 8 - 1
+> Disconnect AC adapter : acer_wmi: Unknown function number - 8 - 0
+>
+> The event for disconnection is printed twice.
+> I've also noticed following message occasionally along with these events=
+.
+>
+> workqueue: acpi_os_execute_deferred hogged CPU for >13333us 19 times,
+> consider switching to WQ_UNBOUND
+>
+> Kernel version: 6.11.0-9-generic
+>
+> Thanks,
+> Farhan
 
-The event for disconnection is printed twice.
-I've also noticed following message occasionally along with these events.
+Those events seem to signal a AC connect/disconnect, so i think it should =
+be safe to ignore those events.
 
-workqueue: acpi_os_execute_deferred hogged CPU for >13333us 19 times, consider switching to WQ_UNBOUND
+Regarding the warning: it seems that some ACPI Notify() or GPE handler tak=
+es quite long to execute, so nothing
+directly related to the acer-wmi driver.
 
-Kernel version: 6.11.0-9-generic
+I am currently moving and thus unable to access my dev machine. I already =
+prepared some patches for the acer-wmi
+driver, i will send a prototype soon.
 
 Thanks,
-Farhan
+Armin Wolf
 
