@@ -1,276 +1,106 @@
-Received: from mout.gmx.net (mout.gmx.net [212.227.17.22])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f47.google.com (mail-ej1-f47.google.com [209.85.218.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D2F3A1DA11A;
-	Sun, 17 Nov 2024 19:57:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.22
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 655D2433A0
+	for <platform-driver-x86@vger.kernel.org>; Sun, 17 Nov 2024 20:11:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1731873438; cv=none; b=LjIaJLQdow/IHj29M7qoIhK4TWFRG1YBMM/DH+qYx1jzSAY10AhU+3OxFgJYg5/NfwBwe6N/cfAILYo0aKJNoUVGItNZrDO5XDLDSa2rwRHDABtM2Y4fhfpPQDju1tbEyFKJzaweNyZFPtA55Cb2bwkL2ondnOZE642MRHUfSwo=
+	t=1731874314; cv=none; b=e+4v+RV2t0A7H6Lzom+Jw4JlJPdrb+04I/SeK7C/5y+ML8bGGwTDPjhvEMHwpG6+iRj9R+1gilBI/oJuLgPtxK6wVnZlNpluRHbZ0UbaIlUhcm679+gA80N4Q+lP2VR+xMRdEJB6UayS4Su1jTeApbGT57aQ4nItRggKNIEAfLw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1731873438; c=relaxed/simple;
-	bh=0D0rVlLazk3e9+UzYzAwJMY7U6wVdChYB6C/Cv5RJlc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=md+Z3jWYbdVCKwb3P5MQr+VVBg2FVBUH2RNlgpbMoK1D+hjnDzV7U7whYwphvy794dxtONFlUKYLmDv37Ea9p6nsPkygzACWY7WOrYp3MqBTFaA+9EGVUSQwVwjbjcJtXkqLOSXPqnHjyuGUIbnBbsJPX2AtQoifqv1lFUkXmLw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b=dYyfPglV; arc=none smtp.client-ip=212.227.17.22
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
+	s=arc-20240116; t=1731874314; c=relaxed/simple;
+	bh=ljkP5RdGaB1bHVUP/qwxqIk/oo1F3x9PdFlY6Gbiz3w=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=DE7YIkYDrPfVRhepLdkVSksndcquCSW7dILv3GPepcmY05X8dRidYaBbwTdHv/JEpa4L/em9rtC5g2ZWo6jc/3/C4jJ2JnMsHFnXsxmXoPBimNTu+Is9lMgywJtJs2impMZdumM0wALnPlEpCHy0sjunwkZtc2uIQGJuo6XfwCc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=m0+Auegd; arc=none smtp.client-ip=209.85.218.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b="dYyfPglV"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.de;
-	s=s31663417; t=1731873374; x=1732478174; i=w_armin@gmx.de;
-	bh=LpwvtYmMYMG3OMu+ZG7wRaqRDTH2ywal0co5/aDXKFM=;
-	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:To:Cc:
-	 References:From:In-Reply-To:Content-Type:
-	 Content-Transfer-Encoding:cc:content-transfer-encoding:
-	 content-type:date:from:message-id:mime-version:reply-to:subject:
-	 to;
-	b=dYyfPglVGDQY8Rxfd39sK88medIG/xkR0P5eFRGyJjY44im1d6+gYnWv994E4Gej
-	 8EWhQcQYO6Ov6ykN4qRlKgjRCf818q1d2UmqA7wtham9erVDhPHqDO2XfNLyBNiSZ
-	 DXoCrVFH8X0NVdnLEnIrihFQ4nhMkUmU4qkYyWnDOEb9I9DJb20j19jWGqc+07A3q
-	 8Mzxohahh7HRBG9AdmhdJd14rz18+QYpah/zTjwbYyoH9fat7U9q14LGTmtrHY+HN
-	 bkrkjhWWE2i66Ly+Iz0fWSsJ0Ft6rUl9+hRFo/UOzCPjm7WUlGqAFBdsVqougD7D7
-	 EPEPHw1s3kujRiAO1A==
-X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
-Received: from [192.168.0.14] ([141.30.226.119]) by mail.gmx.net (mrgmx104
- [212.227.17.168]) with ESMTPSA (Nemesis) id 1MUGiJ-1tLFgj0lNL-00TFtG; Sun, 17
- Nov 2024 20:56:14 +0100
-Message-ID: <c3fda59b-11c2-40ed-aa64-66c10805f74b@gmx.de>
-Date: Sun, 17 Nov 2024 20:56:08 +0100
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="m0+Auegd"
+Received: by mail-ej1-f47.google.com with SMTP id a640c23a62f3a-a9ed49ec0f1so612568166b.1
+        for <platform-driver-x86@vger.kernel.org>; Sun, 17 Nov 2024 12:11:52 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1731874311; x=1732479111; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=ljkP5RdGaB1bHVUP/qwxqIk/oo1F3x9PdFlY6Gbiz3w=;
+        b=m0+Auegdz2lqLbIHcUiGO/wYIbSIf/uuXeYFXguylKPv5WGuOhAn8emCL3qpNXIy6d
+         U0wgvH1Jh+jdEm9nuYCEA15PrtcfKeFfgDcJEOm1iUsIH8MOBV/anfyUSVYFdekSJ+Ou
+         OrAyl3ot20UqIAZDOrDmReTeOvIXV0oVY2Ppk3f9k++eSCkZILEmR9e7W6H0RGYr7FgB
+         RV+XsO85X7uVxEjf5zprn+Hd5lSxHP9hvtpox//6ePwiqywxMgIdA4dSHNVkHFHkSb7v
+         gXN4eyR6UnzfNV+h/zHEaZJanz4H8BFKztswuAxCK6hkrTYHxlAWEGVMiM6Nnp7JE1Xm
+         xL1A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1731874311; x=1732479111;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=ljkP5RdGaB1bHVUP/qwxqIk/oo1F3x9PdFlY6Gbiz3w=;
+        b=HRkL2pM/FOk19gtYt+jsnQTnpXfQ791ECXCEY5WOV+O/taLHeClTgR0KWB7Xo1jUsY
+         bvrjQ20XPjwTNBspa/xnfm+53jwo9rfisU3JvANj/2hJN9oGJ62pq8GwcOBxyFNBFk2z
+         75VCwAytp/g13DDmVh2lHsW4lOpKdouB2nn4MvpVlUkRmpprvjFdOTt/ZWBbbVEUl3Ic
+         /XBcoYwZCRiUVf7gsdc8/fJamsTcvQpUxiGMkgqTchEyr8otsFh3J1QgUbzWgEo9JpmH
+         i/oDSDBfXzKFyTdoyy43siyy9euq4cGQ9P5TWbSvm7qr8DeDTTrnDwVZlxaHPcOa9q+6
+         OFUQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUA+fS/0EIqVc+htytYvJvYrlJkWuAH6d8wTHKiaQwpYeCiPkn1VkC8a2DuK/m6df1+GbzZZPa0lyguSqKDVQk7G0mj@vger.kernel.org
+X-Gm-Message-State: AOJu0YyT/3Tk+UsJtRAMcR+8QH74oCYIRkjMNH2GTCDMCGGRYJiZUO/o
+	9eMdbuRSBHnSjL0BACLrHHqQyYHo8rXLuedYt4eEm97xi6fwbmLPIhlxaLDMekRRPSV8qbpDwEL
+	ab6J+XzhyfHn4AWkqQvE9uUqasLNst/CB
+X-Google-Smtp-Source: AGHT+IFIsO/pMMHR7QaRUpkEZ7QRUm/3c4uPzhtOdmv2UAtL+S3SfY/hKuZBdulN2WpdChkvnusXg/eOvB3O25g9Mx0=
+X-Received: by 2002:a17:907:96ac:b0:a9a:76d:e86c with SMTP id
+ a640c23a62f3a-aa48354d82amr900027866b.49.1731874310512; Sun, 17 Nov 2024
+ 12:11:50 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v6 09/22] ACPI: platform_profile: Use `scoped_cond_guard`
-To: Mario Limonciello <mario.limonciello@amd.com>,
- Hans de Goede <hdegoede@redhat.com>,
- =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Cc: "Rafael J . Wysocki" <rafael@kernel.org>, Len Brown <lenb@kernel.org>,
- Maximilian Luz <luzmaximilian@gmail.com>, Lee Chun-Yi <jlee@suse.com>,
- Shyam Sundar S K <Shyam-sundar.S-k@amd.com>,
- Corentin Chary <corentin.chary@gmail.com>, "Luke D . Jones"
- <luke@ljones.dev>, Ike Panhc <ike.pan@canonical.com>,
- Henrique de Moraes Holschuh <hmh@hmh.eng.br>,
- Alexis Belmonte <alexbelm48@gmail.com>,
- =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>,
- Ai Chao <aichao@kylinos.cn>, Gergo Koteles <soyer@irl.hu>,
- open list <linux-kernel@vger.kernel.org>,
- "open list:ACPI" <linux-acpi@vger.kernel.org>,
- "open list:MICROSOFT SURFACE PLATFORM PROFILE DRIVER"
- <platform-driver-x86@vger.kernel.org>,
- "open list:THINKPAD ACPI EXTRAS DRIVER"
- <ibm-acpi-devel@lists.sourceforge.net>,
- Mark Pearson <mpearson-lenovo@squebb.ca>,
- Matthew Schwartz <matthew.schwartz@linux.dev>
-References: <20241109044151.29804-1-mario.limonciello@amd.com>
- <20241109044151.29804-10-mario.limonciello@amd.com>
-Content-Language: en-US
-From: Armin Wolf <W_Armin@gmx.de>
-In-Reply-To: <20241109044151.29804-10-mario.limonciello@amd.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+References: <20241116121659.57487-1-hdegoede@redhat.com> <38506d35-b07f-47b0-9154-9b0d4b9fee7e@redhat.com>
+In-Reply-To: <38506d35-b07f-47b0-9154-9b0d4b9fee7e@redhat.com>
+From: Andy Shevchenko <andy.shevchenko@gmail.com>
+Date: Sun, 17 Nov 2024 22:11:14 +0200
+Message-ID: <CAHp75VeTPxreMZQZkchFn5hc3HeED_xsF8FnDKGCW-Vfh_jciw@mail.gmail.com>
+Subject: Re: [PATCH v2 1/2] platform/x86/intel: bytcrc_pwrsrc: Optionally
+ register a power_supply dev
+To: Hans de Goede <hdegoede@redhat.com>
+Cc: =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, 
+	Andy Shevchenko <andy@kernel.org>, platform-driver-x86@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1://Vaf54lrdOn3E1YeZLvLbuxO6gyb+3fHRAE4h76tkHQz1Tgy7+
- MaT2snJnBA36FJ5mEZH/DogJZbbg6k4RLXzjXnUefk2lJ4GQacInAXDPh5yE1gWj5miZ1c9
- 1Ei8Z9tGMJgjq7sUWFZmVmk6bAlpElPZoL7KOP9IYh89kM9Br4Gx0LWH+1mym6PH0m1nhI4
- 1ulOyLnlL9TYlOqQLGynA==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:cst14HlcA94=;oAgdpRj4miV2YIFQwWIUfxciMb6
- WGyjKaabbucOGbkaKzci+Kt0mpg425TnKrtcX9sHmDOieLbfTU89Pai+1S2iAgt7vGlt9H7aH
- x40fo/sLS4DqVn+Z6PVan3mS539BnQXVfvPMziLLAWtvxaOW8CtDF/3V1KBcEef32ImNjqj91
- ydmkpdaj9W8ataf2NLdQJjaPW6pHsO8jcP/SD8H5jDm0C0MqtEonXQ/NpfculPJ5f2/oyvnQb
- Mn5y8TDbsBjWP4fG+Fjlzv0VEkHQi2fGdc0hjcrJ5XF2SnMOeW+IQpWXQLfdpKpabZgZcYpwB
- td+zCx3nwhrcoqB5rwRijUq06WO9h1LHUA7sxrREm5//zsKO5No7yDU8zXZUq9xF3trcl/5Pg
- b/8YyzuOWZoXTg8rmUisNhO5ogiCw9QLsuclUt/4CKMB1oHQd4p77nCyinvnlqJ+CmKwSyJuu
- QKvy332OzfCto55elJMZWp/1eLPRlPgrGd5BP6bpoX7Z0HOswOjjaWsKPX4J4acgs5/iZEqaa
- rxkewd3AS4k4ZK8L5X28W0w3tC2JW97nNk6E+fptPyCY1tz9xNncUKV+OCESjssc4iVNS0dfe
- hZxhk7ardz2FMe3LPevVOGmZ4j3yAAVTTQmHPx9ywlE0zZEDyJJbjabl1kdV8OhjgXVIdR2ci
- bbfQ/73OiIdlypAJONs5ZyVTrzLk7/BKE1/wxnpYAAJIo8EVbljzumov7RdHunOHljORKV7jJ
- mqVOqCe7WTIbLfn/jarxDGXbF2LEhH29O5q45dxntWhnp/vTVFMgTvCjSm+lolaC6jFYfAAxj
- 8hW7AtHLuLtp0DhBbmUPfGZh01OdF+0R9I9NzsTaaloiVggOe8OiJr+W5rriTiFwIfG1JIo+B
- ViiX3NYoKw23GtaLAYd0hplU+zt7g128meGC2RxFo9iBtOkzu15PB5qKd
 
-Am 09.11.24 um 05:41 schrieb Mario Limonciello:
+On Sat, Nov 16, 2024 at 5:17=E2=80=AFPM Hans de Goede <hdegoede@redhat.com>=
+ wrote:
+> On 16-Nov-24 1:16 PM, Hans de Goede wrote:
+> > On some Android tablets with Crystal Cove PMIC the DSDT lacks an ACPI A=
+C
+> > device to indicate whether a charger is plugged in or not.
+> >
+> > Add support for registering a "crystal_cove_pwrsrc" power_supply class
+> > device to indicate charger online status. This is made conditional on
+> > a "linux,register-pwrsrc-power_supply" boolean device-property to avoid
+> > registering a duplicate power_supply class device on devices where this
+> > is already handled by an ACPI AC device.
+> >
+> > Note the "linux,register-pwrsrc-power_supply" property is only used on
+> > x86/ACPI (non devicetree) devs and the devicetree-bindings maintainers
+> > have requested properties like these to not be added to the devicetree
+> > bindings, so the new property is deliberately not added to any bindings=
+.
 
-> Migrate away from using an interruptible mutex to scoped_cond_guard
-> in all functions. While changing, move the sysfs notification
-> used in platform_profile_store() outside of mutex scope.
+...
 
-Reviewed-by: Armin Wolf <W_Armin@gmx.de>
+> > Changes in v2:
+> > - Adress a few small review remarks
+>
+> I forgot to add Andy's Reviewed-by, since the changes were very
+> minimal and all address remarks from Andy I presume that the review
+> still stands:
+>
+> Reviewed-by: Andy Shevchenko <andy@kernel.org>
 
-> Tested-by: Mark Pearson <mpearson-lenovo@squebb.ca>
-> Reviewed-by: Mark Pearson <mpearson-lenovo@squebb.ca>
-> Reviewed-by: Ilpo J=C3=A4rvinen <ilpo.jarvinen@linux.intel.com>
-> Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
-> ---
->   drivers/acpi/platform_profile.c | 111 +++++++++++++-------------------
->   1 file changed, 43 insertions(+), 68 deletions(-)
->
-> diff --git a/drivers/acpi/platform_profile.c b/drivers/acpi/platform_pro=
-file.c
-> index 9729543df6333..32affb75e782d 100644
-> --- a/drivers/acpi/platform_profile.c
-> +++ b/drivers/acpi/platform_profile.c
-> @@ -27,25 +27,20 @@ static ssize_t platform_profile_choices_show(struct =
-device *dev,
->   					char *buf)
->   {
->   	int len =3D 0;
-> -	int err, i;
-> -
-> -	err =3D mutex_lock_interruptible(&profile_lock);
-> -	if (err)
-> -		return err;
-> -
-> -	if (!cur_profile) {
-> -		mutex_unlock(&profile_lock);
-> -		return -ENODEV;
-> -	}
-> -
-> -	for_each_set_bit(i, cur_profile->choices, PLATFORM_PROFILE_LAST) {
-> -		if (len =3D=3D 0)
-> -			len +=3D sysfs_emit_at(buf, len, "%s", profile_names[i]);
-> -		else
-> -			len +=3D sysfs_emit_at(buf, len, " %s", profile_names[i]);
-> +	int i;
-> +
-> +	scoped_cond_guard(mutex_intr, return -ERESTARTSYS, &profile_lock) {
-> +		if (!cur_profile)
-> +			return -ENODEV;
-> +		for_each_set_bit(i, cur_profile->choices, PLATFORM_PROFILE_LAST) {
-> +			if (len =3D=3D 0)
-> +				len +=3D sysfs_emit_at(buf, len, "%s", profile_names[i]);
-> +			else
-> +				len +=3D sysfs_emit_at(buf, len, " %s", profile_names[i]);
-> +		}
->   	}
->   	len +=3D sysfs_emit_at(buf, len, "\n");
-> -	mutex_unlock(&profile_lock);
-> +
->   	return len;
->   }
->
-> @@ -56,20 +51,15 @@ static ssize_t platform_profile_show(struct device *=
-dev,
->   	enum platform_profile_option profile =3D PLATFORM_PROFILE_BALANCED;
->   	int err;
->
-> -	err =3D mutex_lock_interruptible(&profile_lock);
-> -	if (err)
-> -		return err;
-> +	scoped_cond_guard(mutex_intr, return -ERESTARTSYS, &profile_lock) {
-> +		if (!cur_profile)
-> +			return -ENODEV;
->
-> -	if (!cur_profile) {
-> -		mutex_unlock(&profile_lock);
-> -		return -ENODEV;
-> +		err =3D cur_profile->profile_get(cur_profile, &profile);
-> +		if (err)
-> +			return err;
->   	}
->
-> -	err =3D cur_profile->profile_get(cur_profile, &profile);
-> -	mutex_unlock(&profile_lock);
-> -	if (err)
-> -		return err;
-> -
->   	/* Check that profile is valid index */
->   	if (WARN_ON((profile < 0) || (profile >=3D ARRAY_SIZE(profile_names))=
-))
->   		return -EIO;
-> @@ -88,28 +78,21 @@ static ssize_t platform_profile_store(struct device =
-*dev,
->   	if (i < 0)
->   		return -EINVAL;
->
-> -	err =3D mutex_lock_interruptible(&profile_lock);
-> -	if (err)
-> -		return err;
-> +	scoped_cond_guard(mutex_intr, return -ERESTARTSYS, &profile_lock) {
-> +		if (!cur_profile)
-> +			return -ENODEV;
->
-> -	if (!cur_profile) {
-> -		mutex_unlock(&profile_lock);
-> -		return -ENODEV;
-> -	}
-> +		/* Check that platform supports this profile choice */
-> +		if (!test_bit(i, cur_profile->choices))
-> +			return -EOPNOTSUPP;
->
-> -	/* Check that platform supports this profile choice */
-> -	if (!test_bit(i, cur_profile->choices)) {
-> -		mutex_unlock(&profile_lock);
-> -		return -EOPNOTSUPP;
-> +		err =3D cur_profile->profile_set(cur_profile, i);
-> +		if (err)
-> +			return err;
->   	}
->
-> -	err =3D cur_profile->profile_set(cur_profile, i);
-> -	if (!err)
-> -		sysfs_notify(acpi_kobj, NULL, "platform_profile");
-> +	sysfs_notify(acpi_kobj, NULL, "platform_profile");
->
-> -	mutex_unlock(&profile_lock);
-> -	if (err)
-> -		return err;
->   	return count;
->   }
->
-> @@ -140,36 +123,28 @@ int platform_profile_cycle(void)
->   	enum platform_profile_option next;
->   	int err;
->
-> -	err =3D mutex_lock_interruptible(&profile_lock);
-> -	if (err)
-> -		return err;
-> +	scoped_cond_guard(mutex_intr, return -ERESTARTSYS, &profile_lock) {
-> +		if (!cur_profile)
-> +			return -ENODEV;
->
-> -	if (!cur_profile) {
-> -		mutex_unlock(&profile_lock);
-> -		return -ENODEV;
-> -	}
-> +		err =3D cur_profile->profile_get(cur_profile, &profile);
-> +		if (err)
-> +			return err;
->
-> -	err =3D cur_profile->profile_get(cur_profile, &profile);
-> -	if (err) {
-> -		mutex_unlock(&profile_lock);
-> -		return err;
-> -	}
-> +		next =3D find_next_bit_wrap(cur_profile->choices, PLATFORM_PROFILE_LA=
-ST,
-> +					  profile + 1);
->
-> -	next =3D find_next_bit_wrap(cur_profile->choices, PLATFORM_PROFILE_LAS=
-T,
-> -				  profile + 1);
-> +		if (WARN_ON(next =3D=3D PLATFORM_PROFILE_LAST))
-> +			return -EINVAL;
->
-> -	if (WARN_ON(next =3D=3D PLATFORM_PROFILE_LAST)) {
-> -		mutex_unlock(&profile_lock);
-> -		return -EINVAL;
-> +		err =3D cur_profile->profile_set(cur_profile, next);
-> +		if (err)
-> +			return err;
->   	}
->
-> -	err =3D cur_profile->profile_set(cur_profile, next);
-> -	mutex_unlock(&profile_lock);
-> -
-> -	if (!err)
-> -		sysfs_notify(acpi_kobj, NULL, "platform_profile");
-> +	sysfs_notify(acpi_kobj, NULL, "platform_profile");
->
-> -	return err;
-> +	return 0;
->   }
->   EXPORT_SYMBOL_GPL(platform_profile_cycle);
->
+Correct.
+
+--=20
+With Best Regards,
+Andy Shevchenko
