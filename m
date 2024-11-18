@@ -1,196 +1,766 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from NAM12-BN8-obe.outbound.protection.outlook.com (mail-bn8nam12on2042.outbound.protection.outlook.com [40.107.237.42])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 038BD1B21A0
-	for <platform-driver-x86@vger.kernel.org>; Mon, 18 Nov 2024 15:02:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1731942148; cv=none; b=dxMEvupikzTzIIVPHwYOZRNyPSx0uJxxJ+qehBILslYy4M4x1LoL0qvxgEMRgsptYcveNb2iG+I0LTzEqrHMJW8DAWz07tkb63RnxVFEW6PpRWsTAkowa9UkAOkvT/3p4B+HYBBb3eFXt7OG1FVHpu48A+VcHgYv1abBKTuhOjQ=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1731942148; c=relaxed/simple;
-	bh=/yFLj6LFMe0QYmGe1XuNGU/hZy26p3bfk3hcCx4lR7Y=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=TF/dRyGV1r/GQDG9swG1aRVCsJWNem3dvOBR/+UHSfEmn7QaFLr6kzfwEJhdwN3onsoWxB557kmLBbaVBfoHfv2LTGwU9Z9dJ9gWKVtfE3D5ccVOM0uPmUcMrYr7OLi2y55KCYgrpVQVtJ00JkbI2WpHNumCD8yBrRUWUlk6agQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=SmuFDr2S; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A11B91863F;
+	Mon, 18 Nov 2024 15:19:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.237.42
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1731943182; cv=fail; b=ThPwVHXgfNS8EMxfMISJfnRtGRwgJsrxiDaLl65Y5dw8ilz81vecJJI1xNu51OLMIAvuWkeL+5lhaatwXvTKUfUy4dljIUBFAC2a0/Lk7aDw/fncSf07Pmmq9PDWhWZDMzhG7suAAft1WyNf5xMzWTUL2ZExv16IIPIXqUOrusc=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1731943182; c=relaxed/simple;
+	bh=GOV7nrlNprPrsiGHp8QA/Ko7FL+QGCGd+NzSndSNdhk=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=efVwmIMThIqVABiHtzzEwkBDa3c1PNDx2DMKmKb9S1PBjDip5f+YX/PE6SNKm+oUCGsiEDFNbyGzVRie4TJkpowvfxA2ABqDNVQVCWZZ6fJ9ai5NejAM68h93UPM2NA1SuyWBSUfVz2+O64fUhPP9jucheVb/hcsg3tqwaPB/ww=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=Sq8+M2Ri; arc=fail smtp.client-ip=40.107.237.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="SmuFDr2S"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1731942144;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=dx6X/0YGxm0pZlof6BYKQBt9G8sQkw5O71WYO9Vc5mw=;
-	b=SmuFDr2SeLMYG6rdWl4Zcr6rRTeS5uPv/GNcK7k5zJL1kxGAHaD4KJXzW9Yci/g/Y+dlCu
-	81LF0RnPsEPmz3bWf/r5zJYbj+Z77eSAfxW6l38khCmIvs3hgYjo4HvvKT4xhHpGy2jBOt
-	M4T6uVKypxpN32+BKvXmCpJDUEDgd2Q=
-Received: from mail-ej1-f72.google.com (mail-ej1-f72.google.com
- [209.85.218.72]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-244-4Eo2FhfHOq6sNQrVR3h9sA-1; Mon, 18 Nov 2024 10:02:23 -0500
-X-MC-Unique: 4Eo2FhfHOq6sNQrVR3h9sA-1
-X-Mimecast-MFC-AGG-ID: 4Eo2FhfHOq6sNQrVR3h9sA
-Received: by mail-ej1-f72.google.com with SMTP id a640c23a62f3a-a99efe7369dso435337666b.0
-        for <platform-driver-x86@vger.kernel.org>; Mon, 18 Nov 2024 07:02:22 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1731942141; x=1732546941;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=dx6X/0YGxm0pZlof6BYKQBt9G8sQkw5O71WYO9Vc5mw=;
-        b=PILupCAjTTf07SBYdxweGXvPstyhP7VbICtk7Lz9CZWZqbMTDfEV2eQzH8wfWITDNs
-         7C3MzRW63e8fPgz75oWNvVtJoW6hrrUoFFJZiOm8wUpwjM7/3i/PPstTLpouqdop+uoK
-         Uklvt7l8jiSqmdHSlALODj5UZcdy52pJ85a1p2XxJxj+gRh70YjJ3VIvuBgAqW5nZTUb
-         QiZ3eXB58cHYdew9GyO8p5xM/EvVUvwqGgruL3Z7T1gtQ4ZEDC/g1APTIvDK3zuHfNqf
-         hZyurxa5wdF3kCJ+TrkKay4arJRYtpmKxYs1HIgvolpNM0P7M56awsVmWl7M6XkT1Qdc
-         cXJA==
-X-Gm-Message-State: AOJu0YwvONTeKQaqgYDxxbscocmzRk7Bkzbr/79ZLpXYGycemuUlGW1h
-	6Ny7Xtt8AlGnKjXrfvc9eUP+RGfX3TK6grIYrIJxvSSIaxC/XSfQnAhlr9V1YRUqCfI6RIXXTUz
-	3LqJXpnagQO4CoVdsq5qHPpfxOwPR/CIHJs1Z+SQpxNi3zaeawqYawvnl//GCK3sbaS9BjP+TLm
-	XPI6A=
-X-Received: by 2002:a17:907:36ca:b0:a91:1699:f8eb with SMTP id a640c23a62f3a-aa481a60008mr1153426466b.28.1731942139063;
-        Mon, 18 Nov 2024 07:02:19 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IEwXyfPEFSL+ncCoOCwenW8p3xQutfwWxLXUlAWpTOzorGvyWtkEq3wmZ/7DOmcKe8STuohqQ==
-X-Received: by 2002:a17:907:36ca:b0:a91:1699:f8eb with SMTP id a640c23a62f3a-aa481a60008mr1153397766b.28.1731942136470;
-        Mon, 18 Nov 2024 07:02:16 -0800 (PST)
-Received: from ?IPV6:2001:1c00:c32:7800:5bfa:a036:83f0:f9ec? (2001-1c00-0c32-7800-5bfa-a036-83f0-f9ec.cable.dynamic.v6.ziggo.nl. [2001:1c00:c32:7800:5bfa:a036:83f0:f9ec])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-aa20df268casm548254066b.1.2024.11.18.07.02.15
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 18 Nov 2024 07:02:16 -0800 (PST)
-Message-ID: <2aa14a34-b8cc-421b-b697-d4e9113b9030@redhat.com>
-Date: Mon, 18 Nov 2024 16:02:15 +0100
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="Sq8+M2Ri"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=tYIDesD3WUYm5pmUIo/pKVJNLhOmNZVg4ak40t4dCkMygS3yYCVCHs4M/XGb/Aud8jrPKy1D8dsWLnXjRaBdMQ9ateEBeb2TevMzzBUTM2gxtZZgKAwVqydvkPxoU2lPmM7Qq9KjSXD3Ef8IffDRbK0IBrDm1MKGjYm3D89DCDV6uWw/SN3JowFpmS93MUzRICpJIyZ9llo/OJ10JeQzZU7fL3t53oF8G5VnKgGC6WkYoleUJ1KGMm+S84yuD1vLfm+GKvLFjiDEmCEWwdLvDIEYtr9IrwtlEq+AHDiTrsjeaUs3WdZNTqwKWX12jxjV05ipJa4fcMSgubtilKGXOQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=MGqXbFIRaRsVxvGhYQQiMGuHIbj80sG66gigMOs4sAg=;
+ b=xxvWMbeMTVYTbxj5pt7hXAzoK3ffNwQrkUzL4LcE2RxCqSHMVeiEuzNdk6SsZEMZjsOEywWYk//Q+vhylPWx2VHeGWQumzRwrjTQEm2nzrwP2jUED6lpGJTkX9eOxOU1x+9baM7R0mOLXMQ13J6wJYEnicHSAI5GByDDdoeOvZ3p9KBMXDygrCgPuIaZ800SRbQsM4yP/CtD88G1qNVdQ3aJSibeePQCIMVH2NAETUcjawfNVprs5ELDOngsj8fRjymewCHA7XouGSBZxMXyYk9m4tmpa2d1U7z/PZkSI+I6tkW/wvpEGhvTLsYW+bgCfdeutATzH6a9OdpMco7M4g==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=MGqXbFIRaRsVxvGhYQQiMGuHIbj80sG66gigMOs4sAg=;
+ b=Sq8+M2RijIHeyKv1MCZA72P5Unerhn0CrG9ED1jFUzGJhX7eLlPip/VjRjAI/HhNP2xNzLnUtmPB8BPScndiEjh4jrX0XOP6Nf0JSdPkuXxVR+wzq5WWLevzaLMIuX1WPGycRPUvDXGp7AQ5i1imTXTk90q3lrBU8quQWX8M+Lw=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from MN0PR12MB6101.namprd12.prod.outlook.com (2603:10b6:208:3cb::10)
+ by PH0PR12MB8050.namprd12.prod.outlook.com (2603:10b6:510:26e::9) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8158.18; Mon, 18 Nov
+ 2024 15:19:36 +0000
+Received: from MN0PR12MB6101.namprd12.prod.outlook.com
+ ([fe80::37ee:a763:6d04:81ca]) by MN0PR12MB6101.namprd12.prod.outlook.com
+ ([fe80::37ee:a763:6d04:81ca%4]) with mapi id 15.20.8158.019; Mon, 18 Nov 2024
+ 15:19:35 +0000
+Message-ID: <cfe6dfa3-2a03-4dfa-83d0-3e502a2d0a96@amd.com>
+Date: Mon, 18 Nov 2024 09:19:33 -0600
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] Lenovo Legion Go WMI Control
+To: zhixin zhang <jonmail@163.com>, hdegoede@redhat.com,
+ ilpo.jarvinen@linux.intel.com
+Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
+ zhixin zhang <zhangzx36@lenovo.com>
+References: <20241118100503.14228-1-jonmail@163.com>
+Content-Language: en-US
+From: Mario Limonciello <mario.limonciello@amd.com>
+In-Reply-To: <20241118100503.14228-1-jonmail@163.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: SN4PR0501CA0040.namprd05.prod.outlook.com
+ (2603:10b6:803:41::17) To MN0PR12MB6101.namprd12.prod.outlook.com
+ (2603:10b6:208:3cb::10)
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: Lenovo WMI camera driver, switching to SW_CAMERA_LENS_COVER ?
-To: Armin Wolf <W_Armin@gmx.de>, Ai Chao <aichao@kylinos.cn>
-Cc: "platform-driver-x86@vger.kernel.org"
- <platform-driver-x86@vger.kernel.org>
-References: <5666914c-e8c2-481d-8fdf-aff82865c228@redhat.com>
- <388bc9f3-3d0a-47f4-8cc6-beb7e2d4a4d9@gmx.de>
-Content-Language: en-US, nl
-From: Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <388bc9f3-3d0a-47f4-8cc6-beb7e2d4a4d9@gmx.de>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: MN0PR12MB6101:EE_|PH0PR12MB8050:EE_
+X-MS-Office365-Filtering-Correlation-Id: a49006bb-a495-43e9-ee54-08dd07e46942
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|1800799024|376014;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?TEFOdU16b2pnRExmTWlwTHhJUDJYSTcxeHpXWUNya29DVDJheHQ3dERzSmg2?=
+ =?utf-8?B?dDAxZ1ppS3dUeDY5OWorakM4ZkVJd0JlOTVOV1ZQWmM1MER4WExPZXlCdXJJ?=
+ =?utf-8?B?aWJEaUNteFVYS3Q3a1J4ZFhraWVSSi96VDhBTzdoYkdvSm9IUDNDOUdSN2Qx?=
+ =?utf-8?B?VUtoa1dlOENaR0pnUUh0RjdXWU4zbnRaU2dqLzlHRWJ2eWtUVDlNQS9Mcjhx?=
+ =?utf-8?B?STJVeWRaZTV5T08wWURJc05YZ2hmZEVOaTB0OWRTRDVXbHZ1ZFN4dXdCSWZv?=
+ =?utf-8?B?cDhLdS9Rc1lsaXMxdEpTd1BWaFltYXJyN1RBMmRDY1FUSlpDNVl5djNzZ0RR?=
+ =?utf-8?B?ZkltSHZob0pyRHVReTY0VG9PcmQzMWQ0ZUlMQzBWejFTZFE1RHRKY01yRjg3?=
+ =?utf-8?B?Wjc0cnZqNVR1bDBDeU4wczNFakJreVFYYjk0QU1tT2dabGQzdlBFR0thZVJV?=
+ =?utf-8?B?QlE1dXpIOG5IQlNOSE5kWXBrY3prdGkyckFBTDlaV2tkV0VleXFzbGRITFhn?=
+ =?utf-8?B?U0lQTVVsdmlicmxid3FCcFlGeTBGYmhFdzJZZFRwNFRGQTNoZVAvUE5NVGh3?=
+ =?utf-8?B?aUljSnFnNFQ3c1FndDBEVnJiSXV2U1YzM1pNTmFVbHhXTmp1dUpFTldGVWla?=
+ =?utf-8?B?RWt3aExJZ3BYL2VFL2FsZkpyZzZvd0o3Zkcwa0VxZGdlVGtjQTZMdnhLN1JR?=
+ =?utf-8?B?WDdtcUxuU2lJdVdNM0laN1NzYXZ0WlFOdkw5V0xXYk9WZ2htVnhaMWxuSFA2?=
+ =?utf-8?B?Nk5YanQyVkZJK1lpVG0zc3ErNGNmeG5tVUIvL3lOL2xuUnREQ0w1V1h5MlhX?=
+ =?utf-8?B?Y2c3N0J1RW84NmhMOGdpMTh0K3hBUXZtSTN2QXlJRGQycGZmdVVZSzBPWTgy?=
+ =?utf-8?B?SVQvNlpaclRuZ0RQRnlkYWIvNEdvVmtFMFZPMGRMMTRZMkdoL3ZpNUFRRmM0?=
+ =?utf-8?B?Y2t2T3JyRXJXNFNZakNqT0kwYWgxbUcxd292NTVpUGNPN2xQR0EwUEI0Mjlt?=
+ =?utf-8?B?anFROW5OMU83R3c3TDJWdFRDTmp0MUJQcnVXM1ZrWGNxRS9VNnM0MzNzSVNC?=
+ =?utf-8?B?bUJaRHJQdUtZWWxOT0FzLytISnJyV3ZuU3YxQ2NXNXh3cEQ4MGs1Ly9IVDhi?=
+ =?utf-8?B?bTVpTmpjNzQzU1Bya2doN2ZrQ2dxNHR5UlRCWVdKOFNOd2daSGlxWncyaWFv?=
+ =?utf-8?B?L0o0dEp1enNGbXZyMnRIZE5xVDFLNU9yM0JyZHdlbmZQRVdJbWROUUxlbTZy?=
+ =?utf-8?B?T05ZYVZ4MmZCTno1UVZ1UDFLdzdLT1plQk9wckoybS9uVGZ1S3dQZ201WWhx?=
+ =?utf-8?B?MHduT0kwNU9ENUlYaHJhWFgrV2FyQkpSQ2RZcGNXVERjK1orb3pOanhYU2FT?=
+ =?utf-8?B?M0lmelQ0RDFxWlpwVk4wM2cxTVVHL3MrV281U1RkbVNBdHBKSXdMV210NnpH?=
+ =?utf-8?B?NVB4Ky9jamFFTXZmWmlmWndqNkNDeE9jeXlNbGppMmVlbUR6d2xKK3hGOGVh?=
+ =?utf-8?B?ckg1S3RuZTZUS3BvVm5Ga1g3clF2anVVd2M2RHpzWlFmVmRFTjBsTUU1RzNh?=
+ =?utf-8?B?eUFDd0loclNlSXJPUUVpbVpKZjBSc085OW5LVzRDTFRxUG1kU09wWDNSWnRu?=
+ =?utf-8?B?NkFha0pTUkUvdE9OMmJOWmhMT0FyMlA0aHV3WHZ2aEplOSt1NVFQdUsvUENM?=
+ =?utf-8?B?U2d2RTZNRFIwK1NCUXZZdEtYSHhwTmVsQmltZ3dFS3d1T1lnN1ZyNTFaclVQ?=
+ =?utf-8?Q?7az6W1bVgfEgg786uZ87YYFS/V5/fbWYZcDCHMF?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MN0PR12MB6101.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(376014);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?b0tLcklaazNCNFhHSk5Dd2QzYWNqeFF2SHg0cXR6clpCNDRMekdyNCtBZDNv?=
+ =?utf-8?B?U2paUWcra09SQW9zUmgvdG9GbHR0VTFQb0FTUHZrdVFZcHYzVkllZnFDRmI4?=
+ =?utf-8?B?b21oMDdpekVmS0RpYkVXRk9OaWU4aHRpVEdnTDg1bHEyTmZTOTd2U3RXTDhQ?=
+ =?utf-8?B?QzM4Nk9FSUd5ODAyc1hrVEREa2lVZG1NNnZOeVovZXE2WEQ3VVVIOVZybXVS?=
+ =?utf-8?B?N2pyeUpmR1pCL3FuRFhla2wxT2xkOHhiYmpDbDIvOHBMb2NWZGl5WWlqSjE5?=
+ =?utf-8?B?NEZ5T3ZKa3dROFpVTS8xQTNkaUUzMjg4VHUvYnF3V2w5T0Q1UTVsN1NsOU9H?=
+ =?utf-8?B?dkJTOWkwbzFYUllPOUg2T0ZXZVV4dTJJbjg1RVV4VnJ4SWw1QmRSS0cyZEF1?=
+ =?utf-8?B?OWdkRm5wa0hLU3NKOHpMZVZyT1hWcDJkL0J6cEtWTldLUy9HZ3VGQlVHOWtm?=
+ =?utf-8?B?Q01zdUZ2dEpUNS8rSFNQTWJpRTA5Q2NVNmx3di9nV0NCc010bUNQWUM3bGwy?=
+ =?utf-8?B?SFVQZjFMYXFNbmZzRUQ1UGZYN01PQzJNWWdJUDNjbEsrdVY2SE8xelo0bzRS?=
+ =?utf-8?B?NXprb3FzUDZ5WW93dWw5WEZpaDlGSWRPWXBiTkhMaW9EM2NnbjBIRWFaYWNy?=
+ =?utf-8?B?QUd3Z2JsOTAvUEdOMGowYThVbFI3S2JQM1hRUGRRRUhxN0o3OXVqU1ZwbW5E?=
+ =?utf-8?B?OGQ2REtlanczUE5vR2FTc0ZwQWFDbjljL1ZVaFpxRXBZTGlLbkR4N21KK094?=
+ =?utf-8?B?V2cvY0RvdU5Ja1RZZGVWS1VITm92TGlVS2szM3hlOFZQVXlwMHhEaTJGZDU3?=
+ =?utf-8?B?RWIrZFZMMFgxNGMyL3Zwbys2UnRSU2daamt5K0pKd0FGL3FoTUtvOXJOMXkv?=
+ =?utf-8?B?Z1g0MVV2QXc5aFVXazMyWDMwaWo0ZzAzUnQ0MkphbExiZ0tEK2I5SWNYdXJk?=
+ =?utf-8?B?RFFBUWtPU1E1azFBQmJYZ3ZQeEFOVVN2ZHBWQkpuT2gxUFNOUERsNHNodCs2?=
+ =?utf-8?B?ZmhMeXgyeU80eVVJbm16Ymw1R3hGdmxEMEZ2OTMvNS9lN3JLNUNPd3dKZDNt?=
+ =?utf-8?B?OE0xR1N6bWZXSG10Y0xDNDIwTHFZRDhLMmdVczVIeHIyQmh5djhML3lEWXBs?=
+ =?utf-8?B?Vk1PclhHRGU4dml4N2ZGT2RMYUZnRVhETU5yYStnb1N1NDB2RHpNZjdUNU1m?=
+ =?utf-8?B?b3pUSlphanR4aVgyMCs3SXZHcTFXTVN5STArN05ybUh6aDFFTUpwNzN6UHhF?=
+ =?utf-8?B?amdlQi9SRG1NRUZlckFEQXVUQzI0c1MwdjZjbTRRUm1IVE9GZ3BtUHYvY3E0?=
+ =?utf-8?B?REpDUkMvV3ZBc3l2R0lCQm5iRm1LNlFXWDNuZ0doMExTZmtjNkpoLzM5aURF?=
+ =?utf-8?B?YTVVOU9TTndxV1BsWElvZ2JqUXpiaHZCS0VBUVJ5OSt1Snp6M3I4TlkvaXlu?=
+ =?utf-8?B?Q3lXSWh0YVZhbjZITDByOVZha3FsM0xKSUpFYS9LK2JiQjNmY3prREtYRkE5?=
+ =?utf-8?B?bUg1VEtyMVk1Mk5QMXlsVVVKUlhRTEpYSm1WM25qZmJvbkRNU0xwaUNyaUt1?=
+ =?utf-8?B?ZGdiNXFmQ3Zib25VRkVYczRWenJ2VFUwNHN0NTEvdFFpOXNiWDMrVVFINzhZ?=
+ =?utf-8?B?eElNYXNzZjA1YURHZlZ2NzNVdnpkTldtV3hTdGZxd2M0eU5iTlQxb0ZaWUlW?=
+ =?utf-8?B?My9DTjVoUlJIWGVTd3BlVW9wZEpMZTdCM3NiSzcwbEhzZlFBQWdZVkFPcU8y?=
+ =?utf-8?B?dVRRODlBUjNjOS9uWEY2ODNUalQ1bTB6UU5vanpReTN2TEhNb0JaMnZIN0dP?=
+ =?utf-8?B?WllzbHFBWHpGR25xVEdENmVCRkwvNFlrMnRoUFZpYXFzcUZ4VHhhMG00RkVx?=
+ =?utf-8?B?ak9MMHlidVk1Ynhnc2pNTzIxMGxaQXhvdWdsREdpNFJYV0Fha0dIalQyVFRh?=
+ =?utf-8?B?dXE2L3ZQS1NPMFNsQkMvU1g4eHFXUnZxNm04SWZWVW56aW93TW4zUmhwR1Qy?=
+ =?utf-8?B?M3dVdm5waTk4citWaW0weSsvUDMxQTY2Uy9KcnFYUTQ5ZGZIdWw4V0hkT0tr?=
+ =?utf-8?B?SFNHb3JaOU1BVGtYdUc0MzFXV01BMVlEL3kxSGNieFBSUVFtYlNCSkROVk5Q?=
+ =?utf-8?Q?LcF0nDWR91mWtGrBH+Ail2qUb?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: a49006bb-a495-43e9-ee54-08dd07e46942
+X-MS-Exchange-CrossTenant-AuthSource: MN0PR12MB6101.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 18 Nov 2024 15:19:35.7701
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: ewQ7UDemwkBB/oNQY3qD9RwsXMh7G9mx3qy19WrAQCTLtMs9wGXdMDwD6Fya00DY1OIvqs1sqszhdJPJrcTQyQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH0PR12MB8050
 
-Hi Armin, ai,
-
-I'm answering to both your replies in one go here since they
-are related. This also re-adds the list for Ai's reply which
-dropped the list from the Cc.
-
-On 12-Nov-24 4:16 AM, 艾超 wrote:
-> We have discussed this question(initial state of the camera) with the
+On 11/18/2024 04:05, zhixin zhang wrote:
+> From: zhixin zhang <zhangzx36@lenovo.com>
 > 
-> hardware enginner about SW_CAMERA_LENS_COVER.
+> This driver provides support for modifying the performance mode
+> function of Lenovo's Legion Go series.
 > 
-> Driver need a WMI events to report current  camera state to desktop-environment,
+> Signed-off-by: zhixin zhang <zhangzx36@lenovo.com>
+> ---
+>   drivers/platform/x86/Kconfig         |   9 +
+>   drivers/platform/x86/Makefile        |   1 +
+>   drivers/platform/x86/legion-go-wmi.c | 552 +++++++++++++++++++++++++++
+>   3 files changed, 562 insertions(+)
+>   create mode 100644 drivers/platform/x86/legion-go-wmi.c
 > 
-> and no need to get the old camera state. Whether the camera lens cover on/off ,  the camera
-> streaming is normal.
+> diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
+> index 3875abba5a79..d04018f69dc6 100644
+> --- a/drivers/platform/x86/Kconfig
+> +++ b/drivers/platform/x86/Kconfig
+> @@ -483,6 +483,15 @@ config LENOVO_YMC
+>   	  This driver maps the Tablet Mode Control switch to SW_TABLET_MODE input
+>   	  events for Lenovo Yoga notebooks.
+>   
+> +config LEGION_GO_WMI
+> +	tristate "Lenovo Legion Go WMI Control"
+> +	depends on ACPI_WMI
+> +	depends on INPUT
+> +	help
+> +	  This driver provides support for modifying the performance mode
+> +	  function of Lenovo's Legion Go series, as well as the ability to
+> +	  set CPU power consumption in custom mode.
+> +
+>   config SENSORS_HDAPS
+>   	tristate "Thinkpad Hard Drive Active Protection System (hdaps)"
+>   	depends on INPUT
+> diff --git a/drivers/platform/x86/Makefile b/drivers/platform/x86/Makefile
+> index e1b142947067..74b1f107084f 100644
+> --- a/drivers/platform/x86/Makefile
+> +++ b/drivers/platform/x86/Makefile
+> @@ -68,6 +68,7 @@ obj-$(CONFIG_THINKPAD_LMI)	+= think-lmi.o
+>   obj-$(CONFIG_YOGABOOK)		+= lenovo-yogabook.o
+>   obj-$(CONFIG_YT2_1380)		+= lenovo-yoga-tab2-pro-1380-fastcharger.o
+>   obj-$(CONFIG_LENOVO_WMI_CAMERA)	+= lenovo-wmi-camera.o
+> +obj-$(CONFIG_LEGION_GO_WMI)	+= legion-go-wmi.o
+>   
+>   # Intel
+>   obj-y				+= intel/
+> diff --git a/drivers/platform/x86/legion-go-wmi.c b/drivers/platform/x86/legion-go-wmi.c
+> new file mode 100644
+> index 000000000000..e319219c3ace
+> --- /dev/null
+> +++ b/drivers/platform/x86/legion-go-wmi.c
+> @@ -0,0 +1,552 @@
+> +// SPDX-License-Identifier: GPL-2.0-or-later
+> +/*
+> + * legion-go-wmi.c - Lenovo Legion Go WMI Control
+> + *
+> + * Copyright © 2024 zhixin zhang <zhangzx36@lenovo.com>
+> + */
+> +
+> +#include <linux/kernel.h>
+> +#include <linux/acpi.h>
+> +#include <linux/printk.h>
+> +#include <linux/module.h>
+> +#include <linux/wmi.h>
+> +#include <linux/errno.h>
+> +#include <linux/string.h>
+> +#include <linux/proc_fs.h>
+> +#include <linux/slab.h>
+> +#include <linux/uaccess.h>
+> +#include <linux/version.h>
+> +
+> +//extern struct proc_dir_entry *acpi_root_dir;
+> +struct proc_dir_entry *acpi_root_dir;
+> +
+> +#define BUFFER_SIZE 256
+> +
+> +#define LEGION_GO_WMI_GAMEZONE_GUID			"887B54E3-DDDC-4B2C-8B88-68A26A8835D0"
+> +#define LEGION_GO_WMI_OTHER_GUID			"dc2a8805-3a8c-41ba-a6f7-092e0089cd3b"
+> +
+> +//wmi_device_id context string
+> +#define LEGION_GO_WMI_GAMEZONE_CONTEXT	"GameZone"
+> +#define LEGION_GO_WMI_OTHER_CONTEXT		"Other"
+> +
+> +//funciton name
+> +#define CMD_SET_SPL				"SetSPL"
+> +#define CMD_GET_SPL				"GetSPL"
+> +#define CMD_SET_SPPT			"SetSPPT"
+> +#define CMD_GET_SPPT			"GetSPPT"
+> +#define CMD_SET_FPPT			"SetFPPT"
+> +#define CMD_GET_FPPT			"GetFPPT"
+> +#define CMD_SET_SMART_FAN_MODE	"SetSmartFanMode"
+> +#define CMD_GET_SMART_FAN_MODE	"GetSmartFanMode"
+> +
+> +//function arg for ids
+> +enum legion_go_wmi_ids{
+> +	ARG_SPL_CUSTOM_MODE = 0x0102FF00,
+> +	ARG_SPL_GET_VALUE = 0x0102FF00,
+> +
+> +	ARG_SPPT_CUSTOM_MODE = 0x0101FF00,
+> +	ARG_SPPT_GET_VALUE = 0x0101FF00,
+> +
+> +	ARG_FPPT_CUSTOM_MODE = 0x0103FF00,
+> +	ARG_FPPT_GET_VALUE = 0x0103FF00,
+> +
+> +	ARG_SMART_FAN_QUIENT_MODE = 0x1,
+> +	ARG_SMART_FAN_BALANCE_MODE = 0x2,
+> +	ARG_SMART_FAN_PERFORMANCE_MODE = 0x3,
+> +	ARG_SMART_FAN_CUSTOM_MODE = 0xFF,
+> +};
+> +
+> +static const struct wmi_device_id legion_go_wmi_id_table[] = {
+> +	{ LEGION_GO_WMI_GAMEZONE_GUID, LEGION_GO_WMI_GAMEZONE_CONTEXT },
+> +	{ LEGION_GO_WMI_OTHER_GUID, LEGION_GO_WMI_OTHER_CONTEXT },
+> +	{ }
+> +};
+> +
+> +
+> +enum legion_go_wmi_gamezone_method {
+> +	legion_go_wmi_gamezone_method	= 0xAA,	// WMAA, DSDT
+> +	LEGION_GO_WMI_OTHER_METHOD		= 0xAE,	// WMAA, DSDT
+> +};
+> +
+> +//wmi command
+> +enum legion_go_wmi_command {
+> +	// smart fan mode
+> +	LEGION_GO_WMI_GAMEZONE_SET_SMARTFANMODE	= 0x2C,
+> +	LEGION_GO_WMI_GAMEZONE_GET_SMARTFANMODE	= 0x2D,
+> +	// set bois feature
+> +	LEGION_GO_WMI_OTHER_SET_FEATURE_VALUE	= 0x12,
+> +	LEGION_GO_WMI_OTHER_GET_FEATURE_VALUE	= 0x11,
+> +};
+> +
+> +//wmi call function
+> +enum legion_go_call_function {
+> +	LEGION_GO_FUNC_NONE,
+> +	LEGION_GO_FUNC_SET_SPL,
+> +	LEGION_GO_FUNC_GET_SPL,
+> +	LEGION_GO_FUNC_SET_SPPT,
+> +	LEGION_GO_FUNC_GET_SPPT,
+> +	LEGION_GO_FUNC_SET_FPPT,
+> +	LEGION_GO_FUNC_GET_FPPT,
+> +	LEGION_GO_FUNC_SET_SMART_FAN_MODE,
+> +	LEGION_GO_FUNC_GET_SMART_FAN_MODE
+> +};
+> +
+> +struct legion_go_wmi_args_3i {
+> +	u32 arg1;
+> +	u32 arg2;
+> +	u32 arg3;
+> +};
+> +
+> +struct legion_go_wmi_args_2i {
+> +	u32 arg1;
+> +	u32 arg2;
+> +};
+> +
+> +struct legion_go_wmi_args_1i {
+> +	u32 arg1;
+> +};
+> +
+> +struct legion_go_global {
+> +	struct wmi_device *legion_device[2]; //0:"GameZone"  1:"Other"
+> +	enum legion_go_call_function last_call_function;
+> +	bool first_read;
+> +	struct proc_dir_entry *acpi_entry;
+> +	char result_buffer[BUFFER_SIZE];
+> +};
+> +
+> +static struct legion_go_global g_Legion_Go_Global = {
+> +	.legion_device = {NULL, NULL},
+> +	.last_call_function = LEGION_GO_FUNC_NONE,
+> +	.first_read = true,
+> +	.acpi_entry = NULL,
+> +};
+> +
+> +static acpi_status legion_go_wmi_perform_query(struct wmi_device *wdev,
+> +		enum legion_go_wmi_gamezone_method method_id,
+> +		const struct acpi_buffer *in,
+> +		struct acpi_buffer *out)
+> +{
+> +	acpi_status ret = wmidev_evaluate_method(wdev, 0x0, method_id, in, out);
+> +
+> +	if (ACPI_FAILURE(ret)) {
+> +		dev_warn(&wdev->dev, "LEGION GO WMI: WMI query failed with error: %d\n", ret);
+> +		return -EIO;
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +static acpi_status legion_go_wmi_query_integer(struct wmi_device *wdev,
+> +		enum legion_go_wmi_gamezone_method method_id,
+> +		const struct acpi_buffer *in,
+> +		u32 *res)
+> +{
+> +	union acpi_object *obj;
+> +	struct acpi_buffer result = { ACPI_ALLOCATE_BUFFER, NULL };
+> +	acpi_status ret;
+> +
+> +	ret = legion_go_wmi_perform_query(wdev, method_id, in, &result);
+> +	if (ret) {
+> +		return ret;
+> +	}
+> +
+> +	obj = result.pointer;
+> +	if (obj && obj->type == ACPI_TYPE_INTEGER) {
+> +		*res = obj->integer.value;
+> +	}
+> +	else {
+> +		ret = -EIO;
+> +	}
+> +
+> +	kfree(result.pointer);
+> +	return ret;
+> +}
+> +
+> +
+> +/**
+> + * procfs write callback. Called when writing into /proc/acpi/call.
+> +*/
+> +static ssize_t acpi_proc_write(struct file *filp,
+> +		const char __user *buff,
+> +		size_t len,
+> +		loff_t *data)
+> +{
+> +    char input[2 * BUFFER_SIZE] = { '\0' };
+> +    union acpi_object *args;
+> +    int nargs, i;
+> +    char *method;
+> +
+> +	u32 prod_id;
+> +	acpi_status ret;
+> +
+> +    if (len > sizeof(input) - 1) {
+> +        printk(KERN_ERR "LEGION GO WMI: Input too long! (%lu)\n", len);
+> +        return -ENOSPC;
+> +    }
+> +
+> +    if (copy_from_user( input, buff, len )) {
+> +        return -EFAULT;
+> +    }
+> +
+> +    input[len] = '\0';
+> +    if (input[len-1] == '\n')
+> +        input[len-1] = '\0';
+> +
+> +	printk("LEGION GO WMI: procfs write is %s\n", input);
+> +
+> +	char cmd[2 * BUFFER_SIZE] = { '\0' };
+> +	char arg1[2 * BUFFER_SIZE] = { '\0' };
+> +	int arg1Num = 0;
+> +	int retNum = 0;
+> +
+> +	int pos = -1;
+> +	for(int i=0;i<2 * BUFFER_SIZE;i++) {
+> +		if(input[i]== ',') {
+> +			memcpy(cmd,input,i*sizeof(char));
+> +			pos = i+1;
+> +		}
+> +		else if(input[i]=='\0' && pos != -1) {
+> +			memcpy(arg1,input+pos,(i-pos)*sizeof(char));
+> +			pos = i+1;
+> +			break;
+> +		}
+> +	}
+> +	if(pos == -1) {
+> +		memcpy(cmd,input,len*sizeof(char));
+> +	}
+> +	else {
+> +		printk(KERN_ERR "LEGION GO WMI: cmd = %s, arg1 : %s\n", cmd,arg1);
+> +		retNum = kstrtoint(arg1,10,&arg1Num);
+> +		if(retNum != 0)
+> +		{
+> +			printk(KERN_ERR "LEGION GO WMI: arg1 = %s param error!\n",arg1);
+> +			return -ENOSPC;
+> +		}
+> +	}
+> +
+> +	if(ret == 0) {
+> +		if(strcmp(cmd,CMD_SET_SPL)==0) {
+> +			struct legion_go_wmi_args_2i args = {
+> +				.arg1 = ARG_SPL_CUSTOM_MODE,
+> +				.arg2 = arg1Num,
+> +			};
+> +			const struct acpi_buffer in = {
+> +				.length = sizeof(args),
+> +				.pointer = &args,
+> +			};
+> +
+> +			g_Legion_Go_Global.last_call_function = LEGION_GO_FUNC_SET_SPL;
+> +
+> +			ret = legion_go_wmi_query_integer(g_Legion_Go_Global.legion_device[1],
+> +					LEGION_GO_WMI_OTHER_SET_FEATURE_VALUE, &in, &prod_id);
+> +			if (ret == 0) {
+> +				dev_info(&g_Legion_Go_Global.legion_device[1]->dev,
+> +						"LEGION GO WMI: SetSPL result is %d\n", prod_id);
+> +			}
+> +			else {
+> +				dev_warn(&g_Legion_Go_Global.legion_device[1]->dev,
+> +						"LEGION GO WMI: SetSPL query failed with err: %d\n", ret);
+> +			}
+> +		}
+> +		else if(strcmp(cmd,CMD_GET_SPL)==0) {
+> +			g_Legion_Go_Global.last_call_function = LEGION_GO_FUNC_GET_SPL;
+> +		}
+> +		else if(strcmp(cmd,CMD_SET_SPPT)==0) {
+> +			struct legion_go_wmi_args_2i args = {
+> +				.arg1 = ARG_SPPT_CUSTOM_MODE,
+> +				.arg2 = arg1Num,
+> +			};
+> +			const struct acpi_buffer in = {
+> +				.length = sizeof(args),
+> +				.pointer = &args,
+> +			};
+> +
+> +			g_Legion_Go_Global.last_call_function = LEGION_GO_FUNC_SET_SPPT;
+> +
+> +			ret = legion_go_wmi_query_integer(g_Legion_Go_Global.legion_device[1],
+> +					LEGION_GO_WMI_OTHER_SET_FEATURE_VALUE,
+> +					&in,
+> +					&prod_id);
+> +			if (ret == 0) {
+> +				dev_info(&g_Legion_Go_Global.legion_device[1]->dev,
+> +						"LEGION GO WMI: SetSPPT result is %d\n", prod_id);
+> +			}
+> +			else {
+> +				dev_warn(&g_Legion_Go_Global.legion_device[1]->dev,
+> +						"LEGION GO WMI: SetSPPT query failed with err: %d\n", ret);
+> +			}
+> +		}
+> +		else if(strcmp(cmd,CMD_GET_SPPT)==0) {
+> +			g_Legion_Go_Global.last_call_function = LEGION_GO_FUNC_GET_SPPT;
+> +		}
+> +		else if(strcmp(cmd,CMD_SET_FPPT)==0) {
+> +			struct legion_go_wmi_args_2i args = {
+> +				.arg1 = ARG_FPPT_CUSTOM_MODE,
+> +				.arg2 = arg1Num,
+> +			};
+> +			const struct acpi_buffer in = {
+> +				.length = sizeof(args),
+> +				.pointer = &args,
+> +			};
+> +
+> +			g_Legion_Go_Global.last_call_function = LEGION_GO_FUNC_SET_FPPT;
+> +
+> +			ret = legion_go_wmi_query_integer(g_Legion_Go_Global.legion_device[1],
+> +					LEGION_GO_WMI_OTHER_SET_FEATURE_VALUE,
+> +					&in,
+> +					&prod_id);
+> +			if (ret == 0) {
+> +				dev_info(&g_Legion_Go_Global.legion_device[1]->dev,
+> +						"LEGION GO WMI: SetFPPT result is %d\n", prod_id);
+> +			}
+> +			else {
+> +				dev_warn(&g_Legion_Go_Global.legion_device[1]->dev,
+> +						"LEGION GO WMI: SetFPPT query failed with err: %d\n", ret);
+> +			}
+> +		}
+> +		else if(strcmp(cmd,CMD_GET_FPPT)==0) {
+> +			g_Legion_Go_Global.last_call_function = LEGION_GO_FUNC_GET_FPPT;
+> +		}
+> +		else if(strcmp(cmd,CMD_SET_SMART_FAN_MODE)==0) {
+> +			if(arg1Num != 1 && arg1Num != 2 && arg1Num != 3 && arg1Num != 0xFF) {
+> +				printk(KERN_ERR "LEGION GO WMI: %s arg1 = %s param error!\n",
+> +						CMD_SET_SMART_FAN_MODE,arg1);
+> +				return -ENOSPC;
+> +			}
+> +
+> +			struct legion_go_wmi_args_1i args = {
+> +				.arg1 = arg1Num,
+> +			};
+> +			const struct acpi_buffer in = {
+> +				.length = sizeof(args),
+> +				.pointer = &args,
+> +			};
+> +			g_Legion_Go_Global.last_call_function = LEGION_GO_FUNC_SET_SMART_FAN_MODE;
+> +			ret = legion_go_wmi_query_integer(g_Legion_Go_Global.legion_device[0],
+> +					LEGION_GO_WMI_GAMEZONE_SET_SMARTFANMODE,
+> +					&in,
+> +					&prod_id);
+> +
+> +			if (ret == 0) {
+> +				dev_info(&g_Legion_Go_Global.legion_device[0]->dev,
+> +					"LEGION GO WMI: SetSmartFanMode query result is %d\n", prod_id);
+> +			}
+> +			else {
+> +				dev_warn(&g_Legion_Go_Global.legion_device[0]->dev,
+> +				"LEGION GO WMI: SetSmartFanMode query failed with err: %d\n", ret);
+> +			}
+> +		}
+> +		else if(strcmp(cmd,CMD_GET_SMART_FAN_MODE)==0) {
+> +			g_Legion_Go_Global.last_call_function = LEGION_GO_FUNC_GET_SMART_FAN_MODE;
+> +		}
+> +	}
+> +
+> +    return len;
+> +}
+> +
+> +//read other mothod
+> +acpi_status acpi_proc_read_other(struct wmi_device *wdev,
+> +		enum legion_go_wmi_command cmd,
+> +		struct legion_go_wmi_args_1i* args,
+> +		char* funciton_name)
+> +{
+> +	u32 prod_id = 0;
+> +	const struct acpi_buffer in = {
+> +		.length = sizeof(*args),
+> +		.pointer = args,
+> +	};
+> +	acpi_status ret = legion_go_wmi_query_integer(wdev, cmd,  &in, &prod_id);
+> +	if (ret == 0) {
+> +		dev_info(&wdev->dev, "LEGION GO WMI: Integer query result is %d\n", prod_id);
+> +		snprintf(g_Legion_Go_Global.result_buffer,BUFFER_SIZE,"%s,%u",funciton_name,prod_id);
+> +	}
+> +	else {
+> +		dev_warn(&wdev->dev, "LEGION GO WMI: Integer query failed with err: %d\n", ret);
+> +		snprintf(g_Legion_Go_Global.result_buffer,BUFFER_SIZE,"%s,error",funciton_name);
+> +	}
+> +	return ret;
+> +}
+> +
+> +static ssize_t acpi_proc_read(struct file *filp, char __user *buff, size_t count, loff_t *off)
+> +{
+> +	u32 prod_id;
+> +	acpi_status ret;
+> +	int len = strlen(g_Legion_Go_Global.result_buffer);
+> +
+> +	memset(g_Legion_Go_Global.result_buffer,'\0',len);
+> +
+> +	if(g_Legion_Go_Global.last_call_function == LEGION_GO_FUNC_NONE) {
+> +		ssize_t result = simple_read_from_buffer(buff,
+> +				count,
+> +				off,
+> +				g_Legion_Go_Global.result_buffer,
+> +				len + 1);
+> +		return result;
+> +		//return -EIO;
+> +	}
+> +
+> +
+> +	switch(g_Legion_Go_Global.last_call_function) {
+> +		case LEGION_GO_FUNC_SET_SPL:
+> +		case LEGION_GO_FUNC_GET_SPL:
+> +		{
+> +			struct legion_go_wmi_args_1i args = {
+> +				.arg1 = ARG_SPL_GET_VALUE,
+> +			};
+> +			ret = acpi_proc_read_other(g_Legion_Go_Global.legion_device[1],
+> +				LEGION_GO_WMI_OTHER_GET_FEATURE_VALUE,
+> +				&args,
+> +				CMD_GET_SPL);
+> +
+> +			break;
+> +		}
+> +		case LEGION_GO_FUNC_SET_SPPT:
+> +		case LEGION_GO_FUNC_GET_SPPT:
+> +		{
+> +			struct legion_go_wmi_args_1i args = {
+> +				.arg1 = ARG_SPPT_GET_VALUE,
+> +			};
+> +			ret = acpi_proc_read_other(g_Legion_Go_Global.legion_device[1],
+> +					LEGION_GO_WMI_OTHER_GET_FEATURE_VALUE,
+> +					&args,
+> +					CMD_GET_SPPT);
+> +
+> +			break;
+> +		}
+> +		case LEGION_GO_FUNC_SET_FPPT:
+> +		case LEGION_GO_FUNC_GET_FPPT:
+> +		{
+> +			struct legion_go_wmi_args_1i args = {
+> +				.arg1 = ARG_FPPT_GET_VALUE,
+> +			};
+> +			ret = acpi_proc_read_other(g_Legion_Go_Global.legion_device[1],
+> +					LEGION_GO_WMI_OTHER_GET_FEATURE_VALUE,
+> +					&args,
+> +					CMD_GET_FPPT);
+> +
+> +			break;
+> +		}
+> +		case LEGION_GO_FUNC_SET_SMART_FAN_MODE:
+> +		case LEGION_GO_FUNC_GET_SMART_FAN_MODE:
+> +		{
+> +			struct legion_go_wmi_args_1i args = {
+> +				.arg1 = 255,
+> +			};
+> +			const struct acpi_buffer in = {
+> +				.length = sizeof(args),
+> +				.pointer = &args,
+> +			};
+> +
+> +			ret = legion_go_wmi_query_integer(g_Legion_Go_Global.legion_device[0],
+> +					LEGION_GO_WMI_GAMEZONE_GET_SMARTFANMODE,
+> +					&in,
+> +					&prod_id);
+> +			if (ret == 0) {
+> +				dev_info(&g_Legion_Go_Global.legion_device[0]->dev,
+> +						"LEGION GO WMI: Integer query result is %d\n", prod_id);
+> +				snprintf(g_Legion_Go_Global.result_buffer,BUFFER_SIZE,"%s,%u",
+> +						CMD_GET_SMART_FAN_MODE,prod_id);
+> +			}
+> +			else {
+> +				dev_warn(&g_Legion_Go_Global.legion_device[0]->dev,
+> +						"LEGION GO WMI: Integer query failed with err: %d\n", ret);
+> +				snprintf(g_Legion_Go_Global.result_buffer,BUFFER_SIZE,"%s,error",
+> +						CMD_GET_SMART_FAN_MODE);
+> +			}
+> +			break;
+> +		}
+> +		default:
+> +		{
+> +			strcpy(g_Legion_Go_Global.result_buffer,"LEGION GO WMI: nothing to write");
+> +		}
+> +	}
+> +
+> +	if(g_Legion_Go_Global.first_read == true) {
+> +		char temp[BUFFER_SIZE] = {'\0'};
+> +		strcpy(temp, g_Legion_Go_Global.result_buffer);
+> +		strcpy(g_Legion_Go_Global.result_buffer+1, temp);
+> +		g_Legion_Go_Global.first_read = false;
+> +	}
+> +	// output the current result buffer
+> +	ssize_t result = simple_read_from_buffer(buff,
+> +			count,
+> +			off,
+> +			g_Legion_Go_Global.result_buffer,
+> +			len + 1);
+> +
+> +    return result;
+> +}
+> +
+> +static const struct proc_ops proc_acpi_operations = {
+> +        .proc_read     = acpi_proc_read,
+> +        .proc_write    = acpi_proc_write,
+> +};
+> +
+> +static int legion_go_wmi_probe(struct wmi_device *wdev, const void *context)
+> +{
+> +	dev_info(&wdev->dev, "LEGION GO WMI: Probe is starting.\n");
+> +
+> +	if (!wmi_has_guid(LEGION_GO_WMI_OTHER_GUID)) {
+> +		dev_warn(&wdev->dev, "LEGION GO WMI: No known OTHER WMI GUID found\n");
+> +		return -ENODEV;
+> +	}
+> +
+> +	if (!wmi_has_guid(LEGION_GO_WMI_GAMEZONE_GUID)) {
+> +		dev_warn(&wdev->dev, "LEGION GO WMI: No known GAMEZONE WMI GUID found\n");
+> +		return -ENODEV;
+> +	}
+> +
+> +	if (g_Legion_Go_Global.acpi_entry == NULL) {
+> +		g_Legion_Go_Global.acpi_entry = proc_create("legion_go_call",
+> +				0660,
+> +				acpi_root_dir,
+> +				&proc_acpi_operations);
+> +	}
+> +
+> +    if (g_Legion_Go_Global.acpi_entry == NULL)
+> +	{
+> +      dev_warn(&wdev->dev, "LEGION GO WMI: Couldn't create procfs entry\n");
+> +      return -ENOMEM;
+> +    }
+> +
+> +    dev_info(&wdev->dev, "LEGION GO WMI: procfs entry at /proc/acpi/legion_go_call created.\n");
+> +
+> +	dev_info(&wdev->dev, "LEGION GO WMI: Probe is exiting.\n");
+> +
+> +	if(strcmp(context, LEGION_GO_WMI_GAMEZONE_CONTEXT)== 0) {
+> +		g_Legion_Go_Global.legion_device[0] = wdev;
+> +	}
+> +	else {
+> +		g_Legion_Go_Global.legion_device[1] = wdev;
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +static void legion_go_wmi_remove(struct wmi_device *wdev)
+> +{
+> +	g_Legion_Go_Global.legion_device[0] = NULL;
+> +	g_Legion_Go_Global.legion_device[1] = NULL;
+> +
+> +    remove_proc_entry("legion_go_call", acpi_root_dir);
+> +
+> +    dev_info(&wdev->dev, "LEGION GO WMI: procfs entry removed\n");
+> +}
+> +
+> +static struct wmi_driver legion_go_wmi_driver = {
+> +	.driver = {
+> +		.name = "legion-go-wmi",
+> +	},
+> +	.id_table = legion_go_wmi_id_table,
+> +	.probe = legion_go_wmi_probe,
+> +	.remove = legion_go_wmi_remove
+> +};
+> +
+> +module_wmi_driver(legion_go_wmi_driver);
+> +
+> +MODULE_DEVICE_TABLE(wmi, legion_go_wmi_id_table);
+> +
+> +MODULE_DESCRIPTION("Lenovo Legion Go WMI Driver");
+> +MODULE_AUTHOR("zhixin zhang<zhangzx36@lenovo.com>");
+> +MODULE_LICENSE("GPL");
+> +MODULE_VERSION("1.0.0.0");
 
-Ok, so this means that if lenovo-wmi switch gets moved to use SW_CAMERA_LENS_COVER
-it will need to do the same thing as which hp-wmi is doing and delay registering
-the input device with the SW_CAMERA_LENS_COVER capability until the first idea.
+Besides the comments from Ilpo and Kurt I notice that this driver is 
+incredibly noisy.  You've got a dev_info() or dev_warn() in nearly every 
+function.
 
-Do I understand correctly that the GPIO triggering the WMI events is attached to
-the mechanical lens cover and basically reports the location of the cover ?
-
-In that case switching to SW_CAMERA_LENS_COVER would definitely be the right
-thing to do.
-
-On 11-Nov-24 7:37 PM, Armin Wolf wrote:
-> Am 11.11.24 um 15:33 schrieb Hans de Goede:
-> 
->> Hi Ai,
->>
->> I have been looking into all the different way the kernel is
->> currently communicating to userspace that a camera is disabled
->> by some form of on/off switch / privacy control, see:
->>
->> https://lore.kernel.org/linuxa-media/a644fed4-aff5-4514-8e35-d6cab642d3dd@redhat.com/
->>
->> As I mention there my proposal is to standardize on
->> SW_CAMERA_LENS_COVER. This assumes that the button
->> which generates the WMI events actually enables /
->> disables the camera the hardware level.
-> 
-> Hi,
-> 
-> i think SW_CAMERA_LENS_COVER is misleading here, since AFAIK the camera completely disappears
-> from the USB bus. With a proper lens cover however, the camera would still be accessible for
-> querying things like supported resolutions, etc.
-
-As Ai mentions above the camera keeps streaming normally looking ay
-the original commit message for the driver which says:
-
-"""
-Add lenovo WMI camera button driver to support camera button.
-The Camera button is a GPIO device. This driver receives ACPI notifications
-when the camera button is switched on/off. This driver is used in
-Lenovo A70, it is a Computer integrated machine.
-"""
-
-We are talking about a GPIO attached to some sort of on/off contact
-here not normal keypresses. And this is for a so called All-In-One
-device (a monitor with a PC builtin) e.g. something like this:
-
-https://c1.neweggimages.com/ProductImageCompressAll1280/83-265-019-01.jpg
-
-Notice how there is a camera-cover which the user can slide over the cam,
-I presume the GPIO reports the position of the camera.\
-
-Ai can you confirm this?
-
-Also note that these AIO devices use normal keyboards which typically do
-not have any camera on/off key. So I really believe that this WMI driver
-is for a physical switch co-located with the camera itself and thus
-reporting SW_CAMERA_LENS_COVER is the right thing to do.
-
-Armin, You are right that there are cases where the camera completely
-drops of the USB bus when some laptop camera hotkey gets pressed on
-laptop keyboards. But I do not believe that that is the case here.
-
-> Also i believe that the intent of the buttons handled by this driver is to disable access to
-> all cameras connected to the system, so KEY_CAMERA_ACCESS_ENABLE / KEY_CAMERA_ACCESS_DISABLE
-> is necessary here if external USB cameras are connected.
-
-As you say on laptops these keys sometimes drop the camera completely
-from the USB bus, so the key clearly works on the internal camera
-not all cameras.
-
-What to do in those cases is a bit offtopic here, but even there
-I would like to see us move to SW_CAMERA_LENS_COVER especially
-since sometimes there is no info when we get the key press event
-if the camera was added or removed. So what I would like to do
-there is have some in kernel helper to look for an internal USB
-camera and if there is none report SW_CAMERA_LENS_COVER=1 and
-then when the camera comes back report SW_CAMERA_LENS_COVER=0
-at the moment on these laptops we just report "KEY_CAMERA" which
-really is not helpful for userspace.
-
-Userspace could do the look for internal camera thing itself
-but I would rather solve this once in the kernel and use
-SW_CAMERA_LENS_COVER consistently everywhere. I know dropping
-the camera from the bus is not technically a lens-cover but
-the important thing is to let userspace camera using apps 
-know that they need to ask the user to enable the camera.
-
-ATM this is a bit of a mess mixing SW_CAMERA_LENS_COVER +
-KEY_CAMERA + KEY_CAMERA_ACCESS_[DIS|EN]ABLE and I would like
-to try fixing this before userspace starts relying on the
-current broken status quo.
-
-Regards,
-
-Hans
-
-
-
+While going through all the comments from checkpatch and Ilpo please 
+also drop 99% of those.
