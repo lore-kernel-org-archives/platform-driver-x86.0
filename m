@@ -1,240 +1,67 @@
-Received: from mout.gmx.net (mout.gmx.net [212.227.17.21])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f67.google.com (mail-wm1-f67.google.com [209.85.128.67])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8DF081E0E0D;
-	Mon, 18 Nov 2024 21:06:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.21
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F2314158DAC
+	for <platform-driver-x86@vger.kernel.org>; Mon, 18 Nov 2024 22:39:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.67
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1731963998; cv=none; b=IV2VsKogkpGGyV+a9g7QWiZUg0bDo/HxWi5Kv0ScguTwiAKlZNCE/sGkiy7ijOKLFxW3oFpwXCUVZleDkTQV8y4NKqEa2fX1tGF4JKXTcAtwRwSTABJE/oKefC90ijI1dyMPtxpnpVpFrnYY3rnrqYvG61PtQ7UC6+XdTSxI2TY=
+	t=1731969551; cv=none; b=cA89kAgKfcEAI7oKffBSmGagBRN0fTcL47PwbuNCA+oSl8SZAXXXycihnIn2YD4/JLujdXoAX0K6JGBB4nYOCLecVsf7DwDmFn8csg0liUEpkvPcW2E38EdAfTZpjR6l7NhyiDn2w3u+eGrZ/exnay28AFKw4VMog/7+YLa+iQQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1731963998; c=relaxed/simple;
-	bh=VMpSpxTh1rjF9OETalGtIZer5YwrqGwAQQcuh02CKb8=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
-	 In-Reply-To:Content-Type; b=Bz5lPKZQmmBmMcNmTt6qF+yeVN07a84KrTEgGqLGWcwuZt9Rcl3BLtwAZdlsKv4pJd9wLb6JISjLU+X+ciFwPU97gfM9Ne2eSMxyjRBtqhRfh/xOP1M8QTaAPAfecrC+dnJ5CcjnuODEP4fyRDMymln2E9JDDQhwQHW3ZI9GArM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b=Zx9GsvLE; arc=none smtp.client-ip=212.227.17.21
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
+	s=arc-20240116; t=1731969551; c=relaxed/simple;
+	bh=mqk98GP19dZ+Ay7HEP68kLZER2bT/NkIqYTu8jMJ4BE=;
+	h=From:Message-ID:To:Subject:Date:MIME-Version:Content-Type; b=tGlnC5rk383Q4yGALgpPi1NfAQbQTFqhOjPX2BTteJY/6skOulF+8eb5riHVbKodo9P9+q/EPd9or86A+bv/0vLXAXYh9pW1fWsM29YwxFVTXlDA+flNGRHsF6Dms5VGLVEDDtp28mzldnd0kp6xJfjAdj6Qw4DeC429YgIRrGI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=XAXwVGXL; arc=none smtp.client-ip=209.85.128.67
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b="Zx9GsvLE"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.de;
-	s=s31663417; t=1731963914; x=1732568714; i=w_armin@gmx.de;
-	bh=VMpSpxTh1rjF9OETalGtIZer5YwrqGwAQQcuh02CKb8=;
-	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:From:To:
-	 Cc:References:In-Reply-To:Content-Type:Content-Transfer-Encoding:
-	 cc:content-transfer-encoding:content-type:date:from:message-id:
-	 mime-version:reply-to:subject:to;
-	b=Zx9GsvLEqkNRuAUYTGUHFnpYPuP5dijUlE5cSuXZsSmSKDUb1+Yiwoxpe8XzvVn8
-	 eU8fwEOcpXp1yU25EeAc+Mp8WrruJr/dIXOPu1zUVAfbgevAqutc/zOJtXhcm6Ji2
-	 lnBvpTzSN771m1X0RptWINRRIwwumsZ2stor13XxrpkoZGNYOrErZRcbixGQegHlj
-	 sEY0dh5Hwct1/qWjoqKQZbl0WaCKbIKhI98Sh3bDVv3tacDEtMvWnTiFzx6SQaTRr
-	 Df+UWfC3J0Oih9Ir7HZr1wsyY3TKIM6qGcNz6gusFRvgW6ZgdT7yhd/ChdlUJt+/n
-	 eZicFkNRDXVGwYN9Aw==
-X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
-Received: from [192.168.0.14] ([141.30.226.119]) by mail.gmx.net (mrgmx104
- [212.227.17.168]) with ESMTPSA (Nemesis) id 1Mplbx-1tXbK31VLp-00nhG8; Mon, 18
- Nov 2024 22:05:14 +0100
-Message-ID: <c05d3199-03e3-4e60-a1a1-19e36150f3e3@gmx.de>
-Date: Mon, 18 Nov 2024 22:05:10 +0100
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XAXwVGXL"
+Received: by mail-wm1-f67.google.com with SMTP id 5b1f17b1804b1-431695fa98bso1832075e9.3
+        for <platform-driver-x86@vger.kernel.org>; Mon, 18 Nov 2024 14:39:09 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1731969546; x=1732574346; darn=vger.kernel.org;
+        h=mime-version:date:subject:to:reply-to:message-id:from:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=mqk98GP19dZ+Ay7HEP68kLZER2bT/NkIqYTu8jMJ4BE=;
+        b=XAXwVGXLdZrf1MuyJ4yiqV3zaq/NmhhtA3GunUDCP1+iwCtnaobfXgoJcIV50dH+3Y
+         nOY0UxS1bgK/VppZhrwHNaxmnjLV4nhME2vCqXH4yHtmLyo8zLnIohu+iqsEDRGi354y
+         s23JBfMCNqnUUtbBFXAtdoZT+4duJ20YBoggYBB3jFlFaEP/zm/j/W1jV8IhTIUbno3K
+         dQtr7nXVW25nOkQeeJNZeEMuIPOZa0Xvg4V361cyx4fhNfP778v+xgIivKmLnzEmybEs
+         +jUlj7hYFiLgt3WC9sZMdr6fq6H3T736p0ZDh/FsweXKiwoNTY/3MhHPVUSAFg53PT4a
+         tIPA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1731969546; x=1732574346;
+        h=mime-version:date:subject:to:reply-to:message-id:from
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=mqk98GP19dZ+Ay7HEP68kLZER2bT/NkIqYTu8jMJ4BE=;
+        b=nuA/kML8xnCFlXpIM3CWny39W3UP00ynP0FLjoi3ziLqn9vyixOZcwYcXKUzrSWYOu
+         7gBt/vDsFpCNvq2UCDKEHXDU001bM2Be6R+7cMmyVe0ByKdIXdNWOqI5gi3r2+Hrisfz
+         Viej5XYp5cQQhMX37qMoe1MtWJiX6PojJ1AwwnQFDRIjtoev4g8ofsnvss+YU2ZYsmPK
+         LdUVGEphL/mjcXSH7C8ub4Pc6xMIWQvxOUB5I2DdK1SEbl190+h6k4yOknQGHiglIBk0
+         kqsVBpwLTNlJKseAkroWOs2YQlVeWK76TQu+O9U/sQAGFUHODs0L2d0UR5w9Tg93QhsK
+         VXaw==
+X-Gm-Message-State: AOJu0YzQjjtM+xJcwkRxy/6REKyH8qC9qbkFOEaU8tQiB9C0JH5KBX+i
+	Lo8GTEaXAecO4E34SRg7H2SvZs7oSC0bV3ZSTJFEzAiL2/rpRvemR74slqay
+X-Google-Smtp-Source: AGHT+IER8q0ZbLF3RwX+D9sKmFRTkPtJL6krdn2qMMdtA78+Q4Jl+tcmO/fMvuNipojP8ecinduliA==
+X-Received: by 2002:a05:600c:a4c:b0:42c:a580:71cf with SMTP id 5b1f17b1804b1-432df78f0f9mr133630665e9.30.1731969546561;
+        Mon, 18 Nov 2024 14:39:06 -0800 (PST)
+Received: from [87.120.84.56] ([87.120.84.56])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-432dab789fasm174720225e9.18.2024.11.18.14.39.03
+        for <platform-driver-x86@vger.kernel.org>
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 18 Nov 2024 14:39:04 -0800 (PST)
+From: William Cheung <muralidhoron73@gmail.com>
+X-Google-Original-From: William Cheung <info@gmail.com>
+Message-ID: <c228473b3af65b8f806e54425601b327dd9ca0563877164b16ec2dd91ef14d46@mx.google.com>
+Reply-To: willchg@hotmail.com
+To: platform-driver-x86@vger.kernel.org
+Subject: A Proposal
+Date: Mon, 18 Nov 2024 14:38:52 -0800
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v6 00/22] Add support for binding ACPI platform profile to
- multiple drivers
-From: Armin Wolf <W_Armin@gmx.de>
-To: Mario Limonciello <mario.limonciello@amd.com>,
- Hans de Goede <hdegoede@redhat.com>,
- =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Cc: "Rafael J . Wysocki" <rafael@kernel.org>, Len Brown <lenb@kernel.org>,
- Maximilian Luz <luzmaximilian@gmail.com>, Lee Chun-Yi <jlee@suse.com>,
- Shyam Sundar S K <Shyam-sundar.S-k@amd.com>,
- Corentin Chary <corentin.chary@gmail.com>, "Luke D . Jones"
- <luke@ljones.dev>, Ike Panhc <ike.pan@canonical.com>,
- Henrique de Moraes Holschuh <hmh@hmh.eng.br>,
- Alexis Belmonte <alexbelm48@gmail.com>,
- =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>,
- Ai Chao <aichao@kylinos.cn>, Gergo Koteles <soyer@irl.hu>,
- open list <linux-kernel@vger.kernel.org>,
- "open list:ACPI" <linux-acpi@vger.kernel.org>,
- "open list:MICROSOFT SURFACE PLATFORM PROFILE DRIVER"
- <platform-driver-x86@vger.kernel.org>,
- "open list:THINKPAD ACPI EXTRAS DRIVER"
- <ibm-acpi-devel@lists.sourceforge.net>,
- Mark Pearson <mpearson-lenovo@squebb.ca>,
- Matthew Schwartz <matthew.schwartz@linux.dev>
-References: <20241109044151.29804-1-mario.limonciello@amd.com>
- <7d06c91a-bf89-4880-b640-1fce38d51036@gmx.de>
-Content-Language: en-US
-In-Reply-To: <7d06c91a-bf89-4880-b640-1fce38d51036@gmx.de>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:xoNGxhYF660ENn6icr8X5bH8Jk+CCpBpGPk8fnZFcGbEcB61Ruw
- SEfmxA6seeJVRKy9qUpIZPeQs+EiKaFc0FuRMneNrsHP+Q7ijFyX3k8kwooxRc1D4l4Eq9d
- io1rEr0byVvogM0aw3EdBYCTH+ZEdZZS/oVwVDw7K/MPkVRzkh88VQ1r3FKENqfPtZ5c8og
- keb2Jmyc9m2i4JpijozMw==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:nMqnwR/4YBk=;4I2b5Iv7AUngtckLhitFHo5JbgV
- EFAV7fbilvha6Rf9aNYLWMGxVuaITSJAnYAZdXHg2fcPgbjt4UNw7AdEsZnWxk3W9pIBfWwax
- FXYp95cRMwfCoiWcIKnmtF1/q7huQ06p3SvkZB8fhQi14XvN/MU1qg9DHrz2B3AdWskxqNDW0
- Z+JcIouKsuWGH4oShfGPn53hOx1RSMKIO6qdCx9DdH3F66NO3aodfF8PXNffMICRZmCEQhUBC
- jEd3w7vbhj3yf0DwUEoopZkTjvRRw53HgRPbTAlRCX0s2pCxsRpKLQ6Z7E7W2RezZIpdGVMRE
- NGAIiS/sQSgMN3WWJJBWULSDstUIaZtuV+ibJvS11nQuVXUfFHwxbVujBRCPnZhbiyqQjTB9F
- on9pBCM1r64vgehj9S8VZYtKTGfETBUN+VSTQibwXw4S0HKcAK0vZXBYA1j+0pGcxi2vZrluS
- Vjpsql/iPDGq53gnRupHGSu4llwZZksXhIvI6Fak2JSWx0FBLEbebRDyF41478tixepgxHERd
- xPheLXwBAvHj90dmBDEfzp7GGCw0bAsugO68MwH8aHorEIkQwUCz0niRclhWiPBDIvUbCwppa
- 8Nt1zE2pLjrrjJ37tJ7ppXUj58tBvyDclDGk29K3RKD1ZIWCpiGXOTdxVVesTvABtU2qR/TUd
- arwyFqiowz0Xj/FwhhdZUJPuKtMP0cp3Deex+fsOaOJYbg1F1Ku2pUmycdWDZiONhPAWegLG6
- cp0ZAJSYhe34kFIRBmsU315XKptIgkoq88Nv/pv4LOXHeI7umIQOoLp0Gq7lT3sa0J32ragET
- 9zxifggQVySfmmlEhax/Zq4o46ea6d4QCBFIvD3aTePwQTna8TL0MoHI/yt5DHHTLVhtwt7yH
- quC+6aMR8DNnL36JebYYK18Y+LYh9bWs9V/G8J6Qu3HWgLTKkCgbGzem7
+Content-Type: text/plain; charset=us-ascii
 
-Am 14.11.24 um 22:57 schrieb Armin Wolf:
-
-> Am 09.11.24 um 05:41 schrieb Mario Limonciello:
->
->> Currently there are a number of ASUS products on the market that
->> happen to
->> have ACPI objects for amd-pmf to bind to as well as an ACPI platform
->> profile provided by asus-wmi.
->>
->> The ACPI platform profile support created by amd-pmf on these ASUS
->> products is "Function 9" which is specifically for "BIOS or EC
->> notification" of power slider position. This feature is actively used
->> by some designs such as Framework 13 and Framework 16.
->>
->> On these ASUS designs we keep on quirking more and more of them to turn
->> off this notification so that asus-wmi can bind.
->>
->> This however isn't how Windows works.=C2=A0 "Multiple" things are notif=
-ied
->> for
->> the power slider position. This series adjusts Linux to behave
->> similarly.
->>
->> Multiple drivers can now register an ACPI platform profile and will
->> react
->> to set requests.
->>
->> To avoid chaos, only positions that are common to both drivers are
->> accepted when the legacy /sys/firmware/acpi/platform_profile interface
->> is used.
->>
->> This series also adds a new concept of a "custom" profile.=C2=A0 This a=
-llows
->> userspace to discover that there are multiple driver handlers that are
->> configured differently.
->>
->> This series also allows dropping all of the PMF quirks from amd-pmf.
->
-> Sorry for taking a bit long to respond, i am currently quite busy. I
-> will try to review this series
-> in the coming days.
->
-> Thanks,
-> Armin Wolf
->
-So far the patch series looks quite good, but a single issue remains: the =
-locking around the class attributes.
-Maybe someone with some knowledge about sysfs can help us here.
-
-Also can you please rebase the patch series onto the current for-net branc=
-h? This would solve a merge conflict
-inside the asus-wmi driver.
-
-Thanks,
-Armin WOlf
-
->> ---
->> v6:
->> =C2=A0 * Add patch dev patch but don't make mandatory
->> =C2=A0 * See other patches changelogs for individualized changes
->>
->> Mario Limonciello (22):
->> =C2=A0=C2=A0 ACPI: platform-profile: Add a name member to handlers
->> =C2=A0=C2=A0 platform/x86/dell: dell-pc: Create platform device
->> =C2=A0=C2=A0 ACPI: platform_profile: Add device pointer into platform p=
-rofile
->> =C2=A0=C2=A0=C2=A0=C2=A0 handler
->> =C2=A0=C2=A0 ACPI: platform_profile: Add platform handler argument to
->> =C2=A0=C2=A0=C2=A0=C2=A0 platform_profile_remove()
->> =C2=A0=C2=A0 ACPI: platform_profile: Pass the profile handler into
->> =C2=A0=C2=A0=C2=A0=C2=A0 platform_profile_notify()
->> =C2=A0=C2=A0 ACPI: platform_profile: Move sanity check out of the mutex
->> =C2=A0=C2=A0 ACPI: platform_profile: Move matching string for new profi=
-le out of
->> =C2=A0=C2=A0=C2=A0=C2=A0 mutex
->> =C2=A0=C2=A0 ACPI: platform_profile: Use guard(mutex) for register/unre=
-gister
->> =C2=A0=C2=A0 ACPI: platform_profile: Use `scoped_cond_guard`
->> =C2=A0=C2=A0 ACPI: platform_profile: Create class for ACPI platform pro=
-file
->> =C2=A0=C2=A0 ACPI: platform_profile: Add name attribute to class interf=
-ace
->> =C2=A0=C2=A0 ACPI: platform_profile: Add choices attribute for class in=
-terface
->> =C2=A0=C2=A0 ACPI: platform_profile: Add profile attribute for class in=
-terface
->> =C2=A0=C2=A0 ACPI: platform_profile: Notify change events on register a=
-nd
->> =C2=A0=C2=A0=C2=A0=C2=A0 unregister
->> =C2=A0=C2=A0 ACPI: platform_profile: Only show profiles common for all =
-handlers
->> =C2=A0=C2=A0 ACPI: platform_profile: Add concept of a "custom" profile
->> =C2=A0=C2=A0 ACPI: platform_profile: Make sure all profile handlers agr=
-ee on
->> =C2=A0=C2=A0=C2=A0=C2=A0 profile
->> =C2=A0=C2=A0 ACPI: platform_profile: Check all profile handler to calcu=
-late next
->> =C2=A0=C2=A0 ACPI: platform_profile: Notify class device from
->> =C2=A0=C2=A0=C2=A0=C2=A0 platform_profile_notify()
->> =C2=A0=C2=A0 ACPI: platform_profile: Allow multiple handlers
->> =C2=A0=C2=A0 platform/x86/amd: pmf: Drop all quirks
->> =C2=A0=C2=A0 Documentation: Add documentation about class interface for=
- platform
->> =C2=A0=C2=A0=C2=A0=C2=A0 profiles
->>
->> =C2=A0 .../ABI/testing/sysfs-platform_profile=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0 |=C2=A0=C2=A0 5 +
->> =C2=A0 .../userspace-api/sysfs-platform_profile.rst=C2=A0 |=C2=A0 28 +
->> =C2=A0 drivers/acpi/platform_profile.c=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 | 537 ++++++++++++++--=
---
->> =C2=A0 .../surface/surface_platform_profile.c=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0 |=C2=A0=C2=A0 8 +-
->> =C2=A0 drivers/platform/x86/acer-wmi.c=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 |=C2=A0 12 +-
->> =C2=A0 drivers/platform/x86/amd/pmf/Makefile=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0 |=C2=A0=C2=A0 2 +-
->> =C2=A0 drivers/platform/x86/amd/pmf/core.c=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 |=C2=A0=C2=A0 1 -
->> =C2=A0 drivers/platform/x86/amd/pmf/pmf-quirks.c=C2=A0=C2=A0=C2=A0=C2=
-=A0 |=C2=A0 66 ---
->> =C2=A0 drivers/platform/x86/amd/pmf/pmf.h=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 |=C2=A0=C2=A0 3 -
->> =C2=A0 drivers/platform/x86/amd/pmf/sps.c=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 |=C2=A0=C2=A0 4 +-
->> =C2=A0 drivers/platform/x86/asus-wmi.c=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 |=C2=A0 10 +-
->> =C2=A0 drivers/platform/x86/dell/alienware-wmi.c=C2=A0=C2=A0=C2=A0=C2=
-=A0 |=C2=A0=C2=A0 8 +-
->> =C2=A0 drivers/platform/x86/dell/dell-pc.c=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 |=C2=A0 36 +-
->> =C2=A0 drivers/platform/x86/hp/hp-wmi.c=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 |=C2=A0=C2=A0 8 +-
->> =C2=A0 drivers/platform/x86/ideapad-laptop.c=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0 |=C2=A0=C2=A0 6 +-
->> =C2=A0 .../platform/x86/inspur_platform_profile.c=C2=A0=C2=A0=C2=A0 |=
-=C2=A0=C2=A0 7 +-
->> =C2=A0 drivers/platform/x86/thinkpad_acpi.c=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0 |=C2=A0 16 +-
->> =C2=A0 include/linux/platform_profile.h=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 |=C2=A0=C2=A0 9 +-
->> =C2=A0 18 files changed, 553 insertions(+), 213 deletions(-)
->> =C2=A0 delete mode 100644 drivers/platform/x86/amd/pmf/pmf-quirks.c
->>
->>
->> base-commit: d68cb6023356af3bd3193983ad4ec03954a0b3e2
->
+I have a lucratuve proposal for you, reply for more info.
