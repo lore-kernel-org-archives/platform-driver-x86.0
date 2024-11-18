@@ -1,46 +1,91 @@
-Received: from layka.disroot.org (layka.disroot.org [178.21.23.139])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail.zeus03.de (zeus03.de [194.117.254.33])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A44813CA95;
-	Mon, 18 Nov 2024 06:56:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.21.23.139
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 39D6614F102
+	for <platform-driver-x86@vger.kernel.org>; Mon, 18 Nov 2024 07:29:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=194.117.254.33
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1731912992; cv=none; b=klPpadWB6077mgsJDKJDd5sd4b0sv7l22kZTFk8NKHc+OLsnscHpPJaPI8wZsfsS2xsYQxqrQAXmXsB829F5cUO2TpBkqLcGaTVbWzSEMB7H9n4rNPGjiH3wof96n9IcaHybgekyxBlShBssErIDpM7nKehg6AadKeQJfL/odek=
+	t=1731914990; cv=none; b=VXCvR4/dJ9/REbdfAjjWN4NI9aBNcrBPSNGKM0lCjvtD/rolXFJC81HkrTLv9J5FhGTz/5BZk7ThC0KqGnuvddm9kLRoPl9G2FJ4WS9AwW7ZBOcxhQtmHBqjDMflv6wbJUE2ziiSdRuC/Bhx4p50AuJUIw7eiceiirilWQEA+OE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1731912992; c=relaxed/simple;
-	bh=Qs9duRa2WkNIoX6p67oHfQtM34fKgEVmCboEjdNFdls=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=ZEsDK4pnoW2dq4B7pThl4+zGd2lqGIMJM4Gmxz7smi6niuhbyaOjTdsGwJv8c2JY+Sj2EsvyN6tPutt1m2CAlsqaV5RbePVjGVXL5AzgS12NaAODgW8rRXV6ET+BIghhpoBjpFLj9w4SzNDce8X6Co4q/hj9+2SyCBW59Ik8IP4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=disroot.org; spf=pass smtp.mailfrom=disroot.org; dkim=pass (2048-bit key) header.d=disroot.org header.i=@disroot.org header.b=CVaeUprW; arc=none smtp.client-ip=178.21.23.139
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=disroot.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=disroot.org
+	s=arc-20240116; t=1731914990; c=relaxed/simple;
+	bh=H9LQQX3+errApdP89llWL2h0g9xMJY3eOit1C3k3VPc=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=lmH1AWGJoGMa6vqOOqf6d8FrxDPHNMqlku37T3WE9djjrSgsjvVQ05e5Bt+mNfoeunLACWnAErVRWhkBKLomSMhUMZLlL3+ZIz6ip+OeVJI5n7kGZfi96Dq/IZYQeC3c0WcEdCMiHIopDoQ0fkSlv/w0k4aWs28e0DNLhSJqgbA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com; spf=pass smtp.mailfrom=sang-engineering.com; dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b=f3oZ9P4T; arc=none smtp.client-ip=194.117.254.33
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sang-engineering.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=disroot.org header.i=@disroot.org header.b="CVaeUprW"
-Received: from mail01.disroot.lan (localhost [127.0.0.1])
-	by disroot.org (Postfix) with ESMTP id DB86325348;
-	Mon, 18 Nov 2024 07:47:57 +0100 (CET)
-X-Virus-Scanned: SPAM Filter at disroot.org
-Received: from layka.disroot.org ([127.0.0.1])
- by localhost (disroot.org [127.0.0.1]) (amavis, port 10024) with ESMTP
- id 4-DxB9MTCAHp; Mon, 18 Nov 2024 07:47:57 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=disroot.org; s=mail;
-	t=1731912477; bh=Qs9duRa2WkNIoX6p67oHfQtM34fKgEVmCboEjdNFdls=;
-	h=From:To:Cc:Subject:Date;
-	b=CVaeUprWr85hYpzGP02fE2NxpQnq/f/E6xmjpnIypQBGQua0ALirzoKsdq7uGxkRF
-	 Tw1xbvOPLCSh/WiNo4WUyMhFmquiu6N/SJZFMZW/0F+KJhWT6tEkpgjwDH9r8a9pnl
-	 9oKjM/ycqY0kXwAeUbEdNLMKYal+HUilcY/GSCxNL1cNhe1dclrYcQzdnXTy3ahCA4
-	 FHMoeZXtSbEfQk20bI2qUjsQ9BfCnO+ziZxVBEDeCWdunw26vBQv+SbTxAbIfrxXNv
-	 /wCMPZFilFiYJuaKHL95W3/Gbc8ra3gwopvyI/63MI33DOU0oZBfhvFQzTQ7X16q8y
-	 cXS7QaxuLLnmw==
-From: Yao Zi <ziyao@disroot.org>
-To: Kenneth Chan <kenneth.t.chan@gmail.com>,
+	dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b="f3oZ9P4T"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	sang-engineering.com; h=from:to:cc:subject:date:message-id
+	:mime-version:content-transfer-encoding; s=k1; bh=hpvNWCyCojrkvY
+	du6o2rWrPDcX4yyavTS3Qt2myCoUo=; b=f3oZ9P4TdOlRmdKNkheJwEcz4/4MKC
+	E+us1Y0Z5G/c0MS+Bz6Y92iZAVSu6gh8I2EHNZnsE4vvnM1IEBU4jw0BJ7jBK/23
+	ZOZQ4RJ2AcAdG3Fo/aXZB9caknqWoqjSSmuy/JraNtaDb8tIiDJKRDaiRhkY0XkA
+	7uTdsdNMuXZYeAsP3CdBbf4AhdYfGmUY5qgfm3fYIZ2/IzEDR4qK0/w+urqiJ5wP
+	VkQidxTC4V72CV9fMrJrQhUtcLb2vyrTsDKAGJ7/HUe7z6Sm4E5RVmqvrVAL3k93
+	lE86wQvmOS98Rttic76V8vKZ0HEY2F4KmUzwsfyyatEqffHmbpqiBuog==
+Received: (qmail 112200 invoked from network); 18 Nov 2024 08:29:34 +0100
+Received: by mail.zeus03.de with ESMTPSA (TLS_AES_256_GCM_SHA384 encrypted, authenticated); 18 Nov 2024 08:29:34 +0100
+X-UD-Smtp-Session: l3s3148p1@ykLZ4ConvNUujntT
+From: Wolfram Sang <wsa+renesas@sang-engineering.com>
+To: linux-kernel@vger.kernel.org
+Cc: Wolfram Sang <wsa+renesas@sang-engineering.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Alexandre Belloni <alexandre.belloni@bootlin.com>,
+	Andrew Lunn <andrew@lunn.ch>,
+	Andrew Lunn <andrew+netdev@lunn.ch>,
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+	Armin Wolf <W_Armin@gmx.de>,
+	Benjamin Tissoires <bentiss@kernel.org>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Borislav Petkov <bp@alien8.de>,
+	Chandrashekar Devegowda <chandrashekar.devegowda@intel.com>,
+	Chen-Yu Tsai <wens@csie.org>,
+	coresight@lists.linaro.org,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	"David S. Miller" <davem@davemloft.net>,
+	Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+	Eric Dumazet <edumazet@google.com>,
+	Florian Fainelli <florian.fainelli@broadcom.com>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
 	Hans de Goede <hdegoede@redhat.com>,
-	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Cc: platform-driver-x86@vger.kernel.org (open list:PANASONIC LAPTOP ACPI EXTRAS DRIVER),
-	linux-kernel@vger.kernel.org (open list),
-	Yao Zi <ziyao@disroot.org>
-Subject: [PATCH] platform/x86: panasonic-laptop: Return errno correctly in show callback
-Date: Mon, 18 Nov 2024 06:46:39 +0000
-Message-ID: <20241118064637.61832-3-ziyao@disroot.org>
+	Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+	Heiner Kallweit <hkallweit1@gmail.com>,
+	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	Ingo Molnar <mingo@redhat.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Jernej Skrabec <jernej.skrabec@gmail.com>,
+	Jiri Kosina <jikos@kernel.org>,
+	Len Brown <len.brown@intel.com>,
+	linux-arm-kernel@lists.infradead.org,
+	linux-input@vger.kernel.org,
+	linux-mediatek@lists.infradead.org,
+	linux-media@vger.kernel.org,
+	linux-mmc@vger.kernel.org,
+	linux-pci@vger.kernel.org,
+	linux-pm@vger.kernel.org,
+	linux-rtc@vger.kernel.org,
+	linux-sunxi@lists.linux.dev,
+	linux-usb@vger.kernel.org,
+	Loic Poulain <loic.poulain@linaro.org>,
+	Matthias Brugger <matthias.bgg@gmail.com>,
+	Mauro Carvalho Chehab <mchehab@kernel.org>,
+	netdev@vger.kernel.org,
+	Paolo Abeni <pabeni@redhat.com>,
+	Pavel Machek <pavel@ucw.cz>,
+	platform-driver-x86@vger.kernel.org,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Samuel Holland <samuel@sholland.org>,
+	Sean Young <sean@mess.org>,
+	Sergey Ryazanov <ryazanov.s.a@gmail.com>,
+	Suzuki K Poulose <suzuki.poulose@arm.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Ulf Hansson <ulf.hansson@linaro.org>,
+	x86@kernel.org
+Subject: [PATCH 00/15] treewide: don't include 'pm_wakeup.h' directly
+Date: Mon, 18 Nov 2024 08:28:59 +0100
+Message-Id: <20241118072917.3853-1-wsa+renesas@sang-engineering.com>
+X-Mailer: git-send-email 2.39.2
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -49,45 +94,57 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-When an error occurs in sysfs show callback, we should return the errno
-directly instead of formatting it as the result, which produces
-meaningless output and doesn't inform the userspace of the error.
+While working on the wakeup functionality of a RTC driver, I noticed
+that we have a few occasions where 'pm_wakeup.h' gets included directly
+despite the comment that it shouldn't be done. It doesn't build-break
+because these files also include 'device.h' either directly or via some
+indirection, mostly 'platform_device.h'. Still, respect the requirement
+that 'pm_wakeup.h' shall only be included in 'device.h' and not
+directly.
 
-Fixes: 468f96bfa3a0 ("platform/x86: panasonic-laptop: Add support for battery charging threshold (eco mode)")
-Fixes: d5a81d8e864b ("platform/x86: panasonic-laptop: Add support for optical driver power in Y and W series")
-Signed-off-by: Yao Zi <ziyao@disroot.org>
----
- drivers/platform/x86/panasonic-laptop.c | 10 +++++++---
- 1 file changed, 7 insertions(+), 3 deletions(-)
+Based on 6.12-rc7. Build-bot is happy and there are no dependencies. I
+suggest that each patch goes in via the relevant subsystem tree.
 
-diff --git a/drivers/platform/x86/panasonic-laptop.c b/drivers/platform/x86/panasonic-laptop.c
-index 2bf94d0ab324..22ca70eb8227 100644
---- a/drivers/platform/x86/panasonic-laptop.c
-+++ b/drivers/platform/x86/panasonic-laptop.c
-@@ -614,8 +614,7 @@ static ssize_t eco_mode_show(struct device *dev, struct device_attribute *attr,
- 		result = 1;
- 		break;
- 	default:
--		result = -EIO;
--		break;
-+		return -EIO;
- 	}
- 	return sysfs_emit(buf, "%u\n", result);
- }
-@@ -761,7 +760,12 @@ static ssize_t current_brightness_store(struct device *dev, struct device_attrib
- static ssize_t cdpower_show(struct device *dev, struct device_attribute *attr,
- 			    char *buf)
- {
--	return sysfs_emit(buf, "%d\n", get_optd_power_state());
-+	int state = get_optd_power_state();
-+
-+	if (state < 0)
-+		return state;
-+
-+	return sysfs_emit(buf, "%d\n", state);
- }
- 
- static ssize_t cdpower_store(struct device *dev, struct device_attribute *attr,
+Thanks and happy hacking,
+
+   Wolfram
+
+
+Wolfram Sang (15):
+  x86/platform/olpc-xo1-sci: don't include 'pm_wakeup.h' directly
+  drivers core: don't include 'pm_wakeup.h' directly
+  HID: google: don't include 'pm_wakeup.h' directly
+  coresight: etm4x: don't include 'pm_wakeup.h' directly
+  Input: spear-keyboard - don't include 'pm_wakeup.h' directly
+  Input: sun4i-lradc-keys - don't include 'pm_wakeup.h' directly
+  media: mceusb: don't include 'pm_wakeup.h' directly
+  mmc: core: don't include 'pm_wakeup.h' directly
+  net: phy: broadcom: don't include 'pm_wakeup.h' directly
+  net: wwan: t7xx: don't include 'pm_wakeup.h' directly
+  PCI: don't include 'pm_wakeup.h' directly
+  platform/x86: quickstart: don't include 'pm_wakeup.h' directly
+  rtc: brcmstb-waketimer: don't include 'pm_wakeup.h' directly
+  usb: typec: tcpci_mt6370: don't include 'pm_wakeup.h' directly
+  PM / Sleep: don't include 'pm_wakeup.h' directly
+
+ arch/x86/platform/olpc/olpc-xo1-sci.c              | 1 -
+ drivers/base/power/sysfs.c                         | 1 -
+ drivers/hid/hid-google-hammer.c                    | 1 -
+ drivers/hwtracing/coresight/coresight-etm4x-core.c | 1 -
+ drivers/input/keyboard/spear-keyboard.c            | 1 -
+ drivers/input/keyboard/sun4i-lradc-keys.c          | 1 -
+ drivers/media/rc/mceusb.c                          | 1 -
+ drivers/mmc/core/core.c                            | 1 -
+ drivers/mmc/core/host.c                            | 1 -
+ drivers/net/phy/broadcom.c                         | 2 +-
+ drivers/net/wwan/t7xx/t7xx_pci.c                   | 1 -
+ drivers/pci/pci.c                                  | 1 -
+ drivers/platform/x86/quickstart.c                  | 1 -
+ drivers/rtc/rtc-brcmstb-waketimer.c                | 1 -
+ drivers/usb/typec/tcpm/tcpci_mt6370.c              | 1 -
+ kernel/power/autosleep.c                           | 1 -
+ 16 files changed, 1 insertion(+), 16 deletions(-)
+
 -- 
-2.47.0
+2.39.2
 
