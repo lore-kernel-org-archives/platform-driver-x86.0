@@ -1,655 +1,343 @@
-Received: from m16.mail.163.com (m16.mail.163.com [220.197.31.2])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 54685149E0E;
-	Mon, 18 Nov 2024 10:05:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.31.2
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1731924351; cv=none; b=BByXbGeRsr680iLhNdUp9SheoPYQnpwsl2039xN1bbHxFN9zbWC2RI/bLqGeqCGbWnm1BPvpBn9Vd89o8HVRprFwRLo96dIQuUg10ILSMMdFjyH+K0drdUzW+phxcELd/PMlQjVQ0/yvebMEX/hjGgWEAUd39Nu77pYbGJn+NjI=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1731924351; c=relaxed/simple;
-	bh=FH2b4J154ug8vBD7Yf9TkRynbPaj1VxpJ2jFP40Harc=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=PcIgGJMMd25GBlm6UagWtOcPzM1JL7JYIP49D2zF+H9hyVMIylZoo5yvsJM+nh9TlMkk2DCh2vhttohgqiqwk/GKiUQ9z6dVoPJlVakFZ2nJyPNC5027zfEQj7WiSG9jQj25v/swcMmpPbxZ1STk+kaU+QEtIHbJW3MBLQqd2n8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=XoGg7OGn; arc=none smtp.client-ip=220.197.31.2
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
+Received: from NAM11-CO1-obe.outbound.protection.outlook.com (mail-co1nam11on2046.outbound.protection.outlook.com [40.107.220.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B32FC1DFFB
+	for <platform-driver-x86@vger.kernel.org>; Mon, 18 Nov 2024 10:30:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.220.46
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1731925820; cv=fail; b=Dej/oRo/UPMCbHK1XF7dAc+fTiUrZ4FxLdE8Xmj4yVvwpFCjTVoic75qMUJRoOtqwueylKGe7UGtD8qTGKZVdYfenkjuLc1n7pnEi0HacWdoKyTppRHZbqwJmVTScHE74QvypGiAXt5pjPh8C6uiAtmI0iVwJtAjylGNtzuoRx4=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1731925820; c=relaxed/simple;
+	bh=sz7JZT/xeHXvgjQ1fWZPGH3AwVMTqVeyfWEmf/Ew0Vg=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=KJMYToR3wSejuXdqxSomnVW+I3ZRK+Tj/eApb/uUERuxoTSI6IXffJ63qkF2+oODhANWDbuhebFlVfK7Pachhx06r8VsYKCR7slG8o/tpMcWroNqQOVtOEVfaCtlWn2fb7nCBhInSKTA0eJZIvzj7Rm0YN8ADwGtCVsRHhK4lKc=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=ft2rAw37; arc=fail smtp.client-ip=40.107.220.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="XoGg7OGn"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-	s=s110527; h=From:Subject:Date:Message-Id:MIME-Version:
-	Content-Type; bh=0b//Hxv2k1WVccIAqdBjO/7yM6ciWq7KX/t10FSUOac=;
-	b=XoGg7OGnJ7tFpd20DBLjLuvClIdI6iOoN+RzEgQ8Gjnn2NoEw7xKkiMXYioUT7
-	4pLqy/YxpgHzt2pv1i4sqtTQnps+3o/uj8bfB2Jz7w92+plZSAnDyGdKj3FEq9O4
-	o13lFa/WxreGBBOJr12tMji6nHCGtBdpRMD/Ajm4leUqM=
-Received: from jon-Legion-Go-8APU1.lenovo.com (unknown [61.181.102.82])
-	by gzga-smtp-mtada-g0-3 (Coremail) with SMTP id _____wD3HwhRETtnQRBVDA--.63655S2;
-	Mon, 18 Nov 2024 18:05:09 +0800 (CST)
-From: zhixin zhang <jonmail@163.com>
-To: hdegoede@redhat.com,
-	ilpo.jarvinen@linux.intel.com
-Cc: platform-driver-x86@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	zhixin zhang <zhangzx36@lenovo.com>
-Subject: [PATCH] Lenovo Legion Go WMI Control
-Date: Mon, 18 Nov 2024 18:05:03 +0800
-Message-Id: <20241118100503.14228-1-jonmail@163.com>
-X-Mailer: git-send-email 2.34.1
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="ft2rAw37"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=NIugT9TtDVBSE+IVLy0UoDhRamEmOD22jy0avwBsUsyybteJQ+oqo9M47J2jz698HrUdUGyGlN9cnke3WvcLty3+3kRDrU6yijDCrfsvMFSAjv7UdxF9/rrYWOzgTYy2Hys+SGF6O2z1JpSPaSXNnqnpEQEeUJHqPqsg2e5X3Hg1RP8phj/vVng7+SuB0/8O2DXh1VJbdZIy46md0KvWjT8rIppF3ZaLDX3a/llFdv8CjH3n9B2F62n06hh/ab1Oo6V49qFfDqdISYOPd9f1rERUCqNKpHytItAJJvS/XmtjORmTV0GkreaCT+zdnDyNtq/CPPkKdODSBUPqebFSqQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=S6BYcCwTN5fI4h5pkY15o9ObeTPic+3sdr+en0i1tas=;
+ b=CSTVXddYOS22vaWb2S376r2ElZHKcs7OJ3wxa5CBMcNG8j6NeDNhCjzZPp9CrqFv/VhobXmXBkyEG3RtZGvm3/tRmhhenhyVu/rgX5KcFciGp/k1nSE9aX5YGYdlfVJQXZrQHZOPQ/8PZk0JBqcpi4t9jlJXwQr2AZlKeV0IWdZ41pqysGIdQhE5HGVLPpukl68kpQ+iueV0mJfL73NS42wxsG1aYxy+HSCPMhaIvnzP54eb0gMecavhZIWGiZx2XLe5sUq8L6nFk+2jk2+aMdXPBD7MnAo4BV0SMVl9x128wKqn7yhxsTNjercGe8rYB3cBZTs+pIoj+r3l51X7Qg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=softfail (sender ip
+ is 165.204.84.12) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=amd.com;
+ dmarc=fail (p=quarantine sp=quarantine pct=100) action=quarantine
+ header.from=amd.com; dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=S6BYcCwTN5fI4h5pkY15o9ObeTPic+3sdr+en0i1tas=;
+ b=ft2rAw37Em1a8dU2XZNVQyG+eNAaSOuewGf4niVP4XeGDZAG0K7ECXUzuE6VEn5E9h2DOXVIoAZa4+VO2w7mAuQt9XEka+pXL80OiK1d25ktBr2caa4zzK9gr7KBrc9TpZJ7ipjYSvRvg1QZwRiWoj5SaiAgLffpfl3blAS13Ws=
+Received: from SA0PR11CA0137.namprd11.prod.outlook.com (2603:10b6:806:131::22)
+ by DS7PR12MB6045.namprd12.prod.outlook.com (2603:10b6:8:86::18) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8158.23; Mon, 18 Nov
+ 2024 10:30:15 +0000
+Received: from SN1PEPF0002636B.namprd02.prod.outlook.com
+ (2603:10b6:806:131:cafe::41) by SA0PR11CA0137.outlook.office365.com
+ (2603:10b6:806:131::22) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8158.21 via Frontend
+ Transport; Mon, 18 Nov 2024 10:30:15 +0000
+X-MS-Exchange-Authentication-Results: spf=softfail (sender IP is
+ 165.204.84.12) smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=fail action=quarantine header.from=amd.com;
+Received-SPF: SoftFail (protection.outlook.com: domain of transitioning
+ amd.com discourages use of 165.204.84.12 as permitted sender)
+Received: from SATLEXMB04.amd.com (165.204.84.12) by
+ SN1PEPF0002636B.mail.protection.outlook.com (10.167.241.136) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.8158.14 via Frontend Transport; Mon, 18 Nov 2024 10:30:15 +0000
+Received: from amd.amd.com (10.180.168.240) by SATLEXMB04.amd.com
+ (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Mon, 18 Nov
+ 2024 04:28:15 -0600
+From: Suma Hegde <suma.hegde@amd.com>
+To: <platform-driver-x86@vger.kernel.org>
+CC: <ilpo.jarvinen@linux.intel.com>, <hdegoede@redhat.com>, Suma Hegde
+	<suma.hegde@amd.com>, Naveen Krishna Chatradhi
+	<naveenkrishna.chatradhi@amd.com>
+Subject: [v3] platform/x86/amd/hsmp: Add support for HSMP protocol version 7 messages
+Date: Mon, 18 Nov 2024 10:27:52 +0000
+Message-ID: <20241118102752.11703-1-suma.hegde@amd.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:_____wD3HwhRETtnQRBVDA--.63655S2
-X-Coremail-Antispam: 1Uf129KBjvAXoW3CrWDAF1UAw15AFyxWryrCrg_yoW8Ar4fZo
-	W7XwsxAa10gry8XFWUAF1IgayYga40k3Wqyr4rAw45AF97Cr1DK3s7t3Z7Z3W5JF1fKws5
-	WryfK34Dtr1xKFykn29KB7ZKAUJUUUU8529EdanIXcx71UUUUU7v73VFW2AGmfu7bjvjm3
-	AaLaJ3UbIYCTnIWIevJa73UjIFyTuYvjxUsNVyUUUUU
-X-CM-SenderInfo: 5mrqztllo6il2tof0z/1tbiwgubymc7BIbx2gABss
+Content-Type: text/plain
+X-ClientProxiedBy: SATLEXMB03.amd.com (10.181.40.144) To SATLEXMB04.amd.com
+ (10.181.40.145)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: SN1PEPF0002636B:EE_|DS7PR12MB6045:EE_
+X-MS-Office365-Filtering-Correlation-Id: d1411e2a-969c-40f5-73ab-08dd07bbfdbc
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|1800799024|36860700013|82310400026|376014;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?yRRgH6IrgzOeL7hfAo7IBWGf0aFls9UuheNpMYdIhEvhvlsDz02xJRBCxr/k?=
+ =?us-ascii?Q?n6AliUucZI1gRXHhWrDNcCHeARHz3pADvchuPKTQ2DKwJ1eLYrcNVSRCZohQ?=
+ =?us-ascii?Q?VE35l8YmC5BEQ8zSkRUvSmBdySptaFEfWcy+LNFjiJJIWeByEbVdp2cp3SRf?=
+ =?us-ascii?Q?cThMemoKlHl2XXNPyzpEdM9arGydXBPKeasYb8Ktlw46/RsbpgJaphAa1uvV?=
+ =?us-ascii?Q?TNsiRUoIm+Nm7ayyRCEAz/aSZ4Zt/GYG1sHLERXhx9bZ8Tz2kfWQp2vq3i0X?=
+ =?us-ascii?Q?7lqGuzMQQP0RXLdmM4xrbahZLDIkn8XGTAxmAu9y5rRYbV47WfqDpEpN3+su?=
+ =?us-ascii?Q?KKq1asaHxGqo269mAMl3FxuRW+73OYIavCv59KpV006fKzOS0lXC9nUrp5rz?=
+ =?us-ascii?Q?WdigFSMBhym+uogyTlbF+VLJDUXG6dYNOibGxYvNStf21nrVwbu6ULT9Xnx5?=
+ =?us-ascii?Q?OjTdZKSi+lI7pAu6j7UwR082WXVmjwbzrCzAsYSt6OmHqcPs3eor5OaZOj3L?=
+ =?us-ascii?Q?gDYt52z28t448Uu88XXNPXO/vgqFIHme//p2vBNFH1G0mgz4kuSoAYejnuJR?=
+ =?us-ascii?Q?pPoBBnFmVrWP6VKmD8p/y+56E5vLtrcoXxuOFFWkRoFjVneY+TWfkbpuUQOs?=
+ =?us-ascii?Q?cn5ZUb+o+gGC1aneRfVyi0tx9SQdKi6l7MvIkoWfOgr5HJo/unpH8xA7LihA?=
+ =?us-ascii?Q?QGEXtzdgH10/J8CasA41SzkMrYabvyp0m4/wtiCuFWe+iGJhXstYHuTMKVMM?=
+ =?us-ascii?Q?X11q4Ka1vRKO8gohzZLs4b5eRSOd0251mnv3XM87TIR7oF8T0schMMfXWf8e?=
+ =?us-ascii?Q?eEydXiyUh1yOPuH+br+8eyyTqUSw58Yvjqr87wR4XcGDUCKt226UkDOzrZ3J?=
+ =?us-ascii?Q?FkAWmgor85rWMeN64HnolKswcByBPTMuXUqcKowbp2Y+c8AQkb6WCp+luOeS?=
+ =?us-ascii?Q?Ht9FUyovaL088nPDUICiFtguSPEVmxyPingsloZJGNkIXgjcn4GwzhRzZW/7?=
+ =?us-ascii?Q?HkdUxW7ARCplHUzXh/dqqArEBGCtdK4bl7LQ4/mQtz3/XxJffKddkmOb+v9Y?=
+ =?us-ascii?Q?hz7Xwh2Dm7zqFXWaq/py+kL4SydnyIwx2tivKs/lR2zWwuAyrvdXWu672gV4?=
+ =?us-ascii?Q?IfKZWMKGCw+zvAcDevxdGnIwwFgS2XhJ+du56EE3U9gt6Wizm8GthW0lFOgx?=
+ =?us-ascii?Q?6xdzmZ0Ht5TsiizBMxJylZ7C3MIIxWHp/y+3dBsdt6jt3VAjGl9npnouftak?=
+ =?us-ascii?Q?xZGPT4R7Z69TIvq60VmCRPGakynDAZcsbiF2K7zlIHZn2p1o3nGFq58xPO/P?=
+ =?us-ascii?Q?iYjvQi+u7qqzTfpDKFNFJ4fYYLeQNAT2ibcBkUFI5A4E47ghr/zzpFV0IvwT?=
+ =?us-ascii?Q?PC2v+q2g0t0T4u8DmydsaFPA2iDuKqB5OqP3T1VAS7QYG8+5mw=3D=3D?=
+X-Forefront-Antispam-Report:
+	CIP:165.204.84.12;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:atlvpn-bp.amd.com;CAT:NONE;SFS:(13230040)(1800799024)(36860700013)(82310400026)(376014);DIR:OUT;SFP:1101;
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 18 Nov 2024 10:30:15.2962
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: d1411e2a-969c-40f5-73ab-08dd07bbfdbc
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.12];Helo=[SATLEXMB04.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	SN1PEPF0002636B.namprd02.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS7PR12MB6045
 
-From: zhixin zhang <zhangzx36@lenovo.com>
+Following new HSMP messages are available on family 0x1A, model 0x00-0x1F
+platforms with protocol version 7. Add support for them in the driver.
+- SetXgmiPstateRange(26h)
+- CpuRailIsoFreqPolicy(27h)
+- DfcEnable(28h)
+- GetRaplUnit(30h)
+- GetRaplCoreCounter(31h)
+- GetRaplPackageCounter(32h)
 
-This driver provides support for modifying the performance mode
-function of Lenovo's Legion Go series.
+Also update HSMP message PwrEfficiencyModeSelection-21h. This message is
+updated to include GET option in recent firmware.
 
-Signed-off-by: zhixin zhang <zhangzx36@lenovo.com>
+Signed-off-by: Suma Hegde <suma.hegde@amd.com>
+Reviewed-by: Naveen Krishna Chatradhi <naveenkrishna.chatradhi@amd.com>
 ---
- drivers/platform/x86/Kconfig         |   9 +
- drivers/platform/x86/Makefile        |   1 +
- drivers/platform/x86/legion-go-wmi.c | 552 +++++++++++++++++++++++++++
- 3 files changed, 562 insertions(+)
- create mode 100644 drivers/platform/x86/legion-go-wmi.c
+Changes since v2:
+1. BIT(31) is #defined as CHECK_GET_BIT
+2. Instead of nested ifs, && is used in	is_get_msg()
 
-diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
-index 3875abba5a79..d04018f69dc6 100644
---- a/drivers/platform/x86/Kconfig
-+++ b/drivers/platform/x86/Kconfig
-@@ -483,6 +483,15 @@ config LENOVO_YMC
- 	  This driver maps the Tablet Mode Control switch to SW_TABLET_MODE input
- 	  events for Lenovo Yoga notebooks.
+Changes since v1:
+1. Common check is moved out of if else ladder in validate_message().
+2. Code comments are modified in validate_message().
+
+
+ arch/x86/include/uapi/asm/amd_hsmp.h | 64 +++++++++++++++++++++++++++-
+ drivers/platform/x86/amd/hsmp/hsmp.c | 47 +++++++++++++++++---
+ 2 files changed, 103 insertions(+), 8 deletions(-)
+
+diff --git a/arch/x86/include/uapi/asm/amd_hsmp.h b/arch/x86/include/uapi/asm/amd_hsmp.h
+index e5d182c7373c..c83a5a7103b5 100644
+--- a/arch/x86/include/uapi/asm/amd_hsmp.h
++++ b/arch/x86/include/uapi/asm/amd_hsmp.h
+@@ -50,6 +50,12 @@ enum hsmp_message_ids {
+ 	HSMP_GET_METRIC_TABLE_VER,	/* 23h Get metrics table version */
+ 	HSMP_GET_METRIC_TABLE,		/* 24h Get metrics table */
+ 	HSMP_GET_METRIC_TABLE_DRAM_ADDR,/* 25h Get metrics table dram address */
++	HSMP_SET_XGMI_PSTATE_RANGE,	/* 26h Set xGMI P-state range */
++	HSMP_CPU_RAIL_ISO_FREQ_POLICY,	/* 27h Get/Set Cpu Iso frequency policy */
++	HSMP_DFC_ENABLE_CTRL,		/* 28h Enable/Disable DF C-state */
++	HSMP_GET_RAPL_UNITS = 0x30,	/* 30h Get scaling factor for energy */
++	HSMP_GET_RAPL_CORE_COUNTER,	/* 31h Get core energy counter value */
++	HSMP_GET_RAPL_PACKAGE_COUNTER,	/* 32h Get package energy counter value */
+ 	HSMP_MSG_ID_MAX,
+ };
  
-+config LEGION_GO_WMI
-+	tristate "Lenovo Legion Go WMI Control"
-+	depends on ACPI_WMI
-+	depends on INPUT
-+	help
-+	  This driver provides support for modifying the performance mode
-+	  function of Lenovo's Legion Go series, as well as the ability to
-+	  set CPU power consumption in custom mode.
+@@ -65,6 +71,7 @@ enum hsmp_msg_type {
+ 	HSMP_RSVD = -1,
+ 	HSMP_SET  = 0,
+ 	HSMP_GET  = 1,
++	HSMP_SET_GET	= 2,
+ };
+ 
+ enum hsmp_proto_versions {
+@@ -72,7 +79,8 @@ enum hsmp_proto_versions {
+ 	HSMP_PROTO_VER3,
+ 	HSMP_PROTO_VER4,
+ 	HSMP_PROTO_VER5,
+-	HSMP_PROTO_VER6
++	HSMP_PROTO_VER6,
++	HSMP_PROTO_VER7
+ };
+ 
+ struct hsmp_msg_desc {
+@@ -299,7 +307,7 @@ static const struct hsmp_msg_desc hsmp_msg_desc_table[] = {
+ 	 * HSMP_SET_POWER_MODE, num_args = 1, response_sz = 0
+ 	 * input: args[0] = power efficiency mode[2:0]
+ 	 */
+-	{1, 0, HSMP_SET},
++	{1, 1, HSMP_SET_GET},
+ 
+ 	/*
+ 	 * HSMP_SET_PSTATE_MAX_MIN, num_args = 1, response_sz = 0
+@@ -324,6 +332,58 @@ static const struct hsmp_msg_desc hsmp_msg_desc_table[] = {
+ 	 * output: args[1] = upper 32 bits of the address
+ 	 */
+ 	{0, 2, HSMP_GET},
 +
- config SENSORS_HDAPS
- 	tristate "Thinkpad Hard Drive Active Protection System (hdaps)"
- 	depends on INPUT
-diff --git a/drivers/platform/x86/Makefile b/drivers/platform/x86/Makefile
-index e1b142947067..74b1f107084f 100644
---- a/drivers/platform/x86/Makefile
-+++ b/drivers/platform/x86/Makefile
-@@ -68,6 +68,7 @@ obj-$(CONFIG_THINKPAD_LMI)	+= think-lmi.o
- obj-$(CONFIG_YOGABOOK)		+= lenovo-yogabook.o
- obj-$(CONFIG_YT2_1380)		+= lenovo-yoga-tab2-pro-1380-fastcharger.o
- obj-$(CONFIG_LENOVO_WMI_CAMERA)	+= lenovo-wmi-camera.o
-+obj-$(CONFIG_LEGION_GO_WMI)	+= legion-go-wmi.o
++	/*
++	 * HSMP_SET_XGMI_PSTATE_RANGE, num_args = 1, response_sz = 0
++	 * input: args[0] = min xGMI p-state[15:8] + max xGMI p-state[7:0]
++	 */
++	{1, 0, HSMP_SET},
++
++	/*
++	 * HSMP_CPU_RAIL_ISO_FREQ_POLICY, num_args = 1, response_sz = 1
++	 * input: args[0] = set/get policy[31] +
++	 * disable/enable independent control[0]
++	 * output: args[0] = current policy[0]
++	 */
++	{1, 1, HSMP_SET_GET},
++
++	/*
++	 * HSMP_DFC_ENABLE_CTRL, num_args = 1, response_sz = 1
++	 * input: args[0] = set/get policy[31] + enable/disable DFC[0]
++	 * output: args[0] = current policy[0]
++	 */
++	{1, 1, HSMP_SET_GET},
++
++	/* RESERVED(0x29-0x2f) */
++	{0, 0, HSMP_RSVD},
++	{0, 0, HSMP_RSVD},
++	{0, 0, HSMP_RSVD},
++	{0, 0, HSMP_RSVD},
++	{0, 0, HSMP_RSVD},
++	{0, 0, HSMP_RSVD},
++	{0, 0, HSMP_RSVD},
++
++	/*
++	 * HSMP_GET_RAPL_UNITS, response_sz = 1
++	 * output: args[0] = tu value[19:16] + esu value[12:8]
++	 */
++	{0, 1, HSMP_GET},
++
++	/*
++	 * HSMP_GET_RAPL_CORE_COUNTER, num_args = 1, response_sz = 1
++	 * input: args[0] = apic id[15:0]
++	 * output: args[0] = lower 32 bits of energy
++	 * output: args[1] = upper 32 bits of energy
++	 */
++	{1, 2, HSMP_GET},
++
++	/*
++	 * HSMP_GET_RAPL_PACKAGE_COUNTER, num_args = 0, response_sz = 1
++	 * output: args[0] = lower 32 bits of energy
++	 * output: args[1] = upper 32 bits of energy
++	 */
++	{0, 2, HSMP_GET},
++
+ };
  
- # Intel
- obj-y				+= intel/
-diff --git a/drivers/platform/x86/legion-go-wmi.c b/drivers/platform/x86/legion-go-wmi.c
-new file mode 100644
-index 000000000000..e319219c3ace
---- /dev/null
-+++ b/drivers/platform/x86/legion-go-wmi.c
-@@ -0,0 +1,552 @@
-+// SPDX-License-Identifier: GPL-2.0-or-later
+ /* Metrics table (supported only with proto version 6) */
+diff --git a/drivers/platform/x86/amd/hsmp/hsmp.c b/drivers/platform/x86/amd/hsmp/hsmp.c
+index f29dd93fbf0b..a8f3e7519678 100644
+--- a/drivers/platform/x86/amd/hsmp/hsmp.c
++++ b/drivers/platform/x86/amd/hsmp/hsmp.c
+@@ -33,7 +33,13 @@
+ #define HSMP_WR			true
+ #define HSMP_RD			false
+ 
+-#define DRIVER_VERSION		"2.3"
++#define DRIVER_VERSION		"2.4"
++
 +/*
-+ * legion-go-wmi.c - Lenovo Legion Go WMI Control
-+ *
-+ * Copyright © 2024 zhixin zhang <zhangzx36@lenovo.com>
++ * When same message numbers are used for both GET and SET operation,
++ * bit:31 indicates whether its SET or GET operation.
 + */
-+
-+#include <linux/kernel.h>
-+#include <linux/acpi.h>
-+#include <linux/printk.h>
-+#include <linux/module.h>
-+#include <linux/wmi.h>
-+#include <linux/errno.h>
-+#include <linux/string.h>
-+#include <linux/proc_fs.h>
-+#include <linux/slab.h>
-+#include <linux/uaccess.h>
-+#include <linux/version.h>
-+
-+//extern struct proc_dir_entry *acpi_root_dir;
-+struct proc_dir_entry *acpi_root_dir;
-+
-+#define BUFFER_SIZE 256
-+
-+#define LEGION_GO_WMI_GAMEZONE_GUID			"887B54E3-DDDC-4B2C-8B88-68A26A8835D0"
-+#define LEGION_GO_WMI_OTHER_GUID			"dc2a8805-3a8c-41ba-a6f7-092e0089cd3b"
-+
-+//wmi_device_id context string
-+#define LEGION_GO_WMI_GAMEZONE_CONTEXT	"GameZone"
-+#define LEGION_GO_WMI_OTHER_CONTEXT		"Other"
-+
-+//funciton name
-+#define CMD_SET_SPL				"SetSPL"
-+#define CMD_GET_SPL				"GetSPL"
-+#define CMD_SET_SPPT			"SetSPPT"
-+#define CMD_GET_SPPT			"GetSPPT"
-+#define CMD_SET_FPPT			"SetFPPT"
-+#define CMD_GET_FPPT			"GetFPPT"
-+#define CMD_SET_SMART_FAN_MODE	"SetSmartFanMode"
-+#define CMD_GET_SMART_FAN_MODE	"GetSmartFanMode"
-+
-+//function arg for ids
-+enum legion_go_wmi_ids{
-+	ARG_SPL_CUSTOM_MODE = 0x0102FF00,
-+	ARG_SPL_GET_VALUE = 0x0102FF00,
-+
-+	ARG_SPPT_CUSTOM_MODE = 0x0101FF00,
-+	ARG_SPPT_GET_VALUE = 0x0101FF00,
-+
-+	ARG_FPPT_CUSTOM_MODE = 0x0103FF00,
-+	ARG_FPPT_GET_VALUE = 0x0103FF00,
-+
-+	ARG_SMART_FAN_QUIENT_MODE = 0x1,
-+	ARG_SMART_FAN_BALANCE_MODE = 0x2,
-+	ARG_SMART_FAN_PERFORMANCE_MODE = 0x3,
-+	ARG_SMART_FAN_CUSTOM_MODE = 0xFF,
-+};
-+
-+static const struct wmi_device_id legion_go_wmi_id_table[] = {
-+	{ LEGION_GO_WMI_GAMEZONE_GUID, LEGION_GO_WMI_GAMEZONE_CONTEXT },
-+	{ LEGION_GO_WMI_OTHER_GUID, LEGION_GO_WMI_OTHER_CONTEXT },
-+	{ }
-+};
-+
-+
-+enum legion_go_wmi_gamezone_method {
-+	legion_go_wmi_gamezone_method	= 0xAA,	// WMAA, DSDT
-+	LEGION_GO_WMI_OTHER_METHOD		= 0xAE,	// WMAA, DSDT
-+};
-+
-+//wmi command
-+enum legion_go_wmi_command {
-+	// smart fan mode
-+	LEGION_GO_WMI_GAMEZONE_SET_SMARTFANMODE	= 0x2C,
-+	LEGION_GO_WMI_GAMEZONE_GET_SMARTFANMODE	= 0x2D,
-+	// set bois feature
-+	LEGION_GO_WMI_OTHER_SET_FEATURE_VALUE	= 0x12,
-+	LEGION_GO_WMI_OTHER_GET_FEATURE_VALUE	= 0x11,
-+};
-+
-+//wmi call function
-+enum legion_go_call_function {
-+	LEGION_GO_FUNC_NONE,
-+	LEGION_GO_FUNC_SET_SPL,
-+	LEGION_GO_FUNC_GET_SPL,
-+	LEGION_GO_FUNC_SET_SPPT,
-+	LEGION_GO_FUNC_GET_SPPT,
-+	LEGION_GO_FUNC_SET_FPPT,
-+	LEGION_GO_FUNC_GET_FPPT,
-+	LEGION_GO_FUNC_SET_SMART_FAN_MODE,
-+	LEGION_GO_FUNC_GET_SMART_FAN_MODE
-+};
-+
-+struct legion_go_wmi_args_3i {
-+	u32 arg1;
-+	u32 arg2;
-+	u32 arg3;
-+};
-+
-+struct legion_go_wmi_args_2i {
-+	u32 arg1;
-+	u32 arg2;
-+};
-+
-+struct legion_go_wmi_args_1i {
-+	u32 arg1;
-+};
-+
-+struct legion_go_global {
-+	struct wmi_device *legion_device[2]; //0:"GameZone"  1:"Other"
-+	enum legion_go_call_function last_call_function;
-+	bool first_read;
-+	struct proc_dir_entry *acpi_entry;
-+	char result_buffer[BUFFER_SIZE];
-+};
-+
-+static struct legion_go_global g_Legion_Go_Global = {
-+	.legion_device = {NULL, NULL},
-+	.last_call_function = LEGION_GO_FUNC_NONE,
-+	.first_read = true,
-+	.acpi_entry = NULL,
-+};
-+
-+static acpi_status legion_go_wmi_perform_query(struct wmi_device *wdev,
-+		enum legion_go_wmi_gamezone_method method_id,
-+		const struct acpi_buffer *in,
-+		struct acpi_buffer *out)
-+{
-+	acpi_status ret = wmidev_evaluate_method(wdev, 0x0, method_id, in, out);
-+
-+	if (ACPI_FAILURE(ret)) {
-+		dev_warn(&wdev->dev, "LEGION GO WMI: WMI query failed with error: %d\n", ret);
-+		return -EIO;
++#define CHECK_GET_BIT		BIT(31)
+ 
+ static struct hsmp_plat_device hsmp_pdev;
+ 
+@@ -167,11 +173,28 @@ static int validate_message(struct hsmp_message *msg)
+ 	if (hsmp_msg_desc_table[msg->msg_id].type == HSMP_RSVD)
+ 		return -ENOMSG;
+ 
+-	/* num_args and response_sz against the HSMP spec */
+-	if (msg->num_args != hsmp_msg_desc_table[msg->msg_id].num_args ||
+-	    msg->response_sz != hsmp_msg_desc_table[msg->msg_id].response_sz)
++	/*
++	 * num_args passed by user should match the num_args specified in
++	 * message description table.
++	 */
++	if (msg->num_args != hsmp_msg_desc_table[msg->msg_id].num_args)
+ 		return -EINVAL;
+ 
++	/*
++	 * Some older HSMP SET messages are updated to add GET in the same message.
++	 * In these messages, GET returns the current value and SET also returns
++	 * the successfully set value. To support this GET and SET in same message
++	 * while maintaining backward compatibility for the HSMP users,
++	 * hsmp_msg_desc_table[] indicates only maximum allowed response_sz.
++	 */
++	if (hsmp_msg_desc_table[msg->msg_id].type == HSMP_SET_GET) {
++		if (msg->response_sz > hsmp_msg_desc_table[msg->msg_id].response_sz)
++			return -EINVAL;
++	} else {
++		/* only HSMP_SET or HSMP_GET messages go through this strict check */
++		if (msg->response_sz != hsmp_msg_desc_table[msg->msg_id].response_sz)
++			return -EINVAL;
 +	}
+ 	return 0;
+ }
+ 
+@@ -239,6 +262,18 @@ int hsmp_test(u16 sock_ind, u32 value)
+ }
+ EXPORT_SYMBOL_NS_GPL(hsmp_test, AMD_HSMP);
+ 
++static bool is_get_msg(struct hsmp_message *msg)
++{
++	if (hsmp_msg_desc_table[msg->msg_id].type == HSMP_GET)
++		return true;
 +
-+	return 0;
++	if (hsmp_msg_desc_table[msg->msg_id].type == HSMP_SET_GET &&
++	    (msg->args[0] & CHECK_GET_BIT))
++		return true;
++
++	return false;
 +}
 +
-+static acpi_status legion_go_wmi_query_integer(struct wmi_device *wdev,
-+		enum legion_go_wmi_gamezone_method method_id,
-+		const struct acpi_buffer *in,
-+		u32 *res)
-+{
-+	union acpi_object *obj;
-+	struct acpi_buffer result = { ACPI_ALLOCATE_BUFFER, NULL };
-+	acpi_status ret;
-+
-+	ret = legion_go_wmi_perform_query(wdev, method_id, in, &result);
-+	if (ret) {
-+		return ret;
-+	}
-+
-+	obj = result.pointer;
-+	if (obj && obj->type == ACPI_TYPE_INTEGER) {
-+		*res = obj->integer.value;
-+	}
-+	else {
-+		ret = -EIO;
-+	}
-+
-+	kfree(result.pointer);
-+	return ret;
-+}
-+
-+
-+/**
-+ * procfs write callback. Called when writing into /proc/acpi/call.
-+*/
-+static ssize_t acpi_proc_write(struct file *filp,
-+		const char __user *buff,
-+		size_t len,
-+		loff_t *data)
-+{
-+    char input[2 * BUFFER_SIZE] = { '\0' };
-+    union acpi_object *args;
-+    int nargs, i;
-+    char *method;
-+
-+	u32 prod_id;
-+	acpi_status ret;
-+
-+    if (len > sizeof(input) - 1) {
-+        printk(KERN_ERR "LEGION GO WMI: Input too long! (%lu)\n", len);
-+        return -ENOSPC;
-+    }
-+
-+    if (copy_from_user( input, buff, len )) {
-+        return -EFAULT;
-+    }
-+
-+    input[len] = '\0';
-+    if (input[len-1] == '\n')
-+        input[len-1] = '\0';
-+
-+	printk("LEGION GO WMI: procfs write is %s\n", input);
-+
-+	char cmd[2 * BUFFER_SIZE] = { '\0' };
-+	char arg1[2 * BUFFER_SIZE] = { '\0' };
-+	int arg1Num = 0;
-+	int retNum = 0;
-+
-+	int pos = -1;
-+	for(int i=0;i<2 * BUFFER_SIZE;i++) {
-+		if(input[i]== ',') {
-+			memcpy(cmd,input,i*sizeof(char));
-+			pos = i+1;
-+		}
-+		else if(input[i]=='\0' && pos != -1) {
-+			memcpy(arg1,input+pos,(i-pos)*sizeof(char));
-+			pos = i+1;
-+			break;
-+		}
-+	}
-+	if(pos == -1) {
-+		memcpy(cmd,input,len*sizeof(char));
-+	}
-+	else {
-+		printk(KERN_ERR "LEGION GO WMI: cmd = %s, arg1 : %s\n", cmd,arg1);
-+		retNum = kstrtoint(arg1,10,&arg1Num);
-+		if(retNum != 0)
-+		{
-+			printk(KERN_ERR "LEGION GO WMI: arg1 = %s param error!\n",arg1);
-+			return -ENOSPC;
-+		}
-+	}
-+
-+	if(ret == 0) {
-+		if(strcmp(cmd,CMD_SET_SPL)==0) {
-+			struct legion_go_wmi_args_2i args = {
-+				.arg1 = ARG_SPL_CUSTOM_MODE,
-+				.arg2 = arg1Num,
-+			};
-+			const struct acpi_buffer in = {
-+				.length = sizeof(args),
-+				.pointer = &args,
-+			};
-+
-+			g_Legion_Go_Global.last_call_function = LEGION_GO_FUNC_SET_SPL;
-+
-+			ret = legion_go_wmi_query_integer(g_Legion_Go_Global.legion_device[1], 
-+					LEGION_GO_WMI_OTHER_SET_FEATURE_VALUE, &in, &prod_id);
-+			if (ret == 0) {
-+				dev_info(&g_Legion_Go_Global.legion_device[1]->dev, 
-+						"LEGION GO WMI: SetSPL result is %d\n", prod_id);
-+			}
-+			else {
-+				dev_warn(&g_Legion_Go_Global.legion_device[1]->dev,
-+						"LEGION GO WMI: SetSPL query failed with err: %d\n", ret);
-+			}
-+		}
-+		else if(strcmp(cmd,CMD_GET_SPL)==0) {
-+			g_Legion_Go_Global.last_call_function = LEGION_GO_FUNC_GET_SPL;
-+		}
-+		else if(strcmp(cmd,CMD_SET_SPPT)==0) {
-+			struct legion_go_wmi_args_2i args = {
-+				.arg1 = ARG_SPPT_CUSTOM_MODE,
-+				.arg2 = arg1Num,
-+			};
-+			const struct acpi_buffer in = {
-+				.length = sizeof(args),
-+				.pointer = &args,
-+			};
-+
-+			g_Legion_Go_Global.last_call_function = LEGION_GO_FUNC_SET_SPPT;
-+
-+			ret = legion_go_wmi_query_integer(g_Legion_Go_Global.legion_device[1],
-+					LEGION_GO_WMI_OTHER_SET_FEATURE_VALUE,
-+					&in,
-+					&prod_id);
-+			if (ret == 0) {
-+				dev_info(&g_Legion_Go_Global.legion_device[1]->dev,
-+						"LEGION GO WMI: SetSPPT result is %d\n", prod_id);
-+			}
-+			else {
-+				dev_warn(&g_Legion_Go_Global.legion_device[1]->dev,
-+						"LEGION GO WMI: SetSPPT query failed with err: %d\n", ret);
-+			}
-+		}
-+		else if(strcmp(cmd,CMD_GET_SPPT)==0) {
-+			g_Legion_Go_Global.last_call_function = LEGION_GO_FUNC_GET_SPPT;
-+		}
-+		else if(strcmp(cmd,CMD_SET_FPPT)==0) {
-+			struct legion_go_wmi_args_2i args = {
-+				.arg1 = ARG_FPPT_CUSTOM_MODE,
-+				.arg2 = arg1Num,
-+			};
-+			const struct acpi_buffer in = {
-+				.length = sizeof(args),
-+				.pointer = &args,
-+			};
-+
-+			g_Legion_Go_Global.last_call_function = LEGION_GO_FUNC_SET_FPPT;
-+
-+			ret = legion_go_wmi_query_integer(g_Legion_Go_Global.legion_device[1],
-+					LEGION_GO_WMI_OTHER_SET_FEATURE_VALUE,
-+					&in,
-+					&prod_id);
-+			if (ret == 0) {
-+				dev_info(&g_Legion_Go_Global.legion_device[1]->dev,
-+						"LEGION GO WMI: SetFPPT result is %d\n", prod_id);
-+			}
-+			else {
-+				dev_warn(&g_Legion_Go_Global.legion_device[1]->dev,
-+						"LEGION GO WMI: SetFPPT query failed with err: %d\n", ret);
-+			}
-+		}
-+		else if(strcmp(cmd,CMD_GET_FPPT)==0) {
-+			g_Legion_Go_Global.last_call_function = LEGION_GO_FUNC_GET_FPPT;
-+		}
-+		else if(strcmp(cmd,CMD_SET_SMART_FAN_MODE)==0) {
-+			if(arg1Num != 1 && arg1Num != 2 && arg1Num != 3 && arg1Num != 0xFF) {
-+				printk(KERN_ERR "LEGION GO WMI: %s arg1 = %s param error!\n",
-+						CMD_SET_SMART_FAN_MODE,arg1);
-+				return -ENOSPC;
-+			}
-+
-+			struct legion_go_wmi_args_1i args = {
-+				.arg1 = arg1Num,
-+			};
-+			const struct acpi_buffer in = {
-+				.length = sizeof(args),
-+				.pointer = &args,
-+			};
-+			g_Legion_Go_Global.last_call_function = LEGION_GO_FUNC_SET_SMART_FAN_MODE;
-+			ret = legion_go_wmi_query_integer(g_Legion_Go_Global.legion_device[0],
-+					LEGION_GO_WMI_GAMEZONE_SET_SMARTFANMODE,
-+					&in,
-+					&prod_id);
-+
-+			if (ret == 0) {
-+				dev_info(&g_Legion_Go_Global.legion_device[0]->dev,
-+					"LEGION GO WMI: SetSmartFanMode query result is %d\n", prod_id);
-+			} 
-+			else {
-+				dev_warn(&g_Legion_Go_Global.legion_device[0]->dev,
-+				"LEGION GO WMI: SetSmartFanMode query failed with err: %d\n", ret);
-+			}
-+		}
-+		else if(strcmp(cmd,CMD_GET_SMART_FAN_MODE)==0) {
-+			g_Legion_Go_Global.last_call_function = LEGION_GO_FUNC_GET_SMART_FAN_MODE;
-+		}
-+	}
-+
-+    return len;
-+}
-+
-+//read other mothod
-+acpi_status acpi_proc_read_other(struct wmi_device *wdev,
-+		enum legion_go_wmi_command cmd,
-+		struct legion_go_wmi_args_1i* args,
-+		char* funciton_name)
-+{
-+	u32 prod_id = 0;
-+	const struct acpi_buffer in = {
-+		.length = sizeof(*args),
-+		.pointer = args,
-+	};
-+	acpi_status ret = legion_go_wmi_query_integer(wdev, cmd,  &in, &prod_id);
-+	if (ret == 0) {
-+		dev_info(&wdev->dev, "LEGION GO WMI: Integer query result is %d\n", prod_id);
-+		snprintf(g_Legion_Go_Global.result_buffer,BUFFER_SIZE,"%s,%u",funciton_name,prod_id);
-+	} 
-+	else {
-+		dev_warn(&wdev->dev, "LEGION GO WMI: Integer query failed with err: %d\n", ret);
-+		snprintf(g_Legion_Go_Global.result_buffer,BUFFER_SIZE,"%s,error",funciton_name);
-+	}
-+	return ret;
-+}
-+
-+static ssize_t acpi_proc_read(struct file *filp, char __user *buff, size_t count, loff_t *off)
-+{
-+	u32 prod_id;
-+	acpi_status ret;
-+	int len = strlen(g_Legion_Go_Global.result_buffer);
-+
-+	memset(g_Legion_Go_Global.result_buffer,'\0',len);
-+
-+	if(g_Legion_Go_Global.last_call_function == LEGION_GO_FUNC_NONE) {
-+		ssize_t result = simple_read_from_buffer(buff,
-+				count,
-+				off,
-+				g_Legion_Go_Global.result_buffer,
-+				len + 1);
-+		return result;
-+		//return -EIO;
-+	}
-+
-+
-+	switch(g_Legion_Go_Global.last_call_function) {
-+		case LEGION_GO_FUNC_SET_SPL:
-+		case LEGION_GO_FUNC_GET_SPL:
-+		{
-+			struct legion_go_wmi_args_1i args = {
-+				.arg1 = ARG_SPL_GET_VALUE,
-+			};
-+			ret = acpi_proc_read_other(g_Legion_Go_Global.legion_device[1],
-+				LEGION_GO_WMI_OTHER_GET_FEATURE_VALUE,
-+				&args,
-+				CMD_GET_SPL);
-+
-+			break;
-+		}
-+		case LEGION_GO_FUNC_SET_SPPT:
-+		case LEGION_GO_FUNC_GET_SPPT:
-+		{
-+			struct legion_go_wmi_args_1i args = {
-+				.arg1 = ARG_SPPT_GET_VALUE,
-+			};
-+			ret = acpi_proc_read_other(g_Legion_Go_Global.legion_device[1],
-+					LEGION_GO_WMI_OTHER_GET_FEATURE_VALUE,
-+					&args,
-+					CMD_GET_SPPT);
-+
-+			break;
-+		}
-+		case LEGION_GO_FUNC_SET_FPPT:
-+		case LEGION_GO_FUNC_GET_FPPT:
-+		{
-+			struct legion_go_wmi_args_1i args = {
-+				.arg1 = ARG_FPPT_GET_VALUE,
-+			};
-+			ret = acpi_proc_read_other(g_Legion_Go_Global.legion_device[1],
-+					LEGION_GO_WMI_OTHER_GET_FEATURE_VALUE,
-+					&args,
-+					CMD_GET_FPPT);
-+
-+			break;
-+		}
-+		case LEGION_GO_FUNC_SET_SMART_FAN_MODE:
-+		case LEGION_GO_FUNC_GET_SMART_FAN_MODE:
-+		{
-+			struct legion_go_wmi_args_1i args = {
-+				.arg1 = 255,
-+			};
-+			const struct acpi_buffer in = {
-+				.length = sizeof(args),
-+				.pointer = &args,
-+			};
-+
-+			ret = legion_go_wmi_query_integer(g_Legion_Go_Global.legion_device[0],
-+					LEGION_GO_WMI_GAMEZONE_GET_SMARTFANMODE,
-+					&in,
-+					&prod_id);
-+			if (ret == 0) {
-+				dev_info(&g_Legion_Go_Global.legion_device[0]->dev,
-+						"LEGION GO WMI: Integer query result is %d\n", prod_id);
-+				snprintf(g_Legion_Go_Global.result_buffer,BUFFER_SIZE,"%s,%u",
-+						CMD_GET_SMART_FAN_MODE,prod_id);
-+			}
-+			else {
-+				dev_warn(&g_Legion_Go_Global.legion_device[0]->dev,
-+						"LEGION GO WMI: Integer query failed with err: %d\n", ret);
-+				snprintf(g_Legion_Go_Global.result_buffer,BUFFER_SIZE,"%s,error",
-+						CMD_GET_SMART_FAN_MODE);
-+			}
-+			break;
-+		}
-+		default:
-+		{
-+			strcpy(g_Legion_Go_Global.result_buffer,"LEGION GO WMI: nothing to write");
-+		}
-+	}
-+
-+	if(g_Legion_Go_Global.first_read == true) {
-+		char temp[BUFFER_SIZE] = {'\0'};
-+		strcpy(temp, g_Legion_Go_Global.result_buffer);
-+		strcpy(g_Legion_Go_Global.result_buffer+1, temp);
-+		g_Legion_Go_Global.first_read = false;
-+	}
-+	// output the current result buffer
-+	ssize_t result = simple_read_from_buffer(buff,
-+			count,
-+			off,
-+			g_Legion_Go_Global.result_buffer,
-+			len + 1);
-+
-+    return result;
-+}
-+
-+static const struct proc_ops proc_acpi_operations = {
-+        .proc_read     = acpi_proc_read,
-+        .proc_write    = acpi_proc_write,
-+};
-+
-+static int legion_go_wmi_probe(struct wmi_device *wdev, const void *context)
-+{
-+	dev_info(&wdev->dev, "LEGION GO WMI: Probe is starting.\n");
-+
-+	if (!wmi_has_guid(LEGION_GO_WMI_OTHER_GUID)) {
-+		dev_warn(&wdev->dev, "LEGION GO WMI: No known OTHER WMI GUID found\n");
-+		return -ENODEV;
-+	}
-+
-+	if (!wmi_has_guid(LEGION_GO_WMI_GAMEZONE_GUID)) {
-+		dev_warn(&wdev->dev, "LEGION GO WMI: No known GAMEZONE WMI GUID found\n");
-+		return -ENODEV;
-+	}
-+
-+	if (g_Legion_Go_Global.acpi_entry == NULL) {
-+		g_Legion_Go_Global.acpi_entry = proc_create("legion_go_call", 
-+				0660,
-+				acpi_root_dir,
-+				&proc_acpi_operations);
-+	}
-+
-+    if (g_Legion_Go_Global.acpi_entry == NULL)
-+	{
-+      dev_warn(&wdev->dev, "LEGION GO WMI: Couldn't create procfs entry\n");
-+      return -ENOMEM;
-+    }
-+
-+    dev_info(&wdev->dev, "LEGION GO WMI: procfs entry at /proc/acpi/legion_go_call created.\n");
-+
-+	dev_info(&wdev->dev, "LEGION GO WMI: Probe is exiting.\n");
-+
-+	if(strcmp(context, LEGION_GO_WMI_GAMEZONE_CONTEXT)== 0) {
-+		g_Legion_Go_Global.legion_device[0] = wdev;
-+	}
-+	else {
-+		g_Legion_Go_Global.legion_device[1] = wdev;
-+	}
-+
-+	return 0;
-+}
-+
-+static void legion_go_wmi_remove(struct wmi_device *wdev)
-+{
-+	g_Legion_Go_Global.legion_device[0] = NULL;
-+	g_Legion_Go_Global.legion_device[1] = NULL;
-+
-+    remove_proc_entry("legion_go_call", acpi_root_dir);
-+
-+    dev_info(&wdev->dev, "LEGION GO WMI: procfs entry removed\n");
-+}
-+
-+static struct wmi_driver legion_go_wmi_driver = {
-+	.driver = {
-+		.name = "legion-go-wmi",
-+	},
-+	.id_table = legion_go_wmi_id_table,
-+	.probe = legion_go_wmi_probe,
-+	.remove = legion_go_wmi_remove
-+};
-+
-+module_wmi_driver(legion_go_wmi_driver);
-+
-+MODULE_DEVICE_TABLE(wmi, legion_go_wmi_id_table);
-+
-+MODULE_DESCRIPTION("Lenovo Legion Go WMI Driver");
-+MODULE_AUTHOR("zhixin zhang<zhangzx36@lenovo.com>");
-+MODULE_LICENSE("GPL");
-+MODULE_VERSION("1.0.0.0");
+ long hsmp_ioctl(struct file *fp, unsigned int cmd, unsigned long arg)
+ {
+ 	int __user *arguser = (int  __user *)arg;
+@@ -261,7 +296,7 @@ long hsmp_ioctl(struct file *fp, unsigned int cmd, unsigned long arg)
+ 		 * Device is opened in O_WRONLY mode
+ 		 * Execute only set/configure commands
+ 		 */
+-		if (hsmp_msg_desc_table[msg.msg_id].type != HSMP_SET)
++		if (is_get_msg(&msg))
+ 			return -EPERM;
+ 		break;
+ 	case FMODE_READ:
+@@ -269,7 +304,7 @@ long hsmp_ioctl(struct file *fp, unsigned int cmd, unsigned long arg)
+ 		 * Device is opened in O_RDONLY mode
+ 		 * Execute only get/monitor commands
+ 		 */
+-		if (hsmp_msg_desc_table[msg.msg_id].type != HSMP_GET)
++		if (!is_get_msg(&msg))
+ 			return -EPERM;
+ 		break;
+ 	case FMODE_READ | FMODE_WRITE:
 -- 
-2.34.1
+2.25.1
 
