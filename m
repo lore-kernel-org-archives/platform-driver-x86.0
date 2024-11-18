@@ -1,343 +1,98 @@
-Received: from NAM11-CO1-obe.outbound.protection.outlook.com (mail-co1nam11on2046.outbound.protection.outlook.com [40.107.220.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f171.google.com (mail-pf1-f171.google.com [209.85.210.171])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B32FC1DFFB
-	for <platform-driver-x86@vger.kernel.org>; Mon, 18 Nov 2024 10:30:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.220.46
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1731925820; cv=fail; b=Dej/oRo/UPMCbHK1XF7dAc+fTiUrZ4FxLdE8Xmj4yVvwpFCjTVoic75qMUJRoOtqwueylKGe7UGtD8qTGKZVdYfenkjuLc1n7pnEi0HacWdoKyTppRHZbqwJmVTScHE74QvypGiAXt5pjPh8C6uiAtmI0iVwJtAjylGNtzuoRx4=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1731925820; c=relaxed/simple;
-	bh=sz7JZT/xeHXvgjQ1fWZPGH3AwVMTqVeyfWEmf/Ew0Vg=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=KJMYToR3wSejuXdqxSomnVW+I3ZRK+Tj/eApb/uUERuxoTSI6IXffJ63qkF2+oODhANWDbuhebFlVfK7Pachhx06r8VsYKCR7slG8o/tpMcWroNqQOVtOEVfaCtlWn2fb7nCBhInSKTA0eJZIvzj7Rm0YN8ADwGtCVsRHhK4lKc=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=ft2rAw37; arc=fail smtp.client-ip=40.107.220.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4043C152166;
+	Mon, 18 Nov 2024 11:02:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.171
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1731927761; cv=none; b=ehlcFCMQSS8PF95WqTBUGxoncY4BpzSR0yEmwZfRv9kpmA/IxGOqdUpc125kX/udsQ4WkbqkFaTb+snl57VyaVXFtsHS5f2+lYpqMl8JkMYGrRgKlGguRXlc9SKJ6wCEVp4Hef9TfKR62cuWmM5gRCVPWu0mCuRuQHIQbAb24oM=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1731927761; c=relaxed/simple;
+	bh=LfGCkkZyMx0jWUord9yvSHk7Bt1WaEeG4A66PVUlNW8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=GdKiO/L0Y+Y6x7a3Z2zNbEV6ZeFtVEad3B1neOe4D3WgClCqI0gh5d2Mlk6k+iTKEa7HXzjD57zna5Hef6cWmt+NsH20n3DabCFXvwT/wwtHk85VnQWMkXKuV8gzEUB39tqJNIyO2UWjX+A2m0f4iGeIBKDg8XQ7F06X+JdoO+g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=RYpnaodH; arc=none smtp.client-ip=209.85.210.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="ft2rAw37"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=NIugT9TtDVBSE+IVLy0UoDhRamEmOD22jy0avwBsUsyybteJQ+oqo9M47J2jz698HrUdUGyGlN9cnke3WvcLty3+3kRDrU6yijDCrfsvMFSAjv7UdxF9/rrYWOzgTYy2Hys+SGF6O2z1JpSPaSXNnqnpEQEeUJHqPqsg2e5X3Hg1RP8phj/vVng7+SuB0/8O2DXh1VJbdZIy46md0KvWjT8rIppF3ZaLDX3a/llFdv8CjH3n9B2F62n06hh/ab1Oo6V49qFfDqdISYOPd9f1rERUCqNKpHytItAJJvS/XmtjORmTV0GkreaCT+zdnDyNtq/CPPkKdODSBUPqebFSqQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=S6BYcCwTN5fI4h5pkY15o9ObeTPic+3sdr+en0i1tas=;
- b=CSTVXddYOS22vaWb2S376r2ElZHKcs7OJ3wxa5CBMcNG8j6NeDNhCjzZPp9CrqFv/VhobXmXBkyEG3RtZGvm3/tRmhhenhyVu/rgX5KcFciGp/k1nSE9aX5YGYdlfVJQXZrQHZOPQ/8PZk0JBqcpi4t9jlJXwQr2AZlKeV0IWdZ41pqysGIdQhE5HGVLPpukl68kpQ+iueV0mJfL73NS42wxsG1aYxy+HSCPMhaIvnzP54eb0gMecavhZIWGiZx2XLe5sUq8L6nFk+2jk2+aMdXPBD7MnAo4BV0SMVl9x128wKqn7yhxsTNjercGe8rYB3cBZTs+pIoj+r3l51X7Qg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=softfail (sender ip
- is 165.204.84.12) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=amd.com;
- dmarc=fail (p=quarantine sp=quarantine pct=100) action=quarantine
- header.from=amd.com; dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=S6BYcCwTN5fI4h5pkY15o9ObeTPic+3sdr+en0i1tas=;
- b=ft2rAw37Em1a8dU2XZNVQyG+eNAaSOuewGf4niVP4XeGDZAG0K7ECXUzuE6VEn5E9h2DOXVIoAZa4+VO2w7mAuQt9XEka+pXL80OiK1d25ktBr2caa4zzK9gr7KBrc9TpZJ7ipjYSvRvg1QZwRiWoj5SaiAgLffpfl3blAS13Ws=
-Received: from SA0PR11CA0137.namprd11.prod.outlook.com (2603:10b6:806:131::22)
- by DS7PR12MB6045.namprd12.prod.outlook.com (2603:10b6:8:86::18) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8158.23; Mon, 18 Nov
- 2024 10:30:15 +0000
-Received: from SN1PEPF0002636B.namprd02.prod.outlook.com
- (2603:10b6:806:131:cafe::41) by SA0PR11CA0137.outlook.office365.com
- (2603:10b6:806:131::22) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8158.21 via Frontend
- Transport; Mon, 18 Nov 2024 10:30:15 +0000
-X-MS-Exchange-Authentication-Results: spf=softfail (sender IP is
- 165.204.84.12) smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=fail action=quarantine header.from=amd.com;
-Received-SPF: SoftFail (protection.outlook.com: domain of transitioning
- amd.com discourages use of 165.204.84.12 as permitted sender)
-Received: from SATLEXMB04.amd.com (165.204.84.12) by
- SN1PEPF0002636B.mail.protection.outlook.com (10.167.241.136) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.8158.14 via Frontend Transport; Mon, 18 Nov 2024 10:30:15 +0000
-Received: from amd.amd.com (10.180.168.240) by SATLEXMB04.amd.com
- (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Mon, 18 Nov
- 2024 04:28:15 -0600
-From: Suma Hegde <suma.hegde@amd.com>
-To: <platform-driver-x86@vger.kernel.org>
-CC: <ilpo.jarvinen@linux.intel.com>, <hdegoede@redhat.com>, Suma Hegde
-	<suma.hegde@amd.com>, Naveen Krishna Chatradhi
-	<naveenkrishna.chatradhi@amd.com>
-Subject: [v3] platform/x86/amd/hsmp: Add support for HSMP protocol version 7 messages
-Date: Mon, 18 Nov 2024 10:27:52 +0000
-Message-ID: <20241118102752.11703-1-suma.hegde@amd.com>
-X-Mailer: git-send-email 2.25.1
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RYpnaodH"
+Received: by mail-pf1-f171.google.com with SMTP id d2e1a72fcca58-720b2d8bcd3so2862338b3a.2;
+        Mon, 18 Nov 2024 03:02:40 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1731927759; x=1732532559; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=WkuJdzi6EA4PVzFbbcShtq4EUebMOJtIJZmQvDYGsMA=;
+        b=RYpnaodHxE8l0Njs9XY/DTGGLScRe3njQYWt8b5DYKyF23mvMUe/EAmipXmlieR5We
+         iRlJJMrCFNlzEbgRlxjGI2M2p3WvSiBxATpwSqahNNrNOr2bLTjmOnwyQWFU/mvDbQty
+         VNzi1HHEPMl5P9+0miCLbsTnquDraS0EdiKLA97BQYSU0Ot0besI72EBtLNKUVFW+wOx
+         DguPsx1tLO1IwLUB8r/SS5+Q37yQwtNBSnYBtRoQOAnqafFzhlu2LD5bka8/tDpZtBSZ
+         G94hSBoS2DBV/Cww4mqsZtpGj0cAxupqJUaPN8NZb6MpLmgUvn6tDrdrEAKG0w9Y4fq0
+         rz3Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1731927759; x=1732532559;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=WkuJdzi6EA4PVzFbbcShtq4EUebMOJtIJZmQvDYGsMA=;
+        b=N3pUtBeXFJB207d57fhcyxHSiQKh8yjtDyXpeqHwhaiRGGQAAvst027//+vU9PmgKY
+         8KT2qbHwM0Eu912gyO3ZiPm/QL1cmSPawXLxydzsHBZfABZYJt5G1ZKRU8JhpFuK54IO
+         8akb5XjKPMm28eAmyMq36EiVdUpxBh2NWKGty2bwMVJaYgMXvlyWCY0Pj+DbDwbn4o6h
+         F5Xn4Zdjy4WzEwnUAvSk6PpdIhW/N0FxfCSKlRNgXJ7CPyhqlzkl0N65YfghWNqWl+rQ
+         wbGQnmQBautYP9yG0c4CCuohxL+Wvb0iN/R+gDPXVh5c5Z9KQHQtD7/cSYbEAQCofcBD
+         A+rg==
+X-Forwarded-Encrypted: i=1; AJvYcCUw9ZutwvhtpUQI03hFzO602o1eVyg1dQ5bpYGLoFga/NBWFgqMZUkhVyU3RCdzEY01vrbRkhERfzRoMew=@vger.kernel.org, AJvYcCX8paTkzcGWojEAPdwXWvZTBKj4aAzcNeJx2F84Ge5l6WHc/7HO/dCSRqaZpFQ66AJ3Hn6bDqC9LqerN4lu5By1d2zwwg==@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy+4gqlIBPvwiVe8Dx5akqtDB8MkKyVhZLh8ysMypkCGcQEw/0H
+	baCoEb7SAmSe5hcfTI2q0QPxgv+yHXM/Srs58OWsK1Fi7Qfl467k
+X-Google-Smtp-Source: AGHT+IEnPCmDOuNosPP8tM8oM2CRosb2XWJKipg6I/acpqXd+B+byQ6lv/B1h9j0lc/+v6VQGoA/wQ==
+X-Received: by 2002:a05:6a00:998:b0:724:58dd:43aa with SMTP id d2e1a72fcca58-72476bbaa26mr15704622b3a.14.1731927759402;
+        Mon, 18 Nov 2024 03:02:39 -0800 (PST)
+Received: from alphacentauri (host95.181-12-202.telecom.net.ar. [181.12.202.95])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-724771e5be5sm5918854b3a.167.2024.11.18.03.02.37
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 18 Nov 2024 03:02:39 -0800 (PST)
+Date: Mon, 18 Nov 2024 08:02:35 -0300
+From: Kurt Borja <kuurtb@gmail.com>
+To: zhixin zhang <jonmail@163.com>
+Cc: hdegoede@redhat.com, ilpo.jarvinen@linux.intel.com, 
+	platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	zhixin zhang <zhangzx36@lenovo.com>
+Subject: Re: [PATCH] Lenovo Legion Go WMI Control
+Message-ID: <zqsq45oqvhmr3unqu55msqaxo47yrknw4rd6hqojepibdgecob@bfpgy5o5rkmy>
+References: <20241118100503.14228-1-jonmail@163.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: SATLEXMB03.amd.com (10.181.40.144) To SATLEXMB04.amd.com
- (10.181.40.145)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SN1PEPF0002636B:EE_|DS7PR12MB6045:EE_
-X-MS-Office365-Filtering-Correlation-Id: d1411e2a-969c-40f5-73ab-08dd07bbfdbc
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|1800799024|36860700013|82310400026|376014;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?yRRgH6IrgzOeL7hfAo7IBWGf0aFls9UuheNpMYdIhEvhvlsDz02xJRBCxr/k?=
- =?us-ascii?Q?n6AliUucZI1gRXHhWrDNcCHeARHz3pADvchuPKTQ2DKwJ1eLYrcNVSRCZohQ?=
- =?us-ascii?Q?VE35l8YmC5BEQ8zSkRUvSmBdySptaFEfWcy+LNFjiJJIWeByEbVdp2cp3SRf?=
- =?us-ascii?Q?cThMemoKlHl2XXNPyzpEdM9arGydXBPKeasYb8Ktlw46/RsbpgJaphAa1uvV?=
- =?us-ascii?Q?TNsiRUoIm+Nm7ayyRCEAz/aSZ4Zt/GYG1sHLERXhx9bZ8Tz2kfWQp2vq3i0X?=
- =?us-ascii?Q?7lqGuzMQQP0RXLdmM4xrbahZLDIkn8XGTAxmAu9y5rRYbV47WfqDpEpN3+su?=
- =?us-ascii?Q?KKq1asaHxGqo269mAMl3FxuRW+73OYIavCv59KpV006fKzOS0lXC9nUrp5rz?=
- =?us-ascii?Q?WdigFSMBhym+uogyTlbF+VLJDUXG6dYNOibGxYvNStf21nrVwbu6ULT9Xnx5?=
- =?us-ascii?Q?OjTdZKSi+lI7pAu6j7UwR082WXVmjwbzrCzAsYSt6OmHqcPs3eor5OaZOj3L?=
- =?us-ascii?Q?gDYt52z28t448Uu88XXNPXO/vgqFIHme//p2vBNFH1G0mgz4kuSoAYejnuJR?=
- =?us-ascii?Q?pPoBBnFmVrWP6VKmD8p/y+56E5vLtrcoXxuOFFWkRoFjVneY+TWfkbpuUQOs?=
- =?us-ascii?Q?cn5ZUb+o+gGC1aneRfVyi0tx9SQdKi6l7MvIkoWfOgr5HJo/unpH8xA7LihA?=
- =?us-ascii?Q?QGEXtzdgH10/J8CasA41SzkMrYabvyp0m4/wtiCuFWe+iGJhXstYHuTMKVMM?=
- =?us-ascii?Q?X11q4Ka1vRKO8gohzZLs4b5eRSOd0251mnv3XM87TIR7oF8T0schMMfXWf8e?=
- =?us-ascii?Q?eEydXiyUh1yOPuH+br+8eyyTqUSw58Yvjqr87wR4XcGDUCKt226UkDOzrZ3J?=
- =?us-ascii?Q?FkAWmgor85rWMeN64HnolKswcByBPTMuXUqcKowbp2Y+c8AQkb6WCp+luOeS?=
- =?us-ascii?Q?Ht9FUyovaL088nPDUICiFtguSPEVmxyPingsloZJGNkIXgjcn4GwzhRzZW/7?=
- =?us-ascii?Q?HkdUxW7ARCplHUzXh/dqqArEBGCtdK4bl7LQ4/mQtz3/XxJffKddkmOb+v9Y?=
- =?us-ascii?Q?hz7Xwh2Dm7zqFXWaq/py+kL4SydnyIwx2tivKs/lR2zWwuAyrvdXWu672gV4?=
- =?us-ascii?Q?IfKZWMKGCw+zvAcDevxdGnIwwFgS2XhJ+du56EE3U9gt6Wizm8GthW0lFOgx?=
- =?us-ascii?Q?6xdzmZ0Ht5TsiizBMxJylZ7C3MIIxWHp/y+3dBsdt6jt3VAjGl9npnouftak?=
- =?us-ascii?Q?xZGPT4R7Z69TIvq60VmCRPGakynDAZcsbiF2K7zlIHZn2p1o3nGFq58xPO/P?=
- =?us-ascii?Q?iYjvQi+u7qqzTfpDKFNFJ4fYYLeQNAT2ibcBkUFI5A4E47ghr/zzpFV0IvwT?=
- =?us-ascii?Q?PC2v+q2g0t0T4u8DmydsaFPA2iDuKqB5OqP3T1VAS7QYG8+5mw=3D=3D?=
-X-Forefront-Antispam-Report:
-	CIP:165.204.84.12;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:atlvpn-bp.amd.com;CAT:NONE;SFS:(13230040)(1800799024)(36860700013)(82310400026)(376014);DIR:OUT;SFP:1101;
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 18 Nov 2024 10:30:15.2962
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: d1411e2a-969c-40f5-73ab-08dd07bbfdbc
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.12];Helo=[SATLEXMB04.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	SN1PEPF0002636B.namprd02.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS7PR12MB6045
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20241118100503.14228-1-jonmail@163.com>
 
-Following new HSMP messages are available on family 0x1A, model 0x00-0x1F
-platforms with protocol version 7. Add support for them in the driver.
-- SetXgmiPstateRange(26h)
-- CpuRailIsoFreqPolicy(27h)
-- DfcEnable(28h)
-- GetRaplUnit(30h)
-- GetRaplCoreCounter(31h)
-- GetRaplPackageCounter(32h)
+On Mon, Nov 18, 2024 at 06:05:03PM +0800, zhixin zhang wrote:
+> From: zhixin zhang <zhangzx36@lenovo.com>
+> 
+> This driver provides support for modifying the performance mode
+> function of Lenovo's Legion Go series.
+> 
+> Signed-off-by: zhixin zhang <zhangzx36@lenovo.com>
+> ---
+>  drivers/platform/x86/Kconfig         |   9 +
+>  drivers/platform/x86/Makefile        |   1 +
+>  drivers/platform/x86/legion-go-wmi.c | 552 +++++++++++++++++++++++++++
+>  3 files changed, 562 insertions(+)
+>  create mode 100644 drivers/platform/x86/legion-go-wmi.c
 
-Also update HSMP message PwrEfficiencyModeSelection-21h. This message is
-updated to include GET option in recent firmware.
+Hi!
 
-Signed-off-by: Suma Hegde <suma.hegde@amd.com>
-Reviewed-by: Naveen Krishna Chatradhi <naveenkrishna.chatradhi@amd.com>
----
-Changes since v2:
-1. BIT(31) is #defined as CHECK_GET_BIT
-2. Instead of nested ifs, && is used in	is_get_msg()
+As a word of advice, you should analyze your patch with checkpatch.pl
+before submitting. It gives me the following output for your patch:
 
-Changes since v1:
-1. Common check is moved out of if else ladder in validate_message().
-2. Code comments are modified in validate_message().
+./scripts/checkpatch.pl
+[...]
+total: 104 errors, 51 warnings, 574 lines checked
+[...]
 
-
- arch/x86/include/uapi/asm/amd_hsmp.h | 64 +++++++++++++++++++++++++++-
- drivers/platform/x86/amd/hsmp/hsmp.c | 47 +++++++++++++++++---
- 2 files changed, 103 insertions(+), 8 deletions(-)
-
-diff --git a/arch/x86/include/uapi/asm/amd_hsmp.h b/arch/x86/include/uapi/asm/amd_hsmp.h
-index e5d182c7373c..c83a5a7103b5 100644
---- a/arch/x86/include/uapi/asm/amd_hsmp.h
-+++ b/arch/x86/include/uapi/asm/amd_hsmp.h
-@@ -50,6 +50,12 @@ enum hsmp_message_ids {
- 	HSMP_GET_METRIC_TABLE_VER,	/* 23h Get metrics table version */
- 	HSMP_GET_METRIC_TABLE,		/* 24h Get metrics table */
- 	HSMP_GET_METRIC_TABLE_DRAM_ADDR,/* 25h Get metrics table dram address */
-+	HSMP_SET_XGMI_PSTATE_RANGE,	/* 26h Set xGMI P-state range */
-+	HSMP_CPU_RAIL_ISO_FREQ_POLICY,	/* 27h Get/Set Cpu Iso frequency policy */
-+	HSMP_DFC_ENABLE_CTRL,		/* 28h Enable/Disable DF C-state */
-+	HSMP_GET_RAPL_UNITS = 0x30,	/* 30h Get scaling factor for energy */
-+	HSMP_GET_RAPL_CORE_COUNTER,	/* 31h Get core energy counter value */
-+	HSMP_GET_RAPL_PACKAGE_COUNTER,	/* 32h Get package energy counter value */
- 	HSMP_MSG_ID_MAX,
- };
- 
-@@ -65,6 +71,7 @@ enum hsmp_msg_type {
- 	HSMP_RSVD = -1,
- 	HSMP_SET  = 0,
- 	HSMP_GET  = 1,
-+	HSMP_SET_GET	= 2,
- };
- 
- enum hsmp_proto_versions {
-@@ -72,7 +79,8 @@ enum hsmp_proto_versions {
- 	HSMP_PROTO_VER3,
- 	HSMP_PROTO_VER4,
- 	HSMP_PROTO_VER5,
--	HSMP_PROTO_VER6
-+	HSMP_PROTO_VER6,
-+	HSMP_PROTO_VER7
- };
- 
- struct hsmp_msg_desc {
-@@ -299,7 +307,7 @@ static const struct hsmp_msg_desc hsmp_msg_desc_table[] = {
- 	 * HSMP_SET_POWER_MODE, num_args = 1, response_sz = 0
- 	 * input: args[0] = power efficiency mode[2:0]
- 	 */
--	{1, 0, HSMP_SET},
-+	{1, 1, HSMP_SET_GET},
- 
- 	/*
- 	 * HSMP_SET_PSTATE_MAX_MIN, num_args = 1, response_sz = 0
-@@ -324,6 +332,58 @@ static const struct hsmp_msg_desc hsmp_msg_desc_table[] = {
- 	 * output: args[1] = upper 32 bits of the address
- 	 */
- 	{0, 2, HSMP_GET},
-+
-+	/*
-+	 * HSMP_SET_XGMI_PSTATE_RANGE, num_args = 1, response_sz = 0
-+	 * input: args[0] = min xGMI p-state[15:8] + max xGMI p-state[7:0]
-+	 */
-+	{1, 0, HSMP_SET},
-+
-+	/*
-+	 * HSMP_CPU_RAIL_ISO_FREQ_POLICY, num_args = 1, response_sz = 1
-+	 * input: args[0] = set/get policy[31] +
-+	 * disable/enable independent control[0]
-+	 * output: args[0] = current policy[0]
-+	 */
-+	{1, 1, HSMP_SET_GET},
-+
-+	/*
-+	 * HSMP_DFC_ENABLE_CTRL, num_args = 1, response_sz = 1
-+	 * input: args[0] = set/get policy[31] + enable/disable DFC[0]
-+	 * output: args[0] = current policy[0]
-+	 */
-+	{1, 1, HSMP_SET_GET},
-+
-+	/* RESERVED(0x29-0x2f) */
-+	{0, 0, HSMP_RSVD},
-+	{0, 0, HSMP_RSVD},
-+	{0, 0, HSMP_RSVD},
-+	{0, 0, HSMP_RSVD},
-+	{0, 0, HSMP_RSVD},
-+	{0, 0, HSMP_RSVD},
-+	{0, 0, HSMP_RSVD},
-+
-+	/*
-+	 * HSMP_GET_RAPL_UNITS, response_sz = 1
-+	 * output: args[0] = tu value[19:16] + esu value[12:8]
-+	 */
-+	{0, 1, HSMP_GET},
-+
-+	/*
-+	 * HSMP_GET_RAPL_CORE_COUNTER, num_args = 1, response_sz = 1
-+	 * input: args[0] = apic id[15:0]
-+	 * output: args[0] = lower 32 bits of energy
-+	 * output: args[1] = upper 32 bits of energy
-+	 */
-+	{1, 2, HSMP_GET},
-+
-+	/*
-+	 * HSMP_GET_RAPL_PACKAGE_COUNTER, num_args = 0, response_sz = 1
-+	 * output: args[0] = lower 32 bits of energy
-+	 * output: args[1] = upper 32 bits of energy
-+	 */
-+	{0, 2, HSMP_GET},
-+
- };
- 
- /* Metrics table (supported only with proto version 6) */
-diff --git a/drivers/platform/x86/amd/hsmp/hsmp.c b/drivers/platform/x86/amd/hsmp/hsmp.c
-index f29dd93fbf0b..a8f3e7519678 100644
---- a/drivers/platform/x86/amd/hsmp/hsmp.c
-+++ b/drivers/platform/x86/amd/hsmp/hsmp.c
-@@ -33,7 +33,13 @@
- #define HSMP_WR			true
- #define HSMP_RD			false
- 
--#define DRIVER_VERSION		"2.3"
-+#define DRIVER_VERSION		"2.4"
-+
-+/*
-+ * When same message numbers are used for both GET and SET operation,
-+ * bit:31 indicates whether its SET or GET operation.
-+ */
-+#define CHECK_GET_BIT		BIT(31)
- 
- static struct hsmp_plat_device hsmp_pdev;
- 
-@@ -167,11 +173,28 @@ static int validate_message(struct hsmp_message *msg)
- 	if (hsmp_msg_desc_table[msg->msg_id].type == HSMP_RSVD)
- 		return -ENOMSG;
- 
--	/* num_args and response_sz against the HSMP spec */
--	if (msg->num_args != hsmp_msg_desc_table[msg->msg_id].num_args ||
--	    msg->response_sz != hsmp_msg_desc_table[msg->msg_id].response_sz)
-+	/*
-+	 * num_args passed by user should match the num_args specified in
-+	 * message description table.
-+	 */
-+	if (msg->num_args != hsmp_msg_desc_table[msg->msg_id].num_args)
- 		return -EINVAL;
- 
-+	/*
-+	 * Some older HSMP SET messages are updated to add GET in the same message.
-+	 * In these messages, GET returns the current value and SET also returns
-+	 * the successfully set value. To support this GET and SET in same message
-+	 * while maintaining backward compatibility for the HSMP users,
-+	 * hsmp_msg_desc_table[] indicates only maximum allowed response_sz.
-+	 */
-+	if (hsmp_msg_desc_table[msg->msg_id].type == HSMP_SET_GET) {
-+		if (msg->response_sz > hsmp_msg_desc_table[msg->msg_id].response_sz)
-+			return -EINVAL;
-+	} else {
-+		/* only HSMP_SET or HSMP_GET messages go through this strict check */
-+		if (msg->response_sz != hsmp_msg_desc_table[msg->msg_id].response_sz)
-+			return -EINVAL;
-+	}
- 	return 0;
- }
- 
-@@ -239,6 +262,18 @@ int hsmp_test(u16 sock_ind, u32 value)
- }
- EXPORT_SYMBOL_NS_GPL(hsmp_test, AMD_HSMP);
- 
-+static bool is_get_msg(struct hsmp_message *msg)
-+{
-+	if (hsmp_msg_desc_table[msg->msg_id].type == HSMP_GET)
-+		return true;
-+
-+	if (hsmp_msg_desc_table[msg->msg_id].type == HSMP_SET_GET &&
-+	    (msg->args[0] & CHECK_GET_BIT))
-+		return true;
-+
-+	return false;
-+}
-+
- long hsmp_ioctl(struct file *fp, unsigned int cmd, unsigned long arg)
- {
- 	int __user *arguser = (int  __user *)arg;
-@@ -261,7 +296,7 @@ long hsmp_ioctl(struct file *fp, unsigned int cmd, unsigned long arg)
- 		 * Device is opened in O_WRONLY mode
- 		 * Execute only set/configure commands
- 		 */
--		if (hsmp_msg_desc_table[msg.msg_id].type != HSMP_SET)
-+		if (is_get_msg(&msg))
- 			return -EPERM;
- 		break;
- 	case FMODE_READ:
-@@ -269,7 +304,7 @@ long hsmp_ioctl(struct file *fp, unsigned int cmd, unsigned long arg)
- 		 * Device is opened in O_RDONLY mode
- 		 * Execute only get/monitor commands
- 		 */
--		if (hsmp_msg_desc_table[msg.msg_id].type != HSMP_GET)
-+		if (!is_get_msg(&msg))
- 			return -EPERM;
- 		break;
- 	case FMODE_READ | FMODE_WRITE:
--- 
-2.25.1
-
+Regards,
+Kurt
