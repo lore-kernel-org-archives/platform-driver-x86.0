@@ -1,108 +1,62 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail.tuxedocomputers.com (mail.tuxedocomputers.com [157.90.84.7])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 30A2913AA35;
-	Tue, 19 Nov 2024 16:22:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 237A51D0E35
+	for <platform-driver-x86@vger.kernel.org>; Tue, 19 Nov 2024 16:43:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=157.90.84.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1732033363; cv=none; b=hhJnikJpv4jNbE3Sojmu8sLkHLt5m/v8/BXqGO1569RXRdLTzlS8cC9ve3WPl/N9I4Ad+qRUZt68ocREO/EPJSXqWDGGHYsOaaGCedSKsgVC0qbmOiKaxlKWJstdvXk1mJhqML1npGIMbszPbhnAPggE1p36GGVOLa1hXoSYPVU=
+	t=1732034610; cv=none; b=W7lMgpAi1KhNNEypNNIxSRi5ZqlHK5fRPjv6d+CXKsE2LLTz+3Ac1gMaeAlyUp5VDTGiNRv3lkZP/cV5dlZ2Jr/CkwjPJ0rj9ZO0Br5IPVWbLfB1UpzWK5UeIaoWzwCCfbxAbtYxPKlJdJ/+bp8kS5oVCchrCOL5E25gHO9DLUg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1732033363; c=relaxed/simple;
-	bh=Q90ZRu85HoHqaLtjiKeNB0uD20LZL3CANLfe7NwUgFg=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=XlegiYZeOg1BdGH/9SBgOEm+tPnCPDrLBDw8iiL4lz/ag3GSRuRnpzfeg+vDN8ktEnapKimGIFuSfKQWjof2PPWzppXBeV9E/5roHFHnWAJ9iWIGZEyiGaHqKCd9Uau4yqyAkzWqZWtinSGdSJiwYV1kkV8esRF2Bq2KFGrNIYk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=hkEUl9Mu; arc=none smtp.client-ip=198.175.65.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1732034610; c=relaxed/simple;
+	bh=xKNLgVjMkRQxYEYWv7mTpulBHRk/E77m9A6EuDxmE/0=;
+	h=Message-ID:Date:MIME-Version:To:From:Subject:Content-Type; b=beVviDzd7dNvUcKgRzF7G+WoyCpcUxGFv112v58Zp2nD0LAtgF04Y1BtMIjl5gWtGHoheHixrSe7NClqkucndMWjAh7WSI4E4vumdQJUx9vLmdFndPPjwrZX17yDjDB9W0GXaM+PyRtezyTypry+MSBt8iBQgy75KBd7Lw1aORs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=tuxedocomputers.com; spf=pass smtp.mailfrom=tuxedocomputers.com; dkim=pass (1024-bit key) header.d=tuxedocomputers.com header.i=@tuxedocomputers.com header.b=Q6dqzidV; arc=none smtp.client-ip=157.90.84.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=tuxedocomputers.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tuxedocomputers.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="hkEUl9Mu"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1732033362; x=1763569362;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=Q90ZRu85HoHqaLtjiKeNB0uD20LZL3CANLfe7NwUgFg=;
-  b=hkEUl9Muh/nkXZ4wtfPcSwPSDKMAU8u2+8VdTZ5msmoISGxK0LnwoRps
-   fl9geidsQDvjhQx6e8WSkll2cKpe9EPKDFgUVmi+GWkEja16Pz0IbDkEs
-   jH4VcrbL27xzXrH0xGvfNhUKb3QBdtJDYjEROTYpwJU0/g7D9DmwzUGPq
-   nh10hgYuvj3oe9N2Que9fzGXHafoRrLHh5qQUM2o4ePu64hQUGiP3JLFE
-   D3f3tQQWbBTPrW+96srdAISZNR6TqQj5LyEb71wnAU80Ks0dT3Ol1PXNd
-   0BO1ojKAaBErvSHLpZ7f/D3EicQ8Ss8gCVDTdPqrgNZoB1fJqs+inKPD5
-   A==;
-X-CSE-ConnectionGUID: bo9RlC39QDOBgkMgChCG+w==
-X-CSE-MsgGUID: CwYo5PvvSvCcO4gMV2p9Nw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11261"; a="32103327"
-X-IronPort-AV: E=Sophos;i="6.12,166,1728975600"; 
-   d="scan'208";a="32103327"
-Received: from fmviesa007.fm.intel.com ([10.60.135.147])
-  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Nov 2024 08:22:39 -0800
-X-CSE-ConnectionGUID: iD6M6vKrTFyT37gEcsjCbw==
-X-CSE-MsgGUID: +4Hle7NiRYajuA/GqSSXSA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.12,166,1728975600"; 
-   d="scan'208";a="89415584"
-Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.54])
-  by fmviesa007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Nov 2024 08:22:37 -0800
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Tue, 19 Nov 2024 18:22:34 +0200 (EET)
-To: Kurt Borja <kuurtb@gmail.com>
-cc: Markus Elfring <Markus.Elfring@web.de>, 
-    platform-driver-x86@vger.kernel.org, Dell.Client.Kernel@dell.com, 
-    LKML <linux-kernel@vger.kernel.org>, Armin Wolf <W_Armin@gmx.de>, 
-    Hans de Goede <hdegoede@redhat.com>, 
-    Mario Limonciello <mario.limonciello@amd.com>
-Subject: Re: [PATCH 4/5] alienware-wmi: Fix module init error handling
-In-Reply-To: <tuqhdoqturo2yjqcxgood3xagjloctouuxc4unqwdy3uqnvjau@xqqgw6jb7ztv>
-Message-ID: <31712d24-e1ae-0928-a7ab-a1f7116844ff@linux.intel.com>
-References: <20241119043523.25650-1-kuurtb@gmail.com> <940b49da-cbca-42d4-9a80-501465bc8cbe@web.de> <tuqhdoqturo2yjqcxgood3xagjloctouuxc4unqwdy3uqnvjau@xqqgw6jb7ztv>
+	dkim=pass (1024-bit key) header.d=tuxedocomputers.com header.i=@tuxedocomputers.com header.b="Q6dqzidV"
+Received: from [192.168.42.96] (p5de457db.dip0.t-ipconnect.de [93.228.87.219])
+	(Authenticated sender: wse@tuxedocomputers.com)
+	by mail.tuxedocomputers.com (Postfix) with ESMTPSA id E8AC02FC004D
+	for <platform-driver-x86@vger.kernel.org>; Tue, 19 Nov 2024 17:43:17 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=tuxedocomputers.com;
+	s=default; t=1732034598;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=ND6QtCrt9UtNrP0iWZN/lQ0/2956jlbKxuX7qUMIQMY=;
+	b=Q6dqzidVF3hKJHbsoXVvxUqK69uopCE4B8Z6ZzmNWV7GfldlWaj4YQUfgxlIReBkExFDDG
+	Jhm6lV+bzTaosLKQmFPjdDhruAoKklCWq6ZNYXd4WTUGOprtZoHF53PJlbLq/AsieryKJX
+	uSi7lZXpmNMxU+yupzIhQEtoIkRsF7M=
+Authentication-Results: mail.tuxedocomputers.com;
+	auth=pass smtp.auth=wse@tuxedocomputers.com smtp.mailfrom=wse@tuxedocomputers.com
+Message-ID: <64d96f64-4512-44f6-be3a-ba07043485b6@tuxedocomputers.com>
+Date: Tue, 19 Nov 2024 17:43:17 +0100
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="8323328-1838324427-1732033354=:1015"
+User-Agent: Mozilla Thunderbird
+Content-Language: en-US
+To: platform-driver-x86@vger.kernel.org
+From: Werner Sembach <wse@tuxedocomputers.com>
+Subject: acpi_device->driver_data vs acpi_device->dev.driver_data
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
+Hi,
 
---8323328-1838324427-1732033354=:1015
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+another quick learning question: Why does the acpi_device struct have a 
+driver_data member in addition to the driver_data member of the nested dev?
 
-On Tue, 19 Nov 2024, Kurt Borja wrote:
+What should each driver_data member be used for?
 
-> On Tue, Nov 19, 2024 at 03:55:08PM +0100, Markus Elfring wrote:
-> > > Propagate led_classdev_register return value in case of error.
-> > > Call led_classdev_unregister in case sysfs_create_group fails.
-> > >
-> > > If alienware_zone_init fails, alienware_zone_exit should not be calle=
-d
-> > > because the latter unregisters/removes the led class and the sysfs
-> > > group, which may not be registered/created if the former failed
-> > > prematurely.
-> >=20
-> > How do you think about to add any tags (like =E2=80=9CFixes=E2=80=9D an=
-d =E2=80=9CCc=E2=80=9D) accordingly?
-> > https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree=
-/Documentation/process/submitting-patches.rst?h=3Dv6.12#n145
->=20
-> Sure! I will on v2.
->=20
-> This might be kind of obvious but, if I add the Fixes tag, do I have to
-> make the patch over that commit, over stable trees or leave it as is?
+In contrast platform_device and wmi_device only have the dev.driver_data and not 
+the top level driver data.
 
-Hi Kurt,
+Kind regards,
 
-You do it normally on top of pdx86 fixes branch. In this case because of=20
-the on-going merge window, you'll have for-next patch to enter there=20
-before your fix will get merged after -rc1.
+Werner Sembach
 
-Don't worry about stable at this point too much, other than try to have
-the fixes patches as early as possible in your series to avoid conflicts=20
-with the other patches within your own patch series.
-
---=20
- i.
-
---8323328-1838324427-1732033354=:1015--
