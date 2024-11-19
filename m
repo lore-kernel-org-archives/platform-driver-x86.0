@@ -1,40 +1,40 @@
-Received: from mout.gmx.net (mout.gmx.net [212.227.15.18])
+Received: from mout.gmx.net (mout.gmx.net [212.227.15.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A69D513B780;
-	Tue, 19 Nov 2024 12:36:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9411F26AD3;
+	Tue, 19 Nov 2024 13:01:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1732019777; cv=none; b=r99Yqv8Sydf1gerf5ugQdHxwJEHI7odzFrmLTYgVd0H8+A1unHy6kEiy1poEWDCXuLAi9gfIbCqTiRkMknTscGrBIFvk9bH/sjQWyiy5fkY4dv8SLSFqkM1odnMuEVvO/v9SZEai7SAfs6tuSOBgckH45eBGWkm8zWI6469J2JA=
+	t=1732021308; cv=none; b=QNGNTxa1LFuRhTbMa3uIlq+2Svxh9pocYpCs1ilHXhNFgfPiCnGOk5TyUmLq48NjLlXGkJG6yMu2tbrwGHj6gglU83QsD73R4wh82w7ZEd73ZZhqid0BDYZB/NmuEWk4zsG47MQ60JT9K3df1Kenp0thy6Dta0+Rj7JEDRaisMM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1732019777; c=relaxed/simple;
-	bh=42pVbvRM9/bjgLh5vQiRdHWwVKK7rawwp6Bs5KoqcN0=;
+	s=arc-20240116; t=1732021308; c=relaxed/simple;
+	bh=vs7geAAh3IgaGjhfidahLn31KbuXOzFaEbksLVAseC8=;
 	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
-	 In-Reply-To:Content-Type; b=CYl32itwVTGwD7kLBcAFtFcqIcWezVrNpPtjvWUjjz84JtYaMB/0wTZ6AeNyLocbL/NW8SNpgWWYygZQ6Pu5ZYmJaac7SRUcKc/HyjeJRX8ACrfKMHfaxrq9hDrXEqv7og03hA6p3GqzD7eHmLBFIL/UHvySp9IXWJR0Yx3IV2I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b=RzG7Eqzg; arc=none smtp.client-ip=212.227.15.18
+	 In-Reply-To:Content-Type; b=NSOD7YyeNGG6YzLChSw77dHGWpdgJnIZZBRUWDU6F8yUuHacS02kSX6x042FDPB6rSXnSlQIDPCLi7nrQofvsPOIEsVevasTM7AhcUiVmZdt0J+n1uCea0GiQwaDxrOBkL1m2V3F9V3aSPT7T+/JHNlamswNYjL4133pY17fSX8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b=tBFXghsO; arc=none smtp.client-ip=212.227.15.19
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b="RzG7Eqzg"
+	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b="tBFXghsO"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.de;
-	s=s31663417; t=1732019706; x=1732624506; i=w_armin@gmx.de;
-	bh=42pVbvRM9/bjgLh5vQiRdHWwVKK7rawwp6Bs5KoqcN0=;
+	s=s31663417; t=1732021218; x=1732626018; i=w_armin@gmx.de;
+	bh=vs7geAAh3IgaGjhfidahLn31KbuXOzFaEbksLVAseC8=;
 	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:From:To:
 	 Cc:References:In-Reply-To:Content-Type:Content-Transfer-Encoding:
 	 cc:content-transfer-encoding:content-type:date:from:message-id:
 	 mime-version:reply-to:subject:to;
-	b=RzG7EqzgSy96AUqGjJfvJD2SRmGZuHkREhaIY+nRknEBx54alvOQLM0APn84mYkN
-	 23SOqgtYgbudV2gbJcjpgL/OtCWyzNjm0oTsYfjin6VPMwcvu3UPVK9J/mUfY7P7z
-	 hDQr8q6fF5v0XPFda2i8L+Dxhq5Ew+0W1hUtNqvoUUvo5wMDg0DmTpUS6FT05p/xo
-	 Clt0ySQY97kilIYMwPHTQlASxUdRAFWSI9JOsLv3BkRgsQgucyoPLWQGgy1vvpJJQ
-	 zwxo3magO66ex4wLp8XlJZuBcfeilTWlvwk0WWuwmmJjoRpKVmfMiaGogh1xeQR6p
-	 wQn11k4hqmyIhuWrLw==
+	b=tBFXghsOBKwr3FO3Zu1hZuqEWldBDCqBplyfIlhlt2zQVimNoiDeWccqwW/UM7aw
+	 K8dwzG/J/htFoGHdsRQWb/itcZwVg9u7JIYWU+QADRBWBnBLlC+ZC07JmBrtM+ZT7
+	 HYVP5qNMi3SurMJOSmGW7VVgxxwhsFLKJHSL0PlEXmBrMy9Im9UnO2F6ogiuIEQA7
+	 NFEXq6tUJHs6VxR++j4KZDx3ZUjp9KSyBAECRbuUJ6CeGkV+Yb3k7tVC6mPtJaqvY
+	 8EKrHrOKlN0Mipy+Jo/gaImYl23FLRE/bNxP7lreFw0H6QDZGbjws8Q/q6r/bJC4F
+	 KlyoYAgjM1vWAEHymA==
 X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
 Received: from [172.16.87.225] ([141.76.181.126]) by mail.gmx.net (mrgmx004
- [212.227.17.190]) with ESMTPSA (Nemesis) id 1MKbgE-1tRkV40XJk-00VSZh; Tue, 19
- Nov 2024 13:35:06 +0100
-Message-ID: <b5b942fd-9c64-48a0-9c3d-64d841994299@gmx.de>
-Date: Tue, 19 Nov 2024 13:35:00 +0100
+ [212.227.17.190]) with ESMTPSA (Nemesis) id 1MA7GS-1t2xRI1buE-005Vzl; Tue, 19
+ Nov 2024 14:00:18 +0100
+Message-ID: <3331c9f8-0590-4d3d-b9ae-7bdc22473d7a@gmx.de>
+Date: Tue, 19 Nov 2024 14:00:11 +0100
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -42,8 +42,8 @@ List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v6 10/22] ACPI: platform_profile: Create class for ACPI
- platform profile
+Subject: Re: [PATCH v6 18/22] ACPI: platform_profile: Check all profile
+ handler to calculate next
 From: Armin Wolf <W_Armin@gmx.de>
 To: Mario Limonciello <mario.limonciello@amd.com>,
  Hans de Goede <hdegoede@redhat.com>,
@@ -66,277 +66,93 @@ Cc: "Rafael J . Wysocki" <rafael@kernel.org>, Len Brown <lenb@kernel.org>,
  Mark Pearson <mpearson-lenovo@squebb.ca>,
  Matthew Schwartz <matthew.schwartz@linux.dev>
 References: <20241109044151.29804-1-mario.limonciello@amd.com>
- <20241109044151.29804-11-mario.limonciello@amd.com>
- <88f8571c-a8d3-4dda-a56c-74df6ca49af2@gmx.de>
+ <20241109044151.29804-19-mario.limonciello@amd.com>
+ <5c961eaa-9a3b-48cb-a0dc-f704dbb267ab@gmx.de>
 Content-Language: en-US
-In-Reply-To: <88f8571c-a8d3-4dda-a56c-74df6ca49af2@gmx.de>
+In-Reply-To: <5c961eaa-9a3b-48cb-a0dc-f704dbb267ab@gmx.de>
 Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:GC9bBfi3JuTV7lQhVTlpSMqeRPtH2/ER7ZPnjfMNpHwZy5GtU+w
- QZtJ1uUgGR4U7nBgzccU6If4Cv8CrCcfmxvqe29wysD6oESqxnw87IHRfydHsu5ZhYmSnTQ
- 3vaoMrmc0zEZykVzuYw2RNh4e8km93dwMDHciED4+bPxEUVqkI0/hjz9/ZbPN3rNBCPnzit
- x6i1/xklQSY1y2yjtmNQg==
+Content-Transfer-Encoding: base64
+X-Provags-ID: V03:K1:fbsBGDLc0FOzSPdO6OnojaVkO5MvsDr6/JGhGldEg58Q1FGNhrl
+ Ivjj6VXPSxYctIIcsCylv0F+GErICXCyan9vFfXhr8XX44ksRH9BRpRt7zOfLJXqLGzhKNY
+ LF+CVsxqxvU8C7s5k+YsB+2ssaoJiuj2knEt98oSRLSKHwWWwijz30L3nh+reSMHLR4m/AW
+ BST+4JNHg+yLXkyTfWicQ==
 X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:QI76JElnipI=;32FqBcmlUDm1OZ3f2PgpQJuA/o0
- ghCgTnoCqp15S5oYFpcJ8w7o9UlhFzTly0OWckgziJCdERI9+zWQ32R4TZaJNDI0gUot59wJQ
- C3qiLL9qd5NvrfyQ9tmUgLR7RMMurVwUX/vYdO60Q0xKELHvTrGRNMNM3p93FGeAYocUO6Fj/
- IVgk8MjYLUu/INVxtFu/d+Qb4Wkj3sq+phG00ArVJS6f6JZTR2oAjKD7JKg/owJxK93ICkgQO
- qkDpQbOoamxGC5LXMBmnfwygvdYrAY4ws0TQhb2Hk2mj0iPw33iRvAwM8MgqB4hzxYyP1xSvc
- WoQEHBioUwvOvZy6i3mbvUrZ04LlCXXZUmGqdTTwcxGTFEJr690yCCB8oAs56xlqUoMQl6JuW
- S7+ZmPV/VjnskI87AItj7FnfTQb7u61XiCcyxVHu2pDw2PwT5+zL1Bypz5GbFB/pBtxkqjig/
- kAmUcnR8lj8/lAonamuB7OXZX33ZlvW6Oz/+N9ZCnethUfncgm3msH9mF8C83ukfN+xbyR573
- T52fg/E4c7J2afwIIYB5AHKNn/wakdRGCBj7dOlErKghwwIvnyOc7/LZHomwMimcnSzXLBgGO
- 69W32fMwk2cmqA6OQqUb4grOyNegskH6WcoFgJeGVN2sGKQViRwvjc+6fM+NeH7r8v8M4JzAx
- syjFAeDUawgJDLIwNIqflb5zNkGgHAhD83X/4YPoCjXavDWWkpxPl5P1rU7nYVUhwpffEh8Sf
- EwG54WdfJx9+TdGrkr+W16MM+3+vRrzwt7JX2ww/2qxSIjY0oHL1gK9jPusDO4DJ5+VXo6AOL
- 5e7qPR6vipN2rgjv7Viz1aNXbRQB2qrK8KWQJoVd07iiMLpFtYRAIDLtGs/vdVhplBbj1ySyL
- EDKEeaes5DRNen/eY9CGiYEQj0CAgjruz/BLNWti7L0frqu2KragnUxof
+UI-OutboundReport: notjunk:1;M01:P0:Xbzu5487ub4=;NnEQSykyd391YdQIpT4MPSJ5ILv
+ edgyN5lGm5TX+ak1DoKWR7WHpEhvFEKI++osqvCxFClgCPLBQI/3uRiTQzy6iqKXBZJfjsLCQ
+ YnfXDbq1OpqFCZApKSfT/dDsK9gEt6wyw/EJt3wxWa/k2TEQ7CIzK5Ac3YJJVl4jOAlv00grC
+ GILtkiti4mndp40K1Amnm6Wy5sqnnsGtnxrq5RBYzanokLRUONJLBgPCtJ2/YPQnPHuMyrzM3
+ 2MYy61JGx0o1yP2q3Peogr6g4dm0abntL7Cuh7fJEtVQu0FMihQ+4M6rEk/6kVx/ki4t+yT5k
+ RnH/p1xcY82SSCeK+JZD1HlxsJEOHRzDBsoY97UVahaN/yivPhHeJNY3m6Xl0aUkFWYq3bLhL
+ wSrZ50sdB44tFha1URLwoxBL4cm9+DjGXZR/9Au0dUq6iGIWw3QnOadzUlybnIPSqLMVyyqDA
+ eT1l36462UQK6xj8/RJex7ulXLdIV/9gnQ4YdGx0+4yNgHTU085DzAYRM6pcmYTNbbI96SWsJ
+ 36dSk+wRS4rZI7/yGjPIRVnM8AmuH37mCuNUFT6LaqlZbqRRKfjRpCYH+e15RQgUMC7b4Aksu
+ MoG8FnB6AqCKTrT1nBhj5Umfqv6tzfqqVXInpvy9YmDk+rc9iCkih+Ydy06WlDmA4hBt6xoG2
+ nlZFIIiTf386b5ktEN4+0uCzYmdb1UJZNeIENIUh/Pngq9IgfHsObt1GsuOlLU4RBm/YSUsvg
+ 2ewY7QkDQSfMSryJ9NIYVjBpVwnuUrwTZO+sSuW4sOJYYrHr4M3uppJ6/w5L1VK5xh1FYvFPh
+ A55gyUmSKPN+YMeNOf92AzeeB+vn3QqmeY9arrR2rqvEA8HXTk9Grw/uHNOCAFaaHZIaA8jmV
+ 9EeWaoeOuko1fZMY+gDuOGMcEwreV5AyKTYcwdQbCcjGPfHjUtk7ozajB
 
-Am 17.11.24 um 20:11 schrieb Armin Wolf:
-
-> Am 09.11.24 um 05:41 schrieb Mario Limonciello:
->
->> When registering a platform profile handler create a class device
->> that will allow changing a single platform profile handler.
->>
->> The class and sysfs group are no longer needed when the platform profil=
-e
->> core is a module and unloaded, so remove them at that time as well.
->>
->> Tested-by: Mark Pearson <mpearson-lenovo@squebb.ca>
->> Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
->> ---
->> v6:
->> =C2=A0 * Catch failures in ida_alloc
->> =C2=A0 * Use 4th argument of device_create instead of dev_set_drvdata()
->> =C2=A0 * Squash unregister patch
->> =C2=A0 * Add module init callback
->> =C2=A0 * Move class creation to module init
->> =C2=A0 * Update visibility based on group presence
->> =C2=A0 * Add back parent device
->> v5:
->> =C2=A0 * Use ida instead of idr
->> =C2=A0 * Use device_unregister instead of device_destroy()
->> =C2=A0 * MKDEV (0, 0)
->> ---
->> =C2=A0 drivers/acpi/platform_profile.c=C2=A0 | 88 +++++++++++++++++++++=
-+++++++++--
->> =C2=A0 include/linux/platform_profile.h |=C2=A0 2 +
->> =C2=A0 2 files changed, 85 insertions(+), 5 deletions(-)
->>
->> diff --git a/drivers/acpi/platform_profile.c
->> b/drivers/acpi/platform_profile.c
->> index 32affb75e782d..ef6af2c655524 100644
->> --- a/drivers/acpi/platform_profile.c
->> +++ b/drivers/acpi/platform_profile.c
->> @@ -5,6 +5,7 @@
->> =C2=A0 #include <linux/acpi.h>
->> =C2=A0 #include <linux/bits.h>
->> =C2=A0 #include <linux/init.h>
->> +#include <linux/kdev_t.h>
->> =C2=A0 #include <linux/mutex.h>
->> =C2=A0 #include <linux/platform_profile.h>
->> =C2=A0 #include <linux/sysfs.h>
->> @@ -22,6 +23,12 @@ static const char * const profile_names[] =3D {
->> =C2=A0 };
->> =C2=A0 static_assert(ARRAY_SIZE(profile_names) =3D=3D PLATFORM_PROFILE_=
-LAST);
->>
->> +static DEFINE_IDA(platform_profile_ida);
->> +
->> +static const struct class platform_profile_class =3D {
->> +=C2=A0=C2=A0=C2=A0 .name =3D "platform-profile",
->> +};
->> +
->> =C2=A0 static ssize_t platform_profile_choices_show(struct device *dev,
->> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 struct device_at=
-tribute *attr,
->> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 char *buf)
->> @@ -105,8 +112,25 @@ static struct attribute
->> *platform_profile_attrs[] =3D {
->> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 NULL
->> =C2=A0 };
->>
->> +static int profile_class_registered(struct device *dev, const void
->> *data)
->> +{
->> +=C2=A0=C2=A0=C2=A0 return 1;
->> +}
->> +
->> +static umode_t profile_class_is_visible(struct kobject *kobj, struct
->> attribute *attr, int idx)
->> +{
->> +=C2=A0=C2=A0=C2=A0 if (!class_find_device(&platform_profile_class, NUL=
-L, NULL,
->> profile_class_registered))
->> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 return 0;
->> +=C2=A0=C2=A0=C2=A0 if (attr =3D=3D &dev_attr_platform_profile_choices.=
-attr)
->> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 return 0444;
->> +=C2=A0=C2=A0=C2=A0 if (attr =3D=3D &dev_attr_platform_profile.attr)
->> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 return 0644;
->> +=C2=A0=C2=A0=C2=A0 return 0;
->> +}
->> +
->> =C2=A0 static const struct attribute_group platform_profile_group =3D {
->> -=C2=A0=C2=A0=C2=A0 .attrs =3D platform_profile_attrs
->> +=C2=A0=C2=A0=C2=A0 .attrs =3D platform_profile_attrs,
->> +=C2=A0=C2=A0=C2=A0 .is_visible =3D profile_class_is_visible,
->> =C2=A0 };
->>
->> =C2=A0 void platform_profile_notify(struct platform_profile_handler *pp=
-rof)
->> @@ -123,6 +147,9 @@ int platform_profile_cycle(void)
->> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 enum platform_profile_option next;
->> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 int err;
->>
->> +=C2=A0=C2=A0=C2=A0 if (!class_is_registered(&platform_profile_class))
->> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 return -ENODEV;
->
-> This check is pointless since the platform profile class will always
-> be registered during module initialization.
-> Please remove it.
->
->> +
->> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 scoped_cond_guard(mutex_intr, return -ER=
-ESTARTSYS,
->> &profile_lock) {
->> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (!cur_profile=
-)
->> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0 return -ENODEV;
->> @@ -164,25 +191,76 @@ int platform_profile_register(struct
->> platform_profile_handler *pprof)
->> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (cur_profile)
->> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 return -EEXIST;
->>
->> -=C2=A0=C2=A0=C2=A0 err =3D sysfs_create_group(acpi_kobj, &platform_pro=
-file_group);
->> -=C2=A0=C2=A0=C2=A0 if (err)
->> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 return err;
->> +=C2=A0=C2=A0=C2=A0 /* create class interface for individual handler */
->> +=C2=A0=C2=A0=C2=A0 pprof->minor =3D ida_alloc(&platform_profile_ida, G=
-FP_KERNEL);
->> +=C2=A0=C2=A0=C2=A0 if (pprof->minor < 0)
->> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 return pprof->minor;
->> +=C2=A0=C2=A0=C2=A0 pprof->class_dev =3D device_create(&platform_profil=
-e_class,
->> pprof->dev,
->> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 MKDEV(0, 0), pprof, "p=
-latform-profile-%d",
->> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 pprof->minor);
->> +=C2=A0=C2=A0=C2=A0 if (IS_ERR(pprof->class_dev)) {
->> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 err =3D PTR_ERR(pprof->clas=
-s_dev);
->> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 goto cleanup_ida;
->> +=C2=A0=C2=A0=C2=A0 }
->>
->> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 cur_profile =3D pprof;
->> +
->> +=C2=A0=C2=A0=C2=A0 err =3D sysfs_update_group(acpi_kobj, &platform_pro=
-file_group);
->> +=C2=A0=C2=A0=C2=A0 if (err)
->> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 goto cleanup_cur;
->> +
->> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 return 0;
->> +
->> +cleanup_cur:
->> +=C2=A0=C2=A0=C2=A0 cur_profile =3D NULL;
->> +=C2=A0=C2=A0=C2=A0 device_unregister(pprof->class_dev);
->> +
->> +cleanup_ida:
->> +=C2=A0=C2=A0=C2=A0 ida_free(&platform_profile_ida, pprof->minor);
->> +
->> +=C2=A0=C2=A0=C2=A0 return err;
->> =C2=A0 }
->> =C2=A0 EXPORT_SYMBOL_GPL(platform_profile_register);
->>
->> =C2=A0 int platform_profile_remove(struct platform_profile_handler *ppr=
-of)
->> =C2=A0 {
->> +=C2=A0=C2=A0=C2=A0 int id;
->> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 guard(mutex)(&profile_lock);
->>
->> -=C2=A0=C2=A0=C2=A0 sysfs_remove_group(acpi_kobj, &platform_profile_gro=
-up);
->> +=C2=A0=C2=A0=C2=A0 id =3D pprof->minor;
->> +=C2=A0=C2=A0=C2=A0 device_unregister(pprof->class_dev);
->> +=C2=A0=C2=A0=C2=A0 ida_free(&platform_profile_ida, id);
->> +
->> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 cur_profile =3D NULL;
->> +
->> +=C2=A0=C2=A0=C2=A0 sysfs_update_group(acpi_kobj, &platform_profile_gro=
-up);
->> +
->> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 return 0;
->> =C2=A0 }
->> =C2=A0 EXPORT_SYMBOL_GPL(platform_profile_remove);
->>
->> +static int __init platform_profile_init(void)
->> +{
->> +=C2=A0=C2=A0=C2=A0 int err;
->> +
->> +=C2=A0=C2=A0=C2=A0 err =3D class_register(&platform_profile_class);
->> +=C2=A0=C2=A0=C2=A0 if (err)
->> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 return err;
->> +
->> +=C2=A0=C2=A0=C2=A0 err =3D sysfs_create_group(acpi_kobj, &platform_pro=
-file_group);
->> +=C2=A0=C2=A0=C2=A0 if (err)
->> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 class_unregister(&platform_=
-profile_class);
->> +
->> +=C2=A0=C2=A0=C2=A0 return err;
->> +}
->
-> Please use a blank line after function/struct/union/enum declarations.
->
-> Apart from those minor issues the patch looks quite nice, so with
-> those issues being fixed:
->
-> Reviewed-by: Armin Wolf <W_Armin@gmx.de>
->
->> +static void __exit platform_profile_exit(void)
->> +{
->> +=C2=A0=C2=A0=C2=A0 class_unregister(&platform_profile_class);
->> +=C2=A0=C2=A0=C2=A0 sysfs_remove_group(acpi_kobj, &platform_profile_gro=
-up);
-
-I just noticed that the legacy sysfs group needs to be removed before the =
-class, otherwise
-there might be a short time window during module exit where the legacy sys=
-fs interface might
-try to use the already unregistered class.
-
-Thanks,
-Armin Wolf
-
->> +}
->> +module_init(platform_profile_init);
->> +module_exit(platform_profile_exit);
->> +
->> =C2=A0 MODULE_AUTHOR("Mark Pearson <markpearson@lenovo.com>");
->> =C2=A0 MODULE_DESCRIPTION("ACPI platform profile sysfs interface");
->> =C2=A0 MODULE_LICENSE("GPL");
->> diff --git a/include/linux/platform_profile.h
->> b/include/linux/platform_profile.h
->> index 8ec0b8da56db5..a888fd085c513 100644
->> --- a/include/linux/platform_profile.h
->> +++ b/include/linux/platform_profile.h
->> @@ -29,6 +29,8 @@ enum platform_profile_option {
->> =C2=A0 struct platform_profile_handler {
->> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 const char *name;
->> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 struct device *dev;
->> +=C2=A0=C2=A0=C2=A0 struct device *class_dev;
->> +=C2=A0=C2=A0=C2=A0 int minor;
->> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 unsigned long choices[BITS_TO_LONGS(PLAT=
-FORM_PROFILE_LAST)];
->> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 int (*profile_get)(struct platform_profi=
-le_handler *pprof,
->> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 enum platform_profile_option *profile);
->
+QW0gMTguMTEuMjQgdW0gMjA6NTMgc2NocmllYiBBcm1pbiBXb2xmOg0KDQo+IEFtIDA5LjExLjI0
+IHVtIDA1OjQxIHNjaHJpZWIgTWFyaW8gTGltb25jaWVsbG86DQo+DQo+PiBBcyBtdWx0aXBsZSBw
+bGF0Zm9ybSBwcm9maWxlIGhhbmRsZXJzIG1pZ2h0IG5vdCBhbGwgc3VwcG9ydCB0aGUgc2FtZQ0K
+Pj4gcHJvZmlsZSwgY3ljbGluZyB0byB0aGUgbmV4dCBwcm9maWxlIGNvdWxkIGhhdmUgYSBkaWZm
+ZXJlbnQgcmVzdWx0DQo+PiBkZXBlbmRpbmcgb24gd2hhdCBoYW5kbGVyIGFyZSByZWdpc3RlcmVk
+Lg0KPj4NCj4+IENoZWNrIHdoYXQgaXMgYWN0aXZlIGFuZCBzdXBwb3J0ZWQgYnkgYWxsIGhhbmRs
+ZXJzIHRvIGRlY2lkZSB3aGF0DQo+PiB0byBkby4NCj4NCj4gUmV2aWV3ZWQtYnk6IEFybWluIFdv
+bGYgPFdfQXJtaW5AZ214LmRlPg0KPg0KPj4gVGVzdGVkLWJ5OiBNYXJrIFBlYXJzb24gPG1wZWFy
+c29uLWxlbm92b0BzcXVlYmIuY2E+DQo+PiBTaWduZWQtb2ZmLWJ5OiBNYXJpbyBMaW1vbmNpZWxs
+byA8bWFyaW8ubGltb25jaWVsbG9AYW1kLmNvbT4NCj4+IC0tLQ0KPj4gdjY6DQo+PiDCoCAqIEhh
+bmRsZSBjYXNlcyBvZiBpbmNvbnNpc3RlbnQgcHJvZmlsZXMgb3IgYWxsIHByb2ZpbGUgaGFuZGxl
+cnMNCj4+IMKgwqDCoCBzdXBwb3J0aW5nIGN1c3RvbS4NCj4+IHY1Og0KPj4gwqAgKiBBZGp1c3Qg
+bXV0ZXggdXNlDQo+PiAtLS0NCj4+IMKgIGRyaXZlcnMvYWNwaS9wbGF0Zm9ybV9wcm9maWxlLmMg
+fCAzMCArKysrKysrKysrKysrKysrKysrKystLS0tLS0tLS0NCj4+IMKgIDEgZmlsZSBjaGFuZ2Vk
+LCAyMSBpbnNlcnRpb25zKCspLCA5IGRlbGV0aW9ucygtKQ0KPj4NCj4+IGRpZmYgLS1naXQgYS9k
+cml2ZXJzL2FjcGkvcGxhdGZvcm1fcHJvZmlsZS5jIA0KPj4gYi9kcml2ZXJzL2FjcGkvcGxhdGZv
+cm1fcHJvZmlsZS5jDQo+PiBpbmRleCAyNjc2ZjRhMTM2ODllLi5jNTc0NDgzYmU0ZmQxIDEwMDY0
+NA0KPj4gLS0tIGEvZHJpdmVycy9hY3BpL3BsYXRmb3JtX3Byb2ZpbGUuYw0KPj4gKysrIGIvZHJp
+dmVycy9hY3BpL3BsYXRmb3JtX3Byb2ZpbGUuYw0KPj4gQEAgLTQyMywyOCArNDIzLDQwIEBAIEVY
+UE9SVF9TWU1CT0xfR1BMKHBsYXRmb3JtX3Byb2ZpbGVfbm90aWZ5KTsNCj4+DQo+PiDCoCBpbnQg
+cGxhdGZvcm1fcHJvZmlsZV9jeWNsZSh2b2lkKQ0KPj4gwqAgew0KPj4gLcKgwqDCoCBlbnVtIHBs
+YXRmb3JtX3Byb2ZpbGVfb3B0aW9uIHByb2ZpbGU7DQo+PiAtwqDCoMKgIGVudW0gcGxhdGZvcm1f
+cHJvZmlsZV9vcHRpb24gbmV4dDsNCj4+ICvCoMKgwqAgZW51bSBwbGF0Zm9ybV9wcm9maWxlX29w
+dGlvbiBuZXh0ID0gUExBVEZPUk1fUFJPRklMRV9MQVNUOw0KPj4gK8KgwqDCoCBlbnVtIHBsYXRm
+b3JtX3Byb2ZpbGVfb3B0aW9uIHByb2ZpbGUgPSBQTEFURk9STV9QUk9GSUxFX0xBU1Q7DQo+PiAr
+wqDCoMKgIHVuc2lnbmVkIGxvbmcgY2hvaWNlc1tCSVRTX1RPX0xPTkdTKFBMQVRGT1JNX1BST0ZJ
+TEVfTEFTVCldOw0KPj4gwqDCoMKgwqDCoCBpbnQgZXJyOw0KPj4NCj4+IMKgwqDCoMKgwqAgaWYg
+KCFjbGFzc19pc19yZWdpc3RlcmVkKCZwbGF0Zm9ybV9wcm9maWxlX2NsYXNzKSkNCj4+IMKgwqDC
+oMKgwqDCoMKgwqDCoCByZXR1cm4gLUVOT0RFVjsNCj4+DQo+PiArwqDCoMKgIHNldF9iaXQoUExB
+VEZPUk1fUFJPRklMRV9MQVNULCBjaG9pY2VzKTsNCj4+IMKgwqDCoMKgwqAgc2NvcGVkX2NvbmRf
+Z3VhcmQobXV0ZXhfaW50ciwgcmV0dXJuIC1FUkVTVEFSVFNZUywgDQo+PiAmcHJvZmlsZV9sb2Nr
+KSB7DQo+PiAtwqDCoMKgwqDCoMKgwqAgaWYgKCFjdXJfcHJvZmlsZSkNCj4+IC3CoMKgwqDCoMKg
+wqDCoMKgwqDCoMKgIHJldHVybiAtRU5PREVWOw0KPj4gK8KgwqDCoMKgwqDCoMKgIGVyciA9IGNs
+YXNzX2Zvcl9lYWNoX2RldmljZSgmcGxhdGZvcm1fcHJvZmlsZV9jbGFzcywgTlVMTCwNCj4+ICvC
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgICZwcm9maWxlLCBf
+YWdncmVnYXRlX3Byb2ZpbGVzKTsNCj4+ICvCoMKgwqDCoMKgwqDCoCBpZiAoZXJyKQ0KPj4gK8Kg
+wqDCoMKgwqDCoMKgwqDCoMKgwqAgcmV0dXJuIGVycjsNCj4+DQo+PiAtwqDCoMKgwqDCoMKgwqAg
+ZXJyID0gY3VyX3Byb2ZpbGUtPnByb2ZpbGVfZ2V0KGN1cl9wcm9maWxlLCAmcHJvZmlsZSk7DQo+
+PiArwqDCoMKgwqDCoMKgwqAgaWYgKHByb2ZpbGUgPT0gUExBVEZPUk1fUFJPRklMRV9DVVNUT00g
+fHwNCj4+ICvCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIHByb2ZpbGUgPT0gUExBVEZPUk1fUFJPRklM
+RV9MQVNUKQ0KPj4gK8KgwqDCoMKgwqDCoMKgwqDCoMKgwqAgcmV0dXJuIC1FSU5WQUw7DQo+PiAr
+DQo+PiArwqDCoMKgwqDCoMKgwqAgZXJyID0gY2xhc3NfZm9yX2VhY2hfZGV2aWNlKCZwbGF0Zm9y
+bV9wcm9maWxlX2NsYXNzLCBOVUxMLA0KPj4gK8KgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
+oMKgwqDCoMKgwqDCoMKgwqAgY2hvaWNlcywgX2FnZ3JlZ2F0ZV9jaG9pY2VzKTsNCj4+IMKgwqDC
+oMKgwqDCoMKgwqDCoCBpZiAoZXJyKQ0KPj4gwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgcmV0
+dXJuIGVycjsNCj4+DQo+PiAtwqDCoMKgwqDCoMKgwqAgbmV4dCA9IGZpbmRfbmV4dF9iaXRfd3Jh
+cChjdXJfcHJvZmlsZS0+Y2hvaWNlcywgDQo+PiBQTEFURk9STV9QUk9GSUxFX0xBU1QsDQo+PiAr
+wqDCoMKgwqDCoMKgwqAgLyogbmV2ZXIgaXRlcmF0ZSBpbnRvIGEgY3VzdG9tIGlmIGFsbCBkcml2
+ZXJzIHN1cHBvcnRlZCBpdCAqLw0KPj4gK8KgwqDCoMKgwqDCoMKgIGNsZWFyX2JpdChQTEFURk9S
+TV9QUk9GSUxFX0NVU1RPTSwgY2hvaWNlcyk7DQo+PiArDQo+PiArwqDCoMKgwqDCoMKgwqAgbmV4
+dCA9IGZpbmRfbmV4dF9iaXRfd3JhcChjaG9pY2VzLA0KPj4gK8KgwqDCoMKgwqDCoMKgwqDCoMKg
+wqDCoMKgwqDCoMKgwqDCoMKgwqDCoCBQTEFURk9STV9QUk9GSUxFX0xBU1QsDQo+PiDCoMKgwqDC
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIHByb2ZpbGUgKyAxKTsNCj4+
+DQo+PiAtwqDCoMKgwqDCoMKgwqAgaWYgKFdBUk5fT04obmV4dCA9PSBQTEFURk9STV9QUk9GSUxF
+X0xBU1QpKQ0KPj4gLcKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgcmV0dXJuIC1FSU5WQUw7DQo+PiAr
+wqDCoMKgwqDCoMKgwqAgZXJyID0gY2xhc3NfZm9yX2VhY2hfZGV2aWNlKCZwbGF0Zm9ybV9wcm9m
+aWxlX2NsYXNzLCBOVUxMLCANCj4+ICZuZXh0LA0KPj4gK8KgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgX3N0b3JlX2NsYXNzX3Byb2ZpbGUpOw0KDQpJIGp1c3Qg
+bm90aWNlZCB0aGF0IHRoZSBjbGFzcyBkZXZpY2UgaXMgbm90IG5vdGlmaWVkIGhlcmUuIFBsZWFz
+ZSB1c2UgX3N0b3JlX2FuZF9ub3RpZnkoKSBpbnN0ZWQgb2YgX3N0b3JlX2NsYXNzX3Byb2ZpbGUo
+KQ0KaGVyZS4NCg0KVGhhbmtzLA0KQXJtaW4gV29sZg0KDQo+Pg0KPj4gLcKgwqDCoMKgwqDCoMKg
+IGVyciA9IGN1cl9wcm9maWxlLT5wcm9maWxlX3NldChjdXJfcHJvZmlsZSwgbmV4dCk7DQo+PiDC
+oMKgwqDCoMKgwqDCoMKgwqAgaWYgKGVycikNCj4+IMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
+IHJldHVybiBlcnI7DQo+PiDCoMKgwqDCoMKgIH0NCj4NCg==
