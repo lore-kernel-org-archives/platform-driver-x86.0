@@ -1,67 +1,191 @@
-Received: from mail-wm1-f67.google.com (mail-wm1-f67.google.com [209.85.128.67])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mout.gmx.net (mout.gmx.net [212.227.15.19])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F2314158DAC
-	for <platform-driver-x86@vger.kernel.org>; Mon, 18 Nov 2024 22:39:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.67
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 468FE17C8D;
+	Tue, 19 Nov 2024 00:29:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1731969551; cv=none; b=cA89kAgKfcEAI7oKffBSmGagBRN0fTcL47PwbuNCA+oSl8SZAXXXycihnIn2YD4/JLujdXoAX0K6JGBB4nYOCLecVsf7DwDmFn8csg0liUEpkvPcW2E38EdAfTZpjR6l7NhyiDn2w3u+eGrZ/exnay28AFKw4VMog/7+YLa+iQQ=
+	t=1731976169; cv=none; b=In1Yhnrl7rC1jlZzWsbPrTg4ldtyt+fD+ZvxJeialm7bu5YpOg0kJLE6jtxZdUexi7c+gPkq6iEA2AhS68DXsN9Zh9vWyrx1LxX8JZ9VtJXoBYhZYxo6KeVzzGvxPCHGCF5wcy8PAdM77GjtUUoorC2Y9C2aipKlCzbCW/odhx8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1731969551; c=relaxed/simple;
-	bh=mqk98GP19dZ+Ay7HEP68kLZER2bT/NkIqYTu8jMJ4BE=;
-	h=From:Message-ID:To:Subject:Date:MIME-Version:Content-Type; b=tGlnC5rk383Q4yGALgpPi1NfAQbQTFqhOjPX2BTteJY/6skOulF+8eb5riHVbKodo9P9+q/EPd9or86A+bv/0vLXAXYh9pW1fWsM29YwxFVTXlDA+flNGRHsF6Dms5VGLVEDDtp28mzldnd0kp6xJfjAdj6Qw4DeC429YgIRrGI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=XAXwVGXL; arc=none smtp.client-ip=209.85.128.67
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1731976169; c=relaxed/simple;
+	bh=Z8DqmcWjt1zrD0CYXeSpSjfpqvmdRKZWzMK9PjvpSrM=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
+	 In-Reply-To:Content-Type; b=CO4F0Rj4H+IUzaunb7uzUB+hXkEqh2DsW4wFFYvKMxyCQyppGD09QFe2IEE1NFTgeapfVRHyv80zUWKbd2cTNjAdyFMjM14PBzw37G6x/C6TcplfQILz6QeC7o3CV9sQSDPTwLKlrL/lh4eYOFyERRzD2B3jfXkyvM4KU/Xiz9M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b=M1I4DaxS; arc=none smtp.client-ip=212.227.15.19
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XAXwVGXL"
-Received: by mail-wm1-f67.google.com with SMTP id 5b1f17b1804b1-431695fa98bso1832075e9.3
-        for <platform-driver-x86@vger.kernel.org>; Mon, 18 Nov 2024 14:39:09 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1731969546; x=1732574346; darn=vger.kernel.org;
-        h=mime-version:date:subject:to:reply-to:message-id:from:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=mqk98GP19dZ+Ay7HEP68kLZER2bT/NkIqYTu8jMJ4BE=;
-        b=XAXwVGXLdZrf1MuyJ4yiqV3zaq/NmhhtA3GunUDCP1+iwCtnaobfXgoJcIV50dH+3Y
-         nOY0UxS1bgK/VppZhrwHNaxmnjLV4nhME2vCqXH4yHtmLyo8zLnIohu+iqsEDRGi354y
-         s23JBfMCNqnUUtbBFXAtdoZT+4duJ20YBoggYBB3jFlFaEP/zm/j/W1jV8IhTIUbno3K
-         dQtr7nXVW25nOkQeeJNZeEMuIPOZa0Xvg4V361cyx4fhNfP778v+xgIivKmLnzEmybEs
-         +jUlj7hYFiLgt3WC9sZMdr6fq6H3T736p0ZDh/FsweXKiwoNTY/3MhHPVUSAFg53PT4a
-         tIPA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1731969546; x=1732574346;
-        h=mime-version:date:subject:to:reply-to:message-id:from
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=mqk98GP19dZ+Ay7HEP68kLZER2bT/NkIqYTu8jMJ4BE=;
-        b=nuA/kML8xnCFlXpIM3CWny39W3UP00ynP0FLjoi3ziLqn9vyixOZcwYcXKUzrSWYOu
-         7gBt/vDsFpCNvq2UCDKEHXDU001bM2Be6R+7cMmyVe0ByKdIXdNWOqI5gi3r2+Hrisfz
-         Viej5XYp5cQQhMX37qMoe1MtWJiX6PojJ1AwwnQFDRIjtoev4g8ofsnvss+YU2ZYsmPK
-         LdUVGEphL/mjcXSH7C8ub4Pc6xMIWQvxOUB5I2DdK1SEbl190+h6k4yOknQGHiglIBk0
-         kqsVBpwLTNlJKseAkroWOs2YQlVeWK76TQu+O9U/sQAGFUHODs0L2d0UR5w9Tg93QhsK
-         VXaw==
-X-Gm-Message-State: AOJu0YzQjjtM+xJcwkRxy/6REKyH8qC9qbkFOEaU8tQiB9C0JH5KBX+i
-	Lo8GTEaXAecO4E34SRg7H2SvZs7oSC0bV3ZSTJFEzAiL2/rpRvemR74slqay
-X-Google-Smtp-Source: AGHT+IER8q0ZbLF3RwX+D9sKmFRTkPtJL6krdn2qMMdtA78+Q4Jl+tcmO/fMvuNipojP8ecinduliA==
-X-Received: by 2002:a05:600c:a4c:b0:42c:a580:71cf with SMTP id 5b1f17b1804b1-432df78f0f9mr133630665e9.30.1731969546561;
-        Mon, 18 Nov 2024 14:39:06 -0800 (PST)
-Received: from [87.120.84.56] ([87.120.84.56])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-432dab789fasm174720225e9.18.2024.11.18.14.39.03
-        for <platform-driver-x86@vger.kernel.org>
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 18 Nov 2024 14:39:04 -0800 (PST)
-From: William Cheung <muralidhoron73@gmail.com>
-X-Google-Original-From: William Cheung <info@gmail.com>
-Message-ID: <c228473b3af65b8f806e54425601b327dd9ca0563877164b16ec2dd91ef14d46@mx.google.com>
-Reply-To: willchg@hotmail.com
-To: platform-driver-x86@vger.kernel.org
-Subject: A Proposal
-Date: Mon, 18 Nov 2024 14:38:52 -0800
+	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b="M1I4DaxS"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.de;
+	s=s31663417; t=1731976096; x=1732580896; i=w_armin@gmx.de;
+	bh=5hVcqyFvTu5vatuyXRiaENgjDo70JIP3TxdDakNOEoY=;
+	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:From:To:
+	 Cc:References:In-Reply-To:Content-Type:Content-Transfer-Encoding:
+	 cc:content-transfer-encoding:content-type:date:from:message-id:
+	 mime-version:reply-to:subject:to;
+	b=M1I4DaxSnoCLq+cE/xr8pqVX7z8CJWeB8M1Lr5yZSm7/R1FS0vCWaGThSO8zFcoz
+	 GaMsive8zHBMQQtbFvs/BUs0eXEQ6UvWC/sLZoNOXntABtY8cCc5AZI3P1y6sNILs
+	 x5MeR6RQV0BGLU5xQx4/KnAZZBPQW73CLpf1y5PiszCBZj0MIrH2zboFcHQ0kSTLL
+	 93bqLzYfeD15BIoxos1shW+uxZpdP5z7Y150+LhPVb18gQD5BEhmrTzcr3Rr3n+t1
+	 ZcsftcDhrBSA5TRhImTR/zjovRQVZ/AC3EtHjiDcBEll6FJQkySjdYuvvaBuoDjuY
+	 X4kq6RS1Sreq6y0SYw==
+X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
+Received: from [192.168.0.14] ([141.30.226.119]) by mail.gmx.net (mrgmx004
+ [212.227.17.190]) with ESMTPSA (Nemesis) id 1MxlzI-1txi8f3jgM-00zraz; Tue, 19
+ Nov 2024 01:28:16 +0100
+Message-ID: <6b7d2f80-0dde-4f07-b889-fa2cb99f5c88@gmx.de>
+Date: Tue, 19 Nov 2024 01:28:08 +0100
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v6 11/22] ACPI: platform_profile: Add name attribute to
+ class interface
+From: Armin Wolf <W_Armin@gmx.de>
+To: Mario Limonciello <mario.limonciello@amd.com>,
+ Hans de Goede <hdegoede@redhat.com>,
+ =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Cc: "Rafael J . Wysocki" <rafael@kernel.org>, Len Brown <lenb@kernel.org>,
+ Maximilian Luz <luzmaximilian@gmail.com>, Lee Chun-Yi <jlee@suse.com>,
+ Shyam Sundar S K <Shyam-sundar.S-k@amd.com>,
+ Corentin Chary <corentin.chary@gmail.com>, "Luke D . Jones"
+ <luke@ljones.dev>, Ike Panhc <ike.pan@canonical.com>,
+ Henrique de Moraes Holschuh <hmh@hmh.eng.br>,
+ Alexis Belmonte <alexbelm48@gmail.com>,
+ =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>,
+ Ai Chao <aichao@kylinos.cn>, Gergo Koteles <soyer@irl.hu>,
+ open list <linux-kernel@vger.kernel.org>,
+ "open list:ACPI" <linux-acpi@vger.kernel.org>,
+ "open list:MICROSOFT SURFACE PLATFORM PROFILE DRIVER"
+ <platform-driver-x86@vger.kernel.org>,
+ "open list:THINKPAD ACPI EXTRAS DRIVER"
+ <ibm-acpi-devel@lists.sourceforge.net>,
+ Mark Pearson <mpearson-lenovo@squebb.ca>,
+ Matthew Schwartz <matthew.schwartz@linux.dev>
+References: <20241109044151.29804-1-mario.limonciello@amd.com>
+ <20241109044151.29804-12-mario.limonciello@amd.com>
+ <29899120-efec-4264-b6a8-0bca4fc1f332@gmx.de>
+Content-Language: en-US
+In-Reply-To: <29899120-efec-4264-b6a8-0bca4fc1f332@gmx.de>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:bSMGx/uh1q7vg+W2/okqjuLaAoxzMkFQA4fCWCTTEXdCq3uQYq5
+ 4hcp/iGW1shsODj7zQga6ANI8rRrYgDYH7N/GKa14LI6/PzIcxe9X5GFgHc/Ze5UzJMKvgx
+ pYYRDNP/NF+gljOQ5Hc0/M5cly70I6mod49AJjRZ6MEQlo5GiB7mV8pJvigN6w1+S+0EyvX
+ 4RtbCRDd+SsikqtSTu55Q==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:anLUiQlL/Pg=;9BVvn4ZIFw1ZS8IzZF3GfZQok8R
+ N6gwacx8GN6z3hVhPIwhUAy2M9cLQRqKZalSIz/NVD2aVlaJpl+uqJdf9okZXVdH427FptXxm
+ ZzpXlEdBtWtFjro5PF8ymRsP0rZl5STKSojyQMG1eMkCS0KfSBII5SOmJzp+Gqfp+530oYNil
+ JYkKQvzW9zN66SAdH3vcBPXisnUI9zCRcQTEpc6llgXAhBfWlXokoRTIIL4tbglIRXegkfCbn
+ kI/O/CeXMLo09ybu26mVBUbEewqhtv/rJp9gsTiBb7Vw6GA4u+yawRWQ4eNgu0rXdC+lTh1qR
+ Or8hd+ynwapM7N4gjj4tJjpjD8FDVV4LQsq7+sCbFjhK32DOYXo/pWZ4QhtopeEEc5zrVhTDW
+ 5IxAc70BHE8boGDHpSc+UiY3D4gkRS+lF0UuPp5j6E1CDI2dQOZv6g4a2Ia6vKAbn8kppM/K1
+ rHdZ+5tNCqEbn2fRgXn8fC3sEeyXiYEwKXoRXW4SglxbvfCUngP7ag4E43h5ULsG0kI79jEnp
+ WW3//jyyDG1x4uqQEu2e3jjcaq5XS/v7ZmTw+XKuM2WZpIbVt8nGsveWNrXLkfL9p5vhcARyp
+ rGrCc8O4Jnlqs9shJCTdocC07gye6h9E95l8aMs3yjWBW6XfdnlXbz9Yw5+6jGY9j8Co71oCa
+ AASpTc5IWHg6/Xu7JRohn+A/VyxgB/gGHss/4yUqPLZJZ4NzGX2BvF8ZwhOrOvFKde2ejpm90
+ eo4HtmF9tF0ilX37xJOXWdbUOAPHhUbvu6eVd1uOwJOJh3Qj/dpAebVwXghJXdzNUGfH6NnW/
+ Itel1fvVSRzB2nGFfdD+rSbIKKYL/tcj0X11p6Qi/UaYssgxJIpaMLBc5Iaa5BSZ8kn8L+TXw
+ 9xmzEjdxMhTFVhxxHqOzjRAAHeKBCwNlrtP65H1Ww8HxpzBOoccxQpdM9
 
-I have a lucratuve proposal for you, reply for more info.
+Am 18.11.24 um 20:43 schrieb Armin Wolf:
+
+> Am 09.11.24 um 05:41 schrieb Mario Limonciello:
+>
+>> The name attribute shows the name of the associated platform profile
+>> handler.
+>>
+>> Tested-by: Mark Pearson <mpearson-lenovo@squebb.ca>
+>> Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
+>> ---
+>> =C2=A0 drivers/acpi/platform_profile.c | 27 +++++++++++++++++++++++++++
+>> =C2=A0 1 file changed, 27 insertions(+)
+>>
+>> diff --git a/drivers/acpi/platform_profile.c
+>> b/drivers/acpi/platform_profile.c
+>> index ef6af2c655524..4e2eda18f7f5f 100644
+>> --- a/drivers/acpi/platform_profile.c
+>> +++ b/drivers/acpi/platform_profile.c
+>> @@ -25,8 +25,35 @@ static_assert(ARRAY_SIZE(profile_names) =3D=3D
+>> PLATFORM_PROFILE_LAST);
+>>
+>> =C2=A0 static DEFINE_IDA(platform_profile_ida);
+>>
+>> +/**
+>> + * name_show - Show the name of the profile handler
+>> + * @dev: The device
+>> + * @attr: The attribute
+>> + * @buf: The buffer to write to
+>> + * Return: The number of bytes written
+>> + */
+>> +static ssize_t name_show(struct device *dev,
+>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0 struct device_attribute *attr,
+>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0 char *buf)
+>> +{
+>> +=C2=A0=C2=A0=C2=A0 struct platform_profile_handler *handler =3D dev_ge=
+t_drvdata(dev);
+>> +
+>> +=C2=A0=C2=A0=C2=A0 scoped_cond_guard(mutex_intr, return -ERESTARTSYS, =
+&profile_lock) {
+>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 return sysfs_emit(buf, "%s\=
+n", handler->name);
+>> +=C2=A0=C2=A0=C2=A0 }
+>> +=C2=A0=C2=A0=C2=A0 return -ERESTARTSYS;
+>
+> I still have a bad feeling about the locking inside the class
+> attributes...
+>
+> Can we assume that no sysfs accesses occur after unregistering the
+> class device?
+>
+> Even if this is not the case then the locking fails to protect the
+> platform_profile_handler here.
+> If the device is unregistered right after dev_get_drvdata() was
+> called, then we would sill operate
+> on possibly stale data once we take the profile_lock.
+>
+> Does someone have any clue how sysfs attributes act during removal?
+>
+I think i found the answer to my questions inside this patch series:
+https://lore.kernel.org/linux-kernel/1390951311-15325-1-git-send-email-tj@=
+kernel.org
+
+It says that:
+
+	kernfs / sysfs implement the "sever" semantic for userland accesses.
+	When a node is removed, no further userland operations are allowed and
+	the in-flight ones are drained before removal is finished.  This makes
+	policing post-mortem userland accesses trivial for its users.
+
+In this case taking the profile_lock when reading/writing class attributes=
+ seems to be unnecessary.
+Please remove the unnecessary locking inside the class attributes.
+
+Thanks,
+Armin Wolf
+
+> Thanks,
+> Armin Wolf
+>
+>> +}
+>> +
+>> +static DEVICE_ATTR_RO(name);
+>> +static struct attribute *profile_attrs[] =3D {
+>> +=C2=A0=C2=A0=C2=A0 &dev_attr_name.attr,
+>> +=C2=A0=C2=A0=C2=A0 NULL
+>> +};
+>> +ATTRIBUTE_GROUPS(profile);
+>> +
+>> =C2=A0 static const struct class platform_profile_class =3D {
+>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 .name =3D "platform-profile",
+>> +=C2=A0=C2=A0=C2=A0 .dev_groups =3D profile_groups,
+>> =C2=A0 };
+>>
+>> =C2=A0 static ssize_t platform_profile_choices_show(struct device *dev,
+>
