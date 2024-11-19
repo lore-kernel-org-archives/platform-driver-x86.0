@@ -1,41 +1,40 @@
 Received: from mout.gmx.net (mout.gmx.net [212.227.15.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0041E1CCB2E;
-	Tue, 19 Nov 2024 12:27:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A69D513B780;
+	Tue, 19 Nov 2024 12:36:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1732019282; cv=none; b=VuTSfpR4DtwSVUuecH0qMldMyFVmcgb8EaX0zAFCqjOdt4MutvtuJqjrrtrLgYNk/AuVBOWN1kQ6Jm3/tFCBtHPBPD4r6+dFxrbQqijRjrQZFQT+qyDcEpOuuj6zSMMHwv+HSuOr+i8EvNX59Dnf2IKEeiSKQfi9r0RKNOqWbgg=
+	t=1732019777; cv=none; b=r99Yqv8Sydf1gerf5ugQdHxwJEHI7odzFrmLTYgVd0H8+A1unHy6kEiy1poEWDCXuLAi9gfIbCqTiRkMknTscGrBIFvk9bH/sjQWyiy5fkY4dv8SLSFqkM1odnMuEVvO/v9SZEai7SAfs6tuSOBgckH45eBGWkm8zWI6469J2JA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1732019282; c=relaxed/simple;
-	bh=wiDAwSEDccIo/pEeBb3tVGh0uk5CwdsPNV+ewEfeEAs=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=KFDWXH0gS2AQn3iGccb1tx4uG2+dnsYQiefBO9gf8yyG7osjdOLp1tLXTPcQO0XRk+Z88OZvRp1UqEA1vC1XXSw+qC+zk+Fv0RBQWDvn1TwNS0eIggv239WvCjCnLCEoU5L4V29XehOGV+uxtjD4EjJyPg2e5uTwSiCdtpcdkfk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b=rx+Cs55J; arc=none smtp.client-ip=212.227.15.18
+	s=arc-20240116; t=1732019777; c=relaxed/simple;
+	bh=42pVbvRM9/bjgLh5vQiRdHWwVKK7rawwp6Bs5KoqcN0=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
+	 In-Reply-To:Content-Type; b=CYl32itwVTGwD7kLBcAFtFcqIcWezVrNpPtjvWUjjz84JtYaMB/0wTZ6AeNyLocbL/NW8SNpgWWYygZQ6Pu5ZYmJaac7SRUcKc/HyjeJRX8ACrfKMHfaxrq9hDrXEqv7og03hA6p3GqzD7eHmLBFIL/UHvySp9IXWJR0Yx3IV2I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b=RzG7Eqzg; arc=none smtp.client-ip=212.227.15.18
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b="rx+Cs55J"
+	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b="RzG7Eqzg"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.de;
-	s=s31663417; t=1732019210; x=1732624010; i=w_armin@gmx.de;
-	bh=wiDAwSEDccIo/pEeBb3tVGh0uk5CwdsPNV+ewEfeEAs=;
-	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:To:Cc:
-	 References:From:In-Reply-To:Content-Type:
-	 Content-Transfer-Encoding:cc:content-transfer-encoding:
-	 content-type:date:from:message-id:mime-version:reply-to:subject:
-	 to;
-	b=rx+Cs55JnDdz6MxRfxfdmrSOsw18cgtq57V5n95Ms6RzDcx7CjgxAybZTkw7F87X
-	 rWv3+L87qEb/iBxvoUDSU6Ki1sQuhVZ+juKAB5YKcJIms4t2/xtuQ+NLq/RNRZac1
-	 4aMXhZEmyBsC1W7V6IxXjWk2FprH3WvWUtOhPzf5JquS+hvMOaEuG23iGwfdvHLFT
-	 wr37qinFUdjhIxxWdf9gFATtdDRv52tH6iEjORLoyWSjs3DEunQ5eGQRPxSDjsd1y
-	 Kx2Kh2g9Hu3EoG+VsBrXyt50Ez2vghtzen4pJ2v6wo2gbsqi4ogce05B2TEZTXMfU
-	 NoGXe6KsEnlqXIz97Q==
+	s=s31663417; t=1732019706; x=1732624506; i=w_armin@gmx.de;
+	bh=42pVbvRM9/bjgLh5vQiRdHWwVKK7rawwp6Bs5KoqcN0=;
+	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:From:To:
+	 Cc:References:In-Reply-To:Content-Type:Content-Transfer-Encoding:
+	 cc:content-transfer-encoding:content-type:date:from:message-id:
+	 mime-version:reply-to:subject:to;
+	b=RzG7EqzgSy96AUqGjJfvJD2SRmGZuHkREhaIY+nRknEBx54alvOQLM0APn84mYkN
+	 23SOqgtYgbudV2gbJcjpgL/OtCWyzNjm0oTsYfjin6VPMwcvu3UPVK9J/mUfY7P7z
+	 hDQr8q6fF5v0XPFda2i8L+Dxhq5Ew+0W1hUtNqvoUUvo5wMDg0DmTpUS6FT05p/xo
+	 Clt0ySQY97kilIYMwPHTQlASxUdRAFWSI9JOsLv3BkRgsQgucyoPLWQGgy1vvpJJQ
+	 zwxo3magO66ex4wLp8XlJZuBcfeilTWlvwk0WWuwmmJjoRpKVmfMiaGogh1xeQR6p
+	 wQn11k4hqmyIhuWrLw==
 X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
 Received: from [172.16.87.225] ([141.76.181.126]) by mail.gmx.net (mrgmx004
- [212.227.17.190]) with ESMTPSA (Nemesis) id 1MK3Rs-1tSIdT3uQw-00UuBG; Tue, 19
- Nov 2024 13:26:50 +0100
-Message-ID: <77c76379-672b-4367-8491-6ba9bbc1da1a@gmx.de>
-Date: Tue, 19 Nov 2024 13:26:43 +0100
+ [212.227.17.190]) with ESMTPSA (Nemesis) id 1MKbgE-1tRkV40XJk-00VSZh; Tue, 19
+ Nov 2024 13:35:06 +0100
+Message-ID: <b5b942fd-9c64-48a0-9c3d-64d841994299@gmx.de>
+Date: Tue, 19 Nov 2024 13:35:00 +0100
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -43,8 +42,9 @@ List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v6 11/22] ACPI: platform_profile: Add name attribute to
- class interface
+Subject: Re: [PATCH v6 10/22] ACPI: platform_profile: Create class for ACPI
+ platform profile
+From: Armin Wolf <W_Armin@gmx.de>
 To: Mario Limonciello <mario.limonciello@amd.com>,
  Hans de Goede <hdegoede@redhat.com>,
  =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
@@ -66,174 +66,277 @@ Cc: "Rafael J . Wysocki" <rafael@kernel.org>, Len Brown <lenb@kernel.org>,
  Mark Pearson <mpearson-lenovo@squebb.ca>,
  Matthew Schwartz <matthew.schwartz@linux.dev>
 References: <20241109044151.29804-1-mario.limonciello@amd.com>
- <20241109044151.29804-12-mario.limonciello@amd.com>
- <29899120-efec-4264-b6a8-0bca4fc1f332@gmx.de>
- <6b7d2f80-0dde-4f07-b889-fa2cb99f5c88@gmx.de>
- <0ba333c7-6e13-41b1-82ea-588da0161e5e@amd.com>
+ <20241109044151.29804-11-mario.limonciello@amd.com>
+ <88f8571c-a8d3-4dda-a56c-74df6ca49af2@gmx.de>
 Content-Language: en-US
-From: Armin Wolf <W_Armin@gmx.de>
-In-Reply-To: <0ba333c7-6e13-41b1-82ea-588da0161e5e@amd.com>
+In-Reply-To: <88f8571c-a8d3-4dda-a56c-74df6ca49af2@gmx.de>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:5O2kimKnJheUXsYxNj4SLiDGOnrmTFQ9UPQkQ95al4ipDZIFzew
- J+X4NhzZKNUFXUYxO99IRDd6dJbhnHjxEaszcRb+IO4TqaFkBiBk6IWv3zeadOlBrc5Vzal
- +xbK8GzELRpWiQ2BvWstnNGLdtcPJwaCWysYjRO7Sy4lmp9aEfVyyLvMtLUgIYFHGPdYSNU
- lw+8ZL5bGxIRSBsX4ojuQ==
+X-Provags-ID: V03:K1:GC9bBfi3JuTV7lQhVTlpSMqeRPtH2/ER7ZPnjfMNpHwZy5GtU+w
+ QZtJ1uUgGR4U7nBgzccU6If4Cv8CrCcfmxvqe29wysD6oESqxnw87IHRfydHsu5ZhYmSnTQ
+ 3vaoMrmc0zEZykVzuYw2RNh4e8km93dwMDHciED4+bPxEUVqkI0/hjz9/ZbPN3rNBCPnzit
+ x6i1/xklQSY1y2yjtmNQg==
 X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:z46DBAFBHgA=;ZBf33EscqHkMxG89Op4s7QQFBl5
- V4UihANMVZpe3UNdCxrKv/3EYHeCbDGdFb20mqZV2RGJbeUL9F4cBeF9yzBzF3rk+dj+bDoUL
- C3UTlDANngMLmwDNu0S5r6xxzX6pZCyFfmad7SrLJJVv/MmLBdq6vKpVuppkwcdbg6xuEuROF
- 8F/P0cAo15c85p9HpNY3Q5vhVCf4yvSWX1pqL5tC7Zp246uonyCkIg+t3snIpbA3XyANrFgz/
- atpN0bUG/Vm+s6QbMQgpvg4OehW+FYAfB2COB/uQaZfVUuXRCv3C3E83RV+YBCAFpmfEdJYtd
- ScwfbHrPrKwyMqsxrui7CiTst/w+Ux976TWwabP8hKNGOZmIUeuKaK0KkWZtoarqcPKiNkTSY
- CoKdgu2Z8c1d+QvZtEKqYDsCEGbTzofEMdpVE7ICQoYR5+8CrApdlzG0jy/K4NfYny5LYoHCc
- Wxy/oVEl8hWXjll/Y5eh/CununpjuLESKzJRt5rTOY3fUrRoi9l0PVF/Lnxdnx0eJxcs2Xv+I
- rsfplcezfu/9ahgR/XHzGsTjbPRRK7TjZi5Si8sHhUu4IywJ5mBt+4aIhgcb4NBaATyaXH7pe
- 658/jQaaWACXmWG7cbb/gmvwZo2fOmy6C4adsD/8uOAmov+cfCV2QXtvWHUqDQMicxl3wYQbC
- AMQ9BjYkgObQ/I7zuScfSfIfMB0NFRHfPZiFY3/BSPyvZ+8TEnJsrR8CQGuvtZEl3KaHIS7KQ
- wCtLy9A/M6ag5rWv8TAz6SBRFaavzS8tgK99UFvCiN0a8+eQ/nxp1CskPH86/KxF2svtMEQWM
- 1IMAfOImLZROAVqWwNCFwDs6Itc3bDzMPZXL6k3QUqUDmUC+41Ui5Qiz/ZR73KoCQpzCx+9BW
- gqIaR498JZLCmIM4iDVsc8qFEUTXcAnWBmTshtmDdYjSF3Gt73csa3p4Y
+UI-OutboundReport: notjunk:1;M01:P0:QI76JElnipI=;32FqBcmlUDm1OZ3f2PgpQJuA/o0
+ ghCgTnoCqp15S5oYFpcJ8w7o9UlhFzTly0OWckgziJCdERI9+zWQ32R4TZaJNDI0gUot59wJQ
+ C3qiLL9qd5NvrfyQ9tmUgLR7RMMurVwUX/vYdO60Q0xKELHvTrGRNMNM3p93FGeAYocUO6Fj/
+ IVgk8MjYLUu/INVxtFu/d+Qb4Wkj3sq+phG00ArVJS6f6JZTR2oAjKD7JKg/owJxK93ICkgQO
+ qkDpQbOoamxGC5LXMBmnfwygvdYrAY4ws0TQhb2Hk2mj0iPw33iRvAwM8MgqB4hzxYyP1xSvc
+ WoQEHBioUwvOvZy6i3mbvUrZ04LlCXXZUmGqdTTwcxGTFEJr690yCCB8oAs56xlqUoMQl6JuW
+ S7+ZmPV/VjnskI87AItj7FnfTQb7u61XiCcyxVHu2pDw2PwT5+zL1Bypz5GbFB/pBtxkqjig/
+ kAmUcnR8lj8/lAonamuB7OXZX33ZlvW6Oz/+N9ZCnethUfncgm3msH9mF8C83ukfN+xbyR573
+ T52fg/E4c7J2afwIIYB5AHKNn/wakdRGCBj7dOlErKghwwIvnyOc7/LZHomwMimcnSzXLBgGO
+ 69W32fMwk2cmqA6OQqUb4grOyNegskH6WcoFgJeGVN2sGKQViRwvjc+6fM+NeH7r8v8M4JzAx
+ syjFAeDUawgJDLIwNIqflb5zNkGgHAhD83X/4YPoCjXavDWWkpxPl5P1rU7nYVUhwpffEh8Sf
+ EwG54WdfJx9+TdGrkr+W16MM+3+vRrzwt7JX2ww/2qxSIjY0oHL1gK9jPusDO4DJ5+VXo6AOL
+ 5e7qPR6vipN2rgjv7Viz1aNXbRQB2qrK8KWQJoVd07iiMLpFtYRAIDLtGs/vdVhplBbj1ySyL
+ EDKEeaes5DRNen/eY9CGiYEQj0CAgjruz/BLNWti7L0frqu2KragnUxof
 
-Am 19.11.24 um 05:09 schrieb Mario Limonciello:
+Am 17.11.24 um 20:11 schrieb Armin Wolf:
 
-> On 11/18/2024 18:28, Armin Wolf wrote:
->> Am 18.11.24 um 20:43 schrieb Armin Wolf:
+> Am 09.11.24 um 05:41 schrieb Mario Limonciello:
+>
+>> When registering a platform profile handler create a class device
+>> that will allow changing a single platform profile handler.
 >>
->>> Am 09.11.24 um 05:41 schrieb Mario Limonciello:
->>>
->>>> The name attribute shows the name of the associated platform profile
->>>> handler.
->>>>
->>>> Tested-by: Mark Pearson <mpearson-lenovo@squebb.ca>
->>>> Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
->>>> ---
->>>> =C2=A0 drivers/acpi/platform_profile.c | 27 +++++++++++++++++++++++++=
-++
->>>> =C2=A0 1 file changed, 27 insertions(+)
->>>>
->>>> diff --git a/drivers/acpi/platform_profile.c
->>>> b/drivers/acpi/platform_profile.c
->>>> index ef6af2c655524..4e2eda18f7f5f 100644
->>>> --- a/drivers/acpi/platform_profile.c
->>>> +++ b/drivers/acpi/platform_profile.c
->>>> @@ -25,8 +25,35 @@ static_assert(ARRAY_SIZE(profile_names) =3D=3D
->>>> PLATFORM_PROFILE_LAST);
->>>>
->>>> =C2=A0 static DEFINE_IDA(platform_profile_ida);
->>>>
->>>> +/**
->>>> + * name_show - Show the name of the profile handler
->>>> + * @dev: The device
->>>> + * @attr: The attribute
->>>> + * @buf: The buffer to write to
->>>> + * Return: The number of bytes written
->>>> + */
->>>> +static ssize_t name_show(struct device *dev,
->>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0 struct device_attribute *attr,
->>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0 char *buf)
->>>> +{
->>>> +=C2=A0=C2=A0=C2=A0 struct platform_profile_handler *handler =3D dev_=
-get_drvdata(dev);
->>>> +
->>>> +=C2=A0=C2=A0=C2=A0 scoped_cond_guard(mutex_intr, return -ERESTARTSYS=
-,
->>>> &profile_lock) {
->>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 return sysfs_emit(buf, "%=
-s\n", handler->name);
->>>> +=C2=A0=C2=A0=C2=A0 }
->>>> +=C2=A0=C2=A0=C2=A0 return -ERESTARTSYS;
->>>
->>> I still have a bad feeling about the locking inside the class
->>> attributes...
->>>
->>> Can we assume that no sysfs accesses occur after unregistering the
->>> class device?
->>>
->>> Even if this is not the case then the locking fails to protect the
->>> platform_profile_handler here.
->>> If the device is unregistered right after dev_get_drvdata() was
->>> called, then we would sill operate
->>> on possibly stale data once we take the profile_lock.
->>>
->>> Does someone have any clue how sysfs attributes act during removal?
->>>
->> I think i found the answer to my questions inside this patch series:
->> https://lore.kernel.org/linux-kernel/1390951311-15325-1-git-send-email-
->> tj@kernel.org
+>> The class and sysfs group are no longer needed when the platform profil=
+e
+>> core is a module and unloaded, so remove them at that time as well.
 >>
->> It says that:
+>> Tested-by: Mark Pearson <mpearson-lenovo@squebb.ca>
+>> Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
+>> ---
+>> v6:
+>> =C2=A0 * Catch failures in ida_alloc
+>> =C2=A0 * Use 4th argument of device_create instead of dev_set_drvdata()
+>> =C2=A0 * Squash unregister patch
+>> =C2=A0 * Add module init callback
+>> =C2=A0 * Move class creation to module init
+>> =C2=A0 * Update visibility based on group presence
+>> =C2=A0 * Add back parent device
+>> v5:
+>> =C2=A0 * Use ida instead of idr
+>> =C2=A0 * Use device_unregister instead of device_destroy()
+>> =C2=A0 * MKDEV (0, 0)
+>> ---
+>> =C2=A0 drivers/acpi/platform_profile.c=C2=A0 | 88 +++++++++++++++++++++=
++++++++++--
+>> =C2=A0 include/linux/platform_profile.h |=C2=A0 2 +
+>> =C2=A0 2 files changed, 85 insertions(+), 5 deletions(-)
 >>
->> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0kernfs / sysfs implement the "sever" sema=
-ntic for userland
->> accesses.
->> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0When a node is removed, no further userla=
-nd operations are
->> allowed and
->> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0the in-flight ones are drained before rem=
-oval is finished. This
->> makes
->> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0policing post-mortem userland accesses tr=
-ivial for its users.
+>> diff --git a/drivers/acpi/platform_profile.c
+>> b/drivers/acpi/platform_profile.c
+>> index 32affb75e782d..ef6af2c655524 100644
+>> --- a/drivers/acpi/platform_profile.c
+>> +++ b/drivers/acpi/platform_profile.c
+>> @@ -5,6 +5,7 @@
+>> =C2=A0 #include <linux/acpi.h>
+>> =C2=A0 #include <linux/bits.h>
+>> =C2=A0 #include <linux/init.h>
+>> +#include <linux/kdev_t.h>
+>> =C2=A0 #include <linux/mutex.h>
+>> =C2=A0 #include <linux/platform_profile.h>
+>> =C2=A0 #include <linux/sysfs.h>
+>> @@ -22,6 +23,12 @@ static const char * const profile_names[] =3D {
+>> =C2=A0 };
+>> =C2=A0 static_assert(ARRAY_SIZE(profile_names) =3D=3D PLATFORM_PROFILE_=
+LAST);
 >>
->> In this case taking the profile_lock when reading/writing class
->> attributes seems to be unnecessary.
->> Please remove the unnecessary locking inside the class attributes.
+>> +static DEFINE_IDA(platform_profile_ida);
+>> +
+>> +static const struct class platform_profile_class =3D {
+>> +=C2=A0=C2=A0=C2=A0 .name =3D "platform-profile",
+>> +};
+>> +
+>> =C2=A0 static ssize_t platform_profile_choices_show(struct device *dev,
+>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 struct device_at=
+tribute *attr,
+>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 char *buf)
+>> @@ -105,8 +112,25 @@ static struct attribute
+>> *platform_profile_attrs[] =3D {
+>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 NULL
+>> =C2=A0 };
 >>
+>> +static int profile_class_registered(struct device *dev, const void
+>> *data)
+>> +{
+>> +=C2=A0=C2=A0=C2=A0 return 1;
+>> +}
+>> +
+>> +static umode_t profile_class_is_visible(struct kobject *kobj, struct
+>> attribute *attr, int idx)
+>> +{
+>> +=C2=A0=C2=A0=C2=A0 if (!class_find_device(&platform_profile_class, NUL=
+L, NULL,
+>> profile_class_registered))
+>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 return 0;
+>> +=C2=A0=C2=A0=C2=A0 if (attr =3D=3D &dev_attr_platform_profile_choices.=
+attr)
+>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 return 0444;
+>> +=C2=A0=C2=A0=C2=A0 if (attr =3D=3D &dev_attr_platform_profile.attr)
+>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 return 0644;
+>> +=C2=A0=C2=A0=C2=A0 return 0;
+>> +}
+>> +
+>> =C2=A0 static const struct attribute_group platform_profile_group =3D {
+>> -=C2=A0=C2=A0=C2=A0 .attrs =3D platform_profile_attrs
+>> +=C2=A0=C2=A0=C2=A0 .attrs =3D platform_profile_attrs,
+>> +=C2=A0=C2=A0=C2=A0 .is_visible =3D profile_class_is_visible,
+>> =C2=A0 };
+>>
+>> =C2=A0 void platform_profile_notify(struct platform_profile_handler *pp=
+rof)
+>> @@ -123,6 +147,9 @@ int platform_profile_cycle(void)
+>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 enum platform_profile_option next;
+>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 int err;
+>>
+>> +=C2=A0=C2=A0=C2=A0 if (!class_is_registered(&platform_profile_class))
+>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 return -ENODEV;
 >
-> Before I respin a v7, let's make sure we're agreed on which things
-> need locking and which don't.
+> This check is pointless since the platform profile class will always
+> be registered during module initialization.
+> Please remove it.
 >
-> Functions that check if a lock is held:
-> _store_class_profile()
-> _notify_class_profile()
-> get_class_profile()
-> _aggregate_choices()
+>> +
+>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 scoped_cond_guard(mutex_intr, return -ER=
+ESTARTSYS,
+>> &profile_lock) {
+>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (!cur_profile=
+)
+>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0 return -ENODEV;
+>> @@ -164,25 +191,76 @@ int platform_profile_register(struct
+>> platform_profile_handler *pprof)
+>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (cur_profile)
+>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 return -EEXIST;
+>>
+>> -=C2=A0=C2=A0=C2=A0 err =3D sysfs_create_group(acpi_kobj, &platform_pro=
+file_group);
+>> -=C2=A0=C2=A0=C2=A0 if (err)
+>> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 return err;
+>> +=C2=A0=C2=A0=C2=A0 /* create class interface for individual handler */
+>> +=C2=A0=C2=A0=C2=A0 pprof->minor =3D ida_alloc(&platform_profile_ida, G=
+FP_KERNEL);
+>> +=C2=A0=C2=A0=C2=A0 if (pprof->minor < 0)
+>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 return pprof->minor;
+>> +=C2=A0=C2=A0=C2=A0 pprof->class_dev =3D device_create(&platform_profil=
+e_class,
+>> pprof->dev,
+>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 MKDEV(0, 0), pprof, "p=
+latform-profile-%d",
+>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 pprof->minor);
+>> +=C2=A0=C2=A0=C2=A0 if (IS_ERR(pprof->class_dev)) {
+>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 err =3D PTR_ERR(pprof->clas=
+s_dev);
+>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 goto cleanup_ida;
+>> +=C2=A0=C2=A0=C2=A0 }
+>>
+>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 cur_profile =3D pprof;
+>> +
+>> +=C2=A0=C2=A0=C2=A0 err =3D sysfs_update_group(acpi_kobj, &platform_pro=
+file_group);
+>> +=C2=A0=C2=A0=C2=A0 if (err)
+>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 goto cleanup_cur;
+>> +
+>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 return 0;
+>> +
+>> +cleanup_cur:
+>> +=C2=A0=C2=A0=C2=A0 cur_profile =3D NULL;
+>> +=C2=A0=C2=A0=C2=A0 device_unregister(pprof->class_dev);
+>> +
+>> +cleanup_ida:
+>> +=C2=A0=C2=A0=C2=A0 ida_free(&platform_profile_ida, pprof->minor);
+>> +
+>> +=C2=A0=C2=A0=C2=A0 return err;
+>> =C2=A0 }
+>> =C2=A0 EXPORT_SYMBOL_GPL(platform_profile_register);
+>>
+>> =C2=A0 int platform_profile_remove(struct platform_profile_handler *ppr=
+of)
+>> =C2=A0 {
+>> +=C2=A0=C2=A0=C2=A0 int id;
+>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 guard(mutex)(&profile_lock);
+>>
+>> -=C2=A0=C2=A0=C2=A0 sysfs_remove_group(acpi_kobj, &platform_profile_gro=
+up);
+>> +=C2=A0=C2=A0=C2=A0 id =3D pprof->minor;
+>> +=C2=A0=C2=A0=C2=A0 device_unregister(pprof->class_dev);
+>> +=C2=A0=C2=A0=C2=A0 ida_free(&platform_profile_ida, id);
+>> +
+>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 cur_profile =3D NULL;
+>> +
+>> +=C2=A0=C2=A0=C2=A0 sysfs_update_group(acpi_kobj, &platform_profile_gro=
+up);
+>> +
+>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 return 0;
+>> =C2=A0 }
+>> =C2=A0 EXPORT_SYMBOL_GPL(platform_profile_remove);
+>>
+>> +static int __init platform_profile_init(void)
+>> +{
+>> +=C2=A0=C2=A0=C2=A0 int err;
+>> +
+>> +=C2=A0=C2=A0=C2=A0 err =3D class_register(&platform_profile_class);
+>> +=C2=A0=C2=A0=C2=A0 if (err)
+>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 return err;
+>> +
+>> +=C2=A0=C2=A0=C2=A0 err =3D sysfs_create_group(acpi_kobj, &platform_pro=
+file_group);
+>> +=C2=A0=C2=A0=C2=A0 if (err)
+>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 class_unregister(&platform_=
+profile_class);
+>> +
+>> +=C2=A0=C2=A0=C2=A0 return err;
+>> +}
 >
-> Functions that take a lock:
-> name_show()
-> choices_show()
-> profile_show()
-> profile_store()
-> platform_profile_choices_show()
-> platform_profile_show()
-> platform_profile_store()
-> platform_profile_cycle()
-> platform_profile_register()
-> platform_profile_remove()
+> Please use a blank line after function/struct/union/enum declarations.
 >
-> Functions that don't take or check for a lock (these are intermediary
-> and things they call check for one):
-> _aggregate_profiles()
-> _store_and_notify()
+> Apart from those minor issues the patch looks quite nice, so with
+> those issues being fixed:
 >
-> Are you suggesting that basically these 4 can drop taking the lock?
-> name_show()
-> choices_show()
-> profile_show()
-> profile_store()
+> Reviewed-by: Armin Wolf <W_Armin@gmx.de>
 >
-> I think the show() ones I can get behind, but I'm worried about
-> profile_store(), particularly as it pertains to the other callers of
-> _store_class_profile() because it's incongruent how the other callers
-> would use it then.
->
-> Can we perhaps just drop it for the 3 class attribute show() ones?
+>> +static void __exit platform_profile_exit(void)
+>> +{
+>> +=C2=A0=C2=A0=C2=A0 class_unregister(&platform_profile_class);
+>> +=C2=A0=C2=A0=C2=A0 sysfs_remove_group(acpi_kobj, &platform_profile_gro=
+up);
 
-I think so, i also remembered that profile_store() needs to keep taking th=
-e lock in case platform_profile_cycle() is currently
-running.
-
-Can you also remove the second call to dev_get_drvdata() in _store_class_p=
-rofile()?
+I just noticed that the legacy sysfs group needs to be removed before the =
+class, otherwise
+there might be a short time window during module exit where the legacy sys=
+fs interface might
+try to use the already unregistered class.
 
 Thanks,
 Armin Wolf
 
->
-> LMK.
->
->
+>> +}
+>> +module_init(platform_profile_init);
+>> +module_exit(platform_profile_exit);
+>> +
+>> =C2=A0 MODULE_AUTHOR("Mark Pearson <markpearson@lenovo.com>");
+>> =C2=A0 MODULE_DESCRIPTION("ACPI platform profile sysfs interface");
+>> =C2=A0 MODULE_LICENSE("GPL");
+>> diff --git a/include/linux/platform_profile.h
+>> b/include/linux/platform_profile.h
+>> index 8ec0b8da56db5..a888fd085c513 100644
+>> --- a/include/linux/platform_profile.h
+>> +++ b/include/linux/platform_profile.h
+>> @@ -29,6 +29,8 @@ enum platform_profile_option {
+>> =C2=A0 struct platform_profile_handler {
+>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 const char *name;
+>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 struct device *dev;
+>> +=C2=A0=C2=A0=C2=A0 struct device *class_dev;
+>> +=C2=A0=C2=A0=C2=A0 int minor;
+>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 unsigned long choices[BITS_TO_LONGS(PLAT=
+FORM_PROFILE_LAST)];
+>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 int (*profile_get)(struct platform_profi=
+le_handler *pprof,
+>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 enum platform_profile_option *profile);
 >
