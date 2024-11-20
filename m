@@ -1,240 +1,192 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f178.google.com (mail-pf1-f178.google.com [209.85.210.178])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C34C1C4A3C;
-	Wed, 20 Nov 2024 14:57:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 07C651BF7E5
+	for <platform-driver-x86@vger.kernel.org>; Wed, 20 Nov 2024 15:04:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1732114623; cv=none; b=MrRt4enQzJ5uSPtB28E3vpUedtOcvenMwsF9jsPp9rRRpWiJfo1sxT28i3+V9TU7hUmuR8wb1l9pmA5Wulx6U7VrG6wZiwiitN+OhNSADF2jOwR74hPZHQjtIwGtyia5KJmP6kGuvW5Ple5PQ5NP4MemhB4cgsNiVBbas8TUrs4=
+	t=1732115066; cv=none; b=FDgyMQkEURzrq7XjGD2aKArjM8FNjLuSMrF2TzysDyVwNeCy/Z/MHmMWER8PVVMDcdyYNgO91j+8oYXXZTc/in+c2PPylmlQ8vHfm1j61v+FFuZrv1s/33l+9n+H6Dd2b8AsgyzV+Ep/aW5h291bN6qIkgedFNPUGTRvQGAAnHY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1732114623; c=relaxed/simple;
-	bh=wetaeUzQPiT6pjBtLDIE7JUZiPyegKlKOWgtNaRS/7g=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=HqV3NbsFSANqH76NxGCbJx63Jev0DvK9ISik/mbU4nmyN56XElkldua7nloOQ0LDt386gQxI0c/LOB0bfC8ONHIEZ8N5uPuUeCnNouYg/QM01Ai3E0lOZtWoLeK5BgAjUDmMKyTPZaqx2j7FQput82tyF2YJXwqPYDJc0XrXfNI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=cC0Y/B23; arc=none smtp.client-ip=198.175.65.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1732115066; c=relaxed/simple;
+	bh=M4ihmb8wmdZY2S61AMsEhjZ1+vS2HsqHuU98GHMV5Lw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=VaHzWBCdLzzJeSuSwPSg8zTnsxuzxIYAJ7146xR4iDIeyD/htNCWJJLkOaxDJKxoDc78+aRxpxwfre0pVR8l4+uJoP7z+6TUS51GULgU7RThuB/ruPk0ZK4S3MxE7kIiJ3xFtTGzL/YtFzsJW4JgRs+0AokEZrBziLfi5FAL0ag=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=F3GTtIZ3; arc=none smtp.client-ip=209.85.210.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="cC0Y/B23"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1732114622; x=1763650622;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=wetaeUzQPiT6pjBtLDIE7JUZiPyegKlKOWgtNaRS/7g=;
-  b=cC0Y/B23GprC1tIIXLIK/1Z6+9e1LA32eaEyvMt0baPBuH9dfmGp6bjl
-   SrLmYXeWIjth+Djij273Xr7SIrZ0xDWeubgDQtEZ8mJerQzwvZCoq2LfA
-   l5oCFFtlw8BflEdvR8h1mgiyk0nBm68izm6yzsF1xNwAp92HaIB9mF24j
-   PYGClKdm7BM29TY5+Yl9tBXcSs3Ekvwj50TFXQmGf3DeZ6htcvEH58ng2
-   AOxRzSMPTfepWCRLrY1xJxn+nqxfj4/WkcftHBc+o+y5rA+lGfMVEVT64
-   ATcf97jrGXQEN5G1LNWpPoppSJGa1JK9m8/ETQeEL8sjnQxcXwi8Noc8V
-   A==;
-X-CSE-ConnectionGUID: CNjZ26S0TfuEw7raVHJnRQ==
-X-CSE-MsgGUID: 4AvoKDH0Q+C9bv2BsbhSzA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11262"; a="42689295"
-X-IronPort-AV: E=Sophos;i="6.12,170,1728975600"; 
-   d="scan'208";a="42689295"
-Received: from fmviesa005.fm.intel.com ([10.60.135.145])
-  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Nov 2024 06:57:00 -0800
-X-CSE-ConnectionGUID: 7xbMxUtvQTu1psqEeTwTkg==
-X-CSE-MsgGUID: op+9Czp1TfSbzZsNItd5Aw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.12,170,1728975600"; 
-   d="scan'208";a="94405691"
-Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.15])
-  by fmviesa005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Nov 2024 06:56:52 -0800
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Wed, 20 Nov 2024 16:56:46 +0200 (EET)
-To: Mario Limonciello <mario.limonciello@amd.com>
-cc: Hans de Goede <hdegoede@redhat.com>, 
-    "Rafael J . Wysocki" <rafael@kernel.org>, Len Brown <lenb@kernel.org>, 
-    Maximilian Luz <luzmaximilian@gmail.com>, Lee Chun-Yi <jlee@suse.com>, 
-    Shyam Sundar S K <Shyam-sundar.S-k@amd.com>, 
-    Corentin Chary <corentin.chary@gmail.com>, 
-    "Luke D . Jones" <luke@ljones.dev>, Ike Panhc <ike.pan@canonical.com>, 
-    Henrique de Moraes Holschuh <hmh@hmh.eng.br>, 
-    Alexis Belmonte <alexbelm48@gmail.com>, 
-    =?ISO-8859-15?Q?Uwe_Kleine-K=F6nig?= <u.kleine-koenig@pengutronix.de>, 
-    Ai Chao <aichao@kylinos.cn>, Gergo Koteles <soyer@irl.hu>, 
-    open list <linux-kernel@vger.kernel.org>, 
-    "open list:ACPI" <linux-acpi@vger.kernel.org>, 
-    "open list:MICROSOFT SURFACE PLATFORM PROFILE DRIVER" <platform-driver-x86@vger.kernel.org>, 
-    "open list:THINKPAD ACPI EXTRAS DRIVER" <ibm-acpi-devel@lists.sourceforge.net>, 
-    Mark Pearson <mpearson-lenovo@squebb.ca>, 
-    Matthew Schwartz <matthew.schwartz@linux.dev>
-Subject: Re: [PATCH v7 13/22] ACPI: platform_profile: Add profile attribute
- for class interface
-In-Reply-To: <20241119171739.77028-14-mario.limonciello@amd.com>
-Message-ID: <afff4d12-b611-68f0-07a0-2d22bc57fc06@linux.intel.com>
-References: <20241119171739.77028-1-mario.limonciello@amd.com> <20241119171739.77028-14-mario.limonciello@amd.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="F3GTtIZ3"
+Received: by mail-pf1-f178.google.com with SMTP id d2e1a72fcca58-71e49ad46b1so1979313b3a.1
+        for <platform-driver-x86@vger.kernel.org>; Wed, 20 Nov 2024 07:04:24 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1732115064; x=1732719864; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=dKIizGpW79Ywu5q2PUlJIQqmW0zYIfb1kfgqzoe/lNc=;
+        b=F3GTtIZ3OYayafnKZJXnToX/EpSf1uAU7Q13be+h/hT8kb/ags/Vg2zvOdWOBptje5
+         hW96ABDH8PEAtUJGy8yqPvbWd2aiamOAqltgrhIwLx3eCKBpGvQpwEqkv9BQEMnE5S5N
+         AzGTYlSJWL9EZcTrrJg0lZNqYIG5Giig5AG0TEhefcNZTEzJscDUa2NyVl6SWQxY4bQL
+         J13yKtznPE73cbNJ++N4gzyKAj7RSxe3Gij/QHrSgvw5x7aH26/kY+lXn8Rdn+L01c3j
+         Cs3Dv9FGcpxXhbFzNnMTiitXVepDQLBkbURUkMn2CVYmvlkONJ6no3K/RKU519pp8ivj
+         V9jQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1732115064; x=1732719864;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=dKIizGpW79Ywu5q2PUlJIQqmW0zYIfb1kfgqzoe/lNc=;
+        b=CDIxGcdMEcgh7++/3IQEEtyItI2FFBDVelWHWuPODY4k1rqZ29WQ4cuQNty45N7Loz
+         iWbVsx1dUTXsd1Qgc4cPsesONYjRufWv6U/LqsNwJDaXA/baRe2aE2Q6navasImy9S3z
+         8FIWa8VAaVQu7Ls3U3sJ4VrlRBLEnpn+SmlbYE50Pv/WVVWVPGk438tccOjpcgk/Rr5B
+         9jbD7wCch8wZodaeS2EU6xZrgimFKdwcq7VkVWbl8BQRtHLMYavhPmaxi3i5Xq+FJ63V
+         eALn1I7qHnrhWSLy1nQDU4zxeHqNtINpM9ks4L4XF0PwLKYsH0nJYQykxAeRylmMoUR5
+         b/ww==
+X-Forwarded-Encrypted: i=1; AJvYcCWB6lEhvDE9Ba4tsDh8rysGC4eiC8Jz+vnjt/w+kFlEw5VqP00XmA2ygbzg+Ys/wVFXg9iXe8J6Gc8RQO5RBTEAFi6x@vger.kernel.org
+X-Gm-Message-State: AOJu0YyRuU3GyNsNQrXWem+5Gb4cO8igbF7DwtAUS8qnNil5A6xVUIHP
+	O+WXuyoKPs+ttgNqhxPDpPg3knB9Rdfx2km6JJdc9zSW/d6Rv6Pq
+X-Gm-Gg: ASbGncu3Ca5soDjIjQnkF+01M/kuqfI78rXcMOC9INkl9kZsuMWFP8a4aBDixjDenEa
+	rrfZS67GN0V+C/hTFAI3ie9rC/vs7RjIIEoNCBEJkca86tTtnxIrFB3JSxb7ZYwsiJ9F1jKqfCY
+	JwC3WMW8I3KtOvuOAS2Bz5dATDc035M7pEKk6BYLXxRsEt90VPCM6hzgfLCA7KJZrLv5bfAFDSt
+	RyH/S9BVx8ZStq7Cg2YFqEdi1R+3ijv4U6tw8Bh4wky5g==
+X-Google-Smtp-Source: AGHT+IEk/3yZUC4wAGzS555O9M0NnfqBgLPIPcDP/bCNwsnCRXC0Ckv4NBpTVnVzCTk4R6t5uOCpqQ==
+X-Received: by 2002:a05:6a00:814:b0:71e:58be:3604 with SMTP id d2e1a72fcca58-724bec8769dmr3383033b3a.4.1732115063942;
+        Wed, 20 Nov 2024 07:04:23 -0800 (PST)
+Received: from alphacentauri ([181.84.94.92])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-724befb27bfsm1717093b3a.169.2024.11.20.07.04.21
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 20 Nov 2024 07:04:23 -0800 (PST)
+Date: Wed, 20 Nov 2024 12:04:19 -0300
+From: Kurt Borja <kuurtb@gmail.com>
+To: Armin Wolf <W_Armin@gmx.de>
+Cc: Mario Limonciello <mario.limonciello@amd.com>, 
+	platform-driver-x86@vger.kernel.org, ilpo.jarvinen@linux.intel.com, 
+	Dell Client Kernel <Dell.Client.Kernel@dell.com>
+Subject: Re: alienware-wmi rework RFC
+Message-ID: <gz67ujg6ggqx7gq4grm2jzi7assjzmcches7dmqaky6qi2fvjq@kkkbkj2z7i5g>
+References: <6m66cuivkzhcsvpjv4nunjyddqhr42bmjdhptu4bqm6rm7fvxf@qjwove4hg6gb>
+ <bf238c08-1f49-4e16-b9ee-1d1a5e0b9763@amd.com>
+ <uyzgfmsbd6dkeyx76fmstqpauj4ulnz2eqbww6dz7fwjxwxer6@vwuebqbtl5e5>
+ <7ce64458-4390-4630-8d59-66e37d6f4521@gmx.de>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <7ce64458-4390-4630-8d59-66e37d6f4521@gmx.de>
 
-On Tue, 19 Nov 2024, Mario Limonciello wrote:
-
-> Reading and writing the `profile` sysfs file will use the callbacks for
-> the platform profile handler to read or set the given profile.
+On Wed, Nov 20, 2024 at 01:06:57PM +0100, Armin Wolf wrote:
+> Am 19.11.24 um 05:29 schrieb Kurt Borja:
 > 
-> Tested-by: Mark Pearson <mpearson-lenovo@squebb.ca>
-> Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
-> ---
-> v7:
->  * Remove extra handler set
->  * Remove err variable
-> v6:
->  * Fix return
-> v5:
->  * Drop recovery flow
->  * Don't get profile before setting (not needed)
->  * Simplify casting for call to _store_class_profile()
->  * Only notify legacy interface of changes
->  * Adjust mutex use
-> ---
->  drivers/acpi/platform_profile.c | 100 ++++++++++++++++++++++++++++++++
->  1 file changed, 100 insertions(+)
+> > On Mon, Nov 18, 2024 at 09:54:25PM -0600, Mario Limonciello wrote:
+> > > Loop Dell Client Kernel M/B for any comments.
+> > > 
+> > > On 11/18/2024 21:47, Kurt Borja wrote:
+> > > > Hi!
+> > > > 
+> > > > I'm planning on migrating the alienware-wmi driver to the new WMI
+> > > > interface, as it's currently using the deprecated one.
+> > > 🎉
 > 
-> diff --git a/drivers/acpi/platform_profile.c b/drivers/acpi/platform_profile.c
-> index 9d6ead043994c..1530e6096cd39 100644
-> --- a/drivers/acpi/platform_profile.c
-> +++ b/drivers/acpi/platform_profile.c
-> @@ -46,6 +46,52 @@ static ssize_t _commmon_choices_show(unsigned long *choices, char *buf)
->  	return len;
->  }
->  
-> +/**
-> + * _store_class_profile - Set the profile for a class device
-> + * @dev: The class device
-> + * @data: The profile to set
-> + */
-> +static int _store_class_profile(struct device *dev, void *data)
-> +{
-> +	struct platform_profile_handler *handler;
-> +	int *i = (int *)data;
-
-I don't like using "i" as the variable name for this.
-
-> +	lockdep_assert_held(&profile_lock);
-> +	handler = dev_get_drvdata(dev);
-> +	if (!test_bit(*i, handler->choices))
-> +		return -EOPNOTSUPP;
-> +
-> +	return handler->profile_set(handler, *i);
-> +}
-> +
-> +/**
-> + * get_class_profile - Show the current profile for a class device
-> + * @dev: The class device
-> + * @profile: The profile to return
-> + * Return: 0 on success, -errno on failure
-> + */
-> +static int get_class_profile(struct device *dev,
-> +			     enum platform_profile_option *profile)
-> +{
-> +	struct platform_profile_handler *handler;
-> +	enum platform_profile_option val;
-> +	int err;
-> +
-> +	lockdep_assert_held(&profile_lock);
-> +	handler = dev_get_drvdata(dev);
-> +	err = handler->profile_get(handler, &val);
-> +	if (err) {
-> +		pr_err("Failed to get profile for handler %s\n", handler->name);
-> +		return err;
-> +	}
-> +
-> +	if (WARN_ON(val >= PLATFORM_PROFILE_LAST))
-> +		return -EINVAL;
-> +	*profile = val;
-> +
-> +	return 0;
-> +}
-> +
->  /**
->   * name_show - Show the name of the profile handler
->   * @dev: The device
-> @@ -77,12 +123,66 @@ static ssize_t choices_show(struct device *dev,
->  	return _commmon_choices_show(handler->choices, buf);
->  }
->  
-> +/**
-> + * profile_show - Show the current profile for a class device
-> + * @dev: The device
-> + * @attr: The attribute
-> + * @buf: The buffer to write to
-> + * Return: The number of bytes written
-> + */
-> +static ssize_t profile_show(struct device *dev,
-> +			    struct device_attribute *attr,
-> +			    char *buf)
-> +{
-> +	enum platform_profile_option profile = PLATFORM_PROFILE_LAST;
-> +	int err;
-> +
-> +	scoped_cond_guard(mutex_intr, return -ERESTARTSYS, &profile_lock) {
-> +		err = get_class_profile(dev, &profile);
-> +		if (err)
-> +			return err;
-> +	}
-> +
-> +	return sysfs_emit(buf, "%s\n", profile_names[profile]);
-> +}
-> +
-> +/**
-> + * profile_store - Set the profile for a class device
-> + * @dev: The device
-> + * @attr: The attribute
-> + * @buf: The buffer to read from
-> + * @count: The number of bytes to read
-> + * Return: The number of bytes read
-> + */
-> +static ssize_t profile_store(struct device *dev,
-> +			     struct device_attribute *attr,
-> +			     const char *buf, size_t count)
-> +{
-> +	int i, ret;
-> +
-> +	i = sysfs_match_string(profile_names, buf);
-
-Please consider if there's a better name for the variable.
-
-> +	if (i < 0)
-> +		return -EINVAL;
-> +
-> +	scoped_cond_guard(mutex_intr, return -ERESTARTSYS, &profile_lock) {
-> +		ret = _store_class_profile(dev, &i);
-> +		if (ret)
-> +			return ret;
-> +	}
-> +
-> +	sysfs_notify(acpi_kobj, NULL, "platform_profile");
-> +
-> +	return count;
-> +}
-> +
->  static DEVICE_ATTR_RO(name);
->  static DEVICE_ATTR_RO(choices);
-> +static DEVICE_ATTR_RW(profile);
->  
->  static struct attribute *profile_attrs[] = {
->  	&dev_attr_name.attr,
->  	&dev_attr_choices.attr,
-> +	&dev_attr_profile.attr,
-
-I started to wonder if "choices" is good name for the other attribute as 
-it is the set of values "profile" accepts? Should they be bound by the 
-naming too like "profile_choices" or something along those lines so the
-connection between the two is very evident?
-
->  	NULL
->  };
->  ATTRIBUTE_GROUPS(profile);
+> I like this :)
 > 
+> > > 
+> > > > My plan is to:
+> > > > 
+> > > > rename alienware-wmi.c -> alienware-wmi-base.c
+> > > > create alienware-wmi.h
+> > > > create alienware-wmi-legacy
+> > > > create alienware-wmi-wmax
+> > > > 
+> > > > The last two files would not be independent modules, just includes for
+> > > > the base module. The base module would be in charge of initializing the
+> > > > platform driver plus the correct wmi_driver backend, but the wmi probes
+> > > > would register the platform device. This would be very similar to what
+> > > > other dell drivers already do. Aditionally I want to migrate everything
+> > > > to the state container design pattern.
+> > > > 
+> > > > I would do this in such a way that the legacy and new code would be
+> > > > completely independent of each other (i.e. different state containters,
+> > > > dmi checks, etc).
+> > > As the original author of this driver when I was at Dell I'll add some
+> > > comments.
+> > > 
+> > > The 'legacy' code was very narrowly focused for supporting a handful of
+> > > hardware specifically for lighting control.  One was the original Alienware
+> > > steam machine, and then a few generations of the X51.
+> > > 
+> > > I don't know how much of the driver continues to work on hardware since
+> > > then.  Maybe Dell guys I added to CC can comment on how much of this has
+> > > stuck around over the years and keeps working.
+> > My guess is that none of it works on new models. The LEGACY wmi device
+> > is not longer included on new machines, as all lighting control is done
+> > through an EC and the WMAX device was repurposed to fan/thermal control.
+> > I say this based on exploring quite a few acpidumps and a couple RGB
+> > control Windows open source alternatives.
+> > 
+> > > > Pros:
+> > > >    - Modern interfaces and design patterns
+> > > >    - This is compatible with Mario's upcoming platform profile changes as
+> > > >      the WMAX device would hold a reference to the platform device
+> > > >    - Would not break compatibility as legacy code is independent
+> > > >    - Easier to understand and develop in the future
+> > > > 
+> > > > Cons:
+> > > >    - Initialy alienware-wmi-base.c would be almost completely legacy code,
+> > > >      as new features don't require a platform device (yet), so
+> > > >      alienware-wmi-base would basically just register the wmax wmi driver
+> > > >      on newer machines
+> > > >    - With this design users would not be able to completely exclude legacy
+> > > >      code with CONFIG parameters
+> > > I wonder if you're better off just having the legacy driver as it's own
+> > > kernel object?  If it only supports a handful of systems, most people won't
+> > > need it compiled.
+> > Yes! I'd like to do this but unfortunately some user space applications
+> > might depend on attributes being available to a platform device named
+> > "alienware-wmi". This is why I wanted to have a unified "alienware-wmi"
+> > platform driver.
+> > 
+> > Thank you for your feedback!
+> 
+> It see, that is unfortunate. In this case having a single driver which handles the platform device
+> and calls the right initialization function from the other two files sounds like a good choice to me.
 
--- 
- i.
+I have another idea:
 
+rename alienware-wmi.c -> alienware-alienfx.c
+create alienware-wmi-wmax.c
+
+Both independent modules that can be included/excluded with config
+parameters, etc. alienware-alienfx would register the platform driver
+and the wmi legacy device driver, while alienware-wmi-wmax would do
+everything independently and only register an "alienware-wmi" platform
+device if loaded on a 'legacy' laptop model.
+
+Of course I'd make sure a platform device with the same name is not loaded
+twice.
+
+Something about this doesn't feel right but I don't know what it is.
+However it is less files and less memory footprint, because ideally,
+'legacy' code would not even load on newer models. 
+
+I thought about this because Mario said legacy interface is only
+supported by a handful of devices and it seems like a waste of resources
+to load unsupported interfaces.
+
+> 
+> Thanks,
+> Armin Wolf
+> 
+> > > > After this I want to add HWMON and sparse keymap capabilities to the
+> > > > wmax interface.
+> > > 🎉
+> > > 
+> > > > I'm sure there are things I'm not seeing so feedback is greatly
+> > > > appreciated!
+> > > > 
+> > > > Regards,
+> > > > Kurt
