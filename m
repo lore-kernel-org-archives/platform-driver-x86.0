@@ -1,97 +1,197 @@
-Received: from sender4-of-o54.zoho.com (sender4-of-o54.zoho.com [136.143.188.54])
+Received: from esa6.hgst.iphmx.com (esa6.hgst.iphmx.com [216.71.154.45])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3DC8C12E5B;
-	Wed, 20 Nov 2024 04:20:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.54
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1732076444; cv=pass; b=R3wCUM/PS0f1z6wMuNZFbzZbwiyYH4sRPgR9racpn5Sz4DqaRFsCDnwJ3CWdrLhrhkP5lRHOixix7YEV6KixmNAipziw/bOnV/1G2e5bOcL/nDfJGkc4lPeOvR58qGBiV/MRSLB+So5J7TzKsXi5H4QFQs1mHEpwxfKO1J86slU=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1732076444; c=relaxed/simple;
-	bh=t90Hvawi2GNI9kzppLaoXPkcjXAE5P6hvgCMwrNY7fE=;
-	h=Date:From:To:Message-ID:In-Reply-To:References:Subject:
-	 MIME-Version:Content-Type; b=Q58XFOz+GLBncf+SnoI+vCvlnsGLdI5HwhFOALR1DJpCpsbOQ9yAXt2afkghiIqNp7Mt5ZwXaI3hiDLBTjVew8//f4Uhyw7tbh5o9/oWm4IuACLpS1tOw+7wijmZIhq6cdcvUO8dA3s/lReMLFtHwt2dD4eZ0k7j5uhLuzeGwz0=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=mitchellaugustin.com; spf=pass smtp.mailfrom=mitchellaugustin.com; dkim=pass (1024-bit key) header.d=mitchellaugustin.com header.i=mitchell@mitchellaugustin.com header.b=Bp4N9Jq7; arc=pass smtp.client-ip=136.143.188.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=mitchellaugustin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mitchellaugustin.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 96F95158A09
+	for <platform-driver-x86@vger.kernel.org>; Wed, 20 Nov 2024 06:41:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.71.154.45
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1732084865; cv=none; b=CQ0ZxggDg8eASw5UD/G6iHyZeq/zgh/k91qmai+SdEDvJ0sX+atABuFgf/5TbnTEBjkm+HS54YgtU4JRPVEonD6KGUuhCY6OGBoGI/UhwTx9u7FeuUCWUUcHQhGfdpqVts5Eepkl16uslZncE4bORRB8Q3vl4xkIu+ThXu0OnIk=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1732084865; c=relaxed/simple;
+	bh=1VNxz5jrhpQMypUpSQ0AVceHqtewk2GNLDbrLrr5Fhg=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=VxmQZ3jqHsjSLkFzcwXSZz9wjtoK+vK02nDm4L4WFx3GG7ckB1dPAokH6B0U2AKO/KKbRlTXYiEKM96JDJVjRKVNMyKHwWg39/VAm8N5unRuOZDef4r3XmdDybNPqmdvSexO4addTKuQITA/aailZvb8nmoLu+rZ9HeKONRCGZA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wdc.com; spf=pass smtp.mailfrom=wdc.com; dkim=pass (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b=V8CqvqE+; arc=none smtp.client-ip=216.71.154.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wdc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wdc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=mitchellaugustin.com header.i=mitchell@mitchellaugustin.com header.b="Bp4N9Jq7"
-ARC-Seal: i=1; a=rsa-sha256; t=1732076433; cv=none; 
-	d=zohomail.com; s=zohoarc; 
-	b=idoQIJ4KCvdu1Sg9CvbMe5X5LgmayH+sSk1EkdnhFnLNr2U6izhV8Pzd7q4GJOY48Hnd6pr00/qpzRH3/Sjy+xwzvvttDbW7btTDd5oNph/wCIAW6AFes9ArauoibDpqJYYBvl7CxjxD18d6LCTp/F0T+I2lC8AlU1q1w41EuCQ=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1732076433; h=Content-Type:Content-Transfer-Encoding:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To:Cc; 
-	bh=rHEmzLKlp/AfS0Aq2l3BoB05N22t3t44AF62MSrMzV4=; 
-	b=fU0phTGd7Ek9L8eU3WSWDmZdth8h2149KZ0ODiQD1gAPgFfFgdLYI4mwx2gA2hjeyP33+x/ruwFwQ1aOsNh8Paza/yDp8xVVWtFKSI+j3jRp2+ZVeMT8QLPOM0YsEg6i/0PuOFp0HSbtQGOGbfd8ZDDsTJDwXT5shURKuT8imAs=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-	dkim=pass  header.i=mitchellaugustin.com;
-	spf=pass  smtp.mailfrom=mitchell@mitchellaugustin.com;
-	dmarc=pass header.from=<mitchell@mitchellaugustin.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1732076433;
-	s=zoho; d=mitchellaugustin.com; i=mitchell@mitchellaugustin.com;
-	h=Date:Date:From:From:To:To:Message-ID:In-Reply-To:References:Subject:Subject:MIME-Version:Content-Type:Content-Transfer-Encoding:Message-Id:Reply-To:Cc;
-	bh=rHEmzLKlp/AfS0Aq2l3BoB05N22t3t44AF62MSrMzV4=;
-	b=Bp4N9Jq79vMQ7MhC24KY+5xlq0M4Wb+sWsjFQl+lwq9wq3tSZ9uXRdxCmozXZUYf
-	KLFSWDChnJMDCtffVfG1o0JNlsaYtXfgw+VUX6l8BYwkjb4Pfg7594GtdDAvmd68mhb
-	9jhhsSrI8hqMFThNEykFhGLPMk6M+6DQFEtSrjdE=
-Received: from mail.zoho.com by mx.zohomail.com
-	with SMTP id 1732076431271434.04917164835854; Tue, 19 Nov 2024 20:20:31 -0800 (PST)
-Date: Tue, 19 Nov 2024 20:20:31 -0800
-From: Mitchell Augustin <mitchell@mitchellaugustin.com>
-To: "Corentin Chary" <corentin.chary@gmail.com>,
-	"Luke D. Jones" <luke@ljones.dev>,
-	"Hans de Goede" <hdegoede@redhat.com>,
-	=?UTF-8?Q?=22Ilpo_J=C3=A4rvinen=22?= <ilpo.jarvinen@linux.intel.com>,
-	"platform-driver-x86" <platform-driver-x86@vger.kernel.org>,
-	"linux-kernel" <linux-kernel@vger.kernel.org>
-Message-ID: <19347cce78e.1107b2a6f515198.6482303922487401469@mitchellaugustin.com>
-In-Reply-To: <1933b52f4cc.d2378f8b154603.5100196514130862791@mitchellaugustin.com>
-References: <1933b52f4cc.d2378f8b154603.5100196514130862791@mitchellaugustin.com>
-Subject: Re: platform/x86: asus-wmi: Keyboard backlight brightness does not
- work correctly on Asus ROG Zephyrus G15
+	dkim=pass (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="V8CqvqE+"
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
+  t=1732084863; x=1763620863;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=1VNxz5jrhpQMypUpSQ0AVceHqtewk2GNLDbrLrr5Fhg=;
+  b=V8CqvqE+08bJc9WgBm/HkUlILHKs5FHvX5sXmmgbvxjFQZIXiueg+Ezp
+   f1vHir7NouCYg8b9PEHfLoNLYliD5DNgGKUwLS/8glEppeEwyERs/j78M
+   EkLGXdaa86uQdiSeW6zazzYOuOC/Qlw7YiM3baup9iBgoobMmd5886Rk+
+   9TNpXBm+BPJDsCsYbc1OVWE8B9s5kMo92vEhWy2c1oeIqhslfFpfMkWG4
+   RuTlLtVuF6xl2gV4N7K2td9daOkdWT1ikKh6uMMNdFbqORwJKxP862mXZ
+   q6Z/WJVbxWD+vyI1uKCv65728xW1k1xBR4uFIbBVaZvjQmUmCd0OvxsAo
+   g==;
+X-CSE-ConnectionGUID: 6DdIzDPBQfKaJ3i9dsRNJg==
+X-CSE-MsgGUID: Knfzh5+nTcKzvfxG2iiYhg==
+X-IronPort-AV: E=Sophos;i="6.12,168,1728921600"; 
+   d="scan'208";a="31828837"
+Received: from h199-255-45-15.hgst.com (HELO uls-op-cesaep02.wdc.com) ([199.255.45.15])
+  by ob1.hgst.iphmx.com with ESMTP; 20 Nov 2024 14:40:56 +0800
+IronPort-SDR: 673d75e6_bN/r/kmkkEUeiWjBggrfCHotOKYpKOkZSpZ3ZhIUbtvMYXK
+ 9Bybj7WYoilhDBaqzOIM90sfjcsaY0T3tViiYOg==
+Received: from uls-op-cesaip01.wdc.com ([10.248.3.36])
+  by uls-op-cesaep02.wdc.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 19 Nov 2024 21:38:46 -0800
+WDCIronportException: Internal
+Received: from unknown (HELO shindev.ssa.fujisawa.hgst.com) ([10.149.66.30])
+  by uls-op-cesaip01.wdc.com with ESMTP; 19 Nov 2024 22:40:56 -0800
+From: Shin'ichiro Kawasaki <shinichiro.kawasaki@wdc.com>
+To: platform-driver-x86@vger.kernel.org,
+	Hans de Goede <hdegoede@redhat.com>,
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: ilpo.jarvinen@linux.intel.com,
+	danielwa@cisco.com,
+	Shin'ichiro Kawasaki <shinichiro.kawasaki@wdc.com>
+Subject: [PATCH] p2sb: Do not scan and remove the P2SB device when it is hidden
+Date: Wed, 20 Nov 2024 15:40:55 +0900
+Message-ID: <20241120064055.245969-1-shinichiro.kawasaki@wdc.com>
+X-Mailer: git-send-email 2.47.0
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Importance: Medium
-User-Agent: Zoho Mail
-X-Mailer: Zoho Mail
+Content-Transfer-Encoding: 8bit
 
-Nevermind, upon further digging I found https://lore.kernel.org/all/20240713074733.77334-2-luke@ljones.dev/, which wasn't pulled into
-my downstream kernel yet and verified that it does work for me.
+When drivers access P2SB device resources, it calls p2sb_bar() to obtain
+the resources. Before the commit 5913320eb0b3 ("platform/x86: p2sb:
+Allow p2sb_bar() calls during PCI device probe"), p2sb_bar() obtained
+the resources and then called pci_stop_and_remove_bus_device() for clean
+up. Then the P2SB device disappeared even when the BIOS does not hide
+the P2SB device. The commit introduced the P2SB device resource cache
+feature in the boot process. During the resource cache process,
+pci_stop_and_remove_bus_device() is called for the P2SB device, then the
+P2SB device disappears regardless of whether p2sb_bar() is called or
+not. Such P2SB device disappearance caused a confusion [1]. To avoid the
+confusion, avoid the pci_stop_and_remove_bus_device() call when the BIOS
+does not hide the P2SB device.
 
-Thanks,
-Mitchell Augustin
+For that purpose, add a new helper function p2sb_read_and_cache(), which
+does the same work as p2sb_scan_and_cache() but does not call
+pci_stop_and_remove_bus_device(). These two functions are almost same
+except the device scan and remove. Then make them call the single
+function p2sb_cache_devfn(), which takes the argument "bool scan".
 
+If the BIOS does not hide the P2SB device, just call
+p2sb_read_and_cache() to cache the resources. If not, do additional
+preparations (lock "rescan remove" for parallel scan, and unhide the
+P2SB device), then call p2sb_scan_and_cache().
 
----- On Sun, 17 Nov 2024 10:11:52 -0800 Mitchell Augustin  wrote ---
+Fixes: 5913320eb0b3 ("platform/x86: p2sb: Allow p2sb_bar() calls during PCI device probe")
+Closes: https://lore.kernel.org/lkml/ZzTI+biIUTvFT6NC@goliath/ [1]
+Signed-off-by: Shin'ichiro Kawasaki <shinichiro.kawasaki@wdc.com>
+---
+ drivers/platform/x86/p2sb.c | 51 +++++++++++++++++++++++++------------
+ 1 file changed, 35 insertions(+), 16 deletions(-)
 
- > Hello, 
- >  
- > On my Zephyrus G15 (GA503RM-G15.R93060), 
- >  my keyboard brightness controls do not work. I believe I have traced 
- > this down to being a kernel issue, based on the fact that my Gnome 
- > control center slider and `asusctl -k` do result in 
- > `/sys/class/leds/asus::kbd_backlight/brightness` being updated, but the 
- > changed value of `/sys/class/leds/asus::kbd_backlight/brightness` is not 
- >  reflective of the actual brightness of my keyboard, which always 
- > remains unchanged. (I can also confirm that other keyboard/fan control 
- > features do work, such as the keyboard profile switcher, custom fan 
- > curves, etc. - so it just seems to be the brightness that is broken.) 
- >  
- > If this is likely just a case where I would need to poke around my hardware to 
- > find the correct values to write for brightness control to work on my 
- > specific SKU, I would be happy to do that and contribute it back here, but I 
- > will need some guidance on where to look for that info. 
- >  
- > Let me know if that would be helpful, or if there's any other info I can provide to help fix this bug. 
- >  
- > Thanks, 
- >  
- > Mitchell Augustin 
- > 
+diff --git a/drivers/platform/x86/p2sb.c b/drivers/platform/x86/p2sb.c
+index 31f38309b389..43b712b7a1ea 100644
+--- a/drivers/platform/x86/p2sb.c
++++ b/drivers/platform/x86/p2sb.c
+@@ -79,29 +79,37 @@ static void p2sb_read_bar0(struct pci_dev *pdev, struct resource *mem)
+ 	mem->desc = bar0->desc;
+ }
+ 
+-static void p2sb_scan_and_cache_devfn(struct pci_bus *bus, unsigned int devfn)
++static void __p2sb_cache_devfn(struct pci_bus *bus, unsigned int devfn,
++			       bool scan)
+ {
+ 	struct p2sb_res_cache *cache = &p2sb_resources[PCI_FUNC(devfn)];
+ 	struct pci_dev *pdev;
+ 
+-	pdev = pci_scan_single_device(bus, devfn);
++	if (scan)
++		pdev = pci_scan_single_device(bus, devfn);
++	else
++		pdev = pci_get_slot(bus, devfn);
++
+ 	if (!pdev)
+ 		return;
+ 
+ 	p2sb_read_bar0(pdev, &cache->res);
+ 	cache->bus_dev_id = bus->dev.id;
+ 
+-	pci_stop_and_remove_bus_device(pdev);
++	if (scan)
++		pci_stop_and_remove_bus_device(pdev);
++	else
++		pci_dev_put(pdev);
+ }
+ 
+-static int p2sb_scan_and_cache(struct pci_bus *bus, unsigned int devfn)
++static int p2sb_cache_devfn(struct pci_bus *bus, unsigned int devfn, bool scan)
+ {
+-	/* Scan the P2SB device and cache its BAR0 */
+-	p2sb_scan_and_cache_devfn(bus, devfn);
++	/* Scan or read the P2SB device and cache its BAR0 */
++	__p2sb_cache_devfn(bus, devfn, scan);
+ 
+ 	/* On Goldmont p2sb_bar() also gets called for the SPI controller */
+ 	if (devfn == P2SB_DEVFN_GOLDMONT)
+-		p2sb_scan_and_cache_devfn(bus, SPI_DEVFN_GOLDMONT);
++		__p2sb_cache_devfn(bus, SPI_DEVFN_GOLDMONT, scan);
+ 
+ 	if (!p2sb_valid_resource(&p2sb_resources[PCI_FUNC(devfn)].res))
+ 		return -ENOENT;
+@@ -109,6 +117,16 @@ static int p2sb_scan_and_cache(struct pci_bus *bus, unsigned int devfn)
+ 	return 0;
+ }
+ 
++static int p2sb_scan_and_cache(struct pci_bus *bus, unsigned int devfn)
++{
++	return p2sb_cache_devfn(bus, devfn, true);
++}
++
++static int p2sb_read_and_cache(struct pci_bus *bus, unsigned int devfn)
++{
++	return p2sb_cache_devfn(bus, devfn, false);
++}
++
+ static struct pci_bus *p2sb_get_bus(struct pci_bus *bus)
+ {
+ 	static struct pci_bus *p2sb_bus;
+@@ -145,6 +163,14 @@ static int p2sb_cache_resources(void)
+ 	if (!PCI_POSSIBLE_ERROR(class) && class != PCI_CLASS_MEMORY_OTHER)
+ 		return -ENODEV;
+ 
++	/*
++	 * The BIOS does not hide the P2SB device then it should have been
++	 * enumerated by the PCI subsystem. Get the resources from it.
++	 */
++	pci_bus_read_config_dword(bus, devfn_p2sb, P2SBC, &value);
++	if ((value & P2SBC_HIDE) != P2SBC_HIDE)
++		return p2sb_read_and_cache(bus, devfn_p2sb);
++
+ 	/*
+ 	 * Prevent concurrent PCI bus scan from seeing the P2SB device and
+ 	 * removing via sysfs while it is temporarily exposed.
+@@ -154,17 +180,10 @@ static int p2sb_cache_resources(void)
+ 	/*
+ 	 * The BIOS prevents the P2SB device from being enumerated by the PCI
+ 	 * subsystem, so we need to unhide and hide it back to lookup the BAR.
+-	 * Unhide the P2SB device here, if needed.
+ 	 */
+-	pci_bus_read_config_dword(bus, devfn_p2sb, P2SBC, &value);
+-	if (value & P2SBC_HIDE)
+-		pci_bus_write_config_dword(bus, devfn_p2sb, P2SBC, 0);
+-
++	pci_bus_write_config_dword(bus, devfn_p2sb, P2SBC, 0);
+ 	ret = p2sb_scan_and_cache(bus, devfn_p2sb);
+-
+-	/* Hide the P2SB device, if it was hidden */
+-	if (value & P2SBC_HIDE)
+-		pci_bus_write_config_dword(bus, devfn_p2sb, P2SBC, P2SBC_HIDE);
++	pci_bus_write_config_dword(bus, devfn_p2sb, P2SBC, P2SBC_HIDE);
+ 
+ 	pci_unlock_rescan_remove();
+ 
+-- 
+2.47.0
 
