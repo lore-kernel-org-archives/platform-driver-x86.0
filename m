@@ -1,105 +1,105 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f172.google.com (mail-pf1-f172.google.com [209.85.210.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A9AD191
-	for <platform-driver-x86@vger.kernel.org>; Wed, 20 Nov 2024 15:56:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E580D749C;
+	Wed, 20 Nov 2024 16:39:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1732118212; cv=none; b=Z1lpp7ApD5tFgEvnb22ytnMAhZ6b1URbDlIwhRUsHE6jiPKrTsIC1tp8RDYZzUieoAf1YmT6dYDXikcP1qHqCA1Ezyp6UzjKpeV1SGv4kUz8+FEObIzeynckOYcR2uCBUXJWWIr95d4XCo8E+HnTthkMSGoapqh2SC6noC8R0ec=
+	t=1732120779; cv=none; b=FJS2fGb73H1CQYtFUkhyrc9m1P7yFHZSB76TGaXfbXYiw3ZxIKr4BlCUW2nkSiCp9lh9aJjjlMZZb/mg8OayyVLISzmsutoSY589fjeWYOiJUXZ7rrxfwNjBGMOqnTGcKFe5qNKVc8rrdcfAwFm4Mr1AX2Ixy84vpjkOXa6KoXc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1732118212; c=relaxed/simple;
-	bh=bYKOtq/sZ24PuRBSUgtIwbocwftKOn4eU42sjM23AFg=;
-	h=From:To:Subject:Date:Message-ID:Content-Type:MIME-Version; b=LmoUULRDRE9vSy1kXhcpcYk/FA6x19AnT0BXHR/MBj6iPLazE+XgKZf7t1ENQnUBQ0GamMyX6PI10yxVqAHieLu8DMaWGeCH/mD+nFZ3PzBs9KwfjfAKh2UP9TZzE/tz2BVR5+R+sLXiv5xUEe7i+pigOOs6K/u8EdR6ljTCvw4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WQ6nbpda; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1732120779; c=relaxed/simple;
+	bh=BsIa+RgaLPKa5bAxbkQ1STBnEtdx6f/7oQ0Otk+B8Hc=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=GSqh3ebVbteS6zVPyim0KPkY02QDiMlhOcHZd6aU8+LorY5OszXdk66o1+IOxwuP1wKcUtGDfdLbvER8+mmsOn+AYwMO3C3C9oIOAzvSrNwsET7pmCbNXnz0JrE+NRTJWX+4rI6Z/5gPNLNsZO0KcObvPqnIWUQQlkE1T4AE//E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=JvAeQaUq; arc=none smtp.client-ip=209.85.210.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WQ6nbpda"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 89450C4CED1
-	for <platform-driver-x86@vger.kernel.org>; Wed, 20 Nov 2024 15:56:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1732118211;
-	bh=bYKOtq/sZ24PuRBSUgtIwbocwftKOn4eU42sjM23AFg=;
-	h=From:To:Subject:Date:From;
-	b=WQ6nbpda0EIFMW2m8l286S3gAi//pMuJ+HRfMlJkZvovcNw378+4MA93bSMRsXCZP
-	 XAI9wDa9t4wJbPGfrdUn6aPNNsv4hA9TMdln4xrmFqDGt/XK6WabFbrXNvwoShiwXL
-	 QJLBnVXgGKqiqpFXX+Yhv5d/tRJGYLYZreu4qhMeYjJpXwv9qyxGwI8fnzcilAPA0P
-	 8LIgb+h2KfZ4F9z48I81K2fpvx3SMImvfm4v/SpUldfp+6lg/yNJvd5T6UCuqPj4HS
-	 S8j6A1Yhk6Ar+ApL2mHJz5Y7LJgkkkEBI+T0GoS2gKhFDoUZr9D2An24jBGetNmSZ2
-	 SxU4gBupKc19w==
-Received: by aws-us-west-2-korg-bugzilla-1.web.codeaurora.org (Postfix, from userid 48)
-	id 7CC94CAB786; Wed, 20 Nov 2024 15:56:51 +0000 (UTC)
-From: bugzilla-daemon@kernel.org
-To: platform-driver-x86@vger.kernel.org
-Subject: [Bug 219517] New: REGRESSION: charge_control missing in 6.12
-Date: Wed, 20 Nov 2024 15:56:51 +0000
-X-Bugzilla-Reason: None
-X-Bugzilla-Type: new
-X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
-X-Bugzilla-Product: Drivers
-X-Bugzilla-Component: Platform_x86
-X-Bugzilla-Version: 2.5
-X-Bugzilla-Keywords: 
-X-Bugzilla-Severity: normal
-X-Bugzilla-Who: auslands-kv@gmx.de
-X-Bugzilla-Status: NEW
-X-Bugzilla-Resolution: 
-X-Bugzilla-Priority: P3
-X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
-X-Bugzilla-Flags: 
-X-Bugzilla-Changed-Fields: bug_id short_desc product version rep_platform
- op_sys bug_status bug_severity priority component assigned_to reporter
- cf_regression
-Message-ID: <bug-219517-215701@https.bugzilla.kernel.org/>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Bugzilla-URL: https://bugzilla.kernel.org/
-Auto-Submitted: auto-generated
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JvAeQaUq"
+Received: by mail-pf1-f172.google.com with SMTP id d2e1a72fcca58-72483f6e2f3so916850b3a.1;
+        Wed, 20 Nov 2024 08:39:37 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1732120777; x=1732725577; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=CAUwlthhsrI+QxNOIY7hNomh5JBQhjmQBWtieudrhVg=;
+        b=JvAeQaUq2NLPVkfW71DcLHYun9lcKyWDz1+h6Bsky1YR2u205cY9IzlKEXrhiihi0C
+         XoLEurP841Y43urjYCor3E5h25rwvaZLWjoLWdY+IcgIxToWXPGCFcXES3+QzsbsaggR
+         MwEufknnQ05DzYQ2thKLw3De552GEDEz5odyJYcaa+6DYZ/yt1YHGKPhOQJ7cHEqqFC0
+         1JWebkcJSbsHuvzLW0KAF+D9ne7ayYS9I3DRsJMb/qKN0yScZPO5v66HORD0Q1TWbhGL
+         mQJlcFIfX4BaubklBQWfN9j332m8K4q9PQxCkpacb4syizfZvR+bJlkZrH0+gEUBIcwj
+         hogA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1732120777; x=1732725577;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=CAUwlthhsrI+QxNOIY7hNomh5JBQhjmQBWtieudrhVg=;
+        b=C/ILeGG3wSFxQuu/gkcer7XZk3sZh3WcBKgAa0jMIpcJ+9Hj+oXFlGKqZwNsN0MGRg
+         JJ76tYckdeBzYx7iGK+WXTe9k6IYVztVgY+rdI5sHrlXx+0VskkPXp4G5ucvxf3n5O07
+         Fv0cOsFm1Gvyvv4fIWJd1LgKWvqBrV5TNUwPqIkGz3PZrjwTMRjy9adE5Dhtx+kOkj1Q
+         tG6/6lSgo+KOIZJiDVcMMSQ922xIcTz5x7cql+v/dTQdkZyLx62ytoHGNgdyFMZyNr2X
+         dk6YHyiLDaRkYFYUi5QTR+IYqXMMHMuSlXH+ZTLcns18EiFQ3Yt09Tx1oo7M/BbbceSv
+         jhHQ==
+X-Forwarded-Encrypted: i=1; AJvYcCW5BFkxDqX+q5WnqVi9LtNnNRZmpwXlGEjkCsUEk6iQIRTN649wUybsvPgiOLSBYjz910UPoW6XlvNYi8MfX8a3BL1wEQ==@vger.kernel.org, AJvYcCXiQSV0SNE6tiv5mFNpEFmzDL3kRq6MjjI5jYJ+wfnIjWzpKqxkoD1OWslvvSRTvSyVf44N6nttNJA8MDk=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz4a44IP1Mr/Gj2uyJc4Z1nXyzrr2v3LWrEJQvNiCHSc34kHQfy
+	BWIIwFp4046a3+lUeMhVpN3xLEWSpABZJs7w6j0xOJHbPPQhZVZB
+X-Google-Smtp-Source: AGHT+IHHtFpi8o5Bm0xSkzaHeuFqDgQowwYXmMwUDAN8o/XELlMVq1TRzHOKcUsgeTK0wChjShhODg==
+X-Received: by 2002:a05:6a00:1393:b0:724:67c6:99de with SMTP id d2e1a72fcca58-724af97a50amr13747289b3a.12.1732120777067;
+        Wed, 20 Nov 2024 08:39:37 -0800 (PST)
+Received: from localhost.localdomain ([181.84.94.92])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-724befac939sm1845981b3a.163.2024.11.20.08.39.34
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 20 Nov 2024 08:39:36 -0800 (PST)
+From: Kurt Borja <kuurtb@gmail.com>
+To: kuurtb@gmail.com
+Cc: Dell.Client.Kernel@dell.com,
+	hdegoede@redhat.com,
+	ilpo.jarvinen@linux.intel.com,
+	linux-kernel@vger.kernel.org,
+	mario.limonciello@amd.com,
+	platform-driver-x86@vger.kernel.org,
+	w_armin@gmx.de
+Subject: [PATCH v2 0/4] alienware-wmi: Improvements
+Date: Wed, 20 Nov 2024 13:38:36 -0300
+Message-ID: <20241120163834.6446-3-kuurtb@gmail.com>
+X-Mailer: git-send-email 2.47.0
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-https://bugzilla.kernel.org/show_bug.cgi?id=3D219517
+Hi!
 
-            Bug ID: 219517
-           Summary: REGRESSION: charge_control missing in 6.12
-           Product: Drivers
-           Version: 2.5
-          Hardware: All
-                OS: Linux
-            Status: NEW
-          Severity: normal
-          Priority: P3
-         Component: Platform_x86
-          Assignee: drivers_platform_x86@kernel-bugs.osdl.org
-          Reporter: auslands-kv@gmx.de
-        Regression: No
+I want to migrate this driver to the new WMI interface. These are some
+improvements I figured I should send beforehand.
 
-On my ASUS Vivobook S14 (TP3402VA) I noticed that with kernel 6.12(-rc4,-rc=
-7)
-several charge control related /sys entries are missing.
+I made everything on top of pdx86/for-next because I think they are not
+fixes, just improvements. Check individual patches for more details.
 
-with kernel 6.12 the corresponding folder looks like this:
-ls /sys/class/power_supply/BAT0/
+Regards,
+Kurt
 
-alarm               charge_now   manufacturer   status      voltage_min_des=
-ign
-capacity            current_now  model_name     subsystem   voltage_now
-capacity_level      cycle_count  power          technology
-charge_full         device       present        type
-charge_full_design  hwmon3       serial_number  uevent
+---
+v2:
+ - Dropped patch 4/5 bacause it's empty after changes
+ - Changed patch order:
+    1 -> 3
+    2 -> 4
+    3 -> 1
+    5 -> 2
+---
+Kurt Borja (4):
+  alienware-wmi: Migrate to device managed resources
+  alienware-wmi: Improves sysfs groups creation
+  alienware-wmi: Simplify platform device creation
+  alienware-wmi: Remove unnecessary check at module exit
 
-Specifically missing is charge_control_end_threshold, which is normally use=
-d to
-set individual charge end points. That worked nicely up to kernel 6.11, but=
- is
-defect now in the current 6.12 version.
+ drivers/platform/x86/dell/alienware-wmi.c | 186 ++++++++--------------
+ 1 file changed, 62 insertions(+), 124 deletions(-)
 
-Anything special you need from me to fix the problem?
+-- 
+2.47.0
 
---=20
-You may reply to this email to add a comment.
-
-You are receiving this mail because:
-You are watching the assignee of the bug.=
