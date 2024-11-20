@@ -1,178 +1,160 @@
-Received: from mout.gmx.net (mout.gmx.net [212.227.15.18])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 361D017BB2E
-	for <platform-driver-x86@vger.kernel.org>; Wed, 20 Nov 2024 12:07:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 50C08174EDB
+	for <platform-driver-x86@vger.kernel.org>; Wed, 20 Nov 2024 13:44:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1732104432; cv=none; b=QqzhZgePB2/O8uocXzNQ0UbzqD36Nz6McHmOOkMBsWYy5BKxeARUa5saVr7yQCM+QknH+Ou9EJRhp8Btq+fhe+5ovfI7T4pmUyV5iFOrNty8hSiXlLqM+uTNQOhkR8dOkCw8ivesH3djUOmAp5L1ax0huoKB2eCJ6/gm9wyrYEw=
+	t=1732110242; cv=none; b=s36SuvRrk2VJvAU+eVZdP84GIugkaqAZrjnntpKVbufgNdzsJmUKkd9uoWMflRpyD4Z1CHFbqYQdkqaAEp/UfBGEqGUyyQ3J/a18PbiBSjmweZbPPqezjbhBjVlxNW+Lkn5Ois2tddE6c5tVZsiKhlSzbIWqTkAdBrHU24bfjM8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1732104432; c=relaxed/simple;
-	bh=Ga9gOPpLo7YxEnJO5y2lqDswpU300m6I4+K8yJoyuPY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=EO/nc9WP/uB+Vv+75L6gtnR8FqWITBKtuzVX1xk40rjx/O/XIGGhbFPkO7uR5mKg+7uV0YEN5kJqCSGJPaiPtUG2gsGG9v2bP/aK3PJDB9c6CINnT/fO/zGebqpkafrqlaSw8QZaeQHiOA1lQ0Cd+DfSgL9i4P6rOKWQ0TThlvA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b=F2qPtz7r; arc=none smtp.client-ip=212.227.15.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
+	s=arc-20240116; t=1732110242; c=relaxed/simple;
+	bh=Zf/8J5XkQn4lHiYTHSQ5uI4TioMM+sQRCEg4eRgv9ko=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=QZx6k8OzfwIIG1EzYFd2LQ9rHG8iOUB72CmIEzYU9Qym6eLg9TDLL5gn7xQ7x6cpxzojWBQ41ba97Cq9vAdR4JeCC8jIaIijsnaz1oZczL/Whl1hC83+SKxOG3cN0DAZYfDLPU4c2OayP9oOtMb17rpjKRZX4nyagP6ZCwN3+kM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=mnW7i3VH; arc=none smtp.client-ip=198.175.65.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b="F2qPtz7r"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.de;
-	s=s31663417; t=1732104419; x=1732709219; i=w_armin@gmx.de;
-	bh=c/g555/61MXddcZJyi2oeEYJpsrSb0upCLCxYtUQAGc=;
-	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:To:Cc:
-	 References:From:In-Reply-To:Content-Type:
-	 Content-Transfer-Encoding:cc:content-transfer-encoding:
-	 content-type:date:from:message-id:mime-version:reply-to:subject:
-	 to;
-	b=F2qPtz7rjIDnwI7m9LXStCE5L2xGf7xj7aJLN2M6WvNHeFlIJ+Y022tAiQkbdu3p
-	 lFu3RRUEx4Qw9k9R+aULfDWZhaj6V59WkWjdUFBSly12Y9FXQhJdFCHw5yy0FrjyS
-	 FCW9axSUaoDRhF4nli0oZTi4Oivaktnz7IXt5ZcLJYupEAkAWkqvO5FzFEGMv/8FY
-	 x/TvAAnQtUIiVDUaMQhty9Bn4/JKvZblG0k1NNbqAP+kbc/wbbANqdfe/Sm0ZhCeR
-	 /+ZgJFmCNuumFrCYRKBFr1v98/qu/xcgx50aEleDRL2x3zdaGMd0FOLXtHawhAYtj
-	 q4x6LlUL9AAa084WYQ==
-X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
-Received: from [192.168.0.14] ([141.30.226.119]) by mail.gmx.net (mrgmx005
- [212.227.17.190]) with ESMTPSA (Nemesis) id 1MkYc0-1tbIBp0d8Y-00h7Yj; Wed, 20
- Nov 2024 13:06:59 +0100
-Message-ID: <7ce64458-4390-4630-8d59-66e37d6f4521@gmx.de>
-Date: Wed, 20 Nov 2024 13:06:57 +0100
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="mnW7i3VH"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1732110240; x=1763646240;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=Zf/8J5XkQn4lHiYTHSQ5uI4TioMM+sQRCEg4eRgv9ko=;
+  b=mnW7i3VHTYzLmAnb/FjSmsVLVc/4rJA5z2MwUJSpdTn2mokwPgtgfAem
+   7r42fmZPtJYU7Bjql+uvRaUBt/xMPVHyFtM+f1LHQ9ZIa5PLG9wFd1mOn
+   5YUF3HY8EaPSh3KuOoJ1v7xPtK9jE+ZsFUv3XUZOe2jL14AQBUB6/LyZY
+   rWh7wbZyl9rYg9nVPM5lR5mwrNdNEGUdVl/fIgJXgmsIZ1fvkKi9UJPKE
+   VCFqdz5k7jMsuENqOqucdAoZ6nHl0jHqQtpEmoz/SVfs9RktGjQUnjhZm
+   EWCpvx+9xEQ6O12nJS7x15hFI4BxQeesrcMWTk2h9r+FDRjgPTAFTxoU+
+   Q==;
+X-CSE-ConnectionGUID: NU02gUr3QdOj0BT6xXHJFA==
+X-CSE-MsgGUID: dtDM7tEZT1ybD/osdTNT1Q==
+X-IronPort-AV: E=McAfee;i="6700,10204,11262"; a="49595632"
+X-IronPort-AV: E=Sophos;i="6.12,169,1728975600"; 
+   d="scan'208";a="49595632"
+Received: from orviesa010.jf.intel.com ([10.64.159.150])
+  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Nov 2024 05:44:00 -0800
+X-CSE-ConnectionGUID: Pxwp0r3pQEKF2iI2nzQo2w==
+X-CSE-MsgGUID: vv+2yiwUTGGfQCHX27OlPA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.12,169,1728975600"; 
+   d="scan'208";a="89870807"
+Received: from smile.fi.intel.com ([10.237.72.154])
+  by orviesa010.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Nov 2024 05:43:59 -0800
+Received: from andy by smile.fi.intel.com with local (Exim 4.98)
+	(envelope-from <andriy.shevchenko@linux.intel.com>)
+	id 1tDkzr-0000000GirS-3gB2;
+	Wed, 20 Nov 2024 15:43:55 +0200
+Date: Wed, 20 Nov 2024 15:43:55 +0200
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Shin'ichiro Kawasaki <shinichiro.kawasaki@wdc.com>
+Cc: platform-driver-x86@vger.kernel.org,
+	Hans de Goede <hdegoede@redhat.com>, ilpo.jarvinen@linux.intel.com,
+	danielwa@cisco.com
+Subject: Re: [PATCH] p2sb: Do not scan and remove the P2SB device when it is
+ hidden
+Message-ID: <Zz3nm-593xzUw1ZB@smile.fi.intel.com>
+References: <20241120064055.245969-1-shinichiro.kawasaki@wdc.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: alienware-wmi rework RFC
-To: Kurt Borja <kuurtb@gmail.com>,
- Mario Limonciello <mario.limonciello@amd.com>
-Cc: platform-driver-x86@vger.kernel.org, ilpo.jarvinen@linux.intel.com,
- Dell Client Kernel <Dell.Client.Kernel@dell.com>
-References: <6m66cuivkzhcsvpjv4nunjyddqhr42bmjdhptu4bqm6rm7fvxf@qjwove4hg6gb>
- <bf238c08-1f49-4e16-b9ee-1d1a5e0b9763@amd.com>
- <uyzgfmsbd6dkeyx76fmstqpauj4ulnz2eqbww6dz7fwjxwxer6@vwuebqbtl5e5>
-Content-Language: en-US
-From: Armin Wolf <W_Armin@gmx.de>
-In-Reply-To: <uyzgfmsbd6dkeyx76fmstqpauj4ulnz2eqbww6dz7fwjxwxer6@vwuebqbtl5e5>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:Bcn2P+DHVtYii7JZXv20NeeUdXubjjhgTdjpwRmMA+J8eQQOtnJ
- HxN1LVBc4Y1lAoTLmpvbDvESOgMmO55OZcvGWeczhGviWNlLKukw18rveJVjx5U7bAHRccd
- lRNuGmET9ldmptNwQraTyORVYrO7Q+O0mBcmRZW3uMJYBkXJxnUxoxE0c7hDffKnPSmmqMd
- lkO8aWgwdgtrzrWSAjiNw==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:q3t18BxwfbQ=;LONsz9dzpztNVEdjaFRvoixTUax
- 6Mr9NXtjkA9IGaYmLpgg5BXtJAU+EPX7WzONRM+WfnejouBD+NVQYFcVnSMm5YHCmc/3ZFNzf
- yyAzHrOn1PECu5GHe6AXCfe17gAy7c8pzTGVgU+vykdVZfgeP8ukA2s/DJ75Df1x76tkhhuQB
- zIAb0HfBJGZvDaHphBTk55urF0Vzp7+4XPHsKMjivA8G10KIXMuD3NAu75Uzq9a9eAqm1SjWu
- XvtRDz22b9OdClAjqCNFza0xRaILsPjTJDUfGLtuqJfRbmtlmRf0WfZeVAvyOApwM2+19Sr5x
- J8i7HKgAtCAtuOspgk/0wVF8P/WNyudmPFGDtPhY12eFkW8av7HYck8mflMM2iCPs2/BvqXx7
- SvyxUZpeFXmMLbkeGPBY2UULf24K647Ymmw9pjHrtZWgV4y+o4a99yf/JnDYhSX6xriNsKMKd
- fOAeNe65mhcCVSPbXQeEUNGfjUg1O6uSCOYHJ5tOl2KhetUniERKy1THuelv199swDZfzTOkm
- 1MhqCEGn6K7nIrawKHJTf7YlNuK3T74rgRsChCiiLT2SL52dmZHWwYZnEsaQc/mNjQUu+SnJS
- bT9DKCyohEC/nw+Ru/PyPFo6oKi/+TcYkybwW66O6i8/I4JqwQtAxswPUyhNKjzWMr1mfV924
- 5CHmUGnkbe6fy0NfZUZF0ac7M7Vahy6B8LuK60P72AtEE6A0ZT6jh3ReHGAY60Vfc5V8v8ob/
- KW4IOQfxJnXC61ykF94olmoPJwGsA2N7cT6MaSC1JF019R69I5TtERtjMw77whJloCXR97qFL
- rS9TM+a2tAycJRb9uP7OpiwrwLjunP5kMjNMdoPVYR2ehq0Bu1vf9SrVS0gT5TQtUSAwdtfbU
- i442RPTbbj/GvKm3scNVQqZoqMqDK5TTdLUNUHPHRCAypI6oY3E6fzZRB
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20241120064055.245969-1-shinichiro.kawasaki@wdc.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-Am 19.11.24 um 05:29 schrieb Kurt Borja:
+On Wed, Nov 20, 2024 at 03:40:55PM +0900, Shin'ichiro Kawasaki wrote:
 
-> On Mon, Nov 18, 2024 at 09:54:25PM -0600, Mario Limonciello wrote:
->> Loop Dell Client Kernel M/B for any comments.
->>
->> On 11/18/2024 21:47, Kurt Borja wrote:
->>> Hi!
->>>
->>> I'm planning on migrating the alienware-wmi driver to the new WMI
->>> interface, as it's currently using the deprecated one.
->> =F0=9F=8E=89
+The subject probably wants to say "unhidden".
 
-I like this :)
+> When drivers access P2SB device resources, it calls p2sb_bar() to obtain
+> the resources. Before the commit 5913320eb0b3 ("platform/x86: p2sb:
+> Allow p2sb_bar() calls during PCI device probe"), p2sb_bar() obtained
+> the resources and then called pci_stop_and_remove_bus_device() for clean
+> up. Then the P2SB device disappeared even when the BIOS does not hide
+> the P2SB device. The commit introduced the P2SB device resource cache
+> feature in the boot process. During the resource cache process,
+> pci_stop_and_remove_bus_device() is called for the P2SB device, then the
+> P2SB device disappears regardless of whether p2sb_bar() is called or
+> not. Such P2SB device disappearance caused a confusion [1]. To avoid the
+> confusion, avoid the pci_stop_and_remove_bus_device() call when the BIOS
+> does not hide the P2SB device.
+> 
+> For that purpose, add a new helper function p2sb_read_and_cache(), which
+> does the same work as p2sb_scan_and_cache() but does not call
+> pci_stop_and_remove_bus_device(). These two functions are almost same
+> except the device scan and remove. Then make them call the single
+> function p2sb_cache_devfn(), which takes the argument "bool scan".
+> 
+> If the BIOS does not hide the P2SB device, just call
+> p2sb_read_and_cache() to cache the resources. If not, do additional
+> preparations (lock "rescan remove" for parallel scan, and unhide the
+> P2SB device), then call p2sb_scan_and_cache().
 
->>
->>> My plan is to:
->>>
->>> rename alienware-wmi.c -> alienware-wmi-base.c
->>> create alienware-wmi.h
->>> create alienware-wmi-legacy
->>> create alienware-wmi-wmax
->>>
->>> The last two files would not be independent modules, just includes for
->>> the base module. The base module would be in charge of initializing th=
-e
->>> platform driver plus the correct wmi_driver backend, but the wmi probe=
-s
->>> would register the platform device. This would be very similar to what
->>> other dell drivers already do. Aditionally I want to migrate everythin=
-g
->>> to the state container design pattern.
->>>
->>> I would do this in such a way that the legacy and new code would be
->>> completely independent of each other (i.e. different state containters=
-,
->>> dmi checks, etc).
->> As the original author of this driver when I was at Dell I'll add some
->> comments.
->>
->> The 'legacy' code was very narrowly focused for supporting a handful of
->> hardware specifically for lighting control.  One was the original Alien=
-ware
->> steam machine, and then a few generations of the X51.
->>
->> I don't know how much of the driver continues to work on hardware since
->> then.  Maybe Dell guys I added to CC can comment on how much of this ha=
-s
->> stuck around over the years and keeps working.
-> My guess is that none of it works on new models. The LEGACY wmi device
-> is not longer included on new machines, as all lighting control is done
-> through an EC and the WMAX device was repurposed to fan/thermal control.
-> I say this based on exploring quite a few acpidumps and a couple RGB
-> control Windows open source alternatives.
->
->>> Pros:
->>>    - Modern interfaces and design patterns
->>>    - This is compatible with Mario's upcoming platform profile changes=
- as
->>>      the WMAX device would hold a reference to the platform device
->>>    - Would not break compatibility as legacy code is independent
->>>    - Easier to understand and develop in the future
->>>
->>> Cons:
->>>    - Initialy alienware-wmi-base.c would be almost completely legacy c=
-ode,
->>>      as new features don't require a platform device (yet), so
->>>      alienware-wmi-base would basically just register the wmax wmi dri=
-ver
->>>      on newer machines
->>>    - With this design users would not be able to completely exclude le=
-gacy
->>>      code with CONFIG parameters
->> I wonder if you're better off just having the legacy driver as it's own
->> kernel object?  If it only supports a handful of systems, most people w=
-on't
->> need it compiled.
-> Yes! I'd like to do this but unfortunately some user space applications
-> might depend on attributes being available to a platform device named
-> "alienware-wmi". This is why I wanted to have a unified "alienware-wmi"
-> platform driver.
->
-> Thank you for your feedback!
+Even for the simple read case we have to do that under rescan lock.
+Yes, it might be just a theoretical issue, but that's how makes code
+robust against possible enumeration changes at boot time.
 
-It see, that is unfortunate. In this case having a single driver which han=
-dles the platform device
-and calls the right initialization function from the other two files sound=
-s like a good choice to me.
+...
 
-Thanks,
-Armin Wolf
+> -static int p2sb_scan_and_cache(struct pci_bus *bus, unsigned int devfn)
+> +static int p2sb_cache_devfn(struct pci_bus *bus, unsigned int devfn, bool scan)
+>  {
+> -	/* Scan the P2SB device and cache its BAR0 */
+> -	p2sb_scan_and_cache_devfn(bus, devfn);
+> +	/* Scan or read the P2SB device and cache its BAR0 */
+> +	__p2sb_cache_devfn(bus, devfn, scan);
 
->>> After this I want to add HWMON and sparse keymap capabilities to the
->>> wmax interface.
->> =F0=9F=8E=89
->>
->>> I'm sure there are things I'm not seeing so feedback is greatly
->>> appreciated!
->>>
->>> Regards,
->>> Kurt
+Strictly speaking we don't need to cache values when the device is unhidden.
+Moreover, the rescan can happen in between and the resource relocation to
+another place, which makes cached value invalid.
+
+>  	/* On Goldmont p2sb_bar() also gets called for the SPI controller */
+>  	if (devfn == P2SB_DEVFN_GOLDMONT)
+> -		p2sb_scan_and_cache_devfn(bus, SPI_DEVFN_GOLDMONT);
+> +		__p2sb_cache_devfn(bus, SPI_DEVFN_GOLDMONT, scan);
+>  
+>  	if (!p2sb_valid_resource(&p2sb_resources[PCI_FUNC(devfn)].res))
+>  		return -ENOENT;
+
+>  	return 0;
+>  }
+
+...
+
+> +	pci_bus_read_config_dword(bus, devfn_p2sb, P2SBC, &value);
+> +	if ((value & P2SBC_HIDE) != P2SBC_HIDE)
+> +		return p2sb_read_and_cache(bus, devfn_p2sb);
+
+This still has to be under rescan lock.
+
+...
+
+> -	pci_bus_read_config_dword(bus, devfn_p2sb, P2SBC, &value);
+> -	if (value & P2SBC_HIDE)
+> -		pci_bus_write_config_dword(bus, devfn_p2sb, P2SBC, 0);
+> -
+> +	pci_bus_write_config_dword(bus, devfn_p2sb, P2SBC, 0);
+>  	ret = p2sb_scan_and_cache(bus, devfn_p2sb);
+
+That's why I proposed initially to have a conditional here, but see above,
+it looks like the correct approach is to cache values if and only if the BIOS
+hides the p2sb.
+
+> -	/* Hide the P2SB device, if it was hidden */
+> -	if (value & P2SBC_HIDE)
+> -		pci_bus_write_config_dword(bus, devfn_p2sb, P2SBC, P2SBC_HIDE);
+> +	pci_bus_write_config_dword(bus, devfn_p2sb, P2SBC, P2SBC_HIDE);
+>  
+>  	pci_unlock_rescan_remove();
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
