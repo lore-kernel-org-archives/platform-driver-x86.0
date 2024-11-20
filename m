@@ -1,160 +1,268 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 50C08174EDB
-	for <platform-driver-x86@vger.kernel.org>; Wed, 20 Nov 2024 13:44:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D1B8C1AA7A6;
+	Wed, 20 Nov 2024 14:37:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1732110242; cv=none; b=s36SuvRrk2VJvAU+eVZdP84GIugkaqAZrjnntpKVbufgNdzsJmUKkd9uoWMflRpyD4Z1CHFbqYQdkqaAEp/UfBGEqGUyyQ3J/a18PbiBSjmweZbPPqezjbhBjVlxNW+Lkn5Ois2tddE6c5tVZsiKhlSzbIWqTkAdBrHU24bfjM8=
+	t=1732113476; cv=none; b=H7qh5/owCE4c/o2zC+bQdoO7pKVJ3oaav+8QSTt0VgoD0aSFYoLD26u6a2kK6Tg5C8AaC11YL5RxszLxpWuheDZzwqO/ANCv6F6RHuA3omoPFCGuys4LvPvTrcPur4XDPyrC7xIDoPMDXpm8OpR4zD69PUrtWNLPLQjHgPyxgcY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1732110242; c=relaxed/simple;
-	bh=Zf/8J5XkQn4lHiYTHSQ5uI4TioMM+sQRCEg4eRgv9ko=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=QZx6k8OzfwIIG1EzYFd2LQ9rHG8iOUB72CmIEzYU9Qym6eLg9TDLL5gn7xQ7x6cpxzojWBQ41ba97Cq9vAdR4JeCC8jIaIijsnaz1oZczL/Whl1hC83+SKxOG3cN0DAZYfDLPU4c2OayP9oOtMb17rpjKRZX4nyagP6ZCwN3+kM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=mnW7i3VH; arc=none smtp.client-ip=198.175.65.10
+	s=arc-20240116; t=1732113476; c=relaxed/simple;
+	bh=huhfnspYmyT9A0LEG6xXsTFa1U1/BfpTovXGM0t2Kak=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=Lynqjan6jN0AIAtONTPf6M0sWQLI6x3ghgMSLDrBHbcXAHMCXIFNc+TrOc/xKesfFK1X5xfURobbDsy/V5Fp5n/DQqJydMyf/s7v9d7YGmH4i9Qb13z1GPe8/0uYvABUg6EmLgtbE1Y+1v7Y9yrLwnyjnesfXarGW+EfTMOp41Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=i27XemEK; arc=none smtp.client-ip=198.175.65.11
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="mnW7i3VH"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="i27XemEK"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1732110240; x=1763646240;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=Zf/8J5XkQn4lHiYTHSQ5uI4TioMM+sQRCEg4eRgv9ko=;
-  b=mnW7i3VHTYzLmAnb/FjSmsVLVc/4rJA5z2MwUJSpdTn2mokwPgtgfAem
-   7r42fmZPtJYU7Bjql+uvRaUBt/xMPVHyFtM+f1LHQ9ZIa5PLG9wFd1mOn
-   5YUF3HY8EaPSh3KuOoJ1v7xPtK9jE+ZsFUv3XUZOe2jL14AQBUB6/LyZY
-   rWh7wbZyl9rYg9nVPM5lR5mwrNdNEGUdVl/fIgJXgmsIZ1fvkKi9UJPKE
-   VCFqdz5k7jMsuENqOqucdAoZ6nHl0jHqQtpEmoz/SVfs9RktGjQUnjhZm
-   EWCpvx+9xEQ6O12nJS7x15hFI4BxQeesrcMWTk2h9r+FDRjgPTAFTxoU+
-   Q==;
-X-CSE-ConnectionGUID: NU02gUr3QdOj0BT6xXHJFA==
-X-CSE-MsgGUID: dtDM7tEZT1ybD/osdTNT1Q==
-X-IronPort-AV: E=McAfee;i="6700,10204,11262"; a="49595632"
-X-IronPort-AV: E=Sophos;i="6.12,169,1728975600"; 
-   d="scan'208";a="49595632"
-Received: from orviesa010.jf.intel.com ([10.64.159.150])
-  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Nov 2024 05:44:00 -0800
-X-CSE-ConnectionGUID: Pxwp0r3pQEKF2iI2nzQo2w==
-X-CSE-MsgGUID: vv+2yiwUTGGfQCHX27OlPA==
+  t=1732113476; x=1763649476;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=huhfnspYmyT9A0LEG6xXsTFa1U1/BfpTovXGM0t2Kak=;
+  b=i27XemEKy9sVx7wwF3ay4Yi4rlxRddCG/KbaR9dXgHU3MIYRDAFtH2Uu
+   xbsQARyfhCTtilEM0hsoilDv8SL58ehvNJtdlWQ14tov3LPzOJ6E2LEM2
+   YpvT26nJGOM5vpUN9cXe8cQYX0YoRxP0m7bePhuSDjoelasSLY0tTmEyO
+   XlbnX3Fr5+j8CcqziP/lcwKGg9HkYfZo7M3WMFhVrTLFFeFoInv+0z8Wl
+   DzSUXZEk0NAGIRgh6P6j6V7ts9gGtS5/Sm7dtKWMFosw5TotRNOvB3tRI
+   7IbtK3dRnelCA7jZFHI6fKLI1UwAJKwhggW8ZlwjGa/N7Slbb9GzLvdLz
+   w==;
+X-CSE-ConnectionGUID: 2cbr75vBTZiq1yq0TDLzLw==
+X-CSE-MsgGUID: zZM2//sfSBKy+KEKCXjvOg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11262"; a="42684964"
+X-IronPort-AV: E=Sophos;i="6.12,170,1728975600"; 
+   d="scan'208";a="42684964"
+Received: from fmviesa008.fm.intel.com ([10.60.135.148])
+  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Nov 2024 06:37:38 -0800
+X-CSE-ConnectionGUID: 8isG7xbCRWe1GHP/k4ss8A==
+X-CSE-MsgGUID: yQI1+t9GT7+pt8Exz7P1Bg==
 X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.12,169,1728975600"; 
-   d="scan'208";a="89870807"
-Received: from smile.fi.intel.com ([10.237.72.154])
-  by orviesa010.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Nov 2024 05:43:59 -0800
-Received: from andy by smile.fi.intel.com with local (Exim 4.98)
-	(envelope-from <andriy.shevchenko@linux.intel.com>)
-	id 1tDkzr-0000000GirS-3gB2;
-	Wed, 20 Nov 2024 15:43:55 +0200
-Date: Wed, 20 Nov 2024 15:43:55 +0200
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Shin'ichiro Kawasaki <shinichiro.kawasaki@wdc.com>
-Cc: platform-driver-x86@vger.kernel.org,
-	Hans de Goede <hdegoede@redhat.com>, ilpo.jarvinen@linux.intel.com,
-	danielwa@cisco.com
-Subject: Re: [PATCH] p2sb: Do not scan and remove the P2SB device when it is
- hidden
-Message-ID: <Zz3nm-593xzUw1ZB@smile.fi.intel.com>
-References: <20241120064055.245969-1-shinichiro.kawasaki@wdc.com>
+X-IronPort-AV: E=Sophos;i="6.12,170,1728975600"; 
+   d="scan'208";a="90100512"
+Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.15])
+  by fmviesa008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Nov 2024 06:37:31 -0800
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Wed, 20 Nov 2024 16:37:28 +0200 (EET)
+To: Mario Limonciello <mario.limonciello@amd.com>
+cc: Hans de Goede <hdegoede@redhat.com>, 
+    "Rafael J . Wysocki" <rafael@kernel.org>, Len Brown <lenb@kernel.org>, 
+    Maximilian Luz <luzmaximilian@gmail.com>, Lee Chun-Yi <jlee@suse.com>, 
+    Shyam Sundar S K <Shyam-sundar.S-k@amd.com>, 
+    Corentin Chary <corentin.chary@gmail.com>, 
+    "Luke D . Jones" <luke@ljones.dev>, Ike Panhc <ike.pan@canonical.com>, 
+    Henrique de Moraes Holschuh <hmh@hmh.eng.br>, 
+    Alexis Belmonte <alexbelm48@gmail.com>, 
+    =?ISO-8859-15?Q?Uwe_Kleine-K=F6nig?= <u.kleine-koenig@pengutronix.de>, 
+    Ai Chao <aichao@kylinos.cn>, Gergo Koteles <soyer@irl.hu>, 
+    open list <linux-kernel@vger.kernel.org>, 
+    "open list:ACPI" <linux-acpi@vger.kernel.org>, 
+    "open list:MICROSOFT SURFACE PLATFORM PROFILE DRIVER" <platform-driver-x86@vger.kernel.org>, 
+    "open list:THINKPAD ACPI EXTRAS DRIVER" <ibm-acpi-devel@lists.sourceforge.net>, 
+    Mark Pearson <mpearson-lenovo@squebb.ca>, 
+    Matthew Schwartz <matthew.schwartz@linux.dev>, Armin Wolf <W_Armin@gmx.de>
+Subject: Re: [PATCH v7 10/22] ACPI: platform_profile: Create class for ACPI
+ platform profile
+In-Reply-To: <20241119171739.77028-11-mario.limonciello@amd.com>
+Message-ID: <6aa9ba66-485f-6de9-1769-a544e8313d22@linux.intel.com>
+References: <20241119171739.77028-1-mario.limonciello@amd.com> <20241119171739.77028-11-mario.limonciello@amd.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20241120064055.245969-1-shinichiro.kawasaki@wdc.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+Content-Type: text/plain; charset=US-ASCII
 
-On Wed, Nov 20, 2024 at 03:40:55PM +0900, Shin'ichiro Kawasaki wrote:
+On Tue, 19 Nov 2024, Mario Limonciello wrote:
 
-The subject probably wants to say "unhidden".
-
-> When drivers access P2SB device resources, it calls p2sb_bar() to obtain
-> the resources. Before the commit 5913320eb0b3 ("platform/x86: p2sb:
-> Allow p2sb_bar() calls during PCI device probe"), p2sb_bar() obtained
-> the resources and then called pci_stop_and_remove_bus_device() for clean
-> up. Then the P2SB device disappeared even when the BIOS does not hide
-> the P2SB device. The commit introduced the P2SB device resource cache
-> feature in the boot process. During the resource cache process,
-> pci_stop_and_remove_bus_device() is called for the P2SB device, then the
-> P2SB device disappears regardless of whether p2sb_bar() is called or
-> not. Such P2SB device disappearance caused a confusion [1]. To avoid the
-> confusion, avoid the pci_stop_and_remove_bus_device() call when the BIOS
-> does not hide the P2SB device.
+> When registering a platform profile handler create a class device
+> that will allow changing a single platform profile handler.
 > 
-> For that purpose, add a new helper function p2sb_read_and_cache(), which
-> does the same work as p2sb_scan_and_cache() but does not call
-> pci_stop_and_remove_bus_device(). These two functions are almost same
-> except the device scan and remove. Then make them call the single
-> function p2sb_cache_devfn(), which takes the argument "bool scan".
+> The class and sysfs group are no longer needed when the platform profile
+> core is a module and unloaded, so remove them at that time as well.
 > 
-> If the BIOS does not hide the P2SB device, just call
-> p2sb_read_and_cache() to cache the resources. If not, do additional
-> preparations (lock "rescan remove" for parallel scan, and unhide the
-> P2SB device), then call p2sb_scan_and_cache().
-
-Even for the simple read case we have to do that under rescan lock.
-Yes, it might be just a theoretical issue, but that's how makes code
-robust against possible enumeration changes at boot time.
-
-...
-
-> -static int p2sb_scan_and_cache(struct pci_bus *bus, unsigned int devfn)
-> +static int p2sb_cache_devfn(struct pci_bus *bus, unsigned int devfn, bool scan)
->  {
-> -	/* Scan the P2SB device and cache its BAR0 */
-> -	p2sb_scan_and_cache_devfn(bus, devfn);
-> +	/* Scan or read the P2SB device and cache its BAR0 */
-> +	__p2sb_cache_devfn(bus, devfn, scan);
-
-Strictly speaking we don't need to cache values when the device is unhidden.
-Moreover, the rescan can happen in between and the resource relocation to
-another place, which makes cached value invalid.
-
->  	/* On Goldmont p2sb_bar() also gets called for the SPI controller */
->  	if (devfn == P2SB_DEVFN_GOLDMONT)
-> -		p2sb_scan_and_cache_devfn(bus, SPI_DEVFN_GOLDMONT);
-> +		__p2sb_cache_devfn(bus, SPI_DEVFN_GOLDMONT, scan);
+> Reviewed-by: Armin Wolf <W_Armin@gmx.de>
+> Tested-by: Mark Pearson <mpearson-lenovo@squebb.ca>
+> Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
+> ---
+> v7:
+>  * Whitespace
+>  * Add tag
+>  * Drop class_is_registered() check
+>  * Remove legacy sysfs before class
+> v6:
+>  * Catch failures in ida_alloc
+>  * Use 4th argument of device_create instead of dev_set_drvdata()
+>  * Squash unregister patch
+>  * Add module init callback
+>  * Move class creation to module init
+>  * Update visibility based on group presence
+>  * Add back parent device
+> v5:
+>  * Use ida instead of idr
+>  * Use device_unregister instead of device_destroy()
+>  * MKDEV (0, 0)
+> ---
+>  drivers/acpi/platform_profile.c  | 86 ++++++++++++++++++++++++++++++--
+>  include/linux/platform_profile.h |  2 +
+>  2 files changed, 83 insertions(+), 5 deletions(-)
+> 
+> diff --git a/drivers/acpi/platform_profile.c b/drivers/acpi/platform_profile.c
+> index 32affb75e782d..3524a2b4618ed 100644
+> --- a/drivers/acpi/platform_profile.c
+> +++ b/drivers/acpi/platform_profile.c
+> @@ -5,6 +5,7 @@
+>  #include <linux/acpi.h>
+>  #include <linux/bits.h>
+>  #include <linux/init.h>
+> +#include <linux/kdev_t.h>
+>  #include <linux/mutex.h>
+>  #include <linux/platform_profile.h>
+>  #include <linux/sysfs.h>
+> @@ -22,6 +23,12 @@ static const char * const profile_names[] = {
+>  };
+>  static_assert(ARRAY_SIZE(profile_names) == PLATFORM_PROFILE_LAST);
 >  
->  	if (!p2sb_valid_resource(&p2sb_resources[PCI_FUNC(devfn)].res))
->  		return -ENOENT;
-
->  	return 0;
->  }
-
-...
-
-> +	pci_bus_read_config_dword(bus, devfn_p2sb, P2SBC, &value);
-> +	if ((value & P2SBC_HIDE) != P2SBC_HIDE)
-> +		return p2sb_read_and_cache(bus, devfn_p2sb);
-
-This still has to be under rescan lock.
-
-...
-
-> -	pci_bus_read_config_dword(bus, devfn_p2sb, P2SBC, &value);
-> -	if (value & P2SBC_HIDE)
-> -		pci_bus_write_config_dword(bus, devfn_p2sb, P2SBC, 0);
-> -
-> +	pci_bus_write_config_dword(bus, devfn_p2sb, P2SBC, 0);
->  	ret = p2sb_scan_and_cache(bus, devfn_p2sb);
-
-That's why I proposed initially to have a conditional here, but see above,
-it looks like the correct approach is to cache values if and only if the BIOS
-hides the p2sb.
-
-> -	/* Hide the P2SB device, if it was hidden */
-> -	if (value & P2SBC_HIDE)
-> -		pci_bus_write_config_dword(bus, devfn_p2sb, P2SBC, P2SBC_HIDE);
-> +	pci_bus_write_config_dword(bus, devfn_p2sb, P2SBC, P2SBC_HIDE);
+> +static DEFINE_IDA(platform_profile_ida);
+> +
+> +static const struct class platform_profile_class = {
+> +	.name = "platform-profile",
+> +};
+> +
+>  static ssize_t platform_profile_choices_show(struct device *dev,
+>  					struct device_attribute *attr,
+>  					char *buf)
+> @@ -105,8 +112,25 @@ static struct attribute *platform_profile_attrs[] = {
+>  	NULL
+>  };
 >  
->  	pci_unlock_rescan_remove();
+> +static int profile_class_registered(struct device *dev, const void *data)
+> +{
+> +	return 1;
+> +}
+> +
+> +static umode_t profile_class_is_visible(struct kobject *kobj, struct attribute *attr, int idx)
+> +{
+> +	if (!class_find_device(&platform_profile_class, NULL, NULL, profile_class_registered))
+> +		return 0;
+> +	if (attr == &dev_attr_platform_profile_choices.attr)
+> +		return 0444;
+> +	if (attr == &dev_attr_platform_profile.attr)
+> +		return 0644;
+
+These two should just return attr->mode I think.
+
+> +	return 0;
+
+Is this even necessary for something?
 
 -- 
-With Best Regards,
-Andy Shevchenko
+ i.
 
-
+> +}
+> +
+>  static const struct attribute_group platform_profile_group = {
+> -	.attrs = platform_profile_attrs
+> +	.attrs = platform_profile_attrs,
+> +	.is_visible = profile_class_is_visible,
+>  };
+>  
+>  void platform_profile_notify(struct platform_profile_handler *pprof)
+> @@ -164,25 +188,77 @@ int platform_profile_register(struct platform_profile_handler *pprof)
+>  	if (cur_profile)
+>  		return -EEXIST;
+>  
+> -	err = sysfs_create_group(acpi_kobj, &platform_profile_group);
+> -	if (err)
+> -		return err;
+> +	/* create class interface for individual handler */
+> +	pprof->minor = ida_alloc(&platform_profile_ida, GFP_KERNEL);
+> +	if (pprof->minor < 0)
+> +		return pprof->minor;
+> +	pprof->class_dev = device_create(&platform_profile_class, pprof->dev,
+> +					 MKDEV(0, 0), pprof, "platform-profile-%d",
+> +					 pprof->minor);
+> +	if (IS_ERR(pprof->class_dev)) {
+> +		err = PTR_ERR(pprof->class_dev);
+> +		goto cleanup_ida;
+> +	}
+>  
+>  	cur_profile = pprof;
+> +
+> +	err = sysfs_update_group(acpi_kobj, &platform_profile_group);
+> +	if (err)
+> +		goto cleanup_cur;
+> +
+>  	return 0;
+> +
+> +cleanup_cur:
+> +	cur_profile = NULL;
+> +	device_unregister(pprof->class_dev);
+> +
+> +cleanup_ida:
+> +	ida_free(&platform_profile_ida, pprof->minor);
+> +
+> +	return err;
+>  }
+>  EXPORT_SYMBOL_GPL(platform_profile_register);
+>  
+>  int platform_profile_remove(struct platform_profile_handler *pprof)
+>  {
+> +	int id;
+>  	guard(mutex)(&profile_lock);
+>  
+> -	sysfs_remove_group(acpi_kobj, &platform_profile_group);
+>  	cur_profile = NULL;
+> +
+> +	id = pprof->minor;
+> +	device_unregister(pprof->class_dev);
+> +	ida_free(&platform_profile_ida, id);
+> +
+> +	sysfs_update_group(acpi_kobj, &platform_profile_group);
+> +
+>  	return 0;
+>  }
+>  EXPORT_SYMBOL_GPL(platform_profile_remove);
+>  
+> +static int __init platform_profile_init(void)
+> +{
+> +	int err;
+> +
+> +	err = class_register(&platform_profile_class);
+> +	if (err)
+> +		return err;
+> +
+> +	err = sysfs_create_group(acpi_kobj, &platform_profile_group);
+> +	if (err)
+> +		class_unregister(&platform_profile_class);
+> +
+> +	return err;
+> +}
+> +
+> +static void __exit platform_profile_exit(void)
+> +{
+> +	sysfs_remove_group(acpi_kobj, &platform_profile_group);
+> +	class_unregister(&platform_profile_class);
+> +}
+> +module_init(platform_profile_init);
+> +module_exit(platform_profile_exit);
+> +
+>  MODULE_AUTHOR("Mark Pearson <markpearson@lenovo.com>");
+>  MODULE_DESCRIPTION("ACPI platform profile sysfs interface");
+>  MODULE_LICENSE("GPL");
+> diff --git a/include/linux/platform_profile.h b/include/linux/platform_profile.h
+> index 8ec0b8da56db5..a888fd085c513 100644
+> --- a/include/linux/platform_profile.h
+> +++ b/include/linux/platform_profile.h
+> @@ -29,6 +29,8 @@ enum platform_profile_option {
+>  struct platform_profile_handler {
+>  	const char *name;
+>  	struct device *dev;
+> +	struct device *class_dev;
+> +	int minor;
+>  	unsigned long choices[BITS_TO_LONGS(PLATFORM_PROFILE_LAST)];
+>  	int (*profile_get)(struct platform_profile_handler *pprof,
+>  				enum platform_profile_option *profile);
+> 
