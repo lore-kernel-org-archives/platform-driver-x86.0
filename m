@@ -1,41 +1,41 @@
 Received: from mout.gmx.net (mout.gmx.net [212.227.15.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2A5C01A7259
-	for <platform-driver-x86@vger.kernel.org>; Wed, 20 Nov 2024 12:00:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 361D017BB2E
+	for <platform-driver-x86@vger.kernel.org>; Wed, 20 Nov 2024 12:07:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1732104013; cv=none; b=c5EmXGSy8uT8Oa/E+iCjzP06wgJYzfNII7e5AYCrI+9owOaLOPI0okL6C9Ap3MeycM3kbby6DdEWSiBiSuD0fOx6kFvDPqbUS5OIZImixu6NxOmNcYRS4mxYsfhaOgfabz80+HXT3Pog9yq0sG7Npk5oCq6IFBJqYRSgY7qwvuk=
+	t=1732104432; cv=none; b=QqzhZgePB2/O8uocXzNQ0UbzqD36Nz6McHmOOkMBsWYy5BKxeARUa5saVr7yQCM+QknH+Ou9EJRhp8Btq+fhe+5ovfI7T4pmUyV5iFOrNty8hSiXlLqM+uTNQOhkR8dOkCw8ivesH3djUOmAp5L1ax0huoKB2eCJ6/gm9wyrYEw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1732104013; c=relaxed/simple;
-	bh=foWy3N3npQUGPSA9PvOvib0+VD9PxwrtceYNEQVVXv8=;
+	s=arc-20240116; t=1732104432; c=relaxed/simple;
+	bh=Ga9gOPpLo7YxEnJO5y2lqDswpU300m6I4+K8yJoyuPY=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=q61/g1j0yvRmHiduXhrBZbli1jwS0/ddlG+pq2rQZl+5XsH7zbqChf7PGjUugP7wjNlwodC8qKCsNVCaTfoTNlC8TlTAGNbWGdMMtsUQ4V3fE/TfXLEZLf9UQJbbPGqXI+yPx0kaRiJ+LWa+i7fAqkOwDZnELVKefMwkVyGJmnM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b=k0FBjOAc; arc=none smtp.client-ip=212.227.15.18
+	 In-Reply-To:Content-Type; b=EO/nc9WP/uB+Vv+75L6gtnR8FqWITBKtuzVX1xk40rjx/O/XIGGhbFPkO7uR5mKg+7uV0YEN5kJqCSGJPaiPtUG2gsGG9v2bP/aK3PJDB9c6CINnT/fO/zGebqpkafrqlaSw8QZaeQHiOA1lQ0Cd+DfSgL9i4P6rOKWQ0TThlvA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b=F2qPtz7r; arc=none smtp.client-ip=212.227.15.18
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b="k0FBjOAc"
+	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b="F2qPtz7r"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.de;
-	s=s31663417; t=1732103995; x=1732708795; i=w_armin@gmx.de;
-	bh=foWy3N3npQUGPSA9PvOvib0+VD9PxwrtceYNEQVVXv8=;
+	s=s31663417; t=1732104419; x=1732709219; i=w_armin@gmx.de;
+	bh=c/g555/61MXddcZJyi2oeEYJpsrSb0upCLCxYtUQAGc=;
 	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:To:Cc:
 	 References:From:In-Reply-To:Content-Type:
 	 Content-Transfer-Encoding:cc:content-transfer-encoding:
 	 content-type:date:from:message-id:mime-version:reply-to:subject:
 	 to;
-	b=k0FBjOAcaSloyLQRKlIJ62PSsAePXhEG9mc/AZHpkaTs95m8CIe0o2UXm96QqjE3
-	 +F/ImmOyXJjKJcyFcCIDX0y7CJ70hvqTlLhAuFtwCEFWA8bCDiGHkLUf6JGJoOOVp
-	 YFETvOH4YwPpUCfaCsq3jm8nNCS0rz0rUiKkq7pd+drXLsyJkZkpSWQu5Dl9FrmcR
-	 uYXPpLLWsC6X5l9EQAczujvkwOnE6Fw3UQiQBaqqzORCQANhHV23I6C//Hhh2x6C9
-	 t5HYjYB1VhQimeQvrK8s2zyVlok9I1nm/mEeH/iwhMOr0HpxLMnk5BsQgnmtqIUvg
-	 dVy5u1YTO3i3NdbxNg==
+	b=F2qPtz7rjIDnwI7m9LXStCE5L2xGf7xj7aJLN2M6WvNHeFlIJ+Y022tAiQkbdu3p
+	 lFu3RRUEx4Qw9k9R+aULfDWZhaj6V59WkWjdUFBSly12Y9FXQhJdFCHw5yy0FrjyS
+	 FCW9axSUaoDRhF4nli0oZTi4Oivaktnz7IXt5ZcLJYupEAkAWkqvO5FzFEGMv/8FY
+	 x/TvAAnQtUIiVDUaMQhty9Bn4/JKvZblG0k1NNbqAP+kbc/wbbANqdfe/Sm0ZhCeR
+	 /+ZgJFmCNuumFrCYRKBFr1v98/qu/xcgx50aEleDRL2x3zdaGMd0FOLXtHawhAYtj
+	 q4x6LlUL9AAa084WYQ==
 X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
 Received: from [192.168.0.14] ([141.30.226.119]) by mail.gmx.net (mrgmx005
- [212.227.17.190]) with ESMTPSA (Nemesis) id 1Mzhj9-1tzfBq2Edt-010bmA; Wed, 20
- Nov 2024 12:59:55 +0100
-Message-ID: <fd4a30e0-b5bb-47d7-8173-312417dce215@gmx.de>
-Date: Wed, 20 Nov 2024 12:59:53 +0100
+ [212.227.17.190]) with ESMTPSA (Nemesis) id 1MkYc0-1tbIBp0d8Y-00h7Yj; Wed, 20
+ Nov 2024 13:06:59 +0100
+Message-ID: <7ce64458-4390-4630-8d59-66e37d6f4521@gmx.de>
+Date: Wed, 20 Nov 2024 13:06:57 +0100
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -43,168 +43,136 @@ List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: Adding a new platform driver samsung-galaxybook
-To: Joshua Grisham <josh@joshuagrisham.com>,
- =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
- Hans de Goede <hdegoede@redhat.com>
-Cc: platform-driver-x86@vger.kernel.org
-References: <CAMF+KeYus9dW00WNJMLVxLLHdG9JgCfrGJ491fu7NM8GAEqqCg@mail.gmail.com>
+Subject: Re: alienware-wmi rework RFC
+To: Kurt Borja <kuurtb@gmail.com>,
+ Mario Limonciello <mario.limonciello@amd.com>
+Cc: platform-driver-x86@vger.kernel.org, ilpo.jarvinen@linux.intel.com,
+ Dell Client Kernel <Dell.Client.Kernel@dell.com>
+References: <6m66cuivkzhcsvpjv4nunjyddqhr42bmjdhptu4bqm6rm7fvxf@qjwove4hg6gb>
+ <bf238c08-1f49-4e16-b9ee-1d1a5e0b9763@amd.com>
+ <uyzgfmsbd6dkeyx76fmstqpauj4ulnz2eqbww6dz7fwjxwxer6@vwuebqbtl5e5>
 Content-Language: en-US
 From: Armin Wolf <W_Armin@gmx.de>
-In-Reply-To: <CAMF+KeYus9dW00WNJMLVxLLHdG9JgCfrGJ491fu7NM8GAEqqCg@mail.gmail.com>
+In-Reply-To: <uyzgfmsbd6dkeyx76fmstqpauj4ulnz2eqbww6dz7fwjxwxer6@vwuebqbtl5e5>
 Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Provags-ID: V03:K1:SI+/qz9o0sqlvv71nCY4YmUWXGl+ouY/pN/UE4js8scFIWTQ8PH
- umPxrynXIZqL2isaFpmkw/Ff9e00Y0XiXVLbasnyaTiMZN4uAVM3LWy0f4QzsfmBTFmD+IM
- Qk5oTOgoxAwEMb5ZwwqLusK2MpEoG54eGRThj+jLQPbJymJ1TzsGgYkoXIbeEJ1IezWGVcr
- l9TbE2cJzKPKCV2cPuiPg==
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:Bcn2P+DHVtYii7JZXv20NeeUdXubjjhgTdjpwRmMA+J8eQQOtnJ
+ HxN1LVBc4Y1lAoTLmpvbDvESOgMmO55OZcvGWeczhGviWNlLKukw18rveJVjx5U7bAHRccd
+ lRNuGmET9ldmptNwQraTyORVYrO7Q+O0mBcmRZW3uMJYBkXJxnUxoxE0c7hDffKnPSmmqMd
+ lkO8aWgwdgtrzrWSAjiNw==
 X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:Mi2a+lEic4U=;fqx2oDx5nlySFvL3RSRd62Y02a+
- OIkTzOVxjtStinhh2ZmMghchOhfGuNUzXbdmLbRusfEx+EPyG2rfO9HkovmB0+i95eGz4+v6g
- UWcfWksOVu4j1KP6obRp8mAQFgjgpaDiS1ETy+WPvsJ88o0NLd5qKcKD+3IZsKHbFXq95qbv9
- RFMdvAPAuV9gtAm8yiS7TlcyOjZWn9JQQhiYmMuNO46S5M8aD5VGXPB3gCkSiFjT+O7J+Yy6k
- ZumreVOJBF5eBpezXQ2FMWJhn5YUty9DcyJbrPdji88YIR5HQiXZcJQvdLokeSoOT80nzYC2C
- UCVS0l91mfWmfYSoHc1HnURv3plpcnV04Vsn4Itqvbyww77n3ZkrlMk5bS7FzT5j7rD7douXt
- jHTrXkoqJVytu6lNxIbDewKsXkArrYm6KStcIpAZvKFkzkoTEzvxWUZ7tL4HEaTDpI3nOX6eD
- IJdiYosbHGiBRPooAFRC8KEe0HzjqeXBkqhjgGR8sTR6ejKCdECiO/TkZNORmxuUEaiKJYYKA
- ePW1uBfv8RY4b+pkDMjgMHGsEV8SBFT782h4ralkrCaqoOioMlljOp3Dke5cWbi1KPIZm3vB4
- ujnkn8TAZC+E6lNgUGspx3wE+OE2I50hPgMOV7KJmM6sk7xW5mtXnqHsrf7/rFLnc3DaFSflb
- n2LHEHkna6TjqrE2Y6kWLfpGja4jYCHTGMjnCQdXNIguOidHaFVXJN1tLkbZVCB392Hatha9X
- mT6kYMoFXcFYzEku6l0C30NCInoS3HxENMmbItGtwewt5Q5sxhCPnG9bEWxGweihaYuMHRTag
- 7EwBuWrtH9tAHCmfcZv4X29J+otZ+qbaF0gHpJpZTcIiCtbWAtpiEUo/r2PiyzZKqMAzeKEh9
- 9vu7QFqYGelpFEqDAhhYPOj8rak2o4bolN1J9QSKvm2PUwCarsfkgpnUW
+UI-OutboundReport: notjunk:1;M01:P0:q3t18BxwfbQ=;LONsz9dzpztNVEdjaFRvoixTUax
+ 6Mr9NXtjkA9IGaYmLpgg5BXtJAU+EPX7WzONRM+WfnejouBD+NVQYFcVnSMm5YHCmc/3ZFNzf
+ yyAzHrOn1PECu5GHe6AXCfe17gAy7c8pzTGVgU+vykdVZfgeP8ukA2s/DJ75Df1x76tkhhuQB
+ zIAb0HfBJGZvDaHphBTk55urF0Vzp7+4XPHsKMjivA8G10KIXMuD3NAu75Uzq9a9eAqm1SjWu
+ XvtRDz22b9OdClAjqCNFza0xRaILsPjTJDUfGLtuqJfRbmtlmRf0WfZeVAvyOApwM2+19Sr5x
+ J8i7HKgAtCAtuOspgk/0wVF8P/WNyudmPFGDtPhY12eFkW8av7HYck8mflMM2iCPs2/BvqXx7
+ SvyxUZpeFXmMLbkeGPBY2UULf24K647Ymmw9pjHrtZWgV4y+o4a99yf/JnDYhSX6xriNsKMKd
+ fOAeNe65mhcCVSPbXQeEUNGfjUg1O6uSCOYHJ5tOl2KhetUniERKy1THuelv199swDZfzTOkm
+ 1MhqCEGn6K7nIrawKHJTf7YlNuK3T74rgRsChCiiLT2SL52dmZHWwYZnEsaQc/mNjQUu+SnJS
+ bT9DKCyohEC/nw+Ru/PyPFo6oKi/+TcYkybwW66O6i8/I4JqwQtAxswPUyhNKjzWMr1mfV924
+ 5CHmUGnkbe6fy0NfZUZF0ac7M7Vahy6B8LuK60P72AtEE6A0ZT6jh3ReHGAY60Vfc5V8v8ob/
+ KW4IOQfxJnXC61ykF94olmoPJwGsA2N7cT6MaSC1JF019R69I5TtERtjMw77whJloCXR97qFL
+ rS9TM+a2tAycJRb9uP7OpiwrwLjunP5kMjNMdoPVYR2ehq0Bu1vf9SrVS0gT5TQtUSAwdtfbU
+ i442RPTbbj/GvKm3scNVQqZoqMqDK5TTdLUNUHPHRCAypI6oY3E6fzZRB
 
-Am 18.11.24 um 14:51 schrieb Joshua Grisham:
+Am 19.11.24 um 05:29 schrieb Kurt Borja:
 
-> Hello! I have created a platform driver for Samsung Galaxy Book series
-> notebooks which has now gone through several iterations and
-> contributions from several other community members. Based on stars and
-> community involvement I would guess that the usage of the driver is
-> more than at least 100 users (if not more?) across multiple different
-> generations of devices and many different distributions, so hopefully
-> we have ironed out a lot of issues by now!
+> On Mon, Nov 18, 2024 at 09:54:25PM -0600, Mario Limonciello wrote:
+>> Loop Dell Client Kernel M/B for any comments.
+>>
+>> On 11/18/2024 21:47, Kurt Borja wrote:
+>>> Hi!
+>>>
+>>> I'm planning on migrating the alienware-wmi driver to the new WMI
+>>> interface, as it's currently using the deprecated one.
+>> =F0=9F=8E=89
 
-Nice work! Improving the hardware support for notebooks under linux is always
-welcomed.
+I like this :)
 
-> The existing driver samsung-laptop is of course somewhat
-> famous/notorious for how it works, but on newer devices (primarily
-> Samsung Galaxy Book series devices but does include a few others),
-> Samsung is using a new ACPI device called "SCAI" which is what this
-> new driver is built on, and the functionality is totally different.
-> There are only a few ACPI methods on this device that then actually
-> control a lot of different features; the "magic" is in building
-> various payloads to steer all of these different functionalities even
-> though it is often using the same ACPI method.
+>>
+>>> My plan is to:
+>>>
+>>> rename alienware-wmi.c -> alienware-wmi-base.c
+>>> create alienware-wmi.h
+>>> create alienware-wmi-legacy
+>>> create alienware-wmi-wmax
+>>>
+>>> The last two files would not be independent modules, just includes for
+>>> the base module. The base module would be in charge of initializing th=
+e
+>>> platform driver plus the correct wmi_driver backend, but the wmi probe=
+s
+>>> would register the platform device. This would be very similar to what
+>>> other dell drivers already do. Aditionally I want to migrate everythin=
+g
+>>> to the state container design pattern.
+>>>
+>>> I would do this in such a way that the legacy and new code would be
+>>> completely independent of each other (i.e. different state containters=
+,
+>>> dmi checks, etc).
+>> As the original author of this driver when I was at Dell I'll add some
+>> comments.
+>>
+>> The 'legacy' code was very narrowly focused for supporting a handful of
+>> hardware specifically for lighting control.  One was the original Alien=
+ware
+>> steam machine, and then a few generations of the X51.
+>>
+>> I don't know how much of the driver continues to work on hardware since
+>> then.  Maybe Dell guys I added to CC can comment on how much of this ha=
+s
+>> stuck around over the years and keeps working.
+> My guess is that none of it works on new models. The LEGACY wmi device
+> is not longer included on new machines, as all lighting control is done
+> through an EC and the WMAX device was repurposed to fan/thermal control.
+> I say this based on exploring quite a few acpidumps and a couple RGB
+> control Windows open source alternatives.
 >
-> It is my opinion that, as we now have achieved some level of stability
-> with this driver, it would be good to try and get it added to mainline
-> as having it in mainline will add a lot of benefits (even larger
-> number of users who will gain benefit from this, better quality and
-> standardization with involvement from maintainers and the larger
-> community, etc).
-
-I support your initiative to upstream your driver. Having such a piece of software
-upstream helps everyone.
-
-> I have myself tried to adhere to many of the existing patterns that
-> exist within other pdx86 drivers and the community has helped to find
-> and ensure (and in some cases even directly contributed to that)
-> various features are using standard interfaces such as with the
-> battery extension, platform profile, etc, in a way that seems to be
-> unified with existing platform drivers as well.
+>>> Pros:
+>>>    - Modern interfaces and design patterns
+>>>    - This is compatible with Mario's upcoming platform profile changes=
+ as
+>>>      the WMAX device would hold a reference to the platform device
+>>>    - Would not break compatibility as legacy code is independent
+>>>    - Easier to understand and develop in the future
+>>>
+>>> Cons:
+>>>    - Initialy alienware-wmi-base.c would be almost completely legacy c=
+ode,
+>>>      as new features don't require a platform device (yet), so
+>>>      alienware-wmi-base would basically just register the wmax wmi dri=
+ver
+>>>      on newer machines
+>>>    - With this design users would not be able to completely exclude le=
+gacy
+>>>      code with CONFIG parameters
+>> I wonder if you're better off just having the legacy driver as it's own
+>> kernel object?  If it only supports a handful of systems, most people w=
+on't
+>> need it compiled.
+> Yes! I'd like to do this but unfortunately some user space applications
+> might depend on attributes being available to a platform device named
+> "alienware-wmi". This is why I wanted to have a unified "alienware-wmi"
+> platform driver.
 >
-> The driver code is currently located here:
-> https://github.com/joshuagrisham/samsung-galaxybook-extras/blob/main/samsung-galaxybook.c
->
-> As there are a few variants of what features are supported on
-> different devices (even devices with the same ACPI device id) then one
-> of the key principles that I have tried to now follow with the driver
-> is that each feature tries to check that it works or not (receives an
-> error code in the payload from the ACPI method) before "enabling" the
-> feature (creating a sysfs attribute or registering a new device etc)
-> when the module is probed and loaded.
+> Thank you for your feedback!
 
-Sounds like a good strategy to me, being able to automatically detect which features are
-available is usually better than having a very long quirk list.
-
-> Instead of just sending the code as-is in a new patch then I thought
-> to ask you all as the PDX86 maintainers if there is anything glaring
-> that you would prefer should be changed or re-designed before we try
-> to push this in as a patch and add this driver to the kernel?
-
-After looking at the driver, i would advise you to drop the acpi_driver stuff and instead
-implement the whole driver as a platform_driver. Does the kernel already create a suitable
-platform device with the name "SAM04[number]:[number]"?
-
-> You can see more background and what features are supported in the
-> README file here:
-> https://github.com/joshuagrisham/samsung-galaxybook-extras/blob/main/README.md
->
-> A few potentially "controversial" bits that I can highlight already now:
->
-> 1. various failure messages or "unsupported features" write a warning
-> that directs users to create an issue in my own Github repository
-> instead of in Bugzilla -- maybe this is ok at the beginning but assume
-> it would be better to just remove some of this info from the message
-> and/or direct users to create a new bug in Bugzilla under the right
-> component there ?
-
-As a general rule driver should be quiet if everything works, so unsupported features should not
-result in a warning message. The other error messages should just contain the message without any
-bugzilla/github links since stable kernel users might want to use the bugtrackers of their distro first.
-
->
-> 2. some features where Kernel version are checked for handling some
-> things different for older versions of the kernel, but all of this I
-> would take away before submitting a patch
-
-Yes, please remove any kernel version checks.
+It see, that is unfortunate. In this case having a single driver which han=
+dles the platform device
+and calls the right initialization function from the other two files sound=
+s like a good choice to me.
 
 Thanks,
 Armin Wolf
 
-> 3. usage of the i8042 filter and ACPI hotkey notifications to handle a
-> few of the hotkey actions within the driver itself instead of just
-> emitting input events and allow userspace to handle the actions
-> (namely cycling through keyboard backlight levels, performance modes,
-> etc)
->
-> This last item (executing hotkey actions in kernel space) is not
-> totally unprecedented either, as I have seen there seems to exist
-> similar i8042 filters driving hotkey actions in msi-laptop,
-> toshiba_acpi, and dell-laptop and ACPI notifications from hotkeys
-> driving actions in several x86 platform drivers as well (dell-laptop,
-> acer-wmi, asus-laptop, ideapad-laptop, etc; this is an even more
-> common pattern than using an i8042 filter, it seems).
->
-> The problem with just emitting the "right" input events and relying on
-> the userspace to handle this stuff in the right way is that 1) there
-> are not really keycodes that exist for exactly the keys we want here
-> (even though "Keyboard Backlight Cycle" and some kind of "Performance
-> Mode" hotkeys are very common on laptops today) and 2) functionality
-> for how to handle these kind of events do not really support these
-> use-cases either (an example if you read through the discussion here:
-> https://gitlab.gnome.org/GNOME/gnome-settings-daemon/-/issues/41 and
-> especially several of the comments from Benjamin Berg, that
-> implementation of "Keyboard Backlight Toggle" is just on vs off and
-> does not cycle, and there should either be special handling of this or
-> a new key is created specifically for this purpose... this was from
-> 5-6 years ago and the state of this has not changed since then from
-> what I can tell). It is because of these same problems that I assume
-> the existing PDX86 drivers do in fact implement some of this hotkey
-> action logic in the kernel space, in a similar way that I have tried
-> to do in this new samsung-galaxybook driver. I am not sure the
-> appetite for having even more of this pattern exist and/or if there
-> are any details of the implementation that you all would wish that I
-> should tweak a bit? I am very open to any kind of feedback on this.
->
-> Any other discussion or questions are of course welcome! Otherwise
-> and/or once things are to a point that is looking good then I can
-> create and submit a patch for this new driver.
->
-> Thank you!
->
-> Best regards,
-> Joshua Grisham
->
+>>> After this I want to add HWMON and sparse keymap capabilities to the
+>>> wmax interface.
+>> =F0=9F=8E=89
+>>
+>>> I'm sure there are things I'm not seeing so feedback is greatly
+>>> appreciated!
+>>>
+>>> Regards,
+>>> Kurt
