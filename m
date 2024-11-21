@@ -1,523 +1,171 @@
-Received: from NAM02-SN1-obe.outbound.protection.outlook.com (mail-sn1nam02on2085.outbound.protection.outlook.com [40.107.96.85])
+Received: from NAM11-CO1-obe.outbound.protection.outlook.com (mail-co1nam11on2050.outbound.protection.outlook.com [40.107.220.50])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C99E81C9B76;
-	Thu, 21 Nov 2024 21:08:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.96.85
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5FC071A2C04;
+	Thu, 21 Nov 2024 21:10:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.220.50
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1732223325; cv=fail; b=OMeFVPmGvyzMIX7xpKV3mIseRJj/UORIMyS/n8va0aKliPKneiy9x6OJinZ0R1/7mkZ9uRzeASsvNc7yCU98Rkm8fYFpvTaEZAh90p+ISuyVUDJrL2JPEOfRcznbpIHVsItK35rW7JYrbCmvwEnfPGoqj3SiqkydgHR2jNKx9QM=
+	t=1732223408; cv=fail; b=r6nd+d4rcJBODZyA+np203a09oMAqYRZHlbDZK6zZXgeT2bVBWbQHa65a3KTwpdgu4DlbQ+y3Le4UUMmjfoqwAE5NfwGqdsDFR1IDxd+R5QuHmuYuSjE4cZAiMyg6pMvsb5e4YCxpeQYjfxWHr+JuU3v+cxhzbRwxYwH6B6e62Q=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1732223325; c=relaxed/simple;
-	bh=AoMg3jFvZfizgpffqMIl263HNw20AemVjm2lOFTpS+g=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=cDHIJGEpCUqhjqUgZ2q7jPyQg0ZSakX1iGrJ37Wb9YkG6YLCyIxyImYCf+cjXq4Vn9rR6iu53B1X8C/D/oyMFhqAB3NY9IrRnxipEhWdIspkGTf+0aV9wVtsUrWOgMi2NVSywzo2UCs6VKxuZWvHouYRa1NI31CSpvwFFej0D+c=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=dTDZaqIf; arc=fail smtp.client-ip=40.107.96.85
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	s=arc-20240116; t=1732223408; c=relaxed/simple;
+	bh=Hwg9ywIMYiQe7crGeKCdu0jM6HR+ofuB2KyH2Ez53Vw=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=sOLS6UXHNZjLg6hPB2qAAVuedbLAEFJdBU6BYV+DyZ+8sQgBrozhEWeHr04z0FPEgmT7mPEJqj4BypcMajjexSaLeBTxgLUCu0qYTw55AfkOUMxWiwiZYQmYa4jBh4RUWecGS9HXVPPJXuU++/rRoXC+E0zPlzoFPZYSjHWyAFE=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=RxKVqXOI; arc=fail smtp.client-ip=40.107.220.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="dTDZaqIf"
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="RxKVqXOI"
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=SpQveODOIgZkbhiS8ID6GPiQbo0xbYXKUhDZD3Run7jdWp0Af7ZFxgOyqWn868lxlJv5gFBcwggjTaX7aAtjRmVvdoylqWwusDYSWsj0+5o0BXVI6AYbQ/ng61qCovND4yyOsWn+3Xsqu+PyDPJxPaBtUc4W66uqtMVg8iZ1JwLQUK6bjhN2q+L917nNPa8DoOXWjvK+sjcqzh5YD93jl2A09ZEm0KU+gENa51HfVwCABijp6KIORUckgwGIbuXW6qg+bepl52fUPYFC7r4z13l51VmYAfyzwP6uIbR7nvn8EHSTc9QlxQ+3ikZe0fNmWDF4QHtzHsWVHfCbwNokzA==
+ b=UPBL+Hkb7v73Ngng7A6WMpkgym1Onc1AWU7KzxhYdwjwBYsnRGbdF4dgKlWy1hUPS13FeOjDXKQWbDb6IrOiwjUpFm+qVVuSIEdFKCSeXGbc1HgZhBWBENWbbWemMPPrYnh04KLisDWgn6hdVnxLZYcULAJ9EIpLWoumpsV35wfWYRGdGTAcuZ4XvkaCfwA2Ys4RYKhcGhWG3n50hMGQVLG7ChB1LjJK60V3p+zcUA9CMQmjsxwCH+eftYLY3xcpqeQhTzJ+/OtrfOhjhcHl9xHwW5z5K+Vvkg32F/OrEGy5nNvatq/0A6gWGFXI5ihkZJqBfHacr4wtZo92l4jefQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=K+FxFnla7yPjgBywdFNC3zCmuWOregupoJ5vKG7mN3c=;
- b=JnyKbL5hj307V8Df4jNm9F1s2bxrWDn5lNVgKS3/hIjKttj7RMX5yCSPkT1iqZaKAgwJ//y3zBdSnc1QRhH+F5yi8ii1nxsuJV1vDOja/yXq+PWOQI+uh7KQ2xEdIqL/HXP85fbRPb8rS5xmm9yu5HpaVfBJbgZ/HCT02ATJvNbhBiBTXWFLceK+yjJQ9jFnSSqj7Jq/lCcwz+P6d6RQJUXmT+iKX3GNJbiEOL4eo2/b5F5294GPJCFKGOhDdg7HXsmnnkeuOUx767ubHzCoiAYg6jEPX9TKfl08aI0BvP/fxxf/APOkEpYKXEgqtW+ZYtkbmcXMKzB666UxXuHHHw==
+ bh=LgSc5phI+m+P6c9488x/CWagQboPxwn190+yXg6Iuus=;
+ b=NjxKppXrlOsxHDqXE62SuS3vtmzUQghV/ovVMs8ULOphWLcQk8JTrwwVohSG1q9ckfMxabf3fZCM4Z+2dH6NTU/yJuiivlapTpLKket4mPTv8Zw3f4O6dZGcV9SjfECts4ld3leQrsDnSv36swvH+mG2wqdZWKUzBhKtdac3CRexYLiVguR7CaWjbdYB2uyuXLQMM8CFKwEN7fGn8XEx5cnZWaRlvAkf1vFnZty5IWkqoKuZwjySJsp8L7ozB+VgMwbvUvEY7bz6bMHhWRiwZWKZgvLbvFClNGb7ib/MmSl2Mv7zyrsdTFFja4VgnehtI98FKk2yqzvq3zYBW4NvHA==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=K+FxFnla7yPjgBywdFNC3zCmuWOregupoJ5vKG7mN3c=;
- b=dTDZaqIf/5GRAlbcFo79//NlASMLZisCtGmItV+SBlNcFEgdl9v2YIub4Y6jGYAK5fqgAN86ZGs+KShojgCG36fwCf2uLDH+p9lCZHx5GUSWYZx8IiY5Y9xD6D7uAl5Mb83GJuBUeJ+/tqAqAtA4DoaqiWZLcDVL4znB4aVA+MU=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from MN0PR12MB6101.namprd12.prod.outlook.com (2603:10b6:208:3cb::10)
- by LV8PR12MB9335.namprd12.prod.outlook.com (2603:10b6:408:1fc::22) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8158.24; Thu, 21 Nov
- 2024 21:08:38 +0000
-Received: from MN0PR12MB6101.namprd12.prod.outlook.com
- ([fe80::37ee:a763:6d04:81ca]) by MN0PR12MB6101.namprd12.prod.outlook.com
- ([fe80::37ee:a763:6d04:81ca%4]) with mapi id 15.20.8158.019; Thu, 21 Nov 2024
- 21:08:38 +0000
-Message-ID: <9ecac3b6-c21f-4296-a855-ea7280b8b411@amd.com>
-Date: Thu, 21 Nov 2024 15:08:31 -0600
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC 01/13] Documentation: PM: Add documentation for S0ix Standby
- States
-To: Antheas Kapenekakis <lkml@antheas.dev>
-Cc: linux-pm@vger.kernel.org, platform-driver-x86@vger.kernel.org,
- dri-devel@lists.freedesktop.org, Hans de Goede <hdegoede@redhat.com>,
- Kyle Gospodnetich <me@kylegospodneti.ch>
-References: <20241121172239.119590-1-lkml@antheas.dev>
- <20241121172239.119590-2-lkml@antheas.dev>
- <1e7057cc-c74e-48ff-8585-8b0db58e08bf@amd.com>
- <CAGwozwF9qzinGmyJQQ+KK02troC-u6+vULpExvYE8taYaBHCXw@mail.gmail.com>
- <80653958-2f34-4ed8-b77e-8f82d80ebbea@amd.com>
- <CAGwozwFtbxptqH1ZwLcpjibfRdnm5VvQoLSjAO8mtD=Aw9y=eg@mail.gmail.com>
+ bh=LgSc5phI+m+P6c9488x/CWagQboPxwn190+yXg6Iuus=;
+ b=RxKVqXOIGpgrK4DhTZG/BGl89gNLQu0J1zb+6cGYsIt2vBkodONolbPQ1y2KhqTHuw4pIQBmTGQiqPkexuu/xyHJ9Z2zXRiVK08LCX3SRSv1pwYHpB5FNe13Z4VjDIm5XbpEi19f9lStYKEoAcH1FCu8UALmoOv2sZMKxUTfkljtf0zHMFh2ioM9cRT6Yf2v4ksLI2iDHkvWeAH0R9ckZFLLNL009lixS+rajpj1LTVesc9xL4UXR82RYWRLzk+qBLO5ycWHzZWMxHSyZOMHuometAJZK1/Mei4Vs08Z0F9SqjvE6CiYbldTynCKk7lC8Gjio0BBkrjIlwt6RznwSg==
+Received: from MN0PR12MB5907.namprd12.prod.outlook.com (2603:10b6:208:37b::17)
+ by DM4PR12MB9072.namprd12.prod.outlook.com (2603:10b6:8:be::6) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.8182.17; Thu, 21 Nov 2024 21:10:00 +0000
+Received: from MN0PR12MB5907.namprd12.prod.outlook.com
+ ([fe80::e53b:7416:2158:6950]) by MN0PR12MB5907.namprd12.prod.outlook.com
+ ([fe80::e53b:7416:2158:6950%5]) with mapi id 15.20.8158.023; Thu, 21 Nov 2024
+ 21:10:00 +0000
+From: David Thompson <davthompson@nvidia.com>
+To: Pei Xiao <xiaopei01@kylinos.cn>, "hdegoede@redhat.com"
+	<hdegoede@redhat.com>, "ilpo.jarvinen@linux.intel.com"
+	<ilpo.jarvinen@linux.intel.com>, Vadim Pasternak <vadimp@nvidia.com>,
+	"platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+CC: kernel test robot <lkp@intel.com>
+Subject: RE: [PATCH] platform/mellanox: mlxbf-pmc: incorrect type in
+ assignment
+Thread-Topic: [PATCH] platform/mellanox: mlxbf-pmc: incorrect type in
+ assignment
+Thread-Index: AQHbOyEStfwJ7V3SRkSuF/aZY8y/r7LCPP3w
+Date: Thu, 21 Nov 2024 21:09:59 +0000
+Message-ID:
+ <MN0PR12MB590751AC951287F325FE26BFC7222@MN0PR12MB5907.namprd12.prod.outlook.com>
+References: <202411121935.cgFcEMO4-lkp@intel.com>
+ <fece26ad40620b1e0beb733b9bba3de3ce325761.1732088929.git.xiaopei01@kylinos.cn>
+In-Reply-To:
+ <fece26ad40620b1e0beb733b9bba3de3ce325761.1732088929.git.xiaopei01@kylinos.cn>
+Accept-Language: en-US
 Content-Language: en-US
-From: Mario Limonciello <mario.limonciello@amd.com>
-In-Reply-To: <CAGwozwFtbxptqH1ZwLcpjibfRdnm5VvQoLSjAO8mtD=Aw9y=eg@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: SA1PR02CA0021.namprd02.prod.outlook.com
- (2603:10b6:806:2cf::20) To MN0PR12MB6101.namprd12.prod.outlook.com
- (2603:10b6:208:3cb::10)
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nvidia.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: MN0PR12MB5907:EE_|DM4PR12MB9072:EE_
+x-ms-office365-filtering-correlation-id: 2a4e9c00-69d4-4ec1-cf67-08dd0a70dc1b
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;ARA:13230040|1800799024|366016|376014|38070700018;
+x-microsoft-antispam-message-info:
+ =?us-ascii?Q?O3ea9/SnZt5h5mgHT4RqbVoTFb5xSD5pNo0GtBZpMde9xf5OHKc6H3stpooy?=
+ =?us-ascii?Q?UwCa/y38p/NHE19tdH4PjB58gzokbr3xffj1uymxnuHYQDjt4K1kvngW/chP?=
+ =?us-ascii?Q?bvQesWr2GcdBoNZBc8A7KzxWbzltnviDvo2AR+6nQi9JwXbFHnwbPge5SNJC?=
+ =?us-ascii?Q?s2ntzWbijDLbnhXCiUDjPrkEp827XmpgpiuEMS8nkb06H0pxhIsSOAQ0H5Yv?=
+ =?us-ascii?Q?XROsZ6g2Q6kzzjeD9WAp5fIqBOP/sYjGSdCs4bMBsgkcrO8CStosLYPHSNSg?=
+ =?us-ascii?Q?VJ6BE0wbrRpWempnXyWofjg8r76Nsfgn+gVWKX1R99wc7SOOgOS4stkudrXV?=
+ =?us-ascii?Q?yJYGONVXHQQT7a+/HBdsAFGXkpFq7hqXnMuSoEBVDCT+uGgRyn02WJfCHEBE?=
+ =?us-ascii?Q?5supjVZrHMY9vW27rXNpzV2VgxU6y7r15J7HM/kqsaAoGf1B8M/TpW9RS2Sw?=
+ =?us-ascii?Q?QbJJv6IHGw4FQwGTkbusul+Vu3ADEt4rK3wjUYT9Gm3SfTpdM8v3QqhztYlW?=
+ =?us-ascii?Q?I6IQnqPxjQB61WDytKY0UPsDB5eNLenNBXnlK2OAn5MK2iC4hAiD8iutzDEr?=
+ =?us-ascii?Q?13+PWrof1jXWsBS/enUaGurt17IZzeBf5hmhlvCqXK4DUK1V99g45DJMlay2?=
+ =?us-ascii?Q?T+yO1sjN2KK0TaQvKy6vszrWn0J97AN/e50LB5/vHuPGkf2zXirreCNbH54E?=
+ =?us-ascii?Q?aMMGk92X+21Junhn57253KmP/dKa760GBd10L9fsEwW8emJUWXgEW/vAtyfA?=
+ =?us-ascii?Q?nct5dR2BXn+KcFkE8tU6iH5Ew6TmFLFjD0UzMmjG7iN/JQu/Pn3YpuYkKrO7?=
+ =?us-ascii?Q?zVYVu7dgS/mnTHsBvHUf6cjiH1wCb9URUMt4RN2C/MZJIky5JRI96NU1qxN5?=
+ =?us-ascii?Q?7LMYIrfxG2CkvZ7aeMo/X1/Sc/j04OLE+tcoQyaJNdSZsrh2ZtN0psG0/1vk?=
+ =?us-ascii?Q?IRR0YlOhP5vj1DyJdbCETN8dRwLObTT0y4/PB0dHl302k26p3KXDCazugovC?=
+ =?us-ascii?Q?z45qzFWtwX9BehFmnfDIBX6WQvNEYWnjQZY5z3M8qyrCBrsvOkQZIyJFlDS8?=
+ =?us-ascii?Q?pWJeYWw5aH0In6K2HdJwL0c8nL6vUFHjQHVPfLL0HEUXalHCzEhIaD4NZzKo?=
+ =?us-ascii?Q?MmCSxZm2fKfSez1fk9uENHlihsR1gn1+Y+pTu/R+DtMFGM5csKdDwaKkZ7Ps?=
+ =?us-ascii?Q?PzaSFHrQVJl3Nj64EW/dzaidNl5luDnMeaj8ZJxUwVvJzIdBS6rtzDHRgT5C?=
+ =?us-ascii?Q?5WG5JrSDkbeJTHd50FOx3ExbGAYa5KwzSHmwKJRRjcl8iSrAKz2b3UIE1SdA?=
+ =?us-ascii?Q?XUMuE0ROPgeI1m4sJ1knJpH9lEkNz6VD0jfu37DslJOqHe+fEeM5EGClpmev?=
+ =?us-ascii?Q?wPvGgT8=3D?=
+x-forefront-antispam-report:
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MN0PR12MB5907.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(376014)(38070700018);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0:
+ =?us-ascii?Q?zNKa7yhIjoOCwrtoWmeCjvgii05j9s6PuyITjbwn/miXjiC2yepzQRlTXkP5?=
+ =?us-ascii?Q?2wwZ21pocNC6+hFoA94V01CkhCsyJAETa/vca3F4734Dwa78JWsdqNbXTrjR?=
+ =?us-ascii?Q?Vkd/+YXFCGVN3PczJdIkME5oI7ekWERey7MUUEQe0gEDCPC7kiMlfqhtzPBS?=
+ =?us-ascii?Q?VJbxe6byCCqs4kIIit9NrmD05GUSvMx2q53/Hsi9uz8u2m55GWU3HR7X/6iq?=
+ =?us-ascii?Q?gzDUcAiFVdoRRkx57GgU5w5SAVCi31HK37A0KB81Z1X1dzDXboLcqp8zzoi+?=
+ =?us-ascii?Q?NBKQfAsCQRCcOKGGMrUjYH8abPKnOsUvBxyVliceA+fG072iPnk7/XNEPAWz?=
+ =?us-ascii?Q?LSn95EbdxZ+CqVeP0I3Y/BgEVXSkH7Sp9YIqj4/8Zxl8wFbLXPXTG6ohNAAr?=
+ =?us-ascii?Q?itWHdE8dEpLP3YAx9EN8Kt4cmLbvtXAg1947bEXOwCDr76x0bAjcj4/uMemh?=
+ =?us-ascii?Q?t83rxLHXnE9Gd1GaM1Wl+HgLjpiUdr5OE5fXGa1X9fnrcDTL34iDdZf9y2Wl?=
+ =?us-ascii?Q?GRcC+0gqclX4PtK0WlWWgRDyHTv7QT2/zEoQPl8YYQjWnlQubsdudeOYGgkI?=
+ =?us-ascii?Q?wjFCN+QB3/ZFEoocDnvnxCICvT4VdQSdDUZ/AxaYMVfiOheQuU/hG7pCygba?=
+ =?us-ascii?Q?j0kp4o6Zr6X8xwN65yI2t49LQss5c/86MMQkiJaBZO1FcSPiC+NTw2yZJgVx?=
+ =?us-ascii?Q?uy+Xe0SN49eKNNcoCRl36IrjIsBF5HywSgowv7pNe1+abCZ6DjjijM+VJMkW?=
+ =?us-ascii?Q?2xkYgJ+TlwFkNPg+n1mFXynHcm4M7w9nseaeIbSOFsaf1dOtfrEQo0DW/3/F?=
+ =?us-ascii?Q?MGscwbbCfqmQh6wLH87fcIG5rhtZAhYYqRUucLzLD28rD4GHBjkEkczYAXtG?=
+ =?us-ascii?Q?M4WBRKEB8x9H88vt/0c6OUu94kbIIyhPtSdZkqhE178lcnx9LLfWXXOlfOxK?=
+ =?us-ascii?Q?W+JOtNxev+SYF2syla7hH0DncUzUDGFlZe2iww9RsLa/St9MOeY57xtZtDKB?=
+ =?us-ascii?Q?/CSNK+6raTx7lRjkDwcmCxv81PEvVzRKOQDEfE/YOhfz52Xqd9IMq2AFzGgn?=
+ =?us-ascii?Q?nMLdSrLsD0BWWqCts6zSRWlJt/cjw1VY4XawDlHXBoptBPaf7o9qrB/hucXP?=
+ =?us-ascii?Q?VPZQBe/kUBKpw8GrXW00FIMWrKHXtJjMHVwZBeb+L4zcK4GnNg5BOAWIsNc/?=
+ =?us-ascii?Q?+btLQhHnGAOtHnF/fDFPQ6DlsKGO/t1R9MUWHEtKwB95Lar2iuUQ6wVGYILM?=
+ =?us-ascii?Q?1SruAHpxWG/HPFuhhScz4AuxX+n1mtshQHhl0v30buwb/fC01C65P3miriM9?=
+ =?us-ascii?Q?cPVmCHuGGeFl8FiO/P1vXoXPSch2StHhq2lR7hiOQrKdbFCtIgf8qIpBKf3w?=
+ =?us-ascii?Q?uJ9bx75ArPY9zJAsTwqbSLOTpnz0C8tASWAoDyb+dix1Oe4yJSHYtRujqvR5?=
+ =?us-ascii?Q?lt9V8fmHWdQCFka3HhX90CY2bzp2F3qboXB4EpF+g8fCc+zho6mr1F5eb0lL?=
+ =?us-ascii?Q?leG1ixzDeMbEmPBmoBxVqdvgKfexpbWXrJKM3bL55aiSqtvIWFEasxJ7xPut?=
+ =?us-ascii?Q?RS6HRtiRjapua++5SwMzp7dhuJSsxnJkIySgEiKY?=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: MN0PR12MB6101:EE_|LV8PR12MB9335:EE_
-X-MS-Office365-Filtering-Correlation-Id: 1795c576-5c6a-4b9c-0e97-08dd0a70ab30
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|1800799024|366016|7053199007;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?emdzT0FhTVNNNlJsRUJqNXk2U2pUNmFVSTdlakpnbVg5ZjI1N3BSQzArRlIw?=
- =?utf-8?B?bk1vUDFLbG9OQ0p1NmcvR3IveEZJMEdkQUpkZzlkaEI1YS9tU0tnbHcxYk41?=
- =?utf-8?B?eHJEWGZJbDlxTml0ME9ST2JFcFZFSGRtcURIZGM5SWNvc3QwNElEWmVVTGsy?=
- =?utf-8?B?TTFVbWdzOXVwbnBTenJsZ1hTRXRnaVJINGI5ZGRITXZLbCtZUkdMSGE0eDRv?=
- =?utf-8?B?WjhiclJtdVgzMmFza1FmbFpHdEhmOG9iSVhuMnA1c2dFblFzNHhCcFB2dTcw?=
- =?utf-8?B?dmdKa3RBRW5SSU5rUjAzWUNxajNzbnRscEJabk51TE5YMnZkTWVHZzRpek1l?=
- =?utf-8?B?VnVYWFRheGt5REpIOXlnbWNvWE1vbWphZ1YrRHIwUUdoY0VrMUE4a0VjTW14?=
- =?utf-8?B?Y1hpNHFQTVhoWWlOOGV3UmFTZU9PU3d1SWJvaSs1ZWlGNHdBTktwdHkvemlB?=
- =?utf-8?B?R05BMWI4ZEJOQllaQXhQcy9yTTAyb0RNSnNIZllZcmMyQUFKNlB5SlRxOFgw?=
- =?utf-8?B?cExZajRnTkN1U2hySjBpQ1hQVTBBbXVWY0dVMHpmTTFtYUJVa3Z3cnNmY1dN?=
- =?utf-8?B?VjN6VnAveVo1NStQVzc1K0c4Ync3Z2pVNVVTVG5zZjg0cW9iOGdmQmdnclY0?=
- =?utf-8?B?aVhGWWV3aFlHdklxaXJKK0JHYUE5a3lxVm9QYXhTNHdoRnZPNDhRMzFJWVly?=
- =?utf-8?B?QTJZdS9kOFk3R2lOaXU1Z2tJSHBxZ2xFSk1nb2F3aG9HNG5FbTF2VktPWGxE?=
- =?utf-8?B?R2UwVkp0dlMwem1QMmJRd0d5TTRTQkNYM2tlRjQ2aWNhTER6eE9TbmhCT1Qy?=
- =?utf-8?B?MUhUOWNHVEV6OEZBZGdBZDZQWlJSanZrWTZTcTY0T1hiZHMxTjh1Y01pSE1i?=
- =?utf-8?B?aUE3RU9FQkZHZjdSazNycjVrOHFzQWlyQkxmK3kzczhCVVBwdDNWTDlNNmFh?=
- =?utf-8?B?UFdJYmlGRG1OWTlFQTh2UGI3SkZSZkZFaExCd2o0MmduZjVoYmtrWnVlRVZl?=
- =?utf-8?B?UU1aZUFXbWwvT1YzTXRGRXlSaWk3S2FFM1hBQ1BFbkd6amU5MUhaQVdRVG1O?=
- =?utf-8?B?RkVDZVl2dW01OGw1M20vV0lnMW9QUWNkQXFhM0xTZlNwbVFGUkVVUW9XV2E4?=
- =?utf-8?B?OFRuVndaVExxVENFT3U0N3hoQ0J3V3NpZmxiZDlod1ZDcG5NYndLRWcvdzV3?=
- =?utf-8?B?NmFnMFBJUTl2SytlYlVwTG1DWGNFSlFnQWgrcU5EVDVyQ2dwZTYwM0N3OUNU?=
- =?utf-8?B?MUdOR0twa1dkdmpaVDIrTVVqSnRybjkrc3RrSWtBa3hwQWFIa3hjbHBPamJ6?=
- =?utf-8?B?ZHlDSkt3Y1VNVzFXM21yb0JubG1UM2dLWXFJWnlzSmVjb1JIV1daajl0Yy9j?=
- =?utf-8?B?T0FUNjMrcVFlTlVGR2xkd01YQkpGdHU1Z28vR1pBbjJ5aUJ4dFJSZ00yQTB5?=
- =?utf-8?B?L21nMGl6QStLMGxHdi9FcHpnUzI4bGJ4NDRxakV5bCtwK1hyU0p2cVp2am1V?=
- =?utf-8?B?Ui9Yb1Bxd0ZqUFJTNWtKUVo5TGZud0NoZkNteXZVNGh3WS84aWNVUDVuQ09r?=
- =?utf-8?B?UUN3MytlbWRoN055YTg3bjkzb2JqTVlNbStMME5POTdJa29qWW9TMDdwQlA3?=
- =?utf-8?B?V2tTVkFHL2UwMTNCZnJrTVlPWHJtbUJjN3JINDBibUdhaGVaWjQrSWJ4U0hz?=
- =?utf-8?B?V3B2K3o0UHFsYzR6c25nQzFMTnRudlNHSkdNTmZKQ0ZIMHNpYTZOZXRnPT0=?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MN0PR12MB6101.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(1800799024)(366016)(7053199007);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?YzRYd0wyMzgyQXgyZGZCWlo3M1E5dm5oc3I2K0tyM05Vc3RBYzhOYU9qZ3E4?=
- =?utf-8?B?eittZ1lJcDV1akFxakdyK1E3VkJxalJrdTFiUlczUExIajNvaVk2ZnZIbjNX?=
- =?utf-8?B?VXVHaG80aGJLeWxuQy9PdGh1OGdrT3JXTHlwOHFnaVpwR0xLcWR4NW9MOUNo?=
- =?utf-8?B?bjkrZ241RGdPRWx4WTQ3QmFoRVNUZlVML1g4ZzJ4SmNsRHQxRkJGRWJDTGw5?=
- =?utf-8?B?Mm1yMXlqQ0FyenN4L3VHT2JuZVNCM1ZZc2JIS2xQNmpQSWgrQVdkQjVzU2ZT?=
- =?utf-8?B?amsvZjJyMmM3U1VZQklvSEZiVGNXNWdGclFPV1BXTi8xQVVkY3ZSYVJjUmRM?=
- =?utf-8?B?SGxrT0JNM2xhdlFtWk5LM2E4UHNaYmlxV0REakg5bkhoL25mTzhFQ0pwTGx2?=
- =?utf-8?B?b3QzODVubGMvNHFoRjBVS2VBNjluNmNyVFdaT29NelRaLzBCZjBHYmVZK1Ex?=
- =?utf-8?B?aU9pMS9VSEE3aWJZTTI1UDE5YWhLaTZhSEMyMlB4N0d3TktOem9PUzM5YVJi?=
- =?utf-8?B?VXF6bW12L1RiT0oxMUpGbDRIaXl3V2xIbWh6NkJUeFhKOERKaWNVRWExMFZw?=
- =?utf-8?B?aFhLaGl4clp5VVBnaFFnZ2prYkZQUTVDaDZxL3VjbWNYZUd2b3JCUUVJNFk0?=
- =?utf-8?B?WDFGUjFraUZpWWVLQ0ZpQnVpMTJ2R0g0cFRVbklabFgvY2dJeWhmU3JZWUxX?=
- =?utf-8?B?QnlMQWNmeFF0Ti85MVptOGNGd3g0UDMzajBFNWtINnhWZU0xYlJqTHJoLzln?=
- =?utf-8?B?djVuZTBtWC8zR1hWV0ttTXhWdm1RUk1OM0JuYmR6c0hrR2JVVHRqSW0zZ1l1?=
- =?utf-8?B?MFhOMnVzb09MZUZUYWV5Sm1qNnVOdktzdG52c0JFTStPVFBSdlgza3U4N2tH?=
- =?utf-8?B?c012cDlkWnk5bkF2OG9BbG04dm9RQlFIOSs4U1ZZSnRPUjFCWFRpenZMWnoy?=
- =?utf-8?B?S3lQOHpHR3JIWjB6Q1VGclpYaG9QYXA5MXFHM295R3lmZEdLdDFlbDE3ZHZq?=
- =?utf-8?B?Qlk0WGN3L3JLaHVySWxJVlN6MUpja21ZenFOanZaaVJQT292cXZTa2ltRmx5?=
- =?utf-8?B?ZUl4T2J6TEwvRTZhQ0hKa0NFcCtQVTgyTmxEZm9yQ3QyMkJnZjhwQWpTNmNa?=
- =?utf-8?B?Ukw1RUNNcGxLWDZvUzdiM2Q5NEJsMnk1djRLczZ5QkF4UTRROEt1WXlDdXRV?=
- =?utf-8?B?UVh3QnE5NDNmaU5QZlNTSk12ZlFKTHhPamppZkx5WkV5UFVOaU1Zd0E5QUFX?=
- =?utf-8?B?ZENXZHFrMWJjUUNUV0RuYjUrb0xsSUNUR1l2QVdHbEl1bkVwNy9oSkhESHdR?=
- =?utf-8?B?WVdlZmJPZURRbUtPOWZQK2RsbnZmcWRjeFNZakhyNnlueHEwYWNmbHh3ZDhF?=
- =?utf-8?B?Zi9FUjJIZWFGdHBtc1VCTjdWQ2cwMXhoRS9EWTl2ZFoycHc3cHVMS0w3Ziti?=
- =?utf-8?B?dllIeW0vWC9QRWxNYnhLYmRTbk93YVpIMTB6bC91bXF0Vi8wVk56YnRyMDR2?=
- =?utf-8?B?ajFhY3dPb1FyM3VGSjd2Z3AwWXhqZ2FQL2tOamY4VmNLZFlqakpVNndVUmVi?=
- =?utf-8?B?ZlhhdzJabnhyemtxakRvdThaZEJENXFtUmI5OU1jZkJuK1NKZ29JSmJuQStL?=
- =?utf-8?B?OGM1Y2FXUmRhNENUb29pc3l3dy9CM1BFWCtzU1RjeC9lNFhtUHp6OTdPRklC?=
- =?utf-8?B?SmE3VW5yYWo1SGV5VTh1WUtGQU5QMFN4NHBNZmpjZVlLL0xnNWo2S3liM1FZ?=
- =?utf-8?B?eEFXSmhkdnhVbnBneWJkMTl4VHVVSjRWSlhXQVB0WHpCNThSV2gvZHplR0o0?=
- =?utf-8?B?QWhLV08vdTcyaWI3ZTF0ZjlDQ2t6bldrSTBRK3BHUmRKSHhGTnp3ZHludGJa?=
- =?utf-8?B?bDVNVTJZSEdidnQxMnZZWXBVd1p2STRuZlFyaGtzRFFxSWtJQmRhWkFHZUpq?=
- =?utf-8?B?cThaNTdOQWtPNTd3aHdEQm9qc1l2cWlWQ2VsUlB4c0VmNDhRY0xtTGJNbHBa?=
- =?utf-8?B?MlN0Y01Gck9WbVpIOVd0TWdESnppUzdXbFRaOGN1bVorNmZRcW9USGR4L0tS?=
- =?utf-8?B?UWh0OCtnZlRFNFpJclBpSXB3c1Rnb1MzZGhQQ3dmemRVVGR6YkRma2RnQ0Jk?=
- =?utf-8?Q?X+mRA/nwz3VqdnuJV1EHiTLb7?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 1795c576-5c6a-4b9c-0e97-08dd0a70ab30
-X-MS-Exchange-CrossTenant-AuthSource: MN0PR12MB6101.namprd12.prod.outlook.com
+X-OriginatorOrg: Nvidia.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 21 Nov 2024 21:08:38.2597
+X-MS-Exchange-CrossTenant-AuthSource: MN0PR12MB5907.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 2a4e9c00-69d4-4ec1-cf67-08dd0a70dc1b
+X-MS-Exchange-CrossTenant-originalarrivaltime: 21 Nov 2024 21:09:59.6057
  (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 76jUV5xO96B0o4IH+cRCyJvOlTshNJkd/6XTjBIdk+2QruVjfQ81EVtIpts2aNWJWW3wrzpIBzVDYkNLVUC/WQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: LV8PR12MB9335
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: aSujiKf+z272AHCi4PdTMqKlCb6l3JdDsTtKss2hEnuLWcVQSM7YvsqQkFO/vPzegX0JH77k6qDuLBsgtYWpvQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM4PR12MB9072
 
-On 11/21/2024 14:33, Antheas Kapenekakis wrote:
-> On Thu, 21 Nov 2024 at 20:40, Mario Limonciello
-> <mario.limonciello@amd.com> wrote:
->>
->> On 11/21/2024 13:11, Antheas Kapenekakis wrote:
->>> On Thu, 21 Nov 2024 at 19:58, Mario Limonciello
->>> <mario.limonciello@amd.com> wrote:
->>>>
->>>> On 11/21/2024 11:22, Antheas Kapenekakis wrote:
->>>>> Add documentation about the S0ix Standby States that will be exposed
->>>>> to userspace as part of this series.
->>>>>
->>>>> Signed-off-by: Antheas Kapenekakis <lkml@antheas.dev>
->>>>> ---
->>>>>     .../admin-guide/pm/standby-states.rst         | 133 ++++++++++++++++++
->>>>>     Documentation/admin-guide/pm/system-wide.rst  |   1 +
->>>>>     2 files changed, 134 insertions(+)
->>>>>     create mode 100644 Documentation/admin-guide/pm/standby-states.rst
->>>>>
->>>>> diff --git a/Documentation/admin-guide/pm/standby-states.rst b/Documentation/admin-guide/pm/standby-states.rst
->>>>> new file mode 100644
->>>>> index 000000000000..96727574312d
->>>>> --- /dev/null
->>>>> +++ b/Documentation/admin-guide/pm/standby-states.rst
->>>>> @@ -0,0 +1,133 @@
->>>>> +.. SPDX-License-Identifier: GPL-2.0
->>>>> +.. include:: <isonum.txt>
->>>>> +
->>>>> +=====================
->>>>> +S0ix Standby States
->>>>> +=====================
->>>>> +
->>>>> +:Copyright: |copy| 2024 Antheas Kapenekakis
->>>>> +
->>>>> +:Author: Antheas Kapenekakis <lkml@antheas.dev>
->>>>> +
->>>>> +With the advent of modern mobile devices, users have become accustomed to instant
->>>>> +wake-up times and always-on connectivity. To meet these expectations, modern
->>>>> +standby was created, which is a standard that allows the platform to seamlessly
->>>>> +transition between an S3-like low-power idle state and a set of low power active
->>>>> +states, where connectivity is maintained, and the system is responsive to user
->>>>> +input. Current x86 hardware supports 5 different standby states, which are:
->>>>> +"Deepest run-time idle platform state" or "DRIPS" (S3-like), "Sleep", "Resume",
->>>>> +"Screen Off", and "Active".
->>>>> +
->>>>> +The system begins in the "Active" state. Either due to user inactivity or
->>>>> +user action (e.g., pressing the power button), it transitions to the "Screen Off"
->>>>> +state.
->>>>
->>>> So are you implicitly suggesting that userspace should be responsible
->>>> for *telling* the kernel that the screen is off?  I feel some DRM
->>>> helpers are missing to make it easy, but after such helpers are made the
->>>> kernel "should" be able to easily tell this on it's own.
->>>
->>> There are two issues with this
->>>     1) Windows implements a 5 second grace period on idle before firing
->>> that firmware notification [1]. This is also a partial debounce, the
->>> kernel cannot do that reliably or with the finesse required for such a
->>> notification
->>
->> Why can't the kernel do this?  I'm thinking something like this pseudo
->> code that is triggered when number of enabled CRTCs changes:
->>
->> if (in_suspend_sequence)
->>          return;
->> switch (old_num_displays) {
->> case 0:
->>          display_on_cb();
->> default:
->>          schedule_delayed_work(&drm_s2idle_wq);
->> }
->>
->> Then if the "normal" suspend sequence is started the delayed work is
->> cancelled.
->>
->> If the "normal" suspend sequence doesn't start when it fires then it
->> would call the display off callback.
-> 
-> Fundamentally, it is more complicated and error prone than 2 systemd
-> suspend targets that fire at the same time DEs lock the lock screen
-> (or any init system for that matter). 
+> -----Original Message-----
+> From: Pei Xiao <xiaopei01@kylinos.cn>
+> Sent: Wednesday, November 20, 2024 2:52 AM
+> To: hdegoede@redhat.com; ilpo.jarvinen@linux.intel.com; Vadim Pasternak
+> <vadimp@nvidia.com>; platform-driver-x86@vger.kernel.org; linux-
+> kernel@vger.kernel.org
+> Cc: David Thompson <davthompson@nvidia.com>; Pei Xiao
+> <xiaopei01@kylinos.cn>; kernel test robot <lkp@intel.com>
+> Subject: [PATCH] platform/mellanox: mlxbf-pmc: incorrect type in assignme=
+nt
+>=20
+> sparse warning,expected 'void __iomem *addr',but got 'void *addr'
+>=20
+> Reported-by: kernel test robot <lkp@intel.com>
+> Closes: https://lore.kernel.org/oe-kbuild-all/202411121935.cgFcEMO4-
+> lkp@intel.com/
+> Fixes: 423c3361855c ("platform/mellanox: mlxbf-pmc: Add support for BlueF=
+ield-
+> 3")
+> Signed-off-by: Pei Xiao <xiaopei01@kylinos.cn>
+> ---
 
-2 userspace jobs for the suspend sequence firing at same time vying for 
-similar resources?
-
-That sounds inherently racy.
-
-> This pseudocode also hardcodes
-> the delay and does not debounce the display on callback.
-> 
-
-If sticking to the Microsoft way of doing this, then it would be 
-hardcoded.  But yeah if going this direction it "could" be something 
-configurable by userspace.
-
-An actual implementation would need some locking protection like a mutex.
-
-> There is the theoretical risk of a device misbehaving if the callbacks
-> fire at the wrong time. But this risk is theoretical and could be
-> solved by a device driver quirk that blocks the transition for that
-> specific device. Which is also much simpler than trying to hardcode an
-> implementation that works with all devices.
-> 
->>>     2) Windows clearly states virtual or real and virtual can really
->>> mean anything here.
->>
->> In the context of the kernel, to me this is a DRM driver that has made
->> outputs that are not tied to a physical display.  Does it mean anything
->> else?  They should still be DRM connectors, and they should still have a
->> CRTC AFAICT.
-> 
-> For all the devices I tested, the display calls change the
-> presentation of the device such as RGB or aux devices that drain power
-> during suspend. I do not see a connection to DRM. This points me to
-> userspace being more appropriate for handling this. It also solves all
-> UX edge cases because userspace knows when it is inactive.
-> 
-> Userspace handling this will not be backwards compatible in the sense
-> that it will not fire when the displays turn off with current
-> userspace. But it preserves current behavior and as such it is not a
-> breaking change.
-> 
->>>
->>> In the end, only systemd and the compositor know if both conditions 1
->>> and 2 are met and as such can be responsible for the notification.
->>>
->>> However, if that notification firing before certain CRTCs are
->>> deactivated causes issues, such DRM helpers could be used to block the
->>> transition
->>>
->>> Link: https://learn.microsoft.com/en-us/windows-hardware/design/device-experiences/display--sleep--and-hibernate-idle-timers
->>> [1]
->>>
->>>>> Afterwards, it is free to transition between the "Sleep", "DRIPS", and
->>>>> +"Screen Off" states until user action is received. Once that happens, the system
->>>>> +begins to transition to the "Active" state. From "DRIPS" or "Sleep", it
->>>>> +transitions to "Resume", where the Power Limit (PLx) is restored to its normal
->>>>> +level, to speed up finishing "Sleep". Then, it transitions to "Screen Off".
->>>>> +If on "Screen Off" or after the transition, the display is prepared to turn on
->>>>> +and the system transitions to "Active" alongside turning it on.
->>>>> +
->>>>> +To maintain battery life, in the Windows implementation, the system is allocated
->>>>> +a maximum percentage of battery and time it can use while staying in idle states.
->>>>> +By default, this is 5% of battery or up to 2 days, where the system designer/OEM
->>>>> +is able to tweak these values. If the system exceeds either the battery
->>>>> +percentage or time limit, it enters Hibernation (S4), through a concept
->>>>> +called "Adaptive Hibernate".
->>>>> +
->>>>> +
->>>>> +S0ix Standby States
->>>>> +==================================
->>>>> +The following idle states are supported::
->>>>> +
->>>>> +                 ↓→  <Hibernate (S4)>
->>>>
->>>> I think S4 distracts in this context.
->>>
->>> Sure, can be removed.
->>>
->>>>> +    <DRIPS> ↔ <Sleep> ↔ <Screen Off> ↔ <Active>
->>>>> +        →       →  <Resume>  ↑
->>>>> +
->>>>> +.. _s2idle_drips:
->>>>> +
->>>>> +DRIPS
->>>>> +-----
->>>>> +
->>>>> +The "Deepest run-time idle platform state" or "DRIPS" is the lowest power idle
->>>>> +state that the system can enter. It is similar to the S3 state, with the
->>>>> +difference that the system may wake up faster than S3 and due to a larger number
->>>>> +of interrupts (e.g., fingerprint sensor, touchpad, touchscreen). This state
->>>>> +is entered when the system is told to suspend to idle, through conventional
->>>>> +means (see :doc:`sleep states <sleep-states>`). The system can only transition
->>>>> +to "DRIPS" while it is in the "Sleep" state. If it is not, the kernel will
->>>>> +automatically transition to the "Sleep" state before beginning the suspend
->>>>> +sequence and restore the previous state afterwards. After the kernel has
->>>>> +suspended, the notifications LSP0 Entry and Exit are used.
->>>>> +
->>>>> +.. _s2idle_sleep:
->>>>> +
->>>>> +Sleep
->>>>> +-----
->>>>> +
->>>>> +The "Sleep" state is a low power idle state where the kernel is fully active.
->>>>> +However, userspace has been partially frozen, particularly desktop applications,
->>>>> +and only essential "value adding" activities are allowed to run. This is not
->>>>> +enforced by the kernel and is the responsibility of userspace (e.g., systemd).
->>>>> +Hardware wise, the Sleep Entry and Exit firmware notifications are fired, which
->>>>> +may lower the Power Limit (PLx), pulse the suspend light, turn off the keyboard
->>>>> +lighting or disable a handheld device's gamepad. This state is associated with
->>>>> +the firmware notifications "Sleep Entry" and "Sleep Exit".
->>>>> +
->>>>> +.. _s2idle_resume:
->>>>> +
->>>>> +Resume
->>>>> +------
->>>>> +
->>>>> +The "Resume" state is a faux "Sleep" state that is used to fire the Turn On
->>>>> +Display firmware notification when the system is in the "Sleep" state but
->>>>> +intends to turn on the display. It solves the problem of system designers
->>>>> +limiting the Power Limit (PLx) while the system is in the "Sleep" state causing
->>>>
->>>> AFAIK, PLx is an Intel specific acronym, it's probably better to be more
->>>> generic in documentation.  You mentioned PLx in a commit too.
->>>
->>> Microsoft used this term in their documentation [2]. Can update to
->>> generic terms.
->>>
->>> Link: https://learn.microsoft.com/en-us/windows-hardware/design/device-experiences/modern-standby-firmware-notifications#turn-on-display-notification-function-9
->>> [2]
->>>
->>>>> +the system to wake up slower than desired. This firmware notification is used
->>>>> +to restore the normal Power Limit of the system, while having it stay in the
->>>>> +"Sleep" state.  As such, the system can only transition to the "Resume" state
->>>>> +while in the "Sleep" state and cannot re-transition to the "Sleep" state
->>>>> +afterwards.
->>>>> +
->>>>> +.. _s2idle_screen_off:
->>>>> +
->>>>> +Screen Off
->>>>> +----------
->>>>> +
->>>>> +The "Screen Off" state is the state the system enters when all its displays
->>>>> +(virtual or real) turn off. It is used to signify the user is not actively
->>>>> +using the system. The associated firmware notifications of "Display On" and
->>>>> +"Display Off" are used by manufacturers to turn off certain hardware
->>>>> +components that are associated with the display being on, e.g., a handheld
->>>>> +device's controller and RGB. Windows implements a 5-second grace period
->>>>> +before firing this callback when the screen turns off due to inactivity.
->>>>> +
->>>>> +.. _s2idle_active:
->>>>> +
->>>>> +Active
->>>>> +------
->>>>> +
->>>>> +Finally, the "Active" state is the default state of the system and the one it
->>>>> +has when it is turned on. It is the state where the system is fully operational,
->>>>> +the displays of the device are on, and the user is actively interacting with
->>>>> +the system.
->>>>> +
->>>>> +Basic ``sysfs`` Interface for S0ix Standby transitions
->>>>> +=============================================================
->>>>> +
->>>>> +The file :file:`/sys/power/standby` can be used to transition the system between
->>>>> +the different standby states. The file accepts the following values: ``active``,
->>>>> +``screen_off``, ``sleep``, and ``resume``. File writes will block until the
->>>>> +transition completes. It will return ``-EINVAL`` when asking for an unsupported
->>>>> +state or, e.g., requesting ``resume`` when not in the ``sleep`` state. If there
->>>>> +is an error during the transition, the transition will pause on the last
->>>>> +error-free state and return an error. The file can be read to retrieve the
->>>>> +current state (and potential ones) using the following format:
->>>>> +``[active] screen_off sleep resume``. The state "DRIPS" is omitted, as it is
->>>>> +entered through the conventional suspend to idle path and userspace will never
->>>>> +be able to see its value due to being suspended.
->>>>
->>>> If you follow my above suggestion, I think this file is totally
->>>> unnecessary and then there is no compatibility issue.
->>>>
->>>> It would mean that userspace if it wants to see this "screen off" state
->>>> and associated performance needs to do literally just that - turn the
->>>> screens off.
->>>
->>> Please see the reasoning above for Display On/Off. Also, you omitted
->>> sleep and resume, which have no hardware analogues you can hook into
->>> and are just as important if not more than Display On/Off.
->>
->> I suppose I'm not seeing the argument yet for why "sleep" and HW DRIPS
->> need to be different.  What kind of things would be allowed to run in
->> this state?  Who draws that line?
-> 
-> The most useful thing would be maintaining some basic connectivity so
-> that the device can resume faster if it suspended a couple of minutes
-> before and handling transitions such as to hibernation. The transition
-> to hibernation is especially important, as if both DPMS and the sleep
-> transition fire the transition looks proper. Being able to run certain
-> maintenance tasks without changing the presentation of the device from
-> sleep (e.g., the APM timer to check the battery level) is important.
-> 
-
-These points still seem to argue for "display on" vs "display off" 
-though, not a "sleep" vs "HW DRIPS".
-
-
-> Even without that, if userspace transitions to sleep and fires DPMS
-> before beginning freezing and the suspend sequence, it halfs the user
-> perceived delay to sleep. It is a big deal. This is a planned feature
-> for the next version of bazzite so I am testing it right now. It looks
-> really professional.
-> 
-
-I feel that what you're mostly vying for is "Dark Resume", which is 
-something that exists in the Chrome OS world:
-
-https://chromium.googlesource.com/chromiumos/platform2/+/HEAD/power_manager/docs/dark_resume.md
-
-I feel with cooperation between the compositor and the initiator of 
-suspend the same thing can be done outside of ChromeOS.
-
->> As it stands today the kernel freezes all tasks when suspending, so in
->> this "half" suspend state I feel like there would need to be some sort
->> of allow list, no?
-> 
-> I do sympathize with this. The most important part would be to lower
-> the power limit of the device which the manufacturers can already do
-> via the notification and perhaps other kernel drivers could do too.
-> Non-root software can be limited by the init system in general.
-
-Why does the power limit specifically need to be lowered?  The goal is 
-to avoid excessive power consumption in this kind of state, right?
-
-There are lots of other things that can be done to accomplish this:
-For example:
-* CPU boost be turned off
-* EPP bias be adjusted to efficiency
-* NVME APST can be tuned (idle timeout and transition latency tolerance)
-See this table for more info on what Microsoft does while in Modern 
-Standby: 
-https://learn.microsoft.com/en-us/windows-hardware/design/component-guidelines/power-management-for-storage-hardware-devices-nvme
-See this comment in the kernel: 
-https://github.com/torvalds/linux/blob/4a4be1ad3a6efea16c56615f31117590fd881358/drivers/nvme/host/core.c#L2503
-* Wifi power savings can be enacted
-
-Those are all things clearly that userspace can accomplish.
-
-What I'm getting at is perhaps the "suspend initiator" would be better 
-to do things than change the flow from the kernel.
-
-1) Freeze relevant tasks
-2) Work with the compositor to disable the display
-3) Save/restore EPP, boost, APST and WPS values.
-4) After a timeout (or whatever reason) when ready to go into "HW DRIPS" 
-then it can call the traditional suspend routine.
-
-Then when the system wakes up from "HW DRIPS" the "suspend initiator" 
-can decide when to restore all those values, work with compositor to 
-turn on the display etc.
-
-> 
-> As a side note, after all tasks have frozen, including compositors,
-> you can fire DPMS safely before beginning the suspend sequence for
-> backwards compatibility and to lower the span the old framebuffer is
-> shown. This would be a useful addition to this series.
-> 
->>>
->>>>> +
->>>>> +Before entering the "Screen Off" state or suspending, it is recommended that
->>>>> +userspace marks all CRTCs as inactive (DPMS). Otherwise, there will be a split
->>>>> +second where the display of the device is on, but the presentation of the system
->>>>> +is inactive (e.g., the power button pulses), which is undesirable.
->>>>> \ No newline at end of file
->>>>> diff --git a/Documentation/admin-guide/pm/system-wide.rst b/Documentation/admin-guide/pm/system-wide.rst
->>>>> index 1a1924d71006..411775fae4ac 100644
->>>>> --- a/Documentation/admin-guide/pm/system-wide.rst
->>>>> +++ b/Documentation/admin-guide/pm/system-wide.rst
->>>>> @@ -8,4 +8,5 @@ System-Wide Power Management
->>>>>        :maxdepth: 2
->>>>>
->>>>>        sleep-states
->>>>> +   standby-states
->>>>>        suspend-flows
->>>>
->>
-
+Reviewed-by: David Thompson  <davthompson@nvidia.com>
