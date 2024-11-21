@@ -1,37 +1,37 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E65492309B6
-	for <platform-driver-x86@vger.kernel.org>; Thu, 21 Nov 2024 05:50:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A7DC318660C
+	for <platform-driver-x86@vger.kernel.org>; Thu, 21 Nov 2024 05:56:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1732168229; cv=none; b=qgWnfhP3ZfO1YKsSBjpb95L2+iLC+QdE+N9fo+31NWlJxA0arKe96AUqz7q3Z4Ly5dHwBTX8OHzmF4uQJqPkdaum7V+b64tUchG/7sx4hZ59dkKrmIcM2Pu769lEab48dwYiGdoT7W0p5jRuowYMuKidawqHVgyFQH985sBrPOs=
+	t=1732168607; cv=none; b=hzEqcEUc7QFSdQ5oh20cguL1nRyy06eg6oyVi7Kyk3gDrOl/2diFRAzozTv4ygb96sJwlKOuQCtjzy5whzQDb9VQ9Zql5y+f9Rn5cg1YH2fbTmwCwkGtyvsBoXig5Vz+34Wy/5Cbbi8ks5jLUEmGHIOOTJ3NaWUx4Pu1ypTg7WY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1732168229; c=relaxed/simple;
-	bh=YKBYcO2s6kvNyzn1VoFtOuAC/eXIUFfIaZnZH203OJI=;
+	s=arc-20240116; t=1732168607; c=relaxed/simple;
+	bh=P6fN2ZcAZ5Cp/rN2+ZUVjwmn6JxcfEIaJErkCW7UeiY=;
 	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=BSGtpc9kgGysfjtwATHtq+vcQ44aZJ83n5gmD0zGtoWpNiDssIeR8UTD2OgEQFf8dsek8LxX49OeeypgK3p3nnAsoZ6j50lD1V3OhXlyhyuGVfoYB2q8CgQPTIbmS38eUDZSrSN7yTidEx9VzB+cN21jGD3RnnN7ifOCYkA+Muo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Vix3PdvO; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:MIME-Version; b=ky1d/jMOwyogAlrB1crgZVAdbkpmPGhluebg4xHuWPFRi6HJ1AvX78f8KfY65babHoaVfyA1t56mX0J4P8fnDaINVq6xxSyMVkGi/+Z66Ss7SSagyHXcRgS7TJ7kmPUzw/Zj50cgyNNr/U6MFHcve1VFEvVHvgkDhCPTuwhV9nE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pQsUrCcl; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Vix3PdvO"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 88A5CC4CECC
-	for <platform-driver-x86@vger.kernel.org>; Thu, 21 Nov 2024 05:50:28 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pQsUrCcl"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 40D61C4CECC
+	for <platform-driver-x86@vger.kernel.org>; Thu, 21 Nov 2024 05:56:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1732168228;
-	bh=YKBYcO2s6kvNyzn1VoFtOuAC/eXIUFfIaZnZH203OJI=;
+	s=k20201202; t=1732168607;
+	bh=P6fN2ZcAZ5Cp/rN2+ZUVjwmn6JxcfEIaJErkCW7UeiY=;
 	h=From:To:Subject:Date:In-Reply-To:References:From;
-	b=Vix3PdvOtV+Wuk3LKH3brYY6KwcGFD1gE9Ht5MEVO+jL9HJ0nNzffg0evoWu+YfTU
-	 o14weQscLz1E2awURoLSK6ggTAI/u2ybNxLNbZJj0WBrv05nts8ru0c6x9pshuw+FL
-	 TZ8TfySjw9tt38DZwq41hI8vt0LC5oOmfm+khXENd/GIr2JGQ8n8xpYdwIBSoIIPra
-	 VM4ORivCzlBWMsRr7xmoH7mpLFEXwHkteXm8m1dfXcOdvMje6x9YPep25La10Z1MDh
-	 UjmKev5A6LwUa95106HvhjY5X+b0ND+ubLB8h5K5UrR+Q11F/a/2lZr13fNklcg9L9
-	 cmgN7SqfzkAKQ==
+	b=pQsUrCclEpg/2NK7p03UvDN78oOVYKSFmkf5wnfzXJQ8+dXhJPOS6QJ6Espli8eqE
+	 yuVrszjmW8ED27cMz3uq1A3Qf51CRwsjJUnL10W/sYiqvettwryblhlgqeKC2bp5CZ
+	 li96yIbt+RmM5JeejRt5fiEM0RvBPJghiXzAlvCk2GBzTTtDo51MdnYl8kaF3Lo7CB
+	 J21BEoo6W4dEA2w0Z5P4m7A84J9WLzQ6SVUIePKE8f81uM6FhE9FlQkKUJt/R86LNe
+	 Vdj4OEJnY0Rwah/xF8uJjgvBv5LgnrcNxbqsEILgv3u420lT5XMfWK1R2AFNXaAxlL
+	 bte7A5x3ALCvA==
 Received: by aws-us-west-2-korg-bugzilla-1.web.codeaurora.org (Postfix, from userid 48)
-	id 789E2C53BBF; Thu, 21 Nov 2024 05:50:28 +0000 (UTC)
+	id 33F3DC53BBF; Thu, 21 Nov 2024 05:56:47 +0000 (UTC)
 From: bugzilla-daemon@kernel.org
 To: platform-driver-x86@vger.kernel.org
 Subject: [Bug 219517] REGRESSION: charge_control missing in 6.12
-Date: Thu, 21 Nov 2024 05:50:28 +0000
+Date: Thu, 21 Nov 2024 05:56:47 +0000
 X-Bugzilla-Reason: None
 X-Bugzilla-Type: changed
 X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
@@ -47,7 +47,7 @@ X-Bugzilla-Priority: P3
 X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
 X-Bugzilla-Flags: 
 X-Bugzilla-Changed-Fields: 
-Message-ID: <bug-219517-215701-hVVboViYyx@https.bugzilla.kernel.org/>
+Message-ID: <bug-219517-215701-9uY2M37C11@https.bugzilla.kernel.org/>
 In-Reply-To: <bug-219517-215701@https.bugzilla.kernel.org/>
 References: <bug-219517-215701@https.bugzilla.kernel.org/>
 Content-Type: text/plain; charset="UTF-8"
@@ -63,22 +63,17 @@ MIME-Version: 1.0
 
 https://bugzilla.kernel.org/show_bug.cgi?id=3D219517
 
---- Comment #2 from Michael (auslands-kv@gmx.de) ---
-Hi Armin
+--- Comment #3 from Michael (auslands-kv@gmx.de) ---
+As a comparison, here's the dmesg from an earlier kernel with working
+asus-nb-wmi:
 
-Yes, the asus-wmi driver loads, but the asus-nb-wmi driver fails with error=
- 5.
-Here is the relevant dmesg:
-
- dmesg|grep asus
-[   18.552935] asus_wmi: ASUS WMI generic driver loaded
-[   18.570919] asus_wmi: Initialization: 0x1
-[   18.572730] asus_wmi: SFUN value: 0x21
-[   18.572746] asus-nb-wmi asus-nb-wmi: Detected ATK, not ASUSWMI, use DSTS
-[   18.619578] asus_wmi: Failed to set throttle thermal policy (retval): 0x0
-[   18.619584] asus_wmi: Failed to set default thermal profile
-[   18.619589] asus-nb-wmi asus-nb-wmi: probe with driver asus-nb-wmi failed
-with error -5
+=E2=9D=AF dmesg|grep asus
+[   14.268902] asus_wmi: ASUS WMI generic driver loaded
+[   14.283569] asus_wmi: Initialization: 0x1
+[   14.284980] asus_wmi: SFUN value: 0x21
+[   14.284993] asus-nb-wmi asus-nb-wmi: Detected ATK, not ASUSWMI, use DSTS
+[   14.329923] input: Asus WMI hotkeys as
+/devices/platform/asus-nb-wmi/input/input11
 
 --=20
 You may reply to this email to add a comment.
