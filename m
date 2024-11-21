@@ -1,103 +1,87 @@
-Received: from mailgw.kylinos.cn (mailgw.kylinos.cn [124.126.103.232])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 630D249652;
-	Thu, 21 Nov 2024 03:55:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=124.126.103.232
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E65492309B6
+	for <platform-driver-x86@vger.kernel.org>; Thu, 21 Nov 2024 05:50:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1732161352; cv=none; b=RqR35B7ZVmnkD1g324uvwyRy5uULfLRaobl6LUAlrvxgEnJx8V1NyCYpleh9y4jDgtdQXTqzloLWcw1HsojcFGZP8fUZn58yI6yU2Qe9BJoPD87mRAlp/rrXg/8U8Jo0LLZDZaJIHxpW+/K81dJ4TyToLTtIGEbT8abnGOfkQhc=
+	t=1732168229; cv=none; b=qgWnfhP3ZfO1YKsSBjpb95L2+iLC+QdE+N9fo+31NWlJxA0arKe96AUqz7q3Z4Ly5dHwBTX8OHzmF4uQJqPkdaum7V+b64tUchG/7sx4hZ59dkKrmIcM2Pu769lEab48dwYiGdoT7W0p5jRuowYMuKidawqHVgyFQH985sBrPOs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1732161352; c=relaxed/simple;
-	bh=Ow9RTFdrQ4oOvpUDH4Qejbiz1iCr0XL2PGEH92IPSCw=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=gERoduiZUtCR/uXRvAffE3b87zZON0vlACxQHPlW7vgU7BeIK28+gLSc+Rwj0VyA8Xunp74sYiZZShDYMNiT4jAVQJ1FUabfS0w8irS8uU2y16j+mIcfrqWDbbRe+N0B3NIMta96EF6e2CUC4v69hvNkHyar3jtU7EW46ZteXqw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn; spf=pass smtp.mailfrom=kylinos.cn; arc=none smtp.client-ip=124.126.103.232
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kylinos.cn
-X-UUID: 78dbc356a7bc11efa216b1d71e6e1362-20241121
-X-CTIC-Tags:
-	HR_CC_COUNT, HR_CC_DOMAIN_COUNT, HR_CC_NAME, HR_CTE_8B, HR_CTT_MISS
-	HR_DATE_H, HR_DATE_WKD, HR_DATE_ZONE, HR_FROM_DIGIT_LEN, HR_FROM_NAME
-	HR_SJ_DIGIT_LEN, HR_SJ_LANG, HR_SJ_LEN, HR_SJ_LETTER, HR_SJ_NOR_SYM
-	HR_SJ_PHRASE, HR_SJ_PHRASE_LEN, HR_SJ_WS, HR_TO_COUNT, HR_TO_DOMAIN_COUNT
-	HR_TO_NO_NAME, IP_TRUSTED, SRC_TRUSTED, DN_TRUSTED, SA_TRUSTED
-	SA_EXISTED, SN_TRUSTED, SN_EXISTED, SPF_NOPASS, DKIM_NOPASS
-	DMARC_NOPASS, CIE_BAD, CIE_GOOD_SPF, GTI_FG_BS, GTI_C_CI
-	GTI_FG_IT, GTI_RG_INFO, GTI_C_BU, AMN_T1, AMN_GOOD
-	AMN_C_TI, AMN_C_BU
-X-CID-P-RULE: Release_Ham
-X-CID-O-INFO: VERSION:1.1.38,REQID:641ea83f-472c-4b89-8e3e-f3428b142dad,IP:0,U
-	RL:0,TC:0,Content:-5,EDM:0,RT:0,SF:-5,FILE:0,BULK:0,RULE:Release_Ham,ACTIO
-	N:release,TS:-10
-X-CID-INFO: VERSION:1.1.38,REQID:641ea83f-472c-4b89-8e3e-f3428b142dad,IP:0,URL
-	:0,TC:0,Content:-5,EDM:0,RT:0,SF:-5,FILE:0,BULK:0,RULE:Release_Ham,ACTION:
-	release,TS:-10
-X-CID-META: VersionHash:82c5f88,CLOUDID:b5f3703de92dcc30843066aac6904296,BulkI
-	D:241121115540NU8O3AH3,BulkQuantity:0,Recheck:0,SF:38|17|19|66|841|102,TC:
-	nil,Content:0,EDM:-3,IP:nil,URL:1,File:nil,RT:nil,Bulk:nil,QS:nil,BEC:nil,
-	COL:0,OSI:0,OSA:0,AV:0,LES:1,SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0
-X-CID-BVR: 0,NGT
-X-CID-BAS: 0,NGT,0,_
-X-CID-FACTOR: TF_CID_SPAM_ULS,TF_CID_SPAM_SNR,TF_CID_SPAM_FAS,TF_CID_SPAM_FSD
-X-UUID: 78dbc356a7bc11efa216b1d71e6e1362-20241121
-X-User: xiaopei01@kylinos.cn
-Received: from xiaopei-pc.. [(10.44.16.150)] by mailgw.kylinos.cn
-	(envelope-from <xiaopei01@kylinos.cn>)
-	(Generic MTA with TLSv1.3 TLS_AES_256_GCM_SHA384 256/256)
-	with ESMTP id 1783700527; Thu, 21 Nov 2024 11:55:39 +0800
-From: Pei Xiao <xiaopei01@kylinos.cn>
-To: hdegoede@redhat.com,
-	platform-driver-x86@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: Pei Xiao <xiaopei01@kylinos.cn>,
-	kernel test robot <lkp@intel.com>
-Subject: [PATCH] platform/x86: x86-android-tablets: make platform data be static
-Date: Thu, 21 Nov 2024 11:55:34 +0800
-Message-Id: <daafd1371e7e9946217712ce8720e29cd5c52f7a.1732161310.git.xiaopei01@kylinos.cn>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <202410160432.oJAPbrW9-lkp@intel.co>
-References: <202410160432.oJAPbrW9-lkp@intel.co>
+	s=arc-20240116; t=1732168229; c=relaxed/simple;
+	bh=YKBYcO2s6kvNyzn1VoFtOuAC/eXIUFfIaZnZH203OJI=;
+	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=BSGtpc9kgGysfjtwATHtq+vcQ44aZJ83n5gmD0zGtoWpNiDssIeR8UTD2OgEQFf8dsek8LxX49OeeypgK3p3nnAsoZ6j50lD1V3OhXlyhyuGVfoYB2q8CgQPTIbmS38eUDZSrSN7yTidEx9VzB+cN21jGD3RnnN7ifOCYkA+Muo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Vix3PdvO; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Vix3PdvO"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 88A5CC4CECC
+	for <platform-driver-x86@vger.kernel.org>; Thu, 21 Nov 2024 05:50:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1732168228;
+	bh=YKBYcO2s6kvNyzn1VoFtOuAC/eXIUFfIaZnZH203OJI=;
+	h=From:To:Subject:Date:In-Reply-To:References:From;
+	b=Vix3PdvOtV+Wuk3LKH3brYY6KwcGFD1gE9Ht5MEVO+jL9HJ0nNzffg0evoWu+YfTU
+	 o14weQscLz1E2awURoLSK6ggTAI/u2ybNxLNbZJj0WBrv05nts8ru0c6x9pshuw+FL
+	 TZ8TfySjw9tt38DZwq41hI8vt0LC5oOmfm+khXENd/GIr2JGQ8n8xpYdwIBSoIIPra
+	 VM4ORivCzlBWMsRr7xmoH7mpLFEXwHkteXm8m1dfXcOdvMje6x9YPep25La10Z1MDh
+	 UjmKev5A6LwUa95106HvhjY5X+b0ND+ubLB8h5K5UrR+Q11F/a/2lZr13fNklcg9L9
+	 cmgN7SqfzkAKQ==
+Received: by aws-us-west-2-korg-bugzilla-1.web.codeaurora.org (Postfix, from userid 48)
+	id 789E2C53BBF; Thu, 21 Nov 2024 05:50:28 +0000 (UTC)
+From: bugzilla-daemon@kernel.org
+To: platform-driver-x86@vger.kernel.org
+Subject: [Bug 219517] REGRESSION: charge_control missing in 6.12
+Date: Thu, 21 Nov 2024 05:50:28 +0000
+X-Bugzilla-Reason: None
+X-Bugzilla-Type: changed
+X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
+X-Bugzilla-Product: Drivers
+X-Bugzilla-Component: Platform_x86
+X-Bugzilla-Version: 2.5
+X-Bugzilla-Keywords: 
+X-Bugzilla-Severity: normal
+X-Bugzilla-Who: auslands-kv@gmx.de
+X-Bugzilla-Status: NEW
+X-Bugzilla-Resolution: 
+X-Bugzilla-Priority: P3
+X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
+X-Bugzilla-Flags: 
+X-Bugzilla-Changed-Fields: 
+Message-ID: <bug-219517-215701-hVVboViYyx@https.bugzilla.kernel.org/>
+In-Reply-To: <bug-219517-215701@https.bugzilla.kernel.org/>
+References: <bug-219517-215701@https.bugzilla.kernel.org/>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Bugzilla-URL: https://bugzilla.kernel.org/
+Auto-Submitted: auto-generated
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
 
-make lenovo_yoga_tab2_1380_bq24190_pdata and lenovo_yoga_tab2_1380_modules
-to be static
+https://bugzilla.kernel.org/show_bug.cgi?id=3D219517
 
-Reported-by: kernel test robot <lkp@intel.com>
-Closes: https://lore.kernel.org/oe-kbuild-all/202410160432.oJAPbrW9-lkp@intel.com/
-Fixes: 3eee73ad42c3 ("platform/x86: x86-android-tablets: Add Lenovo Yoga Tablet 2 Pro 1380F/L data")
-Signed-off-by: Pei Xiao <xiaopei01@kylinos.cn>
----
- drivers/platform/x86/x86-android-tablets/lenovo.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+--- Comment #2 from Michael (auslands-kv@gmx.de) ---
+Hi Armin
 
-diff --git a/drivers/platform/x86/x86-android-tablets/lenovo.c b/drivers/platform/x86/x86-android-tablets/lenovo.c
-index ae087f1471c1..a60efbaf4817 100644
---- a/drivers/platform/x86/x86-android-tablets/lenovo.c
-+++ b/drivers/platform/x86/x86-android-tablets/lenovo.c
-@@ -601,7 +601,7 @@ static const struct regulator_init_data lenovo_yoga_tab2_1380_bq24190_vbus_init_
- 	.num_consumer_supplies = 1,
- };
- 
--struct bq24190_platform_data lenovo_yoga_tab2_1380_bq24190_pdata = {
-+static struct bq24190_platform_data lenovo_yoga_tab2_1380_bq24190_pdata = {
- 	.regulator_init_data = &lenovo_yoga_tab2_1380_bq24190_vbus_init_data,
- };
- 
-@@ -726,7 +726,7 @@ static const struct platform_device_info lenovo_yoga_tab2_1380_pdevs[] __initcon
- 	},
- };
- 
--const char * const lenovo_yoga_tab2_1380_modules[] __initconst = {
-+static const char * const lenovo_yoga_tab2_1380_modules[] __initconst = {
- 	"bq24190_charger",            /* For the Vbus regulator for lc824206xa */
- 	NULL
- };
--- 
-2.34.1
+Yes, the asus-wmi driver loads, but the asus-nb-wmi driver fails with error=
+ 5.
+Here is the relevant dmesg:
 
+ dmesg|grep asus
+[   18.552935] asus_wmi: ASUS WMI generic driver loaded
+[   18.570919] asus_wmi: Initialization: 0x1
+[   18.572730] asus_wmi: SFUN value: 0x21
+[   18.572746] asus-nb-wmi asus-nb-wmi: Detected ATK, not ASUSWMI, use DSTS
+[   18.619578] asus_wmi: Failed to set throttle thermal policy (retval): 0x0
+[   18.619584] asus_wmi: Failed to set default thermal profile
+[   18.619589] asus-nb-wmi asus-nb-wmi: probe with driver asus-nb-wmi failed
+with error -5
+
+--=20
+You may reply to this email to add a comment.
+
+You are receiving this mail because:
+You are watching the assignee of the bug.=
