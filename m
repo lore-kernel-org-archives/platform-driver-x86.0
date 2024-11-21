@@ -1,73 +1,74 @@
-Received: from cmccmta2.chinamobile.com (cmccmta6.chinamobile.com [111.22.67.139])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 86C801CCEC3;
-	Thu, 21 Nov 2024 13:00:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=111.22.67.139
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A5E11CD211
+	for <platform-driver-x86@vger.kernel.org>; Thu, 21 Nov 2024 13:24:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1732194036; cv=none; b=ghbKuePI1CS3IUFVCXE1cE0A/uuqN44xzc+h+t1DxS04+JXPIV0ltV0lXK/yw+olGHnZDpeIRqcaxyapp6UNljjicvhc5Plrg9mW1r2zbiVlzjKDZhi+QCmgz0gLnw3g8LnAMVmLQKbl/6l35tDB/eUT8czo5TItvZHcpKg9WAI=
+	t=1732195495; cv=none; b=DxHdJFH6gaYJiN+4XN4xJn9JkJcotfeIsEEMzR85XaltA+mWm85KPgK2l0tb1e6QwfFkNPqzCR1HNSDhTQVXOP/GjnQDAijg2WlidsGTfWpi1hKOV4fxzPfdVX7L3T3UNQ3+F+7CCwjucs8gsUP3z8a2ujxmE8J/5exOk/rCFT8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1732194036; c=relaxed/simple;
-	bh=pNxMM+jCRLHZcp2/hz4VhiG1zswitaV2W3TVBT6z5X4=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=uAdOkmAW4D4Qa7ip5x+6BuLIkvVApl3cT8loco0VD094LfjsdfikyhRYyXg+c3dmmWQShi662zcw03ldMXCA2BVVI3q277gnOjob201ZgVTQzO94n9ghiVl1XHM4vVuHnBRrQ4plJhhLogMtGrAhz3HH+sdM31ZswFIY+qZaCxg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=cmss.chinamobile.com; spf=pass smtp.mailfrom=cmss.chinamobile.com; arc=none smtp.client-ip=111.22.67.139
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=cmss.chinamobile.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cmss.chinamobile.com
-X-RM-TagInfo: emlType=0                                       
-X-RM-SPAM-FLAG:00000000
-Received:from spf.mail.chinamobile.com (unknown[10.188.0.87])
-	by rmmx-syy-dmz-app05-12005 (RichMail) with SMTP id 2ee5673f2ee9fcb-5efe2;
-	Thu, 21 Nov 2024 21:00:29 +0800 (CST)
-X-RM-TRANSID:2ee5673f2ee9fcb-5efe2
-X-RM-TagInfo: emlType=0                                       
-X-RM-SPAM-FLAG:00000000
-Received:from localhost.localdomain (unknown[10.55.1.69])
-	by rmsmtp-syy-appsvr05-12005 (RichMail) with SMTP id 2ee5673f2eed70b-d8ca6;
-	Thu, 21 Nov 2024 21:00:29 +0800 (CST)
-X-RM-TRANSID:2ee5673f2eed70b-d8ca6
-From: liujing <liujing@cmss.chinamobile.com>
-To: srinivas.pandruvada@linux.intel.com
-Cc: platform-driver-x86@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	liujing <liujing@cmss.chinamobile.com>
-Subject: [PATCH] tools/power/x86/intel-speed-select: Fix the wrong format specifier
-Date: Thu, 21 Nov 2024 21:00:28 +0800
-Message-Id: <20241121130028.6259-1-liujing@cmss.chinamobile.com>
-X-Mailer: git-send-email 2.27.0
+	s=arc-20240116; t=1732195495; c=relaxed/simple;
+	bh=n8vfw9Zc/bCzHVQoAca5pKXwJfwAleFhmjRX0XVpVfg=;
+	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=oA/oFB69Xf27WyPtorGPwecQKAc6Zr8KUNyLtqWulI1tA4400qsc/ZXhGeGEfgWGlGDrxi9YQue6Ez2dKkGoeUkI7tVIzYUTAHEDVvbAoRqVicjEQMS5hfb0esJSP0/mCWARYEBeIjeGM7o7piiBBLmrKAR3Bb1HdLO0sYO68to=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=odlMHWi4; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="odlMHWi4"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 1CB36C4CED0
+	for <platform-driver-x86@vger.kernel.org>; Thu, 21 Nov 2024 13:24:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1732195495;
+	bh=n8vfw9Zc/bCzHVQoAca5pKXwJfwAleFhmjRX0XVpVfg=;
+	h=From:To:Subject:Date:In-Reply-To:References:From;
+	b=odlMHWi4cX1Y/tQq/DDo+2Vvh+yQ4F4p73dpom6lcdupN9L95atKVCeV0Cx72Rnw3
+	 bXb53eW1XtBi6XOSGUdSuwBVQtrOBQM8sZ8XZnFN5/koJ+fKeF5E6VEXfQHxCmsUje
+	 h+umIAqK9oLMO7fFYao8WuL4pgqYQMr4X44f9ibZ3teXi77Tg3gF+to9ElhXSSiuda
+	 TmLo5GmvSeUZHAa/8NcpRxFLjMjJvJ2ruJlZgRp+aOF8bY4+/EbJMKda2AfPqXJC1D
+	 lg4s/zGKUJ488kqJoPbRiOq2NvupL6piYV+0eP1+rnwc+WB2ycr5IqUncPmbZNRsQr
+	 qx9QKsTKoaPQw==
+Received: by aws-us-west-2-korg-bugzilla-1.web.codeaurora.org (Postfix, from userid 48)
+	id 0AE17CAB785; Thu, 21 Nov 2024 13:24:55 +0000 (UTC)
+From: bugzilla-daemon@kernel.org
+To: platform-driver-x86@vger.kernel.org
+Subject: [Bug 219517] REGRESSION: charge_control missing in 6.12
+Date: Thu, 21 Nov 2024 13:24:54 +0000
+X-Bugzilla-Reason: None
+X-Bugzilla-Type: changed
+X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
+X-Bugzilla-Product: Drivers
+X-Bugzilla-Component: Platform_x86
+X-Bugzilla-Version: 2.5
+X-Bugzilla-Keywords: 
+X-Bugzilla-Severity: normal
+X-Bugzilla-Who: W_Armin@gmx.de
+X-Bugzilla-Status: NEW
+X-Bugzilla-Resolution: 
+X-Bugzilla-Priority: P3
+X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
+X-Bugzilla-Flags: 
+X-Bugzilla-Changed-Fields: 
+Message-ID: <bug-219517-215701-HnKiPQakFU@https.bugzilla.kernel.org/>
+In-Reply-To: <bug-219517-215701@https.bugzilla.kernel.org/>
+References: <bug-219517-215701@https.bugzilla.kernel.org/>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Bugzilla-URL: https://bugzilla.kernel.org/
+Auto-Submitted: auto-generated
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
 
-Because clos_config->clos_min and clos_config->clos_max
-are unsigned int types, the output format should be %u.
+https://bugzilla.kernel.org/show_bug.cgi?id=3D219517
 
-Signed-off-by: liujing <liujing@cmss.chinamobile.com>
+--- Comment #11 from Armin Wolf (W_Armin@gmx.de) ---
+Can you check in the mean time if any BIOS updates are available for your
+device?
 
-diff --git a/tools/power/x86/intel-speed-select/isst-display.c b/tools/power/x86/intel-speed-select/isst-display.c
-index 07ebd08f3202..5ecf24bda6dd 100644
---- a/tools/power/x86/intel-speed-select/isst-display.c
-+++ b/tools/power/x86/intel-speed-select/isst-display.c
-@@ -617,14 +617,14 @@ void isst_clos_display_information(struct isst_id *id, FILE *outf, int clos,
- 	format_and_print(outf, level + 2, header, value);
- 
- 	snprintf(header, sizeof(header), "clos-min");
--	snprintf(value, sizeof(value), "%d MHz", clos_config->clos_min * isst_get_disp_freq_multiplier());
-+	snprintf(value, sizeof(value), "%u MHz", clos_config->clos_min * isst_get_disp_freq_multiplier());
- 	format_and_print(outf, level + 2, header, value);
- 
- 	snprintf(header, sizeof(header), "clos-max");
- 	if ((clos_config->clos_max * isst_get_disp_freq_multiplier()) == 25500)
- 		snprintf(value, sizeof(value), "Max Turbo frequency");
- 	else
--		snprintf(value, sizeof(value), "%d MHz", clos_config->clos_max * isst_get_disp_freq_multiplier());
-+		snprintf(value, sizeof(value), "%u MHz", clos_config->clos_max * isst_get_disp_freq_multiplier());
- 	format_and_print(outf, level + 2, header, value);
- 
- 	snprintf(header, sizeof(header), "clos-desired");
--- 
-2.27.0
+--=20
+You may reply to this email to add a comment.
 
-
-
+You are receiving this mail because:
+You are watching the assignee of the bug.=
