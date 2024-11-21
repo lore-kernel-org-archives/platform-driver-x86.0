@@ -1,251 +1,304 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from NAM04-MW2-obe.outbound.protection.outlook.com (mail-mw2nam04on2053.outbound.protection.outlook.com [40.107.101.53])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8DEC614A0AA;
-	Thu, 21 Nov 2024 17:41:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1732210886; cv=none; b=HC03sil1qoQzAHlSQqwlhnkro4kbF0csBD+YwXBe5O34lTUoc9ZrakApzLtyqFLv60U7jJgVb1qmgNl9yHPem5Vh4U6TaGcEXNBYH3K6d6HjNKpQETo/3Dw7o91V/OxqFrKob7K4nG0ticctffekKQMGOTCmX7m4dbgXIxY4KM4=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1732210886; c=relaxed/simple;
-	bh=P0feMC60hth3rSJATqX1MRVAlwWtwEnhY5hmLhrXyVM=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=EC/TSSpiXANpCk79NLwUm560BO/eNmT77biS57X/2rC8zec38WZ33tnEFOUdYqtPe5GMC0ESiC6+g0w2LIg8nPfwa9Yq0Aa9jAOCUICFPKdTazNVEGRyylTH/bZoyLr2bMy574F5y4gylrCwlWwRc4jlMOZzO41pvjOolfsb858=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MBzUubfR; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 05A2B1C4A3F;
+	Thu, 21 Nov 2024 18:04:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.101.53
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1732212288; cv=fail; b=WWUwQg0DgmALnqyYFkFibdKuRlSt5BqAzcdjSia4lDr2H8AgJybQJ9HoLkyZ8OvHhO2jIS65H5+BrFy0jxaq8Qs0uYftxZktVY0ALTTGeMmq9ML3F2BmRc2c1xee+vzpRb3LvuI11XY4o8Bfvn2rLE0cjDfGiWfIi70HKwPBKuk=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1732212288; c=relaxed/simple;
+	bh=OGlgqxkBAmtk0ygqQ1sAnK6UXSpXYIn7xL/b6Xj1Odw=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=fGBMT0YfuZhWAZpKyx35MRhOnjIX/HwlGtSqgB5ta7yQdZ3GnsYa4Sj8ujJNyWxY1emz9/FQdhj7R6bEgxk58fhFgvgYZyVPHsgNpI4kw7wNdnh89FLaowxF/wH/G2o1y5hFdIumFQ7kB1f/fCeoW+M8gZi+UwYU6JfHwA1V4AY=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=miir7Kau; arc=fail smtp.client-ip=40.107.101.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MBzUubfR"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 15024C4CECC;
-	Thu, 21 Nov 2024 17:41:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1732210886;
-	bh=P0feMC60hth3rSJATqX1MRVAlwWtwEnhY5hmLhrXyVM=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=MBzUubfR+0xU6sIQhz2tvd+8WRNmC4AZ0j0x44qRFaB1MSUWU1FA+/TKiK+wxKMdd
-	 lWjsB0aTZdPfTgmTZ7sBoOswYXVKm8XkqrH5N9176wEUYAMfjvjujsq+H33DevCtj9
-	 B/EaQbL0lcGDDqPZt5qPbuoNavAUMjv60aUUJLIzNT4zhmCNaNpkHxE6wsZ2BUrYC/
-	 T4oNCtrC/Pa7Whdq1rh0GFjeVel/W4nc4Djl0Tq9/Y87ejGWR7p3NzgahFfyvYWnnV
-	 tHWaTqLUGOOPF4eOVtk1V6zNt+xZdZZkLYEzLYWRuJvM5DOYz8Ef6y/kI/L5c78lfu
-	 cOz3+S8zh/VNw==
-Received: by mail-oa1-f44.google.com with SMTP id 586e51a60fabf-296b0d2271aso799454fac.0;
-        Thu, 21 Nov 2024 09:41:26 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCWxtpBjvCfAq9mLX2GZr+sccyrtFa8pSlPvtsFmPfuZRpC8HlYG+jaRUZWmYYd49jThwodv0cjqXv3wRuW7k0D2D/P3@vger.kernel.org
-X-Gm-Message-State: AOJu0YwE8qzPQ9RTSDPJ7/XRtxmF20Aw7I+UF6joATicJd9D82SUwpKP
-	w/99kFanIXwmNeCmANx0lj7Mxv7gGKLfpMfQWzNR2IpK8AUX4Tn5agoevF3FaksvkCTYVFNSvVm
-	i6VpfQURzSAKPoTMuO8LLgyg3mfw=
-X-Google-Smtp-Source: AGHT+IHLqeIrimbLb4wXUN1Zgww8MR9OFZG5lj+3ockOum7cV87ygjCO3p1xGsSNZiP8/WDlyb6qQgD2+cTYoFUkO8c=
-X-Received: by 2002:a05:6870:418e:b0:277:e641:5659 with SMTP id
- 586e51a60fabf-296d9ec5dd1mr8315412fac.35.1732210885144; Thu, 21 Nov 2024
- 09:41:25 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="miir7Kau"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=OGkomdM8GAvBvgto1cimqt4fZinhtVk/bvcOvWjhEvXHNO32Ls9ghTfdAk8DqKmZDam5VcZOZ0UkMcjaAzKF4KHUmiJdrJps5m8F+Xfz7Zx8cKQ/qWQhtWv5Q5dr2EbaG4PGDPi7E3XGiT8V4C5hyDoOJs0Bm8kKssDhoXH4dKHzm1UMKCcyhjVW1E5LajEmTgIJRbQwI+0F/xBTIKgNuWwkvgLf+KGYhgO5s+jYlYw1FYsvTCQmk+UBSJXjtN7BgCrXgKox/GiTfI0mhw13JDaW98ahe4zugXmgSsaEBo3NfClIbrE1FTaFUzcPzlKEU7udE8rK80mlTLOIg8eKDQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=88RAwZpZe/W9EU12OQq62gzPS88u+uLalnvhzv5Sf/k=;
+ b=uo76B7kKiS1lXut11oOeBRkwo5OFN6bC1nE1Inv9W8EJOu7i9eMnw/h9+hTxuLOw9+y1HwcqfDFuqZBZZFr6Ll2txPXIwvH2XaEviewHOPErIVyANhe19i8ym3DH3hm4PB1saSZs0pCOb9NKyeOo26GqB+ozeItZwOvxQ5RqJ3MUl0Trb80ib/TgnPZqoyNCznpWAGE3Ao6sRYVoHW4LNdaaFBgeYehJblEdCoR2K6rVmZGSDt3fXhdw4264AE005Yk0diB17O3QpLK9odRML0gSEtF9t0VbRLJ2IcV7lJ6+WzAY1cOBWsbKcDMud8fQCWGR6olGXOOJ/bYlMBvmRw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=88RAwZpZe/W9EU12OQq62gzPS88u+uLalnvhzv5Sf/k=;
+ b=miir7KauFOPTrNXa31e/QmUCn7GYs4/lzcXqoJPDB2Jgcm6vV0AhvrFyMvvI58+IQKsaJbY6YxYguQ06lG0Tg7zWCPn9It/MgQjWFZGAkeLLqxtx0JE126/Eu1cCadV093FNDG5x4vhxV1xYaMDaYJvZqpmeggTIDgyzLhV/lKM=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from MN0PR12MB6101.namprd12.prod.outlook.com (2603:10b6:208:3cb::10)
+ by MN2PR12MB4205.namprd12.prod.outlook.com (2603:10b6:208:198::10) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8182.16; Thu, 21 Nov
+ 2024 18:04:42 +0000
+Received: from MN0PR12MB6101.namprd12.prod.outlook.com
+ ([fe80::37ee:a763:6d04:81ca]) by MN0PR12MB6101.namprd12.prod.outlook.com
+ ([fe80::37ee:a763:6d04:81ca%4]) with mapi id 15.20.8158.019; Thu, 21 Nov 2024
+ 18:04:42 +0000
+Message-ID: <bdad36d9-aa0f-49dc-9780-ab72c7879a0f@amd.com>
+Date: Thu, 21 Nov 2024 12:04:40 -0600
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFC 11/13] acpi/x86: s2idle: add quirk table for modern standby
+ delays
+To: Antheas Kapenekakis <lkml@antheas.dev>, linux-pm@vger.kernel.org
+Cc: platform-driver-x86@vger.kernel.org, dri-devel@lists.freedesktop.org,
+ Hans de Goede <hdegoede@redhat.com>, Kyle Gospodnetich <me@kylegospodneti.ch>
+References: <20241121172239.119590-1-lkml@antheas.dev>
+ <20241121172239.119590-12-lkml@antheas.dev>
+Content-Language: en-US
+From: Mario Limonciello <mario.limonciello@amd.com>
+In-Reply-To: <20241121172239.119590-12-lkml@antheas.dev>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: SA1P222CA0108.NAMP222.PROD.OUTLOOK.COM
+ (2603:10b6:806:3c5::29) To MN0PR12MB6101.namprd12.prod.outlook.com
+ (2603:10b6:208:3cb::10)
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20241121172239.119590-1-lkml@antheas.dev>
-In-Reply-To: <20241121172239.119590-1-lkml@antheas.dev>
-From: "Rafael J. Wysocki" <rafael@kernel.org>
-Date: Thu, 21 Nov 2024 18:41:14 +0100
-X-Gmail-Original-Message-ID: <CAJZ5v0gDg57skLVOH32NtmhCEXGw_m63az4jWRJgkUq6qTsqgQ@mail.gmail.com>
-Message-ID: <CAJZ5v0gDg57skLVOH32NtmhCEXGw_m63az4jWRJgkUq6qTsqgQ@mail.gmail.com>
-Subject: Re: [RFC 00/13] acpi/x86: s2idle: implement Modern Standby transition
- states and expose to userspace
-To: Antheas Kapenekakis <lkml@antheas.dev>
-Cc: linux-pm@vger.kernel.org, platform-driver-x86@vger.kernel.org, 
-	dri-devel@lists.freedesktop.org, 
-	Mario Limonciello <mario.limonciello@amd.com>, Hans de Goede <hdegoede@redhat.com>, 
-	Kyle Gospodnetich <me@kylegospodneti.ch>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: MN0PR12MB6101:EE_|MN2PR12MB4205:EE_
+X-MS-Office365-Filtering-Correlation-Id: 5e91e3ec-11c5-425d-5a7c-08dd0a56f910
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|376014|366016|7053199007;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?L3hNcUVkdmlFV3hmcEJDV0MzVUVIVkUvbTVJWFVibG85d3RmU3VNcGtNZkJZ?=
+ =?utf-8?B?aXJFTVpmakNIQXhXTXA1Vjlna2wvdmdkcDcvUFdEZjdXVWxMOUsxa1JXQmRM?=
+ =?utf-8?B?RlY0NUJqMTRsRFd2MEloS0dINERUK21nSHJPaHlKZFBnT0lTTW9JdDNvZFJx?=
+ =?utf-8?B?ZEhlZ1NjeE5jUHNMbXBjMVBmeHMxQ2wwUkR6dHBKUFp2YSs5QUdyZDB0SjdU?=
+ =?utf-8?B?RW9JUGJSS1hZUTl4VkpabFNvYVoxbGU0VzNJTnNzZXlxTnpad3RDbUFOc2h1?=
+ =?utf-8?B?NXVhV3l3VzJMSHlIcXI5dWVLK3dqbnIzNGM5OXM1SHVaTzE5M0FLLzVhZjQz?=
+ =?utf-8?B?OHRuYSt0RC9PYUpUaDltVWRuc0ZNbzFpd1FXNzhuQzd0RTZ2aHA0QTUrOTBo?=
+ =?utf-8?B?MTRGUnRkR2hvdWNvaUk5STg1b2lVekJnYzEyRW5zK2NHRTZ5NkhXdlBTSTBF?=
+ =?utf-8?B?T2RGcldmMUdyWC96OFM1M2ZDVjhQU1lVY2MvSDlxa21QbE11UnlhU1FocGVR?=
+ =?utf-8?B?NnhPZkhwMlFPZURtOExRSk1xYmcrR3BxaFRwK3pKM3ZPSlBKL2orOFdOdzVI?=
+ =?utf-8?B?N0FaQzVtT0NPNEJGVklGcDVWRkJQMVFwVXZoT08zU3kvYlZVTGUyMmNqc2M2?=
+ =?utf-8?B?ellrY1h1UmFDMXlwRXprb2dFZFN3ZTEzdjFablBRM3dSWGpjaTBkU3ljQ29Q?=
+ =?utf-8?B?NW9rZlV0Y0V0TTBmaWpDN0lvczNUK1MrK2VLNEJVa3RadEpOWHZpekhrZ1V1?=
+ =?utf-8?B?cCtCTnQyQ0JvVVdwK1lDRmlEbUp5V2dGcXJlMzQxelJiM2VXK3BGbFIxZEpZ?=
+ =?utf-8?B?bzJZZVpqbkk3dGRPa0hMcjU2UEdwVmtnSlVYNlMxQnI0NlV5SDZzRnRGNWds?=
+ =?utf-8?B?WG5GV2lTbXNXV0VsNEF3aEdaa3V3bUtBNE9wSmFlSVpkdHFJQjl3UFpoZTQv?=
+ =?utf-8?B?Zk9uMHlSZ0F5enl2VC9DbEQyMzRIZXpYeDltUjBvMlFGR0V6d01CbkRwSThm?=
+ =?utf-8?B?Z1Ywd2NHMjF0Yng3NE5sNFNpNkF3YlhkcDl4L280Q0pQZWxqbENpZXJsM0M3?=
+ =?utf-8?B?aTNHY3dTMnJBTUtkejR4M0ZSb3cxNThjSElVN0sxNjhxK0JNbUJTamlsaitZ?=
+ =?utf-8?B?QVI0ZnY1aHladW9URDdOaUo1REk3UFZlMm56TjRsNW82ZG91RkZwM01xMXVm?=
+ =?utf-8?B?MUlucFpTWk1hNy9GbXNsdWN5aHY2UXh0Qmg1ODVHQVN0a0FTYVpENGhQYldy?=
+ =?utf-8?B?N0dFRFkydUk0bWNvUko2L24xdzFKZk5lRXVSVlkwVWF5bG9TOHNjNWh6QTJj?=
+ =?utf-8?B?OVpJOXVua2daam5lM3NzQXg5cnA0NUFoeW54eU1XekxXazBYTzJFQm1nNzcy?=
+ =?utf-8?B?VnZ0RU1YcE5Gbk5GRnFGMDZSa1Rwek56NXZyaElXdDlWaE1ZRmc5M1ZGZkVI?=
+ =?utf-8?B?OE1INUZlTnExZldnVWg0RUNTS09HRTZqTExKWEE0NXhZc0NUZWQ3cjF4ektI?=
+ =?utf-8?B?RlhOSUhvV01zMHNFWVVoMzVQTjJOM0JaNlJrQSs2TWJDbndRWlFiVlBwclJO?=
+ =?utf-8?B?cWl2Q2xBdTBhR3FLbEZlazhlcy90RE5TcC9JYVRtcitudjd0eDZvZ0xpQjUy?=
+ =?utf-8?B?Vmsvek04d0xJRHQyZEo3cnFhMTJmNFRKaTZMVkNvVVd4aG1CdG1tSzI3WnY0?=
+ =?utf-8?B?ZzkybXhiMUZIenVucjA1cDZEWHNVMXlRYklpcHBzR0hzT0dNQ0JYV1hnZnVX?=
+ =?utf-8?Q?8XrBxhF+RNtrEj9fm4MrMpl0u5reaCKR6rbPjCt?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MN0PR12MB6101.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(376014)(366016)(7053199007);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?VEpycXdHZlZhZTV6cWx4TlVTMzlVc0hQY1hIUlVxclJEeWd5WHE0VUk1ZzVz?=
+ =?utf-8?B?OFlXNG5YMjlGNitmbzVtcFFtblNPdW1EWGZpbTVRY2p3UjJoYTZsTUZBNnFW?=
+ =?utf-8?B?VCtYd3djdmkzZTN2cnZvY1JFMmZidGVQVGR6bm5pYzI4L0t4TmJuYTBQWERo?=
+ =?utf-8?B?YlZmcjQrWENSQ1ZialFTbVgvMk5sRnhSYktLSVdOdXZxNEg0Q0hQd2k2cGZS?=
+ =?utf-8?B?anVKbWQ2bDcwV0VOd3BPUnFwNmYraU80ZkFCREJhWUo2R1dHUWpPeDRac25O?=
+ =?utf-8?B?V2VPWmcrb2g2T1Y1eTRjci9BQllveFloNGFURVNndmswWFV1WFpvMmxEUDgv?=
+ =?utf-8?B?TGR4SWpYZnVCQmVIZ0Rwbkt4SktzNm9yM0FtZHBveURQUS9qWWNrT0NYYU1R?=
+ =?utf-8?B?VVlnYmZFU1NJSXBpM3ltUUZDWkVIUmUweGNGTGRlZmZ2MnYzNGhyRjY1VS9s?=
+ =?utf-8?B?NmltUTRpWTFXNkdxWHM4c3NhMFl0QlcwRjJjRlowblFQRFQ2SHNlbVBaKzlq?=
+ =?utf-8?B?WmIzamJTTm1XZG9CZzk3VFNOZXoxbnBFYkhIU0hwaTZrN29QazFiRDNwTng5?=
+ =?utf-8?B?MXNlTDlHeUo4c1l2RVlGY1dpOUx4L3d0ZmNPRmtTcitUN2pnbUFaM2Rucmh6?=
+ =?utf-8?B?WGd0Y2JUOXIwOGpOR2tnbWFrdXNWa255Wmp4VVE1eGtZcmJyQWx4M2pBK2Iy?=
+ =?utf-8?B?RHg5cnF1YzhqUkY1Z2VwYk5aOUJReGR0c2E4UHNwaXY5RTlPZFczU0ZNcTU4?=
+ =?utf-8?B?cCswMUtHVG9NU215K0t2aWZZaHpxQ0NNZEZTN040NERhTGV6R3kzK2JURGRZ?=
+ =?utf-8?B?Q2d1Ym5HNVJUaWVMUHhHMVFqUGd4ZC9pT0xkMzVTUTJJRDZhU3FJTUxvZm9x?=
+ =?utf-8?B?UUtXNW5uOHluU3A4QnZuMWpuc2NvbXZ5b2J6eDhnUEprUjVnOUZqaUtjMDdy?=
+ =?utf-8?B?a3crQzdyRWVTUGVyeE9adE1XZkdLV0hhME80SW9hUW1PV0FQYVVZMmI5czNL?=
+ =?utf-8?B?eXBoYk10N0ZORUd4eFNuYWxlNVpEek16SjQxYjFxdDFrbHB6ZjlEUTVYOHdS?=
+ =?utf-8?B?OENCTFo4TVNDWmRVRmZrbUJpdTZZa3k1d3R3aFVYNHRpWE5GTUVzSVNka2Fu?=
+ =?utf-8?B?YlRDeHJLZlVMMlRTeGpJRWVhc0xRWHVLc2FBV1hxeFpwcWxiV0FLVWhhM1lv?=
+ =?utf-8?B?Szg2U2lxOUQ5VCs1RmlSaXZWMWpmSUtxcWIrcnNFRUtPZ3hGVGdCUjNZdE0w?=
+ =?utf-8?B?emxDckdZajRaSzhlNTk2TXpiMmlQU0IxV0V6UmJwQjEwd0V2cnZSM2xwUDdQ?=
+ =?utf-8?B?dWlPRE1BcE5PdytiVnNXaEFzWjYzQ1p5QkMvOVdjSWxTU3Mzcms5QjZYOGM5?=
+ =?utf-8?B?NENzREZSanFhTDFWa09kVjlIMURQRnZaRlhPZ0RiSk1hUDZVZ1hvTEl4Ri9j?=
+ =?utf-8?B?eVpjUEpyMW9BUm1vaWlkS0U5U3U0MzRvc2ZoMkNsZEJrUm5IRjAzNzNvWEFH?=
+ =?utf-8?B?NXZPSXNYTnBaNlR3aGp6anFmTGFMaStmbURPODVEdWJQTC9qc0FVbS9RV1d4?=
+ =?utf-8?B?UXYraFFZTmpXVVpQSUY5cU5WazkyeVA4VnI4WDdDZmMyenpDa09BNk1iS1Y2?=
+ =?utf-8?B?S3VYdXZ3ZHVzODVLckQyQTdKcy83Y2JtQXBLZC9SYmZ1QWsvb2E1TDA3SS9V?=
+ =?utf-8?B?cENrR2swaldtd0lsY2E2OGVXeGtMaFRCQVVOM08za1ozRUJucHRNaEU5c09v?=
+ =?utf-8?B?ZUN0S3hyQXp0WUpRaFg1Mkh6M3VHTWt0SzJCdVBiMXpNRWJwa2FFWEZ3Vjg4?=
+ =?utf-8?B?cXB5OTV1amduS2tBRFpGa0lna3lFRGJwcmptUDhNUXovaXU4Sjg4QmsyY0FX?=
+ =?utf-8?B?KzZSQ0tpaVNkUDJYQm54VDFuVzJZK0h3VTVJazR4aGZEL0hnMHlvQlA0My9j?=
+ =?utf-8?B?UmJjRWpyNnZCVEhqci9vWC9VRHRoZFNXQ3FZdTFLZ2dOTFJpY256QkRoaStz?=
+ =?utf-8?B?bzJ1Qlo1Nmk3Q2JPRHNaeEZVSU1ZZVF3WUhOTk9raWJLUjIwN1VxVVJIK1V5?=
+ =?utf-8?B?S1FjYUFub010M3Y2NllwbVBUVThhQ2tKM3lUdzFkbUNFam9OOHFVNlRlcGw2?=
+ =?utf-8?Q?n2A/jMbHAa29BTBj37n1iCAGa?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 5e91e3ec-11c5-425d-5a7c-08dd0a56f910
+X-MS-Exchange-CrossTenant-AuthSource: MN0PR12MB6101.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 21 Nov 2024 18:04:42.0230
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: CdlKAFXmRXCA1JezOUho04uX4Ykb7rXPKpBLMSKvREzQ6eQXsMhJNXp29ju+UqCR9shcXyd2Vj2PVvWAOceWIQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR12MB4205
 
-On Thu, Nov 21, 2024 at 6:28=E2=80=AFPM Antheas Kapenekakis <lkml@antheas.d=
-ev> wrote:
->
-> The following series moves the _DSM 3,4,7,8 firmware notifications outsid=
-e
-> the suspend sequence, and makes them part of a transition function, where
-> the system can transition freely between them when it is not suspended.
-> This transition function is exposed to userspace, which now gains the
-> ability to control the presentation of the device (e.g., pulse the suspen=
-d
-> light) without forcing the kernel to suspend. In addition, it adds suppor=
-t
-> for the _DSM 9 call Turn Display On, which was introduced in Windows 22H2
-> and aims to speed up device wake-up while remaining in the "Sleep" state.
-> If userspace is not standby aware, the kernel will bring the system into
-> the "Sleep" state before beginning the suspend sequence.
+On 11/21/2024 11:22, Antheas Kapenekakis wrote:
+> Unfortunately, some modern standby systems, including the ROG Ally, rely
+> on a delay between modern standby transitions. Add a quirk table for
+> introducing delays between modern standby transitions, and quirk the
+> ROG Ally on "Display Off", which needs a bit of time to turn off its
+> controllers prior to suspending.
+> 
+> Signed-off-by: Antheas Kapenekakis <lkml@antheas.dev>
+> ---
+>   drivers/acpi/x86/s2idle.c | 56 +++++++++++++++++++++++++++++++++++++++
+>   1 file changed, 56 insertions(+)
+> 
+> diff --git a/drivers/acpi/x86/s2idle.c b/drivers/acpi/x86/s2idle.c
+> index d389c57d2963..504e6575d7ad 100644
+> --- a/drivers/acpi/x86/s2idle.c
+> +++ b/drivers/acpi/x86/s2idle.c
+> @@ -18,6 +18,7 @@
+>   #include <linux/acpi.h>
+>   #include <linux/device.h>
+>   #include <linux/dmi.h>
+> +#include <linux/delay.h>
+>   #include <linux/suspend.h>
+>   
+>   #include "../sleep.h"
+> @@ -91,11 +92,50 @@ struct lpi_device_constraint_amd {
+>   	int min_dstate;
+>   };
+>   
+> +struct s2idle_delay_quirks {
+> +	int delay_display_off;
+> +	int delay_sleep_entry;
+> +	int delay_sleep_exit;
+> +	int delay_display_on;
+> +};
 
-I'll get to this when 6.13-rc1 is out, but I can tell you right away
-that some of the above cannot be done without breaking backwards
-compatibility.
+Historically these "kinds" of quirks are kept in drivers/acpi/x86/utils.c.
 
-> This series requires a bit of background on how modern standby works in
-> Windows. Windows has a concept of "Modern Standby" [1], where it performs
-> an elaborate userspace and kernel suspend choreography while the device i=
-s
-> inactive in order to maintain fast wake-up times and connectivity while t=
-he
-> display of the device is off. This is done through 5 hardware states and
-> the OS takes the liberty of transitioning between them, by following a se=
-t
-> of rules (e.g., "Adaptive Hibernate").
->
-> ```
->                                  \/-> "Hibernate (S4)"
-> "Active" <-> "Screen Off" <-> "Sleep" <-> "DRIPS"
->                   /\-  "Resume"  <-         <-
-> ```
->
-> When the display is on and the user is interacting with the device, it is
-> in the "Active" state. The moment the display turns off, the device
-> transitions to the "Screen Off" state, where hardware and userspace are
-> fully active. Userspace will then decide when appropriate to freeze major
-> components (such as the DE) and transition into the "Sleep" state, where
-> the kernel is still active and connectivity is maintained. Finally, the
-> conventional "Suspend-to-idle" path can be used to bring the system into
-> the deepest runtime idle platform state (DRIPS) state, which is named
-> "s2idle" in the Linux kernel.
->
-> After wake-up, the system re-transitions into the "Sleep" state, where
-> userspace can run housekeeping and/or hibernate if the wake-up was not us=
-er
-> initiated (e.g., timer). If user-initiated, userspace can hasten the
-> transition out of the "Sleep" state by transitioning into the state
-> "Resume" that certain devices use to boost the Power Limit (PLx) while
-> remaining in sleep (support for this new notification is rare). Then, it
-> transitions back into "Screen Off" and "Active" to prepare for the user.
->
-> All transitions between these states feature unique firmware notification=
-s
-> [3] that change the presentation of the device (e.g., pulse the suspend
-> light, turn off RGB). For more information, see the docs in [8]. Making
-> these transitions accessible from userspace moves them out of the suspend
-> sequence and has them happen while the kernel is fully active, mirroring
-> Windows.
->
-> As a side effect, this patch series completely fixes the ROG Ally
-> controller issue [5], which expects for .5s to lapse before its
-> controller's USB hub goes into D3 and otherwise malfunctions. It also fix=
-es
-> an issue present in (allegedly only) older firmwares where they check the
-> USB subsystem is not in D3 before allowing the controller to wake up whil=
-e
-> in powersave mode (for avoiding spurious wake-ups). As such, this patch
-> series is also a universal fix for the ROG Ally controller.
->
-> Moreover, this patch series allows turning off the controller and RGB of
-> most Windows handhelds (OneXPlayer, Lenovo Legion Go, GPD, and Asus ROG
-> Ally), opening the possibility of implementing suspend-then-hibernate and
-> other standby features, such as background downloads, without waking up t=
-he
-> RGB/controller of those devices. A Thinkpad T14 2021 was also tested, and
-> it pulses its suspend light during sleep.
->
-> There is still the question of where LSP0 entry/exit (_DSM 5,6) should be
-> fired or whether they should be fired in the path to hibernation. However=
-,
-> as they cause no issues currently, and they fire when software activity h=
-as
-> seized, they are fine where they are.
->
-> It is important to note that the effects of these _DSMs persist during
-> reboots. I.e., if the Legion Go reboots while in the "Sleep" state, it wi=
-ll
-> boot into the "Sleep" state and have its controller disabled and suspend
-> light pulsing. The reboot persistence is undesirable, so the reboot path
-> will need to include a transition to active prior to reboot (not
-> included in this series). This is not the case after shutdown and
-> hibernation, where the device boots into the "Active" state.
->
-> The issue of DPMS is still present. Currently, gamescope and KDE (at leas=
-t)
-> do not fire DPMS before suspending. This causes an undesirable frozen
-> screen while the system is suspending and looks quite ugly in general. Th=
-is
-> is especially true if the firmware notifications fire earlier. Therefore,
-> should the kernel fire DPMS before forcing the transition to sleep for
-> backwards compat.? If yes, it will be quite the effort. Moreover, should
-> the kernel allow graphics drivers hook the transition function and block
-> transitions to "Screen Off" if there is an active CRTC? As that would be =
-a
-> significant undertaking, there should be proof that there exists such a
-> device that has an issue firing the notifications with an active CRTC.
->
-> A variant of this series has been tested by thousands of users by now,
-> where the notifications fire around .5s before the CRTC is disabled and n=
-o
-> ill-effects have found in regard to this quirk. AFAIK, it is a visual
-> quirk. Making DPMS fire before the backwards compat. transition is a good
-> idea in any case, as it will sync the 200ms between Display Off/Sleep Ent=
-ry
-> firing and the graphics driver turning off the display, but it might not =
-be
-> worth the effort.
->
-> We are currently testing a DPMS patch for gamescope and it completely fix=
-es
-> this visual quirk while allowing for e.g., hibernation without turning on
-> the screen. The DPMS gamescope patch + performing the transitions in
-> userspace in such a way where it blends the Ally's suspend delay halves t=
-he
-> user perceived delay to sleep and results in a very professional
-> presentation. This presentation extends to other devices as well, such as
-> the Legion Go.
->
-> Link: https://learn.microsoft.com/en-us/windows-hardware/design/device-ex=
-periences/prepare-hardware-for-modern-standby [1]
-> Link: https://learn.microsoft.com/en-us/windows-hardware/customize/power-=
-settings/adaptive-hibernate [2]
-> Link: https://learn.microsoft.com/en-us/windows-hardware/design/device-ex=
-periences/modern-standby-firmware-notifications [3]
-> Link: https://github.com/hhd-dev/hwinfo/tree/master/devices [4]
-> Link: https://git.kernel.org/pub/scm/linux/kernel/git/superm1/linux.git/l=
-og/?h=3Dsuperm1/dsm-screen-on-off [5]
-> Link: https://gitlab.freedesktop.org/drm/amd/-/issues/2719 [6]
-> Link: https://dl.dell.com/manuals/all-products/esuprt_solutions_int/esupr=
-t_solutions_int_solutions_resources/client-mobile-solution-resources_white-=
-papers45_en-us.pdf [7]
-> File: Documentation/admin-guide/pm/standby-states.rst [8]
->
-> Changes from previous series (`acpi/x86: s2idle: move Display off/on call=
-s
->   outside suspend (fixes ROG Ally suspend)`):
->   - Separate Display On/Off rename into its own commit (suggested by Hans=
-)
->   - Move delay quirks into s2idle.c (suggested by Hans)
->   - Add documentation on Documentation/admin-guide/pm/standby-states.rst
->   - Callbacks are now static and a transition function is used
->   - Fixed all checkpatch warnings
->   - The rest of the series is completely re-written
->
-> Antheas Kapenekakis (13):
->   Documentation: PM: Add documentation for S0ix Standby States
->   acpi/x86: s2idle: add support for Display Off and Display On callbacks
->   acpi/x86: s2idle: add support for Sleep Entry and Sleep Exit callbacks
->   acpi/x86: s2idle: add support for Turn On Display callback
->   acpi/x86: s2idle: add modern standby transition function
->   acpi/x86: s2idle: rename Screen On/Off to Display On/Off
->   acpi/x86: s2idle: call Display On/Off as part of callbacks
->   acpi/x86: s2idle: rename MS Exit/Entry to Sleep Exit/Entry
->   acpi/x86: s2idle: call Sleep Entry/Exit as part of callbacks
->   acpi/x86: s2idle: add Turn On Display and call as part of callback
->   acpi/x86: s2idle: add quirk table for modern standby delays
->   platform/x86: asus-wmi: remove Ally (1st gen) and Ally X suspend quirk
->   PM: standby: Add sysfs attribute for modern standby transitions
->
->  Documentation/ABI/testing/sysfs-power         |  34 +++
->  .../admin-guide/pm/standby-states.rst         | 133 ++++++++++
->  Documentation/admin-guide/pm/system-wide.rst  |   1 +
->  drivers/acpi/x86/s2idle.c                     | 249 ++++++++++++++----
->  drivers/platform/x86/asus-wmi.c               |  54 ----
->  include/linux/suspend.h                       |  16 ++
->  kernel/power/main.c                           |  75 ++++++
->  kernel/power/power.h                          |   1 +
->  kernel/power/suspend.c                        | 154 +++++++++++
->  9 files changed, 616 insertions(+), 101 deletions(-)
->  create mode 100644 Documentation/admin-guide/pm/standby-states.rst
->
-> --
-> 2.47.0
->
->
+Could it be moved there?  Or perhaps stored in the ASUS drivers and 
+callbacks?
+
+This feels cleaner if you used "struct acpi_s2idle_dev_ops" and 
+callbacks.  More below.
+
+> +
+> +/*
+> + * The ROG Ally series disconnects its controllers on Display Off and performs
+> + * a fancy shutdown sequence, which requires around half a second to complete.
+> + * If the power is cut earlier by entering it into D3, the original Ally unit
+> + * might not disconnect its XInput MCU, causing excess battery drain, and the
+> + * Ally X will make the controller restart post-suspend. In addition, the EC
+> + * of the device rarely (1/20 attempts) may get stuck asserting PROCHOT after
+> + * suspend (for various reasons), so split the delay between Display Off and
+> + * Sleep Entry.
+> + */
+> +static const struct s2idle_delay_quirks rog_ally_quirks = {
+> +	.delay_display_off = 350,
+> +	.delay_sleep_entry = 150,
+> +};
+
+Is this delay still needed with Ally MCU 319 that has the fixes from ASUS?
+
+I'm suspecting not, which means this quirk should be made more narrow IMO.
+
+In the various ASUS drivers you can lookup the MCU firmware version. 
+Those drivers can do acpi_register_lps0_dev() when the older firmware is 
+present and use the callbacks.  If the newer firmware is there less code 
+to worry about.
+
+This also would mean less static quirk tables in the kernel tree.
+
+> +
+> +static const struct dmi_system_id s2idle_delay_quirks[] = {
+> +	{
+> +		.matches = {
+> +			DMI_MATCH(DMI_BOARD_NAME, "RC71L"),
+> +		},
+> +		.driver_data = (void *)&rog_ally_quirks
+> +	},
+> +	{
+> +		.matches = {
+> +			DMI_MATCH(DMI_BOARD_NAME, "RC72L"),
+> +		},
+> +		.driver_data = (void *)&rog_ally_quirks
+> +	},
+> +	{}
+> +};
+> +
+>   static LIST_HEAD(lps0_s2idle_devops_head);
+>   
+>   static struct lpi_constraints *lpi_constraints_table;
+>   static int lpi_constraints_table_size;
+>   static int rev_id;
+> +struct s2idle_delay_quirks *delay_quirks;
+>   
+>   #define for_each_lpi_constraint(entry)						\
+>   	for (int i = 0;								\
+> @@ -566,6 +606,9 @@ static int acpi_s2idle_display_off(void)
+>   		acpi_sleep_run_lps0_dsm(ACPI_LPS0_DISPLAY_OFF,
+>   				lps0_dsm_func_mask_microsoft, lps0_dsm_guid_microsoft);
+>   
+> +	if (delay_quirks && delay_quirks->delay_display_off)
+> +		msleep(delay_quirks->delay_display_off);
+> +
+>   	acpi_scan_lock_release();
+>   
+>   	return 0;
+> @@ -587,6 +630,9 @@ static int acpi_s2idle_sleep_entry(void)
+>   		acpi_sleep_run_lps0_dsm(ACPI_LPS0_SLEEP_ENTRY,
+>   				lps0_dsm_func_mask_microsoft, lps0_dsm_guid_microsoft);
+>   
+> +	if (delay_quirks && delay_quirks->delay_sleep_entry)
+> +		msleep(delay_quirks->delay_sleep_entry);
+> +
+>   	acpi_scan_lock_release();
+>   
+>   	return 0;
+> @@ -627,6 +673,9 @@ static int acpi_s2idle_sleep_exit(void)
+>   	acpi_scan_lock_acquire();
+>   
+>   	/* Modern Standby Sleep Exit */
+> +	if (delay_quirks && delay_quirks->delay_sleep_exit)
+> +		msleep(delay_quirks->delay_sleep_exit);
+> +
+>   	if (lps0_dsm_func_mask_microsoft > 0)
+>   		acpi_sleep_run_lps0_dsm(ACPI_LPS0_SLEEP_EXIT,
+>   				lps0_dsm_func_mask_microsoft, lps0_dsm_guid_microsoft);
+> @@ -648,6 +697,9 @@ static int acpi_s2idle_display_on(void)
+>   	acpi_scan_lock_acquire();
+>   
+>   	/* Display on */
+> +	if (delay_quirks && delay_quirks->delay_display_on)
+> +		msleep(delay_quirks->delay_display_on);
+> +
+>   	if (lps0_dsm_func_mask_microsoft > 0)
+>   		acpi_sleep_run_lps0_dsm(ACPI_LPS0_DISPLAY_ON,
+>   				lps0_dsm_func_mask_microsoft, lps0_dsm_guid_microsoft);
+> @@ -760,6 +812,10 @@ int acpi_register_lps0_dev(struct acpi_s2idle_dev_ops *arg)
+>   
+>   	sleep_flags = lock_system_sleep();
+>   	list_add(&arg->list_node, &lps0_s2idle_devops_head);
+> +	const struct dmi_system_id *s2idle_sysid = dmi_first_match(
+> +		s2idle_delay_quirks
+> +	);
+> +	delay_quirks = s2idle_sysid ? s2idle_sysid->driver_data : NULL;
+>   	unlock_system_sleep(sleep_flags);
+>   
+>   	return 0;
+
