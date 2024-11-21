@@ -1,126 +1,121 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from linux1587.grserver.gr (linux1587.grserver.gr [185.138.42.100])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 968EC198A3F;
-	Thu, 21 Nov 2024 16:49:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C7FBC1A01C6;
+	Thu, 21 Nov 2024 17:22:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.138.42.100
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1732207744; cv=none; b=Yidqbh7YdfcymAmnIVpI2iejebLEyPMFYhsjpjCWu9i3YJ1GDZsV+bKMEQG4usdjfW2i2DjckQOfQDRHgw3qB0jqom9Jp4zPTRdmggVf/e7pyj0OoSozexTjPaP6NK8/lABr5OS6BhfcnloaONZDR2aVujl64tyAu/hB8X+eO7U=
+	t=1732209780; cv=none; b=ZrJ/FDiH8mskYu2lFt1sw4sPNK37ZAG/dBziXIC+dhpL4+PuG/VmoMNSSle1GlXIeiR6Uayju3Qi8/4f+Dk96nJTyF1Ou9oG9ZiZT24rV8frEHlmJConfJKKbzKQypKc2bhFyr/abYW7YhEIT+YP2cUNJsdnS853lRZYJrojLbc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1732207744; c=relaxed/simple;
-	bh=8TnNgT9BSGeNnV9Q4psaEUNm1Db9V2po/4TACtO0ZMo=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=OXYXUGAnPJ5hLhAp/YEzUOyTGGRLQMT44M1Bx8072nJ/cofdyTB7q8HVGiKPRG0VtQJj8osaHXLLg+7ux8H163w7x0MhFSjq9xna0WPapkwTst5VugWhTqul8wmfK+7wZh4Se2vwUgocvCCScqOb1pc0kl0JFaAzBgnQtjgc3RU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=mXc45Td3; arc=none smtp.client-ip=192.198.163.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1732209780; c=relaxed/simple;
+	bh=zcXvvFF+HpwUBmxtDFrw3rBWYXzLDCzPByRJTtZcqPU=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=P8Thvu+M9TG3wv4VFOGFHSKTYNLQEsmYz73oAuOXJmnoinzODAvc9dGIhqHVHFjRN/H5B++QzUW7ix6MLg/LOMg6XsZQ4UTjhDedGunfxhqrHCXC9GVg0xrZQsjfk5RX00FCexDT9FqxJFQBDm/32bTK41ttcd3NhBiTxT31uzs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=antheas.dev; spf=pass smtp.mailfrom=antheas.dev; dkim=pass (1024-bit key) header.d=antheas.dev header.i=@antheas.dev header.b=aVltbebO; arc=none smtp.client-ip=185.138.42.100
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=antheas.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=antheas.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="mXc45Td3"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1732207743; x=1763743743;
-  h=message-id:subject:from:to:cc:date:in-reply-to:
-   references:content-transfer-encoding:mime-version;
-  bh=8TnNgT9BSGeNnV9Q4psaEUNm1Db9V2po/4TACtO0ZMo=;
-  b=mXc45Td3ZBuw+cbXgyrpbI7W/0AYbqHK7ucUYhikjkvEGzwKQwL3uINn
-   hkSQRoDiW98c+cO+qZwPFTn5Kl3EC+LeaXYBus6bVGDyWQ8ejfDibxG8y
-   qXZnElG472uQmX+WfYcj22/81YerxqlrCwYt9R8hO/13rndtz7n6UaOjo
-   IZjTekQ6Fa8x8T58qS3KWVXjxar7E0PQAmo2Aoxwm2lmVQVHB7O5fUWyl
-   Fu3GcpaguUJQTDHv+dFHBSjDIlj9mTZWHO5xGrgda7rn4h9vKcF8exV3c
-   k3vQgJXQ9pNcxLlj8xl1UmBSeqpEO5qdoTHHoDL5Sivsi0p+CKTSI/mly
-   w==;
-X-CSE-ConnectionGUID: jyAn31n9TvioGUb5FIMvpQ==
-X-CSE-MsgGUID: up+klhdAS4m3d65mA7vKVw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11263"; a="43730767"
-X-IronPort-AV: E=Sophos;i="6.12,173,1728975600"; 
-   d="scan'208";a="43730767"
-Received: from orviesa006.jf.intel.com ([10.64.159.146])
-  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Nov 2024 08:49:02 -0800
-X-CSE-ConnectionGUID: Rujrdt0hTzqYMp2r60LyPA==
-X-CSE-MsgGUID: lgl1DRxOR3CLJ7GljqRlqA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.12,173,1728975600"; 
-   d="scan'208";a="90431340"
-Received: from spandruv-desk1.amr.corp.intel.com ([10.125.109.229])
-  by orviesa006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Nov 2024 08:49:02 -0800
-Message-ID: <56b6520093f5a0aca6738d2114c5ae08db2660fa.camel@linux.intel.com>
-Subject: Re: [PATCH] tools/power/x86/intel-speed-select: Fix the wrong
- format specifier
-From: srinivas pandruvada <srinivas.pandruvada@linux.intel.com>
-To: liujing <liujing@cmss.chinamobile.com>
-Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-Date: Thu, 21 Nov 2024 08:49:01 -0800
-In-Reply-To: <20241121130028.6259-1-liujing@cmss.chinamobile.com>
-References: <20241121130028.6259-1-liujing@cmss.chinamobile.com>
-Autocrypt: addr=srinivas.pandruvada@linux.intel.com; prefer-encrypt=mutual;
- keydata=mQGNBGYHNAsBDAC7tv5u9cIsSDvdgBBEDG0/a/nTaC1GXOx5MFNEDL0LWia2p8Asl7igx
- YrB68fyfPNLSIgtCmps0EbRUkPtoN5/HTbAEZeJUTL8Xdoe6sTywf8/6/DMheEUzprE4Qyjt0HheW
- y1JGvdOA0f1lkxCnPXeiiDY4FUqQHr3U6X4FPqfrfGlrMmGvntpKzOTutlQl8eSAprtgZ+zm0Jiwq
- NSiSBOt2SlbkGu9bBYx7mTsrGv+x7x4Ca6/BO9o5dIvwJOcfK/cXC/yxEkr1ajbIUYZFEzQyZQXrT
- GUGn8j3/cXQgVvMYxrh3pGCq9Q0Q6PAwQYhm97ipXa86GcTpP5B2ip9xclPtDW99sihiL8euTWRfS
- TUsEI+1YzCyz5DU32w3WiXr3ITicaMV090tMg9phIZsjfFbnR8hY03n0kRNWWFXi/ch2MsZCCqXIB
- oY/SruNH9Y6mnFKW8HSH762C7On8GXBYJzH6giLGeSsbvis2ZmV/r+LmswwZ6ACcOKLlvvIukAEQE
- AAbQ5U3Jpbml2YXMgUGFuZHJ1dmFkYSA8c3Jpbml2YXMucGFuZHJ1dmFkYUBsaW51eC5pbnRlbC5j
- b20+iQHRBBMBCAA7FiEEdki2SeUi0wlk2xcjOqtdDMJyisMFAmYHNAsCGwMFCwkIBwICIgIGFQoJC
- AsCBBYCAwECHgcCF4AACgkQOqtdDMJyisMobAv+LLYUSKNuWhRN3wS7WocRPCi3tWeBml+qivCwyv
- oZbmE2LcxYFnkcj6YNoS4N1CHJCr7vwefWTzoKTTDYqz3Ma0D0SbR1p/dH0nDgN34y41HpIHf0tx0
- UxGMgOWJAInq3A7/mNkoLQQ3D5siG39X3bh9Ecg0LhMpYwP/AYsd8X1ypCWgo8SE0J/6XX/HXop2a
- ivimve15VklMhyuu2dNWDIyF2cWz6urHV4jmxT/wUGBdq5j87vrJhLXeosueRjGJb8/xzl34iYv08
- wOB0fP+Ox5m0t9N5yZCbcaQug3hSlgp9hittYRgIK4GwZtNO11bOzeCEMk+xFYUoa5V8JWK9/vxrx
- NZEn58vMJ/nxoJzkb++iV7KBtsqErbs5iDwFln/TRJAQDYrtHJKLLFB9BGUDuaBOmFummR70Rbo55
- J9fvUHc2O70qteKOt5A0zv7G8uUdIaaUHrT+VOS7o+MrbPQcSk+bl81L2R7TfWViCmKQ60sD3M90Y
- oOfCQxricddC
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.52.4 (3.52.4-2.fc40) 
+	dkim=pass (1024-bit key) header.d=antheas.dev header.i=@antheas.dev header.b="aVltbebO"
+Received: from localhost.localdomain (unknown [IPv6:2a05:f6c2:511b:0:cbc0:999f:73ad:33bd])
+	by linux1587.grserver.gr (Postfix) with ESMTPSA id 46D7A2E09693;
+	Thu, 21 Nov 2024 19:22:52 +0200 (EET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=antheas.dev;
+	s=default; t=1732209773;
+	bh=OzkxDuIjq0abCpdesqahg7f+ZtZjUSV0EPiXaxqA5VM=; h=From:To:Subject;
+	b=aVltbebOkEG9DDsFxDdM93qXN7uF78NYPGeAv7E+f2COeGR61G5yHUhqRrBfwFHLx
+	 1d4w25h8wJAPy8kinDX4F7hzoQTtEIpt+Be1S2DZEXgXfERClk9GowWUac5hcO9OXr
+	 w0rKHDmLYDkeyPnAv89RLNamlt7FanVgmuW+icNk=
+Authentication-Results: linux1587.grserver.gr;
+	spf=pass (sender IP is 2a05:f6c2:511b:0:cbc0:999f:73ad:33bd) smtp.mailfrom=lkml@antheas.dev smtp.helo=localhost.localdomain
+Received-SPF: pass (linux1587.grserver.gr: connection is authenticated)
+From: Antheas Kapenekakis <lkml@antheas.dev>
+To: linux-pm@vger.kernel.org
+Cc: platform-driver-x86@vger.kernel.org,
+	dri-devel@lists.freedesktop.org,
+	Mario Limonciello <mario.limonciello@amd.com>,
+	Hans de Goede <hdegoede@redhat.com>,
+	Kyle Gospodnetich <me@kylegospodneti.ch>,
+	Antheas Kapenekakis <lkml@antheas.dev>
+Subject: [RFC 03/13] acpi/x86: s2idle: add support for Sleep Entry and Sleep
+ Exit callbacks
+Date: Thu, 21 Nov 2024 18:22:28 +0100
+Message-ID: <20241121172239.119590-4-lkml@antheas.dev>
+X-Mailer: git-send-email 2.47.0
+In-Reply-To: <20241121172239.119590-1-lkml@antheas.dev>
+References: <20241121172239.119590-1-lkml@antheas.dev>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-PPP-Message-ID: 
+ <173220977334.4697.4549620138605508037@linux1587.grserver.gr>
+X-PPP-Vhost: antheas.dev
+X-Virus-Scanned: clamav-milter 0.103.11 at linux1587.grserver.gr
+X-Virus-Status: Clean
 
-On Thu, 2024-11-21 at 21:00 +0800, liujing wrote:
-> Because clos_config->clos_min and clos_config->clos_max
-> are unsigned int types, the output format should be %u.
->=20
-> Signed-off-by: liujing <liujing@cmss.chinamobile.com>
+The Sleep Entry and Sleep Exit firmware notifications allow the platform
+to enter Modern Standby. In this state, if supported, the platform turns
+off auxiliary USB devices (e.g., the controllers of the Legion Go),
+makes the power light of the device flash, and lowers the power envelope
+to a minimum that still allows for software activity without affecting
+battery life.
 
-You need to have for your tag:
+Allow for entering this state prior to initiating the suspend sequence.
+This fixes issues where the EC or the USB of the device need time to
+power down before entering the suspend sequence, and allows for entering
+this power state without suspending the device.
 
-Full Name <email address>
+Suggested-by: Mario Limonciello <mario.limonciello@amd.com>
+Signed-off-by: Antheas Kapenekakis <lkml@antheas.dev>
+---
+ include/linux/suspend.h |  2 ++
+ kernel/power/suspend.c  | 10 ++++++++++
+ 2 files changed, 12 insertions(+)
 
-Thanks,
-Srinivas
-
->=20
-> diff --git a/tools/power/x86/intel-speed-select/isst-display.c
-> b/tools/power/x86/intel-speed-select/isst-display.c
-> index 07ebd08f3202..5ecf24bda6dd 100644
-> --- a/tools/power/x86/intel-speed-select/isst-display.c
-> +++ b/tools/power/x86/intel-speed-select/isst-display.c
-> @@ -617,14 +617,14 @@ void isst_clos_display_information(struct
-> isst_id *id, FILE *outf, int clos,
-> =C2=A0	format_and_print(outf, level + 2, header, value);
-> =C2=A0
-> =C2=A0	snprintf(header, sizeof(header), "clos-min");
-> -	snprintf(value, sizeof(value), "%d MHz", clos_config-
-> >clos_min * isst_get_disp_freq_multiplier());
-> +	snprintf(value, sizeof(value), "%u MHz", clos_config-
-> >clos_min * isst_get_disp_freq_multiplier());
-> =C2=A0	format_and_print(outf, level + 2, header, value);
-> =C2=A0
-> =C2=A0	snprintf(header, sizeof(header), "clos-max");
-> =C2=A0	if ((clos_config->clos_max *
-> isst_get_disp_freq_multiplier()) =3D=3D 25500)
-> =C2=A0		snprintf(value, sizeof(value), "Max Turbo
-> frequency");
-> =C2=A0	else
-> -		snprintf(value, sizeof(value), "%d MHz",
-> clos_config->clos_max * isst_get_disp_freq_multiplier());
-> +		snprintf(value, sizeof(value), "%u MHz",
-> clos_config->clos_max * isst_get_disp_freq_multiplier());
-> =C2=A0	format_and_print(outf, level + 2, header, value);
-> =C2=A0
-> =C2=A0	snprintf(header, sizeof(header), "clos-desired");
+diff --git a/include/linux/suspend.h b/include/linux/suspend.h
+index 57c083754e8b..733dffb09b28 100644
+--- a/include/linux/suspend.h
++++ b/include/linux/suspend.h
+@@ -133,6 +133,7 @@ struct platform_suspend_ops {
+ 
+ struct platform_s2idle_ops {
+ 	int (*display_off)(void);
++	int (*sleep_entry)(void);
+ 	int (*begin)(void);
+ 	int (*prepare)(void);
+ 	int (*prepare_late)(void);
+@@ -141,6 +142,7 @@ struct platform_s2idle_ops {
+ 	void (*restore_early)(void);
+ 	void (*restore)(void);
+ 	void (*end)(void);
++	int (*sleep_exit)(void);
+ 	int (*display_on)(void);
+ };
+ 
+diff --git a/kernel/power/suspend.c b/kernel/power/suspend.c
+index cded6b9b439b..3f4bbefa9b82 100644
+--- a/kernel/power/suspend.c
++++ b/kernel/power/suspend.c
+@@ -259,6 +259,16 @@ static int platform_standby_display_off(void)
+ 	return s2idle_ops && s2idle_ops->display_off ? s2idle_ops->display_off() : 0;
+ }
+ 
++static int platform_standby_sleep_entry(void)
++{
++	return s2idle_ops && s2idle_ops->sleep_entry ? s2idle_ops->sleep_entry() : 0;
++}
++
++static int platform_standby_sleep_exit(void)
++{
++	return s2idle_ops && s2idle_ops->sleep_exit ? s2idle_ops->sleep_exit() : 0;
++}
++
+ static int platform_standby_display_on(void)
+ {
+ 	return s2idle_ops && s2idle_ops->display_on ? s2idle_ops->display_on() : 0;
+-- 
+2.47.0
 
