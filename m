@@ -1,267 +1,126 @@
-Received: from mail-pl1-f180.google.com (mail-pl1-f180.google.com [209.85.214.180])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4403A19E97E;
-	Thu, 21 Nov 2024 15:37:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 968EC198A3F;
+	Thu, 21 Nov 2024 16:49:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1732203465; cv=none; b=VkuI6t3IyItoQoauNNEs2uPs/QTyN1dUSwLPyzXYU4zu5CrvPmshgVdcqEF/P7+5HZO+EGCtuG1NdbkrVFzjkvM942jEnpL0TxbWJtY+DfsRITJvqnyCSxXYHCHcrz0xFwgkxV3CqLHZ3d4Q8LttGa2koTGqDpoJ3EnSYQZk9ys=
+	t=1732207744; cv=none; b=Yidqbh7YdfcymAmnIVpI2iejebLEyPMFYhsjpjCWu9i3YJ1GDZsV+bKMEQG4usdjfW2i2DjckQOfQDRHgw3qB0jqom9Jp4zPTRdmggVf/e7pyj0OoSozexTjPaP6NK8/lABr5OS6BhfcnloaONZDR2aVujl64tyAu/hB8X+eO7U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1732203465; c=relaxed/simple;
-	bh=e67T/bb73dIJmTnKmrhXEuI/9x+/0ZqyZXDdlyHF6vk=;
-	h=Date:From:To:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=BGootVEyueH9cump47XbfLORzNmjYMkS+K1wRUhaoPSzIvsz+3+WerFyPrf+3IqIL6Ek/SkExABXWTXGuNXKpaE68ha1ReHahzReucctXxJpOlp9Bjgod5JbpQZ+pPoiRqh1p/Zxp4AC4tE6XON8xwQTTQ6ePMWtsAgci8Autr8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=UolTThuh; arc=none smtp.client-ip=209.85.214.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1732207744; c=relaxed/simple;
+	bh=8TnNgT9BSGeNnV9Q4psaEUNm1Db9V2po/4TACtO0ZMo=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=OXYXUGAnPJ5hLhAp/YEzUOyTGGRLQMT44M1Bx8072nJ/cofdyTB7q8HVGiKPRG0VtQJj8osaHXLLg+7ux8H163w7x0MhFSjq9xna0WPapkwTst5VugWhTqul8wmfK+7wZh4Se2vwUgocvCCScqOb1pc0kl0JFaAzBgnQtjgc3RU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=mXc45Td3; arc=none smtp.client-ip=192.198.163.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UolTThuh"
-Received: by mail-pl1-f180.google.com with SMTP id d9443c01a7336-20cf3e36a76so10744925ad.0;
-        Thu, 21 Nov 2024 07:37:43 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1732203463; x=1732808263; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=ajIostHiPNrhoaapnUP6WI9Q5i3QNMOV0292OM4R3+4=;
-        b=UolTThuhHHTBUcTwBig0uU77puJ2io6UT0h4JZhM7HIEIKYHZFiPhKI7pwsksqpsoB
-         gF1xsNCy3MXc0JVmDnrqhj+aByFoJ3OC7B3+q1oiTDe8XmQxuiRK4bhZSR4kqZBBfdRU
-         qdxLEgOO0LOGeceMuwLzi2YZ1SLD9kJyCpmrOx5qwmQPEMC5MZ2Kj6rMEppJjD6lPgMc
-         2BSl/wTes8c46zwXNJ6JqojC+XGLc8zvMnM77kr+uwnh5mylG+ZbfaFPIzfEpTRKgSzM
-         ZEBJpp3M2Y/3iwO10Td1r+VfiPFBNIu8JRLgm2l/9bXtqtXaJLl/ctTTRhN2p10oLngq
-         V2cQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1732203463; x=1732808263;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=ajIostHiPNrhoaapnUP6WI9Q5i3QNMOV0292OM4R3+4=;
-        b=DpLo8mITtxGM1QF8TtvgWjEiE3KfdT4OmNTjOlCNAcHTH0G/WCOrfM8RBNIBV82u2A
-         1q+PzWId/QcJ1mb9/bv0WRCCPIt/NeNKSAaq8V7fxvGikwhhs4EXrjk3RhzrbFLaL7eW
-         py01eWFNl0/XDcmWc7gL1jXQX67sp1yCj2Zx0BBORYDQTU/ddyf4a6blLictG4YVFvQR
-         pfLhPhMikHHRPDQ4ASF6y/x9XN50dIfuy6qVeCE3DSuZ4D4wUaKKZoeXoW5d4Qz3QynM
-         QjAXGzkoNbSheZPdO+SV9+1+vAUUm3r81vsZx49HKVw9sNv2X0u6Y6jNcO7m5nzxE7rg
-         M8lA==
-X-Forwarded-Encrypted: i=1; AJvYcCUH2a2TCPmHzTS9jF3DRo5QFaTTf9uKp9aAJ69VSwFryqOzAaytHnULPxrgm4GB9Gjfwhi+ay5/nwmnttI=@vger.kernel.org, AJvYcCUPkY5i4QfJ4ckgp+RUUyinW9rFcNB2umN7MzDOl+T7yQdPILaTckxPLXq4FH4DJCjZg9PgIGG0aT+WvBdJnC88FyMQZw==@vger.kernel.org
-X-Gm-Message-State: AOJu0Yys/cmmvKmeir9RRafepyoA7V6Bdj4zKgZjVdQYroaCSnun9pkO
-	w4e1fkiWhbI3nsyLs1PfHI6CkxSIC7Ske/5UYRRz6sMt6VJFh+kx
-X-Gm-Gg: ASbGncv1ZKZQIQtEwQ9qngUQBG+0DD0UQsMf60prCsMbMht7mgeStIgH5CFOWg2EXjx
-	fgmjOY8ze8dx6H7m4ZCxEH+akx/sAAsn4J+XSFEa8+m80nlEb8XcuLnBHxmbXZKJM8kamAeoFNc
-	wQIdeRVDDRTD3V2Gfx0+/2F9OwtU31OX6RDbmi/PcsMxu5qcn20B7k8byjQkZvlkf1j+0M7b2L0
-	UYAoSbPXW+r7eeQh7o3g/noQMT6kwI8Bn6UfVAUX4jRXA==
-X-Google-Smtp-Source: AGHT+IE+Be2uTmrYKGFeFKFwc+olBUh2rQAJSjYfcKlDQRXQaXzmsyDlo5NOxVxSozD6QpsmWkvK6Q==
-X-Received: by 2002:a17:902:f681:b0:212:67a5:aaff with SMTP id d9443c01a7336-2126a4359b5mr100088145ad.39.1732203463225;
-        Thu, 21 Nov 2024 07:37:43 -0800 (PST)
-Received: from alphacentauri ([181.84.94.92])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-212884081easm15005765ad.278.2024.11.21.07.37.40
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 21 Nov 2024 07:37:42 -0800 (PST)
-Date: Thu, 21 Nov 2024 12:37:39 -0300
-From: Kurt Borja <kuurtb@gmail.com>
-To: Dell.Client.Kernel@dell.com, hdegoede@redhat.com, 
-	ilpo.jarvinen@linux.intel.com, linux-kernel@vger.kernel.org, mario.limonciello@amd.com, 
-	platform-driver-x86@vger.kernel.org, w_armin@gmx.de
-Subject: Re: [PATCH v2 2/4] alienware-wmi: Improves sysfs groups creation
-Message-ID: <vfjavxf5gedn3nsdntamg6ercruja6cb3sobd5gax7nv63jm2j@2fvd4kucu3p4>
-References: <20241120163834.6446-3-kuurtb@gmail.com>
- <20241120164314.7177-2-kuurtb@gmail.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="mXc45Td3"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1732207743; x=1763743743;
+  h=message-id:subject:from:to:cc:date:in-reply-to:
+   references:content-transfer-encoding:mime-version;
+  bh=8TnNgT9BSGeNnV9Q4psaEUNm1Db9V2po/4TACtO0ZMo=;
+  b=mXc45Td3ZBuw+cbXgyrpbI7W/0AYbqHK7ucUYhikjkvEGzwKQwL3uINn
+   hkSQRoDiW98c+cO+qZwPFTn5Kl3EC+LeaXYBus6bVGDyWQ8ejfDibxG8y
+   qXZnElG472uQmX+WfYcj22/81YerxqlrCwYt9R8hO/13rndtz7n6UaOjo
+   IZjTekQ6Fa8x8T58qS3KWVXjxar7E0PQAmo2Aoxwm2lmVQVHB7O5fUWyl
+   Fu3GcpaguUJQTDHv+dFHBSjDIlj9mTZWHO5xGrgda7rn4h9vKcF8exV3c
+   k3vQgJXQ9pNcxLlj8xl1UmBSeqpEO5qdoTHHoDL5Sivsi0p+CKTSI/mly
+   w==;
+X-CSE-ConnectionGUID: jyAn31n9TvioGUb5FIMvpQ==
+X-CSE-MsgGUID: up+klhdAS4m3d65mA7vKVw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11263"; a="43730767"
+X-IronPort-AV: E=Sophos;i="6.12,173,1728975600"; 
+   d="scan'208";a="43730767"
+Received: from orviesa006.jf.intel.com ([10.64.159.146])
+  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Nov 2024 08:49:02 -0800
+X-CSE-ConnectionGUID: Rujrdt0hTzqYMp2r60LyPA==
+X-CSE-MsgGUID: lgl1DRxOR3CLJ7GljqRlqA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.12,173,1728975600"; 
+   d="scan'208";a="90431340"
+Received: from spandruv-desk1.amr.corp.intel.com ([10.125.109.229])
+  by orviesa006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Nov 2024 08:49:02 -0800
+Message-ID: <56b6520093f5a0aca6738d2114c5ae08db2660fa.camel@linux.intel.com>
+Subject: Re: [PATCH] tools/power/x86/intel-speed-select: Fix the wrong
+ format specifier
+From: srinivas pandruvada <srinivas.pandruvada@linux.intel.com>
+To: liujing <liujing@cmss.chinamobile.com>
+Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+Date: Thu, 21 Nov 2024 08:49:01 -0800
+In-Reply-To: <20241121130028.6259-1-liujing@cmss.chinamobile.com>
+References: <20241121130028.6259-1-liujing@cmss.chinamobile.com>
+Autocrypt: addr=srinivas.pandruvada@linux.intel.com; prefer-encrypt=mutual;
+ keydata=mQGNBGYHNAsBDAC7tv5u9cIsSDvdgBBEDG0/a/nTaC1GXOx5MFNEDL0LWia2p8Asl7igx
+ YrB68fyfPNLSIgtCmps0EbRUkPtoN5/HTbAEZeJUTL8Xdoe6sTywf8/6/DMheEUzprE4Qyjt0HheW
+ y1JGvdOA0f1lkxCnPXeiiDY4FUqQHr3U6X4FPqfrfGlrMmGvntpKzOTutlQl8eSAprtgZ+zm0Jiwq
+ NSiSBOt2SlbkGu9bBYx7mTsrGv+x7x4Ca6/BO9o5dIvwJOcfK/cXC/yxEkr1ajbIUYZFEzQyZQXrT
+ GUGn8j3/cXQgVvMYxrh3pGCq9Q0Q6PAwQYhm97ipXa86GcTpP5B2ip9xclPtDW99sihiL8euTWRfS
+ TUsEI+1YzCyz5DU32w3WiXr3ITicaMV090tMg9phIZsjfFbnR8hY03n0kRNWWFXi/ch2MsZCCqXIB
+ oY/SruNH9Y6mnFKW8HSH762C7On8GXBYJzH6giLGeSsbvis2ZmV/r+LmswwZ6ACcOKLlvvIukAEQE
+ AAbQ5U3Jpbml2YXMgUGFuZHJ1dmFkYSA8c3Jpbml2YXMucGFuZHJ1dmFkYUBsaW51eC5pbnRlbC5j
+ b20+iQHRBBMBCAA7FiEEdki2SeUi0wlk2xcjOqtdDMJyisMFAmYHNAsCGwMFCwkIBwICIgIGFQoJC
+ AsCBBYCAwECHgcCF4AACgkQOqtdDMJyisMobAv+LLYUSKNuWhRN3wS7WocRPCi3tWeBml+qivCwyv
+ oZbmE2LcxYFnkcj6YNoS4N1CHJCr7vwefWTzoKTTDYqz3Ma0D0SbR1p/dH0nDgN34y41HpIHf0tx0
+ UxGMgOWJAInq3A7/mNkoLQQ3D5siG39X3bh9Ecg0LhMpYwP/AYsd8X1ypCWgo8SE0J/6XX/HXop2a
+ ivimve15VklMhyuu2dNWDIyF2cWz6urHV4jmxT/wUGBdq5j87vrJhLXeosueRjGJb8/xzl34iYv08
+ wOB0fP+Ox5m0t9N5yZCbcaQug3hSlgp9hittYRgIK4GwZtNO11bOzeCEMk+xFYUoa5V8JWK9/vxrx
+ NZEn58vMJ/nxoJzkb++iV7KBtsqErbs5iDwFln/TRJAQDYrtHJKLLFB9BGUDuaBOmFummR70Rbo55
+ J9fvUHc2O70qteKOt5A0zv7G8uUdIaaUHrT+VOS7o+MrbPQcSk+bl81L2R7TfWViCmKQ60sD3M90Y
+ oOfCQxricddC
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.52.4 (3.52.4-2.fc40) 
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20241120164314.7177-2-kuurtb@gmail.com>
 
-On Wed, Nov 20, 2024 at 01:43:15PM -0300, Kurt Borja wrote:
-> Devices with hdmi_mux, amplifier or deepslp quirks create a sysfs group
-> for each available feature. To accomplish this, helper create/remove
-> functions were called on module init, but they had the following
-> problems:
-> 
->  - Create helpers called remove helpers on failure, which in turn tried
->    to remove the sysfs group that failed to be created
->  - If group creation failed mid way, previous successfully created groups
->    were not cleaned up
->  - Module exit only removed hdmi_mux group
-> 
-> To improve this, drop all helpers and let the platform driver manage these
-> sysfs groups, while controlling visibility with their respective quirks.
-> 
-> Signed-off-by: Kurt Borja <kuurtb@gmail.com>
-> ---
-> v2:
->  - Drop the helpers approach in favor of letting the driver manage the
->    wmax sysfs groups
-> ---
-> 
-> Again I think not cleaning up created sysfs group is not actually a bug
-> so this is only an improvement.
-> 
-> ---
->  drivers/platform/x86/dell/alienware-wmi.c | 112 +++++++---------------
->  1 file changed, 36 insertions(+), 76 deletions(-)
-> 
-> diff --git a/drivers/platform/x86/dell/alienware-wmi.c b/drivers/platform/x86/dell/alienware-wmi.c
-> index 6760c7627f62..ecab14d90b27 100644
-> --- a/drivers/platform/x86/dell/alienware-wmi.c
-> +++ b/drivers/platform/x86/dell/alienware-wmi.c
-> @@ -410,17 +410,12 @@ struct wmax_u32_args {
->  	u8 arg3;
->  };
->  
-> +
+On Thu, 2024-11-21 at 21:00 +0800, liujing wrote:
+> Because clos_config->clos_min and clos_config->clos_max
+> are unsigned int types, the output format should be %u.
+>=20
+> Signed-off-by: liujing <liujing@cmss.chinamobile.com>
 
-Just realized the extra line here.
+You need to have for your tag:
 
->  static struct platform_device *platform_device;
->  static struct platform_zone *zone_data;
->  static struct platform_profile_handler pp_handler;
->  static enum wmax_thermal_mode supported_thermal_profiles[PLATFORM_PROFILE_LAST];
->  
-> -static struct platform_driver platform_driver = {
-> -	.driver = {
-> -		.name = "alienware-wmi",
-> -	}
-> -};
-> -
->  static struct attribute_group zone_attribute_group = {
->  	.name = "rgb_zones",
->  };
-> @@ -781,6 +776,12 @@ static ssize_t toggle_hdmi_source(struct device *dev,
->  	return count;
->  }
->  
-> +static bool hdmi_group_visible(struct kobject *kobj)
-> +{
-> +	return quirks->hdmi_mux;
-> +}
-> +DEFINE_SIMPLE_SYSFS_GROUP_VISIBLE(hdmi);
-> +
->  static DEVICE_ATTR(cable, S_IRUGO, show_hdmi_cable, NULL);
->  static DEVICE_ATTR(source, S_IRUGO | S_IWUSR, show_hdmi_source,
->  		   toggle_hdmi_source);
-> @@ -793,25 +794,10 @@ static struct attribute *hdmi_attrs[] = {
->  
->  static const struct attribute_group hdmi_attribute_group = {
->  	.name = "hdmi",
-> +	.is_visible = SYSFS_GROUP_VISIBLE(hdmi),
->  	.attrs = hdmi_attrs,
->  };
->  
-> -static void remove_hdmi(struct platform_device *dev)
-> -{
-> -	if (quirks->hdmi_mux > 0)
-> -		sysfs_remove_group(&dev->dev.kobj, &hdmi_attribute_group);
-> -}
-> -
-> -static int create_hdmi(struct platform_device *dev)
-> -{
-> -	int ret;
-> -
-> -	ret = sysfs_create_group(&dev->dev.kobj, &hdmi_attribute_group);
-> -	if (ret)
-> -		remove_hdmi(dev);
-> -	return ret;
-> -}
-> -
->  /*
->   * Alienware GFX amplifier support
->   * - Currently supports reading cable status
-> @@ -838,6 +824,12 @@ static ssize_t show_amplifier_status(struct device *dev,
->  	return sysfs_emit(buf, "unconnected connected [unknown]\n");
->  }
->  
-> +static bool amplifier_group_visible(struct kobject *kobj)
-> +{
-> +	return quirks->amplifier;
-> +}
-> +DEFINE_SIMPLE_SYSFS_GROUP_VISIBLE(amplifier);
-> +
->  static DEVICE_ATTR(status, S_IRUGO, show_amplifier_status, NULL);
->  
->  static struct attribute *amplifier_attrs[] = {
-> @@ -847,25 +839,10 @@ static struct attribute *amplifier_attrs[] = {
->  
->  static const struct attribute_group amplifier_attribute_group = {
->  	.name = "amplifier",
-> +	.is_visible = SYSFS_GROUP_VISIBLE(amplifier),
->  	.attrs = amplifier_attrs,
->  };
->  
-> -static void remove_amplifier(struct platform_device *dev)
-> -{
-> -	if (quirks->amplifier > 0)
-> -		sysfs_remove_group(&dev->dev.kobj, &amplifier_attribute_group);
-> -}
-> -
-> -static int create_amplifier(struct platform_device *dev)
-> -{
-> -	int ret;
-> -
-> -	ret = sysfs_create_group(&dev->dev.kobj, &amplifier_attribute_group);
-> -	if (ret)
-> -		remove_amplifier(dev);
-> -	return ret;
-> -}
-> -
->  /*
->   * Deep Sleep Control support
->   * - Modifies BIOS setting for deep sleep control allowing extra wakeup events
-> @@ -916,6 +893,12 @@ static ssize_t toggle_deepsleep(struct device *dev,
->  	return count;
->  }
->  
-> +static bool deepsleep_group_visible(struct kobject *kobj)
-> +{
-> +	return quirks->deepslp;
-> +}
-> +DEFINE_SIMPLE_SYSFS_GROUP_VISIBLE(deepsleep);
-> +
->  static DEVICE_ATTR(deepsleep, S_IRUGO | S_IWUSR, show_deepsleep_status, toggle_deepsleep);
->  
->  static struct attribute *deepsleep_attrs[] = {
-> @@ -925,25 +908,10 @@ static struct attribute *deepsleep_attrs[] = {
->  
->  static const struct attribute_group deepsleep_attribute_group = {
->  	.name = "deepsleep",
-> +	.is_visible = SYSFS_GROUP_VISIBLE(deepsleep),
->  	.attrs = deepsleep_attrs,
->  };
->  
-> -static void remove_deepsleep(struct platform_device *dev)
-> -{
-> -	if (quirks->deepslp > 0)
-> -		sysfs_remove_group(&dev->dev.kobj, &deepsleep_attribute_group);
-> -}
-> -
-> -static int create_deepsleep(struct platform_device *dev)
-> -{
-> -	int ret;
-> -
-> -	ret = sysfs_create_group(&dev->dev.kobj, &deepsleep_attribute_group);
-> -	if (ret)
-> -		remove_deepsleep(dev);
-> -	return ret;
-> -}
-> -
->  /*
->   * Thermal Profile control
->   *  - Provides thermal profile control through the Platform Profile API
-> @@ -1151,6 +1119,20 @@ static void remove_thermal_profile(void)
->  		platform_profile_remove();
->  }
->  
-> +const struct attribute_group *wmax_groups[] = {
-> +	&hdmi_attribute_group,
-> +	&amplifier_attribute_group,
-> +	&deepsleep_attribute_group,
-> +	NULL
-> +};
+Full Name <email address>
 
-And this is not static.
+Thanks,
+Srinivas
 
-I'll fix it.
+>=20
+> diff --git a/tools/power/x86/intel-speed-select/isst-display.c
+> b/tools/power/x86/intel-speed-select/isst-display.c
+> index 07ebd08f3202..5ecf24bda6dd 100644
+> --- a/tools/power/x86/intel-speed-select/isst-display.c
+> +++ b/tools/power/x86/intel-speed-select/isst-display.c
+> @@ -617,14 +617,14 @@ void isst_clos_display_information(struct
+> isst_id *id, FILE *outf, int clos,
+> =C2=A0	format_and_print(outf, level + 2, header, value);
+> =C2=A0
+> =C2=A0	snprintf(header, sizeof(header), "clos-min");
+> -	snprintf(value, sizeof(value), "%d MHz", clos_config-
+> >clos_min * isst_get_disp_freq_multiplier());
+> +	snprintf(value, sizeof(value), "%u MHz", clos_config-
+> >clos_min * isst_get_disp_freq_multiplier());
+> =C2=A0	format_and_print(outf, level + 2, header, value);
+> =C2=A0
+> =C2=A0	snprintf(header, sizeof(header), "clos-max");
+> =C2=A0	if ((clos_config->clos_max *
+> isst_get_disp_freq_multiplier()) =3D=3D 25500)
+> =C2=A0		snprintf(value, sizeof(value), "Max Turbo
+> frequency");
+> =C2=A0	else
+> -		snprintf(value, sizeof(value), "%d MHz",
+> clos_config->clos_max * isst_get_disp_freq_multiplier());
+> +		snprintf(value, sizeof(value), "%u MHz",
+> clos_config->clos_max * isst_get_disp_freq_multiplier());
+> =C2=A0	format_and_print(outf, level + 2, header, value);
+> =C2=A0
+> =C2=A0	snprintf(header, sizeof(header), "clos-desired");
 
-> [...]
