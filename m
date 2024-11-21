@@ -1,41 +1,41 @@
-Received: from mout.gmx.net (mout.gmx.net [212.227.15.18])
+Received: from mout.gmx.net (mout.gmx.net [212.227.15.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C18E01C9B76
-	for <platform-driver-x86@vger.kernel.org>; Thu, 21 Nov 2024 21:54:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 594031DC05D;
+	Thu, 21 Nov 2024 22:03:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1732226047; cv=none; b=q3oiIkBmVNxrBrZRKTDxy6LkI3DUeLl/CIKzGKiyxklb4HsgRekI61cv3+GdTcMxqff/OHnMRRivCb/C46DKRGeBGhpb1ZmBix8X/wyG5XlY+4kKfz3rbvjZW9L7z1lF/HixKbqgm8YwqNDWOytU3+h+SMwd1k50D8dplpK7b5E=
+	t=1732226593; cv=none; b=ARMFQN4dqAsq05WEHxOftJa9UpOf4wdLzg5F+7QrJgaFP8jHIFDIu5A9PBdLVQ0x9xnPACzMW1JYHRdSfOZz3SX1PkMQ1TPUTb7qA00R1QClNFAxmsKXQRVcvXqteelZ5d5BwBIoTr8jwJWL4pnO4H0uzjaltew0unHaX880yUU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1732226047; c=relaxed/simple;
-	bh=ifLpZQrWqE/vJr/w/xfN2IM94D1/r+qv78hFLhvweHw=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=O5lI9jqOrP35ZiroCm/sPb2Ero9nOP/Z+RL3nilODjNQMNB+ccCgAWiUZn9LURH4ZvVJc8M2N2gGlkQPQ/TidrI0gzbNwilh3KwPGs+hNensmetKjY+gP3WmEGCcT901WvWa680EHF16fuMdgcWmOxZcpDlBtoXGdjhrZkyvrxk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b=mNbwwkml; arc=none smtp.client-ip=212.227.15.18
+	s=arc-20240116; t=1732226593; c=relaxed/simple;
+	bh=Ros+bwO9Q/78EujOU7Y6eyGXbq2ExfNBOnLKVTgOVVM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=k/3OUv7LrPyrFvID1qLzgVpyrd1zkJu+I1TXg+O03UamGExSFYqjE6P83PRQUZF/OtTmV7Fb8GYl/x5mrjo/dd7KT/q19zd1bUtNjSs4jxavr4fuG1jLIE0u4oi4gLY78NKOIoSPRWL41n5nx0nBxtQV6nqMd/XvRD0ME0s/+wM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b=dy884cPf; arc=none smtp.client-ip=212.227.15.15
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b="mNbwwkml"
+	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b="dy884cPf"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.de;
-	s=s31663417; t=1732226040; x=1732830840; i=w_armin@gmx.de;
-	bh=ifLpZQrWqE/vJr/w/xfN2IM94D1/r+qv78hFLhvweHw=;
-	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:To:
+	s=s31663417; t=1732226522; x=1732831322; i=w_armin@gmx.de;
+	bh=MEp8dGg1PO0r/R+78/I2+LfYJ53XS9xvmlLw7gkP+JE=;
+	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:To:Cc:
 	 References:From:In-Reply-To:Content-Type:
 	 Content-Transfer-Encoding:cc:content-transfer-encoding:
 	 content-type:date:from:message-id:mime-version:reply-to:subject:
 	 to;
-	b=mNbwwkmlLyn5lGpxU1R+4EZSY/H31NNRylrFzaqUhovgYAWqEkrpdoFM7PJTNsxk
-	 H5h41fMc8j/HwDqztmxbuOZgsO2SPD+FPssIqooP7RDaljPpikfTGGCOFp8AjsoOU
-	 Gsk3ozoqvZzBUUo7KYG85pxnxedqqiUqSGnNItuyVgrtIQp6H5yHQxI0M4OCM0nnm
-	 d+8rA05oCspfTuEF169uZYUEhrmLTJLBQr+ie9ecbzLTWwl9+KGXgh5iHvAU2UKAC
-	 7KzLjZ09Pj20upsumxYXzVYhm/r3bvLkWIdfGie37lpQrFHDmWfpnSLc0hjwQib0I
-	 RsWQHwwh+OdyjCh+CA==
+	b=dy884cPf6L2VLJdZkaNYYZMrj13pkufR7cAqgO5v6t0qpWfSXk32fBNtlSHyQRV2
+	 qUIpo72RewCg/sQEALSCJ9Sjl/mkYCSuPG72/URNXwVuOXl+QFdcdK3qFBOFxHI8E
+	 L3WwJx+3iIy6ZmwLD1kCDehQuH3hXj5VrCwchXmUY5rtEUQIZY2LgQZr8YQpjjukM
+	 eQrOwaw/sJZDQXxQQSC7w+e2dBch6ee/g1eSspCWySlyycHLRf/+AfSU7kK6GyffH
+	 3x824e+4dGiE9vvvDjn/CqBXh4AgSFI1vnf2knVz2gnMAJltOMcGUwFy7275u3IXK
+	 rhKBvxRuubhERxGoOg==
 X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
-Received: from [192.168.129.174] ([176.6.148.212]) by mail.gmx.net (mrgmx004
- [212.227.17.190]) with ESMTPSA (Nemesis) id 1MMGN2-1tUGL80TFm-00R1ij; Thu, 21
- Nov 2024 22:54:00 +0100
-Message-ID: <04db3001-55ca-4d9c-aa78-f9286b1d9ccc@gmx.de>
-Date: Thu, 21 Nov 2024 22:53:59 +0100
+Received: from [192.168.129.90] ([176.6.148.212]) by mail.gmx.net (mrgmx004
+ [212.227.17.190]) with ESMTPSA (Nemesis) id 1MtOGa-1u16yV3zf4-012Yc4; Thu, 21
+ Nov 2024 23:02:02 +0100
+Message-ID: <2a652c79-daaa-4ef7-9b92-4512a26d633a@gmx.de>
+Date: Thu, 21 Nov 2024 23:01:56 +0100
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -43,61 +43,154 @@ List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: acpi_device->driver_data vs acpi_device->dev.driver_data
-To: Werner Sembach <wse@tuxedocomputers.com>,
- platform-driver-x86@vger.kernel.org
-References: <64d96f64-4512-44f6-be3a-ba07043485b6@tuxedocomputers.com>
+Subject: Re: [PATCH v7 02/22] platform/x86/dell: dell-pc: Create platform
+ device
+To: Mario Limonciello <mario.limonciello@amd.com>,
+ Hans de Goede <hdegoede@redhat.com>,
+ =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Cc: "Rafael J . Wysocki" <rafael@kernel.org>, Len Brown <lenb@kernel.org>,
+ Maximilian Luz <luzmaximilian@gmail.com>, Lee Chun-Yi <jlee@suse.com>,
+ Shyam Sundar S K <Shyam-sundar.S-k@amd.com>,
+ Corentin Chary <corentin.chary@gmail.com>, "Luke D . Jones"
+ <luke@ljones.dev>, Ike Panhc <ike.pan@canonical.com>,
+ Henrique de Moraes Holschuh <hmh@hmh.eng.br>,
+ Alexis Belmonte <alexbelm48@gmail.com>,
+ =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>,
+ Ai Chao <aichao@kylinos.cn>, Gergo Koteles <soyer@irl.hu>,
+ open list <linux-kernel@vger.kernel.org>,
+ "open list:ACPI" <linux-acpi@vger.kernel.org>,
+ "open list:MICROSOFT SURFACE PLATFORM PROFILE DRIVER"
+ <platform-driver-x86@vger.kernel.org>,
+ "open list:THINKPAD ACPI EXTRAS DRIVER"
+ <ibm-acpi-devel@lists.sourceforge.net>,
+ Mark Pearson <mpearson-lenovo@squebb.ca>,
+ Matthew Schwartz <matthew.schwartz@linux.dev>
+References: <20241119171739.77028-1-mario.limonciello@amd.com>
+ <20241119171739.77028-3-mario.limonciello@amd.com>
 Content-Language: en-US
 From: Armin Wolf <W_Armin@gmx.de>
-In-Reply-To: <64d96f64-4512-44f6-be3a-ba07043485b6@tuxedocomputers.com>
+In-Reply-To: <20241119171739.77028-3-mario.limonciello@amd.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:SAWghkaS9nyO+LCwFNSXS2iaxl8yYU0yxj0RXFBe56ZhxHpLeWv
- NGez4rE4PVirIpvVyhMX0m23LMZOJ8f8SNWoMHsiyfUjfK4uk4yB/nglFBZNC0TomcyZBUV
- MbDct3C9t1AYoVIBA1l6I/LiravH9GrUhUqTBTJezOppl30+BMwYXUT1N7I7weFrssvS6qa
- izV5Q5NtI/JpSLaFkXMcA==
+X-Provags-ID: V03:K1:GYS5AOoGxqF0wXWDWQbStEiONjvFlvQC7x/UDdLufe4mr+RYYs6
+ 4RNr2/1T5EfL0VyJgzs3rPF1aw0rG2eBS8vJFTBHjElziSSc/THZLsEfDwFr3/2QRNiWqmt
+ ZEhKawoSNkLUrvwoj04+7Uq1E4UYLS400uOiP9FtykNwYT2+V5FjnOh+IkjuvClznHBvWHH
+ s/A5mUDarqNljjUmwmZEw==
 X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:/vbwicV97wU=;8CLbuqzFXFyB5XUNn9pWzlEKFLu
- tFVk6ol7q+6MrWNlN7Z1N4UyeD5jMRfj5f+83ym9bPfDsR57Qv1Ybqx62zihnIjx7PAXGxnb3
- f4dhpFW1BK0huoZLwfIaW/FwEPoZ/Gag8yhYlG01N7HPXwgKqdoTVpRZyA1rlG0nuY+jXzKup
- pNCaTjtos/aX8p502lx1D7NxkqYLVMK3L5HfZvWazQ5N8xEMBgNbvL01ZPDUe3pi5de7ntdeX
- VvdFmVCZz3u3ENp6zGAV/1dL7Caeb1udthbS3OkywTXjhlJT1M2vSeQrSK6ZP9qCW5Pkn9k6f
- xXyST3WApLQ2h9CcVqNieuyuUpvz2gBIqMKT/yGmnOZ1/jN21GSMymMHJJ/yjKk/WYSIHUoQ4
- AprzpO7QfTAckHsbX2oS8KtdH0h0PoMBJ1+FwbFKvcZWsfmPln7c4yUn9/rNwT5nu2vg/sD/z
- poKN4V6WeQ3Usxpc3x8MKEFqWGn2i/OYcTOYm9VHued1ce4BI3RLS+Q8ySOmxM3jVNWNb3ZCG
- e2Dy+6bRPNixqXqW1ijGJFCHSpAn3yVaO8xiSdk01TdCx7+uuI+lRoA/G7XbFMZSkJawfe5e4
- 8TZHsfeahOWQgy2K294mszxpHqzsr2Ws8jOkpnJik/H8m9igORZcdPm5M9sXlMftojReMMBkj
- Wd3BiTGT6y5TNWmLthERdTIjEAKKapZCwUmXE4VostEaBbgry03b55w6GB4ldaiYjiKN38n0y
- eLcc/LeCvF6rfRRgaqJSSz9hWqFHBJUyrU2ylnANgCwk6y1dNaqGeNza7DfB0W1rkQI6Y27y8
- cPL/b+i/Xd3f1hv73AKGaK4/wqmW4jx2H00iIklYvLAABuQeg+Ym4ak8FWJgACtp1z0PhPrEL
- GweXeN51ar2UdvOK9ZosKgiSzuu+xbyCNEPhlmVW8c236Tvi4saJ1aSs6EWe0GNJaTdizC0W4
- dLnTbwhG8va8LsmHBYzrlfLctgykB3yf0NEy01VHtGXbt7/0lFTtdUILsnsFF256GTHs+3N0R
- Pan57O31L196FSRXTyt81Mo6mlWb8RIqVlDuc5HwKUdKYfvTntqLqurHXHmVtt0ou7yZqNflg
- 3tdV3oskSxxtU/xQBUTQPGW+4FTEjZ
+UI-OutboundReport: notjunk:1;M01:P0:wZgpFk+F8Ds=;sZBT09GJoZLUuLjWxAXIxp1RT2U
+ iGLfb0OizrnkcdTLQDgu7dNKerwlrBBf7AthLq+f768/6dgGyGy/X+AjdKbSdJD8JfSv4yyuv
+ GqFDcp5q2v77jIVOfpcOV24jZl3vtQcUwZVm5BOJBlB+nysOrpsS59ttlzYQZjY6ogXJdsND9
+ H8woKwhRXBenCV3ds7iZsXqqGQL2FwUymc/l2PUVNQ1QPwRUf7qfCdF9qWmBIU118fg/5iYHw
+ uRNuuq8FUdGhqpWcavSSTNidW6RGkyDpnZbIY4k5lEdhjwYoO1XeDJSnaa3LySsfHfjYK7ZVR
+ tXOkXMeHq4yXqhoKYWQI8XakyjhfH2PbW0/Jyn44Lvxx5WLh7xeveDRINp+F+3FBIbwl6F9e/
+ N4Q/XpOWlhziw8EuIgws9JWiHwOrkVKdroeg70bmmnCO7TCSNxAS5mzcqgaZ4O3M/OK/vVlSI
+ lq3tX6UZ5vK4jbZhluOcIuDDMCL45Npew2DVMlWW5/XAmkNAXtY1TYCFDciX5KST94PbVcB0Y
+ XR9yr69OdyaVjSx55Gtd086pwBeBKts8fxBwewJ7t169WwSDheWuaFgIKazEOi3B4q3fxg/u8
+ zFU4TRItgrQS/f5ns/35J/AP2i5wcen7/nYc+oUl+t1oByomOiXRuiEFcqputqU0w7kXvHdUY
+ tfCCkwM7bRRlK3Ivnt+QpsIYvhDAuoNXTNe4z5kmA6UKgnww8bkybVwS4Ttch0D6/8J9YKnZY
+ 3Jy4nJRryB6ApplPehAMz8STmLwoXFvMZa1Gl4gsKID14ZFoYeMveuYDP63JHcRt2B5tjEpAW
+ JB/H7Tju9WpkfuE3fFn85NbtgF9FHkKXM2wqHdVHiKcKyvkU9nC8tyh4JX/WDIBN3NW9jm3e7
+ lCzbtMqM3Hi1v8aMKqFAiJW4uT1rfMVCm2i2Sw+SOEG6nM5pTK2fInJA9
 
-Am 19.11.24 um 17:43 schrieb Werner Sembach:
+Am 19.11.24 um 18:17 schrieb Mario Limonciello:
 
-> Hi,
+> In order to have a device for the platform profile core to reference
+> create a platform device for dell-pc.
 >
-> another quick learning question: Why does the acpi_device struct have
-> a driver_data member in addition to the driver_data member of the
-> nested dev?
+> While doing this change the memory allocation for the thermal handler
+> to be device managed to follow the lifecycle of that device.
 >
-> What should each driver_data member be used for?
+> Reviewed-by: Armin Wolf <W_Armin@gmx.de>
+> Tested-by: Mark Pearson <mpearson-lenovo@squebb.ca>
+> Reviewed-by: Ilpo J=C3=A4rvinen <ilpo.jarvinen@linux.intel.com>
+> Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
+> ---
+> v6:
+>   * Use PLATFORM_DEVID_NONE (Armin)
+> v5:
+>   * use platform_device_register_simple()
+> ---
+>   drivers/platform/x86/dell/dell-pc.c | 32 +++++++++++++++++++++--------
+>   1 file changed, 23 insertions(+), 9 deletions(-)
 >
-> In contrast platform_device and wmi_device only have the
-> dev.driver_data and not the top level driver data.
+> diff --git a/drivers/platform/x86/dell/dell-pc.c b/drivers/platform/x86/=
+dell/dell-pc.c
+> index 3cf79e55e3129..805497e44b3a5 100644
+> --- a/drivers/platform/x86/dell/dell-pc.c
+> +++ b/drivers/platform/x86/dell/dell-pc.c
+> @@ -18,10 +18,13 @@
+>   #include <linux/kernel.h>
+>   #include <linux/module.h>
+>   #include <linux/platform_profile.h>
+> +#include <linux/platform_device.h>
+>   #include <linux/slab.h>
 >
-> Kind regards,
+>   #include "dell-smbios.h"
 >
-> Werner Sembach
+> +static struct platform_device *platform_device;
+> +
+>   static const struct dmi_system_id dell_device_table[] __initconst =3D =
+{
+>   	{
+>   		.ident =3D "Dell Inc.",
+> @@ -244,9 +247,15 @@ static int thermal_init(void)
+>   	if (!supported_modes)
+>   		return 0;
 >
-Hi,
+> -	thermal_handler =3D kzalloc(sizeof(*thermal_handler), GFP_KERNEL);
+> -	if (!thermal_handler)
+> +	platform_device =3D platform_device_register_simple("dell-pc", PLATFOR=
+M_DEVID_NONE, NULL, 0);
+> +	if (!platform_device)
+>   		return -ENOMEM;
 
-from my point of view the driver_data member inside the acpi_device struct=
- is deprecated. You should use dev_set/get_drvdata()
-instead. Other than that the semantics are the same (i think).
+Sorry for taking so long to notice that, but the documentation for platfor=
+m_device_register_simple() says:
 
-Thanks,
-Armin Wolf
+	"Returns &struct platform_device pointer on success, or ERR_PTR() on
+error." So please use IS_ERR() for checking the platform_device pointer,
+since a simple NULL-check is not enough. Thanks, Armin Wolf
 
+> +
+> +	thermal_handler =3D devm_kzalloc(&platform_device->dev, sizeof(*therma=
+l_handler), GFP_KERNEL);
+> +	if (!thermal_handler) {
+> +		ret =3D -ENOMEM;
+> +		goto cleanup_platform_device;
+> +	}
+>   	thermal_handler->name =3D "dell-pc";
+>   	thermal_handler->profile_get =3D thermal_platform_profile_get;
+>   	thermal_handler->profile_set =3D thermal_platform_profile_set;
+> @@ -262,20 +271,25 @@ static int thermal_init(void)
+>
+>   	/* Clean up if failed */
+>   	ret =3D platform_profile_register(thermal_handler);
+> -	if (ret) {
+> -		kfree(thermal_handler);
+> -		thermal_handler =3D NULL;
+> -	}
+> +	if (ret)
+> +		goto cleanup_thermal_handler;
+> +
+> +	return 0;
+> +
+> +cleanup_thermal_handler:
+> +	thermal_handler =3D NULL;
+> +
+> +cleanup_platform_device:
+> +	platform_device_unregister(platform_device);
+>
+>   	return ret;
+>   }
+>
+>   static void thermal_cleanup(void)
+>   {
+> -	if (thermal_handler) {
+> +	if (thermal_handler)
+>   		platform_profile_remove();
+> -		kfree(thermal_handler);
+> -	}
+> +	platform_device_unregister(platform_device);
+>   }
+>
+>   static int __init dell_init(void)
