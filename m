@@ -1,41 +1,41 @@
-Received: from mout.gmx.net (mout.gmx.net [212.227.17.20])
+Received: from mout.gmx.net (mout.gmx.net [212.227.17.22])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 94D741ABEB0
-	for <platform-driver-x86@vger.kernel.org>; Thu, 21 Nov 2024 22:21:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.20
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E4AEB1CEAB8;
+	Thu, 21 Nov 2024 22:26:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.22
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1732227677; cv=none; b=XSTCa2W2Knc9YtXYjprgHYZZaRN7MQdogkXII5yCQrpWjSIFy8yfsLPlDTAL2osmxIs39ykMXMtLJmIYjxUzxIL7LpaQfnkoVyWO0bQlWEJrEoIK+KLH6/QCO8tam2AmLvaogplP2CAPy86eB1jUJwpeT25sHJQPQn8GMaUgHFQ=
+	t=1732227985; cv=none; b=cr687irprtmt4Bt9ivQvyGN8x95o5SKYksybs0VWuLXLbkk2y8cjAg6jt0OHFFr752Vi5mmAJhgM7xubowN7xn8U6VNyOimo9ZAD3Exk80g+qrwdZPNwIWOOYfMMfrfI1b4i64u74gbD5lG1Lh3JUeY7Hj+04Raf1D/DCyn8Iyg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1732227677; c=relaxed/simple;
-	bh=XQ4xqVRklioa2SiIdvsOccplHhQ4JRP2gd4jDK31608=;
+	s=arc-20240116; t=1732227985; c=relaxed/simple;
+	bh=EH/XAb2bLpcT2B2KyuREJ6qvtY0LOfPeILpQHOtsVU4=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=kCgUFS0+14dlCzDrkBB0vk8pOtAuiDKxp5JKWY6Abwk5s7tvlBbTxaUQRtdXjPzARQZ08AUlURkRB6kxFeozmCUL7HScN+Obi1Ei1lbm6VDKdmJy1SFan7TmG2wiMz2nijXwtzIyzHCAcipzucpwll+vj+tCESpxRcuQih2SdMY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b=rwfMmkK4; arc=none smtp.client-ip=212.227.17.20
+	 In-Reply-To:Content-Type; b=TPQy9sw9o+Ezi2GM5JRtev0Tbm+BZjVYkkx+CNhSXO/IruO5Gucg1C+AkR85HxmHsJyO30JWugE5c5cXFfDwB2e1rn09+d6VJgtiQhWCCMEJKXtReKr8fQx9JoJASWxDNDi9VwajBUd1zN4R64rxycNGG84Ct03cuCl57tMDJXA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b=UCCrsNHy; arc=none smtp.client-ip=212.227.17.22
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b="rwfMmkK4"
+	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b="UCCrsNHy"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.de;
-	s=s31663417; t=1732227663; x=1732832463; i=w_armin@gmx.de;
-	bh=ntHJZvsovuX3l7aISfSyUqmdt52gmbikJtRDlsxOw2U=;
+	s=s31663417; t=1732227905; x=1732832705; i=w_armin@gmx.de;
+	bh=EH/XAb2bLpcT2B2KyuREJ6qvtY0LOfPeILpQHOtsVU4=;
 	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:To:Cc:
 	 References:From:In-Reply-To:Content-Type:
 	 Content-Transfer-Encoding:cc:content-transfer-encoding:
 	 content-type:date:from:message-id:mime-version:reply-to:subject:
 	 to;
-	b=rwfMmkK4OgIvFgcyAIDK2vZ4hkdpwoTwHQQXMJ5+28JVv+33xbs0y2nkqyTKpF+e
-	 Yg/bW8/sKDEQM6SDGWonXobni1HVoheGb5l5poobyLBy1HkwUC66Q9lXrSVFfCDUV
-	 vvN0CzFeh/3Z+CnkB/y7kOjl1+jtWvi7aDqy0g+5CeLGlbl2sbQw/dA4D07Xsz2FI
-	 sNPdVYQtNwPi8T+ZyyeVQZpVHRywsKJ+qk8PBtzaRCWV6Xh24OLT/XjFvzozswhp4
-	 OlxtGA4iPW8zjY4y5TLN01IwIk4PF1qn86UVR5n0lrBY/iaYlEjMuXwv3LdXKGwo2
-	 s8mRzsGuUZ0goY0e0Q==
+	b=UCCrsNHyEL2RiOt098Z8FrvU/zcDw1K6E7Zm/F3tgqWhYXibUbXLhnbN16abWJWZ
+	 vF9ZY6en2pPyus2Xxk65Gor9ffXANWJP33/4P8lPoAE54QPKjXiApahMtNc/sZhbS
+	 BvL8WAhJIettkYZeMArFamSz+pK9TbG8nLwEzSQluVgAysFmNBabrmNFTQ8PZ8s4u
+	 /yk4g7TwKy2Wgx3+j1snlrDdZ5viMi+9qLCb4utkEdXpPJxpnhv5UW6dleUE3gQkc
+	 q2OO3/crHEaln2Ezd24DLkwVx27h8he23fvPweoJa5ESZmiK9IyFP9GTqEigvtZXl
+	 P8B9IZP1LHDGy8yQRQ==
 X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
 Received: from [192.168.129.90] ([176.6.148.212]) by mail.gmx.net (mrgmx105
- [212.227.17.168]) with ESMTPSA (Nemesis) id 1N8XPt-1trSAw0TEP-015J6O; Thu, 21
- Nov 2024 23:21:03 +0100
-Message-ID: <e01dfd1b-1981-47a3-a33f-5afa321b7a10@gmx.de>
-Date: Thu, 21 Nov 2024 23:20:59 +0100
+ [212.227.17.168]) with ESMTPSA (Nemesis) id 1N95eJ-1tpnwk1CaN-014lXw; Thu, 21
+ Nov 2024 23:25:05 +0100
+Message-ID: <99c47bd4-02f4-46bc-a355-50a0ab1d8538@gmx.de>
+Date: Thu, 21 Nov 2024 23:24:52 +0100
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -43,121 +43,125 @@ List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v7 13/22] ACPI: platform_profile: Add profile attribute
- for class interface
-To: Mark Pearson <mpearson-lenovo@squebb.ca>,
- =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
- "Limonciello, Mario" <mario.limonciello@amd.com>
-Cc: "platform-driver-x86@vger.kernel.org"
- <platform-driver-x86@vger.kernel.org>
+Subject: Re: [PATCH v7 14/22] ACPI: platform_profile: Notify change events on
+ register and unregister
+To: Mario Limonciello <mario.limonciello@amd.com>,
+ =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Cc: Hans de Goede <hdegoede@redhat.com>,
+ "Rafael J . Wysocki" <rafael@kernel.org>, Len Brown <lenb@kernel.org>,
+ Maximilian Luz <luzmaximilian@gmail.com>, Lee Chun-Yi <jlee@suse.com>,
+ Shyam Sundar S K <Shyam-sundar.S-k@amd.com>,
+ Corentin Chary <corentin.chary@gmail.com>, "Luke D . Jones"
+ <luke@ljones.dev>, Ike Panhc <ike.pan@canonical.com>,
+ Henrique de Moraes Holschuh <hmh@hmh.eng.br>,
+ Alexis Belmonte <alexbelm48@gmail.com>,
+ =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>,
+ Ai Chao <aichao@kylinos.cn>, Gergo Koteles <soyer@irl.hu>,
+ open list <linux-kernel@vger.kernel.org>,
+ "open list:ACPI" <linux-acpi@vger.kernel.org>,
+ "open list:MICROSOFT SURFACE PLATFORM PROFILE DRIVER"
+ <platform-driver-x86@vger.kernel.org>,
+ "open list:THINKPAD ACPI EXTRAS DRIVER"
+ <ibm-acpi-devel@lists.sourceforge.net>,
+ Mark Pearson <mpearson-lenovo@squebb.ca>,
+ Matthew Schwartz <matthew.schwartz@linux.dev>
 References: <20241119171739.77028-1-mario.limonciello@amd.com>
- <20241119171739.77028-14-mario.limonciello@amd.com>
- <afff4d12-b611-68f0-07a0-2d22bc57fc06@linux.intel.com>
- <080ad77b-aa87-4541-8aec-bc74a6c2c0a7@app.fastmail.com>
- <42828c2f-4653-590f-0879-0ecdd00953ed@linux.intel.com>
- <249d2e7d-e859-4344-8bf6-f73641b009b9@app.fastmail.com>
+ <20241119171739.77028-15-mario.limonciello@amd.com>
+ <31d48b10-87e1-1064-b25a-71f55736e504@linux.intel.com>
+ <46b822e9-8bfd-462e-9f2f-acddd44bba30@amd.com>
 Content-Language: en-US
 From: Armin Wolf <W_Armin@gmx.de>
-In-Reply-To: <249d2e7d-e859-4344-8bf6-f73641b009b9@app.fastmail.com>
+In-Reply-To: <46b822e9-8bfd-462e-9f2f-acddd44bba30@amd.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:MvnZnIWiHPSMky/qwpXvr+UcKs6/Yu7iL1UshAU5+e6fO/OtyQi
- 9aRejCNTN9RmwHO3R1lazBUAEV1DAh4FQ+Vw2l/3MysDeZ0chCkB1u6/FpAhIyJiTGVqXcM
- QFw9oTmoS9JskzE+rOqxMY/fbpLy2gbkP/wGuI3W/1jX1gdi07v4LlYn27G9jZ5DJLUYoGy
- RDIAJtMnBffUmQrHwGx6A==
+X-Provags-ID: V03:K1:7p8ufks7Qmp5C3tLzfCRVWOPDNTRx3CzCPILtm/b+WagWkCJ3d0
+ Lyc/wwZqqNRCgun0jtkvGWABsPXzE4G2JEdvx7SrF3x4Xi67VCBqv7+tyUWaLWbdauyQo2q
+ siR2/EseX/WhFUOovwFJmPJqdqld28M7LiDbb0h2aoVzwBD+eVksQb5s7FvnBJ52hhK9EZX
+ 9r/QuQ+rKReMIOTOu1Y7A==
 X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:sXCzkzZtijY=;1yKW20AxTXRewVGO6NRBHglC2wj
- lsp4BtAbYvxGCKExzmAGz/HLvS0G4YwvrtAy6GgDIDWmYdf0uO1cXVbwGwCqGV2igukzNM80k
- 6b/TsBe09thdi7VAc3ay2aGlDUtJoXT3K3JzQznKCLjfYVlhJGgKIGLaJQP6tVonyk6zhG+qJ
- lvgHLrj32u/7N/Nx7DM1kkZWYhxjwPDuvWyKN95o4v/c/d5YPmWjsGUQQek8FRw7nODMyCq9Q
- es1SgE5NeVKdBBg+r4o3wdQfrMH23hO8CRsc8+/leHv+ZYQJvCyvVSc/6MmSMx7mJbnoORqfk
- BNrawUeRaqAfJjmpqbXz7TR1Wb/FOd9qBjagrl8AN/HHCLtwxsTqc+jyLXzXGXvovSbtU9kOc
- fOZ61T/+mX7zxaDtvnPyxxU8qlhNsQTSZIjZDlWgjz1Yw6jYDJGiNqhV9X0BivhgZXhFH5aaf
- SAAt5A1YavJXVxrkgqPb6GYu/qzRNh6Rif3IiQh/W8tJ+/wu7bZFYmsLyotxz79yb3CDK/V8g
- OGsHtBiEBaqqfh9/yNRDPABABe/hF5lwWTLa0LjOJg98A47U940wt1oVwL+TnBRaFlWLc874H
- r78hACOhNfGFOyoBVEQV0WP5CkJVCIOddUZYHBbmHuFpA0Q9DJ69hsuNBiNWjOWNb6aCN0iw3
- 7HRVFFVY7RxRWqsbbMEREBesa3BxJ3LFLT4MZuRjk7JKfUt3Jjt9rvA2a5sqE0OiVolYQ8+JQ
- B85b5jr1sORVW73JiAhywtgt5EZpTDwF3/l7tKuHxHNMcWsed2N1Xpdp/q6at+GodUZE8a6MX
- 7+bfgMZ4voBIke4mwndORToWTOce7zEfO1AfOYfe313IcY0iqUBwmb1D9b/fvxv5UoxWC3Phg
- 1oCiPIL/tOOBZ+GMXS3ThQ8w9Cb0Ff/GOKrp3P2iYQFIdwFwJ+Lk69MtcRx1GJVR1bUeOTzs6
- hMp6qVvcFBLNsNrxdPU81B3Nf5YN+BW8QwZxdQqp0rQYjKE6OMSVa241bVZCbGSofZ4d54ySq
- jRrPaAJdNfKEmeM5ywgSq6ma//vKn4uVmsChnpkT/6DBPCdWjzbsDOlOe93PNM4Usknu9zzM9
- 1DZZSsSDFJY//OOomhPFsOilL9mRD9
+UI-OutboundReport: notjunk:1;M01:P0:VNdloLmZJ6w=;pUIx4JRKa+1/cvst9LNEfclYVYx
+ +BFVWVmKnLl2vFxqcVGttN0gwnXlrp3DbqwnzGcnFpz03kU5f0+h8jdTRu22KvLyzAulrQyVL
+ Gp38xpFaVspf0idn90D/jzFP9m9M80GTNC3X8+bLbrBq3T5UL9EPZjNrmCX6cZWuKuY4WzwT3
+ XRowDz7/2HDh3uNgIn1hc19vwqI53ID4AyC1pBkP6/NflZXCNEnEliLbDk1f1iJCoc1RDbeuQ
+ 6lFGyeIrLwCjtV32VMaaq2bt0Kblabrmy00YNN+0+GfWcwHnNgKK6m6Cih0V3QTKoIbOuW6X8
+ vziTaT/+EzdQehxpND23kHVPVW/jU+WOUVoma5XM+Qda8OvQ/vx7icazmROV2xnYV0/ZKmcUk
+ UdIOFEDaaW03ueivplRUpYXE9JhS9974dur2+cd/rGP+MZ0mrcAKggR7VbhpTckCycHseVKQ4
+ wMZzSQfBUL4U7056xR5rvVPA07DlCmrtkPB5sM7nh06WYidwSTcGYrq7ICOZS29qL5VbPeuZH
+ 5+RvuZS+b2OuqVgOomVyaWRLK8xjJJc2DZvLWTC0Jqxi8cKvmN54h3pS6jr4V8q1h24MkNYg2
+ x/rSxeamrqS4N1SbtLD4PfRlwXVH4bqdxYPi0Exu0yD6xS++CKCqj/F4Xd+BS3vuyYLQUyec/
+ RGwgLLU7qKN0EZ3fNhG+oEdWcqVA7gG3p1qDIrIHmbnjT76ETFdJB2h1A/0qmRuZUIA5AcThP
+ +gImHcv4ZmVf3cPfvgpD6kvYqdzqXBMBH0BbBoLF1V0cIcmyBaobWTAKYUJLg87YBH1Z4MSgw
+ EuyMRtPDAWjapsN+KMtzrxscqfyoxqg/K4UeDUl5PnIOIzD1hvrMt6DDzHFSAGQ4WxQ1zZ2+y
+ dwb8sD57O+paD+Od4ZQTrjB8g6upxhdY9tS/z99GcMEBBS3JW0+CC7sT9
 
-Am 21.11.24 um 15:27 schrieb Mark Pearson:
+Am 20.11.24 um 16:37 schrieb Mario Limonciello:
 
-> On Thu, Nov 21, 2024, at 6:10 AM, Ilpo J=C3=A4rvinen wrote:
->> I don't know why you dropped Mario and the list, I reinstanstated those
->> two.
-> Unintentional - sorry. Hit the reply button instead of reply-all and did=
-n't notice. Doh.
->
->> On Wed, 20 Nov 2024, Mark Pearson wrote:
->>> On Wed, Nov 20, 2024, at 9:56 AM, Ilpo J=C3=A4rvinen wrote:
->>>> On Tue, 19 Nov 2024, Mario Limonciello wrote:
->>>>
->>>>> Reading and writing the `profile` sysfs file will use the callbacks =
-for
->>>>> the platform profile handler to read or set the given profile.
->>>>>
->>>>> Tested-by: Mark Pearson <mpearson-lenovo@squebb.ca>
->>>>> Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
->>>>> ---
->>>>> v7:
->>>>>   * Remove extra handler set
->>>>>   * Remove err variable
->>>>> v6:
->>>>>   * Fix return
->>>>> v5:
->>>>>   * Drop recovery flow
->>>>>   * Don't get profile before setting (not needed)
->>>>>   * Simplify casting for call to _store_class_profile()
->>>>>   * Only notify legacy interface of changes
->>>>>   * Adjust mutex use
->>>>> ---
->>>>>   drivers/acpi/platform_profile.c | 100 ++++++++++++++++++++++++++++=
-++++
->>>>>   1 file changed, 100 insertions(+)
->>>>>
->>>>> diff --git a/drivers/acpi/platform_profile.c b/drivers/acpi/platform=
-_profile.c
->>>>> index 9d6ead043994c..1530e6096cd39 100644
->>>>> --- a/drivers/acpi/platform_profile.c
->>>>> +++ b/drivers/acpi/platform_profile.c
->>>>>   static struct attribute *profile_attrs[] =3D {
->>>>>   	&dev_attr_name.attr,
->>>>>   	&dev_attr_choices.attr,
->>>>> +	&dev_attr_profile.attr,
->>>> I started to wonder if "choices" is good name for the other attribute=
- as
->>>> it is the set of values "profile" accepts? Should they be bound by th=
-e
->>>> naming too like "profile_choices" or something along those lines so t=
-he
->>>> connection between the two is very evident?
->>>>
->>> Wouldn't it be weird to not have it in sync with the main sysfs entry
->>> (which I don't think we can change at that point without messing up
->>> userspace).
->>>
->>> I think it would be more confusing to have different naming as it woul=
-d
->>> imply they're different things.
->> Ah, I didn't realize there's a pre-existing convention. Then just
->> disregard what I suggested.
+> On 11/20/2024 09:09, Ilpo J=C3=A4rvinen wrote:
+>> On Tue, 19 Nov 2024, Mario Limonciello wrote:
 >>
-> No idea if it's a convention - I just would think it would be confusing =
-for users.
+>>> As multiple platform profile handlers may come and go, send a
+>>> notification
+>>> to userspace each time that a platform profile handler is registered o=
+r
+>>> unregistered.
+>>>
+>>> Reviewed-by: Armin Wolf <W_Armin@gmx.de>
+>>> Tested-by: Mark Pearson <mpearson-lenovo@squebb.ca>
+>>> Tested-by: Matthew Schwartz <matthew.schwartz@linux.dev>
+>>> Reviewed-by: Mark Pearson <mpearson-lenovo@squebb.ca>
+>>> Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
+>>> ---
+>>> v7:
+>>> =C2=A0 * Add Armin's tag
+>>> ---
+>>> =C2=A0 drivers/acpi/platform_profile.c | 4 ++++
+>>> =C2=A0 1 file changed, 4 insertions(+)
+>>>
+>>> diff --git a/drivers/acpi/platform_profile.c
+>>> b/drivers/acpi/platform_profile.c
+>>> index 1530e6096cd39..de0804305b02c 100644
+>>> --- a/drivers/acpi/platform_profile.c
+>>> +++ b/drivers/acpi/platform_profile.c
+>>> @@ -363,6 +363,8 @@ int platform_profile_register(struct
+>>> platform_profile_handler *pprof)
+>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 goto cleanup_id=
+a;
+>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 }
+>>> =C2=A0 +=C2=A0=C2=A0=C2=A0 sysfs_notify(acpi_kobj, NULL, "platform_pro=
+file");
+>>> +
+>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 cur_profile =3D pprof;
+>>> =C2=A0 =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 err =3D sysfs_update_group(acpi_=
+kobj, &platform_profile_group);
+>>
+>> Is the ordering problematic here, how long userspace has to wait for th=
+e
+>> update to become visible?
 >
-> Thanks
-> Mark
+> TBH - this feels like an artifact of the earlier patches.=C2=A0 I don't
+> know that we really need the notify anymore since calling
+> sysfs_update_group().
+>
+> I'm tending to think drop this patch entirely.
+>
+I do not think so. A new platform profile handler might cause the platform=
+ profile choices to change. It might also cause the platform profile
+to switch to "custom" in some cases. So i think we still have to keep this=
+ patch.
 
-I personally would prefer the attribute name "choices", but i would also a=
-ccept if the attribute was
-named "profile_choices". I think adding the "profile" prefix to the attrib=
-ute when it is already handled
-by the platform-profile class is silly.
+Thanks
 
-Either way:
-Reviewed-by: Armin Wolf <W_Armin@gmx.de>
-
+>>
+>>> @@ -393,6 +395,8 @@ int platform_profile_remove(struct
+>>> platform_profile_handler *pprof)
+>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 device_unregister(pprof->class_dev);
+>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 ida_free(&platform_profile_ida, id);
+>>> =C2=A0 +=C2=A0=C2=A0=C2=A0 sysfs_notify(acpi_kobj, NULL, "platform_pro=
+file");
+>>> +
+>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 sysfs_update_group(acpi_kobj, &platform=
+_profile_group);
+>>
+>>
+>
+>
