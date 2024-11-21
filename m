@@ -1,122 +1,124 @@
-Received: from linux1587.grserver.gr (linux1587.grserver.gr [185.138.42.100])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B940D1C304F;
-	Thu, 21 Nov 2024 17:28:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.138.42.100
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3CC591428F3;
+	Thu, 21 Nov 2024 17:31:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1732210094; cv=none; b=uucumFNFBIEwDPbC9GzQlPu6Svgk4hbAYaAksC6vdhUvHyAqtom4IZ7cLmCeHDtqrOCYG9s5E4OoChEE/QMBiMMzFD2F2LtMw7//s3JECc39FgaWvkXRGuFlMavsPWKS8CPgf1vHjCVeqw3Sjy7IppIJz8+EwFI1FfbrULENQ4Y=
+	t=1732210298; cv=none; b=cG/hy5QlsXPU+xpBa7UZ6zm7npbnyK61szKZdiMdkqmdqLBfnOV3nmnDi1rWTQDFW+KJjV1DYdaf02h654eTyVBnd6AKgQHKF+Mlhyb29c+I5+NyvKzT8vNx7NgGtuwVGzNnPXBvjNDn7h+KBzeOveSuzcecFaZzoKi3aygoNiU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1732210094; c=relaxed/simple;
-	bh=DkK6FKerYQ5Jj6C78QVHSiDhwQ1VrPm0mSRsM0u0Vzs=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=dvK7mfettNHQdGnq/jtkdjGhB0bcTDRvxw6DNqlrnCUq0/cU1sGWVQMkjyuLwcqkZJ+46UFoYc8FTsS5e2RklTunfLiP0AhNI8kR5UXtW123woWdIHUDnAwfI7GiWw6463Jmn9f6CAc6bTXslQARmuYSo2XS8rVOTd3otdoXOqM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=antheas.dev; spf=pass smtp.mailfrom=antheas.dev; dkim=pass (1024-bit key) header.d=antheas.dev header.i=@antheas.dev header.b=ROQ8fEeb; arc=none smtp.client-ip=185.138.42.100
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=antheas.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=antheas.dev
+	s=arc-20240116; t=1732210298; c=relaxed/simple;
+	bh=qvnKnejMHTt5yQjnfmJSaKX0kWb1lHoEU3Q8HwZUXYE=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=P6HU28JwWYtp0cZ3N+XIyEd2Jyhq4+aYrsVxCqHSipCsyRM/FdFLhmH4li4GZ+GkmOOa2vnJbbi9gafTJ9nlSiAi8UqHkLl8N/QD/2GgtJvkvPZNAV5NMtd6C2H8GqOVOdTgvgOhAcnuneNyvXyUKYn2yhLgNkh66LEsxL01rJ4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=EGCAoz6/; arc=none smtp.client-ip=198.175.65.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=antheas.dev header.i=@antheas.dev header.b="ROQ8fEeb"
-Received: from localhost.localdomain (unknown [IPv6:2a05:f6c2:511b:0:cbc0:999f:73ad:33bd])
-	by linux1587.grserver.gr (Postfix) with ESMTPSA id 173172E09589;
-	Thu, 21 Nov 2024 19:22:49 +0200 (EET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=antheas.dev;
-	s=default; t=1732209771;
-	bh=0YVrjraYiMF7JFRMsGzYGi+DLsnhBUH9lwvrGzQx40s=; h=From:To:Subject;
-	b=ROQ8fEeb/FgQIikIPcPmun/aLlgmlG34bO+t6bLBdiOpL6ZctiSfIAi2FS8iOqXM/
-	 yKOtdEBqwRB5pvdIb54XUmubFTnXqG18OM/Ln8ct/FIrZcLanIMujuoDsUeVPDv+ZW
-	 +d/+BSb87c/h9WXka00b/m8MR1ESpBOLQ5Fjkzuc=
-Authentication-Results: linux1587.grserver.gr;
-	spf=pass (sender IP is 2a05:f6c2:511b:0:cbc0:999f:73ad:33bd) smtp.mailfrom=lkml@antheas.dev smtp.helo=localhost.localdomain
-Received-SPF: pass (linux1587.grserver.gr: connection is authenticated)
-From: Antheas Kapenekakis <lkml@antheas.dev>
-To: linux-pm@vger.kernel.org
-Cc: platform-driver-x86@vger.kernel.org,
-	dri-devel@lists.freedesktop.org,
-	Mario Limonciello <mario.limonciello@amd.com>,
-	Hans de Goede <hdegoede@redhat.com>,
-	Kyle Gospodnetich <me@kylegospodneti.ch>,
-	Antheas Kapenekakis <lkml@antheas.dev>
-Subject: [RFC 02/13] acpi/x86: s2idle: add support for Display Off and Display
- On callbacks
-Date: Thu, 21 Nov 2024 18:22:27 +0100
-Message-ID: <20241121172239.119590-3-lkml@antheas.dev>
-X-Mailer: git-send-email 2.47.0
-In-Reply-To: <20241121172239.119590-1-lkml@antheas.dev>
-References: <20241121172239.119590-1-lkml@antheas.dev>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="EGCAoz6/"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1732210296; x=1763746296;
+  h=message-id:subject:from:to:cc:date:in-reply-to:
+   references:content-transfer-encoding:mime-version;
+  bh=qvnKnejMHTt5yQjnfmJSaKX0kWb1lHoEU3Q8HwZUXYE=;
+  b=EGCAoz6/FdZ11Q/kiRw6TucD9kDtCro7QDWnmn47D0HgFf+5bbjdh6/9
+   hNs6/Z+O5OqxhscVILYi0ypVCYK3IJ3/qQhtFeLkUyH9fLig4wj28aEew
+   3Dp3ZYPz3hzPq99F4YWdaPti+q3fkVVbANGgmg841g4bEZKDYJiXuiGUK
+   G64eMEqEwgp+lTAqpQTYksGRFpO4cl02tN1X6zy1LmK9gqBqgR3Hr728c
+   +AceIyE1iCc3rzp43RFNqWMw0+BelnWp583iGR9OR2IbLhx3gymhnH+Nv
+   I/LoANYlSWs+L05siZK+drBiswnvixLeaH3KThDTnDGgmuK1b0/xQjoon
+   A==;
+X-CSE-ConnectionGUID: 6bAiZD+fRayhS0gpvfEPZw==
+X-CSE-MsgGUID: 0+f59z67RRiYT6EMtC638Q==
+X-IronPort-AV: E=McAfee;i="6700,10204,11263"; a="32486067"
+X-IronPort-AV: E=Sophos;i="6.12,173,1728975600"; 
+   d="scan'208";a="32486067"
+Received: from fmviesa009.fm.intel.com ([10.60.135.149])
+  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Nov 2024 09:31:36 -0800
+X-CSE-ConnectionGUID: xvsWEZUFSnau9J5nV7lMhQ==
+X-CSE-MsgGUID: q7YBespHRLeLcfwhh6GUbg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.12,173,1728975600"; 
+   d="scan'208";a="90740290"
+Received: from spandruv-desk1.amr.corp.intel.com ([10.125.109.229])
+  by fmviesa009-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Nov 2024 09:31:35 -0800
+Message-ID: <5fb45a8da68f2a694acc781b8a6ff7d4c95f423c.camel@linux.intel.com>
+Subject: Re: [PATCH] tools/power/x86/intel-speed-select: rm .*.cmd when make
+ clean
+From: srinivas pandruvada <srinivas.pandruvada@linux.intel.com>
+To: Zhu Jun <zhujun2@cmss.chinamobile.com>
+Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+Date: Thu, 21 Nov 2024 09:31:35 -0800
+In-Reply-To: <20241115073221.6176-1-zhujun2@cmss.chinamobile.com>
+References: <20241115073221.6176-1-zhujun2@cmss.chinamobile.com>
+Autocrypt: addr=srinivas.pandruvada@linux.intel.com; prefer-encrypt=mutual;
+ keydata=mQGNBGYHNAsBDAC7tv5u9cIsSDvdgBBEDG0/a/nTaC1GXOx5MFNEDL0LWia2p8Asl7igx
+ YrB68fyfPNLSIgtCmps0EbRUkPtoN5/HTbAEZeJUTL8Xdoe6sTywf8/6/DMheEUzprE4Qyjt0HheW
+ y1JGvdOA0f1lkxCnPXeiiDY4FUqQHr3U6X4FPqfrfGlrMmGvntpKzOTutlQl8eSAprtgZ+zm0Jiwq
+ NSiSBOt2SlbkGu9bBYx7mTsrGv+x7x4Ca6/BO9o5dIvwJOcfK/cXC/yxEkr1ajbIUYZFEzQyZQXrT
+ GUGn8j3/cXQgVvMYxrh3pGCq9Q0Q6PAwQYhm97ipXa86GcTpP5B2ip9xclPtDW99sihiL8euTWRfS
+ TUsEI+1YzCyz5DU32w3WiXr3ITicaMV090tMg9phIZsjfFbnR8hY03n0kRNWWFXi/ch2MsZCCqXIB
+ oY/SruNH9Y6mnFKW8HSH762C7On8GXBYJzH6giLGeSsbvis2ZmV/r+LmswwZ6ACcOKLlvvIukAEQE
+ AAbQ5U3Jpbml2YXMgUGFuZHJ1dmFkYSA8c3Jpbml2YXMucGFuZHJ1dmFkYUBsaW51eC5pbnRlbC5j
+ b20+iQHRBBMBCAA7FiEEdki2SeUi0wlk2xcjOqtdDMJyisMFAmYHNAsCGwMFCwkIBwICIgIGFQoJC
+ AsCBBYCAwECHgcCF4AACgkQOqtdDMJyisMobAv+LLYUSKNuWhRN3wS7WocRPCi3tWeBml+qivCwyv
+ oZbmE2LcxYFnkcj6YNoS4N1CHJCr7vwefWTzoKTTDYqz3Ma0D0SbR1p/dH0nDgN34y41HpIHf0tx0
+ UxGMgOWJAInq3A7/mNkoLQQ3D5siG39X3bh9Ecg0LhMpYwP/AYsd8X1ypCWgo8SE0J/6XX/HXop2a
+ ivimve15VklMhyuu2dNWDIyF2cWz6urHV4jmxT/wUGBdq5j87vrJhLXeosueRjGJb8/xzl34iYv08
+ wOB0fP+Ox5m0t9N5yZCbcaQug3hSlgp9hittYRgIK4GwZtNO11bOzeCEMk+xFYUoa5V8JWK9/vxrx
+ NZEn58vMJ/nxoJzkb++iV7KBtsqErbs5iDwFln/TRJAQDYrtHJKLLFB9BGUDuaBOmFummR70Rbo55
+ J9fvUHc2O70qteKOt5A0zv7G8uUdIaaUHrT+VOS7o+MrbPQcSk+bl81L2R7TfWViCmKQ60sD3M90Y
+ oOfCQxricddC
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.52.4 (3.52.4-2.fc40) 
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-PPP-Message-ID: 
- <173220977021.4257.7217008257458970692@linux1587.grserver.gr>
-X-PPP-Vhost: antheas.dev
-X-Virus-Scanned: clamav-milter 0.103.11 at linux1587.grserver.gr
-X-Virus-Status: Clean
 
-The Display Off and Display On firmware notifications are meant to signify
-the system entering a state where the user is not actively interacting
-with it (i.e., in Windows this state is called "Screen Off" and the
-system enters it once it turns the screen off e.g., due to inactivity).
+On Thu, 2024-11-14 at 23:32 -0800, Zhu Jun wrote:
+> rm .*.cmd when make clean
+>=20
+I don't see .cmd files by running make, how did you get those files?
 
-Currently, these functions are called within the suspend sequence, which
-causes issues when these notifications interact with e.g., a USB device
-and makes them unable to be called as part of the screen turning off.
+I have
 
-This patch adds a set of callbacks to allow calling the Display On/Off
-notifications outside of the suspend/resume path.
+#ls
 
-Co-developed-by: Mario Limonciello <mario.limonciello@amd.com>
-Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
-Signed-off-by: Antheas Kapenekakis <lkml@antheas.dev>
----
- include/linux/suspend.h |  2 ++
- kernel/power/suspend.c  | 10 ++++++++++
- 2 files changed, 12 insertions(+)
+Build         include                  isst-config.c  isst-core-mbox.c
+isst-core-tpmi.c  isst-daemon.o   isst.h
+hfi-events.c  intel-speed-select       isst-config.o  isst-core-mbox.o
+isst-core-tpmi.o  isst-display.c  Makefile
+hfi-events.o  intel-speed-select-in.o  isst-core.c    isst-core.o    =20
+isst-daemon.c     isst-display.o
 
-diff --git a/include/linux/suspend.h b/include/linux/suspend.h
-index da6ebca3ff77..57c083754e8b 100644
---- a/include/linux/suspend.h
-+++ b/include/linux/suspend.h
-@@ -132,6 +132,7 @@ struct platform_suspend_ops {
- };
- 
- struct platform_s2idle_ops {
-+	int (*display_off)(void);
- 	int (*begin)(void);
- 	int (*prepare)(void);
- 	int (*prepare_late)(void);
-@@ -140,6 +141,7 @@ struct platform_s2idle_ops {
- 	void (*restore_early)(void);
- 	void (*restore)(void);
- 	void (*end)(void);
-+	int (*display_on)(void);
- };
- 
- #ifdef CONFIG_SUSPEND
-diff --git a/kernel/power/suspend.c b/kernel/power/suspend.c
-index 09f8397bae15..cded6b9b439b 100644
---- a/kernel/power/suspend.c
-+++ b/kernel/power/suspend.c
-@@ -254,6 +254,16 @@ static bool sleep_state_supported(suspend_state_t state)
- 	       (valid_state(state) && !cxl_mem_active());
- }
- 
-+static int platform_standby_display_off(void)
-+{
-+	return s2idle_ops && s2idle_ops->display_off ? s2idle_ops->display_off() : 0;
-+}
-+
-+static int platform_standby_display_on(void)
-+{
-+	return s2idle_ops && s2idle_ops->display_on ? s2idle_ops->display_on() : 0;
-+}
-+
- static int platform_suspend_prepare(suspend_state_t state)
- {
- 	return state != PM_SUSPEND_TO_IDLE && suspend_ops->prepare ?
--- 
-2.47.0
+
+Thanks,
+Srinivas
+
+> Signed-off-by: Zhu Jun <zhujun2@cmss.chinamobile.com>
+> ---
+> =C2=A0tools/power/x86/intel-speed-select/Makefile | 2 +-
+> =C2=A01 file changed, 1 insertion(+), 1 deletion(-)
+>=20
+> diff --git a/tools/power/x86/intel-speed-select/Makefile
+> b/tools/power/x86/intel-speed-select/Makefile
+> index 7221f2f55e8b..b58185cc97d2 100644
+> --- a/tools/power/x86/intel-speed-select/Makefile
+> +++ b/tools/power/x86/intel-speed-select/Makefile
+> @@ -47,7 +47,7 @@ $(OUTPUT)intel-speed-select: $(ISST_IN)
+> =C2=A0clean:
+> =C2=A0	rm -f $(ALL_PROGRAMS)
+> =C2=A0	rm -rf $(OUTPUT)include/linux/isst_if.h
+> -	find $(or $(OUTPUT),.) -name '*.o' -delete -o -name '\.*.d'
+> -delete
+> +	find $(or $(OUTPUT),.) -name '*.o' -delete -o -name '\.*.d'
+> -delete -o -name '\.*.cmd' -delete
+> =C2=A0
+> =C2=A0install: $(ALL_PROGRAMS)
+> =C2=A0	install -d -m 755 $(DESTDIR)$(bindir);		\
 
