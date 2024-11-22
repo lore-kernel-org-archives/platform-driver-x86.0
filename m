@@ -1,273 +1,227 @@
-Received: from mail-oi1-f178.google.com (mail-oi1-f178.google.com [209.85.167.178])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from letterbox.kde.org (letterbox.kde.org [46.43.1.242])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 45C711DDC24
-	for <platform-driver-x86@vger.kernel.org>; Fri, 22 Nov 2024 17:30:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D40B42FC23;
+	Fri, 22 Nov 2024 19:33:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.43.1.242
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1732296613; cv=none; b=rLtSZ2P6i4uqFvNkpodRXAws/S51CaWr/RAJJpUxRSAPkMY6/64EyMcDlra+pxEe3XWih06UyrUpN7wA1MiNJGnenNZVV0h48L1PYEy55Hwgqci5O3ehLwaIZ2RXMFmT7D3megvSc/shuK/t+qhecBHXWx7vco9v+T/YJ+lG+to=
+	t=1732304021; cv=none; b=JV9/xHui2I6N3EbCQlQMRF3xwY8SZhJ40GOL4D77STFWiZ/k4zgSy1IUZb1InV8EsIRXqQodVF3kDtm8jzsz6idm8p1G/6yAe8Kf5mfKLqrq2LP97uqvleFdK9mfCucZpdBZpfs50o3UBDwZcNqZq8kS9dpM5x/0yb1da7o55vY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1732296613; c=relaxed/simple;
-	bh=EUZuHKWZknJku54SJ6vrlITMLqjLXwQYQg3tm1Juj88=;
+	s=arc-20240116; t=1732304021; c=relaxed/simple;
+	bh=pEHiS2FWVRv5zJ7TVl7scMX943vtQWw0iaP7N+Gc7JY=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=XA0JaK6xSIoRT2D0DD6HMlfb7gUYRg5J/MbK/heFufrAuxPSyCpZ3I9AIbOL5iXafjlX3sci+95hegarjFj2tPi5fOAXyi+zibL/93Z3SjCQAkrnEtJD823NAww/h4LwUwD+jdYyYC+5TwD/aOWA5cFsTgaMZ/oWw7p9Ss3eFbE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=joshuagrisham.com; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.167.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=joshuagrisham.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-oi1-f178.google.com with SMTP id 5614622812f47-3e6010a3bbfso1323717b6e.2
-        for <platform-driver-x86@vger.kernel.org>; Fri, 22 Nov 2024 09:30:11 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1732296610; x=1732901410;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=EUZuHKWZknJku54SJ6vrlITMLqjLXwQYQg3tm1Juj88=;
-        b=tvKDSAySLJr5NtlGfIZxf0sqqPPAfEPFVsPHgJN2jn/fdNNRDKTt0AxxfVn59nOS+2
-         poJmD2+QT5bIqg95HR/9CRjHXhYqVlyb1ceuTcJE2r0L8xUVk5vxgPnKu7+pNmH9qs8u
-         rrAdaJ6RyN9W5b56yFNXfADHUHMOxtgJDQc39FFpk7BzSytqE3qYqmuAg9l5Df+ootHO
-         T31gT0hgIOLY9uQbrcxgmYYecHO+GAnfxpbyXHeb7GLNRxe5COpvOqkg1uoHkf5Mx1vr
-         puXaex9lAgJwAemUTf7tIbx6B6YPjT1RAHBr8rNufQgik1tW4pGtvodOU4bT3ugiRNm5
-         6wMQ==
-X-Forwarded-Encrypted: i=1; AJvYcCV2d0TU0XnfQu/CFQ3uFOlVqOnr/mJLNMMl4Lyn37N30Fb0aNAnK5Rd2IgLUaiO1/pQxT09mVgaKhF4fUgRKgUHjnDF@vger.kernel.org
-X-Gm-Message-State: AOJu0YxLTdRhPsMW7NitqgQhiIEgEkHTc3QTGrbsHT5j5HxM2LGwSQWW
-	RQ2aeqOq7o77+bxDAVcQCE+NmIOKx4DJYZlTZNjys7KqjTSTeso6LupDfwqN
-X-Gm-Gg: ASbGncvZYfrPRui73ABUjj08Vs47hYvKlSxzbeoTvZJXk/RVUAKLGmY48nsWTiae8wI
-	SVX/Me0Tr76DmEC9C4B5B45mMm0OgWKDwwxpCceRe4nQNp0y7+IcNJoQJWAkIOk3W5FDdKtziW1
-	wCsN5NEpx3QEXciBBBRLBKE0eP2mX7NLa4SPR2ZTYAWUtSBqkmqhlxZt9k4IKxr+S1d0PVmRrgg
-	eX1yq4h1MaxiHyr9OWMALfQ10nSqFFIIaIr71QBI76/gOtM/1Pby82QA2PgTDVk4OOdbSTBLOLg
-	HgPt6gYHrwmGBH0=
-X-Google-Smtp-Source: AGHT+IGoZOzq4SBxhJ/4Hf2DlwAlK/k83UXEvvo7wyiEAuh1WSUbDCQk/n06iwRwxhECbPwVZI7aTw==
-X-Received: by 2002:a05:6808:1526:b0:3e6:28cc:fec0 with SMTP id 5614622812f47-3e915b12e37mr3982763b6e.43.1732296610106;
-        Fri, 22 Nov 2024 09:30:10 -0800 (PST)
-Received: from mail-io1-f50.google.com (mail-io1-f50.google.com. [209.85.166.50])
-        by smtp.gmail.com with ESMTPSA id 8926c6da1cb9f-4e1cff34eb0sm743296173.149.2024.11.22.09.30.09
-        for <platform-driver-x86@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 22 Nov 2024 09:30:09 -0800 (PST)
-Received: by mail-io1-f50.google.com with SMTP id ca18e2360f4ac-83e5ae95815so96110339f.2
-        for <platform-driver-x86@vger.kernel.org>; Fri, 22 Nov 2024 09:30:09 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCWSxMCV2auxDDLEmxqI5qnhEBqgS9u6cqnh8zh5hD9xSHz5MmolP6K7WCMXVXvd4xN8/OFhxIApB+i/sCfox5ILK/re@vger.kernel.org
-X-Received: by 2002:a05:6602:6405:b0:82c:ed57:ebd9 with SMTP id
- ca18e2360f4ac-83ecdd1bd3dmr430953939f.10.1732296608965; Fri, 22 Nov 2024
- 09:30:08 -0800 (PST)
+	 To:Cc:Content-Type; b=oVOUdCV40oElxa6ZZT7Z6yOeWphsP85YvAGjKmx/CoCJDxAwAiB9oqfxUNtvBmq3vOvX2al0yPJWk1J6ANyTiztE2Hp0vgiHn9DaGOAOnJtJ66XAoTym7bJL3pk+bpAlA5sRnkLN5UAXPp8+PTonLSM1vi0Lj3S9ppJftkw0LYE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kde.org; spf=pass smtp.mailfrom=kde.org; dkim=pass (2048-bit key) header.d=kde.org header.i=@kde.org header.b=IEu7BeIb; arc=none smtp.client-ip=46.43.1.242
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kde.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kde.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kde.org header.i=@kde.org header.b="IEu7BeIb"
+Received: from mail-ed1-f54.google.com (mail-ed1-f54.google.com [209.85.208.54])
+	(Authenticated sender: zamundaaa)
+	by letterbox.kde.org (Postfix) with ESMTPSA id E641D33E181;
+	Fri, 22 Nov 2024 19:25:57 +0000 (GMT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kde.org; s=users;
+	t=1732303557; bh=DklyLP4ID5juKFUX6zxmrl7+y8rTw8JIAgOSUGDDoic=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=IEu7BeIbAn3PNnnfI4NEcn/XeR3zmLl1YLmOpIOXbVrHPAWkb2oRw9jk04mp6Rzrh
+	 bJnm9dvkpeJEqSaLAdxQPVdZ6bC2vxGV6mhwWpATJt8lCceKJkpXJUGfbgwbSfB70v
+	 WHOZ4f8I6+HGPCRA5vyP3vTABE6I9UA8wqGjv8+6VzncLdejdMDX+AVNl2OIrGgfKK
+	 06LcbIxxHmu2jVDn/Kim1jL04zHOt/JTmAwbUj3TSXWdmXgf5GnM4rw+A3yxb+Q/NC
+	 CfGNpuM4SGUjY48n4dMgw29gAaWYq13jqoi5+gxRhcxesylkJVLoID2WlYQh+qJ/XI
+	 U6+dRYVQi6RLw==
+Received: by mail-ed1-f54.google.com with SMTP id 4fb4d7f45d1cf-5cfe5da1251so3025955a12.1;
+        Fri, 22 Nov 2024 11:25:57 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCWrNAYmVibjbo2MQq+CzsE8NZVDPacpTWcjwp9abp7NNMg/KMNthz5XseJdwUyL4O//MjGmMk2R5JWdMovOQNSt5zRd@vger.kernel.org
+X-Gm-Message-State: AOJu0YyUO1iLFzkBxtReTz6DhyG7tQcGC8JZ3Nb5mmm8QBKyCwalIu7K
+	P8u/K62aPqaeMu2epfA0x31nQal8afqToYx6CnxnvJL+QlzDFADpmyhUAOFiWYNJQ0Bd27kWvLc
+	oBtuTm7JK8QujKOmY/V7KUby3U3E=
+X-Google-Smtp-Source: AGHT+IHs0kiTYKVCEWddfpf8wOrS4FFtiJIfIKSGge5HiEZPlJIaAJXPV569eM0U7PVx3IkyY4koujDfRPQurE7g/OQ=
+X-Received: by 2002:a17:906:18a2:b0:a99:f4c3:580d with SMTP id
+ a640c23a62f3a-aa509b9f98emr299635466b.42.1732303557239; Fri, 22 Nov 2024
+ 11:25:57 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <CAMF+KeYus9dW00WNJMLVxLLHdG9JgCfrGJ491fu7NM8GAEqqCg@mail.gmail.com>
- <fd4a30e0-b5bb-47d7-8173-312417dce215@gmx.de>
-In-Reply-To: <fd4a30e0-b5bb-47d7-8173-312417dce215@gmx.de>
-From: Joshua Grisham <josh@joshuagrisham.com>
-Date: Fri, 22 Nov 2024 18:29:57 +0100
-X-Gmail-Original-Message-ID: <CAMF+KeZkqwnBNT4vVNLEC03zZqSTSAE-Z=8j9ZLACf3yBeun8A@mail.gmail.com>
-Message-ID: <CAMF+KeZkqwnBNT4vVNLEC03zZqSTSAE-Z=8j9ZLACf3yBeun8A@mail.gmail.com>
-Subject: Re: Adding a new platform driver samsung-galaxybook
-To: Armin Wolf <W_Armin@gmx.de>
-Cc: =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, 
-	Hans de Goede <hdegoede@redhat.com>, platform-driver-x86@vger.kernel.org
+References: <20241121172239.119590-1-lkml@antheas.dev>
+In-Reply-To: <20241121172239.119590-1-lkml@antheas.dev>
+From: Xaver Hugl <xaver.hugl@kde.org>
+Date: Fri, 22 Nov 2024 20:25:46 +0100
+X-Gmail-Original-Message-ID: <CAFZQkGytgJO0JwkTrGBmY8GxS099RLOPNMAbyjWwEO=fBxY6eQ@mail.gmail.com>
+Message-ID: <CAFZQkGytgJO0JwkTrGBmY8GxS099RLOPNMAbyjWwEO=fBxY6eQ@mail.gmail.com>
+Subject: Re: [RFC 00/13] acpi/x86: s2idle: implement Modern Standby transition
+ states and expose to userspace
+To: Antheas Kapenekakis <lkml@antheas.dev>
+Cc: linux-pm@vger.kernel.org, platform-driver-x86@vger.kernel.org, 
+	dri-devel@lists.freedesktop.org, 
+	Mario Limonciello <mario.limonciello@amd.com>, Hans de Goede <hdegoede@redhat.com>, 
+	Kyle Gospodnetich <me@kylegospodneti.ch>
 Content-Type: text/plain; charset="UTF-8"
 
-Hi Ilpo and Armin and thank you for the replies; these are exactly the
-kind of questions I was hoping for! :)
+Am Do., 21. Nov. 2024 um 18:22 Uhr schrieb Antheas Kapenekakis
+<lkml@antheas.dev>:
+>
+> The following series moves the _DSM 3,4,7,8 firmware notifications outside
+> the suspend sequence, and makes them part of a transition function, where
+> the system can transition freely between them when it is not suspended.
+> This transition function is exposed to userspace, which now gains the
+> ability to control the presentation of the device (e.g., pulse the suspend
+> light) without forcing the kernel to suspend. In addition, it adds support
+> for the _DSM 9 call Turn Display On, which was introduced in Windows 22H2
+> and aims to speed up device wake-up while remaining in the "Sleep" state.
+> If userspace is not standby aware, the kernel will bring the system into
+> the "Sleep" state before beginning the suspend sequence.
+>
+> This series requires a bit of background on how modern standby works in
+> Windows. Windows has a concept of "Modern Standby" [1], where it performs
+> an elaborate userspace and kernel suspend choreography while the device is
+> inactive in order to maintain fast wake-up times and connectivity while the
+> display of the device is off. This is done through 5 hardware states and
+> the OS takes the liberty of transitioning between them, by following a set
+> of rules (e.g., "Adaptive Hibernate").
+>
+> ```
+>                                  \/-> "Hibernate (S4)"
+> "Active" <-> "Screen Off" <-> "Sleep" <-> "DRIPS"
+>                   /\-  "Resume"  <-         <-
+> ```
+>
+> When the display is on and the user is interacting with the device, it is
+> in the "Active" state. The moment the display turns off, the device
+> transitions to the "Screen Off" state, where hardware and userspace are
+> fully active. Userspace will then decide when appropriate to freeze major
+> components (such as the DE) and transition into the "Sleep" state, where
+> the kernel is still active and connectivity is maintained. Finally, the
+> conventional "Suspend-to-idle" path can be used to bring the system into
+> the deepest runtime idle platform state (DRIPS) state, which is named
+> "s2idle" in the Linux kernel.
+>
+> After wake-up, the system re-transitions into the "Sleep" state, where
+> userspace can run housekeeping and/or hibernate if the wake-up was not user
+> initiated (e.g., timer). If user-initiated, userspace can hasten the
+> transition out of the "Sleep" state by transitioning into the state
+> "Resume" that certain devices use to boost the Power Limit (PLx) while
+> remaining in sleep (support for this new notification is rare). Then, it
+> transitions back into "Screen Off" and "Active" to prepare for the user.
+>
+> All transitions between these states feature unique firmware notifications
+> [3] that change the presentation of the device (e.g., pulse the suspend
+> light, turn off RGB). For more information, see the docs in [8]. Making
+> these transitions accessible from userspace moves them out of the suspend
+> sequence and has them happen while the kernel is fully active, mirroring
+> Windows.
+>
+> As a side effect, this patch series completely fixes the ROG Ally
+> controller issue [5], which expects for .5s to lapse before its
+> controller's USB hub goes into D3 and otherwise malfunctions. It also fixes
+> an issue present in (allegedly only) older firmwares where they check the
+> USB subsystem is not in D3 before allowing the controller to wake up while
+> in powersave mode (for avoiding spurious wake-ups). As such, this patch
+> series is also a universal fix for the ROG Ally controller.
+>
+> Moreover, this patch series allows turning off the controller and RGB of
+> most Windows handhelds (OneXPlayer, Lenovo Legion Go, GPD, and Asus ROG
+> Ally), opening the possibility of implementing suspend-then-hibernate and
+> other standby features, such as background downloads, without waking up the
+> RGB/controller of those devices. A Thinkpad T14 2021 was also tested, and
+> it pulses its suspend light during sleep.
+>
+> There is still the question of where LSP0 entry/exit (_DSM 5,6) should be
+> fired or whether they should be fired in the path to hibernation. However,
+> as they cause no issues currently, and they fire when software activity has
+> seized, they are fine where they are.
+>
+> It is important to note that the effects of these _DSMs persist during
+> reboots. I.e., if the Legion Go reboots while in the "Sleep" state, it will
+> boot into the "Sleep" state and have its controller disabled and suspend
+> light pulsing. The reboot persistence is undesirable, so the reboot path
+> will need to include a transition to active prior to reboot (not
+> included in this series). This is not the case after shutdown and
+> hibernation, where the device boots into the "Active" state.
+>
+> The issue of DPMS is still present. Currently, gamescope and KDE (at least)
+> do not fire DPMS before suspending. This causes an undesirable frozen
+> screen while the system is suspending and looks quite ugly in general. This
+> is especially true if the firmware notifications fire earlier. Therefore,
+> should the kernel fire DPMS before forcing the transition to sleep for
+> backwards compat.?
 
-Den ons 20 nov. 2024 kl 13:00 skrev Armin Wolf <W_Armin@gmx.de>:
-> After looking at the driver, i would advise you to drop the acpi_driver stuff and instead
-> implement the whole driver as a platform_driver. Does the kernel already create a suitable
-> platform device with the name "SAM04[number]:[number]"?
+FWIW in KDE we already planned to turn the screen off before suspend
+to deal better with spurious wakeups, and that'll be in the next
+version of Plasma. I think it's fine if you just leave this up to
+userspace, and maybe write to wayland-devel, so that other compositor
+developers are aware they should do the same.
 
-Yes, the kernel creates an ACPI device exactly as you asked.
-
-As a bit of history: much of how this driver is structured came from
-inspiration I took from existing platform/x86 drivers and this pattern
-of having an acpi_driver followed by the platform_driver seems to be
-more common than not from what I can see (except for specific cases
-like the the WMI-specific drivers for example). I took a cursory look
-and it does seem possible to do as you say, but I would still need to
-grab a handle to the ACPI device somehow of course, and the full path
-might be different for different models, so from what I can tell it
-feels a bit more "clumsy" because I don't see any function which will
-allow me to pass an array of acpi_device_id or strings but instead
-would need to loop through the array and within the loop see if I get
-a match and fetch the device that way (e.g. using something like
-acpi_dev_get_first_match_dev()). Is this in fact the preferred
-approach now? (and just so happens that many of the existing
-platform/x86 drivers do not follow this design currently?) I am of
-course happy to take this in either direction, but would just want to
-know what the preference is so that I know what to do next on it!
-
-> As a general rule driver should be quiet if everything works, so unsupported features should not
-> result in a warning message. The other error messages should just contain the message without any
-> bugzilla/github links since stable kernel users might want to use the bugtrackers of their distro first.
-
-(Similar comment/question from both of you on this)
-I have now gone over to using dynamic debug in the driver now instead
-of a custom debug module parameter, and revamped quite a lot of the
-print stuff. Now much of the previous information has been moved to
-debug but there are still a few cases which warrant warn or error I
-think.
-
-One thing I feel like does actually add some value to print to INFO is
-that, because how some of the dynamic features will work can vary for
-different models, to me it seems like it would be a good thing to
-actually tell the user about these specific things (e.g. only power
-profiles x, y, z will be available and will be mapped to vendor
-performance modes a, b, c, ... just as an example). Otherwise I can
-understand how there would be a fair amount of confusion about what
-actually happens when you press the hotkey or try and toggle the modes
-using various services (power-profiles-daemon, etc..). To me, I see
-these messages as similar to what prints to INFO when for example a
-new input device is added, a new battery extension is added, etc. Does
-this sound ok or should ALL of these kind of prints be moved to debug
-instead?
-
-
-I will also try to reach out to Hans directly to ask this question
-regarding if it would make sense to handle hotkey work actions from
-the platform driver or not. Otherwise, I feel like once I can resolve
-these other two main questions I asked here ( 1) register acpi_driver
-vs looping array to get the dev handle and 2) printing some of these
-last dynamic things to info vs debug ), then I will go ahead and tidy
-up the rest of the bits and send in a patch here.
-
-Thank you again!
-
-Best regards,
-Joshua
-
+> If yes, it will be quite the effort. Moreover, should
+> the kernel allow graphics drivers hook the transition function and block
+> transitions to "Screen Off" if there is an active CRTC? As that would be a
+> significant undertaking, there should be proof that there exists such a
+> device that has an issue firing the notifications with an active CRTC.
 >
-> Am 18.11.24 um 14:51 schrieb Joshua Grisham:
+> A variant of this series has been tested by thousands of users by now,
+> where the notifications fire around .5s before the CRTC is disabled and no
+> ill-effects have found in regard to this quirk. AFAIK, it is a visual
+> quirk. Making DPMS fire before the backwards compat. transition is a good
+> idea in any case, as it will sync the 200ms between Display Off/Sleep Entry
+> firing and the graphics driver turning off the display, but it might not be
+> worth the effort.
 >
-> > Hello! I have created a platform driver for Samsung Galaxy Book series
-> > notebooks which has now gone through several iterations and
-> > contributions from several other community members. Based on stars and
-> > community involvement I would guess that the usage of the driver is
-> > more than at least 100 users (if not more?) across multiple different
-> > generations of devices and many different distributions, so hopefully
-> > we have ironed out a lot of issues by now!
+> We are currently testing a DPMS patch for gamescope and it completely fixes
+> this visual quirk while allowing for e.g., hibernation without turning on
+> the screen. The DPMS gamescope patch + performing the transitions in
+> userspace in such a way where it blends the Ally's suspend delay halves the
+> user perceived delay to sleep and results in a very professional
+> presentation. This presentation extends to other devices as well, such as
+> the Legion Go.
 >
-> Nice work! Improving the hardware support for notebooks under linux is always
-> welcomed.
+> Link: https://learn.microsoft.com/en-us/windows-hardware/design/device-experiences/prepare-hardware-for-modern-standby [1]
+> Link: https://learn.microsoft.com/en-us/windows-hardware/customize/power-settings/adaptive-hibernate [2]
+> Link: https://learn.microsoft.com/en-us/windows-hardware/design/device-experiences/modern-standby-firmware-notifications [3]
+> Link: https://github.com/hhd-dev/hwinfo/tree/master/devices [4]
+> Link: https://git.kernel.org/pub/scm/linux/kernel/git/superm1/linux.git/log/?h=superm1/dsm-screen-on-off [5]
+> Link: https://gitlab.freedesktop.org/drm/amd/-/issues/2719 [6]
+> Link: https://dl.dell.com/manuals/all-products/esuprt_solutions_int/esuprt_solutions_int_solutions_resources/client-mobile-solution-resources_white-papers45_en-us.pdf [7]
+> File: Documentation/admin-guide/pm/standby-states.rst [8]
 >
-> > The existing driver samsung-laptop is of course somewhat
-> > famous/notorious for how it works, but on newer devices (primarily
-> > Samsung Galaxy Book series devices but does include a few others),
-> > Samsung is using a new ACPI device called "SCAI" which is what this
-> > new driver is built on, and the functionality is totally different.
-> > There are only a few ACPI methods on this device that then actually
-> > control a lot of different features; the "magic" is in building
-> > various payloads to steer all of these different functionalities even
-> > though it is often using the same ACPI method.
-> >
-> > It is my opinion that, as we now have achieved some level of stability
-> > with this driver, it would be good to try and get it added to mainline
-> > as having it in mainline will add a lot of benefits (even larger
-> > number of users who will gain benefit from this, better quality and
-> > standardization with involvement from maintainers and the larger
-> > community, etc).
+> Changes from previous series (`acpi/x86: s2idle: move Display off/on calls
+>   outside suspend (fixes ROG Ally suspend)`):
+>   - Separate Display On/Off rename into its own commit (suggested by Hans)
+>   - Move delay quirks into s2idle.c (suggested by Hans)
+>   - Add documentation on Documentation/admin-guide/pm/standby-states.rst
+>   - Callbacks are now static and a transition function is used
+>   - Fixed all checkpatch warnings
+>   - The rest of the series is completely re-written
 >
-> I support your initiative to upstream your driver. Having such a piece of software
-> upstream helps everyone.
+> Antheas Kapenekakis (13):
+>   Documentation: PM: Add documentation for S0ix Standby States
+>   acpi/x86: s2idle: add support for Display Off and Display On callbacks
+>   acpi/x86: s2idle: add support for Sleep Entry and Sleep Exit callbacks
+>   acpi/x86: s2idle: add support for Turn On Display callback
+>   acpi/x86: s2idle: add modern standby transition function
+>   acpi/x86: s2idle: rename Screen On/Off to Display On/Off
+>   acpi/x86: s2idle: call Display On/Off as part of callbacks
+>   acpi/x86: s2idle: rename MS Exit/Entry to Sleep Exit/Entry
+>   acpi/x86: s2idle: call Sleep Entry/Exit as part of callbacks
+>   acpi/x86: s2idle: add Turn On Display and call as part of callback
+>   acpi/x86: s2idle: add quirk table for modern standby delays
+>   platform/x86: asus-wmi: remove Ally (1st gen) and Ally X suspend quirk
+>   PM: standby: Add sysfs attribute for modern standby transitions
 >
-> > I have myself tried to adhere to many of the existing patterns that
-> > exist within other pdx86 drivers and the community has helped to find
-> > and ensure (and in some cases even directly contributed to that)
-> > various features are using standard interfaces such as with the
-> > battery extension, platform profile, etc, in a way that seems to be
-> > unified with existing platform drivers as well.
-> >
-> > The driver code is currently located here:
-> > https://github.com/joshuagrisham/samsung-galaxybook-extras/blob/main/samsung-galaxybook.c
-> >
-> > As there are a few variants of what features are supported on
-> > different devices (even devices with the same ACPI device id) then one
-> > of the key principles that I have tried to now follow with the driver
-> > is that each feature tries to check that it works or not (receives an
-> > error code in the payload from the ACPI method) before "enabling" the
-> > feature (creating a sysfs attribute or registering a new device etc)
-> > when the module is probed and loaded.
+>  Documentation/ABI/testing/sysfs-power         |  34 +++
+>  .../admin-guide/pm/standby-states.rst         | 133 ++++++++++
+>  Documentation/admin-guide/pm/system-wide.rst  |   1 +
+>  drivers/acpi/x86/s2idle.c                     | 249 ++++++++++++++----
+>  drivers/platform/x86/asus-wmi.c               |  54 ----
+>  include/linux/suspend.h                       |  16 ++
+>  kernel/power/main.c                           |  75 ++++++
+>  kernel/power/power.h                          |   1 +
+>  kernel/power/suspend.c                        | 154 +++++++++++
+>  9 files changed, 616 insertions(+), 101 deletions(-)
+>  create mode 100644 Documentation/admin-guide/pm/standby-states.rst
 >
-> Sounds like a good strategy to me, being able to automatically detect which features are
-> available is usually better than having a very long quirk list.
+> --
+> 2.47.0
 >
-> > Instead of just sending the code as-is in a new patch then I thought
-> > to ask you all as the PDX86 maintainers if there is anything glaring
-> > that you would prefer should be changed or re-designed before we try
-> > to push this in as a patch and add this driver to the kernel?
 >
-> After looking at the driver, i would advise you to drop the acpi_driver stuff and instead
-> implement the whole driver as a platform_driver. Does the kernel already create a suitable
-> platform device with the name "SAM04[number]:[number]"?
->
-> > You can see more background and what features are supported in the
-> > README file here:
-> > https://github.com/joshuagrisham/samsung-galaxybook-extras/blob/main/README.md
-> >
-> > A few potentially "controversial" bits that I can highlight already now:
-> >
-> > 1. various failure messages or "unsupported features" write a warning
-> > that directs users to create an issue in my own Github repository
-> > instead of in Bugzilla -- maybe this is ok at the beginning but assume
-> > it would be better to just remove some of this info from the message
-> > and/or direct users to create a new bug in Bugzilla under the right
-> > component there ?
->
-> As a general rule driver should be quiet if everything works, so unsupported features should not
-> result in a warning message. The other error messages should just contain the message without any
-> bugzilla/github links since stable kernel users might want to use the bugtrackers of their distro first.
->
-> >
-> > 2. some features where Kernel version are checked for handling some
-> > things different for older versions of the kernel, but all of this I
-> > would take away before submitting a patch
->
-> Yes, please remove any kernel version checks.
->
-> Thanks,
-> Armin Wolf
->
-> > 3. usage of the i8042 filter and ACPI hotkey notifications to handle a
-> > few of the hotkey actions within the driver itself instead of just
-> > emitting input events and allow userspace to handle the actions
-> > (namely cycling through keyboard backlight levels, performance modes,
-> > etc)
-> >
-> > This last item (executing hotkey actions in kernel space) is not
-> > totally unprecedented either, as I have seen there seems to exist
-> > similar i8042 filters driving hotkey actions in msi-laptop,
-> > toshiba_acpi, and dell-laptop and ACPI notifications from hotkeys
-> > driving actions in several x86 platform drivers as well (dell-laptop,
-> > acer-wmi, asus-laptop, ideapad-laptop, etc; this is an even more
-> > common pattern than using an i8042 filter, it seems).
-> >
-> > The problem with just emitting the "right" input events and relying on
-> > the userspace to handle this stuff in the right way is that 1) there
-> > are not really keycodes that exist for exactly the keys we want here
-> > (even though "Keyboard Backlight Cycle" and some kind of "Performance
-> > Mode" hotkeys are very common on laptops today) and 2) functionality
-> > for how to handle these kind of events do not really support these
-> > use-cases either (an example if you read through the discussion here:
-> > https://gitlab.gnome.org/GNOME/gnome-settings-daemon/-/issues/41 and
-> > especially several of the comments from Benjamin Berg, that
-> > implementation of "Keyboard Backlight Toggle" is just on vs off and
-> > does not cycle, and there should either be special handling of this or
-> > a new key is created specifically for this purpose... this was from
-> > 5-6 years ago and the state of this has not changed since then from
-> > what I can tell). It is because of these same problems that I assume
-> > the existing PDX86 drivers do in fact implement some of this hotkey
-> > action logic in the kernel space, in a similar way that I have tried
-> > to do in this new samsung-galaxybook driver. I am not sure the
-> > appetite for having even more of this pattern exist and/or if there
-> > are any details of the implementation that you all would wish that I
-> > should tweak a bit? I am very open to any kind of feedback on this.
-> >
-> > Any other discussion or questions are of course welcome! Otherwise
-> > and/or once things are to a point that is looking good then I can
-> > create and submit a patch for this new driver.
-> >
-> > Thank you!
-> >
-> > Best regards,
-> > Joshua Grisham
-> >
