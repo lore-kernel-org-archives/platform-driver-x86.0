@@ -1,97 +1,131 @@
-Received: from mail-ej1-f42.google.com (mail-ej1-f42.google.com [209.85.218.42])
+Received: from mail-il1-f174.google.com (mail-il1-f174.google.com [209.85.166.174])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DD6BB195;
-	Sat, 23 Nov 2024 13:30:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 29C5E17C2
+	for <platform-driver-x86@vger.kernel.org>; Sat, 23 Nov 2024 17:58:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1732368649; cv=none; b=V6g4dJpwVYIgK42onAygUB+KHofAyskFP2VogUDRK+0xMbDBaclmWBdErwSwJAaCuIqfDBfJ0nsM+94xANVQqyiPfAl3t9EYdaJC0BXbUIy+u3vs+4tpFC8smyt85+TDcqVnHgrFjd+dc+8ab1hsRVWSen8Yf5Cg06rdjYnAj34=
+	t=1732384719; cv=none; b=FUy8weALRAIUVg3oHhbSYGQyTOXSG2kk8cUFct5dYL07R13ogLJnzygCzlCiQI/gVU1bb3KJIvvSafrFeJMW4sKu56LzpN6ku9ZMkRlVWEZHe55B20wHahBaW6LaFtooQW4tuSl7pqrb36EtjSOq8pwRps4tA9bkscV+nbmJ9As=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1732368649; c=relaxed/simple;
-	bh=PODvO7efBSYrARH+0IcTSogGogSpn7ZuwexSw10wPcU=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=ECHh7y7FFbfvaIZ58L6vUV5gNbKT2mejZ62RLBf8cfzwXRwzGMi8JWA3TPDnNhF43RVbP7EoX6Nfd8j7ODEsZb5j4Rh/3S3ZS2Ne5QZxl0H971MhNtmjFTCH2SnPdPJ9ScYIQwFbyJUrcRtpkr5UPOO4o8dLZrWDDYWLWfrtvFQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=FhkAjt8O; arc=none smtp.client-ip=209.85.218.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+	s=arc-20240116; t=1732384719; c=relaxed/simple;
+	bh=/ZzlJWzz76IOoqI73LEBhFBE5T/f72YR/jyegorsr7U=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=iqLNKqceqXXVEMJdbWzvkLD7Lw04BYEIErZHI1m4kuo0GQCqp2o4vPoQNGVFPvWUBwgVnzDjTge0lB8EmwqOfztMuS6P04C0PKNi7TeaIs1sR7HCfoFxagpyazRpl16FEOov/IGlb8Jo7LS+vVntdH91Hr/GD9l7dusrp10ALIw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=joshuagrisham.com; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.166.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=joshuagrisham.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FhkAjt8O"
-Received: by mail-ej1-f42.google.com with SMTP id a640c23a62f3a-a9ed49edd41so489006766b.0;
-        Sat, 23 Nov 2024 05:30:47 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1732368646; x=1732973446; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=9jVh5FVgJEYeptk/BgcXIyUBn+GDLBlAirNbIOzByfI=;
-        b=FhkAjt8OaGYrmz1WRXrBmZ1tDalCsumqSiJrrNNwmNxC+KXtd6Fbp9ZtR5VSTIaW0w
-         9Tysj8R5j0l1Ijkm94O1MV48rNNn6dR2DBT0bfHX2zegXXyQ+X4YrkdAY3ORUmhulMRp
-         gzY7kUs57GO+DLetWWlAeZ3MBZzJ+7Pz/gYFBlmYytnd1kCebRMlwLogxa699j30mrsB
-         m/w/ImSJoSR7yYmuHKO7RotHOuBnbDuH86JSp+65+XIVM8Rjuq4oUMQCHrCf5Ndj0PfC
-         e/ocIvZOekoOGH8yAUmJv1KHikAaqKMxRVniPMRQM9dNWeedu3LWyovmYQF56jvpwX+J
-         DNIQ==
+Received: by mail-il1-f174.google.com with SMTP id e9e14a558f8ab-3a763f45bb6so12284195ab.1
+        for <platform-driver-x86@vger.kernel.org>; Sat, 23 Nov 2024 09:58:37 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1732368646; x=1732973446;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+        d=1e100.net; s=20230601; t=1732384717; x=1732989517;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=9jVh5FVgJEYeptk/BgcXIyUBn+GDLBlAirNbIOzByfI=;
-        b=ST7M5WKkZZ4sDL0mjqPCHe+JRMr1+GWeo4nSq7hQKVdnEgwIooZ8PUPW/eqnCvNFUW
-         G75E7IjUx5Fd3JbjCNOgXaSZedaHXycWcsnwV6t1U9FIjX0MDUIOUuIflDD37XWK0qIE
-         Ga8hg8ySHD7h78flzQ9iFqZRBO19lDbg6EmQUbZ+vNU+8HMtdgDNpxRBM+/pi155xvXt
-         /1WWJB33IxfpLMFDgCcnXdSbfmnoj828EVIAPncwmgE5fdB7RyIUjqi8Bpw8YmtCepyP
-         I3tFKN3zWRz8qWhfjAD/pxSXzRe/6jDbiJaoN2i1PYQDDXdTjeRdij+PnlqJkCRRrbf5
-         BMEQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVh/oKmQWJGYjLjy7TK/PcR8q3NNFO+z6LcALv+kGIICSUCGtxCGQ+2WFEP5aPofUm67NtTbL/A8idR6T7NezdXwa7a2g==@vger.kernel.org, AJvYcCXaIpBdIszwKnEVCZxlCI1qnuVyJg3doKq+A5nOdGY9aJWl7aGGGegMBLYaIyVYwIQ8LRKdsRqW9ExO9H0=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzMt+M1vNalw7EKCz1DPCg01is0vYCSECVtp0fP7+PDIQJDIu4L
-	FRouoHxbjqM0r+VPwteAQI5h4nRgH0Hvf9UE+hHkz86mNbR9EdXQ
-X-Gm-Gg: ASbGnct4JBmz80kFso5FeCrrsShY4Bql4oM4VEITL83G2qfcQWkwlXtn57xZzL/Hdne
-	ljriDni9MYUBML1l/V2jjM7wBTYKe0bPlIxIb2M78/2UJzflslfAOXvPa+xyJ+I+uTwarL2xIyb
-	2XU0HznKpx4yI0pA6GtdqlCGT7wEeIScwRa+qNarlWME/iS2JOz5WnLLhfx4xNV23elI8IJk+Cl
-	Jhu+chya9GMEb7n/kGtcqJQU44zkfJ+atbk/TzoViWa+OzQnz0oCXGPqeIju8J+rg==
-X-Google-Smtp-Source: AGHT+IH3iRbFV5Bzaffw47/xC2RWeLgrHDa6s/8Lzdsn6x/e+Nte+W8YFRBxuPBpOchdVjoZ+ONq+w==
-X-Received: by 2002:a17:906:3295:b0:a9a:296:b501 with SMTP id a640c23a62f3a-aa5099f7262mr422932066b.26.1732368645937;
-        Sat, 23 Nov 2024 05:30:45 -0800 (PST)
-Received: from localhost.localdomain ([2a02:3030:a:6268:4624:5b8b:5eeb:b500])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-aa50b28f6d8sm225877966b.33.2024.11.23.05.30.44
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 23 Nov 2024 05:30:44 -0800 (PST)
-From: Sedat Dilek <sedat.dilek@gmail.com>
-To: Corentin Chary <corentin.chary@gmail.com>,
-	Hans de Goede <hdegoede@redhat.com>,
-	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	platform-driver-x86@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Sedat Dilek <sedat.dilek@gmail.com>
-Subject: [PATCH] platform/x86: samsung-laptop: Rename MODULE_DESCRIPTION
-Date: Sat, 23 Nov 2024 14:29:28 +0100
-Message-ID: <20241123133041.16042-1-sedat.dilek@gmail.com>
-X-Mailer: git-send-email 2.45.2
+        bh=/ZzlJWzz76IOoqI73LEBhFBE5T/f72YR/jyegorsr7U=;
+        b=om4Ryu/OhYweTrOph4ZmKjHqDp3YE3kIjE2unMFYet1sF68j97AE96JK78aI2VG5if
+         mDQNQXIJz48QBgVoh+GMVUnYmtVLvgDvx0rN2TH3BV06SH4gLudDHgw+lKmw0Mh8amRy
+         nqTUaeHnW/K6trQ1CRchcku5fbFRifWQA09d4axil6LxXhiX58L9KYoHasns+APojybo
+         oqh0ZMVqxpJ2bBTDizJg1g06EveBVfvaiijiDfDGfCiW9TSTgYaLK4WEQSEHra6qTxCh
+         MWaImo/qvbABXf2oApL0gxZoY6nQtAQ4cqXZdm/WVLpwZ5d5IE9eoDfKSqYwHj6VGjSE
+         M/iw==
+X-Forwarded-Encrypted: i=1; AJvYcCVmtEW90cdLtC31nTmZAFlPlp7ZdaDYcnQGgWHwcqA8S+xQX7trObil3uyGu3VbT6QuK1CWbakXm3hU+p6J9lqtC+wi@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw6vr5Gc/nYmuOE6qdxwQNvniBg+QlmmYwfzjbjWqx6AysqZ4zp
+	Dsw6LzXZWJVHh22N598wLYesPxBNENowalQHCHCkrClyE3e2sfTIjqtAw09e
+X-Gm-Gg: ASbGncs2L+FhvCtC8gvmwoOLYObCkjB9wSrv1eHKWNS6fqEBlk6tnf9J+cqh8GeDbMP
+	Tbzzlnrw2EZ5ocMt5fWVP/hXroHOddpn0Sen5f+6/EeB2uWK1sW1VyeNwGjUCA3vu2/3tGyK5oN
+	ITOc4/T7X7neYtdlZOdLrs+keEWpDsLX4EiNO33/PbCHRw7d1f0T1vaqUj/hVO6TtdbY1UoIjra
+	l+0R/xx4zObiLw09Xu37y337JozJ+WoqeRRSbq9bV0yGO5UreAmp5NpFufVkJjtLjGemb4wFSa8
+	68D0Gp3J3mQSyPE=
+X-Google-Smtp-Source: AGHT+IEFOw/261YvlwuKAKc7UqXDDHHCnu6QZgIxJ+DtqJCqt64YfBzkHiMdk4yDZBkdmka0JGtYiA==
+X-Received: by 2002:a05:6e02:1a03:b0:3a7:6f5a:e5ce with SMTP id e9e14a558f8ab-3a79acfd53emr88302115ab.3.1732384717225;
+        Sat, 23 Nov 2024 09:58:37 -0800 (PST)
+Received: from mail-io1-f48.google.com (mail-io1-f48.google.com. [209.85.166.48])
+        by smtp.gmail.com with ESMTPSA id 8926c6da1cb9f-4e1cfe59c91sm1223334173.76.2024.11.23.09.58.36
+        for <platform-driver-x86@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sat, 23 Nov 2024 09:58:36 -0800 (PST)
+Received: by mail-io1-f48.google.com with SMTP id ca18e2360f4ac-83ab694ebe5so101753339f.0
+        for <platform-driver-x86@vger.kernel.org>; Sat, 23 Nov 2024 09:58:36 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCUtETYVWUEFEOUq8I6W+2oyK6iy/b/6Lr5LXfZFa1zfjy+L0ApNOGs0oAdWNSUfUbZQ39jMldmE2bmQgtwdOOHJvIAQ@vger.kernel.org
+X-Received: by 2002:a05:6602:1401:b0:835:45f9:c2ee with SMTP id
+ ca18e2360f4ac-83ecdc6176cmr719100439f.4.1732384716517; Sat, 23 Nov 2024
+ 09:58:36 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <CAMF+KeYus9dW00WNJMLVxLLHdG9JgCfrGJ491fu7NM8GAEqqCg@mail.gmail.com>
+ <fd4a30e0-b5bb-47d7-8173-312417dce215@gmx.de> <CAMF+KeZkqwnBNT4vVNLEC03zZqSTSAE-Z=8j9ZLACf3yBeun8A@mail.gmail.com>
+ <qsdbzbvpwlrnx2sqhrjfg3rukbm3z5gjkyjwlwoc3jnd3vre36@72py3mfwwsse>
+In-Reply-To: <qsdbzbvpwlrnx2sqhrjfg3rukbm3z5gjkyjwlwoc3jnd3vre36@72py3mfwwsse>
+From: Joshua Grisham <josh@joshuagrisham.com>
+Date: Sat, 23 Nov 2024 18:58:25 +0100
+X-Gmail-Original-Message-ID: <CAMF+KeYGCZuc5DSCf4S+oZZgp5E4hwowJ+HqOy=ijjPZwv+zpQ@mail.gmail.com>
+Message-ID: <CAMF+KeYGCZuc5DSCf4S+oZZgp5E4hwowJ+HqOy=ijjPZwv+zpQ@mail.gmail.com>
+Subject: Re: Adding a new platform driver samsung-galaxybook
+To: Kurt Borja <kuurtb@gmail.com>
+Cc: Armin Wolf <W_Armin@gmx.de>, =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, 
+	Hans de Goede <hdegoede@redhat.com>, platform-driver-x86@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-Rename from "Samsung Backlight driver" to "Samsung Laptop driver".
+Den fre 22 nov. 2024 kl 21:25 skrev Kurt Borja <kuurtb@gmail.com>:
+> If there is a suitable platform device, your platform driver already has
+> an acpi_match_table, thus you can get your acpi_device with
+> ACPI_COMPANION or your handler with ACPI_HANDLER. Check [1] for an
+> example.
 
-Signed-off-by: Sedat Dilek <sedat.dilek@gmail.com>
----
- drivers/platform/x86/samsung-laptop.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Thank you Kurt! I looked into this and I think it makes more sense to
+me now. Also it seems the existing driver ideapad-laptop is also quite
+similar to this pattern and potentially a good reference, as well.
 
-diff --git a/drivers/platform/x86/samsung-laptop.c b/drivers/platform/x86/samsung-laptop.c
-index 0d3e3ca20b1b..decde4c9a3d9 100644
---- a/drivers/platform/x86/samsung-laptop.c
-+++ b/drivers/platform/x86/samsung-laptop.c
-@@ -1653,5 +1653,5 @@ module_init(samsung_init);
- module_exit(samsung_exit);
- 
- MODULE_AUTHOR("Greg Kroah-Hartman <gregkh@suse.de>");
--MODULE_DESCRIPTION("Samsung Backlight driver");
-+MODULE_DESCRIPTION("Samsung Laptop driver");
- MODULE_LICENSE("GPL");
--- 
-2.45.2
+One thing more that I have found while looking at it from this
+perspective now: in addition to the acpi_driver stuff, the driver is
+also creating and registering a totally new platform_device and that
+is currently the "interface" I have created (via sysfs) to control
+some of the settings (e.g. "start_on_lid_open" etc). After an initial
+local draft of the changes, it became apparent to me that even this
+extra platform_device is not needed, and everything can work from the
+existing ACPI device ID-based platform device (SAM0429:00, etc).
 
+The downside to this is that users with these devices will not have a
+fixed name for controlling some of these ACPI settings via sysfs
+attributes on the device (depending on which model, they will have a
+different platform device name). For example, like this (using
+existing platform_device):
+
+cat /sys/devices/platform/SAM0429\:00/start_on_lid_open
+
+Instead of this (creating new platform_device like currently exists in
+the code):
+
+cat /sys/devices/platform/samsung-galaxybook/start_on_lid_open
+
+I guess to me having this be based on ACPI Device ID and differing per
+device feels "less nice" compared to having a nice "user friendly"
+path that feels a bit more obvious. Is it preferred to just use the
+existing platform_device based on the ACPI device ID instead of
+creating a new "virtual" platform_device with a nicer name for
+purposes like settings sysfs attributes be more "user friendly" like
+this?
+
+Another alternative is that I could move these kind of sysfs
+attributes to driver attributes instead; then if I am guessing
+correctly then it would be like this:
+
+cat /sys/bus/platform/drivers/samsung-galaxybook/start_on_lid_open
+
+But then I do not know if having this kind of sysfs attribute (which
+actually will query and write values to the device itself using ACPI
+methods) feel correct as "driver" attributes ? Maybe it does not
+matter and I am just over thinking it :)
+
+Any preference on these two questions? Again, to recap:
+1) Yes or no to create new platform_device even though one already
+exists with the ACPI device ID as it's name?
+2) If using existing platform_device, should these kind of sysfs
+attributes be under the dynamic device ID-based platform_device or is
+it ok / make sense to move them to driver attributes?
+
+> [...]
