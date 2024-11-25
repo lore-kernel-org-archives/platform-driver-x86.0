@@ -1,192 +1,157 @@
-Received: from esa4.hgst.iphmx.com (esa4.hgst.iphmx.com [216.71.154.42])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B10A18EA2
-	for <platform-driver-x86@vger.kernel.org>; Mon, 25 Nov 2024 04:23:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.71.154.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE00B18C031
+	for <platform-driver-x86@vger.kernel.org>; Mon, 25 Nov 2024 09:39:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1732508617; cv=none; b=TWzkeeDi5LTc4H9z9050ZAHnu03gl4XuiFPwWguqkWDlBFguQhGkM1V/VPWWnmMrA6Juetu5Um/1F01hHEgtiSaPqZs1AAumwUxYmwRNEx3izQYJEKfNGAIoURyUWKKvPUiynZC8e5hJNlYrW3Wp4O6XMegkU1fYcTF5LKkqRc4=
+	t=1732527594; cv=none; b=h/HKms4nVhvfE53o/+SIz8w2hP47UmybnZTWCXkKY1TiBe2QtGXVc1MCSE+XZYvAUbEGFcPsMDe6Ci0rZWWqFplOzzxo9ymSc9qTR6EkQySJzJ7TVeIm49zqhbWD70+y4mtz0Cyji0w/z538GF/4m0LEqXjNbe16pasOADEyR4E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1732508617; c=relaxed/simple;
-	bh=ttvnwOJZvCO3bI/dyhRMPi+Kp9QbJX2Bo/LNdRjqilU=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=o7eQNZOq3JQm0SCEuPar6CX366IN4eSAIruSLrc5sFufeVZyeOSQ65FnRxzro0Y/Ur07nq/eYPeZEmKG+z7DkFOUawFO86GhT073FOaQsHSGSeeHJuoSdULsnS5C0aBNIlMTtVZa1Vh6J4ekXtEOQufSbzuyB37PWhWPvSf+kAQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wdc.com; spf=pass smtp.mailfrom=wdc.com; dkim=pass (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b=d7Hp872p; arc=none smtp.client-ip=216.71.154.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wdc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wdc.com
+	s=arc-20240116; t=1732527594; c=relaxed/simple;
+	bh=/XmRtZPekwBtjrpUKtPZ8Qzt7cmYd7hNsU72jLIQ7MM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=RL1WRGYR/O7bhumWp26GC2B54vD275xT07tOAl3unlbColerDXEccAqTNvfTLiqY6ZI1u1p8BDDFml4kaASa/qFvP6B9WRCjKLPZd5rdfCJcSCVRdcU6C9RaohnEN6zJFTqIwyDkWgKP+GnG2de3/NnGJRB866qsF29r3mxI/cA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=F9Oonc4I; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="d7Hp872p"
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
-  t=1732508615; x=1764044615;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=ttvnwOJZvCO3bI/dyhRMPi+Kp9QbJX2Bo/LNdRjqilU=;
-  b=d7Hp872pCM3yMCX5REQVCbZwhWsm1FwUBLzyu8U44tOsKhBnDcA8KGw9
-   1n/mKCyN3nKRIJ7nUzi7osGLeV65WfhO1/ilE1pAAgP2AA2O1HcTm2vsd
-   eYX3nHTx6m4PPCyx9dHecqLRXIn5jp+w8L0Zf09W1vqxtEc4JpNrVNDWD
-   /HOUckcpaR9EMd1Qoi/t+nmnSFHWcGgt6HTsSr/j59UifDo7kuqFRlSts
-   8uB/2K+hvlugHiQ9Hvy2QYTKHCAxKKC7ytZBA+RbfC7qTdV/GxvwtIVwJ
-   38HUzDU6NO9f/R8CN557C4l8pHSNBnVVnAJGuesko4ietqgn4gNadpnDy
-   g==;
-X-CSE-ConnectionGUID: 6r3NSEhHQZm5qjksO9a3HA==
-X-CSE-MsgGUID: dxO0K4dNSluV4Scow/wqbw==
-X-IronPort-AV: E=Sophos;i="6.12,182,1728921600"; 
-   d="scan'208";a="31628275"
-Received: from uls-op-cesaip02.wdc.com (HELO uls-op-cesaep02.wdc.com) ([199.255.45.15])
-  by ob1.hgst.iphmx.com with ESMTP; 25 Nov 2024 12:23:28 +0800
-IronPort-SDR: 6743ed27_hiGLUzlzn6uS+yMq9MFTVcxcbqxC2xixgHzTiorxjefznUM
- cvmA13pH5bpsHEaFOlIHOk9yw5ENgfbiCCMIgNA==
-Received: from uls-op-cesaip02.wdc.com ([10.248.3.37])
-  by uls-op-cesaep02.wdc.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 24 Nov 2024 19:21:11 -0800
-WDCIronportException: Internal
-Received: from unknown (HELO shindev.ssa.fujisawa.hgst.com) ([10.149.66.30])
-  by uls-op-cesaip02.wdc.com with ESMTP; 24 Nov 2024 20:23:27 -0800
-From: Shin'ichiro Kawasaki <shinichiro.kawasaki@wdc.com>
-To: platform-driver-x86@vger.kernel.org,
-	Hans de Goede <hdegoede@redhat.com>,
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: ilpo.jarvinen@linux.intel.com,
-	danielwa@cisco.com,
-	Shin'ichiro Kawasaki <shinichiro.kawasaki@wdc.com>
-Subject: [PATCH v2] p2sb: Do not scan and remove the P2SB device when it is unhidden
-Date: Mon, 25 Nov 2024 13:23:26 +0900
-Message-ID: <20241125042326.304780-1-shinichiro.kawasaki@wdc.com>
-X-Mailer: git-send-email 2.47.0
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="F9Oonc4I"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1732527591;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Hkv+uXuHpbZj4SkgeiuTnLecSlEJeOMpyMLd4JnkUbc=;
+	b=F9Oonc4IV+sRTz8CWdNn6VU5nnPEIxEowKnNAcLVP2PSwdUNBsrKIHEio3/vrj0QmqB0u0
+	roPSayOrvH2dGnmAoXIcaJQdavvH00ZocQLLOE7cbQtMmTvZSToHxtHpeH0rRtnNYz9A18
+	Ba7Y1/ScmDD/AwR4dJ6ua2Fos10xV4I=
+Received: from mail-ej1-f71.google.com (mail-ej1-f71.google.com
+ [209.85.218.71]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-173-f735kK1mP4akXVR3Ry2QGw-1; Mon, 25 Nov 2024 04:39:50 -0500
+X-MC-Unique: f735kK1mP4akXVR3Ry2QGw-1
+X-Mimecast-MFC-AGG-ID: f735kK1mP4akXVR3Ry2QGw
+Received: by mail-ej1-f71.google.com with SMTP id a640c23a62f3a-aa543b13532so85937966b.3
+        for <platform-driver-x86@vger.kernel.org>; Mon, 25 Nov 2024 01:39:49 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1732527589; x=1733132389;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=Hkv+uXuHpbZj4SkgeiuTnLecSlEJeOMpyMLd4JnkUbc=;
+        b=CnOV3WVTmyVMaEXIQL1XBaRukxKyc9uR76D/hOhyj8PFn0fAi4k/zEmkmFxzPIsPPY
+         yYJZehKTOCCLZPe+hO1sowDkDTGgNiKY5WEbmmxKQhWfECgggAK8c3h3b/bxBA1iBELc
+         WtfbE3/FcG8YyWWKIHqS1xT/y6coKXwBYSrZRdzxiMiI371Kj2+Nj6oZ27J0yPPWM6wK
+         nfgs8G8wbGGjoVcn4TXcK6fsexqBlScUeef8gWpbTopFVwKQP9BQcFwjB2tOCAyGwYl2
+         mxv8pBbMzkgLVaKTidcjArxl4HGuCEvCJt/s7wjFzIOTgYxgcn81ggwIWSdqCklbs0Yy
+         IkRg==
+X-Forwarded-Encrypted: i=1; AJvYcCUHYKgRe2vvC93AJtfklOgX6HcBPo6zaGDXbSFPFAKX+J7rFc1M8ps6Lg8JJjwSAaJKOEqr7KiA40bjrqlI/w9ckd1i@vger.kernel.org
+X-Gm-Message-State: AOJu0YyvtEYNze8wasnTP+zoQnRbkBZe65kB7d5MLDIDU6630ZEaiB2t
+	5XT76dRNOJWJXDNo9QaoJ1kfdSkzZNsGIVs4r3ZHQ9uFSXz59iBnU/okCIUHpp6MYuggiQARuk2
+	/1c5JsTAKo1no/Ckn54dw5xhWJO4MRreGqKWgIG0yG2lF51tRVsCQrZya/kLAl1bS3qVFRbs=
+X-Gm-Gg: ASbGnctwg5/zQX4Va7JcB7cJXxHOMglRpn3BFTItPJO820CCEGDZ5cMnHkl7Vl4Q512
+	th//lRacPJ8Iet55oIulxF8bbAwuEb2v3NuHkZLOS/KVosJrwO0XHaYtK0+155qo1pBK3KE+vVW
+	B3B9JbQUvJBFUjOzAortdHtA6AHsNR8YXkxlLU8sNp8lbUHwu1seJvoQk0vvTBgkUvvkFtV+v06
+	jQFdnzIfEIhjTXKMhz/+eDNJOlFeDT2tWHrV1P3pM7c+I8g1Q9/o37/648GgA0Ny4j180+hMn2T
+	Mp1DbGrOjeXK26Z9CGGSW+J7FH/Swru3IgX8l5z3Rr8cvTLrZ2ALIyqc/FF5L9CulO/rlmAjw5U
+	tvYRS/Ov6ah3l/FG91JeJNG6D
+X-Received: by 2002:a17:906:3cb2:b0:aa5:e01:1471 with SMTP id a640c23a62f3a-aa50e012d9emr801069566b.37.1732527588963;
+        Mon, 25 Nov 2024 01:39:48 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IH/f1jKAAuDrIC1Zrrvx4lRzK1vd7c9PbVgtQQZlOB3tA0pjSv7qEbmVKDZG1Joh+4VYnDp+A==
+X-Received: by 2002:a17:906:3cb2:b0:aa5:e01:1471 with SMTP id a640c23a62f3a-aa50e012d9emr801067666b.37.1732527588602;
+        Mon, 25 Nov 2024 01:39:48 -0800 (PST)
+Received: from ?IPV6:2001:1c00:c32:7800:5bfa:a036:83f0:f9ec? (2001-1c00-0c32-7800-5bfa-a036-83f0-f9ec.cable.dynamic.v6.ziggo.nl. [2001:1c00:c32:7800:5bfa:a036:83f0:f9ec])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-aa50b52fe50sm447130066b.102.2024.11.25.01.39.47
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 25 Nov 2024 01:39:48 -0800 (PST)
+Message-ID: <d48bee72-7cd6-41cd-8d1d-282e8e68269d@redhat.com>
+Date: Mon, 25 Nov 2024 10:39:47 +0100
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFC PATCH] platform/x86: asus-nb-wmi: Ignore unknown event 0xCF
+To: Armin Wolf <W_Armin@gmx.de>, pespin@espeweb.net,
+ corentin.chary@gmail.com, luke@ljones.dev
+Cc: ilpo.jarvinen@linux.intel.com, platform-driver-x86@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <20241123224700.18530-1-W_Armin@gmx.de>
+Content-Language: en-US, nl
+From: Hans de Goede <hdegoede@redhat.com>
+In-Reply-To: <20241123224700.18530-1-W_Armin@gmx.de>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-When drivers access P2SB device resources, it calls p2sb_bar(). Before
-the commit 5913320eb0b3 ("platform/x86: p2sb: Allow p2sb_bar() calls
-during PCI device probe"), p2sb_bar() obtained the resources and then
-called pci_stop_and_remove_bus_device() for clean up. Then the P2SB
-device disappeared. The commit 5913320eb0b3 introduced the P2SB device
-resource cache feature in the boot process. During the resource cache,
-pci_stop_and_remove_bus_device() is called for the P2SB device, then the
-P2SB device disappears regardless of whether p2sb_bar() is called or
-not. Such P2SB device disappearance caused a confusion [1]. To avoid the
-confusion, avoid the pci_stop_and_remove_bus_device() call when the BIOS
-does not hide the P2SB device.
+Hi,
 
-For that purpose, cache the P2SB device resources only if the P2SB
-device is hidden. When p2sb_cache_resources() is called, check if the
-device is hidden and store the result in the global flag p2sb_hidden.
-Check the flag in p2sb_bar() and if the device is hidden, refer to the
-cached resources. Otherwise, read the resources from the unhidden P2SB
-device.
+On 23-Nov-24 11:47 PM, Armin Wolf wrote:
+> On the Asus X541UAK an unknown event 0xCF is emited when the charger
+> is plugged in. This is caused by the following AML code:
+> 
+>     If (ACPS ())
+>     {
+>         ACPF = One
+>         Local0 = 0x58
+>         If (ATKP)
+>         {
+>             ^^^^ATKD.IANE (0xCF)
+>         }
+>     }
+>     Else
+>     {
+>         ACPF = Zero
+>         Local0 = 0x57
+>     }
+> 
+>     Notify (AC0, 0x80) // Status Change
+>     If (ATKP)
+>     {
+>         ^^^^ATKD.IANE (Local0)
+>     }
+> 
+>     Sleep (0x64)
+>     PNOT ()
+>     Sleep (0x0A)
+>     NBAT (0x80)
+> 
+> Ignore the 0xCF event to silence the unknown event warning.
+> 
+> Reported-by: Pau Espin Pedrol <pespin@espeweb.net>
+> Closes: https://lore.kernel.org/platform-driver-x86/54d4860b-ec9c-4992-acf6-db3f90388293@espeweb.net
+> Signed-off-by: Armin Wolf <W_Armin@gmx.de>
 
-Reported-by: "Daniel Walker (danielwa)" <danielwa@cisco.com>
-Fixes: 5913320eb0b3 ("platform/x86: p2sb: Allow p2sb_bar() calls during PCI device probe")
-Closes: https://lore.kernel.org/lkml/ZzTI+biIUTvFT6NC@goliath/ [1]
-Signed-off-by: Shin'ichiro Kawasaki <shinichiro.kawasaki@wdc.com>
----
-Changes from v1:
-* Put back P2SBC_HIDE flag reference code in the rescan_remove lock region
-* Do not cache resources when the P2SB device is not hidden
-* Added the Reported-by tag
+Thanks, patch looks good to me:
 
- drivers/platform/x86/p2sb.c | 56 ++++++++++++++++++++++++++-----------
- 1 file changed, 40 insertions(+), 16 deletions(-)
+Reviewed-by: Hans de Goede <hdegoede@redhat.com>
 
-diff --git a/drivers/platform/x86/p2sb.c b/drivers/platform/x86/p2sb.c
-index 31f38309b389..0b1d604fcfe5 100644
---- a/drivers/platform/x86/p2sb.c
-+++ b/drivers/platform/x86/p2sb.c
-@@ -42,6 +42,7 @@ struct p2sb_res_cache {
- };
- 
- static struct p2sb_res_cache p2sb_resources[NR_P2SB_RES_CACHE];
-+static bool p2sb_hidden;
- 
- static void p2sb_get_devfn(unsigned int *devfn)
- {
-@@ -152,20 +153,23 @@ static int p2sb_cache_resources(void)
- 	pci_lock_rescan_remove();
- 
- 	/*
--	 * The BIOS prevents the P2SB device from being enumerated by the PCI
--	 * subsystem, so we need to unhide and hide it back to lookup the BAR.
--	 * Unhide the P2SB device here, if needed.
-+	 * The BIOS does not hide the P2SB device then its resources are
-+	 * accesilble. Do not cache them.
- 	 */
- 	pci_bus_read_config_dword(bus, devfn_p2sb, P2SBC, &value);
--	if (value & P2SBC_HIDE)
--		pci_bus_write_config_dword(bus, devfn_p2sb, P2SBC, 0);
-+	p2sb_hidden = value & P2SBC_HIDE;
-+	if (!p2sb_hidden)
-+		goto unlock;
- 
-+	/*
-+	 * The BIOS prevents the P2SB device from being enumerated by the PCI
-+	 * subsystem, so we need to unhide and hide it back to lookup the BAR.
-+	 */
-+	pci_bus_write_config_dword(bus, devfn_p2sb, P2SBC, 0);
- 	ret = p2sb_scan_and_cache(bus, devfn_p2sb);
-+	pci_bus_write_config_dword(bus, devfn_p2sb, P2SBC, P2SBC_HIDE);
- 
--	/* Hide the P2SB device, if it was hidden */
--	if (value & P2SBC_HIDE)
--		pci_bus_write_config_dword(bus, devfn_p2sb, P2SBC, P2SBC_HIDE);
--
-+unlock:
- 	pci_unlock_rescan_remove();
- 
- 	return ret;
-@@ -188,6 +192,8 @@ static int p2sb_cache_resources(void)
- int p2sb_bar(struct pci_bus *bus, unsigned int devfn, struct resource *mem)
- {
- 	struct p2sb_res_cache *cache;
-+	struct pci_dev *pdev;
-+	int ret = 0;
- 
- 	bus = p2sb_get_bus(bus);
- 	if (!bus)
-@@ -196,15 +202,33 @@ int p2sb_bar(struct pci_bus *bus, unsigned int devfn, struct resource *mem)
- 	if (!devfn)
- 		p2sb_get_devfn(&devfn);
- 
--	cache = &p2sb_resources[PCI_FUNC(devfn)];
--	if (cache->bus_dev_id != bus->dev.id)
--		return -ENODEV;
-+	/*
-+	 * If the P2SB device is hidden, refer to the cached resources.
-+	 * Otherwise, read the resources on the fly.
-+	 */
-+	if (p2sb_hidden) {
-+		cache = &p2sb_resources[PCI_FUNC(devfn)];
-+		if (cache->bus_dev_id != bus->dev.id)
-+			return -ENODEV;
- 
--	if (!p2sb_valid_resource(&cache->res))
--		return -ENOENT;
-+		if (!p2sb_valid_resource(&cache->res))
-+			return -ENOENT;
- 
--	memcpy(mem, &cache->res, sizeof(*mem));
--	return 0;
-+		memcpy(mem, &cache->res, sizeof(*mem));
-+	} else {
-+		pdev = pci_get_slot(bus, devfn);
-+		if (!pdev)
-+			return -ENODEV;
-+
-+		if (p2sb_valid_resource(pci_resource_n(pdev, 0)))
-+			p2sb_read_bar0(pdev, mem);
-+		else
-+			ret = -ENOENT;
-+
-+		pci_dev_put(pdev);
-+	}
-+
-+	return ret;
- }
- EXPORT_SYMBOL_GPL(p2sb_bar);
- 
--- 
-2.47.0
+Regards,
+
+Hans
+
+
+
+
+> ---
+>  drivers/platform/x86/asus-nb-wmi.c | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/drivers/platform/x86/asus-nb-wmi.c b/drivers/platform/x86/asus-nb-wmi.c
+> index ef04d396f61c..a5933980ade3 100644
+> --- a/drivers/platform/x86/asus-nb-wmi.c
+> +++ b/drivers/platform/x86/asus-nb-wmi.c
+> @@ -623,6 +623,7 @@ static const struct key_entry asus_nb_wmi_keymap[] = {
+>  	{ KE_KEY, 0xC4, { KEY_KBDILLUMUP } },
+>  	{ KE_KEY, 0xC5, { KEY_KBDILLUMDOWN } },
+>  	{ KE_IGNORE, 0xC6, },  /* Ambient Light Sensor notification */
+> +	{ KE_IGNORE, 0xCF, },	/* AC mode */
+>  	{ KE_KEY, 0xFA, { KEY_PROG2 } },           /* Lid flip action */
+>  	{ KE_KEY, 0xBD, { KEY_PROG2 } },           /* Lid flip action on ROG xflow laptops */
+>  	{ KE_END, 0},
+> --
+> 2.39.5
+> 
 
