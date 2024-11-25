@@ -1,72 +1,72 @@
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE00B18C031
-	for <platform-driver-x86@vger.kernel.org>; Mon, 25 Nov 2024 09:39:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 49BD8191F91
+	for <platform-driver-x86@vger.kernel.org>; Mon, 25 Nov 2024 09:40:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1732527594; cv=none; b=h/HKms4nVhvfE53o/+SIz8w2hP47UmybnZTWCXkKY1TiBe2QtGXVc1MCSE+XZYvAUbEGFcPsMDe6Ci0rZWWqFplOzzxo9ymSc9qTR6EkQySJzJ7TVeIm49zqhbWD70+y4mtz0Cyji0w/z538GF/4m0LEqXjNbe16pasOADEyR4E=
+	t=1732527608; cv=none; b=JJdftRm2Skwm/qr4Oh+6a7ocFxLxPVJ2R0c8srPWT4y/VgbK/jiIldIulUNNZ+oQLJjjq6S+cEsWkP3+1DPvck8n9/P1eKra1Z052xd8iEezAMfXiI5FhmPgH4XNR3e0u07BqziHoTSkwdKyXCa/CSrfqkk9PA+ODllYpSJvPGI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1732527594; c=relaxed/simple;
-	bh=/XmRtZPekwBtjrpUKtPZ8Qzt7cmYd7hNsU72jLIQ7MM=;
+	s=arc-20240116; t=1732527608; c=relaxed/simple;
+	bh=cOpE0c+LyUVWwbcDeKJBtPbzMortWcCvzht78xT5aFY=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=RL1WRGYR/O7bhumWp26GC2B54vD275xT07tOAl3unlbColerDXEccAqTNvfTLiqY6ZI1u1p8BDDFml4kaASa/qFvP6B9WRCjKLPZd5rdfCJcSCVRdcU6C9RaohnEN6zJFTqIwyDkWgKP+GnG2de3/NnGJRB866qsF29r3mxI/cA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=F9Oonc4I; arc=none smtp.client-ip=170.10.129.124
+	 In-Reply-To:Content-Type; b=CNeywEZ3D9r8/j8t0ZAvzJLFLeEGKm/2Fo6OCTZ2EfFq9BD5WLsArZ00Je7ZxIK25ClrkyP63gyhSKf7ULYHRlv+PKLqFSDD1x5UZHqcZUEf+HQPr6w3ptax+3s9867Euigu5mk33OxB8aMql87uJh0qCLlhQ89uJnM+xWroKNU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=PJ9P4MKl; arc=none smtp.client-ip=170.10.129.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="F9Oonc4I"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="PJ9P4MKl"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1732527591;
+	s=mimecast20190719; t=1732527605;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=Hkv+uXuHpbZj4SkgeiuTnLecSlEJeOMpyMLd4JnkUbc=;
-	b=F9Oonc4IV+sRTz8CWdNn6VU5nnPEIxEowKnNAcLVP2PSwdUNBsrKIHEio3/vrj0QmqB0u0
-	roPSayOrvH2dGnmAoXIcaJQdavvH00ZocQLLOE7cbQtMmTvZSToHxtHpeH0rRtnNYz9A18
-	Ba7Y1/ScmDD/AwR4dJ6ua2Fos10xV4I=
-Received: from mail-ej1-f71.google.com (mail-ej1-f71.google.com
- [209.85.218.71]) by relay.mimecast.com with ESMTP with STARTTLS
+	bh=eYb0srWcbDisGIXUS7s0SfGyL9DUOFJ4d9y9eJeg7jU=;
+	b=PJ9P4MKlIYGezAbgCbAmwPIZgrSQCJ4DUpHvKJcqm5p1ibsSTMar8iqUfqIBxj95Ti4oGC
+	F2N6Hd8OYXG4yGEbRCAPcwM0yXA8RgE+LBGdlopb+i0wl26WJ9C2MlyEud0MEcwcUSpKbG
+	RmmuoxR0WpP65/O/XY8jMnz9eKos4Jk=
+Received: from mail-ej1-f69.google.com (mail-ej1-f69.google.com
+ [209.85.218.69]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-173-f735kK1mP4akXVR3Ry2QGw-1; Mon, 25 Nov 2024 04:39:50 -0500
-X-MC-Unique: f735kK1mP4akXVR3Ry2QGw-1
-X-Mimecast-MFC-AGG-ID: f735kK1mP4akXVR3Ry2QGw
-Received: by mail-ej1-f71.google.com with SMTP id a640c23a62f3a-aa543b13532so85937966b.3
-        for <platform-driver-x86@vger.kernel.org>; Mon, 25 Nov 2024 01:39:49 -0800 (PST)
+ us-mta-213--xj7Y7DkMAymM-1V93ZO2w-1; Mon, 25 Nov 2024 04:40:01 -0500
+X-MC-Unique: -xj7Y7DkMAymM-1V93ZO2w-1
+X-Mimecast-MFC-AGG-ID: -xj7Y7DkMAymM-1V93ZO2w
+Received: by mail-ej1-f69.google.com with SMTP id a640c23a62f3a-aa5449e1d9cso127776666b.2
+        for <platform-driver-x86@vger.kernel.org>; Mon, 25 Nov 2024 01:40:01 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1732527589; x=1733132389;
+        d=1e100.net; s=20230601; t=1732527600; x=1733132400;
         h=content-transfer-encoding:in-reply-to:from:content-language
          :references:cc:to:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Hkv+uXuHpbZj4SkgeiuTnLecSlEJeOMpyMLd4JnkUbc=;
-        b=CnOV3WVTmyVMaEXIQL1XBaRukxKyc9uR76D/hOhyj8PFn0fAi4k/zEmkmFxzPIsPPY
-         yYJZehKTOCCLZPe+hO1sowDkDTGgNiKY5WEbmmxKQhWfECgggAK8c3h3b/bxBA1iBELc
-         WtfbE3/FcG8YyWWKIHqS1xT/y6coKXwBYSrZRdzxiMiI371Kj2+Nj6oZ27J0yPPWM6wK
-         nfgs8G8wbGGjoVcn4TXcK6fsexqBlScUeef8gWpbTopFVwKQP9BQcFwjB2tOCAyGwYl2
-         mxv8pBbMzkgLVaKTidcjArxl4HGuCEvCJt/s7wjFzIOTgYxgcn81ggwIWSdqCklbs0Yy
-         IkRg==
-X-Forwarded-Encrypted: i=1; AJvYcCUHYKgRe2vvC93AJtfklOgX6HcBPo6zaGDXbSFPFAKX+J7rFc1M8ps6Lg8JJjwSAaJKOEqr7KiA40bjrqlI/w9ckd1i@vger.kernel.org
-X-Gm-Message-State: AOJu0YyvtEYNze8wasnTP+zoQnRbkBZe65kB7d5MLDIDU6630ZEaiB2t
-	5XT76dRNOJWJXDNo9QaoJ1kfdSkzZNsGIVs4r3ZHQ9uFSXz59iBnU/okCIUHpp6MYuggiQARuk2
-	/1c5JsTAKo1no/Ckn54dw5xhWJO4MRreGqKWgIG0yG2lF51tRVsCQrZya/kLAl1bS3qVFRbs=
-X-Gm-Gg: ASbGnctwg5/zQX4Va7JcB7cJXxHOMglRpn3BFTItPJO820CCEGDZ5cMnHkl7Vl4Q512
-	th//lRacPJ8Iet55oIulxF8bbAwuEb2v3NuHkZLOS/KVosJrwO0XHaYtK0+155qo1pBK3KE+vVW
-	B3B9JbQUvJBFUjOzAortdHtA6AHsNR8YXkxlLU8sNp8lbUHwu1seJvoQk0vvTBgkUvvkFtV+v06
-	jQFdnzIfEIhjTXKMhz/+eDNJOlFeDT2tWHrV1P3pM7c+I8g1Q9/o37/648GgA0Ny4j180+hMn2T
-	Mp1DbGrOjeXK26Z9CGGSW+J7FH/Swru3IgX8l5z3Rr8cvTLrZ2ALIyqc/FF5L9CulO/rlmAjw5U
-	tvYRS/Ov6ah3l/FG91JeJNG6D
-X-Received: by 2002:a17:906:3cb2:b0:aa5:e01:1471 with SMTP id a640c23a62f3a-aa50e012d9emr801069566b.37.1732527588963;
-        Mon, 25 Nov 2024 01:39:48 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IH/f1jKAAuDrIC1Zrrvx4lRzK1vd7c9PbVgtQQZlOB3tA0pjSv7qEbmVKDZG1Joh+4VYnDp+A==
-X-Received: by 2002:a17:906:3cb2:b0:aa5:e01:1471 with SMTP id a640c23a62f3a-aa50e012d9emr801067666b.37.1732527588602;
-        Mon, 25 Nov 2024 01:39:48 -0800 (PST)
+        bh=eYb0srWcbDisGIXUS7s0SfGyL9DUOFJ4d9y9eJeg7jU=;
+        b=kfXX7cF8RVoY276dZJoA168CLE7yShvdJhDwNTKfdJB50KxHiNKc3dZKq/5hV39ffb
+         p2mtgRN/kKYLrPh7eEYmaf4FuRxED/FtWldieIhgeV3/GEhVLTaMb4Tl5S7INlfrOm5/
+         dWcnHt+Dvp14FLpV97QDZfmg7QhHjU9twfH7Gp0PmCDi7eyXM5VR/0BIvAPUaA1q1Suy
+         5CDXlSPvRIFDZlNgFVpH9pqWGhabE++2ngwBDF7o76uEjdZXmir4B+df7pgAjeGYb5Fs
+         vUUe+oi+dhRBUb9PLroEnhXv6b0Trpssxs3/lnOcfKXEWXvwp6URhX6xom18MQ1U3Wa9
+         i/uA==
+X-Forwarded-Encrypted: i=1; AJvYcCWzQ+h3oMare8XTYlCbJUPDwF7eH9ZPGhOFT9Y2ZdEIx2q3OvK9Zsf0JUquPHHGWDBg08YnnRktEnWLrcL147s6fpHb@vger.kernel.org
+X-Gm-Message-State: AOJu0YxJaz5aC/gKICBmhp7CtN2r6w4M1lMEEW5iqGU9XIfcrXXArqpm
+	HkKQMXTtRPVyBNOOPIXExjWv9+2kKMrHrdLuaCwNUGif+B+cxF4/br7AF1ZF3RjdrWMDatTxa6v
+	Z4k8dvZAgsHPO7k2GyNVU6JkY0flHAKb7v7HlKWDOeBTDjLokYxZoOzbTlP54IMkvfkbAMi8=
+X-Gm-Gg: ASbGncti0lvgF7TFgpm3Nafbhtz145jl6dRns0T1B/9CgK6uPSsx046wzWWu7GJFk9t
+	gU9E1VWlJ+PxnbhhF1XW2pcwkF+yV6ANDfRCCn1kZWzul1UBytM4SO5pDe7XNUYuxFuvy8B7etC
+	aDqT4Gg7GUeRVkWOSrE13Kns+IH1Pki4X263ujloiqmWXuM0/HEh9c9dT1/xFzboM40z0A/crV7
+	FSHPQCQjQpulGWs3tuClxIWTedbfRILbnktb27b/EH5i8B9m7niIqUjNaruIxN0H4e7mME2gY6O
+	eaM8ArESciwseX5vzDdcvhHHuEb9ynR+bxY7pRPyy6/Gdzcr9PDBGzI7UXNf2A+F9JvJ7EDLd1S
+	ca3Gaf6DxEr+bq+JbAhOxtUMp
+X-Received: by 2002:a17:906:9c2:b0:aa5:297a:429f with SMTP id a640c23a62f3a-aa5297a431cmr756539566b.51.1732527600492;
+        Mon, 25 Nov 2024 01:40:00 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IEGeiriE0b8Iux0eyUY22xZRptZbW/6+Lgi16hErdHIBckumrlRFBkkEPjGo8VVvQ/rPfvj7g==
+X-Received: by 2002:a17:906:9c2:b0:aa5:297a:429f with SMTP id a640c23a62f3a-aa5297a431cmr756538166b.51.1732527600104;
+        Mon, 25 Nov 2024 01:40:00 -0800 (PST)
 Received: from ?IPV6:2001:1c00:c32:7800:5bfa:a036:83f0:f9ec? (2001-1c00-0c32-7800-5bfa-a036-83f0-f9ec.cable.dynamic.v6.ziggo.nl. [2001:1c00:c32:7800:5bfa:a036:83f0:f9ec])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-aa50b52fe50sm447130066b.102.2024.11.25.01.39.47
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-aa50b2f044dsm439226266b.46.2024.11.25.01.39.59
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 25 Nov 2024 01:39:48 -0800 (PST)
-Message-ID: <d48bee72-7cd6-41cd-8d1d-282e8e68269d@redhat.com>
-Date: Mon, 25 Nov 2024 10:39:47 +0100
+        Mon, 25 Nov 2024 01:39:59 -0800 (PST)
+Message-ID: <13590dd6-1529-487c-842a-85b44c577811@redhat.com>
+Date: Mon, 25 Nov 2024 10:39:59 +0100
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -74,54 +74,31 @@ List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC PATCH] platform/x86: asus-nb-wmi: Ignore unknown event 0xCF
-To: Armin Wolf <W_Armin@gmx.de>, pespin@espeweb.net,
+Subject: Re: [PATCH] platform/x86: asus-wmi: Ignore return value when writing
+ thermal policy
+To: Armin Wolf <W_Armin@gmx.de>, auslands-kv@gmx.de,
  corentin.chary@gmail.com, luke@ljones.dev
 Cc: ilpo.jarvinen@linux.intel.com, platform-driver-x86@vger.kernel.org,
  linux-kernel@vger.kernel.org
-References: <20241123224700.18530-1-W_Armin@gmx.de>
+References: <20241124171941.29789-1-W_Armin@gmx.de>
 Content-Language: en-US, nl
 From: Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <20241123224700.18530-1-W_Armin@gmx.de>
+In-Reply-To: <20241124171941.29789-1-W_Armin@gmx.de>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 Hi,
 
-On 23-Nov-24 11:47 PM, Armin Wolf wrote:
-> On the Asus X541UAK an unknown event 0xCF is emited when the charger
-> is plugged in. This is caused by the following AML code:
+On 24-Nov-24 6:19 PM, Armin Wolf wrote:
+> On some machines like the ASUS Vivobook S14 writing the thermal policy
+> returns the currently writen thermal policy instead of an error code.
 > 
->     If (ACPS ())
->     {
->         ACPF = One
->         Local0 = 0x58
->         If (ATKP)
->         {
->             ^^^^ATKD.IANE (0xCF)
->         }
->     }
->     Else
->     {
->         ACPF = Zero
->         Local0 = 0x57
->     }
+> Ignore the return code to avoid falsely returning an error when the
+> thermal policy was written successfully.
 > 
->     Notify (AC0, 0x80) // Status Change
->     If (ATKP)
->     {
->         ^^^^ATKD.IANE (Local0)
->     }
-> 
->     Sleep (0x64)
->     PNOT ()
->     Sleep (0x0A)
->     NBAT (0x80)
-> 
-> Ignore the 0xCF event to silence the unknown event warning.
-> 
-> Reported-by: Pau Espin Pedrol <pespin@espeweb.net>
-> Closes: https://lore.kernel.org/platform-driver-x86/54d4860b-ec9c-4992-acf6-db3f90388293@espeweb.net
+> Reported-by: auslands-kv@gmx.de
+> Closes: https://bugzilla.kernel.org/show_bug.cgi?id=219517
+> Fixes: 2daa86e78c49 ("platform/x86: asus_wmi: Support throttle thermal policy")
 > Signed-off-by: Armin Wolf <W_Armin@gmx.de>
 
 Thanks, patch looks good to me:
@@ -133,24 +110,46 @@ Regards,
 Hans
 
 
-
-
 > ---
->  drivers/platform/x86/asus-nb-wmi.c | 1 +
->  1 file changed, 1 insertion(+)
+>  drivers/platform/x86/asus-wmi.c | 11 ++---------
+>  1 file changed, 2 insertions(+), 9 deletions(-)
 > 
-> diff --git a/drivers/platform/x86/asus-nb-wmi.c b/drivers/platform/x86/asus-nb-wmi.c
-> index ef04d396f61c..a5933980ade3 100644
-> --- a/drivers/platform/x86/asus-nb-wmi.c
-> +++ b/drivers/platform/x86/asus-nb-wmi.c
-> @@ -623,6 +623,7 @@ static const struct key_entry asus_nb_wmi_keymap[] = {
->  	{ KE_KEY, 0xC4, { KEY_KBDILLUMUP } },
->  	{ KE_KEY, 0xC5, { KEY_KBDILLUMDOWN } },
->  	{ KE_IGNORE, 0xC6, },  /* Ambient Light Sensor notification */
-> +	{ KE_IGNORE, 0xCF, },	/* AC mode */
->  	{ KE_KEY, 0xFA, { KEY_PROG2 } },           /* Lid flip action */
->  	{ KE_KEY, 0xBD, { KEY_PROG2 } },           /* Lid flip action on ROG xflow laptops */
->  	{ KE_END, 0},
+> diff --git a/drivers/platform/x86/asus-wmi.c b/drivers/platform/x86/asus-wmi.c
+> index ba8b6d028f9f..8bd187e8b47f 100644
+> --- a/drivers/platform/x86/asus-wmi.c
+> +++ b/drivers/platform/x86/asus-wmi.c
+> @@ -3696,7 +3696,6 @@ static int asus_wmi_custom_fan_curve_init(struct asus_wmi *asus)
+>  /* Throttle thermal policy ****************************************************/
+>  static int throttle_thermal_policy_write(struct asus_wmi *asus)
+>  {
+> -	u32 retval;
+>  	u8 value;
+>  	int err;
+> 
+> @@ -3718,8 +3717,8 @@ static int throttle_thermal_policy_write(struct asus_wmi *asus)
+>  		value = asus->throttle_thermal_policy_mode;
+>  	}
+> 
+> -	err = asus_wmi_set_devstate(asus->throttle_thermal_policy_dev,
+> -				    value, &retval);
+> +	/* Some machines do not return an error code as a result, so we ignore it */
+> +	err = asus_wmi_set_devstate(asus->throttle_thermal_policy_dev, value, NULL);
+> 
+>  	sysfs_notify(&asus->platform_device->dev.kobj, NULL,
+>  			"throttle_thermal_policy");
+> @@ -3729,12 +3728,6 @@ static int throttle_thermal_policy_write(struct asus_wmi *asus)
+>  		return err;
+>  	}
+> 
+> -	if (retval != 1) {
+> -		pr_warn("Failed to set throttle thermal policy (retval): 0x%x\n",
+> -			retval);
+> -		return -EIO;
+> -	}
+> -
+>  	/* Must set to disabled if mode is toggled */
+>  	if (asus->cpu_fan_curve_available)
+>  		asus->custom_fan_curves[FAN_CURVE_DEV_CPU].enabled = false;
 > --
 > 2.39.5
 > 
