@@ -1,156 +1,208 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f41.google.com (mail-wr1-f41.google.com [209.85.221.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 49BD8191F91
-	for <platform-driver-x86@vger.kernel.org>; Mon, 25 Nov 2024 09:40:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF410195B18
+	for <platform-driver-x86@vger.kernel.org>; Mon, 25 Nov 2024 10:11:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1732527608; cv=none; b=JJdftRm2Skwm/qr4Oh+6a7ocFxLxPVJ2R0c8srPWT4y/VgbK/jiIldIulUNNZ+oQLJjjq6S+cEsWkP3+1DPvck8n9/P1eKra1Z052xd8iEezAMfXiI5FhmPgH4XNR3e0u07BqziHoTSkwdKyXCa/CSrfqkk9PA+ODllYpSJvPGI=
+	t=1732529482; cv=none; b=ZsjPEnv2G9JvXOMBFfk5NIFMb8l9zcESoPQxqg3FBjEgYy1YWIIXgMt9Ue4gFGjQQqaXRCH3Vearvvrlw8ld0eVA6IgEEUPVtDGjxy9mG+K068DlitHAbzu4c5EK4pi2HRzDV97wWuyCZLNO2kxe8pmdGEFbBnCZHwkfiMixWBQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1732527608; c=relaxed/simple;
-	bh=cOpE0c+LyUVWwbcDeKJBtPbzMortWcCvzht78xT5aFY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=CNeywEZ3D9r8/j8t0ZAvzJLFLeEGKm/2Fo6OCTZ2EfFq9BD5WLsArZ00Je7ZxIK25ClrkyP63gyhSKf7ULYHRlv+PKLqFSDD1x5UZHqcZUEf+HQPr6w3ptax+3s9867Euigu5mk33OxB8aMql87uJh0qCLlhQ89uJnM+xWroKNU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=PJ9P4MKl; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1732529482; c=relaxed/simple;
+	bh=m8ztMxv1Y5dp8hBaAgKpbaqoQ57GEe1lJLMmhH58fkI=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=XOAdKFuF5rMzFCq1bpjoxfwB8PpuEsNkAhr031kTnZApntstFLFSNxnWcSRcfm0aGUh0HqU6LAlCFnkf1SDTTD14Rd9fxTD+azPR2aEOHNdMrTHAuYi5Ifgr+j7L5z5kxbjEccoNVNSYW3TQzW7mU065seO9Y7x5243fs6TVkT4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=tq3tZcP0; arc=none smtp.client-ip=209.85.221.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="PJ9P4MKl"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1732527605;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=eYb0srWcbDisGIXUS7s0SfGyL9DUOFJ4d9y9eJeg7jU=;
-	b=PJ9P4MKlIYGezAbgCbAmwPIZgrSQCJ4DUpHvKJcqm5p1ibsSTMar8iqUfqIBxj95Ti4oGC
-	F2N6Hd8OYXG4yGEbRCAPcwM0yXA8RgE+LBGdlopb+i0wl26WJ9C2MlyEud0MEcwcUSpKbG
-	RmmuoxR0WpP65/O/XY8jMnz9eKos4Jk=
-Received: from mail-ej1-f69.google.com (mail-ej1-f69.google.com
- [209.85.218.69]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-213--xj7Y7DkMAymM-1V93ZO2w-1; Mon, 25 Nov 2024 04:40:01 -0500
-X-MC-Unique: -xj7Y7DkMAymM-1V93ZO2w-1
-X-Mimecast-MFC-AGG-ID: -xj7Y7DkMAymM-1V93ZO2w
-Received: by mail-ej1-f69.google.com with SMTP id a640c23a62f3a-aa5449e1d9cso127776666b.2
-        for <platform-driver-x86@vger.kernel.org>; Mon, 25 Nov 2024 01:40:01 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="tq3tZcP0"
+Received: by mail-wr1-f41.google.com with SMTP id ffacd0b85a97d-3823f1ed492so2859550f8f.1
+        for <platform-driver-x86@vger.kernel.org>; Mon, 25 Nov 2024 02:11:18 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1732529477; x=1733134277; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=McR1GAXTozKsbyI8huiaN/MANI6sbWPvlD786hLQmKA=;
+        b=tq3tZcP0DOM3s2ZFndXHPi0AFYCixeA+/loQhxKWPVL9u4PvuhgfAARlcF3oDPSnlY
+         5V0Hi8HFh3iFyVbLg8e6K0RTztwugdc5QO9TtFudjErPMiDxWrYXk6I0ASSeCu2g+kzB
+         Xc3+rRuH8XhzEK/fhTN6LdpjYQ9dMB541X5bIK05pqTqZUicTBwqMS51gQxaNWg4D15P
+         qvbncZ0GPlNpWlMbVYOuW+iyuMk8tS36z3SoYKIS6J17LnxKr05fGQNpmnDBMwSdadan
+         EEx6GrHWdfpCovZzCoJEL8SkylgRNcoFS5IG39NVh0LDd0EyqrWiuHGdX57txfpust9B
+         rg0w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1732527600; x=1733132400;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=eYb0srWcbDisGIXUS7s0SfGyL9DUOFJ4d9y9eJeg7jU=;
-        b=kfXX7cF8RVoY276dZJoA168CLE7yShvdJhDwNTKfdJB50KxHiNKc3dZKq/5hV39ffb
-         p2mtgRN/kKYLrPh7eEYmaf4FuRxED/FtWldieIhgeV3/GEhVLTaMb4Tl5S7INlfrOm5/
-         dWcnHt+Dvp14FLpV97QDZfmg7QhHjU9twfH7Gp0PmCDi7eyXM5VR/0BIvAPUaA1q1Suy
-         5CDXlSPvRIFDZlNgFVpH9pqWGhabE++2ngwBDF7o76uEjdZXmir4B+df7pgAjeGYb5Fs
-         vUUe+oi+dhRBUb9PLroEnhXv6b0Trpssxs3/lnOcfKXEWXvwp6URhX6xom18MQ1U3Wa9
-         i/uA==
-X-Forwarded-Encrypted: i=1; AJvYcCWzQ+h3oMare8XTYlCbJUPDwF7eH9ZPGhOFT9Y2ZdEIx2q3OvK9Zsf0JUquPHHGWDBg08YnnRktEnWLrcL147s6fpHb@vger.kernel.org
-X-Gm-Message-State: AOJu0YxJaz5aC/gKICBmhp7CtN2r6w4M1lMEEW5iqGU9XIfcrXXArqpm
-	HkKQMXTtRPVyBNOOPIXExjWv9+2kKMrHrdLuaCwNUGif+B+cxF4/br7AF1ZF3RjdrWMDatTxa6v
-	Z4k8dvZAgsHPO7k2GyNVU6JkY0flHAKb7v7HlKWDOeBTDjLokYxZoOzbTlP54IMkvfkbAMi8=
-X-Gm-Gg: ASbGncti0lvgF7TFgpm3Nafbhtz145jl6dRns0T1B/9CgK6uPSsx046wzWWu7GJFk9t
-	gU9E1VWlJ+PxnbhhF1XW2pcwkF+yV6ANDfRCCn1kZWzul1UBytM4SO5pDe7XNUYuxFuvy8B7etC
-	aDqT4Gg7GUeRVkWOSrE13Kns+IH1Pki4X263ujloiqmWXuM0/HEh9c9dT1/xFzboM40z0A/crV7
-	FSHPQCQjQpulGWs3tuClxIWTedbfRILbnktb27b/EH5i8B9m7niIqUjNaruIxN0H4e7mME2gY6O
-	eaM8ArESciwseX5vzDdcvhHHuEb9ynR+bxY7pRPyy6/Gdzcr9PDBGzI7UXNf2A+F9JvJ7EDLd1S
-	ca3Gaf6DxEr+bq+JbAhOxtUMp
-X-Received: by 2002:a17:906:9c2:b0:aa5:297a:429f with SMTP id a640c23a62f3a-aa5297a431cmr756539566b.51.1732527600492;
-        Mon, 25 Nov 2024 01:40:00 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IEGeiriE0b8Iux0eyUY22xZRptZbW/6+Lgi16hErdHIBckumrlRFBkkEPjGo8VVvQ/rPfvj7g==
-X-Received: by 2002:a17:906:9c2:b0:aa5:297a:429f with SMTP id a640c23a62f3a-aa5297a431cmr756538166b.51.1732527600104;
-        Mon, 25 Nov 2024 01:40:00 -0800 (PST)
-Received: from ?IPV6:2001:1c00:c32:7800:5bfa:a036:83f0:f9ec? (2001-1c00-0c32-7800-5bfa-a036-83f0-f9ec.cable.dynamic.v6.ziggo.nl. [2001:1c00:c32:7800:5bfa:a036:83f0:f9ec])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-aa50b2f044dsm439226266b.46.2024.11.25.01.39.59
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 25 Nov 2024 01:39:59 -0800 (PST)
-Message-ID: <13590dd6-1529-487c-842a-85b44c577811@redhat.com>
-Date: Mon, 25 Nov 2024 10:39:59 +0100
+        d=1e100.net; s=20230601; t=1732529477; x=1733134277;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=McR1GAXTozKsbyI8huiaN/MANI6sbWPvlD786hLQmKA=;
+        b=C6U6GeKTURI2mTixQNK+pfLkreMet0tgZeoBQOmhJzTFJ5v5930+eoSFCSIS0AAp+p
+         Mo4OIY488esUZLH9dLg8orqm9xYLiOu8UkfJyjoGAbQptAUiUZ283qrqD+snluGtv8eS
+         9D59Vb40/VOt+p7Te3feyLOGgu2jsDpUx6eDkZllug46SYR+c4jMHPxsE7g5ZZd/vsDs
+         4bKlFnziuLMx4cV07VwLNG9S6o0/lpwMIysvwwMm1V6dnjMsI33a/749VseJHkqEBhyX
+         k3N9ntO1YYWTDR3IN0HOj9nuoML3hOwysD1o2xIXwQbZ6H1QgXPMZvp+LmZUFL3dMBmr
+         G8ug==
+X-Gm-Message-State: AOJu0Yz+0eqtfFpsvoh1X+nccmxWeQHQemQfyamBxnZyY5ISktjU45Pa
+	/nHpwRmIr+kby8nVtKiEyyn34fC9crjmugiN6w5pBLYjdGNjQ6+zCJk3cpZMfZhatj4KlaYOchz
+	s
+X-Gm-Gg: ASbGncumFMiF+Af/Pp/6tLIPX881N0pzoFUsd7BmhnjEIuIF9uJ3RAnHABOuZGaOULj
+	Qak53ex5F+yMyzglcFruRj2qxWJANMdiNBcx1/0X69RjOzBM5PGmHk5/Y/nTxLmRKln5sskQ6uZ
+	PSslbeDv5dfSL7/cevRIzpz8nXJjUztbzzQY+r+Ek7bIlElZ22yYdMm5ohbvBowG0SbH3zeMmUL
+	mdR58s2znfNs0KJ5HCxy3IVQKqIuyWhwGq4tqAoTT+GqZJrGV4Gv5rUJ/BCtLsVkcvtvsNeMHrW
+	SFDX8kPhyKd/hoiIreX8R4R6KxmXcHetGrl0yQ==
+X-Google-Smtp-Source: AGHT+IFNaBoBipHcAKNRV9cEp7cydC/2YiIqPmq0r4TXisujrQAB5ptz8Zbl3oIamw/3a9U35yt9nQ==
+X-Received: by 2002:a5d:5f4a:0:b0:381:edc5:b8a7 with SMTP id ffacd0b85a97d-38259c51ab8mr13672937f8f.0.1732529476904;
+        Mon, 25 Nov 2024 02:11:16 -0800 (PST)
+Received: from localhost (p200300f65f242d005bbc9b581c6b9666.dip0.t-ipconnect.de. [2003:f6:5f24:2d00:5bbc:9b58:1c6b:9666])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4348e272094sm77633175e9.7.2024.11.25.02.11.16
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 25 Nov 2024 02:11:16 -0800 (PST)
+From: =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>
+To: Hans de Goede <hdegoede@redhat.com>,
+	=?utf-8?q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	Maximilian Luz <luzmaximilian@gmail.com>
+Cc: platform-driver-x86@vger.kernel.org
+Subject: [PATCH] platform/surface: Switch back to struct platform_driver::remove()
+Date: Mon, 25 Nov 2024 11:11:06 +0100
+Message-ID: <20241125101107.5677-2-u.kleine-koenig@baylibre.com>
+X-Mailer: git-send-email 2.45.2
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] platform/x86: asus-wmi: Ignore return value when writing
- thermal policy
-To: Armin Wolf <W_Armin@gmx.de>, auslands-kv@gmx.de,
- corentin.chary@gmail.com, luke@ljones.dev
-Cc: ilpo.jarvinen@linux.intel.com, platform-driver-x86@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <20241124171941.29789-1-W_Armin@gmx.de>
-Content-Language: en-US, nl
-From: Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <20241124171941.29789-1-W_Armin@gmx.de>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+X-Developer-Signature: v=1; a=openpgp-sha256; l=5577; i=u.kleine-koenig@baylibre.com; h=from:subject; bh=m8ztMxv1Y5dp8hBaAgKpbaqoQ57GEe1lJLMmhH58fkI=; b=owEBbQGS/pANAwAKAY+A+1h9Ev5OAcsmYgBnRE07YBHrjevxA0ANZUkOOCCxNpiDnOfyVEhqn RnaCN0zmuKJATMEAAEKAB0WIQQ/gaxpOnoeWYmt/tOPgPtYfRL+TgUCZ0RNOwAKCRCPgPtYfRL+ TmduB/4gasS76JFJv4ZqyOs99V1stugUz5Ne33t0teiMA/lTt8eRaWstop++64m1jre7pgSB5Gh YtK0KabcXsFQkcQsqxV19m1BbyZbUf6bwBd6aUzkYlM8pMgH8CHiE6usCoqm//hQvfoweFwrN8/ qXotziqfYYC4DCuFnvxtp4UddEePGm3hk4R0SjBMPSKKyUemv1IIo0LkAQc8YI+mFgtwFZ2UaF+ Ri/K98kr6qtA0dS9Ez8g46U+kNKSo4UdT1Qejn7br3BhFB/hv/3+kmAvpKxtxjly1KTgUzgGAM5 NmcPJfK5k1E08E0+VAqjj9qyG1G3o2pafZEJP4rL+jBak7u1
+X-Developer-Key: i=u.kleine-koenig@baylibre.com; a=openpgp; fpr=0D2511F322BFAB1C1580266BE2DCDD9132669BD6
+Content-Transfer-Encoding: 8bit
 
-Hi,
+After commit 0edb555a65d1 ("platform: Make platform_driver::remove()
+return void") .remove() is (again) the right callback to implement for
+platform drivers.
 
-On 24-Nov-24 6:19 PM, Armin Wolf wrote:
-> On some machines like the ASUS Vivobook S14 writing the thermal policy
-> returns the currently writen thermal policy instead of an error code.
-> 
-> Ignore the return code to avoid falsely returning an error when the
-> thermal policy was written successfully.
-> 
-> Reported-by: auslands-kv@gmx.de
-> Closes: https://bugzilla.kernel.org/show_bug.cgi?id=219517
-> Fixes: 2daa86e78c49 ("platform/x86: asus_wmi: Support throttle thermal policy")
-> Signed-off-by: Armin Wolf <W_Armin@gmx.de>
+Convert all platform drivers below drivers/platform/surface to use
+.remove(), with the eventual goal to drop struct
+platform_driver::remove_new(). As .remove() and .remove_new() have the
+same prototypes, conversion is done by just changing the structure
+member name in the driver initializer.
 
-Thanks, patch looks good to me:
+Signed-off-by: Uwe Kleine-König <u.kleine-koenig@baylibre.com>
+---
+Hello,
 
-Reviewed-by: Hans de Goede <hdegoede@redhat.com>
+this is based on todays next, feel free to drop changes that result in a
+conflict when you come around to apply this. I'll care for the fallout
+at a later time then. (Having said that, if you use b4 am -3 and git am
+-3, there should be hardly any conflict.)
 
-Regards,
+The change isn't urgent (as there are still quite a few users of
+.remove_new()) and merge window material. Still it would be nice if you
+scheduled it for v6.14-rc1.
 
-Hans
+Best regards
+Uwe
 
+ drivers/platform/surface/surface3-wmi.c                | 2 +-
+ drivers/platform/surface/surface_acpi_notify.c         | 2 +-
+ drivers/platform/surface/surface_aggregator_cdev.c     | 2 +-
+ drivers/platform/surface/surface_aggregator_registry.c | 2 +-
+ drivers/platform/surface/surface_dtx.c                 | 2 +-
+ drivers/platform/surface/surface_gpe.c                 | 2 +-
+ drivers/platform/surface/surface_hotplug.c             | 2 +-
+ 7 files changed, 7 insertions(+), 7 deletions(-)
 
-> ---
->  drivers/platform/x86/asus-wmi.c | 11 ++---------
->  1 file changed, 2 insertions(+), 9 deletions(-)
-> 
-> diff --git a/drivers/platform/x86/asus-wmi.c b/drivers/platform/x86/asus-wmi.c
-> index ba8b6d028f9f..8bd187e8b47f 100644
-> --- a/drivers/platform/x86/asus-wmi.c
-> +++ b/drivers/platform/x86/asus-wmi.c
-> @@ -3696,7 +3696,6 @@ static int asus_wmi_custom_fan_curve_init(struct asus_wmi *asus)
->  /* Throttle thermal policy ****************************************************/
->  static int throttle_thermal_policy_write(struct asus_wmi *asus)
->  {
-> -	u32 retval;
->  	u8 value;
->  	int err;
-> 
-> @@ -3718,8 +3717,8 @@ static int throttle_thermal_policy_write(struct asus_wmi *asus)
->  		value = asus->throttle_thermal_policy_mode;
->  	}
-> 
-> -	err = asus_wmi_set_devstate(asus->throttle_thermal_policy_dev,
-> -				    value, &retval);
-> +	/* Some machines do not return an error code as a result, so we ignore it */
-> +	err = asus_wmi_set_devstate(asus->throttle_thermal_policy_dev, value, NULL);
-> 
->  	sysfs_notify(&asus->platform_device->dev.kobj, NULL,
->  			"throttle_thermal_policy");
-> @@ -3729,12 +3728,6 @@ static int throttle_thermal_policy_write(struct asus_wmi *asus)
->  		return err;
->  	}
-> 
-> -	if (retval != 1) {
-> -		pr_warn("Failed to set throttle thermal policy (retval): 0x%x\n",
-> -			retval);
-> -		return -EIO;
-> -	}
-> -
->  	/* Must set to disabled if mode is toggled */
->  	if (asus->cpu_fan_curve_available)
->  		asus->custom_fan_curves[FAN_CURVE_DEV_CPU].enabled = false;
-> --
-> 2.39.5
-> 
+diff --git a/drivers/platform/surface/surface3-wmi.c b/drivers/platform/surface/surface3-wmi.c
+index c15ed7a12784..6c8fb7a4dde4 100644
+--- a/drivers/platform/surface/surface3-wmi.c
++++ b/drivers/platform/surface/surface3-wmi.c
+@@ -247,7 +247,7 @@ static struct platform_driver s3_wmi_driver = {
+ 		.name = "surface3-wmi",
+ 		.pm = &s3_wmi_pm,
+ 	},
+-	.remove_new = s3_wmi_remove,
++	.remove = s3_wmi_remove,
+ };
+ 
+ static int __init s3_wmi_init(void)
+diff --git a/drivers/platform/surface/surface_acpi_notify.c b/drivers/platform/surface/surface_acpi_notify.c
+index 14a9d8a267cb..3b30cfe3466b 100644
+--- a/drivers/platform/surface/surface_acpi_notify.c
++++ b/drivers/platform/surface/surface_acpi_notify.c
+@@ -850,7 +850,7 @@ MODULE_DEVICE_TABLE(acpi, san_match);
+ 
+ static struct platform_driver surface_acpi_notify = {
+ 	.probe = san_probe,
+-	.remove_new = san_remove,
++	.remove = san_remove,
+ 	.driver = {
+ 		.name = "surface_acpi_notify",
+ 		.acpi_match_table = san_match,
+diff --git a/drivers/platform/surface/surface_aggregator_cdev.c b/drivers/platform/surface/surface_aggregator_cdev.c
+index 165b1416230d..bfaa09d1648b 100644
+--- a/drivers/platform/surface/surface_aggregator_cdev.c
++++ b/drivers/platform/surface/surface_aggregator_cdev.c
+@@ -762,7 +762,7 @@ static struct platform_device *ssam_cdev_device;
+ 
+ static struct platform_driver ssam_cdev_driver = {
+ 	.probe = ssam_dbg_device_probe,
+-	.remove_new = ssam_dbg_device_remove,
++	.remove = ssam_dbg_device_remove,
+ 	.driver = {
+ 		.name = SSAM_CDEV_DEVICE_NAME,
+ 		.probe_type = PROBE_PREFER_ASYNCHRONOUS,
+diff --git a/drivers/platform/surface/surface_aggregator_registry.c b/drivers/platform/surface/surface_aggregator_registry.c
+index 06e45f0b9817..d4f32ad66530 100644
+--- a/drivers/platform/surface/surface_aggregator_registry.c
++++ b/drivers/platform/surface/surface_aggregator_registry.c
+@@ -554,7 +554,7 @@ static void ssam_platform_hub_remove(struct platform_device *pdev)
+ 
+ static struct platform_driver ssam_platform_hub_driver = {
+ 	.probe = ssam_platform_hub_probe,
+-	.remove_new = ssam_platform_hub_remove,
++	.remove = ssam_platform_hub_remove,
+ 	.driver = {
+ 		.name = "surface_aggregator_platform_hub",
+ 		.acpi_match_table = ssam_platform_hub_acpi_match,
+diff --git a/drivers/platform/surface/surface_dtx.c b/drivers/platform/surface/surface_dtx.c
+index 89ca6b50e812..97ae010069e4 100644
+--- a/drivers/platform/surface/surface_dtx.c
++++ b/drivers/platform/surface/surface_dtx.c
+@@ -1180,7 +1180,7 @@ MODULE_DEVICE_TABLE(acpi, surface_dtx_acpi_match);
+ 
+ static struct platform_driver surface_dtx_platform_driver = {
+ 	.probe = surface_dtx_platform_probe,
+-	.remove_new = surface_dtx_platform_remove,
++	.remove = surface_dtx_platform_remove,
+ 	.driver = {
+ 		.name = "surface_dtx_pltf",
+ 		.acpi_match_table = surface_dtx_acpi_match,
+diff --git a/drivers/platform/surface/surface_gpe.c b/drivers/platform/surface/surface_gpe.c
+index 62fd4004db31..b359413903b1 100644
+--- a/drivers/platform/surface/surface_gpe.c
++++ b/drivers/platform/surface/surface_gpe.c
+@@ -278,7 +278,7 @@ static void surface_gpe_remove(struct platform_device *pdev)
+ 
+ static struct platform_driver surface_gpe_driver = {
+ 	.probe = surface_gpe_probe,
+-	.remove_new = surface_gpe_remove,
++	.remove = surface_gpe_remove,
+ 	.driver = {
+ 		.name = "surface_gpe",
+ 		.pm = &surface_gpe_pm,
+diff --git a/drivers/platform/surface/surface_hotplug.c b/drivers/platform/surface/surface_hotplug.c
+index a404f26cfae8..c0d83ed5a208 100644
+--- a/drivers/platform/surface/surface_hotplug.c
++++ b/drivers/platform/surface/surface_hotplug.c
+@@ -259,7 +259,7 @@ MODULE_DEVICE_TABLE(acpi, surface_hotplug_acpi_match);
+ 
+ static struct platform_driver surface_hotplug_driver = {
+ 	.probe = surface_hotplug_probe,
+-	.remove_new = surface_hotplug_remove,
++	.remove = surface_hotplug_remove,
+ 	.driver = {
+ 		.name = "surface_hotplug",
+ 		.acpi_match_table = surface_hotplug_acpi_match,
+
+base-commit: 85a2dd7d7c8152cb125712a1ecae1d0a6ccac250
+-- 
+2.45.2
 
