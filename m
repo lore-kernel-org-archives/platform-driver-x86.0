@@ -1,120 +1,91 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail.tuxedocomputers.com (mail.tuxedocomputers.com [157.90.84.7])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 26E62192D79;
-	Wed, 27 Nov 2024 10:44:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 29FC61F4735;
+	Wed, 27 Nov 2024 11:22:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=157.90.84.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1732704269; cv=none; b=fek/SQmI2jcRx7fsIKSzb8Q8/R1ybEpS0xEXMYsXlCT6Zsk7E/HH+HXqY1vivmTxf/lCVZ7la5W0VnqRiY0oaZfc6N7VBL3NWr8jPj452YyUl3eeWUdr+0CI+x21w6aKck418CJ4GTNdw/wSsEy1XaiO0T0LPy18yF7hW9pJmtY=
+	t=1732706544; cv=none; b=U5F/r0LQJxqZSgIJwA2/yexrg/uegMWmbxagequLq6WIaz/dwLv8OGUZ8R15BJp/byL5hsHWl2Z9kdPZsq5XdXynr2RxO88w0BVRCCEBVEXJLI6k87hYUUoFvmjV9N7EO9RWGKQgEnurI1WuAqrS4LnSYVx0Woue738xeX7djPM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1732704269; c=relaxed/simple;
-	bh=RCfwYift9o4l7+Ap7MyKfuhE6hST1jIqGbg9B38+Km8=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=odJ5yRqSImHF8YxzTiopkks0ZdbDpTcoA+Noii5nhAUVxxiyDtO0lCBWPkHxZwDF2P/CmEOmmXZeljjPNeDzsoSsXI3hanv0e4EL/7dGsG1CJZu+xi15EUAhkznrauwS73ZYSBkeIFcRFwyF3V7bZ6l9O5k8i8vJw+opsmtqSr8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=nm7/1J07; arc=none smtp.client-ip=198.175.65.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1732706544; c=relaxed/simple;
+	bh=tSV3HOFFBdh9P0hRuhEtN0I2z+DLXZWaa6f95IsG/+E=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=isW2YxrNZ7+vX4joUeo2Q8ayq8O/0HZ7X3bTPf8qosFzWaIXF2FaFTyRHk9HNz1sesw0wHkjZTIBZp9EsLp/Z4GMpxVERxlPtjAiSKWlCq8FoL7VkqLJLxqSrP7NdHrxoKFIY/uAnK9w7ac6zmg3+2xv/Et8N/lg6RbOVsHKFso=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=tuxedocomputers.com; spf=pass smtp.mailfrom=tuxedocomputers.com; dkim=pass (1024-bit key) header.d=tuxedocomputers.com header.i=@tuxedocomputers.com header.b=alf0PTOG; arc=none smtp.client-ip=157.90.84.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=tuxedocomputers.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tuxedocomputers.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="nm7/1J07"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1732704268; x=1764240268;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=RCfwYift9o4l7+Ap7MyKfuhE6hST1jIqGbg9B38+Km8=;
-  b=nm7/1J07/SoCRygh7GJHZM7cTzzXKXo5jAWGu+po3F0m2pLbj86YIAhI
-   F5/fTO23lWEb1U67RqwfgfvraMnxJVKiM6Pct/KBNeNFLbGbdSQtEa4mn
-   2qM17wonKC/9AHDD5sGx8SIpzxzBocc9QHIjSLUugrf2WT+bS8TcrHoEy
-   kCk3O3lD+DkM1qrbKXLsMkGGC6QOV0rN4z/S6XFbpUmLT1j4wUzWYxKb7
-   1XI84V6xS3N7udzrbYf29USF1gTLVR/BsmhwkNPWxB3pDWHjjdcUBp3aL
-   RxV2gWZha0EDZzYZ0OZWYlD7a1Lm/1CePd0/mf86qR/+GswtNzkn2xYj3
-   g==;
-X-CSE-ConnectionGUID: 9uUscNC5QCuZ2X2fn1PkmA==
-X-CSE-MsgGUID: VhCdTy/ARbG9giwz2Czxag==
-X-IronPort-AV: E=McAfee;i="6700,10204,11268"; a="33056610"
-X-IronPort-AV: E=Sophos;i="6.12,189,1728975600"; 
-   d="scan'208";a="33056610"
-Received: from orviesa006.jf.intel.com ([10.64.159.146])
-  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Nov 2024 02:44:28 -0800
-X-CSE-ConnectionGUID: 33rGevD8QHCjWRsg4i6JcA==
-X-CSE-MsgGUID: 7bEWvnWTTOGluCJP5tnM0w==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.12,189,1728975600"; 
-   d="scan'208";a="91994498"
-Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.71])
-  by orviesa006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Nov 2024 02:44:25 -0800
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Wed, 27 Nov 2024 12:44:22 +0200 (EET)
-To: Armin Wolf <W_Armin@gmx.de>
-cc: jlee@suse.com, farhan.anwar8@gmail.com, rayanmargham4@gmail.com, 
-    Hans de Goede <hdegoede@redhat.com>, platform-driver-x86@vger.kernel.org, 
-    LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [RFC PATCH 5/5] platform/x86: acer-wmi: Ignore AC events
-In-Reply-To: <20241124171426.29203-6-W_Armin@gmx.de>
-Message-ID: <9ea81e1d-572f-5c01-93ad-64af84973899@linux.intel.com>
-References: <20241124171426.29203-1-W_Armin@gmx.de> <20241124171426.29203-6-W_Armin@gmx.de>
+	dkim=pass (1024-bit key) header.d=tuxedocomputers.com header.i=@tuxedocomputers.com header.b="alf0PTOG"
+Received: from wse-pc.fritz.box (pd9e59944.dip0.t-ipconnect.de [217.229.153.68])
+	(Authenticated sender: wse@tuxedocomputers.com)
+	by mail.tuxedocomputers.com (Postfix) with ESMTPA id 4F0DC2FC0052;
+	Wed, 27 Nov 2024 12:22:11 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=tuxedocomputers.com;
+	s=default; t=1732706531;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=z708NEoaWXkhSvxJclBk16ByWS4EDMXM/K/P8Pjev/g=;
+	b=alf0PTOGc7atMAJQWrUHPgC5mVf28NBqowXrn+bhkRczWrQGZNNrT9b+ZN535Az0W9CJ3x
+	Y7w5q5Pozx6IUHOErh10WhLIqR77b5JnZKgUGPVey/o4UgNqdzuUXGljs3dPuFeqm50yYG
+	KCTnLHQ8DYdHD6oWlJVI2fl3pVajcdQ=
+Authentication-Results: mail.tuxedocomputers.com;
+	auth=pass smtp.auth=wse@tuxedocomputers.com smtp.mailfrom=wse@tuxedocomputers.com
+From: Werner Sembach <wse@tuxedocomputers.com>
+To: hdegoede@redhat.com,
+	ilpo.jarvinen@linux.intel.com
+Cc: linux-kernel@vger.kernel.org,
+	platform-driver-x86@vger.kernel.org,
+	Werner Sembach <wse@tuxedocomputers.com>
+Subject: [RFC PATCH 0/1] platform: x86: tuxi: Implement TUXEDO TUXI ACPI TFAN as thermal subsystem
+Date: Wed, 27 Nov 2024 12:21:09 +0100
+Message-ID: <20241127112141.42920-1-wse@tuxedocomputers.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="8323328-1642322309-1732704262=:931"
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
+Hi,
 
---8323328-1642322309-1732704262=:931
-Content-Type: text/plain; charset=ISO-8859-15
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Following up to https://lore.kernel.org/all/172b7acd-4313-4924-bcbc-41b73b39ada0@tuxedocomputers.com/ and https://lore.kernel.org/all/f26d867e-f247-43bb-a78b-be0bce35c973@roeck-us.net/ I experimented with the thermal subsystem and these are my results so far, but I'm hitting a bit of a wall:
 
-On Sun, 24 Nov 2024, Armin Wolf wrote:
+As far as I can tell to implement "2. As long as GTMP is > 80°C fan speed must be at least 30%." I would need to add a new gevenor, lets call it "user_space_with_safeguards". I would be nice when the temp <-> fanspeed relation could be passed via the thermal_trip structure. And safeguarding the hardware from userspace only works when I can restrict userspace from just selecting the preexisting "user_space" govenor.
 
-> On the Acer Swift SFG14-41, the events 8 - 1 and 8 - 0 are printed on
-> AC connect/disconnect. Ignore those events to avoid spamming the
-> kernel log with error messages.
->=20
-> Reported-by: Farhan Anwar <farhan.anwar8@gmail.com>
-> Closes: https://lore.kernel.org/platform-driver-x86/2ffb529d-e7c8-4026-a3=
-b8-120c8e7afec8@gmail.com
-> Signed-off-by: Armin Wolf <W_Armin@gmx.de>
+So my ideas/questions:
+- Add a field "min_fanspeed_percent" to the thermal_trip struct that will only be used by the "user_space_with_safeguards" govenor
+- Add a "user_space_with_safeguards" govenor that is the same as the "user_space" govenor, but on trip, a minimum speed is applied
+- How can i ensure that on further speed updates the min speed is applied to? I could just implement it directly in the cdev, but that would be spagetti coding around the govenor.
+- Can I somehow restrict userspace from using certain govenors?
+- I'm a litte bit confused about the thermal zone "mode" sysfs switch, here it says deactivate for userspace control: https://elixir.bootlin.com/linux/v6.12/source/Documentation/ABI/testing/sysfs-class-thermal#L20, but what about the user_space govenor then?
 
-Reviewed-by: Ilpo J=E4rvinen <ilpo.jarvinen@linux.intel.com>
+Best regards,
+Werner
 
---
- i.
+Werner Sembach (1):
+  platform: x86: tuxi: Implement TUXEDO TUXI ACPI TFAN as thermal
+    subsystem
 
-> ---
->  drivers/platform/x86/acer-wmi.c | 4 ++++
->  1 file changed, 4 insertions(+)
->=20
-> diff --git a/drivers/platform/x86/acer-wmi.c b/drivers/platform/x86/acer-=
-wmi.c
-> index 6964fea84fa1..73243090242d 100644
-> --- a/drivers/platform/x86/acer-wmi.c
-> +++ b/drivers/platform/x86/acer-wmi.c
-> @@ -97,6 +97,7 @@ enum acer_wmi_event_ids {
->  =09WMID_HOTKEY_EVENT =3D 0x1,
->  =09WMID_ACCEL_OR_KBD_DOCK_EVENT =3D 0x5,
->  =09WMID_GAMING_TURBO_KEY_EVENT =3D 0x7,
-> +=09WMID_AC_EVENT =3D 0x8,
->  };
->=20
->  enum acer_wmi_predator_v4_sys_info_command {
-> @@ -2302,6 +2303,9 @@ static void acer_wmi_notify(union acpi_object *obj,=
- void *context)
->  =09=09if (return_value.key_num =3D=3D 0x5 && has_cap(ACER_CAP_PLATFORM_P=
-ROFILE))
->  =09=09=09acer_thermal_profile_change();
->  =09=09break;
-> +=09case WMID_AC_EVENT:
-> +=09=09/* We ignore AC events here */
-> +=09=09break;
->  =09default:
->  =09=09pr_warn("Unknown function number - %d - %d\n",
->  =09=09=09return_value.function, return_value.key_num);
-> --
-> 2.39.5
->=20
+ drivers/platform/x86/Makefile                 |   3 +
+ drivers/platform/x86/tuxedo/Kbuild            |   6 +
+ drivers/platform/x86/tuxedo/nbxx/Kbuild       |   8 +
+ drivers/platform/x86/tuxedo/nbxx/Kconfig      |   9 +
+ drivers/platform/x86/tuxedo/nbxx/acpi_tuxi.c  |  96 +++++++
+ drivers/platform/x86/tuxedo/nbxx/acpi_tuxi.h  |  84 ++++++
+ .../x86/tuxedo/nbxx/acpi_tuxi_thermal.c       | 241 ++++++++++++++++++
+ .../x86/tuxedo/nbxx/acpi_tuxi_thermal.h       |  14 +
+ 8 files changed, 461 insertions(+)
+ create mode 100644 drivers/platform/x86/tuxedo/Kbuild
+ create mode 100644 drivers/platform/x86/tuxedo/nbxx/Kbuild
+ create mode 100644 drivers/platform/x86/tuxedo/nbxx/Kconfig
+ create mode 100644 drivers/platform/x86/tuxedo/nbxx/acpi_tuxi.c
+ create mode 100644 drivers/platform/x86/tuxedo/nbxx/acpi_tuxi.h
+ create mode 100644 drivers/platform/x86/tuxedo/nbxx/acpi_tuxi_thermal.c
+ create mode 100644 drivers/platform/x86/tuxedo/nbxx/acpi_tuxi_thermal.h
 
---8323328-1642322309-1732704262=:931--
+-- 
+2.43.0
+
