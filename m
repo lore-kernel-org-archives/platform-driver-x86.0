@@ -1,105 +1,120 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA066145B0F;
-	Wed, 27 Nov 2024 10:42:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 26E62192D79;
+	Wed, 27 Nov 2024 10:44:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1732704135; cv=none; b=tdaoxTNIQcSFumW7eFcp0OAOnhH0jG7Gy15tjf/dmN3dK9u60e2A3OOdp5xGhZp7eZQT/FPcmhLc8nDRdMojuWxLd4fKMEQDnNcR7juy51N5Bx0qK1QGSi8vu50lCeJUuDtF9u/flnkO3G98j/zRim4gGqzGY6UTWxBTCma3dmQ=
+	t=1732704269; cv=none; b=fek/SQmI2jcRx7fsIKSzb8Q8/R1ybEpS0xEXMYsXlCT6Zsk7E/HH+HXqY1vivmTxf/lCVZ7la5W0VnqRiY0oaZfc6N7VBL3NWr8jPj452YyUl3eeWUdr+0CI+x21w6aKck418CJ4GTNdw/wSsEy1XaiO0T0LPy18yF7hW9pJmtY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1732704135; c=relaxed/simple;
-	bh=wZ6Pd1q6VEtjcLUGO6tUqjQCpl+eVGwavhOR34BrIc8=;
+	s=arc-20240116; t=1732704269; c=relaxed/simple;
+	bh=RCfwYift9o4l7+Ap7MyKfuhE6hST1jIqGbg9B38+Km8=;
 	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=msXaqNWc/CmeGoQVn5RQrc1RUenQU7cpIYzi1xbtXGSHVBjBmaTggc6QOw2A+8fahZEqppuG4xiLTa+nBiSf9vRQwsFkusLgiFG7WZpS+LPtLMZvMOP+ySKWISrqWzV7/sC2wQnGppAFHNQKzAW62uLLAMUJuZHsM8gqi6nzBek=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=AFViMWtt; arc=none smtp.client-ip=198.175.65.15
+	 MIME-Version:Content-Type; b=odJ5yRqSImHF8YxzTiopkks0ZdbDpTcoA+Noii5nhAUVxxiyDtO0lCBWPkHxZwDF2P/CmEOmmXZeljjPNeDzsoSsXI3hanv0e4EL/7dGsG1CJZu+xi15EUAhkznrauwS73ZYSBkeIFcRFwyF3V7bZ6l9O5k8i8vJw+opsmtqSr8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=nm7/1J07; arc=none smtp.client-ip=198.175.65.18
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="AFViMWtt"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="nm7/1J07"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1732704134; x=1764240134;
+  t=1732704268; x=1764240268;
   h=from:date:to:cc:subject:in-reply-to:message-id:
    references:mime-version;
-  bh=wZ6Pd1q6VEtjcLUGO6tUqjQCpl+eVGwavhOR34BrIc8=;
-  b=AFViMWtt42YzscdXX3s/6vDfUYO8AaZ1++1NZMxuCTGeXPYdKJbDrdnW
-   B8387wbpnNobYtXMcRZiR4gRqWhjzTmCLYcHnlTnP2wegvLfVSqvY9Ss/
-   I3XKA2E6GvH71u5goNmRdw5jKaxo15NR3uuXlz1sl+d7ux1nrRhnbormV
-   N/gUEXXYMHzupqxVpOAuyKWYJR292dB/j7EfKjEyjji3e/WBll7PYP8Vr
-   THQphZXv9PRrBTy0lWMw0D7ObDTpI0OYMqFwOiXHWhYuti7FCVu69nXH0
-   vy9BnKFQmxDRhPgcOVCQWJmGMpIKix9l/Vuf4fHElg7Sizm/sVk9QG6C9
-   w==;
-X-CSE-ConnectionGUID: iyzmZ6DoSy6KlAXMEP+gtw==
-X-CSE-MsgGUID: PpaKluT9QWyJ4wRknOkLKA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11268"; a="36567877"
+  bh=RCfwYift9o4l7+Ap7MyKfuhE6hST1jIqGbg9B38+Km8=;
+  b=nm7/1J07/SoCRygh7GJHZM7cTzzXKXo5jAWGu+po3F0m2pLbj86YIAhI
+   F5/fTO23lWEb1U67RqwfgfvraMnxJVKiM6Pct/KBNeNFLbGbdSQtEa4mn
+   2qM17wonKC/9AHDD5sGx8SIpzxzBocc9QHIjSLUugrf2WT+bS8TcrHoEy
+   kCk3O3lD+DkM1qrbKXLsMkGGC6QOV0rN4z/S6XFbpUmLT1j4wUzWYxKb7
+   1XI84V6xS3N7udzrbYf29USF1gTLVR/BsmhwkNPWxB3pDWHjjdcUBp3aL
+   RxV2gWZha0EDZzYZ0OZWYlD7a1Lm/1CePd0/mf86qR/+GswtNzkn2xYj3
+   g==;
+X-CSE-ConnectionGUID: 9uUscNC5QCuZ2X2fn1PkmA==
+X-CSE-MsgGUID: VhCdTy/ARbG9giwz2Czxag==
+X-IronPort-AV: E=McAfee;i="6700,10204,11268"; a="33056610"
 X-IronPort-AV: E=Sophos;i="6.12,189,1728975600"; 
-   d="scan'208";a="36567877"
-Received: from orviesa001.jf.intel.com ([10.64.159.141])
-  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Nov 2024 02:42:14 -0800
-X-CSE-ConnectionGUID: AHGA/AwhS3eSWRRIg5uRXA==
-X-CSE-MsgGUID: DuSUhu83SByPM/nwBlWFTg==
+   d="scan'208";a="33056610"
+Received: from orviesa006.jf.intel.com ([10.64.159.146])
+  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Nov 2024 02:44:28 -0800
+X-CSE-ConnectionGUID: 33rGevD8QHCjWRsg4i6JcA==
+X-CSE-MsgGUID: 7bEWvnWTTOGluCJP5tnM0w==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.12,189,1728975600"; 
-   d="scan'208";a="129417696"
+   d="scan'208";a="91994498"
 Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.71])
-  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Nov 2024 02:42:11 -0800
+  by orviesa006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Nov 2024 02:44:25 -0800
 From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Wed, 27 Nov 2024 12:42:07 +0200 (EET)
+Date: Wed, 27 Nov 2024 12:44:22 +0200 (EET)
 To: Armin Wolf <W_Armin@gmx.de>
 cc: jlee@suse.com, farhan.anwar8@gmail.com, rayanmargham4@gmail.com, 
     Hans de Goede <hdegoede@redhat.com>, platform-driver-x86@vger.kernel.org, 
     LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [RFC PATCH 4/5] platform/x86: acer-wmi: Improve error handling
- when reading AC status
-In-Reply-To: <20241124171426.29203-5-W_Armin@gmx.de>
-Message-ID: <de578b41-b301-0d50-7ef4-a00c31c6c9bf@linux.intel.com>
-References: <20241124171426.29203-1-W_Armin@gmx.de> <20241124171426.29203-5-W_Armin@gmx.de>
+Subject: Re: [RFC PATCH 5/5] platform/x86: acer-wmi: Ignore AC events
+In-Reply-To: <20241124171426.29203-6-W_Armin@gmx.de>
+Message-ID: <9ea81e1d-572f-5c01-93ad-64af84973899@linux.intel.com>
+References: <20241124171426.29203-1-W_Armin@gmx.de> <20241124171426.29203-6-W_Armin@gmx.de>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: multipart/mixed; boundary="8323328-1642322309-1732704262=:931"
+
+  This message is in MIME format.  The first part should be readable text,
+  while the remaining parts are likely unreadable without MIME-aware tools.
+
+--8323328-1642322309-1732704262=:931
+Content-Type: text/plain; charset=ISO-8859-15
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 
 On Sun, 24 Nov 2024, Armin Wolf wrote:
 
-> If a call to ACER_WMID_GET_GAMING_SYS_INFO_METHODID fails, the lower
-> 8 bits will be non-zero. Use WMID_gaming_get_sys_info() to check for
-> this when reading the AC status.
-> 
+> On the Acer Swift SFG14-41, the events 8 - 1 and 8 - 0 are printed on
+> AC connect/disconnect. Ignore those events to avoid spamming the
+> kernel log with error messages.
+>=20
+> Reported-by: Farhan Anwar <farhan.anwar8@gmail.com>
+> Closes: https://lore.kernel.org/platform-driver-x86/2ffb529d-e7c8-4026-a3=
+b8-120c8e7afec8@gmail.com
 > Signed-off-by: Armin Wolf <W_Armin@gmx.de>
-> ---
->  drivers/platform/x86/acer-wmi.c | 9 +++------
->  1 file changed, 3 insertions(+), 6 deletions(-)
-> 
-> diff --git a/drivers/platform/x86/acer-wmi.c b/drivers/platform/x86/acer-wmi.c
-> index 7b549920eba7..6964fea84fa1 100644
-> --- a/drivers/platform/x86/acer-wmi.c
-> +++ b/drivers/platform/x86/acer-wmi.c
-> @@ -1951,12 +1951,9 @@ static int acer_thermal_profile_change(void)
->  			return err;
-> 
->  		/* Check power source */
-> -		status = WMI_gaming_execute_u64(
-> -			ACER_WMID_GET_GAMING_SYS_INFO_METHODID,
-> -			ACER_WMID_CMD_GET_PREDATOR_V4_BAT_STATUS, &on_AC);
-> -
-> -		if (ACPI_FAILURE(status))
-> -			return -EIO;
-> +		err = WMID_gaming_get_sys_info(ACER_WMID_CMD_GET_PREDATOR_V4_BAT_STATUS, &on_AC);
-> +		if (err < 0)
-> +			return err;
-> 
->  		switch (current_tp) {
->  		case ACER_PREDATOR_V4_THERMAL_PROFILE_TURBO:
-> --
-> 2.39.5
-> 
 
-I'd add WMID_gaming_get_sys_info() in this change and reorder the series
-so that this comes before the fan/temp/hwmon changes.
+Reviewed-by: Ilpo J=E4rvinen <ilpo.jarvinen@linux.intel.com>
 
--- 
+--
  i.
 
+> ---
+>  drivers/platform/x86/acer-wmi.c | 4 ++++
+>  1 file changed, 4 insertions(+)
+>=20
+> diff --git a/drivers/platform/x86/acer-wmi.c b/drivers/platform/x86/acer-=
+wmi.c
+> index 6964fea84fa1..73243090242d 100644
+> --- a/drivers/platform/x86/acer-wmi.c
+> +++ b/drivers/platform/x86/acer-wmi.c
+> @@ -97,6 +97,7 @@ enum acer_wmi_event_ids {
+>  =09WMID_HOTKEY_EVENT =3D 0x1,
+>  =09WMID_ACCEL_OR_KBD_DOCK_EVENT =3D 0x5,
+>  =09WMID_GAMING_TURBO_KEY_EVENT =3D 0x7,
+> +=09WMID_AC_EVENT =3D 0x8,
+>  };
+>=20
+>  enum acer_wmi_predator_v4_sys_info_command {
+> @@ -2302,6 +2303,9 @@ static void acer_wmi_notify(union acpi_object *obj,=
+ void *context)
+>  =09=09if (return_value.key_num =3D=3D 0x5 && has_cap(ACER_CAP_PLATFORM_P=
+ROFILE))
+>  =09=09=09acer_thermal_profile_change();
+>  =09=09break;
+> +=09case WMID_AC_EVENT:
+> +=09=09/* We ignore AC events here */
+> +=09=09break;
+>  =09default:
+>  =09=09pr_warn("Unknown function number - %d - %d\n",
+>  =09=09=09return_value.function, return_value.key_num);
+> --
+> 2.39.5
+>=20
+
+--8323328-1642322309-1732704262=:931--
