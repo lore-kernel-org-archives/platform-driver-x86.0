@@ -1,106 +1,106 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.16])
+Received: from mout.gmx.net (mout.gmx.net [212.227.15.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D515819ADB0
-	for <platform-driver-x86@vger.kernel.org>; Thu, 28 Nov 2024 12:59:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1703D25761;
+	Thu, 28 Nov 2024 14:51:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1732798764; cv=none; b=O4SmxrYgjQS8UX9RIVsEAgWwL5EF8NCOBi7Fl4G06d3SPLT39Q6CkuUedVu4UWsk7UN2lkBminGVQMv+m8x1l2aa3A+jFuMiQJ7q0Ssmnj0AxjFs5YCIPptd5iAo33e3R23BGZ8qSkRmpSZlcTa2NPyVJsPyQHANCm/hFP+TXm0=
+	t=1732805487; cv=none; b=c77Uj2Rb+m6CB1WfgI380ZO3gU0dIrO/kfY54oCTwmffS7CttLqK36106u42XU9D4zBZeTa8iw/8Upp65ZfJb2X4Otl6GcuBap2D33ow0kYbEJVxX4E0dJl3kT7vl+BpRyjx7YFI2ctdcDGEGFpaBVo77ktesmBgb1sX9VvVZtw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1732798764; c=relaxed/simple;
-	bh=JrFwq4pGen+xim5dCwsNMrvwX0g/P9TupQM22TdTO10=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=m7yFGwZsILLTeMUY6OA4CZWZGBQGXknEcF9SufTpTAdh8jlc5bDye4TSs5YnajYmg1zC0W2ZhYSzBo7W1TGQ+npw+Vb/yBjk0SugisKJenZZsDI4Vc44bznxHDcAgMxAIikB6YXnu+mluZ0P0vks9clUsCgZVnipg8kzc0tMWT8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=gHUF3Bpe; arc=none smtp.client-ip=198.175.65.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1732805487; c=relaxed/simple;
+	bh=MZMoSSJ1PbHEqgRQl8hIFfL0mBNTdeMxkde36dIMf8s=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=mEIdPCPWL6b9QAmxSdjsPVMiv7Opz1lhi+CyDx1pgNSUT8DhW7hfNXNu68PdBSKa542c4t2n6gAlReJzsiagCzAo6yRfStUocv7RgQYa8MsZSGpSDcA1Phe4qKEZKZ+yq1GOTptdNh155t2FL/WwaCiTVX2rAH+It3U4UKjvnpo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b=N1BXHi+D; arc=none smtp.client-ip=212.227.15.19
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="gHUF3Bpe"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1732798763; x=1764334763;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=JrFwq4pGen+xim5dCwsNMrvwX0g/P9TupQM22TdTO10=;
-  b=gHUF3BpeXRFPUzujMIj/ZAievkQBP/cKNx2MN+MYwupogH8NVeIHJrqg
-   cWlrgoElyS0hdlbo8Z/4bo6MelfOZcihFo26kEBbCMKAxmihcAY/kgxjE
-   jV4afp/jbx8ooefa87aqukvOuiXGDpWb6YRnJxleEOWytt2ILvLRQsBtv
-   c49PZCD1L0EF6F6U8JWN01+xzG1M8ASzL+zoB2bmgdeg7izQy+cmLI761
-   v7LtYQP2cGU8XBOLDHMOFbfco1ahx4PCvgTBT851/jLvs3aJux0mLJr4X
-   fA7k+IpNsOImZS+bpPziNW5gkMPK6/dr4RWSIEmVqQaNVCaV1Pi49JnIp
-   A==;
-X-CSE-ConnectionGUID: 1GNq/ieXSaOFHi/caVtRLQ==
-X-CSE-MsgGUID: SKDlzJQyRqmrQ75YhA0AyQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11270"; a="33172698"
-X-IronPort-AV: E=Sophos;i="6.12,192,1728975600"; 
-   d="scan'208";a="33172698"
-Received: from fmviesa007.fm.intel.com ([10.60.135.147])
-  by orvoesa108.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Nov 2024 04:59:23 -0800
-X-CSE-ConnectionGUID: sH4ZHrBWQ7aLwAZjuu++Iw==
-X-CSE-MsgGUID: 2OcgzXZsQQ2/4gHgCiuV2w==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.12,192,1728975600"; 
-   d="scan'208";a="92038262"
-Received: from smile.fi.intel.com ([10.237.72.154])
-  by fmviesa007.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Nov 2024 04:59:20 -0800
-Received: from andy by smile.fi.intel.com with local (Exim 4.98)
-	(envelope-from <andriy.shevchenko@linux.intel.com>)
-	id 1tGe74-00000001vZr-1Qqn;
-	Thu, 28 Nov 2024 14:59:18 +0200
-Date: Thu, 28 Nov 2024 14:59:18 +0200
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Shinichiro Kawasaki <shinichiro.kawasaki@wdc.com>
-Cc: Hans de Goede <hdegoede@redhat.com>,
-	"platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>,
-	"ilpo.jarvinen@linux.intel.com" <ilpo.jarvinen@linux.intel.com>,
-	"danielwa@cisco.com" <danielwa@cisco.com>
-Subject: Re: [PATCH v3 4/4] p2sb: Do not scan and remove the P2SB device when
- it is unhidden
-Message-ID: <Z0hpJu95bzEq9E8f@smile.fi.intel.com>
-References: <20241127060055.357498-1-shinichiro.kawasaki@wdc.com>
- <20241127060055.357498-5-shinichiro.kawasaki@wdc.com>
- <9606e49a-0a8a-450c-bece-a834df8ea480@redhat.com>
- <24wfa4ytdy5brrtflstsnwfspq4eqontuqqwqk4xbeeal67ppi@mcb2amxhhdtd>
+	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b="N1BXHi+D"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.de;
+	s=s31663417; t=1732805477; x=1733410277; i=w_armin@gmx.de;
+	bh=kv7Z67wkwWyBYt8nY7JYLzssXcyPWmD/VRunzVVYLRQ=;
+	h=X-UI-Sender-Class:From:To:Cc:Subject:Date:Message-Id:
+	 MIME-Version:Content-Type:Content-Transfer-Encoding:cc:
+	 content-transfer-encoding:content-type:date:from:message-id:
+	 mime-version:reply-to:subject:to;
+	b=N1BXHi+DU1Ppwpu36PxZJkofSkVcvNqwVXMD1UtRp3ch5CFDbszRQVVnfpFc1Wjx
+	 DrFHRQk15zN2fjsQAHvYcIk6Xa/yKjAFBMckZGsh9AqZvU1NbZMlDk3lnErF26cv1
+	 o7ar3q15Jqc1ICZy4ZjUysmFtQ+tNoMS7SXJ9IveKdg7SbaC+iwUIeoqib0a9RoQH
+	 Hd/r+W0PRYSfM/ZpCR0SXIkYjxAGJRwJs91r8j0U6sgdfwQOM6zlQROoL45Rbm/4N
+	 uq/b5ziiMQqtHGNBV0YVgBv9XsP/4WpF7ZUxdrVlLMXKyREBYgoWLEF5fBuTMqiKy
+	 sTJ/YfLCa5tS2Q78OQ==
+X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
+Received: from mx-inspiron.dip.tu-dresden.de ([141.76.179.133]) by
+ mail.gmx.net (mrgmx004 [212.227.17.190]) with ESMTPSA (Nemesis) id
+ 1MiacH-1tw4tG002R-00nNvJ; Thu, 28 Nov 2024 15:51:17 +0100
+From: Armin Wolf <W_Armin@gmx.de>
+To: jlee@suse.com,
+	farhan.anwar8@gmail.com,
+	rayanmargham4@gmail.com
+Cc: hdegoede@redhat.com,
+	ilpo.jarvinen@linux.intel.com,
+	platform-driver-x86@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v2 0/5] platform/x86: acer-wmi: Various improvements
+Date: Thu, 28 Nov 2024 15:50:59 +0100
+Message-Id: <20241128145104.13538-1-W_Armin@gmx.de>
+X-Mailer: git-send-email 2.39.5
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <24wfa4ytdy5brrtflstsnwfspq4eqontuqqwqk4xbeeal67ppi@mcb2amxhhdtd>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:TrLVEgAfJUKIFTlDW08K9iqt2FVUSYPufDLiNeFyMSZMQC3927L
+ tnPc6GxWwBi49o0ZRKXyCbquPeyURUrYGTRIR4FP2Ftxp4RWRszgT1DwM6/OiKI9AtYbgrw
+ aWzHufpg2WenZp7pRu3G4yMJ1GwbN7wkTwIpR50w5OL71ObVW4M+9ugW6xVgE7dyfLecaYs
+ Zic7DehRQupxdh3C6XHcg==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:3L7jl6KveDk=;ko8RxmSsdqNwFYKizIwNbsy4Stz
+ GkKOE+e9m7QftM4BIWFWszj2G//JzQjrTICxUZrYb6dlMTIN1B7CV6qbo+qF/AvMBLSTuCSuT
+ 7DA29FGNMx01as4/XKTUgWXqwl4rj+3SMNLZ+eAWPG+XMffOlwxI2mhUjQ/AtaaYlWsNHyAJP
+ HTjuhb38BBiNIb3mT4S/hh8RF1hC6NNubZtQ0T1zITMHzNpKYNmoEpy8kA91UOQden9DNgLs/
+ 44i6U7dVAxqyLM8vIlFpqlRsolr+2Nz3lqgr7NWTfoahybecnvh3zhRb1puA0gSpyiMH7B0RS
+ kS5DBP+y89OmSehM7+FHYpd/u2FYsLE+Zfhe4KBOWhYkOjzxfHHfN1dS3Bg5eQDFMijvvCzSL
+ yhSO9d39AwZ/eKaO0wCIpYINTM0U0X38vEYXmJbXaKOSvaDus+nTn8BdBZCH9HL6EpS9/+0dc
+ 2hhfTBa0fhylnDrP5W6C5S9GdreaD7AAcOCDsx2FoYf3m03w8KifegJdnHmOHS8UNm/eP8RM3
+ O9tZhXD31qS+P9iVfMenkVHvmP+w8KAG3yB2Wj2zaNF5MwiTtU/kMrB+/XMNCVe32LJYztjOC
+ D/UE5zD/fqXNBGIgy5BItp5wAMM25gJOBauATU/KhwyaU0NBvLqDUKSapmddyhviOYKy2Aom4
+ 330/QjhcXIOJWBdI5tKszujjlyr5/T1fj60WwcZQunCJD93zGUYo1C+1mDq6htY0jOIr0vwyi
+ hH+6qNlgt9KIDwquoLSHWiAQVAbEI/GEwEHJKhjJ2oqLwslksI4f912Tgkzop0v8l2tpuyGFg
+ L5c3jp2m+NFCLSgRGlICOPEkRt07hNn149jYqsxJTY/PQRyq0npwzBdeH4AKTblkDFqzhWpAB
+ c0OyEkWJx1N0ZBhUQ7RHzMfGJPnmJSDr/Jq1BruSBMfb5NqzG7cYNtadSxayjMZiXtJhb+6gJ
+ w/xpTuSqFpiYNndAY3+CFdwjzIvLIrUlaNe5TaSUwxRYJuUVT7vzJnWgVxwcPeeOzpG0zCFEg
+ uqRlxEiJHw5/jlc1c2KQUW0khvnf5mbyKmNy42tkGe0+SfIVndUjEIxMLQDxCgwk53SvzML6c
+ Rk/HvT46NBMB1CxE/o0cNRFr5FLT5I
 
-On Thu, Nov 28, 2024 at 12:26:05AM +0000, Shinichiro Kawasaki wrote:
-> On Nov 27, 2024 / 10:55, Hans de Goede wrote:
-> > On 27-Nov-24 7:00 AM, Shin'ichiro Kawasaki wrote:
+This patch series contains various improvements to the acer-wmi
+driver based on user reports:
 
-[...]
+- adds support for the Acer PH14-51
+- improves hwmon support
+- ignores function 8 events
 
-> > > +	if (p2sb_hidden_by_bios)
-> > > +		ret = p2sb_scan_and_cache(bus, devfn_p2sb);
-> > 
-> > ret will be returned uninitialized now when p2sb_hidden_by_bios is false,
-> > so this patch also needs to initialize ret to 0 when declaring it.
-> 
-> Ah, right. Will fix it in v4. I compile tested with KCFLAGS=-Wall and expected
-> it would catch such mistakes, but it didn't. I found that -Wmaybe-uninitialized
-> does the check. Will use this check for my future patches.
+The changes are compile-tested only, so i would like to have them
+tested on a real machine.
 
-Just use what kernel Kbuild provides already to you with carefully selected
-warnings, i.e.
+Changes since v1:
+- fix spelling issue in patch 2
+- rework patch 3 and 4
+- add Reviewed-by tag to patch 5
 
-	`make W=1 ...`
+Armin Wolf (5):
+  platform/x86: acer-wmi: Add support for Acer PH14-51
+  platform/x86: acer-wmi: Rename ACER_CAP_FAN_SPEED_READ
+  platform/x86: acer-wmi: Improve error handling when reading gaming
+    system information
+  platform/x86: acer-wmi: Implement proper hwmon support
+  platform/x86: acer-wmi: Ignore AC events
 
-without any need to hack KCFLAGS or anything else.
+ drivers/platform/x86/acer-wmi.c | 166 ++++++++++++++++++++++++--------
+ 1 file changed, 124 insertions(+), 42 deletions(-)
 
-FYI, the above mentioned warning is included in level 1 of Linux kernel Kbuild
-W facility. But if you want much more, there are level 2 and IIRC 3, but I'm
-not sure.
-
--- 
-With Best Regards,
-Andy Shevchenko
-
+=2D-
+2.39.5
 
