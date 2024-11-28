@@ -1,185 +1,84 @@
-Received: from esa3.hgst.iphmx.com (esa3.hgst.iphmx.com [216.71.153.141])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from server.atrad.com.au (server.atrad.com.au [150.101.241.2])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C47938F64
-	for <platform-driver-x86@vger.kernel.org>; Thu, 28 Nov 2024 00:28:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.71.153.141
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A04412E406;
+	Thu, 28 Nov 2024 02:52:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.101.241.2
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1732753724; cv=none; b=O1RwKOaZXdnbJX7rw9sHrjd9CNG5JtBpQjRIxscmsrw8p9rgHTPGwqPR6utzvj7afRK6nEjvVMQt00Zpl6hXI4sm1ic+vnL0ORrQskAFMbgiEn3X/kXxpcyJHLSsACP8+1OQHSlIRKAYEQeFM18CqSzDPHu4lCvqMEegQjXtUD4=
+	t=1732762363; cv=none; b=dmHrzL5q8QZLLyfV0PoMVrTpZi11upeQKOB55SjhMZqTyPg69vqI2VJ5BYbpyEwvym0MzBEEMk8ASHR/if3yru8ASrCszswLMja0KJOWoGf3WzzBf8Ou82jdUGh9Pqp5XJyq5RlZnZy2n5+aIMxcVEI2GtRx0OWQwgaDsH5z8U8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1732753724; c=relaxed/simple;
-	bh=VNtbFFkcpnDe7mxxpCDHubJfS44qlBtPRva34M+zs20=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=qEDcvgJLawHdFtcV6zO1wDJpMQSYz83LzMU0eHGkDBI3g8dEeaVmGfiHU9V/RFbq2ft+XKVvqcPQDE3ZJICgBQXlbMWRh6G1BLUyNm5k/sy5FoMy9M2OjIXgur2D9adsnuHHNOI3NnKYKjvyVw6YIKU4aekfcwasKCQkgmcUls4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wdc.com; spf=pass smtp.mailfrom=wdc.com; dkim=pass (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b=cQQErOjP; arc=none smtp.client-ip=216.71.153.141
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wdc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wdc.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="cQQErOjP"
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
-  t=1732753723; x=1764289723;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=VNtbFFkcpnDe7mxxpCDHubJfS44qlBtPRva34M+zs20=;
-  b=cQQErOjPnMhA7oCQ1UfilLHXWq7DyBE0eZRxLT4sJTlmDcCtRWzMurYJ
-   x2FjPsGbl0ye8BV6IulPVrWlVWhteEOFrfVSpEPqdyIdRpEHJg76UW0LM
-   S2kr8xhixHxZZYsQZj263cjQKE/9VHoJm2WFwmVA/W49BIwQzgJmGIpT2
-   pTiYDevaLnfAjvm//uOh3hUdEuP2aTjIftUcbXOimH6QyIgSw0oJ9AHPr
-   pramdfLMEC/RCEfLe2pjujtaWLZddIRZucyo9vki/tX3+S2J9HARUxt2x
-   r+4kBDFCuwl3skl5NGupD9lzT1TYjnzCNmAuGXbHVbX5iiSddYTd1smU6
-   g==;
-X-CSE-ConnectionGUID: MjMKdDeaQ9Wn1DHy9s/vGQ==
-X-CSE-MsgGUID: 1eBkyGX8RQiwc5OpaQaeZg==
-X-IronPort-AV: E=Sophos;i="6.12,190,1728921600"; 
-   d="scan'208";a="32605721"
-Received: from uls-op-cesaip02.wdc.com (HELO uls-op-cesaep02.wdc.com) ([199.255.45.15])
-  by ob1.hgst.iphmx.com with ESMTP; 28 Nov 2024 08:28:43 +0800
-IronPort-SDR: 6747aa9e_BGNRx+Q2zmn49/AekFnlOBorf3gn8NXHep0vz69TSaKhgXO
- iIFYcryWsN8rLuEj3n6bl9osx/x7FkZKInViJ/A==
-Received: from uls-op-cesaip01.wdc.com ([10.248.3.36])
-  by uls-op-cesaep02.wdc.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 27 Nov 2024 15:26:22 -0800
-WDCIronportException: Internal
-Received: from unknown (HELO shindev.ssa.fujisawa.hgst.com) ([10.149.66.30])
-  by uls-op-cesaip01.wdc.com with ESMTP; 27 Nov 2024 16:28:42 -0800
-From: Shin'ichiro Kawasaki <shinichiro.kawasaki@wdc.com>
-To: platform-driver-x86@vger.kernel.org,
-	Hans de Goede <hdegoede@redhat.com>,
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: ilpo.jarvinen@linux.intel.com,
-	danielwa@cisco.com,
-	Shin'ichiro Kawasaki <shinichiro.kawasaki@wdc.com>
-Subject: [PATCH v4 4/4] p2sb: Do not scan and remove the P2SB device when it is unhidden
-Date: Thu, 28 Nov 2024 09:28:36 +0900
-Message-ID: <20241128002836.373745-5-shinichiro.kawasaki@wdc.com>
-X-Mailer: git-send-email 2.47.0
-In-Reply-To: <20241128002836.373745-1-shinichiro.kawasaki@wdc.com>
-References: <20241128002836.373745-1-shinichiro.kawasaki@wdc.com>
+	s=arc-20240116; t=1732762363; c=relaxed/simple;
+	bh=SCA/ejFWinklGoM5zpkaUb12rYzzPHgjMWU0Kdg36pY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=jjmpmG5UurV4sTB2ZGGfEVcaDi0wWwRad0fSnl1TfK/UNygz93FuTGoeNsmSHogPm+0BrfDMNZkVyZQqywzIAN5SLtwzclMhYDhtvm2mv+Wz3Q16TPCsHafsQXa6qJGmg+QPRpIT6KKNvZ7V8dTW+AVhDMoZ8GdRx1rAy4A3xOs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=just42.net; spf=pass smtp.mailfrom=just42.net; arc=none smtp.client-ip=150.101.241.2
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=just42.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=just42.net
+Received: from marvin.atrad.com.au (marvin.atrad.com.au [192.168.0.2])
+	by server.atrad.com.au (8.18.1/8.18.1) with ESMTPS id 4AS2dEBm011120
+	(version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
+	Thu, 28 Nov 2024 13:09:16 +1030
+Date: Thu, 28 Nov 2024 13:09:14 +1030
+From: Jonathan Woithe <jwoithe@just42.net>
+To: Abdul Rahim <abdul.rahim@myyahoo.com>
+Cc: Hans de Goede <hdegoede@redhat.com>,
+        Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] fujitsu-laptop: replace strcpy -> strscpy
+Message-ID: <Z0fX0hwv51LY2AZV@marvin.atrad.com.au>
+References: <20241127203710.36425-1-abdul.rahim.ref@myyahoo.com>
+ <20241127203710.36425-1-abdul.rahim@myyahoo.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20241127203710.36425-1-abdul.rahim@myyahoo.com>
+X-MIMEDefang-action: accept
+X-Scanned-By: MIMEDefang 2.86 on 192.168.0.1
 
-When drivers access P2SB device resources, it calls p2sb_bar(). Before
-the commit 5913320eb0b3 ("platform/x86: p2sb: Allow p2sb_bar() calls
-during PCI device probe"), p2sb_bar() obtained the resources and then
-called pci_stop_and_remove_bus_device() for clean up. Then the P2SB
-device disappeared. The commit 5913320eb0b3 introduced the P2SB device
-resource cache feature in the boot process. During the resource cache,
-pci_stop_and_remove_bus_device() is called for the P2SB device, then the
-P2SB device disappears regardless of whether p2sb_bar() is called or
-not. Such P2SB device disappearance caused a confusion [1]. To avoid the
-confusion, avoid the pci_stop_and_remove_bus_device() call when the BIOS
-does not hide the P2SB device.
+On Thu, Nov 28, 2024 at 02:07:07AM +0530, Abdul Rahim wrote:
+> strcpy() performs no bounds checking on the destination buffer. This
+> could result in linear overflows beyond the end of the buffer, leading
+> to all kinds of misbehaviors.[1]
+> 
+> [1]: https://www.kernel.org/doc/html/latest/process/deprecated.html#strcpy
+> 
+> Signed-off-by: Abdul Rahim <abdul.rahim@myyahoo.com>
+> ---
+>  drivers/platform/x86/fujitsu-laptop.c | 8 ++++----
+>  1 file changed, 4 insertions(+), 4 deletions(-)
+> 
+> diff --git a/drivers/platform/x86/fujitsu-laptop.c b/drivers/platform/x86/fujitsu-laptop.c
+> index ae992ac1ab4a..a0eae24ca9e6 100644
+> --- a/drivers/platform/x86/fujitsu-laptop.c
+> +++ b/drivers/platform/x86/fujitsu-laptop.c
+> @@ -505,8 +505,8 @@ static int acpi_fujitsu_bl_add(struct acpi_device *device)
+>  		return -ENOMEM;
+>  
+>  	fujitsu_bl = priv;
+> -	strcpy(acpi_device_name(device), ACPI_FUJITSU_BL_DEVICE_NAME);
+> -	strcpy(acpi_device_class(device), ACPI_FUJITSU_CLASS);
+> +	strscpy(acpi_device_name(device), ACPI_FUJITSU_BL_DEVICE_NAME);
+> +	strscpy(acpi_device_class(device), ACPI_FUJITSU_CLASS);
+>  	device->driver_data = priv;
+>  
+>  	pr_info("ACPI: %s [%s]\n",
+> @@ -891,8 +891,8 @@ static int acpi_fujitsu_laptop_add(struct acpi_device *device)
+>  	WARN_ONCE(fext, "More than one FUJ02E3 ACPI device was found.  Driver may not work as intended.");
+>  	fext = device;
+>  
+> -	strcpy(acpi_device_name(device), ACPI_FUJITSU_LAPTOP_DEVICE_NAME);
+> -	strcpy(acpi_device_class(device), ACPI_FUJITSU_CLASS);
+> +	strscpy(acpi_device_name(device), ACPI_FUJITSU_LAPTOP_DEVICE_NAME);
+> +	strscpy(acpi_device_class(device), ACPI_FUJITSU_CLASS);
+>  	device->driver_data = priv;
+>  
+>  	/* kfifo */
 
-For that purpose, cache the P2SB device resources only if the BIOS hides
-the P2SB device. Call p2sb_scan_and_cache() only if p2sb_hidden_by_bios
-is true. This allows removing two branches from p2sb_scan_and_cache().
-When p2sb_bar() is called, get the resources from the cache if the P2SB
-device is hidden. Otherwise, read the resources from the unhidden P2SB
-device.
+This looks good to me and is a useful improvement.  Thanks!
 
-Reported-by: "Daniel Walker (danielwa)" <danielwa@cisco.com>
-Closes: https://lore.kernel.org/lkml/ZzTI+biIUTvFT6NC@goliath/ [1]
-Fixes: 5913320eb0b3 ("platform/x86: p2sb: Allow p2sb_bar() calls during PCI device probe")
-Signed-off-by: Shin'ichiro Kawasaki <shinichiro.kawasaki@wdc.com>
-Reviewed-by: Hans de Goede <hdegoede@redhat.com>
----
- drivers/platform/x86/p2sb.c | 42 +++++++++++++++++++++++++++++--------
- 1 file changed, 33 insertions(+), 9 deletions(-)
-
-diff --git a/drivers/platform/x86/p2sb.c b/drivers/platform/x86/p2sb.c
-index 0bc6b21c4c20..c56650b9ff96 100644
---- a/drivers/platform/x86/p2sb.c
-+++ b/drivers/platform/x86/p2sb.c
-@@ -100,10 +100,8 @@ static int p2sb_scan_and_cache(struct pci_bus *bus, unsigned int devfn)
- 	/*
- 	 * The BIOS prevents the P2SB device from being enumerated by the PCI
- 	 * subsystem, so we need to unhide and hide it back to lookup the BAR.
--	 * Unhide the P2SB device here, if needed.
- 	 */
--	if (p2sb_hidden_by_bios)
--		pci_bus_write_config_dword(bus, devfn, P2SBC, 0);
-+	pci_bus_write_config_dword(bus, devfn, P2SBC, 0);
- 
- 	/* Scan the P2SB device and cache its BAR0 */
- 	p2sb_scan_and_cache_devfn(bus, devfn);
-@@ -112,9 +110,7 @@ static int p2sb_scan_and_cache(struct pci_bus *bus, unsigned int devfn)
- 	if (devfn == P2SB_DEVFN_GOLDMONT)
- 		p2sb_scan_and_cache_devfn(bus, SPI_DEVFN_GOLDMONT);
- 
--	/* Hide the P2SB device, if it was hidden */
--	if (p2sb_hidden_by_bios)
--		pci_bus_write_config_dword(bus, devfn, P2SBC, P2SBC_HIDE);
-+	pci_bus_write_config_dword(bus, devfn, P2SBC, P2SBC_HIDE);
- 
- 	if (!p2sb_valid_resource(&p2sb_resources[PCI_FUNC(devfn)].res))
- 		return -ENOENT;
-@@ -141,7 +137,7 @@ static int p2sb_cache_resources(void)
- 	u32 value = P2SBC_HIDE;
- 	struct pci_bus *bus;
- 	u16 class;
--	int ret;
-+	int ret = 0;
- 
- 	/* Get devfn for P2SB device itself */
- 	p2sb_get_devfn(&devfn_p2sb);
-@@ -167,7 +163,12 @@ static int p2sb_cache_resources(void)
- 	pci_bus_read_config_dword(bus, devfn_p2sb, P2SBC, &value);
- 	p2sb_hidden_by_bios = value & P2SBC_HIDE;
- 
--	ret = p2sb_scan_and_cache(bus, devfn_p2sb);
-+	/*
-+	 * If the BIOS does not hide the P2SB device then its resources
-+	 * are accesilble. Cache them only if the P2SB device is hidden.
-+	 */
-+	if (p2sb_hidden_by_bios)
-+		ret = p2sb_scan_and_cache(bus, devfn_p2sb);
- 
- 	pci_unlock_rescan_remove();
- 
-@@ -190,6 +191,26 @@ static int p2sb_read_from_cache(struct pci_bus *bus, unsigned int devfn,
- 	return 0;
- }
- 
-+static int p2sb_read_from_dev(struct pci_bus *bus, unsigned int devfn,
-+			      struct resource *mem)
-+{
-+	struct pci_dev *pdev;
-+	int ret = 0;
-+
-+	pdev = pci_get_slot(bus, devfn);
-+	if (!pdev)
-+		return -ENODEV;
-+
-+	if (p2sb_valid_resource(pci_resource_n(pdev, 0)))
-+		p2sb_read_bar0(pdev, mem);
-+	else
-+		ret = -ENOENT;
-+
-+	pci_dev_put(pdev);
-+
-+	return ret;
-+}
-+
- /**
-  * p2sb_bar - Get Primary to Sideband (P2SB) bridge device BAR
-  * @bus: PCI bus to communicate with
-@@ -213,7 +234,10 @@ int p2sb_bar(struct pci_bus *bus, unsigned int devfn, struct resource *mem)
- 	if (!devfn)
- 		p2sb_get_devfn(&devfn);
- 
--	return p2sb_read_from_cache(bus, devfn, mem);
-+	if (p2sb_hidden_by_bios)
-+		return p2sb_read_from_cache(bus, devfn, mem);
-+
-+	return p2sb_read_from_dev(bus, devfn, mem);
- }
- EXPORT_SYMBOL_GPL(p2sb_bar);
- 
--- 
-2.47.0
-
+Acked-by: Jonathan Woithe <jwoithe@just42.net>
