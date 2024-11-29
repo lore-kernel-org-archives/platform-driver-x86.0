@@ -1,151 +1,110 @@
 Received: from mout.gmx.net (mout.gmx.net [212.227.15.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7EEDF1A0739;
-	Fri, 29 Nov 2024 19:30:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9516719ADA4;
+	Fri, 29 Nov 2024 19:34:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1732908643; cv=none; b=nAnqhTs/Hq6L1H8DdWVPV2BVkJeXHzPu6Zy7dH/Mog4gyRMkHXyuBkyeNftFUB+1Ad8XtGDna6WDtIQ6gcXV643whkyy+19rMJR8mYJo/PYuO/UhwrsrAVEmPI5AZe58i1yxkexsGqig9ubvguOOKNxtDwIDgC5pXwrx0saHUDo=
+	t=1732908855; cv=none; b=Ik/nTCFAinWoscfcG+PK/r8DTppiDijDkr8pg5Xk3RtAoW8lnobMqY5p1IH0ZD5wmb1BKHobExEiTiDXX/f1l02JX0jJCE4VrqeTG6mgKdmVUGuV8FfgY6cecPZdVxEOjTGRIeu5VasH1NzdMjv0/vXKv6D/U/sHM1avJd5348s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1732908643; c=relaxed/simple;
-	bh=KnDpmj4tc4sajjklL6W0ssi8nJTWD11iFvZLJz/VP3g=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=btfg98R8AN7iVRmaMszBV2NW3kah4M759yDrvryO9Tb0NO70YpYXqDV3fEVGFegBrN6MzJbhb0dXyYypjaRyFOC5i3SLX/a+7+LQ0bkgwDL8UjPW/eKDjAQAPeoEacYvAQwuQ3IR3cLOaRoRYzoEENj6HVtRCskgN8CDrW6r8ho=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b=DzrcT8eJ; arc=none smtp.client-ip=212.227.15.19
+	s=arc-20240116; t=1732908855; c=relaxed/simple;
+	bh=+NsfS12z6+nfWgmBv2svKQe8/TOaOgarqjh82miSqDs=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=qTkXUldLmDz+JL7YEC9L2+/K+55FkUuOdZGKFyV5kPzvvboQji8WhxzohM3tVnoDnU60ebcIy4t8EcusEUIZnrDPa55m08lF9F4g8Q561bk31jCrYC2fOtCcPwGI48rlmbW7Z5P4g8HJ+siGmCoyJ/qgjUdoCQ7EvLoksYXVtSI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b=bh4jOloq; arc=none smtp.client-ip=212.227.15.19
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b="DzrcT8eJ"
+	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b="bh4jOloq"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.de;
-	s=s31663417; t=1732908629; x=1733513429; i=w_armin@gmx.de;
-	bh=gAYeqXnKwf8NzwD+wLJwofOXoiQnyNhiklqW3PtfLNM=;
-	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:To:Cc:
-	 References:From:In-Reply-To:Content-Type:
-	 Content-Transfer-Encoding:cc:content-transfer-encoding:
-	 content-type:date:from:message-id:mime-version:reply-to:subject:
-	 to;
-	b=DzrcT8eJ388ZDxm9VMGdOY4dq34UFbvo2SA+d/gxua02HpvYssaG1kYHhUUep6Wl
-	 s3qK5K1U4m1NoNy4Xi1PJPX3FePYmyGX+2CjLCjMgQMuVcPD5AJ9JaijJdilJqPoe
-	 xAZkAEwTZ2YJ8nfYzvpOme/xG1TXM3ucFdy8NP87H6wETW4TkhmqPQ6P3vFmsXQha
-	 EfrIbsCvmWkfa0ObKJsnpFWjAL6jxc6+ejYrYYhZYtzK4waENDTRzEro+y5qKBurC
-	 QKzn5hUDqRYqRhT1NEbagoUaH3wgcJgbf5qZXLphSH3W4KTTPcnRdiUhITw1xAdZV
-	 GsiB2bFtnD6tszijTA==
+	s=s31663417; t=1732908844; x=1733513644; i=w_armin@gmx.de;
+	bh=azNbtrU1reEQ/0X/FcYSXs5uIBdbUWPAC66MU+MvUiM=;
+	h=X-UI-Sender-Class:From:To:Cc:Subject:Date:Message-Id:
+	 MIME-Version:Content-Type:Content-Transfer-Encoding:cc:
+	 content-transfer-encoding:content-type:date:from:message-id:
+	 mime-version:reply-to:subject:to;
+	b=bh4jOloqWYL9dSXt90A+hoVTBGtMJLCEW/6cPpdDmVSqIhAo5rENWIrfyeil7e/t
+	 QMaffhch9NCAA2TXcn2whtVxtGUH7SMZh5Ww1eQ382wPiJsMhbdPJZV5eg+M76KEm
+	 A9bZF+OVjUI/AB/uvCEaV5pXoIrkpg0WWULOw4bs/ly3HcRrjiQvJUf33JP0M5tkO
+	 4wIY6Litb8Ixvagamwjn9okG2YjVTWYkG9Ny8RlZ+OTXXvemJLkKC1UryCV+qwHnn
+	 zU1HMDntTspakOxycev+2TMmmQzO7IVsWXeKLlf4sGfu59rBeiv01NFXPTyqBZjZn
+	 pJlg0My0hwD8fHNMaA==
 X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
-Received: from [192.168.0.14] ([141.30.226.119]) by mail.gmx.net (mrgmx005
- [212.227.17.190]) with ESMTPSA (Nemesis) id 1N4zAs-1tiqGH0jkC-00wwv2; Fri, 29
- Nov 2024 20:30:29 +0100
-Message-ID: <d6ab1593-45a0-4688-b281-4f7acfa1d515@gmx.de>
-Date: Fri, 29 Nov 2024 20:30:27 +0100
+Received: from mx-inspiron.fritz.box ([141.30.226.119]) by mail.gmx.net
+ (mrgmx005 [212.227.17.190]) with ESMTPSA (Nemesis) id
+ 1MmlXA-1tzoxG0ZPC-00ejpl; Fri, 29 Nov 2024 20:34:04 +0100
+From: Armin Wolf <W_Armin@gmx.de>
+To: jlee@suse.com,
+	farhan.anwar8@gmail.com,
+	rayanmargham4@gmail.com
+Cc: hdegoede@redhat.com,
+	ilpo.jarvinen@linux.intel.com,
+	platform-driver-x86@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v3 0/5] platform/x86: acer-wmi: Various improvements
+Date: Fri, 29 Nov 2024 20:33:54 +0100
+Message-Id: <20241129193359.8392-1-W_Armin@gmx.de>
+X-Mailer: git-send-email 2.39.5
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC PATCH] platform/x86: asus-nb-wmi: Ignore unknown event 0xCF
-To: Hans de Goede <hdegoede@redhat.com>, pespin@espeweb.net,
- corentin.chary@gmail.com, luke@ljones.dev
-Cc: ilpo.jarvinen@linux.intel.com, platform-driver-x86@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <20241123224700.18530-1-W_Armin@gmx.de>
- <d48bee72-7cd6-41cd-8d1d-282e8e68269d@redhat.com>
-Content-Language: en-US
-From: Armin Wolf <W_Armin@gmx.de>
-In-Reply-To: <d48bee72-7cd6-41cd-8d1d-282e8e68269d@redhat.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Provags-ID: V03:K1:i5HGvQlmoCEDAg4f3jXWlz+oLXfSJ9gpKJmmlY1C4P+XKipKRw4
- dHqfK8iUELUx8pPW/UFHElEujSTc2clB0RCejof36adEDEej/mWZq4iFGlnYYzqCctSLyS0
- lKSbnUwPsbur8wp684UdL0/VEsOABZfGXnxxcK30t/zA98OpIinf4RqTKhn+qhLcrA15aE2
- IN3d12SVzbgRjl0Dyqmjg==
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:KWhAc2gdZu1E/LGG+pUyK1OE0KLeBkWdP+jGxTcZ9Us8taDIA72
+ bhyZ9XNocqVnmgDsS/GBVkxrff/ajjM0g+vhz7/ZI0bAFv0XM64gHe8uxVuCB4fB/1qqyqT
+ N2toUmq0xBUhvUEQK8S8kx5gzCN4fEHHOMLEdxmLVbx99k2TVxdlZZrq+/JlfPASOGkqwZV
+ zu73G7p3MmEJORxcqhs2g==
 X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:6a2VvutNHaY=;oSmLsVtrzBE2O6IqDlezTS+zgN4
- fTApaL4YaKlQWE0sTxBvoVpBdJDHF7VgEaOCulE/qiOuKxZAv01hfRxzXxD76dAouXrGe2yHp
- SQDzvFHYI3fUR/8hgEuxkU4cDdLlWzJDE/r+eN8SrnvrtRS8llDIeopRHu2ZykQ+NYwluB0d1
- yZrqTW8o2jyMRMP78rElcTjIwQtMIoWk9qJuaHQyFu0oTPRDfpJS7Fb4jj5pc+OuSziEOp92g
- K6vgO+oBBTWgXb6SZyVdnFK4nlV4wCWWUmhbHroy/3jVRb9ur4vD22eFjPGXagp23HinUzlRZ
- k8DTq71jMIk88apDU9/jgWcdvLXySkJlPTnmRgw2wzVHTZjZk2GpATdAGwCWHGPgBbW+QVJMQ
- AohlJjsrFpQD2FGxgKCiLQKTNQo0/crmHcFZJzljhugejL6LT23k2OGb90WnMA/edUfeQXuiG
- MkyOq5pH3WU1Cqxbj+379kwffim5IrwbPuvt9Uq8e+SuJj9X2w4udNDi73KqC4ilGcoAZz7OD
- yIfQOoOvCSup/uTfZrKCFpjrOk0qd7u9BgTvmld/ZHtTYeowX1Y5maeRql7nj5QlrQkngPneM
- ZqtowVPewV5csRmYtuztkG1iSJqxjsJiJJVvx98/IrL+Zev6LP1krUc+vI4PSIrrCDqTjaHK9
- csJPeA5xXzKtLGqBBHv+aO8QxNJRDpF6TSSu3cHCM/EYRiDT8rEVUxgqz2T9Jxm9JaiIgrsWK
- nsroOQjXo6xAaSEtsE9tlQ1isbSqddz++rzKcX+nepViFHoBTTew+FKA5qhGFBejBcmXIrdXV
- OtCWfeFoxjyZQbGDstUA2UpBr+8uOtQ6/O4dCd8AIVKS76upaDDp+xMX8+UD+83BRpLvy/fBB
- zmbvXWx2ucA4H+LTu/Exd9kISOt8HOgIMq8G2ERCDxoiImFMchAV7fOb50a+AYjP85Ee1R3/E
- cY9nt1S4DUimMpTeNLp6f6xcdPziaHJVi5YprUzoE5U33AXWwH5DosNfHQrTfckXfivE2DlMw
- h7BrbnYEx3+lqWeVIqsgRgXaAXHaBBV/1dHsXUAj5AA2/v/HtdBHJeDGo40oSWQf8VRZ21PDW
- UDIePhGKsMoyvSUn4Yboa3aWe06/mf
+UI-OutboundReport: notjunk:1;M01:P0:RRGsize+mok=;95V3EA2PmJjQNHnMZVkPaqEzFwF
+ 9+d/fiZZ1W+Rf/s6UnkXEfnEgdI/kKg+Khub3L05fWuZr4B1aIDV7/Ghp4lG/jvzcuk38wGla
+ Z+Czmywb2dBDNW/RpbfJHorg64UMrc9QRQBw36qr1pUMnxcLamlHiLWzj9bsOf9zVHLuW7pmw
+ EhWbnBs1iuAG7YMALU1gDnPHSdDuf2JQoD7jv/+BdGKV+a3quWQzJMEDbXocAp+Vw3j272kLn
+ np6r9XWC6IJJIPcoJCPHF/au+30mJ2DurNhc11GSftSc0tgjiBsHUNedPZJnIrrrr5jFrtwXi
+ WXDP4lexwIBpdd/SWRG7Kczx30NOTOrJxTLSja8jjfYd3dzVi3hBpdqwzbAmQOeMcZ+cH23PA
+ wTx4CNuMhHnM1RNEuSEqNzqD7bKg06yqh/sE1L2kSjwV425AUrIEmNUEROOsFX3kniANX0x5P
+ SrMp8aNhXUYIU6/p1llkFbYr0dGtbY8Djz6BF8BTjYxk3gDIRuVR7hdGrNQvJOCLFIUsRpk82
+ 85P9Eh+dogh38c+QhjFxb7hfsVk/EhuMuO0C0/qBtxAUfHJkuMaMz01DaZpH5r9uM62QwaYW/
+ 6Brvy5F39At8QsAaUuMuhSgBb/oN+qdxmuxscvonf1hnNpanIpaRVSPevlGHnK/Z79G5PGOHU
+ 9tQqIBqRE1hJwMCR0syr8yxGwDLDsowggMJ3IG2dQGzFJpsqPfFwT9+nVybY41CuY1mwHpsNp
+ BfcFtGiLHDVMfsKwdowo93E+smPq1sfVpYST5bvq7sNKYA9NakFhvJwOUFxVVZwjKQ9epLFex
+ TAQrs38IV/7Uo8NqtaXvsYL/iLdQ9SrUOea1Um1IPctXQnFa46gvU0Dc/IYa0WgDXBRoKDQ8z
+ npDrNzSL2D1xCmp9/Sjy1gOFNMxZqFlRnG7zT76PULNY4NOtAbC+wjJKdnss0QM/qAIVvJmNN
+ JgsLOSEVcQQxWyo8BEcQqIAqWcaVceG07QWRZdPspKOftEhKwq9RMqnHL1QFLbPvSx9Lw/zjw
+ rs6z6oMx1EdsBidfksUYaDIVGLYMrFU+zdBdmR2t13Pmz0n9GyJjonQ+16iXz7gyOgj55ct7D
+ s3EYSKCFgFcUHqMrneMUWXT9nwFkXX
 
-Am 25.11.24 um 10:39 schrieb Hans de Goede:
+This patch series contains various improvements to the acer-wmi
+driver based on user reports:
 
-> Hi,
->
-> On 23-Nov-24 11:47 PM, Armin Wolf wrote:
->> On the Asus X541UAK an unknown event 0xCF is emited when the charger
->> is plugged in. This is caused by the following AML code:
->>
->>      If (ACPS ())
->>      {
->>          ACPF = One
->>          Local0 = 0x58
->>          If (ATKP)
->>          {
->>              ^^^^ATKD.IANE (0xCF)
->>          }
->>      }
->>      Else
->>      {
->>          ACPF = Zero
->>          Local0 = 0x57
->>      }
->>
->>      Notify (AC0, 0x80) // Status Change
->>      If (ATKP)
->>      {
->>          ^^^^ATKD.IANE (Local0)
->>      }
->>
->>      Sleep (0x64)
->>      PNOT ()
->>      Sleep (0x0A)
->>      NBAT (0x80)
->>
->> Ignore the 0xCF event to silence the unknown event warning.
->>
->> Reported-by: Pau Espin Pedrol <pespin@espeweb.net>
->> Closes: https://lore.kernel.org/platform-driver-x86/54d4860b-ec9c-4992-acf6-db3f90388293@espeweb.net
->> Signed-off-by: Armin Wolf <W_Armin@gmx.de>
-> Thanks, patch looks good to me:
->
-> Reviewed-by: Hans de Goede <hdegoede@redhat.com>
->
-> Regards,
->
-> Hans
+- adds support for the Acer PH14-51
+- improves hwmon support
+- ignores function 8 events
 
-Any updates on this?
+The changes are compile-tested only, so i would like to have them
+tested on a real machine.
 
-Thanks,
-Armin Wolf
+Changes since v2:
+- fix compilation error after patch 3
+- replace GENMASK() with GENMASK_ULL() and adjust bit numbers
 
->> ---
->>   drivers/platform/x86/asus-nb-wmi.c | 1 +
->>   1 file changed, 1 insertion(+)
->>
->> diff --git a/drivers/platform/x86/asus-nb-wmi.c b/drivers/platform/x86/asus-nb-wmi.c
->> index ef04d396f61c..a5933980ade3 100644
->> --- a/drivers/platform/x86/asus-nb-wmi.c
->> +++ b/drivers/platform/x86/asus-nb-wmi.c
->> @@ -623,6 +623,7 @@ static const struct key_entry asus_nb_wmi_keymap[] = {
->>   	{ KE_KEY, 0xC4, { KEY_KBDILLUMUP } },
->>   	{ KE_KEY, 0xC5, { KEY_KBDILLUMDOWN } },
->>   	{ KE_IGNORE, 0xC6, },  /* Ambient Light Sensor notification */
->> +	{ KE_IGNORE, 0xCF, },	/* AC mode */
->>   	{ KE_KEY, 0xFA, { KEY_PROG2 } },           /* Lid flip action */
->>   	{ KE_KEY, 0xBD, { KEY_PROG2 } },           /* Lid flip action on ROG xflow laptops */
->>   	{ KE_END, 0},
->> --
->> 2.39.5
->>
+Changes since v1:
+- fix spelling issue in patch 2
+- rework patch 3 and 4
+- add Reviewed-by tag to patch 5
+
+Armin Wolf (5):
+  platform/x86: acer-wmi: Add support for Acer PH14-51
+  platform/x86: acer-wmi: Rename ACER_CAP_FAN_SPEED_READ
+  platform/x86: acer-wmi: Improve error handling when reading gaming
+    system information
+  platform/x86: acer-wmi: Implement proper hwmon support
+  platform/x86: acer-wmi: Ignore AC events
+
+ drivers/platform/x86/acer-wmi.c | 167 ++++++++++++++++++++++++--------
+ 1 file changed, 125 insertions(+), 42 deletions(-)
+
+=2D-
+2.39.5
+
