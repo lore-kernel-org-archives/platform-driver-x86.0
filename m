@@ -1,378 +1,212 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
+Received: from esa3.hgst.iphmx.com (esa3.hgst.iphmx.com [216.71.153.141])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A7381C460D;
-	Thu, 28 Nov 2024 22:50:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.18
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1732834257; cv=none; b=s0MY/AJ+oARMM7JEgcLZrjfG3kSHrspVN62XkaV7cwJNSYjVXXcNZUAYqc4AAClhlyc5UvKA2fc1x9h6aQDFtTmO1XMWdPoTQO3wAZ01DDwBlTZmp9OuMACR8WkhEUbXsaFhf+S9DFEMQNCQfjtpJiJJeq0LbEMiyOf19j9S1rY=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1732834257; c=relaxed/simple;
-	bh=JOS69uGNLVpH/BajOYW6TKf29XQWgQbq6B8dgGzoYDM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=U4AoqNNrCQSEqTWXgYVpOlL1Ybp1+ZlKTC+Rx5cSWScM/uN5ioVHoT8WD6qMIX3pPd1lUsoBDwm0BgTkPEFPdGmX85d9DYMSPPZHWJFO3FBybh6I+cr5e4+M9Ni8oRKvQJ76DFYm9uoPRITR0krwy0awTcGAekohoxL/SpVIWmM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=aWr23lqS; arc=none smtp.client-ip=192.198.163.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C9C5D193
+	for <platform-driver-x86@vger.kernel.org>; Fri, 29 Nov 2024 00:11:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=216.71.153.141
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1732839094; cv=fail; b=hdwmuXMq9+EoUVgpYYplilgN91hgvyZv91omzqad3YTistrbyb8OHyngn1/IPmIBkQ0C2+MAmiRG/wU51rOArCFXw/Zx9wszWsxYEC3KQ0DPM36IZQyB8xR9fBVN2fucphXvxhfO8ugh4MiMFOmhQiMN+/rZokC7iAljp58N5IQ=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1732839094; c=relaxed/simple;
+	bh=qa/TGFDnWmAAe+QoF1POGfJlzybTOamDGtZTQKlH/Mg=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=Ts777P8v4iBLeyqxIt8fMCoLzo0nCQ9FghPqPTrKO/nk+X1BcYtjbKthtBTPLzXYpHtVwCC7/YGWz9BGKsza7jJaVbEv7Bj0uk26T7+ERjfE+X/S1+quIXqW9/WwiZ1vj3XwmzYZhJKJdLQSIe4x6QgvDSEKwGKCVCBRGnTDO64=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wdc.com; spf=pass smtp.mailfrom=wdc.com; dkim=pass (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b=fs1iMD+o; dkim=pass (1024-bit key) header.d=sharedspace.onmicrosoft.com header.i=@sharedspace.onmicrosoft.com header.b=BHd6g1oR; arc=fail smtp.client-ip=216.71.153.141
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wdc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wdc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="aWr23lqS"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1732834255; x=1764370255;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=JOS69uGNLVpH/BajOYW6TKf29XQWgQbq6B8dgGzoYDM=;
-  b=aWr23lqS8HMXa//ZdurtyIV0OwOjYE5eL/ZH4tRuEFWqxpLt2AgAZXEm
-   fWKcrLio+Dtz2moJ6kOFr93dLBTitFAwDzushE4OVlKkvf43VxYDLl4y6
-   ifKLdtUT4uS584+jEuqeCYpaN9qK8Ni/r98Ii8JVmYS6brEpTAM8Uotbc
-   9Db23NQ9I5GJtC2xQbedUh8B8Co89FtRPWlYan0U5lPbbZzTkZEGROamx
-   GYdv1J+3z3NFK8cyHurg+Ci2vh0Qm/NDGNkyZY7IrfL3OUDZmkq8SrRQr
-   SJotYlmPXb8jiF1Gs2Wtj+J920OLJqb9kZI2JNpzOUgsKIpb/ZZQnpOOz
-   Q==;
-X-CSE-ConnectionGUID: xJCJbCiJR+yRr5YGP59UjQ==
-X-CSE-MsgGUID: n0R1yBpbQhO/X8pBAUVfSw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11270"; a="32435531"
-X-IronPort-AV: E=Sophos;i="6.12,193,1728975600"; 
-   d="scan'208";a="32435531"
-Received: from fmviesa003.fm.intel.com ([10.60.135.143])
-  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Nov 2024 14:50:48 -0800
-X-CSE-ConnectionGUID: s4aDQT6kRgmK5zYlsPbnww==
-X-CSE-MsgGUID: uw0BfONeTFGw5l84jiVlOA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.12,193,1728975600"; 
-   d="scan'208";a="96420623"
-Received: from lkp-server01.sh.intel.com (HELO 8122d2fc1967) ([10.239.97.150])
-  by fmviesa003.fm.intel.com with ESMTP; 28 Nov 2024 14:50:40 -0800
-Received: from kbuild by 8122d2fc1967 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1tGnLJ-000A7P-1X;
-	Thu, 28 Nov 2024 22:50:37 +0000
-Date: Fri, 29 Nov 2024 06:50:24 +0800
-From: kernel test robot <lkp@intel.com>
-To: Armin Wolf <W_Armin@gmx.de>, jlee@suse.com, farhan.anwar8@gmail.com,
-	rayanmargham4@gmail.com
-Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
-	hdegoede@redhat.com, ilpo.jarvinen@linux.intel.com,
-	platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 4/5] platform/x86: acer-wmi: Implement proper hwmon
- support
-Message-ID: <202411290611.AQz0KQ2z-lkp@intel.com>
-References: <20241128145104.13538-5-W_Armin@gmx.de>
+	dkim=pass (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="fs1iMD+o";
+	dkim=pass (1024-bit key) header.d=sharedspace.onmicrosoft.com header.i=@sharedspace.onmicrosoft.com header.b="BHd6g1oR"
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
+  t=1732839093; x=1764375093;
+  h=from:to:cc:subject:date:message-id:references:
+   in-reply-to:content-id:content-transfer-encoding:
+   mime-version;
+  bh=qa/TGFDnWmAAe+QoF1POGfJlzybTOamDGtZTQKlH/Mg=;
+  b=fs1iMD+oyK5pEb+TmPYoAbmzaCVKHSS6dxB0/DFGJD8LPUnOPyCFgoFB
+   cmZ/UpKh0zXXuUFrIubQzXiyAbGlSXZJaxWWidy2+WO1pgKR1gey/C5Ns
+   gnSrBc8Vi/MlChFdwydSKvxTvYkskvyyxlRjxyXAMTEeQ0yv0MEs0Vb59
+   52Fjv8JRcxdP6W/b7H+2dMs7ht3UvbpF+dd4Oi7m8eQI4Ie8/o9fr8Bx+
+   oNqBMu4zjgnACe2Rn+mi1FVn//OilVb+yYJsaa7xuEZejXiAaEdgUC+O1
+   Lsdkf867bUuVVhmumh3sinapCEAxMj6tyezzc+cm3FH1XBBP1VQPUocTY
+   g==;
+X-CSE-ConnectionGUID: YlsqAggQTJS/3Qo6uR16qw==
+X-CSE-MsgGUID: FE6aYjVDTl6y7jnjLwz0OA==
+X-IronPort-AV: E=Sophos;i="6.12,194,1728921600"; 
+   d="scan'208";a="32680536"
+Received: from mail-dm6nam04lp2041.outbound.protection.outlook.com (HELO NAM04-DM6-obe.outbound.protection.outlook.com) ([104.47.73.41])
+  by ob1.hgst.iphmx.com with ESMTP; 29 Nov 2024 08:11:26 +0800
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=bXz8r7UUv95yQmUguQ+oOfrfQ7aYeGKjvNhSQLEmq+M8CMmchh9tOJzQqMXtf/kuuMyxmWFRmAFc7KC3TpoHUpu1UQiO10K3e5BvItRzXx6mOE46qEOV9uWjEMSUXfeiM/YAsHz9/HnoDK81YFEUVLHXM9hdlxugghQio/boeOJ/mfbsLkvCtn0RRwY5JKSXp0jJvwhbKGPCQUtc8NWKEYAgNF2jm9qiIxkycDXa54+lPBvhCqGuPf6rhP6XWCMZQn2gARThQjHPGooQoWxEiri28FoZPt6aAcxKLNOwmiowRYcnEnRSbMS+OtttcIrUmsmxGfzlxBAs3nUogWB46Q==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=9uNRzBsvOcnGnwR4NEli1Y1aiaIKLrau/aStmrRLh7g=;
+ b=aggcLCcCvKG0LCViF5orQpGmq1xEcGgCkrww1mdWbcRKGr9RirQkJ/fbFbRzBcMXxGMuydUNsoG0bkts6Mr/Flnq/ctzTBBeQCbdtSIGvwM5nOdbTm+/zK2WlqKMswxXTqfPH96ECdV1CeXNupWUie5gMEQAM5Riku31ZCXPnFAy3hNSind1USGjHmlvqdJ/2qIojCdLJo68tWY/RpHyJKzbeqKCjK70szDZnBkquoDzfoT5lXvm+1lACDpO+7htRB9AofuQz8nvncgnoglrugpn7NpHArfL/OPd/PX8GoLdzjvl7D+ZH+QGSWLsMtxehxpXAkn9f1wPpWcJsTNPkw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=wdc.com; dmarc=pass action=none header.from=wdc.com; dkim=pass
+ header.d=wdc.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=sharedspace.onmicrosoft.com; s=selector2-sharedspace-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=9uNRzBsvOcnGnwR4NEli1Y1aiaIKLrau/aStmrRLh7g=;
+ b=BHd6g1oRM/J33TkwTaUFqIH2fgM7KE/TFFJkR3SdfjuBLzFjZoGTcM5K9vbfq9ufyk2sJbgyxz9Kb1TQmEIN5ryMfpmkB21dgRWP+SuNtLzoYIldh56meX59o8dc8FXaCalUQLeprpCX0RqFiatIQVuKxM8QLug4LbQ5sFVWdD0=
+Received: from BN0PR04MB8048.namprd04.prod.outlook.com (2603:10b6:408:15f::17)
+ by LV3PR04MB9324.namprd04.prod.outlook.com (2603:10b6:408:286::6) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8207.14; Fri, 29 Nov
+ 2024 00:11:23 +0000
+Received: from BN0PR04MB8048.namprd04.prod.outlook.com
+ ([fe80::2482:b157:963:ed48]) by BN0PR04MB8048.namprd04.prod.outlook.com
+ ([fe80::2482:b157:963:ed48%6]) with mapi id 15.20.8207.010; Fri, 29 Nov 2024
+ 00:11:23 +0000
+From: Shinichiro Kawasaki <shinichiro.kawasaki@wdc.com>
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+CC: Hans de Goede <hdegoede@redhat.com>, "platform-driver-x86@vger.kernel.org"
+	<platform-driver-x86@vger.kernel.org>, "ilpo.jarvinen@linux.intel.com"
+	<ilpo.jarvinen@linux.intel.com>, "danielwa@cisco.com" <danielwa@cisco.com>
+Subject: Re: [PATCH v3 4/4] p2sb: Do not scan and remove the P2SB device when
+ it is unhidden
+Thread-Topic: [PATCH v3 4/4] p2sb: Do not scan and remove the P2SB device when
+ it is unhidden
+Thread-Index: AQHbQJHDV1FYGQWu20KpOYadO+0wTrLK4+sAgADzKQCAANJzAIAAu8YA
+Date: Fri, 29 Nov 2024 00:11:23 +0000
+Message-ID: <pjqoabmmpiqslwlebl7afab2zxvjzm2qzxbljhixfgha3ohpiq@c52lm2rm2iky>
+References: <20241127060055.357498-1-shinichiro.kawasaki@wdc.com>
+ <20241127060055.357498-5-shinichiro.kawasaki@wdc.com>
+ <9606e49a-0a8a-450c-bece-a834df8ea480@redhat.com>
+ <24wfa4ytdy5brrtflstsnwfspq4eqontuqqwqk4xbeeal67ppi@mcb2amxhhdtd>
+ <Z0hpJu95bzEq9E8f@smile.fi.intel.com>
+In-Reply-To: <Z0hpJu95bzEq9E8f@smile.fi.intel.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=wdc.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: BN0PR04MB8048:EE_|LV3PR04MB9324:EE_
+x-ms-office365-filtering-correlation-id: 4a3cb573-ca40-4fef-f9a1-08dd100a5c0a
+wdcipoutbound: EOP-TRUE
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;ARA:13230040|366016|1800799024|376014|38070700018;
+x-microsoft-antispam-message-info:
+ =?us-ascii?Q?xJA75ZFIzd6Ues9DvtyzJtEYxrEKo9EalBEXqpN70wQN5OVaf4QDHPc6w0F/?=
+ =?us-ascii?Q?onTyF6UiN1PcAJXQQXpttjQNnXOap/ixMv86FzKWf3FkDxgZrEpcc+HLBf8b?=
+ =?us-ascii?Q?kI68l61awWCJM3UCfZAaTzaE+Dx0yUVl05RyMZjO9Jm3a/jp/WmbOzfZ3rNl?=
+ =?us-ascii?Q?jGIY9w4ZilWy5R5QrFL/lsy/Jm6ddcFnJ3QsnI8/txngTq8t4pmtBuhQ1YZ3?=
+ =?us-ascii?Q?/9Db6nbrykx82ZVjaHtpAmAms011NWezbe3dZHhoIGw096QXGbD5oBrGFbxS?=
+ =?us-ascii?Q?nZ9M8RgBXUPV6TJqb9NlSEij2TEKHhE85GtrFmOyrCy3ggowK7eIjt/naWW/?=
+ =?us-ascii?Q?H8/7i1KzA5U7PKDwcINYEd99+THjadEnSUGHTtg8IfSPcCj9xBd2MT3WfqoY?=
+ =?us-ascii?Q?34o9K7gD2Ggb67YIETrkLePfCAeQeli2Hehj81azoyYov74vDujP5qcqxe18?=
+ =?us-ascii?Q?t5rB6kdt2qDtMYj3VIjNrSSSYinwXDkar9PBRBg4MJlSKW13xsKXiEMRHsz/?=
+ =?us-ascii?Q?iBclRboQssSZ55mo2oj+wpUOQhSjqScXWi30r32Lsp3tBSrWkglNbJLIe2eC?=
+ =?us-ascii?Q?2cxQW0qoiho3Pz/0v7yaDsCBT/rc0T/i19W3jQS+2JkKqTYXcnBK8cHMI2Jl?=
+ =?us-ascii?Q?31e+igK16vx7BEhm71MkjPrewq+QJvuYwX88/jyXrbbkOShN4N8kH2fWMjPQ?=
+ =?us-ascii?Q?csGEw070wrYZQ3WYeJ5vdsm++wwDf+DcT+5YW4SiEincvSkRj0Ywa5uavRq2?=
+ =?us-ascii?Q?qSF4J+pM2J2J6Qeh2jpz8LYZVhOwGnlnIplQYRoDz5C7M4V9cAypc94J07uw?=
+ =?us-ascii?Q?lHOD3aiUAafcltPCeKvMmMT5PM4F0DL4U/3tg66c7XmycX9Fy2471EscGXWC?=
+ =?us-ascii?Q?LsvU4v4r8mcU5EVVzlbftwUVbYgvRix49Zob38ghDPRqU2yK7c1YMfqd/d3M?=
+ =?us-ascii?Q?arrfNG/gMaM8o1EwmORIUdIlotqi8XXtXt1M9GlZWmxGz9p6DsmJ8Um3u2li?=
+ =?us-ascii?Q?4qLV+Li8+8cz7cMpILgRttumJYc8Scvtg0xVZtAL0mKgH0nDabDdSjPT4eSh?=
+ =?us-ascii?Q?GIRFKb2DgW/391pc0NlfsiFtzzFUnrTp3mgS63XBioUetDkczMDHcrMCFYwC?=
+ =?us-ascii?Q?t1WwBXlI5bRVgBJz2w97kGBQ0oUImZgESAXbduDgIR2Dz0PBxG5Emn9LWo6J?=
+ =?us-ascii?Q?ngjtC8kBqvgIlMeyGgLOx4zx4g4k6KEdkj7lhlVvAd8MkwfMGIg3OV3OFy27?=
+ =?us-ascii?Q?UjCx0YRvorquDqB9D23OuGvDmPn2dpA/4CnAZF0hS4Ue8BSBGmfOf2g1WI30?=
+ =?us-ascii?Q?VWIT1aeEKOrnzH59Fv5LUIJqp3otvlSVuStEj0oKlBx5A1SIavFbkAKbN/cA?=
+ =?us-ascii?Q?wuf687y4nEV0bF4aIJf2LEkqrc68QVeqpH2z844pj+9MYZjXsQ=3D=3D?=
+x-forefront-antispam-report:
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BN0PR04MB8048.namprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(376014)(38070700018);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0:
+ =?us-ascii?Q?CKG8ApFow7l29Ph6hJot1iMRgFEisO81CjUVxeQ5s0Wr3ZeMLv3sgZuHFsEs?=
+ =?us-ascii?Q?1rowg5xljY5GEqBk100z6Yn29H0Wq/WmLQ8SH0BSMOhssgyTa5T11YFtahed?=
+ =?us-ascii?Q?5EbzN0MP3wQ8gi36RGgm0p/Z2wW5Pn7Gogue4tgyJAhmC/VRY4zLpr/2L4zH?=
+ =?us-ascii?Q?5Y/Cc9vt4vRR8M90Q4TjMiXR11vLUG8h4CryNWiQqh1/+9MyPBCZE9/Kn049?=
+ =?us-ascii?Q?ns9Vjbr+lPT59uGqBglIB9cUX0XdvG3ktZJzMQHMByHpgodkxzTcjqMc4tBg?=
+ =?us-ascii?Q?ZVw6vnhHcwQMUprWD5cCrlq14FxOLXD9Tp4fSsxFgk0HQax2HpALAbIg1/wd?=
+ =?us-ascii?Q?6ZBGgdFJJe6v12hzItybSb2SiyKdTQhbr8sf++S4tKkwvtuO1aXTFuCyD2av?=
+ =?us-ascii?Q?J4l28lhCBauBIkweBQyTab7HiNwEf783vLBbyZ8i89GA+DWSbq/n/5u32hWJ?=
+ =?us-ascii?Q?Lf2lYpvkSQ5GTViopfYfqUkegQWIH0w+R00lapnSZ3MK9VKPmipy5wmfOKw2?=
+ =?us-ascii?Q?aK/KUFIZMoma7cz1YX5Xu17bejgrsXRzOMgEtuzXwEAc0da539eE+toRis+P?=
+ =?us-ascii?Q?6ObeZidD1mOP4u+HwR2MTVlw/p3xHcGxTGKUIaDZ2I4ATsByVD7IV+0OyBoz?=
+ =?us-ascii?Q?k36Fji+G2vEFcj4grGHbHz59XirpYF1nqGMZs/qTBaD5dzlu0oJePEV7UWPS?=
+ =?us-ascii?Q?G5Qzvm7LjAIp3XVuAt1YDmp5W//nbhxO+mJL4ezZmNcG46FSmVMRMy1TAIfw?=
+ =?us-ascii?Q?NLX9ELrk4C4RsjkN3zpCP9q2+H9z48bkC69I9FVR45BO3YXA9u3swH+b4aKF?=
+ =?us-ascii?Q?uuaITn8wW2mgHK8gpGWW4rTkLa4qoEzF7r5BEcFbkzFmYmA7CRs3/OpHFq8b?=
+ =?us-ascii?Q?E2YX+nFfmiIuzksrjYy2MvTWjn+gVeWepaK8u5eIPaPPA+6XBnieek3Jrilo?=
+ =?us-ascii?Q?8RkhPOsuDqPtK5VlCjaFwDjJK5gaoOKwJgFF5DKN5kLPO/ooENtl8cmeJv4+?=
+ =?us-ascii?Q?dSYRUrl6dP9r93qsxCs05S6qQrbQ4svLGFXTlEOsB6keU1VF6hFNo2Pc+U0l?=
+ =?us-ascii?Q?SZTgTuUqF2TkcbbXA/MNrhypOIokemlGgeODTceNif9Ajl7Fkhmu9PrYpS6g?=
+ =?us-ascii?Q?3yEoNbxoaIFvYgjq5qDqBHDc6bdbdtu+CFPOHXij2Rj/gsgmkycnGUZVnfFp?=
+ =?us-ascii?Q?tEaneg2LmkcGH8SxGKGtJzcjdLRPA+XZwQrLFvG5+KE1g0eW74Nl1DPVda89?=
+ =?us-ascii?Q?klnaBGe+DeRWwXAG5fquH8oVXXy11XRf0fIYW2N4stMug0g/adYk/QmhMGAM?=
+ =?us-ascii?Q?vPguqVlhRBC+CJo+XEl0nobwMvCEBXhzYWd6mIF1bI4sXqeZK0mosBfJd+We?=
+ =?us-ascii?Q?t/ejpHPk2IBw+ksIPq/ZWrsm8MyYBY9F551zB6fk9F6geSlIxhE4sFPfmrET?=
+ =?us-ascii?Q?X3BWDRsHJOwDws7/1GFFPm7dxdbko8c3PA7I1Sq8ftjRNqctJoEZx+tqcJLd?=
+ =?us-ascii?Q?6rmqEWLqvHk40khWkKIRjCkK3CI6UUByc09hyk7BP8Ue8g3FFagWFJn8NmxP?=
+ =?us-ascii?Q?alcb+Nt84XFIG1n13XNWIhcRFeFx+wOTfMa+vkpKbgmyl94fX4fLNBq7uJp0?=
+ =?us-ascii?Q?iMrDLm3BFGovOb9e0vfqWgE=3D?=
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <EFE948E0766F4443BFA3ED99E0DED9E9@namprd04.prod.outlook.com>
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20241128145104.13538-5-W_Armin@gmx.de>
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0:
+	daN8FzMQvWe8hNxbHEK0aypy141bo9NWvlv8GMRHdYrnZTs6I9MH+odCMeN425kvIB+UuEbLfODuNtheDseeQ9kHkcnDThP9PnDB12Uji9lvrEBY4pF4NADdi+71pS6u8h1TMvAvvdIToV1wOqBFbmiaCFMxjpTodCXAa2jARiIh+FIjN6Dl201AOxXTCJHzx4XeYHOzVKmjdT+6MZ3WMaDbwHb+SjQdwm//TTsJ7wJF2Bio9ye+8upR4nXyihRs00ewQSv0Vgn4WPDOWMZ/MxmRSGqGtR8rZ08vsfkkAHxpA2oweYr87WLiDnU/Ddble7aMdxmCKIrTMTONgUuUg5MzwNjEtrJxevF5oT3g+gVuSru/DiNf+Mba8+ddlR34EodUTjDpuJm/fSiBNdtnWvdwRvCwcjRCHu57H4OLGEbUQzGhsFBjWq/oOmjq2EeJw+tZAgx6ksmN8ALn1Gg8Mynn1/LMoNpmncoIGWfdaIxEWQAO3nLBIMtVQPDd7uPd4wZbu2OB6O8unA8UcsJR5dxtpFaU2F4NAWOjp2dCrVj9kJa9X8Xd7IlvdSdrRUNJC20y1vE6ww4dJ0U90nQPKODt7YPKj70oYEFr3UsHojwMrGm9RvpwBcQp1iJbb4xc
+X-OriginatorOrg: wdc.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: BN0PR04MB8048.namprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 4a3cb573-ca40-4fef-f9a1-08dd100a5c0a
+X-MS-Exchange-CrossTenant-originalarrivaltime: 29 Nov 2024 00:11:23.5954
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: b61c8803-16f3-4c35-9b17-6f65f441df86
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: mehOzQBVDxTAqStrctHGZlJuyDtDbW+tKgil4+D3svktmJjlpnTPI1fnXGX4slB7cEoM/QSiYqO96/jbVgyIM9tH5QxJr4SdEOaOcomV68Y=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: LV3PR04MB9324
 
-Hi Armin,
+On Nov 28, 2024 / 14:59, Andy Shevchenko wrote:
+> On Thu, Nov 28, 2024 at 12:26:05AM +0000, Shinichiro Kawasaki wrote:
+> > On Nov 27, 2024 / 10:55, Hans de Goede wrote:
+> > > On 27-Nov-24 7:00 AM, Shin'ichiro Kawasaki wrote:
+>=20
+> [...]
+>=20
+> > > > +	if (p2sb_hidden_by_bios)
+> > > > +		ret =3D p2sb_scan_and_cache(bus, devfn_p2sb);
+> > >=20
+> > > ret will be returned uninitialized now when p2sb_hidden_by_bios is fa=
+lse,
+> > > so this patch also needs to initialize ret to 0 when declaring it.
+> >=20
+> > Ah, right. Will fix it in v4. I compile tested with KCFLAGS=3D-Wall and=
+ expected
+> > it would catch such mistakes, but it didn't. I found that -Wmaybe-unini=
+tialized
+> > does the check. Will use this check for my future patches.
+>=20
+> Just use what kernel Kbuild provides already to you with carefully select=
+ed
+> warnings, i.e.
+>=20
+> 	`make W=3D1 ...`
+>=20
+> without any need to hack KCFLAGS or anything else.
+>=20
+> FYI, the above mentioned warning is included in level 1 of Linux kernel K=
+build
+> W facility. But if you want much more, there are level 2 and IIRC 3, but =
+I'm
+> not sure.
 
-kernel test robot noticed the following build warnings:
-
-[auto build test WARNING on linus/master]
-[also build test WARNING on v6.12 next-20241128]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
-
-url:    https://github.com/intel-lab-lkp/linux/commits/Armin-Wolf/platform-x86-acer-wmi-Add-support-for-Acer-PH14-51/20241128-225534
-base:   linus/master
-patch link:    https://lore.kernel.org/r/20241128145104.13538-5-W_Armin%40gmx.de
-patch subject: [PATCH v2 4/5] platform/x86: acer-wmi: Implement proper hwmon support
-config: i386-buildonly-randconfig-004-20241129 (https://download.01.org/0day-ci/archive/20241129/202411290611.AQz0KQ2z-lkp@intel.com/config)
-compiler: clang version 19.1.3 (https://github.com/llvm/llvm-project ab51eccf88f5321e7c60591c5546b254b6afab99)
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20241129/202411290611.AQz0KQ2z-lkp@intel.com/reproduce)
-
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202411290611.AQz0KQ2z-lkp@intel.com/
-
-All warnings (new ones prefixed by >>):
-
-   In file included from drivers/platform/x86/acer-wmi.c:19:
-   In file included from include/linux/backlight.h:13:
-   In file included from include/linux/fb.h:5:
-   In file included from include/uapi/linux/fb.h:6:
-   In file included from include/linux/i2c.h:19:
-   In file included from include/linux/regulator/consumer.h:35:
-   In file included from include/linux/suspend.h:5:
-   In file included from include/linux/swap.h:9:
-   In file included from include/linux/memcontrol.h:21:
-   In file included from include/linux/mm.h:2223:
-   include/linux/vmstat.h:518:36: warning: arithmetic between different enumeration types ('enum node_stat_item' and 'enum lru_list') [-Wenum-enum-conversion]
-     518 |         return node_stat_name(NR_LRU_BASE + lru) + 3; // skip "nr_"
-         |                               ~~~~~~~~~~~ ^ ~~~
->> drivers/platform/x86/acer-wmi.c:2786:32: warning: shift count is negative [-Wshift-count-negative]
-    2786 |         supported_sensors = FIELD_GET(ACER_PREDATOR_V4_SUPPORTED_SENSORS_BIT_MASK, result);
-         |                             ~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-   drivers/platform/x86/acer-wmi.c:77:53: note: expanded from macro 'ACER_PREDATOR_V4_SUPPORTED_SENSORS_BIT_MASK'
-      77 | #define ACER_PREDATOR_V4_SUPPORTED_SENSORS_BIT_MASK GENMASK(40, 24)
-         |                                                     ^
-   include/linux/bits.h:35:31: note: expanded from macro 'GENMASK'
-      35 |         (GENMASK_INPUT_CHECK(h, l) + __GENMASK(h, l))
-         |                                      ^
-   include/uapi/linux/bits.h:9:19: note: expanded from macro '__GENMASK'
-       9 |          (~_UL(0) >> (__BITS_PER_LONG - 1 - (h))))
-         |                   ^
-   note: (skipping 3 expansions in backtrace; use -fmacro-backtrace-limit=0 to see all)
-   include/linux/compiler_types.h:542:22: note: expanded from macro 'compiletime_assert'
-     542 |         _compiletime_assert(condition, msg, __compiletime_assert_, __COUNTER__)
-         |         ~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-   include/linux/compiler_types.h:530:23: note: expanded from macro '_compiletime_assert'
-     530 |         __compiletime_assert(condition, msg, prefix, suffix)
-         |         ~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-   include/linux/compiler_types.h:522:9: note: expanded from macro '__compiletime_assert'
-     522 |                 if (!(condition))                                       \
-         |                       ^~~~~~~~~
->> drivers/platform/x86/acer-wmi.c:2786:32: warning: shift count is negative [-Wshift-count-negative]
-    2786 |         supported_sensors = FIELD_GET(ACER_PREDATOR_V4_SUPPORTED_SENSORS_BIT_MASK, result);
-         |                             ~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-   drivers/platform/x86/acer-wmi.c:77:53: note: expanded from macro 'ACER_PREDATOR_V4_SUPPORTED_SENSORS_BIT_MASK'
-      77 | #define ACER_PREDATOR_V4_SUPPORTED_SENSORS_BIT_MASK GENMASK(40, 24)
-         |                                                     ^
-   include/linux/bits.h:35:31: note: expanded from macro 'GENMASK'
-      35 |         (GENMASK_INPUT_CHECK(h, l) + __GENMASK(h, l))
-         |                                      ^
-   include/uapi/linux/bits.h:9:19: note: expanded from macro '__GENMASK'
-       9 |          (~_UL(0) >> (__BITS_PER_LONG - 1 - (h))))
-         |                   ^
-   note: (skipping 3 expansions in backtrace; use -fmacro-backtrace-limit=0 to see all)
-   include/linux/compiler_types.h:542:22: note: expanded from macro 'compiletime_assert'
-     542 |         _compiletime_assert(condition, msg, __compiletime_assert_, __COUNTER__)
-         |         ~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-   include/linux/compiler_types.h:530:23: note: expanded from macro '_compiletime_assert'
-     530 |         __compiletime_assert(condition, msg, prefix, suffix)
-         |         ~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-   include/linux/compiler_types.h:522:9: note: expanded from macro '__compiletime_assert'
-     522 |                 if (!(condition))                                       \
-         |                       ^~~~~~~~~
->> drivers/platform/x86/acer-wmi.c:2786:32: warning: shift count is negative [-Wshift-count-negative]
-    2786 |         supported_sensors = FIELD_GET(ACER_PREDATOR_V4_SUPPORTED_SENSORS_BIT_MASK, result);
-         |                             ~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-   drivers/platform/x86/acer-wmi.c:77:53: note: expanded from macro 'ACER_PREDATOR_V4_SUPPORTED_SENSORS_BIT_MASK'
-      77 | #define ACER_PREDATOR_V4_SUPPORTED_SENSORS_BIT_MASK GENMASK(40, 24)
-         |                                                     ^
-   include/linux/bits.h:35:31: note: expanded from macro 'GENMASK'
-      35 |         (GENMASK_INPUT_CHECK(h, l) + __GENMASK(h, l))
-         |                                      ^
-   include/uapi/linux/bits.h:9:19: note: expanded from macro '__GENMASK'
-       9 |          (~_UL(0) >> (__BITS_PER_LONG - 1 - (h))))
-         |                   ^
-   note: (skipping 3 expansions in backtrace; use -fmacro-backtrace-limit=0 to see all)
-   include/linux/compiler_types.h:542:22: note: expanded from macro 'compiletime_assert'
-     542 |         _compiletime_assert(condition, msg, __compiletime_assert_, __COUNTER__)
-         |         ~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-   include/linux/compiler_types.h:530:23: note: expanded from macro '_compiletime_assert'
-     530 |         __compiletime_assert(condition, msg, prefix, suffix)
-         |         ~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-   include/linux/compiler_types.h:522:9: note: expanded from macro '__compiletime_assert'
-     522 |                 if (!(condition))                                       \
-         |                       ^~~~~~~~~
->> drivers/platform/x86/acer-wmi.c:2786:32: warning: shift count is negative [-Wshift-count-negative]
-    2786 |         supported_sensors = FIELD_GET(ACER_PREDATOR_V4_SUPPORTED_SENSORS_BIT_MASK, result);
-         |                             ~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-   drivers/platform/x86/acer-wmi.c:77:53: note: expanded from macro 'ACER_PREDATOR_V4_SUPPORTED_SENSORS_BIT_MASK'
-      77 | #define ACER_PREDATOR_V4_SUPPORTED_SENSORS_BIT_MASK GENMASK(40, 24)
-         |                                                     ^
-   include/linux/bits.h:35:31: note: expanded from macro 'GENMASK'
-      35 |         (GENMASK_INPUT_CHECK(h, l) + __GENMASK(h, l))
-         |                                      ^
-   include/uapi/linux/bits.h:9:19: note: expanded from macro '__GENMASK'
-       9 |          (~_UL(0) >> (__BITS_PER_LONG - 1 - (h))))
-         |                   ^
-   note: (skipping 4 expansions in backtrace; use -fmacro-backtrace-limit=0 to see all)
-   include/linux/compiler_types.h:542:22: note: expanded from macro 'compiletime_assert'
-     542 |         _compiletime_assert(condition, msg, __compiletime_assert_, __COUNTER__)
-         |         ~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-   include/linux/compiler_types.h:530:23: note: expanded from macro '_compiletime_assert'
-     530 |         __compiletime_assert(condition, msg, prefix, suffix)
-         |         ~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-   include/linux/compiler_types.h:522:9: note: expanded from macro '__compiletime_assert'
-     522 |                 if (!(condition))                                       \
-         |                       ^~~~~~~~~
->> drivers/platform/x86/acer-wmi.c:2786:32: warning: shift count is negative [-Wshift-count-negative]
-    2786 |         supported_sensors = FIELD_GET(ACER_PREDATOR_V4_SUPPORTED_SENSORS_BIT_MASK, result);
-         |                             ~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-   drivers/platform/x86/acer-wmi.c:77:53: note: expanded from macro 'ACER_PREDATOR_V4_SUPPORTED_SENSORS_BIT_MASK'
-      77 | #define ACER_PREDATOR_V4_SUPPORTED_SENSORS_BIT_MASK GENMASK(40, 24)
-         |                                                     ^
-   include/linux/bits.h:35:31: note: expanded from macro 'GENMASK'
-      35 |         (GENMASK_INPUT_CHECK(h, l) + __GENMASK(h, l))
-         |                                      ^
-   include/uapi/linux/bits.h:9:19: note: expanded from macro '__GENMASK'
-       9 |          (~_UL(0) >> (__BITS_PER_LONG - 1 - (h))))
-         |                   ^
-   note: (skipping 4 expansions in backtrace; use -fmacro-backtrace-limit=0 to see all)
-   include/linux/compiler_types.h:542:22: note: expanded from macro 'compiletime_assert'
-     542 |         _compiletime_assert(condition, msg, __compiletime_assert_, __COUNTER__)
-         |         ~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-   include/linux/compiler_types.h:530:23: note: expanded from macro '_compiletime_assert'
-     530 |         __compiletime_assert(condition, msg, prefix, suffix)
-         |         ~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-   include/linux/compiler_types.h:522:9: note: expanded from macro '__compiletime_assert'
-     522 |                 if (!(condition))                                       \
-         |                       ^~~~~~~~~
->> drivers/platform/x86/acer-wmi.c:2786:32: warning: shift count is negative [-Wshift-count-negative]
-    2786 |         supported_sensors = FIELD_GET(ACER_PREDATOR_V4_SUPPORTED_SENSORS_BIT_MASK, result);
-         |                             ~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-   drivers/platform/x86/acer-wmi.c:77:53: note: expanded from macro 'ACER_PREDATOR_V4_SUPPORTED_SENSORS_BIT_MASK'
-      77 | #define ACER_PREDATOR_V4_SUPPORTED_SENSORS_BIT_MASK GENMASK(40, 24)
-         |                                                     ^
-   include/linux/bits.h:35:31: note: expanded from macro 'GENMASK'
-      35 |         (GENMASK_INPUT_CHECK(h, l) + __GENMASK(h, l))
-         |                                      ^
-   include/uapi/linux/bits.h:9:19: note: expanded from macro '__GENMASK'
-       9 |          (~_UL(0) >> (__BITS_PER_LONG - 1 - (h))))
-         |                   ^
-   note: (skipping 5 expansions in backtrace; use -fmacro-backtrace-limit=0 to see all)
-   include/linux/compiler_types.h:542:22: note: expanded from macro 'compiletime_assert'
-     542 |         _compiletime_assert(condition, msg, __compiletime_assert_, __COUNTER__)
-         |         ~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-   include/linux/compiler_types.h:530:23: note: expanded from macro '_compiletime_assert'
-     530 |         __compiletime_assert(condition, msg, prefix, suffix)
-         |         ~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-   include/linux/compiler_types.h:522:9: note: expanded from macro '__compiletime_assert'
-     522 |                 if (!(condition))                                       \
-         |                       ^~~~~~~~~
->> drivers/platform/x86/acer-wmi.c:2786:32: warning: shift count is negative [-Wshift-count-negative]
-    2786 |         supported_sensors = FIELD_GET(ACER_PREDATOR_V4_SUPPORTED_SENSORS_BIT_MASK, result);
-         |                             ~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-   drivers/platform/x86/acer-wmi.c:77:53: note: expanded from macro 'ACER_PREDATOR_V4_SUPPORTED_SENSORS_BIT_MASK'
-      77 | #define ACER_PREDATOR_V4_SUPPORTED_SENSORS_BIT_MASK GENMASK(40, 24)
-         |                                                     ^
-   include/linux/bits.h:35:31: note: expanded from macro 'GENMASK'
-      35 |         (GENMASK_INPUT_CHECK(h, l) + __GENMASK(h, l))
-         |                                      ^
-   include/uapi/linux/bits.h:9:19: note: expanded from macro '__GENMASK'
-       9 |          (~_UL(0) >> (__BITS_PER_LONG - 1 - (h))))
-         |                   ^
-   note: (skipping 6 expansions in backtrace; use -fmacro-backtrace-limit=0 to see all)
-   include/linux/compiler_types.h:542:22: note: expanded from macro 'compiletime_assert'
-     542 |         _compiletime_assert(condition, msg, __compiletime_assert_, __COUNTER__)
-         |         ~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-   include/linux/compiler_types.h:530:23: note: expanded from macro '_compiletime_assert'
-     530 |         __compiletime_assert(condition, msg, prefix, suffix)
-         |         ~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-   include/linux/compiler_types.h:522:9: note: expanded from macro '__compiletime_assert'
-     522 |                 if (!(condition))                                       \
-         |                       ^~~~~~~~~
->> drivers/platform/x86/acer-wmi.c:2786:32: warning: shift count is negative [-Wshift-count-negative]
-    2786 |         supported_sensors = FIELD_GET(ACER_PREDATOR_V4_SUPPORTED_SENSORS_BIT_MASK, result);
-         |                             ~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-   drivers/platform/x86/acer-wmi.c:77:53: note: expanded from macro 'ACER_PREDATOR_V4_SUPPORTED_SENSORS_BIT_MASK'
-      77 | #define ACER_PREDATOR_V4_SUPPORTED_SENSORS_BIT_MASK GENMASK(40, 24)
-         |                                                     ^
-   include/linux/bits.h:35:31: note: expanded from macro 'GENMASK'
-      35 |         (GENMASK_INPUT_CHECK(h, l) + __GENMASK(h, l))
-         |                                      ^
-   include/uapi/linux/bits.h:9:19: note: expanded from macro '__GENMASK'
-       9 |          (~_UL(0) >> (__BITS_PER_LONG - 1 - (h))))
-         |                   ^
-   note: (skipping 5 expansions in backtrace; use -fmacro-backtrace-limit=0 to see all)
-   include/linux/compiler_types.h:542:22: note: expanded from macro 'compiletime_assert'
-     542 |         _compiletime_assert(condition, msg, __compiletime_assert_, __COUNTER__)
-         |         ~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-   include/linux/compiler_types.h:530:23: note: expanded from macro '_compiletime_assert'
-     530 |         __compiletime_assert(condition, msg, prefix, suffix)
-         |         ~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-   include/linux/compiler_types.h:522:9: note: expanded from macro '__compiletime_assert'
-     522 |                 if (!(condition))                                       \
-         |                       ^~~~~~~~~
->> drivers/platform/x86/acer-wmi.c:2786:32: warning: shift count is negative [-Wshift-count-negative]
-    2786 |         supported_sensors = FIELD_GET(ACER_PREDATOR_V4_SUPPORTED_SENSORS_BIT_MASK, result);
-         |                             ~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-   drivers/platform/x86/acer-wmi.c:77:53: note: expanded from macro 'ACER_PREDATOR_V4_SUPPORTED_SENSORS_BIT_MASK'
-      77 | #define ACER_PREDATOR_V4_SUPPORTED_SENSORS_BIT_MASK GENMASK(40, 24)
-         |                                                     ^
-   include/linux/bits.h:35:31: note: expanded from macro 'GENMASK'
-      35 |         (GENMASK_INPUT_CHECK(h, l) + __GENMASK(h, l))
-         |                                      ^
-   include/uapi/linux/bits.h:9:19: note: expanded from macro '__GENMASK'
-       9 |          (~_UL(0) >> (__BITS_PER_LONG - 1 - (h))))
-         |                   ^
-   note: (skipping 6 expansions in backtrace; use -fmacro-backtrace-limit=0 to see all)
-   include/linux/compiler_types.h:542:22: note: expanded from macro 'compiletime_assert'
-     542 |         _compiletime_assert(condition, msg, __compiletime_assert_, __COUNTER__)
-         |         ~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-   include/linux/compiler_types.h:530:23: note: expanded from macro '_compiletime_assert'
-     530 |         __compiletime_assert(condition, msg, prefix, suffix)
-         |         ~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-   include/linux/compiler_types.h:522:9: note: expanded from macro '__compiletime_assert'
-     522 |                 if (!(condition))                                       \
-         |                       ^~~~~~~~~
->> drivers/platform/x86/acer-wmi.c:2786:32: warning: shift count is negative [-Wshift-count-negative]
-    2786 |         supported_sensors = FIELD_GET(ACER_PREDATOR_V4_SUPPORTED_SENSORS_BIT_MASK, result);
-         |                             ~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-   drivers/platform/x86/acer-wmi.c:77:53: note: expanded from macro 'ACER_PREDATOR_V4_SUPPORTED_SENSORS_BIT_MASK'
-      77 | #define ACER_PREDATOR_V4_SUPPORTED_SENSORS_BIT_MASK GENMASK(40, 24)
-         |                                                     ^
-   include/linux/bits.h:35:31: note: expanded from macro 'GENMASK'
-      35 |         (GENMASK_INPUT_CHECK(h, l) + __GENMASK(h, l))
-         |                                      ^
-   include/uapi/linux/bits.h:9:19: note: expanded from macro '__GENMASK'
-       9 |          (~_UL(0) >> (__BITS_PER_LONG - 1 - (h))))
-         |                   ^
-   include/linux/bitfield.h:156:30: note: expanded from macro 'FIELD_GET'
-     156 |                 (typeof(_mask))(((_reg) & (_mask)) >> __bf_shf(_mask)); \
-         |                                            ^~~~~
->> drivers/platform/x86/acer-wmi.c:2786:32: warning: shift count is negative [-Wshift-count-negative]
-    2786 |         supported_sensors = FIELD_GET(ACER_PREDATOR_V4_SUPPORTED_SENSORS_BIT_MASK, result);
-         |                             ~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-   drivers/platform/x86/acer-wmi.c:77:53: note: expanded from macro 'ACER_PREDATOR_V4_SUPPORTED_SENSORS_BIT_MASK'
-      77 | #define ACER_PREDATOR_V4_SUPPORTED_SENSORS_BIT_MASK GENMASK(40, 24)
-         |                                                     ^
-   include/linux/bits.h:35:31: note: expanded from macro 'GENMASK'
-      35 |         (GENMASK_INPUT_CHECK(h, l) + __GENMASK(h, l))
-         |                                      ^
-   include/uapi/linux/bits.h:9:19: note: expanded from macro '__GENMASK'
-       9 |          (~_UL(0) >> (__BITS_PER_LONG - 1 - (h))))
-         |                   ^
-   include/linux/bitfield.h:156:50: note: expanded from macro 'FIELD_GET'
-     156 |                 (typeof(_mask))(((_reg) & (_mask)) >> __bf_shf(_mask)); \
-         |                                                       ~~~~~~~~~^~~~~~
-   include/linux/bitfield.h:45:38: note: expanded from macro '__bf_shf'
-      45 | #define __bf_shf(x) (__builtin_ffsll(x) - 1)
-         |                                      ^
-   12 warnings generated.
-
-
-vim +2786 drivers/platform/x86/acer-wmi.c
-
-  2773	
-  2774	static int acer_wmi_hwmon_init(void)
-  2775	{
-  2776		struct device *dev = &acer_platform_device->dev;
-  2777		struct device *hwmon;
-  2778		u64 result;
-  2779		int ret;
-  2780	
-  2781		ret = WMID_gaming_get_sys_info(ACER_WMID_CMD_GET_PREDATOR_V4_SUPPORTED_SENSORS, &result);
-  2782		if (ret < 0)
-  2783			return ret;
-  2784	
-  2785		/* Return early if no sensors are available */
-> 2786		supported_sensors = FIELD_GET(ACER_PREDATOR_V4_SUPPORTED_SENSORS_BIT_MASK, result);
-  2787		if (!supported_sensors)
-  2788			return 0;
-  2789	
-  2790		hwmon = devm_hwmon_device_register_with_info(dev, "acer",
-  2791							     &supported_sensors,
-  2792							     &acer_wmi_hwmon_chip_info,
-  2793							     NULL);
-  2794	
-  2795		if (IS_ERR(hwmon)) {
-  2796			dev_err(dev, "Could not register acer hwmon device\n");
-  2797			return PTR_ERR(hwmon);
-  2798		}
-  2799	
-  2800		return 0;
-  2801	}
-  2802	
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+Thanks! 'make W=3Dn' is handier than KCFLAGS. I found 'make help' describes=
+ W=3Dn,
+and it says n can be 1, 2 or 3. Will use them in the future.=
