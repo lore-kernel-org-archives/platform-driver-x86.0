@@ -1,41 +1,41 @@
 Received: from mout.gmx.net (mout.gmx.net [212.227.17.22])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C0491F94D;
-	Sun,  1 Dec 2024 17:41:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DEAC71BC094;
+	Sun,  1 Dec 2024 17:58:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.22
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1733074900; cv=none; b=RqmGKyeoVEkUWPsbP5vpwosDXHJDa2Px0D/tN+QMamD2GaLRN6DN3hCfUG/ueOMOiTf/ScTJqZCBJqHg1jjnOIH3AR9/Cam9VeO1FCjHKoXffaXv9XLisL0f5Y0H79QIrJ2DXQPQSjAv5NhxtdQVx9M4iglj7uTCOb4UOuUrkaA=
+	t=1733075931; cv=none; b=HkdkzyIJj3wnfr904ydmJRYYL7/St/wGq6DgfS7eaVXHJYbprbDJbe6r74owrqbTmNOLq4Ma9tbuOUnpSkzFOh0UZlvzF1+AfgAEk/ujMKOQAI78dQO4vapDH0KlOcBxcQEGLJfC58SCY779JnXApwpQ1X/O4A56oCeXcMuJVXI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1733074900; c=relaxed/simple;
-	bh=oMkRlb7msNrgFRRQHRDAuvenkWWOKN9QFc7Utb/Wby0=;
+	s=arc-20240116; t=1733075931; c=relaxed/simple;
+	bh=Hq4481C+0KO6/BSBgy36PO7z+3nnE/ExcU1Z1tIJx18=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=CPenWu2VOkWiGG52V+ZS+yZIrlZtwBDI1d123NmwfqaMKQtKgPl+6IhIeoQ016rmyL08KweLFKOHON1lJS1tVE9Cwcmnb0beSnwfrdzqVOyaP5e2Fp1HurCim4lspQMdMQXhTSf354w9sC9KXGEgd+Dp4TJW6+QtxXgG+Uh+FRk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b=HU/Tap4W; arc=none smtp.client-ip=212.227.17.22
+	 In-Reply-To:Content-Type; b=LDegpPagWPm2n4YmlA+eGSDV9aveUaWNzKxqB515omJ/cYoQhuTjFUO6ZOhhSJIIZlimosCjMkR4Z0yTLv316j6ThLYTUZw5rzergR/kLAUMMyZh/MUb87K5MOhfG4jZaDa78mqEQfBdd9xMd4fKds6MeiJdYaRgknYthKuO1dY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b=JtCLHlRJ; arc=none smtp.client-ip=212.227.17.22
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b="HU/Tap4W"
+	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b="JtCLHlRJ"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.de;
-	s=s31663417; t=1733074888; x=1733679688; i=w_armin@gmx.de;
-	bh=Fj5Y17eQDn06kFjLHrN2HV6OZfvOURIsGq4efoqRPR4=;
+	s=s31663417; t=1733075920; x=1733680720; i=w_armin@gmx.de;
+	bh=rlHQ8/p3xS/Ykqg8LHS+OG2al5HrpauYglCNK+JgmU0=;
 	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:To:Cc:
 	 References:From:In-Reply-To:Content-Type:
 	 Content-Transfer-Encoding:cc:content-transfer-encoding:
 	 content-type:date:from:message-id:mime-version:reply-to:subject:
 	 to;
-	b=HU/Tap4WjdfK/sZAblGeUJPkaftNGgOOUmPOr8GrcAazah5iKGur2QmTndSf5pDu
-	 XQt/7sy1akFfiVB7ejc6z7Pg3Ti2+04Vmiz6GLoEBWc80W50zjZXmEjJspgG9pzWw
-	 hZOt6Z1IH1YuXIGZb+VtWlevG2xt0KGkz/MwrqH6GD425JlKqju6k4DfPAvq6Wzqj
-	 yBHfbfAy86acSEZ3A1NrZsfnjsMERYE5jD4IkpOfeXoqg1LR4GDaNd6ftKBYKSjFa
-	 71e+LOxUqEZwThd09/5uWFZCCtCOgFITb/h2+i7pXAurcND0Z4NFEEkKmjysbpJ1/
-	 cPSuLUlo8oljlHj3Dg==
+	b=JtCLHlRJ8upfiXrveCBT/fDIc11ApFOVPAxez/TVN90J8nLx0z58x0xNdKSWIA/W
+	 /ZzeTWYkBXCLLQebdMp1RdHk5NRXxQ042cWzPSf6pPIOPl5wSsgeLFawi+Tw66NJ4
+	 jn4BV3HvEhuigvsP/OuzWNIAaofE7A4z/QPVf5qld+zYbdpQr9+qR9haBC6bDdpHr
+	 A5gAshGnNpipLkpT3pvxl7/2YbF/7zDCIMy8545glWYc7HS+b7Lawkl/LnMg73eCs
+	 zeLuIl0J0c82IzLp6z4fnoh1bUup9Ik7jweSsv5eqMVe0H1yuNJyG5kHnozLcC/9y
+	 BMPcKCZjaNs67UQFrg==
 X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
 Received: from [192.168.0.14] ([141.30.226.119]) by mail.gmx.net (mrgmx104
- [212.227.17.168]) with ESMTPSA (Nemesis) id 1M6ll8-1tJQFK2fR0-00DjXI; Sun, 01
- Dec 2024 18:41:28 +0100
-Message-ID: <eb40d2a6-6313-4ca6-bc09-ad147471813f@gmx.de>
-Date: Sun, 1 Dec 2024 18:41:27 +0100
+ [212.227.17.168]) with ESMTPSA (Nemesis) id 1MQe5u-1t49DC1fug-00XTe3; Sun, 01
+ Dec 2024 18:58:40 +0100
+Message-ID: <3530748f-4819-4a02-ae6c-c459952ba82f@gmx.de>
+Date: Sun, 1 Dec 2024 18:58:39 +0100
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -43,56 +43,120 @@ List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC PATCH 1/1] platform: x86: tuxi: Implement TUXEDO TUXI ACPI
+Subject: Re: [RFC PATCH 0/1] platform: x86: tuxi: Implement TUXEDO TUXI ACPI
  TFAN as thermal subsystem
 To: Werner Sembach <wse@tuxedocomputers.com>, hdegoede@redhat.com,
  ilpo.jarvinen@linux.intel.com
 Cc: linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org
 References: <20241127112141.42920-1-wse@tuxedocomputers.com>
- <20241127112141.42920-2-wse@tuxedocomputers.com>
 Content-Language: en-US
 From: Armin Wolf <W_Armin@gmx.de>
-In-Reply-To: <20241127112141.42920-2-wse@tuxedocomputers.com>
+In-Reply-To: <20241127112141.42920-1-wse@tuxedocomputers.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:Mf4PxrpF49nLF4aDJeMv1HnJKjJGZoObs+efvwrz1hbsFWuE+Hy
- M5HFIQLPJ3ztt0T23YTxqCStln/OEskG7FMXB15qIqIPbSTbk2N9nSfV9dMNigjKhv4xXvR
- soP6KIfA29xX0L1pydj8g0v71cK3Zt59wk3QKb3gPR2NBpyfmd7iqPgNVOBK/iMIVI/kj77
- iVhvY7pblwGe9EH0Pnt+A==
+X-Provags-ID: V03:K1:iNXq5KMPgNzHhE4xDnFQPJr4UksiC/fnVp+SReufR23hjU+WSUV
+ QopGLGtd2ONGe7spKIo9lDLxzRaaDIuHWlnhFiPiBqrbVSMAjit60fJ7du068MA45nUQpLK
+ eLYnOrGPyIerCbaHaYBTq4QvJuhhkwgii9gDTZe+5sqf5DChRFEeh1yYOd1p061yZXnOqzg
+ Yik55epFe5NruEMJ2vqzg==
 X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:S23X6yYJs2Y=;QvKoxBQM221P8bSfVymqq9Ox7oo
- 7OiyGgzl3NTpWNdgJUKJATDQVaPN5LEvU3Qob191GqKmgAyfdPZi8zgCtKaAS7Uo393XWG9Rx
- n/+C+YAPeNXKjHT3m9YCt3eJIDe8DLae7o4IKLiz329/HxAuocK+x23nUdRAd9Pc2M39+jmyc
- TXX4aUbJBUXsmLLLSTolJapsopF9p/yv1OiDSD/J13uBqU1sTkbhoY5xOTsRMbK9ok9DkwNNt
- GT227DSnP/7KbeOOKEFdvmCtieNTRTsu16Zs9ZVPRUdyVG9oTqAGkdTYPf/IgHEZP5tasEiG/
- h6rhdddVYEnqk3n5GDwFHWr6fhMHs/pBS7TWqNHPpwLRNtTxJQMponzB+/+cjvr6YLCALW93/
- hXRqGYaKpTy8VmFZqtIL2H3QnVAp9Xmvoyw6nhACm3EBcKY9LMhZ2PR0estH6isk8mstkYOy3
- Duvre0Q9OnUUN3D9lXkYdR6Lh/2oIodfoQxPzRfgfwq2IwtWSaQ9272WS+zQ8djAmeRDRX2e9
- SzZ+9txA9K7mUvmRH98ff15zVSrbZu4UtmiTDnon+yjeHalbDzOCsQ4/dyoyhNC6tSEJm/ez3
- +aItGXBBCvGVjSnsq/dlQhR7J4Xj7cqUNX9LRklG/8GFZRm0vBrMjDI0yfBDx2XH3FhmpHJIz
- 0mH6sA4FopGYpUkfz8+UacXUpfTjbmRbWAzCa//eJruVMaALP1tAf/A6chVpjFymfFiOC99v6
- TS4w+d8yCuqYxkEJaG4D9P3RbFSx9sogiT0j5cDsQDf/m746JoAqLBNwBspzHzwSi6DCKrlaX
- EZJENKqAB0/Eo6JaXF4hgaPHjfcclzOHpBr7rWnUkmsJBikB7IN8biF4AZxPYoRZCUeA0BpSJ
- ZEXnqmKHtPs49U2Wb+IzaUqO/ztLTIam6ymUcqDpr8yyEa1N2nHJ9bVPe8IdplTZBY4b8ZoM2
- mVvaJZhK+DsX1ZVqSCRu5LZXDENhmA1evKEKn/eyWFNXy/ccv790LBd4VdF4wNxFglXEYuFlj
- Iy6e8KQLdxv4uWAWSoFggDOS9QptMAQsD+53sFra9FLkH4NutBFHKyap2GKVg9kKtAU8K2L9l
- 8DafpY9zzdWeleB5qmI+qh1FINmESU
+UI-OutboundReport: notjunk:1;M01:P0:AT2YW/6Yv30=;1HomO/3/SRCWf5iRXaGHRZEEsNJ
+ 0NGcwDEuf2ffYfaOM2VgPr9OVbNA8A1t2ZeDgH3AyQcYXjHNDtQQiOKGg47s9qtWldBFDyagO
+ ox46GfxTDP3UE+Toqc2M8kl4/wxSGSUJBMMh/Ga0JPe8TCwEi3BS+ddah5hGKLMWYfzQIO/4J
+ XytJXPf0WrdHpPTNyxKLVoT2X6PR9P5P4qR6lJHY4fuBXPGzKjpLzVIliwvxOWzsvi8Ew+IBS
+ culre0CN7Akst7JWHTWiFSYbR0NuPdWxtp7HCRkUu0jarp2lsyR5g8X2P/7FXPj/stZ3NZGJJ
+ OvqD1S1Ref/TMtTTt62F/+6teFlx1MwCkJ7KORs8eaaQgZwmB9hrazpqLeU45jhqi6KuYoRWk
+ D7J0Z5M9yPZQryELBA7LYNy7keY0diYzLiLwtMzopBxUjDQqqiVZ9Ca7WIi+DOyVTb6j85RDt
+ oe87USKNGKJtqwPKCfRt5mMEZ7zfE6GndBQYrNrslLnrlYLx8HZqD4nv/CODwdAf9ST47h7G7
+ Uv0R6KI3GX6JQfGT+XHcCbG90aeQpXCn2mfCvQ7o6aGI/VUkNK5SfJBJ0e8NJW5AaJbUhhe+a
+ YTEpo815HFKRXts9arEKv2nZI2f4k/pnx6Ttim82cCFonoDLlv9QzL4I8upl18WS7WzAvnOl2
+ k4CBZvmNMd63bWdnSLkiR7jyKGYEQ/mHUP9IMnx8Amv6ct9G2Bbm8W3gXxP3NGFSRZemsSClK
+ 8qJl8daWNdMhpwm7421KDpXDleGo2RuBWmYZVoe1J7MnguTsMu5exTi38JwzSm+afnYLaH/pY
+ MoOvfbu/7w3jvBhHgWLU3I9X0BHrVqqZ7RFUHseDJPjyUaZhR8/Bqi8rI8w6JbeDHkFUSn3at
+ M+gv67XZ9ynZohRG+uWuocOUR010UFk+ZBK3QuETPorLds0sPTNCJupIcqsCEsG5Bp8pJbQZw
+ pxOCU3PyXwyZBwN5STDduaEy+SAJFb6VgGrY7KPsHSGg3OsdzSxOOk8iwqJH1ZaJAL2pVHsLQ
+ QlON+PtjyiSFHo6mKoDmcupdDDN1uhBoRSqcc0E+B9U7/4uwwokxPuMVq0uTr+sPgLRH62Ei4
+ M44GysP1JcJYYgQoA7Cc1mh8z3VAR3
 
 Am 27.11.24 um 12:21 schrieb Werner Sembach:
 
-> The TUXEDO Sirius 16 Gen1 & Gen2 have the custom TUXEDO Interface (TUXI)
-> ACPI interface which currently consists of the TFAN device. This has ACP=
-I
-> functions to control the built in fans and monitor fan speeds and CPU an=
-d
-> GPU temprature.
+> Hi,
 >
-> This driver implements this TFAN device via the thermal subsystem to all=
-ow
-> userspace controlled, but hardware safe, custom fan curves.
+> Following up to https://lore.kernel.org/all/172b7acd-4313-4924-bcbc-41b7=
+3b39ada0@tuxedocomputers.com/ and https://lore.kernel.org/all/f26d867e-f24=
+7-43bb-a78b-be0bce35c973@roeck-us.net/ I experimented with the thermal sub=
+system and these are my results so far, but I'm hitting a bit of a wall:
 >
-> Signed-off-by: Werner Sembach <wse@tuxedocomputers.com>
-> ---
+> As far as I can tell to implement "2. As long as GTMP is > 80=C2=B0C fan=
+ speed must be at least 30%." I would need to add a new gevenor, lets call=
+ it "user_space_with_safeguards". I would be nice when the temp <-> fanspe=
+ed relation could be passed via the thermal_trip structure. And safeguardi=
+ng the hardware from userspace only works when I can restrict userspace fr=
+om just selecting the preexisting "user_space" govenor.
+>
+> So my ideas/questions:
+> - Add a field "min_fanspeed_percent" to the thermal_trip struct that wil=
+l only be used by the "user_space_with_safeguards" govenor
+> - Add a "user_space_with_safeguards" govenor that is the same as the "us=
+er_space" govenor, but on trip, a minimum speed is applied
+> - How can i ensure that on further speed updates the min speed is applie=
+d to? I could just implement it directly in the cdev, but that would be sp=
+agetti coding around the govenor.
+> - Can I somehow restrict userspace from using certain govenors?
+> - I'm a litte bit confused about the thermal zone "mode" sysfs switch, h=
+ere it says deactivate for userspace control: https://elixir.bootlin.com/l=
+inux/v6.12/source/Documentation/ABI/testing/sysfs-class-thermal#L20, but w=
+hat about the user_space govenor then?
+
+Hi,
+
+i am having little experience with the thermal subsystem, but i suggest th=
+at policy decisions like "min_fanspeed_percent" should either:
+
+- come from the hardware/firmware itself
+- come from userspace
+
+Effectively this driver tries to enforce a Tuxedo-specific policy that is =
+not directly based on hardware limits. The book "Linux Device Drivers"
+says:
+
+	"the role of a device driver is providing///mechanism/, not/policy/."
+
+Furthermore:
+
+	"When/writing/ drivers, a programmer should pay particular attention to t=
+his fundamental concept: write kernel code to access the hardware,
+	 but don't force particular policies on the user, since different users h=
+ave different needs. The driver should deal with making the hardware
+	 available, leaving all the issues about/how/ to use the hardware to the =
+applications. A driver, then, is flexible if it offers access to the
+	 hardware capabilities without adding constraints."
+
+The issue is that the Tuxedo-specific policy is not directly connected wit=
+h the hardware. Some hardware might need a bigger minimum fan speed than
+other hardware for example.
+
+The hardware (or rather firmware in this case) should communicate those co=
+nstraints to the linux driver so that we do not need to rely on random
+temperatures for hardware protection.
+
+This ACPI interface however basically provides us with a hwmon interface a=
+nd Tuxedo now wants the kernel to enforce their policy on it. I suspect th=
+at
+happens for warranty reasons, right?
+
+Maybe there is a way to enforce this policy through userspace applications=
+?
+
+Thanks,
+Armin Wolf
+
+> Best regards,
+> Werner
+>
+> Werner Sembach (1):
+>    platform: x86: tuxi: Implement TUXEDO TUXI ACPI TFAN as thermal
+>      subsystem
+>
 >   drivers/platform/x86/Makefile                 |   3 +
 >   drivers/platform/x86/tuxedo/Kbuild            |   6 +
 >   drivers/platform/x86/tuxedo/nbxx/Kbuild       |   8 +
@@ -112,561 +176,3 @@ c
 >   create mode 100644 drivers/platform/x86/tuxedo/nbxx/acpi_tuxi_thermal.=
 h
 >
-> diff --git a/drivers/platform/x86/Makefile b/drivers/platform/x86/Makefi=
-le
-> index e1b1429470674..1562dcd7ad9a5 100644
-> --- a/drivers/platform/x86/Makefile
-> +++ b/drivers/platform/x86/Makefile
-> @@ -153,3 +153,6 @@ obj-$(CONFIG_WINMATE_FM07_KEYS)		+=3D winmate-fm07-k=
-eys.o
->
->   # SEL
->   obj-$(CONFIG_SEL3350_PLATFORM)		+=3D sel3350-platform.o
-> +
-> +# TUXEDO
-> +obj-y					+=3D tuxedo/
-> diff --git a/drivers/platform/x86/tuxedo/Kbuild b/drivers/platform/x86/t=
-uxedo/Kbuild
-> new file mode 100644
-> index 0000000000000..16396a8923432
-> --- /dev/null
-> +++ b/drivers/platform/x86/tuxedo/Kbuild
-> @@ -0,0 +1,6 @@
-> +# SPDX-License-Identifier: GPL-2.0-only
-> +#
-> +# TUXEDO X86 Platform Specific Drivers
-> +#
-> +
-> +obj-y	+=3D nbxx/
-
-Hi,
-
-please give this directory a more descriptive name, maybe call it "tuxi"?
-
-> diff --git a/drivers/platform/x86/tuxedo/nbxx/Kbuild b/drivers/platform/=
-x86/tuxedo/nbxx/Kbuild
-> new file mode 100644
-> index 0000000000000..aa4d6d66b785f
-> --- /dev/null
-> +++ b/drivers/platform/x86/tuxedo/nbxx/Kbuild
-> @@ -0,0 +1,8 @@
-> +# SPDX-License-Identifier: GPL-2.0-only
-> +#
-> +# TUXEDO X86 Platform Specific Drivers
-> +#
-> +
-> +tuxedo_nbxx_acpi_tuxi-y			:=3D acpi_tuxi.o
-> +tuxedo_nbxx_acpi_tuxi-y			+=3D acpi_tuxi_thermal.o
-> +obj-$(CONFIG_TUXEDO_NBXX_ACPI_TUXI)	+=3D tuxedo_nbxx_acpi_tuxi.o
-> diff --git a/drivers/platform/x86/tuxedo/nbxx/Kconfig b/drivers/platform=
-/x86/tuxedo/nbxx/Kconfig
-> new file mode 100644
-> index 0000000000000..93f7f86e803da
-> --- /dev/null
-> +++ b/drivers/platform/x86/tuxedo/nbxx/Kconfig
-> @@ -0,0 +1,9 @@
-> +# SPDX-License-Identifier: GPL-2.0-only
-> +#
-> +# TUXEDO X86 Platform Specific Drivers
-> +#
-> +
-> +config TUXEDO_NBXX_ACPI_TUXI
-> +	tristate "TUXEDO TUXI"
-> +	help
-> +	  TUXEDO TUXI driver
-
-Please add any dependencies and a more descriptive help text.
-
-> diff --git a/drivers/platform/x86/tuxedo/nbxx/acpi_tuxi.c b/drivers/plat=
-form/x86/tuxedo/nbxx/acpi_tuxi.c
-> new file mode 100644
-> index 0000000000000..6031cf731b449
-> --- /dev/null
-> +++ b/drivers/platform/x86/tuxedo/nbxx/acpi_tuxi.c
-> @@ -0,0 +1,96 @@
-> +// SPDX-License-Identifier: GPL-2.0-or-later
-> +/*
-> + * Copyright (C) 2024 Werner Sembach wse@tuxedocomputers.com
-> + */
-> +
-> +#include <linux/module.h>
-> +#include <linux/acpi.h>
-> +#include "acpi_tuxi_thermal.h"
-> +
-> +#include "acpi_tuxi.h"
-> +
-> +static int eval_intparams(acpi_handle handle, acpi_string pathname,
-> +			  unsigned long long *params, u32 params_count,
-> +			  unsigned long long *retval)
-> +{
-> +	struct acpi_object_list arguments;
-> +	unsigned long long data;
-> +	acpi_status status;
-> +
-> +	pr_debug("Eval %s\n", pathname);
-> +
-> +	if (params_count > 0) {
-> +		pr_debug("Params:\n");
-> +
-> +		arguments.count =3D params_count;
-> +		arguments.pointer =3D kzalloc(
-> +			params_count * sizeof(*arguments.pointer), GFP_KERNEL);
-> +		for (int i =3D 0; i < params_count; ++i) {
-> +			pr_debug("%llu\n", params[i]);
-> +
-> +			arguments.pointer[i].type =3D ACPI_TYPE_INTEGER;
-> +			arguments.pointer[i].integer.value =3D params[i];
-> +		}
-> +		status =3D acpi_evaluate_integer(handle, pathname, &arguments,
-> +					       &data);
-> +		kfree(arguments.pointer);
-> +	} else {
-> +		status =3D acpi_evaluate_integer(handle, pathname, NULL, &data);
-> +	}
-> +	if (ACPI_FAILURE(status))
-> +		return_ACPI_STATUS(status);
-
-This is an internal function of ACPICA, please just return -EIO.
-
-> +
-> +	if (retval)
-> +		*retval =3D data;
-> +
-> +	pr_debug("RetVal: %llu\n", *retval);
-> +
-> +	return 0;
-> +}
-> +
-> +static int add(struct acpi_device *device) {
-> +	struct tuxedo_nbxx_acpi_tuxi_driver_data_t *driver_data;
-> +	acpi_status status;
-> +
-> +	driver_data =3D devm_kzalloc(&device->dev, sizeof(*driver_data),
-> +				   GFP_KERNEL);
-> +	if (!driver_data)
-> +		return -ENOMEM;
-> +
-> +	// Find subdevices
-> +	status =3D acpi_get_handle(device->handle, "TFAN",
-> +				 &driver_data->tfan_handle);
-> +	if (ACPI_FAILURE(status))
-> +		return_ACPI_STATUS(status);
-> +
-> +	driver_data->eval_intparams =3D &eval_intparams;
-> +
-> +	dev_set_drvdata(&device->dev, driver_data);
-> +
-> +	return tuxedo_nbxx_acpi_tuxi_thermal_add_devices(device);
-> +}
-> +
-> +static void remove(struct acpi_device *device) {
-> +	tuxedo_nbxx_acpi_tuxi_thermal_remove_devices(device);
-> +}
-> +
-> +static const struct acpi_device_id acpi_device_ids[] =3D {
-> +	{"TUXI0000", 0},
-> +	{"", 0}
-> +};
-> +MODULE_DEVICE_TABLE(acpi, acpi_device_ids);
-> +
-> +static struct acpi_driver acpi_driver =3D {
-> +	.name =3D "tuxedo_nbxx_acpi_tuxi",
-> +	.ids =3D acpi_device_ids,
-> +	.ops =3D {
-> +		.add =3D add,
-> +		.remove =3D remove,
-> +	},
-> +};
-> +
-> +module_acpi_driver(acpi_driver);
-
-Please implement your driver as an platform driver.
-
-> +
-> +MODULE_DESCRIPTION("TUXEDO TUXI");
-> +MODULE_AUTHOR("Werner Sembach <wse@tuxedocomputers.com>");
-> +MODULE_LICENSE("GPL");
-> diff --git a/drivers/platform/x86/tuxedo/nbxx/acpi_tuxi.h b/drivers/plat=
-form/x86/tuxedo/nbxx/acpi_tuxi.h
-> new file mode 100644
-> index 0000000000000..7ffda8e0dd68a
-> --- /dev/null
-> +++ b/drivers/platform/x86/tuxedo/nbxx/acpi_tuxi.h
-> @@ -0,0 +1,84 @@
-> +/* SPDX-License-Identifier: GPL-2.0-or-later */
-> +/*
-> + * Copyright (C) 2024 Werner Sembach wse@tuxedocomputers.com
-> + */
-> +
-> +#ifndef __PLATFORM_X86_TUXEDO_NBXX_ACPI_TUXI_H__
-> +#define __PLATFORM_X86_TUXEDO_NBXX_ACPI_TUXI_H__
-> +
-> +#include <linux/thermal.h>
-> +#include <linux/acpi.h>
-> +
-> +/*
-> + * Set fan speed target
-> + *
-> + * Set a specific fan speed (needs manual mode)
-> + *
-> + * Arg0: Fan index
-> + * Arg1: Fan speed as a fraction of maximum speed (0-255)
-> + */
-> +#define TUXI_TFAN_METHOD_SET_FAN_SPEED		"SSPD"
-> +
-> +/*
-> + * Get fan speed target
-> + *
-> + * Arg0: Fan index
-> + * Returns: Current fan speed target a fraction of maximum speed (0-255=
-)
-> + */
-> +#define TUXI_TFAN_METHOD_GET_FAN_SPEED		"GSPD"
-> +
-> +/*
-> + * Get fans count
-> + *
-> + * Returns: Number of individually controllable fans
-> + */
-> +#define TUXI_TFAN_METHOD_GET_FAN_COUNT		"GCNT"
-> +
-> +/*
-> + * Set fans mode
-> + *
-> + * Arg0: 0 =3D auto, 1 =3D manual
-> + */
-> +#define TUXI_TFAN_METHOD_SET_FAN_MODE		"SMOD"
-> +
-> +/*
-> + * Get fans mode
-> + *
-> + * Returns: 0 =3D auto, 1 =3D manual
-> + */
-> +#define TUXI_TFAN_METHOD_GET_FAN_MODE		"GMOD"
-> +
-> +/*
-> + * Get fan type/what the fan is pointed at
-> + *
-> + * Arg0: Fan index
-> + * Returns: 0 =3D general, 1 =3D CPU, 2 =3D GPU
-> + */
-> +#define TUXI_TFAN_METHOD_GET_FAN_TYPE		"GTYP"
-> +
-> +/*
-> + * Get fan temperature/temperature of what the fan is pointed at
-> + *
-> + * Arg0: Fan index
-> + * Returns: Temperature sensor value in 10ths of degrees kelvin
-> + */
-> +#define TUXI_TFAN_METHOD_GET_FAN_TEMPERATURE	"GTMP"
-> +
-> +/*
-> + * Get actual fan speed in RPM
-> + *
-> + * Arg0: Fan index
-> + * Returns: Speed sensor value in revolutions per minute
-> + */
-> +#define TUXI_TFAN_METHOD_GET_FAN_RPM		"GRPM"
-> +
-> +struct tuxedo_nbxx_acpi_tuxi_driver_data_t {
-> +	acpi_handle tfan_handle;
-> +	int (*eval_intparams)(acpi_handle, acpi_string,
-> +				  unsigned long long *, u32,
-> +				  unsigned long long *);
-> +	struct thermal_zone_device **tzdevs;
-> +	size_t tzdevs_count;
-> +};
-
-Do you plan for this driver to have multiple backends? If not then
-please remove this unnecessary indirection.
-
-> +
-> +#endif // __PLATFORM_X86_TUXEDO_NBXX_ACPI_TUXI_H__
-> diff --git a/drivers/platform/x86/tuxedo/nbxx/acpi_tuxi_thermal.c b/driv=
-ers/platform/x86/tuxedo/nbxx/acpi_tuxi_thermal.c
-> new file mode 100644
-> index 0000000000000..557e3fac15779
-> --- /dev/null
-> +++ b/drivers/platform/x86/tuxedo/nbxx/acpi_tuxi_thermal.c
-> @@ -0,0 +1,241 @@
-> +// SPDX-License-Identifier: GPL-2.0-or-later
-> +/*
-> + * Copyright (C) 2024 Werner Sembach wse@tuxedocomputers.com
-> + */
-> +
-> +#include <linux/thermal.h>
-> +#include <linux/minmax.h>
-> +#include <linux/export.h>
-> +#include <linux/module.h>
-> +#include <linux/device.h>
-> +#include <linux/acpi.h>
-> +#include "acpi_tuxi.h"
-> +
-> +#include "acpi_tuxi_thermal.h"
-> +
-> +static struct thermal_trip tzdtrips[] =3D {
-> +	{
-> +		.type		=3D THERMAL_TRIP_ACTIVE,
-> +		.temperature	=3D 80000,
-> +		.hysteresis	=3D 5000,
-> +	},
-> +	{
-> +		.type		=3D THERMAL_TRIP_ACTIVE,
-> +		.temperature	=3D 90000,
-> +		.hysteresis	=3D 5000,
-> +	},
-> +	{
-> +		.type		=3D THERMAL_TRIP_HOT,
-> +		.temperature	=3D 100000,
-> +		.hysteresis	=3D 5000,
-> +	},
-> +	{
-> +		.type		=3D THERMAL_TRIP_CRITICAL,
-> +		.temperature	=3D 110000,
-> +	},
-> +};
-> +
-> +struct tz_devdata_t {
-> +	struct acpi_device *parent;
-> +	struct thermal_cooling_device *cdev;
-> +	size_t index;
-> +};
-> +
-> +static bool should_bind(struct thermal_zone_device *tzdev,
-> +			const struct thermal_trip __always_unused *trip,
-> +			struct thermal_cooling_device *cdev,
-> +			struct cooling_spec __always_unused *cspec)
-> +{
-> +	return cdev->devdata =3D=3D tzdev;
-> +}
-> +
-> +static int get_temp(struct thermal_zone_device *tzdev, int *temp)
-> +{
-> +	struct tuxedo_nbxx_acpi_tuxi_driver_data_t *driver_data;
-> +	struct tz_devdata_t *tz_devdata;
-> +	unsigned long long data;
-> +	int ret;
-> +
-> +	tz_devdata =3D thermal_zone_device_priv(tzdev);
-> +	driver_data =3D dev_get_drvdata(&tz_devdata->parent->dev);
-> +
-> +	unsigned long long params[] =3D { tz_devdata->index };
-> +	ret =3D driver_data->eval_intparams(driver_data->tfan_handle,
-> +					  TUXI_TFAN_METHOD_GET_FAN_TEMPERATURE,
-> +					  params, ARRAY_SIZE(params), &data);
-> +	if (ret)
-> +		return ret;
-> +
-> +	*temp =3D data * 100 - 272000;
-
-Please check if you can use units.h for that.
-
-> +
-> +	return 0;
-> +}
-> +
-> +static struct thermal_zone_device_ops tzdops =3D {
-> +	.should_bind =3D should_bind,
-> +	.get_temp =3D get_temp,
-> +};
-> +
-> +static struct thermal_zone_params tzdparams =3D {
-> +	.governor_name =3D "user_space",
-> +};
-> +
-> +static int get_max_state(struct thermal_cooling_device __always_unused =
-*cdev,
-> +		  unsigned long *state)
-> +{
-> +	*state =3D 255;
-> +
-> +	return 0;
-> +}
-> +
-> +static int get_cur_state(struct thermal_cooling_device *cdev,
-> +			 unsigned long *state)
-> +{
-> +	struct tuxedo_nbxx_acpi_tuxi_driver_data_t *driver_data;
-> +	struct thermal_zone_device *tzdev;
-> +	struct tz_devdata_t *tz_devdata;
-> +	unsigned long long data;
-> +	int ret;
-> +
-> +	tzdev =3D cdev->devdata;
-> +	tz_devdata =3D thermal_zone_device_priv(tzdev);
-> +	driver_data =3D dev_get_drvdata(&tz_devdata->parent->dev);
-> +
-> +	unsigned long long params[] =3D { tz_devdata->index };
-> +	ret =3D driver_data->eval_intparams(driver_data->tfan_handle,
-> +					  TUXI_TFAN_METHOD_GET_FAN_SPEED,
-> +					  params, ARRAY_SIZE(params), &data);
-> +	if (ret)
-> +		return ret;
-> +
-> +	*state =3D data;
-> +
-> +	return 0;
-> +}
-> +
-> +static int set_cur_state(struct thermal_cooling_device *cdev,
-> +			 unsigned long state) {
-> +	struct tuxedo_nbxx_acpi_tuxi_driver_data_t *driver_data;
-> +	struct thermal_zone_device *tzdev;
-> +	struct tz_devdata_t *tz_devdata;
-> +	unsigned long long data;
-> +	int ret;
-> +
-> +	tzdev =3D cdev->devdata;
-> +	tz_devdata =3D thermal_zone_device_priv(tzdev);
-> +	driver_data =3D dev_get_drvdata(&tz_devdata->parent->dev);
-> +
-> +	unsigned long long params[] =3D { tz_devdata->index, state };
-
-Please check if "state" is greater than 255 and return -EINVAL in such a c=
-ase.
-
-> +	ret =3D driver_data->eval_intparams(driver_data->tfan_handle,
-> +					  TUXI_TFAN_METHOD_SET_FAN_SPEED,
-> +					  params, ARRAY_SIZE(params), &data);
-> +	if (ret)
-> +		return ret;
-> +
-> +	return 0;
-> +}
-> +
-> +static struct thermal_cooling_device_ops tcdops =3D {
-> +	.get_max_state =3D get_max_state,
-> +	.get_cur_state =3D get_cur_state,
-> +	.set_cur_state =3D set_cur_state,
-> +};
-> +
-> +int tuxedo_nbxx_acpi_tuxi_thermal_add_devices(struct acpi_device *paren=
-t)
-> +{
-> +	struct tuxedo_nbxx_acpi_tuxi_driver_data_t *driver_data;
-> +	struct tz_devdata_t *tz_devdata;
-> +	struct thermal_zone_device **tzdevs;
-> +	unsigned long long data;
-> +	size_t tzdevs_count;
-> +	char *type;
-> +	int ret;
-> +
-> +	driver_data =3D dev_get_drvdata(&parent->dev);
-> +
-> +	ret =3D driver_data->eval_intparams(driver_data->tfan_handle,
-> +					  TUXI_TFAN_METHOD_GET_FAN_COUNT, NULL,
-> +					  0, &data);
-> +	if (ret)
-> +		return ret;
-> +
-> +	tzdevs_count =3D data;
-> +	tzdevs =3D devm_kzalloc(&parent->dev, tzdevs_count * sizeof(*tzdevs),
-> +			      GFP_KERNEL);
-> +	if (!tzdevs)
-> +			return -ENOMEM;
-> +
-> +	driver_data->tzdevs =3D tzdevs;
-> +	driver_data->tzdevs_count =3D tzdevs_count;
-> +
-> +	for (size_t i =3D 0; i < tzdevs_count; ++i) {
-> +		tz_devdata =3D devm_kzalloc(&parent->dev, sizeof(*tz_devdata),
-> +					  GFP_KERNEL);
-> +		if (!tz_devdata)
-> +			return -ENOMEM;
-> +
-> +		tz_devdata->parent =3D parent;
-> +		tz_devdata->index =3D i;
-> +
-> +		unsigned long long params[] =3D { i };
-> +		ret =3D driver_data->eval_intparams(driver_data->tfan_handle,
-> +						  TUXI_TFAN_METHOD_GET_FAN_TYPE,
-> +						  params, ARRAY_SIZE(params),
-> +						  &data);
-> +		if (ret)
-> +			return ret;
-> +
-> +		switch(data) {
-> +		case 0:
-> +			type =3D "tuxedo_general";
-> +			break;
-> +		case 1:
-> +			type =3D "tuxedo_cpu";
-> +			break;
-> +		case 2:
-> +			type =3D "tuxedo_gpu";
-> +			break;
-> +		default:
-> +			return -EIO;
-> +		}
-> +
-> +		tzdevs[i] =3D thermal_zone_device_register_with_trips(
-> +			type, tzdtrips, ARRAY_SIZE(tzdtrips), tz_devdata, &tzdops,
-> +			&tzdparams, 1000, 1000);
-> +		if (IS_ERR(tzdevs[i]))
-> +			return PTR_ERR(tzdevs[i]);
-> +
-> +		tz_devdata->cdev =3D thermal_cooling_device_register(type,
-> +								   tzdevs[i],
-> +								   &tcdops);
-> +		if (IS_ERR(tz_devdata->cdev))
-> +			return PTR_ERR(tz_devdata->cdev);
-
-Where do you clean up those thermal zones and cooling devices should an er=
-ror occur? Better use devres for that.
-
-Thanks,
-Armin Wolf
-
-> +	}
-> +
-> +	unsigned long long params[] =3D { 1 };
-> +	driver_data->eval_intparams(driver_data->tfan_handle,
-> +				    TUXI_TFAN_METHOD_SET_FAN_MODE,
-> +				    params, ARRAY_SIZE(params), &data);
-> +
-> +	return 0;
-> +}
-> +
-> +void tuxedo_nbxx_acpi_tuxi_thermal_remove_devices(struct acpi_device *p=
-arent) {
-> +	struct tuxedo_nbxx_acpi_tuxi_driver_data_t *driver_data;
-> +	struct tz_devdata_t *tz_devdata;
-> +	unsigned long long data;
-> +
-> +	driver_data =3D dev_get_drvdata(&parent->dev);
-> +
-> +	unsigned long long params[] =3D { 0 };
-> +	driver_data->eval_intparams(driver_data->tfan_handle,
-> +				    TUXI_TFAN_METHOD_SET_FAN_MODE,
-> +				    params, ARRAY_SIZE(params), &data);
-> +
-> +	for (int i =3D 0; i < driver_data->tzdevs_count; ++i) {
-> +		tz_devdata =3D thermal_zone_device_priv(driver_data->tzdevs[i]);
-> +
-> +		thermal_cooling_device_unregister(tz_devdata->cdev);
-> +		thermal_zone_device_unregister(driver_data->tzdevs[i]);
-> +	}
-> +}
-> diff --git a/drivers/platform/x86/tuxedo/nbxx/acpi_tuxi_thermal.h b/driv=
-ers/platform/x86/tuxedo/nbxx/acpi_tuxi_thermal.h
-> new file mode 100644
-> index 0000000000000..2193fa6db0ea1
-> --- /dev/null
-> +++ b/drivers/platform/x86/tuxedo/nbxx/acpi_tuxi_thermal.h
-> @@ -0,0 +1,14 @@
-> +/* SPDX-License-Identifier: GPL-2.0-or-later */
-> +/*
-> + * Copyright (C) 2024 Werner Sembach wse@tuxedocomputers.com
-> + */
-> +
-> +#ifndef __PLATFORM_X86_TUXEDO_NBXX_ACPI_TUXI_THERMAL_H__
-> +#define __PLATFORM_X86_TUXEDO_NBXX_ACPI_TUXI_THERMAL_H__
-> +
-> +#include <linux/acpi.h>
-> +
-> +int tuxedo_nbxx_acpi_tuxi_thermal_add_devices(struct acpi_device *paren=
-t);
-> +void tuxedo_nbxx_acpi_tuxi_thermal_remove_devices(struct acpi_device *p=
-arent);
-> +
-> +#endif // __PLATFORM_X86_TUXEDO_NBXX_ACPI_TUXI_THERMAL_H__
