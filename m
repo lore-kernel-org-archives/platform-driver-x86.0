@@ -1,53 +1,53 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.15])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C3F661A9B2E;
-	Sat, 30 Nov 2024 17:43:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7892BF9E8;
+	Sun,  1 Dec 2024 02:56:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1732988601; cv=none; b=mLEJB0CIj8FUdx8IOHskuf36SRah1rNcx24SNkkKqJ/K6HFchdFJgGuULaPDlQMKvoaA5ZznHUG4D0AITmtADVAjAVwkQDR0CbVGspgLWwaI5kkMVvS30vWIC6u0XNu7+/smPB/7+35kOJKSru597TY22pXnfflI/+e7CB5qKKY=
+	t=1733021767; cv=none; b=i4gi+KYAWioHaMyL5dyTdUr1rDl+YIGypNXP5nhdqJcQko9Y7gi+fzx41zFJqucYCiAbTrdy3KInsfINXiOAUnvYQXwJ5VCspMJxjfJtkajfsCh2vEQmvW5ckoveUQZ2/DHTIRowRKWZJQTt5Vxf3oneC+eiVkqFLAmNFCOFy4I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1732988601; c=relaxed/simple;
-	bh=hp79E4kQ26QL67QnIKLFTCKPhH95s/jPskxdhk6jR3A=;
+	s=arc-20240116; t=1733021767; c=relaxed/simple;
+	bh=2MDLGdtixIr+eogn07QqelKmKPJW7oyKKYZK2ByJj5Y=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=tvPHlMzZQE0a7BHhy/LESp7Xy1nGz0pey1Dd0QF3EbFkDFRkl7d4mnG0HtOv4JiUP+UFGe+NQd+ADW3OxfipuJDNAWA43yx6ASxDqMeFoVHNmVZ2MYMpHLgwI8NdcGVA9IgbTPQmDgE1xZ19qtBtI1MxFVLVYfwivDHjQQ0PBwI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=KVsBsjWR; arc=none smtp.client-ip=192.198.163.15
+	 Content-Type:Content-Disposition:In-Reply-To; b=keAe4c+uavuY44QhCcoVQQz5q5qt7NjBcPudaLQ2oexUQYgTxTCElTRifBZMrKC8q+gPVKI2HSb34s5ModJLztVD+Z3UBKb5PXfcyBfu/7LWhXUx5V1UZiD8kU+JjBQZnXhr8ptTp8VYzH16fvBBYGLoLCg+vwv17SiK3I7PWMk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=hV3mrotw; arc=none smtp.client-ip=198.175.65.13
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="KVsBsjWR"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="hV3mrotw"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1732988599; x=1764524599;
+  t=1733021765; x=1764557765;
   h=date:from:to:cc:subject:message-id:references:
    mime-version:in-reply-to;
-  bh=hp79E4kQ26QL67QnIKLFTCKPhH95s/jPskxdhk6jR3A=;
-  b=KVsBsjWRuN2cN0wCJDJbq7KFL907NGl6wAp/N6bFv/TRXZaMuwWukx7U
-   eJAUcxihT8JpSzidaphshqcR4OqDjcyafJ3QlqXE3+duQ3klX+423favA
-   6bkqWT2QTUZPT4hrcqEbiiqRh2OmykI3u84Vo3lDxw9dzUz+ObMa6yRHU
-   IoOdJZFSD7n7ebV2WmadX8KmzT9ERU1W7IrXD9Agx93wLI4swF0TRtZ4P
-   KcNYeUHSY+VK8VDcM1ympygWP0mavyseQs6Aox2UkTckDQX/2mi99QlsC
-   jekK7JamVCbLnRwX/PhWvGiR2Vdq+4UB5kvbhFBrJ+VsclDv2d7oVx/2Z
-   w==;
-X-CSE-ConnectionGUID: rHfEG30LTzeeiGZgVkLhOg==
-X-CSE-MsgGUID: 2IdsykmdQU6HHhKOx6YAZw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11272"; a="33319829"
-X-IronPort-AV: E=Sophos;i="6.12,198,1728975600"; 
-   d="scan'208";a="33319829"
-Received: from orviesa008.jf.intel.com ([10.64.159.148])
-  by fmvoesa109.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Nov 2024 09:43:18 -0800
-X-CSE-ConnectionGUID: STfJSgtMSQuLn6aITruuUg==
-X-CSE-MsgGUID: 9i8jZTqRS2GKg5alYFu95w==
+  bh=2MDLGdtixIr+eogn07QqelKmKPJW7oyKKYZK2ByJj5Y=;
+  b=hV3mrotwWQCv5TVV+POUpRLLshlMDO+NGJ2+G4WFHtFkURLjdnaprQ/7
+   rRkFtYJyKUM24LuWdta1GHezFQLZQdo09yzqU92r95m6kr+jdQv46M4yb
+   2MOvC7nlYfUCVIhadw+1b07fTzwBaq6W5YSZmSAQQuygou9F2DaxUTBjd
+   uocDk2qwBTPNdfVja8JRCdgzCl9saIBc+XovGJakgBjDpcwhfOZUD9PEJ
+   fKi4zJoT1u/ZQOkw/rCjrzeA/lDkfO6QqXzUxbILVS9WMGe2I3MPXVab7
+   +Gmq2R1EMS4aoNNc+rCLNnJmpT/Xgsk5MLNRNKrdykSrVUmN+NliMKMAJ
+   g==;
+X-CSE-ConnectionGUID: HXJMo9GbT/SI+gbM/GSATw==
+X-CSE-MsgGUID: jX1s19gDSuW6T6tPpbEqLA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11272"; a="44248029"
+X-IronPort-AV: E=Sophos;i="6.12,199,1728975600"; 
+   d="scan'208";a="44248029"
+Received: from orviesa004.jf.intel.com ([10.64.159.144])
+  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Nov 2024 18:56:04 -0800
+X-CSE-ConnectionGUID: awvlkQ0XQouCl51C2mZQ+w==
+X-CSE-MsgGUID: NoGx+l5vQ26mWR/7dI8L2A==
 X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.12,198,1728975600"; 
-   d="scan'208";a="93546463"
+X-IronPort-AV: E=Sophos;i="6.12,199,1728975600"; 
+   d="scan'208";a="97890037"
 Received: from lkp-server02.sh.intel.com (HELO 36a1563c48ff) ([10.239.97.151])
-  by orviesa008.jf.intel.com with ESMTP; 30 Nov 2024 09:43:12 -0800
+  by orviesa004.jf.intel.com with ESMTP; 30 Nov 2024 18:55:59 -0800
 Received: from kbuild by 36a1563c48ff with local (Exim 4.96)
 	(envelope-from <lkp@intel.com>)
-	id 1tHRUs-0000s3-29;
-	Sat, 30 Nov 2024 17:43:10 +0000
-Date: Sun, 1 Dec 2024 01:42:47 +0800
+	id 1tHa7o-0001An-2a;
+	Sun, 01 Dec 2024 02:55:56 +0000
+Date: Sun, 1 Dec 2024 10:55:19 +0800
 From: kernel test robot <lkp@intel.com>
 To: Mario Limonciello <mario.limonciello@amd.com>,
 	Hans de Goede <hdegoede@redhat.com>,
@@ -74,7 +74,7 @@ Cc: oe-kbuild-all@lists.linux.dev, "Rafael J . Wysocki" <rafael@kernel.org>,
 	Armin Wolf <W_Armin@gmx.de>
 Subject: Re: [PATCH v8 02/22] platform/x86/dell: dell-pc: Create platform
  device
-Message-ID: <202412010129.zSeGQmOm-lkp@intel.com>
+Message-ID: <202412011002.Hb0aRIsM-lkp@intel.com>
 References: <20241130140454.455-3-mario.limonciello@amd.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
@@ -96,37 +96,24 @@ url:    https://github.com/intel-lab-lkp/linux/commits/Mario-Limonciello/ACPI-pl
 base:   2ba9f676d0a2e408aef14d679984c26373bf37b7
 patch link:    https://lore.kernel.org/r/20241130140454.455-3-mario.limonciello%40amd.com
 patch subject: [PATCH v8 02/22] platform/x86/dell: dell-pc: Create platform device
-config: i386-buildonly-randconfig-003-20241130 (https://download.01.org/0day-ci/archive/20241201/202412010129.zSeGQmOm-lkp@intel.com/config)
+config: x86_64-randconfig-121-20241201 (https://download.01.org/0day-ci/archive/20241201/202412011002.Hb0aRIsM-lkp@intel.com/config)
 compiler: gcc-12 (Debian 12.2.0-14) 12.2.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20241201/202412010129.zSeGQmOm-lkp@intel.com/reproduce)
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20241201/202412011002.Hb0aRIsM-lkp@intel.com/reproduce)
 
 If you fix the issue in a separate patch/commit (i.e. not just a new version of
 the same patch/commit), kindly add following tags
 | Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202412010129.zSeGQmOm-lkp@intel.com/
+| Closes: https://lore.kernel.org/oe-kbuild-all/202412011002.Hb0aRIsM-lkp@intel.com/
 
-All warnings (new ones prefixed by >>):
+sparse warnings: (new ones prefixed by >>)
+>> drivers/platform/x86/dell/dell-pc.c:252:32: sparse: sparse: incorrect type in argument 1 (different base types) @@     expected long error @@     got struct platform_device *static [assigned] [toplevel] platform_device @@
+   drivers/platform/x86/dell/dell-pc.c:252:32: sparse:     expected long error
+   drivers/platform/x86/dell/dell-pc.c:252:32: sparse:     got struct platform_device *static [assigned] [toplevel] platform_device
+>> drivers/platform/x86/dell/dell-pc.c:252:31: sparse: sparse: incorrect type in return expression (different base types) @@     expected int @@     got void * @@
+   drivers/platform/x86/dell/dell-pc.c:252:31: sparse:     expected int
+   drivers/platform/x86/dell/dell-pc.c:252:31: sparse:     got void *
 
-   drivers/platform/x86/dell/dell-pc.c: In function 'thermal_init':
->> drivers/platform/x86/dell/dell-pc.c:252:32: warning: passing argument 1 of 'ERR_PTR' makes integer from pointer without a cast [-Wint-conversion]
-     252 |                 return ERR_PTR(platform_device);
-         |                                ^~~~~~~~~~~~~~~
-         |                                |
-         |                                struct platform_device *
-   In file included from include/linux/kernfs.h:9,
-                    from include/linux/sysfs.h:16,
-                    from include/linux/kobject.h:20,
-                    from include/linux/dmi.h:6,
-                    from drivers/platform/x86/dell/dell-pc.c:15:
-   include/linux/err.h:39:48: note: expected 'long int' but argument is of type 'struct platform_device *'
-      39 | static inline void * __must_check ERR_PTR(long error)
-         |                                           ~~~~~^~~~~
->> drivers/platform/x86/dell/dell-pc.c:252:24: warning: returning 'void *' from a function with return type 'int' makes integer from pointer without a cast [-Wint-conversion]
-     252 |                 return ERR_PTR(platform_device);
-         |                        ^~~~~~~~~~~~~~~~~~~~~~~~
-
-
-vim +/ERR_PTR +252 drivers/platform/x86/dell/dell-pc.c
+vim +252 drivers/platform/x86/dell/dell-pc.c
 
    233	
    234	static int thermal_init(void)
