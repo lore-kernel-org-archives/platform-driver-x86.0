@@ -1,96 +1,91 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 931851DC1BD;
-	Mon,  2 Dec 2024 17:26:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E0DD21DB548
+	for <platform-driver-x86@vger.kernel.org>; Mon,  2 Dec 2024 17:49:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1733160390; cv=none; b=Kq46QZTuQ94RR/m0eRqvZYaOXbQPq9yK2PJrLzomyJGLa5YgaJJsu25wBTwIjEzHg+7Z+iNuOS9nbExoURxY9KCmEEY7Ju3oNYRlwsLvRgzQSTRm6qJ4Wty0eaaQyVw2bhjkeSovOyT2C+E+UGCgYJYV9wyYNn8iNM9DWnAb2iY=
+	t=1733161745; cv=none; b=gwSd6D01C9Mh5RCSn+wdeVnn42En23mtFaPaAvWlhC6L+vtBI8fNQK4fhVBnTO9ny505wO9NSI8ePlnvM4A6Z+poxk+3QL7oujErfFyJ6VrpY9GXuUnvTvl5/daP/KyrQxeupyiL02U2lNStDxfzyoAzYkuJRqaCjENAwUyibko=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1733160390; c=relaxed/simple;
-	bh=Y+WumHtOMY05KufTKmNmz4ua2A4KkuwUlgtAE39QaVk=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=WXnt0slJKY91qSe2XHO2ziVWGgn9twzX4JVEmZz+48oGRrd59TPsV2shDzY+6zh5JjsZatU5IaQXrLik7dNUSq/h+Qng1Hyxdmnf4TO0Ifb7478kOpW5dsRQ/o4liYYTdn+RT8ebIP1wBL+tbR0T/ngAolwgO6fxp06gqcxKx3I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=hIwsIBgU; arc=none smtp.client-ip=192.198.163.18
+	s=arc-20240116; t=1733161745; c=relaxed/simple;
+	bh=MJIXbgHwG+Y7OY/tVEuxPDAypBmDzobv+I/zehEjr6g=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=pk169A7wvbgUv1IPE3mJPgCeAWUpiJtRQnpUV43ettgyQ0adj9p1R3cD0F56XvML8pgrqvm1FhNzjr3ejooOCpbVcq2mVxvq3l/MO6KwCbWS/IpFxHADQSMTXF60UByMvMRRzB8TZyJtiwoHYbI/nNaFpwrglBI3phMS2t02gyI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=L/nxo0Sz; arc=none smtp.client-ip=192.198.163.7
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="hIwsIBgU"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="L/nxo0Sz"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1733160389; x=1764696389;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=Y+WumHtOMY05KufTKmNmz4ua2A4KkuwUlgtAE39QaVk=;
-  b=hIwsIBgUMCBRPAgV4R/KLC3GIEXUOHcRTIpq4uZYJhMd8N4EJK5B9Bjz
-   wRzJfyP9oETGMWj49TmP4qzKCFE/7dscmLR4tbukaGYVOuqPL9lZfMVoX
-   Nwa2SEqo/9DOff2L5MOrF5L251+dBbCBjZEHf1vEjnLNxtYARLL9R1cgO
-   l5Pp2ZN70vvh7iy0pdXrp/VOFQ6n2ISPewaAh3t05MgqzYZSyMsV5Zd7V
-   xZmyARmyOQdqf/gREFM3M8wJQgBbxFcX8UhQYzDtNEHV7Sk2Se5bFTzDp
-   60inF8R76x9fTGOgmzoRqQCJ0zMbMBTskHZnEeM7+v0A8gWi/tzaC3cDG
-   w==;
-X-CSE-ConnectionGUID: 9d2FNtJPS3+CRttBmHQYrA==
-X-CSE-MsgGUID: KKLQEEotQwm6ZTemlMoVpw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11274"; a="32701924"
+  t=1733161744; x=1764697744;
+  h=from:to:cc:in-reply-to:references:subject:message-id:
+   date:mime-version:content-transfer-encoding;
+  bh=MJIXbgHwG+Y7OY/tVEuxPDAypBmDzobv+I/zehEjr6g=;
+  b=L/nxo0SzA8TCqj2Pwjh75Bp7VZGdDUFKGJu6EXfQ5Mqa2PsyjO8h7pgi
+   pZMXSDO4agzdd2dwFCjdu2luktLvdX3BR3ZnArts22geaU6otFWLqiB5b
+   OSaJ5so/vtR/Ck5WyDaAVr9zEU/wJftnu2xQ2TZlk8azfOiccCEbzqFlT
+   X2nvYhQsuAM9Gcxb8WhOOxZxCrB4t+DO5i3RGB5Kw64Y1Q3TfUyIdnRfP
+   oJiobDYtAaqUq93/ALd78Zznbn4xIKSLgJvzPijOxpbJaH8dn3w6mPYoK
+   5EbzdAt+Rn8MIGpiDeN5P4r0GyuS2CjnXBOShdckfkuPDm5ho8nRVcyCm
+   A==;
+X-CSE-ConnectionGUID: O1mrk5AgSVC/fUOO8SWOYg==
+X-CSE-MsgGUID: piLga+mBTzmztLYlBEb/MA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11274"; a="58747783"
 X-IronPort-AV: E=Sophos;i="6.12,203,1728975600"; 
-   d="scan'208";a="32701924"
-Received: from fmviesa001.fm.intel.com ([10.60.135.141])
-  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Dec 2024 09:26:28 -0800
-X-CSE-ConnectionGUID: sMn1ouFSQQyqa1k8TCg/4w==
-X-CSE-MsgGUID: XExYUV0eRYSm3fnuFFh0ow==
+   d="scan'208";a="58747783"
+Received: from orviesa009.jf.intel.com ([10.64.159.149])
+  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Dec 2024 09:49:03 -0800
+X-CSE-ConnectionGUID: JzmJAvbLQFupHk/n4smFQQ==
+X-CSE-MsgGUID: omElbMFRQZOCSzqMA58CpQ==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.12,203,1728975600"; 
-   d="scan'208";a="124105533"
+   d="scan'208";a="93076705"
 Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.61])
-  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Dec 2024 09:26:25 -0800
+  by orviesa009-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Dec 2024 09:49:01 -0800
 From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Mon, 2 Dec 2024 19:26:21 +0200 (EET)
-To: Illia Ostapyshyn <illia@yshyn.com>, 
-    Dmitry Torokhov <dmitry.torokhov@gmail.com>
-cc: LKML <linux-kernel@vger.kernel.org>, linux-input@vger.kernel.org, 
-    platform-driver-x86@vger.kernel.org, ibm-acpi-devel@lists.sourceforge.net, 
-    Ilpo Jarvinen <ilpo.jarvinen@linux.intel.com>, 
-    Hans de Goede <hdegoede@redhat.com>, 
-    Henrique de Moraes Holschuh <hmh@hmh.eng.br>
-Subject: Re: [PATCH 1/2] Input: allocate keycode for phone linking
-In-Reply-To: <20241114173930.44983-2-illia@yshyn.com>
-Message-ID: <8127d500-6eb4-d196-849a-48c3847ebc53@linux.intel.com>
-References: <20241114173930.44983-1-illia@yshyn.com> <20241114173930.44983-2-illia@yshyn.com>
+To: platform-driver-x86@vger.kernel.org, Suma Hegde <suma.hegde@amd.com>
+Cc: hdegoede@redhat.com, 
+ Naveen Krishna Chatradhi <naveenkrishna.chatradhi@amd.com>
+In-Reply-To: <20241118102752.11703-1-suma.hegde@amd.com>
+References: <20241118102752.11703-1-suma.hegde@amd.com>
+Subject: Re: [v3] platform/x86/amd/hsmp: Add support for HSMP protocol
+ version 7 messages
+Message-Id: <173316173604.27896.6281260511503596071.b4-ty@linux.intel.com>
+Date: Mon, 02 Dec 2024 19:48:56 +0200
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Mailer: b4 0.13.0
 
-On Thu, 14 Nov 2024, Illia Ostapyshyn wrote:
+On Mon, 18 Nov 2024 10:27:52 +0000, Suma Hegde wrote:
 
-> The F11 key on the new Lenovo Thinkpad T14 Gen 5, T16 Gen 3, and P14s
-> Gen 5 laptops includes a symbol showing a smartphone and a laptop
-> chained together.  According to the user manual, it starts the Microsoft
-> Phone Link software used to connect to Android/iOS devices and relay
-> messages/calls or sync data.
+> Following new HSMP messages are available on family 0x1A, model 0x00-0x1F
+> platforms with protocol version 7. Add support for them in the driver.
+> - SetXgmiPstateRange(26h)
+> - CpuRailIsoFreqPolicy(27h)
+> - DfcEnable(28h)
+> - GetRaplUnit(30h)
+> - GetRaplCoreCounter(31h)
+> - GetRaplPackageCounter(32h)
 > 
-> As there are no suitable keycodes for this action, introduce a new one.
-> 
-> Signed-off-by: Illia Ostapyshyn <illia@yshyn.com>
-> ---
->  include/uapi/linux/input-event-codes.h | 1 +
->  1 file changed, 1 insertion(+)
-> 
-> diff --git a/include/uapi/linux/input-event-codes.h b/include/uapi/linux/input-event-codes.h
-> index a4206723f503..5a199f3d4a26 100644
-> --- a/include/uapi/linux/input-event-codes.h
-> +++ b/include/uapi/linux/input-event-codes.h
-> @@ -519,6 +519,7 @@
->  #define KEY_NOTIFICATION_CENTER	0x1bc	/* Show/hide the notification center */
->  #define KEY_PICKUP_PHONE	0x1bd	/* Answer incoming call */
->  #define KEY_HANGUP_PHONE	0x1be	/* Decline incoming call */
-> +#define KEY_LINK_PHONE		0x1bf   /* AL Phone Syncing */
+> [...]
 
-Any thoughts about this Dmitry?
 
--- 
+Thank you for your contribution, it has been applied to my local
+review-ilpo-next branch. Note it will show up in the public
+platform-drivers-x86/review-ilpo-next branch only once I've pushed my
+local branch there, which might take a while.
+
+The list of commits applied:
+[1/1] platform/x86/amd/hsmp: Add support for HSMP protocol version 7 messages
+      commit: 836d0d7107e53e6479b60d32fb73bd5f7813e5d1
+
+--
  i.
 
