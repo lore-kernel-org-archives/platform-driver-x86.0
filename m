@@ -1,32 +1,31 @@
 Received: from todd.t-8ch.de (todd.t-8ch.de [159.69.126.157])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1EBF21DE3BC;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2DDCF1DE4D0;
 	Mon,  2 Dec 2024 19:38:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.69.126.157
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1733168321; cv=none; b=uU/z9btP3Q4Jx0mpCpx9sziWZAvMAlCw758hc98TlxlmZa/xDNFHxfRVZudVHPJ5aTNHx4sKVX0rX/dkyyMPwOXNiOmFRg9LHY1ghJ9yaFkdE76UWJrdsmuHsVaeBjYDvYfaKjpCZ4UYrvIeAPSDwxR0+4tzfOlY/BSrMEyo/Wo=
+	t=1733168322; cv=none; b=cA574YaWq0Dkchc+R1ZWFunURadMpDsyhUOCJxiVvcH5XxY/TcPqrLLIpkTeN+5G/W77nJ0RkE7Lr8vhw8fpizH7Mimu9eRelU07vlx8yNYTjT3jOBHp2ooMfPb1MlZAC2RyVUmlJOskvQMQXLESpeCeEogydbgXjbJTf6um5z8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1733168321; c=relaxed/simple;
-	bh=YsbcgpRFOi+cY43e/Gwc75c9FlqZyz0+ZOwZ6DhkDSI=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=dX+UYtEymbuB0gMTXvpWp7fTWNaC5cm/qAItTTQvgM34YmgJj3Meofl3pYFzuquTnLTeuXWpRCKHSZ1TdwZpVns/yjOCA7nYu/envhFqulgZojiJc404p/WiH0S+uQgnLg7Hrr4Bq3/kjFFUlgW8pjhAl1pDshS4xRcSQEGBq9A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=weissschuh.net; spf=pass smtp.mailfrom=weissschuh.net; dkim=pass (1024-bit key) header.d=weissschuh.net header.i=@weissschuh.net header.b=V3u6b9gg; arc=none smtp.client-ip=159.69.126.157
+	s=arc-20240116; t=1733168322; c=relaxed/simple;
+	bh=CCLjKz4p9ifDEuTD7i7Xx+E3HYG987FaG9aqLLF5Qvc=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=hvyDtkQHULuJ+/xqD6jus6tc96/m93rsqAXLl3Aa4og+uqVeEvJtuP3MUD3cLWdsu1EziYtET+dLRT4bKg4B1ZuiQAPfkOYJQgq0GYjPG+gF0t6FH+24XF7FyxcarAjWvYUU8+rJk6BYj5+z2E+wUX5bdzO0PAxgYQQ7wgAK5OI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=weissschuh.net; spf=pass smtp.mailfrom=weissschuh.net; dkim=pass (1024-bit key) header.d=weissschuh.net header.i=@weissschuh.net header.b=hmfy9Old; arc=none smtp.client-ip=159.69.126.157
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=weissschuh.net
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=weissschuh.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=weissschuh.net header.i=@weissschuh.net header.b="V3u6b9gg"
+	dkim=pass (1024-bit key) header.d=weissschuh.net header.i=@weissschuh.net header.b="hmfy9Old"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=weissschuh.net;
 	s=mail; t=1733168316;
-	bh=YsbcgpRFOi+cY43e/Gwc75c9FlqZyz0+ZOwZ6DhkDSI=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=V3u6b9ggz5UxbedruQ9U8mCgaUyqq/thMPo8C9kcwjSbkjjETaYTAnzNjeOpyMLz/
-	 126gqxxY3WhHelteRYnRz3sNzQUh1LFqLtCSIrDUlYi13CVXFcc/mec4FbkKI+PysA
-	 9pIq22l2BfckIt5p29IxYKQi5rWzrqZA+gw/jAsI=
+	bh=CCLjKz4p9ifDEuTD7i7Xx+E3HYG987FaG9aqLLF5Qvc=;
+	h=From:Subject:Date:To:Cc:From;
+	b=hmfy9OldGu2MUnjh5a14kl54b3yqaLMbRVsQPuZUZ/2I3aAXMrmwSV0R6fWOpBiwj
+	 88wUxK5DYFYBr6xhyxGfZiGO6oouImn2Tn9vjuLChL7iG1xw2Ni0jEU1gLpWwyHXHL
+	 2Xb4DcpHl1+2nFF4K7K9E0fSi+ZmXhBT/oue2l50=
 From: =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <linux@weissschuh.net>
-Date: Mon, 02 Dec 2024 20:38:33 +0100
-Subject: [PATCH 2/5] platform/x86: dell_rbu: Constify 'struct
- bin_attribute'
+Subject: [PATCH 0/5] platform/x86: Constify 'struct bin_attribute'
+Date: Mon, 02 Dec 2024 20:38:31 +0100
+Message-Id: <20241202-sysfs-const-bin_attr-pdx86-v1-0-9ab204c2a814@weissschuh.net>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -35,9 +34,10 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-Message-Id: <20241202-sysfs-const-bin_attr-pdx86-v1-2-9ab204c2a814@weissschuh.net>
-References: <20241202-sysfs-const-bin_attr-pdx86-v1-0-9ab204c2a814@weissschuh.net>
-In-Reply-To: <20241202-sysfs-const-bin_attr-pdx86-v1-0-9ab204c2a814@weissschuh.net>
+X-B4-Tracking: v=1; b=H4sIALcMTmcC/x2MQQrCMBAAvxL27IKJNYpfEZF0s9G9pCUbpKX07
+ 128zDCX2UC5CSs83AaNf6IyVQt/ckDfVD+Mkq0hnMPgDairFkWaqnYcpb5T7w3nvNwjko+Urvl
+ yM4EN5sZFlv/8+dr3A3HrrWtsAAAA
+X-Change-ID: 20241202-sysfs-const-bin_attr-pdx86-c16ca5d376ca
 To: Stuart Hayes <stuart.w.hayes@gmail.com>, 
  Hans de Goede <hdegoede@redhat.com>, 
  =?utf-8?q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, 
@@ -47,11 +47,11 @@ To: Stuart Hayes <stuart.w.hayes@gmail.com>,
 Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, 
  =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <linux@weissschuh.net>
 X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1733168316; l=3353;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1733168316; l=1415;
  i=linux@weissschuh.net; s=20221212; h=from:subject:message-id;
- bh=YsbcgpRFOi+cY43e/Gwc75c9FlqZyz0+ZOwZ6DhkDSI=;
- b=FzqPL1axoOZTDBRkK5+Wfehj/Z+2MZfHleJLbw9zuoeB4O4Jp3P2DWebZ0f4j0f3MFJvpsqtW
- oaIF99Yxm1aCBmsNsuvvP+8ESgB84DV2fweV3+t45OwkEBbN7+tuH5w
+ bh=CCLjKz4p9ifDEuTD7i7Xx+E3HYG987FaG9aqLLF5Qvc=;
+ b=fbCmy4KqhmkC8aA8an75i/z6sDXnvm83lqZlF47zBtLi7BS02dQNo8YLruAaMzKuv7lKXfnj1
+ c5h2qz5EZHVBid1+d+RZT3wn4EMhn14MgU5hA0cmPj5ECHi5EZE62re
 X-Developer-Key: i=linux@weissschuh.net; a=ed25519;
  pk=KcycQgFPX2wGR5azS7RhpBqedglOZVgRPfdFSPB1LNw=
 
@@ -59,95 +59,32 @@ The sysfs core now allows instances of 'struct bin_attribute' to be
 moved into read-only memory. Make use of that to protect them against
 accidental or malicious modifications.
 
+The usage of read_new/write_new/bin_attrs_new is a transition mechanism
+and will be removed after the tree-wide transition to
+const struct bin_attribute.
+
 Signed-off-by: Thomas Weißschuh <linux@weissschuh.net>
 ---
- drivers/platform/x86/dell/dell_rbu.c | 20 ++++++++++----------
- 1 file changed, 10 insertions(+), 10 deletions(-)
+Thomas Weißschuh (5):
+      platform/x86: dell: dcdbas: Constify 'struct bin_attribute'
+      platform/x86: dell_rbu: Constify 'struct bin_attribute'
+      platform/x86/intel/sdsi: Constify 'struct bin_attribute'
+      platform/x86/intel/pmt: Constify 'struct bin_attribute'
+      platform/x86/amd/hsmp: Constify 'struct bin_attribute'
 
-diff --git a/drivers/platform/x86/dell/dell_rbu.c b/drivers/platform/x86/dell/dell_rbu.c
-index 9f51e0fcab04e1c61ce68b90b754b6b43a741b58..e30ca325938cb604560a810e7d63f65b4b70964b 100644
---- a/drivers/platform/x86/dell/dell_rbu.c
-+++ b/drivers/platform/x86/dell/dell_rbu.c
-@@ -475,7 +475,7 @@ static ssize_t read_rbu_mono_data(char *buffer, loff_t pos, size_t count)
- }
- 
- static ssize_t data_read(struct file *filp, struct kobject *kobj,
--			 struct bin_attribute *bin_attr,
-+			 const struct bin_attribute *bin_attr,
- 			 char *buffer, loff_t pos, size_t count)
- {
- 	ssize_t ret_count = 0;
-@@ -492,7 +492,7 @@ static ssize_t data_read(struct file *filp, struct kobject *kobj,
- 	spin_unlock(&rbu_data.lock);
- 	return ret_count;
- }
--static BIN_ATTR_RO(data, 0);
-+static const BIN_ATTR_RO(data, 0);
- 
- static void callbackfn_rbu(const struct firmware *fw, void *context)
- {
-@@ -530,7 +530,7 @@ static void callbackfn_rbu(const struct firmware *fw, void *context)
- }
- 
- static ssize_t image_type_read(struct file *filp, struct kobject *kobj,
--			       struct bin_attribute *bin_attr,
-+			       const struct bin_attribute *bin_attr,
- 			       char *buffer, loff_t pos, size_t count)
- {
- 	int size = 0;
-@@ -540,7 +540,7 @@ static ssize_t image_type_read(struct file *filp, struct kobject *kobj,
- }
- 
- static ssize_t image_type_write(struct file *filp, struct kobject *kobj,
--				struct bin_attribute *bin_attr,
-+				const struct bin_attribute *bin_attr,
- 				char *buffer, loff_t pos, size_t count)
- {
- 	int rc = count;
-@@ -597,10 +597,10 @@ static ssize_t image_type_write(struct file *filp, struct kobject *kobj,
- 
- 	return rc;
- }
--static BIN_ATTR_RW(image_type, 0);
-+static const BIN_ATTR_RW(image_type, 0);
- 
- static ssize_t packet_size_read(struct file *filp, struct kobject *kobj,
--				struct bin_attribute *bin_attr,
-+				const struct bin_attribute *bin_attr,
- 				char *buffer, loff_t pos, size_t count)
- {
- 	int size = 0;
-@@ -613,7 +613,7 @@ static ssize_t packet_size_read(struct file *filp, struct kobject *kobj,
- }
- 
- static ssize_t packet_size_write(struct file *filp, struct kobject *kobj,
--				 struct bin_attribute *bin_attr,
-+				 const struct bin_attribute *bin_attr,
- 				 char *buffer, loff_t pos, size_t count)
- {
- 	unsigned long temp;
-@@ -626,9 +626,9 @@ static ssize_t packet_size_write(struct file *filp, struct kobject *kobj,
- 	spin_unlock(&rbu_data.lock);
- 	return count;
- }
--static BIN_ATTR_RW(packet_size, 0);
-+static const BIN_ATTR_RW(packet_size, 0);
- 
--static struct bin_attribute *rbu_bin_attrs[] = {
-+static const struct bin_attribute *const rbu_bin_attrs[] = {
- 	&bin_attr_data,
- 	&bin_attr_image_type,
- 	&bin_attr_packet_size,
-@@ -636,7 +636,7 @@ static struct bin_attribute *rbu_bin_attrs[] = {
- };
- 
- static const struct attribute_group rbu_group = {
--	.bin_attrs = rbu_bin_attrs,
-+	.bin_attrs_new = rbu_bin_attrs,
- };
- 
- static int __init dcdrbu_init(void)
+ drivers/platform/x86/amd/hsmp/acpi.c   | 12 ++++++------
+ drivers/platform/x86/amd/hsmp/plat.c   | 12 ++++++------
+ drivers/platform/x86/dell/dcdbas.c     | 10 +++++-----
+ drivers/platform/x86/dell/dcdbas.h     |  8 --------
+ drivers/platform/x86/dell/dell_rbu.c   | 20 ++++++++++----------
+ drivers/platform/x86/intel/pmt/class.c |  4 ++--
+ drivers/platform/x86/intel/sdsi.c      | 34 +++++++++++++++++-----------------
+ 7 files changed, 46 insertions(+), 54 deletions(-)
+---
+base-commit: e70140ba0d2b1a30467d4af6bcfe761327b9ec95
+change-id: 20241202-sysfs-const-bin_attr-pdx86-c16ca5d376ca
 
+Best regards,
 -- 
-2.47.1
+Thomas Weißschuh <linux@weissschuh.net>
 
