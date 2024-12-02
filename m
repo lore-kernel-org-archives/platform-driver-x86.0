@@ -1,91 +1,142 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E0DD21DB548
-	for <platform-driver-x86@vger.kernel.org>; Mon,  2 Dec 2024 17:49:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 83F801DB34E
+	for <platform-driver-x86@vger.kernel.org>; Mon,  2 Dec 2024 17:53:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1733161745; cv=none; b=gwSd6D01C9Mh5RCSn+wdeVnn42En23mtFaPaAvWlhC6L+vtBI8fNQK4fhVBnTO9ny505wO9NSI8ePlnvM4A6Z+poxk+3QL7oujErfFyJ6VrpY9GXuUnvTvl5/daP/KyrQxeupyiL02U2lNStDxfzyoAzYkuJRqaCjENAwUyibko=
+	t=1733162038; cv=none; b=m6ANFF1qjuvvXEfnoeDveFUjb3IGH+PHUoA6coKaV98v+wKK3iBLPfEatVTfOprtaGQLqsPxW39IG3Wzw7/POVl9lRJDRYmw/I/UmH1ez2Wt7AkP7YVnJayxop4GyzkD+8YWqOChvJ8AvBYhVkn/0x5H8S1Y3omlDThfuA5d1Os=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1733161745; c=relaxed/simple;
-	bh=MJIXbgHwG+Y7OY/tVEuxPDAypBmDzobv+I/zehEjr6g=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=pk169A7wvbgUv1IPE3mJPgCeAWUpiJtRQnpUV43ettgyQ0adj9p1R3cD0F56XvML8pgrqvm1FhNzjr3ejooOCpbVcq2mVxvq3l/MO6KwCbWS/IpFxHADQSMTXF60UByMvMRRzB8TZyJtiwoHYbI/nNaFpwrglBI3phMS2t02gyI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=L/nxo0Sz; arc=none smtp.client-ip=192.198.163.7
+	s=arc-20240116; t=1733162038; c=relaxed/simple;
+	bh=1O8Jnzd2HEBru/xjRiEozNO8bodAz7JTcJ984l9oIFw=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=cn++mAsa7zdibzgItIO+/MF1UOFnYc+8CrpJVB9JZ3kDblAoxZUb9jm5bk+ANIUDKKzSaKr2SUUWia2UXCoCJEqv4ubB6Wrm9M5J8Mfh2gleweiYRUENZ4ZVCjKHaShHE+B7B5tjoQ7WSaVNV7gOe1gCS8kWxT2NaAuPJxiZ7BE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=SzFC0uvO; arc=none smtp.client-ip=198.175.65.15
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="L/nxo0Sz"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="SzFC0uvO"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1733161744; x=1764697744;
-  h=from:to:cc:in-reply-to:references:subject:message-id:
-   date:mime-version:content-transfer-encoding;
-  bh=MJIXbgHwG+Y7OY/tVEuxPDAypBmDzobv+I/zehEjr6g=;
-  b=L/nxo0SzA8TCqj2Pwjh75Bp7VZGdDUFKGJu6EXfQ5Mqa2PsyjO8h7pgi
-   pZMXSDO4agzdd2dwFCjdu2luktLvdX3BR3ZnArts22geaU6otFWLqiB5b
-   OSaJ5so/vtR/Ck5WyDaAVr9zEU/wJftnu2xQ2TZlk8azfOiccCEbzqFlT
-   X2nvYhQsuAM9Gcxb8WhOOxZxCrB4t+DO5i3RGB5Kw64Y1Q3TfUyIdnRfP
-   oJiobDYtAaqUq93/ALd78Zznbn4xIKSLgJvzPijOxpbJaH8dn3w6mPYoK
-   5EbzdAt+Rn8MIGpiDeN5P4r0GyuS2CjnXBOShdckfkuPDm5ho8nRVcyCm
+  t=1733162037; x=1764698037;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=1O8Jnzd2HEBru/xjRiEozNO8bodAz7JTcJ984l9oIFw=;
+  b=SzFC0uvOa5t1zkqP9KtWctwEPCv810sHYl7uRPLY8LLnDjFqPOK1gCLs
+   Ed3sJYdtfi72Lm1xyzrNoEPW0BLm2uoZ9zkEQQLHArwhdyJ/H/4fhTYu+
+   S4UwKP2Am4SYX5oX5j6aF7kxivb0bi4n5bEVCB6LOvFSxkCcvTOOBv6Qy
+   m2mGGFWunGkUEwrltklh1/ONzA9N8aP5eiBsparkRBl8cjCbkNdyFyM1l
+   SsTCnLMGPOJFsPnUOuE0oo+QOq1FdsQ/C7zCszHp8qS7k99McHb53wFkz
+   +XkworWqwod9JFH7oEeOK0lOFTFQ9NcshSisddeIU7UjkdjPeQde1mprA
    A==;
-X-CSE-ConnectionGUID: O1mrk5AgSVC/fUOO8SWOYg==
-X-CSE-MsgGUID: piLga+mBTzmztLYlBEb/MA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11274"; a="58747783"
+X-CSE-ConnectionGUID: 1dUcx633R++DNoXL/PnYkA==
+X-CSE-MsgGUID: UZuG7EqAT2eBc6+5X6f6qA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11274"; a="37011480"
 X-IronPort-AV: E=Sophos;i="6.12,203,1728975600"; 
-   d="scan'208";a="58747783"
-Received: from orviesa009.jf.intel.com ([10.64.159.149])
-  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Dec 2024 09:49:03 -0800
-X-CSE-ConnectionGUID: JzmJAvbLQFupHk/n4smFQQ==
-X-CSE-MsgGUID: omElbMFRQZOCSzqMA58CpQ==
+   d="scan'208";a="37011480"
+Received: from orviesa008.jf.intel.com ([10.64.159.148])
+  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Dec 2024 09:53:57 -0800
+X-CSE-ConnectionGUID: m9tcufQcTjm4HsujONNzSQ==
+X-CSE-MsgGUID: e3Ndsmc1Rwq+JuWZrzi1GA==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.12,203,1728975600"; 
-   d="scan'208";a="93076705"
+   d="scan'208";a="94008746"
 Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.61])
-  by orviesa009-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Dec 2024 09:49:01 -0800
+  by orviesa008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Dec 2024 09:53:54 -0800
 From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-To: platform-driver-x86@vger.kernel.org, Suma Hegde <suma.hegde@amd.com>
-Cc: hdegoede@redhat.com, 
- Naveen Krishna Chatradhi <naveenkrishna.chatradhi@amd.com>
-In-Reply-To: <20241118102752.11703-1-suma.hegde@amd.com>
-References: <20241118102752.11703-1-suma.hegde@amd.com>
-Subject: Re: [v3] platform/x86/amd/hsmp: Add support for HSMP protocol
- version 7 messages
-Message-Id: <173316173604.27896.6281260511503596071.b4-ty@linux.intel.com>
-Date: Mon, 02 Dec 2024 19:48:56 +0200
+Date: Mon, 2 Dec 2024 19:53:50 +0200 (EET)
+To: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
+cc: Hans de Goede <hdegoede@redhat.com>, Sanket.Goswami@amd.com, 
+    platform-driver-x86@vger.kernel.org
+Subject: Re: [PATCH v5 00/10] platform/x86/amd/pmc: Updates to AMD PMC
+ driver
+In-Reply-To: <20241108070822.3912689-1-Shyam-sundar.S-k@amd.com>
+Message-ID: <abf2b911-e3a1-f8fb-5edf-82cf989fc4ec@linux.intel.com>
+References: <20241108070822.3912689-1-Shyam-sundar.S-k@amd.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Mailer: b4 0.13.0
+Content-Type: text/plain; charset=US-ASCII
 
-On Mon, 18 Nov 2024 10:27:52 +0000, Suma Hegde wrote:
+On Fri, 8 Nov 2024, Shyam Sundar S K wrote:
 
-> Following new HSMP messages are available on family 0x1A, model 0x00-0x1F
-> platforms with protocol version 7. Add support for them in the driver.
-> - SetXgmiPstateRange(26h)
-> - CpuRailIsoFreqPolicy(27h)
-> - DfcEnable(28h)
-> - GetRaplUnit(30h)
-> - GetRaplCoreCounter(31h)
-> - GetRaplPackageCounter(32h)
+> Updates include:
+> - Rework STB code and move into a separate file
+> - Update the code with new IP block information for newer SoCs
+> - Add STB support for new generation
+> - Add STB support for Ryzen desktop variants
+> - Updates to MAINTAINERS record.
 > 
-> [...]
+> v5:
+> ----
+>  - Merge patch1 and 2 of v4
+>  - Update Ilpo tags
+>  - drop explicit typecasting.
+>  - Use switch() for getting the message port
+>  - Rename function names
 
+Thanks for the update. I applied v5 to review-ilpo-next branch. I ended up 
+reordering ips_ptr and active_ips members in the struct amd_pmc_dev to 
+group them together.
 
-Thank you for your contribution, it has been applied to my local
-review-ilpo-next branch. Note it will show up in the public
-platform-drivers-x86/review-ilpo-next branch only once I've pushed my
-local branch there, which might take a while.
+While checking this series out, I notice there's also one sparse warning
+in amd/pmc dir:
 
-The list of commits applied:
-[1/1] platform/x86/amd/hsmp: Add support for HSMP protocol version 7 messages
-      commit: 836d0d7107e53e6479b60d32fb73bd5f7813e5d1
+drivers/platform/x86/amd/pmc/mp2_stb.c:105:30: warning: incorrect type in 
+assignment (different address spaces)
+drivers/platform/x86/amd/pmc/mp2_stb.c:105:30:    expected void [noderef] 
+__iomem *vslbase
+drivers/platform/x86/amd/pmc/mp2_stb.c:105:30:    got void *
 
---
+If you could fix that please.
+
+-- 
  i.
+
+> 
+> v4:
+> ----
+>   - Reorder patches as suggested by Mario and Ilpo
+>   - Squash patches
+>   - Update tags
+> 
+> v3:
+> ----
+>  - Split patch 1/8 of v2 into two more patches
+>  - Add helper for printing S2D/PMC ports
+>  - Use ARRAY_SIZE() for getting the number of IPs
+>  - Address other remarks from Ilpo.
+> 
+> v2:
+> ----
+>  - Add Mario's Reviewed-by tags
+>  - Add amd_stb_update_args() to simplify code handling
+>  - use cpu_feature_enabled() instead of root port's cpu_id information.
+> 
+> Shyam Sundar S K (10):
+>   platform/x86/amd/pmc: Move STB block into amd_pmc_s2d_init()
+>   platform/x86/amd/pmc: Move STB functionality to a new file for better
+>     code organization
+>   platform/x86/amd/pmc: Update function names to align with new STB file
+>   platform/x86/amd/pmc: Define enum for S2D/PMC msg_port and add helper
+>     function
+>   platform/x86/amd/pmc: Isolate STB code changes to a new file
+>   platform/x86/amd/pmc: Use ARRAY_SIZE() to fill num_ips information
+>   platform/x86/amd/pmc: Update IP information structure for newer SoCs
+>   platform/x86/amd/pmc: Update S2D message id for 1Ah Family 70h model
+>   platform/x86/amd/pmc: Add STB support for AMD Desktop variants
+>   MAINTAINERS: Change AMD PMC driver status to "Supported"
+> 
+>  MAINTAINERS                            |   2 +-
+>  drivers/platform/x86/amd/pmc/Makefile  |   2 +-
+>  drivers/platform/x86/amd/pmc/mp1_stb.c | 332 ++++++++++++++++++++++
+>  drivers/platform/x86/amd/pmc/pmc.c     | 377 +++++--------------------
+>  drivers/platform/x86/amd/pmc/pmc.h     |  22 +-
+>  5 files changed, 424 insertions(+), 311 deletions(-)
+>  create mode 100644 drivers/platform/x86/amd/pmc/mp1_stb.c
+> 
+> 
 
