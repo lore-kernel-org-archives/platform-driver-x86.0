@@ -1,37 +1,37 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6AA9A13AA35
-	for <platform-driver-x86@vger.kernel.org>; Mon,  2 Dec 2024 13:43:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CFC341FECA8
+	for <platform-driver-x86@vger.kernel.org>; Mon,  2 Dec 2024 13:48:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1733147031; cv=none; b=HPM1mRwu68qc9rIwRHGvNHCRtJ3l7PYQ3O8uLY1uggacPsQugu0NSTVoCAP9muJgiBX177TyDfRk86dpnnk/doahEw5cEc3+hBJms8CeaUhPV8Fx2HxdyU5NMSy6TlJYMsQeJn0UEC60rkre0CUg0Bfr5oLtDXAwyCRZhKHHdro=
+	t=1733147292; cv=none; b=Sc2w+EV3aSZTnd6XSKRT0kx5ylydNYFhqSvt/UOxwdIcDOryNGljTWRub30a3okML6QrTN6T4A6oFKN9hwxzYId03Iy8XgNlsMwJVIAIIjriK2ctw80FaiygqhdnYGQYR3jqedHns2DnHfK6BAHRY0rBNw9ZVvfiGQh5cykv31I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1733147031; c=relaxed/simple;
-	bh=ulfExLYYb7KKhKNHngcic+ppAns5jXJCwI8fiOzMYT0=;
+	s=arc-20240116; t=1733147292; c=relaxed/simple;
+	bh=DE2Qe1M3X27vz53S9X1uIsju8l8rBUAqAj0g1BSAVpU=;
 	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=clLTyldLXn0YSWE15xtt1jsDF4ntKpn00A/LfWmP6Jy4b/XyhSyYIDFLg32A3LWSyZOpdrXRDIJu2f6Tg44v5bpiN9fpwsNZiHc/st1j1jAbrFXd/89FO5PDTm1pIJrFUyhpb2pNgnfYuD0ayxGyuLdrWMOAnX10Pdr5KuzuLfM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=umQzoy5C; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:MIME-Version; b=ANNy854fV+n4PYKUMobumuFPuT+mtfI6Kh3LPjZWSbi/W42JckCv/VsJfWrR+iM/XmOuAIb+0pTDrJKFTv8xXh8HJyHf4QqIMDcVtwnbV0ZHrCUXYdoim6bSgEGSGVloINW5K/NNIx1sf3EfhYiPkNbXo6I/jPG7tHVbDB6AzvM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pDCTPPJB; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="umQzoy5C"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id EBA56C4CED1
-	for <platform-driver-x86@vger.kernel.org>; Mon,  2 Dec 2024 13:43:50 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pDCTPPJB"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id A2854C4CED1
+	for <platform-driver-x86@vger.kernel.org>; Mon,  2 Dec 2024 13:48:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1733147031;
-	bh=ulfExLYYb7KKhKNHngcic+ppAns5jXJCwI8fiOzMYT0=;
+	s=k20201202; t=1733147292;
+	bh=DE2Qe1M3X27vz53S9X1uIsju8l8rBUAqAj0g1BSAVpU=;
 	h=From:To:Subject:Date:In-Reply-To:References:From;
-	b=umQzoy5COfc7LIKYSceKPcLI+n5GZALtN2LBwkKfMr92mIqbyXN5uWrDI++6wZMZN
-	 2tltIDp1Fio3JPqzjtlBRybb6ILLi8fVw6IgXccuQUhdsyIWp7IRqSuhp1eNKLFq5o
-	 t6XpVkx7A8yIkX6Opo43EgOaXYdvLCefRQWvewxvaJzLhKmm9cWCp4UO49e4XdsfRl
-	 SBC39KoVHBHrdDkly+9IeQT6+QmfDUL58whQGFhPUninK12eKaLdU0CjsB1X8G8epq
-	 kCRoij4Nu+RPc+AabQZKy0wLVfUlPDUm9ekvfZxLckDd3gwJOFRaDlzwajFByo5HgW
-	 exoo2UCAC27EQ==
+	b=pDCTPPJBhIxI2Rw97uRf7Sxy2yy5SG7aIJMqIjjOEeTpxzYvt9V7StW/onCoHFXv+
+	 L66XKXcIgb234xhiAeuPJ+AHylKc8KELg4AQbOva80c+u4mJ1onhkaKtyYRsvoR6P6
+	 Jlyu6nZ2nbsdouJDEoXFtCyJFjriZ1RfL2xIYezmU7SPvYkS2ANvyBXxpdeYTfxB1T
+	 pwIm9ax1gNfmgr869fSnqw7ZKjIF2BzFOuJ8bjn2iYwz8trQAHHldLubAJnjn8zUEh
+	 WuWiqfBzfA7FBI8P6KMKn9IEWwbS3vpUQSxnPS8LrWaXA/PexgA6zUn7QiVoLcfRfX
+	 H0SNMLVqmjZQQ==
 Received: by aws-us-west-2-korg-bugzilla-1.web.codeaurora.org (Postfix, from userid 48)
-	id D780DC53BC5; Mon,  2 Dec 2024 13:43:50 +0000 (UTC)
+	id 9B3BDC53BC5; Mon,  2 Dec 2024 13:48:12 +0000 (UTC)
 From: bugzilla-daemon@kernel.org
 To: platform-driver-x86@vger.kernel.org
-Subject: [Bug 219515] intel_th_pci Driver Probe Failed with Error Code -107
-Date: Mon, 02 Dec 2024 13:43:50 +0000
+Subject: [Bug 219495] [TPM2] tpm_tis driver crashs during the boot time.
+Date: Mon, 02 Dec 2024 13:48:12 +0000
 X-Bugzilla-Reason: None
 X-Bugzilla-Type: changed
 X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
@@ -44,12 +44,12 @@ X-Bugzilla-Who: tiwai@suse.de
 X-Bugzilla-Status: NEW
 X-Bugzilla-Resolution: 
 X-Bugzilla-Priority: P3
-X-Bugzilla-Assigned-To: ash@inbox.spbu.ru
+X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
 X-Bugzilla-Flags: 
-X-Bugzilla-Changed-Fields: assigned_to
-Message-ID: <bug-219515-215701-3w0BAjIeRw@https.bugzilla.kernel.org/>
-In-Reply-To: <bug-219515-215701@https.bugzilla.kernel.org/>
-References: <bug-219515-215701@https.bugzilla.kernel.org/>
+X-Bugzilla-Changed-Fields: 
+Message-ID: <bug-219495-215701-vgRNtmSGMq@https.bugzilla.kernel.org/>
+In-Reply-To: <bug-219495-215701@https.bugzilla.kernel.org/>
+References: <bug-219495-215701@https.bugzilla.kernel.org/>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 X-Bugzilla-URL: https://bugzilla.kernel.org/
@@ -61,19 +61,11 @@ List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 
-https://bugzilla.kernel.org/show_bug.cgi?id=3D219515
+https://bugzilla.kernel.org/show_bug.cgi?id=3D219495
 
-Takashi Iwai (tiwai@suse.de) changed:
-
-           What    |Removed                     |Added
-----------------------------------------------------------------------------
-           Assignee|drivers_platform_x86@kernel |ash@inbox.spbu.ru
-                   |-bugs.osdl.org              |
-
---- Comment #6 from Takashi Iwai (tiwai@suse.de) ---
-Alexander, could you check it?  It's about intel-th stuff.
-It might be a BIOS problem or somewhere in PCI core, but it needs to be
-verified.
+--- Comment #15 from Takashi Iwai (tiwai@suse.de) ---
+Jarkko, any progress on this?
+As Stefan suggested, just capping the max size to 96kB would work?
 
 --=20
 You may reply to this email to add a comment.
