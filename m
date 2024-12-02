@@ -1,31 +1,31 @@
 Received: from todd.t-8ch.de (todd.t-8ch.de [159.69.126.157])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2DDCF1DE4D0;
-	Mon,  2 Dec 2024 19:38:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA7991DED73;
+	Mon,  2 Dec 2024 19:38:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.69.126.157
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1733168322; cv=none; b=cA574YaWq0Dkchc+R1ZWFunURadMpDsyhUOCJxiVvcH5XxY/TcPqrLLIpkTeN+5G/W77nJ0RkE7Lr8vhw8fpizH7Mimu9eRelU07vlx8yNYTjT3jOBHp2ooMfPb1MlZAC2RyVUmlJOskvQMQXLESpeCeEogydbgXjbJTf6um5z8=
+	t=1733168324; cv=none; b=HuGqiIPUXRDBAMvUzMklCFWhdERPnRvRq/ygLp3GOCWf9t2dmfQrlfMl+bLiCYx5dFi4E63GKExlOz+7F2HhCMfZshJOoNrOaAwrBSeb8VrFu9MBX6fL8u7q/PS6Ed4XkGlvl89ORci1vnnNLzraQbHwbnJiLCmuVFLzv6DCU5M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1733168322; c=relaxed/simple;
-	bh=CCLjKz4p9ifDEuTD7i7Xx+E3HYG987FaG9aqLLF5Qvc=;
-	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=hvyDtkQHULuJ+/xqD6jus6tc96/m93rsqAXLl3Aa4og+uqVeEvJtuP3MUD3cLWdsu1EziYtET+dLRT4bKg4B1ZuiQAPfkOYJQgq0GYjPG+gF0t6FH+24XF7FyxcarAjWvYUU8+rJk6BYj5+z2E+wUX5bdzO0PAxgYQQ7wgAK5OI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=weissschuh.net; spf=pass smtp.mailfrom=weissschuh.net; dkim=pass (1024-bit key) header.d=weissschuh.net header.i=@weissschuh.net header.b=hmfy9Old; arc=none smtp.client-ip=159.69.126.157
+	s=arc-20240116; t=1733168324; c=relaxed/simple;
+	bh=0vcuNhLRTgSihR2euTqOu3GUXYlgxvTzCrcLW+vJNFw=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=Xx3p+NlCa1aQM9E2YTU3ZtxY5+Wp6KCZ+ekLOilWs5jluq/Ozqpo/wNQ7fS2DZTtqEx9mG1b8Hw/SMb0uxRr8+N93f2SyZA5cDui9X3AS6QnEUG6nA+r2xfPTRwdw454ZR0lUPiRaiHY9FScR5fqAWUzRDNWBZfwJTFp7ShWw6w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=weissschuh.net; spf=pass smtp.mailfrom=weissschuh.net; dkim=pass (1024-bit key) header.d=weissschuh.net header.i=@weissschuh.net header.b=ZM0A6z8z; arc=none smtp.client-ip=159.69.126.157
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=weissschuh.net
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=weissschuh.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=weissschuh.net header.i=@weissschuh.net header.b="hmfy9Old"
+	dkim=pass (1024-bit key) header.d=weissschuh.net header.i=@weissschuh.net header.b="ZM0A6z8z"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=weissschuh.net;
-	s=mail; t=1733168316;
-	bh=CCLjKz4p9ifDEuTD7i7Xx+E3HYG987FaG9aqLLF5Qvc=;
-	h=From:Subject:Date:To:Cc:From;
-	b=hmfy9OldGu2MUnjh5a14kl54b3yqaLMbRVsQPuZUZ/2I3aAXMrmwSV0R6fWOpBiwj
-	 88wUxK5DYFYBr6xhyxGfZiGO6oouImn2Tn9vjuLChL7iG1xw2Ni0jEU1gLpWwyHXHL
-	 2Xb4DcpHl1+2nFF4K7K9E0fSi+ZmXhBT/oue2l50=
+	s=mail; t=1733168317;
+	bh=0vcuNhLRTgSihR2euTqOu3GUXYlgxvTzCrcLW+vJNFw=;
+	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
+	b=ZM0A6z8zO3RMN0gIzDol8W2IO1RkNu3+aniBFzSvsdlBUqP92/Ch1vEOY38IV5gXA
+	 rkJvE8eJb/1dXWUMlWQofq+zd89+Z7I6VGHMV3qBQpEAsgUKLaKrKKziqPrid103Va
+	 7ECLimINi+1cDFZLXqGn5xIkC3vPsHvdmdsWxFLA=
 From: =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <linux@weissschuh.net>
-Subject: [PATCH 0/5] platform/x86: Constify 'struct bin_attribute'
-Date: Mon, 02 Dec 2024 20:38:31 +0100
-Message-Id: <20241202-sysfs-const-bin_attr-pdx86-v1-0-9ab204c2a814@weissschuh.net>
+Date: Mon, 02 Dec 2024 20:38:36 +0100
+Subject: [PATCH 5/5] platform/x86/amd/hsmp: Constify 'struct bin_attribute'
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -34,10 +34,9 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-X-B4-Tracking: v=1; b=H4sIALcMTmcC/x2MQQrCMBAAvxL27IKJNYpfEZF0s9G9pCUbpKX07
- 128zDCX2UC5CSs83AaNf6IyVQt/ckDfVD+Mkq0hnMPgDairFkWaqnYcpb5T7w3nvNwjko+Urvl
- yM4EN5sZFlv/8+dr3A3HrrWtsAAAA
-X-Change-ID: 20241202-sysfs-const-bin_attr-pdx86-c16ca5d376ca
+Message-Id: <20241202-sysfs-const-bin_attr-pdx86-v1-5-9ab204c2a814@weissschuh.net>
+References: <20241202-sysfs-const-bin_attr-pdx86-v1-0-9ab204c2a814@weissschuh.net>
+In-Reply-To: <20241202-sysfs-const-bin_attr-pdx86-v1-0-9ab204c2a814@weissschuh.net>
 To: Stuart Hayes <stuart.w.hayes@gmail.com>, 
  Hans de Goede <hdegoede@redhat.com>, 
  =?utf-8?q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, 
@@ -47,11 +46,11 @@ To: Stuart Hayes <stuart.w.hayes@gmail.com>,
 Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, 
  =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <linux@weissschuh.net>
 X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1733168316; l=1415;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1733168316; l=3637;
  i=linux@weissschuh.net; s=20221212; h=from:subject:message-id;
- bh=CCLjKz4p9ifDEuTD7i7Xx+E3HYG987FaG9aqLLF5Qvc=;
- b=fbCmy4KqhmkC8aA8an75i/z6sDXnvm83lqZlF47zBtLi7BS02dQNo8YLruAaMzKuv7lKXfnj1
- c5h2qz5EZHVBid1+d+RZT3wn4EMhn14MgU5hA0cmPj5ECHi5EZE62re
+ bh=0vcuNhLRTgSihR2euTqOu3GUXYlgxvTzCrcLW+vJNFw=;
+ b=aj5Sq7rt8w+1KN2yvaOHBP2H/fvqSILVCbbuG2+cF6IQtooZBHuxMIw3F4l0RXKZZNO1VP/kP
+ pTR3002AdPCCkZjpUp4Lu4p3LVGS9u4FE8nA8s6EDErtPFd2FdQuo++
 X-Developer-Key: i=linux@weissschuh.net; a=ed25519;
  pk=KcycQgFPX2wGR5azS7RhpBqedglOZVgRPfdFSPB1LNw=
 
@@ -59,32 +58,92 @@ The sysfs core now allows instances of 'struct bin_attribute' to be
 moved into read-only memory. Make use of that to protect them against
 accidental or malicious modifications.
 
-The usage of read_new/write_new/bin_attrs_new is a transition mechanism
-and will be removed after the tree-wide transition to
-const struct bin_attribute.
-
 Signed-off-by: Thomas Weißschuh <linux@weissschuh.net>
 ---
-Thomas Weißschuh (5):
-      platform/x86: dell: dcdbas: Constify 'struct bin_attribute'
-      platform/x86: dell_rbu: Constify 'struct bin_attribute'
-      platform/x86/intel/sdsi: Constify 'struct bin_attribute'
-      platform/x86/intel/pmt: Constify 'struct bin_attribute'
-      platform/x86/amd/hsmp: Constify 'struct bin_attribute'
+ drivers/platform/x86/amd/hsmp/acpi.c | 12 ++++++------
+ drivers/platform/x86/amd/hsmp/plat.c | 12 ++++++------
+ 2 files changed, 12 insertions(+), 12 deletions(-)
 
- drivers/platform/x86/amd/hsmp/acpi.c   | 12 ++++++------
- drivers/platform/x86/amd/hsmp/plat.c   | 12 ++++++------
- drivers/platform/x86/dell/dcdbas.c     | 10 +++++-----
- drivers/platform/x86/dell/dcdbas.h     |  8 --------
- drivers/platform/x86/dell/dell_rbu.c   | 20 ++++++++++----------
- drivers/platform/x86/intel/pmt/class.c |  4 ++--
- drivers/platform/x86/intel/sdsi.c      | 34 +++++++++++++++++-----------------
- 7 files changed, 46 insertions(+), 54 deletions(-)
----
-base-commit: e70140ba0d2b1a30467d4af6bcfe761327b9ec95
-change-id: 20241202-sysfs-const-bin_attr-pdx86-c16ca5d376ca
+diff --git a/drivers/platform/x86/amd/hsmp/acpi.c b/drivers/platform/x86/amd/hsmp/acpi.c
+index dd5b5773328a9aff376a389cbd0109cb8cf0e385..7d802bfe206c73a4570dcd3752faee853bb81485 100644
+--- a/drivers/platform/x86/amd/hsmp/acpi.c
++++ b/drivers/platform/x86/amd/hsmp/acpi.c
+@@ -226,7 +226,7 @@ static int hsmp_parse_acpi_table(struct device *dev, u16 sock_ind)
+ }
+ 
+ static ssize_t hsmp_metric_tbl_acpi_read(struct file *filp, struct kobject *kobj,
+-					 struct bin_attribute *bin_attr, char *buf,
++					 const struct bin_attribute *bin_attr, char *buf,
+ 					 loff_t off, size_t count)
+ {
+ 	struct device *dev = container_of(kobj, struct device, kobj);
+@@ -285,19 +285,19 @@ static int init_acpi(struct device *dev)
+ 	return ret;
+ }
+ 
+-static struct bin_attribute  hsmp_metric_tbl_attr = {
++static const struct bin_attribute  hsmp_metric_tbl_attr = {
+ 	.attr = { .name = HSMP_METRICS_TABLE_NAME, .mode = 0444},
+-	.read = hsmp_metric_tbl_acpi_read,
++	.read_new = hsmp_metric_tbl_acpi_read,
+ 	.size = sizeof(struct hsmp_metric_table),
+ };
+ 
+-static struct bin_attribute *hsmp_attr_list[] = {
++static const struct bin_attribute *hsmp_attr_list[] = {
+ 	&hsmp_metric_tbl_attr,
+ 	NULL
+ };
+ 
+-static struct attribute_group hsmp_attr_grp = {
+-	.bin_attrs = hsmp_attr_list,
++static const struct attribute_group hsmp_attr_grp = {
++	.bin_attrs_new = hsmp_attr_list,
+ 	.is_bin_visible = hsmp_is_sock_attr_visible,
+ };
+ 
+diff --git a/drivers/platform/x86/amd/hsmp/plat.c b/drivers/platform/x86/amd/hsmp/plat.c
+index 748bbc35648474370275a80daf2c26e5d732f6ad..1fdcd65d398e6ceca154b804074cbba083f4b7f1 100644
+--- a/drivers/platform/x86/amd/hsmp/plat.c
++++ b/drivers/platform/x86/amd/hsmp/plat.c
+@@ -59,7 +59,7 @@ static int amd_hsmp_pci_rdwr(struct hsmp_socket *sock, u32 offset,
+ }
+ 
+ static ssize_t hsmp_metric_tbl_plat_read(struct file *filp, struct kobject *kobj,
+-					 struct bin_attribute *bin_attr, char *buf,
++					 const struct bin_attribute *bin_attr, char *buf,
+ 					 loff_t off, size_t count)
+ {
+ 	struct hsmp_socket *sock;
+@@ -97,13 +97,13 @@ static umode_t hsmp_is_sock_attr_visible(struct kobject *kobj,
+  * is_bin_visible function is used to show / hide the necessary groups.
+  */
+ #define HSMP_BIN_ATTR(index, _list)					\
+-static struct bin_attribute attr##index = {				\
++static const struct bin_attribute attr##index = {			\
+ 	.attr = { .name = HSMP_METRICS_TABLE_NAME, .mode = 0444},	\
+ 	.private = (void *)index,					\
+-	.read = hsmp_metric_tbl_plat_read,					\
++	.read_new = hsmp_metric_tbl_plat_read,				\
+ 	.size = sizeof(struct hsmp_metric_table),			\
+ };									\
+-static struct bin_attribute _list[] = {					\
++static const struct bin_attribute _list[] = {				\
+ 	&attr##index,							\
+ 	NULL								\
+ }
+@@ -118,8 +118,8 @@ HSMP_BIN_ATTR(6, *sock6_attr_list);
+ HSMP_BIN_ATTR(7, *sock7_attr_list);
+ 
+ #define HSMP_BIN_ATTR_GRP(index, _list, _name)			\
+-static struct attribute_group sock##index##_attr_grp = {	\
+-	.bin_attrs = _list,					\
++static const struct attribute_group sock##index##_attr_grp = {	\
++	.bin_attrs_new = _list,					\
+ 	.is_bin_visible = hsmp_is_sock_attr_visible,		\
+ 	.name = #_name,						\
+ }
 
-Best regards,
 -- 
-Thomas Weißschuh <linux@weissschuh.net>
+2.47.1
 
