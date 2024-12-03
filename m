@@ -1,141 +1,177 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
+Received: from bedivere.hansenpartnership.com (bedivere.hansenpartnership.com [96.44.175.130])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 71C171F76C2
-	for <platform-driver-x86@vger.kernel.org>; Tue,  3 Dec 2024 15:38:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 112031F890D;
+	Tue,  3 Dec 2024 16:06:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=96.44.175.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1733240315; cv=none; b=WD243S9jUyLBRpNtjEsujMwFn50wVYZsYQm2SO7WGvzNVu6QzMEhJI57dsHhVlGBIzmtFcQ+c/AON2ocUU/5s4RPCweuq67NnCRaPXdgpxQZ7WN33lxjcxTMiajufZ8cztmZBd8eYVTA9OSIXqqo7HaSXIbvRv2gCAb8FMu8abI=
+	t=1733241988; cv=none; b=HvWod2SqmFkg1DvrTpYJmPACvaYAqiujjHJaUP5XogQl5IHsfeqePQ7/qFGEZO9jORmXBT9peLO2EvhCbYsLOP1W/1ulVWHrIMmdWjS/0+kEXiId5r6KJkStbDewnCAKuGXOPZTlmczrBd1Ep8DRJPmEfx5NeoKk7j93DeGQbEc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1733240315; c=relaxed/simple;
-	bh=XgJ0wfHjuxTCbtMf84EGxNIDaRmrryl0o7eS4Gj92Qc=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=eK8N30awaGe5x1jzj2QvMOt55QStEGtrgZ7JeUtzEh1epnUMJZgP2k8z1BlrBij94+ui8QeBWJ6B4leGDC9PRqvB45oetCaZPHDq41T4C1dsZEX61QsLqvRnOiSm6PLCowWgWXG/mD3mKcrvWokDAwXuLJSsvJEPm5hUxUJbEiw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=fSMX6/a4; arc=none smtp.client-ip=198.175.65.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1733241988; c=relaxed/simple;
+	bh=VBBfv3eA4AsVsLgBF8VnP+EajJe1ALpu2GW7YHfiN/w=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:Content-Type:
+	 MIME-Version; b=BiAXw5SXoTVaegE2WpiwoTt2OQDYpyrbUID2w5o0Ic0vKQD8ynBzTdo3OHScW0i+07RqXHOrls8c/ufPc5plYzAU/yqDt/25f+eksOCqOK8i46ietWYs7/7nN3Ofn7iWv/MaV3eyP+SbZ2s6ogcwyaUF05hkjAgsKrWQdaGF+gg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=HansenPartnership.com; spf=pass smtp.mailfrom=HansenPartnership.com; dkim=pass (1024-bit key) header.d=hansenpartnership.com header.i=@hansenpartnership.com header.b=lHnQZbqT; dkim=pass (1024-bit key) header.d=hansenpartnership.com header.i=@hansenpartnership.com header.b=lHnQZbqT; arc=none smtp.client-ip=96.44.175.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=HansenPartnership.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=HansenPartnership.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="fSMX6/a4"
+	dkim=pass (1024-bit key) header.d=hansenpartnership.com header.i=@hansenpartnership.com header.b="lHnQZbqT";
+	dkim=pass (1024-bit key) header.d=hansenpartnership.com header.i=@hansenpartnership.com header.b="lHnQZbqT"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1733240313; x=1764776313;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version:content-id;
-  bh=XgJ0wfHjuxTCbtMf84EGxNIDaRmrryl0o7eS4Gj92Qc=;
-  b=fSMX6/a4JdZ0MqOWn/78RU1G3dIpln12rNkGZSZErLNmYlTZ3b66m+pn
-   ofCvdJYLrkF+4ZLwmy5U7iGo49vfvWPWm+oUDE01laZodkP/fGUN3GIPb
-   3YIoe+mBkx1SfCA0eIudbOW903EEqTTrc5vFynEG0eEutm1VZnTpvB6/M
-   nzfuL0ZfDBwIV80/csiE26nYLYHuyJRXjO1iCeVKUi95w01pOAKcY0zRQ
-   eB3VgQuAWiwZV01mz9Zvjco6lo20SKk+e9ekPZZm3U6y6ICwgi2eJc9+M
-   60ydcy9VXMPN//sRXxKitxHlLuInr3NUGmpKgN7IxWJytoybdSXH4tZzt
-   Q==;
-X-CSE-ConnectionGUID: LowhuzkVQ1eFydZcNvLKLA==
-X-CSE-MsgGUID: khULjEMUT5i/duWLQelooA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11275"; a="50870519"
-X-IronPort-AV: E=Sophos;i="6.12,205,1728975600"; 
-   d="scan'208";a="50870519"
-Received: from orviesa010.jf.intel.com ([10.64.159.150])
-  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Dec 2024 07:38:33 -0800
-X-CSE-ConnectionGUID: 9aWcZ2QOQ8CqN2iO3hAzbA==
-X-CSE-MsgGUID: rRwAhPhBTEelq1GUzTRvqQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.12,205,1728975600"; 
-   d="scan'208";a="93350518"
-Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.42])
-  by orviesa010-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Dec 2024 07:38:31 -0800
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Tue, 3 Dec 2024 17:38:27 +0200 (EET)
-To: Andy Shevchenko <andy.shevchenko@gmail.com>
-cc: Hans de Goede <hdegoede@redhat.com>, Andy Shevchenko <andy@kernel.org>, 
-    platform-driver-x86@vger.kernel.org
-Subject: Re: [PATCH v2 2/2] platform/x86: x86-android-tablets: Add Vexia EDU
- ATLA 10 EC battery driver
-In-Reply-To: <CAHp75VdJ_MfRXXX18c+rB943Saare6n_GEEwko+Hf31UW39XpA@mail.gmail.com>
-Message-ID: <193bb88b-6613-fb09-86df-99fc63e0bb6b@linux.intel.com>
-References: <20241116121659.57487-1-hdegoede@redhat.com> <20241116121659.57487-2-hdegoede@redhat.com> <b5b40432-77ed-2466-7d30-ce35a239d0ae@linux.intel.com> <Z04ASf0znID9C1FN@smile.fi.intel.com> <040238ad-6f88-4c4a-814e-2b94b7a43116@redhat.com>
- <CAHp75VdJ_MfRXXX18c+rB943Saare6n_GEEwko+Hf31UW39XpA@mail.gmail.com>
+	d=hansenpartnership.com; s=20151216; t=1733241982;
+	bh=VBBfv3eA4AsVsLgBF8VnP+EajJe1ALpu2GW7YHfiN/w=;
+	h=Message-ID:Subject:From:To:Date:In-Reply-To:From;
+	b=lHnQZbqTPw8lccD9LZoQTnjENuqFmq3M4qdXn9YwdcXuh8kaYOH60UbGnuArtEJoE
+	 Px4kL7hmZa2/uxmjqmqHUiq2gnIFhqP/9JNM4Zxjm340Kjh3IenF17vJPycyc5doEz
+	 9qzMTvJH2/Dq+wqAj7McqxgXVZICR0uf3Mza6cXQ=
+Received: from localhost (localhost [127.0.0.1])
+	by bedivere.hansenpartnership.com (Postfix) with ESMTP id 9B55D12871C9;
+	Tue, 03 Dec 2024 11:06:22 -0500 (EST)
+Received: from bedivere.hansenpartnership.com ([127.0.0.1])
+ by localhost (bedivere.hansenpartnership.com [127.0.0.1]) (amavis, port 10024)
+ with ESMTP id OEo6FblEm0Xs; Tue,  3 Dec 2024 11:06:22 -0500 (EST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+	d=hansenpartnership.com; s=20151216; t=1733241982;
+	bh=VBBfv3eA4AsVsLgBF8VnP+EajJe1ALpu2GW7YHfiN/w=;
+	h=Message-ID:Subject:From:To:Date:In-Reply-To:From;
+	b=lHnQZbqTPw8lccD9LZoQTnjENuqFmq3M4qdXn9YwdcXuh8kaYOH60UbGnuArtEJoE
+	 Px4kL7hmZa2/uxmjqmqHUiq2gnIFhqP/9JNM4Zxjm340Kjh3IenF17vJPycyc5doEz
+	 9qzMTvJH2/Dq+wqAj7McqxgXVZICR0uf3Mza6cXQ=
+Received: from lingrow.int.hansenpartnership.com (unknown [IPv6:2601:5c4:4302:c21::a774])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits))
+	(Client did not present a certificate)
+	by bedivere.hansenpartnership.com (Postfix) with ESMTPSA id 1133D128718C;
+	Tue, 03 Dec 2024 11:06:17 -0500 (EST)
+Message-ID: <7ed3b713f8901398f52d7485d59613c19ea0e752.camel@HansenPartnership.com>
+Subject: Re: [PATCH v2 09/10] sysfs: bin_attribute: add const read/write
+ callback variants
+From: James Bottomley <James.Bottomley@HansenPartnership.com>
+To: linux@weissschuh.net
+Cc: James.Bottomley@HansenPartnership.com, Xinhui.Pan@amd.com, 
+ airlied@gmail.com, ajd@linux.ibm.com, alexander.deucher@amd.com, 
+ alison.schofield@intel.com, amd-gfx@lists.freedesktop.org, arnd@arndb.de, 
+ bhelgaas@google.com, carlos.bilbao.osdev@gmail.com,
+ christian.koenig@amd.com,  dan.j.williams@intel.com, dave.jiang@intel.com,
+ dave@stgolabs.net,  david.e.box@linux.intel.com, decui@microsoft.com, 
+ dennis.dalessandro@cornelisnetworks.com, dri-devel@lists.freedesktop.org, 
+ fbarrat@linux.ibm.com, gregkh@linuxfoundation.org, haiyangz@microsoft.com, 
+ hdegoede@redhat.com, ilpo.jarvinen@linux.intel.com, ira.weiny@intel.com, 
+ jgg@ziepe.ca, jonathan.cameron@huawei.com, kys@microsoft.com,
+ leon@kernel.org,  linux-alpha@vger.kernel.org, linux-cxl@vger.kernel.org, 
+ linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ linux-mtd@lists.infradead.org, linux-pci@vger.kernel.org, 
+ linux-rdma@vger.kernel.org, linux-scsi@vger.kernel.org, 
+ linux-usb@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+ logang@deltatee.com,  martin.petersen@oracle.com, mattst88@gmail.com,
+ miquel.raynal@bootlin.com,  mwalle@kernel.org,
+ naveenkrishna.chatradhi@amd.com,  platform-driver-x86@vger.kernel.org,
+ pratyush@kernel.org, rafael@kernel.org,  richard.henderson@linaro.org,
+ richard@nod.at, simona@ffwll.ch,  srinivas.kandagatla@linaro.org,
+ tudor.ambarus@linaro.org, vigneshr@ti.com,  vishal.l.verma@intel.com,
+ wei.liu@kernel.org
+Date: Tue, 03 Dec 2024 11:06:16 -0500
+In-Reply-To: <20241103-sysfs-const-bin_attr-v2-9-71110628844c@weissschuh.net>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.42.4 
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; BOUNDARY="8323328-1820244260-1733236707=:929"
-Content-ID: <077f2543-b5b1-6b41-34ab-764396f46bbc@linux.intel.com>
+Content-Transfer-Encoding: 7bit
 
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
+> diff --git a/include/linux/sysfs.h b/include/linux/sysfs.h
+> index
+> d17c473c1ef292875475bf3bdf62d07241c13882..d713a6445a6267145a7014f308d
+> f3bb25b8c3287 100644
+> --- a/include/linux/sysfs.h
+> +++ b/include/linux/sysfs.h
+> @@ -305,8 +305,12 @@ struct bin_attribute {
+>  	struct address_space *(*f_mapping)(void);
+>  	ssize_t (*read)(struct file *, struct kobject *, struct
+> bin_attribute *,
+>  			char *, loff_t, size_t);
+> +	ssize_t (*read_new)(struct file *, struct kobject *, const
+> struct bin_attribute *,
+> +			    char *, loff_t, size_t);
+>  	ssize_t (*write)(struct file *, struct kobject *, struct
+> bin_attribute *,
+>  			 char *, loff_t, size_t);
+> +	ssize_t (*write_new)(struct file *, struct kobject *,
+> +			     const struct bin_attribute *, char *,
+> loff_t, size_t);
+>  	loff_t (*llseek)(struct file *, struct kobject *, const
+> struct bin_attribute *,
+>  			 loff_t, int);
+>  	int (*mmap)(struct file *, struct kobject *, const struct
+> bin_attribute *attr,
+> @@ -325,11 +329,28 @@ struct bin_attribute {
+>   */
+>  #define sysfs_bin_attr_init(bin_attr) sysfs_attr_init(&(bin_attr)-
+> >attr)
+>  
+> +typedef ssize_t __sysfs_bin_rw_handler_new(struct file *, struct
+> kobject *,
+> +					   const struct
+> bin_attribute *, char *, loff_t, size_t);
+> +
+>  /* macros to create static binary attributes easier */
+>  #define __BIN_ATTR(_name, _mode, _read, _write, _size)
+> {		\
+>  	.attr = { .name = __stringify(_name), .mode = _mode
+> },		\
+> -	.read	=
+> _read,						\
+> -	.write	=
+> _write,						\
+> +	.read =
+> _Generic(_read,						\
+> +		__sysfs_bin_rw_handler_new * :
+> NULL,			\
+> +		default :
+> _read						\
+> +	),							
+> 	\
+> +	.read_new =
+> _Generic(_read,					\
+> +		__sysfs_bin_rw_handler_new * :
+> _read,			\
+> +		default :
+> NULL						\
+> +	),							
+> 	\
+> +	.write =
+> _Generic(_write,					\
+> +		__sysfs_bin_rw_handler_new * :
+> NULL,			\
+> +		default :
+> _write					\
+> +	),							
+> 	\
+> +	.write_new =
+> _Generic(_write,					\
+> +		__sysfs_bin_rw_handler_new * :
+> _write,			\
+> +		default :
+> NULL						\
+> +	),							
+> 	\
+>  	.size	=
+> _size,						\
+>  }
 
---8323328-1820244260-1733236707=:929
-Content-Type: text/plain; CHARSET=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Content-ID: <2a1e4973-ccdf-4359-0f0f-491e96a4109e@linux.intel.com>
+It's probably a bit late now, but you've done this the wrong way
+around.  What you should have done is added the const to .read/.write
+then added a .read_old/.write_old with the original function prototype
+and used _Generic() to switch between them.  Then when there are no
+more non const left, you can simply remove .read_old and .write_old
+without getting Linus annoyed by having to do something like this:
 
-On Tue, 3 Dec 2024, Andy Shevchenko wrote:
+https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=e70140ba0d2b1a30467d4af6bcfe761327b9ec95
 
-> On Mon, Dec 2, 2024 at 11:48=E2=80=AFPM Hans de Goede <hdegoede@redhat.co=
-m> wrote:
-> > On 2-Dec-24 7:45 PM, Andy Shevchenko wrote:
-> > > On Mon, Dec 02, 2024 at 08:34:01PM +0200, Ilpo J=C3=A4rvinen wrote:
-> > >> On Sat, 16 Nov 2024, Hans de Goede wrote:
->=20
-> ...
->=20
-> > >>> +struct atla10_ec_battery_state {
-> > >>> +   u8 status;                      /* Using ACPI Battery spec stat=
-us bits */
-> > >>> +   u8 capacity;                    /* Percent */
->=20
-> Then an obvious remark based on Hans' reply, why are these internal
-> kernel types and not external ones, i.e. __u8?
->=20
-> > >>> +   __le16 charge_now_mAh;
-> > >>> +   __le16 voltage_now_mV;
-> > >>> +   __le16 current_now_mA;
-> > >>> +   __le16 charge_full_mAh;
-> > >>> +   __le16 temp;                    /* centi degrees Celsius */
-> > >>> +} __packed;
-> > >>> +
-> > >>> +struct atla10_ec_battery_info {
-> > >>> +   __le16 charge_full_design_mAh;
-> > >>> +   __le16 voltage_now_mV;          /* Should be design voltage, bu=
-t is not ? */
-> > >>> +   __le16 charge_full_design2_mAh;
-> > >>> +} __packed;
-> > >>
-> > >> Both struct have only naturally aligned members. Why is __packed nee=
-ded?
-> > >
-> > > Wouldn't the second one give sizeof() =3D=3D 8 rather than 6? Sorry, =
-my memory
-> > > about this in C is always flaky.
-> >
-> > That might be one way how things could go wrong, yes.
-> >
-> > To answer Ilpo's original question: these structures represent
-> > the on wire format, hence also the __le16 use and the __packed
-> > is there to disable any possible compiler shenanigans.
-> >
-> > I basically always add __packed to structures representing
-> > hw memory / wire formats just to be sure.
+Regards,
 
-Things will break spectacularly if such shenanigans are more than a myth.
-It's not like they can change ABIs just like that without impacting real=20
-code. Essential networking headers such as tcp.h and ip.h do not use=20
-packed despite being literally wire formats. The day compiler people would=
-=20
-break natural alignment means no padding, world will stop so chances of=20
-that happening are practically nil.
+James
 
-I admit though networking structs tend to be dword sized so Andy's=20
-point about sizeof() has more validity in it. My tests seemed to indicate=
-=20
-it would be based on the alignment requirements of members within the=20
-struct so all __le16 would not need extra tail padding. But unlike the
-natural alignment case, I've not seen the ABI/spec language about that so=
-=20
-it seems acceptable in this case to use __packed, just in case.
-
---=20
- i.
---8323328-1820244260-1733236707=:929--
