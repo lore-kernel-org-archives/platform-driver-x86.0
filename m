@@ -1,62 +1,62 @@
-Received: from mail-wr1-f46.google.com (mail-wr1-f46.google.com [209.85.221.46])
+Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com [209.85.128.54])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8A5B71F943E
-	for <platform-driver-x86@vger.kernel.org>; Tue,  3 Dec 2024 17:16:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 05FE52500C4
+	for <platform-driver-x86@vger.kernel.org>; Tue,  3 Dec 2024 17:16:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1733246194; cv=none; b=CXMqZAsKuhEso18ITothJSHjBOmr2fAZ34ytOxW8+VLH/NKS40WcAdb7mCTqko9qPFrW6YJNoZKOmWaq9HARxxaIMK1roSi5lyWi9nCQzAgGTOVhXs7JDlsOYaQ28Lf0UOhKbwYiwil6Q1GLjviB4BlrXEyOTFcdmx27CsraGQM=
+	t=1733246195; cv=none; b=Nm8GBbFCxq2dm1sBquTwOwL+SMH/X8RgDGPy/uLQDX4AoyaNCi5rNMBuGkK+a8B+6WO+payWswb5/wlNJDv+YVXvVh5MtuvfMy9XS5OJEU7lmzS0dWzPcLuIKgOpH9N/AOBhQyuZ/xaiszX7flBGx9nkb3YrIHjGwySeijrJ7tI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1733246194; c=relaxed/simple;
-	bh=2uNM5E79VqxO+4hWUeY8pC50c4tRPQ6CI6tgNwDKkk4=;
+	s=arc-20240116; t=1733246195; c=relaxed/simple;
+	bh=MLx0HXKyXXM3y8y6+2+1z0+USh/AYD3UzcwSVg7LVgU=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=bYk//JM9F+4mq0Fo/BiDFHA9a5DwV1SR1eeiGo7rdHqzDUL9RmGF2cgH2GFueh5SkhOt2KMHJ5cfhkO23wo8zn41Pko522j2UF7+I8mKuExw0qlfs5ahQA/M6/T1iEC/RqFDlPIfIfPwbypoSpGROj/J6RqMIOZ/uYzkI0t9paU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=NV1ep21B; arc=none smtp.client-ip=209.85.221.46
+	 MIME-Version:Content-Type; b=rgo/Bq3WG2CH7c/ijqyqdlk+4O8Qml23X0+aeLt2YUuUhjBShwA1LmDwKOwN6ar9Vjc+7GQ2oaXN9vmgdE48HvKo2c5AVS2OQkiIEgwY49dF7gb5pzrXiLZAQtYqFQIwKTI3Y+eJtSAYSf78XQSm51FnG/zGS5H2+y0sjlVTvko=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=INQooTFH; arc=none smtp.client-ip=209.85.128.54
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="NV1ep21B"
-Received: by mail-wr1-f46.google.com with SMTP id ffacd0b85a97d-385d7f19f20so2630160f8f.1
-        for <platform-driver-x86@vger.kernel.org>; Tue, 03 Dec 2024 09:16:32 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="INQooTFH"
+Received: by mail-wm1-f54.google.com with SMTP id 5b1f17b1804b1-434acf1f9abso53632055e9.2
+        for <platform-driver-x86@vger.kernel.org>; Tue, 03 Dec 2024 09:16:33 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1733246191; x=1733850991; darn=vger.kernel.org;
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1733246192; x=1733850992; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=h0uKqW9vvWRGO5PxCSBAB7Ojpuf7zy1ETNyv1ImS+4k=;
-        b=NV1ep21BpNacHxFMpf9WGWzWPxYqlR/ltnKnMZFNF9+uCxUo4eP947/79/Pjzqz1id
-         NH4Hk6+To5RIipxdlmRhDFt7S4lL1s+5qJ3Y9cSLIT7E62KaS2TYPTLTJKHLgjaoxAq5
-         nBTwaOuwGTFvdAR/a/o8H5l+OXJIyOVnlq39xnbmKEFA6rc5KUZ/fSY/6fDiY5E7Y0rK
-         9ETC48OmkMSerEwZElprc4UseHEAdF66HxRMLB3xn8l1HoBWuN0BzPjWgct2zIlpKZcO
-         s6lnd2t+Q09g/QPAjC2qhdfLImCgxdhFjjqV/SKbbQ0UULFxgbnDR4rfy4vRKH5hfr47
-         F8+Q==
+        bh=bfz7EKDAPFwQQLg5EGqOmoY87z8R+/d21HRHaU4rMP8=;
+        b=INQooTFHdqqQuhSunXAND/AZPy6i5KgPgYT/c8DzBDX5WCrUjBk98lEFEAM942Ivs7
+         lAJyjzjpCsqLGi7+tMmYT+x0G74Jz8HivoxUlzV3WhcuOyf+a6sVNtPllkONDiqW1odM
+         PF3WbZaId7+f9NpgikEnpCDckVvc5exmUvlojcx6d1ez+GEZV+SSsDbNgtz239WT5x4b
+         DZlK7+16mEmCGUAsK7WzUgu9Gbab+X25pj1gcpEkvGvWUcs/x2N0EwoiqfFl1KuKtvA7
+         cwC7a72bdIp+wXCETsxM7NBroPhhgfUgFDzU4TJTsPZD7XI9TosvhAovMwAqSWfvnscV
+         7wlg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1733246191; x=1733850991;
+        d=1e100.net; s=20230601; t=1733246192; x=1733850992;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=h0uKqW9vvWRGO5PxCSBAB7Ojpuf7zy1ETNyv1ImS+4k=;
-        b=YPL2FgZFKuHKBpJXpcN5pwenh2Wpgw6Hd3xOEnn8xWTtd7QZQXStSk701JhpA6KL2Q
-         S+SznXyPZ12nu/iWnmIBmBaVQCCrZrapmCcmiRdjyhjfrufpSHGlsGRedAY83PzSH6rH
-         PUd3qcAxjMv6jvKxGVtx7fDCXCF3w+/nFiBVLFw46flixQ7ek84NDqudT8A9FnVJebyA
-         2fbIEQUUqzScXsHm41VSUlzs99xggwvg7en4h6ag2/La1lBgBAgGIVKUAaEbWVjoH5q3
-         D+mhOMZAph3A13e86Y0lz3RnZY/IP5Mt1XXNvhMLD2R4Xmbwn5PGs1lpd/YgkZA05tIW
-         h54g==
-X-Forwarded-Encrypted: i=1; AJvYcCUbYsCRg5B8je22B5zZi6VJc3uylRbP4Da97MudIa6qHj4oi7e/511QREaKODpIBhTJfqpYzIEb71q6ZPy+LH6F/nYU@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywonjx/Znmi7LY2eunNblizcI1q/oPYZwBq/IRVRaBTea9J5HTr
-	JUaq3QP8ArI9IVi9Ew2+7ZEyIno2oVOzi1TRGlLItJW0DcJYsbvftDqMQzJSR5k=
-X-Gm-Gg: ASbGncsOQlKrbC4zm9/WX3k0rrKwJnjyExXZILIdLSHAvbDFNblCAmfhXuhKlNRnzCY
-	Sl9738Lj3svxBI1BgmEInz9ErlFnXDWaSd8lbJ3XiFfL1YqpaBOPB50JvU/ypomr+3v/YHmOLzu
-	KKIvljGI0joSQ8LiLSzLR1URXIa+rtlK+bUjhOLgawg+rGhSlLFEDzUdfpJpR6wGURJ7AhQN4Lq
-	k5RRl5H/cwiKDNv11frfLlPjmxpz7E0GwsdrCRnCL+s0f/NJkt+kLrcByBoI8ub8Gyt86dj1RM5
-	RE71
-X-Google-Smtp-Source: AGHT+IFw3vi5gBv/+PBzElsQLFBW8gwbgc04WQ/TBWmy09BS1Trc/+BXbDqi3tSXKRTkK7KTyJorug==
-X-Received: by 2002:a05:6000:1885:b0:382:5010:c8de with SMTP id ffacd0b85a97d-38607c164f8mr1074793f8f.46.1733246190826;
-        Tue, 03 Dec 2024 09:16:30 -0800 (PST)
+        bh=bfz7EKDAPFwQQLg5EGqOmoY87z8R+/d21HRHaU4rMP8=;
+        b=QTPqpOivp3CTdUDowAY/VhRhY/ykPjI78w2Amy3F9iUZYeqx5Rf2lyTqxcFzu/Fu1W
+         NdfLQl3NCeKlkilxUQhczm9i5L4Iofn3RurbocxpKsqFTTCRI6T4t8e7NYg8JFhsLWz+
+         9Vd6RANLT3JMMk+2bBRmuPlE0e5Q5ma6OXYWt4ekorqL4z/1mdKf96lFgHtp4Rmfaida
+         uLo594aldsrSsVbHZNiWa24/+21nPwNVF0u8YmKMcfoil/F3vutHQMLIviZ6DW7JH/v7
+         y980MgJj6IkKSWrlym0mq618IQxGfDS7BTl46mGNEGrMWr5JAAvI/sYgJWjE03flKcpv
+         MP/A==
+X-Forwarded-Encrypted: i=1; AJvYcCUITlgCiBlwKpcfcwNHc/yrjQFdhUIjBVJdRjVIbdI5//XHA9kWxjowkH8RoH/hBmOC3DzsRaVPgdP3G9qTieZzekb8@vger.kernel.org
+X-Gm-Message-State: AOJu0YwcjDNJhoZesoLso4WgGJaZO1A0Dj5tVDtT1Ju8fMIFoH2tdSUu
+	kDIJ1sih8Avfp5XU9HKCvCVLxkuEw7F8Jk7x6bFKyQdgoQeQ6FUbTS4yYpgoOMk=
+X-Gm-Gg: ASbGncs9KG1QBnV6BnMPOuKidDKgsk1xjxG3Z244K2SqKhbmCa0jDkqUtKvMQT1GUPh
+	mdWGMJ2sOkTdJHIvc/87g/6FY3YfGOE8PWdPyrYbI8tiheiS4lhFRiM1lyCKCfF0ikfu8TkcSAR
+	ik9hvV93coyRBaZqewIF57awWHGnlzURY20tgQGLOgoOXqdvIuhe88OMB2RBZaZyPnmtThH2vw9
+	wuNTFTduFs+XyuIHvYJJbu0cv7/87coXipFh6+XkhUWykO73NYnSkizWXNvjUsNh+RYC6WTGd33
+	bMUt
+X-Google-Smtp-Source: AGHT+IFoPJItQ+VTXRbxuqQvrsK7cTv/Gk/LwLMIXuHO9GbWZUw4c7hfqi9jkofbnT9ohgu7PhAUAg==
+X-Received: by 2002:a05:600c:35cf:b0:431:52b7:a499 with SMTP id 5b1f17b1804b1-434d0a07e76mr27423905e9.20.1733246192302;
+        Tue, 03 Dec 2024 09:16:32 -0800 (PST)
 Received: from localhost (p5dc6838f.dip0.t-ipconnect.de. [93.198.131.143])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-385ccd3a56fsm15903085f8f.62.2024.12.03.09.16.30
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-434b0f70cbfsm201776645e9.36.2024.12.03.09.16.31
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 03 Dec 2024 09:16:30 -0800 (PST)
+        Tue, 03 Dec 2024 09:16:31 -0800 (PST)
 From: =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>
 To: linux-pwm@vger.kernel.org
 Cc: Hans de Goede <hdegoede@redhat.com>,
@@ -64,9 +64,9 @@ Cc: Hans de Goede <hdegoede@redhat.com>,
 	Thierry Reding <thierry.reding@gmail.com>,
 	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
 	platform-driver-x86@vger.kernel.org
-Subject: [PATCH 1/2] pwm: lpss: Move namespace import into a header
-Date: Tue,  3 Dec 2024 18:16:14 +0100
-Message-ID:  <3a99048a52aeee356d01dbf7f2f06e6e0826ed78.1733245406.git.ukleinek@kernel.org>
+Subject: [PATCH 2/2] pwm: lpss: Define DEFAULT_SYMBOL_NAMESPACE earlier
+Date: Tue,  3 Dec 2024 18:16:15 +0100
+Message-ID:  <9f0e30c514a846aec72655a52deaed276467a07e.1733245406.git.ukleinek@kernel.org>
 X-Mailer: git-send-email 2.45.2
 In-Reply-To: <cover.1733245406.git.ukleinek@kernel.org>
 References: <cover.1733245406.git.ukleinek@kernel.org>
@@ -77,83 +77,46 @@ List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2630; i=u.kleine-koenig@baylibre.com; h=from:subject:message-id; bh=2uNM5E79VqxO+4hWUeY8pC50c4tRPQ6CI6tgNwDKkk4=; b=owEBbQGS/pANAwAKAY+A+1h9Ev5OAcsmYgBnTzzhhbwznRnHJ5gKYcuhn7fYxxBWZBHiXgPJb cl1DuWrimGJATMEAAEKAB0WIQQ/gaxpOnoeWYmt/tOPgPtYfRL+TgUCZ0884QAKCRCPgPtYfRL+ TiknB/4jRyiWRDxkq5fCwPAgnXM3JxY4Neg/HTlIp9XiCARliVwvrg3pyDItMmDKwM7dN0eSaHJ Pa+JsdGwMEykPW1V0MfxOKe2i0y+3FmXJ1mZZUwezjCAzH47bTyHuzV9XIoQcK633xy4Uyr9wCO BhBMkUae4uh4z7nL5fbaR/BX3e00eoNahJP7KzQrXM4FCf1AZWLVPirqK33/9mK0sNBR6zYGwtO DK51mkVF09gU4TS6q8j8KYL7vBMq9w+FSJRZZnyBWu7bB8vom5U2KTCKjIbqeYZ7AsPbOti7Djn C/SB6uDAg+gqqYB+zRGX3Y1xapfc3Er2UvYqai5VgfNSMSCh
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1192; i=u.kleine-koenig@baylibre.com; h=from:subject:message-id; bh=MLx0HXKyXXM3y8y6+2+1z0+USh/AYD3UzcwSVg7LVgU=; b=owEBbQGS/pANAwAKAY+A+1h9Ev5OAcsmYgBnTzzjtz/i8uKDCaiZ5c+ovGLZgu/IacX8+/opL x1OD1Svgb6JATMEAAEKAB0WIQQ/gaxpOnoeWYmt/tOPgPtYfRL+TgUCZ0884wAKCRCPgPtYfRL+ Tgr8B/wPprElJIbn9hU2u8ge4/4joAnkRmi39mrgL9oAOALP10H1RU8YfBaKt+whiS+3yypEWim vywS1F5ffhpg7KNG3tPQEwUTVM96cbL8ixlxatbfd9TuPyyDOON66UAXrfhO+1NP5xhMlWs5yLW GihqvnoS8cuRVUg1ErOTFGnnWQFVydOOxhLkxnR0uyybJTwtCqmPAYSig7lPrOMoYNDr/ogNzCX z4xzdCXbMYRGY31AQbQxUASQLyKXMI9YT1gcFXcWf8L6buwaagskUDKRwljaONoopVj6pog+PPh 78gNU4tnH81CRyWXaVLzAwrx8cTByxLT9+KW5zy2idk3u0ab
 X-Developer-Key: i=u.kleine-koenig@baylibre.com; a=openpgp; fpr=0D2511F322BFAB1C1580266BE2DCDD9132669BD6
 Content-Transfer-Encoding: 8bit
 
-Each user of the exported symbols related to the pwm-lpss driver needs
-to import the matching namespace. So this can just be done in the header
-together with the prototypes.
+DEFAULT_SYMBOL_NAMESPACE must be already defined when <linux/export.h>
+is included. So move the define above the include block.
 
-This fixes drivers/pinctrl/intel/pinctrl-intel.c which failed to import
-that namespace before. (However this didn't hurt because the pwm-lpss
-module namespace isn't used; see the next commit.)
+With the DEFAULT_SYMBOL_NAMESPACE being defined too late, the exported
+symbols end up in the default namespace. So the modules making use of
+the symbols defined in pwm-lpss.c can import these just fine and just
+import the the PWM_LPSS namespace without any gain.
 
+Fixes: a3682d2fe3c3 ("pwm: lpss: Move exported symbols to PWM_LPSS namespace")
 Signed-off-by: Uwe Kleine-König <u.kleine-koenig@baylibre.com>
 ---
- drivers/pwm/pwm-lpss-pci.c                 | 2 --
- drivers/pwm/pwm-lpss-platform.c            | 2 --
- include/linux/platform_data/x86/pwm-lpss.h | 7 +++++++
- 3 files changed, 7 insertions(+), 4 deletions(-)
+ drivers/pwm/pwm-lpss.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/pwm/pwm-lpss-pci.c b/drivers/pwm/pwm-lpss-pci.c
-index f7ece2809e6b..8615c44c1034 100644
---- a/drivers/pwm/pwm-lpss-pci.c
-+++ b/drivers/pwm/pwm-lpss-pci.c
-@@ -8,7 +8,6 @@
+diff --git a/drivers/pwm/pwm-lpss.c b/drivers/pwm/pwm-lpss.c
+index 867e2bc8c601..9519d1b06869 100644
+--- a/drivers/pwm/pwm-lpss.c
++++ b/drivers/pwm/pwm-lpss.c
+@@ -10,6 +10,8 @@
+  * Author: Alan Cox <alan@linux.intel.com>
   */
  
- #include <linux/kernel.h>
--#include <linux/module.h>
- #include <linux/pci.h>
- #include <linux/pm_runtime.h>
- 
-@@ -70,4 +69,3 @@ module_pci_driver(pwm_lpss_driver_pci);
- 
- MODULE_DESCRIPTION("PWM PCI driver for Intel LPSS");
- MODULE_LICENSE("GPL v2");
--MODULE_IMPORT_NS(PWM_LPSS);
-diff --git a/drivers/pwm/pwm-lpss-platform.c b/drivers/pwm/pwm-lpss-platform.c
-index 5130238a4567..3de1ab2cff54 100644
---- a/drivers/pwm/pwm-lpss-platform.c
-+++ b/drivers/pwm/pwm-lpss-platform.c
-@@ -9,7 +9,6 @@
- 
- #include <linux/kernel.h>
- #include <linux/mod_devicetable.h>
--#include <linux/module.h>
- #include <linux/platform_device.h>
- #include <linux/pm_runtime.h>
- #include <linux/property.h>
-@@ -78,5 +77,4 @@ module_platform_driver(pwm_lpss_driver_platform);
- 
- MODULE_DESCRIPTION("PWM platform driver for Intel LPSS");
- MODULE_LICENSE("GPL v2");
--MODULE_IMPORT_NS(PWM_LPSS);
- MODULE_ALIAS("platform:pwm-lpss");
-diff --git a/include/linux/platform_data/x86/pwm-lpss.h b/include/linux/platform_data/x86/pwm-lpss.h
-index 752c06b47cc8..0a1025f6cd58 100644
---- a/include/linux/platform_data/x86/pwm-lpss.h
-+++ b/include/linux/platform_data/x86/pwm-lpss.h
-@@ -4,6 +4,7 @@
- #ifndef __PLATFORM_DATA_X86_PWM_LPSS_H
- #define __PLATFORM_DATA_X86_PWM_LPSS_H
- 
-+#include <linux/module.h>
- #include <linux/types.h>
- 
- struct device;
-@@ -30,4 +31,10 @@ struct pwm_lpss_boardinfo {
- struct pwm_chip *devm_pwm_lpss_probe(struct device *dev, void __iomem *base,
- 				     const struct pwm_lpss_boardinfo *info);
- 
-+/*
-+ * The above function and the pwm_lpss_boardinfo variables in
-+ * drivers/pwm/pwm-lpss.h are defined in the PWM_LPSS namespace.
-+ */
-+MODULE_IMPORT_NS(PWM_LPSS);
++#define DEFAULT_SYMBOL_NAMESPACE PWM_LPSS
 +
- #endif	/* __PLATFORM_DATA_X86_PWM_LPSS_H */
+ #include <linux/bits.h>
+ #include <linux/delay.h>
+ #include <linux/io.h>
+@@ -19,8 +21,6 @@
+ #include <linux/pm_runtime.h>
+ #include <linux/time.h>
+ 
+-#define DEFAULT_SYMBOL_NAMESPACE PWM_LPSS
+-
+ #include "pwm-lpss.h"
+ 
+ #define PWM				0x00000000
 -- 
 2.45.2
 
