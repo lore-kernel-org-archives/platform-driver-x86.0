@@ -1,177 +1,118 @@
-Received: from bedivere.hansenpartnership.com (bedivere.hansenpartnership.com [96.44.175.130])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 112031F890D;
-	Tue,  3 Dec 2024 16:06:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=96.44.175.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4500F1F12F7
+	for <platform-driver-x86@vger.kernel.org>; Tue,  3 Dec 2024 16:10:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1733241988; cv=none; b=HvWod2SqmFkg1DvrTpYJmPACvaYAqiujjHJaUP5XogQl5IHsfeqePQ7/qFGEZO9jORmXBT9peLO2EvhCbYsLOP1W/1ulVWHrIMmdWjS/0+kEXiId5r6KJkStbDewnCAKuGXOPZTlmczrBd1Ep8DRJPmEfx5NeoKk7j93DeGQbEc=
+	t=1733242204; cv=none; b=sdO25Ydd+VdwcpemQYvAn+LQtkkPdBs1YrH9Xq/Z7aZRLpLy1L/IJxWoeXmFxrjqPU377WVg0mLnvL3y8E7CSpJAIozB7DnBCRoTK3hRSYYkWkbNqCUJypXYQS3EnWSJDkie1gF3DejyTDK3fQ4znluQ81VvKUNdVOO6frYOgjs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1733241988; c=relaxed/simple;
-	bh=VBBfv3eA4AsVsLgBF8VnP+EajJe1ALpu2GW7YHfiN/w=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:Content-Type:
-	 MIME-Version; b=BiAXw5SXoTVaegE2WpiwoTt2OQDYpyrbUID2w5o0Ic0vKQD8ynBzTdo3OHScW0i+07RqXHOrls8c/ufPc5plYzAU/yqDt/25f+eksOCqOK8i46ietWYs7/7nN3Ofn7iWv/MaV3eyP+SbZ2s6ogcwyaUF05hkjAgsKrWQdaGF+gg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=HansenPartnership.com; spf=pass smtp.mailfrom=HansenPartnership.com; dkim=pass (1024-bit key) header.d=hansenpartnership.com header.i=@hansenpartnership.com header.b=lHnQZbqT; dkim=pass (1024-bit key) header.d=hansenpartnership.com header.i=@hansenpartnership.com header.b=lHnQZbqT; arc=none smtp.client-ip=96.44.175.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=HansenPartnership.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=HansenPartnership.com
+	s=arc-20240116; t=1733242204; c=relaxed/simple;
+	bh=wKmlpVP41Q8QuVpO3551yuOmamNRWnFBv/oW/23U5SE=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=d6Rgrus+0g+B1iIvjfosEvPdohhQ3Tfonrti6JQDMHvDVHQH0jWAL0mlIZ/abJLSZnBd2zS+hc94kj1dN2YfibRKy/jpK2Pok1YFYh06jK+ieW/W9OpUyV6lFYO7lj/zd7Zt22QpWzZ0pRYn5PJefNPNF+MlL2lTWR9NRaLhEOU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=N9hGS/km; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=hansenpartnership.com header.i=@hansenpartnership.com header.b="lHnQZbqT";
-	dkim=pass (1024-bit key) header.d=hansenpartnership.com header.i=@hansenpartnership.com header.b="lHnQZbqT"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-	d=hansenpartnership.com; s=20151216; t=1733241982;
-	bh=VBBfv3eA4AsVsLgBF8VnP+EajJe1ALpu2GW7YHfiN/w=;
-	h=Message-ID:Subject:From:To:Date:In-Reply-To:From;
-	b=lHnQZbqTPw8lccD9LZoQTnjENuqFmq3M4qdXn9YwdcXuh8kaYOH60UbGnuArtEJoE
-	 Px4kL7hmZa2/uxmjqmqHUiq2gnIFhqP/9JNM4Zxjm340Kjh3IenF17vJPycyc5doEz
-	 9qzMTvJH2/Dq+wqAj7McqxgXVZICR0uf3Mza6cXQ=
-Received: from localhost (localhost [127.0.0.1])
-	by bedivere.hansenpartnership.com (Postfix) with ESMTP id 9B55D12871C9;
-	Tue, 03 Dec 2024 11:06:22 -0500 (EST)
-Received: from bedivere.hansenpartnership.com ([127.0.0.1])
- by localhost (bedivere.hansenpartnership.com [127.0.0.1]) (amavis, port 10024)
- with ESMTP id OEo6FblEm0Xs; Tue,  3 Dec 2024 11:06:22 -0500 (EST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-	d=hansenpartnership.com; s=20151216; t=1733241982;
-	bh=VBBfv3eA4AsVsLgBF8VnP+EajJe1ALpu2GW7YHfiN/w=;
-	h=Message-ID:Subject:From:To:Date:In-Reply-To:From;
-	b=lHnQZbqTPw8lccD9LZoQTnjENuqFmq3M4qdXn9YwdcXuh8kaYOH60UbGnuArtEJoE
-	 Px4kL7hmZa2/uxmjqmqHUiq2gnIFhqP/9JNM4Zxjm340Kjh3IenF17vJPycyc5doEz
-	 9qzMTvJH2/Dq+wqAj7McqxgXVZICR0uf3Mza6cXQ=
-Received: from lingrow.int.hansenpartnership.com (unknown [IPv6:2601:5c4:4302:c21::a774])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits))
-	(Client did not present a certificate)
-	by bedivere.hansenpartnership.com (Postfix) with ESMTPSA id 1133D128718C;
-	Tue, 03 Dec 2024 11:06:17 -0500 (EST)
-Message-ID: <7ed3b713f8901398f52d7485d59613c19ea0e752.camel@HansenPartnership.com>
-Subject: Re: [PATCH v2 09/10] sysfs: bin_attribute: add const read/write
- callback variants
-From: James Bottomley <James.Bottomley@HansenPartnership.com>
-To: linux@weissschuh.net
-Cc: James.Bottomley@HansenPartnership.com, Xinhui.Pan@amd.com, 
- airlied@gmail.com, ajd@linux.ibm.com, alexander.deucher@amd.com, 
- alison.schofield@intel.com, amd-gfx@lists.freedesktop.org, arnd@arndb.de, 
- bhelgaas@google.com, carlos.bilbao.osdev@gmail.com,
- christian.koenig@amd.com,  dan.j.williams@intel.com, dave.jiang@intel.com,
- dave@stgolabs.net,  david.e.box@linux.intel.com, decui@microsoft.com, 
- dennis.dalessandro@cornelisnetworks.com, dri-devel@lists.freedesktop.org, 
- fbarrat@linux.ibm.com, gregkh@linuxfoundation.org, haiyangz@microsoft.com, 
- hdegoede@redhat.com, ilpo.jarvinen@linux.intel.com, ira.weiny@intel.com, 
- jgg@ziepe.ca, jonathan.cameron@huawei.com, kys@microsoft.com,
- leon@kernel.org,  linux-alpha@vger.kernel.org, linux-cxl@vger.kernel.org, 
- linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org, 
- linux-mtd@lists.infradead.org, linux-pci@vger.kernel.org, 
- linux-rdma@vger.kernel.org, linux-scsi@vger.kernel.org, 
- linux-usb@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
- logang@deltatee.com,  martin.petersen@oracle.com, mattst88@gmail.com,
- miquel.raynal@bootlin.com,  mwalle@kernel.org,
- naveenkrishna.chatradhi@amd.com,  platform-driver-x86@vger.kernel.org,
- pratyush@kernel.org, rafael@kernel.org,  richard.henderson@linaro.org,
- richard@nod.at, simona@ffwll.ch,  srinivas.kandagatla@linaro.org,
- tudor.ambarus@linaro.org, vigneshr@ti.com,  vishal.l.verma@intel.com,
- wei.liu@kernel.org
-Date: Tue, 03 Dec 2024 11:06:16 -0500
-In-Reply-To: <20241103-sysfs-const-bin_attr-v2-9-71110628844c@weissschuh.net>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.42.4 
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="N9hGS/km"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1733242202;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=BrSAvYkcGaxZqNeF7Z+XfbzUmqceDWeS2bM3UUKc9UY=;
+	b=N9hGS/kmYS4UJeN2d+xdCmgGdpf4oE/bMBGgdj2vMSD0Ua/0UHotK88J9EncOxjIKTVcqs
+	1qzeqxgaJwGt0x/lVH0zhZ7AROWZ7OsYrcFf0bgKJWOmZkKID4YicexVbLUQDQMFcRN65S
+	rdNsjemLlQWwpFL14xUsc1MVR9GHEew=
+Received: from mail-ed1-f70.google.com (mail-ed1-f70.google.com
+ [209.85.208.70]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-674-9wIqDocjOtawfnaB2I7ctA-1; Tue, 03 Dec 2024 11:10:00 -0500
+X-MC-Unique: 9wIqDocjOtawfnaB2I7ctA-1
+X-Mimecast-MFC-AGG-ID: 9wIqDocjOtawfnaB2I7ctA
+Received: by mail-ed1-f70.google.com with SMTP id 4fb4d7f45d1cf-5d0e78fb68aso2622687a12.0
+        for <platform-driver-x86@vger.kernel.org>; Tue, 03 Dec 2024 08:10:00 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1733242199; x=1733846999;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=BrSAvYkcGaxZqNeF7Z+XfbzUmqceDWeS2bM3UUKc9UY=;
+        b=NyuPHHT9sOHHqoaOERezb0CKdpicIPWGRjDQqMea2qkO0VPKVsWwwA0H0OXXMJMRyZ
+         8Iov52Uid2CXtfPuT6Rkl1N0ph3AADWJdzLI5uvmKafhEf38I/YjRv/kftZMh0sLdbzv
+         iiqEDsgEgV7aT3zernBKU5BxFf2i0C66oVj4fJDPFTjXKVWc9ismS0GJhQrV93pfldi/
+         neeBL4IHEMrJZHapbkeNP3GBfBZhhRKhhjPs1ul7rDd+iTci5skBvuCX5/INZAga0hkT
+         EITm5weJB5CpRNHJMiLdSdnC87Djqi1GVzAHSLtKx+xrAojP8ZjBm13Vfcm4Cjt+z+BI
+         NnLA==
+X-Forwarded-Encrypted: i=1; AJvYcCUkMD9GTWiwjLsfgBjjEfzC65bqSkQao4hEXtIbM5BGRALhbqzBYSi5BWnmWm4YgmERH3lf4pgtb5yr3IzQnCJE6Rvz@vger.kernel.org
+X-Gm-Message-State: AOJu0YzyYnWxDSz7g8QQmuzrCAkcc+mmflkYwdwiSu1AQ3p+zLt/WM8u
+	FXSW1wa6Z3Jzj1E6PfTzjlDOAYfnRrsVYk7i7+V39iz21Tv8C37rtderuW8R0PfeEtgDgkxfI3H
+	sjd+svSF4jDKWZ6ZGfgqWiHYYT2hX2gCGkzYyaZ+Abfnp1rp8kTAU+5yDVlJKvILKsYGqI0c=
+X-Gm-Gg: ASbGncvt4ro9974DQDOf7tyGGQRCgpNNeJDy1rHVehhK906tiO9NCuNc3xzRuprJd0V
+	2nXomPp4DEDamH7h8jf63eReO+YLfWqiqj6D0d2SIySVZ4NNZbe7zrHlHF5KdP9MuAQEKdO8Ti4
+	emGK7oMQaeBfHI7YrmNHY0LnbF8M0e7S5CQu95jF4UZby3hU3XqpFxLHT99VbKAt1cgvBgjHNvd
+	pha9FBLTSPH+OTneTvng7kn0dDC+4WDu4lqABu0z2iByFeEY29IlD58Shaef8npF7nHDfVyC35i
+	ZE2rkPbAl0bwS8GTl+l3zKoRI1gQr6uhaC7+e2ASNZSmtRBOJkbMauVMk6Z91yUENHCbHrXZvW0
+	bAmBRpm2PprZqOruTsyUDtbWV2ao=
+X-Received: by 2002:a17:906:1ba2:b0:aa5:479b:3d25 with SMTP id a640c23a62f3a-aa5f7f2b0c4mr211191166b.51.1733242199344;
+        Tue, 03 Dec 2024 08:09:59 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IHw8ZbHNP7By/eNP6XItxO4VuoSIBpM2+1/i3XDMdZsp4ymhJo9FmrdZ+u0XMDd2Qv2Agk+Og==
+X-Received: by 2002:a17:906:1ba2:b0:aa5:479b:3d25 with SMTP id a640c23a62f3a-aa5f7f2b0c4mr211188766b.51.1733242198947;
+        Tue, 03 Dec 2024 08:09:58 -0800 (PST)
+Received: from ?IPV6:2001:1c00:2a07:3a01:e7a9:b143:57e6:261b? (2001-1c00-2a07-3a01-e7a9-b143-57e6-261b.cable.dynamic.v6.ziggo.nl. [2001:1c00:2a07:3a01:e7a9:b143:57e6:261b])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-aa59990a7a7sm628271566b.172.2024.12.03.08.09.58
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 03 Dec 2024 08:09:58 -0800 (PST)
+Message-ID: <c19e9043-0750-4eb0-b794-521d946317d6@redhat.com>
+Date: Tue, 3 Dec 2024 17:09:57 +0100
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 2/2] platform/x86: x86-android-tablets: Add Vexia EDU
+ ATLA 10 EC battery driver
+To: Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc: Andy Shevchenko <andy@kernel.org>,
+ =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+ platform-driver-x86@vger.kernel.org
+References: <20241116121659.57487-1-hdegoede@redhat.com>
+ <20241116121659.57487-2-hdegoede@redhat.com>
+ <b5b40432-77ed-2466-7d30-ce35a239d0ae@linux.intel.com>
+ <Z04ASf0znID9C1FN@smile.fi.intel.com>
+ <040238ad-6f88-4c4a-814e-2b94b7a43116@redhat.com>
+ <CAHp75VdJ_MfRXXX18c+rB943Saare6n_GEEwko+Hf31UW39XpA@mail.gmail.com>
+Content-Language: en-US
+From: Hans de Goede <hdegoede@redhat.com>
+In-Reply-To: <CAHp75VdJ_MfRXXX18c+rB943Saare6n_GEEwko+Hf31UW39XpA@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-> diff --git a/include/linux/sysfs.h b/include/linux/sysfs.h
-> index
-> d17c473c1ef292875475bf3bdf62d07241c13882..d713a6445a6267145a7014f308d
-> f3bb25b8c3287 100644
-> --- a/include/linux/sysfs.h
-> +++ b/include/linux/sysfs.h
-> @@ -305,8 +305,12 @@ struct bin_attribute {
->  	struct address_space *(*f_mapping)(void);
->  	ssize_t (*read)(struct file *, struct kobject *, struct
-> bin_attribute *,
->  			char *, loff_t, size_t);
-> +	ssize_t (*read_new)(struct file *, struct kobject *, const
-> struct bin_attribute *,
-> +			    char *, loff_t, size_t);
->  	ssize_t (*write)(struct file *, struct kobject *, struct
-> bin_attribute *,
->  			 char *, loff_t, size_t);
-> +	ssize_t (*write_new)(struct file *, struct kobject *,
-> +			     const struct bin_attribute *, char *,
-> loff_t, size_t);
->  	loff_t (*llseek)(struct file *, struct kobject *, const
-> struct bin_attribute *,
->  			 loff_t, int);
->  	int (*mmap)(struct file *, struct kobject *, const struct
-> bin_attribute *attr,
-> @@ -325,11 +329,28 @@ struct bin_attribute {
->   */
->  #define sysfs_bin_attr_init(bin_attr) sysfs_attr_init(&(bin_attr)-
-> >attr)
->  
-> +typedef ssize_t __sysfs_bin_rw_handler_new(struct file *, struct
-> kobject *,
-> +					   const struct
-> bin_attribute *, char *, loff_t, size_t);
-> +
->  /* macros to create static binary attributes easier */
->  #define __BIN_ATTR(_name, _mode, _read, _write, _size)
-> {		\
->  	.attr = { .name = __stringify(_name), .mode = _mode
-> },		\
-> -	.read	=
-> _read,						\
-> -	.write	=
-> _write,						\
-> +	.read =
-> _Generic(_read,						\
-> +		__sysfs_bin_rw_handler_new * :
-> NULL,			\
-> +		default :
-> _read						\
-> +	),							
-> 	\
-> +	.read_new =
-> _Generic(_read,					\
-> +		__sysfs_bin_rw_handler_new * :
-> _read,			\
-> +		default :
-> NULL						\
-> +	),							
-> 	\
-> +	.write =
-> _Generic(_write,					\
-> +		__sysfs_bin_rw_handler_new * :
-> NULL,			\
-> +		default :
-> _write					\
-> +	),							
-> 	\
-> +	.write_new =
-> _Generic(_write,					\
-> +		__sysfs_bin_rw_handler_new * :
-> _write,			\
-> +		default :
-> NULL						\
-> +	),							
-> 	\
->  	.size	=
-> _size,						\
->  }
+Hi,
 
-It's probably a bit late now, but you've done this the wrong way
-around.  What you should have done is added the const to .read/.write
-then added a .read_old/.write_old with the original function prototype
-and used _Generic() to switch between them.  Then when there are no
-more non const left, you can simply remove .read_old and .write_old
-without getting Linus annoyed by having to do something like this:
+On 3-Dec-24 1:58 PM, Andy Shevchenko wrote:
+> On Mon, Dec 2, 2024 at 11:48 PM Hans de Goede <hdegoede@redhat.com> wrote:
+>> On 2-Dec-24 7:45 PM, Andy Shevchenko wrote:
+>>> On Mon, Dec 02, 2024 at 08:34:01PM +0200, Ilpo Järvinen wrote:
+>>>> On Sat, 16 Nov 2024, Hans de Goede wrote:
+> 
+> ...
+> 
+>>>>> +struct atla10_ec_battery_state {
+>>>>> +   u8 status;                      /* Using ACPI Battery spec status bits */
+>>>>> +   u8 capacity;                    /* Percent */
+> 
+> Then an obvious remark based on Hans' reply, why are these internal
+> kernel types and not external ones, i.e. __u8?
 
-https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=e70140ba0d2b1a30467d4af6bcfe761327b9ec95
+Because this is not a uapi header? 
 
 Regards,
 
-James
+Hans
+
 
