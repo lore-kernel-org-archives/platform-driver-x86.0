@@ -1,130 +1,122 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F7AE38385;
-	Wed,  4 Dec 2024 01:50:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 89CBC1AF0A9;
+	Wed,  4 Dec 2024 12:13:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1733277058; cv=none; b=GjGra5X4NU2wsUy3nfBjfjRAaU7uMZjaUJIyU5DI8NQBDowUIpx3OLp+74cvP+5aIlTue+RRbdRW9NVWYbHPE1xARJgK3mbuKHoYgzEbUnJ25eWoJePf/Ah6SAjLvYaw8kvoKRku0LZ+E5rBA8Lh4ylZZD7Ak+giZPI8TMPfusU=
+	t=1733314406; cv=none; b=IotY7wwreqKddhbwsgwijaeygfQ0ewdZ98LlVJ3kXySa3IZwQH7bBUdEhqsxCcpgR6KqTQTCzNy/c9k4UpmhYL1vqrY16Zo0EnT0hzegh5QYCDP2p18f4uUCfd27wD15e7Al9klM2qmsQ6NJwxm7ADAQ3SVB0IgcJnI4yb7EQfE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1733277058; c=relaxed/simple;
-	bh=ogJf0wodXJmsWqSxlFu5GDjXZVmUCYVdeuYCGaoChZU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=o2E97Abj3yNauxA6FQ+8aoV4HCZNwjRD1m25vVHapoxqHiows02QKGo35Kdda/PKheQLoHMQQ89BLjHvadFOhSrW4Nd60D+jR2EmZL6iFSQeEQ5FLoxUx8DIQQ51ObSRJssxvOKkKN/LXzRlgzAspaKtqq2Ue9RKN0KmBe1823E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=EQTXy07o; arc=none smtp.client-ip=198.175.65.19
+	s=arc-20240116; t=1733314406; c=relaxed/simple;
+	bh=F/PGUjJpR/GznCOjIscqm2kL6oAgWba4NmiPD8rhYLM=;
+	h=From:To:Cc:Date:Subject:Message-ID:MIME-Version:Content-Type; b=bLDSwWI+V+J0rTsunrmKFjTRv/QC+VPrvc+3npxpyZOgjVgzBbQJ7e7pY/06samuDSsMuJ7h+C6PHTfJcJGg7nJOec9nyuJfZeIVJWGLDJSP+Nl/aN5CyKJxScxB7QyXV/WEmQ8MsrA/vtL0PPuWZ19Q4ajYfkDyFStxR4FvLKk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=dWXrO8cJ; arc=none smtp.client-ip=192.198.163.14
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="EQTXy07o"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="dWXrO8cJ"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1733277057; x=1764813057;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:content-transfer-encoding:in-reply-to;
-  bh=ogJf0wodXJmsWqSxlFu5GDjXZVmUCYVdeuYCGaoChZU=;
-  b=EQTXy07o5t8t68m4agL13kRXNDnWJ/G3P/bTYoA33QV9AYrmotneDxL6
-   M5kb+5GYIrXp3BiQyvLDr9HYNT8tEEYEpzSnIGFUAcgysbWSywwO3n3zc
-   lBGKfKx3TCQwQ7QqSEz3KdAVHG/cPcWxF7Gfrc1DJCOA4K/Z+Y2WHkJHR
-   8IsEIlGtBaBh0uE9G59K0IlCJil8kE5qjsmlYqJD03e0+dnr9VjgVJQZF
-   B3KoqdN3aeGgUz5yYkggo0TAbccUue3RzpVBubta1F0UEAfedN/+6m0bS
-   2g4PmJowbXup9m/lrTYylaX2Db5S2tNDpBtkUog2UicP//TBtXou6dsw7
-   g==;
-X-CSE-ConnectionGUID: MkNeaBa5RdqxCITygNaksg==
-X-CSE-MsgGUID: urN4Va53TYu46lgrQRytWw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11275"; a="33400692"
-X-IronPort-AV: E=Sophos;i="6.12,206,1728975600"; 
-   d="scan'208";a="33400692"
-Received: from fmviesa003.fm.intel.com ([10.60.135.143])
-  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Dec 2024 17:50:56 -0800
-X-CSE-ConnectionGUID: XJnjf8/3Raavt53CruPmmw==
-X-CSE-MsgGUID: 9WpvTPYHR2CRB+ecTL3Bwg==
+  t=1733314405; x=1764850405;
+  h=from:to:cc:date:subject:message-id:mime-version:
+   content-transfer-encoding;
+  bh=F/PGUjJpR/GznCOjIscqm2kL6oAgWba4NmiPD8rhYLM=;
+  b=dWXrO8cJo3FjGCjK4kt4HOTr8OjQ/cFUMTLx6hhVib9p4NguFaM/KrBP
+   gp+X5QMZ+TjYPdOf++fyx4m3lmNnBIwSLmR5RJfPJdVGaLJXRouEd1J5T
+   XTolMzv7LPFWJ1weY/KqLqKZHILAde5Qnprr8bgOJF1mhbnTCdqOsP4Ab
+   twJSybR1AAcxj+MdNuQN4HXahOOEpyw3aQPnV/w11QLdi6BLI89oMN3US
+   7Se21cerwnYNsGBYkyE2h9pPkbZ9VY1RnPLNhL1j5hLCzfIjq/DWoF685
+   USr/pR3cJhQ2+YHiZE/uE/aMUiyJT6Stby3AEW2xUx+0c/O4PmMkISw7e
+   w==;
+X-CSE-ConnectionGUID: +DqmSnx9RaCNnichsLKwPw==
+X-CSE-MsgGUID: q7t+NEI9QhyR7f0XtuHZMg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11276"; a="33825953"
+X-IronPort-AV: E=Sophos;i="6.12,207,1728975600"; 
+   d="scan'208";a="33825953"
+Received: from fmviesa008.fm.intel.com ([10.60.135.148])
+  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Dec 2024 04:13:24 -0800
+X-CSE-ConnectionGUID: fljyPwKxRuWyX0HBXtD+GA==
+X-CSE-MsgGUID: 639ol/leQLm0MLx0Ta0pOw==
 X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.12,206,1728975600"; 
-   d="scan'208";a="97684014"
-Received: from smile.fi.intel.com ([10.237.72.154])
-  by fmviesa003.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Dec 2024 17:50:54 -0800
-Received: from andy by smile.fi.intel.com with local (Exim 4.98)
-	(envelope-from <andriy.shevchenko@linux.intel.com>)
-	id 1tIeXT-00000003bwZ-28F1;
-	Wed, 04 Dec 2024 03:50:51 +0200
-Date: Wed, 4 Dec 2024 03:50:51 +0200
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <u.kleine-koenig@baylibre.com>
-Cc: linux-pwm@vger.kernel.org, Hans de Goede <hdegoede@redhat.com>,
-	Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	Thierry Reding <thierry.reding@gmail.com>,
-	platform-driver-x86@vger.kernel.org
-Subject: Re: [PATCH 1/2] pwm: lpss: Move namespace import into a header
-Message-ID: <Z0-1e5Wr4q_Iuq6-@smile.fi.intel.com>
-References: <cover.1733245406.git.ukleinek@kernel.org>
- <3a99048a52aeee356d01dbf7f2f06e6e0826ed78.1733245406.git.ukleinek@kernel.org>
- <Z09YJGifvpENYNPy@smile.fi.intel.com>
- <6fjduueg7r3nctg4ivevvk7kopax4ynm32prxacrieq5gpbcgx@zhrgpx2loulp>
- <Z0-GB4tQAz2gfmUN@smile.fi.intel.com>
- <6bjnfjell3jyr2f5v7wvvqg6lq2w2xuqhavdom4epjr6liluw5@p7cbkwwvpe43>
+X-IronPort-AV: E=Sophos;i="6.12,207,1728975600"; 
+   d="scan'208";a="93933839"
+Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.178])
+  by fmviesa008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Dec 2024 04:13:21 -0800
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: LKML <linux-kernel@vger.kernel.org>, PDx86 <platform-driver-x86@vger.kernel.org>, Hans de Goede <hdegoede@redhat.com>, Andy Shevchenko <andy@kernel.org>
+Date: Wed, 04 Dec 2024 14:12:06 +0200
+Subject: [GIT PULL] platform-drivers-x86 for v6.13-2
+Message-ID: <pdx86-pr-20241204141206-1813515751@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <6bjnfjell3jyr2f5v7wvvqg6lq2w2xuqhavdom4epjr6liluw5@p7cbkwwvpe43>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-On Wed, Dec 04, 2024 at 12:38:49AM +0100, Uwe Kleine-König wrote:
-> On Wed, Dec 04, 2024 at 12:28:23AM +0200, Andy Shevchenko wrote:
-> > On Tue, Dec 03, 2024 at 10:32:17PM +0100, Uwe Kleine-König wrote:
-> > > On Tue, Dec 03, 2024 at 09:12:36PM +0200, Andy Shevchenko wrote:
-> > > > On Tue, Dec 03, 2024 at 06:16:14PM +0100, Uwe Kleine-König wrote:
+Hi Linus,
 
-...
+Here is a platform-drivers-x86 fixes PR for v6.13.
 
-> > > > The header must not provide any module importing features as it effectively
-> > > > diminishes the point of namespace. Any (ab)user can include just a header and
-> > > > be okay with that.
-> > > 
-> > > Huh? Any abuser can also just do the IMPORT_NS statement? Module
-> > > namespaces are not a safeguard against bad code? So I don't see why
-> > > making it simple for the regular users should be the wrong choice.
-> > > 
-> > > Actually I think this is very elegant because this way all needs to use
-> > > these symbols (i.e. prototype and namespace) are in a single place and
-> > > users just do the #include and get all the preconditions.
-> > 
-> > Recent LWN https://lwn.net/Articles/998221/ article describes in more details
-> > what I implied under abuser here.
-> 
-> Ok. But I don't see how this supports your case. Independent of where
-> the import for a given namespace happens, you can see the used
-> namespaces in modinfo and that is the only place where suspicious
-> imports can be noted reliably. And MODULE_foo isn't relevant here as the
-> namespace of the pwm-lpss driver combo is used in several modules.
+Fixes:
 
-The initial point that the (ab)users will be visible at review stage.
-Yes, runtime restrictions are more difficult to enforce.
+ - asus-nb-wmi: Silence unknown event warning when charger is plugged in
 
-> I thought the point of namespaces is grouping of symbols and reduction
-> of the set of globally available symbols to speed up module loading.
-> I didn't have "duplicate IMPORT_NS statements to make it harder for bad
-> out-of-tree code" on my radar and that shouldn't be a motivation if the
-> price is that in-tree code faces the same constraints IMHO.
-> 
-> And I'm pretty sure, we won't prevent a bad actor from successfully
-> using a symbol they should not, just because they need an include *and*
-> an import.
-> 
-> Am I missing something?
+ - asus-wmi: Handle return code variations during thermal policy writing
+   graciously
 
-They may not need the include actually, as they can just tell the compiler with
-extern keyword to look for a prototype somewhere else. In any case let's
-return to the main topic here. My proposal is to add the respective module
-namespace import into pin control driver.
+ - samsung-laptop: Correct module description
 
--- 
-With Best Regards,
-Andy Shevchenko
+Regards, i.
 
 
+The following changes since commit 40384c840ea1944d7c5a392e8975ed088ecf0b37:
+
+  Linux 6.13-rc1 (2024-12-01 14:28:56 -0800)
+
+are available in the Git repository at:
+
+  https://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git tags/platform-drivers-x86-v6.13-2
+
+for you to fetch changes up to e9fba20c29e27dc99e55e1c550573a114561bf8c:
+
+  platform/x86: asus-nb-wmi: Ignore unknown event 0xCF (2024-12-02 18:57:17 +0200)
+
+----------------------------------------------------------------
+platform-drivers-x86 for v6.13-2
+
+Fixes:
+
+ - asus-nb-wmi: Silence unknown event warning when charger is plugged in
+
+ - asus-wmi: Handle return code variations during thermal policy writing
+   graciously
+
+ - samsung-laptop: Correct module description
+
+The following is an automated shortlog grouped by driver:
+
+asus-nb-wmi:
+ -  Ignore unknown event 0xCF
+
+asus-wmi:
+ -  Ignore return value when writing thermal policy
+
+samsung-laptop:
+ -  Match MODULE_DESCRIPTION() to functionality
+
+----------------------------------------------------------------
+Armin Wolf (2):
+      platform/x86: asus-wmi: Ignore return value when writing thermal policy
+      platform/x86: asus-nb-wmi: Ignore unknown event 0xCF
+
+Sedat Dilek (1):
+      platform/x86: samsung-laptop: Match MODULE_DESCRIPTION() to functionality
+
+ drivers/platform/x86/asus-nb-wmi.c    |  1 +
+ drivers/platform/x86/asus-wmi.c       | 11 ++---------
+ drivers/platform/x86/samsung-laptop.c |  2 +-
+ 3 files changed, 4 insertions(+), 10 deletions(-)
