@@ -1,379 +1,129 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f170.google.com (mail-il1-f170.google.com [209.85.166.170])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ED72B1A8F7A
-	for <platform-driver-x86@vger.kernel.org>; Wed,  4 Dec 2024 19:35:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2F1E11531E8
+	for <platform-driver-x86@vger.kernel.org>; Wed,  4 Dec 2024 20:33:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1733340903; cv=none; b=SvCsBV8iHoRFU9eHbxV7hwFlWLElROZunLJAdJl6fYG+e27QEp5cqn5oyxmaQW7hUyeZGHDHNVZFrVMXoEUNepy7fsrY21eRrTNuUmtYQwTLeVlb0cg/dyhH/BLriFJeXfFIYHm/81HjZJNd1fKHc2bWA0fb0B5uVzpMeQkRA4Y=
+	t=1733344406; cv=none; b=i84q5Q3jHdYx+F3XNE5gqBD4tO3eyk2wTYFLiyI4FxhILCN8K9njOoO/JsM90Wgp3niUb+z+STiyYR/Q/zQXE8owlOUw6Hz5MXjTDK8kAbzpWcoWhfB/guG9itm/8eO2jHg6KO55WeymjoCsVG9Wk+6X7lldMO7pAzJ0WFaAr4U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1733340903; c=relaxed/simple;
-	bh=/p0NkQEwMWVM5WBSL506+Fwl4vKlV/dldWoSHTxjAyg=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=ofcJwiZx8J18PRzdo10zbUDfYxtcY2QVGyupeBQ+Te1wNklomd/1LTm/G4/vUY7KkH68yYjpMoNSALnQOHt8ME7pUbd0J6bzuStxGDxqmHdX9gFjBwz/rHkT8NvoXoUeiqtCgcvjVSO+OJhZZeUevpUJAJGrabtS0+2rrRChBw0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=CykdjbMQ; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="CykdjbMQ"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1733340901;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=bAJt8ilyZxTzCBVV/sG8+3oVUMO6niS5tW5My/xfuJ4=;
-	b=CykdjbMQf5VBfE2VZktL5M9PB8QtaxiShYMdI5UONXqOkW4b4KECXvlNy9uhcASp0OKLDQ
-	/QJXyJbC/GzVOmZ9qhCYKBtLAXy3inGgoKr2LB+BDCyXj2TqibMBM/hlADNOG0BiFmB+po
-	vlXrSjZiIVGTe+E4UHa8y9sD8T0/2Jo=
-Received: from mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-515-TtX_gMAXOqSwyV5nnOhrzg-1; Wed,
- 04 Dec 2024 14:34:57 -0500
-X-MC-Unique: TtX_gMAXOqSwyV5nnOhrzg-1
-X-Mimecast-MFC-AGG-ID: TtX_gMAXOqSwyV5nnOhrzg
-Received: from mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.12])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 001391955D58;
-	Wed,  4 Dec 2024 19:34:57 +0000 (UTC)
-Received: from localhost.localdomain (unknown [10.39.194.11])
-	by mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id A43EE19560A2;
-	Wed,  4 Dec 2024 19:34:55 +0000 (UTC)
-From: Hans de Goede <hdegoede@redhat.com>
-To: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	Andy Shevchenko <andy@kernel.org>
-Cc: Hans de Goede <hdegoede@redhat.com>,
-	platform-driver-x86@vger.kernel.org
-Subject: [PATCH v3 2/2] platform/x86: x86-android-tablets: Add Vexia EDU ATLA 10 EC battery driver
-Date: Wed,  4 Dec 2024 20:34:42 +0100
-Message-ID: <20241204193442.65374-3-hdegoede@redhat.com>
-In-Reply-To: <20241204193442.65374-1-hdegoede@redhat.com>
-References: <20241204193442.65374-1-hdegoede@redhat.com>
+	s=arc-20240116; t=1733344406; c=relaxed/simple;
+	bh=n4DkBmr2ruHZSlgIIYtBx4iEuBjLq78dWJawlIgW+vc=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=XPWvrV6LcrdXoZpp2LneOO3dV5thHA7x1KGo6wbC6tFy8ziPqYoMRoavxGdgCROxmiOZYl8Mbuk3ncqa73r4+WgI7JzNddDOtlNSKcnaQJrQjM4DkZ1+mw1eYSeoAcXBG1hNu34GWn7W1ljuqcoW6k/Y7BdWputK3+cb7SfD//w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=joshuagrisham.com; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.166.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=joshuagrisham.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-il1-f170.google.com with SMTP id e9e14a558f8ab-3a777fd574bso436475ab.1
+        for <platform-driver-x86@vger.kernel.org>; Wed, 04 Dec 2024 12:33:24 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1733344404; x=1733949204;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=nOZHAeOihCCF3n24yoUvKwBdq0TTbHh5X1pp5iE1H1o=;
+        b=Ot/up0cWsGStQ05vRXiYvKxJ42dqt0Rc/yisJb3+1hSVCnbMPoY3+ZqbN0a5PASrVo
+         SFEW0ZXSCM5jGFGkNqgcFO4wIe0HTLeTCAZ3ZodMsXgRlbsVg+2H4LvvCfkKRR0XeZg6
+         H5pfHtBE4W4kj3yzIMsz1JrkD9BN98H/9G+RtbN8HcKwSMV9FtrjtM85d8R02hRHvZh2
+         M/4K1T53Wg0iBi+pG6nLJstMols99A+0guolgQ7fl7sO533uuRTFeV3FNVvAMshvtLse
+         dVMHVHx/9l825Bo+0t9KNrgFWF8zTqQeUOFQ887lVdw+BpENg0v07/lQ9/VTxyT2LAMH
+         4Ukg==
+X-Forwarded-Encrypted: i=1; AJvYcCUqGTlwo86P4t/g/UBBiwOur+8pSE5g7Ci5TCoXKT2lSBc50L70DdGuMya4MmLs7fzE7NYzNimM6XQTVLzGIny5ZBQD@vger.kernel.org
+X-Gm-Message-State: AOJu0YwhCCJ48g4/1O9gg5YzL5+gGghK1VCTDBeYfXztz+omZTBsBCxz
+	zljzMXQcfGtrYA63gX9alyQR/C0Fh3I/YZPvJDL+8ZMD894MGFQyW1HZeTgv
+X-Gm-Gg: ASbGncunk/h4P0tKWER1Q4F0I6l5+9X75PvtdmSAwqEz2kUAyAxceO6GNtKUBMVN1+B
+	YEGnQPA5kranIXxQgpqFimlOfvndj18DF8ItfA+1+soInSGtRfpQ/xZspO6NaoLteP522zv2UYY
+	+WXTtrenK1N4xV4wTF1kY9GlUZhpWZxrfsJVEbi8aHf9OAq3HHGm/v+wfRZ1EW1HUWYx3eU9Tr6
+	LHbmHJkZyHZSHQKKcT7gY8X7YgryTu2y99a7e769o5WG+pgbSS0WboQtuixn4U4KqGXrpcFMdLO
+	GUqt5EGZiC+UJbg=
+X-Google-Smtp-Source: AGHT+IFBw8J5bA/MZIYlvgvBKfz7cXC2kT5q/z8i3ZJlZ/wsoD8plDo4hLm6J7YPhhvP0dJC0TowLA==
+X-Received: by 2002:a05:6e02:3d88:b0:3a7:e86a:e812 with SMTP id e9e14a558f8ab-3a7f9a8c510mr104632545ab.17.1733344404277;
+        Wed, 04 Dec 2024 12:33:24 -0800 (PST)
+Received: from mail-io1-f42.google.com (mail-io1-f42.google.com. [209.85.166.42])
+        by smtp.gmail.com with ESMTPSA id 8926c6da1cb9f-4e230e5eb7dsm3250205173.94.2024.12.04.12.33.23
+        for <platform-driver-x86@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 04 Dec 2024 12:33:23 -0800 (PST)
+Received: by mail-io1-f42.google.com with SMTP id ca18e2360f4ac-843df3c4390so4605139f.3
+        for <platform-driver-x86@vger.kernel.org>; Wed, 04 Dec 2024 12:33:23 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCXPlITqwdGQMRGNNVNp/7xDNrcnzJKjRK8wAIdTCqm0JzrUBX/BiwSWAEALN8YX7rt6v+FR9k9457Tb5kt/WEaKZdKg@vger.kernel.org
+X-Received: by 2002:a05:6602:29c8:b0:807:f0fb:1192 with SMTP id
+ ca18e2360f4ac-8445b5477f8mr991740039f.1.1733344403205; Wed, 04 Dec 2024
+ 12:33:23 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.12
+References: <CAMF+KeYus9dW00WNJMLVxLLHdG9JgCfrGJ491fu7NM8GAEqqCg@mail.gmail.com>
+ <40b82b39-3bba-4eac-8eb0-b4cee4868737@redhat.com>
+In-Reply-To: <40b82b39-3bba-4eac-8eb0-b4cee4868737@redhat.com>
+From: Joshua Grisham <josh@joshuagrisham.com>
+Date: Wed, 4 Dec 2024 21:33:12 +0100
+X-Gmail-Original-Message-ID: <CAMF+KeYKxiG0h4K39Fzbeoa30VZsvN68XMcQ5382YdfRDgeUdQ@mail.gmail.com>
+Message-ID: <CAMF+KeYKxiG0h4K39Fzbeoa30VZsvN68XMcQ5382YdfRDgeUdQ@mail.gmail.com>
+Subject: Re: Adding a new platform driver samsung-galaxybook
+To: Hans de Goede <hdegoede@redhat.com>
+Cc: =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, 
+	platform-driver-x86@vger.kernel.org, Armin Wolf <W_Armin@gmx.de>, 
+	Kurt Borja <kuurtb@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 
-The Vexia EDU ATLA 10 tablet has an embedded controller instead of
-giving the os direct access to the charger + fuel-gauge ICs as is normal
-on tablets designed for Android.
+Hi Hans, thank you so much for taking the time to read through the
+questions and get back to me!
 
-There is ACPI Battery device in the DSDT using the EC which should work
-except that it expects the I2C controller to be enumerated as an ACPI
-device and the tablet's BIOS enumerates all LPSS devices as PCI devices
-(and changing the LPSS BIOS settings from PCI -> ACPI does not work).
+Den ons 4 dec. 2024 kl 18:31 skrev Hans de Goede <hdegoede@redhat.com>:
+>
+> So I think it is best to just emulate what the laptops where
+> the cycling is directly done by the embedded-control do.
+>
+> That is:
+>
+> 1. Add LED_BRIGHT_HW_CHANGED to the flags of the led_classdev
+> for the "xxx:kbd_backlight" led class device you expose
+>
+> 2. Filter out kbd-backlight-cycle keypresses and on such
+> a keypress:
+>
+> 2.1 Determine new brightness level
+> 2.2 Apply new brightness level
+> 2.3 Call:
+>
+> led_classdev_notify_brightness_hw_changed(&kbd_backlight_led_classdev, new_brightness_level);
+>
 
-Add a power_supply class driver for the Atla 10 EC to expert battery info
-to userspace. This is made part of the x86-android-tablets directory and
-Kconfig option because the i2c_client it binds to is instantiated by
-the x86-android-tablets kmod.
+This is actually exactly what I have already implemented with the one
+exception: I am executing exactly the same kind of logic you mentioned
+(via schedule_work()) but I have NOT filtered out the keypress;
+instead, it is just scheduling this logic to run in a workqueue and
+then going ahead and passing along the keypress as well, just in case
+anyone wanted to trigger any other kind of event from this hotkey.
 
-Reviewed-by: Andy Shevchenko <andy@kernel.org>
-Signed-off-by: Hans de Goede <hdegoede@redhat.com>
----
-Changes in v3:
-- Use I2C_SMBUS_BLOCK_MAX instead of hardcoding 32 bytes as bufsize
-- Add UPDATE_INTERVAL_JIFFIES define
+I have actually submitted a patch to the keyboard hwdb which was
+merged in to systemd that maps this particular key to "unknown" with
+the idea that someone who has this model would also likely have this
+platform driver module loaded, so by default the kernel-space action
+to actually change the brightness level would be executed (the
+"EC-like" behavior as you mentioned that they could not change), but
+the user would also have the option of remapping the key and
+triggering additional actions on top of this if they wanted.  Does
+that sound appropriate or is it better to just filter out the keypress
+entirely once the above actions are scheduled/executed?
 
-Changes in v2:
-- Makefile tweaks
-- postfix variable/define names with units (e.g. _mV / _mAh)
-- Replace i2c_smbus_read_i2c_block_data() with i2c_smbus_read_block_data()
-  which takes care of the length byte prefixing the buffer for us
-- Adress other small review remarks
----
- .../platform/x86/x86-android-tablets/Makefile |   2 +-
- .../x86/x86-android-tablets/vexia_atla10_ec.c | 261 ++++++++++++++++++
- 2 files changed, 262 insertions(+), 1 deletion(-)
- create mode 100644 drivers/platform/x86/x86-android-tablets/vexia_atla10_ec.c
+Also as an aside, I have had a few users who have mentioned that if
+they have compiled and loaded i8042 as a module (which is then marked
+as "used by" samsung_galaxybook due to the i8042 filter), if they
+execute a modprobe -r then it also removes i8042 and their keyboard
+stops working. Is this known/expected behavior and/or is there
+anything that can be done in this driver itself to try and help
+prevent this from happening? Otherwise I guess a "fix" for this would
+be if users compile their kernel with CONFIG_SERIO_I8042=y then they
+would not have this problem?
 
-diff --git a/drivers/platform/x86/x86-android-tablets/Makefile b/drivers/platform/x86/x86-android-tablets/Makefile
-index 41ece5a37137..313be30548bc 100644
---- a/drivers/platform/x86/x86-android-tablets/Makefile
-+++ b/drivers/platform/x86/x86-android-tablets/Makefile
-@@ -3,7 +3,7 @@
- # X86 Android tablet support Makefile
- #
- 
-+obj-$(CONFIG_X86_ANDROID_TABLETS) += vexia_atla10_ec.o
- obj-$(CONFIG_X86_ANDROID_TABLETS) += x86-android-tablets.o
--
- x86-android-tablets-y := core.o dmi.o shared-psy-info.o \
- 			 asus.o lenovo.o other.o
-diff --git a/drivers/platform/x86/x86-android-tablets/vexia_atla10_ec.c b/drivers/platform/x86/x86-android-tablets/vexia_atla10_ec.c
-new file mode 100644
-index 000000000000..5d02af1c5aaa
---- /dev/null
-+++ b/drivers/platform/x86/x86-android-tablets/vexia_atla10_ec.c
-@@ -0,0 +1,261 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * power_supply class (battery) driver for the I2C attached embedded controller
-+ * found on Vexia EDU ATLA 10 (9V version) tablets.
-+ *
-+ * This is based on the ACPI Battery device in the DSDT which should work
-+ * expect that it expects the I2C controller to be enumerated as an ACPI
-+ * device and the tablet's BIOS enumerates all LPSS devices as PCI devices
-+ * (and changing the LPSS BIOS settings from PCI -> ACPI does not work).
-+ *
-+ * Copyright (c) 2024 Hans de Goede <hansg@kernel.org>
-+ */
-+
-+#include <linux/bits.h>
-+#include <linux/devm-helpers.h>
-+#include <linux/err.h>
-+#include <linux/i2c.h>
-+#include <linux/module.h>
-+#include <linux/power_supply.h>
-+#include <linux/types.h>
-+#include <linux/workqueue.h>
-+
-+#include <asm/byteorder.h>
-+
-+/* State field uses ACPI Battery spec status bits */
-+#define ACPI_BATTERY_STATE_DISCHARGING		BIT(0)
-+#define ACPI_BATTERY_STATE_CHARGING		BIT(1)
-+
-+#define ATLA10_EC_BATTERY_STATE_COMMAND		0x87
-+#define ATLA10_EC_BATTERY_INFO_COMMAND		0x88
-+
-+/* From broken ACPI battery device in DSDT */
-+#define ATLA10_EC_VOLTAGE_MIN_DESIGN_uV		3750000
-+
-+/* Update data every 5 seconds */
-+#define UPDATE_INTERVAL_JIFFIES			(5 * HZ)
-+
-+struct atla10_ec_battery_state {
-+	u8 status;			/* Using ACPI Battery spec status bits */
-+	u8 capacity;			/* Percent */
-+	__le16 charge_now_mAh;
-+	__le16 voltage_now_mV;
-+	__le16 current_now_mA;
-+	__le16 charge_full_mAh;
-+	__le16 temp;			/* centi degrees Celsius */
-+} __packed;
-+
-+struct atla10_ec_battery_info {
-+	__le16 charge_full_design_mAh;
-+	__le16 voltage_now_mV;		/* Should be design voltage, but is not ? */
-+	__le16 charge_full_design2_mAh;
-+} __packed;
-+
-+struct atla10_ec_data {
-+	struct i2c_client *client;
-+	struct power_supply *psy;
-+	struct delayed_work work;
-+	struct mutex update_lock;
-+	struct atla10_ec_battery_info info;
-+	struct atla10_ec_battery_state state;
-+	bool valid;			/* true if state is valid */
-+	unsigned long last_update;	/* In jiffies */
-+};
-+
-+static int atla10_ec_cmd(struct atla10_ec_data *data, u8 cmd, u8 len, u8 *values)
-+{
-+	struct device *dev = &data->client->dev;
-+	u8 buf[I2C_SMBUS_BLOCK_MAX];
-+	int ret;
-+
-+	ret = i2c_smbus_read_block_data(data->client, cmd, buf);
-+	if (ret != len) {
-+		dev_err(dev, "I2C command 0x%02x error: %d\n", cmd, ret);
-+		return -EIO;
-+	}
-+
-+	memcpy(values, buf, len);
-+	return 0;
-+}
-+
-+static int atla10_ec_update(struct atla10_ec_data *data)
-+{
-+	int ret;
-+
-+	if (data->valid && time_before(jiffies, data->last_update + UPDATE_INTERVAL_JIFFIES))
-+		return 0;
-+
-+	ret = atla10_ec_cmd(data, ATLA10_EC_BATTERY_STATE_COMMAND,
-+			    sizeof(data->state), (u8 *)&data->state);
-+	if (ret)
-+		return ret;
-+
-+	data->last_update = jiffies;
-+	data->valid = true;
-+	return 0;
-+}
-+
-+static int atla10_ec_psy_get_property(struct power_supply *psy,
-+				      enum power_supply_property psp,
-+				      union power_supply_propval *val)
-+{
-+	struct atla10_ec_data *data = power_supply_get_drvdata(psy);
-+	int charge_now_mAh, charge_full_mAh, ret;
-+
-+	guard(mutex)(&data->update_lock);
-+
-+	ret = atla10_ec_update(data);
-+	if (ret)
-+		return ret;
-+
-+	switch (psp) {
-+	case POWER_SUPPLY_PROP_STATUS:
-+		if (data->state.status & ACPI_BATTERY_STATE_DISCHARGING)
-+			val->intval = POWER_SUPPLY_STATUS_DISCHARGING;
-+		else if (data->state.status & ACPI_BATTERY_STATE_CHARGING)
-+			val->intval = POWER_SUPPLY_STATUS_CHARGING;
-+		else if (data->state.capacity == 100)
-+			val->intval = POWER_SUPPLY_STATUS_FULL;
-+		else
-+			val->intval = POWER_SUPPLY_STATUS_NOT_CHARGING;
-+		break;
-+	case POWER_SUPPLY_PROP_CAPACITY:
-+		val->intval = data->state.capacity;
-+		break;
-+	case POWER_SUPPLY_PROP_CHARGE_NOW:
-+		/*
-+		 * The EC has a bug where it reports charge-full-design as
-+		 * charge-now when the battery is full. Clamp charge-now to
-+		 * charge-full to workaround this.
-+		 */
-+		charge_now_mAh = le16_to_cpu(data->state.charge_now_mAh);
-+		charge_full_mAh = le16_to_cpu(data->state.charge_full_mAh);
-+		val->intval = min(charge_now_mAh, charge_full_mAh) * 1000;
-+		break;
-+	case POWER_SUPPLY_PROP_VOLTAGE_NOW:
-+		val->intval = le16_to_cpu(data->state.voltage_now_mV) * 1000;
-+		break;
-+	case POWER_SUPPLY_PROP_CURRENT_NOW:
-+		val->intval = le16_to_cpu(data->state.current_now_mA) * 1000;
-+		/*
-+		 * Documentation/ABI/testing/sysfs-class-power specifies
-+		 * negative current for discharging.
-+		 */
-+		if (data->state.status & ACPI_BATTERY_STATE_DISCHARGING)
-+			val->intval = -val->intval;
-+		break;
-+	case POWER_SUPPLY_PROP_CHARGE_FULL:
-+		val->intval = le16_to_cpu(data->state.charge_full_mAh) * 1000;
-+		break;
-+	case POWER_SUPPLY_PROP_TEMP:
-+		val->intval = le16_to_cpu(data->state.temp) / 10;
-+		break;
-+	case POWER_SUPPLY_PROP_CHARGE_FULL_DESIGN:
-+		val->intval = le16_to_cpu(data->info.charge_full_design_mAh) * 1000;
-+		break;
-+	case POWER_SUPPLY_PROP_VOLTAGE_MIN_DESIGN:
-+		val->intval = ATLA10_EC_VOLTAGE_MIN_DESIGN_uV;
-+		break;
-+	case POWER_SUPPLY_PROP_PRESENT:
-+		val->intval = 1;
-+		break;
-+	case POWER_SUPPLY_PROP_TECHNOLOGY:
-+		val->intval = POWER_SUPPLY_TECHNOLOGY_LIPO;
-+		break;
-+	default:
-+		return -EINVAL;
-+	}
-+
-+	return 0;
-+}
-+
-+static void atla10_ec_external_power_changed_work(struct work_struct *work)
-+{
-+	struct atla10_ec_data *data = container_of(work, struct atla10_ec_data, work.work);
-+
-+	dev_dbg(&data->client->dev, "External power changed\n");
-+	data->valid = false;
-+	power_supply_changed(data->psy);
-+}
-+
-+static void atla10_ec_external_power_changed(struct power_supply *psy)
-+{
-+	struct atla10_ec_data *data = power_supply_get_drvdata(psy);
-+
-+	/* After charger plug in/out wait 0.5s for things to stabilize */
-+	mod_delayed_work(system_wq, &data->work, HZ / 2);
-+}
-+
-+static const enum power_supply_property atla10_ec_psy_props[] = {
-+	POWER_SUPPLY_PROP_STATUS,
-+	POWER_SUPPLY_PROP_CAPACITY,
-+	POWER_SUPPLY_PROP_CHARGE_NOW,
-+	POWER_SUPPLY_PROP_VOLTAGE_NOW,
-+	POWER_SUPPLY_PROP_CURRENT_NOW,
-+	POWER_SUPPLY_PROP_CHARGE_FULL,
-+	POWER_SUPPLY_PROP_TEMP,
-+	POWER_SUPPLY_PROP_CHARGE_FULL_DESIGN,
-+	POWER_SUPPLY_PROP_VOLTAGE_MIN_DESIGN,
-+	POWER_SUPPLY_PROP_PRESENT,
-+	POWER_SUPPLY_PROP_TECHNOLOGY,
-+};
-+
-+static const struct power_supply_desc atla10_ec_psy_desc = {
-+	.name = "atla10_ec_battery",
-+	.type = POWER_SUPPLY_TYPE_BATTERY,
-+	.properties = atla10_ec_psy_props,
-+	.num_properties = ARRAY_SIZE(atla10_ec_psy_props),
-+	.get_property = atla10_ec_psy_get_property,
-+	.external_power_changed = atla10_ec_external_power_changed,
-+};
-+
-+static int atla10_ec_probe(struct i2c_client *client)
-+{
-+	struct power_supply_config psy_cfg = { };
-+	struct device *dev = &client->dev;
-+	struct atla10_ec_data *data;
-+	int ret;
-+
-+	data = devm_kzalloc(dev, sizeof(*data), GFP_KERNEL);
-+	if (!data)
-+		return -ENOMEM;
-+
-+	psy_cfg.drv_data = data;
-+	data->client = client;
-+
-+	ret = devm_mutex_init(dev, &data->update_lock);
-+	if (ret)
-+		return ret;
-+
-+	ret = devm_delayed_work_autocancel(dev, &data->work,
-+					   atla10_ec_external_power_changed_work);
-+	if (ret)
-+		return ret;
-+
-+	ret = atla10_ec_cmd(data, ATLA10_EC_BATTERY_INFO_COMMAND,
-+			    sizeof(data->info), (u8 *)&data->info);
-+	if (ret)
-+		return ret;
-+
-+	data->psy = devm_power_supply_register(dev, &atla10_ec_psy_desc, &psy_cfg);
-+	return PTR_ERR_OR_ZERO(data->psy);
-+}
-+
-+static const struct i2c_device_id atla10_ec_id_table[] = {
-+	{ "vexia_atla10_ec" },
-+	{ }
-+};
-+MODULE_DEVICE_TABLE(i2c, atla10_ec_id_table);
-+
-+static struct i2c_driver atla10_ec_driver = {
-+	.driver = {
-+		.name = "vexia_atla10_ec",
-+	},
-+	.probe = atla10_ec_probe,
-+	.id_table = atla10_ec_id_table,
-+};
-+module_i2c_driver(atla10_ec_driver);
-+
-+MODULE_AUTHOR("Hans de Goede <hdegoede@redhat.com>");
-+MODULE_DESCRIPTION("Battery driver for Vexia EDU ATLA 10 tablet EC");
-+MODULE_LICENSE("GPL");
--- 
-2.47.0
+Thank you again!
 
+Best regards,
+Joshua
+
+> [...]
