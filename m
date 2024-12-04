@@ -1,102 +1,96 @@
-Received: from mail-ej1-f41.google.com (mail-ej1-f41.google.com [209.85.218.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 129F02391AA
-	for <platform-driver-x86@vger.kernel.org>; Wed,  4 Dec 2024 19:15:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E4900188A3B
+	for <platform-driver-x86@vger.kernel.org>; Wed,  4 Dec 2024 19:34:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1733339744; cv=none; b=FrOcBAr+SpbU7pBpIO3It3JXgQ7HUHIemd/XjYTliKxVJWbtnGildbhIjnPVsyoQOaa6Ue3dQJiZiL/tFpISXVtXhEjPwvF0OjCGpUJFwgO2FtfZ8rMne2N2+xpl/I3QiIFDczYy1PyEh5S7BZzuPCReze5bZzcdfydAvNUWvIA=
+	t=1733340899; cv=none; b=l3S9bb6coanKrMIR8B4oc3JGbPJpqldKdIK150b04dku9TPoG9nGnmY2JeQCmiWlqvmwar22u1p0ypiJ3In0zZ/yFEo+oPtB2fdgFc7KNhVPQwFTdeack4DrV6tJ8lTabA7Y9OTIcPYBllYHf3IIZik/aHrv0ZTltwfiw46BLts=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1733339744; c=relaxed/simple;
-	bh=TRt1FBB1Mrd7UksUqZ6lSr7s28rNYcxwF01snXiqdzo=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=ditbKPoTgd4BnCpoy76l8J50G+cQK+6uZUopgsm1ZzEu4ryN/wni5rKBvjsRZbhz70YEoQfd092o9obpFpgftg8PXU3ud5dyysgsIKE4PdUflZ2AtS2UDYhwffHug4LlTKvrgqGjJWzNRLwkspKuzA7JCXv0u70ixbR4GjM0FD0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=AY6PgTmy; arc=none smtp.client-ip=209.85.218.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1733340899; c=relaxed/simple;
+	bh=kh5SWpzrzd8M0++tHbyJUAV2WMNoxmG3tyDR6S+xDQo=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=oIEiWbaLujxUHFU+Zp98W5lbRn0X5VN+b9yfJkjZDR4T07fcdswoHPoeKLqVoW4wMnZr69z3rdx3GuQTc166DLKhleKIEphldHsLc4HFvgz6CjWbAqTWkB2a/kXEJU3TbleQ9/mF/uJh4+h3qZ/drfcMUoD1hSnPgegIHJkWrlg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Lhl+dTco; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AY6PgTmy"
-Received: by mail-ej1-f41.google.com with SMTP id a640c23a62f3a-aa5f1909d6fso9489966b.3
-        for <platform-driver-x86@vger.kernel.org>; Wed, 04 Dec 2024 11:15:42 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1733339741; x=1733944541; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=TRt1FBB1Mrd7UksUqZ6lSr7s28rNYcxwF01snXiqdzo=;
-        b=AY6PgTmyrJEBYez49t3A9yuZ9u923dHKA2T3MwfFf7RswwlPq1wyOc4dqh3EY7CmF+
-         rC+S5ffAup+A04YtPWQbsaCkzM3KJASDgLExhpHqHxFhI9C1ZflCvnsECBYw56CeIrM5
-         KH0zwdE5HicR2Buz5UJELR/v87ADg8NUKw03HoWddGnCmwXggIOawjMS1MCAk2pdvRjI
-         8sUXQLwXpV1aXkF3xYhkTJ9VrgZg0A8CDACAiFPUWenuqWNeVVQNAjxRendu+5KZga7B
-         uUzsBXrh7kRxzMvWUGyiehwTJy61N0yVeDStVorHjsNu5p+uBKJLjxV15eMTv5gSYaHm
-         vBiw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1733339741; x=1733944541;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=TRt1FBB1Mrd7UksUqZ6lSr7s28rNYcxwF01snXiqdzo=;
-        b=U6cf5AFApnFok50E7N2oxXGPumK5zLip4o8l/XQpCWTqeQM5bXp+oGGAQqP9u2Qpuu
-         S+xXruIUOtcXd3PNXPgyLakkGUVIh+SmGyS2IO7eV8SpLcnxKuafNZicZa3No4Oxl0yr
-         Za7F4VHqWBqCBMCo/ClXQhibR/gtXMjeEcnhd+P7b9Rr3fLkvYOwkp+cM1+O+LhMIPj8
-         GDeNqsneiiwxfT5B6JEHBlnJQKcdypjcgOuRBpDvD0MSIBN5g9GPK315ICR4uZCablXv
-         SlkZtEaUiKgAspijJVVr8T7GR0kTGetG0NttUu3Pi63kBImo2ntaaYQ6DSYKfWk6B7pZ
-         mQQw==
-X-Forwarded-Encrypted: i=1; AJvYcCXzyvE7Vq79XjCMHmLiE1sxExL0wMPKNQgkZfbE661VnecourM5AFobwU6AQh6onRpMg23tbTEqirqc8iTG3mH79MGV@vger.kernel.org
-X-Gm-Message-State: AOJu0YyGsqBD+ICb4QYfVfvHyVMAME1CYrZtcjEzRItaBbQrjPUIJZRG
-	XyvPNukan2vvyjNGgqkesMnGUmaoZDg95YsQ4X016jKBFYlcwaZ2GK9XE6zggGc0BnqBRBxcyQT
-	36KuiBllD68aV/W5LQzXBHuZSFesOhuaX
-X-Gm-Gg: ASbGncsYgtb4xe9p+4G/d+bO0PcnsqecdWVkKVY/yITC46NurYYPpYHHbnWn8b2SJgu
-	lT2xF+StywzSjjcmp5VuzYQ3qZAKAKz8=
-X-Google-Smtp-Source: AGHT+IG3zxNRGTugLaqbACpLIbYY6X3DLBfyRuP0AbZzQrGcXnF7MIVMRvNOL8R2MlOImriNZlZn+EmtI3QL0oF3ZNA=
-X-Received: by 2002:a17:906:cc4d:b0:a9a:423:3278 with SMTP id
- a640c23a62f3a-aa5f7f2a12cmr770430066b.49.1733339741105; Wed, 04 Dec 2024
- 11:15:41 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Lhl+dTco"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1733340896;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=PtP+MxKVGxqaDMEOnTjU/IlmymFj6VP/1OD2iJu4C3s=;
+	b=Lhl+dTcot32hKm9jcZp4vGJ5q0jtQ1Xi/PuWqrOUtMWFnqXVbuW0Z+yDo5S7wkzwyx4ua5
+	FEZusppTA3tLOvDULeoUW7ndjCuMldwBGnKOcGVFRhDIMBiloFBdYhV2kPH4BRRjnCoIO3
+	30dgagekwa+dusgUOKrSfP4ryFBWNSc=
+Received: from mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-364-FsEvLW0sOxG3wtyOWc_t3Q-1; Wed,
+ 04 Dec 2024 14:34:55 -0500
+X-MC-Unique: FsEvLW0sOxG3wtyOWc_t3Q-1
+X-Mimecast-MFC-AGG-ID: FsEvLW0sOxG3wtyOWc_t3Q
+Received: from mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.12])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 2E98219560A2;
+	Wed,  4 Dec 2024 19:34:53 +0000 (UTC)
+Received: from localhost.localdomain (unknown [10.39.194.11])
+	by mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id AB25219560A2;
+	Wed,  4 Dec 2024 19:34:51 +0000 (UTC)
+From: Hans de Goede <hdegoede@redhat.com>
+To: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	Andy Shevchenko <andy@kernel.org>
+Cc: Hans de Goede <hdegoede@redhat.com>,
+	platform-driver-x86@vger.kernel.org
+Subject: [PATCH v3 0/2] platform/x86: Vexia EDU ATLA 10 pwrsrc and battery support
+Date: Wed,  4 Dec 2024 20:34:40 +0100
+Message-ID: <20241204193442.65374-1-hdegoede@redhat.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20241128154212.6216-1-hdegoede@redhat.com> <Z0iRlZPFYItHIV7_@smile.fi.intel.com>
- <45502fa4-3b9e-404e-8494-a9a2101f1791@redhat.com>
-In-Reply-To: <45502fa4-3b9e-404e-8494-a9a2101f1791@redhat.com>
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Date: Wed, 4 Dec 2024 21:15:05 +0200
-Message-ID: <CAHp75Vd_jz-_r77B-oS-Z55+x9EoaZ+mFzrhG3WYL2n=6hXFbQ@mail.gmail.com>
-Subject: Re: [PATCH 1/4] platform/x86: int3472: Check for adev == NULL
-To: Hans de Goede <hdegoede@redhat.com>
-Cc: Andy Shevchenko <andy@kernel.org>, =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, 
-	platform-driver-x86@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.12
 
-On Wed, Dec 4, 2024 at 7:40=E2=80=AFPM Hans de Goede <hdegoede@redhat.com> =
-wrote:
-> On 28-Nov-24 4:51 PM, Andy Shevchenko wrote:
-> > On Thu, Nov 28, 2024 at 04:42:09PM +0100, Hans de Goede wrote:
-> >> Not all devices have an ACPI companion fwnode, so adev might be NULL. =
-This
-> >> can e.g. (theoretically) happen when a user manually binds one of
-> >> the int3472 drivers to another i2c/platform device through sysfs.
-> >>
-> >> Add a check for adev not being set and return -ENODEV in that case.
-> >
-> > But what kind of "bad thing" can happen in such cases?
->
-> NULL pointer deref oops in skl_int3472_get_acpi_buffer() during
-> probe() when it tries to get adev->handle.
->
-> I guess for v2 you want me to reword the second paragraph of the commit
-> message to e.g. :
->
-> Add a check for adev not being set and return -ENODEV in that case to
-> avoid a possible NULL pointer deref in skl_int3472_get_acpi_buffer().
->
-> ?
+Hi All,
 
-I don't remember, but it sounds good to me.
+Here is v3 of my series to add support for having the bytcrc_pwrsrc driver
+register a power_supply class device and adding a new driver for battery
+monitoring using the Vexia EDU ATLA 10 EC.
 
---=20
-With Best Regards,
-Andy Shevchenko
+Changes in v3:
+- Use I2C_SMBUS_BLOCK_MAX instead of hardcoding 32 bytes as bufsize
+- Add UPDATE_INTERVAL_JIFFIES define
+
+Changes in v2:
+- Makefile tweaks
+- postfix variable/define names with units (e.g. _mV / _mAh)
+- Replace i2c_smbus_read_i2c_block_data() with i2c_smbus_read_block_data()
+  which takes care of the length byte prefixing the buffer for us
+- Address other small review remarks
+
+Regards,
+
+Hans
+
+
+Hans de Goede (2):
+  platform/x86/intel: bytcrc_pwrsrc: Optionally register a power_supply
+    dev
+  platform/x86: x86-android-tablets: Add Vexia EDU ATLA 10 EC battery
+    driver
+
+ drivers/platform/x86/intel/bytcrc_pwrsrc.c    |  79 +++++-
+ .../platform/x86/x86-android-tablets/Makefile |   2 +-
+ .../x86/x86-android-tablets/vexia_atla10_ec.c | 261 ++++++++++++++++++
+ 3 files changed, 339 insertions(+), 3 deletions(-)
+ create mode 100644 drivers/platform/x86/x86-android-tablets/vexia_atla10_ec.c
+
+-- 
+2.47.0
+
