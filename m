@@ -1,106 +1,88 @@
-Received: from mail-ed1-f48.google.com (mail-ed1-f48.google.com [209.85.208.48])
+Received: from mail-ej1-f42.google.com (mail-ej1-f42.google.com [209.85.218.42])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5428923918A
-	for <platform-driver-x86@vger.kernel.org>; Wed,  4 Dec 2024 18:24:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D0AB21C3C01
+	for <platform-driver-x86@vger.kernel.org>; Wed,  4 Dec 2024 19:13:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1733336658; cv=none; b=W6x/LxKgMwDBehK39wrXihsiBnBX5OO8Df/4vALBeU0qUMNdLCRir0ISLBaFFSmgQmxGV6ISPUOEMHrFe6JU2gOUkUdgWDmHKmLxZXy+7KGZejIHYwmJakqA8lPjKiO6hvUVhJ5RhmiZVEqQEery00XQ99nw5WXzCabnYHb6W/k=
+	t=1733339626; cv=none; b=qmlM/d1JBAy1a9aRl2sm8PiXrl9/cbNI9yzxOcHXJpetZFhhsNkdUR7qv7bY0ZH+UkIuEGZCvRJwHB3VJlTFl/uW9tUg5esjIlvcPktfnUfvQQgVefiph2PHnpaQ0L2Ze3P2ANBNJgDq10eNJtcs6oG5T0VkKkFTgyALpSedRLM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1733336658; c=relaxed/simple;
-	bh=qkAsxzqbDgvuFfal+02fXqeULJUd5U0tUOQuh3quxe0=;
+	s=arc-20240116; t=1733339626; c=relaxed/simple;
+	bh=UWtC4sQPq4mDct17MPG6dh8QDLKGYB2wuVmKY+1H/NU=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=iTwUvalFzEuI7oizPNKnHztn9KCeM1CiTThIyIa1rQ31VZ7xpKzfXataBOAY/FZWEoeCkvHg2GJVgkm28wD+VJMOm/ztGnRnOoVOTBe/kbem1PAmD4MB2nlsGOS2BuW6fRttI+aCoz7GZY7BQpzLxD8W3RuI0nMFaYSyXzrfYtQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=KK9PJoLJ; arc=none smtp.client-ip=209.85.208.48
+	 To:Cc:Content-Type; b=icY7fyCSvw3ZRZ+FbQc1hwa8uJbLl8Y7fn/o7l+ZHCAUCNEyx7nIWtskKOgq99SwGvW0hLy6NqD7fFMnmgAUqIemPHY055+ER9ruj7mGvELjPUze4YeyfPPeAj5SGHd3VhrV0RKK2GKFOaca22D0JUMjsZgBhY2kjWUt22MR3zI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Qx7B6Ltc; arc=none smtp.client-ip=209.85.218.42
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KK9PJoLJ"
-Received: by mail-ed1-f48.google.com with SMTP id 4fb4d7f45d1cf-5d0e75dd846so5404262a12.3
-        for <platform-driver-x86@vger.kernel.org>; Wed, 04 Dec 2024 10:24:16 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Qx7B6Ltc"
+Received: by mail-ej1-f42.google.com with SMTP id a640c23a62f3a-a9f1d76dab1so14726266b.0
+        for <platform-driver-x86@vger.kernel.org>; Wed, 04 Dec 2024 11:13:44 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1733336655; x=1733941455; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1733339623; x=1733944423; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=gRetZTPNxOXMzPZ9T2wErtrI5vXs4SiY/11l9IQdZq0=;
-        b=KK9PJoLJ12Hd7PHhEMS74GZcYrXuT5CD/eau4LaBCDKrpsNvXdHmOO6WWO19Hlxp0p
-         NH509iy3ZXeeN+WB14mYqZlJlpy8gqFR9s2c1xGSSCcYEyZJ6bzKmtNDtHq4eJnDFJ6d
-         P661I+V7QNVigD+f+U1Towm87EJjIOue3ILe2KRCrCeGrytkXdrHAAdMddnsjaPOQ9e/
-         Zrt3Y+j7rTiW4cB29naKOuxZUlhkiYgLZZTED5df16IeOuT9CJt/Xk5t+z05SWlGDvbw
-         1GiO6UYb6t+Tb105QfZjs8A7zyTEpe8k47IMB3wpiRXaGLyNMlyXYK7Kt+PSrP+gz6Ks
-         Z1lQ==
+        bh=UWtC4sQPq4mDct17MPG6dh8QDLKGYB2wuVmKY+1H/NU=;
+        b=Qx7B6Ltc/dmkESjwolKX9yPRAzLMkeeNfUDNH5UirOLD53wq7MYHq0164QJPUNM+O0
+         7rfjVDMSkeBssIlFCevcEt9OK6JTeo2Nr/cws4LDhObabK0K6IG6O3VDAo1iRVObRFcW
+         CSn+guTODPrkoVDS80X51ir9xS5TO2xaPoppwZGOT7sg4i8PZuxCsLdrHfxkr0fCOpnU
+         im+3ehgXPLZlKMfO3UmVjBAE0/E95vkqCp1zHKInV3sHRwoO+8sP4qq924R5d17jPnV9
+         NxumNqwVV+CnKfJgSRT0wLx21aThZsUxPmWm4W/HSDIDSHBEtojvDU9B5OxzVce08h7T
+         eMBg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1733336655; x=1733941455;
+        d=1e100.net; s=20230601; t=1733339623; x=1733944423;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=gRetZTPNxOXMzPZ9T2wErtrI5vXs4SiY/11l9IQdZq0=;
-        b=uTOQWbSGwZXbcvg5OTqaVOvz4GnLsMaKw3X7CqG6wJUUJQrGHxZmKL1drAG66GJCW2
-         smA7tCDZ0sZ2QgjsLzqbSppMCpuyE9Fa6Umilt/xGLSLIu8ItNYttEB2Z/l+jlrBZff6
-         JTyyI19VUNrBgtPZT7VF5edHgxrNjuKqclt5ScOJSJaLrVGVvlTW6fAbeKkMA/Y9pWeP
-         qnyEzlJPgFxTFJRZAGkcBLZY7cXwEPC15n1fzjeCUbe24FzWwraBKsrymTDI8RKrxYmB
-         a+S9DPCKhH2xqFZ1C2+TktoQ9RJzYcxqWSzw8uy9tOK/tirs2Qh7ip4MEPH61XKLMa11
-         8MsA==
-X-Forwarded-Encrypted: i=1; AJvYcCW81zhIAZE6+IJaCZBkDYap5a2RUmgi18E9FI2cqwr8+j4oLTx4qR+D0VnYC73GOIv/AO4nAcVWhpv34EtmH86c/B0q@vger.kernel.org
-X-Gm-Message-State: AOJu0YwKy1Uk5os81BVq9pJhS+7O097qR+y7xXK2ehz0PYM/2DygO2hg
-	7uMY75qFXY44EuKKNDjIr43w1cjrfct4stSYPHduiaz8TFwHdt4wfspxOkDRzoUjnv/yMgPdRVR
-	GmcDZMJ26EWoYfKQNqM2NZdagN5Q=
-X-Gm-Gg: ASbGncs62vS3DsLP5cm1ZG+rI+8bUnFJrIyP3XCNsVe5Az0Cf1vAtfVNu/MR9Sqj/k3
-	T3X9uaGfu8r3UkPASjObS7V3+i8F1E1s=
-X-Google-Smtp-Source: AGHT+IGVM741errqsueizTid7zTtxkH911VtqIe2exjiq3o8jk+dYs3M8DSYNA0IwiGhDhazYd/gv1jHsFIrF5ylE64=
-X-Received: by 2002:a17:906:3183:b0:aa5:3853:553d with SMTP id
- a640c23a62f3a-aa5f7f1acb0mr612907166b.46.1733336655330; Wed, 04 Dec 2024
- 10:24:15 -0800 (PST)
+        bh=UWtC4sQPq4mDct17MPG6dh8QDLKGYB2wuVmKY+1H/NU=;
+        b=rpH2ffql1atQVJg2IJD1QPl1WAKRGFEtJAZJIDmZ6D/VGn3RF2We+VPF0PbnIOn0y7
+         GViEiGoQEClQC7M8q0dB3VHl7NNcdTw/Y4BaBzXjh1a7vuBSSwxNDMNWVHZ1+tqo4lGo
+         Ki9tV6em6nzNPEoiC3ujEF++eMLLYtLXb7NcdW2Vjt/tBpvYCjcjeJ44K8pstypi0WOh
+         k8femxfWjm1UxGRUMi5BX52vNfwai4VnQg8rf1pPLhi4/ONEMr+Kid5sNhwHdLy4R4xe
+         Yq/VJZYu9bX71fTjET110iujB87AjvQ5A3mCzb15e/76+XjkTpgMHbQuEW0UahGt3lha
+         Lkgg==
+X-Forwarded-Encrypted: i=1; AJvYcCXKh4eD11OgVdXT+nxBWHc23Jafv4D7HPwFIZF7icBvjL3fjZR1bluuO14wNd5lucDzSvEIfPfAccpaJo6hZtgHoMjR@vger.kernel.org
+X-Gm-Message-State: AOJu0Yyo2c45UAMp6muiHj+qvmIq7ZqEePTOqwsU0IU88m9ZpEUCHEjj
+	iYyjFfNgqcUvDjWmsGHkPwgZAt8AzyoPhC0mFV8nJDNaYkpMaG0+r/Grm8arYLUurN3M6W6/aCp
+	kVn91AyAFjjLN6JiITmT6X6A3+OSd2Co4
+X-Gm-Gg: ASbGnct+aGkTye1zefeyg1ynZrFUltCzgK/hq89u66otdPtQP8vKhoEPg1FUs2NQrpx
+	tWafzcx4BAe2UmBXo55CZ2mZQrm/i5CU=
+X-Google-Smtp-Source: AGHT+IFK0I78q+TOVqsd98PfQmZm4vGBGeIZq6it/toi9NAFp+IO7wVe+1+iCGYqIShabNY/3SUQaJSZDAZmkk2K4hg=
+X-Received: by 2002:a17:906:7951:b0:a99:89e9:a43d with SMTP id
+ a640c23a62f3a-aa6018d88aamr583852766b.39.1733339622919; Wed, 04 Dec 2024
+ 11:13:42 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20241128154212.6216-1-hdegoede@redhat.com> <20241128154212.6216-2-hdegoede@redhat.com>
- <Z0iRuxcNnPMZptK_@smile.fi.intel.com> <95b952cf-d3b9-4ba7-92a0-6b1d240fada8@redhat.com>
-In-Reply-To: <95b952cf-d3b9-4ba7-92a0-6b1d240fada8@redhat.com>
+References: <20241204143807.32966-1-hdegoede@redhat.com>
+In-Reply-To: <20241204143807.32966-1-hdegoede@redhat.com>
 From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Date: Wed, 4 Dec 2024 20:23:38 +0200
-Message-ID: <CAHp75VeAax_cbOc8AkYr9W1+pqY9rnZyEqdSqnh2koGCtkuPXg@mail.gmail.com>
-Subject: Re: [PATCH 2/4] platform/x86: int3472: Drop "pin number mismatch" messages
+Date: Wed, 4 Dec 2024 21:13:06 +0200
+Message-ID: <CAHp75Vfw-_d1HB3-AKUnk6m-OdTGc7vcCictwkubg88wDuO2sg@mail.gmail.com>
+Subject: Re: [PATCH] platform/x86: intel: int0002_vgpio: Make the irqchip immutable
 To: Hans de Goede <hdegoede@redhat.com>
-Cc: Andy Shevchenko <andy@kernel.org>, =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, 
-	platform-driver-x86@vger.kernel.org
+Cc: =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, 
+	Andy Shevchenko <andy@kernel.org>, platform-driver-x86@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Wed, Dec 4, 2024 at 7:36=E2=80=AFPM Hans de Goede <hdegoede@redhat.com> =
+On Wed, Dec 4, 2024 at 4:38=E2=80=AFPM Hans de Goede <hdegoede@redhat.com> =
 wrote:
-> On 28-Nov-24 4:52 PM, Andy Shevchenko wrote:
-> > On Thu, Nov 28, 2024 at 04:42:10PM +0100, Hans de Goede wrote:
+>
+> Commit 6c846d026d49 ("gpio: Don't fiddle with irqchips marked as
+> immutable") added a warning to indicate if the gpiolib is altering the
+> internals of irqchips:
+>
+> gpio gpiochip4: (INT0002 Virtual GPIO): not an immutable chip, please con=
+sider fixing it!
+>
+> Fix this by making the irqchip in the int0002_vgpio driver immutable.
 
-...
-
-> >> -    if (pin !=3D agpio->pin_table[0])
-> >> -            dev_warn(int3472->dev, "%s %s pin number mismatch _DSM %d=
- resource %d\n",
-> >> -                     func, agpio->resource_source.string_ptr, pin,
-> >> -                     agpio->pin_table[0]);
-> >> -
-> >
-> > Hmm... Perhaps move it to dev_dbg(FW_BUG) ?
->
-> I'm not sure there is much value in keeping this. If we do go for dev_dbg=
-()
-> then the check should be changed to:
->
->         if (pin !=3D (agpio->pin_table[0] % 256))
->
-> to avoid false positives and the need for that IMHO already shows that
-> there is little use in keeping the check.
->
-> But lowering it to dev_dbg() + adding the % 256 also works for me,
-> please let me know how you want to proceed.
-
-I think dev_dbg() might still make (a little, though) sense. But also
-add a FW_BUG prefix to the message.
+Reviewed-by: Andy Shevchenko <andy@kernel.org>
 
 --=20
 With Best Regards,
