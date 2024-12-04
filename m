@@ -1,263 +1,133 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5507B1B87CE;
-	Wed,  4 Dec 2024 13:41:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A0E11B4157
+	for <platform-driver-x86@vger.kernel.org>; Wed,  4 Dec 2024 14:38:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1733319684; cv=none; b=Lu9AfiQh+I0vwbNguRKtHAVXUhN1QbM4n6PM3a0NoY/jmdcBKwbqIVoq0iwvClCP0V25NiPvrdCRgt57tpA9Z8W+D2HQZwWaLmZvcw7BjWW9+3kKb8/VE+R9XcQNO86IHlC5Yie4ikd2bpDTtQF1Lb8rO5g8f6NlyKYYblDlKAA=
+	t=1733323102; cv=none; b=h7qACTvjQIIq9F8+ZXXvs0PbdlELhxjrnPfG7HJN4+cMuB7Fs01owXLgFsOVPH59jixI4xnIMRrVx1ZgweGxVRjWsFAmxxdUqiMsbwO7eV5mypG+6lfqopFo3Xa/T4IkJw/kPSi5u63NXT1FhgZz4hZ2fJ4hulsY6v627yYm2i8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1733319684; c=relaxed/simple;
-	bh=OrUBrzA867BuM25tSmoSho1+xInsbkDy8p/o5TqA0Pc=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=p0a2AQP9dSQAvyewsqks8KupovasQq3uhvC82lzd9C+gptgkpfreGfyGnGHk359p3/GydY3kf0Xg5g+B5YFenLntLWlMjkxHzupYPOPpwpvgVuDYdz24nV495GFn2gIqSvON6mI4XbO+9rIUths4pMX/2Z6TwihP+eEPlGENLFI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=e+28Xtj3; arc=none smtp.client-ip=192.198.163.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1733323102; c=relaxed/simple;
+	bh=bzZV/cMZwASkG19dsd5ACVo5kRNEXcfeXTR6A7s6caE=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=mPyjQXHyggcv9IC1fj2vKre/Q/B0Jz6DLsjmcnejFPIr6GSS3oKnkPG6nhSrQOdmRBberaAO+EMVY7e/fhMmae/Tiv9I1+8aWnemSxRcnueDWXhsY4N2XmyQdPZmfQ/Z4zGicba+O3HzmW6cy6nUgrpvhXV3XGOn4hPopsux6E8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Qy95kl/s; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="e+28Xtj3"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1733319682; x=1764855682;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=OrUBrzA867BuM25tSmoSho1+xInsbkDy8p/o5TqA0Pc=;
-  b=e+28Xtj3qpXGuyANGWXwtfxpGBmgCCesPKu6pFOUNW4FGOEesCrMxbSt
-   M+6/YUodXeljv1gNLo5jFDylFETOSiv2nwrdGqVdrKNPSerWF05ILzOeI
-   gZpQ7YhR2mVH01/PmZJ3OsKcQ9tz80imeDzGv4Cd/uv78u9eVViRDH/90
-   15mPIsT+V8heRaasUgPR1lXt5DwUCqnSWPC0SwrvpzKe7/XMvdHWjOGIW
-   H3V9hbkxOg760saQEYXN/6s7cnEyuGk0EScXqcrB2BXqXHOLy0Cl+7gBf
-   2by9k1HIRq9KV/cQffTkfIZr6KFbOO5YkU/1mfMBuX01e3HPEa+50w9M6
-   A==;
-X-CSE-ConnectionGUID: Me78Ql4yThC/fxUXo1OPLA==
-X-CSE-MsgGUID: 5RCCAnVcQ9eMi+rg0ku/sQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11276"; a="32927184"
-X-IronPort-AV: E=Sophos;i="6.12,207,1728975600"; 
-   d="scan'208";a="32927184"
-Received: from orviesa008.jf.intel.com ([10.64.159.148])
-  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Dec 2024 05:41:21 -0800
-X-CSE-ConnectionGUID: 9P8O9cslRGKVO9efCilCog==
-X-CSE-MsgGUID: sNMJU2HuQeazbzD+h/zPrw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.12,207,1728975600"; 
-   d="scan'208";a="94595871"
-Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.178])
-  by orviesa008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Dec 2024 05:41:15 -0800
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Wed, 4 Dec 2024 15:41:12 +0200 (EET)
-To: Mario Limonciello <mario.limonciello@amd.com>
-cc: Hans de Goede <hdegoede@redhat.com>, 
-    "Rafael J . Wysocki" <rafael@kernel.org>, Len Brown <lenb@kernel.org>, 
-    Maximilian Luz <luzmaximilian@gmail.com>, Lee Chun-Yi <jlee@suse.com>, 
-    Shyam Sundar S K <Shyam-sundar.S-k@amd.com>, 
-    Corentin Chary <corentin.chary@gmail.com>, 
-    "Luke D . Jones" <luke@ljones.dev>, Ike Panhc <ike.pan@canonical.com>, 
-    Henrique de Moraes Holschuh <hmh@hmh.eng.br>, 
-    Alexis Belmonte <alexbelm48@gmail.com>, 
-    =?ISO-8859-15?Q?Uwe_Kleine-K=F6nig?= <u.kleine-koenig@pengutronix.de>, 
-    Ai Chao <aichao@kylinos.cn>, Gergo Koteles <soyer@irl.hu>, 
-    open list <linux-kernel@vger.kernel.org>, 
-    "open list:ACPI" <linux-acpi@vger.kernel.org>, 
-    "open list:MICROSOFT SURFACE PLATFORM PROFILE DRIVER" <platform-driver-x86@vger.kernel.org>, 
-    "open list:THINKPAD ACPI EXTRAS DRIVER" <ibm-acpi-devel@lists.sourceforge.net>, 
-    Mark Pearson <mpearson-lenovo@squebb.ca>, 
-    Matthew Schwartz <matthew.schwartz@linux.dev>, Armin Wolf <W_Armin@gmx.de>
-Subject: Re: [PATCH v9 10/22] ACPI: platform_profile: Create class for ACPI
- platform profile
-In-Reply-To: <20241202055031.8038-11-mario.limonciello@amd.com>
-Message-ID: <9ab7b709-33eb-45fa-3e5d-a1f0c8c72e14@linux.intel.com>
-References: <20241202055031.8038-1-mario.limonciello@amd.com> <20241202055031.8038-11-mario.limonciello@amd.com>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Qy95kl/s"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1733323099;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=fhpcEC/tiPm3d0LycSorlQv7zqEOdPfUjLN+bZ1Vg84=;
+	b=Qy95kl/spZuhmcy5JJpj+h+8C4jC02QtCqZsJPH9sEwJIGizU6H+NQeayivFR2GewG6IIz
+	Tr8jNpA6ogMmAiLtkA+TzrAAPNheH5hWe8NwueY43ipRuI3PO6zk5X5aPwvYrb1ektYYV3
+	8mq8xJpFlUzcuze4mcKRO+ZZI2m72gQ=
+Received: from mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-605-XBYQmWbRMbiuQ0EFju4n7Q-1; Wed,
+ 04 Dec 2024 09:38:16 -0500
+X-MC-Unique: XBYQmWbRMbiuQ0EFju4n7Q-1
+X-Mimecast-MFC-AGG-ID: XBYQmWbRMbiuQ0EFju4n7Q
+Received: from mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.15])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 1630C195605A;
+	Wed,  4 Dec 2024 14:38:15 +0000 (UTC)
+Received: from localhost.localdomain (unknown [10.39.194.11])
+	by mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id B36AF19560A0;
+	Wed,  4 Dec 2024 14:38:13 +0000 (UTC)
+From: Hans de Goede <hdegoede@redhat.com>
+To: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	Andy Shevchenko <andy@kernel.org>
+Cc: Hans de Goede <hdegoede@redhat.com>,
+	platform-driver-x86@vger.kernel.org
+Subject: [PATCH] platform/x86: intel: int0002_vgpio: Make the irqchip immutable
+Date: Wed,  4 Dec 2024 15:38:07 +0100
+Message-ID: <20241204143807.32966-1-hdegoede@redhat.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="8323328-281037050-1733319672=:904"
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.15
 
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
+Commit 6c846d026d49 ("gpio: Don't fiddle with irqchips marked as
+immutable") added a warning to indicate if the gpiolib is altering the
+internals of irqchips:
 
---8323328-281037050-1733319672=:904
-Content-Type: text/plain; charset=ISO-8859-15
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+gpio gpiochip4: (INT0002 Virtual GPIO): not an immutable chip, please consider fixing it!
 
-On Sun, 1 Dec 2024, Mario Limonciello wrote:
+Fix this by making the irqchip in the int0002_vgpio driver immutable.
 
-> When registering a platform profile handler create a class device
-> that will allow changing a single platform profile handler.
->=20
-> The class and sysfs group are no longer needed when the platform profile
-> core is a module and unloaded, so remove them at that time as well.
->=20
-> Reviewed-by: Armin Wolf <W_Armin@gmx.de>
-> Tested-by: Mark Pearson <mpearson-lenovo@squebb.ca>
-> Reviewed-by: Mark Pearson <mpearson-lenovo@squebb.ca>
-> Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
+Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+---
+ drivers/platform/x86/intel/int0002_vgpio.c | 14 ++++++++++++--
+ 1 file changed, 12 insertions(+), 2 deletions(-)
 
-Reviewed-by: Ilpo J=E4rvinen <ilpo.jarvinen@linux.intel.com>
+diff --git a/drivers/platform/x86/intel/int0002_vgpio.c b/drivers/platform/x86/intel/int0002_vgpio.c
+index 527d8fbc7cc1..71fe75d67847 100644
+--- a/drivers/platform/x86/intel/int0002_vgpio.c
++++ b/drivers/platform/x86/intel/int0002_vgpio.c
+@@ -83,8 +83,12 @@ static void int0002_irq_ack(struct irq_data *data)
+ 
+ static void int0002_irq_unmask(struct irq_data *data)
+ {
++	struct gpio_chip *gc = irq_data_get_irq_chip_data(data);
++	irq_hw_number_t hwirq = irqd_to_hwirq(data);
+ 	u32 gpe_en_reg;
+ 
++	gpiochip_enable_irq(gc, hwirq);
++
+ 	gpe_en_reg = inl(GPE0A_EN_PORT);
+ 	gpe_en_reg |= GPE0A_PME_B0_EN_BIT;
+ 	outl(gpe_en_reg, GPE0A_EN_PORT);
+@@ -92,11 +96,15 @@ static void int0002_irq_unmask(struct irq_data *data)
+ 
+ static void int0002_irq_mask(struct irq_data *data)
+ {
++	struct gpio_chip *gc = irq_data_get_irq_chip_data(data);
++	irq_hw_number_t hwirq = irqd_to_hwirq(data);
+ 	u32 gpe_en_reg;
+ 
+ 	gpe_en_reg = inl(GPE0A_EN_PORT);
+ 	gpe_en_reg &= ~GPE0A_PME_B0_EN_BIT;
+ 	outl(gpe_en_reg, GPE0A_EN_PORT);
++
++	gpiochip_disable_irq(gc, hwirq);
+ }
+ 
+ static int int0002_irq_set_wake(struct irq_data *data, unsigned int on)
+@@ -140,12 +148,14 @@ static bool int0002_check_wake(void *data)
+ 	return (gpe_sts_reg & GPE0A_PME_B0_STS_BIT);
+ }
+ 
+-static struct irq_chip int0002_irqchip = {
++static const struct irq_chip int0002_irqchip = {
+ 	.name			= DRV_NAME,
+ 	.irq_ack		= int0002_irq_ack,
+ 	.irq_mask		= int0002_irq_mask,
+ 	.irq_unmask		= int0002_irq_unmask,
+ 	.irq_set_wake		= int0002_irq_set_wake,
++	.flags			= IRQCHIP_IMMUTABLE,
++	GPIOCHIP_IRQ_RESOURCE_HELPERS,
+ };
+ 
+ static void int0002_init_irq_valid_mask(struct gpio_chip *chip,
+@@ -203,7 +213,7 @@ static int int0002_probe(struct platform_device *pdev)
+ 	}
+ 
+ 	girq = &chip->irq;
+-	girq->chip = &int0002_irqchip;
++	gpio_irq_chip_set_chip(girq, &int0002_irqchip);
+ 	/* This let us handle the parent IRQ in the driver */
+ 	girq->parent_handler = NULL;
+ 	girq->num_parents = 0;
+-- 
+2.47.0
 
---=20
- i.
-
-> ---
-> v8:
->  * Use attr->mode
-> ---
->  drivers/acpi/platform_profile.c  | 82 ++++++++++++++++++++++++++++++--
->  include/linux/platform_profile.h |  2 +
->  2 files changed, 79 insertions(+), 5 deletions(-)
->=20
-> diff --git a/drivers/acpi/platform_profile.c b/drivers/acpi/platform_prof=
-ile.c
-> index a1f0378f15e62..11eb60b09bac4 100644
-> --- a/drivers/acpi/platform_profile.c
-> +++ b/drivers/acpi/platform_profile.c
-> @@ -5,6 +5,7 @@
->  #include <linux/acpi.h>
->  #include <linux/bits.h>
->  #include <linux/init.h>
-> +#include <linux/kdev_t.h>
->  #include <linux/mutex.h>
->  #include <linux/platform_profile.h>
->  #include <linux/sysfs.h>
-> @@ -22,6 +23,12 @@ static const char * const profile_names[] =3D {
->  };
->  static_assert(ARRAY_SIZE(profile_names) =3D=3D PLATFORM_PROFILE_LAST);
-> =20
-> +static DEFINE_IDA(platform_profile_ida);
-> +
-> +static const struct class platform_profile_class =3D {
-> +=09.name =3D "platform-profile",
-> +};
-> +
->  static ssize_t platform_profile_choices_show(struct device *dev,
->  =09=09=09=09=09struct device_attribute *attr,
->  =09=09=09=09=09char *buf)
-> @@ -101,8 +108,21 @@ static struct attribute *platform_profile_attrs[] =
-=3D {
->  =09NULL
->  };
-> =20
-> +static int profile_class_registered(struct device *dev, const void *data=
-)
-> +{
-> +=09return 1;
-> +}
-> +
-> +static umode_t profile_class_is_visible(struct kobject *kobj, struct att=
-ribute *attr, int idx)
-> +{
-> +=09if (!class_find_device(&platform_profile_class, NULL, NULL, profile_c=
-lass_registered))
-> +=09=09return 0;
-> +=09return attr->mode;
-> +}
-> +
->  static const struct attribute_group platform_profile_group =3D {
-> -=09.attrs =3D platform_profile_attrs
-> +=09.attrs =3D platform_profile_attrs,
-> +=09.is_visible =3D profile_class_is_visible,
->  };
-> =20
->  void platform_profile_notify(struct platform_profile_handler *pprof)
-> @@ -160,25 +180,77 @@ int platform_profile_register(struct platform_profi=
-le_handler *pprof)
->  =09if (cur_profile)
->  =09=09return -EEXIST;
-> =20
-> -=09err =3D sysfs_create_group(acpi_kobj, &platform_profile_group);
-> -=09if (err)
-> -=09=09return err;
-> +=09/* create class interface for individual handler */
-> +=09pprof->minor =3D ida_alloc(&platform_profile_ida, GFP_KERNEL);
-> +=09if (pprof->minor < 0)
-> +=09=09return pprof->minor;
-> +=09pprof->class_dev =3D device_create(&platform_profile_class, pprof->de=
-v,
-> +=09=09=09=09=09 MKDEV(0, 0), pprof, "platform-profile-%d",
-> +=09=09=09=09=09 pprof->minor);
-> +=09if (IS_ERR(pprof->class_dev)) {
-> +=09=09err =3D PTR_ERR(pprof->class_dev);
-> +=09=09goto cleanup_ida;
-> +=09}
-> =20
->  =09cur_profile =3D pprof;
-> +
-> +=09err =3D sysfs_update_group(acpi_kobj, &platform_profile_group);
-> +=09if (err)
-> +=09=09goto cleanup_cur;
-> +
->  =09return 0;
-> +
-> +cleanup_cur:
-> +=09cur_profile =3D NULL;
-> +=09device_unregister(pprof->class_dev);
-> +
-> +cleanup_ida:
-> +=09ida_free(&platform_profile_ida, pprof->minor);
-> +
-> +=09return err;
->  }
->  EXPORT_SYMBOL_GPL(platform_profile_register);
-> =20
->  int platform_profile_remove(struct platform_profile_handler *pprof)
->  {
-> +=09int id;
->  =09guard(mutex)(&profile_lock);
-> =20
-> -=09sysfs_remove_group(acpi_kobj, &platform_profile_group);
->  =09cur_profile =3D NULL;
-> +
-> +=09id =3D pprof->minor;
-> +=09device_unregister(pprof->class_dev);
-> +=09ida_free(&platform_profile_ida, id);
-> +
-> +=09sysfs_update_group(acpi_kobj, &platform_profile_group);
-> +
->  =09return 0;
->  }
->  EXPORT_SYMBOL_GPL(platform_profile_remove);
-> =20
-> +static int __init platform_profile_init(void)
-> +{
-> +=09int err;
-> +
-> +=09err =3D class_register(&platform_profile_class);
-> +=09if (err)
-> +=09=09return err;
-> +
-> +=09err =3D sysfs_create_group(acpi_kobj, &platform_profile_group);
-> +=09if (err)
-> +=09=09class_unregister(&platform_profile_class);
-> +
-> +=09return err;
-> +}
-> +
-> +static void __exit platform_profile_exit(void)
-> +{
-> +=09sysfs_remove_group(acpi_kobj, &platform_profile_group);
-> +=09class_unregister(&platform_profile_class);
-> +}
-> +module_init(platform_profile_init);
-> +module_exit(platform_profile_exit);
-> +
->  MODULE_AUTHOR("Mark Pearson <markpearson@lenovo.com>");
->  MODULE_DESCRIPTION("ACPI platform profile sysfs interface");
->  MODULE_LICENSE("GPL");
-> diff --git a/include/linux/platform_profile.h b/include/linux/platform_pr=
-ofile.h
-> index 8ec0b8da56db5..a888fd085c513 100644
-> --- a/include/linux/platform_profile.h
-> +++ b/include/linux/platform_profile.h
-> @@ -29,6 +29,8 @@ enum platform_profile_option {
->  struct platform_profile_handler {
->  =09const char *name;
->  =09struct device *dev;
-> +=09struct device *class_dev;
-> +=09int minor;
->  =09unsigned long choices[BITS_TO_LONGS(PLATFORM_PROFILE_LAST)];
->  =09int (*profile_get)(struct platform_profile_handler *pprof,
->  =09=09=09=09enum platform_profile_option *profile);
->=20
---8323328-281037050-1733319672=:904--
