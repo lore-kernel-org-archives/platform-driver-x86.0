@@ -1,129 +1,111 @@
-Received: from mail-il1-f170.google.com (mail-il1-f170.google.com [209.85.166.170])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2F1E11531E8
-	for <platform-driver-x86@vger.kernel.org>; Wed,  4 Dec 2024 20:33:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5307C3D0D5
+	for <platform-driver-x86@vger.kernel.org>; Wed,  4 Dec 2024 20:42:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1733344406; cv=none; b=i84q5Q3jHdYx+F3XNE5gqBD4tO3eyk2wTYFLiyI4FxhILCN8K9njOoO/JsM90Wgp3niUb+z+STiyYR/Q/zQXE8owlOUw6Hz5MXjTDK8kAbzpWcoWhfB/guG9itm/8eO2jHg6KO55WeymjoCsVG9Wk+6X7lldMO7pAzJ0WFaAr4U=
+	t=1733344965; cv=none; b=WIy4hA6DykYy8XuPRXVd7itLlJu2r6m8JygsMMvpwAxTcCEpGsvt9sZfaUOPx5lcIJwVppaiTl6In8tc2Clia4xpPGZ+GweM+ggsHJxvY6dWT7t5HdP2qaVzGZ4/+EbMczUoBUWdawsGILecV+E1kvKnqjbMhx4ztvk6hv9UGFM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1733344406; c=relaxed/simple;
-	bh=n4DkBmr2ruHZSlgIIYtBx4iEuBjLq78dWJawlIgW+vc=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=XPWvrV6LcrdXoZpp2LneOO3dV5thHA7x1KGo6wbC6tFy8ziPqYoMRoavxGdgCROxmiOZYl8Mbuk3ncqa73r4+WgI7JzNddDOtlNSKcnaQJrQjM4DkZ1+mw1eYSeoAcXBG1hNu34GWn7W1ljuqcoW6k/Y7BdWputK3+cb7SfD//w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=joshuagrisham.com; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.166.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=joshuagrisham.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-il1-f170.google.com with SMTP id e9e14a558f8ab-3a777fd574bso436475ab.1
-        for <platform-driver-x86@vger.kernel.org>; Wed, 04 Dec 2024 12:33:24 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1733344404; x=1733949204;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=nOZHAeOihCCF3n24yoUvKwBdq0TTbHh5X1pp5iE1H1o=;
-        b=Ot/up0cWsGStQ05vRXiYvKxJ42dqt0Rc/yisJb3+1hSVCnbMPoY3+ZqbN0a5PASrVo
-         SFEW0ZXSCM5jGFGkNqgcFO4wIe0HTLeTCAZ3ZodMsXgRlbsVg+2H4LvvCfkKRR0XeZg6
-         H5pfHtBE4W4kj3yzIMsz1JrkD9BN98H/9G+RtbN8HcKwSMV9FtrjtM85d8R02hRHvZh2
-         M/4K1T53Wg0iBi+pG6nLJstMols99A+0guolgQ7fl7sO533uuRTFeV3FNVvAMshvtLse
-         dVMHVHx/9l825Bo+0t9KNrgFWF8zTqQeUOFQ887lVdw+BpENg0v07/lQ9/VTxyT2LAMH
-         4Ukg==
-X-Forwarded-Encrypted: i=1; AJvYcCUqGTlwo86P4t/g/UBBiwOur+8pSE5g7Ci5TCoXKT2lSBc50L70DdGuMya4MmLs7fzE7NYzNimM6XQTVLzGIny5ZBQD@vger.kernel.org
-X-Gm-Message-State: AOJu0YwhCCJ48g4/1O9gg5YzL5+gGghK1VCTDBeYfXztz+omZTBsBCxz
-	zljzMXQcfGtrYA63gX9alyQR/C0Fh3I/YZPvJDL+8ZMD894MGFQyW1HZeTgv
-X-Gm-Gg: ASbGncunk/h4P0tKWER1Q4F0I6l5+9X75PvtdmSAwqEz2kUAyAxceO6GNtKUBMVN1+B
-	YEGnQPA5kranIXxQgpqFimlOfvndj18DF8ItfA+1+soInSGtRfpQ/xZspO6NaoLteP522zv2UYY
-	+WXTtrenK1N4xV4wTF1kY9GlUZhpWZxrfsJVEbi8aHf9OAq3HHGm/v+wfRZ1EW1HUWYx3eU9Tr6
-	LHbmHJkZyHZSHQKKcT7gY8X7YgryTu2y99a7e769o5WG+pgbSS0WboQtuixn4U4KqGXrpcFMdLO
-	GUqt5EGZiC+UJbg=
-X-Google-Smtp-Source: AGHT+IFBw8J5bA/MZIYlvgvBKfz7cXC2kT5q/z8i3ZJlZ/wsoD8plDo4hLm6J7YPhhvP0dJC0TowLA==
-X-Received: by 2002:a05:6e02:3d88:b0:3a7:e86a:e812 with SMTP id e9e14a558f8ab-3a7f9a8c510mr104632545ab.17.1733344404277;
-        Wed, 04 Dec 2024 12:33:24 -0800 (PST)
-Received: from mail-io1-f42.google.com (mail-io1-f42.google.com. [209.85.166.42])
-        by smtp.gmail.com with ESMTPSA id 8926c6da1cb9f-4e230e5eb7dsm3250205173.94.2024.12.04.12.33.23
-        for <platform-driver-x86@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 04 Dec 2024 12:33:23 -0800 (PST)
-Received: by mail-io1-f42.google.com with SMTP id ca18e2360f4ac-843df3c4390so4605139f.3
-        for <platform-driver-x86@vger.kernel.org>; Wed, 04 Dec 2024 12:33:23 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCXPlITqwdGQMRGNNVNp/7xDNrcnzJKjRK8wAIdTCqm0JzrUBX/BiwSWAEALN8YX7rt6v+FR9k9457Tb5kt/WEaKZdKg@vger.kernel.org
-X-Received: by 2002:a05:6602:29c8:b0:807:f0fb:1192 with SMTP id
- ca18e2360f4ac-8445b5477f8mr991740039f.1.1733344403205; Wed, 04 Dec 2024
- 12:33:23 -0800 (PST)
+	s=arc-20240116; t=1733344965; c=relaxed/simple;
+	bh=PaijjdoP1H8Ul83P3FUXm1uO+RKR9cUPglfGNGDrs0k=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=lnVApgu7gFTw2mQL3zk8fHHNOw31TJr5iwoIdLT6HlyFLtvOmiI5jxGkoWO2KloklbvE/TcN4efpTZIHwXeXmEHGfyOExMQt6aYUSQKHljphNcNEXvyoCTzcQPevdILnwp4XGuXrXlzyyYJL/Poc47isWkYDGnoohGrNW1hQBpo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=NzlaY2jT; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="NzlaY2jT"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1733344962;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=xQQAO7odwhFIzVgnTMPbnzKCSV1fneUMKCZFGLx2nWY=;
+	b=NzlaY2jTr5EvOxXHu1WeNzU7SHpROPowacc00WwqeB2YDWnORaUsf/azoIgoIJ9NWvUNI/
+	oE4jwLw0CW4c0aq7xQjv48/Cepl95AkSgqhtHNEItWsZlhH80sqjgQyfQVEgHRY9iSc4Xq
+	vYbEx/+IYW+zYllx6Y/MqlBKaGTKLl8=
+Received: from mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-464-dIhiUTF3MxOEvZ3fuWgBhg-1; Wed,
+ 04 Dec 2024 15:42:40 -0500
+X-MC-Unique: dIhiUTF3MxOEvZ3fuWgBhg-1
+X-Mimecast-MFC-AGG-ID: dIhiUTF3MxOEvZ3fuWgBhg
+Received: from mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.15])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 6B2BA19560A1;
+	Wed,  4 Dec 2024 20:42:38 +0000 (UTC)
+Received: from localhost.localdomain (unknown [10.39.194.11])
+	by mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 171E61956095;
+	Wed,  4 Dec 2024 20:42:36 +0000 (UTC)
+From: Hans de Goede <hdegoede@redhat.com>
+To: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	Andy Shevchenko <andy@kernel.org>
+Cc: Hans de Goede <hdegoede@redhat.com>,
+	platform-driver-x86@vger.kernel.org
+Subject: [PATCH v3 0/8] platform/x86: x86-android-tablets: Add Bluetooth support for Vexia EDU ATLA 10
+Date: Wed,  4 Dec 2024 21:42:11 +0100
+Message-ID: <20241204204227.95757-1-hdegoede@redhat.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <CAMF+KeYus9dW00WNJMLVxLLHdG9JgCfrGJ491fu7NM8GAEqqCg@mail.gmail.com>
- <40b82b39-3bba-4eac-8eb0-b4cee4868737@redhat.com>
-In-Reply-To: <40b82b39-3bba-4eac-8eb0-b4cee4868737@redhat.com>
-From: Joshua Grisham <josh@joshuagrisham.com>
-Date: Wed, 4 Dec 2024 21:33:12 +0100
-X-Gmail-Original-Message-ID: <CAMF+KeYKxiG0h4K39Fzbeoa30VZsvN68XMcQ5382YdfRDgeUdQ@mail.gmail.com>
-Message-ID: <CAMF+KeYKxiG0h4K39Fzbeoa30VZsvN68XMcQ5382YdfRDgeUdQ@mail.gmail.com>
-Subject: Re: Adding a new platform driver samsung-galaxybook
-To: Hans de Goede <hdegoede@redhat.com>
-Cc: =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, 
-	platform-driver-x86@vger.kernel.org, Armin Wolf <W_Armin@gmx.de>, 
-	Kurt Borja <kuurtb@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.15
 
-Hi Hans, thank you so much for taking the time to read through the
-questions and get back to me!
+Hi All,
 
-Den ons 4 dec. 2024 kl 18:31 skrev Hans de Goede <hdegoede@redhat.com>:
->
-> So I think it is best to just emulate what the laptops where
-> the cycling is directly done by the embedded-control do.
->
-> That is:
->
-> 1. Add LED_BRIGHT_HW_CHANGED to the flags of the led_classdev
-> for the "xxx:kbd_backlight" led class device you expose
->
-> 2. Filter out kbd-backlight-cycle keypresses and on such
-> a keypress:
->
-> 2.1 Determine new brightness level
-> 2.2 Apply new brightness level
-> 2.3 Call:
->
-> led_classdev_notify_brightness_hw_changed(&kbd_backlight_led_classdev, new_brightness_level);
->
+Here is a patch-series for adding Bluetooth support for the Vexia EDU ATLA
+10 tablet to x86-android-tablets.
 
-This is actually exactly what I have already implemented with the one
-exception: I am executing exactly the same kind of logic you mentioned
-(via schedule_work()) but I have NOT filtered out the keypress;
-instead, it is just scheduling this logic to run in a workqueue and
-then going ahead and passing along the keypress as well, just in case
-anyone wanted to trigger any other kind of event from this hotkey.
+Due to the LPSS UARTs being enumerated through PCI rather than through
+ACPI, this is somewhat involved. Just like how this special case needed
+some extra work for instantiating the various i2c-clients.
 
-I have actually submitted a patch to the keyboard hwdb which was
-merged in to systemd that maps this particular key to "unknown" with
-the idea that someone who has this model would also likely have this
-platform driver module loaded, so by default the kernel-space action
-to actually change the brightness level would be executed (the
-"EC-like" behavior as you mentioned that they could not change), but
-the user would also have the option of remapping the key and
-triggering additional actions on top of this if they wanted.  Does
-that sound appropriate or is it better to just filter out the keypress
-entirely once the above actions are scheduled/executed?
+Changes in v3:
+- Make the "platform/x86: x86-android-tablets: Add missing __init to
+  get_i2c_adap_by_*()" bugfix the first patch in the series
+- Add 2 more bugfixes as patches 2 - 3
 
-Also as an aside, I have had a few users who have mentioned that if
-they have compiled and loaded i8042 as a module (which is then marked
-as "used by" samsung_galaxybook due to the i8042 filter), if they
-execute a modprobe -r then it also removes i8042 and their keyboard
-stops working. Is this known/expected behavior and/or is there
-anything that can be done in this driver itself to try and help
-prevent this from happening? Otherwise I guess a "fix" for this would
-be if users compile their kernel with CONFIG_SERIO_I8042=y then they
-would not have this problem?
+Changes in v2:
+- Use a union in struct x86_serdev_info which stores either ACPI HID + UID
+  or the PCI devfn of the serdev-controller
 
-Thank you again!
+Regards,
 
-Best regards,
-Joshua
+Hans
 
-> [...]
+
+Hans de Goede (8):
+  platform/x86: x86-android-tablets: Add missing __init to
+    get_i2c_adap_by_*()
+  platform/x86: x86-android-tablets: Make variables only used locally
+    static
+  platform/x86: serdev_helpers: Check for serial_ctrl_uid == NULL
+  platform/x86: serdev_helpers: Add get_serdev_controller_from_parent()
+    helper
+  platform/x86: x86-android-tablets: Change x86_instantiate_serdev()
+    prototype
+  platform/x86: x86-android-tablets: Store serdev-controller ACPI HID +
+    UID in a union
+  platform/x86: x86-android-tablets: Add support for getting
+    serdev-controller by PCI parent
+  platform/x86: x86-android-tablets: Add Bluetooth support for Vexia EDU
+    ATLA 10
+
+ drivers/platform/x86/serdev_helpers.h         | 60 +++++++++++--------
+ .../platform/x86/x86-android-tablets/asus.c   |  4 +-
+ .../platform/x86/x86-android-tablets/core.c   | 31 +++++++---
+ .../platform/x86/x86-android-tablets/lenovo.c |  4 +-
+ .../platform/x86/x86-android-tablets/other.c  | 16 ++++-
+ .../x86-android-tablets/x86-android-tablets.h | 13 +++-
+ 6 files changed, 85 insertions(+), 43 deletions(-)
+
+-- 
+2.47.0
+
