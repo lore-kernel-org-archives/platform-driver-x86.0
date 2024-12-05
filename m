@@ -1,96 +1,158 @@
-Received: from mail-ej1-f48.google.com (mail-ej1-f48.google.com [209.85.218.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF9611A28D;
-	Thu,  5 Dec 2024 14:11:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BDE341B59A;
+	Thu,  5 Dec 2024 14:23:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1733407906; cv=none; b=EgreNr/Mr76vA1xYSgHVqL2hGwX5pXXU4Jnyi/awZCoV2NN09P5QHigZasq7igw0cmg7pUQ9fqsMYaODOP5a2Qg/eIJS/FJvoKmp7Ac78Cz4DHhiVSRFbMeuKUPSi+3l7qOLKTOQm7PTZfpHZ5riDWu0EIzxGp3XHxd2FE8jlrM=
+	t=1733408592; cv=none; b=UbZWPXIg+vv2NqwnklP1O2/TRFXgwIpYreF0ksc/MYHSFb5gcmPLJ4uuIFvfHGWb/BThFz2ww5rXUDCRx6/bSeysReTfLMOktQkRhwS2MSpcCQY/I6ZRX3DJW3r+uztairQ5TUpZpNF+vhMfxkocCYRgY4dbazaeoolMuGWgcto=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1733407906; c=relaxed/simple;
-	bh=xZpSnmgGYgmYjC6S22jHypxExV3HUWtrI7m8C5o84Vo=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=dtdK+cn2j4rrGKvKJm3uiXvFXdML2HCSyO2pFGTz5ZYAhhYBlifyQPa4nTcIVYUmk+QxgtpIryQHAtJyN+E5zz85BJNLt3kdipVq14mNUUpBp0zxKW4xDujGlUYZgi9ZkYgXtlE1yEzprSM3XY2OLWz0k15JIErBi12N2x4+tDQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=aIXbnjZs; arc=none smtp.client-ip=209.85.218.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1733408592; c=relaxed/simple;
+	bh=KV0cBHy/QqFDgX3uFP6QgbhHS3lUE5VEmKJ05QIhPEI=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=BjNdQulewL1FOnIq2+yOfOnqmaS8oLWZ+pdHTC250vwAlWm8K5BsBeYlcpXo2gSHuyMJXKYNVD5xr+vgLpw0CrQJaToTRZMmAn6yum3l5HO1VUGuX0tlrwwEPDL0vqthGDH3NBx4qxPTZndRfkGHVoHkd+0c5b9iqJbSqpmgkJY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=D7L4gMkV; arc=none smtp.client-ip=192.198.163.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aIXbnjZs"
-Received: by mail-ej1-f48.google.com with SMTP id a640c23a62f3a-aa5f1909d6fso181847566b.3;
-        Thu, 05 Dec 2024 06:11:44 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1733407903; x=1734012703; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=CfYe4ICab1Py8zIDsrFL3Y6kzaJuAiZekwVzc5KCQik=;
-        b=aIXbnjZs37OTph9oH/2kdJWiW2ATHqv52ywmN1khgIbqLZLjFhkcW+uScUnD+522oZ
-         5WcbbN/wD48sAk3iV7npkw4FswQn3AUUIRnd5+rXgieU8QF6pcNsLxbjGPqMGKnhNJW+
-         pvwbpzx54xBTX11rw2VGtq8wvBDrAbt/KRDiDoMF1Eyzem4PKEIkD0/IGWL89shDA8ZF
-         S0PyJtBExLfCd8Te0jRsZRCYoV+9qb9QvSopxZVjJoiHNsrKMRcLx1ltC+8DmFxUrOTZ
-         d6FICcPZrUScmNKQf5NYOS9dtTolJ6VByjjN98fsW/sGB0ipCLhW6aONJzqXFfMfnta9
-         c84g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1733407903; x=1734012703;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=CfYe4ICab1Py8zIDsrFL3Y6kzaJuAiZekwVzc5KCQik=;
-        b=ekmuSzXCvg4hxGj4X0NzZgyC8CPbUxzy6pDhDQNc2O1wpytgi0kR8GcjG0tqDUWMuR
-         wcwGv4kaCMZEiQsZ19NjFgFx5utDpiWjJXaV5mQhqIgxb3cP0pPZuGuDiX7aasvLKZyH
-         0rOQRpHG+7yef4UbObRN5bMI8dR53kyzuvBGPq73w4YgxyKoswFmurp4KYoHaGBwa+/h
-         zO9ggajTe1xioseUnsjnzK8DgSPzscYHIzuWfOjXjwrIZXGrbKxY0LeKsBKIprFen6yx
-         9mQ74BfUXLi491L7Hj30/pdist1c+q/QtRdj3kGXgsXhYDCz3so/kuRHJpAudwCuZRnS
-         /e8w==
-X-Forwarded-Encrypted: i=1; AJvYcCWh7XiwkMUYjLDXh9JAoSZfLumfEQwRZV0X6yuF0GF5RO1WU/MGOSsy1epoqI2ZUTQrvjeeD1Ew+HI34su07/LAfm5i@vger.kernel.org, AJvYcCXGUrKcSk5lW/+9o+9jiVvV+logZNtiVB1QcLAseLgz7xmoU8Ph6r7MppL8Y7c6ocMrszIW+avh@vger.kernel.org
-X-Gm-Message-State: AOJu0YyaJIXuO9XSHblfSmBpJhYX2VRLMmOgetHNF6j3n/N+FYkGfjoY
-	IjauTqyEObdVp9Jb+gaCLwVow8cRWTEy3OIKebXSALiS/dVIJByg5JNEf9VnodQYEh/LIg8H0hf
-	VT36HRMimvY5LtYfZmZGGFdK4Bis=
-X-Gm-Gg: ASbGnctzSZCgLLtG9cisx7pJNbHbqUSk1r6pWf8c40Rf440cICFW3qKY0EjHzJT2RCN
-	fPHghIJQJ1jFRnfY6GvVnRM7M/YaX6I4=
-X-Google-Smtp-Source: AGHT+IGctkYgzZhHQFrVjRvY1pRz3e5HXkV0aSBJupJhfyZeVFcEsAKxqf5EKb+Hbe8s6jFO1wWJt2DP8x1TcHZSXYU=
-X-Received: by 2002:a17:906:9c2:b0:aa5:f333:bb96 with SMTP id
- a640c23a62f3a-aa5f7eedd3cmr893400066b.43.1733407902971; Thu, 05 Dec 2024
- 06:11:42 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="D7L4gMkV"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1733408591; x=1764944591;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=KV0cBHy/QqFDgX3uFP6QgbhHS3lUE5VEmKJ05QIhPEI=;
+  b=D7L4gMkVWhw3ETMmxGXwRuw44Rqk1TLKeCBqO4o9nUtyo96gx7Vrr1Ve
+   w5I2jQPBUd45q2LycVKsVdnQlAcWaWcfPQz1vRMuhvocf7Cv4JQMHSxSJ
+   mGA6wD3ytWwMXmJA66gYl6IOpX6b1MPDtb4ynC9OjC4xhaeqBPBlQutG5
+   3cnsUYWte19bjUw22GmjMiAmT/mC1LMl/g86gZW+O7Jl4HgwozYhze6nt
+   N5eQKSPnaDLeAwyhbhzATtZrdZKUA76ZKlcifb6PWLwX3HIujTCCTllVO
+   uqr95wi29U0Pzo2x0Xqp51DwJD1iljOTqHMbcjqp/KDGBNqvdxDziHPuR
+   g==;
+X-CSE-ConnectionGUID: I9hgzMASRlOlY/LWgTG9dQ==
+X-CSE-MsgGUID: jVG0HtapTJKGtPEMF9UPdA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11277"; a="21308541"
+X-IronPort-AV: E=Sophos;i="6.12,210,1728975600"; 
+   d="scan'208";a="21308541"
+Received: from fmviesa008.fm.intel.com ([10.60.135.148])
+  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Dec 2024 06:23:10 -0800
+X-CSE-ConnectionGUID: PmBgtXJ7Rr6Xz8L0Q3KGPw==
+X-CSE-MsgGUID: iowx0A/aQ0yUaXxZzCnpPQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.12,210,1728975600"; 
+   d="scan'208";a="94302147"
+Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.60])
+  by fmviesa008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Dec 2024 06:23:02 -0800
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Thu, 5 Dec 2024 16:22:59 +0200 (EET)
+To: Mario Limonciello <mario.limonciello@amd.com>
+cc: Hans de Goede <hdegoede@redhat.com>, 
+    "Rafael J . Wysocki" <rafael@kernel.org>, Len Brown <lenb@kernel.org>, 
+    Maximilian Luz <luzmaximilian@gmail.com>, Lee Chun-Yi <jlee@suse.com>, 
+    Shyam Sundar S K <Shyam-sundar.S-k@amd.com>, 
+    Corentin Chary <corentin.chary@gmail.com>, 
+    "Luke D . Jones" <luke@ljones.dev>, Ike Panhc <ike.pan@canonical.com>, 
+    Henrique de Moraes Holschuh <hmh@hmh.eng.br>, 
+    Alexis Belmonte <alexbelm48@gmail.com>, 
+    =?ISO-8859-15?Q?Uwe_Kleine-K=F6nig?= <u.kleine-koenig@pengutronix.de>, 
+    Ai Chao <aichao@kylinos.cn>, Gergo Koteles <soyer@irl.hu>, 
+    open list <linux-kernel@vger.kernel.org>, 
+    "open list:ACPI" <linux-acpi@vger.kernel.org>, 
+    "open list:MICROSOFT SURFACE PLATFORM PROFILE DRIVER" <platform-driver-x86@vger.kernel.org>, 
+    "open list:THINKPAD ACPI EXTRAS DRIVER" <ibm-acpi-devel@lists.sourceforge.net>, 
+    Mark Pearson <mpearson-lenovo@squebb.ca>, 
+    Matthew Schwartz <matthew.schwartz@linux.dev>, Armin Wolf <W_Armin@gmx.de>
+Subject: Re: [PATCH v9 18/22] ACPI: platform_profile: Check all profile
+ handler to calculate next
+In-Reply-To: <20241202055031.8038-19-mario.limonciello@amd.com>
+Message-ID: <fc57acd9-396c-e047-12c1-14836e477d14@linux.intel.com>
+References: <20241202055031.8038-1-mario.limonciello@amd.com> <20241202055031.8038-19-mario.limonciello@amd.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20241204204227.95757-1-hdegoede@redhat.com> <20241204204227.95757-4-hdegoede@redhat.com>
- <Z1Fs4j8g7uC-Cc14@smile.fi.intel.com> <d0a88f8f-dd53-c67d-b619-972000c23118@linux.intel.com>
-In-Reply-To: <d0a88f8f-dd53-c67d-b619-972000c23118@linux.intel.com>
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Date: Thu, 5 Dec 2024 16:11:06 +0200
-Message-ID: <CAHp75Vdqv6natT8aUMMRGpuaxX6N+BK3AXy-nC-_G3f43ZDs2Q@mail.gmail.com>
-Subject: Re: [PATCH v3 3/8] platform/x86: serdev_helpers: Check for
- serial_ctrl_uid == NULL
-To: =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Cc: Andy Shevchenko <andy@kernel.org>, Hans de Goede <hdegoede@redhat.com>, 
-	platform-driver-x86@vger.kernel.org, stable@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=US-ASCII
 
-On Thu, Dec 5, 2024 at 12:32=E2=80=AFPM Ilpo J=C3=A4rvinen
-<ilpo.jarvinen@linux.intel.com> wrote:
-> On Thu, 5 Dec 2024, Andy Shevchenko wrote:
-> > On Wed, Dec 04, 2024 at 09:42:14PM +0100, Hans de Goede wrote:
+On Sun, 1 Dec 2024, Mario Limonciello wrote:
 
-...
+> As multiple platform profile handlers might not all support the same
+> profile, cycling to the next profile could have a different result
+> depending on what handler are registered.
+> 
+> Check what is active and supported by all handlers to decide what
+> to do.
+> 
+> Reviewed-by: Armin Wolf <W_Armin@gmx.de>
+> Tested-by: Mark Pearson <mpearson-lenovo@squebb.ca>
+> Reviewed-by: Mark Pearson <mpearson-lenovo@squebb.ca>
+> Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
+> ---
+>  drivers/acpi/platform_profile.c | 30 +++++++++++++++++++++---------
+>  1 file changed, 21 insertions(+), 9 deletions(-)
+> 
+> diff --git a/drivers/acpi/platform_profile.c b/drivers/acpi/platform_profile.c
+> index d5f0679d59d50..16746d9b9aa7c 100644
+> --- a/drivers/acpi/platform_profile.c
+> +++ b/drivers/acpi/platform_profile.c
+> @@ -407,25 +407,37 @@ EXPORT_SYMBOL_GPL(platform_profile_notify);
+>  
+>  int platform_profile_cycle(void)
+>  {
+> -	enum platform_profile_option profile;
+> -	enum platform_profile_option next;
+> +	enum platform_profile_option next = PLATFORM_PROFILE_LAST;
+> +	enum platform_profile_option profile = PLATFORM_PROFILE_LAST;
+> +	unsigned long choices[BITS_TO_LONGS(PLATFORM_PROFILE_LAST)];
+>  	int err;
+>  
+> +	set_bit(PLATFORM_PROFILE_LAST, choices);
+>  	scoped_cond_guard(mutex_intr, return -ERESTARTSYS, &profile_lock) {
+> -		if (!cur_profile)
+> -			return -ENODEV;
+> +		err = class_for_each_device(&platform_profile_class, NULL,
+> +					    &profile, _aggregate_profiles);
+> +		if (err)
+> +			return err;
+>  
+> -		err = cur_profile->profile_get(cur_profile, &profile);
+> +		if (profile == PLATFORM_PROFILE_CUSTOM ||
+> +		    profile == PLATFORM_PROFILE_LAST)
+> +			return -EINVAL;
+> +
+> +		err = class_for_each_device(&platform_profile_class, NULL,
+> +					    choices, _aggregate_choices);
+>  		if (err)
+>  			return err;
+>  
+> -		next = find_next_bit_wrap(cur_profile->choices, PLATFORM_PROFILE_LAST,
+> +		/* never iterate into a custom if all drivers supported it */
+> +		clear_bit(PLATFORM_PROFILE_CUSTOM, choices);
 
-> > > +                  serial_ctrl_hid, serial_ctrl_uid ?: "*");
-> >
-> > Not sure about '*' as it would mean 'any', perhaps 'none', '-', or 'und=
-efined'
-> > would be better, but since they are error messages, it's not so critica=
-l.
->
-> Isn't not checking _UID (in acpi_dev_get_first_match_dev()) same as "any"
-> _UID?
+I'm confused by the comment. I was under impression the custom "profile" 
+is just a framework construct when the _framework_ couldn't find a 
+consistent profile? How can a driver decide to "support it"? It sounds 
+like a driver overstepping its intended domain of operation.
 
-Ah, good point!
+If the intention really is for the driver to "support" or "not support" 
+custom profile, then you should adjust the commit message of the patch
+which introduced it.
 
---=20
-With Best Regards,
-Andy Shevchenko
+-- 
+ i.
+
+> +		next = find_next_bit_wrap(choices,
+> +					  PLATFORM_PROFILE_LAST,
+>  					  profile + 1);
+>  
+> -		if (WARN_ON(next == PLATFORM_PROFILE_LAST))
+> -			return -EINVAL;
+> +		err = class_for_each_device(&platform_profile_class, NULL, &next,
+> +					    _store_and_notify);
+>  
+> -		err = cur_profile->profile_set(cur_profile, next);
+>  		if (err)
+>  			return err;
+>  	}
+> 
