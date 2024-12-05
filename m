@@ -1,105 +1,116 @@
-Received: from mail-lf1-f46.google.com (mail-lf1-f46.google.com [209.85.167.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from todd.t-8ch.de (todd.t-8ch.de [159.69.126.157])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E1DD6226ECD;
-	Thu,  5 Dec 2024 16:42:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C1103224B0F;
+	Thu,  5 Dec 2024 17:35:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.69.126.157
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1733416951; cv=none; b=QSfLECULeovYOcc4avUws8wWg4tpNJbtdC7giCU0DBafp7OakUzqI/KBQVzKICyc9a4JkLpoEavcIVzzVdd7ZiGk/y7KcaekNWY5rFe1BxEdMIxgKDQWx7YVvP6dHn+/23XYNk7xXC8rgNR48jNYQlwpHuQpBPUmipieXijJVK4=
+	t=1733420142; cv=none; b=ozAyV6z+v97qpX0fugw+7/6mqbiTtGJRnqOM4xgrOhqlo98zo/LQyonMp8h7boXx6LXifo9oC58MveboIXZhK/26Nbl5+IeLvlEAPgWtSs5XF58jbjJfWv0U52yavtf1GMAKeSPRD2yrVhXwSQi6RfbsVV/1RiLAcEPG9pKQ+sM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1733416951; c=relaxed/simple;
-	bh=uwJORr6lYv+2fD/3UybCxfQotZIsukSpSifUmgN5abY=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Ei+CjBCPIWqYEnBcWngOZ+7GDH9eylX3QaGWm4OFXf/VowQ3zO9+SAtm/GHmxUinYcj11pVibqLeXakg0doGr/M5sNm4/PQCSr83SReJ4ElqN9hHtXFEg/yHnSuhumlYM24792yKsse1VoDsl6pCOHbuCatgQ3uxKbeWJdikPdE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=WQHOqbp4; arc=none smtp.client-ip=209.85.167.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1733420142; c=relaxed/simple;
+	bh=cfuC4VjJZbJslwembV87HLGJheNWpA6IXa9jHRZu/TI=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=sOlaQ3xoIpu3ZfrrvDlcTILqRASfAIi4MYpJkk653GtBuMni+FJL6Mar7Shi0YMlV5enjHhIGfAR6YG6Dg4kQVIJ3qFRMcUCzpzfzkFWhuHlIEvBo9CF7UZY0+dtuE5wOV3KGCDFYJ1PuX7JAu1j4ReA/K5zz/b3seEMmCLfcsk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=weissschuh.net; spf=pass smtp.mailfrom=weissschuh.net; dkim=pass (1024-bit key) header.d=weissschuh.net header.i=@weissschuh.net header.b=guoxc6ji; arc=none smtp.client-ip=159.69.126.157
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=weissschuh.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=weissschuh.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WQHOqbp4"
-Received: by mail-lf1-f46.google.com with SMTP id 2adb3069b0e04-53e1be0ec84so1399323e87.1;
-        Thu, 05 Dec 2024 08:42:29 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1733416948; x=1734021748; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :reply-to:in-reply-to:references:mime-version:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=xL38ZgZFjgD/c1dhEQ6sIMBHQ5oRx1qiNvWMWE5O0q0=;
-        b=WQHOqbp4VyjoVrZ4sDy5ISt1uDX1kvr1ILuumD1sNPK5Niqwt+qQrFGPh0oiucZqO+
-         w93iKuPhpOTjxGObpfRteKdL8VPY11dmDAXHPoc6Nu+PY36fZHOQzoMGhxFGzgcSef1i
-         zXtYn1zLtukoy0bPl5irK3MZ16Gi9vPGnnG025mnqfo76v/ow6t4kkJ9NIFK883AXevu
-         p5GtK3vKiD5yYkIXjvxNGhy5APPuzA/jMs3Z9bnOKMIGjyOmmIIgyWisTkQlpf8m5qnQ
-         lAiLCoHy0gvOCB325HjJBf72KUsn6DXakOy/gJCk25HLPrUjonIQNLPHc5BFYAaHfllS
-         +sFA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1733416948; x=1734021748;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :reply-to:in-reply-to:references:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=xL38ZgZFjgD/c1dhEQ6sIMBHQ5oRx1qiNvWMWE5O0q0=;
-        b=DI6WwzdPnhjxBkxgGONamBAFUMWhIRT7HMcVMMhwMRsqoR6bNESpDCRynkGJt4YeE/
-         rdqwyZS2c3KgWDHxD8DcdwbpDFgVjyGXegC2F4u27MWz8BFduqMuKUdlmhW+f5CltquL
-         dW1Zm1B+zUPGVQdJ3/h9WB4YIjY5TA/72qiQY0hnd+xpPPELhVdCRTxvsulUo4XttX7A
-         VO4wdrudCC4u5oxsToKhuXjRLhxpuLsWz2U56eydD1WvFG5Vu6U/5mHExAatKiflC1FJ
-         9gmbsj0qhgVSzJ5UsG5Jwj0UjWTTCneRxjd0CmGWgSW+OoSZd2OQo76eNZf5nK8Gs91F
-         2wGw==
-X-Forwarded-Encrypted: i=1; AJvYcCUI0/TYF+/BCUrPlTjK1kNIm5eYCWewETLFqT4bf9qrul3Mv/5x2ZMvjV+jjFXdFOHmwxHch7iMmMvApvU=@vger.kernel.org, AJvYcCWHMNQh5wcCv81i5kPHhwb+WIGe422NFc0ad3DmZJuQVUEVwfCy+wtw/PwCInvWaUiedJR+2ceAmw/OLZIKO0qjph0JQA==@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx+Vn6qA+1g4mECvigsiSq9FVj5Jd8wVNQu/iFem05XEEnDLBUJ
-	1egBUjoeHtpK3WxvTiPjDb0tALnj+Ve7Y3oFtcZvjdThEZwhwCBy9oL5jzCRYK/vyW8P+4u/8kx
-	D202N9f04D3j4YR0T6l3FECHU65k=
-X-Gm-Gg: ASbGncsrf0rhqdp14gz9qLplgwQIEqrTXhPA1w6ZT22V5YzF+Nyt/HayPVxTTMAHeSx
-	HngrireZqsM5Xd5eMY8fpQtYWlBtBDQD8Fw==
-X-Google-Smtp-Source: AGHT+IEE5u4KC9DrYBNEk3YONZDgsrN6j2NnGhOJbTc6tQTEFRHZ8bud1/TQacX6mhHTp8Ec35zqmHGlg5KBCr4+e/s=
-X-Received: by 2002:a05:6512:3b83:b0:53d:d41e:b1a8 with SMTP id
- 2adb3069b0e04-53e129fdd48mr5668318e87.20.1733416947747; Thu, 05 Dec 2024
- 08:42:27 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=weissschuh.net header.i=@weissschuh.net header.b="guoxc6ji"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=weissschuh.net;
+	s=mail; t=1733420137;
+	bh=cfuC4VjJZbJslwembV87HLGJheNWpA6IXa9jHRZu/TI=;
+	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
+	b=guoxc6jiRIqYEGgM6BDygebSsXZ13mk0XDHwVPTvCXJki6yuOI+VMVHt/REiIuCp3
+	 5PH3S7I1rR5ECLEBN+pPHNQKosnLzkuyeTaP0HRnoKS91a4VeTxCdX7qXj6M8oBX9J
+	 pPlkZUr/1HRJkQYaW1Zp5F16MRkEAaHCkW1k8zbU=
+From: =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <linux@weissschuh.net>
+Date: Thu, 05 Dec 2024 18:35:16 +0100
+Subject: [PATCH 4/4] btf: Switch module BTF attribute to
+ sysfs_bin_attr_simple_read()
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20241123133041.16042-1-sedat.dilek@gmail.com> <173315902007.13686.16854039790074639451.b4-ty@linux.intel.com>
-In-Reply-To: <173315902007.13686.16854039790074639451.b4-ty@linux.intel.com>
-Reply-To: sedat.dilek@gmail.com
-From: Sedat Dilek <sedat.dilek@gmail.com>
-Date: Thu, 5 Dec 2024 17:41:57 +0100
-Message-ID: <CA+icZUXSKmnLZGY7U4xpOBEhEz5UUh88Ko1WFFKCAwPBRwohpA@mail.gmail.com>
-Subject: Re: [PATCH] platform/x86: samsung-laptop: Rename MODULE_DESCRIPTION
-To: =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Cc: Corentin Chary <corentin.chary@gmail.com>, Hans de Goede <hdegoede@redhat.com>, 
-	platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+Message-Id: <20241205-sysfs-const-bin_attr-simple-v1-4-4a4e4ced71e3@weissschuh.net>
+References: <20241205-sysfs-const-bin_attr-simple-v1-0-4a4e4ced71e3@weissschuh.net>
+In-Reply-To: <20241205-sysfs-const-bin_attr-simple-v1-0-4a4e4ced71e3@weissschuh.net>
+To: Michael Ellerman <mpe@ellerman.id.au>, 
+ Nicholas Piggin <npiggin@gmail.com>, 
+ Christophe Leroy <christophe.leroy@csgroup.eu>, 
+ Naveen N Rao <naveen@kernel.org>, Madhavan Srinivasan <maddy@linux.ibm.com>, 
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+ "Rafael J. Wysocki" <rafael@kernel.org>, 
+ Luis Chamberlain <mcgrof@kernel.org>, Petr Pavlu <petr.pavlu@suse.com>, 
+ Sami Tolvanen <samitolvanen@google.com>, 
+ Daniel Gomez <da.gomez@samsung.com>, Armin Wolf <W_Armin@gmx.de>, 
+ Hans de Goede <hdegoede@redhat.com>, 
+ =?utf-8?q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, 
+ Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, 
+ Andrii Nakryiko <andrii@kernel.org>, 
+ Martin KaFai Lau <martin.lau@linux.dev>, 
+ Eduard Zingerman <eddyz87@gmail.com>, Song Liu <song@kernel.org>, 
+ Yonghong Song <yonghong.song@linux.dev>, 
+ John Fastabend <john.fastabend@gmail.com>, KP Singh <kpsingh@kernel.org>, 
+ Stanislav Fomichev <sdf@fomichev.me>, Hao Luo <haoluo@google.com>, 
+ Jiri Olsa <jolsa@kernel.org>
+Cc: linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org, 
+ linux-modules@vger.kernel.org, platform-driver-x86@vger.kernel.org, 
+ bpf@vger.kernel.org, 
+ =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <linux@weissschuh.net>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1733420137; l=1356;
+ i=linux@weissschuh.net; s=20221212; h=from:subject:message-id;
+ bh=cfuC4VjJZbJslwembV87HLGJheNWpA6IXa9jHRZu/TI=;
+ b=e241/DoQXymqExeN+SMwvZ808XE79ecCrN8XFKqhJnW3U8HuphVENS4R6ai//luSj/YPr30lo
+ NqTPg+Nmf9/Dvw7MuaG3SlMfMc+h0AAu8h+lEG2k3oNOjl5IwrAmm5N
+X-Developer-Key: i=linux@weissschuh.net; a=ed25519;
+ pk=KcycQgFPX2wGR5azS7RhpBqedglOZVgRPfdFSPB1LNw=
 
-On Mon, Dec 2, 2024 at 6:05=E2=80=AFPM Ilpo J=C3=A4rvinen
-<ilpo.jarvinen@linux.intel.com> wrote:
->
-> On Sat, 23 Nov 2024 14:29:28 +0100, Sedat Dilek wrote:
->
-> > Rename from "Samsung Backlight driver" to "Samsung Laptop driver".
-> >
-> >
->
->
-> Thank you for your contribution, it has been applied to my local
-> review-ilpo-fixes branch. Note it will show up in the public
-> platform-drivers-x86/review-ilpo-fixes branch only once I've pushed my
-> local branch there, which might take a while.
->
-> The list of commits applied:
-> [1/1] platform/x86: samsung-laptop: Rename MODULE_DESCRIPTION
->       commit: 3510398032b445abd034753ce86a60882f41fe27
->
-> --
->  i.
+The generic function from the sysfs core can replace the custom one.
 
-Thanks, Ilpo.
+Signed-off-by: Thomas Weißschuh <linux@weissschuh.net>
+---
+ kernel/bpf/btf.c | 15 ++-------------
+ 1 file changed, 2 insertions(+), 13 deletions(-)
 
-The commit is now in fixes Git branch.
+diff --git a/kernel/bpf/btf.c b/kernel/bpf/btf.c
+index e7a59e6462a9331d0acb17a88a4ebf641509c050..69caa86ae6085dce17e95107c4497d2d8cf81544 100644
+--- a/kernel/bpf/btf.c
++++ b/kernel/bpf/btf.c
+@@ -7870,17 +7870,6 @@ struct btf_module {
+ static LIST_HEAD(btf_modules);
+ static DEFINE_MUTEX(btf_module_mutex);
+ 
+-static ssize_t
+-btf_module_read(struct file *file, struct kobject *kobj,
+-		struct bin_attribute *bin_attr,
+-		char *buf, loff_t off, size_t len)
+-{
+-	const struct btf *btf = bin_attr->private;
+-
+-	memcpy(buf, btf->data + off, len);
+-	return len;
+-}
+-
+ static void purge_cand_cache(struct btf *btf);
+ 
+ static int btf_module_notify(struct notifier_block *nb, unsigned long op,
+@@ -7941,8 +7930,8 @@ static int btf_module_notify(struct notifier_block *nb, unsigned long op,
+ 			attr->attr.name = btf->name;
+ 			attr->attr.mode = 0444;
+ 			attr->size = btf->data_size;
+-			attr->private = btf;
+-			attr->read = btf_module_read;
++			attr->private = btf->data;
++			attr->read_new = sysfs_bin_attr_simple_read;
+ 
+ 			err = sysfs_create_bin_file(btf_kobj, attr);
+ 			if (err) {
 
-Best regards,
--Sedat-
+-- 
+2.47.1
 
-[1] https://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-=
-x86.git/log/?h=3Dfixes
