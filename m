@@ -1,119 +1,63 @@
-Received: from todd.t-8ch.de (todd.t-8ch.de [159.69.126.157])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F69422579D;
-	Thu,  5 Dec 2024 17:35:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.69.126.157
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 12F6E227B92;
+	Thu,  5 Dec 2024 18:04:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1733420143; cv=none; b=D3cLQcllqElOvPy1YIaKAo4CCeSd808+5o3qt6qwV3H/8W5LehiOrn+8D2m64QFKkd8WRvL8WwkU/BQZRnZ6ncUpijcd4OU719nEJak3OUjn54UcaHwTjSYOJzNM9hXCAw8C+aBZLMsjoa7caRtPyPCLdR2c+ZNflxjpnrXbIWc=
+	t=1733421846; cv=none; b=GDgU9IBit2suO6ZRVrQyckV5qMECZqag2a7YKlZ4blV+Zc1wG0/TmsK7zSNICCc+uOW/IWYi+FEagdY6OO4ZCTCo42adj5rLnO5WdfQaPDQcvPGWXw6juAMwt8pOfHn7MDqYP++0+M4RAJWockPV4WEx8nxiW2i471HXlQioOdI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1733420143; c=relaxed/simple;
-	bh=v54jOXPBj86EmdoK8VRH/WJTe91je7IjzNhdTGxTAGM=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=Nai668EQ8mjtKJUKHobZ3eU72HFIs3XrfZipAm2iAjXxSDHDRGIBYm4KqySA+ZFTPlMNyDUH5QLxIL4GQqkrjeobEk5PBUTQVwAkCfztwLRhwiPP7MJfk3Tq/aFVQymzPSxSwjZA+zoKJOQ6BbBbOS3NsPvHbixpzrdlqPUZUpo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=weissschuh.net; spf=pass smtp.mailfrom=weissschuh.net; dkim=pass (1024-bit key) header.d=weissschuh.net header.i=@weissschuh.net header.b=K6bno3Pi; arc=none smtp.client-ip=159.69.126.157
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=weissschuh.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=weissschuh.net
+	s=arc-20240116; t=1733421846; c=relaxed/simple;
+	bh=Tc1K0cGBA87seGcnVccWvJN/6iYvMywul7HFh3GlU/Q=;
+	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=s+jk0v2F0WSgLe2jogjyZOPGHUj1WmsKd8wWDYAP/80bfpVRePX6tBVt/z4h3X3afeDtYCGKCO1L3TzttDwfNUE2eLbjHYDhLimhnt4dpq9mrK4zjrdWU6pE1Pv5J4F5+4u0ZaCbh4Qq9cXg32tCkdAmwcD3CzKa3qbJumcr1sY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=X+BYOYBW; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=weissschuh.net header.i=@weissschuh.net header.b="K6bno3Pi"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=weissschuh.net;
-	s=mail; t=1733420137;
-	bh=v54jOXPBj86EmdoK8VRH/WJTe91je7IjzNhdTGxTAGM=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=K6bno3Pid1wQl8du0lNePJ95Kvvh7/8n5drvB2nGu7OHw9DcP/cBbyuGWw1foEg5Y
-	 zAU2a1oj/zgo72VtMRKRrCdb4KgzJ0Umw1lBEe2d076qaJC9xwZRrqMPO9OuBNxt/z
-	 Trex6yqGmkJCtKeeefG+X9DMpIdzov2ei2fbATzM=
-From: =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <linux@weissschuh.net>
-Date: Thu, 05 Dec 2024 18:35:15 +0100
-Subject: [PATCH 3/4] btf: Switch vmlinux BTF attribute to
- sysfs_bin_attr_simple_read()
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="X+BYOYBW"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AB6D7C4CEDF;
+	Thu,  5 Dec 2024 18:04:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1733421845;
+	bh=Tc1K0cGBA87seGcnVccWvJN/6iYvMywul7HFh3GlU/Q=;
+	h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
+	b=X+BYOYBWRlK9/5LVwN2OcvtUPi9P7kId/E32mR7ZYK5Q7NB81RgZPiRi8ZNAZ89rT
+	 hF3+h5d9OqiCU8MATXHaLLrQY3JizSH2cKF/aw/YNtsS3XY3sB6WTnNIUgHXqpN9Ok
+	 kD6FxyJnIBeXbZ1IEZPjdtePHcUkDO+Pf50LY2qx5fM9JccOigmpMeSvPDbiNaiYEM
+	 50vXCtHTdDRFmfJ65Z8iD2kPaSG4Wme2WvnhC9paoTHtcLtv2SDSaC9cQhCvg91lSK
+	 Ka8dWx62nxXnEm7A766XZh2EM1jcQ7UoCEPXgz6MJjcOlLRenioU+3D0TVmlTlSh1q
+	 OdlW7imYNbbJw==
+Received: from [10.30.226.235] (localhost [IPv6:::1])
+	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id AE46D380A951;
+	Thu,  5 Dec 2024 18:04:21 +0000 (UTC)
+Subject: Re: [GIT PULL] platform-drivers-x86 for v6.13-2
+From: pr-tracker-bot@kernel.org
+In-Reply-To: <pdx86-pr-20241204141206-1813515751@linux.intel.com>
+References: <pdx86-pr-20241204141206-1813515751@linux.intel.com>
+X-PR-Tracked-List-Id: <platform-driver-x86.vger.kernel.org>
+X-PR-Tracked-Message-Id: <pdx86-pr-20241204141206-1813515751@linux.intel.com>
+X-PR-Tracked-Remote: https://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git tags/platform-drivers-x86-v6.13-2
+X-PR-Tracked-Commit-Id: e9fba20c29e27dc99e55e1c550573a114561bf8c
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: 0769a8f69ebc4603d5c068112b7caf2f2187a1e6
+Message-Id: <173342186032.2011200.14942856430930016979.pr-tracker-bot@kernel.org>
+Date: Thu, 05 Dec 2024 18:04:20 +0000
+To: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>, LKML <linux-kernel@vger.kernel.org>, PDx86 <platform-driver-x86@vger.kernel.org>, Hans de Goede <hdegoede@redhat.com>, Andy Shevchenko <andy@kernel.org>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-Message-Id: <20241205-sysfs-const-bin_attr-simple-v1-3-4a4e4ced71e3@weissschuh.net>
-References: <20241205-sysfs-const-bin_attr-simple-v1-0-4a4e4ced71e3@weissschuh.net>
-In-Reply-To: <20241205-sysfs-const-bin_attr-simple-v1-0-4a4e4ced71e3@weissschuh.net>
-To: Michael Ellerman <mpe@ellerman.id.au>, 
- Nicholas Piggin <npiggin@gmail.com>, 
- Christophe Leroy <christophe.leroy@csgroup.eu>, 
- Naveen N Rao <naveen@kernel.org>, Madhavan Srinivasan <maddy@linux.ibm.com>, 
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
- "Rafael J. Wysocki" <rafael@kernel.org>, 
- Luis Chamberlain <mcgrof@kernel.org>, Petr Pavlu <petr.pavlu@suse.com>, 
- Sami Tolvanen <samitolvanen@google.com>, 
- Daniel Gomez <da.gomez@samsung.com>, Armin Wolf <W_Armin@gmx.de>, 
- Hans de Goede <hdegoede@redhat.com>, 
- =?utf-8?q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, 
- Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, 
- Andrii Nakryiko <andrii@kernel.org>, 
- Martin KaFai Lau <martin.lau@linux.dev>, 
- Eduard Zingerman <eddyz87@gmail.com>, Song Liu <song@kernel.org>, 
- Yonghong Song <yonghong.song@linux.dev>, 
- John Fastabend <john.fastabend@gmail.com>, KP Singh <kpsingh@kernel.org>, 
- Stanislav Fomichev <sdf@fomichev.me>, Hao Luo <haoluo@google.com>, 
- Jiri Olsa <jolsa@kernel.org>
-Cc: linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org, 
- linux-modules@vger.kernel.org, platform-driver-x86@vger.kernel.org, 
- bpf@vger.kernel.org, 
- =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <linux@weissschuh.net>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1733420137; l=1383;
- i=linux@weissschuh.net; s=20221212; h=from:subject:message-id;
- bh=v54jOXPBj86EmdoK8VRH/WJTe91je7IjzNhdTGxTAGM=;
- b=z5q+mLaILrDgqDYwtsD48fkDkxpZ62jcajO3UKpxPz32mD8JI/2JI972ZU1lQwyNF3vSJQo0s
- 6sYjAwPi+IUDoUGqDySD1CsWmyWtBNVzTIiDOk4iNPc9R3Rd/cj/9nF
-X-Developer-Key: i=linux@weissschuh.net; a=ed25519;
- pk=KcycQgFPX2wGR5azS7RhpBqedglOZVgRPfdFSPB1LNw=
 
-The generic function from the sysfs core can replace the custom one.
+The pull request you sent on Wed, 04 Dec 2024 14:12:06 +0200:
 
-Signed-off-by: Thomas Weißschuh <linux@weissschuh.net>
+> https://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git tags/platform-drivers-x86-v6.13-2
 
----
-This is a replacement for [0], as Alexei was not happy about BIN_ATTR_SIMPLE_RO()
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/0769a8f69ebc4603d5c068112b7caf2f2187a1e6
 
-[0] https://lore.kernel.org/lkml/20241122-sysfs-const-bin_attr-bpf-v1-1-823aea399b53@weissschuh.net/
----
- kernel/bpf/sysfs_btf.c | 12 ++----------
- 1 file changed, 2 insertions(+), 10 deletions(-)
-
-diff --git a/kernel/bpf/sysfs_btf.c b/kernel/bpf/sysfs_btf.c
-index fedb54c94cdb830a4890d33677dcc5a6e236c13f..81d6cf90584a7157929c50f62a5c6862e7a3d081 100644
---- a/kernel/bpf/sysfs_btf.c
-+++ b/kernel/bpf/sysfs_btf.c
-@@ -12,24 +12,16 @@
- extern char __start_BTF[];
- extern char __stop_BTF[];
- 
--static ssize_t
--btf_vmlinux_read(struct file *file, struct kobject *kobj,
--		 struct bin_attribute *bin_attr,
--		 char *buf, loff_t off, size_t len)
--{
--	memcpy(buf, __start_BTF + off, len);
--	return len;
--}
--
- static struct bin_attribute bin_attr_btf_vmlinux __ro_after_init = {
- 	.attr = { .name = "vmlinux", .mode = 0444, },
--	.read = btf_vmlinux_read,
-+	.read_new = sysfs_bin_attr_simple_read,
- };
- 
- struct kobject *btf_kobj;
- 
- static int __init btf_vmlinux_init(void)
- {
-+	bin_attr_btf_vmlinux.private = __start_BTF;
- 	bin_attr_btf_vmlinux.size = __stop_BTF - __start_BTF;
- 
- 	if (bin_attr_btf_vmlinux.size == 0)
+Thank you!
 
 -- 
-2.47.1
-
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/prtracker.html
