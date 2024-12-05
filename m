@@ -1,157 +1,319 @@
-Received: from NAM10-DM6-obe.outbound.protection.outlook.com (mail-dm6nam10on2082.outbound.protection.outlook.com [40.107.93.82])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.16])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 07C0E1E008A
-	for <platform-driver-x86@vger.kernel.org>; Thu,  5 Dec 2024 09:57:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.93.82
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1733392637; cv=fail; b=nmbpweZ8Nn0/ZBIc3G8svaS1T5zsQqUOyRPayF4KMq0gdWWwezVerzhW4/Ne2DugMG7eju25Xjhz23xZdwPok8xnt10a+j6FP/6VxhX4ERDjfktSI3wCvarJ6xn4BWHn+KJFZpQaCRMA3cFWHN02be5BBBOgWxnuE3JqXHOcIOc=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1733392637; c=relaxed/simple;
-	bh=sBIJGOcAJ8OTNUp4Z2A6Ih5BxOSbNHY/eTrLSP51MA4=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=gKBCrqRDWC5DC0ZQG20PmA+dmTP4TKEG3T1QbvMtHwQEsoMECAbL7adoXjjNftAbD4k6kT12O3bca+FH2AakTFvbtGuYLi4DnbtqIEcC+eWXgL83cFWVpkFg5D3L94MRMprqGP7FHdHz29ee2Gu2m2lKtij/H0pAkGGCqzs7dTs=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=Z1T0UA1B; arc=fail smtp.client-ip=40.107.93.82
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2CB1A18D622;
+	Thu,  5 Dec 2024 10:17:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.16
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1733393829; cv=none; b=UIkpVHty+fMxLt1y4qRhm++bs5QWYPsXt3M+BfKtUbo5tSf+d4IqMP+U2ocJ0ljbOYdCfotALWq2rwsfUVuTQYKni5djFY5A5CmSnCKlZZL0C1MQ5PaSrDkSaZq6qAoEXqLyHVK3ofepAmhg5vwX2f1o/jEB7QtZp4MoExNwfxE=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1733393829; c=relaxed/simple;
+	bh=5ahi/YuX8QNvOJ7blol/fgHlvu/NPgcVS03bUQQLLMw=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=c40/BU0SQk6IJdlqU5o3npdH2TR5x2PQIh9DPR/hVSXdm7zDEce2lVqyqiDFGZe+OElnCEgbRzq3PfWEIhMquGwtpXqO+aF3MUHQp+kJ08+yRe7CYF1PN8cMy9lBghYIqyyp07/8wi1nanWz/d5higHVnfBE/cOKCFwRUO0GyiE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=HhRzjWiW; arc=none smtp.client-ip=198.175.65.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="Z1T0UA1B"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=PlOKbRZA1bliCYKTby898eUCBL0TVSS6LeEvMkQJ4nAQlDOBb8kEGq3iMD+5RJvyHqGrzCK4OP7FpBNfgxUZMOdV1ZGi2QZRAg03AIxKs4swgcOg6nvjSykTSStMounhWLabf2ofy1D6NQb23xINzQjVzwW+KEqKse0IPvvIRKOot8pdTb0y4R7/KzyqFCpl2nEPXC7ymwqukCJqsxP5/9+YCTim38gw/9IykwsJgWR0Fcfp4ppUtWr9XomAFZnwACtFnBZioyWttyBr+1eEXzhMYdA0nBodyLxNrSO19ycHPQLIjSOsyeq1yQ6ctd9ywc2mxgVJNuOmd1yEZiMF/g==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=OMBHlHoJBZb0UcC5bROpuI78jlzYGlLWmO72BIci5AU=;
- b=fdLqJopts2ZvzFD76laveFI2Tm4qyLRLqq4JR7DmKkFAKDP368imWiHpT+8h3EOsTuTrL5az/WcJ0oKXHJ9XueFUPpWHnpv9ZGT2dD1Y9YRz7GmUboIUMBr+dG/1goE0E8CLCfeIr8BfSx+bSRNemzvX47rh1QC/P54haMpa+9kaC9ADKoATIktJWwnM7MUZZGX4T9803rF8wedjrJZ4b2+bGZMFseI8pIXAZZRJpHmH3Z6M31ThZP8hZE9QIYFY4S1SU127cZyFKEiMlRDUPRRs21dmG2/PpixGZwf8SbQtWEJ84WQg/plCmyFEt2jd7eISq0QHQB9LlPS0t/drOw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=redhat.com smtp.mailfrom=amd.com; dmarc=pass
- (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
- dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=OMBHlHoJBZb0UcC5bROpuI78jlzYGlLWmO72BIci5AU=;
- b=Z1T0UA1BN9YpfMFBB9+TPTnRkzbJOqX66banQOWOMpqga7w0IPIp9XkYEtwJzw9IaM6XpO/H07xvmau2K3WS4kcTBTabH1fiF/d3SKR2eNNDox7D7e5Amdc+9pBvA6S6vO8bJqqiR0pqT3gGNKMdryEr3+GX17tOGep+8pv2Ho8=
-Received: from BYAPR01CA0022.prod.exchangelabs.com (2603:10b6:a02:80::35) by
- PH7PR12MB9203.namprd12.prod.outlook.com (2603:10b6:510:2f2::17) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8230.11; Thu, 5 Dec
- 2024 09:57:12 +0000
-Received: from CO1PEPF000075EE.namprd03.prod.outlook.com
- (2603:10b6:a02:80:cafe::a2) by BYAPR01CA0022.outlook.office365.com
- (2603:10b6:a02:80::35) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.8207.18 via Frontend Transport; Thu,
- 5 Dec 2024 09:57:12 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
-Received: from SATLEXMB04.amd.com (165.204.84.17) by
- CO1PEPF000075EE.mail.protection.outlook.com (10.167.249.37) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.8230.7 via Frontend Transport; Thu, 5 Dec 2024 09:57:12 +0000
-Received: from airavat.amd.com (10.180.168.240) by SATLEXMB04.amd.com
- (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Thu, 5 Dec
- 2024 03:57:06 -0600
-From: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
-To: <hdegoede@redhat.com>, <ilpo.jarvinen@linux.intel.com>
-CC: <Sanket.Goswami@amd.com>, <platform-driver-x86@vger.kernel.org>, "Shyam
- Sundar S K" <Shyam-sundar.S-k@amd.com>, Basavaraj Natikar
-	<Basavaraj.Natikar@amd.com>
-Subject: [PATCH] platform/x86/amd/pmc: Fix typecast warning from Sparse
-Date: Thu, 5 Dec 2024 15:26:49 +0530
-Message-ID: <20241205095649.2260654-1-Shyam-sundar.S-k@amd.com>
-X-Mailer: git-send-email 2.34.1
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="HhRzjWiW"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1733393828; x=1764929828;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=5ahi/YuX8QNvOJ7blol/fgHlvu/NPgcVS03bUQQLLMw=;
+  b=HhRzjWiWStFulQFYA7orpaPvNeEtFZjGhsuReNcWLU9jy0pHMjI3LRsm
+   tFA/XaluwdGf5xaa56XgQf95CnT4XpV+BiDajwU1n/EjzllIF5uBk1+3F
+   td1Iew4B5QUi5+sOZKetN6L5oBcwmgvcYIV4Zia4QXH1qlssYbZrJxJXx
+   vSqiqjG6r0AaKN+wDCkD+/TpaSTb2GfCJXrw6KmdeNWodN1e2yypBJ0e2
+   HkXDxsdKrLgGiKwdt8Dmtr4LEQKIHymMQXQYOh0+VgzUDExCykeuKrocQ
+   bcqgka+ODyZ5lqhJ0O6unr9W1mvHoY5Rz58Gba14nlLP6QpCiuae7odVd
+   Q==;
+X-CSE-ConnectionGUID: dWZS07+fS6yZMIPu6FezvQ==
+X-CSE-MsgGUID: 62J4QGiRQWCrpOvyDEqn+Q==
+X-IronPort-AV: E=McAfee;i="6700,10204,11276"; a="33833664"
+X-IronPort-AV: E=Sophos;i="6.12,210,1728975600"; 
+   d="scan'208";a="33833664"
+Received: from fmviesa005.fm.intel.com ([10.60.135.145])
+  by orvoesa108.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Dec 2024 02:17:07 -0800
+X-CSE-ConnectionGUID: 5817TUWURj2TwYYt4wH0cA==
+X-CSE-MsgGUID: RTDylfuRSCizYFsgmlwzuQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.12,210,1728975600"; 
+   d="scan'208";a="98502944"
+Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.60])
+  by fmviesa005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Dec 2024 02:17:04 -0800
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Thu, 5 Dec 2024 12:17:01 +0200 (EET)
+To: Kurt Borja <kuurtb@gmail.com>
+cc: Dell.Client.Kernel@dell.com, Hans de Goede <hdegoede@redhat.com>, 
+    LKML <linux-kernel@vger.kernel.org>, mario.limonciello@amd.com, 
+    platform-driver-x86@vger.kernel.org, w_armin@gmx.de
+Subject: Re: [RFC PATCH 05/21] alienware-wmi: Refactor rgb-zones sysfs group
+ creation
+In-Reply-To: <20241205004005.2184945-2-kuurtb@gmail.com>
+Message-ID: <5d0ebcc9-062d-7252-956a-2ad8294d7077@linux.intel.com>
+References: <20241205002733.2183537-3-kuurtb@gmail.com> <20241205004005.2184945-2-kuurtb@gmail.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: SATLEXMB03.amd.com (10.181.40.144) To SATLEXMB04.amd.com
- (10.181.40.145)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CO1PEPF000075EE:EE_|PH7PR12MB9203:EE_
-X-MS-Office365-Filtering-Correlation-Id: af1c0638-be7b-4a85-07a7-08dd151330f7
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|1800799024|82310400026|36860700013|376014;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?aOcm4Ek2aeibo70BPTbeQEtkt1FYdJiFtctVJmvWy/WHawEYBzavQJgpX0z/?=
- =?us-ascii?Q?AFU7XhX5QmgrXaigfC4RiuDNfnhO7gYmTT4m+5QcjecBq/SuqtJW0mWmLm0S?=
- =?us-ascii?Q?c7FAwlbX6+NNAlwSihFktoXk0b0b0/tLdiSSRjoy+rLN0wdqnG7nVV95qRQD?=
- =?us-ascii?Q?zFMADLhhQcrZfWs6+oH3O+6oVUZWIuh9qv+HB1O0wFshLjYZQegEYpw+gMA4?=
- =?us-ascii?Q?0H+ipANtjmDZ5BzhJV3zGejN6+qsY9Gyfo99WoED4n42H4K1H7ybBR6TL/xu?=
- =?us-ascii?Q?Pp4TpItkKCLPkb8E9NiOk0V4VhOnNh1hA9vifj/qxzw5n/FopTttBUNvL5RN?=
- =?us-ascii?Q?8ABADKTjv1E2s8N7gSfJ6DZKGXzEStyMBaGSNJ6R3PoUFFVAujuaFJbXAEz9?=
- =?us-ascii?Q?KK/XkeN0L+PiW8C96N5TYWYBk/pmyHd5U7by1661Z+xpUew+uuMHXSAg/P2v?=
- =?us-ascii?Q?uss2EA977vYyPttpwOJrURDB9UEXoujEXbGDWxldNNZqndxbNINV7pNAdxi8?=
- =?us-ascii?Q?r06JHB9unUal31QQzc5pBji1tRpMEu9FtJa3gRNXopLZRRgaocTOYpXkcG1l?=
- =?us-ascii?Q?d1yN30htJ/DXV8+sCPYruLfIk/pgzAOHPRTgs329o9kDurMeuvyewatY4m/z?=
- =?us-ascii?Q?ArTZj1tvzQYVPFpkMLUeWa9aCr4Nt2fh5UMPSSA3XDQ4LT8dLRdEfjY2xerO?=
- =?us-ascii?Q?tycSEvVq1tqiZl2wWO2S7aVvZnhGiixHNH3q3y3W7yo11bpQUeu0eHMdiLRp?=
- =?us-ascii?Q?/j829MkwAGrDkjaX0bhtZy/wNkOumBZyoIYUZQaewNoBEWIF8NUN/tqZFMim?=
- =?us-ascii?Q?+k5rSnRb8sk1BsKoijjb3ooY43shDuMLIni3jGw+LqfA1aHllR5yAZtUqAlc?=
- =?us-ascii?Q?168kZZUd94nkevk8CR3m7jwdR7i0cz0AEBSC3LW180S0DkFCOfM1deMQ+IyQ?=
- =?us-ascii?Q?VTt4D8GXpmMrhiMzZ/fuliNWQi9ZldYZNwNO4TEHecyr+Xxo6ekRTRg/5VED?=
- =?us-ascii?Q?8SIOvpr/Z+98O1H+Fe5IxJ5aWO5IOjAYHY+vl1CzOun/UVc1Wm/QSuLfGtvx?=
- =?us-ascii?Q?6vmwRD7KTP1aphiNpk7oIYQAEU9Pr8eoKI+vDE+LlHrnU2tKbm9oHHbjv0TW?=
- =?us-ascii?Q?VJWbISCn0tABjlwQgBs3IbXMf0xEb3iV+i4AOZAO4zTQ/VqHoGAJFDdILftu?=
- =?us-ascii?Q?vedpF7I/Uuuj6uiQVLqB+/J6v5hSngDKTDKhc+exBCra1bYC0TwBB0bpNIqb?=
- =?us-ascii?Q?x593VjiabqHmlGhA4cgqEadenUsyOUt5I/5H03dLn0CmjaSVdKgZiJmi5jt0?=
- =?us-ascii?Q?+9E5UevYH8lEGefwulHC7kUI02orLIkbR9N3AUKHaVUQ1nzuQKC6WWmWrk2L?=
- =?us-ascii?Q?4/Sliaf5v/0Ztw2BrXS2t5gWeonDR0Wws6YZv2985/ReVitDKDn047jSCAed?=
- =?us-ascii?Q?rMHGNXUDXrz8YfE55DU/0iI0XrOzwMuu?=
-X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(1800799024)(82310400026)(36860700013)(376014);DIR:OUT;SFP:1101;
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 05 Dec 2024 09:57:12.4817
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: af1c0638-be7b-4a85-07a7-08dd151330f7
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	CO1PEPF000075EE.namprd03.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH7PR12MB9203
+Content-Type: text/plain; charset=US-ASCII
 
-Sparse reported the following problem with typecasting. Fix this by doing
-an appropriate typecast during assignment.
+On Wed, 4 Dec 2024, Kurt Borja wrote:
 
-drivers/platform/x86/amd/pmc/mp2_stb.c:105:30: warning: incorrect type in
-assignment (different address spaces)
-drivers/platform/x86/amd/pmc/mp2_stb.c:105:30:    expected void [noderef]
-__iomem *vslbase
-drivers/platform/x86/amd/pmc/mp2_stb.c:105:30:    got void *
+> Define zone_attrs statically with the use of helper macros and
+> initialize the zone_attribute_group with driver's .dev_groups.
+> 
+> This makes match_zone() no longer needed, so drop it.
+> 
+> Signed-off-by: Kurt Borja <kuurtb@gmail.com>
+> ---
+>  drivers/platform/x86/dell/alienware-wmi.c | 137 ++++++++++------------
+>  1 file changed, 60 insertions(+), 77 deletions(-)
+> 
+> diff --git a/drivers/platform/x86/dell/alienware-wmi.c b/drivers/platform/x86/dell/alienware-wmi.c
+> index 78bbb4ef4526..fa7bbbb07b86 100644
+> --- a/drivers/platform/x86/dell/alienware-wmi.c
+> +++ b/drivers/platform/x86/dell/alienware-wmi.c
+> @@ -378,7 +378,6 @@ struct color_platform {
+>  
+>  struct platform_zone {
+>  	u8 location;
+> -	struct device_attribute *attr;
+>  	struct color_platform colors;
+>  };
+>  
+> @@ -411,16 +410,10 @@ struct wmax_u32_args {
+>  };
+>  
+>  static struct platform_device *platform_device;
+> -static struct device_attribute *zone_dev_attrs;
+> -static struct attribute **zone_attrs;
+>  static struct platform_zone *zone_data;
+>  static struct platform_profile_handler pp_handler;
+>  static enum wmax_thermal_mode supported_thermal_profiles[PLATFORM_PROFILE_LAST];
+>  
+> -static struct attribute_group zone_attribute_group = {
+> -	.name = "rgb_zones",
+> -};
+> -
+>  static u8 interface;
+>  static u8 lighting_control_state;
+>  static u8 global_brightness;
+> @@ -452,20 +445,6 @@ static int parse_rgb(const char *buf, struct color_platform *colors)
+>  	return 0;
+>  }
+>  
+> -static struct platform_zone *match_zone(struct device_attribute *attr)
+> -{
+> -	u8 zone;
+> -
+> -	for (zone = 0; zone < quirks->num_zones; zone++) {
+> -		if ((struct device_attribute *)zone_data[zone].attr == attr) {
+> -			pr_debug("alienware-wmi: matched zone location: %d\n",
+> -				 zone_data[zone].location);
+> -			return &zone_data[zone];
+> -		}
+> -	}
+> -	return NULL;
+> -}
+> -
+>  /*
+>   * Individual RGB zone control
+>   */
+> @@ -510,12 +489,10 @@ static int alienware_update_led(struct platform_zone *zone)
+>  }
+>  
+>  static ssize_t zone_show(struct device *dev, struct device_attribute *attr,
+> -			 char *buf)
+> +			 char *buf, u8 location)
+>  {
+>  	struct platform_zone *target_zone;
+> -	target_zone = match_zone(attr);
+> -	if (target_zone == NULL)
+> -		return sprintf(buf, "red: -1, green: -1, blue: -1\n");
+> +	target_zone = &zone_data[location];
+>  	return sprintf(buf, "red: %d, green: %d, blue: %d\n",
+>  		       target_zone->colors.red,
+>  		       target_zone->colors.green, target_zone->colors.blue);
+> @@ -523,15 +500,11 @@ static ssize_t zone_show(struct device *dev, struct device_attribute *attr,
+>  }
+>  
+>  static ssize_t zone_set(struct device *dev, struct device_attribute *attr,
+> -			const char *buf, size_t count)
+> +			const char *buf, size_t count, u8 location)
+>  {
+>  	struct platform_zone *target_zone;
+>  	int ret;
+> -	target_zone = match_zone(attr);
+> -	if (target_zone == NULL) {
+> -		pr_err("alienware-wmi: invalid target zone\n");
+> -		return 1;
+> -	}
+> +	target_zone = &zone_data[location];
+>  	ret = parse_rgb(buf, &target_zone->colors);
+>  	if (ret)
+>  		return ret;
+> @@ -539,6 +512,32 @@ static ssize_t zone_set(struct device *dev, struct device_attribute *attr,
+>  	return ret ? ret : count;
+>  }
+>  
+> +#define ALIENWARE_ZONE_SHOW_FUNC(_num)					\
+> +	static ssize_t zone0##_num##_show(struct device *dev,		\
+> +					struct device_attribute *attr,	\
+> +					char *buf)			\
+> +	{								\
+> +		return zone_show(dev, attr, buf, _num);			\
+> +	}
+> +
+> +#define ALIENWARE_ZONE_STORE_FUNC(_num)					\
+> +	static ssize_t zone0##_num##_store(struct device *dev,		\
+> +					struct device_attribute *attr,	\
+> +					const char *buf, size_t count)	\
+> +	{								\
+> +		return zone_set(dev, attr, buf, count, _num);		\
+> +	}
+> +
+> +#define ALIENWARE_ZONE_ATTR(_num)					\
+> +	ALIENWARE_ZONE_SHOW_FUNC(_num)					\
+> +	ALIENWARE_ZONE_STORE_FUNC(_num)					\
+> +	static DEVICE_ATTR_RW(zone0##_num)
+> +
+> +ALIENWARE_ZONE_ATTR(0);
+> +ALIENWARE_ZONE_ATTR(1);
+> +ALIENWARE_ZONE_ATTR(2);
+> +ALIENWARE_ZONE_ATTR(3);
+> +
+>  /*
+>   * Lighting control state device attribute (Global)
+>   */
+> @@ -577,6 +576,33 @@ static ssize_t lighting_control_state_store(struct device *dev,
+>  
+>  static DEVICE_ATTR_RW(lighting_control_state);
+>  
+> +static umode_t zone_attr_visible(struct kobject *kobj,
+> +				 struct attribute *attr, int n)
+> +{
+> +	return n < quirks->num_zones + 1 ? 0644 : 0;
+> +}
+> +
+> +static bool zone_group_visible(struct kobject *kobj)
+> +{
+> +	return quirks->num_zones > 0;
+> +}
+> +DEFINE_SYSFS_GROUP_VISIBLE(zone);
+> +
+> +static struct attribute *zone_attrs[] = {
+> +	&dev_attr_lighting_control_state.attr,
+> +	&dev_attr_zone00.attr,
+> +	&dev_attr_zone01.attr,
+> +	&dev_attr_zone02.attr,
+> +	&dev_attr_zone03.attr,
+> +	NULL
+> +};
+> +
+> +static struct attribute_group zone_attribute_group = {
+> +	.name = "rgb_zones",
+> +	.is_visible = SYSFS_GROUP_VISIBLE(zone),
+> +	.attrs = zone_attrs,
+> +};
+> +
+>  /*
+>   * LED Brightness (Global)
+>   */
+> @@ -624,7 +650,6 @@ static struct led_classdev global_led = {
+>  static int alienware_zone_init(struct platform_device *dev)
+>  {
+>  	u8 zone;
+> -	char *name;
+>  
+>  	if (interface == WMAX) {
+>  		lighting_control_state = WMAX_RUNNING;
+> @@ -634,65 +659,22 @@ static int alienware_zone_init(struct platform_device *dev)
+>  	global_led.max_brightness = 0x0F;
+>  	global_brightness = global_led.max_brightness;
+>  
+> -	/*
+> -	 *      - zone_dev_attrs num_zones + 1 is for individual zones and then
+> -	 *        null terminated
+> -	 *      - zone_attrs num_zones + 2 is for all attrs in zone_dev_attrs +
+> -	 *        the lighting control + null terminated
+> -	 *      - zone_data num_zones is for the distinct zones
+> -	 */
+> -	zone_dev_attrs =
+> -	    kcalloc(quirks->num_zones + 1, sizeof(struct device_attribute),
+> -		    GFP_KERNEL);
+> -	if (!zone_dev_attrs)
+> -		return -ENOMEM;
+> -
+> -	zone_attrs =
+> -	    kcalloc(quirks->num_zones + 2, sizeof(struct attribute *),
+> -		    GFP_KERNEL);
+> -	if (!zone_attrs)
+> -		return -ENOMEM;
+> -
+>  	zone_data =
+>  	    kcalloc(quirks->num_zones, sizeof(struct platform_zone),
+>  		    GFP_KERNEL);
+>  	if (!zone_data)
+>  		return -ENOMEM;
+>  
+> -	for (zone = 0; zone < quirks->num_zones; zone++) {
+> -		name = kasprintf(GFP_KERNEL, "zone%02hhX", zone);
+> -		if (name == NULL)
+> -			return 1;
+> -		sysfs_attr_init(&zone_dev_attrs[zone].attr);
+> -		zone_dev_attrs[zone].attr.name = name;
+> -		zone_dev_attrs[zone].attr.mode = 0644;
+> -		zone_dev_attrs[zone].show = zone_show;
+> -		zone_dev_attrs[zone].store = zone_set;
+> +	for (zone = 0; zone < 4; zone++)
 
-Fixes: 2dc77993cb5e ("platform/x86/amd/pmc: Add AMD MP2 STB functionality")
-Suggested-by: Sanket Goswami <Sanket.Goswami@amd.com>
-Acked-by: Basavaraj Natikar <Basavaraj.Natikar@amd.com>
-Signed-off-by: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
----
- drivers/platform/x86/amd/pmc/mp2_stb.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+You allocate quirks->num_zones entries to zone_data above but use a 
+literal here?
 
-diff --git a/drivers/platform/x86/amd/pmc/mp2_stb.c b/drivers/platform/x86/amd/pmc/mp2_stb.c
-index 9775ddc1b27a..2014435dc989 100644
---- a/drivers/platform/x86/amd/pmc/mp2_stb.c
-+++ b/drivers/platform/x86/amd/pmc/mp2_stb.c
-@@ -102,7 +102,8 @@ static int amd_mp2_stb_region(struct amd_mp2_dev *mp2)
- 	unsigned int len = mp2->stb_len;
- 
- 	if (!mp2->stbdata) {
--		mp2->vslbase = dmam_alloc_coherent(dev, len, &mp2->dma_addr, GFP_KERNEL);
-+		mp2->vslbase = (void __iomem *)dmam_alloc_coherent(dev, len, &mp2->dma_addr,
-+								   GFP_KERNEL);
- 		if (!mp2->vslbase)
- 			return -ENOMEM;
- 
 -- 
-2.34.1
+ i.
 
+
+>  		zone_data[zone].location = zone;
+> -		zone_attrs[zone] = &zone_dev_attrs[zone].attr;
+> -		zone_data[zone].attr = &zone_dev_attrs[zone];
+> -	}
+> -	zone_attrs[quirks->num_zones] = &dev_attr_lighting_control_state.attr;
+> -	zone_attribute_group.attrs = zone_attrs;
+> -
+> -	led_classdev_register(&dev->dev, &global_led);
+>  
+> -	return sysfs_create_group(&dev->dev.kobj, &zone_attribute_group);
+> +	return led_classdev_register(&dev->dev, &global_led);
+>  }
+>  
+>  static void alienware_zone_exit(struct platform_device *dev)
+>  {
+> -	u8 zone;
+> -
+> -	sysfs_remove_group(&dev->dev.kobj, &zone_attribute_group);
+>  	led_classdev_unregister(&global_led);
+> -	if (zone_dev_attrs) {
+> -		for (zone = 0; zone < quirks->num_zones; zone++)
+> -			kfree(zone_dev_attrs[zone].attr.name);
+> -	}
+> -	kfree(zone_dev_attrs);
+>  	kfree(zone_data);
+> -	kfree(zone_attrs);
+>  }
+>  
+>  static acpi_status alienware_wmax_command(void *in_args, size_t in_size,
+> @@ -1140,6 +1122,7 @@ static void remove_thermal_profile(void)
+>   * Platform Driver
+>   */
+>  static const struct attribute_group *alienfx_groups[] = {
+> +	&zone_attribute_group,
+>  	&hdmi_attribute_group,
+>  	&amplifier_attribute_group,
+>  	&deepsleep_attribute_group,
+> 
