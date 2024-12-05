@@ -1,192 +1,79 @@
-Received: from mail-pl1-f178.google.com (mail-pl1-f178.google.com [209.85.214.178])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5359517BD6;
-	Thu,  5 Dec 2024 00:48:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC12C2391A8
+	for <platform-driver-x86@vger.kernel.org>; Thu,  5 Dec 2024 09:03:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1733359706; cv=none; b=pLt+er5vU+lLTbiyzQ/SWv0zUh87usbhWHobB16sKoYHcy5u+OgJZaOTicmmooApAyaNwpZ2BsjhcrxpLVn64KqNJ3JVsmmc8rBvVhzk6mrhQ24OccbMLIQhPPbkjQDvq7IYZrj1HnbMcpLQvOFRdw9D/aG2ALE8z0wHMjGQAXI=
+	t=1733389395; cv=none; b=GpwMcsodxO3TVlxzBdc5wBl+v4h5rJtiJ/OIwa5/tbx4Z8J9+2Om54bSliKazNAxpitIops1RXMdZizDdSSZrrezcS4DhGsAq/361lTBxVWFn7o8JdaCUUa4FNstzHgAchfUFbzDUNIHGgEN1ZIIvq0TfCwfxx+3KWHXwEwIQMc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1733359706; c=relaxed/simple;
-	bh=U9buNCn3Q6EwBDv1ejzzt7584TCtyKt3bwWsdIBPaRs=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=SosCRFfXcI7X3JrDu+s2mVlADD2dHWn0jTkXzjma+j53Kw31sFvfb40XOrRbE73jgVM7btCh1RWOLKnAdiM127uBCGu/xMSGjPTHmHMD3Yu0OtF0HHzjc4wuLFcALueovJPtbpwv6CaRhGpt/XSnbGSCVtYSyayzeHOEI57z7As=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=aqSKL1xz; arc=none smtp.client-ip=209.85.214.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aqSKL1xz"
-Received: by mail-pl1-f178.google.com with SMTP id d9443c01a7336-215c4000c20so3735135ad.3;
-        Wed, 04 Dec 2024 16:48:25 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1733359704; x=1733964504; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=0V9Nc2MLGRoLsywNBsHM1XPUkoBaWbrhQmpIa1sSKzU=;
-        b=aqSKL1xz5sPdGK2YrhH2uDy7eSd+xGRL1SH7xRHxOWxmcV9dxF3iNaRbKc933JVpR4
-         gz+rwQll1bUlAOqJM5gXhX228ZEFtPZ62MD9eCejemjqpxvBe1PI340sxKjMjp5tbrO5
-         HkVpo/WJTkp3v86hB4rIoOrfpovbp3pWj9X6SmRYKiPgxYB/buRYlh6Kbh76oX8QVEDe
-         p4FkF8xKE3V4WyVBwJ4Tw3spPR+pQMsLb86jqJ6NvSf2eih8rl3lYcbhtR1MVIf+6aQY
-         slowIEednpO3Qqjten0nJjJ4hV/GosJvwmVv9m+fGtO2srRl3yRIaM7m3MDitW6yC5Q1
-         cqTg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1733359704; x=1733964504;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=0V9Nc2MLGRoLsywNBsHM1XPUkoBaWbrhQmpIa1sSKzU=;
-        b=l6I72+VEKadIRIPWup5W0XpVWJNEJgLeIH3wDYTOHsbpu+ZqGBRrW+HHK6JVQwhx2F
-         1t/ROigpCTSrAEitrGnk0gH+aD4k6atoifXqL9WR+FpRBEQB7TeqrCV+ZSNfAmVaZ7UQ
-         ON6bozFsusTKMT+4akBmt7b06SG6EWyOHIqUY3eFz41QUzARUQWdd+ycO4HmWV7uQz+l
-         sprIaJkZpVj73biOWna9JefcOM6kd6dwm/AsKZIGHCw66ypYTE3+lB4TXMAdZX0VgAxe
-         njNn66pZV7g1s6aV/yXD+9yX5kei6kTVzaapWUjnPXAzrq8eW4ZYHIY5BZPiCQKrca1O
-         VRRA==
-X-Forwarded-Encrypted: i=1; AJvYcCUalRLQbZofrn2qy7B831gkX6WAlGhaMsH6W1er3Y3J861S9WgdCSYRDtyaTxhW5zs/vR/4pcORzt0Oz4bNTpssDC0Jgw==@vger.kernel.org, AJvYcCUwc3e2KQZMrQZWvEllOqLAQMC1sLN+lwJ6Mvmxpvt8HMeMwYeE4B4sBbSIBvg48sRvPGPv6dBB1Y+zqc4=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxBa+DiKfLlXTcdlPS+pfSy1ZKYZlbmAtl0sGwR38i3xkQVjmms
-	y+MgYhuNgzWYqzYcmwmMD+cP3i7SBocWL+4sApdoeItdn3mVAdv5JVtf+WGd
-X-Gm-Gg: ASbGnct5/ZP5GfJCqhwq6G3xy+vlaKU0+nzzujvsIixmV2bZDdNdT1ucyawaBsgI1pD
-	ZYE88edZevjCo28O6Ck555lmh82e6zNrdhernHRVn+X9LkyRMCJf+JVoC2veyhkTaj/PtteRiim
-	+oTT9QbcAg13KVHvEWIAxCiBdG/C5oJ1BtLGpf2WlJV+4TBLiDZSdE/N6KePRJ6Nl7lBKK2tYCr
-	ALjfT3rUl6R4RlymQITNyxzfWLyuETEWC4hmTlDAHZmclmtlEIck3++7Tp/ArlOa7k3X72V/g3q
-	7C2eldLeg9vBDs9LbiY=
-X-Google-Smtp-Source: AGHT+IHdW9EoBC+guyiuoiRxfVcpdxSPxViXTfYiPBAPPbJb7JPwiQUl+M5/dg7Emlzr5VAx6iaM2Q==
-X-Received: by 2002:a17:902:cec2:b0:215:7fad:49ab with SMTP id d9443c01a7336-215bd1b3babmr103860265ad.10.1733359704549;
-        Wed, 04 Dec 2024 16:48:24 -0800 (PST)
-Received: from localhost.localdomain (host111.181-10-101.telecom.net.ar. [181.10.101.111])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-215f8f0921asm1384655ad.178.2024.12.04.16.48.22
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 04 Dec 2024 16:48:24 -0800 (PST)
-From: Kurt Borja <kuurtb@gmail.com>
-To: kuurtb@gmail.com
-Cc: Dell.Client.Kernel@dell.com,
-	hdegoede@redhat.com,
-	ilpo.jarvinen@linux.intel.com,
-	linux-kernel@vger.kernel.org,
-	mario.limonciello@amd.com,
+	s=arc-20240116; t=1733389395; c=relaxed/simple;
+	bh=PTh7UTwllRmh/DpMinZCfJGLGawPGsN5wvkFGTRcjkQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=PM3y0eZ0XjG0J7hwqp95poZCBkivI8J7tpJxhl2bKUMYj9jogd6EbQNVKUCMcZJR7T0UkPInKpwJvWLc/vaniNDb+tSl7QX2aP4uH7n/GAG93fZUI6tv/J3wmpCyHcrZx74xIszvriBsLuEf58gSyTSi8FiGX2/BkNLflaAa1F4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=kernel.org; spf=fail smtp.mailfrom=kernel.org; arc=none smtp.client-ip=198.175.65.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=kernel.org
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=kernel.org
+X-CSE-ConnectionGUID: JK/47bEHTb2BRGmzk1sK4Q==
+X-CSE-MsgGUID: nXMoSALVR8GSvTTg5iVsjA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11276"; a="51106422"
+X-IronPort-AV: E=Sophos;i="6.12,209,1728975600"; 
+   d="scan'208";a="51106422"
+Received: from orviesa009.jf.intel.com ([10.64.159.149])
+  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Dec 2024 01:03:08 -0800
+X-CSE-ConnectionGUID: chlwDa0LQlecxP1/BKka2w==
+X-CSE-MsgGUID: Rt2A5p/fQumdo4TWt2bsFg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.12,209,1728975600"; 
+   d="scan'208";a="93923199"
+Received: from smile.fi.intel.com ([10.237.72.154])
+  by orviesa009.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Dec 2024 01:03:07 -0800
+Received: from andy by smile.fi.intel.com with local (Exim 4.98)
+	(envelope-from <andy@kernel.org>)
+	id 1tJ7lI-000000042Ev-25zY;
+	Thu, 05 Dec 2024 11:03:04 +0200
+Date: Thu, 5 Dec 2024 11:03:04 +0200
+From: Andy Shevchenko <andy@kernel.org>
+To: Hans de Goede <hdegoede@redhat.com>
+Cc: Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
 	platform-driver-x86@vger.kernel.org,
-	w_armin@gmx.de
-Subject: [RFC PATCH 21/21] platform-x86: Add config entries to alienware-wmi
-Date: Wed,  4 Dec 2024 21:48:05 -0300
-Message-ID: <20241205004804.2187253-2-kuurtb@gmail.com>
-X-Mailer: git-send-email 2.47.1
-In-Reply-To: <20241205002733.2183537-3-kuurtb@gmail.com>
-References: <20241205002733.2183537-3-kuurtb@gmail.com>
+	kernel test robot <lkp@intel.com>
+Subject: Re: [PATCH v3 2/8] platform/x86: x86-android-tablets: Make variables
+ only used locally static
+Message-ID: <Z1FsSKVp8SldyLre@smile.fi.intel.com>
+References: <20241204204227.95757-1-hdegoede@redhat.com>
+ <20241204204227.95757-3-hdegoede@redhat.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20241204204227.95757-3-hdegoede@redhat.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-Add config entries to conditionally compile alienware-wmi-alienfx.c and
-alienware-wmi-awcc.c.
+On Wed, Dec 04, 2024 at 09:42:13PM +0100, Hans de Goede wrote:
+> Commit 06f876def346 ("platform/x86: x86-android-tablets: Add support for
+> Vexia EDU ATLA 10 tablet") omitted the static keyword from some variables
+> which are only used inside other.c .
+> 
+> Add the missing static keyword to these, this fixes the following warnings:
+> 
+> drivers/platform/x86/x86-android-tablets/other.c:605:12: sparse: sparse: symbol 'crystal_cove_pwrsrc_psy' was not declared. Should it be static?
+> drivers/platform/x86/x86-android-tablets/other.c:612:28: sparse: sparse: symbol 'vexia_edu_atla10_ulpmc_node' was not declared. Should it be static?
 
-Signed-off-by: Kurt Borja <kuurtb@gmail.com>
----
- drivers/platform/x86/dell/Kconfig         | 25 ++++++++++++++++++-----
- drivers/platform/x86/dell/Makefile        |  8 ++++----
- drivers/platform/x86/dell/alienware-wmi.h | 22 ++++++++++++++++++++
- 3 files changed, 46 insertions(+), 9 deletions(-)
+I believe you can shorten these lines like
 
-diff --git a/drivers/platform/x86/dell/Kconfig b/drivers/platform/x86/dell/Kconfig
-index 2dddafb3f7fa..fcc7f7d28ac1 100644
---- a/drivers/platform/x86/dell/Kconfig
-+++ b/drivers/platform/x86/dell/Kconfig
-@@ -18,16 +18,31 @@ config ALIENWARE_WMI
- 	tristate "Alienware Special feature control"
- 	default m
- 	depends on ACPI
-+	depends on ACPI_WMI
-+	help
-+	 This is a driver for controlling Alienware WMI driven
-+	 features.
-+
-+config ALIENWARE_ALIENFX
-+	bool "Alienware AlienFX backend"
-+	default y
- 	depends on LEDS_CLASS
- 	depends on NEW_LEDS
--	depends on ACPI_WMI
--	select ACPI_PLATFORM_PROFILE
-+	depends on ALIENWARE_WMI
- 	help
--	 This is a driver for controlling Alienware BIOS driven
--	 features.  It exposes an interface for controlling the AlienFX
--	 zones on Alienware machines that don't contain a dedicated AlienFX
-+	 It exposes an interface for controlling the AlienFX zones on
-+	 Alienware machines that don't contain a dedicated AlienFX
- 	 USB MCU such as the X51 and X51-R2.
- 
-+config ALIENWARE_AWCC
-+	bool "Alienware AWCC backend"
-+	default y
-+	depends on ALIENWARE_WMI
-+	select ACPI_PLATFORM_PROFILE
-+	help
-+	 Provides thermal control features on Alienware and Dell's
-+	 GSeries laptops with a WMI device with UID "AWCC".
-+
- config DCDBAS
- 	tristate "Dell Systems Management Base Driver"
- 	default m
-diff --git a/drivers/platform/x86/dell/Makefile b/drivers/platform/x86/dell/Makefile
-index 54a592fd6ae6..6153cff5538f 100644
---- a/drivers/platform/x86/dell/Makefile
-+++ b/drivers/platform/x86/dell/Makefile
-@@ -4,10 +4,10 @@
- # Dell x86 Platform-Specific Drivers
- #
- 
--obj-$(CONFIG_ALIENWARE_WMI)		+= alienware-wmi.o
--alienware-wmi-objs			:= alienware-wmi-base.o
--alienware-wmi-y				+= alienware-wmi-alienfx.o
--alienware-wmi-y				+= alienware-wmi-awcc.o
-+obj-$(CONFIG_ALIENWARE_WMI)			+= alienware-wmi.o
-+alienware-wmi-objs				:= alienware-wmi-base.o
-+alienware-wmi-$(CONFIG_ALIENWARE_ALIENFX)	+= alienware-wmi-alienfx.o
-+alienware-wmi-$(CONFIG_ALIENWARE_AWCC)		+= alienware-wmi-awcc.o
- obj-$(CONFIG_DCDBAS)			+= dcdbas.o
- obj-$(CONFIG_DELL_LAPTOP)		+= dell-laptop.o
- obj-$(CONFIG_DELL_RBTN)			+= dell-rbtn.o
-diff --git a/drivers/platform/x86/dell/alienware-wmi.h b/drivers/platform/x86/dell/alienware-wmi.h
-index 1c12b8e330e2..16624c824828 100644
---- a/drivers/platform/x86/dell/alienware-wmi.h
-+++ b/drivers/platform/x86/dell/alienware-wmi.h
-@@ -110,10 +110,32 @@ struct awcc_priv {
- acpi_status alienware_wmi_command(struct wmi_device *wdev, u32 method_id,
- 				  void *in_args, size_t in_size, u32 *out_data);
- 
-+#if IS_ENABLED(CONFIG_ALIENWARE_ALIENFX)
- int alienfx_wmi_init(struct alienfx_platdata *pdata);
- void alienfx_wmi_exit(struct wmi_device *wdev);
-+#else
-+int inline alienfx_wmi_init(struct alienfx_platdata *pdata)
-+{
-+	return 0;
-+}
-+
-+void inline alienfx_wmi_exit(struct wmi_device *wdev)
-+{
-+}
-+#endif
- 
-+#if IS_ENABLED(CONFIG_ALIENWARE_AWCC)
- int create_thermal_profile(struct wmi_device *wdev, bool has_gmode);
- void remove_thermal_profile(void);
-+#else
-+int inline create_thermal_profile(struct wmi_device *wdev, bool has_gmode)
-+{
-+	return 0;
-+}
-+
-+void inline remove_thermal_profile(void)
-+{
-+}
-+#endif
- 
- #endif
+  .../x86-android-tablets/<and so on>
+
+(Note '...' instead of PDx86 root path.)
+
+Reviewed-by: Andy Shevchenko <andy@kernel.org>
+
 -- 
-2.47.1
+With Best Regards,
+Andy Shevchenko
+
 
