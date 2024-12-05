@@ -1,145 +1,202 @@
-Received: from mail-pf1-f177.google.com (mail-pf1-f177.google.com [209.85.210.177])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E5CE62185AC;
-	Thu,  5 Dec 2024 13:34:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 31CF41A28D;
+	Thu,  5 Dec 2024 14:06:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1733405701; cv=none; b=LJbb8GHMvz73U9Z8MdN5g0mjaIoWAc0WiutDiiKOGLcm1MWmR6YcyahniqXuZvUMDKv8F3nTTpxPJfgH+F8H9beUJh78Kan5g67iIOmJiIspZACbi4F/BllwdD6h4fkGZpYIKqnZrP9CXgUyHbUtpq+0DWt5CUvxmiUJp/0DTW8=
+	t=1733407600; cv=none; b=r+7jp2OQHOYJTtsz0BvYpj9k70QrgbskO94RU9Cdl47IZZAfBTTklB3foS5iz2m9ayIFOyAkoU8Cr30u/4b3Gh/2rivyuf2HCSNVGaPfP5+kMX9r9PRJteO4FZGOVh8jx6uAM4s44uyZXeztnem3k/H1t+4kqnFQ/jdEGA+9ay8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1733405701; c=relaxed/simple;
-	bh=MbJGCoYqcCq5hCwG5sy5ZqPkTBw9NO6IV8jhsPWs8dY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=kuCOKjdgvv+QNdqX+Amp/KUxPhQq42qf/L63mquiD1y0TxrgtClLXciIYIl2fO8NaVkP4yahYMZBHMNsxvrW6WRxQhi0mGzKiEcqlWcwWjMhR1WvQU+qTGZfkSXclOV74VRwFZz+pm5UCfxFam2sgGF27Y4d1q4TXlPIP/W/lP8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=E0EtsQai; arc=none smtp.client-ip=209.85.210.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1733407600; c=relaxed/simple;
+	bh=WcnoYLiqVW6s8lhRqcE/XXO4eS3a+9cECImQbGvlOb4=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=ZntGNpo4m67PlczNjKkyoFXNJHrO9cjrhmF/nl3vnnGB7VqP3NxIaub+wuw5zEEh8bEyGmWxEFK+STy7nUNWf4DiMrg1tqq7ffBG1vK4eB1CKD+BMOChjIgy/lzj/+OhjqO4z8kUDGtw7nRcNahSmiaSQvtFyhnID/ZrA86UAf8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=IkPr4+ka; arc=none smtp.client-ip=192.198.163.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="E0EtsQai"
-Received: by mail-pf1-f177.google.com with SMTP id d2e1a72fcca58-7252b7326f4so781582b3a.2;
-        Thu, 05 Dec 2024 05:34:59 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1733405699; x=1734010499; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=lmaMe+macmiP2X/9Fl+r7HIK5Cma8viDkEYR2H3Mp/U=;
-        b=E0EtsQai+aWlzwlYLck1UqPW8pkCfYT+XOys6XZHniuq1dAEElHVp+T4xIi6kJeTs5
-         OtGIert/az3VOp6Fk/lXmnjGdvxz8xv2wOznV/S6RlQSBsKqZGnMSlIuLhhjpWTTeGX2
-         SSVZcZhHQo0Y4g5v6CtiN8MssiE1X7SWm6BfrQ7cjkTG91BvOm3L9b8ER4GbtgZRwzVJ
-         vq1rKhZ3Kwh73AQp+MVOSDep7iBW/Z7lYHWuVWP1Q8JjbC7NnefBpWXIdXGNJic/5Kiu
-         GIJNMEBI14rW79QY38Kq7eKuh2KJlD9u2MjLXTtVyI8uJkjzV1qO+GajGPafbqjROyo5
-         x1pg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1733405699; x=1734010499;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=lmaMe+macmiP2X/9Fl+r7HIK5Cma8viDkEYR2H3Mp/U=;
-        b=gxbi5qWt1zxOADS+tTi63u3+2krvrc9s+7bKzzHIO3GLT3FI0EJ2SQMQGdl4DZ/LF7
-         eYEWO2ZrhU6IKXBEF1fr37ljDnY8o+1+tOGCPfKDpGytJ+30ftrLqPYhikVpEo5EAtB9
-         fnhk2j1ajgIHm2DtyJ8kQHuyenj7lJ644VIZaqL/FX/3owNA2ybHh/viCwfQXDEKacUZ
-         LKS3oIr9fL+D7yQsJ9bfqZbroz1YZYWT10gWccUc23mAoubzhcTJoQQibHQ2xHcXZOTe
-         qyIgb2xvl3WQWUNtjZgdx2BvErI8vRqkGNeMy45endpkXSOiNAR8/9TumJKXELmRqRfY
-         IIOA==
-X-Forwarded-Encrypted: i=1; AJvYcCUTRLTJIo/t76Gs7eDF+ZHL9rYqJutxzbyXY2ADACD1etAklc/xhbXejzZ0TpANYVDM/SUkePsr5V/Th6hF8pMdUjZ8Dg==@vger.kernel.org, AJvYcCVq4wut3ZQeLPO0qSplkRPYYwjoCW0qPnftDgmJTbUPtRn5a6b+S4MbgnlYIlahya8K6AdYFPZs+lcGd6o=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzxKglioZbkBVBvgblFCKvO4AHIbQAYQTMRBVXbPpfeyiqmBaeH
-	EbWlgcTHQOgCm55XkFUMkY3RxklHOoz5usmKu6WfxZd/0mkur5sb
-X-Gm-Gg: ASbGncvDobwzV9V2Yc3izcNxxn2QlV9ZJydbOnSo/zxEZhNhC+jeK8Xsfv+BDDmvCxJ
-	raIh8k3QGltP/0qnuzEB4FX2MZ4hFPHrhZJv0fJ21mRXnKJbbsSrjAiXEd0rMoJxSC2QOG+2TuI
-	UL5C/BSX78D7o7ieE+tYGJO4fVSh1le1WQBhYUetQYYzi71CnKsD5KUbUjzz5XUXB/FCtAQwEMJ
-	BLjvFr42i5g8K+2tTbqJ8mbEJM/XWuoIkukbCk22pBqM6V83M3PG7W3gH/7q1JBVIIc8dd8577T
-	GwJxu7kk
-X-Google-Smtp-Source: AGHT+IGNa+EIsm5xVIkM3wmX5wX5zPoM7Lus9YIDldrGf4LGEHJGPWbbLwLrKv7iB2IX6jaK/w+tvQ==
-X-Received: by 2002:a05:6a00:1782:b0:724:5aac:1687 with SMTP id d2e1a72fcca58-7257fcb029fmr13652653b3a.20.1733405699044;
-        Thu, 05 Dec 2024 05:34:59 -0800 (PST)
-Received: from alphacentauri (host111.181-10-101.telecom.net.ar. [181.10.101.111])
-        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-7fd156c4373sm1133507a12.21.2024.12.05.05.34.56
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 05 Dec 2024 05:34:58 -0800 (PST)
-Date: Thu, 5 Dec 2024 10:34:54 -0300
-From: Kurt Borja <kuurtb@gmail.com>
-To: Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>
-Cc: Dell.Client.Kernel@dell.com, Hans de Goede <hdegoede@redhat.com>, 
-	LKML <linux-kernel@vger.kernel.org>, mario.limonciello@amd.com, platform-driver-x86@vger.kernel.org, 
-	w_armin@gmx.de
-Subject: Re: [RFC PATCH 05/21] alienware-wmi: Refactor rgb-zones sysfs group
- creation
-Message-ID: <nsx7vz5qtbxo5vq3ukzhfopkyrsi2bnhhelfpvxolqqdiokg25@6bgy5nclgftc>
-References: <20241205002733.2183537-3-kuurtb@gmail.com>
- <20241205004005.2184945-2-kuurtb@gmail.com>
- <5d0ebcc9-062d-7252-956a-2ad8294d7077@linux.intel.com>
- <fme54i5psnvamh6u7u7o7wlnyzpstiuus6jk73tkjfkoulg2m6@kxicd7efw2rx>
- <b051f580-a6e0-bd32-a6ad-2d172de3aecc@linux.intel.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="IkPr4+ka"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1733407598; x=1764943598;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version:content-id;
+  bh=WcnoYLiqVW6s8lhRqcE/XXO4eS3a+9cECImQbGvlOb4=;
+  b=IkPr4+kaJDWxkVLl1Bi6NgLavaWmuxSPBoIY5zdHlvEH62QhCB811U9H
+   VzCyb8qJ8M2bzAixDUzrAHrKZ/OHKLqxut0dranfQ0NaAYFd9SY5kk5WV
+   U8QGD7kMNwlPVaVEujoiozRsKUYHt2AlLFF7Cdrlm1zcP6cK3QV547n3O
+   QDR7rb0Vje8BdeTAp5kVdl2BbtNg0ceuzr4UiLklRilSk7SQRva5rBbpN
+   V/+0G9zG4lX2E+utFoJc2mpL8O/v/Lb1kfkyeOQrOKyVm/uAWxy1Gt7Ia
+   VxFBTdafwn01gMgv9QLggcBfzI9OGBON35h4wa2rD7JfOj3iXXNjh2asQ
+   A==;
+X-CSE-ConnectionGUID: Ka1RDkyaS5OeyZfRfeyOpw==
+X-CSE-MsgGUID: PtiQ3jc4TtO+25ZZoEC1Zg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11276"; a="37656151"
+X-IronPort-AV: E=Sophos;i="6.12,210,1728975600"; 
+   d="scan'208";a="37656151"
+Received: from fmviesa002.fm.intel.com ([10.60.135.142])
+  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Dec 2024 06:06:29 -0800
+X-CSE-ConnectionGUID: ifWs9E5cS4aj8+rMaZRLbg==
+X-CSE-MsgGUID: I2+xAJf9TTqvuNRhDZCwHQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.12,210,1728975600"; 
+   d="scan'208";a="117347994"
+Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.60])
+  by fmviesa002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Dec 2024 06:06:26 -0800
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Thu, 5 Dec 2024 16:06:23 +0200 (EET)
+To: Kurt Borja <kuurtb@gmail.com>
+cc: Dell.Client.Kernel@dell.com, Hans de Goede <hdegoede@redhat.com>, 
+    LKML <linux-kernel@vger.kernel.org>, mario.limonciello@amd.com, 
+    platform-driver-x86@vger.kernel.org, w_armin@gmx.de
+Subject: Re: [RFC PATCH 16/21] alienware-wmi: Make running control state part
+ of platdata
+In-Reply-To: <foiw2np7nj2qefgdw7t43zuz5kujdgnsllutjqjdoq7i5tkrdy@zfu2pk43crzx>
+Message-ID: <c0af93e4-f2a6-bf2e-787d-7a360286ac8a@linux.intel.com>
+References: <20241205002733.2183537-3-kuurtb@gmail.com> <20241205004534.2186539-2-kuurtb@gmail.com> <d0828df1-4a46-2cd3-f15a-b08e5d011bba@linux.intel.com> <foiw2np7nj2qefgdw7t43zuz5kujdgnsllutjqjdoq7i5tkrdy@zfu2pk43crzx>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <b051f580-a6e0-bd32-a6ad-2d172de3aecc@linux.intel.com>
+Content-Type: multipart/mixed; BOUNDARY="8323328-824526675-1733405799=:932"
+Content-ID: <046b9b25-2a2c-e6d9-bfca-cb6589f9dd06@linux.intel.com>
 
-On Thu, Dec 05, 2024 at 03:18:20PM +0200, Ilpo Järvinen wrote:
-> On Thu, 5 Dec 2024, Kurt Borja wrote:
-> 
-> > On Thu, Dec 05, 2024 at 12:17:01PM +0200, Ilpo Järvinen wrote:
-> > > On Wed, 4 Dec 2024, Kurt Borja wrote:
-> > > 
-> > > > Define zone_attrs statically with the use of helper macros and
-> > > > initialize the zone_attribute_group with driver's .dev_groups.
-> > > > 
-> > > > This makes match_zone() no longer needed, so drop it.
-> > > > 
-> > > > Signed-off-by: Kurt Borja <kuurtb@gmail.com>
-> 
-> > > >  	zone_data =
-> > > >  	    kcalloc(quirks->num_zones, sizeof(struct platform_zone),
-> > > >  		    GFP_KERNEL);
-> 
-> You kcalloc() zone_data here for quirks->num_zones entries....
+  This message is in MIME format.  The first part should be readable text,
+  while the remaining parts are likely unreadable without MIME-aware tools.
 
-Totally missed this, thanks. 
+--8323328-824526675-1733405799=:932
+Content-Type: text/plain; CHARSET=ISO-8859-15
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-ID: <741308fa-c092-775f-e5f1-47909671469a@linux.intel.com>
 
-> 
-> > > > -	for (zone = 0; zone < quirks->num_zones; zone++) {
-> > > > -		name = kasprintf(GFP_KERNEL, "zone%02hhX", zone);
-> > > > -		if (name == NULL)
-> > > > -			return 1;
-> > > > -		sysfs_attr_init(&zone_dev_attrs[zone].attr);
-> > > > -		zone_dev_attrs[zone].attr.name = name;
-> > > > -		zone_dev_attrs[zone].attr.mode = 0644;
-> > > > -		zone_dev_attrs[zone].show = zone_show;
-> > > > -		zone_dev_attrs[zone].store = zone_set;
-> > > > +	for (zone = 0; zone < 4; zone++)
-> > > >  		zone_data[zone].location = zone;
-> > > 
-> > > You allocate quirks->num_zones entries to zone_data above but use a 
-> > > literal here?
-> > 
-> > I did this because quirks->num_zones controlls only visibility now.
-> 
-> This kind of information would be useful to put into the commit message!
-> 
-> It does not control only visibility, see the kcalloc() code above. Did you 
-> mean to alter the alloc too but forgot?
+On Thu, 5 Dec 2024, Kurt Borja wrote:
 
-Yes I did not pay much attention when modifying this function. I'll fix
-it.
+> On Thu, Dec 05, 2024 at 01:32:46PM +0200, Ilpo J=E4rvinen wrote:
+> > On Wed, 4 Dec 2024, Kurt Borja wrote:
+> >=20
+> > > Both WMI devices have a different "RUNNING" control state code. Make =
+the
+> > > WMI drivers decide which code to use, and refactor sysfs methods
+> > > accordingly.
+> > >=20
+> > > Signed-off-by: Kurt Borja <kuurtb@gmail.com>
+> > > ---
+> > >  drivers/platform/x86/dell/alienware-wmi.c | 9 ++++++---
+> > >  1 file changed, 6 insertions(+), 3 deletions(-)
+> > >=20
+> > > diff --git a/drivers/platform/x86/dell/alienware-wmi.c b/drivers/plat=
+form/x86/dell/alienware-wmi.c
+> > > index 25e0139ed78c..fa21a50d66bd 100644
+> > > --- a/drivers/platform/x86/dell/alienware-wmi.c
+> > > +++ b/drivers/platform/x86/dell/alienware-wmi.c
+> > > @@ -431,6 +431,7 @@ struct alienfx_platdata {
+> > >  =09bool hdmi_mux;
+> > >  =09bool amplifier;
+> > >  =09bool deepslp;
+> > > +=09u8 running_code;
+> > >  };
+> > > =20
+> > >  static u8 interface;
+> > > @@ -576,18 +577,18 @@ static ssize_t lighting_control_state_store(str=
+uct device *dev,
+> > >  =09=09=09=09=09    const char *buf, size_t count)
+> > >  {
+> > >  =09struct alienfx_priv *priv;
+> > > +=09struct alienfx_platdata *pdata;
+> > >  =09u8 val;
+> > > =20
+> > >  =09priv =3D dev_get_drvdata(dev);
+> > > +=09pdata =3D dev_get_platdata(dev);
+> > > =20
+> > >  =09if (strcmp(buf, "booting\n") =3D=3D 0)
+> > >  =09=09val =3D LEGACY_BOOTING;
+> > >  =09else if (strcmp(buf, "suspend\n") =3D=3D 0)
+> > >  =09=09val =3D LEGACY_SUSPEND;
+> > > -=09else if (interface =3D=3D LEGACY)
+> > > -=09=09val =3D LEGACY_RUNNING;
+> > >  =09else
+> > > -=09=09val =3D WMAX_RUNNING;
+> > > +=09=09val =3D pdata->running_code;
+> > > =20
+> > >  =09priv->lighting_control_state =3D val;
+> > >  =09pr_debug("alienware-wmi: updated control state to %d\n",
+> > > @@ -1249,6 +1250,7 @@ static int legacy_wmi_probe(struct wmi_device *=
+wdev, const void *context)
+> > >  =09=09.hdmi_mux =3D quirks->hdmi_mux,
+> > >  =09=09.amplifier =3D quirks->amplifier,
+> > >  =09=09.deepslp =3D quirks->deepslp,
+> > > +=09=09.running_code =3D LEGACY_RUNNING,
+> > >  =09};
+> > > =20
+> > >  =09if (quirks->num_zones > 0)
+> > > @@ -1333,6 +1335,7 @@ static int wmax_wmi_probe(struct wmi_device *wd=
+ev, const void *context)
+> > >  =09=09.hdmi_mux =3D quirks->hdmi_mux,
+> > >  =09=09.amplifier =3D quirks->amplifier,
+> > >  =09=09.deepslp =3D quirks->deepslp,
+> > > +=09=09.running_code =3D WMAX_RUNNING,
+> > >  =09};
+> > > =20
+> > >  =09if (quirks->thermal)
+> > >=20
+> >=20
+> > I've not taken extensive look at interdependent changes in the series b=
+ut=20
+> > while reviewing patch 20/21 I noticed that alienfx_probe() changed ther=
+e
+> > from:
+> >=20
+> > -       if (interface =3D=3D WMAX)
+> > -               priv->lighting_control_state =3D WMAX_RUNNING;
+> > -       else if (interface =3D=3D LEGACY)
+> > -               priv->lighting_control_state =3D LEGACY_RUNNING;
+> >=20
+> > to:
+> >=20
+> > +       priv->lighting_control_state =3D pdata->running_code;
+>=20
+> This was a workaround. I forgot to add this change in this patch. Also I'=
+ll
+> move this earlier in the series.
+>=20
+> >=20
+> > Somehow, it felt odd and then looking this patch 16, it felt even odder=
+=2E=20
+>=20
+> The reason behind this is that I don't want AlienFX related methods
+> depending on global variables like `interface` so I can split the file
+> cleanly.
 
-> 
-> > I didn't feel comfortable leaving an out of bounds access on zone_show()
-> > and zone_set() when they do `zone_data[location]`.
-> > 
-> > Still those out of bounds accesses are hidden from user-space (right?) and
-> > alienware_wmi_init() is getting dropped anyway so I should just leave it
-> > as zone < quirks->num_zones.
-> 
-> The assignment within this loop will write out of bounds if 
-> quirks->num_zones is less than 4.
-> 
-> -- 
->  i.
+Just to make sure we don't talk past each other, I didn't mean the code=20
+itself felt odd, just the patch it was changed in. So if your plan was to=
+=20
+have it in this patch to begin with but you noticed the problem while=20
+doing the other change and put it "temporarily" there and forgot to move=20
+it into correct place, no oddity problem then. :-)
 
+> > Perhaps there's a good reason my review that didn't go deep enough fail=
+ed=20
+> > to uncover but please check if this is an indication that something is =
+a=20
+> > miss in the series.
+> >=20
+>=20
+> Thank you so much for commenting on the series!
+>=20
+> Also, what do you think about the general approach? I was a bit unsure
+> about the whole "platdata" stuff, as not many drivers use it in this
+> subsystem.
+
+I'm sorry but I've not come across it much so I'm not sure if my opinion=20
+is that valuable.
+
+What I can say for sure though is that the wide-spread use of global-level=
+=20
+variables in pdx86 drivers is definitely not setting a good example.
+
+--=20
+ i.
+
+--8323328-824526675-1733405799=:932--
