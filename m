@@ -1,58 +1,59 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A1A5B1B0F1F;
-	Thu,  5 Dec 2024 11:17:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C40021DB52D;
+	Thu,  5 Dec 2024 11:32:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1733397428; cv=none; b=l84BZ7qYumLXg/vZjB5ZT8RMzhdzLXVYX8EkIB+gV4Jp6lKDA4uH938Alvsc/4IaLlWi4iCpImiTi3evtE21GIV0ajaWTcgZkoXGeDcDXtw3kLj+pcO5iq/TsCCPGw8Vs+gRTsRupBM4rjebP8Bm0gHEgr15nAJuSrZ6XUIMs8o=
+	t=1733398375; cv=none; b=lYT2Pt6zfIAi+IMzBhVYZCw40iCS/F6y2rdbaftc+mkudSfrXPrFYPRtnDg8d4Bzk5K1+DWjv5Y9HFemudpZEE8O67XaLM2MXmhkVMXXB9zRC9fVlTMw4+XL9YPxB3B2UFsMXkLgBNgb73c4De+TGLZLE36ujgVwqs3IYvxEUMY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1733397428; c=relaxed/simple;
-	bh=d584/xl9AYR4vwbG7zJc0aQcYRMgCPGFJqqxiWY0nH4=;
+	s=arc-20240116; t=1733398375; c=relaxed/simple;
+	bh=ctvOJ5uo9QztDCQyGLxE7wHVtDuBSxiQgaHt/qUMQCM=;
 	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=iWvJ2i7pBY6KmOCBwap0uAo83eCkLm74WOSwWyt1fZOtSuosSI72lNwYVCxF23BML+XvpebhXr3OiPhFULi5MVAW7nOQdLCha9YiWgOKXRZmSlmNFxRqFst1lSRax5am7y24E6KkIogAmybVDJLM3FV7UY83DCNQJsC5AB5cBwo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=NKp/33pe; arc=none smtp.client-ip=192.198.163.14
+	 MIME-Version:Content-Type; b=q6lSbBZgPx4LRPhtboB8CEtpn0vGF07t1dXg/wQbEgW82tiN+ECQ254Lyo8BZ1rTiSFeMrWMJLh9yF4R6Q7fzP0jcCR9Fvqh6h4jNO3dbY4UgTv7Vc0q2QmEDF3KYIriAT5FIHMp2DWLwMFjOuOGGXNiNjCSz9z9A6nbxvEtTDY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=NAq/J/Uw; arc=none smtp.client-ip=192.198.163.7
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="NKp/33pe"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="NAq/J/Uw"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1733397427; x=1764933427;
+  t=1733398373; x=1764934373;
   h=from:date:to:cc:subject:in-reply-to:message-id:
    references:mime-version;
-  bh=d584/xl9AYR4vwbG7zJc0aQcYRMgCPGFJqqxiWY0nH4=;
-  b=NKp/33pepo6mUHpDDyR3JHHDQK3Bl8bSNkDULU3aFZ1pfjnkH4EBmwcs
-   z2kOi6RuV/htEX9baxoRHHM37KnXcoJQQajSUwx85M3/JvgkK9DrkAnne
-   /bzqckb5nK8krd2w11aSNbewf+9qo9iHIMjKjUeIJiJn7dT000l5vouLN
-   IOiMfyoiOiU0KPAftvsgTvPhPALzDACbfCDRKNlBwyiD6Lflrd5oLv6cY
-   Klc6dVbRyQx7ma7hOg13L9fE6D+BDTRL3z9BYJ/At+kOmnYoxzrszJmTe
-   mxkHAJqRBoF1Lt9p2VmY3z+g3BCLEQRXoJERrm/BBux16jzKx1TBaIjae
-   Q==;
-X-CSE-ConnectionGUID: mNywlZT3QTGifFFBvH770g==
-X-CSE-MsgGUID: OYSgjnYhSue6hfzWlpVy/Q==
-X-IronPort-AV: E=McAfee;i="6700,10204,11276"; a="33947621"
+  bh=ctvOJ5uo9QztDCQyGLxE7wHVtDuBSxiQgaHt/qUMQCM=;
+  b=NAq/J/UwIwxU8Cukh6Y8J1edKnX9OqEkrRxhvOMye3bMFvnwGg/NRpfC
+   dLf4dTW0xe3bLmLqwQc1GAjnsarcWYBlUcjvqwARHJLW0oNAjHHu+f7Tl
+   MkrbhlZ9x483npgi7TceXNmtNIWy7yJR1587JkCniF6ts9WFfE9UGHkcu
+   jNJDiMPVUHwKrvndoahLQDoxTpHsdW1J0hZ/Z04rPa7atUL0idg3Ji91i
+   EiteqKEbuNQgPPvzq5WlFw8MbQp7cvqpnqmxaZlUbNe9MlbGpAhf2hEW5
+   wuErvEE4sKBeOiQKTUKdLOevQmoyAsY4yko7rjRRVulxgCI56/dBVKtBC
+   w==;
+X-CSE-ConnectionGUID: R6pInUzbQNmoLdRe0QAccg==
+X-CSE-MsgGUID: flJuW5UMSKC8icobnI8DeA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11276"; a="59109105"
 X-IronPort-AV: E=Sophos;i="6.12,210,1728975600"; 
-   d="scan'208";a="33947621"
-Received: from orviesa002.jf.intel.com ([10.64.159.142])
-  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Dec 2024 03:17:06 -0800
-X-CSE-ConnectionGUID: +50Dqw76ShivmJ+0SE/2DA==
-X-CSE-MsgGUID: 3jJx0oX3T/K4+vQtVygfSA==
+   d="scan'208";a="59109105"
+Received: from orviesa004.jf.intel.com ([10.64.159.144])
+  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Dec 2024 03:32:53 -0800
+X-CSE-ConnectionGUID: kRsf8d8AT+CY9dmbIyOc+Q==
+X-CSE-MsgGUID: oxRzv559RgqNjIVZJjwqgQ==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.12,210,1728975600"; 
-   d="scan'208";a="124882991"
+   d="scan'208";a="99147176"
 Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.60])
-  by orviesa002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Dec 2024 03:17:02 -0800
+  by orviesa004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Dec 2024 03:32:49 -0800
 From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Thu, 5 Dec 2024 13:16:59 +0200 (EET)
+Date: Thu, 5 Dec 2024 13:32:46 +0200 (EET)
 To: Kurt Borja <kuurtb@gmail.com>
 cc: Dell.Client.Kernel@dell.com, Hans de Goede <hdegoede@redhat.com>, 
     LKML <linux-kernel@vger.kernel.org>, mario.limonciello@amd.com, 
     platform-driver-x86@vger.kernel.org, w_armin@gmx.de
-Subject: Re: [RFC PATCH 19/21] platform-x86: Rename alienare-wmi
-In-Reply-To: <20241205004709.2186969-2-kuurtb@gmail.com>
-Message-ID: <41ea44ee-fa2d-5e06-1080-5bb61fee1352@linux.intel.com>
-References: <20241205002733.2183537-3-kuurtb@gmail.com> <20241205004709.2186969-2-kuurtb@gmail.com>
+Subject: Re: [RFC PATCH 16/21] alienware-wmi: Make running control state part
+ of platdata
+In-Reply-To: <20241205004534.2186539-2-kuurtb@gmail.com>
+Message-ID: <d0828df1-4a46-2cd3-f15a-b08e5d011bba@linux.intel.com>
+References: <20241205002733.2183537-3-kuurtb@gmail.com> <20241205004534.2186539-2-kuurtb@gmail.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -63,55 +64,84 @@ Content-Type: text/plain; charset=US-ASCII
 
 On Wed, 4 Dec 2024, Kurt Borja wrote:
 
-> In order to eventually split the module:
-> 
-> Rename alienware-wmi.c -> alienware-wmi-base.c
-> 
-> And modify MAINTAINERS accordingly.
+> Both WMI devices have a different "RUNNING" control state code. Make the
+> WMI drivers decide which code to use, and refactor sysfs methods
+> accordingly.
 > 
 > Signed-off-by: Kurt Borja <kuurtb@gmail.com>
 > ---
->  MAINTAINERS                                                    | 3 ++-
->  drivers/platform/x86/dell/Makefile                             | 1 +
->  .../x86/dell/{alienware-wmi.c => alienware-wmi-base.c}         | 0
->  3 files changed, 3 insertions(+), 1 deletion(-)
->  rename drivers/platform/x86/dell/{alienware-wmi.c => alienware-wmi-base.c} (100%)
+>  drivers/platform/x86/dell/alienware-wmi.c | 9 ++++++---
+>  1 file changed, 6 insertions(+), 3 deletions(-)
 > 
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index 3809931b9240..a4d02074dd91 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -787,7 +787,8 @@ ALIENWARE WMI DRIVER
->  L:	Dell.Client.Kernel@dell.com
->  S:	Maintained
->  F:	Documentation/wmi/devices/alienware-wmi.rst
-> -F:	drivers/platform/x86/dell/alienware-wmi.c
-> +F:	drivers/platform/x86/dell/alienware-wmi-*
-> +F:	drivers/platform/x86/dell/alienware-wmi.*
-
-Why not F: drivers/platform/x86/dell/alienware-wmi*
-
-?
-
->  ALLEGRO DVT VIDEO IP CORE DRIVER
->  M:	Michael Tretter <m.tretter@pengutronix.de>
-> diff --git a/drivers/platform/x86/dell/Makefile b/drivers/platform/x86/dell/Makefile
-> index 79d60f1bf4c1..5e7496aeb070 100644
-> --- a/drivers/platform/x86/dell/Makefile
-> +++ b/drivers/platform/x86/dell/Makefile
-> @@ -5,6 +5,7 @@
->  #
+> diff --git a/drivers/platform/x86/dell/alienware-wmi.c b/drivers/platform/x86/dell/alienware-wmi.c
+> index 25e0139ed78c..fa21a50d66bd 100644
+> --- a/drivers/platform/x86/dell/alienware-wmi.c
+> +++ b/drivers/platform/x86/dell/alienware-wmi.c
+> @@ -431,6 +431,7 @@ struct alienfx_platdata {
+>  	bool hdmi_mux;
+>  	bool amplifier;
+>  	bool deepslp;
+> +	u8 running_code;
+>  };
 >  
->  obj-$(CONFIG_ALIENWARE_WMI)		+= alienware-wmi.o
-> +alienware-wmi-objs			:= alienware-wmi-base.o
->  obj-$(CONFIG_DCDBAS)			+= dcdbas.o
->  obj-$(CONFIG_DELL_LAPTOP)		+= dell-laptop.o
->  obj-$(CONFIG_DELL_RBTN)			+= dell-rbtn.o
-> diff --git a/drivers/platform/x86/dell/alienware-wmi.c b/drivers/platform/x86/dell/alienware-wmi-base.c
-> similarity index 100%
-> rename from drivers/platform/x86/dell/alienware-wmi.c
-> rename to drivers/platform/x86/dell/alienware-wmi-base.c
+>  static u8 interface;
+> @@ -576,18 +577,18 @@ static ssize_t lighting_control_state_store(struct device *dev,
+>  					    const char *buf, size_t count)
+>  {
+>  	struct alienfx_priv *priv;
+> +	struct alienfx_platdata *pdata;
+>  	u8 val;
+>  
+>  	priv = dev_get_drvdata(dev);
+> +	pdata = dev_get_platdata(dev);
+>  
+>  	if (strcmp(buf, "booting\n") == 0)
+>  		val = LEGACY_BOOTING;
+>  	else if (strcmp(buf, "suspend\n") == 0)
+>  		val = LEGACY_SUSPEND;
+> -	else if (interface == LEGACY)
+> -		val = LEGACY_RUNNING;
+>  	else
+> -		val = WMAX_RUNNING;
+> +		val = pdata->running_code;
+>  
+>  	priv->lighting_control_state = val;
+>  	pr_debug("alienware-wmi: updated control state to %d\n",
+> @@ -1249,6 +1250,7 @@ static int legacy_wmi_probe(struct wmi_device *wdev, const void *context)
+>  		.hdmi_mux = quirks->hdmi_mux,
+>  		.amplifier = quirks->amplifier,
+>  		.deepslp = quirks->deepslp,
+> +		.running_code = LEGACY_RUNNING,
+>  	};
+>  
+>  	if (quirks->num_zones > 0)
+> @@ -1333,6 +1335,7 @@ static int wmax_wmi_probe(struct wmi_device *wdev, const void *context)
+>  		.hdmi_mux = quirks->hdmi_mux,
+>  		.amplifier = quirks->amplifier,
+>  		.deepslp = quirks->deepslp,
+> +		.running_code = WMAX_RUNNING,
+>  	};
+>  
+>  	if (quirks->thermal)
 > 
+
+I've not taken extensive look at interdependent changes in the series but 
+while reviewing patch 20/21 I noticed that alienfx_probe() changed there
+from:
+
+-       if (interface == WMAX)
+-               priv->lighting_control_state = WMAX_RUNNING;
+-       else if (interface == LEGACY)
+-               priv->lighting_control_state = LEGACY_RUNNING;
+
+to:
+
++       priv->lighting_control_state = pdata->running_code;
+
+Somehow, it felt odd and then looking this patch 16, it felt even odder. 
+Perhaps there's a good reason my review that didn't go deep enough failed 
+to uncover but please check if this is an indication that something is a 
+miss in the series.
 
 -- 
  i.
