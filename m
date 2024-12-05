@@ -1,73 +1,77 @@
-Received: from mail-pg1-f171.google.com (mail-pg1-f171.google.com [209.85.215.171])
+Received: from mail-pg1-f177.google.com (mail-pg1-f177.google.com [209.85.215.177])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E25971FB4;
-	Thu,  5 Dec 2024 00:36:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0E12B10E9;
+	Thu,  5 Dec 2024 00:38:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1733358990; cv=none; b=KwRbu09ziIOPzUnAD2k0iqwLb1hDR/sQia3N8YSYYmjl08k0nDU48woX37KQdCu+0CuW9yThOWJcbaHs8uYf7sKwEpJ0CV+Pbdzg0P+7rN4GNUjV9wQpnbSS78BNgTqF1wE8HEjsKYlktkeDP0FZoB1wxEWZ6QQMUwEDwsGy8j0=
+	t=1733359111; cv=none; b=hwEb1Aevajc6Q+WccHYTQS8o+FMz94Y8y0Huizg2lqhT+kHTyCgpECga1J+c7/jzMmTntHL7G4RDpflmeq26VQXykEYKVKeSZfTl2NJJTNDABJFrmEtQC/zVz2pXawR10yGtUhHdR0tnFgS0W2VIwMpK0eJXu+1YXMtWcHndEDw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1733358990; c=relaxed/simple;
-	bh=c3IGFIcYrs5POjUJZJ77cFGRuU9qQ7oV+pzI3UzIk64=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=NtSSMR5sTgak+W5y95t1jG1zb2KdJTnqapGzq03dFVQdozyzz91YC40MG8yCFllxAsG9/7mswRZjQrHYUEFJddGFsXNd0kWV6J6rcs2wmTbgMzpdPqZBftISKzGhf613zsK2AJYJbC7BsRSDrI50ZKrXbxVxsB0Zn4W5P37U5vs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Hof/BnBh; arc=none smtp.client-ip=209.85.215.171
+	s=arc-20240116; t=1733359111; c=relaxed/simple;
+	bh=CVtGeYGQ2lsIhDmByOC3VmZ9h8mcsqIVHwZTa60EnLA=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=Rs7PbZtkJ1fhS7cTnPrVmiFL6iq8sWMLP3gr+aWOTtWdkHC7fiPsIRi9gtc45JiknPN4lGbVOreodTyBHcJeEHVf9QMGhg5fOu+TKxCt2Zx/bv8iaUrDNmfUhzNT6591uNo1orkMu6JS6d3AUXf3K4SWKR1eQkXgcf1VYn7B+gk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=CFmsIKhk; arc=none smtp.client-ip=209.85.215.177
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Hof/BnBh"
-Received: by mail-pg1-f171.google.com with SMTP id 41be03b00d2f7-7fd10cd5b1aso289375a12.2;
-        Wed, 04 Dec 2024 16:36:28 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CFmsIKhk"
+Received: by mail-pg1-f177.google.com with SMTP id 41be03b00d2f7-7fd10cd5b10so336105a12.2;
+        Wed, 04 Dec 2024 16:38:29 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1733358988; x=1733963788; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=6uhuTedbxWiR2mVtb5z46bMDrioY6oWpuEBDEuGxtUM=;
-        b=Hof/BnBhuTj/qbR/66YkpwDczp42U0mUtdoCawh2Uo5yEhl3KT41Et6FBldVqZhWhS
-         BPL2BO78hb6dkUJnOVpzlmLDGjgt6b8G5BW8WVfQ2zM8ZfztleahH25m8VoIIdVgphAy
-         IBnu/3t3qldxwTujFq6M8Zv79HMmTqeGIICQCt/Isx2WC0EHFILAVam14L/IqVF60Bjc
-         NtJQ716RzAu3nFHGuSUaVMGT8PtmWUKIKfT4OgOEIIqCG8lOJEtf/LPFSvtDiLCjWF6B
-         GTq2t++xElk3LOpygHO2J9Aw/cg8fDFVXAjx40tB8C2FnUq5SpX2z8hyQxtEMakvd7e+
-         CPig==
+        d=gmail.com; s=20230601; t=1733359109; x=1733963909; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=9TaqAnQ9e84EfyCGFY27XE5cu/57VweM6gLIO9TxviE=;
+        b=CFmsIKhkOCPqeS98oKWoFO5zo2feDy75fr+q34YeV7lDVwctX2/rbRKW1N9QZvJNAU
+         o4VgW2wK+Aos2a+wPEexI53Og5Svtl/ByWavl8QQCgqXW3dkMME0yQRSPgBNMgDNg5Bk
+         Yv9W3TiSer00ljVvI7pArE4YjjumtM7PAVOucmaMX4by5YvhKJV90/cGhj+Idwx6eJBE
+         b7ZKv/ke+1YaU6A8VCIJ+UOBkLRKxXqecpn+9zO+E6pay0TW0YqZT95jQ/zxtHbCM3EG
+         FH4cwihynyfx3U1RGJfa950YlkaoTuWveNxVsPBSO4UtQ38oqsASGkuvRlk4n3zXgW5p
+         WREg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1733358988; x=1733963788;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=6uhuTedbxWiR2mVtb5z46bMDrioY6oWpuEBDEuGxtUM=;
-        b=Wt98rW3zFNsCPcynDI6YVNwxEvcVVuBHaFLh0arUq0sNB3obNDpNCYxW57++yjW1/8
-         LheCQZLT4zWORQjZZtf5pjDuNl3wEvZXTwFv8J0k6+YAaqEMlaCIhBnenW3MYDWdSdVk
-         C5rWrKyK0LeT3CC4a00vwjid7sNX2c+GQj9G4MID7kFXxr6LimjR4c/3TAq0VuqHyoc1
-         fxBOOsOpWZAeDSaw85EAu5Dfl1iIS3w9DCFilfUHpz3uBTzSB7a8Pd2/gvPQyd3ksw+Q
-         PGgsGG17rLZ4kh15N+7t/KVKsaOc9OCIHvZoiezUt2xYdRUHuPsCt1Mr4QNzbQ1IJkQZ
-         rV6Q==
-X-Forwarded-Encrypted: i=1; AJvYcCURJwm7mCIht/VV5U/Hg27DYWiOzwrlou3tT3/A1ClxuX4px0XIbk9hdSRmfUgOKwUid1/3iPpVEfuSUS4=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxgYOnL+ilY/M1G9x2sJvp6xKcbFMc8SMey/+dPwfJZbxLc19hf
-	c62JxT/Gs4vLtWGBPWwhTPpZ6cmoA+4mtL/Y/RCuULAL6Jvaxc0zPjbIAVtU
-X-Gm-Gg: ASbGncsJUdCWUP5sO+pEs0yQiTsGftU60zjtJBUjMLywACEieKXWUb6jBxZ8AgGSIMH
-	lf8OxAs1b8ajiKbL4KZRmrEJ0Of/lUOiLxHFnwP3WOGRRfH+5UStZd6NO49fFu5HRvomAOPeezz
-	Ze/wPOiR8L2r4G/clG8X9j1OAom3yRXC0Df2FWK4gofToTsTrheDM/ECtDJyxxiRV2Rivl3UpCi
-	/zH7W2LBW0QJRIvycX78DaCckZ8WeULYE+e3lJej63lRTepZNetQrEUwUlCYyyYPqcR5zQvypA5
-	sW+0vcreUQ1aRXQCPmk=
-X-Google-Smtp-Source: AGHT+IHPrhJIlSA36m/yhzrjjRLRsSmY9cvhvedQ3vfHRYCV/a0uaYbpIw+2wyg73IQBm/k3vy8yyw==
-X-Received: by 2002:a05:6a21:6d94:b0:1db:d8df:8c4e with SMTP id adf61e73a8af0-1e16bdf9bc5mr11013325637.12.1733358987842;
-        Wed, 04 Dec 2024 16:36:27 -0800 (PST)
+        d=1e100.net; s=20230601; t=1733359109; x=1733963909;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=9TaqAnQ9e84EfyCGFY27XE5cu/57VweM6gLIO9TxviE=;
+        b=EnZDwCfKZVhJYMrGbJQF3/086rpPYP6q/zMnz1Y2svQM3b90fYcJq8kHpd9ezCcW6D
+         mZnKioc7CPVPLQFdPXqi2p4vEsBs2Bp+joRlSaej9y375XuhjUK97aXDcF0kE7KfLp2w
+         GxrrGalxkm32zFziKXL80KZ7lCAP83x2pp/zFOiCTwiUYWSPuyPh6/ZHeGGjZz3ddIGL
+         g/YhQ+wv4kD8+FpRlS3UHR270U4yitCubvKjYRmKeY+cKxayJOxjDnj2Cs6X8ifO0Yj4
+         EYexVoJCasi6TM1+5PB0jsgxft3lfuVxW/UUZF8yNYRC3sEaGqcNFCbdMGJySBAmLrqT
+         GiLw==
+X-Forwarded-Encrypted: i=1; AJvYcCV7dUDNnitaAfD3Q3GFFe5rf3XS99ueSLyDdtxxcM/OXjsq3PEKIqaLfww2XrPSKTDSTDqS70XO1RVscwgKVaK3Dod84w==@vger.kernel.org, AJvYcCWmhQl0vbWEg84C3LoDgttxhjsXjn4qQeuiAQrFCmUOm8U3BQ1cn+jm/KxUK6+JTxic7MjIKkR+EzZnEQk=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzPjdQ6Hh30DVZxVTLOoe5wDnTPdX6250YdXy4erHr2RprTYTBk
+	Gez2iKn/SPkSv1umGUgidj9bKtht6I1lmC9Ps6BlsoQKtos2veO6
+X-Gm-Gg: ASbGncuZlp7LKYd3teQeKhccpm/w+PUhSaGbfEwWjTAzWNlPoXhheTYhirA4unuKuej
+	lfcQR5Dro8xzgEl0Qap8R6B0EhuLm9M8590nsQobujoL4pRawHSxLEAmVbvAKWlq0sUHYwcfHxJ
+	fMvXQh1rwQDopcrQChI41Ey0EwbOqQKt2dS6dOd/1TaJF+XEP8NcWtQfTUnXikd0TB58yfvBZQn
+	8y9jeNWFH3VgfX0At1ffYD+WQGeqm07eGnlwu+5KRhduk48KsPg5F/63cBBSrKIGnp34q+XFGR9
+	j5PXK4HUoR1MDIPyNd0=
+X-Google-Smtp-Source: AGHT+IHGZoXQtkdzn9gcelz/RSchyTX6Ifra/ExRIUhpX7+I/4rIt6Gijq0x5nMiHxPzojX3/Q283w==
+X-Received: by 2002:a05:6a21:339c:b0:1e0:f05b:e727 with SMTP id adf61e73a8af0-1e1653a7977mr12494551637.2.1733359109229;
+        Wed, 04 Dec 2024 16:38:29 -0800 (PST)
 Received: from localhost.localdomain (host111.181-10-101.telecom.net.ar. [181.10.101.111])
-        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-7fd1569b2b6sm148768a12.14.2024.12.04.16.36.25
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-725a2cc9311sm94243b3a.182.2024.12.04.16.38.26
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 04 Dec 2024 16:36:27 -0800 (PST)
+        Wed, 04 Dec 2024 16:38:28 -0800 (PST)
 From: Kurt Borja <kuurtb@gmail.com>
-To: platform-driver-x86@vger.kernel.org
+To: kuurtb@gmail.com
 Cc: Dell.Client.Kernel@dell.com,
 	hdegoede@redhat.com,
 	ilpo.jarvinen@linux.intel.com,
 	linux-kernel@vger.kernel.org,
 	mario.limonciello@amd.com,
-	w_armin@gmx.de,
-	Kurt Borja <kuurtb@gmail.com>
-Subject: [RFC PATCH 00/21] alienware-wmi driver rework
-Date: Wed,  4 Dec 2024 21:27:35 -0300
-Message-ID: <20241205002733.2183537-3-kuurtb@gmail.com>
+	platform-driver-x86@vger.kernel.org,
+	w_armin@gmx.de
+Subject: [RFC PATCH 01/21] alienware-wmi: Modify parse_rgb() signature
+Date: Wed,  4 Dec 2024 21:38:03 -0300
+Message-ID: <20241205003802.2184367-2-kuurtb@gmail.com>
 X-Mailer: git-send-email 2.47.1
+In-Reply-To: <20241205002733.2183537-3-kuurtb@gmail.com>
+References: <20241205002733.2183537-3-kuurtb@gmail.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -76,143 +80,45 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Hi :)
+parse_rgb() now takes struct color_platform instead of struct
+platform_zone to support upcoming refactor.
 
-This series are a follow-up to this discussion [1], in which I proposed
-migrating the alienware-wmi driver to use:
+Signed-off-by: Kurt Borja <kuurtb@gmail.com>
+---
+ drivers/platform/x86/dell/alienware-wmi.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-1. State container driver model
-2. Modern WMI driver design
-3. Drop use of deprecated WMI methods
-
-Of course, this was much harder than expected to do cleanly. Main
-problem was that this driver "drives" two completely different devices
-(I'm not referring to the WMI devices, which also happen to be two).
-
-Throughout these series we will call these devices AlienFX and AWCC.
-
-As a preamble
-=============
-
-AlienFX exposes a LED, hdmi, amplifier and deepsleep interface to
-userspace through a platform device named "alienware-wmi". Historically
-this driver handled this by leveraging on two WMI devices as a backend.
-This devices named LEGACY and WMAX were very similar, the only
-difference was that WMAX had more features, but share all features
-LEGACY had. Although it's a stretch, it could be argued this WMI devices
-are the "same", just different GUID.
-
-Later Dell repurposed the WMAX WMI device to serve as a thermal control
-interface for all newer "gaming" laptops. This new WMAX device has an
-ACPI UID = "AWCC" (I discovered this recently). So it could also be
-argued that old WMAX and AWCC WMAX are not the same device, just same
-GUID.
-
-This drivers manages all these features using deprecated WMI methods.
-
-Approach I took for the rework
-==============================
-
-Parts 1-7 sort of containerize all AlienFX functionality under the
-"alienware-wmi" platform driver so WMI drivers can prepare and register
-a matching platform device from the probe.
-
-Parts 8-12 create and register two WMI drivers for the LEGACY and WMAX
-devices respectively. The code for these probes is VERY similar and
-all "differences" are passed to the platform device via platform
-specific data (platdata). Also AlienFX functionality is refactored to
-use non-deprecated WMI methods.
-
-Parts 13-17 migrate all AWCC methods to use non-deprecated WMI methods
-and the state container driver model.
-
-Parts 18-21 I splitted the alienware-wmi.c module into the different
-features this driver manages.
-
-alienware-wmi-base.c is in charge of initializing WMI drivers and
-define some platform specific data, like operations (Part 10 for more
-info). alienware-wmi-alienfx.c has all AlienFX functionality and
-alienware-wmi-awcc.c has all AWCC functionality.
-
-Coments
-=======
-
-This is still kind of a draft, but I did some testing and it works!
-
-Of course I will do thorough testing and cleanup when I send the
-non-RFC version. I just want to get some comments on the general
-approach before proceeding further.
-
-I think this is quite messy in it's current state so I apollogize.
-
-@Mario Limonciello: I included the reviews you gave me on [2]. I
-included some of those patches here, and dropped the ones that did not
-make sense with this design. As this is another series let me know if
-you want me to drop the tags!
-
-@Armin Wolf: I don't like the amount of files I made. As the maintainer
-of the wmi module, what do you think about making two independent
-modules, one for AlienFX and one for AWCC. In order to not register two
-drivers for the WMAX device the module init would check if the "AWCC"
-UID is present.
-
-The approach for that would be basically the same, and I think the
-series would change very little.
-
-I would like this a lot because I still think old and new WMAX devices
-are different, but I couldn't find another example of where an OEM
-repurposed a WMI device.
-
-@Everyone: I know this is VERY long. Thank you so much for your time in
-advance!
-
-This series were made on top of the 'for-next' branch:
-
-Commit c712e8fd9bf4 ("MAINTAINERS: Change AMD PMC driver status to "Supported"")
-
-~ Kurt
-
-[1] https://lore.kernel.org/platform-driver-x86/6m66cuivkzhcsvpjv4nunjyddqhr42bmjdhptu4bqm6rm7fvxf@qjwove4hg6gb/T/#u
-[2] https://lore.kernel.org/platform-driver-x86/20241120163834.6446-3-kuurtb@gmail.com/
-
-Kurt Borja (21):
-  alienware-wmi: Modify parse_rgb() signature
-  alienware-wmi: Move Lighting Control State
-  alienware-wmi: Remove unnecessary check at module exit
-  alienware-wmi: Improve sysfs groups creation
-  alienware-wmi: Refactor rgb-zones sysfs group creation
-  alienware-wmi: Add state container and alienfx_probe()
-  alienware-wmi: Migrate to state container pattern
-  alienware-wmi: Add WMI Drivers
-  alienware-wmi: Initialize WMI drivers
-  alienware-wmi: Add alienfx OPs to platdata
-  alienware-wmi: Refactor LED control methods
-  alienware-wmi: Refactor hdmi, amplifier, deepslp
-  alienware-wmi: Add a state container for AWCC
-  alienware-wmi: Migrate thermal methods to wmidev
-  alienware-wmi: Refactor sysfs visibility methods
-  alienware-wmi: Make running control state part of platdata
-  alienware-wmi: Drop thermal methods dependency on quirks
-  platform-x86: Add header file for alienware-wmi
-  platform-x86: Rename alienare-wmi
-  platform-x86: Split the alienware-wmi module
-  platform-x86: Add config entries to alienware-wmi
-
- MAINTAINERS                                   |    3 +-
- drivers/platform/x86/dell/Kconfig             |   25 +-
- drivers/platform/x86/dell/Makefile            |    5 +-
- .../platform/x86/dell/alienware-wmi-alienfx.c |  531 +++++++
- .../platform/x86/dell/alienware-wmi-awcc.c    |  282 ++++
- .../platform/x86/dell/alienware-wmi-base.c    |  525 +++++++
- drivers/platform/x86/dell/alienware-wmi.c     | 1267 -----------------
- drivers/platform/x86/dell/alienware-wmi.h     |  141 ++
- 8 files changed, 1505 insertions(+), 1274 deletions(-)
- create mode 100644 drivers/platform/x86/dell/alienware-wmi-alienfx.c
- create mode 100644 drivers/platform/x86/dell/alienware-wmi-awcc.c
- create mode 100644 drivers/platform/x86/dell/alienware-wmi-base.c
- delete mode 100644 drivers/platform/x86/dell/alienware-wmi.c
- create mode 100644 drivers/platform/x86/dell/alienware-wmi.h
-
+diff --git a/drivers/platform/x86/dell/alienware-wmi.c b/drivers/platform/x86/dell/alienware-wmi.c
+index 77465ed9b449..b3a73fc43b3c 100644
+--- a/drivers/platform/x86/dell/alienware-wmi.c
++++ b/drivers/platform/x86/dell/alienware-wmi.c
+@@ -434,7 +434,7 @@ static u8 global_brightness;
+ /*
+  * Helpers used for zone control
+  */
+-static int parse_rgb(const char *buf, struct platform_zone *zone)
++static int parse_rgb(const char *buf, struct color_platform *colors)
+ {
+ 	long unsigned int rgb;
+ 	int ret;
+@@ -454,7 +454,7 @@ static int parse_rgb(const char *buf, struct platform_zone *zone)
+ 	repackager.package = rgb & 0x0f0f0f0f;
+ 	pr_debug("alienware-wmi: r: %d g:%d b: %d\n",
+ 		 repackager.cp.red, repackager.cp.green, repackager.cp.blue);
+-	zone->colors = repackager.cp;
++	*colors = repackager.cp;
+ 	return 0;
+ }
+ 
+@@ -538,7 +538,7 @@ static ssize_t zone_set(struct device *dev, struct device_attribute *attr,
+ 		pr_err("alienware-wmi: invalid target zone\n");
+ 		return 1;
+ 	}
+-	ret = parse_rgb(buf, target_zone);
++	ret = parse_rgb(buf, &target_zone->colors);
+ 	if (ret)
+ 		return ret;
+ 	ret = alienware_update_led(target_zone);
 -- 
 2.47.1
 
