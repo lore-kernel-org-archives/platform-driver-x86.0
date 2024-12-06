@@ -1,147 +1,334 @@
-Received: from mail-ej1-f52.google.com (mail-ej1-f52.google.com [209.85.218.52])
+Received: from linux1587.grserver.gr (linux1587.grserver.gr [185.138.42.100])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E8F0213E98;
-	Fri,  6 Dec 2024 21:18:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 43DB522C6C0;
+	Fri,  6 Dec 2024 21:44:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.138.42.100
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1733519924; cv=none; b=c6ORLnjCLliByQwYmCaSAJHQevKFDMj5YeXHqycLlXIKoB/YnwsgCylsxpVREjHMIhQxbUQaoINSD1d2LTG6Dv3PCKsr7D1OglD2/8qCO0mYo9UYqppCAJRwl/C5/rGS23Z5rZfC2IPh/jOtG2CvClrCdym9KVHck3BEIj++j+A=
+	t=1733521503; cv=none; b=pwXb0suSzC6LOeJguhTDW1UIMF/shyS0XFbzhmPcT6SLinrNWvghr955SCp8oU8/E1aYE1YhOP1uVQtLZv59vFRiu4VQf7XYVG52d+F3QoD9SlRIvWG1UkE+ACls/ZMlzA3NkAgQdCP/P0OjhUnqA6qMpnfj/GPh+kyrs/eUWR0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1733519924; c=relaxed/simple;
-	bh=+G0VUTcrCnTC5rX+UjcLwTptgU7q/HBq1U1Y2xggPl4=;
-	h=Date:From:To:Cc:Message-ID:In-Reply-To:References:Subject:
-	 MIME-Version:Content-Type; b=kfYLXXXBgqgq2MExoMacXHPp0Jkt3sAREyIBdcAXd/BUvsIZfHTdCjaPDF3abojW0/kdaop+5lOmv0/IGdLcjkPKm/N6Rko9AKmVBHhDPjwRAZ13rOKtfAQVJwAI81BNQ1fBalKK7BFCmLRORRztBsmjTEA7d51pVqN+hPe1mfs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ErRn66Lr; arc=none smtp.client-ip=209.85.218.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1733521503; c=relaxed/simple;
+	bh=aJWZPAiWAxucwbjk7jb9g/Vq3AuP4WmybZ/3vCS6qSo=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=XDYlcgAAD0mnj4JNBP1VuXhz2RDZPdMzFiQcjcivq+w4YRcQp65yvN/Id/leYNAuQKlHJqPqCF3aFbuypWm5qCsdtsmVxdBFcWbXiKKR0571cBctGK0CUW+CKtJQn+/AaFodmn+rUOOfB99KO7XrG21ibocKh0zJLPvR6wy590I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=antheas.dev; spf=pass smtp.mailfrom=antheas.dev; dkim=pass (1024-bit key) header.d=antheas.dev header.i=@antheas.dev header.b=42qtEUOF; arc=none smtp.client-ip=185.138.42.100
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=antheas.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=antheas.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ErRn66Lr"
-Received: by mail-ej1-f52.google.com with SMTP id a640c23a62f3a-aa503cced42so352623966b.3;
-        Fri, 06 Dec 2024 13:18:41 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1733519920; x=1734124720; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:subject:references
-         :in-reply-to:message-id:cc:to:from:date:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=+G0VUTcrCnTC5rX+UjcLwTptgU7q/HBq1U1Y2xggPl4=;
-        b=ErRn66Lrkd1BRffrmAYPHrDaLy5hWARwN2D9uoGlVn+pDFc6WFqFv4NbbtIhS+wP3p
-         RshhR5Jyn7pwA+HrWwEQjr3AugfLn7hedCHJ/ucCRaf/ndovoLEXH4feaRBzDRxMPM9H
-         gW9ZNDDyegCUam/o57mDkc04xtoO6bQsBZ0clgFJJt9CRtAKsh/BhEEB0f+RGumi9tjk
-         6u2WqRykdzxzJx323s8q5izOrwN52xYxcvUfZXAsTTyNRb6f2Oaqc+W3z8dQWf2VhuUR
-         InkJC0OwrqmpxTYFvj/eR3Gu1Ayva0K/sL8v80GJHR+XZS76y35rR9tMlTC5ctPODLvl
-         lB5g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1733519920; x=1734124720;
-        h=content-transfer-encoding:mime-version:subject:references
-         :in-reply-to:message-id:cc:to:from:date:x-gm-message-state:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=+G0VUTcrCnTC5rX+UjcLwTptgU7q/HBq1U1Y2xggPl4=;
-        b=WtXH9HR5OphZ7fQuB42Oy1MNN+4aQwvE/zZ1VgaWoBpKxMvaBYibewsNQsBLoXcyUH
-         L7/RBcII/J6rVqi6We+LV5qV7Sfn744cj/mg9P+THa0kw88hEzHhLQRpVoj6mkwxqvPr
-         K8Tf9b62EicNilT20UOLt/SZChjij29hWIzZdoJlcZns11n2Zw8Ge4wKvojSn1HX0yEf
-         6W1hzo3a/gBS+BIXMbk2CeNPI/vcrtBhsXUnNuIkq6sBUiNpFTOdnf/nFxHeJsq+nDrp
-         g7NLQlh6YNh4WXDGhem8Qp07vv/xvRKH9NdO8gTig+DKdl2JP1ENYA/ipszdOCZaNQO6
-         ZEaQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVr3gQqhHZ0C9s446uvZAo2Dy6yWQQxQNqZBzDEBXFt7V3B1eWOvt0EzpkeJ2KD4M2O6rjofPwoX8iFfsc=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwbE/S7NhjO9GXPJ/czDzL9cjBLU24RekQtLoZoTHISh5cnEa7J
-	eqrzrqTI5NjKLFId8YnKhKSeoPk5u7S+CLGHmxAIyUestS+IC0x8
-X-Gm-Gg: ASbGnct0iK24QoXmvpf7+9gQ0fwZRfQX/W71zwQwWumziPGKyTmW43o/8MJFF1GBFBL
-	bRSPyh5KEqEwkCq59jcwd7ZWElP52jk0V2q6oUaE+hx3nKSbJLSNQEvP+RX3pbRnguQKdoGI7Da
-	u16x39EZeZ3jJuo1uDK1vxUmo9wMBYe1s4ppJV4IawJdN+zAictPfKWRB0A+r0ybwipLf7j9Tf/
-	y2fnDaSbFDYfk7Du5Y6wVAkDUC5A3i5QbfjeGWI5GN45g==
-X-Google-Smtp-Source: AGHT+IGcoxybZrhqT6jfLtgMG6i7/mc41GHYgMF8CO/3DtZQeH/elgJdfj7dasDNeMyogMXK8EXInA==
-X-Received: by 2002:a17:907:7714:b0:aa6:3418:d9d4 with SMTP id a640c23a62f3a-aa63a073aa6mr302410166b.17.1733519919441;
-        Fri, 06 Dec 2024 13:18:39 -0800 (PST)
-Received: from [127.0.0.1] ([45.152.72.7])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-aa625e96a3esm291696566b.59.2024.12.06.13.18.38
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 06 Dec 2024 13:18:39 -0800 (PST)
-Date: Fri, 6 Dec 2024 23:18:36 +0200 (GMT+02:00)
-From: Yurii Strilets <yurastr100@gmail.com>
-To: Armin Wolf <W_Armin@gmx.de>
-Cc: platform-driver-x86@vger.kernel.org, regressions@lists.linux.dev,
-	linux-kernel@vger.kernel.org
-Message-ID: <78eb0efb-bbaf-4cba-840a-9aa507798075@gmail.com>
-In-Reply-To: <bf3b9efd-6700-485a-bd0e-f81de1e11fcf@gmx.de>
-References: <33bfcda8-3d3d-46b9-84f0-44e0e9f44230@gmail.com> <bf3b9efd-6700-485a-bd0e-f81de1e11fcf@gmx.de>
-Subject: Re: [REGRESSION][BISECTED] asus-wmi driver fails on my laptop
+	dkim=pass (1024-bit key) header.d=antheas.dev header.i=@antheas.dev header.b="42qtEUOF"
+Received: from mail-lj1-f170.google.com (mail-lj1-f170.google.com [209.85.208.170])
+	by linux1587.grserver.gr (Postfix) with ESMTPSA id 2BDAD2E08B10;
+	Fri,  6 Dec 2024 23:37:38 +0200 (EET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=antheas.dev;
+	s=default; t=1733521060;
+	bh=sUIZ7yFiwkQs7/RyRHjph86Tz7Z33Zp4mkGsfwbVWjw=;
+	h=Received:From:Subject:To;
+	b=42qtEUOFJrKln6b5nS7YdbvjNGKGAGrpi4eJsHe7q41DKxatcYNdZlA9FKB6uXXFm
+	 OX02FsNjh2EFWt/YLW9A6K3EHva8duZ28S8mK41eiiXbmSjRvdzBrivA+IUULb4gHh
+	 4xHaygJKjo7dnFeZflZslJd/Ws4BSltW4gEhWMxo=
+Authentication-Results: linux1587.grserver.gr;
+        spf=pass (sender IP is 209.85.208.170) smtp.mailfrom=lkml@antheas.dev smtp.helo=mail-lj1-f170.google.com
+Received-SPF: pass (linux1587.grserver.gr: connection is authenticated)
+Received: by mail-lj1-f170.google.com with SMTP id
+ 38308e7fff4ca-2ffc7a2c5d5so25381941fa.1;
+        Fri, 06 Dec 2024 13:37:38 -0800 (PST)
+X-Forwarded-Encrypted: i=1;
+ AJvYcCXi9iLN0CNyeQ8z/Wy4D2/4tR6fc9c0QABGz2mqI+Ks8U3FTx13ZFVwRFd+dXwGkGnaxJABdFzlAFaQ+hEoxFBXdTNA@vger.kernel.org
+X-Gm-Message-State: AOJu0YyutUN8m/3pPOYt2qY8FhzJXV+gK6lrfcBkZouruxm+dprY6Q/X
+	mGe9dBly/QahNjOE6EsjhqIwlIpYKgGqGhgnTdqiVJVeWXqZA376cBAlimr7Rppavqvi4ARBFs+
+	JFsyOOot0xkKZOamp2C/GGg+LCSE=
+X-Google-Smtp-Source: 
+ AGHT+IEiHgR5xIO6c0tBPqpY3rl5MAN0+xVjFvG+Gf/34uH+FygSQslFHHGsFHFwoh1tTLgAr86tfegbq0Ys3XZA2cM=
+X-Received: by 2002:a2e:ab0f:0:b0:2ff:7a4f:e770 with SMTP id
+ 38308e7fff4ca-3002fc68eaemr15238351fa.31.1733521057001; Fri, 06 Dec 2024
+ 13:37:37 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+References: <20241121172239.119590-1-lkml@antheas.dev>
+ <CAJZ5v0gDg57skLVOH32NtmhCEXGw_m63az4jWRJgkUq6qTsqgQ@mail.gmail.com>
+In-Reply-To: 
+ <CAJZ5v0gDg57skLVOH32NtmhCEXGw_m63az4jWRJgkUq6qTsqgQ@mail.gmail.com>
+From: Antheas Kapenekakis <lkml@antheas.dev>
+Date: Fri, 6 Dec 2024 22:37:25 +0100
+X-Gmail-Original-Message-ID: 
+ <CAGwozwEmgtWFD=dErONA8zitPCUhK6JNu6Y-6_AHEiEev7AWvw@mail.gmail.com>
+Message-ID: 
+ <CAGwozwEmgtWFD=dErONA8zitPCUhK6JNu6Y-6_AHEiEev7AWvw@mail.gmail.com>
+Subject: Re: [RFC 00/13] acpi/x86: s2idle: implement Modern Standby transition
+ states and expose to userspace
+To: "Rafael J. Wysocki" <rafael@kernel.org>
+Cc: linux-pm@vger.kernel.org, platform-driver-x86@vger.kernel.org,
+	dri-devel@lists.freedesktop.org,
+	Mario Limonciello <mario.limonciello@amd.com>,
+ Hans de Goede <hdegoede@redhat.com>,
+	Kyle Gospodnetich <me@kylegospodneti.ch>
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-X-Correlation-ID: <78eb0efb-bbaf-4cba-840a-9aa507798075@gmail.com>
+X-PPP-Message-ID: 
+ <173352105855.19321.17167263946980701921@linux1587.grserver.gr>
+X-PPP-Vhost: antheas.dev
+X-Virus-Scanned: clamav-milter 0.103.11 at linux1587.grserver.gr
+X-Virus-Status: Clean
 
-Thank you very much for the fix!
-I am terribly sorry about a faulty report, I did just find out I had an iss=
-ue during the mainline build.
+Hi Rafael,
+since 6.13-rc1 is out, hopefully you can have a look over the next few days
 
-Dec 6, 2024 20:15:05 Armin Wolf <W_Armin@gmx.de>:
+We have deployed a variant of this patchset now on desktop builds as
+well for over 2 months now, and we haven't had any regressions
+reported. We have also been using it on handheld builds, where for the
+last 2 or so weeks we transition to the sleep state and fire the dpms
+as part of the systemd sleep target, and it makes a big difference in
+how devices look when suspending and hibernating.
 
-> Am 06.12.24 um 14:33 schrieb Yura Strilets:
->=20
->> Hello,
->>=20
->> After upgrading from 6.11 to 6.12 a bunch of Fn+Fx buttons(touchpad,
->> mic, kb backlight, my asus) stopped working and the
->> /sys/(...)/asus::kbd_backlight interface is missing, which,
->> considering the dmesg, looks like an asus-wmi driver issue.
->>=20
->> I've been able to bisect the issue to the commit
->> [b012170fed282151f7ba8988a347670c299f5ab3] "platform/x86: asus-wmi:
->> Fix thermal profile initialization"
->>=20
->> Additionally, here's some maybe-helpful information:
->> my laptop's model -- ASUS Zenbook UX3402VA
->> linux distro -- Arch Linux
->> .config for bisection -- was taken from /proc/config.gz at 6.12.1 arch
->> kernel(attached in [1]) and missing options are default
->> dmesg logs -- The "grep asus" parts of both good and bad scenarios can
->> be seen below and full logs are at [2] and [3]
->>=20
->> =3D=3D bad.log =3D=3D
->> [=C2=A0=C2=A0=C2=A0 3.664546] asus_wmi: ASUS WMI generic driver loaded
->> [=C2=A0=C2=A0=C2=A0 3.713358] asus_wmi: Initialization: 0x1
->> [=C2=A0=C2=A0=C2=A0 3.714126] asus_wmi: SFUN value: 0x21
->> [=C2=A0=C2=A0=C2=A0 3.714131] asus-nb-wmi asus-nb-wmi: Detected ATK, not=
- ASUSWMI, use
->> DSTS
->> [=C2=A0=C2=A0=C2=A0 3.757420] asus_wmi: Failed to set throttle thermal p=
-olicy
->> (retval): 0x0
->> [=C2=A0=C2=A0=C2=A0 3.757425] asus_wmi: Failed to set default thermal pr=
-ofile
->> [=C2=A0=C2=A0=C2=A0 3.757429] asus-nb-wmi asus-nb-wmi: probe with driver=
- asus-nb-wmi
->> failed with error -5
->> =3D=3D end =3D=3D
->>=20
->> =3D=3D good.log =3D=3D
->> [=C2=A0=C2=A0=C2=A0 4.557898] asus_wmi: ASUS WMI generic driver loaded
->> [=C2=A0=C2=A0=C2=A0 4.776587] asus_wmi: Initialization: 0x1
->> [=C2=A0=C2=A0=C2=A0 4.777253] asus_wmi: SFUN value: 0x21
->> [=C2=A0=C2=A0=C2=A0 4.777256] asus-nb-wmi asus-nb-wmi: Detected ATK, not=
- ASUSWMI, use
->> DSTS
->> [=C2=A0=C2=A0=C2=A0 4.777258] asus-nb-wmi asus-nb-wmi: Detected ATK, ena=
-ble event queue
->> [=C2=A0=C2=A0=C2=A0 4.805497] input: Asus WMI hotkeys as
->> /devices/platform/asus-nb-wmi/input/input15
->> =3D=3D end =3D=3D
->>=20
->> [1] .config - https://pastebin.com/raw/3nDSV8Sm
->> [2] bad.log - https://pastebin.com/raw/fvR5Sjzt
->> [3] good.log - https://pastebin.com/raw/EazfLAWA
->>=20
->> Thanks,
->> Yurii
->>=20
-> I am aware of this issue, the necessary fix (commit 25fb5f47f34d) was alr=
-eady submitted upstream and will likely
-> show up in the stable kernels soon.
->=20
-> Thanks,
-> Armin Wolf
+Essentially, as soon as the suspend animation plays, the screen and
+rgb of the devices turn off instantly, and the power light of devices
+that have it as part of the sleep call begins to flash. Then, after a
+few seconds, the fan of the devices turns off. Before, they'd show a
+stale framebuffer and have the RGB be on until almost the suspend
+sequence is over.
+
+This is also true for hibernation, where before the RGB lights of the
+devices would stay on during the suspend sequence and the device would
+show a stale frame buffer on the screen. Now the devices look like
+they are suspended while initializing hibernation and then just turn
+off
+
+Maybe I need to shoot a video with it..
+
+So I'd love to hear your thoughts. Can you expand on what you mean by
+not backwards compatible?
+
+I know that it is not backwards compatible in the way where if the
+compositor/init system are not aware of it, the display on/off
+notifications will not fire automatically when the displays turn off.
+
+Antheas
+
+On Thu, 21 Nov 2024 at 18:41, Rafael J. Wysocki <rafael@kernel.org> wrote:
+>
+> On Thu, Nov 21, 2024 at 6:28=E2=80=AFPM Antheas Kapenekakis <lkml@antheas=
+.dev> wrote:
+> >
+> > The following series moves the _DSM 3,4,7,8 firmware notifications outs=
+ide
+> > the suspend sequence, and makes them part of a transition function, whe=
+re
+> > the system can transition freely between them when it is not suspended.
+> > This transition function is exposed to userspace, which now gains the
+> > ability to control the presentation of the device (e.g., pulse the susp=
+end
+> > light) without forcing the kernel to suspend. In addition, it adds supp=
+ort
+> > for the _DSM 9 call Turn Display On, which was introduced in Windows 22=
+H2
+> > and aims to speed up device wake-up while remaining in the "Sleep" stat=
+e.
+> > If userspace is not standby aware, the kernel will bring the system int=
+o
+> > the "Sleep" state before beginning the suspend sequence.
+>
+> I'll get to this when 6.13-rc1 is out, but I can tell you right away
+> that some of the above cannot be done without breaking backwards
+> compatibility.
+>
+> > This series requires a bit of background on how modern standby works in
+> > Windows. Windows has a concept of "Modern Standby" [1], where it perfor=
+ms
+> > an elaborate userspace and kernel suspend choreography while the device=
+ is
+> > inactive in order to maintain fast wake-up times and connectivity while=
+ the
+> > display of the device is off. This is done through 5 hardware states an=
+d
+> > the OS takes the liberty of transitioning between them, by following a =
+set
+> > of rules (e.g., "Adaptive Hibernate").
+> >
+> > ```
+> >                                  \/-> "Hibernate (S4)"
+> > "Active" <-> "Screen Off" <-> "Sleep" <-> "DRIPS"
+> >                   /\-  "Resume"  <-         <-
+> > ```
+> >
+> > When the display is on and the user is interacting with the device, it =
+is
+> > in the "Active" state. The moment the display turns off, the device
+> > transitions to the "Screen Off" state, where hardware and userspace are
+> > fully active. Userspace will then decide when appropriate to freeze maj=
+or
+> > components (such as the DE) and transition into the "Sleep" state, wher=
+e
+> > the kernel is still active and connectivity is maintained. Finally, the
+> > conventional "Suspend-to-idle" path can be used to bring the system int=
+o
+> > the deepest runtime idle platform state (DRIPS) state, which is named
+> > "s2idle" in the Linux kernel.
+> >
+> > After wake-up, the system re-transitions into the "Sleep" state, where
+> > userspace can run housekeeping and/or hibernate if the wake-up was not =
+user
+> > initiated (e.g., timer). If user-initiated, userspace can hasten the
+> > transition out of the "Sleep" state by transitioning into the state
+> > "Resume" that certain devices use to boost the Power Limit (PLx) while
+> > remaining in sleep (support for this new notification is rare). Then, i=
+t
+> > transitions back into "Screen Off" and "Active" to prepare for the user=
+.
+> >
+> > All transitions between these states feature unique firmware notificati=
+ons
+> > [3] that change the presentation of the device (e.g., pulse the suspend
+> > light, turn off RGB). For more information, see the docs in [8]. Making
+> > these transitions accessible from userspace moves them out of the suspe=
+nd
+> > sequence and has them happen while the kernel is fully active, mirrorin=
+g
+> > Windows.
+> >
+> > As a side effect, this patch series completely fixes the ROG Ally
+> > controller issue [5], which expects for .5s to lapse before its
+> > controller's USB hub goes into D3 and otherwise malfunctions. It also f=
+ixes
+> > an issue present in (allegedly only) older firmwares where they check t=
+he
+> > USB subsystem is not in D3 before allowing the controller to wake up wh=
+ile
+> > in powersave mode (for avoiding spurious wake-ups). As such, this patch
+> > series is also a universal fix for the ROG Ally controller.
+> >
+> > Moreover, this patch series allows turning off the controller and RGB o=
+f
+> > most Windows handhelds (OneXPlayer, Lenovo Legion Go, GPD, and Asus ROG
+> > Ally), opening the possibility of implementing suspend-then-hibernate a=
+nd
+> > other standby features, such as background downloads, without waking up=
+ the
+> > RGB/controller of those devices. A Thinkpad T14 2021 was also tested, a=
+nd
+> > it pulses its suspend light during sleep.
+> >
+> > There is still the question of where LSP0 entry/exit (_DSM 5,6) should =
+be
+> > fired or whether they should be fired in the path to hibernation. Howev=
+er,
+> > as they cause no issues currently, and they fire when software activity=
+ has
+> > seized, they are fine where they are.
+> >
+> > It is important to note that the effects of these _DSMs persist during
+> > reboots. I.e., if the Legion Go reboots while in the "Sleep" state, it =
+will
+> > boot into the "Sleep" state and have its controller disabled and suspen=
+d
+> > light pulsing. The reboot persistence is undesirable, so the reboot pat=
+h
+> > will need to include a transition to active prior to reboot (not
+> > included in this series). This is not the case after shutdown and
+> > hibernation, where the device boots into the "Active" state.
+> >
+> > The issue of DPMS is still present. Currently, gamescope and KDE (at le=
+ast)
+> > do not fire DPMS before suspending. This causes an undesirable frozen
+> > screen while the system is suspending and looks quite ugly in general. =
+This
+> > is especially true if the firmware notifications fire earlier. Therefor=
+e,
+> > should the kernel fire DPMS before forcing the transition to sleep for
+> > backwards compat.? If yes, it will be quite the effort. Moreover, shoul=
+d
+> > the kernel allow graphics drivers hook the transition function and bloc=
+k
+> > transitions to "Screen Off" if there is an active CRTC? As that would b=
+e a
+> > significant undertaking, there should be proof that there exists such a
+> > device that has an issue firing the notifications with an active CRTC.
+> >
+> > A variant of this series has been tested by thousands of users by now,
+> > where the notifications fire around .5s before the CRTC is disabled and=
+ no
+> > ill-effects have found in regard to this quirk. AFAIK, it is a visual
+> > quirk. Making DPMS fire before the backwards compat. transition is a go=
+od
+> > idea in any case, as it will sync the 200ms between Display Off/Sleep E=
+ntry
+> > firing and the graphics driver turning off the display, but it might no=
+t be
+> > worth the effort.
+> >
+> > We are currently testing a DPMS patch for gamescope and it completely f=
+ixes
+> > this visual quirk while allowing for e.g., hibernation without turning =
+on
+> > the screen. The DPMS gamescope patch + performing the transitions in
+> > userspace in such a way where it blends the Ally's suspend delay halves=
+ the
+> > user perceived delay to sleep and results in a very professional
+> > presentation. This presentation extends to other devices as well, such =
+as
+> > the Legion Go.
+> >
+> > Link: https://learn.microsoft.com/en-us/windows-hardware/design/device-=
+experiences/prepare-hardware-for-modern-standby [1]
+> > Link: https://learn.microsoft.com/en-us/windows-hardware/customize/powe=
+r-settings/adaptive-hibernate [2]
+> > Link: https://learn.microsoft.com/en-us/windows-hardware/design/device-=
+experiences/modern-standby-firmware-notifications [3]
+> > Link: https://github.com/hhd-dev/hwinfo/tree/master/devices [4]
+> > Link: https://git.kernel.org/pub/scm/linux/kernel/git/superm1/linux.git=
+/log/?h=3Dsuperm1/dsm-screen-on-off [5]
+> > Link: https://gitlab.freedesktop.org/drm/amd/-/issues/2719 [6]
+> > Link: https://dl.dell.com/manuals/all-products/esuprt_solutions_int/esu=
+prt_solutions_int_solutions_resources/client-mobile-solution-resources_whit=
+e-papers45_en-us.pdf [7]
+> > File: Documentation/admin-guide/pm/standby-states.rst [8]
+> >
+> > Changes from previous series (`acpi/x86: s2idle: move Display off/on ca=
+lls
+> >   outside suspend (fixes ROG Ally suspend)`):
+> >   - Separate Display On/Off rename into its own commit (suggested by Ha=
+ns)
+> >   - Move delay quirks into s2idle.c (suggested by Hans)
+> >   - Add documentation on Documentation/admin-guide/pm/standby-states.rs=
+t
+> >   - Callbacks are now static and a transition function is used
+> >   - Fixed all checkpatch warnings
+> >   - The rest of the series is completely re-written
+> >
+> > Antheas Kapenekakis (13):
+> >   Documentation: PM: Add documentation for S0ix Standby States
+> >   acpi/x86: s2idle: add support for Display Off and Display On callback=
+s
+> >   acpi/x86: s2idle: add support for Sleep Entry and Sleep Exit callback=
+s
+> >   acpi/x86: s2idle: add support for Turn On Display callback
+> >   acpi/x86: s2idle: add modern standby transition function
+> >   acpi/x86: s2idle: rename Screen On/Off to Display On/Off
+> >   acpi/x86: s2idle: call Display On/Off as part of callbacks
+> >   acpi/x86: s2idle: rename MS Exit/Entry to Sleep Exit/Entry
+> >   acpi/x86: s2idle: call Sleep Entry/Exit as part of callbacks
+> >   acpi/x86: s2idle: add Turn On Display and call as part of callback
+> >   acpi/x86: s2idle: add quirk table for modern standby delays
+> >   platform/x86: asus-wmi: remove Ally (1st gen) and Ally X suspend quir=
+k
+> >   PM: standby: Add sysfs attribute for modern standby transitions
+> >
+> >  Documentation/ABI/testing/sysfs-power         |  34 +++
+> >  .../admin-guide/pm/standby-states.rst         | 133 ++++++++++
+> >  Documentation/admin-guide/pm/system-wide.rst  |   1 +
+> >  drivers/acpi/x86/s2idle.c                     | 249 ++++++++++++++----
+> >  drivers/platform/x86/asus-wmi.c               |  54 ----
+> >  include/linux/suspend.h                       |  16 ++
+> >  kernel/power/main.c                           |  75 ++++++
+> >  kernel/power/power.h                          |   1 +
+> >  kernel/power/suspend.c                        | 154 +++++++++++
+> >  9 files changed, 616 insertions(+), 101 deletions(-)
+> >  create mode 100644 Documentation/admin-guide/pm/standby-states.rst
+> >
+> > --
+> > 2.47.0
+> >
+> >
