@@ -1,334 +1,215 @@
-Received: from linux1587.grserver.gr (linux1587.grserver.gr [185.138.42.100])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mout.gmx.net (mout.gmx.net [212.227.17.20])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 43DB522C6C0;
-	Fri,  6 Dec 2024 21:44:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.138.42.100
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 734F322C6C3;
+	Fri,  6 Dec 2024 21:57:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.20
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1733521503; cv=none; b=pwXb0suSzC6LOeJguhTDW1UIMF/shyS0XFbzhmPcT6SLinrNWvghr955SCp8oU8/E1aYE1YhOP1uVQtLZv59vFRiu4VQf7XYVG52d+F3QoD9SlRIvWG1UkE+ACls/ZMlzA3NkAgQdCP/P0OjhUnqA6qMpnfj/GPh+kyrs/eUWR0=
+	t=1733522227; cv=none; b=N56WWx9YRibmse4LmN1yycbEsaPDHGUrnjjOHA34hxgi02z6PsZGGF5dKHunKYTv1M+UTOB9zN4OXqFfY5PAEKzHxUlQjvCnFS/qM3ZmLBZfamNmndUuTnBdtoIXA/dChSckR9D18aFjrvgX0yw3nZCLkE7gm4QWh6W5mSupy+k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1733521503; c=relaxed/simple;
-	bh=aJWZPAiWAxucwbjk7jb9g/Vq3AuP4WmybZ/3vCS6qSo=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=XDYlcgAAD0mnj4JNBP1VuXhz2RDZPdMzFiQcjcivq+w4YRcQp65yvN/Id/leYNAuQKlHJqPqCF3aFbuypWm5qCsdtsmVxdBFcWbXiKKR0571cBctGK0CUW+CKtJQn+/AaFodmn+rUOOfB99KO7XrG21ibocKh0zJLPvR6wy590I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=antheas.dev; spf=pass smtp.mailfrom=antheas.dev; dkim=pass (1024-bit key) header.d=antheas.dev header.i=@antheas.dev header.b=42qtEUOF; arc=none smtp.client-ip=185.138.42.100
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=antheas.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=antheas.dev
+	s=arc-20240116; t=1733522227; c=relaxed/simple;
+	bh=SmywzE/8SrM/WvdqM+K4Uq23ueox1yqICb1mpZzjT/E=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=YeGgNW6ZwIlt5Tr6f+qMFgVLtZUUUrH83ztH9xGPWNkS50c5ShBcrsX9PWciXbPWHXByl2+SasUlruSGIQHrwVqEAaK8ZFw0EYj0fMNNCEAlNRsBc59CSi4BjnG5gEtDiUp1Kkh/Otjbrw5mIE8wMS5ZdbM+NStRo3HcO8NTK64=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b=EG2R5s3R; arc=none smtp.client-ip=212.227.17.20
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=antheas.dev header.i=@antheas.dev header.b="42qtEUOF"
-Received: from mail-lj1-f170.google.com (mail-lj1-f170.google.com [209.85.208.170])
-	by linux1587.grserver.gr (Postfix) with ESMTPSA id 2BDAD2E08B10;
-	Fri,  6 Dec 2024 23:37:38 +0200 (EET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=antheas.dev;
-	s=default; t=1733521060;
-	bh=sUIZ7yFiwkQs7/RyRHjph86Tz7Z33Zp4mkGsfwbVWjw=;
-	h=Received:From:Subject:To;
-	b=42qtEUOFJrKln6b5nS7YdbvjNGKGAGrpi4eJsHe7q41DKxatcYNdZlA9FKB6uXXFm
-	 OX02FsNjh2EFWt/YLW9A6K3EHva8duZ28S8mK41eiiXbmSjRvdzBrivA+IUULb4gHh
-	 4xHaygJKjo7dnFeZflZslJd/Ws4BSltW4gEhWMxo=
-Authentication-Results: linux1587.grserver.gr;
-        spf=pass (sender IP is 209.85.208.170) smtp.mailfrom=lkml@antheas.dev smtp.helo=mail-lj1-f170.google.com
-Received-SPF: pass (linux1587.grserver.gr: connection is authenticated)
-Received: by mail-lj1-f170.google.com with SMTP id
- 38308e7fff4ca-2ffc7a2c5d5so25381941fa.1;
-        Fri, 06 Dec 2024 13:37:38 -0800 (PST)
-X-Forwarded-Encrypted: i=1;
- AJvYcCXi9iLN0CNyeQ8z/Wy4D2/4tR6fc9c0QABGz2mqI+Ks8U3FTx13ZFVwRFd+dXwGkGnaxJABdFzlAFaQ+hEoxFBXdTNA@vger.kernel.org
-X-Gm-Message-State: AOJu0YyutUN8m/3pPOYt2qY8FhzJXV+gK6lrfcBkZouruxm+dprY6Q/X
-	mGe9dBly/QahNjOE6EsjhqIwlIpYKgGqGhgnTdqiVJVeWXqZA376cBAlimr7Rppavqvi4ARBFs+
-	JFsyOOot0xkKZOamp2C/GGg+LCSE=
-X-Google-Smtp-Source: 
- AGHT+IEiHgR5xIO6c0tBPqpY3rl5MAN0+xVjFvG+Gf/34uH+FygSQslFHHGsFHFwoh1tTLgAr86tfegbq0Ys3XZA2cM=
-X-Received: by 2002:a2e:ab0f:0:b0:2ff:7a4f:e770 with SMTP id
- 38308e7fff4ca-3002fc68eaemr15238351fa.31.1733521057001; Fri, 06 Dec 2024
- 13:37:37 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b="EG2R5s3R"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.de;
+	s=s31663417; t=1733522216; x=1734127016; i=w_armin@gmx.de;
+	bh=mM0+9Xt8SfhtSQJF2vyZ3azlCiuQbKlJQqRaVWm1nTo=;
+	h=X-UI-Sender-Class:From:To:Cc:Subject:Date:Message-Id:
+	 MIME-Version:Content-Transfer-Encoding:cc:
+	 content-transfer-encoding:content-type:date:from:message-id:
+	 mime-version:reply-to:subject:to;
+	b=EG2R5s3RqiEF0YTbPodCHRgXqtBhxvmhUQssyR3zHJDgLxBoG6CWgaWazI1zywFY
+	 wL1tu1yrSmYg3g1VhQJxPD+XBaXn+GI12E+9uZIA7bvSmPDRweA3ZSa76AEW2wSrB
+	 b1hUvgswfBw5NzQVEk0pjdNwAs4bQt21DCGkBCNpajtlbKjI0ByJZRJGLTh1uvf1Z
+	 yg/S0ql2sa3lv1dWUA7GZA28GZfjL0DoHtiHV9qe6Le6BkFH6kge7HvfxRWFjDqw2
+	 L76YAfBHCI08ivoPrSvHE5e/MT4lXVRkvJeTZdcTuSuFVRFO5NX7KzG0pvixU2KOS
+	 WNE0dyiWNJ1yvNgreA==
+X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
+Received: from mx-inspiron.fritz.box ([91.14.230.110]) by mail.gmx.net
+ (mrgmx104 [212.227.17.168]) with ESMTPSA (Nemesis) id
+ 1M4s51-1tJxQm3zD5-00BFlp; Fri, 06 Dec 2024 22:56:56 +0100
+From: Armin Wolf <W_Armin@gmx.de>
+To: linux@weissschuh.net
+Cc: hdegoede@redhat.com,
+	ilpo.jarvinen@linux.intel.com,
+	platform-driver-x86@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH] platform/x86: wmi-bmof: Make use of .bin_size() callback
+Date: Fri,  6 Dec 2024 22:56:50 +0100
+Message-Id: <20241206215650.2977-1-W_Armin@gmx.de>
+X-Mailer: git-send-email 2.39.5
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20241121172239.119590-1-lkml@antheas.dev>
- <CAJZ5v0gDg57skLVOH32NtmhCEXGw_m63az4jWRJgkUq6qTsqgQ@mail.gmail.com>
-In-Reply-To: 
- <CAJZ5v0gDg57skLVOH32NtmhCEXGw_m63az4jWRJgkUq6qTsqgQ@mail.gmail.com>
-From: Antheas Kapenekakis <lkml@antheas.dev>
-Date: Fri, 6 Dec 2024 22:37:25 +0100
-X-Gmail-Original-Message-ID: 
- <CAGwozwEmgtWFD=dErONA8zitPCUhK6JNu6Y-6_AHEiEev7AWvw@mail.gmail.com>
-Message-ID: 
- <CAGwozwEmgtWFD=dErONA8zitPCUhK6JNu6Y-6_AHEiEev7AWvw@mail.gmail.com>
-Subject: Re: [RFC 00/13] acpi/x86: s2idle: implement Modern Standby transition
- states and expose to userspace
-To: "Rafael J. Wysocki" <rafael@kernel.org>
-Cc: linux-pm@vger.kernel.org, platform-driver-x86@vger.kernel.org,
-	dri-devel@lists.freedesktop.org,
-	Mario Limonciello <mario.limonciello@amd.com>,
- Hans de Goede <hdegoede@redhat.com>,
-	Kyle Gospodnetich <me@kylegospodneti.ch>
-Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-X-PPP-Message-ID: 
- <173352105855.19321.17167263946980701921@linux1587.grserver.gr>
-X-PPP-Vhost: antheas.dev
-X-Virus-Scanned: clamav-milter 0.103.11 at linux1587.grserver.gr
-X-Virus-Status: Clean
+X-Provags-ID: V03:K1:iyM4dC2L+GYkowPGgDXdq5goD0TD+/TK9baZlTimbb8wj+YbDis
+ /HEzq0VAbr37z3OVzEUu5SivP1d4Wqc2yyaz5pB1hkct5HIZFvPnPk6g0yViBQDuqAIhOxk
+ tohsUClrz9/NVkltMOcz5G0k7id4Mu8fOqa8vho6rKxbDfyK6mC0Nz0IQm+WGyTSxxbbSx8
+ 5bLeSgPjKeSkGtlH6dFGQ==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:0H2r0O+nqyU=;z91BdkoBc1NFdxKG2Ipq8dMpgEt
+ rvHnRkKUYtpmjbCB9UJi8vAKyI2bVAu7whUm9JLGzccB9rqpfY2U+0l/KZWguUc/CN9Fdulvm
+ 5YYh1sG7rN7Tq1O8nhT3fGNkE96/Cy2CFR8BMeUfGi6CPjazpDq4LCLoMMQO7lS0r/MgZCl+E
+ Ps/QNPZ96GsVaT8XUpNHPcYW3qbEVoSMBtPN68TzfQDGvLnKGokY6GR76VfmwnQxo9TogEROy
+ vi+Y0z2UED6gVlOn6oac46tUAH6JDGxcIjXps9Xb7iY4ywNLQoa9/SEZQTRHFiPTsw98Dm5nZ
+ UKSYiXRiewU7LUMjY38mKkd5GGEglLoLYItx2DL18g8z3zs39ZrrDUDG9Z9JfoE4EsGHbcmr5
+ VpoXAT7mRcVr/zGv148kB86Y1/hdcBOCr553hNGPxKCrRsm3iONhAEp3U4pq3JWDjJQp+1ySX
+ qOZnvfrGRRluZFzVD39XmNtV1PFUKxbDBibmDwi/XDWSMOANYb38ep62eJwEGMY5QTfsnTgeM
+ vg11mWYsvLLBoG1CPAAEwnLvSUxxg/+9MA9g6Y/XKwnkcSEu8323GFkeEgBBNcGBfowthF41K
+ xDD/jXCfWNEzhKyA4yQxJ7/l9gnSSqaKQcnm1t+YHnXaWYuhrejwDxQm6k6aF/OdG2VJ2Rch8
+ esowZLihy3/YL84JUeI/RAcCKDgrl3u4n+ubvdT/PrKk5nV8jbaE6x7uvcfFlgVi7FJ16/0V/
+ 5YIWkNcEhL2yYgOSuwSoYlL6s6vGlhPpsFwUt5UQkzwTaYHmOGzmrbB5li3KdRAFOn5wdveXU
+ 1wN5f1B3eEBKBOw+/CWwwVFHgyg9/U/RQZvA39DFzj3ueM/KZPSPEeaXY5JtMGDofd/hz6Bw5
+ 4i4jKL89rNPMVodbEaz6po9wYjjp4xDqhc62g0vM/yQhBhY8iY2y6M+y6LA8F/JZ1DEZ+Mnbv
+ ry4FYfr2zWFoB4aqmw0CQC2LpBFIK1uQKsNj/OzpHzDhYZIX6uxeo1s5tDm8iCpRIl6gEsZXi
+ meTNT54U14J/uUn8Zr37wUGIGD/IqaSyH3d4PsPE2WhJs0x9+P66g7IcRuszxeGUKM+QTr4TQ
+ hAyxe5aKN2y5mjsf/ptrOt8yRPfVlK
 
-Hi Rafael,
-since 6.13-rc1 is out, hopefully you can have a look over the next few days
+Until now the wmi-bmof driver had to allocate the binary sysfs
+attribute dynamically since its size depends on the bmof buffer
+returned by the firmware.
 
-We have deployed a variant of this patchset now on desktop builds as
-well for over 2 months now, and we haven't had any regressions
-reported. We have also been using it on handheld builds, where for the
-last 2 or so weeks we transition to the sleep state and fire the dpms
-as part of the systemd sleep target, and it makes a big difference in
-how devices look when suspending and hibernating.
+Use the new .bin_size() callback to avoid having to do this memory
+allocation.
 
-Essentially, as soon as the suspend animation plays, the screen and
-rgb of the devices turn off instantly, and the power light of devices
-that have it as part of the sleep call begins to flash. Then, after a
-few seconds, the fan of the devices turns off. Before, they'd show a
-stale framebuffer and have the RGB be on until almost the suspend
-sequence is over.
+Tested on a Asus Prime B650-Plus.
 
-This is also true for hibernation, where before the RGB lights of the
-devices would stay on during the suspend sequence and the device would
-show a stale frame buffer on the screen. Now the devices look like
-they are suspended while initializing hibernation and then just turn
-off
+Signed-off-by: Armin Wolf <W_Armin@gmx.de>
+=2D--
+ drivers/platform/x86/wmi-bmof.c | 75 +++++++++++++++++----------------
+ 1 file changed, 38 insertions(+), 37 deletions(-)
 
-Maybe I need to shoot a video with it..
+diff --git a/drivers/platform/x86/wmi-bmof.c b/drivers/platform/x86/wmi-bm=
+of.c
+index df6f0ae6e6c7..3e33da36da8a 100644
+=2D-- a/drivers/platform/x86/wmi-bmof.c
++++ b/drivers/platform/x86/wmi-bmof.c
+@@ -20,66 +20,66 @@
 
-So I'd love to hear your thoughts. Can you expand on what you mean by
-not backwards compatible?
+ #define WMI_BMOF_GUID "05901221-D566-11D1-B2F0-00A0C9062910"
 
-I know that it is not backwards compatible in the way where if the
-compositor/init system are not aware of it, the display on/off
-notifications will not fire automatically when the displays turn off.
+-struct bmof_priv {
+-	union acpi_object *bmofdata;
+-	struct bin_attribute bmof_bin_attr;
+-};
+-
+-static ssize_t read_bmof(struct file *filp, struct kobject *kobj, struct =
+bin_attribute *attr,
++static ssize_t bmof_read(struct file *filp, struct kobject *kobj, const s=
+truct bin_attribute *attr,
+ 			 char *buf, loff_t off, size_t count)
+ {
+-	struct bmof_priv *priv =3D container_of(attr, struct bmof_priv, bmof_bin=
+_attr);
++	struct device *dev =3D kobj_to_dev(kobj);
++	union acpi_object *obj =3D dev_get_drvdata(dev);
 
-Antheas
+-	return memory_read_from_buffer(buf, count, &off, priv->bmofdata->buffer.=
+pointer,
+-				       priv->bmofdata->buffer.length);
++	return memory_read_from_buffer(buf, count, &off, obj->buffer.pointer, ob=
+j->buffer.length);
+ }
 
-On Thu, 21 Nov 2024 at 18:41, Rafael J. Wysocki <rafael@kernel.org> wrote:
->
-> On Thu, Nov 21, 2024 at 6:28=E2=80=AFPM Antheas Kapenekakis <lkml@antheas=
-.dev> wrote:
-> >
-> > The following series moves the _DSM 3,4,7,8 firmware notifications outs=
-ide
-> > the suspend sequence, and makes them part of a transition function, whe=
-re
-> > the system can transition freely between them when it is not suspended.
-> > This transition function is exposed to userspace, which now gains the
-> > ability to control the presentation of the device (e.g., pulse the susp=
-end
-> > light) without forcing the kernel to suspend. In addition, it adds supp=
-ort
-> > for the _DSM 9 call Turn Display On, which was introduced in Windows 22=
-H2
-> > and aims to speed up device wake-up while remaining in the "Sleep" stat=
-e.
-> > If userspace is not standby aware, the kernel will bring the system int=
-o
-> > the "Sleep" state before beginning the suspend sequence.
->
-> I'll get to this when 6.13-rc1 is out, but I can tell you right away
-> that some of the above cannot be done without breaking backwards
-> compatibility.
->
-> > This series requires a bit of background on how modern standby works in
-> > Windows. Windows has a concept of "Modern Standby" [1], where it perfor=
-ms
-> > an elaborate userspace and kernel suspend choreography while the device=
- is
-> > inactive in order to maintain fast wake-up times and connectivity while=
- the
-> > display of the device is off. This is done through 5 hardware states an=
-d
-> > the OS takes the liberty of transitioning between them, by following a =
-set
-> > of rules (e.g., "Adaptive Hibernate").
-> >
-> > ```
-> >                                  \/-> "Hibernate (S4)"
-> > "Active" <-> "Screen Off" <-> "Sleep" <-> "DRIPS"
-> >                   /\-  "Resume"  <-         <-
-> > ```
-> >
-> > When the display is on and the user is interacting with the device, it =
-is
-> > in the "Active" state. The moment the display turns off, the device
-> > transitions to the "Screen Off" state, where hardware and userspace are
-> > fully active. Userspace will then decide when appropriate to freeze maj=
-or
-> > components (such as the DE) and transition into the "Sleep" state, wher=
-e
-> > the kernel is still active and connectivity is maintained. Finally, the
-> > conventional "Suspend-to-idle" path can be used to bring the system int=
-o
-> > the deepest runtime idle platform state (DRIPS) state, which is named
-> > "s2idle" in the Linux kernel.
-> >
-> > After wake-up, the system re-transitions into the "Sleep" state, where
-> > userspace can run housekeeping and/or hibernate if the wake-up was not =
-user
-> > initiated (e.g., timer). If user-initiated, userspace can hasten the
-> > transition out of the "Sleep" state by transitioning into the state
-> > "Resume" that certain devices use to boost the Power Limit (PLx) while
-> > remaining in sleep (support for this new notification is rare). Then, i=
-t
-> > transitions back into "Screen Off" and "Active" to prepare for the user=
-.
-> >
-> > All transitions between these states feature unique firmware notificati=
-ons
-> > [3] that change the presentation of the device (e.g., pulse the suspend
-> > light, turn off RGB). For more information, see the docs in [8]. Making
-> > these transitions accessible from userspace moves them out of the suspe=
-nd
-> > sequence and has them happen while the kernel is fully active, mirrorin=
-g
-> > Windows.
-> >
-> > As a side effect, this patch series completely fixes the ROG Ally
-> > controller issue [5], which expects for .5s to lapse before its
-> > controller's USB hub goes into D3 and otherwise malfunctions. It also f=
-ixes
-> > an issue present in (allegedly only) older firmwares where they check t=
-he
-> > USB subsystem is not in D3 before allowing the controller to wake up wh=
-ile
-> > in powersave mode (for avoiding spurious wake-ups). As such, this patch
-> > series is also a universal fix for the ROG Ally controller.
-> >
-> > Moreover, this patch series allows turning off the controller and RGB o=
-f
-> > most Windows handhelds (OneXPlayer, Lenovo Legion Go, GPD, and Asus ROG
-> > Ally), opening the possibility of implementing suspend-then-hibernate a=
-nd
-> > other standby features, such as background downloads, without waking up=
- the
-> > RGB/controller of those devices. A Thinkpad T14 2021 was also tested, a=
-nd
-> > it pulses its suspend light during sleep.
-> >
-> > There is still the question of where LSP0 entry/exit (_DSM 5,6) should =
-be
-> > fired or whether they should be fired in the path to hibernation. Howev=
-er,
-> > as they cause no issues currently, and they fire when software activity=
- has
-> > seized, they are fine where they are.
-> >
-> > It is important to note that the effects of these _DSMs persist during
-> > reboots. I.e., if the Legion Go reboots while in the "Sleep" state, it =
-will
-> > boot into the "Sleep" state and have its controller disabled and suspen=
-d
-> > light pulsing. The reboot persistence is undesirable, so the reboot pat=
-h
-> > will need to include a transition to active prior to reboot (not
-> > included in this series). This is not the case after shutdown and
-> > hibernation, where the device boots into the "Active" state.
-> >
-> > The issue of DPMS is still present. Currently, gamescope and KDE (at le=
-ast)
-> > do not fire DPMS before suspending. This causes an undesirable frozen
-> > screen while the system is suspending and looks quite ugly in general. =
-This
-> > is especially true if the firmware notifications fire earlier. Therefor=
-e,
-> > should the kernel fire DPMS before forcing the transition to sleep for
-> > backwards compat.? If yes, it will be quite the effort. Moreover, shoul=
-d
-> > the kernel allow graphics drivers hook the transition function and bloc=
-k
-> > transitions to "Screen Off" if there is an active CRTC? As that would b=
-e a
-> > significant undertaking, there should be proof that there exists such a
-> > device that has an issue firing the notifications with an active CRTC.
-> >
-> > A variant of this series has been tested by thousands of users by now,
-> > where the notifications fire around .5s before the CRTC is disabled and=
- no
-> > ill-effects have found in regard to this quirk. AFAIK, it is a visual
-> > quirk. Making DPMS fire before the backwards compat. transition is a go=
-od
-> > idea in any case, as it will sync the 200ms between Display Off/Sleep E=
-ntry
-> > firing and the graphics driver turning off the display, but it might no=
-t be
-> > worth the effort.
-> >
-> > We are currently testing a DPMS patch for gamescope and it completely f=
-ixes
-> > this visual quirk while allowing for e.g., hibernation without turning =
-on
-> > the screen. The DPMS gamescope patch + performing the transitions in
-> > userspace in such a way where it blends the Ally's suspend delay halves=
- the
-> > user perceived delay to sleep and results in a very professional
-> > presentation. This presentation extends to other devices as well, such =
-as
-> > the Legion Go.
-> >
-> > Link: https://learn.microsoft.com/en-us/windows-hardware/design/device-=
-experiences/prepare-hardware-for-modern-standby [1]
-> > Link: https://learn.microsoft.com/en-us/windows-hardware/customize/powe=
-r-settings/adaptive-hibernate [2]
-> > Link: https://learn.microsoft.com/en-us/windows-hardware/design/device-=
-experiences/modern-standby-firmware-notifications [3]
-> > Link: https://github.com/hhd-dev/hwinfo/tree/master/devices [4]
-> > Link: https://git.kernel.org/pub/scm/linux/kernel/git/superm1/linux.git=
-/log/?h=3Dsuperm1/dsm-screen-on-off [5]
-> > Link: https://gitlab.freedesktop.org/drm/amd/-/issues/2719 [6]
-> > Link: https://dl.dell.com/manuals/all-products/esuprt_solutions_int/esu=
-prt_solutions_int_solutions_resources/client-mobile-solution-resources_whit=
-e-papers45_en-us.pdf [7]
-> > File: Documentation/admin-guide/pm/standby-states.rst [8]
-> >
-> > Changes from previous series (`acpi/x86: s2idle: move Display off/on ca=
-lls
-> >   outside suspend (fixes ROG Ally suspend)`):
-> >   - Separate Display On/Off rename into its own commit (suggested by Ha=
-ns)
-> >   - Move delay quirks into s2idle.c (suggested by Hans)
-> >   - Add documentation on Documentation/admin-guide/pm/standby-states.rs=
-t
-> >   - Callbacks are now static and a transition function is used
-> >   - Fixed all checkpatch warnings
-> >   - The rest of the series is completely re-written
-> >
-> > Antheas Kapenekakis (13):
-> >   Documentation: PM: Add documentation for S0ix Standby States
-> >   acpi/x86: s2idle: add support for Display Off and Display On callback=
-s
-> >   acpi/x86: s2idle: add support for Sleep Entry and Sleep Exit callback=
-s
-> >   acpi/x86: s2idle: add support for Turn On Display callback
-> >   acpi/x86: s2idle: add modern standby transition function
-> >   acpi/x86: s2idle: rename Screen On/Off to Display On/Off
-> >   acpi/x86: s2idle: call Display On/Off as part of callbacks
-> >   acpi/x86: s2idle: rename MS Exit/Entry to Sleep Exit/Entry
-> >   acpi/x86: s2idle: call Sleep Entry/Exit as part of callbacks
-> >   acpi/x86: s2idle: add Turn On Display and call as part of callback
-> >   acpi/x86: s2idle: add quirk table for modern standby delays
-> >   platform/x86: asus-wmi: remove Ally (1st gen) and Ally X suspend quir=
-k
-> >   PM: standby: Add sysfs attribute for modern standby transitions
-> >
-> >  Documentation/ABI/testing/sysfs-power         |  34 +++
-> >  .../admin-guide/pm/standby-states.rst         | 133 ++++++++++
-> >  Documentation/admin-guide/pm/system-wide.rst  |   1 +
-> >  drivers/acpi/x86/s2idle.c                     | 249 ++++++++++++++----
-> >  drivers/platform/x86/asus-wmi.c               |  54 ----
-> >  include/linux/suspend.h                       |  16 ++
-> >  kernel/power/main.c                           |  75 ++++++
-> >  kernel/power/power.h                          |   1 +
-> >  kernel/power/suspend.c                        | 154 +++++++++++
-> >  9 files changed, 616 insertions(+), 101 deletions(-)
-> >  create mode 100644 Documentation/admin-guide/pm/standby-states.rst
-> >
-> > --
-> > 2.47.0
-> >
-> >
+-static int wmi_bmof_probe(struct wmi_device *wdev, const void *context)
++static const BIN_ATTR_ADMIN_RO(bmof, 0);
++
++static const struct bin_attribute * const bmof_attrs[] =3D {
++	&bin_attr_bmof,
++	NULL
++};
++
++static size_t bmof_bin_size(struct kobject *kobj, const struct bin_attrib=
+ute *attr, int n)
+ {
+-	struct bmof_priv *priv;
+-	int ret;
++	struct device *dev =3D kobj_to_dev(kobj);
++	union acpi_object *obj =3D dev_get_drvdata(dev);
++
++	return obj->buffer.length;
++}
+
+-	priv =3D devm_kzalloc(&wdev->dev, sizeof(struct bmof_priv), GFP_KERNEL);
+-	if (!priv)
+-		return -ENOMEM;
++static const struct attribute_group bmof_group =3D {
++	.bin_size =3D bmof_bin_size,
++	.bin_attrs_new =3D bmof_attrs,
++};
++
++static const struct attribute_group *bmof_groups[] =3D {
++	&bmof_group,
++	NULL
++};
+
+-	dev_set_drvdata(&wdev->dev, priv);
++static int wmi_bmof_probe(struct wmi_device *wdev, const void *context)
++{
++	union acpi_object *obj;
+
+-	priv->bmofdata =3D wmidev_block_query(wdev, 0);
+-	if (!priv->bmofdata) {
++	obj =3D wmidev_block_query(wdev, 0);
++	if (!obj) {
+ 		dev_err(&wdev->dev, "failed to read Binary MOF\n");
+ 		return -EIO;
+ 	}
+
+-	if (priv->bmofdata->type !=3D ACPI_TYPE_BUFFER) {
++	if (obj->type !=3D ACPI_TYPE_BUFFER) {
+ 		dev_err(&wdev->dev, "Binary MOF is not a buffer\n");
+-		ret =3D -EIO;
+-		goto err_free;
++		kfree(obj);
++		return -EIO;
+ 	}
+
+-	sysfs_bin_attr_init(&priv->bmof_bin_attr);
+-	priv->bmof_bin_attr.attr.name =3D "bmof";
+-	priv->bmof_bin_attr.attr.mode =3D 0400;
+-	priv->bmof_bin_attr.read =3D read_bmof;
+-	priv->bmof_bin_attr.size =3D priv->bmofdata->buffer.length;
+-
+-	ret =3D device_create_bin_file(&wdev->dev, &priv->bmof_bin_attr);
+-	if (ret)
+-		goto err_free;
++	dev_set_drvdata(&wdev->dev, obj);
+
+ 	return 0;
+-
+- err_free:
+-	kfree(priv->bmofdata);
+-	return ret;
+ }
+
+ static void wmi_bmof_remove(struct wmi_device *wdev)
+ {
+-	struct bmof_priv *priv =3D dev_get_drvdata(&wdev->dev);
++	union acpi_object *obj =3D dev_get_drvdata(&wdev->dev);
+
+-	device_remove_bin_file(&wdev->dev, &priv->bmof_bin_attr);
+-	kfree(priv->bmofdata);
++	kfree(obj);
+ }
+
+ static const struct wmi_device_id wmi_bmof_id_table[] =3D {
+@@ -90,6 +90,7 @@ static const struct wmi_device_id wmi_bmof_id_table[] =
+=3D {
+ static struct wmi_driver wmi_bmof_driver =3D {
+ 	.driver =3D {
+ 		.name =3D "wmi-bmof",
++		.dev_groups =3D bmof_groups,
+ 	},
+ 	.probe =3D wmi_bmof_probe,
+ 	.remove =3D wmi_bmof_remove,
+=2D-
+2.39.5
+
