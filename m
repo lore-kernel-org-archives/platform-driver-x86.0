@@ -1,142 +1,147 @@
-Received: from mout.gmx.net (mout.gmx.net [212.227.15.15])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f52.google.com (mail-ej1-f52.google.com [209.85.218.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 264AE204564;
-	Fri,  6 Dec 2024 18:15:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E8F0213E98;
+	Fri,  6 Dec 2024 21:18:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1733508909; cv=none; b=qAZnRhrB2MzkXDoqPX6lBDsL07rxmQGxOty073FaF/gflip0XjaPu5Mxa8OEyq8u1c+ljUAv1Ak8mOmVPPAeawy+AzvJ0oNvrQR2rr66CXyO1Dq0UqCeTUgcKgP0nfDUeJsck5JA5R5SHGc1r4foA/FH9eyld6GjqfKTAMAH920=
+	t=1733519924; cv=none; b=c6ORLnjCLliByQwYmCaSAJHQevKFDMj5YeXHqycLlXIKoB/YnwsgCylsxpVREjHMIhQxbUQaoINSD1d2LTG6Dv3PCKsr7D1OglD2/8qCO0mYo9UYqppCAJRwl/C5/rGS23Z5rZfC2IPh/jOtG2CvClrCdym9KVHck3BEIj++j+A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1733508909; c=relaxed/simple;
-	bh=acY9QYkkj2FPlaqOV9k2ALcWmvnYFb5Djq/L+K2WqAI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=gbAs35zQnq7MYdk8DE323BUudSMDCRG6y4HnWrSQPlUEbJ+A9MHzti38YYEe4lSUAcCuAAjVuHvzjq/ZA6m4mojlNsTa8mKIwIuX4dSzWBbafU2NkgyR8l4yprFanTA68lGK7Vvc6acCfWi/3SQdD2B8QCMnFgoEV8yE9BHuAus=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b=VOJX02fW; arc=none smtp.client-ip=212.227.15.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
+	s=arc-20240116; t=1733519924; c=relaxed/simple;
+	bh=+G0VUTcrCnTC5rX+UjcLwTptgU7q/HBq1U1Y2xggPl4=;
+	h=Date:From:To:Cc:Message-ID:In-Reply-To:References:Subject:
+	 MIME-Version:Content-Type; b=kfYLXXXBgqgq2MExoMacXHPp0Jkt3sAREyIBdcAXd/BUvsIZfHTdCjaPDF3abojW0/kdaop+5lOmv0/IGdLcjkPKm/N6Rko9AKmVBHhDPjwRAZ13rOKtfAQVJwAI81BNQ1fBalKK7BFCmLRORRztBsmjTEA7d51pVqN+hPe1mfs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ErRn66Lr; arc=none smtp.client-ip=209.85.218.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b="VOJX02fW"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.de;
-	s=s31663417; t=1733508904; x=1734113704; i=w_armin@gmx.de;
-	bh=acY9QYkkj2FPlaqOV9k2ALcWmvnYFb5Djq/L+K2WqAI=;
-	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:To:Cc:
-	 References:From:In-Reply-To:Content-Type:
-	 Content-Transfer-Encoding:cc:content-transfer-encoding:
-	 content-type:date:from:message-id:mime-version:reply-to:subject:
-	 to;
-	b=VOJX02fW6UMM2Ig/br6qRyauJ1QF8JLVRmHy9HCTz48Wd6rZf2CAVcGTa1w5BXC4
-	 bKSa6IygSk9xoecARwW1H48FfWdg6SwLMwyx/edxunPtgPnCdZum+64UoxPeytZ+x
-	 5h0V7HDswvlIDJiEFJYVdRq+JFlZSP81LtXDwoAXE95EU3jGrJc2fpGS3bYKlbzLY
-	 taZPbtLE4GTWCCrniGmax64xw88EWo7KtvZ7TRwi+EFIOCMidKb0edfNcM4ISOfLp
-	 clHDIjxTNwDsRGB1zjBP7JGFedHMvdf/7RWcE+VRzTNZdHUHVBZVe8lIcOEusBKvx
-	 oHOXWW15x8x4tXT0vQ==
-X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
-Received: from [192.168.0.14] ([91.14.230.110]) by mail.gmx.net (mrgmx005
- [212.227.17.190]) with ESMTPSA (Nemesis) id 1MRTN9-1syUyT2l2j-00SMxY; Fri, 06
- Dec 2024 19:15:04 +0100
-Message-ID: <bf3b9efd-6700-485a-bd0e-f81de1e11fcf@gmx.de>
-Date: Fri, 6 Dec 2024 19:15:04 +0100
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ErRn66Lr"
+Received: by mail-ej1-f52.google.com with SMTP id a640c23a62f3a-aa503cced42so352623966b.3;
+        Fri, 06 Dec 2024 13:18:41 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1733519920; x=1734124720; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:subject:references
+         :in-reply-to:message-id:cc:to:from:date:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=+G0VUTcrCnTC5rX+UjcLwTptgU7q/HBq1U1Y2xggPl4=;
+        b=ErRn66Lrkd1BRffrmAYPHrDaLy5hWARwN2D9uoGlVn+pDFc6WFqFv4NbbtIhS+wP3p
+         RshhR5Jyn7pwA+HrWwEQjr3AugfLn7hedCHJ/ucCRaf/ndovoLEXH4feaRBzDRxMPM9H
+         gW9ZNDDyegCUam/o57mDkc04xtoO6bQsBZ0clgFJJt9CRtAKsh/BhEEB0f+RGumi9tjk
+         6u2WqRykdzxzJx323s8q5izOrwN52xYxcvUfZXAsTTyNRb6f2Oaqc+W3z8dQWf2VhuUR
+         InkJC0OwrqmpxTYFvj/eR3Gu1Ayva0K/sL8v80GJHR+XZS76y35rR9tMlTC5ctPODLvl
+         lB5g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1733519920; x=1734124720;
+        h=content-transfer-encoding:mime-version:subject:references
+         :in-reply-to:message-id:cc:to:from:date:x-gm-message-state:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=+G0VUTcrCnTC5rX+UjcLwTptgU7q/HBq1U1Y2xggPl4=;
+        b=WtXH9HR5OphZ7fQuB42Oy1MNN+4aQwvE/zZ1VgaWoBpKxMvaBYibewsNQsBLoXcyUH
+         L7/RBcII/J6rVqi6We+LV5qV7Sfn744cj/mg9P+THa0kw88hEzHhLQRpVoj6mkwxqvPr
+         K8Tf9b62EicNilT20UOLt/SZChjij29hWIzZdoJlcZns11n2Zw8Ge4wKvojSn1HX0yEf
+         6W1hzo3a/gBS+BIXMbk2CeNPI/vcrtBhsXUnNuIkq6sBUiNpFTOdnf/nFxHeJsq+nDrp
+         g7NLQlh6YNh4WXDGhem8Qp07vv/xvRKH9NdO8gTig+DKdl2JP1ENYA/ipszdOCZaNQO6
+         ZEaQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVr3gQqhHZ0C9s446uvZAo2Dy6yWQQxQNqZBzDEBXFt7V3B1eWOvt0EzpkeJ2KD4M2O6rjofPwoX8iFfsc=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwbE/S7NhjO9GXPJ/czDzL9cjBLU24RekQtLoZoTHISh5cnEa7J
+	eqrzrqTI5NjKLFId8YnKhKSeoPk5u7S+CLGHmxAIyUestS+IC0x8
+X-Gm-Gg: ASbGnct0iK24QoXmvpf7+9gQ0fwZRfQX/W71zwQwWumziPGKyTmW43o/8MJFF1GBFBL
+	bRSPyh5KEqEwkCq59jcwd7ZWElP52jk0V2q6oUaE+hx3nKSbJLSNQEvP+RX3pbRnguQKdoGI7Da
+	u16x39EZeZ3jJuo1uDK1vxUmo9wMBYe1s4ppJV4IawJdN+zAictPfKWRB0A+r0ybwipLf7j9Tf/
+	y2fnDaSbFDYfk7Du5Y6wVAkDUC5A3i5QbfjeGWI5GN45g==
+X-Google-Smtp-Source: AGHT+IGcoxybZrhqT6jfLtgMG6i7/mc41GHYgMF8CO/3DtZQeH/elgJdfj7dasDNeMyogMXK8EXInA==
+X-Received: by 2002:a17:907:7714:b0:aa6:3418:d9d4 with SMTP id a640c23a62f3a-aa63a073aa6mr302410166b.17.1733519919441;
+        Fri, 06 Dec 2024 13:18:39 -0800 (PST)
+Received: from [127.0.0.1] ([45.152.72.7])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-aa625e96a3esm291696566b.59.2024.12.06.13.18.38
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 06 Dec 2024 13:18:39 -0800 (PST)
+Date: Fri, 6 Dec 2024 23:18:36 +0200 (GMT+02:00)
+From: Yurii Strilets <yurastr100@gmail.com>
+To: Armin Wolf <W_Armin@gmx.de>
+Cc: platform-driver-x86@vger.kernel.org, regressions@lists.linux.dev,
+	linux-kernel@vger.kernel.org
+Message-ID: <78eb0efb-bbaf-4cba-840a-9aa507798075@gmail.com>
+In-Reply-To: <bf3b9efd-6700-485a-bd0e-f81de1e11fcf@gmx.de>
+References: <33bfcda8-3d3d-46b9-84f0-44e0e9f44230@gmail.com> <bf3b9efd-6700-485a-bd0e-f81de1e11fcf@gmx.de>
+Subject: Re: [REGRESSION][BISECTED] asus-wmi driver fails on my laptop
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [REGRESSION][BISECTED] asus-wmi driver fails on my laptop
-To: Yura Strilets <yurastr100@gmail.com>, platform-driver-x86@vger.kernel.org
-Cc: regressions@lists.linux.dev, linux-kernel@vger.kernel.org
-References: <33bfcda8-3d3d-46b9-84f0-44e0e9f44230@gmail.com>
-Content-Language: en-US
-From: Armin Wolf <W_Armin@gmx.de>
-In-Reply-To: <33bfcda8-3d3d-46b9-84f0-44e0e9f44230@gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:JqhSvlqpwvBpTYv7338/mK4fck667VMNfCQkH9+BWs/WWr9tOGZ
- +Rd8cc5JI9glx4k3ekGfxdwTwKxC4mUCDUGKnc5pnRZL3X4+ZnInmS+EbXrIkacJC1quNxb
- sPRgvFLJ1QuWLIlNV7869HvEP7+LmUOIKTa5RrC0eRgpoUUBeMCOYSlQrzirFS3U1MqEWLN
- A/yKWS/tcUasqVBhhlyJA==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:/mExfcB00e0=;wdRbfLWlH151AbiciLd3nOP3XG/
- W55jS0mdHCFOt3wrLDfv4a23GICYMdQRq3s4CPsX+B4BRqfDiVijBTWeDUlAdAcIN4saX0aXl
- Qlt82jvP5V6I4IpNTJXAiFpx1EkGdkMtsTmvK49kflN875VRJFhfVyOMyThm7MAxR7KaR9LE0
- e8IsUSQDJCRsSOjIAsTFoE+n2KNEyBd14dBkllBiQs3HxS46Z3py6mkD02HCjqVWCFlo46N8a
- FiQh1vEeGnLg9fszYcNXC8SvZNrBv1qxfC8ujCN6y+4YZH63+KGVNK5IiHY+EFxqTqJ6rsedO
- EiMr/Dk02IWW26gS6VWPdbGMKP4FrhbmIWS8Wfq7Pu37k81cfD9aK5pinYcFeQyZJZcxo/NL0
- YZPOfPIVTFnwS35TwGC4GMrsBdror3VF1o6Fa5EJtri+xisFDE9fxELB2ZUjKf84p3wH8v0Sc
- UvHFfRCRcgL+6UXOE41mlghuJQLmHFbqsZyDt2LoNljbSIOL7lw8rU47ZbvIV3zWMlD90eQo0
- RwhFQRPuE0p0w4Wzl3QWOl03jZNHi53QEam3Pi2qW3AihW2ARVbFZpQJluczZOAjVTKdzZuHD
- /waX4Bl+S3uyNhPCao76DhEAEKXwHyiTA630u6+kX3JaooQd158UeW2gKVeK69g7uqjIAQXfC
- LWvql5eeNaB7wfNd17ekBK3KujdgFYz5mKYbwo6izPpMzYx2cEI8IhWxXXCJUo4Ny8o1a8RhC
- cViLVl7Fk3XMxlIURC6OA/qpeRRKYHuJFBnv5T4rD5KS83OoJBnW3kJxXf7uJLTI9rfBFmSgN
- f3evI/Fav3i/QDunwRtyI/SV/YT/TIw5QLZ0u/7D5bNd1PsJ4SYXGvO6I3DvY8OOTuJcOo+uk
- 5iM5xQkA/4ux+/zj4RBiwdxG5/mZ0DtqwAVshUs0dYY62AOdft2P1KovRDU6Q9UePkXZU5V7U
- evHy+Y7k1t9InBBDfkJDUhlMyML0VD9o7NPc6RHiLFKTQouHhibAhjeI8qRra+gYgnO+H6PXs
- /dNUXEyvA8lcHOhLu7zv1FN6IdXU0F+QgGsrTle2Fttbp5i7lLZTeAc3BGg8bbAXGdd53woVj
- XVyK5ZlNzJRiR5rHfQpPIMqiQq0yfw
+X-Correlation-ID: <78eb0efb-bbaf-4cba-840a-9aa507798075@gmail.com>
 
-Am 06.12.24 um 14:33 schrieb Yura Strilets:
+Thank you very much for the fix!
+I am terribly sorry about a faulty report, I did just find out I had an iss=
+ue during the mainline build.
 
-> Hello,
->
-> After upgrading from 6.11 to 6.12 a bunch of Fn+Fx buttons(touchpad,
-> mic, kb backlight, my asus) stopped working and the
-> /sys/(...)/asus::kbd_backlight interface is missing, which,
-> considering the dmesg, looks like an asus-wmi driver issue.
->
-> I've been able to bisect the issue to the commit
-> [b012170fed282151f7ba8988a347670c299f5ab3] "platform/x86: asus-wmi:
-> Fix thermal profile initialization"
->
-> Additionally, here's some maybe-helpful information:
-> my laptop's model -- ASUS Zenbook UX3402VA
-> linux distro -- Arch Linux
-> .config for bisection -- was taken from /proc/config.gz at 6.12.1 arch
-> kernel(attached in [1]) and missing options are default
-> dmesg logs -- The "grep asus" parts of both good and bad scenarios can
-> be seen below and full logs are at [2] and [3]
->
-> =3D=3D bad.log =3D=3D
-> [=C2=A0=C2=A0=C2=A0 3.664546] asus_wmi: ASUS WMI generic driver loaded
-> [=C2=A0=C2=A0=C2=A0 3.713358] asus_wmi: Initialization: 0x1
-> [=C2=A0=C2=A0=C2=A0 3.714126] asus_wmi: SFUN value: 0x21
-> [=C2=A0=C2=A0=C2=A0 3.714131] asus-nb-wmi asus-nb-wmi: Detected ATK, not=
+Dec 6, 2024 20:15:05 Armin Wolf <W_Armin@gmx.de>:
+
+> Am 06.12.24 um 14:33 schrieb Yura Strilets:
+>=20
+>> Hello,
+>>=20
+>> After upgrading from 6.11 to 6.12 a bunch of Fn+Fx buttons(touchpad,
+>> mic, kb backlight, my asus) stopped working and the
+>> /sys/(...)/asus::kbd_backlight interface is missing, which,
+>> considering the dmesg, looks like an asus-wmi driver issue.
+>>=20
+>> I've been able to bisect the issue to the commit
+>> [b012170fed282151f7ba8988a347670c299f5ab3] "platform/x86: asus-wmi:
+>> Fix thermal profile initialization"
+>>=20
+>> Additionally, here's some maybe-helpful information:
+>> my laptop's model -- ASUS Zenbook UX3402VA
+>> linux distro -- Arch Linux
+>> .config for bisection -- was taken from /proc/config.gz at 6.12.1 arch
+>> kernel(attached in [1]) and missing options are default
+>> dmesg logs -- The "grep asus" parts of both good and bad scenarios can
+>> be seen below and full logs are at [2] and [3]
+>>=20
+>> =3D=3D bad.log =3D=3D
+>> [=C2=A0=C2=A0=C2=A0 3.664546] asus_wmi: ASUS WMI generic driver loaded
+>> [=C2=A0=C2=A0=C2=A0 3.713358] asus_wmi: Initialization: 0x1
+>> [=C2=A0=C2=A0=C2=A0 3.714126] asus_wmi: SFUN value: 0x21
+>> [=C2=A0=C2=A0=C2=A0 3.714131] asus-nb-wmi asus-nb-wmi: Detected ATK, not=
  ASUSWMI, use
-> DSTS
-> [=C2=A0=C2=A0=C2=A0 3.757420] asus_wmi: Failed to set throttle thermal p=
+>> DSTS
+>> [=C2=A0=C2=A0=C2=A0 3.757420] asus_wmi: Failed to set throttle thermal p=
 olicy
-> (retval): 0x0
-> [=C2=A0=C2=A0=C2=A0 3.757425] asus_wmi: Failed to set default thermal pr=
+>> (retval): 0x0
+>> [=C2=A0=C2=A0=C2=A0 3.757425] asus_wmi: Failed to set default thermal pr=
 ofile
-> [=C2=A0=C2=A0=C2=A0 3.757429] asus-nb-wmi asus-nb-wmi: probe with driver=
+>> [=C2=A0=C2=A0=C2=A0 3.757429] asus-nb-wmi asus-nb-wmi: probe with driver=
  asus-nb-wmi
-> failed with error -5
-> =3D=3D end =3D=3D
->
-> =3D=3D good.log =3D=3D
-> [=C2=A0=C2=A0=C2=A0 4.557898] asus_wmi: ASUS WMI generic driver loaded
-> [=C2=A0=C2=A0=C2=A0 4.776587] asus_wmi: Initialization: 0x1
-> [=C2=A0=C2=A0=C2=A0 4.777253] asus_wmi: SFUN value: 0x21
-> [=C2=A0=C2=A0=C2=A0 4.777256] asus-nb-wmi asus-nb-wmi: Detected ATK, not=
+>> failed with error -5
+>> =3D=3D end =3D=3D
+>>=20
+>> =3D=3D good.log =3D=3D
+>> [=C2=A0=C2=A0=C2=A0 4.557898] asus_wmi: ASUS WMI generic driver loaded
+>> [=C2=A0=C2=A0=C2=A0 4.776587] asus_wmi: Initialization: 0x1
+>> [=C2=A0=C2=A0=C2=A0 4.777253] asus_wmi: SFUN value: 0x21
+>> [=C2=A0=C2=A0=C2=A0 4.777256] asus-nb-wmi asus-nb-wmi: Detected ATK, not=
  ASUSWMI, use
-> DSTS
-> [=C2=A0=C2=A0=C2=A0 4.777258] asus-nb-wmi asus-nb-wmi: Detected ATK, ena=
+>> DSTS
+>> [=C2=A0=C2=A0=C2=A0 4.777258] asus-nb-wmi asus-nb-wmi: Detected ATK, ena=
 ble event queue
-> [=C2=A0=C2=A0=C2=A0 4.805497] input: Asus WMI hotkeys as
-> /devices/platform/asus-nb-wmi/input/input15
-> =3D=3D end =3D=3D
->
-> [1] .config - https://pastebin.com/raw/3nDSV8Sm
-> [2] bad.log - https://pastebin.com/raw/fvR5Sjzt
-> [3] good.log - https://pastebin.com/raw/EazfLAWA
->
+>> [=C2=A0=C2=A0=C2=A0 4.805497] input: Asus WMI hotkeys as
+>> /devices/platform/asus-nb-wmi/input/input15
+>> =3D=3D end =3D=3D
+>>=20
+>> [1] .config - https://pastebin.com/raw/3nDSV8Sm
+>> [2] bad.log - https://pastebin.com/raw/fvR5Sjzt
+>> [3] good.log - https://pastebin.com/raw/EazfLAWA
+>>=20
+>> Thanks,
+>> Yurii
+>>=20
+> I am aware of this issue, the necessary fix (commit 25fb5f47f34d) was alr=
+eady submitted upstream and will likely
+> show up in the stable kernels soon.
+>=20
 > Thanks,
-> Yurii
->
-I am aware of this issue, the necessary fix (commit 25fb5f47f34d) was alre=
-ady submitted upstream and will likely
-show up in the stable kernels soon.
-
-Thanks,
-Armin Wolf
-
+> Armin Wolf
