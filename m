@@ -1,107 +1,120 @@
-Received: from mail-pl1-f179.google.com (mail-pl1-f179.google.com [209.85.214.179])
+Received: from mail-lj1-f172.google.com (mail-lj1-f172.google.com [209.85.208.172])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1A8A51EF09B
-	for <platform-driver-x86@vger.kernel.org>; Fri,  6 Dec 2024 09:48:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 49161224EA;
+	Fri,  6 Dec 2024 13:33:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1733478537; cv=none; b=IjN7aQDACfbk8xbRCeYJEl+Y5hHQ8IT/fvpEG4EPkXwFWhQi/nOxOQvO58x8S2Azv4th3+r8iz1W5jIKOYD4bsrShHkR2L77c/o9282u61BIvBebZ3W5t5d6iQk/b9/4NE2hyY6dDSoVIIl1UayI0uoE78nmSA4DVYEEN56kNhU=
+	t=1733491984; cv=none; b=SA+JWTyVtI5fNFTCksm8n3H0N2w2w00D/oiTmaFFKrSGmV04ssv3ALPMY2sA+Zea6Nej9dEz3mgIEqx5oyndL4ir3IqmBTk+luhIkImEwB11W/yTUbMyN4laqn+c8BOuSYfLZMfy+ApP2F5mQRt/wp+ZwqP4gPt0sLc5UITtkE0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1733478537; c=relaxed/simple;
-	bh=tQT7gPj20AkjhJhxdzdzpxUxZ8eanLiPGKLGhYhe7c8=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=nL2b2SfePTOTAdXQGzhviYUjU5qjWPsMnLnrGy/zojU7yqPcJUcjReTCpgxavQTxUTxlrdvyJQcFdY9jcMsgQ7yu87DGaL8OLURcFwr9d2UxzvWtCYpMVOtF9/I4jtvlAU2UuOvw62NKvvCsN/QAisxXqnUVBr0fVDVHqZ9DN/I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=pf.is.s.u-tokyo.ac.jp; spf=none smtp.mailfrom=pf.is.s.u-tokyo.ac.jp; dkim=pass (2048-bit key) header.d=pf-is-s-u-tokyo-ac-jp.20230601.gappssmtp.com header.i=@pf-is-s-u-tokyo-ac-jp.20230601.gappssmtp.com header.b=accsamQv; arc=none smtp.client-ip=209.85.214.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=pf.is.s.u-tokyo.ac.jp
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=pf.is.s.u-tokyo.ac.jp
+	s=arc-20240116; t=1733491984; c=relaxed/simple;
+	bh=vLP1tsrLrBn5UbOMsUTvwsyw2ImcPlXlTvJJHcQ03AA=;
+	h=Message-ID:Date:MIME-Version:From:Subject:To:Cc:Content-Type; b=SquCsVFBsB/VkpNQugzc/dLTgfb/CG9Vlj9g6svumuzY6HeX5ZhF2/WsfUXDWwKteUbrolNk6rIxDCGQxY1/XUJtRPpADfe+pRwjJSzzCbhasXI4sI+XGMz0on+Ta1uL+hwWpk1qdV2ffP3vWeNMNFiGCOqAdEH5zR3hAROfX0U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=P+DmwXlz; arc=none smtp.client-ip=209.85.208.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=pf-is-s-u-tokyo-ac-jp.20230601.gappssmtp.com header.i=@pf-is-s-u-tokyo-ac-jp.20230601.gappssmtp.com header.b="accsamQv"
-Received: by mail-pl1-f179.google.com with SMTP id d9443c01a7336-215936688aeso16639825ad.1
-        for <platform-driver-x86@vger.kernel.org>; Fri, 06 Dec 2024 01:48:54 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="P+DmwXlz"
+Received: by mail-lj1-f172.google.com with SMTP id 38308e7fff4ca-30037784fceso4807271fa.2;
+        Fri, 06 Dec 2024 05:33:02 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=pf-is-s-u-tokyo-ac-jp.20230601.gappssmtp.com; s=20230601; t=1733478534; x=1734083334; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=kSxRSZAJYUL4Kzev92MLWSVY3zScSiJ+F5sCThGqLA8=;
-        b=accsamQvxmrHVe67BKtcjtYgV1gbpAHrLS2w6YX36k1HSBzM7qL5CU9I7CHFLDISoG
-         aYVIibJ7ULAZtqf5YLGBa7ax55mV0bO+Lm/n0C+3WEklfDDFI13NuVn/TLoP1cWkYwIh
-         qKxk1DpWpuPbWSaurlzbILLFXi5Tk5OPcr8zlKhUSIsElqcNbzmm1xth4h8qabNByVx2
-         H6oJGwhUCPWut6Us1/UewJFdjEF7SUIY/8Mz5zTkorHqlC0y8lsDg2MXXAK0nCOe3fsD
-         r3zd3pSUY75BOWPoPfDAFvkzChh4MzFHHg0T1YYyTHY3iqE+t7GML9WqdXZp+4/Nkz4n
-         FzPw==
+        d=gmail.com; s=20230601; t=1733491981; x=1734096781; darn=vger.kernel.org;
+        h=content-transfer-encoding:content-language:cc:to:subject:from
+         :user-agent:mime-version:date:message-id:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=GSrFoYGsGUHyZVE4nB9VSg0Tyg06nqGrBpnSKe/0vDQ=;
+        b=P+DmwXlz7vgfLv8ZmhNAbX7TbTQKO7exI5VpqDX/Z+AEMIgRhHMiRABfT6FndsxSLh
+         JhBSXfw1Rx5B4F0P8bOT7WSOhRUJoh0byCqkL+3H3TgcRsEXsQo5yZ/7G8t0ynkQ2Pd4
+         AWGda1B0T7jb2kvxv/ZvVJwcOKcDxk9XLydUdodgoMSftFkLUqXjcgISFfTuH5SJDb2T
+         MGGrS1y8r68LUAiDycu/rCNvYbBppjNMDba+Sj0g1O9kw2S3Raj0KSFNqO2j+Aug/rEx
+         kWZwf9V4bzsC+kKYYhere0Bre1rUmoxYlSKJFJ/jAGgLQHJGqz9Gs39ZEF8UKrntiOHo
+         thGw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1733478534; x=1734083334;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=kSxRSZAJYUL4Kzev92MLWSVY3zScSiJ+F5sCThGqLA8=;
-        b=DT3w7tf2XlC+uL1Oygnx6E56G+0WlacDB737NPDNc88sslFJHUYr1Rxu9HZOudCK3Z
-         cBSp+rRjxOCfy8S2YLFZewoaQz7fdbudorzilSRyzGlWxPLs8VxosiW9fuSg5W5PaDuX
-         64238NFavhCeRqDunts1Ke/TCHulxf47Sof90g2i2nOE2kaEsdXUpBIbLi+kawUZsGPw
-         K5KaeeLIqD/KR+jxir3Nd+4mX8earDWTMBspg9ou15HnNr9I9nlSstjnQR2JPf3AxLZv
-         aX9feXlZZqPDtmwtWEPDQ0DI+dc0+kWWhT04ZPdkrwWSzY/RVfk++16AvdCC3llJeg+j
-         csOw==
-X-Gm-Message-State: AOJu0Yz0iaSjBcu/Go6Ya8xPK/v+sYyTu+A0xqz4fXUwdNVIpzIpm/bF
-	AbrsZmB7313kuRXKEkEsXnDNJrR+Igk4X8VyLzKFkMm8y1cYhq5KaqkuYDhc97A=
-X-Gm-Gg: ASbGncu2fATY4JwbRj72xOPfgobVVDjDXu70UdpPu/Gy2tpxmJ3Dm1MXhTRU6VHg1wa
-	l7iiV0iqINHq6JocTFTrZUTT5nvseQku1fUoG+Cmj+1QE8yl23ONqX6UAdIz1qdbjVUsSgMdeDQ
-	NJhSPKnkI3oNYYVW1Iug3rPum8jqKe1gdfMs9GseZKyPfqu2cJuYMxqaFZ84Jz3ZKdznpU/sT8j
-	dc/UAnG3/S0ZHXDKiKv2VC1zqUNsn0vmBc7XjZ2vXJXGAyWtt5Z0dOc8onZcXCdy9/RT4W0EhrL
-	Ukmj8zQTNvmQX/dI1mb4tVFswldmWrDs9CSe
-X-Google-Smtp-Source: AGHT+IHUdMl646+Pp52IWgKKPeySsvGoniwqfsly4HSg3aBCd8YVrqwclEYt/OoqwVEBep762LCTlA==
-X-Received: by 2002:a17:902:ce06:b0:215:b9a7:526c with SMTP id d9443c01a7336-21614d5d6bbmr34473025ad.25.1733478534391;
-        Fri, 06 Dec 2024 01:48:54 -0800 (PST)
-Received: from localhost.localdomain (133-32-227-190.east.xps.vectant.ne.jp. [133.32.227.190])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-215f8e3faccsm25292905ad.42.2024.12.06.01.48.52
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 06 Dec 2024 01:48:53 -0800 (PST)
-From: Joe Hattori <joe@pf.is.s.u-tokyo.ac.jp>
-To: Andrea.Ho@advantech.com.tw,
-	hdegoede@redhat.com,
-	ilpo.jarvinen@linux.intel.com
-Cc: platform-driver-x86@vger.kernel.org,
-	Joe Hattori <joe@pf.is.s.u-tokyo.ac.jp>
-Subject: [PATCH] platform/x86: adv_swbutton: disable wakeup in .remove() and the error path of .probe()
-Date: Fri,  6 Dec 2024 18:48:48 +0900
-Message-Id: <20241206094848.1650137-1-joe@pf.is.s.u-tokyo.ac.jp>
-X-Mailer: git-send-email 2.34.1
+        d=1e100.net; s=20230601; t=1733491981; x=1734096781;
+        h=content-transfer-encoding:content-language:cc:to:subject:from
+         :user-agent:mime-version:date:message-id:x-gm-message-state:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=GSrFoYGsGUHyZVE4nB9VSg0Tyg06nqGrBpnSKe/0vDQ=;
+        b=jTrpECgoH2ZofVyrDBDYLMtjim7s8jB/p5IMMRqxFVEgEHs12ZZXSzcABWMa0AqnBy
+         h1lUBruEX5Kp/j3nKM1bgKy5av1z3HSBbAmI1fj0g5gD5zEPAnopuloOLQSFGWsVp8cs
+         1IwSRcvXqgBbN3u44UTw3DMSgNx+k3p/0j0CLTy521Z0S/UNwJh/lmwQDJrPBci7mP29
+         P0UbBc2ev4H0KN/n5zB/pR1CYODmyewRr80zdIMdrQDSxgDZNxxejGdsVA1wvLONaBt+
+         FjfPUs9Urwf0/WZhFfcGRSt2UEMGxYCHouoPvZ+xSSaEu/nMA3YaNpvIm5tVpXWwC3Ik
+         VR8A==
+X-Forwarded-Encrypted: i=1; AJvYcCX8huDsQfaLYIidj4llbAPOpFDPWbCH7lInElnO98BlgEUqFxYDcYiBlaHxhia5b4uRpsWiYqZV72mveGw=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw4UPyEqkIrgUU3ZdqvKfIX5JgK6T/p1m31cDGWTdRl1NUJ9hbf
+	MiPrsg7n0X+7quvEoDIYMFRts6PoJMUke57R1ndv9eIU+sbXF6BVI7DO3JGp
+X-Gm-Gg: ASbGncsVCXEKD+EjC4uKIe0b4TbX8sQB2T9fCZj6e7IwqSWaTrtehiTITB121v+xpFL
+	nFGmcHEsrs3w0lOGMHfp6t/iM5YXLjuC9u34pS7upn0R2XLQjkXAkadeTjQe4lZQnLyVOkYctZF
+	oaFzqr9XIjzw1EWQSIvxJKRjK7m0tfOdUsza+E/DqCMH0bHaIpdlrhyftwHQDrdx/fKPFu9+fnI
+	kOiICsCO6jYV5Rw/y4JGYkdpIDUA2DqH2/CXpvbmgw4X5iC3tI0
+X-Google-Smtp-Source: AGHT+IFN6Nih4BPUS9vHqQD9JB0tRflwPG1VssIbKhDZvAyx2rQwUJqNR0m9Anlg6c9QjKZZHtkGjw==
+X-Received: by 2002:a05:651c:901:b0:2fb:4b0d:9092 with SMTP id 38308e7fff4ca-3002f89e98dmr14923121fa.1.1733491980769;
+        Fri, 06 Dec 2024 05:33:00 -0800 (PST)
+Received: from [192.168.0.205] ([45.152.72.7])
+        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-30038254e47sm794911fa.61.2024.12.06.05.32.59
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 06 Dec 2024 05:33:00 -0800 (PST)
+Message-ID: <33bfcda8-3d3d-46b9-84f0-44e0e9f44230@gmail.com>
+Date: Fri, 6 Dec 2024 15:33:07 +0200
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+From: Yura Strilets <yurastr100@gmail.com>
+Subject: [REGRESSION][BISECTED] asus-wmi driver fails on my laptop
+To: platform-driver-x86@vger.kernel.org
+Cc: regressions@lists.linux.dev, linux-kernel@vger.kernel.org
+Content-Language: en-US
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
 
-Current code leaves the device's wakeup enabled in the error path of
-.probe() and .remove(), which results in a memory leak. Therefore, add
-the device_init_wakeup(&device->dev, false) calls.
+Hello,
 
-Fixes: 3d904005f686 ("platform/x86: add support for Advantech software defined button")
-Signed-off-by: Joe Hattori <joe@pf.is.s.u-tokyo.ac.jp>
----
- drivers/platform/x86/adv_swbutton.c | 2 ++
- 1 file changed, 2 insertions(+)
+After upgrading from 6.11 to 6.12 a bunch of Fn+Fx buttons(touchpad, 
+mic, kb backlight, my asus) stopped working and the 
+/sys/(...)/asus::kbd_backlight interface is missing, which, considering 
+the dmesg, looks like an asus-wmi driver issue.
 
-diff --git a/drivers/platform/x86/adv_swbutton.c b/drivers/platform/x86/adv_swbutton.c
-index 6fa60f3fc53c..523836be6d4b 100644
---- a/drivers/platform/x86/adv_swbutton.c
-+++ b/drivers/platform/x86/adv_swbutton.c
-@@ -84,6 +84,7 @@ static int adv_swbutton_probe(struct platform_device *device)
- 					     device);
- 	if (ACPI_FAILURE(status)) {
- 		dev_err(&device->dev, "Error installing notify handler\n");
-+		device_init_wakeup(&device->dev, false);
- 		return -EIO;
- 	}
- 
-@@ -96,6 +97,7 @@ static void adv_swbutton_remove(struct platform_device *device)
- 
- 	acpi_remove_notify_handler(handle, ACPI_DEVICE_NOTIFY,
- 				   adv_swbutton_notify);
-+	device_init_wakeup(&device->dev, false);
- }
- 
- static const struct acpi_device_id button_device_ids[] = {
--- 
-2.34.1
+I've been able to bisect the issue to the commit 
+[b012170fed282151f7ba8988a347670c299f5ab3] "platform/x86: asus-wmi: Fix 
+thermal profile initialization"
 
+Additionally, here's some maybe-helpful information:
+my laptop's model -- ASUS Zenbook UX3402VA
+linux distro -- Arch Linux
+.config for bisection -- was taken from /proc/config.gz at 6.12.1 arch 
+kernel(attached in [1]) and missing options are default
+dmesg logs -- The "grep asus" parts of both good and bad scenarios can 
+be seen below and full logs are at [2] and [3]
+
+== bad.log ==
+[    3.664546] asus_wmi: ASUS WMI generic driver loaded
+[    3.713358] asus_wmi: Initialization: 0x1
+[    3.714126] asus_wmi: SFUN value: 0x21
+[    3.714131] asus-nb-wmi asus-nb-wmi: Detected ATK, not ASUSWMI, use DSTS
+[    3.757420] asus_wmi: Failed to set throttle thermal policy (retval): 0x0
+[    3.757425] asus_wmi: Failed to set default thermal profile
+[    3.757429] asus-nb-wmi asus-nb-wmi: probe with driver asus-nb-wmi 
+failed with error -5
+== end ==
+
+== good.log ==
+[    4.557898] asus_wmi: ASUS WMI generic driver loaded
+[    4.776587] asus_wmi: Initialization: 0x1
+[    4.777253] asus_wmi: SFUN value: 0x21
+[    4.777256] asus-nb-wmi asus-nb-wmi: Detected ATK, not ASUSWMI, use DSTS
+[    4.777258] asus-nb-wmi asus-nb-wmi: Detected ATK, enable event queue
+[    4.805497] input: Asus WMI hotkeys as 
+/devices/platform/asus-nb-wmi/input/input15
+== end ==
+
+[1] .config - https://pastebin.com/raw/3nDSV8Sm
+[2] bad.log - https://pastebin.com/raw/fvR5Sjzt
+[3] good.log - https://pastebin.com/raw/EazfLAWA
+
+Thanks,
+Yurii
