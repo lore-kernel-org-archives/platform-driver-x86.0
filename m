@@ -1,239 +1,235 @@
-Received: from mout.gmx.net (mout.gmx.net [212.227.15.19])
+Received: from NAM04-BN8-obe.outbound.protection.outlook.com (mail-bn8nam04on2040.outbound.protection.outlook.com [40.107.100.40])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CCFB51B87D0
-	for <platform-driver-x86@vger.kernel.org>; Thu,  5 Dec 2024 20:50:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.19
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1733431810; cv=none; b=h359mBfQYNtA53T1DhWd6QYO3Uf38pQXJpfAmJdD7tirjcU15CfyqL8z6GDT6itwHV5V98t+hUooJiL2XXDZgLemLGfMtt5FTKtXz+YZBtqOjZthxCrRDPdWpSOBUXBURmdEMwkkEw7u5w3yegVb08O5hSGdmRBrn13CYY3O6eo=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1733431810; c=relaxed/simple;
-	bh=y7Ci3rg1zMoHO4qFdRLajkZR9e4nf+yQP/YqIPaYWdI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=SCz4ru0TXEN2AH2Vp4CMlwgK3kWcKkiEHg+xvCTfSaMHttf4Jt8uJbvje7tI8sIGw4weimFEMdHgI1N6nJ9BlH3GWx99/WPgcV7NgnKUbT47QxLhB4KLyqsHQR8+TBPDpNhJ9Yl8a7h+JsxaqY4N4Lkcs50hgDGj4Tm5FCb7JGY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b=rLTXSGfG; arc=none smtp.client-ip=212.227.15.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5EDB934CDE;
+	Fri,  6 Dec 2024 03:20:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.100.40
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1733455249; cv=fail; b=u+aZJxbhJxeyT6uAsEm1xbm2viTCE2+4lY+2FgCemm0l21TUKUHFZA+fqAgOOLdwOWeiXAQXAJPOJxnQVbOw6IblJmoFElKMoU69FwaXRHRYcbORrv/E7gG/HwnsUsKPatVg9SFSjZPW5WowOEpC9qbzGLUmqcmaPQBdZtQfu9E=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1733455249; c=relaxed/simple;
+	bh=MsLIw//eHDCbM7lKY0hFU0zDEhxKZAMOZ/jhK9qlVd4=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=TAMkCChSNGCYBJm86l4sJncyX5yeMSbiiIDInRm6lGJjzDZlfIJT3frs5BTXF+GaiByTKSvtgK5ygiu2K9WZ4r71vQaV3FsRhkDBiZJGnz5ig9QTi7qx4ljlUqO5eoIc4/UaZ0sYF7wiOG/kU/CQueF8MqeBIlDTanHVHbUHf2c=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=4RNcdxy2; arc=fail smtp.client-ip=40.107.100.40
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b="rLTXSGfG"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.de;
-	s=s31663417; t=1733431785; x=1734036585; i=w_armin@gmx.de;
-	bh=gCSGJUlNK5FLLEymiYQXm1xPuaPQY7MNF/aykGz8rJo=;
-	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:To:Cc:
-	 References:From:In-Reply-To:Content-Type:
-	 Content-Transfer-Encoding:cc:content-transfer-encoding:
-	 content-type:date:from:message-id:mime-version:reply-to:subject:
-	 to;
-	b=rLTXSGfGbhjaaRkypaQvjSPE3szotn3l/HZYZ+lfaabmd9GA/aXj0A9gdFZ7U06R
-	 FEETkUVsFJRD3fDwpKbzDOnQpuEv+6zMyHGBPdxuvqUO/T5lR012Rp+kNjhH6Yau3
-	 ga6pwiW8dgvmKL8QpeM/TmaVUy7A3jwv8NMOY0ZYpb27MCgD3O4Pl3q5e4eOPR0Ou
-	 QC87mC1I2lJ1gkPyt6jXzPOOggW6ov1zsrtaspAsWQ2xdZIkDXeVwClQtp5lEY2k6
-	 PZ5zuI2slfA8aBvyldmRIMQ0cP3BsjmZllPV2+dvWlCh0iyU7X2p8XekxjysIn+2G
-	 sPTpcIGDoa4NVS/weA==
-X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
-Received: from [192.168.0.14] ([93.202.247.107]) by mail.gmx.net (mrgmx004
- [212.227.17.190]) with ESMTPSA (Nemesis) id 1MDQeK-1tSgyl2aNK-000bEr; Thu, 05
- Dec 2024 21:49:45 +0100
-Message-ID: <cc9f1a7d-1de6-4b2a-a2a6-e3137e0186b5@gmx.de>
-Date: Thu, 5 Dec 2024 21:49:44 +0100
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="4RNcdxy2"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=XUHhSbwOMVzB4FmgmQ66DyhS7mocjTeAAOYSJgKCT8gGr9uQTFANLbeT6UVDK7Ab72uMDYLQZF9TGuzHL1m41BNmOLvFiZ5zLErAG6efYFedsTuT6xFsNWVP7N9UBD168dlrxoETLSDqh2+/YZmmYAM6yZl34U9dBc39Calyd+J2uZMSekkMYq7m035mI7JQ3jxPuqWV4uQwD2DPzY6Jio8zHE1DbCy4Wt7Y+HRkm+pMwcMBj9HUfhiPgzJN0bDrGsnKEKsXbIOKSXs9Zhy4y68ndZ6vjEcI2tL6j6GDTPIbjpnDWMYGHwUf3iJohpdtqKe5Bm7WwqC3FkvKj+pjbA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=SaXvfC3f55zE4iuYdrvqQSm4/l0JwsEB6uZv06dc+Ms=;
+ b=n8w4bhjYkL0G4QzMa0wC6aurNBURdIAlOB5OadlLbj/7SnEpEhN4S144Bn4UDYds7lka0ZYkySJZk0ZeBVKgxw21GOFZK75QGGiYVOIMIxGg/RALqTtMyOd/tiokKWBT/EI04sczGWLuzLKLcIFzxxm+HFWcH9WgLpA+IdQlcX9seIPAGuzRLxChaDav7gMRoo77xCI7/HtgAx70aoMexyuEmDn1QRgB5/jikTzXq/4Glv2WxHXWR/xyMyeO6/5MIglsVbW76zazd8q+lZn7KRqAaXGFPh0XiPhBVB5lv9NxzXW2AQjqZMkf1SAvUWOeT79iOTiOBe/9mH4Kj3935g==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=redhat.com smtp.mailfrom=amd.com; dmarc=pass
+ (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
+ dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=SaXvfC3f55zE4iuYdrvqQSm4/l0JwsEB6uZv06dc+Ms=;
+ b=4RNcdxy2YTpBGe1pb3dxqnU0oHsCtKe6INv5M0l8i3IZrfqh9tRU5wBugUwiLApV6pWgryfZYGNKgFObFKTCDloKXHDUNiz8aRaEKqVmMrnaET5BcDTjodbf3japZYrLnQZHuCwnkQx5/M+dWuh6dFa0phvPOOUBE5MdFaXvRkQ=
+Received: from SJ0PR05CA0085.namprd05.prod.outlook.com (2603:10b6:a03:332::30)
+ by DS0PR12MB9422.namprd12.prod.outlook.com (2603:10b6:8:1bb::16) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8230.12; Fri, 6 Dec
+ 2024 03:20:41 +0000
+Received: from SJ5PEPF000001C9.namprd05.prod.outlook.com
+ (2603:10b6:a03:332:cafe::3e) by SJ0PR05CA0085.outlook.office365.com
+ (2603:10b6:a03:332::30) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.8230.9 via Frontend Transport; Fri, 6
+ Dec 2024 03:20:40 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
+Received: from SATLEXMB04.amd.com (165.204.84.17) by
+ SJ5PEPF000001C9.mail.protection.outlook.com (10.167.242.37) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.8230.7 via Frontend Transport; Fri, 6 Dec 2024 03:20:40 +0000
+Received: from AUS-P9-MLIMONCI.amd.com (10.180.168.240) by SATLEXMB04.amd.com
+ (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Thu, 5 Dec
+ 2024 21:20:07 -0600
+From: Mario Limonciello <mario.limonciello@amd.com>
+To: Hans de Goede <hdegoede@redhat.com>, =?UTF-8?q?Ilpo=20J=C3=A4rvinen?=
+	<ilpo.jarvinen@linux.intel.com>
+CC: "Rafael J . Wysocki" <rafael@kernel.org>, Len Brown <lenb@kernel.org>,
+	Maximilian Luz <luzmaximilian@gmail.com>, Lee Chun-Yi <jlee@suse.com>, "Shyam
+ Sundar S K" <Shyam-sundar.S-k@amd.com>, Corentin Chary
+	<corentin.chary@gmail.com>, "Luke D . Jones" <luke@ljones.dev>, Ike Panhc
+	<ike.pan@canonical.com>, Henrique de Moraes Holschuh <hmh@hmh.eng.br>,
+	"Alexis Belmonte" <alexbelm48@gmail.com>, =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?=
+	<u.kleine-koenig@pengutronix.de>, Ai Chao <aichao@kylinos.cn>, Gergo Koteles
+	<soyer@irl.hu>, open list <linux-kernel@vger.kernel.org>, "open list:ACPI"
+	<linux-acpi@vger.kernel.org>, "open list:MICROSOFT SURFACE PLATFORM PROFILE
+ DRIVER" <platform-driver-x86@vger.kernel.org>, "open list:THINKPAD ACPI
+ EXTRAS DRIVER" <ibm-acpi-devel@lists.sourceforge.net>, Mark Pearson
+	<mpearson-lenovo@squebb.ca>, Matthew Schwartz <matthew.schwartz@linux.dev>,
+	Mario Limonciello <mario.limonciello@amd.com>
+Subject: [PATCH v10 00/22] Add support for binding ACPI platform profile to multiple drivers
+Date: Thu, 5 Dec 2024 21:18:56 -0600
+Message-ID: <20241206031918.1537-1-mario.limonciello@amd.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: Adding a new platform driver samsung-galaxybook
-To: Joshua Grisham <josh@joshuagrisham.com>,
- =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Cc: Hans de Goede <hdegoede@redhat.com>, platform-driver-x86@vger.kernel.org,
- Kurt Borja <kuurtb@gmail.com>
-References: <CAMF+KeYus9dW00WNJMLVxLLHdG9JgCfrGJ491fu7NM8GAEqqCg@mail.gmail.com>
- <40b82b39-3bba-4eac-8eb0-b4cee4868737@redhat.com>
- <CAMF+KeYKxiG0h4K39Fzbeoa30VZsvN68XMcQ5382YdfRDgeUdQ@mail.gmail.com>
- <d84a8908-543e-4537-86d0-ce3089ba481f@redhat.com>
- <121f408b-bf43-4ad4-baa3-ae47068d8f40@gmx.de>
- <CAMF+KebH8FqV-ZrvS6NeSOjtBDc08_Ei8M97XO727TX=4FrDgQ@mail.gmail.com>
-Content-Language: en-US
-From: Armin Wolf <W_Armin@gmx.de>
-In-Reply-To: <CAMF+KebH8FqV-ZrvS6NeSOjtBDc08_Ei8M97XO727TX=4FrDgQ@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Provags-ID: V03:K1:orwmQTJ0G2o4Akh9lzereqib58eYeIEOC93M3z/mWi37j9E2oSr
- g30FkoGdwHTLsRL+3gNcS7UL/UkdSiww84R3u8HTfJK//W+IplF48vxF2C7So8pAxKMFIzX
- F7bb9Jlrv7DsiJpIGg/M0Jxo5M2wL0EWelRpdoXlnvVH1U+JTZTVEP9SQLTUs04uXVoJS20
- 4lVo9uAFqVlLBAMkGu2iQ==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:pj7U4kJlQ6M=;hZZIrxYpuknF9ORA0YmfYfZ4Ppo
- JXS1gg1Low45EEWuyzXJfH/9xlw1MRppmGeU6fvb+jT7r9eHDcb2BoHj/tW5so1aE0PIv1pAY
- k9vV7ZDIqD9AGfxFhO3jTYIeOBF6/OPijnKKZmZ/QyROanv3sMR+Mcyd4ZtGvKz9fuRjGtAOM
- xQuiJPNEZp2kc26ATaILS7wUSJfiNfG7gHY0V4fGCdEMGcvbA5QyTHT+Wl5CQ0DPTsRfxAlsa
- tVGhuyHFckca8gRK2spV0PXkijrXDeuohhyrLMnzXNd7HxXWRgBZ1kEQndABX+AYkqmE9Pk0z
- bK/9Q6b3ScFiWbw8JP9N9uiuuMvRO68DEQtcleWOuapIdKsJA0g6pgLGX9DI5MxeLcaq73yop
- GS4hcuRR9JXQ9RtrH1IO9QanopMudb8S1agYdq3qUmRCqAxKfGgnEOEjmtRut9slo2AUc9E9q
- tNiRAPIVoW8BBy1/IHuz/SudV7n4NufYgjgZHKo/+/6/Fu2UMFerhbinanw5i68GTFYgFKyEF
- DTkzaBNuR8g1fAMZ2F+zr0JdMaW7LuaGr0wr+vnFZ+cDIwk92b7ollT9fdGy/OraMfZDW4rO/
- jwq26VJkl3vJdMbctOC6MN3XWNOr+JBRzlcsQu6e+Bcvv8z4BU6km0Ku1EzYkwzU0LPd67lsT
- AfAB4Eh/ocAdcZp+UslDnZAuaFLjjlvLepb/FxA61N/xVXpDp2/9SGVdTpSaJKQ5MghIAzzED
- 0EDDsuCddmbZUw3VdYN17q3BtmPftTZlDaFU7Ka40RG/R/RnkIbR16y3F4n5me3KYv9JxvYzv
- wLOz96FD8h/Xh5Kgjc+ge7pxTLcAhFgj8stJw+2Td88h1a2ScqFvCFI2xzAUwYfzD5CDkep/y
- xjJ2ZNqG00ttCdtCgSIFV+kg6syvfI8Z4E0GXjg9BLjxchB9HYedomXqcLJyjcxOxgAXfsmJ1
- +lHTGwAYvr+3FRpacJS0YjkTUlZHRcTKERePJ8DobziaeDz1cIurQjxz72Ef9fukRf6NHBLf0
- dMzwf0S+/ZXcZunJfsLwIl5xOFXQOLyfYdHuxq7jpnigj+9kQGYnRazlXvirXzrBI5HrkxcmW
- aVvMu3TUWRsLR+7tONGponex3p4mJX
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: SATLEXMB03.amd.com (10.181.40.144) To SATLEXMB04.amd.com
+ (10.181.40.145)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: SJ5PEPF000001C9:EE_|DS0PR12MB9422:EE_
+X-MS-Office365-Filtering-Correlation-Id: 00375c4d-dccf-4e06-3aee-08dd15a4f662
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|82310400026|376014|1800799024|7416014|36860700013;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?Vk56QzZsOHRtMG5iV2oxQVhyN0JXNnVXZEZnalVoc284ejB0bmFOdFV4WnB3?=
+ =?utf-8?B?bDhTTHNmVytkSEFFWkxUcTE0WnVDMWpxSFJxbU1mZXBvN29Id3ovTzNORHkv?=
+ =?utf-8?B?ZUdvRi9haWlIMHJHUVNIRDlXZVVNZWZsK21XenliZGlCV3dKZjhnc3Zvei91?=
+ =?utf-8?B?RmtBNHR5RVBNbFJQamplVWlrWlVaTU9jVURydTVxZnFESFEzZVBEVXo5UTBp?=
+ =?utf-8?B?cndsTklJaFNIa0QwUDk5K1J3eit5WGJyZjRZQTZHNCtKVW53QXZUb2F0L1Z5?=
+ =?utf-8?B?dGN0Ykx1RGlnQVBZQXJ5NVBHNlo4MW5XMFVTSCtQcU5UUTRVdm4vVnNqa3F1?=
+ =?utf-8?B?Y084cFZjNE1DbmVsb1lRUytYbVlBejF2WXpzTzN5ZklFSDN0OXJhS21NVSty?=
+ =?utf-8?B?WDlvWlVJVXV1T1QvSmtaVjVJeVdHbnNYNnNyb3VPc21SWEZrSmZlbmozeEty?=
+ =?utf-8?B?VzBwQ0tTVXMwdWR4UG5NeVd0OXVRRmdiVFMwVzI2Q2lTUFNCdllhd2ZDK1pP?=
+ =?utf-8?B?TUN4eTFpWEtGRWFJYjJCUDNMdXBkWVdDV3FwU3dTcWdkRHJoZjE5RW1MMmFP?=
+ =?utf-8?B?VjUrVFlpc0RKa1RiZnJydHJMWGozRU53bWV2aWIvOHRvb2hkM3o3djloMGhy?=
+ =?utf-8?B?ZllzMEZQT2FTY2pxbmNNRCtxMzJmUGVsM3hRd0Q2NEp4SDR3MmVQNUVBaEcx?=
+ =?utf-8?B?ckEzbWpsOWljNHk3N0tjSG5QS1o5bEpneitBMlg5OFIxT1E1TVBTTWRpSEJZ?=
+ =?utf-8?B?RUJucDRwbWQ3NE1XYVQwMWYvaHdWOEoreUZob29ZdWg2bjMwWXZEZnBFQ3pF?=
+ =?utf-8?B?QldtYnIyYVl4aUtSUExtWXF3S2dVejdMbm56SUhpMHlHZlZhNVVnbE5OYTQy?=
+ =?utf-8?B?dHhQQkszL2ljb1M4Z1JPdUJJZHRyTnI5YkxxTEFKVGFxa1hyaS9CNDhDOFA4?=
+ =?utf-8?B?VjExTUNWaEpMWnJuUkFHYTNHQ0xVeDRBRVVqeWU5ZDNWUkhjc3k3cHRYbWow?=
+ =?utf-8?B?ZGIxRzJzZExIYVJnZlNaN3gwVTF5ZkNLTS9CQWlvSXdySTNTanZQbjVmWXl1?=
+ =?utf-8?B?S1dESlUyMHFrWmRjLy94SnV1YTNOS2FJRU9sYjRlVWpHeTNjWExNL055ZmF5?=
+ =?utf-8?B?bGxGRTVpamZ2bUgzdjhvcFpmWFJ5OTN1S2VLdHZrZk9VSHdsZEpNSHphREhs?=
+ =?utf-8?B?WTB4QW9IZElKNW1ZaTBYRWU5RE5sU3UrMDFTNHJyc0gvTFNwVWVOUk5jZVhR?=
+ =?utf-8?B?c0JYUEllbHJJR3Z0dFBqcmlzempZTElMZHdHVDFUTUk2U014UkpnL2ZSc0Nj?=
+ =?utf-8?B?Z3lxRVBEbVc4UlNGV0dwTnk4eHczR0FQWkQ5azJOcXRzUGtoa1lYQnFmblR5?=
+ =?utf-8?B?OERKWm0wYW1FSmlEZm9uTUw5VmZNblIvUmFML1dxTnptWElYTXgraExWVS9K?=
+ =?utf-8?B?MlhFcGdmNEc3SlhHZlJjeFJjRkpyRy81bVRFSDlpK3paNzlFVU9wS2V3TXFu?=
+ =?utf-8?B?V3l3T0FkMVI5byswUUhSQU1TcWdMM0N5RTdibjExZDJQampyTVh0clYvTkdU?=
+ =?utf-8?B?TUJIamZpMDdBRTBQRDF2ZEdKVks5dmhXTS9TMFQ2M01qdEQvZFgzWG9Wbmdr?=
+ =?utf-8?B?d0ZqZm9hZUloQTkzWmhWZTlmcmNLSG14ekptTCtrSkcwMjVRc0FtcHhVQWNY?=
+ =?utf-8?B?bDRVK2pqZVlVcDUxWVVxaDhXYU1ZdTMwRlhWR1ZWVzBwN2hZZDJFVjJibEhK?=
+ =?utf-8?B?L2kvakdaWnY1V3BSZDdNMk81UWdlTDg0cHg5SE4wSEM3U1BlQTU2UUxSZ3F4?=
+ =?utf-8?B?QW1jWStRaXZUd083UVM4UW96bEYzUTNkazV1amZKVkc3Z09NK21GL2lHRXBF?=
+ =?utf-8?B?cEYvUG1tYUhCSnpiMkZNZHhKckl4ZTZwaDBuSHpMUldnaUwzbklaQVNZWTRJ?=
+ =?utf-8?Q?tJR8ryzaTmZFupOdrjJ2U7g30t6DcnyO?=
+X-Forefront-Antispam-Report:
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(82310400026)(376014)(1800799024)(7416014)(36860700013);DIR:OUT;SFP:1101;
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 06 Dec 2024 03:20:40.7368
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 00375c4d-dccf-4e06-3aee-08dd15a4f662
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	SJ5PEPF000001C9.namprd05.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS0PR12MB9422
 
-Am 05.12.24 um 21:40 schrieb Joshua Grisham:
+Currently there are a number of ASUS products on the market that happen to
+have ACPI objects for amd-pmf to bind to as well as an ACPI platform
+profile provided by asus-wmi.
 
-> Den ons 4 dec. 2024 kl 23:19 skrev Armin Wolf <W_Armin@gmx.de>:
->> Am 04.12.24 um 23:00 schrieb Hans de Goede:
->>
->>> Hi Joshua,
->>>
->>> On 4-Dec-24 9:33 PM, Joshua Grisham wrote:
->>>> Hi Hans, thank you so much for taking the time to read through the
->>>> questions and get back to me!
->>>>
->>>> Den ons 4 dec. 2024 kl 18:31 skrev Hans de Goede <hdegoede@redhat.com>:
->>>>> So I think it is best to just emulate what the laptops where
->>>>> the cycling is directly done by the embedded-control do.
->>>>>
->>>>> That is:
->>>>>
->>>>> 1. Add LED_BRIGHT_HW_CHANGED to the flags of the led_classdev
->>>>> for the "xxx:kbd_backlight" led class device you expose
->>>>>
->>>>> 2. Filter out kbd-backlight-cycle keypresses and on such
->>>>> a keypress:
->>>>>
->>>>> 2.1 Determine new brightness level
->>>>> 2.2 Apply new brightness level
->>>>> 2.3 Call:
->>>>>
->>>>> led_classdev_notify_brightness_hw_changed(&kbd_backlight_led_classdev, new_brightness_level);
->>>>>
->>>> This is actually exactly what I have already implemented with the one
->>>> exception: I am executing exactly the same kind of logic you mentioned
->>>> (via schedule_work()) but I have NOT filtered out the keypress;
->>>> instead, it is just scheduling this logic to run in a workqueue and
->>>> then going ahead and passing along the keypress as well, just in case
->>>> anyone wanted to trigger any other kind of event from this hotkey.
->>>>
->>>> I have actually submitted a patch to the keyboard hwdb which was
->>>> merged in to systemd that maps this particular key to "unknown" with
->>>> the idea that someone who has this model would also likely have this
->>>> platform driver module loaded, so by default the kernel-space action
->>>> to actually change the brightness level would be executed (the
->>>> "EC-like" behavior as you mentioned that they could not change), but
->>>> the user would also have the option of remapping the key and
->>>> triggering additional actions on top of this if they wanted.  Does
->>>> that sound appropriate or is it better to just filter out the keypress
->>>> entirely once the above actions are scheduled/executed?
->>> In my experience it is best to pick one approach of
->>>
->>> 1. Deliver event to userspace and let userspace handle everything
->>> 2. Handle everything in kernel and stick with that
->>>
->>> We actually have what you are suggesting for display brightness
->>> up/down presses in the drivers/acpi/acpi_video.c driver
->>> which exposes both a /sys/class/backlight device and an evdev
->>> device delivering key-press events and which automatically
->>> increases the brightness of the /sys/class/backlight device on
->>> brightness up/down hotkey presses.
->>>
->>> And that combination is a hot mess. GNOME/KDE see the keypress
->>> and then race with the kernel increasing the brightness. Typically
->>> they loose the race reading the new brigthness increasing the
->>> brightness by 2 steps on one keypress. And some older laptops
->>> have only 8 steps, so that is a problem.
->>>
->>> I disabled the in kernel handling of the brightness up/down
->>> keypresses in the ACPI video bus driver because of this, but
->>> some users complained about this breaking old X11 setups using
->>> e.g. Window Maker of fvwm. Linus Torvalds ended up "fixing"
->>> this by instead of having the kernel immediately react giving
->>> userspace like 0.25 seconds or something to respond and if
->>> it does not, then handle it in the kernel. Which of course
->>> is racy so sometimes users still hit the 2 steps for one
->>> keypress issue if the laptop is under load.
->>>
->>> Note this is meant as an example of what NOT to do.
->>>
->>> As for the hwdb mapping of they keypress to unknown I predict
->>> that at some point a well intending user is going to notice
->>> this, map it to KEY_KBDILLUMTOGGLE and submit a PR to systemd
->>> upstream.  Then the systemd upstream maintainers will trust
->>> this user, who actually has such a laptop which they don't to
->>> be doing the right thing and merge it.
->>>
->>> And then if GNOME/KDE/xxxx grow support for actually acting
->>> on KEY_KBDILLUMTOGGLE (if they do not do so already) we have
->>> the kernel hotkey and userspace hotkey handling fighting
->>> each other just like the example above.
->>>
->>> So based on this I would strongly advice you to filter out
->>> the key event completely at the kernel level.
->>>
->>> If someone ever really needs / wants that event then my
->>> suggestion would be to add a module option which *completely*
->>> disables all in kernel handling for the key in kernelspace
->>> and instead delivers the events to userspace.
->>>
->>> TL;DR: IMHO mixing in kernel handling with keypress reporting
->>> is a bad idea. Please chose one model and stick with it.
->> I agree with this viewpoint. Also the user still sees the event when you filter out
->> the special keypress, since calling led_classdev_notify_brightness_hw_changed() sends a
->> poll notification to the led class device. So when using poll(), select(), etc. the user
->> can still react to this event.
->>
->>>> Also as an aside, I have had a few users who have mentioned that if
->>>> they have compiled and loaded i8042 as a module (which is then marked
->>>> as "used by" samsung_galaxybook due to the i8042 filter), if they
->>>> execute a modprobe -r then it also removes i8042 and their keyboard
->>>> stops working. Is this known/expected behavior and/or is there
->>>> anything that can be done in this driver itself to try and help
->>>> prevent this from happening? Otherwise I guess a "fix" for this would
->>>> be if users compile their kernel with CONFIG_SERIO_I8042=y then they
->>>> would not have this problem?
->>> IMHO, the best way to solve this issue is to tell users to do
->>> "rmmod samsung_galaxybook" instead of modprobe -r. And you can do
->>> the same in any Makefiles / scripts you may have.
->>>
->>> Regards,
->>>
->>> Hans
->>>
->> Same problem with any driver which registers a acpi_battery_hook, if you unload the driver you also unload
->> the ACPI battery driver itself :( The reason for this seems to be that modprobe assumes that the ACPI battery
->> driver is a pure dependency of the first driver and can be unloaded if no other module depend on it.
->>
->> I think this problem could be fixable, but i have no experience when it comes to the kernel modules infrastructure.
->>
->> For now using rmmmod instead of modprobe -r should indeed do the job.
->>
->> Thanks,
->> Armin Wolf
->>
-> Perfect, thank you both! All of this makes perfect sense to me and I
-> will make these suggested changes.
->
-> I am planning to try and fix up some documentation which I will also
-> add for this platform driver, plus add relevant KConfig/Makefile/etc
-> entries, do some additional testing, and will try to get a patch
-> submitted here hopefully sometime within the next few days.
->
-> My plan was to take the latest commit at the time from the 'for-next'
-> branch of pdx86/platform-drivers-x86.git and then submit it all
-> together as a patch via a new thread here. Please let me know if there
-> are any problems with that plan or anything else I might need to
-> adjust before doing so.
->
-> Thank you again!
->
-> Best regards,
-> Joshua
+The ACPI platform profile support created by amd-pmf on these ASUS
+products is "Function 9" which is specifically for "BIOS or EC
+notification" of power slider position. This feature is actively used
+by some designs such as Framework 13 and Framework 16.
 
-Sounds good to me, looking forward to review this patch :)
+On these ASUS designs we keep on quirking more and more of them to turn
+off this notification so that asus-wmi can bind.
 
-Thanks,
-Armin Wolf
+This however isn't how Windows works.  "Multiple" things are notified for
+the power slider position. This series adjusts Linux to behave similarly.
+
+Multiple drivers can now register an ACPI platform profile and will react
+to set requests.
+
+To avoid chaos, only positions that are common to both drivers are
+accepted when the legacy /sys/firmware/acpi/platform_profile interface
+is used.
+
+This series also adds a new concept of a "custom" profile.  This allows
+userspace to discover that there are multiple driver handlers that are
+configured differently.
+
+This series also allows dropping all of the PMF quirks from amd-pmf.
+
+NOTE: Although this series changes code in acpi platform profile, I think
+      it is better to go through the platform-x86 tree as more drivers can
+      be introduced during the kernel cycle and should make the changes to
+      support class interface when merging.
+
+v10:
+ * Whitespace changes
+ * Documentation update for custom in a single driver
+
+Mario Limonciello (22):
+  ACPI: platform-profile: Add a name member to handlers
+  platform/x86/dell: dell-pc: Create platform device
+  ACPI: platform_profile: Add device pointer into platform profile
+    handler
+  ACPI: platform_profile: Add platform handler argument to
+    platform_profile_remove()
+  ACPI: platform_profile: Pass the profile handler into
+    platform_profile_notify()
+  ACPI: platform_profile: Move sanity check out of the mutex
+  ACPI: platform_profile: Move matching string for new profile out of
+    mutex
+  ACPI: platform_profile: Use guard(mutex) for register/unregister
+  ACPI: platform_profile: Use `scoped_cond_guard`
+  ACPI: platform_profile: Create class for ACPI platform profile
+  ACPI: platform_profile: Add name attribute to class interface
+  ACPI: platform_profile: Add choices attribute for class interface
+  ACPI: platform_profile: Add profile attribute for class interface
+  ACPI: platform_profile: Notify change events on register and
+    unregister
+  ACPI: platform_profile: Only show profiles common for all handlers
+  ACPI: platform_profile: Add concept of a "custom" profile
+  ACPI: platform_profile: Make sure all profile handlers agree on
+    profile
+  ACPI: platform_profile: Check all profile handler to calculate next
+  ACPI: platform_profile: Notify class device from
+    platform_profile_notify()
+  ACPI: platform_profile: Allow multiple handlers
+  platform/x86/amd: pmf: Drop all quirks
+  Documentation: Add documentation about class interface for platform
+    profiles
+
+ .../ABI/testing/sysfs-platform_profile        |   5 +
+ .../userspace-api/sysfs-platform_profile.rst  |  38 ++
+ drivers/acpi/platform_profile.c               | 534 ++++++++++++++----
+ .../surface/surface_platform_profile.c        |   8 +-
+ drivers/platform/x86/acer-wmi.c               |  12 +-
+ drivers/platform/x86/amd/pmf/Makefile         |   2 +-
+ drivers/platform/x86/amd/pmf/core.c           |   1 -
+ drivers/platform/x86/amd/pmf/pmf-quirks.c     |  66 ---
+ drivers/platform/x86/amd/pmf/pmf.h            |   3 -
+ drivers/platform/x86/amd/pmf/sps.c            |   4 +-
+ drivers/platform/x86/asus-wmi.c               |   8 +-
+ drivers/platform/x86/dell/alienware-wmi.c     |   8 +-
+ drivers/platform/x86/dell/dell-pc.c           |  38 +-
+ drivers/platform/x86/hp/hp-wmi.c              |   8 +-
+ drivers/platform/x86/ideapad-laptop.c         |   6 +-
+ .../platform/x86/inspur_platform_profile.c    |   7 +-
+ drivers/platform/x86/thinkpad_acpi.c          |  16 +-
+ include/linux/platform_profile.h              |   9 +-
+ 18 files changed, 559 insertions(+), 214 deletions(-)
+ delete mode 100644 drivers/platform/x86/amd/pmf/pmf-quirks.c
+
+-- 
+2.43.0
 
