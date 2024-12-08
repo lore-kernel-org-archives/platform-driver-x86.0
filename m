@@ -1,41 +1,40 @@
 Received: from mout.gmx.net (mout.gmx.net [212.227.15.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0CE141E480;
-	Sun,  8 Dec 2024 00:33:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B78118035;
+	Sun,  8 Dec 2024 00:36:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1733618033; cv=none; b=VPxNuvYA37bGOoXBPkMeCFmrm+x7FVmP4ULUZopSPRz3nehGSuXRe88umENbJxh5MRIBLD1CEcFHBiUl3lQzoLSL30wrBTXux/vLbB4YsZpnBYgr92jW4dido9YsQXOmraX3QI82NqC7qwOUKN/IMrnu2Q1EflHIxVto6OwAqcg=
+	t=1733618172; cv=none; b=elfg45D1ITIYGDZN0beDiFT7LKd43qluujqhCWKGILPge9vdaDgndA2Z4/fiznfH1a7s9vR+1kk4uCSAKjWw8XNZxolF2NU5XcF0spCDXA+n2Im6U6qJlf09sOSvnjiJifV9KqmDVj+TizcjcKOkZ6MUWhqqAXzYc6LdSB36cR0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1733618033; c=relaxed/simple;
-	bh=MGJ1aVj95g0SY59UATiAcOqoeUVWhnEEWQb4cCUeyJI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=JrHovOZSk0WpdQLl3Fqr6wvhBFQwK31ArS3csY53D+I4OicgZjDyH1+gRtD0GYkW+2U8gt/dUl8AS5swn0/MIuSyWjhqfb+hg8rb2dPWqfmT5/tff6f3ZKDr3TbfVeyvLs6ejjPZAgqW4PPNUda0RTPtJMXK6U2W6lz8BdjV8JQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b=imKfo0Ox; arc=none smtp.client-ip=212.227.15.15
+	s=arc-20240116; t=1733618172; c=relaxed/simple;
+	bh=PaN1CMHfi/mE94nKaZXHJ/LjnzYwtLEXcURjOsdp+ok=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
+	 In-Reply-To:Content-Type; b=R40ZshW4EOIw4VA4ggnalKiz6VFaI4nCzsrbml23y5vv3NMLEyrRWk7Jye8L9DP9kzenBtPaDCrq0CVL0s/ef0D+A/wkQQgHGlhSxesXahIsx1w+ORxdRtlQiEGjudJWSW2vW1Tzbr6pRxHq4SZ4wiFcJ609FnMY7w1IcpVSFFQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b=P/4fSrGk; arc=none smtp.client-ip=212.227.15.15
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b="imKfo0Ox"
+	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b="P/4fSrGk"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.de;
-	s=s31663417; t=1733618018; x=1734222818; i=w_armin@gmx.de;
-	bh=HL+IMuAiNiF8aM/8sH0ANomr/T5Z8We7VKoDmRJ/65s=;
-	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:To:Cc:
-	 References:From:In-Reply-To:Content-Type:
-	 Content-Transfer-Encoding:cc:content-transfer-encoding:
-	 content-type:date:from:message-id:mime-version:reply-to:subject:
-	 to;
-	b=imKfo0Ox3y9n2Jt/7WWuhzFiC6eJ0SVX17GrEn3IPJARbo7vYdWvwigamcuCYwFc
-	 NiWMa1Zyt0vNvIG1sNBS1Mc21WiK1f0gyRklPTEDMU/RaVcPo0CTAYWfisewjzinf
-	 EdVu7vH3neICtk+e+sRWIkCEttq1eURWwOzrYHhf+/xdLS+cPkBpkcUc/ctIQRxL8
-	 W+vGZvROiPbVYY3qtL2vEZj5xYPD8pesGOusCIpNazQagFTjWcZpNr6PUcJyk4/AO
-	 MGsxXGL02jIBdrMCNdDiNgP37hmQB4TqZd3FUlCWmbyiUYqldVEY7DW0LgG3l39ID
-	 2bBR51cwwsTP7pDD2A==
+	s=s31663417; t=1733618160; x=1734222960; i=w_armin@gmx.de;
+	bh=GRwdT4pWZL6KXL583qwCFEKU2VG67kSzO1j7SGkaU9I=;
+	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:From:To:
+	 Cc:References:In-Reply-To:Content-Type:Content-Transfer-Encoding:
+	 cc:content-transfer-encoding:content-type:date:from:message-id:
+	 mime-version:reply-to:subject:to;
+	b=P/4fSrGkWw+QtMz2lMP0QNWAZt81k/j1WDPUqa/XanSQMfxsImjUEj8gzMSh0aFH
+	 a9SzAfgqUcqYSgEE27h+2mELi9EcmGG4zjKLpJTXPtgxTQeVQT/TMVyjrONtsCDx5
+	 qtSdSk6w1PeYESrwYJlJge0cXiNcX44mikxG4PLhjDfKfGp4m7UVWjJHGxvrCtJVd
+	 QY2hwfqPPB4gKT8p8d7Ai5VceRC8r0+6mp1z5+czEc5EWZQUe271y/MPGJRbC5eI/
+	 yUZE5IcjNnHlqRnkokkCXM2J+sUHyKz59pzS4gl6skTyyFfWPg3o2q8RojTfCkyCu
+	 tNtPN++kyf53aYp6sA==
 X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
 Received: from [192.168.0.14] ([91.14.230.110]) by mail.gmx.net (mrgmx004
- [212.227.17.190]) with ESMTPSA (Nemesis) id 1MLi8g-1t2Ppa1AsC-00RZm8; Sun, 08
- Dec 2024 01:33:38 +0100
-Message-ID: <d5a57f5b-92cd-4b60-bd92-16db368f4486@gmx.de>
-Date: Sun, 8 Dec 2024 01:33:36 +0100
+ [212.227.17.190]) with ESMTPSA (Nemesis) id 1Mz9Yv-1tXv3z0Wt1-0169rZ; Sun, 08
+ Dec 2024 01:36:00 +0100
+Message-ID: <6641ef91-7d07-4104-a31b-e44a80952444@gmx.de>
+Date: Sun, 8 Dec 2024 01:35:58 +0100
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -43,72 +42,76 @@ List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 2/2] alienware-wmi: Adds support to Alienware m16 R1
- AMD
-To: Kurt Borja <kuurtb@gmail.com>, platform-driver-x86@vger.kernel.org
-Cc: ilpo.jarvinen@linux.intel.com, Dell.Client.Kernel@dell.com,
- hdegoede@redhat.com, linux-kernel@vger.kernel.org,
- Cihan Ozakca <cozakca@outlook.com>
-References: <20241208002652.5885-4-kuurtb@gmail.com>
- <20241208003013.6490-3-kuurtb@gmail.com>
-Content-Language: en-US
+Subject: Re: [PATCH v3 0/5] platform/x86: acer-wmi: Various improvements
 From: Armin Wolf <W_Armin@gmx.de>
-In-Reply-To: <20241208003013.6490-3-kuurtb@gmail.com>
+To: jlee@suse.com, farhan.anwar8@gmail.com, rayanmargham4@gmail.com
+Cc: hdegoede@redhat.com, ilpo.jarvinen@linux.intel.com,
+ platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20241129193359.8392-1-W_Armin@gmx.de>
+Content-Language: en-US
+In-Reply-To: <20241129193359.8392-1-W_Armin@gmx.de>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
-X-Provags-ID: V03:K1:5KCjUwNrWBT42fBP6HR5Er2Bii1XLf+XR2A4/4pEu0zbxOQlhae
- 4y7WfMl3q6ryqMubcGte27vv+ZgPdXVi5i8dWHqQfe4snjQ79pylP+upSrAnS47jX86mvOa
- 0hSf7CP0lS+jE3nd3j6ESWPx7JvO9j21B7HfpSibtDVBTeSH6sQp//p1GUY7WlVMNFOVEDf
- HA8MkiQn+uN8AVdH6312Q==
+X-Provags-ID: V03:K1:EoOkpN8Jhb9Cyznt2e4cWuwLb8PQnqVwMzUhYu2wGJ2s/I+bOLm
+ s7CThJeEAOSX+Vas8Io3N46OXSwVh30/s10FJIfAhOOPlDCuwLXyKV7gtC3fl76/yaeqVeJ
+ 4HVqfyl7YKFRKTpdwD0PtwUj3eFRbSID2cCgh/WcFhS0gSm5N/SDrQKljMnn3htD7BGYsdx
+ VeH/R/H7QEAGSHu2KwxAQ==
 X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:+cqpx8jzvXA=;+SvocsB3KZkDBkIgCJ72XfX2zEn
- iStFKC9CB/VIrqWrM6evT3r6pL4NLUR4NTn+JU1bUywjm8eu2/0CYv6c2zR460/eLwMqhZf3f
- 1YF0NxE8PfyKRScrpQH2nhpbou/2mVYCXLR1EUT3JeadOXi19TvQuN9SZlRvGnHQfKjIMpk/3
- impiyZHwGikec+Gs6dg5nJik5t8Jb/u305FR550BifJm+RMyak9dbzc4l3XAN1qNpoBE4qweO
- M8gJoqHt3+/BMpvrwaOGBIdoOKkUoQCNRKxj6YHx4EHQZncxpZyZZa9pW6WEG4MqlVrAlt9yx
- RFNIUonRodyNro3GPzZEpVzI9qDnSn0X1zi49h4ViO4pnaAUr201M+bN1tUwz/O6dk2eqOQe7
- NS7XCFzakEs3sJ2Uu9eoOq0PNRagPORg1l5W0F/OJTChfI30Ztg8Da73TLHp0DFQ+j0rlRd8m
- iR58gnOOcI54E/rNRbTvd96enZUze8Jf97iD04I8rlzxo7CqNr9y9gUOlrBre31zBC4S0xm0y
- VWlH5YKSQs2Xpr4AGaEnrxR5a5p3yA0CskFRIC0CZevMUK/utzRrM8E1vUtEQHLZPN4zOm4M7
- Ltqr263dHPBA3xp/Bw87A4IBj4cjN6CG/aVjaG2qRi0RJ1wrB6IwReSSgkc4YGjjPSbGZRRvE
- FWDJraLPa6esOOq/nl90SxW4oGirdkq+esW3YsB38b6DZzihGcwZn+KKY3XWWykPIGxOLttlD
- 5kTwh8sUJTkqM/ZxRD90HSxiCBjf+UokssZtuhnstPo0lFx1Ei+pN8W76JJ1Fo8RosCQqMNfb
- sZ5/EP97E/XkqcEabcGFCkYTEQYu3fAznr3n6E4mH8z/b/7OvaZYtX0doSPHrvmtYAEWEGyse
- IAfwcelmhikz5gQn96z/UcBwkUmf059PcyA+z5J+iRBidhnLDowOgmg3u67iYRMh0zeYR3Uou
- olX9SCR9JLrQWiVZMX8In6ncEA15iz+5Kp/6eyxG+JgkGwpqHsJf54Dut0M4lTgTC8CnI5LWA
- cfYv05vNPARBObn5jcHNc5M+U6Od84qRuBGVGPyqpnM3CkA1LF3AyyZYh+LUColUwGWEySKPa
- vVP0tnEc8OJ/J+HMI0hdDtMvZ7dcWY
+UI-OutboundReport: notjunk:1;M01:P0:q3DgEE5eTts=;yrPoLw0gd0d9azB8hZ1q5k1ImeJ
+ HRMziCYJbOheMFLIa24z+wJSGmnJud6NrIv/Fzvy1s6ujLRYHnRnZe/tkl5jt4YlhXXXJxhLM
+ WGuf7dK7DgArKX/+hFVnK+tBqmSvbZ4dp65Ip0Do3xuTWgyUNT3yaKGc8sguPr6P6jn0xziuA
+ Wkl+GCbxHOZoclu4oocedYQOi38j1pIEUIrYevDMq2fo7I2BX3gPXu5JjrJVZ4cTZXw4ZoSSB
+ MFJh751vOgUJpEzYqwwaz84WXnittn/nWD23TCgxj56tPOzro0j0mJU/VHaPRQw0jSTTDnTgk
+ Tk9OaHQsEogqrz+uOdGMOouUX4IvbKsdEOnee8GWEwpCPrAoqV19kcT6uM3d8xtv7q1OAx6Vf
+ CmKq+I2Txx5eooj50RciKqwwQmcUWsUbsGpWKFszXOHljTLVxx15CwSS/+9G7mI8DAKND5yVM
+ ivGYvG61pkNob0aAFDrlzVN6n+vYroBRadkF/LIvn7HHcqlXlyhEYXxLy+eNB04KWssxh08fc
+ OIB1zoddsUK3u+ykK4p8tPqDfZyquWnPkf6a1p6VaWu+VayeZ2u8A4DwLl+PPjW+M1Edw8hCq
+ 9qu2H9xGIOnKKtR62GIZBX2ciTVKnZR1qaUyNnANre4pRLEsNy6mexOTN2syqsFmJovxUw98d
+ 1jbqexBbAO2UXm62Xp2m/m5I0kTqRTv+L9qLOt7qrgslaJ9SJXTsHFi5yE852TJhdRmWB+ufD
+ UIF5Mb+G6HGruqH3KlBVLTAxBmO8kYnRUg7VgaXas75QVKiHqK0mYsVu2qDqK8kgz/nDMNCd8
+ hFNXph1f9K+mzHibQx3phrH6bTjWhSX/xTRZHEAXm1wARvtILJLr68LX0GQ18CWhrMdm48rEM
+ 6vLywUrVn/DM37NILM66uUm9MY2n1x2m8MJ53HIn5fyQcHsOzd/tlcvZKtDxyed18HECQ83HC
+ a4mbUs++9Z/88066e724tEcxrViaDbwtAbvoUAk0FBfL/4jr5uhkCW/unxGDvD7QX2P8HKy3U
+ gtpMGWAhsCOsut2hlJ3YHuMSZteIJEDyP3zpsxrHkQzTzqhQKBJl8FEKf0PCVbjIeV6LKdq3d
+ yRGuwAtOqAkuzIVLFGtpsYW1xMcqiC
 
-Am 08.12.24 um 01:30 schrieb Kurt Borja:
+Am 29.11.24 um 20:33 schrieb Armin Wolf:
 
-> Adds support to Alienware m16 R1 AMD.
-Reviewed-by: Armin Wolf <W_Armin@gmx.de>
-> Tested-by: Cihan Ozakca <cozakca@outlook.com>
-> Signed-off-by: Kurt Borja <kuurtb@gmail.com>
-> ---
-> v2:
->   - Added this patch
-> ---
->   drivers/platform/x86/dell/alienware-wmi.c | 9 +++++++++
->   1 file changed, 9 insertions(+)
+> This patch series contains various improvements to the acer-wmi
+> driver based on user reports:
 >
-> diff --git a/drivers/platform/x86/dell/alienware-wmi.c b/drivers/platform/x86/dell/alienware-wmi.c
-> index e69bf9a7b6c8..341d01d3e3e4 100644
-> --- a/drivers/platform/x86/dell/alienware-wmi.c
-> +++ b/drivers/platform/x86/dell/alienware-wmi.c
-> @@ -241,6 +241,15 @@ static const struct dmi_system_id alienware_quirks[] __initconst = {
->   		},
->   		.driver_data = &quirk_asm201,
->   	},
-> +	{
-> +		.callback = dmi_matched,
-> +		.ident = "Alienware m16 R1 AMD",
-> +		.matches = {
-> +			DMI_MATCH(DMI_SYS_VENDOR, "Alienware"),
-> +			DMI_MATCH(DMI_PRODUCT_NAME, "Alienware m16 R1 AMD"),
-> +		},
-> +		.driver_data = &quirk_x_series,
-> +	},
->   	{
->   		.callback = dmi_matched,
->   		.ident = "Alienware m17 R5",
+> - adds support for the Acer PH14-51
+> - improves hwmon support
+> - ignores function 8 events
+>
+> The changes are compile-tested only, so i would like to have them
+> tested on a real machine.
+
+The whole patch series was tested by a user, so for all patches:
+
+Tested-by: Rayan Margham <rayanmargham4@gmail.com>
+
+> Changes since v2:
+> - fix compilation error after patch 3
+> - replace GENMASK() with GENMASK_ULL() and adjust bit numbers
+>
+> Changes since v1:
+> - fix spelling issue in patch 2
+> - rework patch 3 and 4
+> - add Reviewed-by tag to patch 5
+>
+> Armin Wolf (5):
+>    platform/x86: acer-wmi: Add support for Acer PH14-51
+>    platform/x86: acer-wmi: Rename ACER_CAP_FAN_SPEED_READ
+>    platform/x86: acer-wmi: Improve error handling when reading gaming
+>      system information
+>    platform/x86: acer-wmi: Implement proper hwmon support
+>    platform/x86: acer-wmi: Ignore AC events
+>
+>   drivers/platform/x86/acer-wmi.c | 167 ++++++++++++++++++++++++--------
+>   1 file changed, 125 insertions(+), 42 deletions(-)
+>
+> --
+> 2.39.5
+>
+>
