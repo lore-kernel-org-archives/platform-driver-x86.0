@@ -1,99 +1,147 @@
-Received: from mout.gmx.net (mout.gmx.net [212.227.15.19])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f181.google.com (mail-pl1-f181.google.com [209.85.214.181])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 32C364642D
-	for <platform-driver-x86@vger.kernel.org>; Sat,  7 Dec 2024 19:01:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BED7817E0;
+	Sun,  8 Dec 2024 00:29:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1733598086; cv=none; b=EHBO0cQK403dKsEUZmVvehHsM/OQ9zpZQvcHJcVw6A/X8qDLJ2ox2VxP7dssK3J/K6bsPzm0YNqmPrzjtUcSVAkVXlL04TjadDC/8HfshETrRVO5g6pjS76n18l9nGnEXR1Ow8hB13Qgm9FhSoJLkJWGp5xhkaOYxV80d8nAlIo=
+	t=1733617748; cv=none; b=VgbzL8Fs17IDunSqL0GYxHmKF0cZ2yCBv3GX3qOMSZGiOvzsfRkbURYF1l5Iup1QlBHWMy1PbY7pNkpfScMwPanJIFLDjMarNLM4yuM5+GyuyVICnMftiLEMqdO80+FfPUPR0lGp8jOnCCpcgY3qVa50mLy/nAqnF7HXue3eg1o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1733598086; c=relaxed/simple;
-	bh=JUfNFnkXcWyZHNBC3IA+Goni2GJEAJr3mtXnJ0CZDRo=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:Cc:From:
-	 In-Reply-To:Content-Type; b=a3AhuvLV7OnMbzBmcJOEAEDHEY/vh94jmg6JXzHxzj+BfkrzhWf3ipUc2Z/jnNX9AoAI16RNoC0f33gQ8sohs49TD37LrGcop1oToSixLZLzj2jGxF3HY2VKND692fx05QO04LVH7WnORdnf+XlJyB2mLgfrLvVt2fKkqBa2gpE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b=lhQlbejW; arc=none smtp.client-ip=212.227.15.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
+	s=arc-20240116; t=1733617748; c=relaxed/simple;
+	bh=Scd+9AdoKpcxpcjCzDqtEiMeYyMaRNzM9h+zhAllZlo=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=tp6kBAAzBDQ4kLL68WZlHqVxp55XaQ2WG7+w1MRlQ+bZqyBUXL5VE0ipLP9dKn4wifAWGv3RNaQiZ2ik5g9b5VYTSWhxxDqFiHINe4NU/v9/W92FjS68qb0ljkVqnFJzzO0KrPdWpCkRTldNnZoI68G06qkX+89Q2s90quSbuSw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=clOVccUG; arc=none smtp.client-ip=209.85.214.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b="lhQlbejW"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.de;
-	s=s31663417; t=1733598081; x=1734202881; i=w_armin@gmx.de;
-	bh=JUfNFnkXcWyZHNBC3IA+Goni2GJEAJr3mtXnJ0CZDRo=;
-	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:To:
-	 References:Cc:From:In-Reply-To:Content-Type:
-	 Content-Transfer-Encoding:cc:content-transfer-encoding:
-	 content-type:date:from:message-id:mime-version:reply-to:subject:
-	 to;
-	b=lhQlbejWexhKLYy2OdgRA66wCIFtoSMcMge38Lb2vv7vPNyXFsEohdjEMTVx3DPP
-	 iLsReClU5typmQaA6Trf37x6+aIpcNBNGFMy0JBAtlJIWsXQu20BfkYfoohkpYCR1
-	 c8DTF/7VxkiFO0y+uGb41IU9uVSyNOsNZap7m5pt9U55bh7qAQVvNOiKDbiE2+SCx
-	 pnCe958RpCkJLXxTJYY0OfprneTXhopEBY7zAEbcuuMHZX8VtWOlz5koi8cjbLn5X
-	 by6M8lTYwuRyYQ01UrtkaScSQ+L9IuE5xgcQcth+JoCnZe0utaFcIScbLgb4BMkCt
-	 CaywzV/D3zUzd5WDZw==
-X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
-Received: from [192.168.0.14] ([91.14.230.110]) by mail.gmx.net (mrgmx004
- [212.227.17.190]) with ESMTPSA (Nemesis) id 1MSt8W-1tCwnv3Ago-00KSX1; Sat, 07
- Dec 2024 20:01:21 +0100
-Message-ID: <6aab4f00-ba91-43ec-a5db-8d8e62c37268@gmx.de>
-Date: Sat, 7 Dec 2024 20:01:21 +0100
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="clOVccUG"
+Received: by mail-pl1-f181.google.com with SMTP id d9443c01a7336-215a7e487bfso27583385ad.2;
+        Sat, 07 Dec 2024 16:29:06 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1733617745; x=1734222545; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=ZUvcwGZUAhJ/Qv6jLvno/oIrk5VGqb/XMZYkBUQMUUM=;
+        b=clOVccUG9Cr17WHX8pNLZMQS+a8y2e3bgRbXGmXeykSg3ROgD02sNBxQMBdoKwziRC
+         QbDvRKvpinOymvusUDZh8BstL7CF71NAva0IoneKD29XGlFsPOZfzZmAIiDIzsrtHQwl
+         f8P7rzVHmAeQ78wMTJvRk1dkk4AzhNntlkxv/Sv6w6oJRTp8O88PoC1tC2bj4Wh3XHPp
+         UGcI+l4BFKQcbc1s5c5ju9DOuSGqcMeDhSViDW+U6pVT3pswYST5yzyCMiKNVflvUVi0
+         CEGVLSW5QkaIVqm7fbZUUAUEILy+mw86tHAaDXFHi12qTmVfyaAY0TaRReaPEinX6330
+         iusQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1733617745; x=1734222545;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=ZUvcwGZUAhJ/Qv6jLvno/oIrk5VGqb/XMZYkBUQMUUM=;
+        b=dMJlhAPS3PMwmThMtDUa09X+8wns3ErK0v15pmrXsignw/vcKpQKIMTM1O5DTzl34V
+         g9JEp9DP0lAwyYkf6DqE6DM9qwQpt82x3aeRmEHi4KDqHJCslAd1uES22+nl/qgM6P0Y
+         1CqjcQJxCtbCrCzfcOYtEIZ1c2zH80vqcTPvSk7E3xU0yoiWsRzwApvg6heAVbIt7Fah
+         9Np32Voq3KILLBT/xlDrKbJu6EjN6Dt95vAQiP5CLES+tIQekK8vdvizyUX7en3hu2oC
+         Tb82sfN/esoQWCuA4yV/P14tVYxi7ejHR6cCCow8JVTup/t/czCVFR8IIteHmRDLM/0A
+         PVug==
+X-Forwarded-Encrypted: i=1; AJvYcCUMQ9Oylor4O07Rqf/ZgyAnyCLTxTSdzGYIENoUzKmYILuB1K8T5AkeCkiR+Mag2GqxCpgZcj+OiW3O31s=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxhUu9ceZszukuSp/0v7/fetyMCPlUFIbnfTaDTph5Uu6Xj6BiM
+	fg+DtU5WUVWrUov52mAm6Nql3L+WEXZEFRDoyvvsdAlb20gItMl03uskoA==
+X-Gm-Gg: ASbGnctUGrGcS3mHAc9tS6Xj01gnM3jWu3djwuh9jnpLCe1vQHXXoKaV8By0wmw58ki
+	AoiL9na+a4D715hmM2Xif8KjPrl8nslhglAvxCmv/HHWdls/N8iagp5n73n9YffdOkxoRF1OYJG
+	xEas8QZY0wTbcR0iviFUGf34fTywiB5SlSbwIUEojyBGfIUs/2TEP0YSFGrS0pJOivH4dPT+uAO
+	E9/j7RH80yMQHhulQm+cvUxUITwTIdDYsr+isfDVLSL+Xk0ooq7k7r+FiFROyRahU/1uxbG4/QG
+	ZRqTpwv72BrUL6fU0Sg=
+X-Google-Smtp-Source: AGHT+IG1DnAmS3J5IeWgv7/5a9rrRkM51YdBDHhWsDR8q1er+kGuDrIu7RlUWHkdpkLkq9UIxxlsrQ==
+X-Received: by 2002:a17:902:d507:b0:216:19a4:dbcb with SMTP id d9443c01a7336-21619b41fb7mr100103285ad.45.1733617745468;
+        Sat, 07 Dec 2024 16:29:05 -0800 (PST)
+Received: from localhost.localdomain (host111.181-10-101.telecom.net.ar. [181.10.101.111])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-21631d718acsm13035145ad.36.2024.12.07.16.29.03
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 07 Dec 2024 16:29:05 -0800 (PST)
+From: Kurt Borja <kuurtb@gmail.com>
+To: platform-driver-x86@vger.kernel.org
+Cc: ilpo.jarvinen@linux.intel.com,
+	Dell.Client.Kernel@dell.com,
+	hdegoede@redhat.com,
+	linux-kernel@vger.kernel.org,
+	Kurt Borja <kuurtb@gmail.com>,
+	Armin Wolf <W_Armin@gmx.de>
+Subject: [PATCH v2 1/2] alienware-wmi: Fix X Series and G Series quirks
+Date: Sat,  7 Dec 2024 21:26:55 -0300
+Message-ID: <20241208002652.5885-4-kuurtb@gmail.com>
+X-Mailer: git-send-email 2.47.1
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: Regarding Your work on hp-wmi
-To: Sharan Kumar <sharwesh2005@gmail.com>
-References: <CACGGMP13h+VskpoAMg4rShZC0QWM48ibXpARLmCEiQHvLL=P8A@mail.gmail.com>
-Content-Language: en-US
-Cc: "platform-driver-x86@vger.kernel.org"
- <platform-driver-x86@vger.kernel.org>
-From: Armin Wolf <W_Armin@gmx.de>
-In-Reply-To: <CACGGMP13h+VskpoAMg4rShZC0QWM48ibXpARLmCEiQHvLL=P8A@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:Rzw6TB0b8rwvXJdnluhFXkoxEC6oaV1t++7bCimZgl03RQKG1t2
- xve2aRuCeff3yNYEAMuZUMWmBQ9Qfy6kyEPfVKkshWWKF2yIGMpzqrD0sVrZO12lKrPrF1c
- u8YBx2IFGRC1ISoWDyFU14oqLmFjtMFqAPEiCuLQI7Qojh052s271xrh4vtobalwTs+4zkb
- GqZYyu5rB4At8MrEUUf0g==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:bosYh3RudlI=;qkXQdra7Oo/Ez2286r9TLX3RUDw
- QObBhq4Z7G6hUqPTBbSTjSGKzRA/RgrkiEsqD5C0bf3U7DFIn6kHsOggCtVHaSHT3iNC0O5T/
- /WKEUQlz9uRdbEwbjnrjNtbd5IFSKzeAAX6WIY6GX5N4sNIfyQUgzrPogLFBphr7joL80F3Yy
- 75nJ9F67CHdSURee436pWHHy4KCiuwSqA+mTBIvr44+1cxZTdOdxPrOYacxQHyDWbKjNBCZDR
- 6e/qYb0bU1Y7cFmO9K3A9IjyA4d100qDoJoWVgLQhjWI6vXLExa+9eyX4yXnOW82/5bT969O8
- JWsQAmjKXzWiHD4jXBfYsP43fxVYrIou6OVCdvil+d9b1X/DjbcisTSZdQATSIReXUa+WN0vQ
- 4z6E7xEv9kxASbmMy2WbcP14UocpRsX06+kc7QmCzYvO3xio7IRWsWkBQ5shkimfcQPNuJkz4
- DBTxVzkYGcvKjeED7thSIYx340mNQjSTBYgTfoPuZ5dk9D48gR7ui5TWkXHfP7Xj6d5KC7+V6
- K6/+R6tHUgZgB8yl18W95Cg12A31qdHhRTVTI3YG5mf065r52YmdxYSE4V5ZrQ7kMsy2d1fo/
- X6QIoI/Vo5uNospJiOwX6QnYx0Aj6mhaTr6BP25hFWQs6hdy1skQ0d1jUpcrAIsF55fu7/KIQ
- ovMM1J+a0gzzevWYvi//VqZvcBbJDnVqBh5mzjI/7YKEE4YD0zZ4QeZqB/4Vd0A8ViUJedDdd
- bCQ3G2SITpMdktt6a/qxae4IrPqRN/tx6XVkG4LleRS0V9D4MTwDHDABABU3mUDZjlG9ugkYr
- wLZoBXuS8qeWLild1chDnEKvv24zWMCiCsWYshkwKMGxcIiSV3A9XocrI1VgtBkJhDOQyGZP9
- D+MqdYRAC/ktUktPzAJmTEgFhiogQNKuXzEPapoERMe+592xArquLMWGDc7Kk/Ey1rv1jtrff
- GyPFZRNpfNkj1YpZzVkNUy+CW4tlbwrmYXJO0DpU6mer3ND5A8kdkbYDY/cwTFpQQVHR39GRE
- LbJDTA3Q30QthE0F/izdxE7bZzg70PPf/V4yFGj7EW3ZjCDFZHgvs9r3yVQf3uzrXgMEayVbu
- zBRTPSLqF9vrpf+/47ye6VjbzbQ9V3
+Content-Transfer-Encoding: 8bit
 
-Am 07.12.24 um 15:02 schrieb Sharan Kumar:
+Devices that are known to support the WMI thermal interface do not
+support the legacy LED control interface. Make `.num_zones = 0` and
+avoid calling alienware_zone_init() if that's the case.
 
-> I was testing the hp-wmi module for linux and found that you
-> contributed to that file. So i would like to get your advice on that
-> because wmi commands for to set(eg:to set keyboard backlight) is not
-> working in my laptop and i don't know how to move forward.I would like
-> you to give some suggestions on that.
-> thank you
+Fixes: 9f6c43041552 ("alienware-wmi: added platform profile support")
+Fixes: 1c1eb70e7d23 ("alienware-wmi: extends the list of supported models")
+Suggested-by: Armin Wolf <W_Armin@gmx.de>
+Reviewed-by: Armin Wolf <W_Armin@gmx.de>
+Signed-off-by: Kurt Borja <kuurtb@gmail.com>
+---
+Suggested here:
 
-Hi,
+[1] https://lore.kernel.org/platform-driver-x86/38399b6a-e31c-4b99-a10e-01dc20649c24@gmx.de/
 
-i have no direct experience with this driver, as i was doing only some WMI=
- cleanup work.
+v2:
+ - Remove extra line from commit message
+---
+ drivers/platform/x86/dell/alienware-wmi.c | 15 ++++++++++-----
+ 1 file changed, 10 insertions(+), 5 deletions(-)
 
-However in general providing the output of "acpidump" is very helpful in s=
-uch cases. I CCed the
-x86 platform driver mailing list, so maybe someone can help you with this.
-
-Thanks,
-Armin Wolf
+diff --git a/drivers/platform/x86/dell/alienware-wmi.c b/drivers/platform/x86/dell/alienware-wmi.c
+index 77465ed9b449..e69bf9a7b6c8 100644
+--- a/drivers/platform/x86/dell/alienware-wmi.c
++++ b/drivers/platform/x86/dell/alienware-wmi.c
+@@ -190,7 +190,7 @@ static struct quirk_entry quirk_asm201 = {
+ };
+ 
+ static struct quirk_entry quirk_g_series = {
+-	.num_zones = 2,
++	.num_zones = 0,
+ 	.hdmi_mux = 0,
+ 	.amplifier = 0,
+ 	.deepslp = 0,
+@@ -199,7 +199,7 @@ static struct quirk_entry quirk_g_series = {
+ };
+ 
+ static struct quirk_entry quirk_x_series = {
+-	.num_zones = 2,
++	.num_zones = 0,
+ 	.hdmi_mux = 0,
+ 	.amplifier = 0,
+ 	.deepslp = 0,
+@@ -687,6 +687,9 @@ static void alienware_zone_exit(struct platform_device *dev)
+ {
+ 	u8 zone;
+ 
++	if (!quirks->num_zones)
++		return;
++
+ 	sysfs_remove_group(&dev->dev.kobj, &zone_attribute_group);
+ 	led_classdev_unregister(&global_led);
+ 	if (zone_dev_attrs) {
+@@ -1229,9 +1232,11 @@ static int __init alienware_wmi_init(void)
+ 			goto fail_prep_thermal_profile;
+ 	}
+ 
+-	ret = alienware_zone_init(platform_device);
+-	if (ret)
+-		goto fail_prep_zones;
++	if (quirks->num_zones > 0) {
++		ret = alienware_zone_init(platform_device);
++		if (ret)
++			goto fail_prep_zones;
++	}
+ 
+ 	return 0;
+ 
+-- 
+2.47.1
 
