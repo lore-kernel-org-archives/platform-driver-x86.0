@@ -1,117 +1,120 @@
-Received: from mout.gmx.net (mout.gmx.net [212.227.15.15])
+Received: from todd.t-8ch.de (todd.t-8ch.de [159.69.126.157])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B78118035;
-	Sun,  8 Dec 2024 00:36:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F88280BFF;
+	Sun,  8 Dec 2024 13:02:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.69.126.157
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1733618172; cv=none; b=elfg45D1ITIYGDZN0beDiFT7LKd43qluujqhCWKGILPge9vdaDgndA2Z4/fiznfH1a7s9vR+1kk4uCSAKjWw8XNZxolF2NU5XcF0spCDXA+n2Im6U6qJlf09sOSvnjiJifV9KqmDVj+TizcjcKOkZ6MUWhqqAXzYc6LdSB36cR0=
+	t=1733662962; cv=none; b=orpczh8TDz3AYfgBYJZoAbm1qJ+WLsoOseaDnl7cRevhfk1RBBn6nOC1nHbAYD4c9lbhVkP+gMtt4F4TKKhGGJqPrlX6Bahzda/7KOuY0UmOuOv0DKZUXlrvM7dJuy5bmfi2Kq4vGC/LbQlhyE/F6J07ViU/bIRyj4CHYMUpSIo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1733618172; c=relaxed/simple;
-	bh=PaN1CMHfi/mE94nKaZXHJ/LjnzYwtLEXcURjOsdp+ok=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
-	 In-Reply-To:Content-Type; b=R40ZshW4EOIw4VA4ggnalKiz6VFaI4nCzsrbml23y5vv3NMLEyrRWk7Jye8L9DP9kzenBtPaDCrq0CVL0s/ef0D+A/wkQQgHGlhSxesXahIsx1w+ORxdRtlQiEGjudJWSW2vW1Tzbr6pRxHq4SZ4wiFcJ609FnMY7w1IcpVSFFQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b=P/4fSrGk; arc=none smtp.client-ip=212.227.15.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
+	s=arc-20240116; t=1733662962; c=relaxed/simple;
+	bh=5uH53yw6BlCKxmOXRAKHQy9Q+cvI4FT7Jj+ynXFpNQM=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=jp/C7a5HWwlPG+N1snsvzi02jA9FrmspSZUH8VUF+Z2LvmZrxbolSz9uphNkM6Cte1mricfNsc1PFWymsMOnPsZRbigaliDvF19EZHovNlUMPgNwk88XKqogq49SinOI81ewiz0N/9vj7X6dFa6TstgS016xfafKMVnK1fit/eY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=weissschuh.net; spf=pass smtp.mailfrom=weissschuh.net; dkim=pass (1024-bit key) header.d=weissschuh.net header.i=@weissschuh.net header.b=exZ1FKX4; arc=none smtp.client-ip=159.69.126.157
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=weissschuh.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=weissschuh.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b="P/4fSrGk"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.de;
-	s=s31663417; t=1733618160; x=1734222960; i=w_armin@gmx.de;
-	bh=GRwdT4pWZL6KXL583qwCFEKU2VG67kSzO1j7SGkaU9I=;
-	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:From:To:
-	 Cc:References:In-Reply-To:Content-Type:Content-Transfer-Encoding:
-	 cc:content-transfer-encoding:content-type:date:from:message-id:
-	 mime-version:reply-to:subject:to;
-	b=P/4fSrGkWw+QtMz2lMP0QNWAZt81k/j1WDPUqa/XanSQMfxsImjUEj8gzMSh0aFH
-	 a9SzAfgqUcqYSgEE27h+2mELi9EcmGG4zjKLpJTXPtgxTQeVQT/TMVyjrONtsCDx5
-	 qtSdSk6w1PeYESrwYJlJge0cXiNcX44mikxG4PLhjDfKfGp4m7UVWjJHGxvrCtJVd
-	 QY2hwfqPPB4gKT8p8d7Ai5VceRC8r0+6mp1z5+czEc5EWZQUe271y/MPGJRbC5eI/
-	 yUZE5IcjNnHlqRnkokkCXM2J+sUHyKz59pzS4gl6skTyyFfWPg3o2q8RojTfCkyCu
-	 tNtPN++kyf53aYp6sA==
-X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
-Received: from [192.168.0.14] ([91.14.230.110]) by mail.gmx.net (mrgmx004
- [212.227.17.190]) with ESMTPSA (Nemesis) id 1Mz9Yv-1tXv3z0Wt1-0169rZ; Sun, 08
- Dec 2024 01:36:00 +0100
-Message-ID: <6641ef91-7d07-4104-a31b-e44a80952444@gmx.de>
-Date: Sun, 8 Dec 2024 01:35:58 +0100
+	dkim=pass (1024-bit key) header.d=weissschuh.net header.i=@weissschuh.net header.b="exZ1FKX4"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=weissschuh.net;
+	s=mail; t=1733662958;
+	bh=5uH53yw6BlCKxmOXRAKHQy9Q+cvI4FT7Jj+ynXFpNQM=;
+	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
+	b=exZ1FKX42K2Dub0ls66LKTltOA6EXURRy3ukSyvmGcUkPoUG4YNqcJgskmSdxPHWb
+	 ngOIHitpOcImPaO1BcimXv6awzrO/8ib8a4IRFYuvoO+pDcP7B7xPFYjUTkaC3XgFG
+	 oraMo2BdgDkb7aRrA+rhefOCdhKFZMVMBUrxVQ0Q=
+From: =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <linux@weissschuh.net>
+Date: Sun, 08 Dec 2024 14:02:34 +0100
+Subject: [PATCH 02/14] power: supply: core: introduce
+ power_supply_for_each_psy()
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 0/5] platform/x86: acer-wmi: Various improvements
-From: Armin Wolf <W_Armin@gmx.de>
-To: jlee@suse.com, farhan.anwar8@gmail.com, rayanmargham4@gmail.com
-Cc: hdegoede@redhat.com, ilpo.jarvinen@linux.intel.com,
- platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20241129193359.8392-1-W_Armin@gmx.de>
-Content-Language: en-US
-In-Reply-To: <20241129193359.8392-1-W_Armin@gmx.de>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Provags-ID: V03:K1:EoOkpN8Jhb9Cyznt2e4cWuwLb8PQnqVwMzUhYu2wGJ2s/I+bOLm
- s7CThJeEAOSX+Vas8Io3N46OXSwVh30/s10FJIfAhOOPlDCuwLXyKV7gtC3fl76/yaeqVeJ
- 4HVqfyl7YKFRKTpdwD0PtwUj3eFRbSID2cCgh/WcFhS0gSm5N/SDrQKljMnn3htD7BGYsdx
- VeH/R/H7QEAGSHu2KwxAQ==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:q3DgEE5eTts=;yrPoLw0gd0d9azB8hZ1q5k1ImeJ
- HRMziCYJbOheMFLIa24z+wJSGmnJud6NrIv/Fzvy1s6ujLRYHnRnZe/tkl5jt4YlhXXXJxhLM
- WGuf7dK7DgArKX/+hFVnK+tBqmSvbZ4dp65Ip0Do3xuTWgyUNT3yaKGc8sguPr6P6jn0xziuA
- Wkl+GCbxHOZoclu4oocedYQOi38j1pIEUIrYevDMq2fo7I2BX3gPXu5JjrJVZ4cTZXw4ZoSSB
- MFJh751vOgUJpEzYqwwaz84WXnittn/nWD23TCgxj56tPOzro0j0mJU/VHaPRQw0jSTTDnTgk
- Tk9OaHQsEogqrz+uOdGMOouUX4IvbKsdEOnee8GWEwpCPrAoqV19kcT6uM3d8xtv7q1OAx6Vf
- CmKq+I2Txx5eooj50RciKqwwQmcUWsUbsGpWKFszXOHljTLVxx15CwSS/+9G7mI8DAKND5yVM
- ivGYvG61pkNob0aAFDrlzVN6n+vYroBRadkF/LIvn7HHcqlXlyhEYXxLy+eNB04KWssxh08fc
- OIB1zoddsUK3u+ykK4p8tPqDfZyquWnPkf6a1p6VaWu+VayeZ2u8A4DwLl+PPjW+M1Edw8hCq
- 9qu2H9xGIOnKKtR62GIZBX2ciTVKnZR1qaUyNnANre4pRLEsNy6mexOTN2syqsFmJovxUw98d
- 1jbqexBbAO2UXm62Xp2m/m5I0kTqRTv+L9qLOt7qrgslaJ9SJXTsHFi5yE852TJhdRmWB+ufD
- UIF5Mb+G6HGruqH3KlBVLTAxBmO8kYnRUg7VgaXas75QVKiHqK0mYsVu2qDqK8kgz/nDMNCd8
- hFNXph1f9K+mzHibQx3phrH6bTjWhSX/xTRZHEAXm1wARvtILJLr68LX0GQ18CWhrMdm48rEM
- 6vLywUrVn/DM37NILM66uUm9MY2n1x2m8MJ53HIn5fyQcHsOzd/tlcvZKtDxyed18HECQ83HC
- a4mbUs++9Z/88066e724tEcxrViaDbwtAbvoUAk0FBfL/4jr5uhkCW/unxGDvD7QX2P8HKy3U
- gtpMGWAhsCOsut2hlJ3YHuMSZteIJEDyP3zpsxrHkQzTzqhQKBJl8FEKf0PCVbjIeV6LKdq3d
- yRGuwAtOqAkuzIVLFGtpsYW1xMcqiC
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+Message-Id: <20241208-power-supply-dev_to_psy-v1-2-f95de9117558@weissschuh.net>
+References: <20241208-power-supply-dev_to_psy-v1-0-f95de9117558@weissschuh.net>
+In-Reply-To: <20241208-power-supply-dev_to_psy-v1-0-f95de9117558@weissschuh.net>
+To: Sebastian Reichel <sre@kernel.org>, 
+ Linus Walleij <linus.walleij@linaro.org>, 
+ Maximilian Luz <luzmaximilian@gmail.com>, 
+ =?utf-8?q?Pali_Roh=C3=A1r?= <pali@kernel.org>, 
+ Konrad Dybcio <konradybcio@kernel.org>
+Cc: linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ platform-driver-x86@vger.kernel.org, 
+ =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <linux@weissschuh.net>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1733662957; l=2415;
+ i=linux@weissschuh.net; s=20221212; h=from:subject:message-id;
+ bh=5uH53yw6BlCKxmOXRAKHQy9Q+cvI4FT7Jj+ynXFpNQM=;
+ b=sVGaz9d1TovL+sO0f5svGBwLPKkxW+A8hEbZe0ho2hbhSpMA+bqf+9hQYhNhyfXOhNFWy0BA2
+ qoD3h1EphiSBKXfxWWUJp1ikHn6xtxluTMBVbhI3jvHdMwywrv6r/oT
+X-Developer-Key: i=linux@weissschuh.net; a=ed25519;
+ pk=KcycQgFPX2wGR5azS7RhpBqedglOZVgRPfdFSPB1LNw=
 
-Am 29.11.24 um 20:33 schrieb Armin Wolf:
+All existing callers of power_supply_for_each_device() want to iterate
+over 'struct power_supply', not 'struct device'.
+The power_supply_for_each_device() forces each caller to duplicate the
+logic to go from one to the other.
+Introduce power_supply_for_each_psy() to simplify the callers.
 
-> This patch series contains various improvements to the acer-wmi
-> driver based on user reports:
->
-> - adds support for the Acer PH14-51
-> - improves hwmon support
-> - ignores function 8 events
->
-> The changes are compile-tested only, so i would like to have them
-> tested on a real machine.
+Signed-off-by: Thomas Weißschuh <linux@weissschuh.net>
+---
+ drivers/power/supply/power_supply_core.c | 24 ++++++++++++++++++++++++
+ include/linux/power_supply.h             |  1 +
+ 2 files changed, 25 insertions(+)
 
-The whole patch series was tested by a user, so for all patches:
+diff --git a/drivers/power/supply/power_supply_core.c b/drivers/power/supply/power_supply_core.c
+index 502b07468b93dfb7f5a6c2092588d931a7d015f2..48bc968ff6c54d4b196c3faf450ef6464cdb305d 100644
+--- a/drivers/power/supply/power_supply_core.c
++++ b/drivers/power/supply/power_supply_core.c
+@@ -122,6 +122,30 @@ int power_supply_for_each_device(void *data, int (*fn)(struct device *dev, void
+ }
+ EXPORT_SYMBOL_GPL(power_supply_for_each_device);
+ 
++struct psy_for_each_psy_cb_data {
++	int (*fn)(struct power_supply *psy, void *data);
++	void *data;
++};
++
++static int psy_for_each_psy_cb(struct device *dev, void *data)
++{
++	struct psy_for_each_psy_cb_data *cb_data = data;
++	struct power_supply *psy = dev_get_drvdata(dev);
++
++	return cb_data->fn(psy, cb_data->data);
++}
++
++int power_supply_for_each_psy(void *data, int (*fn)(struct power_supply *psy, void *data))
++{
++	struct psy_for_each_psy_cb_data cb_data = {
++		.fn = fn,
++		.data = data,
++	};
++
++	return power_supply_for_each_device(&cb_data, psy_for_each_psy_cb);
++}
++EXPORT_SYMBOL_GPL(power_supply_for_each_psy);
++
+ void power_supply_changed(struct power_supply *psy)
+ {
+ 	unsigned long flags;
+diff --git a/include/linux/power_supply.h b/include/linux/power_supply.h
+index b98106e1a90f34bce5129317a099f363248342b9..11d54270eaa9216f3e46e129cd363a804ae8759a 100644
+--- a/include/linux/power_supply.h
++++ b/include/linux/power_supply.h
+@@ -882,6 +882,7 @@ extern int power_supply_powers(struct power_supply *psy, struct device *dev);
+ 
+ extern void *power_supply_get_drvdata(struct power_supply *psy);
+ extern int power_supply_for_each_device(void *data, int (*fn)(struct device *dev, void *data));
++extern int power_supply_for_each_psy(void *data, int (*fn)(struct power_supply *psy, void *data));
+ 
+ static inline bool power_supply_is_amp_property(enum power_supply_property psp)
+ {
 
-Tested-by: Rayan Margham <rayanmargham4@gmail.com>
+-- 
+2.47.1
 
-> Changes since v2:
-> - fix compilation error after patch 3
-> - replace GENMASK() with GENMASK_ULL() and adjust bit numbers
->
-> Changes since v1:
-> - fix spelling issue in patch 2
-> - rework patch 3 and 4
-> - add Reviewed-by tag to patch 5
->
-> Armin Wolf (5):
->    platform/x86: acer-wmi: Add support for Acer PH14-51
->    platform/x86: acer-wmi: Rename ACER_CAP_FAN_SPEED_READ
->    platform/x86: acer-wmi: Improve error handling when reading gaming
->      system information
->    platform/x86: acer-wmi: Implement proper hwmon support
->    platform/x86: acer-wmi: Ignore AC events
->
->   drivers/platform/x86/acer-wmi.c | 167 ++++++++++++++++++++++++--------
->   1 file changed, 125 insertions(+), 42 deletions(-)
->
-> --
-> 2.39.5
->
->
