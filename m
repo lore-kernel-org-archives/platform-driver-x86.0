@@ -1,141 +1,180 @@
-Received: from mail-pf1-f179.google.com (mail-pf1-f179.google.com [209.85.210.179])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 31AB61F0E56;
-	Mon,  9 Dec 2024 17:45:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6BFCA167DAC
+	for <platform-driver-x86@vger.kernel.org>; Mon,  9 Dec 2024 18:36:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1733766341; cv=none; b=hkYBmH6sFxLh4Ht1w/n4tUbYfkTklfEe8TJ+ZQIUxZDWb5DiOb5RSsJ8HbGGUy9Zx45IxnQ08UG3LFQ5k7pzyRsGXcikfgnVZFuiJnOF185FO+hxZWeaXVjtG3ngeE1TXAHHwaK4aMMf8VBFeP5hvzjrkEO32c6grM++jAacAC0=
+	t=1733769373; cv=none; b=hJDinyHqkhVLNL6OVVFTTjRmeQn0vK71Bdhce4FnoHCTHZumIMoIg/p2nHhdOqok5qDJTouXamCvOJKZEKacMlxt4MFvOE+vsVxx3Cd6wJc9WG+zs3ulp1v6ej6u3p11Fivql33Sc7p+19whKs3gC5NUn/rdVlN6g2MBZQDK3E4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1733766341; c=relaxed/simple;
-	bh=CcuwSq1SxtQMhtHuhAR5Boa6Ar8NA6RwQBru1LJ34o8=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=KDPVVCovw8lxm074x0N+KJOVL4GDzC1NuWQbLbsGTfG/ZPaDwStAXmpOKM6wTWogsUpx2baPcdMawHwevxN7B8hUX4qIfl54l9i2zlg3/8BCn85Oto4ke4N4BEEAft7VdfXeUxMlH9TceT8iDo1k91zBACTHbYzn2by6U8YL5Ic=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=dwzuwR0X; arc=none smtp.client-ip=209.85.210.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1733769373; c=relaxed/simple;
+	bh=ZEYplIOq10xjae08qI9+kU5Z7KB5L1PMHsqZr9IETM4=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=ebeLNz2oUcs1/yoRc7xbEmh0sxjywK/xGO5EmmAXNR6o2PyjTaywfphsv3N9OndVNWbFY7Nmg1fCPFsc9SRayi40/SxbxWlkdkHJkhNDntq8yQSaVCbp5w3qYa2Qyil0O1zUMOxaZruQw5shUnfHpwKz63orMbArmvYe+PuZrp0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=bIvPqe7b; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dwzuwR0X"
-Received: by mail-pf1-f179.google.com with SMTP id d2e1a72fcca58-725ee6f56b4so1097455b3a.3;
-        Mon, 09 Dec 2024 09:45:38 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1733766338; x=1734371138; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=hLL+hTR2erfFMDNeV90V786XCRfTp97LfoiOqBvZZGc=;
-        b=dwzuwR0XUZanDwpP+mKZfcSxP2FkoLZHfHU5yRxQahIESEsNNsA3jLjXta+RghyAzB
-         LDaXRg6BFwdKKIOCKd58YG8rgFwhf3iBiOmUwM5r14FuGJh96SamYlXOm5nciMhoWYa/
-         k2NEAPBNTv6rhkoueuekyh6n/KnUyzNVf1nd9mfy91gMWqYqHpByhhjb/27/4liFwkW6
-         ybbLU3bvTF0jL2HeytZ2oqud/QupKgGuJgTL5LmAvYJf2lrTLA47wpNxQrLW7vH6f+5c
-         TtAnPTLcjvwx10Q2QxsoIn7dl4ubi7hkHZdQOwKikM3vIllvhCLDmj2s+K6MWRW7/Wqi
-         C6zQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1733766338; x=1734371138;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=hLL+hTR2erfFMDNeV90V786XCRfTp97LfoiOqBvZZGc=;
-        b=pW9cUAlp+3epNZ1KcYggTnhwpzxhaeiEQ/AwnSP99Y/bFmo+ly8f6zrnE+Tey646Jc
-         5OU2NRkvlL7kxl+KnoOtqnKVw8btnB7bH4L9QfW0p2VS6VPSX7edWJmi93eyxaL0QMNI
-         TAalMhmYDbZsITnef+5/jfnLYFQ+1S/0EvbCn6t6Qjs162onhjaG7+C2KlM0Tkqmi8wh
-         lzYV/WSSvS/Fi0UtIe/RJXpndClzs73XZlUhfZqvx+fHeSqzeNr3fXSjl5EAfU5s2uwh
-         vZiKvdHZvtkcWxAscOF/7mk7V/dwyVsMLEIV1uudMQz+nFzV8zKGNTHLdYxSaoGBk2oh
-         TMXw==
-X-Forwarded-Encrypted: i=1; AJvYcCWBhqEpRJkmTFiNB74zldZx2C+nlLO2y3LJ28Abt4W0C911vC3xO4gFLodLswCgsYTWXI7mykJJKphoZdOfZnpg9wMibw==@vger.kernel.org, AJvYcCWkD/+wlh7Ccv/Y8a4EGp6iX2bFr00Wp5EP6p8fpm9bWaYERPwArKWQT7kjEGVeK19VFiwjjL3T1D+YAz4R@vger.kernel.org, AJvYcCWpgjI9vnEE0VjBAfF8CuCLNkyar/2lx6Gb2Z+1TITMJn13G2FqORG7JlEze+gK/7o6mYs06ucmAN1AeEoPbA==@vger.kernel.org, AJvYcCWt7lsVFYbU5ZqECDcut0TlVTrKU3WyjWetnwzsfkjOJSC+kRyordpZjT+ScU7WnMHytMw=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwkGoBMYHNQ9zI3EpcmJLDtOlSJ6LKwYFJEHjH4jd62pdLlbtp5
-	+Uky6pByhLfadKX7eD+ICYcRDPiEyXtG6cOQphqBMijmMUEdez+uxt8wuZSYqns8YW3xEq3QZZT
-	cxlZks8EZvHjMNv9KyoQjYXs/y0Y=
-X-Gm-Gg: ASbGncviDw3zN5fPGPl3wvwi3CC6P84TZM7C3VXpXovlSQ/lSP680qqMrts56zZd+Gd
-	9JKhWh1xMFCdw/Zhz5L2iTDNoCdu0SWY7hrzxoeW2Xvd5mKWqINk=
-X-Google-Smtp-Source: AGHT+IF6C1kyOIzspL8FJ6lY6T2B7S0Ong/QRjtBPIeAUZMab/0JVUfow4OcO3JdX8i8lSSqgjFzDc6Dn626X5R/OrY=
-X-Received: by 2002:a05:6a20:9f9b:b0:1e0:d1db:4d8a with SMTP id
- adf61e73a8af0-1e1870bd5e1mr20198567637.10.1733766338437; Mon, 09 Dec 2024
- 09:45:38 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="bIvPqe7b"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1733769370;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=AAMc5MpMujgl5pX3TiAF+Pgw3NS8Qs1CNeL7AS+qtnc=;
+	b=bIvPqe7bzol2altiIVZPvwNBiAaesjpDR9+InwAWMEX6bfICeBWmoNMLMWwzbhMZXoK5kQ
+	HMKaEx3YsS5nYUIGjTCpKgeWc0yjMr5VgVtOEB/g2XH0OSIIbnrPTCAz5VYYi/wFKAktSq
+	ajJpmizWslyEt3qONtHrLOgoSqZZ5V8=
+Received: from mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-641-xa6HUsYWNMmvWtpvWyelAg-1; Mon,
+ 09 Dec 2024 13:36:06 -0500
+X-MC-Unique: xa6HUsYWNMmvWtpvWyelAg-1
+X-Mimecast-MFC-AGG-ID: xa6HUsYWNMmvWtpvWyelAg
+Received: from mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.17])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id F3C971954AFF;
+	Mon,  9 Dec 2024 18:36:03 +0000 (UTC)
+Received: from shalem.redhat.com (unknown [10.39.192.52])
+	by mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 3E6771956048;
+	Mon,  9 Dec 2024 18:35:58 +0000 (UTC)
+From: Hans de Goede <hdegoede@redhat.com>
+To: =?UTF-8?q?Pali=20Roh=C3=A1r?= <pali@kernel.org>,
+	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	Andy Shevchenko <andy@kernel.org>,
+	Paul Menzel <pmenzel@molgen.mpg.de>,
+	Wolfram Sang <wsa@kernel.org>
+Cc: Hans de Goede <hdegoede@redhat.com>,
+	eric.piel@tremplin-utc.net,
+	Marius Hoch <mail@mariushoch.de>,
+	Dell.Client.Kernel@dell.com,
+	Kai Heng Feng <kai.heng.feng@canonical.com>,
+	platform-driver-x86@vger.kernel.org,
+	Jean Delvare <jdelvare@suse.com>,
+	Andi Shyti <andi.shyti@kernel.org>,
+	linux-i2c@vger.kernel.org
+Subject: [PATCH v9 0/4] i2c-i801 / dell-lis3lv02d: Move instantiation of lis3lv02d i2c_client from i2c-i801 to dell-lis3lv02d
+Date: Mon,  9 Dec 2024 19:35:53 +0100
+Message-ID: <20241209183557.7560-1-hdegoede@redhat.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20241205-sysfs-const-bin_attr-simple-v1-0-4a4e4ced71e3@weissschuh.net>
- <20241205-sysfs-const-bin_attr-simple-v1-4-4a4e4ced71e3@weissschuh.net>
-In-Reply-To: <20241205-sysfs-const-bin_attr-simple-v1-4-4a4e4ced71e3@weissschuh.net>
-From: Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Date: Mon, 9 Dec 2024 09:45:26 -0800
-Message-ID: <CAEf4BzasK+pV69CMcy-pMk1cMf+LhKnXKPm8q6s7gioXnebRNQ@mail.gmail.com>
-Subject: Re: [PATCH 4/4] btf: Switch module BTF attribute to sysfs_bin_attr_simple_read()
-To: =?UTF-8?Q?Thomas_Wei=C3=9Fschuh?= <linux@weissschuh.net>
-Cc: Michael Ellerman <mpe@ellerman.id.au>, Nicholas Piggin <npiggin@gmail.com>, 
-	Christophe Leroy <christophe.leroy@csgroup.eu>, Naveen N Rao <naveen@kernel.org>, 
-	Madhavan Srinivasan <maddy@linux.ibm.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
-	"Rafael J. Wysocki" <rafael@kernel.org>, Luis Chamberlain <mcgrof@kernel.org>, Petr Pavlu <petr.pavlu@suse.com>, 
-	Sami Tolvanen <samitolvanen@google.com>, Daniel Gomez <da.gomez@samsung.com>, 
-	Armin Wolf <W_Armin@gmx.de>, Hans de Goede <hdegoede@redhat.com>, 
-	=?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, 
-	Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, 
-	Andrii Nakryiko <andrii@kernel.org>, Martin KaFai Lau <martin.lau@linux.dev>, 
-	Eduard Zingerman <eddyz87@gmail.com>, Song Liu <song@kernel.org>, 
-	Yonghong Song <yonghong.song@linux.dev>, John Fastabend <john.fastabend@gmail.com>, 
-	KP Singh <kpsingh@kernel.org>, Stanislav Fomichev <sdf@fomichev.me>, Hao Luo <haoluo@google.com>, 
-	Jiri Olsa <jolsa@kernel.org>, linuxppc-dev@lists.ozlabs.org, 
-	linux-kernel@vger.kernel.org, linux-modules@vger.kernel.org, 
-	platform-driver-x86@vger.kernel.org, bpf@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.17
 
-On Thu, Dec 5, 2024 at 9:35=E2=80=AFAM Thomas Wei=C3=9Fschuh <linux@weisssc=
-huh.net> wrote:
->
-> The generic function from the sysfs core can replace the custom one.
->
-> Signed-off-by: Thomas Wei=C3=9Fschuh <linux@weissschuh.net>
-> ---
->  kernel/bpf/btf.c | 15 ++-------------
->  1 file changed, 2 insertions(+), 13 deletions(-)
->
+Hi All,
 
-LGTM
+Here is v9 of my patch series to move the manual instantation of lis3lv02d
+i2c_client-s for SMO88xx ACPI device from the generic i2c-i801.c code to
+a SMO88xx specific dell-lis3lv02d driver.
 
-Acked-by: Andrii Nakryiko <andrii@kernel.org>
+The i2c-core and i2c-i801 dependencies have both been merged into 6.13-rc1
+so I believe that this series is ready to be merged now .
 
-> diff --git a/kernel/bpf/btf.c b/kernel/bpf/btf.c
-> index e7a59e6462a9331d0acb17a88a4ebf641509c050..69caa86ae6085dce17e95107c=
-4497d2d8cf81544 100644
-> --- a/kernel/bpf/btf.c
-> +++ b/kernel/bpf/btf.c
-> @@ -7870,17 +7870,6 @@ struct btf_module {
->  static LIST_HEAD(btf_modules);
->  static DEFINE_MUTEX(btf_module_mutex);
->
-> -static ssize_t
-> -btf_module_read(struct file *file, struct kobject *kobj,
-> -               struct bin_attribute *bin_attr,
-> -               char *buf, loff_t off, size_t len)
-> -{
-> -       const struct btf *btf =3D bin_attr->private;
-> -
-> -       memcpy(buf, btf->data + off, len);
-> -       return len;
-> -}
-> -
->  static void purge_cand_cache(struct btf *btf);
->
->  static int btf_module_notify(struct notifier_block *nb, unsigned long op=
-,
-> @@ -7941,8 +7930,8 @@ static int btf_module_notify(struct notifier_block =
-*nb, unsigned long op,
->                         attr->attr.name =3D btf->name;
->                         attr->attr.mode =3D 0444;
->                         attr->size =3D btf->data_size;
-> -                       attr->private =3D btf;
-> -                       attr->read =3D btf_module_read;
-> +                       attr->private =3D btf->data;
-> +                       attr->read_new =3D sysfs_bin_attr_simple_read;
->
->                         err =3D sysfs_create_bin_file(btf_kobj, attr);
->                         if (err) {
->
-> --
-> 2.47.1
->
+Patch 2/4 does still touch the i2c-i801 code removing the quirk code which
+is moved to the pdx86 dell-smo8800 code. I think it would be best if Ilpo
+prepares an immutable branch with this series to be merged into both
+pdx86/for-next and the i2c-subsystem. Andi can we get your Ack for merging
+the i2c-i801 changes through the pdx86 tree ?
+
+Moving the i2c_client instantiation has the following advantages:
+
+1. This moves the SMO88xx ACPI device quirk handling away from the generic
+i2c-i801 module which is loaded on all Intel x86 machines to a module
+which will only be loaded when there is an ACPI SMO88xx device.
+
+2. This removes the duplication of the SMO88xx ACPI Hardware ID (HID) table
+between the i2c-i801 and dell-smo8800 drivers.
+
+3. This allows extending the quirk handling by adding new code and related
+module parameters to the dell-lis3lv02d driver, without needing to modify
+the i2c-i801 code.
+
+This series also extends the i2c_client instantiation with support for
+probing for the i2c-address of the lis3lv02d chip on devices which
+are not yet listed in the DMI table with i2c-addresses for known models.
+This probing is only done when requested through a module parameter.
+
+Changes in v9:
+- Rebase on top of v6.13-rc1
+- Drop already merged i2c-core and i2c-i801 dependencies
+
+Changes in v8:
+- Address some minor review remarks from Andy
+
+Changes in v7:
+- Rebase on v6.11-rc1
+
+Changes in v6:
+- Use i2c_new_scanned_device() instead of re-inventing it
+
+Changes in v5:
+- Make match_acpi_device_ids() and match_acpi_device_ids[] __init[const]
+- Add "Depends on I2C" to Kconfig (to fix kernel-test-robot reported issues)
+- Add "this may be dangerous warning" to MODULE_PARM_DESC(probe_i2c_addr)
+
+Changes in v4:
+- Move the i2c_client instantiation to a new dell-lis3lv02d driver instead
+  of adding it to the dell-smo8800 driver
+- Address a couple of other minor review comments
+
+Changes in v3:
+- Use an i2c bus notifier so that the i2c_client will still be instantiated if
+  the i801 i2c_adapter shows up later or is re-probed (removed + added again).
+  This addresses the main concern / review-comments made during review of v2.
+- Add 2 prep patches to the i2c-core / the i2c-i801 driver to allow bus-notifier
+  use / to avoid the need to duplicate the PCI-ids of IDF i2c-i801 adapters.
+- Switch to standard dmi_system_id matching to check both sys-vendor +
+  product-name DMI fields
+- Drop the patch to alternatively use the st_accel IIO driver instead of
+  drivers/misc/lis3lv02d/lis3lv02d.c
+
+Changes in v2:
+- Drop "[PATCH 1/6] platform/x86: dell-smo8800: Only load on Dell laptops"
+- Use a pci_device_id table to check for IDF (non main) i2c-i801 SMBusses
+- Add a comment documenting the IDF PCI device ids
+- Keep using drivers/misc/lis3lv02d/lis3lv02d.c by default
+- Rename the module-parameter to use_iio_driver which can be set to
+  use the IIO st_accel driver instead
+- Add a new patch adding the accelerometer address for the 2 models
+  I have tested this on to dell_lis3lv02d_devices[]
+
+Since this touches files under both drivers/i2c and drivers/platform/x86
+some subsystem coordination is necessary. I think it would be best to just
+merge the entire series through the i2c subsystem since this touches some
+core i2c files. As pdx86 subsys co-maintainer I'm fine with doing so.
+
+Regards,
+
+Hans
+
+
+Hans de Goede (4):
+  platform/x86: dell-smo8800: Move SMO88xx acpi_device_ids to
+    dell-smo8800-ids.h
+  platform/x86: dell-smo8800: Move instantiation of lis3lv02d i2c_client
+    from i2c-i801 to dell-lis3lv02d
+  platform/x86: dell-smo8800: Add a couple more models to
+    lis3lv02d_devices[]
+  platform/x86: dell-smo8800: Add support for probing for the
+    accelerometer i2c address
+
+ drivers/i2c/busses/i2c-i801.c                | 124 ---------
+ drivers/platform/x86/dell/Kconfig            |   1 +
+ drivers/platform/x86/dell/Makefile           |   1 +
+ drivers/platform/x86/dell/dell-lis3lv02d.c   | 252 +++++++++++++++++++
+ drivers/platform/x86/dell/dell-smo8800-ids.h |  27 ++
+ drivers/platform/x86/dell/dell-smo8800.c     |  16 +-
+ 6 files changed, 282 insertions(+), 139 deletions(-)
+ create mode 100644 drivers/platform/x86/dell/dell-lis3lv02d.c
+ create mode 100644 drivers/platform/x86/dell/dell-smo8800-ids.h
+
+-- 
+2.47.1
+
