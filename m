@@ -1,45 +1,47 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 41DA419B5BE
-	for <platform-driver-x86@vger.kernel.org>; Mon,  9 Dec 2024 20:41:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD70C1990BD
+	for <platform-driver-x86@vger.kernel.org>; Mon,  9 Dec 2024 20:41:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1733776865; cv=none; b=vCZ3Sk//3MVpiH48bPzl8qkFzficB1InOSObFZDfO5jEnAkNV2x0c5zoNJCnNyFlomzKLSeO5H/SxXJZgvLkzAHXRHOmNwqFYK6VYYXNfkways9sLzZg5pF12gDfzbty3fS441xoVDPvTwmLsYwMFiV3F+J2unye+fJ9NyiftMA=
+	t=1733776868; cv=none; b=p4CFND6ke0XA7yQyqvH7TfY8JPMaWqAJqgMXuOx0/cRm+DPcz3iG2KZYrXSExh2qzPsmXbgAwWr8B4QSWtsm/Hb2/n8UFrV7B2FT1lVL8/D5qKipoKpC2Lj+bz7uM/8C5xDweKeSDopOf+FjvTuAX/5/IWmBv+xxF7YA3LODsLU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1733776865; c=relaxed/simple;
-	bh=b3QC0lxSEqtE/2sZDN6CxxldMhhm6er9n1gHmsyRGh4=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=nIs23MfTBUffQDj2Q4ygRztXlDLjsGTLHGIhg2fWWwrZTJg3GMSk6r0KORwMpIkS6cIomJrWJOxHM4+cMh4+PeHagT2NgkKpDxhzE6TznekW3ZnOMl+X1JXnWDn5qVtm7SBODiZPSERwmMbHsFRLLP3g1alP2F0FpOntYRlnFQM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Q8FtZjlp; arc=none smtp.client-ip=170.10.133.124
+	s=arc-20240116; t=1733776868; c=relaxed/simple;
+	bh=fOn5vftnHowQdsdCJf7Zg5nwl094kOoR8egbAaPstwY=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=a62IkgmtlTdwKs74wDAnQxTxKIKMhvM5WOAhzWl8HVSeB6gzcORoz/LrIoG2YJjpqIjgvcO+x+EXtGDZpJDKHSk7U/Gba1Ck8bF4XJkn2b+oIc7gCdf4FKS1ZG8c9z64zc779Cs0qxg0x9MPT+WD1jcJHQbzar3/AyxiyR78+7M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=DHg9e+8S; arc=none smtp.client-ip=170.10.129.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Q8FtZjlp"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="DHg9e+8S"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1733776860;
+	s=mimecast20190719; t=1733776864;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=neXEvMUWmmBYpBk/TV8cGUzUSFhztB6qT1VprsT8z7I=;
-	b=Q8FtZjlp8v+flk1KLryAN4I5KDHt9vcHeERIrsNQOjpaxkS78M83hrEBi4WLwdf+N6rl5J
-	8bA/kAOt61mpN9gGQMdsK4eJXPoQ85sYfliIQwMew2Nq/HIh11aQhxojxXtrBi1/SZG0v5
-	WS7EXLkvxZs81sSR8Ig13d2doRHP0+k=
-Received: from mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=VWTavI7bsES6h91twlmYZxh3tQEdUFXenM82ye4dDqQ=;
+	b=DHg9e+8SDHewbmTrRVCPbNx92LkBYiJanmDE3hud+tHjZEnI4Gtur0WPMT6U7UE59CiwJ1
+	ZDlzLx3bELBwmWxD25W3hIhT23kdSaQCbIQLPV6l3xUJnmQuzGzdi351roFJ7jt/XyhRqB
+	jcS6O0aSl1TliKEdfnxD8ExrWBg51wQ=
+Received: from mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com
  (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
  relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-86-1dxczdoBNfGO7qG9WIHNuQ-1; Mon,
- 09 Dec 2024 15:40:57 -0500
-X-MC-Unique: 1dxczdoBNfGO7qG9WIHNuQ-1
-X-Mimecast-MFC-AGG-ID: 1dxczdoBNfGO7qG9WIHNuQ
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-635-VcvcpYZJOV6xYLG7DkB7AQ-1; Mon,
+ 09 Dec 2024 15:41:03 -0500
+X-MC-Unique: VcvcpYZJOV6xYLG7DkB7AQ-1
+X-Mimecast-MFC-AGG-ID: VcvcpYZJOV6xYLG7DkB7AQ
 Received: from mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.4])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 971EE1956048;
-	Mon,  9 Dec 2024 20:40:55 +0000 (UTC)
+	by mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id BB3B31955F45;
+	Mon,  9 Dec 2024 20:41:01 +0000 (UTC)
 Received: from shalem.redhat.com (unknown [10.39.192.3])
-	by mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 8226A300018D;
-	Mon,  9 Dec 2024 20:40:52 +0000 (UTC)
+	by mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 86A66300018D;
+	Mon,  9 Dec 2024 20:40:59 +0000 (UTC)
 From: Hans de Goede <hdegoede@redhat.com>
 To: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
 	Andy Shevchenko <andy@kernel.org>,
@@ -49,9 +51,11 @@ Cc: Hans de Goede <hdegoede@redhat.com>,
 	=?UTF-8?q?Thomas=20Wei=C3=9Fschuh?= <linux@weissschuh.net>,
 	Jelle van der Waa <jelle@vdwaa.nl>,
 	linux-pm@vger.kernel.org
-Subject: [PATCH v3 0/4] power: supply: Add new "charge_types" property
-Date: Mon,  9 Dec 2024 21:40:47 +0100
-Message-ID: <20241209204051.8786-1-hdegoede@redhat.com>
+Subject: [PATCH v3 2/4] power: supply: core: Add new "charge_types" property
+Date: Mon,  9 Dec 2024 21:40:49 +0100
+Message-ID: <20241209204051.8786-3-hdegoede@redhat.com>
+In-Reply-To: <20241209204051.8786-1-hdegoede@redhat.com>
+References: <20241209204051.8786-1-hdegoede@redhat.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -61,61 +65,188 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.4
 
-Hi,
+Add a new "charge_types" property, this is identical to "charge_type" but
+reading returns a list of supported charge-types with the currently active
+type surrounded by square brackets, e.g.:
 
-As first discussed here:
-https://lore.kernel.org/linux-pm/49993a42-aa91-46bf-acef-4a089db4c2db@redhat.com/
+Fast [Standard] "Long_Life"
 
-Some power_supply devices have a writable charge_type property, but
-userspace cannot know which charge_type values are valid to write.
+This has the advantage over the existing "charge_type" property that this
+allows userspace to find out which charge-types are supported for writable
+charge_type properties.
 
-This series adds a new "charge_types" property, which is identical to
-"charge_type" but reading returns a list of supported charge-types with
-the currently active type surrounded by square brackets, e.g.:
+Drivers which already support "charge_type" can easily add support for
+this by setting power_supply_desc.charge_types to a bitmask representing
+valid charge_type values. The existing "charge_type" get_property() and
+set_property() code paths can be re-used for "charge_types".
 
-Fast [Standard] Long_Life
-
-this allows userspace to find out which charge-types are supported.
-
-Patch 1/4 does some prep work and patch 2/4 is the core implementation
-of "charge_types" property support.
-
-Patch 3/4 is a standard psy-driver user of the new "charge_types"
-property support. Patch 4/4 shows an ACPI battery extension driver
-with support for this property using the new show()/store() helpers.
-
-Changes in v3:
-- Rebase on top of v6.13-rc1
-
+Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+---
 Changes in v2:
-- Replace spaces with '_' instead of surrounding the text-value by ""
 - Add "Check charge_types to get the values supported by the battery."
   to Documentation/ABI/testing/sysfs-class-power
 - Add a note about labels with spaces having these replaced by '_'
-  in charge_types output to Documentation/ABI/testing/sysfs-class-power
+  to Documentation/ABI/testing/sysfs-class-power
 - Use power_supply_match_string() in power_supply_charge_types_parse()
+---
+ Documentation/ABI/testing/sysfs-class-power | 20 ++++++++++++
+ drivers/power/supply/power_supply_sysfs.c   | 34 +++++++++++++++++++++
+ include/linux/power_supply.h                | 23 +++++++++++++-
+ 3 files changed, 76 insertions(+), 1 deletion(-)
 
-Regards,
-
-Hans
-
-
-Hans de Goede (4):
-  power: supply: power_supply_show_enum_with_available(): Replace spaces
-    with '_'
-  power: supply: core: Add new "charge_types" property
-  power: supply: bq24190_charger: Add support for "charge_types"
-    property
-  platform/x86: dell-laptop: Use power_supply_charge_types_show/_parse()
-    helpers
-
- Documentation/ABI/testing/sysfs-class-power | 20 ++++++
- drivers/platform/x86/dell/dell-laptop.c     | 54 ++++++++--------
- drivers/power/supply/bq24190_charger.c      |  7 ++
- drivers/power/supply/power_supply_sysfs.c   | 71 +++++++++++++++++++--
- include/linux/power_supply.h                | 23 ++++++-
- 5 files changed, 141 insertions(+), 34 deletions(-)
-
+diff --git a/Documentation/ABI/testing/sysfs-class-power b/Documentation/ABI/testing/sysfs-class-power
+index 45180b62d426..4421815cfb40 100644
+--- a/Documentation/ABI/testing/sysfs-class-power
++++ b/Documentation/ABI/testing/sysfs-class-power
+@@ -407,10 +407,30 @@ Description:
+ 
+ 		Access: Read, Write
+ 
++		Reading this returns the current active value, e.g. 'Standard'.
++		Check charge_types to get the values supported by the battery.
++
+ 		Valid values:
+ 			      "Unknown", "N/A", "Trickle", "Fast", "Standard",
+ 			      "Adaptive", "Custom", "Long Life", "Bypass"
+ 
++What:		/sys/class/power_supply/<supply_name>/charge_types
++Date:		November 2024
++Contact:	linux-pm@vger.kernel.org
++Description:
++		Identical to charge_type but reading returns a list of supported
++		charge-types with the currently active type surrounded by square
++		brackets, e.g.: "Fast [Standard] Long_Life".
++
++		power_supply class devices may support both charge_type and
++		charge_types for backward compatibility. In this case both will
++		always have the same active value and the active value can be
++		changed by writing either property.
++
++		Note charge-types which contain a space such as "Long Life" will
++		have the space replaced by a '_' resulting in e.g. "Long_Life".
++		When writing charge-types both variants are accepted.
++
+ What:		/sys/class/power_supply/<supply_name>/charge_term_current
+ Date:		July 2014
+ Contact:	linux-pm@vger.kernel.org
+diff --git a/drivers/power/supply/power_supply_sysfs.c b/drivers/power/supply/power_supply_sysfs.c
+index 034e1848f1ca..48a9bf791a38 100644
+--- a/drivers/power/supply/power_supply_sysfs.c
++++ b/drivers/power/supply/power_supply_sysfs.c
+@@ -182,6 +182,8 @@ static struct power_supply_attr power_supply_attrs[] __ro_after_init = {
+ 	POWER_SUPPLY_ATTR(CHARGE_CONTROL_START_THRESHOLD),
+ 	POWER_SUPPLY_ATTR(CHARGE_CONTROL_END_THRESHOLD),
+ 	POWER_SUPPLY_ENUM_ATTR(CHARGE_BEHAVIOUR),
++	/* Same enum value texts as "charge_type" without the 's' at the end */
++	_POWER_SUPPLY_ENUM_ATTR(CHARGE_TYPES, POWER_SUPPLY_CHARGE_TYPE_TEXT),
+ 	POWER_SUPPLY_ATTR(INPUT_CURRENT_LIMIT),
+ 	POWER_SUPPLY_ATTR(INPUT_VOLTAGE_LIMIT),
+ 	POWER_SUPPLY_ATTR(INPUT_POWER_LIMIT),
+@@ -335,6 +337,10 @@ static ssize_t power_supply_show_property(struct device *dev,
+ 		ret = power_supply_charge_behaviour_show(dev, psy->desc->charge_behaviours,
+ 							 value.intval, buf);
+ 		break;
++	case POWER_SUPPLY_PROP_CHARGE_TYPES:
++		ret = power_supply_charge_types_show(dev, psy->desc->charge_types,
++						     value.intval, buf);
++		break;
+ 	case POWER_SUPPLY_PROP_MODEL_NAME ... POWER_SUPPLY_PROP_SERIAL_NUMBER:
+ 		ret = sysfs_emit(buf, "%s\n", value.strval);
+ 		break;
+@@ -571,3 +577,31 @@ int power_supply_charge_behaviour_parse(unsigned int available_behaviours, const
+ 	return -EINVAL;
+ }
+ EXPORT_SYMBOL_GPL(power_supply_charge_behaviour_parse);
++
++ssize_t power_supply_charge_types_show(struct device *dev,
++				       unsigned int available_types,
++				       enum power_supply_charge_type current_type,
++				       char *buf)
++{
++	return power_supply_show_enum_with_available(
++				dev, POWER_SUPPLY_CHARGE_TYPE_TEXT,
++				ARRAY_SIZE(POWER_SUPPLY_CHARGE_TYPE_TEXT),
++				available_types, current_type, buf);
++}
++EXPORT_SYMBOL_GPL(power_supply_charge_types_show);
++
++int power_supply_charge_types_parse(unsigned int available_types, const char *buf)
++{
++	int i = power_supply_match_string(POWER_SUPPLY_CHARGE_TYPE_TEXT,
++					  ARRAY_SIZE(POWER_SUPPLY_CHARGE_TYPE_TEXT),
++					  buf);
++
++	if (i < 0)
++		return i;
++
++	if (available_types & BIT(i))
++		return i;
++
++	return -EINVAL;
++}
++EXPORT_SYMBOL_GPL(power_supply_charge_types_parse);
+diff --git a/include/linux/power_supply.h b/include/linux/power_supply.h
+index b98106e1a90f..60c7f669ec3e 100644
+--- a/include/linux/power_supply.h
++++ b/include/linux/power_supply.h
+@@ -40,7 +40,7 @@ enum {
+ };
+ 
+ /* What algorithm is the charger using? */
+-enum {
++enum power_supply_charge_type {
+ 	POWER_SUPPLY_CHARGE_TYPE_UNKNOWN = 0,
+ 	POWER_SUPPLY_CHARGE_TYPE_NONE,
+ 	POWER_SUPPLY_CHARGE_TYPE_TRICKLE,	/* slow speed */
+@@ -135,6 +135,7 @@ enum power_supply_property {
+ 	POWER_SUPPLY_PROP_CHARGE_CONTROL_START_THRESHOLD, /* in percents! */
+ 	POWER_SUPPLY_PROP_CHARGE_CONTROL_END_THRESHOLD, /* in percents! */
+ 	POWER_SUPPLY_PROP_CHARGE_BEHAVIOUR,
++	POWER_SUPPLY_PROP_CHARGE_TYPES,
+ 	POWER_SUPPLY_PROP_INPUT_CURRENT_LIMIT,
+ 	POWER_SUPPLY_PROP_INPUT_VOLTAGE_LIMIT,
+ 	POWER_SUPPLY_PROP_INPUT_POWER_LIMIT,
+@@ -245,6 +246,7 @@ struct power_supply_desc {
+ 	const char *name;
+ 	enum power_supply_type type;
+ 	u8 charge_behaviours;
++	u32 charge_types;
+ 	u32 usb_types;
+ 	const enum power_supply_property *properties;
+ 	size_t num_properties;
+@@ -944,6 +946,11 @@ ssize_t power_supply_charge_behaviour_show(struct device *dev,
+ 					   char *buf);
+ 
+ int power_supply_charge_behaviour_parse(unsigned int available_behaviours, const char *buf);
++ssize_t power_supply_charge_types_show(struct device *dev,
++				       unsigned int available_types,
++				       enum power_supply_charge_type current_type,
++				       char *buf);
++int power_supply_charge_types_parse(unsigned int available_types, const char *buf);
+ #else
+ static inline
+ ssize_t power_supply_charge_behaviour_show(struct device *dev,
+@@ -959,6 +966,20 @@ static inline int power_supply_charge_behaviour_parse(unsigned int available_beh
+ {
+ 	return -EOPNOTSUPP;
+ }
++
++static inline
++ssize_t power_supply_charge_types_show(struct device *dev,
++				       unsigned int available_types,
++				       enum power_supply_charge_type current_type,
++				       char *buf)
++{
++	return -EOPNOTSUPP;
++}
++
++static inline int power_supply_charge_types_parse(unsigned int available_types, const char *buf)
++{
++	return -EOPNOTSUPP;
++}
+ #endif
+ 
+ #endif /* __LINUX_POWER_SUPPLY_H__ */
 -- 
 2.47.1
 
