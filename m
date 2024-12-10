@@ -1,131 +1,87 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.20])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D4CD1BCA05
-	for <platform-driver-x86@vger.kernel.org>; Tue, 10 Dec 2024 14:31:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A7EE1A2C0B;
+	Tue, 10 Dec 2024 14:39:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.20
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1733841104; cv=none; b=DhqbDpv4rrPwmfrg8M3NBxi3NFxi+khNtu+Vafc1DHEyq4Dbik4mH08lv08KmxlwTLPpeIBesOrpgiHWo95jkR6LTTzrXEbgTUqr3MFChAYpRgf9YFMRa8JokphzMqyOAoq8vD4muwwYnh/igFYdrSWaVcqxukUrOPP+YzWoDw8=
+	t=1733841564; cv=none; b=SCIC40IlNocvGW4TIpSATluztGEJ/E+18B8keO4AC+PCcayfYSWxphBru9I+56hG4qae0wx/nyov6++EB1qoJYaiBfE8nZ6htmXD0meH2sxCtSzJtpB7ylqEmmeQQeS7wTEUa4j5Cb7/YAamkAS8elwYnKZMPPdiMhkUfFiZ7RQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1733841104; c=relaxed/simple;
-	bh=MK/jzAyESGqvtBKPpeF2RWQUfFE5/8q3KB719LtytAE=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=l9Y6wUS0OHhdr94yf/1RxcxklzOeQ8suHo/GUEvfIqsT7oOvCdAyJ3OuGrgRiNEscVTraodSa/ZM1QUv5edZM5RFc29YNmBoecrU5i8LRBs9yNjrwr3rwjuP5tLhJRbRY1gLdHU3E3Z5HWieofH8CjrH9jgg53On9tpDCfSFA1o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=AN2CYKuk; arc=none smtp.client-ip=198.175.65.9
+	s=arc-20240116; t=1733841564; c=relaxed/simple;
+	bh=K9lzVfeajj0MtskWSsICrfUKtI4Y0SFpgZjQtp5yZhw=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=EczL8G0byOo2HjSyiMxHUT53MWL3Ianw8ad62JB6ZuzgxDE8gjKVt5vNbArqTkciW2l0mVMrbJXPVOnJryjxFS88c80ozKIROwgK3C1vuD0Z2SxErf3fqCqkkimAGgJkEr7ziBVI0lFn1gIueX913ehPUaqKlTPU/V99Gm2n0Wc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=GeAMpIsL; arc=none smtp.client-ip=198.175.65.20
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="AN2CYKuk"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="GeAMpIsL"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1733841103; x=1765377103;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=MK/jzAyESGqvtBKPpeF2RWQUfFE5/8q3KB719LtytAE=;
-  b=AN2CYKukQqpIbiYW42fKrYnnw++R8bmGUs00onHYHxhVgG2x7ipjj+K7
-   slU3nUDoOcwro+BbqXF6+m8E8PhbW1DxgVASE+Yf7yM/CGlBQbMn+Ap1S
-   r0zpiyUTEsMx/M2HVdf7iB3ACP2zbNn5qzZy/0ts0QyeYJRfPiUxAO9Ln
-   xUXBb2samnwRlHrOLEwEE9J1uxqUTS2ArOXXhAGwPZl1JCZ6uu3wHWzC3
-   fY9pFJcS5DkjDNb47unKmm4uadsCKlDPxB6qeqB1bT2wu7XbX0VpC9r/N
-   YLr8Dtw/oH2ccnmnPOrASphwBEGmDuBEixgV1hS4nOxHtYPA6Nb0sJtM7
+  t=1733841563; x=1765377563;
+  h=from:to:cc:in-reply-to:references:subject:message-id:
+   date:mime-version:content-transfer-encoding;
+  bh=K9lzVfeajj0MtskWSsICrfUKtI4Y0SFpgZjQtp5yZhw=;
+  b=GeAMpIsLcso66uZnLDB66Laz0I0aa/1KRYDDbPNFdEz72CutEMzsCsgy
+   S9I6Jp1rYihjLjh/6dXZ/bB75ZSr1ExBFL/pDPwgW3JjrLImbg2cFWnjd
+   ++VwkMUfbGmuBQAh42Ff36LklUnryIRcSeE0lxEXwmf3AY2L/etxSAoZW
+   iW1axb3vE5ScR3CppbNQLMEiUYFZAunlm+8mlJ0lJ+jXEHO0xuIFQOEIh
+   rA2u5A76ipO8NAJxNhGQqIC+wkmhkSLNQB0iSVJP1XwLfmucBv1PvLxTR
+   jHoCyuusw70py8f0tHuC/DFDGvVqCSTzezkxO7ClhJ92sxGRx6b9N20CT
    g==;
-X-CSE-ConnectionGUID: 6iBT1D5PTIurKfjxV9Pm4Q==
-X-CSE-MsgGUID: PoR+xGguTPmSva/NNMlJ2g==
-X-IronPort-AV: E=McAfee;i="6700,10204,11282"; a="56667746"
+X-CSE-ConnectionGUID: m7cK4G3BRKO9hjh0b2nMTw==
+X-CSE-MsgGUID: AR0mEz9IQ9GmVMUCpt3UCw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11282"; a="33917560"
 X-IronPort-AV: E=Sophos;i="6.12,222,1728975600"; 
-   d="scan'208";a="56667746"
-Received: from orviesa005.jf.intel.com ([10.64.159.145])
-  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Dec 2024 06:31:42 -0800
-X-CSE-ConnectionGUID: AMUZWAicTKm0NAzjlhsd/Q==
-X-CSE-MsgGUID: IZsjKunDRKuhSAEg/mL9Wg==
+   d="scan'208";a="33917560"
+Received: from fmviesa007.fm.intel.com ([10.60.135.147])
+  by orvoesa112.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Dec 2024 06:39:23 -0800
+X-CSE-ConnectionGUID: wWBmzMXhQfeF2Ai7KVE2DQ==
+X-CSE-MsgGUID: 8KKosOuiSJGtNDFfmhoAIA==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.12,222,1728975600"; 
-   d="scan'208";a="100380763"
+   d="scan'208";a="95262480"
 Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.56])
-  by orviesa005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Dec 2024 06:31:41 -0800
+  by fmviesa007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Dec 2024 06:39:20 -0800
 From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Tue, 10 Dec 2024 16:31:37 +0200 (EET)
-To: hmtheboy154 <buingoc67@gmail.com>
-cc: platform-driver-x86@vger.kernel.org
-Subject: Re: [PATCH] platform/x86: touchscreen_dmi: Add info for SARY Tab 3
- tablet
-In-Reply-To: <20241202221802.9711-1-buingoc67@gmail.com>
-Message-ID: <07b324aa-8d32-55e6-3200-0e846ccbf127@linux.intel.com>
-References: <20241202221802.9711-1-buingoc67@gmail.com>
+To: platform-driver-x86@vger.kernel.org, Kurt Borja <kuurtb@gmail.com>
+Cc: Dell.Client.Kernel@dell.com, hdegoede@redhat.com, 
+ linux-kernel@vger.kernel.org, Armin Wolf <W_Armin@gmx.de>
+In-Reply-To: <20241208002652.5885-4-kuurtb@gmail.com>
+References: <20241208002652.5885-4-kuurtb@gmail.com>
+Subject: Re: [PATCH v2 1/2] alienware-wmi: Fix X Series and G Series quirks
+Message-Id: <173384155548.12053.6491077559044408958.b4-ty@linux.intel.com>
+Date: Tue, 10 Dec 2024 16:39:15 +0200
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Mailer: b4 0.13.0
 
-On Tue, 3 Dec 2024, buingoc67@gmail.com wrote:
+On Sat, 07 Dec 2024 21:26:55 -0300, Kurt Borja wrote:
 
-> From: hmtheboy154 <buingoc67@gmail.com>
+> Devices that are known to support the WMI thermal interface do not
+> support the legacy LED control interface. Make `.num_zones = 0` and
+> avoid calling alienware_zone_init() if that's the case.
 > 
-> There's no info about the OEM behind the tablet, only online stores
-> listing. This tablet uses an Intel Atom x5-Z8300, 4GB of RAM & 64GB
-> of storage.
 > 
-> Signed-off-by: hmtheboy154 <buingoc67@gmail.com>
 
-Hi,
 
-Thank you for the patch.
+Thank you for your contribution, it has been applied to my local
+review-ilpo-fixes branch. Note it will show up in the public
+platform-drivers-x86/review-ilpo-fixes branch only once I've pushed my
+local branch there, which might take a while.
 
-We need to have your proper name in From and Signed-off-by tag before a 
-patch can be accepted. Please send a v2 with that fixed, thanks.
+The list of commits applied:
+[1/2] alienware-wmi: Fix X Series and G Series quirks
+      commit: c1043cdb019ed4d053d673e62b553a5cea1a287d
+[2/2] alienware-wmi: Adds support to Alienware m16 R1 AMD
+      commit: 54a8cada2f3d7efb4a7920807473d89c442d9c45
 
 --
  i.
 
-> ---
->  drivers/platform/x86/touchscreen_dmi.c | 26 ++++++++++++++++++++++++++
->  1 file changed, 26 insertions(+)
-> 
-> diff --git a/drivers/platform/x86/touchscreen_dmi.c b/drivers/platform/x86/touchscreen_dmi.c
-> index 0a39f68c641d..bdc19cd8d3ed 100644
-> --- a/drivers/platform/x86/touchscreen_dmi.c
-> +++ b/drivers/platform/x86/touchscreen_dmi.c
-> @@ -855,6 +855,23 @@ static const struct ts_dmi_data rwc_nanote_next_data = {
->  	.properties = rwc_nanote_next_props,
->  };
->  
-> +static const struct property_entry sary_tab_3_props[] = {
-> +	PROPERTY_ENTRY_U32("touchscreen-size-x", 1730),
-> +	PROPERTY_ENTRY_U32("touchscreen-size-y", 1151),
-> +	PROPERTY_ENTRY_BOOL("touchscreen-inverted-x"),
-> +	PROPERTY_ENTRY_BOOL("touchscreen-inverted-y"),
-> +	PROPERTY_ENTRY_BOOL("touchscreen-swapped-x-y"),
-> +	PROPERTY_ENTRY_STRING("firmware-name", "gsl1680-sary-tab-3.fw"),
-> +	PROPERTY_ENTRY_U32("silead,max-fingers", 10),
-> +	PROPERTY_ENTRY_BOOL("silead,home-button"),
-> +	{ }
-> +};
-> +
-> +static const struct ts_dmi_data sary_tab_3_data = {
-> +	.acpi_name	= "MSSL1680:00",
-> +	.properties	= sary_tab_3_props,
-> +};
-> +
->  static const struct property_entry schneider_sct101ctm_props[] = {
->  	PROPERTY_ENTRY_U32("touchscreen-size-x", 1715),
->  	PROPERTY_ENTRY_U32("touchscreen-size-y", 1140),
-> @@ -1615,6 +1632,15 @@ const struct dmi_system_id touchscreen_dmi_table[] = {
->  			DMI_MATCH(DMI_BIOS_VERSION, "S8A70R100-V005"),
->  		},
->  	},
-> +	{
-> +		/* SARY Tab 3 */
-> +		.driver_data = (void *)&sary_tab_3_data,
-> +		.matches = {
-> +			DMI_MATCH(DMI_SYS_VENDOR, "SARY"),
-> +			DMI_MATCH(DMI_PRODUCT_NAME, "C210C"),
-> +			DMI_MATCH(DMI_PRODUCT_SKU, "TAB3"),
-> +		},
-> +	},
->  	{
->  		/* Schneider SCT101CTM */
->  		.driver_data = (void *)&schneider_sct101ctm_data,
-> 
