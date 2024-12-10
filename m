@@ -1,123 +1,187 @@
-Received: from mout.gmx.net (mout.gmx.net [212.227.17.22])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f169.google.com (mail-pf1-f169.google.com [209.85.210.169])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9132870812;
-	Tue, 10 Dec 2024 00:17:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.22
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 32ECD233129;
+	Tue, 10 Dec 2024 02:06:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1733789843; cv=none; b=Q/0LSKBwqLFM6phQQl1S9qlLxpjAVIhOpT4HJBV7wj2vKKsrN4bOZNhCpqoqYZ1HEzoX7rZWt/IAFn5Ub+g1BekCMrSbz5o57AzgEIfOXM+OYLDChGn415lwxaI35LU6bTstAHe8cdFdwWLlI8BcMiMQkWvhALTg0pIros1JgCw=
+	t=1733796415; cv=none; b=SU8TdYozLuPYcf3ipxNapKXKMtv57yqSXhNMdzZVgBKBNSafvZ34Fc3zDmGFFLETZOs/cUuI3NnPOOt457y5/IGyj76/d5EsvN4vqdfqe8SRDAUw4PAtS6PLdQZdcIx8YU5+ENh/+iS9VSh9ewHFn+2ybmQs7/rOEqbFpKx9OkQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1733789843; c=relaxed/simple;
-	bh=PyFUiziYEU81rlXyeFc86BFSQplMEMqj/jZmq9uqG3c=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=cRYAv32DbW1NVoeTtWYk8pbnH7GXIruC0R2AvssgrjxVZEEC4S/kt61/MaeCN26Z8wvWIbAT8YYoYLTgnYJnEcHpCMXCVy4mVWLn8CNnqtYv2Emel+KefYDGHiBr+GCpJ0anBkb5kKYEATBGYQh+Zdz7VVjw2SFZfmm9/SQqbM0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b=pO8xBJbD; arc=none smtp.client-ip=212.227.17.22
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
+	s=arc-20240116; t=1733796415; c=relaxed/simple;
+	bh=cgmafluFZlv4GbkSveoxLKrE94PUY8hpmRVSIcm0r5w=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=j4LybkKF91jKj7maHJ15eXNkC4/PTUTmVBQyOUSa8cTmNvRHPKqdnOCWNeojGbreBO+DcIHqnRmNEcBH8WP4L6A+m4apaI657qNIwWFtNy75LsDKjRj9lIP/3+DQUmEgS5nCMXHfD8Cc1WkyuT29oFTAiIOxG9QrgWkLLwaJwNA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=KKPiEQDe; arc=none smtp.client-ip=209.85.210.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b="pO8xBJbD"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.de;
-	s=s31663417; t=1733789831; x=1734394631; i=w_armin@gmx.de;
-	bh=ynwFX715WAOy4YH4tt/nVds0p82RcqbxW0WOwCF/3VI=;
-	h=X-UI-Sender-Class:From:To:Cc:Subject:Date:Message-Id:In-Reply-To:
-	 References:MIME-Version:Content-Type:Content-Transfer-Encoding:cc:
-	 content-transfer-encoding:content-type:date:from:message-id:
-	 mime-version:reply-to:subject:to;
-	b=pO8xBJbD0nIrlmKOwROLUe7l4bbv9Vc2JLQUZ5wA9haXfsNBLnudTkXM83tMHSja
-	 u0LWlmqE3sKa+/UchMDPICrHd/2d4u0rK8yk9e1VtdZedwcn7KrrK3HiYn531ZUtd
-	 YC+vtrZ82IH8hHofbEelq3nzjC3DeVhCKyg43tBFRvoLCfQuQGcmw/9ukboihVELB
-	 o4gLchxvejPp3YXGy2JowZ+cslZjly8LlDHlG/UG3IamMzzYnBzgNcuAurQ5x8hgo
-	 /AG8oDIVa1ChNqvABag6ZmZRCkl53aFV0r4Soswdsl8zkfcB3WbXZpxzhEP7RoC9W
-	 8UmuWh8FGHbjLe6q5Q==
-X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
-Received: from mx-inspiron.fritz.box ([91.14.230.110]) by mail.gmx.net
- (mrgmx104 [212.227.17.168]) with ESMTPSA (Nemesis) id
- 1MhD2Y-1tovxd2VTW-00q6f3; Tue, 10 Dec 2024 01:17:11 +0100
-From: Armin Wolf <W_Armin@gmx.de>
-To: jlee@suse.com,
-	farhan.anwar8@gmail.com,
-	rayanmargham4@gmail.com
-Cc: hdegoede@redhat.com,
-	ilpo.jarvinen@linux.intel.com,
-	platform-driver-x86@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	kuurtb@gmail.com
-Subject: [PATCH v4 5/5] platform/x86: acer-wmi: Ignore AC events
-Date: Tue, 10 Dec 2024 01:16:57 +0100
-Message-Id: <20241210001657.3362-6-W_Armin@gmx.de>
-X-Mailer: git-send-email 2.39.5
-In-Reply-To: <20241210001657.3362-1-W_Armin@gmx.de>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KKPiEQDe"
+Received: by mail-pf1-f169.google.com with SMTP id d2e1a72fcca58-725dbdf380aso1778933b3a.3;
+        Mon, 09 Dec 2024 18:06:53 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1733796413; x=1734401213; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=PFFoOVv6RWfbMMJyWo8grqya93jLFLYBfyNkKFEN5gs=;
+        b=KKPiEQDeowX//qvHyFvHO7j2As40Wy0M6MJLYpod/b/f6/0xhS9/PGHcYEqxXFAfRb
+         qCJF74Nmn7OpKI1JG5Tji4m2baxlR2O8afFlgZtZ23qtDFvUzVyHZKvKuT924YxaRzCx
+         2/E/CMjXXu00bZdZn04MWjSy3PawibwFb7IZ4FwSUh3AtY7/UNdETac0KpFDjNOIFH7x
+         kjzFiM0vBziEglI2SoFT0L1YeMmbl5Bgu9ByCuzdrO1wQcdu2Sa5laCJcVEGx0OMyIpo
+         2+MSrLeOXiguCvhjigUEJ0R1vkfNaHUHSpZznBay6iS81/xEX59t/GYJAER19GI3DZYS
+         8Hgw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1733796413; x=1734401213;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=PFFoOVv6RWfbMMJyWo8grqya93jLFLYBfyNkKFEN5gs=;
+        b=hcLgOSj+z+YzKFB3eetvVn7VIGOxjpVqOam9AIvfAOKpUP542ShEiPWrCfA6vF0BhP
+         wPRAEvbgCrCQHqJLuUMV5cxewEfuqUDz+EURGE9yhH/5j8pcCmeNWF3Lab60a5phiP60
+         Bn/39VvtNnHZN67rXaNxG6NTT1G04BauLv6eGdL3OytcQpztrBbH7W8NhCZy87sCLLci
+         pnF0YrPW/h5WaYodGczn1RGxTLgSwOyPJ99zN1wK2Q4pZEYDkPvxJ8k64LUbUb+8r7z6
+         576ZBqQ8y0koaiSPuJZ/t3x8r9M/ZzxtWw+db2R/CL9TNJs7/ZskduT0z1YvNvJfWtGr
+         TwvA==
+X-Forwarded-Encrypted: i=1; AJvYcCXVucan7cdMffsYabx5TVVqFgsXnNK88Kj8jDYo7gwMS8cm+mKYMnEld+M+Gf/ReLzQ6A1TbpIh6EKl3exgj2Ia1hOyzg==@vger.kernel.org, AJvYcCXcpZCqdPw1E4i3h0wJ7zEpKZZCIrzeW/Sj1b9P84Xi9ATpA9iTb4+eu9AgNWl9tZsuSwijwFXAvtHSnFg=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxfmXvuoL+okNrSMK5a7K0JXXBb1RAY3IoYVFT127tM/q7o+lWQ
+	Iu3hCVqpjFZc4LckLB0WMAeoxB5YEn5klFz+1/Cu50medn24WwQX
+X-Gm-Gg: ASbGncv9T5vVAB4DP//5X2NGw1sD6gC+iMy+rcF+vcBrWt9tSkNPSREP0RnLAzVmSs0
+	QsAK/uLpyUEb4kyJxcip5rJsFcFzrGiZXFWeAqx0G0TMWwZfsqDn20v6xulP0pAOyXebc3xkqjl
+	k0jUNq8oFniBEeG/yjfxfIPz37csDaJtCxG4qSNuy5TNY32KAIROdAJAq5Sz41V3nrfjutWu5mH
+	bfE63HpNoTWYQkMUT1TE6BfIzz1frkIZ/Tcz6tbCHsCtL4RuCGf3JYJqw4IdcRlrk2S//jdQ8bP
+	4snElTZczypL
+X-Google-Smtp-Source: AGHT+IHTiTyq5GRaSOJWq0P3dNR9nIw/0WMy7E1tpHjwT1LqS3PI3UsEFR6Ze9u5g/mezf9sjxfO+w==
+X-Received: by 2002:a05:6a00:10d5:b0:71e:16b3:e5dc with SMTP id d2e1a72fcca58-7273cb8561bmr3887066b3a.19.1733796413232;
+        Mon, 09 Dec 2024 18:06:53 -0800 (PST)
+Received: from alphacentauri (host111.181-10-101.telecom.net.ar. [181.10.101.111])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-725a29c5ad8sm8246388b3a.8.2024.12.09.18.06.50
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 09 Dec 2024 18:06:52 -0800 (PST)
+Date: Mon, 9 Dec 2024 23:06:49 -0300
+From: Kurt Borja <kuurtb@gmail.com>
+To: Armin Wolf <W_Armin@gmx.de>
+Cc: jlee@suse.com, farhan.anwar8@gmail.com, rayanmargham4@gmail.com, 
+	hdegoede@redhat.com, ilpo.jarvinen@linux.intel.com, 
+	platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v4 3/5] platform/x86: acer-wmi: Improve error handling
+ when reading gaming system information
+Message-ID: <i4jcyhqxfugfykbtvrwba4udln4l2cgk7zgj3sy7iqncf47a4q@exk6jk7rmmvk>
 References: <20241210001657.3362-1-W_Armin@gmx.de>
+ <20241210001657.3362-4-W_Armin@gmx.de>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:L2DgElR4FB2QZWQAU3j3F3+wSr6FYXUKneUIoMs7EIjl1l4eUYJ
- 1lxIekj71yrR04bjVIa/8pWP03cfHfWBVY5Mz5ZibakKuNhZyXb4zabuunGLyQLnF5UMvMm
- +m0jwWIt0dPShm9NAzDuLgphnyJtT+yVvo+1+FgmhYCsrQyGNjwL30ZlAutZhE8356bUw0/
- U895s56M3m80gDY+WHdPA==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:SsX9P+I93T0=;iQRSMHcgUDof341DwH07ZlGnhe7
- SIyOeuQFIViEF2/MccnfSzv9S11dKmD1K11okrwow2xRpMKyFqOS1+tKygcnsIMLPBnlVbVgR
- Uk48SDmi5WMaJ1iamxxPUppwk6KNkWeMc2tsRcFBjL1ra9BZSUhyYTdeV7uM8JCeVifvuvWZu
- +FEbqN8XdkYLnRQWMvgoo83Ny+bm2oB0e0mwx+gJ5XfIj0PjU6oRtEBw45a3Y1NYe/fzlTsWU
- vFrTb9BELt9s3RMKwEabhXOvXTUClbXqlt4E5IbrixmVuukX8hiDgh29a/3GWsC96lOXsee5X
- j6bpC85uaF6YwQdxllBBQWq9ymAxylZifSEs/3aSeXfCno2u+PJNrLMqMgTH5whJSADgGdQgH
- iiISog/Fe4/SqQIoOEiJ0wttH0twjWfq0QvX+RAqxePlJ1bFR4t9CHpCTz4uIH3sUxLMQYPJk
- E0RKhD4TVnIkksEYLhhSYmgWXIjPVoM2FHPy68NivlOyDgtDWqtTHoUK1QAkhI2PrrNiXnmSd
- pH38Bun+xruzKdor2WYtz2lhs8gq566qbp7/NWvexF5O0FHv/37OdLjVf17S+F7cKBPNywRrn
- 6MsoOTlc0LofIg/0OUmGV07sxxDKJWgUjXR6xhLhwKojmtRs5xnMUUhDfIHs3crWenuGdZu+y
- d1XmC9RFd8JnwaXhNcZhf1pEpdjLT8M7DY/AH98d7x3ZLpz/cF6KdJgYjeiVxmmoV41bLKxis
- repYUXrYTDnbpWhdlLwMj/aWCKP5eb/UdyHDVz+S6LO5lRL2N3stqNlxw8N3Uy08xrvI0T3yv
- hJ8qOBsso+Bw852J18FQDfN5U2+aRHoGM0AgvabFbluntz/kr5QEdZtk8pTGzVf/dAW4ilvKK
- vG8rLmeqocWWgmLqcTTiqPB0i+Ykvs7X6F+nlXpbcMV0i78+oC/czbGt852Jrh1etmlwuZtM5
- eU8wWAysXI2ccSTpcRqIS+SSNNEbxlBXl/Yj8K0FGwx2ymvYg9TvQ8RiqdVYjpMqFKcVwL8EQ
- f4UMMVqEvvLnuDHgfxd5SmzVt8Q7pDg5lliaSMGQZs4rExxE44y8mnoEk4lVjTJWnp8iombE/
- 2qh5fWa45KsD3HXWSuUKovr0bO3VGh
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20241210001657.3362-4-W_Armin@gmx.de>
 
-On the Acer Swift SFG14-41, the events 8 - 1 and 8 - 0 are printed on
-AC connect/disconnect. Ignore those events to avoid spamming the
-kernel log with error messages.
+On Tue, Dec 10, 2024 at 01:16:55AM +0100, Armin Wolf wrote:
+> If a call to ACER_WMID_GET_GAMING_SYS_INFO_METHODID fails, the lower
+> 8 bits will be non-zero. Introduce a helper function to check this and
+> use it when reading gaming system information.
+> 
+> Tested-by: Rayan Margham <rayanmargham4@gmail.com>
+> Signed-off-by: Armin Wolf <W_Armin@gmx.de>
+> ---
+>  drivers/platform/x86/acer-wmi.c | 55 +++++++++++++++++++++------------
+>  1 file changed, 36 insertions(+), 19 deletions(-)
+> 
+> diff --git a/drivers/platform/x86/acer-wmi.c b/drivers/platform/x86/acer-wmi.c
+> index dd57787466b9..ac4500f33b8c 100644
+> --- a/drivers/platform/x86/acer-wmi.c
+> +++ b/drivers/platform/x86/acer-wmi.c
+> @@ -70,6 +70,7 @@ MODULE_LICENSE("GPL");
+> 
+>  #define ACER_PREDATOR_V4_THERMAL_PROFILE_EC_OFFSET 0x54
+> 
+> +#define ACER_PREDATOR_V4_RETURN_STATUS_BIT_MASK GENMASK_ULL(7, 0)
+>  #define ACER_PREDATOR_V4_FAN_SPEED_READ_BIT_MASK GENMASK(20, 8)
+> 
+>  /*
+> @@ -1513,6 +1514,24 @@ static acpi_status WMID_gaming_get_u64(u64 *value, u32 cap)
+>  	return status;
+>  }
+> 
+> +static int WMID_gaming_get_sys_info(u32 command, u64 *out)
+> +{
+> +	acpi_status status;
+> +	u64 result;
+> +
+> +	status = WMI_gaming_execute_u64(ACER_WMID_GET_GAMING_SYS_INFO_METHODID, command, &result);
+> +	if (ACPI_FAILURE(status))
+> +		return -EIO;
+> +
+> +	/* The return status must be zero for the operation to have succeeded */
+> +	if (FIELD_GET(ACER_PREDATOR_V4_RETURN_STATUS_BIT_MASK, result))
+> +		return -EIO;
+> +
+> +	*out = result;
+> +
+> +	return 0;
+> +}
+> +
+>  static void WMID_gaming_set_fan_mode(u8 fan_mode)
+>  {
+>  	/* fan_mode = 1 is used for auto, fan_mode = 2 used for turbo*/
+> @@ -1762,22 +1781,23 @@ static int acer_gsensor_event(void)
+> 
+>  static int acer_get_fan_speed(int fan)
+>  {
+> -	if (quirks->predator_v4) {
+> -		acpi_status status;
+> -		u64 fanspeed;
+> +	u64 fanspeed;
+> +	u32 command;
+> +	int ret;
+> 
+> -		status = WMI_gaming_execute_u64(
+> -			ACER_WMID_GET_GAMING_SYS_INFO_METHODID,
+> -			fan == 0 ? ACER_WMID_CMD_GET_PREDATOR_V4_CPU_FAN_SPEED :
+> -				   ACER_WMID_CMD_GET_PREDATOR_V4_GPU_FAN_SPEED,
+> -			&fanspeed);
+> +	if (!quirks->predator_v4)
+> +		return -EOPNOTSUPP;
+> 
+> -		if (ACPI_FAILURE(status))
+> -			return -EIO;
+> +	if (fan == 0)
+> +		command = ACER_WMID_CMD_GET_PREDATOR_V4_CPU_FAN_SPEED;
+> +	else
+> +		command = ACER_WMID_CMD_GET_PREDATOR_V4_GPU_FAN_SPEED;
+> 
+> -		return FIELD_GET(ACER_PREDATOR_V4_FAN_SPEED_READ_BIT_MASK, fanspeed);
+> -	}
+> -	return -EOPNOTSUPP;
+> +	ret = WMID_gaming_get_sys_info(command, &fanspeed);
+> +	if (ret < 0)
+> +		return ret;
+> +
+> +	return FIELD_GET(ACER_PREDATOR_V4_FAN_SPEED_READ_BIT_MASK, fanspeed);
+>  }
 
-Reported-by: Farhan Anwar <farhan.anwar8@gmail.com>
-Closes: https://lore.kernel.org/platform-driver-x86/2ffb529d-e7c8-4026-a3b=
-8-120c8e7afec8@gmail.com
-Tested-by: Rayan Margham <rayanmargham4@gmail.com>
-Reviewed-by: Ilpo J=C3=A4rvinen <ilpo.jarvinen@linux.intel.com>
-Signed-off-by: Armin Wolf <W_Armin@gmx.de>
-=2D--
- drivers/platform/x86/acer-wmi.c | 4 ++++
- 1 file changed, 4 insertions(+)
+I wonder if it's necessary to refactor this function if you are going to
+drop it on Patch 4.
 
-diff --git a/drivers/platform/x86/acer-wmi.c b/drivers/platform/x86/acer-w=
-mi.c
-index aad8eb0ddae5..ef26ec8d90ea 100644
-=2D-- a/drivers/platform/x86/acer-wmi.c
-+++ b/drivers/platform/x86/acer-wmi.c
-@@ -99,6 +99,7 @@ enum acer_wmi_event_ids {
- 	WMID_HOTKEY_EVENT =3D 0x1,
- 	WMID_ACCEL_OR_KBD_DOCK_EVENT =3D 0x5,
- 	WMID_GAMING_TURBO_KEY_EVENT =3D 0x7,
-+	WMID_AC_EVENT =3D 0x8,
- };
-
- enum acer_wmi_predator_v4_sys_info_command {
-@@ -2304,6 +2305,9 @@ static void acer_wmi_notify(union acpi_object *obj, =
-void *context)
- 		if (return_value.key_num =3D=3D 0x5 && has_cap(ACER_CAP_PLATFORM_PROFIL=
-E))
- 			acer_thermal_profile_change();
- 		break;
-+	case WMID_AC_EVENT:
-+		/* We ignore AC events here */
-+		break;
- 	default:
- 		pr_warn("Unknown function number - %d - %d\n",
- 			return_value.function, return_value.key_num);
-=2D-
-2.39.5
-
+> 
+>  /*
+> @@ -1942,12 +1962,9 @@ static int acer_thermal_profile_change(void)
+>  			return err;
+> 
+>  		/* Check power source */
+> -		status = WMI_gaming_execute_u64(
+> -			ACER_WMID_GET_GAMING_SYS_INFO_METHODID,
+> -			ACER_WMID_CMD_GET_PREDATOR_V4_BAT_STATUS, &on_AC);
+> -
+> -		if (ACPI_FAILURE(status))
+> -			return -EIO;
+> +		err = WMID_gaming_get_sys_info(ACER_WMID_CMD_GET_PREDATOR_V4_BAT_STATUS, &on_AC);
+> +		if (err < 0)
+> +			return err;
+> 
+>  		switch (current_tp) {
+>  		case ACER_PREDATOR_V4_THERMAL_PROFILE_TURBO:
+> --
+> 2.39.5
+> 
