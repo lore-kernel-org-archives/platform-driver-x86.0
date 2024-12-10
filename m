@@ -1,234 +1,131 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C0F31AA792;
-	Tue, 10 Dec 2024 14:21:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D4CD1BCA05
+	for <platform-driver-x86@vger.kernel.org>; Tue, 10 Dec 2024 14:31:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1733840469; cv=none; b=MJNgwLlx3DpDRcfDsEVALHz/6UTWeSJCHq3v3Ztf5DegSrP4tlAWSPeUDIuF4gDAr7wxpfGfJPeQVW4R1eB1t4Xgk+VYripKICNeeuhDHikEiYXZgP8WKxgsla2givjSZ4S+/6pfukgmOOcLQojyuCTf4RzMT5KQKUn4B9vmLa4=
+	t=1733841104; cv=none; b=DhqbDpv4rrPwmfrg8M3NBxi3NFxi+khNtu+Vafc1DHEyq4Dbik4mH08lv08KmxlwTLPpeIBesOrpgiHWo95jkR6LTTzrXEbgTUqr3MFChAYpRgf9YFMRa8JokphzMqyOAoq8vD4muwwYnh/igFYdrSWaVcqxukUrOPP+YzWoDw8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1733840469; c=relaxed/simple;
-	bh=vbCYVQK9u8EtPZJkiuKJss0G39vzyN+eThKf4a8hQdY=;
+	s=arc-20240116; t=1733841104; c=relaxed/simple;
+	bh=MK/jzAyESGqvtBKPpeF2RWQUfFE5/8q3KB719LtytAE=;
 	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=fFyqrwERRILA8et4Xg8oaWa7LeZoaTqDp86guWf+xGDa0/nxAW50qkfRidV1kjBy+KwmV84sr5TFc4Poq2pYHItbRP8pdoOvcRcQb/H+vFr2CpF2nwdEH7I+HD1zyrjNiOVaMsZIhep6QTIwc0Fao/2CNURB88oFFWtqpNHqbQY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=NjTf4mur; arc=none smtp.client-ip=192.198.163.13
+	 MIME-Version:Content-Type; b=l9Y6wUS0OHhdr94yf/1RxcxklzOeQ8suHo/GUEvfIqsT7oOvCdAyJ3OuGrgRiNEscVTraodSa/ZM1QUv5edZM5RFc29YNmBoecrU5i8LRBs9yNjrwr3rwjuP5tLhJRbRY1gLdHU3E3Z5HWieofH8CjrH9jgg53On9tpDCfSFA1o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=AN2CYKuk; arc=none smtp.client-ip=198.175.65.9
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="NjTf4mur"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="AN2CYKuk"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1733840468; x=1765376468;
+  t=1733841103; x=1765377103;
   h=from:date:to:cc:subject:in-reply-to:message-id:
    references:mime-version;
-  bh=vbCYVQK9u8EtPZJkiuKJss0G39vzyN+eThKf4a8hQdY=;
-  b=NjTf4mur/aVled4wPmg+LYLcY1Ht2OZTSWNIpAQzbcNOyfAkJSkXWc9h
-   IP0Zg9lBc7xdscnyAJFlWTbuUNO1WJV2HQAH9QOX1nQUUfAfMvvkvBLJ1
-   Vr9TeBW2qqoQGHyVvWYEwLEDJtdJQl27w2TN4h/hZxCK6d31Y7zRkXu3g
-   yEa0AO6iF5pqsr4QhemOROnKfxGjJbNpcmqDYNXjT1QczjQBL2IX44dCr
-   FWyQAssuvC6C0bENhemAMCe0XOa88Zd6QAD7QEuOpmZwfyEqzcbFzZOJg
-   GFT47gCiqx6fidFiwA4qv71ofMRet1Z6Jcq1SQIickP4gKLBOx8QzeZDh
-   w==;
-X-CSE-ConnectionGUID: tAvSDHqrQFSQCkBUFl0OYw==
-X-CSE-MsgGUID: 11HQ8QloRqGmo+F3vCEIew==
-X-IronPort-AV: E=McAfee;i="6700,10204,11282"; a="37017461"
+  bh=MK/jzAyESGqvtBKPpeF2RWQUfFE5/8q3KB719LtytAE=;
+  b=AN2CYKukQqpIbiYW42fKrYnnw++R8bmGUs00onHYHxhVgG2x7ipjj+K7
+   slU3nUDoOcwro+BbqXF6+m8E8PhbW1DxgVASE+Yf7yM/CGlBQbMn+Ap1S
+   r0zpiyUTEsMx/M2HVdf7iB3ACP2zbNn5qzZy/0ts0QyeYJRfPiUxAO9Ln
+   xUXBb2samnwRlHrOLEwEE9J1uxqUTS2ArOXXhAGwPZl1JCZ6uu3wHWzC3
+   fY9pFJcS5DkjDNb47unKmm4uadsCKlDPxB6qeqB1bT2wu7XbX0VpC9r/N
+   YLr8Dtw/oH2ccnmnPOrASphwBEGmDuBEixgV1hS4nOxHtYPA6Nb0sJtM7
+   g==;
+X-CSE-ConnectionGUID: 6iBT1D5PTIurKfjxV9Pm4Q==
+X-CSE-MsgGUID: PoR+xGguTPmSva/NNMlJ2g==
+X-IronPort-AV: E=McAfee;i="6700,10204,11282"; a="56667746"
 X-IronPort-AV: E=Sophos;i="6.12,222,1728975600"; 
-   d="scan'208";a="37017461"
-Received: from orviesa007.jf.intel.com ([10.64.159.147])
-  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Dec 2024 06:21:07 -0800
-X-CSE-ConnectionGUID: aRQFVUqcTxeOIa3l7zf+Ng==
-X-CSE-MsgGUID: uqb1HqcVQduywpt1jMipmg==
+   d="scan'208";a="56667746"
+Received: from orviesa005.jf.intel.com ([10.64.159.145])
+  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Dec 2024 06:31:42 -0800
+X-CSE-ConnectionGUID: AMUZWAicTKm0NAzjlhsd/Q==
+X-CSE-MsgGUID: IZsjKunDRKuhSAEg/mL9Wg==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.12,222,1728975600"; 
-   d="scan'208";a="95877032"
+   d="scan'208";a="100380763"
 Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.56])
-  by orviesa007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Dec 2024 06:21:04 -0800
+  by orviesa005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Dec 2024 06:31:41 -0800
 From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Tue, 10 Dec 2024 16:21:01 +0200 (EET)
-To: =?ISO-8859-15?Q?Pali_Roh=E1r?= <pali@kernel.org>, 
-    Jean Delvare <jdelvare@suse.com>, Andi Shyti <andi.shyti@kernel.org>
-cc: Andy Shevchenko <andy@kernel.org>, Paul Menzel <pmenzel@molgen.mpg.de>, 
-    Wolfram Sang <wsa@kernel.org>, eric.piel@tremplin-utc.net, 
-    Marius Hoch <mail@mariushoch.de>, Dell.Client.Kernel@dell.com, 
-    Kai Heng Feng <kai.heng.feng@canonical.com>, 
-    Hans de Goede <hdegoede@redhat.com>, platform-driver-x86@vger.kernel.org, 
-    linux-i2c@vger.kernel.org
-Subject: Re: [PATCH v9 0/4] i2c-i801 / dell-lis3lv02d: Move instantiation of
- lis3lv02d i2c_client from i2c-i801 to dell-lis3lv02d
-In-Reply-To: <20241209185047.7nuweqmjensbhvvu@pali>
-Message-ID: <ddaa1a6f-c087-f6f2-f802-8d02fa7ae929@linux.intel.com>
-References: <20241209183557.7560-1-hdegoede@redhat.com> <20241209185047.7nuweqmjensbhvvu@pali>
+Date: Tue, 10 Dec 2024 16:31:37 +0200 (EET)
+To: hmtheboy154 <buingoc67@gmail.com>
+cc: platform-driver-x86@vger.kernel.org
+Subject: Re: [PATCH] platform/x86: touchscreen_dmi: Add info for SARY Tab 3
+ tablet
+In-Reply-To: <20241202221802.9711-1-buingoc67@gmail.com>
+Message-ID: <07b324aa-8d32-55e6-3200-0e846ccbf127@linux.intel.com>
+References: <20241202221802.9711-1-buingoc67@gmail.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="8323328-1952583182-1733840461=:905"
+Content-Type: text/plain; charset=US-ASCII
 
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
+On Tue, 3 Dec 2024, buingoc67@gmail.com wrote:
 
---8323328-1952583182-1733840461=:905
-Content-Type: text/plain; charset=ISO-8859-15
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+> From: hmtheboy154 <buingoc67@gmail.com>
+> 
+> There's no info about the OEM behind the tablet, only online stores
+> listing. This tablet uses an Intel Atom x5-Z8300, 4GB of RAM & 64GB
+> of storage.
+> 
+> Signed-off-by: hmtheboy154 <buingoc67@gmail.com>
 
-On Mon, 9 Dec 2024, Pali Roh=E1r wrote:
+Hi,
 
-> All patches except the last one are reviewed and should be ready, that
-> it fine. The last patch is basically no-go, as it was discussed many
-> times, it should not be accepted at all. As Hans said that would not
-> respond to my emails, I'm also not going to discuss more with him.
+Thank you for the patch.
 
-I could merge the non-controversial patches 1-3 through pdx86 tree. Would
-a I2C drivers maintainer want to give an ack for the patch 2 whose diff is=
-=20
-simply removing the code from I2C side?
+We need to have your proper name in From and Signed-off-by tag before a 
+patch can be accepted. Please send a v2 with that fixed, thanks.
 
-(I'll have to lookup what's up with the last patch later when I've more=20
-time to go through archives.)
-
---=20
+--
  i.
 
-
-> On Monday 09 December 2024 19:35:53 Hans de Goede wrote:
-> > Hi All,
-> >=20
-> > Here is v9 of my patch series to move the manual instantation of lis3lv=
-02d
-> > i2c_client-s for SMO88xx ACPI device from the generic i2c-i801.c code t=
-o
-> > a SMO88xx specific dell-lis3lv02d driver.
-> >=20
-> > The i2c-core and i2c-i801 dependencies have both been merged into 6.13-=
-rc1
-> > so I believe that this series is ready to be merged now .
-> >=20
-> > Patch 2/4 does still touch the i2c-i801 code removing the quirk code wh=
-ich
-> > is moved to the pdx86 dell-smo8800 code. I think it would be best if Il=
-po
-> > prepares an immutable branch with this series to be merged into both
-> > pdx86/for-next and the i2c-subsystem. Andi can we get your Ack for merg=
-ing
-> > the i2c-i801 changes through the pdx86 tree ?
-> >=20
-> > Moving the i2c_client instantiation has the following advantages:
-> >=20
-> > 1. This moves the SMO88xx ACPI device quirk handling away from the gene=
-ric
-> > i2c-i801 module which is loaded on all Intel x86 machines to a module
-> > which will only be loaded when there is an ACPI SMO88xx device.
-> >=20
-> > 2. This removes the duplication of the SMO88xx ACPI Hardware ID (HID) t=
-able
-> > between the i2c-i801 and dell-smo8800 drivers.
-> >=20
-> > 3. This allows extending the quirk handling by adding new code and rela=
-ted
-> > module parameters to the dell-lis3lv02d driver, without needing to modi=
-fy
-> > the i2c-i801 code.
-> >=20
-> > This series also extends the i2c_client instantiation with support for
-> > probing for the i2c-address of the lis3lv02d chip on devices which
-> > are not yet listed in the DMI table with i2c-addresses for known models=
-=2E
-> > This probing is only done when requested through a module parameter.
-> >=20
-> > Changes in v9:
-> > - Rebase on top of v6.13-rc1
-> > - Drop already merged i2c-core and i2c-i801 dependencies
-> >=20
-> > Changes in v8:
-> > - Address some minor review remarks from Andy
-> >=20
-> > Changes in v7:
-> > - Rebase on v6.11-rc1
-> >=20
-> > Changes in v6:
-> > - Use i2c_new_scanned_device() instead of re-inventing it
-> >=20
-> > Changes in v5:
-> > - Make match_acpi_device_ids() and match_acpi_device_ids[] __init[const=
-]
-> > - Add "Depends on I2C" to Kconfig (to fix kernel-test-robot reported is=
-sues)
-> > - Add "this may be dangerous warning" to MODULE_PARM_DESC(probe_i2c_add=
-r)
-> >=20
-> > Changes in v4:
-> > - Move the i2c_client instantiation to a new dell-lis3lv02d driver inst=
-ead
-> >   of adding it to the dell-smo8800 driver
-> > - Address a couple of other minor review comments
-> >=20
-> > Changes in v3:
-> > - Use an i2c bus notifier so that the i2c_client will still be instanti=
-ated if
-> >   the i801 i2c_adapter shows up later or is re-probed (removed + added =
-again).
-> >   This addresses the main concern / review-comments made during review =
-of v2.
-> > - Add 2 prep patches to the i2c-core / the i2c-i801 driver to allow bus=
--notifier
-> >   use / to avoid the need to duplicate the PCI-ids of IDF i2c-i801 adap=
-ters.
-> > - Switch to standard dmi_system_id matching to check both sys-vendor +
-> >   product-name DMI fields
-> > - Drop the patch to alternatively use the st_accel IIO driver instead o=
-f
-> >   drivers/misc/lis3lv02d/lis3lv02d.c
-> >=20
-> > Changes in v2:
-> > - Drop "[PATCH 1/6] platform/x86: dell-smo8800: Only load on Dell lapto=
-ps"
-> > - Use a pci_device_id table to check for IDF (non main) i2c-i801 SMBuss=
-es
-> > - Add a comment documenting the IDF PCI device ids
-> > - Keep using drivers/misc/lis3lv02d/lis3lv02d.c by default
-> > - Rename the module-parameter to use_iio_driver which can be set to
-> >   use the IIO st_accel driver instead
-> > - Add a new patch adding the accelerometer address for the 2 models
-> >   I have tested this on to dell_lis3lv02d_devices[]
-> >=20
-> > Since this touches files under both drivers/i2c and drivers/platform/x8=
-6
-> > some subsystem coordination is necessary. I think it would be best to j=
-ust
-> > merge the entire series through the i2c subsystem since this touches so=
-me
-> > core i2c files. As pdx86 subsys co-maintainer I'm fine with doing so.
-> >=20
-> > Regards,
-> >=20
-> > Hans
-> >=20
-> >=20
-> > Hans de Goede (4):
-> >   platform/x86: dell-smo8800: Move SMO88xx acpi_device_ids to
-> >     dell-smo8800-ids.h
-> >   platform/x86: dell-smo8800: Move instantiation of lis3lv02d i2c_clien=
-t
-> >     from i2c-i801 to dell-lis3lv02d
-> >   platform/x86: dell-smo8800: Add a couple more models to
-> >     lis3lv02d_devices[]
-> >   platform/x86: dell-smo8800: Add support for probing for the
-> >     accelerometer i2c address
-> >=20
-> >  drivers/i2c/busses/i2c-i801.c                | 124 ---------
-> >  drivers/platform/x86/dell/Kconfig            |   1 +
-> >  drivers/platform/x86/dell/Makefile           |   1 +
-> >  drivers/platform/x86/dell/dell-lis3lv02d.c   | 252 +++++++++++++++++++
-> >  drivers/platform/x86/dell/dell-smo8800-ids.h |  27 ++
-> >  drivers/platform/x86/dell/dell-smo8800.c     |  16 +-
-> >  6 files changed, 282 insertions(+), 139 deletions(-)
-> >  create mode 100644 drivers/platform/x86/dell/dell-lis3lv02d.c
-> >  create mode 100644 drivers/platform/x86/dell/dell-smo8800-ids.h
-> >=20
-> > --=20
-> > 2.47.1
-> >=20
->=20
---8323328-1952583182-1733840461=:905--
+> ---
+>  drivers/platform/x86/touchscreen_dmi.c | 26 ++++++++++++++++++++++++++
+>  1 file changed, 26 insertions(+)
+> 
+> diff --git a/drivers/platform/x86/touchscreen_dmi.c b/drivers/platform/x86/touchscreen_dmi.c
+> index 0a39f68c641d..bdc19cd8d3ed 100644
+> --- a/drivers/platform/x86/touchscreen_dmi.c
+> +++ b/drivers/platform/x86/touchscreen_dmi.c
+> @@ -855,6 +855,23 @@ static const struct ts_dmi_data rwc_nanote_next_data = {
+>  	.properties = rwc_nanote_next_props,
+>  };
+>  
+> +static const struct property_entry sary_tab_3_props[] = {
+> +	PROPERTY_ENTRY_U32("touchscreen-size-x", 1730),
+> +	PROPERTY_ENTRY_U32("touchscreen-size-y", 1151),
+> +	PROPERTY_ENTRY_BOOL("touchscreen-inverted-x"),
+> +	PROPERTY_ENTRY_BOOL("touchscreen-inverted-y"),
+> +	PROPERTY_ENTRY_BOOL("touchscreen-swapped-x-y"),
+> +	PROPERTY_ENTRY_STRING("firmware-name", "gsl1680-sary-tab-3.fw"),
+> +	PROPERTY_ENTRY_U32("silead,max-fingers", 10),
+> +	PROPERTY_ENTRY_BOOL("silead,home-button"),
+> +	{ }
+> +};
+> +
+> +static const struct ts_dmi_data sary_tab_3_data = {
+> +	.acpi_name	= "MSSL1680:00",
+> +	.properties	= sary_tab_3_props,
+> +};
+> +
+>  static const struct property_entry schneider_sct101ctm_props[] = {
+>  	PROPERTY_ENTRY_U32("touchscreen-size-x", 1715),
+>  	PROPERTY_ENTRY_U32("touchscreen-size-y", 1140),
+> @@ -1615,6 +1632,15 @@ const struct dmi_system_id touchscreen_dmi_table[] = {
+>  			DMI_MATCH(DMI_BIOS_VERSION, "S8A70R100-V005"),
+>  		},
+>  	},
+> +	{
+> +		/* SARY Tab 3 */
+> +		.driver_data = (void *)&sary_tab_3_data,
+> +		.matches = {
+> +			DMI_MATCH(DMI_SYS_VENDOR, "SARY"),
+> +			DMI_MATCH(DMI_PRODUCT_NAME, "C210C"),
+> +			DMI_MATCH(DMI_PRODUCT_SKU, "TAB3"),
+> +		},
+> +	},
+>  	{
+>  		/* Schneider SCT101CTM */
+>  		.driver_data = (void *)&schneider_sct101ctm_data,
+> 
