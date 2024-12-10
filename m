@@ -1,95 +1,81 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
+Received: from todd.t-8ch.de (todd.t-8ch.de [159.69.126.157])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F6D423ED4A;
-	Tue, 10 Dec 2024 21:26:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 601CF2397B6;
+	Tue, 10 Dec 2024 21:56:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.69.126.157
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1733866013; cv=none; b=jNetGKZqVznEEooxYeFPJmVcDq0qywRuO0lAKPrVJo8l6IQPiBupwDw5Rv23KhK3CeuTRBf0CbjnvezsLiRMaW3OUBByDQjCrd8yqE6g+n3ezJshcMgVUizAtxRe6xJ0G+Kki92xmtw2ELwm7zYelMZIfAjK96YyvzNKfNs+gDc=
+	t=1733867765; cv=none; b=OFZbhHeP6zqDdEBpL5eP7SXos074l8bt2au4AXjHJQ0LvKc+oDSMVBlRrXrzQfcqK7FAjeFMPgygVaAP/Ut5ck44ix9vmsFOUn3Aw/mu8/awl2M90Mf/i9qnp0NTyirED+KvD12x8HswqFZeStdNVE4bBILeANo62SNa/DthfAw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1733866013; c=relaxed/simple;
-	bh=QGEVtB/OI75hknLv7NcDfG2ONAhagOpBfsAXUEcCF+4=;
-	h=From:To:Subject:Date:Message-ID:MIME-Version; b=S3qvIJSxygnoE5xFEvugWLWX4q9Omn6SmGKiyvyxiGUn+vQ3eKmM9lqeWPExEZ6x8bKzi1CZixTD32+HnWVKnSJFRTsy3aw4mFcvZJlCNWzN4EE5VvAt4e7owjCZ87iCgTGzQBh/JD0xunYkHRmsPdJdEhgFas710lNzU78HhTo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Q4K/JEWm; arc=none smtp.client-ip=198.175.65.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1733867765; c=relaxed/simple;
+	bh=Rkince4SbmHoWAJI8yRTlw7n74O79dIb/szqZ+k52X0=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=BeQg7N9wo9cE2Pvp1KbAZSOwPG9ZziRfiq+64pjQEcMFDthZeb4lWkznPjWCY+gza1ypxE+hiUpoiDxE8gUY0vPi9O3Jp7fraZbjqP/I46SGhvYEAyZqYRKq1+yfKLS3wfQVU79lMoPj/zUvJUfXoDX6gvf49ymsfClW+2Bh5Xc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=weissschuh.net; spf=pass smtp.mailfrom=weissschuh.net; dkim=pass (1024-bit key) header.d=weissschuh.net header.i=@weissschuh.net header.b=I+ZHRQFX; arc=none smtp.client-ip=159.69.126.157
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=weissschuh.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=weissschuh.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Q4K/JEWm"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1733866012; x=1765402012;
-  h=from:to:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=QGEVtB/OI75hknLv7NcDfG2ONAhagOpBfsAXUEcCF+4=;
-  b=Q4K/JEWm9maYU+KrQje9yHy6qVGVe1WsTP2Cw4b1hEjz0mK7uH7KSBpj
-   TCqtTa7mqkiLKL4Y0AtlzuTRiMSdOTIqaYF0NL4n3E+9H7qgYdkUPCuAL
-   2c6m1Bdb2lFtDLFQmuFAOakTdIK7uYPoLazwWtQxxXm0LwFK293gVOwnO
-   GXYDSQgXT9p66tPzqjddAe1giJM11uhgS8dvDIygf5E8gBSiP1opL9ClD
-   p5P40SHtD54ullX/b2o0EZDUZ0Y8zApG1COV6WD4UMyjHxzVK7itNnBlP
-   m0Rs3G1PJeFdz7oxIB0eK3ssaSTNcQQPNV5CqLqhc+teHQUbUtUpw8hrA
-   A==;
-X-CSE-ConnectionGUID: 4QhdCnilTwSD/kil/k8sZA==
-X-CSE-MsgGUID: fhzIY/goQWCQnEDTdxWjcg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11282"; a="51641157"
-X-IronPort-AV: E=Sophos;i="6.12,223,1728975600"; 
-   d="scan'208";a="51641157"
-Received: from orviesa001.jf.intel.com ([10.64.159.141])
-  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Dec 2024 13:26:52 -0800
-X-CSE-ConnectionGUID: buMF0DY5SnKEzr8jIkMYmQ==
-X-CSE-MsgGUID: cVwdL6ZRTb67+fji7Q1kbw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.12,223,1728975600"; 
-   d="scan'208";a="132938472"
-Received: from bjrankin-mobl3.amr.corp.intel.com (HELO xpardee-desk.intel.com) ([10.124.222.84])
-  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Dec 2024 13:26:49 -0800
-From: Xi Pardee <xi.pardee@linux.intel.com>
-To: xi.pardee@linux.intel.com,
-	irenic.rajneesh@gmail.com,
-	david.e.box@linux.intel.com,
-	hdegoede@redhat.com,
-	ilpo.jarvinen@linux.intel.com,
-	platform-driver-x86@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-pm@vger.kernel.org
-Subject: [PATCH] platform/x86/intel/vsec: Add support for Panther Lake
-Date: Tue, 10 Dec 2024 13:26:41 -0800
-Message-ID: <20241210212646.239211-1-xi.pardee@linux.intel.com>
-X-Mailer: git-send-email 2.43.0
+	dkim=pass (1024-bit key) header.d=weissschuh.net header.i=@weissschuh.net header.b="I+ZHRQFX"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=weissschuh.net;
+	s=mail; t=1733867760;
+	bh=Rkince4SbmHoWAJI8yRTlw7n74O79dIb/szqZ+k52X0=;
+	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
+	b=I+ZHRQFXvnnI7tKo1uptF7DaH5A5OF2A3GrxYi29NmNFRFf+JKZoody+UDZu52gEl
+	 1qa6yM1KgKGA84MVNEEPt9GDlkKfBa+UPJEsez0WBkh2w0+khF+GQxk/4QYtpLylxO
+	 Ilkt85jdz49W9sG2lO8FwFriG1fhy8Sgw7BPFOkg=
+From: =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <linux@weissschuh.net>
+Date: Tue, 10 Dec 2024 22:55:48 +0100
+Subject: [PATCH v2 01/14] power: supply: mm8013: use accessor for driver
+ data
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
+Message-Id: <20241210-power-supply-dev_to_psy-v2-1-9d8c9d24cfe4@weissschuh.net>
+References: <20241210-power-supply-dev_to_psy-v2-0-9d8c9d24cfe4@weissschuh.net>
+In-Reply-To: <20241210-power-supply-dev_to_psy-v2-0-9d8c9d24cfe4@weissschuh.net>
+To: Sebastian Reichel <sre@kernel.org>, 
+ Linus Walleij <linus.walleij@linaro.org>, 
+ Maximilian Luz <luzmaximilian@gmail.com>, 
+ =?utf-8?q?Pali_Roh=C3=A1r?= <pali@kernel.org>, 
+ Konrad Dybcio <konradybcio@kernel.org>
+Cc: linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ platform-driver-x86@vger.kernel.org, 
+ =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <linux@weissschuh.net>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1733867760; l=795;
+ i=linux@weissschuh.net; s=20221212; h=from:subject:message-id;
+ bh=Rkince4SbmHoWAJI8yRTlw7n74O79dIb/szqZ+k52X0=;
+ b=yRMd1OWjV5tRW6wmCgjUKhLOZqxJwf3GO3jOa8Pqda4apXT6jYmJOW7d+hrX8gSaFXH0hjEdc
+ 42RJ3CdFFnvBj1tWrPE15HS7nJDH9T/sEpQghDNgZttfPxfE1JAdIa/
+X-Developer-Key: i=linux@weissschuh.net; a=ed25519;
+ pk=KcycQgFPX2wGR5azS7RhpBqedglOZVgRPfdFSPB1LNw=
 
-Add Panther Lake PMT telemetry support.
+Instead of directly accessing the structure member, use the accessor.
 
-Signed-off-by: Xi Pardee <xi.pardee@linux.intel.com>
+Signed-off-by: Thomas Weißschuh <linux@weissschuh.net>
 ---
- drivers/platform/x86/intel/vsec.c | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/power/supply/mm8013.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/platform/x86/intel/vsec.c b/drivers/platform/x86/intel/vsec.c
-index 4a85aad2475a7..8272f1dd0fbc0 100644
---- a/drivers/platform/x86/intel/vsec.c
-+++ b/drivers/platform/x86/intel/vsec.c
-@@ -423,6 +423,7 @@ static const struct intel_vsec_platform_info lnl_info = {
- #define PCI_DEVICE_ID_INTEL_VSEC_RPL		0xa77d
- #define PCI_DEVICE_ID_INTEL_VSEC_TGL		0x9a0d
- #define PCI_DEVICE_ID_INTEL_VSEC_LNL_M		0x647d
-+#define PCI_DEVICE_ID_INTEL_VSEC_PTL		0xb07d
- static const struct pci_device_id intel_vsec_pci_ids[] = {
- 	{ PCI_DEVICE_DATA(INTEL, VSEC_ADL, &tgl_info) },
- 	{ PCI_DEVICE_DATA(INTEL, VSEC_DG1, &dg1_info) },
-@@ -432,6 +433,7 @@ static const struct pci_device_id intel_vsec_pci_ids[] = {
- 	{ PCI_DEVICE_DATA(INTEL, VSEC_RPL, &tgl_info) },
- 	{ PCI_DEVICE_DATA(INTEL, VSEC_TGL, &tgl_info) },
- 	{ PCI_DEVICE_DATA(INTEL, VSEC_LNL_M, &lnl_info) },
-+	{ PCI_DEVICE_DATA(INTEL, VSEC_PTL, &mtl_info) },
- 	{ }
- };
- MODULE_DEVICE_TABLE(pci, intel_vsec_pci_ids);
+diff --git a/drivers/power/supply/mm8013.c b/drivers/power/supply/mm8013.c
+index 5bcfaeeda3db755e05a449cbfd6f0c72162b6890..4adf2acc2779366323e52c467cff4f99ebb9d6ea 100644
+--- a/drivers/power/supply/mm8013.c
++++ b/drivers/power/supply/mm8013.c
+@@ -90,7 +90,7 @@ static int mm8013_get_property(struct power_supply *psy,
+ 			       enum power_supply_property psp,
+ 			       union power_supply_propval *val)
+ {
+-	struct mm8013_chip *chip = psy->drv_data;
++	struct mm8013_chip *chip = power_supply_get_drvdata(psy);
+ 	int ret = 0;
+ 	u32 regval;
+ 
+
 -- 
-2.43.0
+2.47.1
 
