@@ -1,143 +1,202 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 58DCA1B0F12;
-	Tue, 10 Dec 2024 14:44:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F32E9B676;
+	Tue, 10 Dec 2024 14:47:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1733841842; cv=none; b=mTtiSSGIXa+sEaPDIAJvvZMdNCfPZL7Z4dxUj8/aE4twuzjrYcsabN5O/+KaCquibvxLnUtMbYTAMWq0zd7iNpp616smrQZuw2se5TzeZ3fiKaryxj2P70czGXjSglJAqAOsh9AlO606eNbXKedoA42oaEZPhhDP4GpCEoZgC4M=
+	t=1733842065; cv=none; b=ES3yiejknB2q3KL3rHMQPeUezv9bZ7PS4X8CGp1aS8ZuJrAafKMjKv09sHV4622d7gL8sMTIaRYgCfM1bp+vRYFo1kQwcQjIBN/TvpxMWmNz0byptHpKWPX4ZcoUHNtAYBr6lt36u1PPLV7qAAWHEYkOTGQZG/DYcuz34Rr80I8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1733841842; c=relaxed/simple;
-	bh=85lxPveoF0Og5zEC+Yhbca7k7ks3rwCrZuV7a31bcVU=;
+	s=arc-20240116; t=1733842065; c=relaxed/simple;
+	bh=OSbBVHFSnoLD3d/sFOchTp8lD3nMnqHhclQ+D0oRQ0M=;
 	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=Vvt//0ioluU1BPQ6zizhHN62fDGIe+tn5/X6L4F8S7mrfBcMM/bMdwPo8UXAxjLqeYels+ty6UQKqmc/pHYnY/kS85IW+cGY4wmRx27d8LgoAgBohDBps7LpJaGDvDvIfG7ysWFqb+XvW2QUuolERMr28VTPRF7sgepzndCfWXw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=nuLZ259A; arc=none smtp.client-ip=198.175.65.9
+	 MIME-Version:Content-Type; b=YSPiMzBUNR+H4QXmOq8NBfxfbGXnn0d7bcWVliu1bMlKDKJMc/EqdB4cYkuo2bGaJPVgM6DJ5ovEHQ21ofFVqE/uPQvRDbB3LKjJsWecQjZnyR7/OaXu0fbiMAofECgnRUyUWC4SWUoWJfNWCQjHScZz6XjlVo6SiijvBU7M2BE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=AR+nFoj5; arc=none smtp.client-ip=198.175.65.10
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="nuLZ259A"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="AR+nFoj5"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1733841841; x=1765377841;
+  t=1733842064; x=1765378064;
   h=from:date:to:cc:subject:in-reply-to:message-id:
    references:mime-version;
-  bh=85lxPveoF0Og5zEC+Yhbca7k7ks3rwCrZuV7a31bcVU=;
-  b=nuLZ259AAkP8vW58lELP3ICJhpsC3syjjD2k/oFKXAoOegM5Z2S/65/A
-   jdeZqC7Ol/rym++fKrKXsBmaSWjnn8uAGUwU/SYutL24XqhTn5FSDUbs+
-   Vfm6B4FP3bpcJ8+79Ty4uHpUHpVp/asKId76LOEUNKs2nz3LrpFg3eK7H
-   gR3zLqCOeHk5f4stYIL3OihlTJFDTb6Iuwi9irB15Zcz9M8uPeKjsCDnA
-   7gIjENxCx3SkXAxpv/igwfwvPD/ihCpnRwTyNA1769UHKBBGy8S6BG0H/
-   wUZgGeCfY1Q1OrD98pORkFo0GJ1yaU+phLmNHIGkYkiZ1xSgvkBe16FFU
+  bh=OSbBVHFSnoLD3d/sFOchTp8lD3nMnqHhclQ+D0oRQ0M=;
+  b=AR+nFoj540ufqvCOFvyqXY07MpxUzgSZWoJYI0up4iDR/5slqLFP/9Dq
+   /tuTm/pRuxU7jz7AiDCBcigp3jcdVBT+XBsLZzvHV2Ps0bekwAnudWlFX
+   Czps6fH+IsXT40xbhq7Of66+sZm8thykyaczWZvL8eQFRKY2jGxqdZd/n
+   2Ia/DvmK3Un4jc+KKTqV4yInjKASXT+OEGtZF9fAJA4B+7kxwodEFrJvi
+   XX1sOJHCeiHsFZTZwZh07+RTrqr25Vs7YWLIG46IBvT9ud2Xb8yMLQEf/
+   QDnukPCu9hJCia7mp3naPT0GkrPDYj2T7m4j3yDNSAtesN8NHorPudD+k
    g==;
-X-CSE-ConnectionGUID: hrQ8ZfhYQIC69GB1rBfrKQ==
-X-CSE-MsgGUID: P0tSyA3JT2W+9/sN+oYSMg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11282"; a="56669401"
+X-CSE-ConnectionGUID: 6AEVInIuQF2Qr/vIoNWVXA==
+X-CSE-MsgGUID: CsfMOzEQQh6dEgg/Pna/3A==
+X-IronPort-AV: E=McAfee;i="6700,10204,11282"; a="51599691"
 X-IronPort-AV: E=Sophos;i="6.12,222,1728975600"; 
-   d="scan'208";a="56669401"
+   d="scan'208";a="51599691"
 Received: from orviesa003.jf.intel.com ([10.64.159.143])
-  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Dec 2024 06:44:01 -0800
-X-CSE-ConnectionGUID: 5HwIY5WuQ1GbhafZ+selrw==
-X-CSE-MsgGUID: hCcNcgEgTgK59Ypg+kbNng==
+  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Dec 2024 06:47:43 -0800
+X-CSE-ConnectionGUID: jm+XQhz/SQOHoUbmyM6beQ==
+X-CSE-MsgGUID: 5fZsAwrkRI+Lruldh+12xQ==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.11,199,1725346800"; 
-   d="scan'208";a="100485570"
+   d="scan'208";a="100487086"
 Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.56])
-  by ORVIESA003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Dec 2024 06:43:58 -0800
+  by ORVIESA003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Dec 2024 06:47:41 -0800
 From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Tue, 10 Dec 2024 16:43:53 +0200 (EET)
+Date: Tue, 10 Dec 2024 16:47:38 +0200 (EET)
 To: Armin Wolf <W_Armin@gmx.de>
-cc: Kurt Borja <kuurtb@gmail.com>, jlee@suse.com, farhan.anwar8@gmail.com, 
-    rayanmargham4@gmail.com, Hans de Goede <hdegoede@redhat.com>, 
+cc: linux@weissschuh.net, Hans de Goede <hdegoede@redhat.com>, 
     platform-driver-x86@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v4 5/5] platform/x86: acer-wmi: Ignore AC events
-In-Reply-To: <2f695131-b875-4856-9782-c3d4231adc8b@gmx.de>
-Message-ID: <01cec6cc-bfed-39e0-acf3-4973ba833881@linux.intel.com>
-References: <20241210001657.3362-1-W_Armin@gmx.de> <20241210001657.3362-6-W_Armin@gmx.de> <jxqp276qrzg32zvm4zmyzq6qzru2ex4fbgyogj4ynvetf6j5gp@kxocmd2ky6dv> <2f695131-b875-4856-9782-c3d4231adc8b@gmx.de>
+Subject: Re: [PATCH] platform/x86: wmi-bmof: Make use of .bin_size()
+ callback
+In-Reply-To: <20241206215650.2977-1-W_Armin@gmx.de>
+Message-ID: <ad05e251-37bd-0cc2-8b11-a859e453f476@linux.intel.com>
+References: <20241206215650.2977-1-W_Armin@gmx.de>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="8323328-2102736852-1733841833=:905"
+Content-Type: text/plain; charset=US-ASCII
 
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
+On Fri, 6 Dec 2024, Armin Wolf wrote:
 
---8323328-2102736852-1733841833=:905
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+> Until now the wmi-bmof driver had to allocate the binary sysfs
+> attribute dynamically since its size depends on the bmof buffer
+> returned by the firmware.
+> 
+> Use the new .bin_size() callback to avoid having to do this memory
+> allocation.
+> 
+> Tested on a Asus Prime B650-Plus.
+> 
+> Signed-off-by: Armin Wolf <W_Armin@gmx.de>
+> ---
+>  drivers/platform/x86/wmi-bmof.c | 75 +++++++++++++++++----------------
+>  1 file changed, 38 insertions(+), 37 deletions(-)
+> 
+> diff --git a/drivers/platform/x86/wmi-bmof.c b/drivers/platform/x86/wmi-bmof.c
+> index df6f0ae6e6c7..3e33da36da8a 100644
+> --- a/drivers/platform/x86/wmi-bmof.c
+> +++ b/drivers/platform/x86/wmi-bmof.c
+> @@ -20,66 +20,66 @@
+> 
+>  #define WMI_BMOF_GUID "05901221-D566-11D1-B2F0-00A0C9062910"
+> 
+> -struct bmof_priv {
+> -	union acpi_object *bmofdata;
+> -	struct bin_attribute bmof_bin_attr;
+> -};
+> -
+> -static ssize_t read_bmof(struct file *filp, struct kobject *kobj, struct bin_attribute *attr,
+> +static ssize_t bmof_read(struct file *filp, struct kobject *kobj, const struct bin_attribute *attr,
+>  			 char *buf, loff_t off, size_t count)
+>  {
+> -	struct bmof_priv *priv = container_of(attr, struct bmof_priv, bmof_bin_attr);
+> +	struct device *dev = kobj_to_dev(kobj);
+> +	union acpi_object *obj = dev_get_drvdata(dev);
+> 
+> -	return memory_read_from_buffer(buf, count, &off, priv->bmofdata->buffer.pointer,
+> -				       priv->bmofdata->buffer.length);
+> +	return memory_read_from_buffer(buf, count, &off, obj->buffer.pointer, obj->buffer.length);
+>  }
+> 
+> -static int wmi_bmof_probe(struct wmi_device *wdev, const void *context)
+> +static const BIN_ATTR_ADMIN_RO(bmof, 0);
+> +
+> +static const struct bin_attribute * const bmof_attrs[] = {
+> +	&bin_attr_bmof,
+> +	NULL
+> +};
+> +
+> +static size_t bmof_bin_size(struct kobject *kobj, const struct bin_attribute *attr, int n)
+>  {
+> -	struct bmof_priv *priv;
+> -	int ret;
+> +	struct device *dev = kobj_to_dev(kobj);
+> +	union acpi_object *obj = dev_get_drvdata(dev);
+> +
+> +	return obj->buffer.length;
+> +}
+> 
+> -	priv = devm_kzalloc(&wdev->dev, sizeof(struct bmof_priv), GFP_KERNEL);
+> -	if (!priv)
+> -		return -ENOMEM;
+> +static const struct attribute_group bmof_group = {
+> +	.bin_size = bmof_bin_size,
+> +	.bin_attrs_new = bmof_attrs,
+> +};
+> +
+> +static const struct attribute_group *bmof_groups[] = {
+> +	&bmof_group,
+> +	NULL
+> +};
+> 
+> -	dev_set_drvdata(&wdev->dev, priv);
+> +static int wmi_bmof_probe(struct wmi_device *wdev, const void *context)
+> +{
+> +	union acpi_object *obj;
+> 
+> -	priv->bmofdata = wmidev_block_query(wdev, 0);
+> -	if (!priv->bmofdata) {
+> +	obj = wmidev_block_query(wdev, 0);
+> +	if (!obj) {
+>  		dev_err(&wdev->dev, "failed to read Binary MOF\n");
+>  		return -EIO;
+>  	}
+> 
+> -	if (priv->bmofdata->type != ACPI_TYPE_BUFFER) {
+> +	if (obj->type != ACPI_TYPE_BUFFER) {
+>  		dev_err(&wdev->dev, "Binary MOF is not a buffer\n");
+> -		ret = -EIO;
+> -		goto err_free;
+> +		kfree(obj);
+> +		return -EIO;
+>  	}
+> 
+> -	sysfs_bin_attr_init(&priv->bmof_bin_attr);
+> -	priv->bmof_bin_attr.attr.name = "bmof";
+> -	priv->bmof_bin_attr.attr.mode = 0400;
+> -	priv->bmof_bin_attr.read = read_bmof;
+> -	priv->bmof_bin_attr.size = priv->bmofdata->buffer.length;
+> -
+> -	ret = device_create_bin_file(&wdev->dev, &priv->bmof_bin_attr);
+> -	if (ret)
+> -		goto err_free;
+> +	dev_set_drvdata(&wdev->dev, obj);
+> 
+>  	return 0;
+> -
+> - err_free:
+> -	kfree(priv->bmofdata);
+> -	return ret;
+>  }
+> 
+>  static void wmi_bmof_remove(struct wmi_device *wdev)
+>  {
+> -	struct bmof_priv *priv = dev_get_drvdata(&wdev->dev);
+> +	union acpi_object *obj = dev_get_drvdata(&wdev->dev);
+> 
+> -	device_remove_bin_file(&wdev->dev, &priv->bmof_bin_attr);
+> -	kfree(priv->bmofdata);
+> +	kfree(obj);
+>  }
+> 
+>  static const struct wmi_device_id wmi_bmof_id_table[] = {
+> @@ -90,6 +90,7 @@ static const struct wmi_device_id wmi_bmof_id_table[] = {
+>  static struct wmi_driver wmi_bmof_driver = {
+>  	.driver = {
+>  		.name = "wmi-bmof",
+> +		.dev_groups = bmof_groups,
+>  	},
+>  	.probe = wmi_bmof_probe,
+>  	.remove = wmi_bmof_remove,
 
-On Tue, 10 Dec 2024, Armin Wolf wrote:
+So do I understand right that this meant to supercede the patch from 
+Thomas?
 
-> Am 10.12.24 um 03:16 schrieb Kurt Borja:
->=20
-> > On Tue, Dec 10, 2024 at 01:16:57AM +0100, Armin Wolf wrote:
-> > > On the Acer Swift SFG14-41, the events 8 - 1 and 8 - 0 are printed on
-> > > AC connect/disconnect. Ignore those events to avoid spamming the
-> > > kernel log with error messages.
-> > I noticed acer_thermal_profile_change() behavior changed whether the
-> > laptop was on AC or not. Maybe users expect some kind of behavior aroun=
-d
-> > thermal profiles with this event? Like switching to low-power when not
-> > on AC or something like that.
-> >=20
-> > ~ Kurt
->=20
-> Good question, i will ask the person with the Acer notebook to test if th=
-e
-> platform
-> profile changes automatically when switching to AC.
->=20
-> The other however patches can be taken regardless of this patch.
-
-I took patches now 1-4 but left the 5th for now.
-
---=20
+-- 
  i.
 
-> Thanks,
-> Armin Wolf
->=20
-> > > Reported-by: Farhan Anwar <farhan.anwar8@gmail.com>
-> > > Closes:
-> > > https://lore.kernel.org/platform-driver-x86/2ffb529d-e7c8-4026-a3b8-1=
-20c8e7afec8@gmail.com
-> > > Tested-by: Rayan Margham <rayanmargham4@gmail.com>
-> > > Reviewed-by: Ilpo J=C3=A4rvinen <ilpo.jarvinen@linux.intel.com>
-> > > Signed-off-by: Armin Wolf <W_Armin@gmx.de>
-> > > ---
-> > >   drivers/platform/x86/acer-wmi.c | 4 ++++
-> > >   1 file changed, 4 insertions(+)
-> > >=20
-> > > diff --git a/drivers/platform/x86/acer-wmi.c
-> > > b/drivers/platform/x86/acer-wmi.c
-> > > index aad8eb0ddae5..ef26ec8d90ea 100644
-> > > --- a/drivers/platform/x86/acer-wmi.c
-> > > +++ b/drivers/platform/x86/acer-wmi.c
-> > > @@ -99,6 +99,7 @@ enum acer_wmi_event_ids {
-> > >   =09WMID_HOTKEY_EVENT =3D 0x1,
-> > >   =09WMID_ACCEL_OR_KBD_DOCK_EVENT =3D 0x5,
-> > >   =09WMID_GAMING_TURBO_KEY_EVENT =3D 0x7,
-> > > +=09WMID_AC_EVENT =3D 0x8,
-> > >   };
-> > >=20
-> > >   enum acer_wmi_predator_v4_sys_info_command {
-> > > @@ -2304,6 +2305,9 @@ static void acer_wmi_notify(union acpi_object *=
-obj,
-> > > void *context)
-> > >   =09=09if (return_value.key_num =3D=3D 0x5 &&
-> > > has_cap(ACER_CAP_PLATFORM_PROFILE))
-> > >   =09=09=09acer_thermal_profile_change();
-> > >   =09=09break;
-> > > +=09case WMID_AC_EVENT:
-> > > +=09=09/* We ignore AC events here */
-> > > +=09=09break;
-> > >   =09default:
-> > >   =09=09pr_warn("Unknown function number - %d - %d\n",
-> > >   =09=09=09return_value.function, return_value.key_num);
-> > > --
-> > > 2.39.5
-> > >=20
->=20
---8323328-2102736852-1733841833=:905--
