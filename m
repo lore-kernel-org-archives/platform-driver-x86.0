@@ -1,38 +1,38 @@
-Received: from mout.gmx.net (mout.gmx.net [212.227.17.20])
+Received: from mout.gmx.net (mout.gmx.net [212.227.17.21])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 08C23635;
-	Tue, 10 Dec 2024 00:17:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.20
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C0F2208A7;
+	Tue, 10 Dec 2024 00:17:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.21
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1733789833; cv=none; b=gpaAVo+PCtpv7Y1f8Xkj6iwkxEERF+hlhBTEJplLPl886ynDMxbNRGIc9/OaaVuDKAbPTC+iwtJjHNPJnJkU7NfWil+ULBz5zh4nn8f0PqPjD35wT/DhXLAnMiDD6eT/jg2x/KoM1OrmDp7dzMcFe8Vj9fDGQ2aXCdKCEsFlxxA=
+	t=1733789838; cv=none; b=fpVrloovIoQj8/HVi/1qGZkzXoUNm8pPSNvp6GPWoRjJM/O+ihCHeTPM5RqNC+e+UbYA4sNll8AV9a1jyyRc4vuXoS1T3CZbRdYBPDTQhK7V1kjia+xCVSkhgIN9A8a1qTw9XA4OW4bwGeaBSZSstfst5o6gz+JFoB0EYXtFViQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1733789833; c=relaxed/simple;
-	bh=w8PL8xxnxxYhfjStXYwd8Cyyx6b7jZdtJLncxdh1dsw=;
+	s=arc-20240116; t=1733789838; c=relaxed/simple;
+	bh=LR1g7gIxaoVx0dTzeqGsXrg7xhhuaGHVl2rTR06y5Xg=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=s0MmVCPWkOfjl5sXYhvYztBUcY6kiQkv566kUt1ruqGGcOZ+k5iuMIROC3MhA0XrqtYO7hLU8dddNW0Tt8EhYCMCQEIYyp5VWj25Zx36VZf4x6btOmBab6LjZSZdJ3liF0GxdZqOC6xyRIcHW+w5QP9kpsw9X3wpSmAl131wRgU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b=KsO25G4G; arc=none smtp.client-ip=212.227.17.20
+	 MIME-Version; b=LUsUiX5/IOC278Lhjjg9NM0Yye6BLnK1qiM/zn2NPZp2hCLF0aPTYg0OXC+EJBN7XK6h795IUW91NnHmXBovtKVbyjPrJo+RILa6SZd0KY3MBTrPLacMpCOp0gHm3oNzILqAlORPA8ACz389HEP4k+pevJsTWwAzbgCgjAaY1x0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b=Pof5zVH5; arc=none smtp.client-ip=212.227.17.21
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b="KsO25G4G"
+	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b="Pof5zVH5"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.de;
-	s=s31663417; t=1733789824; x=1734394624; i=w_armin@gmx.de;
-	bh=gCOj+xJwVV00bzuAA7053ZW1ofwq96/t2R3OAQyBSAE=;
+	s=s31663417; t=1733789828; x=1734394628; i=w_armin@gmx.de;
+	bh=9sHqBJzy5pd/TkZFigEltiiGQPEFM5EM5zZ5JqmZL9M=;
 	h=X-UI-Sender-Class:From:To:Cc:Subject:Date:Message-Id:In-Reply-To:
 	 References:MIME-Version:Content-Transfer-Encoding:cc:
 	 content-transfer-encoding:content-type:date:from:message-id:
 	 mime-version:reply-to:subject:to;
-	b=KsO25G4GZMYYARzSk5/uYGMvHgZLOKsAFsdGcKta4mPV2eo/zuI7atwKbRbjTu2q
-	 X4P8X1CU8w56KYr+3Dcico8vd3kFIRtPk3Suv3jAkDRTux4sL+8MDBVuboQtHenlE
-	 AawFa15IlB1Fd9FbinvOfP4ny8YbnSmgAIoou+Bg1T11RWvfLcKs9RKoT95ztVECp
-	 JlDQ6BjmYcqBfbaY4Nkscn5cWigtgRuIoplwiR2tW6pFyKk7WqvDmmYCF3Xa5wjMe
-	 9vyTvPfqeZ9FjARnfH8DaW0En/YbPhSqlz0PiCe+RJGq7G41FgndhNY5eY8ieId9h
-	 eQRiXiAZq6Hs+qQcnQ==
+	b=Pof5zVH5RE1fEtjDaYCSM8slpt8UDXiLSe5e5jcqIiKID4OAIfCkRnYNC90AnVtX
+	 Io1nWyYG3c+o8EHyp+n8MDiKV8yrDVy92n3xwHeeG/5R8WceZQ9UiG4g/NihT6W4H
+	 dRtOodUc8vcO/0Ge6qjnMIqgG+kpD5gjE6sWt9g7TixVdQf6lr44Co79EO9icJ+47
+	 AOj+Lqw+qbOTIIyTlK2j8oIG1lZjFkl2w6JKoYZudiM9j3E/LDE680zBv+v9cLyg1
+	 2uqf7q1qqBR7d9Ko1CKxeOaIPZI+Q6UZPArXlxo9MYBXg3uf8vS3/EMzHSi78qpPf
+	 9PErmEDVNsngh7cLKw==
 X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
 Received: from mx-inspiron.fritz.box ([91.14.230.110]) by mail.gmx.net
- (mrgmx104 [212.227.17.168]) with ESMTPSA (Nemesis) id
- 1Mnaof-1u1KTi28N3-00c1kL; Tue, 10 Dec 2024 01:17:03 +0100
+ (mrgmx105 [212.227.17.168]) with ESMTPSA (Nemesis) id
+ 1MYeMt-1t6u870U43-00WWof; Tue, 10 Dec 2024 01:17:08 +0100
 From: Armin Wolf <W_Armin@gmx.de>
 To: jlee@suse.com,
 	farhan.anwar8@gmail.com,
@@ -42,9 +42,9 @@ Cc: hdegoede@redhat.com,
 	platform-driver-x86@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
 	kuurtb@gmail.com
-Subject: [PATCH v4 1/5] platform/x86: acer-wmi: Add support for Acer PH14-51
-Date: Tue, 10 Dec 2024 01:16:53 +0100
-Message-Id: <20241210001657.3362-2-W_Armin@gmx.de>
+Subject: [PATCH v4 3/5] platform/x86: acer-wmi: Improve error handling when reading gaming system information
+Date: Tue, 10 Dec 2024 01:16:55 +0100
+Message-Id: <20241210001657.3362-4-W_Armin@gmx.de>
 X-Mailer: git-send-email 2.39.5
 In-Reply-To: <20241210001657.3362-1-W_Armin@gmx.de>
 References: <20241210001657.3362-1-W_Armin@gmx.de>
@@ -55,78 +55,133 @@ List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:3knchs1Dc7BsInfSEmVfkqEtYOVgJxXVK+KcU0GitjD08neQyG4
- A1HL2K7tVxrr5oQV/OWGMC40FEpN60JfwI0Nqyp5oJ29rx+CDFXvNzcr7Y2bi9MSq2oqiQf
- wK5OImItfkdzhGpLBVNb1MAUce06zNvMUjdmZIaEEXfNPiP9BvaHagKnK6dBHZZLPUO8Drw
- Mxaozwpd99Uva6Awl5Y1Q==
+X-Provags-ID: V03:K1:1mBd5hO5y1A45BeCH74sK3ta+g6b8CGloSWiUXcLe9zmenWCCFr
+ cLq/TPA0JjXQ1Nl+E0hTxk7PFC+P/Tz8adOiV3JFOuO9dvkSr5bPEJeg+ISKDsJ+1usDEy/
+ B7l4Wge7A9+bfxdPgyYQzyxw21T+sVnkXPQV74L5tOSfJFuOIi5EHtI0Vw/bO9MvQ3iCjsD
+ RPmkJW0tc6/T3Hesg1GdQ==
 X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:c6G4skQDPkw=;E11znX+t5noiEc4/uuFSs8TgqY5
- uUD2pBriQnCKxSEFlmOISqvxZcQMXd7SWtgM9qDmtxCba+tki9119ZJy8Zh6KSfFZ1R9g7kIO
- g6mZMOlnXXJC11I4kD5I7jhBM3Sj/7jogsahEJBV9hxQM8QKnVhE6f/ZozvvzhHw6rDtYzf+V
- 4itjLv/r5q+FUuI9c0hQBnWG518iUsVOGkrq/R941JN8XDVC2iUNuOVzAagsOHhcQq2L+3D/0
- YWyXZTDEFUmVp/rLEZWvxRZw60S3lPQ4ENOgecZsb7ajPpxoTZdcDAP3P2n1n7OYA3hcv+dw+
- DX4ylmoC3To/tmaMxyHN62TwTRjIC7NmrR5/IR16UsslHfl0ARwPSdOPteGiV8amsiX9ak+nz
- aRV9TB6+vOWq/eNMc60juctZ3xMvBu9RrB+JJbx0Cw9IuuiM2Ob3uhdBYYNCRCYI2qypPYGtR
- IrP1CJFIx4Ema5oWsCqEm9LN3MhhIqOW2PInTP2uWK/LevvNjIQIqPUbtio9mbo4B1UTq9SGY
- 6wlMQCl4ZQEp0Z5WhTntqwpli+peHLDgHuZaolPKCAn7lzOl550PMRPXWC49w464rDPvECbYk
- 42d1jf4ddc2zyYo/MsSrvBly2IK94FH5pcuwUy6trQEah7Ij43nPjKhZ7ydTZIVW/5LuKgKU3
- A1FEC6/uFy+0rk4i8x8l1McDSOV5iFEKUJ6nGjV0K/V7wYAZcv9Eh9/F9Qt7DZJtsR+cIKA9m
- W8XVlHQPCMQHSzxHiIQwPV5KF2XGnUd0Wr3prxvvRxhOp8C7iDMDY8UyheVKu38BzoWVaXoyM
- K9sqJal5NVIBvF7ALbDh6N0XwLLfYLazKo/ZAjkeWsPglpmmseDJrLfGv/DUFpuxjHvKGn7Td
- o1WdnrYw3k63t2v6FIwiaR6QNBZm/ofPzu0kKBsWaXzruuEfpkDKNf3uOOjukm7Z9FFOMW7cv
- 26BS7OQcCY74910ElA6EIWG4jRcPGIqfvprOj+RO2U6ZpoCkQQnIe0u5f66x4YerKLlv1u35Q
- HZnrNVN9I95Ejweht89heSzwDxsc3Jm67tzl5NvnN1Qz6gX7rSEi5wfV624VenGBlMDvJB2zp
- dDA1lUqV1wHuYC/d1iCvyqKVlYZuSu
+UI-OutboundReport: notjunk:1;M01:P0:H1pY/+q2f7I=;h1xA4HPQAyXpghXWIbep1qi4tfT
+ ixZT7wjVq8l1uHMRKNvbhnYgk1ziUVjOhGGAlfV07znVINs5gekHOA6dvIc7oBSyjlOxU5mej
+ mSEeEOPOdZCFVVvJXsS+Ga9xgEnuBfjS3KYHe9a809yw1EMLc5k9Yh3x8uQxGdBka8rMVcA2z
+ zc2DuD271xgGhogSFZWheqGCgumqehoANUAtjm8IbSfgUDZnkK5Gv2mjgqe98jfBWSTB9PJ4G
+ x5pg95SugVc/ehdtbLEF4DBD8QZ7oeUYfsKIeRVa7Wg8KPd5tod3o0On+0cAosmSPJLnOwvaE
+ m0VlOLVw2dssvt18VXBUc3yNBCTLocjTzHUYnCFKMVupAN5uWgEpLcRHyI2G2tAkyGHXt9fal
+ 450h2ToDSe/JIDR8nZC+3YHV7I8q9rl12wUQMvO8MG2NxWE16Bq60KVNyuWx5zEixnQ89VKjz
+ 5H0IQJdxV18dPQsgXqrjUpmujsBdDOmb01R5mG+kzjgClxcxS7+JqLoszWmwYUTNBCh+4BkyO
+ kP99gGHfLX0c68ZZ7H1ASOF41BE33equaSbScwL+j/0S398GMSxvjx5BddW/tkaUpBD6TqgaZ
+ Aac2PSzBwvA+MElqv67i+h6Oce2fTz1fSGb2AaWgYIMvzcGTZN/BunHLMNMFIgA6t3B5H0IlZ
+ r1HtOtbCGB5OsV0iNCJgcHIqkBJzexueAdmmvLVIrJoIDSrox2xK/04+PfRRFdpIcylbCEVJT
+ 09kI3EIf3rTMZ8bIUF2jDoUJy23CbbDREZ92+36y1MdtwjDVFyKqerpDFYB7YcIpvLT5uziG/
+ hXDqbBDCUIDYvn91XNeSoUN+cdw+moGkstvm/tsYIaRSOoJSIdzdwtdzg7EJ1qbHeEH4htjBs
+ YHvxkeEl0IJzFporSaXtD09bm/v6Y/NUHnggR1727n1eCXwSTqFbOuimo3EGdc4eYpQ4uWITx
+ N9jq3bzFJvbMFRaiC3dAYGdW+D08xk03Mcc//FAmobG64llRSMldVvIgM/pcaDokbS6JJS0NT
+ ozWb6mRxQCXJSynE5O1oLeJeqHNZZH6fzcL+s2u3ZPE6TI4Dc9AQpRcFHlU9TDSPKfSCkoFrW
+ jjr1fyfQe9jsE067kT1UQs7IFCu4A0
 
-Add the Acer Predator PT14-51 to acer_quirks to provide support
-for the turbo button and predator_v4 hwmon interface.
+If a call to ACER_WMID_GET_GAMING_SYS_INFO_METHODID fails, the lower
+8 bits will be non-zero. Introduce a helper function to check this and
+use it when reading gaming system information.
 
-Reported-by: Rayan Margham <rayanmargham4@gmail.com>
-Closes: https://lore.kernel.org/platform-driver-x86/CACzB=3D=3D6tUsCnr5mus=
-VMz-EymjTUCJfNtKzhMFYqMRU_h=3DkydXA@mail.gmail.com
 Tested-by: Rayan Margham <rayanmargham4@gmail.com>
 Signed-off-by: Armin Wolf <W_Armin@gmx.de>
 =2D--
- drivers/platform/x86/acer-wmi.c | 16 ++++++++++++++++
- 1 file changed, 16 insertions(+)
+ drivers/platform/x86/acer-wmi.c | 55 +++++++++++++++++++++------------
+ 1 file changed, 36 insertions(+), 19 deletions(-)
 
 diff --git a/drivers/platform/x86/acer-wmi.c b/drivers/platform/x86/acer-w=
 mi.c
-index d09baa3d3d90..5cff538ee67f 100644
+index dd57787466b9..ac4500f33b8c 100644
 =2D-- a/drivers/platform/x86/acer-wmi.c
 +++ b/drivers/platform/x86/acer-wmi.c
-@@ -393,6 +393,13 @@ static struct quirk_entry quirk_acer_predator_ph315_5=
-3 =3D {
- 	.gpu_fans =3D 1,
- };
+@@ -70,6 +70,7 @@ MODULE_LICENSE("GPL");
 
-+static struct quirk_entry quirk_acer_predator_pt14_51 =3D {
-+	.turbo =3D 1,
-+	.cpu_fans =3D 1,
-+	.gpu_fans =3D 1,
-+	.predator_v4 =3D 1,
-+};
+ #define ACER_PREDATOR_V4_THERMAL_PROFILE_EC_OFFSET 0x54
+
++#define ACER_PREDATOR_V4_RETURN_STATUS_BIT_MASK GENMASK_ULL(7, 0)
+ #define ACER_PREDATOR_V4_FAN_SPEED_READ_BIT_MASK GENMASK(20, 8)
+
+ /*
+@@ -1513,6 +1514,24 @@ static acpi_status WMID_gaming_get_u64(u64 *value, =
+u32 cap)
+ 	return status;
+ }
+
++static int WMID_gaming_get_sys_info(u32 command, u64 *out)
++{
++	acpi_status status;
++	u64 result;
 +
- static struct quirk_entry quirk_acer_predator_v4 =3D {
- 	.predator_v4 =3D 1,
- };
-@@ -600,6 +607,15 @@ static const struct dmi_system_id acer_quirks[] __ini=
-tconst =3D {
- 		},
- 		.driver_data =3D &quirk_acer_predator_v4,
- 	},
-+	{
-+		.callback =3D dmi_matched,
-+		.ident =3D "Acer Predator PT14-51",
-+		.matches =3D {
-+			DMI_MATCH(DMI_SYS_VENDOR, "Acer"),
-+			DMI_MATCH(DMI_PRODUCT_NAME, "Predator PT14-51"),
-+		},
-+		.driver_data =3D &quirk_acer_predator_pt14_51,
-+	},
- 	{
- 		.callback =3D set_force_caps,
- 		.ident =3D "Acer Aspire Switch 10E SW3-016",
++	status =3D WMI_gaming_execute_u64(ACER_WMID_GET_GAMING_SYS_INFO_METHODID=
+, command, &result);
++	if (ACPI_FAILURE(status))
++		return -EIO;
++
++	/* The return status must be zero for the operation to have succeeded */
++	if (FIELD_GET(ACER_PREDATOR_V4_RETURN_STATUS_BIT_MASK, result))
++		return -EIO;
++
++	*out =3D result;
++
++	return 0;
++}
++
+ static void WMID_gaming_set_fan_mode(u8 fan_mode)
+ {
+ 	/* fan_mode =3D 1 is used for auto, fan_mode =3D 2 used for turbo*/
+@@ -1762,22 +1781,23 @@ static int acer_gsensor_event(void)
+
+ static int acer_get_fan_speed(int fan)
+ {
+-	if (quirks->predator_v4) {
+-		acpi_status status;
+-		u64 fanspeed;
++	u64 fanspeed;
++	u32 command;
++	int ret;
+
+-		status =3D WMI_gaming_execute_u64(
+-			ACER_WMID_GET_GAMING_SYS_INFO_METHODID,
+-			fan =3D=3D 0 ? ACER_WMID_CMD_GET_PREDATOR_V4_CPU_FAN_SPEED :
+-				   ACER_WMID_CMD_GET_PREDATOR_V4_GPU_FAN_SPEED,
+-			&fanspeed);
++	if (!quirks->predator_v4)
++		return -EOPNOTSUPP;
+
+-		if (ACPI_FAILURE(status))
+-			return -EIO;
++	if (fan =3D=3D 0)
++		command =3D ACER_WMID_CMD_GET_PREDATOR_V4_CPU_FAN_SPEED;
++	else
++		command =3D ACER_WMID_CMD_GET_PREDATOR_V4_GPU_FAN_SPEED;
+
+-		return FIELD_GET(ACER_PREDATOR_V4_FAN_SPEED_READ_BIT_MASK, fanspeed);
+-	}
+-	return -EOPNOTSUPP;
++	ret =3D WMID_gaming_get_sys_info(command, &fanspeed);
++	if (ret < 0)
++		return ret;
++
++	return FIELD_GET(ACER_PREDATOR_V4_FAN_SPEED_READ_BIT_MASK, fanspeed);
+ }
+
+ /*
+@@ -1942,12 +1962,9 @@ static int acer_thermal_profile_change(void)
+ 			return err;
+
+ 		/* Check power source */
+-		status =3D WMI_gaming_execute_u64(
+-			ACER_WMID_GET_GAMING_SYS_INFO_METHODID,
+-			ACER_WMID_CMD_GET_PREDATOR_V4_BAT_STATUS, &on_AC);
+-
+-		if (ACPI_FAILURE(status))
+-			return -EIO;
++		err =3D WMID_gaming_get_sys_info(ACER_WMID_CMD_GET_PREDATOR_V4_BAT_STAT=
+US, &on_AC);
++		if (err < 0)
++			return err;
+
+ 		switch (current_tp) {
+ 		case ACER_PREDATOR_V4_THERMAL_PROFILE_TURBO:
 =2D-
 2.39.5
 
