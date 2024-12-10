@@ -1,138 +1,151 @@
-Received: from mail.zeus03.de (zeus03.de [194.117.254.33])
+Received: from todd.t-8ch.de (todd.t-8ch.de [159.69.126.157])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B44B1442F3
-	for <platform-driver-x86@vger.kernel.org>; Tue, 10 Dec 2024 16:30:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=194.117.254.33
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 02C012080C0;
+	Tue, 10 Dec 2024 16:42:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.69.126.157
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1733848242; cv=none; b=ddcv2cBHCaCGV3ERgdFAbm/2zatG+krih81oGsAFRlwXkAm5koTqbKdGte9CD89Fn9puOB4HjZ+vvrA4/BSIBE4tDRnKkv6L02SSWSid8MmfVhXvA5fjk8N1rPnw2xnPn8NO7yAQp3dOHAPl9KdbtFIh8Iwtfbj42HEbEwHZvzQ=
+	t=1733848963; cv=none; b=VWbdVA9f1A9Z9b/Yp2RdrUBFGHQKqqd8ZizzbO1jmG6/GNNaTezhOQ5oBVpOzQWCZJJ/XFWf1zexTISbIrPJPwAenBEYDLX4wPlzIzvLr4iHJaiIlgvpp1oD26eXx0lQ1Z95HZojFNbCMl9ijlfracr2VNdxO4HXq8juHyF2yzs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1733848242; c=relaxed/simple;
-	bh=Zlnzz0wdPYXkvJtPphlnVkmYtMKsjBqYbz2HGIuD3A0=;
+	s=arc-20240116; t=1733848963; c=relaxed/simple;
+	bh=8UgbxDtpVAKp5DkHJqnnP3H5z3t9ezVduDOhIftxeGc=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=CwZvUJtkCXOCcAGAuszxZFvbf8iCQVlgosdLHRduas2+hsHp7B+gjpZfJ0UevnJBpLW+zhTVH4fMLrPelVQWsfqGCSJ1rfj5zW62adbcTiFnEJqyzmyCwNO1ok8r2cNNY481TpagkJQq8uZm3zUfb9vIvlIyIhPUJYORm8Xx4AY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com; spf=pass smtp.mailfrom=sang-engineering.com; dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b=jAPTSoQ1; arc=none smtp.client-ip=194.117.254.33
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sang-engineering.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=k+e/1NMzn7B0RgFtTQHjnTgimXrao3dEaCe9AcyXGc0RzNgIrFR5iLQY/vIWE9tRwlG10yfXLUOIRVPgRODljmLt515tYwkLc9vGlPT9LX//z7l6By7mD91sS78wv9FMRg3YngPKCBwTZrHSVN2EOioMVWYHo+zsrz3yHCLWqFU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=weissschuh.net; spf=pass smtp.mailfrom=weissschuh.net; dkim=pass (1024-bit key) header.d=weissschuh.net header.i=@weissschuh.net header.b=f07kYqtW; arc=none smtp.client-ip=159.69.126.157
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=weissschuh.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=weissschuh.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b="jAPTSoQ1"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	sang-engineering.com; h=date:from:to:cc:subject:message-id
-	:references:mime-version:content-type:in-reply-to; s=k1; bh=Zlnz
-	z0wdPYXkvJtPphlnVkmYtMKsjBqYbz2HGIuD3A0=; b=jAPTSoQ125TUsdb1Ob/8
-	sA12zrGKpA6Lu3q84fFxaVBnyXd087afVV6l/lzM70C5FuJeQFsKvkbMQ/MXvmAV
-	qV7TPcUOV67YzhspT0PAuWwwMXa7g4VF7wIqJay9jnL57qhrTOGcfLK2lThyECHm
-	vJ0dPBySrgACFjdTlcPDPNQqppHVmSQkjnovdc/H8lczNdrwS+DvIXbNFTBGe9mb
-	+h+9VlG/xt8QMlXgcmSH3G63FjEoksKl7t6U/wHlTOEu8OFf1bObWFjoIMDbe/AA
-	Din6OqbGSRrPcCCZjJ0wif3Gm1OCHH9E0g6IXAPMFdYf8C+quX8Ax2On/pSNu9pU
-	2A==
-Received: (qmail 1448706 invoked from network); 10 Dec 2024 17:30:29 +0100
-Received: by mail.zeus03.de with ESMTPSA (TLS_AES_256_GCM_SHA384 encrypted, authenticated); 10 Dec 2024 17:30:29 +0100
-X-UD-Smtp-Session: l3s3148p1@JFTR/+wo/rsujnsc
-Date: Tue, 10 Dec 2024 17:30:29 +0100
-From: Wolfram Sang <wsa+renesas@sang-engineering.com>
+	dkim=pass (1024-bit key) header.d=weissschuh.net header.i=@weissschuh.net header.b="f07kYqtW"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=weissschuh.net;
+	s=mail; t=1733848949;
+	bh=8UgbxDtpVAKp5DkHJqnnP3H5z3t9ezVduDOhIftxeGc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=f07kYqtWytQcpZQsFpnz9/zhgyTTmdRglQgfR+RWvR/lWKDLY02bfuztpOTTfRGhu
+	 +GTvVoy4G3PHFsaoFOWpncy1vaT3GWsdjb93REJkLhfsu3L1X7wuaVDr472M6Yvr3W
+	 7V6VRHh1rZPMvfCiJmtFLxtrO05BXsnCGljrvUBI=
+Date: Tue, 10 Dec 2024 17:42:29 +0100
+From: Thomas =?utf-8?Q?Wei=C3=9Fschuh?= <linux@weissschuh.net>
 To: Hans de Goede <hdegoede@redhat.com>
-Cc: Pali =?utf-8?B?Um9ow6Fy?= <pali@kernel.org>,
-	Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>,
-	Andy Shevchenko <andy@kernel.org>,
-	Paul Menzel <pmenzel@molgen.mpg.de>, Wolfram Sang <wsa@kernel.org>,
-	eric.piel@tremplin-utc.net, Marius Hoch <mail@mariushoch.de>,
-	Dell.Client.Kernel@dell.com,
-	Kai Heng Feng <kai.heng.feng@canonical.com>,
-	platform-driver-x86@vger.kernel.org,
-	Jean Delvare <jdelvare@suse.com>,
-	Andi Shyti <andi.shyti@kernel.org>, linux-i2c@vger.kernel.org
-Subject: Re: [PATCH v9 2/4] platform/x86: dell-smo8800: Move instantiation of
- lis3lv02d i2c_client from i2c-i801 to dell-lis3lv02d
-Message-ID: <Z1hspfPEgOAwmmOt@ninjato>
-Mail-Followup-To: Wolfram Sang <wsa+renesas@sang-engineering.com>,
-	Hans de Goede <hdegoede@redhat.com>,
-	Pali =?utf-8?B?Um9ow6Fy?= <pali@kernel.org>,
-	Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>,
-	Andy Shevchenko <andy@kernel.org>,
-	Paul Menzel <pmenzel@molgen.mpg.de>, Wolfram Sang <wsa@kernel.org>,
-	eric.piel@tremplin-utc.net, Marius Hoch <mail@mariushoch.de>,
-	Dell.Client.Kernel@dell.com,
-	Kai Heng Feng <kai.heng.feng@canonical.com>,
-	platform-driver-x86@vger.kernel.org,
-	Jean Delvare <jdelvare@suse.com>,
-	Andi Shyti <andi.shyti@kernel.org>, linux-i2c@vger.kernel.org
-References: <20241209183557.7560-1-hdegoede@redhat.com>
- <20241209183557.7560-3-hdegoede@redhat.com>
+Cc: Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>, 
+	Andy Shevchenko <andy@kernel.org>, Sebastian Reichel <sre@kernel.org>, 
+	platform-driver-x86@vger.kernel.org, Jelle van der Waa <jelle@vdwaa.nl>, linux-pm@vger.kernel.org
+Subject: Re: [PATCH v3 1/4] power: supply:
+ power_supply_show_enum_with_available(): Replace spaces with '_'
+Message-ID: <a5f42d6a-0c32-4343-9d6a-db3aa3d6c759@t-8ch.de>
+References: <20241209204051.8786-1-hdegoede@redhat.com>
+ <20241209204051.8786-2-hdegoede@redhat.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="cMjDwkZc+VaUwAzL"
-Content-Disposition: inline
-In-Reply-To: <20241209183557.7560-3-hdegoede@redhat.com>
-
-
---cMjDwkZc+VaUwAzL
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20241209204051.8786-2-hdegoede@redhat.com>
 
-On Mon, Dec 09, 2024 at 07:35:55PM +0100, Hans de Goede wrote:
-> Various Dell laptops have an lis3lv02d freefall/accelerometer sensor.
-> The lis3lv02d chip has an interrupt line as well as an I2C connection to
-> the system's main SMBus.
->=20
-> The lis3lv02d is described in the ACPI tables by an SMO88xx ACPI device,
-> but the SMO88xx ACPI fwnodes are incomplete and only list an IRQ resource.
->=20
-> So far this has been worked around with some SMO88xx specific quirk code
-> in the generic i2c-i801 driver, but it is not necessary to handle the Dell
-> specific instantiation of i2c_client-s for SMO88xx ACPI devices there.
->=20
-> The kernel already instantiates platform_device-s for these with an
-> acpi:SMO88xx modalias. The drivers/platform/x86/dell/dell-smo8800.c
-> driver binds to this platform device but this only deals with
-> the interrupt resource. Add a drivers/platform/x86/dell/dell-lis3lv02d.c
-> which will matches on the same acpi:SMO88xx modaliases and move
-> the i2c_client instantiation from the generic i2c-i801 driver there.
->=20
-> Moving the i2c_client instantiation has the following advantages:
->=20
-> 1. This moves the SMO88xx ACPI device quirk handling away from the generic
-> i2c-i801 module which is loaded on all Intel x86 machines to a module
-> which will only be loaded when there is an ACPI SMO88xx device.
->=20
-> 2. This removes the duplication of the SMO88xx ACPI Hardware ID (HID) tab=
-le
-> between the i2c-i801 and dell-smo8800 drivers.
->=20
-> 3. This allows extending the quirk handling by adding new code and related
-> module parameters to the dell-lis3lv02d driver, without needing to modify
-> the i2c-i801 code.
->=20
-> Reviewed-by: Pali Roh=C3=A1r <pali@kernel.org>
+On 2024-12-09 21:40:48+0100, Hans de Goede wrote:
+> Some enum style power-supply properties have text-values / labels for some
+> of the enum values containing a space, e.g. "Long Life" for
+> POWER_SUPPLY_CHARGE_TYPE_LONGLIFE.
+> 
+> Make power_supply_show_enum_with_available() replace these spaces with
+> '_' when showing the available text-values. After this the output for
+> a battery which supports "Long Life" will be e.g.:
+> 
+> Fast [Standard] Long_Life
+> 
+> or:
+> 
+> Fast Standard [Long_Life]
+> 
+> Modify power_supply_store_property() to accept both the original text-value
+> with space and the alternative value with the spaces replaced by '_'.
+> This allows users to write the value with '_' after seeing this on reading
+> the property.
+> 
 > Signed-off-by: Hans de Goede <hdegoede@redhat.com>
 
-Acked-by: Wolfram Sang <wsa@kernel.org>
+Reviewed-by: Thomas Weißschuh <linux@weissschuh.net>
 
-
---cMjDwkZc+VaUwAzL
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAmdYbKEACgkQFA3kzBSg
-KbbdXQ/+O30sH3sRP8ycr3QAz+pXZAB9ZeihSq6o1qOkaxS3FLbN2GrcW+XU92H8
-+dynC1Nk7wCN0h5IoPJpREc1G5i0kdYWIxiQoY7XECdcDeD3y5+FDuoF0vOsLPho
-G6gp5DhKXZoPJDWJrhiyX2mYnDP3iGEHz/0NtAN4ojTrEFBQoKMlxGw+40g4kQc0
-iH7QcbWE/VyaWCvXXmQihVRRfXM4wSy8LUty68bDpka6wh+hi2AvgTdD5d68dTfc
-s44R7GQr9nyUXihxpCQfSL0q8KqW9O+WqiBn8nTEYSm/ZyMESWiBGw1GB7JZofe5
-xmzLA3iKtJtjxJJB3UkLwFMxUOMUMZfdlUxrWVHjjdUH+fW7GUJmEtYWBPNVpy39
-8Zvd7+sXI9Ocd1St07AdpUZPEzj/7pFG5P6ZGAkCKoGdKMCzwJvCKO7ZI+W/rPA4
-A7nsuHAvBGpJ86Ybm6njdTbSdnrYNsPHvxcPRzuQsM5pnsefqwk4JJTCTKUxhGHZ
-iB6+p09ctwUubvMs6v4FoDIMdsMcs3IoTmapFkIr3E2Qsn3M2sVtCLNpC9EZcOEm
-Zx79gsSB5wuyxTQDd/Z/QQG5vPEJJQK3Trzx+ewdp7jT7vZRVJAEGQ/ASJfYX63U
-hWBrxUPoH4JawvZqkCHbgbRz7qLQLjqDXYYGyFpZYwqVnviKB0M=
-=e6Q1
------END PGP SIGNATURE-----
-
---cMjDwkZc+VaUwAzL--
+> ---
+> Changes in v2
+> - Replace spaces with '_' instead of surrounding the text-value by ""
+> ---
+>  drivers/power/supply/power_supply_sysfs.c | 37 ++++++++++++++++++++---
+>  1 file changed, 33 insertions(+), 4 deletions(-)
+> 
+> diff --git a/drivers/power/supply/power_supply_sysfs.c b/drivers/power/supply/power_supply_sysfs.c
+> index 571de43fcca9..034e1848f1ca 100644
+> --- a/drivers/power/supply/power_supply_sysfs.c
+> +++ b/drivers/power/supply/power_supply_sysfs.c
+> @@ -237,23 +237,52 @@ static enum power_supply_property dev_attr_psp(struct device_attribute *attr)
+>  	return  to_ps_attr(attr) - power_supply_attrs;
+>  }
+>  
+> +static void power_supply_escape_spaces(const char *str, char *buf, size_t bufsize)
+> +{
+> +	strscpy(buf, str, bufsize);
+> +	strreplace(buf, ' ', '_');
+> +}
+> +
+> +static int power_supply_match_string(const char * const *array, size_t n, const char *s)
+> +{
+> +	int ret;
+> +
+> +	/* First try an exact match */
+> +	ret = __sysfs_match_string(array, n, s);
+> +	if (ret >= 0)
+> +		return ret;
+> +
+> +	/* Second round, try matching with spaces replaced by '_' */
+> +	for (size_t i = 0; i < n; i++) {
+> +		char buf[32];
+> +
+> +		power_supply_escape_spaces(array[i], buf, sizeof(buf));
+> +		if (sysfs_streq(buf, s))
+> +			return i;
+> +	}
+> +
+> +	return -EINVAL;
+> +}
+> +
+>  static ssize_t power_supply_show_enum_with_available(
+>  			struct device *dev, const char * const labels[], int label_count,
+>  			unsigned int available_values, int value, char *buf)
+>  {
+>  	bool match = false, available, active;
+> +	char escaped_label[32];
+>  	ssize_t count = 0;
+>  	int i;
+>  
+>  	for (i = 0; i < label_count; i++) {
+>  		available = available_values & BIT(i);
+>  		active = i == value;
+> +		power_supply_escape_spaces(labels[i], escaped_label, sizeof(escaped_label));
+>  
+>  		if (available && active) {
+> -			count += sysfs_emit_at(buf, count, "[%s] ", labels[i]);
+> +			count += sysfs_emit_at(buf, count, "[%s] ", escaped_label);
+>  			match = true;
+>  		} else if (available) {
+> -			count += sysfs_emit_at(buf, count, "%s ", labels[i]);
+> +			count += sysfs_emit_at(buf, count, "%s ", escaped_label);
+>  		}
+>  	}
+>  
+> @@ -332,8 +361,8 @@ static ssize_t power_supply_store_property(struct device *dev,
+>  
+>  	ret = -EINVAL;
+>  	if (ps_attr->text_values_len > 0) {
+> -		ret = __sysfs_match_string(ps_attr->text_values,
+> -					   ps_attr->text_values_len, buf);
+> +		ret = power_supply_match_string(ps_attr->text_values,
+> +						ps_attr->text_values_len, buf);
+>  	}
+>  
+>  	/*
+> -- 
+> 2.47.1
+> 
