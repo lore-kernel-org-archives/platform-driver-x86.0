@@ -1,170 +1,181 @@
-Received: from todd.t-8ch.de (todd.t-8ch.de [159.69.126.157])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A58C322FE17;
-	Tue, 10 Dec 2024 17:03:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.69.126.157
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F75623ED68;
+	Tue, 10 Dec 2024 17:30:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.8
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1733850224; cv=none; b=N14ovxuA4clr+I4LBF0HLG1WBRS9PWLrfSrQ/2rSWSrMOvs9zw9Qk/HbvhNOqc9k3KWX7V57AGfsza1Bkj7nxHVvqcRaDU5Lbqowlu0njEcKsMJiwVpnIV/IrusOHsMp7oVhVAt92qm6+6MEdEjuXclr2HgWwCjH9GInVqoXG/k=
+	t=1733851820; cv=none; b=SGMY9krn5Fj97eXU+b7MXrlhGH+fCs2q0KNAir6aP5ZUBlBK6jB0R0teKHvoBGaOojXGUtbjfwBKDBwzShBQzooTdFNrvo/RhDIs7WS3+dHUC6uSHz2edOouE5K8+eSa/a2jC71WzkzL1lzpDa8LTUbJ7lnvbX8V1lwd7DCWj70=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1733850224; c=relaxed/simple;
-	bh=Lp8Jhgg1qVhtZgXWwaHfbQ7G7Qq7eMQKR/S57j01VfQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=RmiJf3BIMNDTqatXChSxtXQaLBtiJvpXSx5Td8jaz7qfsFdvMcdEYuIbWteFecDABw4qkZO2WVMyp9qBHY0GVBGnGnTu1pYY/jOi0Few2tYsTVklwUIuedUCpIk2T3gL98agISCy+IeSAxlvtB2RoHvQhHJPKhRLeOHldfOQyl4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=weissschuh.net; spf=pass smtp.mailfrom=weissschuh.net; dkim=pass (1024-bit key) header.d=weissschuh.net header.i=@weissschuh.net header.b=iSbNefuI; arc=none smtp.client-ip=159.69.126.157
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=weissschuh.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=weissschuh.net
+	s=arc-20240116; t=1733851820; c=relaxed/simple;
+	bh=JIbhvMKKCNsFNVHATvxBxVjKBlYLJhzisEw7hU3DyL4=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=g1JJLVk9QS7o5pXAAA15Angr720QFk94kmd+usFthr0tWalBoIhdaOLpBIImhrsKKQCtjrBWJt5rMGxSU1Pw0CNEBcJkbfTs3fGKXWV1SfnImL0sNi7oU6PL+SriZlthh2j0jbj7JlKsBiayH28BGgZHS1zmOFe+faBTyO8Sm/Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Qa5hg5/g; arc=none smtp.client-ip=192.198.163.8
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=weissschuh.net header.i=@weissschuh.net header.b="iSbNefuI"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=weissschuh.net;
-	s=mail; t=1733850219;
-	bh=Lp8Jhgg1qVhtZgXWwaHfbQ7G7Qq7eMQKR/S57j01VfQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=iSbNefuI29Sm/0xB3x4crw7wYQYO1tRxmUoseWqSq0q1F97ZJWcaU3H4IOSPy4Ru0
-	 7lSQvPtp6qi8s4bIOC7/U4YDXkP4lwxA+EdwAVAKJBIMW5S/Q1Dci+IDXIb6/nJZuD
-	 nprgQJF/ZQR6zgcD5sC+aQsalkpxah3cDUWbgPJ4=
-Date: Tue, 10 Dec 2024 18:03:39 +0100
-From: Thomas =?utf-8?Q?Wei=C3=9Fschuh?= <linux@weissschuh.net>
-To: Hans de Goede <hdegoede@redhat.com>
-Cc: Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>, 
-	Andy Shevchenko <andy@kernel.org>, Sebastian Reichel <sre@kernel.org>, 
-	platform-driver-x86@vger.kernel.org, Jelle van der Waa <jelle@vdwaa.nl>, linux-pm@vger.kernel.org
-Subject: Re: [PATCH v3 4/4] platform/x86: dell-laptop: Use
- power_supply_charge_types_show/_parse() helpers
-Message-ID: <f57031ce-8d5c-4601-87bc-2f1362a8de78@t-8ch.de>
-References: <20241209204051.8786-1-hdegoede@redhat.com>
- <20241209204051.8786-5-hdegoede@redhat.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Qa5hg5/g"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1733851819; x=1765387819;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=JIbhvMKKCNsFNVHATvxBxVjKBlYLJhzisEw7hU3DyL4=;
+  b=Qa5hg5/gw1whcq0pBYXrnLXcGO4OIcnNFBZHJH0z38+Ogp8m+pKR9Xbz
+   i1kUYFCS0st2AKVE7LlJhnvgHRwNqYVhpqJOnM9ya7FBEzA2IrHWrmh2N
+   1ZDYKHASewHU1mGBIw9nan7yiexnY6ygnQmbrDqFh6/UNDHR0R5K8AqOA
+   LSeBEMvg5sRxHXpxDmODDyE9o7OADERswxIJPuLnFV4GBPcbSspAQFazE
+   ojBhNx2xFEc9yIJvxJbielL1v/hfR98e9tDvD9aGcZbTCgA2xFE7L7SlU
+   GaB45nufLiNaleFdKEeZQqVXoVwDptVKEro4mqYn1GgQHUv9Bqp3ZQqxt
+   A==;
+X-CSE-ConnectionGUID: mxM9ASF1Twe/RZ0pYgdJIw==
+X-CSE-MsgGUID: vxTV8bqUS/COqAaB40uwHQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11282"; a="51735481"
+X-IronPort-AV: E=Sophos;i="6.12,223,1728975600"; 
+   d="scan'208";a="51735481"
+Received: from orviesa001.jf.intel.com ([10.64.159.141])
+  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Dec 2024 09:30:18 -0800
+X-CSE-ConnectionGUID: GDjwszKgQeqWE1KGKuDc5Q==
+X-CSE-MsgGUID: Cb5B1ylERs62Jld5dPeyNg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.12,223,1728975600"; 
+   d="scan'208";a="132868383"
+Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.56])
+  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Dec 2024 09:30:12 -0800
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Tue, 10 Dec 2024 19:30:09 +0200 (EET)
+To: Mario Limonciello <mario.limonciello@amd.com>, 
+    "Rafael J . Wysocki" <rafael@kernel.org>
+cc: Hans de Goede <hdegoede@redhat.com>, Len Brown <lenb@kernel.org>, 
+    Maximilian Luz <luzmaximilian@gmail.com>, Lee Chun-Yi <jlee@suse.com>, 
+    Shyam Sundar S K <Shyam-sundar.S-k@amd.com>, 
+    Corentin Chary <corentin.chary@gmail.com>, 
+    "Luke D . Jones" <luke@ljones.dev>, Ike Panhc <ike.pan@canonical.com>, 
+    Henrique de Moraes Holschuh <hmh@hmh.eng.br>, 
+    Alexis Belmonte <alexbelm48@gmail.com>, 
+    =?ISO-8859-15?Q?Uwe_Kleine-K=F6nig?= <u.kleine-koenig@pengutronix.de>, 
+    Ai Chao <aichao@kylinos.cn>, Gergo Koteles <soyer@irl.hu>, 
+    open list <linux-kernel@vger.kernel.org>, 
+    "open list:ACPI" <linux-acpi@vger.kernel.org>, 
+    "open list:MICROSOFT SURFACE PLATFORM PROFILE DRIVER" <platform-driver-x86@vger.kernel.org>, 
+    "open list:THINKPAD ACPI EXTRAS DRIVER" <ibm-acpi-devel@lists.sourceforge.net>, 
+    Mark Pearson <mpearson-lenovo@squebb.ca>, 
+    Matthew Schwartz <matthew.schwartz@linux.dev>
+Subject: Re: [PATCH v10 00/22] Add support for binding ACPI platform profile
+ to multiple drivers
+In-Reply-To: <20241206031918.1537-1-mario.limonciello@amd.com>
+Message-ID: <a34c7648-02cb-76e9-53f4-e54003c98ecb@linux.intel.com>
+References: <20241206031918.1537-1-mario.limonciello@amd.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20241209204051.8786-5-hdegoede@redhat.com>
+Content-Type: text/plain; charset=US-ASCII
 
-On 2024-12-09 21:40:51+0100, Hans de Goede wrote:
-> Make battery_modes a map between tokens and enum power_supply_charge_type
-> values instead of between tokens and strings and use the new
-> power_supply_charge_types_show/_parse() helpers for show()/store()
-> to ensure that things are handled in the same way as in other drivers.
-> 
-> This also changes battery_supported_modes to be a bitmap of charge-types
-> (enum power_supply_charge_type values) rather then a bitmap of indices
-> into battery_modes[].
-> 
-> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+Hi Rafael,
 
-This screams for power supply extensions.
+This series seems ready and Mario has requested it to be merged through 
+platform drivers tree despite majority of changes touching 
+drivers/acpi/platform_profile.c because its API relates to many pdx86 
+drivers.
 
-Reviewed-by: Thomas Weißschuh <linux@weissschuh.net>
+Is that fine with you?
 
-> ---
->  drivers/platform/x86/dell/dell-laptop.c | 54 ++++++++++++-------------
->  1 file changed, 25 insertions(+), 29 deletions(-)
+On Thu, 5 Dec 2024, Mario Limonciello wrote:
+
+> Currently there are a number of ASUS products on the market that happen to
+> have ACPI objects for amd-pmf to bind to as well as an ACPI platform
+> profile provided by asus-wmi.
 > 
-> diff --git a/drivers/platform/x86/dell/dell-laptop.c b/drivers/platform/x86/dell/dell-laptop.c
-> index 5671bd0deee7..9a4cfcb8bbe0 100644
-> --- a/drivers/platform/x86/dell/dell-laptop.c
-> +++ b/drivers/platform/x86/dell/dell-laptop.c
-> @@ -103,15 +103,15 @@ static bool mute_led_registered;
->  
->  struct battery_mode_info {
->  	int token;
-> -	const char *label;
-> +	enum power_supply_charge_type charge_type;
->  };
->  
->  static const struct battery_mode_info battery_modes[] = {
-> -	{ BAT_PRI_AC_MODE_TOKEN,   "Trickle" },
-> -	{ BAT_EXPRESS_MODE_TOKEN,  "Fast" },
-> -	{ BAT_STANDARD_MODE_TOKEN, "Standard" },
-> -	{ BAT_ADAPTIVE_MODE_TOKEN, "Adaptive" },
-> -	{ BAT_CUSTOM_MODE_TOKEN,   "Custom" },
-> +	{ BAT_PRI_AC_MODE_TOKEN,   POWER_SUPPLY_CHARGE_TYPE_TRICKLE },
-> +	{ BAT_EXPRESS_MODE_TOKEN,  POWER_SUPPLY_CHARGE_TYPE_FAST },
-> +	{ BAT_STANDARD_MODE_TOKEN, POWER_SUPPLY_CHARGE_TYPE_STANDARD },
-> +	{ BAT_ADAPTIVE_MODE_TOKEN, POWER_SUPPLY_CHARGE_TYPE_ADAPTIVE },
-> +	{ BAT_CUSTOM_MODE_TOKEN,   POWER_SUPPLY_CHARGE_TYPE_CUSTOM },
->  };
->  static u32 battery_supported_modes;
->  
-> @@ -2261,46 +2261,42 @@ static ssize_t charge_types_show(struct device *dev,
->  		struct device_attribute *attr,
->  		char *buf)
->  {
-> -	ssize_t count = 0;
-> +	enum power_supply_charge_type charge_type;
->  	int i;
->  
->  	for (i = 0; i < ARRAY_SIZE(battery_modes); i++) {
-> -		bool active;
-> +		charge_type = battery_modes[i].charge_type;
->  
-> -		if (!(battery_supported_modes & BIT(i)))
-> +		if (!(battery_supported_modes & BIT(charge_type)))
->  			continue;
->  
-> -		active = dell_battery_mode_is_active(battery_modes[i].token);
-> -		count += sysfs_emit_at(buf, count, active ? "[%s] " : "%s ",
-> -				battery_modes[i].label);
-> +		if (!dell_battery_mode_is_active(battery_modes[i].token))
-> +			continue;
-> +
-> +		return power_supply_charge_types_show(dev, battery_supported_modes,
-> +						      charge_type, buf);
->  	}
->  
-> -	/* convert the last space to a newline */
-> -	if (count > 0)
-> -		count--;
-> -	count += sysfs_emit_at(buf, count, "\n");
-> -
-> -	return count;
-> +	/* No active mode found */
-> +	return -EIO;
->  }
->  
->  static ssize_t charge_types_store(struct device *dev,
->  		struct device_attribute *attr,
->  		const char *buf, size_t size)
->  {
-> -	bool matched = false;
-> -	int err, i;
-> +	int charge_type, err, i;
-> +
-> +	charge_type = power_supply_charge_types_parse(battery_supported_modes, buf);
-> +	if (charge_type < 0)
-> +		return charge_type;
->  
->  	for (i = 0; i < ARRAY_SIZE(battery_modes); i++) {
-> -		if (!(battery_supported_modes & BIT(i)))
-> -			continue;
-> -
-> -		if (sysfs_streq(battery_modes[i].label, buf)) {
-> -			matched = true;
-> +		if (battery_modes[i].charge_type == charge_type)
->  			break;
-> -		}
->  	}
-> -	if (!matched)
-> -		return -EINVAL;
-> +	if (i == ARRAY_SIZE(battery_modes))
-> +		return -EIO;
->  
->  	err = dell_battery_set_mode(battery_modes[i].token);
->  	if (err)
-> @@ -2430,7 +2426,7 @@ static u32 __init battery_get_supported_modes(void)
->  
->  	for (i = 0; i < ARRAY_SIZE(battery_modes); i++) {
->  		if (dell_smbios_find_token(battery_modes[i].token))
-> -			modes |= BIT(i);
-> +			modes |= BIT(battery_modes[i].charge_type);
->  	}
->  
->  	return modes;
-> -- 
-> 2.47.1
+> The ACPI platform profile support created by amd-pmf on these ASUS
+> products is "Function 9" which is specifically for "BIOS or EC
+> notification" of power slider position. This feature is actively used
+> by some designs such as Framework 13 and Framework 16.
 > 
+> On these ASUS designs we keep on quirking more and more of them to turn
+> off this notification so that asus-wmi can bind.
+> 
+> This however isn't how Windows works.  "Multiple" things are notified for
+> the power slider position. This series adjusts Linux to behave similarly.
+> 
+> Multiple drivers can now register an ACPI platform profile and will react
+> to set requests.
+> 
+> To avoid chaos, only positions that are common to both drivers are
+> accepted when the legacy /sys/firmware/acpi/platform_profile interface
+> is used.
+> 
+> This series also adds a new concept of a "custom" profile.  This allows
+> userspace to discover that there are multiple driver handlers that are
+> configured differently.
+> 
+> This series also allows dropping all of the PMF quirks from amd-pmf.
+> 
+> NOTE: Although this series changes code in acpi platform profile, I think
+>       it is better to go through the platform-x86 tree as more drivers can
+>       be introduced during the kernel cycle and should make the changes to
+>       support class interface when merging.
+> 
+> v10:
+>  * Whitespace changes
+>  * Documentation update for custom in a single driver
+> 
+> Mario Limonciello (22):
+>   ACPI: platform-profile: Add a name member to handlers
+>   platform/x86/dell: dell-pc: Create platform device
+>   ACPI: platform_profile: Add device pointer into platform profile
+>     handler
+>   ACPI: platform_profile: Add platform handler argument to
+>     platform_profile_remove()
+>   ACPI: platform_profile: Pass the profile handler into
+>     platform_profile_notify()
+>   ACPI: platform_profile: Move sanity check out of the mutex
+>   ACPI: platform_profile: Move matching string for new profile out of
+>     mutex
+>   ACPI: platform_profile: Use guard(mutex) for register/unregister
+>   ACPI: platform_profile: Use `scoped_cond_guard`
+>   ACPI: platform_profile: Create class for ACPI platform profile
+>   ACPI: platform_profile: Add name attribute to class interface
+>   ACPI: platform_profile: Add choices attribute for class interface
+>   ACPI: platform_profile: Add profile attribute for class interface
+>   ACPI: platform_profile: Notify change events on register and
+>     unregister
+>   ACPI: platform_profile: Only show profiles common for all handlers
+>   ACPI: platform_profile: Add concept of a "custom" profile
+>   ACPI: platform_profile: Make sure all profile handlers agree on
+>     profile
+>   ACPI: platform_profile: Check all profile handler to calculate next
+>   ACPI: platform_profile: Notify class device from
+>     platform_profile_notify()
+>   ACPI: platform_profile: Allow multiple handlers
+>   platform/x86/amd: pmf: Drop all quirks
+>   Documentation: Add documentation about class interface for platform
+>     profiles
+> 
+>  .../ABI/testing/sysfs-platform_profile        |   5 +
+>  .../userspace-api/sysfs-platform_profile.rst  |  38 ++
+>  drivers/acpi/platform_profile.c               | 534 ++++++++++++++----
+>  .../surface/surface_platform_profile.c        |   8 +-
+>  drivers/platform/x86/acer-wmi.c               |  12 +-
+>  drivers/platform/x86/amd/pmf/Makefile         |   2 +-
+>  drivers/platform/x86/amd/pmf/core.c           |   1 -
+>  drivers/platform/x86/amd/pmf/pmf-quirks.c     |  66 ---
+>  drivers/platform/x86/amd/pmf/pmf.h            |   3 -
+>  drivers/platform/x86/amd/pmf/sps.c            |   4 +-
+>  drivers/platform/x86/asus-wmi.c               |   8 +-
+>  drivers/platform/x86/dell/alienware-wmi.c     |   8 +-
+>  drivers/platform/x86/dell/dell-pc.c           |  38 +-
+>  drivers/platform/x86/hp/hp-wmi.c              |   8 +-
+>  drivers/platform/x86/ideapad-laptop.c         |   6 +-
+>  .../platform/x86/inspur_platform_profile.c    |   7 +-
+>  drivers/platform/x86/thinkpad_acpi.c          |  16 +-
+>  include/linux/platform_profile.h              |   9 +-
+>  18 files changed, 559 insertions(+), 214 deletions(-)
+>  delete mode 100644 drivers/platform/x86/amd/pmf/pmf-quirks.c
+
+-- 
+ i.
+
