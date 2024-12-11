@@ -1,66 +1,128 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 53F451AF0D8;
-	Wed, 11 Dec 2024 12:25:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B00C5236919
+	for <platform-driver-x86@vger.kernel.org>; Wed, 11 Dec 2024 13:57:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1733919946; cv=none; b=KkV/H06YJnvFUc7pTN+5l3Qys4BAQvnVGe7j+xZxA7YPAoB8UyNJYObWGTO/QHw6lww5QlgEdbgeWPzMAomxxg3HhJlWqN271UwM7o6JeZ0fGzsS+H1bVlEUgS/7dK+O4OWEagcaWtG/MulGOPtIFsOpJMLmb7ibYC1ExZMRK/k=
+	t=1733925481; cv=none; b=MwZZyKpog0oXWVn5Evvfq+F5WdssOjTPLxPZDgzKFeBM/dzjJ9J2BRSSFRZ/ImrRLXPIij+OQyxpiaphfCbxdUmtBwkmwOibDTd47LwEXLaInl9cyQOLRS69ahT89nESGmbQpZLJWWojkXERC5gj52X9IyJg/G4e4T2oA6pZrLQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1733919946; c=relaxed/simple;
-	bh=KXFMRN/pnEc5WpAO05w2dauo90eSyioOBFOtPz/2KCI=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=nDF7jhkXqMRY0Lizf2AelQzWK3bC7Wto+2KZmF/cpaZOBhIN1pt5S4luSxd4f/Yl8mPFkdyaLJMGLAlo22uJQsJpttIplNYX9fhyH58k63+KKClzuKHlFVC0dSCSg7mD1wdORa4GEKXmpzyTb9hBntpIgJOM3F1zjTetZ9m2qzQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Px5/bFL9; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1733925481; c=relaxed/simple;
+	bh=1fZNOGbIpPaCyBnDAgEqrbCezQHIjMU/yXfJemQM09Q=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=XHLyUEl1XCbetnxVMDAS3kCdmZ/9eJ0JwJ3weC0aWfj2rPKZyfYEgwPhC5BVu1f4mLaXbSaCU86P1dlEu/Rj6G9chUd8bFHar5dM8FQUaGaMzKWFp3irmuviL/YGtOBI127miDa4qgpdkaDzxEcFgljktnhaX4Mp4dmooyUeaZw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=WYMIlhlg; arc=none smtp.client-ip=192.198.163.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Px5/bFL9"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 396F0C4CED2;
-	Wed, 11 Dec 2024 12:25:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1733919945;
-	bh=KXFMRN/pnEc5WpAO05w2dauo90eSyioOBFOtPz/2KCI=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
-	b=Px5/bFL9JW1WtpQnj/MKT/vow0GA8+7j9VMHJW5J3Mw5jbEqHuHz4KweKSqQYn8J7
-	 Q7WVMCbv699UNTe8p9IPKdefnHSjKz2t95Nd3dkN9byuaH4Ci1KYzxeUJ6RuA3CTvd
-	 J4uyK2NpTnrQsVjKAguom+6g2P2lpACfzEnwhD+qXicKBIBiL9Bg+fcG5ooV5hrRIU
-	 Q8MJ990f2CGFnBKnnkS+aMYXzoEPsU0orl3cd/h1ZmDMRQP4GjO+svny0V+oSmz7oP
-	 sO52/Nh85VfOgpO2GtNcgKlVch1BzNE48deESnabQnp+0sBZIsKIU0NbXuLNYsrwKB
-	 nnj8AmrPqg8Jg==
-From: Lee Jones <lee@kernel.org>
-To: Andy Shevchenko <andy@kernel.org>, Peter Tyser <ptyser@xes-inc.com>, 
- Lee Jones <lee@kernel.org>, Hans de Goede <hdegoede@redhat.com>
-Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-In-Reply-To: <20241114193808.110132-1-hdegoede@redhat.com>
-References: <20241114193808.110132-1-hdegoede@redhat.com>
-Subject: Re: (subset) [PATCH] mfd: lpc_ich: Add another Gemini Lake ISA
- bridge PCI device-id
-Message-Id: <173391994391.782805.17939045533438701407.b4-ty@kernel.org>
-Date: Wed, 11 Dec 2024 12:25:43 +0000
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="WYMIlhlg"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1733925480; x=1765461480;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=1fZNOGbIpPaCyBnDAgEqrbCezQHIjMU/yXfJemQM09Q=;
+  b=WYMIlhlgiHXokAIE2IPDaS2is3YcceEG/kLU/gBkmqQS27yrDh6M/WUG
+   mBinpEwRYO7k4A6Rl08u/UfPgZwc4eMjGb9hoRnr4mNEPWtiBfalA206v
+   ajXs3neal7mO3/tNYGNnNs8sk0OWC3bPR8jcpnonOMiuD1/grPJ35m8q3
+   oBmPXeBCZkD6XWbsmO/Nmc75VSlMejgUIHEmGgpAMnfyIR8MK/cT904cG
+   rBO+O3UwVzoi4UAhJhlm8ZLfo2nCcJQbgEkH+RwG4y4ldtR7+Tp11P9On
+   uoP6k8CM8CvUcSJkDaXZeDbrBocsRtpV5WHcSjIqqop6b8TSWP3JD8MF2
+   g==;
+X-CSE-ConnectionGUID: YXuS8T3ZR/Ck0LStvuOpUw==
+X-CSE-MsgGUID: Wl3skvDPSlefZ4uBaNQuHg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11282"; a="33635911"
+X-IronPort-AV: E=Sophos;i="6.12,225,1728975600"; 
+   d="scan'208";a="33635911"
+Received: from orviesa002.jf.intel.com ([10.64.159.142])
+  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Dec 2024 05:57:58 -0800
+X-CSE-ConnectionGUID: fuw2LE6mTKOt3dJrVtN+Lw==
+X-CSE-MsgGUID: VU/eJEiXRLmtKoXsQhhz6Q==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.12,225,1728975600"; 
+   d="scan'208";a="126648479"
+Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.214])
+  by orviesa002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Dec 2024 05:57:56 -0800
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Wed, 11 Dec 2024 15:57:53 +0200 (EET)
+To: Joe Hattori <joe@pf.is.s.u-tokyo.ac.jp>
+cc: Andrea.Ho@advantech.com.tw, Hans de Goede <hdegoede@redhat.com>, 
+    platform-driver-x86@vger.kernel.org
+Subject: Re: [PATCH v2] platform/x86: adv_swbutton: use devm_add_action_or_reset()
+ for cleanup
+In-Reply-To: <20241211085821.3982351-1-joe@pf.is.s.u-tokyo.ac.jp>
+Message-ID: <e0782001-7a4f-e341-4ef8-1072904c9571@linux.intel.com>
+References: <20241211085821.3982351-1-joe@pf.is.s.u-tokyo.ac.jp>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-X-Mailer: b4 0.13.0
+Content-Type: text/plain; charset=US-ASCII
 
-On Thu, 14 Nov 2024 20:38:08 +0100, Hans de Goede wrote:
-> On N4100 / N4120 Gemini Lake SoCs the ISA bridge PCI device-id is 31e8
-> rather the 3197 found on e.g. the N4000 / N4020.
+On Wed, 11 Dec 2024, Joe Hattori wrote:
+
+> Current code leaves the device's wakeup enabled in the error path of
+> .probe() and .remove(). Also, the registered input device is not
+> unregistered. Add a devm_add_action_or_reset() call and cleanup these
+> resources in the callback.
 > 
-> While at fix the existing GLK PCI-id table entry breaking the table
-> being sorted by device-id.
+> Fixes: 3d904005f686 ("platform/x86: add support for Advantech software defined button")
+> Signed-off-by: Joe Hattori <joe@pf.is.s.u-tokyo.ac.jp>
+> ---
+> Changes in V2:
+> - Use devm_add_action_or_reset().
+> - Call input_unregister_device().
+> ---
+>  drivers/platform/x86/adv_swbutton.c | 11 +++++++++++
+>  1 file changed, 11 insertions(+)
 > 
+> diff --git a/drivers/platform/x86/adv_swbutton.c b/drivers/platform/x86/adv_swbutton.c
+> index 6fa60f3fc53c..5b07c42adfad 100644
+> --- a/drivers/platform/x86/adv_swbutton.c
+> +++ b/drivers/platform/x86/adv_swbutton.c
+> @@ -44,6 +44,14 @@ static void adv_swbutton_notify(acpi_handle handle, u32 event, void *context)
+>  	}
+>  }
+>  
+> +static void adv_swbutton_release(void *__input)
+> +{
+> +	struct input_dev *input = __input;
+> +
+> +	input_unregister_device(input);
+
+Better but the input device is managed so the unregister call is 
+unnecessary.
+
+devm_input_allocate_device() comment says:
+
+ * Managed input devices do not need to be explicitly unregistered or
+ * freed as it will be done automatically when owner device unbinds from
+ * its driver (or binding fails). Once managed input device is allocated,
+ * it is ready to be set up and registered in the same fashion as regular
+ * input device. There are no special devm_input_device_[un]register()
+ * variants, regular ones work with both managed and unmanaged devices,
+ * should you need them. In most cases however, managed input device need
+ * not be explicitly unregistered or freed.
+
+-- 
+ i.
+
+> +	device_init_wakeup(input->dev.parent, false);
+> +}
+> +
+>  static int adv_swbutton_probe(struct platform_device *device)
+>  {
+>  	struct adv_swbutton *button;
+> @@ -78,6 +86,9 @@ static int adv_swbutton_probe(struct platform_device *device)
+>  
+>  	device_init_wakeup(&device->dev, true);
+>  
+> +	if (devm_add_action_or_reset(&device->dev, adv_swbutton_release, input))
+> +		return -ENOMEM;
+> +
+>  	status = acpi_install_notify_handler(handle,
+>  					     ACPI_DEVICE_NOTIFY,
+>  					     adv_swbutton_notify,
 > 
-> [...]
-
-Applied, thanks!
-
-[1/1] mfd: lpc_ich: Add another Gemini Lake ISA bridge PCI device-id
-      commit: 49339c4af2adcf9e9d080fcf751723d3ba52fe50
-
---
-Lee Jones [李琼斯]
-
