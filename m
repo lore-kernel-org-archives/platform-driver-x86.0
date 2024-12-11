@@ -1,61 +1,48 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE4691FF1B4
-	for <platform-driver-x86@vger.kernel.org>; Wed, 11 Dec 2024 17:45:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA63F23E6F8;
+	Wed, 11 Dec 2024 18:51:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1733939127; cv=none; b=I1hgJkX5hCgo5mBrU/9td51ykMJuqbesW9LsMTrrezuw4ahvlmc6UeLZyaNTyMIgqiNLwbyuZU3zW9tdyKcVmBXN2ylDB4MHPTl8ivyPkKgbEbBm3Plp/u+5n9G2HmXDEl7pOdt5nYVhtmtkFLr0INgzH7tEGR/wCM1jUasjH3Y=
+	t=1733943073; cv=none; b=ZOtYKRFl+oIuPIwadRU1XE8cuz/YRKIQdtUZcadvvBbybm3obcjouSbyg6uTaVPFws+CBKMT+1GzFJcVTw1hP64s38a/wOV6WCRXcEt1PBV5Rhx5wib+/5Cp36SGvwMhl5vRulyR/TVXMkZW5iUs+yYj7kGpLtCGDy/zJdGWvtc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1733939127; c=relaxed/simple;
-	bh=TwI4kcw5E9dXvSi8E3cuhfIKNw9o/lb2MgRfPnYXifI=;
+	s=arc-20240116; t=1733943073; c=relaxed/simple;
+	bh=JHV1ZGNo0qQGBCydS+tOU+f9vDRktd9Jn1B2cBSQWsk=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=W/2CWVxx8R8/RVAp3V7qyfIVCbCSFwOcbTm/MwiLgGB0ayLkWXcDX9iny7NknJBuY6MDhGo8OzDIlTXlSX8xMxv0FU3eJJGpyjTqZ4gGOMeMETw//K8Y2o9RunMY6VCh/Jd77oIfhfokHyuf+wJYL6dYe6daD5Qh7XdyJDl5wiQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=LEFcJ3Sx; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	 MIME-Version:Content-Type; b=C67cIy7MMkDWse7ho+UAQ1Ud8Xv/eFVotzaPG+Ni2tGVwSk9O8IJ9jHPAOksDh7+6jWMFIFgSn5Sq0XJEDN4TZYzx5hijWzR1PJPqp+kll7wr2zOLtZarGGriuLr6xukRdL/NNyeAYxQ5W+FQwM0CglUemjQEhx4SJrR4iMuQYw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HYxEMYg9; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="LEFcJ3Sx"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1733939124;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=hNZ3RmF3vV/5HrOiNLwpkU5SzMysJ0TEKo30ECSVbhE=;
-	b=LEFcJ3SxWtp/JO288bQOijXJF3EVwrkk9y7ifQa5MY73IpjydVo0wIWWjwHrAMgjyFkvLf
-	SjVwMfP7F1frZWZAUlG+pTuQGiYHegkQ9hVZaam3k6F47+VXhybR0z78ELVkAMcETxMFQG
-	yb9bJ/pamQGyJOtNjoxCXkSphjEFh38=
-Received: from mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-687-QHu25gL-MUOOgUignDX3lg-1; Wed,
- 11 Dec 2024 12:45:19 -0500
-X-MC-Unique: QHu25gL-MUOOgUignDX3lg-1
-X-Mimecast-MFC-AGG-ID: QHu25gL-MUOOgUignDX3lg
-Received: from mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.17])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 6A7DE19560B6;
-	Wed, 11 Dec 2024 17:45:15 +0000 (UTC)
-Received: from localhost.localdomain (unknown [10.39.192.61])
-	by mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 3D2271956048;
-	Wed, 11 Dec 2024 17:45:13 +0000 (UTC)
-From: Hans de Goede <hdegoede@redhat.com>
-To: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	Andy Shevchenko <andy@kernel.org>,
-	=?UTF-8?q?Thomas=20Wei=C3=9Fschuh?= <linux@weissschuh.net>,
-	Sebastian Reichel <sre@kernel.org>
-Cc: Hans de Goede <hdegoede@redhat.com>,
-	Jelle van der Waa <jelle@vdwaa.nl>,
-	platform-driver-x86@vger.kernel.org,
-	linux-pm@vger.kernel.org
-Subject: [PATCH v4 4/4] platform/x86: dell-laptop: Use power_supply_charge_types_show/_parse() helpers
-Date: Wed, 11 Dec 2024 18:44:51 +0100
-Message-ID: <20241211174451.355421-5-hdegoede@redhat.com>
-In-Reply-To: <20241211174451.355421-1-hdegoede@redhat.com>
-References: <20241211174451.355421-1-hdegoede@redhat.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HYxEMYg9"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 55CBBC4AF09;
+	Wed, 11 Dec 2024 18:51:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1733943073;
+	bh=JHV1ZGNo0qQGBCydS+tOU+f9vDRktd9Jn1B2cBSQWsk=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=HYxEMYg9Vp2+SkiC8Lkg4/g7sQ9FUXpvJo/vOfdyfkLpUJk4d7L3vjDPEWooGNAeB
+	 3Z+HEzUyPMj+/lScqjoLov7tCbpQqgDvv9mn/mjKEu5nd9iXi83F+78h7VMgx4Rnlf
+	 UCdWJYf4yfGZdVFtrYPJLZNg06kahCRr2hom6eTkb50Blk62e7X8k+TtMCJ3ZvaA/q
+	 nJTgHhczqK4Whtcfd0POAJb+HIW9NuMZI/GUHSC4SJ84OIr/XIGLiXVr7wqyh3yX3W
+	 gfSaPyFBml7H3mne/EKhNRC6AZanZH4bTpS4kEio2E1n13lJRk82R+LKFbObWX/RQI
+	 WrQjZpxue+LWA==
+From: Sasha Levin <sashal@kernel.org>
+To: linux-kernel@vger.kernel.org,
+	stable@vger.kernel.org
+Cc: Armin Wolf <W_Armin@gmx.de>,
+	Pau Espin Pedrol <pespin@espeweb.net>,
+	Hans de Goede <hdegoede@redhat.com>,
+	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	Sasha Levin <sashal@kernel.org>,
+	corentin.chary@gmail.com,
+	luke@ljones.dev,
+	platform-driver-x86@vger.kernel.org
+Subject: [PATCH AUTOSEL 6.12 20/36] platform/x86: asus-nb-wmi: Ignore unknown event 0xCF
+Date: Wed, 11 Dec 2024 13:49:36 -0500
+Message-ID: <20241211185028.3841047-20-sashal@kernel.org>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20241211185028.3841047-1-sashal@kernel.org>
+References: <20241211185028.3841047-1-sashal@kernel.org>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -63,124 +50,70 @@ List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
+X-stable: review
+X-Patchwork-Hint: Ignore
+X-stable-base: Linux 6.12.4
 Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.17
 
-Make battery_modes a map between tokens and enum power_supply_charge_type
-values instead of between tokens and strings and use the new
-power_supply_charge_types_show/_parse() helpers for show()/store()
-to ensure that things are handled in the same way as in other drivers.
+From: Armin Wolf <W_Armin@gmx.de>
 
-This also changes battery_supported_modes to be a bitmap of charge-types
-(enum power_supply_charge_type values) rather then a bitmap of indices
-into battery_modes[].
+[ Upstream commit e9fba20c29e27dc99e55e1c550573a114561bf8c ]
 
-Reviewed-by: Thomas Weißschuh <linux@weissschuh.net>
-Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+On the Asus X541UAK an unknown event 0xCF is emited when the charger
+is plugged in. This is caused by the following AML code:
+
+    If (ACPS ())
+    {
+        ACPF = One
+        Local0 = 0x58
+        If (ATKP)
+        {
+            ^^^^ATKD.IANE (0xCF)
+        }
+    }
+    Else
+    {
+        ACPF = Zero
+        Local0 = 0x57
+    }
+
+    Notify (AC0, 0x80) // Status Change
+    If (ATKP)
+    {
+        ^^^^ATKD.IANE (Local0)
+    }
+
+    Sleep (0x64)
+    PNOT ()
+    Sleep (0x0A)
+    NBAT (0x80)
+
+Ignore the 0xCF event to silence the unknown event warning.
+
+Reported-by: Pau Espin Pedrol <pespin@espeweb.net>
+Closes: https://lore.kernel.org/platform-driver-x86/54d4860b-ec9c-4992-acf6-db3f90388293@espeweb.net
+Signed-off-by: Armin Wolf <W_Armin@gmx.de>
+Reviewed-by: Hans de Goede <hdegoede@redhat.com>
+Link: https://lore.kernel.org/r/20241123224700.18530-1-W_Armin@gmx.de
+Reviewed-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
+Signed-off-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/platform/x86/dell/dell-laptop.c | 54 ++++++++++++-------------
- 1 file changed, 25 insertions(+), 29 deletions(-)
+ drivers/platform/x86/asus-nb-wmi.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/platform/x86/dell/dell-laptop.c b/drivers/platform/x86/dell/dell-laptop.c
-index 5671bd0deee7..9a4cfcb8bbe0 100644
---- a/drivers/platform/x86/dell/dell-laptop.c
-+++ b/drivers/platform/x86/dell/dell-laptop.c
-@@ -103,15 +103,15 @@ static bool mute_led_registered;
- 
- struct battery_mode_info {
- 	int token;
--	const char *label;
-+	enum power_supply_charge_type charge_type;
- };
- 
- static const struct battery_mode_info battery_modes[] = {
--	{ BAT_PRI_AC_MODE_TOKEN,   "Trickle" },
--	{ BAT_EXPRESS_MODE_TOKEN,  "Fast" },
--	{ BAT_STANDARD_MODE_TOKEN, "Standard" },
--	{ BAT_ADAPTIVE_MODE_TOKEN, "Adaptive" },
--	{ BAT_CUSTOM_MODE_TOKEN,   "Custom" },
-+	{ BAT_PRI_AC_MODE_TOKEN,   POWER_SUPPLY_CHARGE_TYPE_TRICKLE },
-+	{ BAT_EXPRESS_MODE_TOKEN,  POWER_SUPPLY_CHARGE_TYPE_FAST },
-+	{ BAT_STANDARD_MODE_TOKEN, POWER_SUPPLY_CHARGE_TYPE_STANDARD },
-+	{ BAT_ADAPTIVE_MODE_TOKEN, POWER_SUPPLY_CHARGE_TYPE_ADAPTIVE },
-+	{ BAT_CUSTOM_MODE_TOKEN,   POWER_SUPPLY_CHARGE_TYPE_CUSTOM },
- };
- static u32 battery_supported_modes;
- 
-@@ -2261,46 +2261,42 @@ static ssize_t charge_types_show(struct device *dev,
- 		struct device_attribute *attr,
- 		char *buf)
- {
--	ssize_t count = 0;
-+	enum power_supply_charge_type charge_type;
- 	int i;
- 
- 	for (i = 0; i < ARRAY_SIZE(battery_modes); i++) {
--		bool active;
-+		charge_type = battery_modes[i].charge_type;
- 
--		if (!(battery_supported_modes & BIT(i)))
-+		if (!(battery_supported_modes & BIT(charge_type)))
- 			continue;
- 
--		active = dell_battery_mode_is_active(battery_modes[i].token);
--		count += sysfs_emit_at(buf, count, active ? "[%s] " : "%s ",
--				battery_modes[i].label);
-+		if (!dell_battery_mode_is_active(battery_modes[i].token))
-+			continue;
-+
-+		return power_supply_charge_types_show(dev, battery_supported_modes,
-+						      charge_type, buf);
- 	}
- 
--	/* convert the last space to a newline */
--	if (count > 0)
--		count--;
--	count += sysfs_emit_at(buf, count, "\n");
--
--	return count;
-+	/* No active mode found */
-+	return -EIO;
- }
- 
- static ssize_t charge_types_store(struct device *dev,
- 		struct device_attribute *attr,
- 		const char *buf, size_t size)
- {
--	bool matched = false;
--	int err, i;
-+	int charge_type, err, i;
-+
-+	charge_type = power_supply_charge_types_parse(battery_supported_modes, buf);
-+	if (charge_type < 0)
-+		return charge_type;
- 
- 	for (i = 0; i < ARRAY_SIZE(battery_modes); i++) {
--		if (!(battery_supported_modes & BIT(i)))
--			continue;
--
--		if (sysfs_streq(battery_modes[i].label, buf)) {
--			matched = true;
-+		if (battery_modes[i].charge_type == charge_type)
- 			break;
--		}
- 	}
--	if (!matched)
--		return -EINVAL;
-+	if (i == ARRAY_SIZE(battery_modes))
-+		return -EIO;
- 
- 	err = dell_battery_set_mode(battery_modes[i].token);
- 	if (err)
-@@ -2430,7 +2426,7 @@ static u32 __init battery_get_supported_modes(void)
- 
- 	for (i = 0; i < ARRAY_SIZE(battery_modes); i++) {
- 		if (dell_smbios_find_token(battery_modes[i].token))
--			modes |= BIT(i);
-+			modes |= BIT(battery_modes[i].charge_type);
- 	}
- 
- 	return modes;
+diff --git a/drivers/platform/x86/asus-nb-wmi.c b/drivers/platform/x86/asus-nb-wmi.c
+index ef04d396f61c7..a5933980ade3d 100644
+--- a/drivers/platform/x86/asus-nb-wmi.c
++++ b/drivers/platform/x86/asus-nb-wmi.c
+@@ -623,6 +623,7 @@ static const struct key_entry asus_nb_wmi_keymap[] = {
+ 	{ KE_KEY, 0xC4, { KEY_KBDILLUMUP } },
+ 	{ KE_KEY, 0xC5, { KEY_KBDILLUMDOWN } },
+ 	{ KE_IGNORE, 0xC6, },  /* Ambient Light Sensor notification */
++	{ KE_IGNORE, 0xCF, },	/* AC mode */
+ 	{ KE_KEY, 0xFA, { KEY_PROG2 } },           /* Lid flip action */
+ 	{ KE_KEY, 0xBD, { KEY_PROG2 } },           /* Lid flip action on ROG xflow laptops */
+ 	{ KE_END, 0},
 -- 
-2.47.1
+2.43.0
 
