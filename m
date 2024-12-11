@@ -1,31 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D30BB251B04;
-	Wed, 11 Dec 2024 18:53:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B5DC5254E99;
+	Wed, 11 Dec 2024 18:54:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1733943213; cv=none; b=c/EYcmr65Qn36tPRPbxoh+9q65Q3R1SMgmrdzb7IzWOXzD2rRfuVgWRVFK6yBYpswZluOnzv7tG72VOv+m8/k9Wys0ctnqFREArqO9BldbD9CZnk/fvAYLAkL+tne23PUM74mwvF0B3s8USjtr+hGbeY/9VDIMfbg0+k+DyACfA=
+	t=1733943247; cv=none; b=XUyB9B6fnQl8+fJep6lJy9i6RY9ILKzA1XlLrBY9I3DvN/Qp7LVJPub8DBNlRenZfPk3B6KDTpf40N828BqTSfqZMnTI6SvpeMO/YBgGf+SfoOXBekDu4sCsSJV6uTlwJVw6HIAFqSwZFyO8cDp4MQ28BqkV1URvl/8cvJ3G7Gc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1733943213; c=relaxed/simple;
-	bh=AFFFYm0TzJs28HaW0/KZYqN//Zf7bl9GumaR7p3vuws=;
+	s=arc-20240116; t=1733943247; c=relaxed/simple;
+	bh=7ozMWDrtDMO5SKBOtF4GA6VAsjKod8+uLX4ouEbOVZo=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=ZSOPg8U8+zyMUh2jnpArTKYUkZJUZV643HFyMQ0yGAroWRqVjX8ji2/Ub62ghxulQiqh4M9Jr2D1/EL5xkWeRXUOxkQ3/jQd3tadlxJAyc5OAXskDYiC70Wmlj3kTZKj7VWSY/h0IsBRe3R3FibQGRi46e8UzRIEAZEoGW1l+YU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZUNSI/c6; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version:Content-Type; b=BUqFwk2E8r0J38hh9t46EcA+xglwyw8QG3xyzXRiCpYngEVCncv1biKoRlkC6bHqjfrtiTvJy/W1Ar70IpUSI5Zlfr8VerZ3srHT3l+nvts0iBoN7mSVs0vY3X5rgGyniRCjujSbDDdPPfXJ6t6wleV3rfQhjjC7ufn3KtkSh2A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nIVHxg2i; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZUNSI/c6"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2EEBDC4CED4;
-	Wed, 11 Dec 2024 18:53:32 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nIVHxg2i"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0F7F5C4CEE0;
+	Wed, 11 Dec 2024 18:54:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1733943213;
-	bh=AFFFYm0TzJs28HaW0/KZYqN//Zf7bl9GumaR7p3vuws=;
+	s=k20201202; t=1733943247;
+	bh=7ozMWDrtDMO5SKBOtF4GA6VAsjKod8+uLX4ouEbOVZo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=ZUNSI/c67Lub7VdOjnTsy3CKSQEq0F8dFfxd0usj5utWoIQ20Z9Vse95x5OIY1K/u
-	 BlHlKsjuG61RrDbUNed7y12U/cLVRgbvuY8Rwlw8p6KruvJBffptuOZdPmK64F1MnI
-	 iWtgSlIwVpUKFovI5Qipo9UgkDdNIGb4mKgjmkPL9ue0EXHWAspWKSaWKbd2fXkB9s
-	 EGqlLYh75herf053y88cgv1Ye6DfrB3IZEi7mazrOL/V0QOt3z0xMtUwx8bPEVLEkR
-	 dIIxQNt2UL1CxqNXF9Kd1h5a2xU8CP+Pgc/1g7roJHuOUWqvSt0ZReWxNVkXFx6+kI
-	 tSJRys54yB/3w==
+	b=nIVHxg2iK7G54CwHsNbo3H3EB2QfX7J1GJ7vPoH6h2bPT0g48UfrPGW39/Ks4mbHx
+	 3c1cpCdbB5KABoakmNEQnXoWZwjes0tfqDZJBG0HxYaWvqSbzLe+z07l75BmQv0bII
+	 isBocO2qLDWb2wTyjRQlwHHru7f5GQyLbnLMqoEB6fWWypra7TMm6qWJYZmgwCCIi7
+	 GjbJt2JH5Z+9GDWxalkc3HA9RVfrugEwMSPldV5K7KjVWf6kz/9hB7MAPYEchSp96/
+	 9D+u8kTIRbXUfRyik0ukIAJeUGWoj33tprX5WHUpCEhcinWbuh8dgkTUvFlY7vaudM
+	 a/WgqX/K42lmQ==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
@@ -37,12 +37,12 @@ Cc: Armin Wolf <W_Armin@gmx.de>,
 	corentin.chary@gmail.com,
 	luke@ljones.dev,
 	platform-driver-x86@vger.kernel.org
-Subject: [PATCH AUTOSEL 6.1 08/15] platform/x86: asus-nb-wmi: Ignore unknown event 0xCF
-Date: Wed, 11 Dec 2024 13:53:00 -0500
-Message-ID: <20241211185316.3842543-8-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.15 06/10] platform/x86: asus-nb-wmi: Ignore unknown event 0xCF
+Date: Wed, 11 Dec 2024 13:53:47 -0500
+Message-ID: <20241211185355.3842902-6-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20241211185316.3842543-1-sashal@kernel.org>
-References: <20241211185316.3842543-1-sashal@kernel.org>
+In-Reply-To: <20241211185355.3842902-1-sashal@kernel.org>
+References: <20241211185355.3842902-1-sashal@kernel.org>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -52,7 +52,7 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
-X-stable-base: Linux 6.1.119
+X-stable-base: Linux 5.15.173
 Content-Transfer-Encoding: 8bit
 
 From: Armin Wolf <W_Armin@gmx.de>
@@ -103,10 +103,10 @@ Signed-off-by: Sasha Levin <sashal@kernel.org>
  1 file changed, 1 insertion(+)
 
 diff --git a/drivers/platform/x86/asus-nb-wmi.c b/drivers/platform/x86/asus-nb-wmi.c
-index af3da303e2b15..cba515ce3444d 100644
+index 49505939352ae..224c1f1c271bc 100644
 --- a/drivers/platform/x86/asus-nb-wmi.c
 +++ b/drivers/platform/x86/asus-nb-wmi.c
-@@ -590,6 +590,7 @@ static const struct key_entry asus_nb_wmi_keymap[] = {
+@@ -574,6 +574,7 @@ static const struct key_entry asus_nb_wmi_keymap[] = {
  	{ KE_KEY, 0xC4, { KEY_KBDILLUMUP } },
  	{ KE_KEY, 0xC5, { KEY_KBDILLUMDOWN } },
  	{ KE_IGNORE, 0xC6, },  /* Ambient Light Sensor notification */
