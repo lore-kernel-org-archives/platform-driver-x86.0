@@ -1,381 +1,396 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
+Received: from NAM12-BN8-obe.outbound.protection.outlook.com (mail-bn8nam12on2056.outbound.protection.outlook.com [40.107.237.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B37523A187;
-	Thu, 12 Dec 2024 16:47:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.17
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1734022030; cv=none; b=qW5hLk9S7wqNtMw6rs3TJcP/3aB9aExJhGR9Tbv0Y1aPJOppiblO1og7B45fUkRoy1nrPlihEl4Czfx2rftcnGnBJaQBd0Ql8qwO8axzxceYN/Z6nGdX7ZgNGJ1FBdWkWS7r7CUjuqL7MnlZCg7Cg/FodfoBML5qhEbBJmTPDDc=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1734022030; c=relaxed/simple;
-	bh=yGjhiV9R8XgmrAnClQpCMGoAHgaU+9z+Q96HcObkhSk=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=Fkq6yh3YUthQv3kHJCQMC0FKrt/3IAh6KMIVFbB/p3OZXFsABJ30Zockxk2Ij1O3vjHOWPG0JO35rIIcoZYL0Yz3R1BrITOjbFnqKp3GIdmsbaE80E/B/91sy6Bg8taPAy1zrI/h6cN3XdlqDOBf6XcdKWzYmOOxUoy4hbK5giM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=TcqNJ2SM; arc=none smtp.client-ip=192.198.163.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F072A217F34;
+	Thu, 12 Dec 2024 17:27:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.237.56
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1734024457; cv=fail; b=WOv5JLHyOpcnoINwYsIJaHfytEgQeNii1IDGJbBaV2ONxlo4+pUDW34drgwSFLd+ylx8ci+dCJM8JP0FQ3Q6JrWeKvK49tuca1oUDBOmooITFMiqSg2+ExeNYkTjarcy+W561TGCky5zci2jeiqms5uo1fgADJy/NWHnwHcBg0w=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1734024457; c=relaxed/simple;
+	bh=CX+r2Wbgd0/gHJbruoDkMMQxfRwn8wTm5m8MyxN2jrQ=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=PNhRjSAMS4H5y+KLPo/AduS7vUiVQiYH1vuCCJ7vr6U0o5Tt7uqd8L68FSGDxuEApADsD7UzNLuVbt8SKMj+Wut3p13Iu5wR9jYT7JSmUGLG21frIVdjW07e7bzkVngUNaiViRkeQeUOfnZXF48Mhi3cv6+/A55BFl0ctCY5DUM=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=RVV2Ij3q; arc=fail smtp.client-ip=40.107.237.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="TcqNJ2SM"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1734022028; x=1765558028;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version:content-id;
-  bh=yGjhiV9R8XgmrAnClQpCMGoAHgaU+9z+Q96HcObkhSk=;
-  b=TcqNJ2SMKY4MdDc13DTo1Y6N6Q8D+wcSfIHTEv4/o2cAWA0eyLNrTkMI
-   atIlV/U6qdt4U3I2ygUJzzy+XTuPFIPYkoyxe/gwyw/nrBZuV0sqCEXxO
-   tKhHqXfDcOxZRj1VNpYtWw9vJ4gUZVswZkUPTQQu7DNlWfRN5S8CYa0Ev
-   IxgEX+YpSPoG2krizdPgTec4R7E9xVyFotXcsuNVR62XvAqHS3eBMVl1C
-   WgMadn02XTc5G1JkpGFuq1CWsZnnHXy0/Anel4jfNWTeSLp+soYxVs1Wp
-   hHBGYFmrJbG4nA1v7OtHeB6QRTTQ313KBdjOXJHiZDDCfyogvwZDbJHFb
-   A==;
-X-CSE-ConnectionGUID: 8vsgmWeVRruv8dHfKSPa2g==
-X-CSE-MsgGUID: iogPoevISMe15m6lKqc0ig==
-X-IronPort-AV: E=McAfee;i="6700,10204,11284"; a="34359030"
-X-IronPort-AV: E=Sophos;i="6.12,229,1728975600"; 
-   d="scan'208";a="34359030"
-Received: from fmviesa006.fm.intel.com ([10.60.135.146])
-  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Dec 2024 08:47:08 -0800
-X-CSE-ConnectionGUID: rQrWQi5ARamtDeNcE1I+lQ==
-X-CSE-MsgGUID: DE8X+LKBQS6fHgJlQ1N9nw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.12,229,1728975600"; 
-   d="scan'208";a="96019426"
-Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.137])
-  by fmviesa006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Dec 2024 08:47:03 -0800
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Thu, 12 Dec 2024 18:47:00 +0200 (EET)
-To: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
-cc: Mario Limonciello <mario.limonciello@amd.com>, 
-    Hans de Goede <hdegoede@redhat.com>, 
-    Basavaraj Natikar <basavaraj.natikar@amd.com>, 
-    Jiri Kosina <jikos@kernel.org>, Benjamin Tissoires <bentiss@kernel.org>, 
-    Akshata MukundShetty <akshata.mukundshetty@amd.com>, 
-    Patil Rajesh Reddy <patreddy@amd.com>, platform-driver-x86@vger.kernel.org, 
-    linux-input@vger.kernel.org
-Subject: Re: [PATCH 1/2] HID: amd_sfh: Add support to export device operating
- states
-In-Reply-To: <a16764a3-744b-4a55-86af-777de02ff999@amd.com>
-Message-ID: <1e9aad0f-73bd-74a4-1a96-3543419b4fc3@linux.intel.com>
-References: <20241212151951.1922544-1-Shyam-sundar.S-k@amd.com> <20241212151951.1922544-2-Shyam-sundar.S-k@amd.com> <1b3dacc1-37bd-49cc-addc-628e843a5af8@amd.com> <a16764a3-744b-4a55-86af-777de02ff999@amd.com>
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="RVV2Ij3q"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=qoNARE54Vx4WPUC5rS6hQ2koBS2lH6vv1nUnOnXBsa5KYdEk7Ev9P6/2Ifk6qanCxVXibBbaCtdQU6zByunr86t5sYoyQxtNarib/f3e3zBfwPqcQPvzrxjWf0PL3ePcg+aprWsqLJQN/BIM55Q/YiUDOmhgk3osqAmzm4ID2hMSKheYRz0nnBfXvt/7IEb01emTSsFdt4u8p2n59AtmK8DNcLOSB5R7YBrRSJrkRBj/NpoxLoP4pkjQuFUjZEkUsxgoI7tSYPkyKkVFnuZ8kSIG2cIR4e5L7jxSKxnXzM3Xacog8KHPldb5sKFehowMNRCXIIe6yBgDLDoB0pueEg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=o2sq8fBDdc/UH1duv5ky0yBqh0KohAFyb7B1ZOFzr0k=;
+ b=Eb0mXrrM3WBaq7Y3Y6H2/OcGhuQQrVSIosFahSI9e+pknvhLcL96/l08rOeIOkOhu3PdJE5PLNVpuugy0ejWGRlrQ69nfVyrXL/tUBXAkYZXxRRsWMFNRzx98AE6OF309IkvWqixyrDBCaCnEHZwrfD77W1YS1Xgke/QwQw7Ok3xwTLLFATZZSQeqKd85IQSQYAik/RpKVg/b8+52rtv3RKfLUZIw/1EmmpTilKUWzH/YOpJjTg/Ve05rw8SiVTKkoxl1zG8Q7inBrXWPm7DFC3MyaUXC1ejGVOeplnn6qQ6YICbqyKc4lTeTXV5otD6i6a1F8YDJSAGzq/OW4An8Q==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=kernel.org smtp.mailfrom=amd.com; dmarc=pass
+ (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
+ dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=o2sq8fBDdc/UH1duv5ky0yBqh0KohAFyb7B1ZOFzr0k=;
+ b=RVV2Ij3qXrblgzp7/gHIyXVR47CemgPespjWEA86ezQs6bKT3+tB+XXh48cezTpe6YBEe6XJo2Av3FCpJ5KHGNWYuqbkrfXt900zFszbNzoqyLYjymOd6lnA2/Z6GJswPPK7qt9yk/3dek79w0Da6NnCLKWR8vNccvsN8tvUozw=
+Received: from CH2PR14CA0040.namprd14.prod.outlook.com (2603:10b6:610:56::20)
+ by CY8PR12MB8266.namprd12.prod.outlook.com (2603:10b6:930:79::5) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8251.17; Thu, 12 Dec
+ 2024 17:27:23 +0000
+Received: from DS3PEPF000099D6.namprd04.prod.outlook.com
+ (2603:10b6:610:56:cafe::f2) by CH2PR14CA0040.outlook.office365.com
+ (2603:10b6:610:56::20) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.8251.16 via Frontend Transport; Thu,
+ 12 Dec 2024 17:27:23 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
+Received: from SATLEXMB04.amd.com (165.204.84.17) by
+ DS3PEPF000099D6.mail.protection.outlook.com (10.167.17.7) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.8251.15 via Frontend Transport; Thu, 12 Dec 2024 17:27:23 +0000
+Received: from purico-9eb2host.amd.com (10.180.168.240) by SATLEXMB04.amd.com
+ (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Thu, 12 Dec
+ 2024 11:27:21 -0600
+From: Yazen Ghannam <yazen.ghannam@amd.com>
+To: <yazen.ghannam@amd.com>, <x86@kernel.org>, <tony.luck@intel.com>,
+	<mario.limonciello@amd.com>, <bhelgaas@google.com>, <jdelvare@suse.com>,
+	<linux@roeck-us.net>, <clemens@ladisch.de>, <Shyam-sundar.S-k@amd.com>,
+	<hdegoede@redhat.com>, <ilpo.jarvinen@linux.intel.com>,
+	<naveenkrishna.chatradhi@amd.com>, <suma.hegde@amd.com>
+CC: <linux-kernel@vger.kernel.org>, <linux-edac@vger.kernel.org>,
+	<linux-pci@vger.kernel.org>, <linux-hwmon@vger.kernel.org>,
+	<platform-driver-x86@vger.kernel.org>
+Subject: [PATCH v2.1] x86/amd_node, platform/x86/amd/hsmp: Have HSMP use SMN through AMD_NODE
+Date: Thu, 12 Dec 2024 17:27:11 +0000
+Message-ID: <20241212172711.1944927-1-yazen.ghannam@amd.com>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20241206161210.163701-15-yazen.ghannam@amd.com>
+References:
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; BOUNDARY="8323328-1362301288-1734021357=:936"
-Content-ID: <0c848b9a-2154-473f-eff4-4f62b1c307cb@linux.intel.com>
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: SATLEXMB03.amd.com (10.181.40.144) To SATLEXMB04.amd.com
+ (10.181.40.145)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DS3PEPF000099D6:EE_|CY8PR12MB8266:EE_
+X-MS-Office365-Filtering-Correlation-Id: 9e185135-927f-4768-4f2b-08dd1ad23d80
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|376014|7416014|1800799024|82310400026|36860700013|921020;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?wdMUj3BRxr4U/qrOR0xQvH9M7Q1JNvtNBwIEV7q4OKBybqBJcn5pK5Xgx1bM?=
+ =?us-ascii?Q?MesGvffK8y7FQX/RxzKOvMrxpyIzCoYv0HuBV5FNsIGsHZc12JoKAlH1UPnM?=
+ =?us-ascii?Q?cpmrDpxIBwqaYyF/lVlHqID3lxYqHXo8TQjm5W/zDqB1jXis9tNMXah4oaRX?=
+ =?us-ascii?Q?lrDcPkVw6InoQy4NepY95xaifm6ux48pLgrQuw02f12qnFvVqAdF4lbUUg1H?=
+ =?us-ascii?Q?Jv5eHaVjxdSbZKunmPa8/DJHP+MByAOl34CtEPhoO1sADNbEdtjkNKvIvIvm?=
+ =?us-ascii?Q?nrCd19LO3FiCgTcgbIGKIbHg2f2tj1+XOibDuGQdpc1ooXt4YLZb1p3xvlOi?=
+ =?us-ascii?Q?gZK+v8n8onRbb01ZDPIpje+20vcCRooQcPhWp4G/IWdVShkPwUH4PzC2Mz5n?=
+ =?us-ascii?Q?bjhjYwo7ak1QBnzu0/zM78wTNUGSl9V/jENbE0yRXN7BblNkrINxgjfkEgWI?=
+ =?us-ascii?Q?puywguQAYV3m+yVv63W2lC1gYEq2QGJiDfcv3cnyEPbVbcpIr+Z4ep8gg9AQ?=
+ =?us-ascii?Q?6p5BtAm34F0P/aObckQFTZjTGA5+whlfUCoJq1VJh/IkEl/9U6ZiUeBVHtm0?=
+ =?us-ascii?Q?j4vXuLuIoAGM2GoW6kkT93JEDqsCnVsoYTy4AvygMeE/33xt6cy1LeR9SU69?=
+ =?us-ascii?Q?wOkf/qCcIij8flAcitcOqPQpI6SGB3LKo30FSPJtxcmjOovwNKsFcA2rHZhf?=
+ =?us-ascii?Q?3zg9v+IvLgM+HoW89m79lg8qrdk6eEHpSJem1N7p+P+ZP6hwd2IYAd+/QWIK?=
+ =?us-ascii?Q?3YDUZPD8nGZR6Vzf0nBIfdvYoboSm7CtRrSIWALLEUIDZaA3YfjrZ+ilxeCD?=
+ =?us-ascii?Q?knWQ+Xllk31GKZXmAMseytGMuQO9pA7Qyqk5sYcQRH3rqYgz/pAWlT6QcpmF?=
+ =?us-ascii?Q?LADD8uPkcb7G9m/bVoav/vU3rKo2d1GQJkGhydAwLURbGPgbzbjLqZH/ncYZ?=
+ =?us-ascii?Q?azbreX8j+/MzXPKKspDNlHKXKDOTFaDapQCAAXTcmOMakmeyBlWWGFmlwm34?=
+ =?us-ascii?Q?+g+qVZBoCfmzHixygyDIyHJAZIdWMM4DTsnuWYcDWExT58IEvCKZRjvuE+ym?=
+ =?us-ascii?Q?WCqhWUoKYKOO2pzicLusb87hpmItvbmmFdvMAtyp/Fd4WAoX29G4PZdfqgao?=
+ =?us-ascii?Q?U7lBdh+Y1PFkEvf76UKLCoiOFxDf8yjwgpSaPLTcXtFtlDcRiqDkny1FVC+s?=
+ =?us-ascii?Q?b229SPsU1ZhAoTeqJJa0Oed+RFEzq1aw9m0f0T/MdkrCJOkX3VibksYwntzk?=
+ =?us-ascii?Q?Wf+VyRgn9Y78Hl8s1tpzr66gT8S89yRFjPd08YwELtDGY+OAW4ItUxD/RtfY?=
+ =?us-ascii?Q?IivbDZfjUtt6ycI4FUPm5UXRxoGJNkMdNutakC/VI6CKhgVm81BosARkeIxJ?=
+ =?us-ascii?Q?ll2fcntZVfLmFRvQtFzui3d5Wrw0ey8PVdAgGmkADVic1AZccvlrCoI46w1b?=
+ =?us-ascii?Q?EisjLWPS5S2kHeQrISklZ1y89o02uD5ZyoswTh7lxoUks1vk/LgssA=3D=3D?=
+X-Forefront-Antispam-Report:
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(376014)(7416014)(1800799024)(82310400026)(36860700013)(921020);DIR:OUT;SFP:1101;
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 12 Dec 2024 17:27:23.2658
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 9e185135-927f-4768-4f2b-08dd1ad23d80
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	DS3PEPF000099D6.namprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY8PR12MB8266
 
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
+The HSMP interface is just an SMN interface with different offsets.
 
---8323328-1362301288-1734021357=:936
-Content-Type: text/plain; CHARSET=ISO-8859-15
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Content-ID: <5a3c0e9b-d75d-5eec-92c6-9705eed706fa@linux.intel.com>
+Define an HSMP wrapper in the SMN code and have the HSMP platform driver
+use that rather than a local solution.
 
-On Thu, 12 Dec 2024, Shyam Sundar S K wrote:
-> On 12/12/2024 21:16, Mario Limonciello wrote:
-> > On 12/12/2024 09:19, Shyam Sundar S K wrote:
-> >> From: Basavaraj Natikar <basavaraj.natikar@amd.com>
-> >>
-> >> Add support to export device operating states, such as laptop
-> >> placement,
-> >> platform types and propagate this data to AMD PMF driver for use in
-> >> actions.
-> >>
-> >> To retrieve the device operating states data, SRA sensor support
-> >> need to
-> >> be enabled in AMD SFH driver. So add support to enable the SRA sensor.
-> >>
-> >> Co-developed-by: Akshata MukundShetty <akshata.mukundshetty@amd.com>
-> >> Signed-off-by: Akshata MukundShetty <akshata.mukundshetty@amd.com>
-> >> Signed-off-by: Basavaraj Natikar <basavaraj.natikar@amd.com>
-> >=20
-> > When you send someone else's patch but don't change it you are still
-> > supposed to add your "own" S-o-b.
->=20
-> ah! Thanks. I missed to add it.
->=20
-> >=20
-> > I have two small nits below.
-> >=20
->=20
-> Sure, but I have a question to Hans and Ilpo
->=20
-> while we address the remarks what should be approach for merging this
-> series? Should it go via pdx86 tree or hid because patch 2/2 is
-> dependent of 1/2.
+Also, remove the "root" member from AMD_NB, since there are no more
+users of it.
 
-Hi,
+Signed-off-by: Yazen Ghannam <yazen.ghannam@amd.com>
+---
 
-Given pdx86 pmf driver gets much more changes overall, it would seem=20
-better to merge the series through pdx86 tree. But I also want to mention=
-=20
-that generally it's also possible to make requests on merge path as the=20
-submitter of the series, in particular, it is good to take into account
-if you know there are patches that might conflict with the changes=20
-(within this kernel cycle) to make the merge window less problematic for=20
-maintainers.
+Notes:
+    Link:
+    https://lore.kernel.org/20241206161210.163701-15-yazen.ghannam@amd.com
+    
+    v2->v2.1:
+    * Include static_assert() and comment for sysfs attributes.
+    
+    v1->v2:
+    * Rebase on recent HSMP rework.
 
-[In some cases it's possible to create an immutable branch which can be=20
-merged by two (or more) subsystems but I don't think it provides added=20
-value here given how low traffic amd-sfh-hid is.]
+ arch/x86/include/asm/amd_nb.h         |  1 -
+ arch/x86/include/asm/amd_node.h       |  3 +++
+ arch/x86/kernel/amd_nb.c              |  1 -
+ arch/x86/kernel/amd_node.c            |  9 +++++++
+ drivers/platform/x86/amd/hsmp/Kconfig |  2 +-
+ drivers/platform/x86/amd/hsmp/acpi.c  |  7 +++---
+ drivers/platform/x86/amd/hsmp/hsmp.c  |  1 -
+ drivers/platform/x86/amd/hsmp/hsmp.h  |  3 ---
+ drivers/platform/x86/amd/hsmp/plat.c  | 35 +++++++++------------------
+ 9 files changed, 28 insertions(+), 34 deletions(-)
 
---=20
- i.
+diff --git a/arch/x86/include/asm/amd_nb.h b/arch/x86/include/asm/amd_nb.h
+index 4c4efb93045e..adfa0854cf2d 100644
+--- a/arch/x86/include/asm/amd_nb.h
++++ b/arch/x86/include/asm/amd_nb.h
+@@ -27,7 +27,6 @@ struct amd_l3_cache {
+ };
+ 
+ struct amd_northbridge {
+-	struct pci_dev *root;
+ 	struct pci_dev *misc;
+ 	struct pci_dev *link;
+ 	struct amd_l3_cache l3_cache;
+diff --git a/arch/x86/include/asm/amd_node.h b/arch/x86/include/asm/amd_node.h
+index 113ad3e8ee40..5fe9c6537434 100644
+--- a/arch/x86/include/asm/amd_node.h
++++ b/arch/x86/include/asm/amd_node.h
+@@ -33,4 +33,7 @@ static inline u16 amd_num_nodes(void)
+ int __must_check amd_smn_read(u16 node, u32 address, u32 *value);
+ int __must_check amd_smn_write(u16 node, u32 address, u32 value);
+ 
++/* Should only be used by the HSMP driver. */
++int __must_check amd_smn_hsmp_rdwr(u16 node, u32 address, u32 *value, bool write);
++
+ #endif /*_ASM_X86_AMD_NODE_H_*/
+diff --git a/arch/x86/kernel/amd_nb.c b/arch/x86/kernel/amd_nb.c
+index 2729e99806ec..3a20312062af 100644
+--- a/arch/x86/kernel/amd_nb.c
++++ b/arch/x86/kernel/amd_nb.c
+@@ -73,7 +73,6 @@ static int amd_cache_northbridges(void)
+ 	amd_northbridges.nb = nb;
+ 
+ 	for (i = 0; i < amd_northbridges.num; i++) {
+-		node_to_amd_nb(i)->root = amd_node_get_root(i);
+ 		node_to_amd_nb(i)->misc = amd_node_get_func(i, 3);
+ 		node_to_amd_nb(i)->link = amd_node_get_func(i, 4);
+ 	}
+diff --git a/arch/x86/kernel/amd_node.c b/arch/x86/kernel/amd_node.c
+index d2ec7fd555c5..65045f223c10 100644
+--- a/arch/x86/kernel/amd_node.c
++++ b/arch/x86/kernel/amd_node.c
+@@ -97,6 +97,9 @@ static DEFINE_MUTEX(smn_mutex);
+ #define SMN_INDEX_OFFSET	0x60
+ #define SMN_DATA_OFFSET		0x64
+ 
++#define HSMP_INDEX_OFFSET	0xc4
++#define HSMP_DATA_OFFSET	0xc8
++
+ /*
+  * SMN accesses may fail in ways that are difficult to detect here in the called
+  * functions amd_smn_read() and amd_smn_write(). Therefore, callers must do
+@@ -179,6 +182,12 @@ int __must_check amd_smn_write(u16 node, u32 address, u32 value)
+ }
+ EXPORT_SYMBOL_GPL(amd_smn_write);
+ 
++int __must_check amd_smn_hsmp_rdwr(u16 node, u32 address, u32 *value, bool write)
++{
++	return __amd_smn_rw(HSMP_INDEX_OFFSET, HSMP_DATA_OFFSET, node, address, value, write);
++}
++EXPORT_SYMBOL_GPL(amd_smn_hsmp_rdwr);
++
+ static int amd_cache_roots(void)
+ {
+ 	u16 node, num_nodes = amd_num_nodes();
+diff --git a/drivers/platform/x86/amd/hsmp/Kconfig b/drivers/platform/x86/amd/hsmp/Kconfig
+index 7d10d4462a45..d6f7a62d55b5 100644
+--- a/drivers/platform/x86/amd/hsmp/Kconfig
++++ b/drivers/platform/x86/amd/hsmp/Kconfig
+@@ -7,7 +7,7 @@ config AMD_HSMP
+ 	tristate
+ 
+ menu "AMD HSMP Driver"
+-	depends on AMD_NB || COMPILE_TEST
++	depends on AMD_NODE || COMPILE_TEST
+ 
+ config AMD_HSMP_ACPI
+ 	tristate "AMD HSMP ACPI device driver"
+diff --git a/drivers/platform/x86/amd/hsmp/acpi.c b/drivers/platform/x86/amd/hsmp/acpi.c
+index e981d45e1c12..28565ca78afd 100644
+--- a/drivers/platform/x86/amd/hsmp/acpi.c
++++ b/drivers/platform/x86/amd/hsmp/acpi.c
+@@ -10,7 +10,6 @@
+ #define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
+ 
+ #include <asm/amd_hsmp.h>
+-#include <asm/amd_nb.h>
+ 
+ #include <linux/acpi.h>
+ #include <linux/device.h>
+@@ -24,6 +23,8 @@
+ 
+ #include <uapi/asm-generic/errno-base.h>
+ 
++#include <asm/amd_node.h>
++
+ #include "hsmp.h"
+ 
+ #define DRIVER_NAME		"amd_hsmp"
+@@ -321,8 +322,8 @@ static int hsmp_acpi_probe(struct platform_device *pdev)
+ 		return -ENOMEM;
+ 
+ 	if (!hsmp_pdev->is_probed) {
+-		hsmp_pdev->num_sockets = amd_nb_num();
+-		if (hsmp_pdev->num_sockets == 0 || hsmp_pdev->num_sockets > MAX_AMD_SOCKETS)
++		hsmp_pdev->num_sockets = amd_num_nodes();
++		if (hsmp_pdev->num_sockets == 0 || hsmp_pdev->num_sockets > MAX_AMD_NUM_NODES)
+ 			return -ENODEV;
+ 
+ 		hsmp_pdev->sock = devm_kcalloc(&pdev->dev, hsmp_pdev->num_sockets,
+diff --git a/drivers/platform/x86/amd/hsmp/hsmp.c b/drivers/platform/x86/amd/hsmp/hsmp.c
+index 227b4ad4a51a..e04c613ad5d6 100644
+--- a/drivers/platform/x86/amd/hsmp/hsmp.c
++++ b/drivers/platform/x86/amd/hsmp/hsmp.c
+@@ -8,7 +8,6 @@
+  */
+ 
+ #include <asm/amd_hsmp.h>
+-#include <asm/amd_nb.h>
+ 
+ #include <linux/acpi.h>
+ #include <linux/delay.h>
+diff --git a/drivers/platform/x86/amd/hsmp/hsmp.h b/drivers/platform/x86/amd/hsmp/hsmp.h
+index e852f0a947e4..af8b21f821d6 100644
+--- a/drivers/platform/x86/amd/hsmp/hsmp.h
++++ b/drivers/platform/x86/amd/hsmp/hsmp.h
+@@ -21,8 +21,6 @@
+ 
+ #define HSMP_ATTR_GRP_NAME_SIZE	10
+ 
+-#define MAX_AMD_SOCKETS 8
+-
+ #define HSMP_CDEV_NAME		"hsmp_cdev"
+ #define HSMP_DEVNODE_NAME	"hsmp"
+ 
+@@ -41,7 +39,6 @@ struct hsmp_socket {
+ 	void __iomem *virt_base_addr;
+ 	struct semaphore hsmp_sem;
+ 	char name[HSMP_ATTR_GRP_NAME_SIZE];
+-	struct pci_dev *root;
+ 	struct device *dev;
+ 	u16 sock_ind;
+ 	int (*amd_hsmp_rdwr)(struct hsmp_socket *sock, u32 off, u32 *val, bool rw);
+diff --git a/drivers/platform/x86/amd/hsmp/plat.c b/drivers/platform/x86/amd/hsmp/plat.c
+index a61f815c9f80..32921092b0c8 100644
+--- a/drivers/platform/x86/amd/hsmp/plat.c
++++ b/drivers/platform/x86/amd/hsmp/plat.c
+@@ -10,7 +10,6 @@
+ #define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
+ 
+ #include <asm/amd_hsmp.h>
+-#include <asm/amd_nb.h>
+ 
+ #include <linux/device.h>
+ #include <linux/module.h>
+@@ -18,6 +17,8 @@
+ #include <linux/platform_device.h>
+ #include <linux/sysfs.h>
+ 
++#include <asm/amd_node.h>
++
+ #include "hsmp.h"
+ 
+ #define DRIVER_NAME		"amd_hsmp"
+@@ -34,28 +35,12 @@
+ #define SMN_HSMP_MSG_RESP	0x0010980
+ #define SMN_HSMP_MSG_DATA	0x00109E0
+ 
+-#define HSMP_INDEX_REG		0xc4
+-#define HSMP_DATA_REG		0xc8
+-
+ static struct hsmp_plat_device *hsmp_pdev;
+ 
+ static int amd_hsmp_pci_rdwr(struct hsmp_socket *sock, u32 offset,
+ 			     u32 *value, bool write)
+ {
+-	int ret;
+-
+-	if (!sock->root)
+-		return -ENODEV;
+-
+-	ret = pci_write_config_dword(sock->root, HSMP_INDEX_REG,
+-				     sock->mbinfo.base_addr + offset);
+-	if (ret)
+-		return ret;
+-
+-	ret = (write ? pci_write_config_dword(sock->root, HSMP_DATA_REG, *value)
+-		     : pci_read_config_dword(sock->root, HSMP_DATA_REG, value));
+-
+-	return ret;
++	return amd_smn_hsmp_rdwr(sock->sock_ind, sock->mbinfo.base_addr + offset, value, write);
+ }
+ 
+ static ssize_t hsmp_metric_tbl_plat_read(struct file *filp, struct kobject *kobj,
+@@ -95,7 +80,12 @@ static umode_t hsmp_is_sock_attr_visible(struct kobject *kobj,
+  * Static array of 8 + 1(for NULL) elements is created below
+  * to create sysfs groups for sockets.
+  * is_bin_visible function is used to show / hide the necessary groups.
++ *
++ * Validate the maximum number against MAX_AMD_NUM_NODES. If this changes,
++ * then the attributes and groups below must be adjusted.
+  */
++static_assert(MAX_AMD_NUM_NODES == 8);
++
+ #define HSMP_BIN_ATTR(index, _list)					\
+ static struct bin_attribute attr##index = {				\
+ 	.attr = { .name = HSMP_METRICS_TABLE_NAME, .mode = 0444},	\
+@@ -159,10 +149,7 @@ static int init_platform_device(struct device *dev)
+ 	int ret, i;
+ 
+ 	for (i = 0; i < hsmp_pdev->num_sockets; i++) {
+-		if (!node_to_amd_nb(i))
+-			return -ENODEV;
+ 		sock = &hsmp_pdev->sock[i];
+-		sock->root			= node_to_amd_nb(i)->root;
+ 		sock->sock_ind			= i;
+ 		sock->dev			= dev;
+ 		sock->mbinfo.base_addr		= SMN_HSMP_BASE;
+@@ -305,11 +292,11 @@ static int __init hsmp_plt_init(void)
+ 		return -ENOMEM;
+ 
+ 	/*
+-	 * amd_nb_num() returns number of SMN/DF interfaces present in the system
++	 * amd_num_nodes() returns number of SMN/DF interfaces present in the system
+ 	 * if we have N SMN/DF interfaces that ideally means N sockets
+ 	 */
+-	hsmp_pdev->num_sockets = amd_nb_num();
+-	if (hsmp_pdev->num_sockets == 0 || hsmp_pdev->num_sockets > MAX_AMD_SOCKETS)
++	hsmp_pdev->num_sockets = amd_num_nodes();
++	if (hsmp_pdev->num_sockets == 0 || hsmp_pdev->num_sockets > MAX_AMD_NUM_NODES)
+ 		return ret;
+ 
+ 	ret = platform_driver_register(&amd_hsmp_driver);
+-- 
+2.43.0
 
-> >> ---
-> >> =A0 drivers/hid/amd-sfh-hid/amd_sfh_common.h=A0=A0=A0=A0=A0 |=A0 1 +
-> >> =A0 drivers/hid/amd-sfh-hid/sfh1_1/amd_sfh_init.c | 22 ++++++++++++
-> >> =A0 .../amd-sfh-hid/sfh1_1/amd_sfh_interface.c=A0=A0=A0 | 35 +++++++++=
-++++++
-> >> ++++
-> >> =A0 .../amd-sfh-hid/sfh1_1/amd_sfh_interface.h=A0=A0=A0 | 20 +++++++++=
-++
-> >> =A0 include/linux/amd-pmf-io.h=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=
-=A0=A0=A0=A0=A0=A0 | 15 ++++++++
-> >> =A0 5 files changed, 93 insertions(+)
-> >>
-> >> diff --git a/drivers/hid/amd-sfh-hid/amd_sfh_common.h b/drivers/hid/
-> >> amd-sfh-hid/amd_sfh_common.h
-> >> index e5620d7db569..799b8686a88a 100644
-> >> --- a/drivers/hid/amd-sfh-hid/amd_sfh_common.h
-> >> +++ b/drivers/hid/amd-sfh-hid/amd_sfh_common.h
-> >> @@ -43,6 +43,7 @@ struct amd_mp2_sensor_info {
-> >> =A0 struct sfh_dev_status {
-> >> =A0=A0=A0=A0=A0 bool is_hpd_present;
-> >> =A0=A0=A0=A0=A0 bool is_als_present;
-> >> +=A0=A0=A0 bool is_sra_present;
-> >> =A0 };
-> >> =A0 =A0 struct amd_mp2_dev {
-> >> diff --git a/drivers/hid/amd-sfh-hid/sfh1_1/amd_sfh_init.c b/
-> >> drivers/hid/amd-sfh-hid/sfh1_1/amd_sfh_init.c
-> >> index db36d87d5634..03c028f1aab4 100644
-> >> --- a/drivers/hid/amd-sfh-hid/sfh1_1/amd_sfh_init.c
-> >> +++ b/drivers/hid/amd-sfh-hid/sfh1_1/amd_sfh_init.c
-> >> @@ -30,6 +30,7 @@ static int amd_sfh_get_sensor_num(struct
-> >> amd_mp2_dev *mp2, u8 *sensor_id)
-> >> =A0=A0=A0=A0=A0=A0=A0=A0=A0 case ACCEL_IDX:
-> >> =A0=A0=A0=A0=A0=A0=A0=A0=A0 case GYRO_IDX:
-> >> =A0=A0=A0=A0=A0=A0=A0=A0=A0 case MAG_IDX:
-> >> +=A0=A0=A0=A0=A0=A0=A0 case SRA_IDX:
-> >> =A0=A0=A0=A0=A0=A0=A0=A0=A0 case ALS_IDX:
-> >> =A0=A0=A0=A0=A0=A0=A0=A0=A0 case HPD_IDX:
-> >> =A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 if (BIT(i) & slist->sl.sensors=
-)
-> >> @@ -58,6 +59,8 @@ static const char *get_sensor_name(int idx)
-> >> =A0=A0=A0=A0=A0=A0=A0=A0=A0 return "gyroscope";
-> >> =A0=A0=A0=A0=A0 case MAG_IDX:
-> >> =A0=A0=A0=A0=A0=A0=A0=A0=A0 return "magnetometer";
-> >> +=A0=A0=A0 case SRA_IDX:
-> >> +=A0=A0=A0=A0=A0=A0=A0 return "SRA";
-> >> =A0=A0=A0=A0=A0 case ALS_IDX:
-> >> =A0=A0=A0=A0=A0=A0=A0=A0=A0 return "ALS";
-> >> =A0=A0=A0=A0=A0 case HPD_IDX:
-> >> @@ -130,6 +133,23 @@ static int amd_sfh1_1_hid_client_init(struct
-> >> amd_mp2_dev *privdata)
-> >> =A0 =A0=A0=A0=A0=A0 for (i =3D 0; i < cl_data->num_hid_devices; i++) {
-> >> =A0=A0=A0=A0=A0=A0=A0=A0=A0 cl_data->sensor_sts[i] =3D SENSOR_DISABLED=
-;
-> >> +
-> >> +=A0=A0=A0=A0=A0=A0=A0 if (cl_data->num_hid_devices =3D=3D 1 && cl_dat=
-a->sensor_idx[0]
-> >> =3D=3D SRA_IDX)
-> >> +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 break;
-> >> +
-> >> +=A0=A0=A0=A0=A0=A0=A0 if (cl_data->sensor_idx[i] =3D=3D SRA_IDX) {
-> >> +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 info.sensor_idx =3D cl_data->sensor=
-_idx[i];
-> >> +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 writel(0, privdata->mmio + amd_get_=
-p2c_val(privdata, 0));
-> >> +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 mp2_ops->start(privdata, info);
-> >> +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 status =3D amd_sfh_wait_for_respons=
-e
-> >> +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 (privdata, cl_data->sen=
-sor_idx[i], ENABLE_SENSOR);
-> >> +
-> >> +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 cl_data->sensor_sts[i] =3D (status =
-=3D=3D 0) ?
-> >> SENSOR_ENABLED : SENSOR_DISABLED;
-> >> +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 if (cl_data->sensor_sts[i] =3D=3D S=
-ENSOR_ENABLED)
-> >> +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 privdata->dev_en.is_sra=
-_present =3D true;
-> >> +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 continue;
-> >> +=A0=A0=A0=A0=A0=A0=A0 }
-> >> +
-> >> =A0=A0=A0=A0=A0=A0=A0=A0=A0 cl_data->sensor_requested_cnt[i] =3D 0;
-> >> =A0=A0=A0=A0=A0=A0=A0=A0=A0 cl_data->cur_hid_dev =3D i;
-> >> =A0=A0=A0=A0=A0=A0=A0=A0=A0 cl_idx =3D cl_data->sensor_idx[i];
-> >> @@ -181,6 +201,8 @@ static int amd_sfh1_1_hid_client_init(struct
-> >> amd_mp2_dev *privdata)
-> >> =A0=A0=A0=A0=A0 }
-> >> =A0 =A0=A0=A0=A0=A0 for (i =3D 0; i < cl_data->num_hid_devices; i++) {
-> >> +=A0=A0=A0=A0=A0=A0=A0 if (cl_data->sensor_idx[i] =3D=3D SRA_IDX)
-> >> +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 continue;
-> >> =A0=A0=A0=A0=A0=A0=A0=A0=A0 cl_data->cur_hid_dev =3D i;
-> >> =A0=A0=A0=A0=A0=A0=A0=A0=A0 if (cl_data->sensor_sts[i] =3D=3D SENSOR_E=
-NABLED) {
-> >> =A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 cl_data->is_any_sensor_enabled=
- =3D true;
-> >> diff --git a/drivers/hid/amd-sfh-hid/sfh1_1/amd_sfh_interface.c b/
-> >> drivers/hid/amd-sfh-hid/sfh1_1/amd_sfh_interface.c
-> >> index 4676f060da26..b4c0d96ab152 100644
-> >> --- a/drivers/hid/amd-sfh-hid/sfh1_1/amd_sfh_interface.c
-> >> +++ b/drivers/hid/amd-sfh-hid/sfh1_1/amd_sfh_interface.c
-> >> @@ -87,6 +87,38 @@ void sfh_interface_init(struct amd_mp2_dev *mp2)
-> >> =A0=A0=A0=A0=A0 emp2 =3D mp2;
-> >> =A0 }
-> >> =A0 +static int amd_sfh_mode_info(u32 *platform_type, u32
-> >> *laptop_placement)
-> >> +{
-> >> +=A0=A0=A0 struct sfh_op_mode mode;
-> >> +
-> >> +=A0=A0=A0 if (!platform_type || !laptop_placement)
-> >> +=A0=A0=A0=A0=A0=A0=A0 return -EINVAL;
-> >> +
-> >> +=A0=A0=A0 if (!emp2 || !emp2->dev_en.is_sra_present)
-> >> +=A0=A0=A0=A0=A0=A0=A0 return -ENODEV;
-> >> +
-> >> +=A0=A0=A0 mode.val =3D readl(emp2->mmio + amd_get_c2p_val(emp2, 3));
-> >> +
-> >> +=A0=A0=A0 *platform_type =3D mode.op_mode.devicemode;
-> >> +
-> >> +=A0=A0=A0 if (mode.op_mode.ontablestate =3D=3D 1)
-> >> +=A0=A0=A0=A0=A0=A0=A0 *laptop_placement =3D ON_TABLE;
-> >> +=A0=A0=A0 else if (mode.op_mode.ontablestate =3D=3D 2)
-> >> +=A0=A0=A0=A0=A0=A0=A0 *laptop_placement =3D ON_LAP_MOTION;
-> >> +=A0=A0=A0 else if (mode.op_mode.inbagstate =3D=3D 1)
-> >> +=A0=A0=A0=A0=A0=A0=A0 *laptop_placement =3D IN_BAG;
-> >> +=A0=A0=A0 else if (mode.op_mode.outbagstate =3D=3D 1)
-> >> +=A0=A0=A0=A0=A0=A0=A0 *laptop_placement =3D OUT_OF_BAG;
-> >> +=A0=A0=A0 else if (mode.op_mode.ontablestate =3D=3D 0 ||
-> >> mode.op_mode.inbagstate =3D=3D 0 ||
-> >> +=A0=A0=A0=A0=A0=A0=A0=A0 mode.op_mode.outbagstate =3D=3D 0)
-> >> +=A0=A0=A0=A0=A0=A0=A0 *laptop_placement =3D LP_UNKNOWN;
-> >> +=A0=A0=A0 else if (mode.op_mode.ontablestate =3D=3D 3 ||
-> >> mode.op_mode.inbagstate =3D=3D 3 ||
-> >> +=A0=A0=A0=A0=A0=A0=A0=A0 mode.op_mode.outbagstate =3D=3D 3)
-> >> +=A0=A0=A0=A0=A0=A0=A0 *laptop_placement =3D LP_UNDEFINED;
-> >=20
-> > What do you think of doing a pr_warn_once() when you end up with an
-> > undefined placement?=A0 This could help point out that the driver needs
-> > to be changed for a newly created mode that the hardware detected.
-> >=20
-> >> +
-> >> +=A0=A0=A0 return 0;
-> >> +}
-> >> +
-> >> =A0 static int amd_sfh_hpd_info(u8 *user_present)
-> >> =A0 {
-> >> =A0=A0=A0=A0=A0 struct hpd_status hpdstatus;
-> >> @@ -131,6 +163,9 @@ int amd_get_sfh_info(struct amd_sfh_info
-> >> *sfh_info, enum sfh_message_type op)
-> >> =A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 return amd_sfh_hpd_info(&sfh_i=
-nfo->user_present);
-> >> =A0=A0=A0=A0=A0=A0=A0=A0=A0 case MT_ALS:
-> >> =A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 return amd_sfh_als_info(&sfh_i=
-nfo->ambient_light);
-> >> +=A0=A0=A0=A0=A0=A0=A0 case MT_SRA:
-> >> +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 return amd_sfh_mode_info(&sfh_info-=
->platform_type,
-> >> +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=
-=A0 &sfh_info->laptop_placement);
-> >> =A0=A0=A0=A0=A0=A0=A0=A0=A0 }
-> >> =A0=A0=A0=A0=A0 }
-> >> =A0=A0=A0=A0=A0 return -EINVAL;
-> >> diff --git a/drivers/hid/amd-sfh-hid/sfh1_1/amd_sfh_interface.h b/
-> >> drivers/hid/amd-sfh-hid/sfh1_1/amd_sfh_interface.h
-> >> index 2c211d28764d..f7eb2539bccc 100644
-> >> --- a/drivers/hid/amd-sfh-hid/sfh1_1/amd_sfh_interface.h
-> >> +++ b/drivers/hid/amd-sfh-hid/sfh1_1/amd_sfh_interface.h
-> >> @@ -22,6 +22,7 @@ enum sensor_index {
-> >> =A0=A0=A0=A0=A0 ACCEL_IDX,
-> >> =A0=A0=A0=A0=A0 GYRO_IDX,
-> >> =A0=A0=A0=A0=A0 MAG_IDX,
-> >> +=A0=A0=A0 SRA_IDX,
-> >> =A0=A0=A0=A0=A0 ALS_IDX =3D 4,
-> >> =A0=A0=A0=A0=A0 HPD_IDX =3D 5,
-> >=20
-> > IIRC in C enums start at 0 right?=A0 So ALS_IDX and HPD_IDX don't need
-> > explicit assingments anymore.
-> >=20
-> >> =A0=A0=A0=A0=A0 MAX_IDX =3D 15,
-> >> @@ -164,6 +165,25 @@ struct hpd_status {
-> >> =A0=A0=A0=A0=A0 };
-> >> =A0 };
-> >> =A0 +struct sfh_op_mode {
-> >> +=A0=A0=A0 union {
-> >> +=A0=A0=A0=A0=A0=A0=A0 u32 val;
-> >> +=A0=A0=A0=A0=A0=A0=A0 struct {
-> >> +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 u32 mode=A0=A0=A0=A0=A0=A0=A0 : 3;
-> >> +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 u32 lidstatus=A0=A0=A0=A0=A0=A0=A0 =
-: 1;
-> >> +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 u32 angle=A0=A0=A0=A0=A0=A0=A0 : 10=
-;
-> >> +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 u32 inbagstatedbg=A0=A0=A0 : 2;
-> >> +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 u32 ontablestate=A0=A0=A0 : 2;
-> >> +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 u32 inbagstate=A0=A0=A0=A0=A0=A0=A0=
- : 2;
-> >> +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 u32 outbagstate=A0=A0=A0=A0=A0=A0=
-=A0 : 2;
-> >> +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 u32 inbagmlcstate=A0=A0=A0 : 1;
-> >> +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 u32 powerstate=A0=A0=A0=A0=A0=A0=A0=
- : 2;
-> >> +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 u32 data=A0=A0=A0=A0=A0=A0=A0 : 3;
-> >> +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 u32 devicemode=A0=A0=A0=A0=A0=A0=A0=
- : 4;
-> >> +=A0=A0=A0=A0=A0=A0=A0 } op_mode;
-> >> +=A0=A0=A0 };
-> >> +};
-> >> +
-> >> =A0 void sfh_interface_init(struct amd_mp2_dev *mp2);
-> >> =A0 void sfh_deinit_emp2(void);
-> >> =A0 void amd_sfh1_1_set_desc_ops(struct amd_mp2_ops *mp2_ops);
-> >> diff --git a/include/linux/amd-pmf-io.h b/include/linux/amd-pmf-io.h
-> >> index b4f818205216..01f2b12c56a6 100644
-> >> --- a/include/linux/amd-pmf-io.h
-> >> +++ b/include/linux/amd-pmf-io.h
-> >> @@ -18,10 +18,12 @@
-> >> =A0=A0 * enum sfh_message_type - Query the SFH message type
-> >> =A0=A0 * @MT_HPD: Message ID to know the Human presence info from MP2 =
-FW
-> >> =A0=A0 * @MT_ALS: Message ID to know the Ambient light info from MP2 F=
-W
-> >> + * @MT_SRA: Message ID to know the SRA data from MP2 FW
-> >> =A0=A0 */
-> >> =A0 enum sfh_message_type {
-> >> =A0=A0=A0=A0=A0 MT_HPD,
-> >> =A0=A0=A0=A0=A0 MT_ALS,
-> >> +=A0=A0=A0 MT_SRA,
-> >> =A0 };
-> >> =A0 =A0 /**
-> >> @@ -40,10 +42,23 @@ enum sfh_hpd_info {
-> >> =A0=A0 * struct amd_sfh_info - get HPD sensor info from MP2 FW
-> >> =A0=A0 * @ambient_light: Populates the ambient light information
-> >> =A0=A0 * @user_present: Populates the user presence information
-> >> + * @platform_type: Operating modes (clmashell, flat, tent, etc.)
-> >> + * @laptop_placement: Device states (ontable, onlap, outbag)
-> >> =A0=A0 */
-> >> =A0 struct amd_sfh_info {
-> >> =A0=A0=A0=A0=A0 u32 ambient_light;
-> >> =A0=A0=A0=A0=A0 u8 user_present;
-> >> +=A0=A0=A0 u32 platform_type;
-> >> +=A0=A0=A0 u32 laptop_placement;
-> >> +};
-> >> +
-> >> +enum laptop_placement {
-> >> +=A0=A0=A0 LP_UNKNOWN =3D 0,
-> >> +=A0=A0=A0 ON_TABLE,
-> >> +=A0=A0=A0 ON_LAP_MOTION,
-> >> +=A0=A0=A0 IN_BAG,
-> >> +=A0=A0=A0 OUT_OF_BAG,
-> >> +=A0=A0=A0 LP_UNDEFINED,
-> >> =A0 };
-> >> =A0 =A0 int amd_get_sfh_info(struct amd_sfh_info *sfh_info, enum
-> >> sfh_message_type op);
-> >=20
->=20
---8323328-1362301288-1734021357=:936--
