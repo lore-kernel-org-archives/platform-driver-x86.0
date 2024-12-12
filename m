@@ -1,52 +1,52 @@
-Received: from NAM02-BN1-obe.outbound.protection.outlook.com (mail-bn1nam02on2082.outbound.protection.outlook.com [40.107.212.82])
+Received: from NAM02-BN1-obe.outbound.protection.outlook.com (mail-bn1nam02on2042.outbound.protection.outlook.com [40.107.212.42])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1723B10F2;
-	Thu, 12 Dec 2024 15:55:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.212.82
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B2D5A216E3B;
+	Thu, 12 Dec 2024 16:24:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.212.42
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1734018931; cv=fail; b=YQwqRZaCi7YOjJdy65W85wtjRGCbMAZpuDksJgs2nCBsLjUuI3Bw2qrYVdLi/JAcuDde/7bPsprT/XeBAfZ3/1PTgj+YOk3/jVCbyw5vz6ef/54oT0itRd8g5XB4m0mjKsm4lYnLI3hyXE8fl5UGGc28vibGqFha906MdW20Y4U=
+	t=1734020673; cv=fail; b=Q9ujMOJ6g/WPoePQHgkvRbJhRH/Hm9ihM7PyFsJaqmEwrVeHy1M36FJ55Pbml6/Jy8KsAxYNnv+jdV8/APPnzBtNYrf+nwPbDF6bwaumdmu+G3SFFsy9MN607M/UUUGZYEp3ExvkoXHKzejLTNqe4+rBySpFyocRJwIb+RY7wvQ=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1734018931; c=relaxed/simple;
-	bh=NgU9xS/VeirodN1iANhYSf9F3vg+bEiTUDxakjOMUYc=;
+	s=arc-20240116; t=1734020673; c=relaxed/simple;
+	bh=A6+IROIEh0w7ZMbffQ9G0heO/n3Yy9yus2Mz7tJAOYA=;
 	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=aMr/NwuxFD5/5s67GVQyshHIC+z/iNvkDRdr8MCG4IAylft55uHA/RZTuk+mAlUBtLB3lacGlm2x4w2QCxvQZOEUq9fn7b8x0T9e/UBkMc/mVhqps6EUeycy3ruQW4jKG8by9OZUeEyk1su2WKjANVtxskH8IeOz1/xGomM0RUU=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=Pwx9P/r+; arc=fail smtp.client-ip=40.107.212.82
+	 Content-Type:MIME-Version; b=Y7x2Ab0iPi0iRyv0g3q7V0qWcbXnDAEx2d4gBz89r+8Lo05MHIubtYQO84WF7XE0ZRx3mM5PKB4edf/tpKeYtDP+K+BG75NnbP69YN54zgZuluJZzL4TlHkD5z4QW9OjYq3SKoDaeIc1+3a2lzWEc/FEo9hdhOIO5jTKnqAopuo=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=HVXlOtwv; arc=fail smtp.client-ip=40.107.212.42
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
 Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="Pwx9P/r+"
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="HVXlOtwv"
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=MIIRp6DlUrheGVHq70JloNlsev/lWLlCO4HE1t8QUAx80LMo+4FdSRRnX76feYApqXHf8BGFsnNyGFlFNdIMyNpV9rUAFr0p+XRyTHjMsSKZQrixOLeMvUiMPrLDzSxokOm8B/RPUu4EADB3mRaFPpEgkHjtpPkWSArw7JSlEmS810h0+JDDA2YuTqRPaO1rRqrOdCBYwz3Ua6SanlpTaMOv42XJUwJR53gduCoay/Se7E3RQxo+PQO21j3zW1fmEFlzi4L6BiFyxNWoC7a+lj88V+sNP+oyiYA5FMI//qv1YfogPX7GiJ5/1Hf1ZgL2V7IDZ6FgtygHJBWhU48z9Q==
+ b=CjWeztUhO1Ba8X00zAfxELgdDHpl0Ey3q32qNlfM106NpDtunWEhi42ohVFYaWUFMN+2m4H2COpUPbbX9xa1yO2WS9YsjmJaypHYdpPvhNPFeEsv4M2OExZ9e7jqqIy9krj45BkXDqadh7PLqkqDOQlYPkomENtaNoayjJ9Iuh2aW/uXgNct03aSK0/82k25m0hu82W/zfErHdHAJeXsgrr1FkuyNtsN+iWYztB98ZiE8kG5d7y7pkC77G24zmgQiZrS84ohyO+WWCWWR4wwVxRRosfSK+FgyKqONT8CY9aCCQqGkI5/HYPAI6HxpPX50sCuF+gnBW6rjfZdEzoTVg==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=BQMuszy2UrGjUvFvwKQKPhCg6KVqNjNpLyBAsHE5um8=;
- b=moY9HRF116WDcIYCeihlZEQ85NomRF9/Y2FkYNP2zjHCQJO1LEBKcIpqeAoVMTsqCJfmwxo50xPhZI6eVjoeyLIld5Iz6ANbZf8kcu9mQpvISlhKdfErLx1t7It97DDOx3lrLfYm7WsMV55HOvCQqUPMS2C2hHtC8Ez87mcdLKkdHsg6RaXfrJSC7YAgBwE4E49yC9fYNzwWzmGu0PxuLgI3mpW0HanxJ1ZjP1UG4Z6QmwINZtYLQUoeJojur8EzXgV95xfoPDYQ7wDKI/OmxioBwSju4kB0PkxiddfH8Ja6BC+oRMGN++2nrL/ofuZCEnccMmajsj4uRBqm3O9pVA==
+ bh=h2ETmc7tJcU3De295fmSMJ9cPU7RZFfU3+NxiKh3wn4=;
+ b=A059Lq8hRdJDbWg9NWUSvlYNn1yucjnQ1f3gENFR418W2c9Ldm2V4SczG869yl6cG9/X2VtRTgBS/W+13+SaBErXJSPbrlfuvZpcDD8wMsnhQsh/8Vz9lBcHgQzXEMnAj9q4dq0L/pavqqRcxnOBDNNS9K3/R9V5BW8eRJFZitlbMEp0q3Kdcf9A6OBboZgO6JBPketiFyDzBlciNY8BE9fg1ztiU+sdZeFewXDs2UpaWJhHiNDuOPbh2VvFMFMXFsUsAiExWPR8AzSaNug/T8tbtuR2uq/n1U3KKlyAB36fDkCtM6z2IUzCNff2p6ZVnOwHTSRzEO1Tn4Ou0QezhA==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
  header.d=amd.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=BQMuszy2UrGjUvFvwKQKPhCg6KVqNjNpLyBAsHE5um8=;
- b=Pwx9P/r+aF2OnHGkvDg9xLvYR5zq3LS9GU4y+8uWMargzvV5gff038t0afYIwP3n9hnBA50fdSuxT9cgf39G1tZcJsZOgm0L1MPJU5dcexwb47x29ZGKR4z6ef7F3cSnPwYt9WfSbeNU5jlPcac7vVKGtnZIH9K8JsfXJ94yXw8=
+ bh=h2ETmc7tJcU3De295fmSMJ9cPU7RZFfU3+NxiKh3wn4=;
+ b=HVXlOtwv7soO76edDHWxJzeCbT+4EcC4ieqsVEqENFgd11Oc9jqA9NZN85lJEPlZBwx8cmysWFnqAVwlSoHDKpntVvtNbehUy44qP/jtL1dIm3pxtRsYZRuVEagoK0wA2bq6fHiDYeb0sN9GVZ3E40pO45ApeljozPqHuJ54tz0=
 Authentication-Results: dkim=none (message not signed)
  header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from BL1PR12MB5176.namprd12.prod.outlook.com (2603:10b6:208:311::19)
- by PH8PR12MB7253.namprd12.prod.outlook.com (2603:10b6:510:226::16) with
+Received: from MN0PR12MB6101.namprd12.prod.outlook.com (2603:10b6:208:3cb::10)
+ by MN0PR12MB5859.namprd12.prod.outlook.com (2603:10b6:208:37a::17) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8230.12; Thu, 12 Dec
- 2024 15:55:24 +0000
-Received: from BL1PR12MB5176.namprd12.prod.outlook.com
- ([fe80::ed5b:dd2f:995a:bcf4]) by BL1PR12MB5176.namprd12.prod.outlook.com
- ([fe80::ed5b:dd2f:995a:bcf4%4]) with mapi id 15.20.8251.015; Thu, 12 Dec 2024
- 15:55:23 +0000
-Message-ID: <a16764a3-744b-4a55-86af-777de02ff999@amd.com>
-Date: Thu, 12 Dec 2024 21:25:16 +0530
+ 2024 16:24:28 +0000
+Received: from MN0PR12MB6101.namprd12.prod.outlook.com
+ ([fe80::37ee:a763:6d04:81ca]) by MN0PR12MB6101.namprd12.prod.outlook.com
+ ([fe80::37ee:a763:6d04:81ca%4]) with mapi id 15.20.8251.008; Thu, 12 Dec 2024
+ 16:24:28 +0000
+Message-ID: <ef7845f3-8515-46df-b8aa-a6c9486206d7@amd.com>
+Date: Thu, 12 Dec 2024 10:22:41 -0600
 User-Agent: Mozilla Thunderbird
 Subject: Re: [PATCH 1/2] HID: amd_sfh: Add support to export device operating
  states
-To: Mario Limonciello <mario.limonciello@amd.com>,
+To: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>,
  Hans de Goede <hdegoede@redhat.com>, ilpo.jarvinen@linux.intel.com,
  Basavaraj Natikar <basavaraj.natikar@amd.com>, Jiri Kosina
  <jikos@kernel.org>, Benjamin Tissoires <bentiss@kernel.org>,
@@ -55,15 +55,14 @@ To: Mario Limonciello <mario.limonciello@amd.com>,
 Cc: platform-driver-x86@vger.kernel.org, linux-input@vger.kernel.org
 References: <20241212151951.1922544-1-Shyam-sundar.S-k@amd.com>
  <20241212151951.1922544-2-Shyam-sundar.S-k@amd.com>
- <1b3dacc1-37bd-49cc-addc-628e843a5af8@amd.com>
 Content-Language: en-US
-From: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
-In-Reply-To: <1b3dacc1-37bd-49cc-addc-628e843a5af8@amd.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: PN2PR01CA0050.INDPRD01.PROD.OUTLOOK.COM
- (2603:1096:c01:22::25) To BL1PR12MB5176.namprd12.prod.outlook.com
- (2603:10b6:208:311::19)
+From: Mario Limonciello <mario.limonciello@amd.com>
+In-Reply-To: <20241212151951.1922544-2-Shyam-sundar.S-k@amd.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: SN7P222CA0024.NAMP222.PROD.OUTLOOK.COM
+ (2603:10b6:806:124::20) To MN0PR12MB6101.namprd12.prod.outlook.com
+ (2603:10b6:208:3cb::10)
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -71,353 +70,104 @@ List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: BL1PR12MB5176:EE_|PH8PR12MB7253:EE_
-X-MS-Office365-Filtering-Correlation-Id: 6228ff06-ca79-4b0a-e22f-08dd1ac56355
+X-MS-TrafficTypeDiagnostic: MN0PR12MB6101:EE_|MN0PR12MB5859:EE_
+X-MS-Office365-Filtering-Correlation-Id: 70d999d0-2b22-497e-e7b8-08dd1ac97352
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|1800799024|366016;
+X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|376014|1800799024;
 X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?N2dBaHdNa2FwQUFTL3VtSm1MMUN5dFloajBYNWUzTmxhb1l4WlhidTlMTDA1?=
- =?utf-8?B?cW56Q252UW5HUGpnTEl2M29qWjdhYW1CbEJNTk42Q1YxaDFyZk9NZWowYThD?=
- =?utf-8?B?bEphV3pCNVgwT1YybUJnYVE3U0FWcXZHcmZUMmVaUFFiL29yb05OWDhsTGQv?=
- =?utf-8?B?SWtsMjB4VXFsaXBnNVY2cGREUTczVGZGSE1NZVpxNWw3MDJKbUR1OVhFRHAv?=
- =?utf-8?B?OGdhYmZWWnNFYUJkS0lZMGw1a3BCMzk1cnc1bXRIOFZCVzNkV2VqUTBSSTFI?=
- =?utf-8?B?a2I2OXEwSEpxay9CYit6RXI2VDVPb2U1L3VTYW54RE1SNHdDYVFoUCtMbFBt?=
- =?utf-8?B?TFFFdzFjUWVCRjdndVkwOUpkL1FpelNqTEZxcUVFbmVIRFYybnV0MVU3MUh4?=
- =?utf-8?B?T0lnM0QreFVnMnN6ZGVwcGxEd1BoMlJPN1BzNFV2em5YdE82OVMxZ3lxNGlr?=
- =?utf-8?B?WWZGRTUvRkxMM3gyUmUyQ2hPL3dHT3k5TE9FbWEzd2NPN2RtclBJQlpsUktp?=
- =?utf-8?B?SS9FSXJDZWR4SFRTOFJ5NStqazdpS3dPdGZmNkdHZCs3MmFpcjkxQy9CSDh1?=
- =?utf-8?B?L0VIakdOdlo0ZjgvNzdmeWQwczNZbHhpV0lTR1UyU2F5ZDdKY28zazhTZnpu?=
- =?utf-8?B?NUpwV1BUMmdacWhGRjY0RTZ0dERsWFR1MEJBWktTNFo1U29iK1RoaXdhTWlq?=
- =?utf-8?B?Tks2a3AySnhES1JTSGYrWTNCaldCZ1dCTnBPZmJEVDhBRVdKMDVNQlhGNVhy?=
- =?utf-8?B?Y2N3ZE1zN3Ryb0drelE1UWNZMzhsWkJLMHlXMlJpSDV6VHE5cVpSSTJVT0ZV?=
- =?utf-8?B?RWFOVkRWTUwyN2RlM2pHK0JkcjJ3UjU3YXVrSVR2UlBqTzd3MTZUZ3FyV3Jv?=
- =?utf-8?B?eC9PdnFYSUFHd2tiMDJldncvK2U0QmRCZlgrSTA0clN0bEVkNjBKUDlvTVdC?=
- =?utf-8?B?SnJyajBoUm9tYjlMV29UZVhmcnVUdi8xNVJ4ajFDbm9seFJURkV5RHBVRlVV?=
- =?utf-8?B?V0MzS0cvSGkwY2N0NDJyamtoc0VXTmh1Rnd0Vi91c2FOS0J0OXMrVmtVUW9K?=
- =?utf-8?B?aUhRbXJsZlZUOHlMTHF0Q1lLdE4vNDhWZi9FSklhbEtxR2orTElSWmxqSmJK?=
- =?utf-8?B?bi85WjZEL3d1MWdNMEZHblU2YWxnd1BLM2ZnaWhjTC9wTjZjcVZqdlVHR3Zx?=
- =?utf-8?B?UHE0cjdObVVnZWV5UVZqZ3VxMUx4UWxKQnpQek1EWmRTSmlFNldSM3FSTmx1?=
- =?utf-8?B?ZUJ4K28zN0U2NmpLb0x4T0RQM2VjcFVPejZiRk15R3puSEZZampWbk85MnlU?=
- =?utf-8?B?Nm5hQmVIYlIyWWxRdFpLdW9xWWFaazRERDliK21VcGl6RVpOSGExZU1INnh4?=
- =?utf-8?B?U1VwRUFWK05zVlFIdmpXaGZrOGN5T2VIRnFmVlk4Qm9nWkdOeWF6eEw2ajQ0?=
- =?utf-8?B?NmRmRkNWMUlMNGsxakVHWW16LzJJcjBteEpwVE9uTkhlV3RDZEFTWGQ3VGx6?=
- =?utf-8?B?VjFFYXdWeDE3Tnl3OHpXT0trNXNiY0tycDVXUmFzR1IvcDg0S1hXM2xQOW1k?=
- =?utf-8?B?S2FOTU9PYWZIUTVVRDdnQ0xsVkRRVVRQK3dQdklLOTQwNjdCQmNzQ21POHpy?=
- =?utf-8?B?Q3ZFQUxVbVFRb1hHdXFndkIvVVd5ZUVMRWtjZGYyd1VpL1BMWmNIWldIcXhm?=
- =?utf-8?B?VnZsZ0JXMG5TU1RYZlJtY1pCSkpCcEtDU0xrTVNJSHd6RWJNRG5udXU2VVBK?=
- =?utf-8?B?L2pFNG1NRVdVME95MkV3b2w5T0RCTVB1VXMrRzlmLzJLM29xYVZTVVM4UEJu?=
- =?utf-8?B?NnBjSzN5SE41enkyeWVtdz09?=
+	=?utf-8?B?U0pGL1JlV0xNVWM0R1V6OWZ4UWFTTGFuMXp6VkVDc09yTEFTeVQyNXhTdGJS?=
+ =?utf-8?B?SU05enNEQnRYQUpCRXplMHJKcTNXQ21MUCtZR2xMMm1aU2RDMzYvT2RuaW84?=
+ =?utf-8?B?emFiL0ZRWFVFeW1QK203RDBTWGRFa1J0WWpFTVcvM0lmWGQvVEhDcTRTdXFW?=
+ =?utf-8?B?dnFWMkZxQkRZNWdlYlIrMlUwZVpRVTJVbERBNFpMQ3ZjdFJuUnJBUmVHK1BU?=
+ =?utf-8?B?aFRoV2x1c1VzVUJmRzdrWGFZLzVNdExLL1RCTEhUQ0ZuM0lncmhqeS9ObDgy?=
+ =?utf-8?B?VDYvTU0rZXFiZVBiU2h4bUI3akFBNkdwbUVDRWRBTk41dFZCRVY2Z2dkVEYx?=
+ =?utf-8?B?dmtXd3J1aWhqYkM4TzQ2VG1wc2lnblM1WjNCZjBHdnBBMmJ1VVIvam04SThZ?=
+ =?utf-8?B?RW10OE9VN0dCeDBPOWZ1UXRIWUtxSWRiNElib01IcTJkOWFRbU5PRDZlU0E5?=
+ =?utf-8?B?VzBiVE02V2NlTWpqcmJjOVNxanRrZEZpMmcvQlBTeWhMNHFvUXJVNzhEb2NX?=
+ =?utf-8?B?ZHpHUUFNRzBQTFg3NUhkaW84V0Urak9OSUV0WXdMT2g4VzRJVDZPK1dZekl2?=
+ =?utf-8?B?WGdxblBMRk0rU3A0T2JFYTNyN1ZhQUk1a3RDclZQYmJ4eCtCTGI0NXBLOW5C?=
+ =?utf-8?B?dWdpK2J5cFRsUXFHbWt4UkgzMlFmSjlvZDVkOTIrYTJxMEw4VC8yYXdMNm0r?=
+ =?utf-8?B?TDdNNTM5MzRkM05qQXE1dUFaUlNFTVp0eFVsYzRySTVHTmNmcmNiNDdieGlB?=
+ =?utf-8?B?UE8vdmRMeHoyMUdRRFdHTlNBelBYdThRQzgrR2daMnRvMVpNbFhHMlpSZW84?=
+ =?utf-8?B?d3hlbUt3V3NsQ1I4NWVFRmhHSEdmRVl5c1RYL2NXQWpDeVRMdmFzTS9POFl0?=
+ =?utf-8?B?YWdNOW1JVlVDUVQvYlJucDN5NHoxa0h4NlZoOXJ4cHErdDN2aEpmbnYwd3FU?=
+ =?utf-8?B?WnlBZU5PL1BNM2ZmV2YzUHZDN0IzWjJpUmxKeHNqUnZtczdYV1Vxekw0OHY5?=
+ =?utf-8?B?SXRsVEJEZjBZTFNDZDcyYzFmbGhpZXF3MDhNTHVtMXpMUGQvRy9hNTZRQTJr?=
+ =?utf-8?B?c2o3Mm16VFdQUWFvWFVyQjBwb0dwRWFuVlN1SzFvcUtKUWJnemd5ditHRnNV?=
+ =?utf-8?B?U1Jndnk3ckNDa0xRdmFGLyswY3FsZFRDZ1FUOHVwZ1dacVFlNzdaKzlSVjQw?=
+ =?utf-8?B?Zkk2TGNDRnpiaWkyUVFPbkdtYytWT3I3VUhOSnJERU9GMWtIamtHbmVUZys5?=
+ =?utf-8?B?cHFYd2s5T3JxQ0dvcWY5OGpHSGMremdNU2UxaVNRTXByY2Q0Z1V0dzRvd2VN?=
+ =?utf-8?B?N1JxcVhsaE05dzhtOVMzQ3ZQVU5KWmhEbS9UbG9LVzdCYlRWWmtob0JaMkpa?=
+ =?utf-8?B?bFRUcW82U2dUNXFXSVpoWnQwK0FIeTRxRUFMNU00ZWR2MjI5QnI2U0xpREwr?=
+ =?utf-8?B?dWJjK2ptSWx2Wm1sMkZVMmFCRk9lTTUxcytUT3l0WGZpcnc1anBwZmV2UEFK?=
+ =?utf-8?B?UWp5MmxablZDejlET3JTcnRzb1NrRkZvdmROYTI2ejNZZ3VvVEJVeVYvT2dR?=
+ =?utf-8?B?T3hLd2dqMlkxL280VE9hUTNtRERLRW9nV1NSRStLekdvc3hRTER2NitBcnFo?=
+ =?utf-8?B?aUhZa0JoaWFqK2J1eG5NWnJZVks2cE1JQlBkcnhCQ25pai9iVkpHa2I3bUl5?=
+ =?utf-8?B?bTN0UW4rbTZsdlFON0Q1SHpzcnd2YnE4ODVWc2RZamFjMXQwQUNvYUhITjdz?=
+ =?utf-8?B?bCs1cHljT1EvSWg4YWpZOUhXZ09LMkM2QXQzdDFtbEhQcC9KNFhHYWw5WnIv?=
+ =?utf-8?B?NzdJVXRoa3dMd0xPdVFHZz09?=
 X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BL1PR12MB5176.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(1800799024)(366016);DIR:OUT;SFP:1101;
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MN0PR12MB6101.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(376014)(1800799024);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?Q1lVOG9FZndMa0FCOVMzVUJZNjlia29TdDlGMWNicFhoT0lRVWdDVjhpZkJJ?=
- =?utf-8?B?M2JZMkxEaEk1aVlEM1hCODdzeTdVcUJ6dE1yNmU2MXMrKzN2cGNlRkZpd1lY?=
- =?utf-8?B?YnpCSG1oTDhtYkZBdHZ6SHByN1pyc2dzZXM1dy9xMGhiaHpULys2cC8zQlQr?=
- =?utf-8?B?N2NVd21oRFQ2TG5ZQ09lZll5dy9CTmdhWE41d2U4NUk0ZWZMeE9OQUZNdlIx?=
- =?utf-8?B?U0ZBODFyOFFEZHMzS1JOUDNoYXZCZTEvNFJYVkRsb2NMUFhQSUUyMkNLWThq?=
- =?utf-8?B?KzIzd2ZIQkU4Z0dwRWFEbEhkREhNeEtITUg2cnQzelhtNkY5YzBib2N6eGtz?=
- =?utf-8?B?b2ZwelAzMGJnYlA0dUVDcUljNVJJeVRaZlZBOWhuc1ZqQmFiU214c2Q4SXhR?=
- =?utf-8?B?YWMreUoxRVdkM0w0SVRuRWViZSs1dEs5c0JsNlpoKysvRXFUdE01S1hIUFAw?=
- =?utf-8?B?cGRXd1l3dzZtNjJIMmlROFkvU1NQcXhITnY0YWJHVjNLVjA0SUVMTklWdEY0?=
- =?utf-8?B?TDdDTnlLUTZlZWVwTmZTVjJLNFgwVTd4cmFxdmFoUGg4REJPK0FRYm5WenVG?=
- =?utf-8?B?ZnYvU0R6U25WM29sb3hERFpzU2NKbHNIMFAzaFo3ZVI2ZnpjSDN6MVdZWVFN?=
- =?utf-8?B?VFBQTE1FVHVSMkhnbTVSV2hzbUJmOHJQYlp0Y2pLcVB2TkZnWUxLb1I5TjhX?=
- =?utf-8?B?bERsYStmSkVLbU9UMDhaNXEzd0NTTXpnZ29RKzNZQjBFcXRSTFdwMS94UTdy?=
- =?utf-8?B?dEhoMzRwVExZN0RMK2FyWVEwbFdESTZDNkx6UzJBdzF3SzNXZ0l4dFZOUGVO?=
- =?utf-8?B?Ynl6YnlNMytsOFltQTlTd3JCWXZJa0w0VU5wZENweThTVW8rblFlak1obkhJ?=
- =?utf-8?B?SHBJZmNwMCthMEFZYUg5eTRXQndqT2Q4SU1aVUpLY1FveWVSVXJrOEhEZ1VH?=
- =?utf-8?B?RXhkZkRaY2U4MWdBVFlHY2M4UHZRZjdEbWlBaEZYa0h0VC9hOUdrVXB3M04r?=
- =?utf-8?B?WlFrMkFlZ1pBTUZwU0dWbWZiVms0djBIbVBTRmVZa09QVnhHRUF5QWRoMWdG?=
- =?utf-8?B?VVlMblkzWHlNYkxFNjMxNlEvM3RjbHk2STZjZkZ5N2dzYjlEc2xvTnVLaThQ?=
- =?utf-8?B?WkJmMUtoMHpkRnFydlpkalV6R2FaakpTbS90OXAwM1REeFBrZVgyd1VlQ3NU?=
- =?utf-8?B?VXcrUVhRNEtMbHZ2OXZoQ29UdVBwcHVJUW9LV1ovcTJrNm03MFdMWE0wWlBw?=
- =?utf-8?B?OUE3WFhZNjhGMUhzOGtTRGZ1MUU3VGR4dVc1UHJxQjdpRlY5VTVBZzVsT3BB?=
- =?utf-8?B?ZXZLM0tVTGtaOW81eDZuYlVkTmhUa1ZEVWN4MG1iYXpoaXNQQTJ2N2hjUVY3?=
- =?utf-8?B?MzJpbjdmbHYvNjZYSm91NkdoQmpCRnBNaUlaczFVdWhWbks1TEtmT2ZvSFNw?=
- =?utf-8?B?TEFGTFA4aTJjTTZjUFR3ck1tUlMvZldDUjFIb1R4Qi84TnNTaERUY3lLRmxj?=
- =?utf-8?B?SG92VThBQnhQVkdzL3lkYjlBTkZIeFcrN2sySFBzanhTUWZiYnA2eTA1NEo0?=
- =?utf-8?B?WElhVjJkWjlob2UzQjBsMFVtb3MrUjlWNkZHKzNSRzEwR2w5QjRpRTZub3FV?=
- =?utf-8?B?clhIRWEvN3J3d2NLK3JEL3FaKzFZdzBsamtPbEhzUFlZamtpclpUZVdVSldq?=
- =?utf-8?B?VjZFWnBJZVkyWTJyeWpYU1FOb1VIT0RJZVYxNUdjaURKZGNwd3NXY3hzMGk1?=
- =?utf-8?B?Sk9MWE8wd3kyK2N2b1JnS3hNYldhUDA0MkdIU0dhTXJ5UWZiN0EvQkZ2cHRw?=
- =?utf-8?B?ak5WQ2J1VHRybDVSSU43T1NpTWFZYlNPMGFSVVB6N1J6M3BmSmhDRUNYdWYv?=
- =?utf-8?B?UUJ3aDdlMlF5Y2JjTVlTZUJlcitpR0lKUFZtbThRb2UxYUtDQjgweXlJVUxP?=
- =?utf-8?B?WlBZSEhNOStrYWdTSVRFMjZhaGl2WSsxUEhNYkZSU2NFUWFQVFI1b3pnTy9z?=
- =?utf-8?B?d0tyOWxQRGU4N0tFbkExZjQzUnU2d282TXJxMW9MdnkyMWZ2RDJPQ1pnWTht?=
- =?utf-8?B?U3lmYmtDbWdDdy9NakxCZDJNM3JydlBqVDhrb0dyNmw3RExKVXhzVmNWUGl1?=
- =?utf-8?Q?t0eRLoMpHUYZfXUqXTvMbhROI?=
+	=?utf-8?B?ak5RaUt3K3grRVRUbUVaOHYyQ3gyNEhVN3hrYjVYR3NMYzJ4d2lGbnhheFNL?=
+ =?utf-8?B?aUd3REsvTlhzYnRKYTFDRHVoOXBpT05EckRqaUkvd01XdFZTak13bXJRSklP?=
+ =?utf-8?B?blVXV0lBMEdHbWZwUUorZVorQmcwRzlDM3IxbDRGazI1QkREWU5qUXNNRXJ5?=
+ =?utf-8?B?MlB3WlI2bldCUXFMKzJSMmFrbUtsa1F5aWhvdGJ0SUd1czl2eGpVUnZxdndJ?=
+ =?utf-8?B?SjRtVUdMMXNVUzBVUldEMkRJTkwwdEtTeFcveFdvcm5qdldpQlR4ZUlPbzZk?=
+ =?utf-8?B?VDdUbVNRZVBYYzZMUFNHQ1V5K3E0bmJyYUNvY1NzUnltOWJ2QlVJZ05mZUFM?=
+ =?utf-8?B?MkxzMnJHNEd1c1gyQUQ3dmFjZ3QrVmMxRm5zUDlkMm5pYzBsY29IbXhCeURE?=
+ =?utf-8?B?Y051WUkyWE1MSm55UlVnQ25IY29sZEFFbmQxR0tHUitBM0ptazJrTEVRMHZV?=
+ =?utf-8?B?MERpRVFYWXpkVjdEZkc5THplUXNZVDVXMDV2R0I0YUJKd3NqeHN3R1h6TTFY?=
+ =?utf-8?B?Njh4OUJKMUd4WVBJKzc4VTFKRjB6ZnFuWDIzdkJCblUwbGlVbnRXakhJYzda?=
+ =?utf-8?B?a1M5c2o5QU5hdTM2UnVYU3FzQWxaTjZ4VWRXb1R6VWZlNW0xM2tIcGE4YVRo?=
+ =?utf-8?B?NzlGYnIzWFU4Y3hQTWVqNjJTTnhQSm5Ua2ZCbUFpLytxdi9FN1JlRHRXd290?=
+ =?utf-8?B?K0F1SXFTY1F1eXNWK05OY2drUXUvU3BWK3BpaGhBTEEyaFB1aUhVRDZXRkIz?=
+ =?utf-8?B?UlFpSCt3Q0xwNkZiQ0RPd2V0QmZtTVFiQW10MTZRK1R4M2FVZnd0cWhQbW81?=
+ =?utf-8?B?cTUvenNtY2pRVXZNMUxMSmV2RDBIdDhvdndRdlNMbktaMVZ4bnhSVCtKZTE4?=
+ =?utf-8?B?R1B4dHNnY2Rtd0xYVytsYWFLUDJkenZySkpKQTkxeTRNL2dtYm5jUVI4QmFs?=
+ =?utf-8?B?cWxKUTBuWlFzZGxqNzloNXFiMnZ0Z1M3MVI4NmdoRzF2aHFPcDdKWHdoNFQx?=
+ =?utf-8?B?Zy9aWTJkUkVNTmE1MEVmZ0Jyc2ErWFA4TVk3WXorUHBacGtFbTh1eTFmQStB?=
+ =?utf-8?B?M3hRZzdVK2hLd2FXYmtMSDFFVDdjUTI3VDJyUFREaXVVQW1FZkZaODdMWmtH?=
+ =?utf-8?B?cFZ3N2JpMGJxWi9DbkM5Y3lvdDFvK08yWFo0eEFBZ2Nzb1RaTlpOZ2lLYkdG?=
+ =?utf-8?B?M1ZWekVPR3lucktaZnMzeHhaTDBGQ1VvTmlzc2xXNVE5d2F0LzQyRXo1WWph?=
+ =?utf-8?B?MXZTRTl3eHhXdDZVN0t4WlA2UkJqWlJxaEFtYVNPRGs1ck1qVlBtcldmT3FB?=
+ =?utf-8?B?bjdQeVJ3MjN2TFd4OGdTbC96Z2IwQTNzWUM2MlBhbUw2M25zTlAwM01admZL?=
+ =?utf-8?B?eUFRN1A0YVdTQkZtRnJ0ZC8wL2lybEZrUUdjZ1BzekZndkVrcERkSmxoU2NN?=
+ =?utf-8?B?aXc4MFVqWnJmS0xEQkpOcEJVR1IxTEFCclBiYmh3cndjQ1M2empmNkpHRng0?=
+ =?utf-8?B?Q2tCV0ZtYkkxZlRnZGRmVFpheWxOSjI1bndjcHFVaDlNd2ZEUVhmU202UkRj?=
+ =?utf-8?B?T0wrV2VzdCtzRGt6WVUyVURKcHNCQjlrSEN2TnlSS1JiUnRydXFiWGVGNnEw?=
+ =?utf-8?B?ZjRVb1N6WmZDbDN5eW9SSHM0UGdoK1hzVXpJdnNBcTJmQk1CeHpSY1plRExK?=
+ =?utf-8?B?ODR1T1BKN3g1VTMwVnUzL2ttNm9vbHJDUnhwQmZhSVhQeXZFbkdJRFBpUkhB?=
+ =?utf-8?B?d3lEMStPVHRXSWRHUklNWDZVQ3dudjJIbElKRHpIejA5c2pyM2Jkajh2aldE?=
+ =?utf-8?B?QnkyUURmTjRTZGdQc3FUb25HNzZFeTZ3eFFwSk44elY5akxMN2lkNDNHNUJo?=
+ =?utf-8?B?SGVUUWNEWktybVpDNkRxSXVRLzZtcnNaYjV4eUZOaEd6SG1lWEtDdktZOTFT?=
+ =?utf-8?B?Rm9UeFJTNm03NTZuWU9mV3pZcjZRZStYcEcxWkFJQVUwUFVkQUhMQ2hJRmFy?=
+ =?utf-8?B?eXNuS0xUVzlFWDFTanlnbzdrZ2NGZkRhQWppRE9aQjFweFlyU3IxUWtXQTJU?=
+ =?utf-8?B?V2hGbFBPanRwMFlGZklVN09OYW1TSU5mQmZJOXdXaC9YMTJsUTIvaG1lZ1JI?=
+ =?utf-8?Q?FS33oDhM/MTVUu5hAbXqzUZJR?=
 X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 6228ff06-ca79-4b0a-e22f-08dd1ac56355
-X-MS-Exchange-CrossTenant-AuthSource: BL1PR12MB5176.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 70d999d0-2b22-497e-e7b8-08dd1ac97352
+X-MS-Exchange-CrossTenant-AuthSource: MN0PR12MB6101.namprd12.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 12 Dec 2024 15:55:23.7456
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 12 Dec 2024 16:24:28.3629
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: taMLw1VCmrkx8TSVv2GgVQRwYmFkFYTs0rC3JmBmE5cE1Y9fGDnuMDtSZK1hOVm4WdubOhFrff8tQWEUmK0U7Q==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH8PR12MB7253
+X-MS-Exchange-CrossTenant-UserPrincipalName: 0n7B112lh7UD6W9rsqPll+KKvYHG8JquwhjV2sGiy74qqHdTG5CBuK8CHYox8L+GE3TJy37eLwaU7IL0AB12sw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN0PR12MB5859
 
+On 12/12/2024 09:19, Shyam Sundar S K wrote:
+>   
+>   /**
+> @@ -40,10 +42,23 @@ enum sfh_hpd_info {
+>    * struct amd_sfh_info - get HPD sensor info from MP2 FW
+>    * @ambient_light: Populates the ambient light information
+>    * @user_present: Populates the user presence information
+> + * @platform_type: Operating modes (clmashell, flat, tent, etc.)
 
+Sorry, one more issue.  You have a spelling error here "clmashell".
 
-On 12/12/2024 21:16, Mario Limonciello wrote:
-> On 12/12/2024 09:19, Shyam Sundar S K wrote:
->> From: Basavaraj Natikar <basavaraj.natikar@amd.com>
->>
->> Add support to export device operating states, such as laptop
->> placement,
->> platform types and propagate this data to AMD PMF driver for use in
->> actions.
->>
->> To retrieve the device operating states data, SRA sensor support
->> need to
->> be enabled in AMD SFH driver. So add support to enable the SRA sensor.
->>
->> Co-developed-by: Akshata MukundShetty <akshata.mukundshetty@amd.com>
->> Signed-off-by: Akshata MukundShetty <akshata.mukundshetty@amd.com>
->> Signed-off-by: Basavaraj Natikar <basavaraj.natikar@amd.com>
-> 
-> When you send someone else's patch but don't change it you are still
-> supposed to add your "own" S-o-b.
-
-ah! Thanks. I missed to add it.
-
-> 
-> I have two small nits below.
-> 
-
-Sure, but I have a question to Hans and Ilpo
-
-while we address the remarks what should be approach for merging this
-series? Should it go via pdx86 tree or hid because patch 2/2 is
-dependent of 1/2.
-
-Thanks,
-Shyam
->> ---
->>   drivers/hid/amd-sfh-hid/amd_sfh_common.h      |  1 +
->>   drivers/hid/amd-sfh-hid/sfh1_1/amd_sfh_init.c | 22 ++++++++++++
->>   .../amd-sfh-hid/sfh1_1/amd_sfh_interface.c    | 35 +++++++++++++++
->> ++++
->>   .../amd-sfh-hid/sfh1_1/amd_sfh_interface.h    | 20 +++++++++++
->>   include/linux/amd-pmf-io.h                    | 15 ++++++++
->>   5 files changed, 93 insertions(+)
->>
->> diff --git a/drivers/hid/amd-sfh-hid/amd_sfh_common.h b/drivers/hid/
->> amd-sfh-hid/amd_sfh_common.h
->> index e5620d7db569..799b8686a88a 100644
->> --- a/drivers/hid/amd-sfh-hid/amd_sfh_common.h
->> +++ b/drivers/hid/amd-sfh-hid/amd_sfh_common.h
->> @@ -43,6 +43,7 @@ struct amd_mp2_sensor_info {
->>   struct sfh_dev_status {
->>       bool is_hpd_present;
->>       bool is_als_present;
->> +    bool is_sra_present;
->>   };
->>     struct amd_mp2_dev {
->> diff --git a/drivers/hid/amd-sfh-hid/sfh1_1/amd_sfh_init.c b/
->> drivers/hid/amd-sfh-hid/sfh1_1/amd_sfh_init.c
->> index db36d87d5634..03c028f1aab4 100644
->> --- a/drivers/hid/amd-sfh-hid/sfh1_1/amd_sfh_init.c
->> +++ b/drivers/hid/amd-sfh-hid/sfh1_1/amd_sfh_init.c
->> @@ -30,6 +30,7 @@ static int amd_sfh_get_sensor_num(struct
->> amd_mp2_dev *mp2, u8 *sensor_id)
->>           case ACCEL_IDX:
->>           case GYRO_IDX:
->>           case MAG_IDX:
->> +        case SRA_IDX:
->>           case ALS_IDX:
->>           case HPD_IDX:
->>               if (BIT(i) & slist->sl.sensors)
->> @@ -58,6 +59,8 @@ static const char *get_sensor_name(int idx)
->>           return "gyroscope";
->>       case MAG_IDX:
->>           return "magnetometer";
->> +    case SRA_IDX:
->> +        return "SRA";
->>       case ALS_IDX:
->>           return "ALS";
->>       case HPD_IDX:
->> @@ -130,6 +133,23 @@ static int amd_sfh1_1_hid_client_init(struct
->> amd_mp2_dev *privdata)
->>         for (i = 0; i < cl_data->num_hid_devices; i++) {
->>           cl_data->sensor_sts[i] = SENSOR_DISABLED;
->> +
->> +        if (cl_data->num_hid_devices == 1 && cl_data->sensor_idx[0]
->> == SRA_IDX)
->> +            break;
->> +
->> +        if (cl_data->sensor_idx[i] == SRA_IDX) {
->> +            info.sensor_idx = cl_data->sensor_idx[i];
->> +            writel(0, privdata->mmio + amd_get_p2c_val(privdata, 0));
->> +            mp2_ops->start(privdata, info);
->> +            status = amd_sfh_wait_for_response
->> +                (privdata, cl_data->sensor_idx[i], ENABLE_SENSOR);
->> +
->> +            cl_data->sensor_sts[i] = (status == 0) ?
->> SENSOR_ENABLED : SENSOR_DISABLED;
->> +            if (cl_data->sensor_sts[i] == SENSOR_ENABLED)
->> +                privdata->dev_en.is_sra_present = true;
->> +            continue;
->> +        }
->> +
->>           cl_data->sensor_requested_cnt[i] = 0;
->>           cl_data->cur_hid_dev = i;
->>           cl_idx = cl_data->sensor_idx[i];
->> @@ -181,6 +201,8 @@ static int amd_sfh1_1_hid_client_init(struct
->> amd_mp2_dev *privdata)
->>       }
->>         for (i = 0; i < cl_data->num_hid_devices; i++) {
->> +        if (cl_data->sensor_idx[i] == SRA_IDX)
->> +            continue;
->>           cl_data->cur_hid_dev = i;
->>           if (cl_data->sensor_sts[i] == SENSOR_ENABLED) {
->>               cl_data->is_any_sensor_enabled = true;
->> diff --git a/drivers/hid/amd-sfh-hid/sfh1_1/amd_sfh_interface.c b/
->> drivers/hid/amd-sfh-hid/sfh1_1/amd_sfh_interface.c
->> index 4676f060da26..b4c0d96ab152 100644
->> --- a/drivers/hid/amd-sfh-hid/sfh1_1/amd_sfh_interface.c
->> +++ b/drivers/hid/amd-sfh-hid/sfh1_1/amd_sfh_interface.c
->> @@ -87,6 +87,38 @@ void sfh_interface_init(struct amd_mp2_dev *mp2)
->>       emp2 = mp2;
->>   }
->>   +static int amd_sfh_mode_info(u32 *platform_type, u32
->> *laptop_placement)
->> +{
->> +    struct sfh_op_mode mode;
->> +
->> +    if (!platform_type || !laptop_placement)
->> +        return -EINVAL;
->> +
->> +    if (!emp2 || !emp2->dev_en.is_sra_present)
->> +        return -ENODEV;
->> +
->> +    mode.val = readl(emp2->mmio + amd_get_c2p_val(emp2, 3));
->> +
->> +    *platform_type = mode.op_mode.devicemode;
->> +
->> +    if (mode.op_mode.ontablestate == 1)
->> +        *laptop_placement = ON_TABLE;
->> +    else if (mode.op_mode.ontablestate == 2)
->> +        *laptop_placement = ON_LAP_MOTION;
->> +    else if (mode.op_mode.inbagstate == 1)
->> +        *laptop_placement = IN_BAG;
->> +    else if (mode.op_mode.outbagstate == 1)
->> +        *laptop_placement = OUT_OF_BAG;
->> +    else if (mode.op_mode.ontablestate == 0 ||
->> mode.op_mode.inbagstate == 0 ||
->> +         mode.op_mode.outbagstate == 0)
->> +        *laptop_placement = LP_UNKNOWN;
->> +    else if (mode.op_mode.ontablestate == 3 ||
->> mode.op_mode.inbagstate == 3 ||
->> +         mode.op_mode.outbagstate == 3)
->> +        *laptop_placement = LP_UNDEFINED;
-> 
-> What do you think of doing a pr_warn_once() when you end up with an
-> undefined placement?  This could help point out that the driver needs
-> to be changed for a newly created mode that the hardware detected.
-> 
->> +
->> +    return 0;
->> +}
->> +
->>   static int amd_sfh_hpd_info(u8 *user_present)
->>   {
->>       struct hpd_status hpdstatus;
->> @@ -131,6 +163,9 @@ int amd_get_sfh_info(struct amd_sfh_info
->> *sfh_info, enum sfh_message_type op)
->>               return amd_sfh_hpd_info(&sfh_info->user_present);
->>           case MT_ALS:
->>               return amd_sfh_als_info(&sfh_info->ambient_light);
->> +        case MT_SRA:
->> +            return amd_sfh_mode_info(&sfh_info->platform_type,
->> +                         &sfh_info->laptop_placement);
->>           }
->>       }
->>       return -EINVAL;
->> diff --git a/drivers/hid/amd-sfh-hid/sfh1_1/amd_sfh_interface.h b/
->> drivers/hid/amd-sfh-hid/sfh1_1/amd_sfh_interface.h
->> index 2c211d28764d..f7eb2539bccc 100644
->> --- a/drivers/hid/amd-sfh-hid/sfh1_1/amd_sfh_interface.h
->> +++ b/drivers/hid/amd-sfh-hid/sfh1_1/amd_sfh_interface.h
->> @@ -22,6 +22,7 @@ enum sensor_index {
->>       ACCEL_IDX,
->>       GYRO_IDX,
->>       MAG_IDX,
->> +    SRA_IDX,
->>       ALS_IDX = 4,
->>       HPD_IDX = 5,
-> 
-> IIRC in C enums start at 0 right?  So ALS_IDX and HPD_IDX don't need
-> explicit assingments anymore.
-> 
->>       MAX_IDX = 15,
->> @@ -164,6 +165,25 @@ struct hpd_status {
->>       };
->>   };
->>   +struct sfh_op_mode {
->> +    union {
->> +        u32 val;
->> +        struct {
->> +            u32 mode        : 3;
->> +            u32 lidstatus        : 1;
->> +            u32 angle        : 10;
->> +            u32 inbagstatedbg    : 2;
->> +            u32 ontablestate    : 2;
->> +            u32 inbagstate        : 2;
->> +            u32 outbagstate        : 2;
->> +            u32 inbagmlcstate    : 1;
->> +            u32 powerstate        : 2;
->> +            u32 data        : 3;
->> +            u32 devicemode        : 4;
->> +        } op_mode;
->> +    };
->> +};
->> +
->>   void sfh_interface_init(struct amd_mp2_dev *mp2);
->>   void sfh_deinit_emp2(void);
->>   void amd_sfh1_1_set_desc_ops(struct amd_mp2_ops *mp2_ops);
->> diff --git a/include/linux/amd-pmf-io.h b/include/linux/amd-pmf-io.h
->> index b4f818205216..01f2b12c56a6 100644
->> --- a/include/linux/amd-pmf-io.h
->> +++ b/include/linux/amd-pmf-io.h
->> @@ -18,10 +18,12 @@
->>    * enum sfh_message_type - Query the SFH message type
->>    * @MT_HPD: Message ID to know the Human presence info from MP2 FW
->>    * @MT_ALS: Message ID to know the Ambient light info from MP2 FW
->> + * @MT_SRA: Message ID to know the SRA data from MP2 FW
->>    */
->>   enum sfh_message_type {
->>       MT_HPD,
->>       MT_ALS,
->> +    MT_SRA,
->>   };
->>     /**
->> @@ -40,10 +42,23 @@ enum sfh_hpd_info {
->>    * struct amd_sfh_info - get HPD sensor info from MP2 FW
->>    * @ambient_light: Populates the ambient light information
->>    * @user_present: Populates the user presence information
->> + * @platform_type: Operating modes (clmashell, flat, tent, etc.)
->> + * @laptop_placement: Device states (ontable, onlap, outbag)
->>    */
->>   struct amd_sfh_info {
->>       u32 ambient_light;
->>       u8 user_present;
->> +    u32 platform_type;
->> +    u32 laptop_placement;
->> +};
->> +
->> +enum laptop_placement {
->> +    LP_UNKNOWN = 0,
->> +    ON_TABLE,
->> +    ON_LAP_MOTION,
->> +    IN_BAG,
->> +    OUT_OF_BAG,
->> +    LP_UNDEFINED,
->>   };
->>     int amd_get_sfh_info(struct amd_sfh_info *sfh_info, enum
->> sfh_message_type op);
-> 
 
