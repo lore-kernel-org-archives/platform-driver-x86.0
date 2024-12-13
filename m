@@ -1,82 +1,116 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from todd.t-8ch.de (todd.t-8ch.de [159.69.126.157])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 819A5154430
-	for <platform-driver-x86@vger.kernel.org>; Fri, 13 Dec 2024 06:31:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F097196D8F;
+	Fri, 13 Dec 2024 07:43:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.69.126.157
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1734071492; cv=none; b=EWbjUP6sfJPSg4MwSW/Ep5F0gjiKj/Qu3l8fVM14fio0jvK/EAgaipA+QKags0Q6pJh8RFXR+soLAHBRF+MEtjMVtufmmt3hPzoUFKA9SLBC2GUPJbooCxLMpCdcx6T8T9STGsvbflq8h0diyoP03LTxUYOf1GxuWSCikYbu27M=
+	t=1734075834; cv=none; b=Wj+hz//hnQcJwJEzWS6wHNaXlMwBZ2ijxtqOdO3U2UXCjSI/I9iq2buSrhnZTDFwPFeKMI9DcsQkZqAow3nOioMabRJCNR6k4Wz/t/GakAcuWARqWVy6rbIQGxyZPGRG0zXGfWh9iyeoyReotOTQ8dKoo9toz2gf0aryuDLBcmw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1734071492; c=relaxed/simple;
-	bh=mU+bx6gthckPgKSUi5qeBNJeAYxEsp23VxcZNanuwG4=;
-	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=XFVFBCdkonwT+VhvPyp3MLRVRsW//usYkJyAZEBFE+kJVRqK3+UK/sGcSxYe5QC27JT2KtCKqhokXmKHBDKxn0iNkSoA1lQ5+0xfna3ro/hIIkRypQRe6MlH6zlWo05a3h4MNnqx3luqPZ8j4bVYHN/DLos/zeE7ps9m9NKICDA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lBw/q/Ag; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1734075834; c=relaxed/simple;
+	bh=lHwtD1iPNGzdJwYjIGoo8w0zLrhQgGX7/hX9tiBWhM4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=MN1T8uBOT+bxrs/M5qQOuRarwyp34nn+hObMu9afr5LhmvxdVHSVk4MtcFgoSE6yT/avli5HnQdRyOtIpTjMWkt15ntnc1HuhyLBsa3c1qf0oCYvOe8yxAxkHeGIHiASZMKj3QI3wLoJOSsR0qrxMDgH+WkCoG3fl0C8uLQbEUQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=weissschuh.net; spf=pass smtp.mailfrom=weissschuh.net; dkim=pass (1024-bit key) header.d=weissschuh.net header.i=@weissschuh.net header.b=ohI0IvaJ; arc=none smtp.client-ip=159.69.126.157
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=weissschuh.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=weissschuh.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lBw/q/Ag"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 2D641C4CEDD
-	for <platform-driver-x86@vger.kernel.org>; Fri, 13 Dec 2024 06:31:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1734071492;
-	bh=mU+bx6gthckPgKSUi5qeBNJeAYxEsp23VxcZNanuwG4=;
-	h=From:To:Subject:Date:In-Reply-To:References:From;
-	b=lBw/q/Ag/Q2P/eVqpPDhcNdxkRyBiWZDeeZUGhhYT6N0p+ubwp/ftwqDeXQG6093P
-	 phMHhBuX5SzFQ39S7iHOB1+E+kBrfXxkgM81jYPrxsubPgqwlmdmyyj1OwtT6Y0dAu
-	 OBi3YS8i9L//c5DaNhnou3k1rUVQ6qWV1G4mfgDhug0RJcRhc6ypk90DrtnVMCwSlB
-	 NvMOYEnbtTJCZtuiUOyoZ3EmMijz0Qi9+5F2BLOQxitI/N2r6Pn8SaW+YMhNQbmgmk
-	 JJ7Dr+YdUyej0euvF2LN4q0thAkPbmARqk6J6WgTezA+yM7AVIWY0IH8XtbphEF4qE
-	 Gvcg1u9odFiCw==
-Received: by aws-us-west-2-korg-bugzilla-1.web.codeaurora.org (Postfix, from userid 48)
-	id 1575DC41614; Fri, 13 Dec 2024 06:31:32 +0000 (UTC)
-From: bugzilla-daemon@kernel.org
-To: platform-driver-x86@vger.kernel.org
-Subject: [Bug 219495] [TPM2] tpm_tis driver crashs during the boot time.
-Date: Fri, 13 Dec 2024 06:31:31 +0000
-X-Bugzilla-Reason: None
-X-Bugzilla-Type: changed
-X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
-X-Bugzilla-Product: Drivers
-X-Bugzilla-Component: Platform_x86
-X-Bugzilla-Version: 2.5
-X-Bugzilla-Keywords: 
-X-Bugzilla-Severity: normal
-X-Bugzilla-Who: andy.liang@hpe.com
-X-Bugzilla-Status: NEW
-X-Bugzilla-Resolution: 
-X-Bugzilla-Priority: P3
-X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
-X-Bugzilla-Flags: 
-X-Bugzilla-Changed-Fields: 
-Message-ID: <bug-219495-215701-O6QbQpZN9h@https.bugzilla.kernel.org/>
-In-Reply-To: <bug-219495-215701@https.bugzilla.kernel.org/>
-References: <bug-219495-215701@https.bugzilla.kernel.org/>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Bugzilla-URL: https://bugzilla.kernel.org/
-Auto-Submitted: auto-generated
+	dkim=pass (1024-bit key) header.d=weissschuh.net header.i=@weissschuh.net header.b="ohI0IvaJ"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=weissschuh.net;
+	s=mail; t=1734075826;
+	bh=lHwtD1iPNGzdJwYjIGoo8w0zLrhQgGX7/hX9tiBWhM4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=ohI0IvaJ5l9TNKXFl3u2YGdIyF/Va5/dQjCulUrI7V490GJY9EOjo9j7wMsjITTC7
+	 pc3iTWYawwbQ9UmwE2rFrXjOFGwmG6JEWGIGIV+E172fpwZa2XnJ2KxDF3NkpU/50o
+	 uOeiloPI/w2dHQjKKp4tLqJokisytzKAKFS6T77w=
+Date: Fri, 13 Dec 2024 08:43:46 +0100
+From: Thomas =?utf-8?Q?Wei=C3=9Fschuh?= <linux@weissschuh.net>
+To: Armin Wolf <W_Armin@gmx.de>
+Cc: Michael Ellerman <mpe@ellerman.id.au>, 
+	Nicholas Piggin <npiggin@gmail.com>, Christophe Leroy <christophe.leroy@csgroup.eu>, 
+	Naveen N Rao <naveen@kernel.org>, Madhavan Srinivasan <maddy@linux.ibm.com>, 
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>, 
+	Luis Chamberlain <mcgrof@kernel.org>, Petr Pavlu <petr.pavlu@suse.com>, 
+	Sami Tolvanen <samitolvanen@google.com>, Daniel Gomez <da.gomez@samsung.com>, 
+	Hans de Goede <hdegoede@redhat.com>, Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>, 
+	Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, 
+	Andrii Nakryiko <andrii@kernel.org>, Martin KaFai Lau <martin.lau@linux.dev>, 
+	Eduard Zingerman <eddyz87@gmail.com>, Song Liu <song@kernel.org>, 
+	Yonghong Song <yonghong.song@linux.dev>, John Fastabend <john.fastabend@gmail.com>, 
+	KP Singh <kpsingh@kernel.org>, Stanislav Fomichev <sdf@fomichev.me>, 
+	Hao Luo <haoluo@google.com>, Jiri Olsa <jolsa@kernel.org>, linuxppc-dev@lists.ozlabs.org, 
+	linux-kernel@vger.kernel.org, linux-modules@vger.kernel.org, 
+	platform-driver-x86@vger.kernel.org, bpf@vger.kernel.org
+Subject: Re: [PATCH 2/4] platform/x86: wmi-bmof: Switch to
+ sysfs_bin_attr_simple_read()
+Message-ID: <d1580513-6297-46b5-b4e0-c2063496b2ed@t-8ch.de>
+References: <20241205-sysfs-const-bin_attr-simple-v1-0-4a4e4ced71e3@weissschuh.net>
+ <20241205-sysfs-const-bin_attr-simple-v1-2-4a4e4ced71e3@weissschuh.net>
+ <2fbf5d9d-8cfe-4ce4-a268-ec84c261d1bd@gmx.de>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <2fbf5d9d-8cfe-4ce4-a268-ec84c261d1bd@gmx.de>
 
-https://bugzilla.kernel.org/show_bug.cgi?id=3D219495
+Hi Armin,
 
---- Comment #25 from andy.liang@hpe.com ---
-(In reply to Stefan Berger from comment #23)
-> I suppose the binary and ascii dumps of the log are still as before.
+On 2024-12-13 01:21:37+0100, Armin Wolf wrote:
+> Am 05.12.24 um 18:35 schrieb Thomas Weißschuh:
+> 
+> > The generic function from the sysfs core can replace the custom one.
+> 
+> Sorry for taking quite a bit to respond, i totally overlooked this patch.
+> 
+> This patch is superseded by a patch of mine: https://lore.kernel.org/platform-driver-x86/20241206215650.2977-1-W_Armin@gmx.de/
+> 
+> This reworks the binary attribute handling inside the driver to use the new .bin_size() callback. This allows the
+> driver to have a static binary attribute which does not need a memory allocation.
+> 
+> Because i think we cannot use sysfs_bin_attr_simple_read() anymore. So maybe you can just drop this patch?
 
-The TPM2 DUMP still shows the TPM event log size as 8MB. Thank you.
+Works for me, thanks!
 
---- Comment #26 from andy.liang@hpe.com ---
-(In reply to Stefan Berger from comment #23)
-> I suppose the binary and ascii dumps of the log are still as before.
+Thomas
 
-The TPM2 DUMP still shows the TPM event log size as 8MB. Thank you.
-
---=20
-You may reply to this email to add a comment.
-
-You are receiving this mail because:
-You are watching the assignee of the bug.=
+> > Signed-off-by: Thomas Weißschuh <linux@weissschuh.net>
+> > ---
+> >   drivers/platform/x86/wmi-bmof.c | 12 ++----------
+> >   1 file changed, 2 insertions(+), 10 deletions(-)
+> > 
+> > diff --git a/drivers/platform/x86/wmi-bmof.c b/drivers/platform/x86/wmi-bmof.c
+> > index df6f0ae6e6c7904f97c125297a21166f56d0b1f0..e6c217d70086a2896dc70cf8ac1c27dafb501a95 100644
+> > --- a/drivers/platform/x86/wmi-bmof.c
+> > +++ b/drivers/platform/x86/wmi-bmof.c
+> > @@ -25,15 +25,6 @@ struct bmof_priv {
+> >   	struct bin_attribute bmof_bin_attr;
+> >   };
+> > 
+> > -static ssize_t read_bmof(struct file *filp, struct kobject *kobj, struct bin_attribute *attr,
+> > -			 char *buf, loff_t off, size_t count)
+> > -{
+> > -	struct bmof_priv *priv = container_of(attr, struct bmof_priv, bmof_bin_attr);
+> > -
+> > -	return memory_read_from_buffer(buf, count, &off, priv->bmofdata->buffer.pointer,
+> > -				       priv->bmofdata->buffer.length);
+> > -}
+> > -
+> >   static int wmi_bmof_probe(struct wmi_device *wdev, const void *context)
+> >   {
+> >   	struct bmof_priv *priv;
+> > @@ -60,7 +51,8 @@ static int wmi_bmof_probe(struct wmi_device *wdev, const void *context)
+> >   	sysfs_bin_attr_init(&priv->bmof_bin_attr);
+> >   	priv->bmof_bin_attr.attr.name = "bmof";
+> >   	priv->bmof_bin_attr.attr.mode = 0400;
+> > -	priv->bmof_bin_attr.read = read_bmof;
+> > +	priv->bmof_bin_attr.read_new = sysfs_bin_attr_simple_read;
+> > +	priv->bmof_bin_attr.private = priv->bmofdata->buffer.pointer;
+> >   	priv->bmof_bin_attr.size = priv->bmofdata->buffer.length;
+> > 
+> >   	ret = device_create_bin_file(&wdev->dev, &priv->bmof_bin_attr);
+> > 
