@@ -1,41 +1,41 @@
-Received: from mout.gmx.net (mout.gmx.net [212.227.15.18])
+Received: from mout.gmx.net (mout.gmx.net [212.227.15.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EECBABA2D;
-	Fri, 13 Dec 2024 00:17:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 98059621;
+	Fri, 13 Dec 2024 00:22:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1734049029; cv=none; b=ONw23RtX/4z0+o2Fvwm3O7kZXbcMYpFjeAcHmXKfWlhi1o6gQ/viQigs3e42Yd1EZDn2mITC8fNWg43zF/yAaOdvEWNZy3zbBUnCya7Pj269hg/XuEgH7UzZZP/yV9/vvkhXX5MFRu5ajbYP1/eLc325MpqZ6ZOb7tZa3QClGi8=
+	t=1734049347; cv=none; b=h/8XCn2QyQdFqFbimGw+SlJXPR+Vv5wfwwzJ57ihjW6xVgckfY4iI8YzAcE7Akv23ofU7aGziegtJm6sEGCP3YJ5QZ59xcFBYuvu2Xnt8ZhUIIMwgaDM0Xt7cU0OC/c4a/oTpyOLfu3ME1/al8wHP2VxNO0zKmnM04NR9T2tSdw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1734049029; c=relaxed/simple;
-	bh=5VPDtNvK9i2w/wN9DFpxIWxQWboqbna1fZeRH35VbWM=;
+	s=arc-20240116; t=1734049347; c=relaxed/simple;
+	bh=3HNRmm/Q08QVyzMZ8XAUhAQfTbZ5JZRDoufN4hfqVDo=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=TadoWO7eNUJWsiCo/3qGiQa0Db8gUjm5wG5ur0AAgvawTE2v0R8oWwzWEPbqSL3ByVYxGqxQh11wonFo1Vxy5WeIBXOlKoCTLakQ9NBhLnsuwRoW+30KvnjDOxMZDfiwii+K1+zsPOopOwJHqTrJcFr24lhZte8k5gs9PXXklRs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b=hnDe7CSj; arc=none smtp.client-ip=212.227.15.18
+	 In-Reply-To:Content-Type; b=Ts8S8oYt2vymu7RbzMQW16Xw4ceEvvk3Sc7keV/hs58x9EDw5z3MqvUQLP0JZdCj5CmSXdA9P5yTks6VrKjyBdqF9o4a1rFiXWnXAKh2wWPFI/KP7teNXhZ4c+NmpwCqFPK+JhrqNd8xsKW67clDlgFUgWpKsHsqqQxA5RspIh8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b=HKdT9lJw; arc=none smtp.client-ip=212.227.15.15
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b="hnDe7CSj"
+	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b="HKdT9lJw"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.de;
-	s=s31663417; t=1734049019; x=1734653819; i=w_armin@gmx.de;
-	bh=D1lZgIEASCFhjHKcI+DVOag39YmhyUtR+F8m5MGxYEI=;
+	s=s31663417; t=1734049310; x=1734654110; i=w_armin@gmx.de;
+	bh=pc4caFALq5op4/J6K3vAuBSZziJYzazQYmi+f4y4us4=;
 	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:To:Cc:
 	 References:From:In-Reply-To:Content-Type:
 	 Content-Transfer-Encoding:cc:content-transfer-encoding:
 	 content-type:date:from:message-id:mime-version:reply-to:subject:
 	 to;
-	b=hnDe7CSjoLjlXCGI3BogQszEo+5mYi7Jz/D+wVbz3/S6PcZd13JG4+aFdmkNC5Ky
-	 5alt/1JPGVOYhiM8SKFLUTwEjkRN1mrLd4egQSmGWNKvkY5PtrwuJQ80pLJ9FfI3S
-	 mmQsRELUqJndRZLxPU5w0ZbxY+Ok1CFRRYaCuGiRxAt0CQN5iSsrpd4v9Wp2hDacj
-	 s0GRZCa5Rethe8Lxu6uG0qJJx02Y/+7EzOJH4+eCgvMjU5PMOwcDJmLLlFYSwxEki
-	 3CePpfM9QrSz+2Z1vZsQIGwh9Len+6hRK5LtRu8HEpqBQXHUo+I7DGWm8hsgNDKEa
-	 W/5jStKBYudGhzWpkA==
+	b=HKdT9lJw3caw772k0PNQomNYQqYZLiR13f8Vfz2/qvVrZZ5bHgHey1wk5jWWdlNO
+	 xy4bMsqhzHz9PaFZ9q6OUKvpuicmDCQ4wObsyAV9A92JXqxpTEQwfugFK3vgNofln
+	 9JP95F7Ogsj8Oe/K0l35N/wyfxOuULix1ZNtsJVTjpZo0Gp/YajB2c0LpmIXH5csO
+	 dmEqk98u1WIKa1wsNJOvSenjaOdoe3wm8nM0o/nG3YRkKnHkwQ+lmch33baUegI9w
+	 kCy9m8bJE3hPpW+josuT5veKifWkQU4ltg1U4fB9Hr8Y872BvYGrjPJXpeykH8IAi
+	 zfxb1VH/inKDSOXIUQ==
 X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
 Received: from [192.168.0.14] ([91.14.230.110]) by mail.gmx.net (mrgmx005
- [212.227.17.190]) with ESMTPSA (Nemesis) id 1M1Hdw-1tJ8TI30Xa-00FY0S; Fri, 13
- Dec 2024 01:16:58 +0100
-Message-ID: <84bd3fe1-bfba-4427-8f01-7d1ab245e617@gmx.de>
-Date: Fri, 13 Dec 2024 01:16:57 +0100
+ [212.227.17.190]) with ESMTPSA (Nemesis) id 1MPXhA-1szFyp3XOM-00QRfF; Fri, 13
+ Dec 2024 01:21:50 +0100
+Message-ID: <2fbf5d9d-8cfe-4ce4-a268-ec84c261d1bd@gmx.de>
+Date: Fri, 13 Dec 2024 01:21:37 +0100
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -43,192 +43,118 @@ List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] platform/x86: wmi-bmof: Make use of .bin_size() callback
-To: =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Cc: linux@weissschuh.net, Hans de Goede <hdegoede@redhat.com>,
- platform-driver-x86@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
-References: <20241206215650.2977-1-W_Armin@gmx.de>
- <ad05e251-37bd-0cc2-8b11-a859e453f476@linux.intel.com>
+Subject: Re: [PATCH 2/4] platform/x86: wmi-bmof: Switch to
+ sysfs_bin_attr_simple_read()
+To: =?UTF-8?Q?Thomas_Wei=C3=9Fschuh?= <linux@weissschuh.net>,
+ Michael Ellerman <mpe@ellerman.id.au>, Nicholas Piggin <npiggin@gmail.com>,
+ Christophe Leroy <christophe.leroy@csgroup.eu>,
+ Naveen N Rao <naveen@kernel.org>, Madhavan Srinivasan <maddy@linux.ibm.com>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ "Rafael J. Wysocki" <rafael@kernel.org>, Luis Chamberlain
+ <mcgrof@kernel.org>, Petr Pavlu <petr.pavlu@suse.com>,
+ Sami Tolvanen <samitolvanen@google.com>, Daniel Gomez
+ <da.gomez@samsung.com>, Hans de Goede <hdegoede@redhat.com>,
+ =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+ Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>,
+ Andrii Nakryiko <andrii@kernel.org>, Martin KaFai Lau
+ <martin.lau@linux.dev>, Eduard Zingerman <eddyz87@gmail.com>,
+ Song Liu <song@kernel.org>, Yonghong Song <yonghong.song@linux.dev>,
+ John Fastabend <john.fastabend@gmail.com>, KP Singh <kpsingh@kernel.org>,
+ Stanislav Fomichev <sdf@fomichev.me>, Hao Luo <haoluo@google.com>,
+ Jiri Olsa <jolsa@kernel.org>
+Cc: linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
+ linux-modules@vger.kernel.org, platform-driver-x86@vger.kernel.org,
+ bpf@vger.kernel.org
+References: <20241205-sysfs-const-bin_attr-simple-v1-0-4a4e4ced71e3@weissschuh.net>
+ <20241205-sysfs-const-bin_attr-simple-v1-2-4a4e4ced71e3@weissschuh.net>
 Content-Language: en-US
 From: Armin Wolf <W_Armin@gmx.de>
-In-Reply-To: <ad05e251-37bd-0cc2-8b11-a859e453f476@linux.intel.com>
+In-Reply-To: <20241205-sysfs-const-bin_attr-simple-v1-2-4a4e4ced71e3@weissschuh.net>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:nJts4E3uXovXfsYWsEMRmx9zwn3qiqAg8t30Yui7hBHsKGEHhYR
- 0j/LETu85qE2Z9+nlZJlQ0z8gVVxPHh/9LKAQ8gNVDAfcRR4kWz2C3CJVFneiAeCRu2PDnW
- DLhej+gv5pepLpNA50DXOGIqzYYUMhAXYhYvJMUuAJl5IvH+9tvnFoiEDpgmrOZ1qw+6Mrw
- 1CvnuR5Ey4INMQWCe4GPQ==
+X-Provags-ID: V03:K1:sEqBGP2Ac0vGkBppc5TPHNF5GODfInD0hzbaCS0ddgYsItdBe5p
+ 2xdFdNBD2/3IFGQJS5l4ixxknu73P0PueOGSf9tMm/O8niUy+knHcsKr0WKRhQC8gmbaBRO
+ zRP2UQtl9CHmKQKZsGzQuvW6QSUTtv15p13jP7TsWPqOn7D9/3d8lvbKady/tS3sg6AjSv+
+ +gzIUgEAv0ESzIp9jiRtA==
 X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:O33FMR1tMtw=;aryA9D+9jYtStbVAdXI7rKq959/
- QXGG3Nsnq5gfAz8qyCbsjzWD8Fi4thQJ2pBWNXWFQ7hLW6wpuk9/4TVpx6vAwxKpqay5e3e6N
- doiJpKLrYrZEeHHsRqWx+8gTdFoiKscCIl7uxh+lpxSelOeWcOpxZDVeH0j0FtP5p4EquKbmY
- DAoYwox12iGIzzDihqgEnrkZBgmqg+U0AO2ODnUWZsRT50RVWzfiGzQ0RzuvqN1WyiczRrJqf
- 3IygrKm9Pv0F1kfmZpN9v47Cq5b2rRIngZ057+AEhuqbF6v7CKnDkr9Kpbtr8uIvKhg+ThjZg
- cEv+bE80uz+pAiZ8v/paRG2awoM0doPZujfF85BRELFhJOV/0D8zvh9RWlf5kKohK8rW+jmx9
- DJuORUBV5QksO0YZoCKsrIHjZIbSU1O5idOc8fK9tVFEdEub2a2XfW7peWF6Arszqlbg+p61+
- AWiazfLHpLDz7BGasZTZZ/niM/5M9nJh0TRZ+Oo/ocMPbGaCK/iyn9QNU+isKGMtXh+7QfmAq
- 6qGmL0H4RSyg70EYqCTtWFcGaRPa1Uqu0HvAiQsO9LkRr9KdkAvPHuxgReeUY1BLHzNlSSVhn
- lnzyACzB5Rj2qk0qSUI5L+17S1DpCNNgwoRflOBmaUV9OYBJsJMKpCTKIfpcVs+6kUxb4WHL6
- HX0MSDu3WXZ56UjHtjSMVMYMVO7PGMkH4x8pUvkwJm30RWQYW/zjfNnQdJie7fFaOHAVzDvBv
- LaCSFreMB37lIDR0y6pJQShvPCBEi5QZ5+lf4ywDW3dvaecpCXqU3GtJ2ft7G2CUe4w1PPeuS
- PMtMuiqB6xnOM5IjJhgRM7hS5ziI2dgHRx2mT1hSPHzVEe3Dn4ko+SNfHEYVN0JniFp6nVnKk
- jBcs0MioaeihVmxcQyIgTIPwWreQrkt3kxQRgw+KEOwRNyZR0uaMmOUiUVHW6fvFp7Hd40/y8
- 7wR1DtQZKpHIAtvjNj1i5UXA3Uz+thy+6g95AJjiuOKSXqJAeM6f7bFlgQwLOe0j6fya8WR+h
- 2Pv7AwdfJLnIy0wjkhd6qSnOI+fdzaAAkgV9s9T1zW49deP0S0eZ5BOAmqSWklFew5RaaIz/P
- msPFGKzHEOHo8L2ObegCSBzcGiAeMV
+UI-OutboundReport: notjunk:1;M01:P0:Q8yG4hNuxB0=;/TD9fKXzbRQiKwXr8w07+qxNhlk
+ i9vONWUhyajPHgxY29yscwuFBNzChl/gBenVrS5CfDX0TkBkU0QEVpCzoBgJYq8JCG8Ib+XKz
+ GU2fHxVRhscQyya3JySoKYRe4kfB2swn75GzgCw1PGvOIgV35oGKOHx4ZGs7bASK1FLGp4eNJ
+ E4VZjhq4A4IFE/QZVk2JfeUbBoJ5jSYfeRBzb0HNpXU4xt0NwzQxkApcWAaQUE0m56Oyfbw/Y
+ ihAjBrKUhYp76EnJcWbBFmll/Ln4bixJh2eclJdiYDzhZbddr3TzwxHXueHqwmZHJFKvDAp/g
+ /FHYbkNwA26UNhauIj01Gb4BEAQw4A/npxYsD5FtyFOuxglv+5fucEmKZt21NHEY7t6ciBTGI
+ b/cP1EOMstYEbPCKBldxE+j8g6vLgsEYl1k9ddA/s4hanj2x8zywItg54ZQOxuQOixBo3WS6k
+ HGToeT69iUuBtqTAAF86BYLlHFG9p/n1xIJCcK+8NN1frLriWHTp0ypcYxfjt8AqiQF9hAZvr
+ iTOxhdtEsr/10FkKIqHcqPNBYXdmYII+/Vt5/QOZd9MCKDOcISxmJpchayy5ER0EHeNaW+Obs
+ aYe08KwjSpKZmtiA+Z0n8242n77wdKhRumxxZ5xFJZ82bGFZH8OPfFAOpru6vI1UosCMAw4EI
+ xtTsnicAWtx+rsCPkNFAmAjsk0HtcqyG9yPepjiyA/JYqz95eSo6YpoeJ1Y6P3oJAWIA0QDab
+ 1fx02yBOS2xC8EnFQYNutlv09PeRIlMyWkY+tTWLt+jSDTl8oikDC2Np9UDo9SlsDuTMnCXrw
+ GK7P6Ik0Xy52/pyuFYelHuero7udeVxxt0r/eXM6+g/WUU6A2AFNf+hBpnyRzWmrV7lExakvq
+ CzKEHT+/JyDmLBsM7LjUKkmYNukMj2px+bj3hsKpzLjUZzq+8YzbWiVa007QspHQd9URppJ9K
+ tCHDbQrIrfqbItGZeV3da0wqkjAqrOVvtF6PszvoOA32E7Tjh0qcc6GO5Ao8B0buAIanTSRsU
+ 9D8UD98oTXLhcjTLYDSztcAYd8LWoI9xYZZvdokPBDim9rnucTKvwyoyUyxGBMBHPG+xoyn6r
+ YUBmZMg6vosbDcYZyJsE+BpIGE0PEI
 
-Am 10.12.24 um 15:47 schrieb Ilpo J=C3=A4rvinen:
+Am 05.12.24 um 18:35 schrieb Thomas Wei=C3=9Fschuh:
 
-> On Fri, 6 Dec 2024, Armin Wolf wrote:
->
->> Until now the wmi-bmof driver had to allocate the binary sysfs
->> attribute dynamically since its size depends on the bmof buffer
->> returned by the firmware.
->>
->> Use the new .bin_size() callback to avoid having to do this memory
->> allocation.
->>
->> Tested on a Asus Prime B650-Plus.
->>
->> Signed-off-by: Armin Wolf <W_Armin@gmx.de>
->> ---
->>   drivers/platform/x86/wmi-bmof.c | 75 +++++++++++++++++---------------=
--
->>   1 file changed, 38 insertions(+), 37 deletions(-)
->>
->> diff --git a/drivers/platform/x86/wmi-bmof.c b/drivers/platform/x86/wmi=
--bmof.c
->> index df6f0ae6e6c7..3e33da36da8a 100644
->> --- a/drivers/platform/x86/wmi-bmof.c
->> +++ b/drivers/platform/x86/wmi-bmof.c
->> @@ -20,66 +20,66 @@
->>
->>   #define WMI_BMOF_GUID "05901221-D566-11D1-B2F0-00A0C9062910"
->>
->> -struct bmof_priv {
->> -	union acpi_object *bmofdata;
->> -	struct bin_attribute bmof_bin_attr;
->> -};
->> -
->> -static ssize_t read_bmof(struct file *filp, struct kobject *kobj, stru=
-ct bin_attribute *attr,
->> +static ssize_t bmof_read(struct file *filp, struct kobject *kobj, cons=
-t struct bin_attribute *attr,
->>   			 char *buf, loff_t off, size_t count)
->>   {
->> -	struct bmof_priv *priv =3D container_of(attr, struct bmof_priv, bmof_=
-bin_attr);
->> +	struct device *dev =3D kobj_to_dev(kobj);
->> +	union acpi_object *obj =3D dev_get_drvdata(dev);
->>
->> -	return memory_read_from_buffer(buf, count, &off, priv->bmofdata->buff=
-er.pointer,
->> -				       priv->bmofdata->buffer.length);
->> +	return memory_read_from_buffer(buf, count, &off, obj->buffer.pointer,=
- obj->buffer.length);
->>   }
->>
->> -static int wmi_bmof_probe(struct wmi_device *wdev, const void *context=
-)
->> +static const BIN_ATTR_ADMIN_RO(bmof, 0);
->> +
->> +static const struct bin_attribute * const bmof_attrs[] =3D {
->> +	&bin_attr_bmof,
->> +	NULL
->> +};
->> +
->> +static size_t bmof_bin_size(struct kobject *kobj, const struct bin_att=
-ribute *attr, int n)
->>   {
->> -	struct bmof_priv *priv;
->> -	int ret;
->> +	struct device *dev =3D kobj_to_dev(kobj);
->> +	union acpi_object *obj =3D dev_get_drvdata(dev);
->> +
->> +	return obj->buffer.length;
->> +}
->>
->> -	priv =3D devm_kzalloc(&wdev->dev, sizeof(struct bmof_priv), GFP_KERNE=
-L);
->> -	if (!priv)
->> -		return -ENOMEM;
->> +static const struct attribute_group bmof_group =3D {
->> +	.bin_size =3D bmof_bin_size,
->> +	.bin_attrs_new =3D bmof_attrs,
->> +};
->> +
->> +static const struct attribute_group *bmof_groups[] =3D {
->> +	&bmof_group,
->> +	NULL
->> +};
->>
->> -	dev_set_drvdata(&wdev->dev, priv);
->> +static int wmi_bmof_probe(struct wmi_device *wdev, const void *context=
-)
->> +{
->> +	union acpi_object *obj;
->>
->> -	priv->bmofdata =3D wmidev_block_query(wdev, 0);
->> -	if (!priv->bmofdata) {
->> +	obj =3D wmidev_block_query(wdev, 0);
->> +	if (!obj) {
->>   		dev_err(&wdev->dev, "failed to read Binary MOF\n");
->>   		return -EIO;
->>   	}
->>
->> -	if (priv->bmofdata->type !=3D ACPI_TYPE_BUFFER) {
->> +	if (obj->type !=3D ACPI_TYPE_BUFFER) {
->>   		dev_err(&wdev->dev, "Binary MOF is not a buffer\n");
->> -		ret =3D -EIO;
->> -		goto err_free;
->> +		kfree(obj);
->> +		return -EIO;
->>   	}
->>
->> -	sysfs_bin_attr_init(&priv->bmof_bin_attr);
->> -	priv->bmof_bin_attr.attr.name =3D "bmof";
->> -	priv->bmof_bin_attr.attr.mode =3D 0400;
->> -	priv->bmof_bin_attr.read =3D read_bmof;
->> -	priv->bmof_bin_attr.size =3D priv->bmofdata->buffer.length;
->> -
->> -	ret =3D device_create_bin_file(&wdev->dev, &priv->bmof_bin_attr);
->> -	if (ret)
->> -		goto err_free;
->> +	dev_set_drvdata(&wdev->dev, obj);
->>
->>   	return 0;
->> -
->> - err_free:
->> -	kfree(priv->bmofdata);
->> -	return ret;
->>   }
->>
->>   static void wmi_bmof_remove(struct wmi_device *wdev)
->>   {
->> -	struct bmof_priv *priv =3D dev_get_drvdata(&wdev->dev);
->> +	union acpi_object *obj =3D dev_get_drvdata(&wdev->dev);
->>
->> -	device_remove_bin_file(&wdev->dev, &priv->bmof_bin_attr);
->> -	kfree(priv->bmofdata);
->> +	kfree(obj);
->>   }
->>
->>   static const struct wmi_device_id wmi_bmof_id_table[] =3D {
->> @@ -90,6 +90,7 @@ static const struct wmi_device_id wmi_bmof_id_table[]=
- =3D {
->>   static struct wmi_driver wmi_bmof_driver =3D {
->>   	.driver =3D {
->>   		.name =3D "wmi-bmof",
->> +		.dev_groups =3D bmof_groups,
->>   	},
->>   	.probe =3D wmi_bmof_probe,
->>   	.remove =3D wmi_bmof_remove,
-> So do I understand right that this meant to supercede the patch from
-> Thomas?
->
-Yes, i totally overlooked this patch, sorry. I will ask him to drop his pa=
-tch.
+> The generic function from the sysfs core can replace the custom one.
+
+Sorry for taking quite a bit to respond, i totally overlooked this patch.
+
+This patch is superseded by a patch of mine: https://lore.kernel.org/platf=
+orm-driver-x86/20241206215650.2977-1-W_Armin@gmx.de/
+
+This reworks the binary attribute handling inside the driver to use the ne=
+w .bin_size() callback. This allows the
+driver to have a static binary attribute which does not need a memory allo=
+cation.
+
+Because i think we cannot use sysfs_bin_attr_simple_read() anymore. So may=
+be you can just drop this patch?
 
 Thanks,
 Armin Wolf
 
+> Signed-off-by: Thomas Wei=C3=9Fschuh <linux@weissschuh.net>
+> ---
+>   drivers/platform/x86/wmi-bmof.c | 12 ++----------
+>   1 file changed, 2 insertions(+), 10 deletions(-)
+>
+> diff --git a/drivers/platform/x86/wmi-bmof.c b/drivers/platform/x86/wmi-=
+bmof.c
+> index df6f0ae6e6c7904f97c125297a21166f56d0b1f0..e6c217d70086a2896dc70cf8=
+ac1c27dafb501a95 100644
+> --- a/drivers/platform/x86/wmi-bmof.c
+> +++ b/drivers/platform/x86/wmi-bmof.c
+> @@ -25,15 +25,6 @@ struct bmof_priv {
+>   	struct bin_attribute bmof_bin_attr;
+>   };
+>
+> -static ssize_t read_bmof(struct file *filp, struct kobject *kobj, struc=
+t bin_attribute *attr,
+> -			 char *buf, loff_t off, size_t count)
+> -{
+> -	struct bmof_priv *priv =3D container_of(attr, struct bmof_priv, bmof_b=
+in_attr);
+> -
+> -	return memory_read_from_buffer(buf, count, &off, priv->bmofdata->buffe=
+r.pointer,
+> -				       priv->bmofdata->buffer.length);
+> -}
+> -
+>   static int wmi_bmof_probe(struct wmi_device *wdev, const void *context=
+)
+>   {
+>   	struct bmof_priv *priv;
+> @@ -60,7 +51,8 @@ static int wmi_bmof_probe(struct wmi_device *wdev, con=
+st void *context)
+>   	sysfs_bin_attr_init(&priv->bmof_bin_attr);
+>   	priv->bmof_bin_attr.attr.name =3D "bmof";
+>   	priv->bmof_bin_attr.attr.mode =3D 0400;
+> -	priv->bmof_bin_attr.read =3D read_bmof;
+> +	priv->bmof_bin_attr.read_new =3D sysfs_bin_attr_simple_read;
+> +	priv->bmof_bin_attr.private =3D priv->bmofdata->buffer.pointer;
+>   	priv->bmof_bin_attr.size =3D priv->bmofdata->buffer.length;
+>
+>   	ret =3D device_create_bin_file(&wdev->dev, &priv->bmof_bin_attr);
+>
