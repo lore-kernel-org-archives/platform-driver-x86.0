@@ -1,63 +1,82 @@
-Received: from m16.mail.163.com (m16.mail.163.com [220.197.31.4])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2435338DE0;
-	Sat, 14 Dec 2024 10:45:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.31.4
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6DEA3133987
+	for <platform-driver-x86@vger.kernel.org>; Sat, 14 Dec 2024 10:49:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1734173145; cv=none; b=m0+55PYDBvaX+z2DlojEFYQsl9W/UZPeA2Sc2gcYZZZGNe6ytNZxt1oOse+XU7fKhr7nGC1DO/DnyC9BIK2EySsJHlGrdLjlyeZqWv2n//CmUYp+HYPJht39RmRYAFcP3amO26OxhacCC7Nffy/noTmadzTOyi9RwJbxsTtcTaI=
+	t=1734173379; cv=none; b=FMP+1ybpdL0F0jhNbMLGEjnaQAV49AcF7vFsSawNXDvwRv0O6z/asv4BqmNIK7xkIZenqI63sYZMV1Ez7p3IT99HTHfzoBFtiFwaKfpdeDfKrtqPMh5bl9h6t7SHVTCs8grOMTFMWJitmQhdPNcyWjb9k6kDGNGa+cgZb61DtDQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1734173145; c=relaxed/simple;
-	bh=OnXWpLLwCl53Ii1gDoJk2KQDsWWSkBYK6ZIUAfCW0Hs=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=dscWTX4LGaTxGntBCisC9cmpIXTmdRL9dIUgbXxjRsozzHjnSoRBLIIU8ubXlcBXjEXT4CDMAj1yYDrKzYZSAHkD0wGbzNOcAy4/KYORpDrox0XoUqMHfFsG0nID8K9TectsTcPmMhakItqF6a5kCvxow+KqyIYaGzPgla7lkLI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=L9FZvYV2; arc=none smtp.client-ip=220.197.31.4
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
+	s=arc-20240116; t=1734173379; c=relaxed/simple;
+	bh=Lw5kop6nMcnWZIComlisfRyMcYmOyuRAB0xNKE33y/M=;
+	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=mRRDrubtKNuRKJ65ERy+8GgM1vg0K5KMhmj8HhLi+HdaYG00kXdzwFFmDqFwoCKXRwUIXilC+/8Wr5eCacMsoqbTvYqX3MCx/fnsM8vAp1lovF7e6UZiZebRoSTI/NCOFe4+ur8IjfzlZscmWWmpGdY7s57hQtfSMlMfPGfCU8I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Q3xIxNBl; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="L9FZvYV2"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-	s=s110527; h=From:Subject:Date:Message-Id:MIME-Version; bh=/Mz8e
-	CJi+fLHjNC7SvrXgMLSiUUevypzCUZ0HwZ40L0=; b=L9FZvYV2eIf0hll/x+vHI
-	rYmP/nDD6SvYAqYn2C6GMthTiIuQueOgBaYRbuvN9ZCM6b5jqIhdw14o9WdWaaks
-	fjHGo7O21s0qlZfz/5RIP04Vq04UzHS0A0T1ES5klAY56VyL3tohy0bzcW9j9JP0
-	67oFGagIZrvWVpsXr28VJc=
-Received: from localhost.localdomain (unknown [])
-	by gzga-smtp-mtada-g1-2 (Coremail) with SMTP id _____wC3Lgy1YV1nsqYGAg--.26075S4;
-	Sat, 14 Dec 2024 18:45:26 +0800 (CST)
-From: David Wang <00107082@163.com>
-To: w_armin@gmx.de
-Cc: farhan.anwar8@gmail.com,
-	hdegoede@redhat.com,
-	ilpo.jarvinen@linux.intel.com,
-	jlee@suse.com,
-	kuurtb@gmail.com,
-	linux-kernel@vger.kernel.org,
-	platform-driver-x86@vger.kernel.org,
-	rayanmargham4@gmail.com
-Subject: Re: [PATCH v4 5/5] platform/x86: acer-wmi: Ignore AC events
-Date: Sat, 14 Dec 2024 18:45:05 +0800
-Message-Id: <20241214104505.16025-1-00107082@163.com>
-X-Mailer: git-send-email 2.39.2
-In-Reply-To: <20241210001657.3362-6-W_Armin@gmx.de>
-References: <20241210001657.3362-6-W_Armin@gmx.de>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Q3xIxNBl"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id F23D4C4CEE1
+	for <platform-driver-x86@vger.kernel.org>; Sat, 14 Dec 2024 10:49:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1734173379;
+	bh=Lw5kop6nMcnWZIComlisfRyMcYmOyuRAB0xNKE33y/M=;
+	h=From:To:Subject:Date:In-Reply-To:References:From;
+	b=Q3xIxNBl2LNb562pbtE15tRXTWSicgempFZ5/GH4U3winjx22UMGW0KnS/aB7Km33
+	 2C/AfgRyO2r9xgzYOOBrdOC/hIs4Ky6gujEjM7nV8X0ZG6oyCDD7O2TlLm+rhf7t7z
+	 0Y0NT+rDMTNqC0R5zC2JxS3a4ImhNzKukMxZQn+TIQOaha3nGqe9R/dNmDRBEiGSRF
+	 ey3DHlah7AG9qv0z+5VeJToyaIE92fN9MpEG4QYUclHzxTlc3t4ggGqDQxAAGsjKDM
+	 VEPmmoOU1W7GUesF5C/t5m878E9jO0LJgDXzsQKo3ink4DV2U5a7UJ1f8QC3JWB54D
+	 dZpUk3A+bcqnQ==
+Received: by aws-us-west-2-korg-bugzilla-1.web.codeaurora.org (Postfix, from userid 48)
+	id EB0F0C41612; Sat, 14 Dec 2024 10:49:38 +0000 (UTC)
+From: bugzilla-daemon@kernel.org
+To: platform-driver-x86@vger.kernel.org
+Subject: [Bug 219517] REGRESSION: charge_control missing in 6.12
+Date: Sat, 14 Dec 2024 10:49:38 +0000
+X-Bugzilla-Reason: None
+X-Bugzilla-Type: changed
+X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
+X-Bugzilla-Product: Drivers
+X-Bugzilla-Component: Platform_x86
+X-Bugzilla-Version: 2.5
+X-Bugzilla-Keywords: 
+X-Bugzilla-Severity: normal
+X-Bugzilla-Who: guilhem@lettron.fr
+X-Bugzilla-Status: NEW
+X-Bugzilla-Resolution: 
+X-Bugzilla-Priority: P3
+X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
+X-Bugzilla-Flags: 
+X-Bugzilla-Changed-Fields: blocked
+Message-ID: <bug-219517-215701-stDbM5HJ8k@https.bugzilla.kernel.org/>
+In-Reply-To: <bug-219517-215701@https.bugzilla.kernel.org/>
+References: <bug-219517-215701@https.bugzilla.kernel.org/>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Bugzilla-URL: https://bugzilla.kernel.org/
+Auto-Submitted: auto-generated
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:_____wC3Lgy1YV1nsqYGAg--.26075S4
-X-Coremail-Antispam: 1Uf129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7v73
-	VFW2AGmfu7bjvjm3AaLaJ3UbIYCTnIWIevJa73UjIFyTuYvjxUjSdyDUUUU
-X-CM-SenderInfo: qqqrilqqysqiywtou0bp/xtbB0hO1qmddUp3R-wAAsF
 
-May I suggest pr_info() this WMID_AC_EVENT event, there were discussions
-about possible unstable adapter cord causing flood of events 8-0/1. The
-logs may help identify the cause.
+https://bugzilla.kernel.org/show_bug.cgi?id=3D219517
+
+Guilhem Lettron (guilhem@lettron.fr) changed:
+
+           What    |Removed                     |Added
+----------------------------------------------------------------------------
+             Blocks|                            |219573
 
 
-Thanks
-David
+Referenced Bugs:
 
- 
+https://bugzilla.kernel.org/show_bug.cgi?id=3D219573
+[Bug 219573] ASUS Zenbook UM5302TA function keys reversed and Fn lock broken
+after kernel 6.12 update
+--=20
+You may reply to this email to add a comment.
 
+You are receiving this mail because:
+You are watching the assignee of the bug.=
