@@ -1,142 +1,97 @@
-Received: from mail-pf1-f178.google.com (mail-pf1-f178.google.com [209.85.210.178])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from todd.t-8ch.de (todd.t-8ch.de [159.69.126.157])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 38C1E1114
-	for <platform-driver-x86@vger.kernel.org>; Sun, 15 Dec 2024 01:36:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1AE191D696;
+	Sun, 15 Dec 2024 13:25:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.69.126.157
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1734226621; cv=none; b=cxNPl6TAjRHOjStojVMiQU8QvQ+Ab/V3/3KxCc7e7ptn4hHYdEEohNBW19SkUlpp8eiWv9nKdA0i/H1o7ztubLcbqKIi6uwf6sg0kEzfk2o083bTmuKccHW+zhYoK7MtnDWE9Wikapw8qU1rdUL7D+2gK99OdPthuN7+rCG+e5o=
+	t=1734269149; cv=none; b=EaZN52vCAB9hedbzHp3aqcle++COWVdGgO3bbTa3o+U1XGr3DRVROZqJ5zERbyjIHkEkO1crikrbjSx2rRXQkKjWXhYDjIzbxqRIj8gXvnoRdfudKIU12P0fIijuZsoGqQ58kqozm3ShbncUI+RAboVAx8T7oqVDhiydBVgIoY8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1734226621; c=relaxed/simple;
-	bh=aDDiFrjZPZKOyWatWCZRpnJFj8Uwb1SWbxPXYT5IUEQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=cz0CSb4NjEhVWjBBa8eAFeuHLg3MpX196Y/lO9ApIPrgpjYVCo0hRJDgkuVlC/2GpWKleJEfCYswuh3uPqILO3lMilPBWwsOU99eDyYfvTlO4Qqh/y16lUrL//SlDKFa3SGhpjMtECt95F4Im+jYIyRIvpE/mnEdOdWP5djBoM0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=pf.is.s.u-tokyo.ac.jp; spf=none smtp.mailfrom=pf.is.s.u-tokyo.ac.jp; dkim=pass (2048-bit key) header.d=pf-is-s-u-tokyo-ac-jp.20230601.gappssmtp.com header.i=@pf-is-s-u-tokyo-ac-jp.20230601.gappssmtp.com header.b=b9H0uFsL; arc=none smtp.client-ip=209.85.210.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=pf.is.s.u-tokyo.ac.jp
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=pf.is.s.u-tokyo.ac.jp
+	s=arc-20240116; t=1734269149; c=relaxed/simple;
+	bh=N/lB5gYneBd9IFIjiiYEnblaonZz81LGrbhwQ231yJE=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=AJkAWyHAeKuH+eWmbDgV4BtVLkQVDHGMAnwySjaZIUY18KNU+Gse+VwS3xUgWIvm+GjKNeYaeXebHwG7zfoZ/4wrFbLY9BPAW3H5uJWXFkfkmd3lRxKniZzoaNkP4KoiA1MaKuXlVHVAO2v7W4cBZD1Bk1SG3AGmyqTE8VvJWxQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=weissschuh.net; spf=pass smtp.mailfrom=weissschuh.net; dkim=pass (1024-bit key) header.d=weissschuh.net header.i=@weissschuh.net header.b=qzpQgw33; arc=none smtp.client-ip=159.69.126.157
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=weissschuh.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=weissschuh.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=pf-is-s-u-tokyo-ac-jp.20230601.gappssmtp.com header.i=@pf-is-s-u-tokyo-ac-jp.20230601.gappssmtp.com header.b="b9H0uFsL"
-Received: by mail-pf1-f178.google.com with SMTP id d2e1a72fcca58-728eccf836bso2547613b3a.1
-        for <platform-driver-x86@vger.kernel.org>; Sat, 14 Dec 2024 17:36:57 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=pf-is-s-u-tokyo-ac-jp.20230601.gappssmtp.com; s=20230601; t=1734226617; x=1734831417; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=qAuVc47OrAJnSCWspBEIOoGAjeu//CVN/qE98yvAz1A=;
-        b=b9H0uFsLaLeZHG3zp62VDIzqEMBlfCkbCQqksyuqyUkZUKijWDQYLzg+d+IMy5s0Ja
-         vdD+AXAT/AIOU61KikXROyWnAauOeZEIuPM6eM+N1O8aNmKsjeFza8gpR4aBGVyEuCxR
-         87Pr6mMUoNoBaPycoeeXSPPZCKyCJJ8PzXBAxKVpvDlnDqM//SvvM8tLDjbs4qZMBEZO
-         /ixv0CqQ030mJlg5KS83IzHpq1evOODlKYLpdxYrMoLp1Vi95AxlgdRQcoqdhZhrD/Zk
-         tXJenZrCzNTi1fYKe8JJWR9f8TM7IxNanfJpz+UpYtJFGmJVqnhTLRQeBLggsEE09Unt
-         Utdw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1734226617; x=1734831417;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=qAuVc47OrAJnSCWspBEIOoGAjeu//CVN/qE98yvAz1A=;
-        b=VMB/6RVFUz8SV0HF/zo1ADlSBqYRA+5MKYugAglDQkFK4Ae/SklBryRNXNbDw06asy
-         iyn8HMCKZkSaS+MsVsTtgoEtjytJRoNz3T8uOeO4Rhep/ic6RqG1KySGoK08aqB4EQtZ
-         cXiJfCGf7AkXpwKR7q4Un/I3HNxs10X2TT+V0kaBVSkXk/AeOK6BS3ESnbaoWmexfSQz
-         pUJI6VFC0lWbb0zqJVgV2MuOTXAp76sptv+EmV7/dmwrE9LR4W/792mBF88QYB6s8tgS
-         Wh2t5R530ZV8Tgx4gN61CGUZLGdUB+J7TGRaZF0wcCTAO9BXCdCKSl2UyNEAOhKGt3Wz
-         B5Kg==
-X-Forwarded-Encrypted: i=1; AJvYcCWK9f4fmACJ1nU3GqLP1AEkMi2mFs3IVJxtW+glDTNpzRWXX4Nh5R/un1vTnP6Bm8WCq+xWm4rHzbiVF0/RdMBTrWjz@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz8Dp6QpbKkA9eteKR55F/grOpjDjyUhq/cvZTU+U5uNgmOtn3i
-	q7teNqKSmHgXK5WPB3HB0sT9Ef1z5u5WB2rvMRIEs6wUPuUJ8TKNn7t0M2k/2Hc=
-X-Gm-Gg: ASbGncuhuDArNlo++DgN4DsaNHrqz+rFZNFjecGig+JVGDCnNqgdoJQSGRzDEQVX4Fd
-	TVTsrw+TcawR3415QM+KHZeUkw2h1tpe+E5rBm0WG38I7I2GH+cmNOGr36pxZ9DjoQ/fFb9oQm7
-	nOp1ooroIcNhr4YOTCUH1arxGM9oI1yRRHevQ604CJZas9uKiSF2P77te3mTQuSD4bOhgTEc0FM
-	z5XbTJzYm10jPxWctAkcfg+8Vm9Gw7zHkZ2YBibV4fBcSLQW/QEqOMW68s5Bq11hZ0CxvgbvNqg
-	DHsfwoP+cdmXg+k/PzTepQ6/f7SI6w5FKHXq
-X-Google-Smtp-Source: AGHT+IHZO5IJIBJvVoTg0Rcc7EdygCFPIAJEgg0G0OQIfKzVbYZmBPQoGTiIroAiaGv7dP9a7KsJ+Q==
-X-Received: by 2002:a05:6a00:3e10:b0:725:b347:c3cc with SMTP id d2e1a72fcca58-7290c27384emr12635610b3a.23.1734226617297;
-        Sat, 14 Dec 2024 17:36:57 -0800 (PST)
-Received: from ?IPV6:2001:f70:39c0:3a00:39e1:57de:eaa2:a1ed? ([2001:f70:39c0:3a00:39e1:57de:eaa2:a1ed])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-72918b78f72sm2051480b3a.116.2024.12.14.17.36.55
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 14 Dec 2024 17:36:56 -0800 (PST)
-Message-ID: <ddaab383-d196-45d5-9534-c417e78232af@pf.is.s.u-tokyo.ac.jp>
-Date: Sun, 15 Dec 2024 10:36:53 +0900
+	dkim=pass (1024-bit key) header.d=weissschuh.net header.i=@weissschuh.net header.b="qzpQgw33"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=weissschuh.net;
+	s=mail; t=1734269143;
+	bh=N/lB5gYneBd9IFIjiiYEnblaonZz81LGrbhwQ231yJE=;
+	h=From:Date:Subject:To:Cc:From;
+	b=qzpQgw33uLi5EmmezLrtDvI3SVbzaXAzmPIeDekLqsjirB/svC0KVXqLC4/F9e+S8
+	 0P1i9LQt8GLtyo9JVRsckWLAugroES3TO+40z9phEPdq5mRhCaXHFmCN4GTsNyeG7n
+	 ODq36CkLiczqqju5WQAW+55TzMSVsMBrbNxiJSpc=
+From: =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <linux@weissschuh.net>
+Date: Sun, 15 Dec 2024 14:25:40 +0100
+Subject: [PATCH] mlxbf-bootctl: Constify 'struct bin_attribute'
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] platform/x86: adv_swbutton: use
- devm_add_action_or_reset() for cleanup
-To: =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Cc: Andrea.Ho@advantech.com.tw, Hans de Goede <hdegoede@redhat.com>,
- platform-driver-x86@vger.kernel.org
-References: <20241211085821.3982351-1-joe@pf.is.s.u-tokyo.ac.jp>
- <e0782001-7a4f-e341-4ef8-1072904c9571@linux.intel.com>
-Content-Language: en-US
-From: Joe Hattori <joe@pf.is.s.u-tokyo.ac.jp>
-In-Reply-To: <e0782001-7a4f-e341-4ef8-1072904c9571@linux.intel.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
+Message-Id: <20241215-sysfs-const-bin_attr-mellanox-v1-1-b6fe4f68e2ca@weissschuh.net>
+X-B4-Tracking: v=1; b=H4sIANPYXmcC/x3MUQqDMAwA0KtIvhdoO4vbrjJEqqYu4NLRFHGId
+ 1/Z5/t5ByhlJoVHc0CmjZWTVNhLA9MryELIczU441rrrEf9alSckmjBkWUIpWR807oGSTteO3O
+ LYzsb7+9Qj0+myPv/f/bn+QNpkS8HbwAAAA==
+X-Change-ID: 20241215-sysfs-const-bin_attr-mellanox-3708fb4d0559
+To: Hans de Goede <hdegoede@redhat.com>, 
+ =?utf-8?q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, 
+ Vadim Pasternak <vadimp@nvidia.com>
+Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <linux@weissschuh.net>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1734269142; l=1609;
+ i=linux@weissschuh.net; s=20221212; h=from:subject:message-id;
+ bh=N/lB5gYneBd9IFIjiiYEnblaonZz81LGrbhwQ231yJE=;
+ b=+CItkQDjvjWt4TOE6o+WJ26/kZ5d0tJ9HUztb1/YK6IdS2eNoT54Rfz8k8PT2iXMQQnn3PAbZ
+ BPx/G6581w/C9QpVO7uMcNcn9hkzIZwx0BKMCZciGWpXSGjVX6aE30x
+X-Developer-Key: i=linux@weissschuh.net; a=ed25519;
+ pk=KcycQgFPX2wGR5azS7RhpBqedglOZVgRPfdFSPB1LNw=
 
-Hi Ilpo,
+The sysfs core now allows instances of 'struct bin_attribute' to be
+moved into read-only memory. Make use of that to protect them against
+accidental or malicious modifications.
 
-Thank you for your review.
-I am currently submitting a patch to introduce the devm_ version of 
-device_init_wakeup(dev, true) [1], and I would like to send a V3 patch 
-utilizing it after it is merged.
+Signed-off-by: Thomas Weißschuh <linux@weissschuh.net>
+---
+ drivers/platform/mellanox/mlxbf-bootctl.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-[1]: 
-https://lore.kernel.org/linux-pm/20241214021652.3432500-1-joe@pf.is.s.u-tokyo.ac.jp/T/#u
+diff --git a/drivers/platform/mellanox/mlxbf-bootctl.c b/drivers/platform/mellanox/mlxbf-bootctl.c
+index c5b36837e6943ab2cfb8908b03e3d0fe387f2cb0..a2011af48201c6561565920cbac2f18b667c3006 100644
+--- a/drivers/platform/mellanox/mlxbf-bootctl.c
++++ b/drivers/platform/mellanox/mlxbf-bootctl.c
+@@ -939,7 +939,7 @@ MODULE_DEVICE_TABLE(acpi, mlxbf_bootctl_acpi_ids);
+ 
+ static ssize_t mlxbf_bootctl_bootfifo_read(struct file *filp,
+ 					   struct kobject *kobj,
+-					   struct bin_attribute *bin_attr,
++					   const struct bin_attribute *bin_attr,
+ 					   char *buf, loff_t pos,
+ 					   size_t count)
+ {
+@@ -971,9 +971,9 @@ static ssize_t mlxbf_bootctl_bootfifo_read(struct file *filp,
+ 	return p - buf;
+ }
+ 
+-static struct bin_attribute mlxbf_bootctl_bootfifo_sysfs_attr = {
++static const struct bin_attribute mlxbf_bootctl_bootfifo_sysfs_attr = {
+ 	.attr = { .name = "bootfifo", .mode = 0400 },
+-	.read = mlxbf_bootctl_bootfifo_read,
++	.read_new = mlxbf_bootctl_bootfifo_read,
+ };
+ 
+ static bool mlxbf_bootctl_guid_match(const guid_t *guid,
 
-On 12/11/24 22:57, Ilpo Järvinen wrote:
-> On Wed, 11 Dec 2024, Joe Hattori wrote:
-> 
->> Current code leaves the device's wakeup enabled in the error path of
->> .probe() and .remove(). Also, the registered input device is not
->> unregistered. Add a devm_add_action_or_reset() call and cleanup these
->> resources in the callback.
->>
->> Fixes: 3d904005f686 ("platform/x86: add support for Advantech software defined button")
->> Signed-off-by: Joe Hattori <joe@pf.is.s.u-tokyo.ac.jp>
->> ---
->> Changes in V2:
->> - Use devm_add_action_or_reset().
->> - Call input_unregister_device().
->> ---
->>   drivers/platform/x86/adv_swbutton.c | 11 +++++++++++
->>   1 file changed, 11 insertions(+)
->>
->> diff --git a/drivers/platform/x86/adv_swbutton.c b/drivers/platform/x86/adv_swbutton.c
->> index 6fa60f3fc53c..5b07c42adfad 100644
->> --- a/drivers/platform/x86/adv_swbutton.c
->> +++ b/drivers/platform/x86/adv_swbutton.c
->> @@ -44,6 +44,14 @@ static void adv_swbutton_notify(acpi_handle handle, u32 event, void *context)
->>   	}
->>   }
->>   
->> +static void adv_swbutton_release(void *__input)
->> +{
->> +	struct input_dev *input = __input;
->> +
->> +	input_unregister_device(input);
-> 
-> Better but the input device is managed so the unregister call is
-> unnecessary.
-> 
-> devm_input_allocate_device() comment says:
-> 
->   * Managed input devices do not need to be explicitly unregistered or
->   * freed as it will be done automatically when owner device unbinds from
->   * its driver (or binding fails). Once managed input device is allocated,
->   * it is ready to be set up and registered in the same fashion as regular
->   * input device. There are no special devm_input_device_[un]register()
->   * variants, regular ones work with both managed and unmanaged devices,
->   * should you need them. In most cases however, managed input device need
->   * not be explicitly unregistered or freed.
+---
+base-commit: 2d8308bf5b67dff50262d8a9260a50113b3628c6
+change-id: 20241215-sysfs-const-bin_attr-mellanox-3708fb4d0559
 
-Thank you for pointing out, will be fixed in the V3 patch.
-> 
+Best regards,
+-- 
+Thomas Weißschuh <linux@weissschuh.net>
 
-Best,
-Joe
