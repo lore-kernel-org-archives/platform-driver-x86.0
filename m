@@ -1,92 +1,89 @@
-Received: from mail-il1-f169.google.com (mail-il1-f169.google.com [209.85.166.169])
+Received: from mail-io1-f45.google.com (mail-io1-f45.google.com [209.85.166.45])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B19A154449;
-	Sun, 15 Dec 2024 14:41:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 98B62148FE6;
+	Sun, 15 Dec 2024 16:09:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1734273685; cv=none; b=q2bpiZ+QSgtXVF93VkzAXWNj3v7zn28hus6s3LnC+qmEzG5IsnOCsMnuttJm2++3xnxr557Nr3c1wS9M4rtYkF/6sdddL93489WNejONlicUbkuWFQ/c6hEet+bGZfxNbCdjWc+FZ6VV8gGCs+1Hqb+SYGqVy7O3Q12lyAgSqI4=
+	t=1734278988; cv=none; b=HG46ypgmUzapXBXHUZDL8YROFY6EtDX2BHeDhnYZAVUK7Hi5OTZHI5lmx/wkOp0UdKQHQNmKUUtxQi9jC+sMxf6kSScEouBu0sxdZiYjPrXWhuWkOLjzFDprlyFd8hAjfouih0XTtquuBRsiCmSTItybWrDV3hpb4YlzbuhBO60=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1734273685; c=relaxed/simple;
-	bh=kXeJ4Hj3hzzePfAjpzKGNKDxMpqaR8gopxSh0vbf+iE=;
+	s=arc-20240116; t=1734278988; c=relaxed/simple;
+	bh=qhFseBubiVHHwLzVxNpYvAjEdglCvUWh0q0fOWY7KmU=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=bEoUL+N7qpcITwp2L+/X6vnpDcAFVInPWlYUlRa5BwMX7DGBtjRPP7scUzotzZjwb+G7UuVQcWQSex3PfhGWNULBc1cIIgnpllr0rr7Tal5q1FR8g/ilcU5lRyWsBR5Ko0/SYdrsmQ/TKeosbw9GVXfDCHbioYd2Xbnk8dE2KBI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=joshuagrisham.com; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.166.169
+	 To:Cc:Content-Type; b=KKZzXjzj/rXULfhtmh5MoGS5lbzPeSK+VAAtQ4DIzVNowrfRyow6DoOyz7hEBIi1LTBwGnIMXlz2K6kyFR0j875wH3Y5Tlnqtt6RszVGbUTXLRea9EB02A1KhmtOl7IRJqY0j93c1CrajeB3dhTBbuO8Rlwr7wgkMRQrYFXS2GQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=joshuagrisham.com; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.166.45
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=joshuagrisham.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-il1-f169.google.com with SMTP id e9e14a558f8ab-3a7deec316aso11279855ab.1;
-        Sun, 15 Dec 2024 06:41:23 -0800 (PST)
+Received: by mail-io1-f45.google.com with SMTP id ca18e2360f4ac-844e1020253so103175639f.3;
+        Sun, 15 Dec 2024 08:09:46 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1734273683; x=1734878483;
+        d=1e100.net; s=20230601; t=1734278986; x=1734883786;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=PCbNs8+4+AyZ8aANBlD6tglNDCYClZMZKU1hKK1G8O4=;
-        b=jYSrGOrAPNjYnaybFH5UBWN1JHFYRLoEz4GwP2IhHEq8+6QN00hIrM+ZbgICd2YD4k
-         Mvyg66gszGe4ORInNLVuXF9H2Opgq7Pnx+fyZqPowsqGkOTiTaJC/327Aq0CZqSP7pag
-         IABS/cmdwlOg5LZ321ImL+sofnmcDOX0O0dRsSj/3p1fgO5xlJiUoNRrtPjsfytQvPmr
-         mKvNoS5LFkZTpX/ydQN2Ltlsh+/VeDZ5eLg8XGIXY00vF9tir7FLrgOWlpszYPS67vYq
-         nePOTJ++bjunNZSwJkT7pxv2DQPf3RvnfCAGPf0u0ZI0yM3RhFAGxqBxe6XXo322JjhN
-         AInQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUEh51/MgCx7bmFCOFnsVpaP1aQdelWDVTYpwfdbnzO/y8BiGf9H5KHS3AB4tQuqYecwnVvKcPLyRo=@vger.kernel.org, AJvYcCV2WJOqNua/dxLJY7K6v2cpy5DNwvwDiE4XmCIRWG1e0dryYdKpHmjzTfaEJUI+Cwm1LfZi3wpDAEDeZUNvt0v/VMmbGg==@vger.kernel.org, AJvYcCWCYgrPwHK1Gz1zqrDpo8AsB4wrmIkRBSAOEIpB3w/X7Na/wA3SSbdaIDOf922IaW+/a8B/OCkQXRgZzZw=@vger.kernel.org, AJvYcCWHo2rbamjowPd5GKEb8MvpPfy+pb2B3fajkkgNICQn/gw5XkTZBokInUzUQXAQRYZbHtwm6DMiONeodPbx@vger.kernel.org
-X-Gm-Message-State: AOJu0YwUJ/9VpDo4k7+rSuIQdmyEFRezt73HSKveLHTLNhie9RxikTRw
-	xzd5IisEmzig8G5M2OSAPLgUlqmhvjhU/qz8krdV4/gDVVycIdo7mXEInhZL
-X-Gm-Gg: ASbGncumO7EAmvtSUVAhsjVZ/aWF0+LYUWCku0teAu1EQgCWiaFWKQJElaI4dPzlK8Q
-	3A4GruimSyjTHRO0KdbdSAb6819k34N6Pw/xGFBEhsX5SqyDMFhX3bnRTNkf2UH5Gh074eXeBV/
-	066m1a7UWWPlReICyzLH3e1lHBk9hKvFwt9deWwniQ5Cryxel4BlEnhcsW7Oe1EiVMkY7wDTL2f
-	nqOBpWkVXsijiD0tI9FJXs6Ex7qCD8WZxsJ+R1+zCgou3wImAuSsMXelCcmZoL85676KZJZPbxn
-	uSntK3OFQii/xb7KH1kfpyoNNg==
-X-Google-Smtp-Source: AGHT+IE5azjUemih2bn9mL8HN7p9hsVWV+OTQ+fJo6vAOTxz8pkdam2ceHeCpuWz4QAQQHBrMWQDdw==
-X-Received: by 2002:a05:6e02:18cd:b0:3a7:d5a6:1f9d with SMTP id e9e14a558f8ab-3aff5397ba4mr88667175ab.9.1734273683145;
-        Sun, 15 Dec 2024 06:41:23 -0800 (PST)
-Received: from mail-il1-f176.google.com (mail-il1-f176.google.com. [209.85.166.176])
-        by smtp.gmail.com with ESMTPSA id e9e14a558f8ab-3b248228c19sm10307255ab.28.2024.12.15.06.41.22
+        bh=6ON1gH7cnZrQUQ1/fl7tmHbVu74bmczwJzXNMdn/fj0=;
+        b=KAvTwMiMtNzIha46MMkCn9LZo43BfGcQXOpLmWmr3VytuJjvqgWPAuq0UtF8mhiqzZ
+         9y3RzW4JWzUzTlhSHo/bliSwyXajxudLlk4xQBpgJuzllTYncQgbDOLzfbss5IN9t+KW
+         gSfCiNm3LjmRuHocpWhLMc93C/u8AQI8dL3gICN19jKgRvK8zXvRiFjPZNwLt/dg32qT
+         YX2zx1knuOWoSNo4digxVfH5xeWijkHtz4qsp1NIcGRbyQmXxF+IR/26KRgdSGLjTEQW
+         OOPwdxBmCEKCXIqWtbGEnyLVDx0WqAUsdH5jkClnZ3C8LSrIDz/EX2AlX5CSXu1dQhIA
+         WhMw==
+X-Forwarded-Encrypted: i=1; AJvYcCUMPoDFiqFP02RB73IN6i1ng99Dww0CGWqIM8Bnepov/Os7si4xOjRTajEwuOgrhGMeNG6jm7unsdxwuuAX@vger.kernel.org, AJvYcCV7q3WvKuk7gvVSXkZD8J+cGe5MFokU28nb125cvu4PUQOfqRV609SOSKqsM+W5iRW9bbUF20erS/ky9sk=@vger.kernel.org, AJvYcCXEuLCXoa3/1dqJZPmNZ0WJA1HK2sTfqTV2DHdWbdP6aOUL6UJsKGVZBqYAqcraapLq8H/89r+FRjg=@vger.kernel.org, AJvYcCXorqqK2ozdDC5xUpwbvUs8MGFnQLjp7BiemvOfIm8cunNogU1g+IJ8VdnfkAnXMI5hMS1W+6AaVE41yypTv3yOjQ4lRg==@vger.kernel.org
+X-Gm-Message-State: AOJu0YwLMXcgcvRAOXvvdux8ZD58ywHcmow19rNmnMdXEVS7y+hYQodJ
+	6zLhUR9X1lV6+49ctA+pIRyUytChYmVZ6WovtR12WtEI9ANrbn5upbVEp1Chf1s=
+X-Gm-Gg: ASbGncv7o0yu6gl1MIJ5FzFFpRU28uyvsGO43otOzR1/Rjuj3y1Dmmmsx4G2TYocKO9
+	813jXkWoisWNy4EaINtEfGwL9oN9WFDqyVxg5Vis8NVNNKNiXwj6xfEtPR2cW0NZoNvDfCdV4nJ
+	x0U0sBKBvYJgYbblrKgaUubdGCODjRw5pS+Yrz77c4drVOwgJONAOWhCpCnw3OZAJH7w+GElsSZ
+	Y5iCzBbpvTXIQllx8DppBukWikbqjEGrtoW+Y/VDWjPulSj7eOIWG8Ux6k+bciRWlT49N1FTA4S
+	T+l1BKLYUOjhlVqDCYACUrXi7w==
+X-Google-Smtp-Source: AGHT+IH49yx7pNIueQuVutTxTAImpRcHmFxwER+daZTh+wxWZxjBxuifefH3F8TZhgCkHSrvHyRhtQ==
+X-Received: by 2002:a05:6602:2d88:b0:835:4931:b110 with SMTP id ca18e2360f4ac-844e87f096bmr771636839f.5.1734278985707;
+        Sun, 15 Dec 2024 08:09:45 -0800 (PST)
+Received: from mail-il1-f177.google.com (mail-il1-f177.google.com. [209.85.166.177])
+        by smtp.gmail.com with ESMTPSA id ca18e2360f4ac-844f626b622sm85442739f.15.2024.12.15.08.09.44
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 15 Dec 2024 06:41:22 -0800 (PST)
-Received: by mail-il1-f176.google.com with SMTP id e9e14a558f8ab-3a7d7c1b190so11385895ab.3;
-        Sun, 15 Dec 2024 06:41:22 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCUhx92qdN/j7QtYzGOuVssOpghvaalWwrBAT4xZaDmg8JEJFpS7KYhmvRE3XTOod6XPQQp0yweg5h0=@vger.kernel.org, AJvYcCVfckoV4yx52iAQ5rTqhLb6YLSHVsw1TTGVjVhtzo8lBoK3Pt1Pfp8ddpy5GMMYNiNaoBfBCRfWidcfgxiP@vger.kernel.org, AJvYcCWdl3CrmDV0W3G51oHcfZwAvPjVFjZy97qb5XxwMuMHGW1egrq56i5pp6RUPm6fRQJbUMWqDggAxXycM5M=@vger.kernel.org, AJvYcCWt3+cczbPAB/yMGFEas2imNvAsyfIElWU/WcH/6tlGv9jRTuFs3DC3uWygCIcfBzvVaiyJ/6Lr6rY8J+hTkytZsVIYkA==@vger.kernel.org
-X-Received: by 2002:a05:6e02:1886:b0:3a7:4eee:b7b9 with SMTP id
- e9e14a558f8ab-3aff6219ff1mr100318725ab.13.1734273682673; Sun, 15 Dec 2024
- 06:41:22 -0800 (PST)
+        Sun, 15 Dec 2024 08:09:45 -0800 (PST)
+Received: by mail-il1-f177.google.com with SMTP id e9e14a558f8ab-3a9d9c86920so10545215ab.2;
+        Sun, 15 Dec 2024 08:09:44 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCUROGPnsdvr89YWfIDJfnSSQMQW90UcH8sit5IuvqDL9AttBu7/4z4ybdGhga0infrSt7MSVy/6y8WtyLg=@vger.kernel.org, AJvYcCWkRwqUUAPEKsGiKTaKxyB2ixx/4UhUcCxEzSRt4de+qfFjhU/OO1qh/2dwm6S7zA92BPeJ2kl3G51KGZUb@vger.kernel.org, AJvYcCWydpiQgXjz7EyxIIPB6ZFXxQhq3bCuLb0G8lJxIYvjNs8pIm8IhHmINurBCAGilLUc877OuANzTiGehPawx/oAL0PYyA==@vger.kernel.org, AJvYcCX0zhIKPvD4qbh5F0tkeuiEwvHSGap14npekseUmBGJt3+28q5Blr6Ojp3GkL6ijnqfRdADGElcG8c=@vger.kernel.org
+X-Received: by 2002:a05:6e02:168a:b0:3a7:819c:5129 with SMTP id
+ e9e14a558f8ab-3aff243f6f5mr95903055ab.18.1734278984700; Sun, 15 Dec 2024
+ 08:09:44 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20241209163720.17597-1-josh@joshuagrisham.com> <f8db26af-c6c6-478c-a69c-0bc811e0b59d@roeck-us.net>
-In-Reply-To: <f8db26af-c6c6-478c-a69c-0bc811e0b59d@roeck-us.net>
+References: <20241209163720.17597-1-josh@joshuagrisham.com> <797b248c-7542-43fd-8e44-f2c7d650ccff@infradead.org>
+In-Reply-To: <797b248c-7542-43fd-8e44-f2c7d650ccff@infradead.org>
 From: Joshua Grisham <josh@joshuagrisham.com>
-Date: Sun, 15 Dec 2024 15:41:11 +0100
-X-Gmail-Original-Message-ID: <CAMF+KeZAGPYLjWujOpOk5esuX5XTFXzWgUx+baTrTskQ=jWqFA@mail.gmail.com>
-Message-ID: <CAMF+KeZAGPYLjWujOpOk5esuX5XTFXzWgUx+baTrTskQ=jWqFA@mail.gmail.com>
+Date: Sun, 15 Dec 2024 17:09:33 +0100
+X-Gmail-Original-Message-ID: <CAMF+Keb0cXc8t8J_T39WJUKydpD2EME92ZWT7SFr_taiCXfvww@mail.gmail.com>
+Message-ID: <CAMF+Keb0cXc8t8J_T39WJUKydpD2EME92ZWT7SFr_taiCXfvww@mail.gmail.com>
 Subject: Re: [PATCH] platform/x86: samsung-galaxybook: Add samsung-galaxybook driver
-To: Guenter Roeck <linux@roeck-us.net>
+To: Randy Dunlap <rdunlap@infradead.org>
 Cc: Joshua Grisham <josh@joshuagrisham.com>, ilpo.jarvinen@linux.intel.com, 
 	hdegoede@redhat.com, platform-driver-x86@vger.kernel.org, corbet@lwn.net, 
-	linux-doc@vger.kernel.org, jdelvare@suse.com, linux-hwmon@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
+	linux-doc@vger.kernel.org, jdelvare@suse.com, linux@roeck-us.net, 
+	linux-hwmon@vger.kernel.org, linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-Den m=C3=A5n 9 dec. 2024 kl 17:58 skrev Guenter Roeck <linux@roeck-us.net>:
+Den m=C3=A5n 9 dec. 2024 kl 18:04 skrev Randy Dunlap <rdunlap@infradead.org=
+>:
 >
-> > +             if (channel < galaxybook_ptr->fans_count && attr =3D=3D h=
-wmon_fan_input) {
-> Why is this check necesary ? The is_visible function should have masked i=
-t out.
+> Also needs <linux/sysfs.h>.
+> Maybe <linux/printk.h>.
+> Maybe <linux/err.h>.
 >
-> > [...]
-> Same as above.
+> --
+> ~Randy
 >
-> Guenter
->
-> > [...]
 
-Hi Guenter, now I have removed all of this from the v2 patch for this
-driver and instead will pursue support for these fan devices directly
-within ACPI instead! Thank you for taking a look!
+Also done in v2 of the patch, thanks Randy! (though no printk.h
+anymore as I removed all pr_* functions.. maybe I should explicitly
+add <linux/dev_printk.h> though? or is it good enough to get it via
+platform_device.h <=3D device.h <=3D dev_printk.h  ?)
 
-Best,
 Joshua
