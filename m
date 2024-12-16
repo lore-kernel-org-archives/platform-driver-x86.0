@@ -1,91 +1,105 @@
-Received: from forward102b.mail.yandex.net (forward102b.mail.yandex.net [178.154.239.149])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0DD23204C2C
-	for <platform-driver-x86@vger.kernel.org>; Mon, 16 Dec 2024 13:24:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.154.239.149
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF97B29CA;
+	Mon, 16 Dec 2024 13:57:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1734355480; cv=none; b=X7fkKf7imxj4ZszUhB8TZIPPfYYCb/inlfzrmtSWfnoMuOrXQdjDh1n6YMjMJyRctpneQw/z95faoa0rze+ROKsX9AgFh3zCssXP15XUlqAwFvzhz+Q8OgNacM+hXrWQTUB5+F+U9XdKccPL8AOCbJcFP5JrNi+GJF5yKPRCVp8=
+	t=1734357452; cv=none; b=QU+PGKfC7ntNoP0R1MaNyM2FxnoMTR1M5H+pKmOI2Zn2Hsq11s5izX+ewi7IRctT+WThSzCM+iT8iraDtlml6KoLZAJtgY948Ud+MDZ4lL6NJEpDyxi8Z7OcPIYAZeyTvSD/ReMuTAU6/J33zkD1rIXjhwmPQzZjIfiBq1Z3L5I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1734355480; c=relaxed/simple;
-	bh=y941jo/sRMhhfFF7WNIDQZJxeUouy2vYEKnecTatsA4=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=eNJOUhvL0XV4FwyO5DKpy12a82XPzD2bBMDjH6gQh+7oQUjQ1lqBS/ZgAwRGAHQ8QHCLjrOghlOqhWGffH3cAUKw0+YFGy88zrehatb0KiRlhbyYgUV6RnuQumlJ+/3kd3o/IXnaql4GPQPe1ccDE7+OqEfE0C/+0zSWkz+7V/A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=yandex.ru; spf=pass smtp.mailfrom=yandex.ru; dkim=pass (1024-bit key) header.d=yandex.ru header.i=@yandex.ru header.b=W7yqHCNm; arc=none smtp.client-ip=178.154.239.149
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=yandex.ru
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=yandex.ru
+	s=arc-20240116; t=1734357452; c=relaxed/simple;
+	bh=asW/rEU97Lhupbtp+ldMp9ntQdvITH9HiMPFa8DHXXU=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=mjypnTvzrP0IL366geKqEU+B8JzOIRSXN/Kzkt/vxtnYl2FY39e61Yo279x9y24jbgn+0cv5FcqhWx/avif59qPR43qk3fLeaVNC+ouDPYlfScAD7GnmV6HEZjr43mt2rvGcdd7JOqAVOadSiTRC2fPkaAH1Cv29+prhv7l0lsU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=CvNmGMQ6; arc=none smtp.client-ip=192.198.163.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=yandex.ru header.i=@yandex.ru header.b="W7yqHCNm"
-Received: from mail-nwsmtp-smtp-production-main-91.sas.yp-c.yandex.net (mail-nwsmtp-smtp-production-main-91.sas.yp-c.yandex.net [IPv6:2a02:6b8:c10:2d9f:0:640:f6ce:0])
-	by forward102b.mail.yandex.net (Yandex) with ESMTPS id ED1D760994;
-	Mon, 16 Dec 2024 16:24:34 +0300 (MSK)
-Received: by mail-nwsmtp-smtp-production-main-91.sas.yp-c.yandex.net (smtp/Yandex) with ESMTPSA id WOP0oF3Oda60-j68qKZ1N;
-	Mon, 16 Dec 2024 16:24:34 +0300
-X-Yandex-Fwd: 1
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yandex.ru; s=mail;
-	t=1734355474; bh=YLYv+wwP1DsCGfmT3CvNDg6rvSm1TodbVqBznvvjRpM=;
-	h=Message-ID:Date:Cc:Subject:To:From;
-	b=W7yqHCNmgpQ6qJyWDAnjKkJ+GSDX09OoT9ZASoakvfdM9OWkIDE1koOzjkv8W8KYe
-	 +M2nQeSZCvJIe+fH6f/SpNJZwNbASV9jrIVGd3lLyMl6bvaFEbs/orpMHP3Cn7s+pN
-	 UsDjPY2WSU8OIaKxjJISDcx5tDNwMzwyAWKpYj7s=
-Authentication-Results: mail-nwsmtp-smtp-production-main-91.sas.yp-c.yandex.net; dkim=pass header.i=@yandex.ru
-From: Dmitry Antipov <dmantipov@yandex.ru>
-To: Lee Chun-Yi <jlee@suse.com>,
-	Hans de Goede <hdegoede@redhat.com>,
-	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Cc: platform-driver-x86@vger.kernel.org,
-	lvc-project@linuxtesting.org,
-	Dmitry Antipov <dmantipov@yandex.ru>
-Subject: [PATCH] platform/x86: acer-wmi: fix fan mode setup in WMID_gaming_set_fan_mode()
-Date: Mon, 16 Dec 2024 16:24:00 +0300
-Message-ID: <20241216132400.302003-1-dmantipov@yandex.ru>
-X-Mailer: git-send-email 2.47.1
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="CvNmGMQ6"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1734357451; x=1765893451;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=asW/rEU97Lhupbtp+ldMp9ntQdvITH9HiMPFa8DHXXU=;
+  b=CvNmGMQ6AYqJjGOyKKU6MoQACL9olKgfBKDe/64qjkJCd3T8i039axKt
+   ufHiaOc4KD2xpMQJYkluiLzmXNVT/qOfhRtTUtYKbtaU0IURqvgn2U115
+   9puY2fSfOR68tsv82fGgrqOsw4fujVDV1qErjd+9xlUa986u9802u6PfX
+   JSD+gLuajdfzvvEgQ1R27cKDn6iCUERMhmNpbYVTnxbGYr0O1gTmTx+56
+   JKDAftrsPCGdnAWDzqZHQ4y0neC9sbpfctM23ttVQJ8a44Res9EUo2ZES
+   cOcBrnhVckRJw44MHyGWuwg1sv8UpvrYiN8YZIoQwnO/Sq+evUSndGiJk
+   Q==;
+X-CSE-ConnectionGUID: eWgx9HNnRAyfqGGWPMA4mw==
+X-CSE-MsgGUID: Qh8+q7+2QX2eMtlP3MXnoA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11288"; a="22327530"
+X-IronPort-AV: E=Sophos;i="6.12,238,1728975600"; 
+   d="scan'208";a="22327530"
+Received: from fmviesa006.fm.intel.com ([10.60.135.146])
+  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Dec 2024 05:57:30 -0800
+X-CSE-ConnectionGUID: XOBIYAXUQuSw0lBEwcrp+A==
+X-CSE-MsgGUID: 76n3K51WRmioP0fo0HJzmA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.12,238,1728975600"; 
+   d="scan'208";a="96971982"
+Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.29])
+  by fmviesa006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Dec 2024 05:57:25 -0800
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Mon, 16 Dec 2024 15:57:23 +0200 (EET)
+To: Yazen Ghannam <yazen.ghannam@amd.com>
+cc: x86@kernel.org, tony.luck@intel.com, mario.limonciello@amd.com, 
+    bhelgaas@google.com, jdelvare@suse.com, linux@roeck-us.net, 
+    clemens@ladisch.de, Shyam-sundar.S-k@amd.com, 
+    Hans de Goede <hdegoede@redhat.com>, naveenkrishna.chatradhi@amd.com, 
+    suma.hegde@amd.com, LKML <linux-kernel@vger.kernel.org>, 
+    linux-edac@vger.kernel.org, linux-pci@vger.kernel.org, 
+    linux-hwmon@vger.kernel.org, platform-driver-x86@vger.kernel.org
+Subject: Re: [PATCH v2.1] x86/amd_node, platform/x86/amd/hsmp: Have HSMP use
+ SMN through AMD_NODE
+In-Reply-To: <20241212214637.GA80677@yaz-khff2.amd.com>
+Message-ID: <ff59d4e9-15da-37b3-1a8c-1ae688fa4094@linux.intel.com>
+References: <20241212172711.1944927-1-yazen.ghannam@amd.com> <65375593-f2e0-e03b-7e7f-ad8be58772d4@linux.intel.com> <20241212214637.GA80677@yaz-khff2.amd.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/mixed; boundary="8323328-1223704678-1734357443=:941"
 
-In 'WMID_gaming_set_fan_mode()', most likely the (whether CPU or
-GPU or even total) fan count is not larger than 31. But still
-cast everyting to 'u64' just to be sure that there is no integer
-overflow when performing left shifts. Compile tested only.
+  This message is in MIME format.  The first part should be readable text,
+  while the remaining parts are likely unreadable without MIME-aware tools.
 
-Found by Linux Verification Center (linuxtesting.org) with SVACE.
+--8323328-1223704678-1734357443=:941
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 
-Signed-off-by: Dmitry Antipov <dmantipov@yandex.ru>
----
- drivers/platform/x86/acer-wmi.c | 10 +++++-----
- 1 file changed, 5 insertions(+), 5 deletions(-)
+On Thu, 12 Dec 2024, Yazen Ghannam wrote:
 
-diff --git a/drivers/platform/x86/acer-wmi.c b/drivers/platform/x86/acer-wmi.c
-index d09baa3d3d90..9be6176c0076 100644
---- a/drivers/platform/x86/acer-wmi.c
-+++ b/drivers/platform/x86/acer-wmi.c
-@@ -1504,17 +1504,17 @@ static void WMID_gaming_set_fan_mode(u8 fan_mode)
- 	int i;
- 
- 	if (quirks->cpu_fans > 0)
--		gpu_fan_config2 |= 1;
-+		gpu_fan_config2 |= 1ULL;
- 	for (i = 0; i < (quirks->cpu_fans + quirks->gpu_fans); ++i)
--		gpu_fan_config2 |= 1 << (i + 1);
-+		gpu_fan_config2 |= 1ULL << (i + 1);
- 	for (i = 0; i < quirks->gpu_fans; ++i)
--		gpu_fan_config2 |= 1 << (i + 3);
-+		gpu_fan_config2 |= 1ULL << (i + 3);
- 	if (quirks->cpu_fans > 0)
- 		gpu_fan_config1 |= fan_mode;
- 	for (i = 0; i < (quirks->cpu_fans + quirks->gpu_fans); ++i)
--		gpu_fan_config1 |= fan_mode << (2 * i + 2);
-+		gpu_fan_config1 |= (u64)fan_mode << (2 * i + 2);
- 	for (i = 0; i < quirks->gpu_fans; ++i)
--		gpu_fan_config1 |= fan_mode << (2 * i + 6);
-+		gpu_fan_config1 |= (u64)fan_mode << (2 * i + 6);
- 	WMID_gaming_set_u64(gpu_fan_config2 | gpu_fan_config1 << 16, ACER_CAP_TURBO_FAN);
- }
- 
--- 
-2.47.1
+> On Thu, Dec 12, 2024 at 08:50:26PM +0200, Ilpo J=E4rvinen wrote:
+> > On Thu, 12 Dec 2024, Yazen Ghannam wrote:
+> > > @@ -95,7 +80,12 @@ static umode_t hsmp_is_sock_attr_visible(struct ko=
+bject *kobj,
+> > >   * Static array of 8 + 1(for NULL) elements is created below
+> > >   * to create sysfs groups for sockets.
+> > >   * is_bin_visible function is used to show / hide the necessary grou=
+ps.
+> > > + *
+> > > + * Validate the maximum number against MAX_AMD_NUM_NODES. If this ch=
+anges,
+> > > + * then the attributes and groups below must be adjusted.
+> > >   */
+> > > +static_assert(MAX_AMD_NUM_NODES =3D=3D 8);
+> >=20
+> > Please also add the #include for it.
+> >
+>=20
+> Just to confirm, you mean for static_assert()?
+>=20
+>   #include <linux/build_bug.h>
 
+I saw you already made that change but yes, it is what I meant.
+
+--=20
+ i.
+
+--8323328-1223704678-1734357443=:941--
