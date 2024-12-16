@@ -1,82 +1,84 @@
-Received: from mail-pl1-f174.google.com (mail-pl1-f174.google.com [209.85.214.174])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D9644158870
-	for <platform-driver-x86@vger.kernel.org>; Mon, 16 Dec 2024 06:16:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2EDBF1C3318;
+	Mon, 16 Dec 2024 08:34:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1734329776; cv=none; b=AyizCaLZz6AOhSI0xGRGPajNW8iKaC8GmXXvsGlYiXfe+gb7LdkcEgto0bJuouHE46rOGNJbJdwCfp620UxMYIxjydlrt4i2YOMwPirLl6F2nzA8c6VTOXTpuSM45SSMgcYp97v2xye2pZidfBMRjWONc6taxQG0HTqQqg5e9fQ=
+	t=1734338054; cv=none; b=jQc4Aj1iZfWNq47T6N/jXjC72GSXTKqOcv2RFk4bOv1c94ayvFQYTNRYfgCGBg3QXh3KCwhvRA4LUDBSWtRroKxTu3AplnFKBWSnqYsDGHuKGOakBFMiB/Kow9T44IE+irt5RjxWUqfFoU1r5ICEsFr6zvGroCWNrfqwV17thRE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1734329776; c=relaxed/simple;
-	bh=Fmn8kmTaRIctXuMIFKOrhgLrmiXgK9vucAcFKIHg4HM=;
-	h=MIME-Version:From:Date:Message-ID:Subject:To:Content-Type; b=dLAQT2Eiy2HdQTD4QBmVm1SMm5xakSwMzTcCSQ5L24NufEwBzNSw3J1lcluHM2dTyEDq7CK1Jg+RGsq26iZStKQF8CgSB24Y3Bmzmj5EzYtVHnkFMcnrudm6QRoubxZ5zF2rxMU6Vt6Y7Jj0A4BGOc3BOLRJxBWA1KBnmmB8BWo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=lSwXP8WH; arc=none smtp.client-ip=209.85.214.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1734338054; c=relaxed/simple;
+	bh=Eo1ajtnJsnButOoKnoFQoNlk/tRZVz/zZ906wj6eUAQ=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=IlfNujjuHWJouqsG28XB2PTWruR499J2byffIFsPffpU0tq1jQWwWjwRIHioO+UHEMsAGOj1iyt7Nct91ur860qwJg2FDTldgfD8M3N0Ux7EYI+Qr/FrThTjtlTrIj6cQr47MLkkDj+QxDvXxhsgKId6OmR5QnAHzodk+vik17w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=phby1jvS; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lSwXP8WH"
-Received: by mail-pl1-f174.google.com with SMTP id d9443c01a7336-216728b1836so25614325ad.0
-        for <platform-driver-x86@vger.kernel.org>; Sun, 15 Dec 2024 22:16:13 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1734329773; x=1734934573; darn=vger.kernel.org;
-        h=to:subject:message-id:date:from:mime-version:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=Fmn8kmTaRIctXuMIFKOrhgLrmiXgK9vucAcFKIHg4HM=;
-        b=lSwXP8WHSJYr57OwrNtpYFNGEQSBr4FIZXjQ4xviBBRtMUlWdgnTTncWl/rQx2js7c
-         7jXt81CoXPHsjYcp0o1zXxd+Ry1BX3D+sWjYGcjVzM6TWDdFAiaQu9kDk/jRmQ0PPkP/
-         LpzEa4QUSlQoUdLhm3Yp7ywTDbJ/JYCXBsJ6DrENxT0oQ4nkLJteABlJTInttWPXDU7k
-         sBJ/r8X5rca1MdB3VVDaEKOJ73Xyo+z6NXpDMfKGaEXZUdxf7taxyhYtUSNMH4Jtvrsz
-         aZ8cs/caMPTBuCXH9y7bvA99qb+8dY5AdSnv6t01IJyjhcDkIiWPxWWuDj5U0iUqwR2l
-         RsgQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1734329773; x=1734934573;
-        h=to:subject:message-id:date:from:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=Fmn8kmTaRIctXuMIFKOrhgLrmiXgK9vucAcFKIHg4HM=;
-        b=w+B2t/2YIFbQE4pzXfAna//g8/GkJdYPqhAX8qXELeOqe1asOBmSJ50R9oqDQB+0BI
-         XZWSK94BbP9eVQkb0rLwG7GdlpkaZp3n9gbLblhoIA89o1LOpQDxfHnsNIFAymjidjvZ
-         O5vL8gWi994+EnLeC00cvvJX1vX5Jwupnn2WQG5tB5uBTzhnC3CO6ThR0tH8UE58VdDa
-         7UPOUmzZ63dZkWWCG1V9Qshh7PHUfUeJTE/3Nzo2plsKe2PjElUkapaaHeiWfpf7sjYk
-         wEblg3kvhq7bfq0PnRuE1yT3hYZn+HZAFuutwrALDrpcZw23S9jVoMYoUnxeN66iT2ag
-         N3cQ==
-X-Gm-Message-State: AOJu0Yzb+NTFA9lVttzXp1a1LGs98esnLcw6MLGjsJFMqmd2rnAt1VTq
-	lLyNOxt5VM/P/j0RVT2dPPR7BD+8CqNfBfMhUQw6YxZLuLih+gp39nBbJfJMan0i5t0UtQvsazf
-	gdTsTIzXzRhc5lH3cUDNnSDlK3wRM5mVKVXQ=
-X-Gm-Gg: ASbGncuKwOwcwup8PcG17lAzb7gvPHe6tdEtRQR/MuXO9LAadXEzN5SgJWiBxBEJY1J
-	+60Bj0kyXLntZYLwlcbVlPut35K+4Drkz2loJogU=
-X-Google-Smtp-Source: AGHT+IH04uYeZxUT9tD+dKkksOAuASj8/BMriqviDa/zoNFUKWI+7jcfHhRrb57+UdGJVithTZ+L5vnDs5elq2teXqI=
-X-Received: by 2002:a17:903:2382:b0:215:94e0:17 with SMTP id
- d9443c01a7336-218929f0d25mr124985465ad.23.1734329772785; Sun, 15 Dec 2024
- 22:16:12 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="phby1jvS"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AF1B3C4CED0;
+	Mon, 16 Dec 2024 08:34:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1734338053;
+	bh=Eo1ajtnJsnButOoKnoFQoNlk/tRZVz/zZ906wj6eUAQ=;
+	h=From:To:Cc:Subject:Date:From;
+	b=phby1jvSqidDr3SQMGHLdOqPb+aoGOuAFeaWQpy+ZpF5gdIpz3KXuKVnVVdAHNTOH
+	 defami4R6qBtVUcA/MEHYLcrkphjujGhF08MxTmC5bz6TxXcS9ygGeaiej2DXVsGsT
+	 8DVbSKk4w4uzVn19lckzH5C62T8Y0e57OJ+iwtineADRl84/AbKARDyQiND1hTGmcD
+	 GX5WKXFI3JRwGuSk7+AO9qla6NXmmD+5WvrveGj3KqQqXyTp27qo4LOzwFA0cFNDkB
+	 5PNlR5x3TkSZyzTKInqPundu0FperblyvqcV7Sh6pp8o7ZjB9E8zjYUk19ZkXauJJu
+	 rwcDmJy2AQh7A==
+From: Arnd Bergmann <arnd@kernel.org>
+To: Hans de Goede <hdegoede@redhat.com>,
+	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	Andy Shevchenko <andy@kernel.org>
+Cc: Arnd Bergmann <arnd@arndb.de>,
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	Tero Kristo <tero.kristo@linux.intel.com>,
+	Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+	platform-driver-x86@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH] platform/x86/intel: bytcrc_pwrsrc: fix power_supply dependency
+Date: Mon, 16 Dec 2024 09:34:05 +0100
+Message-Id: <20241216083409.1885677-1-arnd@kernel.org>
+X-Mailer: git-send-email 2.39.5
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: Hridesh MG <hridesh699@gmail.com>
-Date: Mon, 16 Dec 2024 11:45:37 +0530
-Message-ID: <CALiyAom1xDH6A0Q2WNHCMUcpMJfM3pXO2DaW=bgHGUi8ZOpBbQ@mail.gmail.com>
-Subject: acer-wmi: Nitro button doesn't produce a WMI event
-To: platform-driver-x86@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 
-Hi,
+From: Arnd Bergmann <arnd@arndb.de>
 
-I'm currently in the process of writing a patch for my Acer Nitro 5
-AN515-58 laptop to support Turbo Mode. The OC WMI calls have different
-input values on the nitro, and I've managed to reverse engineer the
-nitro sense app to obtain them. However, im facing a small difficulty
--
+The driver now fails to link when the power supply core is missing
+or in a loadable module:
 
-Currently, the driver listens for WMI events to call the
-toggle_turbo() function, the problem is that on my laptop the Turbo
-Key does not seem to produce a WMI event (as observed by acpi_listen).
-It does however show up on the output of wev with the keycode 433 and
-symbol XF86Presentation.
+_64-linux/bin/x86_64-linux-ld: drivers/platform/x86/intel/bytcrc_pwrsrc.o: in function `crc_pwrsrc_irq_handler':
+bytcrc_pwrsrc.c:(.text+0x2aa): undefined reference to `power_supply_changed'
+x86_64-linux-ld: drivers/platform/x86/intel/bytcrc_pwrsrc.o: in function `crc_pwrsrc_psy_get_property':
+bytcrc_pwrsrc.c:(.text+0x2f6): undefined reference to `power_supply_get_drvdata'
+x86_64-linux-ld: drivers/platform/x86/intel/bytcrc_pwrsrc.o: in function `crc_pwrsrc_probe':
+bytcrc_pwrsrc.c:(.text+0x644): undefined reference to `devm_power_supply_register'
 
-I'm not sure how to proceed right now since I'm not that familiar with
-the input or wmi subsystem. Any suggestions?
+Add the appropriate dependency for it.
 
-Thanks,
-Hridesh MG
+Fixes: 0130ec83c553 ("platform/x86/intel: bytcrc_pwrsrc: Optionally register a power_supply dev")
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+---
+ drivers/platform/x86/intel/Kconfig | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/drivers/platform/x86/intel/Kconfig b/drivers/platform/x86/intel/Kconfig
+index eb698dcb9af9..19a2246f2770 100644
+--- a/drivers/platform/x86/intel/Kconfig
++++ b/drivers/platform/x86/intel/Kconfig
+@@ -83,6 +83,7 @@ config INTEL_BXTWC_PMIC_TMU
+ config INTEL_BYTCRC_PWRSRC
+ 	tristate "Intel Bay Trail Crystal Cove power source driver"
+ 	depends on INTEL_SOC_PMIC
++	depends on POWER_SUPPLY
+ 	help
+ 	  This option adds a power source driver for Crystal Cove PMICs
+ 	  on Intel Bay Trail devices.
+-- 
+2.39.5
+
