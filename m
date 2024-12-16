@@ -1,58 +1,58 @@
 Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E526E2063D6;
-	Mon, 16 Dec 2024 17:17:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 00DCB839F4
+	for <platform-driver-x86@vger.kernel.org>; Mon, 16 Dec 2024 17:17:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1734369460; cv=none; b=cW48bHS5BX484weh+oW5INsL//nT4ecv/gSGIZCWd0qTsw1GwzkOWsQNnTrzF+4g5UjyLsxeAdpZpaHDghS17lgN5URj+3BcLM0WX02PvmlKJfXgedhb/h5/BaAwQM+uOjCKEF9oTvAlq4WZvKAd4PvxeCPz0NR3VrsxDfRw1hw=
+	t=1734369468; cv=none; b=acaHtdxzmoJ+CYNVnyn18W9NM6qfxgr5ZJUoPKIpWkqoks0bUJdrhM0+4eDkWiPpj/pXaCJkONZVR2rEySNcB5I/ch9GRWRY6mdfkv3KqVPtBK356ybdYrsz1IP8HAdJhOe0v09Tzlb1BtBY8oQWK1kdm0yOcFuQQ9G3ECvVsFo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1734369460; c=relaxed/simple;
-	bh=jwIDm7OntIjMqYsTkCZKIYWjyTOolpmfBMiJPluAcv0=;
+	s=arc-20240116; t=1734369468; c=relaxed/simple;
+	bh=253JcMNCvfAoRiFgoAZ0Pweb/aQlSecC3T8S2jNSsDQ=;
 	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=qkCQtHgltFp4WrseJzgsYdMMOoiwKrkrfbrqWL4MJAv9gMwHpXZDsa5Pa9JRPDC3NNU/esg3hr6drFW/K7KIoKmDgyqYIQwABfleNsTyeBbpu6EOa9txJlSaMj4r0wPSmtSjs9sfb6mwkjkKr7Kk34IkRMK+vsz9WnyWcORPqHA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=DqxfhbY1; arc=none smtp.client-ip=198.175.65.12
+	 MIME-Version:Content-Type; b=akIxllNomnh5d2010cTM9e+DXpJCQPiURWCrfx9D4Okn9SnS0Qf6zLFcgH3QJQcKmZWQtDOKki52nBL2fYwZSrYo4P3V0eflSHCHSJMjTa+HQm1SCx5syKtiLxKfkvSJB12hiVAeSGJ8g2/VqMCmiiG4vltD6mwxM/Q3JKQVUwo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ZssIQKIu; arc=none smtp.client-ip=198.175.65.12
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="DqxfhbY1"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ZssIQKIu"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1734369459; x=1765905459;
+  t=1734369467; x=1765905467;
   h=from:to:cc:in-reply-to:references:subject:message-id:
    date:mime-version:content-transfer-encoding;
-  bh=jwIDm7OntIjMqYsTkCZKIYWjyTOolpmfBMiJPluAcv0=;
-  b=DqxfhbY1EZY+yLc3M+2yLBpVxQCNacBfA4GofGvx6PwKjKUTAM5QW+yE
-   6o2mgkLEIAibzTqOndvOb55VkcICKiE/Qt8dlD//lFbdoud4p00GgwyFR
-   vuj8ARAe0hSwPaWWR8ohmhhAMee0p9zbOATuVbk9VIfv1yStZW2Q7ETZg
-   z0sntDjaC8Yz+4xv2FyyKFO5hndugMWlq28YbO0+PCcpNqFNt4sV76EeJ
-   W142ANUEVipSajd759KuoLvzdA63HIPJJM7a3bksALNLMjw0++z9bMXg3
-   VGnGWzJTz51XncG2dkZXisLG81vmtHuas1qlyoOt1E14hZS3A50D92N+f
-   w==;
-X-CSE-ConnectionGUID: DrfUhnxGS+awBONsBmTGTg==
-X-CSE-MsgGUID: emkNbhefTw6+ZA77qmUQIQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11278"; a="46156595"
+  bh=253JcMNCvfAoRiFgoAZ0Pweb/aQlSecC3T8S2jNSsDQ=;
+  b=ZssIQKIukhUTDuj2uB/lhBNXkyQckrzUzlVD8TfgLTD0v9t1Zm5xWCsP
+   Ej3Otjeuo/hQQsJAbDAIuNvJf39hvxLKNBVh1OcDJ87R1J983O2MmBzOL
+   /5bnacmqAk304Q/qbGFLql0FEuvgtJohCHZhy2Ck6N/VBZ1/H9gUd7Bzv
+   WOeJt/tl6yv1shhZJYZ9DnOh4x8orCmjZ4BKlzyXohnvR/UbG60tPwAai
+   wSUATixMRW9BE21V6MfJNkvyid5tBV1sn0ri/vla54izrb/8w7b1sVxTn
+   llo2hG3qMcdY+EoE3aB2gkhTA1xy+Y3EB2gQ4CmpurlV8unGR7HsuQg3g
+   A==;
+X-CSE-ConnectionGUID: yK/lo3fITkWamuW+cfHPpQ==
+X-CSE-MsgGUID: uq/pZrg6QziRUeCAf9RhIA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11278"; a="46156599"
 X-IronPort-AV: E=Sophos;i="6.12,214,1728975600"; 
-   d="scan'208";a="46156595"
+   d="scan'208";a="46156599"
 Received: from orviesa008.jf.intel.com ([10.64.159.148])
-  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Dec 2024 09:17:39 -0800
-X-CSE-ConnectionGUID: 8XOi4/ByQFGVd87bk4ccAw==
-X-CSE-MsgGUID: 8ZWTwE/UR0aW7TPora4gfQ==
+  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Dec 2024 09:17:47 -0800
+X-CSE-ConnectionGUID: N5rrWH4xTRaEobymUncVZg==
+X-CSE-MsgGUID: WUy2rNoxROGVT7E5pXZKsA==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
-   d="scan'208";a="98051792"
+   d="scan'208";a="98051802"
 Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.29])
-  by orviesa008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Dec 2024 09:17:36 -0800
+  by orviesa008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Dec 2024 09:17:44 -0800
 From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-To: Hans de Goede <hdegoede@redhat.com>, 
- Vadim Pasternak <vadimp@nvidia.com>, 
- =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <linux@weissschuh.net>
-Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-In-Reply-To: <20241215-sysfs-const-bin_attr-mellanox-v1-1-b6fe4f68e2ca@weissschuh.net>
-References: <20241215-sysfs-const-bin_attr-mellanox-v1-1-b6fe4f68e2ca@weissschuh.net>
-Subject: Re: [PATCH] mlxbf-bootctl: Constify 'struct bin_attribute'
-Message-Id: <173436945144.2913.15103478815629651953.b4-ty@linux.intel.com>
-Date: Mon, 16 Dec 2024 19:17:31 +0200
+To: hdegoede@redhat.com, Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
+Cc: platform-driver-x86@vger.kernel.org, Patil.Reddy@amd.com, 
+ mario.limonciello@amd.com
+In-Reply-To: <20241205101937.2547351-1-Shyam-sundar.S-k@amd.com>
+References: <20241205101937.2547351-1-Shyam-sundar.S-k@amd.com>
+Subject: Re: [PATCH] platform/x86/amd/pmf: Enable Custom BIOS Inputs for
+ PMF-TA
+Message-Id: <173436945879.2913.895221431387080855.b4-ty@linux.intel.com>
+Date: Mon, 16 Dec 2024 19:17:38 +0200
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -60,14 +60,15 @@ List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 X-Mailer: b4 0.13.0
 
-On Sun, 15 Dec 2024 14:25:40 +0100, Thomas Weißschuh wrote:
+On Thu, 05 Dec 2024 15:49:37 +0530, Shyam Sundar S K wrote:
 
-> The sysfs core now allows instances of 'struct bin_attribute' to be
-> moved into read-only memory. Make use of that to protect them against
-> accidental or malicious modifications.
+> Introduce support for passing custom BIOS inputs to the PMF-TA to assess
+> BIOS input policy conditions. The PMF driver will adjust system settings
+> based on these BIOS input conditions and their corresponding output
+> actions.
 > 
 > 
 
@@ -78,8 +79,8 @@ platform-drivers-x86/review-ilpo-next branch only once I've pushed my
 local branch there, which might take a while.
 
 The list of commits applied:
-[1/1] mlxbf-bootctl: Constify 'struct bin_attribute'
-      commit: aeb965c0eb8af66777d4bd5a109b92c7a947133f
+[1/1] platform/x86/amd/pmf: Enable Custom BIOS Inputs for PMF-TA
+      commit: 6000bc1f5a81eb3938d824b325dbe1790d4f7efa
 
 --
  i.
