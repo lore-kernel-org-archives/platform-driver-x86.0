@@ -1,41 +1,40 @@
 Received: from todd.t-8ch.de (todd.t-8ch.de [159.69.126.157])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3E68713D891;
-	Tue, 17 Dec 2024 18:50:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 127A31F8ADF;
+	Tue, 17 Dec 2024 18:54:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.69.126.157
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1734461410; cv=none; b=XBPu00eQxodx1So5Bh2449awXBM5X/W5LJ/0DUosWT748oO0LGueRD54cYy/zalcjSQLuIZcuRFoet0NhufBzL2xk2dXCiTuQqsgINIXHyrdhvco9RWlBK5GYwwLAFwAQ9DFl7kp9zUTafYigIol3nq9+P6SouVMBjgTEgv0vx8=
+	t=1734461656; cv=none; b=CwX6LvspM7U0uN4di+S7mr13YNnJlCOnubEYRWxJLBF33RpQR3bbSMlqHcAr31ipWkS8dz/li6rCNL7nOCzD28wAVJUbIt16C9w2Ix5zdzq1TTE9fDfU/AdDrj5jeuaTv7vKd733BLmrZrHWITebXbnezGmb5x5DibHI4um1U38=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1734461410; c=relaxed/simple;
-	bh=G40LjJrXzGvTeGa7ZXEnOFARV4ydsEIj57Okp9nY12Q=;
+	s=arc-20240116; t=1734461656; c=relaxed/simple;
+	bh=AiaXSAppZt/mMAAT8W2evmJaQ5KeHMjF39PfKx+wRhE=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=aFM/OFuF8j93O0GooTpiZlmrF0QfCyusA5G2CyZI0s2pzsXa1f6VPNMxZb5cJG+HhOQ239DSomG0SZz6e5AjiaDMCyEgR78BmQ/F1IeAthrTDINPbAlGxS/m3fNg3Q3319wZqGFXDl4428ANXRA3Lp5CyPczKcbvlkmMjOBFRsQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=weissschuh.net; spf=pass smtp.mailfrom=weissschuh.net; dkim=pass (1024-bit key) header.d=weissschuh.net header.i=@weissschuh.net header.b=pYIONDXe; arc=none smtp.client-ip=159.69.126.157
+	 Content-Type:Content-Disposition:In-Reply-To; b=IDUzEngv8ORMnQISUAZWxUgt/KabQ3xVhy1sc/j0xtiB9RhixwoOSyxIIISN3UUiLAigLX70k9ATJqWFaQKiMvJEtiRojCCQuKapL/zPmpXGUiAf0x7Is03GFBD0mR9wd475eLneumzvo1u68a0E2o7LQWglnhp1lU2hu/IMeIE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=weissschuh.net; spf=pass smtp.mailfrom=weissschuh.net; dkim=pass (1024-bit key) header.d=weissschuh.net header.i=@weissschuh.net header.b=jsrWMYmx; arc=none smtp.client-ip=159.69.126.157
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=weissschuh.net
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=weissschuh.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=weissschuh.net header.i=@weissschuh.net header.b="pYIONDXe"
+	dkim=pass (1024-bit key) header.d=weissschuh.net header.i=@weissschuh.net header.b="jsrWMYmx"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=weissschuh.net;
-	s=mail; t=1734461398;
-	bh=G40LjJrXzGvTeGa7ZXEnOFARV4ydsEIj57Okp9nY12Q=;
+	s=mail; t=1734461650;
+	bh=AiaXSAppZt/mMAAT8W2evmJaQ5KeHMjF39PfKx+wRhE=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=pYIONDXeFCMQy1GxAr3Q8ayx5hBLarUNrSbajwdqe7FN7O4+cKaHVWql+7LV8VTcB
-	 xT2ha8Bx68+kVOmIOVCjRvY/Mm/XDyRqfT24KxaekGXWWVB9QXFs9zRJ6Ax9/H7qOe
-	 wit4Myy0J6GlAPpzPLkxkTTKN6Se2ha8N1sOzSbg=
-Date: Tue, 17 Dec 2024 19:49:57 +0100
+	b=jsrWMYmxfta24/w2SpHyh/6TblZCH1538sXp9X+MtTYEFLPJ4phHi6f8NBVFf4BLr
+	 On0EDODUk5/84lZ5amsFFoiwfe/ckHjqJx1mH95C5TsXej/FUalQ0O/y4xdfX3a9bF
+	 4wnUKJG+iVv+MLqhuEkJW8YfzaYtcZbt1armsXJk=
+Date: Tue, 17 Dec 2024 19:54:10 +0100
 From: Thomas =?utf-8?Q?Wei=C3=9Fschuh?= <linux@weissschuh.net>
 To: Hans de Goede <hdegoede@redhat.com>
-Cc: Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>, 
-	Andy Shevchenko <andy@kernel.org>, Sebastian Reichel <sre@kernel.org>, 
-	Jelle van der Waa <jelle@vdwaa.nl>, platform-driver-x86@vger.kernel.org, linux-pm@vger.kernel.org
-Subject: Re: [PATCH v4 4/4] platform/x86: dell-laptop: Use
- power_supply_charge_types_show/_parse() helpers
-Message-ID: <c59ed113-6a43-4807-a006-ceb5a807fb90@t-8ch.de>
-References: <20241211174451.355421-1-hdegoede@redhat.com>
- <20241211174451.355421-5-hdegoede@redhat.com>
- <0030c3dd-c70c-d21b-de2b-ace0aeb4030d@linux.intel.com>
- <6760c9d3-ccf4-47de-bfe5-b59b8b9fca07@redhat.com>
+Cc: Joshua Grisham <josh@joshuagrisham.com>, ilpo.jarvinen@linux.intel.com, 
+	W_Armin@gmx.de, platform-driver-x86@vger.kernel.org, corbet@lwn.net, 
+	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3] platform/x86: samsung-galaxybook: Add
+ samsung-galaxybook driver
+Message-ID: <7e25c789-5840-40a5-b491-b97b24cbebd1@t-8ch.de>
+References: <20241216103855.18457-1-josh@joshuagrisham.com>
+ <13184052-baf2-4e7d-b8ef-9ba3f34d475a@t-8ch.de>
+ <66897a27-5f81-46fc-898d-682456d7f37f@redhat.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -45,40 +44,51 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <6760c9d3-ccf4-47de-bfe5-b59b8b9fca07@redhat.com>
+In-Reply-To: <66897a27-5f81-46fc-898d-682456d7f37f@redhat.com>
 
-Hi Hans,
-
-On 2024-12-17 16:18:47+0100, Hans de Goede wrote:
-> On 17-Dec-24 1:01 PM, Ilpo Järvinen wrote:
-> > On Wed, 11 Dec 2024, Hans de Goede wrote:
-> > 
-> >> Make battery_modes a map between tokens and enum power_supply_charge_type
-> >> values instead of between tokens and strings and use the new
-> >> power_supply_charge_types_show/_parse() helpers for show()/store()
-> >> to ensure that things are handled in the same way as in other drivers.
-> >>
-> >> This also changes battery_supported_modes to be a bitmap of charge-types
-> >> (enum power_supply_charge_type values) rather then a bitmap of indices
-> >> into battery_modes[].
-> >>
-> >> Reviewed-by: Thomas Weißschuh <linux@weissschuh.net>
-> >> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+On 2024-12-17 15:23:22+0100, Hans de Goede wrote:
+> On 16-Dec-24 5:46 PM, Thomas Weißschuh wrote:
 
 [..]
 
-> Note that merging this requires the earlier patches from this
-> series which have been merged into:
+> >> +Keyboard hotkey actions (i8042 filter)
+> >> +======================================
+> >> +
+> >> +Controlled by parameter: ``i8042_filter``
+> >> +
+> >> +The i8042 filter will swallow the keyboard events for the Fn+F9 hotkey (Multi-
+> >> +level keyboard backlight toggle) and Fn+F10 hotkey (Allow/block recording
+> >> +toggle) and instead execute their actions within the driver itself.
+> >> +
+> >> +Fn+F9 will cycle through the brightness levels of the keyboard backlight. A
+> >> +notification will be sent using ``led_classdev_notify_brightness_hw_changed``
+> >> +so that the userspace can be aware of the change. This mimics the behavior of
+> >> +other existing devices where the brightness level is cycled internally by the
+> >> +embedded controller and then reported via a notification.
+> >> +
+> >> +Fn+F10 will toggle the value of the "Allow recording" setting.
+> > 
+> > Personally I'm not a big fan to implement policy this way in the kernel.
+> > But others may disagree.
 > 
-> https://git.kernel.org/pub/scm/linux/kernel/git/sre/linux-power-supply.git/log/?h=for-next
+> The keyboard backlight cycling ws already discussed and handling this in
+> the driver is ok.
+
+Ack.
+
+[..]
+
+> >> +static struct platform_driver galaxybook_platform_driver = {
+> > 
+> > Could this be a 'struct acpi_driver'?
 > 
-> so this either requires an immutable tag from Sebastian for you to merge,
-> or this should be merged through Sebastian's tree.
+> The use of acpi_driver is deprecated. AFAIK the plan it to
+> move the remaining ones to platform-drivers and eventually
+> remove the whole ACPI bus concept turning ACPI companion
+> nodes into "normal" fwnodes like the current software and
+> openfirmware fwnodes.
 
-If this goes in via the psy tree, you could already make it a power
-supply extension. The necessary code is in psy/for-next.
+Thanks for this explanation, I was not aware.
+It explains the comment from Rafael in [0].
 
-Not necessary obviously.
-
-
-Thomas
+[0] https://lore.kernel.org/lkml/CAJZ5v0g0B8UFqYza88ahMfC-1_FzzizeS6QN=Qtt7vGv9+TK1w@mail.gmail.com/
