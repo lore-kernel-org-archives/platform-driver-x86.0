@@ -1,92 +1,84 @@
-Received: from mail-pg1-f181.google.com (mail-pg1-f181.google.com [209.85.215.181])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from todd.t-8ch.de (todd.t-8ch.de [159.69.126.157])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 40D641F75B5
-	for <platform-driver-x86@vger.kernel.org>; Tue, 17 Dec 2024 17:42:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3E68713D891;
+	Tue, 17 Dec 2024 18:50:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.69.126.157
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1734457336; cv=none; b=ZoZLJ9fPwMaMLy6dm5ZYRiDxdDsQbBvJb4TJPBJNHm6zJmigme1AlpVpvOuDWJzq5OGIaadQrGFrU+D7/xfEQ/D84Ri2tvvc1gW8kU+HOOlmumU6AX8jHp3onRVk+3X5GfwUEcyT5dzTls6unC2BA31YhtkVPYEXvvRTtROxQlo=
+	t=1734461410; cv=none; b=XBPu00eQxodx1So5Bh2449awXBM5X/W5LJ/0DUosWT748oO0LGueRD54cYy/zalcjSQLuIZcuRFoet0NhufBzL2xk2dXCiTuQqsgINIXHyrdhvco9RWlBK5GYwwLAFwAQ9DFl7kp9zUTafYigIol3nq9+P6SouVMBjgTEgv0vx8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1734457336; c=relaxed/simple;
-	bh=+FoC4TzW8bYNkefFsH5wtU59UmmY013IpZJwq7zo/tE=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=A1ls0dKsK6IJkSC5Kh5Ia/AVm1I1TsU12C64vqIhJ5sGfatUYU2v7Kfxci2WXlmF6A2t7lvv2kcQGu+wI0VqzpVvAaM0+v4NzbXa8IPyboBJsXvkj6S7rHAcGxxv8GjU0AsJjsj36KZg5Vqw06SiBUGZYxbXpNY3NJ1ICn/7hZU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=lqBO5mC5; arc=none smtp.client-ip=209.85.215.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1734461410; c=relaxed/simple;
+	bh=G40LjJrXzGvTeGa7ZXEnOFARV4ydsEIj57Okp9nY12Q=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=aFM/OFuF8j93O0GooTpiZlmrF0QfCyusA5G2CyZI0s2pzsXa1f6VPNMxZb5cJG+HhOQ239DSomG0SZz6e5AjiaDMCyEgR78BmQ/F1IeAthrTDINPbAlGxS/m3fNg3Q3319wZqGFXDl4428ANXRA3Lp5CyPczKcbvlkmMjOBFRsQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=weissschuh.net; spf=pass smtp.mailfrom=weissschuh.net; dkim=pass (1024-bit key) header.d=weissschuh.net header.i=@weissschuh.net header.b=pYIONDXe; arc=none smtp.client-ip=159.69.126.157
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=weissschuh.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=weissschuh.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lqBO5mC5"
-Received: by mail-pg1-f181.google.com with SMTP id 41be03b00d2f7-7fd526d4d9eso4337527a12.2
-        for <platform-driver-x86@vger.kernel.org>; Tue, 17 Dec 2024 09:42:13 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1734457333; x=1735062133; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=+FoC4TzW8bYNkefFsH5wtU59UmmY013IpZJwq7zo/tE=;
-        b=lqBO5mC5Or/QEBc1AX+ZoQSxzXI0A8zoQLSMtmYGo91bk7DdRrmFKqYcOgWD6Jv1S9
-         nTkZHzzLXy37HHszYxOs0DOwE8aBS9xYu1Vm4b5krodeo9oF28MC6+A/vVENamrShDQl
-         pvydAr+zFj/IOFEFN+NKuiSedUxjUnEwLFGmpbEaglfAYrHCdlzQSq8VuETku988dN5D
-         c2MbyEwe6AwCRyp01ocxIKmVnniBC/g1WVP2RhiBC1TQLGSrGrLP5vJ7qGhUPZ9Q2hc8
-         BFwUvYypKZGDkfaL+O+okNl6SdhxRfx1+fCKB+YTbItNMQnhEgEu0OZFX9YmrU9TjAOd
-         x2qg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1734457333; x=1735062133;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=+FoC4TzW8bYNkefFsH5wtU59UmmY013IpZJwq7zo/tE=;
-        b=KszcFtAcqM9DyhqBX7GAAQywfv8JyD+gx3vIVJ+g3bewQlTOhSzbiPj4xDGvBkqFNO
-         Xz4QPwtSiG1nvR9ekeg4uiVSBBCe4nMmPEPumXFLsTpq4fvJaswf+CE7O61j76wb1yjh
-         C2ryAeBtCD5aJYn9BOj4XqMBOFTC6RyHHKz5CPwh13FKJpJ4OgQA2/erugOGN3/It8Ay
-         /jOSpNr2NkJq1B3WUmZ5drUOXbcWgQMDyk1kivrRuHU1mBdlKjvv3TC22HmFBS59hZ/f
-         1QcjZGB6xHCaxdXbw7x8UrzwEDrVcu+pWmigBBCnhkbJI/WWQ4R0+mqWyFFQS+WdNqNc
-         GdaQ==
-X-Gm-Message-State: AOJu0YyD4i9Ll143C4IIGpzt1nqswJOJFbPF4JLvZFmrmjoCuHnOkNhM
-	mm+rYZcvFeUfxcDBNRFfGLv3mZu9rvyHjI3JQsRH+HVAoirPsUASpTPWl+1ox7zAg7RththCXjU
-	yWC+5W7LPJyU80LBjzwTkfZ3mVQM=
-X-Gm-Gg: ASbGncvLSgVbKOch+ICwLuXM8JnePFrgV2bNLaW7qq1xBSbWdV6Rj0uDXblmMSPHz01
-	mGZSmtPDBi2/2o3BDKpnHCWDNjjJKBKuWGh0nEfUl
-X-Google-Smtp-Source: AGHT+IE71jlXfIdRG7DMvW18ppSOJPP4cWQqMkkTzw5vitt+osx/JLrAM4tmDgWIcUqI7yITHAAhjif8oV5LO8aTB2M=
-X-Received: by 2002:a17:90b:4a4f:b0:2ee:9902:18b4 with SMTP id
- 98e67ed59e1d1-2f2900a9878mr24881218a91.27.1734457333277; Tue, 17 Dec 2024
- 09:42:13 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=weissschuh.net header.i=@weissschuh.net header.b="pYIONDXe"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=weissschuh.net;
+	s=mail; t=1734461398;
+	bh=G40LjJrXzGvTeGa7ZXEnOFARV4ydsEIj57Okp9nY12Q=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=pYIONDXeFCMQy1GxAr3Q8ayx5hBLarUNrSbajwdqe7FN7O4+cKaHVWql+7LV8VTcB
+	 xT2ha8Bx68+kVOmIOVCjRvY/Mm/XDyRqfT24KxaekGXWWVB9QXFs9zRJ6Ax9/H7qOe
+	 wit4Myy0J6GlAPpzPLkxkTTKN6Se2ha8N1sOzSbg=
+Date: Tue, 17 Dec 2024 19:49:57 +0100
+From: Thomas =?utf-8?Q?Wei=C3=9Fschuh?= <linux@weissschuh.net>
+To: Hans de Goede <hdegoede@redhat.com>
+Cc: Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>, 
+	Andy Shevchenko <andy@kernel.org>, Sebastian Reichel <sre@kernel.org>, 
+	Jelle van der Waa <jelle@vdwaa.nl>, platform-driver-x86@vger.kernel.org, linux-pm@vger.kernel.org
+Subject: Re: [PATCH v4 4/4] platform/x86: dell-laptop: Use
+ power_supply_charge_types_show/_parse() helpers
+Message-ID: <c59ed113-6a43-4807-a006-ceb5a807fb90@t-8ch.de>
+References: <20241211174451.355421-1-hdegoede@redhat.com>
+ <20241211174451.355421-5-hdegoede@redhat.com>
+ <0030c3dd-c70c-d21b-de2b-ace0aeb4030d@linux.intel.com>
+ <6760c9d3-ccf4-47de-bfe5-b59b8b9fca07@redhat.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <CALiyAom1xDH6A0Q2WNHCMUcpMJfM3pXO2DaW=bgHGUi8ZOpBbQ@mail.gmail.com>
- <8b8749c1-59c8-4f95-a43e-055cf94f9597@gmx.de> <CALiyAo=R1kcvwRpw22s=YU0YHUxR8T_WHLwSvDr=8Ahsenn-jA@mail.gmail.com>
- <9c625119-e46e-464b-933d-9c836577f454@gmx.de>
-In-Reply-To: <9c625119-e46e-464b-933d-9c836577f454@gmx.de>
-From: Hridesh MG <hridesh699@gmail.com>
-Date: Tue, 17 Dec 2024 23:11:37 +0530
-Message-ID: <CALiyAo=7kVi4ipA5-xDfRYQ-gqyza0woYHUzwGuW5BccLOVHgg@mail.gmail.com>
-Subject: Re: acer-wmi: Nitro button doesn't produce a WMI event
-To: Armin Wolf <W_Armin@gmx.de>
-Cc: platform-driver-x86@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <6760c9d3-ccf4-47de-bfe5-b59b8b9fca07@redhat.com>
 
-On Tue, Dec 17, 2024 at 6:58=E2=80=AFPM Armin Wolf <W_Armin@gmx.de> wrote:
-> This seems to be caused by an oddly named ACPI table ("$H20"). I will ask=
- the
-> ACPICA guys if this check can be relaxed. Other than that this error is h=
-armless.
+Hi Hans,
 
-Thanks,
+On 2024-12-17 16:18:47+0100, Hans de Goede wrote:
+> On 17-Dec-24 1:01 PM, Ilpo Järvinen wrote:
+> > On Wed, 11 Dec 2024, Hans de Goede wrote:
+> > 
+> >> Make battery_modes a map between tokens and enum power_supply_charge_type
+> >> values instead of between tokens and strings and use the new
+> >> power_supply_charge_types_show/_parse() helpers for show()/store()
+> >> to ensure that things are handled in the same way as in other drivers.
+> >>
+> >> This also changes battery_supported_modes to be a bitmap of charge-types
+> >> (enum power_supply_charge_type values) rather then a bitmap of indices
+> >> into battery_modes[].
+> >>
+> >> Reviewed-by: Thomas Weißschuh <linux@weissschuh.net>
+> >> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
 
-> It also seems that the ACPI code contains the necessary logic to submit a=
-n turbo mode
-> WMI event. I suspect that some settings have to be enabled first.
-Okay that's interesting, I did catch a WMI call on windows (it was
-something named APge action iirc) when the turbo button was pressed.
-I'm guessing this means that I will have to learn ACPI and how linux
-implements it if i wish to debug this issue.
+[..]
+
+> Note that merging this requires the earlier patches from this
+> series which have been merged into:
+> 
+> https://git.kernel.org/pub/scm/linux/kernel/git/sre/linux-power-supply.git/log/?h=for-next
+> 
+> so this either requires an immutable tag from Sebastian for you to merge,
+> or this should be merged through Sebastian's tree.
+
+If this goes in via the psy tree, you could already make it a power
+supply extension. The necessary code is in psy/for-next.
+
+Not necessary obviously.
 
 
-> The thermal control should be handled by thermald.
-I don't have thermald installed, afaik the only thing responsible for
-managing cpu clock speeds right now is intel_pstate.
+Thomas
