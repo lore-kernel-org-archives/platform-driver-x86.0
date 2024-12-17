@@ -1,37 +1,41 @@
-Received: from smtp6-g21.free.fr (smtp6-g21.free.fr [212.27.42.6])
+Received: from mout.gmx.net (mout.gmx.net [212.227.17.20])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A16AB1F03E8;
-	Tue, 17 Dec 2024 13:19:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.27.42.6
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB8071F4721
+	for <platform-driver-x86@vger.kernel.org>; Tue, 17 Dec 2024 13:28:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.20
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1734441551; cv=none; b=ttX8YqNNQqNut1USHALH7E4WjHI6nqEKtotikXS+Aq3VnBAdif2Gk7gpvOzfUdq4oFvpLQ/kEwpHZKGV+/q10PC8GQyu18sG65cXTOlXYk1g572Q4SUCsHKzpvliCyG33BEvoL+RahN5c9AyEV6341Lk3SnWbw6TxsdxlAicPMU=
+	t=1734442119; cv=none; b=jXD36m1OvGTZR+U5D5WPGjqwXgp5fi+QJYIeromocotdcYqBFQ0w3avpFCcPkZScD/0lctvUOvUD47Ug4j75fOyT5tSdoLm16S8Stwslof+ZMFS6I7grzHjZFLGwlebisBMg0czkAIQGlFSHKFEFH95Bn4dCmdT0ejNfkV631jA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1734441551; c=relaxed/simple;
-	bh=GystmgYDwjDUbQIi65MhsY/caTgyfH7ztB4WE2dJtiA=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
-	 In-Reply-To:Content-Type; b=GLLl6xRVPp3Kk+pX3c9UKlUTtf8XzdAPZMdd/Dee6338Wjc40PXj3Br4ozG8TGHJD7OCG3ZDA8j9j6Aog7mLS9P3ueyZ+puzW/lXgJx0QqdJMpeUd6qOYjmZYCVAMpj+r/U4uGEBDE7V6tYPbvY4gdtfkq6iqYtiSFTbdntNjdA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=free.fr; spf=pass smtp.mailfrom=free.fr; dkim=pass (2048-bit key) header.d=free.fr header.i=@free.fr header.b=NIr23H6y; arc=none smtp.client-ip=212.27.42.6
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=free.fr
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=free.fr
+	s=arc-20240116; t=1734442119; c=relaxed/simple;
+	bh=QBVS9kaz2bvVoUhqZtCelKs3eFPHXn75MNDU/Da3UCo=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=a9HADXuPGEBSvDyIN2QIR61/et9NZQAiDPiRsnS+7YAJTYKeVEEc0N4go1Z+mx9LBhFXXdeWcs2JT6e97vAqw3gKvq9jOSeBF98Z9Cs79XEspoy9yTWU0U7P6u+j2PYf8ZrxLpPsxU08N1Q2eZsRvNkre/NADZtvZz/VBAx+r04=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b=MPuxjOoq; arc=none smtp.client-ip=212.227.17.20
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=free.fr header.i=@free.fr header.b="NIr23H6y"
-Received: from [IPV6:2a02:842a:8223:5500::978] (unknown [IPv6:2a02:842a:8223:5500::978])
-	(Authenticated sender: julien.robin28@free.fr)
-	by smtp6-g21.free.fr (Postfix) with ESMTPSA id BDAFA780502;
-	Tue, 17 Dec 2024 14:18:57 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=free.fr;
-	s=smtp-20201208; t=1734441541;
-	bh=GystmgYDwjDUbQIi65MhsY/caTgyfH7ztB4WE2dJtiA=;
-	h=Date:Subject:From:To:Cc:References:In-Reply-To:From;
-	b=NIr23H6y0P0y7ECI07vrcZqdYZNUYrTiJPId4Df97UOmejZBZUzOs4FmFjHTCchRw
-	 0sxHI2cZGKPd8AFgbbgmTxAKrMRaQsd3L79c1PdmBPYE2BXkWrCslbTrw6G0c04RRK
-	 Lc8C1Nt99p/nvrl4/7jxP13SVHuLG2kzkGLTukOVFXu6huWpwaP0e/so7Swe2954T5
-	 RAys8lQZNgFCV32rAL6e3md00cKP3L55/KApsLZnkMQuaZf/OiPoB7YPNfVHCBQ8zv
-	 ThCX86h854jTnXTdliCXLFJaZLAvyZ9+uuHPOgj1Lz4M1kFsNvc9vrsZUA1SXNFbNr
-	 XQNlwXWt5Y9fw==
-Message-ID: <4d213541-9305-46ce-83ad-3e4bbc5f9819@free.fr>
-Date: Tue, 17 Dec 2024 14:18:57 +0100
+	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b="MPuxjOoq"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.de;
+	s=s31663417; t=1734442114; x=1735046914; i=w_armin@gmx.de;
+	bh=QBVS9kaz2bvVoUhqZtCelKs3eFPHXn75MNDU/Da3UCo=;
+	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:To:Cc:
+	 References:From:In-Reply-To:Content-Type:
+	 Content-Transfer-Encoding:cc:content-transfer-encoding:
+	 content-type:date:from:message-id:mime-version:reply-to:subject:
+	 to;
+	b=MPuxjOoqk8ZNT1vkISodDxB8hBX2H26FExpfTYvqZzL7BBJh60iQ2B+7LTn5hXBu
+	 dyOU3vVnqwjeNai5FpS8NvPH/eD4WjlgBygyMm0k7A1Odnq412KoLNHIeS6h+Q/r9
+	 1xp/s27DCd5iW+CGprW4TMx8qwt2DxfKsiTXVZU8W6H2vzf+V581SBhxbk8S/2Wjt
+	 NJLs3txNmJ90+9QJM+5d+Rq71L/5Ckw6XCcas5PZgQZ6Gi4YJFEeo8zi/30g8C5rk
+	 M4PWEJvH4EY8y4EKF9ayfNkGd1MSNGO3zCkeIORhD4esKL9hSfm1pcsF9YTrIt75V
+	 L2Vwfp7Cp7ScflyjOQ==
+X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
+Received: from [172.16.3.38] ([141.76.176.50]) by mail.gmx.net (mrgmx104
+ [212.227.17.168]) with ESMTPSA (Nemesis) id 1MRCKC-1tBLtt3Aoe-00Y1Wi; Tue, 17
+ Dec 2024 14:28:34 +0100
+Message-ID: <9c625119-e46e-464b-933d-9c836577f454@gmx.de>
+Date: Tue, 17 Dec 2024 14:28:32 +0100
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -39,150 +43,76 @@ List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: Bug report: HP: WMI: Fan speed reading and PWM control fails +
- dmesg related errors
-From: Julien ROBIN <julien.robin28@free.fr>
-To: hdegoede@redhat.com, ilpo.jarvinen@linux.intel.com
-Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <6e56ec6c-60ad-48ea-b185-19d7064a53f2@free.fr>
+Subject: Re: acer-wmi: Nitro button doesn't produce a WMI event
+To: Hridesh MG <hridesh699@gmail.com>
+Cc: platform-driver-x86@vger.kernel.org
+References: <CALiyAom1xDH6A0Q2WNHCMUcpMJfM3pXO2DaW=bgHGUi8ZOpBbQ@mail.gmail.com>
+ <8b8749c1-59c8-4f95-a43e-055cf94f9597@gmx.de>
+ <CALiyAo=R1kcvwRpw22s=YU0YHUxR8T_WHLwSvDr=8Ahsenn-jA@mail.gmail.com>
 Content-Language: en-US
-In-Reply-To: <6e56ec6c-60ad-48ea-b185-19d7064a53f2@free.fr>
+From: Armin Wolf <W_Armin@gmx.de>
+In-Reply-To: <CALiyAo=R1kcvwRpw22s=YU0YHUxR8T_WHLwSvDr=8Ahsenn-jA@mail.gmail.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:eoAy6IGTQJymEPBpTJBxqAU8mqkdGOfXrSSKKGcnv1AxxXbgUc6
+ 4OSXXrY+dwjMeh5qMuvQ+tt5e96MiGHiKlJISrHrVmnMasrpihylPWQ+OItaailvxcPLIjq
+ +aw58rxL9T6ZO8+OFPmExuwlpu97wEjo8J97yh69sQZN5ZBpu3WaDiJhCBIowKd/anEYcmC
+ aQ93jn0DsqmB1/6BfuGTQ==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:2ge6SlZ06f4=;15OEZeJZpCY9S1goYXsg4aDmoIh
+ kAxEBT+5Rek75Qc2OncQTzkdJyphWHuLY6DbHsU0MIr9DbKTFu4fUP8fqlWvLYTZU/VGuDRnb
+ XktqetweZOZI/nZAE9Nx5IUjMqLqvHn0qcTYZ8EkuXUPNqVc5L97gN1Gh9lczUPyEbYjwTWCi
+ nBD1tWqis8oLwaF6pgLl4nt1gZMKX6ktuxeD5GF6h5X3tDJhlRgObQmbcj5XZKXJowMX+/ihB
+ jCH3IvYZhv8tfjRykNObwe1dTg7t1D5Butx6LHMBMp4vE0iNtchKEUHI+nMu7H51A9CixZfkV
+ J6mPF0eKWaj2wgVBD39zuvnL5c40uS+XC5ft8+9l4vJJJRnHM4ZIPj2fWUGLadT62RslMk7ur
+ eMaFsbb8/1led2gHCKwhWAP+JbVuUtpqugU156pR7ZaA9W1GItA6i/3ccGpIAOGoXX9UYhYDi
+ jlUI4y35Uvw8T4zNfkQCtolMyNfkf5BZjfgk3sVJgRM07NAt0FofaESx+h9QBkM8FIJ6lE0r6
+ WcWxmfxySgm/6kVwDJC5LvOy7Y1fbLE4fNkanOVQOlicJAJbA41NS8YnkmKJr3QXd117ZKeGe
+ RtFYjB5x5tCDZ/MNe/RyohTjCqUdvRVxWqfhZunwl+R0kcXE0GwLbWjul6F6qr0L+VSLG4m6P
+ /6LXTgFT907xk6HB+DsqsL9cTOKaIE7W4NitzqlKB3CYNrlcc+idle9c34jXZAZIckB1lLxZ+
+ 2UnErxdAm6AnoBF0w3iGc/E8cPd+LtmWqWPl0p6H9Ruof8kMRf7s5/0rvxtdEipewFwDh6pZO
+ +EFOVLWzFky+GurdPDF4zMOQA9CowUchZirFiZpL4G2yoKTVuJzeQZKr3JEkjPSTEJFPS+LIx
+ jo+K4IH70LIVRcKy56Z5deh8X5RPxsBSR7c5dvJnqfOlTLwapVDPJURbgPi6AatSHZMjB/63A
+ gakHzhjzgJjCK8626z+1Vb6w/7npd4BOOSLQOx0MaBVr2AEIr5AfaARbDu7VQhMR3JZRtfwFo
+ QwKF+zxSWbvWFhimplRhAgvkjtJYLB/m7mjVfybpy1XIdEu524AGE/6WG7bJLXew//DZY1x8P
+ YuwNh9PAFkAj9jtovqNDhMlc9YCOBb
 
-On 12/12/24 3:45 PM, Julien ROBIN wrote:
-> Hello there,
-> 
-> Using intended WMI drivers and associated sysfs through `pwm1_enable` 
-> and `pwm1` virtual files generally allows manual setting of fan speed on 
-> laptops, which can be useful to set maximum speed when running rude CPU 
-> and GPU tasks for example (to avoid reaching crazy temperatures).
-> 
-> I have a new machine (HP 16-s1034nf) on which (even with latest mainline 
-> kernel 6.13-rc2) this pwm fan control sysfs interface is failing, and 
-> fan speed reported values are stuck to zero (even when they are 
-> blowing), through hp-wpi driver.
-> 
-> Just to be sure, I checked using "HP Omen Gaming Hub" application in 
-> Windows that the hardware is actually capable of fan speed reading and 
-> setting (the answer is yes).
-> 
-> In details:
->   - `/sys/devices/platform/hp-wmi/hwmon/hwmon6/pwm1_enable` writing 
-> isn't applied (when writing "0", value is kept to "2" and writing "1" 
-> says write error: Invalid argument)
->   - `/sys/devices/platform/hp-wmi/hwmon/hwmon6/pwm1` is missing
->   - `/sys/devices/platform/hp-wmi/hwmon/hwmon6/fan1_input` is always 
-> stuck to 0 (even when fans are running)
->   - `/sys/devices/platform/hp-wmi/hwmon/hwmon6/fan2_input` is always 
-> stuck to 0 too (this computer actually has 2 fans)
-> 
-> The interesting part of the dmesg output is the following:
->      [...]
->      input: HP WMI hotkeys as /devices/virtual/input/input15
->      ACPI BIOS Error (bug): Could not resolve symbol [\_SB.PEP.DETY], 
-> AE_NOT_FOUND (20240322/psargs-332)
->      ACPI Error: Aborting method \_SB.WMID.GTPS due to previous error 
-> (AE_NOT_FOUND) (20240322/psparse-529)
->      ACPI Error: Aborting method \_SB.WMID.RDCF due to previous error 
-> (AE_NOT_FOUND) (20240322/psparse-529)
->      ACPI Error: Aborting method \_SB.WMID.WHCM due to previous error 
-> (AE_NOT_FOUND) (20240322/psparse-529)
->      ACPI Error: Aborting method \_SB.WMID.WMAA due to previous error 
-> (AE_NOT_FOUND) (20240322/psparse-529)
->      [...]
-> 
-> All of the previous dmesg messages are disappearing when booting with 
-> `module_blacklist=hp_wmi` into the Kernel command line. In place of 
-> them, we got a single line:
->      [..]
->      Module hp_wmi is blacklisted
->      [..]
-> 
-> So I understand these errors mentioning ACPI are caused by what the 
-> hp_wmi driver is doing (or trying to).
-> 
-> In order to be sure this isn't an ACPI Firmware bug from the laptop's 
-> ACPI tables, I used Firmware Test Suite on "DSDT" as explained into 
-> https://wiki.ubuntu.com/Kernel/Reference/WMI
-> It turns out imperfections found by FWTS aren't related to the HP WMI 
-> interfaces GUID. Anyway I'm still providing all of the related files and 
-> results in case someone needs them.
-> 
-> Unfortunately, going further alone is a little bit outside of my skills, 
-> but I keep available for any questions and tests.
-> As it's my first bug report into this mailing list, I hope I didn't make 
-> too much mistakes! Sincerely sorry in advance if I did.
-> 
+Am 17.12.24 um 09:33 schrieb Hridesh MG:
+
+> On Tue, Dec 17, 2024 at 6:17=E2=80=AFAM Armin Wolf <W_Armin@gmx.de> wrot=
+e:
+>> Theoretically you can use a i8042 filter to filter out those special
+>> keyboard events. However i suspect that Acer will not omit such an WMI
+>> event without a good reason. Can you share the output of "acpidump"?
+>> Thanks, Armin Wolf
+> I've attached the dump. Not sure if it means anything but when i ran
+> the command i also got this error:
+> Table signature (0x4F324824) is invalid
+> Could not get ACPI table at index 29, AE_BAD_HEADER
+
+This seems to be caused by an oddly named ACPI table ("$H20"). I will ask =
+the
+ACPICA guys if this check can be relaxed. Other than that this error is ha=
+rmless.
+
+It also seems that the ACPI code contains the necessary logic to submit an=
+ turbo mode
+WMI event. I suspect that some settings have to be enabled first.
+
+> I also noticed some difference in the turbo behaviour on linux and
+> windows. On windows, making the WMI call increases my fan speed and
+> raises my CPU's throttling temperature to 100 C. The same increase in
+> fan speeds is observed in linux but the CPU's throttling temperature
+> is not affected. I don't have any thermal management daemons running
+> and the CPU scaling driver is intel_pstate, do you have any idea what
+> could be causing this difference?
+
+The thermal control should be handled by thermald.
+
+Thanks,
+Armin Wolf
+
+> Thanks for looking into this!
+>
 > Best regards,
-> Julien ROBIN
-> 
-> Notes:
->   - Using Debian 13/Trixie (testing)
->   - Problem still exists on latest 6.13-rc2 "pure" kernel with no DKMS 
-> loaded driver
-> 
-> I placed all of the required files (dmidecode, dmesg, kernel config, and 
-> ACPI tables related stuff) into the following link:
->   - https://pix-server-sorel.luoss.fr/Manual/Linux/HP-WMI/Bug- 
-> Report-2024-12-12/
-
-As an update on this subject, I eventually went further, I obtained much 
-more comprehensive information and did some successful tests.
-
-I'm sharing it there, in case some people are looking at this issue in 
-the future. If not, I may be able to work on a reliable update patch 
-later, to implement new behavior on correctly identified new laptops 
-models without altering behavior with the previous ones.
-
-
-  - 1st change: User defined settings (thermal profiles and fan speeds) 
-aren't used unless a "Fan Count get query" = 0x10 query using HP_WMI 
-command HPWMI_GM = 0x20008, is played before. This should also be used 
-as a keep-alive to maintain the computer in the user defined state, 
-instead of having it returning default generic state after a 120 seconds 
-timeout.
-
-  - 2nd change: Disabling Max fan speed by writing back "0" with 
-HPWMI_FAN_SPEED_MAX_SET_QUERY = 0x27 is not enough: it should be 
-disabled using "Fan Speed set query" = 0x2E query using HP_WMI command 
-HPWMI_GM = 0x20008, and providing 0x00 values (2 bytes).
-
-  - 3rd change: Reading the fan speed with 0x11 query doesn't work 
-anymore, instead, 0x2D query may be used to retrieve actual/measured fan 
-speed (and the reading of the returned value is different).
-
-  - 4th change: The performance modes / thermal profiles, which should 
-be applied using HPWMI_SET_PERFORMANCE_MODE = 0x1A queries, are using 
-only 2 values: 0x00 for ECO/Balanced modes, and 0x01 for Performance. It 
-only changes the cTDP values of the CPU. But the HP provided app for 
-Windows also performs other new queries, including GPU related thermal 
-settings.
-
-  - 5th change: No EC register seems to allow retrieving the current 
-performance mode, so the ec_read(HP_OMEN_EC_THERMAL_PROFILE_OFFSET, 
-&data) thing shouldn't be used anymore.
-
-
-All the details:
-https://pix-server-sorel.luoss.fr/Manual/Linux/HP-WMI/Bug-Report-2024-12-12/HP-WMI-retro-engineering-2024-12-17.txt
-
-
-As an example of quick/dirty successful tests with the fans:
-
-https://pix-server-sorel.luoss.fr/Manual/Linux/HP-WMI/Bug-Report-2024-12-12/hp-wmi-original-6.12.4.c
-https://pix-server-sorel.luoss.fr/Manual/Linux/HP-WMI/Bug-Report-2024-12-12/hp-wmi-FAN-SET+GET-success.c
-
-Best regards,
-Julien ROBIN
-
-PS:
-About the dmesg "AE_NOT_FOUND" errors I mentioned into my original 
-message, it happens when legacy HPWMI_THERMAL_PROFILE_QUERY = 0x4C is 
-being used (for Omen/Victus laptops it doesn't work anymore) instead of 
-the HPWMI_SET_PERFORMANCE_MODE = 0x1A query.
-
-And about the missing pwm1 file / impossibility to write "1" into 
-pwm1_enable file, this is just because as of today, the driver isn't 
-providing manual fan speed control other than Max or Auto (so this was 
-normal).
+> Hridesh MG
