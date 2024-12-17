@@ -1,116 +1,129 @@
-Received: from mout.gmx.net (mout.gmx.net [212.227.17.22])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f170.google.com (mail-pl1-f170.google.com [209.85.214.170])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F1F71F37C6
-	for <platform-driver-x86@vger.kernel.org>; Tue, 17 Dec 2024 21:44:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.22
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B2B2E1F869B;
+	Tue, 17 Dec 2024 23:06:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1734471848; cv=none; b=nlAM97JQ0PIFrUq8BSlX05q2TqtIcSMo/2gWLJivBZcn723pVFFwFoK72Cat4uM7qklA7rLFhRRHH/nNpLmv68j+GvCTSJpnML8VEyp3xgd1xQXTsP1FSQURDgt/pXbW+jwTfvUjXiA6ZyPgXUUxWErMs7C02WY0yb1I/M4ta1M=
+	t=1734476813; cv=none; b=sNJeufZaKKvZLfBel9gG/FefNCSbZh6T/R7eqkmMOekFI7Tq7gpQZ+4iCidOw6I4SphvZ0hmIumsuv+Qag8sP/vI+emYTrnK6nTYlfSqWuKxau4Zm1mweGuBofHMnJKilBapx6ayBzmJge4Af6jSj4UYroylOviXCFxTx8TAr64=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1734471848; c=relaxed/simple;
-	bh=kYqkuidfCjuPa/X0Ka1XFzCLDGJOjEHODmCIKvLZ61M=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=h6TJaqRAu5CShQTSb1+ik6ODyGMnUFxCnueDUTd6z3+4AWLo35bLs4t1V1RrOAU787C2Xn2Cs9EjF8kzJf+R9pOUYjh7r4mBKAvInKq6VYgIdpRwnv71iaBx/mymL/yqzOj6aJ9CoX5IHqc682IRsvb0Vt8JyML/AYP2KlwUOpw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b=c1PG65Xs; arc=none smtp.client-ip=212.227.17.22
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
+	s=arc-20240116; t=1734476813; c=relaxed/simple;
+	bh=+cUdF4VZjQdMulNbD5JiXungrYErRr8AvXdUYS54UQ0=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=j1cTxH0z/hJ9fN9djMJBVu6NqPp4Fh5gflQtjn3qiyc/Kqhypq1+gf5P8QE/5s+AMus5gHYeY/L3I78qGulitL6H37m639omeCK9PJTwfIUJRhCEATNpCHvmjm7Ra262Fkl+OlFB3KrmeBs+PCpO1b0ymrn3SUNr5A8lpJceGk0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=f24lHLjk; arc=none smtp.client-ip=209.85.214.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b="c1PG65Xs"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.de;
-	s=s31663417; t=1734471843; x=1735076643; i=w_armin@gmx.de;
-	bh=kJq6apBwvyVOVZD2n3lJi3M0sd4Q0Cu+JuM40mhEppU=;
-	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:To:Cc:
-	 References:From:In-Reply-To:Content-Type:
-	 Content-Transfer-Encoding:cc:content-transfer-encoding:
-	 content-type:date:from:message-id:mime-version:reply-to:subject:
-	 to;
-	b=c1PG65Xscwa3yIahtgj4UiPWW10pEe4+XlJzKXRiTEd8v93MrCXJvx7BIilLIRbC
-	 WNkVmyK8kCpzMyf6eaLZ6xHq46qMHQC0A0DMyewi/Z6qrSqHg/s8yZubE0o6Rou4g
-	 qull1m6dHOPDlQJZq7XdPTxt14WFIk0lO79k5yA3Fm1SQkTKnz5hpYY3F9JwcMG2n
-	 HSdEu+7RkvOA1I6sbruqGvcFxeMEzKBPmibwAoWI9Xt1YPO+RmYxZqFdZipBzr+Mz
-	 9PAimIT741jLV1Ub0oULvhlRQq//YBVtCBzToyfnSFgLo7tikIJZ5C/3vOqERN6+Y
-	 JAeahvc81BF3oabpdg==
-X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
-Received: from [192.168.0.14] ([91.14.230.110]) by mail.gmx.net (mrgmx104
- [212.227.17.168]) with ESMTPSA (Nemesis) id 1MMXUN-1t7Nh60cuV-00SnJl; Tue, 17
- Dec 2024 22:44:03 +0100
-Message-ID: <c5124fb9-74af-4c90-9edc-ddb3517cd9ac@gmx.de>
-Date: Tue, 17 Dec 2024 22:44:02 +0100
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="f24lHLjk"
+Received: by mail-pl1-f170.google.com with SMTP id d9443c01a7336-2166f1e589cso61042305ad.3;
+        Tue, 17 Dec 2024 15:06:51 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1734476811; x=1735081611; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=GLHrYooVAsN5numrmbqy6VBSKz/Pcqg/+vPoU0gAXTY=;
+        b=f24lHLjkt3fP+pwkW3m2smTKcbb/Xsc6UduQU2PZArtkipnq0Sy9M8fE0YBkaJ9s4B
+         9jIWf6BpMQnNt9ANLFnYTiumi6ju0PUGoS+yR1OR4arCwfAH6Zz7bbOu7PuJBHgbcyEC
+         polv+sSRwgh5CEcZytMvM+1Hnn8Et9UD0w5KjjeS8RQphgSgFJY76Q5QKt1c6aF+KFm6
+         pdS8Fb75Lffv+aiRNjmjrbxxqo3QqTcFJKBG5wb6vfqsNRgv7FHsAGB7DlD+k5y6l+eu
+         a28kJcNzAAd7abxLPIfpyinCS9Hv43z7/yQBXskWbkmAzxBSjO226mEPfSFWQKkZeBG1
+         yirw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1734476811; x=1735081611;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=GLHrYooVAsN5numrmbqy6VBSKz/Pcqg/+vPoU0gAXTY=;
+        b=CmEDf0ZdVojcEtHCNch9yD48R+vIHq+k8agzKowf/NuSmbc4gG5AMqG8ZUxo8Vehne
+         mbWvtD3N/TGUDB5eWSC29OeUWRd7ZnDJL0VqgQCVXFP5E7qna3VJLabwb58B5LKd3dWn
+         O1Y+JnPUFc3a6jvGNZHIXevqW3uAvuvVRKAQBn8pfqbCR0pkBTcMMFRJlgjjSqitUwja
+         qX+vFLiVIX9lKth5LCHZziNHdTVcCWa301f8BvC9G07eVcnzs7bCaTpRxBFH5pwTLcyt
+         x4FdNWG7232xmf/yiYKTYMOynCn60NK3vjcMNgBVz4LSVIbihJvfh/QuX7EOOSyCHUON
+         5PIA==
+X-Forwarded-Encrypted: i=1; AJvYcCVC0EzEZT0+Q5yYkvCok/MLMn2oho2mukrVOY0jgrUQ/W0yWVLmg2kEed0vc+/q5OVMFHG7WtSmuVYbAz1Z@vger.kernel.org, AJvYcCVVcFathApeLlqUub4+3BHqhs12SKiMFQ9MxIS0z19M1mFFd6XO/QBQNXV6OqROaStoP3VgkzvRFYzCaPxI0Pk+/FWb4g==@vger.kernel.org, AJvYcCViHiaAt/uJVDpho7skAVC81rK4oC9lMWh/ZIzgpkEV8B3pYlg3wyKS53mBjy9Hme4P7LSd6we91Uw=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw0VFsmLbhWBbeePfR1Ih2l0fW0OWaGzQiA6MasV2b4NOMcChiJ
+	oNt4BXK/d6uRZQa+Ib3dhlwu+HFIuv5+3LlDw1y+y76IoVEkHMse
+X-Gm-Gg: ASbGncuJCk2sumdDwwG1O1rV7f/9vALAfnxEKzfIQS3liJM14OXPMX69xF50l2Se+C9
+	rD7w0QrzudjCjV4nzGv6O2ZqfINxwAw/I6eDdKFcBNCvGd5LFimSd0EwVQJseeXHw0fwtKaDgXc
+	fSFTyCKWk1GcGfXHqvit7FwMPOatc11wGuQ0KO4HyfdpSFxJ5m7PWBY/cqBkOGMe/PPAV4o/11X
+	iVt1iP89A2Sn6p4WAjpiAW/X6IB1Z2TnOLjcg93KKnA5AbeCTtnV5Wwn8HyBYz0tK5Ex2anDkYp
+	ZLQ5VqVYSm33j7TTV4n+FKCK2mHewU3LcQJLMiBwjMYsozLNJhSNd58=
+X-Google-Smtp-Source: AGHT+IGQhQ8MCrpvqthZB4yeso+hSopb/9FK4blCtwu6dsUxI3TUsJSYDD9JS2Lxo+vc4ubgSHO1Nw==
+X-Received: by 2002:a17:903:41cf:b0:215:63a0:b58c with SMTP id d9443c01a7336-218d725f629mr6737215ad.46.1734476810881;
+        Tue, 17 Dec 2024 15:06:50 -0800 (PST)
+Received: from localhost.localdomain (108-228-232-20.lightspeed.sndgca.sbcglobal.net. [108.228.232.20])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-218a1db58cdsm64536765ad.38.2024.12.17.15.06.49
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 17 Dec 2024 15:06:50 -0800 (PST)
+From: "Derek J. Clark" <derekjohn.clark@gmail.com>
+To: Hans de Goede <hdegoede@redhat.com>
+Cc: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	Jonathan Corbet <corbet@lwn.net>,
+	Mario Limonciello <superm1@kernel.org>,
+	Luke Jones <luke@ljones.dev>,
+	Xino Ni <nijs1@lenovo.com>,
+	Zhixin Zhang <zhangzx36@lenovo.com>,
+	Mia Shao <shaohz1@lenovo.com>,
+	Mark Pearson <mpearson-lenovo@squebb.ca>,
+	"Pierre-Loup A . Griffais" <pgriffais@valvesoftware.com>,
+	"Derek J . Clark" <derekjohn.clark@gmail.com>,
+	platform-driver-x86@vger.kernel.org,
+	linux-doc@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH 0/1] platform/x86: Add Lenovo Legion WMI Drivers
+Date: Tue, 17 Dec 2024 15:06:44 -0800
+Message-ID: <20241217230645.15027-1-derekjohn.clark@gmail.com>
+X-Mailer: git-send-email 2.47.0
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: acer-wmi: Nitro button doesn't produce a WMI event
-To: Hridesh MG <hridesh699@gmail.com>
-Cc: platform-driver-x86@vger.kernel.org
-References: <CALiyAom1xDH6A0Q2WNHCMUcpMJfM3pXO2DaW=bgHGUi8ZOpBbQ@mail.gmail.com>
- <8b8749c1-59c8-4f95-a43e-055cf94f9597@gmx.de>
- <CALiyAo=R1kcvwRpw22s=YU0YHUxR8T_WHLwSvDr=8Ahsenn-jA@mail.gmail.com>
- <9c625119-e46e-464b-933d-9c836577f454@gmx.de>
- <CALiyAo=7kVi4ipA5-xDfRYQ-gqyza0woYHUzwGuW5BccLOVHgg@mail.gmail.com>
- <209f39ab-a312-45b5-981c-8324d9b8cd90@gmx.de>
- <CALiyAo=GpKN2Aty5c3Bw0Vh4U16vgUP29pZkaeBsOKw8kcK29w@mail.gmail.com>
-Content-Language: en-US
-From: Armin Wolf <W_Armin@gmx.de>
-In-Reply-To: <CALiyAo=GpKN2Aty5c3Bw0Vh4U16vgUP29pZkaeBsOKw8kcK29w@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:8U7Kq5SMCr/1nAXYofqi8hEV0QdEptpC/6IO/H0q2PctWhGUKDd
- 1Fz5WKVhkfjH+soekhtaOL1YOY4GsudBCqolBXoGFjYAdEhctUZqgZlYsI1d5ECFTHuGw7C
- jBqHDyOVi1Cbf/chQJRjJVs3lwKSJ6NYXOdgiWWZ+lnNbi8KZ7Vb79/zop5dgfWwVZPbh00
- 6qtxSdKNpOxwKk/7sI6/g==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:119P7uwmpdQ=;X0k+Zhj1epi972qwF9EBdpFxbeC
- COnejSJoXnsB0QLXY6WO83Bjh2O8TQWwnTEvUx1PnZ8E9N4Y6cp//y473PXy7NXx+S85wz4/g
- GyKMvCwNsMMi1GXkAr5M0/uQTmvPRJ2LbB9uDVw4NquWEvYbh0sufc/tlM1UqAEN+66LOQhvY
- bRYn6wbsvfb2M/l5sr2uV/6IOGx5CKTSA6LWuN4eBL8t6gVyZjTgoMc8K9Exa+7y3TmyvT2nx
- JhTAgOhCNfdnh0WdVgg8vSERsUQ8JiMl6vg1DMkSOzZazGKdXLqiEZ5QIUWT9ztoMKM0kRQnt
- aLX02yWoOOnjQofeh+wYl3k8meAFSewAahO8LDKbQRX1DeTmi96/XUZwTD21KOmx6ImHSLdOl
- w8A5EYKiwbILimGTTfJLfKdMh9P347hbY+PbgDei78u/mAw+oc0BXkFjRI3DG1Sq0lOamjnGt
- deuIOHsSI4ZQWpTdvGJHc4KlNhvt4HIvmUTVU/Ly4QzrOREV4/Q06i2OqaH5V5vZGBNngcf7b
- sUXN80/xlJS8rYEwVi12KbrsnT1z+OF+HhV4lRAaDzGRdGICyDbkfbQ7GD0XtqCYBGeuPqu7v
- HyIDXneSzGoGjcvyS21/y76s18/mHFYnCpkvopDiw8ykPV4Wm5L7xEqE+ZDZ8FgyJtpCfuj3X
- dw15ssMMRZ5ncD0wCLePXVWCsPiOscLsPE7Xc1ms2zuz43oY/0KVAtNumHSGVSpgjt8f9cIOF
- r4zCurPAGYtZoJLCK0es4IqR/PRcRhrtUQVqbknncbGKGbBGupo0xLPkEMtSTg76qaOn5+wNz
- YxNlr81ezTFgSLh3MtjBzfuwH4PYf/TU7vAlcsMpIewIuuJlvnU3DXJHC4H8zCqcoAXpNbYlK
- RU9aHRsrAvhmNV2TPQodCRxhXymBXn7xK7WfrDgdvtEZPFF1OBXcbZcL85zZhX/oILcPe6ynr
- gwxXK5s851NabCQhUtAnL+PWrm5LCStKvpgmXFFh/uWwWIcAgmgTGXPzImXtYosO7saBIw0EN
- 2RVt5z14+8LkzLzGxb4s82yEJskDaG+ed6aPXCZ1BDsyLflGnkbEC30ACiRZcO1UEsAzBlsmH
- K3FySCUSQkug/M7bDHpPfeU7bAdRSQ
+Content-Transfer-Encoding: 8bit
 
-Am 17.12.24 um 21:52 schrieb Hridesh MG:
+Adds support for the Lenovo Legion series of laptop hardware to use WMI
+interfaces that control various power settings. There are multiple WMI
+interfaces that work in concert to provide getting and setting values as
+well as validation of input. Currently only the "GameZone", "Other
+Method", and "LENOVO_CAPABILITY_DATA_01" interfaces are implemented, but
+I attempted to structure the driver so that adding the "Custom Mode",
+"Lighting", and the other CAPABILITY_DATA interfaces would be trivial if
+desired in a later patch.
 
-> On Wed, Dec 18, 2024 at 1:42=E2=80=AFAM Armin Wolf <W_Armin@gmx.de> wrot=
-e:
->>> I'm guessing this means that I will have to learn ACPI and how linux
->>> implements it if i wish to debug this issue.
->> Actually i think you need to look into the Windows application and chec=
-k if they call a
->> WMI method during initialization to enable this event. On the Linux sid=
-e this event should
->> be supported if received.
-> That makes sense, I will try this out soon.
->
->> Then i suggest you install thermald so that the platform profile fully =
-works.
-> Wow, that actually fixed it! Throttles just like windows now, thanks a l=
-ot!
->
->> Also can you tell me what special OC calls are necessary on your machin=
-e? I know of another user
->> which might suffer from the same problem.
-> Yep, there's only one call - SetGamingMiscSetting (Method ID: 21)
->
-> Inputs:
-> Performance - 0x40B (OC)
-> Default - 0x10B
-> Quiet -  0xB (Nvidia Whisper)
+This driver is distinct from, but should be considered a replacement for
+this patch:
+https://lore.kernel.org/all/20241118100503.14228-1-jonmail@163.com/
 
-Are the other OC WMI calls still submitted by the Windows application?
+This driver attempts to standardize the exposed sysfs by mirroring the
+asus-armoury driver currently under review. As such, a lot of
+inspiration has been drawn from that driver.
+https://lore.kernel.org/all/20240930000046.51388-1-luke@ljones.dev/
 
-Thanks,
-Armin Wolf
+The driver has been tested by me on the Lenovo Legion Go.
+
+Suggested-by: Mario Limonciello <superm1@kernel.org>
+Reviewed-by: Luke Jones <luke@ljones.dev>
+Signed-off-by: Derek J. Clark <derekjohn.clark@gmail.com>
+
+Derek J. Clark (1):
+  Add lenovo-legion-wmi drivers
+
+ .../wmi/devices/lenovo-legion-wmi.rst         |  79 ++++
+ MAINTAINERS                                   |   9 +
+ drivers/platform/x86/Kconfig                  |  35 ++
+ drivers/platform/x86/Makefile                 |  21 +-
+ .../x86/lenovo-legion-wmi-capdata01.c         | 103 +++++
+ .../platform/x86/lenovo-legion-wmi-gamezone.c | 233 +++++++++++
+ .../platform/x86/lenovo-legion-wmi-other.c    | 377 ++++++++++++++++++
+ drivers/platform/x86/lenovo-legion-wmi.h      | 271 +++++++++++++
+ 8 files changed, 1119 insertions(+), 9 deletions(-)
+ create mode 100644 Documentation/wmi/devices/lenovo-legion-wmi.rst
+ create mode 100644 drivers/platform/x86/lenovo-legion-wmi-capdata01.c
+ create mode 100644 drivers/platform/x86/lenovo-legion-wmi-gamezone.c
+ create mode 100644 drivers/platform/x86/lenovo-legion-wmi-other.c
+ create mode 100644 drivers/platform/x86/lenovo-legion-wmi.h
+
+-- 
+2.47.0
 
