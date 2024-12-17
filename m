@@ -1,41 +1,41 @@
-Received: from mout.gmx.net (mout.gmx.net [212.227.15.19])
+Received: from mout.gmx.net (mout.gmx.net [212.227.15.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 015D618E1F;
-	Tue, 17 Dec 2024 00:44:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 98FC48493
+	for <platform-driver-x86@vger.kernel.org>; Tue, 17 Dec 2024 00:47:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1734396264; cv=none; b=MgSNe2hoHAAyrXP3x4Wy3iBILoSXH6s5SAU1+Iu3OkFTOAFtdAccckNdaSIE8zmTG3bajI2bXSUxs9JarKOU/A3UnY8n9GmpTroyhKwQd9eKmPqa53k+UWFGL3MC3R7JCiH9XJpkyZF6UMBa+3mYOxn9chyQtC59P6J9LLI06VI=
+	t=1734396438; cv=none; b=ZT5aY+GITsAcaQzVTyZ7cLv066ChjGoXrWkImLV96JbKjOznmB1u1fI85d0/WRlz3hAeQv9qls5JfrJm1HJA0yFUTvwENpQLe46OH5V1WG+87/mBQVVF/u91Jxu0fETMDry9Mdx2SV+9LvD5389pJTWrVporh/4/lCPFCb2n4aE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1734396264; c=relaxed/simple;
-	bh=oDYQRvF0p5X6K4YQ2N75tSTFUUvFr3NJNB1u1qSZVmk=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ItkTxcW9qV/H9Cl3KuUVak3WFcevbkyKfMgal87RmP3lcUNsqHBT8pxGXU4ICKowMuJ21cTEUF34l9ARIh0zZvEjcHCkUpYjw1s5kUCr24X+feEpynp0bYco9twYDZ+LFHv7xB8leIIhmbEFY3MebOIprKsdpC1IG7wYSKEFXMU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b=ep5AWyDv; arc=none smtp.client-ip=212.227.15.19
+	s=arc-20240116; t=1734396438; c=relaxed/simple;
+	bh=b9CHctyDQzOzUZjZPRBHN02KpEMFE7mjZxqSDZCliGA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=ovexww0kydbir1psjuzc8EtDbK1UobTcc/tOIr10IHIekQ/XWYcqCXDzKQ3K+v/iRVMYYYzroStKwOpDn3yjQdTuzQVQOePfP3QsRRzacoxL6whq86LDC/XHcRyuid7qqHNSEMooYPeEElxRLkzmfvCO4m/QGl3D8wI++KlCBvI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b=fFqMoiDB; arc=none smtp.client-ip=212.227.15.15
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b="ep5AWyDv"
+	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b="fFqMoiDB"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.de;
-	s=s31663417; t=1734396224; x=1735001024; i=w_armin@gmx.de;
-	bh=oDYQRvF0p5X6K4YQ2N75tSTFUUvFr3NJNB1u1qSZVmk=;
-	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:To:Cc:
+	s=s31663417; t=1734396434; x=1735001234; i=w_armin@gmx.de;
+	bh=b9CHctyDQzOzUZjZPRBHN02KpEMFE7mjZxqSDZCliGA=;
+	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:To:
 	 References:From:In-Reply-To:Content-Type:
 	 Content-Transfer-Encoding:cc:content-transfer-encoding:
 	 content-type:date:from:message-id:mime-version:reply-to:subject:
 	 to;
-	b=ep5AWyDvHXUmXIzTxYmiGHvC2Pm9hHjTLouGmpMI+1ieLPMDkB1J1jSXgl+mNRQb
-	 YP2L/IV0rIiDJGiAWpV2FjccGk+BWI8PJ7UhM4ioPuFXmyVYOES3GQXdewx3OE1Xp
-	 TWKWKMPJNljfKSXJS36NBkNvY8BW73GxSBUsTchSwafv12jEfdcv9RjSmKzyVEfYD
-	 RjvtsnE5xl7au86UUPvSkVm0rz1IgzVw3C1nTzVkNKK+zjJSz7x1oOuMpfKfiVylR
-	 HU3e1V1HbnWMae+rYrbDZWTbY+TN0GhgpX65EqpB8LjpXKhgYjggdQFkP2hpOSZW4
-	 +xW8PZWDYg3H9zU8Xg==
+	b=fFqMoiDB7tFFboKYzyOLPpJNVB6gQhk6JPHxOpkfkYQ8548RU+80/x2bVx7bzBBt
+	 F2GCjQoHCL82fB5XQS9uFkVgkJaWBEtWaKmggyZAvpuqw9UcYalvAzfOrXHAymVYP
+	 WdwJKkyB4Z8m3Rhwe2X9fyn+S2KdLlkNU4Ip89lL6PjXmQDV6PSG5MzZbpgYWUCPh
+	 2fM7fgel4dMI6eMCBgYJtkg4Y5EjMX4h7vg6O3LLse1IqMVX3wGf96Y+fw3zh2jA/
+	 8bWR5enWjrVGd5s9H5PGeds7eF4i49JTmPFqao00F4/hzt9PJF7O2BnSB+TwmYjSZ
+	 2LRosCUZNLTE1u3P8A==
 X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
-Received: from [192.168.0.14] ([91.14.230.110]) by mail.gmx.net (mrgmx004
- [212.227.17.190]) with ESMTPSA (Nemesis) id 1MtOGa-1tiacz3j4w-012YF8; Tue, 17
- Dec 2024 01:43:44 +0100
-Message-ID: <07920e80-831e-4e2c-932e-9a5a8fe2bd3f@gmx.de>
-Date: Tue, 17 Dec 2024 01:43:36 +0100
+Received: from [192.168.0.14] ([91.14.230.110]) by mail.gmx.net (mrgmx005
+ [212.227.17.190]) with ESMTPSA (Nemesis) id 1MXXuH-1t5SBi3ial-00LAmR; Tue, 17
+ Dec 2024 01:47:13 +0100
+Message-ID: <8b8749c1-59c8-4f95-a43e-055cf94f9597@gmx.de>
+Date: Tue, 17 Dec 2024 01:47:12 +0100
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -43,78 +43,61 @@ List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] Input: i8042 - Add support for platform filter contexts
-To: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc: o2g.org.ru@gmail.com, hdegoede@redhat.com, ilpo.jarvinen@linux.intel.com,
- corentin.chary@gmail.com, luke@ljones.dev, mjg59@srcf.ucam.org,
- pali@kernel.org, eric.piel@tremplin-utc.net, jlee@suse.com,
- kenneth.t.chan@gmail.com, coproscefalo@gmail.com,
- linux-input@vger.kernel.org, platform-driver-x86@vger.kernel.org,
- linux-kernel@vger.kernel.org, josh@joshuagrisham.com
-References: <20241215233628.4500-1-W_Armin@gmx.de>
- <Z2BhjwkkysKsmhVT@google.com>
+Subject: Re: acer-wmi: Nitro button doesn't produce a WMI event
+To: Hridesh MG <hridesh699@gmail.com>, platform-driver-x86@vger.kernel.org
+References: <CALiyAom1xDH6A0Q2WNHCMUcpMJfM3pXO2DaW=bgHGUi8ZOpBbQ@mail.gmail.com>
 Content-Language: en-US
 From: Armin Wolf <W_Armin@gmx.de>
-In-Reply-To: <Z2BhjwkkysKsmhVT@google.com>
+In-Reply-To: <CALiyAom1xDH6A0Q2WNHCMUcpMJfM3pXO2DaW=bgHGUi8ZOpBbQ@mail.gmail.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Provags-ID: V03:K1:XtpKKqthjH2lGPuxWC2Bft842s9ZNeQ2fYfZFWGlcuDLmNWXVti
- cZ4mUDU+mkBufTHWqMavSbmNoypnF3D1pFDYZaps4nlnSA2M1/2ffFx3cCvqCcyVTG8gM+C
- mtqbCBhsw/hB13JBjN0DZZDGRgZeSvV1SYC/35fmEUjvn0TeXP+MjsRghucOg8L06ecmZEY
- bM/9mOvk6cvSrChg/1G+w==
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:SARDDSO/dZaSiy4n4SwLxbD0BWIKNnRcaM4b5OS0AtLqGXttMQa
+ 4V/ZXMCEbs2UjlSLI5jWXXwthkQbIpsuNhufc3eiOTp2sSwRDIaA7b83dmD9iHO1Q2E34DE
+ HAF+XuN5EvqqCiDkN/Qy3Mo3tkVcBkpoOeJiYQAKqQIfLQzOuOLy0oJuR/U7e/95mwvqz+J
+ vS+1s2u2RC2Im8ZejaizQ==
 X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:93LTMCq2kAA=;AazR4PydoDDSwTxVw/lXRsWPcqn
- 2MvRvNMdt7abAPDbqqKwv8tTCudW89qdtkBdVxwZbk/eAM1tumfLGN79BJhI6hpOf75JeX8n1
- uQK7IUOfAext42/Ojgb/Zy+Jbn2hUP/XXH67JokaukIB4b/meKARF/LAdisQ2qA4lI9RrJhVK
- 9EQMqoNLcc52sbLH02tZL1SgMSxqcm1BfM3nneUCOXvWFhvZNuA7vqPNVmuDxGAUtrF4eHvvr
- PFUY9w6hCFU75cMOGUOG0DawT6xRXZHg/3Dvx+7YovE41NVibMm5GOPIoZLkJvDMpOQuNXGLQ
- Nrn1F1Z9zjpUulNZDdUW1HYKKtjdK6dT9iAs9Hqw3lyp3VZOyyscGOlu5X7LT9l31yDDRqZ84
- awNWPnzcQplA2EoRue/T63WLmaBomVQ6XpoOSeShayEWdywwWlaviaFxJcj6oM/H37PFJaa/G
- SND2Rs98INH68e2eIG/CIFavFIWuybgkaJVL6fpPuiUCOvIqdT0SauVSkT8lLDQGhTnNt8FFR
- vPzhAy+0sxL8EKdO1+Rarb2LY38/j7MHizTnCDUacJce3Yw43OPrDt46hiXBVWG6pVCUc6fMh
- PYGXUN9zOGXGAhP9n1mEI4Gc7A9JjmQ2JbgRYVCb/I6Ojdsj9C8KS15R4AOAfA73hhlORqf4Z
- bWgziH+lVodygbpbLKslA4Lu8b3N81vhO5NQ3rJI8O6RPeD1qMnMXr3V1A1XdG/jHTHhvlCGG
- ObepH0ogAhPSresh2nXufhWCM9XSAgHE6SjAWuLNd57qDzv9XKuAGg34RS/obGnY6Ad/TlvO7
- Ok0jBr7xCouj2NYLsYJTu96kiviPlsBPrT6Eek1cynMt9nB4rSAZKl1LkFjnHoDCsipEkaEbI
- mecMBayoXXczUdxNO1P/YKcOF8upHScRsJ5mtt8EjpHrxtbyl5sHwTWOLvwgPYT5sYY9LHXZH
- +f6N7UmpDR4JNfZy5oYDtzI6ALdDSGJXrv9Mrej4mqzkOQyrM3NgF3+SP5cpj1DSkqZFrBOSN
- 2BF0aTfkYGk8QCCswdtrxv0mpkn6MAEQ6qneJnvL38S7ZTwxZFmUnel0IiMMGk0yhWvfh0u1G
- 5e57X6736EDhKoOyAjgP1aXHWxZ0Cr
+UI-OutboundReport: notjunk:1;M01:P0:ifOYqCoFpaQ=;uQya4kr73rAaW0ndwZ+Lfvq24i8
+ ccKVbtiq7ceihe3VIgSzk+pad834mtp2XTg5I8q5TmcBx+OjhgyCBC5Ha+J30j9pMJb6uccB2
+ mYmtxRQZ1EqG2wWKFSHQvPXyjHCchaY3Eb+XozyH0jjyqPeWof2nz6Bgvj20jdV9CF7ISKkac
+ 1fMHqApkpAQvUQRUqs6En/Cmb8HxrJ17Qkep1gBHwV43iWxMiINhqarnJbLvL6kzNQa+gKE9t
+ VcUw3XBNIhn9w3xSLO46M4SoAgNk7SQt33iy6Kke+LDe9RdJwZHPdyjXtgMWxMwXBOgR8lhLD
+ PBg1OZ57ssOw0zg3iytDVh6jK6FfPgve2FKqmmMyWb4cmyz0glKlgIXHGGkIK3jUaBIJGYoaW
+ ZkIrR5wv0DDgoXjMD7ekNufo1f65I9BHAszJB3bsyCyJKmgNDNSBpkYYNbs1I6osqG20LQcJR
+ 2rBofHyjTmhZrsZxOVsc2p2cnzZYOQDpOHFUWmbJ3qA+GgBRoKRAyOpUHiuX8yGeVdcZMlOEu
+ qS8tvKF0YrsZDGdpVHQTHyA48ETPS6BK05rFbHuReqS/oOm15EhAqBYmGer21N0DOnCBsK1UK
+ v6vvyzV2lBc6q21Ygw5QQCbOJie0sPq8mPbkuXV6K6luT5opbjHv9rD/XYzcs1RGNkVhk7JXY
+ e2j0LTKQkPTx4Q8iiEiV9RphbWpl+C75/JDePGt7w6qB3FXYjEChs0L8e8mjA1sJ7m+x6lOYB
+ Jsy3rHvI6y/jHYITCxcrWIYmyXGTg4AEVBBEF4+L9sZV0X38P2Rb7bSGyquRlKe301B3BMOLa
+ KKrsLSNl+C22oemd58HIOZh0GHiXklBAsQotEl9HCv70WO30+Qm7F+rDhWUDSkhNTFwEb8Fvj
+ SvM5krwCvtNVRG1mUOxyiyFzOdDsVDpaLgY2nO2JrNgAaPeI5q0uGDbRQo1Q3sGjfaqu5YXkP
+ qg4A2xprR23QnW1NNHDKL6i3o5cxuTeGWX/0+XFRLP+6DWag9RQpCleoH7QKKm02M9S+jS2rL
+ tbQ8kehgpWJ4VQSv6z6sgNap2AO0TjMFnsiMBiDqEXK/1mu38DNY5toJVWcaNvjrxOZHOVVb9
+ a/6598LHl7CTQNsiWgmZTbgz8OAz4F
 
-Am 16.12.24 um 18:21 schrieb Dmitry Torokhov:
+Am 16.12.24 um 07:15 schrieb Hridesh MG:
 
-> Hi Armin,
+> Hi,
 >
-> On Mon, Dec 16, 2024 at 12:36:28AM +0100, Armin Wolf wrote:
->> Currently the platform filter cannot access any driver-specific state
->> which forces drivers installing a i8042 filter to have at least some
->> kind of global pointer for their filter.
->>
->> This however might cause issues should such a driver probe multiple
->> devices. Fix this by allowing callers of i8042_install_filter() to
->> submit a context pointer which is then passed to the i8042 filter.
-> Right now i8042 supports only one instance of a filter, so the driver
-> probing several devices will have to sort out the ownership of the
-> filter anyways.
+> I'm currently in the process of writing a patch for my Acer Nitro 5
+> AN515-58 laptop to support Turbo Mode. The OC WMI calls have different
+> input values on the nitro, and I've managed to reverse engineer the
+> nitro sense app to obtain them. However, im facing a small difficulty
+> -
 >
-> Unless you plan on supporting multiple filters I do not see the need of
-> storing the context in i8042. And if you decide to add support for
-> multiple filters I would need to better understand the use case.
+> Currently, the driver listens for WMI events to call the
+> toggle_turbo() function, the problem is that on my laptop the Turbo
+> Key does not seem to produce a WMI event (as observed by acpi_listen).
+> It does however show up on the output of wev with the keycode 433 and
+> symbol XF86Presentation.
 >
-> Thanks.
+> I'm not sure how to proceed right now since I'm not that familiar with
+> the input or wmi subsystem. Any suggestions?
 >
-I am well aware that the i8042 driver currently supports only a single platform filter.
+> Thanks,
+> Hridesh MG
 
-The reason for introducing a context pointer is that otherwise drivers registering a i8042 filter
-would need to provide such a global pointer for their filter themself, together with the necessary
-locking since those driver can (theoretically) be instantiated multiple times.
-
-With this patch the i8042 driver takes care of that so those driver can finally get rid of global
-data structures which will break as soon as the driver is instantiated multiple times.
-
-Additionally this new API will allow us to add support for multiple handlers later should the need
-arise.
-
-Thanks,
-Armin Wolf
+Theoretically you can use a i8042 filter to filter out those special
+keyboard events. However i suspect that Acer will not omit such an WMI
+event without a good reason. Can you share the output of "acpidump"?
+Thanks, Armin Wolf
 
