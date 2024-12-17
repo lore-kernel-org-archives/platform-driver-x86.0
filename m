@@ -1,130 +1,130 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.16])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3E52A762F7
-	for <platform-driver-x86@vger.kernel.org>; Tue, 17 Dec 2024 14:47:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 198DA1F707A
+	for <platform-driver-x86@vger.kernel.org>; Tue, 17 Dec 2024 15:08:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1734446832; cv=none; b=e2ITkF0MIpTSPcyjXHnlRFbZHUug2jPBWqL1KPBzk0Y7OpO4rygPjbx6hzCXlQhf5dMPsPwPxdlmK90UfhfCfvZIq54dvtrQHFGx4AZMtk9VwJjeqjpPUcJZHdzYAEkc4l45K1sN5XJemuxVJM7dxo3HnIIKkeVb4GbmptAe9ks=
+	t=1734448104; cv=none; b=KrO86IhtOv+bO6gmVQ0Lr6+hhsszP+Je40tDs4sKuu+INQ9QWjGPYW5HhZwOkSAG9YPR/6VoupANQlX9OK1TLXsWNfb2Kc6+oVKtIkY1Q4KS5WIHha9pa2eowMPrYPODa1UPPdoEqZvuPbIUUbmLhrYzj1sJ4GtjlOhALHWx1Xo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1734446832; c=relaxed/simple;
-	bh=zdExDuJSG95EX2zHd1TaNUnw9twURX91SQkvBv//7e8=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=SB91mXEh7HEMFa3syk/vK7+laiuxHbXksuMvKqW0j6dAsZ5dKBBxbgV6LM1EI4UelkRYcU4eTbl+GyXhaRzKgFMAQ6cXGAfYTl/BrhtlydLV4QpALVzOX/xMY33Rewq0EPFJ6+YlsZ+6zGoM3EdGvgF8tZYAoOJXM/uQYyXdo00=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=dUY90XLj; arc=none smtp.client-ip=198.175.65.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1734448104; c=relaxed/simple;
+	bh=EnOLx/nHKpZaAJE5Zlhn7nWmQRH3Q2HYlAAYXXmpiJI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=KY462TPmh2NLjmJGZu4B5aHzWDyq1ChO9g2aDQwup8BbHoBHshb4pylfB5NAxYwW0LlhFpfCbN5eSTsAsxh23gUw3XU5+cxP1EOL7CWkmbdJy5/S/tzzinViL1gQXP6aRelf4K+tmeMG7v3c8+a041u+FNgh3Tm9NLbOeUqt1jA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=S5qLMCar; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="dUY90XLj"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1734446831; x=1765982831;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=zdExDuJSG95EX2zHd1TaNUnw9twURX91SQkvBv//7e8=;
-  b=dUY90XLjC8tVLNHMKuN10glLCXZ8M5hxtx5yyelOh4+voZyCkRrCWFyZ
-   QUpQcSpAeKn5NgZG3QSXangWLuCWSCCFRj8rU3dKK3EKQxKlinYQk/dhh
-   Zb9n3txBnw2PkHWGMB00graZ2KbUIes4xDrompDa2vG6eHlaDZJmpMWLT
-   baTNYESF6G0Z674lH9unUXbYMcCMo08QmRXqVCxgWfN8X4uYjMn5QIy71
-   nJ/eARy8cYyRdykcg6WVqjovr17qiTZFy76s7JzVnTxjd65oDHA9FJqsm
-   J2dkBewOP80pGUadfkAQVtDUIbTF+ZWmtgsqbYZmBwBIv3hnmlLYmd+pN
-   g==;
-X-CSE-ConnectionGUID: 1iQvrZDETPGQbOTiM/ukxg==
-X-CSE-MsgGUID: 8bh63U7ASru3G6r0ufsl0Q==
-X-IronPort-AV: E=McAfee;i="6700,10204,11288"; a="35024077"
-X-IronPort-AV: E=Sophos;i="6.12,242,1728975600"; 
-   d="scan'208";a="35024077"
-Received: from fmviesa006.fm.intel.com ([10.60.135.146])
-  by orvoesa108.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Dec 2024 06:47:11 -0800
-X-CSE-ConnectionGUID: HLAFrMETRMuV956SP19w9w==
-X-CSE-MsgGUID: Tq1RSMWuTFKAAZJD45nJWA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.12,242,1728975600"; 
-   d="scan'208";a="97334627"
-Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.192])
-  by fmviesa006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Dec 2024 06:47:08 -0800
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Tue, 17 Dec 2024 16:47:05 +0200 (EET)
-To: Dmitry Antipov <dmantipov@yandex.ru>
-cc: Lee Chun-Yi <jlee@suse.com>, Hans de Goede <hdegoede@redhat.com>, 
-    platform-driver-x86@vger.kernel.org, lvc-project@linuxtesting.org
-Subject: Re: [PATCH] platform/x86: acer-wmi: fix fan mode setup in
- WMID_gaming_set_fan_mode()
-In-Reply-To: <20241216132400.302003-1-dmantipov@yandex.ru>
-Message-ID: <724c98ef-848d-ecfd-63d0-18fd2a6b89f4@linux.intel.com>
-References: <20241216132400.302003-1-dmantipov@yandex.ru>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="S5qLMCar"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1734448099;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=D7ABiOnpBEGx89PJw5n4fgFhL0VnSY3UoS2smPvphwQ=;
+	b=S5qLMCaroKOv72Ui+nrTCrRXB60mhldBWu99hVNLarud+aJgpkhGUGD4cW1yI5j7DBY0TO
+	BXPgevqoWyepubYSu6DUXF+pQRrMvH92KpX/vHJ7t8dw9fpIL6hZtuC6BCC7zZcAweIRfb
+	6xqT1YYic5rg05fVv8liCtunZWyq3pM=
+Received: from mail-ej1-f70.google.com (mail-ej1-f70.google.com
+ [209.85.218.70]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-633-Vc7LDWb9O_GzN2nWhNWk0Q-1; Tue, 17 Dec 2024 10:08:17 -0500
+X-MC-Unique: Vc7LDWb9O_GzN2nWhNWk0Q-1
+X-Mimecast-MFC-AGG-ID: Vc7LDWb9O_GzN2nWhNWk0Q
+Received: by mail-ej1-f70.google.com with SMTP id a640c23a62f3a-aab954d1116so366810566b.3
+        for <platform-driver-x86@vger.kernel.org>; Tue, 17 Dec 2024 07:08:17 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1734448097; x=1735052897;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=D7ABiOnpBEGx89PJw5n4fgFhL0VnSY3UoS2smPvphwQ=;
+        b=e6nbYIvfBRPMSamktheNLnWrwQH1xj1Rgl4iWRrc9phhoBWYZ0oneLMr5hXkfSsndW
+         rdM6io/1igviqpk9LsLq1AWssuLb8XIHhnUS8Jorfm10mztwVyLj4DhWkgFkZuc+Yr7V
+         xBibO1QpUF/64SH6xTZQGIjokd9KrgQhdRk6GtPnG4nSmbs9kgQT3HvNKU4LuNFuVdt8
+         3I/1F+cU+6rWd3yerUIksR6tojE8HAVVsDoyUqFMD2BDyT2A/oO7rQ2PCq48W8P4FCc/
+         ce7B/WC5QLgeN+osoIzMerMaK8cveIiKOmrN9r9ahGONxte92H1kUjf6Wl5QKk14eLX/
+         C2pQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVJreFCAw06lCmnGT7KYBzTkMzQPOFUgswaXFcCHpUcsGuCVp30qeIZLnx7bxMLXAd5HGnEyzLaIwW+DTOqbAYs5OC4@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywlw6vUT1vLhj2NRazCwJ0Kb9EPUnsVK/JRU2sAKleFQm4YOtKt
+	2/Qn7zZTRvGYZIwxeUgdCaB97hHhHBfu+I14XVzFKz7hYMw2ALY7sQHlPZTFZMGDB96AfnEprfV
+	cLJZ9lSehn2xBsn9XK+5D7TxLrXyzyn4w1HIZOBJYezQYRgHN7Cjc5HLWnwMjvSH6sxrFr2o=
+X-Gm-Gg: ASbGncvmjoh81fZnQRxbWWUGi7MgI5nX6r4/10/EODIaFhU5Mbdog/pBacMVtEWwAe/
+	oqSZH0yYIdYrpx7vpLaJRU5LBkx6kNi30h2FBd2f4AyCmRjGtnbDXGL3QHbSVIWz5f+NJK0a4ol
+	w7QxgSPIOamm0rIuha/uVcjMLtNCZkweOeyWk1DEQnokNSQUlKj3U6RjiyG4e/WVx4453LlmV5z
+	MRi+nopPl2OLUfExkonjzmoKZY+NtVoutGNlA0HEnFgfFLH72HZdKgQynXYMOXr
+X-Received: by 2002:a17:907:2d26:b0:aa6:691f:20a9 with SMTP id a640c23a62f3a-aab778d9db3mr1484535166b.4.1734448096595;
+        Tue, 17 Dec 2024 07:08:16 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IFDWHkMPveAxZ0xKYxQGkeagwKHAxrWPUWCyDh6esu0iO6udkUJ+rwK5j9MucJziPskb6Bquw==
+X-Received: by 2002:a17:907:2d26:b0:aa6:691f:20a9 with SMTP id a640c23a62f3a-aab778d9db3mr1484531766b.4.1734448096173;
+        Tue, 17 Dec 2024 07:08:16 -0800 (PST)
+Received: from [192.168.162.203] ([109.36.231.174])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-aab9639363asm452932366b.169.2024.12.17.07.07.57
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 17 Dec 2024 07:08:15 -0800 (PST)
+Message-ID: <1aecf86b-6e3b-4755-8f1f-d3dbc8d13644@redhat.com>
+Date: Tue, 17 Dec 2024 16:07:49 +0100
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] platform/x86: samsung-galaxybook: Add samsung-galaxybook
+ driver
+To: Armin Wolf <W_Armin@gmx.de>, Joshua Grisham <josh@joshuagrisham.com>
+Cc: ilpo.jarvinen@linux.intel.com, platform-driver-x86@vger.kernel.org,
+ corbet@lwn.net, linux-doc@vger.kernel.org, jdelvare@suse.com,
+ linux@roeck-us.net, linux-hwmon@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20241209163720.17597-1-josh@joshuagrisham.com>
+ <53c5075b-1967-45d0-937f-463912dd966d@gmx.de>
+ <CAMF+KebYQyN+gkHayAdZZHPU7DbghwpmVQaLFaf0TiBb-CVp7A@mail.gmail.com>
+ <44cd9966-e24a-4386-a0cb-20b1022adcee@gmx.de>
+Content-Language: en-US
+From: Hans de Goede <hdegoede@redhat.com>
+In-Reply-To: <44cd9966-e24a-4386-a0cb-20b1022adcee@gmx.de>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Mon, 16 Dec 2024, Dmitry Antipov wrote:
+Hi,
 
-> In 'WMID_gaming_set_fan_mode()', most likely the (whether CPU or
-> GPU or even total) fan count is not larger than 31. But still
-> cast everyting to 'u64' just to be sure that there is no integer
-> overflow when performing left shifts. Compile tested only.
+On 17-Dec-24 2:41 AM, Armin Wolf wrote:
+
+<snip>
+
+>> Regarding the keycode do you mean that this should send something to
+>> the input device via the sparse keymap or that the i8042 filter should
+>> emit a key event, or? And/or that it could be handled with a hwdb
+>> update in systemd so that this key gets mapped to the right event?
 > 
-> Found by Linux Verification Center (linuxtesting.org) with SVACE.
+> Please send the input event through the input device with the sparse keymap.
 > 
-> Signed-off-by: Dmitry Antipov <dmantipov@yandex.ru>
-> ---
->  drivers/platform/x86/acer-wmi.c | 10 +++++-----
->  1 file changed, 5 insertions(+), 5 deletions(-)
+>>
+>> Regarding the specific keycode I assume that maybe the appropriate one
+>> would be KEY_CAMERA_ACCESS_TOGGLE ? (though I have not seen any OSD
+>> notification with this keycode but maybe it was only with older
+>> versions of userspace tools I was originally testing this with..).
 > 
-> diff --git a/drivers/platform/x86/acer-wmi.c b/drivers/platform/x86/acer-wmi.c
-> index d09baa3d3d90..9be6176c0076 100644
-> --- a/drivers/platform/x86/acer-wmi.c
-> +++ b/drivers/platform/x86/acer-wmi.c
-> @@ -1504,17 +1504,17 @@ static void WMID_gaming_set_fan_mode(u8 fan_mode)
->  	int i;
->  
->  	if (quirks->cpu_fans > 0)
-> -		gpu_fan_config2 |= 1;
-> +		gpu_fan_config2 |= 1ULL;
->  	for (i = 0; i < (quirks->cpu_fans + quirks->gpu_fans); ++i)
-> -		gpu_fan_config2 |= 1 << (i + 1);
-> +		gpu_fan_config2 |= 1ULL << (i + 1);
->  	for (i = 0; i < quirks->gpu_fans; ++i)
-> -		gpu_fan_config2 |= 1 << (i + 3);
-> +		gpu_fan_config2 |= 1ULL << (i + 3);
+> Depends, that will happen if recording gets disabled?
 
-Now this change doesn't make much sense. You assumed that fan counts can 
-be large which I find highly suspicious to begin with. Reading the code
-easily reveals neither is never > 1!??!
+Since the driver handles the toggling of recording on/off itself
+KEY_CAMERA_ACCESS_TOGGLE should not be used. As mentioned in my
+reply to the v3 posting:
 
-But lets entartain the idea those counts could be large...
+"It would be good to report the camera state to userspace using
+a separate input/evdev device which reports SW_CAMERA_LENS_COVER
+as discussed here:
 
-What about bit collisions if cpu_fans + gpu_fans > 2?
+https://lore.kernel.org/linux-media/CANiDSCtjpPG3XzaEOEeczZWO5gL-V_sj_Fv5=w82D6zKC9hnpw@mail.gmail.com/
 
->  	if (quirks->cpu_fans > 0)
->  		gpu_fan_config1 |= fan_mode;
->  	for (i = 0; i < (quirks->cpu_fans + quirks->gpu_fans); ++i)
-> -		gpu_fan_config1 |= fan_mode << (2 * i + 2);
-> +		gpu_fan_config1 |= (u64)fan_mode << (2 * i + 2);
->  	for (i = 0; i < quirks->gpu_fans; ++i)
-> -		gpu_fan_config1 |= fan_mode << (2 * i + 6);
-> +		gpu_fan_config1 |= (u64)fan_mode << (2 * i + 6);
->  	WMID_gaming_set_u64(gpu_fan_config2 | gpu_fan_config1 << 16, ACER_CAP_TURBO_FAN);
+the plan is to make that the canonical API to reported "muted"
+cameras."
 
-This line tells us gpu_fan_config2 can only be up to a GENMASK(15, 0) 
-field so if the type overflow problem would be real, there would be much 
-bigger problems with this code than what this patch is trying to "fix".
+Regards,
 
-When you use an "automated" tools to find "problems", you have to read and 
-understand _all surrounding and related code_ before submitting patches 
-like this. You could have easily seen that those counts are never larger 
-than 1 and that the patch is not a real fix. Please keep that in mind 
-before sending more fixes originating from automated tools.
+Hans
 
 
-(And yes, this code should be converted to use FIELD_PREP() and GENMASK(),
-and the fan auto/turbo modes named with defines, etc.).
-
-
--- 
- i.
 
