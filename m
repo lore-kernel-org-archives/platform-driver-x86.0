@@ -1,198 +1,92 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f181.google.com (mail-pg1-f181.google.com [209.85.215.181])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 613CD13D891;
-	Tue, 17 Dec 2024 16:49:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 40D641F75B5
+	for <platform-driver-x86@vger.kernel.org>; Tue, 17 Dec 2024 17:42:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1734454147; cv=none; b=AvRZ8C9h/tYch7QXw0EQnmZnhMkl2VlKgJaWa1OXzq7mB6FrcRSfcwbc2eIdz3dRwKck9+S8uoYjhJDjG5tfxyy+mIq4U5dGxseWi1ugLiXeTUrwO7Uv/3oEOqsAx22V95Jnw0si2DU/h6y6VxCF9cbJhCWLsJgiM8ot6EVRNRM=
+	t=1734457336; cv=none; b=ZoZLJ9fPwMaMLy6dm5ZYRiDxdDsQbBvJb4TJPBJNHm6zJmigme1AlpVpvOuDWJzq5OGIaadQrGFrU+D7/xfEQ/D84Ri2tvvc1gW8kU+HOOlmumU6AX8jHp3onRVk+3X5GfwUEcyT5dzTls6unC2BA31YhtkVPYEXvvRTtROxQlo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1734454147; c=relaxed/simple;
-	bh=ffP/A1FwqZUN0fq401ch5jHCfiRHhidUNp9QFwcD2vQ=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=mYJTtMvLRxm4/RUVkmX7FzTgwulmNXIOcNf978omRiZ/0D9qgZTHQhUjOdHMX6I29qN1G7UZXZW0ioGMS8m/WDYlPWXxpDbzPXxBWg4Q8OKU/l0NZ3pprCrS09ZdF0LiGNVLhK4zH9OgcHhfLRcfXDguAYy/oPm6IMxgtfBqz4c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=gnE8MLNl; arc=none smtp.client-ip=192.198.163.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1734457336; c=relaxed/simple;
+	bh=+FoC4TzW8bYNkefFsH5wtU59UmmY013IpZJwq7zo/tE=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=A1ls0dKsK6IJkSC5Kh5Ia/AVm1I1TsU12C64vqIhJ5sGfatUYU2v7Kfxci2WXlmF6A2t7lvv2kcQGu+wI0VqzpVvAaM0+v4NzbXa8IPyboBJsXvkj6S7rHAcGxxv8GjU0AsJjsj36KZg5Vqw06SiBUGZYxbXpNY3NJ1ICn/7hZU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=lqBO5mC5; arc=none smtp.client-ip=209.85.215.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="gnE8MLNl"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1734454145; x=1765990145;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=ffP/A1FwqZUN0fq401ch5jHCfiRHhidUNp9QFwcD2vQ=;
-  b=gnE8MLNl0kibLtSE7ctt+D0L66LZBNM2eJ1Rq2rgACqKFFIwX/JFmLpm
-   uv3wv8F1HHKTY1jEhiiT1MnI3jfqSzdHzGpAFlollOVp2Soxg1puCJG41
-   C4q6kPpXVq+eWeT9veD6lZxCFf9Nh3INcbu8y7yGNEljJPJceDYXkvIY1
-   vF/BU0S8EsP0LCTqBxKvnY8bdWKqPuHp+f85nUglqu9dFN+3Ns4H3AY9t
-   sa8tRh0cI3nKkRD7bUiTNaxSeZdk8M18DkLSm3YBN4cUQcLeY8Eg1AL+m
-   XN3o4w8dnEVVGU3zuYYtMzCEkh7GU83TT85DouIYiDOscbuxJ7mKNs2QE
-   Q==;
-X-CSE-ConnectionGUID: JXErsGX0RLqRlXLHU7SBGw==
-X-CSE-MsgGUID: XHHpCPejRROkyIDmp8u5Dw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11288"; a="34784572"
-X-IronPort-AV: E=Sophos;i="6.12,242,1728975600"; 
-   d="scan'208";a="34784572"
-Received: from fmviesa002.fm.intel.com ([10.60.135.142])
-  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Dec 2024 08:49:04 -0800
-X-CSE-ConnectionGUID: 2FhLg9n4SU+ioYE6W89gog==
-X-CSE-MsgGUID: T0CD/t+OSTSv9GSg0Qo1sQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
-   d="scan'208";a="120834384"
-Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.192])
-  by fmviesa002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Dec 2024 08:49:00 -0800
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Tue, 17 Dec 2024 18:48:55 +0200 (EET)
-To: Hans de Goede <hdegoede@redhat.com>
-cc: =?ISO-8859-15?Q?Pali_Roh=E1r?= <pali@kernel.org>, 
-    Andy Shevchenko <andy@kernel.org>, Paul Menzel <pmenzel@molgen.mpg.de>, 
-    Wolfram Sang <wsa@kernel.org>, eric.piel@tremplin-utc.net, 
-    Marius Hoch <mail@mariushoch.de>, Dell.Client.Kernel@dell.com, 
-    Kai Heng Feng <kai.heng.feng@canonical.com>, 
-    platform-driver-x86@vger.kernel.org, Jean Delvare <jdelvare@suse.com>, 
-    Andi Shyti <andi.shyti@kernel.org>, linux-i2c@vger.kernel.org
-Subject: Re: [PATCH v9 4/4] platform/x86: dell-smo8800: Add support for
- probing for the accelerometer i2c address
-In-Reply-To: <20241209183557.7560-5-hdegoede@redhat.com>
-Message-ID: <ee90da14-024e-4563-00ff-9b525e700106@linux.intel.com>
-References: <20241209183557.7560-1-hdegoede@redhat.com> <20241209183557.7560-5-hdegoede@redhat.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lqBO5mC5"
+Received: by mail-pg1-f181.google.com with SMTP id 41be03b00d2f7-7fd526d4d9eso4337527a12.2
+        for <platform-driver-x86@vger.kernel.org>; Tue, 17 Dec 2024 09:42:13 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1734457333; x=1735062133; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=+FoC4TzW8bYNkefFsH5wtU59UmmY013IpZJwq7zo/tE=;
+        b=lqBO5mC5Or/QEBc1AX+ZoQSxzXI0A8zoQLSMtmYGo91bk7DdRrmFKqYcOgWD6Jv1S9
+         nTkZHzzLXy37HHszYxOs0DOwE8aBS9xYu1Vm4b5krodeo9oF28MC6+A/vVENamrShDQl
+         pvydAr+zFj/IOFEFN+NKuiSedUxjUnEwLFGmpbEaglfAYrHCdlzQSq8VuETku988dN5D
+         c2MbyEwe6AwCRyp01ocxIKmVnniBC/g1WVP2RhiBC1TQLGSrGrLP5vJ7qGhUPZ9Q2hc8
+         BFwUvYypKZGDkfaL+O+okNl6SdhxRfx1+fCKB+YTbItNMQnhEgEu0OZFX9YmrU9TjAOd
+         x2qg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1734457333; x=1735062133;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=+FoC4TzW8bYNkefFsH5wtU59UmmY013IpZJwq7zo/tE=;
+        b=KszcFtAcqM9DyhqBX7GAAQywfv8JyD+gx3vIVJ+g3bewQlTOhSzbiPj4xDGvBkqFNO
+         Xz4QPwtSiG1nvR9ekeg4uiVSBBCe4nMmPEPumXFLsTpq4fvJaswf+CE7O61j76wb1yjh
+         C2ryAeBtCD5aJYn9BOj4XqMBOFTC6RyHHKz5CPwh13FKJpJ4OgQA2/erugOGN3/It8Ay
+         /jOSpNr2NkJq1B3WUmZ5drUOXbcWgQMDyk1kivrRuHU1mBdlKjvv3TC22HmFBS59hZ/f
+         1QcjZGB6xHCaxdXbw7x8UrzwEDrVcu+pWmigBBCnhkbJI/WWQ4R0+mqWyFFQS+WdNqNc
+         GdaQ==
+X-Gm-Message-State: AOJu0YyD4i9Ll143C4IIGpzt1nqswJOJFbPF4JLvZFmrmjoCuHnOkNhM
+	mm+rYZcvFeUfxcDBNRFfGLv3mZu9rvyHjI3JQsRH+HVAoirPsUASpTPWl+1ox7zAg7RththCXjU
+	yWC+5W7LPJyU80LBjzwTkfZ3mVQM=
+X-Gm-Gg: ASbGncvLSgVbKOch+ICwLuXM8JnePFrgV2bNLaW7qq1xBSbWdV6Rj0uDXblmMSPHz01
+	mGZSmtPDBi2/2o3BDKpnHCWDNjjJKBKuWGh0nEfUl
+X-Google-Smtp-Source: AGHT+IE71jlXfIdRG7DMvW18ppSOJPP4cWQqMkkTzw5vitt+osx/JLrAM4tmDgWIcUqI7yITHAAhjif8oV5LO8aTB2M=
+X-Received: by 2002:a17:90b:4a4f:b0:2ee:9902:18b4 with SMTP id
+ 98e67ed59e1d1-2f2900a9878mr24881218a91.27.1734457333277; Tue, 17 Dec 2024
+ 09:42:13 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+References: <CALiyAom1xDH6A0Q2WNHCMUcpMJfM3pXO2DaW=bgHGUi8ZOpBbQ@mail.gmail.com>
+ <8b8749c1-59c8-4f95-a43e-055cf94f9597@gmx.de> <CALiyAo=R1kcvwRpw22s=YU0YHUxR8T_WHLwSvDr=8Ahsenn-jA@mail.gmail.com>
+ <9c625119-e46e-464b-933d-9c836577f454@gmx.de>
+In-Reply-To: <9c625119-e46e-464b-933d-9c836577f454@gmx.de>
+From: Hridesh MG <hridesh699@gmail.com>
+Date: Tue, 17 Dec 2024 23:11:37 +0530
+Message-ID: <CALiyAo=7kVi4ipA5-xDfRYQ-gqyza0woYHUzwGuW5BccLOVHgg@mail.gmail.com>
+Subject: Re: acer-wmi: Nitro button doesn't produce a WMI event
+To: Armin Wolf <W_Armin@gmx.de>
+Cc: platform-driver-x86@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Mon, 9 Dec 2024, Hans de Goede wrote:
+On Tue, Dec 17, 2024 at 6:58=E2=80=AFPM Armin Wolf <W_Armin@gmx.de> wrote:
+> This seems to be caused by an oddly named ACPI table ("$H20"). I will ask=
+ the
+> ACPICA guys if this check can be relaxed. Other than that this error is h=
+armless.
 
-> Unfortunately the SMOxxxx ACPI device does not contain the i2c-address
-> of the accelerometer. So a DMI product-name to address mapping table
-> is used.
-> 
-> At support to have the kernel probe for the i2c-address for modesl
-> which are not on the list.
-> 
-> The new probing code sits behind a new probe_i2c_addr module parameter,
-> which is disabled by default because probing might be dangerous.
-> 
-> Link: https://lore.kernel.org/linux-i2c/4820e280-9ca4-4d97-9d21-059626161bfc@molgen.mpg.de/
-> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+Thanks,
 
-So what was the result of the private inquiry to Dell?
+> It also seems that the ACPI code contains the necessary logic to submit a=
+n turbo mode
+> WMI event. I suspect that some settings have to be enabled first.
+Okay that's interesting, I did catch a WMI call on windows (it was
+something named APge action iirc) when the turbo button was pressed.
+I'm guessing this means that I will have to learn ACPI and how linux
+implements it if i wish to debug this issue.
 
-Did they respond?
 
-Did they provide useful info?
-
-> Changes in v8:
-> - Use dev_err() / dev_dbg() where possible using &adap->dev as the device
->   for logging
-> 
-> Changes in v6:
-> - Use i2c_new_scanned_device() instead of re-inventing it
-> 
-> Changes in v5:
-> - Add "this may be dangerous warning" to MODULE_PARM_DESC(probe_i2c_addr)
-> ---
->  drivers/platform/x86/dell/dell-lis3lv02d.c | 53 ++++++++++++++++++++--
->  1 file changed, 49 insertions(+), 4 deletions(-)
-> 
-> diff --git a/drivers/platform/x86/dell/dell-lis3lv02d.c b/drivers/platform/x86/dell/dell-lis3lv02d.c
-> index d2b34e10c5eb..8d9dc59c7d8c 100644
-> --- a/drivers/platform/x86/dell/dell-lis3lv02d.c
-> +++ b/drivers/platform/x86/dell/dell-lis3lv02d.c
-> @@ -15,6 +15,8 @@
->  #include <linux/workqueue.h>
->  #include "dell-smo8800-ids.h"
->  
-> +#define LIS3_WHO_AM_I 0x0f
-> +
->  #define DELL_LIS3LV02D_DMI_ENTRY(product_name, i2c_addr)                 \
->  	{                                                                \
->  		.matches = {                                             \
-> @@ -57,6 +59,39 @@ static u8 i2c_addr;
->  static struct i2c_client *i2c_dev;
->  static bool notifier_registered;
->  
-> +static bool probe_i2c_addr;
-> +module_param(probe_i2c_addr, bool, 0444);
-> +MODULE_PARM_DESC(probe_i2c_addr, "Probe the i801 I2C bus for the accelerometer on models where the address is unknown, this may be dangerous.");
-> +
-> +static int detect_lis3lv02d(struct i2c_adapter *adap, unsigned short addr)
-> +{
-> +	union i2c_smbus_data smbus_data;
-> +	int err;
-> +
-> +	dev_info(&adap->dev, "Probing for lis3lv02d on address 0x%02x\n", addr);
-> +
-> +	err = i2c_smbus_xfer(adap, addr, 0, I2C_SMBUS_READ, LIS3_WHO_AM_I,
-> +			     I2C_SMBUS_BYTE_DATA, &smbus_data);
-> +	if (err < 0)
-> +		return 0; /* Not found */
-> +
-> +	/* valid who-am-i values are from drivers/misc/lis3lv02d/lis3lv02d.c */
-> +	switch (smbus_data.byte) {
-> +	case 0x32:
-> +	case 0x33:
-> +	case 0x3a:
-> +	case 0x3b:
-> +		break;
-> +	default:
-> +		dev_warn(&adap->dev, "Unknown who-am-i register value 0x%02x\n",
-> +			 smbus_data.byte);
-> +		return 0; /* Not found */
-> +	}
-> +
-> +	dev_dbg(&adap->dev, "Detected lis3lv02d on address 0x%02x\n", addr);
-> +	return 1; /* Found */
-> +}
-> +
->  static bool i2c_adapter_is_main_i801(struct i2c_adapter *adap)
->  {
->  	/*
-> @@ -97,10 +132,18 @@ static void instantiate_i2c_client(struct work_struct *work)
->  	if (!adap)
->  		return;
->  
-> -	info.addr = i2c_addr;
->  	strscpy(info.type, "lis3lv02d", I2C_NAME_SIZE);
->  
-> -	i2c_dev = i2c_new_client_device(adap, &info);
-> +	if (i2c_addr) {
-> +		info.addr = i2c_addr;
-> +		i2c_dev = i2c_new_client_device(adap, &info);
-> +	} else {
-> +		/* First try address 0x29 (most used) and then try 0x1d */
-> +		static const unsigned short addr_list[] = { 0x29, 0x1d, I2C_CLIENT_END };
-> +
-> +		i2c_dev = i2c_new_scanned_device(adap, &info, addr_list, detect_lis3lv02d);
-> +	}
-> +
->  	if (IS_ERR(i2c_dev)) {
->  		dev_err(&adap->dev, "error %ld registering i2c_client\n", PTR_ERR(i2c_dev));
->  		i2c_dev = NULL;
-> @@ -169,12 +212,14 @@ static int __init dell_lis3lv02d_init(void)
->  	put_device(dev);
->  
->  	lis3lv02d_dmi_id = dmi_first_match(lis3lv02d_devices);
-> -	if (!lis3lv02d_dmi_id) {
-> +	if (!lis3lv02d_dmi_id && !probe_i2c_addr) {
->  		pr_warn("accelerometer is present on SMBus but its address is unknown, skipping registration\n");
-> +		pr_info("Pass dell_lis3lv02d.probe_i2c_addr=1 on the kernel commandline to probe, this may be dangerous!\n");
->  		return 0;
->  	}
->  
-> -	i2c_addr = (long)lis3lv02d_dmi_id->driver_data;
-> +	if (lis3lv02d_dmi_id)
-> +		i2c_addr = (long)lis3lv02d_dmi_id->driver_data;
-
-If somebody enables this parameter and it successfully finds a device, 
-shouldn't the user be instructed to report the info so that new entries 
-can be added and the probe parameter is no longer needed in those case?
-
--- 
- i.
-
+> The thermal control should be handled by thermald.
+I don't have thermald installed, afaik the only thing responsible for
+managing cpu clock speeds right now is intel_pstate.
