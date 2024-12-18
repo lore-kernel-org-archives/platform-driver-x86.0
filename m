@@ -1,41 +1,36 @@
-Received: from mout.gmx.net (mout.gmx.net [212.227.15.15])
+Received: from smtp6-g21.free.fr (smtp6-g21.free.fr [212.27.42.6])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 78FEA3597C;
-	Wed, 18 Dec 2024 18:37:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CEA84156991
+	for <platform-driver-x86@vger.kernel.org>; Wed, 18 Dec 2024 19:39:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.27.42.6
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1734547070; cv=none; b=eUvQj4ZsCnK3AeT7xYMfo3McoVmHHfceUeUK+HjDRP6uWk+2QIIXX9vT/chVaXYkq+puehwRN7HJKWOPXsyqTo3CGicWPcy3NzsS2ohI0lyuoDO1FXbvR4HWQkSeO0FcMFHCZJiWfW+Kya9rCMGJCy23XSO+0cROszrEuSk0BUg=
+	t=1734550767; cv=none; b=sUHMj+SrrWDEsC1pqoDOuxRrlYMfhCHPDs8aVroz6IcH5JCl/pWPFoVSLE3FPvjSMdrt7kjGTErphvmI75Ru3qDLZ3ITxhJV+VBise9uY2GUmJtVuat4wHGmXR9xPncG2PlQQT+7Zvtg9yaTJMJA+ahnhIKIUm8qZ9AHoSGib6g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1734547070; c=relaxed/simple;
-	bh=LREft+AACPcc3Ll7HjmrtCDuO6HfgzalMF/6ktsYEY0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=hMqmeUmURCuSOlC9xMG14r97RAKDPOY/Qh1FLhZJtyhJ9Uf2x07xQ/ecqwCuooNHs3+SKNRNoXH6JK7x4Hy4raw6yN6B+ydBu2UkmptaYHeZWItXRlO5n1sVFpoc8k6GO+fQD9FcnixMnkUllhnyp7xb9majTWlqUMjD8gHXl1E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b=mJLhs+Bn; arc=none smtp.client-ip=212.227.15.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
+	s=arc-20240116; t=1734550767; c=relaxed/simple;
+	bh=s4DgWbbkiSZqb9KrO9eT9TfRKxqVJ3Abd/D9GORTV3c=;
+	h=Message-ID:Date:MIME-Version:From:Subject:To:Cc:Content-Type; b=BrEv4BPXVg9t8GOcCzmWv/BBbJjwxNYDFHc4AiIFeW3OJjUVGzqcoyIePVqxm5wk1BKCGwiCLXcIe3IMH0Aa02gU4Oxc/li5zC2gj362F5nImKdzPlKmaWjjGl4pSgccTdusZvjxXeTfnYeup3YExz09UK1O96JF4gcE+WNRK5A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=free.fr; spf=pass smtp.mailfrom=free.fr; dkim=pass (2048-bit key) header.d=free.fr header.i=@free.fr header.b=tV7pXhxV; arc=none smtp.client-ip=212.27.42.6
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=free.fr
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=free.fr
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b="mJLhs+Bn"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.de;
-	s=s31663417; t=1734547037; x=1735151837; i=w_armin@gmx.de;
-	bh=LREft+AACPcc3Ll7HjmrtCDuO6HfgzalMF/6ktsYEY0=;
-	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:To:
-	 References:From:In-Reply-To:Content-Type:
-	 Content-Transfer-Encoding:cc:content-transfer-encoding:
-	 content-type:date:from:message-id:mime-version:reply-to:subject:
-	 to;
-	b=mJLhs+BnyRff1b+m0uNv05YnD6riryW9vk5SY3i1snT6G62oNQOW8lVWaGBEiBXw
-	 xv/O4lZxwkLSTK2/XbUR0JnSz5KPWaE3p6hhuEBzYVB4/RmyzqwpnYaaC9Da/g4BQ
-	 n7Bq1Ztgj61RTAIrt/muzPFIGqTFM9Sz0DI79t9FDGeSsmteGGahbH70QLh6MXD/O
-	 gvMw2KN3IDLlDhEoae/h5l8mZQhS3/YMzmR/93Jni+MBNFOvoqPLRYj3jn3299xEn
-	 we+R3iHm699qAYQCZph6QOACVl+TMHo45H8RItcnnHeGOmZOXXPEg4M0zr7tMwxc4
-	 InuUdTnk/CjCzClKMQ==
-X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
-Received: from [192.168.0.14] ([91.14.230.110]) by mail.gmx.net (mrgmx004
- [212.227.17.190]) with ESMTPSA (Nemesis) id 1MatVh-1tyhRm2E9r-00bZSH; Wed, 18
- Dec 2024 19:37:17 +0100
-Message-ID: <a0fd8c4a-598a-4fec-a8c9-c1435f880f7a@gmx.de>
-Date: Wed, 18 Dec 2024 19:37:10 +0100
+	dkim=pass (2048-bit key) header.d=free.fr header.i=@free.fr header.b="tV7pXhxV"
+Received: from [IPV6:2a02:842a:8223:5500::978] (unknown [IPv6:2a02:842a:8223:5500::978])
+	(Authenticated sender: julien.robin28@free.fr)
+	by smtp6-g21.free.fr (Postfix) with ESMTPSA id C86AD78050B;
+	Wed, 18 Dec 2024 20:39:13 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=free.fr;
+	s=smtp-20201208; t=1734550756;
+	bh=s4DgWbbkiSZqb9KrO9eT9TfRKxqVJ3Abd/D9GORTV3c=;
+	h=Date:From:Subject:To:Cc:From;
+	b=tV7pXhxVDKX/fDOG2TQNVZiiK+DN7JBftWsV8OqAL9STtjfRgulfBD9y0DUg68Q10
+	 i6G+z3zhO7r6cjg/HSIpgRovB3OycDiCVHsl9FRnJRMqHlkOYW3D3dv72oxBqwUUfe
+	 cIQQXHdaekOu6DEaGUbx0wVJiDYYpdggjmAvV3311YsN7l6qyksccXDLA4JsllMXcu
+	 mwfGg4R28hEXF2wWUEObfpayqAziY4OT8GN14q8rC6TYibFfcyTeaHBVjzepjFvX3i
+	 6IS6z7DpbT/h+UcqAS+W/cv4IS9UUSzySlt8t9PG6uG4Cm4Gt/ZuQzMXkwkkVf9hBh
+	 74DnC04azCQ0w==
+Message-ID: <69a3a3bf-fe56-4843-91a5-b765e53e337d@free.fr>
+Date: Wed, 18 Dec 2024 20:39:13 +0100
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -43,127 +38,481 @@ List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3] platform/x86: samsung-galaxybook: Add
- samsung-galaxybook driver
-To: Hans de Goede <hdegoede@redhat.com>,
- Joshua Grisham <josh@joshuagrisham.com>, ilpo.jarvinen@linux.intel.com,
- platform-driver-x86@vger.kernel.org, corbet@lwn.net,
- linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
- rostedt@goodmis.org, mhiramat@kernel.org, mathieu.desnoyers@efficios.com,
- linux-trace-kernel@vger.kernel.org
-References: <20241216103855.18457-1-josh@joshuagrisham.com>
- <c23c4c88-786a-4662-a448-deb006b7a03c@gmx.de>
- <6d2e175f-0a84-4a6f-9484-c2c299bcc3c5@redhat.com>
+From: Julien ROBIN <julien.robin28@free.fr>
+Subject: [PATCH] platform/x86: hp-wmi: Add fan and thermal profile support for
+ Victus 16-s1000
+To: hdegoede@redhat.com, ilpo.jarvinen@linux.intel.com
+Cc: platform-driver-x86@vger.kernel.org
 Content-Language: en-US
-From: Armin Wolf <W_Armin@gmx.de>
-In-Reply-To: <6d2e175f-0a84-4a6f-9484-c2c299bcc3c5@redhat.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:eBgquaRcXWM93wLmKkO2143eWvW+bkMvcApl7Nsat0fUWz5IuJ+
- KiXlpDFm8nkx01F4n531nUsm1rWu9APsn5a99gN34M7eZGMUBGFza4NeGu9Wa/L+r40xpsb
- zhNfH2qrBoVOIacwdlbVojES3rX4jpErWOPKki3GO1ruNfbYKYQ1L9BIExONegDs9l0GvN0
- za2UAImtA81IUVXyaSJGQ==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:YxJa90v0py4=;7Xy6v1B2B2O4BUg+ma2ahxvvPtJ
- GEpT7mYiFxdl8uiYMytGpebQW2E1oOspgYALV9/w3JsFyNUNwYIFxEcYNnyvWPHc35v8atzrt
- f2zn0C/BMy59hDUptcnc4z+bVqayvSZYn1oqlrgtxiVVcDB+8fdAg8RAW5CGdibwfunvJ2pqi
- qTSYX1muq2TX0PKqx9td41GGZ0cB4BMhm1VsAifFOJeyl49pepuTs/srWzYXNDJ2pyCK58+tu
- Hg2VeNu/TesHFDx4dvax5Otgkip9MmDau9dTdSY5MtJQSq2CnZKUQ8F+VWeuvsopPuItgCbY/
- viUJzHd14THSv8/VKo5c6HyinAxprdhdxTtKj53g4FgtLHZ/s0lxZY1p6bFMCdNFQLmoMyBjV
- 2HnxTjjSpgD2nPZE4TGzH5MG37hqZN3Ln/JvOiHHnpDg+7/Q6sPXw9ukkKIf/88GQXCPfOmcx
- wfe8KKCe78f2mRoA7GcpvIuqOTWjjedagCAuDx+zSHJxlE6ogEG7fNq625QOX705w11p2h1x4
- 91ZcqvxrDPm+vGzVpuPyEAKQ1zeCVLU53uSZP+sv4w6UaowUaAG8p0IedCRzMnCrz4YsvAKRU
- Kh3uUhj2OK13VioWkOBvhiSaCROrXf7yEL0NctGcOOS8PXk9HjBPOnO4o5pbfwPZI2bBc+i8c
- PLDY0ouohoyuXYq852b1F9q+7t+op9KF2etgd5ZafhmZGBlLwmQ8KBfZ0JPgWp5JDzyjuZDSI
- 02ROfcQtsL6riI9Vsqk7N9D3hc0JxXVL+IJHe0lQRrQYlyX09pf0SHhZDS5u5d9cjmu/NQEFF
- SPbj4mGLOY/vC0MfnGWFvD2pwcTuz24PKOSMGdRrZtNwDufJcAjEVYzG8Zktv6jFtgvm6eNyh
- JMN1aZkdcW/axzh+7HgmNvjeWwPER0hhoairjQQcXnWQkP8qkVNKCvegs43zJKL8b8BG0yVaF
- d7kBcD10wItFY4L3TRkHaQl1P+WmMKL4lQoNli64S7/weuQgFHikBZLyAc56TLhzPQ320oj8d
- vQOMT06qgkhjaVFExVyMA0lV4KJRAFO8CoFFx5NJPyHfyy5/+O4SRWVzn6Rx3Yeeo3J3xpsQk
- qO/sIify38aAivT+mGBpjJEHDvAWZu
+Content-Transfer-Encoding: 7bit
 
-Am 18.12.24 um 15:24 schrieb Hans de Goede:
+The following patch adds support for HP Victus 16-s1000 laptop series,
+by adding and fixing the following functionalities, which can be
+accessed through hwmon and platform_profile sysfs:
 
-> Hi Armin,
->
-> Thank you for reviewing this new driver.
->
-> On 17-Dec-24 10:31 PM, Armin Wolf wrote:
->> Am 16.12.24 um 11:38 schrieb Joshua Grisham:
-> <snip>
->
->>> +/*
->>> + * Hotkey work and filters
->>> + */
->>> +
->>> +static void galaxybook_kbd_backlight_hotkey_work(struct work_struct *=
-work)
->>> +{
->>> +=C2=A0=C2=A0=C2=A0 struct samsung_galaxybook *galaxybook =3D
->>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 container_of(work, struct =
-samsung_galaxybook, kbd_backlight_hotkey_work);
->>> +
->>> +=C2=A0=C2=A0=C2=A0 if (galaxybook->kbd_backlight.brightness < galaxyb=
-ook->kbd_backlight.max_brightness)
->>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 kbd_backlight_acpi_set(gal=
-axybook, galaxybook->kbd_backlight.brightness + 1);
->>> +=C2=A0=C2=A0=C2=A0 else
->>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 kbd_backlight_acpi_set(gal=
-axybook, 0);
->>> +
->>> +=C2=A0=C2=A0=C2=A0 led_classdev_notify_brightness_hw_changed(
->>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 &galaxybook->kbd_backlight=
-,
->>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 galaxybook->kbd_backlight.=
-brightness);
->> This is the exact reason why i think this should be done in userspace. =
-You can replace this code
->> with a simple input event submission using the KBDILLUM* key codes. Thi=
-s would also allow you to
->> avoid any special locking in this case.
->>
->> This would also allow userspace to configure the step with of the brigh=
-tness changes.
-> As discussed in an earlier thread, there is really no good way to let
-> userspace handle this atm. KEY_KBDILLUMTOGGLE gets mapped to XF86KbdLigh=
-tOnOff
-> while we really want Cycle, as we have in e.g. XF86MonBrightnessCycle.
->
-> I just checked gnome-settings-daemon and it does handle XF86KbdLightOnOf=
-f
-> but it only toggles on/off. In most laptops the cycle key is handled by
-> the embedded controller and this simply emulates that common setup to
-> match what userspace currently expects.
->
-> Handling this in userspace would require adding a new KEY_KBDILLUMCYCLE
-> and then adding support for that to xkb and maybe also upower and
-> gnome-settings-daemon and KDE and then wait for that all to land before
-> things start to work.
->
-> As for your argument about allowing to set the percentage to step,
-> note that this in kernel handling only increaeses the level by 1 on
-> the hotkey press that make sense because typically these kbds backlights
-> only have 2 - 4 levels.
->
-> So IMHO handling this in the kernel is an acceptable compromise,
-> (yes I do realize that this is a compromise).
->
-> If some need arises later to do move this to userspace we can always
-> add a module parameter to completely disable the in kernel handling and
-> instead send out a new KEY_KBDILLUMCYCLE key-code when this now
-> module parameter is set.
->
-> Regards,
->
-> Hans
+  - Functional measured fan speed reading
+  - Ability to enable and disable maximum fan speed
+  - Platform profiles full setting ability for CPU and GPU
 
-I see, in this case we can indeed handle this inside the kernel.
+It sets appropriates CPU and GPU power settings both on AC and battery
+power sources, for low-power, balanced and performance modes.
 
-However we should really use led_set_brightness_sync() here instead of man=
-ually updating the brightness.
-Also we need a mutex here so that the whole read-modify-write brightness u=
-pdate is atomic.
+It has been thoroughly tested on a 16-s1034nf laptop based on a 8C9C DMI
+board name, and behavior of the driver on previous boards is left
+untouched thanks to the separated lists of DMI board names.
 
-Thanks,
-Armin Wolf
+Signed-off-by: Julien ROBIN <julien.robin28@free.fr>
+---
+  /drivers/platform/x86/hp/hp-wmi.c | 304 ++++++++++++++++++++++++++++++++-
+  1 file changed, 297 insertions(+), 7 deletions(-)
+
+diff --git a/drivers/platform/x86/hp/hp-wmi.c 
+b/drivers/platform/x86/hp/hp-wmi.c
+index 81ccc96..9ce2b80 100644
+--- a/drivers/platform/x86/hp/hp-wmi.c
++++ b/drivers/platform/x86/hp/hp-wmi.c
+@@ -83,11 +83,16 @@ static const char * const 
+omen_timed_thermal_profile_boards[] = {
+  	"8BAD", "8A42"
+  };
+
+-/* DMI Board names of Victus laptops */
++/* DMI Board names of Victus 16-d1xxx laptops */
+  static const char * const victus_thermal_profile_boards[] = {
+  	"8A25"
+  };
+
++/* DMI Board names of Victus 16-s1000 laptops */
++static const char * const victus_s_thermal_profile_boards[] = {
++	"8C9C"
++};
++
+  enum hp_wmi_radio {
+  	HPWMI_WIFI	= 0x0,
+  	HPWMI_BLUETOOTH	= 0x1,
+@@ -153,6 +158,11 @@ enum hp_wmi_gm_commandtype {
+  	HPWMI_FAN_SPEED_MAX_GET_QUERY = 0x26,
+  	HPWMI_FAN_SPEED_MAX_SET_QUERY = 0x27,
+  	HPWMI_GET_SYSTEM_DESIGN_DATA = 0x28,
++	HPWMI_FAN_COUNT_GET_QUERY = 0x10,
++	HPWMI_SET_GPU_THERMAL_MODES_QUERY = 0x22,
++	HPWMI_SET_POWER_LIMITS_QUERY = 0x29,
++	HPWMI_VICTUS_S_FAN_SPEED_GET_QUERY = 0x2D,
++	HPWMI_FAN_SPEED_SET_QUERY = 0x2E,
+  };
+
+  enum hp_wmi_command {
+@@ -211,6 +221,11 @@ enum hp_thermal_profile_victus {
+  	HP_VICTUS_THERMAL_PROFILE_QUIET			= 0x03,
+  };
+
++enum hp_thermal_profile_victus_s {
++	HP_VICTUS_S_THERMAL_PROFILE_DEFAULT		= 0x00,
++	HP_VICTUS_S_THERMAL_PROFILE_PERFORMANCE		= 0x01,
++};
++
+  enum hp_thermal_profile {
+  	HP_THERMAL_PROFILE_PERFORMANCE	= 0x00,
+  	HP_THERMAL_PROFILE_DEFAULT		= 0x01,
+@@ -411,6 +426,26 @@ out_free:
+  	return ret;
+  }
+
++/*
++ * Calling this hp_wmi_get_fan_count_userdefine_trigger function also 
+enables
++ * and/or maintains the laptop in user defined thermal and fan states, 
+instead
++ * of using a fallback state. After a 120 seconds timeout however, the 
+laptop
++ * goes back to its fallback state.
++ */
++static int hp_wmi_get_fan_count_userdefine_trigger(void)
++{
++	char fan_data[4] = { 0 };
++
++	int ret = hp_wmi_perform_query(HPWMI_FAN_COUNT_GET_QUERY, HPWMI_GM,
++				       &fan_data, sizeof(char),
++				       sizeof(fan_data));
++
++	if (ret != 0)
++		return -EINVAL;
++
++	return fan_data[0]; /* Others bytes aren't providing fan count */
++}
++
+  static int hp_wmi_get_fan_speed(int fan)
+  {
+  	u8 fsh, fsl;
+@@ -429,6 +464,23 @@ static int hp_wmi_get_fan_speed(int fan)
+  	return (fsh << 8) | fsl;
+  }
+
++static int hp_wmi_get_fan_speed_victus_s(int fan)
++{
++	char fan_data[128] = { 0 };
++
++	int ret = hp_wmi_perform_query(HPWMI_VICTUS_S_FAN_SPEED_GET_QUERY,
++				       HPWMI_GM, &fan_data, sizeof(char),
++				       sizeof(fan_data));
++
++	if (ret != 0)
++		return -EINVAL;
++
++	if (fan >= 0 && fan < sizeof(fan_data))
++		return fan_data[fan] * 100;
++	else
++		return -EINVAL;
++}
++
+  static int hp_wmi_read_int(int query)
+  {
+  	int val = 0, ret;
+@@ -557,6 +609,29 @@ static int hp_wmi_fan_speed_max_set(int enabled)
+  	return enabled;
+  }
+
++static int hp_wmi_fan_speed_reset(void)
++{
++	int ret;
++	char fan_speed[2] = { 0 }; /* Restores automatic speed */
++
++	ret = hp_wmi_perform_query(HPWMI_FAN_SPEED_SET_QUERY, HPWMI_GM,
++				   &fan_speed, sizeof(fan_speed), 0);
++
++	return ret;
++}
++
++static int hp_wmi_fan_speed_max_reset(void)
++{
++	int ret = hp_wmi_fan_speed_max_set(0);
++
++	if (ret)
++		return ret;
++
++	/* Disabling Max fan speed on Victus s1xxx laptops needs a 2nd step: */
++	ret = hp_wmi_fan_speed_reset();
++	return ret;
++}
++
+  static int hp_wmi_fan_speed_max_get(void)
+  {
+  	int val = 0, ret;
+@@ -1472,6 +1547,127 @@ static int platform_profile_victus_set_ec(enum 
+platform_profile_option profile)
+  	return 0;
+  }
+
++static bool is_victus_s_thermal_profile(void)
++{
++	const char *board_name = dmi_get_system_info(DMI_BOARD_NAME);
++
++	if (!board_name)
++		return false;
++
++	return match_string(victus_s_thermal_profile_boards,
++			    ARRAY_SIZE(victus_s_thermal_profile_boards),
++			    board_name) >= 0;
++}
++
++static int victus_s_gpu_thermal_profile_set(bool ctgp_enable,
++					    bool ppab_enable,
++					    char dstate)
++{
++	char gpu_settings[4];
++	int ret;
++
++	gpu_settings[0] = ctgp_enable ? 0x01 : 0x00;
++	gpu_settings[1] = ppab_enable ? 0x01 : 0x00;
++	gpu_settings[2] = dstate;
++	gpu_settings[3] = 0x57; /* it tells we're setting the 3 above values */
++
++	ret = hp_wmi_perform_query(HPWMI_SET_GPU_THERMAL_MODES_QUERY, HPWMI_GM,
++				   &gpu_settings, sizeof(gpu_settings), 0);
++
++	return ret;
++}
++
++static int victus_s_set_cpu_pl1_pl2(char pl1, char pl2)
++{
++	/* Placing 0xFF in the 2 last bytes tells we're setting PL1 and PL2 */
++	char buffer[4] = { pl1, pl2, 0xFF, 0xFF };
++
++	if (pl1 == 0xFF || pl2 == 0xFF)
++		return -EINVAL; /* the 0xFF value has a special meaning */
++
++	if (pl2 < pl1)
++		return -EINVAL; /* PL2 is not supposed to be lower than PL1 */
++
++	/* Note: providing 0x00 as PL1 and PL2 is restoring default values */
++
++	int ret = hp_wmi_perform_query(HPWMI_SET_POWER_LIMITS_QUERY,
++				       HPWMI_GM,
++				       &buffer, sizeof(buffer), 0);
++
++	return ret;
++}
++
++static int platform_profile_victus_s_get(struct 
+platform_profile_handler *pprof,
++					 enum platform_profile_option *profile)
++{
++	/* Same behaviour as platform_profile_omen_get */
++	return platform_profile_omen_get(pprof, profile);
++}
++
++static int platform_profile_victus_s_set_ec(enum 
+platform_profile_option profile)
++{
++	int err, tp;
++	bool gpu_ctgp_enable, gpu_ppab_enable;
++	char gpu_dstate; /* Test shows 1 = 100%, 2 = 50%, 3 = 25%, 4 = 12.5% */
++
++	switch (profile) {
++	case PLATFORM_PROFILE_PERFORMANCE:
++		tp = HP_VICTUS_S_THERMAL_PROFILE_PERFORMANCE;
++		gpu_ctgp_enable = true;
++		gpu_ppab_enable = true;
++		gpu_dstate = 1;
++		break;
++	case PLATFORM_PROFILE_BALANCED:
++		tp = HP_VICTUS_S_THERMAL_PROFILE_DEFAULT;
++		gpu_ctgp_enable = false;
++		gpu_ppab_enable = true;
++		gpu_dstate = 1;
++		break;
++	case PLATFORM_PROFILE_LOW_POWER:
++		tp = HP_VICTUS_S_THERMAL_PROFILE_DEFAULT;
++		gpu_ctgp_enable = false;
++		gpu_ppab_enable = false;
++		gpu_dstate = 1;
++		break;
++	default:
++		return -EOPNOTSUPP;
++	}
++
++	hp_wmi_get_fan_count_userdefine_trigger();
++
++	err = omen_thermal_profile_set(tp);
++	if (err < 0) {
++		pr_err("Failed to set platform profile %d: %d\n", profile, err);
++		return err;
++	}
++
++	err = victus_s_gpu_thermal_profile_set(gpu_ctgp_enable,
++					       gpu_ppab_enable,
++					       gpu_dstate);
++	if (err < 0) {
++		pr_err("Failed to set GPU profile %d: %d\n", profile, err);
++		return err;
++	}
++
++	return 0;
++}
++
++static int platform_profile_victus_s_set(struct 
+platform_profile_handler *pprof,
++					 enum platform_profile_option profile)
++{
++	int err;
++
++	guard(mutex)(&active_platform_profile_lock);
++
++	err = platform_profile_victus_s_set_ec(profile);
++	if (err < 0)
++		return err;
++
++	active_platform_profile = profile;
++
++	return 0;
++}
++
+  static int platform_profile_victus_set(struct platform_profile_handler 
+*pprof,
+  				       enum platform_profile_option profile)
+  {
+@@ -1545,6 +1741,38 @@ static int omen_powersource_event(struct 
+notifier_block *nb,
+  	return NOTIFY_OK;
+  }
+
++static int victus_s_powersource_event(struct notifier_block *nb,
++				      unsigned long value,
++				      void *data)
++{
++	struct acpi_bus_event *event_entry = data;
++	int err;
++
++	if (strcmp(event_entry->device_class, ACPI_AC_CLASS) != 0)
++		return NOTIFY_DONE;
++
++	pr_debug("Received power source device event\n");
++
++	/*
++	 * Switching to battery power source while Performance mode is active
++	 * needs manual triggering of CPU power limits. Same goes when switching
++	 * to AC power source while Performance mode is active. Other modes
++	 * however are automatically behaving without any manual action.
++	 * Seen on HP 16-s1034nf (board 8C9C) with F.11 BIOS version.
++	 */
++
++	if (active_platform_profile == PLATFORM_PROFILE_PERFORMANCE) {
++		pr_debug("Triggering CPU PL1/PL2 actualization\n");
++		err = victus_s_set_cpu_pl1_pl2(0, 0);
++		if (err)
++			pr_warn("Failed to actualize power limits: %d\n", err);
++
++		return NOTIFY_DONE;
++	}
++
++	return NOTIFY_OK;
++}
++
+  static int omen_register_powersource_event_handler(void)
+  {
+  	int err;
+@@ -1560,11 +1788,31 @@ static int 
+omen_register_powersource_event_handler(void)
+  	return 0;
+  }
+
++static int victus_s_register_powersource_event_handler(void)
++{
++	int err;
++
++	platform_power_source_nb.notifier_call = victus_s_powersource_event;
++	err = register_acpi_notifier(&platform_power_source_nb);
++
++	if (err < 0) {
++		pr_warn("Failed to install ACPI power source notify handler\n");
++		return err;
++	}
++
++	return 0;
++}
++
+  static inline void omen_unregister_powersource_event_handler(void)
+  {
+  	unregister_acpi_notifier(&platform_power_source_nb);
+  }
+
++static inline void victus_s_unregister_powersource_event_handler(void)
++{
++	unregister_acpi_notifier(&platform_power_source_nb);
++}
++
+  static int thermal_profile_setup(void)
+  {
+  	int err, tp;
+@@ -1603,6 +1851,22 @@ static int thermal_profile_setup(void)
+  		platform_profile_handler.profile_set = platform_profile_victus_set;
+
+  		set_bit(PLATFORM_PROFILE_QUIET, platform_profile_handler.choices);
++	} else if (is_victus_s_thermal_profile()) {
++		/*
++		 * Being unable to retrieve laptop's current thermal profile,
++		 * during this setup, we set it to Balanced by default.
++		 */
++		active_platform_profile = PLATFORM_PROFILE_BALANCED;
++
++		err = platform_profile_victus_s_set_ec(active_platform_profile);
++		if (err < 0)
++			return err;
++
++		platform_profile_handler.profile_get = platform_profile_victus_s_get;
++		platform_profile_handler.profile_set = platform_profile_victus_s_set;
++
++		/* Adding an equivalent to HP Omen software ECO mode: */
++		set_bit(PLATFORM_PROFILE_LOW_POWER, platform_profile_handler.choices);
+  	} else {
+  		tp = thermal_profile_get();
+
+@@ -1628,9 +1892,14 @@ static int thermal_profile_setup(void)
+  	set_bit(PLATFORM_PROFILE_PERFORMANCE, platform_profile_handler.choices);
+
+  	err = platform_profile_register(&platform_profile_handler);
+-	if (err)
++	if (err == -EEXIST) {
++		pr_warn("A platform profile handler is already registered\n");
+  		return err;
+-
++	} else if (err) {
++		pr_err("Platform profile handler registration fail: %d\n", err);
++		return err;
++	}
++	pr_info("Registered as platform profile handler\n");
+  	platform_profile_support = true;
+
+  	return 0;
+@@ -1759,8 +2028,13 @@ static umode_t hp_wmi_hwmon_is_visible(const void 
+*data,
+  	case hwmon_pwm:
+  		return 0644;
+  	case hwmon_fan:
+-		if (hp_wmi_get_fan_speed(channel) >= 0)
+-			return 0444;
++		if (is_victus_s_thermal_profile()) {
++			if (hp_wmi_get_fan_speed_victus_s(channel) >= 0)
++				return 0444;
++		} else {
++			if (hp_wmi_get_fan_speed(channel) >= 0)
++				return 0444;
++		}
+  		break;
+  	default:
+  		return 0;
+@@ -1776,7 +2050,10 @@ static int hp_wmi_hwmon_read(struct device *dev, 
+enum hwmon_sensor_types type,
+
+  	switch (type) {
+  	case hwmon_fan:
+-		ret = hp_wmi_get_fan_speed(channel);
++		if (is_victus_s_thermal_profile())
++			ret = hp_wmi_get_fan_speed_victus_s(channel);
++		else
++			ret = hp_wmi_get_fan_speed(channel);
+
+  		if (ret < 0)
+  			return ret;
+@@ -1810,11 +2087,17 @@ static int hp_wmi_hwmon_write(struct device 
+*dev, enum hwmon_sensor_types type,
+  	case hwmon_pwm:
+  		switch (val) {
+  		case 0:
++			if (is_victus_s_thermal_profile())
++				hp_wmi_get_fan_count_userdefine_trigger();
+  			/* 0 is no fan speed control (max), which is 1 for us */
+  			return hp_wmi_fan_speed_max_set(1);
+  		case 2:
+  			/* 2 is automatic speed control, which is 0 for us */
+-			return hp_wmi_fan_speed_max_set(0);
++			if (is_victus_s_thermal_profile()) {
++				hp_wmi_get_fan_count_userdefine_trigger();
++				return hp_wmi_fan_speed_max_reset();
++			} else
++				return hp_wmi_fan_speed_max_set(0);
+  		default:
+  			/* we don't support manual fan speed control */
+  			return -EINVAL;
+@@ -1893,6 +2176,10 @@ static int __init hp_wmi_init(void)
+  		err = omen_register_powersource_event_handler();
+  		if (err)
+  			goto err_unregister_device;
++	} else if (is_victus_s_thermal_profile()) {
++		err = victus_s_register_powersource_event_handler();
++		if (err)
++			goto err_unregister_device;
+  	}
+
+  	return 0;
+@@ -1912,6 +2199,9 @@ static void __exit hp_wmi_exit(void)
+  	if (is_omen_thermal_profile() || is_victus_thermal_profile())
+  		omen_unregister_powersource_event_handler();
+
++	if (is_victus_s_thermal_profile())
++		victus_s_unregister_powersource_event_handler();
++
+  	if (wmi_has_guid(HPWMI_EVENT_GUID))
+  		hp_wmi_input_destroy();
 
