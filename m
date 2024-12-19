@@ -1,353 +1,324 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6686341C64;
-	Thu, 19 Dec 2024 14:39:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C0D7D78F2A;
+	Thu, 19 Dec 2024 14:49:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1734619182; cv=none; b=C92Dx3iNbBK0iOc3rHo0f4CTae6eTBZ905aQigbQhJhCgOMBIqhFYxX7CP/ralYQlO2c//i/ZjcCCfOUmbFhI8vwNi6UmYcFoTzzUqf715Ig4CWQSTZG37aCiqdKHvdtLvrO7jnZSS9g8jpMG+QxIiMTTDC5JB0SAu9kS3pMzKA=
+	t=1734619791; cv=none; b=pKl7Mk+k7dbIuxqYLrHoYdhSrSYvydfZW/Bil+R2wQpGt8l/T2t+2W3TytAVroh3UyQlVyUDA4Eu3QZT9P1K/PY/CtWnaTS5LFCLXEN9rQQ+TJ8O8q3KGiJWVeeOAHf0C49+V5EX9EdLlWOHgfDJLxgxDS4ppNFtkyACVfiM/wI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1734619182; c=relaxed/simple;
-	bh=S+UfMY1vVhn5lcjqWfM26VYummzYqtnHzdbWrInp4Fo=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=Q1+14U0FhD2h0TuRE7LkqWvuQirpjxkErX3XHHOodYHwFnorRBk50FQLppmhHK7dX9rGL55Ly4VkvP5UTBJH5BmoJNjpIcSREcZUdssslDtD3zT7APzJwEzoQhcrlyLOVe9qyN8KavhPmoC8r4rPz7UMWMkbdlLS0z99KVDBKbU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ZEQkaC1x; arc=none smtp.client-ip=192.198.163.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1734619791; c=relaxed/simple;
+	bh=D4HGhhaz6x5Ojv478y5OG8tgiWNS97cMEjlajQwzTVI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=KN0BYy0YPag/wnDg1e07nR0u8YmpRUHHmiCApy/o/C2HeT5IocKsQVkwP8zSA6BEc9ECyGFv5kAdWsm+NTcKAGZLh5eSjx6xoof8KiBTGo/UHyMdEo9sAcQ108E25lVmO8BcwOZIkc0Ce5+ikNuSKTgzd1I1eIyDGNl/C4UKMHw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rpx60iSL; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ZEQkaC1x"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1734619181; x=1766155181;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=S+UfMY1vVhn5lcjqWfM26VYummzYqtnHzdbWrInp4Fo=;
-  b=ZEQkaC1xxsVpImxBisYiBMo07CLZPzUXUVpanKUV1fq2UNXnfJcXr2d3
-   7dRsQhYrGayTxnZ6MJJqc2GXyNgiv3oBry0AznhfqItsNf6lSYXkdyAsv
-   G5qWBDWdCZM8LqSbC1xOdUz+FyJ124ySFyZC0MgY8RA9uTQw8KRmTyWG6
-   2J6iPxbbe680r7wFz1ND30wzZlHKH0PlFhmmQi7fkaVbQiNu+56K/Yqhr
-   uqW4YOhdsZmi5+ac//hToOb9ABewALAvVS5R5WskMUaNv6ITUt1yUE6uO
-   FY+/09zHhW9DYLS8cdHK9ovJ2DOGRLuj7HB2MeALCrScPQFs0w6CAumjI
-   A==;
-X-CSE-ConnectionGUID: ANgfCdjdTJOmM1jecUY9cQ==
-X-CSE-MsgGUID: qgA6sb9sTdKhzYpIvqa+pw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11290"; a="45730061"
-X-IronPort-AV: E=Sophos;i="6.12,248,1728975600"; 
-   d="scan'208";a="45730061"
-Received: from orviesa009.jf.intel.com ([10.64.159.149])
-  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Dec 2024 06:39:32 -0800
-X-CSE-ConnectionGUID: 1xTirdLBRM6BJkMONemJMA==
-X-CSE-MsgGUID: NBJVfSNJTweZCx7AMQZXJA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.12,248,1728975600"; 
-   d="scan'208";a="98103765"
-Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.7])
-  by orviesa009-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Dec 2024 06:39:29 -0800
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Thu, 19 Dec 2024 16:39:24 +0200 (EET)
-To: Mario Limonciello <mario.limonciello@amd.com>
-cc: Borislav Petkov <bp@alien8.de>, Hans de Goede <hdegoede@redhat.com>, 
-    x86@kernel.org, "Gautham R . Shenoy" <gautham.shenoy@amd.com>, 
-    Perry Yuan <perry.yuan@amd.com>, LKML <linux-kernel@vger.kernel.org>, 
-    linux-doc@vger.kernel.org, linux-pm@vger.kernel.org, 
-    platform-driver-x86@vger.kernel.org, 
-    Shyam Sundar S K <Shyam-sundar.S-k@amd.com>, 
-    Perry Yuan <Perry.Yuan@amd.com>
-Subject: Re: [PATCH v7 04/12] platform/x86: hfi: Introduce AMD Hardware
- Feedback Interface Driver
-In-Reply-To: <20241130152023.684-5-mario.limonciello@amd.com>
-Message-ID: <8f95fad6-216c-ee66-dfa4-bc4bf37ae93f@linux.intel.com>
-References: <20241130152023.684-1-mario.limonciello@amd.com> <20241130152023.684-5-mario.limonciello@amd.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rpx60iSL"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 74F9DC4CECE;
+	Thu, 19 Dec 2024 14:49:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1734619791;
+	bh=D4HGhhaz6x5Ojv478y5OG8tgiWNS97cMEjlajQwzTVI=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=rpx60iSLgDtQVyYhgDxMQd622seaCxqGeIWiJAhaPowkdZ8BqakmvagdLftKhrXkK
+	 MEFO+lAQGsDPoqBT5J8dJfiJlLWua9tFm58DDloNJHVlHgPYCIpdFqK9f3uR1ut8QX
+	 GeLd71UFwyPMvWKDniii6JllRelWV5HXPhYNFCEEa4tuQmbUAmhY+W++VOhduKORqA
+	 /lxNb4P8csRHhuAlCSnCEbkJ7YZxhIfrkQOKliG3BYfDtLQF1YuoXBjBMyCI+YoHTL
+	 D9NUidpFZM3PO6tdYZrlzaYpErmUHAML0BLlbANdwu9mHLQIBgy9fdaCjaiapaldI4
+	 qNPXDCdn3Iy0g==
+Message-ID: <ba5a7961-de65-41a1-a556-338ed1b06faa@kernel.org>
+Date: Thu, 19 Dec 2024 08:49:47 -0600
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFC 2/2] platform/x86/amd: pmf: Add manual control support
+To: Antheas Kapenekakis <lkml@antheas.dev>,
+ Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
+Cc: "Rafael J . Wysocki" <rafael@kernel.org>,
+ Hans de Goede <hdegoede@redhat.com>,
+ =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+ "Luke D . Jones" <luke@ljones.dev>, Mark Pearson
+ <mpearson-lenovo@squebb.ca>,
+ "open list:AMD PMF DRIVER" <platform-driver-x86@vger.kernel.org>,
+ open list <linux-kernel@vger.kernel.org>,
+ "open list:ACPI" <linux-acpi@vger.kernel.org>,
+ "Derek J . Clark" <derekjohn.clark@gmail.com>, me@kylegospodneti.ch,
+ Denis Benato <benato.denis96@gmail.com>,
+ Mario Limonciello <mario.limonciello@amd.com>
+References: <20240926025955.1728766-1-superm1@kernel.org>
+ <20240926025955.1728766-3-superm1@kernel.org>
+ <CAGwozwFjo4uSFpCAXRKivK+VoeYz-Qftmw+iLtOrVnyhn3xpfA@mail.gmail.com>
+Content-Language: en-US
+From: Mario Limonciello <superm1@kernel.org>
+In-Reply-To: <CAGwozwFjo4uSFpCAXRKivK+VoeYz-Qftmw+iLtOrVnyhn3xpfA@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Sat, 30 Nov 2024, Mario Limonciello wrote:
+On 12/19/2024 07:12, Antheas Kapenekakis wrote:
+> Hi Mario,
+> given that there is a Legion Go driver in the works, and Asus already
+> has a driver, the only thing that would be left for locking down ACPI
+> access is manufacturers w/o vendor APIs.
+> 
+> So, can we restart the conversation about this driver? It would be
+> nice to get to a place where we can lock down /dev/mem and ACPI by
+> spring.
 
-> From: Perry Yuan <Perry.Yuan@amd.com>
-> 
-> The AMD Heterogeneous core design and Hardware Feedback Interface (HFI)
-> provide behavioral classification and a dynamically updated ranking table
-> for the scheduler to use when choosing cores for tasks.
-> 
-> There are two CPU core types defined: `Classic Core` and `Dense Core`.
-> "Classic" cores are the standard performance cores, while "Dense" cores
-> are optimized for area and efficiency.
-> 
-> Heterogeneous compute refers to CPU implementations that are comprised
-> of more than one architectural class, each with two capabilities. This
-> means each CPU reports two separate capabilities: "perf" and "eff".
-> 
-> Each capability lists all core ranking numbers between 0 and 255, where
-> a higher number represents a higher capability.
-> 
-> Heterogeneous systems can also extend to more than two architectural
-> classes.
-> 
-> The purpose of the scheduling feedback mechanism is to provide information
-> to the operating system scheduler in real time, allowing the scheduler to
-> direct threads to the optimal core during task scheduling.
-> 
-> All core ranking data are provided by the PMFW via a shared memory ranking
-> table, which the driver reads and uses to update core capabilities to the
-> scheduler. When the hardware updates the table, it generates a platform
-> interrupt to notify the OS to read the new ranking table.
-> 
-> Link: https://bugzilla.kernel.org/show_bug.cgi?id=206537
-> Reviewed-by: Gautham R. Shenoy <gautham.shenoy@amd.com>
-> Signed-off-by: Perry Yuan <perry.yuan@amd.com>
-> Co-developed-by: Mario Limonciello <mario.limonciello@amd.com>
-> Reviewed-by: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
-> Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
-> ---
-> v7:
->  * Adjust Kconfig to 80 characters
-> ---
->  drivers/platform/x86/amd/Kconfig      |   1 +
->  drivers/platform/x86/amd/Makefile     |   1 +
->  drivers/platform/x86/amd/hfi/Kconfig  |  20 ++++
->  drivers/platform/x86/amd/hfi/Makefile |   7 ++
->  drivers/platform/x86/amd/hfi/hfi.c    | 161 ++++++++++++++++++++++++++
->  5 files changed, 190 insertions(+)
->  create mode 100644 drivers/platform/x86/amd/hfi/Kconfig
->  create mode 100644 drivers/platform/x86/amd/hfi/Makefile
->  create mode 100644 drivers/platform/x86/amd/hfi/hfi.c
-> 
-> diff --git a/drivers/platform/x86/amd/Kconfig b/drivers/platform/x86/amd/Kconfig
-> index c3e086ea64fc6..589d61ebf726b 100644
-> --- a/drivers/platform/x86/amd/Kconfig
-> +++ b/drivers/platform/x86/amd/Kconfig
-> @@ -6,6 +6,7 @@
->  source "drivers/platform/x86/amd/hsmp/Kconfig"
->  source "drivers/platform/x86/amd/pmf/Kconfig"
->  source "drivers/platform/x86/amd/pmc/Kconfig"
-> +source "drivers/platform/x86/amd/hfi/Kconfig"
->  
->  config AMD_3D_VCACHE
->  	tristate "AMD 3D V-Cache Performance Optimizer Driver"
-> diff --git a/drivers/platform/x86/amd/Makefile b/drivers/platform/x86/amd/Makefile
-> index 56f62fc9c97b4..c50e93c3334cf 100644
-> --- a/drivers/platform/x86/amd/Makefile
-> +++ b/drivers/platform/x86/amd/Makefile
-> @@ -10,3 +10,4 @@ obj-$(CONFIG_AMD_PMC)		+= pmc/
->  obj-$(CONFIG_AMD_HSMP)		+= hsmp/
->  obj-$(CONFIG_AMD_PMF)		+= pmf/
->  obj-$(CONFIG_AMD_WBRF)		+= wbrf.o
-> +obj-$(CONFIG_AMD_HFI)		+= hfi/
-> diff --git a/drivers/platform/x86/amd/hfi/Kconfig b/drivers/platform/x86/amd/hfi/Kconfig
-> new file mode 100644
-> index 0000000000000..532939eb08a6a
-> --- /dev/null
-> +++ b/drivers/platform/x86/amd/hfi/Kconfig
-> @@ -0,0 +1,20 @@
-> +# SPDX-License-Identifier: GPL-2.0-only
-> +#
-> +# AMD Hardware Feedback Interface Driver
-> +#
-> +
-> +config AMD_HFI
-> +	bool "AMD Hetero Core Hardware Feedback Driver"
-> +	depends on ACPI
-> +	depends on CPU_SUP_AMD
-> +	help
-> +	 Select this option to enable the AMD Heterogeneous Core Hardware
-> +	 Feedback Interface. If selected, hardware provides runtime thread
-> +	 classification guidance to the operating system on the performance and
-> +	 energy efficiency capabilities of each heterogeneous CPU core. These
-> +	 capabilities may vary due to the inherent differences in the core types
-> +	 and can also change as a result of variations in the operating
-> +	 conditions of the system such as power and thermal limits. If selected,
-> +	 the kernel relays updates in heterogeneous CPUs' capabilities to
-> +	 userspace, allowing for more optimal task scheduling and resource
-> +	 allocation, leveraging the diverse set of cores available.
-> diff --git a/drivers/platform/x86/amd/hfi/Makefile b/drivers/platform/x86/amd/hfi/Makefile
-> new file mode 100644
-> index 0000000000000..672c6ac106e95
-> --- /dev/null
-> +++ b/drivers/platform/x86/amd/hfi/Makefile
-> @@ -0,0 +1,7 @@
-> +# SPDX-License-Identifier: GPL-2.0
-> +#
-> +# AMD Hardware Feedback Interface Driver
-> +#
-> +
-> +obj-$(CONFIG_AMD_HFI) += amd_hfi.o
-> +amd_hfi-objs := hfi.o
-> diff --git a/drivers/platform/x86/amd/hfi/hfi.c b/drivers/platform/x86/amd/hfi/hfi.c
-> new file mode 100644
-> index 0000000000000..2cd71d79a22c9
-> --- /dev/null
-> +++ b/drivers/platform/x86/amd/hfi/hfi.c
-> @@ -0,0 +1,161 @@
-> +// SPDX-License-Identifier: GPL-2.0-or-later
-> +/*
-> + * AMD Hardware Feedback Interface Driver
-> + *
-> + * Copyright (C) 2024 Advanced Micro Devices, Inc. All Rights Reserved.
-> + *
-> + * Authors: Perry Yuan <Perry.Yuan@amd.com>
-> + *          Mario Limonciello <mario.limonciello@amd.com>
-> + */
-> +
-> +#define pr_fmt(fmt)  "amd-hfi: " fmt
-> +
-> +#include <linux/acpi.h>
-> +#include <linux/cpu.h>
-> +#include <linux/cpumask.h>
-> +#include <linux/gfp.h>
-> +#include <linux/init.h>
-> +#include <linux/io.h>
-> +#include <linux/kernel.h>
-> +#include <linux/module.h>
-> +#include <linux/mutex.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/smp.h>
-> +
-> +#define AMD_HFI_DRIVER		"amd_hfi"
-> +#define AMD_HETERO_CPUID_27	0x80000027
-> +static struct platform_device *device;
-> +
-> +struct amd_hfi_data {
-> +	const char	*name;
-> +	struct device	*dev;
-> +	struct mutex	lock;
-> +};
-> +
-> +struct amd_hfi_classes {
-> +	u32	perf;
-> +	u32	eff;
-> +};
-> +
-> +/**
-> + * struct amd_hfi_cpuinfo - HFI workload class info per CPU
-> + * @cpu:		cpu index
-> + * @cpus:		mask of cpus associated with amd_hfi_cpuinfo
-> + * @class_index:	workload class ID index
-> + * @nr_class:		max number of workload class supported
-> + * @amd_hfi_classes:	current cpu workload class ranking data
-> + *
-> + * Parameters of a logical processor linked with hardware feedback class
-> + */
-> +struct amd_hfi_cpuinfo {
-> +	int		cpu;
-> +	cpumask_var_t	cpus;
-> +	s16		class_index;
-> +	u8		nr_class;
-> +	struct amd_hfi_classes	*amd_hfi_classes;
-> +};
-> +
-> +static DEFINE_PER_CPU(struct amd_hfi_cpuinfo, amd_hfi_cpuinfo) = {.class_index = -1};
-> +
-> +static int amd_hfi_alloc_class_data(struct platform_device *pdev)
-> +{
-> +	struct amd_hfi_cpuinfo *hfi_cpuinfo;
-> +	struct device *dev = &pdev->dev;
-> +	int idx;
-> +	int nr_class_id;
-> +
-> +	nr_class_id = cpuid_eax(AMD_HETERO_CPUID_27);
-> +	if (nr_class_id < 0 || nr_class_id > 255) {
-> +		dev_err(dev, "failed to get number of supported classes: %d\n",
-> +			nr_class_id);
-> +		return -EINVAL;
-> +	}
-> +
-> +	for_each_present_cpu(idx) {
-> +		struct amd_hfi_classes *classes;
-> +
-> +		classes = devm_kzalloc(dev,
-> +				       nr_class_id * sizeof(struct amd_hfi_classes),
-> +				       GFP_KERNEL);
+As Shyam mentioned we don't have control for limits by the PMF driver 
+for this on PMF v2 (Strix) or later platforms.
 
-devm_kcalloc()?
+So if we were to revive this custom discussion it would only be for 
+Phoenix and Hawk Point platforms.
 
--- 
- i.
-
-> +		if (!classes)
-> +			return -ENOMEM;
-> +		hfi_cpuinfo = per_cpu_ptr(&amd_hfi_cpuinfo, idx);
-> +		hfi_cpuinfo->amd_hfi_classes = classes;
-> +		hfi_cpuinfo->nr_class = nr_class_id;
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +static const struct acpi_device_id amd_hfi_platform_match[] = {
-> +	{"AMDI0104", 0},
-> +	{ }
-> +};
-> +MODULE_DEVICE_TABLE(acpi, amd_hfi_platform_match);
-> +
-> +static int amd_hfi_probe(struct platform_device *pdev)
-> +{
-> +	struct amd_hfi_data *amd_hfi_data;
-> +	int ret;
-> +
-> +	if (!acpi_match_device(amd_hfi_platform_match, &pdev->dev))
-> +		return -ENODEV;
-> +
-> +	amd_hfi_data = devm_kzalloc(&pdev->dev, sizeof(*amd_hfi_data), GFP_KERNEL);
-> +	if (!amd_hfi_data)
-> +		return -ENOMEM;
-> +
-> +	amd_hfi_data->dev = &pdev->dev;
-> +	ret = devm_mutex_init(&pdev->dev, &amd_hfi_data->lock);
-> +	if (ret)
-> +		return ret;
-> +	platform_set_drvdata(pdev, amd_hfi_data);
-> +
-> +	ret = amd_hfi_alloc_class_data(pdev);
-> +	if (ret)
-> +		return ret;
-> +
-> +	return 0;
-> +}
-> +
-> +static struct platform_driver amd_hfi_driver = {
-> +	.driver = {
-> +		.name = AMD_HFI_DRIVER,
-> +		.owner = THIS_MODULE,
-> +		.acpi_match_table = ACPI_PTR(amd_hfi_platform_match),
-> +	},
-> +	.probe = amd_hfi_probe,
-> +};
-> +
-> +static int __init amd_hfi_init(void)
-> +{
-> +	int ret;
-> +
-> +	if (acpi_disabled ||
-> +	    !cpu_feature_enabled(X86_FEATURE_AMD_HETEROGENEOUS_CORES) ||
-> +	    !cpu_feature_enabled(X86_FEATURE_AMD_WORKLOAD_CLASS))
-> +		return -ENODEV;
-> +
-> +	device = platform_device_register_simple(AMD_HFI_DRIVER, -1, NULL, 0);
-> +	if (IS_ERR(device)) {
-> +		pr_err("unable to register HFI platform device\n");
-> +		return PTR_ERR(device);
-> +	}
-> +
-> +	ret = platform_driver_register(&amd_hfi_driver);
-> +	if (ret)
-> +		pr_err("failed to register HFI driver\n");
-> +
-> +	return ret;
-> +}
-> +
-> +static __exit void amd_hfi_exit(void)
-> +{
-> +	platform_device_unregister(device);
-> +	platform_driver_unregister(&amd_hfi_driver);
-> +}
-> +module_init(amd_hfi_init);
-> +module_exit(amd_hfi_exit);
-> +
-> +MODULE_LICENSE("GPL");
-> +MODULE_DESCRIPTION("AMD Hardware Feedback Interface Driver");
 > 
+> Moreover, since the other two proposed drivers use the
+> firmware_attributes API, should this be used here as well?
+
+I do feel that if we revive this conversation specifically for Phoenix 
+and Hawk Point platforms yes we should use the same API to expose it to 
+userspace as those other two drivers do.
+
+I'd like Shyam's temperature on this idea though before anyone spends 
+time on it.  If he's amenable would you want to work on it?
+
+> 
+> By the way, you were right about needing a taint for this. Strix Point
+> fails to enter a lower power state during sleep if you set it to lower
+> than 10W. This is not ideal, as hawk point could go down to 5 while
+> still showing a power difference, but I am unsure where this bug
+> should be reported. This is both through ryzenadj/ALIB
+
+Who is to say this is a bug?  Abusing a debugging interface with a 
+reverse engineered tool means you might be able to configure a platform 
+out of specifications.
+
+> 
+> Antheas
+> 
+> On Thu, 26 Sept 2024 at 05:00, Mario Limonciello <superm1@kernel.org> wrote:
+>>
+>> From: Mario Limonciello <mario.limonciello@amd.com>
+>>
+>> A number of users resort to using reverse engineered software like
+>> ryzenadj to manipulate debugging interfaces for modifying APU settings.
+>>
+>> At a glance these tools are useful, but the problem is they break
+>> state machines in other software such as the PMF driver or the OEM
+>> EC.
+>>
+>> Offer a knob for PMF to allow 'manual control' which will users can
+>> directly change things like fPPT and sPPT. As this can be harmful for
+>> a system to try to push limits outside of a thermal design, taint the
+>> kernel and show a critical message when in use.
+>>
+>> Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
+>> ---
+>>   Documentation/ABI/testing/sysfs-amd-pmf | 10 +++
+>>   drivers/platform/x86/amd/pmf/Makefile   |  1 +
+>>   drivers/platform/x86/amd/pmf/core.c     |  9 +++
+>>   drivers/platform/x86/amd/pmf/manual.c   | 88 +++++++++++++++++++++++++
+>>   drivers/platform/x86/amd/pmf/pmf.h      |  5 ++
+>>   drivers/platform/x86/amd/pmf/sps.c      |  4 ++
+>>   6 files changed, 117 insertions(+)
+>>   create mode 100644 drivers/platform/x86/amd/pmf/manual.c
+>>
+>> diff --git a/Documentation/ABI/testing/sysfs-amd-pmf b/Documentation/ABI/testing/sysfs-amd-pmf
+>> index 7fc0e1c2b76b..6f3d5cbf443f 100644
+>> --- a/Documentation/ABI/testing/sysfs-amd-pmf
+>> +++ b/Documentation/ABI/testing/sysfs-amd-pmf
+>> @@ -11,3 +11,13 @@ Description: Reading this file tells if the AMD Platform Management(PMF)
+>>                  To turn off CnQF user can write "off" to the sysfs node.
+>>                  Note: Systems that support auto mode will not have this sysfs file
+>>                  available.
+>> +
+>> +What:          /sys/devices/platform/*/{spl, fppt, sppt, sppt_apu_only, stt_min, stt_limit_apu, stt_skip_temp}
+>> +Date:          December 2024
+>> +Contact:       Mario Limonciello <mario.limonciello@amd.com>
+>> +Description:   Manual control of AMD PMF APU coefficients
+>> +               .
+>> +               These files are used to manually control the APU coefficients.
+>> +               In order to write to these files the module most be
+>> +               loaded with manual_control=1 and the user must write "custom"
+>> +               to the ACPI platform profile.
+>> diff --git a/drivers/platform/x86/amd/pmf/Makefile b/drivers/platform/x86/amd/pmf/Makefile
+>> index 7d6079b02589..81444d6f4428 100644
+>> --- a/drivers/platform/x86/amd/pmf/Makefile
+>> +++ b/drivers/platform/x86/amd/pmf/Makefile
+>> @@ -7,4 +7,5 @@
+>>   obj-$(CONFIG_AMD_PMF) += amd-pmf.o
+>>   amd-pmf-objs := core.o acpi.o sps.o \
+>>                  auto-mode.o cnqf.o \
+>> +               manual.o \
+>>                  tee-if.o spc.o pmf-quirks.o
+>> diff --git a/drivers/platform/x86/amd/pmf/core.c b/drivers/platform/x86/amd/pmf/core.c
+>> index d6af0ca036f1..52a68ca094be 100644
+>> --- a/drivers/platform/x86/amd/pmf/core.c
+>> +++ b/drivers/platform/x86/amd/pmf/core.c
+>> @@ -53,6 +53,10 @@ static bool force_load;
+>>   module_param(force_load, bool, 0444);
+>>   MODULE_PARM_DESC(force_load, "Force load this driver on supported older platforms (experimental)");
+>>
+>> +bool pmf_manual_control;
+>> +module_param_named(manual_control, pmf_manual_control, bool, 0444);
+>> +MODULE_PARM_DESC(manual_control, "Expose manual control knobs (experimental)");
+>> +
+>>   static int amd_pmf_pwr_src_notify_call(struct notifier_block *nb, unsigned long event, void *data)
+>>   {
+>>          struct amd_pmf_dev *pmf = container_of(nb, struct amd_pmf_dev, pwr_src_notifier);
+>> @@ -349,6 +353,10 @@ static void amd_pmf_init_features(struct amd_pmf_dev *dev)
+>>                  dev_dbg(dev->dev, "SPS enabled and Platform Profiles registered\n");
+>>          }
+>>
+>> +       if (pmf_manual_control) {
+>> +               amd_pmf_init_manual_control(dev);
+>> +               return;
+>> +       }
+>>          amd_pmf_init_smart_pc(dev);
+>>          if (dev->smart_pc_enabled) {
+>>                  dev_dbg(dev->dev, "Smart PC Solution Enabled\n");
+>> @@ -485,6 +493,7 @@ static void amd_pmf_remove(struct platform_device *pdev)
+>>
+>>   static const struct attribute_group *amd_pmf_driver_groups[] = {
+>>          &cnqf_feature_attribute_group,
+>> +       &manual_attribute_group,
+>>          NULL,
+>>   };
+>>
+>> diff --git a/drivers/platform/x86/amd/pmf/manual.c b/drivers/platform/x86/amd/pmf/manual.c
+>> new file mode 100644
+>> index 000000000000..b33fc3cd8d61
+>> --- /dev/null
+>> +++ b/drivers/platform/x86/amd/pmf/manual.c
+>> @@ -0,0 +1,88 @@
+>> +// SPDX-License-Identifier: GPL-2.0-or-later
+>> +/*
+>> + * AMD Platform Management Framework Driver
+>> + *
+>> + * Copyright (c) 2024, Advanced Micro Devices, Inc.
+>> + * All Rights Reserved.
+>> + *
+>> + * Author: Mario Limonciello <mario.limonciello@amd.com>
+>> + */
+>> +
+>> +#include "pmf.h"
+>> +
+>> +#define pmf_manual_attribute(_name, _set_command, _get_command)                \
+>> +static ssize_t _name##_store(struct device *d,                         \
+>> +                            struct device_attribute *attr,             \
+>> +                            const char *buf, size_t count)             \
+>> +{                                                                      \
+>> +       struct amd_pmf_dev *dev = dev_get_drvdata(d);                   \
+>> +       uint val;                                                       \
+>> +                                                                       \
+>> +       if (dev->current_profile != PLATFORM_PROFILE_CUSTOM) {          \
+>> +               dev_warn_once(dev->dev,                                 \
+>> +                             "Manual control is disabled, please set " \
+>> +                             "platform profile to custom.\n");         \
+>> +               return -EINVAL;                                         \
+>> +       }                                                               \
+>> +                                                                       \
+>> +       if (kstrtouint(buf, 10, &val) < 0)                              \
+>> +               return -EINVAL;                                         \
+>> +                                                                       \
+>> +       amd_pmf_send_cmd(dev, _set_command, false, val, NULL);          \
+>> +                                                                       \
+>> +       return count;                                                   \
+>> +}                                                                      \
+>> +static ssize_t _name##_show(struct device *d,                          \
+>> +                          struct device_attribute *attr,               \
+>> +                          char *buf)                                   \
+>> +{                                                                      \
+>> +       struct amd_pmf_dev *dev = dev_get_drvdata(d);                   \
+>> +       uint val;                                                       \
+>> +                                                                       \
+>> +       amd_pmf_send_cmd(dev, _get_command, true, ARG_NONE, &val);      \
+>> +                                                                       \
+>> +       return sysfs_emit(buf, "%u\n", val);                            \
+>> +}
+>> +
+>> +pmf_manual_attribute(spl, SET_SPL, GET_SPL);
+>> +static DEVICE_ATTR_RW(spl);
+>> +pmf_manual_attribute(fppt, SET_FPPT, GET_FPPT);
+>> +static DEVICE_ATTR_RW(fppt);
+>> +pmf_manual_attribute(sppt, SET_SPPT, GET_SPPT);
+>> +static DEVICE_ATTR_RW(sppt);
+>> +pmf_manual_attribute(sppt_apu_only, SET_SPPT_APU_ONLY, GET_SPPT_APU_ONLY);
+>> +static DEVICE_ATTR_RW(sppt_apu_only);
+>> +pmf_manual_attribute(stt_min, SET_STT_MIN_LIMIT, GET_STT_MIN_LIMIT);
+>> +static DEVICE_ATTR_RW(stt_min);
+>> +pmf_manual_attribute(stt_limit_apu, SET_STT_LIMIT_APU, GET_STT_LIMIT_APU);
+>> +static DEVICE_ATTR_RW(stt_limit_apu);
+>> +pmf_manual_attribute(stt_skin_temp, SET_STT_LIMIT_HS2, GET_STT_LIMIT_HS2);
+>> +static DEVICE_ATTR_RW(stt_skin_temp);
+>> +
+>> +static umode_t manual_attr_is_visible(struct kobject *kobj, struct attribute *attr, int idx)
+>> +{
+>> +       return pmf_manual_control ? 0660 : 0;
+>> +}
+>> +
+>> +static struct attribute *manual_attrs[] = {
+>> +       &dev_attr_spl.attr,
+>> +       &dev_attr_fppt.attr,
+>> +       &dev_attr_sppt.attr,
+>> +       &dev_attr_sppt_apu_only.attr,
+>> +       &dev_attr_stt_min.attr,
+>> +       &dev_attr_stt_limit_apu.attr,
+>> +       &dev_attr_stt_skin_temp.attr,
+>> +       NULL,
+>> +};
+>> +
+>> +const struct attribute_group manual_attribute_group = {
+>> +       .attrs = manual_attrs,
+>> +       .is_visible = manual_attr_is_visible,
+>> +};
+>> +
+>> +void amd_pmf_init_manual_control(struct amd_pmf_dev *dev)
+>> +{
+>> +       add_taint(TAINT_CPU_OUT_OF_SPEC, LOCKDEP_STILL_OK);
+>> +       pr_crit("Manual PMF control is enabled, please disable it before "
+>> +               "reporting any bugs unrelated to PMF.\n");
+>> +}
+>> diff --git a/drivers/platform/x86/amd/pmf/pmf.h b/drivers/platform/x86/amd/pmf/pmf.h
+>> index 8ce8816da9c1..ca3df63cf190 100644
+>> --- a/drivers/platform/x86/amd/pmf/pmf.h
+>> +++ b/drivers/platform/x86/amd/pmf/pmf.h
+>> @@ -798,4 +798,9 @@ void amd_pmf_dump_ta_inputs(struct amd_pmf_dev *dev, struct ta_pmf_enact_table *
+>>   /* Quirk infrastructure */
+>>   void amd_pmf_quirks_init(struct amd_pmf_dev *dev);
+>>
+>> +/* Manual configuration */
+>> +extern bool pmf_manual_control;
+>> +extern const struct attribute_group manual_attribute_group;
+>> +void amd_pmf_init_manual_control(struct amd_pmf_dev *dev);
+>> +
+>>   #endif /* PMF_H */
+>> diff --git a/drivers/platform/x86/amd/pmf/sps.c b/drivers/platform/x86/amd/pmf/sps.c
+>> index 92f7fb22277d..6db88e523a86 100644
+>> --- a/drivers/platform/x86/amd/pmf/sps.c
+>> +++ b/drivers/platform/x86/amd/pmf/sps.c
+>> @@ -305,6 +305,8 @@ int amd_pmf_get_pprof_modes(struct amd_pmf_dev *pmf)
+>>          case PLATFORM_PROFILE_LOW_POWER:
+>>                  mode = POWER_MODE_POWER_SAVER;
+>>                  break;
+>> +       case PLATFORM_PROFILE_CUSTOM:
+>> +               return 0;
+>>          default:
+>>                  dev_err(pmf->dev, "Unknown Platform Profile.\n");
+>>                  return -EOPNOTSUPP;
+>> @@ -412,6 +414,8 @@ int amd_pmf_init_sps(struct amd_pmf_dev *dev)
+>>          set_bit(PLATFORM_PROFILE_LOW_POWER, dev->pprof.choices);
+>>          set_bit(PLATFORM_PROFILE_BALANCED, dev->pprof.choices);
+>>          set_bit(PLATFORM_PROFILE_PERFORMANCE, dev->pprof.choices);
+>> +       if (pmf_manual_control)
+>> +               set_bit(PLATFORM_PROFILE_CUSTOM, dev->pprof.choices);
+>>
+>>          /* Create platform_profile structure and register */
+>>          err = platform_profile_register(&dev->pprof);
+>> --
+>> 2.43.0
+>>
+
