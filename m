@@ -1,403 +1,264 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
+Received: from NAM12-MW2-obe.outbound.protection.outlook.com (mail-mw2nam12on2089.outbound.protection.outlook.com [40.107.244.89])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 79DD478F54;
-	Thu, 19 Dec 2024 14:53:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.18
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1734620023; cv=none; b=Q7w0lfKA32m3OtiQOuwo0UeSJsuEl8t31A7yblcYv+WdFH6d92CTZcKYupWjxgMED8vmPE94vzDPH9xxXq4R3OuzjpgIP+bjE2jeW/skO3MbF3aIjrTZC+TKG9BT8T7AN5Kdc/XjP6YMIWZJL2KBdju1vmqCYwFaNtXxWRfc65Y=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1734620023; c=relaxed/simple;
-	bh=/kcw3YPwWPCsUd6P2IuDB3IOkdnGo8zDSmr/l4fD45Q=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=fcZPada5RfkQjuULtcUS66+vUIhxmyMT86IBTEJD4wRv/Mb8yLImzIMw+lfC3Zpu8YGuGXwI8gKrCRDXJ3RdiCzZqlgj9YozkuOJaN5Yii8Rja5YXBJMSdvnmBODm+GTf81K1H1tNvGwJe458RxpOaP9W763EDWEm+JVWNUpuaw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=QxPECP4x; arc=none smtp.client-ip=198.175.65.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3047841C64;
+	Thu, 19 Dec 2024 14:59:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.244.89
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1734620364; cv=fail; b=ss0hhgdcBnhO4uRdUIe5F4gH5Ed6mNAiFhuT91ghaahj5I5Os3pbUe8z6xagDgsTwocWcYU6FlUB9gyTxuVZL5zXNVo+c56aeFTRuspMh86i4VXyoc5bzAa9bGTjyopoxDTnt8mmoIPcdZML708iGobI/730WyPi0M1Zg7J/p7E=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1734620364; c=relaxed/simple;
+	bh=80/7GzBWJAMHmv6Y+/2BqfQesVcH4b4O1eV74cb7IeE=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=VgxjbzoJG4cwQ9FoV8lAb+i8NTO03YUKAINumeTaWgLPDOJpDe/JDQhoIjI2WgKyQanaXqNtDWssMoeFnf3CMsQwgb/qb5tiVLITeRYK/Tryj1AWvgbJtz1mvtjetODXME9f7Gl+F49Y+lKKD/wU8/MEmemtQXrsaj1latKGYTY=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=a7hIurZO; arc=fail smtp.client-ip=40.107.244.89
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="QxPECP4x"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1734620022; x=1766156022;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version:content-id;
-  bh=/kcw3YPwWPCsUd6P2IuDB3IOkdnGo8zDSmr/l4fD45Q=;
-  b=QxPECP4xIQOL2zNuCnii+2nvznyX8ZOLLhJk/33HNNkyo7d4EPcX4ry+
-   0NeaZJPwcwUKtCZrQhGeQwFGuJNe5LzNFtPN+tj366dym7jtd+O2zabVk
-   YY7nrOIivwLqnbO5V50NtBkQNZjSd743W5cmdvPN7F9svnLxYwi20QQb4
-   J9F4HbwEm1xgVPJLsuCp6Umi9RKVtFvuuG/DYYZQQutlgkgw9Jg75W0/Q
-   vbES3fIIIGMcxeLtnDXpiqPwAtkxFpwAIFWE9ENskYB2YWh8jlpizW4lW
-   E6V1NsRkDQX0tln+iCo1AtzKc5PM9utqrTLxQCVT5wKA5rXAZGqOdkLLM
-   Q==;
-X-CSE-ConnectionGUID: uA60o2wYQa6LC9E4SX0mVA==
-X-CSE-MsgGUID: iiet5BrwSXSvsu9yjC4fPQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11290"; a="35260274"
-X-IronPort-AV: E=Sophos;i="6.12,248,1728975600"; 
-   d="scan'208";a="35260274"
-Received: from fmviesa001.fm.intel.com ([10.60.135.141])
-  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Dec 2024 06:53:41 -0800
-X-CSE-ConnectionGUID: kPEbUKkCRxqS4aQZ3YrcHw==
-X-CSE-MsgGUID: 2mAWPB3GTTqlSZOQwXNMKw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
-   d="scan'208";a="129181500"
-Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.7])
-  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Dec 2024 06:53:37 -0800
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Thu, 19 Dec 2024 16:53:34 +0200 (EET)
-To: Mario Limonciello <mario.limonciello@amd.com>
-cc: Borislav Petkov <bp@alien8.de>, Hans de Goede <hdegoede@redhat.com>, 
-    x86@kernel.org, "Gautham R . Shenoy" <gautham.shenoy@amd.com>, 
-    Perry Yuan <perry.yuan@amd.com>, LKML <linux-kernel@vger.kernel.org>, 
-    linux-doc@vger.kernel.org, linux-pm@vger.kernel.org, 
-    platform-driver-x86@vger.kernel.org, 
-    Shyam Sundar S K <Shyam-sundar.S-k@amd.com>, 
-    Perry Yuan <Perry.Yuan@amd.com>
-Subject: Re: [PATCH v7 05/12] platform/x86: hfi: parse CPU core ranking data
- from shared memory
-In-Reply-To: <20241130152023.684-6-mario.limonciello@amd.com>
-Message-ID: <4f3c0938-7ca4-c1b5-06e4-a03bba47b408@linux.intel.com>
-References: <20241130152023.684-1-mario.limonciello@amd.com> <20241130152023.684-6-mario.limonciello@amd.com>
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="a7hIurZO"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=K7D+5RLg/StTr6g81UCfbPhZVymrc15CWaCagM1UDeSbtqgbTGSG8tsatxdhOpE+mzwek+J4sGbXBmELm3Nx0vYnyxMRMV8NJEh9nwXYpC8Y57Rvnhd997ShAFUtT4yLoSlbilxuf/V75A7cfqieCIk/RSWqs2UluoaNBra+KUbp7KeAGDltNpfBYoqXjqCLGjLSDji49mySnN4vhQlW29JFzV+CbJjf/izhn8gKsreZZH+e/fMbS9KtQH3IXhRdq4ro2GM/7qEcw+uzj0RZjEz1MWa/+7XOwHK38qE+kafdwWLWOrLG/gRi90tciEGt1hok/IPWyFyKJAyGdAw8kA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=xdlUQGggl/OBrQ22llQpfKY+7ZnosCdVuU0RVEUCXEY=;
+ b=LeDhyYltSCwxoFRLZREAniJ2wNBMP/Pqph1kL2cIYOuosHqx3gNYIi3T8WVNl2YZ5yd9+jixlHrkjfMKfBgILEWQZcQ0EQSTRid96kP0E0KwDD4/TkI37z7801cPDzBrZU85Xpo0LoATro46KN3dG0MyP3+xmYl13uG/dZ8GFPZ9Y/b2IQepZeN2r1YVmVZ5bz9JeCy2khd1DIL91YO6ELz3DqqJ4ezOGWgz/zbqIg2NdwzZnc4EKRJgG87u/2pkg7PQirEwHFFDTRyAlyneOrUNIrlprKecjKkfd0V1ew6aUXm/Ugjdkei1W3PU47sZBL94NATHvtH9A49HCRiDDA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=xdlUQGggl/OBrQ22llQpfKY+7ZnosCdVuU0RVEUCXEY=;
+ b=a7hIurZO3rSkIJiNQcdXrMUXTD7v6bEM3cXIBfxnMxrLoLtYs9M3DlvgJvSYbWZzrxbVzMCLXPNMlwhgsvOL9UT8LizPNOrNYLpvKHMt2lJp52h7AjParQEDbEa8+6eGWfAl/EYg+Lhb1sB5jsEkVMtN8v4sxYoJAI0qXO8QCxk=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from BL1PR12MB5286.namprd12.prod.outlook.com (2603:10b6:208:31d::6)
+ by SN7PR12MB7273.namprd12.prod.outlook.com (2603:10b6:806:2ac::21) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8272.13; Thu, 19 Dec
+ 2024 14:59:19 +0000
+Received: from BL1PR12MB5286.namprd12.prod.outlook.com
+ ([fe80::35a:28cb:2534:6eb7]) by BL1PR12MB5286.namprd12.prod.outlook.com
+ ([fe80::35a:28cb:2534:6eb7%7]) with mapi id 15.20.8272.005; Thu, 19 Dec 2024
+ 14:59:19 +0000
+Message-ID: <3b2c016d-9991-4cfa-9cf1-bbac39d5a183@amd.com>
+Date: Thu, 19 Dec 2024 20:29:11 +0530
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 5/5] platform/x86/amd/hsmp: Constify 'struct
+ bin_attribute'
+To: =?UTF-8?Q?Thomas_Wei=C3=9Fschuh?= <linux@weissschuh.net>,
+ Stuart Hayes <stuart.w.hayes@gmail.com>, Hans de Goede
+ <hdegoede@redhat.com>, =?UTF-8?Q?Ilpo_J=C3=A4rvinen?=
+ <ilpo.jarvinen@linux.intel.com>, "David E. Box"
+ <david.e.box@linux.intel.com>, Carlos Bilbao <carlos.bilbao.osdev@gmail.com>
+Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20241202-sysfs-const-bin_attr-pdx86-v1-0-9ab204c2a814@weissschuh.net>
+ <20241202-sysfs-const-bin_attr-pdx86-v1-5-9ab204c2a814@weissschuh.net>
+Content-Language: en-US
+From: "Chatradhi, Naveen Krishna" <naveenkrishna.chatradhi@amd.com>
+In-Reply-To: <20241202-sysfs-const-bin_attr-pdx86-v1-5-9ab204c2a814@weissschuh.net>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: PN3PR01CA0061.INDPRD01.PROD.OUTLOOK.COM
+ (2603:1096:c01:99::6) To BL1PR12MB5286.namprd12.prod.outlook.com
+ (2603:10b6:208:31d::6)
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; BOUNDARY="8323328-164415166-1734619252=:932"
-Content-ID: <74654046-6989-d4b8-c5dd-f04182b2f788@linux.intel.com>
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: BL1PR12MB5286:EE_|SN7PR12MB7273:EE_
+X-MS-Office365-Filtering-Correlation-Id: d9592109-06d0-435b-b737-08dd203db6c0
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|376014|1800799024|7053199007;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?L2RIZStRbTF4c0w2YmRUNWcxTzlueFNZazRtNHNNR242bFlHaXJlSVNWL3o0?=
+ =?utf-8?B?UVNoUUVzK3o5VS93Nk1WZ2l6OXQvdGlhWFMwejdXQ28yaSs0NmJVWjJxd0R0?=
+ =?utf-8?B?YndOOFEwaUJlcWhRQUpYWXhKYXZNcDRXbU9ISkJsZy9NQm1ubXppWnNIUWNY?=
+ =?utf-8?B?U1NkOVB5TW5BejBRN2ZtT3ZCRzI3N2p1Yk1wMnhWQVlxRVR4THVCV1ArQ010?=
+ =?utf-8?B?bk5LSmdMZ1FCeDZKcU1DTnV3SjhXeVFHc0xtNUl2cW5MQWU4cE0zNkxGSkNZ?=
+ =?utf-8?B?eGUvNVloRHUwTzRaY0hjV1FGOXdMNUVOTERBblhJcSt4L3puT3JHY2pYQzdC?=
+ =?utf-8?B?UlZhSnB6TXp2TzZ2aDRuMHJrMHZvc3UvUmszMnBEelFrcjM2Tkk4cmJyelpY?=
+ =?utf-8?B?d2hTQzlTREhBTHRObDk0ajBLTW5xUXk4NE14Y2JHZGZVYmN1WEVBVDJsdHdz?=
+ =?utf-8?B?Nks1NFBqdU9waFdERmpEWmgvWk1DcHA1VnJraGpUVzlCTTMvaDRGaWhJcTRN?=
+ =?utf-8?B?SktTMG92b3kzeDhCYUpzc2lEWEN3alI3N3JlOHUzM01Xei96d1lrTnhHeS91?=
+ =?utf-8?B?dGFSZGpqeVNYcURzTkFtNmNzazhaUS9GSlN4RytoVFBCbFM5cVpSSVRneGlH?=
+ =?utf-8?B?M0pvcTRzVmtrR01CRkxwenJ0NFFuZ2hwNnpuRTd2bHQ3VGNKNmZUYU1RVWJT?=
+ =?utf-8?B?TUNXQ3dvWmptZmllRC9QZVdGZHA4ZlJuY1JiaTN4SUpzNCt4YkdVUmlsd1dL?=
+ =?utf-8?B?bDgrcUJvdVIrcTBReEF3dDVyeTZvZkZETWZjRitzR0Q3dFhENW1xTVE1UXFt?=
+ =?utf-8?B?WjFNNzFWTmoxb1RWU3ZsTkhmV05VZC9iWHFDd3FOeENMZG9LempjcDdhNGlR?=
+ =?utf-8?B?emRra2FuWGpxdS9XQkRjVTNVRVhOQzdxRU1ESUpyOVRkS1IzbWR3ZXl1T216?=
+ =?utf-8?B?WDJCRjV0K3k3cW5QdHo0U2VVK2ppYkZsUHBReExTT0NtajVmakkzTSs2cS9r?=
+ =?utf-8?B?NkUvaHZwWHFNWld6enNBM21KQXpFcmtzN1BvTTFqSXdDWHNmL3RGMUJNQno2?=
+ =?utf-8?B?VHVQMUw5R3ozUjFqenJFajkrZWpjRlh2TnV4ZkN1eW9pMVlBKzYzMHZ2NUgy?=
+ =?utf-8?B?a2lLZm9QMDhDOGRlVHV5ZVk1OGx4aldDRDNibllvV1gyZm5xM1BocC9vU09R?=
+ =?utf-8?B?WHZDNE5CaXp5ZWVIei82Sncvb1d3RWRYL1VzdmRiOEtvT3dMZXdLMXJGb1Nv?=
+ =?utf-8?B?aE5pQTZjRHUxM2drL3ZQNGZRNjVEaDNSZWFpNmFRR3F3S0ZMZG8yc21jMFhl?=
+ =?utf-8?B?c3k3cmFOa21ybXZ2ekNXUFM4Y1Radyt4ZlpiaXc5SGVyNFZyOWJ6ck85dzIx?=
+ =?utf-8?B?UW5qUVlzTEpIUUY2dkx1QjhEcXE1L3VMOWdGS1I3K1dzKzd4cU5GZnVDMm9p?=
+ =?utf-8?B?dVRic1dYdXgxRUlJR3JPc1JzT0JmS1VhNi90MVlYUG5ZVE9kaVJ5Ri9UbTJ4?=
+ =?utf-8?B?ZFR1OGRMeXZlUnVaMUtUVUIzSGxZcDVHYlpmZFhidVNxZkFTWTNyQk44YTJl?=
+ =?utf-8?B?YWliTEFWZVBpSXQwZTBZVEl6cTlKYmdET3hVcDM1NUpsaWlIbVNhU0lyOHdK?=
+ =?utf-8?B?M2U1VnpVSmFIY21ISTFERGdlM1V2aWt0S2xqb3J3TkEvUU01ZjhCUXE1Ry9C?=
+ =?utf-8?B?MWVwMEN5YUljWnI5ck9malEyaVZNQmZOZHhvUFBQdVhJYmozc1ZmTDhmb2U0?=
+ =?utf-8?B?NHVHNzFwOFFVb2FkV0xHRTdiY2QvQTZhbzJJdzA0bmRuNnNiY2lqSkp4VFpK?=
+ =?utf-8?B?MjVSL3hNakR1T2dTSnF6QTVhRm9YN2ZZSDFrbkNVSXluQkhHNysydlppbWYv?=
+ =?utf-8?Q?KmeNXxTnsnBNq?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BL1PR12MB5286.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(376014)(1800799024)(7053199007);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?ajYrczFGRDJwQllhQ0tuY3c0Q05aUkk4dWlMNFdTS1IvU1FlN0JwQm1NcDBo?=
+ =?utf-8?B?NXBRenZiVnZoY3p0cVBHb3poc1FqcmpRNHlVOHhZUnV3RlNHcGpDYzN5NG15?=
+ =?utf-8?B?di96bk55QVJESWV0YW8zaXFMTHRCSTJLUU9MUE8vQk5mWS9PQU5tUlV6QzVu?=
+ =?utf-8?B?Smxlbm1HTkp6cmlBRk1SRUk4SFV1RS9wQjZtYWRnVFphRVZtOGkwWXBLUTZM?=
+ =?utf-8?B?Rm9MQURDMFFWS0pQNVdTTHZnZXlxUTUxWUNxSjE0L2NBTjBDaUxQOXg0YjVU?=
+ =?utf-8?B?S3lUa0s1T1Q3cjFzVU5TOTJ5bCsrNjJwcjZSZWo4WXQ4QmFBWTM3SzdpcDFM?=
+ =?utf-8?B?NGRONHd4c1ZPSzRZbzVPTzhyaHVjN1R2TS9IUEpnY3ZiRk9BYlNpN3M4UmFY?=
+ =?utf-8?B?bDQzemx2QXZGSldQOWJvY050NEc1cGMyY2syZEVyYzNHTzF4WFBJazc3RXJN?=
+ =?utf-8?B?bXhnSWF2b1lUMGxBMlFKUW9leG1tQW9JOXBDQTd3SFU1Y0xoTUJXd2Y3aHF5?=
+ =?utf-8?B?MlpmdWpWemdjVXlqZ0kvaVg1R0ROQWIvdE5jQTJZZHhMM1NYY003a1F1NWdB?=
+ =?utf-8?B?SXhwQlp4V0t1d0I1RFpueW01UXZpLzVic1A0ZGNXMVBPNTBFUytXUnNGSHMr?=
+ =?utf-8?B?Y0xpcDczdW1EVXkyWlRaM0h2cnBBU2J6OWwxRGNhOEVBRTNDeXJZMmwvVzNN?=
+ =?utf-8?B?QjFTbU9rVXcrbWxzdndxemV4ZExHdERUNWNqOVhXVS83RUNmSXFGSTRGRjc3?=
+ =?utf-8?B?SmhiZzBoVzE3WE5mZFBwU21TcnNDNTFXUjMrVGErRXZUeGZua3dxeDkvdDJz?=
+ =?utf-8?B?UW9RaUhJci9RajNSbjVQejRFdnd3eWNoK0dpRHNkdW44QTgrTmFzWUNoWGtW?=
+ =?utf-8?B?b2NoRFZMNlVPL25XUjdEc0NvRDNhamFBRjhKUUtNN3RkSjM4WDhnZEF5Kzdp?=
+ =?utf-8?B?Z0dDMCt6THorUHVMOC9XK1ZMK1ArcE5MM1U2RWZ5eW5oMUIzVVRVTkdTUjU4?=
+ =?utf-8?B?dStnZTk5RWdGSUU5cmxEL2FOOG9TMy8wM0M0ZDVjbkFIOEJDR3J4Zld6TW9w?=
+ =?utf-8?B?L05QenpWdk9pWitwMUpiMWZQanFIdlFxMFk4Uk5DVUdMVlRpaksyUjBYUzVC?=
+ =?utf-8?B?K2tybExYcmIzWWdYNFFNQ1hIOEV5VHhvNitRUHNOTVBuVUFXK0FvRm5aR0Jo?=
+ =?utf-8?B?YmxHeGlYbUtIYldmWVowcjBKNXZHczBBeU1HdmdvUDFERnhkNlJGVmwwRkY4?=
+ =?utf-8?B?bW1tVjErL2lBc0Y5UVA5Zk44dDRIMW9HRGxnWVFFWThLRXZoZlA0SU42MWcx?=
+ =?utf-8?B?ZVQ5MjZSZ0ZQSm1kUldMcmhQS1VhMW4vMnZUSVdBaVp6bitxVVBlL1VkTFJx?=
+ =?utf-8?B?ckVOd0NnUE1GcjlOOXJ5NkhPbTJOcHBLTVRLNEVPSzZUaEE1TTlPaHR1Vjkz?=
+ =?utf-8?B?YlBPUmdvT2JnR1NNNjh4UERIa3p5blMzQWNKV1BKUVRvZEg1cHVnaldueXpw?=
+ =?utf-8?B?RzUxQlJ5bnFxWlpVdjd2VWpMYWNOSmV3UWlKRlBSZXhFbUtlVEppaGFnNnBP?=
+ =?utf-8?B?L3pTTHlzcmUvb3p6c1NrZXp4djNyZXA5bEcvZUVkclp0VjVQNEdZTlhpdTln?=
+ =?utf-8?B?NEdrRlpDV3dsc3hWa0l6QWlENE5VMU9RVWQ3N2d1bnp3QzV1Nmdhc2QvT0Zr?=
+ =?utf-8?B?dS9HaytmQkxKSkpyaWk0SnlDQjdZbW0ydzZrL3IrZWRPS3Vrb3FVekVkUWVv?=
+ =?utf-8?B?NjJSTWp3Y2lXc3NYZGhmekNCZjYxS2xwNU84WlFPUXJ3QTF5cS9IRnpTblQ4?=
+ =?utf-8?B?cjlRVDlrbEtFVFdER2l5dkZtQUtsRHpKVDNlcUxjSHpPNUk5MEpvYmdQS2pC?=
+ =?utf-8?B?QlVIWnpKRWIvRm00bTBseGpiYkpJVVBwRUZlZk5TbmNRQzB0ck5hMUFCb2Vj?=
+ =?utf-8?B?dmJZcmlTWEZ1MVNPcW1Tckk5L0k2bkEwT3hxVGlHU0FPcnYzN2tOMWhEWStt?=
+ =?utf-8?B?dG1Gc3pFYUQxd3lSZFJvZ0xFOVJ5a1ZmK2FtRk5lSnhSTytydVlFcUxoYXB2?=
+ =?utf-8?B?RC93QU1mVm5NcUVjVU1IWTZsRHZaVXlMcFF5MG5tMFBaZWp6NEJZYkh0NmZR?=
+ =?utf-8?Q?kYE8br8WisAfe1yxsZgNLrZA4?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: d9592109-06d0-435b-b737-08dd203db6c0
+X-MS-Exchange-CrossTenant-AuthSource: BL1PR12MB5286.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 19 Dec 2024 14:59:19.1396
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: p2m41Q0j9n7mvZK0TR/l0Xo6JTuy1csuKT4T5Fv9sxwonPKOGVgttwILJmau6DDupedEYFpP1O54/8eY1RCoJg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN7PR12MB7273
 
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
 
---8323328-164415166-1734619252=:932
-Content-Type: text/plain; CHARSET=ISO-8859-15
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Content-ID: <9697c350-de78-59a9-7d17-32631f73fe93@linux.intel.com>
+On 12/3/2024 1:08 AM, Thomas Weißschuh wrote:
+> Caution: This message originated from an External Source. Use proper caution when opening attachments, clicking links, or responding.
+>
+>
+> The sysfs core now allows instances of 'struct bin_attribute' to be
+> moved into read-only memory. Make use of that to protect them against
+> accidental or malicious modifications.
+>
+> Signed-off-by: Thomas Weißschuh <linux@weissschuh.net>
 
-On Sat, 30 Nov 2024, Mario Limonciello wrote:
+Thanks for the patch
 
-> From: Perry Yuan <Perry.Yuan@amd.com>
->=20
-> When `amd_hfi` driver is loaded, it will use PCCT subspace type 4 table
-> to retrieve the shared memory address which contains the CPU core ranking
-> table. This table includes a header that specifies the number of ranking
-> data entries to be parsed and rank each CPU core with the Performance and
-> Energy Efficiency capability as implemented by the CPU power management
-> firmware.
->=20
-> Once the table has been parsed, each CPU is assigned a ranking score
-> within its class. Subsequently, when the scheduler selects cores, it
-> chooses from the ranking list based on the assigned scores in each class,
-> thereby ensuring the optimal selection of CPU cores according to their
-> predefined classifications and priorities.
->=20
-> Signed-off-by: Perry Yuan <Perry.Yuan@amd.com>
-> Co-developed-by: Mario Limonciello <mario.limonciello@amd.com>
-> Reviewed-by: Ilpo J=E4rvinen <ilpo.jarvinen@linux.intel.com>
-> Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
+Acked-by: Naveen Krishna Chatradhi <naveenkrishna.chatradhi@amd.com>
+
 > ---
->  * Drop __packed
-> ---
->  drivers/platform/x86/amd/hfi/hfi.c | 196 +++++++++++++++++++++++++++++
->  1 file changed, 196 insertions(+)
->=20
-> diff --git a/drivers/platform/x86/amd/hfi/hfi.c b/drivers/platform/x86/am=
-d/hfi/hfi.c
-> index 2cd71d79a22c9..3c90e93fd192c 100644
-> --- a/drivers/platform/x86/amd/hfi/hfi.c
-> +++ b/drivers/platform/x86/amd/hfi/hfi.c
-> @@ -18,20 +18,72 @@
->  #include <linux/io.h>
->  #include <linux/kernel.h>
->  #include <linux/module.h>
-> +#include <linux/mailbox_client.h>
->  #include <linux/mutex.h>
-> +#include <linux/percpu-defs.h>
->  #include <linux/platform_device.h>
->  #include <linux/smp.h>
-> +#include <linux/topology.h>
-> +#include <linux/workqueue.h>
-> +
-> +#include <asm/cpu_device_id.h>
-> +
-> +#include <acpi/pcc.h>
-> +#include <acpi/cppc_acpi.h>
-> =20
->  #define AMD_HFI_DRIVER=09=09"amd_hfi"
-> +#define AMD_HFI_MAILBOX_COUNT=091
-> +#define AMD_HETERO_RANKING_TABLE_VER=092
-> +
->  #define AMD_HETERO_CPUID_27=090x80000027
-> +
->  static struct platform_device *device;
-
-Please add the empty lines already in the patch introducing=20
-AMD_HETERO_CPUID_27 define.
-
-> =20
-> +/**
-> + * struct amd_shmem_info - Shared memory table for AMD HFI
-> + *
-> + * @header:=09The PCCT table header including signature, length flags an=
-d command.
-> + * @version_number:=09=09Version number of the table
-> + * @n_logical_processors:=09Number of logical processors
-> + * @n_capabilities:=09=09Number of ranking dimensions (performance, effi=
-ciency, etc)
-> + * @table_update_context:=09Command being sent over the subspace
-> + * @n_bitmaps:=09=09=09Number of 32-bit bitmaps to enumerate all the API=
-C IDs
-> + *=09=09=09=09This is based on the maximum APIC ID enumerated in the sys=
-tem
-> + * @reserved:=09=09=0924 bit spare
-> + * @table_data:=09=09=09Bit Map(s) of enabled logical processors
-> + *=09=09=09=09Followed by the ranking data for each logical processor
-> + */
-> +struct amd_shmem_info {
-> +=09struct acpi_pcct_ext_pcc_shared_memory header;
-> +=09u32=09version_number=09=09:8,
-> +=09=09n_logical_processors=09:8,
-> +=09=09n_capabilities=09=09:8,
-> +=09=09table_update_context=09:8;
-> +=09u32=09n_bitmaps=09=09:8,
-> +=09=09reserved=09=09:24;
-> +=09u32=09table_data[];
-> +};
-> +
->  struct amd_hfi_data {
->  =09const char=09*name;
->  =09struct device=09*dev;
->  =09struct mutex=09lock;
-> +
-> +=09/* PCCT table related*/
-> +=09struct pcc_mbox_chan=09*pcc_chan;
-> +=09void __iomem=09=09*pcc_comm_addr;
-> +=09struct acpi_subtable_header=09*pcct_entry;
-> +=09struct amd_shmem_info=09*shmem;
->  };
-> =20
-> +/**
-> + * struct amd_hfi_classes - HFI class capabilities per CPU
-> + * @perf:=09Performance capability
-> + * @eff:=09Power efficiency capability
-> + *
-> + * Capabilities of a logical processor in the ranking table. These capab=
-ilities
-> + * are unitless and specific to each HFI class.
-> + */
->  struct amd_hfi_classes {
->  =09u32=09perf;
->  =09u32=09eff;
-> @@ -40,23 +92,105 @@ struct amd_hfi_classes {
->  /**
->   * struct amd_hfi_cpuinfo - HFI workload class info per CPU
->   * @cpu:=09=09cpu index
-> + * @apic_id:=09=09apic id of the current cpu
->   * @cpus:=09=09mask of cpus associated with amd_hfi_cpuinfo
->   * @class_index:=09workload class ID index
->   * @nr_class:=09=09max number of workload class supported
-> + * @ipcc_scores:=09ipcc scores for each class
->   * @amd_hfi_classes:=09current cpu workload class ranking data
->   *
->   * Parameters of a logical processor linked with hardware feedback class
->   */
->  struct amd_hfi_cpuinfo {
->  =09int=09=09cpu;
-> +=09u32=09=09apic_id;
->  =09cpumask_var_t=09cpus;
->  =09s16=09=09class_index;
->  =09u8=09=09nr_class;
-> +=09int=09=09*ipcc_scores;
->  =09struct amd_hfi_classes=09*amd_hfi_classes;
->  };
-> =20
->  static DEFINE_PER_CPU(struct amd_hfi_cpuinfo, amd_hfi_cpuinfo) =3D {.cla=
-ss_index =3D -1};
-> =20
-> +static int find_cpu_index_by_apicid(unsigned int target_apicid)
-> +{
-> +=09int cpu_index;
-> +
-> +=09for_each_present_cpu(cpu_index) {
-> +=09=09struct cpuinfo_x86 *info =3D &cpu_data(cpu_index);
-> +
-> +=09=09if (info->topo.apicid =3D=3D target_apicid) {
-> +=09=09=09pr_debug("match APIC id %d for CPU index: %d\n",
-> +=09=09=09=09 info->topo.apicid, cpu_index);
-> +=09=09=09return cpu_index;
-> +=09=09}
-> +=09}
-> +
-> +=09return -ENODEV;
-> +}
-> +
-> +static int amd_hfi_fill_metadata(struct amd_hfi_data *amd_hfi_data)
-> +{
-> +=09struct acpi_pcct_ext_pcc_slave *pcct_ext =3D
-> +=09=09(struct acpi_pcct_ext_pcc_slave *)amd_hfi_data->pcct_entry;
-> +=09void __iomem *pcc_comm_addr;
-> +
-> +=09pcc_comm_addr =3D acpi_os_ioremap(amd_hfi_data->pcc_chan->shmem_base_=
-addr,
-> +=09=09=09=09=09amd_hfi_data->pcc_chan->shmem_size);
-> +=09if (!pcc_comm_addr) {
-> +=09=09pr_err("failed to ioremap PCC common region mem\n");
-> +=09=09return -ENOMEM;
-> +=09}
-> +
-> +=09memcpy_fromio(amd_hfi_data->shmem, pcc_comm_addr, pcct_ext->length);
-> +=09iounmap(pcc_comm_addr);
-> +
-> +=09if (amd_hfi_data->shmem->header.signature !=3D PCC_SIGNATURE) {
-> +=09=09pr_err("invalid signature in shared memory\n");
-> +=09=09return -EINVAL;
-> +=09}
-> +=09if (amd_hfi_data->shmem->version_number !=3D AMD_HETERO_RANKING_TABLE=
-_VER) {
-> +=09=09pr_err("invalid version %d\n", amd_hfi_data->shmem->version_number=
-);
-> +=09=09return -EINVAL;
-> +=09}
-> +
-> +=09for (unsigned int i =3D 0; i < amd_hfi_data->shmem->n_bitmaps; i++) {
-> +=09=09u32 bitmap =3D amd_hfi_data->shmem->table_data[i];
-> +
-> +=09=09for (unsigned int j =3D 0; j < BITS_PER_TYPE(u32); j++) {
-> +=09=09=09struct amd_hfi_cpuinfo *info;
-> +=09=09=09int apic_id =3D i * BITS_PER_TYPE(u32) + j;
-> +=09=09=09int cpu_index;
-
-Reverse xmas order.
-
---=20
- i.
-
-> +
-> +=09=09=09if (!(bitmap & BIT(j)))
-> +=09=09=09=09continue;
-> +
-> +=09=09=09cpu_index =3D find_cpu_index_by_apicid(apic_id);
-> +=09=09=09if (cpu_index < 0) {
-> +=09=09=09=09pr_warn("APIC ID %d not found\n", apic_id);
-> +=09=09=09=09continue;
-> +=09=09=09}
-> +
-> +=09=09=09info =3D per_cpu_ptr(&amd_hfi_cpuinfo, cpu_index);
-> +=09=09=09info->apic_id =3D apic_id;
-> +
-> +=09=09=09/* Fill the ranking data for each logical processor */
-> +=09=09=09info =3D per_cpu_ptr(&amd_hfi_cpuinfo, cpu_index);
-> +=09=09=09for (unsigned int k =3D 0; k < info->nr_class; k++) {
-> +=09=09=09=09u32 *table =3D amd_hfi_data->shmem->table_data +
-> +=09=09=09=09=09     amd_hfi_data->shmem->n_bitmaps +
-> +=09=09=09=09=09     i * info->nr_class;
-> +=09=09=09=09info->amd_hfi_classes[k].eff =3D table[apic_id + 2 * k];
-> +=09=09=09=09info->amd_hfi_classes[k].perf =3D table[apic_id + 2 * k + 1]=
-;
-> +=09=09=09}
-> +=09=09}
-> +=09}
-> +
-> +=09return 0;
-> +}
-> +
->  static int amd_hfi_alloc_class_data(struct platform_device *pdev)
->  {
->  =09struct amd_hfi_cpuinfo *hfi_cpuinfo;
-> @@ -73,20 +207,78 @@ static int amd_hfi_alloc_class_data(struct platform_=
-device *pdev)
-> =20
->  =09for_each_present_cpu(idx) {
->  =09=09struct amd_hfi_classes *classes;
-> +=09=09int *ipcc_scores;
-> =20
->  =09=09classes =3D devm_kzalloc(dev,
->  =09=09=09=09       nr_class_id * sizeof(struct amd_hfi_classes),
->  =09=09=09=09       GFP_KERNEL);
->  =09=09if (!classes)
->  =09=09=09return -ENOMEM;
-> +=09=09ipcc_scores =3D devm_kcalloc(dev, nr_class_id, sizeof(int), GFP_KE=
-RNEL);
-> +=09=09if (!ipcc_scores)
-> +=09=09=09return -ENOMEM;
->  =09=09hfi_cpuinfo =3D per_cpu_ptr(&amd_hfi_cpuinfo, idx);
->  =09=09hfi_cpuinfo->amd_hfi_classes =3D classes;
-> +=09=09hfi_cpuinfo->ipcc_scores =3D ipcc_scores;
->  =09=09hfi_cpuinfo->nr_class =3D nr_class_id;
->  =09}
-> =20
->  =09return 0;
->  }
-> =20
-> +static int amd_hfi_metadata_parser(struct platform_device *pdev,
-> +=09=09=09=09   struct amd_hfi_data *amd_hfi_data)
-> +{
-> +=09struct acpi_pcct_ext_pcc_slave *pcct_ext;
-> +=09struct acpi_subtable_header *pcct_entry;
-> +=09struct mbox_chan *pcc_mbox_channels;
-> +=09struct acpi_table_header *pcct_tbl;
-> +=09struct pcc_mbox_chan *pcc_chan;
-> +=09acpi_status status;
-> +=09int ret;
-> +
-> +=09pcc_mbox_channels =3D devm_kcalloc(&pdev->dev, AMD_HFI_MAILBOX_COUNT,
-> +=09=09=09=09=09 sizeof(*pcc_mbox_channels), GFP_KERNEL);
-> +=09if (!pcc_mbox_channels)
-> +=09=09return -ENOMEM;
-> +
-> +=09pcc_chan =3D devm_kcalloc(&pdev->dev, AMD_HFI_MAILBOX_COUNT,
-> +=09=09=09=09sizeof(*pcc_chan), GFP_KERNEL);
-> +=09if (!pcc_chan)
-> +=09=09return -ENOMEM;
-> +
-> +=09status =3D acpi_get_table(ACPI_SIG_PCCT, 0, &pcct_tbl);
-> +=09if (ACPI_FAILURE(status) || !pcct_tbl)
-> +=09=09return -ENODEV;
-> +
-> +=09/* get pointer to the first PCC subspace entry */
-> +=09pcct_entry =3D (struct acpi_subtable_header *) (
-> +=09=09=09(unsigned long)pcct_tbl + sizeof(struct acpi_table_pcct));
-> +
-> +=09pcc_chan->mchan =3D &pcc_mbox_channels[0];
-> +
-> +=09amd_hfi_data->pcc_chan =3D pcc_chan;
-> +=09amd_hfi_data->pcct_entry =3D pcct_entry;
-> +=09pcct_ext =3D (struct acpi_pcct_ext_pcc_slave *)pcct_entry;
-> +
-> +=09if (pcct_ext->length <=3D 0)
-> +=09=09return -EINVAL;
-> +
-> +=09amd_hfi_data->shmem =3D devm_kzalloc(amd_hfi_data->dev, pcct_ext->len=
-gth, GFP_KERNEL);
-> +=09if (!amd_hfi_data->shmem)
-> +=09=09return -ENOMEM;
-> +
-> +=09pcc_chan->shmem_base_addr =3D pcct_ext->base_address;
-> +=09pcc_chan->shmem_size =3D pcct_ext->length;
-> +
-> +=09/* parse the shared memory info from the pcct table */
-> +=09ret =3D amd_hfi_fill_metadata(amd_hfi_data);
-> +
-> +=09acpi_put_table(pcct_tbl);
-> +
-> +=09return ret;
-> +}
-> +
->  static const struct acpi_device_id amd_hfi_platform_match[] =3D {
->  =09{"AMDI0104", 0},
->  =09{ }
-> @@ -115,6 +307,10 @@ static int amd_hfi_probe(struct platform_device *pde=
-v)
->  =09if (ret)
->  =09=09return ret;
-> =20
-> +=09ret =3D amd_hfi_metadata_parser(pdev, amd_hfi_data);
-> +=09if (ret)
-> +=09=09return ret;
-> +
->  =09return 0;
->  }
-> =20
->=20
---8323328-164415166-1734619252=:932--
+>   drivers/platform/x86/amd/hsmp/acpi.c | 12 ++++++------
+>   drivers/platform/x86/amd/hsmp/plat.c | 12 ++++++------
+>   2 files changed, 12 insertions(+), 12 deletions(-)
+>
+> diff --git a/drivers/platform/x86/amd/hsmp/acpi.c b/drivers/platform/x86/amd/hsmp/acpi.c
+> index dd5b5773328a9aff376a389cbd0109cb8cf0e385..7d802bfe206c73a4570dcd3752faee853bb81485 100644
+> --- a/drivers/platform/x86/amd/hsmp/acpi.c
+> +++ b/drivers/platform/x86/amd/hsmp/acpi.c
+> @@ -226,7 +226,7 @@ static int hsmp_parse_acpi_table(struct device *dev, u16 sock_ind)
+>   }
+>
+>   static ssize_t hsmp_metric_tbl_acpi_read(struct file *filp, struct kobject *kobj,
+> -                                        struct bin_attribute *bin_attr, char *buf,
+> +                                        const struct bin_attribute *bin_attr, char *buf,
+>                                           loff_t off, size_t count)
+>   {
+>          struct device *dev = container_of(kobj, struct device, kobj);
+> @@ -285,19 +285,19 @@ static int init_acpi(struct device *dev)
+>          return ret;
+>   }
+>
+> -static struct bin_attribute  hsmp_metric_tbl_attr = {
+> +static const struct bin_attribute  hsmp_metric_tbl_attr = {
+>          .attr = { .name = HSMP_METRICS_TABLE_NAME, .mode = 0444},
+> -       .read = hsmp_metric_tbl_acpi_read,
+> +       .read_new = hsmp_metric_tbl_acpi_read,
+>          .size = sizeof(struct hsmp_metric_table),
+>   };
+>
+> -static struct bin_attribute *hsmp_attr_list[] = {
+> +static const struct bin_attribute *hsmp_attr_list[] = {
+>          &hsmp_metric_tbl_attr,
+>          NULL
+>   };
+>
+> -static struct attribute_group hsmp_attr_grp = {
+> -       .bin_attrs = hsmp_attr_list,
+> +static const struct attribute_group hsmp_attr_grp = {
+> +       .bin_attrs_new = hsmp_attr_list,
+>          .is_bin_visible = hsmp_is_sock_attr_visible,
+>   };
+>
+> diff --git a/drivers/platform/x86/amd/hsmp/plat.c b/drivers/platform/x86/amd/hsmp/plat.c
+> index 748bbc35648474370275a80daf2c26e5d732f6ad..1fdcd65d398e6ceca154b804074cbba083f4b7f1 100644
+> --- a/drivers/platform/x86/amd/hsmp/plat.c
+> +++ b/drivers/platform/x86/amd/hsmp/plat.c
+> @@ -59,7 +59,7 @@ static int amd_hsmp_pci_rdwr(struct hsmp_socket *sock, u32 offset,
+>   }
+>
+>   static ssize_t hsmp_metric_tbl_plat_read(struct file *filp, struct kobject *kobj,
+> -                                        struct bin_attribute *bin_attr, char *buf,
+> +                                        const struct bin_attribute *bin_attr, char *buf,
+>                                           loff_t off, size_t count)
+>   {
+>          struct hsmp_socket *sock;
+> @@ -97,13 +97,13 @@ static umode_t hsmp_is_sock_attr_visible(struct kobject *kobj,
+>    * is_bin_visible function is used to show / hide the necessary groups.
+>    */
+>   #define HSMP_BIN_ATTR(index, _list)                                    \
+> -static struct bin_attribute attr##index = {                            \
+> +static const struct bin_attribute attr##index = {                      \
+>          .attr = { .name = HSMP_METRICS_TABLE_NAME, .mode = 0444},       \
+>          .private = (void *)index,                                       \
+> -       .read = hsmp_metric_tbl_plat_read,                                      \
+> +       .read_new = hsmp_metric_tbl_plat_read,                          \
+>          .size = sizeof(struct hsmp_metric_table),                       \
+>   };                                                                     \
+> -static struct bin_attribute _list[] = {                                        \
+> +static const struct bin_attribute _list[] = {                          \
+>          &attr##index,                                                   \
+>          NULL                                                            \
+>   }
+> @@ -118,8 +118,8 @@ HSMP_BIN_ATTR(6, *sock6_attr_list);
+>   HSMP_BIN_ATTR(7, *sock7_attr_list);
+>
+>   #define HSMP_BIN_ATTR_GRP(index, _list, _name)                 \
+> -static struct attribute_group sock##index##_attr_grp = {       \
+> -       .bin_attrs = _list,                                     \
+> +static const struct attribute_group sock##index##_attr_grp = { \
+> +       .bin_attrs_new = _list,                                 \
+>          .is_bin_visible = hsmp_is_sock_attr_visible,            \
+>          .name = #_name,                                         \
+>   }
+>
+> --
+> 2.47.1
+>
