@@ -1,152 +1,261 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f174.google.com (mail-il1-f174.google.com [209.85.166.174])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC9C4227561;
-	Thu, 19 Dec 2024 16:13:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E0A22154C04;
+	Thu, 19 Dec 2024 17:31:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1734624840; cv=none; b=fG2sdM+DZI5gPpptInt0rxfnEqZlSLr+4JcI3An5ebNRB+7wTgcGFdZBYPhe+sO1Ik3CeUME1IlugFmctpIQhPhI8Zmrk10lYcbvhoeFQw88KepFr0VAJtChja6TAv3HdMfJDwbqiz27PY1oobwwIVqam5JvosifvUR9rnl1cGI=
+	t=1734629497; cv=none; b=BXPrgUXPuOMHzwIziMhScEtvJuKkukDMNyj5i5Nf8VJJoTDYjc8wE8KzOZDFQbEkOSDusKcYxxqWNKKLXWSGr54crRVukH5B7U7T7YZuUi3Jee3XJBm5wAJSAu72hwXZuV/9UMBA3ubCweqR3ef27c40hm3JR5TcT085+qH6bZQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1734624840; c=relaxed/simple;
-	bh=Yc3/2cJCYlxM2s5kaL57wIYuJuvUqF4D/4Y+Dx8HhIM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Yz+diwa0rFQxfCwtKaL9421k++KinfRTuWiig9XLTCoEB2STy/Lr5c7hzYlx14W3UlD7K5sy5Hy4Qjlp5mqv2ThW7xhD2EOiGDy1hiiLdMH4NlXMd7eKgoP7fzarBiN6lQ30bpLVPwIx6dVlMxjuPH1sYGQ9Vcd4YAmcmndlTls=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YFeoPoKz; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YFeoPoKz"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8789DC4CECE;
-	Thu, 19 Dec 2024 16:13:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1734624839;
-	bh=Yc3/2cJCYlxM2s5kaL57wIYuJuvUqF4D/4Y+Dx8HhIM=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=YFeoPoKzxHxqW+QCAqoMT+Ei+Oq6k3V3quVOvEKehzybjsaxqtWdI6cJHTNf1eRxY
-	 j1HomNzWRCZw1mBb9z/y+f9e5PcPbdzB6JYdoTgRIpYpqfH+mfwGD/nJdSR1Hz+BDl
-	 JiqTmszUL71+A8gsWA/o5bSpNuvtuavJb/fn9U/d71vWL2Le4SMoUTFhSlsJb9w7o7
-	 t32LxK3yrGGwfp58Ak/+aTZhYnB+UzqjHcdWRUgWzU5z8s5xRrkidHt1HR8D6LM2qI
-	 yRqbxFfGLhQllzbpeoCvqNxUYj8iTb30ln1wpaIV2EyrTetWBY6dzRdhsHSGtmle0P
-	 zjP9fqbD1ILHQ==
-Message-ID: <deda5a04-ba48-43c0-83c9-2f0afcaefb18@kernel.org>
-Date: Thu, 19 Dec 2024 10:13:55 -0600
+	s=arc-20240116; t=1734629497; c=relaxed/simple;
+	bh=864pAgfmKQf//4O2IhEEwaTqgaNKE8D5q9hM+FeQgFk=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=lHrCzzibf0/0rIMewAm7gDdTahaxbCfcZyfKkuBIvnl6n2TfedqW9Xk5j9BH56L9UqgiDbCQqMGKU/IU6uJ0uCnXEFARGLD0tHGV//ZyjUDmYg6Y/yHBr96hHWgi51c8oesrpmvOLovZ6WReQVpOa1w8xSY/FyHYoy+E2oLFLrQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=joshuagrisham.com; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.166.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=joshuagrisham.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-il1-f174.google.com with SMTP id e9e14a558f8ab-3a81324bbdcso6767655ab.1;
+        Thu, 19 Dec 2024 09:31:35 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1734629495; x=1735234295;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=864pAgfmKQf//4O2IhEEwaTqgaNKE8D5q9hM+FeQgFk=;
+        b=kSbdjH9LkCPx8Twn2j7XR2VsS3n0Ne4RHm88tuWfzhb+VQIAtnckPsfb+YdCHstpVy
+         +zffI/N9PFilnF/DxcXjalGICcrCMxZOYhYEYhSkkhrRVvAZOfKifNBpHChHSOVXVOHG
+         Hcd3LmuhEu9aGYc8R9kMtTOXf/ANniiUxUG9ScNSPuBBli+MTBZ70+RTzEn/HeK3vgVz
+         7jvAI2cTKDCqzmRhnGQzXRCif00pight2iUI0LVO2J3GOZ/p6rLTzP1Ux6MEuoyfM+T7
+         4zCzfeRKKpcPE3DZZZ6vkEXxyuW8TKSOOhxOmJanSybcLXfhfaUditsrQ327i1qjbdIB
+         dWUQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUQ+upEBIe6I+hIDrCp9/1doNXXTFBY6SrglOkafM2MLg1Oz0Mzez3OeN6uNd5faqqp0ccjnbCFHo0qb/fbs9VHY0nfew==@vger.kernel.org, AJvYcCX1IVZjHgnjDnQ4OODRl/CjQMgq0ZL5XbH9UGOg8j9W8H2lKnxwMuKWWI8BrIh6oaKOA7wLcGWZIbk=@vger.kernel.org, AJvYcCXB5+3urBWM44gOGYNw0ymp3dWc+FdkYfEW5hhANrkDdfFUcrQXArqnAvMKf2NMEAwLCWjmYjaAe9Y4HFR2@vger.kernel.org
+X-Gm-Message-State: AOJu0YzzxIH0DMb9MqBLPPoIBdfeaBofHtxNL4mLFWCOj+0BLzsVPxAJ
+	xx0u00gu5T/2f4ElbQ8bP4hvdSuKcichV4cBfknROnK8e2VbGarYovZEWh02Qqs=
+X-Gm-Gg: ASbGncuFo49VzjopKeASzgbXHzN18KCG5lFBhe0GUEzFco4s4dURBgMRSRhuhJB/DOI
+	EeQJ8+xEQ7h5rzfIc9bnhcuGKz/6vJWF5gkHn7nkUuXoD6EhK3KW7xWliVv/MncCszeVC2qomqn
+	S6IQeosYE8uAO9xYN+rOqCDhKiQYp7UcJkFOpxhn7/ldv1VV/dAsCAvLn8iJN+qNn3vLwhVtGBg
+	l54df4Lfqp2h9ynDUtycpY6PHxg9EtYJAP36nvsYB7GHIHPGtmpH/i7c0Ejsxh1w6YxrB9oPqbq
+	OWy0ZOK27PIdXVUgkphTB/nkyA==
+X-Google-Smtp-Source: AGHT+IE0Vh8KWue6T3xiiPnp3Qqe14QPR3ysyIZyQbpN0rWNKiVyjR0B4mMqFtFbnVq99gleRAP83A==
+X-Received: by 2002:a05:6e02:3b07:b0:3a7:1f72:ad3c with SMTP id e9e14a558f8ab-3c013b07177mr47151195ab.19.1734629494884;
+        Thu, 19 Dec 2024 09:31:34 -0800 (PST)
+Received: from mail-il1-f179.google.com (mail-il1-f179.google.com. [209.85.166.179])
+        by smtp.gmail.com with ESMTPSA id 8926c6da1cb9f-4e68c1d9c7bsm370264173.124.2024.12.19.09.31.34
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 19 Dec 2024 09:31:34 -0800 (PST)
+Received: by mail-il1-f179.google.com with SMTP id e9e14a558f8ab-3a7e108b491so7560085ab.3;
+        Thu, 19 Dec 2024 09:31:34 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCW06EyBMnLtdgpVQLkd9frdC0/h8YHlnWmGCS+nGW60e/oK3Aqf7p3nKOLLjE1OUZkhmR3vD1Kk2kE=@vger.kernel.org, AJvYcCXQLrdWJIZVbdiI1hHIcRbO2F5WoX+DnRdu31/AVg9qNkO9RBrxoDfN86zTNMjCconCWaXmjVZH4dqYIrJsAqVrIha9Kw==@vger.kernel.org, AJvYcCXsjxKnPVCeoWp7NvJjgGosjf+R0N0SydNjo6ZJXTNm/uxIILxLtH+ppJY6VGHW7Wrln9MRNoW/iJCLBpbh@vger.kernel.org
+X-Received: by 2002:a05:6e02:2387:b0:3a7:c5c8:aa53 with SMTP id
+ e9e14a558f8ab-3c011b49314mr39069045ab.13.1734629494069; Thu, 19 Dec 2024
+ 09:31:34 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC 2/2] platform/x86/amd: pmf: Add manual control support
-To: Antheas Kapenekakis <lkml@antheas.dev>
-Cc: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>,
- "Rafael J . Wysocki" <rafael@kernel.org>, Hans de Goede
- <hdegoede@redhat.com>, =?UTF-8?Q?Ilpo_J=C3=A4rvinen?=
- <ilpo.jarvinen@linux.intel.com>, "Luke D . Jones" <luke@ljones.dev>,
- Mark Pearson <mpearson-lenovo@squebb.ca>,
- "open list:AMD PMF DRIVER" <platform-driver-x86@vger.kernel.org>,
- open list <linux-kernel@vger.kernel.org>,
- "open list:ACPI" <linux-acpi@vger.kernel.org>,
- "Derek J . Clark" <derekjohn.clark@gmail.com>, me@kylegospodneti.ch,
- Denis Benato <benato.denis96@gmail.com>,
- Mario Limonciello <mario.limonciello@amd.com>
-References: <20240926025955.1728766-1-superm1@kernel.org>
- <20240926025955.1728766-3-superm1@kernel.org>
- <CAGwozwFjo4uSFpCAXRKivK+VoeYz-Qftmw+iLtOrVnyhn3xpfA@mail.gmail.com>
- <ba5a7961-de65-41a1-a556-338ed1b06faa@kernel.org>
- <CAGwozwEAuGOKTsPvko4Ncg9nhkXiinb0B8-kXBaQ6dxyLocD5w@mail.gmail.com>
-Content-Language: en-US
-From: Mario Limonciello <superm1@kernel.org>
-In-Reply-To: <CAGwozwEAuGOKTsPvko4Ncg9nhkXiinb0B8-kXBaQ6dxyLocD5w@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+References: <20241216103855.18457-1-josh@joshuagrisham.com>
+ <13184052-baf2-4e7d-b8ef-9ba3f34d475a@t-8ch.de> <66897a27-5f81-46fc-898d-682456d7f37f@redhat.com>
+In-Reply-To: <66897a27-5f81-46fc-898d-682456d7f37f@redhat.com>
+From: Joshua Grisham <josh@joshuagrisham.com>
+Date: Thu, 19 Dec 2024 18:31:22 +0100
+X-Gmail-Original-Message-ID: <CAMF+KeZ3uAWZuuPJcrrvTJS-TgyxkqXOY_w=wNw7eZQiUkV5YA@mail.gmail.com>
+Message-ID: <CAMF+KeZ3uAWZuuPJcrrvTJS-TgyxkqXOY_w=wNw7eZQiUkV5YA@mail.gmail.com>
+Subject: Re: [PATCH v3] platform/x86: samsung-galaxybook: Add
+ samsung-galaxybook driver
+To: Hans de Goede <hdegoede@redhat.com>
+Cc: =?UTF-8?Q?Thomas_Wei=C3=9Fschuh?= <linux@weissschuh.net>, 
+	Joshua Grisham <josh@joshuagrisham.com>, ilpo.jarvinen@linux.intel.com, W_Armin@gmx.de, 
+	platform-driver-x86@vger.kernel.org, corbet@lwn.net, 
+	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 12/19/2024 09:24, Antheas Kapenekakis wrote:
-> On Thu, 19 Dec 2024 at 15:50, Mario Limonciello <superm1@kernel.org> wrote:
->>
->> On 12/19/2024 07:12, Antheas Kapenekakis wrote:
->>> Hi Mario,
->>> given that there is a Legion Go driver in the works, and Asus already
->>> has a driver, the only thing that would be left for locking down ACPI
->>> access is manufacturers w/o vendor APIs.
->>>
->>> So, can we restart the conversation about this driver? It would be
->>> nice to get to a place where we can lock down /dev/mem and ACPI by
->>> spring.
->>
->> As Shyam mentioned we don't have control for limits by the PMF driver
->> for this on PMF v2 (Strix) or later platforms.
->>
->> So if we were to revive this custom discussion it would only be for
->> Phoenix and Hawk Point platforms.
-> 
-> That's unfortunate.
-> 
->>>
->>> Moreover, since the other two proposed drivers use the
->>> firmware_attributes API, should this be used here as well?
->>
->> I do feel that if we revive this conversation specifically for Phoenix
->> and Hawk Point platforms yes we should use the same API to expose it to
->> userspace as those other two drivers do.
->>
->> I'd like Shyam's temperature on this idea though before anyone spends
->> time on it.  If he's amenable would you want to work on it?
-> 
-> We currently expect the 2025 lineup to include a lot of Strix Point
-> handhelds, so I'd like a solution that works with that. OneXPlayer
-> released a model already, and GPD is getting ready to ship as well.
-> 
-> Yeah, I could throw some hours to it after I go through some overdue stuff.
-> 
->>>
->>> By the way, you were right about needing a taint for this. Strix Point
->>> fails to enter a lower power state during sleep if you set it to lower
->>> than 10W. This is not ideal, as hawk point could go down to 5 while
->>> still showing a power difference, but I am unsure where this bug
->>> should be reported. This is both through ryzenadj/ALIB
->>
->> Who is to say this is a bug?  Abusing a debugging interface with a
->> reverse engineered tool means you might be able to configure a platform
->> out of specifications.
-> 
-> The spec being 10+W would be very undesirable for handhelds with Strix
-> Point, so I'd hope somebody looks into it, esp. if it can be fixed
-> with a BIOS fw update before more handhelds come out. I can raise the
-> minimum TDP to 10W, with some user complaints.
-> 
-> Asus and Lenovo use the same mailbox so they'd share the issue too.
-> 
-> FYI for a typical handheld with e.g., a 60Wh battery, a 10W envelope
-> results in around 20-22W total consumption which is around 2.5 hours.
-> Hawk Point can be TDP limited down to 16W total consumption (TDP ~7W)
-> and can go down to 8W with frame limiting etc. I do not have numbers
-> for Strix Point yet, but to match Hawk Point it has to allow TDP to go
-> down to 7W. I think for 2025, customer expectation will be 6-8 hours+
-> at low wattages.
-> 
+Thank you both Thomas and Hans for your review and comments! I am
+working on a v4 of the patch but had a few questions which I wanted to
+clarify (they can also come after in a v5 etc in case I managed to get
+this ready to go before anyone has the time to confirm and/or clarify
+some things!).
 
-I've got a fundamental question - why the fixation on PPT?
+Den tis 17 dec. 2024 kl 15:23 skrev Hans de Goede <hdegoede@redhat.com>:
+>
+> On 16-Dec-24 5:46 PM, Thomas Wei=C3=9Fschuh wrote:
+> >> +Various hardware settings can be controlled by the following sysfs at=
+tributes:
+> >> +
+> >> +- ``allow_recording`` (allows or blocks usage of built-in camera and =
+microphone)
+> >> +- ``start_on_lid_open`` (power on automatically when opening the lid)
+> >> +- ``usb_charge`` (allows USB ports to provide power even when device =
+is off)
+> >
+> > Non-standard sysfs attributes should be avoided where possible.
+> > Userspace will need bespoke code to handle them.
+> > This looks like it could be handled by the standard firmware_attributes
+> > interface.
+> > This would standardize discovery and usage.
+>
+> Ack this really feels like firmware-attributes. I would not be surprised
+> if there are matching BIOS settings and if changing those also changes
+> the sysfs files and likewise if the sysfs settings persist over reboot.
+>
 
-This just sets "limits" for the package.  In Windows it's probably the 
-best knob to tune to adjust performance in an effort to extend battery 
-life, but in Linux we have a lot of other knobs:
+Yes 2 of these (not this "allow_recording" I think) are available via
+BIOS and all 3 of them persist over restarts.
 
-* the ability to tune EPP (energy_performance_preference)
-* set min and max CPU frequencies (scaling_min_freq, scaling_max_freq)
-* offline cores at will
-* change DPM setting in the GPU driver (power_dpm_force_performance_level)
+Just so I am 100% clear what you mean here -- these type of attributes
+should be created using the utilities available in
+drivers/platform/x86/firmware_attributes_class.h so that they are
+created under the path /sys/class/firmware-attributes/*/attributes/*/
+?
 
-All the core related knobs can be changed on a per-core basis.  So for 
-example even on a non-heterogeneous design you could potentially make it 
-perform "like" a hetero design where you set it so that some cores don't 
-go above nominal frequency or the EPP value is tuned less aggressively 
-on some cores.
+What exactly should they be named (any preference?) and should I also
+add some documentation for them in
+Documentation/ABI/testing/sysfs-class-firmware-attributes ?
 
-These knobs can have just as drastic of a result on battery life as 
-adjusting the various power limiting knobs.  Most importantly these 
-knobs have architectural limits that you won't be able to override so 
-you can safely change them to min/max and see what happens.
+I am fairly sure I understand the concept and can agree that it kind
+of makes a lot of sense to be able to standardize the userspace
+interface, especially for attributes which do the exact same thing
+across different vendors/devices (unless it just as easily possible to
+go based on some pattern matching e.g. like is done in udev and upower
+with "*kbd_backlight*" etc) but as of now it looks like the only
+examples implemented are for thinklmi, dell-wmi, and hp-bioscfg that I
+can see so far?
 
-I feel like specifically if you keep EPP at balance_performance, keep 
-scaling_min_freq at lowest non linear frequency and change 
-scaling_max_freq on a few of the cores you should be able to influence 
-the battery life quite a bit while still keeping the system responsive.
+Before, I had tried to look through all of the various platform/x86
+drivers and harmonize which names I picked for these sysfs attributes
+(that is how I landed on "usb_charge" and "start_on_lid_open" as I
+recall correctly) but I am not aware of any existing userspace tools
+which are looking for anything like these (apart for
+driver/vendor-specific utilities). Any recommendation from the very
+wise people here would certainly be appreciated for these :)
+
+>
+> The allow-recording setting toggle is new to me. So this is changeable
+> at runtime, interesting.
+>
+> Joshua above you write this toggle both the microphone mute and
+> disables the camera?
+>
+> It would be good to report the camera state to userspace using
+> a separate input/evdev device which reports SW_CAMERA_LENS_COVER
+> as discussed here:
+>
+> https://lore.kernel.org/linux-media/CANiDSCtjpPG3XzaEOEeczZWO5gL-V_sj_Fv5=
+=3Dw82D6zKC9hnpw@mail.gmail.com/
+>
+> the plan is to make that the canonical API to reported "muted"
+> cameras.
+>
+> What happens with the camera when recording is disallowed,
+> dus it drop of the USB bus or does it only produce black
+> frames ?
+>
+> It is a bit unexpected that this one button controls both
+> microphone and camera mute. But given that unique behavior
+> I guess that handling this in the kernel is probably best.
+>
+> The alsamixer should send some events for the mic mute/unmute
+> I hope and we can use SW_CAMERA_LENS_COVER to report the camera
+> state.
+>
+
+Yes this is kind of an interesting one, also... In the user manuals
+for these Samsung devices, they actually call this feature "Block
+Recording." See the second link here with the same title:
+
+https://www.samsung.com/ca/support/computing/samsung-laptop-disable-the-web=
+cam/
+
+There is this software control in their "Samsung Settings" and/or
+"Samsung Security" application plus the hotkey, but they both function
+exactly the same (executing this ACPI method with the right payload).
+The reason I called it "allow recording" is because I was trying to
+take a simple approach in the beginning, and let the device value and
+userspace value have a 1:1 mapping (you send 0x1 if you want the
+webcam and mic to NOT block recording, i.e. be "allowed" and 0x0 if
+you them to be blocked). I thought that echo 1 > block_recording to
+turn OFF "blocking" felt backwards so I just reversed the name instead
+;) But in theory it could as easily be called "block_recording" and
+the kernel driver could handle the flip (0x1 from userspace becomes
+0x0 to/from the device and vice-versa).
+
+When you press the hotkey in Windows then there is an OSD popup from
+their own background software, but nothing actually happens to the
+devices themselves. Even in Linux via this driver or if you just
+directly execute the ACPI method with the right values in the buffer,
+what happens is that the image feed from the camera just becomes solid
+black and the mic input is just completely silent. The USB camera
+device is not removed or seemingly touched in anyway, and there does
+not seem to be any kind of sound device event at all from what I can
+tell (I tried to check using "amixer events" and a few other methods
+but never saw anything, and the mixer control in alsa is always
+un-muted like normal when toggling the feature on and off even though
+it stops the sound from being able to be recorded).
+
+It is as this switch name SW_CAMERA_LENS_COVER indicates, almost like
+a physical (virtual?) cover has been drawn over the camera and the
+microphone but they are still seen as operational and completely
+unchanged from a device perspective.
+
+What I have started with for now based on this thread, is that as it
+seems like KE_SW key entries should have a "sw" struct with code and
+value, that I am assuming I should send .code =3D SW_CAMERA_LENS_COVER,
+.value =3D 0 for "cover is removed/off/not blocking", and .code =3D
+SW_CAMERA_LENS_COVER, .value =3D 1 for "cover is placed/on/blocking",
+also it looks like I should send this event as part of init for the
+current state at init time (the input device seems to have a "state"
+associated to this switch) -- is this correct?
+
+And then is there any events or functions that should be called to
+notify of a mic mute switch (not actually to send the event to toggle
+mic mute to userspace, but to just report to userspace somehow that
+the mic has been muted by hardware, similar to this
+SW_CAMERA_LENS_COVER or led_classdev_notify_brightness_hw_changed()
+etc ?
+
+At the same time I am still not convinced what exactly the name of
+this attribute should be ("allow_recording" vs "block_recording" vs
+"camera_mic_privacy" etc ??)
+
+Other notifications that I am wondering what the "right" way to handle
+/ using the right interface:
+
+- Are there better events to use for these which these devices are
+reporting for "ACPI_NOTIFY_DEVICE_ON_TABLE" and
+"ACPI_NOTIFY_DEVICE_OFF_TABLE" , i.e. some kind of standard
+"switch"-like notification that the motion sensor in the device has
+detected that it has been placed or lifted from a flat surface?
+
+- When the battery charge control end threshold is reached, there is
+an ACPI notification on this device as well that is the one I have
+marked "ACPI_NOTIFY_BATTERY_STATE_CHANGED" -- the Samsung background
+apps pop up a custom OSD that basically says something to the effect
+that their "Battery saver is protecting the battery by stopping
+charging" (can't remember the exact verbiage) and they change the
+battery icon, but without doing anything else in my driver currently
+the battery still reports state of "charging" even though it just sits
+constantly at the percentage (and has the charging icon in GNOME etc).
+I have seen the event come and go occasionally when I did not expect
+it, but my working theory is that maybe it is if/when the battery
+starts charging again if it dips too far below the target "end
+threshold" and then notifies again when the threshold has been
+reached. Armin also mentioned this before in a different mail; I guess
+I would hope/expect there is an event or a function I could call to
+have the state reflected correctly but I would not want that it
+negatively impacts the normal behavior of charging the battery itself
+(just that the state/icon would change would be ideal! as it functions
+perfectly, it is just that the state and icon are not accurate).
+
+> <snip>
+>
+> Regards,
+>
+> Hans
+>
+
+Thanks again!
+
+Best regards,
+Joshua
