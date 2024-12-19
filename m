@@ -1,261 +1,321 @@
-Received: from mail-il1-f174.google.com (mail-il1-f174.google.com [209.85.166.174])
+Received: from mail-lf1-f47.google.com (mail-lf1-f47.google.com [209.85.167.47])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E0A22154C04;
-	Thu, 19 Dec 2024 17:31:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D17F11C6F55;
+	Thu, 19 Dec 2024 20:08:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1734629497; cv=none; b=BXPrgUXPuOMHzwIziMhScEtvJuKkukDMNyj5i5Nf8VJJoTDYjc8wE8KzOZDFQbEkOSDusKcYxxqWNKKLXWSGr54crRVukH5B7U7T7YZuUi3Jee3XJBm5wAJSAu72hwXZuV/9UMBA3ubCweqR3ef27c40hm3JR5TcT085+qH6bZQ=
+	t=1734638918; cv=none; b=DHJuCfMBHXK7duFiKmnJ31lOSAfKWp9jcjrb4xH+eATtKnvD3V48r/4o/2IxD54aOtB2iD2k3nTopNd8rZniShfyBWqrh57KT6Wg+eVY2TDD/KVum8T3FeYefpqVcHTKtZCqYrd84ujQkRsd2iVsLlcoydvSCaH215oA49kwX+I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1734629497; c=relaxed/simple;
-	bh=864pAgfmKQf//4O2IhEEwaTqgaNKE8D5q9hM+FeQgFk=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=lHrCzzibf0/0rIMewAm7gDdTahaxbCfcZyfKkuBIvnl6n2TfedqW9Xk5j9BH56L9UqgiDbCQqMGKU/IU6uJ0uCnXEFARGLD0tHGV//ZyjUDmYg6Y/yHBr96hHWgi51c8oesrpmvOLovZ6WReQVpOa1w8xSY/FyHYoy+E2oLFLrQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=joshuagrisham.com; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.166.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=joshuagrisham.com
+	s=arc-20240116; t=1734638918; c=relaxed/simple;
+	bh=jg+Er16seDmoKpGs/9lT/ITlebvU2tlXkSQV2i9rWOg=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=Jhcr8iRuV3IaYPhmWTlOTEobWPP1/cYg4fAu+a8r8c+Ub9Q/oe/57yh6VSeP1+X+P0ejp6X9BU6YHaQnQ9Gr2yOg1ntyBK1Ftzfui5POK0lUHsPDNUPW/Mx8finuh7HSmZGEzqq6qjMMMj1/bUXnzl8dcvExRWc7surm9hxyqTE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=CHEShny4; arc=none smtp.client-ip=209.85.167.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-il1-f174.google.com with SMTP id e9e14a558f8ab-3a81324bbdcso6767655ab.1;
-        Thu, 19 Dec 2024 09:31:35 -0800 (PST)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CHEShny4"
+Received: by mail-lf1-f47.google.com with SMTP id 2adb3069b0e04-54020b0dcd2so2367640e87.1;
+        Thu, 19 Dec 2024 12:08:36 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1734638915; x=1735243715; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=sPaohUawxCoZuNaOQRaHJC/S0epHyE5msg96wUYCYlM=;
+        b=CHEShny4v3FAQ3G/tQJjogtxewI3IZwXaIRYfxoC0NjqDF5yd2/EsKNcFzmQT3OgDT
+         0QMhPNNCCYvCBkcXAaq3XUoFHJkoBSZSXMgInqOOSG45HL3+LA/zeAqsqVR1R5//tKc1
+         LLSVfsHM4dF6hFaguQRkJ1TvkLIk82J0qXJO/rlXq1wueGH/vmfxcl4e8Agjbc7lbNQH
+         PjxfDayWelaj1vA2mZdR5NqpudeC9bCEg78XedQjpFnVLOgqJHOljbgl14sGWE2f4k+V
+         aPNJ0fJGAZy9l3tp2+9Q090jDmp8V3AHv9oQ8bKLBM32HPjLJSzuMKZRPf5Zm0lD4Ryl
+         JLYg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1734629495; x=1735234295;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+        d=1e100.net; s=20230601; t=1734638915; x=1735243715;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=864pAgfmKQf//4O2IhEEwaTqgaNKE8D5q9hM+FeQgFk=;
-        b=kSbdjH9LkCPx8Twn2j7XR2VsS3n0Ne4RHm88tuWfzhb+VQIAtnckPsfb+YdCHstpVy
-         +zffI/N9PFilnF/DxcXjalGICcrCMxZOYhYEYhSkkhrRVvAZOfKifNBpHChHSOVXVOHG
-         Hcd3LmuhEu9aGYc8R9kMtTOXf/ANniiUxUG9ScNSPuBBli+MTBZ70+RTzEn/HeK3vgVz
-         7jvAI2cTKDCqzmRhnGQzXRCif00pight2iUI0LVO2J3GOZ/p6rLTzP1Ux6MEuoyfM+T7
-         4zCzfeRKKpcPE3DZZZ6vkEXxyuW8TKSOOhxOmJanSybcLXfhfaUditsrQ327i1qjbdIB
-         dWUQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUQ+upEBIe6I+hIDrCp9/1doNXXTFBY6SrglOkafM2MLg1Oz0Mzez3OeN6uNd5faqqp0ccjnbCFHo0qb/fbs9VHY0nfew==@vger.kernel.org, AJvYcCX1IVZjHgnjDnQ4OODRl/CjQMgq0ZL5XbH9UGOg8j9W8H2lKnxwMuKWWI8BrIh6oaKOA7wLcGWZIbk=@vger.kernel.org, AJvYcCXB5+3urBWM44gOGYNw0ymp3dWc+FdkYfEW5hhANrkDdfFUcrQXArqnAvMKf2NMEAwLCWjmYjaAe9Y4HFR2@vger.kernel.org
-X-Gm-Message-State: AOJu0YzzxIH0DMb9MqBLPPoIBdfeaBofHtxNL4mLFWCOj+0BLzsVPxAJ
-	xx0u00gu5T/2f4ElbQ8bP4hvdSuKcichV4cBfknROnK8e2VbGarYovZEWh02Qqs=
-X-Gm-Gg: ASbGncuFo49VzjopKeASzgbXHzN18KCG5lFBhe0GUEzFco4s4dURBgMRSRhuhJB/DOI
-	EeQJ8+xEQ7h5rzfIc9bnhcuGKz/6vJWF5gkHn7nkUuXoD6EhK3KW7xWliVv/MncCszeVC2qomqn
-	S6IQeosYE8uAO9xYN+rOqCDhKiQYp7UcJkFOpxhn7/ldv1VV/dAsCAvLn8iJN+qNn3vLwhVtGBg
-	l54df4Lfqp2h9ynDUtycpY6PHxg9EtYJAP36nvsYB7GHIHPGtmpH/i7c0Ejsxh1w6YxrB9oPqbq
-	OWy0ZOK27PIdXVUgkphTB/nkyA==
-X-Google-Smtp-Source: AGHT+IE0Vh8KWue6T3xiiPnp3Qqe14QPR3ysyIZyQbpN0rWNKiVyjR0B4mMqFtFbnVq99gleRAP83A==
-X-Received: by 2002:a05:6e02:3b07:b0:3a7:1f72:ad3c with SMTP id e9e14a558f8ab-3c013b07177mr47151195ab.19.1734629494884;
-        Thu, 19 Dec 2024 09:31:34 -0800 (PST)
-Received: from mail-il1-f179.google.com (mail-il1-f179.google.com. [209.85.166.179])
-        by smtp.gmail.com with ESMTPSA id 8926c6da1cb9f-4e68c1d9c7bsm370264173.124.2024.12.19.09.31.34
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 19 Dec 2024 09:31:34 -0800 (PST)
-Received: by mail-il1-f179.google.com with SMTP id e9e14a558f8ab-3a7e108b491so7560085ab.3;
-        Thu, 19 Dec 2024 09:31:34 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCW06EyBMnLtdgpVQLkd9frdC0/h8YHlnWmGCS+nGW60e/oK3Aqf7p3nKOLLjE1OUZkhmR3vD1Kk2kE=@vger.kernel.org, AJvYcCXQLrdWJIZVbdiI1hHIcRbO2F5WoX+DnRdu31/AVg9qNkO9RBrxoDfN86zTNMjCconCWaXmjVZH4dqYIrJsAqVrIha9Kw==@vger.kernel.org, AJvYcCXsjxKnPVCeoWp7NvJjgGosjf+R0N0SydNjo6ZJXTNm/uxIILxLtH+ppJY6VGHW7Wrln9MRNoW/iJCLBpbh@vger.kernel.org
-X-Received: by 2002:a05:6e02:2387:b0:3a7:c5c8:aa53 with SMTP id
- e9e14a558f8ab-3c011b49314mr39069045ab.13.1734629494069; Thu, 19 Dec 2024
- 09:31:34 -0800 (PST)
+        bh=sPaohUawxCoZuNaOQRaHJC/S0epHyE5msg96wUYCYlM=;
+        b=Cob8mW/KvEqDlHVMQ/xFv5IMfqqJMJvLxuVMSaB4QTnj+mz+HVAbElUmq+9nsuwGb7
+         wdNIqBq6VdF7BBJcGzBiwZiYJTJgYYIIu3vX6Bne9sTCak8KJaO1jDfvEoP+pgM0GrHW
+         na/vy8Hy7VQ3PNqrfU4OdMzW7gveutkdKYwo0VSBAKErxD0nklg9BzljFxrqWfdjGe8h
+         YMcAB8D1Y16LoQmP7y17QyQvmVE21JjjQB3OiMNsHZm47xNdF7uSWLFZZuwQvnUegW96
+         k9mwmAVTolI0b5Zho7yp5sm2iM9OqFZ3mY8AuNsVB8WL8fyaQJpxA+FBf9tsjFP8lSRq
+         1FCQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWC6RZNV7ISOUGnx+KnTWU2GuY7XIt7Kt9q9fxyWpcHoZIDzlRTEuOOKYGXjbnit+yhalxgFlAIGJ9AKpY=@vger.kernel.org, AJvYcCXdDHHfj6AHXogLNPWOU12BVTyKhNLfRD4isSSs3EX/drngYIScVJY9CcKoRW2Hp/zTyN6Tdj+jkxNPI229rK4=@vger.kernel.org, AJvYcCXxEUajrEQWWerloef3Y5yK6ULhZBSsCWieklFNzHuKQMdUulpb1wrdnDiZw558+yIyPJeJ4lO++bjvBK39XpOkm0W79Q==@vger.kernel.org
+X-Gm-Message-State: AOJu0YxsIMgvwcj8BLK8B7F73rAkwlEVEfs+FMfCsqR6ShDHHBsbaFHT
+	m6JfynU9QinLx8qEsKbz0wsQlvaOGo2REE0Xd043Mbi8EwrvpEZP
+X-Gm-Gg: ASbGncv3IMj7yEcWbrGWJO6CpXec4dEA0VVr0SJRFLL/d2pVy95Khxh/tZiZ8mTnTtV
+	js6RJ0N6xq4au/zqCSGbQ9JW5aWAzKoepIj2OQbqR9MeFdKCLOXrOLbXHwWNnyK+JLgyMda9kR3
+	rIDOoQBJE81+LQboA2H0hWBdlEjJIONP+D0IEgrzGKwDx1ghZFCn2cNZyIDgBCuajolYMkOCVXJ
+	vdsgtcLh3YubiBZ09zBVnVP7Lp1l8hKowOt30Fk4qSZyF//ALlEwPA4AVbDKrY4w2mgjAL4byRw
+	9hE=
+X-Google-Smtp-Source: AGHT+IHsvHxtOEZWZs4q6trnCTg7IDIJ2M+dLqrP3IZVxsZpl8GaPLsxWOz/E2bnOsH9DUfbp+toZQ==
+X-Received: by 2002:a05:6512:1591:b0:540:3566:5396 with SMTP id 2adb3069b0e04-54229474f7fmr11253e87.27.1734638914675;
+        Thu, 19 Dec 2024 12:08:34 -0800 (PST)
+Received: from localhost.localdomain ([2a02:a311:80b0:1c80:9433:9060:39fc:2954])
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-542238135d8sm265642e87.145.2024.12.19.12.08.31
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 19 Dec 2024 12:08:33 -0800 (PST)
+From: Maya Matuszczyk <maccraft123mc@gmail.com>
+To: Hans de Goede <hdegoede@redhat.com>,
+	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	"Bryan O'Donoghue" <bryan.odonoghue@linaro.org>,
+	Maya Matuszczyk <maccraft123mc@gmail.com>,
+	Miguel Ojeda <ojeda@kernel.org>,
+	Alex Gaynor <alex.gaynor@gmail.com>,
+	Boqun Feng <boqun.feng@gmail.com>,
+	Gary Guo <gary@garyguo.net>,
+	=?UTF-8?q?Bj=C3=B6rn=20Roy=20Baron?= <bjorn3_gh@protonmail.com>,
+	Benno Lossin <benno.lossin@proton.me>,
+	Andreas Hindborg <a.hindborg@kernel.org>,
+	Alice Ryhl <aliceryhl@google.com>,
+	Trevor Gross <tmgross@umich.edu>
+Cc: linux-arm-msm@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	platform-driver-x86@vger.kernel.org,
+	rust-for-linux@vger.kernel.org
+Subject: [PATCH v2 2/3] platform: arm64: Add driver for EC found in most X1E laptops
+Date: Thu, 19 Dec 2024 21:08:19 +0100
+Message-ID: <20241219200821.8328-2-maccraft123mc@gmail.com>
+X-Mailer: git-send-email 2.45.2
+In-Reply-To: <20241219200821.8328-1-maccraft123mc@gmail.com>
+References: <20241219200821.8328-1-maccraft123mc@gmail.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20241216103855.18457-1-josh@joshuagrisham.com>
- <13184052-baf2-4e7d-b8ef-9ba3f34d475a@t-8ch.de> <66897a27-5f81-46fc-898d-682456d7f37f@redhat.com>
-In-Reply-To: <66897a27-5f81-46fc-898d-682456d7f37f@redhat.com>
-From: Joshua Grisham <josh@joshuagrisham.com>
-Date: Thu, 19 Dec 2024 18:31:22 +0100
-X-Gmail-Original-Message-ID: <CAMF+KeZ3uAWZuuPJcrrvTJS-TgyxkqXOY_w=wNw7eZQiUkV5YA@mail.gmail.com>
-Message-ID: <CAMF+KeZ3uAWZuuPJcrrvTJS-TgyxkqXOY_w=wNw7eZQiUkV5YA@mail.gmail.com>
-Subject: Re: [PATCH v3] platform/x86: samsung-galaxybook: Add
- samsung-galaxybook driver
-To: Hans de Goede <hdegoede@redhat.com>
-Cc: =?UTF-8?Q?Thomas_Wei=C3=9Fschuh?= <linux@weissschuh.net>, 
-	Joshua Grisham <josh@joshuagrisham.com>, ilpo.jarvinen@linux.intel.com, W_Armin@gmx.de, 
-	platform-driver-x86@vger.kernel.org, corbet@lwn.net, 
-	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-Thank you both Thomas and Hans for your review and comments! I am
-working on a v4 of the patch but had a few questions which I wanted to
-clarify (they can also come after in a v5 etc in case I managed to get
-this ready to go before anyone has the time to confirm and/or clarify
-some things!).
+Currently it features only reporting that the AP is going to suspend,
+which results in keyboard backlight turning off and the power LED
+slowly blinking on the Lenovo Yoga Slim 7x.
 
-Den tis 17 dec. 2024 kl 15:23 skrev Hans de Goede <hdegoede@redhat.com>:
->
-> On 16-Dec-24 5:46 PM, Thomas Wei=C3=9Fschuh wrote:
-> >> +Various hardware settings can be controlled by the following sysfs at=
-tributes:
-> >> +
-> >> +- ``allow_recording`` (allows or blocks usage of built-in camera and =
-microphone)
-> >> +- ``start_on_lid_open`` (power on automatically when opening the lid)
-> >> +- ``usb_charge`` (allows USB ports to provide power even when device =
-is off)
-> >
-> > Non-standard sysfs attributes should be avoided where possible.
-> > Userspace will need bespoke code to handle them.
-> > This looks like it could be handled by the standard firmware_attributes
-> > interface.
-> > This would standardize discovery and usage.
->
-> Ack this really feels like firmware-attributes. I would not be surprised
-> if there are matching BIOS settings and if changing those also changes
-> the sysfs files and likewise if the sysfs settings persist over reboot.
->
+Honor Magicbook Art 14 and Lenovo Yoga Slim 7x are known to have
+firmware with extensions which would need appropriate handling.
+For reverse engineering the firmware on them I have written a Rust
+utility:
 
-Yes 2 of these (not this "allow_recording" I think) are available via
-BIOS and all 3 of them persist over restarts.
+https://github.com/Maccraft123/it8987-qcom-tool.git
 
-Just so I am 100% clear what you mean here -- these type of attributes
-should be created using the utilities available in
-drivers/platform/x86/firmware_attributes_class.h so that they are
-created under the path /sys/class/firmware-attributes/*/attributes/*/
-?
+Signed-off-by: Maya Matuszczyk <maccraft123mc@gmail.com>
+---
+ MAINTAINERS                              |   6 +
+ drivers/platform/arm64/Kconfig           |   8 ++
+ drivers/platform/arm64/Makefile          |   1 +
+ drivers/platform/arm64/qcom-x1e-it8987.c | 158 +++++++++++++++++++++++
+ 4 files changed, 173 insertions(+)
+ create mode 100644 drivers/platform/arm64/qcom-x1e-it8987.c
 
-What exactly should they be named (any preference?) and should I also
-add some documentation for them in
-Documentation/ABI/testing/sysfs-class-firmware-attributes ?
+diff --git a/MAINTAINERS b/MAINTAINERS
+index b878ddc99f94..08d170e2e1e3 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -12890,6 +12890,12 @@ S:	Maintained
+ W:	http://legousb.sourceforge.net/
+ F:	drivers/usb/misc/legousbtower.c
+ 
++QCOM IT8987 EC DRIVER
++M:	Maya Matuszczyk <maccraft123mc@gmail.com>
++S:	Maintained
++F:	Documentation/devicetree/bindings/platform/qcom,x1e-it8987-ec.yaml
++F:	drivers/platform/arm64/qcom-x1e-it8987.c
++
+ LETSKETCH HID TABLET DRIVER
+ M:	Hans de Goede <hdegoede@redhat.com>
+ L:	linux-input@vger.kernel.org
+diff --git a/drivers/platform/arm64/Kconfig b/drivers/platform/arm64/Kconfig
+index f88395ea3376..ebb7b4f70ca0 100644
+--- a/drivers/platform/arm64/Kconfig
++++ b/drivers/platform/arm64/Kconfig
+@@ -49,4 +49,12 @@ config EC_LENOVO_YOGA_C630
+ 
+ 	  Say M or Y here to include this support.
+ 
++config EC_QCOM_X1E_IT8987
++	tristate "Embedded Controller driver for most X1E80100 laptops"
++	depends on ARCH_QCOM || COMPILE_TEST
++	depends on I2C
++	help
++	  This driver currently supports reporting device suspend to the EC so it
++	  can take appropriate actions.
++
+ endif # ARM64_PLATFORM_DEVICES
+diff --git a/drivers/platform/arm64/Makefile b/drivers/platform/arm64/Makefile
+index b2ae9114fdd8..b9aa195bc1e6 100644
+--- a/drivers/platform/arm64/Makefile
++++ b/drivers/platform/arm64/Makefile
+@@ -7,3 +7,4 @@
+ 
+ obj-$(CONFIG_EC_ACER_ASPIRE1)	+= acer-aspire1-ec.o
+ obj-$(CONFIG_EC_LENOVO_YOGA_C630) += lenovo-yoga-c630.o
++obj-$(CONFIG_EC_QCOM_X1E_IT8987) += qcom-x1e-it8987.o
+diff --git a/drivers/platform/arm64/qcom-x1e-it8987.c b/drivers/platform/arm64/qcom-x1e-it8987.c
+new file mode 100644
+index 000000000000..d27067d6326a
+--- /dev/null
++++ b/drivers/platform/arm64/qcom-x1e-it8987.c
+@@ -0,0 +1,158 @@
++// SPDX-License-Identifier: GPL-2.0-only
++/*
++ * Copyright (c) 2024 Maya Matuszczyk <maccraft123mc@gmail.com>
++ */
++#include <linux/i2c.h>
++#include <linux/module.h>
++#include <linux/input.h>
++#include <linux/input/sparse-keymap.h>
++
++#define EC_IRQ_REASON_REG 0x05
++#define EC_SUSPEND_RESUME_REG 0x23
++#define EC_IRQ_ENABLE_REG 0x35
++
++#define EC_NOTIFY_SUSPEND_ENTER 0x01
++#define EC_NOTIFY_SUSPEND_EXIT 0x00
++#define EC_NOTIFY_SCREEN_OFF 0x03
++#define EC_NOTIFY_SCREEN_ON 0x04
++
++#define EC_IRQ_MICMUTE_BUTTON 0x04
++#define EC_IRQ_FAN1_STATUS_CHANGE 0x30
++#define EC_IRQ_FAN2_STATUS_CHANGE 0x31
++#define EC_IRQ_FAN1_SPEED_CHANGE 0x32
++#define EC_IRQ_FAN2_SPEED_CHANGE 0x33
++#define EC_IRQ_COMPLETED_LUT_UPDATE 0x34
++#define EC_IRQ_COMPLETED_FAN_PROFILE_SWITCH 0x35
++#define EC_IRQ_THERMISTOR_1_TEMP_THRESHOLD_CROSS 0x36
++#define EC_IRQ_THERMISTOR_2_TEMP_THRESHOLD_CROSS 0x37
++#define EC_IRQ_THERMISTOR_3_TEMP_THRESHOLD_CROSS 0x38
++#define EC_IRQ_THERMISTOR_4_TEMP_THRESHOLD_CROSS 0x39
++#define EC_IRQ_THERMISTOR_5_TEMP_THRESHOLD_CROSS 0x3a
++#define EC_IRQ_THERMISTOR_6_TEMP_THRESHOLD_CROSS 0x3b
++#define EC_IRQ_THERMISTOR_7_TEMP_THRESHOLD_CROSS 0x3c
++#define EC_IRQ_RECOVERED_FROM_RESET 0x3d
++
++struct qcom_x1e_it8987_ec {
++	struct i2c_client *client;
++	struct input_dev *idev;
++	struct mutex lock;
++};
++
++static irqreturn_t qcom_x1e_it8987_ec_irq(int irq, void *data)
++{
++	struct qcom_x1e_it8987_ec *ec = data;
++	struct device *dev = &ec->client->dev;
++	int val;
++
++	guard(mutex)(&ec->lock);
++
++	val = i2c_smbus_read_byte_data(ec->client, EC_IRQ_REASON_REG);
++	if (val < 0) {
++		dev_err(dev, "Failed to get EC IRQ reason: %d\n", val);
++		return IRQ_HANDLED;
++	}
++
++	dev_info(dev, "Unhandled EC IRQ reason: %d\n", val);
++
++	return IRQ_HANDLED;
++}
++
++static int qcom_x1e_it8987_ec_probe(struct i2c_client *client)
++{
++	struct device *dev = &client->dev;
++	struct qcom_x1e_it8987_ec *ec;
++	int ret;
++
++	ec = devm_kzalloc(dev, sizeof(*ec), GFP_KERNEL);
++	if (!ec)
++		return -ENOMEM;
++
++	mutex_init(&ec->lock);
++	ec->client = client;
++
++	ret = devm_request_threaded_irq(dev, client->irq,
++					NULL, qcom_x1e_it8987_ec_irq,
++					IRQF_ONESHOT, "qcom_x1e_it8987_ec", ec);
++	if (ret < 0)
++		return dev_err_probe(dev, ret, "Unable to request irq\n");
++
++	ret = i2c_smbus_write_byte_data(client, EC_IRQ_ENABLE_REG, 0x01);
++	if (ret < 0)
++		return dev_err_probe(dev, ret, "Failed to enable interrupts\n");
++
++	return 0;
++}
++
++static void qcom_x1e_it8987_ec_remove(struct i2c_client *client)
++{
++	struct device *dev = &client->dev;
++	int ret;
++
++	ret = i2c_smbus_write_byte_data(client, EC_IRQ_ENABLE_REG, 0x00);
++	if (ret < 0)
++		dev_err(dev, "Failed to disable interrupts: %d\n", ret);
++}
++
++static int qcom_x1e_it8987_ec_suspend(struct device *dev)
++{
++	struct i2c_client *client = to_i2c_client(dev);
++	int ret;
++
++	ret = i2c_smbus_write_byte_data(client, EC_SUSPEND_RESUME_REG, EC_NOTIFY_SCREEN_OFF);
++	if (ret)
++		return ret;
++
++	ret = i2c_smbus_write_byte_data(client, EC_SUSPEND_RESUME_REG, EC_NOTIFY_SUSPEND_ENTER);
++	if (ret)
++		return ret;
++
++	return 0;
++}
++
++static int qcom_x1e_it8987_ec_resume(struct device *dev)
++{
++	struct i2c_client *client = to_i2c_client(dev);
++	int ret;
++
++	ret = i2c_smbus_write_byte_data(client, EC_SUSPEND_RESUME_REG, EC_NOTIFY_SUSPEND_EXIT);
++	if (ret)
++		return ret;
++
++	ret = i2c_smbus_write_byte_data(client, EC_SUSPEND_RESUME_REG, EC_NOTIFY_SCREEN_ON);
++	if (ret)
++		return ret;
++
++	return 0;
++}
++
++static const struct of_device_id qcom_x1e_it8987_ec_of_match[] = {
++	{ .compatible = "lenovo,yoga-slim7x-ec" },
++	{ .compatible = "qcom,x1e-it9897-ec" },
++	{}
++};
++MODULE_DEVICE_TABLE(of, qcom_x1e_it8987_ec_of_match);
++
++static const struct i2c_device_id qcom_x1e_it8987_ec_i2c_id_table[] = {
++	{ "qcom-x1e-it8987-ec", },
++	{}
++};
++MODULE_DEVICE_TABLE(i2c, qcom_x1e_it8987_ec_i2c_id_table);
++
++static DEFINE_SIMPLE_DEV_PM_OPS(qcom_x1e_it8987_ec_pm_ops,
++		qcom_x1e_it8987_ec_suspend,
++		qcom_x1e_it8987_ec_resume);
++
++static struct i2c_driver qcom_x1e_it8987_ec_i2c_driver = {
++	.driver = {
++		.name = "yoga-slim7x-ec",
++		.of_match_table = qcom_x1e_it8987_ec_of_match,
++		.pm = &qcom_x1e_it8987_ec_pm_ops
++	},
++	.probe = qcom_x1e_it8987_ec_probe,
++	.remove = qcom_x1e_it8987_ec_remove,
++	.id_table = qcom_x1e_it8987_ec_i2c_id_table,
++};
++module_i2c_driver(qcom_x1e_it8987_ec_i2c_driver);
++
++MODULE_DESCRIPTION("Lenovo Yoga Slim 7x Embedded Controller");
++MODULE_LICENSE("GPL");
+-- 
+2.45.2
 
-I am fairly sure I understand the concept and can agree that it kind
-of makes a lot of sense to be able to standardize the userspace
-interface, especially for attributes which do the exact same thing
-across different vendors/devices (unless it just as easily possible to
-go based on some pattern matching e.g. like is done in udev and upower
-with "*kbd_backlight*" etc) but as of now it looks like the only
-examples implemented are for thinklmi, dell-wmi, and hp-bioscfg that I
-can see so far?
-
-Before, I had tried to look through all of the various platform/x86
-drivers and harmonize which names I picked for these sysfs attributes
-(that is how I landed on "usb_charge" and "start_on_lid_open" as I
-recall correctly) but I am not aware of any existing userspace tools
-which are looking for anything like these (apart for
-driver/vendor-specific utilities). Any recommendation from the very
-wise people here would certainly be appreciated for these :)
-
->
-> The allow-recording setting toggle is new to me. So this is changeable
-> at runtime, interesting.
->
-> Joshua above you write this toggle both the microphone mute and
-> disables the camera?
->
-> It would be good to report the camera state to userspace using
-> a separate input/evdev device which reports SW_CAMERA_LENS_COVER
-> as discussed here:
->
-> https://lore.kernel.org/linux-media/CANiDSCtjpPG3XzaEOEeczZWO5gL-V_sj_Fv5=
-=3Dw82D6zKC9hnpw@mail.gmail.com/
->
-> the plan is to make that the canonical API to reported "muted"
-> cameras.
->
-> What happens with the camera when recording is disallowed,
-> dus it drop of the USB bus or does it only produce black
-> frames ?
->
-> It is a bit unexpected that this one button controls both
-> microphone and camera mute. But given that unique behavior
-> I guess that handling this in the kernel is probably best.
->
-> The alsamixer should send some events for the mic mute/unmute
-> I hope and we can use SW_CAMERA_LENS_COVER to report the camera
-> state.
->
-
-Yes this is kind of an interesting one, also... In the user manuals
-for these Samsung devices, they actually call this feature "Block
-Recording." See the second link here with the same title:
-
-https://www.samsung.com/ca/support/computing/samsung-laptop-disable-the-web=
-cam/
-
-There is this software control in their "Samsung Settings" and/or
-"Samsung Security" application plus the hotkey, but they both function
-exactly the same (executing this ACPI method with the right payload).
-The reason I called it "allow recording" is because I was trying to
-take a simple approach in the beginning, and let the device value and
-userspace value have a 1:1 mapping (you send 0x1 if you want the
-webcam and mic to NOT block recording, i.e. be "allowed" and 0x0 if
-you them to be blocked). I thought that echo 1 > block_recording to
-turn OFF "blocking" felt backwards so I just reversed the name instead
-;) But in theory it could as easily be called "block_recording" and
-the kernel driver could handle the flip (0x1 from userspace becomes
-0x0 to/from the device and vice-versa).
-
-When you press the hotkey in Windows then there is an OSD popup from
-their own background software, but nothing actually happens to the
-devices themselves. Even in Linux via this driver or if you just
-directly execute the ACPI method with the right values in the buffer,
-what happens is that the image feed from the camera just becomes solid
-black and the mic input is just completely silent. The USB camera
-device is not removed or seemingly touched in anyway, and there does
-not seem to be any kind of sound device event at all from what I can
-tell (I tried to check using "amixer events" and a few other methods
-but never saw anything, and the mixer control in alsa is always
-un-muted like normal when toggling the feature on and off even though
-it stops the sound from being able to be recorded).
-
-It is as this switch name SW_CAMERA_LENS_COVER indicates, almost like
-a physical (virtual?) cover has been drawn over the camera and the
-microphone but they are still seen as operational and completely
-unchanged from a device perspective.
-
-What I have started with for now based on this thread, is that as it
-seems like KE_SW key entries should have a "sw" struct with code and
-value, that I am assuming I should send .code =3D SW_CAMERA_LENS_COVER,
-.value =3D 0 for "cover is removed/off/not blocking", and .code =3D
-SW_CAMERA_LENS_COVER, .value =3D 1 for "cover is placed/on/blocking",
-also it looks like I should send this event as part of init for the
-current state at init time (the input device seems to have a "state"
-associated to this switch) -- is this correct?
-
-And then is there any events or functions that should be called to
-notify of a mic mute switch (not actually to send the event to toggle
-mic mute to userspace, but to just report to userspace somehow that
-the mic has been muted by hardware, similar to this
-SW_CAMERA_LENS_COVER or led_classdev_notify_brightness_hw_changed()
-etc ?
-
-At the same time I am still not convinced what exactly the name of
-this attribute should be ("allow_recording" vs "block_recording" vs
-"camera_mic_privacy" etc ??)
-
-Other notifications that I am wondering what the "right" way to handle
-/ using the right interface:
-
-- Are there better events to use for these which these devices are
-reporting for "ACPI_NOTIFY_DEVICE_ON_TABLE" and
-"ACPI_NOTIFY_DEVICE_OFF_TABLE" , i.e. some kind of standard
-"switch"-like notification that the motion sensor in the device has
-detected that it has been placed or lifted from a flat surface?
-
-- When the battery charge control end threshold is reached, there is
-an ACPI notification on this device as well that is the one I have
-marked "ACPI_NOTIFY_BATTERY_STATE_CHANGED" -- the Samsung background
-apps pop up a custom OSD that basically says something to the effect
-that their "Battery saver is protecting the battery by stopping
-charging" (can't remember the exact verbiage) and they change the
-battery icon, but without doing anything else in my driver currently
-the battery still reports state of "charging" even though it just sits
-constantly at the percentage (and has the charging icon in GNOME etc).
-I have seen the event come and go occasionally when I did not expect
-it, but my working theory is that maybe it is if/when the battery
-starts charging again if it dips too far below the target "end
-threshold" and then notifies again when the threshold has been
-reached. Armin also mentioned this before in a different mail; I guess
-I would hope/expect there is an event or a function I could call to
-have the state reflected correctly but I would not want that it
-negatively impacts the normal behavior of charging the battery itself
-(just that the state/icon would change would be ideal! as it functions
-perfectly, it is just that the state and icon are not accurate).
-
-> <snip>
->
-> Regards,
->
-> Hans
->
-
-Thanks again!
-
-Best regards,
-Joshua
