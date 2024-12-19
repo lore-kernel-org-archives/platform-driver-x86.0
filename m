@@ -1,111 +1,101 @@
-Received: from mail-lf1-f50.google.com (mail-lf1-f50.google.com [209.85.167.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5FD791BC9E2;
-	Thu, 19 Dec 2024 23:20:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 69D5A1C57B2;
+	Thu, 19 Dec 2024 23:55:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1734650453; cv=none; b=TPv1CZzJ+LnDz45ay/qYB5gr2+iYoC2GtnkSmqVI6XGZsa1SoMzB4x9bZ/ZOo0O5+VsS1qYU5xmUdDQ0e8jW9jc+rIFl/YSBBZk3fojdmcjHmToyEMu6yCA69wxokv99RVdb8BjOerodqzwjjG41EMxHKFUvrWxzgTBvqaHKD9Y=
+	t=1734652548; cv=none; b=ZMuTrm4y6xJavzW9PyXgTaIKM0764WUgcPPx9Tl48fwzG3c372myxrLz4f0DF5BnfA5BKdsCrQLrfq/37g6hsur0dFt6beLpZNPs6XVwg1avZK/bb8HMUS1faUkhnjn/PrrTaLTAmzFERZob/dDITujJXQbaewqxr+0UDmyasig=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1734650453; c=relaxed/simple;
-	bh=PyAv8DfuTTRxWly3wwtgaeWFbM6URK4ZQI9Kpqky42c=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=BDAoFNrC9k7fCXCres7yOTnJLKs0ZVpX47qzwVefr1iZVi7bwVqlaROE3vCiLyHEei16RiPuEPepmiwQmE4pjr5hXHgbUg+yA2YMiXFi+9SLRiJjEfz2knw6cp/UIXdnzUYkDB1ouXVrZtuD+mb08U5OsTytUtvNO+gVRCrq+xw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=eiELhGy2; arc=none smtp.client-ip=209.85.167.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1734652548; c=relaxed/simple;
+	bh=Mqck2DRppu/550M0kA0W0YNJY++k97lpF3Vg8iKSRu8=;
+	h=From:To:Subject:Date:Message-ID:MIME-Version:Content-Type; b=oc0E9A8LQBcLIIwsDbeSdLclq7domXw0eaZc7zdqMGFeJaBuCsEZv8V+4UDNIAOj02EGHH41xmZcxjAll7iJ1/DD6Da0LGszf1HO8P2l1x1QYP8YXNiLRHKXrAVnDUloRO+dss10icisKksDnfOzOF3blx3yek0RCcm4vYmQ3fo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=AtLjKEbq; arc=none smtp.client-ip=198.175.65.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eiELhGy2"
-Received: by mail-lf1-f50.google.com with SMTP id 2adb3069b0e04-53e384e3481so1143436e87.2;
-        Thu, 19 Dec 2024 15:20:51 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1734650449; x=1735255249; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=sGNaK0SKBtxWvolKgkKBNrXPweprdag50UbzPfvkQzc=;
-        b=eiELhGy2izAqtvz4iHpprWYoTRZat6/MkVCm1XNlDmFbw9Xhlw9llkX/PtRBu8ynea
-         TipprFQ9MJP3sBteGSaarq/Y0G3lc8xNXCj6BSNKXl/qcLOMsgxSYwSeZtl/8roFe3/E
-         P8A9Op1Ij4sztQieh76rxoANJ/bW4K3PQKaXDnPzQ2I7/P4vhJNsV3mFWcLMX/qoiQeU
-         GnZdViuUGsMt5sSTFWZ4T1VOEVGarT/YHvE800dM2mCisSct8ZxeaIv/olMBjDwwBmd0
-         FJcfnmYxJe6wmjrdzIvnDjzy/IsgBuDfocSzA7y/4I2WOY5Loe/OHlFCuQ0IXWAIfO3U
-         9aoA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1734650449; x=1735255249;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=sGNaK0SKBtxWvolKgkKBNrXPweprdag50UbzPfvkQzc=;
-        b=uFm+UfLcwZOlW/YG2nIX51Z/79hlcCF/+y0yaAxgryx0/v12Swla4xR40TXagiVOrD
-         BU7I6s3UIiyfm1Lxk1fZHtpk15xtJeA+4S3Fg1WBdXLcbHZQv0QnAqi5hgdQPeZQkiX5
-         gMKjmh4L00CqRLJab3p3cNEmycWN8uH/8PQuA4rxC0OXx5sPvnzW14Q9nq3E+bOMlNpV
-         99pOwkaXzOP/UBrS0Fpphya5c88ImVtgbp5yJSwiS8nV1/A+My+hB1aN/CeDy60wk6o/
-         6AurjwUi6fFP+SnT26Bytf3/hedIULBjRLiwb20jZj8qW0mGWp/EGdnqmAmd9DKQYIUp
-         vFJg==
-X-Forwarded-Encrypted: i=1; AJvYcCU/VzC2dE+i/M/msU+cPe5+StBKZ4M/9psVJ8EbQxRzl3cCJpeHAtnnVn8dOstXhEMbRvWOb4WcNo8251PcDHXj0a076g==@vger.kernel.org, AJvYcCWH1Jix4CSLIsB7FVvW70Q9P0jvdz7KCDvMMC/q51kn9QH43QYG3E03hXA/Aj/HeDSOURr/Z5dRM9VA26I=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzElG/f8H7GI9j94D6RZANqPxPNHQmLhj3IIDS/nUNVhrgC0TIw
-	U8d55WnU5zwRADNYDaEdwOxxxLEcE8tElcknd088iCqxMjXybU3I
-X-Gm-Gg: ASbGncsdZbIgc/1rJEzS0dPZwgHDHHdOKoxMHNAIOmZWGhNeeG8sngOenjJeUSv4iNy
-	zSS4MKdAiKwxfI8R3qhyLhaGDNikDEE7lonSqlIlMOQIRCWBLXU5EgMZInJVD7t4XCIDJIsnd+W
-	ZgEU9ELZZhKgm5njtlVHE4vs6NLgTQuiScYtwQsMiYTOyC84OF39+9kLnH0NmZUURHd6PZ/B8GZ
-	23+sLd2hkfvr35rrYOYKJGEeOEomh6nCsVUNWviua7bUrEBPWjMFi8WPvexfWVNifleb/6+8iph
-	aG+HoA==
-X-Google-Smtp-Source: AGHT+IGO09JSKhQ5zt0DCXHuoQZ294XE/49OW870wNkyjwTRJfz/3m+B4aM+prrQBAgC6nKrSodzlg==
-X-Received: by 2002:a05:6512:6d3:b0:540:3561:8897 with SMTP id 2adb3069b0e04-542295619e1mr102153e87.39.1734650449219;
-        Thu, 19 Dec 2024 15:20:49 -0800 (PST)
-Received: from localhost.localdomain ([81.195.143.106])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-54223832bc5sm307783e87.257.2024.12.19.15.20.47
-        (version=TLS1_3 cipher=TLS_CHACHA20_POLY1305_SHA256 bits=256/256);
-        Thu, 19 Dec 2024 15:20:47 -0800 (PST)
-From: Dmitry Kandybka <d.kandybka@gmail.com>
-To: Rajneesh Bhardwaj <irenic.rajneesh@gmail.com>
-Cc: David E Box <david.e.box@intel.com>,
-	Hans de Goede <hdegoede@redhat.com>,
-	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="AtLjKEbq"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1734652547; x=1766188547;
+  h=from:to:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=Mqck2DRppu/550M0kA0W0YNJY++k97lpF3Vg8iKSRu8=;
+  b=AtLjKEbqPT/1jzHBsbqCsbYU9tqt2UeaRA0E94CM6MhxySdk+8AesGQ/
+   ZtByItaGSEx0URnbRlhDvF3CLQSalcAwDMVR0E0a8Cz5pGpF1ayOEMWRO
+   qdyjgnncJjKCcbPD84/M0HhEjV/YD7QiDsFfOWrHcWt/81qhlUnmjbUsf
+   1vRo0L1PAxCXJ+jgHhYmMJmY/TMtEPuAfg6i+ik0IBMvlFPtu1O9YNO1x
+   lUbCZelK4AS8y3WPBpPbekpffEtiAXiBIhbaVg2XwA5HS9Yd0FNCAMji/
+   AYkNrb5IZ1BibTmAXeuTq5Bas9+ejzWhY/ZY42sG6Rn5AeSIEpBGJc4jf
+   Q==;
+X-CSE-ConnectionGUID: 6IZsmn3sSIK0/SEpDiTGDg==
+X-CSE-MsgGUID: zirKbkdBSc6XXAclsHyvhA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11291"; a="38975805"
+X-IronPort-AV: E=Sophos;i="6.12,249,1728975600"; 
+   d="scan'208";a="38975805"
+Received: from fmviesa010.fm.intel.com ([10.60.135.150])
+  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Dec 2024 15:55:46 -0800
+X-CSE-ConnectionGUID: swm5Dgj6TjqDC341wDnBGg==
+X-CSE-MsgGUID: 6b8vHTiZTs23WqRC25Rq0g==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.12,249,1728975600"; 
+   d="scan'208";a="98745830"
+Received: from jairdeje-mobl1.amr.corp.intel.com (HELO xpardee-desk.lan) ([10.124.221.167])
+  by fmviesa010-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Dec 2024 15:55:45 -0800
+From: Xi Pardee <xi.pardee@linux.intel.com>
+To: xi.pardee@linux.intel.com,
+	rajvi0912@gmail.com,
+	irenic.rajneesh@gmail.com,
+	david.e.box@linux.intel.com,
+	hdegoede@redhat.com,
+	ilpo.jarvinen@linux.intel.com,
 	platform-driver-x86@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
-	lvc-project@linuxtesting.org
-Subject: [PATCH] platform/x86/intel: pmc: fix ltr decode in pmc_core_ltr_show()
-Date: Fri, 20 Dec 2024 02:20:45 +0300
-Message-ID: <20241219232045.51792-1-d.kandybka@gmail.com>
-X-Mailer: git-send-email 2.47.1
+	linux-pm@vger.kernel.org
+Subject: [PATCH v3 0/3] Add Arrow Lake U/H support
+Date: Thu, 19 Dec 2024 15:55:37 -0800
+Message-ID: <20241219235543.236592-1-xi.pardee@linux.intel.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-In pmc_core_ltr_show(), promote 'val' to 'u64' to avoid possible integer
-overflow. Values (10 bit) are multiplied by the scale, the result of
-expression is in a range from 1 to 34,326,183,936 which is bigger then
-UINT32_MAX. Compile tested only.
+This patch series contains three patches to add Arrow Lake
+U/H support in intel_pmc_core driver. The first two patches
+are preparation patches. The second patch creates a generic
+init function for all platforms to reduce duplicate code.
 
-Found by Linux Verification Center (linuxtesting.org) with SVACE.
+v3->v2:
+- Create a generic init function for all platforms
 
-Signed-off-by: Dmitry Kandybka <d.kandybka@gmail.com>
----
- drivers/platform/x86/intel/pmc/core.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+v2->v1:
+- Create an info structure for platform variation information
+- Make generic init function to static in tgl.c
+- Fix typo
 
-diff --git a/drivers/platform/x86/intel/pmc/core.c b/drivers/platform/x86/intel/pmc/core.c
-index 3e7f99ac8c94..f06ba9636b03 100644
---- a/drivers/platform/x86/intel/pmc/core.c
-+++ b/drivers/platform/x86/intel/pmc/core.c
-@@ -660,12 +660,12 @@ static int pmc_core_ltr_show(struct seq_file *s, void *unused)
- 			if (FIELD_GET(LTR_REQ_NONSNOOP, ltr_raw_data)) {
- 				scale = FIELD_GET(LTR_DECODED_SCALE, nonsnoop_ltr);
- 				val = FIELD_GET(LTR_DECODED_VAL, nonsnoop_ltr);
--				decoded_non_snoop_ltr = val * convert_ltr_scale(scale);
-+				decoded_non_snoop_ltr = (u64)val * convert_ltr_scale(scale);
- 			}
- 			if (FIELD_GET(LTR_REQ_SNOOP, ltr_raw_data)) {
- 				scale = FIELD_GET(LTR_DECODED_SCALE, snoop_ltr);
- 				val = FIELD_GET(LTR_DECODED_VAL, snoop_ltr);
--				decoded_snoop_ltr = val * convert_ltr_scale(scale);
-+				decoded_snoop_ltr = (u64)val * convert_ltr_scale(scale);
- 			}
- 
- 			seq_printf(s, "%d\tPMC%d:%-32s\tLTR: RAW: 0x%-16x\tNon-Snoop(ns): %-16llu\tSnoop(ns): %-16llu\tLTR_IGNORE: %d\n",
+Xi Pardee (3):
+  platform/x86:intel/pmc: Make tgl_core_generic_init() static
+  platform/x86:intel/pmc: Create generic_core_init() for all platforms
+  platform/x86/intel/pmc: Add Arrow Lake U/H support to intel_pmc_core
+    driver
+
+ drivers/platform/x86/intel/pmc/adl.c  | 21 +++----
+ drivers/platform/x86/intel/pmc/arl.c  | 81 ++++++++++++++++-----------
+ drivers/platform/x86/intel/pmc/cnp.c  | 21 +++----
+ drivers/platform/x86/intel/pmc/core.c | 47 ++++++++++++++++
+ drivers/platform/x86/intel/pmc/core.h | 27 ++++++++-
+ drivers/platform/x86/intel/pmc/icl.c  | 18 ++----
+ drivers/platform/x86/intel/pmc/lnl.c  | 24 +++-----
+ drivers/platform/x86/intel/pmc/mtl.c  | 45 ++++-----------
+ drivers/platform/x86/intel/pmc/spt.c  | 18 ++----
+ drivers/platform/x86/intel/pmc/tgl.c  | 43 +++++++-------
+ 10 files changed, 189 insertions(+), 156 deletions(-)
+
 -- 
-2.47.1
+2.43.0
 
