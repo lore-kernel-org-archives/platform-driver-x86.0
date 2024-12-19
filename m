@@ -1,228 +1,111 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f50.google.com (mail-lf1-f50.google.com [209.85.167.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6DE821C5CB6;
-	Thu, 19 Dec 2024 21:35:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5FD791BC9E2;
+	Thu, 19 Dec 2024 23:20:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1734644111; cv=none; b=WTqszx+DU78z5IQQozXhIrOKK12h54m5BdnUY/ignhwKPMXM7ZTY+YbAAd0WmSDLs5wLus/lZRL0gFhvEy9wHRrJh3EAPciF6fcwBxXj6z18sU17ne3G1zf5A+T2+j+7CEZKvFyej1yHq5wZCUeXNQPSvp8CHhidkjszaaaD3V0=
+	t=1734650453; cv=none; b=TPv1CZzJ+LnDz45ay/qYB5gr2+iYoC2GtnkSmqVI6XGZsa1SoMzB4x9bZ/ZOo0O5+VsS1qYU5xmUdDQ0e8jW9jc+rIFl/YSBBZk3fojdmcjHmToyEMu6yCA69wxokv99RVdb8BjOerodqzwjjG41EMxHKFUvrWxzgTBvqaHKD9Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1734644111; c=relaxed/simple;
-	bh=gRFltU4fxhjOFJFvL0nOWyf+SxsAEjybpwxoxFYKr88=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ahoVso/w1JKbcZU+EksWiwtjPYZ6fLoqCAnIsoFcf64M/da+eG/tChImjzaSdBnQn5CcCoQ+L9gku0zpsyKlKTgIOJUWdx1IibmVvtMOiBRSDwefsT4T9YWg2i+L43HcYf/EijnXnnOSmEEBe88h9ZbEiATyXMp3k/EvqEy0+eM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ku+uYpWO; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1734650453; c=relaxed/simple;
+	bh=PyAv8DfuTTRxWly3wwtgaeWFbM6URK4ZQI9Kpqky42c=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=BDAoFNrC9k7fCXCres7yOTnJLKs0ZVpX47qzwVefr1iZVi7bwVqlaROE3vCiLyHEei16RiPuEPepmiwQmE4pjr5hXHgbUg+yA2YMiXFi+9SLRiJjEfz2knw6cp/UIXdnzUYkDB1ouXVrZtuD+mb08U5OsTytUtvNO+gVRCrq+xw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=eiELhGy2; arc=none smtp.client-ip=209.85.167.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ku+uYpWO"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9C718C4CECE;
-	Thu, 19 Dec 2024 21:35:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1734644111;
-	bh=gRFltU4fxhjOFJFvL0nOWyf+SxsAEjybpwxoxFYKr88=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=ku+uYpWOE83mz9GiWNlAJJ71IL6HmJQS/j6R8iZ4b1qufrGsb33AQFDSgxNTEa+By
-	 hDWWs/DHrYyuOe6lvxA9mGTpBuh14YPH7qtC9sJmapT0gtPYQJx7NUkL0OBO3xMlHo
-	 H9HprA+kS+j/0Y+v7XITPeS6QyPGp7L2vciaDj14/pFPdiT4oofwPdXejztS5IVK1H
-	 B4BcRiGinIK26+H5I8UXl75gf8pj/VYVdt1QMOy3x0eSWhVX5IhqaPfXx0LPJ83uc3
-	 4eEiEqg5zokhafwPaVwUZZZIyFGXTStTJuoUSJ5RDlqaRRxDtuY9FTwSBza6vfNo6d
-	 bq7OMT8LyP6dA==
-Message-ID: <e66973b9-29e5-4d77-a069-8bd7d264f402@kernel.org>
-Date: Thu, 19 Dec 2024 15:35:08 -0600
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eiELhGy2"
+Received: by mail-lf1-f50.google.com with SMTP id 2adb3069b0e04-53e384e3481so1143436e87.2;
+        Thu, 19 Dec 2024 15:20:51 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1734650449; x=1735255249; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=sGNaK0SKBtxWvolKgkKBNrXPweprdag50UbzPfvkQzc=;
+        b=eiELhGy2izAqtvz4iHpprWYoTRZat6/MkVCm1XNlDmFbw9Xhlw9llkX/PtRBu8ynea
+         TipprFQ9MJP3sBteGSaarq/Y0G3lc8xNXCj6BSNKXl/qcLOMsgxSYwSeZtl/8roFe3/E
+         P8A9Op1Ij4sztQieh76rxoANJ/bW4K3PQKaXDnPzQ2I7/P4vhJNsV3mFWcLMX/qoiQeU
+         GnZdViuUGsMt5sSTFWZ4T1VOEVGarT/YHvE800dM2mCisSct8ZxeaIv/olMBjDwwBmd0
+         FJcfnmYxJe6wmjrdzIvnDjzy/IsgBuDfocSzA7y/4I2WOY5Loe/OHlFCuQ0IXWAIfO3U
+         9aoA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1734650449; x=1735255249;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=sGNaK0SKBtxWvolKgkKBNrXPweprdag50UbzPfvkQzc=;
+        b=uFm+UfLcwZOlW/YG2nIX51Z/79hlcCF/+y0yaAxgryx0/v12Swla4xR40TXagiVOrD
+         BU7I6s3UIiyfm1Lxk1fZHtpk15xtJeA+4S3Fg1WBdXLcbHZQv0QnAqi5hgdQPeZQkiX5
+         gMKjmh4L00CqRLJab3p3cNEmycWN8uH/8PQuA4rxC0OXx5sPvnzW14Q9nq3E+bOMlNpV
+         99pOwkaXzOP/UBrS0Fpphya5c88ImVtgbp5yJSwiS8nV1/A+My+hB1aN/CeDy60wk6o/
+         6AurjwUi6fFP+SnT26Bytf3/hedIULBjRLiwb20jZj8qW0mGWp/EGdnqmAmd9DKQYIUp
+         vFJg==
+X-Forwarded-Encrypted: i=1; AJvYcCU/VzC2dE+i/M/msU+cPe5+StBKZ4M/9psVJ8EbQxRzl3cCJpeHAtnnVn8dOstXhEMbRvWOb4WcNo8251PcDHXj0a076g==@vger.kernel.org, AJvYcCWH1Jix4CSLIsB7FVvW70Q9P0jvdz7KCDvMMC/q51kn9QH43QYG3E03hXA/Aj/HeDSOURr/Z5dRM9VA26I=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzElG/f8H7GI9j94D6RZANqPxPNHQmLhj3IIDS/nUNVhrgC0TIw
+	U8d55WnU5zwRADNYDaEdwOxxxLEcE8tElcknd088iCqxMjXybU3I
+X-Gm-Gg: ASbGncsdZbIgc/1rJEzS0dPZwgHDHHdOKoxMHNAIOmZWGhNeeG8sngOenjJeUSv4iNy
+	zSS4MKdAiKwxfI8R3qhyLhaGDNikDEE7lonSqlIlMOQIRCWBLXU5EgMZInJVD7t4XCIDJIsnd+W
+	ZgEU9ELZZhKgm5njtlVHE4vs6NLgTQuiScYtwQsMiYTOyC84OF39+9kLnH0NmZUURHd6PZ/B8GZ
+	23+sLd2hkfvr35rrYOYKJGEeOEomh6nCsVUNWviua7bUrEBPWjMFi8WPvexfWVNifleb/6+8iph
+	aG+HoA==
+X-Google-Smtp-Source: AGHT+IGO09JSKhQ5zt0DCXHuoQZ294XE/49OW870wNkyjwTRJfz/3m+B4aM+prrQBAgC6nKrSodzlg==
+X-Received: by 2002:a05:6512:6d3:b0:540:3561:8897 with SMTP id 2adb3069b0e04-542295619e1mr102153e87.39.1734650449219;
+        Thu, 19 Dec 2024 15:20:49 -0800 (PST)
+Received: from localhost.localdomain ([81.195.143.106])
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-54223832bc5sm307783e87.257.2024.12.19.15.20.47
+        (version=TLS1_3 cipher=TLS_CHACHA20_POLY1305_SHA256 bits=256/256);
+        Thu, 19 Dec 2024 15:20:47 -0800 (PST)
+From: Dmitry Kandybka <d.kandybka@gmail.com>
+To: Rajneesh Bhardwaj <irenic.rajneesh@gmail.com>
+Cc: David E Box <david.e.box@intel.com>,
+	Hans de Goede <hdegoede@redhat.com>,
+	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	platform-driver-x86@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	lvc-project@linuxtesting.org
+Subject: [PATCH] platform/x86/intel: pmc: fix ltr decode in pmc_core_ltr_show()
+Date: Fri, 20 Dec 2024 02:20:45 +0300
+Message-ID: <20241219232045.51792-1-d.kandybka@gmail.com>
+X-Mailer: git-send-email 2.47.1
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC 2/2] platform/x86/amd: pmf: Add manual control support
-To: Antheas Kapenekakis <lkml@antheas.dev>
-Cc: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>,
- "Rafael J . Wysocki" <rafael@kernel.org>, Hans de Goede
- <hdegoede@redhat.com>, =?UTF-8?Q?Ilpo_J=C3=A4rvinen?=
- <ilpo.jarvinen@linux.intel.com>, "Luke D . Jones" <luke@ljones.dev>,
- Mark Pearson <mpearson-lenovo@squebb.ca>,
- "open list:AMD PMF DRIVER" <platform-driver-x86@vger.kernel.org>,
- open list <linux-kernel@vger.kernel.org>,
- "open list:ACPI" <linux-acpi@vger.kernel.org>,
- "Derek J . Clark" <derekjohn.clark@gmail.com>, me@kylegospodneti.ch,
- Denis Benato <benato.denis96@gmail.com>,
- Mario Limonciello <mario.limonciello@amd.com>
-References: <20240926025955.1728766-1-superm1@kernel.org>
- <20240926025955.1728766-3-superm1@kernel.org>
- <CAGwozwFjo4uSFpCAXRKivK+VoeYz-Qftmw+iLtOrVnyhn3xpfA@mail.gmail.com>
- <ba5a7961-de65-41a1-a556-338ed1b06faa@kernel.org>
- <CAGwozwEAuGOKTsPvko4Ncg9nhkXiinb0B8-kXBaQ6dxyLocD5w@mail.gmail.com>
- <deda5a04-ba48-43c0-83c9-2f0afcaefb18@kernel.org>
- <CAGwozwG3WCOa6s0_73-e1-iQOwMy413tBqj8WXk=J5FPkq3+QA@mail.gmail.com>
- <d56cc2e1-fe4f-4694-a987-6e0a49134c7f@kernel.org>
- <CAGwozwG8dFQfPzPVDa=rwKYLnraw7kRoLOZELZrkrW0tEfEsug@mail.gmail.com>
-Content-Language: en-US
-From: Mario Limonciello <superm1@kernel.org>
-In-Reply-To: <CAGwozwG8dFQfPzPVDa=rwKYLnraw7kRoLOZELZrkrW0tEfEsug@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On 12/19/2024 15:27, Antheas Kapenekakis wrote:
-> On Thu, 19 Dec 2024 at 22:21, Mario Limonciello <superm1@kernel.org> wrote:
->>
->> On 12/19/2024 15:10, Antheas Kapenekakis wrote:
->>> On Thu, 19 Dec 2024 at 17:14, Mario Limonciello <superm1@kernel.org> wrote:
->>>>
->>>> On 12/19/2024 09:24, Antheas Kapenekakis wrote:
->>>>> On Thu, 19 Dec 2024 at 15:50, Mario Limonciello <superm1@kernel.org> wrote:
->>>>>>
->>>>>> On 12/19/2024 07:12, Antheas Kapenekakis wrote:
->>>>>>> Hi Mario,
->>>>>>> given that there is a Legion Go driver in the works, and Asus already
->>>>>>> has a driver, the only thing that would be left for locking down ACPI
->>>>>>> access is manufacturers w/o vendor APIs.
->>>>>>>
->>>>>>> So, can we restart the conversation about this driver? It would be
->>>>>>> nice to get to a place where we can lock down /dev/mem and ACPI by
->>>>>>> spring.
->>>>>>
->>>>>> As Shyam mentioned we don't have control for limits by the PMF driver
->>>>>> for this on PMF v2 (Strix) or later platforms.
->>>>>>
->>>>>> So if we were to revive this custom discussion it would only be for
->>>>>> Phoenix and Hawk Point platforms.
->>>>>
->>>>> That's unfortunate.
->>>>>
->>>>>>>
->>>>>>> Moreover, since the other two proposed drivers use the
->>>>>>> firmware_attributes API, should this be used here as well?
->>>>>>
->>>>>> I do feel that if we revive this conversation specifically for Phoenix
->>>>>> and Hawk Point platforms yes we should use the same API to expose it to
->>>>>> userspace as those other two drivers do.
->>>>>>
->>>>>> I'd like Shyam's temperature on this idea though before anyone spends
->>>>>> time on it.  If he's amenable would you want to work on it?
->>>>>
->>>>> We currently expect the 2025 lineup to include a lot of Strix Point
->>>>> handhelds, so I'd like a solution that works with that. OneXPlayer
->>>>> released a model already, and GPD is getting ready to ship as well.
->>>>>
->>>>> Yeah, I could throw some hours to it after I go through some overdue stuff.
->>>>>
->>>>>>>
->>>>>>> By the way, you were right about needing a taint for this. Strix Point
->>>>>>> fails to enter a lower power state during sleep if you set it to lower
->>>>>>> than 10W. This is not ideal, as hawk point could go down to 5 while
->>>>>>> still showing a power difference, but I am unsure where this bug
->>>>>>> should be reported. This is both through ryzenadj/ALIB
->>>>>>
->>>>>> Who is to say this is a bug?  Abusing a debugging interface with a
->>>>>> reverse engineered tool means you might be able to configure a platform
->>>>>> out of specifications.
->>>>>
->>>>> The spec being 10+W would be very undesirable for handhelds with Strix
->>>>> Point, so I'd hope somebody looks into it, esp. if it can be fixed
->>>>> with a BIOS fw update before more handhelds come out. I can raise the
->>>>> minimum TDP to 10W, with some user complaints.
->>>>>
->>>>> Asus and Lenovo use the same mailbox so they'd share the issue too.
->>>>>
->>>>> FYI for a typical handheld with e.g., a 60Wh battery, a 10W envelope
->>>>> results in around 20-22W total consumption which is around 2.5 hours.
->>>>> Hawk Point can be TDP limited down to 16W total consumption (TDP ~7W)
->>>>> and can go down to 8W with frame limiting etc. I do not have numbers
->>>>> for Strix Point yet, but to match Hawk Point it has to allow TDP to go
->>>>> down to 7W. I think for 2025, customer expectation will be 6-8 hours+
->>>>> at low wattages.
->>>>>
->>>>
->>>> I've got a fundamental question - why the fixation on PPT?
->>>>
->>>> This just sets "limits" for the package.  In Windows it's probably the
->>>> best knob to tune to adjust performance in an effort to extend battery
->>>> life, but in Linux we have a lot of other knobs:
->>>>
->>>> * the ability to tune EPP (energy_performance_preference)
->>>> * set min and max CPU frequencies (scaling_min_freq, scaling_max_freq)
->>>
->>> We use both of these.
->>>
->>>> * offline cores at will
->>>
->>> if a core is parked and you try to write into its sysfs entrypoints,
->>> we found that this might cause a userspace program to hang
->>> indefinitely. Since a lot of settings are per core that's problematic
->>> and since it does not help much most TDP programs dont offer it
->>> anymore.
->>
->> This sounds like a kernel bug if you're hanging programs when trying to
->> write to sysfs files of offlined cores.  If we can get that fixed having
->> that in your toolbelt is quite useful.  I'm sure there are plenty of
->> games that don't really need all the cores up and you can save some power.
->>
->> Can you get a simple reproducer for me into a bug report to look at next
->> year?
-> 
-> I will try to. This was relayed to me. 
+In pmc_core_ltr_show(), promote 'val' to 'u64' to avoid possible integer
+overflow. Values (10 bit) are multiplied by the scale, the result of
+expression is in a range from 1 to 34,326,183,936 which is bigger then
+UINT32_MAX. Compile tested only.
 
-Thanks! If whoever relayed it to you opens the bug report that's totally 
-fine with me too.  Just ping me after the new year if I miss it because 
-it will be lost in a giant pile of other stuff.
+Found by Linux Verification Center (linuxtesting.org) with SVACE.
 
-> Disabling SMT also causes a
-> crash on the Ally when going to sleep.
+Signed-off-by: Dmitry Kandybka <d.kandybka@gmail.com>
+---
+ drivers/platform/x86/intel/pmc/core.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-Yes; SMT is require to be enabled for s0i3 to work.
-
-That's why the s2idle debugging script flags it.
-
-https://gitlab.freedesktop.org/drm/amd/-/blob/master/scripts/amd_s2idle.py#L1207
-> 
->>>
->>>> * change DPM setting in the GPU driver (power_dpm_force_performance_level)
->>>
->>> I think we played with this mostly to try to get lower than 800mhz.
->>> However, going lower than 800mhz in these APUs causes issues.
->>>
->>>> All the core related knobs can be changed on a per-core basis.  So for
->>>> example even on a non-heterogeneous design you could potentially make it
->>>> perform "like" a hetero design where you set it so that some cores don't
->>>> go above nominal frequency or the EPP value is tuned less aggressively
->>>> on some cores.
->>>
->>>> These knobs can have just as drastic of a result on battery life as
->>>> adjusting the various power limiting knobs.  Most importantly these
->>>> knobs have architectural limits that you won't be able to override so
->>>> you can safely change them to min/max and see what happens.
->>>
->>> I feel like we are discussing different targets here. When it comes to
->>> computing tasks, you have a certain block of work that needs to be
->>> done and after that the CPU is free. In this case, programs like tuned
->>> (allegedly) optimize these settings so that they take the minimum
->>> amount of power to complete that block of work.
->>>
->>> However, games are different. Games have no problem burning power if
->>> you let them and they are also playable at a variety of power levels.
->>> Typically, unless the user caps the framerate and video quality of the
->>> game it will use the full slow temp limit value. Even if they do set
->>> that, the game will typically burn 3-4W more than what is needed
->>> depending on TDP, EPP etc.
->>
->> Part of what I'm wondering is if our 4 levels of EPP values "aren't
->> enough" for optimization on a per game basis.
->>
->> IMO They're incredibly rigid.  I do have a patch that can expose "raw"
->> numbers for amd-pstate like intel-pstate does, but I haven't brought it
->> on the lists yet because I'm still discussing it with others internal to
->> AMD.
->>
->> EPP is really about responsiveness in games.
-> 
-> EPP performance is so detrimental we hide it. It destroys performance
-> by sucking power from the GPU. EPP balance_performance is only useful
-> in certain emulators that need a lot of CPU. Only balance_power is
-> useful. Then, for TDPs lower than 10, setting EPP to power milks
-> another 1-2W
-
-Yes; this is a different conversation once you're talking about the 
-power share between CPU cores and GPU.  It's part of why I was talking 
-about core parking when you don't need all the cores.
+diff --git a/drivers/platform/x86/intel/pmc/core.c b/drivers/platform/x86/intel/pmc/core.c
+index 3e7f99ac8c94..f06ba9636b03 100644
+--- a/drivers/platform/x86/intel/pmc/core.c
++++ b/drivers/platform/x86/intel/pmc/core.c
+@@ -660,12 +660,12 @@ static int pmc_core_ltr_show(struct seq_file *s, void *unused)
+ 			if (FIELD_GET(LTR_REQ_NONSNOOP, ltr_raw_data)) {
+ 				scale = FIELD_GET(LTR_DECODED_SCALE, nonsnoop_ltr);
+ 				val = FIELD_GET(LTR_DECODED_VAL, nonsnoop_ltr);
+-				decoded_non_snoop_ltr = val * convert_ltr_scale(scale);
++				decoded_non_snoop_ltr = (u64)val * convert_ltr_scale(scale);
+ 			}
+ 			if (FIELD_GET(LTR_REQ_SNOOP, ltr_raw_data)) {
+ 				scale = FIELD_GET(LTR_DECODED_SCALE, snoop_ltr);
+ 				val = FIELD_GET(LTR_DECODED_VAL, snoop_ltr);
+-				decoded_snoop_ltr = val * convert_ltr_scale(scale);
++				decoded_snoop_ltr = (u64)val * convert_ltr_scale(scale);
+ 			}
+ 
+ 			seq_printf(s, "%d\tPMC%d:%-32s\tLTR: RAW: 0x%-16x\tNon-Snoop(ns): %-16llu\tSnoop(ns): %-16llu\tLTR_IGNORE: %d\n",
+-- 
+2.47.1
 
