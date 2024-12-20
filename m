@@ -1,370 +1,555 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 68B301C75F2;
-	Fri, 20 Dec 2024 11:51:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4314A1C3039;
+	Fri, 20 Dec 2024 11:53:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1734695475; cv=none; b=c47DmPcGLv0bIXAdUql7xKGe9aABQuyboYf6cT89RlWvnU5ACyQXOmYh62QYwam6ysbXun1FTS4hjNPPTWBSVox2/eGCLmYWEdFNQYD0dbCT+f3qmoBqpF+417Riy4+j6a62dS2ZWhxNJxTTor3bTiTU9zCCTXBAYIS1heZtGl0=
+	t=1734695584; cv=none; b=rxDvAkq0F7yxsX0/yBYXpbMAKKp1dJauKfF51IWgnLevlre8R710Yllm18c0X7mFuAbY17nx0f+EzAcTvamzdTMeK7iS127fUV9rRYQKWg0jTZIK6Qvb1keALrcB02XM7H4lym/4qaYQsDpyTKROBEKOMm/P3W6nDMe0oUxQvW8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1734695475; c=relaxed/simple;
-	bh=kk0D1HDgN+uzz+al8DmKwAUPHEcunuEhRDRu8uKa2W8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=bDf3hzm/ah269zCbtyRiHxLQ8MKbPfGnRZRa16sJvQ4Lho6KRN9GWVVuuvPkCvk5oPWZPdkaOoQGpjfl0sSWMYzHuWt5V96a+9jWAVisUK1bLHa2XogJso8+47lixOgLLtS3L+lo0imd7YMErbN00RPPU8ECR+dZj/+N3tW33Sg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=CT9dBA7+; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1734695584; c=relaxed/simple;
+	bh=XvzABePPikVvfX7pE9KmLzEeL8EC4fMD4a8JD8rVtH8=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=Gj+VUqpSx/740oNl0wkdSjKjgFvxzMpliHP1DsFZLqyjoRrThl3DcyysxYp10fsVJ1xM9uuyYu6fREdErSpgzo60bWUqexNhhyTNbifLmFrgRFaIubY32CWI03fqrfKPgHuo4kvvSNmUqe7j37kIsutw4yZtKwYHlNNx0IhAeQ4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=LrTiTe0g; arc=none smtp.client-ip=198.175.65.9
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="CT9dBA7+"
-Received: from pps.filterd (m0279868.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 4BK7Lmui028186;
-	Fri, 20 Dec 2024 11:50:53 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	Jbule/aC8PTf5qGg5Ul+prOAU51iCS9OFJMIQUQUwPc=; b=CT9dBA7+6qtu2BVm
-	vifmBWLyt4bhKvoMdIHFXMdkyG6xrIvGIUsR8SKytuTcWZwULBag07ezIOrzQEgz
-	TXZX2LB60eH12GMzZU7mHREXZvOMx5vSLYhoaVBUuSJFdJyrPpB9EQSEuPssCrxN
-	Kf4mb2ZiW/xImKgyevJELK/FV7K5PGz3sgy8jfxRLUKxIRK99p/Nz2sMTmWs+fHZ
-	40Ia//OuH9jP3labxrEelvmDO6YQi57f9tz0bQeK0l3e0hT1uel0DhGF6WtGd0KM
-	5pWT1WV1TLc71ojX4ERgBy6IGXR1diZh9cdyOtCEWbNrZTHX+kxUmFAFjPDUVl8j
-	GkxuAA==
-Received: from nasanppmta02.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 43n44ggpn3-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 20 Dec 2024 11:50:53 +0000 (GMT)
-Received: from nasanex01a.na.qualcomm.com (nasanex01a.na.qualcomm.com [10.52.223.231])
-	by NASANPPMTA02.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 4BKBoqoK012016
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 20 Dec 2024 11:50:52 GMT
-Received: from [10.239.132.150] (10.80.80.8) by nasanex01a.na.qualcomm.com
- (10.52.223.231) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Fri, 20 Dec
- 2024 03:50:48 -0800
-Message-ID: <9d0324de-e42a-43b8-bdcc-0d0885434b25@quicinc.com>
-Date: Fri, 20 Dec 2024 19:50:45 +0800
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="LrTiTe0g"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1734695582; x=1766231582;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=XvzABePPikVvfX7pE9KmLzEeL8EC4fMD4a8JD8rVtH8=;
+  b=LrTiTe0gpw2IKCXDZyj1WIQqrAwA5k92gnqBGEGpG2bursaSjfEZHwNA
+   vsP0B8bTB3OhGsSerl0kpM6WhQpyla7opISUnoLc8FF2nzMf0COTIh8Fx
+   uOv7jxEmS82AKdBIkJ6mJEby576pVOYXgX1jxYsaVPj8XpTXcXdUupiBc
+   vAUdmQ1v4Uoa+uN0DuSbFekYB0EAPb5DVZExGjLmrDbOfFiPYICELT0LJ
+   s6G2PpjHrnU/TR9iVrNamJz4+6gmubQCzpoF4ywEkFz5MnzhinUlPOpzc
+   ozTrjKpZzSq1+jggIcHw4ry4DRe8RE25lcbgLODKFouKdYuReFevQfTvX
+   g==;
+X-CSE-ConnectionGUID: nLxlXn6+QRqj25lWPuMPMQ==
+X-CSE-MsgGUID: lkWBoluuS7iDT1yW5dr0PA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11291"; a="57714701"
+X-IronPort-AV: E=Sophos;i="6.12,250,1728975600"; 
+   d="scan'208";a="57714701"
+Received: from orviesa007.jf.intel.com ([10.64.159.147])
+  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Dec 2024 03:53:02 -0800
+X-CSE-ConnectionGUID: 3hKWJvp0Q3aoGTqcXhk5sw==
+X-CSE-MsgGUID: rI44pdAAS3+s/kNjcUfIcg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
+   d="scan'208";a="98966589"
+Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.160])
+  by orviesa007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Dec 2024 03:52:58 -0800
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Fri, 20 Dec 2024 13:52:55 +0200 (EET)
+To: Xi Pardee <xi.pardee@linux.intel.com>
+cc: rajvi0912@gmail.com, irenic.rajneesh@gmail.com, 
+    david.e.box@linux.intel.com, Hans de Goede <hdegoede@redhat.com>, 
+    platform-driver-x86@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>, 
+    linux-pm@vger.kernel.org
+Subject: Re: [PATCH v3 2/3] platform/x86:intel/pmc: Create generic_core_init()
+ for all platforms
+In-Reply-To: <20241219235543.236592-3-xi.pardee@linux.intel.com>
+Message-ID: <5f694390-079a-13e6-5c93-38b938125044@linux.intel.com>
+References: <20241219235543.236592-1-xi.pardee@linux.intel.com> <20241219235543.236592-3-xi.pardee@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 2/3] platform: arm64: Add driver for EC found in most
- X1E laptops
-To: Maya Matuszczyk <maccraft123mc@gmail.com>,
-        Bryan O'Donoghue
-	<bryan.odonoghue@linaro.org>
-CC: Hans de Goede <hdegoede@redhat.com>,
-        =?UTF-8?Q?Ilpo_J=C3=A4rvinen?=
-	<ilpo.jarvinen@linux.intel.com>,
-        Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor
-	<alex.gaynor@gmail.com>,
-        Boqun Feng <boqun.feng@gmail.com>, Gary Guo
-	<gary@garyguo.net>,
-        =?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?=
-	<bjorn3_gh@protonmail.com>,
-        Benno Lossin <benno.lossin@proton.me>,
-        Andreas
- Hindborg <a.hindborg@kernel.org>,
-        Alice Ryhl <aliceryhl@google.com>, Trevor
- Gross <tmgross@umich.edu>,
-        <linux-arm-msm@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <platform-driver-x86@vger.kernel.org>,
-        <rust-for-linux@vger.kernel.org>
-References: <20241219200821.8328-1-maccraft123mc@gmail.com>
- <20241219200821.8328-2-maccraft123mc@gmail.com>
- <a2310cf8-5e00-4233-8c56-f04d3f692b13@linaro.org>
- <CAO_MupK8GYwNep9k-C28=Ly8wgn1T6LLiYnFcbKg0spRNXbkYw@mail.gmail.com>
-From: "Aiqun(Maria) Yu" <quic_aiquny@quicinc.com>
-Content-Language: en-US
-In-Reply-To: <CAO_MupK8GYwNep9k-C28=Ly8wgn1T6LLiYnFcbKg0spRNXbkYw@mail.gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nasanex01a.na.qualcomm.com (10.52.223.231)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-ORIG-GUID: bG1p-lHjGMXSeB2YzjpZbwVnHBvKYQX-
-X-Proofpoint-GUID: bG1p-lHjGMXSeB2YzjpZbwVnHBvKYQX-
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.60.29
- definitions=2024-09-06_09,2024-09-06_01,2024-09-02_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0
- mlxlogscore=999 spamscore=0 phishscore=0 lowpriorityscore=0 mlxscore=0
- clxscore=1011 suspectscore=0 bulkscore=0 priorityscore=1501 adultscore=0
- impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2411120000 definitions=main-2412200097
+Content-Type: text/plain; charset=US-ASCII
 
-On 12/20/2024 4:58 AM, Maya Matuszczyk wrote:
-> czw., 19 gru 2024 o 21:43 Bryan O'Donoghue
-> <bryan.odonoghue@linaro.org> napisał(a):
->>
->> On 19/12/2024 20:08, Maya Matuszczyk wrote:
->>> Currently it features only reporting that the AP is going to suspend,
->>> which results in keyboard backlight turning off and the power LED
->>> slowly blinking on the Lenovo Yoga Slim 7x.
->>>
->>> Honor Magicbook Art 14 and Lenovo Yoga Slim 7x are known to have
->>> firmware with extensions which would need appropriate handling.
->>> For reverse engineering the firmware on them I have written a Rust
->>> utility:
->>>
->>> https://github.com/Maccraft123/it8987-qcom-tool.git
->>>
->>> Signed-off-by: Maya Matuszczyk <maccraft123mc@gmail.com>
->>> ---
->>>   MAINTAINERS                              |   6 +
->>>   drivers/platform/arm64/Kconfig           |   8 ++
->>>   drivers/platform/arm64/Makefile          |   1 +
->>>   drivers/platform/arm64/qcom-x1e-it8987.c | 158 +++++++++++++++++++++++
->>>   4 files changed, 173 insertions(+)
->>>   create mode 100644 drivers/platform/arm64/qcom-x1e-it8987.c
->>>
->>> diff --git a/MAINTAINERS b/MAINTAINERS
->>> index b878ddc99f94..08d170e2e1e3 100644
->>> --- a/MAINTAINERS
->>> +++ b/MAINTAINERS
->>> @@ -12890,6 +12890,12 @@ S:   Maintained
->>>   W:  http://legousb.sourceforge.net/
->>>   F:  drivers/usb/misc/legousbtower.c
->>>
->>> +QCOM IT8987 EC DRIVER
->>> +M:   Maya Matuszczyk <maccraft123mc@gmail.com>
->>> +S:   Maintained
->>> +F:   Documentation/devicetree/bindings/platform/qcom,x1e-it8987-ec.yaml
+On Thu, 19 Dec 2024, Xi Pardee wrote:
 
-Actually, the IT8987 is from ITE Tech. As far as I know, there are other
-platforms besides x1e that use this. So if this driver can be also
-applied for all ITE it8987, it might be better to say 'ITE IT8987'
-instead of 'QCOM IT8987'. This also applies to the file name and function.
->>> +F:   drivers/platform/arm64/qcom-x1e-it8987.c
->>> +
->>>   LETSKETCH HID TABLET DRIVER
->>>   M:  Hans de Goede <hdegoede@redhat.com>
->>>   L:  linux-input@vger.kernel.org
->>> diff --git a/drivers/platform/arm64/Kconfig b/drivers/platform/arm64/Kconfig
->>> index f88395ea3376..ebb7b4f70ca0 100644
->>> --- a/drivers/platform/arm64/Kconfig
->>> +++ b/drivers/platform/arm64/Kconfig
->>> @@ -49,4 +49,12 @@ config EC_LENOVO_YOGA_C630
->>>
->>>         Say M or Y here to include this support.
->>>
->>> +config EC_QCOM_X1E_IT8987
->>> +     tristate "Embedded Controller driver for most X1E80100 laptops"
->>> +     depends on ARCH_QCOM || COMPILE_TEST
->>> +     depends on I2C
->>> +     help
->>> +       This driver currently supports reporting device suspend to the EC so it
->>> +       can take appropriate actions.
->>> +
->>>   endif # ARM64_PLATFORM_DEVICES
->>> diff --git a/drivers/platform/arm64/Makefile b/drivers/platform/arm64/Makefile
->>> index b2ae9114fdd8..b9aa195bc1e6 100644
->>> --- a/drivers/platform/arm64/Makefile
->>> +++ b/drivers/platform/arm64/Makefile
->>> @@ -7,3 +7,4 @@
->>>
->>>   obj-$(CONFIG_EC_ACER_ASPIRE1)       += acer-aspire1-ec.o
->>>   obj-$(CONFIG_EC_LENOVO_YOGA_C630) += lenovo-yoga-c630.o
->>> +obj-$(CONFIG_EC_QCOM_X1E_IT8987) += qcom-x1e-it8987.o
->>> diff --git a/drivers/platform/arm64/qcom-x1e-it8987.c b/drivers/platform/arm64/qcom-x1e-it8987.c
->>> new file mode 100644
->>> index 000000000000..d27067d6326a
->>> --- /dev/null
->>> +++ b/drivers/platform/arm64/qcom-x1e-it8987.c
->>> @@ -0,0 +1,158 @@
->>> +// SPDX-License-Identifier: GPL-2.0-only
->>> +/*
->>> + * Copyright (c) 2024 Maya Matuszczyk <maccraft123mc@gmail.com>
->>> + */
->>> +#include <linux/i2c.h>
->>> +#include <linux/module.h>
->>> +#include <linux/input.h>
->>> +#include <linux/input/sparse-keymap.h>
->>
->> Your includes should be alphabetised.
->>
->>> +
->>> +#define EC_IRQ_REASON_REG 0x05
->>> +#define EC_SUSPEND_RESUME_REG 0x23
->>> +#define EC_IRQ_ENABLE_REG 0x35
->>> +
->>> +#define EC_NOTIFY_SUSPEND_ENTER 0x01
->>> +#define EC_NOTIFY_SUSPEND_EXIT 0x00
->>> +#define EC_NOTIFY_SCREEN_OFF 0x03
->>> +#define EC_NOTIFY_SCREEN_ON 0x04
->>> +
->>> +#define EC_IRQ_MICMUTE_BUTTON 0x04
->>> +#define EC_IRQ_FAN1_STATUS_CHANGE 0x30
->>> +#define EC_IRQ_FAN2_STATUS_CHANGE 0x31
->>> +#define EC_IRQ_FAN1_SPEED_CHANGE 0x32
->>> +#define EC_IRQ_FAN2_SPEED_CHANGE 0x33
->>> +#define EC_IRQ_COMPLETED_LUT_UPDATE 0x34
->>> +#define EC_IRQ_COMPLETED_FAN_PROFILE_SWITCH 0x35
->>> +#define EC_IRQ_THERMISTOR_1_TEMP_THRESHOLD_CROSS 0x36
->>> +#define EC_IRQ_THERMISTOR_2_TEMP_THRESHOLD_CROSS 0x37
->>> +#define EC_IRQ_THERMISTOR_3_TEMP_THRESHOLD_CROSS 0x38
->>> +#define EC_IRQ_THERMISTOR_4_TEMP_THRESHOLD_CROSS 0x39
->>> +#define EC_IRQ_THERMISTOR_5_TEMP_THRESHOLD_CROSS 0x3a
->>> +#define EC_IRQ_THERMISTOR_6_TEMP_THRESHOLD_CROSS 0x3b
->>> +#define EC_IRQ_THERMISTOR_7_TEMP_THRESHOLD_CROSS 0x3c
->>> +#define EC_IRQ_RECOVERED_FROM_RESET 0x3d
+> Create a generic_core_init() function for all architecture to reduce
+> duplicate code in each architecture file. Create an info structure
+> to catch the variations between each architecture and pass it to the
+> generic init function.
+> 
+> Convert all architectures to call the generic core init function.
+> 
+> Signed-off-by: Xi Pardee <xi.pardee@linux.intel.com>
 
-Could you provide more details or any document references for the IRQ
-reasons defined above? It seems incomplete to me.
-By the way, I noticed this is a V2, but I couldn't find V1. Perhaps
-including a cover letter next time would be helpful.
->>> +
->>> +struct qcom_x1e_it8987_ec {
->>> +     struct i2c_client *client;
->>> +     struct input_dev *idev;
->>> +     struct mutex lock;
->>> +};
->>> +
->>> +static irqreturn_t qcom_x1e_it8987_ec_irq(int irq, void *data)
->>> +{
->>> +     struct qcom_x1e_it8987_ec *ec = data;
->>> +     struct device *dev = &ec->client->dev;
->>> +     int val;
->>> +
->>> +     guard(mutex)(&ec->lock);
->>
->> What's the thing that can execute at the same time as this procedure -
->> there doesn't appear to be any concurrent candidate in this patch.
-> The user could suspend the laptop and the EC could fire an IRQ at the same
-> time... I'll need to add mutex locking to suspend/resume functions
+This looks much better!
+
+> ---
+>  drivers/platform/x86/intel/pmc/adl.c  | 21 ++++--------
+>  drivers/platform/x86/intel/pmc/arl.c  | 47 ++++++++-------------------
+>  drivers/platform/x86/intel/pmc/cnp.c  | 21 ++++--------
+>  drivers/platform/x86/intel/pmc/core.c | 45 +++++++++++++++++++++++++
+>  drivers/platform/x86/intel/pmc/core.h | 25 ++++++++++++++
+>  drivers/platform/x86/intel/pmc/icl.c  | 18 ++++------
+>  drivers/platform/x86/intel/pmc/lnl.c  | 24 +++++---------
+>  drivers/platform/x86/intel/pmc/mtl.c  | 45 +++++++------------------
+>  drivers/platform/x86/intel/pmc/spt.c  | 18 ++++------
+>  drivers/platform/x86/intel/pmc/tgl.c  | 31 +++++++++---------
+>  10 files changed, 145 insertions(+), 150 deletions(-)
+> 
+> diff --git a/drivers/platform/x86/intel/pmc/adl.c b/drivers/platform/x86/intel/pmc/adl.c
+> index e7878558fd909..ac37f4ece9c70 100644
+> --- a/drivers/platform/x86/intel/pmc/adl.c
+> +++ b/drivers/platform/x86/intel/pmc/adl.c
+> @@ -311,20 +311,13 @@ const struct pmc_reg_map adl_reg_map = {
+>  	.pson_residency_counter_step = TGL_PSON_RES_COUNTER_STEP,
+>  };
+>  
+> +static struct pmc_dev_info adl_pmc_dev = {
+> +	.map = &adl_reg_map,
+> +	.suspend = cnl_suspend,
+> +	.resume = cnl_resume,
+> +};
+> +
+>  int adl_core_init(struct pmc_dev *pmcdev)
+>  {
+> -	struct pmc *pmc = pmcdev->pmcs[PMC_IDX_MAIN];
+> -	int ret;
+> -
+> -	pmcdev->suspend = cnl_suspend;
+> -	pmcdev->resume = cnl_resume;
+> -
+> -	pmc->map = &adl_reg_map;
+> -	ret = get_primary_reg_base(pmc);
+> -	if (ret)
+> -		return ret;
+> -
+> -	pmc_core_get_low_power_modes(pmcdev);
+> -
+> -	return 0;
+> +	return generic_core_init(pmcdev, &adl_pmc_dev);
+>  }
+> diff --git a/drivers/platform/x86/intel/pmc/arl.c b/drivers/platform/x86/intel/pmc/arl.c
+> index 05dec4f5019f3..137a1fdfee715 100644
+> --- a/drivers/platform/x86/intel/pmc/arl.c
+> +++ b/drivers/platform/x86/intel/pmc/arl.c
+> @@ -691,40 +691,19 @@ static int arl_resume(struct pmc_dev *pmcdev)
+>  	return cnl_resume(pmcdev);
+>  }
+>  
+> +static struct pmc_dev_info arl_pmc_dev = {
+> +	.func = 0,
+> +	.ssram = true,
+> +	.dmu_guid = ARL_PMT_DMU_GUID,
+> +	.regmap_list = arl_pmc_info_list,
+> +	.map = &arl_socs_reg_map,
+> +	.fixup = arl_d3_fixup,
+
+I think the fixups should be left to be called from the per architecture 
+init funcs.
+
+> +	.suspend = cnl_suspend,
+> +	.resume = arl_resume,
+> +};
+> +
+>  int arl_core_init(struct pmc_dev *pmcdev)
+>  {
+> -	struct pmc *pmc = pmcdev->pmcs[PMC_IDX_SOC];
+> -	int ret;
+> -	int func = 0;
+> -	bool ssram_init = true;
+> -
+> -	arl_d3_fixup();
+> -	pmcdev->suspend = cnl_suspend;
+> -	pmcdev->resume = arl_resume;
+> -	pmcdev->regmap_list = arl_pmc_info_list;
+> -
+> -	/*
+> -	 * If ssram init fails use legacy method to at least get the
+> -	 * primary PMC
+> -	 */
+> -	ret = pmc_core_ssram_init(pmcdev, func);
+> -	if (ret) {
+> -		ssram_init = false;
+> -		pmc->map = &arl_socs_reg_map;
+> -
+> -		ret = get_primary_reg_base(pmc);
+> -		if (ret)
+> -			return ret;
+> -	}
+> -
+> -	pmc_core_get_low_power_modes(pmcdev);
+> -	pmc_core_punit_pmt_init(pmcdev, ARL_PMT_DMU_GUID);
+> -
+> -	if (ssram_init)	{
+> -		ret = pmc_core_ssram_get_lpm_reqs(pmcdev);
+> -		if (ret)
+> -			return ret;
+> -	}
+> -
+> -	return 0;
+> +	return generic_core_init(pmcdev, &arl_pmc_dev);
+>  }
+> +
+> diff --git a/drivers/platform/x86/intel/pmc/cnp.c b/drivers/platform/x86/intel/pmc/cnp.c
+> index fc5193fdf8a88..6d268058e40b9 100644
+> --- a/drivers/platform/x86/intel/pmc/cnp.c
+> +++ b/drivers/platform/x86/intel/pmc/cnp.c
+> @@ -274,20 +274,13 @@ int cnl_resume(struct pmc_dev *pmcdev)
+>  	return pmc_core_resume_common(pmcdev);
+>  }
+>  
+> +static struct pmc_dev_info cnp_pmc_dev = {
+> +	.map = &cnp_reg_map,
+> +	.suspend = cnl_suspend,
+> +	.resume = cnl_resume,
+> +};
+> +
+>  int cnp_core_init(struct pmc_dev *pmcdev)
+>  {
+> -	struct pmc *pmc = pmcdev->pmcs[PMC_IDX_MAIN];
+> -	int ret;
+> -
+> -	pmcdev->suspend = cnl_suspend;
+> -	pmcdev->resume = cnl_resume;
+> -
+> -	pmc->map = &cnp_reg_map;
+> -	ret = get_primary_reg_base(pmc);
+> -	if (ret)
+> -		return ret;
+> -
+> -	pmc_core_get_low_power_modes(pmcdev);
+> -
+> -	return 0;
+> +	return generic_core_init(pmcdev, &cnp_pmc_dev);
+>  }
+> diff --git a/drivers/platform/x86/intel/pmc/core.c b/drivers/platform/x86/intel/pmc/core.c
+> index 3e7f99ac8c941..8b73101dcfe95 100644
+> --- a/drivers/platform/x86/intel/pmc/core.c
+> +++ b/drivers/platform/x86/intel/pmc/core.c
+> @@ -1344,6 +1344,51 @@ static void pmc_core_dbgfs_register(struct pmc_dev *pmcdev)
+>  	}
+>  }
+>  
+> +int generic_core_init(struct pmc_dev *pmcdev, struct pmc_dev_info *pmc_dev_info)
+> +{
+> +	struct pmc *pmc = pmcdev->pmcs[PMC_IDX_MAIN];
+> +	void (*fixup)(void) = pmc_dev_info->fixup;
+> +	bool ssram;
+> +	int ret;
+> +
+> +	if (fixup)
+> +		fixup();
+> +
+> +	pmcdev->suspend = pmc_dev_info->suspend;
+> +	pmcdev->resume = pmc_dev_info->resume;
+> +
+> +	/*
+> +	 * If ssram init fails use legacy method to at least get the
+> +	 * primary PMC
+> +	 */
+
+This comment feels misplaced. I think you could simply make it a function 
+comment instead as it describes the general level behavior within the 
+function.
+
+> +	ssram = pmc_dev_info->ssram;
+> +	if (ssram) {
+> +		pmcdev->regmap_list = pmc_dev_info->regmap_list;
+
+I wonder why the pmc_dev_info->ssram is necessary, doesn't ->regmap_list 
+!= NULL tell the same information already? You might also want to mention 
+it in the struct pmc_dev_info documentation that it implies SSRAM.
+
+So you could do:
+
+	ssram = pmc_dev_info->ssram != NULL;
+	if (ssram) {
+		...
+
+> +		ret = pmc_core_ssram_init(pmcdev, pmc_dev_info->func);
+> +		if (ret) {
+> +			dev_warn(&pmcdev->pdev->dev,
+> +				 "ssram init failed, %d, using legacy init\n", ret);
+> +			ssram = false;
+> +		}
+> +	}
+> +
+> +	if (!ssram) {
+> +		pmc->map = pmc_dev_info->map;
+> +		ret = get_primary_reg_base(pmc);
+> +		if (ret)
+> +			return ret;
+> +	}
+> +
+> +	pmc_core_get_low_power_modes(pmcdev);
+> +	if (pmc_dev_info->dmu_guid)
+> +		pmc_core_punit_pmt_init(pmcdev, pmc_dev_info->dmu_guid);
+> +
+> +	if (ssram)
+> +		return pmc_core_ssram_get_lpm_reqs(pmcdev);
+> +
+> +	return 0;
+> +}
+> +
+>  static const struct x86_cpu_id intel_pmc_core_ids[] = {
+>  	X86_MATCH_VFM(INTEL_SKYLAKE_L,		spt_core_init),
+>  	X86_MATCH_VFM(INTEL_SKYLAKE,		spt_core_init),
+> diff --git a/drivers/platform/x86/intel/pmc/core.h b/drivers/platform/x86/intel/pmc/core.h
+> index a1886d8e1ef3e..82be953db9463 100644
+> --- a/drivers/platform/x86/intel/pmc/core.h
+> +++ b/drivers/platform/x86/intel/pmc/core.h
+> @@ -436,6 +436,30 @@ enum pmc_index {
+>  	PMC_IDX_MAX
+>  };
+>  
+> +/**
+> + * struct pmc_dev_info - Structure to keep pmc device info
+> + * @func:		Function number of the primary pmc
+
+Capitalize "PMC" in the comments.
+
+> + * @ssram:		Bool shows if platform has ssram support
+> + * @dmu_guid:		DMU GUID
+> + * @regmap_list:	Pointer to a list of pmc_info structure that could be
+> + *			available for the platform
+> + * @map:		Pointer to a pmc_reg_map struct that contains platform
+> + *			specific attributes of the primary pmc
+> + * @fixup:		Function to perform platform specific fixup
+> + * @suspend:		Function to perform platform specific suspend
+> + * @resume:		Function to perform platform specific resume
+> + */
+> +struct pmc_dev_info {
+> +	u8 func;
+> +	bool ssram;
+> +	u32 dmu_guid;
+> +	struct pmc_info *regmap_list;
+> +	const struct pmc_reg_map *map;
+> +	void (*fixup)(void);
+> +	void (*suspend)(struct pmc_dev *pmcdev);
+> +	int (*resume)(struct pmc_dev *pmcdev);
+> +};
+> +
+>  extern const struct pmc_bit_map msr_map[];
+>  extern const struct pmc_bit_map spt_pll_map[];
+>  extern const struct pmc_bit_map spt_mphy_map[];
+> @@ -592,6 +616,7 @@ extern void pmc_core_set_device_d3(unsigned int device);
+>  
+>  extern int pmc_core_ssram_init(struct pmc_dev *pmcdev, int func);
+>  
+> +int generic_core_init(struct pmc_dev *pmcdev, struct pmc_dev_info *pmc_dev_info);
+>  int spt_core_init(struct pmc_dev *pmcdev);
+>  int cnp_core_init(struct pmc_dev *pmcdev);
+>  int icl_core_init(struct pmc_dev *pmcdev);
+> diff --git a/drivers/platform/x86/intel/pmc/icl.c b/drivers/platform/x86/intel/pmc/icl.c
+> index 71b0fd6cb7d84..f044546e1aa5e 100644
+> --- a/drivers/platform/x86/intel/pmc/icl.c
+> +++ b/drivers/platform/x86/intel/pmc/icl.c
+> @@ -50,18 +50,12 @@ const struct pmc_reg_map icl_reg_map = {
+>  	.etr3_offset = ETR3_OFFSET,
+>  };
+>  
+> +static struct pmc_dev_info icl_pmc_dev = {
+> +	.map = &icl_reg_map,
+> +};
+> +
+>  int icl_core_init(struct pmc_dev *pmcdev)
+>  {
+> -	struct pmc *pmc = pmcdev->pmcs[PMC_IDX_MAIN];
+> -	int ret;
+> -
+> -	pmc->map = &icl_reg_map;
+> -
+> -	ret = get_primary_reg_base(pmc);
+> -	if (ret)
+> -		return ret;
+> -
+> -	pmc_core_get_low_power_modes(pmcdev);
+> -
+> -	return ret;
+> +	return generic_core_init(pmcdev, &icl_pmc_dev);
+>  }
+> +
+> diff --git a/drivers/platform/x86/intel/pmc/lnl.c b/drivers/platform/x86/intel/pmc/lnl.c
+> index be029f12cdf40..8f6b2a8d30438 100644
+> --- a/drivers/platform/x86/intel/pmc/lnl.c
+> +++ b/drivers/platform/x86/intel/pmc/lnl.c
+> @@ -550,22 +550,14 @@ static int lnl_resume(struct pmc_dev *pmcdev)
+>  	return cnl_resume(pmcdev);
+>  }
+>  
+> +static struct pmc_dev_info lnl_pmc_dev = {
+> +	.map = &lnl_socm_reg_map,
+> +	.fixup = lnl_d3_fixup,
+> +	.suspend = cnl_suspend,
+> +	.resume = lnl_resume,
+> +};
+> +
+>  int lnl_core_init(struct pmc_dev *pmcdev)
+>  {
+> -	int ret;
+> -	struct pmc *pmc = pmcdev->pmcs[PMC_IDX_SOC];
+
+Hmm, so PMC_IDX_SOC and PMC_IDX_MAIN are set to same value which I 
+haven't noticed before. I don't know why they were separate to begin with 
+but I think you just removed all user of PMC_IDX_SOC so perhaps that it 
+should be removed from enum as well?
+
+> -
+> -	lnl_d3_fixup();
+> -
+> -	pmcdev->suspend = cnl_suspend;
+> -	pmcdev->resume = lnl_resume;
+> -
+> -	pmc->map = &lnl_socm_reg_map;
+> -	ret = get_primary_reg_base(pmc);
+> -	if (ret)
+> -		return ret;
+> -
+> -	pmc_core_get_low_power_modes(pmcdev);
+> -
+> -	return 0;
+> +	return generic_core_init(pmcdev, &lnl_pmc_dev);
+>  }
+> diff --git a/drivers/platform/x86/intel/pmc/mtl.c b/drivers/platform/x86/intel/pmc/mtl.c
+> index 02949fed76e91..b7a752e8adbc6 100644
+> --- a/drivers/platform/x86/intel/pmc/mtl.c
+> +++ b/drivers/platform/x86/intel/pmc/mtl.c
+> @@ -990,39 +990,18 @@ static int mtl_resume(struct pmc_dev *pmcdev)
+>  	return cnl_resume(pmcdev);
+>  }
+>  
+> +static struct pmc_dev_info mtl_pmc_dev = {
+> +	.func = 2,
+> +	.ssram = true,
+> +	.dmu_guid = MTL_PMT_DMU_GUID,
+> +	.regmap_list = mtl_pmc_info_list,
+> +	.map = &mtl_socm_reg_map,
+> +	.fixup = mtl_d3_fixup,
+> +	.suspend = cnl_suspend,
+> +	.resume = mtl_resume,
+> +};
+> +
+>  int mtl_core_init(struct pmc_dev *pmcdev)
+>  {
+> -	struct pmc *pmc = pmcdev->pmcs[PMC_IDX_SOC];
+> -	int ret;
+> -	int func = 2;
+> -	bool ssram_init = true;
+> -
+> -	mtl_d3_fixup();
+> -
+> -	pmcdev->suspend = cnl_suspend;
+> -	pmcdev->resume = mtl_resume;
+> -	pmcdev->regmap_list = mtl_pmc_info_list;
+> -
+> -	/*
+> -	 * If ssram init fails use legacy method to at least get the
+> -	 * primary PMC
+> -	 */
+> -	ret = pmc_core_ssram_init(pmcdev, func);
+> -	if (ret) {
+> -		ssram_init = false;
+> -		dev_warn(&pmcdev->pdev->dev,
+> -			 "ssram init failed, %d, using legacy init\n", ret);
+> -		pmc->map = &mtl_socm_reg_map;
+> -		ret = get_primary_reg_base(pmc);
+> -		if (ret)
+> -			return ret;
+> -	}
+> -
+> -	pmc_core_get_low_power_modes(pmcdev);
+> -	pmc_core_punit_pmt_init(pmcdev, MTL_PMT_DMU_GUID);
+> -
+> -	if (ssram_init)
+> -		return pmc_core_ssram_get_lpm_reqs(pmcdev);
+> -
+> -	return 0;
+> +	return generic_core_init(pmcdev, &mtl_pmc_dev);
+>  }
+> diff --git a/drivers/platform/x86/intel/pmc/spt.c b/drivers/platform/x86/intel/pmc/spt.c
+> index ab993a69e33ee..09d3ce09af736 100644
+> --- a/drivers/platform/x86/intel/pmc/spt.c
+> +++ b/drivers/platform/x86/intel/pmc/spt.c
+> @@ -134,18 +134,12 @@ const struct pmc_reg_map spt_reg_map = {
+>  	.pm_vric1_offset = SPT_PMC_VRIC1_OFFSET,
+>  };
+>  
+> +static struct pmc_dev_info spt_pmc_dev = {
+> +	.map = &spt_reg_map,
+> +};
+> +
+>  int spt_core_init(struct pmc_dev *pmcdev)
+>  {
+> -	struct pmc *pmc = pmcdev->pmcs[PMC_IDX_MAIN];
+> -	int ret;
+> -
+> -	pmc->map = &spt_reg_map;
+> -
+> -	ret = get_primary_reg_base(pmc);
+> -	if (ret)
+> -		return ret;
+> -
+> -	pmc_core_get_low_power_modes(pmcdev);
+> -
+> -	return ret;
+> +	return generic_core_init(pmcdev, &spt_pmc_dev);
+>  }
+> +
+> diff --git a/drivers/platform/x86/intel/pmc/tgl.c b/drivers/platform/x86/intel/pmc/tgl.c
+> index 4fec43d212d01..43a2aec4a5673 100644
+> --- a/drivers/platform/x86/intel/pmc/tgl.c
+> +++ b/drivers/platform/x86/intel/pmc/tgl.c
+> @@ -285,35 +285,36 @@ void pmc_core_get_tgl_lpm_reqs(struct platform_device *pdev)
+>  	ACPI_FREE(out_obj);
+>  }
+>  
+> -static int tgl_core_generic_init(struct pmc_dev *pmcdev, int pch_tp)
+> -{
+> -	struct pmc *pmc = pmcdev->pmcs[PMC_IDX_MAIN];
+> -	int ret;
+> +static struct pmc_dev_info tgl_l_pmc_dev = {
+> +	.map = &tgl_reg_map,
+> +	.suspend = cnl_suspend,
+> +	.resume = cnl_resume,
+> +};
+>  
+> -	if (pch_tp == PCH_H)
+> -		pmc->map = &tgl_h_reg_map;
+> -	else
+> -		pmc->map = &tgl_reg_map;
+> +static struct pmc_dev_info tgl_pmc_dev = {
+> +	.map = &tgl_h_reg_map,
+> +	.suspend = cnl_suspend,
+> +	.resume = cnl_resume,
+> +};
+>  
+> -	pmcdev->suspend = cnl_suspend;
+> -	pmcdev->resume = cnl_resume;
+> +static int tgl_core_generic_init(struct pmc_dev *pmcdev, struct pmc_dev_info *pmc_dev_info)
+> +{
+> +	int ret;
+>  
+> -	ret = get_primary_reg_base(pmc);
+> +	ret = generic_core_init(pmcdev, &tgl_l_pmc_dev);
+>  	if (ret)
+>  		return ret;
+>  
+> -	pmc_core_get_low_power_modes(pmcdev);
+>  	pmc_core_get_tgl_lpm_reqs(pmcdev->pdev);
+> -
+>  	return 0;
+>  }
+>  
+>  int tgl_l_core_init(struct pmc_dev *pmcdev)
+>  {
+> -	return tgl_core_generic_init(pmcdev, PCH_LP);
+> +	return tgl_core_generic_init(pmcdev, &tgl_l_pmc_dev);
+>  }
+>  
+>  int tgl_core_init(struct pmc_dev *pmcdev)
+>  {
+> -	return tgl_core_generic_init(pmcdev, PCH_H);
+> +	return tgl_core_generic_init(pmcdev, &tgl_pmc_dev);
+>  }
 > 
 
-Using a mutex lock inside an IRQ handler is not advisable. Additionally,
-since this IRQ appears to be only for logging purposes, is it really
-necessary for it to be triggered during suspend and resume?
-> 
->>> +
->>> +     val = i2c_smbus_read_byte_data(ec->client, EC_IRQ_REASON_REG);
->>> +     if (val < 0) {
->>> +             dev_err(dev, "Failed to get EC IRQ reason: %d\n", val);
->>> +             return IRQ_HANDLED;
->>> +     }
->>> +
->>> +     dev_info(dev, "Unhandled EC IRQ reason: %d\n", val);
->>
->> Should an unhandled IRQ be an info or an err ?
-> I don't know, it's "unimplemented but doesn't really matter"
-> 
->>
->>> +
->>> +     return IRQ_HANDLED;
->>> +}
->>> +
->>> +static int qcom_x1e_it8987_ec_probe(struct i2c_client *client)
->>> +{
->>> +     struct device *dev = &client->dev;
->>> +     struct qcom_x1e_it8987_ec *ec;
->>> +     int ret;
->>> +
->>> +     ec = devm_kzalloc(dev, sizeof(*ec), GFP_KERNEL);
->>> +     if (!ec)
->>> +             return -ENOMEM;
->>> +
->>> +     mutex_init(&ec->lock);
->>> +     ec->client = client;
->>> +
->>> +     ret = devm_request_threaded_irq(dev, client->irq,
->>> +                                     NULL, qcom_x1e_it8987_ec_irq,
->>> +                                     IRQF_ONESHOT, "qcom_x1e_it8987_ec", ec);
->>> +     if (ret < 0)
->>> +             return dev_err_probe(dev, ret, "Unable to request irq\n");
->>> +
->>> +     ret = i2c_smbus_write_byte_data(client, EC_IRQ_ENABLE_REG, 0x01);
->>> +     if (ret < 0)
->>> +             return dev_err_probe(dev, ret, "Failed to enable interrupts\n");
->>> +
->>> +     return 0;
->>> +}
->>> +
->>> +static void qcom_x1e_it8987_ec_remove(struct i2c_client *client)
->>> +{
->>> +     struct device *dev = &client->dev;
->>> +     int ret;
->>> +
->>> +     ret = i2c_smbus_write_byte_data(client, EC_IRQ_ENABLE_REG, 0x00);
->>> +     if (ret < 0)
->>> +             dev_err(dev, "Failed to disable interrupts: %d\n", ret);
->>> +}
->>> +
->>> +static int qcom_x1e_it8987_ec_suspend(struct device *dev)
->>> +{
->>> +     struct i2c_client *client = to_i2c_client(dev);
->>> +     int ret;
->>> +
->>> +     ret = i2c_smbus_write_byte_data(client, EC_SUSPEND_RESUME_REG, EC_NOTIFY_SCREEN_OFF);
->>> +     if (ret)
->>> +             return ret;
->>> +
->>> +     ret = i2c_smbus_write_byte_data(client, EC_SUSPEND_RESUME_REG, EC_NOTIFY_SUSPEND_ENTER);
->>> +     if (ret)
->>> +             return ret;
->>> +
->>> +     return 0;
->>> +}
->>> +
->>> +static int qcom_x1e_it8987_ec_resume(struct device *dev)
->>> +{
->>> +     struct i2c_client *client = to_i2c_client(dev);
->>> +     int ret;
->>> +
->>> +     ret = i2c_smbus_write_byte_data(client, EC_SUSPEND_RESUME_REG, EC_NOTIFY_SUSPEND_EXIT);
->>> +     if (ret)
->>> +             return ret;
->>> +
->>> +     ret = i2c_smbus_write_byte_data(client, EC_SUSPEND_RESUME_REG, EC_NOTIFY_SCREEN_ON);
->>> +     if (ret)
->>> +             return ret;
->>> +
->>> +     return 0;
->>> +}
->>> +
->>> +static const struct of_device_id qcom_x1e_it8987_ec_of_match[] = {
->>> +     { .compatible = "lenovo,yoga-slim7x-ec" },
->>> +     { .compatible = "qcom,x1e-it9897-ec" },
->>> +     {}
->>> +};
->>> +MODULE_DEVICE_TABLE(of, qcom_x1e_it8987_ec_of_match);
->>> +
->>> +static const struct i2c_device_id qcom_x1e_it8987_ec_i2c_id_table[] = {
->>> +     { "qcom-x1e-it8987-ec", },
->>> +     {}
->>> +};
->>> +MODULE_DEVICE_TABLE(i2c, qcom_x1e_it8987_ec_i2c_id_table);
->>> +
->>> +static DEFINE_SIMPLE_DEV_PM_OPS(qcom_x1e_it8987_ec_pm_ops,
->>> +             qcom_x1e_it8987_ec_suspend,
->>> +             qcom_x1e_it8987_ec_resume);
->>> +
->>> +static struct i2c_driver qcom_x1e_it8987_ec_i2c_driver = {
->>> +     .driver = {
->>> +             .name = "yoga-slim7x-ec",
->>> +             .of_match_table = qcom_x1e_it8987_ec_of_match,
->>> +             .pm = &qcom_x1e_it8987_ec_pm_ops
->>> +     },
->>> +     .probe = qcom_x1e_it8987_ec_probe,
->>> +     .remove = qcom_x1e_it8987_ec_remove,
->>> +     .id_table = qcom_x1e_it8987_ec_i2c_id_table,
->>> +};
->>> +module_i2c_driver(qcom_x1e_it8987_ec_i2c_driver);
->>> +
->>> +MODULE_DESCRIPTION("Lenovo Yoga Slim 7x Embedded Controller");
->>> +MODULE_LICENSE("GPL");
->>
->> Otherwise looks pretty good to me, nice hacking :)
->>
->> ---
->> bod
->>
-
+It might be also worth to consider what is stored into those 
+X86_MATCH_VFM()s so that the simple init functions could be removed 
+entirely but it could be done in another patch on top of this one.
 
 -- 
-Thx and BRs,
-Aiqun(Maria) Yu
+ i.
+
