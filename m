@@ -1,37 +1,37 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 863ED22655E
-	for <platform-driver-x86@vger.kernel.org>; Fri, 20 Dec 2024 20:16:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E9EEB1A0B0E
+	for <platform-driver-x86@vger.kernel.org>; Fri, 20 Dec 2024 20:33:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1734725783; cv=none; b=mmkHwsboHYDGzDXpVLjaj+YqdMaXdSORBRMjQxAxhhlmA2S1JxyXmEzBYtV4G9U4c9RwiRAe5T7sO34s4pjI34QjMJGkq6oMI76tCVZFRuCB/LdSNe/Gk79q2GPLtA65k2cJ/V1oV0UwXXxDlmlGynW6Bbg3WlstZsd4q7NjoJs=
+	t=1734726830; cv=none; b=T/VZUsPmrR0Y1mVXl3fYlA7Ibe4xoDRvSAi2V5GO6mw25q4FWmv6CW2TDVVHWvDvr5K0pj2tEHpNTizOu2EiNdUkLUXDOV/EyP2mIHn6+9tLvI+WDFML2vjuzm68X4NcPvA/n+InTqetjBXhLIGyplKk6A/yVBoP0XZrehKbFWA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1734725783; c=relaxed/simple;
-	bh=Nw+yKswsltG2sr0y0PU+y4A+Cbsod/JYe1zBrRqiTwo=;
+	s=arc-20240116; t=1734726830; c=relaxed/simple;
+	bh=h/2K8ptKanZZm/5cIcVMT45Vu/PHpsMNJjCg+V+Z+1E=;
 	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=lWizawtnUOnm5Ff9aOIzYyX9vZTddzo3E2AYjoNx41LIDdxgM3QQVRAKF5/cobRJcwK7BQ9RFbqmYPtR+g9GnOJ4P+DIQ8fblNCjxy/lHeA863fxFCb/AhmVsd0OPQrIfOV/F5frtmHYCVespLr+wYeSZ01odHRaQdm12D8jBM4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NT0LvlaZ; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:MIME-Version; b=mZD5AgCFxAdMSVg25VhBSB8qP3+K6ScBmig1fgyrhgWQ5sTd/PnTFtQ5hcYQR4aMuNSyLUXqF+iSc1A1PsBGpWhOFDmv8NWE7ho9KbIVYaRu5qrHyFQMCjF/DK95N2UU/NYKTr9/Ok/byHFkTltGJ6E8r0duFYOHbtnmCoAnD6k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VoZn3H1p; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NT0LvlaZ"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 10F0BC4CED4
-	for <platform-driver-x86@vger.kernel.org>; Fri, 20 Dec 2024 20:16:23 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VoZn3H1p"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 6F13DC4CED6
+	for <platform-driver-x86@vger.kernel.org>; Fri, 20 Dec 2024 20:33:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1734725783;
-	bh=Nw+yKswsltG2sr0y0PU+y4A+Cbsod/JYe1zBrRqiTwo=;
+	s=k20201202; t=1734726829;
+	bh=h/2K8ptKanZZm/5cIcVMT45Vu/PHpsMNJjCg+V+Z+1E=;
 	h=From:To:Subject:Date:In-Reply-To:References:From;
-	b=NT0LvlaZOLPEgdoRMmI+tm+wUREqcUvPAKT7j6Tu8+w2QJsosHayHumOWRah5box6
-	 MO0z1zV4BAcMzH9UnhbiQ/JDsWs+YfnZHuCba+NlRiDuPWaxrLIWgqECDRzLfwID2C
-	 WV7Dlo981nIXEvRaP5fTK9dhmvWv3aFB0g917U1/oXtOT6qbWj5Ao9mqHNjpD36yNl
-	 zSu7B2Wpfja3fuLO4nMYT6BLKOxBdJUxWPSgWcoYe8iA0X4Nit4WuBGmIPMZbfxDG2
-	 GYzT+fAzIiZ+Ier1IF5jVAISKtsnIeH0TOt0Jk5CZ8b7V32v+gSe01S1+OYihiGaeq
-	 M97lCUfvHdgUA==
+	b=VoZn3H1pVZwsZoN1vKvpqKbzdWtDQrqJXhLr6qEgXSpvJVrzUlmGFBxO6oPjgeW/8
+	 VV0vr7hUG3fEOIlw3yu+pGG74b0I9Xm3t3+4HKIYQy36ucS5rUPoxaWx+YUWFqApjX
+	 jG5sOcNv+QmWTJKXOmHAVm9sfAIwwev2HeuGIPWPGwzWNkRtVRm+MDIXUeA6ycH0Ye
+	 E1A/GQYTHl/sj03UfLlRzAB17oz2RoL5FPJhx5K3o3hz8eXAZXLsGU4wo7d8x75wZi
+	 wK2RCG8lLVYMQfoifwQZNMNUoOwVd0xJ1SUZrP4AytEwCtc2UEb4sSMb/8092256Kc
+	 XQllRySp02J3Q==
 Received: by aws-us-west-2-korg-bugzilla-1.web.codeaurora.org (Postfix, from userid 48)
-	id 08469C41613; Fri, 20 Dec 2024 20:16:23 +0000 (UTC)
+	id 6290BC4160E; Fri, 20 Dec 2024 20:33:49 +0000 (UTC)
 From: bugzilla-daemon@kernel.org
 To: platform-driver-x86@vger.kernel.org
 Subject: [Bug 219495] [TPM2] tpm_tis driver crashs during the boot time.
-Date: Fri, 20 Dec 2024 20:16:22 +0000
+Date: Fri, 20 Dec 2024 20:33:49 +0000
 X-Bugzilla-Reason: None
 X-Bugzilla-Type: changed
 X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
@@ -47,7 +47,7 @@ X-Bugzilla-Priority: P3
 X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
 X-Bugzilla-Flags: 
 X-Bugzilla-Changed-Fields: 
-Message-ID: <bug-219495-215701-5qvanpoUG3@https.bugzilla.kernel.org/>
+Message-ID: <bug-219495-215701-HC4j1OfhGn@https.bugzilla.kernel.org/>
 In-Reply-To: <bug-219495-215701@https.bugzilla.kernel.org/>
 References: <bug-219495-215701@https.bugzilla.kernel.org/>
 Content-Type: text/plain; charset="UTF-8"
@@ -63,12 +63,9 @@ MIME-Version: 1.0
 
 https://bugzilla.kernel.org/show_bug.cgi?id=3D219495
 
---- Comment #39 from jarkko@kernel.org ---
-Since ACPI's own code uses normal memory accesses to the memory mapped by
-acpi_os_map_io_mem(), we can too:
-
-https://elixir.bootlin.com/linux/v6.11.5/source/drivers/acpi/apei/einj-core=
-.c#L222
+--- Comment #40 from jarkko@kernel.org ---
+Errata 3: Better to keep semantics of TPM 1 path for ACPI as it were as we
+don't want to mod tpm1.c.
 
 --=20
 You may reply to this email to add a comment.
