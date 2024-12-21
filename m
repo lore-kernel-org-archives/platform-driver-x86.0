@@ -1,85 +1,96 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 25ED51F2369
-	for <platform-driver-x86@vger.kernel.org>; Sat, 21 Dec 2024 12:46:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 809E71F2C3E
+	for <platform-driver-x86@vger.kernel.org>; Sat, 21 Dec 2024 12:51:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1734785182; cv=none; b=C4a1MOxdmwStZUuLF+6aYkQ15PWM1SbypMJgqnChtg+JuVwoh7rBqSjBZrvNe4G26Ed940InXdS6GeSCNNtDovkq6z4TOCSWHPN3S12q3t7fP3iptz0ueeTFxYxlLT6LtMci9HAN7h/7tdQVJaKoXg7BGFg9znLsflAIhZvn/XE=
+	t=1734785513; cv=none; b=eaFPC7BDwdGpIe/DYdjSfkk6gFrNfB6mjODXLQqsFPHyQa/H8LcokwxA2A6HxYTcK613Nj9UEHr5w52glLY6+rtBEAH9qQrQ/hNRWe/V+IaZq5ezATpf5wzKzAaWxe7SNMWfGncE0qmrjYy2Lyria+oDrwDRJqgSPChnq6BoZRU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1734785182; c=relaxed/simple;
-	bh=fYi8rHa9Len9kjX/MB/aE7mV2AMNN4E7R54D4yVHm1w=;
-	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=qL3REUuj56fDtRZ6aV3J0DdY2Ruo4tnTcGtWPhajV4e7vNlYGVaFiM6V3kZRxBQcYuOv2Yj8UbxtfsVJImguGDacl1I4kFkBT9E+u5LWuzqBjYPs9ODz1ITmC2NlCesSaUZDugMf555BeCR7hGEl5XGWVPynl6L0y59rm9KHFuo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=k16TDK4w; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1734785513; c=relaxed/simple;
+	bh=ftFqeXJlr7ozSsJiJmwDqttcOnaO3TPQ4NZq5jR1kpU=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=tJ4v6DhPHelTgjsBe+EDQcr913dWg3nll3Hu96diyCE2b4NrFJYgf26xDXg+L4FK9exZ/+O704a6WDJdfuxvVjDdkXgHp04JJxglwjQMrCwDo/AhHYDQybyNwYTxBSqeUmhAP/vdP3/0JZ2iqV/4VHSP4r1GdQMB7w9HwAlRC0M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=IY7P+5v0; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="k16TDK4w"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id AEAB1C4CED4
-	for <platform-driver-x86@vger.kernel.org>; Sat, 21 Dec 2024 12:46:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1734785181;
-	bh=fYi8rHa9Len9kjX/MB/aE7mV2AMNN4E7R54D4yVHm1w=;
-	h=From:To:Subject:Date:In-Reply-To:References:From;
-	b=k16TDK4wUfbEoa3nqoJwoWRWhy2sUcIIBwFnRBu41PywyX21sJO6k9hPo1FkeGaZ+
-	 40lTo6zjYp298WhAeUG+u+Mf89/tfVTkLmrHgj2OpjdhgHkNmNRqzkMLDc6EG7bG3o
-	 WKLfjxxP0LJkhi9+f4w2m8XOihUEiDhpTgI92pEBdRmFTb0gAW5mP9WXcnuLrPoQrD
-	 zj8mQg7q5zaL7laEue7PokyLdICWAu5fpCwCgssl46vMlRLRITIETpXeO22vA6CHoK
-	 OeCGI17nebY/9JH/5rV2i/+VDAzztOCMCpqLtGGXjh5joNxEjKgHZ9RIHmUvV8/zRR
-	 2qeXDfaXU2pUA==
-Received: by aws-us-west-2-korg-bugzilla-1.web.codeaurora.org (Postfix, from userid 48)
-	id A2957C4160E; Sat, 21 Dec 2024 12:46:21 +0000 (UTC)
-From: bugzilla-daemon@kernel.org
-To: platform-driver-x86@vger.kernel.org
-Subject: [Bug 219495] [TPM2] tpm_tis driver crashs during the boot time.
-Date: Sat, 21 Dec 2024 12:46:21 +0000
-X-Bugzilla-Reason: None
-X-Bugzilla-Type: changed
-X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
-X-Bugzilla-Product: Drivers
-X-Bugzilla-Component: Platform_x86
-X-Bugzilla-Version: 2.5
-X-Bugzilla-Keywords: 
-X-Bugzilla-Severity: normal
-X-Bugzilla-Who: jarkko@kernel.org
-X-Bugzilla-Status: NEW
-X-Bugzilla-Resolution: 
-X-Bugzilla-Priority: P3
-X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
-X-Bugzilla-Flags: 
-X-Bugzilla-Changed-Fields: attachments.isobsolete attachments.created
-Message-ID: <bug-219495-215701-DIOdAZh6dO@https.bugzilla.kernel.org/>
-In-Reply-To: <bug-219495-215701@https.bugzilla.kernel.org/>
-References: <bug-219495-215701@https.bugzilla.kernel.org/>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Bugzilla-URL: https://bugzilla.kernel.org/
-Auto-Submitted: auto-generated
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="IY7P+5v0"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1734785510;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=DMdR9EaqQqpEHfKqP+5Z9GMZ9uoTPMuFThXtBArLjI8=;
+	b=IY7P+5v0y0MAdsPtZRVtFxJpCEZQ/6lPZFAeoXHeCa8xu+UM0DMZwnYPDB4ZAKL6cCFoNs
+	nKYai6SRhB33zYM7puXcVExWbMI0LiwFResvCDbjJxObxiAXIZwSuqELU25BI7K29ujD9H
+	JR6f9UXtccfmJwinLJ6JqRgZ932VJ6I=
+Received: from mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-274-PjvPJLMuNqiJwJftw3LRbA-1; Sat,
+ 21 Dec 2024 07:51:45 -0500
+X-MC-Unique: PjvPJLMuNqiJwJftw3LRbA-1
+X-Mimecast-MFC-AGG-ID: PjvPJLMuNqiJwJftw3LRbA
+Received: from mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.12])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 33C0F19560B1;
+	Sat, 21 Dec 2024 12:51:44 +0000 (UTC)
+Received: from shalem.redhat.com (unknown [10.39.192.23])
+	by mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id B9A4519560A2;
+	Sat, 21 Dec 2024 12:51:41 +0000 (UTC)
+From: Hans de Goede <hdegoede@redhat.com>
+To: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	Andy Shevchenko <andy@kernel.org>,
+	Sebastian Reichel <sre@kernel.org>
+Cc: Hans de Goede <hdegoede@redhat.com>,
+	=?UTF-8?q?Thomas=20Wei=C3=9Fschuh?= <linux@weissschuh.net>,
+	platform-driver-x86@vger.kernel.org,
+	linux-pm@vger.kernel.org
+Subject: [PATCH v5 0/1] power: supply: Add new "charge_types" property
+Date: Sat, 21 Dec 2024 13:51:39 +0100
+Message-ID: <20241221125140.345776-1-hdegoede@redhat.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.12
 
-https://bugzilla.kernel.org/show_bug.cgi?id=3D219495
+Here is v5 of my "charge_types" property series, most of this series
+has already been merged, leaving only the dell-laptop patch.
 
-jarkko@kernel.org changed:
+Changes in v5:
+- Drop patches 1-3 (already merged)
+- dell-laptop: Return ENOENT instead of EIO in charge_types_store() when
+  the requested mode was accepted by power_supply_charge_types_parse() but
+  for some reason is not found in the battery_modes[] array
 
-           What    |Removed                     |Added
-----------------------------------------------------------------------------
- Attachment #307383|0                           |1
-        is obsolete|                            |
+As already discussed since the dependencies are merged into
+linux-power-supply/for-next this patch should also be merged through
+linux-power-supply/for-next.
 
---- Comment #45 from jarkko@kernel.org ---
-Created attachment 307384
-  --> https://bugzilla.kernel.org/attachment.cgi?id=3D307384&action=3Dedit
-[PATCH v2] tpm: Map the ACPI provided event log
+Ilpo, this new version addresses your review comment, can you please
+provide your Acked-by for merging this through linux-power-supply/for-next?
 
-https://lore.kernel.org/linux-integrity/20241221124447.774553-1-jarkko@kern=
-el.org/T/#u
+Sebastian, can you merge this once acked by Ilpo?
 
---=20
-You may reply to this email to add a comment.
+Regards,
 
-You are receiving this mail because:
-You are watching the assignee of the bug.=
+Hans
+
+
+Hans de Goede (1):
+  platform/x86: dell-laptop: Use power_supply_charge_types_show/_parse()
+    helpers
+
+ drivers/platform/x86/dell/dell-laptop.c | 54 ++++++++++++-------------
+ 1 file changed, 25 insertions(+), 29 deletions(-)
+
+-- 
+2.47.1
+
