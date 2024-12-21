@@ -1,61 +1,61 @@
-Received: from mail-yb1-f170.google.com (mail-yb1-f170.google.com [209.85.219.170])
+Received: from mail-yw1-f175.google.com (mail-yw1-f175.google.com [209.85.128.175])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B889028366;
-	Sat, 21 Dec 2024 05:59:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C0A1E1EE7DD;
+	Sat, 21 Dec 2024 06:00:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1734760799; cv=none; b=JiPnU3RKXw5pO3fzSVBFAWfkhDq0SAKcOUm7N3CdHs79qczeaMmeM54pPnCRrcCsDqiFmO7hB8ehkutnVI6OKbwls4BobCFuIQh8jPf2w4B2sbw3HwOSeUPvw/k+8sJZ+EqQNlJWL/99mmwoSi8WIJt9PYElBt3kN1qp35x7SsE=
+	t=1734760803; cv=none; b=BEdyCC+fiL2uzeSHbQoGIOd52kI3sTPN6zNnd5HJJKExiCCUI4kwFRCazw37fzUC4KYp4Ltot5EP+eyy3GvxclOKP8ir4ccZMKO38Fc7FsI0SQWzEoFYQJUihrCs21WOvyoK8R2p2ObzTwCAMeoma3Fa8GgytC69iljCctVAfUI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1734760799; c=relaxed/simple;
-	bh=4NNzJCS6dqZubCbXKxy5ZPIrkzp2CGi7vV0ZMorGyLU=;
+	s=arc-20240116; t=1734760803; c=relaxed/simple;
+	bh=E8E8wxxFfTC5oYXh0qFC1FyTDteE+cIe83wwFVwUAyQ=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=b2eqW9596lyBM8AvTxgdhB40IZ+Wsr7cGQE1wcpuFQmKj1ZRLdUq8v8ypKROqcToSrpyVDcilQvFuFVkObH2LyZ255rPVs9JoXLAvNkt5hs0lN9oCFukJ0XMWaTDcET8QruvGFFEhu22QYN0PUJwmX63m4F2nPWHHjwi7aLDNEM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=MIzHx8zo; arc=none smtp.client-ip=209.85.219.170
+	 MIME-Version; b=AwpxADEfeVcUIlSHLmPLatLx5rYZBerqnjp2LgEJQOTObFy1/hxCEdC8txVJLuhu2k6iVZGPFsQMUuU26l6iCNKhizUC6wiiBhnWXNlTWfBEHmslL6tRhOLloHSEJ1ZouhoQRMDymwxuoHq18zrNDlc4L2ZljIj+Alm2FCQXhu4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=YBenQXhB; arc=none smtp.client-ip=209.85.128.175
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MIzHx8zo"
-Received: by mail-yb1-f170.google.com with SMTP id 3f1490d57ef6-e460717039fso2062614276.0;
-        Fri, 20 Dec 2024 21:59:57 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YBenQXhB"
+Received: by mail-yw1-f175.google.com with SMTP id 00721157ae682-6f0054cb797so21088917b3.0;
+        Fri, 20 Dec 2024 22:00:01 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1734760797; x=1735365597; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1734760800; x=1735365600; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=679ZZs5M5yhRZZVx57ba0x+NupoeJc1WiRduiJBWPv4=;
-        b=MIzHx8zoay4Kx3zdRg17HSFHPpg69mbvDU891FDaUweky2shrXD0/mVgcHfUACD44b
-         KzqWAQEjfTJ2xvppQn8/lotd2FvnPp+ZVCg9jVZmg79DlAK348ZWcDJN0oSDGucw3WDb
-         H7VLA8pXKopIRLsU41VRD0PKlZDvxA/olXkSFEfHHPk1i5Cqrq586QDvgxUbLxaXzPH2
-         3OYqHChg+2kCJY3FjGAGh9vBCKtWE8G79rg5QVIFFQroKkhEZfkLcg3PTapqHeEfnFrb
-         ixCrz4sORMKaV7m99Pvis0UFxy38W9x5rJwlMevMCKANx8QvslxLkWBHi9nNI2mz8Zvq
-         SeuQ==
+        bh=j06yCL1SGn4M6xGgU0mz4/+MosEfAZ9tu5HVjjwGpNI=;
+        b=YBenQXhB8kLPIuGdmbMrZ1hmDOA0w50SO0m9wQDYqqmARgJNDMlAworGi+3X0J78O+
+         TavVY2owshti9xX+JbZUH1D5+Wi6VX3e2xOTrmS3PujYvV3ykLnIhFwrB2BFa2RqIzY5
+         y62PiX/BxCzZ/sMHeO4vqeJf1r6Rc9umj2U+wi9h+ziccamhUJUOdOsSj634NdPFvgzu
+         5VPaZuJMCSAiuKEsP5F011ILH68xs9KxGKvOagTV/YzPFjkeVjq5RKBr246M3qIfXBD2
+         54iDo9uOPssXm0HGBUwPbydrc35r4urPOl7mWdhxm1h85wvVz+LuZVT22a/TtPLy3o5q
+         9FXQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1734760797; x=1735365597;
+        d=1e100.net; s=20230601; t=1734760800; x=1735365600;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=679ZZs5M5yhRZZVx57ba0x+NupoeJc1WiRduiJBWPv4=;
-        b=CjJnVhZuIPFsAZWnUCd2uSgO0EeK3Yu7U3oS8beP/ysyXqS5jfnRp+IdMdaohAZpex
-         UQcSnDHz1Ht+Y8V2n4h7ljykcY3LrdvSYpqFbwBndh2eDxL5+cqN/q6bVcyFzBDoiNh7
-         +G9oxbFK6WV/U+opk+6MzRNoUJHvaOOF5nBLWdoaaVxPbkSYP2t+yPcJzzZqN76QZ9GQ
-         SPZM/1Ln2kI5+ySgoWg0O1/pb+Vbkvq7rFp1KDsgDwp90xjHpLXJWpuw7qUO2OIX2Ntw
-         IiekyVlSgFXo9O7q9TX5USUboDPSKeeZhJL6xZmzVqta/bVrsXe8skgyH6o7vG4oeUP9
-         F7aw==
-X-Forwarded-Encrypted: i=1; AJvYcCVj5IuAC/vJ8z2QoWvdNkZ0JVDY8cvY6MirIgdx4uIx8xA40T3cvMAB8vDPOguFvhH0w2hrHd6fZ7QNenQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx/BOHq//QzZRv3qaZFdLMQW3Zr46jAio0m2Dl7nPqkTtdPoayr
-	UxojcOEbAntGET5u3lQLO2vYcTmoDVDkuKvNg3Z2GFsiaMNqIFToZICAuQ==
-X-Gm-Gg: ASbGncs/9WlP5mk4Etzo/XDV+Ws/HVMzvQSyxjZobpF0+BywIeXSTR4OHc82dQhv6JV
-	BvAoojur+y1FCIKmeb9B/fyMCtWDua5+l5BPMXn5sNzcZP18x74U9CQfY6PlnJOFvpdPfwUx20a
-	3+8mxsm0DXvNY0AJ5FmoMc9+iE+3Z4QG/gK66W3mmILI8/JRAfUIwQEIVX5jYto5a+FXewWLpX2
-	rf3fPrIboY/GoYLknZ1juXYC8Nc0goeO0hVa0Jr1SSUACRRvjxxsXT4fElQnupg
-X-Google-Smtp-Source: AGHT+IErsKD0rEqeBakNCLsqSS9COS4I4rTyms3NtiF8Gm2Ws/eqmQo4PiAVmWU4CNyQdZhL+EFe3A==
-X-Received: by 2002:a05:690c:fd2:b0:6ef:7290:d478 with SMTP id 00721157ae682-6f3f823f1e2mr41956647b3.40.1734760796749;
-        Fri, 20 Dec 2024 21:59:56 -0800 (PST)
+        bh=j06yCL1SGn4M6xGgU0mz4/+MosEfAZ9tu5HVjjwGpNI=;
+        b=e2RY73GKr0GX3RBkz/cqfcrtO1q52fX9ULUH3TsPJbbXobkJgtKha7i/sSmgHCRfla
+         lcrLDxNQi42Qp1u0x7S4QJcMcXp51Y5W/pKSfVIhEsmsdh3XrTqT8uxhnJ0QnhBgsjVj
+         ZZ1RYQXHFCcLyf6hpTUempVgwLgWyOFLj+a34dp/YHtSISXPea1jLYNq2x9I3JQeO0tk
+         mvopXMHlvMN88bG2qFtOoc9di6XTWuykDU4V5bh6gIoUjvQz358ZINF8tdrbC20sb1J4
+         2frOizj+zIt8CQo1Xh/H/AIcgCg+0Mag7hlhwf+eilt3xLdcz+oqn+thDUuzZyFfJ7/2
+         U/iw==
+X-Forwarded-Encrypted: i=1; AJvYcCUDLEgFQ+nt8/KU3ZfX8qr60j4JFHDKsJg+R8l2UzWSfdNGg1tcdE58L6YlcX8AFZBUvFrWQIfu4UkZuSg=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzxK6f5tljRz8yuJfT0cUfWf45MNpALieW2AHNTey8ai+HOp8F4
+	fQqnBTm8DJpS30miZRXjW7u1jyTDH0rlUuGC3g93HJoWJPuCoXo2y2Kj0g==
+X-Gm-Gg: ASbGncskGdGriVKeLdT7gsGj0OwRP6AnwVXN5wj1q6suJwlJe6bkwXW2lk4PhJ/mE24
+	dmn8mOdmtqCk1e29K0IFU/bbuPymduHGZR/VzePJQgcSF4gt3YQocu/dd9bi9L9t83KwDQbtwF+
+	fsjnIq4kTKPRDdwVKFus5yADDea53tg03wRpDqFfYADlOaRW80eJD6A5Et124JrWs/t3Y1sXGD2
+	RioB9SO4iAQ+wXNl0Hp8uB7b7eE1TdYase0AKuc6Ng0YOsKeDuoy1PG+g6UGbx+
+X-Google-Smtp-Source: AGHT+IEw4TybRL1Bq8vCrFogKLsFgIVPDehHUQULO4z3pq+sSLE+9HVG4O7cbcFRWEJ00cLFTQQk7g==
+X-Received: by 2002:a05:690c:650a:b0:6ef:81c0:5b56 with SMTP id 00721157ae682-6f3f8125b38mr49502977b3.14.1734760800601;
+        Fri, 20 Dec 2024 22:00:00 -0800 (PST)
 Received: from localhost.localdomain ([2800:bf0:82:1159:1ea9:11b1:7af9:1277])
-        by smtp.gmail.com with ESMTPSA id 00721157ae682-6f3e783ab9dsm12164077b3.119.2024.12.20.21.59.54
+        by smtp.gmail.com with ESMTPSA id 00721157ae682-6f3e783ab9dsm12164077b3.119.2024.12.20.21.59.58
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 20 Dec 2024 21:59:56 -0800 (PST)
+        Fri, 20 Dec 2024 21:59:59 -0800 (PST)
 From: Kurt Borja <kuurtb@gmail.com>
 To: platform-driver-x86@vger.kernel.org
 Cc: ilpo.jarvinen@linux.intel.com,
@@ -65,9 +65,9 @@ Cc: ilpo.jarvinen@linux.intel.com,
 	linux-kernel@vger.kernel.org,
 	Dell.Client.Kernel@dell.com,
 	Kurt Borja <kuurtb@gmail.com>
-Subject: [PATCH 03/20] alienware-wmi: Modify parse_rgb() signature
-Date: Sat, 21 Dec 2024 00:59:00 -0500
-Message-ID: <20241221055917.10555-4-kuurtb@gmail.com>
+Subject: [PATCH 04/20] alienware-wmi: Improve hdmi_mux, amplifier and deepslp group creation
+Date: Sat, 21 Dec 2024 00:59:01 -0500
+Message-ID: <20241221055917.10555-5-kuurtb@gmail.com>
 X-Mailer: git-send-email 2.47.1
 In-Reply-To: <20241221055917.10555-1-kuurtb@gmail.com>
 References: <20241221055917.10555-1-kuurtb@gmail.com>
@@ -79,45 +79,230 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-parse_rgb() now takes struct color_platform instead of struct
-platform_zone to support upcoming refactor.
+Devices with hdmi_mux, amplifier or deepslp quirks create a sysfs group
+for each available feature. To accomplish this, helper create/remove
+functions were called on module init, but they had the following
+problems:
 
+ - Create helpers called remove helpers on failure, which in turn tried
+   to remove the sysfs group that failed to be created
+ - If group creation failed mid way, previous successfully created groups
+   were not cleaned up
+ - Module exit only removed hdmi_mux group
+
+To improve this, drop all helpers and let the platform driver manage these
+sysfs groups, while controlling visibility with their respective quirks.
+
+Reviewed-by: Mario Limonciello <mario.limonciello@amd.com>
 Signed-off-by: Kurt Borja <kuurtb@gmail.com>
 ---
- drivers/platform/x86/dell/alienware-wmi.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ drivers/platform/x86/dell/alienware-wmi.c | 114 ++++++++--------------
+ 1 file changed, 38 insertions(+), 76 deletions(-)
 
 diff --git a/drivers/platform/x86/dell/alienware-wmi.c b/drivers/platform/x86/dell/alienware-wmi.c
-index c5ad0f95c442..273ce9b10765 100644
+index 273ce9b10765..e010c94555e8 100644
 --- a/drivers/platform/x86/dell/alienware-wmi.c
 +++ b/drivers/platform/x86/dell/alienware-wmi.c
-@@ -434,7 +434,7 @@ static u8 global_brightness;
+@@ -417,12 +417,6 @@ static struct platform_zone *zone_data;
+ static struct platform_profile_handler pp_handler;
+ static enum wmax_thermal_mode supported_thermal_profiles[PLATFORM_PROFILE_LAST];
+ 
+-static struct platform_driver platform_driver = {
+-	.driver = {
+-		.name = "alienware-wmi",
+-	}
+-};
+-
+ static struct attribute_group zone_attribute_group = {
+ 	.name = "rgb_zones",
+ };
+@@ -804,6 +798,12 @@ static DEVICE_ATTR(cable, S_IRUGO, show_hdmi_cable, NULL);
+ static DEVICE_ATTR(source, S_IRUGO | S_IWUSR, show_hdmi_source,
+ 		   toggle_hdmi_source);
+ 
++static bool hdmi_group_visible(struct kobject *kobj)
++{
++	return quirks->hdmi_mux;
++}
++DEFINE_SIMPLE_SYSFS_GROUP_VISIBLE(hdmi);
++
+ static struct attribute *hdmi_attrs[] = {
+ 	&dev_attr_cable.attr,
+ 	&dev_attr_source.attr,
+@@ -812,25 +812,10 @@ static struct attribute *hdmi_attrs[] = {
+ 
+ static const struct attribute_group hdmi_attribute_group = {
+ 	.name = "hdmi",
++	.is_visible = SYSFS_GROUP_VISIBLE(hdmi),
+ 	.attrs = hdmi_attrs,
+ };
+ 
+-static void remove_hdmi(struct platform_device *dev)
+-{
+-	if (quirks->hdmi_mux > 0)
+-		sysfs_remove_group(&dev->dev.kobj, &hdmi_attribute_group);
+-}
+-
+-static int create_hdmi(struct platform_device *dev)
+-{
+-	int ret;
+-
+-	ret = sysfs_create_group(&dev->dev.kobj, &hdmi_attribute_group);
+-	if (ret)
+-		remove_hdmi(dev);
+-	return ret;
+-}
+-
  /*
-  * Helpers used for zone control
-  */
--static int parse_rgb(const char *buf, struct platform_zone *zone)
-+static int parse_rgb(const char *buf, struct color_platform *colors)
- {
- 	long unsigned int rgb;
- 	int ret;
-@@ -454,7 +454,7 @@ static int parse_rgb(const char *buf, struct platform_zone *zone)
- 	repackager.package = rgb & 0x0f0f0f0f;
- 	pr_debug("alienware-wmi: r: %d g:%d b: %d\n",
- 		 repackager.cp.red, repackager.cp.green, repackager.cp.blue);
--	zone->colors = repackager.cp;
-+	*colors = repackager.cp;
- 	return 0;
+  * Alienware GFX amplifier support
+  * - Currently supports reading cable status
+@@ -859,6 +844,12 @@ static ssize_t show_amplifier_status(struct device *dev,
+ 
+ static DEVICE_ATTR(status, S_IRUGO, show_amplifier_status, NULL);
+ 
++static bool amplifier_group_visible(struct kobject *kobj)
++{
++	return quirks->amplifier;
++}
++DEFINE_SIMPLE_SYSFS_GROUP_VISIBLE(amplifier);
++
+ static struct attribute *amplifier_attrs[] = {
+ 	&dev_attr_status.attr,
+ 	NULL,
+@@ -866,25 +857,10 @@ static struct attribute *amplifier_attrs[] = {
+ 
+ static const struct attribute_group amplifier_attribute_group = {
+ 	.name = "amplifier",
++	.is_visible = SYSFS_GROUP_VISIBLE(amplifier),
+ 	.attrs = amplifier_attrs,
+ };
+ 
+-static void remove_amplifier(struct platform_device *dev)
+-{
+-	if (quirks->amplifier > 0)
+-		sysfs_remove_group(&dev->dev.kobj, &amplifier_attribute_group);
+-}
+-
+-static int create_amplifier(struct platform_device *dev)
+-{
+-	int ret;
+-
+-	ret = sysfs_create_group(&dev->dev.kobj, &amplifier_attribute_group);
+-	if (ret)
+-		remove_amplifier(dev);
+-	return ret;
+-}
+-
+ /*
+  * Deep Sleep Control support
+  * - Modifies BIOS setting for deep sleep control allowing extra wakeup events
+@@ -937,6 +913,12 @@ static ssize_t toggle_deepsleep(struct device *dev,
+ 
+ static DEVICE_ATTR(deepsleep, S_IRUGO | S_IWUSR, show_deepsleep_status, toggle_deepsleep);
+ 
++static bool deepsleep_group_visible(struct kobject *kobj)
++{
++	return quirks->deepslp;
++}
++DEFINE_SIMPLE_SYSFS_GROUP_VISIBLE(deepsleep);
++
+ static struct attribute *deepsleep_attrs[] = {
+ 	&dev_attr_deepsleep.attr,
+ 	NULL,
+@@ -944,25 +926,10 @@ static struct attribute *deepsleep_attrs[] = {
+ 
+ static const struct attribute_group deepsleep_attribute_group = {
+ 	.name = "deepsleep",
++	.is_visible = SYSFS_GROUP_VISIBLE(deepsleep),
+ 	.attrs = deepsleep_attrs,
+ };
+ 
+-static void remove_deepsleep(struct platform_device *dev)
+-{
+-	if (quirks->deepslp > 0)
+-		sysfs_remove_group(&dev->dev.kobj, &deepsleep_attribute_group);
+-}
+-
+-static int create_deepsleep(struct platform_device *dev)
+-{
+-	int ret;
+-
+-	ret = sysfs_create_group(&dev->dev.kobj, &deepsleep_attribute_group);
+-	if (ret)
+-		remove_deepsleep(dev);
+-	return ret;
+-}
+-
+ /*
+  * Thermal Profile control
+  *  - Provides thermal profile control through the Platform Profile API
+@@ -1172,6 +1139,23 @@ static void remove_thermal_profile(void)
+ 		platform_profile_remove(&pp_handler);
  }
  
-@@ -538,7 +538,7 @@ static ssize_t zone_set(struct device *dev, struct device_attribute *attr,
- 		pr_err("alienware-wmi: invalid target zone\n");
- 		return 1;
- 	}
--	ret = parse_rgb(buf, target_zone);
-+	ret = parse_rgb(buf, &target_zone->colors);
++/*
++ * Platform Driver
++ */
++static const struct attribute_group *alienfx_groups[] = {
++	&hdmi_attribute_group,
++	&amplifier_attribute_group,
++	&deepsleep_attribute_group,
++	NULL
++};
++
++static struct platform_driver platform_driver = {
++	.driver = {
++		.name = "alienware-wmi",
++		.dev_groups = alienfx_groups,
++	},
++};
++
+ static int __init alienware_wmi_init(void)
+ {
+ 	int ret;
+@@ -1211,24 +1195,6 @@ static int __init alienware_wmi_init(void)
  	if (ret)
- 		return ret;
- 	ret = alienware_update_led(target_zone);
+ 		goto fail_platform_device2;
+ 
+-	if (quirks->hdmi_mux > 0) {
+-		ret = create_hdmi(platform_device);
+-		if (ret)
+-			goto fail_prep_hdmi;
+-	}
+-
+-	if (quirks->amplifier > 0) {
+-		ret = create_amplifier(platform_device);
+-		if (ret)
+-			goto fail_prep_amplifier;
+-	}
+-
+-	if (quirks->deepslp > 0) {
+-		ret = create_deepsleep(platform_device);
+-		if (ret)
+-			goto fail_prep_deepsleep;
+-	}
+-
+ 	if (quirks->thermal) {
+ 		ret = create_thermal_profile(platform_device);
+ 		if (ret)
+@@ -1245,9 +1211,6 @@ static int __init alienware_wmi_init(void)
+ 	alienware_zone_exit(platform_device);
+ 	remove_thermal_profile();
+ fail_prep_thermal_profile:
+-fail_prep_deepsleep:
+-fail_prep_amplifier:
+-fail_prep_hdmi:
+ 	platform_device_del(platform_device);
+ fail_platform_device2:
+ 	platform_device_put(platform_device);
+@@ -1262,7 +1225,6 @@ module_init(alienware_wmi_init);
+ static void __exit alienware_wmi_exit(void)
+ {
+ 	alienware_zone_exit(platform_device);
+-	remove_hdmi(platform_device);
+ 	remove_thermal_profile();
+ 	platform_device_unregister(platform_device);
+ 	platform_driver_unregister(&platform_driver);
 -- 
 2.47.1
 
