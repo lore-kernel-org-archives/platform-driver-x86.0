@@ -1,61 +1,61 @@
-Received: from mail-yw1-f181.google.com (mail-yw1-f181.google.com [209.85.128.181])
+Received: from mail-yw1-f176.google.com (mail-yw1-f176.google.com [209.85.128.176])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B97FA1339A4;
-	Sat, 21 Dec 2024 06:00:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3DDBA1FA179;
+	Sat, 21 Dec 2024 06:00:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1734760833; cv=none; b=RfM2Uh+EpycRBvlCjQX56nIOOM64pdlJL9dkacKef1JQND6i8abJ3xQbYmx3XRAcdfVovCvFQxD1tQ4j4cdb+qebg+xHf7GAvQfUvxCE6k4jOvgEXk8/AWXCIAKC+zatgm+CpWCa/Jq0zyT+KzHQ7g+9kgm9kpAelUW3i3KdB8o=
+	t=1734760835; cv=none; b=Ys3qjQ4tmdyHqhzxoXvVWWoH+KsUoN03R/3Shz1Q2jS9YEqfYH/Xq95S2leB7IFfQOucw/MqNV/MQ81A7zkR4BFX8oed6mjv4ak8eeZ7vB5PZt1x+RdelmTVrfk40d6NjMM7qFwLyh3LDYuW7ocqgfAikYgLGizEKFkJua6KfRU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1734760833; c=relaxed/simple;
-	bh=zLPKxOlAI21p5WIQ9JT49JD0QdiKfToAL02o0UZK9nE=;
+	s=arc-20240116; t=1734760835; c=relaxed/simple;
+	bh=bA9TBWS2aTHuSdMlpTKbWZA9iDppBuPiCTaK8L7s0T0=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=f/l7xv5Ordl7EtEJ6htGX15nvQawSl1dymOY+MjydYG26Vc/bB0DWaIP4MeYfvftN07SpcvCedDObIezLF2wiHNFWFhFcIC8KBBl0VFTzcBPwtiHrSTHROq40hHpIW0BvvK7JBZ+iLvyNdc0fPI4wr9z5qNfP2RYHHgd8YkxBYU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=fPlkLfTl; arc=none smtp.client-ip=209.85.128.181
+	 MIME-Version; b=rT22kLP8gPANNLMnfLIkLCTZccqcSTzyCM3LE7VfGb0eLYt61WS5FPtV/d3v/nzZeadlz6Nzz6mAoDUU7f5k6pxfiDN3PKUIM6ddwtQz1wdHieo9BtTxv6LGL3Lv0Ga6rMfKQntI2glLJSR+hc6FneVYLu/5JJDzzfgiQmhmbCs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=VWNO3CJv; arc=none smtp.client-ip=209.85.128.176
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fPlkLfTl"
-Received: by mail-yw1-f181.google.com with SMTP id 00721157ae682-6eff5f99de4so22884987b3.1;
-        Fri, 20 Dec 2024 22:00:31 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VWNO3CJv"
+Received: by mail-yw1-f176.google.com with SMTP id 00721157ae682-6f0054cb797so21091317b3.0;
+        Fri, 20 Dec 2024 22:00:34 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1734760830; x=1735365630; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1734760833; x=1735365633; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=G/6Fu5kwIqTD/F9OQau8gJqzRjheJ0dK8d8lE4LCvKs=;
-        b=fPlkLfTla0ppy4SKaZLxcOOceCKN0Hoyst4r8u0pBxP9k5dkjQzwlfPaiy18XapBYn
-         VoKU6/jL257AIBXgv0taB/xkmTOsEQ3/ZlW7+xiWG0/3SItWbqDYLzCkFtZDrQRyc1MT
-         AfcQTDA/RLTRH4dMlU2EJck+ryzq+RA94dQviKQrglcXfRh/MCzwWG+5h2A9mByCM6jp
-         K9lCIOP9dpO6I3GpaCf6P+RyCq1ClicDPI8pUCZy5JliK5FMJVTdfAe7VL5CP1Niv70R
-         QartpRDA3iFU1KxlOqkEb38NNY+N9W5Wm7BuwtgsirmDu62Ia9siCwJjc4qcDJK5lxMv
-         Y3EA==
+        bh=ljg3BoRyYpx5o9XmoLjmEYfCq25szUxIdIdXguDttik=;
+        b=VWNO3CJvJCs9woFtN/xvCegTct401GYT1W9Ix2ktHl1OTHVgvpfsislR37QhVgf4fV
+         tCDi2PlNmdy+LDBzhNRzxfjfTpNo99ESVsLNiXnTG3DRPn8RobgF5gfdK9cD38lOXuWU
+         HQqBrhq2TbdG4Sg/J6i1qsMHHysLI1Xhd++Ypeil+gf7WmsjjJyzuDticsLoSy3inaMm
+         6nxDhuAZX7L5YmrfB7yaEYAKIDl1KC+jNJNxy3Sn/S/nPJHAXGdh+DErXQsnwXhuF0D/
+         b7oFlj0/TizokYQpwQWxx7QQsnGSpXcBRmX3IZehl74k/iRTXiuEe92iUrNrRpSwEJAW
+         iJSQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1734760830; x=1735365630;
+        d=1e100.net; s=20230601; t=1734760833; x=1735365633;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=G/6Fu5kwIqTD/F9OQau8gJqzRjheJ0dK8d8lE4LCvKs=;
-        b=ORKiKC1fwDIP7t6kPqwA1xiHDR+ffzFj90dHX78vOsZ80l+h3eg3SY0HE5ZZl+RlTs
-         h0Uy9fPXEd6Jj3hBxEqF5R65iYI2H8K9EIkYtQBIPSUl5lXDkLEUT0zONrSVjYVlEMg7
-         inL2q8VtHqBL+XOV2/EEynZ22+lyYF71tZcNKhCe1UAzZZrq3HCKBRwsHqd5sgn9I0uM
-         2WVbtoTh/LauuGDmldc1Fh/4hw9o5OHssQv6HxLgpo49BV33l7rFc+8UT1dPlEfDIMZV
-         AAbyELNVcdwwdeE3kLlRHkSb+mff5UWMmKtDp3pevxDYxbZjfxGQrNPmKa0fFuYuxKwQ
-         G3Jg==
-X-Forwarded-Encrypted: i=1; AJvYcCVr66wzs4aOyNBuOMHG8hqMc2xKVeHKy0lWt1HmJiyzTAvRzhTDNrjRrMFwojCfGeJqrjtWCnJwb6iM6oI=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyOKwLFzF50dRe62ziN+jPnvnHmfMeTUS5SMFmpTETHFAX+2jjg
-	Gdht0ELok3uP5fxCSbl72kAHljkajfDF9MJ7SSC4ghCXiigy9M5/5BHEyw==
-X-Gm-Gg: ASbGncs+3Y8fqPbOIsEAqi3PIIFGZrwqrzMc4+NRVtqmIEoAJHTPpKY+bVeQU1R7PuE
-	NXmSGYttEP9XgpDFQM2xfoag+N4BnSz/IlhieTcgETfaEhdk6xgLMiNZ/6UoU2Mb2duWXIkYul4
-	X8Z986u6Rlq0eGie4q1zvlIyKYpv+wiFmy1qn/XC6icSRca56zEuOWWGtM44dRG40GtG/nQBIeg
-	1omt0u0H8f8otsBI8YbW3/VwIIvk2MHOyaeY6QaNBX0K35Zd8ex0QAFNgmIgOpO
-X-Google-Smtp-Source: AGHT+IECVUni8W1czdmslGXHGsZRuA9zcq/zi9/kmzZY2MEstg1jl8xgIhZ4e8Th/F/r8fwv5iF/Vw==
-X-Received: by 2002:a05:690c:dd2:b0:6ef:90a7:16ce with SMTP id 00721157ae682-6f3f823c74emr37157667b3.42.1734760830253;
-        Fri, 20 Dec 2024 22:00:30 -0800 (PST)
+        bh=ljg3BoRyYpx5o9XmoLjmEYfCq25szUxIdIdXguDttik=;
+        b=YYczud31b6EcdUfPj0v0LQPys8j0uViw1TG1FLxVP11GW/DfgJzTEmLZqJIrsxy1/S
+         4r87JEHzU0bH4eOGG8O1UVm02vBlldXzRpDqoRy5UUzoUiPOsUegH/d99pozDKYbN1+V
+         MwNdzV3lLMhH8dqTKq7XNjKiBPLcPe/FQjQjFQSWY7ErSCRaxtZHRjl29Wjj7l88UMtY
+         o7waIsnSRqJAVb9cZjJ6o0SHlNiMDsoEr7VjpckbqkKC6pZ2yiEY6HBVp5WqgKTN8DpO
+         B8hsOiZWDHRVUdcE2omIXzp1qiqQ8g8YAKHKDN/3l+5J9HbM/r2VioxOD0wWYJJnXbH5
+         6Q0Q==
+X-Forwarded-Encrypted: i=1; AJvYcCWwEEY94e1CJPe2VMMm0flDBEDz13JESuNDICW/Ax0rYQGj9Opvo4AgH2wlkNYSX1oN8bvAJMn3+lIwaR8=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwEMt693XlLroVtrsn7fY/H2FFRxNUrhQjDt5GT+z8RpE5Y8VoQ
+	8uFVg67MQl0ESvxCyZy9+X9v68fmhri2KJsR2D1IryZGyK+JeZPPprEuGg==
+X-Gm-Gg: ASbGncvg96XRNdTxjDJSJQf1INgyJdaGYJ8MWWh+HfnplvRyevLO3qH963DJF0tcnWk
+	ATT6uui3lezRMdHK1sqttIghFR4f7ByRj0orpkGJ43uJPXk6gb6eZGxC0jxfmUJjRB8ao/wzg5V
+	oTefZhm7aU5TfcYqNNjzgvXBIc2IqZHX0xMBwZKS6TS0UyPh1OzF5NgsqAN9VJjNYMi4Sa8AhF8
+	Ni12JZuzIpKIy2t8wctzwZ3TBjOghYcJuIgvWd14jbb9DlW1bg7q6tV9mMbN/Vz
+X-Google-Smtp-Source: AGHT+IFufvSROmzOLw2iVLnPUip9ePZzpqz4NB69kO8++YGylw4f7U+0KxW/KALPM5ReH7UrDSzvGg==
+X-Received: by 2002:a05:690c:4988:b0:6f0:21d6:44a4 with SMTP id 00721157ae682-6f3f81229b2mr43144187b3.10.1734760833126;
+        Fri, 20 Dec 2024 22:00:33 -0800 (PST)
 Received: from localhost.localdomain ([2800:bf0:82:1159:1ea9:11b1:7af9:1277])
-        by smtp.gmail.com with ESMTPSA id 00721157ae682-6f3e783ab9dsm12164077b3.119.2024.12.20.22.00.27
+        by smtp.gmail.com with ESMTPSA id 00721157ae682-6f3e783ab9dsm12164077b3.119.2024.12.20.22.00.30
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 20 Dec 2024 22:00:29 -0800 (PST)
+        Fri, 20 Dec 2024 22:00:32 -0800 (PST)
 From: Kurt Borja <kuurtb@gmail.com>
 To: platform-driver-x86@vger.kernel.org
 Cc: ilpo.jarvinen@linux.intel.com,
@@ -65,9 +65,9 @@ Cc: ilpo.jarvinen@linux.intel.com,
 	linux-kernel@vger.kernel.org,
 	Dell.Client.Kernel@dell.com,
 	Kurt Borja <kuurtb@gmail.com>
-Subject: [PATCH 14/20] MAINTAINERS: Update ALIENWARE WMI DRIVER entry
-Date: Sat, 21 Dec 2024 00:59:11 -0500
-Message-ID: <20241221055917.10555-15-kuurtb@gmail.com>
+Subject: [PATCH 15/20] platform/x86: Rename alienware-wmi.c
+Date: Sat, 21 Dec 2024 00:59:12 -0500
+Message-ID: <20241221055917.10555-16-kuurtb@gmail.com>
 X-Mailer: git-send-email 2.47.1
 In-Reply-To: <20241221055917.10555-1-kuurtb@gmail.com>
 References: <20241221055917.10555-1-kuurtb@gmail.com>
@@ -79,32 +79,31 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Dell has been inactive in its maintainership role of this driver since
-around 2021. Due to this, add myself as a maintainer.
+Rename alienware-wmi to support upcoming split.
 
 Signed-off-by: Kurt Borja <kuurtb@gmail.com>
 ---
- MAINTAINERS | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ drivers/platform/x86/dell/Makefile                               | 1 +
+ .../platform/x86/dell/{alienware-wmi.c => alienware-wmi-base.c}  | 0
+ 2 files changed, 1 insertion(+)
+ rename drivers/platform/x86/dell/{alienware-wmi.c => alienware-wmi-base.c} (100%)
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 3809931b9240..596c6a46478c 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -784,10 +784,12 @@ F:	Documentation/admin-guide/perf/alibaba_pmu.rst
- F:	drivers/perf/alibaba_uncore_drw_pmu.c
+diff --git a/drivers/platform/x86/dell/Makefile b/drivers/platform/x86/dell/Makefile
+index bb3cbd470a46..f8aec8502c2f 100644
+--- a/drivers/platform/x86/dell/Makefile
++++ b/drivers/platform/x86/dell/Makefile
+@@ -5,6 +5,7 @@
+ #
  
- ALIENWARE WMI DRIVER
-+M:	Kurt Borja <kuurtb@gmail.com>
-+L:	platform-driver-x86@vger.kernel.org
- L:	Dell.Client.Kernel@dell.com
- S:	Maintained
- F:	Documentation/wmi/devices/alienware-wmi.rst
--F:	drivers/platform/x86/dell/alienware-wmi.c
-+F:	drivers/platform/x86/dell/alienware-wmi*
- 
- ALLEGRO DVT VIDEO IP CORE DRIVER
- M:	Michael Tretter <m.tretter@pengutronix.de>
+ obj-$(CONFIG_ALIENWARE_WMI)		+= alienware-wmi.o
++alienware-wmi-objs			:= alienware-wmi-base.o
+ obj-$(CONFIG_DCDBAS)			+= dcdbas.o
+ obj-$(CONFIG_DELL_LAPTOP)		+= dell-laptop.o
+ obj-$(CONFIG_DELL_RBTN)			+= dell-rbtn.o
+diff --git a/drivers/platform/x86/dell/alienware-wmi.c b/drivers/platform/x86/dell/alienware-wmi-base.c
+similarity index 100%
+rename from drivers/platform/x86/dell/alienware-wmi.c
+rename to drivers/platform/x86/dell/alienware-wmi-base.c
 -- 
 2.47.1
 
