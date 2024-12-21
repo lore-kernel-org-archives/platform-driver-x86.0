@@ -1,37 +1,37 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 118201F37B3
-	for <platform-driver-x86@vger.kernel.org>; Sat, 21 Dec 2024 14:11:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 51B631F755E
+	for <platform-driver-x86@vger.kernel.org>; Sat, 21 Dec 2024 14:12:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1734790306; cv=none; b=eRcYXikJMMCRcbpMezG5UjJWg++pwK6zAzNoVbtfh7Hm55b/phOXdMBovFLChU5j1dt1HMAYQM2YrlWzhAKRfFZTNpiTRNi8XQlllJPwWRzGB/ZSGSqcn/bj68p6nXCyxcJQ3xaE5/EBvX0EI9SkBotjxPuSrg/iQfWtwwanLpE=
+	t=1734790335; cv=none; b=nqt+bsem9NNW9hAGMZ7HZ5yhVTVjzXSj1d4lOUFz2dcahL3xbbP+NsafDzAH5jYV+hCswpvBxy8NiiiWXWON5VkY9H/S3qIMcGA7wTyMVSnpbBLl1gQ8P2ZZ6BiUtbYkWoWAUYCRVDtR+vGL9b5WJ1DUKYjTiUmeOE0ewfq96Q4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1734790306; c=relaxed/simple;
-	bh=NcKMIv3jhPpJhmMtzeELkdCn7+gxHrod5WsqdXYEa9Q=;
+	s=arc-20240116; t=1734790335; c=relaxed/simple;
+	bh=xRkP2IZdutLzTbL2rbW7FA2FBBlLCW4H6E6+45jCIlU=;
 	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=FlyKtP2UI7CZqPoHudbWiwosebzZNgv5/ioWZVqX78ALHbTCeX+BrWcJUlSUIkm3/k9CNMfYLpir14gqP7y1bOqulw0srtbpZlufec/NHtM0lM6vlXuGNMbVv2/wd2a2sOrrStkyv6CcXwv7i2I0AK1gEi2x6/ZEEUDGbe/BF9g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cS865eVM; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:MIME-Version; b=rwOc3CH1VaapmVzOIoLF6eGC0dY6AHrmNxV5aBXKJCFNA2yzUQ4+UvQRw/LsmHAG2+/Y+2HA3FRRQFTG4fcZbyWxZTDxrs3drXgU2owSZNbyEMgcRv3MXCkdOoJIL0OowWsYVY/L1+aMK40+GdzGI/fqsDQDhjXswnQi2M8Gt1Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=b4gquceS; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cS865eVM"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 814EFC4CED7
-	for <platform-driver-x86@vger.kernel.org>; Sat, 21 Dec 2024 14:11:45 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="b4gquceS"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id D6450C4CED0
+	for <platform-driver-x86@vger.kernel.org>; Sat, 21 Dec 2024 14:12:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1734790305;
-	bh=NcKMIv3jhPpJhmMtzeELkdCn7+gxHrod5WsqdXYEa9Q=;
+	s=k20201202; t=1734790334;
+	bh=xRkP2IZdutLzTbL2rbW7FA2FBBlLCW4H6E6+45jCIlU=;
 	h=From:To:Subject:Date:In-Reply-To:References:From;
-	b=cS865eVMbCWcTT+f20HljGxOZ5n7aob2iKvJxQ5tFp2+3tNdoEX7bB0nLoi0JlPrL
-	 N0lR1Nobva6lYnzTOqvQWUf/pSnYK34Mvbggbrh1E7L0GI5YRIyWnZnBqzMyCnijgS
-	 OWVkELl61tx2XcPmiN2Vgy0XxBrWa9ZPOCs0RWxFElGi1i0PZxo4YU3h0KABU7lIZG
-	 QaLBsRfexjJdXpmI3g/OSuSl4YJHxZKvgdT9dXSJI3KuCLqOgEZToL1TpYAXichzd8
-	 q4z2soJfjiYhEFA1H1jq2+dUbsHofIGel5HmI9mbwkkeqcWGtsuzHpTcVGr8u6paf/
-	 XVWRcio4Jy24w==
+	b=b4gquceSkH4kEzreW7E8qhn9Xd98QcSgeW93HTlbxl/nupQ5FxV0wa9CgdiHYtgUr
+	 Y5MuKj4WSsMYf6u05/QtIL2Cmt4EFcg9t/0eSHSptLVlr5tYrpXTXTEkB6q23zZ6Jk
+	 bElytYZ2UPddWSD0VksGo9kyY8cWWZtLayFc8zPbRHUEIicA7Rxh8tiK06gFrAcLXt
+	 diCHgqgsTeuT4zxt5qS4jW266yZnt3R9ZzQW0XdCPlVv8P3gxSSeTyndi5pU34hI6E
+	 S6l9/n94tX65gyE8a2I0EnECUrGCAYkxCE4kD8TsO9Mw6UBVRSxoSYpQkwgUWTaDgr
+	 1qcluA3k7wong==
 Received: by aws-us-west-2-korg-bugzilla-1.web.codeaurora.org (Postfix, from userid 48)
-	id 683FFC41612; Sat, 21 Dec 2024 14:11:45 +0000 (UTC)
+	id D0186C41612; Sat, 21 Dec 2024 14:12:14 +0000 (UTC)
 From: bugzilla-daemon@kernel.org
 To: platform-driver-x86@vger.kernel.org
 Subject: [Bug 219495] [TPM2] tpm_tis driver crashs during the boot time.
-Date: Sat, 21 Dec 2024 14:11:45 +0000
+Date: Sat, 21 Dec 2024 14:12:14 +0000
 X-Bugzilla-Reason: None
 X-Bugzilla-Type: changed
 X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
@@ -47,7 +47,7 @@ X-Bugzilla-Priority: P3
 X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
 X-Bugzilla-Flags: 
 X-Bugzilla-Changed-Fields: 
-Message-ID: <bug-219495-215701-anhefQK5cS@https.bugzilla.kernel.org/>
+Message-ID: <bug-219495-215701-kZlXcx2oTH@https.bugzilla.kernel.org/>
 In-Reply-To: <bug-219495-215701@https.bugzilla.kernel.org/>
 References: <bug-219495-215701@https.bugzilla.kernel.org/>
 Content-Type: text/plain; charset="UTF-8"
@@ -63,13 +63,8 @@ MIME-Version: 1.0
 
 https://bugzilla.kernel.org/show_bug.cgi?id=3D219495
 
---- Comment #46 from jarkko@kernel.org ---
-I tried my patch with swtpm with both TPM 1.2 and TPM 2.0 emulations and al=
-so
-emulated both TIS and CRB chips. I don't have large regions but the test sh=
-ould
-give pretty good coverage, given that now memory mapping is always used for
-ACPI log instead of allocating a buffer.
+--- Comment #47 from jarkko@kernel.org ---
+That said, obviously requires testing with the actual workload.
 
 --=20
 You may reply to this email to add a comment.
