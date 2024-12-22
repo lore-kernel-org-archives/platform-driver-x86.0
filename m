@@ -1,38 +1,38 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC9512CA9
-	for <platform-driver-x86@vger.kernel.org>; Sun, 22 Dec 2024 02:59:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E0287485
+	for <platform-driver-x86@vger.kernel.org>; Sun, 22 Dec 2024 03:00:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1734836394; cv=none; b=Pyw68MIz/2Qs3SRut3v+LOekoiyJ3PyQfZHRY1/mdIqjDQS2BpfJ6twH3zGXNmyHasgbFTkEEtM1Pbqy99OiWbncQski5Su3guTvw4KKzbBuFpm5b/8/uC31GlOYiv9TwxrpjFCdPUutTJnSXHFAiuxK0mAKc8XNJliVWxQ1S2Y=
+	t=1734836455; cv=none; b=PHfBjkUcqFrxBOi5/0/GBtHNcgnLGfwk4CSzX8db1gFBgawUlX8SrWKLKurHyxUg87y7JlRvbTBn9DhtrMolJFSIny7uXgP2PyI7i5tWKKOgHj4+E66MPPACFvKO7zPvzEXBN2GYidDQ46SBOgFHtE+R6B2Eobi1VsBjd5WyE00=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1734836394; c=relaxed/simple;
-	bh=fqC4SzO1rJ2CUOsUzEwD6hI42kegse5k8djT4TfaQH8=;
+	s=arc-20240116; t=1734836455; c=relaxed/simple;
+	bh=z9HoJWRU3w/SYKttPgPPv87N295cYi8EZ/SaqriJ+xk=;
 	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=emjNzTiFMK7OG/1aEB3weuSqMkofDAxs6M5yZW08y2jJ77XOMHGbsHYRmsRJ6U8hjpEcMgN5jerGi9XxL+auqERRigNVa1nNdLRby+GHE8Vqp2xwp1lsVQELl+5OUr2PxkiriI5Mqx9pYaibpr1LtwBiFW/CQUtfQg7A5Q93yQM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KheDjXQT; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:MIME-Version; b=BtC8TFN2cxDEfLEx1ZPixnkeStGBfgE/T8hi1/S+j4p8Ne1SsaFjxUAPL137jNqEm06RBXA4h0SO9pup2C59Ud06yH79oVyYtgJHaxGCTAGI/Tv4LxE/EdWeRcsgiE7OS44HK/QfsY6Mqnzu9zkoCf+iLLANbphUjaQvEmCspuQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MoxQWas8; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KheDjXQT"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 1492FC4CEDE
-	for <platform-driver-x86@vger.kernel.org>; Sun, 22 Dec 2024 02:59:54 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MoxQWas8"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 0D899C4CEDE
+	for <platform-driver-x86@vger.kernel.org>; Sun, 22 Dec 2024 03:00:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1734836394;
-	bh=fqC4SzO1rJ2CUOsUzEwD6hI42kegse5k8djT4TfaQH8=;
+	s=k20201202; t=1734836455;
+	bh=z9HoJWRU3w/SYKttPgPPv87N295cYi8EZ/SaqriJ+xk=;
 	h=From:To:Subject:Date:In-Reply-To:References:From;
-	b=KheDjXQTKp3s8d8yUfdVqcQ3HjjUAcSVFZuSqQFYvulivctNIZFcE5NvqpHiFlbVl
-	 RWm8Npdp0jcKGpWr24htSFm2vAvm9CfxOkeNWtJDl4gs97b1ZuZpu92IgIuhu7HvXt
-	 AirhjdIR01BKGv0uxUciBWs1QE2TJFGGOmKtb1onn9u0YyOXLBeLFbI/AUoxA3Lr9E
-	 yySaoiAT1CKGRFZavIUCyp3wufGk1EzNcg0qjo2HAIC6TigQnOP6vxNYh+IWN6SwVA
-	 P5hD51zOaoMzYPJEyE8kijNilxlW7jFhY5WSXbedJv0r9P5ibWzB0JwIhAhusdKGa6
-	 GVfcga855HxJw==
+	b=MoxQWas8NmaIuwZev9hANDVLl+eCgL+NhD3bI16wnsMymm9SaB6peG1ZZ4mI5bL7h
+	 hiBApJLwFAj2Ge8zqsa0uCShEbuyH37mPMiQYhFSQb/cjd8u/7gyBbbf3XN8weXtXT
+	 3OJcFJvqYF80gUljj08Ti2ln4uNUEYE4UgkwzED6rb2lR7ZwmhcEUNxPLoLUhIXTo7
+	 60jOaiVBUS4vb1JBUtRak8diedqJO3jSEWmubSQuGDnLJlnVp37mElN+rkzB2/HkHl
+	 7No9N9KuUjDNzsYhXtG5sJShLF/vP5kuEq/C/GrYj17PW5OrJ9WwLUc2b+SeqWlN+y
+	 gfbORlomRu0qg==
 Received: by aws-us-west-2-korg-bugzilla-1.web.codeaurora.org (Postfix, from userid 48)
-	id 0AA9DC41616; Sun, 22 Dec 2024 02:59:54 +0000 (UTC)
+	id 08518C3279E; Sun, 22 Dec 2024 03:00:55 +0000 (UTC)
 From: bugzilla-daemon@kernel.org
 To: platform-driver-x86@vger.kernel.org
 Subject: [Bug 218305] Ryzen 7 7840HS gets stuck at 544MHz frequency after
  resuming after unplugging the power cord during sleep
-Date: Sun, 22 Dec 2024 02:59:53 +0000
+Date: Sun, 22 Dec 2024 03:00:54 +0000
 X-Bugzilla-Reason: None
 X-Bugzilla-Type: changed
 X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
@@ -47,8 +47,8 @@ X-Bugzilla-Resolution: INVALID
 X-Bugzilla-Priority: P3
 X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
 X-Bugzilla-Flags: 
-X-Bugzilla-Changed-Fields: cc
-Message-ID: <bug-218305-215701-veF9Hko0Sb@https.bugzilla.kernel.org/>
+X-Bugzilla-Changed-Fields: 
+Message-ID: <bug-218305-215701-pSqxJYsK6r@https.bugzilla.kernel.org/>
 In-Reply-To: <bug-218305-215701@https.bugzilla.kernel.org/>
 References: <bug-218305-215701@https.bugzilla.kernel.org/>
 Content-Type: text/plain; charset="UTF-8"
@@ -64,23 +64,8 @@ MIME-Version: 1.0
 
 https://bugzilla.kernel.org/show_bug.cgi?id=3D218305
 
-James Hogge (jameshogge@gmail.com) changed:
-
-           What    |Removed                     |Added
-----------------------------------------------------------------------------
-                 CC|                            |jameshogge@gmail.com
-
---- Comment #76 from James Hogge (jameshogge@gmail.com) ---
-Just want to add that I have exactly the same issue on a Lenovo Thinkpad P1=
-6v
-with a Ryzen 7840HS. Without fail, if I close the lid, wait until the lapto=
-p is
-sleeping, unplug the charger, and open the lid again, the CPU will be locked
-between 400-544MHz.
-
-Reinserting the charger does not fix the issue but subsequently disconnecti=
-ng
-it does.
+--- Comment #77 from James Hogge (jameshogge@gmail.com) ---
+Should add that I'm running Ubuntu 24.04. Kernel version 6.8.0
 
 --=20
 You may reply to this email to add a comment.
