@@ -1,159 +1,144 @@
-Received: from todd.t-8ch.de (todd.t-8ch.de [159.69.126.157])
+Received: from mail1.perex.cz (mail1.perex.cz [77.48.224.245])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C28BC16BE3A;
-	Sun, 22 Dec 2024 12:09:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.69.126.157
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A30BADF59;
+	Sun, 22 Dec 2024 13:31:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=77.48.224.245
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1734869377; cv=none; b=QH79n8s8fm2j/yIPkMvzPSR9bdKHOV0FRaYXP36/omFt6mrtYaeceJsi6EIqurQiygpNJDD9fsHMRFxxw2/ulS+J8PoWr1kXrch5fvCyuzdEQ+dg7hv6bkcQSSidvZqKme6syWqi///xG4fVuRJzQbwakzmGaxsqch5hFE0sKXI=
+	t=1734874267; cv=none; b=k8X+DQ1wQKxuzzTxUaoSsKR5kRE3IlWmrihPm3OAzfJ5/3jqe3lzGT0CiuvoCIsptsJ0ohJTXI83fRcPxnwZcvVgT59C4818ldhTbcqnpMs/Qvj6a9cNEciE5lkKI/PMXX7cZIzama8QDpRi0p6aVSbDY2wt1E19hKmf6GhtHiU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1734869377; c=relaxed/simple;
-	bh=JEcAWc+wXNEr2iT6chfisqG5h3apL3QfDBAMs+UovyY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=XbqGQ9vGLZWydCTHOjNaqgcns0FcYyNZZUcvv7ZaQhukLtG1fNV17+ite7dQP6x1lN6DW0JyHiZUx1GHJwk9hmF+Y3I22HgTjwaj7nT4Z0tRmipuU+heAOm0Rc+Mama1Ti2czUrc4AHlGcW6nLxysXggE6Z4wl2ocNcHVnrXe3E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=weissschuh.net; spf=pass smtp.mailfrom=weissschuh.net; dkim=pass (1024-bit key) header.d=weissschuh.net header.i=@weissschuh.net header.b=Mk1gvV7Q; arc=none smtp.client-ip=159.69.126.157
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=weissschuh.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=weissschuh.net
+	s=arc-20240116; t=1734874267; c=relaxed/simple;
+	bh=9D/4bqvrRLqL/Fl/rWgzaqnrJgdFYl9Gr+lxOn7qVzQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=UZxnGwC44cWWOKpJfuuuhsuAr5MAM8h+ysc5pmapeHQCsoY0LvY8DonitN6D0x86bT88MOW/qKkqjhuyd2b0RHaoWkUWePumvAP5f+wyH4JfxL+8hTzbi3Tg6SvD08YdrIEyQJ736gAm7yLZrJHzmOKehwG+WxhEjxwRIo1myFE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=perex.cz; spf=pass smtp.mailfrom=perex.cz; dkim=pass (1024-bit key) header.d=perex.cz header.i=@perex.cz header.b=sRW0UW9T; arc=none smtp.client-ip=77.48.224.245
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=perex.cz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=perex.cz
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=weissschuh.net header.i=@weissschuh.net header.b="Mk1gvV7Q"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=weissschuh.net;
-	s=mail; t=1734869369;
-	bh=JEcAWc+wXNEr2iT6chfisqG5h3apL3QfDBAMs+UovyY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Mk1gvV7Q7uZ4yQz0SZGlVzfrS25sbJb+w5IuxG616XnEkyyxqmpd8x0R0Fl7Sdc9P
-	 y0dcwNqJdmdpJQQeGDb+NI4baP2735wWJMch61HKhBVyBKl5xTGpVz6Gzr5QTRNMEB
-	 AHjaPOGoms8k8OjBHnue4ZfH3B7ndBJ2bQyXujRM=
-Date: Sun, 22 Dec 2024 13:09:28 +0100
-From: Thomas =?utf-8?Q?Wei=C3=9Fschuh?= <linux@weissschuh.net>
-To: Joshua Grisham <josh@joshuagrisham.com>
-Cc: Hans de Goede <hdegoede@redhat.com>, ilpo.jarvinen@linux.intel.com, 
-	W_Armin@gmx.de, platform-driver-x86@vger.kernel.org, corbet@lwn.net, 
-	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3] platform/x86: samsung-galaxybook: Add
- samsung-galaxybook driver
-Message-ID: <c2b5e0c8-651f-426e-ae96-13857313997a@t-8ch.de>
-References: <20241216103855.18457-1-josh@joshuagrisham.com>
- <13184052-baf2-4e7d-b8ef-9ba3f34d475a@t-8ch.de>
- <66897a27-5f81-46fc-898d-682456d7f37f@redhat.com>
- <CAMF+KeZ3uAWZuuPJcrrvTJS-TgyxkqXOY_w=wNw7eZQiUkV5YA@mail.gmail.com>
+	dkim=pass (1024-bit key) header.d=perex.cz header.i=@perex.cz header.b="sRW0UW9T"
+Received: from mail1.perex.cz (localhost [127.0.0.1])
+	by smtp1.perex.cz (Perex's E-mail Delivery System) with ESMTP id C82CB2E9F;
+	Sun, 22 Dec 2024 14:30:50 +0100 (CET)
+DKIM-Filter: OpenDKIM Filter v2.11.0 smtp1.perex.cz C82CB2E9F
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=perex.cz; s=default;
+	t=1734874250; bh=sfUYa5vr0LmI2V9/WK+YiDwns89LxJJ3t1YmJRu7Zn4=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=sRW0UW9Taxd9s9ZMHWjRdC8y1OzdUTp5oiaMZD+ifUM3Mt8I1QrA/58OpGe2KFgBF
+	 9/G33ke9q8X/YYjUKZG7R98grldDSc6hjC/CG7IeTOHqyZJZfMDtUO1gOC1PenY7xJ
+	 v67beAaLLcaEFzt6hztPz/gwySrE1x6Kedcz+Twk=
+Received: from [192.168.100.98] (unknown [192.168.100.98])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: perex)
+	by mail1.perex.cz (Perex's E-mail Delivery System) with ESMTPSA;
+	Sun, 22 Dec 2024 14:30:28 +0100 (CET)
+Message-ID: <6c846999-9d64-4c3a-9d57-570dba0d48c7@perex.cz>
+Date: Sun, 22 Dec 2024 14:30:26 +0100
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/2] platform/x86: ideapad-laptop: Support for mic and
+ audio leds.
+To: =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+ Jackie Dong <xy-jackie@139.com>
+Cc: ike.pan@canonical.com, Hans de Goede <hdegoede@redhat.com>,
+ tiwai@suse.com, bo.liu@senarytech.com, kovalev@altlinux.org, me@oldherl.one,
+ jaroslaw.janik@gmail.com, cs@tuxedo.de, songxiebing@kylinos.cn,
+ kailang@realtek.com, sbinding@opensource.cirrus.com,
+ simont@opensource.cirrus.com, josh@joshuagrisham.com,
+ rf@opensource.cirrus.com, LKML <linux-kernel@vger.kernel.org>,
+ platform-driver-x86@vger.kernel.org, linux-sound@vger.kernel.org,
+ Mark Pearson <mpearson-lenovo@squebb.ca>, waterflowdeg@gmail.com,
+ Jackie Dong <dongeg1@lenovo.com>
+References: <20241219101531.35896-1-xy-jackie@139.com>
+ <c3ec76f3-e612-07d4-d876-d1d65dc2897f@linux.intel.com>
+Content-Language: en-US
+From: Jaroslav Kysela <perex@perex.cz>
+Autocrypt: addr=perex@perex.cz; keydata=
+ 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
+In-Reply-To: <c3ec76f3-e612-07d4-d876-d1d65dc2897f@linux.intel.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAMF+KeZ3uAWZuuPJcrrvTJS-TgyxkqXOY_w=wNw7eZQiUkV5YA@mail.gmail.com>
 
-Hi Joshua,
+On 19. 12. 24 12:40, Ilpo Järvinen wrote:
+> On Thu, 19 Dec 2024, Jackie Dong wrote:
 
-On 2024-12-19 18:31:22+0100, Joshua Grisham wrote:
-> Thank you both Thomas and Hans for your review and comments! I am
-> working on a v4 of the patch but had a few questions which I wanted to
-> clarify (they can also come after in a v5 etc in case I managed to get
-> this ready to go before anyone has the time to confirm and/or clarify
-> some things!).
+...
 
-Keep them coming :-)
-
-> Den tis 17 dec. 2024 kl 15:23 skrev Hans de Goede <hdegoede@redhat.com>:
-> >
-> > On 16-Dec-24 5:46 PM, Thomas Weißschuh wrote:
-> > >> +Various hardware settings can be controlled by the following sysfs attributes:
-> > >> +
-> > >> +- ``allow_recording`` (allows or blocks usage of built-in camera and microphone)
-> > >> +- ``start_on_lid_open`` (power on automatically when opening the lid)
-> > >> +- ``usb_charge`` (allows USB ports to provide power even when device is off)
-> > >
-> > > Non-standard sysfs attributes should be avoided where possible.
-> > > Userspace will need bespoke code to handle them.
-> > > This looks like it could be handled by the standard firmware_attributes
-> > > interface.
-> > > This would standardize discovery and usage.
-> >
-> > Ack this really feels like firmware-attributes. I would not be surprised
-> > if there are matching BIOS settings and if changing those also changes
-> > the sysfs files and likewise if the sysfs settings persist over reboot.
-> >
+>> +};
+>> +
+>>   static int ideapad_input_init(struct ideapad_private *priv)
+>>   {
+>>   	struct input_dev *inputdev;
+>> @@ -2023,15 +2033,145 @@ static void ideapad_check_features(struct ideapad_private *priv)
+>>   /*
+>>    * WMI driver
+>>    */
+>> +#define IDEAPAD_ACPI_LED_MAX  (((SNDRV_CTL_ELEM_ACCESS_MIC_LED -\
+>> +		SNDRV_CTL_ELEM_ACCESS_SPK_LED) >> SNDRV_CTL_ELEM_ACCESS_LED_SHIFT) + 1)
 > 
-> Yes 2 of these (not this "allow_recording" I think) are available via
-> BIOS and all 3 of them persist over restarts.
+> Hmm, so you fix the math bug (2-1 is not 2 but 1) with that +1 in the end?
 > 
-> Just so I am 100% clear what you mean here -- these type of attributes
-> should be created using the utilities available in
-> drivers/platform/x86/firmware_attributes_class.h so that they are
-> created under the path /sys/class/firmware-attributes/*/attributes/*/
-> ?
+> I think you would want something like this here (but I'm not entirely
+> sure at this point of reading your change):
+> 
+> FIELD_GET(SNDRV_CTL_ELEM_ACCESS_MIC_LED, SNDRV_CTL_ELEM_ACCESS_MIC_LED)
+> 
+> (Remember to make sure you've include for FIELD_GET if that's the correct
+> way to go here).
 
-Yes.
+There's no reason to use SNDRV_CTL_ELEM_ACCESS definitions here (no direct 
+connection to the sound control API). I would use direct value 2 here, because 
+this extension controls only 2 LEDs.
 
-> What exactly should they be named (any preference?) and should I also
-> add some documentation for them in
-> Documentation/ABI/testing/sysfs-class-firmware-attributes ?
+						Jaroslav
 
-I think they are meant to be named consistently with what the native
-UEFI setup interface calls them.
-And yes, they should be documented.
-
-> I am fairly sure I understand the concept and can agree that it kind
-> of makes a lot of sense to be able to standardize the userspace
-> interface, especially for attributes which do the exact same thing
-> across different vendors/devices (unless it just as easily possible to
-> go based on some pattern matching e.g. like is done in udev and upower
-> with "*kbd_backlight*" etc) but as of now it looks like the only
-> examples implemented are for thinklmi, dell-wmi, and hp-bioscfg that I
-> can see so far?
-
-The firmware-attributes don't really have a standardized semantic.
-Here the standardization is more about the discovery and interaction.
-Somebody can build a generic UI to change these settings, without the UI
-knowing anything about what the setting actually does.
-
-If the setting maps to a another, more specific interface, that should
-be used.
-
-> Before, I had tried to look through all of the various platform/x86
-> drivers and harmonize which names I picked for these sysfs attributes
-> (that is how I landed on "usb_charge" and "start_on_lid_open" as I
-> recall correctly) but I am not aware of any existing userspace tools
-> which are looking for anything like these (apart for
-> driver/vendor-specific utilities). Any recommendation from the very
-> wise people here would certainly be appreciated for these :)
-
-[..] Snip, I don't feel qualify to comment on the input bits.
-
-> Other notifications that I am wondering what the "right" way to handle
-> / using the right interface:
-
-[..]
-
-> - When the battery charge control end threshold is reached, there is
-> an ACPI notification on this device as well that is the one I have
-> marked "ACPI_NOTIFY_BATTERY_STATE_CHANGED" -- the Samsung background
-> apps pop up a custom OSD that basically says something to the effect
-> that their "Battery saver is protecting the battery by stopping
-> charging" (can't remember the exact verbiage) and they change the
-> battery icon, but without doing anything else in my driver currently
-> the battery still reports state of "charging" even though it just sits
-> constantly at the percentage (and has the charging icon in GNOME etc).
-> I have seen the event come and go occasionally when I did not expect
-> it, but my working theory is that maybe it is if/when the battery
-> starts charging again if it dips too far below the target "end
-> threshold" and then notifies again when the threshold has been
-> reached. Armin also mentioned this before in a different mail; I guess
-> I would hope/expect there is an event or a function I could call to
-> have the state reflected correctly but I would not want that it
-> negatively impacts the normal behavior of charging the battery itself
-> (just that the state/icon would change would be ideal! as it functions
-> perfectly, it is just that the state and icon are not accurate).
-
-Optimally the ACPI event would integrate with the ACPI battery driver.
-See the handling of POWER_SUPPLY_STATUS_NOT_CHARGING in
-drivers/acpi/battery.c.
-Does the battery report the current rate as 0 when limiting?
-Then something like acpi_battery_handle_discharging() could be used.
-
-
-Thomas
+-- 
+Jaroslav Kysela <perex@perex.cz>
+Linux Sound Maintainer; ALSA Project; Red Hat, Inc.
