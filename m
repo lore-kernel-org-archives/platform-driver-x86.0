@@ -1,275 +1,159 @@
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from todd.t-8ch.de (todd.t-8ch.de [159.69.126.157])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 91018EEC5;
-	Sun, 22 Dec 2024 08:49:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C28BC16BE3A;
+	Sun, 22 Dec 2024 12:09:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.69.126.157
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1734857384; cv=none; b=eyQjwmxZnfMu/IQptSOH056NgFnvfgMr4MEqx8uur3aferw/V2OH9M8L8saSV8f474MQjV+QNnRzDMdEefpHZuX0uUIm4lfudDIeW60cFPTRmm2qbKRHSaAIWFxPuNljxBo+GJDmm657nnjZFk0s0tSr0O9LX+XBLeyAi9B2a1A=
+	t=1734869377; cv=none; b=QH79n8s8fm2j/yIPkMvzPSR9bdKHOV0FRaYXP36/omFt6mrtYaeceJsi6EIqurQiygpNJDD9fsHMRFxxw2/ulS+J8PoWr1kXrch5fvCyuzdEQ+dg7hv6bkcQSSidvZqKme6syWqi///xG4fVuRJzQbwakzmGaxsqch5hFE0sKXI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1734857384; c=relaxed/simple;
-	bh=t9LKB8duX7BHWeimepjRYB4oegPGn5YU7/J5zXPgMVU=;
-	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=oN1oIFhPcWEN3hsokFcrP6M+WSG0jpukSmHkAPXYqe7F+NCgf/FlIOe//+qyZgjk1rgINICPCWYOAytgayPEmweSX9OMDG0LnpGQLTkXrD9+9qblRWXKeYUvEa3+t/vSeOMbnbRnb3j9qGD31oueoKbTeGp2NLxBdYojTqP5YTU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=xjIr/dLW; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=Xd+h6bSv; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=xjIr/dLW; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=Xd+h6bSv; arc=none smtp.client-ip=195.135.223.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+	s=arc-20240116; t=1734869377; c=relaxed/simple;
+	bh=JEcAWc+wXNEr2iT6chfisqG5h3apL3QfDBAMs+UovyY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=XbqGQ9vGLZWydCTHOjNaqgcns0FcYyNZZUcvv7ZaQhukLtG1fNV17+ite7dQP6x1lN6DW0JyHiZUx1GHJwk9hmF+Y3I22HgTjwaj7nT4Z0tRmipuU+heAOm0Rc+Mama1Ti2czUrc4AHlGcW6nLxysXggE6Z4wl2ocNcHVnrXe3E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=weissschuh.net; spf=pass smtp.mailfrom=weissschuh.net; dkim=pass (1024-bit key) header.d=weissschuh.net header.i=@weissschuh.net header.b=Mk1gvV7Q; arc=none smtp.client-ip=159.69.126.157
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=weissschuh.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=weissschuh.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="xjIr/dLW";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="Xd+h6bSv";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="xjIr/dLW";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="Xd+h6bSv"
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id 040701F37E;
-	Sun, 22 Dec 2024 08:49:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1734857380; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=DnHva3XwoFhcr2C3S7vjHvCxv30H7Sh0Zclv4tO3TmY=;
-	b=xjIr/dLWwxKaliMegNJ3Wd5DsP/pNad2ieIMJtn8AG3Ya3oGvPxOQhKGZhcaRAanXTlkK6
-	G34uNmDU+HJG9M3bPSVswa4PT9U4GpUQY5NE8LDtF2Ru5yUbBwTlNvq/yDl4MTjb7OKJor
-	GE2nQiygmvBNBSi04rVp2uG45oPwYcw=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1734857380;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=DnHva3XwoFhcr2C3S7vjHvCxv30H7Sh0Zclv4tO3TmY=;
-	b=Xd+h6bSvVLp5eifHogwK939Y9NUdzfWFG/fYeshVgciSYVkEhI+AxO1sFQmfyufVgkjVjq
-	vv/r8rHkoGauRVAA==
-Authentication-Results: smtp-out2.suse.de;
-	dkim=pass header.d=suse.de header.s=susede2_rsa header.b="xjIr/dLW";
-	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=Xd+h6bSv
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1734857380; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=DnHva3XwoFhcr2C3S7vjHvCxv30H7Sh0Zclv4tO3TmY=;
-	b=xjIr/dLWwxKaliMegNJ3Wd5DsP/pNad2ieIMJtn8AG3Ya3oGvPxOQhKGZhcaRAanXTlkK6
-	G34uNmDU+HJG9M3bPSVswa4PT9U4GpUQY5NE8LDtF2Ru5yUbBwTlNvq/yDl4MTjb7OKJor
-	GE2nQiygmvBNBSi04rVp2uG45oPwYcw=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1734857380;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=DnHva3XwoFhcr2C3S7vjHvCxv30H7Sh0Zclv4tO3TmY=;
-	b=Xd+h6bSvVLp5eifHogwK939Y9NUdzfWFG/fYeshVgciSYVkEhI+AxO1sFQmfyufVgkjVjq
-	vv/r8rHkoGauRVAA==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 7BCF913A6D;
-	Sun, 22 Dec 2024 08:49:38 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id BF9GGqLSZ2d0EAAAD6G6ig
-	(envelope-from <tiwai@suse.de>); Sun, 22 Dec 2024 08:49:38 +0000
-Date: Sun, 22 Dec 2024 09:49:22 +0100
-Message-ID: <87ed209k6l.wl-tiwai@suse.de>
-From: Takashi Iwai <tiwai@suse.de>
-To: Jackie Dong <xy-jackie@139.com>
-Cc: ike.pan@canonical.com,
-	hdegoede@redhat.com,
-	ilpo.jarvinen@linux.intel.com,
-	perex@perex.cz,
-	tiwai@suse.com,
-	bo.liu@senarytech.com,
-	kovalev@altlinux.org,
-	me@oldherl.one,
-	jaroslaw.janik@gmail.com,
-	cs@tuxedo.de,
-	songxiebing@kylinos.cn,
-	kailang@realtek.com,
-	sbinding@opensource.cirrus.com,
-	simont@opensource.cirrus.com,
-	josh@joshuagrisham.com,
-	rf@opensource.cirrus.com,
-	linux-kernel@vger.kernel.org,
-	platform-driver-x86@vger.kernel.org,
-	linux-sound@vger.kernel.org,
-	mpearson-lenovo@squebb.ca,
-	waterflowdeg@gmail.com,
-	Jackie Dong <dongeg1@lenovo.com>
-Subject: Re: [PATCH 2/2] ALSA : hda : Support for Ideapad hotkey mute LEDs
-In-Reply-To: <87v7veu00f.wl-tiwai@suse.de>
-References: <20241219101531.35896-1-xy-jackie@139.com>
-	<20241219101531.35896-2-xy-jackie@139.com>
-	<87v7veu00f.wl-tiwai@suse.de>
-User-Agent: Wanderlust/2.15.9 (Almost Unreal) Emacs/27.2 Mule/6.0
+	dkim=pass (1024-bit key) header.d=weissschuh.net header.i=@weissschuh.net header.b="Mk1gvV7Q"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=weissschuh.net;
+	s=mail; t=1734869369;
+	bh=JEcAWc+wXNEr2iT6chfisqG5h3apL3QfDBAMs+UovyY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Mk1gvV7Q7uZ4yQz0SZGlVzfrS25sbJb+w5IuxG616XnEkyyxqmpd8x0R0Fl7Sdc9P
+	 y0dcwNqJdmdpJQQeGDb+NI4baP2735wWJMch61HKhBVyBKl5xTGpVz6Gzr5QTRNMEB
+	 AHjaPOGoms8k8OjBHnue4ZfH3B7ndBJ2bQyXujRM=
+Date: Sun, 22 Dec 2024 13:09:28 +0100
+From: Thomas =?utf-8?Q?Wei=C3=9Fschuh?= <linux@weissschuh.net>
+To: Joshua Grisham <josh@joshuagrisham.com>
+Cc: Hans de Goede <hdegoede@redhat.com>, ilpo.jarvinen@linux.intel.com, 
+	W_Armin@gmx.de, platform-driver-x86@vger.kernel.org, corbet@lwn.net, 
+	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3] platform/x86: samsung-galaxybook: Add
+ samsung-galaxybook driver
+Message-ID: <c2b5e0c8-651f-426e-ae96-13857313997a@t-8ch.de>
+References: <20241216103855.18457-1-josh@joshuagrisham.com>
+ <13184052-baf2-4e7d-b8ef-9ba3f34d475a@t-8ch.de>
+ <66897a27-5f81-46fc-898d-682456d7f37f@redhat.com>
+ <CAMF+KeZ3uAWZuuPJcrrvTJS-TgyxkqXOY_w=wNw7eZQiUkV5YA@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
-Content-Type: text/plain; charset=US-ASCII
-X-Rspamd-Queue-Id: 040701F37E
-X-Spam-Level: 
-X-Spamd-Result: default: False [-2.01 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	SUSPICIOUS_RECIPS(1.50)[];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	MID_CONTAINS_FROM(1.00)[];
-	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	MX_GOOD(-0.01)[];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	MIME_TRACE(0.00)[0:+];
-	SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	RCPT_COUNT_TWELVE(0.00)[23];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	ARC_NA(0.00)[];
-	RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	FREEMAIL_TO(0.00)[139.com];
-	FREEMAIL_ENVRCPT(0.00)[139.com,gmail.com];
-	FREEMAIL_CC(0.00)[canonical.com,redhat.com,linux.intel.com,perex.cz,suse.com,senarytech.com,altlinux.org,oldherl.one,gmail.com,tuxedo.de,kylinos.cn,realtek.com,opensource.cirrus.com,joshuagrisham.com,vger.kernel.org,squebb.ca,lenovo.com];
-	RCVD_COUNT_TWO(0.00)[2];
-	RECEIVED_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:106:10:150:64:167:received];
-	FROM_EQ_ENVFROM(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	TO_DN_SOME(0.00)[];
-	TAGGED_RCPT(0.00)[];
-	ASN(0.00)[asn:25478, ipnet:::/0, country:RU];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	RCVD_TLS_ALL(0.00)[];
-	DKIM_TRACE(0.00)[suse.de:+];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo,imap1.dmz-prg2.suse.org:rdns,suse.de:dkim,suse.de:mid]
-X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
-X-Rspamd-Action: no action
-X-Spam-Score: -2.01
-X-Spam-Flag: NO
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAMF+KeZ3uAWZuuPJcrrvTJS-TgyxkqXOY_w=wNw7eZQiUkV5YA@mail.gmail.com>
 
-On Fri, 20 Dec 2024 11:22:40 +0100,
-Takashi Iwai wrote:
+Hi Joshua,
+
+On 2024-12-19 18:31:22+0100, Joshua Grisham wrote:
+> Thank you both Thomas and Hans for your review and comments! I am
+> working on a v4 of the patch but had a few questions which I wanted to
+> clarify (they can also come after in a v5 etc in case I managed to get
+> this ready to go before anyone has the time to confirm and/or clarify
+> some things!).
+
+Keep them coming :-)
+
+> Den tis 17 dec. 2024 kl 15:23 skrev Hans de Goede <hdegoede@redhat.com>:
+> >
+> > On 16-Dec-24 5:46 PM, Thomas Weißschuh wrote:
+> > >> +Various hardware settings can be controlled by the following sysfs attributes:
+> > >> +
+> > >> +- ``allow_recording`` (allows or blocks usage of built-in camera and microphone)
+> > >> +- ``start_on_lid_open`` (power on automatically when opening the lid)
+> > >> +- ``usb_charge`` (allows USB ports to provide power even when device is off)
+> > >
+> > > Non-standard sysfs attributes should be avoided where possible.
+> > > Userspace will need bespoke code to handle them.
+> > > This looks like it could be handled by the standard firmware_attributes
+> > > interface.
+> > > This would standardize discovery and usage.
+> >
+> > Ack this really feels like firmware-attributes. I would not be surprised
+> > if there are matching BIOS settings and if changing those also changes
+> > the sysfs files and likewise if the sysfs settings persist over reboot.
+> >
 > 
-> On Thu, 19 Dec 2024 11:15:31 +0100,
-> Jackie Dong wrote:
-> > 
-> > New ideapad helper file with support for handling FN key mute LEDS.
-> > Update conexant and realtec codec to add LED support.
-> > 
-> > Suggested-by: Mark Pearson <mpearson-lenovo@squebb.ca>
-> > Signed-off-by: Jackie Dong  <xy-jackie@139.com>
-> > Signed-off-by: Jackie Dong  <dongeg1@lenovo.com>
-> > ---
-> >  sound/pci/hda/ideapad_hotkey_led_helper.c | 36 +++++++++++++++++++++++
-> >  sound/pci/hda/patch_conexant.c            | 10 +++++++
-> >  sound/pci/hda/patch_realtek.c             | 20 +++++++++++++
-> >  3 files changed, 66 insertions(+)
-> >  create mode 100644 sound/pci/hda/ideapad_hotkey_led_helper.c
-> > 
-> > diff --git a/sound/pci/hda/ideapad_hotkey_led_helper.c b/sound/pci/hda/ideapad_hotkey_led_helper.c
-> > new file mode 100644
-> > index 000000000000..e49765304cc0
-> > --- /dev/null
-> > +++ b/sound/pci/hda/ideapad_hotkey_led_helper.c
-> > @@ -0,0 +1,36 @@
-> > +// SPDX-License-Identifier: GPL-2.0
-> > +/*
-> > + * Ideapad helper functions for Lenovo Ideapad LED control,
-> > + * It should be included from codec driver.
-> > + */
-> > +
-> > +#if IS_ENABLED(CONFIG_IDEAPAD_LAPTOP)
-> > +
-> > +#include <linux/acpi.h>
-> > +#include <linux/leds.h>
-> > +
-> > +static bool is_ideapad(struct hda_codec *codec)
-> > +{
-> > +	return (codec->core.subsystem_id >> 16 == 0x17aa) &&
-> > +	       (acpi_dev_found("LHK2019") || acpi_dev_found("VPC2004"));
-> > +}
-> > +
-> > +static void hda_fixup_ideapad_acpi(struct hda_codec *codec,
-> > +				   const struct hda_fixup *fix, int action)
-> > +{
-> > +	if (action == HDA_FIXUP_ACT_PRE_PROBE) {
-> > +		if (!is_ideapad(codec))
-> > +			return;
-> > +		snd_hda_gen_add_mute_led_cdev(codec, NULL);
-> > +		snd_hda_gen_add_micmute_led_cdev(codec, NULL);
-> > +	}
-> > +}
-> > +
-> > +#else /* CONFIG_IDEAPAD_LAPTOP */
-> > +
-> > +static void hda_fixup_ideapad_acpi(struct hda_codec *codec,
-> > +				   const struct hda_fixup *fix, int action)
-> > +{
-> > +}
-> > +
-> > +#endif /* CONFIG_IDEAPAD_LAPTOP */
-> > diff --git a/sound/pci/hda/patch_conexant.c b/sound/pci/hda/patch_conexant.c
-> > index 538c37a78a56..127f9a9565c9 100644
-> > --- a/sound/pci/hda/patch_conexant.c
-> > +++ b/sound/pci/hda/patch_conexant.c
-> > @@ -291,6 +291,7 @@ enum {
-> >  	CXT_FIXUP_GPIO1,
-> >  	CXT_FIXUP_ASPIRE_DMIC,
-> >  	CXT_FIXUP_THINKPAD_ACPI,
-> > +	CXT_FIXUP_IDEAPAD_ACPI,
-> >  	CXT_FIXUP_OLPC_XO,
-> >  	CXT_FIXUP_CAP_MIX_AMP,
-> >  	CXT_FIXUP_TOSHIBA_P105,
-> > @@ -313,6 +314,9 @@ enum {
-> >  /* for hda_fixup_thinkpad_acpi() */
-> >  #include "thinkpad_helper.c"
-> >  
-> > +/* for hda_fixup_ideapad_acpi() */
-> > +#include "ideapad_hotkey_led_helper.c"
-> > +
-> >  static void cxt_fixup_stereo_dmic(struct hda_codec *codec,
-> >  				  const struct hda_fixup *fix, int action)
-> >  {
-> > @@ -928,6 +932,10 @@ static const struct hda_fixup cxt_fixups[] = {
-> >  		.type = HDA_FIXUP_FUNC,
-> >  		.v.func = hda_fixup_thinkpad_acpi,
-> >  	},
-> > +	[CXT_FIXUP_IDEAPAD_ACPI] = {
-> > +		.type = HDA_FIXUP_FUNC,
-> > +		.v.func = hda_fixup_ideapad_acpi,
-> > +	},
-> >  	[CXT_FIXUP_OLPC_XO] = {
-> >  		.type = HDA_FIXUP_FUNC,
-> >  		.v.func = cxt_fixup_olpc_xo,
-> > @@ -1120,6 +1128,7 @@ static const struct hda_quirk cxt5066_fixups[] = {
-> >  	SND_PCI_QUIRK(0x17aa, 0x3978, "Lenovo G50-70", CXT_FIXUP_STEREO_DMIC),
-> >  	SND_PCI_QUIRK(0x17aa, 0x397b, "Lenovo S205", CXT_FIXUP_STEREO_DMIC),
-> >  	SND_PCI_QUIRK_VENDOR(0x17aa, "Thinkpad", CXT_FIXUP_THINKPAD_ACPI),
-> > +	SND_PCI_QUIRK_VENDOR(0x17aa, "IdeaPad", CXT_FIXUP_IDEAPAD_ACPI),
+> Yes 2 of these (not this "allow_recording" I think) are available via
+> BIOS and all 3 of them persist over restarts.
 > 
-> I'm afraid that this doesn't work.  The former entry with the vendor
-> 17aa already hits and it's used as the matched quirk.
-> 
-> You'd need to create a chained quirk entry instead.
+> Just so I am 100% clear what you mean here -- these type of attributes
+> should be created using the utilities available in
+> drivers/platform/x86/firmware_attributes_class.h so that they are
+> created under the path /sys/class/firmware-attributes/*/attributes/*/
+> ?
 
-That is, add a new enum CXT_FIXUP_LENOVO_XPAD_ACPI, and define an
-entry like:
+Yes.
 
-	[CXT_FIXUP_LENOVO_XPAD_ACPI] = {
-		.type = HDA_FIXUP_FUNC,
-		.v.func = hda_fixup_ideapad_acpi,
-		.chained = true,
-		.chain_id = ALC269_FIXUP_THINKPAD_ACPI,
-	},
+> What exactly should they be named (any preference?) and should I also
+> add some documentation for them in
+> Documentation/ABI/testing/sysfs-class-firmware-attributes ?
 
-then replace the line
- 	SND_PCI_QUIRK_VENDOR(0x17aa, "Thinkpad", CXT_FIXUP_THINKPAD_ACPI),
-with
- 	SND_PCI_QUIRK_VENDOR(0x17aa, "Thinkpad/Ideapad", CXT_FIXUP_LENOVO_XPAD_ACPI),
+I think they are meant to be named consistently with what the native
+UEFI setup interface calls them.
+And yes, they should be documented.
 
-Care to rewrite the patch in that way, and resubmit v2 patch?
+> I am fairly sure I understand the concept and can agree that it kind
+> of makes a lot of sense to be able to standardize the userspace
+> interface, especially for attributes which do the exact same thing
+> across different vendors/devices (unless it just as easily possible to
+> go based on some pattern matching e.g. like is done in udev and upower
+> with "*kbd_backlight*" etc) but as of now it looks like the only
+> examples implemented are for thinklmi, dell-wmi, and hp-bioscfg that I
+> can see so far?
+
+The firmware-attributes don't really have a standardized semantic.
+Here the standardization is more about the discovery and interaction.
+Somebody can build a generic UI to change these settings, without the UI
+knowing anything about what the setting actually does.
+
+If the setting maps to a another, more specific interface, that should
+be used.
+
+> Before, I had tried to look through all of the various platform/x86
+> drivers and harmonize which names I picked for these sysfs attributes
+> (that is how I landed on "usb_charge" and "start_on_lid_open" as I
+> recall correctly) but I am not aware of any existing userspace tools
+> which are looking for anything like these (apart for
+> driver/vendor-specific utilities). Any recommendation from the very
+> wise people here would certainly be appreciated for these :)
+
+[..] Snip, I don't feel qualify to comment on the input bits.
+
+> Other notifications that I am wondering what the "right" way to handle
+> / using the right interface:
+
+[..]
+
+> - When the battery charge control end threshold is reached, there is
+> an ACPI notification on this device as well that is the one I have
+> marked "ACPI_NOTIFY_BATTERY_STATE_CHANGED" -- the Samsung background
+> apps pop up a custom OSD that basically says something to the effect
+> that their "Battery saver is protecting the battery by stopping
+> charging" (can't remember the exact verbiage) and they change the
+> battery icon, but without doing anything else in my driver currently
+> the battery still reports state of "charging" even though it just sits
+> constantly at the percentage (and has the charging icon in GNOME etc).
+> I have seen the event come and go occasionally when I did not expect
+> it, but my working theory is that maybe it is if/when the battery
+> starts charging again if it dips too far below the target "end
+> threshold" and then notifies again when the threshold has been
+> reached. Armin also mentioned this before in a different mail; I guess
+> I would hope/expect there is an event or a function I could call to
+> have the state reflected correctly but I would not want that it
+> negatively impacts the normal behavior of charging the battery itself
+> (just that the state/icon would change would be ideal! as it functions
+> perfectly, it is just that the state and icon are not accurate).
+
+Optimally the ACPI event would integrate with the ACPI battery driver.
+See the handling of POWER_SUPPLY_STATUS_NOT_CHARGING in
+drivers/acpi/battery.c.
+Does the battery report the current rate as 0 when limiting?
+Then something like acpi_battery_handle_discharging() could be used.
 
 
-thanks,
-
-Takashi
+Thomas
