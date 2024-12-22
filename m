@@ -1,130 +1,275 @@
-Received: from mail-ed1-f45.google.com (mail-ed1-f45.google.com [209.85.208.45])
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 424F413B7AE;
-	Sun, 22 Dec 2024 08:42:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 91018EEC5;
+	Sun, 22 Dec 2024 08:49:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1734856948; cv=none; b=hoErzLanM05uS/aZBb1DNXcuZjt/RLjxfuMYVRneujTxqsaMs0jOChu2VVMzHgS5k8rrKdMZZpu+pAFCyXcNqNgdZsavlUw4oHwqWN42ersKcFiUJ5647VAtQxYgLzlMTlZ6bacIGE6rj778e8UFxBAdnRjyfWgImq3PwRop2ls=
+	t=1734857384; cv=none; b=eyQjwmxZnfMu/IQptSOH056NgFnvfgMr4MEqx8uur3aferw/V2OH9M8L8saSV8f474MQjV+QNnRzDMdEefpHZuX0uUIm4lfudDIeW60cFPTRmm2qbKRHSaAIWFxPuNljxBo+GJDmm657nnjZFk0s0tSr0O9LX+XBLeyAi9B2a1A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1734856948; c=relaxed/simple;
-	bh=qeT3sFvYjSq6N1za6dXxSbljCN0r2s2+MUE5KdJ8nOE=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=tQcKUvsFRuQCk8cfR7SS98vLS2qqK8JRuWrnqfW60F4sfDuErDppVXvR/P8bRWHBVWu7A/9bsJiff1e+n+CXnzl8xMe2VaM1uaeFlr/eiTWocHvJB2QkR/xKSW10ewFmszb8h/PXOKIZbZ/LtfLVN2CZRKRfAgBzE8/P74c80O0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=f9tMbDMz; arc=none smtp.client-ip=209.85.208.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1734857384; c=relaxed/simple;
+	bh=t9LKB8duX7BHWeimepjRYB4oegPGn5YU7/J5zXPgMVU=;
+	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=oN1oIFhPcWEN3hsokFcrP6M+WSG0jpukSmHkAPXYqe7F+NCgf/FlIOe//+qyZgjk1rgINICPCWYOAytgayPEmweSX9OMDG0LnpGQLTkXrD9+9qblRWXKeYUvEa3+t/vSeOMbnbRnb3j9qGD31oueoKbTeGp2NLxBdYojTqP5YTU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=xjIr/dLW; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=Xd+h6bSv; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=xjIr/dLW; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=Xd+h6bSv; arc=none smtp.client-ip=195.135.223.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="f9tMbDMz"
-Received: by mail-ed1-f45.google.com with SMTP id 4fb4d7f45d1cf-5d0d32cd31aso4614792a12.0;
-        Sun, 22 Dec 2024 00:42:25 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1734856944; x=1735461744; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=FeYmHqbnjLNyTT3j012+iGXpYh4HXdGoYtptCwdfkUY=;
-        b=f9tMbDMz4DOx14AB0ZjrawyqXFXFQwg3u2FznZLNjuPjHLmorPs7svW7uFyBiC7x81
-         OPUYBs5QUCU4gZoENJt7H0YkeKwR6CRTXbqeBmY0LpFXqAgynt2HOJGWNivo/guOjsxa
-         IBLM8QHDozKIDKFhgjzKgl6155TEyo8bFDYI3KaXWGszc6vyr2pPpAF7LLDYR4qeGlEL
-         kqcLg/YIMVj4F+TA80gCpOyEYkLs/TkkoDQrK1eNLlebATDnzq5OKUQQy61WgojV9Olk
-         W0npmRVWUovoNI6HPfujSmPdKBnVJAykmKjkDl8F1d8NkO4VnV1e9NbE8n9Iq0DkUHhS
-         Ub0w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1734856944; x=1735461744;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=FeYmHqbnjLNyTT3j012+iGXpYh4HXdGoYtptCwdfkUY=;
-        b=tBHXNI6/K+49ItKc/sFFn3QdIE4QgORoey4bh4MFkCq1rAwzNuCkj4SMlz2DcGfL0A
-         Wv1/D4NuV4hvfXPoJlczrkVPtvRYTQ3g2geJY51I3RNnv7cnSadydqOZGjkiTFBw2wSw
-         2WzNJgoVa0GszhkF777NDIlwTlV0mGoB2cni48NlECkzCXosfXI46k8y5gunuHdM1Mtd
-         plqOANM4MzZuZzgzUgqBrWa2/LS0n0mgH3FoHI7uLi2rfD/UGbY54HhFH43vHbU8jfcs
-         dh7QzIoVV7d9VCXXvpe/+cLDh9s3S506wwbrVbfndig0lPknhu4EDU+lFW1IbVC98Hf3
-         IagQ==
-X-Forwarded-Encrypted: i=1; AJvYcCU60XqoOJQAFZZBB1h40eKSaMPImWDHMgcQlMQhftDP42p7Evhey477ynd416zkrK9/B/qf6yM4wTc=@vger.kernel.org, AJvYcCUqx8ILqy4F79daUGsCEaCtYbaQuIxhj5PZOU0FkeqJAAJQ8k4P78OjbU+ianN/+5ABObwsO9GtKi3XO/uOblQUpzQlUw==@vger.kernel.org, AJvYcCVqkBHOlolnYotVkUzSvvLgCQNhbs7CwjfSDD2lWqi35eEG+DaMNNlML38b29ApnOzu601yH6ZBzKykORT8@vger.kernel.org
-X-Gm-Message-State: AOJu0YwGa2GH25lefISi2RYuHDrHREA61XB792aDXya3scNGxvIUB7uE
-	TuwvzWYK7NvQL81ATVefRPpQpG1y2IlDMbmFlRqmFKLx1bmpCybY
-X-Gm-Gg: ASbGncs3t6HiKDQPfkxVphFhhXUiFHysw9L2ZvgQ8uj5KH/yKytBwrMYuZheVamZ9Pd
-	SoUyFmwUncwVMobDxgoZpwX2ikwap4oeuHaXxLTLeCSJFg2HmMChHoRAIzz+xKlCqPotl+bKGLP
-	rs0q1FC7yfM8MnCkJzxT1Xhqo4q/4p0XppXBKjNEm62mNI4CxCr31E3rZ+9Xd9mGSOtUsbfhUZA
-	+NMNlZGsWtXsPOCjSi9tEnE99T2le10OqUVlUE9dprCf8Y52L5Gc9A=
-X-Google-Smtp-Source: AGHT+IEmLIl42hgBKyYWMA1CgsCxga4hy8PmdH+a/UjzxJ79eI8CASFNWdFMJCq2de4euz72lWgSTA==
-X-Received: by 2002:a05:6402:2550:b0:5d4:2ef7:1c with SMTP id 4fb4d7f45d1cf-5d81de06532mr21258493a12.24.1734856944201;
-        Sun, 22 Dec 2024 00:42:24 -0800 (PST)
-Received: from localhost.localdomain ([2a09:bac5:27ca:2a0::43:6a])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-aac0f073333sm360112766b.203.2024.12.22.00.42.22
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 22 Dec 2024 00:42:23 -0800 (PST)
-From: John Martens <johnfanv2@gmail.com>
-To: derekjohn.clark@gmail.com
-Cc: corbet@lwn.net,
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="xjIr/dLW";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="Xd+h6bSv";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="xjIr/dLW";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="Xd+h6bSv"
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id 040701F37E;
+	Sun, 22 Dec 2024 08:49:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1734857380; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=DnHva3XwoFhcr2C3S7vjHvCxv30H7Sh0Zclv4tO3TmY=;
+	b=xjIr/dLWwxKaliMegNJ3Wd5DsP/pNad2ieIMJtn8AG3Ya3oGvPxOQhKGZhcaRAanXTlkK6
+	G34uNmDU+HJG9M3bPSVswa4PT9U4GpUQY5NE8LDtF2Ru5yUbBwTlNvq/yDl4MTjb7OKJor
+	GE2nQiygmvBNBSi04rVp2uG45oPwYcw=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1734857380;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=DnHva3XwoFhcr2C3S7vjHvCxv30H7Sh0Zclv4tO3TmY=;
+	b=Xd+h6bSvVLp5eifHogwK939Y9NUdzfWFG/fYeshVgciSYVkEhI+AxO1sFQmfyufVgkjVjq
+	vv/r8rHkoGauRVAA==
+Authentication-Results: smtp-out2.suse.de;
+	dkim=pass header.d=suse.de header.s=susede2_rsa header.b="xjIr/dLW";
+	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=Xd+h6bSv
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1734857380; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=DnHva3XwoFhcr2C3S7vjHvCxv30H7Sh0Zclv4tO3TmY=;
+	b=xjIr/dLWwxKaliMegNJ3Wd5DsP/pNad2ieIMJtn8AG3Ya3oGvPxOQhKGZhcaRAanXTlkK6
+	G34uNmDU+HJG9M3bPSVswa4PT9U4GpUQY5NE8LDtF2Ru5yUbBwTlNvq/yDl4MTjb7OKJor
+	GE2nQiygmvBNBSi04rVp2uG45oPwYcw=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1734857380;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=DnHva3XwoFhcr2C3S7vjHvCxv30H7Sh0Zclv4tO3TmY=;
+	b=Xd+h6bSvVLp5eifHogwK939Y9NUdzfWFG/fYeshVgciSYVkEhI+AxO1sFQmfyufVgkjVjq
+	vv/r8rHkoGauRVAA==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 7BCF913A6D;
+	Sun, 22 Dec 2024 08:49:38 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id BF9GGqLSZ2d0EAAAD6G6ig
+	(envelope-from <tiwai@suse.de>); Sun, 22 Dec 2024 08:49:38 +0000
+Date: Sun, 22 Dec 2024 09:49:22 +0100
+Message-ID: <87ed209k6l.wl-tiwai@suse.de>
+From: Takashi Iwai <tiwai@suse.de>
+To: Jackie Dong <xy-jackie@139.com>
+Cc: ike.pan@canonical.com,
 	hdegoede@redhat.com,
 	ilpo.jarvinen@linux.intel.com,
-	linux-doc@vger.kernel.org,
+	perex@perex.cz,
+	tiwai@suse.com,
+	bo.liu@senarytech.com,
+	kovalev@altlinux.org,
+	me@oldherl.one,
+	jaroslaw.janik@gmail.com,
+	cs@tuxedo.de,
+	songxiebing@kylinos.cn,
+	kailang@realtek.com,
+	sbinding@opensource.cirrus.com,
+	simont@opensource.cirrus.com,
+	josh@joshuagrisham.com,
+	rf@opensource.cirrus.com,
 	linux-kernel@vger.kernel.org,
-	luke@ljones.dev,
-	mpearson-lenovo@squebb.ca,
-	nijs1@lenovo.com,
-	pgriffais@valvesoftware.com,
 	platform-driver-x86@vger.kernel.org,
-	shaohz1@lenovo.com,
-	superm1@kernel.org,
-	zhangzx36@lenovo.com
-Subject: Re: [PATCH 0/1] platform/x86: Add Lenovo Legion WMI Drivers
-Date: Sun, 22 Dec 2024 09:42:16 +0100
-Message-Id: <20241222084216.1420666-1-johnfanv2@gmail.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20241217230645.15027-1-derekjohn.clark@gmail.com>
-References: <20241217230645.15027-1-derekjohn.clark@gmail.com>
+	linux-sound@vger.kernel.org,
+	mpearson-lenovo@squebb.ca,
+	waterflowdeg@gmail.com,
+	Jackie Dong <dongeg1@lenovo.com>
+Subject: Re: [PATCH 2/2] ALSA : hda : Support for Ideapad hotkey mute LEDs
+In-Reply-To: <87v7veu00f.wl-tiwai@suse.de>
+References: <20241219101531.35896-1-xy-jackie@139.com>
+	<20241219101531.35896-2-xy-jackie@139.com>
+	<87v7veu00f.wl-tiwai@suse.de>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) Emacs/27.2 Mule/6.0
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
+X-Rspamd-Queue-Id: 040701F37E
+X-Spam-Level: 
+X-Spamd-Result: default: False [-2.01 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	SUSPICIOUS_RECIPS(1.50)[];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	MID_CONTAINS_FROM(1.00)[];
+	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	MX_GOOD(-0.01)[];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	MIME_TRACE(0.00)[0:+];
+	SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	RCPT_COUNT_TWELVE(0.00)[23];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	ARC_NA(0.00)[];
+	RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	FREEMAIL_TO(0.00)[139.com];
+	FREEMAIL_ENVRCPT(0.00)[139.com,gmail.com];
+	FREEMAIL_CC(0.00)[canonical.com,redhat.com,linux.intel.com,perex.cz,suse.com,senarytech.com,altlinux.org,oldherl.one,gmail.com,tuxedo.de,kylinos.cn,realtek.com,opensource.cirrus.com,joshuagrisham.com,vger.kernel.org,squebb.ca,lenovo.com];
+	RCVD_COUNT_TWO(0.00)[2];
+	RECEIVED_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:106:10:150:64:167:received];
+	FROM_EQ_ENVFROM(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	TO_DN_SOME(0.00)[];
+	TAGGED_RCPT(0.00)[];
+	ASN(0.00)[asn:25478, ipnet:::/0, country:RU];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	RCVD_TLS_ALL(0.00)[];
+	DKIM_TRACE(0.00)[suse.de:+];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo,imap1.dmz-prg2.suse.org:rdns,suse.de:dkim,suse.de:mid]
+X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
+X-Rspamd-Action: no action
+X-Spam-Score: -2.01
+X-Spam-Flag: NO
 
-> Adds support for the Lenovo Legion series of laptop hardware to use WMI
-> interfaces that control various power settings. 
+On Fri, 20 Dec 2024 11:22:40 +0100,
+Takashi Iwai wrote:
+> 
+> On Thu, 19 Dec 2024 11:15:31 +0100,
+> Jackie Dong wrote:
+> > 
+> > New ideapad helper file with support for handling FN key mute LEDS.
+> > Update conexant and realtec codec to add LED support.
+> > 
+> > Suggested-by: Mark Pearson <mpearson-lenovo@squebb.ca>
+> > Signed-off-by: Jackie Dong  <xy-jackie@139.com>
+> > Signed-off-by: Jackie Dong  <dongeg1@lenovo.com>
+> > ---
+> >  sound/pci/hda/ideapad_hotkey_led_helper.c | 36 +++++++++++++++++++++++
+> >  sound/pci/hda/patch_conexant.c            | 10 +++++++
+> >  sound/pci/hda/patch_realtek.c             | 20 +++++++++++++
+> >  3 files changed, 66 insertions(+)
+> >  create mode 100644 sound/pci/hda/ideapad_hotkey_led_helper.c
+> > 
+> > diff --git a/sound/pci/hda/ideapad_hotkey_led_helper.c b/sound/pci/hda/ideapad_hotkey_led_helper.c
+> > new file mode 100644
+> > index 000000000000..e49765304cc0
+> > --- /dev/null
+> > +++ b/sound/pci/hda/ideapad_hotkey_led_helper.c
+> > @@ -0,0 +1,36 @@
+> > +// SPDX-License-Identifier: GPL-2.0
+> > +/*
+> > + * Ideapad helper functions for Lenovo Ideapad LED control,
+> > + * It should be included from codec driver.
+> > + */
+> > +
+> > +#if IS_ENABLED(CONFIG_IDEAPAD_LAPTOP)
+> > +
+> > +#include <linux/acpi.h>
+> > +#include <linux/leds.h>
+> > +
+> > +static bool is_ideapad(struct hda_codec *codec)
+> > +{
+> > +	return (codec->core.subsystem_id >> 16 == 0x17aa) &&
+> > +	       (acpi_dev_found("LHK2019") || acpi_dev_found("VPC2004"));
+> > +}
+> > +
+> > +static void hda_fixup_ideapad_acpi(struct hda_codec *codec,
+> > +				   const struct hda_fixup *fix, int action)
+> > +{
+> > +	if (action == HDA_FIXUP_ACT_PRE_PROBE) {
+> > +		if (!is_ideapad(codec))
+> > +			return;
+> > +		snd_hda_gen_add_mute_led_cdev(codec, NULL);
+> > +		snd_hda_gen_add_micmute_led_cdev(codec, NULL);
+> > +	}
+> > +}
+> > +
+> > +#else /* CONFIG_IDEAPAD_LAPTOP */
+> > +
+> > +static void hda_fixup_ideapad_acpi(struct hda_codec *codec,
+> > +				   const struct hda_fixup *fix, int action)
+> > +{
+> > +}
+> > +
+> > +#endif /* CONFIG_IDEAPAD_LAPTOP */
+> > diff --git a/sound/pci/hda/patch_conexant.c b/sound/pci/hda/patch_conexant.c
+> > index 538c37a78a56..127f9a9565c9 100644
+> > --- a/sound/pci/hda/patch_conexant.c
+> > +++ b/sound/pci/hda/patch_conexant.c
+> > @@ -291,6 +291,7 @@ enum {
+> >  	CXT_FIXUP_GPIO1,
+> >  	CXT_FIXUP_ASPIRE_DMIC,
+> >  	CXT_FIXUP_THINKPAD_ACPI,
+> > +	CXT_FIXUP_IDEAPAD_ACPI,
+> >  	CXT_FIXUP_OLPC_XO,
+> >  	CXT_FIXUP_CAP_MIX_AMP,
+> >  	CXT_FIXUP_TOSHIBA_P105,
+> > @@ -313,6 +314,9 @@ enum {
+> >  /* for hda_fixup_thinkpad_acpi() */
+> >  #include "thinkpad_helper.c"
+> >  
+> > +/* for hda_fixup_ideapad_acpi() */
+> > +#include "ideapad_hotkey_led_helper.c"
+> > +
+> >  static void cxt_fixup_stereo_dmic(struct hda_codec *codec,
+> >  				  const struct hda_fixup *fix, int action)
+> >  {
+> > @@ -928,6 +932,10 @@ static const struct hda_fixup cxt_fixups[] = {
+> >  		.type = HDA_FIXUP_FUNC,
+> >  		.v.func = hda_fixup_thinkpad_acpi,
+> >  	},
+> > +	[CXT_FIXUP_IDEAPAD_ACPI] = {
+> > +		.type = HDA_FIXUP_FUNC,
+> > +		.v.func = hda_fixup_ideapad_acpi,
+> > +	},
+> >  	[CXT_FIXUP_OLPC_XO] = {
+> >  		.type = HDA_FIXUP_FUNC,
+> >  		.v.func = cxt_fixup_olpc_xo,
+> > @@ -1120,6 +1128,7 @@ static const struct hda_quirk cxt5066_fixups[] = {
+> >  	SND_PCI_QUIRK(0x17aa, 0x3978, "Lenovo G50-70", CXT_FIXUP_STEREO_DMIC),
+> >  	SND_PCI_QUIRK(0x17aa, 0x397b, "Lenovo S205", CXT_FIXUP_STEREO_DMIC),
+> >  	SND_PCI_QUIRK_VENDOR(0x17aa, "Thinkpad", CXT_FIXUP_THINKPAD_ACPI),
+> > +	SND_PCI_QUIRK_VENDOR(0x17aa, "IdeaPad", CXT_FIXUP_IDEAPAD_ACPI),
+> 
+> I'm afraid that this doesn't work.  The former entry with the vendor
+> 17aa already hits and it's used as the matched quirk.
+> 
+> You'd need to create a chained quirk entry instead.
 
-Note that there already is a driver for Lenovo Legion laptops that I 
-wanted to merge upstream.
+That is, add a new enum CXT_FIXUP_LENOVO_XPAD_ACPI, and define an
+entry like:
 
-https://github.com/johnfanv2/LenovoLegionLinux
+	[CXT_FIXUP_LENOVO_XPAD_ACPI] = {
+		.type = HDA_FIXUP_FUNC,
+		.v.func = hda_fixup_ideapad_acpi,
+		.chained = true,
+		.chain_id = ALC269_FIXUP_THINKPAD_ACPI,
+	},
 
-Compared to the proposed patch, it has the following
-advantages:
-1. already popular and tested by thousands of users
-    - many stars and discussions on github
-    - patched into multiple kernels of gaming-related distros
-    - packaged as dkms module for almost all relevant Linux 
-      distributions including Debian by other developers
-2. supports many different Lenovo Legion models starting from 2020/2021
-3. supports a lot of more functions, including fan control, which is the
-  most requested feature
-4. supports the many changes between different in the WMI/ACPI method
-5. actually shares some credtis with persons who revere engineered it :)
-6. support by GUI tool to configure it all
+then replace the line
+ 	SND_PCI_QUIRK_VENDOR(0x17aa, "Thinkpad", CXT_FIXUP_THINKPAD_ACPI),
+with
+ 	SND_PCI_QUIRK_VENDOR(0x17aa, "Thinkpad/Ideapad", CXT_FIXUP_LENOVO_XPAD_ACPI),
 
-On the other hand, my driver has the following disadvantages:
-1. The version of master on github is the most recent one and contains
-   a lot of debug output that has to be removed (often indicated by TODO)
-2. It is all in one large c file instead of organizing it neatly into
-   multiple files.
-3. It was modeled after the ideapad driver instead of the newer ASUS
-   driver.
+Care to rewrite the patch in that way, and resubmit v2 patch?
 
-A few notes regarding the many changes of the WMI methods that I tried 
-to deal with in my driver: note that in almost every new model a new 
-WMI method is used to control the same functionality (e.g. fan control
- or powermode). Additionally, often the constants or the unit changes
-: e.g. percent or rpm for fan speed.
 
-> The driver has been tested by me on the Lenovo Legion Go.
+thanks,
 
-The driver on github has been tested by thousands of users.
-
-I suggest that we maybe combine the two drivers before merging them,
-since Derek seems to have more kernel patching knowledge and I seem
-to have more worked on all the Legion laptops.
+Takashi
