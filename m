@@ -1,456 +1,165 @@
-Received: from mout.gmx.net (mout.gmx.net [212.227.15.15])
+Received: from mout.gmx.net (mout.gmx.net [212.227.17.21])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 66958EAF6;
-	Sun, 22 Dec 2024 21:51:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E39BB2B2CF;
+	Sun, 22 Dec 2024 22:10:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.21
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1734904296; cv=none; b=dXWIU2X5hd59MnbOjzNh2dnAbI4kcXX6uak+R3zAMAyppYxzibWNJNEYD0c99u1fDUGKpNwtALtwgg+X/v4EPHduzD08KBz5f3ZdlRTdG/Lgwj7/H8hFOE5IyublUx8esCg8Dvg0fQ0fmxZT3hsXhUfYhMa4ZfVHdVGS6k7FL5w=
+	t=1734905439; cv=none; b=PgNuLWs+OST47dRoFaWuQszJJP/kSg4jzK+HEhPcOnSZfKv4xOQGqoacaa1VVP0Tj8JSr/WuXhJypsVlzqK5qP/I7QcKxw2rmUzl4s8NTA6Hqh5WVH5h7aTVDFyVzVaLtO8JxDdBVUt7btFNMFVtSKdcWsVzMXIaJvqjoa46fSM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1734904296; c=relaxed/simple;
-	bh=QrdcmOVES0c7udi2quCTCuYhvdd0HxOWN+1Ziybv+sk=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=rV3dtkGNVq17M5v4uqWmW0Cos4uDHBh/xsngRpUvQZ3tlDU0DPwm34qRo77MYDmwaawWDIOHGh8G6QaUpyY9KjYzM+PDcCBE5d/r4/84BnlfRhpqvkfq6W17nkoFwfT+xdtxdjMIyCWNDAEgyOvvCdCu0QvAM0vwQ3OhA3AxMPc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b=OnjOOEgR; arc=none smtp.client-ip=212.227.15.15
+	s=arc-20240116; t=1734905439; c=relaxed/simple;
+	bh=oqwVAE/6mgOoOJT2DNKvPP1Rxlwj3xgLdrbjl8vhjPE=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=A837PWqcD2pluyg9a2GSyWnBzcyrntSy5l7oim5c4+elQz3IIsmzfyekXbfwnj0jkPs88bNMR+SSNEtj8og+u9UukQ2JjLhkkQorQP1Uyikb/NXQ1/Fay5M4cWC7z+ekPoXSrRMjwAp/cKVRqDQ03pGLvA74memiaB/Mk+aagRY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b=mYrTncKV; arc=none smtp.client-ip=212.227.17.21
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b="OnjOOEgR"
+	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b="mYrTncKV"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.de;
-	s=s31663417; t=1734904248; x=1735509048; i=w_armin@gmx.de;
-	bh=mFR4J+O1clo+TN4YcicFY04iJ70Rwuc9IkzqZmicPPY=;
-	h=X-UI-Sender-Class:From:To:Cc:Subject:Date:Message-Id:
-	 MIME-Version:Content-Type:Content-Transfer-Encoding:cc:
-	 content-transfer-encoding:content-type:date:from:message-id:
-	 mime-version:reply-to:subject:to;
-	b=OnjOOEgRDnhxSt57Zm0qIndEONPDx4vTJ9McHtdXM8ppUrs9AdOSI4AGv+xa+UP9
-	 bbUaWwX+R8rNOogxipkPBX1Vja8eCkpvI10OBGqlhwJqR/s/daAnPzqUKIbmckR5k
-	 vdYUIBVC0gvobYLt1flVOWsu5UCPSGapf6W6Xsgd0X5OrrS2MRJSnfj0z6DQ3J3Jr
-	 NiIO+gDNsyi1JdM2FuaxMN+o+Z8izh1MJRjBp0qH116rebwaz8yzRSJMf1FoT7oQH
-	 582mgDdLqyqinjAxIIMIB2B9icywyZMaIljKGi3jGIX6W1v0H5mYucdy4U30fpRMI
-	 QT5GYcLb26A27h4fQw==
+	s=s31663417; t=1734905388; x=1735510188; i=w_armin@gmx.de;
+	bh=9S5lsMKNvuL/3CybXeaq9ioLvqg9TfkUihqACV4c00w=;
+	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:To:Cc:
+	 References:From:In-Reply-To:Content-Type:
+	 Content-Transfer-Encoding:cc:content-transfer-encoding:
+	 content-type:date:from:message-id:mime-version:reply-to:subject:
+	 to;
+	b=mYrTncKV7SQ3Cq0e24YHChzUMYFR8+8k4yqQEWbH5msy4ItESR8COR/gdGKjxGPu
+	 mhG68v3IaW36bDEN/gCQ9E69cggwvwexSHbZEDSspspoAP4Z+3LXtaQtuTdAOlBJk
+	 R/NH34MjU8YW7Zzwuu+OccAXtTVLNtCzTkyycLAbvsvqmhJ1Ykz7oYVduCE8HFTtg
+	 bWwUslzVAkEnVUp1gD+5PgbqnvwUtUphMbDQrWXibUpUCgfkc2y+nUXE6qEnjTDbV
+	 K+G/E97MEL2NAiEfx1GqN0t4s7vujyrp9a2bJyfMnoqalKERXSz0tKHxBvA3R+eVv
+	 r6QukUJuZrBzjidrmA==
 X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
-Received: from mx-inspiron.fritz.box ([91.14.230.110]) by mail.gmx.net
- (mrgmx005 [212.227.17.190]) with ESMTPSA (Nemesis) id
- 1MRTN9-1tDkHl19Tp-00SY0l; Sun, 22 Dec 2024 22:50:48 +0100
-From: Armin Wolf <W_Armin@gmx.de>
-To: dmitry.torokhov@gmail.com,
-	o2g.org.ru@gmail.com
-Cc: hdegoede@redhat.com,
-	ilpo.jarvinen@linux.intel.com,
-	corentin.chary@gmail.com,
-	luke@ljones.dev,
-	mjg59@srcf.ucam.org,
-	pali@kernel.org,
-	eric.piel@tremplin-utc.net,
-	jlee@suse.com,
-	kenneth.t.chan@gmail.com,
-	coproscefalo@gmail.com,
-	linux-input@vger.kernel.org,
-	platform-driver-x86@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	josh@joshuagrisham.com
-Subject: [PATCH v2] Input: i8042 - Add support for platform filter contexts
-Date: Sun, 22 Dec 2024 22:50:42 +0100
-Message-Id: <20241222215042.7709-1-W_Armin@gmx.de>
-X-Mailer: git-send-email 2.39.5
+Received: from [192.168.0.14] ([91.14.230.110]) by mail.gmx.net (mrgmx104
+ [212.227.17.168]) with ESMTPSA (Nemesis) id 1N0X8u-1tmWqN2cgW-00yN4u; Sun, 22
+ Dec 2024 23:09:47 +0100
+Message-ID: <5f173547-f643-4ac1-919b-cd864b2969fe@gmx.de>
+Date: Sun, 22 Dec 2024 23:09:44 +0100
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/2] ACPI: platform_profile: Add
+ devm_platform_profile_register()
+To: Kurt Borja <kuurtb@gmail.com>, platform-driver-x86@vger.kernel.org
+Cc: "Rafael J. Wysocki" <rafael@kernel.org>, Len Brown <lenb@kernel.org>,
+ =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+ Mark Pearson <mpearson-lenovo@squebb.ca>,
+ Mario Limonciello <mario.limonciello@amd.com>,
+ Hans de Goede <hdegoede@redhat.com>, Gergo Koteles <soyer@irl.hu>,
+ linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20241221070817.3764-2-kuurtb@gmail.com>
+ <20241221070817.3764-4-kuurtb@gmail.com>
+Content-Language: en-US
+From: Armin Wolf <W_Armin@gmx.de>
+In-Reply-To: <20241221070817.3764-4-kuurtb@gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:Iq8jfnHwCipc77+H5S+JfrMEm3hOyUEgHBgse/G2KLDdID/pQ9g
- wAC9S2P+IwRfXWyp3YgGIZXZVDw+/lkbV9ahYwugDqeC/AZ+I85sl7NczWRdZhnVGhbrgRo
- r7OD5/8Nzy+c0OhiXDWRsVVmqoTm7SVWjHNxzbW38dAm4MVhHQ7euZN8EUyG6nGm0JuDWjd
- dpI80rbBPOB7HjJBrt6QQ==
+X-Provags-ID: V03:K1:QON1IIn52thbvNWhV1q68pbvqld2x233FfUbiNKF8UuYfRgVUYN
+ BrAyuTUWlNOjrAFBrV7XSRlIz5H1B4r2PlRk/txz7UtM+zKxOiofwYp7WzPp9et0wFbu6is
+ fRTaowr20rhGYnLoDG4lrJOFnjIEo6fELyndzepYWGN2Onh4qs63uWNYKA04IH95KVIIJyC
+ 6H7uQcCbkihNEdSW6ZW6Q==
 X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:L2pw2RX9ejA=;rlVYAzi76yetRzNYThq+d/MG9p4
- brGawFjkAX1WvnMtPUJ+F6XJyZ6V8SQaT58DJQo3AAwCiC1SOr1Xz7JFh8tXID662aAH0XuXm
- E2E7xnX/Q7I+Me90xAfDDR3wh0EGs89FmS/tEEw7WDDcCkJkWSUm9npPTj9oH0pZcRZUOdZIF
- 9vtxKzLV/o1Nl2714zMTbTCrEDrtwmNA4KP9T8Tuyf+ggPrye3QEB+8fZckOPtXAEjOjBmt9k
- jsM/gvQaI1usTGI/i96dU3TVAGsVHBiCToy8F1g1kTfUSRbpGrBVrmOrN0yH2P08CQPz0fNEY
- I9KGdewqou2FS3A+FbJK9njCXL7d0WnORSVnYMuWJn0nI9s/V4zI9DT5rvL6JNa5I6xgWhP+u
- V/fVjHo8IWkKkI1BG0itA+vtzgsmo40AhEQ8jLgFwMzUWyFxATcvknyVy6uSQLRxVug738Ul5
- tX0tM67Haviuf3cktI4K36ZTasijyZTRAYj7K4SFP10vuHQyG1lvls1PZ7Eq6VnhJhqN5vcmX
- AZmQ55GPUot2X1kJvoZAtaG86KfPaX7YIG+lKK7oSUdDm8YxpqxFOjMBqrTfN10WP9xOqW6mC
- NwnhuWACtPaaCTJ2RCTHu1H6VumA/HBa3EtoBsKck+8duYIJhtJwqQnoWBc1w1dvU96de5xYk
- XnOfOm5v6v71zwmT2U/FOsSqgmc5d5TT8B/gyCLvZB/7RosUZlC/o9yLfiXINrrPn+8ek1BQW
- dcjotK7Xr/w9Z4q7V3MDzxOBeNcUcbzF/MIh0CddqIFdJGXtojt28tRPAEiyG7a1cdcs4gVk0
- 6qFCw2o73cTUY38trQ0JT4TBvoQERIO42HSyD3puNylYgVWBYxRQZcN3GPyawDvUATGoFe+zj
- Y0h7kxtgGhIkVAK+AjSFh+ezyKDt7ACnUo79QBXFgCcfOE4EmJAaNYOSEItWtSEM15Z+kE0K9
- IIkwd25LbvDaWAE7zQBGWMU6A90pJIl/zwelwi5gZ7UGU+8E5RdWcqWWefN6TUCODPe1DgdUT
- x3Dpt+rgPf8CMuGwDpbthNkgjkHNybQaJQEqcWz8AKsKBUk4OTXMa7Y9lD43ALEzmPssZprzj
- 0kUrk6gl0nrdY7kXpy5XPgbEAMN4wH
+UI-OutboundReport: notjunk:1;M01:P0:viIFtTChA58=;Om7hwquKT4jOA2jMel/j/QIZpNW
+ 2caFJPY4S1u8HfpwNhjCTd+buwUW8B4//93AyGieBue/lMRH0k5DDvA+8vUs8LSiJOQ9WKkzM
+ KPGmMIRjj4rql5odgFzPjuDF1xlj4uwffBKsgJZRJwAgaDq+gmd/xAYdQ2DE74CTkcKmFooM4
+ pSEjbmxuy7txN0PonnM3rMTEiZNm70iLhZtxrAvZzsQL5JIi3UmZvfPdM/M/PhUNCNFPX6Od7
+ kcwrB6FcIktKTLPuniUHKv4fzPEyjxzv+UnArQrrjQ1frPbUJQsmXWwhUX74CMebcCj9xtJ7l
+ +COhnn2ks5aCSYztB5To3dWKOlMrvYAKl0+lgEi76r+D8TvC5EBM/w6ixjcSY+tQiWC1OvOb5
+ C+sp0F0ncn8zd1aR0/kSfFPSFm6J7KZNrbAOQyjiWim35OtIZ7G4RX5R9EqSe3pN1jbxBGebN
+ +EbZryrFNZq3bwDwoFx9SyCGxWji5bJDy1jeHd4s2g5OqROIbmJlodPBHHG6eOXhpfT+jINyZ
+ 73aqax9p5N/1T7b3Pfo8el9siKSerhyYu01/mgvpnwlwVejbToz3ZIXZiZuyXiZhYhELP5uxv
+ kBgvvQEVzeKbiX/eorRXcETeh4EoWnzS3mm4XZYcOD11fx0Qn7DX46og/YAjsjSqAa/gsPQLK
+ 52xJPBX8NqdtalUFVP4zMtIPj6LhHAA+3paI3wq+ZmsLnAC2SvwCgiRql2msm7Z6tO7jszkxN
+ LiOq+FREGXhMzy/W1Bzfe7fYzdDuYYLq0USiHDYQBkvkSt/MTQ1mpVGxXGnAQxvwNkn1HDceS
+ M3X+F/DpDNrWmcdajtN3lDStxFmFhkd96JUxRbzfhcoGpp10loaC2pEwLqI8DNCe+YLT93v14
+ gomzQGUJx7y752lM/1CC8RGFTeWWNdqSQmdcLCddcuidICrXQwqsQK7f3yxXRQq16D+6CR8ar
+ ikq5Ml58nNImXhwVQG8MaEjK2RX6h1CPiMDj8cSmUJ/5CiAk0Bup4pJQO7zXV0+jbsYnvHo61
+ lRkVnD9ppVEhdfmmOwi8CHg13E/+oOJagEAjF6NIL2hLO37RH+CxRusRfAp+AjpogDvGyxTtR
+ 9I5NNpbImpXabOJDP7JafBScscFDZl
 
-Currently the platform filter cannot access any driver-specific state
-which forces drivers installing a i8042 filter to have at least some
-kind of global pointer for their filter.
+Am 21.12.24 um 08:08 schrieb Kurt Borja:
 
-This however might cause issues should such a driver probe multiple
-devices. Fix this by allowing callers of i8042_install_filter() to
-submit a context pointer which is then passed to the i8042 filter.
-
-Also introduce a separate type for the i8042 filter (i8042_filter_t)
-so that the function definitions can stay compact.
-
-Tested on a Dell Inspiron 3505.
-
-Reviewed-by: Ilpo J=C3=A4rvinen <ilpo.jarvinen@linux.intel.com>
-Signed-off-by: Armin Wolf <W_Armin@gmx.de>
-=2D--
-Changes since v1:
-- add kerneldoc for new typedef
-- add Reviewed-by tag
-=2D--
- drivers/input/misc/ideapad_slidebar.c   |  4 ++--
- drivers/input/serio/i8042.c             | 17 ++++++++-------
- drivers/platform/x86/asus-nb-wmi.c      |  3 ++-
- drivers/platform/x86/asus-wmi.c         |  2 +-
- drivers/platform/x86/asus-wmi.h         |  3 +--
- drivers/platform/x86/dell/dell-laptop.c |  6 +++---
- drivers/platform/x86/hp/hp_accel.c      |  4 ++--
- drivers/platform/x86/msi-laptop.c       |  6 +++---
- drivers/platform/x86/panasonic-laptop.c |  4 ++--
- drivers/platform/x86/toshiba_acpi.c     |  4 ++--
- include/linux/i8042.h                   | 28 ++++++++++++++++++-------
- 11 files changed, 48 insertions(+), 33 deletions(-)
-
-diff --git a/drivers/input/misc/ideapad_slidebar.c b/drivers/input/misc/id=
-eapad_slidebar.c
-index f6e5fc807b4d..ab2e0a401904 100644
-=2D-- a/drivers/input/misc/ideapad_slidebar.c
-+++ b/drivers/input/misc/ideapad_slidebar.c
-@@ -121,7 +121,7 @@ static void slidebar_mode_set(u8 mode)
- }
-
- static bool slidebar_i8042_filter(unsigned char data, unsigned char str,
--				  struct serio *port)
-+				  struct serio *port, void *context)
- {
- 	static bool extended =3D false;
-
-@@ -219,7 +219,7 @@ static int __init ideapad_probe(struct platform_device=
-* pdev)
- 	input_set_capability(slidebar_input_dev, EV_ABS, ABS_X);
- 	input_set_abs_params(slidebar_input_dev, ABS_X, 0, 0xff, 0, 0);
-
--	err =3D i8042_install_filter(slidebar_i8042_filter);
-+	err =3D i8042_install_filter(slidebar_i8042_filter, NULL);
- 	if (err) {
- 		dev_err(&pdev->dev,
- 			"Failed to install i8042 filter: %d\n", err);
-diff --git a/drivers/input/serio/i8042.c b/drivers/input/serio/i8042.c
-index 509330a27880..cab5a4c5baf5 100644
-=2D-- a/drivers/input/serio/i8042.c
-+++ b/drivers/input/serio/i8042.c
-@@ -179,8 +179,8 @@ static struct platform_device *i8042_platform_device;
- static struct notifier_block i8042_kbd_bind_notifier_block;
-
- static bool i8042_handle_data(int irq);
--static bool (*i8042_platform_filter)(unsigned char data, unsigned char st=
-r,
--				     struct serio *serio);
-+static i8042_filter_t i8042_platform_filter;
-+static void *i8042_platform_filter_context;
-
- void i8042_lock_chip(void)
- {
-@@ -194,8 +194,7 @@ void i8042_unlock_chip(void)
- }
- EXPORT_SYMBOL(i8042_unlock_chip);
-
--int i8042_install_filter(bool (*filter)(unsigned char data, unsigned char=
- str,
--					struct serio *serio))
-+int i8042_install_filter(i8042_filter_t filter, void *context)
- {
- 	guard(spinlock_irqsave)(&i8042_lock);
-
-@@ -203,12 +202,12 @@ int i8042_install_filter(bool (*filter)(unsigned cha=
-r data, unsigned char str,
- 		return -EBUSY;
-
- 	i8042_platform_filter =3D filter;
-+	i8042_platform_filter_context =3D context;
- 	return 0;
- }
- EXPORT_SYMBOL(i8042_install_filter);
-
--int i8042_remove_filter(bool (*filter)(unsigned char data, unsigned char =
-str,
--				       struct serio *port))
-+int i8042_remove_filter(i8042_filter_t filter)
- {
- 	guard(spinlock_irqsave)(&i8042_lock);
-
-@@ -216,6 +215,7 @@ int i8042_remove_filter(bool (*filter)(unsigned char d=
-ata, unsigned char str,
- 		return -EINVAL;
-
- 	i8042_platform_filter =3D NULL;
-+	i8042_platform_filter_context =3D NULL;
- 	return 0;
- }
- EXPORT_SYMBOL(i8042_remove_filter);
-@@ -480,7 +480,10 @@ static bool i8042_filter(unsigned char data, unsigned=
- char str,
- 		}
- 	}
-
--	if (i8042_platform_filter && i8042_platform_filter(data, str, serio)) {
-+	if (!i8042_platform_filter)
-+		return false;
-+
-+	if (i8042_platform_filter(data, str, serio, i8042_platform_filter_contex=
-t)) {
- 		dbg("Filtered out by platform filter\n");
- 		return true;
- 	}
-diff --git a/drivers/platform/x86/asus-nb-wmi.c b/drivers/platform/x86/asu=
-s-nb-wmi.c
-index ef04d396f61c..a3d4b98045f8 100644
-=2D-- a/drivers/platform/x86/asus-nb-wmi.c
-+++ b/drivers/platform/x86/asus-nb-wmi.c
-@@ -50,7 +50,8 @@ MODULE_PARM_DESC(tablet_mode_sw, "Tablet mode detect: -1=
-:auto 0:disable 1:kbd-do
- static struct quirk_entry *quirks;
- static bool atkbd_reports_vol_keys;
-
--static bool asus_i8042_filter(unsigned char data, unsigned char str, stru=
-ct serio *port)
-+static bool asus_i8042_filter(unsigned char data, unsigned char str, stru=
-ct serio *port,
-+			      void *context)
- {
- 	static bool extended_e0;
- 	static bool extended_e1;
-diff --git a/drivers/platform/x86/asus-wmi.c b/drivers/platform/x86/asus-w=
-mi.c
-index fdeebab96fc0..6c674de60ec0 100644
-=2D-- a/drivers/platform/x86/asus-wmi.c
-+++ b/drivers/platform/x86/asus-wmi.c
-@@ -4824,7 +4824,7 @@ static int asus_wmi_add(struct platform_device *pdev=
+> Platform profile's lifetime is usually tied to a device's lifetime,
+> therefore add a device managed version of platform_profile_register().
+>
+> Signed-off-by: Kurt Borja <kuurtb@gmail.com>
+> ---
+>   drivers/acpi/platform_profile.c  | 27 +++++++++++++++++++++++++++
+>   include/linux/platform_profile.h |  2 +-
+>   2 files changed, 28 insertions(+), 1 deletion(-)
+>
+> diff --git a/drivers/acpi/platform_profile.c b/drivers/acpi/platform_pro=
+file.c
+> index 75a1415190ac..d0c88decef8b 100644
+> --- a/drivers/acpi/platform_profile.c
+> +++ b/drivers/acpi/platform_profile.c
+> @@ -519,6 +519,33 @@ int platform_profile_remove(struct platform_profile=
+_handler *pprof)
+>   }
+>   EXPORT_SYMBOL_GPL(platform_profile_remove);
+>
+> +static void devm_platform_profile_release(struct device *dev, void *res=
 )
- 	}
+> +{
+> +	platform_profile_remove(*(struct platform_profile_handler **) res);
 
- 	if (asus->driver->i8042_filter) {
--		err =3D i8042_install_filter(asus->driver->i8042_filter);
-+		err =3D i8042_install_filter(asus->driver->i8042_filter, NULL);
- 		if (err)
- 			pr_warn("Unable to install key filter - %d\n", err);
- 	}
-diff --git a/drivers/platform/x86/asus-wmi.h b/drivers/platform/x86/asus-w=
-mi.h
-index d02f15fd3482..018dfde4025e 100644
-=2D-- a/drivers/platform/x86/asus-wmi.h
-+++ b/drivers/platform/x86/asus-wmi.h
-@@ -73,8 +73,7 @@ struct asus_wmi_driver {
- 	void (*key_filter) (struct asus_wmi_driver *driver, int *code,
- 			    unsigned int *value, bool *autorelease);
- 	/* Optional standard i8042 filter */
--	bool (*i8042_filter)(unsigned char data, unsigned char str,
--			     struct serio *serio);
-+	i8042_filter_t		i8042_filter;
+Please introduce a local variable instead of using a convoluted cast like =
+this.
 
- 	int (*probe) (struct platform_device *device);
- 	void (*detect_quirks) (struct asus_wmi_driver *driver);
-diff --git a/drivers/platform/x86/dell/dell-laptop.c b/drivers/platform/x8=
-6/dell/dell-laptop.c
-index 5671bd0deee7..58b860b88fff 100644
-=2D-- a/drivers/platform/x86/dell/dell-laptop.c
-+++ b/drivers/platform/x86/dell/dell-laptop.c
-@@ -725,8 +725,8 @@ static void dell_update_rfkill(struct work_struct *ign=
-ored)
- }
- static DECLARE_DELAYED_WORK(dell_rfkill_work, dell_update_rfkill);
+> +}
+> +
+> +int devm_platform_profile_register(struct platform_profile_handler *ppr=
+of)
+> +{
+> +	struct platform_profile_handler **dr;
+> +	int ret;
+> +
+> +	dr =3D devres_alloc(devm_platform_profile_release, sizeof(*dr), GFP_KE=
+RNEL);
+> +	if (!dr)
+> +		return -ENOMEM;
 
--static bool dell_laptop_i8042_filter(unsigned char data, unsigned char st=
-r,
--			      struct serio *port)
-+static bool dell_laptop_i8042_filter(unsigned char data, unsigned char st=
-r, struct serio *port,
-+				     void *context)
- {
- 	static bool extended;
+Maybe it would make sense to turn dr into a normal pointer? AFAIK there is=
+ no benefit in
+having another pointer if we can just use the original pointer.
 
-@@ -884,7 +884,7 @@ static int __init dell_setup_rfkill(void)
- 		pr_warn("Unable to register dell rbtn notifier\n");
- 		goto err_filter;
- 	} else {
--		ret =3D i8042_install_filter(dell_laptop_i8042_filter);
-+		ret =3D i8042_install_filter(dell_laptop_i8042_filter, NULL);
- 		if (ret) {
- 			pr_warn("Unable to install key filter\n");
- 			goto err_filter;
-diff --git a/drivers/platform/x86/hp/hp_accel.c b/drivers/platform/x86/hp/=
-hp_accel.c
-index 39a6530f5072..10d5af18d639 100644
-=2D-- a/drivers/platform/x86/hp/hp_accel.c
-+++ b/drivers/platform/x86/hp/hp_accel.c
-@@ -267,7 +267,7 @@ static struct delayed_led_classdev hpled_led =3D {
- };
+Thanks,
+Armin Wolf
 
- static bool hp_accel_i8042_filter(unsigned char data, unsigned char str,
--				  struct serio *port)
-+				  struct serio *port, void *context)
- {
- 	static bool extended;
-
-@@ -326,7 +326,7 @@ static int lis3lv02d_probe(struct platform_device *dev=
-ice)
- 	/* filter to remove HPQ6000 accelerometer data
- 	 * from keyboard bus stream */
- 	if (strstr(dev_name(&device->dev), "HPQ6000"))
--		i8042_install_filter(hp_accel_i8042_filter);
-+		i8042_install_filter(hp_accel_i8042_filter, NULL);
-
- 	INIT_WORK(&hpled_led.work, delayed_set_status_worker);
- 	ret =3D led_classdev_register(NULL, &hpled_led.led_classdev);
-diff --git a/drivers/platform/x86/msi-laptop.c b/drivers/platform/x86/msi-=
-laptop.c
-index e5391a37014d..c4b150fa093f 100644
-=2D-- a/drivers/platform/x86/msi-laptop.c
-+++ b/drivers/platform/x86/msi-laptop.c
-@@ -806,8 +806,8 @@ static void msi_send_touchpad_key(struct work_struct *=
-ignored)
- }
- static DECLARE_DELAYED_WORK(msi_touchpad_dwork, msi_send_touchpad_key);
-
--static bool msi_laptop_i8042_filter(unsigned char data, unsigned char str=
-,
--				struct serio *port)
-+static bool msi_laptop_i8042_filter(unsigned char data, unsigned char str=
-, struct serio *port,
-+				    void *context)
- {
- 	static bool extended;
-
-@@ -996,7 +996,7 @@ static int __init load_scm_model_init(struct platform_=
-device *sdev)
- 	if (result)
- 		goto fail_input;
-
--	result =3D i8042_install_filter(msi_laptop_i8042_filter);
-+	result =3D i8042_install_filter(msi_laptop_i8042_filter, NULL);
- 	if (result) {
- 		pr_err("Unable to install key filter\n");
- 		goto fail_filter;
-diff --git a/drivers/platform/x86/panasonic-laptop.c b/drivers/platform/x8=
-6/panasonic-laptop.c
-index 22ca70eb8227..2987b4db6009 100644
-=2D-- a/drivers/platform/x86/panasonic-laptop.c
-+++ b/drivers/platform/x86/panasonic-laptop.c
-@@ -260,7 +260,7 @@ struct pcc_acpi {
-  * keypress events over the PS/2 kbd interface, filter these out.
-  */
- static bool panasonic_i8042_filter(unsigned char data, unsigned char str,
--				   struct serio *port)
-+				   struct serio *port, void *context)
- {
- 	static bool extended;
-
-@@ -1100,7 +1100,7 @@ static int acpi_pcc_hotkey_add(struct acpi_device *d=
-evice)
- 		pcc->platform =3D NULL;
- 	}
-
--	i8042_install_filter(panasonic_i8042_filter);
-+	i8042_install_filter(panasonic_i8042_filter, NULL);
- 	return 0;
-
- out_platform:
-diff --git a/drivers/platform/x86/toshiba_acpi.c b/drivers/platform/x86/to=
-shiba_acpi.c
-index 78a5aac2dcfd..5ad3a7183d33 100644
-=2D-- a/drivers/platform/x86/toshiba_acpi.c
-+++ b/drivers/platform/x86/toshiba_acpi.c
-@@ -2755,7 +2755,7 @@ static int toshiba_acpi_enable_hotkeys(struct toshib=
-a_acpi_dev *dev)
- }
-
- static bool toshiba_acpi_i8042_filter(unsigned char data, unsigned char s=
-tr,
--				      struct serio *port)
-+				      struct serio *port, void *context)
- {
- 	if (str & I8042_STR_AUXDATA)
- 		return false;
-@@ -2915,7 +2915,7 @@ static int toshiba_acpi_setup_keyboard(struct toshib=
-a_acpi_dev *dev)
- 	if (ec_handle && acpi_has_method(ec_handle, "NTFY")) {
- 		INIT_WORK(&dev->hotkey_work, toshiba_acpi_hotkey_work);
-
--		error =3D i8042_install_filter(toshiba_acpi_i8042_filter);
-+		error =3D i8042_install_filter(toshiba_acpi_i8042_filter, NULL);
- 		if (error) {
- 			pr_err("Error installing key filter\n");
- 			goto err_free_dev;
-diff --git a/include/linux/i8042.h b/include/linux/i8042.h
-index 95b07f8b77fe..00037c13abc8 100644
-=2D-- a/include/linux/i8042.h
-+++ b/include/linux/i8042.h
-@@ -54,15 +54,29 @@
-
- struct serio;
-
-+/**
-+ * typedef i8042_filter_t - i8042 filter callback
-+ * @data: Data received by the i8042 controller
-+ * @str: Status register of the i8042 controller
-+ * @serio: Serio of the i8042 controller
-+ * @context: Context pointer associated with this callback
-+ *
-+ * This represents a i8042 filter callback which can be used with i8042_i=
-nstall_filter()
-+ * and i8042_remove_filter() to filter the i8042 input for platform-speci=
-fic key codes.
-+ *
-+ * Context: Interrupt context.
-+ * Returns: true if the data should be filtered out, false if otherwise.
-+ */
-+typedef bool (*i8042_filter_t)(unsigned char data, unsigned char str, str=
-uct serio *serio,
-+			       void *context);
-+
- #if defined(CONFIG_SERIO_I8042) || defined(CONFIG_SERIO_I8042_MODULE)
-
- void i8042_lock_chip(void);
- void i8042_unlock_chip(void);
- int i8042_command(unsigned char *param, int command);
--int i8042_install_filter(bool (*filter)(unsigned char data, unsigned char=
- str,
--					struct serio *serio));
--int i8042_remove_filter(bool (*filter)(unsigned char data, unsigned char =
-str,
--				       struct serio *serio));
-+int i8042_install_filter(i8042_filter_t filter, void *context);
-+int i8042_remove_filter(i8042_filter_t filter);
-
- #else
-
-@@ -79,14 +93,12 @@ static inline int i8042_command(unsigned char *param, =
-int command)
- 	return -ENODEV;
- }
-
--static inline int i8042_install_filter(bool (*filter)(unsigned char data,=
- unsigned char str,
--					struct serio *serio))
-+static inline int i8042_install_filter(i8042_filter_t filter, void *conte=
-xt)
- {
- 	return -ENODEV;
- }
-
--static inline int i8042_remove_filter(bool (*filter)(unsigned char data, =
-unsigned char str,
--				       struct serio *serio))
-+static inline int i8042_remove_filter(i8042_filter_t filter)
- {
- 	return -ENODEV;
- }
-=2D-
-2.39.5
-
+> +
+> +	ret =3D platform_profile_register(pprof);
+> +	if (ret) {
+> +		devres_free(dr);
+> +		return ret;
+> +	}
+> +
+> +	*dr =3D pprof;
+> +	devres_add(pprof->dev, dr);
+> +
+> +	return 0;
+> +}
+> +EXPORT_SYMBOL_GPL(devm_platform_profile_register);
+> +
+>   static int __init platform_profile_init(void)
+>   {
+>   	int err;
+> diff --git a/include/linux/platform_profile.h b/include/linux/platform_p=
+rofile.h
+> index 0682bb4c57e5..d8114435865b 100644
+> --- a/include/linux/platform_profile.h
+> +++ b/include/linux/platform_profile.h
+> @@ -41,7 +41,7 @@ struct platform_profile_handler {
+>
+>   int platform_profile_register(struct platform_profile_handler *pprof);
+>   int platform_profile_remove(struct platform_profile_handler *pprof);
+> +int devm_platform_profile_register(struct platform_profile_handler *ppr=
+of);
+>   int platform_profile_cycle(void);
+>   void platform_profile_notify(struct platform_profile_handler *pprof);
+> -
+>   #endif  /*_PLATFORM_PROFILE_H_*/
