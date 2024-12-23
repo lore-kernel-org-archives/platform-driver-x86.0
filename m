@@ -1,142 +1,167 @@
-Received: from relay-us1.mymailcheap.com (relay-us1.mymailcheap.com [51.81.35.219])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B799417BB35;
-	Mon, 23 Dec 2024 10:16:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=51.81.35.219
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C361192B81
+	for <platform-driver-x86@vger.kernel.org>; Mon, 23 Dec 2024 11:05:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1734949020; cv=none; b=EwjcF/qRsXmxOea3ahfM4KAmIcBOJFN7xi8XLJG0tQzyCPy+0k6gGjsNHiVFuqhVDByqTyp08ybVuZIVgCwG8+iXeJp2DpGyn1afiwkU9B1pmxlJqceKBAUzVvzv3rWJlG2co/Gx2Lg9b0tu3G5257mpS3U8zLiYmxgW3b04hS4=
+	t=1734951904; cv=none; b=vEod8MGTHAk5w6NQSzukNkSi+xSlGYB1k/I2kIEq95hbquhDepmudPiBWQ5pEcegC0VQJmAP+6ryCSyYHkzccppG3Ce/yQm4zcP+zt/HD7oqSGhxI+fELmOUsS2qTfiMf+Kv8O3GvgsLxdYlFaSmN08Ix0niy5HsAcgfetAvtyI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1734949020; c=relaxed/simple;
-	bh=4KEGscMEIqsqn+ZzJtdhpeL64pZqYTmH+NdpdoYZnmQ=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=i75PCLK6qQvB30Je7ooEVDlA4omKTi4+mF5zfQ2voVIoHFh0rnJIlIS8h9+AGUgn3z77e9Xo/unxDnPiz/SU27oz4GrmP/5Pm7WTIwU4eU4Q5iB00kviUZ2u1ls9m8tTB0ahJQNagKiVEritsClNUrFoRd0QrzNIywcv7rjwGp0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=aosc.io; spf=pass smtp.mailfrom=aosc.io; dkim=pass (1024-bit key) header.d=aosc.io header.i=@aosc.io header.b=x6dbOqa4; arc=none smtp.client-ip=51.81.35.219
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=aosc.io
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=aosc.io
+	s=arc-20240116; t=1734951904; c=relaxed/simple;
+	bh=kh5knpCO1VSh7yJwCM79OpjuUFc56hAw97cb5n7S6cA=;
+	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=adXXmRbQZ+MlmH0dZ+6xgfjyk5vYFgNTLjDRlMYTyy8DN/4QMrqfg15uPlvcdwbQYBPaZfOc+adgnV03lNCmd8HfgydLggrYYCHqeXA9UYmq4skWfCoZ/DlI+40Uqr6XxGxyrYYgnmbI/yy73rEnlwHfHCqNtc5I1OxvbgiwhbQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bvrUnMSx; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=aosc.io header.i=@aosc.io header.b="x6dbOqa4"
-Received: from relay5.mymailcheap.com (relay5.mymailcheap.com [159.100.241.64])
-	by relay-us1.mymailcheap.com (Postfix) with ESMTPS id 8EF19205A4;
-	Mon, 23 Dec 2024 10:08:22 +0000 (UTC)
-Received: from relay2.mymailcheap.com (relay2.mymailcheap.com [217.182.66.162])
-	by relay5.mymailcheap.com (Postfix) with ESMTPS id AD66020761;
-	Mon, 23 Dec 2024 10:08:13 +0000 (UTC)
-Received: from nf2.mymailcheap.com (nf2.mymailcheap.com [54.39.180.165])
-	by relay2.mymailcheap.com (Postfix) with ESMTPS id 4CEC13E8A9;
-	Mon, 23 Dec 2024 11:08:06 +0100 (CET)
-Received: from mail20.mymailcheap.com (mail20.mymailcheap.com [51.83.111.147])
-	by nf2.mymailcheap.com (Postfix) with ESMTPSA id 3458D400EA;
-	Mon, 23 Dec 2024 10:08:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=aosc.io; s=default;
-	t=1734948484; bh=4KEGscMEIqsqn+ZzJtdhpeL64pZqYTmH+NdpdoYZnmQ=;
-	h=From:To:Cc:Subject:Date:From;
-	b=x6dbOqa4iph60h6mIHpDKCFxB7+4vfHrpb2VmHiPV4YOOdJdTiWHry3f3Hi5uwCHT
-	 XqiFZgW+wf1PdyVNAzKyUEJQyJQ6q5e9h+UXj0cZXYx1LTRDa8nY0X7OsCLMjnXtpR
-	 jk4GC5rcpcf7/Okd5W4eOkwRJ53QcbOqAZXlCX9w=
-Received: from JellyNote.localdomain (unknown [203.175.14.44])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mail20.mymailcheap.com (Postfix) with ESMTPSA id 195C0411E7;
-	Mon, 23 Dec 2024 10:07:59 +0000 (UTC)
-From: Mingcong Bai <jeffbai@aosc.io>
-To: Alexis Belmonte <alexbelm48@gmail.com>,
-	Hans de Goede <hdegoede@redhat.com>,
-	Armin Wolf <W_Armin@gmx.de>
-Cc: Kexy Biscuit <kexybiscuit@aosc.io>,
-	xiaoxi404 <1577912515@qq.com>,
-	Mingcong Bai <jeffbai@aosc.io>,
-	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	Ai Chao <aichao@kylinos.cn>,
-	=?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>,
-	platform-driver-x86@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] platform/x86: hp-wmi: mark 8A15 board for timed OMEN thermal profile
-Date: Mon, 23 Dec 2024 18:07:46 +0800
-Message-ID: <20241223100748.2157703-1-jeffbai@aosc.io>
-X-Mailer: git-send-email 2.47.1
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bvrUnMSx"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 8A401C4CED6
+	for <platform-driver-x86@vger.kernel.org>; Mon, 23 Dec 2024 11:05:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1734951903;
+	bh=kh5knpCO1VSh7yJwCM79OpjuUFc56hAw97cb5n7S6cA=;
+	h=From:To:Subject:Date:In-Reply-To:References:From;
+	b=bvrUnMSx2NSpDJceLs9PdCLi/tAb6E5veBzFnQ02qLHeI9UxlF2rvoLWnmjXq7cQ/
+	 qSMenOd0jgKmsIBnEQUtdZApsAIXLEDSEvrLEuRhMibHybTfuAgwPf920UijQWr4lf
+	 k7thBnz/5LqqIxn1CFRBpOU+fo09Sf8+h334gJky+IZDkfBwRXfMQaAxTOVgcPSmrj
+	 3ELHf3g7kkEuj5JLloy6Xkx6VCgc52TagSC73KuZUMz9egllBl0yBkzg4U1nXRQM9t
+	 WRce14+/qLS3kxY3Q1gifU2kbh5QohcPN7ACp9wcAH3rw5iIIzsSDZVpYGbj6LbB2j
+	 j+8UCIzFgUqkw==
+Received: by aws-us-west-2-korg-bugzilla-1.web.codeaurora.org (Postfix, from userid 48)
+	id 78D71C41613; Mon, 23 Dec 2024 11:05:03 +0000 (UTC)
+From: bugzilla-daemon@kernel.org
+To: platform-driver-x86@vger.kernel.org
+Subject: [Bug 219495] [TPM2] tpm_tis driver crashs during the boot time.
+Date: Mon, 23 Dec 2024 11:05:03 +0000
+X-Bugzilla-Reason: None
+X-Bugzilla-Type: changed
+X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
+X-Bugzilla-Product: Drivers
+X-Bugzilla-Component: Platform_x86
+X-Bugzilla-Version: 2.5
+X-Bugzilla-Keywords: 
+X-Bugzilla-Severity: normal
+X-Bugzilla-Who: jarkko@kernel.org
+X-Bugzilla-Status: NEW
+X-Bugzilla-Resolution: 
+X-Bugzilla-Priority: P3
+X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
+X-Bugzilla-Flags: 
+X-Bugzilla-Changed-Fields: 
+Message-ID: <bug-219495-215701-4ieTTksyyg@https.bugzilla.kernel.org/>
+In-Reply-To: <bug-219495-215701@https.bugzilla.kernel.org/>
+References: <bug-219495-215701@https.bugzilla.kernel.org/>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Bugzilla-URL: https://bugzilla.kernel.org/
+Auto-Submitted: auto-generated
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spamd-Result: default: False [1.40 / 10.00];
-	MID_CONTAINS_FROM(1.00)[];
-	R_MISSING_CHARSET(0.50)[];
-	MIME_GOOD(-0.10)[text/plain];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	RCVD_COUNT_ONE(0.00)[1];
-	MIME_TRACE(0.00)[0:+];
-	ARC_NA(0.00)[];
-	ASN(0.00)[asn:16276, ipnet:51.83.0.0/16, country:FR];
-	FREEMAIL_TO(0.00)[gmail.com,redhat.com,gmx.de];
-	RCPT_COUNT_SEVEN(0.00)[11];
-	SPFBL_URIBL_EMAIL_FAIL(0.00)[1577912515.qq.com:server fail,jeffbai.aosc.io:server fail];
-	FREEMAIL_CC(0.00)[aosc.io,qq.com,linux.intel.com,kylinos.cn,baylibre.com,vger.kernel.org];
-	FROM_HAS_DN(0.00)[];
-	TO_DN_SOME(0.00)[];
-	FROM_EQ_ENVFROM(0.00)[];
-	TO_MATCH_ENVRCPT_SOME(0.00)[];
-	FREEMAIL_ENVRCPT(0.00)[gmail.com,gmx.de,qq.com];
-	RCVD_TLS_ALL(0.00)[]
-X-Rspamd-Server: nf2.mymailcheap.com
-X-Rspamd-Action: no action
-X-Rspamd-Queue-Id: 3458D400EA
 
-From: xiaoxi404 <1577912515@qq.com>
+https://bugzilla.kernel.org/show_bug.cgi?id=3D219495
 
-The HP OMEN 8 (2022), corresponding to a board ID of 8A15, supports OMEN
-thermal profile and requires the timed profile quirk.
+--- Comment #60 from jarkko@kernel.org ---
+(In reply to andy.liang from comment #54)
+> (In reply to jarkko from comment #51)
+> > (In reply to jarkko from comment #31)
+> > > OK, I somehow managed to miss it as it had different naming convention
+> > sorry.
+> > >=20
+> > > Anywhow, I see this:
+> > >=20
+> > > [   10.693310][    T1] tpm_tis STM0925:00: 2.0 TPM (device-id 0x3, re=
+v-id
+> > 0)
+> > > [   10.848132][    T1] ------------[ cut here ]------------
+> > > [   10.853559][    T1] WARNING: CPU: 59 PID: 1 at mm/page_alloc.c:4727
+> > > __alloc_pages_noprof+0x2ca/0x330
+> > > [   10.862827][    T1] Modules linked in:
+> > > [   10.866671][    T1] CPU: 59 UID: 0 PID: 1 Comm: swapper/0 Not tain=
+ted
+> > > 6.12.0-lp155.2.g52785e2-default #1 openSUSE Tumbleweed (unreleased)
+> > > 588cd98293a7c9eba9013378d807364c088c9375
+> > > [   10.882741][    T1] Hardware name: HPE ProLiant DL320 Gen12/ProLia=
+nt
+> > > DL320 Gen12, BIOS 1.20 10/28/2024
+> > > [   10.892170][    T1] RIP: 0010:__alloc_pages_noprof+0x2ca/0x330
+> > > [   10.898103][    T1] Code: 24 08 e9 4a fe ff ff e8 34 36 fa ff e9 8=
+8 fe
+> > ff
+> > > ff 83 fe 0a 0f 86 b3 fd ff ff 80 3d 01 e7 ce 01 00 75 09 c6 05 f8 e6 =
+ce
+> 01
+> > > 01 <0f> 0b 45 31 ff e9 e5 fe ff ff f7 c2 00 00 08 00 75 42 89 d9 80 e1
+> > > [   10.917750][    T1] RSP: 0000:ffffb7cf40077980 EFLAGS: 00010246
+> > > [   10.923777][    T1] RAX: 0000000000000000 RBX: 0000000000040cc0 RC=
+X:
+> > > 0000000000000000
+> > > [   10.931727][    T1] RDX: 0000000000000000 RSI: 000000000000000c RD=
+I:
+> > > 0000000000040cc0
+> > > [   10.939678][    T1] RBP: 000000000000000c R08: ffffffffbb6fdc67 R0=
+9:
+> > > 0000000000000000
+> > > [   10.947626][    T1] R10: ffffb7cf40077ac8 R11: 0000000000000000 R1=
+2:
+> > > 0000000000000000
+> > > [   10.955560][    T1] R13: 00000000ffffffff R14: 0000000000000cc0 R1=
+5:
+> > > ffff9a5c051cc000
+> > > [   10.963507][    T1] FS:  0000000000000000(0000)
+> > GS:ffff9a6348780000(0000)
+> > > knlGS:0000000000000000
+> > > [   10.972405][    T1] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050=
+033
+> > > [   10.978944][    T1] CR2: 0000000000000000 CR3: 0000000184638001 CR=
+4:
+> > > 0000000000f70ef0
+> > > [   10.986891][    T1] DR0: 0000000000000000 DR1: 0000000000000000 DR=
+2:
+> > > 0000000000000000
+> > > [   10.994837][    T1] DR3: 0000000000000000 DR6: 00000000ffff07f0 DR=
+7:
+> > > 0000000000000400
+> > > [   11.002770][    T1] PKRU: 55555554
+> > > [   11.006256][    T1] Call Trace:
+> > > [   11.009479][    T1]  <TASK>
+> > > [   11.012352][    T1]  ? __alloc_pages_noprof+0x2ca/0x330
+> > >=20
+> > >=20
+> > > RSI=3D0x0c, which maps to the parameter 'order' in __alloc_pages_nopr=
+of(),
+> > > which allocates=20
+> > > 4096*2**0xc =3D 16777216 =3D 16 MiB of memory. This means that memory
+> consumed
+> > > by the log is in the range 8 MiB < N <=3D 16 MiB.
+> >=20
+> > I don't understand why ESI=3D0x0c while TPM2 table has size 0x800000, w=
+hich
+> > maps to the order 0x0b as 4096 * 2**0x0b =3D 0x800000.
+> >=20
+> > It looks like as if TPM2 table and this transcript are either from
+> different
+> > machines or different BIOS versions. I'm not sure how to otherwise expl=
+ain
+> > that difference.
+> >=20
+> > For 0x0c, the last line in that TPM2 dump screenshot should start: 0000=
+0001
+> > not 00008000.
+>=20
+> Sorry about that. The machine I had in November is different from the one=
+ in
+> December. I uploaded a new dmesg with Kernel 6.12.6. Thank you.=20
+> https://bugzilla.kernel.org/attachment.cgi?id=3D307386
 
-Upon adding this ID to both the omen_thermal_profile_boards and
-omen_timed_thermal_profile_boards, significant bump in performance can be
-observed. For instance, SilverBench (https://silver.urih.com/) results
-improved from ~56,000 to ~69,000, as a result of higher power draws (and
-thus core frequencies) whilst under load:
+OK thanks for responding! I just needed confirmation that I'm not interpret=
+ing
+the log incorrectly :-)
 
-Package Power:
+--=20
+You may reply to this email to add a comment.
 
-- Before the patch: ~65W (dropping to about 55W under sustained load).
-- After the patch: ~115W (dropping to about 105W under sustained load).
-
-Core Power:
-
-- Before: ~60W (ditto above).
-- After: ~108W (ditto above).
-
-Add 8A15 to omen_thermal_profile_boards and
-omen_timed_thermal_profile_boards to improve performance.
-
-Signed-off-by: xiaoxi404 <1577912515@qq.com>
-Signed-off-by: Mingcong Bai <jeffbai@aosc.io>
----
- drivers/platform/x86/hp/hp-wmi.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/platform/x86/hp/hp-wmi.c b/drivers/platform/x86/hp/hp-wmi.c
-index 81ccc96ffe40..20c55bab3b8c 100644
---- a/drivers/platform/x86/hp/hp-wmi.c
-+++ b/drivers/platform/x86/hp/hp-wmi.c
-@@ -64,7 +64,7 @@ static const char * const omen_thermal_profile_boards[] = {
- 	"874A", "8603", "8604", "8748", "886B", "886C", "878A", "878B", "878C",
- 	"88C8", "88CB", "8786", "8787", "8788", "88D1", "88D2", "88F4", "88FD",
- 	"88F5", "88F6", "88F7", "88FE", "88FF", "8900", "8901", "8902", "8912",
--	"8917", "8918", "8949", "894A", "89EB", "8BAD", "8A42"
-+	"8917", "8918", "8949", "894A", "89EB", "8BAD", "8A42", "8A15"
- };
- 
- /* DMI Board names of Omen laptops that are specifically set to be thermal
-@@ -80,7 +80,7 @@ static const char * const omen_thermal_profile_force_v0_boards[] = {
-  * "balanced" when reaching zero.
-  */
- static const char * const omen_timed_thermal_profile_boards[] = {
--	"8BAD", "8A42"
-+	"8BAD", "8A42", "8A15"
- };
- 
- /* DMI Board names of Victus laptops */
--- 
-2.47.1
-
+You are receiving this mail because:
+You are watching the assignee of the bug.=
