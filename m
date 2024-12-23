@@ -1,107 +1,82 @@
-Received: from mail-ed1-f41.google.com (mail-ed1-f41.google.com [209.85.208.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 85F6733987
-	for <platform-driver-x86@vger.kernel.org>; Mon, 23 Dec 2024 17:11:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D7DE18A924
+	for <platform-driver-x86@vger.kernel.org>; Mon, 23 Dec 2024 18:32:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1734973892; cv=none; b=DAgefv0R+EKIeyGKon2cpvLruOy7r0UNHchDhvsEKgTGjoU3nj1kKUVpgQQoYCEVfXQ4FXoaShoSTpjV6o/X05pSptYmahS/F4GNV3LdQkDqXUzQ8Hf/jk+8LJFZhzIkO/5yRCZSYx4yUZ8WGy00LVzHINaGhWNL/y3k/Z4cjlE=
+	t=1734978743; cv=none; b=GcKw993lM/djBy3f1hzPi+h61X+mUpRzd+IVCqLEyxdDID4hGClPk0qf2/QgztigO1SFsyCT0Lg7BhXLZE3xjZ68lI9oQC17tZdHAZBfqwyx5piqc1ZL4wXt+hrCDrQSiKvt9OXRRu0Lvbv3onyA1k+uEskUBh7ntXmlj7OdmnU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1734973892; c=relaxed/simple;
-	bh=yrf8leQeEihXwV3nFjA1M7/Yf0N2uOxU4xOp/IJdFa0=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=gx2oR/VPVhjDLIB4qkuIGSkCe1zp1XzFGaqli8Mu/2DvxYJQHy8FzoiQfqPbk0lbDdFFWmRWfBD9ZlpQB4P6dKM8HQN+AmlMKYE/XqkPTUlHMVxZNAwzMHG1bBE5lM9YYJtt9YyvEEHzAUh8VBzu8wPqb0yNw5rcmGpcHeRfnyA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=CsWE5D1V; arc=none smtp.client-ip=209.85.208.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1734978743; c=relaxed/simple;
+	bh=Dm5yRIwA2ifikNSUKN9lnxu51+EJWtBP0FqTXJx+l2s=;
+	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=IjPw5bRCBQE7vew9mMyvAvKTz5J9Nf+ORIYoVyfKIs4OLC45IKBD9wIg4JK0K8l8awqvCBoIDIEKzOlUdVWLofRPBouAuadoNmMypjau1cj89f6E2h4mNRAuOOr3hQlWt3SiMbmUXVSu0oqH/SPQDH9Nm73NHQSCWZVMe0YbOcY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=vBK9L6v/; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CsWE5D1V"
-Received: by mail-ed1-f41.google.com with SMTP id 4fb4d7f45d1cf-5d3bbb0f09dso7244783a12.2
-        for <platform-driver-x86@vger.kernel.org>; Mon, 23 Dec 2024 09:11:30 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1734973889; x=1735578689; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=jxnkN++5zriu5UwmZ2aZkMCNM5tPxkxZV2F4iz3WWnc=;
-        b=CsWE5D1VyNLL/6kHG4cJG0HEx9T3zryXnEQg63ir3mE6AO4Us9sZAr69Gfw0biRJGt
-         fOvmW5V0NonIIkAp5gHuaqdpVZcXjIemX2MR6pcKh3vGsTF7+9rNlZj8UfdhwufzIfMI
-         Vlc4gsNP8FaVWrtbDG7ygTyDqziCpmQqjfXWg4E61tpsci5u8n03mbg7N2HYcD8B7zFj
-         KBsx1bsojfmtruaTuJLZYFkx819l8wAgrw/afMBk2DcIWRXo7II5fwg0ld4tW9maqspJ
-         jDDLsi8nJqFAaFxTrhxz61vSjV91YCWRVCAjxtmA2tF5/+XhroZcuJnQ5edk0bIEyCoB
-         WyKQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1734973889; x=1735578689;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=jxnkN++5zriu5UwmZ2aZkMCNM5tPxkxZV2F4iz3WWnc=;
-        b=fGz5/OXeWFMhQ5WpcZm8BcG+QykErkmBenstLykWI5LXsu5lvh2tlrOS1NceJwNsK3
-         61UOUdmy90915iATd9t/yn0/9M3b44R2btmuHtvVFXapvPRi/uWrRX9geElgu92Ciuud
-         qSj0Vk17qwE0WXK+i8PdN6XS0axQ4XjbPqARHxIUYM5vbsDOy99BnCK3Jss7DvUc0J1d
-         dtlNWyCDZ8dfdrZRnroO8XJn0eI1jbILVBuJ/bvLZbslI5DrXlSKQzEP1nvgAxZ56l3j
-         QG7LwscPMUkMLGH+x6pjCY1LnCW0KztzQe2lftR4uIY6GqeuyIGl6ZTv5331OJPKih7R
-         LNVQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVqWSVuVDwaKhfwG78tJIabMktZGxZFKjOZmOipyBKI/dpTWsno3H0i7PYDl3Bc8czrTwAgrHviuce0I8B3lRT/oeCR@vger.kernel.org
-X-Gm-Message-State: AOJu0YyBxr2rc86S1v0llPaEybWnYlJtrKBX5vJEYKf/oENZfmmKoQx3
-	3TPkbrHPUVQbP04FMAN8o1UudUvReJ33zwDT4CiGc0/+pbTy/gNGgk5QegmAEeszXYD+LQ3cRT8
-	dHOjizg8QfLIzcDtgvpcxhB4Wgfw=
-X-Gm-Gg: ASbGnctxNhrOy5ou1VahEQjeRUADo3ShWnUqGxYkQGfwWf1wALX/LjBH4216Ixr/QFh
-	31bNPS+qEHyzI5icQmV++Gp7kz8EbOIfvq+KcFw==
-X-Google-Smtp-Source: AGHT+IHSlN2ZseCUEEd2llRyAP9bvSWCSfOXxsKim9+5JSgcfm6qF+8Nf8uyFbqx5LwgkFrU499XGnzCcjbtvJC+TDE=
-X-Received: by 2002:a17:907:97c5:b0:aac:431:4ee7 with SMTP id
- a640c23a62f3a-aac2883fe8fmr1339469366b.5.1734973888399; Mon, 23 Dec 2024
- 09:11:28 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="vBK9L6v/"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id DF234C4CED3
+	for <platform-driver-x86@vger.kernel.org>; Mon, 23 Dec 2024 18:32:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1734978742;
+	bh=Dm5yRIwA2ifikNSUKN9lnxu51+EJWtBP0FqTXJx+l2s=;
+	h=From:To:Subject:Date:In-Reply-To:References:From;
+	b=vBK9L6v/aYmO/CfWuvQ2mo1NoGzoRCqAZIKZ2k2781/fiYi/buBt7zTamLMuNeYMU
+	 o+VzbHbFZ8XzNty6e8oJHWswTOQl1jxjAK+ShOuvczEzXiyC5yv8KYF3S9HMMCHGff
+	 tORIddTaeTu8DhU7KtEIc8pkOdDz02UUz92UewvltkG/GDw/9frWvxeFhJ2k6j0Q9K
+	 5ynOp0fR837/6wwxYpSgI53wBZeeLLm3nsn1y8AQfULs1W+5sZff2bTXjPxG9jR8wb
+	 mxW7VQVQ/QnfomN4WL6k9sGs2sFM70rKFJp+LqUqyJtpiWok3ArR5r7SATXT7+EaiX
+	 pKGq+CGN1g34g==
+Received: by aws-us-west-2-korg-bugzilla-1.web.codeaurora.org (Postfix, from userid 48)
+	id CFFBFC4160E; Mon, 23 Dec 2024 18:32:22 +0000 (UTC)
+From: bugzilla-daemon@kernel.org
+To: platform-driver-x86@vger.kernel.org
+Subject: [Bug 219495] [TPM2] tpm_tis driver crashs during the boot time.
+Date: Mon, 23 Dec 2024 18:32:22 +0000
+X-Bugzilla-Reason: None
+X-Bugzilla-Type: changed
+X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
+X-Bugzilla-Product: Drivers
+X-Bugzilla-Component: Platform_x86
+X-Bugzilla-Version: 2.5
+X-Bugzilla-Keywords: 
+X-Bugzilla-Severity: normal
+X-Bugzilla-Who: jarkko@kernel.org
+X-Bugzilla-Status: NEW
+X-Bugzilla-Resolution: 
+X-Bugzilla-Priority: P3
+X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
+X-Bugzilla-Flags: 
+X-Bugzilla-Changed-Fields: 
+Message-ID: <bug-219495-215701-llHJu6Kvos@https.bugzilla.kernel.org/>
+In-Reply-To: <bug-219495-215701@https.bugzilla.kernel.org/>
+References: <bug-219495-215701@https.bugzilla.kernel.org/>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Bugzilla-URL: https://bugzilla.kernel.org/
+Auto-Submitted: auto-generated
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20241221111103.26124-1-hdegoede@redhat.com>
-In-Reply-To: <20241221111103.26124-1-hdegoede@redhat.com>
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Date: Mon, 23 Dec 2024 19:10:52 +0200
-Message-ID: <CAHp75Vc1tTo1TO7H4WHt=JWV-FYJHqL0xV95kmyh0VEV64cbBQ@mail.gmail.com>
-Subject: Re: [PATCH v10] platform/x86: dell-smo8800: Add support for probing
- for the accelerometer i2c address
-To: Hans de Goede <hdegoede@redhat.com>
-Cc: =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, 
-	Andy Shevchenko <andy@kernel.org>, Dell.Client.Kernel@dell.com, 
-	=?UTF-8?Q?Pali_Roh=C3=A1r?= <pali@kernel.org>, 
-	Paul Menzel <pmenzel@molgen.mpg.de>, platform-driver-x86@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-On Sat, Dec 21, 2024 at 1:11=E2=80=AFPM Hans de Goede <hdegoede@redhat.com>=
- wrote:
->
-> Unfortunately the SMOxxxx ACPI device does not contain the i2c-address
-> of the accelerometer. So a DMI product-name to address mapping table
-> is used.
->
-> At support to have the kernel probe for the i2c-address for model
+https://bugzilla.kernel.org/show_bug.cgi?id=3D219495
 
-Add (?)
+--- Comment #62 from jarkko@kernel.org ---
+(In reply to jarkko from comment #61)
+> (In reply to andy.liang from comment #59)
+> > The binary dump and kernel log for v2 and v3 patches are uploaded. Thank
+> you.
+>=20
+> Awesome I'll check them later on thanks.
 
-models
+So, v3 log looks great.
 
-> which are not on the list.
->
-> The new probing code sits behind a new probe_i2c_addr module parameter,
-> which is disabled by default because probing might be dangerous.
-
-...
-
-> +               pr_info("Pass dell_lis3lv02d.probe_i2c_addr=3D1 on the ke=
-rnel commandline to probe, this may be dangerous!\n");
-
-command line
-
-(mind the space)
-
-
+Have you tried to copy /sys/kernel/security/tpm0/binary_measurements?
 
 --=20
-With Best Regards,
-Andy Shevchenko
+You may reply to this email to add a comment.
+
+You are receiving this mail because:
+You are watching the assignee of the bug.=
