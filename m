@@ -1,41 +1,41 @@
-Received: from mout.gmx.net (mout.gmx.net [212.227.17.20])
+Received: from mout.gmx.net (mout.gmx.net [212.227.17.21])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0B3111DFE1
-	for <platform-driver-x86@vger.kernel.org>; Wed, 25 Dec 2024 20:52:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.20
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE93F154C0F;
+	Wed, 25 Dec 2024 21:11:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.21
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1735159924; cv=none; b=CPVbEP2cw2ufrTxf+mYPlfA3qlRgi5qLHwty7KjYdG96934yrzaAIOkTjL5UpyFqiCFQ9ODiV+xXqVVDFCeAUB8QW6jNGe8u0FnuNSrD7fMtqQIGnaNWmdjBYobgbebGaGWrrnp9GqrDSRALINcAsFoJqMTBjCRoAYPMcS8VrLM=
+	t=1735161117; cv=none; b=i1m/MrCW7WsTNkX3BQMmcS4xbhWzvZB5D4gJQDPPN2agkrr9PbmyWaGmaFXToxJjkO4XzdTtQUkys1KcZtRQQfyPrNpHH+b3sDUXHIST7fSeULghknOwlaSdeUVlk+qbNwnO1AJzX8VUeT2Iyg0HqLXyY4Gn65PGhwj/ILlanqU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1735159924; c=relaxed/simple;
-	bh=2vebcg+AMXlRy3mNS0+VHLPt+Jjvp8P33zQXuEYXS/c=;
+	s=arc-20240116; t=1735161117; c=relaxed/simple;
+	bh=7LRSpR5DNRwibGAMNHTsd9VqlM0PqWYJFryy3YFDuHM=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=oaJFzKzOPC256uUv00uf1eAUK92jGX8c7WbIbL84L76y2Svo6g3pye/vZ4+KQwdg5F64egIBjkfMp4V1hRFysUlnstox2yaVAtXHM9Fed3e8AaS3aO2iweQ6yv0ZuFs+AcIh+FA5t+saY/fsFT8q44cy81dFjv879P5zTxS0ljs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b=dTVs4Go7; arc=none smtp.client-ip=212.227.17.20
+	 In-Reply-To:Content-Type; b=Ubtt64HQzpqz6hsdC+U0Gr6X18/0MvIuH/d7jB+alIC1a5SUSnv6vtpT+En+fhuDnS4NMwihHZuwtb+aGginDBozbUMmP/XSCdBgNCEr50yJkqvEfsqYC0vhGRi86MLRG9Lux3CiodmgQeyIcvPe6u/OWpPl0h5ru7DXi/lkx2I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b=g5QzQgJn; arc=none smtp.client-ip=212.227.17.21
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b="dTVs4Go7"
+	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b="g5QzQgJn"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.de;
-	s=s31663417; t=1735159920; x=1735764720; i=w_armin@gmx.de;
-	bh=iaMl4LHfXUs62RXgHiCMGVy/GZXkG+HYsXK+rdJou9U=;
+	s=s31663417; t=1735161097; x=1735765897; i=w_armin@gmx.de;
+	bh=Qqn8eBBvBt4eEBj1jGzkL3n6MqLAzi1EHeLQhKygmIA=;
 	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:To:Cc:
 	 References:From:In-Reply-To:Content-Type:
 	 Content-Transfer-Encoding:cc:content-transfer-encoding:
 	 content-type:date:from:message-id:mime-version:reply-to:subject:
 	 to;
-	b=dTVs4Go7FTpYUD6p9gZrTKAfe7V8aWCYYJb2zfG+yMLWVyZadtwXxf9HEYWPBvxv
-	 uIR5f8Ne4grNwR4U5FdIW02jy8Hio5amFoSResURjf7/VLwgwb+2IGjBopglCfOND
-	 CoixS0QtGIbhP//CvbvwgVoxyaOjpXu/BgOpawthzoke0kJBXLDjFF/bf97tiPi5F
-	 RqJi0vnUYkibe9mXqd/EG3zOph2ImHnc85cRNEV7N0cIdhoHTQ+jl6jkeU28faK/V
-	 +YBr306Bg8lhMHPiZhv706MoTCz+ut3RTFx8TIX0sl4+2PAS3lYhcyz19JlVq5c2R
-	 eFfk0nHZghqiHZe9Kg==
+	b=g5QzQgJnhTqu/+aCmXNZhOA3r/LSkUmkUCjPgXdie7HFEDu+lt9Ufk0uP5zomSoJ
+	 LoKM6vZWNwZFjw/7ujslHimYjlWqshxksiQW0+wdsXJu9gqnxqRCw/D71iaJLDJ6R
+	 PTz49/p3GH5nuxH5ZjLHQPgvUdfH8jRB/wukchWXxav+FOw+ik0l9cs7bEtZ1OdTP
+	 0o7ixyCak/zAgUQ6HH5v/ztn1AUDajifJAPRuGOlfwD+8KVSEXoyy2gh/Q5ZC8cHL
+	 SjXLtDWytuczNHRrXq6lcvXvyZV4W3dSWhGzOqvo5E7S+QWBsVZT+tC286rRIR1DL
+	 CswquKzZZj3AzFsfVA==
 X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
-Received: from [192.168.2.35] ([91.137.126.34]) by mail.gmx.net (mrgmx105
- [212.227.17.168]) with ESMTPSA (Nemesis) id 1MpDJX-1tsykS2s87-00pIDO; Wed, 25
- Dec 2024 21:52:00 +0100
-Message-ID: <ecb60ee5-3df7-4d7e-8ebf-8c162b339ade@gmx.de>
-Date: Wed, 25 Dec 2024 21:51:58 +0100
+Received: from [192.168.2.35] ([91.137.126.34]) by mail.gmx.net (mrgmx104
+ [212.227.17.168]) with ESMTPSA (Nemesis) id 1McpJq-1u0RiM3Bxa-00d0U4; Wed, 25
+ Dec 2024 22:11:37 +0100
+Message-ID: <a4b3f2ca-0c91-4079-bc69-d0a98000ce23@gmx.de>
+Date: Wed, 25 Dec 2024 22:11:32 +0100
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -43,375 +43,108 @@ List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: acer-wmi: Nitro button doesn't produce a WMI event
-To: Hridesh MG <hridesh699@gmail.com>
-Cc: platform-driver-x86@vger.kernel.org
-References: <CALiyAom1xDH6A0Q2WNHCMUcpMJfM3pXO2DaW=bgHGUi8ZOpBbQ@mail.gmail.com>
- <8b8749c1-59c8-4f95-a43e-055cf94f9597@gmx.de>
- <CALiyAo=R1kcvwRpw22s=YU0YHUxR8T_WHLwSvDr=8Ahsenn-jA@mail.gmail.com>
- <9c625119-e46e-464b-933d-9c836577f454@gmx.de>
- <CALiyAo=7kVi4ipA5-xDfRYQ-gqyza0woYHUzwGuW5BccLOVHgg@mail.gmail.com>
- <209f39ab-a312-45b5-981c-8324d9b8cd90@gmx.de>
- <CALiyAo=GpKN2Aty5c3Bw0Vh4U16vgUP29pZkaeBsOKw8kcK29w@mail.gmail.com>
- <c5124fb9-74af-4c90-9edc-ddb3517cd9ac@gmx.de>
- <CALiyAok0_JKE+BkUQxHHH8Z39FHq5bW0Hb1Gk-MYHgDy0yFoMA@mail.gmail.com>
- <cea0918c-7c7d-49e1-8b33-b952b64d67f1@gmx.de>
- <d7be714c-3103-42ee-ad15-223a3fe67f80@gmx.de>
- <CALiyAomaT5y10Bawth3X44WB9Cie1fhW0GyBZgASo7ySK6g9zQ@mail.gmail.com>
+Subject: Re: [PATCH 1/1] platform/x86: Add lenovo-legion-wmi drivers
+To: "Derek J. Clark" <derekjohn.clark@gmail.com>,
+ "Cody T.-H. Chiu" <codyit@gmail.com>, Hans de Goede <hdegoede@redhat.com>,
+ ike.pan@canonical.com
+Cc: =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+ Jonathan Corbet <corbet@lwn.net>, Luke Jones <luke@ljones.dev>,
+ Xino Ni <nijs1@lenovo.com>, Zhixin Zhang <zhangzx36@lenovo.com>,
+ Mia Shao <shaohz1@lenovo.com>, Mark Pearson <mpearson-lenovo@squebb.ca>,
+ "Pierre-Loup A . Griffais" <pgriffais@valvesoftware.com>,
+ platform-driver-x86@vger.kernel.org, linux-doc@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <20241217230645.15027-1-derekjohn.clark@gmail.com>
+ <20241217230645.15027-2-derekjohn.clark@gmail.com>
+ <7b1d0298-4cdd-4af7-83e6-9e6287387477@gmail.com>
+ <99246696-4854-4EEB-B782-FD8C13D9D723@gmail.com>
 Content-Language: en-US
 From: Armin Wolf <W_Armin@gmx.de>
-In-Reply-To: <CALiyAomaT5y10Bawth3X44WB9Cie1fhW0GyBZgASo7ySK6g9zQ@mail.gmail.com>
+In-Reply-To: <99246696-4854-4EEB-B782-FD8C13D9D723@gmail.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
-X-Provags-ID: V03:K1:pXSN9o8Y9ivWrrL+pZwpd8MrhxEzY5Vith+TPUUDHvaADQ8Ke65
- GxIyBDzjPaFTIMeRY5UTEGvzokgeQ0GX/taZ5v8Y/+50BxU7JUbRdLLwtynLVWB/SrQpHFZ
- 95LcjmVf4zbJ2fyTsdNab2VvAdb+TgvfEkfjUv8ITY1mPWFd7zRzocysytge772FjA1NcdV
- bra8FPV5OJFfGz3F/B9rQ==
+X-Provags-ID: V03:K1:UnR8KcKv7h655TSC6sgHBi2YFHU9tehTgVuQsZ4S0xFoA9DngII
+ GVORBpoC4kPvi0boFKXhDpzdh8jQtvmheOSvSw0ME+cm+Rn0qLmBSpT9HciuM6YjGuYtufN
+ JzrbzibRQVg8qf+o3+m/MCjmVjxe90aaWxSxfzseurY0ZnpX92g7WGMJUUMQ6QtzWa/B9xw
+ l7iUTbrsl1VlNILsWXnGA==
 X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:6AI6AALQDwc=;Ca/EmqNuApDRXCvFnQA5D8EJ1MP
- +hl64h3VEfRLjWh4w2ftUoQovBt+9nrueYrAsoDz1bo1hLrlp0EQQeSyjkd6LEZKX0wYv/foY
- vz68LA3A7LzlnYlkVk6Rpvvk4t3o65TgVkmgdudbgJFEOtWlt0ud/DP2a75/Ya6bwaCErwHWG
- LhAvduageinD1K7Va1YZj8fNGSHRYvEt3OnR66L+sw3otVkjoYNOlVR+OiHB2kVNHd/HZrCaR
- 3YnogBomIMof7NFPxmq5oL2CxN4O4qygr47DV8Y3oAVgtLiOXyn7fVdcNTVW04F6mXgjlxINg
- V5GMGkeJdXuOArhsow1OHX8dYV8+/LlGirRTNMHE75pqdRTpkRvDJRtb5EaMGDF9YsiuvORMC
- YyQdQNXx8UWIZQM60yOYpw3hW0IQw2bSl+DvB1AVjyu9OilI8QvknZnYYdvE0WW3Z09fotGzA
- ILZmCNpPNHlrkw1+ywVOJ2MumNZpWVTEZW5JGuaYuPY16fou+qIBc4nuIWDpx+Z7HAZrOQzMA
- QWTexaX5JCR15jti0o9eNTIh7lQ6rrc8XxVt820PvE/dnzqWHYtI2SoPpNvh0Ilf8zF0+NIz6
- 7+5b1QNz6NtxlQfEVg+vkPjMp85OdD7FIOsR/5lR/fULWBYX75UzFfW3er1DTFa50g9ywZfD2
- TUYrY1es24VPcgR1jbRW00qZ8E+jQTY4zqKHsnsAUFBass+hW8EcRIbvbe9lYuCbOXF2bYL37
- n7RlpKTR+o+wht/EMaJXITzS873mC/QtRZv2K5SnddCK4tum9zqLD/MxYKY6sgjfocKbOM5V7
- ip2cj+gM5uLV9BtMAdw4asYL/WxBxVeqlTBqkQjxFFA2tzHaLxvozJ3ZRy0VPazQ+fyY+hzFQ
- cD/zAsiDTNpnmZXWbl4pfdKwnqCaRPvOmvWbBBVEKUJ9E3VOflPywXAsA1GagCrzc108+dxZZ
- BWIWBaZGf91K4WIKy0OH1XdQ4PWiMKUCXaJhx+n1PUJxuGACfgZzL3QWkK81b7WUxYdr/BrMa
- BikRUsY9aTFq2RZc/b9I2aIQ+ZKAO2Oo5bS56PGN3V49wTDwT28XkuXuce7DQWtMzTyhmqiYe
- QrJJjZ3cp2Qww//RIR5VZd8QfP9R57
+UI-OutboundReport: notjunk:1;M01:P0:RlVmtjILU5I=;ObpZP31ji+7T4vmlIwRFE47sjvF
+ VihmS38OgV8r1uP5Wbytq59kRK+3d1M/eSDbe+7gcAuImWPSV/xlcimOWgpDTLP9xz9WSVtBm
+ uGwtCEMB3yWxw7enq/QeXmPg3KHOjXh8vYzKxVIId58zFCWwnsLCsQ84969dI0UMovie4ZfJS
+ sJHdNv1V9Yl6z6b1RiUnI62DQ7BNpPmk841Slx6ZOmyaSyKh4ml9Wf2c95esyeEMvYWtcwk8Z
+ Cea2CFf9AfMT/L44O9d82Riiax1kvNjrJUUHypOgIMsYo1fHfcisRvyfp3NaSsMun/kG3P1uN
+ EnwO6lRH4/Ah9v1xl/EtUuOB6D4Yny2EXAwEga2NhkbaqmnGiHVEufSMzn+oNapodLOE0elq1
+ hLgARLAc4eWMouiO3vi3iCkrPNKRC3SZWV61PVdVHXyx3NPA5aehbyQp3JQj3CXIHGsbR+ka+
+ zbA+xVTyMt6+MYNyZduMO/vLVjm6JMSWnSeCUALJz3e7L6Pm2mQ5aFyxi+1NwI495NRWtTtkZ
+ pC/did42Yq91oc6F6OW92TqFN1YszH+fRU+71ZKOev6NFU7QdN7r6n8T+deEt1u/Fm7E2yFFM
+ /kXOEytFd7vy6e7Zb5fQ0VlKhb8ABDfR7mbDFSCsj6QEdt99KozYC0fTlX42q+vwHnrZULake
+ GFVEoVUTLF8lvj4BRuFbYh1f91utfzDD8kBohanHrgSwG0i4UXPGXNQtrE0Eqi4T3YmH/AeYX
+ nm3UYoJfR2OE9BiUppBBGXJKiSiQhxWeNmPzBLXJoUWVZy+MrDUsn+VZZ95ZZXBPD4WcISZVZ
+ PLnO2sb6zvceJbHz6kEpFr9UjDQE5K7EuL38H1UpZ17wUWL5rUxKDHylz0o83OJFVxZvs5OKp
+ XqQfbsaTJ4rkP5xnSgWop35wdQhSN/4bUK56F+07ie14JlfB+A1lyVOiAHuicZTYqGYcKJZbx
+ ZbBvfZWETTmoxEdiMgHWKQrc8/vT5BFKbwJXuiAjvsC0tuMeXujnrimhfNVKryhlGZhTABTXS
+ Up8L+Vt0g2e595DjABCa4aF9SJIuDJB/vC4PrsA34AO9+U/l/11Q4Oc5mb2uC9KA3pOucX+fC
+ BbOsMnRykiw4OKCd3kJ2nHIaKBCvw1
 
-Am 24.12.24 um 19:45 schrieb Hridesh MG:
+Am 25.12.24 um 09:34 schrieb Derek J. Clark:
 
->> Am 24.12.24 um 00:06 schrieb Armin Wolf:
->> This WMI call is already supported by the driver and exposed to userspace using the platform profile interface.
->> It seems however that your device:
->>
->> - does only support the turbo profile and not the other OC settings
->>
->> - only supports a subset of the platform profile choices
->>
->> - uses a different EC address for storing the current platform profile
->>
->> Can you test kernel patches? I can prepare a patch for you which:
->>
->> - puts your device on the necessary whitelists
->>
->> - fixes the platform profile handling
->>
->> Thanks,
->> Armin Wolf
-> Oh I see, thank you for your work! Actually, could I work on the patch
-> myself? I'd like to take this as an opportunity to learn something
-> new, I'm also a mentee under the LFX kernel bug fixing mentorship
-> program and was hoping to create a patch which could count towards my
-> graduation requirements out of this issue.
 >
-> I understood the rest, but if it isn't too much of a bother, could you
-> tell me how you found out the EC address? (or the fact that it was
-> different)
+> On December 24, 2024 9:25:19 PM PST, "Cody T.-H. Chiu" <codyit@gmail.com> wrote:
+>> On 12/17/2024 17:06, Derek J. Clark wrote:
+>>> diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
+>>> ...
+>>> +config LEGION_OTHER_WMI
+>>> +	tristate "Lenovo Legion Other Method WMI Driver"
+>>> +	depends on LEGION_GAMEZONE_WMI
+>>> +	depends on LEGION_DATA_01_WMI
+>>> +	select FW_ATTR_CLASS
+>>> +	help
+>>> +	  Say Y here if you have a WMI aware Lenovo Legion device and would
+>> like to use the
+>>> +	  firmware_attributes API to control various tunable settings
+>> typically exposed by
+>>> +	  Lenovo software in Windows.
+>>> +
+>>> +	  To compile this driver as a module, choose M here: the module will
+>>> +	  be called lenovo_legion_wmi_other.
+>>> +
+>>>    config IDEAPAD_LAPTOP
+>>>    	tristate "Lenovo IdeaPad Laptop Extras"
+>>>    	depends on ACPI
+>> Hi Derek,
+>>
+>> Thank you for the initiative, love to see we'll finally get a driver developed with the help of official specs.
+>>
+>> Perhaps it's common knowledge to the crowd here but I'd like to call out right now significant portion of the support on Legion ACPI / WMI came from ideapad-laptop which explicitly detects it:
+>>
+>> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/drivers/platform/x86/ideapad-laptop.c?h=v6.13-rc4#n2108
 >
-> Thanks,
-> Hridesh MG
+> Hi Cody,
+>
+> Doing a quick search of that GUID on the Lenovo Legion WMI spec there are no matches. Perhaps someone at Lenovo can shed some light here, but the IdeaPad driver grabbing that GUID shouldn't interfere with the GUID's we're working on here.
+>
+>> Per my observation majority of users have no idea this is the case because of the misnomer, adding another set of drivers with Legion in the name explicitly, that don't support those features would double the dissonance.
+> It appears the feature sets are quite different. This seems to enable use of special function/media keys on some (one?) Legion laptops, and it also tries to register an ACPI based platform profile. While the driver does load on my legion go, only the amd_pmf and lenovo-legion-wmi-gamezone drivers have platform profiles registered under the new class at /sys/class/platform-profile/ so that isn't a conflict. I think that the ACPI method may only work on the yoga laptops that are supported by this driver? Again, maybe one of the Lenovo reps can comment on that, but it appears to predate the Custom and Other mode WMI GUID's.
 
-This is the full definition of the Acer gaming WMI interface on your machine:
-
-[WMI, Dynamic, Provider("WmiProv"), Locale("MS\\0x409"), Description("Class used to Gaming Function, Version 2.88"), guid("{7A4DDFE7-5B5D-40B4-8595-4408E0CC7F56}")]
-class AcerGamingFunction {
-   [key, read] string InstanceName;
-   [read] boolean Active;
-
-   [WmiMethodId(1), Implemented, read, write, Description("Set Acer Gaming Profile Configuration.")] void SetGamingProfile([in] uint64 gmInput, [out] uint32 gmOutput);
-   [WmiMethodId(2), Implemented, read, write, Description("Set Acer Gaming LED Behavior.")] void SetGamingLED([in] uint8 gmInput[12], [out] uint32 gmOutput);
-   [WmiMethodId(3), Implemented, read, write, Description("Get Acer Gaming Profile Configuration.")] void GetGamingProfile([in] uint32 gmInput, [out] uint64 gmOutput);
-   [WmiMethodId(4), Implemented, read, write, Description("Get Acer Gaming LED Behavior.")] void GetGamingLED([in] uint32 gmInput, [out] uint8 gmReturn, [out] uint8 gmOutput[11]);
-   [WmiMethodId(5), Implemented, read, write, Description("Get Acer Gaming System Information.")] void GetGamingSysInfo([in] uint32 gmInput, [out] uint64 gmOutput);
-   [WmiMethodId(6), Implemented, read, write, Description("Set Acer Gaming RGB Keyboard Setting.")] void SetGamingRgbKb([in] uint64 gmInput, [out] uint32 gmOutput);
-   [WmiMethodId(7), Implemented, read, write, Description("Get Acer Gaming RGB Keyboard Setting.")] void GetGamingRgbKb([in] uint32 gmInput, [out] uint64 gmOutput);
-   [WmiMethodId(8), Implemented, read, write, Description("Set Acer Gaming Profile Setting.")] void SetGamingProfileSetting([in] uint64 gmInput, [out] uint32 gmOutput);
-   [WmiMethodId(9), Implemented, read, write, Description("Get Acer Gaming Profile Setting.")] void GetGamingProfileSetting([in] uint32 gmInput, [out] uint64 gmOutput);
-   [WmiMethodId(10), Implemented, read, write, Description("Set Acer Gaming LED Group Behavior.")] void SetGamingLEDBehavior([in] uint64 gmInput, [out] uint32 gmOutput);
-   [WmiMethodId(11), Implemented, read, write, Description("Get Acer Gaming LED Group Behavior.")] void GetGamingLEDBehavior([in] uint32 gmInput, [out] uint64 gmOutput);
-   [WmiMethodId(12), Implemented, read, write, Description("Set Acer Gaming LED Group Color.")] void SetGamingLEDColor([in] uint64 gmInput, [out] uint32 gmOutput);
-   [WmiMethodId(13), Implemented, read, write, Description("Get Acer Gaming LED Group Color.")] void GetGamingLEDColor([in] uint32 gmInput, [out] uint64 gmOutput);
-   [WmiMethodId(14), Implemented, read, write, Description("Set Acer Gaming Fan Group Behavior.")] void SetGamingFanBehavior([in] uint64 gmInput, [out] uint32 gmOutput);
-   [WmiMethodId(15), Implemented, read, write, Description("Get Acer Gaming Fan Group Behavior.")] void GetGamingFanBehavior([in] uint32 gmInput, [out] uint64 gmOutput);
-   [WmiMethodId(16), Implemented, read, write, Description("Set Acer Gaming Fan Group Speed.")] void SetGamingFanSpeed([in] uint64 gmInput, [out] uint32 gmOutput);
-   [WmiMethodId(17), Implemented, read, write, Description("Get Acer Gaming Fan Group Speed.")] void GetGamingFanSpeed([in] uint32 gmInput, [out] uint64 gmOutput);
-   [WmiMethodId(18), Implemented, read, write, Description("Set Acer Gaming Fan Table.")] void SetGamingFanTable([in] uint64 gmInput, [out] uint32 gmOutput);
-   [WmiMethodId(19), Implemented, read, write, Description("Get Acer Gaming Fan Table.")] void GetGamingFanTable([out] uint64 gmOutput);
-   [WmiMethodId(20), Implemented, read, write, Description("Set Acer Gaming Keyboard Backlight Behavior.")] void SetGamingKBBacklight([in] uint8 gmInput[16], [out] uint32 gmOutput);
-   [WmiMethodId(21), Implemented, read, write, Description("Get Acer Gaming Keyboard Backlight Behavior.")] void GetGamingKBBacklight([in] uint32 gmInput, [out] uint8 gmReturn, [out] uint8 gmOutput[15]);
-   [WmiMethodId(22), Implemented, read, write, Description("Set Acer Gaming Miscellaneous Setting.")] void SetGamingMiscSetting([in] uint64 gmInput, [out] uint32 gmOutput);
-   [WmiMethodId(23), Implemented, read, write, Description("Get Acer Gaming Miscellaneous Setting.")] void GetGamingMiscSetting([in] uint32 gmInput, [out] uint64 gmOutput);
-   [WmiMethodId(24), Implemented, read, write, Description("Set CPU Overclocking Profile.")] void SetCPUOverclockingProfile([in] uint8 OCProfile, [in] uint8 OCStructure[512], [out] uint8 ReturnCode, [out] uint8 Reserved[3]);
-   [WmiMethodId(25), Implemented, read, write, Description("Get CPU Overclocking Profile.")] void GetCPUOverclockingProfile([in] uint8 Reserved[4], [out] uint8 ReturnCode, [out] uint8 ReturnOCProfile, [out] uint8 OCStructure[512]);
-};
-
-The method "SetGamingMiscSetting"  is used to set the platform profile. For reading however the EC is accessed by the acer-wmi driver.
-
-This is the ACPI code responsible for handling "SetGamingMiscSetting" and "GetGamingMiscSetting" (Arg1 is the WMI method id, Arg2 contains the input arguments):
-
-                 If ((Arg1 == 0x16))
-                 {
-                     BHSK = Arg2
-                     Local0 = DerefOf (BHSK [Zero])
-                     Local1 = DerefOf (BHSK [One])
-                     BHSK [Zero] = 0x03
-                     If ((Local0 == One))
-                     {
-                         \_SB.PC00.LPCB.EC0.TKST = Local1
-                         BHSK [Zero] = Zero
-                     }
-                     ElseIf ((Local0 == 0x02))
-                     {
-                         WSMI (Arg1, Arg2)
-                         BHSK = WMIB /* \_SB_.PC00.WMID.WMIB */
-                     }
-                     ElseIf ((Local0 == 0x05)){}
-                     ElseIf ((Local0 == 0x06))
-                     {
-                         WSMI (Arg1, Arg2)
-                         BHSK = WMIB /* \_SB_.PC00.WMID.WMIB */
-                     }
-                     ElseIf ((Local0 == 0x07)){}
-                     ElseIf ((Local0 == 0x08))
-                     {
-                         WSMI (Arg1, Arg2)
-                         BHSK = WMIB /* \_SB_.PC00.WMID.WMIB */
-                     }
-                     ElseIf ((Local0 == 0x09))
-                     {
-                         BHSK [Zero] = One
-                     }
-                     ElseIf ((Local0 == 0x0A))
-                     {
-                         BHSK [Zero] = 0x03
-                     }
-                     ElseIf ((Local0 == 0x0B))
-                     {
-
-This code in particular is responsible for setting the platform profile. Noticed the OPMS field here which is used to
-store the current platform profile set by the driver.
-
-                         \_SB.PC00.LPCB.EC0.OPMS = Local1
-                         If ((OG00 == Zero))
-                         {
-                             If ((\_SB.GGIV (0x090E000A) == Zero))
-                             {
-                                 If ((Local1 == Zero))
-                                 {
-                                     \ODV0 = Zero
-                                 }
-                                 ElseIf ((Local1 == One))
-                                 {
-                                     \ODV0 = One
-                                 }
-                                 ElseIf ((Local1 == 0x04))
-                                 {
-                                     \ODV0 = 0x02
-                                 }
-                             }
-                             ElseIf ((Local1 == Zero))
-                             {
-                                 \ODV0 = 0x03
-                             }
-                             ElseIf ((Local1 == One))
-                             {
-                                 \ODV0 = 0x04
-                             }
-                             ElseIf ((Local1 == 0x04))
-                             {
-                                 If (((CMSR (0x77) == 0x05) || (CMSR (0x77) == 0x04)))
-                                 {
-                                     \ODV0 = 0x06
-                                 }
-                                 Else
-                                 {
-                                     \ODV0 = 0x05
-                                 }
-                             }
-                         }
-
-                         If ((OG00 == One))
-                         {
-                             If ((\_SB.GGIV (0x090E000A) == Zero))
-                             {
-                                 If ((Local1 == Zero))
-                                 {
-                                     \ODV0 = 0x07
-                                 }
-                                 ElseIf ((Local1 == One))
-                                 {
-                                     \ODV0 = 0x08
-                                 }
-                                 ElseIf ((Local1 == 0x04))
-                                 {
-                                     \ODV0 = 0x09
-                                 }
-                             }
-                             ElseIf ((Local1 == Zero))
-                             {
-                                 \ODV0 = 0x0A
-                             }
-                             ElseIf ((Local1 == One))
-                             {
-                                 \ODV0 = 0x0B
-                             }
-                             ElseIf ((Local1 == 0x04))
-                             {
-                                 If (((CMSR (0x77) == 0x05) || (CMSR (0x77) == 0x04)))
-                                 {
-                                     \ODV0 = 0x0D
-                                 }
-                                 Else
-                                 {
-                                     \ODV0 = 0x0C
-                                 }
-                             }
-                         }
-
-                         \_SB.IETM.ODVP ()
-                         Notify (\_SB.IETM, 0x88) // Device-Specific
-                         Notify (\_SB.NPCF, 0xC0) // Hardware-Specific
-                         Notify (\_SB.NPCF, 0xC1) // Hardware-Specific
-                         BHSK [Zero] = Zero
-                     }
-                     ElseIf ((Local0 == 0x0D))
-                     {
-                         BHSK [Zero] = 0x03
-                     }
-                     ElseIf ((Local0 == 0x0E))
-                     {
-                         BHSK [Zero] = 0x03
-                     }
-                     ElseIf ((Local0 == 0x0F))
-                     {
-                         If ((Local1 == One))
-                         {
-                             BHSK [Zero] = Zero
-                             \_SB.PC00.LPCB.EC0.FMKY = One
-                         }
-                         ElseIf ((Local1 == 0x02))
-                         {
-                             BHSK [Zero] = Zero
-                             \_SB.PC00.LPCB.EC0.FMKY = Zero
-                         }
-                     }
-                     Else
-                     {
-                         BHSK [Zero] = 0x03
-                         BHSK [One] = Zero
-                         BHSK [0x02] = Zero
-                         BHSK [0x03] = Zero
-                     }
-
-                     Return (BHSK) /* \_SB_.PC00.WMID.BHSK */
-                 }
-
-                 If ((Arg1 == 0x17))
-                 {
-                     BHSK = Arg2
-                     Local0 = DerefOf (BHSK [Zero])
-                     BHGK [Zero] = Zero
-                     BHGK [One] = 0xFF
-                     If ((Local0 == One))
-                     {
-                         BHGK [One] = \_SB.PC00.LPCB.EC0.TKST /* External reference */
-                         BHGK [Zero] = Zero
-                     }
-                     ElseIf ((Local0 == 0x02))
-                     {
-                         WSMI (Arg1, Arg2)
-                         BHGK = WMIB /* \_SB_.PC00.WMID.WMIB */
-                     }
-                     ElseIf ((Local0 == 0x05)){}
-                     ElseIf ((Local0 == 0x06))
-                     {
-                         WSMI (Arg1, Arg2)
-                         BHGK = WMIB /* \_SB_.PC00.WMID.WMIB */
-                     }
-                     ElseIf ((Local0 == 0x07)){}
-                     ElseIf ((Local0 == 0x08))
-                     {
-                         WSMI (Arg1, Arg2)
-                         BHGK = WMIB /* \_SB_.PC00.WMID.WMIB */
-                     }
-                     ElseIf ((Local0 == 0x09))
-                     {
-                         WSMI (Arg1, Arg2)
-                         BHGK = WMIB /* \_SB_.PC00.WMID.WMIB */
-                     }
-                     ElseIf ((Local0 == 0x0A))
-                     {
-                         BHGK [Zero] = Zero
-                         BHGK [One] = 0x13
-
-Side note: this field seems to contain a bitmap of the supported platform profiles on this machine.
-
-                     }
-                     ElseIf ((Local0 == 0x0B))
-                     {
-
-Calling this method ("GetGamingMiscSetting") with the same command (0x0B) would return the current platform
-profile by using the OPMS field.
-
-                         BHGK [Zero] = Zero
-                         BHGK [One] = \_SB.PC00.LPCB.EC0.OPMS /* External reference */
-                     }
-                     ElseIf ((Local0 == 0x0C))
-                     {
-                         BHGK [One] = Zero
-                     }
-                     ElseIf ((Local0 == 0x0D))
-                     {
-                         BHGK [Zero] = 0x03
-                     }
-                     ElseIf ((Local0 == 0x0E))
-                     {
-                         BHGK [Zero] = 0x03
-                     }
-                     ElseIf ((Local0 == 0x0F))
-                     {
-                         If ((\_SB.PC00.LPCB.EC0.FMKY == One))
-                         {
-                             BHGK [Zero] = Zero
-                             BHGK [One] = One
-                         }
-                         ElseIf ((\_SB.PC00.LPCB.EC0.FMKY == Zero))
-                         {
-                             BHGK [Zero] = Zero
-                             BHGK [One] = 0x02
-                         }
-                     }
-                     ElseIf ((Local0 == 0x10))
-                     {
-                         BHGK [Zero] = Zero
-                         BHGK [One] = 0xFF
-                     }
-                     Else
-                     {
-                         BHGK [Zero] = Zero
-                         BHGK [One] = 0xFF
-                         BHGK [0x02] = Zero
-                         BHGK [0x03] = Zero
-                         BHGK [0x04] = Zero
-                         BHGK [0x05] = Zero
-                         BHGK [0x06] = Zero
-                         BHGK [0x07] = Zero
-                     }
-
-                     Return (BHGK) /* \_SB_.PC00.WMID.BHGK */
-                 }
-
-I can provide you with a basic patch which adds support for calling those two WMI methods. You can then wire-up the platform profile code
-inside acer-wmi to use those WMI methods instead of trying to access the EC directly.
+Maybe we can remove the "legion" part from the driver name since this WMI device seems to be used on other machines too. Maybe you can instead use "lenovo" when naming the drivers?
 
 Thanks,
 Armin Wolf
 
+>
+>> I wonder if reconciling this is in your planned scope? If not IMO at least this should be called out in documentation / Kconfig.
+> Reconciliation wouldn't be in-line with the WMI driver requirements outlined in the kernel docs as each unique GUID needs to have its own driver in the current spec. It is possible we might need to add a quirk table in the future if we want to add function keys support for the Custom Method or Other Method function keys in the future. Since the Go has no keyboard I can't confirm if the IdeaPad driver is functional on more legion laptops, but considering the DMI quirks that are used in conjunction I would assume support needs to be added explicitly.
+>
+> If someone wants to add documentation on the IdeaPad driver and what it provides that would be good. I'm not familiar enough with it to really do it myself.
+
+As long as both drivers use different GUIDs we can assume that they do not conflict which each another. Anything else can be added later.
+
+Thanks,
+Armin Wolf
+
+>
+>> PS: I'm a developer myself but at lower level kernel domain I'm just a user so hopefully I'm not just adding noise here.
+>>
+>> - Cody
+> - Derek
+>
