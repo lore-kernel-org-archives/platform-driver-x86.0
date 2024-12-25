@@ -1,41 +1,40 @@
-Received: from mout.gmx.net (mout.gmx.net [212.227.17.21])
+Received: from mout.gmx.net (mout.gmx.net [212.227.17.20])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C4BF84A3E;
-	Wed, 25 Dec 2024 20:23:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.21
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D2D2484A3E;
+	Wed, 25 Dec 2024 20:26:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.20
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1735158187; cv=none; b=gloqSnnRnneiD02Bfi66/36WrBf7odjd9MzpwXnXB4Venfglq6+Irm/tP9Ll/7DQPnSbax2rk6N9gOlTDAWq2bQ5UElYNGgg9sPW71HZf5W82js8rhW/hr/3WZgPTQ39QGiTV2Rhkipx0Oj0vaAp8X3SiQAV/bqwsxzLGk9sNWI=
+	t=1735158370; cv=none; b=DGsfnV1woYTLbLJXlKw80u2E5Xrz71/YJyYfHPAUc45Z2da4AKsUmZQELOmIpxQpfmNdTZXwSWRH/qlvxIsHCww4uHDSwbkcsTliGEsgUdcrGgMegx1cBul7dR5SbztXDgLDfEUYZMKeZXSosnx8+VrMGUhjbj0uODBCxtzqdCI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1735158187; c=relaxed/simple;
-	bh=D50Id4GqglsJzTPRDYfYazMwBwxJjtVdRxU1xlTe6Yg=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=W81FKgH/SFgk556Wkjp7mutmspNWpgiwiTSo0Gc/iEb1F2KT/1mIgm9S0r/CvIfwDjipwnEFoPk53n5nR2CouMo5pyu+XfaCk19v+SKtwCWRYBct2T9A7S9JZAJ960x/gqRXHECXvc0/BoiLHgUyxFOMEwSh8xqIjCICOtYjE60=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b=d7+axHj1; arc=none smtp.client-ip=212.227.17.21
+	s=arc-20240116; t=1735158370; c=relaxed/simple;
+	bh=axx17N0yHN+AV6614PCCPcLavSF89yUU1z0q+u0kSjQ=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
+	 In-Reply-To:Content-Type; b=WpnyZPg8Itt7szuylUSoHmHXhn4NYQcM2c7wb2MGTbkg+2PlCjHooRM3/yuyf1xPQX4xQb4xwnrqX+bKhitPZmAiuOpaqQDMSi5soKuyXOcx8jOJDFENykrgqLoR2pq2oM69oSFCIMjmj3PUOr3XCOCZrQXN2f3/GQ3OayWJeQ0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b=fxAZbQJI; arc=none smtp.client-ip=212.227.17.20
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b="d7+axHj1"
+	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b="fxAZbQJI"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.de;
-	s=s31663417; t=1735158171; x=1735762971; i=w_armin@gmx.de;
-	bh=D50Id4GqglsJzTPRDYfYazMwBwxJjtVdRxU1xlTe6Yg=;
-	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:To:Cc:
-	 References:From:In-Reply-To:Content-Type:
-	 Content-Transfer-Encoding:cc:content-transfer-encoding:
-	 content-type:date:from:message-id:mime-version:reply-to:subject:
-	 to;
-	b=d7+axHj1i/L6PIfbXCwsfZMRHyUBBO91C7LddOboxoFvh5e9PFb8D+J+0HR3BHb+
-	 0cR4dNCga3r6/gNQK3wNOkiR4MOE3r12qgqcKEo5OIfeCo+JF7IZxop28e5yx3owv
-	 7vwc76/I4WwiwOcNGwe/rUTMx9bs3XSo20LBWKFZ8vx4f8cKH8XhE7gSh4NmCOd+1
-	 Hk2qLPBwf7IMiG43TgHTTL5oyORVpFXY1MRwonPtwHoglYpwztbewGBkN/fPZ1Z+G
-	 T33erWfr6QY4X3eyj+otdsgBhq5MG/AFPrweNLabjV5ub13eEXTPaPOUIW54Rrz0l
-	 aA3UyFZrlPWdPYIAow==
+	s=s31663417; t=1735158338; x=1735763138; i=w_armin@gmx.de;
+	bh=axx17N0yHN+AV6614PCCPcLavSF89yUU1z0q+u0kSjQ=;
+	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:From:To:
+	 Cc:References:In-Reply-To:Content-Type:Content-Transfer-Encoding:
+	 cc:content-transfer-encoding:content-type:date:from:message-id:
+	 mime-version:reply-to:subject:to;
+	b=fxAZbQJIIl5JTFWONlp2LzuMVnGWssI+FZNIZ6hE6Kdo8BuzF+tuKt5hkLS++Z+7
+	 /Fbiu60givOpaG86xFJ6FbH7bCF/i+V/0ysKSbBoJOtRfEGv+ZB82FgoWket5N+Jk
+	 la4TJz7pOxSiMlhaOlH1StHuGxtXDIceAQoFNAODx9MgUk2CFA5Vj5WPcZ9l8dumj
+	 wD2h8DjlL4b83iiPpng8OMNk4P7GDmgPKxHnECk0N3Bue0P4eMA3CYUnBkUxZTRGc
+	 kgR0fVYQi6e3TZ9KS3Y5jD5a3DIWpSeQ5rLvzrJ/7xMczHSZMgHTuCPsy41MSZxip
+	 aDlliMswghda16xRIw==
 X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
-Received: from [192.168.2.35] ([91.137.126.34]) by mail.gmx.net (mrgmx104
- [212.227.17.168]) with ESMTPSA (Nemesis) id 1N1Obb-1tXzsW0lHH-010tkR; Wed, 25
- Dec 2024 21:22:51 +0100
-Message-ID: <a4ad8907-34e3-4785-a62a-a1f41ddd6e1e@gmx.de>
-Date: Wed, 25 Dec 2024 21:22:41 +0100
+Received: from [192.168.2.35] ([91.137.126.34]) by mail.gmx.net (mrgmx105
+ [212.227.17.168]) with ESMTPSA (Nemesis) id 1M42nY-1tQXwo0OVU-001QrL; Wed, 25
+ Dec 2024 21:25:38 +0100
+Message-ID: <d2251554-593e-4830-895a-d4c0317589a0@gmx.de>
+Date: Wed, 25 Dec 2024 21:25:35 +0100
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -43,167 +42,144 @@ List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3] platform/x86: samsung-galaxybook: Add
- samsung-galaxybook driver
-To: =?UTF-8?Q?Thomas_Wei=C3=9Fschuh?= <linux@weissschuh.net>,
- Joshua Grisham <josh@joshuagrisham.com>
-Cc: Hans de Goede <hdegoede@redhat.com>, ilpo.jarvinen@linux.intel.com,
- platform-driver-x86@vger.kernel.org, corbet@lwn.net,
- linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20241216103855.18457-1-josh@joshuagrisham.com>
- <13184052-baf2-4e7d-b8ef-9ba3f34d475a@t-8ch.de>
- <66897a27-5f81-46fc-898d-682456d7f37f@redhat.com>
- <CAMF+KeZ3uAWZuuPJcrrvTJS-TgyxkqXOY_w=wNw7eZQiUkV5YA@mail.gmail.com>
- <c2b5e0c8-651f-426e-ae96-13857313997a@t-8ch.de>
-Content-Language: en-US
+Subject: Re: [PATCH 00/20] alienware-wmi driver rework
 From: Armin Wolf <W_Armin@gmx.de>
-In-Reply-To: <c2b5e0c8-651f-426e-ae96-13857313997a@t-8ch.de>
+To: Kurt Borja <kuurtb@gmail.com>, platform-driver-x86@vger.kernel.org
+Cc: ilpo.jarvinen@linux.intel.com, mario.limonciello@amd.com,
+ hdegoede@redhat.com, linux-kernel@vger.kernel.org,
+ Dell.Client.Kernel@dell.com
+References: <20241221055917.10555-1-kuurtb@gmail.com>
+ <66005d6f-e47e-4799-b90e-48751bff52fc@gmx.de>
+Content-Language: en-US
+In-Reply-To: <66005d6f-e47e-4799-b90e-48751bff52fc@gmx.de>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:kIxQr3PyRC8TlVMJP5LmiP+X/9SyzOlJgS4C3cvIvzkwtGM2MTf
- qIIaPiIwhP1lrKsfSkS87Yt0Qttv1vATwA4TUoOGeOKSKSCckte8AymLMlmMGj/kq+uacsv
- W9QOfNEA2iriseKK4B1tQ2T5xe6+U3EL6NvrniUMVYtUjk+MuP+vB4/+MrXqycAWbjulBxy
- FQsTbZk5/N5BMNydUJ/VQ==
+X-Provags-ID: V03:K1:x9OFwudnF9jjhCZvJYHCCRgmXCRcMHXAF43JNmocjOACESvBYTa
+ 5aTbaPoKRmj6dbNVc4eFFazW37V4GRghtmQjf8p7Qsmguh1CpUSiWqHiiQKyEaCa1OkvXX+
+ g4KyyAEQsUbnwc/7qdxZYbnvzlQ83RhOGFrKGcsK21HdQnV+f1IFWeEceKPSHL+vUk+ZeRe
+ x86r4sar4UPcSND6hhIhw==
 X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:1Jm0hXpIBHM=;19Q7+rRl9iiLM9hOJzFJuhmuMLL
- nHc1JV6ybJUMoNmdOV582sOpwbJlImNNvXayhBcYWQJV92tyhQM+RVsRXvoaDxnbflFcyrNBz
- cFAPmuuomoHCESQFuN9EfowPyiq52c+DgOxEdLjgZOzOJGSDrwgucQ7RJ+lNThJPEUfFDR4jI
- X/89bzgEwzDzM//iHv43gj0jx8MNjBWgmZaMS3lUE7I98M0xv2Cn1tMYma68x/b+I3rEksPne
- hY2a2cTYXMiUKO2Yg5AhB9uGnnMDBNYsK99rWCrLfXDs2vlrIRVeb2z17aZLzipzl1TKaKq/x
- VmPSdHQIue0rN/r41DXO4s0yYOa4ZOc3I2TAkdPHg2pGIPFrrTM8ABHyhII5Mt1kUfMs+kcV1
- DZzNMefw7qQjCXDzAiY86bj4v8qoqgUujYz4uBPaq8y0o56J01dhaTfjxvgRdKSu833D8OSla
- qKSOoYCjDkFJe3e8WX9FyaQV8tQbYI+76y0Tmt/8NdUuD3sTObxYhFl+hecfzankAPzio/dj2
- b07T+8QayS1ki+bpl09UaOOKglbzL61RZOe15QhhH5v3TALnuivOqmAtEk0M2J79MrIooiaaK
- IriIvAaadDhN5f0B4WNQ1tiCnTOJ7g/HWbEcWH8xsAAafoqOHK9rx8s7Kpd5YUPkQkFW/yVSb
- /huBWgHGytlvY7ksSy4oe872wXi33EG94WVOeDzfofapmKN0XMK0bmd48aR4SBu4HD6EI1n6U
- TWmyoJM2A7xzH5pOTC81bazyqt66AW9Ra2mZS5Jq1l7N64gO+f54ocNRwTl6jj/3oQmU812kY
- qnmPzY6aGAYZGjLeLryiytrx3ZvOA3WG3xavzWBhC6uS2wxE9fqBIyYROglR/ykrQjFcLhkH2
- 34oCQ9NDIt+KvBlqD2DCdVrKZ6ADTxI74hhPuT0GgQbfBF64TVtEzqwpaGid8kzvn2OOdoChZ
- JPEn6ZMLzksixWgZRMNyFvF5J3zUwzIeQIz/CFP/pYEEROQv0p1US+HVKh94cGGPzqCHrGwjO
- ysVcuorB+PbAGu+zbL+Rz9KRwM+kB6snMYS6QyMyf+W9SMA2gECkAP2SrAhP16KuhEeufGhO2
- zLcKZY8Z7nkY05wMzrgT5z7ZfUm3MK
+UI-OutboundReport: notjunk:1;M01:P0:/lj9zXglF50=;BkAInbuFpi9vc10+UL2+QhouGTg
+ Hm4Eyh6epPWALdLxglsyevlfAWNfXgUP4ceYFUr0pEize6TTufW7S0pYeCkxXS6qKCRYYcXBw
+ MnUwdKD0qVOT+3fzU+HHhS/lM2zX5rYTOWcifQYiqHhOY1e/V0l5Og0hRD4geqQsW2R20ubGd
+ 9LtZzadEWwgQlG3BCNufYl2fFtXJ3avQed6RUQ+arXyQZUFgS/dIKJ004ANjROm6qWmNTSJME
+ 2qxF+Uch8voPKmQbaicCsG1Reh56vSyepC6ZA2ObEGTaugEQ0yy/Gq3YjmWSXUO+d7WFejYsD
+ gz8Pq9DyUDpOzK7R2HgV18Q+wYEgXp7/ZGnbs4AV4bB/ATqLCnGuTO6TGYgxs9DJYT/DHle5E
+ hcUHQ7LwLOcUjVVMzy989VEbWxu0xfhp+XPIGHDWz67Hz+1tPnpfjJe3ctXqnjIeqrhAR3z7b
+ MiKnfHb5fcVHI9/mAxA7N1vhOSztnYqOgJc5nps7yCLqiBWf+dfGZm7A5ydK7GeGiJwW+5Ulk
+ MmRvvFEynA9wT8B0GZkbXjukL1AGE4ovvsGdc5v2vlmNyNb5glF7fRQnGVhHE5KWLzNhzdfz+
+ Pj9lxG1Z+rD7ZNfzEW/H1c3d1Idfr0TP0kYaC/h3MGy3ZZUKzbmucio2mceJi/8/Y1VcqZLyJ
+ ULH0jGQqpr7rBFlRHW/FLKbYkX/7DMLPMGp7bmRmDkk3nj3EyRERadSkb+VaT0NW4SV+nmyDa
+ xxzvhAqshsf7WoavewncG1XQW+koBKH+qQng89Gq0GlJmU+gc3gHip28w2xqLi59q7Cc+qdj4
+ eMSyZI8NN0EjKXNifheNXQiQhzyniH7ADlIN+cTBR9LHJHsM2vFPFFYOQ5sbe03ocsPEVJ9ts
+ ND2SlQxHww27KsRKYBOEVYa6h6vGLmPjp0dSDJmkNQv6AYq+PwVO0mGgzOz3+N3uYEfIRRTZe
+ 9UnXdfSKtK9o7Hk2QpMRm5vyQUeDo5af3kZJ3XUpjDh031yl0+ylZF9WIAU5ZSB54wwDgytY2
+ jEuuJH9oILO7kaxfBrpl0yDIAi7uKRERappmefiYRiz9HgmRfuur1v8LzPCFfv/XjhDYY+pAQ
+ SXhVjVM76ZMy8D7/JVe0ZBXNKSYeIe
 
-Am 22.12.24 um 13:09 schrieb Thomas Wei=C3=9Fschuh:
+Am 23.12.24 um 00:06 schrieb Armin Wolf:
 
-> Hi Joshua,
+> Am 21.12.24 um 06:58 schrieb Kurt Borja:
 >
-> On 2024-12-19 18:31:22+0100, Joshua Grisham wrote:
->> Thank you both Thomas and Hans for your review and comments! I am
->> working on a v4 of the patch but had a few questions which I wanted to
->> clarify (they can also come after in a v5 etc in case I managed to get
->> this ready to go before anyone has the time to confirm and/or clarify
->> some things!).
-> Keep them coming :-)
->
->> Den tis 17 dec. 2024 kl 15:23 skrev Hans de Goede <hdegoede@redhat.com>=
-:
->>> On 16-Dec-24 5:46 PM, Thomas Wei=C3=9Fschuh wrote:
->>>>> +Various hardware settings can be controlled by the following sysfs =
-attributes:
->>>>> +
->>>>> +- ``allow_recording`` (allows or blocks usage of built-in camera an=
-d microphone)
->>>>> +- ``start_on_lid_open`` (power on automatically when opening the li=
-d)
->>>>> +- ``usb_charge`` (allows USB ports to provide power even when devic=
-e is off)
->>>> Non-standard sysfs attributes should be avoided where possible.
->>>> Userspace will need bespoke code to handle them.
->>>> This looks like it could be handled by the standard firmware_attribut=
-es
->>>> interface.
->>>> This would standardize discovery and usage.
->>> Ack this really feels like firmware-attributes. I would not be surpris=
-ed
->>> if there are matching BIOS settings and if changing those also changes
->>> the sysfs files and likewise if the sysfs settings persist over reboot=
-.
->>>
->> Yes 2 of these (not this "allow_recording" I think) are available via
->> BIOS and all 3 of them persist over restarts.
+>> Hi :)
 >>
->> Just so I am 100% clear what you mean here -- these type of attributes
->> should be created using the utilities available in
->> drivers/platform/x86/firmware_attributes_class.h so that they are
->> created under the path /sys/class/firmware-attributes/*/attributes/*/
->> ?
-> Yes.
+>> Hopefully these series are quite complete now. Your feedback is much
+>> appreciated!
+>>
+>> Previous discussions:
+>>
+>> [1]
+>> https://lore.kernel.org/platform-driver-x86/6m66cuivkzhcsvpjv4nunjyddqh=
+r42bmjdhptu4bqm6rm7fvxf@qjwove4hg6gb/
+>> [2]
+>> https://lore.kernel.org/platform-driver-x86/20241205002733.2183537-3-ku=
+urtb@gmail.com/
+>>
+>> Comments
+>> =3D=3D=3D=3D=3D=3D=3D=3D
+>>
+>> Patches 14 and 20 are proposals. Feel free to NACK them.
+>>
+>> ~ Kurt
 >
->> What exactly should they be named (any preference?) and should I also
->> add some documentation for them in
->> Documentation/ABI/testing/sysfs-class-firmware-attributes ?
-> I think they are meant to be named consistently with what the native
-> UEFI setup interface calls them.
-> And yes, they should be documented.
+> Nice work, i will take a close look at those patches tomorrow.
 >
->> I am fairly sure I understand the concept and can agree that it kind
->> of makes a lot of sense to be able to standardize the userspace
->> interface, especially for attributes which do the exact same thing
->> across different vendors/devices (unless it just as easily possible to
->> go based on some pattern matching e.g. like is done in udev and upower
->> with "*kbd_backlight*" etc) but as of now it looks like the only
->> examples implemented are for thinklmi, dell-wmi, and hp-bioscfg that I
->> can see so far?
-> The firmware-attributes don't really have a standardized semantic.
-> Here the standardization is more about the discovery and interaction.
-> Somebody can build a generic UI to change these settings, without the UI
-> knowing anything about what the setting actually does.
+> Thanks,
+> Armin Wolf
 >
-> If the setting maps to a another, more specific interface, that should
-> be used.
->
->> Before, I had tried to look through all of the various platform/x86
->> drivers and harmonize which names I picked for these sysfs attributes
->> (that is how I landed on "usb_charge" and "start_on_lid_open" as I
->> recall correctly) but I am not aware of any existing userspace tools
->> which are looking for anything like these (apart for
->> driver/vendor-specific utilities). Any recommendation from the very
->> wise people here would certainly be appreciated for these :)
-> [..] Snip, I don't feel qualify to comment on the input bits.
-
-Harmonization with other platform driver regarding the firmware attribute =
-names will
-likely not result in any benefits. I am not aware of any utility profiting=
- from such
-a thing.
-
->
->> Other notifications that I am wondering what the "right" way to handle
->> / using the right interface:
-> [..]
->
->> - When the battery charge control end threshold is reached, there is
->> an ACPI notification on this device as well that is the one I have
->> marked "ACPI_NOTIFY_BATTERY_STATE_CHANGED" -- the Samsung background
->> apps pop up a custom OSD that basically says something to the effect
->> that their "Battery saver is protecting the battery by stopping
->> charging" (can't remember the exact verbiage) and they change the
->> battery icon, but without doing anything else in my driver currently
->> the battery still reports state of "charging" even though it just sits
->> constantly at the percentage (and has the charging icon in GNOME etc).
->> I have seen the event come and go occasionally when I did not expect
->> it, but my working theory is that maybe it is if/when the battery
->> starts charging again if it dips too far below the target "end
->> threshold" and then notifies again when the threshold has been
->> reached. Armin also mentioned this before in a different mail; I guess
->> I would hope/expect there is an event or a function I could call to
->> have the state reflected correctly but I would not want that it
->> negatively impacts the normal behavior of charging the battery itself
->> (just that the state/icon would change would be ideal! as it functions
->> perfectly, it is just that the state and icon are not accurate).
-> Optimally the ACPI event would integrate with the ACPI battery driver.
-> See the handling of POWER_SUPPLY_STATUS_NOT_CHARGING in
-> drivers/acpi/battery.c.
-> Does the battery report the current rate as 0 when limiting?
-> Then something like acpi_battery_handle_discharging() could be used.
->
->
-> Thomas
-
-Can you send me the acpidump of your machine (with the fan bug)? I can che=
-ck how the
-ACPI battery handles this case internally.
+It seems that i overestimated my time schedule during the Christmas holida=
+ys, sorry.
+I will try to review those patches till new year.
 
 Thanks,
 Armin Wolf
 
+>>
+>> ---
+>> Changes since RFC:
+>> =C2=A0 - Incorporated comments from Ilpo which include style and organi=
+zation
+>> =C2=A0=C2=A0=C2=A0 issues
+>> =C2=A0 - Instead of splitting functionallity blocks, split WMI drivers
+>> (Due to
+>> =C2=A0=C2=A0=C2=A0 Armin's comments)
+>> =C2=A0 - Replaced most of the patches near the end because of the above
+>> change
+>> =C2=A0 - Some patches were squashed into eachother where it made sense
+>> =C2=A0 - Rebased on top of recent platform_profile changes!
+>>
+>> Kurt Borja (20):
+>> =C2=A0=C2=A0 alienware-wmi: Remove unnecessary check at module exit
+>> =C2=A0=C2=A0 alienware-wmi: Move Lighting Control State
+>> =C2=A0=C2=A0 alienware-wmi: Modify parse_rgb() signature
+>> =C2=A0=C2=A0 alienware-wmi: Improve hdmi_mux, amplifier and deepslp gro=
+up creation
+>> =C2=A0=C2=A0 alienware-wmi: Improve rgb-zones group creation
+>> =C2=A0=C2=A0 alienware_wmi: Clean variable declaration in thermal metho=
+ds
+>> =C2=A0=C2=A0 alienware-wmi: Add a state container for LED control featu=
+re
+>> =C2=A0=C2=A0 alienware-wmi: Add WMI Drivers
+>> =C2=A0=C2=A0 alienware-wmi: Add a state container for thermal control m=
+ethods
+>> =C2=A0=C2=A0 alienware-wmi: Refactor LED control methods
+>> =C2=A0=C2=A0 alienware-wmi: Refactor hdmi, amplifier, deepslp methods
+>> =C2=A0=C2=A0 alienware-wmi: Refactor thermal control methods
+>> =C2=A0=C2=A0 alienware-wmi: Split DMI table
+>> =C2=A0=C2=A0 MAINTAINERS: Update ALIENWARE WMI DRIVER entry
+>> =C2=A0=C2=A0 platform/x86: Rename alienware-wmi.c
+>> =C2=A0=C2=A0 platform/x86: Add alienware-wmi.h
+>> =C2=A0=C2=A0 platform-x86: Split the alienware-wmi driver
+>> =C2=A0=C2=A0 platform/x86: dell: Modify Makefile alignment
+>> =C2=A0=C2=A0 platform/x86: Update alienware-wmi config entries
+>> =C2=A0=C2=A0 alienware-wmi: Update header and module information
+>>
+>> =C2=A0 MAINTAINERS=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0 |=C2=A0=C2=A0=C2=A0 4 +-
+>> =C2=A0 drivers/platform/x86/dell/Kconfig=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 |=C2=A0=C2=A0 30 +-
+>> =C2=A0 drivers/platform/x86/dell/Makefile=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 |=C2=A0=C2=A0 45 +-
+>> =C2=A0 .../platform/x86/dell/alienware-wmi-base.c=C2=A0=C2=A0=C2=A0 |=
+=C2=A0 721 ++++++++++
+>> =C2=A0 .../platform/x86/dell/alienware-wmi-legacy.c=C2=A0 |=C2=A0=C2=A0=
+ 89 ++
+>> =C2=A0 .../platform/x86/dell/alienware-wmi-wmax.c=C2=A0=C2=A0=C2=A0 |=
+=C2=A0 526 +++++++
+>> =C2=A0 drivers/platform/x86/dell/alienware-wmi.c=C2=A0=C2=A0=C2=A0=C2=
+=A0 | 1269 -----------------
+>> =C2=A0 drivers/platform/x86/dell/alienware-wmi.h=C2=A0=C2=A0=C2=A0=C2=
+=A0 |=C2=A0 103 ++
+>> =C2=A0 8 files changed, 1491 insertions(+), 1296 deletions(-)
+>> =C2=A0 create mode 100644 drivers/platform/x86/dell/alienware-wmi-base.=
+c
+>> =C2=A0 create mode 100644 drivers/platform/x86/dell/alienware-wmi-legac=
+y.c
+>> =C2=A0 create mode 100644 drivers/platform/x86/dell/alienware-wmi-wmax.=
+c
+>> =C2=A0 delete mode 100644 drivers/platform/x86/dell/alienware-wmi.c
+>> =C2=A0 create mode 100644 drivers/platform/x86/dell/alienware-wmi.h
+>>
+>
