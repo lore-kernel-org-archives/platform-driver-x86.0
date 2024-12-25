@@ -1,112 +1,171 @@
-Received: from mout.gmx.net (mout.gmx.net [212.227.17.21])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yb1-f179.google.com (mail-yb1-f179.google.com [209.85.219.179])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C1B9C1DA21;
-	Wed, 25 Dec 2024 20:32:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.21
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E5D341DA21;
+	Wed, 25 Dec 2024 20:36:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1735158731; cv=none; b=rH1E+mhzJ54FIKu/lCOugF2ltCVE8ehhzN4fNvnAAbLIL5bRXQrvpGt7Wi3eYZBEoPmdxXMMIcqpCctX+cVadWiE/pezysGGK7qoxB7RmWHbRTF0dbBUl5v31DV037pe1b4Af9e7VzKr+2tW+bYF+OG7umoWTcNZC8wfFO5o5PA=
+	t=1735159008; cv=none; b=fly2AQJZej0WCqNdN3GdwX1iW4QzKfclf0pRpJCDMwgnC7t7aX2qvr6qpShyibCcZVC+8oXDVQ/rGdcEU45qTO61TaAWZIXN9vGNU3ZopKFC58TG1rjbriWxIHZk4GMJuNMvOk6cwlSOOgvnOHCjbKP8ed7WRwIdH3NrE8wMpM8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1735158731; c=relaxed/simple;
-	bh=N6tZbh2rxinOTZzDR/Zj9iWMCGgH9H9NNjC7z9uxuUI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=rY4y/iVsX+0k6Gc/CwTYL8lATy7y5EQDnwZrqiPsL4Uy/ByfworyXVwfXcT8Q33cCBjhAjkQTax9ppci3mTPA3ll7ySmFc6s17QjcV+rUa6dc6LPByFKbM2SpuHe+Bwg0EYDS/UfKLH2+VO3e5rWi/e7k8l1e0c8kkbMrOtPg74=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b=uF4NZT+0; arc=none smtp.client-ip=212.227.17.21
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
+	s=arc-20240116; t=1735159008; c=relaxed/simple;
+	bh=NvdY4eAqwSedZTcGtcTpJdDjRKDe4xJ3RxzFVwmjk6c=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=FD5HVqCZ9p7eW8e4ZYJh8n5Y21N0P2fIOjkFl0/n82G4dwrotg/kk175RvzOyuefoupjS5V1/Rq6V61RG+iCLfQqx8d3r4K1lzNn9cL1AQpdMP0s5AcU9rIsDPa+yZbD0GZMIQ9tN4vFTD5rRFnExiDl7QBikRMNG4QU3PR0frc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=HP1Lr8fs; arc=none smtp.client-ip=209.85.219.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b="uF4NZT+0"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.de;
-	s=s31663417; t=1735158680; x=1735763480; i=w_armin@gmx.de;
-	bh=Iaq3MdClClX5fgSo8glyJxrlnP7rY+yJr5h5LF24T0g=;
-	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:To:Cc:
-	 References:From:In-Reply-To:Content-Type:
-	 Content-Transfer-Encoding:cc:content-transfer-encoding:
-	 content-type:date:from:message-id:mime-version:reply-to:subject:
-	 to;
-	b=uF4NZT+0bVSQ1jxwndBOMoqzE2rYgNpebyw8iQNDPInIUHYttsx7MUvVBtA7jHRz
-	 eAFMKyMJJ0+XESBLQk7PFuRIOUHpBoJSiRqUpgCZo3SfNk5+V8Op+EkWSU+CYdPYp
-	 GGCXOBTGqPoeQAzx5irW75ALtEXiuKvqQyOGfD9oHWsWCzNjNhSTS2qJwC/Hz4m9n
-	 OUvYA0gsay8LTocdQrFNaOrYhT9dEx6iRZA6nS7/otLvMv1JkNH7dqD7YLDfx/KYz
-	 wPp1w+QXH/omFJkqM2PJbFElRqqgZLWcPCw8+ZpMxEGUSHkylcmMaeQXKM09AtBd8
-	 dVkN6TZKrz1Xj9/1ZQ==
-X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
-Received: from [192.168.2.35] ([91.137.126.34]) by mail.gmx.net (mrgmx105
- [212.227.17.168]) with ESMTPSA (Nemesis) id 1N9dsb-1tcycf2dgz-014CiD; Wed, 25
- Dec 2024 21:31:20 +0100
-Message-ID: <8680845b-fae0-4bc5-8baf-0b9bbaa9a298@gmx.de>
-Date: Wed, 25 Dec 2024 21:31:17 +0100
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HP1Lr8fs"
+Received: by mail-yb1-f179.google.com with SMTP id 3f1490d57ef6-e479e529ebcso5639259276.3;
+        Wed, 25 Dec 2024 12:36:46 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1735159006; x=1735763806; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=A7Bm7T2HPELM28oNd3NoQAGIueqyuQAnfW8bW1Ft5Vo=;
+        b=HP1Lr8fsmObiXwlHtOypXYihhzAEwOEnucUe6LEDUQ5xzl+tYa/XWfbO3ObKRNl7hx
+         60zAin/MmZH2r1emFSzAU5YQ+1SziGu0d3G4jYei5cJo7pPFXBtFUM2HexDvWZb8SR4U
+         QnsA874/R+U1RRy6UeyWg7lToeY+y2aZYXFs0EgYUpMRLlMnwdNMTSikxPUVkDWfMGx5
+         9WF3Xf7ZMK0qdmnBLcbNf33T/04lrjLa3VMpH0W9wYNmSeAZCygmdNQU86yjaDpFV5Xj
+         VKxohtFfDzn16vpNVLUJoaZLdERPwChRjhh3R72VNiIPIPHd5NrDUEO8+o2Ss0tYt4Kk
+         xcJA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1735159006; x=1735763806;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=A7Bm7T2HPELM28oNd3NoQAGIueqyuQAnfW8bW1Ft5Vo=;
+        b=sBPvtVPbpWV4YfG3s3pnDnCd9QaEcFIizsZH62B17J2FhSFC95pr6WhXOBiy4ixSp2
+         sIEqH1lIBDb6+UaOpzEmbqv4RlD4tBaQbZVlDlgJul+IjYqNVRLWC55TavDXGFB162vf
+         dncmVafQVoTTSw9GCbEEyHU1PU1HobpNzgkMkydZBitF6KABetUiE3i2Abmtqu9EBQht
+         D75IUsctmvF57XI3woIRQHWjGAgf70k/0Gmg8eRi4fKWnacED/+XbuOt+jlhdPU5Mcn+
+         Rg+tzwYPqcVnxYmp+m0QKYZIofT+knpCyidlNGpXgD5Iaxt4nwIn2Qxamak2kposu5J9
+         GVgA==
+X-Forwarded-Encrypted: i=1; AJvYcCXS9tV2gWx5oPAiX+GG/60WEPq8zRytWsRHAE6h3TraidqgU3qEon5DIr+8u3/EK/miDx7Qj9haU8n7hg0=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxRXaPwlgzCtLDg8ujbXs6M3ACM0ewQlVFfVhIBkeHEelyQRHTv
+	aV4oKvbEVACzdaRKrvSFNvXffqxJDlusIcmqnmvc+Czfzm10T2xZ
+X-Gm-Gg: ASbGncvfg9B0ByXGjWNhb9hPW8y2A3SIUylKfDst6SCnQl6QHJIx+rs3NJtOpWd3ppe
+	q6/yb+Zv/hXNKeQRq2sPEffV9JkoCuRiKCOZ52jOCn9065CTkH8mwOe1cOxz617jpAPVMou1QtD
+	NO9hauqQYVqhu/YXVFTLKTHa3MkjDahklCB69pZHz2mD/RNUpUa7tG3Vizp2UqOrNxE2n0U7UvI
+	UpDsOZcP/EyprqyD+DweytOZ9kuxkQ8Wm4n7BehbpxEOa/MlXlbGg==
+X-Google-Smtp-Source: AGHT+IFT/ONuxPMD048F6dUG3DLfuwWWncdWy3rWnx21afLHAh98YaUgaGIslWhwXOit75mP+AsmKw==
+X-Received: by 2002:a25:5803:0:b0:e4d:89e9:6a7f with SMTP id 3f1490d57ef6-e538c41ab61mr11140044276.50.1735159005718;
+        Wed, 25 Dec 2024 12:36:45 -0800 (PST)
+Received: from alphacentauri ([2800:bf0:82:1159:1ea9:11b1:7af9:1277])
+        by smtp.gmail.com with ESMTPSA id 3f1490d57ef6-e537cc7336bsm3590273276.25.2024.12.25.12.36.44
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 25 Dec 2024 12:36:44 -0800 (PST)
+Date: Wed, 25 Dec 2024 15:36:42 -0500
+From: Kurt Borja <kuurtb@gmail.com>
+To: Armin Wolf <W_Armin@gmx.de>
+Cc: platform-driver-x86@vger.kernel.org, ilpo.jarvinen@linux.intel.com, 
+	mario.limonciello@amd.com, hdegoede@redhat.com, linux-kernel@vger.kernel.org, 
+	Dell.Client.Kernel@dell.com
+Subject: Re: [PATCH 00/20] alienware-wmi driver rework
+Message-ID: <q57x6dxz5u4vgdhgnowcaxdwczlfam43rf2pwqhvtis665iudf@hrq6d5glx5os>
+References: <20241221055917.10555-1-kuurtb@gmail.com>
+ <66005d6f-e47e-4799-b90e-48751bff52fc@gmx.de>
+ <d2251554-593e-4830-895a-d4c0317589a0@gmx.de>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 0/2] Device managed platform_profile_register()
-To: Kurt Borja <kuurtb@gmail.com>, platform-driver-x86@vger.kernel.org
-Cc: hdegoede@redhat.com, ilpo.jarvinen@linux.intel.com, lenb@kernel.org,
- linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org,
- mario.limonciello@amd.com, mpearson-lenovo@squebb.ca, rafael@kernel.org,
- soyer@irl.hu
-References: <20241224140131.30362-2-kuurtb@gmail.com>
-Content-Language: en-US
-From: Armin Wolf <W_Armin@gmx.de>
-In-Reply-To: <20241224140131.30362-2-kuurtb@gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Provags-ID: V03:K1:X2ZirBSP3XK2hE8+PG1Fhz5nVGUOl3L0u/Uqu/+O8MysMNiD37P
- GUg39yTuIpEziNWSpZKhR3l8ActVPr5ptyLr1ve2vlCIzJAHOnUu9nLCIjGYdJi8ygVF1fz
- Pea/Ux2gCQXYHztocYpZtn97N5EJNmkSKHdV9XpMXXtTv8jHNu/RpVcCfMYHfsywwZzu19W
- Tpe1nXVeJ9xPC3lZAym0A==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:uRNKfnT9eQ8=;vCyEhqq3kgrPN5JXNEDoaLhCQTf
- kxhf4AFjHvlMFl8BMnThWm9nVE1vdQ2pQ+/fscilfsWaReVMpFsPoQD2c+u66obrASAOYRvHa
- ieX6UQVrKVw+PXnatSo8Kj3D23T2p3B/8pP+JUB0M4DZH7boUOJ2B+vbur6QiBIw/ibCHr7Yj
- 5adsfButQggDkri9Wjh/yL6XAHtQqy6Pwa9TZe4STWmCXKhaBhkbOJZRZTckApeHFx3600pWQ
- UKLbEsS7Z6LuNz5iQQ2IXZdFF1puf107mpNZV0x1Cpm15X7De2L99QMetSmRBe0KGu5DF4yb8
- YaYicq8LSufrrBr0Xmhpkc4LpuvhcDcz7FNoRKoPAXGv3s4s0+4YEusjBQpiqHSUyB2GfCbq2
- U62hlnmNxllmjE0GDPCuh5MrsUZEwT6zI63jtu3AQe8KmeGZ1vlGbAvBtRn3swbtqPkg1wlWM
- tNcGBbvms5U1q2iAg1aRwlF/u75MF4DHV0CzkSDVj9hJVcK3A650jzjBWuNC1Kd1dMLsLb8HJ
- HG6F0TmSCk8ZwKSl3Gw9m6N3t/Oyuv/HnDv2vtR05nfaVwr+xm1SrdA4IRI4X4Yn3do+Sg/Cx
- eUC+XEAYCCrslgOI7Dn7y4Mz7iB8cek5fH/DaGZDrUTr/poySJ8NuV3ImxHh7sTsiFmAH8/mU
- R25NtUrlUMgqP2vp6oEvOCdqwFkhDSqCgt7fg8EhAO5JeZ966ZzIAhs6XQNxT4j0sP6umsrxI
- OVpaj8stOfH825ZW6dqIcZTIrvEw8pswSVKFN0TJVl06wqzR0TFnPNkaMi0K+wgHy7SUd2l2H
- Iar5AbEZCKGEFYQWUvhuyUPClWtKQplduBd3QLIxN3auox5mTMrqEun7qXuiIFpYkC6TVyduD
- rrc37tAnCPc+kEbLES1tzYAn7Qg2LFGfW5v4xxlJw10pnFAfknAQfMZlBBvaJ9M0N27iBUUb3
- nfeDatpf1tqdmbL+qf6l1fCpOwnUe5bdh4seovknLDL1G9yd7pyqbQnNdVn9E7wGaSQddbYvr
- ZYQaHseqRRYfwko6qGSFS557dNIgw+sqhq23+lUWYX4a0jlMWuRoZu/4LJQW2Yua4yP9juNPY
- sbnKUDUv27O1j5K3Uz2Kvj3CUlzp0V
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <d2251554-593e-4830-895a-d4c0317589a0@gmx.de>
 
-Am 24.12.24 um 15:01 schrieb Kurt Borja:
+On Wed, Dec 25, 2024 at 09:25:35PM +0100, Armin Wolf wrote:
+> Am 23.12.24 um 00:06 schrieb Armin Wolf:
+> 
+> > Am 21.12.24 um 06:58 schrieb Kurt Borja:
+> > 
+> > > Hi :)
+> > > 
+> > > Hopefully these series are quite complete now. Your feedback is much
+> > > appreciated!
+> > > 
+> > > Previous discussions:
+> > > 
+> > > [1]
+> > > https://lore.kernel.org/platform-driver-x86/6m66cuivkzhcsvpjv4nunjyddqhr42bmjdhptu4bqm6rm7fvxf@qjwove4hg6gb/
+> > > [2]
+> > > https://lore.kernel.org/platform-driver-x86/20241205002733.2183537-3-kuurtb@gmail.com/
+> > > 
+> > > Comments
+> > > ========
+> > > 
+> > > Patches 14 and 20 are proposals. Feel free to NACK them.
+> > > 
+> > > ~ Kurt
+> > 
+> > Nice work, i will take a close look at those patches tomorrow.
+> > 
+> > Thanks,
+> > Armin Wolf
+> > 
+> It seems that i overestimated my time schedule during the Christmas holidays, sorry.
+> I will try to review those patches till new year.
 
-> Hi :)
->
-> This is meant to be merged on the pdx86 tree.
->
-> ~ Kurt
+Thanks, no worries :) Happy holidays!
 
-After thinking about it my second commit regarding the first patch is invalid, so for the
-whole series:
+~ Kurt
 
-Reviewed-by: Armin Wolf <W_Armin@gmx.de>
-
-> v2:
->   - Replaced convoluted cast with intermediate variable (1/2)
->   - Restored dropped empty line (1/2)
->   - Couldn't incorporate Armin's second comment. I probably didn't
->     understand it (1/2)
-> v1:
->   - https://lore.kernel.org/platform-driver-x86/20241221070817.3764-2-kuurtb@gmail.com
->
-> Kurt Borja (2):
->    ACPI: platform_profile: Add devm_platform_profile_register()
->    alienware-wmi: Use devm_platform_profile_register()
->
->   drivers/acpi/platform_profile.c           | 29 +++++++++++++++++++++++
->   drivers/platform/x86/dell/alienware-wmi.c | 10 +-------
->   include/linux/platform_profile.h          |  1 +
->   3 files changed, 31 insertions(+), 9 deletions(-)
->
->
-> base-commit: 03f8e0e05510dad6377cd5ef029594d30e6c096d
+> 
+> Thanks,
+> Armin Wolf
+> 
+> > > 
+> > > ---
+> > > Changes since RFC:
+> > >   - Incorporated comments from Ilpo which include style and organization
+> > >     issues
+> > >   - Instead of splitting functionallity blocks, split WMI drivers
+> > > (Due to
+> > >     Armin's comments)
+> > >   - Replaced most of the patches near the end because of the above
+> > > change
+> > >   - Some patches were squashed into eachother where it made sense
+> > >   - Rebased on top of recent platform_profile changes!
+> > > 
+> > > Kurt Borja (20):
+> > >    alienware-wmi: Remove unnecessary check at module exit
+> > >    alienware-wmi: Move Lighting Control State
+> > >    alienware-wmi: Modify parse_rgb() signature
+> > >    alienware-wmi: Improve hdmi_mux, amplifier and deepslp group creation
+> > >    alienware-wmi: Improve rgb-zones group creation
+> > >    alienware_wmi: Clean variable declaration in thermal methods
+> > >    alienware-wmi: Add a state container for LED control feature
+> > >    alienware-wmi: Add WMI Drivers
+> > >    alienware-wmi: Add a state container for thermal control methods
+> > >    alienware-wmi: Refactor LED control methods
+> > >    alienware-wmi: Refactor hdmi, amplifier, deepslp methods
+> > >    alienware-wmi: Refactor thermal control methods
+> > >    alienware-wmi: Split DMI table
+> > >    MAINTAINERS: Update ALIENWARE WMI DRIVER entry
+> > >    platform/x86: Rename alienware-wmi.c
+> > >    platform/x86: Add alienware-wmi.h
+> > >    platform-x86: Split the alienware-wmi driver
+> > >    platform/x86: dell: Modify Makefile alignment
+> > >    platform/x86: Update alienware-wmi config entries
+> > >    alienware-wmi: Update header and module information
+> > > 
+> > >   MAINTAINERS                                   |    4 +-
+> > >   drivers/platform/x86/dell/Kconfig             |   30 +-
+> > >   drivers/platform/x86/dell/Makefile            |   45 +-
+> > >   .../platform/x86/dell/alienware-wmi-base.c    |  721 ++++++++++
+> > >   .../platform/x86/dell/alienware-wmi-legacy.c  |   89 ++
+> > >   .../platform/x86/dell/alienware-wmi-wmax.c    |  526 +++++++
+> > >   drivers/platform/x86/dell/alienware-wmi.c     | 1269 -----------------
+> > >   drivers/platform/x86/dell/alienware-wmi.h     |  103 ++
+> > >   8 files changed, 1491 insertions(+), 1296 deletions(-)
+> > >   create mode 100644 drivers/platform/x86/dell/alienware-wmi-base.c
+> > >   create mode 100644 drivers/platform/x86/dell/alienware-wmi-legacy.c
+> > >   create mode 100644 drivers/platform/x86/dell/alienware-wmi-wmax.c
+> > >   delete mode 100644 drivers/platform/x86/dell/alienware-wmi.c
+> > >   create mode 100644 drivers/platform/x86/dell/alienware-wmi.h
+> > > 
+> > 
