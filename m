@@ -1,186 +1,477 @@
-Received: from mail-il1-f172.google.com (mail-il1-f172.google.com [209.85.166.172])
+Received: from mail-pj1-f43.google.com (mail-pj1-f43.google.com [209.85.216.43])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 55F72647;
-	Thu, 26 Dec 2024 16:08:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D7912BCF5
+	for <platform-driver-x86@vger.kernel.org>; Thu, 26 Dec 2024 17:42:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1735229310; cv=none; b=G7MlxcQn3uHVDf7EiA/AVBSBwOIM6gZqkA4BBDK8GWvYaMnvsahADlKbIrusb4LLkbQaw202OcdOJeVQ0Bj5naz9dldrXtor2qvjZ2fMYCKn9DanFIRXIfX2/9h+6dM5mXTYfeGRwsCiDHYwGh/aEyY6Fqzw1HAHucYv3MiboFs=
+	t=1735234958; cv=none; b=fbBGSqX75Vlf8Q26Pp0VPx2oLbRPTIUvZLifMnow2gkufvQ2ZyN7Cc8L5lRm9ClTkMB82HhcEPVsaPn551KDVWe5YwH2d/AQpLmgO8Hfx3Z4QVzF6OElSfampJgcXSb4l8RRZaQia76hz4xtK78LAe4zTp6xhT3boW+9o3AVoNA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1735229310; c=relaxed/simple;
-	bh=tbTZDMPPHbKy4KYERWbLt6yjZwM7Jrzj4liy2enA1io=;
+	s=arc-20240116; t=1735234958; c=relaxed/simple;
+	bh=RqqGGR3XdBuyk6v9Af+guoVQ1l6w2YsmJywQeTIj2x0=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=msO7C34+yylf9k3OP7pFYqiI4pAm/6v5E47+zdG/0NnALKqeeN4i81HipAjwe52u0iHwlDw2PtE3j7hcVCKHn6bTH7w/Muiz/AtNbbErdzuALF252oxomE/ts2pk02vsVntSZsKHgBK/hlym/nEUcv+u3xemev9xtVcMniRJ90Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=joshuagrisham.com; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.166.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=joshuagrisham.com
+	 To:Cc:Content-Type; b=MQyPYG8KIZEGSes8hCSS/HoD7Z7Y2KaLeJ0iflwmuKZIAHXzjvJ6Q450BrDEH0xOnlhmGnXiPT/NYWCPjVqMV5Kkk8rBmG5sPyIQgXaBTjYOfZ8YFdYqT79rK/4IgNBoD2mqrdgtj4H5V+zvWMGzMi/SO9X8fy1yksNtqQw7+Jk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=WaPC9iAS; arc=none smtp.client-ip=209.85.216.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-il1-f172.google.com with SMTP id e9e14a558f8ab-3a8f1c97ef1so21835165ab.2;
-        Thu, 26 Dec 2024 08:08:26 -0800 (PST)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WaPC9iAS"
+Received: by mail-pj1-f43.google.com with SMTP id 98e67ed59e1d1-2ef72924e53so7771178a91.3
+        for <platform-driver-x86@vger.kernel.org>; Thu, 26 Dec 2024 09:42:36 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1735234955; x=1735839755; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=iHluA9ooYeuRjZokwHyh2m5472MC56qInzO6Uq+4/Pg=;
+        b=WaPC9iASACrepKNzv5msn2HFqhqdmfgpEzgoAjqXaSuUIFmG7nll77g7JkijFNWU40
+         6TlTd+r9+uqqDhYePWNWTomM+VeIi+wOkp3WYv6h9mVbo7Gv7qOPb/pKSRGXl3lgcJAU
+         x0x1vAn205ZxUO18M3hXOZg5Otcrt7s2jlxyHWyB2gFPO4QhjbGK8GN8jKNY6kCOkdXq
+         FK53jf8GtuiJUiwrshP2M1BHnb1vcLyuFHmQkXXZH8zfUxlPYmdlY4WFxfvMUUyOOJbB
+         WK24kR7oLBBmyGjalrxVXbGs2ZvhvaTQHewoe3tvMcAF9fiRHHq3GKMUiaR5G648ARru
+         OOSw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1735229305; x=1735834105;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=TA1/Ar8ydSa+9gCDaaHBRCvZ/iUA+ufOprlYsP/S4Vg=;
-        b=nyPOKWHQ6SlOr8usj8rHxqWMT91YX6CtA8uBmrUw6CyV9+yPeq/tNVno8fzx6VlRuU
-         2ymPpxhCl7nUsxERMlAaR9qkzssRAt6njY7PBytNmU0FMV3Q60AO7zckHyww4bkmxvHt
-         aH3asaa/2SyP5kKmc8teFYaghXFA/L4hMg7rUF/KvAcQnwUONI4Gl0CVmcLoXpg4t7j3
-         wDwjNsMZnUBf5E9PuPglMtAN50o53WcJn7edt+EVCKu0zV10IOBsmjr+oIQI3b3lKrRF
-         bGB9ypjtGnwBh3APObgofpzX3BZ5oO7GDbe397XZ82zkaxwVm6ay+uT82GcbXZrEIaHy
-         wH/g==
-X-Forwarded-Encrypted: i=1; AJvYcCUYnxLuj5jT75hUibwvJ+WKNvxaVAw+nOrDaNaQz8tDH3ZtrD73HQFf59MfFoGY08UFbENauvEco+Eg2fX2JqH6GM9PjA==@vger.kernel.org, AJvYcCVgzBnsxPiChs7CQ2FKH+f2WlSgVxX+RY9SKHTFGnpCbM7iujrcd1+uI5+nVeJ1HL8Bu6NrhuDeCvc=@vger.kernel.org, AJvYcCXjO9AiDFkLeSYbuFLYJadftG7fTd6zTQLhZ+ey86OJrnX1APgnBZM+oyjjFD5yRWGhPIE7uMTURKFbo2uh@vger.kernel.org
-X-Gm-Message-State: AOJu0YyvUea+ZoWiHooH/omTkZHFAWvU3pmMJB3UhTF3VSqNkTABQk8X
-	7kWPi5Izh3JBsvEyePZNfM9B9RUzuNfMGkjMagm9ya4KYG8LmxSDOyIWKelFENQ=
-X-Gm-Gg: ASbGncvbn3tYP60xvwd5jBybBFcFs7pGKXE+t12W6FqI4uixyqS/yQw11wOD3nhBfer
-	BHaNXFNZw0HCIybg80yRLtDRZQW6tN9HDw62TzrajiMw37y1ScEJYTKrXwR+SP0rJT8xy3jtDRI
-	xCgSroCJ542cmMjlTxUMA02P9H04N+5/+BBYuep/feFpzrgMvvZRdDzv+Xm1jE1/Ed1bfCYoslj
-	UUjuFDkyZ0/P2A03Rnz4wgLebAxZs2qTaSluqYyuWawoeeOxY7kmghf/pTKNKPyQhpdz79A3Elf
-	BVzbh9CU7mQruUmZidoPNPxwiA==
-X-Google-Smtp-Source: AGHT+IGUnnpYWKO6vaQnE+nDmPIgCLsHfI/Sdxl8igwkOWqacwjxlB4EFYHz+tDfVO3/Vo/fNGoKbQ==
-X-Received: by 2002:a05:6e02:188d:b0:3a7:e452:db5 with SMTP id e9e14a558f8ab-3c2d4c8314dmr204741575ab.15.1735229305140;
-        Thu, 26 Dec 2024 08:08:25 -0800 (PST)
-Received: from mail-il1-f179.google.com (mail-il1-f179.google.com. [209.85.166.179])
-        by smtp.gmail.com with ESMTPSA id e9e14a558f8ab-3c0decceef7sm40464475ab.24.2024.12.26.08.08.24
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 26 Dec 2024 08:08:24 -0800 (PST)
-Received: by mail-il1-f179.google.com with SMTP id e9e14a558f8ab-3a8f1c97ef1so21835075ab.2;
-        Thu, 26 Dec 2024 08:08:24 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCUQXNkeqSS5QS+DjiMvymOSLRNgNwnlYJgrshO+5wosryrsk6qYWpN2+P9E/4CRqQiPpcNsWpqb2UU=@vger.kernel.org, AJvYcCUdX1gLpTUJ6ZG55XIYsdA+fUWs86nlM7ICNYlGlb8Ep9MewAyi2Ih5/zSs0k/rVTwJUTf5hww2zded4VC6@vger.kernel.org, AJvYcCWR2yQY4/+wUxNWxx2B3cvNfmba6ENQuJ5sDYVjSGp0gF4cWJHD7ZID/6ZwZaZLgWENyadPWlC3b+eOoAzhvl2zpKpq6Q==@vger.kernel.org
-X-Received: by 2002:a05:6e02:1c05:b0:3a7:4eee:b7b9 with SMTP id
- e9e14a558f8ab-3c2d2975e44mr162550965ab.13.1735229304720; Thu, 26 Dec 2024
- 08:08:24 -0800 (PST)
+        d=1e100.net; s=20230601; t=1735234955; x=1735839755;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=iHluA9ooYeuRjZokwHyh2m5472MC56qInzO6Uq+4/Pg=;
+        b=gdl/64/yuo2FsTwGBm5TQzWr9lNXMhVhBZQeU8n7wWKoSX/aQpvw2V9horpV/uGipv
+         QgFCs9RtQt04CY6BSVF/T3dvh+08pcvvBK00weHB2V8TMx1YckZcFDcOSZvLo6zOdY6I
+         280AA9lrZW6BTKDsRiE3wq/zieJ3AVCveVqsFnltp1jF1lfiHZfqGZuA8vRicY9rLxrU
+         zAiBh42vTFxTtYXbm2U9zsNXLK9GQow0SapaE69CYbGz8A6ac8ar2R24/0sBILrYVYWf
+         yvUTUlagPFtOj3Nx/umNVlwV+8wVnDgqRWBMAqwcsQg5VMGMdNzFE5/tjgXippu7zf3T
+         gXXQ==
+X-Gm-Message-State: AOJu0YxQBxs/f3jf5xCUKX7R6n4nJ23+u/9i0HJJLPt6Jy0RWFOeR+Z7
+	/7ObiV28tt72zVOZUYOiLVhjHl2wlS24EKDOeR1l67yubEEXnjaCMox65AQi4cUIM99xRTCQxWm
+	P4yhwzorMQc1rC0EFA+TEYQ1tG5qy5elq
+X-Gm-Gg: ASbGnctPt9173J9QAD+DT7AucgXusUi3uHeqB/DlWTjAlrC1AC8V/V2fBEUKvemmF7c
+	+c/chSHeizdt4JmIkuJCxJNssbWakFGUGFQ==
+X-Google-Smtp-Source: AGHT+IEWvDVyjB36w8QSRQmwePw/tq7FPMAfGKa0E2FILAmKtOKOkxQut5G+KxfRt2OE1iciu+L/EZ1myKUb0Ekhy84=
+X-Received: by 2002:a17:90a:e18b:b0:2ee:9902:18b4 with SMTP id
+ 98e67ed59e1d1-2f452ee838bmr34954660a91.27.1735234955153; Thu, 26 Dec 2024
+ 09:42:35 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20241216103855.18457-1-josh@joshuagrisham.com>
- <13184052-baf2-4e7d-b8ef-9ba3f34d475a@t-8ch.de> <66897a27-5f81-46fc-898d-682456d7f37f@redhat.com>
- <CAMF+KeZ3uAWZuuPJcrrvTJS-TgyxkqXOY_w=wNw7eZQiUkV5YA@mail.gmail.com>
- <c2b5e0c8-651f-426e-ae96-13857313997a@t-8ch.de> <a4ad8907-34e3-4785-a62a-a1f41ddd6e1e@gmx.de>
-In-Reply-To: <a4ad8907-34e3-4785-a62a-a1f41ddd6e1e@gmx.de>
-From: Joshua Grisham <josh@joshuagrisham.com>
-Date: Thu, 26 Dec 2024 17:08:13 +0100
-X-Gmail-Original-Message-ID: <CAMF+KeYEarSLRyhS1o4AA7-Uy40_v0k2Bebhjzo9yKF=2k0jQQ@mail.gmail.com>
-Message-ID: <CAMF+KeYEarSLRyhS1o4AA7-Uy40_v0k2Bebhjzo9yKF=2k0jQQ@mail.gmail.com>
-Subject: Re: [PATCH v3] platform/x86: samsung-galaxybook: Add
- samsung-galaxybook driver
+References: <CALiyAom1xDH6A0Q2WNHCMUcpMJfM3pXO2DaW=bgHGUi8ZOpBbQ@mail.gmail.com>
+ <8b8749c1-59c8-4f95-a43e-055cf94f9597@gmx.de> <CALiyAo=R1kcvwRpw22s=YU0YHUxR8T_WHLwSvDr=8Ahsenn-jA@mail.gmail.com>
+ <9c625119-e46e-464b-933d-9c836577f454@gmx.de> <CALiyAo=7kVi4ipA5-xDfRYQ-gqyza0woYHUzwGuW5BccLOVHgg@mail.gmail.com>
+ <209f39ab-a312-45b5-981c-8324d9b8cd90@gmx.de> <CALiyAo=GpKN2Aty5c3Bw0Vh4U16vgUP29pZkaeBsOKw8kcK29w@mail.gmail.com>
+ <c5124fb9-74af-4c90-9edc-ddb3517cd9ac@gmx.de> <CALiyAok0_JKE+BkUQxHHH8Z39FHq5bW0Hb1Gk-MYHgDy0yFoMA@mail.gmail.com>
+ <cea0918c-7c7d-49e1-8b33-b952b64d67f1@gmx.de> <d7be714c-3103-42ee-ad15-223a3fe67f80@gmx.de>
+ <CALiyAomaT5y10Bawth3X44WB9Cie1fhW0GyBZgASo7ySK6g9zQ@mail.gmail.com> <ecb60ee5-3df7-4d7e-8ebf-8c162b339ade@gmx.de>
+In-Reply-To: <ecb60ee5-3df7-4d7e-8ebf-8c162b339ade@gmx.de>
+From: Hridesh MG <hridesh699@gmail.com>
+Date: Thu, 26 Dec 2024 23:11:58 +0530
+Message-ID: <CALiyAonsOGLz9zoj_tA1aZsMbU24wKihiK7h2ONodfEB2HE1qQ@mail.gmail.com>
+Subject: Re: acer-wmi: Nitro button doesn't produce a WMI event
 To: Armin Wolf <W_Armin@gmx.de>
-Cc: =?UTF-8?Q?Thomas_Wei=C3=9Fschuh?= <linux@weissschuh.net>, 
-	Joshua Grisham <josh@joshuagrisham.com>, Hans de Goede <hdegoede@redhat.com>, 
-	ilpo.jarvinen@linux.intel.com, platform-driver-x86@vger.kernel.org, 
-	corbet@lwn.net, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: platform-driver-x86@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi Armin,
-
-Den ons 25 dec. 2024 kl 21:23 skrev Armin Wolf <W_Armin@gmx.de>:
+On Thu, Dec 26, 2024 at 2:22=E2=80=AFAM Armin Wolf <W_Armin@gmx.de> wrote:
 >
-> Harmonization with other platform driver regarding the firmware attribute names will
-> likely not result in any benefits. I am not aware of any utility profiting from such
-> a thing.
+> Am 24.12.24 um 19:45 schrieb Hridesh MG:
 >
-
-I just posted a v4 of the patch where I have moved the device sysfs
-attributes to firmware-attributes as requested by both Thomas and
-Hans. With this change, I did try to "harmonize" the names as best as
-I could anyway, recognizing that there are several device drivers in
-the tree which have actually currently implemented these as device
-sysfs attributes instead, but in theory they could be moved over to
-use the same firmware attribute instead ? e.g. all of the ones that
-have a usb_charge or usb_charging device attribute could be moved to
-use this new usb_charging firmware-attribute if it is desired at a
-later time?
-
-Here were the examples I could find online for different devices that
-drove my rationale for the names that I picked:
-
-1) and maybe easiest to start with: for what I had as
-"allow_recording" I thought would be better to change to be a "block"
-as per Samsung's own documentation and implementation, but then to
-also try and harmonize how it would be interpreted by other tools
-including this switch input event, I chose to switch this entire
-feature to the name "camera lens cover". Hopefully this is ok! The
-only "weird" thing in my opinion is that on this particular device,
-there is a side-effect that the microphone is also blocked as well
-(which is not obviously indicated by this naming, but not totally hard
-to understand, either).
-
-2)  for what I had called "start on lid open", I found the following
-vendors with various names for the same kind of feature:
-HP: "Power On When Lid is Opened"
-Dell/Alienware: "Power On Lid Open"
-Huawei: "Auto Power On"
-Samsung Galaxy Book: "Startup when Lid is Opened"
-Lenovo: "Flip to Start"
-
-So for this, I tweaked my driver's name slightly to try and fit the
-middle ground between all of these, and went with the name
-power_on_lid_open
-
-3) for what I had called "usb charge":
-Lenovo: Always On USB
-Asus: USB power delivery in Soft Off state (S5)
-Dell: USB PowerShare
-Razer: USB Charge Function
-Existing drivers for Chrome, LG, and samsung-laptop call it "USB
-Charge" (long name "USB Charge in Sleep Mode")
-Fujitsu Lifebook: "Anytime USB Charge"
-Acer: "Power-off USB Charging"
-HP: "USB Charging"
-Samsung Galaxy Book series: "USB Charging"
-
-In effort to make this as descriptive as possible and mostly fit all
-of these, I went with the name usb_charging
-
-All 3 of these I have added to the ABI-Testing documentation and
-removed my local documentation for them.
-
-Anyway I am hoping that all of this makes sense and helps, but please
-feel free anyone to say if I got any of this wrong :)
-
-> [...]
+> >> Am 24.12.24 um 00:06 schrieb Armin Wolf:
+> >> This WMI call is already supported by the driver and exposed to usersp=
+ace using the platform profile interface.
+> >> It seems however that your device:
+> >>
+> >> - does only support the turbo profile and not the other OC settings
+> >>
+> >> - only supports a subset of the platform profile choices
+> >>
+> >> - uses a different EC address for storing the current platform profile
+> >>
+> >> Can you test kernel patches? I can prepare a patch for you which:
+> >>
+> >> - puts your device on the necessary whitelists
+> >>
+> >> - fixes the platform profile handling
+> >>
+> >> Thanks,
+> >> Armin Wolf
+> > Oh I see, thank you for your work! Actually, could I work on the patch
+> > myself? I'd like to take this as an opportunity to learn something
+> > new, I'm also a mentee under the LFX kernel bug fixing mentorship
+> > program and was hoping to create a patch which could count towards my
+> > graduation requirements out of this issue.
+> >
+> > I understood the rest, but if it isn't too much of a bother, could you
+> > tell me how you found out the EC address? (or the fact that it was
+> > different)
+> >
+> > Thanks,
+> > Hridesh MG
 >
-> Can you send me the acpidump of your machine (with the fan bug)? I can check how the
-> ACPI battery handles this case internally.
+> This is the full definition of the Acer gaming WMI interface on your mach=
+ine:
 >
-
-I looked further into this one as well. What I see is that the battery
-device itself actually also receives a notification when this happens
-(so 3x events are generated for the same thing on this device; a
-keypress on the keyboard device, an ACPI notification on their "SCAI"
-settings device, and an ACPI notification on the battery device
-itself), and based on what I can tell in the code in ACPI core is
-already "updating" status based on what is read from _BST from the
-battery device. I think then that the "real" problem is that my
-device's _BST is not reporting these parts correctly as per
-https://uefi.org/specs/ACPI/6.5_A/10_Power_Source_and_Power_Meter_Devices.html#bst-battery-status
-and especially in regards to the part about reporting Battery Charge
-Limiting state.
-
-So for now I have made it so that this driver will aim that the
-notification to the battery device is the one that "matters": the
-keyboard event is now filtered away, and I removed any special
-handling of the extra ACPI settings device notification (but do send
-the notification along as an ACPI netlink event in case anyone really
-wants to create their own notification or action from it). I thought
-to also try to take this one up with Samsung; though I am skeptical
-that they would fix it for existing devices like mine,  maybe it will
-help with newer or future devices! In the end it is not too big of a
-deal as the device works well, it is only the icon and status that are
-not being updated correctly.
-
-> Thanks,
-> Armin Wolf
+> [WMI, Dynamic, Provider("WmiProv"), Locale("MS\\0x409"), Description("Cla=
+ss used to Gaming Function, Version 2.88"), guid("{7A4DDFE7-5B5D-40B4-8595-=
+4408E0CC7F56}")]
+> class AcerGamingFunction {
+>    [key, read] string InstanceName;
+>    [read] boolean Active;
 >
+>    [WmiMethodId(1), Implemented, read, write, Description("Set Acer Gamin=
+g Profile Configuration.")] void SetGamingProfile([in] uint64 gmInput, [out=
+] uint32 gmOutput);
+>    [WmiMethodId(2), Implemented, read, write, Description("Set Acer Gamin=
+g LED Behavior.")] void SetGamingLED([in] uint8 gmInput[12], [out] uint32 g=
+mOutput);
+>    [WmiMethodId(3), Implemented, read, write, Description("Get Acer Gamin=
+g Profile Configuration.")] void GetGamingProfile([in] uint32 gmInput, [out=
+] uint64 gmOutput);
+>    [WmiMethodId(4), Implemented, read, write, Description("Get Acer Gamin=
+g LED Behavior.")] void GetGamingLED([in] uint32 gmInput, [out] uint8 gmRet=
+urn, [out] uint8 gmOutput[11]);
+>    [WmiMethodId(5), Implemented, read, write, Description("Get Acer Gamin=
+g System Information.")] void GetGamingSysInfo([in] uint32 gmInput, [out] u=
+int64 gmOutput);
+>    [WmiMethodId(6), Implemented, read, write, Description("Set Acer Gamin=
+g RGB Keyboard Setting.")] void SetGamingRgbKb([in] uint64 gmInput, [out] u=
+int32 gmOutput);
+>    [WmiMethodId(7), Implemented, read, write, Description("Get Acer Gamin=
+g RGB Keyboard Setting.")] void GetGamingRgbKb([in] uint32 gmInput, [out] u=
+int64 gmOutput);
+>    [WmiMethodId(8), Implemented, read, write, Description("Set Acer Gamin=
+g Profile Setting.")] void SetGamingProfileSetting([in] uint64 gmInput, [ou=
+t] uint32 gmOutput);
+>    [WmiMethodId(9), Implemented, read, write, Description("Get Acer Gamin=
+g Profile Setting.")] void GetGamingProfileSetting([in] uint32 gmInput, [ou=
+t] uint64 gmOutput);
+>    [WmiMethodId(10), Implemented, read, write, Description("Set Acer Gami=
+ng LED Group Behavior.")] void SetGamingLEDBehavior([in] uint64 gmInput, [o=
+ut] uint32 gmOutput);
+>    [WmiMethodId(11), Implemented, read, write, Description("Get Acer Gami=
+ng LED Group Behavior.")] void GetGamingLEDBehavior([in] uint32 gmInput, [o=
+ut] uint64 gmOutput);
+>    [WmiMethodId(12), Implemented, read, write, Description("Set Acer Gami=
+ng LED Group Color.")] void SetGamingLEDColor([in] uint64 gmInput, [out] ui=
+nt32 gmOutput);
+>    [WmiMethodId(13), Implemented, read, write, Description("Get Acer Gami=
+ng LED Group Color.")] void GetGamingLEDColor([in] uint32 gmInput, [out] ui=
+nt64 gmOutput);
+>    [WmiMethodId(14), Implemented, read, write, Description("Set Acer Gami=
+ng Fan Group Behavior.")] void SetGamingFanBehavior([in] uint64 gmInput, [o=
+ut] uint32 gmOutput);
+>    [WmiMethodId(15), Implemented, read, write, Description("Get Acer Gami=
+ng Fan Group Behavior.")] void GetGamingFanBehavior([in] uint32 gmInput, [o=
+ut] uint64 gmOutput);
+>    [WmiMethodId(16), Implemented, read, write, Description("Set Acer Gami=
+ng Fan Group Speed.")] void SetGamingFanSpeed([in] uint64 gmInput, [out] ui=
+nt32 gmOutput);
+>    [WmiMethodId(17), Implemented, read, write, Description("Get Acer Gami=
+ng Fan Group Speed.")] void GetGamingFanSpeed([in] uint32 gmInput, [out] ui=
+nt64 gmOutput);
+>    [WmiMethodId(18), Implemented, read, write, Description("Set Acer Gami=
+ng Fan Table.")] void SetGamingFanTable([in] uint64 gmInput, [out] uint32 g=
+mOutput);
+>    [WmiMethodId(19), Implemented, read, write, Description("Get Acer Gami=
+ng Fan Table.")] void GetGamingFanTable([out] uint64 gmOutput);
+>    [WmiMethodId(20), Implemented, read, write, Description("Set Acer Gami=
+ng Keyboard Backlight Behavior.")] void SetGamingKBBacklight([in] uint8 gmI=
+nput[16], [out] uint32 gmOutput);
+>    [WmiMethodId(21), Implemented, read, write, Description("Get Acer Gami=
+ng Keyboard Backlight Behavior.")] void GetGamingKBBacklight([in] uint32 gm=
+Input, [out] uint8 gmReturn, [out] uint8 gmOutput[15]);
+>    [WmiMethodId(22), Implemented, read, write, Description("Set Acer Gami=
+ng Miscellaneous Setting.")] void SetGamingMiscSetting([in] uint64 gmInput,=
+ [out] uint32 gmOutput);
+>    [WmiMethodId(23), Implemented, read, write, Description("Get Acer Gami=
+ng Miscellaneous Setting.")] void GetGamingMiscSetting([in] uint32 gmInput,=
+ [out] uint64 gmOutput);
+>    [WmiMethodId(24), Implemented, read, write, Description("Set CPU Overc=
+locking Profile.")] void SetCPUOverclockingProfile([in] uint8 OCProfile, [i=
+n] uint8 OCStructure[512], [out] uint8 ReturnCode, [out] uint8 Reserved[3])=
+;
+>    [WmiMethodId(25), Implemented, read, write, Description("Get CPU Overc=
+locking Profile.")] void GetCPUOverclockingProfile([in] uint8 Reserved[4], =
+[out] uint8 ReturnCode, [out] uint8 ReturnOCProfile, [out] uint8 OCStructur=
+e[512]);
+> };
+>
+> The method "SetGamingMiscSetting"  is used to set the platform profile. F=
+or reading however the EC is accessed by the acer-wmi driver.
+>
+> This is the ACPI code responsible for handling "SetGamingMiscSetting" and=
+ "GetGamingMiscSetting" (Arg1 is the WMI method id, Arg2 contains the input=
+ arguments):
+>
+>                  If ((Arg1 =3D=3D 0x16))
+>                  {
+>                      BHSK =3D Arg2
+>                      Local0 =3D DerefOf (BHSK [Zero])
+>                      Local1 =3D DerefOf (BHSK [One])
+>                      BHSK [Zero] =3D 0x03
+>                      If ((Local0 =3D=3D One))
+>                      {
+>                          \_SB.PC00.LPCB.EC0.TKST =3D Local1
+>                          BHSK [Zero] =3D Zero
+>                      }
+>                      ElseIf ((Local0 =3D=3D 0x02))
+>                      {
+>                          WSMI (Arg1, Arg2)
+>                          BHSK =3D WMIB /* \_SB_.PC00.WMID.WMIB */
+>                      }
+>                      ElseIf ((Local0 =3D=3D 0x05)){}
+>                      ElseIf ((Local0 =3D=3D 0x06))
+>                      {
+>                          WSMI (Arg1, Arg2)
+>                          BHSK =3D WMIB /* \_SB_.PC00.WMID.WMIB */
+>                      }
+>                      ElseIf ((Local0 =3D=3D 0x07)){}
+>                      ElseIf ((Local0 =3D=3D 0x08))
+>                      {
+>                          WSMI (Arg1, Arg2)
+>                          BHSK =3D WMIB /* \_SB_.PC00.WMID.WMIB */
+>                      }
+>                      ElseIf ((Local0 =3D=3D 0x09))
+>                      {
+>                          BHSK [Zero] =3D One
+>                      }
+>                      ElseIf ((Local0 =3D=3D 0x0A))
+>                      {
+>                          BHSK [Zero] =3D 0x03
+>                      }
+>                      ElseIf ((Local0 =3D=3D 0x0B))
+>                      {
+>
+> This code in particular is responsible for setting the platform profile. =
+Noticed the OPMS field here which is used to
+> store the current platform profile set by the driver.
+>
+>                          \_SB.PC00.LPCB.EC0.OPMS =3D Local1
+>                          If ((OG00 =3D=3D Zero))
+>                          {
+>                              If ((\_SB.GGIV (0x090E000A) =3D=3D Zero))
+>                              {
+>                                  If ((Local1 =3D=3D Zero))
+>                                  {
+>                                      \ODV0 =3D Zero
+>                                  }
+>                                  ElseIf ((Local1 =3D=3D One))
+>                                  {
+>                                      \ODV0 =3D One
+>                                  }
+>                                  ElseIf ((Local1 =3D=3D 0x04))
+>                                  {
+>                                      \ODV0 =3D 0x02
+>                                  }
+>                              }
+>                              ElseIf ((Local1 =3D=3D Zero))
+>                              {
+>                                  \ODV0 =3D 0x03
+>                              }
+>                              ElseIf ((Local1 =3D=3D One))
+>                              {
+>                                  \ODV0 =3D 0x04
+>                              }
+>                              ElseIf ((Local1 =3D=3D 0x04))
+>                              {
+>                                  If (((CMSR (0x77) =3D=3D 0x05) || (CMSR =
+(0x77) =3D=3D 0x04)))
+>                                  {
+>                                      \ODV0 =3D 0x06
+>                                  }
+>                                  Else
+>                                  {
+>                                      \ODV0 =3D 0x05
+>                                  }
+>                              }
+>                          }
+>
+>                          If ((OG00 =3D=3D One))
+>                          {
+>                              If ((\_SB.GGIV (0x090E000A) =3D=3D Zero))
+>                              {
+>                                  If ((Local1 =3D=3D Zero))
+>                                  {
+>                                      \ODV0 =3D 0x07
+>                                  }
+>                                  ElseIf ((Local1 =3D=3D One))
+>                                  {
+>                                      \ODV0 =3D 0x08
+>                                  }
+>                                  ElseIf ((Local1 =3D=3D 0x04))
+>                                  {
+>                                      \ODV0 =3D 0x09
+>                                  }
+>                              }
+>                              ElseIf ((Local1 =3D=3D Zero))
+>                              {
+>                                  \ODV0 =3D 0x0A
+>                              }
+>                              ElseIf ((Local1 =3D=3D One))
+>                              {
+>                                  \ODV0 =3D 0x0B
+>                              }
+>                              ElseIf ((Local1 =3D=3D 0x04))
+>                              {
+>                                  If (((CMSR (0x77) =3D=3D 0x05) || (CMSR =
+(0x77) =3D=3D 0x04)))
+>                                  {
+>                                      \ODV0 =3D 0x0D
+>                                  }
+>                                  Else
+>                                  {
+>                                      \ODV0 =3D 0x0C
+>                                  }
+>                              }
+>                          }
+>
+>                          \_SB.IETM.ODVP ()
+>                          Notify (\_SB.IETM, 0x88) // Device-Specific
+>                          Notify (\_SB.NPCF, 0xC0) // Hardware-Specific
+>                          Notify (\_SB.NPCF, 0xC1) // Hardware-Specific
+>                          BHSK [Zero] =3D Zero
+>                      }
+>                      ElseIf ((Local0 =3D=3D 0x0D))
+>                      {
+>                          BHSK [Zero] =3D 0x03
+>                      }
+>                      ElseIf ((Local0 =3D=3D 0x0E))
+>                      {
+>                          BHSK [Zero] =3D 0x03
+>                      }
+>                      ElseIf ((Local0 =3D=3D 0x0F))
+>                      {
+>                          If ((Local1 =3D=3D One))
+>                          {
+>                              BHSK [Zero] =3D Zero
+>                              \_SB.PC00.LPCB.EC0.FMKY =3D One
+>                          }
+>                          ElseIf ((Local1 =3D=3D 0x02))
+>                          {
+>                              BHSK [Zero] =3D Zero
+>                              \_SB.PC00.LPCB.EC0.FMKY =3D Zero
+>                          }
+>                      }
+>                      Else
+>                      {
+>                          BHSK [Zero] =3D 0x03
+>                          BHSK [One] =3D Zero
+>                          BHSK [0x02] =3D Zero
+>                          BHSK [0x03] =3D Zero
+>                      }
+>
+>                      Return (BHSK) /* \_SB_.PC00.WMID.BHSK */
+>                  }
+>
+>                  If ((Arg1 =3D=3D 0x17))
+>                  {
+>                      BHSK =3D Arg2
+>                      Local0 =3D DerefOf (BHSK [Zero])
+>                      BHGK [Zero] =3D Zero
+>                      BHGK [One] =3D 0xFF
+>                      If ((Local0 =3D=3D One))
+>                      {
+>                          BHGK [One] =3D \_SB.PC00.LPCB.EC0.TKST /* Extern=
+al reference */
+>                          BHGK [Zero] =3D Zero
+>                      }
+>                      ElseIf ((Local0 =3D=3D 0x02))
+>                      {
+>                          WSMI (Arg1, Arg2)
+>                          BHGK =3D WMIB /* \_SB_.PC00.WMID.WMIB */
+>                      }
+>                      ElseIf ((Local0 =3D=3D 0x05)){}
+>                      ElseIf ((Local0 =3D=3D 0x06))
+>                      {
+>                          WSMI (Arg1, Arg2)
+>                          BHGK =3D WMIB /* \_SB_.PC00.WMID.WMIB */
+>                      }
+>                      ElseIf ((Local0 =3D=3D 0x07)){}
+>                      ElseIf ((Local0 =3D=3D 0x08))
+>                      {
+>                          WSMI (Arg1, Arg2)
+>                          BHGK =3D WMIB /* \_SB_.PC00.WMID.WMIB */
+>                      }
+>                      ElseIf ((Local0 =3D=3D 0x09))
+>                      {
+>                          WSMI (Arg1, Arg2)
+>                          BHGK =3D WMIB /* \_SB_.PC00.WMID.WMIB */
+>                      }
+>                      ElseIf ((Local0 =3D=3D 0x0A))
+>                      {
+>                          BHGK [Zero] =3D Zero
+>                          BHGK [One] =3D 0x13
+>
+> Side note: this field seems to contain a bitmap of the supported platform=
+ profiles on this machine.
+>
+>                      }
+>                      ElseIf ((Local0 =3D=3D 0x0B))
+>                      {
+>
+> Calling this method ("GetGamingMiscSetting") with the same command (0x0B)=
+ would return the current platform
+> profile by using the OPMS field.
+>
+>                          BHGK [Zero] =3D Zero
+>                          BHGK [One] =3D \_SB.PC00.LPCB.EC0.OPMS /* Extern=
+al reference */
+>                      }
+>                      ElseIf ((Local0 =3D=3D 0x0C))
+>                      {
+>                          BHGK [One] =3D Zero
+>                      }
+>                      ElseIf ((Local0 =3D=3D 0x0D))
+>                      {
+>                          BHGK [Zero] =3D 0x03
+>                      }
+>                      ElseIf ((Local0 =3D=3D 0x0E))
+>                      {
+>                          BHGK [Zero] =3D 0x03
+>                      }
+>                      ElseIf ((Local0 =3D=3D 0x0F))
+>                      {
+>                          If ((\_SB.PC00.LPCB.EC0.FMKY =3D=3D One))
+>                          {
+>                              BHGK [Zero] =3D Zero
+>                              BHGK [One] =3D One
+>                          }
+>                          ElseIf ((\_SB.PC00.LPCB.EC0.FMKY =3D=3D Zero))
+>                          {
+>                              BHGK [Zero] =3D Zero
+>                              BHGK [One] =3D 0x02
+>                          }
+>                      }
+>                      ElseIf ((Local0 =3D=3D 0x10))
+>                      {
+>                          BHGK [Zero] =3D Zero
+>                          BHGK [One] =3D 0xFF
+>                      }
+>                      Else
+>                      {
+>                          BHGK [Zero] =3D Zero
+>                          BHGK [One] =3D 0xFF
+>                          BHGK [0x02] =3D Zero
+>                          BHGK [0x03] =3D Zero
+>                          BHGK [0x04] =3D Zero
+>                          BHGK [0x05] =3D Zero
+>                          BHGK [0x06] =3D Zero
+>                          BHGK [0x07] =3D Zero
+>                      }
+>
+>                      Return (BHGK) /* \_SB_.PC00.WMID.BHGK */
+>                  }
+That clears up a lot, I did dig around the ACPI tables earlier but I
+couldn't figure out where the WMI functions were being received. Stuff
+makes much more sense now.
 
-There are lots of other adjustments in the v4 of this patch in attempt
-to address all of the issues brought up by everyone, so everyone is of
-course welcome to take a look and see if I managed to catch everything
-or not, and I can adjust from there!
-
-Thanks again!
-
-Best regards,
-Joshua
+> I can provide you with a basic patch which adds support for calling those=
+ two WMI methods. You can then wire-up the platform profile code
+> inside acer-wmi to use those WMI methods instead of trying to access the =
+EC directly.
+Yeah, thanks. Regarding the platform profile code, it currently uses
+the predator v4 quirk to enable platform profile support. Does it make
+sense to add a new quirk for the nitro series so i can associate it
+with the respective functions for the platform profile handler?
