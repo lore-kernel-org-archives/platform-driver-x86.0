@@ -1,150 +1,178 @@
-Received: from mout.gmx.net (mout.gmx.net [212.227.17.21])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f47.google.com (mail-wm1-f47.google.com [209.85.128.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE93F154C0F;
-	Wed, 25 Dec 2024 21:11:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.21
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 47EB3647;
+	Thu, 26 Dec 2024 00:19:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1735161117; cv=none; b=i1m/MrCW7WsTNkX3BQMmcS4xbhWzvZB5D4gJQDPPN2agkrr9PbmyWaGmaFXToxJjkO4XzdTtQUkys1KcZtRQQfyPrNpHH+b3sDUXHIST7fSeULghknOwlaSdeUVlk+qbNwnO1AJzX8VUeT2Iyg0HqLXyY4Gn65PGhwj/ILlanqU=
+	t=1735172343; cv=none; b=t+p2rQozd10rdm5hkszvErxr6czvywwCX7Jqmj6QB6xGMiT1b5/v6p3NV2dM9C8fQDMLK3KFyrECjth2pySveBG7vRns9zMLv2w7t8B5tbXu4iQ3vTdCLvSbv2JxiixmzrQ0/v1/EFBJXXVzJE69dkI+3eSJTbmxfmzPH7ncTEg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1735161117; c=relaxed/simple;
-	bh=7LRSpR5DNRwibGAMNHTsd9VqlM0PqWYJFryy3YFDuHM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Ubtt64HQzpqz6hsdC+U0Gr6X18/0MvIuH/d7jB+alIC1a5SUSnv6vtpT+En+fhuDnS4NMwihHZuwtb+aGginDBozbUMmP/XSCdBgNCEr50yJkqvEfsqYC0vhGRi86MLRG9Lux3CiodmgQeyIcvPe6u/OWpPl0h5ru7DXi/lkx2I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b=g5QzQgJn; arc=none smtp.client-ip=212.227.17.21
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
+	s=arc-20240116; t=1735172343; c=relaxed/simple;
+	bh=wrpPf3bCywbP7wHmQa/D8MVFTbyo3nnMovkdVcF8UG8=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=NiyvAWow7fb2YS3kGhzcXVXSfYJzj9uao2WoSNeW4juSugi9yBzCICuOgNH88N9mnba2t05hFbmYVVk9tSS6Q0uAer88eFfxZiLfP0Tj7nJeKDIb52U7hoy0/Oy7RCgoVUzhz1W2JP1t57S6rT4WMJW0xb2hKA62pt6S9bvh9cw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=F/gXSNsO; arc=none smtp.client-ip=209.85.128.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b="g5QzQgJn"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.de;
-	s=s31663417; t=1735161097; x=1735765897; i=w_armin@gmx.de;
-	bh=Qqn8eBBvBt4eEBj1jGzkL3n6MqLAzi1EHeLQhKygmIA=;
-	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:To:Cc:
-	 References:From:In-Reply-To:Content-Type:
-	 Content-Transfer-Encoding:cc:content-transfer-encoding:
-	 content-type:date:from:message-id:mime-version:reply-to:subject:
-	 to;
-	b=g5QzQgJnhTqu/+aCmXNZhOA3r/LSkUmkUCjPgXdie7HFEDu+lt9Ufk0uP5zomSoJ
-	 LoKM6vZWNwZFjw/7ujslHimYjlWqshxksiQW0+wdsXJu9gqnxqRCw/D71iaJLDJ6R
-	 PTz49/p3GH5nuxH5ZjLHQPgvUdfH8jRB/wukchWXxav+FOw+ik0l9cs7bEtZ1OdTP
-	 0o7ixyCak/zAgUQ6HH5v/ztn1AUDajifJAPRuGOlfwD+8KVSEXoyy2gh/Q5ZC8cHL
-	 SjXLtDWytuczNHRrXq6lcvXvyZV4W3dSWhGzOqvo5E7S+QWBsVZT+tC286rRIR1DL
-	 CswquKzZZj3AzFsfVA==
-X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
-Received: from [192.168.2.35] ([91.137.126.34]) by mail.gmx.net (mrgmx104
- [212.227.17.168]) with ESMTPSA (Nemesis) id 1McpJq-1u0RiM3Bxa-00d0U4; Wed, 25
- Dec 2024 22:11:37 +0100
-Message-ID: <a4b3f2ca-0c91-4079-bc69-d0a98000ce23@gmx.de>
-Date: Wed, 25 Dec 2024 22:11:32 +0100
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="F/gXSNsO"
+Received: by mail-wm1-f47.google.com with SMTP id 5b1f17b1804b1-43618283dedso60434385e9.3;
+        Wed, 25 Dec 2024 16:18:59 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1735172338; x=1735777138; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=rUjjuepKmPmIMKznWdUtptGkJVmslB1gLiRMS6dORq8=;
+        b=F/gXSNsO1M/dyNtSlP/wkM6VHLyqZI2zppZSEwNymaWEqP1pbqhyKgKFz4jbo2Q6mQ
+         V/AM0rQLO6vtKZES9MJjUdf6YmM3ANtyp0pps2FkkRj74h0EbQNso2pcnLjhXha4EBnd
+         epqJpZlNDXhA6OXzxdjOdSjYjl4gZwkWNrZeI59WB7SAKinjs+HoWNxSi0eriaUaTT0I
+         pc+I55aH+qG3Q7dTlK5uYi4pPts2tfOXf0g6g5TZ2hPP9BPEtBUwg5Mi0qfwcadsRpit
+         W+fn0ENJZlZmh2dg8xwQNe/iV8cDw2ZvTJkmijjLOOtO3W57X+wNSOCn6FAuHDB63MIB
+         n2ig==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1735172338; x=1735777138;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=rUjjuepKmPmIMKznWdUtptGkJVmslB1gLiRMS6dORq8=;
+        b=m4pKe8aiZsCdoGUzRzrMIDZT9oE8tQfJakAwjzaxFpJ/+YVjDzXJuVdyqXeX6wPtM0
+         dG98gt9Fkb/39q9i5lW2fJOJaK/Y9UApJmZBH1u0SWLoJKwCbWoGcWnFMpTiMqRUZB+o
+         ZyPLSVqMA+Oz4GYKQhkf8ZNh3OrLoD0xLqeC34Ir/Quew8mJeC8r+qtEkHrhCgnZIYwa
+         YqRwwL92g4xybUPT80tXChA+zD5Ch8a6KnN8rjLeX6GqNDFEfc90vCqdCWCLrPbnq9c8
+         qCv12MT8yI2w95POXsVMDT8jro5e9AfyVTviOjY3GKE/bumi7DmH3sT3NK7kptyJJB8n
+         dOWQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUwD+HIqBEDpIBusPpoNAqwftysX7S7ql/8c7OSypyN4vxEHxEKncAa+GTxcbDmkXEoRzVNtrgIyI8SlIBR95Mj8W416Q==@vger.kernel.org, AJvYcCV/iP/cAePSV1GuyLfHEPfa7zqAkIV70f6xq7GO48tdrUarnq2vkR0Ga+ky6dGsHk4aetS4A0aL7W0=@vger.kernel.org, AJvYcCXidc5MX8Ii886xohW/oGOhJG8OKTMQBIkc6AQZU4g1hNoWRsTAanQtovl+wtTyU9jyxWq1zmDmISFizI+g@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx0YjMs8+isrGw0qXUh1FttikbNAkf5SIDARj548E4c+l50oWzi
+	crZgra8LYL/t+NSzgutyqb7iZyeLGCcqg+xTHb/WcJ3kAs6EMlf7
+X-Gm-Gg: ASbGnctrvSKCzdrKj+2gM5SkhibhWh2oOjajVcVUvA//rp2cd/RxmBZ76uSonqKM1hE
+	RGVNG/vzcYDP6WIKlkwhXxlh5v+iod8D+4tCaOmFveSXYj4MpFOxAeNbYtEdaU7J5GCoHXudtva
+	MxDzQDwPUmilKrdSJfn5/3ewa5S0xTFimqujLzZTNSrXCc55ja+ESd9VMK8NP5d8nJzCwhm3f7w
+	jKemSGGzDSeEbWjm3Ae0naQ6FmtMtFDpPytN7AYeHHLJJ7+ZhdeJRp5Yz8kbEIKuseehw==
+X-Google-Smtp-Source: AGHT+IGd0DkCRMXmfifwRyIZLezPmBrD+B/CQjbNHqoeF3n6SCj340TRczZFiYhBpCVvgaOKRB/t+w==
+X-Received: by 2002:a05:600c:4f03:b0:435:1a2:2633 with SMTP id 5b1f17b1804b1-43668645cf5mr194988895e9.15.1735172338370;
+        Wed, 25 Dec 2024 16:18:58 -0800 (PST)
+Received: from vinyl-Legion-5-15ACH6H.fritz.box ([2a09:bac5:2a1f:3eb::64:94])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-38a1c89e3d9sm17770484f8f.67.2024.12.25.16.18.54
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 25 Dec 2024 16:18:56 -0800 (PST)
+From: John Martens <johnfanv2@gmail.com>
+To: w_armin@gmx.de
+Cc: corbet@lwn.net,
+	derekjohn.clark@gmail.com,
+	hdegoede@redhat.com,
+	ilpo.jarvinen@linux.intel.com,
+	johnfanv2@gmail.com,
+	linux-doc@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	luke@ljones.dev,
+	mpearson-lenovo@squebb.ca,
+	nijs1@lenovo.com,
+	pgriffais@valvesoftware.com,
+	platform-driver-x86@vger.kernel.org,
+	shaohz1@lenovo.com,
+	superm1@kernel.org
+Subject: Re: [PATCH 0/1] platform/x86: Add Lenovo Legion WMI Drivers
+Date: Thu, 26 Dec 2024 01:18:28 +0100
+Message-Id: <20241226001828.423658-1-johnfanv2@gmail.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <a1c25bd8-907f-4b2a-a505-15785eb4b17b@gmx.de>
+References: <a1c25bd8-907f-4b2a-a505-15785eb4b17b@gmx.de>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/1] platform/x86: Add lenovo-legion-wmi drivers
-To: "Derek J. Clark" <derekjohn.clark@gmail.com>,
- "Cody T.-H. Chiu" <codyit@gmail.com>, Hans de Goede <hdegoede@redhat.com>,
- ike.pan@canonical.com
-Cc: =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
- Jonathan Corbet <corbet@lwn.net>, Luke Jones <luke@ljones.dev>,
- Xino Ni <nijs1@lenovo.com>, Zhixin Zhang <zhangzx36@lenovo.com>,
- Mia Shao <shaohz1@lenovo.com>, Mark Pearson <mpearson-lenovo@squebb.ca>,
- "Pierre-Loup A . Griffais" <pgriffais@valvesoftware.com>,
- platform-driver-x86@vger.kernel.org, linux-doc@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <20241217230645.15027-1-derekjohn.clark@gmail.com>
- <20241217230645.15027-2-derekjohn.clark@gmail.com>
- <7b1d0298-4cdd-4af7-83e6-9e6287387477@gmail.com>
- <99246696-4854-4EEB-B782-FD8C13D9D723@gmail.com>
-Content-Language: en-US
-From: Armin Wolf <W_Armin@gmx.de>
-In-Reply-To: <99246696-4854-4EEB-B782-FD8C13D9D723@gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Provags-ID: V03:K1:UnR8KcKv7h655TSC6sgHBi2YFHU9tehTgVuQsZ4S0xFoA9DngII
- GVORBpoC4kPvi0boFKXhDpzdh8jQtvmheOSvSw0ME+cm+Rn0qLmBSpT9HciuM6YjGuYtufN
- JzrbzibRQVg8qf+o3+m/MCjmVjxe90aaWxSxfzseurY0ZnpX92g7WGMJUUMQ6QtzWa/B9xw
- l7iUTbrsl1VlNILsWXnGA==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:RlVmtjILU5I=;ObpZP31ji+7T4vmlIwRFE47sjvF
- VihmS38OgV8r1uP5Wbytq59kRK+3d1M/eSDbe+7gcAuImWPSV/xlcimOWgpDTLP9xz9WSVtBm
- uGwtCEMB3yWxw7enq/QeXmPg3KHOjXh8vYzKxVIId58zFCWwnsLCsQ84969dI0UMovie4ZfJS
- sJHdNv1V9Yl6z6b1RiUnI62DQ7BNpPmk841Slx6ZOmyaSyKh4ml9Wf2c95esyeEMvYWtcwk8Z
- Cea2CFf9AfMT/L44O9d82Riiax1kvNjrJUUHypOgIMsYo1fHfcisRvyfp3NaSsMun/kG3P1uN
- EnwO6lRH4/Ah9v1xl/EtUuOB6D4Yny2EXAwEga2NhkbaqmnGiHVEufSMzn+oNapodLOE0elq1
- hLgARLAc4eWMouiO3vi3iCkrPNKRC3SZWV61PVdVHXyx3NPA5aehbyQp3JQj3CXIHGsbR+ka+
- zbA+xVTyMt6+MYNyZduMO/vLVjm6JMSWnSeCUALJz3e7L6Pm2mQ5aFyxi+1NwI495NRWtTtkZ
- pC/did42Yq91oc6F6OW92TqFN1YszH+fRU+71ZKOev6NFU7QdN7r6n8T+deEt1u/Fm7E2yFFM
- /kXOEytFd7vy6e7Zb5fQ0VlKhb8ABDfR7mbDFSCsj6QEdt99KozYC0fTlX42q+vwHnrZULake
- GFVEoVUTLF8lvj4BRuFbYh1f91utfzDD8kBohanHrgSwG0i4UXPGXNQtrE0Eqi4T3YmH/AeYX
- nm3UYoJfR2OE9BiUppBBGXJKiSiQhxWeNmPzBLXJoUWVZy+MrDUsn+VZZ95ZZXBPD4WcISZVZ
- PLnO2sb6zvceJbHz6kEpFr9UjDQE5K7EuL38H1UpZ17wUWL5rUxKDHylz0o83OJFVxZvs5OKp
- XqQfbsaTJ4rkP5xnSgWop35wdQhSN/4bUK56F+07ie14JlfB+A1lyVOiAHuicZTYqGYcKJZbx
- ZbBvfZWETTmoxEdiMgHWKQrc8/vT5BFKbwJXuiAjvsC0tuMeXujnrimhfNVKryhlGZhTABTXS
- Up8L+Vt0g2e595DjABCa4aF9SJIuDJB/vC4PrsA34AO9+U/l/11Q4Oc5mb2uC9KA3pOucX+fC
- BbOsMnRykiw4OKCd3kJ2nHIaKBCvw1
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-Am 25.12.24 um 09:34 schrieb Derek J. Clark:
 
->
-> On December 24, 2024 9:25:19 PM PST, "Cody T.-H. Chiu" <codyit@gmail.com> wrote:
->> On 12/17/2024 17:06, Derek J. Clark wrote:
->>> diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
->>> ...
->>> +config LEGION_OTHER_WMI
->>> +	tristate "Lenovo Legion Other Method WMI Driver"
->>> +	depends on LEGION_GAMEZONE_WMI
->>> +	depends on LEGION_DATA_01_WMI
->>> +	select FW_ATTR_CLASS
->>> +	help
->>> +	  Say Y here if you have a WMI aware Lenovo Legion device and would
->> like to use the
->>> +	  firmware_attributes API to control various tunable settings
->> typically exposed by
->>> +	  Lenovo software in Windows.
->>> +
->>> +	  To compile this driver as a module, choose M here: the module will
->>> +	  be called lenovo_legion_wmi_other.
->>> +
->>>    config IDEAPAD_LAPTOP
->>>    	tristate "Lenovo IdeaPad Laptop Extras"
->>>    	depends on ACPI
->> Hi Derek,
->>
->> Thank you for the initiative, love to see we'll finally get a driver developed with the help of official specs.
->>
->> Perhaps it's common knowledge to the crowd here but I'd like to call out right now significant portion of the support on Legion ACPI / WMI came from ideapad-laptop which explicitly detects it:
->>
->> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/drivers/platform/x86/ideapad-laptop.c?h=v6.13-rc4#n2108
->
-> Hi Cody,
->
-> Doing a quick search of that GUID on the Lenovo Legion WMI spec there are no matches. Perhaps someone at Lenovo can shed some light here, but the IdeaPad driver grabbing that GUID shouldn't interfere with the GUID's we're working on here.
->
->> Per my observation majority of users have no idea this is the case because of the misnomer, adding another set of drivers with Legion in the name explicitly, that don't support those features would double the dissonance.
-> It appears the feature sets are quite different. This seems to enable use of special function/media keys on some (one?) Legion laptops, and it also tries to register an ACPI based platform profile. While the driver does load on my legion go, only the amd_pmf and lenovo-legion-wmi-gamezone drivers have platform profiles registered under the new class at /sys/class/platform-profile/ so that isn't a conflict. I think that the ACPI method may only work on the yoga laptops that are supported by this driver? Again, maybe one of the Lenovo reps can comment on that, but it appears to predate the Custom and Other mode WMI GUID's.
+I guess the most important task is to get following points right because
+they are hard to fix later.
 
-Maybe we can remove the "legion" part from the driver name since this WMI device seems to be used on other machines too. Maybe you can instead use "lenovo" when naming the drivers?
+1. Should there be a unifrom sysfs interface for different access methods?
+Depending on the model different methods must be used to control the 
+same feature, e.g. the powermode, fan table, dust-cleaning-mode. 
+The access methods could be a different WMI method (newer model), 
+direct ACPI without WMI, or port mapped IO (outb/inb). I suggest that 
+regardless of the access methods it should be produce the same sysfs entry. 
 
-Thanks,
-Armin Wolf
+Example: there is a fan-fullspeed-methods/dustcleaning-mode that 
+sets the fans to the maximal possible speed. I suggest that regardless of 
+the used access method there should be the one file:
 
->
->> I wonder if reconciling this is in your planned scope? If not IMO at least this should be called out in documentation / Kconfig.
-> Reconciliation wouldn't be in-line with the WMI driver requirements outlined in the kernel docs as each unique GUID needs to have its own driver in the current spec. It is possible we might need to add a quirk table in the future if we want to add function keys support for the Custom Method or Other Method function keys in the future. Since the Go has no keyboard I can't confirm if the IdeaPad driver is functional on more legion laptops, but considering the DMI quirks that are used in conjunction I would assume support needs to be added explicitly.
->
-> If someone wants to add documentation on the IdeaPad driver and what it provides that would be good. I'm not familiar enough with it to really do it myself.
+/sys/class/firmware-attributes/*/attributes/fanfullspeed/current_value
 
-As long as both drivers use different GUIDs we can assume that they do not conflict which each another. Anything else can be added later.
+Alternatively, one could use the less elegant approach:
 
-Thanks,
-Armin Wolf
+/sys/class/firmware-attributes/*/attributes/wmi-other-fanfullspeed/current_value
+/sys/class/firmware-attributes/*/attributes/wmi-gamezone-fanfullspeed/current_value
+/sys/class/firmware-attributes/*/attributes/acpi1-fanfullspeed/current_value
 
->
->> PS: I'm a developer myself but at lower level kernel domain I'm just a user so hopefully I'm not just adding noise here.
->>
->> - Cody
-> - Derek
->
+2. Naming and file structure: As mentioned above, there different methods - 
+including non-WMI methods - are used. Hence, it might not be optimal name
+the driver "legion-wmi". One idea would be to name the folder/driver "legion"
+and then seperate into multiple files by access methods (WMI by GUID, ACPI, 
+port mapped IO). 
+
+3. Driver Structure, selection of access method and probing: The right access
+method (WMI, ACPI, ...) has to be chosen for each model. Some of them can
+be automatically probed, some of them have to be hard coded (c.f. also Window
+tools) by the letter-only prefix of the BIOS version. 
+
+Depending on the driver structure there are multiple ideas how to manage this i
+nformation:
+
+a: global-access-into-driver-decide-by-enum: initially the driver can store
+the method of access (WMI, ACPI, ...) for e.g. modifying fanfullspeed as
+an enum/bitfield/... globally. The value can be decided on by probing and
+some hard coded rules. There is one "glovbal" c-file that acts as an 
+entrypoint into the driver and adds all the show/store functions. When the 
+show-function is called it is decided e.g. by a switch statement which 
+function in one of the different files (WMI, ACPI, ...) is called. 
+The upside of this method is that if there are not warnings in the code, 
+then every case is totally covered. The downside is a lot of boilerplate 
+code.
+
+b: global-access-into-driver-decide-by-function-pointer: Same as above
+in case a, but direclty use function pointers instead of enum/bits. There
+is one function pointers for each attribute in a "global" struct. When
+the driver is loaded initially, it sets each function pointers to modify 
+an attribute the right function for the model. The upside is 
+less boilerplate. The downside is that it might get a little
+less safe working with the function pointers.
+
+c: independent-access-in-independent-driver-parts: the driver is split
+into totally independent parts for each method (WMI, ACPI, ...) and GUID.
+Each driver part is responsible for creating the sysfs entries. To
+prevent conflicts each part has to use a unique name (see 1)
+for the attribute. Alternatively, the choice of access has to be propagated 
+down to each part to prevent creating the same sysfs attribute multiple
+times. The upside is the elegance and easy extension. The downside
+is the weird sysfs user-interface and the weird coupling between
+the different driver parts.
+
+d: totally independent drivers: make a totally independent driver
+(module) for each access method.
+
+
+Some more remarks: 
+- I would never make one attribute depend on another
+attribute, e.g. when changing some power parameters of GPU/CPU it 
+should not change the power mode (e.g. going to custom mode). Initially,
+I did the same but it turned out to be not a good idea. However,
+if one changes some power settings and is not custom-powermode some
+sometimes some weird things happen. Sometimes also all changes are 
+ignored by the firmware as seen in the ACPI dissassembly. I guess
+it is best to just manage this in user space.
+- When trying to find out what access method to choose one cannot rely
+on the ACPI/WMI interface. From disassembling the ACPI, one can see
+that sometimes/often even if the function is not implemented it
+will return without error. Moreover, there are some WMI methods
+with name "*IsSupported" (or similar) but they often do not tell
+the truth.
+- Using just one WMI interface is simple — my grandmother could do it. 
+However, when juggling and organizing the various access methods, your 
+guidance is needed to set the driver on the right path from the beginning.
+So I defenitely, appreciate your input on the different options.
