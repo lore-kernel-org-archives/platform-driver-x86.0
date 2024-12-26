@@ -1,178 +1,136 @@
-Received: from mail-wm1-f47.google.com (mail-wm1-f47.google.com [209.85.128.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from relay-us1.mymailcheap.com (relay-us1.mymailcheap.com [51.81.35.219])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 47EB3647;
-	Thu, 26 Dec 2024 00:19:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1C586149C54;
+	Thu, 26 Dec 2024 06:03:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=51.81.35.219
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1735172343; cv=none; b=t+p2rQozd10rdm5hkszvErxr6czvywwCX7Jqmj6QB6xGMiT1b5/v6p3NV2dM9C8fQDMLK3KFyrECjth2pySveBG7vRns9zMLv2w7t8B5tbXu4iQ3vTdCLvSbv2JxiixmzrQ0/v1/EFBJXXVzJE69dkI+3eSJTbmxfmzPH7ncTEg=
+	t=1735193022; cv=none; b=rthM9guT4MH6WACovZXXeF38sBDJSH2To+VxxwnQyC6sTnUXRUEMra9cXL+agqlQ1HHfIeK9i5Uc97d4OExrK2HreNjJqubyQ+lghkokQ4NYbPF1f3l9+TeXlzzGu0JOks/n7rv0rk6TZ9MYplbiSvpf8O4D/p80ViJvh+mE8gk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1735172343; c=relaxed/simple;
-	bh=wrpPf3bCywbP7wHmQa/D8MVFTbyo3nnMovkdVcF8UG8=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=NiyvAWow7fb2YS3kGhzcXVXSfYJzj9uao2WoSNeW4juSugi9yBzCICuOgNH88N9mnba2t05hFbmYVVk9tSS6Q0uAer88eFfxZiLfP0Tj7nJeKDIb52U7hoy0/Oy7RCgoVUzhz1W2JP1t57S6rT4WMJW0xb2hKA62pt6S9bvh9cw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=F/gXSNsO; arc=none smtp.client-ip=209.85.128.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1735193022; c=relaxed/simple;
+	bh=L2SqcaWG/bY9uKtfEK0xRQ+D9GeSPTqhuskElDHEtik=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=R1mq1wQoTilBhTcHKWcLLg1aKeP7fVpg77XmiLw14+aYUyPLgxs1l3UQZl6NJf0TWr6YsuEk5fACupuFOvS+3iKLXvssNHUSGTuJNU554EPwvR8wKipDHoqMv4HPIyI254JFxIMBxy0ES4wyWwXZW0aIoa4aRRqqSyYpe0l9nVU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=aosc.io; spf=pass smtp.mailfrom=aosc.io; dkim=pass (1024-bit key) header.d=aosc.io header.i=@aosc.io header.b=fKpYTIx/; arc=none smtp.client-ip=51.81.35.219
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=aosc.io
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=aosc.io
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="F/gXSNsO"
-Received: by mail-wm1-f47.google.com with SMTP id 5b1f17b1804b1-43618283dedso60434385e9.3;
-        Wed, 25 Dec 2024 16:18:59 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1735172338; x=1735777138; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=rUjjuepKmPmIMKznWdUtptGkJVmslB1gLiRMS6dORq8=;
-        b=F/gXSNsO1M/dyNtSlP/wkM6VHLyqZI2zppZSEwNymaWEqP1pbqhyKgKFz4jbo2Q6mQ
-         V/AM0rQLO6vtKZES9MJjUdf6YmM3ANtyp0pps2FkkRj74h0EbQNso2pcnLjhXha4EBnd
-         epqJpZlNDXhA6OXzxdjOdSjYjl4gZwkWNrZeI59WB7SAKinjs+HoWNxSi0eriaUaTT0I
-         pc+I55aH+qG3Q7dTlK5uYi4pPts2tfOXf0g6g5TZ2hPP9BPEtBUwg5Mi0qfwcadsRpit
-         W+fn0ENJZlZmh2dg8xwQNe/iV8cDw2ZvTJkmijjLOOtO3W57X+wNSOCn6FAuHDB63MIB
-         n2ig==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1735172338; x=1735777138;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=rUjjuepKmPmIMKznWdUtptGkJVmslB1gLiRMS6dORq8=;
-        b=m4pKe8aiZsCdoGUzRzrMIDZT9oE8tQfJakAwjzaxFpJ/+YVjDzXJuVdyqXeX6wPtM0
-         dG98gt9Fkb/39q9i5lW2fJOJaK/Y9UApJmZBH1u0SWLoJKwCbWoGcWnFMpTiMqRUZB+o
-         ZyPLSVqMA+Oz4GYKQhkf8ZNh3OrLoD0xLqeC34Ir/Quew8mJeC8r+qtEkHrhCgnZIYwa
-         YqRwwL92g4xybUPT80tXChA+zD5Ch8a6KnN8rjLeX6GqNDFEfc90vCqdCWCLrPbnq9c8
-         qCv12MT8yI2w95POXsVMDT8jro5e9AfyVTviOjY3GKE/bumi7DmH3sT3NK7kptyJJB8n
-         dOWQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUwD+HIqBEDpIBusPpoNAqwftysX7S7ql/8c7OSypyN4vxEHxEKncAa+GTxcbDmkXEoRzVNtrgIyI8SlIBR95Mj8W416Q==@vger.kernel.org, AJvYcCV/iP/cAePSV1GuyLfHEPfa7zqAkIV70f6xq7GO48tdrUarnq2vkR0Ga+ky6dGsHk4aetS4A0aL7W0=@vger.kernel.org, AJvYcCXidc5MX8Ii886xohW/oGOhJG8OKTMQBIkc6AQZU4g1hNoWRsTAanQtovl+wtTyU9jyxWq1zmDmISFizI+g@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx0YjMs8+isrGw0qXUh1FttikbNAkf5SIDARj548E4c+l50oWzi
-	crZgra8LYL/t+NSzgutyqb7iZyeLGCcqg+xTHb/WcJ3kAs6EMlf7
-X-Gm-Gg: ASbGnctrvSKCzdrKj+2gM5SkhibhWh2oOjajVcVUvA//rp2cd/RxmBZ76uSonqKM1hE
-	RGVNG/vzcYDP6WIKlkwhXxlh5v+iod8D+4tCaOmFveSXYj4MpFOxAeNbYtEdaU7J5GCoHXudtva
-	MxDzQDwPUmilKrdSJfn5/3ewa5S0xTFimqujLzZTNSrXCc55ja+ESd9VMK8NP5d8nJzCwhm3f7w
-	jKemSGGzDSeEbWjm3Ae0naQ6FmtMtFDpPytN7AYeHHLJJ7+ZhdeJRp5Yz8kbEIKuseehw==
-X-Google-Smtp-Source: AGHT+IGd0DkCRMXmfifwRyIZLezPmBrD+B/CQjbNHqoeF3n6SCj340TRczZFiYhBpCVvgaOKRB/t+w==
-X-Received: by 2002:a05:600c:4f03:b0:435:1a2:2633 with SMTP id 5b1f17b1804b1-43668645cf5mr194988895e9.15.1735172338370;
-        Wed, 25 Dec 2024 16:18:58 -0800 (PST)
-Received: from vinyl-Legion-5-15ACH6H.fritz.box ([2a09:bac5:2a1f:3eb::64:94])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-38a1c89e3d9sm17770484f8f.67.2024.12.25.16.18.54
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 25 Dec 2024 16:18:56 -0800 (PST)
-From: John Martens <johnfanv2@gmail.com>
-To: w_armin@gmx.de
-Cc: corbet@lwn.net,
-	derekjohn.clark@gmail.com,
-	hdegoede@redhat.com,
-	ilpo.jarvinen@linux.intel.com,
-	johnfanv2@gmail.com,
-	linux-doc@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	luke@ljones.dev,
-	mpearson-lenovo@squebb.ca,
-	nijs1@lenovo.com,
-	pgriffais@valvesoftware.com,
-	platform-driver-x86@vger.kernel.org,
-	shaohz1@lenovo.com,
-	superm1@kernel.org
-Subject: Re: [PATCH 0/1] platform/x86: Add Lenovo Legion WMI Drivers
-Date: Thu, 26 Dec 2024 01:18:28 +0100
-Message-Id: <20241226001828.423658-1-johnfanv2@gmail.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <a1c25bd8-907f-4b2a-a505-15785eb4b17b@gmx.de>
-References: <a1c25bd8-907f-4b2a-a505-15785eb4b17b@gmx.de>
+	dkim=pass (1024-bit key) header.d=aosc.io header.i=@aosc.io header.b="fKpYTIx/"
+Received: from relay5.mymailcheap.com (relay5.mymailcheap.com [159.100.248.207])
+	by relay-us1.mymailcheap.com (Postfix) with ESMTPS id 5C8C920179;
+	Thu, 26 Dec 2024 06:03:33 +0000 (UTC)
+Received: from relay3.mymailcheap.com (relay3.mymailcheap.com [217.182.66.161])
+	by relay5.mymailcheap.com (Postfix) with ESMTPS id DF32E2675E;
+	Thu, 26 Dec 2024 06:03:24 +0000 (UTC)
+Received: from nf1.mymailcheap.com (nf1.mymailcheap.com [51.75.14.91])
+	by relay3.mymailcheap.com (Postfix) with ESMTPS id 3DF463E8D6;
+	Thu, 26 Dec 2024 07:03:17 +0100 (CET)
+Received: from mail20.mymailcheap.com (mail20.mymailcheap.com [51.83.111.147])
+	by nf1.mymailcheap.com (Postfix) with ESMTPSA id A170040078;
+	Thu, 26 Dec 2024 06:03:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=aosc.io; s=default;
+	t=1735192996; bh=L2SqcaWG/bY9uKtfEK0xRQ+D9GeSPTqhuskElDHEtik=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=fKpYTIx/pKwwtZRwrAqWjsus81kLAk70O33mDIPyv195j05c/qrhWQ7Vxc2kwz8w8
+	 WrNtF7gir081CsfU/LpRGl7F+5OCjUAr0wTNlX3On0KBWGNk4iO8v7rrmtJAZPJEck
+	 oQf7kcwxaOZoi2s3sKU5oTHvrdOEJ/4JnmqxiNZo=
+Received: from [198.18.0.1] (unknown [203.175.14.44])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mail20.mymailcheap.com (Postfix) with ESMTPSA id 6F51D40CC8;
+	Thu, 26 Dec 2024 06:03:12 +0000 (UTC)
+Message-ID: <7c5bdef1-9201-4d38-a6e0-6acd95d8aa38@aosc.io>
+Date: Thu, 26 Dec 2024 14:03:08 +0800
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] platform/x86: hp-wmi: mark 8A15 board for timed OMEN
+ thermal profile
+To: =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Cc: Alexis Belmonte <alexbelm48@gmail.com>,
+ Hans de Goede <hdegoede@redhat.com>, Armin Wolf <W_Armin@gmx.de>,
+ Kexy Biscuit <kexybiscuit@aosc.io>, xiaoxi404 <1577912515@qq.com>,
+ Ai Chao <aichao@kylinos.cn>, =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?=
+ <u.kleine-koenig@baylibre.com>, platform-driver-x86@vger.kernel.org,
+ LKML <linux-kernel@vger.kernel.org>
+References: <20241223100748.2157703-1-jeffbai@aosc.io>
+ <31f0819a-1a56-8f40-b898-76ed113ef545@linux.intel.com>
+Content-Language: en-US
+From: Mingcong Bai <jeffbai@aosc.io>
+In-Reply-To: <31f0819a-1a56-8f40-b898-76ed113ef545@linux.intel.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
+X-Spamd-Result: default: False [-0.10 / 10.00];
+	MIME_GOOD(-0.10)[text/plain];
+	FUZZY_RATELIMITED(0.00)[rspamd.com];
+	RCVD_TLS_ALL(0.00)[];
+	RCPT_COUNT_SEVEN(0.00)[10];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	ASN(0.00)[asn:16276, ipnet:51.83.0.0/16, country:FR];
+	ARC_NA(0.00)[];
+	RCVD_COUNT_ONE(0.00)[1];
+	MIME_TRACE(0.00)[0:+];
+	MID_RHS_MATCH_FROM(0.00)[];
+	TO_MATCH_ENVRCPT_SOME(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	SPFBL_URIBL_EMAIL_FAIL(0.00)[1577912515.qq.com:server fail,jeffbai.aosc.io:server fail];
+	FROM_EQ_ENVFROM(0.00)[];
+	FREEMAIL_CC(0.00)[gmail.com,redhat.com,gmx.de,aosc.io,qq.com,kylinos.cn,baylibre.com,vger.kernel.org];
+	FREEMAIL_ENVRCPT(0.00)[gmail.com,gmx.de,qq.com];
+	TO_DN_SOME(0.00)[]
+X-Rspamd-Server: nf1.mymailcheap.com
+X-Rspamd-Action: no action
+X-Rspamd-Queue-Id: A170040078
 
+Hi Ilpo,
 
-I guess the most important task is to get following points right because
-they are hard to fix later.
+Sorry for the late reply but your email fell through the cracks.
 
-1. Should there be a unifrom sysfs interface for different access methods?
-Depending on the model different methods must be used to control the 
-same feature, e.g. the powermode, fan table, dust-cleaning-mode. 
-The access methods could be a different WMI method (newer model), 
-direct ACPI without WMI, or port mapped IO (outb/inb). I suggest that 
-regardless of the access methods it should be produce the same sysfs entry. 
+在 2024/12/24 03:15, Ilpo Järvinen 写道:
+> On Mon, 23 Dec 2024, Mingcong Bai wrote:
+> 
+>> From: xiaoxi404 <1577912515@qq.com>
+>>
+>> The HP OMEN 8 (2022), corresponding to a board ID of 8A15, supports OMEN
+>> thermal profile and requires the timed profile quirk.
+>>
+>> Upon adding this ID to both the omen_thermal_profile_boards and
+>> omen_timed_thermal_profile_boards, significant bump in performance can be
+>> observed. For instance, SilverBench (https://silver.urih.com/) results
+>> improved from ~56,000 to ~69,000, as a result of higher power draws (and
+>> thus core frequencies) whilst under load:
+>>
+>> Package Power:
+>>
+>> - Before the patch: ~65W (dropping to about 55W under sustained load).
+>> - After the patch: ~115W (dropping to about 105W under sustained load).
+>>
+>> Core Power:
+>>
+>> - Before: ~60W (ditto above).
+>> - After: ~108W (ditto above).
+>>
+>> Add 8A15 to omen_thermal_profile_boards and
+>> omen_timed_thermal_profile_boards to improve performance.
+>>
+>> Signed-off-by: xiaoxi404 <1577912515@qq.com>
+>> Signed-off-by: Mingcong Bai <jeffbai@aosc.io>
+> 
+> Hi,
+> 
+> I wanted to apply this but the first signed-off-by line threw me off. It
+> should contain person's name before the email address line like yours does
+> (assuming the first signed-off-by is necessary in the first place, the
+> patch itself looks quite trivial given it's just about adding one ID).
+> 
 
-Example: there is a fan-fullspeed-methods/dustcleaning-mode that 
-sets the fans to the maximal possible speed. I suggest that regardless of 
-the used access method there should be the one file:
+Understood, but that is how this person represents themselves online. If 
+that is indeed a problem, I can consult them for how this should be handled.
 
-/sys/class/firmware-attributes/*/attributes/fanfullspeed/current_value
-
-Alternatively, one could use the less elegant approach:
-
-/sys/class/firmware-attributes/*/attributes/wmi-other-fanfullspeed/current_value
-/sys/class/firmware-attributes/*/attributes/wmi-gamezone-fanfullspeed/current_value
-/sys/class/firmware-attributes/*/attributes/acpi1-fanfullspeed/current_value
-
-2. Naming and file structure: As mentioned above, there different methods - 
-including non-WMI methods - are used. Hence, it might not be optimal name
-the driver "legion-wmi". One idea would be to name the folder/driver "legion"
-and then seperate into multiple files by access methods (WMI by GUID, ACPI, 
-port mapped IO). 
-
-3. Driver Structure, selection of access method and probing: The right access
-method (WMI, ACPI, ...) has to be chosen for each model. Some of them can
-be automatically probed, some of them have to be hard coded (c.f. also Window
-tools) by the letter-only prefix of the BIOS version. 
-
-Depending on the driver structure there are multiple ideas how to manage this i
-nformation:
-
-a: global-access-into-driver-decide-by-enum: initially the driver can store
-the method of access (WMI, ACPI, ...) for e.g. modifying fanfullspeed as
-an enum/bitfield/... globally. The value can be decided on by probing and
-some hard coded rules. There is one "glovbal" c-file that acts as an 
-entrypoint into the driver and adds all the show/store functions. When the 
-show-function is called it is decided e.g. by a switch statement which 
-function in one of the different files (WMI, ACPI, ...) is called. 
-The upside of this method is that if there are not warnings in the code, 
-then every case is totally covered. The downside is a lot of boilerplate 
-code.
-
-b: global-access-into-driver-decide-by-function-pointer: Same as above
-in case a, but direclty use function pointers instead of enum/bits. There
-is one function pointers for each attribute in a "global" struct. When
-the driver is loaded initially, it sets each function pointers to modify 
-an attribute the right function for the model. The upside is 
-less boilerplate. The downside is that it might get a little
-less safe working with the function pointers.
-
-c: independent-access-in-independent-driver-parts: the driver is split
-into totally independent parts for each method (WMI, ACPI, ...) and GUID.
-Each driver part is responsible for creating the sysfs entries. To
-prevent conflicts each part has to use a unique name (see 1)
-for the attribute. Alternatively, the choice of access has to be propagated 
-down to each part to prevent creating the same sysfs attribute multiple
-times. The upside is the elegance and easy extension. The downside
-is the weird sysfs user-interface and the weird coupling between
-the different driver parts.
-
-d: totally independent drivers: make a totally independent driver
-(module) for each access method.
-
-
-Some more remarks: 
-- I would never make one attribute depend on another
-attribute, e.g. when changing some power parameters of GPU/CPU it 
-should not change the power mode (e.g. going to custom mode). Initially,
-I did the same but it turned out to be not a good idea. However,
-if one changes some power settings and is not custom-powermode some
-sometimes some weird things happen. Sometimes also all changes are 
-ignored by the firmware as seen in the ACPI dissassembly. I guess
-it is best to just manage this in user space.
-- When trying to find out what access method to choose one cannot rely
-on the ACPI/WMI interface. From disassembling the ACPI, one can see
-that sometimes/often even if the function is not implemented it
-will return without error. Moreover, there are some WMI methods
-with name "*IsSupported" (or similar) but they often do not tell
-the truth.
-- Using just one WMI interface is simple — my grandmother could do it. 
-However, when juggling and organizing the various access methods, your 
-guidance is needed to set the driver on the right path from the beginning.
-So I defenitely, appreciate your input on the different options.
+Best Regards,
+Mingcong Bai
