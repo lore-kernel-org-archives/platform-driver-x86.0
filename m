@@ -1,41 +1,41 @@
-Received: from mout.gmx.net (mout.gmx.net [212.227.17.20])
+Received: from mout.gmx.net (mout.gmx.net [212.227.17.22])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D2A4184F;
-	Fri, 27 Dec 2024 00:44:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.20
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6815D2572;
+	Fri, 27 Dec 2024 01:05:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.22
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1735260280; cv=none; b=aU/zfg8wJ+SKsc8uGBLP5LOeFXM6Qv8vnDLvYrV2EF/J3+t0AUEV/zYtoPf1ndtIUPvrV6abBDrQ5jOO0TMF35w80HGb0g8pjohuQTpN37ZLE4tGoayKcu6pjSNvUbsCGI1FGE5y6GAcrbP7InUC/7FE0Fe4YH8+jNGG/CFFct0=
+	t=1735261512; cv=none; b=lFtWHApfDHJ2ZXFLJF88CygofThZ0gAkkREHpLAZVvhjbNPsk31a+6F0PJ3EUEcNJP+Qafg9EDovVKNYiOr/YCvq2A8C0lwhF09nuHG9qKWMhydr/J6gYpR9SF0ruOv7O5fxSGvGOQ+E7rgAHSrjSdcWx/PQI1Igm1B2jhGBRCA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1735260280; c=relaxed/simple;
-	bh=pq9CbGWtn4yjEX0g+rfVmt40+OSpIsOahQl90V7pR5w=;
+	s=arc-20240116; t=1735261512; c=relaxed/simple;
+	bh=kPfcXWCKj79v/B4Cr35mClwADX1oKyu5LcQZFREJStY=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ZOktA1GL+yQSIZpQQNLkrbJELqqIoBOx8/g5JTjyciwGQ1R7H8pPzaMtvOrZmTxx3ILokupUEvbDx7q8Z/4ya26djGW5phFTuFGb8/cUELiQIF0jzxeeuiYpIsui/0bmLL7ziiGQpgA2jLOKSnHAiaYfkN+byTbYdb+deErytFU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b=ZOcuez8A; arc=none smtp.client-ip=212.227.17.20
+	 In-Reply-To:Content-Type; b=O1QJ1LsqAYNqHjeS5OZ9UcZA6v24/mIwv8kYr7mzif1spOR4fI51MRpvspIveEoJ5H6HewoHcy3snCLNcXxlK75ekWvYbXOYBVmR/p9cbLNbx452w+eYKx12r8YvDQwmxn/RH2FeR4X2R+4dOC+UlVMX4q52bUgbPghVkuWQ5x4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b=nB/sir96; arc=none smtp.client-ip=212.227.17.22
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b="ZOcuez8A"
+	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b="nB/sir96"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.de;
-	s=s31663417; t=1735260265; x=1735865065; i=w_armin@gmx.de;
-	bh=mYILtji4LcVFeYDg/UI0Fu3cWaNVaHDjiZj6He0+F+o=;
+	s=s31663417; t=1735261493; x=1735866293; i=w_armin@gmx.de;
+	bh=1vk4AbaIeYymCpNdOIFgLTYvd6qbUwYRxMrl9oXIe+Y=;
 	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:To:Cc:
 	 References:From:In-Reply-To:Content-Type:
 	 Content-Transfer-Encoding:cc:content-transfer-encoding:
 	 content-type:date:from:message-id:mime-version:reply-to:subject:
 	 to;
-	b=ZOcuez8A1TtVIyePltv8dqce7UMQ/BwHooDCaw2q8qXBElvPsmASgoKBS5nM++NR
-	 f/4b0jve8DpnEJ2S47CouvM4neibgFBUqHwn1J20yeINCoGqnlVpi8qbKdzjRFi0/
-	 ZM+Aenm3vImdbhGJUXBSgiMrqw3Pvm5t0tA5TkZnt2/nxLCCxcFiWnV+o2Gh+joEl
-	 8ipCuvzkhUj8F4vyCG7QrRLPlJF+6l4Jg9b8JbT9+O5flLhYzKtadFbH3OZVSXf2D
-	 /oiOrWo6aoHNBeoPO0MS9AvhKx+wfPEK6+XhMJgePM0QKwfJX7uLt+af4o0xm6gZB
-	 8q+0psQLrcSQ63a08A==
+	b=nB/sir96ohMTHNEoUfT2x3AV5Y0mxvbIAldd6IgV911ajP9pDbpNVAnazXFlf2PV
+	 rDNOPKm4BFNuuUnXCKKNVQ+bPSpAaR7WT9MUeL1gJqSwxdP4bZhLoE7GBXK82iiaY
+	 gMN2dk/b9aPygd4BPNE43PEw7uS2CQZ7bGWrKCXRysqEU4wvlgtyVJZGnKDskourz
+	 Ilh64am8TrJ6JPIk0EYe4SKgEYqyfv3lUKgjqosG+x5eSy5XERVQIbiDdNe+k5Lt3
+	 1YUrT9mdEYnDkvPS7fae3rhSAFGQX/UTzt/On1GV5q/uAswT60Saw85/lP43jlfKX
+	 XfqRWxcgHmAIFCUuiA==
 X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
-Received: from [192.168.0.14] ([91.14.230.110]) by mail.gmx.net (mrgmx104
- [212.227.17.168]) with ESMTPSA (Nemesis) id 1M42jQ-1tQySm3uDI-004DXn; Fri, 27
- Dec 2024 01:44:25 +0100
-Message-ID: <a4793eec-3d15-4a2a-9b7b-ff4da6cc8b6c@gmx.de>
-Date: Fri, 27 Dec 2024 01:44:23 +0100
+Received: from [192.168.0.14] ([91.14.230.110]) by mail.gmx.net (mrgmx105
+ [212.227.17.168]) with ESMTPSA (Nemesis) id 1Mo6qp-1tteko1THn-00qOjP; Fri, 27
+ Dec 2024 02:04:53 +0100
+Message-ID: <53d5792d-bdfb-4f6e-a75d-6d5e437e1a93@gmx.de>
+Date: Fri, 27 Dec 2024 02:04:51 +0100
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -43,278 +43,371 @@ List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 04/20] alienware-wmi: Improve hdmi_mux, amplifier and
- deepslp group creation
+Subject: Re: [PATCH 05/20] alienware-wmi: Improve rgb-zones group creation
 To: Kurt Borja <kuurtb@gmail.com>, platform-driver-x86@vger.kernel.org
 Cc: ilpo.jarvinen@linux.intel.com, mario.limonciello@amd.com,
  hdegoede@redhat.com, linux-kernel@vger.kernel.org,
  Dell.Client.Kernel@dell.com
 References: <20241221055917.10555-1-kuurtb@gmail.com>
- <20241221055917.10555-5-kuurtb@gmail.com>
+ <20241221055917.10555-6-kuurtb@gmail.com>
 Content-Language: en-US
 From: Armin Wolf <W_Armin@gmx.de>
-In-Reply-To: <20241221055917.10555-5-kuurtb@gmail.com>
+In-Reply-To: <20241221055917.10555-6-kuurtb@gmail.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:FSrEmLLqs40ir8wO4XnMvPu1Y8TJEyM+78cSF90hKYh7TZAAxF7
- 8Lov4Ycwed472iKwkzVtp/vZmJOU6QLzMz1j9kQhE5NnkZlUVTKAiujO1WXdgyT07ShE3fy
- mQIFLoyr09bdDvhfeRPmsO6YUyXs3nJ9niaPU1n+pZ6Jg7OzniAXTaxNoxEhKC7N8f+yZsD
- uPohsGl1l12A457DAcuyg==
+X-Provags-ID: V03:K1:u4g5ojmFR+oHxY7X7k26gzojbhp2lqlCOScgjKqDthCkU/FPkFM
+ 69xd2URs963tyqq3v3sA/hJBMdyJws0NUuC4kdfjCdnODc6e+8u2ToVYbdcs6No6wNNuK2z
+ Xwu76yWizRiiV4KCRY2Z3g1ptdc1dLRWNHZJkIg781trdUIahx4YNAtbHt2UB8+DJYeitTT
+ 3stzwNsCPoXGw/zVw+hUg==
 X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:kqti5l1dtQc=;aBeGmprbYct5umi3UICg/C6QpRH
- PUP0lwQOC9+Mi/iea1Olu/aCwFZ4jUDs1WtKvzBJO3X3NuvBeaj2sPex0saugyLDbY+WpY0Wc
- dCNOJS5llRi3tOcu86CG/s3zIGm9wlfMZd5RtQ1eqK8Voi84SsVIztEsDmceBJz25UW8ba1EI
- ZP8aG7vXH/8gsKAQ9GgVR0/GDYe9xNjeiMsmJRJnShSyhS1EX+T5ohJDTMynuh5+nMHLC9MT0
- DsmxoxDYu0++NJGTvUsnep+mNI0eXzuFix3YfoNx1A8KEEkCuK5xyxSnzTle/Mtn7IB5I2akA
- pedO8NHejNEa3CI23Jd4u2pVZex36agAIR0WOX/NHpUrh6KdhcEGsAPOpTDdxS5iLiNJs0tM5
- fJbovpIXXEkRe2fDIOBCb3t7Ikr4Ibdhz3oiunuPwdUyCrIVvdGphifZroDWJ0w9ozB8QZMwc
- Aa1n0Bzsy6nc/WsBAp4auInGIuYconXBHgY/ZrVjeX5uDunips4MhlUKXiVTPkMx2uAv3iwOK
- 6Q5FutAhkjodMglubvXsnUtheOPCfKEYZSV50rX/ud/ej3No4vbfCCH1nbgSMtmV40qURDCwE
- eacT8at1KCQLOQ9LjSR3cJwxwG4pGyYRmnVLuWbdKn5juknKj5ywyzVQoruwcyt0hQni9EJiP
- rl5rwagApkvc1+8odxBOMerWd/D41CmD2lRqwjbr8rnQcQkySQChlmQkpX8Sz9P1q8+6+l+8K
- 5Gknw9ttupyiidHGENZfVpatLAnz/+5rQ0BB/ewcSprRGY2NbyAARQfuJSnSMMgdPp4uBj1IF
- oEvsuoeMhNswuxHjwzPRne3gGzjz2ehouHLJv0FXzPhidgo4N4fCGBlqEOjbgtAx2srOjuQ2L
- xG92KGTQH0ZB72CT9WAtLWnEE9XjC/K1/eG642u23JoP8UBcqkEweaw7tDZVA21igsjo/qFuI
- vYLBdDQrcBuS/5C4tH/tXw1FBjVFKe7+0jW46DjLHwFRQXof9phYD7A8URvH7nXD5bl1jW9PM
- QEXMhE6VU8MBlVbxq1B4sKSNtoBCNCOkOtxXzSNnbvukOL2/0ScVPnKbFegDZylLJzSO8nXfN
- zkSUoCBmLhGA7fIyvvxNMCJioYProd
+UI-OutboundReport: notjunk:1;M01:P0:iqX+2wP/jio=;+pokflkxLXYyQniS8N6kHF95bTG
+ fyn/4peZ9NlUPaQ4G5pyXaEm98CGW7pKdUTG6QV7uFM/KUtnPtU64KCt7Z/M3/nfUkUyCcyPl
+ Lhes/oc1QJNGd9THx5FpP9P8OdkDXRvJRznCrcWIEHhRzHT8+SU5xwmOHZyz2YkXOXdO7O4lr
+ dtUxjlHI0dEFaXyuYLatJ/2hguBqtpaaSfRMlkm+aagA8gqFwDPOxHa7JUgi+Wr+vnu9wu9Nl
+ QDuoaGFhi+BzYblO+q908I9nPbbuDAVx9h/mLrkHtmImE+vQjCDhTXdxwaVBwmxC6TCxsmX6t
+ 7wmaTMqEJS3P0cPnGSfkHarhi43E7j6SWs2RMXNvbAC55v8SFZhWgCzPu++2M5zQFsVaEmrnZ
+ oHUA9oYtIKeIjWrFtMN7tZyhZHDCJ17Zh5keI0bi3+BN+1osru9nbdZ17rMbPaw2wVIMDAPmp
+ JG++srtCrw+DOQU0NdqrWQ1ZcYYc1ZcHp6S4TMbuAC8R5YGFTuUieQPf/IeltVgKV1H5hqGqc
+ /c5n0/A8jT3fsBv/N4/yh7yZXBBjLwXKozHgOxYxYOxChLuh1nvMXv+1qeVMEp3ZnPbXR5e+5
+ qMrZpRbTxukA0cOkXZml2hKLl26J5cDtf+eVnyIgWTwj6oUOsgp4uNuuAJbpyXwL+kWw5M6uf
+ UZC9rnqdZONZ8FMOTFhRQrxK3H9eLoyfyR9Bpx0LxNVzf59dcjLiZs2V/O2EmoMfkw3TU6z4d
+ KTl/xZpwTFZ5eM940XX2RDx9tVSbsw3fUw7j4SonvZNoI161snTOmA2ooBECrY6z2ei3Cwgl9
+ txWROew2+55+Q2VBDNMygUE3Y/RI6CiuLS6R4LQTWuTq29DQHULdd9zl+Io4XLqlkM/jDv5Mh
+ ECU4exvkTAtHqTfvQlw0OhZlBpwF4MvC9MxdRX+/FfloumCv0131KJf5ByhfozJjHgT1QIo00
+ 6lUKV74+9CT4g7C2ZrpNmsWSSsBca7Ug08GlciN6z9NS92sAgziHOTUo4uWSGyazAtJzmFC6Q
+ 34vYPAqzeGWQ4kwpLBZFiU3KfhzQZ9gBDgTeQtp3R/lVZiSsZr+1/A9EYrfHNwP9LtVBBUZgp
+ i2qBRheTFKBzPwCWObcwE1V9P9t4gd
 
 Am 21.12.24 um 06:59 schrieb Kurt Borja:
 
-> Devices with hdmi_mux, amplifier or deepslp quirks create a sysfs group
-> for each available feature. To accomplish this, helper create/remove
-> functions were called on module init, but they had the following
-> problems:
+> Define zone_attrs statically with the use of helper macros and
+> initialize the zone_attribute_group with driver's .dev_groups.
 >
->   - Create helpers called remove helpers on failure, which in turn tried
->     to remove the sysfs group that failed to be created
->   - If group creation failed mid way, previous successfully created grou=
-ps
->     were not cleaned up
->   - Module exit only removed hdmi_mux group
+> Drop match_zone() and instead pass a `location` argument to previous
+> show/store methods to access the correct `zone` LED state. On top of
+> that rename zone_set() -> zone_store() to be more consistent with sysfs
+> conventions.
 >
-> To improve this, drop all helpers and let the platform driver manage the=
-se
-> sysfs groups, while controlling visibility with their respective quirks.
-
-Reviewed-by: Armin Wolf <W_Armin@gmx.de>
-
-> Reviewed-by: Mario Limonciello <mario.limonciello@amd.com>
 > Signed-off-by: Kurt Borja <kuurtb@gmail.com>
 > ---
->   drivers/platform/x86/dell/alienware-wmi.c | 114 ++++++++--------------
->   1 file changed, 38 insertions(+), 76 deletions(-)
+>   drivers/platform/x86/dell/alienware-wmi.c | 179 +++++++++-------------
+>   1 file changed, 72 insertions(+), 107 deletions(-)
 >
 > diff --git a/drivers/platform/x86/dell/alienware-wmi.c b/drivers/platfor=
 m/x86/dell/alienware-wmi.c
-> index 273ce9b10765..e010c94555e8 100644
+> index e010c94555e8..a431b1fec9fb 100644
 > --- a/drivers/platform/x86/dell/alienware-wmi.c
 > +++ b/drivers/platform/x86/dell/alienware-wmi.c
-> @@ -417,12 +417,6 @@ static struct platform_zone *zone_data;
+> @@ -376,12 +376,6 @@ struct color_platform {
+>   	u8 red;
+>   } __packed;
+>
+> -struct platform_zone {
+> -	u8 location;
+> -	struct device_attribute *attr;
+> -	struct color_platform colors;
+> -};
+> -
+>   struct wmax_brightness_args {
+>   	u32 led_mask;
+>   	u32 percentage;
+> @@ -411,16 +405,10 @@ struct wmax_u32_args {
+>   };
+>
+>   static struct platform_device *platform_device;
+> -static struct device_attribute *zone_dev_attrs;
+> -static struct attribute **zone_attrs;
+> -static struct platform_zone *zone_data;
+> +static struct color_platform colors[4];
 >   static struct platform_profile_handler pp_handler;
 >   static enum wmax_thermal_mode supported_thermal_profiles[PLATFORM_PROF=
 ILE_LAST];
 >
-> -static struct platform_driver platform_driver =3D {
-> -	.driver =3D {
-> -		.name =3D "alienware-wmi",
-> -	}
+> -static struct attribute_group zone_attribute_group =3D {
+> -	.name =3D "rgb_zones",
 > -};
 > -
->   static struct attribute_group zone_attribute_group =3D {
->   	.name =3D "rgb_zones",
->   };
-> @@ -804,6 +798,12 @@ static DEVICE_ATTR(cable, S_IRUGO, show_hdmi_cable,=
- NULL);
->   static DEVICE_ATTR(source, S_IRUGO | S_IWUSR, show_hdmi_source,
->   		   toggle_hdmi_source);
->
-> +static bool hdmi_group_visible(struct kobject *kobj)
-> +{
-> +	return quirks->hdmi_mux;
-> +}
-> +DEFINE_SIMPLE_SYSFS_GROUP_VISIBLE(hdmi);
-> +
->   static struct attribute *hdmi_attrs[] =3D {
->   	&dev_attr_cable.attr,
->   	&dev_attr_source.attr,
-> @@ -812,25 +812,10 @@ static struct attribute *hdmi_attrs[] =3D {
->
->   static const struct attribute_group hdmi_attribute_group =3D {
->   	.name =3D "hdmi",
-> +	.is_visible =3D SYSFS_GROUP_VISIBLE(hdmi),
->   	.attrs =3D hdmi_attrs,
->   };
->
-> -static void remove_hdmi(struct platform_device *dev)
-> -{
-> -	if (quirks->hdmi_mux > 0)
-> -		sysfs_remove_group(&dev->dev.kobj, &hdmi_attribute_group);
-> -}
-> -
-> -static int create_hdmi(struct platform_device *dev)
-> -{
-> -	int ret;
-> -
-> -	ret =3D sysfs_create_group(&dev->dev.kobj, &hdmi_attribute_group);
-> -	if (ret)
-> -		remove_hdmi(dev);
-> -	return ret;
-> -}
-> -
->   /*
->    * Alienware GFX amplifier support
->    * - Currently supports reading cable status
-> @@ -859,6 +844,12 @@ static ssize_t show_amplifier_status(struct device =
-*dev,
->
->   static DEVICE_ATTR(status, S_IRUGO, show_amplifier_status, NULL);
->
-> +static bool amplifier_group_visible(struct kobject *kobj)
-> +{
-> +	return quirks->amplifier;
-> +}
-> +DEFINE_SIMPLE_SYSFS_GROUP_VISIBLE(amplifier);
-> +
->   static struct attribute *amplifier_attrs[] =3D {
->   	&dev_attr_status.attr,
->   	NULL,
-> @@ -866,25 +857,10 @@ static struct attribute *amplifier_attrs[] =3D {
->
->   static const struct attribute_group amplifier_attribute_group =3D {
->   	.name =3D "amplifier",
-> +	.is_visible =3D SYSFS_GROUP_VISIBLE(amplifier),
->   	.attrs =3D amplifier_attrs,
->   };
->
-> -static void remove_amplifier(struct platform_device *dev)
-> -{
-> -	if (quirks->amplifier > 0)
-> -		sysfs_remove_group(&dev->dev.kobj, &amplifier_attribute_group);
-> -}
-> -
-> -static int create_amplifier(struct platform_device *dev)
-> -{
-> -	int ret;
-> -
-> -	ret =3D sysfs_create_group(&dev->dev.kobj, &amplifier_attribute_group)=
-;
-> -	if (ret)
-> -		remove_amplifier(dev);
-> -	return ret;
-> -}
-> -
->   /*
->    * Deep Sleep Control support
->    * - Modifies BIOS setting for deep sleep control allowing extra wakeu=
-p events
-> @@ -937,6 +913,12 @@ static ssize_t toggle_deepsleep(struct device *dev,
->
->   static DEVICE_ATTR(deepsleep, S_IRUGO | S_IWUSR, show_deepsleep_status=
-, toggle_deepsleep);
->
-> +static bool deepsleep_group_visible(struct kobject *kobj)
-> +{
-> +	return quirks->deepslp;
-> +}
-> +DEFINE_SIMPLE_SYSFS_GROUP_VISIBLE(deepsleep);
-> +
->   static struct attribute *deepsleep_attrs[] =3D {
->   	&dev_attr_deepsleep.attr,
->   	NULL,
-> @@ -944,25 +926,10 @@ static struct attribute *deepsleep_attrs[] =3D {
->
->   static const struct attribute_group deepsleep_attribute_group =3D {
->   	.name =3D "deepsleep",
-> +	.is_visible =3D SYSFS_GROUP_VISIBLE(deepsleep),
->   	.attrs =3D deepsleep_attrs,
->   };
->
-> -static void remove_deepsleep(struct platform_device *dev)
-> -{
-> -	if (quirks->deepslp > 0)
-> -		sysfs_remove_group(&dev->dev.kobj, &deepsleep_attribute_group);
-> -}
-> -
-> -static int create_deepsleep(struct platform_device *dev)
-> -{
-> -	int ret;
-> -
-> -	ret =3D sysfs_create_group(&dev->dev.kobj, &deepsleep_attribute_group)=
-;
-> -	if (ret)
-> -		remove_deepsleep(dev);
-> -	return ret;
-> -}
-> -
->   /*
->    * Thermal Profile control
->    *  - Provides thermal profile control through the Platform Profile AP=
-I
-> @@ -1172,6 +1139,23 @@ static void remove_thermal_profile(void)
->   		platform_profile_remove(&pp_handler);
+>   static u8 interface;
+>   static u8 lighting_control_state;
+>   static u8 global_brightness;
+> @@ -452,24 +440,10 @@ static int parse_rgb(const char *buf, struct color=
+_platform *colors)
+>   	return 0;
 >   }
 >
-> +/*
-> + * Platform Driver
-> + */
-> +static const struct attribute_group *alienfx_groups[] =3D {
-> +	&hdmi_attribute_group,
-> +	&amplifier_attribute_group,
-> +	&deepsleep_attribute_group,
+> -static struct platform_zone *match_zone(struct device_attribute *attr)
+> -{
+> -	u8 zone;
+> -
+> -	for (zone =3D 0; zone < quirks->num_zones; zone++) {
+> -		if ((struct device_attribute *)zone_data[zone].attr =3D=3D attr) {
+> -			pr_debug("alienware-wmi: matched zone location: %d\n",
+> -				 zone_data[zone].location);
+> -			return &zone_data[zone];
+> -		}
+> -	}
+> -	return NULL;
+> -}
+> -
+>   /*
+>    * Individual RGB zone control
+>    */
+> -static int alienware_update_led(struct platform_zone *zone)
+> +static int alienware_update_led(u8 location)
+>   {
+>   	int method_id;
+>   	acpi_status status;
+> @@ -478,8 +452,8 @@ static int alienware_update_led(struct platform_zone=
+ *zone)
+>   	struct legacy_led_args legacy_args;
+>   	struct wmax_led_args wmax_basic_args;
+>   	if (interface =3D=3D WMAX) {
+> -		wmax_basic_args.led_mask =3D 1 << zone->location;
+> -		wmax_basic_args.colors =3D zone->colors;
+> +		wmax_basic_args.led_mask =3D 1 << location;
+> +		wmax_basic_args.colors =3D colors[location];
+>   		wmax_basic_args.state =3D lighting_control_state;
+>   		guid =3D WMAX_CONTROL_GUID;
+>   		method_id =3D WMAX_METHOD_ZONE_CONTROL;
+> @@ -487,7 +461,7 @@ static int alienware_update_led(struct platform_zone=
+ *zone)
+>   		input.length =3D sizeof(wmax_basic_args);
+>   		input.pointer =3D &wmax_basic_args;
+>   	} else {
+> -		legacy_args.colors =3D zone->colors;
+> +		legacy_args.colors =3D colors[location];
+>   		legacy_args.brightness =3D global_brightness;
+>   		legacy_args.state =3D 0;
+>   		if (lighting_control_state =3D=3D LEGACY_BOOTING ||
+> @@ -496,7 +470,7 @@ static int alienware_update_led(struct platform_zone=
+ *zone)
+>   			legacy_args.state =3D lighting_control_state;
+>   		} else
+>   			guid =3D LEGACY_CONTROL_GUID;
+> -		method_id =3D zone->location + 1;
+> +		method_id =3D location + 1;
+>
+>   		input.length =3D sizeof(legacy_args);
+>   		input.pointer =3D &legacy_args;
+> @@ -510,35 +484,54 @@ static int alienware_update_led(struct platform_zo=
+ne *zone)
+>   }
+>
+>   static ssize_t zone_show(struct device *dev, struct device_attribute *=
+attr,
+> -			 char *buf)
+> +			 char *buf, u8 location)
+>   {
+> -	struct platform_zone *target_zone;
+> -	target_zone =3D match_zone(attr);
+> -	if (target_zone =3D=3D NULL)
+> -		return sprintf(buf, "red: -1, green: -1, blue: -1\n");
+>   	return sprintf(buf, "red: %d, green: %d, blue: %d\n",
+> -		       target_zone->colors.red,
+> -		       target_zone->colors.green, target_zone->colors.blue);
+> +		       colors[location].red, colors[location].green,
+> +		       colors[location].blue);
+>
+>   }
+>
+> -static ssize_t zone_set(struct device *dev, struct device_attribute *at=
+tr,
+> -			const char *buf, size_t count)
+> +static ssize_t zone_store(struct device *dev, struct device_attribute *=
+attr,
+> +			  const char *buf, size_t count, u8 location)
+>   {
+> -	struct platform_zone *target_zone;
+>   	int ret;
+> -	target_zone =3D match_zone(attr);
+> -	if (target_zone =3D=3D NULL) {
+> -		pr_err("alienware-wmi: invalid target zone\n");
+> -		return 1;
+> -	}
+> -	ret =3D parse_rgb(buf, &target_zone->colors);
+> +
+> +	ret =3D parse_rgb(buf, &colors[location]);
+>   	if (ret)
+>   		return ret;
+> -	ret =3D alienware_update_led(target_zone);
+> +
+> +	ret =3D alienware_update_led(location);
+> +
+>   	return ret ? ret : count;
+>   }
+>
+> +#define ALIENWARE_ZONE_SHOW_FUNC(_num)					\
+> +	static ssize_t zone0##_num##_show(struct device *dev,		\
+> +					struct device_attribute *attr,	\
+> +					char *buf)			\
+> +	{								\
+> +		return zone_show(dev, attr, buf, _num);			\
+> +	}
+> +
+> +#define ALIENWARE_ZONE_STORE_FUNC(_num)					\
+> +	static ssize_t zone0##_num##_store(struct device *dev,		\
+> +					struct device_attribute *attr,	\
+> +					const char *buf, size_t count)	\
+> +	{								\
+> +		return zone_store(dev, attr, buf, count, _num);		\
+> +	}
+> +
+> +#define ALIENWARE_ZONE_ATTR(_num)					\
+> +	ALIENWARE_ZONE_SHOW_FUNC(_num)					\
+> +	ALIENWARE_ZONE_STORE_FUNC(_num)					\
+> +	static DEVICE_ATTR_RW(zone0##_num)
+> +
+> +ALIENWARE_ZONE_ATTR(0);
+> +ALIENWARE_ZONE_ATTR(1);
+> +ALIENWARE_ZONE_ATTR(2);
+> +ALIENWARE_ZONE_ATTR(3);
+
+I know that this will result in a bit of boilerplate code, but please do n=
+ot use such macros.
+They have a habit of confusing static code analysis tools.
+
+> +
+>   /*
+>    * Lighting control state device attribute (Global)
+>    */
+> @@ -578,6 +571,33 @@ static ssize_t lighting_control_state_store(struct =
+device *dev,
+>
+>   static DEVICE_ATTR_RW(lighting_control_state);
+>
+> +static umode_t zone_attr_visible(struct kobject *kobj,
+> +				 struct attribute *attr, int n)
+> +{
+> +	return n < quirks->num_zones + 1 ? 0644 : 0;
+
+Where is this function used?
+
+Thanks,
+Armin Wolf
+
+> +}
+> +
+> +static bool zone_group_visible(struct kobject *kobj)
+> +{
+> +	return quirks->num_zones > 0;
+> +}
+> +DEFINE_SYSFS_GROUP_VISIBLE(zone);
+> +
+> +static struct attribute *zone_attrs[] =3D {
+> +	&dev_attr_lighting_control_state.attr,
+> +	&dev_attr_zone00.attr,
+> +	&dev_attr_zone01.attr,
+> +	&dev_attr_zone02.attr,
+> +	&dev_attr_zone03.attr,
 > +	NULL
 > +};
 > +
-> +static struct platform_driver platform_driver =3D {
-> +	.driver =3D {
-> +		.name =3D "alienware-wmi",
-> +		.dev_groups =3D alienfx_groups,
-> +	},
+> +static struct attribute_group zone_attribute_group =3D {
+> +	.name =3D "rgb_zones",
+> +	.is_visible =3D SYSFS_GROUP_VISIBLE(zone),
+> +	.attrs =3D zone_attrs,
 > +};
 > +
->   static int __init alienware_wmi_init(void)
->   {
->   	int ret;
-> @@ -1211,24 +1195,6 @@ static int __init alienware_wmi_init(void)
+>   /*
+>    * LED Brightness (Global)
+>    */
+> @@ -606,7 +626,7 @@ static void global_led_set(struct led_classdev *led_=
+cdev,
+>   	if (interface =3D=3D WMAX)
+>   		ret =3D wmax_brightness(brightness);
+>   	else
+> -		ret =3D alienware_update_led(&zone_data[0]);
+> +		ret =3D alienware_update_led(0);
 >   	if (ret)
->   		goto fail_platform_device2;
+>   		pr_err("LED brightness update failed\n");
+>   }
+> @@ -624,9 +644,6 @@ static struct led_classdev global_led =3D {
 >
-> -	if (quirks->hdmi_mux > 0) {
-> -		ret =3D create_hdmi(platform_device);
-> -		if (ret)
-> -			goto fail_prep_hdmi;
-> -	}
-> -
-> -	if (quirks->amplifier > 0) {
-> -		ret =3D create_amplifier(platform_device);
-> -		if (ret)
-> -			goto fail_prep_amplifier;
-> -	}
-> -
-> -	if (quirks->deepslp > 0) {
-> -		ret =3D create_deepsleep(platform_device);
-> -		if (ret)
-> -			goto fail_prep_deepsleep;
-> -	}
-> -
->   	if (quirks->thermal) {
->   		ret =3D create_thermal_profile(platform_device);
->   		if (ret)
-> @@ -1245,9 +1211,6 @@ static int __init alienware_wmi_init(void)
->   	alienware_zone_exit(platform_device);
->   	remove_thermal_profile();
->   fail_prep_thermal_profile:
-> -fail_prep_deepsleep:
-> -fail_prep_amplifier:
-> -fail_prep_hdmi:
->   	platform_device_del(platform_device);
->   fail_platform_device2:
->   	platform_device_put(platform_device);
-> @@ -1262,7 +1225,6 @@ module_init(alienware_wmi_init);
->   static void __exit alienware_wmi_exit(void)
+>   static int alienware_zone_init(struct platform_device *dev)
 >   {
->   	alienware_zone_exit(platform_device);
-> -	remove_hdmi(platform_device);
->   	remove_thermal_profile();
->   	platform_device_unregister(platform_device);
->   	platform_driver_unregister(&platform_driver);
+> -	u8 zone;
+> -	char *name;
+> -
+>   	if (interface =3D=3D WMAX) {
+>   		lighting_control_state =3D WMAX_RUNNING;
+>   	} else if (interface =3D=3D LEGACY) {
+> @@ -635,65 +652,12 @@ static int alienware_zone_init(struct platform_dev=
+ice *dev)
+>   	global_led.max_brightness =3D 0x0F;
+>   	global_brightness =3D global_led.max_brightness;
+>
+> -	/*
+> -	 *      - zone_dev_attrs num_zones + 1 is for individual zones and the=
+n
+> -	 *        null terminated
+> -	 *      - zone_attrs num_zones + 2 is for all attrs in zone_dev_attrs =
++
+> -	 *        the lighting control + null terminated
+> -	 *      - zone_data num_zones is for the distinct zones
+> -	 */
+> -	zone_dev_attrs =3D
+> -	    kcalloc(quirks->num_zones + 1, sizeof(struct device_attribute),
+> -		    GFP_KERNEL);
+> -	if (!zone_dev_attrs)
+> -		return -ENOMEM;
+> -
+> -	zone_attrs =3D
+> -	    kcalloc(quirks->num_zones + 2, sizeof(struct attribute *),
+> -		    GFP_KERNEL);
+> -	if (!zone_attrs)
+> -		return -ENOMEM;
+> -
+> -	zone_data =3D
+> -	    kcalloc(quirks->num_zones, sizeof(struct platform_zone),
+> -		    GFP_KERNEL);
+> -	if (!zone_data)
+> -		return -ENOMEM;
+> -
+> -	for (zone =3D 0; zone < quirks->num_zones; zone++) {
+> -		name =3D kasprintf(GFP_KERNEL, "zone%02hhX", zone);
+> -		if (name =3D=3D NULL)
+> -			return 1;
+> -		sysfs_attr_init(&zone_dev_attrs[zone].attr);
+> -		zone_dev_attrs[zone].attr.name =3D name;
+> -		zone_dev_attrs[zone].attr.mode =3D 0644;
+> -		zone_dev_attrs[zone].show =3D zone_show;
+> -		zone_dev_attrs[zone].store =3D zone_set;
+> -		zone_data[zone].location =3D zone;
+> -		zone_attrs[zone] =3D &zone_dev_attrs[zone].attr;
+> -		zone_data[zone].attr =3D &zone_dev_attrs[zone];
+> -	}
+> -	zone_attrs[quirks->num_zones] =3D &dev_attr_lighting_control_state.att=
+r;
+> -	zone_attribute_group.attrs =3D zone_attrs;
+> -
+> -	led_classdev_register(&dev->dev, &global_led);
+> -
+> -	return sysfs_create_group(&dev->dev.kobj, &zone_attribute_group);
+> +	return led_classdev_register(&dev->dev, &global_led);
+>   }
+>
+>   static void alienware_zone_exit(struct platform_device *dev)
+>   {
+> -	u8 zone;
+> -
+> -	sysfs_remove_group(&dev->dev.kobj, &zone_attribute_group);
+>   	led_classdev_unregister(&global_led);
+> -	if (zone_dev_attrs) {
+> -		for (zone =3D 0; zone < quirks->num_zones; zone++)
+> -			kfree(zone_dev_attrs[zone].attr.name);
+> -	}
+> -	kfree(zone_dev_attrs);
+> -	kfree(zone_data);
+> -	kfree(zone_attrs);
+>   }
+>
+>   static acpi_status alienware_wmax_command(void *in_args, size_t in_siz=
+e,
+> @@ -1143,6 +1107,7 @@ static void remove_thermal_profile(void)
+>    * Platform Driver
+>    */
+>   static const struct attribute_group *alienfx_groups[] =3D {
+> +	&zone_attribute_group,
+>   	&hdmi_attribute_group,
+>   	&amplifier_attribute_group,
+>   	&deepsleep_attribute_group,
