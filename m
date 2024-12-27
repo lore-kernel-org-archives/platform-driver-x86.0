@@ -1,41 +1,41 @@
-Received: from mout.gmx.net (mout.gmx.net [212.227.17.21])
+Received: from mout.gmx.net (mout.gmx.net [212.227.17.22])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C279F2572;
-	Fri, 27 Dec 2024 01:06:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.21
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3EFAA2F28;
+	Fri, 27 Dec 2024 01:32:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.22
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1735261611; cv=none; b=oUPsx1ktpDkR+L/o0FJYawr9tWRwB0dO7htdasPPQCY401PI/9nDWs+4Ib7LJM5kkRpp7HPFdnMiq7zoHKWsOuRETvlRFzScGVl7959IzD+NO1kS2FcuQOu+2Knt5XukLyuKQg4C1VQ1m9zH84HqC18oSxLVj0SuujWEH2nWTg0=
+	t=1735263166; cv=none; b=pgKR6eKCF0r6kcIMDjphp944sNTOvkJr/E6nepTd7PbAnWUD/wnmTnzvgfO9ghcxTMps/1sv67kUtqhkcRz4f2lUBVsgrhpZOPeFpCzp108BkXVu4qV3Z6afBaBe5g6lbzvkMtWHejuBHiWxdv55yK1G5fE4ICMoRskXzeUhkUY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1735261611; c=relaxed/simple;
-	bh=8+JxbadNg8w2rcBNwlcdknAn2yI7v0HUv7fOl0CiUkA=;
+	s=arc-20240116; t=1735263166; c=relaxed/simple;
+	bh=KKT+1TuGh3o5nc3uYQDJ7ZuXfWZs+nGrD8U9eNhugRE=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=JDB9zUwy3K1pTZTg66CVX/0fRjNHP61JSsBUcjcpyNoSih07jVvcRF3Dq4HA3h9WbxUbBi9vBwJ/sQpdp4rH7i9b5s4SNuwK+S0wiERjOyY2BzBDQvZcXfXI3ia8j2GdETkWNbJB8EVn+eSlvHrpXTckSDEqt76Ow8/E+4N89A4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b=WFYVdFDC; arc=none smtp.client-ip=212.227.17.21
+	 In-Reply-To:Content-Type; b=F1FKK7SIRhf9OQ12zgg7ywA1lSbMHQsNok5Br/kbGNVUFtZSlXu5HQwAoNV77jCaATkWzJELAAV0Gfh/sZYibc/aasvWdtTNIF/ewCvWfsU2vxNMNjjIxUPLpY5NURi23w/Ep5jGrU4t8zDT4JUay9NzW287uFnR1kWQZn7zfDs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b=dg2vCroO; arc=none smtp.client-ip=212.227.17.22
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b="WFYVdFDC"
+	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b="dg2vCroO"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.de;
-	s=s31663417; t=1735261595; x=1735866395; i=w_armin@gmx.de;
-	bh=k3lkInFtzDJuadGrlXbdWV00MmmhV7wXrrRZGHZhOqA=;
+	s=s31663417; t=1735263147; x=1735867947; i=w_armin@gmx.de;
+	bh=A9e1f9S8Xuje3etMkhGdYurmuTFzdWo70LorGQSFSCU=;
 	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:To:Cc:
 	 References:From:In-Reply-To:Content-Type:
 	 Content-Transfer-Encoding:cc:content-transfer-encoding:
 	 content-type:date:from:message-id:mime-version:reply-to:subject:
 	 to;
-	b=WFYVdFDCbAKpQeguyqeBVlshoRF1W8H45sD8keLQkd6IbNSGNhewRIeEqX9cJLX9
-	 j15vd7So/d9v/3bXv7MBzwulA1OghsosOTrI9JSBcrtf+x0MGcG+BYAhlP8UNxuMC
-	 sH6/WVZzfcpQF+6zk1gc0ZAwoZosHS1pGnhpfpW4+4pydLHxLaUDNpl1MPW/mWQz3
-	 C3DMQ9+ywnbJI098chADj1fmard14ZE/7/A6HMFIyg7pUpCNOVXV7JMhCAjgG+2Gu
-	 T49nsYcurgMYV+Ej3fnSPQjbTozMdjPY82IUHHUjy3Nhmid50tuLfvEuzz4JRp9LD
-	 MpC2Wq6iOLA4WYwlnA==
+	b=dg2vCroO0bX32xFiLeg2B36KPMGn7OAuCFTnnO9lIrDfXdgV5kzuZ6du2IQhGrp0
+	 x/qG6HRk2R/gGOeZ2Na6pDAGGiv3nUkMKlNCNrgEWcI+FzrI2AgNNn80tOa8wR5f4
+	 u4ljZ7pUhH6dfGsNz4p8NI8nWJZwNJR6iz+YlIl+9FKXZh0TpYhKhIhRqiu821bA1
+	 Xb+GpszK/pIWOVtBh7TqjkPy34SXC99HlA6TOCMu14xvdjaGNZpMVIWImPCfRu2Gb
+	 LHHNXa/st5XUmvuB6Haefxr6+kNIiOEaYxvyTS35IRJjMf188VKDCxn9ka7Q9NIw8
+	 LVO2OCY71ZIlkMlQxw==
 X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
 Received: from [192.168.0.14] ([91.14.230.110]) by mail.gmx.net (mrgmx104
- [212.227.17.168]) with ESMTPSA (Nemesis) id 1MEUz4-1tKs8f2YaA-00EgEn; Fri, 27
- Dec 2024 02:06:35 +0100
-Message-ID: <87b30058-60e8-4894-988b-cce50f4d3b8a@gmx.de>
-Date: Fri, 27 Dec 2024 02:06:33 +0100
+ [212.227.17.168]) with ESMTPSA (Nemesis) id 1Mgeo8-1u1S1n1kKK-00edK3; Fri, 27
+ Dec 2024 02:32:27 +0100
+Message-ID: <4fd5cc02-ccec-435b-96ec-68dc27364250@gmx.de>
+Date: Fri, 27 Dec 2024 02:32:24 +0100
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -43,120 +43,356 @@ List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 06/20] alienware_wmi: Clean variable declaration in
- thermal methods
+Subject: Re: [PATCH 07/20] alienware-wmi: Add a state container for LED
+ control feature
 To: Kurt Borja <kuurtb@gmail.com>, platform-driver-x86@vger.kernel.org
 Cc: ilpo.jarvinen@linux.intel.com, mario.limonciello@amd.com,
  hdegoede@redhat.com, linux-kernel@vger.kernel.org,
  Dell.Client.Kernel@dell.com
 References: <20241221055917.10555-1-kuurtb@gmail.com>
- <20241221055917.10555-7-kuurtb@gmail.com>
+ <20241221055917.10555-8-kuurtb@gmail.com>
 Content-Language: en-US
 From: Armin Wolf <W_Armin@gmx.de>
-In-Reply-To: <20241221055917.10555-7-kuurtb@gmail.com>
+In-Reply-To: <20241221055917.10555-8-kuurtb@gmail.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:N/3+Ess5WXybX0TeHsrp63s9lPYifZUokkIsyidPcDn4Wx2NZxr
- aD6enunttH1kgArdq530cIpT4K+3KRNkDBPSWa9r0i5wrsqZVhzECLpznKwfiGnVU2bbXHp
- A+34bUw9rfvySXQk7rPAEDFgnNdulrY6wLf4yMHJgpNKcj1EQSxJIelrNeVjIhWIWg5kcn3
- 1fq9hZp8g3xOMk/12GZDQ==
+X-Provags-ID: V03:K1:Yb1jdnjmjXANAu4msccORYMajRYDRwYbPFKXKR0aXLceG4LBBH8
+ Fkig9ifHt2/4gxFG4RVrG+CL0JA/nAL1jv/FzXNsmTdiOohz2tpPaQBVq3SGqrE1DXphZu2
+ ourBteAw/IwFd8Am/geD8p97iR2MEUjC9JGQlHbBDfi/BQpzoZOElpZuapJRd63YEU/6SAs
+ 0PP+g1lpoC8RQrM+pj2mw==
 X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:3WEOgDye+WA=;qMBVHhBo2KTtp9S53rHideTU7no
- IBuGH3mTRWUNEaEJUJatdpU6oGuvhMq1WvUpqCHnEhMSZmXgqX9kIq8BkJWyYz/EgYaWtyGyo
- EO1YJWeN/0Q64gdHl1ztwTW+fjduGga4YIid5k9sEg3zdpWqyNFw78baXk8CfI+ESGmG7IPE9
- S6q21gYi7XU2Mg+CUi7EGGY3rThqIMXRfXZvsrm5oaH6OUEfMxcPFdM9pPeMuHbwJz6ZkPe+G
- B5Xlj9XEu0DRayArisTJinbO7kcurxPW9iijsDz8eGj7SGRgZc+R2WMKb8V60YbW+YCLbJkOG
- KhD7nckeHaR5bweTM+TL5GmAJwK0q6h3EV7TD6YBbOXPEn1zxGqYPYjoXZismu9rdZFxAm0wA
- tOsL3oTJE1G/x1ZN7HzgXPCeffFcAQpHio3eNB6/zxmZSF1EWVbZTM39YRIhJFw2tyrilF42R
- nYmtt2apdyrBGlhkZ87irGxaFIGmXlPbL0gtopU8sJtVjobVASZWmM+cqJqUuXeFI/DioAL7V
- rlqYJDEYQ7Z3VfaDuQAaWjQuFuRQd75S+dwmtHBncBt4pYM7OYDrBdbWz88poYAyMywOc1d59
- VdEpoSGUNhUrWjCYXw005CbrDrcIthmxe2UoBacBtFG1g/RJqXwKnlsn9fwhq7VxYgKEIBtF2
- K5nN+AQRBbSnlTFwMRGTsZ0L2r1y8jQx7ntKLerMcw2JZNQaE8hIbTmr30opDHTxHCD/c9yUu
- ZKLBQvp3dySMcr6xPcosyjMhWsFxXybxbOWnzS9ZUkaxaV0KrpWps5y2mafq8bGvwXXhfWiwa
- HiCYAavlVf1kr9VRldD+9Iu9pfZf6BUXsX6u4yjidq2vHkApkSVeIjbdL7/oNH/VdBHo5GdRI
- syuDV5dZfSA9aC4V1SoKCoWyDlZLQvI24m0pYsSh7wFRNKJpot/f3/WRwPI2lyaboebJNrRi7
- 81Yo49no/OIi7xo9Ukc9/LWDl3dAoLNSy2OWekbryER7WsUR40R9UBt0//xnTCgLqeygU8hOB
- ebgKSeubGg1+znmcnfDhPA/RCfLgS7aBSKsiKf6p12Hr1osFuT0oCd+8nh0SfbtiBjRq8AAIK
- RMRkgUh5RFUPDJ7Z+NudP7fEV9Rn8g
+UI-OutboundReport: notjunk:1;M01:P0:FDRc+t+5MgE=;BO2c6MccWlmGPLlYTAyAIbgzdzl
+ z+1oDQgE8ZNuTYWVQw9jN3OqbRNRq60nQHZZy6/tYJ2eqLQhDS/xp2wrrbMAEdr1sDLTk1t6B
+ I+7tNO6mISchKBYCcgwxnFIh+XuWX9IPR5HPklMNOg2rVVvTk+BV+fRcHQU6tDGeqsbzBq23O
+ Dbu2PuYjImHb8GSXA4kRpnATTez/hGpj34QH1EJwRgwU/I0Cl11LLqCCR8Eviv5PhuVwNSpvi
+ KhxgkOWiLTjlsqWRY7ZE6Z4ugbZbcC9l3UJ3fFhaeNak+vgJ2InkhxvSbHc1Bo/psgefVtc0b
+ P4c+EPE82Rgt52GSgKIUih5S5NGLmtFMe3fLp9KgK5EZRH5kw5VbpG8NREHLISJXF4Gnf3imM
+ Acr9qSLzDUNKiXfqY4h88Bf5Y2x/PD39FieTzIphCdenp1x/v7Pue1JT7wSxe47tbjNvv7nni
+ +IeQOoliJ1H2QCdEhBd02wqz47Dchp/qLcWQnFwNCtTP4XiBQZxZRV28F7Oxn7ljZNe13X7WA
+ HICbqLNPr4p8Ew+Kmv8THPFUkfoUXRmKaIu8BOQqbW8A4+7XMHET9aewCjnHYkw3+ayHnPqI+
+ gA3tTJohVnZwFsblxosgGv46nPqfaffBNcM4+XVk5Fk5+nPgQyOiQk4d3rwRYJIT4zKqigc8R
+ ZvUWK5mp9gnaDmy0d1hg0t1Prg9e3dnu5x0uy4F0wcgh24IOkZRep39pFQh+MeCMMKds47vzs
+ GYF4PQbMGw6BM2D20qlcCbzK1KQrQgjqS6e7xh9ae2qetQc5d8AewufTyhd5IS3xl73wM4eAv
+ nQG8zwQjbnUEDD/IjZ+PYemXAbCFuutjlLBjgTBeSkfwpfqkTWncKDbMoMbBtVmpcSkcyvm81
+ Hf15FI3hrQT3CMQ1Kdx0/7T3p8L9QNSAIXRExlXBlsdov6R44nDmZ5RejtBEjX2P/l4Z+XSvN
+ xqGQ58HDxT7HhkUnQLWHpLkx9SQchHQwHDrVDK04wItAtaK0bb8tAPLyYPKHNtEAYhdm9zIVF
+ qz4iQhTa4H8e2ldO0su3tSFi5BO6cNfLZCgr3Kj/IwGcBew1bnEymEAmVW5yDw6h2raKCYOZb
+ /iCGvliNXUUsjYW5BGY2EWJqAdFYLk
 
 Am 21.12.24 um 06:59 schrieb Kurt Borja:
 
-> Reorder variable declaration from longest to shortest.
-
-Reviewed-by: Armin Wolf <W_Armin@gmx.de>
-
+> Add a state container for the "alienware-wmi" platform device and
+> initialize it on the new alienfx_probe(). Migrate all LED control functi=
+ons
+> to use this state container.
+>
+> Additionally move the led_classdev registration to the platform driver
+> probe and make it device managed.
+>
+> Drop alienware_zone_init() and alienware_zone_exit() because they are no
+> longer needed.
 >
 > Signed-off-by: Kurt Borja <kuurtb@gmail.com>
 > ---
->   drivers/platform/x86/dell/alienware-wmi.c | 12 ++++++------
->   1 file changed, 6 insertions(+), 6 deletions(-)
+>   drivers/platform/x86/dell/alienware-wmi.c | 128 +++++++++++++---------
+>   1 file changed, 76 insertions(+), 52 deletions(-)
 >
 > diff --git a/drivers/platform/x86/dell/alienware-wmi.c b/drivers/platfor=
 m/x86/dell/alienware-wmi.c
-> index a431b1fec9fb..67cf376df0f5 100644
+> index 67cf376df0f5..4b68d64bd742 100644
 > --- a/drivers/platform/x86/dell/alienware-wmi.c
 > +++ b/drivers/platform/x86/dell/alienware-wmi.c
-> @@ -923,13 +923,13 @@ static bool is_wmax_thermal_code(u32 code)
+> @@ -404,14 +404,19 @@ struct wmax_u32_args {
+>   	u8 arg3;
+>   };
 >
->   static int wmax_thermal_information(u8 operation, u8 arg, u32 *out_dat=
-a)
+> +struct alienfx_priv {
+> +	struct platform_device *pdev;
+> +	struct led_classdev global_led;
+> +	struct color_platform colors[4];
+> +	u8 global_brightness;
+> +	u8 lighting_control_state;
+> +};
+> +
+>   static struct platform_device *platform_device;
+> -static struct color_platform colors[4];
+>   static struct platform_profile_handler pp_handler;
+>   static enum wmax_thermal_mode supported_thermal_profiles[PLATFORM_PROF=
+ILE_LAST];
+>
+>   static u8 interface;
+> -static u8 lighting_control_state;
+> -static u8 global_brightness;
+>
+>   /*
+>    * Helpers used for zone control
+> @@ -443,7 +448,7 @@ static int parse_rgb(const char *buf, struct color_p=
+latform *colors)
+>   /*
+>    * Individual RGB zone control
+>    */
+> -static int alienware_update_led(u8 location)
+> +static int alienware_update_led(struct alienfx_priv *priv, u8 location)
 >   {
-> -	acpi_status status;
->   	struct wmax_u32_args in_args =3D {
->   		.operation =3D operation,
->   		.arg1 =3D arg,
->   		.arg2 =3D 0,
->   		.arg3 =3D 0,
->   	};
-> +	acpi_status status;
+>   	int method_id;
+>   	acpi_status status;
+> @@ -453,21 +458,21 @@ static int alienware_update_led(u8 location)
+>   	struct wmax_led_args wmax_basic_args;
+>   	if (interface =3D=3D WMAX) {
+>   		wmax_basic_args.led_mask =3D 1 << location;
+> -		wmax_basic_args.colors =3D colors[location];
+> -		wmax_basic_args.state =3D lighting_control_state;
+> +		wmax_basic_args.colors =3D priv->colors[location];
+> +		wmax_basic_args.state =3D priv->lighting_control_state;
+>   		guid =3D WMAX_CONTROL_GUID;
+>   		method_id =3D WMAX_METHOD_ZONE_CONTROL;
 >
->   	status =3D alienware_wmax_command(&in_args, sizeof(in_args),
->   					WMAX_METHOD_THERMAL_INFORMATION,
-> @@ -946,13 +946,13 @@ static int wmax_thermal_information(u8 operation, =
-u8 arg, u32 *out_data)
->
->   static int wmax_thermal_control(u8 profile)
+>   		input.length =3D sizeof(wmax_basic_args);
+>   		input.pointer =3D &wmax_basic_args;
+>   	} else {
+> -		legacy_args.colors =3D colors[location];
+> -		legacy_args.brightness =3D global_brightness;
+> +		legacy_args.colors =3D priv->colors[location];
+> +		legacy_args.brightness =3D priv->global_brightness;
+>   		legacy_args.state =3D 0;
+> -		if (lighting_control_state =3D=3D LEGACY_BOOTING ||
+> -		    lighting_control_state =3D=3D LEGACY_SUSPEND) {
+> +		if (priv->lighting_control_state =3D=3D LEGACY_BOOTING ||
+> +		    priv->lighting_control_state =3D=3D LEGACY_SUSPEND) {
+>   			guid =3D LEGACY_POWER_CONTROL_GUID;
+> -			legacy_args.state =3D lighting_control_state;
+> +			legacy_args.state =3D priv->lighting_control_state;
+>   		} else
+>   			guid =3D LEGACY_CONTROL_GUID;
+>   		method_id =3D location + 1;
+> @@ -486,22 +491,32 @@ static int alienware_update_led(u8 location)
+>   static ssize_t zone_show(struct device *dev, struct device_attribute *=
+attr,
+>   			 char *buf, u8 location)
 >   {
-> -	acpi_status status;
->   	struct wmax_u32_args in_args =3D {
->   		.operation =3D WMAX_OPERATION_ACTIVATE_PROFILE,
->   		.arg1 =3D profile,
->   		.arg2 =3D 0,
->   		.arg3 =3D 0,
->   	};
-> +	acpi_status status;
->   	u32 out_data;
+> +	struct color_platform *colors;
+> +	struct alienfx_priv *priv;
+> +
+> +	priv =3D dev_get_drvdata(dev);
+
+Please use "struct color_platform *colors =3D dev_get_drvdata(dev);" in su=
+ch cases.
+
+> +	colors =3D &priv->colors[location];
+> +
+>   	return sprintf(buf, "red: %d, green: %d, blue: %d\n",
+> -		       colors[location].red, colors[location].green,
+> -		       colors[location].blue);
+> +		       colors->red, colors->green, colors->blue);
 >
->   	status =3D alienware_wmax_command(&in_args, sizeof(in_args),
-> @@ -970,13 +970,13 @@ static int wmax_thermal_control(u8 profile)
+>   }
 >
->   static int wmax_game_shift_status(u8 operation, u32 *out_data)
+>   static ssize_t zone_store(struct device *dev, struct device_attribute =
+*attr,
+>   			  const char *buf, size_t count, u8 location)
 >   {
-> -	acpi_status status;
->   	struct wmax_u32_args in_args =3D {
->   		.operation =3D operation,
->   		.arg1 =3D 0,
->   		.arg2 =3D 0,
->   		.arg3 =3D 0,
->   	};
-> +	acpi_status status;
->
->   	status =3D alienware_wmax_command(&in_args, sizeof(in_args),
->   					WMAX_METHOD_GAME_SHIFT_STATUS,
-> @@ -1045,11 +1045,11 @@ static int thermal_profile_set(struct platform_p=
-rofile_handler *pprof,
->
->   static int create_thermal_profile(struct platform_device *platform_dev=
-ice)
->   {
-> -	u32 out_data;
-> +	enum platform_profile_option profile;
-> +	enum wmax_thermal_mode mode;
->   	u8 sys_desc[4];
->   	u32 first_mode;
-> -	enum wmax_thermal_mode mode;
-> -	enum platform_profile_option profile;
-> +	u32 out_data;
+> +	struct color_platform *colors;
+> +	struct alienfx_priv *priv;
 >   	int ret;
 >
->   	ret =3D wmax_thermal_information(WMAX_OPERATION_SYS_DESCRIPTION,
+> -	ret =3D parse_rgb(buf, &colors[location]);
+> +	priv =3D dev_get_drvdata(dev);
+
+Same as above.
+
+> +	colors =3D &priv->colors[location];
+> +
+> +	ret =3D parse_rgb(buf, colors);
+>   	if (ret)
+>   		return ret;
+>
+> -	ret =3D alienware_update_led(location);
+> +	ret =3D alienware_update_led(priv, location);
+>
+>   	return ret ? ret : count;
+>   }
+> @@ -539,9 +554,13 @@ static ssize_t lighting_control_state_show(struct d=
+evice *dev,
+>   					   struct device_attribute *attr,
+>   					   char *buf)
+>   {
+> -	if (lighting_control_state =3D=3D LEGACY_BOOTING)
+> +	struct alienfx_priv *priv;
+> +
+> +	priv =3D dev_get_drvdata(dev);
+
+Same as above.
+
+> +
+> +	if (priv->lighting_control_state =3D=3D LEGACY_BOOTING)
+>   		return sysfs_emit(buf, "[booting] running suspend\n");
+> -	else if (lighting_control_state =3D=3D LEGACY_SUSPEND)
+> +	else if (priv->lighting_control_state =3D=3D LEGACY_SUSPEND)
+>   		return sysfs_emit(buf, "booting running [suspend]\n");
+>
+>   	return sysfs_emit(buf, "booting [running] suspend\n");
+> @@ -551,8 +570,11 @@ static ssize_t lighting_control_state_store(struct =
+device *dev,
+>   					    struct device_attribute *attr,
+>   					    const char *buf, size_t count)
+>   {
+> +	struct alienfx_priv *priv;
+>   	u8 val;
+>
+> +	priv =3D dev_get_drvdata(dev);
+
+Same as above.
+
+> +
+>   	if (strcmp(buf, "booting\n") =3D=3D 0)
+>   		val =3D LEGACY_BOOTING;
+>   	else if (strcmp(buf, "suspend\n") =3D=3D 0)
+> @@ -562,9 +584,9 @@ static ssize_t lighting_control_state_store(struct d=
+evice *dev,
+>   	else
+>   		val =3D WMAX_RUNNING;
+>
+> -	lighting_control_state =3D val;
+> +	priv->lighting_control_state =3D val;
+>   	pr_debug("alienware-wmi: updated control state to %d\n",
+> -		 lighting_control_state);
+> +		 priv->lighting_control_state);
+>
+>   	return count;
+>   }
+> @@ -621,43 +643,26 @@ static int wmax_brightness(int brightness)
+>   static void global_led_set(struct led_classdev *led_cdev,
+>   			   enum led_brightness brightness)
+>   {
+> +	struct alienfx_priv *priv;
+>   	int ret;
+> -	global_brightness =3D brightness;
+> +
+> +	priv =3D container_of(led_cdev, struct alienfx_priv, global_led);
+
+Same as above, but with container_of().
+
+> +	priv->global_brightness =3D brightness;
+>   	if (interface =3D=3D WMAX)
+>   		ret =3D wmax_brightness(brightness);
+>   	else
+> -		ret =3D alienware_update_led(0);
+> +		ret =3D alienware_update_led(priv, 0);
+>   	if (ret)
+>   		pr_err("LED brightness update failed\n");
+>   }
+>
+>   static enum led_brightness global_led_get(struct led_classdev *led_cde=
+v)
+>   {
+> -	return global_brightness;
+> -}
+> -
+> -static struct led_classdev global_led =3D {
+> -	.brightness_set =3D global_led_set,
+> -	.brightness_get =3D global_led_get,
+> -	.name =3D "alienware::global_brightness",
+> -};
+> -
+> -static int alienware_zone_init(struct platform_device *dev)
+> -{
+> -	if (interface =3D=3D WMAX) {
+> -		lighting_control_state =3D WMAX_RUNNING;
+> -	} else if (interface =3D=3D LEGACY) {
+> -		lighting_control_state =3D LEGACY_RUNNING;
+> -	}
+> -	global_led.max_brightness =3D 0x0F;
+> -	global_brightness =3D global_led.max_brightness;
+> +	struct alienfx_priv *priv;
+>
+> -	return led_classdev_register(&dev->dev, &global_led);
+> -}
+> +	priv =3D container_of(led_cdev, struct alienfx_priv, global_led);
+
+Same as above.
+
+>
+> -static void alienware_zone_exit(struct platform_device *dev)
+> -{
+> -	led_classdev_unregister(&global_led);
+> +	return priv->global_brightness;
+>   }
+>
+>   static acpi_status alienware_wmax_command(void *in_args, size_t in_siz=
+e,
+> @@ -1106,6 +1111,32 @@ static void remove_thermal_profile(void)
+>   /*
+>    * Platform Driver
+>    */
+> +static int alienfx_probe(struct platform_device *pdev)
+> +{
+> +	struct alienfx_priv *priv;
+> +	struct led_classdev *leds;
+> +
+> +	priv =3D devm_kzalloc(&pdev->dev, sizeof(*priv), GFP_KERNEL);
+
+Missing error handling.
+
+> +	platform_set_drvdata(pdev, priv);
+> +
+> +	priv->pdev =3D pdev;
+> +
+> +	if (interface =3D=3D WMAX)
+> +		priv->lighting_control_state =3D WMAX_RUNNING;
+> +	else if (interface =3D=3D LEGACY)
+> +		priv->lighting_control_state =3D LEGACY_RUNNING;
+> +
+> +	leds =3D &priv->global_led;
+
+I do not think that "leds" has any real benefit here, please use "priv->gl=
+obal_led" directly.
+
+Thanks,
+Armin Wolf
+
+> +	leds->name =3D "alienware::global_brightness";
+> +	leds->brightness_set =3D global_led_set;
+> +	leds->brightness_get =3D global_led_get;
+> +	leds->max_brightness =3D 0x0F;
+> +
+> +	priv->global_brightness =3D priv->global_led.max_brightness;
+> +
+> +	return devm_led_classdev_register(&pdev->dev, &priv->global_led);
+> +}
+> +
+>   static const struct attribute_group *alienfx_groups[] =3D {
+>   	&zone_attribute_group,
+>   	&hdmi_attribute_group,
+> @@ -1119,6 +1150,7 @@ static struct platform_driver platform_driver =3D =
+{
+>   		.name =3D "alienware-wmi",
+>   		.dev_groups =3D alienfx_groups,
+>   	},
+> +	.probe =3D alienfx_probe,
+>   };
+>
+>   static int __init alienware_wmi_init(void)
+> @@ -1166,15 +1198,8 @@ static int __init alienware_wmi_init(void)
+>   			goto fail_prep_thermal_profile;
+>   	}
+>
+> -	ret =3D alienware_zone_init(platform_device);
+> -	if (ret)
+> -		goto fail_prep_zones;
+> -
+>   	return 0;
+>
+> -fail_prep_zones:
+> -	alienware_zone_exit(platform_device);
+> -	remove_thermal_profile();
+>   fail_prep_thermal_profile:
+>   	platform_device_del(platform_device);
+>   fail_platform_device2:
+> @@ -1189,7 +1214,6 @@ module_init(alienware_wmi_init);
+>
+>   static void __exit alienware_wmi_exit(void)
+>   {
+> -	alienware_zone_exit(platform_device);
+>   	remove_thermal_profile();
+>   	platform_device_unregister(platform_device);
+>   	platform_driver_unregister(&platform_driver);
