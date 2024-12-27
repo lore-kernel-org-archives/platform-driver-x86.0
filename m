@@ -1,135 +1,145 @@
-Received: from fhigh-a1-smtp.messagingengine.com (fhigh-a1-smtp.messagingengine.com [103.168.172.152])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f170.google.com (mail-pl1-f170.google.com [209.85.214.170])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C3F51F37D8;
-	Fri, 27 Dec 2024 17:07:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.152
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2815435974;
+	Fri, 27 Dec 2024 17:15:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1735319234; cv=none; b=VX/IcniZ9d79225eVNLlq01xb0qLhgbbDiAnROryWgiTwtIQeMs2rLxh3YagkwLNADp7y6aPPSZ5XZl/XwgwYpT33LdjeRUI4xtDt++5TR/lBjnt4JtcjXBBQDdQ6H1lNYvgJlDwVO8RdoNe2Y0otEkMhQN6+kj7i1Ogfc8E07I=
+	t=1735319724; cv=none; b=XrjyY1ydIFu3EdM06QiVPkAWpOE86Pxhb2m2D9OL/J5txQJZoNZsbCQy1ezvTbjB4O+Qeiezh6wbksRTziSRO0Y6em+EJXAsZJOasW0BnPSHCsQ/9ygLPf41pXALZm3lxG48sqTiRpeMT0pql+cmIizjUK4G8ZQiupt7994UHz0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1735319234; c=relaxed/simple;
-	bh=SpcDs3yGZPAuy1uuE24Y+/igrf7oIEqbShHLM0dghDI=;
-	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
-	 Subject:Content-Type; b=LPj88G9DCAdT9m2+ToiNvkTSORVNC6S/y/soLhNd2e3nSxx2IzsOSL5D0q0PjTKnZQFJ7kmJumD6FGaskEibTbzBvzJcDI40PkhfSCSCVhYdqI2aQCRxVS7wNbvBY1SMuDdF+uxUzBP+2QrO+jf9gDGNVfogIk5Srhw4gW7JhTs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=squebb.ca; spf=pass smtp.mailfrom=squebb.ca; dkim=pass (2048-bit key) header.d=squebb.ca header.i=@squebb.ca header.b=tzejgDQw; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=ADbtK6Gx; arc=none smtp.client-ip=103.168.172.152
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=squebb.ca
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=squebb.ca
+	s=arc-20240116; t=1735319724; c=relaxed/simple;
+	bh=kqENJDWRfVkjH1SxZdWluLcN8++438Sm8xVfEuDBBzw=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=tguY/qptBsKey+tb4YQL1VwvaAd4YgbLnlVjBupejMY9GOuutPvvvfT66NnxKGpUvHFEM6ubHuxcFN860o2nRPnMqP+5Pr29dggECXGPHRkMphpC7Q83bpcpIosDhaq5Cv1GkyBGocTNHgjjJ1nSDstxu+qKdFuhKiemwDIPvTg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=CLo5YY2f; arc=none smtp.client-ip=209.85.214.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=squebb.ca header.i=@squebb.ca header.b="tzejgDQw";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="ADbtK6Gx"
-Received: from phl-compute-02.internal (phl-compute-02.phl.internal [10.202.2.42])
-	by mailfhigh.phl.internal (Postfix) with ESMTP id 6C71A11400AF;
-	Fri, 27 Dec 2024 12:07:10 -0500 (EST)
-Received: from phl-imap-10 ([10.202.2.85])
-  by phl-compute-02.internal (MEProxy); Fri, 27 Dec 2024 12:07:10 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=squebb.ca; h=cc
-	:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to; s=fm3; t=1735319230;
-	 x=1735405630; bh=SpcDs3yGZPAuy1uuE24Y+/igrf7oIEqbShHLM0dghDI=; b=
-	tzejgDQwiuj8tfDTlsPiymonHlOuyGMqmbU4Nw1XMAfTKqWNnV4JdnDcbd+2oiDG
-	MdUO7J5VrGU6XQyqkOBBcDiKCXqpbDtn+IwYLGbh90yraGkZZHg4WgmOQycJdq9n
-	60d1MU5hdmm/p2sI43LquuQw3QR0Bq/V34oSQHpiiil0D3/WZWsJ4guQDZThd0Wx
-	z0pK3bry54yKq6auogMsspw3k70wnOoOhYVN+CP3TyIlJgYkWZ2gZuDYVKAQI0J8
-	edRYonAtfSF3e2yDsOWdEYeLcny7KNO5JsYXV5+j8RLOvFwhWMj73lTbADjdl6Bi
-	7D0c1AHuRBDqJP/BTez+VA==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=1735319230; x=
-	1735405630; bh=SpcDs3yGZPAuy1uuE24Y+/igrf7oIEqbShHLM0dghDI=; b=A
-	DbtK6Gxhu6dOoSZQTRRtoL/mTelwyfDIx/M0/oUrPsT4qJY8d5HpsF8JMmrPJLm1
-	g0iVVGGYBnAA8WK+8SR0RfExyJctR0tJ58nqaK0KOLHamy66K6bznd0pxQiJQvKA
-	0gJCm2r0YjsQBu9lzfUfwWavXWb0hpedoOribjCCl3zd4Pyi6IzOrQYwrNYRQTzK
-	GJpnv9X2ee8ECGyWWXpymmgbxqZyE360ddP3LG+4xW6n/RfYEnhHSPDdNvzirtlK
-	sw66ExWHnOPaXIjQ4ZG86JIsDOA12+5OOZ5/sostqwSDwx4F2gsic3z/AeIknY84
-	dpcYoENv27chpuDvPaEzg==
-X-ME-Sender: <xms:vd5uZ6q5TmBnVEqZwvkwNFLewA0eBtFfTKkueiDSfLsDt8P6q1Q_Vw>
-    <xme:vd5uZ4rlAZlaGl8AMJ84jW_ZvK2A_8zysYjnAbNs81BGhm5AUSZnKferLHiqdCAc4
-    T9CPE7j_UXw6UJh7d8>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefuddruddvtddgleejucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggvpdfu
-    rfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnh
-    htshculddquddttddmnecujfgurhepofggfffhvfevkfgjfhfutgfgsehtqhertdertdej
-    necuhfhrohhmpedfofgrrhhkucfrvggrrhhsohhnfdcuoehmphgvrghrshhonhdqlhgvnh
-    hovhhosehsqhhuvggssgdrtggrqeenucggtffrrghtthgvrhhnpefhveekjeeuueekfefh
-    leeljeehuedugfetffdvteekffejudelffdvjeekfeehvdenucevlhhushhtvghrufhiii
-    gvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpehmphgvrghrshhonhdqlhgvnhhovhho
-    sehsqhhuvggssgdrtggrpdhnsggprhgtphhtthhopedugedpmhhouggvpehsmhhtphhouh
-    htpdhrtghpthhtohepuggvrhgvkhhjohhhnhdrtghlrghrkhesghhmrghilhdrtghomhdp
-    rhgtphhtthhopehjohhhnhhfrghnvhdvsehgmhgrihhlrdgtohhmpdhrtghpthhtohepfi
-    gprghrmhhinhesghhmgidruggvpdhrtghpthhtohepshhuphgvrhhmudeskhgvrhhnvghl
-    rdhorhhgpdhrtghpthhtohepnhhijhhsudeslhgvnhhovhhordgtohhmpdhrtghpthhtoh
-    epshhhrghohhiiudeslhgvnhhovhhordgtohhmpdhrtghpthhtohepihhlphhordhjrghr
-    vhhinhgvnheslhhinhhugidrihhnthgvlhdrtghomhdprhgtphhtthhopehluhhkvgeslh
-    hjohhnvghsrdguvghvpdhrtghpthhtoheptghorhgsvghtsehlfihnrdhnvght
-X-ME-Proxy: <xmx:vd5uZ_MPoRhY00RGJ8iO7lyf5LwXPxpKiAbOsuL8TIPYKhc5JogEaQ>
-    <xmx:vd5uZ56Iz-PgTQjEUwbqVX8iKS4gKf-veSBnZBjBN8tbOVPrZI4Xag>
-    <xmx:vd5uZ57jBqbWUWBMZylmWB6HaCj5QTzhUUdKO5MFGEXIXrVUkrlPyg>
-    <xmx:vd5uZ5h6_TuxLYKCnJUrP_t3iH-DdUPqnwnZUpkVBPIN4_XoumpQSg>
-    <xmx:vt5uZ4IPurPDhayimpVfzPtbk_ST7FyKO2gSsf4Kwhe02UoK00s_HiFI>
-Feedback-ID: ibe194615:Fastmail
-Received: by mailuser.phl.internal (Postfix, from userid 501)
-	id 77D9E3C0068; Fri, 27 Dec 2024 12:07:09 -0500 (EST)
-X-Mailer: MessagingEngine.com Webmail Interface
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CLo5YY2f"
+Received: by mail-pl1-f170.google.com with SMTP id d9443c01a7336-21634338cfdso129301265ad.2;
+        Fri, 27 Dec 2024 09:15:22 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1735319722; x=1735924522; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=2xGH4XIve12sF/Sx0uzEqo2PoNPgglUjahAnQc+lAmU=;
+        b=CLo5YY2fVWccWi9xJFR6a/1KrONJJVtt2FgWcCJm6TGDu1LBeoZ3L5Fc5uGAmB+BSs
+         OJrHtn9HMtU/NWYE6ynwogWli6ImvKgec1paj0oeJsVdXVbpCl03jq51TIgf2aot6Um9
+         KHxaJsWT+5GTXb9tgaO6HAtc5/cQ37BtXw7Z6Vb18KrFEwnIGnttHk94KXw/EcWKdUkG
+         gxrXwbyltXHGof52Al5Y+6KIZ8cdi8ujkRj01Nk/1RcwsV+nJ6rp+FPEp5lMpM9vhYIn
+         /M6WYJ0mJOFEY6ZVGzbho8V3bUOpK/WSfRHNZDNFls6EvDS0AzMA/NclGe9QuP0FUofO
+         mXKg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1735319722; x=1735924522;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=2xGH4XIve12sF/Sx0uzEqo2PoNPgglUjahAnQc+lAmU=;
+        b=d+WLlQPRhn97Iw/FC3cYjxqGM66hKL78RbBUJ6FdGmIR9uwZjLojCSae2KkbJAtBXF
+         Qm306yU3WOKjFfroE2eKKVM6Z2GM1nSYeWN9JQsSE8J91vxp9Eui2oT5RQ87PTr9V47M
+         lMgLHqzLpBw6RQ3FBctxa0L4nORO/xe1JgyW7TpyXICJH4TUCVs7anKyHMOoZaiW/xgK
+         OSgKjQQ3ETKhtFTrSo2W8rG/T5xmkZ1jItgJOi1NV6/IljDI5AG/m7GzLujQy8pxKyuU
+         NQH6dj4qCv2UGa2ip8mv3b1MNFLp2oecS8GP8O9VYYQYfAa0fclxCDegYuDVRoNmPl+U
+         W/Eg==
+X-Forwarded-Encrypted: i=1; AJvYcCU+y+dR943nqKKi6/BeAYXcVcsEpD9hI4jMsMEdG+fF7cGPhLVaxJkTnY5IQTE18wc+Xi6dC7QMRpBz@vger.kernel.org, AJvYcCUhmDB5BUKgb1DerRiq1tOjKjGz6DUephPHXk8fGhZ2iEH+jnxCS+r9hhn43rcZ5JYUyG9UTrSyWChj1Kla@vger.kernel.org, AJvYcCVgnFqaPpnPJDZjp2sUL6gQYC12OLiSTl8nbpTq1C//+lirl0YSZ9gTrx1B3vrzIkC8Otn3BxD6f2eOYZLH0ql71kjqdA==@vger.kernel.org, AJvYcCWcIOzQPCZKua9H1PP6+PULABYoycArQMNPJKG3dIKoLUQ1jXWFyoC50EbcEY8qiMtrywOAcSbuQ9Bq3amH@vger.kernel.org, AJvYcCXhTj/bfC3IcTEcbph4IZwIZ4XC2bndw+44ctCF8svbkpbwsGEcw/QjU8CPDMrEDgFfq6FFmIUAJK0=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx9SsmANiqAk8hYZ0Riv0SeQqKcLF+dA5FaaorBLnsfjetm7bsM
+	jfOiILp84Ibg6TSx+97QjTwxDZrM3KJssOa4uosPd7HMvZqz6lbRTU58nGSOEM4WJcIq
+X-Gm-Gg: ASbGncs9U1s1dit0cToqVNaAzvKEfWwxlXJUAYc3UXQUXGk+KHg2iO4JxWrVi+PppOc
+	sy2z2JA95409/bi2/oJ35D7vDnMtNao2duONUAGZuq01R+TiBrU8btQUWYOd9zOcaRG3MLM4qnm
+	Y7RTy0f6FC0Ye9cg+1ZYZwZlhRIuelUgq+yNu1Ny3XG4RSOCjPqN7aEFAN7W6+N5r/vtfk0pxjG
+	fWEmjrvgcepuOE6USp9TWk5hEU0G+o8Zbm0Sq2ZMOE=
+X-Google-Smtp-Source: AGHT+IHTt64/v6O//+g4tudoDgww29789gjWkBCiS4wp+DmomX0svX8WyXKm6m1xzF+2ZGP7sVuR9A==
+X-Received: by 2002:a17:903:120e:b0:215:6816:6345 with SMTP id d9443c01a7336-219e6ea278cmr363721505ad.16.1735319722370;
+        Fri, 27 Dec 2024 09:15:22 -0800 (PST)
+Received: from nuvole.. ([2a09:bac1:76a0:dd10::2e9:62])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-219dc9f5227sm138566925ad.185.2024.12.27.09.15.16
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 27 Dec 2024 09:15:21 -0800 (PST)
+From: Pengyu Luo <mitltlatltl@gmail.com>
+To: Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Bjorn Andersson <andersson@kernel.org>,
+	Konrad Dybcio <konradybcio@kernel.org>,
+	Hans de Goede <hdegoede@redhat.com>,
+	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	Bryan O'Donoghue <bryan.odonoghue@linaro.org>,
+	Sebastian Reichel <sre@kernel.org>,
+	Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-arm-msm@vger.kernel.org,
+	platform-driver-x86@vger.kernel.org,
+	linux-pm@vger.kernel.org,
+	linux-usb@vger.kernel.org,
+	Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
+	Nikita Travkin <nikita@trvn.ru>,
+	Pengyu Luo <mitltlatltl@gmail.com>
+Subject: [PATCH 0/5] platform: arm64: Huawei Matebook E Go embedded controller
+Date: Sat, 28 Dec 2024 01:13:48 +0800
+Message-ID: <20241227171353.404432-1-mitltlatltl@gmail.com>
+X-Mailer: git-send-email 2.47.1
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Date: Fri, 27 Dec 2024 12:06:49 -0500
-From: "Mark Pearson" <mpearson-lenovo@squebb.ca>
-To: "Armin Wolf" <W_Armin@gmx.de>, "John Martens" <johnfanv2@gmail.com>
-Cc: "Jonathan Corbet" <corbet@lwn.net>,
- "Derek J . Clark" <derekjohn.clark@gmail.com>,
- "Hans de Goede" <hdegoede@redhat.com>,
- =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
- linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
- "Luke D . Jones" <luke@ljones.dev>, nijs1@lenovo.com,
- pgriffais@valvesoftware.com,
- "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>,
- shaohz1@lenovo.com, "Mario Limonciello" <superm1@kernel.org>
-Message-Id: <f941534d-4ebb-46b5-88af-0fdfbffa1057@app.fastmail.com>
-In-Reply-To: <eb165321-6a52-4464-bb58-11d8f9ff2008@gmx.de>
-References: <a1c25bd8-907f-4b2a-a505-15785eb4b17b@gmx.de>
- <20241226001828.423658-1-johnfanv2@gmail.com>
- <eb165321-6a52-4464-bb58-11d8f9ff2008@gmx.de>
-Subject: Re: [PATCH 0/1] platform/x86: Add Lenovo Legion WMI Drivers
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Thu, Dec 26, 2024, at 6:19 PM, Armin Wolf wrote:
-> Am 26.12.24 um 01:18 schrieb John Martens:
->
-<snip>
->
->> - When trying to find out what access method to choose one cannot rely
->> on the ACPI/WMI interface. From disassembling the ACPI, one can see
->> that sometimes/often even if the function is not implemented it
->> will return without error. Moreover, there are some WMI methods
->> with name "*IsSupported" (or similar) but they often do not tell
->> the truth.
->
-> Oh no.
->
-> I hope that we just misinterpret the result of those methods. Otherwis=
-e=20
-> this would indeed be
-> very frustrating. Maybe some help from Lenovo can solve this issue.
->
+This adds binding, drivers and the DT support for the Huawei Matebook E Go
+(sc8280xp) Embedded Controller which is also found in Huawei Matebook E Go
+LTE (sc8180x), but I don't have the sc8180x one to perferform test, so this
+series enable support for sc8280xp variant only, this series provides the
+following features:
 
-Can someone (John?) send me the details off email list and I'll see if t=
-he Legion team can help.
-(this comes with a caveat that the Legion platforms are not part of the =
-official Linux program yet, so no promises or guarantees)
+- battery and charger information report
+- charging thresholds control
+- FN lock (An alternative method)
+- LID switch detection
+- Temperature sensors
+- USB Type-C altmode
+- USB Type-C PD(high power)
 
->
->> - Using just one WMI interface is simple =E2=80=94 my grandmother cou=
-ld do it.
+Thanks to the work of Bjorn and Dmitry([1]), the work of Nikita([2]), writing a
+EC driver won't be suffering. This work refers a lot to their work, also, many
+other works. I mentioned them in the source file.
 
-You have an awesome grandmother :D=20
+Depends: https://lore.kernel.org/linux-arm-msm/20241220160530.444864-1-mitltlatltl@gmail.com
 
-Mark
+[1] https://lore.kernel.org/all/20240614-yoga-ec-driver-v7-0-9f0b9b40ae76@linaro.org/
+[2] https://lore.kernel.org/all/20240315-aspire1-ec-v5-0-f93381deff39@trvn.ru/
+
+Signed-off-by: Pengyu Luo <mitltlatltl@gmail.com>
+---
+Pengyu Luo (5):
+  dt-bindings: platform: Add Huawei Matebook E Go EC
+  platform: arm64: add Huawei Matebook E Go (sc8280xp) EC driver
+  usb: typec: ucsi: add Huawei Matebook E Go (sc8280xp) ucsi driver
+  power: supply: add Huawei Matebook E Go (sc8280xp) psy driver
+  arm64: dts: qcom: gaokun3: Add Embedded Controller node
+
+ .../bindings/platform/huawei,gaokun-ec.yaml   | 116 ++++
+ .../boot/dts/qcom/sc8280xp-huawei-gaokun3.dts | 139 ++++
+ drivers/platform/arm64/Kconfig                |  19 +
+ drivers/platform/arm64/Makefile               |   2 +
+ drivers/platform/arm64/huawei-gaokun-ec.c     | 598 ++++++++++++++++++
+ drivers/platform/arm64/huawei-gaokun-wmi.c    | 283 +++++++++
+ drivers/power/supply/Kconfig                  |   9 +
+ drivers/power/supply/Makefile                 |   1 +
+ drivers/power/supply/huawei-gaokun-battery.c  | 446 +++++++++++++
+ drivers/usb/typec/ucsi/Kconfig                |   9 +
+ drivers/usb/typec/ucsi/Makefile               |   1 +
+ drivers/usb/typec/ucsi/ucsi_huawei_gaokun.c   | 481 ++++++++++++++
+ .../linux/platform_data/huawei-gaokun-ec.h    |  90 +++
+ 13 files changed, 2194 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/platform/huawei,gaokun-ec.yaml
+ create mode 100644 drivers/platform/arm64/huawei-gaokun-ec.c
+ create mode 100644 drivers/platform/arm64/huawei-gaokun-wmi.c
+ create mode 100644 drivers/power/supply/huawei-gaokun-battery.c
+ create mode 100644 drivers/usb/typec/ucsi/ucsi_huawei_gaokun.c
+ create mode 100644 include/linux/platform_data/huawei-gaokun-ec.h
+
+-- 
+2.47.1
+
