@@ -1,195 +1,251 @@
-Received: from linux1587.grserver.gr (linux1587.grserver.gr [185.138.42.100])
+Received: from mail-qt1-f177.google.com (mail-qt1-f177.google.com [209.85.160.177])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 061981C2BD;
-	Fri, 27 Dec 2024 18:48:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.138.42.100
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 35B12C8DF;
+	Fri, 27 Dec 2024 23:18:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1735325329; cv=none; b=UpVOj2wP6/GQjWRS6SmCb5xZ4EhvLbApEfIQ51h0lbSknQ+hkbu0j9nmoOuM29UKAJVFHuGh0v+u60o8k5l+5Vi/VyUZT8lsJu2jljHjIXAczMIbd3gWOR3OtXO1pEkRL7tGQkItzrv5K+VdJo6wu2T/kx+amH37tVH7QTceJxo=
+	t=1735341539; cv=none; b=Nb1EK3tmStskRaitMlMrd6k5ZhZrClvKksbRLFcu9C9OG5ytAMc3toOhF/8yO5QUbWVwI1mfe2332RY3UyOTHyA/4Pl9jaYcwqHhpgGHlphUQBhXnMWLaHEopMk5YgUsEX7Z74Qyjsgp4MplsFx4cl/m7uUuje5IUSStIkqz8Qc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1735325329; c=relaxed/simple;
-	bh=de9YawzoPkw5LfFG4GZ3/VeW61mm9EPQ5iS35qjq/U4=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=i1ygPUj4gc8fnixjB4V5r9rbYci3LRmNLyQ4QYlNJofzUbAzSCwEjKwKNJddDlfnfXn8+YA5XSBmEy7oz8LTf6Akb/l73URZ2/+lTekK7LjglNCTVBzqdqW26ZHqtGgzsax1BdOLIGWSPQc8KwyX0+yZ38FCD3hUM4l4fiIM5aI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=antheas.dev; spf=pass smtp.mailfrom=antheas.dev; dkim=pass (1024-bit key) header.d=antheas.dev header.i=@antheas.dev header.b=5gsljBUk; arc=none smtp.client-ip=185.138.42.100
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=antheas.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=antheas.dev
+	s=arc-20240116; t=1735341539; c=relaxed/simple;
+	bh=PIaUEXIOVyeZXpP5uFRKxu6ybYfD17WkqdUZ5MErV0Q=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=uGXj1oZ8lggw8ZwolNDjGsjo0PdZrZmVmsdlDg0mrikrkY9+bbew4UiTfnYTjFoEpuwfHBJr3ZMm+faw1gjbcSvWnWPFCbNHSKZtfH8StCX6J3+H00UXQ78l0w5idVA7e4kGndxw4qiMGu4m7kgETPYWUE949/Oqi4kFBzGWf+A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=FqTjz8uY; arc=none smtp.client-ip=209.85.160.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=antheas.dev header.i=@antheas.dev header.b="5gsljBUk"
-Received: from localhost.localdomain (unknown [IPv6:2a02:2149:8b14:7c00:7f68:a54:8871:387f])
-	by linux1587.grserver.gr (Postfix) with ESMTPSA id 939A62E00777;
-	Fri, 27 Dec 2024 20:48:34 +0200 (EET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=antheas.dev;
-	s=default; t=1735325316;
-	bh=KaXqSLciCpR5aZlcxzNkJJ31s1Cmt2fdD+pblQ/1Fnc=; h=From:To:Subject;
-	b=5gsljBUk0uGY4QhNQ8lMp574G5ateaOsKE8YFggEhIw6nYlQguMt93bedcs8wRiKL
-	 LxW83TsKPRIb2jzKO9dFvs+QqaKeYA5LSR5dLvum7rni7NRvYBYi2kXQUova8uvZ36
-	 mNbKdKYuUyyOnJ1xRhGodlea0yUOYcvzYaxUp9wM=
-Authentication-Results: linux1587.grserver.gr;
-	spf=pass (sender IP is 2a02:2149:8b14:7c00:7f68:a54:8871:387f) smtp.mailfrom=lkml@antheas.dev smtp.helo=localhost.localdomain
-Received-SPF: pass (linux1587.grserver.gr: connection is authenticated)
-From: Antheas Kapenekakis <lkml@antheas.dev>
-To: derekjohn.clark@gmail.com
-Cc: corbet@lwn.net,
-	hdegoede@redhat.com,
-	ilpo.jarvinen@linux.intel.com,
-	linux-doc@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	luke@ljones.dev,
-	mpearson-lenovo@squebb.ca,
-	nijs1@lenovo.com,
-	pgriffais@valvesoftware.com,
-	platform-driver-x86@vger.kernel.org,
-	shaohz1@lenovo.com,
-	superm1@kernel.org,
-	zhangzx36@lenovo.com,
-	johnfanv2@gmail.com,
-	codyit@gmail.com,
-	W_Armin@gmx.de
-Subject: Re: [PATCH 0/1] platform/x86: Add Lenovo Legion WMI Drivers
-Date: Fri, 27 Dec 2024 19:48:25 +0100
-Message-ID: <20241227184825.415286-1-lkml@antheas.dev>
-X-Mailer: git-send-email 2.47.1
-In-Reply-To: <20241217230645.15027-2-derekjohn.clark@gmail.com>
-References: <20241217230645.15027-2-derekjohn.clark@gmail.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FqTjz8uY"
+Received: by mail-qt1-f177.google.com with SMTP id d75a77b69052e-46772a0f85bso63300101cf.3;
+        Fri, 27 Dec 2024 15:18:56 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1735341536; x=1735946336; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=PIaUEXIOVyeZXpP5uFRKxu6ybYfD17WkqdUZ5MErV0Q=;
+        b=FqTjz8uYki2WfylNBZngaEKp8LXP8NBMjhG1YmE1uo8OqLG5hdBhz9Bzj5lZyj0BW7
+         yeIW23l4w0Dnwga5L5C7mhLumneNkt1zl8gUuodaPAahOsUaBYPiGhc+eGrIX/4FWmjn
+         tbcsGtOTnYDzjF4yXFszQAtdKcCq16WN806WtcB1jmG5DRIMrJpxxhVHVgelIwNn2SOW
+         pQMu/l2y4YjBBEVgKGV1aX/XVX4oxX8UzFLkejCpQ7jncOireFsePT/7EPqDebHckYXR
+         rrS2aL18o6nqoZu3OX2yfmDTUtYSec064XDUg63QWDZWgJZm4DRVTBguljAZkGg6zuiV
+         UPKA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1735341536; x=1735946336;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=PIaUEXIOVyeZXpP5uFRKxu6ybYfD17WkqdUZ5MErV0Q=;
+        b=pZCbtCckYqIz81KiJ+a56Y/lpcTuNQyG2j901RIFbpMNp4ZDBQZV049AtWJUrYcd5B
+         LNIXAkfRdxOjJ7/8U2esvPFMhQMBmTmGtUUMgYsJ1SNtZAjQBZuHbp6MHJHs/JNS5nTx
+         qc9kEvwWOw/ZQhR+RnY9kCNG4qXs6g2ejMMR27YfMmmp2ByATIMUSdboaMA2+2z17czA
+         BiQvVEGSB00JkF9CDQ5i0YZD/GXt00HHEPHFlO8odZajK/q+uhGOnE1yMugzEP/GMVH0
+         fdYSabX4/V2VtVoR2G4Jc10NHA6ATt4rli+fdTaMmLvpqPgbVRcJBYccDRpIvL5o3S7z
+         mGfg==
+X-Forwarded-Encrypted: i=1; AJvYcCW5SjR0vq+EqTAUEEcfoyzugX4WECjidNYpJM61gSbCbyEfBpGg4Cf1adRL62DcCihn76mYdlEX9vc=@vger.kernel.org, AJvYcCXXjBawza7R4TSAm6loPdjn87yxG07sgmFQ/f799VmCgpBR4/uxXsLQPDFkrrvljw6WBORjQy/LETQ0Hu0l@vger.kernel.org, AJvYcCXcl3y6KoqZa2AsGW0C6H0nryN8JauY4i7uEu2p+w7p3iV1kUq4Vfc7v1t6UvsZ6pj2xptyunCyxBPXohaFl4BeCOIIAA==@vger.kernel.org
+X-Gm-Message-State: AOJu0YwjCEAgUCU04V11khCR+DGQUO/w3UFZWs9NgiqMv7g58g+yO8XH
+	X53V0nIta4P9erSsHBwvJrh9xxdIfN+jlFY1cq96ETJ+fWHnPmfdkRoZssze2vXBTS1uC+LsX4p
+	mRtLMvwUiCztnJwGx0dLf7ky0xDM=
+X-Gm-Gg: ASbGncsELV6YGiJHsKJAH4bpCuTA8TZ/pqk1iVDWFFUNRfi8eXlZBd2Bj/2zrDGZUt+
+	D+NFTUCPNfQOrYtr8li89ClG9AWI5KOa0SCWVNu0=
+X-Google-Smtp-Source: AGHT+IE/pe3BQ/jUHqYiTeDxFGa9rcFx4puyT9MikRCWMv/GP3ykeazMIEYNZ/Z+37+A0ps6yxrE9B7AHwABOSQFblY=
+X-Received: by 2002:ad4:5aaa:0:b0:6d8:838f:8b54 with SMTP id
+ 6a1803df08f44-6dd2339ff7fmr429264746d6.39.1735341536060; Fri, 27 Dec 2024
+ 15:18:56 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-PPP-Message-ID: 
- <173532531561.9273.10613731026644363289@linux1587.grserver.gr>
-X-PPP-Vhost: antheas.dev
-X-Virus-Scanned: clamav-milter 0.103.11 at linux1587.grserver.gr
-X-Virus-Status: Clean
+References: <a1c25bd8-907f-4b2a-a505-15785eb4b17b@gmx.de> <20241226001828.423658-1-johnfanv2@gmail.com>
+In-Reply-To: <20241226001828.423658-1-johnfanv2@gmail.com>
+From: Derek John Clark <derekjohn.clark@gmail.com>
+Date: Fri, 27 Dec 2024 15:18:45 -0800
+Message-ID: <CAFqHKTna+kJpHLo5s4Fm1TmHcSSqSTr96JHDm0DJ0dxsZMkixA@mail.gmail.com>
+Subject: Re: [PATCH 0/1] platform/x86: Add Lenovo Legion WMI Drivers
+To: John Martens <johnfanv2@gmail.com>
+Cc: w_armin@gmx.de, corbet@lwn.net, hdegoede@redhat.com, 
+	ilpo.jarvinen@linux.intel.com, linux-doc@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, luke@ljones.dev, mpearson-lenovo@squebb.ca, 
+	nijs1@lenovo.com, pgriffais@valvesoftware.com, 
+	platform-driver-x86@vger.kernel.org, shaohz1@lenovo.com, superm1@kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi Derek,
+On Wed, Dec 25, 2024 at 4:18=E2=80=AFPM John Martens <johnfanv2@gmail.com> =
+wrote:
 
-Good job on the driver. I spent a bit of time reviewing it today, and I
-have a few thoughts. Hopefully you can go through them fast, and we can
-have a solid base of understanding moving forward so that I can e.g.,
-merge your driver on Bazzite ahead of the kernel, so you can get some
-valuable testing.
+>I guess the most important task is to get following points right because
+>they are hard to fix later.
+>
+>1. Should there be a unifrom sysfs interface for different access methods?
+>Depending on the model different methods must be used to control the
+>same feature, e.g. the powermode, fan table, dust-cleaning-mode.
+>The access methods could be a different WMI method (newer model),
+>direct ACPI without WMI, or port mapped IO (outb/inb). I suggest that
+>regardless of the access methods it should be produce the same sysfs entry=
+.
+>
 
-// Firmware Attributes
-Right now, I have one major concern I'd like to be addressed before
-moving into the details of the driver. This is mirrored in the Asus
-driver you referenced [1] as well and I do not think I have seen solid
-argumentation for it yet.
+>Example: there is a fan-fullspeed-methods/dustcleaning-mode that
+>sets the fans to the maximal possible speed. I suggest that regardless of
+>the used access method there should be the one file:
+>
+>/sys/class/firmware-attributes/*/attributes/fanfullspeed/current_value
+>
+>Alternatively, one could use the less elegant approach:
+>
+>/sys/class/firmware-attributes/*/attributes/wmi-other-fanfullspeed/current=
+_value
+>/sys/class/firmware-attributes/*/attributes/wmi-gamezone-fanfullspeed/curr=
+ent_value
+>/sys/class/firmware-attributes/*/attributes/acpi1-fanfullspeed/current_val=
+ue
 
-Essentially, you are using the firmware attributes interface for the
-ephemeral attributes SPL, SPPT, and FPPT which is also a concern mirrored
-in the thread with Armin (+cc) and John (+cc) [2]. The question here
-becomes, if exposing fan curve attributes via the firmware interface is
-fickle, why is it correct for SPL, SPPT, and FPPT?
+I agree generally, though there are some limitations. As Armin mentioned, t=
+he
+firmware-attributes interface will handle this with the pattern
+/sys/class/firmware-attributes/<name>. <name> is derived when the class is
+initialized. In v1 I used lenovo-legion-wmi but based on the discussion so =
+far
+I'll likely drop legion from all patterns and call everything based on its =
+GUID
+plain text name like Mark suggested, lenovo-wmi-other for Other Method,
+lenovo-wmi-custom for Custom Method, etc. That will ensure two things:
+(1) drivers won't conflict in namespace if there is an unused but present i=
+n
+the bios older interface on a newer device.
+(2) Userspace apps can determine the preferred interface for a given device=
+ if
+more than one happens to be present. I don't think this will be very common=
+,
+but it can be handled if it does happen.
 
-For context, when it comes to Asus (see [1]), these tunables reset during
-reboots, after sleep, and when changing the TDP mode. Specifically, TDP
-mode, SPL, SPPT, and FPPT, and the fan curve are not preserved between
-reboots, with only TDP mode being preserved between sleep. Following, 
-setting TDP mode resets SPL, SPP, and FPPT, and setting any one of those
-resets the fan curve.
+The goal of this driver, jointly with asus-armoury, is to standardize the
+features that aren't already in the kernel while utilizing those that are. =
+I.E.
+AMD PPT doesn't yet have a standard interface, platform-profile does. The n=
+ames
+of the attributes that provide specific functionality will remain the same
+between drivers (ppt_pl1_spl for example). As firmware-attributes is a clas=
+s,
+it is easy to use udev in userspace apps to avoid hard coding paths so that=
+ any
+interface that provides these attributes will be interchangeable or include=
+ a
+hierarchy table. In the event more than one "competing" driver loads the
+userspace app can prioritize a specific interface and, if a genuine conflic=
+t
+arises between two drivers on a specific device, it will be easy enough to
+quirk that device to not load one or the other. The fanfullspeed attribute
+should be able to follow this same pattern when implemented.
 
-For Lenovo and the Legion Go (1st Gen) it actually depends on the BIOS
-version. In early BIOSes, the custom tunings used to be preserved until
-you reset the BIOS. However, I suspect that this caused used confusion, as
-if you uninstalled Legion Space, the tunings to custom mode would still be
-applied which would be unintuitive. In new BIOS versions, the tunings reset
-when changing TDP modes, which can be done with the combination Legion
-L + Y. I am unsure if they are still preserved between reboots if you
-remain in custom mode. Fan curve resets as well. But the point is that they
-are not persisted, at least to the extent expected by the firmware
-attributes class and writing to them in other modes is undefined.
+>2. Naming and file structure: As mentioned above, there different methods =
+-
+>including non-WMI methods - are used. Hence, it might not be optimal name
+>the driver "legion-wmi". One idea would be to name the folder/driver "legi=
+on"
+>and then seperate into multiple files by access methods (WMI by GUID, ACPI=
+,
+>port mapped IO).
 
-Lastly, if another driver were to be developed e.g., for AMD out-of-tree
-to control devices without a vendor interface, we'd have the same
-issue. As this driver or [1] merging would set a precedent for using
-firmware attributes for these tunings, I think it is important to reach
-agreement before moving forward. For AMD w/o vendor, more details can
-be found in [3]. In [3], Mario makes an RFC for an alt interface for SPL,
-SPPT, and FPPT, through amd_pmf which does not have this peculiar issue.
+Since each driver will be independent I don't see this being a problem.
+lenovo-acpi-tunables or lenovo-i2c-tunables (as example) could coexist.
+As above, each firmware-attributes path will be different but the attribute=
+s
+within them would be standardized.
 
-There are settings where it does make sense however, such as VRAM, boot
-sound (Asus), and the suspend light/barrel plug RGB (Legion). These
-settings are typically persisted in BIOS and there is no ambiguity for
-fitness in those.
+>3. Driver Structure, selection of access method and probing: The right acc=
+ess
+>method (WMI, ACPI, ...) has to be chosen for each model. Some of them can
+>be automatically probed, some of them have to be hard coded (c.f. also Win=
+dow
+>tools) by the letter-only prefix of the BIOS version.
+>
+>Depending on the driver structure there are multiple ideas how to manage t=
+his i
+>nformation:
+>
+>a: global-access-into-driver-decide-by-enum: initially the driver can stor=
+e
+>the method of access (WMI, ACPI, ...) for e.g. modifying fanfullspeed as
+>an enum/bitfield/... globally. The value can be decided on by probing and
+>some hard coded rules. There is one "glovbal" c-file that acts as an
+>entrypoint into the driver and adds all the show/store functions. When the
+>show-function is called it is decided e.g. by a switch statement which
+>function in one of the different files (WMI, ACPI, ...) is called.
+>The upside of this method is that if there are not warnings in the code,
+>then every case is totally covered. The downside is a lot of boilerplate
+>code.
+>
+>b: global-access-into-driver-decide-by-function-pointer: Same as above
+>in case a, but direclty use function pointers instead of enum/bits. There
+>is one function pointers for each attribute in a "global" struct. When
+>the driver is loaded initially, it sets each function pointers to modify
+>an attribute the right function for the model. The upside is
+>less boilerplate. The downside is that it might get a little
+>less safe working with the function pointers.
+>
+>c: independent-access-in-independent-driver-parts: the driver is split
+>into totally independent parts for each method (WMI, ACPI, ...) and GUID.
+>Each driver part is responsible for creating the sysfs entries. To
+>prevent conflicts each part has to use a unique name (see 1)
+>for the attribute. Alternatively, the choice of access has to be propagate=
+d
+>down to each part to prevent creating the same sysfs attribute multiple
+>times. The upside is the elegance and easy extension. The downside
+>is the weird sysfs user-interface and the weird coupling between
+>the different driver parts.
+>
+>d: totally independent drivers: make a totally independent driver
+>(module) for each access method.
+>
+>Some more remarks:
+>- I would never make one attribute depend on another
+>attribute, e.g. when changing some power parameters of GPU/CPU it
+>should not change the power mode (e.g. going to custom mode). Initially,
+>I did the same but it turned out to be not a good idea. However,
+>if one changes some power settings and is not custom-powermode some
+>sometimes some weird things happen. Sometimes also all changes are
+>ignored by the firmware as seen in the ACPI dissassembly. I guess
+>it is best to just manage this in user space.
 
-// Driver Details
-Ok, as for the rest of the driver, I have (i) some stylistic comments and
-(ii) will mirror similar concerns to John in unnecessary accesses.
+I think that is the consensus going forward. In v2 each interface will be
+independent of the others except when it relies on a WMI data block as part=
+ of
+its data validation.
 
-(i) Stylistic Comments
-I would personally be a fan of adding WMI support to the kernel, such that
-userspace can access WMI attributes without the use of a driver, as it is
-done in Windows. However, as I have discussed with Mario, such a thing is
-not an easy task, as it would require adding a BMOF parser to the kernel
-which is a monumental effort. In any case, the current kernel requires
-us custom write drivers for the WMI interface.
+>- When trying to find out what access method to choose one cannot rely
+>on the ACPI/WMI interface. From disassembling the ACPI, one can see
+>that sometimes/often even if the function is not implemented it
+>will return without error. Moreover, there are some WMI methods
+>with name "*IsSupported" (or similar) but they often do not tell
+>the truth.
 
-The reason for this preface is that I think that your driver style is a bit
-"too close" to what such a thing would look. E.g., in the driver I can see
-snippets such as `LENOVO_CAPABILITY_DATA_01 WMI data block driver.` and
-`MODULE_IMPORT_NS("CAPDATA_WMI");`. Since you are going through the effort
-of writing a custom driver, I would be more opinionated in how I'd design
-the driver, so that it's more intuitive from a user's perspective. I think
-John's driver (which has its own issues) and the asus-wmi drivers strike a
-bit better balance, where they "translate" the WMI calls into an ABI that
-can be documented and then parsed by a developer.
+Generally I prefer to use the path of least intervention and automatic
+discovery with explicit deny lists, then explicit allow lists if needed. Th=
+at
+will limit the amount of work needed to support new hardware that implement=
+s
+the same functionality. WMI interfaces for example should load automaticall=
+y,
+unless there is a restrictive DMI quirk for a specific model. If BIOS revis=
+ion
+is of concern then that driver will quirk an alternative method or deny the
+driver overall. If automatic discovery isn't an option, such as EC writes w=
+ith
+inb/outb, then we would explicitly load it using a DMI table in that driver=
+.
+From my experience this seems to be the standard for kernel drivers. We wil=
+l
+need to rely on your historical data and Lenovo to get this right.
 
-Such a design process would then also allow to claim the name legion, as
-you could make sure the legion driver only loads on Legion laptops, where
-now it would randomly load in other laptops as well. Sidenote here is
-that this is something I also found confusing, as the Legion Go does not
-have a keyboard so that driver should definitely not load.
-E.g., you could only load when you detect the Gamezone interface and then
-access the other two as well. The Gamezone interface is only used in
-Legion laptops AFAIK. I think Lenovo also kind of implements all three
-as stubs even if some are not used, to allow extending them with BIOS
-updates, so blindly loading drivers based on the interface might not be
-the best idea in any case. When the Legion Go released, I think only one
-of the three interfaces was used, for example, but all three were present.
+>- Using just one WMI interface is simple =E2=80=94 my grandmother could do=
+ it.
+>However, when juggling and organizing the various access methods, your
+>guidance is needed to set the driver on the right path from the beginning.
+>So I defenitely, appreciate your input on the different options.
 
-(ii) Unnecessary Accesses
-Even though you went hands off on your design of the driver, at the same
-time you held back when it comes to userspace accesses by globally forcing
-the Other function hints as limits. This creates two issues.
-
-The first one is that those limits might be wrong for certain devices or
-certain users might want to go a bit above them, which would mean that if
-you enforce them you'd need to provide a way to quirk them and a module
-parameter override (I know they are correct for the Legion Go as I have
-looked through them as well). But if it is not necessary in Windows,
-why would we add additional roadblocks in the kernel? If Lenovo feels the
-need to enforce them, they can do so in their firmware and extend that
-protection to Windows as well. Asus does when it comes to their fan curve
-firmware, for example.
-
-The second is that you are making a lot of necessary calls, which may harm
-performance or potentially cause instability. My workflow for setting TDP
-on the Go is that I first respect the TDP mode the user has set using
-Legion L + Y. If the user wants to change that, then I do the following:
-set TDP mode to custom, set the TDP, set the SPL, SPPT, and FPPT, and then
-set the fan curve. I also add a small delay in-between each of these calls
-as a further precaution. In your current driver, each of these calls would
-make two additional calls to the WMI interface (one for the limits and
-one for the TDP mode), which would more than double the number of calls
-made in a typical scenario (from 5 to 12), where each triplet is made
-back to back.
-
-There is also the issue mentioned by John, where you do cross-interface
-interactions etc. To fix this, you'd have to retrieve the limits from
-firmware on probing and then cache them in the driver after quirking. It
-would be much easier just to skip all of this for now and just use them to
-prepopulate _min and _max values as hints instead, which you already do.
-
-Those were my comments. You mentioned that you are travelling and might not
-have access to your PC so take your time with the replies.
-
-Happy holidays,
-Antheas
-
-[1] https://lore.kernel.org/all/20240930000046.51388-1-luke@ljones.dev/
-[2] https://lore.kernel.org/lkml/eb165321-6a52-4464-bb58-11d8f9ff2008@gmx.de/
-[3] https://lore.kernel.org/lkml/20240926025955.1728766-1-superm1@kernel.org/
+Thanks John,
+Derek
