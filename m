@@ -1,119 +1,169 @@
-Received: from mail-ua1-f42.google.com (mail-ua1-f42.google.com [209.85.222.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mailgw.kylinos.cn (mailgw.kylinos.cn [124.126.103.232])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 883B5AD21;
-	Fri, 27 Dec 2024 05:01:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F50A135A63;
+	Fri, 27 Dec 2024 09:10:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=124.126.103.232
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1735275680; cv=none; b=sw1WQBQ4N97htZVzZeHodi9IjzIIkZWVwTIuVE+A6yDIdtUy3K2HapuumGMMAG//QP8VD/QrJxHMia6ilLqrym134PMi/0Yh5H7ZIY0qvSWkh4lEV/i6xjHRNC881rwae49riwN+cJpE3z3msv5pR2jZGTuYpDc12ooInbPV2ms=
+	t=1735290624; cv=none; b=ttLZGSLRVu3FM+TBy0uVqGzklgIKfP0iZCwRLxsqQvEzrqf+64ohZsGs1Zz0Z4a1C49I4vfEcUoY1wDajqEW7NKMtsyS+RCGYgzdqB09QeIXIrxfpq3SHDqNg0gbqxwv90aLH0ZDaRNfcpQYu2Q0lCkZnBULzSNZG1F4TA3L0qM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1735275680; c=relaxed/simple;
-	bh=0aP7ZLDC+qrDtruOlqL8bl99glimkZOrkoK4p2seBsY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=o7rs8V/FVFyioxiXejSEo4AMimb7oR1ys5sQaSp/OWXz2VHFDCMB0HgBQZkbOcyb0y+EC4tug8XMROLk9MB9ZOjlBRpUxXi2TJHAKl3HlvC46UXyrgD7AKw73GY1U56zKYdVz0l2mOLVDGm5OmOVPqc3uskghSXBGQHTZrpwlig=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=dGbphETv; arc=none smtp.client-ip=209.85.222.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dGbphETv"
-Received: by mail-ua1-f42.google.com with SMTP id a1e0cc1a2514c-86112ab1ad4so1799593241.1;
-        Thu, 26 Dec 2024 21:01:18 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1735275677; x=1735880477; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=nLLGzq91re/H5W1TmTf/ks1QrFq73PflCFT2L38ptVw=;
-        b=dGbphETvhkU5jXJ9AHn9ony4SpjrF2vPDH56uQWmCirgw4ZCWeHWncH4h6ARmvnwca
-         oLnf02QDeKHDZ3Z7/vgozMBoUYd+7puIJRRJ5tHXBBJrgsPxA6aghsIyb8Dtc07+IFpp
-         fTnxjLpFGQR8FD5GOK2EANatgcaVH9Cn6omwlaHppSLzloOvfNGDt+jZXw7WHHLytP40
-         GFDtoCdKCl+NUVZ4eq6R+rgvyHrgHijiDkX72dxlIXq80ungl9Dnm1TUj7XfXTNKnwEL
-         ywKqEP5ZrDr33vOQIVzPMRhqOsQwKjysOx5wN4jJr3Cmy9J+Z+ZzMgVVvuTZpSYPbq1O
-         9qlQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1735275677; x=1735880477;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=nLLGzq91re/H5W1TmTf/ks1QrFq73PflCFT2L38ptVw=;
-        b=bAHN/fEh5gHVmTqRdAWy0+6/nldZa0x7kKw56Tb0J7ZN4dHUL3tyXS0B/Obv4twf2o
-         5Tx6hLnwc/kvK5hMod87KApaGOfQkNBM6VMrI4eCE+zi8BKI5T+DUlP75g4UtP4k1f2R
-         I1O1H0ZzhMUl9yX7ZADcMyjun/t4dIQhCCohzWy7QIkQ9vzhM+YCfkEU2imHwp6QAAE7
-         0qEi1W5JS1UXH7jrkCZupIGRVz0NPIp0Yvj0W3m/6xv8aOonSAmbMDke4G6TlhkM0Bq4
-         6fJY10ehuj77dujZwiL65vc3QgHKCLavu0TK0YFlQoagUmB7ZrAeavovIzQM8XO6aff8
-         h5pw==
-X-Forwarded-Encrypted: i=1; AJvYcCVUCuntO5SL5rkzJU7hWZvhLYI5rbeIsarObV7zyxH7FlQ/2EgdrMyoyrdaibNTdgjHyYuuhZaV4SEx31U=@vger.kernel.org
-X-Gm-Message-State: AOJu0YziRo1KBZKrUB4kkvA+95swKe3l1RJf7hX7eoXFss210RZp4l/Z
-	N+pVns7autS95I6iN4QCIfvaFEbzHFrfSDILmp2nSPcYZlCP5tbm
-X-Gm-Gg: ASbGncsAsYG6IuViNA25Z/sCKM0ITTQ+7g0KkEYyQ+EKYopYSLbpCIlKzwfPM3QKx+N
-	IW+QALzQoPhPJg+N9xrMPCBllHBV2lahwa85XXaG1rOGiLVox/tSxKcceX3MtilBrx9ezKDN2lA
-	oXb3MKaLVzGSxfOZgJR4YZ8c7VfEAh6LZyBwjbLn+0EfKdCxwRLXZp0W7XEUy8s6LUFUPsjE2ox
-	biOpwPW2FxEpJGf42c8y0ylIzySZ9xXRmQhNDqG4oD9PyTyOxplQw==
-X-Google-Smtp-Source: AGHT+IHeSLPpvOJA7ZLJlRywudU+hsFLchUHB9WGaL5cwB4BiyIS5SGf4ir/yooajiYW8gUGn+bYlg==
-X-Received: by 2002:a05:6102:5122:b0:4af:adb2:5133 with SMTP id ada2fe7eead31-4b2cc49acdemr18617567137.23.1735275677395;
-        Thu, 26 Dec 2024 21:01:17 -0800 (PST)
-Received: from alphacentauri ([2800:bf0:82:1159:1ea9:11b1:7af9:1277])
-        by smtp.gmail.com with ESMTPSA id ada2fe7eead31-4b2bf9c7ca1sm2968501137.16.2024.12.26.21.01.15
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 26 Dec 2024 21:01:16 -0800 (PST)
-Date: Fri, 27 Dec 2024 00:01:13 -0500
-From: Kurt Borja <kuurtb@gmail.com>
-To: Armin Wolf <W_Armin@gmx.de>
-Cc: platform-driver-x86@vger.kernel.org, ilpo.jarvinen@linux.intel.com, 
-	mario.limonciello@amd.com, hdegoede@redhat.com, linux-kernel@vger.kernel.org, 
-	Dell.Client.Kernel@dell.com
-Subject: Re: [PATCH 20/20] alienware-wmi: Update header and module information
-Message-ID: <67ui6qoilcuvbxyh2htvy6smynopxdssvclstzxo7lu4inqteg@bhjp3cansnzp>
-References: <20241221055917.10555-1-kuurtb@gmail.com>
- <20241221055917.10555-21-kuurtb@gmail.com>
- <8b05f882-7410-49fd-987d-5bdbb69b1e33@gmx.de>
+	s=arc-20240116; t=1735290624; c=relaxed/simple;
+	bh=BTSW13bFcchN5SlGwcquV0VDD8CazRg0k3N3KTKWHvs=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=hFccHbGVkefeEa1iHkli4mqR5mIwG4dPLjp3KHI7+uXE6ePCl5zU46mD8vtXIH7op/nA+ZhinKmb/sdHqzTHCiCYXalh+16TjsbMDIGl9wxUiY6c1Ca8hV3aYuNpkciUu0QdlcBP4ttdtZfj7+Ins8omk61j4SvlKx2kO2DIYis=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn; spf=pass smtp.mailfrom=kylinos.cn; arc=none smtp.client-ip=124.126.103.232
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kylinos.cn
+X-UUID: 60fd1982c43211efa216b1d71e6e1362-20241227
+X-CID-P-RULE: Release_Ham
+X-CID-O-INFO: VERSION:1.1.41,REQID:7a6a7477-486b-4971-95cd-e5df691e2ff7,IP:0,U
+	RL:0,TC:0,Content:0,EDM:0,RT:0,SF:0,FILE:0,BULK:0,RULE:Release_Ham,ACTION:
+	release,TS:0
+X-CID-META: VersionHash:6dc6a47,CLOUDID:a3e028cf82632fcd74d6eeb1d29d6624,BulkI
+	D:nil,BulkQuantity:0,Recheck:0,SF:102,TC:nil,Content:0|50,EDM:-3,IP:nil,UR
+	L:0,File:nil,RT:nil,Bulk:nil,QS:nil,BEC:nil,COL:0,OSI:0,OSA:0,AV:0,LES:1,S
+	PR:NO,DKR:0,DKP:0,BRR:0,BRE:0,ARC:0
+X-CID-BVR: 0
+X-CID-BAS: 0,_,0,_
+X-CID-FACTOR: TF_CID_SPAM_SNR
+X-UUID: 60fd1982c43211efa216b1d71e6e1362-20241227
+Received: from node4.com.cn [(10.44.16.170)] by mailgw.kylinos.cn
+	(envelope-from <aichao@kylinos.cn>)
+	(Generic MTA)
+	with ESMTP id 686000743; Fri, 27 Dec 2024 17:10:12 +0800
+Received: from node4.com.cn (localhost [127.0.0.1])
+	by node4.com.cn (NSMail) with SMTP id 7838216002081;
+	Fri, 27 Dec 2024 17:10:12 +0800 (CST)
+X-ns-mid: postfix-676E6EF4-3162571154
+Received: from kylin-pc.. (unknown [172.25.130.133])
+	by node4.com.cn (NSMail) with ESMTPA id AF75F16003300;
+	Fri, 27 Dec 2024 09:10:11 +0000 (UTC)
+From: Ai Chao <aichao@kylinos.cn>
+To: hdegoede@redhat.com,
+	ilpo.jarvinen@linux.intel.com,
+	platform-driver-x86@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Cc: Ai Chao <aichao@kylinos.cn>
+Subject: [PATCH v2] platform/x86: lenovo-wmi-camera: Use SW_CAMERA_LENS_COVER instead of KEY_CAMERA_ACESS
+Date: Fri, 27 Dec 2024 17:10:08 +0800
+Message-ID: <20241227091008.257567-1-aichao@kylinos.cn>
+X-Mailer: git-send-email 2.45.2
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <8b05f882-7410-49fd-987d-5bdbb69b1e33@gmx.de>
+Content-Transfer-Encoding: quoted-printable
 
-On Fri, Dec 27, 2024 at 05:08:58AM +0100, Armin Wolf wrote:
-> Am 21.12.24 um 06:59 schrieb Kurt Borja:
-> 
-> > Update module description and add myself as a module author.
-> 
-> Reviewed-by: Armin Wolf <W_Armin@gmx.de>
+Use SW_CAMERA_LENS_COVER instead of KEY_CAMERA_ACESS_ENABLE and
+KEY_CAMERA_ACESS_DISABLE. When the camera toggle switch was hit,
+the lenovo-wmi-camera driver would report an event code.
 
-Thank you so much for your detailed review Armin! :) I'll submit v2 in a
-couple of days.
+Signed-off-by: Ai Chao <aichao@kylinos.cn>
+---
+change for v2
+-Only delays the input-device registration and switches to reporting SW_C=
+AMERA_LENS_COVER.
 
-~ Kurt
+ drivers/platform/x86/lenovo-wmi-camera.c | 55 ++++++++++++++----------
+ 1 file changed, 32 insertions(+), 23 deletions(-)
 
-> 
-> > Signed-off-by: Kurt Borja <kuurtb@gmail.com>
-> > ---
-> >   drivers/platform/x86/dell/alienware-wmi-base.c | 4 +++-
-> >   1 file changed, 3 insertions(+), 1 deletion(-)
-> > 
-> > diff --git a/drivers/platform/x86/dell/alienware-wmi-base.c b/drivers/platform/x86/dell/alienware-wmi-base.c
-> > index 450ba0a48004..e8ccf9b277fa 100644
-> > --- a/drivers/platform/x86/dell/alienware-wmi-base.c
-> > +++ b/drivers/platform/x86/dell/alienware-wmi-base.c
-> > @@ -1,8 +1,9 @@
-> >   // SPDX-License-Identifier: GPL-2.0-or-later
-> >   /*
-> > - * Alienware AlienFX control
-> > + * Alienware special feature control
-> >    *
-> >    * Copyright (C) 2014 Dell Inc <Dell.Client.Kernel@dell.com>
-> > + * Copyright (C) 2024 Kurt Borja <kuurtb@gmail.com>
-> >    */
-> > 
-> >   #define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
-> > @@ -15,6 +16,7 @@
-> >   #include "alienware-wmi.h"
-> > 
-> >   MODULE_AUTHOR("Mario Limonciello <mario.limonciello@outlook.com>");
-> > +MODULE_AUTHOR("Kurt Borja <kuurtb@gmail.com>");
-> >   MODULE_DESCRIPTION("Alienware special feature control");
-> >   MODULE_LICENSE("GPL");
-> > 
+diff --git a/drivers/platform/x86/lenovo-wmi-camera.c b/drivers/platform/=
+x86/lenovo-wmi-camera.c
+index 0c0bedaf7407..ad296acaf562 100644
+--- a/drivers/platform/x86/lenovo-wmi-camera.c
++++ b/drivers/platform/x86/lenovo-wmi-camera.c
+@@ -26,10 +26,33 @@ enum {
+ 	SW_CAMERA_ON	=3D 1,
+ };
+=20
++static int camera_shutter_input_setup(struct wmi_device *wdev)
++{
++	struct lenovo_wmi_priv *priv =3D dev_get_drvdata(&wdev->dev);
++	int err;
++
++	priv->idev =3D devm_input_allocate_device(&wdev->dev);
++	if (!priv->idev)
++		return -ENOMEM;
++
++	priv->idev->name =3D "Lenovo WMI Camera Button";
++	priv->idev->phys =3D "wmi/input0";
++	priv->idev->id.bustype =3D BUS_HOST;
++	priv->idev->dev.parent =3D &wdev->dev;
++
++	__set_bit(EV_SW, priv->idev->evbit);
++	__set_bit(SW_CAMERA_LENS_COVER, priv->idev->swbit);
++
++	err =3D input_register_device(priv->idev);
++	if (err)
++		return err;
++
++	return 0;
++}
++
+ static void lenovo_wmi_notify(struct wmi_device *wdev, union acpi_object=
+ *obj)
+ {
+ 	struct lenovo_wmi_priv *priv =3D dev_get_drvdata(&wdev->dev);
+-	unsigned int keycode;
+ 	u8 camera_mode;
+=20
+ 	if (obj->type !=3D ACPI_TYPE_BUFFER) {
+@@ -53,13 +76,16 @@ static void lenovo_wmi_notify(struct wmi_device *wdev=
+, union acpi_object *obj)
+ 		return;
+ 	}
+=20
++	if (!priv->idev)
++		if (camera_shutter_input_setup(wdev))
++			return;
++
+ 	mutex_lock(&priv->notify_lock);
+=20
+-	keycode =3D camera_mode =3D=3D SW_CAMERA_ON ?
+-		   KEY_CAMERA_ACCESS_ENABLE : KEY_CAMERA_ACCESS_DISABLE;
+-	input_report_key(priv->idev, keycode, 1);
+-	input_sync(priv->idev);
+-	input_report_key(priv->idev, keycode, 0);
++	if (camera_mode =3D=3D SW_CAMERA_ON)
++		input_report_switch(priv->idev, SW_CAMERA_LENS_COVER, 1);
++	else if (camera_mode =3D=3D SW_CAMERA_OFF)
++		input_report_switch(priv->idev, SW_CAMERA_LENS_COVER, 0);
+ 	input_sync(priv->idev);
+=20
+ 	mutex_unlock(&priv->notify_lock);
+@@ -68,29 +94,12 @@ static void lenovo_wmi_notify(struct wmi_device *wdev=
+, union acpi_object *obj)
+ static int lenovo_wmi_probe(struct wmi_device *wdev, const void *context=
+)
+ {
+ 	struct lenovo_wmi_priv *priv;
+-	int ret;
+=20
+ 	priv =3D devm_kzalloc(&wdev->dev, sizeof(*priv), GFP_KERNEL);
+ 	if (!priv)
+ 		return -ENOMEM;
+=20
+ 	dev_set_drvdata(&wdev->dev, priv);
+-
+-	priv->idev =3D devm_input_allocate_device(&wdev->dev);
+-	if (!priv->idev)
+-		return -ENOMEM;
+-
+-	priv->idev->name =3D "Lenovo WMI Camera Button";
+-	priv->idev->phys =3D "wmi/input0";
+-	priv->idev->id.bustype =3D BUS_HOST;
+-	priv->idev->dev.parent =3D &wdev->dev;
+-	input_set_capability(priv->idev, EV_KEY, KEY_CAMERA_ACCESS_ENABLE);
+-	input_set_capability(priv->idev, EV_KEY, KEY_CAMERA_ACCESS_DISABLE);
+-
+-	ret =3D input_register_device(priv->idev);
+-	if (ret)
+-		return ret;
+-
+ 	mutex_init(&priv->notify_lock);
+=20
+ 	return 0;
+--=20
+2.25.1
+
