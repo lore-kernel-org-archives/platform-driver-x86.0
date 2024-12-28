@@ -1,179 +1,154 @@
-Received: from fout-b7-smtp.messagingengine.com (fout-b7-smtp.messagingengine.com [202.12.124.150])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qv1-f46.google.com (mail-qv1-f46.google.com [209.85.219.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2525A3FD1;
-	Sat, 28 Dec 2024 03:12:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.150
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2EC411CA9C;
+	Sat, 28 Dec 2024 03:30:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1735355538; cv=none; b=pem1YnPWoKSNZuraSqqmsCG+Je2IAsUiBqwJq57ng66v7HKDHFki5bFx4Tc/hHyEnk3SDZWzkwIWEvZP68OzLn2GGtmBn0sdZxMRYILiHOtB3UeXgcNUS9yXyhTY2Qw8hCtuZAKNE66LEPfyp/F5fxpi/m9cccTUBP4yPlzpcCo=
+	t=1735356652; cv=none; b=MFKHkJMX1SHAFNCvdbpaswoPHjd5/aHzRgXGa6uoHrxINuXF0BmNFmMZfsS9Qj6QxZ8kuXVAau8QkQ378nzpcTN7qLf4HkQs11Ywarryz3F8NhAOit9NzjHyfUddL3rfwKmSAv85LT7BINB4/bqtdUGjxn7NFBEvYbz+M4dnRXo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1735355538; c=relaxed/simple;
-	bh=xB2b8kyWFRxwy++8sAnMq9Dp69EoofQxZcVM3Z5Y4QA=;
-	h=MIME-Version:Date:From:To:Message-Id:In-Reply-To:References:
-	 Subject:Content-Type; b=PpWAyQ1RCwpHtft0DDlgYtTK9Wm2q9obDIrLXnV5Q90iA1/P3iCvyysJMmPMlIkuvSgIwP2+DMJWZGl+FIlvJb1g6llJzw/2LV7fTbNivy9jUUQm4pCm12pHVapDffLx/oyU908/1Pz3/2h8M7aIshnbC/th1pTerX+pwh5RBTQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=squebb.ca; spf=pass smtp.mailfrom=squebb.ca; dkim=pass (2048-bit key) header.d=squebb.ca header.i=@squebb.ca header.b=Gx0uFCW9; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=Uh273FYS; arc=none smtp.client-ip=202.12.124.150
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=squebb.ca
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=squebb.ca
+	s=arc-20240116; t=1735356652; c=relaxed/simple;
+	bh=2GiEZ42IYieNHfMgxRj7DTWCGwgDfKbttkdvkVIw4bk=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=CpMSjE3gL2Qadq312XXN+1240e0FhEBVd65wCuZ222dV+YxHTWxxTwDo9NknkQKp9W6CyT2ZM8TEGrzJ9FZO6ypOIPaUD1UJ9cFafr3N78PWYEyFU8YuW/9tMe24TkcqjM4FLt2bCEvFXF+mH8LjAr7MMLF5ZYZAQd9ZjnCDOCc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=gdCKJYZn; arc=none smtp.client-ip=209.85.219.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=squebb.ca header.i=@squebb.ca header.b="Gx0uFCW9";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="Uh273FYS"
-Received: from phl-compute-02.internal (phl-compute-02.phl.internal [10.202.2.42])
-	by mailfout.stl.internal (Postfix) with ESMTP id D24E51140145;
-	Fri, 27 Dec 2024 22:12:13 -0500 (EST)
-Received: from phl-imap-10 ([10.202.2.85])
-  by phl-compute-02.internal (MEProxy); Fri, 27 Dec 2024 22:12:14 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=squebb.ca; h=cc
-	:content-transfer-encoding:content-type:content-type:date:date
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to; s=fm3; t=1735355533;
-	 x=1735441933; bh=oTCiyUx/+Iu2Q1iKJZ0C11ZHzMKd0uDToUXZUmnZC9g=; b=
-	Gx0uFCW9SJyIgblSonOVxISR1yFbwePs54I9de9HxcgQSj9aL/JbT8rUn671jL3j
-	4R2WB/qfQK6pFy1dM485GtJW895iJ1ltZUhpBeLmqZFXK28J2NhVEJxBRJRhKkfg
-	P8aq5nVwHfuUMvsTnbfcyGL3dMqNZUzk+nlSpIMpG8EuGTUhNri4v+YbU1XpugeI
-	/Y7kiDGwy3euuFK9ennxzuyXczlEgiOpt3kiSerKQRhrQ5LgjWhQVmRuBnQrnjly
-	IdQs7Tk5Tzfd0ioiwfCbJx1DDCeXkZU4VOROExuK8ZbxTZrz9lqwiUa5rTXR7jfw
-	TCxgTgQlyHf9Ku4B0D8C2g==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:content-transfer-encoding:content-type
-	:content-type:date:date:feedback-id:feedback-id:from:from
-	:in-reply-to:in-reply-to:message-id:mime-version:references
-	:reply-to:subject:subject:to:to:x-me-proxy:x-me-sender
-	:x-me-sender:x-sasl-enc; s=fm2; t=1735355533; x=1735441933; bh=o
-	TCiyUx/+Iu2Q1iKJZ0C11ZHzMKd0uDToUXZUmnZC9g=; b=Uh273FYS3gHKEoK4R
-	BdVwb6CxtzjnDIPIz6ZHIHUV3KpxjovBarjzpVtQ5DmHFDwGzx/l1Pq3Dy0oiJdD
-	QtNYwHwDgjdNLaIHxZnILrZ8VR/fAHNXtMmEJ2SNFnRSVX/3pdwc3c7p4om6U7+2
-	Lf0Kdp5ke6TEBCeKHtAeZcPfbjNQuODh4WGe/P9OwqT4nFpthIKQwVGRPuCVWuFJ
-	1x307Z2f1pf4kW0i+7m0U/kyRSJHjDFTnJQM4v864RtWC2e4GBhzp3gvYr35W/eF
-	J0qPHYxzRQqGlsgDJ2nP5XRIzDl2htI/Fkx5elSD0FMhWUD8FFrCuydaJKnkoCt3
-	mfzLw==
-X-ME-Sender: <xms:jGxvZwy4sS39aHXLwBjqhFoym18o1Fd48g2GJgX4NyPTjPaMTVZOKQ>
-    <xme:jGxvZ0RBDHtlDP8rLFVDXAbuuEZ8VKzOEOI2DuQjti0DKhGjzFrj8NSH_x4or6EY8
-    lp2AwhqL38CFFHVa4A>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefuddruddvuddgheegucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggvpdfu
-    rfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnh
-    htshculddquddttddmnecujfgurhepofggfffhvffkjghfufgtgfesthejredtredttden
-    ucfhrhhomhepfdforghrkhcurfgvrghrshhonhdfuceomhhpvggrrhhsohhnqdhlvghnoh
-    hvohesshhquhgvsggsrdgtrgeqnecuggftrfgrthhtvghrnhepkeffuedtveekjeeukefg
-    leejgeetleduueetudefudehfefhheefleehheffffeknecuvehluhhsthgvrhfuihiivg
-    eptdenucfrrghrrghmpehmrghilhhfrhhomhepmhhpvggrrhhsohhnqdhlvghnohhvohes
-    shhquhgvsggsrdgtrgdpnhgspghrtghpthhtohepledpmhhouggvpehsmhhtphhouhhtpd
-    hrtghpthhtohepvhhishhhnhhuohgtvhesghhmrghilhdrtghomhdprhgtphhtthhopehh
-    mhhhsehhmhhhrdgvnhhgrdgsrhdprhgtphhtthhopehilhhpohdrjhgrrhhvihhnvghnse
-    hlihhnuhigrdhinhhtvghlrdgtohhmpdhrtghpthhtohepihgsmhdqrggtphhiqdguvghv
-    vghlsehlihhsthhsrdhsohhurhgtvghfohhrghgvrdhnvghtpdhrtghpthhtoheptghorh
-    gsvghtsehlfihnrdhnvghtpdhrtghpthhtohephhguvghgohgvuggvsehrvgguhhgrthdr
-    tghomhdprhgtphhtthhopehlihhnuhigqdguohgtsehvghgvrhdrkhgvrhhnvghlrdhorh
-    hgpdhrtghpthhtoheplhhinhhugidqkhgvrhhnvghlsehvghgvrhdrkhgvrhhnvghlrdho
-    rhhgpdhrtghpthhtohepphhlrghtfhhorhhmqdgurhhivhgvrhdqgiekieesvhhgvghrrd
-    hkvghrnhgvlhdrohhrgh
-X-ME-Proxy: <xmx:jGxvZyU664AmucSeaTASHjGo43K8Kr-oGvCL1NDacU9anNXPx_W-iw>
-    <xmx:jGxvZ-hrZC9l0yYREqQ4xg_3rnzZkRdQuWLEnBvCtCiMg8XLPtHzEQ>
-    <xmx:jGxvZyAm2Ew_dmg9WNctaH1X2qkX6v_pFeUHthO9n-1I1ZpJGDID2A>
-    <xmx:jGxvZ_KXr1DAOJu36RvCZi1mC_HAB0Fx2t-yK1VbyGn5lhJWKWmOYw>
-    <xmx:jWxvZ-31oAL9Wu_ORlA_bfWhjcmNQmY-QqwtjVfCVVpeZBihAIXLMlMI>
-Feedback-ID: ibe194615:Fastmail
-Received: by mailuser.phl.internal (Postfix, from userid 501)
-	id 030473C0066; Fri, 27 Dec 2024 22:12:12 -0500 (EST)
-X-Mailer: MessagingEngine.com Webmail Interface
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gdCKJYZn"
+Received: by mail-qv1-f46.google.com with SMTP id 6a1803df08f44-6dce7263beaso68155126d6.3;
+        Fri, 27 Dec 2024 19:30:50 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1735356650; x=1735961450; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=f8GYBZuEMER9Nx+eft+7uVydGovTURzOA4xadqgTI18=;
+        b=gdCKJYZn/ZWM3C5F2IafS4s3opBvnP4jrzfCyH7YsqJUEBrOuJUj3ouez4S9PQroNR
+         wYXs0XC2wybTKPilc3WZCS48WIHAweggUz/eRhA8HSTk2MF6Kl9CtEv0w+Fg5WDLIo3H
+         kLHgvb7gGiBkJru/LM7E5ZfuNa1yQ5DAH1IQcN4K1QCWZVSqzmo+9rvHAkCT0bndr342
+         t1mjXM6HbEWcMslenO4V7vUEOOOjUnSSQiUSepFVeQFuoy6M6gnPM5zbvyHnCP/mEI0I
+         /wYdmqBYP3AEQxF8FRmS1aa2HXbYSS76phWAlEEED/JE2n8BNaoDijClKevursxx9yDH
+         ceVw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1735356650; x=1735961450;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=f8GYBZuEMER9Nx+eft+7uVydGovTURzOA4xadqgTI18=;
+        b=cv1wsNsSem5fhFhhnwHXb79vSvdAHCgyDcT82iYi5w/9S2L7OIvNpKg6N+Bxnajy8D
+         AjymnCpUND2vTCzUzi3FSdnjTxYzE7A+kS/1k3z62jpxd4X0J014d2Mk8Qgr/t3qReMn
+         2eySBzHiXsC7knBUnqiweNplPEeGRlDK/1s5ViP1WxjcMgSE/6jFZop4bDE59U8FxkqO
+         qM7BcqS23vxRhyOjNaAFbV5F8yDjaShK/r8LyHGi0tKJcmxadd17N9zz33W9JbfFvTZX
+         6z30FDmZ0cOUsoNgIukpZdweq05LhkMZm8J0lnEty18CmzJ5YtEBxkpqbQD2KvwUM8u4
+         q3gA==
+X-Forwarded-Encrypted: i=1; AJvYcCUuFCs4IlSZNYWEydYLHGU1Owzn8FaqxwAy6xS2Ddo1B6FncRglu7ZNqjoIlM4icDcucz5tdHh4Fm8=@vger.kernel.org, AJvYcCWrvZ4mjC+1oNE6gDhVUraYRotwmgRqpCAxrounu3PehhT3Se4/G6kmKS5v96G8tfB3johahfBHKCSxTl+wkQrrA18Brg==@vger.kernel.org, AJvYcCXYkYIE+6QBkgdu8dIW6BROgaKNos2Il/q+Xzi/IrZ3ZGUjX+yoh5iTd8RkZnpda93Pd//6D2vuA9NQffJw@vger.kernel.org
+X-Gm-Message-State: AOJu0YynxLlAb/fGSGi+9oNfGbkGKp3dURmjF0JyP5Io0+3WhmvsFfDC
+	N+Zf9g8R01vDUvFgsLt0c8c0rczkAzs/cHwu0RD7rhEM9/pex8icZV0SPOWmOiiJFIFiwMH0osI
+	p9LsiGO9t0vI3S/480Pptogfv9B0=
+X-Gm-Gg: ASbGncvw0clKwN+S0fqXnCjbnCuN43NTtqiESelurQtxzVoekb8Ys3paMsP97/GfUYe
+	NCu1ItqvKkWx8rGcbd8W4HcOgoE3of06saz2DGDM=
+X-Google-Smtp-Source: AGHT+IE0Eg0VjnTW0n8aHt96ZsAI7FhOdD9tYx35Ph0VO1whJG9NETfSrrlJAdPeL4Dttxw8YDNFDyxv4BH0qVOvGX8=
+X-Received: by 2002:a05:6214:410f:b0:6d8:8874:2126 with SMTP id
+ 6a1803df08f44-6dd2333a8d5mr373647056d6.11.1735356650026; Fri, 27 Dec 2024
+ 19:30:50 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Date: Fri, 27 Dec 2024 22:11:51 -0500
-From: "Mark Pearson" <mpearson-lenovo@squebb.ca>
-To: "Vishnu Sankar" <vishnuocv@gmail.com>, "Jonathan Corbet" <corbet@lwn.net>,
- "Henrique de Moraes Holschuh" <hmh@hmh.eng.br>,
- "Hans de Goede" <hdegoede@redhat.com>,
- =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
- linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
- ibm-acpi-devel@lists.sourceforge.net,
- "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>
-Message-Id: <48ae0687-0426-48d0-8f50-0b8f4e849697@app.fastmail.com>
-In-Reply-To: <20241227231840.21334-1-vishnuocv@gmail.com>
-References: <20241227231840.21334-1-vishnuocv@gmail.com>
-Subject: Re: [PATCH] platform/x86: thinkpad-acpi: Add support for hotkey 0x1401
-Content-Type: text/plain
-Content-Transfer-Encoding: 7bit
+References: <20241217230645.15027-2-derekjohn.clark@gmail.com>
+ <20241227184825.415286-1-lkml@antheas.dev> <CAFqHKT=Y66KNo-e+o+n76tmPEcqL4EBSUQNDXJcoP8B9NXguew@mail.gmail.com>
+ <CAGwozwGpEWVQwEAFfWWkTx4G90uhqdfbF85E4F_2w6c6G6P2Sg@mail.gmail.com>
+In-Reply-To: <CAGwozwGpEWVQwEAFfWWkTx4G90uhqdfbF85E4F_2w6c6G6P2Sg@mail.gmail.com>
+From: Derek John Clark <derekjohn.clark@gmail.com>
+Date: Fri, 27 Dec 2024 19:30:39 -0800
+Message-ID: <CAFqHKTnOA5N-uADQLbdA-b+k-TOMdjZtCPsFsCo9jarMiNioLg@mail.gmail.com>
+Subject: Re: [PATCH 0/1] platform/x86: Add Lenovo Legion WMI Drivers
+To: Antheas Kapenekakis <lkml@antheas.dev>
+Cc: corbet@lwn.net, hdegoede@redhat.com, ilpo.jarvinen@linux.intel.com, 
+	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, luke@ljones.dev, 
+	mpearson-lenovo@squebb.ca, nijs1@lenovo.com, pgriffais@valvesoftware.com, 
+	platform-driver-x86@vger.kernel.org, shaohz1@lenovo.com, superm1@kernel.org, 
+	zhangzx36@lenovo.com, johnfanv2@gmail.com, codyit@gmail.com, W_Armin@gmx.de
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Thanks Vishnu,
+On Fri, Dec 27, 2024 at 5:10=E2=80=AFPM Antheas Kapenekakis <lkml@antheas.d=
+ev> wrote:
 
-On Fri, Dec 27, 2024, at 6:18 PM, Vishnu Sankar wrote:
-> F8 mode key on Lenovo 2025 platforms use a different key code.
-> Adding support for the new keycode 0x1401.
+> They need to re-agree given the context below. It is one thing for
+> them to agree on it theoretically for settings that they might imagine
+> are persistent and another thing when in reality they are not.
 >
-> Tested on X1 Carbon Gen 13 and X1 2-in-1 Gen 10.
+> You did not address this in your comment here.
 >
-> Signed-off-by: Vishnu Sankar <vishnuocv@gmail.com>
-> ---
->  Documentation/admin-guide/laptops/thinkpad-acpi.rst | 10 +++++++---
->  drivers/platform/x86/thinkpad_acpi.c                |  4 +++-
->  2 files changed, 10 insertions(+), 4 deletions(-)
+> The problem I am raising is that SPL, SPPT, and FPPT specifically are
+> not persistent enough to meet the guidelines of that interface.
 >
-> diff --git a/Documentation/admin-guide/laptops/thinkpad-acpi.rst 
-> b/Documentation/admin-guide/laptops/thinkpad-acpi.rst
-> index 7f674a6cfa8a..4ab0fef7d440 100644
-> --- a/Documentation/admin-guide/laptops/thinkpad-acpi.rst
-> +++ b/Documentation/admin-guide/laptops/thinkpad-acpi.rst
-> @@ -445,8 +445,10 @@ event	code	Key		Notes
->  0x1008	0x07	FN+F8		IBM: toggle screen expand
->  				Lenovo: configure UltraNav,
->  				or toggle screen expand.
-> -				On newer platforms (2024+)
-> -				replaced by 0x131f (see below)
-> +				On 2024 platforms replaced by
-> +				0x131f (see below) and on newer
-> +				platforms (2025 +) keycode is
-> +				replaced by 0x1401 (see below).
-> 
->  0x1009	0x08	FN+F9		-
-> 
-> @@ -506,9 +508,11 @@ event	code	Key		Notes
-> 
->  0x1019	0x18	unknown
-> 
-> -0x131f	...	FN+F8	        Platform Mode change.
-> +0x131f	...	FN+F8		Platform Mode change (2024 systems).
->  				Implemented in driver.
-> 
-> +0x1401	...	FN+F8		Platform Mode change (2025 + systems).
-> +				Implemented in driver.
->  ...	...	...
-> 
->  0x1020	0x1F	unknown
-> diff --git a/drivers/platform/x86/thinkpad_acpi.c 
-> b/drivers/platform/x86/thinkpad_acpi.c
-> index 6371a9f765c1..2cfb2ac3f465 100644
-> --- a/drivers/platform/x86/thinkpad_acpi.c
-> +++ b/drivers/platform/x86/thinkpad_acpi.c
-> @@ -184,7 +184,8 @@ enum tpacpi_hkey_event_t {
->  						   */
->  	TP_HKEY_EV_AMT_TOGGLE		= 0x131a, /* Toggle AMT on/off */
->  	TP_HKEY_EV_DOUBLETAP_TOGGLE	= 0x131c, /* Toggle trackpoint doubletap 
-> on/off */
-> -	TP_HKEY_EV_PROFILE_TOGGLE	= 0x131f, /* Toggle platform profile */
-> +	TP_HKEY_EV_PROFILE_TOGGLE	= 0x131f, /* Toggle platform profile in 
-> 2024 systems */
-> +	TP_HKEY_EV_PROFILE_TOGGLE2	= 0x1401, /* Toggle platform profile in 
-> 2025 + systems */
-> 
->  	/* Reasons for waking up from S3/S4 */
->  	TP_HKEY_EV_WKUP_S3_UNDOCK	= 0x2304, /* undock requested, S3 */
-> @@ -11200,6 +11201,7 @@ static bool tpacpi_driver_event(const unsigned 
-> int hkey_event)
->  		tp_features.trackpoint_doubletap = !tp_features.trackpoint_doubletap;
->  		return true;
->  	case TP_HKEY_EV_PROFILE_TOGGLE:
-> +	case TP_HKEY_EV_PROFILE_TOGGLE2:
->  		platform_profile_cycle();
->  		return true;
->  	}
-> -- 
-> 2.45.2
+> [1] and [2] do not address this either.
+>
+> I do not have an alternative planned, just noting that I'd like
+> everyone to be on the same page before we go ahead with this ABI.
 
-Looks good to me.
-Reviewed-by: Mark Pearson <mpearson-lenovo@squebb.ca>
+I'll let them weigh in on this again if they want to, but I think it
+was clear from those threads that this is a new way to use the class.
+Armin's comment was related to the fan curve setting John was
+discussing, which is specifically covered by the hwmon subsystem.
+Hwmon does not cover platform profiles or PPT.
 
-Mark
+> To rephrase, your ABI style is not intuitive, because it contains
+> implementation details such as "gamezone", "capdata01", and "Other
+> Method", in addition to the ABI being hardcoded to the WMI structure
+> lenovo uses. The documentation uses those keywords as well.
+
+Yeah, it's a driver for those interfaces... If you want an agnostic
+BMOF driver then make one. This isn't that.
+
+> If I understand correctly your last sentence, Armin suggested much of
+> the same (ie combine and merge).
+
+You don't seem to, no. The suggestion was to use the component  driver
+API to aggregate the Other Method driver with the capability data
+driver so that the firmware-attributes class is only loaded when both
+are present. That is decidedly different from breaking the kernel's
+WMI driver requirements and merging two GUID's into one driver.
+
+> GUID tables loading !=3D drivers loading also, I would not pin that on
+> the kernel.
+
+What exactly do you think the following does?
+
+ +MODULE_DEVICE_TABLE(wmi, gamezone_wmi_id_table);
+
+> I do not understand what "I hard code the page to custom" means.
+> If you mean the capability data does not change you are right, they
+> are hardcoded in the decompiled ACPI I am pretty sure (it has been
+> close to a year now so I might be forgetting).
+
+The capability data interface has a data block instance for every
+attribute in every fan mode. SPL has one for quiet, balanced,
+performance, and custom. The method for getting that data block (page)
+is the same as calling get/set in Other Method (0x01030100 -
+0x0103FF00). Every page produces different values for each attribute,
+but I am only ever retrieving the instance for custom (0x0103FF00) as
+that's the only one where setting that method ID in Other Method
+changes the values on the Legion Go. It is the only relevant data for
+userspace. Other Gaming Series laptops might treat this differently,
+where every fan mode has an applicable range. I'll need to do more
+testing on other hardware to confirm that. In any case, this isn't
+relevant as I'm dropping the gamezone check (as I've stated multiple
+times in this discussion) and always setting/getting the custom method
+ID for a given attribute.
+
+> It's good that you will be fixing that/I hope you will be fixing that.
+> It is not clear from your comment. Please try to skip the capability
+> call too.
+
+I was pretty clear...
+
+>> v2 will not need this call more than once during probe, and gamezone
+> > will not be called by Other Method ever.
+
+Derek
