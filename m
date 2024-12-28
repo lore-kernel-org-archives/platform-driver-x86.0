@@ -1,154 +1,309 @@
-Received: from mail-qv1-f46.google.com (mail-qv1-f46.google.com [209.85.219.46])
+Received: from mail-pl1-f180.google.com (mail-pl1-f180.google.com [209.85.214.180])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2EC411CA9C;
-	Sat, 28 Dec 2024 03:30:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C489079FD;
+	Sat, 28 Dec 2024 05:44:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1735356652; cv=none; b=MFKHkJMX1SHAFNCvdbpaswoPHjd5/aHzRgXGa6uoHrxINuXF0BmNFmMZfsS9Qj6QxZ8kuXVAau8QkQ378nzpcTN7qLf4HkQs11Ywarryz3F8NhAOit9NzjHyfUddL3rfwKmSAv85LT7BINB4/bqtdUGjxn7NFBEvYbz+M4dnRXo=
+	t=1735364658; cv=none; b=R1y5icKBib5kYfdl+RAJ2RGkrgjaRKgvVndG7roramCdTI5uVMj2zP6srtzNQlfri6Wq3v8B7VN1l6cWd/eiPJkz+upcD0dkdpFef9GkOr6Fu7xhfNacCEOKczlBNl3X8bXj/MIpz7sjXD0Jzh43KSIa8jdDqaMcYheqeEf83ms=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1735356652; c=relaxed/simple;
-	bh=2GiEZ42IYieNHfMgxRj7DTWCGwgDfKbttkdvkVIw4bk=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=CpMSjE3gL2Qadq312XXN+1240e0FhEBVd65wCuZ222dV+YxHTWxxTwDo9NknkQKp9W6CyT2ZM8TEGrzJ9FZO6ypOIPaUD1UJ9cFafr3N78PWYEyFU8YuW/9tMe24TkcqjM4FLt2bCEvFXF+mH8LjAr7MMLF5ZYZAQd9ZjnCDOCc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=gdCKJYZn; arc=none smtp.client-ip=209.85.219.46
+	s=arc-20240116; t=1735364658; c=relaxed/simple;
+	bh=c/UXqWsZkZJ3mZej5WZjmOI/dNhoGUeYeb3AleGkiVc=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=o1Ko1ZeEMsGjfXfMA48qTWsZF3rFUpY8BUeULih27SNmr3Hjq14r+25kI5FSFhxy2E1RK5v0rDknO6D0xLuz9D4R5UtKtFt2voeU+gjbNOMevF0gPslc99gzHpXW6sEreVyp6yYE7GzA97jWyA3ZMteJmJ8sGZziGWwmOAnswT0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=G8kYW/NR; arc=none smtp.client-ip=209.85.214.180
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gdCKJYZn"
-Received: by mail-qv1-f46.google.com with SMTP id 6a1803df08f44-6dce7263beaso68155126d6.3;
-        Fri, 27 Dec 2024 19:30:50 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="G8kYW/NR"
+Received: by mail-pl1-f180.google.com with SMTP id d9443c01a7336-21670dce0a7so32402795ad.1;
+        Fri, 27 Dec 2024 21:44:16 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1735356650; x=1735961450; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
+        d=gmail.com; s=20230601; t=1735364656; x=1735969456; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=f8GYBZuEMER9Nx+eft+7uVydGovTURzOA4xadqgTI18=;
-        b=gdCKJYZn/ZWM3C5F2IafS4s3opBvnP4jrzfCyH7YsqJUEBrOuJUj3ouez4S9PQroNR
-         wYXs0XC2wybTKPilc3WZCS48WIHAweggUz/eRhA8HSTk2MF6Kl9CtEv0w+Fg5WDLIo3H
-         kLHgvb7gGiBkJru/LM7E5ZfuNa1yQ5DAH1IQcN4K1QCWZVSqzmo+9rvHAkCT0bndr342
-         t1mjXM6HbEWcMslenO4V7vUEOOOjUnSSQiUSepFVeQFuoy6M6gnPM5zbvyHnCP/mEI0I
-         /wYdmqBYP3AEQxF8FRmS1aa2HXbYSS76phWAlEEED/JE2n8BNaoDijClKevursxx9yDH
-         ceVw==
+        bh=Nkey3SXPBL8KVxQHG56h9FLqPjdWTDEcnVzd/E3a52w=;
+        b=G8kYW/NRwZwtoj7nZnqjD+zS0R0HR2cUUHwfOrFy62A2c+riGmqlTdRLBgpZGlZh5u
+         zA2BtHQpyACZWJV13zUa7YUdvsz3z0gJ/g16NK4DCmsSSjfL0qLuuB1dPF86ZOctXuZm
+         ZykLQvVTBbjRJtLaJBeXFlDQRI2OQpxxyh1nXKOPN4BaInvHHxRnPX3igKmv/YY0hkFQ
+         eD0ocDfpMRBYvMiouYZS7Nwbt5VhEfD9o4iz+7vYZIcYHoQA0mjyog7eMM0+nertPdwm
+         toOfBMQu1vlRUNAnp0oX/WNau2TknkxQZ1EeAEOGKYDmJFM9OBoa14cJv7GpMEs3/btm
+         0KqA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1735356650; x=1735961450;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+        d=1e100.net; s=20230601; t=1735364656; x=1735969456;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=f8GYBZuEMER9Nx+eft+7uVydGovTURzOA4xadqgTI18=;
-        b=cv1wsNsSem5fhFhhnwHXb79vSvdAHCgyDcT82iYi5w/9S2L7OIvNpKg6N+Bxnajy8D
-         AjymnCpUND2vTCzUzi3FSdnjTxYzE7A+kS/1k3z62jpxd4X0J014d2Mk8Qgr/t3qReMn
-         2eySBzHiXsC7knBUnqiweNplPEeGRlDK/1s5ViP1WxjcMgSE/6jFZop4bDE59U8FxkqO
-         qM7BcqS23vxRhyOjNaAFbV5F8yDjaShK/r8LyHGi0tKJcmxadd17N9zz33W9JbfFvTZX
-         6z30FDmZ0cOUsoNgIukpZdweq05LhkMZm8J0lnEty18CmzJ5YtEBxkpqbQD2KvwUM8u4
-         q3gA==
-X-Forwarded-Encrypted: i=1; AJvYcCUuFCs4IlSZNYWEydYLHGU1Owzn8FaqxwAy6xS2Ddo1B6FncRglu7ZNqjoIlM4icDcucz5tdHh4Fm8=@vger.kernel.org, AJvYcCWrvZ4mjC+1oNE6gDhVUraYRotwmgRqpCAxrounu3PehhT3Se4/G6kmKS5v96G8tfB3johahfBHKCSxTl+wkQrrA18Brg==@vger.kernel.org, AJvYcCXYkYIE+6QBkgdu8dIW6BROgaKNos2Il/q+Xzi/IrZ3ZGUjX+yoh5iTd8RkZnpda93Pd//6D2vuA9NQffJw@vger.kernel.org
-X-Gm-Message-State: AOJu0YynxLlAb/fGSGi+9oNfGbkGKp3dURmjF0JyP5Io0+3WhmvsFfDC
-	N+Zf9g8R01vDUvFgsLt0c8c0rczkAzs/cHwu0RD7rhEM9/pex8icZV0SPOWmOiiJFIFiwMH0osI
-	p9LsiGO9t0vI3S/480Pptogfv9B0=
-X-Gm-Gg: ASbGncvw0clKwN+S0fqXnCjbnCuN43NTtqiESelurQtxzVoekb8Ys3paMsP97/GfUYe
-	NCu1ItqvKkWx8rGcbd8W4HcOgoE3of06saz2DGDM=
-X-Google-Smtp-Source: AGHT+IE0Eg0VjnTW0n8aHt96ZsAI7FhOdD9tYx35Ph0VO1whJG9NETfSrrlJAdPeL4Dttxw8YDNFDyxv4BH0qVOvGX8=
-X-Received: by 2002:a05:6214:410f:b0:6d8:8874:2126 with SMTP id
- 6a1803df08f44-6dd2333a8d5mr373647056d6.11.1735356650026; Fri, 27 Dec 2024
- 19:30:50 -0800 (PST)
+        bh=Nkey3SXPBL8KVxQHG56h9FLqPjdWTDEcnVzd/E3a52w=;
+        b=VfRQabUyWnextu0FZpI0evkr+dEVkJEhXn/gGJ8HOsjx8NeN4fzfbHPrI7pjbjfbRp
+         LV3hvagrhZgdO+sCpP23r2QRC/LNsbHOgWhLIvlPQ8xWxFajsXA0yqqXGR3IroBLv+zG
+         JlUNob/ZHp0shoNbZtOENObrgtVBRnupUt3Q7pUsBcN/NKaSX13VGu2Y2EJf686d9jSC
+         olStFjOTtD9aQg5bsMay/giSMn3u+UX/EtkCJEJCo8s65dLJePFAMlInPMFdTUer/fXz
+         QCbos9X7N0LGArbe/lYdOI0hI6Fk3uR/WO08wo42BiAG9rsNJQ3YZL1GySfWvcWnQ5lk
+         TqqQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUYRVYKpHY01b5RhI+zH9dS0dpKOK/79G8/CyBYQbmQkbn8ozSmJBq+uEwvcX5f93ejGfgIpTLdw8tNW37qvcgLOJ6S1w==@vger.kernel.org, AJvYcCVHFFOci+8tttKLzY0z/iXgUHo2r44WDDTjlArqXcQQPoz1uN/JjHlnzVPKlxoYvpFk3/1Q2kPFOlBa@vger.kernel.org, AJvYcCW4Nx1miMDSZOhHpogy/70WB2UYl+sQAGPNrHKfCNNsNlcObw+gG+3Yalc3ZfJcNoxUNlewCNU6IXc=@vger.kernel.org, AJvYcCWEQGELoSpFew89/Ocm/7TUkpwkhIOvo0+oecRO8F74h7Dj+dp0flYF3DXxCoRC961KggwnxhVe+o5MV+Bl@vger.kernel.org, AJvYcCXZPjM8lEUGAd+YzmNvJwB0AuON8MC3hqDARK0Z76rCKlXUrzQBH3Em+mhHcGOeIX8TxliVlerSVtctnjqi5Q==@vger.kernel.org, AJvYcCXvjSEuEqKBp1UmUPItZGLkFVUUklE35Npr9m0f6hJ2/V/AoAPWABCO6DHCuwKtG7uPyUjwdKNfyzAU@vger.kernel.org
+X-Gm-Message-State: AOJu0YziTnMMW6TQscGJLFgA891MDxBwzZqvO58JXNlJJBs4QXzg6udp
+	GI6RFaTKFLCqGfVhvt4jzt8pCnwOcZiX3ic5VJjffK6qXPk9kM3y
+X-Gm-Gg: ASbGnctSv8DXWgqr8i0fgpR/japKHmx7N9ioq0v8dn9E1CWceXlDolemy1phe4c6EbZ
+	RKzv7jnEUxuV3qcJZZGhzlpcWqjBWOZ1O/Ymn1jrTMLdYBhaTmTaKMhUAzXI3cydVqWT1dvf3tp
+	2wSNopdHZBpTN77Oa6BviHU1KqFsBMo88k5ublBaKV/EfKQniL2PcBanCWczrkTft6JRRhvYYUe
+	pUB0/t+f5XhqEqz0MPn6kRZzMq3H/CwEiAPVn0xlx4=
+X-Google-Smtp-Source: AGHT+IEHyEfIdsHGIJJ+lP2XCN3DQ5dlE3X6F8MNeuKTuN0tlLHkiG12h1jNL4JmMAQ9FeT7Bu44OA==
+X-Received: by 2002:a05:6a00:410d:b0:725:f376:f4ff with SMTP id d2e1a72fcca58-72abde0b086mr42975235b3a.13.1735364655875;
+        Fri, 27 Dec 2024 21:44:15 -0800 (PST)
+Received: from nuvole.. ([2a09:bac1:76a0:dd10::2e9:62])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-72aad8fccd5sm15548149b3a.168.2024.12.27.21.44.10
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 27 Dec 2024 21:44:15 -0800 (PST)
+From: Pengyu Luo <mitltlatltl@gmail.com>
+To: maccraft123mc@gmail.com
+Cc: andersson@kernel.org,
+	bryan.odonoghue@linaro.org,
+	conor+dt@kernel.org,
+	devicetree@vger.kernel.org,
+	dmitry.baryshkov@linaro.org,
+	gregkh@linuxfoundation.org,
+	hdegoede@redhat.com,
+	heikki.krogerus@linux.intel.com,
+	ilpo.jarvinen@linux.intel.com,
+	konradybcio@kernel.org,
+	krzk+dt@kernel.org,
+	linux-arm-msm@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-pm@vger.kernel.org,
+	linux-usb@vger.kernel.org,
+	mitltlatltl@gmail.com,
+	nikita@trvn.ru,
+	platform-driver-x86@vger.kernel.org,
+	robh@kernel.org,
+	sre@kernel.org
+Subject: Re: [PATCH 2/5] platform: arm64: add Huawei Matebook E Go (sc8280xp) EC driver
+Date: Sat, 28 Dec 2024 13:42:57 +0800
+Message-ID: <20241228054259.485044-1-mitltlatltl@gmail.com>
+X-Mailer: git-send-email 2.47.1
+In-Reply-To: <CAO_MupKJyHbEb6RQ0B4gHwPQCrB=NfHJ-odY6R+DaSwOaSfnGw@mail.gmail.com>
+References: <CAO_MupKJyHbEb6RQ0B4gHwPQCrB=NfHJ-odY6R+DaSwOaSfnGw@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20241217230645.15027-2-derekjohn.clark@gmail.com>
- <20241227184825.415286-1-lkml@antheas.dev> <CAFqHKT=Y66KNo-e+o+n76tmPEcqL4EBSUQNDXJcoP8B9NXguew@mail.gmail.com>
- <CAGwozwGpEWVQwEAFfWWkTx4G90uhqdfbF85E4F_2w6c6G6P2Sg@mail.gmail.com>
-In-Reply-To: <CAGwozwGpEWVQwEAFfWWkTx4G90uhqdfbF85E4F_2w6c6G6P2Sg@mail.gmail.com>
-From: Derek John Clark <derekjohn.clark@gmail.com>
-Date: Fri, 27 Dec 2024 19:30:39 -0800
-Message-ID: <CAFqHKTnOA5N-uADQLbdA-b+k-TOMdjZtCPsFsCo9jarMiNioLg@mail.gmail.com>
-Subject: Re: [PATCH 0/1] platform/x86: Add Lenovo Legion WMI Drivers
-To: Antheas Kapenekakis <lkml@antheas.dev>
-Cc: corbet@lwn.net, hdegoede@redhat.com, ilpo.jarvinen@linux.intel.com, 
-	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, luke@ljones.dev, 
-	mpearson-lenovo@squebb.ca, nijs1@lenovo.com, pgriffais@valvesoftware.com, 
-	platform-driver-x86@vger.kernel.org, shaohz1@lenovo.com, superm1@kernel.org, 
-	zhangzx36@lenovo.com, johnfanv2@gmail.com, codyit@gmail.com, W_Armin@gmx.de
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Fri, Dec 27, 2024 at 5:10=E2=80=AFPM Antheas Kapenekakis <lkml@antheas.d=
-ev> wrote:
 
-> They need to re-agree given the context below. It is one thing for
-> them to agree on it theoretically for settings that they might imagine
-> are persistent and another thing when in reality they are not.
+
+On Sat, Dec 28, 2024 at 2:21 AM Maya Matuszczyk <maccraft123mc@gmail.com> wrote:
+> Good to see someone else doing EC drivers for arm64 laptops!
 >
-> You did not address this in your comment here.
+
+Yeah, I have worked on it for a while. I really don't know why don't some
+mechines use a pmic glink. AFAIK, there are some WOA devices without EC.
+Mechines can definitely work without it in a way.
+
+I am also glad that you are reviewing my code.
+
+> pt., 27 gru 2024 o 18:16 Pengyu Luo <mitltlatltl@gmail.com> napisał(a):
+> >
+> > There are 3 variants, Huawei released first 2 at the same time.
+> > Huawei Matebook E Go LTE(sc8180x), codename should be gaokun2.
+> > Huawei Matebook E Go(sc8280xp@3.0GHz), codename is gaokun3.
+> > Huawei Matebook E Go 2023(sc8280xp@2.69GHz).
+> >
+> > Adding support for the latter two variants for now, this driver should
+> > also work for the sc8180x variant according to acpi table files, but I
+> > don't have the device yet.
+> >
+> > Different from other Qualcomm Snapdragon sc8280xp based machines, the
+> > Huawei Matebook E Go uses an embedded controller while others use
+> > something called pmic glink. This embedded controller can be used to
+> > perform a set of various functions, including, but not limited:
+> >
+> > - Battery and charger monitoring;
+> > - Charge control and smart charge;
+> > - Fn_lock settings;
+> > - Tablet lid status;
+> > - Temperature sensors;
+> > - USB Type-C notifications (ports orientation,  DP alt mode HPD);
+> > - USB Type-C PD (according to observation, up to 48w).
+> >
+> > Add the driver for the EC, that creates devices for UCSI, wmi and power
+> > supply devices.
+> >
+> > Signed-off-by: Pengyu Luo <mitltlatltl@gmail.com>
+> > ---
+> >  drivers/platform/arm64/Kconfig                |  19 +
+> >  drivers/platform/arm64/Makefile               |   2 +
+> >  drivers/platform/arm64/huawei-gaokun-ec.c     | 598 ++++++++++++++++++
+> >  drivers/platform/arm64/huawei-gaokun-wmi.c    | 283 +++++++++
+> >  .../linux/platform_data/huawei-gaokun-ec.h    |  90 +++
+> >  5 files changed, 992 insertions(+)
+> >  create mode 100644 drivers/platform/arm64/huawei-gaokun-ec.c
+> >  create mode 100644 drivers/platform/arm64/huawei-gaokun-wmi.c
+> >  create mode 100644 include/linux/platform_data/huawei-gaokun-ec.h
+
+[...]
+
+> > +/* -------------------------------------------------------------------------- */
+> > +/* API For PSY */
+> > +
+> > +int gaokun_ec_psy_multi_read(struct gaokun_ec *ec, u8 reg,
+> > +                            size_t resp_len, u8 *resp)
+> > +{
+> > +       int i, ret;
+> > +       u8 _resp[RESP_HDR_SIZE + 1];
+> > +       u8 req[REQ_HDR_SIZE + 1] = {0x02, EC_READ, 1, };
+> > +
+> > +       for (i = 0; i < resp_len; ++i) {
+> > +               req[INPUT_DATA_OFFSET] = reg++;
+> > +               ret = gaokun_ec_read(ec, req, sizeof(_resp), _resp);
+> > +               if (ret)
+> > +                       return -EIO;
+> > +               resp[i] = _resp[DATA_OFFSET];
+> > +       }
+> > +
+> > +       return 0;
+> > +}
+> > +EXPORT_SYMBOL_GPL(gaokun_ec_psy_multi_read);
+> > +
+> > +/* -------------------------------------------------------------------------- */
+> > +/* API For WMI */
+> WMI is in ACPI, this laptop doesn't boot with ACPI so why are things
+> handled in WMI separate from rest of the driver?
 >
-> The problem I am raising is that SPL, SPPT, and FPPT specifically are
-> not persistent enough to meet the guidelines of that interface.
+
+This driver reimplemented WMI functoins, and it perform a lot of
+operations, to avoid naming it, just call it WMI, make life easier.
+
+Once I considered keeping WMI things in this file, but it makes this file
+bloated. Then I splitted every part into a module.
+
+> > +
+> > +/* Battery charging threshold */
+> > +int gaokun_ec_wmi_get_threshold(struct gaokun_ec *ec, u8 *value, int ind)
+> > +{
+> > +       /* GBTT */
+> > +       return gaokun_ec_read_byte(ec, (u8 []){0x02, 0x69, 1, ind}, value);
+> > +}
+> > +EXPORT_SYMBOL_GPL(gaokun_ec_wmi_get_threshold);
+> > +
+> > +int gaokun_ec_wmi_set_threshold(struct gaokun_ec *ec, u8 start, u8 end)
+> > +{
+> > +       /* SBTT */
+> > +       int ret;
+> > +       u8 req[REQ_HDR_SIZE + 2] = {0x02, 0x68, 2, 3, 0x5a};
+> > +
+> > +       ret = gaokun_ec_write(ec, req);
+> > +       if (ret)
+> > +               return -EIO;
+> > +
+> > +       if (start == 0 && end == 0)
+> > +               return -EINVAL;
+> > +
+> > +       if (start >= 0 && start <= end && end <= 100) {
+> > +               req[INPUT_DATA_OFFSET] = 1;
+> > +               req[INPUT_DATA_OFFSET + 1] = start;
+> > +               ret = gaokun_ec_write(ec, req);
+> > +               if (ret)
+> > +                       return -EIO;
+> > +
+> > +               req[INPUT_DATA_OFFSET] = 2;
+> > +               req[INPUT_DATA_OFFSET + 1] = end;
+> > +               ret = gaokun_ec_write(ec, req);
+> > +       } else {
+> > +               return -EINVAL;
+> > +       }
+> > +
+> > +       return ret;
+> > +}
+> > +EXPORT_SYMBOL_GPL(gaokun_ec_wmi_set_threshold);
+
+[...]
+
+> > +/* -------------------------------------------------------------------------- */
+> > +/* EC */
+> > +
+> > +static irqreturn_t gaokun_ec_irq_handler(int irq, void *data)
+> > +{
+> > +       struct gaokun_ec *ec = data;
+> > +       u8 req[REQ_HDR_SIZE] = {EC_EVENT, EC_QUERY, 0};
+> > +       u8 status, id;
+> > +       int ret;
+> > +
+> > +       ret = gaokun_ec_read_byte(ec, req, &id);
+> > +       if (ret)
+> > +               return IRQ_HANDLED;
+> The error should probably be logged instead of silently ignored
 >
-> [1] and [2] do not address this either.
+
+Generally, one or two I/O errors don't crash anything, but actually if we
+just do as ACPI methoda did, there should not be any error. It may be
+necessary for debugging at the early stage of developemnt. If you suggest,
+then we can add a report to the lower function (gaokun_ec_request) to check
+every transaction. BTW, lenovo c630 also ignored them.
+
+> > +
+> > +       switch (id) {
+> > +       case 0x0: /* No event */
+> > +               break;
+> > +
+> > +       case EC_EVENT_LID:
+> > +               gaokun_ec_psy_read_byte(ec, EC_LID_STATE, &status);
+> > +               status = EC_LID_OPEN & status;
+> > +               input_report_switch(ec->idev, SW_LID, !status);
+> > +               input_sync(ec->idev);
+> > +               break;
+> > +
+> > +       default:
+> > +               blocking_notifier_call_chain(&ec->notifier_list, id, ec);
+> > +       }
+> > +
+> > +       return IRQ_HANDLED;
+> > +}
+> > +
+
+[...]
+
+> > diff --git a/drivers/platform/arm64/huawei-gaokun-wmi.c b/drivers/platform/arm64/huawei-gaokun-wmi.c
+> > new file mode 100644
+> > index 000000000..793cb1659
+> > --- /dev/null
+> > +++ b/drivers/platform/arm64/huawei-gaokun-wmi.c
+> > @@ -0,0 +1,283 @@
+> > +// SPDX-License-Identifier: GPL-2.0-only
+> > +/*
+> > + * huawei-gaokun-wmi - A WMI driver for HUAWEI Matebook E Go (sc8280xp)
+> Just because in ACPI it's done by WMI stuff doesn't mean the non-ACPI
+> driver has to reflect this
 >
-> I do not have an alternative planned, just noting that I'd like
-> everyone to be on the same page before we go ahead with this ABI.
 
-I'll let them weigh in on this again if they want to, but I think it
-was clear from those threads that this is a new way to use the class.
-Armin's comment was related to the fan curve setting John was
-discussing, which is specifically covered by the hwmon subsystem.
-Hwmon does not cover platform profiles or PPT.
+As I just said, and the WMI stuffs are all implemented by wrapping a EC
+transaction in ACPI, at least in this machine.
 
-> To rephrase, your ABI style is not intuitive, because it contains
-> implementation details such as "gamezone", "capdata01", and "Other
-> Method", in addition to the ABI being hardcoded to the WMI structure
-> lenovo uses. The documentation uses those keywords as well.
+> > + *
+> > + * reference: drivers/platform/x86/huawei-wmi.c
+> > + *
+> > + * Copyright (C) 2024 Pengyu Luo <mitltlatltl@gmail.com>
+> > + */
+> > +
+> > +#include <linux/auxiliary_bus.h>
+> > +#include <linux/module.h>
+> > +#include <linux/platform_device.h>
+> > +#include <linux/sysfs.h>
+> > +#include <linux/version.h>
+> > +
+> > +#include <linux/platform_data/huawei-gaokun-ec.h>
+> > +
+> >
 
-Yeah, it's a driver for those interfaces... If you want an agnostic
-BMOF driver then make one. This isn't that.
+[...]
 
-> If I understand correctly your last sentence, Armin suggested much of
-> the same (ie combine and merge).
+> >
+>
+> Best Regards,
+> Maya Matuszczyk
 
-You don't seem to, no. The suggestion was to use the component  driver
-API to aggregate the Other Method driver with the capability data
-driver so that the firmware-attributes class is only loaded when both
-are present. That is decidedly different from breaking the kernel's
-WMI driver requirements and merging two GUID's into one driver.
-
-> GUID tables loading !=3D drivers loading also, I would not pin that on
-> the kernel.
-
-What exactly do you think the following does?
-
- +MODULE_DEVICE_TABLE(wmi, gamezone_wmi_id_table);
-
-> I do not understand what "I hard code the page to custom" means.
-> If you mean the capability data does not change you are right, they
-> are hardcoded in the decompiled ACPI I am pretty sure (it has been
-> close to a year now so I might be forgetting).
-
-The capability data interface has a data block instance for every
-attribute in every fan mode. SPL has one for quiet, balanced,
-performance, and custom. The method for getting that data block (page)
-is the same as calling get/set in Other Method (0x01030100 -
-0x0103FF00). Every page produces different values for each attribute,
-but I am only ever retrieving the instance for custom (0x0103FF00) as
-that's the only one where setting that method ID in Other Method
-changes the values on the Legion Go. It is the only relevant data for
-userspace. Other Gaming Series laptops might treat this differently,
-where every fan mode has an applicable range. I'll need to do more
-testing on other hardware to confirm that. In any case, this isn't
-relevant as I'm dropping the gamezone check (as I've stated multiple
-times in this discussion) and always setting/getting the custom method
-ID for a given attribute.
-
-> It's good that you will be fixing that/I hope you will be fixing that.
-> It is not clear from your comment. Please try to skip the capability
-> call too.
-
-I was pretty clear...
-
->> v2 will not need this call more than once during probe, and gamezone
-> > will not be called by Other Method ever.
-
-Derek
+Best Wishes,
+Pengyu
