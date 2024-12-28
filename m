@@ -1,246 +1,173 @@
-Received: from mail-pl1-f179.google.com (mail-pl1-f179.google.com [209.85.214.179])
+Received: from linux1587.grserver.gr (linux1587.grserver.gr [185.138.42.100])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5CE594C62E;
-	Sat, 28 Dec 2024 11:35:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8224C12BF02;
+	Sat, 28 Dec 2024 11:50:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.138.42.100
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1735385759; cv=none; b=dwQ9fAMePexVGj9v9q6h66lg+2eAGqK8rceoGPRb1WjghH8m+OIblp1csjWlgz9CGmJAX8xH+sj1eGDS2jumYMEk/l/tLwTZdmG8qhIh7eNB6oMbFWlK0dn192k7yCxbT2uRbfy9caLHDrE7Nwu/TKkxpB5SdHSXXrQOX6kvyRE=
+	t=1735386654; cv=none; b=hNGuJ0o0yyRo43e/yYuIxosih/bdqTQRLEWWt9xW33icuQmjphzmiIupmNoCdV6udHkDDEkmWa/dURWYSFdxdAhuqf4KU/ZsSoNp9YswlmpAkUTykWG8vEy4YAsK0+zgNUui4IQSO7enkBI+5HljqaWZ8kEuF1kB0g5SxdhYyJ0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1735385759; c=relaxed/simple;
-	bh=UTL48/8/QWekBUT1m3b7xoPVUOV0/2/gh/jUOyDHSo8=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=nFuLFrdavGK6KMzg+hTcYs8SsdXcnoy4pquI7lriVxzfGYF+Ibv83aogWPbbM6m1kuB1i1YXrHFeP+18eqHnHfmvwbbYRUCqW/xKS0D5jgYAjUdIXEo+eAF0zP+ZArxbpRrvD54E8hje0IyXGW8Bs/pMqs/ZhY/b9KC307W3WVY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=FSHg9OdW; arc=none smtp.client-ip=209.85.214.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1735386654; c=relaxed/simple;
+	bh=8R47ISBJq3AprPLMwWUv+gqTNO1h/pDFq8ADeWg/xp4=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=jx7hQbXVOlrIB2vfcTkKb85QxNtzIVvXMtpPgJOEDRS3WlgliSg0xhoFTMNIJFBUYk1JDB8MuzfuwTyMGbqX3ywtGZrHqtYPRibT+tnKMP75h72CAp2TIQNwvqHPe0n3QruJALS3SiCb21WIzIjQ4rylJ6KM0GZAYPSVCS+u0YE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=antheas.dev; spf=pass smtp.mailfrom=antheas.dev; dkim=pass (1024-bit key) header.d=antheas.dev header.i=@antheas.dev header.b=Jb1eQ0j0; arc=none smtp.client-ip=185.138.42.100
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=antheas.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=antheas.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FSHg9OdW"
-Received: by mail-pl1-f179.google.com with SMTP id d9443c01a7336-21680814d42so87058625ad.2;
-        Sat, 28 Dec 2024 03:35:58 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1735385757; x=1735990557; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=RxjuQXLL5v3IOrWzQlPRNZYnWRhMtcxT+eYpmkHFYZk=;
-        b=FSHg9OdWSpDkUfBAebVCy/NHBfZZwFzwkh3m2rGUXpfVeweoFTfqpz7IWWWYX3e5gE
-         /jTa2jnObANiinSttNC73kAj7SCWVbqQ3HUU2huP6jzDrn69md/JeA9uWU3XLHUuuRKl
-         MWHxn/RdnI4maSwi6JiyWbFGdjLdGZfd7sC+AiN6LybCCjtKYecXZ+yZBfeN8vOpEy6t
-         WDVt6xP7WavUhVC6cxrK3DCw1MEMFmvwsmY6jmR5NbNdeW5YRUN7gJwARESPswTottme
-         OrXBZQYrycHPXuiFFWdLbPcNDisCcPhqbyFsAlZS4ZACsC9isxNLuMjlAHS2vsQOXnM7
-         PdaA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1735385757; x=1735990557;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=RxjuQXLL5v3IOrWzQlPRNZYnWRhMtcxT+eYpmkHFYZk=;
-        b=Cp7f9p8izony6vzbPRUeLq4UVQH/TOEMc6gRJIkQfrZtcneVf1SHiGjK0NM04PppoW
-         M+58UYh1+eXaAEfPVFoUx8EqTRQOxFXXDNZhh0OdFf2twK7AZFeLRcgUoNEqHNRbiJtF
-         5dZQJ3iPTbWuU/5prjgPe26ZbycLsReAiqNQ2cqMfM8zdJSIGe+rq5hWmYzAULGgNWj5
-         AWMvUpW+NabkS9sjW/wRIHlfLZY3+amNvwfT110fLLUIZf9gisb/tuxExSabC9JMNSyw
-         9ynW3wT6u3w836yYMYM5KEWELcqAm8uktL+MuljJlnsid5vftsOTJfi3kg09X5MYMViC
-         Rxjg==
-X-Forwarded-Encrypted: i=1; AJvYcCUOognMwV3BB81LmSZ5QjbxvKg/VgfzOjBnfvaCkwm48VZVn8R09QtyUCm2EBPjq23rB2dJg9YU+NfKilqZdQ==@vger.kernel.org, AJvYcCUQHugftA96NjLEmkxbWTx7ksafh1gQZp/tPhNiBp7hD6pH/IVxhTYPPMOx1fu0dCFWST5OGVjfw0vG65GXZJ16yEiBhA==@vger.kernel.org, AJvYcCUpSxzGqRoxoYaT2cQp8f2fq3WYgIqMTYCw3ug5mBxR88j2fDuClDCinabzmD78zeCPWNIqh0RvIkBs@vger.kernel.org, AJvYcCVjzFHW8/ICEIxvwDWCaEVU77253ONuk9dleAe6DlR/UHm5w5zPmL99HzIKXgYnfTe8/JHsawcaby8=@vger.kernel.org, AJvYcCVtXljsK2+ZPcbyUuTK0WEl04IaCBY7ylMJ7BekYcjN3sHxM4qDjR+cQRnwWtjTVc6i3JeM9BIklsHq@vger.kernel.org, AJvYcCWIfrrHfiRCIyszyx3ofjIs0phA7/7AlUUVggDEvOspQuIdYz2Xw687b/GjJbkzZUev54rPVVd1sHDCjY3w@vger.kernel.org
-X-Gm-Message-State: AOJu0YySKLraX4Sjh6SjsXIYg9MPMVtVy9dPo6rE+mN6BHSonleEGT6R
-	08B282ZAUXJ0piBkYC1tTJPsMsnNzVcvoTt/DeTqKgFq/3lGMDiBk/9TuuTA4b2tomzM
-X-Gm-Gg: ASbGncs2DcHVyYjPP4cDKf4wCHfXOpE8ulR/MANVYSjltir0B26wTByJJbncwOYKETl
-	N1IYHhuW/emZdamvko7PfZw3/EzI4BKWs64etyAl49YBMalt2uJQfXS9SbHCBo366X6MvIt6E00
-	AIT7DAniCPYvzzMlYKjJqhuURTIeRnNibWxYEkPpOPJZdBKK9P0RZHQgipg6MnxCD9pegWoWV8S
-	LGvyW5lONGB082v4MOSrgSGuwKHHRn87PvgobA0qGI=
-X-Google-Smtp-Source: AGHT+IEvHHLAoL0rQKTX8Cmq7nX5QwtvMoE6jSEq4VPP8x/RxBVGGrTpMKiGvXDKDS4pFXPen0TeVw==
-X-Received: by 2002:a17:902:f693:b0:216:1367:7e48 with SMTP id d9443c01a7336-219e6ccdcb2mr417104425ad.0.1735385757455;
-        Sat, 28 Dec 2024 03:35:57 -0800 (PST)
-Received: from nuvole.. ([2a09:bac1:76a0:dd10::2e9:62])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-219dc9d9481sm148178955ad.135.2024.12.28.03.35.52
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 28 Dec 2024 03:35:57 -0800 (PST)
-From: Pengyu Luo <mitltlatltl@gmail.com>
-To: krzk@kernel.org
-Cc: andersson@kernel.org,
-	bryan.odonoghue@linaro.org,
-	conor+dt@kernel.org,
-	devicetree@vger.kernel.org,
-	dmitry.baryshkov@linaro.org,
-	gregkh@linuxfoundation.org,
-	hdegoede@redhat.com,
-	heikki.krogerus@linux.intel.com,
-	ilpo.jarvinen@linux.intel.com,
-	konradybcio@kernel.org,
-	krzk+dt@kernel.org,
-	linux-arm-msm@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-pm@vger.kernel.org,
-	linux-usb@vger.kernel.org,
-	mitltlatltl@gmail.com,
-	nikita@trvn.ru,
-	platform-driver-x86@vger.kernel.org,
-	robh@kernel.org,
-	sre@kernel.org
-Subject: Re: [PATCH 1/5] dt-bindings: platform: Add Huawei Matebook E Go EC
-Date: Sat, 28 Dec 2024 19:34:37 +0800
-Message-ID: <20241228113438.591254-1-mitltlatltl@gmail.com>
-X-Mailer: git-send-email 2.47.1
-In-Reply-To: <53da6468-501c-4c0f-a73b-4eac99c72b8c@kernel.org>
-References: <53da6468-501c-4c0f-a73b-4eac99c72b8c@kernel.org>
+	dkim=pass (1024-bit key) header.d=antheas.dev header.i=@antheas.dev header.b="Jb1eQ0j0"
+Received: from mail-lj1-f178.google.com (mail-lj1-f178.google.com [209.85.208.178])
+	by linux1587.grserver.gr (Postfix) with ESMTPSA id 2EA302E09282;
+	Sat, 28 Dec 2024 13:50:47 +0200 (EET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=antheas.dev;
+	s=default; t=1735386647;
+	bh=aehk3EMVu7deNxBlfRWVbyOfhjn+K9TpzrtDYDzqcEs=;
+	h=Received:From:Subject:To;
+	b=Jb1eQ0j0o4b7pIGvHSxwrCKf7KvpJmzY64DRlEtQWSqdItjXPo8XQVzuQuRgzeeoZ
+	 Ey3rSTjExy4yKoCYzWOX30zbgNZXpSXybNMi9+GfEXSHb/Je8J94k++M94sVG57zVm
+	 PBILJEG68r9I6QxwyrEma7954ItGTuXHCIWzhILc=
+Authentication-Results: linux1587.grserver.gr;
+        spf=pass (sender IP is 209.85.208.178) smtp.mailfrom=lkml@antheas.dev smtp.helo=mail-lj1-f178.google.com
+Received-SPF: pass (linux1587.grserver.gr: connection is authenticated)
+Received: by mail-lj1-f178.google.com with SMTP id
+ 38308e7fff4ca-30036310158so73721451fa.0;
+        Sat, 28 Dec 2024 03:50:47 -0800 (PST)
+X-Forwarded-Encrypted: i=1;
+ AJvYcCV9dkwzJ3Ya+HnD7zHViW3opuliMTo/usz5Urq1aTxSjNGf5TYDOa1reARdd/EMeipGjhjVBREj4R8=@vger.kernel.org,
+ AJvYcCWDGqpkqXBT5yWSmIVYjBJ9QkPs3N/donEsSARYnlqUASXXVeI3aeHEZuI7FEDzvw4fhTNanrfu/wDO3TRRg+je5H2o5Q==@vger.kernel.org,
+ AJvYcCXLqVvHgYPeB6VRGtmMj2Nz8d4UtVWX1MC0pSkXaDk+jUw07H5qOhgRBM5PzcXs3lDw/wPamumYLewvPdR7@vger.kernel.org
+X-Gm-Message-State: AOJu0YyyBRqn6ucVrgM0+HfwZrkIVVB+/atgoiAJVpl17DqaiFsSFn95
+	yyLu8xs5JnhHQCs5GlS6EK0DzYqCsCPW0hZLusO9w8tdxcZng92T/Q1MkiCEhuyJijUgiCttpBp
+	p8LVxTy18tBQbqJcUYYpRrQc3UvE=
+X-Google-Smtp-Source: 
+ AGHT+IE5bj5wM/elToybUAozaWoDBFAm4DC2wMrYgqTKYdRIjP+DwIXzJZMvO9iCDK+pq1sPneW3by8UsWiYl8GiW0o=
+X-Received: by 2002:a05:651c:2215:b0:302:2cdf:7fbb with SMTP id
+ 38308e7fff4ca-3046851e45fmr109656021fa.6.1735386646279; Sat, 28 Dec 2024
+ 03:50:46 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+References: <20241217230645.15027-2-derekjohn.clark@gmail.com>
+ <20241227184825.415286-1-lkml@antheas.dev>
+ <CAFqHKT=Y66KNo-e+o+n76tmPEcqL4EBSUQNDXJcoP8B9NXguew@mail.gmail.com>
+ <CAGwozwGpEWVQwEAFfWWkTx4G90uhqdfbF85E4F_2w6c6G6P2Sg@mail.gmail.com>
+ <CAFqHKTnOA5N-uADQLbdA-b+k-TOMdjZtCPsFsCo9jarMiNioLg@mail.gmail.com>
+In-Reply-To: 
+ <CAFqHKTnOA5N-uADQLbdA-b+k-TOMdjZtCPsFsCo9jarMiNioLg@mail.gmail.com>
+From: Antheas Kapenekakis <lkml@antheas.dev>
+Date: Sat, 28 Dec 2024 12:50:34 +0100
+X-Gmail-Original-Message-ID: 
+ <CAGwozwF79xYrWkCSKpBaLSiXNEZz-5tmayWMbkw-of4zB=LPUQ@mail.gmail.com>
+Message-ID: 
+ <CAGwozwF79xYrWkCSKpBaLSiXNEZz-5tmayWMbkw-of4zB=LPUQ@mail.gmail.com>
+Subject: Re: [PATCH 0/1] platform/x86: Add Lenovo Legion WMI Drivers
+To: Derek John Clark <derekjohn.clark@gmail.com>
+Cc: corbet@lwn.net, hdegoede@redhat.com, ilpo.jarvinen@linux.intel.com,
+	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, luke@ljones.dev,
+	mpearson-lenovo@squebb.ca, nijs1@lenovo.com, pgriffais@valvesoftware.com,
+	platform-driver-x86@vger.kernel.org, shaohz1@lenovo.com, superm1@kernel.org,
+	zhangzx36@lenovo.com, johnfanv2@gmail.com, codyit@gmail.com, W_Armin@gmx.de
+Content-Type: text/plain; charset="UTF-8"
+X-PPP-Message-ID: 
+ <173538664757.17236.16977072296559972225@linux1587.grserver.gr>
+X-PPP-Vhost: antheas.dev
+X-Virus-Scanned: clamav-milter 0.103.11 at linux1587.grserver.gr
+X-Virus-Status: Clean
 
-> On Sat, Dec 28, 2024 at 5:58 PM Krzysztof Kozlowski <krzk@kernel.org> wrote:
-> On 27/12/2024 18:13, Pengyu Luo wrote:
-> > +
-> > +#include <linux/platform_data/huawei-gaokun-ec.h>
-> > +
-> > +#define EC_EVENT             0x06
-> > +
-> > +/* Also can be found in ACPI specification 12.3 */
-> > +#define EC_READ                      0x80
-> > +#define EC_WRITE             0x81
-> > +#define EC_BURST             0x82
-> > +#define EC_QUERY             0x84
-> > +
-> > +
-> > +#define EC_EVENT_LID         0x81
-> > +
-> > +#define EC_LID_STATE         0x80
-> > +#define EC_LID_OPEN          BIT(1)
-> > +
-> > +#define UCSI_REG_SIZE                7
-> > +
-> > +/* for tx, command sequences are arranged as
->
-> Use Linux style comments, see coding style.
->
+> I'll let them weigh in on this again if they want to, but I think it
+> was clear from those threads that this is a new way to use the class.
+> Armin's comment was related to the fan curve setting John was
+> discussing, which is specifically covered by the hwmon subsystem.
+> Hwmon does not cover platform profiles or PPT.
 
-Agree
+I quote the following from Armin:
 
-> > + * {master_cmd, slave_cmd, data_len, data_seq}
-> > + */
-> > +#define REQ_HDR_SIZE         3
-> > +#define INPUT_SIZE_OFFSET    2
-> > +#define INPUT_DATA_OFFSET    3
-> > +
-> > +/* for rx, data sequences are arranged as
-> > + * {status, data_len(unreliable), data_seq}
-> > + */
-> > +#define RESP_HDR_SIZE                2
-> > +#define DATA_OFFSET          2
-> > +
-> > +
-> > +struct gaokun_ec {
-> > +     struct i2c_client *client;
-> > +     struct mutex lock;
->
-> Missing doc. Run Checkpatch --strict, so you will know what is missing here.
->
+> The firmware-attribute class interface is only intended for attributes which are persistent
+> and cannot be exposed over other subsystem interfaces.
 
-I see. A comment for mutex lock.
+The former part is not met here.
 
-> > +     struct blocking_notifier_head notifier_list;
-> > +     struct input_dev *idev;
-> > +     bool suspended;
-> > +};
-> > +
+> > To rephrase, your ABI style is not intuitive, because it contains
+> > implementation details such as "gamezone", "capdata01", and "Other
+> > Method", in addition to the ABI being hardcoded to the WMI structure
+> > lenovo uses. The documentation uses those keywords as well.
 >
->
->
-> ...
->
-> > +
-> > +static DEVICE_ATTR_RO(temperature);
-> > +
-> > +static struct attribute *gaokun_wmi_features_attrs[] = {
-> > +     &dev_attr_charge_control_thresholds.attr,
-> > +     &dev_attr_smart_charge_param.attr,
-> > +     &dev_attr_smart_charge.attr,
-> > +     &dev_attr_fn_lock_state.attr,
-> > +     &dev_attr_temperature.attr,
-> > +     NULL,
-> > +};
->
->
-> No, don't expose your own interface. Charging is already exposed by
-> power supply framework. Temperature by hwmon sensors. Drop all these and
-> never re-implement existing kernel user-space interfaces.
->
+> Yeah, it's a driver for those interfaces... If you want an agnostic
+> BMOF driver then make one. This isn't that.
 
-I don't quite understand what you mean. You mean I should use hwmon
-interface like hwmon_device_register_with_groups to register it, right?
-As for battery, get/set_propery allow us to handle charging thresholds
-things, but there are smart_charge_param, smart_charge and fn_lock to handle.
+It's a driver for Legion Go and Legion laptops. _Not_ those
+interfaces. Which only exist in gen 7+ if I recall from John's driver.
+That was my comment.
 
->
-> > diff --git a/include/linux/platform_data/huawei-gaokun-ec.h b/include/linux/platform_data/huawei-gaokun-ec.h
-> > new file mode 100644
-> > index 000000000..a649e9ecf
-> > --- /dev/null
-> > +++ b/include/linux/platform_data/huawei-gaokun-ec.h
-> > @@ -0,0 +1,90 @@
-> > +// SPDX-License-Identifier: GPL-2.0-only
-> > +/* Huawei Matebook E Go (sc8280xp) Embedded Controller
-> > + *
-> > + * Copyright (C) 2024 Pengyu Luo <mitltlatltl@gmail.com>
-> > + *
-> > + */
-> > +
-> > +#ifndef __HUAWEI_GAOKUN_EC_H__
-> > +#define __HUAWEI_GAOKUN_EC_H__
-> > +
-> > +#define GAOKUN_UCSI_CCI_SIZE 4
-> > +#define GAOKUN_UCSI_DATA_SIZE        16
-> > +#define GAOKUN_UCSI_READ_SIZE        (GAOKUN_UCSI_CCI_SIZE + GAOKUN_UCSI_DATA_SIZE)
-> > +#define GAOKUN_UCSI_WRITE_SIZE       0x18
-> > +
-> > +#define GAOKUN_TZ_REG_NUM    20
-> > +#define GAOKUN_SMART_CHARGE_DATA_SIZE        4 /* mode, delay, start, end */
-> > +
-> > +/* -------------------------------------------------------------------------- */
-> > +
-> > +struct gaokun_ec;
-> > +struct notifier_block;
->
-> Drop, include proper header instead.
->
+Establishing an ABI that works with older laptops and laptops that
+supersede those interfaces would be beneficial I'd say.
 
-I agree, I copy 'struct notifier_block;' from
-include/linux/platform_data/lenovo-yoga-c630.h
+> > If I understand correctly your last sentence, Armin suggested much of
+> > the same (ie combine and merge).
+>
+> You don't seem to, no. The suggestion was to use the component  driver
+> API to aggregate the Other Method driver with the capability data
+> driver so that the firmware-attributes class is only loaded when both
+> are present. That is decidedly different from breaking the kernel's
+> WMI driver requirements and merging two GUID's into one driver.
+>
+> > GUID tables loading != drivers loading also, I would not pin that on
+> > the kernel.
+>
+> What exactly do you think the following does?
+>
+>  +MODULE_DEVICE_TABLE(wmi, gamezone_wmi_id_table);
 
-> > +
-> > +#define GAOKUN_MOD_NAME                      "huawei_gaokun_ec"
-> > +#define GAOKUN_DEV_PSY                       "psy"
-> > +#define GAOKUN_DEV_WMI                       "wmi"
-> > +#define GAOKUN_DEV_UCSI                      "ucsi"
-> > +
-> > +/* -------------------------------------------------------------------------- */
-> > +/* Common API */
-> > +
-> > +int gaokun_ec_register_notify(struct gaokun_ec *ec,
-> > +                           struct notifier_block *nb);
-> > +void gaokun_ec_unregister_notify(struct gaokun_ec *ec,
-> > +                              struct notifier_block *nb);
-> > +
-> > +int gaokun_ec_read(struct gaokun_ec *ec, const u8 *req,
-> > +                size_t resp_len, u8 *resp);
-> > +int gaokun_ec_write(struct gaokun_ec *ec, u8 *req);
-> > +int gaokun_ec_read_byte(struct gaokun_ec *ec, u8 *req, u8 *byte);
->
->
-> You need kerneldoc, in the C file, for all exported functions.
->
+Call the probe function that can -ENODEV
 
-I got it.
-
+> > I do not understand what "I hard code the page to custom" means.
+> > If you mean the capability data does not change you are right, they
+> > are hardcoded in the decompiled ACPI I am pretty sure (it has been
+> > close to a year now so I might be forgetting).
 >
->
-> Best regards,
-> Krzysztof
+> The capability data interface has a data block instance for every
+> attribute in every fan mode. SPL has one for quiet, balanced,
+> performance, and custom. The method for getting that data block (page)
+> is the same as calling get/set in Other Method (0x01030100 -
+> 0x0103FF00). Every page produces different values for each attribute,
+> but I am only ever retrieving the instance for custom (0x0103FF00) as
+> that's the only one where setting that method ID in Other Method
+> changes the values on the Legion Go. It is the only relevant data for
+> userspace. Other Gaming Series laptops might treat this differently,
+> where every fan mode has an applicable range. I'll need to do more
+> testing on other hardware to confirm that. In any case, this isn't
+> relevant as I'm dropping the gamezone check (as I've stated multiple
+> times in this discussion) and always setting/getting the custom method
+> ID for a given attribute.
 
-Best Wishes,
-Pengyu
+Hm, for some reason I missed the capability block when doing my RE
+[1]. Feel free to reference when making the driver.
+
+You should also provision for the fact some legion laptops have an
+extreme mode which is stubbed on the Legion Go
+
+Ok,
+let's wrap up this discussion and put a bow on it.
+
+I currently have two issues that block me from committing to your
+driver: novel use of kernel APIs/design and performance
+degradation/instability from unnecessary calls and checks, as those
+are (i) slower (ii) could error out (iii) could have incorrect data.
+
+The former can leave me with tech debt if your proposed ABI is vetoed
+and the latter would result in a degraded experience for my users; I
+would be putting in work to go backwards. I do not mention missing
+features, as that is something I could have also worked on if I
+committed to your driver.
+
+Therefore, I'm left in a situation where I have to wait for buy-in
+from kernel maintainers and for your V2, hoping it fixes the latter
+issue which you said it will only do partly.
+
+Best,
+Antheas
+
+[1] https://github.com/hhd-dev/hwinfo/tree/master/devices/legion_go#get-feature-command
