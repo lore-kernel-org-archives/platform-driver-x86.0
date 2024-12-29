@@ -1,204 +1,146 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from linux1587.grserver.gr (linux1587.grserver.gr [185.138.42.100])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6DB4224B29;
-	Sun, 29 Dec 2024 21:45:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C320C18C31;
+	Sun, 29 Dec 2024 22:41:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.138.42.100
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1735508749; cv=none; b=e2pPLJNcsiiwyX1im45tm158896MCFwmlGC3T9iozhtZvNP4jkVxpLHXUF32I01JSBgMoeMBlmsGoWxIKTXPza026Z1LCW0U/FgoHHqOpFYNlQ/OiZF6YkgfskalE44hLGUBCC6sHo8wuPMyHyAXWRL/7FNTkv0AxhP5CORQh8E=
+	t=1735512113; cv=none; b=k35WHrYaxdZ5YGLO1YVvrr+WnD9lfxpUx2WKxlJfDyx6fwKv6NUEzJR2oAS8x8tr0R0UuHALmZTW57aYnJs0kFNuAhrwOZLDl88qo6qaP3R9Yd43u4p3NEWU/SbqBccYJ/5vSPNsuhZrCSMOBnCsYyMBS1Ljd2YNcc1Pqtutk3I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1735508749; c=relaxed/simple;
-	bh=OhaM45/UnEuN93p3xjcig3Qaed12iiBSZB2zo93PI8E=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=L1b0KDCquuqO4m4LFVeaWr2ets0bV+wB1atIwM1J4J8in1N/gAsf1sHgeOZ3nmsLWrlj17YnR4EtfKamup5MtHQpwCy1xYBpT8xkguoC/0IHaIXKZqqgS5m7dIHxIzNJy25vqiUQ+fXcfPPjhzJduYbQ6Xfr7jdoU9KKHxOGlnM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NHNovJdn; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1735512113; c=relaxed/simple;
+	bh=q6wAg2B9W5k2ovQrxcoZOhYsVAOUmR9aGOmOIBy+Fs8=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=XC1zfT32Qv6+e5a2EHIjAkXSeNROVGSrh4uMOAGJOj/ZPTAzvAdpNXTpqJW1h9+CubWEnO7gtLMJUqtbMnf0OHqYCUKRYW6UCrRwE5SDY7kcJ4J5KpefFPo7DlSzGdyRop3lymtTqnpWcFmLGn3wwp0mpBtqEcfCENnOkOwGrHc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=antheas.dev; spf=pass smtp.mailfrom=antheas.dev; dkim=pass (1024-bit key) header.d=antheas.dev header.i=@antheas.dev header.b=ZAeIaZEy; arc=none smtp.client-ip=185.138.42.100
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=antheas.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=antheas.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NHNovJdn"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3330FC4CED1;
-	Sun, 29 Dec 2024 21:45:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1735508748;
-	bh=OhaM45/UnEuN93p3xjcig3Qaed12iiBSZB2zo93PI8E=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=NHNovJdnu3vRqIYcLwEo84ylodYsh/MEttdpW3fHETae0Hy+XSKl5t+LYTSywrJLI
-	 L+mkbqKdRrqtoB9tLi9l0IQX8Rk4G6YOr608/2Gb5Bdx9NYsOzLk+9iMVjdcR+JJYm
-	 pA7eDADvFXu8v6hJmYcmZS1TLSUatcLw7FYReApZuoXORIVnOuq7lIOzJ3/lFzrrFS
-	 YP8Fd2PuYh/jH0f7Zc3z6WULnIGFVzyGVrjrYbevRBjfZhd2iWsJLi5U9fMO2VrEgE
-	 Ei6po5zuvQ6b17llhgEd/vw8MBatCeOJHJkILD7IkIq6ZT9zu2vUDtMUIvqjYX/pWs
-	 kVQE0yNBjdPrA==
-Message-ID: <2f63d577-43a8-47d7-8ccb-b5ad2b82e705@kernel.org>
-Date: Sun, 29 Dec 2024 22:45:39 +0100
+	dkim=pass (1024-bit key) header.d=antheas.dev header.i=@antheas.dev header.b="ZAeIaZEy"
+Received: from mail-lj1-f180.google.com (mail-lj1-f180.google.com [209.85.208.180])
+	by linux1587.grserver.gr (Postfix) with ESMTPSA id 87BBA2E08D85;
+	Mon, 30 Dec 2024 00:41:38 +0200 (EET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=antheas.dev;
+	s=default; t=1735512099;
+	bh=q6wAg2B9W5k2ovQrxcoZOhYsVAOUmR9aGOmOIBy+Fs8=;
+	h=Received:From:Subject:To;
+	b=ZAeIaZEyFpzTtwIfyNW27XJImzwamilwquRVaHlr86CIKtFZfUH2ntaNefH4jYHYb
+	 3SihYkRBipXFfKE7+YGhW1wsimPmiNBdifKKHN1xO47Gw+M4LLbXfZ7nm6BX4CAh5B
+	 GRNmhuY2t8xybEqGloQjXmKkZBEwEh9SXSGsGdJQ=
+Authentication-Results: linux1587.grserver.gr;
+        spf=pass (sender IP is 209.85.208.180) smtp.mailfrom=lkml@antheas.dev smtp.helo=mail-lj1-f180.google.com
+Received-SPF: pass (linux1587.grserver.gr: connection is authenticated)
+Received: by mail-lj1-f180.google.com with SMTP id
+ 38308e7fff4ca-30229d5b21cso19700001fa.1;
+        Sun, 29 Dec 2024 14:41:38 -0800 (PST)
+X-Forwarded-Encrypted: i=1;
+ AJvYcCU9c98hssoZ38iThs+JiYoMw+tr3UXMM8SFRkqs3kuXVSF2CZerq3vtSYj3tG/PQnKBCGIFyXc8eKuZIFBj@vger.kernel.org,
+ AJvYcCXFRO+nBfMLQVmU9diJtZlzxkbbx7J9eJ0CXFqOLjCmJ32o2A66c2RwGJaj/fKaFZ8V+VypUM45ODzDWJ4xJcHXQN+ifg==@vger.kernel.org,
+ AJvYcCXtmS0Et/kh/kTqu/hQydu2lGp8bjlhxzkVfZpi9asbDO1589T0GtBviebiup2wSTzgENhjtcH7/Bk=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yyj1+knbaBHqv1nargusXQXllAn4Ayb6wdnBoRqtV1urKuf573b
+	CxVYwk8mFiFgyEGpe7++stv8KLsF9SecmlzyV2DZC+PqFkJDHRbRnJm9GDRaX+O3huk+5mJMdWh
+	DUWgwbFkdoumQiOBeP5tBZ4rhwl0=
+X-Google-Smtp-Source: 
+ AGHT+IHbFNt6qFFnJeYWS47c/udA3neGhmpny1SBMOcMxDpfWetpzo0dqdABueqBTYmda+zarsLZJ45OLJT280ufiWk=
+X-Received: by 2002:a05:651c:61f:b0:302:1e65:f2a1 with SMTP id
+ 38308e7fff4ca-3046852b5a7mr71064781fa.12.1735512097809; Sun, 29 Dec 2024
+ 14:41:37 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/5] dt-bindings: platform: Add Huawei Matebook E Go EC
-To: Pengyu Luo <mitltlatltl@gmail.com>
-Cc: andersson@kernel.org, bryan.odonoghue@linaro.org, conor+dt@kernel.org,
- devicetree@vger.kernel.org, dmitry.baryshkov@linaro.org,
- gregkh@linuxfoundation.org, hdegoede@redhat.com,
- heikki.krogerus@linux.intel.com, ilpo.jarvinen@linux.intel.com,
- konradybcio@kernel.org, krzk+dt@kernel.org, linux-arm-msm@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
- linux-usb@vger.kernel.org, nikita@trvn.ru,
- platform-driver-x86@vger.kernel.org, robh@kernel.org, sre@kernel.org
-References: <0fc279b2-fa58-404a-af8e-ed18d4e2f514@kernel.org>
- <20241229102832.61841-1-mitltlatltl@gmail.com>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 fv0=
-In-Reply-To: <20241229102832.61841-1-mitltlatltl@gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+References: <20241217230645.15027-2-derekjohn.clark@gmail.com>
+ <20241227184825.415286-1-lkml@antheas.dev>
+ <CAFqHKT=Y66KNo-e+o+n76tmPEcqL4EBSUQNDXJcoP8B9NXguew@mail.gmail.com>
+ <CAGwozwGpEWVQwEAFfWWkTx4G90uhqdfbF85E4F_2w6c6G6P2Sg@mail.gmail.com>
+ <CAFqHKTnOA5N-uADQLbdA-b+k-TOMdjZtCPsFsCo9jarMiNioLg@mail.gmail.com>
+ <CAGwozwF79xYrWkCSKpBaLSiXNEZz-5tmayWMbkw-of4zB=LPUQ@mail.gmail.com>
+ <b7089d69-4d7b-42fb-90b3-bd13a27fcf1e@gmx.de>
+In-Reply-To: <b7089d69-4d7b-42fb-90b3-bd13a27fcf1e@gmx.de>
+From: Antheas Kapenekakis <lkml@antheas.dev>
+Date: Sun, 29 Dec 2024 23:41:26 +0100
+X-Gmail-Original-Message-ID: 
+ <CAGwozwEWNkUDCzSq7-Lei1yBAjpQjyZUtW7+8n_Cpn9xd4aR3A@mail.gmail.com>
+Message-ID: 
+ <CAGwozwEWNkUDCzSq7-Lei1yBAjpQjyZUtW7+8n_Cpn9xd4aR3A@mail.gmail.com>
+Subject: Re: [PATCH 0/1] platform/x86: Add Lenovo Legion WMI Drivers
+To: Armin Wolf <W_Armin@gmx.de>
+Cc: Derek John Clark <derekjohn.clark@gmail.com>, corbet@lwn.net,
+ hdegoede@redhat.com,
+	ilpo.jarvinen@linux.intel.com, linux-doc@vger.kernel.org,
+	linux-kernel@vger.kernel.org, luke@ljones.dev, mpearson-lenovo@squebb.ca,
+	nijs1@lenovo.com, pgriffais@valvesoftware.com,
+	platform-driver-x86@vger.kernel.org, shaohz1@lenovo.com, superm1@kernel.org,
+	zhangzx36@lenovo.com, johnfanv2@gmail.com, codyit@gmail.com
+Content-Type: text/plain; charset="UTF-8"
+X-PPP-Message-ID: 
+ <173551209907.2054.9778889980899824006@linux1587.grserver.gr>
+X-PPP-Vhost: antheas.dev
+X-Virus-Scanned: clamav-milter 0.103.11 at linux1587.grserver.gr
+X-Virus-Status: Clean
 
-On 29/12/2024 11:28, Pengyu Luo wrote:
-> On Sun, Dec 29, 2024 at 5:43 PM Krzysztof Kozlowski <krzk@kernel.org> wrote:
->> On 28/12/2024 12:34, Pengyu Luo wrote:
->>>> On Sat, Dec 28, 2024 at 5:58 PM Krzysztof Kozlowski <krzk@kernel.org> wrote:
->>>> On 27/12/2024 18:13, Pengyu Luo wrote:
->>>>> +
->>>>> +#include <linux/platform_data/huawei-gaokun-ec.h>
->>>>> +
->>>>> +#define EC_EVENT             0x06
->>>>> +
->>>>> +/* Also can be found in ACPI specification 12.3 */
->>>>> +#define EC_READ                      0x80
->>>>> +#define EC_WRITE             0x81
->>>>> +#define EC_BURST             0x82
->>>>> +#define EC_QUERY             0x84
->>>>> +
->>>>> +
->>>>> +#define EC_EVENT_LID         0x81
->>>>> +
->>>>> +#define EC_LID_STATE         0x80
->>>>> +#define EC_LID_OPEN          BIT(1)
->>>>> +
->>>>> +#define UCSI_REG_SIZE                7
->>>>> +
->>>>> +/* for tx, command sequences are arranged as
->>>>
->>>> Use Linux style comments, see coding style.
->>>>
->>>
->>> Agree
->>>
->>>>> + * {master_cmd, slave_cmd, data_len, data_seq}
->>>>> + */
->>>>> +#define REQ_HDR_SIZE         3
->>>>> +#define INPUT_SIZE_OFFSET    2
->>>>> +#define INPUT_DATA_OFFSET    3
->>>>> +
->>>>> +/* for rx, data sequences are arranged as
->>>>> + * {status, data_len(unreliable), data_seq}
->>>>> + */
->>>>> +#define RESP_HDR_SIZE                2
->>>>> +#define DATA_OFFSET          2
->>>>> +
->>>>> +
->>>>> +struct gaokun_ec {
->>>>> +     struct i2c_client *client;
->>>>> +     struct mutex lock;
->>>>
->>>> Missing doc. Run Checkpatch --strict, so you will know what is missing here.
->>>>
->>>
->>> I see. A comment for mutex lock.
->>>
->>>>> +     struct blocking_notifier_head notifier_list;
->>>>> +     struct input_dev *idev;
->>>>> +     bool suspended;
->>>>> +};
->>>>> +
->>>>
->>>>
->>>>
->>>> ...
->>>>
->>>>> +
->>>>> +static DEVICE_ATTR_RO(temperature);
->>>>> +
->>>>> +static struct attribute *gaokun_wmi_features_attrs[] = {
->>>>> +     &dev_attr_charge_control_thresholds.attr,
->>>>> +     &dev_attr_smart_charge_param.attr,
->>>>> +     &dev_attr_smart_charge.attr,
->>>>> +     &dev_attr_fn_lock_state.attr,
->>>>> +     &dev_attr_temperature.attr,
->>>>> +     NULL,
->>>>> +};
->>>>
->>>>
->>>> No, don't expose your own interface. Charging is already exposed by
->>>> power supply framework. Temperature by hwmon sensors. Drop all these and
->>>> never re-implement existing kernel user-space interfaces.
->>>>
->>>
->>> I don't quite understand what you mean. You mean I should use hwmon
->>> interface like hwmon_device_register_with_groups to register it, right?
->>
->> You added sysfs interface, I think. My comment is: do not. We have
->> existing interfaces.
->>
-> 
-> I agree with you, but device_add_groups is used to add sysfs interface
-> everywhere, device_add_groups are wrapped in acpi_battery_hook, they
-> handle charge_control_thresholds like this, since qcom arm64 do not
-> support acpi on linux, we do not use acpi_battery_hook to implement it,
-> so it is reasonable to implement it in PSY drivers.
+Hi Armin,
+indeed you covered everything.
 
+I am a bit hesitant about binding sppt, fppt, and spl into those
+interfaces as they need to be set in a very specific ordering and
+rules. E.g., spl < sppt < fppt after setting tdp and before the fan
+curve and after sleep maybe depending on device, after reboot maybe
+after keybind (Legion L + Y) as well. Which is not what's expected by
+the userspace programs consuming this interface. In addition, this
+would expose them to perusing users where they might be confused. I
+also know that its difficult by looking at a patch series to
+understand the nature of these values. However, given my previous
+email, you now have the full context you need to make a decision.
+If you think it is appropriate, it is fine by me.
 
-OK, then do not make it a platform driver sysfs ABI but power supply one
-and document the ABI (see Documentation/ABI/)
+I'd personally stick them next to platform_profile with a /name
+discoverability mechanism similar to hwmon, where tuning
+software can find them (something similar to Mario's RFC
+that I linked above). Other settings such as the bios light that
+interface is perfectly good for.
 
-> 
-> some examples:
-> 
+As for the hardware limits. You are absolutely right, the ACPI eforces
+none, incl. for Lenovo. And the quality is as you expect. For the
+Legion Go, they are quite creative. They added a battery 80%
+capacity limit by re-using the key value for booting from AC [1-2].
+They also used a weird ABI for the lighting interface to turn off
+the suspend light for a good half of the BIOSes, then they fixed it
+when they allowed to turn off the suspend light during sleep as well,
+which caused that option to break in Legion Space for I want to say
+two months. Nevertheless, nobody has broken a Legion Go yet
+messing with those settings by e.g., overclocking. It also brings
+into view that while the Legion Go uses a derived Legion bios it
+has started diverging a bit as it has its own vendor software.
 
+So I would say that it is good that the other function has a discovery
+mechanism and that gamezone has some bitmasks for that purpose as
+well. It means that if we tap on them during probe, at least for
+Legion laptops from the last 3 years, we can get pretty good support
+from the get go. Before that, it is a mix of EC + WMI (see [3]).
 
+In regards to firmware limits, it is something I would not include in
+the first patch series as it will just make this harder to merge, esp.
+if there are laptops with wrong limits. Then there are issues with
+overrides etc. I would advertise the limits through _min, _max so we
+can figure this out later and I would not do a runtime WMI check, as
+we have to run the check during probe anyway to populate sysfs, where
+it is natural to cache the limits.
 
-Best regards,
-Krzysztof
+FInally, if indeed the gamezone function is Legion specific, and the
+key-value pairs of the Other function are legion specific, from a
+stylistic perspective I would tend towards making the ABI of the
+driver Legion specific and abstract away its WMI details. E.g., I'd
+use the name legion-wmi for a combined driver instead of
+lenovo-gamezone-wmi which would then not be useful if lenovo moves
+past gamezone. And I'd make sure it only loads on legion laptops. I'm
+not up to date on my WMI driver conventions, so this is just a
+suggestion.
+
+Best,
+Antheas
+
+[1] https://github.com/BartoszCichecki/LenovoLegionToolkit/blob/21c0e8ca8b98181a2dedbec1e436d695932a4b0f/LenovoLegionToolkit.Lib/Enums.cs#L72
+[2] https://github.com/hhd-dev/adjustor/blob/188ef6c3e4d7020f2110dd29df6d78847026d41e/src/adjustor/core/lenovo.py#L241
+[3] https://github.com/johnfanv2/LenovoLegionLinux
