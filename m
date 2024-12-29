@@ -1,61 +1,61 @@
-Received: from mail-vs1-f50.google.com (mail-vs1-f50.google.com [209.85.217.50])
+Received: from mail-ua1-f52.google.com (mail-ua1-f52.google.com [209.85.222.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB32C1A0AF1;
-	Sun, 29 Dec 2024 19:47:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.217.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B8D4819CC08;
+	Sun, 29 Dec 2024 19:47:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1735501662; cv=none; b=UwLYNEbKhvXtIS+zt5qjMQSvQcjXVQmdCfOIDgDylackLtgBZ6ndPJsi4WslqHaWophHW0lYhFcdnGOgL5UlrCJ6FTMl5RsOq+3wH0xpoPPp16eg1G2yGxpBblnde3WTtpN+ea2HMOkgjaEIBC84wWHkplXSLhumEfy4VCCmxhw=
+	t=1735501664; cv=none; b=u08wINVIzX0PhogH7O3C22IKUFTahKJ6XpjNvE3V7BG4FmqtzLYrMLIeTbuRS5HXtO3kbniZSPKT20RngVgRaoNaeEAjQ/8NPKxlZjoqBK95dcrscATPuJ9LuOJ8G/XA5xY2PKEU6lTYHUB2+PjIlT4wvhhb5qWnYygbfWN9BP8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1735501662; c=relaxed/simple;
-	bh=fYOgJwgKTd4DHoTXBUjVryZrq6+FTwe5bLkfajCUcZw=;
+	s=arc-20240116; t=1735501664; c=relaxed/simple;
+	bh=HzbGEIclIlEM9XemoHD9vKHRyM0aBa+zNp/SqhhWF/8=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=A5jIJT6651/RJBEhaYJFtJtlz+QUVbqENkylcJZzBoJB9YOC0nP5sVmzcnD94P8YKogsnFt3ZcIKBx0SpyE7548Ev/Ai/z4mOlZg55RhqkaNuOGrgJswwjV+HVdeP52KT4I8VRXAnEf6sGEwFyotvxYw+zFwtyxo4lrFexsAXJw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=mkqHIM/P; arc=none smtp.client-ip=209.85.217.50
+	 MIME-Version; b=eq1GLAtL5x8z5LlVEj+WXPcDUL5GB4kGti8xBE5TiNcgDTq0B0zCDktBb/CF9iEggBwKqj5foOmeLdpJjKVri+mLIH5IPBQ4SUSow8YP+zZKkBPuxFR9DVsTvEt0c+zQ7P+qxDNP5vUjZJB5wgE1taGEn+HfBzO/rCazCu6TmZ0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=RLw3su6H; arc=none smtp.client-ip=209.85.222.52
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mkqHIM/P"
-Received: by mail-vs1-f50.google.com with SMTP id ada2fe7eead31-4affab62589so2159125137.1;
-        Sun, 29 Dec 2024 11:47:40 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RLw3su6H"
+Received: by mail-ua1-f52.google.com with SMTP id a1e0cc1a2514c-85b88a685e6so3577323241.2;
+        Sun, 29 Dec 2024 11:47:42 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1735501659; x=1736106459; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1735501661; x=1736106461; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=wzql+0NbG6E8T/ZwGnUcjMqpNG9BOV0R9Dxh4H3SXlM=;
-        b=mkqHIM/PDcEZEHYgzncZvboGDBhk6e8BgIw1PeYEv7F99KkvGn7M1t7Li5yykMbM2u
-         TDoZQnsxl/6wXWePPSP9YkZg79p8NFB1Dr6yCAPyqEEeV0E5/I1Wi8vuFP+qHZZ44sgU
-         KHEbhWMCqgeCCdHVO9kmNssgSufROUrkC2EzRfQ2BPa+l/XqAni1qDtZeKSJ/Is7R/of
-         CLm0I4uOOQoi1sINsquaU2uDjCG1gkEnTy4HBHVRSZqviEHYb2RewFiTm7cP7Lh9WMyK
-         8Ba/10/Ton2u3CEYLL4NgbcKwyjsLhrECG35HzKMMFlxdqHIXryt+XD49KlM0V0Dnwys
-         gGXg==
+        bh=B6ajtEr9BoQ+Z2rv8v7sYGFTSjGW6Mt5CIO3J5hN+R4=;
+        b=RLw3su6HKAhBzndaqTG6edWCTLZ+vNxoEQEeRp3pQXM3MfGFrf0mLmVeg8s1R+EQKY
+         VjujUzxC21xR/FbxUKjiJ5fm6OszE5jCUh2wUFXDHb9q2djMBmrPHZiNY7BPSf83+Mgd
+         81OyO8cEDIm6+Wtx/AwJQXdDduPg7gY6PeCYAT8CGRfAKgJcnbZTN/eDuh2diifhskJq
+         wYd6HnmOmH7MVbEW5WhsINZ5kynYSnL9HvB4ll1XfCG0EzEo8RFhdCXMTD/zDeZHY5Oh
+         rbChjPt5PLtdWLrsJJL/zSBlwbSRWUjuDG86eX6JBls+k2xRCcblyw1x815nJ5NReMXQ
+         NGGQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1735501659; x=1736106459;
+        d=1e100.net; s=20230601; t=1735501661; x=1736106461;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=wzql+0NbG6E8T/ZwGnUcjMqpNG9BOV0R9Dxh4H3SXlM=;
-        b=IYYcrBmrAJ4rIt/w8z454PSVe68ZgzBdZagv7PMLISw6MErTy/KHCoxEZe0gn9+a1O
-         m3iLedj1WzIBAg5hQd23M0RP+4d8m7e8OMFwZfvshzQ6WaCkt5BC8PeTktA2u8/EKy9h
-         Uz9fMJUzk5g0pD0r8AGAf4ywQrwX+Sc2DdVO4cw6E/fBKitVkCsyQ3D/Fr5CUcM5dKh1
-         +Lxh3XRWhROvdCNzkqBkl7cpQUtkglb0cCrUv7cMrtPD64mZZk0fy/wjuR/EoxoCJpqA
-         G1LeenJeLB+DV6zy4Bx+JpLy25fcqx/VDpyWhU7EvDzBzbF28iuYCAJGA1YthUdiSMX5
-         dpAA==
-X-Forwarded-Encrypted: i=1; AJvYcCX32258WfKUGmL6VxM79GkzOItv/R7VqQFdBXCWaj1LrIJrGiFz1b6VwPqgl1ZstpFbaaLOgabPKDQTszw=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyzQ/i3OyzOsRSARzs2wiYWVLqR6HFdnzgEilK4H+RT3S23BVQd
-	WNd1cTZ7kvH7bU99haHelR7YQ/q0eCmmDZRufV841zpZyKhmkixVQpt1OQ==
-X-Gm-Gg: ASbGncv4qyh+fS0ApJO3/izNTcQo2/Jd6zRblFHPWcOcMrjc1NBdqHBgug9VzXhEXQ3
-	hGa5Q/onz0TvrQS/uPtv/gGU/UQEWz7mkCY6D6qdm6KNF8REvzmewSBUZy2G3uY7Ss+fjAGdtcf
-	sGp+DjKQiJS/7EISps69lxgth3TmBdPqler3hLATEJcNQbMHYZ+QP1drKUHX0H439LwvdtIRj2G
-	6Pue681IQA2pGFtIqnIofB5604PAkQrz3ZMDxm1fYeooZY9+i0+N/8HIiB2mmQM
-X-Google-Smtp-Source: AGHT+IGA6IViA5xdPlyOTns4/34lWCP4dO1hh+fWmrtBPqFsdmDlbsZ0dK/TOFwFqfzPq3GIxH/SFA==
-X-Received: by 2002:a05:6102:15a4:b0:4b1:1a3b:a62a with SMTP id ada2fe7eead31-4b2cc499d76mr29776273137.26.1735501659050;
-        Sun, 29 Dec 2024 11:47:39 -0800 (PST)
+        bh=B6ajtEr9BoQ+Z2rv8v7sYGFTSjGW6Mt5CIO3J5hN+R4=;
+        b=n5JYehLabkYUyAD5whLZP36Q8/S8vzJ43bmzf2GmOeJWQTZaH4AwGROfVSR8rPR9oc
+         TRaCfqDdzQN+s6avDsfMcvv0e4SrLagFc/xqarQXH4uKEs523cg4boI4Kj9KOJCwiFhs
+         MeUgzRCTOFGMwgQJo4FwAM96VRjcQBiH8nHy0dlUQ9v/ppLHaYCXt+oJIOpUcsoAAuji
+         g7ECQ2wAvZjdrTQcsSMFXEQZf3arvyrMIjUofpDevINMNzRGpSyfVQGsu9PUlf+uLs11
+         Wr+t+hIlJ+PUYsWtS4gbdfeyYJYfGWlCjbBZtUwOv1MPz59rTZT3IqgeN3WHeWsjMv+p
+         Nusw==
+X-Forwarded-Encrypted: i=1; AJvYcCXZbSkyUDtS5fAYaXa36sl78+JkL6kX+Ir9wZxqaVGGXsGhJwnkY93Em8h3+lIFo2cxfIxv0GNJH7HQ4Fc=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy9OShO0uqN5YwzzjjEKyYTYedj2Z+9gT6jD4DyUEGCr4iltOft
+	Bt4b39CxQ22Ea4kPV1ifAqKrqL4oDIhxVszjsaUrhVoto+PQUq/UooB6wA==
+X-Gm-Gg: ASbGncsYsi/ToJ+UOJEdy8y2r6v2MKhiKmlYCtTtmGNdCTniQNt/qGS2IFKPh2hZbmz
+	+6IClTidgx3BnLwXqbPhbEeVEfhsuIsDbI+hF50Fey4wnV970fwnjJreaolJaGKlpF+Cbyjh/JF
+	HUUjJMg18GI/QAc/wxIrMTEZmkUmE9qTwadLoHsclUXQ8gHR+MUzWHOb2kwHYv2u9/TtjA2hgB5
+	fEJu/wiInSc2hlb7Ueje0cW3IRBI1Br9s/3RWYdLGp5TvBMo8Pd+9zwnajyKdyl
+X-Google-Smtp-Source: AGHT+IG5EvukNEKmTyZ7U2mTigQEn4ga4xN6nDKYWRYiYf+i4+/dHh9XvrkX3fBUriL4t1E+LlzQ3Q==
+X-Received: by 2002:a05:6102:5689:b0:4af:b94a:3c3e with SMTP id ada2fe7eead31-4b2cc322226mr25267446137.5.1735501661558;
+        Sun, 29 Dec 2024 11:47:41 -0800 (PST)
 Received: from localhost.localdomain ([2800:bf0:82:1159:1ea9:11b1:7af9:1277])
-        by smtp.gmail.com with ESMTPSA id ada2fe7eead31-4b2bf98ce0fsm3753555137.3.2024.12.29.11.47.36
+        by smtp.gmail.com with ESMTPSA id ada2fe7eead31-4b2bf98ce0fsm3753555137.3.2024.12.29.11.47.39
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 29 Dec 2024 11:47:38 -0800 (PST)
+        Sun, 29 Dec 2024 11:47:40 -0800 (PST)
 From: Kurt Borja <kuurtb@gmail.com>
 To: platform-driver-x86@vger.kernel.org
 Cc: Dell.Client.Kernel@dell.com,
@@ -64,11 +64,10 @@ Cc: Dell.Client.Kernel@dell.com,
 	linux-kernel@vger.kernel.org,
 	mario.limonciello@amd.com,
 	w_armin@gmx.de,
-	Kurt Borja <kuurtb@gmail.com>,
-	Armin Wolf <W_Armin@gmx.de>
-Subject: [PATCH v2 18/20] platform/x86: dell: Modify Makefile alignment
-Date: Sun, 29 Dec 2024 14:45:05 -0500
-Message-ID: <20241229194506.8268-20-kuurtb@gmail.com>
+	Kurt Borja <kuurtb@gmail.com>
+Subject: [PATCH v2 19/20] platform/x86: Update alienware-wmi config entries
+Date: Sun, 29 Dec 2024 14:45:06 -0500
+Message-ID: <20241229194506.8268-21-kuurtb@gmail.com>
 X-Mailer: git-send-email 2.47.1
 In-Reply-To: <20241229194506.8268-2-kuurtb@gmail.com>
 References: <20241229194506.8268-2-kuurtb@gmail.com>
@@ -80,70 +79,114 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Add one more TAB to each line to support upcoming changes.
+Add config entries for each WMI driver managed by the alienware-wmi
+module to be able to conditionally compile them.
 
-Reviewed-by: Armin Wolf <W_Armin@gmx.de>
 Signed-off-by: Kurt Borja <kuurtb@gmail.com>
 ---
- drivers/platform/x86/dell/Makefile | 48 +++++++++++++++---------------
- 1 file changed, 24 insertions(+), 24 deletions(-)
+ drivers/platform/x86/dell/Kconfig         | 30 +++++++++++++++++++----
+ drivers/platform/x86/dell/Makefile        |  4 +--
+ drivers/platform/x86/dell/alienware-wmi.h | 23 +++++++++++++++++
+ 3 files changed, 50 insertions(+), 7 deletions(-)
 
+diff --git a/drivers/platform/x86/dell/Kconfig b/drivers/platform/x86/dell/Kconfig
+index d09060aedd3f..f8a0dffcaab7 100644
+--- a/drivers/platform/x86/dell/Kconfig
++++ b/drivers/platform/x86/dell/Kconfig
+@@ -18,15 +18,35 @@ config ALIENWARE_WMI
+ 	tristate "Alienware Special feature control"
+ 	default m
+ 	depends on ACPI
++	depends on ACPI_WMI
++	depends on DMI
+ 	depends on LEDS_CLASS
+ 	depends on NEW_LEDS
+-	depends on ACPI_WMI
++	help
++	 This is a driver for controlling Alienware WMI driven features.
++
++	 On legacy devices, it exposes an interface for controlling the AlienFX
++	 zones on Alienware machines that don't contain a dedicated
++	 AlienFX USB MCU such as the X51 and X51-R2.
++
++	 On newer devices, it exposes the AWCC thermal control interface through
++	 known Kernel APIs.
++
++config ALIENWARE_WMI_LEGACY
++	bool "Alienware Legacy WMI device driver"
++	default y
++	depends on ALIENWARE_WMI
++	help
++	 Legacy Alienware WMI driver with AlienFX LED control capabilities.
++
++config ALIENWARE_WMI_WMAX
++	bool "Alienware WMAX WMI device driver"
++	default y
++	depends on ALIENWARE_WMI
+ 	select ACPI_PLATFORM_PROFILE
+ 	help
+-	 This is a driver for controlling Alienware BIOS driven
+-	 features.  It exposes an interface for controlling the AlienFX
+-	 zones on Alienware machines that don't contain a dedicated AlienFX
+-	 USB MCU such as the X51 and X51-R2.
++	 Alienware WMI driver with AlienFX LED, HDMI, amplifier, deep sleep and
++	 AWCC thermal control capabilities.
+ 
+ config DCDBAS
+ 	tristate "Dell Systems Management Base Driver"
 diff --git a/drivers/platform/x86/dell/Makefile b/drivers/platform/x86/dell/Makefile
-index 03ba459f3d31..d5718ef34c48 100644
+index d5718ef34c48..8ac9a933c770 100644
 --- a/drivers/platform/x86/dell/Makefile
 +++ b/drivers/platform/x86/dell/Makefile
-@@ -4,27 +4,27 @@
- # Dell x86 Platform-Specific Drivers
- #
+@@ -6,8 +6,8 @@
  
--obj-$(CONFIG_ALIENWARE_WMI)		+= alienware-wmi.o
--alienware-wmi-objs			:= alienware-wmi-base.o
--alienware-wmi-y				+= alienware-wmi-legacy.o
--alienware-wmi-y				+= alienware-wmi-wmax.o
--obj-$(CONFIG_DCDBAS)			+= dcdbas.o
--obj-$(CONFIG_DELL_LAPTOP)		+= dell-laptop.o
--obj-$(CONFIG_DELL_RBTN)			+= dell-rbtn.o
--obj-$(CONFIG_DELL_RBU)			+= dell_rbu.o
--obj-$(CONFIG_DELL_PC)			+= dell-pc.o
--obj-$(CONFIG_DELL_SMBIOS)		+= dell-smbios.o
--dell-smbios-objs			:= dell-smbios-base.o
--dell-smbios-$(CONFIG_DELL_SMBIOS_WMI)	+= dell-smbios-wmi.o
--dell-smbios-$(CONFIG_DELL_SMBIOS_SMM)	+= dell-smbios-smm.o
--obj-$(CONFIG_DELL_SMO8800)		+= dell-smo8800.o
--obj-$(CONFIG_DELL_SMO8800)		+= dell-lis3lv02d.o
--obj-$(CONFIG_DELL_UART_BACKLIGHT)	+= dell-uart-backlight.o
--obj-$(CONFIG_DELL_WMI)			+= dell-wmi.o
--dell-wmi-objs				:= dell-wmi-base.o
--dell-wmi-$(CONFIG_DELL_WMI_PRIVACY)	+= dell-wmi-privacy.o
--obj-$(CONFIG_DELL_WMI_AIO)		+= dell-wmi-aio.o
--obj-$(CONFIG_DELL_WMI_DESCRIPTOR)	+= dell-wmi-descriptor.o
--obj-$(CONFIG_DELL_WMI_DDV)		+= dell-wmi-ddv.o
--obj-$(CONFIG_DELL_WMI_LED)		+= dell-wmi-led.o
--obj-$(CONFIG_DELL_WMI_SYSMAN)		+= dell-wmi-sysman/
-+obj-$(CONFIG_ALIENWARE_WMI)			+= alienware-wmi.o
-+alienware-wmi-objs				:= alienware-wmi-base.o
-+alienware-wmi-y					+= alienware-wmi-legacy.o
-+alienware-wmi-y					+= alienware-wmi-wmax.o
-+obj-$(CONFIG_DCDBAS)				+= dcdbas.o
-+obj-$(CONFIG_DELL_LAPTOP)			+= dell-laptop.o
-+obj-$(CONFIG_DELL_RBTN)				+= dell-rbtn.o
-+obj-$(CONFIG_DELL_RBU)				+= dell_rbu.o
-+obj-$(CONFIG_DELL_PC)				+= dell-pc.o
-+obj-$(CONFIG_DELL_SMBIOS)			+= dell-smbios.o
-+dell-smbios-objs				:= dell-smbios-base.o
-+dell-smbios-$(CONFIG_DELL_SMBIOS_WMI)		+= dell-smbios-wmi.o
-+dell-smbios-$(CONFIG_DELL_SMBIOS_SMM)		+= dell-smbios-smm.o
-+obj-$(CONFIG_DELL_SMO8800)			+= dell-smo8800.o
-+obj-$(CONFIG_DELL_SMO8800)			+= dell-lis3lv02d.o
-+obj-$(CONFIG_DELL_UART_BACKLIGHT)		+= dell-uart-backlight.o
-+obj-$(CONFIG_DELL_WMI)				+= dell-wmi.o
-+dell-wmi-objs					:= dell-wmi-base.o
-+dell-wmi-$(CONFIG_DELL_WMI_PRIVACY)		+= dell-wmi-privacy.o
-+obj-$(CONFIG_DELL_WMI_AIO)			+= dell-wmi-aio.o
-+obj-$(CONFIG_DELL_WMI_DESCRIPTOR)		+= dell-wmi-descriptor.o
-+obj-$(CONFIG_DELL_WMI_DDV)			+= dell-wmi-ddv.o
-+obj-$(CONFIG_DELL_WMI_LED)			+= dell-wmi-led.o
-+obj-$(CONFIG_DELL_WMI_SYSMAN)			+= dell-wmi-sysman/
+ obj-$(CONFIG_ALIENWARE_WMI)			+= alienware-wmi.o
+ alienware-wmi-objs				:= alienware-wmi-base.o
+-alienware-wmi-y					+= alienware-wmi-legacy.o
+-alienware-wmi-y					+= alienware-wmi-wmax.o
++alienware-wmi-$(CONFIG_ALIENWARE_WMI_LEGACY)	+= alienware-wmi-legacy.o
++alienware-wmi-$(CONFIG_ALIENWARE_WMI_WMAX)	+= alienware-wmi-wmax.o
+ obj-$(CONFIG_DCDBAS)				+= dcdbas.o
+ obj-$(CONFIG_DELL_LAPTOP)			+= dell-laptop.o
+ obj-$(CONFIG_DELL_RBTN)				+= dell-rbtn.o
+diff --git a/drivers/platform/x86/dell/alienware-wmi.h b/drivers/platform/x86/dell/alienware-wmi.h
+index dccbf4f95da0..ae3731f2fef2 100644
+--- a/drivers/platform/x86/dell/alienware-wmi.h
++++ b/drivers/platform/x86/dell/alienware-wmi.h
+@@ -69,10 +69,33 @@ int alienware_wmi_command(struct wmi_device *wdev, u32 method_id,
+ int alienware_alienfx_setup(struct alienfx_platdata *pdata);
+ void alienware_alienfx_exit(struct wmi_device *wdev);
+ 
++#if IS_ENABLED(CONFIG_ALIENWARE_WMI_LEGACY)
+ int __init alienware_legacy_wmi_init(void);
+ void __exit alienware_legacy_wmi_exit(void);
++#else
++static inline int alienware_legacy_wmi_init(void)
++{
++	return -ENODEV;
++}
+ 
++static inline void alienware_legacy_wmi_exit(void)
++{
++}
++#endif
++
++#if IS_ENABLED(CONFIG_ALIENWARE_WMI_WMAX)
+ int __init alienware_wmax_wmi_init(void);
+ void __exit alienware_wmax_wmi_exit(void);
++#else
++static inline int alienware_wmax_wmi_init(void)
++{
++	return -ENODEV;
++}
++
++
++static inline void alienware_wmax_wmi_exit(void)
++{
++}
++#endif
+ 
+ #endif
 -- 
 2.47.1
 
