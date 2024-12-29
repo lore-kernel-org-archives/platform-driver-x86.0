@@ -1,41 +1,41 @@
-Received: from mout.gmx.net (mout.gmx.net [212.227.15.18])
+Received: from mout.gmx.net (mout.gmx.net [212.227.15.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 34E492AD1C;
-	Sun, 29 Dec 2024 20:28:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 853C62594A6;
+	Sun, 29 Dec 2024 20:46:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1735504133; cv=none; b=uDruAg56i0g9qqhDxcgC+xzy7FVMk9caT6uS5yJSUfuwhrCIwcNECWu7cI01HGSZtue2yySeGAVRqBCRiMHSlz7sIUq/pRP3ELYfRWmuve+UEgE1iwjGTJ89hfLHBoDB21G7fzxlgX4So0UPUFjTdh02l8lmUmB4S/DDJxsaRss=
+	t=1735505173; cv=none; b=Y9+4i0BfYa5TvDKBSaraCy2AjMFlcKjI0t9WcRxUhr75PQzYm3cSFGfGSWxPYeMZVEoMuW9s5BNVz31OHCv/XUDxejro2G07+p+Wd+N7rDMTZJ+985liBvTGW/JhJyJv/AGgTgliLHNpznGxTmaNKxDMfI0q5Nj7ZPzDblA8/sE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1735504133; c=relaxed/simple;
-	bh=W5t8jBu1WR1hwP2WMz0ghkz8BBbCo2xL3/PPjsS1XmY=;
+	s=arc-20240116; t=1735505173; c=relaxed/simple;
+	bh=lNVsELNJaS4AA9G4z2N9N/WgLt5qL/6/VmoyZ1Nj5B8=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=qjbO3kSuq1uZxQL1Ss8IZXnugSILnRYzi89s7ZlOVtCxLLaptjVwq4yGKFdaQYqXr62mn/ZZJ/xUIZVJZbJsNerdj5xrCFDetHgYYE97A3iqfEZa4YXqS9Pc7VZxuWRnPaifqMpvEf/8bJPdRYMZH3F5Nr4GV9CEuIU+0pkwNFg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b=Y5tYZkHR; arc=none smtp.client-ip=212.227.15.18
+	 In-Reply-To:Content-Type; b=PKIrIPVoQOppF6i07BifYfCxGCB4BxX/OnBmIum2/VYK7t0722VAi24OVPHM6WihkKXJ9oaMoaD5jhfnb+lEe8d1sFFetXypDKNp/R9OYpjTn/WW49nl5nbclbU1jfyqwv3j8lu5cTZaTsxTmr0T97GZ/CiB26K5dAJpz0wRii0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b=VoDsvHmU; arc=none smtp.client-ip=212.227.15.19
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b="Y5tYZkHR"
+	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b="VoDsvHmU"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.de;
-	s=s31663417; t=1735504113; x=1736108913; i=w_armin@gmx.de;
-	bh=W5t8jBu1WR1hwP2WMz0ghkz8BBbCo2xL3/PPjsS1XmY=;
+	s=s31663417; t=1735505143; x=1736109943; i=w_armin@gmx.de;
+	bh=n9HIfxahsMMjkAx4szIjgTvkDGt3ClxOXh/5u2Qu1Ms=;
 	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:To:Cc:
 	 References:From:In-Reply-To:Content-Type:
 	 Content-Transfer-Encoding:cc:content-transfer-encoding:
 	 content-type:date:from:message-id:mime-version:reply-to:subject:
 	 to;
-	b=Y5tYZkHRMZHF84kWmrHbIeOiNYWxr0n7LZh+rCtoZDDusZo0JMnTrJrq1La0o5nj
-	 PkN4NW4QHeJ4TEr7uqdwqjyr6YqaijpmK7Fapf0ts6/3ZkG0hLRnCwk85b52Taxm4
-	 pxuyEnm4rjbOOeMxTxgHFJmPMIBEsYcbIiS/RVbpIewjbpKuSkrOd+tXSJhHNum8P
-	 OhtsUsSfbpkZoy+yjRFKsoz2ABnioHGO3tDURe32uIlgau7hvqx3YvY8ReFGnjZ12
-	 QIMGNVzkROLR8MzLHvxpLI7cVpgts4OolxhzgM+LTTeolNPle1/EjK3gCSCWndnxB
-	 8wt0IExlwxyw66j+Ng==
+	b=VoDsvHmUJByWsRcMMSsxbiIp9qnIhqxxFJI2snLRECWIlpIOj1gOVlPcJddlLrIL
+	 /1YfqL48gbqSmJgDZM9EF4y/ji6+S1hAax0dQC6tf9JX6JmuHk9aP0Z86UGnMfU28
+	 /Ob8kBXFsbpnQ23XbKQcRAEi8PFccaRhDKDXKcwslR9EkM0CUlLiKzko6HE02Epfx
+	 rxS9EdGZ+mVvDxSFV0zgDRAw3vyBQ9Ock25DPGzfGiinlSjFxY2w1Q2CjgRufYHzw
+	 gkiQGB4FZJTeVJi13pKU/Qm4AyM4s7Yyb68YwC9exnnicPDNWz58izIzPgagpR+5M
+	 0tDvAmx5M7Xpwotjiw==
 X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
 Received: from [192.168.0.14] ([91.14.230.110]) by mail.gmx.net (mrgmx005
- [212.227.17.190]) with ESMTPSA (Nemesis) id 1N49h5-1taQ1w103l-00w82C; Sun, 29
- Dec 2024 21:28:33 +0100
-Message-ID: <0a1dc167-2a2b-42bc-a76f-c0a8036efdee@gmx.de>
-Date: Sun, 29 Dec 2024 21:28:29 +0100
+ [212.227.17.190]) with ESMTPSA (Nemesis) id 1MzQkE-1tf78J2q0G-010Ea4; Sun, 29
+ Dec 2024 21:45:43 +0100
+Message-ID: <b7089d69-4d7b-42fb-90b3-bd13a27fcf1e@gmx.de>
+Date: Sun, 29 Dec 2024 21:45:40 +0100
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -44,7 +44,8 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
 Subject: Re: [PATCH 0/1] platform/x86: Add Lenovo Legion WMI Drivers
-To: Antheas Kapenekakis <lkml@antheas.dev>, derekjohn.clark@gmail.com
+To: Antheas Kapenekakis <lkml@antheas.dev>,
+ Derek John Clark <derekjohn.clark@gmail.com>
 Cc: corbet@lwn.net, hdegoede@redhat.com, ilpo.jarvinen@linux.intel.com,
  linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, luke@ljones.dev,
  mpearson-lenovo@squebb.ca, nijs1@lenovo.com, pgriffais@valvesoftware.com,
@@ -52,187 +53,141 @@ Cc: corbet@lwn.net, hdegoede@redhat.com, ilpo.jarvinen@linux.intel.com,
  zhangzx36@lenovo.com, johnfanv2@gmail.com, codyit@gmail.com
 References: <20241217230645.15027-2-derekjohn.clark@gmail.com>
  <20241227184825.415286-1-lkml@antheas.dev>
+ <CAFqHKT=Y66KNo-e+o+n76tmPEcqL4EBSUQNDXJcoP8B9NXguew@mail.gmail.com>
+ <CAGwozwGpEWVQwEAFfWWkTx4G90uhqdfbF85E4F_2w6c6G6P2Sg@mail.gmail.com>
+ <CAFqHKTnOA5N-uADQLbdA-b+k-TOMdjZtCPsFsCo9jarMiNioLg@mail.gmail.com>
+ <CAGwozwF79xYrWkCSKpBaLSiXNEZz-5tmayWMbkw-of4zB=LPUQ@mail.gmail.com>
 Content-Language: en-US
 From: Armin Wolf <W_Armin@gmx.de>
-In-Reply-To: <20241227184825.415286-1-lkml@antheas.dev>
+In-Reply-To: <CAGwozwF79xYrWkCSKpBaLSiXNEZz-5tmayWMbkw-of4zB=LPUQ@mail.gmail.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
-X-Provags-ID: V03:K1:8R1e1u3Xn11LPtBSwXfw5Tqy+JVv/ulCIEa7Ujm430MENrNUDHO
- efAsTCT3j3l8swADjkZ1RAnVbPLGkWryDHBKFWsaJP1C0a9WzYx5VSdqX0BaIY7cGAk5CVt
- mspcKXGc9wsl5a8gkAMwz99SfX+N8SLucSIZeSy1kbby2co57MbeLMYQHDqFDbOdi84ToAi
- je3MGloS0xS18rRJgPoRA==
+X-Provags-ID: V03:K1:LipJCHyDf0nDf7mBf6xEVTH/YvMC1SJuo6jnxmAa9RZrK2KJ7Za
+ vMGc4BGnGe7a15aqXWx2/przNcZw4g58kMaWFTs4ukRhUtb0IWdpD8yMc4SOo862CQnd7GH
+ slJZPDvLxFDkWrxlOYXzgTwrGBelurebCzGftKHONMJG3GMOnP6PuDafL4SH7pEcsedTMTp
+ 2A93xCabAirUZypw57nzg==
 X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:0BHA9+N0KuQ=;Ii2RDt2SmGbg2+qSs442Z0mlF2/
- Fu4PB+Y6GmIgyapefoXqT3uUvzv2dXog3uhGWrnzTg6mO0FZE/yS8khfs3GDbMEP5WaR36d2A
- IH2+hWh8/esCstNIm/X6s90g5/XFX8kzr16GnrZD5UjND9bdaUsFK+524aF+64ml2FFQ+ICSN
- Fix/bbFlhH3Z6jo44xEA+Kgg+qj9bAVNKfhOm3mgHML0PZz97AJVU3n8pG1QgQl+R2HHRybwM
- ZRxtp0alMt6sGfL0t901/ovfiuWQE0I1xLmfWVmr3la2TQRbOGjYUJZA5QAeKuFsCKAt8jC68
- J5nfbp75h+wzR8SlYwjyMsaI+Wr5tQLw5/TOOEZkV5EbGQ2GAi/3I0RTVFbhNFn65+pOOJtMk
- kj9gZJ4Vbth8qnaiOPt1REwZTASXuu2qzSmGwwSPB7qvHMwZCHQRfQYxwytwVQrNlx/LDL3fw
- YwcLvYskBBnQgWXLkaVAsjnMuTbnjbyObjqRGnH8sIbMeT5NtbdiAbkeOrhLiq045wIIrdN5D
- k2+Ug3F2XIIXBhXtgTrtkhxX53i96x2UkCt5ZHEgiTPNEasbrM70rsJVoswdJKR864GI1hnAx
- ppePLi055ZaWWX6JuG8nkN8t69jgwGsYkE43YAHbsqDstxG5R4fz/Z73GZX1XWwJN2ggAs95O
- z0ONhdaljVJTfzGsgdq0kQrngTycPQXv2q4Mm4Ov9r6oVvS4ynkwdgb25x75A8mM9okrYZMjp
- 6Zd7aGqNVB3iEa6qfY9OFNRWiPLCjQZGXj1amxdUdioQi9Nku8CXKDc81pU5mv4uX8Z9hTccA
- LvsDV5c87hXUgCRxzGAmbpzE4xn2QE0/IJBO3OsgG70ea9QNxzW21nOeTwyFzT0NizceA5AqG
- 1O+NaUayCyXziVdLS8GjUZzbgafBhm6yDXkJc1Zk3BZ5XUeUdE1ADRSpMibaftn9AnDldk+TB
- OUPW0uLnCbHNdl2aL6ZBkb5KvzTOVglbPc2FDRa++/lFbVbAwzHb09so5u8syzLNqt3lXYh+T
- r3lEOi2fGXpJLryK+BWeUaFPwEztKO2KiVDd1Wq4bD5UuW9S0t1zi5ACO15uSlQ4hRpB1m1C0
- knTZKxHRW52i6f7BhZo8CrQFf99iJL
+UI-OutboundReport: notjunk:1;M01:P0:4crVK/3e1D4=;8VKabZG1LbP6Ro8O4MGiG40EvZ0
+ wkSu1CKkIchsbL+IqMe8ayXWS/DSO3z2/4//+gMnlfaptOQ9xHnljrX+s0jlZSUpBTvIV/RIr
+ /Eb3aVnNEnrbPCWcx5b3jEeTAPbI1wURhkR/JyBeXYGme+nitsvsC1l9d5pcnE1RCTXGVfzwX
+ Ok8NgDxtTjkcr2TSg892K8Cc0cuhbiB/qaqaNu1kS2GiHhzOlYPnHev+M/Fk6q4KzxHeJn2li
+ M3o4GJAjDEJ9JYy3LAtaejHqJtTVUIeVl+1uN7eXm87JiU66SXO+KhhtOccb2xoxXEqeERJ6o
+ pCKEBD+1AZBJL5BzY5G/CulO2YYD9FVri3zWtlqSOWwadg83oEuc5OptpuYAAVFdaQg7/Ngry
+ zesngylXN8IM1ihCidAeEMLFSSxRVlLd6RrqeMOeEKW5x4j2cCKqkDdgbveqVcGY3knuKuUfp
+ Z4ijzLJLbRl+JCtJ5gc+rA4XqU2Jbq+NHxk/k+lq9MbYZzKOOnXYo1+V+Sq8BzTchLa5YXm2G
+ 3Gtxb51Fudpxlq2FYfndhk0UR/UoooynowPYTzpzEqZlLcSIZY8Ttr6GV6QVJ18Xh0ujFzteQ
+ jJ5KscZ8AmuCe2YibHT7LFUHQxWMh8dZfMEZVEWS8dcU6gcq+ic18fOnfltD2o2xm4OiQhQgF
+ rAxOO+HGdMClS2QpVXwu6VcjvIxxAZ5KAnvVvEFcpkvilouyXMSZB2wM69DZwTD7lzsLsfaCm
+ uSJW0uMmy/fZsfsjFsF3OzqCALGQKxmdiaszKtvezbktVLjdnHodn0mGJQHvLtwmDLj11/XVB
+ eNI84KrnzjCJulZMxM8AQKfznVVtjWUXG5Cw0PUvCEXHqlh1RJ1INS5VxxNL0mvqmD/rJUQNW
+ H3EjviLPFPHP701uNZHdtbnMamVsjZNDLerTtNkMe2feT71QXEmShtsO9dRtWU2itvJLhcGOm
+ DAwnHjhP/OadHrNY9StQcS+09r40InZ9HBdFxGoblGavLwhVKI5lYcDqEKaBygbdGSdQrhcaA
+ vCKVln4BGzIQcsENqwU0df+NPH1FTicYzYbv4BOpIa85KVCRjT0CL+oxqvObWHujM8WrDZ0Qa
+ SvCiGmJIvRyz7XSVvfqo1S5SoUFz7ZEc7nXE2XdJreIR4r3TTHJIzo/V+UMMELtP8ItBa4q3g
+ =
 
-Am 27.12.24 um 19:48 schrieb Antheas Kapenekakis:
+Am 28.12.24 um 12:50 schrieb Antheas Kapenekakis:
 
-> Hi Derek,
+>> I'll let them weigh in on this again if they want to, but I think it
+>> was clear from those threads that this is a new way to use the class.
+>> Armin's comment was related to the fan curve setting John was
+>> discussing, which is specifically covered by the hwmon subsystem.
+>> Hwmon does not cover platform profiles or PPT.
+> I quote the following from Armin:
 >
-> Good job on the driver. I spent a bit of time reviewing it today, and I
-> have a few thoughts. Hopefully you can go through them fast, and we can
-> have a solid base of understanding moving forward so that I can e.g.,
-> merge your driver on Bazzite ahead of the kernel, so you can get some
-> valuable testing.
->
-> // Firmware Attributes
-> Right now, I have one major concern I'd like to be addressed before
-> moving into the details of the driver. This is mirrored in the Asus
-> driver you referenced [1] as well and I do not think I have seen solid
-> argumentation for it yet.
->
-> Essentially, you are using the firmware attributes interface for the
-> ephemeral attributes SPL, SPPT, and FPPT which is also a concern mirrored
-> in the thread with Armin (+cc) and John (+cc) [2]. The question here
-> becomes, if exposing fan curve attributes via the firmware interface is
-> fickle, why is it correct for SPL, SPPT, and FPPT?
->
-> For context, when it comes to Asus (see [1]), these tunables reset during
-> reboots, after sleep, and when changing the TDP mode. Specifically, TDP
-> mode, SPL, SPPT, and FPPT, and the fan curve are not preserved between
-> reboots, with only TDP mode being preserved between sleep. Following,
-> setting TDP mode resets SPL, SPP, and FPPT, and setting any one of those
-> resets the fan curve.
->
-> For Lenovo and the Legion Go (1st Gen) it actually depends on the BIOS
-> version. In early BIOSes, the custom tunings used to be preserved until
-> you reset the BIOS. However, I suspect that this caused used confusion, as
-> if you uninstalled Legion Space, the tunings to custom mode would still be
-> applied which would be unintuitive. In new BIOS versions, the tunings reset
-> when changing TDP modes, which can be done with the combination Legion
-> L + Y. I am unsure if they are still preserved between reboots if you
-> remain in custom mode. Fan curve resets as well. But the point is that they
-> are not persisted, at least to the extent expected by the firmware
-> attributes class and writing to them in other modes is undefined.
->
-> Lastly, if another driver were to be developed e.g., for AMD out-of-tree
-> to control devices without a vendor interface, we'd have the same
-> issue. As this driver or [1] merging would set a precedent for using
-> firmware attributes for these tunings, I think it is important to reach
-> agreement before moving forward. For AMD w/o vendor, more details can
-> be found in [3]. In [3], Mario makes an RFC for an alt interface for SPL,
-> SPPT, and FPPT, through amd_pmf which does not have this peculiar issue.
->
-> There are settings where it does make sense however, such as VRAM, boot
-> sound (Asus), and the suspend light/barrel plug RGB (Legion). These
-> settings are typically persisted in BIOS and there is no ambiguity for
-> fitness in those.
->
-> // Driver Details
-> Ok, as for the rest of the driver, I have (i) some stylistic comments and
-> (ii) will mirror similar concerns to John in unnecessary accesses.
->
-> (i) Stylistic Comments
-> I would personally be a fan of adding WMI support to the kernel, such that
-> userspace can access WMI attributes without the use of a driver, as it is
-> done in Windows. However, as I have discussed with Mario, such a thing is
-> not an easy task, as it would require adding a BMOF parser to the kernel
-> which is a monumental effort. In any case, the current kernel requires
-> us custom write drivers for the WMI interface.
+>> The firmware-attribute class interface is only intended for attributes which are persistent
+>> and cannot be exposed over other subsystem interfaces.
+> The former part is not met here.
 
-Actually i am currently working on decoding the BMOF format based on the bmfdec utility
-developed by Pali.
-
-The issue with exposing those WMI methods to userspace like how it is done under Windows
-would create a massive security issue since most WMI methods are security sensitive and
-quite fragile when presented with invalid/unusual input data (i fully blame the BIOS developers
-here, they simply do not care about this).
-
-That is why we have to stick with WMI drivers.
+If Ilpo and Hans agree to extend the scope of the firmware-attribute class to also cover non-persistent
+firmware settings then i will not resist.
 
 >
-> The reason for this preface is that I think that your driver style is a bit
-> "too close" to what such a thing would look. E.g., in the driver I can see
-> snippets such as `LENOVO_CAPABILITY_DATA_01 WMI data block driver.` and
-> `MODULE_IMPORT_NS("CAPDATA_WMI");`. Since you are going through the effort
-> of writing a custom driver, I would be more opinionated in how I'd design
-> the driver, so that it's more intuitive from a user's perspective. I think
-> John's driver (which has its own issues) and the asus-wmi drivers strike a
-> bit better balance, where they "translate" the WMI calls into an ABI that
-> can be documented and then parsed by a developer.
+>>> To rephrase, your ABI style is not intuitive, because it contains
+>>> implementation details such as "gamezone", "capdata01", and "Other
+>>> Method", in addition to the ABI being hardcoded to the WMI structure
+>>> lenovo uses. The documentation uses those keywords as well.
+>> Yeah, it's a driver for those interfaces... If you want an agnostic
+>> BMOF driver then make one. This isn't that.
+> It's a driver for Legion Go and Legion laptops. _Not_ those
+> interfaces. Which only exist in gen 7+ if I recall from John's driver.
+> That was my comment.
 >
-> Such a design process would then also allow to claim the name legion, as
-> you could make sure the legion driver only loads on Legion laptops, where
-> now it would randomly load in other laptops as well. Sidenote here is
-> that this is something I also found confusing, as the Legion Go does not
-> have a keyboard so that driver should definitely not load.
-> E.g., you could only load when you detect the Gamezone interface and then
-> access the other two as well. The Gamezone interface is only used in
-> Legion laptops AFAIK. I think Lenovo also kind of implements all three
-> as stubs even if some are not used, to allow extending them with BIOS
-> updates, so blindly loading drivers based on the interface might not be
-> the best idea in any case. When the Legion Go released, I think only one
-> of the three interfaces was used, for example, but all three were present.
-> (ii) Unnecessary Accesses
-> Even though you went hands off on your design of the driver, at the same
-> time you held back when it comes to userspace accesses by globally forcing
-> the Other function hints as limits. This creates two issues.
+> Establishing an ABI that works with older laptops and laptops that
+> supersede those interfaces would be beneficial I'd say.
+
+Excuse me for asking a stupid question here, but what WMI interfaces exactly are we currently arguing about?
+
+>>> If I understand correctly your last sentence, Armin suggested much of
+>>> the same (ie combine and merge).
+>> You don't seem to, no. The suggestion was to use the component  driver
+>> API to aggregate the Other Method driver with the capability data
+>> driver so that the firmware-attributes class is only loaded when both
+>> are present. That is decidedly different from breaking the kernel's
+>> WMI driver requirements and merging two GUID's into one driver.
+>>
+>>> GUID tables loading != drivers loading also, I would not pin that on
+>>> the kernel.
+>> What exactly do you think the following does?
+>>
+>>   +MODULE_DEVICE_TABLE(wmi, gamezone_wmi_id_table);
+> Call the probe function that can -ENODEV
 >
-> The first one is that those limits might be wrong for certain devices or
-> certain users might want to go a bit above them, which would mean that if
-> you enforce them you'd need to provide a way to quirk them and a module
-> parameter override (I know they are correct for the Legion Go as I have
-> looked through them as well). But if it is not necessary in Windows,
-> why would we add additional roadblocks in the kernel? If Lenovo feels the
-> need to enforce them, they can do so in their firmware and extend that
-> protection to Windows as well. Asus does when it comes to their fan curve
-> firmware, for example.
-
-IMHO if the firmware provides min and max limits for settings then the kernel should
-enforce them. The reason for this is that the firmware might only be tested with the
-official Lenovo OEM software and might therefor rely on the userspace software to not
-exceed those limits.
-If we allow a userspace application to exceed those limits then the firmware could break
-and/or behave erratically.
-
-Of course we could add a module param to tell the driver to ignore those limits. But such
-a thing is totally optional and can be added later when the need arises.
-
-> The second is that you are making a lot of necessary calls, which may harm
-> performance or potentially cause instability. My workflow for setting TDP
-> on the Go is that I first respect the TDP mode the user has set using
-> Legion L + Y. If the user wants to change that, then I do the following:
-> set TDP mode to custom, set the TDP, set the SPL, SPPT, and FPPT, and then
-> set the fan curve. I also add a small delay in-between each of these calls
-> as a further precaution. In your current driver, each of these calls would
-> make two additional calls to the WMI interface (one for the limits and
-> one for the TDP mode), which would more than double the number of calls
-> made in a typical scenario (from 5 to 12), where each triplet is made
-> back to back.
+>>> I do not understand what "I hard code the page to custom" means.
+>>> If you mean the capability data does not change you are right, they
+>>> are hardcoded in the decompiled ACPI I am pretty sure (it has been
+>>> close to a year now so I might be forgetting).
+>> The capability data interface has a data block instance for every
+>> attribute in every fan mode. SPL has one for quiet, balanced,
+>> performance, and custom. The method for getting that data block (page)
+>> is the same as calling get/set in Other Method (0x01030100 -
+>> 0x0103FF00). Every page produces different values for each attribute,
+>> but I am only ever retrieving the instance for custom (0x0103FF00) as
+>> that's the only one where setting that method ID in Other Method
+>> changes the values on the Legion Go. It is the only relevant data for
+>> userspace. Other Gaming Series laptops might treat this differently,
+>> where every fan mode has an applicable range. I'll need to do more
+>> testing on other hardware to confirm that. In any case, this isn't
+>> relevant as I'm dropping the gamezone check (as I've stated multiple
+>> times in this discussion) and always setting/getting the custom method
+>> ID for a given attribute.
+> Hm, for some reason I missed the capability block when doing my RE
+> [1]. Feel free to reference when making the driver.
 >
-> There is also the issue mentioned by John, where you do cross-interface
-> interactions etc. To fix this, you'd have to retrieve the limits from
-> firmware on probing and then cache them in the driver after quirking. It
-> would be much easier just to skip all of this for now and just use them to
-> prepopulate _min and _max values as hints instead, which you already do.
+> You should also provision for the fact some legion laptops have an
+> extreme mode which is stubbed on the Legion Go
+>
+> Ok,
+> let's wrap up this discussion and put a bow on it.
+>
+> I currently have two issues that block me from committing to your
+> driver: novel use of kernel APIs/design and performance
+> degradation/instability from unnecessary calls and checks, as those
+> are (i) slower (ii) could error out (iii) could have incorrect data.
+>
+> The former can leave me with tech debt if your proposed ABI is vetoed
+> and the latter would result in a degraded experience for my users; I
+> would be putting in work to go backwards. I do not mention missing
+> features, as that is something I could have also worked on if I
+> committed to your driver.
+>
+> Therefore, I'm left in a situation where I have to wait for buy-in
+> from kernel maintainers and for your V2, hoping it fixes the latter
+> issue which you said it will only do partly.
 
-Your point has some merit, as WMI calls are indeed quite slow. Caching the values would indeed increase performance.
-However i still suggest that the driver actually enforces those limits, as the firmware might rely on this.
+Regarding the firmware-attributes: if Ilpo and Hans give their OK, then i see no problems in using the firmware-attribute class for
+non-persistent firmware settings. I for my part would be OK with such a change.
+
+Regarding the enforcement of firmware limits: i believe that caching those limits during probing would solve the performance problem.
+If users want to override those limits when we can add a module param (marked as unsafe to taint the kernel if used) later which tells
+the driver to ignore those limits when writing firmware settings.
+
+Any important points which i missed?
 
 Thanks,
 Armin Wolf
 
-> Those were my comments. You mentioned that you are travelling and might not
-> have access to your PC so take your time with the replies.
->
-> Happy holidays,
+> Best,
 > Antheas
 >
-> [1] https://lore.kernel.org/all/20240930000046.51388-1-luke@ljones.dev/
-> [2] https://lore.kernel.org/lkml/eb165321-6a52-4464-bb58-11d8f9ff2008@gmx.de/
-> [3] https://lore.kernel.org/lkml/20240926025955.1728766-1-superm1@kernel.org/
+> [1] https://github.com/hhd-dev/hwinfo/tree/master/devices/legion_go#get-feature-command
