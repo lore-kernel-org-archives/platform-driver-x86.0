@@ -1,41 +1,41 @@
 Received: from mout.gmx.net (mout.gmx.net [212.227.17.21])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4DBDFA50;
-	Sun, 29 Dec 2024 00:26:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E180BEC4;
+	Sun, 29 Dec 2024 00:30:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.21
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1735432014; cv=none; b=XdHf8iz83xHlJ1KtQ6K1VqsgOWRJcCDQSVsFNXAGlnmNCafA4UfO9slYbAU6ZbZhivYHBcb26OIz8gf4UNI16+gqHoqaIqPltNmRCT2gQsGGZuqSw2UXml+pNk+u+LiVr/HGdvEClTYPSgykNHyep27NA5zgmnZrcxzrxFVV7Co=
+	t=1735432219; cv=none; b=k8taxgi4cJ+hJDp0uH7L2teWETqeGf/icaqMjnwtLuzZ0daClt79JzJDaiiGyHmu5hw9lcoB0CCnuo37bMIqowsqLvehzcel+D1G2O4W6nTWxVXLAuz64xCV6rRr/CZkofjuo5QQCklEe1eyJcP7zzVSONQrGjlzpUPQCNcchAs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1735432014; c=relaxed/simple;
-	bh=VKxYsK6oHKz7glJwFl56JlxrA00oEu/c1ZRf+2baF0U=;
+	s=arc-20240116; t=1735432219; c=relaxed/simple;
+	bh=MblTFoaTkB+FU4TzzMfg8TzEo7EfZmLu8dhYEG1Gce8=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=FHI3d0/jZdQcWAGyQbJPOAwdSVtSLyMBo5a/YCkSwhZ/DwAHMA7p/w47ZEKjv41MW2R9u3g/87776ZwIdt8enP+fIth3FPOvK0uzy+FI+AQ/2tP4FugHJKv44mF77c+UIrnAZacMf84cPMZXGVNM8mnTFcWUlJM2hrV03gmTxtM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b=mbSJUFQG; arc=none smtp.client-ip=212.227.17.21
+	 In-Reply-To:Content-Type; b=OCwVR2jE/mZ154p/Vjjrw/Wo4HKnEiDA3fuvN4wKZvKX54nPESMOxeNhq5Gve1eoQknaQoqxx2R6DVZIA1k98m1wtHYB2Vva4Xna6XL2GB2CGdwQr2Q0J8A4xaon9A1r5ms6F/QO9xkIcJB62d0pT227zb0mQN0F2Cm3Y+TEZnc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b=h8edbacK; arc=none smtp.client-ip=212.227.17.21
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b="mbSJUFQG"
+	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b="h8edbacK"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.de;
-	s=s31663417; t=1735431998; x=1736036798; i=w_armin@gmx.de;
-	bh=B4rTpWa5nfj8ZJHAw2qHMiLr31f++q8Z4Pl2xA/1jBM=;
+	s=s31663417; t=1735432203; x=1736037003; i=w_armin@gmx.de;
+	bh=jCACReCxZng0mo0JuT2W50xTnFaOffGK242w292IGB8=;
 	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:To:Cc:
 	 References:From:In-Reply-To:Content-Type:
 	 Content-Transfer-Encoding:cc:content-transfer-encoding:
 	 content-type:date:from:message-id:mime-version:reply-to:subject:
 	 to;
-	b=mbSJUFQGUiukGHlasnPGR6Fhfm5dW4QK42eztQr8I1EOdbcUKrnhPXhf+tX8GwxJ
-	 N7zgZX/i/jhxNzGVE0M2LLTnmppMX/BvI5/8fC6L+3+rlRKMOMUww0EpjN8wZQDkk
-	 cBTtyQx6pHlGMgtcocP11hiuxv52SBrntF62E4uT/yotIBDlAiQpJrFa5suGBzz3U
-	 jR2yEcIWT9Vh3OOJc1uefGdfh6jE9T1iCNoxuLFs8h79oLFt1psbzIGN+Pqatipxb
-	 kY0oTcZ4S3WVhPS7celPEvBRUkLNYfefCxX++9Gw6kOR8PFmzn1DonoJ7XCLjXQ3A
-	 waC9KoL4PpYIQ6I4hg==
+	b=h8edbacKGJgnOgVgT5I8PjMhC9BhdQfzG66icsoWqI0C7jGTBOtDuDjOD/OFs+P7
+	 AIkL6grppwH5YKjgq4vZbKS8izi1XcyEYC6R4zGLBrAdOuNZEXuQpjyc0lAYzfkH5
+	 XlBfAgO2Hkz96HloQ+8jXEVkR5Z4teHYuqkUMqbi8xGA1TA8JIv+pbAKGd+TCkSMK
+	 Wer5op1rVS3Th92wNIBKlrTwFuLhKRKiGmBzRqJTiwTlhDX9MbQZyvVAHIR/yAilM
+	 HXBzx0DQKjbGmZ8qeLZ5wT/lkXMlr5d4kUV7WGwM0Rnb6huXCa4AFAHEkxElzWmxm
+	 Yb8lnpRFLBzJVtOr8Q==
 X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
 Received: from [192.168.0.14] ([91.14.230.110]) by mail.gmx.net (mrgmx105
- [212.227.17.168]) with ESMTPSA (Nemesis) id 1MMGRK-1tBoBH3xtW-00IXoW; Sun, 29
- Dec 2024 01:26:38 +0100
-Message-ID: <6a99fe08-f1eb-4101-99bf-db5fa7364680@gmx.de>
-Date: Sun, 29 Dec 2024 01:26:36 +0100
+ [212.227.17.168]) with ESMTPSA (Nemesis) id 1MUXtY-1t1Oup0yh6-00Rrzl; Sun, 29
+ Dec 2024 01:30:03 +0100
+Message-ID: <5f71df0f-fd74-47e8-9044-b274f6f7f68c@gmx.de>
+Date: Sun, 29 Dec 2024 01:30:01 +0100
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -43,345 +43,420 @@ List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 08/20] alienware-wmi: Add WMI Drivers
+Subject: Re: [PATCH 13/20] alienware-wmi: Split DMI table
 To: Kurt Borja <kuurtb@gmail.com>
 Cc: platform-driver-x86@vger.kernel.org, ilpo.jarvinen@linux.intel.com,
  mario.limonciello@amd.com, hdegoede@redhat.com,
  linux-kernel@vger.kernel.org, Dell.Client.Kernel@dell.com
 References: <20241221055917.10555-1-kuurtb@gmail.com>
- <20241221055917.10555-9-kuurtb@gmail.com>
- <367b6e24-d7d3-426e-96ed-e7ab6a36ad5b@gmx.de>
- <zl6ukxdcscxqkpqodjkocfljolnoz2pep74zbu2iy5e7itm3lr@zavcqwt5iyaw>
+ <20241221055917.10555-14-kuurtb@gmail.com>
+ <02ff9ba4-87d2-436f-bf2a-33b4296505dd@gmx.de>
+ <r2yoc6dmpjvl2ihhlnj7ppylq5ykaibz2mpb6roezimmkxwmyv@q6uc27vjf5t3>
 Content-Language: en-US
 From: Armin Wolf <W_Armin@gmx.de>
-In-Reply-To: <zl6ukxdcscxqkpqodjkocfljolnoz2pep74zbu2iy5e7itm3lr@zavcqwt5iyaw>
+In-Reply-To: <r2yoc6dmpjvl2ihhlnj7ppylq5ykaibz2mpb6roezimmkxwmyv@q6uc27vjf5t3>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
-X-Provags-ID: V03:K1:a7WAkk2snP9RhxLGSKw4qfUK1S7z0tzqQxjNQl0ZZIGOgZjJ8/m
- KxHR7u8XxOQMi1NpvZyUQo2uOestqS+/UUORyqLXVCunN18WFkU0Dg77xGJ9/rK6NGQXTrl
- CjEoYpLNPzEgefFlzyH6ZTNE3dg7qs+WIclYfdw6Vg8D/S7aJkGOasbJPCIKght70f9cy7b
- 79A3GQNfKjsxHz7OgqrWg==
+X-Provags-ID: V03:K1:dGss5YJMg2zHDvBpF9XQ2GMZzxLJo1qxiICdzWxCMS7Le0+gMxJ
+ C5qmwuXR6LjO29nmg4gkxiMaDCLIO50f3p0YOETxoO+DJxXgviGs36IU8zUsuydxPqQrTyF
+ IZwVZ56EvrdNpkjMnLG0nPA0ZwTGJHiVa2TVjhyQdtXtgO0lQzBMRaCy35+Kh390AiZs8j6
+ EFvdow+f9p7BhmAsqFPuw==
 X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:p9PLOpo17vE=;mWAIHinAfz5QM5WvTshWUF7HgPg
- dbTcbwCAU/Rqc8e1by/BnH00E7JyyQ2QeM6+0meVb4XyFDlgOpflWUdtupTvx7r5LcfXJexxa
- MS8aFFeWjt2rF6IopjSrGYNqD7Ild1Jgk9tbk5bVnmtROA7ZykyJNJ+jPB/wXqmOe31vWp+Kl
- LagAU5caTsYLINjmmSoebdNpHGOTKG7IueQsqLxAFMvOTchJnOGzmOEKD3rKGsMF96L5t85sA
- VwpZ2U1vejkxv6G0FNBUzlhhaEqg2EirtnxoielEgl7QlxUv4Mk3hlhLgw+f84/+FhN6fe639
- 8QC1PUFCxGawiBBPYglSrJRW+bInZoh1prroz7N9WDdhIkmqHOr+ksXD96eZLuIueyI3TvYq+
- ciMWFDPgP6zX7tTyMrc+PL1ZQdm7CqxG1A7oVyw6Wj5ciK/E/8MGdG1BT9lBL2+lmmTlUzEG8
- EI5vZrSseYrVlREW76jnfKg89YSuNUhuuVT/oBZL4R/cXsOL+WSUem/hoWvBS1VbhYeTKe9xF
- Jkd6w/4EOt7nnMfAmj6Bc0QT1RyEcF5/1RH+ogOZbsyzViEFsWN4PeaACQMAll7W/dOm4qvfy
- ZLPZflEuAO5W19B5w4CK7aZQjk5qB8Fb1NfFQwWj9ge1LepqYvCFrs9NtAWsSoFYW1h600qSh
- pgnl9DNJ7CpJ0LVwyXzAl9NYNxGvQrm8TLgHqfGQYxa5Mmu1MJbx3rkLOKVJhKgqhuK5IQc0I
- GV2ysaSbJLfvHnIeNSEj26iejv/s3+ZkISknhf921pBd2aZW1bymFp/I69SBe5LGj7NHVQobV
- jckAgFRY/ZhDQNRd8S+7nH8R3jth9tJL9Z5zi7/4EHXlhLexY/demB4oJcQBlUaClxEBq7ovz
- ZESN5+WGy8fC6tX9GjZvTOOm/tW7cVA8BY+bja+mcsoh/9hsJgBuvxEB64PoNYgPRikFacnka
- iazaJqQ9khdNp7AV1JOMiNkYnw9ApzaOkrgAbgKl4TV7bw6s1vwpHU+7IdSqXU53P7seGtrQA
- 2IvN7jRHMtrezsaZfLzH/60I1tuAJpEy/jcgLSt06aELilLWZKF6Z0ZfpebqgxQylBjPDcmgO
- WvzGjD/CvaIwacs527/8gAF6VJEYkn
+UI-OutboundReport: notjunk:1;M01:P0:Ne54I7X4o60=;HfD3hrUwUIwhk5kY3M4v7s/t1HP
+ Jg/AcumNQcA9nHrsxb/ktHNy7aH2/F3su+BvRsFy9KjEKXqhZDYVu4aGO+RPUczpg+UhdtHOB
+ Z0rw3ZHa9yOT4AhbnordAR3clKoysEBu1heO/M3dc4z8kixnFw9pBb+Xo3wRMUbUC2QFvGfb2
+ tszYS7UtRciZc0fFzjVgqZj3AzWMhWhTb9Cv4I3KgMNDiztkwWRS2SpFWVg/ogFCJTG7r4pea
+ ONs0PuJF+HdTu5MtyJG9nOjdyFdFANNn8+K7yk2wqjnTxw9qr/r2Okl4cqYx2tzrWHb4YePPu
+ UNM6HIfiuI3Df6fp/WpZO/cYHkli04lNK9IzWzJXIHpAz0wvAxg4hmONJQ8yIFE81F6fcULeW
+ MdW+uvdtgHOHIemXK0MNWsGkTE1mNQMg+v36kugPqOr3cXTzrujDRADXWuUcboXDjyp2tfGi8
+ d3tmTayP8VtfVbRmpLyA/P8AGnLh9DWO1ZE4zsY9yFIv8sJwqNgcss+3wHrpKq6cqgXmm1NeX
+ wUkkroJG/6qXxR64/yTSuw9TOeBTilcLaXQarKpB0oQAV3gQCizTlmB7NjVXleYTQOSdreg3o
+ 2F2B82wZEaLWnq1X8VExOinqZisq4K/a4lXZuTnGozaHKbKlxX6ju3JPQf/uipbSy8WBgdWQG
+ 2o4uSpO0As6tLYq3OlHvt/0NFWoOw3IryGHQRcaXoYVMfM7eNRlD2w4m4IBd9FPWzG99oOnhD
+ aFhp7xKzfHTaTRt5Jc/8hbKqC77SOSy0aS31KoeAqtT7H1O0DZTi2lB9yTSV5xC17r55PSL23
+ RJULBd6Go/MTxs9bBRFzSPQ5r89uVFvr5btp8V0MFvCwPEiwQyDEF3dpQ7mkMEVJokTl739Bq
+ 7Fe7bw51g3TUguDzDWGJe7S2UmlXTVIVXKbXnMWtbS31+D/M3NQKY24xlg/50cgGXl1xso9Xx
+ JSyUVYvcTT8QxwHIK38gdSJFJ0vScd62YONEIaTwKAtSqBgxawhiF319xCewCGKFnSyqvKvck
+ UtTgVQgcTRawvsdu4x7Y9SCY/XAbdWJNyYYFAZii8Y9pvQKjQki6FnsUS0vVCX2DsbyZVnQhL
+ /UdvsB1OBnHWk63h9puRuQ8sRwNndc
 
-Am 27.12.24 um 05:44 schrieb Kurt Borja:
+Am 27.12.24 um 05:55 schrieb Kurt Borja:
 
-> On Fri, Dec 27, 2024 at 04:21:14AM +0100, Armin Wolf wrote:
+> On Fri, Dec 27, 2024 at 04:55:28AM +0100, Armin Wolf wrote:
 >> Am 21.12.24 um 06:59 schrieb Kurt Borja:
 >>
->>> Add WMI drivers for LEGACY and WMAX devices.
->>>
->>> This involves moving platform driver and device registration to a helper
->>> function, which is now called from the driver's preferred WMI device
->>> driver probe. However this is only done if !quirks->thermal because
->>> newer WMAX interface doesn't support any of the features exposed by this
->>> device.
->>>
->>> Only one driver is registered on module initialization to prevent
->>> registering duplicate platform driver and device.
->>>
->>> Aditionally, create_thermal_profile() now takes wmi_device * instead of
->>> platform_device *.
->> Since the HDMI, Amplifier and deepslp groups depend on the WMAX interface i would
->> register them inside wmax_wmi_probe() using device_add_groups() (you might need to
->> rework alienware_alienfx_setup() for that).
->>
->> In the end the only code shared between both drivers should be related to the LED handling.
->> Everything else AFAIK depends on the WMAX interface and should therefore be inside the
->> WMAX driver.
-> Unfortunately this breaks old user-space interface, as the path to this
-> attributes would change :(. This is why I can't even set a parent dev
-> for the platform_device.
+>>> Split thermal features into a new DMI table to support upcoming file
+>>> split.
+>> Could it be that you also decided to reorder the quirk entries?
+> No. I'll make this split lower in the file, so it doesn't mess up the
+> diff.
 >
-> I only know of one project which interefaces with this driver [1], and
-> it does use the /sys/devices/platform/alienware-wmi path. Maybe I could
-> send a pull req, but it would still break old unknown projects and
-> scripts.
->
-> [1] https://crates.io/crates/alienware
+> If I did reorder it by accident I will fix it.
 
-I meant that you use device_add_groups() on the platform device, not on the WMI device itself.
-Since alienware_alienfx_setup() stores a pointer to the platform device using dev_set_drvdata() the WMI driver
-can use dev_get_drvdata() to access the platform device.
+OK, having a clear diff would make it easier to verify that no quirk entries have been changed.
 
 Thanks,
 Armin Wolf
 
+>
 >> Thanks,
->> Armin Wolf
+>> Armin WOlf
 >>
 >>> Signed-off-by: Kurt Borja <kuurtb@gmail.com>
 >>> ---
->>>    drivers/platform/x86/dell/alienware-wmi.c | 186 +++++++++++++++++-----
->>>    1 file changed, 146 insertions(+), 40 deletions(-)
+>>>    drivers/platform/x86/dell/alienware-wmi.c | 163 +++++++++-------------
+>>>    1 file changed, 69 insertions(+), 94 deletions(-)
 >>>
 >>> diff --git a/drivers/platform/x86/dell/alienware-wmi.c b/drivers/platform/x86/dell/alienware-wmi.c
->>> index 4b68d64bd742..f2f6842e27e6 100644
+>>> index 0a0b72dc61ea..8ea08f5f8810 100644
 >>> --- a/drivers/platform/x86/dell/alienware-wmi.c
 >>> +++ b/drivers/platform/x86/dell/alienware-wmi.c
->>> @@ -15,6 +15,7 @@
->>>    #include <linux/platform_profile.h>
->>>    #include <linux/dmi.h>
->>>    #include <linux/leds.h>
->>> +#include <linux/wmi.h>
->>>
->>>    #define LEGACY_CONTROL_GUID		"A90597CE-A997-11DA-B012-B622A1EF5492"
->>>    #define LEGACY_POWER_CONTROL_GUID	"A80593CE-A997-11DA-B012-B622A1EF5492"
->>> @@ -39,8 +40,6 @@
->>>    MODULE_AUTHOR("Mario Limonciello <mario.limonciello@outlook.com>");
->>>    MODULE_DESCRIPTION("Alienware special feature control");
->>>    MODULE_LICENSE("GPL");
->>> -MODULE_ALIAS("wmi:" LEGACY_CONTROL_GUID);
->>> -MODULE_ALIAS("wmi:" WMAX_CONTROL_GUID);
->>>
->>>    static bool force_platform_profile;
->>>    module_param_unsafe(force_platform_profile, bool, 0);
->>> @@ -412,7 +411,10 @@ struct alienfx_priv {
->>>    	u8 lighting_control_state;
+>>> @@ -118,8 +118,6 @@ struct quirk_entry {
+>>>    	u8 hdmi_mux;
+>>>    	u8 amplifier;
+>>>    	u8 deepslp;
+>>> -	bool thermal;
+>>> -	bool gmode;
 >>>    };
 >>>
->>> -static struct platform_device *platform_device;
->>> +struct alienfx_platdata {
->>> +	struct wmi_device *wdev;
->>> +};
->>> +
->>>    static struct platform_profile_handler pp_handler;
->>>    static enum wmax_thermal_mode supported_thermal_profiles[PLATFORM_PROFILE_LAST];
->>>
->>> @@ -1048,7 +1050,7 @@ static int thermal_profile_set(struct platform_profile_handler *pprof,
->>>    	return wmax_thermal_control(supported_thermal_profiles[profile]);
->>>    }
->>>
->>> -static int create_thermal_profile(struct platform_device *platform_device)
->>> +static int create_thermal_profile(struct wmi_device *wdev)
->>>    {
->>>    	enum platform_profile_option profile;
->>>    	enum wmax_thermal_mode mode;
->>> @@ -1097,7 +1099,7 @@ static int create_thermal_profile(struct platform_device *platform_device)
->>>    	pp_handler.profile_get = thermal_profile_get;
->>>    	pp_handler.profile_set = thermal_profile_set;
->>>    	pp_handler.name = "alienware-wmi";
->>> -	pp_handler.dev = &platform_device->dev;
->>> +	pp_handler.dev = &wdev->dev;
->>>
->>>    	return platform_profile_register(&pp_handler);
->>>    }
->>> @@ -1153,19 +1155,138 @@ static struct platform_driver platform_driver = {
->>>    	.probe = alienfx_probe,
+>>>    static struct quirk_entry *quirks;
+>>> @@ -130,8 +128,6 @@ static struct quirk_entry quirk_inspiron5675 = {
+>>>    	.hdmi_mux = 0,
+>>>    	.amplifier = 0,
+>>>    	.deepslp = 0,
+>>> -	.thermal = false,
+>>> -	.gmode = false,
 >>>    };
 >>>
->>> -static int __init alienware_wmi_init(void)
->>> +static int alienware_alienfx_setup(struct alienfx_platdata *pdata)
+>>>    static struct quirk_entry quirk_unknown = {
+>>> @@ -139,8 +135,6 @@ static struct quirk_entry quirk_unknown = {
+>>>    	.hdmi_mux = 0,
+>>>    	.amplifier = 0,
+>>>    	.deepslp = 0,
+>>> -	.thermal = false,
+>>> -	.gmode = false,
+>>>    };
+>>>
+>>>    static struct quirk_entry quirk_x51_r1_r2 = {
+>>> @@ -148,8 +142,6 @@ static struct quirk_entry quirk_x51_r1_r2 = {
+>>>    	.hdmi_mux = 0,
+>>>    	.amplifier = 0,
+>>>    	.deepslp = 0,
+>>> -	.thermal = false,
+>>> -	.gmode = false,
+>>>    };
+>>>
+>>>    static struct quirk_entry quirk_x51_r3 = {
+>>> @@ -157,8 +149,6 @@ static struct quirk_entry quirk_x51_r3 = {
+>>>    	.hdmi_mux = 0,
+>>>    	.amplifier = 1,
+>>>    	.deepslp = 0,
+>>> -	.thermal = false,
+>>> -	.gmode = false,
+>>>    };
+>>>
+>>>    static struct quirk_entry quirk_asm100 = {
+>>> @@ -166,8 +156,6 @@ static struct quirk_entry quirk_asm100 = {
+>>>    	.hdmi_mux = 1,
+>>>    	.amplifier = 0,
+>>>    	.deepslp = 0,
+>>> -	.thermal = false,
+>>> -	.gmode = false,
+>>>    };
+>>>
+>>>    static struct quirk_entry quirk_asm200 = {
+>>> @@ -175,8 +163,6 @@ static struct quirk_entry quirk_asm200 = {
+>>>    	.hdmi_mux = 1,
+>>>    	.amplifier = 0,
+>>>    	.deepslp = 1,
+>>> -	.thermal = false,
+>>> -	.gmode = false,
+>>>    };
+>>>
+>>>    static struct quirk_entry quirk_asm201 = {
+>>> @@ -184,26 +170,6 @@ static struct quirk_entry quirk_asm201 = {
+>>>    	.hdmi_mux = 1,
+>>>    	.amplifier = 1,
+>>>    	.deepslp = 1,
+>>> -	.thermal = false,
+>>> -	.gmode = false,
+>>> -};
+>>> -
+>>> -static struct quirk_entry quirk_g_series = {
+>>> -	.num_zones = 2,
+>>> -	.hdmi_mux = 0,
+>>> -	.amplifier = 0,
+>>> -	.deepslp = 0,
+>>> -	.thermal = true,
+>>> -	.gmode = true,
+>>> -};
+>>> -
+>>> -static struct quirk_entry quirk_x_series = {
+>>> -	.num_zones = 2,
+>>> -	.hdmi_mux = 0,
+>>> -	.amplifier = 0,
+>>> -	.deepslp = 0,
+>>> -	.thermal = true,
+>>> -	.gmode = false,
+>>>    };
+>>>
+>>>    static int __init dmi_matched(const struct dmi_system_id *dmi)
+>>> @@ -242,133 +208,140 @@ static const struct dmi_system_id alienware_quirks[] __initconst = {
+>>>    	},
+>>>    	{
+>>>    		.callback = dmi_matched,
+>>> -		.ident = "Alienware m17 R5",
+>>> +		.ident = "Alienware X51 R1",
+>>>    		.matches = {
+>>>    			DMI_MATCH(DMI_SYS_VENDOR, "Alienware"),
+>>> -			DMI_MATCH(DMI_PRODUCT_NAME, "Alienware m17 R5 AMD"),
+>>> +			DMI_MATCH(DMI_PRODUCT_NAME, "Alienware X51"),
+>>>    		},
+>>> -		.driver_data = &quirk_x_series,
+>>> +		.driver_data = &quirk_x51_r1_r2,
+>>>    	},
+>>>    	{
+>>>    		.callback = dmi_matched,
+>>> -		.ident = "Alienware m18 R2",
+>>> +		.ident = "Alienware X51 R2",
+>>>    		.matches = {
+>>>    			DMI_MATCH(DMI_SYS_VENDOR, "Alienware"),
+>>> -			DMI_MATCH(DMI_PRODUCT_NAME, "Alienware m18 R2"),
+>>> +			DMI_MATCH(DMI_PRODUCT_NAME, "Alienware X51 R2"),
+>>>    		},
+>>> -		.driver_data = &quirk_x_series,
+>>> +		.driver_data = &quirk_x51_r1_r2,
+>>>    	},
+>>>    	{
+>>>    		.callback = dmi_matched,
+>>> -		.ident = "Alienware x15 R1",
+>>> +		.ident = "Alienware X51 R3",
+>>>    		.matches = {
+>>>    			DMI_MATCH(DMI_SYS_VENDOR, "Alienware"),
+>>> -			DMI_MATCH(DMI_PRODUCT_NAME, "Alienware x15 R1"),
+>>> +			DMI_MATCH(DMI_PRODUCT_NAME, "Alienware X51 R3"),
+>>>    		},
+>>> -		.driver_data = &quirk_x_series,
+>>> +		.driver_data = &quirk_x51_r3,
+>>>    	},
+>>>    	{
+>>>    		.callback = dmi_matched,
+>>> -		.ident = "Alienware x17 R2",
+>>> +		.ident = "Dell Inc. Inspiron 5675",
+>>> +		.matches = {
+>>> +			DMI_MATCH(DMI_SYS_VENDOR, "Dell Inc."),
+>>> +			DMI_MATCH(DMI_PRODUCT_NAME, "Inspiron 5675"),
+>>> +		},
+>>> +		.driver_data = &quirk_inspiron5675,
+>>> +	},
+>>> +	{}
+>>> +};
+>>> +
+>>> +struct awcc_features {
+>>> +	bool gmode;
+>>> +};
+>>> +
+>>> +static struct awcc_features g_series_features = {
+>>> +	.gmode = true,
+>>> +};
+>>> +
+>>> +static struct awcc_features x_series_features = {
+>>> +	.gmode = false,
+>>> +};
+>>> +
+>>> +static const struct dmi_system_id awcc_dmi_table[] __initconst = {
+>>> +	{
+>>> +		.ident = "Alienware m17 R5",
+>>>    		.matches = {
+>>>    			DMI_MATCH(DMI_SYS_VENDOR, "Alienware"),
+>>> -			DMI_MATCH(DMI_PRODUCT_NAME, "Alienware x17 R2"),
+>>> +			DMI_MATCH(DMI_PRODUCT_NAME, "Alienware m17 R5 AMD"),
+>>>    		},
+>>> -		.driver_data = &quirk_x_series,
+>>> +		.driver_data = &x_series_features,
+>>>    	},
+>>>    	{
+>>> -		.callback = dmi_matched,
+>>> -		.ident = "Alienware X51 R1",
+>>> +		.ident = "Alienware m18 R2",
+>>>    		.matches = {
+>>>    			DMI_MATCH(DMI_SYS_VENDOR, "Alienware"),
+>>> -			DMI_MATCH(DMI_PRODUCT_NAME, "Alienware X51"),
+>>> +			DMI_MATCH(DMI_PRODUCT_NAME, "Alienware m18 R2"),
+>>>    		},
+>>> -		.driver_data = &quirk_x51_r1_r2,
+>>> +		.driver_data = &x_series_features,
+>>>    	},
+>>>    	{
+>>> -		.callback = dmi_matched,
+>>> -		.ident = "Alienware X51 R2",
+>>> +		.ident = "Alienware x15 R1",
+>>>    		.matches = {
+>>>    			DMI_MATCH(DMI_SYS_VENDOR, "Alienware"),
+>>> -			DMI_MATCH(DMI_PRODUCT_NAME, "Alienware X51 R2"),
+>>> +			DMI_MATCH(DMI_PRODUCT_NAME, "Alienware x15 R1"),
+>>>    		},
+>>> -		.driver_data = &quirk_x51_r1_r2,
+>>> +		.driver_data = &x_series_features,
+>>>    	},
+>>>    	{
+>>> -		.callback = dmi_matched,
+>>> -		.ident = "Alienware X51 R3",
+>>> +		.ident = "Alienware x17 R2",
+>>>    		.matches = {
+>>>    			DMI_MATCH(DMI_SYS_VENDOR, "Alienware"),
+>>> -			DMI_MATCH(DMI_PRODUCT_NAME, "Alienware X51 R3"),
+>>> +			DMI_MATCH(DMI_PRODUCT_NAME, "Alienware x17 R2"),
+>>>    		},
+>>> -		.driver_data = &quirk_x51_r3,
+>>> +		.driver_data = &x_series_features,
+>>>    	},
+>>>    	{
+>>> -		.callback = dmi_matched,
+>>>    		.ident = "Dell Inc. G15 5510",
+>>>    		.matches = {
+>>>    			DMI_MATCH(DMI_SYS_VENDOR, "Dell Inc."),
+>>>    			DMI_MATCH(DMI_PRODUCT_NAME, "Dell G15 5510"),
+>>>    		},
+>>> -		.driver_data = &quirk_g_series,
+>>> +		.driver_data = &g_series_features,
+>>>    	},
+>>>    	{
+>>> -		.callback = dmi_matched,
+>>>    		.ident = "Dell Inc. G15 5511",
+>>>    		.matches = {
+>>>    			DMI_MATCH(DMI_SYS_VENDOR, "Dell Inc."),
+>>>    			DMI_MATCH(DMI_PRODUCT_NAME, "Dell G15 5511"),
+>>>    		},
+>>> -		.driver_data = &quirk_g_series,
+>>> +		.driver_data = &g_series_features,
+>>>    	},
+>>>    	{
+>>> -		.callback = dmi_matched,
+>>>    		.ident = "Dell Inc. G15 5515",
+>>>    		.matches = {
+>>>    			DMI_MATCH(DMI_SYS_VENDOR, "Dell Inc."),
+>>>    			DMI_MATCH(DMI_PRODUCT_NAME, "Dell G15 5515"),
+>>>    		},
+>>> -		.driver_data = &quirk_g_series,
+>>> +		.driver_data = &g_series_features,
+>>>    	},
+>>>    	{
+>>> -		.callback = dmi_matched,
+>>>    		.ident = "Dell Inc. G3 3500",
+>>>    		.matches = {
+>>>    			DMI_MATCH(DMI_SYS_VENDOR, "Dell Inc."),
+>>>    			DMI_MATCH(DMI_PRODUCT_NAME, "G3 3500"),
+>>>    		},
+>>> -		.driver_data = &quirk_g_series,
+>>> +		.driver_data = &g_series_features,
+>>>    	},
+>>>    	{
+>>> -		.callback = dmi_matched,
+>>>    		.ident = "Dell Inc. G3 3590",
+>>>    		.matches = {
+>>>    			DMI_MATCH(DMI_SYS_VENDOR, "Dell Inc."),
+>>>    			DMI_MATCH(DMI_PRODUCT_NAME, "G3 3590"),
+>>>    		},
+>>> -		.driver_data = &quirk_g_series,
+>>> +		.driver_data = &g_series_features,
+>>>    	},
+>>>    	{
+>>> -		.callback = dmi_matched,
+>>>    		.ident = "Dell Inc. G5 5500",
+>>>    		.matches = {
+>>>    			DMI_MATCH(DMI_SYS_VENDOR, "Dell Inc."),
+>>>    			DMI_MATCH(DMI_PRODUCT_NAME, "G5 5500"),
+>>>    		},
+>>> -		.driver_data = &quirk_g_series,
+>>> -	},
+>>> -	{
+>>> -		.callback = dmi_matched,
+>>> -		.ident = "Dell Inc. Inspiron 5675",
+>>> -		.matches = {
+>>> -			DMI_MATCH(DMI_SYS_VENDOR, "Dell Inc."),
+>>> -			DMI_MATCH(DMI_PRODUCT_NAME, "Inspiron 5675"),
+>>> -		},
+>>> -		.driver_data = &quirk_inspiron5675,
+>>> +		.driver_data = &g_series_features,
+>>>    	},
+>>> -	{}
+>>>    };
+>>>
+>>> +struct awcc_features *awcc;
+>>> +
+>>>    struct color_platform {
+>>>    	u8 blue;
+>>>    	u8 green;
+>>> @@ -1009,7 +982,7 @@ static int thermal_profile_set(struct platform_profile_handler *pprof,
+>>>
+>>>    	priv = container_of(pprof, struct awcc_priv, pp_handler);
+>>>
+>>> -	if (quirks->gmode) {
+>>> +	if (awcc->gmode) {
+>>>    		u32 gmode_status;
+>>>    		int ret;
+>>>
+>>> @@ -1077,7 +1050,7 @@ static int create_thermal_profile(struct wmi_device *wdev)
+>>>    	if (bitmap_empty(priv->pp_handler.choices, PLATFORM_PROFILE_LAST))
+>>>    		return -ENODEV;
+>>>
+>>> -	if (quirks->gmode) {
+>>> +	if (awcc->gmode) {
+>>>    		priv->supported_thermal_profiles[PLATFORM_PROFILE_PERFORMANCE] =
+>>>    			WMAX_THERMAL_MODE_GMODE;
+>>>
+>>> @@ -1328,7 +1301,7 @@ static int wmax_wmi_probe(struct wmi_device *wdev, const void *context)
+>>>    	};
+>>>    	int ret = 0;
+>>>
+>>> -	if (quirks->thermal)
+>>> +	if (awcc)
+>>>    		ret = alienware_awcc_setup(wdev);
+>>>    	else
+>>>    		ret = alienware_alienfx_setup(&pdata);
+>>> @@ -1338,7 +1311,7 @@ static int wmax_wmi_probe(struct wmi_device *wdev, const void *context)
+>>>
+>>>    static void wmax_wmi_remove(struct wmi_device *wdev)
 >>>    {
->>> +	struct platform_device *pdev;
->>>    	int ret;
+>>> -	if (quirks->thermal)
+>>> +	if (awcc)
+>>>    		alienware_awcc_exit(wdev);
+>>>    	else
+>>>    		alienware_alienfx_exit(wdev);
+>>> @@ -1362,6 +1335,18 @@ static struct wmi_driver alienware_wmax_wmi_driver = {
 >>>
->>> -	if (wmi_has_guid(LEGACY_CONTROL_GUID))
->>> -		interface = LEGACY;
->>> -	else if (wmi_has_guid(WMAX_CONTROL_GUID))
->>> -		interface = WMAX;
->>> -	else {
->>> -		pr_warn("alienware-wmi: No known WMI GUID found\n");
->>> -		return -ENODEV;
->>> +	ret = platform_driver_register(&platform_driver);
->>> +	if (ret < 0)
->>> +		return ret;
+>>>    static int __init alienware_wmax_wmi_init(void)
+>>>    {
+>>> +	const struct dmi_system_id *id;
 >>> +
->>> +	pdev = platform_device_register_data(NULL, "alienware-wmi",
->>> +					     PLATFORM_DEVID_NONE, pdata,
->>> +					     sizeof(*pdata));
+>>> +	id = dmi_first_match(awcc_dmi_table);
+>>> +	if (id)
+>>> +		awcc = id->driver_data;
 >>> +
->>> +	if (IS_ERR(pdev)) {
->>> +		platform_driver_unregister(&platform_driver);
->>> +		return PTR_ERR(pdev);
->>>    	}
+>>> +	if (force_platform_profile)
+>>> +		awcc = &x_series_features;
+>>> +
+>>> +	if (force_gmode)
+>>> +		awcc = &g_series_features;
+>>> +
+>>>    	return wmi_driver_register(&alienware_wmax_wmi_driver);
+>>>    }
 >>>
->>> +	dev_set_drvdata(&pdata->wdev->dev, pdev);
->>> +
->>> +	return 0;
->>> +}
->>> +
->>> +static void alienware_alienfx_exit(struct wmi_device *wdev)
->>> +{
->>> +	struct platform_device *pdev;
->>> +
->>> +	pdev = dev_get_drvdata(&wdev->dev);
->>> +
->>> +	platform_device_unregister(pdev);
->>> +	platform_driver_unregister(&platform_driver);
->>> +}
->>> +
->>> +/*
->>> + * Legacy WMI driver
->>> + */
->>> +static int legacy_wmi_probe(struct wmi_device *wdev, const void *context)
->>> +{
->>> +	struct alienfx_platdata pdata = {
->>> +		.wdev = wdev,
->>> +	};
->>> +
->>> +	return alienware_alienfx_setup(&pdata);
->>> +}
->>> +
->>> +static void legacy_wmi_remove(struct wmi_device *wdev)
->>> +{
->>> +	alienware_alienfx_exit(wdev);
->>> +}
->>> +
->>> +static struct wmi_device_id alienware_legacy_device_id_table[] = {
->>> +	{ LEGACY_CONTROL_GUID, NULL },
->>> +	{ },
->>> +};
->>> +MODULE_DEVICE_TABLE(wmi, alienware_legacy_device_id_table);
->>> +
->>> +static struct wmi_driver alienware_legacy_wmi_driver = {
->>> +	.driver = {
->>> +		.name = "alienware-wmi-alienfx",
->>> +		.probe_type = PROBE_PREFER_ASYNCHRONOUS,
->>> +	},
->>> +	.id_table = alienware_legacy_device_id_table,
->>> +	.probe = legacy_wmi_probe,
->>> +	.remove = legacy_wmi_remove,
->>> +};
->>> +
->>> +static int __init alienware_legacy_wmi_init(void)
->>> +{
->>> +	return wmi_driver_register(&alienware_legacy_wmi_driver);
->>> +}
->>> +
->>> +static void __exit alienware_legacy_wmi_exit(void)
->>> +{
->>> +	wmi_driver_unregister(&alienware_legacy_wmi_driver);
->>> +}
->>> +
->>> +/*
->>> + * WMAX WMI driver
->>> + */
->>> +static int wmax_wmi_probe(struct wmi_device *wdev, const void *context)
->>> +{
->>> +	struct alienfx_platdata pdata = {
->>> +		.wdev = wdev,
->>> +	};
->>> +	int ret = 0;
->>> +
->>> +	if (quirks->thermal)
->>> +		ret = create_thermal_profile(wdev);
->>> +	else
->>> +		ret = alienware_alienfx_setup(&pdata);
->>> +
->>> +	return ret;
->>> +}
->>> +
->>> +static void wmax_wmi_remove(struct wmi_device *wdev)
->>> +{
->>> +	if (quirks->thermal)
->>> +		remove_thermal_profile();
->>> +	else
->>> +		alienware_alienfx_exit(wdev);
->>> +}
->>> +
->>> +static struct wmi_device_id alienware_wmax_device_id_table[] = {
->>> +	{ WMAX_CONTROL_GUID, NULL },
->>> +	{ },
->>> +};
->>> +MODULE_DEVICE_TABLE(wmi, alienware_wmax_device_id_table);
->>> +
->>> +static struct wmi_driver alienware_wmax_wmi_driver = {
->>> +	.driver = {
->>> +		.name = "alienware-wmi-wmax",
->>> +		.probe_type = PROBE_PREFER_ASYNCHRONOUS,
->>> +	},
->>> +	.id_table = alienware_wmax_device_id_table,
->>> +	.probe = wmax_wmi_probe,
->>> +	.remove = wmax_wmi_remove,
->>> +};
->>> +
->>> +static int __init alienware_wmax_wmi_init(void)
->>> +{
->>> +	return wmi_driver_register(&alienware_wmax_wmi_driver);
->>> +}
->>> +
->>> +static void __exit alienware_wmax_wmi_exit(void)
->>> +{
->>> +	wmi_driver_unregister(&alienware_wmax_wmi_driver);
->>> +}
->>> +
->>> +static int __init alienware_wmi_init(void)
->>> +{
->>> +	int ret;
->>> +
->>>    	dmi_check_system(alienware_quirks);
+>>> @@ -1378,16 +1363,6 @@ static int __init alienware_wmi_init(void)
 >>>    	if (quirks == NULL)
 >>>    		quirks = &quirk_unknown;
->>> @@ -1180,43 +1301,28 @@ static int __init alienware_wmi_init(void)
->>>    			pr_warn("force_gmode requires platform profile support\n");
->>>    	}
 >>>
->>> -	ret = platform_driver_register(&platform_driver);
->>> -	if (ret)
->>> -		goto fail_platform_driver;
->>> -	platform_device = platform_device_alloc("alienware-wmi", PLATFORM_DEVID_NONE);
->>> -	if (!platform_device) {
->>> -		ret = -ENOMEM;
->>> -		goto fail_platform_device1;
->>> +	if (wmi_has_guid(WMAX_CONTROL_GUID)) {
->>> +		interface = WMAX;
->>> +		ret = alienware_wmax_wmi_init();
->>> +	} else {
->>> +		interface = LEGACY;
->>> +		ret = alienware_legacy_wmi_init();
->>>    	}
->>> -	ret = platform_device_add(platform_device);
->>> -	if (ret)
->>> -		goto fail_platform_device2;
->>>
->>> -	if (quirks->thermal) {
->>> -		ret = create_thermal_profile(platform_device);
->>> -		if (ret)
->>> -			goto fail_prep_thermal_profile;
->>> -	}
->>> +	if (ret < 0)
->>> +		return ret;
->>>
->>>    	return 0;
+>>> -	if (force_platform_profile)
+>>> -		quirks->thermal = true;
 >>> -
->>> -fail_prep_thermal_profile:
->>> -	platform_device_del(platform_device);
->>> -fail_platform_device2:
->>> -	platform_device_put(platform_device);
->>> -fail_platform_device1:
->>> -	platform_driver_unregister(&platform_driver);
->>> -fail_platform_driver:
->>> -	return ret;
->>>    }
->>>
->>>    module_init(alienware_wmi_init);
->>>
->>>    static void __exit alienware_wmi_exit(void)
->>>    {
->>> -	remove_thermal_profile();
->>> -	platform_device_unregister(platform_device);
->>> -	platform_driver_unregister(&platform_driver);
->>> +	if (interface == WMAX)
->>> +		alienware_wmax_wmi_exit();
->>> +	else
->>> +		alienware_legacy_wmi_exit();
->>>    }
->>>
->>>    module_exit(alienware_wmi_exit);
+>>> -	if (force_gmode) {
+>>> -		if (quirks->thermal)
+>>> -			quirks->gmode = true;
+>>> -		else
+>>> -			pr_warn("force_gmode requires platform profile support\n");
+>>> -	}
+>>> -
+>>>    	if (wmi_has_guid(WMAX_CONTROL_GUID)) {
+>>>    		interface = WMAX;
+>>>    		ret = alienware_wmax_wmi_init();
