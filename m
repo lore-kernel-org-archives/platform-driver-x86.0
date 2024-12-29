@@ -1,41 +1,41 @@
 Received: from mout.gmx.net (mout.gmx.net [212.227.17.22])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B5D39800;
-	Sun, 29 Dec 2024 00:33:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1ED9FA50;
+	Sun, 29 Dec 2024 00:48:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.22
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1735432387; cv=none; b=aHVuOnptFxZFoCSSkJlvE8DNbRmKddw976kad+om1V4mtCUK7SZtY7o2InF3xhSdfMkG9uGStkFdnhCHkx8aaDd24+S+eyZI3ObVjx8JFmGZZ9EAVzfoz7amNmx/F+uOD7qfO0GzdOw9Mt4kucK0rHefe/P4SGBbdwf16LZp/4A=
+	t=1735433335; cv=none; b=am/xhtR/cftjW+G/VnVMFvwwX109DXfCjIUfJ7uYIKZU0OrwNiNC4wfq8nJT1YgG2pxZiVzitpsrOxGGzUX05MKgmvq5HyU7A/N8EqqFDwvKvDBPw7wWRIRqAs8ig8hNtt9a19Oy4UubEOyAH7MWGUf7jsuwGf/F9wDtAU0Xbe8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1735432387; c=relaxed/simple;
-	bh=5gamqgGj71fceVZF0825XTtZaag/zWnTzYlM4SEIZVk=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Q+7QjrhZNtBzXxe9pfLRzAudEBPIi9f4ihnohYOo2ud8yHTtoLBy+J1OZU3bykcibWVRQ2hFAAplKXr7eqN/zKzXrvfhTCaGt6IkEiaAzT54IK+4xj0/Qgv318Fj4cxpkOECUhXTdZhAh0zzRzzwe4F1l7m6BZhhP+o1+iJ5kDw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b=WLI8XL6f; arc=none smtp.client-ip=212.227.17.22
+	s=arc-20240116; t=1735433335; c=relaxed/simple;
+	bh=DuENfGOZlyymLYDwal5n1/SquMxxnFK3XGrhfuLTYvo=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=JTybhwKqBlICrmvo8CiSAJkSwme0VmSoJ8tOxd8ti6jzjnFcZUfz4gtGgylTApSFIyekBFqVsxo26ak4CBB3R/opegWIUzP4Jx8bRW43a4Fop+G5uCDzyGVmBzRZpIPzLFbdO95HH9wloxaDne//yv2/B9//N858BSmTfyb9b0A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b=REW+p9C1; arc=none smtp.client-ip=212.227.17.22
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b="WLI8XL6f"
+	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b="REW+p9C1"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.de;
-	s=s31663417; t=1735432372; x=1736037172; i=w_armin@gmx.de;
-	bh=0CLJT2eS1jfdKbgfgdu+gubidJrPRji7mZiH4dSFO3Y=;
-	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:To:Cc:
+	s=s31663417; t=1735433318; x=1736038118; i=w_armin@gmx.de;
+	bh=jdDIFEGM90olagaL/UfnU5X6w7rTSvcvV20Ma7xz6HM=;
+	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:To:
 	 References:From:In-Reply-To:Content-Type:
 	 Content-Transfer-Encoding:cc:content-transfer-encoding:
 	 content-type:date:from:message-id:mime-version:reply-to:subject:
 	 to;
-	b=WLI8XL6fi5S5JnoWyLGA4Dk0BGPVFggXxkaohLpWKxiIla8J0ATcJ1RwIE7luoo3
-	 UyiS+RyXP+1yeb0paSeUxLZ4ufct9d586cETsAKVs3TxWbpqGYgsO47ed8M8p+49a
-	 2FhtquCEz4HqqCaWHBCQKqAix4adEV6uW41TLDSJNxSrv4g37gz9+yVJdb9rv6i7A
-	 7TCGZBE+yR/OOKyHGs4sfWbyF9x4bwjsIMaq3FGcO1Dc4UO+7t1x70MjgIB5Ztlb4
-	 nItmunAHw469PDRzxnhPvo2fhcXZVM21mB2g8oBadQIMUFG0+nfdy456uQUVuVmJt
-	 ksgzN5+ypFFQ6QNXqw==
+	b=REW+p9C14sDynGTc3w0J1bRG5NfaN5zDIFJQb0BSyqiIrjbpxKb+2xqDcSsrORKH
+	 HxzWLbwHINOtCeC8tQ+kG/gYmaAJ8sO+B5+XHB53/3vyRsp1hazAtCEjk89Tl2lxf
+	 CZA15IzPGXA1t5pSY2q809MOh887CmZUzlZdXQGUvfXUdY+xY/hNdIefDFTfVxPMT
+	 /dBRpZCWKLCHI0zd8Pqi7CBa84+CXp6TA/ahZJTLRv0xnqpyue8Poq+b8joHoVo4l
+	 H9alvkI92ONM92jn7fo91vJLsF/ylp1KTylNVLLyT2cu3bo9taOPnhuQldRlbg0PN
+	 EyotXEQ7dEExAipU6g==
 X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
-Received: from [192.168.0.14] ([91.14.230.110]) by mail.gmx.net (mrgmx105
- [212.227.17.168]) with ESMTPSA (Nemesis) id 1MIx3C-1tCuTZ3mZe-00LrJC; Sun, 29
- Dec 2024 01:32:51 +0100
-Message-ID: <1384260b-d179-41c6-8f39-11363c1dfd3b@gmx.de>
-Date: Sun, 29 Dec 2024 01:32:50 +0100
+Received: from [192.168.0.14] ([91.14.230.110]) by mail.gmx.net (mrgmx104
+ [212.227.17.168]) with ESMTPSA (Nemesis) id 1M8QS8-1tNHde0oDY-008b8A; Sun, 29
+ Dec 2024 01:48:38 +0100
+Message-ID: <3acc5097-a1bb-4352-acd9-9f31b35dce91@gmx.de>
+Date: Sun, 29 Dec 2024 01:48:36 +0100
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -43,169 +43,179 @@ List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 19/20] platform/x86: Update alienware-wmi config entries
-To: Kurt Borja <kuurtb@gmail.com>
-Cc: platform-driver-x86@vger.kernel.org, ilpo.jarvinen@linux.intel.com,
- mario.limonciello@amd.com, hdegoede@redhat.com,
- linux-kernel@vger.kernel.org, Dell.Client.Kernel@dell.com
-References: <20241221055917.10555-1-kuurtb@gmail.com>
- <20241221055917.10555-20-kuurtb@gmail.com>
- <0ae84512-46f4-4cd9-8fd8-ed9694d96ec8@gmx.de>
- <znrmeluldzbh6gnczl3najtdmw3kydv7omtio5xufxa234pqaf@v5qwv6r2esiy>
+Subject: Re: [PATCH v2] platform/x86: lenovo-wmi-camera: Use
+ SW_CAMERA_LENS_COVER instead of KEY_CAMERA_ACESS
+To: Ai Chao <aichao@kylinos.cn>, hdegoede@redhat.com,
+ ilpo.jarvinen@linux.intel.com, platform-driver-x86@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <20241227091008.257567-1-aichao@kylinos.cn>
 Content-Language: en-US
 From: Armin Wolf <W_Armin@gmx.de>
-In-Reply-To: <znrmeluldzbh6gnczl3najtdmw3kydv7omtio5xufxa234pqaf@v5qwv6r2esiy>
+In-Reply-To: <20241227091008.257567-1-aichao@kylinos.cn>
 Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Provags-ID: V03:K1:cYhBbmYTOEytBa3uWLgXqLKeGK01uOfJ3+FXmChW0dHOfL0DtAQ
- zetUdoargfjP4aGOIvMRWkS/+R66OsMfAW2UAzk99O6cw4ln0rujqrfPrU56PGo79z1/tk4
- 5X/8YyWsCvt2aSXjHjQ+rWZVflL4et8hjyiMDo9ij2LyYJBiUpvHRlbfmQUoNTfuLH9RK4Z
- QvkkqWfmpLiCSrIpu9bfg==
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:2ddRYmwdlLDxmMI4CvhI1MRX5QQIxd6pb+PaMna63ktISHKV5je
+ XJ9oAsm9GuRAD67ma7Cf8rD2R6JkDid31GeBgdx+xC/dTV/jLjibhF1cz0CYMJC/GPmUVL1
+ BUVoqWpLf2lpBAVIOUNnooktk6A811VGjKA3htP0r5Es8xJbvuLN8pO0/yrEASgqN0h1Maa
+ rDdw/a7btuopAKaYUFqow==
 X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:NtJYrzrMLQ8=;2XXW7SlyPBz8NPvPgJB/bX0WRDW
- nQCFb1SMyZQ/E2LHSz1EPKIjUg4OcDWXLBO3gjhaaU2ZykDVvf1dG3uiqNZxP/xJ7Mf3P7dIs
- fl9n8SHBol5drfJ2OiN9mJ2Q0mZiYAoHRmZrZLg1kGjevXMrXGNDBt/fCofVytKZoqszTqybh
- u3KPu2a7UhLPiqgX2xscv4KF1iUzX8JKhLx55Jkip6OSlCuFF9EEvZsXZoGFu8dQWy8sEvK0j
- U+yFIuVUEFOBaJ+Mm1lwyNRbe9Bwa4bN8UpoMq8m6S7k5JPXSEDSTbx65IOpqGgVaBbQQs69c
- xAuP8o6+KWluiuw1T43PvtyZtxxnlD54F2i9XuqZ8cQ08ad4EBAoakB+MKrrJueJ6bE+U7oXJ
- BF2m+OtsRRablqxNwb5cfrItGWDiFlynHrd5yThj3kOetCZ5bHxP7FStQfRK/em7hGYWlO1gD
- NOeJsAVCDHkOHchNryoTHWf1yskSjza4zGMRhAmk7OqbFuqzDyDR91nLuS83oxpmBjcB67+T/
- 7EEiAEUQOpSaKKSD5rvI5WDOXXI971BJ1NarJOoPXrUbVtrCkiLpenxEm5/jDLZX5ZYYy6wTK
- LCKBG4FnI+V9TAAMBAepc2WoknqW+gFdpojyiKUGN9dBo79qeyH9j1kyTCNaXaFTUTemyrKML
- Es+O4bp+eO60IzJQxGRDtezDF2kJCUFiGfQX0S7YIpAm2wZZHvhVWxyIeQpA1LNkQBl7nsqHZ
- XLquEODbl3igTvKh88qrIcOgXQOrC7yjZdL8+mf5rwpewoPG78gpSAppjN9gAssjAlNIajkSE
- Vu1ta4lXxqvOv7LxzUwSLtQTLfECcrqca+3JH2iXQO+TSMq2w8l0o4KDgKhAEdPGQmmaUSdmF
- yN7VUhEQFPZOjt/7JW1wAAxsCerTcZPjQcD9mZxvKccfAHIYdbwg+T7Ntl1Vrh0YfpO0JVuVD
- DGVMmZRng1M4IHd7au+3cx5BWSU8kuljmqJ26ao33zOz0dA0kcb16fR2XQtzO1VgC7+pNIxa7
- EhwCU6DK5k76bNbRwx6EDQ9WwxhvDmyxzo6M9T+m5+rmc/mMbQ3HFEWB8JRbLP6vRCPzuyLRf
- KLsvJHWBHJ7+m63EifEz9jL8RFJPnq
+UI-OutboundReport: notjunk:1;M01:P0:fKRhzcWAvXI=;GyRTrxOS6vVDxqugcR4JNwcHSZy
+ D8GmOZi74aGTHyIkxYvaZLmXhAVTbUk8XvGTDU90sGxAXCGm1tf9/mHoUS/PJcH1VeA9l92qC
+ cd/ozelHRElqOr+m7jU1tY+H/N4KiBYPWKXZzjH7dudAG06AS0muiUHe01VFm/4X5NbLgFuTF
+ TGz6C1C+F+GARDBRCQUdbJIrHiW2kqTkMVfiweP/tCHRPyUAaWlB+0lZeWP3sXGRYPqk1yrMQ
+ l/XMkkZWug51FftGW5F/laegIFZa1aTNELxvzjMZJfIMK11qo1yQjlUpbxlkfzWBgE22WaoLI
+ jqqgdNI3gCNRTun1OiA0u2YMhKyPVGt2g8pnfWdVNgJDVUxbJJymN+d1uOu3bAV70IW/lU0vN
+ RjxgiRsJSmEHtJ+AVh0aL4aYJ3nt07g6h8Zm49khvW6//tYWCQAgWwz4gJ4YKvM/z8gJD9HqG
+ 92r/92PFTcP0jKQe19755+d5PrR0NFDzmnikbQBevetYOr5V8C9e09zTPxFq9gRxOdcoTyuCb
+ hIYSdAWxjMX1R83hJN88ZzMM3fifqq6kWmo66F9M7/yTB7sbYc+nV+uY1mAlmO3YoJrNObaLF
+ bEk4mT0aVG3b3UBfS/koDe89/Nh9PJKls15CVJPxSw7xrARUNPWrOccuoG1IjMQFCOri1RK9J
+ GPAAVN3u3kd3RFG3ngcMgkDQELkmLFDZn0fE0MW2phwPbBJbDLlTe1sD++H0ModcYXMVuV0YT
+ X5HcA78hSiufmB8aSFBC1vA2u2/NNDaEnE2nbyhQNlUT/4AYRtZpNhPrvoW9f/sueP7M0uvTa
+ H976dcIrpW+TYjrtRrV5BgarXj0r3B68ZOY7zRwuXWnPh2TE11vBAPdcUqyumeHLWqTIBfGCq
+ JEsKqtg69bKsJmJQ70Ucm/e0m47QhNsg3/U5173idBZMo+I8q0ADhHMJRTvMtgEs2gT3EEh92
+ EquOQdhpdCAQSu6+jCltXxBHKKg0EaLX4djx6hzEv2ewvKl6XWtE1cpnIJcQH37Xhs1S09v2M
+ vitx2qreV/nB/dNOGdVaYEzjBjaHVbDs5oFvnQlyJfPOIKrT3iiH+OkCG6LYVSMOOq8m2w26O
+ MP/Akbpi1nH8YgrfG84Ri1qNFI0qaq
 
-Am 27.12.24 um 05:59 schrieb Kurt Borja:
+Am 27.12.24 um 10:10 schrieb Ai Chao:
 
-> On Fri, Dec 27, 2024 at 05:08:03AM +0100, Armin Wolf wrote:
->> Am 21.12.24 um 06:59 schrieb Kurt Borja:
->>
->>> Add config entries for each WMI driver managed by the alienware-wmi
->>> module to be able to conditionally compile them.
->>>
->>> Signed-off-by: Kurt Borja <kuurtb@gmail.com>
->>> ---
->>>    drivers/platform/x86/dell/Kconfig         | 30 +++++++++++++++++++----
->>>    drivers/platform/x86/dell/Makefile        |  4 +--
->>>    drivers/platform/x86/dell/alienware-wmi.h | 23 +++++++++++++++++
->>>    3 files changed, 50 insertions(+), 7 deletions(-)
->>>
->>> diff --git a/drivers/platform/x86/dell/Kconfig b/drivers/platform/x86/dell/Kconfig
->>> index d09060aedd3f..f8a0dffcaab7 100644
->>> --- a/drivers/platform/x86/dell/Kconfig
->>> +++ b/drivers/platform/x86/dell/Kconfig
->>> @@ -18,15 +18,35 @@ config ALIENWARE_WMI
->>>    	tristate "Alienware Special feature control"
->>>    	default m
->>>    	depends on ACPI
->>> +	depends on ACPI_WMI
->>> +	depends on DMI
->>>    	depends on LEDS_CLASS
->>>    	depends on NEW_LEDS
->>> -	depends on ACPI_WMI
->>> +	help
->>> +	 This is a driver for controlling Alienware WMI driven features.
->>> +
->>> +	 On legacy devices, it exposes an interface for controlling the AlienFX
->>> +	 zones on Alienware machines that don't contain a dedicated
->>> +	 AlienFX USB MCU such as the X51 and X51-R2.
->>> +
->>> +	 On newer devices, it exposes the AWCC thermal control interface through
->>> +	 known Kernel APIs.
->>> +
->>> +config ALIENWARE_WMI_LEGACY
->>> +	bool "Alienware Legacy WMI device driver"
->>> +	default y
->>> +	depends on ALIENWARE_WMI
->>> +	help
->>> +	 Legacy Alienware WMI driver with AlienFX LED control capabilities.
->>> +
->>> +config ALIENWARE_WMI_WMAX
->>> +	bool "Alienware WMAX WMI device driver"
->>> +	default y
->>> +	depends on ALIENWARE_WMI
->>>    	select ACPI_PLATFORM_PROFILE
->>>    	help
->>> -	 This is a driver for controlling Alienware BIOS driven
->>> -	 features.  It exposes an interface for controlling the AlienFX
->>> -	 zones on Alienware machines that don't contain a dedicated AlienFX
->>> -	 USB MCU such as the X51 and X51-R2.
->>> +	 Alienware WMI driver with AlienFX LED, HDMI, amplifier, deep sleep and
->>> +	 AWCC thermal control capabilities.
->>>
->>>    config DCDBAS
->>>    	tristate "Dell Systems Management Base Driver"
->>> diff --git a/drivers/platform/x86/dell/Makefile b/drivers/platform/x86/dell/Makefile
->>> index d5718ef34c48..8ac9a933c770 100644
->>> --- a/drivers/platform/x86/dell/Makefile
->>> +++ b/drivers/platform/x86/dell/Makefile
->>> @@ -6,8 +6,8 @@
->>>
->>>    obj-$(CONFIG_ALIENWARE_WMI)			+= alienware-wmi.o
->>>    alienware-wmi-objs				:= alienware-wmi-base.o
->>> -alienware-wmi-y					+= alienware-wmi-legacy.o
->>> -alienware-wmi-y					+= alienware-wmi-wmax.o
->>> +alienware-wmi-$(CONFIG_ALIENWARE_WMI_LEGACY)	+= alienware-wmi-legacy.o
->>> +alienware-wmi-$(CONFIG_ALIENWARE_WMI_WMAX)	+= alienware-wmi-wmax.o
->>>    obj-$(CONFIG_DCDBAS)				+= dcdbas.o
->>>    obj-$(CONFIG_DELL_LAPTOP)			+= dell-laptop.o
->>>    obj-$(CONFIG_DELL_RBTN)				+= dell-rbtn.o
->>> diff --git a/drivers/platform/x86/dell/alienware-wmi.h b/drivers/platform/x86/dell/alienware-wmi.h
->>> index 78ac10122155..97b52e51cd7d 100644
->>> --- a/drivers/platform/x86/dell/alienware-wmi.h
->>> +++ b/drivers/platform/x86/dell/alienware-wmi.h
->>> @@ -94,10 +94,33 @@ acpi_status alienware_wmi_command(struct wmi_device *wdev, u32 method_id,
->>>    int alienware_alienfx_setup(struct alienfx_platdata *pdata);
->>>    void alienware_alienfx_exit(struct wmi_device *wdev);
->>>
->>> +#if IS_ENABLED(CONFIG_ALIENWARE_WMI_LEGACY)
->>>    int __init alienware_legacy_wmi_init(void);
->>>    void __exit alienware_legacy_wmi_exit(void);
->>> +#else
->>> +int __init alienware_legacy_wmi_init(void)
->>> +{
->>> +	return 0;
->> Please return -EOPNOTSUPP here.
-> Maybe -ENODEV is better in this case?
+> Use SW_CAMERA_LENS_COVER instead of KEY_CAMERA_ACESS_ENABLE and
+> KEY_CAMERA_ACESS_DISABLE. When the camera toggle switch was hit,
+> the lenovo-wmi-camera driver would report an event code.
 >
-> Also this should be static inline, I'll fix it.
+> Signed-off-by: Ai Chao <aichao@kylinos.cn>
+> ---
+> change for v2
+> -Only delays the input-device registration and switches to reporting SW_=
+CAMERA_LENS_COVER.
+>
+>   drivers/platform/x86/lenovo-wmi-camera.c | 55 ++++++++++++++----------
+>   1 file changed, 32 insertions(+), 23 deletions(-)
+>
+> diff --git a/drivers/platform/x86/lenovo-wmi-camera.c b/drivers/platform=
+/x86/lenovo-wmi-camera.c
+> index 0c0bedaf7407..ad296acaf562 100644
+> --- a/drivers/platform/x86/lenovo-wmi-camera.c
+> +++ b/drivers/platform/x86/lenovo-wmi-camera.c
+> @@ -26,10 +26,33 @@ enum {
+>   	SW_CAMERA_ON	=3D 1,
+>   };
+>
+> +static int camera_shutter_input_setup(struct wmi_device *wdev)
+> +{
+> +	struct lenovo_wmi_priv *priv =3D dev_get_drvdata(&wdev->dev);
+> +	int err;
+> +
+> +	priv->idev =3D devm_input_allocate_device(&wdev->dev);
+> +	if (!priv->idev)
+> +		return -ENOMEM;
+> +
+> +	priv->idev->name =3D "Lenovo WMI Camera Button";
+> +	priv->idev->phys =3D "wmi/input0";
+> +	priv->idev->id.bustype =3D BUS_HOST;
+> +	priv->idev->dev.parent =3D &wdev->dev;
+> +
+> +	__set_bit(EV_SW, priv->idev->evbit);
+> +	__set_bit(SW_CAMERA_LENS_COVER, priv->idev->swbit);
+> +
 
--ENODEV is also OK.
+Please use input_set_capability() here.
+
+> +	err =3D input_register_device(priv->idev);
+> +	if (err)
+> +		return err;
+
+Please set priv->idev back to NULL if input_device_register() fails, or el=
+se
+lenovo_wmi_notify() will assume that a valid input device was registered w=
+hen
+the next WMI event is received.
+
+Also i suggest that you do not use devm_input_allocate_device() since you =
+need
+to be able to free the input device should an error occur during registrat=
+ion.
+Better use input_device_allocate() and remove the input device manually in=
+side
+lenovo_wmi_remove().
+
+> +
+> +	return 0;
+> +}
+> +
+>   static void lenovo_wmi_notify(struct wmi_device *wdev, union acpi_obje=
+ct *obj)
+>   {
+>   	struct lenovo_wmi_priv *priv =3D dev_get_drvdata(&wdev->dev);
+> -	unsigned int keycode;
+>   	u8 camera_mode;
+>
+>   	if (obj->type !=3D ACPI_TYPE_BUFFER) {
+> @@ -53,13 +76,16 @@ static void lenovo_wmi_notify(struct wmi_device *wde=
+v, union acpi_object *obj)
+>   		return;
+>   	}
+>
+> +	if (!priv->idev)
+> +		if (camera_shutter_input_setup(wdev))
+> +			return;
+
+Please move this piece of code below "mutex_lock(&priv->notify_lock)" to m=
+ake
+sure that only a single thread tries to register a input device at the sam=
+e time.
+
+> +
+>   	mutex_lock(&priv->notify_lock);
+>
+> -	keycode =3D camera_mode =3D=3D SW_CAMERA_ON ?
+> -		   KEY_CAMERA_ACCESS_ENABLE : KEY_CAMERA_ACCESS_DISABLE;
+> -	input_report_key(priv->idev, keycode, 1);
+> -	input_sync(priv->idev);
+> -	input_report_key(priv->idev, keycode, 0);
+> +	if (camera_mode =3D=3D SW_CAMERA_ON)
+> +		input_report_switch(priv->idev, SW_CAMERA_LENS_COVER, 1);
+> +	else if (camera_mode =3D=3D SW_CAMERA_OFF)
+> +		input_report_switch(priv->idev, SW_CAMERA_LENS_COVER, 0);
+
+The second if statement is necessary, we already validated camera_mode bef=
+ore.
 
 Thanks,
 Armin Wolf
 
+>   	input_sync(priv->idev);
 >
->>> +}
->>> +
->>> +void __exit alienware_legacy_wmi_exit(void)
->>> +{
->>> +}
->>> +#endif
->>>
->>> +#if IS_ENABLED(CONFIG_ALIENWARE_WMI_WMAX)
->>>    int __init alienware_wmax_wmi_init(void);
->>>    void __exit alienware_wmax_wmi_exit(void);
->>> +#else
->>> +int __init alienware_wmax_wmi_init(void)
->>> +{
->>> +	return 0;
->> Same as above.
->>
->> Thanks,
->> Armin Wolf
->>
->>> +}
->>> +
->>> +
->>> +void __exit alienware_wmax_wmi_exit(void)
->>> +{
->>> +}
->>> +#endif
->>>
->>>    #endif
+>   	mutex_unlock(&priv->notify_lock);
+> @@ -68,29 +94,12 @@ static void lenovo_wmi_notify(struct wmi_device *wde=
+v, union acpi_object *obj)
+>   static int lenovo_wmi_probe(struct wmi_device *wdev, const void *conte=
+xt)
+>   {
+>   	struct lenovo_wmi_priv *priv;
+> -	int ret;
+>
+>   	priv =3D devm_kzalloc(&wdev->dev, sizeof(*priv), GFP_KERNEL);
+>   	if (!priv)
+>   		return -ENOMEM;
+>
+>   	dev_set_drvdata(&wdev->dev, priv);
+> -
+> -	priv->idev =3D devm_input_allocate_device(&wdev->dev);
+> -	if (!priv->idev)
+> -		return -ENOMEM;
+> -
+> -	priv->idev->name =3D "Lenovo WMI Camera Button";
+> -	priv->idev->phys =3D "wmi/input0";
+> -	priv->idev->id.bustype =3D BUS_HOST;
+> -	priv->idev->dev.parent =3D &wdev->dev;
+> -	input_set_capability(priv->idev, EV_KEY, KEY_CAMERA_ACCESS_ENABLE);
+> -	input_set_capability(priv->idev, EV_KEY, KEY_CAMERA_ACCESS_DISABLE);
+> -
+> -	ret =3D input_register_device(priv->idev);
+> -	if (ret)
+> -		return ret;
+> -
+>   	mutex_init(&priv->notify_lock);
+>
+>   	return 0;
