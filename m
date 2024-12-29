@@ -1,16 +1,16 @@
 Received: from vps-ovh.mhejs.net (vps-ovh.mhejs.net [145.239.82.108])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D685D9476;
-	Sun, 29 Dec 2024 17:36:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D33A9476;
+	Sun, 29 Dec 2024 17:36:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=145.239.82.108
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1735493773; cv=none; b=Syt6RMEdn2spScHtyvzoT+S/FXxvT7k1cpyNPlQOEls046suU0oF9EL8I83MBDMykaKSyv7JeoJDU3+rhYWBdxKAEgPRbSSQhFwVb6TAq0q0Qb/2ka6OtXc2E2AQnLVSEczwNQ3ffTJxMHru8J4d1vOF0Aq5xICzks9TmVEIM2Q=
+	t=1735493817; cv=none; b=GABATTEuOOOOClYFQNa6QAgcLt8e4LpgIULs427kSRYEdY1KjV1aLE5Pb8veONISWNkgMcc1WJAWwihKDi2s4C4e4J0YpJynjFIbsHTJCqEdQJJt9UXbMfyfczUmpLSenICxrLq9ssjql5Hmbl7zIOH+Ggwu3HFXVvBAsgXCAK4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1735493773; c=relaxed/simple;
-	bh=LSpeSGahZcN4dGbQZZFXW45txMeGrxkjGG7UV5kR7ig=;
+	s=arc-20240116; t=1735493817; c=relaxed/simple;
+	bh=yYqfQg0XdTGxcTMNAtbHd57MJE3lFb8tvKHqmw47nSI=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=AV/ofIblz0xeT93ZqwhpeQvJ6Qhmef1j1v+RGzP5Xx7uSU2CvKuksJhLXOld6x2WgjnDyLpKReTqdHxHlpWJc9Xt311IsAOjdwj6uQUHAXP6jNKk15QgNi7r43wSL64sZwKgYJNhph8R7iviFSDqfHjEn0IJhEj9rtcrMtg8ZKM=
+	 In-Reply-To:Content-Type; b=gs3yMVYnLVcnLyO6BacVf01V74YdICdzuASA//FMcq3MFQFV/4o8bjwDwwYcqGndtHcQbqwLWwQpBCvBY64uvdq2IdgOBqt1rAEyAAoaH8MkdAmmlH5YvkRHM+1KiREgJEulhD5OxIUXY17+v0pmrg3TQFO82lZKwOYDRdSOIXE=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=maciej.szmigiero.name; spf=pass smtp.mailfrom=vps-ovh.mhejs.net; arc=none smtp.client-ip=145.239.82.108
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=maciej.szmigiero.name
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=vps-ovh.mhejs.net
@@ -18,10 +18,10 @@ Received: from MUA
 	by vps-ovh.mhejs.net with esmtpsa  (TLS1.3) tls TLS_AES_128_GCM_SHA256
 	(Exim 4.98)
 	(envelope-from <mhej@vps-ovh.mhejs.net>)
-	id 1tRxCv-00000004nuL-1FXA;
-	Sun, 29 Dec 2024 18:36:05 +0100
-Message-ID: <6dce9cd8-3982-4fd6-937f-660dcbf6748e@maciej.szmigiero.name>
-Date: Sun, 29 Dec 2024 18:36:00 +0100
+	id 1tRxDe-00000004nuc-1V8J;
+	Sun, 29 Dec 2024 18:36:50 +0100
+Message-ID: <58f43eec-da94-4ece-b3b5-f6199421e990@maciej.szmigiero.name>
+Date: Sun, 29 Dec 2024 18:36:45 +0100
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -39,7 +39,7 @@ Cc: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>,
 References: <d5ed5ffc88fed17e1b1eb988c942e44fb540a68b.1735490591.git.mail@maciej.szmigiero.name>
  <a5781d0a-0a58-a708-1f8f-f9ade14ade52@linux.intel.com>
  <3f0cdfa5-5aa5-4c17-b364-70383a6b6f31@maciej.szmigiero.name>
- <74bfbca1-b10a-f18a-93b9-83f8663078e7@linux.intel.com>
+ <e27e0e0e-a3a9-7b11-4e7d-27274eab604f@linux.intel.com>
 Content-Language: en-US, pl-PL
 From: "Maciej S. Szmigiero" <mail@maciej.szmigiero.name>
 Autocrypt: addr=mail@maciej.szmigiero.name; keydata=
@@ -83,12 +83,12 @@ Autocrypt: addr=mail@maciej.szmigiero.name; keydata=
  xNT833IQSNqyuEnxG9/M82yYa+9ClBiRKM2JyvgnBEbiWA15rAQkOqZGJfFJ3bmTFePx4R/I
  ZVehUxCRY5IS1FLe16tymf9lCASrPXnkO2+hkHpBCwt75wnccS3DwtIGqwagVVmciCxAFg9E
  WZ4dI5B0IUziKtBxgwJG4xY5rp7WbzywjCeaaKubtcLQ9bSBkkK4U8Fu58g6Hg==
-In-Reply-To: <74bfbca1-b10a-f18a-93b9-83f8663078e7@linux.intel.com>
+In-Reply-To: <e27e0e0e-a3a9-7b11-4e7d-27274eab604f@linux.intel.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
 Sender: mhej@vps-ovh.mhejs.net
 
-On 29.12.2024 18:13, Ilpo Järvinen wrote:
+On 29.12.2024 18:19, Ilpo Järvinen wrote:
 > On Sun, 29 Dec 2024, Maciej S. Szmigiero wrote:
 > 
 >> On 29.12.2024 17:58, Ilpo Järvinen wrote:
@@ -182,26 +182,12 @@ On 29.12.2024 18:13, Ilpo Järvinen wrote:
 >>>> Previously, the code would use DEFINE_SIMPLE_DEV_PM_OPS() to define its
 >>>> dev_pm_ops, *which also called this handler on ".freeze" and ".poweroff".*
 > 
-> Ah, I'm sorry. Too much not aligned macro text to parse.
-> 
-> Will it now trigger a warning if some PM CONFIG is not enabled? Those
-> pm_sleep_ptr() are there to avoid those warnings so the handler pointer
-> would likely need to be wrapped inside pm_sleep_ptr().
+> Also, please avoid using "previously" like this. I interpreted it like
+> some old kernel did that.
 > 
 
-pm_sleep_ptr() only changes its meaning based on CONFIG_PM_SLEEP:
-#define pm_sleep_ptr(_ptr) PTR_IF(IS_ENABLED(CONFIG_PM_SLEEP), (_ptr))
-
-CONFIG_PM_SLEEP gets enabled if CONFIG_SUSPEND is on:
-> config PM_SLEEP
->	def_bool y
->	depends on SUSPEND || HIBERNATE_CALLBACKS
-
-And CONFIG_SUSPEND has to be on since the whole driver depends on it:
-> config AMD_PMC
->        tristate "AMD SoC PMC driver"
->        depends on ACPI && PCI && RTC_CLASS && AMD_NB
->        depends on SUSPEND
+Sure, that sentence in the commit message could be rewritten using
+"the code before this patch" or something similar if that's easier to parse.
 
 Thanks,
 Maciej
