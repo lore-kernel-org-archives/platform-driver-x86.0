@@ -1,61 +1,61 @@
-Received: from mail-vk1-f171.google.com (mail-vk1-f171.google.com [209.85.221.171])
+Received: from mail-ua1-f47.google.com (mail-ua1-f47.google.com [209.85.222.47])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2A23419A28D;
-	Sun, 29 Dec 2024 19:46:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B84D199249;
+	Sun, 29 Dec 2024 19:46:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1735501611; cv=none; b=E317kFXVHvqYdfIKkQp2bv/N7lM3c0QBLceKKPCBKhihbAhIhqh0W0aD8IasXa9b/FQYPfRLt+ualB4zhJJTMBRz9ZkVyXhdmGihA/pLJJytLp6m7r1+PdgwAeX1Xkfyr8Ya1x1KTfmRm9T/vEERDh0IZz1Rk3f5zFfwLzjkNt4=
+	t=1735501617; cv=none; b=E0fqX0EGpPpiCbGVp3KySp6nyOunADUwIaULF3hpwFSHqq9vLMYbl8Y+45AFa94VzvuMxZR9v2wf1t0fo2x8fCCn9vyVI0y11dWEke3vq8vIr1ATuLEzt62YjJyuVcGSNjbgXJv1bBOL2kkdcFfN3Lp2w5a0DlfuFc72h+uWXFs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1735501611; c=relaxed/simple;
-	bh=JfXklGaFFo7wbHLPpDz4QYgR3xVQWtszMHXl9hi0lgw=;
+	s=arc-20240116; t=1735501617; c=relaxed/simple;
+	bh=GKJppKxQr9095jG4XrzfmDaQDqXnwWfs1sApouGayiA=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=SQcUKKp29WmjeDieytjFo4cLSMeRqCK3pMBP8LHo1rlfDRJz5c0dNBSXfazKUhjQDLsHE2NKxUYbcNZWv/DtR7ZNj145/H5HbtASqZIqgG6930xfJDwGj5+ExAkxZ8YsBFhuP9uXcDqxYBp1JvtHZbHXuTheFT9QOQCgUUQQtOM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=mapxKrM6; arc=none smtp.client-ip=209.85.221.171
+	 MIME-Version; b=UNkZe70KsR9pNmhPZOzyTKawoY9kKA+cig7wm+Bqd+S6yda+g6TFopW+yqVAqbIpbU6lCP77IWVtRiyXA4dKZ5Bi4BFPX2+zutKtRRQZE6VTZPNOCTGuMNKmnOUZ2DENgeHshqnHfXC/b0vlcHTpRxcYyyKUecH1OELA6dWwh+Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=B0VXXkDs; arc=none smtp.client-ip=209.85.222.47
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mapxKrM6"
-Received: by mail-vk1-f171.google.com with SMTP id 71dfb90a1353d-5187aa2c97dso2907255e0c.2;
-        Sun, 29 Dec 2024 11:46:49 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="B0VXXkDs"
+Received: by mail-ua1-f47.google.com with SMTP id a1e0cc1a2514c-85c662ebbc3so1276889241.0;
+        Sun, 29 Dec 2024 11:46:56 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1735501608; x=1736106408; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1735501615; x=1736106415; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=wHqL+vpiErSUgy/1yGnLTEPBV7j+lZJ6SlOgomo86jw=;
-        b=mapxKrM6sPhTEYlKS9eSctZ62mEtyCLIwVN/hDAugRGXcYDnhbvW+2+EB30hIL48o5
-         rr67MNYWUSSJ/kpMxZ4lhZhRI84xWC+Ge7OmP+xIXTk7FCtI5dEgZQXU975E4F3Ej/d4
-         3gY7eKRVcTQsi5G0RzPhRKfaC+zqpyzL9dMyUZSK5G4CMn8hgfVOOW00E9NMk1m2DyCf
-         4fXYLqYL6Im9uwXSs0OkTzNvW5V9JQC0knhGpSzdowqniyoRybn4/yW64QZGqIUOW14a
-         +S1cj0/QseV59PQqwIX7abEQjMh15SYQVbqJdM21PKHMWMqrlqMOKy7ZyJD2qnx9h7EY
-         f/yg==
+        bh=l+L4gSKrHL6ytx2INvMPs+4ZbJgOi5NCKXXDIXm5o8U=;
+        b=B0VXXkDsObvV0er4+hJ2lSrQNbJqVgMBBjk+EkCy9SzE8cbFfu3umdb2VrWKs/oYfM
+         u5arQP1BouNuOmO5cPHmlfV60PialWstW+SU5lkrsOwza5Uiul3gqJueA/NtcA51ITYC
+         v1yDS4mYXWd9uhKHqVqcQD3zafmH3Uzo7iia4pZHcyP4kafFdAegPS7PbsJaKNzQUrXy
+         hauU9e1nOwfQ2+9kzK83AcasHJZoZN+D68I6Tff+h9oJvQDf+1G9bgAjaosZMQFTujQr
+         lZHcPUKujOj2VpXuVRBVD8WHtboGMiwn47wt/k5JU/5alGn0H6UzV1vVFGaiio0eqyN5
+         Z4rg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1735501608; x=1736106408;
+        d=1e100.net; s=20230601; t=1735501615; x=1736106415;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=wHqL+vpiErSUgy/1yGnLTEPBV7j+lZJ6SlOgomo86jw=;
-        b=c1WO/8qOwS8r0d3S92zSOpWxLgPFZDbiaP47tFWQWIlYi28hqDP9UY9CsG3DfzfaOv
-         keZ8KIQi6yyt7rFfQIhXPhQq6bHYmN0jFhh5JN+m9ZeqowGQLgOWFQtuMuwtSTHwQwwC
-         9LwpWDnlk183cC3qE+lbDulwyFKZSLVoszbfYT7OnNjvqQh/twNB7/BliXzGSlBrFH+4
-         aE04byLPbhL0WrstNuLLYU9YCb/I1Gq3jzMRP2j0RDi1VjdY8Df3Ei9y2unAdtAiabdb
-         INna39C6c7m8vAzr/qmV/kMdr30mDpdltXHj70/xAnBlms+HgHH5TdBbIS2NnXWxLwYl
-         FP2Q==
-X-Forwarded-Encrypted: i=1; AJvYcCXV8Bi6PYQNLvlBgj053BTjqMS8glPL6jadvy/qWWHtHuHZGDeuVnHsSm6MO5STlcJYOVkdk+RERRWOs4I=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxXef6HcN2u6KFQ9HmiBXA7hvTd4vnMGHb9xZOH7J4S8ivJWagE
-	M4fmchM9OZfkG+P6NYYh5mZxSW/nr3dcbvgxO2MZ24ilnv+eYurdCqIskw==
-X-Gm-Gg: ASbGncub1V4oZN1ImFTygYgUKHmWkmWKQVDRfmNslTHde+3657dLRu3BZ3Aw+qrKF6O
-	V5dxLGvR4XpZrZxt7hgliBetHiTTPSXnPrvogKOjwX4wQTqFsJQjwe/Yvn/S+QMJpvypq7hr5rE
-	tmbpu0ZnM1bj9Ys/qiJX58MN1H8b7NfxVvQmBGXvk1o02f9pCbjR9c0DoKvvv0xIDqfhOACRN4n
-	aZzSStZleni3PKZq5E4YQeSXOXqdmJCUlzhAJl/7C/3i0i3L08fJTVcglkdEndU
-X-Google-Smtp-Source: AGHT+IFLazO7QN4Vx/HhHAoEo89f3TZplbh/iyIBmZR100gIU/ar7b+epW+etJOhfG450DuSyo30rg==
-X-Received: by 2002:a05:6102:dd1:b0:4b2:af3b:90e2 with SMTP id ada2fe7eead31-4b2cc35dd51mr27711091137.8.1735501608661;
-        Sun, 29 Dec 2024 11:46:48 -0800 (PST)
+        bh=l+L4gSKrHL6ytx2INvMPs+4ZbJgOi5NCKXXDIXm5o8U=;
+        b=t3uhVODrLDJyRW1oEje8fkc4CLfIH0j8pLhuPFDz5bTRfDKOsJfy859UgNmQQuJGzH
+         d7DEvhdxujqZvbFzazMuPMkp8T7EXCngeb4ShBROe6Rf8Zikk3oAbL22cYF8P44sRoml
+         Lv4M9XqZiHWjzDXUcLAAUtgvs6Z8teO5RfqN4nkEAiunnfJdU9Z/lVp+QSu6PEA30WcJ
+         gj+Trwfv0KQWIrK32FxIBzHC62P9+x+CK5wpa39jHHxKgYrGiOXlmOxHCrZ4ADvfGC5Z
+         nxKcv3Zc+lBQL7DWjGFh/eFld/Z4bPfZm0mfkzXy1711GUVQDo5PnRFTVIPHWzAH9u9M
+         N5hg==
+X-Forwarded-Encrypted: i=1; AJvYcCXo6bRGyUcxJLDQYfArZZSp3xtEPhDMF55FIBAPBzrptw6SgmK6NWmq2cbmYDGjNjgU9tFeLa29B9cRgHI=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw9JHuUYs5zwtkTzfcWB887XRJNjPgCuQA4LKdMpwcnrMgS02Mj
+	+0xyyzK/+OSndQi57YYffviUFoQnFWLQtAKhnjKtEO/34Ye5+LuVxb4mcQ==
+X-Gm-Gg: ASbGncvozeb/SZAg5Nck3qlZo5yYD2SvjH1MyKnXB4Yw/lK5nsKcRwp4mWGXXMk9bMQ
+	8h2kBJWYtMsg2j8IuTEA1Q3tcTkUNV7GEP/0TBaiiiiUBuvLnMeNL+eL4z61mL99zQFVrUG7YUu
+	r7DuVf6hAbIpVPoFMc8CLYB6WULI6Y0EAflPDyIyIv3/gK0/SRp7tkzdoyT02Ed1nyz5Yml+mev
+	AhmB5pHlG/Bn7GpeVI5/pq436Z9cauQhWiUSh5I2rzEIsKYILJ4s7Vyb1injsc/
+X-Google-Smtp-Source: AGHT+IGqSOYDAP24Ao1+lvB9o7RRXm7gMn2ij7rwVZVzNZZOabmYueaihOqrICHCgu+v51I6Y8nFzw==
+X-Received: by 2002:a05:6102:c02:b0:4b2:5c72:cd55 with SMTP id ada2fe7eead31-4b2cc31f256mr27577284137.5.1735501614787;
+        Sun, 29 Dec 2024 11:46:54 -0800 (PST)
 Received: from localhost.localdomain ([2800:bf0:82:1159:1ea9:11b1:7af9:1277])
-        by smtp.gmail.com with ESMTPSA id ada2fe7eead31-4b2bf98ce0fsm3753555137.3.2024.12.29.11.46.46
+        by smtp.gmail.com with ESMTPSA id ada2fe7eead31-4b2bf98ce0fsm3753555137.3.2024.12.29.11.46.51
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 29 Dec 2024 11:46:47 -0800 (PST)
+        Sun, 29 Dec 2024 11:46:53 -0800 (PST)
 From: Kurt Borja <kuurtb@gmail.com>
 To: platform-driver-x86@vger.kernel.org
 Cc: Dell.Client.Kernel@dell.com,
@@ -66,9 +66,9 @@ Cc: Dell.Client.Kernel@dell.com,
 	w_armin@gmx.de,
 	Kurt Borja <kuurtb@gmail.com>,
 	Armin Wolf <W_Armin@gmx.de>
-Subject: [PATCH v2 02/20] alienware-wmi: Move Lighting Control State
-Date: Sun, 29 Dec 2024 14:44:49 -0500
-Message-ID: <20241229194506.8268-4-kuurtb@gmail.com>
+Subject: [PATCH v2 03/20] alienware-wmi: Modify parse_rgb() signature
+Date: Sun, 29 Dec 2024 14:44:50 -0500
+Message-ID: <20241229194506.8268-5-kuurtb@gmail.com>
 X-Mailer: git-send-email 2.47.1
 In-Reply-To: <20241229194506.8268-2-kuurtb@gmail.com>
 References: <20241229194506.8268-2-kuurtb@gmail.com>
@@ -80,115 +80,46 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Place Lighting Control State logic next to other attributes of the same
-sysfs group.
-
-While at it, rename:
-
-store_control_state()	-> lighting_control_state_store()
-show_control_state()	-> lighting_control_state_show()
-
-Replace DEVICE_ATTR() with DEVICE_ATTR_RW() and do a general style
-cleanup.
+parse_rgb() now takes struct color_platform instead of struct
+platform_zone to support upcoming refactor.
 
 Reviewed-by: Armin Wolf <W_Armin@gmx.de>
 Signed-off-by: Kurt Borja <kuurtb@gmail.com>
 ---
- drivers/platform/x86/dell/alienware-wmi.c | 74 ++++++++++++-----------
- 1 file changed, 39 insertions(+), 35 deletions(-)
+ drivers/platform/x86/dell/alienware-wmi.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
 diff --git a/drivers/platform/x86/dell/alienware-wmi.c b/drivers/platform/x86/dell/alienware-wmi.c
-index ed66720260ab..c5ad0f95c442 100644
+index c5ad0f95c442..273ce9b10765 100644
 --- a/drivers/platform/x86/dell/alienware-wmi.c
 +++ b/drivers/platform/x86/dell/alienware-wmi.c
-@@ -545,6 +545,45 @@ static ssize_t zone_set(struct device *dev, struct device_attribute *attr,
- 	return ret ? ret : count;
+@@ -434,7 +434,7 @@ static u8 global_brightness;
+ /*
+  * Helpers used for zone control
+  */
+-static int parse_rgb(const char *buf, struct platform_zone *zone)
++static int parse_rgb(const char *buf, struct color_platform *colors)
+ {
+ 	long unsigned int rgb;
+ 	int ret;
+@@ -454,7 +454,7 @@ static int parse_rgb(const char *buf, struct platform_zone *zone)
+ 	repackager.package = rgb & 0x0f0f0f0f;
+ 	pr_debug("alienware-wmi: r: %d g:%d b: %d\n",
+ 		 repackager.cp.red, repackager.cp.green, repackager.cp.blue);
+-	zone->colors = repackager.cp;
++	*colors = repackager.cp;
+ 	return 0;
  }
  
-+/*
-+ * Lighting control state device attribute (Global)
-+ */
-+static ssize_t lighting_control_state_show(struct device *dev,
-+					   struct device_attribute *attr,
-+					   char *buf)
-+{
-+	if (lighting_control_state == LEGACY_BOOTING)
-+		return sysfs_emit(buf, "[booting] running suspend\n");
-+	else if (lighting_control_state == LEGACY_SUSPEND)
-+		return sysfs_emit(buf, "booting running [suspend]\n");
-+
-+	return sysfs_emit(buf, "booting [running] suspend\n");
-+}
-+
-+static ssize_t lighting_control_state_store(struct device *dev,
-+					    struct device_attribute *attr,
-+					    const char *buf, size_t count)
-+{
-+	u8 val;
-+
-+	if (strcmp(buf, "booting\n") == 0)
-+		val = LEGACY_BOOTING;
-+	else if (strcmp(buf, "suspend\n") == 0)
-+		val = LEGACY_SUSPEND;
-+	else if (interface == LEGACY)
-+		val = LEGACY_RUNNING;
-+	else
-+		val = WMAX_RUNNING;
-+
-+	lighting_control_state = val;
-+	pr_debug("alienware-wmi: updated control state to %d\n",
-+		 lighting_control_state);
-+
-+	return count;
-+}
-+
-+static DEVICE_ATTR_RW(lighting_control_state);
-+
- /*
-  * LED Brightness (Global)
-  */
-@@ -589,41 +628,6 @@ static struct led_classdev global_led = {
- 	.name = "alienware::global_brightness",
- };
- 
--/*
-- * Lighting control state device attribute (Global)
-- */
--static ssize_t show_control_state(struct device *dev,
--				  struct device_attribute *attr, char *buf)
--{
--	if (lighting_control_state == LEGACY_BOOTING)
--		return sysfs_emit(buf, "[booting] running suspend\n");
--	else if (lighting_control_state == LEGACY_SUSPEND)
--		return sysfs_emit(buf, "booting running [suspend]\n");
--	return sysfs_emit(buf, "booting [running] suspend\n");
--}
--
--static ssize_t store_control_state(struct device *dev,
--				   struct device_attribute *attr,
--				   const char *buf, size_t count)
--{
--	long unsigned int val;
--	if (strcmp(buf, "booting\n") == 0)
--		val = LEGACY_BOOTING;
--	else if (strcmp(buf, "suspend\n") == 0)
--		val = LEGACY_SUSPEND;
--	else if (interface == LEGACY)
--		val = LEGACY_RUNNING;
--	else
--		val = WMAX_RUNNING;
--	lighting_control_state = val;
--	pr_debug("alienware-wmi: updated control state to %d\n",
--		 lighting_control_state);
--	return count;
--}
--
--static DEVICE_ATTR(lighting_control_state, 0644, show_control_state,
--		   store_control_state);
--
- static int alienware_zone_init(struct platform_device *dev)
- {
- 	u8 zone;
+@@ -538,7 +538,7 @@ static ssize_t zone_set(struct device *dev, struct device_attribute *attr,
+ 		pr_err("alienware-wmi: invalid target zone\n");
+ 		return 1;
+ 	}
+-	ret = parse_rgb(buf, target_zone);
++	ret = parse_rgb(buf, &target_zone->colors);
+ 	if (ret)
+ 		return ret;
+ 	ret = alienware_update_led(target_zone);
 -- 
 2.47.1
 
