@@ -1,146 +1,244 @@
-Received: from linux1587.grserver.gr (linux1587.grserver.gr [185.138.42.100])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-00823401.pphosted.com (mx0a-00823401.pphosted.com [148.163.148.104])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C320C18C31;
-	Sun, 29 Dec 2024 22:41:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.138.42.100
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1735512113; cv=none; b=k35WHrYaxdZ5YGLO1YVvrr+WnD9lfxpUx2WKxlJfDyx6fwKv6NUEzJR2oAS8x8tr0R0UuHALmZTW57aYnJs0kFNuAhrwOZLDl88qo6qaP3R9Yd43u4p3NEWU/SbqBccYJ/5vSPNsuhZrCSMOBnCsYyMBS1Ljd2YNcc1Pqtutk3I=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1735512113; c=relaxed/simple;
-	bh=q6wAg2B9W5k2ovQrxcoZOhYsVAOUmR9aGOmOIBy+Fs8=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=XC1zfT32Qv6+e5a2EHIjAkXSeNROVGSrh4uMOAGJOj/ZPTAzvAdpNXTpqJW1h9+CubWEnO7gtLMJUqtbMnf0OHqYCUKRYW6UCrRwE5SDY7kcJ4J5KpefFPo7DlSzGdyRop3lymtTqnpWcFmLGn3wwp0mpBtqEcfCENnOkOwGrHc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=antheas.dev; spf=pass smtp.mailfrom=antheas.dev; dkim=pass (1024-bit key) header.d=antheas.dev header.i=@antheas.dev header.b=ZAeIaZEy; arc=none smtp.client-ip=185.138.42.100
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=antheas.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=antheas.dev
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 28188156C71;
+	Mon, 30 Dec 2024 05:29:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=148.163.148.104
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1735536572; cv=fail; b=oU1YyVfczfMOUB88Uz/JT0ctruZl+CKR3LqVKgslJrO2eZTuRiblzOKk8AayDQjabUVsx874ZiYrMMJT6priOSPXZksryhTrj4nTvyfo1xM0XRIVLCKPXO033Yw/jOUPwCC2suqajwXY+D0ThEh1AghPkA9JdNPk8xTjG6fAUTY=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1735536572; c=relaxed/simple;
+	bh=aZ6OsArsMRaoQcBiqBrqdgHBj89NOsIDjwNDcYiobH8=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=k5AGtwGQcvzFsf5NsaymGDHV20GTvxXx7E+0mPd7g9GbQbNPASEEJyfwhdd91zEpm4sUCQ/mAidm3lJ9EjiwVJ2nKBKF7AYM6VWtiCf85FPVeDZtTfwz+ZWQHZfVE5pqEtdxE2LDg/VjRPfXYnmJVme7OxKuSIEFqN4KPQ+SuKo=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=lenovo.com; spf=pass smtp.mailfrom=lenovo.com; dkim=pass (2048-bit key) header.d=lenovo.com header.i=@lenovo.com header.b=FpDM5Nle; arc=fail smtp.client-ip=148.163.148.104
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=lenovo.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lenovo.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=antheas.dev header.i=@antheas.dev header.b="ZAeIaZEy"
-Received: from mail-lj1-f180.google.com (mail-lj1-f180.google.com [209.85.208.180])
-	by linux1587.grserver.gr (Postfix) with ESMTPSA id 87BBA2E08D85;
-	Mon, 30 Dec 2024 00:41:38 +0200 (EET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=antheas.dev;
-	s=default; t=1735512099;
-	bh=q6wAg2B9W5k2ovQrxcoZOhYsVAOUmR9aGOmOIBy+Fs8=;
-	h=Received:From:Subject:To;
-	b=ZAeIaZEyFpzTtwIfyNW27XJImzwamilwquRVaHlr86CIKtFZfUH2ntaNefH4jYHYb
-	 3SihYkRBipXFfKE7+YGhW1wsimPmiNBdifKKHN1xO47Gw+M4LLbXfZ7nm6BX4CAh5B
-	 GRNmhuY2t8xybEqGloQjXmKkZBEwEh9SXSGsGdJQ=
-Authentication-Results: linux1587.grserver.gr;
-        spf=pass (sender IP is 209.85.208.180) smtp.mailfrom=lkml@antheas.dev smtp.helo=mail-lj1-f180.google.com
-Received-SPF: pass (linux1587.grserver.gr: connection is authenticated)
-Received: by mail-lj1-f180.google.com with SMTP id
- 38308e7fff4ca-30229d5b21cso19700001fa.1;
-        Sun, 29 Dec 2024 14:41:38 -0800 (PST)
-X-Forwarded-Encrypted: i=1;
- AJvYcCU9c98hssoZ38iThs+JiYoMw+tr3UXMM8SFRkqs3kuXVSF2CZerq3vtSYj3tG/PQnKBCGIFyXc8eKuZIFBj@vger.kernel.org,
- AJvYcCXFRO+nBfMLQVmU9diJtZlzxkbbx7J9eJ0CXFqOLjCmJ32o2A66c2RwGJaj/fKaFZ8V+VypUM45ODzDWJ4xJcHXQN+ifg==@vger.kernel.org,
- AJvYcCXtmS0Et/kh/kTqu/hQydu2lGp8bjlhxzkVfZpi9asbDO1589T0GtBviebiup2wSTzgENhjtcH7/Bk=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yyj1+knbaBHqv1nargusXQXllAn4Ayb6wdnBoRqtV1urKuf573b
-	CxVYwk8mFiFgyEGpe7++stv8KLsF9SecmlzyV2DZC+PqFkJDHRbRnJm9GDRaX+O3huk+5mJMdWh
-	DUWgwbFkdoumQiOBeP5tBZ4rhwl0=
-X-Google-Smtp-Source: 
- AGHT+IHbFNt6qFFnJeYWS47c/udA3neGhmpny1SBMOcMxDpfWetpzo0dqdABueqBTYmda+zarsLZJ45OLJT280ufiWk=
-X-Received: by 2002:a05:651c:61f:b0:302:1e65:f2a1 with SMTP id
- 38308e7fff4ca-3046852b5a7mr71064781fa.12.1735512097809; Sun, 29 Dec 2024
- 14:41:37 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=lenovo.com header.i=@lenovo.com header.b="FpDM5Nle"
+Received: from pps.filterd (m0355088.ppops.net [127.0.0.1])
+	by m0355088.ppops.net (8.18.1.2/8.18.1.2) with ESMTP id 4BTHo9DZ032549;
+	Mon, 30 Dec 2024 00:33:05 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=lenovo.com; h=cc
+	:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=DKIM202306;
+	 bh=49oI0/q/S1pJBPUyoxKJTVXZAVmydizB3JfMuRU3k6o=; b=FpDM5NleEB3k
+	aNMpdlJ9A/r9jsjiW7LyGyRtKFetPCtE5AOqBICfLtNZ04HAE/WELhdmOgVdxhnD
+	z1q8601+I/4VeU8to0dwOY7jI69pQXWcmWoHeisYu8PCQYAPeMPI2im9Ci8hKysX
+	Ja4Bl4hXn4R+HOzi58l/EfD0fvamcDs587x6Ao1qnG3jhhtT4P5hKAa2Zq3kTje9
+	RbIRxMj9RRUXgUg5rrCGcDNRRJBki0bKxFugiW0blEQ4GHJEMjVw1lJoW+BNyaTi
+	aCPUUcVSXJpF+qoZXgDKfmDvWrWIa4KkpvqL+LvJYhjxePOBDze0D/2rRMQysrgh
+	LG8EzA23tA==
+Received: from apc01-tyz-obe.outbound.protection.outlook.com (mail-tyzapc01lp2042.outbound.protection.outlook.com [104.47.110.42])
+	by m0355088.ppops.net (PPS) with ESMTPS id 43txgshqdu-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 30 Dec 2024 00:33:05 +0000 (GMT)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=YsdxpX+VcWs/sY3Ix3ASc/wM5ERluZPCDlTDayf9+Y2D2ZyAmWTMfPLvi1uSPWbxJl6+9f3XCSY5MG+ZNKgst2IRGc43r1FXDTgG15tUiqMAPl0rrBqQ+80KtujVMnBmRfYOK+OUkDKCZNy+27VykZdaA6cRxE7g2B0mkRgNB4IXVx6bW5s6rVCK9JA+IfG2Gza8ejgPvGi3LNBlyjL+6HcbTvUGNugX2ioAVZQ8yA2uC9A0CW9/k8yrkTxtgJlwK3gCJSOlIWeTshRpXN1vBGj9Src24Y4lj1cbVMH/TpcohnWqgHeXMUUNgGK6/+2BgiiuRD20yaiWV1A7W0f6eg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=49oI0/q/S1pJBPUyoxKJTVXZAVmydizB3JfMuRU3k6o=;
+ b=HIricSMiKEiNqzMGh+Sukq8u6+DAcF1B+jMYgfev+4SEF001oTnRAtuLl3aEF4RzvCITb4PMepie+9WSTYmYNW1W5pi3BSEJn/zZBcP7N53nl5JUAOcdOHaahmYb4LY1PIYcqEMdKDSRq79DMlkMDzMvUU2JPA48/jgydf2R6+e6/osZqNLp8z9rVRGkjESBzx4oymbPw/PRrCNvxLmTg6qamdsBlgDDIftdTAp7L7SE1JBwxLiw5NYg87M3g+dcSKIQG9qR5oafl4F/YUYvu9a+Pa1huuq1LWISU+bxFZwSz36cZOMBqFFo2pxzJawC0R8Skvjq6aUnkkS9k4Islg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=lenovo.com; dmarc=pass action=none header.from=lenovo.com;
+ dkim=pass header.d=lenovo.com; arc=none
+Received: from SEYPR03MB8067.apcprd03.prod.outlook.com (2603:1096:101:167::9)
+ by TYSPR03MB7762.apcprd03.prod.outlook.com (2603:1096:400:413::6) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8293.18; Mon, 30 Dec
+ 2024 00:33:02 +0000
+Received: from SEYPR03MB8067.apcprd03.prod.outlook.com
+ ([fe80::c366:f663:c467:87b7]) by SEYPR03MB8067.apcprd03.prod.outlook.com
+ ([fe80::c366:f663:c467:87b7%7]) with mapi id 15.20.8293.000; Mon, 30 Dec 2024
+ 00:33:02 +0000
+From: Jackie EG1 Dong <dongeg1@lenovo.com>
+To: Takashi Iwai <tiwai@suse.de>, Jackie Dong <xy-jackie@139.com>
+CC: "perex@perex.cz" <perex@perex.cz>, "tiwai@suse.com" <tiwai@suse.com>,
+        "bo.liu@senarytech.com" <bo.liu@senarytech.com>,
+        "kovalev@altlinux.org"
+	<kovalev@altlinux.org>,
+        "me@oldherl.one" <me@oldherl.one>,
+        "jaroslaw.janik@gmail.com" <jaroslaw.janik@gmail.com>,
+        "songxiebing@kylinos.cn" <songxiebing@kylinos.cn>,
+        "kailang@realtek.com"
+	<kailang@realtek.com>,
+        "sbinding@opensource.cirrus.com"
+	<sbinding@opensource.cirrus.com>,
+        "simont@opensource.cirrus.com"
+	<simont@opensource.cirrus.com>,
+        "josh@joshuagrisham.com"
+	<josh@joshuagrisham.com>,
+        "rf@opensource.cirrus.com"
+	<rf@opensource.cirrus.com>,
+        "linux-kernel@vger.kernel.org"
+	<linux-kernel@vger.kernel.org>,
+        "platform-driver-x86@vger.kernel.org"
+	<platform-driver-x86@vger.kernel.org>,
+        "linux-sound@vger.kernel.org"
+	<linux-sound@vger.kernel.org>,
+        "mpearson-lenovo@squebb.ca"
+	<mpearson-lenovo@squebb.ca>
+Subject: RE: [External] Re: [PATCH v2] ALSA: hda: Support for Ideapad hotkey
+ mute LEDs
+Thread-Topic: [External] Re: [PATCH v2] ALSA: hda: Support for Ideapad hotkey
+ mute LEDs
+Thread-Index: AQHbWdClFPjZnA9flEadQWWjkkLrsrL97sFA
+Date: Mon, 30 Dec 2024 00:33:01 +0000
+Message-ID:
+ <SEYPR03MB8067D30F466738C51808461995092@SEYPR03MB8067.apcprd03.prod.outlook.com>
+References: <20241224083316.20222-1-xy-jackie@139.com>
+ <87ikr2dfnc.wl-tiwai@suse.de>
+In-Reply-To: <87ikr2dfnc.wl-tiwai@suse.de>
+Accept-Language: zh-CN, en-US
+Content-Language: zh-CN
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: SEYPR03MB8067:EE_|TYSPR03MB7762:EE_
+x-ms-office365-filtering-correlation-id: 5e2b206a-1b69-427f-0d1b-08dd286984b4
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam:
+ BCL:0;ARA:13230040|1800799024|376014|7416014|366016|38070700018;
+x-microsoft-antispam-message-info:
+ =?us-ascii?Q?Jc4hn1oDZKX6S7v3JDcb1JtizoquhcRPR+Mixo4K+CQ4DPC4mDgUGh/KsFpc?=
+ =?us-ascii?Q?MlpXu6q4e6lZMeMv3KYk4a5oFmwpr2jk7C4M1CaW/e3a1ru+tziAoYjiFJ5M?=
+ =?us-ascii?Q?MkH+03WxXoap/v5EqrOdTfyS4z/xMMRqAtDP0M7k00WOufsLDogUOXeY6tbx?=
+ =?us-ascii?Q?1QxZngnvoGv2KrlB5z8VWuUuf/9Boi0Q8wbXfSvXp7ewD8kb8mKFVLvF2hkN?=
+ =?us-ascii?Q?AXp9LZkgXndztFSeDIisX49cwu7o5POGEBWcecW1VcJXcN1+cOAgDJ/5wEJS?=
+ =?us-ascii?Q?ze/tyQRlTG64qH3CZNyTRSIEmxGTKQCtRunCaGNkbpoNyARsFnrRndWvYKji?=
+ =?us-ascii?Q?3L5Xkakku2odswRncmKgnVCFw/PeGWnA0EgPlQsmlGKCDQD4BsDToZ4Xm0xP?=
+ =?us-ascii?Q?ana2Qq6x/QQv4gvbWXrv7ZGCCMj+M+OHMGrw7DQ6ZXzrqF56lwdtwWespRaT?=
+ =?us-ascii?Q?p/sGSx1J75LCDfMmem2uH1pO8jl1ayeVKN7CUkCfjlzTf2KppQIaX2whbKXl?=
+ =?us-ascii?Q?dFWXuq0qFjs4mzDh9kDVNa/6KSdfrKpC7HNGg3xdpgUsDwEl8dtWTgqe58VG?=
+ =?us-ascii?Q?EpbTQofpw1ibz7gM8ZL1Xo4ZPVMCzyQjPmM4ErNL4Ge5RgKC7qxr0mnkxXgc?=
+ =?us-ascii?Q?16XDhLvrpT9jT3rE0GHd6CWOhSpb9cuVDbzxQ0Xb5vB3tvS0CwSQlfBqHvIg?=
+ =?us-ascii?Q?9ctNBHM+5jCxd0OOv4W/ylQ/fOW4nfncPbLVHEw0sRaF3vrBCzEQ46Wbkk1J?=
+ =?us-ascii?Q?2Ed6YK7KTxxM7uZq7KxQOvzLyXnv9MpWZw/VYt84RYV3JphagtLvgfENTgSB?=
+ =?us-ascii?Q?tBAn0+66Avu6C6VlAXTykwu5qPu9WKJQLwTTA5WwbWuQASsiLSOsQjWhEH3k?=
+ =?us-ascii?Q?68J+E3S121rypXjWiUlec8YtWltyS8vY79yZde0W4tskkRVPohpwJipRaRKB?=
+ =?us-ascii?Q?6FEFQsvtFW3OnI/rwLnWcvBFoMqwAxm/ckoy9BFiY6/2ujwjvX/8MFBazwsb?=
+ =?us-ascii?Q?iZrVvuLOBw1xOMtVgRBe/IqY+1bAXZO212DGZuxOnc3wi4Wu2SJ4aKbGmO8M?=
+ =?us-ascii?Q?EDxuV0XAOAWx6B79yUTzIvt6A/RK8I3gnk9i5zpVlw3oGf9jVgy7MizE9wLj?=
+ =?us-ascii?Q?MN8eQRC+/qgCIqVMBJxPeZ/4mWeJFCTb676vsxVCpUW+E5FiNmpAvG/+v/UU?=
+ =?us-ascii?Q?fdFZMvUnWNmmJdLx7mued9lkEiAncRylGP5VYkc36DTd6Qq3HyVpB6KfcsOK?=
+ =?us-ascii?Q?SmG/+xQizGzU83RArocSeAkOrEHPYt09tCy6B4KW4L/7xRgAeKciI/M8uBxG?=
+ =?us-ascii?Q?Z5lpG+hIt2shVsby9BPX23p4cYIi3tvlQAPEiAm9DeI+Bm5djMcuVx0Gxu6F?=
+ =?us-ascii?Q?krdpsV2LzrOIFPdlpwnqfyX5jbEkBpPpepzpYxtDbq8jEAW8J+8lrA9KmmV1?=
+ =?us-ascii?Q?6WfM24px+D5rbcmjkJf0XBAF2whMH9Zv?=
+x-forefront-antispam-report:
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SEYPR03MB8067.apcprd03.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(376014)(7416014)(366016)(38070700018);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0:
+ =?us-ascii?Q?Qmbdlx+ILXG8WNKOiKp3lHk6BYHRFYc5FhOvQyJjKUnsREg0eLrQWskZiL/3?=
+ =?us-ascii?Q?tCLQrHNbhVv8W/BOPAnJTGImidCU47D4G6+kb7DV2mG/bMP6qhuHlVkrCXCh?=
+ =?us-ascii?Q?EQGOYn4s1JqsbWfruNulu33fC00O4FkYH6SIfd9Pg5bdNSFThf78h5O/aHHl?=
+ =?us-ascii?Q?WkCYGR6xE35qbr219UH7WsKK/c/9UBKVjCw44tlhLCPdZXI5rhhMaQbkGr2S?=
+ =?us-ascii?Q?yy4md9tJiLtSRRSDAL95WViS1cQPco3ipWgV9jwjPUoMlcxRzxO3w/vUzedh?=
+ =?us-ascii?Q?xYCdQCEEf2zqUCDZUqsrz93IHCnrtuvo+ARIlwrI2ls+nDl+ISGdOmveIl44?=
+ =?us-ascii?Q?FRGbsPqiS9VvcwPkN2dBGNtX6bEiIZsZIPyOelUiHvKl3UVmUBmEhbuA6PrQ?=
+ =?us-ascii?Q?DUJt2jSvI0apbts0ro6HeC9LS2yR8OQ/6wG/+gsISh6O7gLm76FZBhA1MlAJ?=
+ =?us-ascii?Q?ATcc73GtIq6ap1AST4zKrR1XhvB3zQW6MylOgSk0pkCbDk0JYDB8h2gIEEy0?=
+ =?us-ascii?Q?s+2oQ3bPoQkQIgpycUfsu4QoHpRlyyBnsDSZ32gfdKJizrWwF1QjXPQ3300s?=
+ =?us-ascii?Q?iT38WHjflLtCVl0eI7oLlDQ/UE8nisGoGKEwE3qPjiGvqwS4vzdAiHgC2McM?=
+ =?us-ascii?Q?L39A5dLnnJLPHXP78DyMYJO2X+QJ1Bn4ivFiObGaoNWr2o3FPTeWw4eYbnkh?=
+ =?us-ascii?Q?MQZQqehUxfHC2PWIX2UTusEJGOqMXENSfUgqii5bM154gebd66tVJccQyn93?=
+ =?us-ascii?Q?xSyYWTeLOQmmQpK0fkFUoSiQrCPXxD0BLSmWF/DaFpRBufWCCdMkotgSACLY?=
+ =?us-ascii?Q?ibok1j/26XwKOPtGNdS5zDXxQV+Uf2RMYXjrFswVOIgf25XjrRvt/CSCZ7eJ?=
+ =?us-ascii?Q?jd4gnXTKKUHPtRENMQRZN5x+vfHyqJ94SXhHNn9uM4Pb6WbpOsFLwBsIf4e+?=
+ =?us-ascii?Q?fPT1LwkP4DeONhdIrDnhkiGfI7LPErO745TdOjnKxRaQjPAsilOm/mwKb7MK?=
+ =?us-ascii?Q?5djrfHEHzbgCs2qCHwtSegxdwl+gM5mJ/BAkL7Lv+93yQBxGB+Ca3IVKqX4S?=
+ =?us-ascii?Q?tzMqauNSsIv6mKmVRCdgUtCbTqpnmjFH2qK/razCaPEgn+L71BIjPV9ARKW5?=
+ =?us-ascii?Q?YkzNwPT9lKaGtWUJZQFd1jHC7eLrGz+Lq+Dy3d9aCXpuFRzubKsKkIgku6CD?=
+ =?us-ascii?Q?0A+HQKGdz/HzaqQmgIhyK8CD6rVoAYZTEk+NDjUWaQhdEiGky7vhgGy/40lG?=
+ =?us-ascii?Q?wVoh+b4ZrepHHOp8BfWv//IHlerfqwHE39lDlZVjDe8wRm8UJVMaBT3Gl6Mr?=
+ =?us-ascii?Q?T9tHDWJ5/ujf3zaZGQq7g+nNbdWGUUEBXagBWhuCfLMD+Of/Yc7v1yW8BecI?=
+ =?us-ascii?Q?DDuy49KEeTl0BzwfdDmEbYmAljKipuS6KzgD8z3bfKnuB6g0ZOzAOE90EC7X?=
+ =?us-ascii?Q?KI7iUFekf/v3js1v8lkmkSYXwuQcb6y3MbjWRBkO6kh6prVGiYbQkjmWDXsj?=
+ =?us-ascii?Q?NT1rnrtS/ENlocvOJ5osKkQO8+2EfZT4XhtiovPX+MLOSi7IxpZBGloMt7ph?=
+ =?us-ascii?Q?SSOzDLvndj9Dq8dVCW4=3D?=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20241217230645.15027-2-derekjohn.clark@gmail.com>
- <20241227184825.415286-1-lkml@antheas.dev>
- <CAFqHKT=Y66KNo-e+o+n76tmPEcqL4EBSUQNDXJcoP8B9NXguew@mail.gmail.com>
- <CAGwozwGpEWVQwEAFfWWkTx4G90uhqdfbF85E4F_2w6c6G6P2Sg@mail.gmail.com>
- <CAFqHKTnOA5N-uADQLbdA-b+k-TOMdjZtCPsFsCo9jarMiNioLg@mail.gmail.com>
- <CAGwozwF79xYrWkCSKpBaLSiXNEZz-5tmayWMbkw-of4zB=LPUQ@mail.gmail.com>
- <b7089d69-4d7b-42fb-90b3-bd13a27fcf1e@gmx.de>
-In-Reply-To: <b7089d69-4d7b-42fb-90b3-bd13a27fcf1e@gmx.de>
-From: Antheas Kapenekakis <lkml@antheas.dev>
-Date: Sun, 29 Dec 2024 23:41:26 +0100
-X-Gmail-Original-Message-ID: 
- <CAGwozwEWNkUDCzSq7-Lei1yBAjpQjyZUtW7+8n_Cpn9xd4aR3A@mail.gmail.com>
-Message-ID: 
- <CAGwozwEWNkUDCzSq7-Lei1yBAjpQjyZUtW7+8n_Cpn9xd4aR3A@mail.gmail.com>
-Subject: Re: [PATCH 0/1] platform/x86: Add Lenovo Legion WMI Drivers
-To: Armin Wolf <W_Armin@gmx.de>
-Cc: Derek John Clark <derekjohn.clark@gmail.com>, corbet@lwn.net,
- hdegoede@redhat.com,
-	ilpo.jarvinen@linux.intel.com, linux-doc@vger.kernel.org,
-	linux-kernel@vger.kernel.org, luke@ljones.dev, mpearson-lenovo@squebb.ca,
-	nijs1@lenovo.com, pgriffais@valvesoftware.com,
-	platform-driver-x86@vger.kernel.org, shaohz1@lenovo.com, superm1@kernel.org,
-	zhangzx36@lenovo.com, johnfanv2@gmail.com, codyit@gmail.com
-Content-Type: text/plain; charset="UTF-8"
-X-PPP-Message-ID: 
- <173551209907.2054.9778889980899824006@linux1587.grserver.gr>
-X-PPP-Vhost: antheas.dev
-X-Virus-Scanned: clamav-milter 0.103.11 at linux1587.grserver.gr
-X-Virus-Status: Clean
+X-OriginatorOrg: lenovo.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: SEYPR03MB8067.apcprd03.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 5e2b206a-1b69-427f-0d1b-08dd286984b4
+X-MS-Exchange-CrossTenant-originalarrivaltime: 30 Dec 2024 00:33:01.9431
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 5c7d0b28-bdf8-410c-aa93-4df372b16203
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: kf7QChR5QCY0ur2R0RaJ06szMvd21SB1PKITH/5dzJYJg3G6hrvr9GGpJX3HJ231bpvtUk7TRPVLAoBZU2GIvg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: TYSPR03MB7762
+X-Proofpoint-GUID: jmiOY4n15dMzJ1Yl2BGGFEa84pN_dOZS
+X-Proofpoint-ORIG-GUID: jmiOY4n15dMzJ1Yl2BGGFEa84pN_dOZS
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.60.29
+ definitions=2024-09-06_09,2024-09-06_01,2024-09-02_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0 bulkscore=0
+ lowpriorityscore=0 mlxlogscore=738 phishscore=0 malwarescore=0 mlxscore=0
+ spamscore=0 priorityscore=1501 clxscore=1011 suspectscore=0 adultscore=0
+ classifier=spam adjust=-20 reason=mlx scancount=1 engine=8.19.0-2411120000
+ definitions=main-2412300001
 
-Hi Armin,
-indeed you covered everything.
+> On Tue, 24 Dec 2024 09:33:16 +0100,
+ > Jackie Dong wrote:
+ >>
+ >> --- a/sound/pci/hda/patch_realtek.c
+ >> +++ b/sound/pci/hda/patch_realtek.c
+ >> @@ -6934,6 +6934,16 @@ static void alc_fixup_thinkpad_acpi(struct hda_c=
+odec *codec,
+ >>   	hda_fixup_thinkpad_acpi(codec, fix, action);
+ >>   }
+ >>
+ >> +/* for hda_fixup_ideapad_acpi() */
+ >> +#include "ideapad_hotkey_led_helper.c"
+ >> +
+ >> +static void alc_fixup_ideapad_acpi(struct hda_codec *codec,
+ >> +				   const struct hda_fixup *fix, int action)
+ >> +{
+ >> +	alc_fixup_no_shutup(codec, fix, action); /* reduce click noise */
+ >> +	hda_fixup_ideapad_acpi(codec, fix, action);
+ >> +}
+ >
+ > So this unconditionally call alc_fixup_no_shutup(), and this  > introduc=
+es another behavior to the existing entry -- i.e. there is a  > chance of b=
+reakage.
+ >
+ > If we want to be very conservative, this call should be limited to  > Id=
+eapad.
+ > For alc_fixup_no_shutup(codec, fix, action),
+ I want to keep same behavior with alc_fixup_thinkpad_apci() and alc_fixup_=
+idea_acpi() for one sound card. So, I add alc_fixup_no_shutup() in alc_fixu=
+p_ideapad_acpi().
+----------Related source code of patch_reatek.c are FYR as below.
+static void alc_fixup_thinkpad_acpi(struct hda_codec *codec,
+                                     const struct hda_fixup *fix, int
+action)
+{
+         alc_fixup_no_shutup(codec, fix, action); /* reduce click noise */
+         hda_fixup_thinkpad_acpi(codec, fix, action); }
 
-I am a bit hesitant about binding sppt, fppt, and spl into those
-interfaces as they need to be set in a very specific ordering and
-rules. E.g., spl < sppt < fppt after setting tdp and before the fan
-curve and after sleep maybe depending on device, after reboot maybe
-after keybind (Legion L + Y) as well. Which is not what's expected by
-the userspace programs consuming this interface. In addition, this
-would expose them to perusing users where they might be confused. I
-also know that its difficult by looking at a patch series to
-understand the nature of these values. However, given my previous
-email, you now have the full context you need to make a decision.
-If you think it is appropriate, it is fine by me.
+/* for hda_fixup_ideapad_acpi() */
+#include "ideapad_hotkey_led_helper.c"
 
-I'd personally stick them next to platform_profile with a /name
-discoverability mechanism similar to hwmon, where tuning
-software can find them (something similar to Mario's RFC
-that I linked above). Other settings such as the bios light that
-interface is perfectly good for.
+static void alc_fixup_ideapad_acpi(struct hda_codec *codec,
+                                    const struct hda_fixup *fix, int action=
+) {
+         alc_fixup_no_shutup(codec, fix, action); /* reduce click noise */
+         hda_fixup_ideapad_acpi(codec, fix, action);
+}
+Thanks,=20
+Jackie
+> thanks,=20
+> =20
+> Takashi =20
+>
 
-As for the hardware limits. You are absolutely right, the ACPI eforces
-none, incl. for Lenovo. And the quality is as you expect. For the
-Legion Go, they are quite creative. They added a battery 80%
-capacity limit by re-using the key value for booting from AC [1-2].
-They also used a weird ABI for the lighting interface to turn off
-the suspend light for a good half of the BIOSes, then they fixed it
-when they allowed to turn off the suspend light during sleep as well,
-which caused that option to break in Legion Space for I want to say
-two months. Nevertheless, nobody has broken a Legion Go yet
-messing with those settings by e.g., overclocking. It also brings
-into view that while the Legion Go uses a derived Legion bios it
-has started diverging a bit as it has its own vendor software.
-
-So I would say that it is good that the other function has a discovery
-mechanism and that gamezone has some bitmasks for that purpose as
-well. It means that if we tap on them during probe, at least for
-Legion laptops from the last 3 years, we can get pretty good support
-from the get go. Before that, it is a mix of EC + WMI (see [3]).
-
-In regards to firmware limits, it is something I would not include in
-the first patch series as it will just make this harder to merge, esp.
-if there are laptops with wrong limits. Then there are issues with
-overrides etc. I would advertise the limits through _min, _max so we
-can figure this out later and I would not do a runtime WMI check, as
-we have to run the check during probe anyway to populate sysfs, where
-it is natural to cache the limits.
-
-FInally, if indeed the gamezone function is Legion specific, and the
-key-value pairs of the Other function are legion specific, from a
-stylistic perspective I would tend towards making the ABI of the
-driver Legion specific and abstract away its WMI details. E.g., I'd
-use the name legion-wmi for a combined driver instead of
-lenovo-gamezone-wmi which would then not be useful if lenovo moves
-past gamezone. And I'd make sure it only loads on legion laptops. I'm
-not up to date on my WMI driver conventions, so this is just a
-suggestion.
-
-Best,
-Antheas
-
-[1] https://github.com/BartoszCichecki/LenovoLegionToolkit/blob/21c0e8ca8b98181a2dedbec1e436d695932a4b0f/LenovoLegionToolkit.Lib/Enums.cs#L72
-[2] https://github.com/hhd-dev/adjustor/blob/188ef6c3e4d7020f2110dd29df6d78847026d41e/src/adjustor/core/lenovo.py#L241
-[3] https://github.com/johnfanv2/LenovoLegionLinux
