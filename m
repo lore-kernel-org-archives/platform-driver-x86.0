@@ -1,308 +1,160 @@
-Received: from mail-pl1-f178.google.com (mail-pl1-f178.google.com [209.85.214.178])
+Received: from linux1587.grserver.gr (linux1587.grserver.gr [185.138.42.100])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC14013633F;
-	Mon, 30 Dec 2024 10:45:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2354E7FBA2;
+	Mon, 30 Dec 2024 13:41:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.138.42.100
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1735555530; cv=none; b=rzbRPwkduz6Be57BrO/iTIuSFw0GKatoXCA11XQchsa37SFz8nESVi1bnuvBQv1flv2J4h/H/dpFuNijAWO5/OdRbJjNFCFmzmjwVxQa8Q5AGGrlLlrp3TWz2yU8TYsUhIrGdXHM28+bcoel95fY+tulzjR18O5f8+kmPgHDBvE=
+	t=1735566083; cv=none; b=rURB02t5Tqj6mb+HXfDM5hVrfvPyQZT3FSWWmMu6+hgPmSGFBHO3hNOCfkcbEyxL4fjgmpuWAIfA0Cb+oep5D6KUn3Hn/XnIKxwXcEwxnMZehZP2jlgtNqG8gwi19ed7+BKRHzpLMY79Mc/AL6/M7CQHvJw+TMa39D3ZdMSVPQo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1735555530; c=relaxed/simple;
-	bh=L0/ZkxSibT+4mHc0CmZI6VPxe/6USTCaDZxPkpbmd7c=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Dm4qB3l14MHCQZYphYEgKd9opW3Ef94pSKuxE5lppJ8VNchG6ZgmYgWHXD7r+12+2jrcUHXOBB8SA4V/iiHzwXWJueBG6hl7XggM6HluzTl/xuGX8f2Zqff8LDC65C/nFUBHI2i42fWGUPSL1DGXbmgDAJQlgnOtJQLXhaTnrAE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=QC+ZGdHB; arc=none smtp.client-ip=209.85.214.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1735566083; c=relaxed/simple;
+	bh=O9nWGQyQJsDyzmJA3itIeEChbWgOu9XTffMoFh8MzCU=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=jk1AvELlV61L/J+V15i6GUIAdMjHlmvazAwjD5squL2bNNFQ70AcSM4yz5pd0j2HlYRih48P/Hr2dHm/kSr/F9iQJSG8PU3onnTJkLCl2rcx97ozdnxyFBePlFxZ4CPTDlVXRv0hTho+Io6Z9HOH8DPzsMofGF9lJK8/uUuARWU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=antheas.dev; spf=pass smtp.mailfrom=antheas.dev; dkim=pass (1024-bit key) header.d=antheas.dev header.i=@antheas.dev header.b=QGQ+d/MZ; arc=none smtp.client-ip=185.138.42.100
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=antheas.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=antheas.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QC+ZGdHB"
-Received: by mail-pl1-f178.google.com with SMTP id d9443c01a7336-216634dd574so77800905ad.2;
-        Mon, 30 Dec 2024 02:45:26 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1735555526; x=1736160326; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=APaYFD30RudnEgnmZHaXtaG597yFzOWoROkKl7BwD44=;
-        b=QC+ZGdHB7suEOXaO4bVPKr0C7Zr1jru0HybSqTsyHJl+s0kSpLsN7lAUkp1cTzfXgH
-         5nnaXNORDfn99AtaTVDb4gcTwuHpfDxBgqC5riMf6R/A4RGk4EAc9odLamshnYUgrHU4
-         EbcFz6px7mk97d0EXXL+x8APLQf76jYm3CCl+KaSvs+14kO36PXWPrRc0WX8IOeGQvXh
-         3cIv1kckp3PDED2VJtS3b+K+Kt2bwX+JREBnuS26Zq8kH8poiMzSukQfFyuhrKVOhd7h
-         SgOKrCsVKU6eiz+HxWuVfh3eQod4kNorPhCNyOrl0spTOlhvqaylg7iwma0E0phWN9nT
-         YiDQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1735555526; x=1736160326;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=APaYFD30RudnEgnmZHaXtaG597yFzOWoROkKl7BwD44=;
-        b=WKHdGOr6RgZwE88wVU52LaBQt0HWPWNkT3pkmOUJB+CBF6KgjvtFyMYGF7DW/venc2
-         JzRW494O2U7dnFBhU/7u+pp1xsrVzeTxP7zGnxqLFOGF/mdsUjAM3lZKM8Ff9wczUxZl
-         Q47z2nW3hpb40f38DayJBz/Hgm5/3j1/ejhkOdXQBTR0Wm+zm7QNIaoNPTJHF2Fxeeus
-         nT0wd7L/WUXwLnv7eOa/Z9/G222slCldQY543TWfQeT+59YYvipg2FgV8+CrFiCqY4m6
-         tFEDlFnPZz8dj4K1HVp7+itTwsbl/Gxp74lONyCFGnS2J0Br25dPd0JRg8oRTjJD3qYZ
-         Q9Ag==
-X-Forwarded-Encrypted: i=1; AJvYcCVapQn7yj83b3Mzset5OWSsytVGHd3376Oc54ZXDt431Rc80ebSh56Xo4XM5NUbx14SwKSfQJBlzck=@vger.kernel.org, AJvYcCVtzlhaZjm53K3dG6Bh5QRisG6VSK/aIVKORRYyF/pjhSsQ9yZC7OaEWIcxilxWdUdnt6rgixdWriB/ZWdd@vger.kernel.org, AJvYcCW9s02EVAeYFdQ/LwXFjxl0LKggf0XDkutVztu8MRDbz7bAU8dS8Qa+QCTYH3rJj3+Yrw979MkHAEfrKh5vIBUyte0nIA==@vger.kernel.org, AJvYcCWLJDw8mcbc0xotcPOc4F42dVvms7em1OQ53eG36vcu64tK3Hwd6jsM2C6IGl/0eKP+BDZOA4zTP7nH@vger.kernel.org, AJvYcCWOPwWiJw4rk+PHYiwy7rZbdwEyy7jvSpSAb4D40R6hia9oQadsC7C9mPhQBy/jzBUkZ3ysDF4ODCYFhiXraQ==@vger.kernel.org, AJvYcCXK+WI2X06YrPfMpRNR0jokeBWSVlLjJQBNygsVcZYMj7VG3TY2yIRURTQg3Hm1n+/Sp0lA4DUwVpWX@vger.kernel.org
-X-Gm-Message-State: AOJu0YxEGUm3/QbPPq5GObTkBk4rJEP2glC6r3vyKrViOkxf26sLcn+G
-	jBrVVyB546os0NKmPPIvaYgSkx781DsPsQK6jdULOYipNys7KwSw
-X-Gm-Gg: ASbGnctwlYjdVgxvLeAf9HV7MF5uN17f0Vzd88mC5nUIkSGLpBqfga0KP8V+c/rzrns
-	tDJQnTzQtcIAb0PZvjwiBLJ8aQ98kz60d2wax9dj0FemzDViJeLeZdv0pkZ6ecJQg3F+mbhcSPA
-	MXoOPq/xLph50lRA5fHCaL1MCsgmKrWRFc9LYgC9o+7diylm1jmAe2Dg6w1l6WFME2b39m3KaW9
-	peGRTZCuKOJ1c2HU70TXV/Pm5rEtns4Ju9jpJB54a0=
-X-Google-Smtp-Source: AGHT+IH6yrNe9TzPma0TrHyfew/WREVGdiQnOdhU8EJOBjK4tTim7ABUoAf5J9acdKapFrt6vZdqSA==
-X-Received: by 2002:a17:903:2306:b0:205:4721:19c with SMTP id d9443c01a7336-219e6f1448cmr438389625ad.37.1735555525838;
-        Mon, 30 Dec 2024 02:45:25 -0800 (PST)
-Received: from nuvole.. ([2a09:bac1:76a0:dd10::2e9:e5])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-219dc9cde7esm175594515ad.152.2024.12.30.02.45.20
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 30 Dec 2024 02:45:25 -0800 (PST)
-From: Pengyu Luo <mitltlatltl@gmail.com>
-To: quic_aiquny@quicinc.com
-Cc: andersson@kernel.org,
-	bryan.odonoghue@linaro.org,
-	conor+dt@kernel.org,
-	devicetree@vger.kernel.org,
-	dmitry.baryshkov@linaro.org,
-	gregkh@linuxfoundation.org,
-	hdegoede@redhat.com,
-	heikki.krogerus@linux.intel.com,
-	ilpo.jarvinen@linux.intel.com,
-	konradybcio@kernel.org,
-	krzk+dt@kernel.org,
-	linux-arm-msm@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-pm@vger.kernel.org,
-	linux-usb@vger.kernel.org,
-	mitltlatltl@gmail.com,
-	nikita@trvn.ru,
-	platform-driver-x86@vger.kernel.org,
-	robh@kernel.org,
-	sre@kernel.org
-Subject: Re: [PATCH 2/5] platform: arm64: add Huawei Matebook E Go (sc8280xp) EC driver
-Date: Mon, 30 Dec 2024 18:44:03 +0800
-Message-ID: <20241230104404.184616-1-mitltlatltl@gmail.com>
-X-Mailer: git-send-email 2.47.1
-In-Reply-To: <564fcad7-59d5-44da-8ed7-78fade8e40a8@quicinc.com>
-References: <564fcad7-59d5-44da-8ed7-78fade8e40a8@quicinc.com>
+	dkim=pass (1024-bit key) header.d=antheas.dev header.i=@antheas.dev header.b="QGQ+d/MZ"
+Received: from mail-lj1-f178.google.com (mail-lj1-f178.google.com [209.85.208.178])
+	by linux1587.grserver.gr (Postfix) with ESMTPSA id 0FA8A2E02902;
+	Mon, 30 Dec 2024 15:41:14 +0200 (EET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=antheas.dev;
+	s=default; t=1735566075;
+	bh=O9nWGQyQJsDyzmJA3itIeEChbWgOu9XTffMoFh8MzCU=;
+	h=Received:From:Subject:To;
+	b=QGQ+d/MZ2Oqy9p6ArWIgx+oCr8lm7sDVxZLEB5qDY3y+1Ndu0aT9lrJB359xBlOGe
+	 ct7c+YAps06+Y+ekZxms2HlG3NdN0AQlkSrai2hfRYYUQNW1+m74vvsgkZkGaDKW2q
+	 6IECI7PNuUGbhoOU873arI5HlPXPs5Rm/+kUh8Rw=
+Authentication-Results: linux1587.grserver.gr;
+        spf=pass (sender IP is 209.85.208.178) smtp.mailfrom=lkml@antheas.dev smtp.helo=mail-lj1-f178.google.com
+Received-SPF: pass (linux1587.grserver.gr: connection is authenticated)
+Received: by mail-lj1-f178.google.com with SMTP id
+ 38308e7fff4ca-3035046d4bfso85919341fa.0;
+        Mon, 30 Dec 2024 05:41:14 -0800 (PST)
+X-Forwarded-Encrypted: i=1;
+ AJvYcCU8j0pUuJxWK7/0twfKEY1I6lOg4nbwnkQZPFyk/E/TurqYyKZZWM7tEQIjAOSeQ1j/JmER683H8Y7XdQ+g3UQHOF7PVA==@vger.kernel.org,
+ AJvYcCWgrAeOPRXwvtpPpQO/Ld1TR+B5vh9qvA1vbIlMRHsU3e/jdBCVee+BHvrTmZ1EC5TQ8cubIDt0cUY=@vger.kernel.org,
+ AJvYcCX5Csj/r1/Cuaqc+6/ICiHRH3Rf6s5jFgkGjQFLXCTh44OcN46/eKkuXlurbZNXGEugHLykcQxIecrO/WSF@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy4mbvQHzsz64y4yxWlYVpFETJL18wGOZ+s0qhLlE+POV6ksVpM
+	eFcZITUFtFPPstvd4jWLC4JktI5ql8H2DLmbjivDmmIwC9OK/CX+gP+rVl+ZKzZL8/0kVTpjgik
+	wym7TJjLUrcurnpvDpsdOSfg7csU=
+X-Google-Smtp-Source: 
+ AGHT+IG3CE5NbizKjDlNO7LAHE3YbVWKYuAZCq2jpkBmc6tF9s89Ou+nJ6fJSIBh08Z4Wh3ESLZS0PxdGYWO79UuENE=
+X-Received: by 2002:a2e:a546:0:b0:304:588a:99e1 with SMTP id
+ 38308e7fff4ca-304685c21c6mr140783031fa.26.1735566074152; Mon, 30 Dec 2024
+ 05:41:14 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+References: <20241217230645.15027-2-derekjohn.clark@gmail.com>
+ <20241227184825.415286-1-lkml@antheas.dev>
+ <CAFqHKT=Y66KNo-e+o+n76tmPEcqL4EBSUQNDXJcoP8B9NXguew@mail.gmail.com>
+ <CAGwozwGpEWVQwEAFfWWkTx4G90uhqdfbF85E4F_2w6c6G6P2Sg@mail.gmail.com>
+ <CAFqHKTnOA5N-uADQLbdA-b+k-TOMdjZtCPsFsCo9jarMiNioLg@mail.gmail.com>
+ <CAGwozwF79xYrWkCSKpBaLSiXNEZz-5tmayWMbkw-of4zB=LPUQ@mail.gmail.com>
+ <b7089d69-4d7b-42fb-90b3-bd13a27fcf1e@gmx.de>
+ <CAGwozwEWNkUDCzSq7-Lei1yBAjpQjyZUtW7+8n_Cpn9xd4aR3A@mail.gmail.com>
+In-Reply-To: 
+ <CAGwozwEWNkUDCzSq7-Lei1yBAjpQjyZUtW7+8n_Cpn9xd4aR3A@mail.gmail.com>
+From: Antheas Kapenekakis <lkml@antheas.dev>
+Date: Mon, 30 Dec 2024 14:41:02 +0100
+X-Gmail-Original-Message-ID: 
+ <CAGwozwF2EZpChf+eCn5pWy5_ctJ_qUgTrARgiBaW2hWk1CgX4A@mail.gmail.com>
+Message-ID: 
+ <CAGwozwF2EZpChf+eCn5pWy5_ctJ_qUgTrARgiBaW2hWk1CgX4A@mail.gmail.com>
+Subject: Re: [PATCH 0/1] platform/x86: Add Lenovo Legion WMI Drivers
+To: Armin Wolf <W_Armin@gmx.de>
+Cc: Derek John Clark <derekjohn.clark@gmail.com>, corbet@lwn.net,
+ hdegoede@redhat.com,
+	ilpo.jarvinen@linux.intel.com, linux-doc@vger.kernel.org,
+	linux-kernel@vger.kernel.org, luke@ljones.dev, mpearson-lenovo@squebb.ca,
+	nijs1@lenovo.com, pgriffais@valvesoftware.com,
+	platform-driver-x86@vger.kernel.org, shaohz1@lenovo.com, superm1@kernel.org,
+	zhangzx36@lenovo.com, johnfanv2@gmail.com, codyit@gmail.com
+Content-Type: text/plain; charset="UTF-8"
+X-PPP-Message-ID: 
+ <173556607557.15476.3139278796124499836@linux1587.grserver.gr>
+X-PPP-Vhost: antheas.dev
+X-Virus-Scanned: clamav-milter 0.103.11 at linux1587.grserver.gr
+X-Virus-Status: Clean
 
-On Mon, Dec 30, 2024 at 5:04 PM Aiqun(Maria) Yu <quic_aiquny@quicinc.com> wrote:
-> On 12/28/2024 1:13 AM, Pengyu Luo wrote:
-> > There are 3 variants, Huawei released first 2 at the same time.
-> > Huawei Matebook E Go LTE(sc8180x), codename should be gaokun2.
-> > Huawei Matebook E Go(sc8280xp@3.0GHz), codename is gaokun3.
-> > Huawei Matebook E Go 2023(sc8280xp@2.69GHz).
+I guess I am late on the party on [1], just reviewed the series. Quite
+a nice series
 
-[...]
+Given there is a class device for this now, it would make sense to me
+that "tunings" for each platform driver would go there
 
-> > +#include <linux/mutex.h>
-> > +#include <linux/version.h>
-> > +
-> > +#include <linux/platform_data/huawei-gaokun-ec.h>
-> > +
-> > +#define EC_EVENT             0x06
-> > +
-> > +/* Also can be found in ACPI specification 12.3 */
+Antheas
+
+[1] https://lore.kernel.org/all/20241206031918.1537-11-mario.limonciello@amd.com/
+
+On Sun, 29 Dec 2024 at 23:41, Antheas Kapenekakis <lkml@antheas.dev> wrote:
 >
-> It appears that the following EC commands are common to all ACPI-applied
-> embedded controllers. Is it possible to standardize these commands and API?
+> Hi Armin,
+> indeed you covered everything.
 >
-
-No, I mentioned a little in kerneldoc, EC_READ only works for psy
-related things.
-
-> > +#define EC_READ                      0x80
-> > +#define EC_WRITE             0x81
-> > +#define EC_BURST             0x82
-> > +#define EC_QUERY             0x84
-> > +
-> > +
-> > +#define EC_EVENT_LID         0x81
-> > +
-> > +#define EC_LID_STATE         0x80
-> > +#define EC_LID_OPEN          BIT(1)
-> > +
-> > +#define UCSI_REG_SIZE                7
-> > +
-> > +/* for tx, command sequences are arranged as
-> > + * {master_cmd, slave_cmd, data_len, data_seq}
-> > + */
-> > +#define REQ_HDR_SIZE         3
-> > +#define INPUT_SIZE_OFFSET    2
-> > +#define INPUT_DATA_OFFSET    3
-> > +
-> > +/* for rx, data sequences are arranged as
-> > + * {status, data_len(unreliable), data_seq}
-> > + */
-> > +#define RESP_HDR_SIZE                2
-> > +#define DATA_OFFSET          2
-> > +
-> > +
-> > +struct gaokun_ec {
-> > +     struct i2c_client *client;
-> > +     struct mutex lock;
-> > +     struct blocking_notifier_head notifier_list;
-> > +     struct input_dev *idev;
-> > +     bool suspended;
-> > +};
-> > +
-> > +static int gaokun_ec_request(struct gaokun_ec *ec, const u8 *req,
-> > +                          size_t resp_len, u8 *resp)
-> > +{
-> > +     struct i2c_client *client = ec->client;
-> > +     struct i2c_msg msgs[2] = {
-> > +             {
-> > +                     .addr = client->addr,
-> > +                     .flags = client->flags,
-> > +                     .len = req[INPUT_SIZE_OFFSET] + REQ_HDR_SIZE,
-> > +                     .buf = req,
-> > +             }, {
-> > +                     .addr = client->addr,
-> > +                     .flags = client->flags | I2C_M_RD,
-> > +                     .len = resp_len,
-> > +                     .buf = resp,
-> > +             },
-> > +     };
-> > +
-> > +     mutex_lock(&ec->lock);
-> > +
-> > +     i2c_transfer(client->adapter, msgs, 2);
+> I am a bit hesitant about binding sppt, fppt, and spl into those
+> interfaces as they need to be set in a very specific ordering and
+> rules. E.g., spl < sppt < fppt after setting tdp and before the fan
+> curve and after sleep maybe depending on device, after reboot maybe
+> after keybind (Legion L + Y) as well. Which is not what's expected by
+> the userspace programs consuming this interface. In addition, this
+> would expose them to perusing users where they might be confused. I
+> also know that its difficult by looking at a patch series to
+> understand the nature of these values. However, given my previous
+> email, you now have the full context you need to make a decision.
+> If you think it is appropriate, it is fine by me.
 >
-> ARRAY_SIZE(msgs) is suggested instead of pure 2.
+> I'd personally stick them next to platform_profile with a /name
+> discoverability mechanism similar to hwmon, where tuning
+> software can find them (something similar to Mario's RFC
+> that I linked above). Other settings such as the bios light that
+> interface is perfectly good for.
 >
-
-Agree
-
-> > +     usleep_range(2000, 2500);
+> As for the hardware limits. You are absolutely right, the ACPI eforces
+> none, incl. for Lenovo. And the quality is as you expect. For the
+> Legion Go, they are quite creative. They added a battery 80%
+> capacity limit by re-using the key value for booting from AC [1-2].
+> They also used a weird ABI for the lighting interface to turn off
+> the suspend light for a good half of the BIOSes, then they fixed it
+> when they allowed to turn off the suspend light during sleep as well,
+> which caused that option to break in Legion Space for I want to say
+> two months. Nevertheless, nobody has broken a Legion Go yet
+> messing with those settings by e.g., overclocking. It also brings
+> into view that while the Legion Go uses a derived Legion bios it
+> has started diverging a bit as it has its own vendor software.
 >
-> Why is a sleep needed here? Is this information specified in any datasheet?
+> So I would say that it is good that the other function has a discovery
+> mechanism and that gamezone has some bitmasks for that purpose as
+> well. It means that if we tap on them during probe, at least for
+> Legion laptops from the last 3 years, we can get pretty good support
+> from the get go. Before that, it is a mix of EC + WMI (see [3]).
 >
-
-Have a break between 2 transaction. This sleep happens in acpi code, also
-inside a critical region. I rearranged it.
-
-Local7 = Acquire (\_SB.IC16.MUEC, 0x03E8)
-...
-write ops
-...
-Sleep (0x02)
-...
-read ops
-...
-Release (\_SB.IC16.MUEC)
-
-> > +
-> > +     mutex_unlock(&ec->lock);
-> > +
-> > +     return *resp;
-> > +}
-> > +
-> > +/* -------------------------------------------------------------------------- */
-> > +/* Common API */
-> > +
-> > +/**
-> > + * gaokun_ec_read - read from EC
-> > + * @ec: The gaokun_ec
-> > + * @req: The sequence to request
-> > + * @resp_len: The size to read
-> > + * @resp: Where the data are read to
-> > + *
-> > + * This function is used to read data after writing a magic sequence to EC.
-> > + * All EC operations dependent on this functions.
-> > + *
-> > + * Huawei uses magic sequences everywhere to complete various functions, all
-> > + * these sequences are passed to ECCD(a ACPI method which is quiet similar
-> > + * to gaokun_ec_request), there is no good abstraction to generalize these
-> > + * sequences, so just wrap it for now. Almost all magic sequences are kept
-> > + * in this file.
-> > + */
-> > +int gaokun_ec_read(struct gaokun_ec *ec, const u8 *req,
-> > +                size_t resp_len, u8 *resp)
-> > +{
-> > +     return gaokun_ec_request(ec, req, resp_len, resp);
-> > +}
-> > +EXPORT_SYMBOL_GPL(gaokun_ec_read);
-> > +
-> > +/**
-> > + * gaokun_ec_write - write to EC
-> > + * @ec: The gaokun_ec
-> > + * @req: The sequence to request
-> > + *
-> > + * This function has no big difference from gaokun_ec_read. When caller care
-> > + * only write status and no actual data are returnd, then use it.
-> > + */
-> > +int gaokun_ec_write(struct gaokun_ec *ec, u8 *req)
-> > +{
-> > +     u8 resp[RESP_HDR_SIZE];
-> > +
-> > +     return gaokun_ec_request(ec, req, sizeof(resp), resp);
-> > +}
-> > +EXPORT_SYMBOL_GPL(gaokun_ec_write);
-> > +
-> > +int gaokun_ec_read_byte(struct gaokun_ec *ec, u8 *req, u8 *byte)
-> > +{
-> > +     int ret;
-> > +     u8 resp[RESP_HDR_SIZE + sizeof(*byte)];
-> > +
-> > +     ret = gaokun_ec_read(ec, req, sizeof(resp), resp);
-> > +     *byte = resp[DATA_OFFSET];
-> > +
-> > +     return ret;
-> > +}
-> > +EXPORT_SYMBOL_GPL(gaokun_ec_read_byte);
-> > +
-> > +int gaokun_ec_register_notify(struct gaokun_ec *ec, struct notifier_block *nb)
-> > +{
-> > +     return blocking_notifier_chain_register(&ec->notifier_list, nb);
-> > +}
-> > +EXPORT_SYMBOL_GPL(gaokun_ec_register_notify);
-> > +
-> > +void gaokun_ec_unregister_notify(struct gaokun_ec *ec, struct notifier_block *nb)
-> > +{
-> > +     blocking_notifier_chain_unregister(&ec->notifier_list, nb);
-> > +}
-> > +EXPORT_SYMBOL_GPL(gaokun_ec_unregister_notify);
-> > +
-> > +/* -------------------------------------------------------------------------- */
-> > +/* API For PSY */
-> > +
-> > +int gaokun_ec_psy_multi_read(struct gaokun_ec *ec, u8 reg,
-> > +                          size_t resp_len, u8 *resp)
-> > +{
-> > +     int i, ret;
-> > +     u8 _resp[RESP_HDR_SIZE + 1];
-> > +     u8 req[REQ_HDR_SIZE + 1] = {0x02, EC_READ, 1, };
+> In regards to firmware limits, it is something I would not include in
+> the first patch series as it will just make this harder to merge, esp.
+> if there are laptops with wrong limits. Then there are issues with
+> overrides etc. I would advertise the limits through _min, _max so we
+> can figure this out later and I would not do a runtime WMI check, as
+> we have to run the check during probe anyway to populate sysfs, where
+> it is natural to cache the limits.
 >
-> Could it be made more readable by specifying the macro names for 0x02
-> and 1? This would help in understanding the meaning of these numbers.
+> FInally, if indeed the gamezone function is Legion specific, and the
+> key-value pairs of the Other function are legion specific, from a
+> stylistic perspective I would tend towards making the ABI of the
+> driver Legion specific and abstract away its WMI details. E.g., I'd
+> use the name legion-wmi for a combined driver instead of
+> lenovo-gamezone-wmi which would then not be useful if lenovo moves
+> past gamezone. And I'd make sure it only loads on legion laptops. I'm
+> not up to date on my WMI driver conventions, so this is just a
+> suggestion.
 >
-
-I really don't know the meaning of master command 0x02, 1 is the size for
-the data_seq behind of it. There are many possible sizes. It is not a good
-idea to define a macro name for everyone.
-
-> Also, please ensure the actual size of the request buffer is handled
-> properly. In gaokun_ec_request(), the req is passed down directly, and
-> the i2c_msg.len is used dynamically with req[INPUT_SIZE_OFFSET] +
-> REQ_HDR_SIZE. This requires the caller to carefully manage the contents
-> to avoid memory over-read, making the code difficult to read.
+> Best,
+> Antheas
 >
-> Creating a defined macro can help you avoid manually defining the size.
-> For example:
-> #define REQ(size, data_0, data_1, args...) \
-> u8 req[REQ_HDR_SIZE + size] = {data_0, data_1, size, args};
->
-
-I think wrapping like this is not recommended, see '5)' in [1]
-
-Best wishes,
-Pengyu
-
-[1] https://www.kernel.org/doc/html/v4.10/process/coding-style.html#macros-enums-and-rtl
+> [1] https://github.com/BartoszCichecki/LenovoLegionToolkit/blob/21c0e8ca8b98181a2dedbec1e436d695932a4b0f/LenovoLegionToolkit.Lib/Enums.cs#L72
+> [2] https://github.com/hhd-dev/adjustor/blob/188ef6c3e4d7020f2110dd29df6d78847026d41e/src/adjustor/core/lenovo.py#L241
+> [3] https://github.com/johnfanv2/LenovoLegionLinux
