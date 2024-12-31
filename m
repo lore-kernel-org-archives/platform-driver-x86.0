@@ -1,104 +1,119 @@
-Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
+Received: from mail-wm1-f45.google.com (mail-wm1-f45.google.com [209.85.128.45])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8324C2114
-	for <platform-driver-x86@vger.kernel.org>; Tue, 31 Dec 2024 11:09:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C70762AEE9
+	for <platform-driver-x86@vger.kernel.org>; Tue, 31 Dec 2024 12:42:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1735643386; cv=none; b=Fv0uykSpVOtUif3H7rLSZKootuUau9CivkCG5ipcF0Oj9xKoUvFD1a/unO4GQdbPfyfl4yAykvU7cd1lCCQJtT2rqRKdrZxq8Hf+s7wWgnJcQMHA/gks/eKLxnGN7F2LZVeMYlDURzCoDNaMEHjRyqJPTpmD5i7Pd7wKRzG6ROQ=
+	t=1735648972; cv=none; b=gwkgxdR6NUt9rg41SCf0wlJNpZJVijEeA8WmF2ihQRAIpIKXD6Q/P7mQWaJuH7p8Y2R2Zo+2DM5/a+T3BHU0IL48uMzZxfrqCYR0PkW27qfeum4YsFi2siBHl8x2AXzkG7T76d06d0NOMYqO3RgyH/d94hwnM1vyqllj8PgInAw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1735643386; c=relaxed/simple;
-	bh=CZQrp3ljcPGAGgTKtH6TnT0akhIhaKad5XpyBTsLY9A=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=tOCGaSl7mzwpaUFkhwg55xEGGe7wMWh9GA2EqV/t+oZFMt5FRZd1cYWprgm0RLTww/fWKAUBbFU/MBhPJdrT8PdREy4GySUWXdohoKSxnC+QzXXqHyMSgDusZ/5RkeSXZqqBJmVaI1P4ynUL/9IMTQwKcGLon1jOVVf1l41Mcu4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=s5tqCrWt; arc=none smtp.client-ip=209.85.128.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1735648972; c=relaxed/simple;
+	bh=JzR5Q8hqCauRZLsysEvoLuXhgbLUKt8HPQwaPffhcWM=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=n8Ebg6k52d3m5aXZ3edIlsRtjOd+ymUKPfjhMlXEbJpf8BRAEnp727qEwkpfpYwUvruDSWrwbQynHErB+P99i0n0ehG7SGTrhBkQ5mc2E4saCS2YBye6TzV9/6T+CCTOnlBKr6T5smgLo0AVDWUdpHMrS90VdCvtXZg/X+f1gAk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=C3ccJLMi; arc=none smtp.client-ip=209.85.128.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="s5tqCrWt"
-Received: by mail-wm1-f41.google.com with SMTP id 5b1f17b1804b1-43624b2d453so103612365e9.2
-        for <platform-driver-x86@vger.kernel.org>; Tue, 31 Dec 2024 03:09:44 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="C3ccJLMi"
+Received: by mail-wm1-f45.google.com with SMTP id 5b1f17b1804b1-43675b1155bso85732565e9.2
+        for <platform-driver-x86@vger.kernel.org>; Tue, 31 Dec 2024 04:42:50 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1735643383; x=1736248183; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=Mh8UYWaZc8WrVxKRwykbsoh7O86a7wx9Ng47k23FtHw=;
-        b=s5tqCrWtKraouzU9+pCS0X4ejOyWYzCvtoiYHShK8elgI41wEu895sywAI5xnJS1Ma
-         +osiZ16wodiyTf8eR67X2dAJjFWQNWtK9v7EaqeARwjBqXP4sBixd09XlF9UCTY+jKyq
-         obL/z3PCD7/3dbjzsDHQx2Pj+KGYgISlZ/5XgSb1cdzNIccDyud4zVyIyJ6/q/9Zfrpu
-         y8rtuNoTRYGbZdJWmtf6Bj/WVeJe6yJr5JamZGwW25t/qQNSM76BjobqMkG5rj6P3vf/
-         xUt7pIgHwoc0hZTrCYM2eDVq/XTWZTv3NGhG7AiNjsw8Sl3aTl2GhK6q4R0AKAfmexfp
-         yD3g==
+        d=gmail.com; s=20230601; t=1735648969; x=1736253769; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=JzR5Q8hqCauRZLsysEvoLuXhgbLUKt8HPQwaPffhcWM=;
+        b=C3ccJLMirFsMvp6gxGlqp+ylkEUIxGB8xo00iqsqdiy3tle5rXpRrH0u4Xr8VJjpcA
+         EP2c8UJYpvf1cCcGoRrGhc30+RQZJ81Wjwkhyps4XcO68Waz3ZYBrM8q466ZxwM7Hktw
+         q4ZGZ9BIKkcEqARFJtjRJEia9Rr0o1E2JYx818kpnjOe2AmYFlHHiHSDgtg59bm/sI6h
+         0vckCj1tRCjTugStE+wuqnRqVxhZ1FhzQb3cxT3eXoBoPu1Jh4h8fw4N9xT9KzAYR1lC
+         CNK28fGosBXuA50RGdAipBbYLw6JYhgRbDB87yazErJp4FHT1FWaGBUknnaXuiscHLfP
+         m9HQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1735643383; x=1736248183;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Mh8UYWaZc8WrVxKRwykbsoh7O86a7wx9Ng47k23FtHw=;
-        b=aJJPrNmNGCx/VUXGJIltnuQs99Bis+NrWKOV3r7HGj1ZPKZNFcCHhsdVqTiICTAWmY
-         YxYpgEnXZp4jw8BUxg/0P7M++AXV8BhVTg8xAK/e0k3XfgtqJQd8TKzLgJMtEvKZDweG
-         LaoY0e7LrF1BKXVyF6lb1jV90CwTzdX+GluTHiOvqZ0j/qLM7DIdIpojnqcZvAcq+ceX
-         2NAZbyjbeNT8TIu9A3Dl4Ps8zx8Le24fTnybZXrKT+JvXawvEpY9/KeqhQ19d/4rWmFr
-         8dvku1ngGuA53htV1SzKeJVvPHgGmQWHHltJGzsUHBlyvoXAWiJF5UWqB3YDDzZCRFmw
-         j5rg==
-X-Forwarded-Encrypted: i=1; AJvYcCWVNcCipvfZuDjh0vL70JQAMbJIjEjKv3jUXc/70zMAtzTH4Cn2Cw316KHhUXZSNNrjRwvaOkbcXsDsoQ7biIIKs9fG@vger.kernel.org
-X-Gm-Message-State: AOJu0YzzhTCePN8VtWcH1R3v7BkAPscJj/kbZ/lT6uEwZa/3eQGr8isq
-	pXUoC3VjBevCShPija4Ivpa77QbW6ocy+9boFsmXtXwK2WdCG3crLb9ogDs2hzg=
-X-Gm-Gg: ASbGncvvnBOJSeHiEs8y4hOUmQ3FNMwKu3J2beo2iP+fUrlwsHRKtS9i4LExDNmG5lh
-	BBT12dr5yat/QZQFMeFdJcenskyt4w7D7vdEaTjh8pGs8uUHCTjaN2WMT1x4y8InrgBdeCXxmb7
-	JCikLET9F98Qxx4OKtqMvtMpsKXk6Qn4eFNfbimj9EyQ+bk9ZqHFrIB+Ei/ACKk10WSm0rdLoYX
-	iEmGi+0ER6mrQPkqCI3Ca1SB9BbFy4lRb1cO6V+MeOe1oh59LhzK6NoMBtUO9S5bzTuOg==
-X-Google-Smtp-Source: AGHT+IFaNhrfsnfvBxSp1tViYSz7o2qMK2dzhldDNDYiuudm1kNGgf7qZsGXiU9LTOK5Js6Pse/c7w==
-X-Received: by 2002:a05:6000:1568:b0:385:dc45:ea22 with SMTP id ffacd0b85a97d-38a223f835dmr31212643f8f.39.1735643382887;
-        Tue, 31 Dec 2024 03:09:42 -0800 (PST)
-Received: from [192.168.0.40] ([176.61.106.227])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-38a1c829120sm33379893f8f.6.2024.12.31.03.09.41
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 31 Dec 2024 03:09:42 -0800 (PST)
-Message-ID: <583ec206-e670-4aa0-9490-4ee6397800e5@linaro.org>
-Date: Tue, 31 Dec 2024 11:09:40 +0000
+        d=1e100.net; s=20230601; t=1735648969; x=1736253769;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=JzR5Q8hqCauRZLsysEvoLuXhgbLUKt8HPQwaPffhcWM=;
+        b=oL0QDze1dln1b8AL0D7i5w7M9LFJbXvCDau7aXA7ysqUTmbVLd2lMhs2onSLZst6qK
+         VyiL/xzHPGihp9pq+UzDXw2Ey7uct1a4wEj6jHAuW0BGD/3fEBCumBa7FrGFJoHPaltK
+         AkLdk4fGSPgJnlzpHWxdnwr8BZVLOdT/EHoRwtc58MXQBAHGlyoXpVj0ZISU1Bcrk+rH
+         eE/xKOmxsSLrSmInl9uAOCJ/V7v5OxU5ykRAHWZ8RXmunCfME2VIV7ZCJV91Z2ApEmDP
+         qa6LSFkl6EGN/7XlUxJdLHY5bt18opFYyhojiBUZGvZTCqzpjIVR6uKvlX/EFPeh5WAc
+         hziA==
+X-Forwarded-Encrypted: i=1; AJvYcCU31ucW35oZi6L+6csNgUD2YU/gk8QmeP752bhVG0wWiNO8sp5mERxIYT/kaMKn2ebntZg+L0lxiy3Qf+VK/3lSjExE@vger.kernel.org
+X-Gm-Message-State: AOJu0Yza5TJvqhAMOLvPJ16m3wRylu7kCEK8+4Cxq3k/g4+WYBlyqmKy
+	trUnwGxLkiWkC5+9DqGjSTaMmDXN7yyjZwzvgrIlTDz2qvRD6zCALoYuiKAPGk5et7n7qzE6Btw
+	vDya7dNiuMqyX37Tx+M8xwecmIes=
+X-Gm-Gg: ASbGncsKDwcQAA5RznkVkU/joAoy17ZWcJwbU37MHdstp4yG8sozIaHJjL1AlC9YB0p
+	W+Im9IHK/oJWZiAvmbjBQHzee4GErY+Y4R3r8ZEI=
+X-Google-Smtp-Source: AGHT+IEhI0zKiijGjDOL8Lq1FoSUbtMIi/uYosF6aP4slKVZRNJ75Q+DdZqAvLabX4qNNqZjg9fb0pABQK125+hzCxs=
+X-Received: by 2002:a5d:5e09:0:b0:385:f72a:a3b0 with SMTP id
+ ffacd0b85a97d-38a223fd417mr41474396f8f.55.1735648968961; Tue, 31 Dec 2024
+ 04:42:48 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 2/5] platform: arm64: add Huawei Matebook E Go (sc8280xp)
- EC driver
-To: Pengyu Luo <mitltlatltl@gmail.com>, quic_aiquny@quicinc.com
-Cc: andersson@kernel.org, conor+dt@kernel.org, devicetree@vger.kernel.org,
- dmitry.baryshkov@linaro.org, gregkh@linuxfoundation.org,
- hdegoede@redhat.com, heikki.krogerus@linux.intel.com,
- ilpo.jarvinen@linux.intel.com, konradybcio@kernel.org, krzk+dt@kernel.org,
- linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-pm@vger.kernel.org, linux-usb@vger.kernel.org, nikita@trvn.ru,
- platform-driver-x86@vger.kernel.org, robh@kernel.org, sre@kernel.org
-References: <1dff7a78-1693-45d7-8ee3-357b33848595@quicinc.com>
- <20241231074437.239979-1-mitltlatltl@gmail.com>
-Content-Language: en-US
-From: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
-In-Reply-To: <20241231074437.239979-1-mitltlatltl@gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+References: <CA+b5WFEXPJ==vruf-6DHrhS7j3pnTaj_EQE08BimxqyaNvktQQ@mail.gmail.com>
+ <d1028755-6a7a-4db4-bd4b-e5a2d682af61@amd.com> <CA+b5WFFa4hMeGnN0J2xd=FpU2Cxe_AjapWBpTFjfNhzUSOUAzA@mail.gmail.com>
+ <0281e6f7-4ccd-4369-9182-d1580c9e6bc5@amd.com> <CA+b5WFEv1Qj3NYcwXaZz1EYW9omj7FmB8FdSKZnixsMNoi1+DQ@mail.gmail.com>
+ <ddd7bf09-31aa-4e4a-93ea-b1336ced8578@amd.com> <CA+b5WFGDstoJTjgaT+hm4r-78zup1pLa2Ada7PqbTY=wCutSbA@mail.gmail.com>
+ <98b3392f-2860-4a32-a769-b4dcd3f5dbbe@amd.com>
+In-Reply-To: <98b3392f-2860-4a32-a769-b4dcd3f5dbbe@amd.com>
+From: Mischa Baars <mjbaars1977.backup@gmail.com>
+Date: Tue, 31 Dec 2024 13:42:38 +0100
+Message-ID: <CA+b5WFGkDJhpRRywQLx2okttXGasBu6K8ScLZyakKrk1+FZWAw@mail.gmail.com>
+Subject: Re: amdgpu 4k@120Hz / HDMI 2.1
+To: amd-gfx@lists.freedesktop.org, platform-driver-x86@vger.kernel.org
+Cc: Mario Limonciello <mario.limonciello@amd.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 31/12/2024 07:44, Pengyu Luo wrote:
-> Please search
-> 'device name + acpi table' on the internet, someone dumped it and uploaded
-> it, in SSDT, check ECCD. I am not sure if huawei allows users to dump it.
-> So I don't provide it here.
+Hi Mario,
 
-There's a repository of ACPI dumps here:
+Although unconfirmed by their website, the rumour goes that the HDMI
+Forum will release a 2.2 specification somewhere in Januari. Do you
+think that an open source 2.1 implementation will be allowed soon
+after?
 
-https://github.com/aarch64-laptops/build/tree/master/misc
+In the meantime I also checked the framerate synchronization through
+glxgears at different resolutions and framerates. This does function
+as expected. Although I haven't yet inspected the glxgears source
+codes in detail, the OpenGL double buffering must be functional up to
+some level. This means that the problem must be confined to GTK and
+the GtkGLArea widget. Using GDK_BACKEND=3Dx11 I do get a double buffered
+context, but the default buffer does not alternate between GL_FRONT
+and GL_BACK.
 
-including the Huawei Matebook E - not sure if that should include the 
-"Matebook E Go"
+Enjoy new year's eve!
 
-https://github.com/aarch64-laptops/build/tree/master/misc/huawei-matebooke-2019
+Regards,
+Mischa.
 
-You could provide it there.
-
----
-bod
+On Wed, Oct 23, 2024 at 6:16=E2=80=AFPM Mario Limonciello
+<mario.limonciello@amd.com> wrote:
+>
+> On 10/23/2024 11:12, Mischa Baars wrote:
+> >> I certainly don't have a crystal ball, but I try to avoid saying thing=
+s
+> >> like "never" or "for sure" in non-ephemeral contexts like mailing list=
+s.
+> >
+> > I understand. I'll concentrate on different aspects of testing the
+> > connection with this TV, like gdk_monitor_get_description(...) doesn't
+> > return a valid description when the application is started with
+> > GDK_BACKEND=3Dx11. I also have less trivial questions about the ancient
+> > and seemingly long forgotten concept of page flipping. I'll think of
+> > something to do.
+> >
+> > Thank you for your help.
+> >
+>
+> OK, If you have more questions about other things that come up along the
+> way feel free to raise them on amd-gfx.
+>
+>
