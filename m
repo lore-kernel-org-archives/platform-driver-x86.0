@@ -1,244 +1,124 @@
-Received: from mout.gmx.net (mout.gmx.net [212.227.15.19])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yb1-f170.google.com (mail-yb1-f170.google.com [209.85.219.170])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9132C19BBA;
-	Tue, 31 Dec 2024 15:19:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F4E31C683;
+	Tue, 31 Dec 2024 15:53:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1735658370; cv=none; b=uekW86pPT60mnc7d60cMJqul4CUCRM+7jnBYB6EjgeQCgGSyzEuiZqn1AkOZeKDwkU3lcLFPsE6ltUTt3qFPkQH94iH0PN1EzObp9gdMqaIx0p7xIX7iKIbVdMKocNRULcMW4oLYNF+pxM2FeOg1j7Z3examL0YhuwzuNOi1YI0=
+	t=1735660415; cv=none; b=YeE+KewZVNvkgbQCv+lugD8tTGGt6zL7b8VAKXZcOIg4o6rBecDkJe6XmCWZnbFFZk94MRgK2c2M5E7fC2m2RKyD3dGf5+A2zMI7Y348AoUmTlHLvdkiAQLbjmIgh5EM6g+sKCwLp1fCKFMDXdhlRX0fiycnpL5AtoE5qdex+7A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1735658370; c=relaxed/simple;
-	bh=YDXolLQBS0bB1pMRwE7z4MUoovP049J6iDA5Yn83EVQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=edZNMiDqg0S1XAYK/7g5K/aCcbUilnQi9DQsYsog0KJhg+lnJw7WE8dVy1fh9bdZgBZySBri50PGOq7UDqa+lX9RP2laAM936fa+7RhSZAURQEDliXrAsr94pWGKnFMYAtnnyOvUfNOutISZjZxfm3BJQZPA4Vhm/70pNp8t0pw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b=XbKxV/2N; arc=none smtp.client-ip=212.227.15.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
+	s=arc-20240116; t=1735660415; c=relaxed/simple;
+	bh=KDLIaVkCTXgvi/X54ec26dlRwP439BW45tSdxoVsiAM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=aw7CkkQVm3ZvfOuXcC5WxEyGOix4omhGP9CfzPcZoIpUnnF1/eWXsJZ/X17SStmCj1APmYEeVS1FUxdA7Me50UQcZEdKmSkeMr3/nIDEQanVY2QTXg97JfjyM7wRtIwf/22otEPRYqSjOwakA7ExSh6kkTx2spN8YoDMkW/gjJg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=JoiIw4qq; arc=none smtp.client-ip=209.85.219.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b="XbKxV/2N"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.de;
-	s=s31663417; t=1735658354; x=1736263154; i=w_armin@gmx.de;
-	bh=smD4lFhsniCkmYA9C5PbtHxc6YfPCjxMZb12G1+C7cs=;
-	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:To:
-	 References:From:In-Reply-To:Content-Type:
-	 Content-Transfer-Encoding:cc:content-transfer-encoding:
-	 content-type:date:from:message-id:mime-version:reply-to:subject:
-	 to;
-	b=XbKxV/2NkJ+L79KEss/NHb0p34y6utDE99JPs6p86NylzYQDg0tIFiF1jSKeCkUb
-	 xgnQ0Qk9AErECajpxTbwiCbXTpldSk9CSGXrD0wS+diYoMmYyvGbOV3eB5S5VPJjI
-	 z8kzHxkLNSx1yfD6F5QlP3lDBB+GUrzVLeSJ/Kv5WWYblQp73tTzcYr6BUC86hc/U
-	 t7f+tWh+03/KujhUyJEmJvnA88dbmZK8IkDb6jUU7MvtWdv4WX/pWwZpQ1BWNt7He
-	 n4xWPLKSbXRoceRzYZrC8kgTnFdLBALgU/coefbgxROSEGU51c7Zl72l9qkJA3WrU
-	 KQ+iAFohJ6ucXYy5Lw==
-X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
-Received: from [192.168.0.14] ([91.14.230.110]) by mail.gmx.net (mrgmx004
- [212.227.17.190]) with ESMTPSA (Nemesis) id 1MKKZ3-1tD21G3bFn-00L0bl; Tue, 31
- Dec 2024 16:19:13 +0100
-Message-ID: <3733c3a7-63ae-4708-8a40-f5e0f1158ab4@gmx.de>
-Date: Tue, 31 Dec 2024 16:19:10 +0100
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JoiIw4qq"
+Received: by mail-yb1-f170.google.com with SMTP id 3f1490d57ef6-e5372a2fbddso13831212276.3;
+        Tue, 31 Dec 2024 07:53:34 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1735660413; x=1736265213; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=EwRpEjFa+TS9Mg3MENxMxqboRhcmn0cpNw5dodxNHeE=;
+        b=JoiIw4qqJGHuaehze+rZFyIbB6I11JoeTcWBczxQ5sx5mpW2hx+IDisQsFqvdSqY0R
+         Gitt1LKSJ3Xb4iFQk40BqaVk3uyahIyiBB6P4cnjsHKQwuOC86J1wMl4rLDJJIRkWy9c
+         /7zz2ZBMbTTnuXDiFuhip0vXoY5G7gQS46MzBtVrVZdP8E7lAxD3Zn/ehQHqSQJ8XCAC
+         890Ps297J1pubgnd/q9MZKe8BgJJoLaG8Fx1Ln3/wYpoRd2Sr7FQuaE+rC/3j7gBvLAX
+         +VjL5tX99Bxan2LdnIgww3wuzg/g6ZoqslQR0Q9X6ZTMSPGMNV6SKak4b6K06banqKqx
+         hetg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1735660413; x=1736265213;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=EwRpEjFa+TS9Mg3MENxMxqboRhcmn0cpNw5dodxNHeE=;
+        b=Von9vD3RHYFLy5UL+EpOR09mv4FRfp5J+KzlMuEmUScH8yklhmbcs9myGwi2G6bAW4
+         Z8yMUJZbTqFUEEcSUDw1FVeMLzhdjet5EpjQxSOrYTTNCTQNwefF/ER9q/ktuGML4RQq
+         MCO8GfpbY2jatPc34fUB4n530hGMdK5zBtbDoRh3M9Mq4kvWfNGZDK34e7OhFDWAXcjc
+         g+9rBvCFfNBYo2F4ANc1cPkfe7cFEqQMN4nqUZZiYSMudz+v4tneu3Pggn8evDfGlXJL
+         g+7Qx1HUfF7kOxHcRHdAc6vgr3H8qoANoJiLHGKIgbfr2YyuQxRzfmUwZDt7Qwm7wKGt
+         06Dw==
+X-Forwarded-Encrypted: i=1; AJvYcCV5+39iTJ0yDsGo7wP27wlAJoW8YzcFea2IcIQwjXghh5tpQf78fpil9IxOokQQjhDWTgG7rHpv7wYC@vger.kernel.org, AJvYcCWddv6Euhvt943pvp9su2HCOI/BBOOhLZc4e6+r8yF5Hs18ARZ6Vz+G39+Y0N6E8PWurxLuFNu1DSiRpiTb@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz/ImOgqjQdSuozEQ9SNJZJfOFODGWLL/Ic+WQ8TRLntjnJnW71
+	dhvTFMq7ashPufTOAVnN0ADR1+LRVPdsTGeBQEgI3WLOWvyUe4l8
+X-Gm-Gg: ASbGncsinseWYf4/eiAFu3KR00rTT1hsOmnIP+mUOyCPm07jbBt6dYpXCmN59KmPYDX
+	awDOJYU3lBstv3tYLXTjWomF18B4NNEApcwt+4aF2K1yndBCbIeqFzmpn9PCAMOXKUpEPIcglYS
+	igGVSkpkPDM/5lp7ja3nMaQhttBpr0PNBAjDrYDIPXChhwsmvRtx5gcbp+5qj2rbeBvssWiAjwi
+	iuUU0Cbi2/RSDlM1+VJlDFqW9cS/sdF26VkS0vewzxihZgwYdhSmg==
+X-Google-Smtp-Source: AGHT+IHG5538UecNtk5l/e74GYoViHNtljjB53ijuISnTo4lQqorJp6NeNcdbIqzomUTSqY3NX8NZg==
+X-Received: by 2002:a05:690c:7481:b0:6ea:7d88:ae3f with SMTP id 00721157ae682-6f3f8126208mr298915027b3.17.1735660412746;
+        Tue, 31 Dec 2024 07:53:32 -0800 (PST)
+Received: from alphacentauri ([2800:bf0:82:1159:1ea9:11b1:7af9:1277])
+        by smtp.gmail.com with ESMTPSA id 00721157ae682-6f3e73e76cbsm62880087b3.22.2024.12.31.07.53.30
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 31 Dec 2024 07:53:32 -0800 (PST)
+Date: Tue, 31 Dec 2024 10:53:29 -0500
+From: Kurt Borja <kuurtb@gmail.com>
+To: Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>
+Cc: platform-driver-x86@vger.kernel.org, W_Armin@gmx.de, 
+	Hans de Goede <hdegoede@redhat.com>, lenb@kernel.org, linux-acpi@vger.kernel.org, 
+	LKML <linux-kernel@vger.kernel.org>, mario.limonciello@amd.com, 
+	Mark Pearson <mpearson-lenovo@squebb.ca>, "Rafael J. Wysocki" <rafael@kernel.org>, soyer@irl.hu
+Subject: Re: [PATCH v2 0/2] Device managed platform_profile_register()
+Message-ID: <q45nl5wdout46frnjbkufvi2pmyhz3cfyp72qyqrsnhpnlmhue@3no6u65stho2>
+References: <20241224140131.30362-2-kuurtb@gmail.com>
+ <00b64207-ec35-5c99-9bdc-13c77e51e453@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4] platform/x86: lenovo-wmi-camera: Use
- SW_CAMERA_LENS_COVER instead of KEY_CAMERA_ACESS
-To: Ai Chao <aichao@kylinos.cn>, hdegoede@redhat.com,
- ilpo.jarvinen@linux.intel.com, platform-driver-x86@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <20241231061303.1142106-1-aichao@kylinos.cn>
-Content-Language: en-US
-From: Armin Wolf <W_Armin@gmx.de>
-In-Reply-To: <20241231061303.1142106-1-aichao@kylinos.cn>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:Kee3AUCrhhbAWxaogRniHmYNxeb+/GmFmX5hGR4HEcuxwsH5tcO
- 7nTHeWSu/A2LEh6evCjJsvyXSKyzwq43JcdTo8kDKLaOXsa1GTtbQOVRIXLmVVVX55YrWOi
- M2IWILsKGBHs52s759gzx4I5p+ZKuQgQr0oPV1FKvfCFoIPVAPBvh+s7f4gx4UgKKrYHXD4
- LD/iVue97MW4nNWaXGiJg==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:a7B+spNc+0Y=;AdT+jB7xlvmrabRBhIM77PlZfMk
- dSpU8Tb3uMNfCEniypDU/zavryThlIJB6sWa23cnT7R53YmZ1G8enXxxYeQzQ18HpQiJh4zy2
- DzF6WeIDy3x0tBFuUMYGCuB1r+rxf3AyxVAf/lh0Hkhc4DVB9aW9Zrgw9ePrnrUP1fSY2xs2q
- 5kVzOJcO9WQ/DPRESrSHqx33NBTLEvC3lk5yQuD6eAJ1dhTq2Kd/6VxIFRJHRCDZiUD8TwL0w
- TPu+zCaDx+ZOM6DezeBaF5B5bqZVHnWmuESwMmckC1qGflduOKA0lKqycCzGlR/bZTpJ8jgHc
- +24exe16xlGA3aD9nz/f5eJGGEsLxek0Y1bMb65kiV5ZdyInKaWMDwlNX/viT4ji0Utl6oXKO
- 9NUVI2FcliRR676wOqshPhUqUtABtV4tivaT9Sbc9vI5aa3yRnNheYPrhgMyV8/zm0SIx17EV
- Sc81o+ZTxv7rLob/2yvhlAnThiQfMY52uaK4m4jousImFnNWEfqdVrBDOEs4hRDELxP2Ct8gV
- +0P3k457Rs932SWt8uvt2+7v/qDkEtDXfZy5j/joVdyOjApLFXU2eWGXfDF9YdVCJN2BVquiG
- fX4nWbRyWJFGOjyKlcBgqaLgAqwZk5zvRUlcRJNGBk+ozLu7ec/azwjdxMgoxTGhrBZ8A1cmV
- aCJ4eb3jMYuDBw58ySUPVIo7iM6beDhDj4gtbhQrp95apR/JMKgWfgwCSa8jsi2uyS0Fn8PJZ
- 2U7zou/tL0IRp/Joxm0XYkpt64DaXQ2dSy8TYoPmffrPFYjZfW9efqAWsnGN5B1xiWIZsj+yt
- tOejGp/EdZ7XMdHNxDkeau1VZ1VpXYp5XvwhoZrWknF/+rh6m3bGB7Svku/AiSTVJ+Agq18AK
- HGqrmSolEvpLfPRjxoyTM96VI1L7g4mDr/puXNmEuAa7g2QkZYDT62DkFoG5V3x1JGHuu80e0
- lEHsYyv6VL1+uELvGpW8fdRTK/d8qI4elRfCOWEdNb4qz4GRGHalhYCkWaHr8Pffdo3hNvqcr
- U9hcd3L6umPFEwwOTice2z60I+esW/bS/vEjtoUtRnme33oFEdvEoaTu8ly394Vho8/8CBK8H
- hulDev4omZheuW2My2TRgfClNbT4qk
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <00b64207-ec35-5c99-9bdc-13c77e51e453@linux.intel.com>
 
-Am 31.12.24 um 07:13 schrieb Ai Chao:
+On Mon, Dec 30, 2024 at 08:31:28PM +0200, Ilpo Järvinen wrote:
+> On Tue, 24 Dec 2024, Kurt Borja wrote:
+> 
+> > Hi :)
+> > 
+> > This is meant to be merged on the pdx86 tree.
+> > 
+> > ~ Kurt
+> > 
+> > v2:
+> >  - Replaced convoluted cast with intermediate variable (1/2)
+> >  - Restored dropped empty line (1/2)
+> >  - Couldn't incorporate Armin's second comment. I probably didn't
+> >    understand it (1/2)
+> > v1: 
+> >  - https://lore.kernel.org/platform-driver-x86/20241221070817.3764-2-kuurtb@gmail.com
+> > 
+> > Kurt Borja (2):
+> >   ACPI: platform_profile: Add devm_platform_profile_register()
+> >   alienware-wmi: Use devm_platform_profile_register()
+> > 
+> >  drivers/acpi/platform_profile.c           | 29 +++++++++++++++++++++++
+> >  drivers/platform/x86/dell/alienware-wmi.c | 10 +-------
+> >  include/linux/platform_profile.h          |  1 +
+> >  3 files changed, 31 insertions(+), 9 deletions(-)
+> 
+> Thanks. I've now applied these.
+> 
+> The first patch is already in the for-next branch and the second is 
+> currently in the review-ilpo-next branch (as I wanted to retain ability to 
+> easily separate changes into platform_profile.c from the rest, they go to 
+> their own branch first).
 
-> Use SW_CAMERA_LENS_COVER instead of KEY_CAMERA_ACESS_ENABLE and
-> KEY_CAMERA_ACESS_DISABLE. When the camera toggle switch was hit,
-> the lenovo-wmi-camera driver would report an event code.
->
-> Signed-off-by: Ai Chao <aichao@kylinos.cn>
-> ---
-> change for v4
-> -Add mutex_unlock and report a switch state of 0 if SW_CAMERA_ON.
-> change for v3
-> -Used input_register_device and input_allocate_device.
-> change for v2
-> -Only delays the input-device registration and switches to reporting SW_=
-CAMERA_LENS_COVER.
->
->   drivers/platform/x86/lenovo-wmi-camera.c | 61 +++++++++++++++---------
->   1 file changed, 38 insertions(+), 23 deletions(-)
->
-> diff --git a/drivers/platform/x86/lenovo-wmi-camera.c b/drivers/platform=
-/x86/lenovo-wmi-camera.c
-> index 0c0bedaf7407..2a662b3c78f2 100644
-> --- a/drivers/platform/x86/lenovo-wmi-camera.c
-> +++ b/drivers/platform/x86/lenovo-wmi-camera.c
-> @@ -26,10 +26,34 @@ enum {
->   	SW_CAMERA_ON	=3D 1,
->   };
->
-> +static int camera_shutter_input_setup(struct wmi_device *wdev)
-> +{
-> +	struct lenovo_wmi_priv *priv =3D dev_get_drvdata(&wdev->dev);
-> +	int err;
-> +
-> +	priv->idev =3D input_allocate_device();
-> +	if (!priv->idev)
-> +		return -ENOMEM;
-> +
-> +	priv->idev->name =3D "Lenovo WMI Camera Button";
-> +	priv->idev->phys =3D "wmi/input0";
-> +	priv->idev->id.bustype =3D BUS_HOST;
-> +	priv->idev->dev.parent =3D &wdev->dev;
-> +
-> +	input_set_capability(priv->idev, EV_SW, SW_CAMERA_LENS_COVER);
-> +
-> +	err =3D input_register_device(priv->idev);
-> +	if (err) {
-> +		input_free_device(priv->idev);
-> +		priv->idev =3D NULL;
-> +	}
-> +
-> +	return err;
+Thanks Ilpo!
 
-Looks good to me, however i just stumbled upon an interesting comment rega=
-rding input_event():
+Should I rebase the alienware-wmi rework patch series on top of
+review-ilpo-next in v3? Currently it's on top of for-next branch.
 
-	NOTE: input_event() may be safely used right after input device was
-allocated with input_allocate_device(), even before it is registered
-with input_register_device(), but the event will not reach any of the
-input handlers. Such early invocation of input_event() may be used to
-'seed' initial state of a switch or initial position of absolute axis,
-etc. So maybe it would sense to call input_report_switch() on the input de=
-vice right before calling
-input_device_register(). This would make sure that the initial switch posi=
-tion is correct.
+~ Kurt
 
-> +}
-> +
->   static void lenovo_wmi_notify(struct wmi_device *wdev, union acpi_obje=
-ct *obj)
->   {
->   	struct lenovo_wmi_priv *priv =3D dev_get_drvdata(&wdev->dev);
-> -	unsigned int keycode;
->   	u8 camera_mode;
->
->   	if (obj->type !=3D ACPI_TYPE_BUFFER) {
-> @@ -55,11 +79,16 @@ static void lenovo_wmi_notify(struct wmi_device *wde=
-v, union acpi_object *obj)
->
->   	mutex_lock(&priv->notify_lock);
->
-> -	keycode =3D camera_mode =3D=3D SW_CAMERA_ON ?
-> -		   KEY_CAMERA_ACCESS_ENABLE : KEY_CAMERA_ACCESS_DISABLE;
-> -	input_report_key(priv->idev, keycode, 1);
-> -	input_sync(priv->idev);
-> -	input_report_key(priv->idev, keycode, 0);
-> +	if (!priv->idev)
-> +		if (camera_shutter_input_setup(wdev)) {
-> +			mutex_unlock(&priv->notify_lock);
-> +			return;
-> +		}
-
-Please add braces to the outer if-statement.
-
-Also if you implement the seeding of the switch position inside camera_shu=
-tter_input_setup() when
-you can return early if the input device was registered since it would alr=
-eady contain the correct
-slider position.
-
-I imagine something like this:
-
-if (!priv->idev) {
-	if (camera_shutter_input_setup(wdev, camera_mode))
-		dev_warn(&wdev->dev, "Failed to register input device\n");
-
-	mutex_unlock(&priv->notify_lock);
-	return;
-}
-
-Other than that the patch seems good to me.
-
-Thanks,
-Armin Wolf
-
-> +
-> +	if (camera_mode =3D=3D SW_CAMERA_ON)
-> +		input_report_switch(priv->idev, SW_CAMERA_LENS_COVER, 0);
-> +	else
-> +		input_report_switch(priv->idev, SW_CAMERA_LENS_COVER, 1);
->   	input_sync(priv->idev);
->
->   	mutex_unlock(&priv->notify_lock);
-> @@ -68,29 +97,12 @@ static void lenovo_wmi_notify(struct wmi_device *wde=
-v, union acpi_object *obj)
->   static int lenovo_wmi_probe(struct wmi_device *wdev, const void *conte=
-xt)
->   {
->   	struct lenovo_wmi_priv *priv;
-> -	int ret;
->
->   	priv =3D devm_kzalloc(&wdev->dev, sizeof(*priv), GFP_KERNEL);
->   	if (!priv)
->   		return -ENOMEM;
->
->   	dev_set_drvdata(&wdev->dev, priv);
-> -
-> -	priv->idev =3D devm_input_allocate_device(&wdev->dev);
-> -	if (!priv->idev)
-> -		return -ENOMEM;
-> -
-> -	priv->idev->name =3D "Lenovo WMI Camera Button";
-> -	priv->idev->phys =3D "wmi/input0";
-> -	priv->idev->id.bustype =3D BUS_HOST;
-> -	priv->idev->dev.parent =3D &wdev->dev;
-> -	input_set_capability(priv->idev, EV_KEY, KEY_CAMERA_ACCESS_ENABLE);
-> -	input_set_capability(priv->idev, EV_KEY, KEY_CAMERA_ACCESS_DISABLE);
-> -
-> -	ret =3D input_register_device(priv->idev);
-> -	if (ret)
-> -		return ret;
-> -
->   	mutex_init(&priv->notify_lock);
->
->   	return 0;
-> @@ -100,6 +112,9 @@ static void lenovo_wmi_remove(struct wmi_device *wde=
-v)
->   {
->   	struct lenovo_wmi_priv *priv =3D dev_get_drvdata(&wdev->dev);
->
-> +	if (priv->idev)
-> +		input_unregister_device(priv->idev);
-> +
->   	mutex_destroy(&priv->notify_lock);
->   }
->
+> 
+> -- 
+>  i.
+> 
