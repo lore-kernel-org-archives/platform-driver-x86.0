@@ -1,143 +1,104 @@
-Received: from mail-pl1-f172.google.com (mail-pl1-f172.google.com [209.85.214.172])
+Received: from mail-pl1-f170.google.com (mail-pl1-f170.google.com [209.85.214.170])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DAB678F58;
-	Wed,  1 Jan 2025 05:59:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BDC863207;
+	Wed,  1 Jan 2025 09:27:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1735711149; cv=none; b=kkeVgI+fJhM+rtDIMCWN7zPg48s3+HGUC/F5eVlaDhKfr+YnkZJfd6YDn57vNyRvaplCf2ABwASXIAMERObNse5M8j+o7IHPjgumnHJE89JLD/gaOLVlHAJ61VVBE/K+fA8M//BCq9L+E4A4kembQX/btvg1+iO/ohGG8NPqlJ8=
+	t=1735723667; cv=none; b=qKe5z2z1iv7+2gZsSmDT2aKCALz5ZCB0+FFhldQbZ2ryhgMF38njtyvg9P9iuOTJU7ks6+/rhI9l9dgPYa2KXlz0TOYpiCszrOXEepgR8jhuPnct/s9MumUqj5cG7jIBxiWH93sGqyt8rlk8+wbRMEtTC8kzHQrFkR20wZLoZo8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1735711149; c=relaxed/simple;
-	bh=1ERfz6MYRyQC9T7JOUIcmI7il21I2EZ+euGNycX8pHI=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Kh90sV54pNcf6lD2PPzn/idiWGDGRJLzRBJwUnHx3Gn5+vh7oCPz+iVNe0nauh9uuZxrfopdyo2wxJ6kFadX2XtFQBoQksg7avtY2M5/xGl3+uwcAge57hSfp6G8n7N018ChHgiFElyBcoGChMchgU7HKFhDWL1suDiNSDSPkeA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=gK30eRv9; arc=none smtp.client-ip=209.85.214.172
+	s=arc-20240116; t=1735723667; c=relaxed/simple;
+	bh=7BEIZOyfQREsK3yKOTfXYxIVcqf4vjErqs1rA1GtByw=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=WUgBJBUWVs9BCRF/dmSMyPlN4HhMAd3ljPztxUpTJdfPyrDI9sx2i8UHFfTzVDh17iZndKOf73l5eWXp+he0LAJ79us3OA07UJDxlUIlFPjHQ5YDXXsn1L1VMumWdMVbVQPgsuMVifybeG5S/XAMOIkV6ZqL9ipa/+QjPBLoSYo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=bRXwm59H; arc=none smtp.client-ip=209.85.214.170
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gK30eRv9"
-Received: by mail-pl1-f172.google.com with SMTP id d9443c01a7336-2165448243fso169167925ad.1;
-        Tue, 31 Dec 2024 21:59:07 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bRXwm59H"
+Received: by mail-pl1-f170.google.com with SMTP id d9443c01a7336-2167141dfa1so138438015ad.1;
+        Wed, 01 Jan 2025 01:27:45 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1735711147; x=1736315947; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=JxlkzERHMH6O41FvyQTnmiC7rDKDMif6g1pkU6AYpeQ=;
-        b=gK30eRv9ifZlF5yeO0FpNmwLBxq/4PUPRXKRB2Harezf1/5G6Sxaz08A+y5ha0Ril3
-         tPjD5kYn7pVH2qEuxYjylsGdM/ScrE1GPWw4GLgfNCcnUWCL2Rm9M5w8QyroiUvfprMs
-         VmNt+Vs1EfqNUVPeeK7MrsyM5laq1iLVNz0GBG4ykSM07ZjxS5btH0SjxqB/huioJqJg
-         Sy+VlqPMyIgoTke32G6+aXH80y4q7In2NqWs4nVFWe4Y/FM+uE35J0vajQjQNYURyrZl
-         8ghitX/mDPpCAjSvE4U8fIoM81PZi48ZmkDr0YtzQ6wOjj7fdicbE1npG1fVM3Yd/5Ay
-         9TEg==
+        d=gmail.com; s=20230601; t=1735723665; x=1736328465; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=gblQ2fahvEh9trckZJPo2LZE0BYb0Hq82UUGKz6pcTk=;
+        b=bRXwm59HaOvCY/qGiPutPAs0TJl3Acgfc8JUO7vPVfOD8Gw5vOJBKFFggikK0TLhgn
+         zlwbVIi+VlF0S+wyA6xkFKyp//P8qFFKcn1P4GH4nz+zG7f9xU815eev1Nw/jeihcscp
+         fj5tGAz2EDzJjag7rmEThH/AiE/47PxhysL65ZArAxP0LAGrZrp6867KbTTtVPLUdVMH
+         66HpaEq4613pmh25otf9tKK18UVVUOoJi4KlUU2IvTLMzgkveqKrT8N8vMY5NZh4U18X
+         shOULcUN2QUTA8bmr+cLVXeeik3mIvBG78CQ8NuTBk9fjBt1bW1aY57X2LRuxFSyOgud
+         SBKg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1735711147; x=1736315947;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=JxlkzERHMH6O41FvyQTnmiC7rDKDMif6g1pkU6AYpeQ=;
-        b=AyfvSN5X0d8uCckPxltne0RNhvXkNJ9+H98GZMB8RnAJUJZ/1L6ol/M1bkq9OQQuTf
-         pt1cFUlG2Vffj8OTZi5wLUiM3dDlnW0KNeI0tQmufccAHUZxfq/XBXu5uMN1crZpvjG/
-         aiV9z4xXpph3ljePQc72WwfZ2uk615BqGnOc0yF0FW7pQETAhzUeaCLR2bcfH4wCpmau
-         hRJu+ahzVMAQKPtlxuT7O0OCtfvR3HGgjuLUfhDgYKd0/680R42PNpYcDBpC8+v/0irf
-         CR9Ye330KEzWBndoh4hGAHSZs7XOV6/xv1WOw9BF80mPOqe+233Jdd1L8YyWgdVLPwhJ
-         RMvw==
-X-Forwarded-Encrypted: i=1; AJvYcCU/A8H5T5+CMLGWVfVI1RHt3fbdR4kdnfz/NeZYilNwNMat0Kyp+UvFl47Whz4mVRLlcAzrB44NV9fBuwBgGg==@vger.kernel.org, AJvYcCUICweDMYsoOOBc2R6eu9PFChU0jtlg/mWV3LAXtaUJaAHYMA78nJhRRkpxKa1qpAyqaSn28mtUPLs=@vger.kernel.org, AJvYcCVqdoh4cIvkwaF00iRrpZYRknTwVkhqZLSrtOrT/E4OZJ8WXN1gp4WqDwYeiVOb3oCfb4U5JGxf47z44seK@vger.kernel.org, AJvYcCWStJ/ZO55vZUlM0zNQz5OKpU71nB2ICEX+SAiRe047/ButUnizVn6s0deVnb3Dmq+th0xNxSACf1XQt4iiZVLMksPa9A==@vger.kernel.org, AJvYcCWtmVpPkJyiE2zFBPD0GonnTFHOaF1t1Qi5/Nabe1PTx98/xUW4zX0HkhherGs+RKzGei/M6pu1DFvB@vger.kernel.org, AJvYcCXD4puMYIlbsIkOyYR8ws/hsJfGYOBQel0A5/V9bG3qDwyH2/FoU1Vk/U1iFxijvATi74M9Uu9EpVCw@vger.kernel.org
-X-Gm-Message-State: AOJu0YxXbbC54heIWkIafXNI/PeEfRPCD+IrVKieEmcDqClTLhZdTsyV
-	7wZ2Czi9Z091zG+8kVYjH3RswjkMKkSxjIUQuupBI/XILrVT+nAL
-X-Gm-Gg: ASbGncurOTylwPd15my9zwWth5GJ2ZnJ+hjTjd8xOnpajzB2nperXcEOdG+g/HOppHJ
-	k5BTbd/thuzeM+wOZDjZkZJH0hmRBMmLzHgnvq6yyRA7YLeNRdFO/W/OlRQh6a4jepphsQ1IL0u
-	pD7hENDIFozjH2WNLLWsxfOsjytET7dHAsiJIezcGKmMYrbA+NG2Pd51BS65gvNiqB2sypXNuod
-	vI/sADJAOWEwTxwPHu9nKwNmlydl2PGEF6pBTYAXis=
-X-Google-Smtp-Source: AGHT+IFaaIyUWgZ24rB3hmAOUX8zPA+G1PMHHz/e1QmhclfDDXABnWyBle8Zo2odWFY/pwPLmQdrVQ==
-X-Received: by 2002:a17:903:24e:b0:215:5625:885b with SMTP id d9443c01a7336-219e6f28552mr636262665ad.52.1735711147068;
-        Tue, 31 Dec 2024 21:59:07 -0800 (PST)
-Received: from nuvole.. ([2a09:bac1:76a0:dd10::2e9:e5])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-219dc9716b3sm204396595ad.90.2024.12.31.21.59.01
+        d=1e100.net; s=20230601; t=1735723665; x=1736328465;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=gblQ2fahvEh9trckZJPo2LZE0BYb0Hq82UUGKz6pcTk=;
+        b=H0okF1PfvESH/fj8g8AVmPyRWZdsJnx7m28aitIi1czKwTu4YaKT/TU4YTZdoFSivb
+         GVuWX3S/37VX1HyiZ8eA8aIWeMVy6LvASQOCAsB9XC2wGJc6WoBEW7oKckVAuhPyI+6e
+         Y5J5jV3fKgC509y+7TctduqVW93HyU0Y5gb2kE46AFjWdfAzVVIEXbIInUR98NaJ7TBc
+         YAC9zW4vdz0KYuNAWlbd7G8HiN9BH2W+veWSxRlQ0ONTa9pKgVmPpJDJU+hTq/OjXXB4
+         0aHzwKZSF8GHoNQdJIoE/l61lqmom8dHhUfoVyK+S2O1jctaV4Kb5CEqYGjUJUDLBjXj
+         VIJw==
+X-Forwarded-Encrypted: i=1; AJvYcCV4+DkwL1TmqKbAbTrPgdTFhVSGrTQmhd+vaovtODLh07sF/Jx8gRifec5M+2uJQBoD6sm+Vbd6OT/f78vx@vger.kernel.org, AJvYcCWF1j/xlpaDbMtvmWkFTbPWh4XKowZvdgXS7FA39LhDus2sCotTYJPD8CD/5rpuE00eGy1jK66R5hK48+jmPwuJsrHE6g==@vger.kernel.org, AJvYcCXnqbyuvKW08Bu6rZudNU69JR5TtkQ6PTNBjZZEzQOj3U2qM+3woNcOf+ALAZq7i0abH2EjSiF0yrw=@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywh9RCV1bQXRJTbXpy5+2ainoPBTuQ6s3TTthWWs2px1WFkM3Xb
+	09m0Hr3M8cKwIb984yvYdidB87P8gX/DOMkyeL+Zm0CdPGL0Ci/v
+X-Gm-Gg: ASbGncty3rAthuzbgqFhGjP6t79zSEwgdYr5ED4SvE9yPgcl8YAwP2vD4FJelTSqbvD
+	4HdM0it6GTQo2PbMulMLTXUMpVZYqim1MEzbrWT+k2VMtXtkMQmc0KS/RHPUZOYlS0goY5610+H
+	8y8LgxvipvjrjvbEaqnG857zFC+6MhrJew08E433uULD5Libn3mYFYhBMmv6rlc+LZjMK9q+Y2r
+	VVORBTeujskqapIrwpRDhBomcXvQnbOqW+THQL0Glp4bxm89l+K7Mfsb4Hu6r4Dglc01i3W4kY=
+X-Google-Smtp-Source: AGHT+IEDuUDwvHyLny+l+shGKwUGQnJ95Mwn8E/IINK5Pn2t1JwwoYPrMjg5bMpKdAFcB/N0l7qtjw==
+X-Received: by 2002:a17:903:90d:b0:215:5d8c:7e46 with SMTP id d9443c01a7336-219e6d6b689mr683337275ad.27.1735723664896;
+        Wed, 01 Jan 2025 01:27:44 -0800 (PST)
+Received: from localhost.localdomain ([2401:4900:4f85:9b9e:7c33:d875:2ba6:356b])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-219dc9d44a0sm206427345ad.165.2025.01.01.01.27.41
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 31 Dec 2024 21:59:06 -0800 (PST)
-From: Pengyu Luo <mitltlatltl@gmail.com>
-To: quic_aiquny@quicinc.com
-Cc: andersson@kernel.org,
-	bryan.odonoghue@linaro.org,
-	conor+dt@kernel.org,
-	devicetree@vger.kernel.org,
-	dmitry.baryshkov@linaro.org,
-	gregkh@linuxfoundation.org,
-	hdegoede@redhat.com,
-	heikki.krogerus@linux.intel.com,
-	ilpo.jarvinen@linux.intel.com,
-	konradybcio@kernel.org,
-	krzk+dt@kernel.org,
-	krzk@kernel.org,
-	linux-arm-msm@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-pm@vger.kernel.org,
-	linux-usb@vger.kernel.org,
-	mitltlatltl@gmail.com,
-	nikita@trvn.ru,
+        Wed, 01 Jan 2025 01:27:44 -0800 (PST)
+From: Hridesh MG <hridesh699@gmail.com>
+To: Armin Wolf <W_Armin@gmx.de>,
+	Jonathan Corbet <corbet@lwn.net>
+Cc: Hridesh MG <hridesh699@gmail.com>,
 	platform-driver-x86@vger.kernel.org,
-	robh@kernel.org,
-	sre@kernel.org
-Subject: Re: [PATCH 1/5] dt-bindings: platform: Add Huawei Matebook E Go EC
-Date: Wed,  1 Jan 2025 13:57:44 +0800
-Message-ID: <20250101055745.357081-1-mitltlatltl@gmail.com>
+	linux-doc@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	"Shuah Khan" <skhan@linuxfoundation.org>
+Subject: [PATCH] docs: platform/x86: wmi: mention tool for invoking WMI methods
+Date: Wed,  1 Jan 2025 14:57:29 +0530
+Message-ID: <20250101092730.87160-1-hridesh699@gmail.com>
 X-Mailer: git-send-email 2.47.1
-In-Reply-To: <7fc6c727-d3c1-4c6d-a990-8caeb95c43c5@quicinc.com>
-References: <7fc6c727-d3c1-4c6d-a990-8caeb95c43c5@quicinc.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-On Mon, Dec 30, 2024 at 3:28 PM Aiqun(Maria) Yu <quic_aiquny@quicinc.com> wrote:
-> On 12/29/2024 6:12 PM, Pengyu Luo wrote:
->
+Add a reference to WMIExplorer, a tool useful for inspecting and
+invoking WMI methods on Windows. This can assist developers in testing
+and understanding WMI device functionality when porting drivers to
+Linux.
 
-[...]
+Signed-off-by: Hridesh MG <hridesh699@gmail.com>
+---
+ Documentation/wmi/driver-development-guide.rst | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-> >>
-> >
-> > Check the motherboard, https://postimg.cc/V5r4KCgx (Credit to Tianyu Gao <gty0622@gmail.com>)
->
-> The link is not accessible from my end. Could you please help follow the
-> document tips referenced by [1] if this content is important for the
-> overall naming design?
->
-> Here are some snippets for reference:
-> "for 'volatile' documents, please create an entry in the kernel
-> bugzilla https://bugzilla.kernel.org and attach a copy of these documents
-> to the bugzilla entry. Finally, provide the URL of the bugzilla entry in
-> the changelog."
->
-> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Documentation/process/maintainer-tip.rst
-> [1]
+diff --git a/Documentation/wmi/driver-development-guide.rst b/Documentation/wmi/driver-development-guide.rst
+index 676873c98680..f7e1089a0559 100644
+--- a/Documentation/wmi/driver-development-guide.rst
++++ b/Documentation/wmi/driver-development-guide.rst
+@@ -41,6 +41,10 @@ helps in understanding how the WMI device is supposed to work. The path of the A
+ method associated with a given WMI device can be retrieved using the ``lswmi`` utility
+ as mentioned above.
+ 
++If you are attempting to port a driver to Linux and are working on a Windows
++system, `WMIExplorer <https://github.com/vinaypamnani/wmie2>`_ can be useful
++for inspecting available WMI methods and invoking them directly.
++
+ Basic WMI driver structure
+ --------------------------
+ 
+-- 
+2.47.1
 
-I created one entry, then I got myself and the entry banned, :(
-I had written to them to explain this yesterday. No response.
-
-Title 'Huawei Matebook E Go, whose codename is Gaokun',
-In this entry, I explained why is it called gaokun, and why gen3.
-
-> https://bugzilla.kernel.org/show_bug.cgi?id=219645
->
-> Artem S. Tashkinov (aros@gmx.com) changed:
->
->            What    |Removed                     |Added
-> ----------------------------------------------------------------------------
->              Status|NEW                         |RESOLVED
->               Group|                            |Junk
->           Component|man-pages                   |Spam
->             Version|unspecified                 |2.5
->          Resolution|---                         |INVALID
->            Assignee|documentation_man-pages@ker |other_spam@kernel-bugs.kern
->                    |nel-bugs.osdl.org           |el.org
->             Product|Documentation               |Other
-
-
-Best wishes,
-Pengyu
