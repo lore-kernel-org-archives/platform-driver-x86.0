@@ -1,117 +1,103 @@
-Received: from mout.gmx.net (mout.gmx.net [212.227.15.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f177.google.com (mail-pl1-f177.google.com [209.85.214.177])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BDDA114F9C4;
-	Wed,  1 Jan 2025 18:52:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 821492119
+	for <platform-driver-x86@vger.kernel.org>; Wed,  1 Jan 2025 19:53:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1735757540; cv=none; b=umg0br1D+Pnk8Xui2ZETszalJ7YkgieTeyK4Hb2xBXjm/v3e3ccANEFNPCN1cfoQmne5C2vpl8QEag9R3+4f4jI0zjgh3DcnmGTtVFnj8Y49dU4GRLob2Rfx/hADaEBxcdmnA1qBFxCKZ/qL/KIMtv7zRrbWPblSP2ciGXhv4gc=
+	t=1735761227; cv=none; b=lRLC3PQduTO2pz/le9++2GtnWoX29wWcmQMAb6GaJX4ttsTo6hI4gXr9nUBkBwddQkR1xzyk3kpp+pLhGjmzi0YUweYgV/Yebv/aCrID6WfJ4oT8PE9ZqH+otyjOeSFg9whX4EKF5sSrySQIWq42945KZ9w7ungco1ONj5uuVGE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1735757540; c=relaxed/simple;
-	bh=88gzwe1RYaSx41GG9PYpHhUQHz8FsNgCN5dWgCqL5HI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=uoWQmozt2/+h0IFHjXGCmf7a1VLQXFgpFSG5dT+viNOECzd/8aSP8ANOhnU6UomJowsCc7IoL2iuNetZcd5sJHp5lEE2tw673eNJ8r7nnNKq+v11+zCoymHo2ZnTkeW7Gw3iP8+3oZzbNp/5tqxrvfYk9WMx1inkBNDg+3OxKaM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b=MtMvM8CP; arc=none smtp.client-ip=212.227.15.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
+	s=arc-20240116; t=1735761227; c=relaxed/simple;
+	bh=oeEcf19e8PZAQQcleT85cjP4gMxLATzzpToP+lYf0Sg=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=YN1xP+T3p8GtbEK1MPMrWi5fepz459bHr6SaHZrCgEyx+tsPxMnyhmziAldPzCSi92QdqLFjGtRP00A0wQ4M1z2r5GH8gFrHqhMF3ikEP2BwfCi0AHc2Bp6P8ATsiMz4slL6oG8NQ3mvlyLZACZ61rBFwa+V29LgeyylSRVFl3I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Kj5VQzDA; arc=none smtp.client-ip=209.85.214.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b="MtMvM8CP"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.de;
-	s=s31663417; t=1735757535; x=1736362335; i=w_armin@gmx.de;
-	bh=655BWo2yyk8Zg5TDnrLLwtachmnydLyPFedK2k3CEY4=;
-	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:To:Cc:
-	 References:From:In-Reply-To:Content-Type:
-	 Content-Transfer-Encoding:cc:content-transfer-encoding:
-	 content-type:date:from:message-id:mime-version:reply-to:subject:
-	 to;
-	b=MtMvM8CPDM0XyuolTW9PAGjzMAfApgKREPeiX2HzeXWrnLA0WAXnAcTztYGIpkx+
-	 WRen6W/5u4fxpX4k9i//qrGbegimWNU0faO34063cv52LoOeJ1kLnplwpGF9G0vJs
-	 ZHTp4cvQD5gCTvKCZXcyw9SJsBviSxEMIy6U46RKrzkdKblfygAqM4HqOlmyTTMVw
-	 uce9QSHplUa7UwqSj8EoiZWCnEbZY6MWxpQkRlVariqeY1S6zNPa3rbU/u5AaitSq
-	 kyIUeU+izRbMJVVRzPRCRBNaMGfnE4UkU3e6HhpbYjT19a6eQzLYvFObvNi+G1pdu
-	 L/Jq07E9E3p/IT1akA==
-X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
-Received: from [192.168.0.14] ([91.14.230.110]) by mail.gmx.net (mrgmx004
- [212.227.17.190]) with ESMTPSA (Nemesis) id 1MatVh-1u4aMm0dSd-00bZPS; Wed, 01
- Jan 2025 19:52:15 +0100
-Message-ID: <df7d0307-0b21-4a58-a599-538a4ffdfd94@gmx.de>
-Date: Wed, 1 Jan 2025 19:52:14 +0100
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Kj5VQzDA"
+Received: by mail-pl1-f177.google.com with SMTP id d9443c01a7336-2165cb60719so147101785ad.0
+        for <platform-driver-x86@vger.kernel.org>; Wed, 01 Jan 2025 11:53:46 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1735761226; x=1736366026; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=VVTWLJ4fwzl05aXyEUO3bhJxhCPB8MHShdQMfTL6o7Q=;
+        b=Kj5VQzDAykvYZNPbk9Mh93YBasA547sCDsBwB/5dhep4vCzUPtP4gvjfGgwEe/KB5V
+         NN8tVq9cpLTM2Rgd2l8K0NKi5FmUrqgnlJpaUoy+YQzeysTI5FXcjYRHXOeAkoFEdn7z
+         4ROvztY2LA5SoKHd+Y4AtFpiaRqd22DWiYnGV+Q7TLvXEMlCvgIdw/kJZgI6x5IayyZh
+         e8RM5IS9WmRGyEUOR7KmHLvf95PTyM/UUnEFuINc71ldLO61tSev1Ic/B3OiCcVc8Sma
+         XPCXw7nnZmc0rCxnluBQKtBX7XQXYQB8CvT+rrR6ogHoTlALRGjrCu9OcQmCp4qy3PD7
+         wuxA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1735761226; x=1736366026;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=VVTWLJ4fwzl05aXyEUO3bhJxhCPB8MHShdQMfTL6o7Q=;
+        b=c2dVtme0qQu0TEWLqqXnfnJ6knFeK1gK5tdJtPc411u4HZwEsvm1U54xAYuzljh/Hf
+         BL0uXFLKPa5TGyY5UxkLdj5WQEaZTAX7cGonhSLWkoNeEGbQP7wWmERBsnvKMmA/g+u3
+         aJvX+qSFO3ul5VZSvuxtONRcQheU9YM3th2dnRou+hbN6Es0lGBqtUoZUNWd6lNxQR+z
+         rytX1NQJksYi6XDtZk+9OnVXxKG8+y4LKSzWJz2yG0xhxoVCZ+/som+2vS/9L0Oeq+nQ
+         c+EXgGeLAhTvwMj+++NO7DhoPSjg9iD4moyzXRwgJOKqMuDYCNeWwuhiJ9Bax1DrlbYd
+         c+QQ==
+X-Gm-Message-State: AOJu0Yz/fQTw5VCuk4L+fBTlQ/ZyNiZALEGSaxhs1QTVqpePo02RhYaC
+	pBiwP+HoEk5xaFzZn5PkRcifthaV4ENcl7swiEpvee8+IO9JxC3Gd8fAoMcHypadzwnkzZhwZzt
+	Hf9+tLSCSz5dvlBqAq0+pHZZBpNQj/SSRx4k=
+X-Gm-Gg: ASbGnctxXUqPoiss8/HYopt/R/WDK3GRrElBnGxKRqvT/2UPkmeycAyuqX6MK4kR7rx
+	ElWfNBGF7Wedti2wqVgVppNu+iSLGJ61LgrgBcCA=
+X-Google-Smtp-Source: AGHT+IE4HhVdMSgF43KR+ak43NmuzFHBff6sZ9ZTuUAqzKYoXxWya53BZYbTDwvsCrnfTRbbzee5+9nMcGOkGPh6yDA=
+X-Received: by 2002:a17:90b:274b:b0:2ee:e961:303d with SMTP id
+ 98e67ed59e1d1-2f452ee4d17mr67762044a91.35.1735761225594; Wed, 01 Jan 2025
+ 11:53:45 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] docs: platform/x86: wmi: mention tool for invoking WMI
- methods
-To: Hridesh MG <hridesh699@gmail.com>, Jonathan Corbet <corbet@lwn.net>
-Cc: platform-driver-x86@vger.kernel.org, linux-doc@vger.kernel.org,
- linux-kernel@vger.kernel.org, Shuah Khan <skhan@linuxfoundation.org>
-References: <20250101092730.87160-1-hridesh699@gmail.com>
-Content-Language: en-US
-From: Armin Wolf <W_Armin@gmx.de>
-In-Reply-To: <20250101092730.87160-1-hridesh699@gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+References: <CALiyAom1xDH6A0Q2WNHCMUcpMJfM3pXO2DaW=bgHGUi8ZOpBbQ@mail.gmail.com>
+ <8b8749c1-59c8-4f95-a43e-055cf94f9597@gmx.de> <CALiyAo=R1kcvwRpw22s=YU0YHUxR8T_WHLwSvDr=8Ahsenn-jA@mail.gmail.com>
+ <9c625119-e46e-464b-933d-9c836577f454@gmx.de> <CALiyAo=7kVi4ipA5-xDfRYQ-gqyza0woYHUzwGuW5BccLOVHgg@mail.gmail.com>
+ <209f39ab-a312-45b5-981c-8324d9b8cd90@gmx.de> <CALiyAon+5H_g1V-iNbjdLmjgYDJng+ePH0XeoYxijYurHj+uTg@mail.gmail.com>
+ <31c28ea2-881c-42e3-b754-8b52ca7f63fd@gmx.de>
+In-Reply-To: <31c28ea2-881c-42e3-b754-8b52ca7f63fd@gmx.de>
+From: Hridesh MG <hridesh699@gmail.com>
+Date: Thu, 2 Jan 2025 01:23:08 +0530
+Message-ID: <CALiyAo=_vGu50RoAPwFMv9J=mkaQWojAQxmB2qmwcEZ5Y8kfSg@mail.gmail.com>
+Subject: Re: acer-wmi: Nitro button doesn't produce a WMI event
+To: Armin Wolf <W_Armin@gmx.de>
+Cc: platform-driver-x86@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:Et/2Md1sXmRctOA8hYqBX6VUBfBuWXHoU+fUuYk0ZPd5sAaKtoC
- wFyrpeIk/Lcxchk3Q7vvTzFL1sRMO11AjkHDlMFh2yqFwu3zUuQR3NlWJVO8fa+U1SnI+FA
- OgbiLZWBdtgbyTnnpi/Pty4ewKrSTPKUTZWV0EFLJrZ+JOdTYGD649OL51d0AYADWJI2Dpj
- OBpOhfqy2Of3I+CUdWZlw==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:q393CSOHL9U=;u4orO8bIjUMILMGZptF6Lfvbvb0
- 4ASdGSHDChVd3sNY3Gy185C9ZM6p1dZ63ACwu1q2f3kUmAuJOSIf4pmXKhtGvVf39g3Bo5FO0
- UcrJwar3jmKE6ZHgR9e3F0SwwLaOALvySzxYJfy/lnyd35SRBKvJ/XMEQ2Nt0nNQxiJFUX/ZR
- bCx6WgA8DEK4V8Bt40yCHc8OxoIxR07drfHaL3TdHA8L2JsjrMRx6CCZq35hLlkUMi2v3Yl56
- mlnpKKojt4nHVQ326S6Rkx/+QRrUsr4TMSlIiTGL2SKO7rzBY/naJtL4hOxr2eU9i+SsEg39X
- 1f6reuw0UPQrXk2p0PBVqVIOT8xUva63CpHo+dKCMFvv0Rh2TXHpMg7DJ026kzuQrnb6+Axzv
- GdlVYv4QKoiHPofreHuUD7dYX2tFopz/aKkeeyE5XKqulvWkCaDM8tl59FW5Wx0MlYF9pa7Wj
- 3neM7FONxpVO7zl2oiwG2SWy3OxHBb00rjrFQXTFZqEXUhRdlDtu/qHy3j+pFPZrZzgNkkMhB
- bag1GkLUbqIQ/zG30B4kJPksC1Ix5yAt/+3hjK4aRbbhRFUWQ7W+CVRLmkc1rgex/Y3K85aNE
- Q53OL3o1PsPVjtI317nq0wZ19bYYSPNegXMNiSM7fTjsoypbLe45XRk9Fj/HWcDb3rQtktI1t
- P3o0QzqSGS/8mw2jpIrdGG+i+JlRMdK6IEym0GXNvhPVJatGoKGHEEGilWmzqw0QbTQxlyhUy
- xa87LDZYbDEe8puh+9Ztz6G7TP984IP6r3Azzr52SXRHURcAlztYpzaOX6qAdng+OVJaXVoKm
- UQRpERuRM+KgbjAbXRB/+O5hZFdesl2qmP9+yBwWDFrwh0MnBkx6GbhIrnIXoOcpmMeYYFglG
- Jo1RXwAnC84VCMgx7M7I3FdkSxGjRpYn3aXdyV+ucUagU9d2xSdhdVB6gExqp8eKog0xTOpgt
- gReJPpmZhy0SLRjUK/I0xaaHJn/GP/keZcDKrj/mZmcoypRxwi6K0LRbI40ixjBojpPspYVo5
- 5l+FkCfb2wYEdOAILG83BaXo2XHOWD4U9NRTHtgtTGkBfkUa4yz1gV5rzvIW06HBIKmFXRe/b
- vlRze+i/wvtQSLQD7TfFjkPbsxiULqY14mitptW5d6dwcbVXXv34bfIGbl423BJmktiLvwuEo
- =
 
-Am 01.01.25 um 10:27 schrieb Hridesh MG:
-
-> Add a reference to WMIExplorer, a tool useful for inspecting and
-> invoking WMI methods on Windows. This can assist developers in testing
-> and understanding WMI device functionality when porting drivers to
-> Linux.
-
-Nice find!
-
-Reviewed-by: Armin Wolf <W_Armin@gmx.de>
-
+> This ACPI method should trigger the turbo mode button (found inside the D=
+SDT table):
 >
-> Signed-off-by: Hridesh MG <hridesh699@gmail.com>
-> ---
->   Documentation/wmi/driver-development-guide.rst | 4 ++++
->   1 file changed, 4 insertions(+)
+>         Method (_Q58, 0, NotSerialized)  // _Qxx: EC Query, xx=3D0x00-0xF=
+F
+>          {
+>                 Debug =3D "=3D=3D=3D=3D=3DPROJECT_QUERY_58=3D=3D=3D=3D=3D=
+"
+>                  ^^^WMID.FEBC [Zero] =3D 0x07
+>                  ^^^WMID.FEBC [One] =3D 0x04
+>                  ^^^WMID.FEBC [0x02] =3D One
+>                  Notify (WMID, 0xBC) // Device-Specific
+>         }
 >
-> diff --git a/Documentation/wmi/driver-development-guide.rst b/Documentat=
-ion/wmi/driver-development-guide.rst
-> index 676873c98680..f7e1089a0559 100644
-> --- a/Documentation/wmi/driver-development-guide.rst
-> +++ b/Documentation/wmi/driver-development-guide.rst
-> @@ -41,6 +41,10 @@ helps in understanding how the WMI device is supposed=
- to work. The path of the A
->   method associated with a given WMI device can be retrieved using the `=
-`lswmi`` utility
->   as mentioned above.
->
-> +If you are attempting to port a driver to Linux and are working on a Wi=
-ndows
-> +system, `WMIExplorer <https://github.com/vinaypamnani/wmie2>`_ can be u=
-seful
-> +for inspecting available WMI methods and invoking them directly.
-> +
->   Basic WMI driver structure
->   --------------------------
->
+I feel like an idiot right now but I just realized something: So far
+I've been assuming that the button I've been calling the "Turbo
+Button" worked the same way on both Nitro and Predator laptops, but
+that's not the case.
+
+On Predator laptops, the button directly enables Turbo mode but on the
+Nitro it only opens the Nitro Sense app. I had assumed that both
+buttons simply opened the app and that directly enabling Turbo mode
+was a feature provided by the Linux driver.
+
+Given this, the ACPI code that you linked earlier is probably for the
+Predator's "Turbo Button". Could it be that the button on my laptop
+doesn=E2=80=99t use that ACPI code at all, considering its functionality is
+completely different? (Though i doubt Acer would leave it in if it
+wasn't being used)
