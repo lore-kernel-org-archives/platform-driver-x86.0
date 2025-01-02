@@ -1,60 +1,62 @@
-Received: from mail-pj1-f43.google.com (mail-pj1-f43.google.com [209.85.216.43])
+Received: from mail-pl1-f174.google.com (mail-pl1-f174.google.com [209.85.214.174])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B736063D;
-	Thu,  2 Jan 2025 00:49:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3C14EEC0;
+	Thu,  2 Jan 2025 00:49:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1735778947; cv=none; b=fYXqVQo7eyXBpwUJ7uIBgQJGrQ2NNIwenanQKLRXFRckx80hKfgGh8Nz/D/eTMxBoYcuEq0EMVJBL30HA5M2p1i30eXpqeu9vAzywTug5xx50CU62X2dHkW2YwgRCRcvG3onaD7+CpEL8qKcRHg0BHhI9nBmI66mtrCGxjwBG5k=
+	t=1735778948; cv=none; b=aIt/oTLhRUtEuj56vqi16jnqI7WlkGr5goa/kyYQuoG2W0sJVE1VqFFpz591UPaTDLHusOSfaYD654i79QEtM3oHmwlpRSPGv2vOM0cbfc7rT4sDBUZnD87ie8/pvvRq2ur8F5GLcw2Svm0Gl+TpQPiLlEirk7Tmsfkv0ET7cXQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1735778947; c=relaxed/simple;
-	bh=ugHPYC6j1ZndMkgQWgurT8zLsPf+9nmJ5LHQfcvd7b0=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=RYRHJgzPGv0uPGbhlWT2/n+mVJiZrsCzC1J6W6nY7SNft765oHGQr+5qslRoC7OKLl5E9TKyErdR+gNWRhr3pbZpURZQQK30RxM5gqx94lwrBcJqwm9mIFtGpItD5GJzGU+SlehGMz5J+i+MnWC0IOtvS53M2gs3AR1zkPhCl9I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=WB7yjeIx; arc=none smtp.client-ip=209.85.216.43
+	s=arc-20240116; t=1735778948; c=relaxed/simple;
+	bh=Fm8umMG1j2xGrV+1jdi95x1bQHup8Am9TCudsCMhPmo=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=ui53Es9zd1lQqVqgk+8xguudBnnWTEBN38B1Xj8Dr99mcV5AIRFLwdGVW33ZC/hLGaCRM5f1oJmQyhHGhu28h29njQbC6leuSVOZAVFHD9CoBV+EZtZ0xF+4F96K7rMkf/l7cwI2Amu5jZ1vkSjbhNITLCdqxD958h2fbJZpwiA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Wnkg7rB4; arc=none smtp.client-ip=209.85.214.174
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WB7yjeIx"
-Received: by mail-pj1-f43.google.com with SMTP id 98e67ed59e1d1-2ef760a1001so14768918a91.0;
-        Wed, 01 Jan 2025 16:49:05 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Wnkg7rB4"
+Received: by mail-pl1-f174.google.com with SMTP id d9443c01a7336-2162c0f6a39so155296845ad.0;
+        Wed, 01 Jan 2025 16:49:07 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1735778945; x=1736383745; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=8Igjw+uWg6O1JgIzIHygYP4klEbzhduIPHJ7Y6zmGQc=;
-        b=WB7yjeIx3Ckh/ALmD5m50q4tkf/3j2T3GHxNkCDz6QH7t0ViSADJV3y8+Drhneo7U1
-         cwu3vzYSdpYMtoSpB8I7oOUvZ+XsD7du/CWlveUJEUS0XrqWY2fLx+yMvo2UJftm0/n9
-         J7YwJN+SI1ttqjO2BiY5hv+06C0UROS24NqtnxNxG+KQ1mLgshTF2ggWODtMApeEgcwz
-         hgXGWGgmqUa7ci5bCCNNO/t42doiL/WddDMEbSXYpDXvQX3+g4fy9Uscp1x9RzBiL00y
-         Fdv/s/2IXk/Ez8NsCliwCCtFgrjgdrKD+RZgxLHpdeax+8xBFQfRLq5ftjsK6V2kr9lm
-         pmSQ==
+        d=gmail.com; s=20230601; t=1735778946; x=1736383746; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=i9SaF2LkjqbaLIv6FhYd2/XFxjdaP39aNDBiwfIJ0Q8=;
+        b=Wnkg7rB4MVaCKWq445qbByJ82tLPpYtSnt02ahFEpTkN7k1E307zlK5ke8tAc4WXpH
+         EXkjDB1/gczgatCBzFORdQO7+2uY8iDV6KDAi46+nLJh6h36q4SAUFkMXBB2fLuzelkm
+         H4K5F3vUsCUlSKUNyg2zfyk3MkHomCk+4YGo/G7rWV98b5wYkTJJLHeXsZtZrDp/KEHv
+         EGlhwBVguJiZVDY2VOyWz+7E4YpaitlTG3HtsPENEousQUC2ZhrHdk/zcJWQy0FzaGTV
+         hrrZI8h9IBaiOhpbSO/MYUDseihg6CFNxokJn0FtUHFS9ytZ6KHfwpTGQgV56vxftYPI
+         7x/A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1735778945; x=1736383745;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=8Igjw+uWg6O1JgIzIHygYP4klEbzhduIPHJ7Y6zmGQc=;
-        b=Thvau5DwFkhU/dC4GrWzVqBBxV0e7ZbEme8pZD2H4mCqLCQkddu69D5hVxLgFet6uM
-         iANFxc7vMVi5ak8V3YuYFmOXhWw7fZh/5iEslPTPWEJP/KsRz2vpLF5DYVmBtCuvhmij
-         xaIN4k6YhhxKBRlBn3MkZT6oGrPEv9VOW6MFxMh2JnJ2MPVlZiI6lNcphAVpPUCr+Yfz
-         TbAhxattXgqdzWfwdde5X8Yyg9/zMjM6exu81WXZRYJVFMnFzGaQTv4iLfL1za+WVpJ8
-         A1KuRZVSLmGUOkkJDWeD3TjXpKDTQ0bS6Ty3szhuP+KtOnHAV+FuuO+Gy34f9FuM12XF
-         HVTQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUlATpsuNu/U08p/cY6djBESmZSlblDzfEcPyIqdDYii2O2f7ngtlhVRgN/ziUUOlx5d8IeGe382pc=@vger.kernel.org, AJvYcCUwsiX6jNE8zVxNKj4HjJLNmltVFJ7hoSOiJgrUbJt0ZK1vHpphNKNvws+4tshTBgUe5oNbA4N0tU7TWL/X@vger.kernel.org, AJvYcCWDNpHhRbbtnRgBj6wzygu0e7NUZ24qdxfnbioLsm2YgXmXGQmMhubFawmywWZPTgZ+u4YM44AVbHTt+4nv+DD+s1f73Q==@vger.kernel.org
-X-Gm-Message-State: AOJu0YyCjampUWATimRfpGN9TTqnV8edUnmTL4S3ty+WMLPYEduhqeT3
-	lrW7pYZ12T/qBOTHne/2wh8Bh79fvlp8z0fklzoE7UWfAZh9lktV
-X-Gm-Gg: ASbGncuZGopDHOidcJs+7DWB3Pe5ik5oUfJxWlnOa2YjiTVKk9VC5xAtHd+HncG5GMh
-	qy+Xyghjw/QUjlupNmzJ5AKTxPFq8rmG+eR814abBf0B4rT7cnMuk9j70ONCkdRKmOYVDZ0Z5yY
-	k9Uwp3zrFrLZC/y8Yp0Jo5HlrQJvFctBSAsr8+y1X69hgJxMPAhUjAOjl2nn3+nMsJ9hQZWwH4D
-	dTvIU7XH7xQ/di9zTeGAnh5cZAypdGlSaaRp2JZ/DPNdx7cn32C8qUcs4298q5+Hbpb/HTbsp/W
-	WXnuzZYOGzBeaVraV6RSef5PI3UJh52l4VPgyDuIz6L++hRtThHq7D8=
-X-Google-Smtp-Source: AGHT+IGBMnUQPQuZy45YZ8AeFUrw7qbpfB1CNxsLjadhWZWbR//95UMcpD6S3Vu4QmU8aH/hkm8g4A==
-X-Received: by 2002:a05:6a00:4c07:b0:72a:9ddf:55ab with SMTP id d2e1a72fcca58-72abdd9c06dmr64598510b3a.10.1735778944860;
-        Wed, 01 Jan 2025 16:49:04 -0800 (PST)
+        d=1e100.net; s=20230601; t=1735778946; x=1736383746;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=i9SaF2LkjqbaLIv6FhYd2/XFxjdaP39aNDBiwfIJ0Q8=;
+        b=DcmnLT+tqCDtj2ZENmrJpDlOzxSaP0K7VCU9/wbvDmMczyUawcCq4WPz/u0C4mytRG
+         ZxGHjBu7kK1zOEJmcEt29eEs2pb+9zgMsce5ILDYkcNuDs21d90kFNU20NxJHKgpCZyA
+         y7xG9aM6FNnAPwO7cnbZX/EfGfNz7A6bDOcJiQctUa7sZlFMBt3ZJWX3xQY3mU+UwUOm
+         LwVd5Qoabo6yQflqE7IZ/IuyQkyZiRBsxwmiwZ/pPJlKrNLuLvIeZXmvtLf6Mdo1bL3N
+         SO2nhmfUWci7xG7ziFwBWPg5kSpOq3s8OpI4F6u5Efke22Ggl6QCM1peTDloWJedNEmv
+         +tzA==
+X-Forwarded-Encrypted: i=1; AJvYcCWEvFL3SsO5EQV4tKvu4VBaayYgTMCxYfjHLc9/mwlpKGYSw7ktCmC+93RBWuMLK9qIh1+89JO/dpQ=@vger.kernel.org, AJvYcCX4qJ3kG6Vxem+O8BMScnHq9dEYIz7EmNcR5BHKHwUqWx8iqS+Dbq/kNKf6QHA49ETy4YQoSvZF34Br4xN0@vger.kernel.org, AJvYcCXTz3JI0o73tyoGBdWYl4yXaBP4dfc2xx6Az2U4VGJ5XectNAwnuDVSeyKXn+cvJ52DSkk0TDexo1QxmtkM0/Eq2XlcgA==@vger.kernel.org
+X-Gm-Message-State: AOJu0YzF0jb/ZjFSrI9zYKJgSgmydExrjlOTAupZoF67ZjdlgfPj8ZpX
+	F1y7Uyn6ovDt9wuuXo4M7BmU/FsRo5KOj+hbyrlJpEe24FrEt5VC
+X-Gm-Gg: ASbGncvrfkMOZuqrsIjOaGJ4b2uOXErim3Zf7tuQ8Oke9w22tDZosZBGKPRUdw2qNDw
+	AaxtYZTsDm3Kw/UtAcOiOJgKtn3kJNdYAZKX9nMUy/uHG6BHOXgyGN4kNi7Mfyyx4XPuZ1i37Mc
+	mmNbMh7ojCLVbjn0jVX0VFM0H4frtBOb4qYzrKIJWmZNpJMv55lDvJ/UjnDpz/8Mc6lN2OLYxEC
+	Vw9o5mVE7w4JFEPLa0BK5mE6YXCmVZfaS9SxLPHgYjBXY7OpKwu7tsGxEtA26aJgUolvvz8ynDR
+	SLSEoGLsUKHhbYcY+28FQeQgltpbFBDLNb6hTQC+CQoCkwUgL8hOrS4=
+X-Google-Smtp-Source: AGHT+IGK7a5ZGvU13YLSZ+73XHxv0quTwggdFT/Y5fNNqQCIY9l7UbqVUcqb/gHT7b+pOWVKQ1Tjyg==
+X-Received: by 2002:a05:6a21:3989:b0:1d9:a94:feec with SMTP id adf61e73a8af0-1e5e1e0460bmr74569802637.2.1735778946447;
+        Wed, 01 Jan 2025 16:49:06 -0800 (PST)
 Received: from localhost.localdomain (108-228-232-20.lightspeed.sndgca.sbcglobal.net. [108.228.232.20])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-72aad8351fasm23793594b3a.62.2025.01.01.16.49.03
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-72aad8351fasm23793594b3a.62.2025.01.01.16.49.05
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 01 Jan 2025 16:49:04 -0800 (PST)
+        Wed, 01 Jan 2025 16:49:05 -0800 (PST)
 From: "Derek J. Clark" <derekjohn.clark@gmail.com>
 To: Hans de Goede <hdegoede@redhat.com>,
 	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
@@ -72,10 +74,12 @@ Cc: Jonathan Corbet <corbet@lwn.net>,
 	platform-driver-x86@vger.kernel.org,
 	linux-doc@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH v2 0/4] platform/x86: Add Lenovo Gaming Series WMI Drivers
-Date: Wed,  1 Jan 2025 16:47:18 -0800
-Message-ID: <20250102004854.14874-1-derekjohn.clark@gmail.com>
+Subject: [PATCH v2 1/4] platform/x86: Add lenovo-wmi drivers Documentation
+Date: Wed,  1 Jan 2025 16:47:19 -0800
+Message-ID: <20250102004854.14874-2-derekjohn.clark@gmail.com>
 X-Mailer: git-send-email 2.47.0
+In-Reply-To: <20250102004854.14874-1-derekjohn.clark@gmail.com>
+References: <20250102004854.14874-1-derekjohn.clark@gmail.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -84,97 +88,131 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Adds support for the Lenovo "Gaming Series" of laptop hardware that use
-WMI interfaces that control various power settings. There are multiple WMI
-interfaces that work in concert to provide getting and setting values as
-well as validation of input. Currently only the "GameZone", "Other
-Mode", and "LENOVO_CAPABILITY_DATA_01" interfaces are implemented, but
-I attempted to structure the driver so that adding the "Custom Mode",
-"Lighting", and other data block interfaces would be trivial in a later
-patches.
-
-This driver is distinct from, but should be considered a replacement for
-this patch:
-https://lore.kernel.org/all/20241118100503.14228-1-jonmail@163.com/
-
-This driver attempts to standardize the exposed sysfs by mirroring the
-asus-armoury driver currently under review. As such, a lot of
-inspiration has been drawn from that driver.
-https://lore.kernel.org/all/20240930000046.51388-1-luke@ljones.dev/
-
-The drivers have been tested by me on the Lenovo Legion Go.
+Adds documentation for all lenovo-wmi* drivers.
 
 v2:
-- Broke up initial patch into a 4 patch series.
-- Removed all references to "Legion" in documentation, Kconfig,
-  driver structs, functions, etc. Everything now refers either to the
-  interface being used or the Lenovo "Gaming Series" of laptop hardware.
-- Fixed all Acked changes requested by Mario and Armin.
-- Capability Data is now cached before kset creation for each attribute.
-  If the lenovo-wmi-capdata01 interface is not present, fails to grab
-  valid data, doesn't include the requested attribute id page, or the
-  data block indicates the attribute is not supported, the attribute will
-  not be created in sysfs.
-- The sysfs path for the firmware-attributes class was moved from
-  lenovo-legion-wmi to lenovo-wmi-other.
+- Update description of Custom Profile to include the need to manually
+  set it.
+- Remove all references to Legion hardware.
+- Add section for lemovo-wmi-camera.c driver as it follows the same
+  naming convention.
 
-- The Other Mode WMI interface no longer relies on gamezone as
-  discussed. However; this creates a problem that should be discussed
-  here. The current_value attribute is now only accurate when the
-  "custom" profile is set on the device. Previously it would report the
-  value from the Capability Data 01 instance related to the currently
-  selected profile, which reported an accurate accounting of the current
-  system state in all cases. I submitted this as-is since we discussed
-  removing that dependency, but I am not a fan of the current_value
-  attribute being incorrect for 3 of the 4 available profiles, especially
-  when the data is available. There is also no way to -ENOTSUPP or
-  similar when not in custom mode as that would also require us to know
-  the state of the gamezone interface. What I would prefer to do would be
-  to make the gamezone interface optional by treating custom as the
-  default mode in the current_value functions, then only update the mode
-  if a callback to get the current fan profile is a success. That way the
-  logic will work with or without the GameZone interface, but it will be
-  greatly improved if it is present.
-
-- I did extensive testing of this firmware-attributes interface and its
-  ability to retain the value set by the user. The SPL, SPPT, FPPT, and 
-  platform profile all retain the users last setting when resuming from
-  suspend, a full reboot, and a full shutdown. The only time the values
-  are not preserved is when the user manually selects a new platform
-  profile using either the pprof interface or the manual selection
-  button on the device, in which case you would not expect them to be
-  retained as they were intentionally changed. Based on the previous
-  discussion it may be the case that older BIOS' will preserve the
-  settings even after changing profiles, though I haven't confirmed
-  this.
-
-v1:
-https://lore.kernel.org/platform-driver-x86/CAFqHKTna+kJpHLo5s4Fm1TmHcSSqSTr96JHDm0DJ0dxsZMkixA@mail.gmail.com/T/#t
-
-Suggested-by: Mario Limonciello <superm1@kernel.org>
 Signed-off-by: Derek J. Clark <derekjohn.clark@gmail.com>
-
-Derek J. Clark (4):
-  platform/x86: Add lenovo-wmi drivers Documentation
-  platform/x86: Add Lenovo GameZone WMI Driver
-  platform/x86: Add Lenovo Capability Data 01 WMI Driver
-  platform/x86: Add Lenovo Other Mode WMI Driver
-
- Documentation/wmi/devices/lenovo-wmi.rst    | 104 ++++++
- MAINTAINERS                                 |   9 +
- drivers/platform/x86/Kconfig                |  34 ++
- drivers/platform/x86/Makefile               |   3 +
- drivers/platform/x86/lenovo-wmi-capdata01.c | 131 +++++++
- drivers/platform/x86/lenovo-wmi-gamezone.c  | 203 +++++++++++
- drivers/platform/x86/lenovo-wmi-other.c     | 385 ++++++++++++++++++++
- drivers/platform/x86/lenovo-wmi.h           | 241 ++++++++++++
- 8 files changed, 1110 insertions(+)
+---
+ Documentation/wmi/devices/lenovo-wmi.rst | 104 +++++++++++++++++++++++
+ 1 file changed, 104 insertions(+)
  create mode 100644 Documentation/wmi/devices/lenovo-wmi.rst
- create mode 100644 drivers/platform/x86/lenovo-wmi-capdata01.c
- create mode 100644 drivers/platform/x86/lenovo-wmi-gamezone.c
- create mode 100644 drivers/platform/x86/lenovo-wmi-other.c
- create mode 100644 drivers/platform/x86/lenovo-wmi.h
 
+diff --git a/Documentation/wmi/devices/lenovo-wmi.rst b/Documentation/wmi/devices/lenovo-wmi.rst
+new file mode 100644
+index 000000000000..62c2ec9505bd
+--- /dev/null
++++ b/Documentation/wmi/devices/lenovo-wmi.rst
+@@ -0,0 +1,104 @@
++.. SPDX-License-Identifier: GPL-2.0-or-later
++======================================================
++Lenovo WMI Interface Drivers (lenovo-wmi)
++======================================================
++
++Introduction
++============
++Lenovo WMI interfaces are broken up into multiple GUIDs, some of which
++require cross-references between GUIDs for some functionality. The "Custom
++Mode" interface is a legacy interface for managing and displaying CPU & GPU
++power and hwmon settings and readings. The "Other Method" interface is a
++modern interface that replaces most "Custom Mode" interface methods. The
++"GameZone" interface adds advanced features such as fan profiles and
++overclocking. The "Lighting" interface adds control of various status
++lights related to different hardware components.
++
++Each interface has a different data structure associated with it that
++provides detailed information about each attribute provided by the
++interface. These data structs are retrieved from additional WMI device
++data block GUIDs:
++ - "Custom Mode" uses LENOVO_FAN_TABLE_DATA, LENOVO_FAN_TEST_DATA,
++   LENOVO_CPU_OVERCLOCKING_DATA, LENOVO_DISCRETE_DATA, and
++   LENOVO_GPU_OVERCLOCKING_DATA depending on the feature.
++ - "Other Method" uses LENOVO_CAPABILITY_DATA_00,
++   LENOVO_CAPABILITY_DATA_01, and LENOVO_CAPABILITY_DATA_02 depending on
++   the feature.
++ - "GameZone" uses LENOVO_GAMEZONE_CPU_OC_DATA and
++   LENOVO_GAMEZONE_GPU_OC_DATA depending on the feature.
++ - The "Lighting" interface uses LENOVO_LIGHTING_DATA.
++
++.. note::
++   Currently only the "GameZone", "Other Method", and
++   LENOVO_CAPABILITY_DATA_01 interfaces are implemented by these drivers.
++
++GameZone
++--------
++WMI GUID "887B54E3-DDDC-4B2C-8B88-68A26A8835D0"
++
++The GameZone WMI interface provides platform-profile and fan curve settings
++for devices that fall under the "Gaming Series" of Lenovo devices.
++
++The following platform profiles are supported:
++ - quiet
++ - balanced
++ - performance
++ - custom
++
++Custom Profile
++~~~~~~~~~~~~~~
++The custom profile represents a hardware mode on Lenovo devices that enables
++user modifications to Package Power Tracking (PPT) settings. When an
++attribute exposed by the "Other Method" WMI interface is to be modified,
++the GameZone driver must first be switched to the "custom" profile manually
++or the setting will have no effect. If another profile is set from the list
++of supported profiles, the BIOS will override any user PPT settings when
++switching to that profile.
++
++
++Other Method
++----------
++WMI GUID "DC2A8805-3A8C-41BA-A6F7-092E0089CD3B"
++
++The Other Method WMI interface uses the fw_attributes class to expose
++various WMI attributes provided by the interface in the sysfs. This enables
++CPU and GPU power limit tuning as well as various other attributes for
++devices that fall under the "Gaming Series" of Lenovo devices. Each
++attribute exposed by the Other Method interface has corresponding
++capability data blocks which allow the driver to probe details about the
++attribute. Each attibute has multiple pages, one for each of the platform
++profiles managed by the "GameZone" interface. For all properties only the
++"Custom" profile values are reported by this driver to ensure any userspace
++applications reading them have accurate tunable value ranges. Attributes
++are exposed in sysfs under the following path:
++/sys/class/firmware-attributes/lenovo-wmi-other/attributes
++
++LENOVO_CAPABILITY_DATA_01
++~~~~~~~~~~~~~~~~~~~~~~~~~
++WMI GUID "7A8F5407-CB67-4D6E-B547-39B3BE018154"
++
++The LENOVO_CAPABILITY_DATA_01 interface provides information on various
++power limits of integrated CPU and GPU components.
++
++The following attributes are supported:
++ - ppt_pl1_spl: Platform Profile Tracking Sustained Power Limit
++ - ppt_pl2_sppt: Platform Profile Tracking Slow Package Power Tracking
++ - ppt_pl3_fppt: Platform Profile Tracking Fast Package Power Tracking
++
++Each attribute has the following properties:
++ - current_value
++ - default_value
++ - display_name
++ - max_value
++ - min_value
++ - scalar_increment
++ - type
++
++
++ Camera
++ ______
++ WMI GUID "50C76F1F-D8E4-D895-0A3D-62F4EA400013"
++
++ The Camera driver provides WMI event notifications for camera button
++ toggling.
++
 -- 
 2.47.0
 
