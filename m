@@ -1,547 +1,401 @@
-Received: from mail-qv1-f42.google.com (mail-qv1-f42.google.com [209.85.219.42])
+Received: from mail-ua1-f46.google.com (mail-ua1-f46.google.com [209.85.222.46])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 881091B4250;
-	Thu,  2 Jan 2025 18:45:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3149C1B4F3D;
+	Thu,  2 Jan 2025 18:45:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1735843515; cv=none; b=lyJm7daytM4+CEO3MEVfImrCo07eTpycIOFns0iqiEPy7vbxfL2EXWniOZ97Wk0xbz0Udfbd87v2wrgO7LbQJooqSG4Hpm+tq7hiZob0n9hI7fruykk4nrKA3Q+FBhiVs06m3Kr+GB5ekuyD7EA+80y2Sm61AVJZurXekp5QkvY=
+	t=1735843526; cv=none; b=j9CswLQsv3Nh/6U0n06F69GbxGh6Ao4HC4m/pGlQllnNimw6b9YZ5xwo5Pa2S2LLsHKsDApkKl7PTW+zGaLJzWakrICT+l2yTLqB05BIjuSiFm2w7zHQ9sW/8W69pzxASgpgkaqTFx89lfI+16v8W9OlNN48VEOOPMWLDlLQubE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1735843515; c=relaxed/simple;
-	bh=7JvmCKxhH4I1zqLAp7YScRcJo3g8APCAbrUJU9829po=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=o0U2tDqLr9zUUxkSCWMqdN5rBQudqMXW7dr8PvQdf4U0IKpjKrwTgO0xRB9wEb5EI8deoNnQu4ej9EtIN4p5/XOAiGI3GmpqBjJV48+VugENNWWg3Qqu+iyV4AH1tH/SpBWJJS6pOeSOIy5mh8qkzmTBwXoTY9cdbw0rT2Vnt6c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=QFlAZMV+; arc=none smtp.client-ip=209.85.219.42
+	s=arc-20240116; t=1735843526; c=relaxed/simple;
+	bh=tDl53ZNoPI819vpyztrv1Q6UmeymFI/Taf8u6xYZMa8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=phNBqGPMUTQFFoDcgNQILL+KczbJMnC5r3wDTwZv+dWDBqQxTarDs0/iS7T/W6XLscub5JESZ8W29mECwwCsdiM3jndxzCGtqZW9YvFNFuyB/vVI6Y6xUJ8C2yJA3SfKSMT45Jl9zp2Kned8jCoeO2Z40BwCAsj4iW5NTIJqQ0g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=R8migTRm; arc=none smtp.client-ip=209.85.222.46
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QFlAZMV+"
-Received: by mail-qv1-f42.google.com with SMTP id 6a1803df08f44-6dcf63155b0so51986646d6.1;
-        Thu, 02 Jan 2025 10:45:10 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="R8migTRm"
+Received: by mail-ua1-f46.google.com with SMTP id a1e0cc1a2514c-85bb264993cso1895091241.1;
+        Thu, 02 Jan 2025 10:45:21 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1735843509; x=1736448309; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=qyG1SawkLsr2B+Wyaxjn2+8g0CyNN8zK93X+S5zHeA0=;
-        b=QFlAZMV+Sr1br7flwP2mb8VWPrlWupZtqstRRdoqBRbicEMpuA478V8A+SXVdjL5lR
-         raGyuzPJ9gf7O8F466tbl6idi3SRA/7BS3YcTaobKcWbAobXnFzFF1k5WGYATjjtk4V/
-         vD4boUOPFXqP5XJRN41ajr+NdH2Li7txAA7auviR2deZSJw6aHdz8YpAP27A34UJ9YpO
-         Hmk2saZ58TZtr8oDUOZdlPqatU82sxuOeIOVruYuelRxtEYQB+lTMPlGDqUSM6ytKAy5
-         sKI6QQqscSFZGfwueURGd/U6hQcmD4dNmh+2+ULrMMI1MhWI13jhFjmknWgXTdDK3A2u
-         olbA==
+        d=gmail.com; s=20230601; t=1735843521; x=1736448321; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=6EitSKvZjHV84UD7mmu9xWWo8RKXYcnUOmny2nweWtc=;
+        b=R8migTRmEaoCDEp7/xnb6x5zafCZej7gMrb3qTYGSVrwxdLMFxOLOo5vTf9h8fc+hR
+         xwzd/lhIshOqpcZs5iNRjyteBVnBd1eWQ6udF+yGdw3dXMWirF1BVSiwojQhHSRPuF34
+         VGnNOEtTJ0QaqWCEBwL0ITqLzImVzGU7o4sjopdwt0KkpNbFljroZmXzQj15D2bawBNX
+         QUrBIJobmaf72M71wbOFzgBEGQRpowQLy7YeKa3mDIWKmtkCLQfWfmfUtf2FVH1ip0M2
+         49M+7swhaLaASliQb2gruO6D5iPGNv+HsrAd/fxQbtE01r01RWPW+wyPDqYjl/AGJaXJ
+         N3+g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1735843509; x=1736448309;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=qyG1SawkLsr2B+Wyaxjn2+8g0CyNN8zK93X+S5zHeA0=;
-        b=ki0cnLRXSJ6wmoMW7sL64IuA1RXKH/+yU0/TCdBeukMDmAlDIE+fhfoRGd0o+C4/9t
-         sYyubI6XELkicEbOm71Edg9rRNvdveRoyTcfEv2VLYcTsCEfmvuk5fMipjM3SC/ufdxK
-         SRtwegBtjnEEWrX/FG2aS1/NZe1N2iVeJiPyCfIQlpQiGlqbb2osrOWAoyVJeN2SNozo
-         zK9dA+3ABRDsMiq/Zb2jyfz8O7rO83nvVGzUs2jRchg0iOTmCOEAjREUTbsGxXIx9aqK
-         cxAFyMojhhAG9JCb89wJbeASh3yVUL38QalnxOgkY6eWs/OmOZQ0ww/XMuFKwltSAHPG
-         sf3g==
-X-Forwarded-Encrypted: i=1; AJvYcCUJJNyw5WfexUYfKN1ZD3r98hh5iEWTjm3khIWKdguDaYo16XCHf13coMg1mDgb+343ht6hsPVCRAg=@vger.kernel.org, AJvYcCVWYWcpSrr2qm68IOfEyOK8CGuOEGRPIBTdaeg2SHdGdt0pcS4UCJtA7azYvVU1jEH/4uhemx7GYambBuxx@vger.kernel.org, AJvYcCWcKu/pLwY8/rZ0miH6CKQBru/Ic3QQjvPg+jqgstw8KfUHwZwZQQ6E3HmoUvDwLc+3iHV5MqyCTDwb+PutwkNhbkMzyA==@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz3/01S88DRdv8AfW2FWooyfaEQkND+LjlPXxYTOGrvIyTzUO9q
-	ocB6JA0GmNLoiN7K6JBBbau5BJfMmmP6GUS11qWujs7Nu+2W7I3etIV+HkBUxZh8f0d0fKO7tFA
-	LewDvjOKq2u8YIfkXDVY0HUXctm4=
-X-Gm-Gg: ASbGncvgooUxKNuE5oWic2xa5GIlQcN1N6CyM/1TG3cm2ieE9dHexG/81V0GLLDtEhU
-	B03x9uF9sz7+ODsRmGDA6Psg9qt4Uj6RUYHrIbZQ=
-X-Google-Smtp-Source: AGHT+IHfFXmY610jD3qo+3MZ5iRgzpmBgVAs4nzDm+BV7DA8/PRgQ1mPb4ZxZ976BW/6M42KnjPSdUkTOyu/5AhYuJo=
-X-Received: by 2002:a05:6214:23cb:b0:6d1:87f7:2924 with SMTP id
- 6a1803df08f44-6dd233ada50mr853340086d6.47.1735843509417; Thu, 02 Jan 2025
- 10:45:09 -0800 (PST)
+        d=1e100.net; s=20230601; t=1735843521; x=1736448321;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=6EitSKvZjHV84UD7mmu9xWWo8RKXYcnUOmny2nweWtc=;
+        b=OJqJfEmbhCxO2Bv4pQ5HEOH+lBskCv7nqkNkkablK2FvxxhubLdOLEtzXRAO2OF7ea
+         chAXtQAR0xmjT74D/T1N6rDXnC5UShKzA5kF+EaFp7IqFpNuvzUaL8csSdjV06luuYWR
+         xu6JnthcT0AtensCeK8nZJAQ8xbm3U4tubwxtxvsaefItipC2b/w0ypKmADDALUYf3A6
+         CZCopcYtjtpZmcNjGBVGWI7otC+Z4jjBd2EZYkss34NJhi/FNKyoVf0u74ALqhs6Qw5Z
+         e4tnV6WUp9MTmjRAVYJ11DDQvcbDqH/t9SIZ5X1Gqm2O8q08dOovjkfdGDYDZ8qkdSEW
+         nKJg==
+X-Forwarded-Encrypted: i=1; AJvYcCWCDO72hMUh0tegXxSKD2uKqoqwMyIW56FTm6eukZeZ28B/0IvQgRF0PUGlEB8qL8fkewSyDa4UGAr6+RU=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzJptGNiuvsMeKWokyEbk0PP0TQJSp8Opn4gBOBQLIdCne3xHmd
+	683NJ9FTLMfcE4Z5YCM1frtgvOEUa3H+2q/FSNKDjubRo/Uk/9SE
+X-Gm-Gg: ASbGncvXp7fR2F9/deaQwqOu9zY1ywCAVQpLU246QODo/x9xsgcO6dnUA7XHeTcxTA8
+	3d1S3rU7Z+OXLMc6EGAoCnaAQ/koTDNC9Ro+LVkbY1FrsQTgB7GkZSq1ASFdJd4VJVohsNQd9Z4
+	FpY5jGL6gzUSyzEjEMJ5TQHTzcxK+2eg0eItbr/cMHxXC986IQI+hFcy7020tjP1BOG6/tYouyw
+	j1snIppZAK3cB0S2FV2tw+LWM7tymOHs3hpPfwl2Y4vR5DWS7ibHA==
+X-Google-Smtp-Source: AGHT+IEmINXH0RNIIUnMaPKtWOcWikgKiq9lvJmiWRr44ruTsop5Q7iOhV+LT/e8POohWGT8rv1XXg==
+X-Received: by 2002:a05:6102:50a0:b0:4af:f740:c1b8 with SMTP id ada2fe7eead31-4b2cc49c115mr36144954137.24.1735843520892;
+        Thu, 02 Jan 2025 10:45:20 -0800 (PST)
+Received: from alphacentauri ([2800:bf0:82:1159:1ea9:11b1:7af9:1277])
+        by smtp.gmail.com with ESMTPSA id ada2fe7eead31-4b2bfa8d401sm5088876137.23.2025.01.02.10.45.18
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 02 Jan 2025 10:45:20 -0800 (PST)
+Date: Thu, 2 Jan 2025 13:45:16 -0500
+From: Kurt Borja <kuurtb@gmail.com>
+To: Armin Wolf <W_Armin@gmx.de>
+Cc: platform-driver-x86@vger.kernel.org, Dell.Client.Kernel@dell.com, 
+	hdegoede@redhat.com, ilpo.jarvinen@linux.intel.com, linux-kernel@vger.kernel.org, 
+	mario.limonciello@amd.com
+Subject: Re: [PATCH v2 07/20] alienware-wmi: Add a state container for LED
+ control feature
+Message-ID: <fz3qdng6vvlfmncxosqmlswhxu36yplg7h6igeaipdqfao2tgl@bymtliqzw5sw>
+References: <20241229194506.8268-2-kuurtb@gmail.com>
+ <20241229194506.8268-9-kuurtb@gmail.com>
+ <50b0b025-87ad-4093-b525-f95a22b8f124@gmx.de>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250102004854.14874-1-derekjohn.clark@gmail.com>
- <20250102004854.14874-3-derekjohn.clark@gmail.com> <e738cf05-6fa6-4ca7-ba18-7f90bd316473@kernel.org>
-In-Reply-To: <e738cf05-6fa6-4ca7-ba18-7f90bd316473@kernel.org>
-From: Derek John Clark <derekjohn.clark@gmail.com>
-Date: Thu, 2 Jan 2025 10:44:58 -0800
-Message-ID: <CAFqHKTnnZYkT_RzdGFQ_HbCY-AzZF7CZhbAn-DyusgAEBDMpqA@mail.gmail.com>
-Subject: Re: [PATCH v2 2/4] platform/x86: Add Lenovo GameZone WMI Driver
-To: Mario Limonciello <superm1@kernel.org>
-Cc: Hans de Goede <hdegoede@redhat.com>, =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, 
-	Jonathan Corbet <corbet@lwn.net>, Luke Jones <luke@ljones.dev>, Xino Ni <nijs1@lenovo.com>, 
-	Zhixin Zhang <zhangzx36@lenovo.com>, Mia Shao <shaohz1@lenovo.com>, 
-	Mark Pearson <mpearson-lenovo@squebb.ca>, 
-	"Pierre-Loup A . Griffais" <pgriffais@valvesoftware.com>, "Cody T . -H . Chiu" <codyit@gmail.com>, 
-	John Martens <johnfanv2@gmail.com>, platform-driver-x86@vger.kernel.org, 
-	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <50b0b025-87ad-4093-b525-f95a22b8f124@gmx.de>
 
-On Wed, Jan 1, 2025 at 8:09=E2=80=AFPM Mario Limonciello <superm1@kernel.or=
-g> wrote:
->
->
->
-> On 1/1/25 18:47, Derek J. Clark wrote:
-> > Adds lenovo-wmi-gamezone.c which provides a driver for the Lenovo
-> > GameZone WMI interface that comes on Lenovo "Gaming Series" hardware.
-> > Provides ACPI platform profiles over WMI.
-> >
-> > v2:
-> > - Use devm_kzalloc to ensure driver can be instanced, remove global
-> >    reference.
-> > - Ensure reverse Christmas tree for all variable declarations.
-> > - Remove extra whitespace.
-> > - Use guard(mutex) in all mutex instances, global mutex.
-> > - Use pr_fmt instead of adding the driver name to each pr_err.
-> > - Remove noisy pr_info usage.
-> > - Rename gamezone_wmi to lenovo_wmi_gz_priv and gz_wmi to priv.
-> > - Remove GZ_WMI symbol exporting.
-> >
-> > Signed-off-by: Derek J. Clark <derekjohn.clark@gmail.com>
+On Thu, Jan 02, 2025 at 05:07:16PM +0100, Armin Wolf wrote:
+> Am 29.12.24 um 20:44 schrieb Kurt Borja:
+> 
+> > Add a state container for the "alienware-wmi" platform device and
+> > initialize it on the new alienfx_probe(). Migrate all LED control functions
+> > to use this state container, as well as hdmi, amplifier, deepslp group
+> > visibility methods, to support upcoming file split.
+> > 
+> > Additionally move the led_classdev registration to the platform driver
+> > probe and make it device managed.
+> > 
+> > Drop alienware_zone_init() and alienware_zone_exit() because they are no
+> > longer needed.
+> > 
+> > Signed-off-by: Kurt Borja <kuurtb@gmail.com>
 > > ---
-> >   MAINTAINERS                                |   7 +
-> >   drivers/platform/x86/Kconfig               |  11 ++
-> >   drivers/platform/x86/Makefile              |   1 +
-> >   drivers/platform/x86/lenovo-wmi-gamezone.c | 203 ++++++++++++++++++++=
-+
-> >   drivers/platform/x86/lenovo-wmi.h          | 105 +++++++++++
-> >   5 files changed, 327 insertions(+)
-> >   create mode 100644 drivers/platform/x86/lenovo-wmi-gamezone.c
-> >   create mode 100644 drivers/platform/x86/lenovo-wmi.h
-> >
-> > diff --git a/MAINTAINERS b/MAINTAINERS
-> > index baf0eeb9a355..8f8a6aec6b92 100644
-> > --- a/MAINTAINERS
-> > +++ b/MAINTAINERS
-> > @@ -13034,6 +13034,13 @@ S:   Maintained
-> >   W:  http://legousb.sourceforge.net/
-> >   F:  drivers/usb/misc/legousbtower.c
-> >
-> > +LENOVO WMI drivers
-> > +M:   Derek J. Clark <derekjohn.clark@gmail.com>
-> > +L:   platform-driver-x86@vger.kernel.org
-> > +S:   Maintained
-> > +F:   drivers/platform/x86/lenovo-wmi-gamezone.c
-> > +F:   drivers/platform/x86/lenovo-wmi.h
-> > +
-> >   LETSKETCH HID TABLET DRIVER
-> >   M:  Hans de Goede <hdegoede@redhat.com>
-> >   L:  linux-input@vger.kernel.org
-> > diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfi=
-g
-> > index 0258dd879d64..9a6ac7fdec9f 100644
-> > --- a/drivers/platform/x86/Kconfig
-> > +++ b/drivers/platform/x86/Kconfig
-> > @@ -459,6 +459,17 @@ config IBM_RTL
-> >        state =3D 0 (BIOS SMIs on)
-> >        state =3D 1 (BIOS SMIs off)
-> >
-> > +config LENOVO_WMI_GAMEZONE
-> > +     tristate "Lenovo GameZone WMI Driver"
-> > +     depends on ACPI_WMI
-> > +     select ACPI_PLATFORM_PROFILE
-> > +     help
-> > +       Say Y here if you have a WMI aware Lenovo Legion device and wou=
-ld like to use the
-> > +       platform-profile firmware interface.
-> > +
-> > +       To compile this driver as a module, choose M here: the module w=
-ill
-> > +       be called lenovo_wmi_gamezone.
-> > +
-> >   config IDEAPAD_LAPTOP
-> >       tristate "Lenovo IdeaPad Laptop Extras"
-> >       depends on ACPI
-> > diff --git a/drivers/platform/x86/Makefile b/drivers/platform/x86/Makef=
-ile
-> > index e1b142947067..7cb29a480ed2 100644
-> > --- a/drivers/platform/x86/Makefile
-> > +++ b/drivers/platform/x86/Makefile
-> > @@ -68,6 +68,7 @@ obj-$(CONFIG_THINKPAD_LMI)  +=3D think-lmi.o
-> >   obj-$(CONFIG_YOGABOOK)              +=3D lenovo-yogabook.o
-> >   obj-$(CONFIG_YT2_1380)              +=3D lenovo-yoga-tab2-pro-1380-fa=
-stcharger.o
-> >   obj-$(CONFIG_LENOVO_WMI_CAMERA)     +=3D lenovo-wmi-camera.o
-> > +obj-$(CONFIG_LENOVO_WMI_GAMEZONE)    +=3D lenovo-wmi-gamezone.o
-> >
-> >   # Intel
-> >   obj-y                               +=3D intel/
-> > diff --git a/drivers/platform/x86/lenovo-wmi-gamezone.c b/drivers/platf=
-orm/x86/lenovo-wmi-gamezone.c
-> > new file mode 100644
-> > index 000000000000..da5e2bc41f39
-> > --- /dev/null
-> > +++ b/drivers/platform/x86/lenovo-wmi-gamezone.c
-> > @@ -0,0 +1,203 @@
-> > +// SPDX-License-Identifier: GPL-2.0-or-later
-> > +/*
-> > + * Lenovo GameZone WMI interface driver. The GameZone WMI interface pr=
-ovides
-> > + * platform profile and fan curve settings for devices that fall under=
- the
-> > + * "Gaming Series" of Lenovo Legion devices.
-> > + *
-> > + * Copyright(C) 2024 Derek J. Clark <derekjohn.clark@gmail.com>
-> > + */
-> > +
-> > +#include <linux/platform_profile.h>
-> > +#include "lenovo-wmi.h"
-> > +
-> > +#define LENOVO_GAMEZONE_GUID "887B54E3-DDDC-4B2C-8B88-68A26A8835D0"
-> > +
-> > +/* Method IDs */
-> > +#define WMI_METHOD_ID_SMARTFAN_SUPP 43 /* IsSupportSmartFan */
-> > +#define WMI_METHOD_ID_SMARTFAN_SET 44 /* SetSmartFanMode */
-> > +#define WMI_METHOD_ID_SMARTFAN_GET 45 /* GetSmartFanMode */
-> > +
-> > +static DEFINE_MUTEX(call_mutex);
-> > +
-> > +static const struct wmi_device_id lenovo_wmi_gamezone_id_table[] =3D {
-> > +     { LENOVO_GAMEZONE_GUID, NULL }, /* LENOVO_GAMEZONE_DATA */
-> > +     {}
+> >   drivers/platform/x86/dell/alienware-wmi.c | 135 +++++++++++++---------
+> >   1 file changed, 79 insertions(+), 56 deletions(-)
+> > 
+> > diff --git a/drivers/platform/x86/dell/alienware-wmi.c b/drivers/platform/x86/dell/alienware-wmi.c
+> > index 2c17160473a6..88d4046ed45f 100644
+> > --- a/drivers/platform/x86/dell/alienware-wmi.c
+> > +++ b/drivers/platform/x86/dell/alienware-wmi.c
+> > @@ -404,14 +404,20 @@ struct wmax_u32_args {
+> >   	u8 arg3;
+> >   };
+> > 
+> > +struct alienfx_priv {
+> > +	struct platform_device *pdev;
+> > +	struct quirk_entry *quirks;
+> > +	struct led_classdev global_led;
+> > +	struct color_platform colors[4];
+> > +	u8 global_brightness;
+> > +	u8 lighting_control_state;
 > > +};
 > > +
-> > +struct lenovo_wmi_gz_priv {
-> > +     struct wmi_device *wdev;
-> > +     enum platform_profile_option current_profile;
-> > +     struct platform_profile_handler pprof;
-> > +     bool platform_profile_support;
-> > +};
+> >   static struct platform_device *platform_device;
+> > -static struct color_platform colors[4];
+> >   static struct platform_profile_handler pp_handler;
+> >   static enum wmax_thermal_mode supported_thermal_profiles[PLATFORM_PROFILE_LAST];
+> > 
+> >   static u8 interface;
+> > -static u8 lighting_control_state;
+> > -static u8 global_brightness;
+> > 
+> >   /*
+> >    * Helpers used for zone control
+> > @@ -443,7 +449,7 @@ static int parse_rgb(const char *buf, struct color_platform *colors)
+> >   /*
+> >    * Individual RGB zone control
+> >    */
+> > -static int alienware_update_led(u8 location)
+> > +static int alienware_update_led(struct alienfx_priv *priv, u8 location)
+> >   {
+> >   	int method_id;
+> >   	acpi_status status;
+> > @@ -453,21 +459,21 @@ static int alienware_update_led(u8 location)
+> >   	struct wmax_led_args wmax_basic_args;
+> >   	if (interface == WMAX) {
+> >   		wmax_basic_args.led_mask = 1 << location;
+> > -		wmax_basic_args.colors = colors[location];
+> > -		wmax_basic_args.state = lighting_control_state;
+> > +		wmax_basic_args.colors = priv->colors[location];
+> > +		wmax_basic_args.state = priv->lighting_control_state;
+> >   		guid = WMAX_CONTROL_GUID;
+> >   		method_id = WMAX_METHOD_ZONE_CONTROL;
+> > 
+> >   		input.length = sizeof(wmax_basic_args);
+> >   		input.pointer = &wmax_basic_args;
+> >   	} else {
+> > -		legacy_args.colors = colors[location];
+> > -		legacy_args.brightness = global_brightness;
+> > +		legacy_args.colors = priv->colors[location];
+> > +		legacy_args.brightness = priv->global_brightness;
+> >   		legacy_args.state = 0;
+> > -		if (lighting_control_state == LEGACY_BOOTING ||
+> > -		    lighting_control_state == LEGACY_SUSPEND) {
+> > +		if (priv->lighting_control_state == LEGACY_BOOTING ||
+> > +		    priv->lighting_control_state == LEGACY_SUSPEND) {
+> >   			guid = LEGACY_POWER_CONTROL_GUID;
+> > -			legacy_args.state = lighting_control_state;
+> > +			legacy_args.state = priv->lighting_control_state;
+> >   		} else
+> >   			guid = LEGACY_CONTROL_GUID;
+> >   		method_id = location + 1;
+> > @@ -486,22 +492,26 @@ static int alienware_update_led(u8 location)
+> >   static ssize_t zone_show(struct device *dev, struct device_attribute *attr,
+> >   			 char *buf, u8 location)
+> >   {
+> > +	struct alienfx_priv *priv = dev_get_drvdata(dev);
+> > +	struct color_platform *colors = &priv->colors[location];
 > > +
-> > +/* Platform Profile Methods */
-> > +static int lenovo_wmi_gamezone_platform_profile_supported(
-> > +     struct platform_profile_handler *pprof, int *supported)
+> >   	return sprintf(buf, "red: %d, green: %d, blue: %d\n",
+> > -		       colors[location].red, colors[location].green,
+> > -		       colors[location].blue);
+> > +		       colors->red, colors->green, colors->blue);
+> > 
+> >   }
+> > 
+> >   static ssize_t zone_store(struct device *dev, struct device_attribute *attr,
+> >   			  const char *buf, size_t count, u8 location)
+> >   {
+> > +	struct alienfx_priv *priv = dev_get_drvdata(dev);
+> > +	struct color_platform *colors = &priv->colors[location];
+> >   	int ret;
+> > 
+> > -	ret = parse_rgb(buf, &colors[location]);
+> > +	ret = parse_rgb(buf, colors);
+> >   	if (ret)
+> >   		return ret;
+> > 
+> > -	ret = alienware_update_led(location);
+> > +	ret = alienware_update_led(priv, location);
+> > 
+> >   	return ret ? ret : count;
+> >   }
+> > @@ -569,9 +579,11 @@ static ssize_t lighting_control_state_show(struct device *dev,
+> >   					   struct device_attribute *attr,
+> >   					   char *buf)
+> >   {
+> > -	if (lighting_control_state == LEGACY_BOOTING)
+> > +	struct alienfx_priv *priv = dev_get_drvdata(dev);
+> > +
+> > +	if (priv->lighting_control_state == LEGACY_BOOTING)
+> >   		return sysfs_emit(buf, "[booting] running suspend\n");
+> > -	else if (lighting_control_state == LEGACY_SUSPEND)
+> > +	else if (priv->lighting_control_state == LEGACY_SUSPEND)
+> >   		return sysfs_emit(buf, "booting running [suspend]\n");
+> > 
+> >   	return sysfs_emit(buf, "booting [running] suspend\n");
+> > @@ -581,6 +593,7 @@ static ssize_t lighting_control_state_store(struct device *dev,
+> >   					    struct device_attribute *attr,
+> >   					    const char *buf, size_t count)
+> >   {
+> > +	struct alienfx_priv *priv = dev_get_drvdata(dev);
+> >   	u8 val;
+> > 
+> >   	if (strcmp(buf, "booting\n") == 0)
+> > @@ -592,9 +605,9 @@ static ssize_t lighting_control_state_store(struct device *dev,
+> >   	else
+> >   		val = WMAX_RUNNING;
+> > 
+> > -	lighting_control_state = val;
+> > +	priv->lighting_control_state = val;
+> >   	pr_debug("alienware-wmi: updated control state to %d\n",
+> > -		 lighting_control_state);
+> > +		 priv->lighting_control_state);
+> > 
+> >   	return count;
+> >   }
+> > @@ -651,43 +664,26 @@ static int wmax_brightness(int brightness)
+> >   static void global_led_set(struct led_classdev *led_cdev,
+> >   			   enum led_brightness brightness)
+> >   {
+> > +	struct alienfx_priv *priv = container_of(led_cdev, struct alienfx_priv,
+> > +						 global_led);
+> >   	int ret;
+> > -	global_brightness = brightness;
+> > +
+> > +	priv->global_brightness = brightness;
+> > +
+> >   	if (interface == WMAX)
+> >   		ret = wmax_brightness(brightness);
+> >   	else
+> > -		ret = alienware_update_led(0);
+> > +		ret = alienware_update_led(priv, 0);
+> >   	if (ret)
+> >   		pr_err("LED brightness update failed\n");
+> >   }
+> > 
+> >   static enum led_brightness global_led_get(struct led_classdev *led_cdev)
+> >   {
+> > -	return global_brightness;
+> > -}
+> > -
+> > -static struct led_classdev global_led = {
+> > -	.brightness_set = global_led_set,
+> > -	.brightness_get = global_led_get,
+> > -	.name = "alienware::global_brightness",
+> > -};
+> > +	struct alienfx_priv *priv = container_of(led_cdev, struct alienfx_priv,
+> > +						 global_led);
+> > 
+> > -static int alienware_zone_init(struct platform_device *dev)
+> > -{
+> > -	if (interface == WMAX) {
+> > -		lighting_control_state = WMAX_RUNNING;
+> > -	} else if (interface == LEGACY) {
+> > -		lighting_control_state = LEGACY_RUNNING;
+> > -	}
+> > -	global_led.max_brightness = 0x0F;
+> > -	global_brightness = global_led.max_brightness;
+> > -
+> > -	return led_classdev_register(&dev->dev, &global_led);
+> > -}
+> > -
+> > -static void alienware_zone_exit(struct platform_device *dev)
+> > -{
+> > -	led_classdev_unregister(&global_led);
+> > +	return priv->global_brightness;
+> >   }
+> > 
+> >   static acpi_status alienware_wmax_command(void *in_args, size_t in_size,
+> > @@ -792,7 +788,9 @@ static DEVICE_ATTR_RW(source);
+> > 
+> >   static bool hdmi_group_visible(struct kobject *kobj)
+> >   {
+> > -	return quirks->hdmi_mux;
+> > +	struct alienfx_priv *priv = dev_get_drvdata(kobj_to_dev(kobj));
+> > +
+> > +	return priv->quirks->hdmi_mux;
+> >   }
+> >   DEFINE_SIMPLE_SYSFS_GROUP_VISIBLE(hdmi);
+> > 
+> > @@ -838,7 +836,9 @@ static DEVICE_ATTR_RO(status);
+> > 
+> >   static bool amplifier_group_visible(struct kobject *kobj)
+> >   {
+> > -	return quirks->amplifier;
+> > +	struct alienfx_priv *priv = dev_get_drvdata(kobj_to_dev(kobj));
+> > +
+> > +	return priv->quirks->amplifier;
+> >   }
+> >   DEFINE_SIMPLE_SYSFS_GROUP_VISIBLE(amplifier);
+> > 
+> > @@ -906,7 +906,9 @@ static DEVICE_ATTR_RW(deepsleep);
+> > 
+> >   static bool deepsleep_group_visible(struct kobject *kobj)
+> >   {
+> > -	return quirks->deepslp;
+> > +	struct alienfx_priv *priv = dev_get_drvdata(kobj_to_dev(kobj));
+> > +
+> > +	return priv->quirks->deepslp;
+> >   }
+> >   DEFINE_SIMPLE_SYSFS_GROUP_VISIBLE(deepsleep);
+> > 
+> > @@ -1133,6 +1135,33 @@ static void remove_thermal_profile(void)
+> >   /*
+> >    * Platform Driver
+> >    */
+> > +static int alienfx_probe(struct platform_device *pdev)
 > > +{
-> > +     struct lenovo_wmi_gz_priv *priv;
+> > +	struct alienfx_priv *priv;
 > > +
-> > +     priv =3D container_of(pprof, struct lenovo_wmi_gz_priv, pprof);
+> > +	priv = devm_kzalloc(&pdev->dev, sizeof(*priv), GFP_KERNEL);
+> > +	if (!priv)
+> > +		return -ENOMEM;
 > > +
-> > +     guard(mutex)(&call_mutex);
-> > +     return lenovo_wmidev_evaluate_method_1(
-> > +             priv->wdev, 0x0, WMI_METHOD_ID_SMARTFAN_SUPP, 0, supporte=
-d);
+> > +	platform_set_drvdata(pdev, priv);
+> > +	priv->pdev = pdev;
+> > +	priv->quirks = quirks;
+> > +
+> > +	if (interface == WMAX)
+> > +		priv->lighting_control_state = WMAX_RUNNING;
+> > +	else if (interface == LEGACY)
+> > +		priv->lighting_control_state = LEGACY_RUNNING;
+> > +
+> > +	priv->global_led.name = "alienware::global_brightness";
+> > +	priv->global_led.brightness_set = global_led_set;
+> > +	priv->global_led.brightness_get = global_led_get;
+> > +	priv->global_led.max_brightness = 0x0F;
+> > +
+> > +	priv->global_brightness = priv->global_led.max_brightness;
+> > +
+> > +	return devm_led_classdev_register(&pdev->dev, &priv->global_led);
 > > +}
 > > +
-> > +static int
-> > +lenovo_wmi_gamezone_profile_get(struct platform_profile_handler *pprof=
-,
-> > +                             enum platform_profile_option *profile)
-> > +{
-> > +     struct lenovo_wmi_gz_priv *priv;
-> > +     int sel_prof;
-> > +     int err;
-> > +
-> > +     priv =3D container_of(pprof, struct lenovo_wmi_gz_priv, pprof);
-> > +
-> > +     guard(mutex)(&call_mutex);
-> > +     err =3D lenovo_wmidev_evaluate_method_1(
-> > +             priv->wdev, 0x0, WMI_METHOD_ID_SMARTFAN_GET, 0, &sel_prof=
-);
-> > +     if (err) {
-> > +             pr_err("Error getting fan profile from WMI interface: %d\=
-n",
-> > +                    err);
-> > +             return err;
-> > +     }
-> > +
-> > +     switch (sel_prof) {
-> > +     case SMARTFAN_MODE_QUIET:
-> > +             *profile =3D PLATFORM_PROFILE_QUIET;
-> > +             break;
-> > +     case SMARTFAN_MODE_BALANCED:
-> > +             *profile =3D PLATFORM_PROFILE_BALANCED;
-> > +             break;
-> > +     case SMARTFAN_MODE_PERFORMANCE:
-> > +             *profile =3D PLATFORM_PROFILE_PERFORMANCE;
-> > +             break;
-> > +     case SMARTFAN_MODE_CUSTOM:
-> > +             *profile =3D PLATFORM_PROFILE_CUSTOM;
-> > +             break;
-> > +     default:
-> > +             return -EINVAL;
-> > +     }
-> > +     priv->current_profile =3D *profile;
-> > +
-> > +     return 0;
-> > +}
-> > +
-> > +static int
-> > +lenovo_wmi_gamezone_profile_set(struct platform_profile_handler *pprof=
-,
-> > +                             enum platform_profile_option profile)
-> > +{
-> > +     struct lenovo_wmi_gz_priv *priv;
-> > +     int sel_prof;
-> > +     int err;
-> > +
-> > +     switch (profile) {
-> > +     case PLATFORM_PROFILE_QUIET:
-> > +             sel_prof =3D SMARTFAN_MODE_QUIET;
-> > +             break;
-> > +     case PLATFORM_PROFILE_BALANCED:
-> > +             sel_prof =3D SMARTFAN_MODE_BALANCED;
-> > +             break;
-> > +     case PLATFORM_PROFILE_PERFORMANCE:
-> > +             sel_prof =3D SMARTFAN_MODE_PERFORMANCE;
-> > +             break;
-> > +     case PLATFORM_PROFILE_CUSTOM:
-> > +             sel_prof =3D SMARTFAN_MODE_CUSTOM;
-> > +             break;
-> > +     default:
-> > +             return -EOPNOTSUPP;
-> > +     }
-> > +
-> > +     priv =3D container_of(pprof, struct lenovo_wmi_gz_priv, pprof);
-> > +
-> > +     guard(mutex)(&call_mutex);
-> > +     err =3D lenovo_wmidev_evaluate_method_1(
-> > +             priv->wdev, 0x0, WMI_METHOD_ID_SMARTFAN_SET, sel_prof, NU=
-LL);
-> > +     if (err) {
-> > +             pr_err("Error setting fan profile on WMI interface: %u\n"=
-, err);
-> > +             return err;
-> > +     }
-> > +
-> > +     priv->current_profile =3D profile;
-> > +     return 0;
-> > +}
-> > +
-> > +/* Driver Setup */
-> > +static int platform_profile_setup(struct lenovo_wmi_gz_priv *priv)
-> > +{
-> > +     int supported;
-> > +     int err;
-> > +
-> > +     err =3D lenovo_wmi_gamezone_platform_profile_supported(&priv->ppr=
-of,
-> > +                                                          &supported);
-> > +     if (err) {
-> > +             pr_err("Error checking platform profile support: %d\n", e=
-rr);
-> > +             return err;
-> > +     }
-> > +
-> > +     priv->platform_profile_support =3D supported;
-> > +
-> > +     if (!supported)
-> > +             return -EOPNOTSUPP;
-> > +
-> > +     priv->pprof.name =3D "lenovo-wmi-gamezone";
-> > +     priv->pprof.profile_get =3D lenovo_wmi_gamezone_profile_get;
-> > +     priv->pprof.profile_set =3D lenovo_wmi_gamezone_profile_set;
-> > +
-> > +     set_bit(PLATFORM_PROFILE_QUIET, priv->pprof.choices);
-> > +     set_bit(PLATFORM_PROFILE_BALANCED, priv->pprof.choices);
-> > +     set_bit(PLATFORM_PROFILE_PERFORMANCE, priv->pprof.choices);
-> > +     set_bit(PLATFORM_PROFILE_CUSTOM, priv->pprof.choices);
-> > +
-> > +     err =3D lenovo_wmi_gamezone_profile_get(&priv->pprof,
-> > +                                           &priv->current_profile);
-> > +     if (err) {
-> > +             pr_err("Error getting current platform profile: %d\n", er=
-r);
-> > +             return err;
-> > +     }
-> > +
-> > +     guard(mutex)(&call_mutex);
-> > +     err =3D platform_profile_register(&priv->pprof);
-> > +     if (err) {
-> > +             pr_err("Error registering platform profile: %d\n", err);
-> > +             return err;
-> > +     }
-> > +
-> > +     return 0;
-> > +}
-> > +
-> > +static int lenovo_wmi_gamezone_probe(struct wmi_device *wdev,
-> > +                                  const void *context)
-> > +{
-> > +     struct lenovo_wmi_gz_priv *priv;
-> > +
-> > +     priv =3D devm_kzalloc(&wdev->dev, sizeof(*priv), GFP_KERNEL);
-> > +     if (!priv)
-> > +             return -ENOMEM;
-> > +
-> > +     priv->wdev =3D wdev;
-> > +     return platform_profile_setup(priv);
-> > +}
-> > +
-> > +static void lenovo_wmi_gamezone_remove(struct wmi_device *wdev)
-> > +{
-> > +     struct lenovo_wmi_gz_priv *priv =3D dev_get_drvdata(&wdev->dev);
-> > +
-> > +     guard(mutex)(&call_mutex);
-> > +     platform_profile_remove(&priv->pprof);
-> > +}
-> > +
-> > +static struct wmi_driver lenovo_wmi_gamezone_driver =3D {
-> > +     .driver =3D { .name =3D "lenovo_wmi_gamezone" },
-> > +     .id_table =3D lenovo_wmi_gamezone_id_table,
-> > +     .probe =3D lenovo_wmi_gamezone_probe,
-> > +     .remove =3D lenovo_wmi_gamezone_remove,
-> > +};
-> > +
-> > +module_wmi_driver(lenovo_wmi_gamezone_driver);
-> > +
-> > +MODULE_DEVICE_TABLE(wmi, lenovo_wmi_gamezone_id_table);
-> > +MODULE_AUTHOR("Derek J. Clark <derekjohn.clark@gmail.com>");
-> > +MODULE_DESCRIPTION("Lenovo GameZone WMI Driver");
-> > +MODULE_LICENSE("GPL");
-> > diff --git a/drivers/platform/x86/lenovo-wmi.h b/drivers/platform/x86/l=
-enovo-wmi.h
-> > new file mode 100644
-> > index 000000000000..8a302c6c47cb
-> > --- /dev/null
-> > +++ b/drivers/platform/x86/lenovo-wmi.h
-> > @@ -0,0 +1,105 @@
-> > +/* SPDX-License-Identifier: GPL-2.0-or-later
-> > + *
-> > + * Lenovo Legion WMI interface driver. The Lenovo Legion WMI interface=
- is
-> > + * broken up into multiple GUID interfaces that require cross-referenc=
-es
-> > + * between GUID's for some functionality. The "Custom Mode" interface =
-is a
-> > + * legacy interface for managing and displaying CPU & GPU power and hw=
-mon
-> > + * settings and readings. The "Other Mode" interface is a modern inter=
-face
-> > + * that replaces or extends the "Custom Mode" interface methods. The
-> > + * "GameZone" interface adds advanced features such as fan profiles an=
-d
-> > + * overclocking. The "Lighting" interface adds control of various stat=
-us
-> > + * lights related to different hardware components. "Other Method" use=
-s
-> > + * the data structs LENOVO_CAPABILITY_DATA_00, LENOVO_CAPABILITY_DATA_=
-01
-> > + * and LENOVO_CAPABILITY_DATA_02 structs for capability information.
-> > + *
-> > + * Copyright(C) 2024 Derek J. Clark <derekjohn.clark@gmail.com>
-> > + *
-> > + */
-> > +
-> > +#define pr_fmt(fmt) "%s:%s: " fmt, KBUILD_MODNAME, __func__
-> > +
-> > +#ifndef _LENOVO_WMI_H_
-> > +#define _LENOVO_WMI_H_
-> > +
-> > +#include <linux/mutex.h>
-> > +#include <linux/types.h>
-> > +#include <linux/wmi.h>
-> > +
-> > +/* Platform Profile Modes */
-> > +#define SMARTFAN_MODE_QUIET 0x01
-> > +#define SMARTFAN_MODE_BALANCED 0x02
-> > +#define SMARTFAN_MODE_PERFORMANCE 0x03
-> > +#define SMARTFAN_MODE_CUSTOM 0xFF
-> > +
-> > +struct wmi_method_args {
-> > +     u32 arg0;
-> > +     u32 arg1;
-> > +};
-> > +
-> > +/* General Use functions */
-> > +static int lenovo_wmidev_evaluate_method(struct wmi_device *wdev, u8 i=
-nstance,
-> > +                                      u32 method_id, struct acpi_buffe=
-r *in,
-> > +                                      struct acpi_buffer *out)
-> > +{
-> > +     acpi_status status;
-> > +
-> > +     status =3D wmidev_evaluate_method(wdev, instance, method_id, in, =
-out);
-> > +
-> > +     if (ACPI_FAILURE(status))
-> > +             return -EIO;
-> > +
-> > +     return 0;
-> > +};
->
-> You can't go and put a static function in a header.  It needs to be in
-> it's own source file.
->
-> > +
-> > +int lenovo_wmidev_evaluate_method_2(struct wmi_device *wdev, u8 instan=
-ce,
-> > +                                 u32 method_id, u32 arg0, u32 arg1,
-> > +                                 u32 *retval);
->  > +> +int lenovo_wmidev_evaluate_method_2(struct wmi_device *wdev, u8
-> instance,
-> > +                                 u32 method_id, u32 arg0, u32 arg1,
-> > +                                 u32 *retval)
-> > +{
->
-> Likewise you can't put this here even if it's used by multiple drivers.
->
-> You can leave the prototypes here, but the implementation needs to be
-> moved to a C source file and the symbol needs to be exported from one
-> driver and used by all the others that need it (maybe a "common" one?)
->
+> >   static const struct attribute_group *alienfx_groups[] = {
+> >   	&zone_attribute_group,
+> >   	&hdmi_attribute_group,
+> > @@ -1145,7 +1174,9 @@ static struct platform_driver platform_driver = {
+> >   	.driver = {
+> >   		.name = "alienware-wmi",
+> >   		.dev_groups = alienfx_groups,
+> > +		.probe_type = PROBE_FORCE_SYNCHRONOUS,
+> 
+> Can you please explain to me why this is exactly necessary?
 
-Simple fix. lenovo-wmi.c or lenovo-wmi-common.c is preferred?
+Because I want to add wmax_alienfx_groups after the platform_device has
+finished probing. I think it's not exactly "necessary" because those
+methods only access `platdata` which is set before probing, but to me it
+doesn't feel right to race with alienfx_probe().
 
-> > +     struct wmi_method_args args =3D { arg0, arg1 };
-> > +     struct acpi_buffer input =3D { (acpi_size)sizeof(args), &args };
-> > +     struct acpi_buffer output =3D { ACPI_ALLOCATE_BUFFER, NULL };
-> > +     union acpi_object *ret_obj =3D NULL;
-> > +     int err;
-> > +
-> > +     err =3D lenovo_wmidev_evaluate_method(wdev, instance, method_id, =
-&input,
-> > +                                         &output);
-> > +
-> > +     if (err) {
-> > +             pr_err("Attempt to get method value failed.\n");
-> > +             return err;
-> > +     }
-> > +
-> > +     if (retval) {
-> > +             ret_obj =3D (union acpi_object *)output.pointer;
-> > +             if (!ret_obj) {
-> > +                     pr_err("Failed to get valid ACPI object from WMI =
-interface\n");
-> > +                     return -EIO;
-> > +             }
-> > +             if (ret_obj->type !=3D ACPI_TYPE_INTEGER) {
-> > +                     pr_err("WMI query returnd ACPI object with wrong =
-type.\n");
-> > +                     kfree(ret_obj);
-> > +                     return -EIO;
-> > +             }
-> > +             *retval =3D (u32)ret_obj->integer.value;
-> > +     }
-> > +
-> > +     kfree(ret_obj);
->
-> Can you use __free on the acpi_object so you don't need to worry about
-> cleanup in the error paths?
->
+I wanted to somehow mimic platform_create_bundle(), which I can't use
+because that function needs to be called from an __init section.
 
-Acked.
+If this is unnecessary I will drop it, otherwise I think it makes more
+sense to move this to [8/20].
 
-> > +
-> > +     return 0;
-> > +}
-> > +
-> > +int lenovo_wmidev_evaluate_method_1(struct wmi_device *wdev, u8 instan=
-ce,
-> > +                                 u32 method_id, u32 arg0, u32 *retval)=
-;
-> > +
->  > +int lenovo_wmidev_evaluate_method_1(struct wmi_device *wdev, u8
-> instance,> +                                u32 method_id, u32 arg0, u32 =
-*retval)
-> > +{
-> > +     return lenovo_wmidev_evaluate_method_2(wdev, instance, method_id,=
- arg0,
-> > +                                            0, retval);
->
-> Same comment as above about source code in the headers.
->
-> > +}
-> > +
-> > +#endif /* !_LENOVO_WMI_H_ */
->
+> 
+> Thanks,
+> Armin Wolf
+> 
+> >   	},
+> > +	.probe = alienfx_probe,
+> >   };
+> > 
+> >   static int __init alienware_wmi_init(void)
+> > @@ -1193,15 +1224,8 @@ static int __init alienware_wmi_init(void)
+> >   			goto fail_prep_thermal_profile;
+> >   	}
+> > 
+> > -	ret = alienware_zone_init(platform_device);
+> > -	if (ret)
+> > -		goto fail_prep_zones;
+> > -
+> >   	return 0;
+> > 
+> > -fail_prep_zones:
+> > -	alienware_zone_exit(platform_device);
+> > -	remove_thermal_profile();
+> >   fail_prep_thermal_profile:
+> >   	platform_device_del(platform_device);
+> >   fail_platform_device2:
+> > @@ -1216,7 +1240,6 @@ module_init(alienware_wmi_init);
+> > 
+> >   static void __exit alienware_wmi_exit(void)
+> >   {
+> > -	alienware_zone_exit(platform_device);
+> >   	remove_thermal_profile();
+> >   	platform_device_unregister(platform_device);
+> >   	platform_driver_unregister(&platform_driver);
