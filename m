@@ -1,41 +1,41 @@
-Received: from mout.gmx.net (mout.gmx.net [212.227.15.19])
+Received: from mout.gmx.net (mout.gmx.net [212.227.15.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8BF654C9A;
-	Thu,  2 Jan 2025 15:50:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C0C514C9A;
+	Thu,  2 Jan 2025 15:51:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1735833024; cv=none; b=o4Cf73xbcvA7OXXprqIxKpz9A/cqORtU2/WvCG3CPd4AG0HqC28UHzMJ22ibqJ8y50MGclYEL+8bSrkSALSQQ0eTiXUuequNYp80rqsemqgnGyk0tflnSqMqi8bJ/ZpJtN9nfjXT3kBFkt036+iubkyRk/pHnbp8itev4Q1oydM=
+	t=1735833066; cv=none; b=oNz1Mh6DCRrkMbJJ3wBVWS3uchS+7lGja1XgHMNKQyiTXu/Gp57hIXJ4ehRkkRoc9jMRPdhvNPi3qzDX+LREby1mUFHxxmXkCeHUOlZpZXpYEWtzhVs+MRQmAXEsQc+F4aeDme0jLgvCatAgnqmjVJDNcEBssW8mZXoDbhUr2yY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1735833024; c=relaxed/simple;
-	bh=JlTc5/gVqoG55ymnoQco47jPrFElQ5gI67BkKA9EZXk=;
+	s=arc-20240116; t=1735833066; c=relaxed/simple;
+	bh=Kvtu2P13IQOB8MJ5TGI1JuX0pta8afOYeEdw7O5EkZ0=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=NcB16X5d2eyJt5upwtoRKTsbThfGqNXiUuiDpTW8HGoFBTzE67VtOboU0ejhmI7GeqQkLofQ6ESxKwe2EvnO+6lnY/c/F/iCsTlgIhg6jzqsIBOgM62qqLUlSFxlPEyymMSg2OGYlHVOQpLtOF4Z9Z40gx5JWZ02G0oAxDBN5tY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b=ULUZ+LtH; arc=none smtp.client-ip=212.227.15.19
+	 In-Reply-To:Content-Type; b=CoH4ks8LsibfE5XQP59+VEGZOoC8DEbSEjCQTRMyFAnTxjv07BKlRurWsN3Fn84hTWyHDzVXwa0GT4MEtJ7Etm4QrpOHfFlz6roSlmkajl2QY1OJ7rLdDB4ZaikFQh0RKNrmvrtvJbxwL0rbYxK2wxDOjNPxjMMa3lBLAX7B0FQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b=tXD2/GP1; arc=none smtp.client-ip=212.227.15.15
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b="ULUZ+LtH"
+	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b="tXD2/GP1"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.de;
-	s=s31663417; t=1735833010; x=1736437810; i=w_armin@gmx.de;
-	bh=saa/IhzvQllZqmov8xMsEd3cc9hnub17le/mSfTRqgI=;
+	s=s31663417; t=1735833051; x=1736437851; i=w_armin@gmx.de;
+	bh=3V3/lskVbI9mpCFx3/3WgVlClDYzeapWJOSfyOirUU4=;
 	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:To:Cc:
 	 References:From:In-Reply-To:Content-Type:
 	 Content-Transfer-Encoding:cc:content-transfer-encoding:
 	 content-type:date:from:message-id:mime-version:reply-to:subject:
 	 to;
-	b=ULUZ+LtHWyR+fxLMCwDDUkWE1MbGkD/HI4PmheudbwJjry+o8PCT0UUmYg2e2QPY
-	 VY1zHbI2lKewKXGU2ux2WqkxFXUCgdtk0a3p9vzv+44G8N+e2Y5N5WdeJmp0+4vt4
-	 u0DSqmo1LJKx/KoVEGtMns7dHEbHrikrwlEtXRhP2XU77GKyJ72LubQpHdByCWOO6
-	 kmZI5R5UPwbhKoRVcPr8imF2yaZZnf+aWV3x14zUqejuf72s0mfMIyvtwItP5CDy4
-	 M0AQOdkc8w2t0H5+iB0if1u0UnxWAdef4+DJDzUEtcJ7ls8elBXdtbv9OQhVl6C4U
-	 HBseBii9r3QWkxFUYg==
+	b=tXD2/GP1kzCjXpI4FSEb+9js7Be4NwatZ5jtoY4oHo1I4+yR1lYYiLHpVh/80CTJ
+	 BDyn0TfqRo18P9ZHWWxX6WQqrCmncjU7f/WIT0iWS7ddXau8mDBI6Nvvs24oNUpPj
+	 RhiMSt1bT8+d2qZ5L1NjVawgH0I0dQr7D2D5nbkkWRmwjwd7B+lYfaeny6YMU86Ov
+	 YYze76/fbPIkv1uVQ4YJMz1OPCK/AHqq/Oy0eG0t54FrmAzi2FKa/25uJtn/5eqFw
+	 x7AblGutayjGnL4tZYRprq4xUUuiIY7MY46MFWQm4a/WOWvsebUUciiuoH41Q34nq
+	 kg8ChGeo60pxLicnSw==
 X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
-Received: from [192.168.0.14] ([91.14.230.110]) by mail.gmx.net (mrgmx004
- [212.227.17.190]) with ESMTPSA (Nemesis) id 1Mj8qd-1txBpf15y1-00fRHi; Thu, 02
- Jan 2025 16:50:10 +0100
-Message-ID: <e5618537-a7ad-42e2-99d8-178ebc59192b@gmx.de>
-Date: Thu, 2 Jan 2025 16:50:05 +0100
+Received: from [192.168.0.14] ([91.14.230.110]) by mail.gmx.net (mrgmx005
+ [212.227.17.190]) with ESMTPSA (Nemesis) id 1MtOKi-1tlSmj03aA-017NbC; Thu, 02
+ Jan 2025 16:50:51 +0100
+Message-ID: <a16d0785-d136-47a6-ae0b-07e5b7a6ec19@gmx.de>
+Date: Thu, 2 Jan 2025 16:50:49 +0100
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -43,150 +43,274 @@ List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 00/20] alienware-wmi driver rework
+Subject: Re: [PATCH v2 06/20] alienware_wmi: General cleanup of WMAX methods
 To: Kurt Borja <kuurtb@gmail.com>, platform-driver-x86@vger.kernel.org
 Cc: Dell.Client.Kernel@dell.com, hdegoede@redhat.com,
  ilpo.jarvinen@linux.intel.com, linux-kernel@vger.kernel.org,
  mario.limonciello@amd.com
 References: <20241229194506.8268-2-kuurtb@gmail.com>
+ <20241229194506.8268-8-kuurtb@gmail.com>
 Content-Language: en-US
 From: Armin Wolf <W_Armin@gmx.de>
-In-Reply-To: <20241229194506.8268-2-kuurtb@gmail.com>
+In-Reply-To: <20241229194506.8268-8-kuurtb@gmail.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Provags-ID: V03:K1:zKKJ/sTz+2OYgSLcqGpfuYmQXAHX7klgfhhtfNJeAvOKYhviqlD
- 61RLqs6nC0OfSY+GVVp8HwLcsw7DgASIttm88pMjTf9VShTYPxox6S0ymY4ndHmkLdvvKee
- ZIPBt9gjQVrHuiN/Nnz09P7g7/FnmO6rtxEaE/a8YhG7g9sRubHpkesTCEyxmRPBQP4yxoP
- fzRlTDtup8KGjWpe+XC8A==
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:HQFL9jUP/8m/vqGmPdDIVc+B2rvTtKupRpmtBRsv7El4lCxuZSS
+ z12C99WmchH+JjgMk25gD13kD4Edm+pkZbiFbutgoFg++GBPTXhYsQPJRirmTMU4PAGW2W3
+ fWjJidVR2xO2aPDvEI2HJ+ZEAfXKxHaf0qn3sfo1YtwGMDyABHMEj2S6UPhFVvy4AWYS9hw
+ JLFLwoQ3yu4aDV6/AvwCA==
 X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:Wg5ZwRIAOak=;JneV+QrF3g7zCjFoFiCO3DD6kHr
- tpLpfVy0/9qTU4kxOT7ET6kcOnI0IfvS3Ozh6fvRC6gSsLVfmJzdFava0aAPHQFUdPx/gIa8s
- QsbCeMJEEaY0juYzVaSX1enC/Sbv22eGDOWCQ9YFJg11jcgYWcwKRH7jX0SKHZONTKBSYozPu
- 66Fb+0sk8qsbbtpQCDu1I5gep9ln1QpIvVNJ3DyTx/N19orFGutq/GE3L0WDScPGVjpXXBstB
- cHQWcHHU0AsVCDkg8StIAdOq1EE9IXqGSN80vWghLM5wVE8c9rG5aOSQBTGqHc71I7uHI2mRz
- KSxEg/b3Wlhh9UzCHh1uPxzanxHf52TpaB3Ip0SaqkFVFT2TdTN9ufgibxGSfbPbftAafO5qt
- f4vNOu3W7sM0T4Y9dzqO+fubqKj7xcJWtmxApDsL2y79UneDOx9BybY1UE3B5V9p2BNd5qzBY
- NWl4jkjfycQSNKmazUqQghpo4Le2Xo+VqCIwtvdp/k1jX02jApR2J8wIOHBi6j8X+w5Y4b+OS
- /mSOYOo5G455Ta8oeVUUlOA7I4zhDJwyuFYuqTnMZtGsnzlvn0bgT8GpTpzgerlEi7KP2emtn
- kUY9zyyfttGCnUGZrqWqtZPoQ669k1Jz98fhgBhrSq7i0abemGbdmGx/x0DsSg9F1I6zXhgY+
- 1SVBl1sQd1VrdG3IgiOloEQPEXuYYb1w8zpMGYaPHZi3O4NbuHmcozAfbqVx4+h7wsULYKfys
- v45pWECrJly+AzuOIBuT1b8pjtvz32Zdc1zsczviDDLDhkstUhxUxkxlzR/uc3WUEMZLe25te
- b/J3rfXdD/RdHRM5OtWgrxYGaLm/gn/TqY8oRrOyYcz/CiHbDcAKGGexvQJj5YPdnIPrjQYyB
- PN5ixTflEYw88O0CwUO90cSOFA6xDoP/bT5WavkqktA4diuuPF3XmWZrYL91KysjM02jnKmbv
- AHcy4rtJ0aRx7y9AJplfOdxwI8a9qSKKaNUKwUPBqakgHW3iIQFLV5LiaDMOO927jGDva5ZI4
- QiExKFU7GeOnkZEDB6Ilj3muVxAseudPprz05KTkGcLTCXyB2z7QRij4vdyrMb0or2Xh7s7a9
- iyxJCHUn01bW7B6sv8A5IPTrgKyzAv
+UI-OutboundReport: notjunk:1;M01:P0:BytYzvRJezo=;Bd/abTimolRoJPOjo1K7kQA9AyU
+ febzGdnbRFN1/U6faGWsLImWGMrZr5BkNeBMAnuAdkbDphjbUcZaxYYtvB6C9T2jVKsKi81iY
+ biKVXbAbyPAup8A8m8WzMiVrwMbd8wstvqAq/rIovdjzK54C4O7buTk9Sm3eqltMcQ0YQzund
+ PWUV9aWTeduU/4G/Te6koNZgEv7ne33GMIkT9iFF2zcUpNtnRxLnn9CXKJ0nUhduWBNLWMpxH
+ SPskJ1thNKaq+vq7xbXfK8c2hvdXhwbVmd72wQFsLpmGnRFaSlWa5jMTBy0a5siExopIYZwCZ
+ S4e6LkoLolkatQr/B/1wy5ClxYKcvnGzwTznMtwBa24uklbHGYBBfvAcZzMmTF9+Xea/tZrdo
+ 2OdRSaOoYoE/tIQATLzkkqLWFOnj3td0ZYpHITNV8pJg9bE8GxIWnPNdDenyfyjAVtoUy9ibT
+ OOhveS33Ufa5m9g5c8in3kX5zqgzNQ8jut85eHRNbu5ob2Tbw6VoET9RJTyHf3QwYIdf5INAO
+ ALUYpElKsut8rp9FBC201JULSLNGA+1HJ9cP+FMwD6E12zAaKXO5RcQm/tKs3WMs6/rfng/RH
+ ochbo4bZ6UhqeksgUv2DV06k7t49k4kUOFG/HU2JX3pVNrM+4F4NS9M6b6EZUhdklu9Y9H5+m
+ 0rys/9XXnK3QniqbZDiKfXFUcsKfd2yYQHu31uua/OBPpFHhq3U93MGB04pS+KE0eKB0/9/Vq
+ Rz1OOka5SqFi76u4cB78AtVgZJYMpNF8Rd2OZ4qlvlENdGdCxLWgm8JiqX+oroZOf5LKPmqsK
+ ECIOxJWJpopWGY77M7rgqY9iPr3IfdIDpS7fo8JDvVWEnAfCLeN9Dcx8vQ0fB/1XSpU25LECV
+ g77kg8SBvWLRjcjTfRd/sc6ECxCzT9Ss2a5sKRbSfMW2NFkWK9nxkdDrfYVGZMl6VngyzaKQN
+ oqu5ZrjUuITBdP1+dInHiwrWlTnpkI2w9qIrgI+VOJ9n6Mbu6ww/KfFZhv4oM1496jIQQYTx5
+ f3+eLGS/bK9bDKsLjsfnQYAeM0KNE5dfghlYf2I2hodSR45DONLfqZ89SPJSK9vgzBiY2o4NJ
+ /s4V1/HebcDVyerpJBRAOG6SBHCaLE
 
 Am 29.12.24 um 20:44 schrieb Kurt Borja:
 
-> Hi!
->
-> Happy holidays. :)
+> Reorder variable declaration from longest to shortest. Standarize
+> show/store method names of WMAX's sysfs groups.
 
-Hi,
-
-i just noticed that your patch are missing the "platform/x86:" prefix. Please add this prefix
-for the next patch revision.
-
-Thanks,
-Armin Wolf
+Reviewed-by: Armin Wolf <W_Armin@gmx.de>
 
 >
-> ~ Kurt
+> Signed-off-by: Kurt Borja <kuurtb@gmail.com>
 > ---
-> v1 -> v2:
+>   drivers/platform/x86/dell/alienware-wmi.c | 67 +++++++++++------------
+>   1 file changed, 32 insertions(+), 35 deletions(-)
 >
-> [2/20]
->   - Small correction in commit message
+> diff --git a/drivers/platform/x86/dell/alienware-wmi.c b/drivers/platfor=
+m/x86/dell/alienware-wmi.c
+> index d97e5e15a8f2..2c17160473a6 100644
+> --- a/drivers/platform/x86/dell/alienware-wmi.c
+> +++ b/drivers/platform/x86/dell/alienware-wmi.c
+> @@ -722,14 +722,14 @@ static acpi_status alienware_wmax_command(void *in=
+_args, size_t in_size,
+>    *	The HDMI mux sysfs node indicates the status of the HDMI input mux.
+>    *	It can toggle between standard system GPU output and HDMI input.
+>    */
+> -static ssize_t show_hdmi_cable(struct device *dev,
+> -			       struct device_attribute *attr, char *buf)
+> +static ssize_t cable_show(struct device *dev, struct device_attribute *=
+attr,
+> +			  char *buf)
+>   {
+> -	acpi_status status;
+> -	u32 out_data;
+>   	struct wmax_basic_args in_args =3D {
+>   		.arg =3D 0,
+>   	};
+> +	acpi_status status;
+> +	u32 out_data;
+>   	status =3D
+>   	    alienware_wmax_command(&in_args, sizeof(in_args),
+>   				   WMAX_METHOD_HDMI_CABLE, &out_data);
+> @@ -743,14 +743,14 @@ static ssize_t show_hdmi_cable(struct device *dev,
+>   	return sysfs_emit(buf, "unconnected connected [unknown]\n");
+>   }
 >
-> [5/20]
->   - Define the sysfs attributes without macros
+> -static ssize_t show_hdmi_source(struct device *dev,
+> -				struct device_attribute *attr, char *buf)
+> +static ssize_t source_show(struct device *dev, struct device_attribute =
+*attr,
+> +			   char *buf)
+>   {
+> -	acpi_status status;
+> -	u32 out_data;
+>   	struct wmax_basic_args in_args =3D {
+>   		.arg =3D 0,
+>   	};
+> +	acpi_status status;
+> +	u32 out_data;
+>   	status =3D
+>   	    alienware_wmax_command(&in_args, sizeof(in_args),
+>   				   WMAX_METHOD_HDMI_STATUS, &out_data);
+> @@ -765,12 +765,11 @@ static ssize_t show_hdmi_source(struct device *dev=
+,
+>   	return sysfs_emit(buf, "input gpu [unknown]\n");
+>   }
 >
-> [6/20]
->   - Reworded commit title
->   - Reorder variables in previous WMAX methods too
->   - Standarized sysfs method names in hdmi, amplifier and deepsleep
->     groups
->   - Dropped Armin's Reviewed-by tag because this patch changed a lot
+> -static ssize_t toggle_hdmi_source(struct device *dev,
+> -				  struct device_attribute *attr,
+> -				  const char *buf, size_t count)
+> +static ssize_t source_store(struct device *dev, struct device_attribute=
+ *attr,
+> +			    const char *buf, size_t count)
+>   {
+> -	acpi_status status;
+>   	struct wmax_basic_args args;
+> +	acpi_status status;
+>   	if (strcmp(buf, "gpu\n") =3D=3D 0)
+>   		args.arg =3D 1;
+>   	else if (strcmp(buf, "input\n") =3D=3D 0)
+> @@ -788,9 +787,8 @@ static ssize_t toggle_hdmi_source(struct device *dev=
+,
+>   	return count;
+>   }
 >
-> [7/20]
->   - Return -ENOMEM in case priv allocation fails in alienfx_probe()
->   - Assign priv and platdata on variable declaration
->   - Drop intermediate *leds in alienfx_probe()
->   - Add quirk_entry to state container
->   - Use quirks from priv on hdmi_mux, amplifier, deepslp visibility
->     methods, to eventually be able to move these groups into
->     alienware-wmi-wmax.c
->   - Set PROBE_FORCE_SYNCHRONOUS to platform_driver, to avoid racing to
->     drvdata after using device_create_groups on [8/20]
+> -static DEVICE_ATTR(cable, S_IRUGO, show_hdmi_cable, NULL);
+> -static DEVICE_ATTR(source, S_IRUGO | S_IWUSR, show_hdmi_source,
+> -		   toggle_hdmi_source);
+> +static DEVICE_ATTR_RO(cable);
+> +static DEVICE_ATTR_RW(source);
 >
-> [8/20]
->   - Create hdmi, amplifier, deepslp sysfs groups on wmax's probe
+>   static bool hdmi_group_visible(struct kobject *kobj)
+>   {
+> @@ -815,14 +813,14 @@ static const struct attribute_group hdmi_attribute=
+_group =3D {
+>    * - Currently supports reading cable status
+>    * - Leaving expansion room to possibly support dock/undock events lat=
+er
+>    */
+> -static ssize_t show_amplifier_status(struct device *dev,
+> -				     struct device_attribute *attr, char *buf)
+> +static ssize_t status_show(struct device *dev, struct device_attribute =
+*attr,
+> +			   char *buf)
+>   {
+> -	acpi_status status;
+> -	u32 out_data;
+>   	struct wmax_basic_args in_args =3D {
+>   		.arg =3D 0,
+>   	};
+> +	acpi_status status;
+> +	u32 out_data;
+>   	status =3D
+>   	    alienware_wmax_command(&in_args, sizeof(in_args),
+>   				   WMAX_METHOD_AMPLIFIER_CABLE, &out_data);
+> @@ -836,7 +834,7 @@ static ssize_t show_amplifier_status(struct device *=
+dev,
+>   	return sysfs_emit(buf, "unconnected connected [unknown]\n");
+>   }
 >
-> [9/20]
->   - Assign priv on variable declaration
->   - Directly return create thermal_profile() in alienware_awcc_setup()
+> -static DEVICE_ATTR(status, S_IRUGO, show_amplifier_status, NULL);
+> +static DEVICE_ATTR_RO(status);
 >
-> [10/20]
->   - Refactored alienware_wmi_method following Armin's comments
->   - Fix legacy_wmi_update_led logic
+>   static bool amplifier_group_visible(struct kobject *kobj)
+>   {
+> @@ -859,14 +857,14 @@ static const struct attribute_group amplifier_attr=
+ibute_group =3D {
+>    * Deep Sleep Control support
+>    * - Modifies BIOS setting for deep sleep control allowing extra wakeu=
+p events
+>    */
+> -static ssize_t show_deepsleep_status(struct device *dev,
+> -				     struct device_attribute *attr, char *buf)
+> +static ssize_t deepsleep_show(struct device *dev, struct device_attribu=
+te *attr,
+> +			      char *buf)
+>   {
+> -	acpi_status status;
+> -	u32 out_data;
+>   	struct wmax_basic_args in_args =3D {
+>   		.arg =3D 0,
+>   	};
+> +	acpi_status status;
+> +	u32 out_data;
+>   	status =3D alienware_wmax_command(&in_args, sizeof(in_args),
+>   					WMAX_METHOD_DEEP_SLEEP_STATUS, &out_data);
+>   	if (ACPI_SUCCESS(status)) {
+> @@ -881,12 +879,11 @@ static ssize_t show_deepsleep_status(struct device=
+ *dev,
+>   	return sysfs_emit(buf, "disabled s5 s5_s4 [unknown]\n");
+>   }
 >
-> [13/20]
->   - Split DMI table lower in the file
->   - Rename quirk_entry -> alienfx_quirks
->   - Rename awcc_features -> awcc_quirks
->   - Make hdmi_mux, amplifier and deepslp `bool`
+> -static ssize_t toggle_deepsleep(struct device *dev,
+> -				struct device_attribute *attr,
+> -				const char *buf, size_t count)
+> +static ssize_t deepsleep_store(struct device *dev, struct device_attrib=
+ute *attr,
+> +			       const char *buf, size_t count)
+>   {
+> -	acpi_status status;
+>   	struct wmax_basic_args args;
+> +	acpi_status status;
 >
-> [16/20]:
->   - Only add common resources on alienware.h
+>   	if (strcmp(buf, "disabled\n") =3D=3D 0)
+>   		args.arg =3D 0;
+> @@ -905,7 +902,7 @@ static ssize_t toggle_deepsleep(struct device *dev,
+>   	return count;
+>   }
 >
-> [17/20]
->   - Reworded commit message: now mentions some blocks were reordered
->   - Move #include <linux/dmi.h> where it belongs alphabetically
->   - Included hdmi, amplifier, deepslp groups in alienware-wmi-wmax.c
+> -static DEVICE_ATTR(deepsleep, S_IRUGO | S_IWUSR, show_deepsleep_status,=
+ toggle_deepsleep);
+> +static DEVICE_ATTR_RW(deepsleep);
 >
-> [18/20]
->   - static inline init functions in case drivers are not compiled
->   - Return errno in case drivers are not compiled
+>   static bool deepsleep_group_visible(struct kobject *kobj)
+>   {
+> @@ -953,13 +950,13 @@ static bool is_wmax_thermal_code(u32 code)
 >
-> v1: https://lore.kernel.org/platform-driver-x86/20241221055917.10555-1-kuurtb@gmail.com/
+>   static int wmax_thermal_information(u8 operation, u8 arg, u32 *out_dat=
+a)
+>   {
+> -	acpi_status status;
+>   	struct wmax_u32_args in_args =3D {
+>   		.operation =3D operation,
+>   		.arg1 =3D arg,
+>   		.arg2 =3D 0,
+>   		.arg3 =3D 0,
+>   	};
+> +	acpi_status status;
 >
-> Kurt Borja (20):
->    alienware-wmi: Remove unnecessary check at module exit
->    alienware-wmi: Move Lighting Control State
->    alienware-wmi: Modify parse_rgb() signature
->    alienware-wmi: Improve hdmi_mux, amplifier and deepslp group creation
->    alienware-wmi: Improve rgb-zones group creation
->    alienware_wmi: General cleanup of WMAX methods
->    alienware-wmi: Add a state container for LED control feature
->    alienware-wmi: Add WMI Drivers
->    alienware-wmi: Add a state container for thermal control methods
->    alienware-wmi: Refactor LED control methods
->    alienware-wmi: Refactor hdmi, amplifier, deepslp methods
->    alienware-wmi: Refactor thermal control methods
->    alienware-wmi: Split DMI table
->    MAINTAINERS: Update ALIENWARE WMI DRIVER entry
->    platform/x86: Rename alienware-wmi.c
->    platform/x86: Add alienware-wmi.h
->    platform-x86: Split the alienware-wmi driver
->    platform/x86: dell: Modify Makefile alignment
->    platform/x86: Update alienware-wmi config entries
->    alienware-wmi: Update header and module information
+>   	status =3D alienware_wmax_command(&in_args, sizeof(in_args),
+>   					WMAX_METHOD_THERMAL_INFORMATION,
+> @@ -976,13 +973,13 @@ static int wmax_thermal_information(u8 operation, =
+u8 arg, u32 *out_data)
 >
->   MAINTAINERS                                   |    4 +-
->   drivers/platform/x86/dell/Kconfig             |   30 +-
->   drivers/platform/x86/dell/Makefile            |   45 +-
->   .../platform/x86/dell/alienware-wmi-base.c    |  492 +++++++
->   .../platform/x86/dell/alienware-wmi-legacy.c  |   98 ++
->   .../platform/x86/dell/alienware-wmi-wmax.c    |  775 ++++++++++
->   drivers/platform/x86/dell/alienware-wmi.c     | 1269 -----------------
->   drivers/platform/x86/dell/alienware-wmi.h     |  101 ++
->   8 files changed, 1518 insertions(+), 1296 deletions(-)
->   create mode 100644 drivers/platform/x86/dell/alienware-wmi-base.c
->   create mode 100644 drivers/platform/x86/dell/alienware-wmi-legacy.c
->   create mode 100644 drivers/platform/x86/dell/alienware-wmi-wmax.c
->   delete mode 100644 drivers/platform/x86/dell/alienware-wmi.c
->   create mode 100644 drivers/platform/x86/dell/alienware-wmi.h
+>   static int wmax_thermal_control(u8 profile)
+>   {
+> -	acpi_status status;
+>   	struct wmax_u32_args in_args =3D {
+>   		.operation =3D WMAX_OPERATION_ACTIVATE_PROFILE,
+>   		.arg1 =3D profile,
+>   		.arg2 =3D 0,
+>   		.arg3 =3D 0,
+>   	};
+> +	acpi_status status;
+>   	u32 out_data;
 >
+>   	status =3D alienware_wmax_command(&in_args, sizeof(in_args),
+> @@ -1000,13 +997,13 @@ static int wmax_thermal_control(u8 profile)
 >
-> base-commit: 03f8e0e05510dad6377cd5ef029594d30e6c096d
+>   static int wmax_game_shift_status(u8 operation, u32 *out_data)
+>   {
+> -	acpi_status status;
+>   	struct wmax_u32_args in_args =3D {
+>   		.operation =3D operation,
+>   		.arg1 =3D 0,
+>   		.arg2 =3D 0,
+>   		.arg3 =3D 0,
+>   	};
+> +	acpi_status status;
+>
+>   	status =3D alienware_wmax_command(&in_args, sizeof(in_args),
+>   					WMAX_METHOD_GAME_SHIFT_STATUS,
+> @@ -1075,11 +1072,11 @@ static int thermal_profile_set(struct platform_p=
+rofile_handler *pprof,
+>
+>   static int create_thermal_profile(struct platform_device *platform_dev=
+ice)
+>   {
+> -	u32 out_data;
+> +	enum platform_profile_option profile;
+> +	enum wmax_thermal_mode mode;
+>   	u8 sys_desc[4];
+>   	u32 first_mode;
+> -	enum wmax_thermal_mode mode;
+> -	enum platform_profile_option profile;
+> +	u32 out_data;
+>   	int ret;
+>
+>   	ret =3D wmax_thermal_information(WMAX_OPERATION_SYS_DESCRIPTION,
