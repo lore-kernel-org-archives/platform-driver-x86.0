@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF92B29A2;
-	Thu,  2 Jan 2025 03:46:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F2B3A7F9;
+	Thu,  2 Jan 2025 04:01:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1735789571; cv=none; b=rypJALs5gL1Z/oWAMUydVidyaOiU1BewBcu4+d2YVkidCQOYClUsyu5n2LRxEyIynIjE5I+Hs+pDZhVIc5owCDH4iutIoRqL1lqyJTsYhepd7JWgq0AnOunUfz5H3U7/mrpqPdT8+e1fnkGOnnM9oVFvT2jdscCYX1TA0A8JOhg=
+	t=1735790488; cv=none; b=PayVA6DaAV8VoUg5Gt5Fhn+Cg3vvv98w/ccF2oQOieOfWX422NuKTCOrhpbqMXsCPXMqje11A+gnWKotqcPc31wYy4RKUhZa907/QP3gkXTA4pkBTXpqC5VvuDxKgZFmYt+d86uY3lk48ql22KcHMW1n7ggB0K8FkGi9cEnwSuI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1735789571; c=relaxed/simple;
-	bh=+Rcy50iewJvYqGAzvWQQO23niLUs+XDnjYO4phK2mZc=;
+	s=arc-20240116; t=1735790488; c=relaxed/simple;
+	bh=y7e8InLJruc+nW0Imex7SJeeBrIu/GaRV9Cb1nZBs14=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=twxYw0VuB3pxyDtqyqM2KbrHRWOb60BTfmpF/yheLz1y9gWKtUWzLKU0vIbd9jt37tKoHcJazmEL/DfBvXTTHueml70xSj98mU6rSi5OJ+3yJ9uuylTJgu/yzp8saPsPWs22ftjF9kQbEz1mp7Q7MQhR9WK0pTEqIOkdw2DycLg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OVlgS8zc; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=KZFNuuz5cd6afMEXgpLtoYbPKYPbd+ynAuTDjmXlgjQATn3Xgjz1FZB7CfhofJP9h6XRrJWF+x6TA0pbqECRD9o9J1s2w04/FXABeY8Zdr9RsZBNBtkiyopxALRGq8NWxAP4X2c0rn0eHrhrDJB4hbIr2xcFgFm/O9zqIhG0R7s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hnr1XvXi; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OVlgS8zc"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 46D9BC4CED0;
-	Thu,  2 Jan 2025 03:46:10 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hnr1XvXi"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8C8D1C4CED0;
+	Thu,  2 Jan 2025 04:01:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1735789571;
-	bh=+Rcy50iewJvYqGAzvWQQO23niLUs+XDnjYO4phK2mZc=;
+	s=k20201202; t=1735790485;
+	bh=y7e8InLJruc+nW0Imex7SJeeBrIu/GaRV9Cb1nZBs14=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=OVlgS8zcgfqQ7HZTiRRn77lZUbyRDQ9s211ydGMtyJS0CvVFKfCMHgSzl6nq3n3iO
-	 uMZ6r7JjyMzmKsaCzbxIew7tBEyVnfLRf3oL9UicOFZzdhYA5kfTs3/QAV0Oa4Jp35
-	 82n5ueVITbjtcSFWUXt7oeHRbEhPQALotcao9UfeWCIOVjSPJ8pQZ8IcynLS4XY0Rj
-	 Zm++VivWMLFC9sG6IV6MNsbaEUnGeKZHoJwrrz5hV4TBJIiocV8KjwMrQWbjgJDmNc
-	 XstOifuSpQTpOF2ISIFAlHs355DNxyI1QF/XCdFvA+zn0IdBdeRwn8btSCAYTz9ARf
-	 cWBv8eJGXFjTA==
-Message-ID: <235a507a-2b60-4ca9-babe-a2f6ef085321@kernel.org>
-Date: Wed, 1 Jan 2025 21:46:09 -0600
+	b=hnr1XvXiG2J2k1TJU4IkQDVecg6mZzd87a2JSm3DPHR7g2H8PnO/VojujHUIonji6
+	 vDh94AeVAw0NCJU+Tx5Sm6hT1m1Mw8GW1kHd6T/5tbU0tzuEjxN1WfIemB//c9FheS
+	 YXp0DlhcXI+M7n9X79AIJQwtLVR89bd8ps4Dzt88RB/M4KvGPhrq1YtivQ07rFyzsH
+	 0gtzqSKTDbwaZ+BcCJGkN54DTBtyrmQJyXY8GqJJCzSbJGnNPVyMgcdLvs+6WYWvFi
+	 EgMx2YwaH6wXc4H/Q9S8nx74JiMDXomndQYNrymdEHLb3qsJVc38bQTABc5Iy3Nmet
+	 hCv0fbehuTDLQ==
+Message-ID: <dc5375fb-1e2e-42b9-9174-3f4a70d914e7@kernel.org>
+Date: Wed, 1 Jan 2025 22:01:22 -0600
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -35,7 +35,7 @@ List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 1/4] platform/x86: Add lenovo-wmi drivers Documentation
+Subject: Re: [PATCH v2 0/4] platform/x86: Add Lenovo Gaming Series WMI Drivers
 To: "Derek J. Clark" <derekjohn.clark@gmail.com>,
  Hans de Goede <hdegoede@redhat.com>,
  =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
@@ -47,142 +47,141 @@ Cc: Jonathan Corbet <corbet@lwn.net>, Luke Jones <luke@ljones.dev>,
  platform-driver-x86@vger.kernel.org, linux-doc@vger.kernel.org,
  linux-kernel@vger.kernel.org
 References: <20250102004854.14874-1-derekjohn.clark@gmail.com>
- <20250102004854.14874-2-derekjohn.clark@gmail.com>
 Content-Language: en-US
 From: Mario Limonciello <superm1@kernel.org>
-In-Reply-To: <20250102004854.14874-2-derekjohn.clark@gmail.com>
+In-Reply-To: <20250102004854.14874-1-derekjohn.clark@gmail.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 
 
 
 On 1/1/25 18:47, Derek J. Clark wrote:
-> Adds documentation for all lenovo-wmi* drivers.
+> Adds support for the Lenovo "Gaming Series" of laptop hardware that use
+> WMI interfaces that control various power settings. There are multiple WMI
+> interfaces that work in concert to provide getting and setting values as
+> well as validation of input. Currently only the "GameZone", "Other
+> Mode", and "LENOVO_CAPABILITY_DATA_01" interfaces are implemented, but
+> I attempted to structure the driver so that adding the "Custom Mode",
+> "Lighting", and other data block interfaces would be trivial in a later
+> patches.
+> 
+> This driver is distinct from, but should be considered a replacement for
+> this patch:
+> https://lore.kernel.org/all/20241118100503.14228-1-jonmail@163.com/
+> 
+> This driver attempts to standardize the exposed sysfs by mirroring the
+> asus-armoury driver currently under review. As such, a lot of
+> inspiration has been drawn from that driver.
+> https://lore.kernel.org/all/20240930000046.51388-1-luke@ljones.dev/
+> 
+> The drivers have been tested by me on the Lenovo Legion Go.
 > 
 > v2:
-> - Update description of Custom Profile to include the need to manually
->    set it.
-> - Remove all references to Legion hardware.
-> - Add section for lemovo-wmi-camera.c driver as it follows the same
->    naming convention.
+> - Broke up initial patch into a 4 patch series.
+> - Removed all references to "Legion" in documentation, Kconfig,
+>    driver structs, functions, etc. Everything now refers either to the
+>    interface being used or the Lenovo "Gaming Series" of laptop hardware.
+> - Fixed all Acked changes requested by Mario and Armin.
+> - Capability Data is now cached before kset creation for each attribute.
+>    If the lenovo-wmi-capdata01 interface is not present, fails to grab
+>    valid data, doesn't include the requested attribute id page, or the
+>    data block indicates the attribute is not supported, the attribute will
+>    not be created in sysfs.
+> - The sysfs path for the firmware-attributes class was moved from
+>    lenovo-legion-wmi to lenovo-wmi-other.
 > 
+> - The Other Mode WMI interface no longer relies on gamezone as
+>    discussed. However; this creates a problem that should be discussed
+>    here. The current_value attribute is now only accurate when the
+>    "custom" profile is set on the device. Previously it would report the
+>    value from the Capability Data 01 instance related to the currently
+>    selected profile, which reported an accurate accounting of the current
+>    system state in all cases. I submitted this as-is since we discussed
+>    removing that dependency, but I am not a fan of the current_value
+>    attribute being incorrect for 3 of the 4 available profiles, especially
+>    when the data is available. There is also no way to -ENOTSUPP or
+>    similar when not in custom mode as that would also require us to know
+>    the state of the gamezone interface. What I would prefer to do would be
+>    to make the gamezone interface optional by treating custom as the
+>    default mode in the current_value functions, then only update the mode
+>    if a callback to get the current fan profile is a success. That way the
+>    logic will work with or without the GameZone interface, but it will be
+>    greatly improved if it is present.
+> 
+
+I agree there needs to be /some/ sort of dependency.
+One thing I was thinking you could do is use:
+
+wmi_has_guid() to tell whether or not the "GZ" interface is even present 
+from the "Other" driver.  Move the GUID for the GZ interface into a 
+common header both drivers include.
+
+However that only helps in the case of a system that supports custom but 
+not GZ.  I think you still will need some sort of symbol to either get a 
+pointer to the platform profile class or tell if the profile for the 
+driver is set to custom.
+
+I personally don't see a problem with a simple symbol like this:
+
+bool lenovo_wmi_gamezone_is_custom(void);
+
+You could then have your logic in all the store and show call a helper 
+something like this:
+
+static bool lenovo_wmi_custom_mode() {
+	if (!wmi_has_guid(GZ_GUID)
+		return true;
+
+	if (!IS_REACHABLE(CONFIG_LENOVO_WMI_GAMEZONE))
+		return true;
+
+	return lenovo_wmi_gamezone_is_custom();
+}
+
+> - I did extensive testing of this firmware-attributes interface and its
+>    ability to retain the value set by the user. The SPL, SPPT, FPPT, and
+>    platform profile all retain the users last setting when resuming from
+>    suspend, a full reboot, and a full shutdown. The only time the values
+>    are not preserved is when the user manually selects a new platform
+>    profile using either the pprof interface or the manual selection
+>    button on the device, in which case you would not expect them to be
+>    retained as they were intentionally changed. Based on the previous
+>    discussion it may be the case that older BIOS' will preserve the
+>    settings even after changing profiles, though I haven't confirmed
+>    this.
+
+This is good to hear considering the concerns raised by some others.
+
+But FWIW we have nothing in the firmware attributes API documentation 
+that mandates what the firmware does for storage of settings across a 
+power cycle so this is currently up to the platform to decide.
+
+> 
+> v1:
+> https://lore.kernel.org/platform-driver-x86/CAFqHKTna+kJpHLo5s4Fm1TmHcSSqSTr96JHDm0DJ0dxsZMkixA@mail.gmail.com/T/#t
+> 
+> Suggested-by: Mario Limonciello <superm1@kernel.org>
 > Signed-off-by: Derek J. Clark <derekjohn.clark@gmail.com>
-
-Reviewed-by: Mario Limonciello <superm1@kernel.org>
-
-> ---
->   Documentation/wmi/devices/lenovo-wmi.rst | 104 +++++++++++++++++++++++
->   1 file changed, 104 insertions(+)
->   create mode 100644 Documentation/wmi/devices/lenovo-wmi.rst
 > 
-> diff --git a/Documentation/wmi/devices/lenovo-wmi.rst b/Documentation/wmi/devices/lenovo-wmi.rst
-> new file mode 100644
-> index 000000000000..62c2ec9505bd
-> --- /dev/null
-> +++ b/Documentation/wmi/devices/lenovo-wmi.rst
-> @@ -0,0 +1,104 @@
-> +.. SPDX-License-Identifier: GPL-2.0-or-later
-> +======================================================
-> +Lenovo WMI Interface Drivers (lenovo-wmi)
-> +======================================================
-> +
-> +Introduction
-> +============
-> +Lenovo WMI interfaces are broken up into multiple GUIDs, some of which
-> +require cross-references between GUIDs for some functionality. The "Custom
-> +Mode" interface is a legacy interface for managing and displaying CPU & GPU
-> +power and hwmon settings and readings. The "Other Method" interface is a
-> +modern interface that replaces most "Custom Mode" interface methods. The
-> +"GameZone" interface adds advanced features such as fan profiles and
-> +overclocking. The "Lighting" interface adds control of various status
-> +lights related to different hardware components.
-> +
-> +Each interface has a different data structure associated with it that
-> +provides detailed information about each attribute provided by the
-> +interface. These data structs are retrieved from additional WMI device
-> +data block GUIDs:
-> + - "Custom Mode" uses LENOVO_FAN_TABLE_DATA, LENOVO_FAN_TEST_DATA,
-> +   LENOVO_CPU_OVERCLOCKING_DATA, LENOVO_DISCRETE_DATA, and
-> +   LENOVO_GPU_OVERCLOCKING_DATA depending on the feature.
-> + - "Other Method" uses LENOVO_CAPABILITY_DATA_00,
-> +   LENOVO_CAPABILITY_DATA_01, and LENOVO_CAPABILITY_DATA_02 depending on
-> +   the feature.
-> + - "GameZone" uses LENOVO_GAMEZONE_CPU_OC_DATA and
-> +   LENOVO_GAMEZONE_GPU_OC_DATA depending on the feature.
-> + - The "Lighting" interface uses LENOVO_LIGHTING_DATA.
-> +
-> +.. note::
-> +   Currently only the "GameZone", "Other Method", and
-> +   LENOVO_CAPABILITY_DATA_01 interfaces are implemented by these drivers.
-> +
-> +GameZone
-> +--------
-> +WMI GUID "887B54E3-DDDC-4B2C-8B88-68A26A8835D0"
-> +
-> +The GameZone WMI interface provides platform-profile and fan curve settings
-> +for devices that fall under the "Gaming Series" of Lenovo devices.
-> +
-> +The following platform profiles are supported:
-> + - quiet
-> + - balanced
-> + - performance
-> + - custom
-> +
-> +Custom Profile
-> +~~~~~~~~~~~~~~
-> +The custom profile represents a hardware mode on Lenovo devices that enables
-> +user modifications to Package Power Tracking (PPT) settings. When an
-> +attribute exposed by the "Other Method" WMI interface is to be modified,
-> +the GameZone driver must first be switched to the "custom" profile manually
-> +or the setting will have no effect. If another profile is set from the list
-> +of supported profiles, the BIOS will override any user PPT settings when
-> +switching to that profile.
-> +
-> +
-> +Other Method
-> +----------
-> +WMI GUID "DC2A8805-3A8C-41BA-A6F7-092E0089CD3B"
-> +
-> +The Other Method WMI interface uses the fw_attributes class to expose
-> +various WMI attributes provided by the interface in the sysfs. This enables
-> +CPU and GPU power limit tuning as well as various other attributes for
-> +devices that fall under the "Gaming Series" of Lenovo devices. Each
-> +attribute exposed by the Other Method interface has corresponding
-> +capability data blocks which allow the driver to probe details about the
-> +attribute. Each attibute has multiple pages, one for each of the platform
-> +profiles managed by the "GameZone" interface. For all properties only the
-> +"Custom" profile values are reported by this driver to ensure any userspace
-> +applications reading them have accurate tunable value ranges. Attributes
-> +are exposed in sysfs under the following path:
-> +/sys/class/firmware-attributes/lenovo-wmi-other/attributes
-> +
-> +LENOVO_CAPABILITY_DATA_01
-> +~~~~~~~~~~~~~~~~~~~~~~~~~
-> +WMI GUID "7A8F5407-CB67-4D6E-B547-39B3BE018154"
-> +
-> +The LENOVO_CAPABILITY_DATA_01 interface provides information on various
-> +power limits of integrated CPU and GPU components.
-> +
-> +The following attributes are supported:
-> + - ppt_pl1_spl: Platform Profile Tracking Sustained Power Limit
-> + - ppt_pl2_sppt: Platform Profile Tracking Slow Package Power Tracking
-> + - ppt_pl3_fppt: Platform Profile Tracking Fast Package Power Tracking
-> +
-> +Each attribute has the following properties:
-> + - current_value
-> + - default_value
-> + - display_name
-> + - max_value
-> + - min_value
-> + - scalar_increment
-> + - type
-> +
-> +
-> + Camera
-> + ______
-> + WMI GUID "50C76F1F-D8E4-D895-0A3D-62F4EA400013"
-> +
-> + The Camera driver provides WMI event notifications for camera button
-> + toggling.
-> +
+> Derek J. Clark (4):
+>    platform/x86: Add lenovo-wmi drivers Documentation
+>    platform/x86: Add Lenovo GameZone WMI Driver
+>    platform/x86: Add Lenovo Capability Data 01 WMI Driver
+>    platform/x86: Add Lenovo Other Mode WMI Driver
+> 
+>   Documentation/wmi/devices/lenovo-wmi.rst    | 104 ++++++
+>   MAINTAINERS                                 |   9 +
+>   drivers/platform/x86/Kconfig                |  34 ++
+>   drivers/platform/x86/Makefile               |   3 +
+>   drivers/platform/x86/lenovo-wmi-capdata01.c | 131 +++++++
+>   drivers/platform/x86/lenovo-wmi-gamezone.c  | 203 +++++++++++
+>   drivers/platform/x86/lenovo-wmi-other.c     | 385 ++++++++++++++++++++
+>   drivers/platform/x86/lenovo-wmi.h           | 241 ++++++++++++
+>   8 files changed, 1110 insertions(+)
+>   create mode 100644 Documentation/wmi/devices/lenovo-wmi.rst
+>   create mode 100644 drivers/platform/x86/lenovo-wmi-capdata01.c
+>   create mode 100644 drivers/platform/x86/lenovo-wmi-gamezone.c
+>   create mode 100644 drivers/platform/x86/lenovo-wmi-other.c
+>   create mode 100644 drivers/platform/x86/lenovo-wmi.h
+> 
 
