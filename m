@@ -1,40 +1,41 @@
-Received: from mout.gmx.net (mout.gmx.net [212.227.15.18])
+Received: from mout.gmx.net (mout.gmx.net [212.227.15.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A092D522F;
-	Thu,  2 Jan 2025 15:28:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 049C58BE5;
+	Thu,  2 Jan 2025 15:44:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1735831728; cv=none; b=j1flXpHbffqaI1pX4jvB/GFK/hm6v+Un0ZwQRazUPtfic4F1Buq+M8svL9uiwc2bwdUsutbqAnK07j7uLSVo5l43ipmhg11GlVKhUjSvNeXLB0qI57bb7Qoe59GtmrXZ1EvV1RI0eJ8xaaRMi4+k8C+/CkvS0WMoZYD2eqyMEQ0=
+	t=1735832676; cv=none; b=dYgyIsfsT66r9LFPt1Lo67W1zyDAoRn0Iqh0CHyh6AEVhP1J0IjbzUijSYUKOJRm8IGh6K/5GFOIJXsm7X/VwTuFFiG1XAZojbY405bepuXvJauw+jDMpKpXBnIvG4tFSHGyQ3P2CiQVTadhMCajzKNW8+j5u3u5itIeE4B0EVY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1735831728; c=relaxed/simple;
-	bh=eQts9Ut/yxzRHPeIcieJEApu6AEeHfG+mcEFJASL5r0=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
-	 In-Reply-To:Content-Type; b=Jv05ppNcsvPaMw5K8Ej2fdfVze2ynDf73+SRyTCVR4MI2CuFQnof720TQsn3L7CESBXGN/yWSU8HilWfRzoIj+CH28lxWS0U3nWcEnAURD1nzJT902eO4RohH+JGOXgy0HT8kx2pXmWIwLBCMDa4MONn5gnyCdGJUaQvZT8eU10=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b=Gb+MD+BA; arc=none smtp.client-ip=212.227.15.18
+	s=arc-20240116; t=1735832676; c=relaxed/simple;
+	bh=+bOvjF1hzZwcgjwS5Acj4d0JMq0qLpPCxhER1uA2A8w=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=mmhmIzpCA3fppEVo8vBHk0dTzE1uF1ATAkep9tRGsZ8cX2K8V3e2ciB9hx/TDJEgQsRzggY7/VbuX0+oiJzzVvc6yr6NItxBGPV+a8zLAy1tInp+swgRrrtMaffzzqcb1TOWcPiAcBeVqA6//Cs+lzPU/cg8Hm0KiSGgSMi9u5M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b=MJvfhhM0; arc=none smtp.client-ip=212.227.15.15
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b="Gb+MD+BA"
+	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b="MJvfhhM0"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.de;
-	s=s31663417; t=1735831723; x=1736436523; i=w_armin@gmx.de;
-	bh=/d7ohZEcMFMyy/ARCWKZyzJMq1mOSFI8j85eYZASREw=;
-	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:From:To:
-	 Cc:References:In-Reply-To:Content-Type:Content-Transfer-Encoding:
-	 cc:content-transfer-encoding:content-type:date:from:message-id:
-	 mime-version:reply-to:subject:to;
-	b=Gb+MD+BAlcCLFbIajmNrA6HRJ3m9ot9vOsMXBXDrwxDzXkuLaq8qVQEY6eBrY2Ff
-	 Q54IZB5axMdZ83pPSEch7PLWnMO1TgCD136bCsC+yJ+HlHluUTBAAftjK3WGxvXTh
-	 Jr1LYN8Z+GTRNxAjztiafXyh2bCwTH2KBJWMLXZHi8FybI2gK14kxv9looZCI/E4Q
-	 rrDevidPUVu3mLwqGL9qeZil424begEOEt8HeyBHaubRNhw3iebsmwBq4vEZOeHD0
-	 qAyYTnc9yasWQ4C1PwWZZAGAKrrI1ZPGQHWrIaVMLoN8ceb3ebXgl/LNzqGWUzx0W
-	 0rm9w1yoeLMxbYho+w==
+	s=s31663417; t=1735832658; x=1736437458; i=w_armin@gmx.de;
+	bh=Tr4eA/524qu++Svq/AXkTBber/BWbtXMnz/P0kS+cVY=;
+	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:To:Cc:
+	 References:From:In-Reply-To:Content-Type:
+	 Content-Transfer-Encoding:cc:content-transfer-encoding:
+	 content-type:date:from:message-id:mime-version:reply-to:subject:
+	 to;
+	b=MJvfhhM0FfoTcouJnXvx3+KMJh/8ANTyYe5YPyOqN1uHaQ0v9RFtDLYGBmKpknua
+	 oiwl8bl/VJCgE0/NP7IL5GndbQQ9meBzyZTs4Y+OiO/xsKtBH/5uf8Dcix9vFq/XL
+	 puxpynGijC4BGiTBPThDZODr95ntgO+m/1yRpanNYs7jZFjK+acYVexf3fu3LpN00
+	 0qQkxZt1A4OhVz7zWDzcA9sq7+Lsxc0Da7KBlrZHGF/fY3tZaq4DFCxjvBzji8m4e
+	 xiopz2ODF8zJUk+6KKvqLE9sNUQHvOhjU+Wy1wnrCPzIIPK6hCJifTtWjfnSz5/IS
+	 QjG9L/E4auOJZ6SGLw==
 X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
 Received: from [192.168.0.14] ([91.14.230.110]) by mail.gmx.net (mrgmx005
- [212.227.17.190]) with ESMTPSA (Nemesis) id 1MlNpH-1tuzEV3urF-00hlqm; Thu, 02
- Jan 2025 16:28:43 +0100
-Message-ID: <b44f5e56-e05a-4f0e-a9e0-2b5fe5cefa1f@gmx.de>
-Date: Thu, 2 Jan 2025 16:28:40 +0100
+ [212.227.17.190]) with ESMTPSA (Nemesis) id 1Mirna-1twupB4BQy-00jfDj; Thu, 02
+ Jan 2025 16:44:18 +0100
+Message-ID: <abfad87b-4397-4421-a23d-318419bd0ccd@gmx.de>
+Date: Thu, 2 Jan 2025 16:44:16 +0100
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -42,427 +43,406 @@ List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] Input: i8042 - Add support for platform filter
- contexts
-From: Armin Wolf <W_Armin@gmx.de>
-To: dmitry.torokhov@gmail.com, o2g.org.ru@gmail.com
-Cc: hdegoede@redhat.com, ilpo.jarvinen@linux.intel.com,
- corentin.chary@gmail.com, luke@ljones.dev, mjg59@srcf.ucam.org,
- pali@kernel.org, eric.piel@tremplin-utc.net, jlee@suse.com,
- kenneth.t.chan@gmail.com, coproscefalo@gmail.com,
- linux-input@vger.kernel.org, platform-driver-x86@vger.kernel.org,
- linux-kernel@vger.kernel.org, josh@joshuagrisham.com
-References: <20241222215042.7709-1-W_Armin@gmx.de>
+Subject: Re: [PATCH v2 05/20] alienware-wmi: Improve rgb-zones group creation
+To: Kurt Borja <kuurtb@gmail.com>, platform-driver-x86@vger.kernel.org
+Cc: Dell.Client.Kernel@dell.com, hdegoede@redhat.com,
+ ilpo.jarvinen@linux.intel.com, linux-kernel@vger.kernel.org,
+ mario.limonciello@amd.com
+References: <20241229194506.8268-2-kuurtb@gmail.com>
+ <20241229194506.8268-7-kuurtb@gmail.com>
 Content-Language: en-US
-In-Reply-To: <20241222215042.7709-1-W_Armin@gmx.de>
+From: Armin Wolf <W_Armin@gmx.de>
+In-Reply-To: <20241229194506.8268-7-kuurtb@gmail.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:QSqWAFTafiXFnpUff4JHENEVx/NtCubtKNUa1khwbSMNzkp6YMS
- dvgSi3VpP0eqVROTUwXTMjFcAilrG/UEQVlfxY1sC+RM7ED7hlj3jHx3JmHBBfeW7jipfPG
- hGomUWZt5ybjsGa5NA4O3iZ9PTZSAurivaIxRINW/4xX1e2i8Y9aEMqcz6e7xtXBPZiF+/4
- wJBEao84ZxpbxtultSUWg==
+X-Provags-ID: V03:K1:Aq4PTLku/J00Adow7SASbpEKdNBcRsE4uVC0qUsVJE0aUaox5yi
+ WCge3px597/BY29A5QC6HKjvRAaJMK+HxRkkYk+ObXagK76HKGeaMUnZCJn3UxXF/9b9+dN
+ YGZcgaQwTqooC60TAb9xmmDjZc5DpiYfAMdamrKu3rE9exI53Zjcqusge7CJnR49tI+tZ/Y
+ 5juyh92mLTghIilGko1tw==
 X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:TvlIa9L+FGg=;zbH3ZtcHinAgOj5fJNxLh9uSRe7
- 2IOXb0k3WXhBDfhPMzoGR80XwTr8xEP9QKmXyFcZ497U9qc+4HHigpRSGbIaWB05iRhie18VD
- sgL4WJEEYSDBsCT5+BNtM7E66qBvfYaLmtETzPl66O6ojhs7Dfcvtov7udteTSuJn1WwBRxgh
- CpkCVxWTLFy061mnc62FB/yXwcUSU02MZo5M2uiMyTBUI5gLdYzgoddi597dzkJuoYP5ACe4O
- EIQjIGjnOOFOhMkDeApn4KunHBHhCCg+fGL97qbVpxbaHGaE0AC77X7Yl+phOQJNLpTRxl1+p
- ZkZJ7u45dwGWGmlZYPC/oZBq/UwDwNZFy3x5daboZt3pGvfJF/ZSCR2fs3M5+ZeAEjKDobqPp
- skDAXVl0KT4LSnYEYmrzv+ECpnq3Vs58oc3Y0oBNtTjUp40axjfr5/gC8hObovQ2rZOOfGQri
- egrNfaGIu43AlDBFzydFzlHNeEpC1ISo9uexYmpUZX8mCt0jecOTIxv6zHOCfEscnzv/3H8OR
- 1Y8/ub4VqRrQVTfK8Nv4S/QCrLHQ/GRItUf6aHnL2vL9+AzHoZ5CGRbIS8FQGB0t41hQnna8c
- BQUg4xBsO1+RAVrQYAMJwnwQWA3oeNMpqYhfMhtADEa1S8bwhO7pIOHblYPV7HSx45aniLgNF
- fZ50PHnY2jRxslnm+R04gdlKyj2E3bW0DeJ79OrLwnUdz4LX2PMv2rwe4Prd5xXgtHEFPCFPk
- mSftMWuPLI2ZyhIaxTxuaZR8KP/994rtYIU+bErFOplEHp7GUuky7BO0etMO4flGDLXZNfQyO
- iUwxDGZnz3cmRwQXnYCQtrGS170MjykerD6stb3yvAI7SBQ+cbNY9ybvs1hGHyIB3J0lGBC2k
- NZDCzlgV8ZnwPdCblSqIxSPg9HzDfIdWxrzzRpScb04lGANCA+JcNZklTpzTX2MXBtYr60eep
- +U/bN5tjHK9JWDCxF3ZaN3V1W+YmtksKBfbZREAyHg48f8fHlDVAVc8o3wSqlyKcZS4at2s7o
- +r+Xbk6B9Z6Oq84PWTmBKW/JPzkOju8uNIOkCknui91rMj+9/575SH0ngawYxXaLWfxe3JmB2
- pBXh00OBgN1osmDBJj0A9exrnMFPHs
+UI-OutboundReport: notjunk:1;M01:P0:hpUMbeaQnLU=;F5yPd6FShNSUIwOBXVal8MohJf2
+ LrmMXHC6ZAHBvP19u0Zr1HRa1qGy2hh0WH7UUwnz0wTbeDLd65FAPDQqt4xs7DXArE2xnfR/v
+ GxkUo48suDLoPem+Ttpy4yDBu0XCEFhJKsSPeJ8t0Mt7SiLkBWlg4HuO9JDNcJjwe6CTSI3u2
+ BpcTCLydzamJ+neIk2VkhtZWlW650EUXg+jGft2mG/tU8ued/eg0/2DIcr1RwiUS3poJp5dYA
+ SlrbVY0KvvabBvyWazYuX8JlHValKu5S2Tu36lUiiw3wpS7oIk0cLqw/kcWOQUSIUvqoU06Ji
+ yiIhytEPfg+YhoqwZBRUPqLuqvNE5VvWmP/lnTa+iX1bwD2eBx4BdPW1eDZH8bTtXqO5rbNQ5
+ +AMQV8Utdi4kQImUWfD9lMjCZgtfgygL4fnNAlJX3q1+BtDSptGeXlPLe692qoVnGoPtbLb0O
+ DMDOHJ/nZOmwx/OxFiIxq6EIf30wjVuqDEEYtZ/nVmU7J/9JdV+v5GF06GhOMtL+Go163Ei89
+ oHMU8eOkTVilBLK/kFZVlO2S0slmkxl7WftH8bEYO6UMK/htA5hAnukdNVllZufzkld1MFnjx
+ C7L1HngttsIqtxYvLwIl3cus3Akx6VFenu8iQjMhyQ7d5zWYtKpjjvPAkYzHAYUfVwHMEIW56
+ VIiXJhK5wplrqdXCvZXvs9su+iz7A54BIChYlTX0MrnKX/hc5tDCBcMMu59OX5axCV7x7tkId
+ nhebcZ6VQYMXfVgTr16lfc4oTcwWnq7FAJC82uO6CjipZ9gmrJRteLjCC2lRJOIm+koczi7cO
+ KNyf9+G0LNtpFZqpFfd10GoUqBrv7B6v4U1niMovEltrDo06duX77njtf76aa0PmN27yTGCYV
+ RKaMot1xzFR8HywGIbFHSikTnnfpK2l6XypoBp0Vvd5Bb24I0hHiqXvk/QYTwFRWWt4klMQzb
+ vwL8ByNn4L8u4iv72RypSk2ox1svmTnyo/Q1fM5D2QeHvC6L+cWl6RW7+ricwh7qQjnkmv2sX
+ 2VPZx51fkcVLyZv3daHLGKYNFxVdCjAO9166jjeqdxWOuu8qFN7YjoRhuNl1CE3/Bu+x7d1jD
+ PGvyqs0eFSiBo38guMOPv5y9iSs34n
 
-Am 22.12.24 um 22:50 schrieb Armin Wolf:
+Am 29.12.24 um 20:44 schrieb Kurt Borja:
 
-> Currently the platform filter cannot access any driver-specific state
-> which forces drivers installing a i8042 filter to have at least some
-> kind of global pointer for their filter.
+> Define zone_attrs statically and initialize zone_attribute_group with
+> platform driver's .dev_groups.
 >
-> This however might cause issues should such a driver probe multiple
-> devices. Fix this by allowing callers of i8042_install_filter() to
-> submit a context pointer which is then passed to the i8042 filter.
+> Drop match_zone() and instead pass a `location` argument to previous
+> show/store methods to access the correct `zone` LED state. On top of
+> that rename zone_set() -> zone_store() to be more consistent with sysfs
+> conventions.
 >
-> Also introduce a separate type for the i8042 filter (i8042_filter_t)
-> so that the function definitions can stay compact.
->
-> Tested on a Dell Inspiron 3505.
-
-Any updates on this?
-
-Thanks,
-Armin Wolf
-
->
-> Reviewed-by: Ilpo J=C3=A4rvinen <ilpo.jarvinen@linux.intel.com>
-> Signed-off-by: Armin Wolf <W_Armin@gmx.de>
+> Signed-off-by: Kurt Borja <kuurtb@gmail.com>
 > ---
-> Changes since v1:
-> - add kerneldoc for new typedef
-> - add Reviewed-by tag
-> ---
->   drivers/input/misc/ideapad_slidebar.c   |  4 ++--
->   drivers/input/serio/i8042.c             | 17 ++++++++-------
->   drivers/platform/x86/asus-nb-wmi.c      |  3 ++-
->   drivers/platform/x86/asus-wmi.c         |  2 +-
->   drivers/platform/x86/asus-wmi.h         |  3 +--
->   drivers/platform/x86/dell/dell-laptop.c |  6 +++---
->   drivers/platform/x86/hp/hp_accel.c      |  4 ++--
->   drivers/platform/x86/msi-laptop.c       |  6 +++---
->   drivers/platform/x86/panasonic-laptop.c |  4 ++--
->   drivers/platform/x86/toshiba_acpi.c     |  4 ++--
->   include/linux/i8042.h                   | 28 ++++++++++++++++++-------
->   11 files changed, 48 insertions(+), 33 deletions(-)
+>   drivers/platform/x86/dell/alienware-wmi.c | 209 +++++++++++-----------
+>   1 file changed, 102 insertions(+), 107 deletions(-)
 >
-> diff --git a/drivers/input/misc/ideapad_slidebar.c b/drivers/input/misc/=
-ideapad_slidebar.c
-> index f6e5fc807b4d..ab2e0a401904 100644
-> --- a/drivers/input/misc/ideapad_slidebar.c
-> +++ b/drivers/input/misc/ideapad_slidebar.c
-> @@ -121,7 +121,7 @@ static void slidebar_mode_set(u8 mode)
->   }
+> diff --git a/drivers/platform/x86/dell/alienware-wmi.c b/drivers/platfor=
+m/x86/dell/alienware-wmi.c
+> index e010c94555e8..d97e5e15a8f2 100644
+> --- a/drivers/platform/x86/dell/alienware-wmi.c
+> +++ b/drivers/platform/x86/dell/alienware-wmi.c
+> @@ -376,12 +376,6 @@ struct color_platform {
+>   	u8 red;
+>   } __packed;
 >
->   static bool slidebar_i8042_filter(unsigned char data, unsigned char st=
-r,
-> -				  struct serio *port)
-> +				  struct serio *port, void *context)
->   {
->   	static bool extended =3D false;
->
-> @@ -219,7 +219,7 @@ static int __init ideapad_probe(struct platform_devi=
-ce* pdev)
->   	input_set_capability(slidebar_input_dev, EV_ABS, ABS_X);
->   	input_set_abs_params(slidebar_input_dev, ABS_X, 0, 0xff, 0, 0);
->
-> -	err =3D i8042_install_filter(slidebar_i8042_filter);
-> +	err =3D i8042_install_filter(slidebar_i8042_filter, NULL);
->   	if (err) {
->   		dev_err(&pdev->dev,
->   			"Failed to install i8042 filter: %d\n", err);
-> diff --git a/drivers/input/serio/i8042.c b/drivers/input/serio/i8042.c
-> index 509330a27880..cab5a4c5baf5 100644
-> --- a/drivers/input/serio/i8042.c
-> +++ b/drivers/input/serio/i8042.c
-> @@ -179,8 +179,8 @@ static struct platform_device *i8042_platform_device=
-;
->   static struct notifier_block i8042_kbd_bind_notifier_block;
->
->   static bool i8042_handle_data(int irq);
-> -static bool (*i8042_platform_filter)(unsigned char data, unsigned char =
-str,
-> -				     struct serio *serio);
-> +static i8042_filter_t i8042_platform_filter;
-> +static void *i8042_platform_filter_context;
->
->   void i8042_lock_chip(void)
->   {
-> @@ -194,8 +194,7 @@ void i8042_unlock_chip(void)
->   }
->   EXPORT_SYMBOL(i8042_unlock_chip);
->
-> -int i8042_install_filter(bool (*filter)(unsigned char data, unsigned ch=
-ar str,
-> -					struct serio *serio))
-> +int i8042_install_filter(i8042_filter_t filter, void *context)
->   {
->   	guard(spinlock_irqsave)(&i8042_lock);
->
-> @@ -203,12 +202,12 @@ int i8042_install_filter(bool (*filter)(unsigned c=
-har data, unsigned char str,
->   		return -EBUSY;
->
->   	i8042_platform_filter =3D filter;
-> +	i8042_platform_filter_context =3D context;
->   	return 0;
->   }
->   EXPORT_SYMBOL(i8042_install_filter);
->
-> -int i8042_remove_filter(bool (*filter)(unsigned char data, unsigned cha=
-r str,
-> -				       struct serio *port))
-> +int i8042_remove_filter(i8042_filter_t filter)
->   {
->   	guard(spinlock_irqsave)(&i8042_lock);
->
-> @@ -216,6 +215,7 @@ int i8042_remove_filter(bool (*filter)(unsigned char=
- data, unsigned char str,
->   		return -EINVAL;
->
->   	i8042_platform_filter =3D NULL;
-> +	i8042_platform_filter_context =3D NULL;
->   	return 0;
->   }
->   EXPORT_SYMBOL(i8042_remove_filter);
-> @@ -480,7 +480,10 @@ static bool i8042_filter(unsigned char data, unsign=
-ed char str,
->   		}
->   	}
->
-> -	if (i8042_platform_filter && i8042_platform_filter(data, str, serio)) =
-{
-> +	if (!i8042_platform_filter)
-> +		return false;
-> +
-> +	if (i8042_platform_filter(data, str, serio, i8042_platform_filter_cont=
-ext)) {
->   		dbg("Filtered out by platform filter\n");
->   		return true;
->   	}
-> diff --git a/drivers/platform/x86/asus-nb-wmi.c b/drivers/platform/x86/a=
-sus-nb-wmi.c
-> index ef04d396f61c..a3d4b98045f8 100644
-> --- a/drivers/platform/x86/asus-nb-wmi.c
-> +++ b/drivers/platform/x86/asus-nb-wmi.c
-> @@ -50,7 +50,8 @@ MODULE_PARM_DESC(tablet_mode_sw, "Tablet mode detect: =
--1:auto 0:disable 1:kbd-do
->   static struct quirk_entry *quirks;
->   static bool atkbd_reports_vol_keys;
->
-> -static bool asus_i8042_filter(unsigned char data, unsigned char str, st=
-ruct serio *port)
-> +static bool asus_i8042_filter(unsigned char data, unsigned char str, st=
-ruct serio *port,
-> +			      void *context)
->   {
->   	static bool extended_e0;
->   	static bool extended_e1;
-> diff --git a/drivers/platform/x86/asus-wmi.c b/drivers/platform/x86/asus=
--wmi.c
-> index fdeebab96fc0..6c674de60ec0 100644
-> --- a/drivers/platform/x86/asus-wmi.c
-> +++ b/drivers/platform/x86/asus-wmi.c
-> @@ -4824,7 +4824,7 @@ static int asus_wmi_add(struct platform_device *pd=
-ev)
->   	}
->
->   	if (asus->driver->i8042_filter) {
-> -		err =3D i8042_install_filter(asus->driver->i8042_filter);
-> +		err =3D i8042_install_filter(asus->driver->i8042_filter, NULL);
->   		if (err)
->   			pr_warn("Unable to install key filter - %d\n", err);
->   	}
-> diff --git a/drivers/platform/x86/asus-wmi.h b/drivers/platform/x86/asus=
--wmi.h
-> index d02f15fd3482..018dfde4025e 100644
-> --- a/drivers/platform/x86/asus-wmi.h
-> +++ b/drivers/platform/x86/asus-wmi.h
-> @@ -73,8 +73,7 @@ struct asus_wmi_driver {
->   	void (*key_filter) (struct asus_wmi_driver *driver, int *code,
->   			    unsigned int *value, bool *autorelease);
->   	/* Optional standard i8042 filter */
-> -	bool (*i8042_filter)(unsigned char data, unsigned char str,
-> -			     struct serio *serio);
-> +	i8042_filter_t		i8042_filter;
->
->   	int (*probe) (struct platform_device *device);
->   	void (*detect_quirks) (struct asus_wmi_driver *driver);
-> diff --git a/drivers/platform/x86/dell/dell-laptop.c b/drivers/platform/=
-x86/dell/dell-laptop.c
-> index 5671bd0deee7..58b860b88fff 100644
-> --- a/drivers/platform/x86/dell/dell-laptop.c
-> +++ b/drivers/platform/x86/dell/dell-laptop.c
-> @@ -725,8 +725,8 @@ static void dell_update_rfkill(struct work_struct *i=
-gnored)
->   }
->   static DECLARE_DELAYED_WORK(dell_rfkill_work, dell_update_rfkill);
->
-> -static bool dell_laptop_i8042_filter(unsigned char data, unsigned char =
-str,
-> -			      struct serio *port)
-> +static bool dell_laptop_i8042_filter(unsigned char data, unsigned char =
-str, struct serio *port,
-> +				     void *context)
->   {
->   	static bool extended;
->
-> @@ -884,7 +884,7 @@ static int __init dell_setup_rfkill(void)
->   		pr_warn("Unable to register dell rbtn notifier\n");
->   		goto err_filter;
->   	} else {
-> -		ret =3D i8042_install_filter(dell_laptop_i8042_filter);
-> +		ret =3D i8042_install_filter(dell_laptop_i8042_filter, NULL);
->   		if (ret) {
->   			pr_warn("Unable to install key filter\n");
->   			goto err_filter;
-> diff --git a/drivers/platform/x86/hp/hp_accel.c b/drivers/platform/x86/h=
-p/hp_accel.c
-> index 39a6530f5072..10d5af18d639 100644
-> --- a/drivers/platform/x86/hp/hp_accel.c
-> +++ b/drivers/platform/x86/hp/hp_accel.c
-> @@ -267,7 +267,7 @@ static struct delayed_led_classdev hpled_led =3D {
+> -struct platform_zone {
+> -	u8 location;
+> -	struct device_attribute *attr;
+> -	struct color_platform colors;
+> -};
+> -
+>   struct wmax_brightness_args {
+>   	u32 led_mask;
+>   	u32 percentage;
+> @@ -411,16 +405,10 @@ struct wmax_u32_args {
 >   };
 >
->   static bool hp_accel_i8042_filter(unsigned char data, unsigned char st=
-r,
-> -				  struct serio *port)
-> +				  struct serio *port, void *context)
->   {
->   	static bool extended;
+>   static struct platform_device *platform_device;
+> -static struct device_attribute *zone_dev_attrs;
+> -static struct attribute **zone_attrs;
+> -static struct platform_zone *zone_data;
+> +static struct color_platform colors[4];
+>   static struct platform_profile_handler pp_handler;
+>   static enum wmax_thermal_mode supported_thermal_profiles[PLATFORM_PROF=
+ILE_LAST];
 >
-> @@ -326,7 +326,7 @@ static int lis3lv02d_probe(struct platform_device *d=
-evice)
->   	/* filter to remove HPQ6000 accelerometer data
->   	 * from keyboard bus stream */
->   	if (strstr(dev_name(&device->dev), "HPQ6000"))
-> -		i8042_install_filter(hp_accel_i8042_filter);
-> +		i8042_install_filter(hp_accel_i8042_filter, NULL);
->
->   	INIT_WORK(&hpled_led.work, delayed_set_status_worker);
->   	ret =3D led_classdev_register(NULL, &hpled_led.led_classdev);
-> diff --git a/drivers/platform/x86/msi-laptop.c b/drivers/platform/x86/ms=
-i-laptop.c
-> index e5391a37014d..c4b150fa093f 100644
-> --- a/drivers/platform/x86/msi-laptop.c
-> +++ b/drivers/platform/x86/msi-laptop.c
-> @@ -806,8 +806,8 @@ static void msi_send_touchpad_key(struct work_struct=
- *ignored)
->   }
->   static DECLARE_DELAYED_WORK(msi_touchpad_dwork, msi_send_touchpad_key)=
-;
->
-> -static bool msi_laptop_i8042_filter(unsigned char data, unsigned char s=
-tr,
-> -				struct serio *port)
-> +static bool msi_laptop_i8042_filter(unsigned char data, unsigned char s=
-tr, struct serio *port,
-> +				    void *context)
->   {
->   	static bool extended;
->
-> @@ -996,7 +996,7 @@ static int __init load_scm_model_init(struct platfor=
-m_device *sdev)
->   	if (result)
->   		goto fail_input;
->
-> -	result =3D i8042_install_filter(msi_laptop_i8042_filter);
-> +	result =3D i8042_install_filter(msi_laptop_i8042_filter, NULL);
->   	if (result) {
->   		pr_err("Unable to install key filter\n");
->   		goto fail_filter;
-> diff --git a/drivers/platform/x86/panasonic-laptop.c b/drivers/platform/=
-x86/panasonic-laptop.c
-> index 22ca70eb8227..2987b4db6009 100644
-> --- a/drivers/platform/x86/panasonic-laptop.c
-> +++ b/drivers/platform/x86/panasonic-laptop.c
-> @@ -260,7 +260,7 @@ struct pcc_acpi {
->    * keypress events over the PS/2 kbd interface, filter these out.
->    */
->   static bool panasonic_i8042_filter(unsigned char data, unsigned char s=
-tr,
-> -				   struct serio *port)
-> +				   struct serio *port, void *context)
->   {
->   	static bool extended;
->
-> @@ -1100,7 +1100,7 @@ static int acpi_pcc_hotkey_add(struct acpi_device =
-*device)
->   		pcc->platform =3D NULL;
->   	}
->
-> -	i8042_install_filter(panasonic_i8042_filter);
-> +	i8042_install_filter(panasonic_i8042_filter, NULL);
+> -static struct attribute_group zone_attribute_group =3D {
+> -	.name =3D "rgb_zones",
+> -};
+> -
+>   static u8 interface;
+>   static u8 lighting_control_state;
+>   static u8 global_brightness;
+> @@ -452,24 +440,10 @@ static int parse_rgb(const char *buf, struct color=
+_platform *colors)
 >   	return 0;
->
->   out_platform:
-> diff --git a/drivers/platform/x86/toshiba_acpi.c b/drivers/platform/x86/=
-toshiba_acpi.c
-> index 78a5aac2dcfd..5ad3a7183d33 100644
-> --- a/drivers/platform/x86/toshiba_acpi.c
-> +++ b/drivers/platform/x86/toshiba_acpi.c
-> @@ -2755,7 +2755,7 @@ static int toshiba_acpi_enable_hotkeys(struct tosh=
-iba_acpi_dev *dev)
 >   }
 >
->   static bool toshiba_acpi_i8042_filter(unsigned char data, unsigned cha=
-r str,
-> -				      struct serio *port)
-> +				      struct serio *port, void *context)
+> -static struct platform_zone *match_zone(struct device_attribute *attr)
+> -{
+> -	u8 zone;
+> -
+> -	for (zone =3D 0; zone < quirks->num_zones; zone++) {
+> -		if ((struct device_attribute *)zone_data[zone].attr =3D=3D attr) {
+> -			pr_debug("alienware-wmi: matched zone location: %d\n",
+> -				 zone_data[zone].location);
+> -			return &zone_data[zone];
+> -		}
+> -	}
+> -	return NULL;
+> -}
+> -
+>   /*
+>    * Individual RGB zone control
+>    */
+> -static int alienware_update_led(struct platform_zone *zone)
+> +static int alienware_update_led(u8 location)
 >   {
->   	if (str & I8042_STR_AUXDATA)
->   		return false;
-> @@ -2915,7 +2915,7 @@ static int toshiba_acpi_setup_keyboard(struct tosh=
-iba_acpi_dev *dev)
->   	if (ec_handle && acpi_has_method(ec_handle, "NTFY")) {
->   		INIT_WORK(&dev->hotkey_work, toshiba_acpi_hotkey_work);
+>   	int method_id;
+>   	acpi_status status;
+> @@ -478,8 +452,8 @@ static int alienware_update_led(struct platform_zone=
+ *zone)
+>   	struct legacy_led_args legacy_args;
+>   	struct wmax_led_args wmax_basic_args;
+>   	if (interface =3D=3D WMAX) {
+> -		wmax_basic_args.led_mask =3D 1 << zone->location;
+> -		wmax_basic_args.colors =3D zone->colors;
+> +		wmax_basic_args.led_mask =3D 1 << location;
+> +		wmax_basic_args.colors =3D colors[location];
+>   		wmax_basic_args.state =3D lighting_control_state;
+>   		guid =3D WMAX_CONTROL_GUID;
+>   		method_id =3D WMAX_METHOD_ZONE_CONTROL;
+> @@ -487,7 +461,7 @@ static int alienware_update_led(struct platform_zone=
+ *zone)
+>   		input.length =3D sizeof(wmax_basic_args);
+>   		input.pointer =3D &wmax_basic_args;
+>   	} else {
+> -		legacy_args.colors =3D zone->colors;
+> +		legacy_args.colors =3D colors[location];
+>   		legacy_args.brightness =3D global_brightness;
+>   		legacy_args.state =3D 0;
+>   		if (lighting_control_state =3D=3D LEGACY_BOOTING ||
+> @@ -496,7 +470,7 @@ static int alienware_update_led(struct platform_zone=
+ *zone)
+>   			legacy_args.state =3D lighting_control_state;
+>   		} else
+>   			guid =3D LEGACY_CONTROL_GUID;
+> -		method_id =3D zone->location + 1;
+> +		method_id =3D location + 1;
 >
-> -		error =3D i8042_install_filter(toshiba_acpi_i8042_filter);
-> +		error =3D i8042_install_filter(toshiba_acpi_i8042_filter, NULL);
->   		if (error) {
->   			pr_err("Error installing key filter\n");
->   			goto err_free_dev;
-> diff --git a/include/linux/i8042.h b/include/linux/i8042.h
-> index 95b07f8b77fe..00037c13abc8 100644
-> --- a/include/linux/i8042.h
-> +++ b/include/linux/i8042.h
-> @@ -54,15 +54,29 @@
+>   		input.length =3D sizeof(legacy_args);
+>   		input.pointer =3D &legacy_args;
+> @@ -510,35 +484,84 @@ static int alienware_update_led(struct platform_zo=
+ne *zone)
+>   }
 >
->   struct serio;
+>   static ssize_t zone_show(struct device *dev, struct device_attribute *=
+attr,
+> -			 char *buf)
+> +			 char *buf, u8 location)
+>   {
+> -	struct platform_zone *target_zone;
+> -	target_zone =3D match_zone(attr);
+> -	if (target_zone =3D=3D NULL)
+> -		return sprintf(buf, "red: -1, green: -1, blue: -1\n");
+>   	return sprintf(buf, "red: %d, green: %d, blue: %d\n",
+> -		       target_zone->colors.red,
+> -		       target_zone->colors.green, target_zone->colors.blue);
+> +		       colors[location].red, colors[location].green,
+> +		       colors[location].blue);
 >
-> +/**
-> + * typedef i8042_filter_t - i8042 filter callback
-> + * @data: Data received by the i8042 controller
-> + * @str: Status register of the i8042 controller
-> + * @serio: Serio of the i8042 controller
-> + * @context: Context pointer associated with this callback
-> + *
-> + * This represents a i8042 filter callback which can be used with i8042=
-_install_filter()
-> + * and i8042_remove_filter() to filter the i8042 input for platform-spe=
-cific key codes.
-> + *
-> + * Context: Interrupt context.
-> + * Returns: true if the data should be filtered out, false if otherwise=
-.
-> + */
-> +typedef bool (*i8042_filter_t)(unsigned char data, unsigned char str, s=
-truct serio *serio,
-> +			       void *context);
+>   }
+>
+> -static ssize_t zone_set(struct device *dev, struct device_attribute *at=
+tr,
+> -			const char *buf, size_t count)
+> +static ssize_t zone_store(struct device *dev, struct device_attribute *=
+attr,
+> +			  const char *buf, size_t count, u8 location)
+>   {
+> -	struct platform_zone *target_zone;
+>   	int ret;
+> -	target_zone =3D match_zone(attr);
+> -	if (target_zone =3D=3D NULL) {
+> -		pr_err("alienware-wmi: invalid target zone\n");
+> -		return 1;
+> -	}
+> -	ret =3D parse_rgb(buf, &target_zone->colors);
 > +
->   #if defined(CONFIG_SERIO_I8042) || defined(CONFIG_SERIO_I8042_MODULE)
->
->   void i8042_lock_chip(void);
->   void i8042_unlock_chip(void);
->   int i8042_command(unsigned char *param, int command);
-> -int i8042_install_filter(bool (*filter)(unsigned char data, unsigned ch=
-ar str,
-> -					struct serio *serio));
-> -int i8042_remove_filter(bool (*filter)(unsigned char data, unsigned cha=
-r str,
-> -				       struct serio *serio));
-> +int i8042_install_filter(i8042_filter_t filter, void *context);
-> +int i8042_remove_filter(i8042_filter_t filter);
->
->   #else
->
-> @@ -79,14 +93,12 @@ static inline int i8042_command(unsigned char *param=
-, int command)
->   	return -ENODEV;
+> +	ret =3D parse_rgb(buf, &colors[location]);
+>   	if (ret)
+>   		return ret;
+> -	ret =3D alienware_update_led(target_zone);
+> +
+> +	ret =3D alienware_update_led(location);
+> +
+>   	return ret ? ret : count;
 >   }
 >
-> -static inline int i8042_install_filter(bool (*filter)(unsigned char dat=
-a, unsigned char str,
-> -					struct serio *serio))
-> +static inline int i8042_install_filter(i8042_filter_t filter, void *con=
-text)
+> +static ssize_t zone00_show(struct device *dev, struct device_attribute =
+*attr,
+> +			   char *buf)
+> +{
+> +	return zone_show(dev, attr, buf, 0);
+> +}
+> +
+> +static ssize_t zone00_store(struct device *dev, struct device_attribute=
+ *attr,
+> +			    const char *buf, size_t count)
+> +{
+> +	return zone_store(dev, attr, buf, count, 0);
+> +}
+> +
+> +DEVICE_ATTR_RW(zone00);
+> +
+> +static ssize_t zone01_show(struct device *dev, struct device_attribute =
+*attr,
+> +			   char *buf)
+> +{
+> +	return zone_show(dev, attr, buf, 1);
+> +}
+> +
+> +static ssize_t zone01_store(struct device *dev, struct device_attribute=
+ *attr,
+> +			    const char *buf, size_t count)
+> +{
+> +	return zone_store(dev, attr, buf, count, 1);
+> +}
+> +
+> +DEVICE_ATTR_RW(zone01);
+> +
+> +static ssize_t zone02_show(struct device *dev, struct device_attribute =
+*attr,
+> +			   char *buf)
+> +{
+> +	return zone_show(dev, attr, buf, 2);
+> +}
+> +
+> +static ssize_t zone02_store(struct device *dev, struct device_attribute=
+ *attr,
+> +			    const char *buf, size_t count)
+> +{
+> +	return zone_store(dev, attr, buf, count, 2);
+> +}
+> +
+> +DEVICE_ATTR_RW(zone02);
+> +
+> +static ssize_t zone03_show(struct device *dev, struct device_attribute =
+*attr,
+> +			   char *buf)
+> +{
+> +	return zone_show(dev, attr, buf, 3);
+> +}
+> +
+> +static ssize_t zone03_store(struct device *dev, struct device_attribute=
+ *attr,
+> +			    const char *buf, size_t count)
+> +{
+> +	return zone_store(dev, attr, buf, count, 3);
+> +}
+> +
+> +DEVICE_ATTR_RW(zone03);
+> +
+>   /*
+>    * Lighting control state device attribute (Global)
+>    */
+> @@ -578,6 +601,33 @@ static ssize_t lighting_control_state_store(struct =
+device *dev,
+>
+>   static DEVICE_ATTR_RW(lighting_control_state);
+>
+> +static umode_t zone_attr_visible(struct kobject *kobj,
+> +				 struct attribute *attr, int n)
+> +{
+> +	return n < quirks->num_zones + 1 ? 0644 : 0;
+
+Please return attr->mode here instead of 0644. I would also prefer if you =
+use a traditional if statement here.
+
+With this small issue being addressed:
+
+Reviewed-by: Armin Wolf <W_Armin@gmx.de>
+
+> +}
+> +
+> +static bool zone_group_visible(struct kobject *kobj)
+> +{
+> +	return quirks->num_zones > 0;
+> +}
+> +DEFINE_SYSFS_GROUP_VISIBLE(zone);
+> +
+> +static struct attribute *zone_attrs[] =3D {
+> +	&dev_attr_lighting_control_state.attr,
+> +	&dev_attr_zone00.attr,
+> +	&dev_attr_zone01.attr,
+> +	&dev_attr_zone02.attr,
+> +	&dev_attr_zone03.attr,
+> +	NULL
+> +};
+> +
+> +static struct attribute_group zone_attribute_group =3D {
+> +	.name =3D "rgb_zones",
+> +	.is_visible =3D SYSFS_GROUP_VISIBLE(zone),
+> +	.attrs =3D zone_attrs,
+> +};
+> +
+>   /*
+>    * LED Brightness (Global)
+>    */
+> @@ -606,7 +656,7 @@ static void global_led_set(struct led_classdev *led_=
+cdev,
+>   	if (interface =3D=3D WMAX)
+>   		ret =3D wmax_brightness(brightness);
+>   	else
+> -		ret =3D alienware_update_led(&zone_data[0]);
+> +		ret =3D alienware_update_led(0);
+>   	if (ret)
+>   		pr_err("LED brightness update failed\n");
+>   }
+> @@ -624,9 +674,6 @@ static struct led_classdev global_led =3D {
+>
+>   static int alienware_zone_init(struct platform_device *dev)
 >   {
->   	return -ENODEV;
+> -	u8 zone;
+> -	char *name;
+> -
+>   	if (interface =3D=3D WMAX) {
+>   		lighting_control_state =3D WMAX_RUNNING;
+>   	} else if (interface =3D=3D LEGACY) {
+> @@ -635,65 +682,12 @@ static int alienware_zone_init(struct platform_dev=
+ice *dev)
+>   	global_led.max_brightness =3D 0x0F;
+>   	global_brightness =3D global_led.max_brightness;
+>
+> -	/*
+> -	 *      - zone_dev_attrs num_zones + 1 is for individual zones and the=
+n
+> -	 *        null terminated
+> -	 *      - zone_attrs num_zones + 2 is for all attrs in zone_dev_attrs =
++
+> -	 *        the lighting control + null terminated
+> -	 *      - zone_data num_zones is for the distinct zones
+> -	 */
+> -	zone_dev_attrs =3D
+> -	    kcalloc(quirks->num_zones + 1, sizeof(struct device_attribute),
+> -		    GFP_KERNEL);
+> -	if (!zone_dev_attrs)
+> -		return -ENOMEM;
+> -
+> -	zone_attrs =3D
+> -	    kcalloc(quirks->num_zones + 2, sizeof(struct attribute *),
+> -		    GFP_KERNEL);
+> -	if (!zone_attrs)
+> -		return -ENOMEM;
+> -
+> -	zone_data =3D
+> -	    kcalloc(quirks->num_zones, sizeof(struct platform_zone),
+> -		    GFP_KERNEL);
+> -	if (!zone_data)
+> -		return -ENOMEM;
+> -
+> -	for (zone =3D 0; zone < quirks->num_zones; zone++) {
+> -		name =3D kasprintf(GFP_KERNEL, "zone%02hhX", zone);
+> -		if (name =3D=3D NULL)
+> -			return 1;
+> -		sysfs_attr_init(&zone_dev_attrs[zone].attr);
+> -		zone_dev_attrs[zone].attr.name =3D name;
+> -		zone_dev_attrs[zone].attr.mode =3D 0644;
+> -		zone_dev_attrs[zone].show =3D zone_show;
+> -		zone_dev_attrs[zone].store =3D zone_set;
+> -		zone_data[zone].location =3D zone;
+> -		zone_attrs[zone] =3D &zone_dev_attrs[zone].attr;
+> -		zone_data[zone].attr =3D &zone_dev_attrs[zone];
+> -	}
+> -	zone_attrs[quirks->num_zones] =3D &dev_attr_lighting_control_state.att=
+r;
+> -	zone_attribute_group.attrs =3D zone_attrs;
+> -
+> -	led_classdev_register(&dev->dev, &global_led);
+> -
+> -	return sysfs_create_group(&dev->dev.kobj, &zone_attribute_group);
+> +	return led_classdev_register(&dev->dev, &global_led);
 >   }
 >
-> -static inline int i8042_remove_filter(bool (*filter)(unsigned char data=
-, unsigned char str,
-> -				       struct serio *serio))
-> +static inline int i8042_remove_filter(i8042_filter_t filter)
+>   static void alienware_zone_exit(struct platform_device *dev)
 >   {
->   	return -ENODEV;
+> -	u8 zone;
+> -
+> -	sysfs_remove_group(&dev->dev.kobj, &zone_attribute_group);
+>   	led_classdev_unregister(&global_led);
+> -	if (zone_dev_attrs) {
+> -		for (zone =3D 0; zone < quirks->num_zones; zone++)
+> -			kfree(zone_dev_attrs[zone].attr.name);
+> -	}
+> -	kfree(zone_dev_attrs);
+> -	kfree(zone_data);
+> -	kfree(zone_attrs);
 >   }
-> --
-> 2.39.5
 >
->
+>   static acpi_status alienware_wmax_command(void *in_args, size_t in_siz=
+e,
+> @@ -1143,6 +1137,7 @@ static void remove_thermal_profile(void)
+>    * Platform Driver
+>    */
+>   static const struct attribute_group *alienfx_groups[] =3D {
+> +	&zone_attribute_group,
+>   	&hdmi_attribute_group,
+>   	&amplifier_attribute_group,
+>   	&deepsleep_attribute_group,
