@@ -1,198 +1,156 @@
-Received: from mail-qv1-f53.google.com (mail-qv1-f53.google.com [209.85.219.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from fhigh-a4-smtp.messagingengine.com (fhigh-a4-smtp.messagingengine.com [103.168.172.155])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6921535959;
-	Thu,  2 Jan 2025 19:41:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7457F282E1;
+	Thu,  2 Jan 2025 19:44:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.155
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1735846903; cv=none; b=ak7Dr8+GNvMAsvrROpytWd+L9Y1izBcqNENu+fetI3E4benNbQKIuDbhvvB3GcYg2swDAb3lfD+7lj1hV3pr9/D3Hn7BZP5HtwhguEtvqN0wvoKZ8UhbjOV+XiLqO/p+jYGJP0Lpc/3nagmTHJcRzrMDXLJQGFetyOB1L1n4FUE=
+	t=1735847045; cv=none; b=dW3GGyy9CYcF4f470Z2+5/FNCihw5hmJ9pC5k0Ma+lIS9O0VBn5Lsug7Y+XL9dHf18tx80o1p1tjfWCNq5+zyLZnONaXSmh6hy7wkcJC33nQyRzl7XQ5aH5ABV9fi3Wp2yP10TBzKbZlSmldm35jn2Yci7tSi36P42iah7//5KU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1735846903; c=relaxed/simple;
-	bh=puJLQEP8nqD6qaASrATN51TS2cQEgxUQahb9r72B9p8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=XxOvGJxBcXralElOkTbKGad9fVH1OSCSGDgQYN0QhlsU3wYoDt/iKxpsTits2i9ZPQKrUaflxcazRyXBWQS1WC1YAFKcJlr8MPels+fqbkK3e71NoBFtg/xEvSnjjGdrfJg+H9PBnAHnatFSSN+IDv3J236Lm8kln3V0VXVTtwI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=MhZDn6gh; arc=none smtp.client-ip=209.85.219.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1735847045; c=relaxed/simple;
+	bh=DT+xqnA2m/bAYeHpH1oNAcB1ko6lElj3WZiP8+p96C8=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=IYtrNApAWPERZMzRg/JO3qCUVbINjQ8XoYbf+ICtQKVUhEdcj97NX7yTfb3astEzLNP6DfiR2GgffYRVRJZuLAaxXVK+8lqfmNjzz2lr1xnV/5kmSTil7hfXnxl4xLxXAB1/OzS7CK6qapVd4aJn1XfwWuWCEoGGcbfOfMLQbug=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=astier.eu; spf=pass smtp.mailfrom=astier.eu; dkim=pass (2048-bit key) header.d=astier.eu header.i=@astier.eu header.b=Fpq6mP/z; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=IeGIypev; arc=none smtp.client-ip=103.168.172.155
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=astier.eu
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=astier.eu
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MhZDn6gh"
-Received: by mail-qv1-f53.google.com with SMTP id 6a1803df08f44-6d8f916b40bso154333226d6.3;
-        Thu, 02 Jan 2025 11:41:40 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1735846899; x=1736451699; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=E93siwCyTNcngZbR9LYYjmI6dLhHcaQUmd8TVt1Jk9E=;
-        b=MhZDn6ghj190XiVvxvhRkKlZywATJ+YGorOnhhtEo1Z2a9ruMpj58CA0ieORd1TZdV
-         GXJWCX+mFxjdXSDu1wAYYwMVruZmRkZI76tu8KJljjOlWY3jXRI5FiC6guMw8svnpwGu
-         KaKSNoxhhrRikoC1PUKWlAUHDl8BTyZIFjvrl9zR7wOVr+No0sS7tT+8h6mOSWy6nvAB
-         Kzj3Hj/7M8IBeZDG9BHdyTgOpdy60vj07frCfJ6oKymlWJsHmielsQoDB+wEB9yOMPQ5
-         dQibBHS8kpmMxljrt9i6DzAGR4OsQj4/56ldxKQL55yD/Yg//qtt2W2S50dygR5h/iWr
-         1OcA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1735846899; x=1736451699;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=E93siwCyTNcngZbR9LYYjmI6dLhHcaQUmd8TVt1Jk9E=;
-        b=T4r90XUMU9rNbd79BYw8KsIdpS0WY1LZt1RDE1fGkQ1FQvHQPeUvvH7VRQbIVxZBYt
-         0YPlwjKa9tvl+y4aj+pGe5UkIeHf5gc7U/epxJP3xrrXmw1u6cU5S1CAyqIzy9tJh6e0
-         usCbkWV0/uHBEcA6y6i197EiKq2yc2lO/PIj47dHjxbfFr38Nwl30u4V0PSiq3CgN0xF
-         aOy2RPDOvZVPyXmqn7HiDOoGFuu9scz6o4Zp2CXzoOTZYwx2zT+8lSXNTd+/cVcUrTJi
-         PiBAMGkMjqeMkxBt8xM6/GyCNneF92ilHLzVypxtfj//XgoKNvfgXmXa1IhlISWo0TRK
-         U8hA==
-X-Forwarded-Encrypted: i=1; AJvYcCWf4JuTTPEMtTIb9H0ZAN0tfQhnTJIezosMxXUGddCYynJgTYgPEm/MATqKx4ilHgzI/TH9SgQ6NC/oSqM=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxKIOVsUGB23evdrZwhlameoT82++RO1GAWxgKUgxM1yCCVXl9H
-	LDxLhtDVYH35Q6IuAtuZKTqPVQ+U+yG9/cB2XMc1a+LYmJV4j9dG
-X-Gm-Gg: ASbGnctuVZAR7fhirIf4wfqPGr/zYdLkAflcXfV00ra0Odr/tJVwTJFxmuSY7Cu+Ea4
-	8R+gz6hBrox9q3JX66iVDiBO4to4Pm06g83CnXchQdygeF/L31mQeRfiMspBH70c8JtmLrDhyNs
-	Fu5/0+K2Qpk4hD1eLwrsqb+0mFLEyMr81kS1Ggl/ZBNqOjq5gzsCr8tsdCUiqTyfolERE9sAIf3
-	M2v8LR8OHmTK07KQOGUOH4TcPrMRjhuwyWNkI35AbZGYw6xRaWGKNf0
-X-Google-Smtp-Source: AGHT+IE0a0ziebly9DPu5c/Vp9K6496kv+HB9oHMxbrPQVdrvu0qsfWPNQSqMTYzmgidSyYaKblnig==
-X-Received: by 2002:ad4:5baa:0:b0:6d4:22d4:f5b0 with SMTP id 6a1803df08f44-6dd2338d333mr742751226d6.33.1735846899271;
-        Thu, 02 Jan 2025 11:41:39 -0800 (PST)
-Received: from alphacentauri ([2800:bf0:179:113e:f067:4e25:4298:6451])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6ddc5b6049bsm1567456d6.79.2025.01.02.11.41.38
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 02 Jan 2025 11:41:38 -0800 (PST)
-Date: Thu, 2 Jan 2025 14:41:35 -0500
-From: Kurt Borja <kuurtb@gmail.com>
-To: Armin Wolf <W_Armin@gmx.de>
-Cc: platform-driver-x86@vger.kernel.org, Dell.Client.Kernel@dell.com, 
-	hdegoede@redhat.com, ilpo.jarvinen@linux.intel.com, linux-kernel@vger.kernel.org, 
-	mario.limonciello@amd.com
-Subject: Re: [PATCH v2 00/20] alienware-wmi driver rework
-Message-ID: <rmv4g3oo75rkimogaiz7ype2vdaw7hf4esa7vd4vklrswiywdt@rsdjiwzgjctw>
-References: <20241229194506.8268-2-kuurtb@gmail.com>
- <e5618537-a7ad-42e2-99d8-178ebc59192b@gmx.de>
+	dkim=pass (2048-bit key) header.d=astier.eu header.i=@astier.eu header.b="Fpq6mP/z";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="IeGIypev"
+Received: from phl-compute-05.internal (phl-compute-05.phl.internal [10.202.2.45])
+	by mailfhigh.phl.internal (Postfix) with ESMTP id 7BE0211401B7;
+	Thu,  2 Jan 2025 14:44:02 -0500 (EST)
+Received: from phl-mailfrontend-02 ([10.202.2.163])
+  by phl-compute-05.internal (MEProxy); Thu, 02 Jan 2025 14:44:02 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=astier.eu; h=cc
+	:cc:content-transfer-encoding:content-type:date:date:from:from
+	:in-reply-to:message-id:mime-version:reply-to:subject:subject:to
+	:to; s=fm2; t=1735847042; x=1735933442; bh=MFKdMWA1jCKS8kqfXxlIq
+	K1Qm4flu81xnetQoPy74M0=; b=Fpq6mP/zUX8H8BJAWtcus06Qx2a7AvIY91dv9
+	oeeNpQyGAlACb/EQGh+tTvVk4gekR4IonnsrVyLYnoat7MuuCAy1GVyKNbc3zZ+m
+	TBAE51GYKTfrhr4h+ENQ8+jR3nKZf802zn3YvNiy3rRoLvRFAV9IkaCE6e+tnW9n
+	PjuX+otIdljKxHEegFhueofnlZC7a7SUBpk6oKdOu8Juixs0pABqGTDsCapR8/b0
+	InHYJU+ODASH6TmcHaD3hm1/VQj5w1qn2mR5Mu5pluo8hmTouvyJpiGaBL7+TINz
+	kCyq7L3nR85qwdRwGeO9UvUQTwWq+OuRd16SADyhqjNdkrJZg==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:date:date:feedback-id:feedback-id:from:from
+	:in-reply-to:message-id:mime-version:reply-to:subject:subject:to
+	:to:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=
+	1735847042; x=1735933442; bh=MFKdMWA1jCKS8kqfXxlIqK1Qm4flu81xnet
+	QoPy74M0=; b=IeGIypevCCbOTZ0VBsTpIaSfpTo9LkBOklUldJNYRwRyyVVz36g
+	Y0D8BTRxHB/v4ZppKN0kAg9+R3bPTM7ksy55Q2uGt3VMd7RXTobpkBeHlCJOH+7S
+	YTMVezy3zbFaF/9E21Wqj8PScTnDTHAr6MgVj9Og85tIZRjziOdajqTUwNu+1grI
+	Dm4FUusAYtgSk7xNoRysPwL8I+qaHSqSTvS5S2GjlUQxI0EAG7gMjRa5PXqP7RmP
+	Y1N+pdoDAUDBtsUNHvJi575wkfz4JIANocXN7IhtIRthojRWgSmAdxcqOba+dr47
+	cuwjcfeeh7lEee/oyVctKqbpEVbxerkA4Ag==
+X-ME-Sender: <xms:gex2ZxaDX70ToThA-WyQfT6e8FVEuznsShfVBtrdIy94BO4ixCIwug>
+    <xme:gex2Z4awrqVvC1oVs8Ak4RDj9lqSKwxg4dIqGUw-jQo051Q4YvckPzvnTz8mDJ-3_
+    WNG-J-Ck6e0nC-q-ec>
+X-ME-Received: <xmr:gex2Zz_l4WT_nVb7LgDTw3NDWRhRF0knXnNSq2Ur_uJnpqD8lCLxrpk5eAegNaD6iTiTNEEk861QOjAPUhEFag>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefuddrudefvddguddvlecutefuodetggdotefrod
+    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpggftfghnshhusghstghrihgsvgdp
+    uffrtefokffrpgfnqfghnecuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivg
+    hnthhsucdlqddutddtmdenucfjughrpefhvfevufffkffoggfgsedtkeertdertddtnecu
+    hfhrohhmpeetnhhishhsvgcutehsthhivghruceorghnihhsshgvsegrshhtihgvrhdrvg
+    huqeenucggtffrrghtthgvrhhnpeegffdvuefgueetteeujedugeefudelleeludeghfeg
+    hfegveffjeeggeeiffeffeenucffohhmrghinhepihhnthgvlhdrtghomhdpghhithhhuh
+    gsrdgtohhmnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhho
+    mheprghnihhsshgvsegrshhtihgvrhdrvghupdhnsggprhgtphhtthhopeekpdhmohguvg
+    epshhmthhpohhuthdprhgtphhtthhopehplhgrthhfohhrmhdqughrihhvvghrqdigkeei
+    sehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhinhhugidqkhgvrhhnvg
+    hlsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtoheprghnihhsshgvsegrshht
+    ihgvrhdrvghupdhrtghpthhtohepjhhithhhuhdrjhhoshgvphhhsehinhhtvghlrdgtoh
+    hmpdhrtghpthhtoheprghshhhokhdrrhgrjhdrlhhinhhugiesghhmrghilhdrtghomhdp
+    rhgtphhtthhopehtohhnhidrlhhutghksehinhhtvghlrdgtohhmpdhrtghpthhtohephh
+    guvghgohgvuggvsehrvgguhhgrthdrtghomhdprhgtphhtthhopehilhhpohdrjhgrrhhv
+    ihhnvghnsehlihhnuhigrdhinhhtvghlrdgtohhm
+X-ME-Proxy: <xmx:gex2Z_qhHCVm8h9DU4YZz4mdQVnUbpcmLyazcAnprC0hOFiGYlsWcg>
+    <xmx:gex2Z8pXc-FrKB2dYIQgxfxXQCQOR2OBLtYtz3SWZVw92oz0y7o5BA>
+    <xmx:gex2Z1R5GjoNbahTa1tKhZx4JR1hR-YjnqJL7QEpUnPOWTwYh2axog>
+    <xmx:gex2Z0qyVKr19jtJaULCfQW2nnXga-7EQ2nvmIUXOLBwL9AsXJMBOA>
+    <xmx:gux2Z4ebYBlWTm9wOWEb2usFnFwqzsi25DfV0gyqsGsLBph6w3AWBTlO>
+Feedback-ID: iccec46d4:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Thu,
+ 2 Jan 2025 14:44:00 -0500 (EST)
+From: Anisse Astier <anisse@astier.eu>
+To: platform-driver-x86@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Cc: Anisse Astier <anisse@astier.eu>,
+	Jithu Joseph <jithu.joseph@intel.com>,
+	Ashok Raj <ashok.raj.linux@gmail.com>,
+	Tony Luck <tony.luck@intel.com>,
+	Hans de Goede <hdegoede@redhat.com>,
+	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Subject: [PATCH] platform/x86/intel/ifs: Update documentation to match current availability of firmware images
+Date: Thu,  2 Jan 2025 20:43:57 +0100
+Message-ID: <20250102194358.33029-1-anisse@astier.eu>
+X-Mailer: git-send-email 2.47.1
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <e5618537-a7ad-42e2-99d8-178ebc59192b@gmx.de>
+Content-Transfer-Encoding: 8bit
 
-On Thu, Jan 02, 2025 at 04:50:05PM +0100, Armin Wolf wrote:
-> Am 29.12.24 um 20:44 schrieb Kurt Borja:
-> 
-> > Hi!
-> > 
-> > Happy holidays. :)
-> 
-> Hi,
-> 
-> i just noticed that your patch are missing the "platform/x86:" prefix. Please add this prefix
-> for the next patch revision.
+Firmware images necessary for the In-field scan[1] functionality are not
+available at the moment[2], and require having access to at least an
+Intel customer account[3].
 
-I will.
+Update documentation to match current state, it can be updated again
+when the images are finally published.
 
-Thanks again for your review Armin!
+[1] https://www.intel.com/content/www/us/en/support/articles/000099537/processors/intel-xeon-processors.html
+[2] https://cdrdv2.intel.com/v1/dl/getContent/826383?explicitVersion=true
+[3] https://www.intel.com/content/www/us/en/secure/design/confidential/software-kits/kit-details.html?kitId=815180
 
-~ Kurt
+Signed-off-by: Anisse Astier <anisse@astier.eu>
+---
+I realize Intel had a few troubled years, and that having this feature
+in the kernel must be quite helpful to some users. But right now, it
+cannot be used unless one has a commercial relationship with Intel.
 
-> 
-> Thanks,
-> Armin Wolf
-> 
-> > 
-> > ~ Kurt
-> > ---
-> > v1 -> v2:
-> > 
-> > [2/20]
-> >   - Small correction in commit message
-> > 
-> > [5/20]
-> >   - Define the sysfs attributes without macros
-> > 
-> > [6/20]
-> >   - Reworded commit title
-> >   - Reorder variables in previous WMAX methods too
-> >   - Standarized sysfs method names in hdmi, amplifier and deepsleep
-> >     groups
-> >   - Dropped Armin's Reviewed-by tag because this patch changed a lot
-> > 
-> > [7/20]
-> >   - Return -ENOMEM in case priv allocation fails in alienfx_probe()
-> >   - Assign priv and platdata on variable declaration
-> >   - Drop intermediate *leds in alienfx_probe()
-> >   - Add quirk_entry to state container
-> >   - Use quirks from priv on hdmi_mux, amplifier, deepslp visibility
-> >     methods, to eventually be able to move these groups into
-> >     alienware-wmi-wmax.c
-> >   - Set PROBE_FORCE_SYNCHRONOUS to platform_driver, to avoid racing to
-> >     drvdata after using device_create_groups on [8/20]
-> > 
-> > [8/20]
-> >   - Create hdmi, amplifier, deepslp sysfs groups on wmax's probe
-> > 
-> > [9/20]
-> >   - Assign priv on variable declaration
-> >   - Directly return create thermal_profile() in alienware_awcc_setup()
-> > 
-> > [10/20]
-> >   - Refactored alienware_wmi_method following Armin's comments
-> >   - Fix legacy_wmi_update_led logic
-> > 
-> > [13/20]
-> >   - Split DMI table lower in the file
-> >   - Rename quirk_entry -> alienfx_quirks
-> >   - Rename awcc_features -> awcc_quirks
-> >   - Make hdmi_mux, amplifier and deepslp `bool`
-> > 
-> > [16/20]:
-> >   - Only add common resources on alienware.h
-> > 
-> > [17/20]
-> >   - Reworded commit message: now mentions some blocks were reordered
-> >   - Move #include <linux/dmi.h> where it belongs alphabetically
-> >   - Included hdmi, amplifier, deepslp groups in alienware-wmi-wmax.c
-> > 
-> > [18/20]
-> >   - static inline init functions in case drivers are not compiled
-> >   - Return errno in case drivers are not compiled
-> > 
-> > v1: https://lore.kernel.org/platform-driver-x86/20241221055917.10555-1-kuurtb@gmail.com/
-> > 
-> > Kurt Borja (20):
-> >    alienware-wmi: Remove unnecessary check at module exit
-> >    alienware-wmi: Move Lighting Control State
-> >    alienware-wmi: Modify parse_rgb() signature
-> >    alienware-wmi: Improve hdmi_mux, amplifier and deepslp group creation
-> >    alienware-wmi: Improve rgb-zones group creation
-> >    alienware_wmi: General cleanup of WMAX methods
-> >    alienware-wmi: Add a state container for LED control feature
-> >    alienware-wmi: Add WMI Drivers
-> >    alienware-wmi: Add a state container for thermal control methods
-> >    alienware-wmi: Refactor LED control methods
-> >    alienware-wmi: Refactor hdmi, amplifier, deepslp methods
-> >    alienware-wmi: Refactor thermal control methods
-> >    alienware-wmi: Split DMI table
-> >    MAINTAINERS: Update ALIENWARE WMI DRIVER entry
-> >    platform/x86: Rename alienware-wmi.c
-> >    platform/x86: Add alienware-wmi.h
-> >    platform-x86: Split the alienware-wmi driver
-> >    platform/x86: dell: Modify Makefile alignment
-> >    platform/x86: Update alienware-wmi config entries
-> >    alienware-wmi: Update header and module information
-> > 
-> >   MAINTAINERS                                   |    4 +-
-> >   drivers/platform/x86/dell/Kconfig             |   30 +-
-> >   drivers/platform/x86/dell/Makefile            |   45 +-
-> >   .../platform/x86/dell/alienware-wmi-base.c    |  492 +++++++
-> >   .../platform/x86/dell/alienware-wmi-legacy.c  |   98 ++
-> >   .../platform/x86/dell/alienware-wmi-wmax.c    |  775 ++++++++++
-> >   drivers/platform/x86/dell/alienware-wmi.c     | 1269 -----------------
-> >   drivers/platform/x86/dell/alienware-wmi.h     |  101 ++
-> >   8 files changed, 1518 insertions(+), 1296 deletions(-)
-> >   create mode 100644 drivers/platform/x86/dell/alienware-wmi-base.c
-> >   create mode 100644 drivers/platform/x86/dell/alienware-wmi-legacy.c
-> >   create mode 100644 drivers/platform/x86/dell/alienware-wmi-wmax.c
-> >   delete mode 100644 drivers/platform/x86/dell/alienware-wmi.c
-> >   create mode 100644 drivers/platform/x86/dell/alienware-wmi.h
-> > 
-> > 
-> > base-commit: 03f8e0e05510dad6377cd5ef029594d30e6c096d
+I am not advocating for the removal of this driver; this is just an
+update of the documentation to show that the publication of the firmware
+images necessary to use the driver might have fallen through the cracks,
+and might not happen soon.
+
+Kind regards,
+
+Anisse
+---
+ drivers/platform/x86/intel/ifs/ifs.h | 11 +++++++----
+ 1 file changed, 7 insertions(+), 4 deletions(-)
+
+diff --git a/drivers/platform/x86/intel/ifs/ifs.h b/drivers/platform/x86/intel/ifs/ifs.h
+index 5c3c0dfa1bf8..9a7ad9cc9d08 100644
+--- a/drivers/platform/x86/intel/ifs/ifs.h
++++ b/drivers/platform/x86/intel/ifs/ifs.h
+@@ -23,9 +23,11 @@
+  * IFS Image
+  * ---------
+  *
+- * Intel provides a firmware file containing the scan tests via
+- * github [#f1]_.  Similar to microcode there is a separate file for each
+- * family-model-stepping. IFS Images are not applicable for some test types.
++ * As of early 2025, Intel provides the firmware files containing the scan tests
++ * to select customers [#f1]_. When this driver was merged in 2022, it was
++ * announced that firmware files would be available via github [#f2]_. Similar
++ * to microcode there is a separate file for each family-model-stepping. IFS
++ * Images are not applicable for some test types.
+  * Wherever applicable the sysfs directory would provide a "current_batch" file
+  * (see below) for loading the image.
+  *
+@@ -125,7 +127,8 @@
+  * 2) Hardware allows for some number of cores to be tested in parallel.
+  * The driver does not make use of this, it only tests one core at a time.
+  *
+- * .. [#f1] https://github.com/intel/TBD
++ * .. [#f1] https://www.intel.com/content/www/us/en/support/articles/000099537/processors/intel-xeon-processors.html
++ * .. [#f2] https://github.com/intel/TBD
+  *
+  *
+  * Structural Based Functional Test at Field (SBAF):
+-- 
+2.47.1
+
