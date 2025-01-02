@@ -1,41 +1,41 @@
-Received: from mout.gmx.net (mout.gmx.net [212.227.15.15])
+Received: from mout.gmx.net (mout.gmx.net [212.227.15.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A355079E1;
-	Thu,  2 Jan 2025 16:07:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C1D4941C69;
+	Thu,  2 Jan 2025 16:16:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1735834060; cv=none; b=DHyxY/w10WnVLED+o3IOXwbdtTppYPVahiIPvNCipTVUVqNGaHph8Jrbe23FMZ+wfxUyLQny00HxdafLiRWS2OwBCGtK6xTHiCQqtcEqCok6G1JoNEULDikUl/k2yxQOJ5y/EOQwlKAmU095G46Mw3KrFZjJP3CNhpaB8Mrndo8=
+	t=1735834591; cv=none; b=eKqluLo1TVyru4OiLVS4sOqDri07TtrF2gHaXU99+xaMu+EZgECWiRUyRZB6INcb6Y3p/5rrrl53SN3pWpkuIsXiQY+dLl4J+QSQrZwUX+J8oox39271Xyvia4dq7Xsjz13btVXgBnrInDbyu1XI/alfKVaC5R31ek/ZVCqiFOg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1735834060; c=relaxed/simple;
-	bh=4uwxRzbxPBCRrdOkIie1gbsiKyQYUVmG/Q0Og17PyQ8=;
+	s=arc-20240116; t=1735834591; c=relaxed/simple;
+	bh=MYjVpgRPiaECt0isrSPs0fGEApQPfG2bRlROKXEX9+c=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ZIWY2pdd25UD/kDMLNonmpfQC6JvJD1ajnJkTJtbAEhWGx2B5Q0AZhDGVKSzkiSPCg1p6J2N2K1ueOHZzeVQ4BFiIrUMXO4OWxbRVDfMjQqg/Dz8j20iVIFNwtAeAJosl5WRJR6+zUzShyamTNrMMNZTy2pJytLEcDRUihSXni4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b=FQqO36jp; arc=none smtp.client-ip=212.227.15.15
+	 In-Reply-To:Content-Type; b=s6sDjOtMn/9egvMm1BrNexiT2mUBgcIyDk27Tw7Xvd1TEB/tWFJajLS+d6r6i4Pc3sN8haeZ4pGDCfht6HDuLGiWDwxsq/xb+JGNAnq0Qlx/tJsX8W5fQMz9NaxjEtI7+vXnD0Di3UqDcRLreogMobtBBKAQcv3b+w0SNMw0jPA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b=a4MZjoZZ; arc=none smtp.client-ip=212.227.15.18
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b="FQqO36jp"
+	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b="a4MZjoZZ"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.de;
-	s=s31663417; t=1735834041; x=1736438841; i=w_armin@gmx.de;
-	bh=7Wjze9MbDnag0U4DWvgz63gMQQJyLplO8+Tn5YcKDdg=;
+	s=s31663417; t=1735834584; x=1736439384; i=w_armin@gmx.de;
+	bh=aIfsWFdq7SlUTaHVCF1V7nwal9SWBHD4hjLFh08xcHA=;
 	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:To:Cc:
 	 References:From:In-Reply-To:Content-Type:
 	 Content-Transfer-Encoding:cc:content-transfer-encoding:
 	 content-type:date:from:message-id:mime-version:reply-to:subject:
 	 to;
-	b=FQqO36jpzuP5sPpaAInXgYC/5a2ODZS/8FNnnObyx+7QLJ5Uwcb77qVUr02J1QNI
-	 vaj27OeNjhDIVK+zCbIh2eID7C25or/bjxcco1/JE0k4DpHoEEHJa4ynQnj/8FcQJ
-	 sv6H2pt+LMpJIUTzz7D7s9ydzNSS9UV3VCiHrbWXY20RcBxWp0omPPlstKC/FkWbq
-	 6xu4ip7cQ/C0f2B9dFUIpbM/SOrKgtN4rcsBxR3YaN5jLqKgIyU8bqnx7QITM9I0J
-	 FJl8LpNYTf21OWQpa+XmHPrT0xzqtNNhxyJAk6RGgTPULKAXKLZIUfdwcC8eIE2cr
-	 6Xrr1K4TnJ2h809wTw==
+	b=a4MZjoZZnBOKK+niPyPi5YkeVwK066iFIEHbyjjQoG0+7/rEmlrqXvUJk88UexVI
+	 YTY72tai0Tbd3IRuKJnbbpfIHO8jthbVHM9s131+Q5zvkmQNdu7SYo0itwaN03Rw8
+	 MWvntI3dmMs8rTO54UmywatSF3PIwwdTSEYYMcwZqGaN1gFI/qxlE+m/LumL5PIgl
+	 Y8nCBiC0f/9EpOHKIJx+y7U/lSDSysHUe1RMkwz/RFqZEBTMRhWBz3wTBOFsTi19R
+	 aTLjJY+1nurseJzH66ytMKkPJ9qqfQMFIpiRy8fSgCBavGECBvpm4a/PtIt861NAi
+	 FBku1YCS9qjCfK7F3Q==
 X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
 Received: from [192.168.0.14] ([91.14.230.110]) by mail.gmx.net (mrgmx004
- [212.227.17.190]) with ESMTPSA (Nemesis) id 1M5wPh-1tQskd3rDv-006fG0; Thu, 02
- Jan 2025 17:07:21 +0100
-Message-ID: <50b0b025-87ad-4093-b525-f95a22b8f124@gmx.de>
-Date: Thu, 2 Jan 2025 17:07:16 +0100
+ [212.227.17.190]) with ESMTPSA (Nemesis) id 1N0oFz-1tfft43ecP-00x76D; Thu, 02
+ Jan 2025 17:16:23 +0100
+Message-ID: <0cd23fcd-132d-437e-a893-eecc2f8c643c@gmx.de>
+Date: Thu, 2 Jan 2025 17:16:21 +0100
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -43,362 +43,351 @@ List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 07/20] alienware-wmi: Add a state container for LED
- control feature
+Subject: Re: [PATCH v2 08/20] alienware-wmi: Add WMI Drivers
 To: Kurt Borja <kuurtb@gmail.com>, platform-driver-x86@vger.kernel.org
 Cc: Dell.Client.Kernel@dell.com, hdegoede@redhat.com,
  ilpo.jarvinen@linux.intel.com, linux-kernel@vger.kernel.org,
  mario.limonciello@amd.com
 References: <20241229194506.8268-2-kuurtb@gmail.com>
- <20241229194506.8268-9-kuurtb@gmail.com>
+ <20241229194506.8268-10-kuurtb@gmail.com>
 Content-Language: en-US
 From: Armin Wolf <W_Armin@gmx.de>
-In-Reply-To: <20241229194506.8268-9-kuurtb@gmail.com>
+In-Reply-To: <20241229194506.8268-10-kuurtb@gmail.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:HIv0PBt977rQ4xkyaVcww9DOI7UJpInce4Zq9fIN3eLbGbxjhBg
- kJlpuNmCNBiIkgx5t8MlBvRVJ3ODQ2TswUJlPUUhLdRUhXTjkgHASaVzIw2UNinKB9YAwGc
- VzxGMu7Il5ByuoUzSaDvYOYPp8sUGEJ6u9vozyk/h2Zh10HQu8X5MoXsetfylo0nJ6OgBzu
- SXs9RR1h08ol+dU9C3mTA==
+X-Provags-ID: V03:K1:4PKizK+sw7mDp3r03QUQVcmUgEqMZtCMvxZiwWgBMDRYP41aqAP
+ tb+X6chlMNUMlpC/IaMW7on8i2PKZb0Muey6Zxk3VM+cVMtDRfgHNbeJ9dEB/BoG6dmWh7+
+ 9WKWzDIHJ6dO6mvrjkMEZ0zpxUFw+PWUHsnQgPO9TFDLLg+XjIwmfV4kwDR8WiSyP8rHRVN
+ hNa6Udm+xCJbs0FNzUvHw==
 X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:jVWGFnvnNuU=;XuKTIDO8rvABvJwt55+bFfPs5Ad
- FRueFVeKhShomDhyswzFhEAEOdyd0JOQMu1oVM2Rb+QEENTCdOYyFlwz2mZUtQrs/vdEdehpD
- o+eS3sES8HawzAu7PbH+UQhTfc4Dnoq8ehCqQkj5fHCyjkixzmIfV/N4T/CgaelqyF0PZ3fPc
- AushoL2VGgiDaJyYV1CtfHJd9CTWUd9Re9InQFujEz68Oj4fJu1LRfhxPipqqWNw7msm/lq5f
- Q3MsGXREM/CEEBMGraha5qHNGESb4TBJ5Xe4hBVO/mEvmbQISoNO+MAsqoEycZEFLjdqfJE1w
- UE97uUMgo88Pw+nIxWpUPhe0IlGCneJnMT1uv74+lX3phWz+M1D+wjzD9IwW5OGVWb9lmrKXN
- zj8WgwjnJxWPP6LFAFJ0CzXIkQYg+dcsGau0vxehmkRo4TtglOBF+Zs0IyjzihPVA0YQvYdrz
- VOy85FAb0yG6XPV7IE4yP18EvADLmNbPccVPFKIkHbLlOl2yvyE3eSL5r3OmInTDYa6JRXdrp
- MuaLKoccJIcjteJemzfuyp+jKlE4co/1Vi2vZSsmcYe9wKKABOo6LCkuZxjpxzzU+1mAj/bFt
- P2nXKLtI5SDDQO7N/hOEiKMcO8Oy2MIYyRlgGb895gY3TKmZn+y5+SGkbOVD+rFrsfxHUulcc
- r632EeGFyySIVty03VjYTn6vchlDBQGx9cPYdp7/zz0n+xzlWq22A3G+U2ch2qR4VVsAGPHPE
- xNbDrZ1QYX+pzDHwlfYSmCCevJXcmwoG6UZPrOL5Duuyim10SnUw1smTDIqjsSPylyAY0xJP+
- cQ3OeLeqhTmu3+8YS/hEVstxnPH+A3lk10ngFm+YFvrnDcb1yDdzia9qvqCnzThjK9pgwPUh5
- 3XLJprC+oEzxn1/dcqvZoIuEVlex5OZwmO/kqieGDuf5AJXVCrYiI56f0syZNSTc/JA/4znYf
- dCE5b9v1GTuNJv9CQOhkHhtorgrc8IH1zGQ6IDUEszMwLa6kJ8R1rUwOW3VNr+hngYk1pONfz
- c+O0HFbuurrcZY4iu9/t/etyjG8Q6Ddq2gpcGnYRmhwy2ITfzum+/ITHCqT1Eah1dribKe7uK
- Fr87kTKoVDG51l/bpmmuU9uk3l1QLL
+UI-OutboundReport: notjunk:1;M01:P0:vwL3TshHFG0=;Cusq2iopEe8+64RW/jZyeZH+/tS
+ QgE31p4FxfJ3lFiKyc71zl2trHjLcsBaEtH7sF+AsWKgBc4DVqEdN2Q94jn1F6ScWLR1EXaWv
+ nUDCczFX1ZNUu1bIXTKBVw3i4fFviU/S+gBdIoxVQ1YcyxEY7tILId4Pm3K2VO+hF3b6+Vt1g
+ m6Ahs9xT2Z2uiZTU9IWM+Kc8sbbSCLD5hkyY2gtm2IwbzQ+Z9JsuvgT+8tmpIZTpycGM5yvaL
+ R8bLX0sciTRPiMoU0b/ffswc4PYpUJpjhsUjLeIPE/xerYLwo/TsHwAIQcRIkqRUCbQd2t/mo
+ qEwOT8GonUZHZw0Fu1RmLLRh3VKvk1t7GNKL81T85O1M8NFLML+sXXlHJeTDlseNKfndKXPuv
+ Xvzt+ZszYN0/JCQkmxA1CGrfRM3slO8DRL3aSaOjfGdzCgLaWY1uvfMGhG8ndHLryAbSsOUhB
+ 2QcjRMlqhJa2Jt2prO3J3Ho09C1vWj7uiyBmvmlEtPSYs9DEICxKQec7ZnC215s7sPu0rqZ1f
+ OI+v5imRUWSmg8JWUqd1mPpt64MXfhLteEM/SZyaH5noP/SXc4I7Ms6euFx5SClo90ZjeU7/r
+ pXsZZSPbbM60k3dAsPyDiOoAJa8ExJLym2H4gj6Qi7o+R/+ux2f1aZlhYztIDrFCh5lNbpC7h
+ IhHwOWtJx3O+kPpuKj0rTK8DVUpqz/dl5hINuGmISKp0r6g4CGCs3O+Smz/fWh2OUhxhr1EyC
+ S+X/R4B4/Pk66+xMZfTLKr7nwSxWmz3LV5BGubQi6UIFIS5+ULIKiVgpzuJj3LtorhJrthCWM
+ NnTo3zv7gvYN7H0GFW2Hz5v9un8qzxmO84e/QveYCOGvZ2Z4rnZ+1Q3gUhk/B3r9kl4GGoKKZ
+ otaGYtIt3mnJZH0TTFqGWqoXwPXY8h9D4dseSYB8AY0FpULTUMAUwYjitO/4I87nACJaU2jcY
+ /Kt+De1QLKR8/52lT8AayIaTOqyWnzwVmQNts/BmvHNHuJ3+jtGqHI1IcUYhWD4hgjV8XAJLv
+ SSMik7lXuUU89++vBXKfGYznIQro4YXnWgjxTOXQHV+yaWQtLT+e7NZarCIbpxNEkQ18v7qVx
+ OgXM+0KRJ6RbdB4urPHykVDZ/eQrKK
 
 Am 29.12.24 um 20:44 schrieb Kurt Borja:
 
-> Add a state container for the "alienware-wmi" platform device and
-> initialize it on the new alienfx_probe(). Migrate all LED control functi=
-ons
-> to use this state container, as well as hdmi, amplifier, deepslp group
-> visibility methods, to support upcoming file split.
+> Add WMI drivers for LEGACY and WMAX devices.
 >
-> Additionally move the led_classdev registration to the platform driver
-> probe and make it device managed.
+> This involves moving platform driver and device registration to a helper
+> function, which is now called from the driver's preferred WMI device
+> driver probe. However this is only done if !quirks->thermal because
+> newer WMAX interface doesn't support any of the features exposed by this
+> device.
 >
-> Drop alienware_zone_init() and alienware_zone_exit() because they are no
-> longer needed.
+> Only one driver is registered on module initialization to prevent
+> registering duplicate platform driver and device.
+>
+> Additionally, create_thermal_profile() now takes wmi_device * instead of
+> platform_device *.
 >
 > Signed-off-by: Kurt Borja <kuurtb@gmail.com>
 > ---
->   drivers/platform/x86/dell/alienware-wmi.c | 135 +++++++++++++---------
->   1 file changed, 79 insertions(+), 56 deletions(-)
+>   drivers/platform/x86/dell/alienware-wmi.c | 195 +++++++++++++++++-----
+>   1 file changed, 155 insertions(+), 40 deletions(-)
 >
 > diff --git a/drivers/platform/x86/dell/alienware-wmi.c b/drivers/platfor=
 m/x86/dell/alienware-wmi.c
-> index 2c17160473a6..88d4046ed45f 100644
+> index 88d4046ed45f..87a7997579c9 100644
 > --- a/drivers/platform/x86/dell/alienware-wmi.c
 > +++ b/drivers/platform/x86/dell/alienware-wmi.c
-> @@ -404,14 +404,20 @@ struct wmax_u32_args {
->   	u8 arg3;
+> @@ -15,6 +15,7 @@
+>   #include <linux/platform_profile.h>
+>   #include <linux/dmi.h>
+>   #include <linux/leds.h>
+> +#include <linux/wmi.h>
+>
+>   #define LEGACY_CONTROL_GUID		"A90597CE-A997-11DA-B012-B622A1EF5492"
+>   #define LEGACY_POWER_CONTROL_GUID	"A80593CE-A997-11DA-B012-B622A1EF549=
+2"
+> @@ -39,8 +40,6 @@
+>   MODULE_AUTHOR("Mario Limonciello <mario.limonciello@outlook.com>");
+>   MODULE_DESCRIPTION("Alienware special feature control");
+>   MODULE_LICENSE("GPL");
+> -MODULE_ALIAS("wmi:" LEGACY_CONTROL_GUID);
+> -MODULE_ALIAS("wmi:" WMAX_CONTROL_GUID);
+>
+>   static bool force_platform_profile;
+>   module_param_unsafe(force_platform_profile, bool, 0);
+> @@ -413,7 +412,10 @@ struct alienfx_priv {
+>   	u8 lighting_control_state;
 >   };
 >
-> +struct alienfx_priv {
-> +	struct platform_device *pdev;
-> +	struct quirk_entry *quirks;
-> +	struct led_classdev global_led;
-> +	struct color_platform colors[4];
-> +	u8 global_brightness;
-> +	u8 lighting_control_state;
+> -static struct platform_device *platform_device;
+> +struct alienfx_platdata {
+> +	struct wmi_device *wdev;
 > +};
 > +
->   static struct platform_device *platform_device;
-> -static struct color_platform colors[4];
 >   static struct platform_profile_handler pp_handler;
 >   static enum wmax_thermal_mode supported_thermal_profiles[PLATFORM_PROF=
 ILE_LAST];
 >
->   static u8 interface;
-> -static u8 lighting_control_state;
-> -static u8 global_brightness;
->
->   /*
->    * Helpers used for zone control
-> @@ -443,7 +449,7 @@ static int parse_rgb(const char *buf, struct color_p=
-latform *colors)
->   /*
->    * Individual RGB zone control
->    */
-> -static int alienware_update_led(u8 location)
-> +static int alienware_update_led(struct alienfx_priv *priv, u8 location)
->   {
->   	int method_id;
->   	acpi_status status;
-> @@ -453,21 +459,21 @@ static int alienware_update_led(u8 location)
->   	struct wmax_led_args wmax_basic_args;
->   	if (interface =3D=3D WMAX) {
->   		wmax_basic_args.led_mask =3D 1 << location;
-> -		wmax_basic_args.colors =3D colors[location];
-> -		wmax_basic_args.state =3D lighting_control_state;
-> +		wmax_basic_args.colors =3D priv->colors[location];
-> +		wmax_basic_args.state =3D priv->lighting_control_state;
->   		guid =3D WMAX_CONTROL_GUID;
->   		method_id =3D WMAX_METHOD_ZONE_CONTROL;
->
->   		input.length =3D sizeof(wmax_basic_args);
->   		input.pointer =3D &wmax_basic_args;
->   	} else {
-> -		legacy_args.colors =3D colors[location];
-> -		legacy_args.brightness =3D global_brightness;
-> +		legacy_args.colors =3D priv->colors[location];
-> +		legacy_args.brightness =3D priv->global_brightness;
->   		legacy_args.state =3D 0;
-> -		if (lighting_control_state =3D=3D LEGACY_BOOTING ||
-> -		    lighting_control_state =3D=3D LEGACY_SUSPEND) {
-> +		if (priv->lighting_control_state =3D=3D LEGACY_BOOTING ||
-> +		    priv->lighting_control_state =3D=3D LEGACY_SUSPEND) {
->   			guid =3D LEGACY_POWER_CONTROL_GUID;
-> -			legacy_args.state =3D lighting_control_state;
-> +			legacy_args.state =3D priv->lighting_control_state;
->   		} else
->   			guid =3D LEGACY_CONTROL_GUID;
->   		method_id =3D location + 1;
-> @@ -486,22 +492,26 @@ static int alienware_update_led(u8 location)
->   static ssize_t zone_show(struct device *dev, struct device_attribute *=
-attr,
->   			 char *buf, u8 location)
->   {
-> +	struct alienfx_priv *priv =3D dev_get_drvdata(dev);
-> +	struct color_platform *colors =3D &priv->colors[location];
-> +
->   	return sprintf(buf, "red: %d, green: %d, blue: %d\n",
-> -		       colors[location].red, colors[location].green,
-> -		       colors[location].blue);
-> +		       colors->red, colors->green, colors->blue);
->
+> @@ -1072,7 +1074,7 @@ static int thermal_profile_set(struct platform_pro=
+file_handler *pprof,
+>   	return wmax_thermal_control(supported_thermal_profiles[profile]);
 >   }
 >
->   static ssize_t zone_store(struct device *dev, struct device_attribute =
-*attr,
->   			  const char *buf, size_t count, u8 location)
+> -static int create_thermal_profile(struct platform_device *platform_devi=
+ce)
+> +static int create_thermal_profile(struct wmi_device *wdev)
 >   {
-> +	struct alienfx_priv *priv =3D dev_get_drvdata(dev);
-> +	struct color_platform *colors =3D &priv->colors[location];
->   	int ret;
+>   	enum platform_profile_option profile;
+>   	enum wmax_thermal_mode mode;
+> @@ -1121,7 +1123,7 @@ static int create_thermal_profile(struct platform_=
+device *platform_device)
+>   	pp_handler.profile_get =3D thermal_profile_get;
+>   	pp_handler.profile_set =3D thermal_profile_set;
+>   	pp_handler.name =3D "alienware-wmi";
+> -	pp_handler.dev =3D &platform_device->dev;
+> +	pp_handler.dev =3D &wdev->dev;
 >
-> -	ret =3D parse_rgb(buf, &colors[location]);
-> +	ret =3D parse_rgb(buf, colors);
->   	if (ret)
->   		return ret;
->
-> -	ret =3D alienware_update_led(location);
-> +	ret =3D alienware_update_led(priv, location);
->
->   	return ret ? ret : count;
+>   	return platform_profile_register(&pp_handler);
 >   }
-> @@ -569,9 +579,11 @@ static ssize_t lighting_control_state_show(struct d=
-evice *dev,
->   					   struct device_attribute *attr,
->   					   char *buf)
->   {
-> -	if (lighting_control_state =3D=3D LEGACY_BOOTING)
-> +	struct alienfx_priv *priv =3D dev_get_drvdata(dev);
-> +
-> +	if (priv->lighting_control_state =3D=3D LEGACY_BOOTING)
->   		return sysfs_emit(buf, "[booting] running suspend\n");
-> -	else if (lighting_control_state =3D=3D LEGACY_SUSPEND)
-> +	else if (priv->lighting_control_state =3D=3D LEGACY_SUSPEND)
->   		return sysfs_emit(buf, "booting running [suspend]\n");
+> @@ -1164,6 +1166,10 @@ static int alienfx_probe(struct platform_device *=
+pdev)
 >
->   	return sysfs_emit(buf, "booting [running] suspend\n");
-> @@ -581,6 +593,7 @@ static ssize_t lighting_control_state_store(struct d=
-evice *dev,
->   					    struct device_attribute *attr,
->   					    const char *buf, size_t count)
->   {
-> +	struct alienfx_priv *priv =3D dev_get_drvdata(dev);
->   	u8 val;
->
->   	if (strcmp(buf, "booting\n") =3D=3D 0)
-> @@ -592,9 +605,9 @@ static ssize_t lighting_control_state_store(struct d=
-evice *dev,
->   	else
->   		val =3D WMAX_RUNNING;
->
-> -	lighting_control_state =3D val;
-> +	priv->lighting_control_state =3D val;
->   	pr_debug("alienware-wmi: updated control state to %d\n",
-> -		 lighting_control_state);
-> +		 priv->lighting_control_state);
->
->   	return count;
->   }
-> @@ -651,43 +664,26 @@ static int wmax_brightness(int brightness)
->   static void global_led_set(struct led_classdev *led_cdev,
->   			   enum led_brightness brightness)
->   {
-> +	struct alienfx_priv *priv =3D container_of(led_cdev, struct alienfx_pr=
-iv,
-> +						 global_led);
->   	int ret;
-> -	global_brightness =3D brightness;
-> +
-> +	priv->global_brightness =3D brightness;
-> +
->   	if (interface =3D=3D WMAX)
->   		ret =3D wmax_brightness(brightness);
->   	else
-> -		ret =3D alienware_update_led(0);
-> +		ret =3D alienware_update_led(priv, 0);
->   	if (ret)
->   		pr_err("LED brightness update failed\n");
->   }
->
->   static enum led_brightness global_led_get(struct led_classdev *led_cde=
-v)
->   {
-> -	return global_brightness;
-> -}
-> -
-> -static struct led_classdev global_led =3D {
-> -	.brightness_set =3D global_led_set,
-> -	.brightness_get =3D global_led_get,
-> -	.name =3D "alienware::global_brightness",
-> -};
-> +	struct alienfx_priv *priv =3D container_of(led_cdev, struct alienfx_pr=
-iv,
-> +						 global_led);
->
-> -static int alienware_zone_init(struct platform_device *dev)
-> -{
-> -	if (interface =3D=3D WMAX) {
-> -		lighting_control_state =3D WMAX_RUNNING;
-> -	} else if (interface =3D=3D LEGACY) {
-> -		lighting_control_state =3D LEGACY_RUNNING;
-> -	}
-> -	global_led.max_brightness =3D 0x0F;
-> -	global_brightness =3D global_led.max_brightness;
-> -
-> -	return led_classdev_register(&dev->dev, &global_led);
-> -}
-> -
-> -static void alienware_zone_exit(struct platform_device *dev)
-> -{
-> -	led_classdev_unregister(&global_led);
-> +	return priv->global_brightness;
->   }
->
->   static acpi_status alienware_wmax_command(void *in_args, size_t in_siz=
-e,
-> @@ -792,7 +788,9 @@ static DEVICE_ATTR_RW(source);
->
->   static bool hdmi_group_visible(struct kobject *kobj)
->   {
-> -	return quirks->hdmi_mux;
-> +	struct alienfx_priv *priv =3D dev_get_drvdata(kobj_to_dev(kobj));
-> +
-> +	return priv->quirks->hdmi_mux;
->   }
->   DEFINE_SIMPLE_SYSFS_GROUP_VISIBLE(hdmi);
->
-> @@ -838,7 +836,9 @@ static DEVICE_ATTR_RO(status);
->
->   static bool amplifier_group_visible(struct kobject *kobj)
->   {
-> -	return quirks->amplifier;
-> +	struct alienfx_priv *priv =3D dev_get_drvdata(kobj_to_dev(kobj));
-> +
-> +	return priv->quirks->amplifier;
->   }
->   DEFINE_SIMPLE_SYSFS_GROUP_VISIBLE(amplifier);
->
-> @@ -906,7 +906,9 @@ static DEVICE_ATTR_RW(deepsleep);
->
->   static bool deepsleep_group_visible(struct kobject *kobj)
->   {
-> -	return quirks->deepslp;
-> +	struct alienfx_priv *priv =3D dev_get_drvdata(kobj_to_dev(kobj));
-> +
-> +	return priv->quirks->deepslp;
->   }
->   DEFINE_SIMPLE_SYSFS_GROUP_VISIBLE(deepsleep);
->
-> @@ -1133,6 +1135,33 @@ static void remove_thermal_profile(void)
->   /*
->    * Platform Driver
->    */
-> +static int alienfx_probe(struct platform_device *pdev)
-> +{
-> +	struct alienfx_priv *priv;
-> +
-> +	priv =3D devm_kzalloc(&pdev->dev, sizeof(*priv), GFP_KERNEL);
-> +	if (!priv)
-> +		return -ENOMEM;
-> +
-> +	platform_set_drvdata(pdev, priv);
-> +	priv->pdev =3D pdev;
-> +	priv->quirks =3D quirks;
-> +
-> +	if (interface =3D=3D WMAX)
-> +		priv->lighting_control_state =3D WMAX_RUNNING;
-> +	else if (interface =3D=3D LEGACY)
-> +		priv->lighting_control_state =3D LEGACY_RUNNING;
-> +
-> +	priv->global_led.name =3D "alienware::global_brightness";
-> +	priv->global_led.brightness_set =3D global_led_set;
-> +	priv->global_led.brightness_get =3D global_led_get;
-> +	priv->global_led.max_brightness =3D 0x0F;
-> +
-> +	priv->global_brightness =3D priv->global_led.max_brightness;
-> +
-> +	return devm_led_classdev_register(&pdev->dev, &priv->global_led);
-> +}
-> +
 >   static const struct attribute_group *alienfx_groups[] =3D {
 >   	&zone_attribute_group,
+> +	NULL
+> +};
+> +
+> +static const struct attribute_group *wmax_alienfx_groups[] =3D {
 >   	&hdmi_attribute_group,
-> @@ -1145,7 +1174,9 @@ static struct platform_driver platform_driver =3D =
-{
->   	.driver =3D {
->   		.name =3D "alienware-wmi",
->   		.dev_groups =3D alienfx_groups,
-> +		.probe_type =3D PROBE_FORCE_SYNCHRONOUS,
+>   	&amplifier_attribute_group,
+>   	&deepsleep_attribute_group,
+> @@ -1179,19 +1185,143 @@ static struct platform_driver platform_driver =
+=3D {
+>   	.probe =3D alienfx_probe,
+>   };
+>
+> -static int __init alienware_wmi_init(void)
+> +static int alienware_alienfx_setup(struct alienfx_platdata *pdata)
+>   {
+> +	struct platform_device *pdev;
+>   	int ret;
+>
+> -	if (wmi_has_guid(LEGACY_CONTROL_GUID))
+> -		interface =3D LEGACY;
+> -	else if (wmi_has_guid(WMAX_CONTROL_GUID))
+> -		interface =3D WMAX;
+> -	else {
+> -		pr_warn("alienware-wmi: No known WMI GUID found\n");
+> -		return -ENODEV;
+> +	ret =3D platform_driver_register(&platform_driver);
+> +	if (ret < 0)
+> +		return ret;
+> +
+> +	pdev =3D platform_device_register_data(NULL, "alienware-wmi",
+> +					     PLATFORM_DEVID_NONE, pdata,
+> +					     sizeof(*pdata));
+> +
+> +	if (IS_ERR(pdev)) {
+> +		platform_driver_unregister(&platform_driver);
+> +		return PTR_ERR(pdev);
+> +	}
+> +
+> +	dev_set_drvdata(&pdata->wdev->dev, pdev);
+> +
+> +	return 0;
+> +}
+> +
+> +static void alienware_alienfx_exit(struct wmi_device *wdev)
+> +{
+> +	struct platform_device *pdev =3D dev_get_drvdata(&wdev->dev);
+> +
+> +	platform_device_unregister(pdev);
+> +	platform_driver_unregister(&platform_driver);
+> +}
+> +
+> +/*
+> + * Legacy WMI driver
+> + */
+> +static int legacy_wmi_probe(struct wmi_device *wdev, const void *contex=
+t)
+> +{
+> +	struct alienfx_platdata pdata =3D {
+> +		.wdev =3D wdev,
+> +	};
+> +
+> +	return alienware_alienfx_setup(&pdata);
+> +}
+> +
+> +static void legacy_wmi_remove(struct wmi_device *wdev)
+> +{
+> +	alienware_alienfx_exit(wdev);
+> +}
+> +
+> +static struct wmi_device_id alienware_legacy_device_id_table[] =3D {
+> +	{ LEGACY_CONTROL_GUID, NULL },
+> +	{ },
+> +};
+> +MODULE_DEVICE_TABLE(wmi, alienware_legacy_device_id_table);
+> +
+> +static struct wmi_driver alienware_legacy_wmi_driver =3D {
+> +	.driver =3D {
+> +		.name =3D "alienware-wmi-alienfx",
+> +		.probe_type =3D PROBE_PREFER_ASYNCHRONOUS,
+> +	},
+> +	.id_table =3D alienware_legacy_device_id_table,
+> +	.probe =3D legacy_wmi_probe,
+> +	.remove =3D legacy_wmi_remove,
+> +};
+> +
+> +static int __init alienware_legacy_wmi_init(void)
+> +{
+> +	return wmi_driver_register(&alienware_legacy_wmi_driver);
+> +}
+> +
+> +static void __exit alienware_legacy_wmi_exit(void)
+> +{
+> +	wmi_driver_unregister(&alienware_legacy_wmi_driver);
+> +}
+> +
+> +/*
+> + * WMAX WMI driver
+> + */
+> +static int wmax_wmi_probe(struct wmi_device *wdev, const void *context)
+> +{
+> +	struct alienfx_platdata pdata =3D {
+> +		.wdev =3D wdev,
+> +	};
+> +	struct platform_device *pdev;
+> +	int ret;
+> +
+> +	if (quirks->thermal) {
+> +		ret =3D create_thermal_profile(wdev);
+> +	} else {
+> +		ret =3D alienware_alienfx_setup(&pdata);
+> +		if (ret < 0)
+> +			return ret;
+> +
+> +		pdev =3D dev_get_drvdata(&wdev->dev);
+> +		ret =3D device_add_groups(&pdev->dev, wmax_alienfx_groups);
 
-Can you please explain to me why this is exactly necessary?
+If device_add_groups() fails you need to call alienware_alienfx_exit().
+
+>   	}
+>
+> +	return ret;
+> +}
+> +
+> +static void wmax_wmi_remove(struct wmi_device *wdev)
+> +{
+> +	if (quirks->thermal)
+> +		remove_thermal_profile();
+> +	else
+> +		alienware_alienfx_exit(wdev);
+
+Missing call to device_remove_groups().
+
+> +}
+> +
+> +static struct wmi_device_id alienware_wmax_device_id_table[] =3D {
+> +	{ WMAX_CONTROL_GUID, NULL },
+> +	{ },
+> +};
+> +MODULE_DEVICE_TABLE(wmi, alienware_wmax_device_id_table);
+> +
+> +static struct wmi_driver alienware_wmax_wmi_driver =3D {
+> +	.driver =3D {
+> +		.name =3D "alienware-wmi-wmax",
+> +		.probe_type =3D PROBE_PREFER_ASYNCHRONOUS,
+> +	},
+> +	.id_table =3D alienware_wmax_device_id_table,
+> +	.probe =3D wmax_wmi_probe,
+> +	.remove =3D wmax_wmi_remove,
+> +};
+> +
+> +static int __init alienware_wmax_wmi_init(void)
+> +{
+> +	return wmi_driver_register(&alienware_wmax_wmi_driver);
+> +}
+> +
+> +static void __exit alienware_wmax_wmi_exit(void)
+> +{
+> +	wmi_driver_unregister(&alienware_wmax_wmi_driver);
+> +}
+> +
+> +static int __init alienware_wmi_init(void)
+> +{
+> +	int ret;
+> +
+>   	dmi_check_system(alienware_quirks);
+>   	if (quirks =3D=3D NULL)
+>   		quirks =3D &quirk_unknown;
+> @@ -1206,43 +1336,28 @@ static int __init alienware_wmi_init(void)
+>   			pr_warn("force_gmode requires platform profile support\n");
+>   	}
+>
+> -	ret =3D platform_driver_register(&platform_driver);
+> -	if (ret)
+> -		goto fail_platform_driver;
+> -	platform_device =3D platform_device_alloc("alienware-wmi", PLATFORM_DE=
+VID_NONE);
+> -	if (!platform_device) {
+> -		ret =3D -ENOMEM;
+> -		goto fail_platform_device1;
+> +	if (wmi_has_guid(WMAX_CONTROL_GUID)) {
+> +		interface =3D WMAX;
+> +		ret =3D alienware_wmax_wmi_init();
+> +	} else {
+> +		interface =3D LEGACY;
+> +		ret =3D alienware_legacy_wmi_init();
+>   	}
+> -	ret =3D platform_device_add(platform_device);
+> -	if (ret)
+> -		goto fail_platform_device2;
+>
+> -	if (quirks->thermal) {
+> -		ret =3D create_thermal_profile(platform_device);
+> -		if (ret)
+> -			goto fail_prep_thermal_profile;
+> -	}
+> +	if (ret < 0)
+> +		return ret;
+>
+>   	return 0;
+
+Please just return ret here.
 
 Thanks,
 Armin Wolf
 
->   	},
-> +	.probe =3D alienfx_probe,
->   };
->
->   static int __init alienware_wmi_init(void)
-> @@ -1193,15 +1224,8 @@ static int __init alienware_wmi_init(void)
->   			goto fail_prep_thermal_profile;
->   	}
->
-> -	ret =3D alienware_zone_init(platform_device);
-> -	if (ret)
-> -		goto fail_prep_zones;
 > -
->   	return 0;
+> -fail_prep_thermal_profile:
+> -	platform_device_del(platform_device);
+> -fail_platform_device2:
+> -	platform_device_put(platform_device);
+> -fail_platform_device1:
+> -	platform_driver_unregister(&platform_driver);
+> -fail_platform_driver:
+> -	return ret;
+>   }
 >
-> -fail_prep_zones:
-> -	alienware_zone_exit(platform_device);
-> -	remove_thermal_profile();
->   fail_prep_thermal_profile:
->   	platform_device_del(platform_device);
->   fail_platform_device2:
-> @@ -1216,7 +1240,6 @@ module_init(alienware_wmi_init);
+>   module_init(alienware_wmi_init);
 >
 >   static void __exit alienware_wmi_exit(void)
 >   {
-> -	alienware_zone_exit(platform_device);
->   	remove_thermal_profile();
->   	platform_device_unregister(platform_device);
->   	platform_driver_unregister(&platform_driver);
+> -	remove_thermal_profile();
+> -	platform_device_unregister(platform_device);
+> -	platform_driver_unregister(&platform_driver);
+> +	if (interface =3D=3D WMAX)
+> +		alienware_wmax_wmi_exit();
+> +	else
+> +		alienware_legacy_wmi_exit();
+>   }
+>
+>   module_exit(alienware_wmi_exit);
