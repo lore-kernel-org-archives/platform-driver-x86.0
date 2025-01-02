@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 642CD383;
-	Thu,  2 Jan 2025 03:44:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF92B29A2;
+	Thu,  2 Jan 2025 03:46:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1735789469; cv=none; b=hF2wcbJfGzJMpRZ4bW9W3cydYmqgebE5akiTSQZl2+GF5qbh2fvEismb4o4ucx2c+bvAHAwcrj9L5+c5CJwJ5PhEel6Awc13H8nO3BUkqjfyxl/20cc2WbvYwJSCyYzxu5T95aanFMiDiajkqeOdXh3S87fPawYa7UrivK9pIvk=
+	t=1735789571; cv=none; b=rypJALs5gL1Z/oWAMUydVidyaOiU1BewBcu4+d2YVkidCQOYClUsyu5n2LRxEyIynIjE5I+Hs+pDZhVIc5owCDH4iutIoRqL1lqyJTsYhepd7JWgq0AnOunUfz5H3U7/mrpqPdT8+e1fnkGOnnM9oVFvT2jdscCYX1TA0A8JOhg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1735789469; c=relaxed/simple;
-	bh=vUBQJ7nrfTuP4YEOaYkwtuRWTl/SlGbCA/+MO1JOees=;
+	s=arc-20240116; t=1735789571; c=relaxed/simple;
+	bh=+Rcy50iewJvYqGAzvWQQO23niLUs+XDnjYO4phK2mZc=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=K2C6PVOK+Q/0tGVATsORCVWqp5Rpqm0mWNsGMzXv5m+Xmathn5INQ5rKECc4mCdeNBpIWRIGVCXVvy9TcrzZM8PsJhuJF/z0u4gyjUv2pXWRc9mv6VVPC/Cy72bZwgsqwSPE+H/sXpX3U7m1ELT6DIAYW3J+VlY7Y5YXEGlBY48=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hR5nA6D3; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=twxYw0VuB3pxyDtqyqM2KbrHRWOb60BTfmpF/yheLz1y9gWKtUWzLKU0vIbd9jt37tKoHcJazmEL/DfBvXTTHueml70xSj98mU6rSi5OJ+3yJ9uuylTJgu/yzp8saPsPWs22ftjF9kQbEz1mp7Q7MQhR9WK0pTEqIOkdw2DycLg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OVlgS8zc; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hR5nA6D3"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 62456C4CED0;
-	Thu,  2 Jan 2025 03:44:27 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OVlgS8zc"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 46D9BC4CED0;
+	Thu,  2 Jan 2025 03:46:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1735789468;
-	bh=vUBQJ7nrfTuP4YEOaYkwtuRWTl/SlGbCA/+MO1JOees=;
+	s=k20201202; t=1735789571;
+	bh=+Rcy50iewJvYqGAzvWQQO23niLUs+XDnjYO4phK2mZc=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=hR5nA6D3gwIOtw6qJECy8ZGlMPzX6NeFK54QBwoVWAwvZsz1AvytHnNkHeGzaqUNd
-	 4InFlHYQsA8h+Ddzbgrfqljdb/+tZW/AWUZnlZ+U3zSN/VMjJIgQUPq77hj7dzXZtZ
-	 x05bMu8eesp03AG+lO6oDWzzFyxqSVeRI7ROFTQHSaWBIMYiY0IVA/9AzUDQwqKntW
-	 CqssPTJ/sFidmtzpjNvHC752GgfAMxIcISV6/Svhr7lRLm5r7J4DB/LR2MYz9IqUGr
-	 Yjz032HqSY2/ACnPMaXs0WhJTto3840A51fp+ENv3XcO/5u4HR2G0NqniLc4Tq4/qc
-	 UpaH6Nw1WCbtA==
-Message-ID: <d086937b-a6d8-493d-82f6-4f19609e63cb@kernel.org>
-Date: Wed, 1 Jan 2025 21:44:26 -0600
+	b=OVlgS8zcgfqQ7HZTiRRn77lZUbyRDQ9s211ydGMtyJS0CvVFKfCMHgSzl6nq3n3iO
+	 uMZ6r7JjyMzmKsaCzbxIew7tBEyVnfLRf3oL9UicOFZzdhYA5kfTs3/QAV0Oa4Jp35
+	 82n5ueVITbjtcSFWUXt7oeHRbEhPQALotcao9UfeWCIOVjSPJ8pQZ8IcynLS4XY0Rj
+	 Zm++VivWMLFC9sG6IV6MNsbaEUnGeKZHoJwrrz5hV4TBJIiocV8KjwMrQWbjgJDmNc
+	 XstOifuSpQTpOF2ISIFAlHs355DNxyI1QF/XCdFvA+zn0IdBdeRwn8btSCAYTz9ARf
+	 cWBv8eJGXFjTA==
+Message-ID: <235a507a-2b60-4ca9-babe-a2f6ef085321@kernel.org>
+Date: Wed, 1 Jan 2025 21:46:09 -0600
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -35,8 +35,7 @@ List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 3/4] platform/x86: Add Lenovo Capability Data 01 WMI
- Driver
+Subject: Re: [PATCH v2 1/4] platform/x86: Add lenovo-wmi drivers Documentation
 To: "Derek J. Clark" <derekjohn.clark@gmail.com>,
  Hans de Goede <hdegoede@redhat.com>,
  =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
@@ -48,274 +47,142 @@ Cc: Jonathan Corbet <corbet@lwn.net>, Luke Jones <luke@ljones.dev>,
  platform-driver-x86@vger.kernel.org, linux-doc@vger.kernel.org,
  linux-kernel@vger.kernel.org
 References: <20250102004854.14874-1-derekjohn.clark@gmail.com>
- <20250102004854.14874-4-derekjohn.clark@gmail.com>
+ <20250102004854.14874-2-derekjohn.clark@gmail.com>
 Content-Language: en-US
 From: Mario Limonciello <superm1@kernel.org>
-In-Reply-To: <20250102004854.14874-4-derekjohn.clark@gmail.com>
+In-Reply-To: <20250102004854.14874-2-derekjohn.clark@gmail.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 
 
 
 On 1/1/25 18:47, Derek J. Clark wrote:
-> Adds lenovo-wmi-capdata01.c which provides a driver for the
-> LENOVO_CAPABILITY_DATA_01 WMI data block that comes on "Other Method"
-> enabled hardware. Provides an interface for querying if a given
-> attribute is supported by the hardware, as well as its default_value,
-> max_value, min_value, and step increment.
+> Adds documentation for all lenovo-wmi* drivers.
 > 
 > v2:
-> - Use devm_kzalloc to ensure driver can be instanced, remove global
->    reference.
-> - Ensure reverse Christmas tree for all variable declarations.
-> - Remove extra whitespace.
-> - Use guard(mutex) in all mutex instances, global mutex.
-> - Use pr_fmt instead of adding the driver name to each pr_err.
-> - Remove noisy pr_info usage.
-> - Rename capdata_wmi to lenovo_wmi_cd01_priv and cd01_wmi to priv.
-> - Use list to get the lenovo_wmi_cd01_priv instance in
->    lenovo_wmi_capdata01_get as none of the data provided by the macros
->    that will use it can pass a member of the struct for use in
->    container_of.
+> - Update description of Custom Profile to include the need to manually
+>    set it.
+> - Remove all references to Legion hardware.
+> - Add section for lemovo-wmi-camera.c driver as it follows the same
+>    naming convention.
 > 
 > Signed-off-by: Derek J. Clark <derekjohn.clark@gmail.com>
+
+Reviewed-by: Mario Limonciello <superm1@kernel.org>
+
 > ---
->   MAINTAINERS                                 |   1 +
->   drivers/platform/x86/Kconfig                |  11 ++
->   drivers/platform/x86/Makefile               |   1 +
->   drivers/platform/x86/lenovo-wmi-capdata01.c | 131 ++++++++++++++++++++
->   drivers/platform/x86/lenovo-wmi.h           |  20 +++
->   5 files changed, 164 insertions(+)
->   create mode 100644 drivers/platform/x86/lenovo-wmi-capdata01.c
+>   Documentation/wmi/devices/lenovo-wmi.rst | 104 +++++++++++++++++++++++
+>   1 file changed, 104 insertions(+)
+>   create mode 100644 Documentation/wmi/devices/lenovo-wmi.rst
 > 
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index 8f8a6aec6b92..c9374c395905 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -13038,6 +13038,7 @@ LENOVO WMI drivers
->   M:	Derek J. Clark <derekjohn.clark@gmail.com>
->   L:	platform-driver-x86@vger.kernel.org
->   S:	Maintained
-> +F:	drivers/platform/x86/lenovo-wmi-capdata01.c
->   F:	drivers/platform/x86/lenovo-wmi-gamezone.c
->   F:	drivers/platform/x86/lenovo-wmi.h
->   
-> diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
-> index 9a6ac7fdec9f..a2c1ab47ad9e 100644
-> --- a/drivers/platform/x86/Kconfig
-> +++ b/drivers/platform/x86/Kconfig
-> @@ -470,6 +470,17 @@ config LENOVO_WMI_GAMEZONE
->   	  To compile this driver as a module, choose M here: the module will
->   	  be called lenovo_wmi_gamezone.
->   
-> +config LENOVO_WMI_DATA01
-> +	tristate "Lenovo Legion WMI capability Data 01 Driver"
-> +	depends on ACPI_WMI
-> +	help
-> +	  Say Y here if you have a WMI aware Lenovo Legion device in the "Gaming Series"
-> +	  line of hardware. This interface is a dependency for exposing tunable power
-> +	  settings.
-> +
-> +	  To compile this driver as a module, choose M here: the module will
-> +	  be called lenovo_wmi_capdata01.
-> +
->   config IDEAPAD_LAPTOP
->   	tristate "Lenovo IdeaPad Laptop Extras"
->   	depends on ACPI
-> diff --git a/drivers/platform/x86/Makefile b/drivers/platform/x86/Makefile
-> index 7cb29a480ed2..6c96cc3f3855 100644
-> --- a/drivers/platform/x86/Makefile
-> +++ b/drivers/platform/x86/Makefile
-> @@ -69,6 +69,7 @@ obj-$(CONFIG_YOGABOOK)		+= lenovo-yogabook.o
->   obj-$(CONFIG_YT2_1380)		+= lenovo-yoga-tab2-pro-1380-fastcharger.o
->   obj-$(CONFIG_LENOVO_WMI_CAMERA)	+= lenovo-wmi-camera.o
->   obj-$(CONFIG_LENOVO_WMI_GAMEZONE)	+= lenovo-wmi-gamezone.o
-> +obj-$(CONFIG_LENOVO_WMI_DATA01)	+= lenovo-wmi-capdata01.o
->   
->   # Intel
->   obj-y				+= intel/
-> diff --git a/drivers/platform/x86/lenovo-wmi-capdata01.c b/drivers/platform/x86/lenovo-wmi-capdata01.c
+> diff --git a/Documentation/wmi/devices/lenovo-wmi.rst b/Documentation/wmi/devices/lenovo-wmi.rst
 > new file mode 100644
-> index 000000000000..b10a6e4b320f
+> index 000000000000..62c2ec9505bd
 > --- /dev/null
-> +++ b/drivers/platform/x86/lenovo-wmi-capdata01.c
-> @@ -0,0 +1,131 @@
-> +// SPDX-License-Identifier: GPL-2.0-or-later
-> +/*
-> + * LENOVO_CAPABILITY_DATA_01 WMI data block driver. This interface provides
-> + * information on tunable attributes used by the "Other Method" WMI interface,
-> + * including if it is supported by the hardware, the default_value, max_value,
-> + * min_value, and step increment.
-> + *
-> + * Copyright(C) 2024 Derek J. Clark <derekjohn.clark@gmail.com>
-> + */
+> +++ b/Documentation/wmi/devices/lenovo-wmi.rst
+> @@ -0,0 +1,104 @@
+> +.. SPDX-License-Identifier: GPL-2.0-or-later
+> +======================================================
+> +Lenovo WMI Interface Drivers (lenovo-wmi)
+> +======================================================
 > +
-> +#include <linux/list.h>
-> +#include "lenovo-wmi.h"
+> +Introduction
+> +============
+> +Lenovo WMI interfaces are broken up into multiple GUIDs, some of which
+> +require cross-references between GUIDs for some functionality. The "Custom
+> +Mode" interface is a legacy interface for managing and displaying CPU & GPU
+> +power and hwmon settings and readings. The "Other Method" interface is a
+> +modern interface that replaces most "Custom Mode" interface methods. The
+> +"GameZone" interface adds advanced features such as fan profiles and
+> +overclocking. The "Lighting" interface adds control of various status
+> +lights related to different hardware components.
 > +
-> +#define LENOVO_CAPABILITY_DATA_01_GUID "7A8F5407-CB67-4D6E-B547-39B3BE018154"
+> +Each interface has a different data structure associated with it that
+> +provides detailed information about each attribute provided by the
+> +interface. These data structs are retrieved from additional WMI device
+> +data block GUIDs:
+> + - "Custom Mode" uses LENOVO_FAN_TABLE_DATA, LENOVO_FAN_TEST_DATA,
+> +   LENOVO_CPU_OVERCLOCKING_DATA, LENOVO_DISCRETE_DATA, and
+> +   LENOVO_GPU_OVERCLOCKING_DATA depending on the feature.
+> + - "Other Method" uses LENOVO_CAPABILITY_DATA_00,
+> +   LENOVO_CAPABILITY_DATA_01, and LENOVO_CAPABILITY_DATA_02 depending on
+> +   the feature.
+> + - "GameZone" uses LENOVO_GAMEZONE_CPU_OC_DATA and
+> +   LENOVO_GAMEZONE_GPU_OC_DATA depending on the feature.
+> + - The "Lighting" interface uses LENOVO_LIGHTING_DATA.
 > +
-> +static DEFINE_MUTEX(cd01_call_mutex);
-> +static DEFINE_MUTEX(cd01_list_mutex);
-> +static LIST_HEAD(cd01_wmi_list);
+> +.. note::
+> +   Currently only the "GameZone", "Other Method", and
+> +   LENOVO_CAPABILITY_DATA_01 interfaces are implemented by these drivers.
 > +
-> +static const struct wmi_device_id lenovo_wmi_capdata01_id_table[] = {
-> +	{ LENOVO_CAPABILITY_DATA_01_GUID, NULL },
-> +	{}
-> +};
+> +GameZone
+> +--------
+> +WMI GUID "887B54E3-DDDC-4B2C-8B88-68A26A8835D0"
 > +
-> +struct lenovo_wmi_cd01_priv {
-> +	struct wmi_device *wdev;
-> +	struct list_head list;
-> +};
+> +The GameZone WMI interface provides platform-profile and fan curve settings
+> +for devices that fall under the "Gaming Series" of Lenovo devices.
 > +
-> +static inline struct lenovo_wmi_cd01_priv *get_first_wmi_priv(void)
-> +{
-> +	guard(mutex)(&cd01_list_mutex);
-> +	return list_first_entry_or_null(&cd01_wmi_list,
-> +					struct lenovo_wmi_cd01_priv, list);
-> +}
+> +The following platform profiles are supported:
+> + - quiet
+> + - balanced
+> + - performance
+> + - custom
 > +
-> +int lenovo_wmi_capdata01_get(struct lenovo_wmi_attr_id attr_id,
-> +			     struct capability_data_01 *cap_data)
-> +{
-> +	u32 attribute_id = *(int *)&attr_id;
-> +	struct lenovo_wmi_cd01_priv *priv;
-> +	union acpi_object *ret_obj;
-
-Rather than all the kfree() paths, could this done with a scoped 
-automatic cleanup by using __free?
-IE Similar to what you're doing with the mutexes.
-
-You would need to adjust the declaration for the union to be within
-the for loop though for this to work.
-
-> +	int instance_idx;
-> +	int count;
+> +Custom Profile
+> +~~~~~~~~~~~~~~
+> +The custom profile represents a hardware mode on Lenovo devices that enables
+> +user modifications to Package Power Tracking (PPT) settings. When an
+> +attribute exposed by the "Other Method" WMI interface is to be modified,
+> +the GameZone driver must first be switched to the "custom" profile manually
+> +or the setting will have no effect. If another profile is set from the list
+> +of supported profiles, the BIOS will override any user PPT settings when
+> +switching to that profile.
 > +
-> +	priv = get_first_wmi_priv();
-> +	if (!priv)
-> +		return -ENODEV;
 > +
-> +	guard(mutex)(&cd01_call_mutex);
-> +	count = wmidev_instance_count(priv->wdev);
-> +	pr_info("Got instance count: %u\n", count);
-
-I don't think you want this to be info level.  Debug at most.
-
+> +Other Method
+> +----------
+> +WMI GUID "DC2A8805-3A8C-41BA-A6F7-092E0089CD3B"
 > +
-> +	for (instance_idx = 0; instance_idx < count; instance_idx++) {
-> +		ret_obj = wmidev_block_query(priv->wdev, instance_idx);
-> +		if (!ret_obj) {
-> +			pr_err("WMI Data block query failed.\n");
-> +			continue;
-> +		}
+> +The Other Method WMI interface uses the fw_attributes class to expose
+> +various WMI attributes provided by the interface in the sysfs. This enables
+> +CPU and GPU power limit tuning as well as various other attributes for
+> +devices that fall under the "Gaming Series" of Lenovo devices. Each
+> +attribute exposed by the Other Method interface has corresponding
+> +capability data blocks which allow the driver to probe details about the
+> +attribute. Each attibute has multiple pages, one for each of the platform
+> +profiles managed by the "GameZone" interface. For all properties only the
+> +"Custom" profile values are reported by this driver to ensure any userspace
+> +applications reading them have accurate tunable value ranges. Attributes
+> +are exposed in sysfs under the following path:
+> +/sys/class/firmware-attributes/lenovo-wmi-other/attributes
 > +
-> +		if (ret_obj->type != ACPI_TYPE_BUFFER) {
-> +			pr_err("WMI Data block query returned wrong type.\n");
-> +			kfree(ret_obj);
-> +			continue;
-> +		}
+> +LENOVO_CAPABILITY_DATA_01
+> +~~~~~~~~~~~~~~~~~~~~~~~~~
+> +WMI GUID "7A8F5407-CB67-4D6E-B547-39B3BE018154"
 > +
-> +		if (ret_obj->buffer.length != sizeof(*cap_data)) {
-> +			pr_err("WMI Data block query returned wrong buffer length: %u vice expected %lu.\n",
-> +			       ret_obj->buffer.length, sizeof(*cap_data));
-> +			kfree(ret_obj);
-> +			continue;
-> +		}
+> +The LENOVO_CAPABILITY_DATA_01 interface provides information on various
+> +power limits of integrated CPU and GPU components.
 > +
-> +		memcpy(cap_data, ret_obj->buffer.pointer,
-> +		       ret_obj->buffer.length);
-> +		kfree(ret_obj);
+> +The following attributes are supported:
+> + - ppt_pl1_spl: Platform Profile Tracking Sustained Power Limit
+> + - ppt_pl2_sppt: Platform Profile Tracking Slow Package Power Tracking
+> + - ppt_pl3_fppt: Platform Profile Tracking Fast Package Power Tracking
 > +
-> +		if (cap_data->id != attribute_id)
-> +			continue;
-> +		break;
-> +	}
+> +Each attribute has the following properties:
+> + - current_value
+> + - default_value
+> + - display_name
+> + - max_value
+> + - min_value
+> + - scalar_increment
+> + - type
 > +
-> +	if (cap_data->id != attribute_id) {
-> +		pr_err("Unable to find capability data for attribute_id %x\n",
-> +		       attribute_id);
-> +		return -EINVAL;
-> +	}
 > +
-> +	return 0;
-> +}
-> +EXPORT_SYMBOL_NS_GPL(lenovo_wmi_capdata01_get, "CAPDATA_WMI");
+> + Camera
+> + ______
+> + WMI GUID "50C76F1F-D8E4-D895-0A3D-62F4EA400013"
 > +
-> +static int lenovo_wmi_capdata01_probe(struct wmi_device *wdev,
-> +				      const void *context)
+> + The Camera driver provides WMI event notifications for camera button
+> + toggling.
 > +
-> +{
-> +	struct lenovo_wmi_cd01_priv *priv;
-> +
-> +	priv = devm_kzalloc(&wdev->dev, sizeof(*priv), GFP_KERNEL);
-> +	if (!priv)
-> +		return -ENOMEM;
-> +
-> +	priv->wdev = wdev;
-> +
-> +	guard(mutex)(&cd01_list_mutex);
-> +	list_add_tail(&priv->list, &cd01_wmi_list);
-> +
-> +	return 0;
-> +}
-> +
-> +static void lenovo_wmi_capdata01_remove(struct wmi_device *wdev)
-> +{
-> +	struct lenovo_wmi_cd01_priv *priv = dev_get_drvdata(&wdev->dev);
-> +
-> +	guard(mutex)(&cd01_list_mutex);
-> +	list_del(&priv->list);
-> +}
-> +
-> +static struct wmi_driver lenovo_wmi_capdata01_driver = {
-> +	.driver = { .name = "lenovo_wmi_capdata01" },
-> +	.id_table = lenovo_wmi_capdata01_id_table,
-> +	.probe = lenovo_wmi_capdata01_probe,
-> +	.remove = lenovo_wmi_capdata01_remove,
-> +};
-> +
-> +module_wmi_driver(lenovo_wmi_capdata01_driver);
-> +
-> +MODULE_DEVICE_TABLE(wmi, lenovo_wmi_capdata01_id_table);
-> +MODULE_AUTHOR("Derek J. Clark <derekjohn.clark@gmail.com>");
-> +MODULE_DESCRIPTION("Lenovo Capability Data 01 WMI Driver");
-> +MODULE_LICENSE("GPL");
-> diff --git a/drivers/platform/x86/lenovo-wmi.h b/drivers/platform/x86/lenovo-wmi.h
-> index 8a302c6c47cb..53cea84a956b 100644
-> --- a/drivers/platform/x86/lenovo-wmi.h
-> +++ b/drivers/platform/x86/lenovo-wmi.h
-> @@ -36,6 +36,22 @@ struct wmi_method_args {
->   	u32 arg1;
->   };
->   
-> +struct lenovo_wmi_attr_id {
-> +	u32 mode_id : 16; /* Fan profile */
-> +	u32 feature_id : 8; /* Attribute (SPL/SPPT/...) */
-> +	u32 device_id : 8; /* CPU/GPU/... */
-> +} __packed;
-> +
-> +/* Data struct for LENOVO_CAPABILITY_DATA_01 */
-> +struct capability_data_01 {
-> +	u32 id;
-> +	u32 supported;
-> +	u32 default_value;
-> +	u32 step;
-> +	u32 min_value;
-> +	u32 max_value;
-> +};
-> +
->   /* General Use functions */
->   static int lenovo_wmidev_evaluate_method(struct wmi_device *wdev, u8 instance,
->   					 u32 method_id, struct acpi_buffer *in,
-> @@ -102,4 +118,8 @@ int lenovo_wmidev_evaluate_method_1(struct wmi_device *wdev, u8 instance,
->   					       0, retval);
->   }
->   
-> +/* LENOVO_CAPABILITY_DATA_01 exported functions */
-> +int lenovo_wmi_capdata01_get(struct lenovo_wmi_attr_id attr_id,
-> +			     struct capability_data_01 *cap_data);
-> +
->   #endif /* !_LENOVO_WMI_H_ */
 
