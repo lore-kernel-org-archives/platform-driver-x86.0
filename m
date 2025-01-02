@@ -1,156 +1,291 @@
-Received: from fhigh-a4-smtp.messagingengine.com (fhigh-a4-smtp.messagingengine.com [103.168.172.155])
+Received: from NAM12-MW2-obe.outbound.protection.outlook.com (mail-mw2nam12on2062.outbound.protection.outlook.com [40.107.244.62])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7457F282E1;
-	Thu,  2 Jan 2025 19:44:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.155
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1735847045; cv=none; b=dW3GGyy9CYcF4f470Z2+5/FNCihw5hmJ9pC5k0Ma+lIS9O0VBn5Lsug7Y+XL9dHf18tx80o1p1tjfWCNq5+zyLZnONaXSmh6hy7wkcJC33nQyRzl7XQ5aH5ABV9fi3Wp2yP10TBzKbZlSmldm35jn2Yci7tSi36P42iah7//5KU=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1735847045; c=relaxed/simple;
-	bh=DT+xqnA2m/bAYeHpH1oNAcB1ko6lElj3WZiP8+p96C8=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=IYtrNApAWPERZMzRg/JO3qCUVbINjQ8XoYbf+ICtQKVUhEdcj97NX7yTfb3astEzLNP6DfiR2GgffYRVRJZuLAaxXVK+8lqfmNjzz2lr1xnV/5kmSTil7hfXnxl4xLxXAB1/OzS7CK6qapVd4aJn1XfwWuWCEoGGcbfOfMLQbug=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=astier.eu; spf=pass smtp.mailfrom=astier.eu; dkim=pass (2048-bit key) header.d=astier.eu header.i=@astier.eu header.b=Fpq6mP/z; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=IeGIypev; arc=none smtp.client-ip=103.168.172.155
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=astier.eu
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=astier.eu
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CCBF63D96A;
+	Thu,  2 Jan 2025 20:04:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.244.62
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1735848270; cv=fail; b=Z2Tgy/UAyggXR9L/gGqe5AE4Wn3WmAyQoDSzB0IJwe6VD7Q2R2VaelSZxpb50HcePvbx0XTlB1YBNm66qQtE4Cko1P1DARNHmrcHyP6+lmCzZRf/jpYW13DB5x1+/RN/j16K0pYR8erRkwid4osiSS9WhlTLa9dGT2mRjjXSc/U=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1735848270; c=relaxed/simple;
+	bh=pN4N2dRG2oYrox7RDYqTb/sjdg6DzPt2kdJ0SPohnGo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=h+HWhXdovcPwnDix8Z9TAdg4aHXl9uQqHEtv2wTWYqSBvNy3HrrEEMAXeTWIrNYXEJ9U3rtluVciRLCMRdPvvTMH+6w0e5tn4DAgs5pt5aedtrC5PfGKjZAJM3M1yvFW9gp3coBZpz387jeY8ztlhRD/4U14UJh/rsJs+COoRjo=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=fail (1024-bit key) header.d=amd.com header.i=@amd.com header.b=mMt++m/I reason="signature verification failed"; arc=fail smtp.client-ip=40.107.244.62
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=astier.eu header.i=@astier.eu header.b="Fpq6mP/z";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="IeGIypev"
-Received: from phl-compute-05.internal (phl-compute-05.phl.internal [10.202.2.45])
-	by mailfhigh.phl.internal (Postfix) with ESMTP id 7BE0211401B7;
-	Thu,  2 Jan 2025 14:44:02 -0500 (EST)
-Received: from phl-mailfrontend-02 ([10.202.2.163])
-  by phl-compute-05.internal (MEProxy); Thu, 02 Jan 2025 14:44:02 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=astier.eu; h=cc
-	:cc:content-transfer-encoding:content-type:date:date:from:from
-	:in-reply-to:message-id:mime-version:reply-to:subject:subject:to
-	:to; s=fm2; t=1735847042; x=1735933442; bh=MFKdMWA1jCKS8kqfXxlIq
-	K1Qm4flu81xnetQoPy74M0=; b=Fpq6mP/zUX8H8BJAWtcus06Qx2a7AvIY91dv9
-	oeeNpQyGAlACb/EQGh+tTvVk4gekR4IonnsrVyLYnoat7MuuCAy1GVyKNbc3zZ+m
-	TBAE51GYKTfrhr4h+ENQ8+jR3nKZf802zn3YvNiy3rRoLvRFAV9IkaCE6e+tnW9n
-	PjuX+otIdljKxHEegFhueofnlZC7a7SUBpk6oKdOu8Juixs0pABqGTDsCapR8/b0
-	InHYJU+ODASH6TmcHaD3hm1/VQj5w1qn2mR5Mu5pluo8hmTouvyJpiGaBL7+TINz
-	kCyq7L3nR85qwdRwGeO9UvUQTwWq+OuRd16SADyhqjNdkrJZg==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:date:date:feedback-id:feedback-id:from:from
-	:in-reply-to:message-id:mime-version:reply-to:subject:subject:to
-	:to:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=
-	1735847042; x=1735933442; bh=MFKdMWA1jCKS8kqfXxlIqK1Qm4flu81xnet
-	QoPy74M0=; b=IeGIypevCCbOTZ0VBsTpIaSfpTo9LkBOklUldJNYRwRyyVVz36g
-	Y0D8BTRxHB/v4ZppKN0kAg9+R3bPTM7ksy55Q2uGt3VMd7RXTobpkBeHlCJOH+7S
-	YTMVezy3zbFaF/9E21Wqj8PScTnDTHAr6MgVj9Og85tIZRjziOdajqTUwNu+1grI
-	Dm4FUusAYtgSk7xNoRysPwL8I+qaHSqSTvS5S2GjlUQxI0EAG7gMjRa5PXqP7RmP
-	Y1N+pdoDAUDBtsUNHvJi575wkfz4JIANocXN7IhtIRthojRWgSmAdxcqOba+dr47
-	cuwjcfeeh7lEee/oyVctKqbpEVbxerkA4Ag==
-X-ME-Sender: <xms:gex2ZxaDX70ToThA-WyQfT6e8FVEuznsShfVBtrdIy94BO4ixCIwug>
-    <xme:gex2Z4awrqVvC1oVs8Ak4RDj9lqSKwxg4dIqGUw-jQo051Q4YvckPzvnTz8mDJ-3_
-    WNG-J-Ck6e0nC-q-ec>
-X-ME-Received: <xmr:gex2Zz_l4WT_nVb7LgDTw3NDWRhRF0knXnNSq2Ur_uJnpqD8lCLxrpk5eAegNaD6iTiTNEEk861QOjAPUhEFag>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefuddrudefvddguddvlecutefuodetggdotefrod
-    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpggftfghnshhusghstghrihgsvgdp
-    uffrtefokffrpgfnqfghnecuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivg
-    hnthhsucdlqddutddtmdenucfjughrpefhvfevufffkffoggfgsedtkeertdertddtnecu
-    hfhrohhmpeetnhhishhsvgcutehsthhivghruceorghnihhsshgvsegrshhtihgvrhdrvg
-    huqeenucggtffrrghtthgvrhhnpeegffdvuefgueetteeujedugeefudelleeludeghfeg
-    hfegveffjeeggeeiffeffeenucffohhmrghinhepihhnthgvlhdrtghomhdpghhithhhuh
-    gsrdgtohhmnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhho
-    mheprghnihhsshgvsegrshhtihgvrhdrvghupdhnsggprhgtphhtthhopeekpdhmohguvg
-    epshhmthhpohhuthdprhgtphhtthhopehplhgrthhfohhrmhdqughrihhvvghrqdigkeei
-    sehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhinhhugidqkhgvrhhnvg
-    hlsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtoheprghnihhsshgvsegrshht
-    ihgvrhdrvghupdhrtghpthhtohepjhhithhhuhdrjhhoshgvphhhsehinhhtvghlrdgtoh
-    hmpdhrtghpthhtoheprghshhhokhdrrhgrjhdrlhhinhhugiesghhmrghilhdrtghomhdp
-    rhgtphhtthhopehtohhnhidrlhhutghksehinhhtvghlrdgtohhmpdhrtghpthhtohephh
-    guvghgohgvuggvsehrvgguhhgrthdrtghomhdprhgtphhtthhopehilhhpohdrjhgrrhhv
-    ihhnvghnsehlihhnuhigrdhinhhtvghlrdgtohhm
-X-ME-Proxy: <xmx:gex2Z_qhHCVm8h9DU4YZz4mdQVnUbpcmLyazcAnprC0hOFiGYlsWcg>
-    <xmx:gex2Z8pXc-FrKB2dYIQgxfxXQCQOR2OBLtYtz3SWZVw92oz0y7o5BA>
-    <xmx:gex2Z1R5GjoNbahTa1tKhZx4JR1hR-YjnqJL7QEpUnPOWTwYh2axog>
-    <xmx:gex2Z0qyVKr19jtJaULCfQW2nnXga-7EQ2nvmIUXOLBwL9AsXJMBOA>
-    <xmx:gux2Z4ebYBlWTm9wOWEb2usFnFwqzsi25DfV0gyqsGsLBph6w3AWBTlO>
-Feedback-ID: iccec46d4:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Thu,
- 2 Jan 2025 14:44:00 -0500 (EST)
-From: Anisse Astier <anisse@astier.eu>
-To: platform-driver-x86@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: Anisse Astier <anisse@astier.eu>,
-	Jithu Joseph <jithu.joseph@intel.com>,
-	Ashok Raj <ashok.raj.linux@gmail.com>,
-	Tony Luck <tony.luck@intel.com>,
-	Hans de Goede <hdegoede@redhat.com>,
-	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Subject: [PATCH] platform/x86/intel/ifs: Update documentation to match current availability of firmware images
-Date: Thu,  2 Jan 2025 20:43:57 +0100
-Message-ID: <20250102194358.33029-1-anisse@astier.eu>
-X-Mailer: git-send-email 2.47.1
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=amd.com header.i=@amd.com header.b="mMt++m/I"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=njHgWZ/1Ufasazq2BGDQNqjRLnJPJyChrNaHLk6cBtUUF9uy+UMMHSYEu3KRWFHNgY5kqrxdRECUCGMkzqV3WuMI0n8af+pOoRfJttGodd3T1UT7WGrG3SaSWOLKNW1h5/Zvwcxob9UZmK5ek/ZXDMBPo3LdnUsAXGkBQdmXeY5294P1L3VeJNPjjnZZWtWOZxeOqJWd0T0a5VR24sfdcIMBLzDNihQVORYbH6e1i9dvLqfZm2JJTyZHDYy+92pCrA1Zjcyl/WOvt7CkEYXHqPOeHK756RukTyFYwRhumoeS8NuUUytpFFU4niWEXmc7+uQcyNGe3zv2SJVFkf7QMw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=5YeQHdBvLlloAo3Wm+FPiIGD28sFeU0Ioeytu2G9H+0=;
+ b=wXCvzW3DpezX/b5Y4uC1MImjNeImM+rGvoYIvaoWqKMA/6pnasM6Iub8mqSlUw2GZBg8yqiDeoIk517lHs+SKdIa79nAxhJFJqGPpcRZrInGU1cvc2q5DFLXjNCAUFC2rOo4edKul0QCeWN2Y+3iFKkp6G0Qgp1yyvzey8gEnb9qmAIZq1Y2c89uUW7VyN+c1h9wiG/VRwIHmRXSPVb7qfBvKXRL1p7JgZtCzLfUjI4t0hDWxD/qWuCvoBmWYhSpfBBey/6iv9y3FMyQfXInRdl2AjtgWrLRg/A2GHPsv6qfvFvRi2CWuU3p3KaqN4Vx41Q6Qklo9pNenkFcfefK0Q==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=5YeQHdBvLlloAo3Wm+FPiIGD28sFeU0Ioeytu2G9H+0=;
+ b=mMt++m/IeXMAMLGmmTKTJ2sFiuJ/Vd6frwOh54R08oUy95TK/WdzmE3kbTNZqvDvGrDiNX+Mkrs6teGL+Bwn9p2pLpS9eTDxmE+hfhOC1qWH6hT9wTC/ppS2imtWtfoOzRFkW3MhD/+JjPfCIZ9WSDCC07+eNG6uMcusQYjon0k=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from DM4PR12MB6373.namprd12.prod.outlook.com (2603:10b6:8:a4::7) by
+ CY8PR12MB7610.namprd12.prod.outlook.com (2603:10b6:930:9a::11) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.8293.16; Thu, 2 Jan 2025 20:04:21 +0000
+Received: from DM4PR12MB6373.namprd12.prod.outlook.com
+ ([fe80::12f7:eff:380b:589f]) by DM4PR12MB6373.namprd12.prod.outlook.com
+ ([fe80::12f7:eff:380b:589f%6]) with mapi id 15.20.8314.011; Thu, 2 Jan 2025
+ 20:04:21 +0000
+Date: Thu, 2 Jan 2025 15:04:11 -0500
+From: Yazen Ghannam <yazen.ghannam@amd.com>
+To: Suma Hegde <Suma.Hegde@amd.com>
+Cc: Borislav Petkov <bp@alien8.de>, x86@kernel.org, tony.luck@intel.com,
+	mario.limonciello@amd.com, bhelgaas@google.com, jdelvare@suse.com,
+	linux@roeck-us.net, clemens@ladisch.de, Shyam-sundar.S-k@amd.com,
+	hdegoede@redhat.com, ilpo.jarvinen@linux.intel.com,
+	naveenkrishna.chatradhi@amd.com, linux-kernel@vger.kernel.org,
+	linux-edac@vger.kernel.org, linux-pci@vger.kernel.org,
+	linux-hwmon@vger.kernel.org, platform-driver-x86@vger.kernel.org
+Subject: Re: [PATCH v2.2] x86/amd_node, platform/x86/amd/hsmp: Have HSMP use
+ SMN through AMD_NODE
+Message-ID: <20250102200411.GA230071@yaz-khff2.amd.com>
+References: <20241212172711.1944927-1-yazen.ghannam@amd.com>
+ <20241213152206.385573-1-yazen.ghannam@amd.com>
+ <20241214100507.GAZ11YU_9llLRq5AoD@fat_crate.local>
+ <20241216183338.GA542682@yaz-khff2.amd.com>
+ <3a616457-7f8e-4add-a363-58dea914e3da@amd.com>
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <3a616457-7f8e-4add-a363-58dea914e3da@amd.com>
+X-ClientProxiedBy: MN2PR16CA0001.namprd16.prod.outlook.com
+ (2603:10b6:208:134::14) To DM4PR12MB6373.namprd12.prod.outlook.com
+ (2603:10b6:8:a4::7)
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DM4PR12MB6373:EE_|CY8PR12MB7610:EE_
+X-MS-Office365-Filtering-Correlation-Id: cbd89e84-4f56-4a65-00cc-08dd2b68a5b6
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|1800799024|7416014|366016;
+X-Microsoft-Antispam-Message-Info:
+	=?iso-8859-1?Q?lvoD3WlqTNhhtEjBYTPq00A4OszRKpOFXtp/6TZvFMgq/GUEROkLAussSe?=
+ =?iso-8859-1?Q?UuRMb19cxiOk0UbCFmxDFky2ftQG3f8vnvTxd4Va8niJIsyKxHA6tL+qV2?=
+ =?iso-8859-1?Q?KkdDUW1ajM3nDuMtX9R8iIz8OTbXLcylsMRPgf6m/aAsQcqv7Mvcc7fdZj?=
+ =?iso-8859-1?Q?2jVdbF0AyO2KlBPGX/BVXwhW+IixYifpPT1KidOZNfv3FQWtroK2d8dTrB?=
+ =?iso-8859-1?Q?HAHfo5pheGpYTyrjdW25vYZUjdKby0WpfKuHpGhDDUs5ywHEEt5EM4yGkn?=
+ =?iso-8859-1?Q?4mfn3uFcjjmMoqdlmIvlzag2+AQ0mzuU4GcXplwt8j3bSIQ537KhmUVr9m?=
+ =?iso-8859-1?Q?izFYsFLL30XvYqlHOc3fPOCUVglPdJSUXXJTU18dub/lnIWcl1/zzp2eG8?=
+ =?iso-8859-1?Q?jYKjluE3UQ8/sFLq7qSjBvxe4MA3NSPQJ+lc9UkaLtps84aXaVVcsRzYJQ?=
+ =?iso-8859-1?Q?tHUjLnYmRnLyW9waB6lvKQVpFjn9uhrNgVXITuah4kilgmqG8e/K4cTSkN?=
+ =?iso-8859-1?Q?HrG8txPaLAvcaPYGttbxBGHNzEObJ9Kbji2gO2iIVksXZmEz4Q0JwkY/3k?=
+ =?iso-8859-1?Q?XzfIPDTyi7xFC77T80I32/cXP370j5pllwN24sqcA2I+KWYc6gKHHs1+GP?=
+ =?iso-8859-1?Q?IX2y2dUaeKHgLkHggO6UL+Z9yY05Tg/SEc1kyXPRaEO5zMGAu83vk7TBN0?=
+ =?iso-8859-1?Q?EjIg7xLLdXvxxtr+TCb13vBtsKLGdc/tTTYNeO4bZ3FSQHz6KaQNcRV3FI?=
+ =?iso-8859-1?Q?MDsoJ18TvZ4+B11R2y88nwINcc1PzZ6BDnzjsfp+l4TfAgmdfKIQt5mqE/?=
+ =?iso-8859-1?Q?QMeLq34uap8CxXNsa3DNSkZ2x8BnVLX7s3dQpCTI4eS2QTpbjr1IZ+8UCL?=
+ =?iso-8859-1?Q?XkI3otXOdrF/PdgONxpLAIyWBixFTGO+8MdrS000wuxdIpaFGyhIXDP8GH?=
+ =?iso-8859-1?Q?UrRNbSp1eRCLErB3Rtx58y7TcEWjutwipsLt2X1kBWngOkhnivXl54eH1U?=
+ =?iso-8859-1?Q?PO3Wp5bDnQEaZoNWrMNcGPE9rMEKHAZJQHpxd2c9TZUNSWB4pH4vc60Te+?=
+ =?iso-8859-1?Q?GYCoYpzl73TOONe0MZ5UeM/Jr6ElelQ84JHg7l6VBC3Buve9OtHgOApL9u?=
+ =?iso-8859-1?Q?6VyWByTNmNnuetA49JQZUdKGtGUC9iRH69hRyDCu49yPmuw0ZBg9YYjRL3?=
+ =?iso-8859-1?Q?Q24EAqaKdU3uTGVU7Tn3lsUhhL+SQ69ORWc2U5eCfrj1IYFcQHUpnUr6MJ?=
+ =?iso-8859-1?Q?6NE8mqp9W1p0Mt4tTMgKjgkXx0a4675u22/oxjOeUISIKvU8znf6UAPIky?=
+ =?iso-8859-1?Q?ncw+Igw8Q+vMBmKiyR6MwAZdeWPvWDkNSI/kcOT+wB0PMjr0pfKWA5xmQ5?=
+ =?iso-8859-1?Q?km6PAyjKrzt00fCVEhMajK2HMz2nfB5DECV3eYpyqCGoqEWCUCQZel4Kbp?=
+ =?iso-8859-1?Q?FMuWKF0QrtfWdcHM?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM4PR12MB6373.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(1800799024)(7416014)(366016);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?iso-8859-1?Q?XIOHjZBGx0KGnUHxXRQIVQB9TejfneSigUWOUilTdob8j+Q7FAY3f0ZcDQ?=
+ =?iso-8859-1?Q?OmBQEojh86ZEM0GqIMIDPsImohlX41HTJkpTUIS747GZVhzKBzRw4tE4Ac?=
+ =?iso-8859-1?Q?jRjKjGP/0PdXcD1Z7Vyj52Ks1BvfQ1Bou9gQ+++3lkiFTK620Sa9MrppEx?=
+ =?iso-8859-1?Q?U8ELDZGTh+aCTSkHPq4J2D/F+Zpt6V0EAe8S+VBXCgNycNZhuHW556dtIs?=
+ =?iso-8859-1?Q?BZ4zaTlyBZN3+gzqSj04GCeNz8XZ065kk6aGd8CO4Z87fLWYTi37r7Rzix?=
+ =?iso-8859-1?Q?eWhXm/XJFo5/yaYuPMvzrXAA8cUxi+ylE60GlnaqFMwHGkxwjj0z2nq+38?=
+ =?iso-8859-1?Q?gtxUvqras5AIU9nkc3g6oNtnGOSVXc6wq4ZGTaC+L41yPjHMbG0y1mOhqG?=
+ =?iso-8859-1?Q?rp9jv9CdeOqpQGb5mnh8x6mz81ufGxZBL6/f5ejQuehjc9aeGwGdOV9jpe?=
+ =?iso-8859-1?Q?WyKTGpC08+JxdpQE+Jf65hQqfbjQjA+Jp1v0lQwwQlTnGSXeUrGKkaGxUa?=
+ =?iso-8859-1?Q?3jaBWDjFtgcDZTek5X1hJ5iWclWrrgaot//eBgDdbFLMqnMkqON4P8JV29?=
+ =?iso-8859-1?Q?KzDKJHu3HONrkKRgwKUwttcoxVR6+Q9qyHzDwyi9O4ZGCD/Ue2nx2pKkhj?=
+ =?iso-8859-1?Q?ySNADiQiCze7mk+yyoBl7dIMtqNjqPxoFZCflXPf3tGWbhvSq/WkzXPTlU?=
+ =?iso-8859-1?Q?RZtg54p9g/V76gwd5qTDuH2CaVmqUd8Y4p7WRlauOJCZTqIjg3bugEhAwM?=
+ =?iso-8859-1?Q?dqKyvrVuO8qLIsehf58qBMkMaIpxBuMxCJjPWrM8vLlwqT6n37X49G1ma+?=
+ =?iso-8859-1?Q?MR2z5Aqidla3blArQdfKBwE5AXQ8Ds6AAxzaqcH67flhxyCSr+CvGOe/PQ?=
+ =?iso-8859-1?Q?vdBFcTHLocYJro518wmHlGHCuF8uQY4MDTwRywgzDujNH0bY5BLV9fD1Fn?=
+ =?iso-8859-1?Q?OalF1XnyGuIVVjF8/7XrkzU4A4h7Hi/nSjK3eDFdQODSghax1NrI6l5GbT?=
+ =?iso-8859-1?Q?xJjycsqvcI8wYu14zidsMorYDcfnFsu2fd37RtfvMSW9cNU0/akQaol9aR?=
+ =?iso-8859-1?Q?rgbdxIU0PUZYo5Fkv2fK//qC99v3ohaJGoWpA5/mK/iu2GuAcp0uVo6SR9?=
+ =?iso-8859-1?Q?rFE6enwcahuvl5x9RlgOdGsuRwy6A09CO50HSrwZvU6ecPLkIEW8nP91vy?=
+ =?iso-8859-1?Q?wZFPFwobud1nf1XUKSgxS/LqAYxnPxA2tdVjR4GVKcl6y6FqmTnAN/9ETx?=
+ =?iso-8859-1?Q?OMTuziYjwzRUnJ+KO+MXcpTpR7YvB0616HDDum12Ew/qFcbGZoNp6c+3eV?=
+ =?iso-8859-1?Q?eXwTQvx0N9hViffiHsDiUsv4eogctuB57n4RGTLq9f11S20GMUZtcO2tk4?=
+ =?iso-8859-1?Q?CF8WFE5olS/XbJ8AAwfFzoFPVCVvbwy6YmVUQl9H9HfAsofASBjiKNIZ3u?=
+ =?iso-8859-1?Q?FxQEI/jD9wU5Z4oU7IR01/v5x3pSftv2U/fQOdVWhokFoJYIKWzWFn/s5n?=
+ =?iso-8859-1?Q?253YVXuc1J/f/fLNwkoslsy1MX3txpckjyRfLGzI7x8secyG+BArEaFC02?=
+ =?iso-8859-1?Q?xsuULY/7KVvCe7CccW/hEyzdJcQYRm7JbJxqSpiVrlbis73ZhEWYJ5GDv+?=
+ =?iso-8859-1?Q?/ryWJu1N7bbyNqLTGEpRbwrvQieIEAt5vJ?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: cbd89e84-4f56-4a65-00cc-08dd2b68a5b6
+X-MS-Exchange-CrossTenant-AuthSource: DM4PR12MB6373.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 02 Jan 2025 20:04:21.5844
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 4xYcbsxQaTXt0WIGjzAl1Ju+QwoYG4flghLH8gRTFoXObI/Gv68ARO6sKwCs1qRWUqoNCFwbcMEtboXNQ49HtA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY8PR12MB7610
 
-Firmware images necessary for the In-field scan[1] functionality are not
-available at the moment[2], and require having access to at least an
-Intel customer account[3].
+On Tue, Dec 24, 2024 at 06:44:17AM +0530, Suma Hegde wrote:
+> Hi Yazen,
+> 
+> 
+> On 12/17/2024 12:03 AM, Yazen Ghannam wrote:
+> > On Sat, Dec 14, 2024 at 11:05:07AM +0100, Borislav Petkov wrote:
+> > > On Fri, Dec 13, 2024 at 03:22:06PM +0000, Yazen Ghannam wrote:
+> > > > The HSMP interface is just an SMN interface with different offsets.
+> > > > 
+> > > > Define an HSMP wrapper in the SMN code and have the HSMP platform driver
+> > > > use that rather than a local solution.
+> > > > 
+> > > > Also, remove the "root" member from AMD_NB, since there are no more
+> > > > users of it.
+> > > > 
+> > > > Signed-off-by: Yazen Ghannam <yazen.ghannam@amd.com>
+> > > > ---
+> > > > 
+> > > > Notes:
+> > > >      Link:
+> > > >      https://lore.kernel.org/20241212172711.1944927-1-yazen.ghannam@amd.com
+> > > >      v2.1-v2.2:
+> > > >      * Include <linux/build_bug.h> for static_assert()
+> > > >      v2->v2.1:
+> > > >      * Include static_assert() and comment for sysfs attributes.
+> > > >      v1->v2:
+> > > >      * Rebase on recent HSMP rework.
+> > > > 
+> > > >   arch/x86/include/asm/amd_nb.h         |  1 -
+> > > >   arch/x86/include/asm/amd_node.h       |  3 +++
+> > > >   arch/x86/kernel/amd_nb.c              |  1 -
+> > > >   arch/x86/kernel/amd_node.c            |  9 +++++++
+> > > >   drivers/platform/x86/amd/hsmp/Kconfig |  2 +-
+> > > >   drivers/platform/x86/amd/hsmp/acpi.c  |  7 +++---
+> > > >   drivers/platform/x86/amd/hsmp/hsmp.c  |  1 -
+> > > >   drivers/platform/x86/amd/hsmp/hsmp.h  |  3 ---
+> > > >   drivers/platform/x86/amd/hsmp/plat.c  | 36 +++++++++------------------
+> > > >   9 files changed, 29 insertions(+), 34 deletions(-)
+> > > ld: drivers/platform/x86/amd/hsmp/plat.o: in function `amd_hsmp_pci_rdwr':
+> > > /home/amd/kernel/linux/drivers/platform/x86/amd/hsmp/plat.c:44: undefined reference to `amd_smn_hsmp_rdwr'
+> > > make[2]: *** [scripts/Makefile.vmlinux:77: vmlinux] Error 1
+> > > make[1]: *** [/home/amd/bpetkov/kernel/linux/Makefile:1225: vmlinux] Error 2
+> > > make[1]: *** Waiting for unfinished jobs....
+> > > make: *** [Makefile:251: __sub-make] Error 2
+> > > 
+> > > Config attached.
+> > > 
+> > I think the fix is this:
+> > 
+> > diff --git a/drivers/platform/x86/amd/hsmp/Kconfig b/drivers/platform/x86/amd/hsmp/Kconfig
+> > index d6f7a62d55b5..fc90ef11a8ad 100644
+> > --- a/drivers/platform/x86/amd/hsmp/Kconfig
+> > +++ b/drivers/platform/x86/amd/hsmp/Kconfig
+> > @@ -7,7 +7,6 @@ config AMD_HSMP
+> >   	tristate
+> >   menu "AMD HSMP Driver"
+> > -	depends on AMD_NODE || COMPILE_TEST
+> >   config AMD_HSMP_ACPI
+> >   	tristate "AMD HSMP ACPI device driver"
+> > @@ -29,6 +28,7 @@ config AMD_HSMP_ACPI
+> >   config AMD_HSMP_PLAT
+> >   	tristate "AMD HSMP platform device driver"
+> > +	depends on AMD_NODE
+> >   	select AMD_HSMP
+> >   	help
+> >   	  Host System Management Port (HSMP) interface is a mailbox interface
+> > 
+> > With all the recent rework, only AMD_HSMP_PLAT has a hard dependency on
+> > AMD_NODE due to needing the SMN register access interface.
+> > 
+> > Various HSMP files still pull in <asm/amd_node.h>, but they just need
+> > defines and an inline function.
+> > 
+> > It seems COMPILE_TEST is not needed, since this change allows
+> > AMD_HSMP_ACPI to build without AMD_NODE which seems like the intent.
+> 
+> COMPILE_TEST was added to provide build coverage to HSMP based on Ilpo's
+> suggestion.
+> 
+> We can probably add #ifdef CONFIG_AMD_NODE and #else as below to fix this
+> instead of removing COMPILE_TEST?
+> 
+> #ifdef CONFIG_AMD_NODE
+> /* Should only be used by the HSMP driver. */
+> int __must_check amd_smn_hsmp_rdwr(u16 node, u32 address, u32 *value, bool
+> write);
+> #else
+> static int amd_smn_hsmp_rdwr(u16 node, u32 address, u32 *value, bool write);
+> {
+>         return 0;
+> }
+> 
+> #endif
+> 
+> May be Ilpo can comment more.
+> 
 
-Update documentation to match current state, it can be updated again
-when the images are finally published.
+Thanks Suma for the feedback.
 
-[1] https://www.intel.com/content/www/us/en/support/articles/000099537/processors/intel-xeon-processors.html
-[2] https://cdrdv2.intel.com/v1/dl/getContent/826383?explicitVersion=true
-[3] https://www.intel.com/content/www/us/en/secure/design/confidential/software-kits/kit-details.html?kitId=815180
+If the intent is to increase build coverage, then I think AMD_HSMP_ACPI
+also needs COMPILE_TEST.
 
-Signed-off-by: Anisse Astier <anisse@astier.eu>
+We could do the following in addition to the #ifdef.
+
 ---
-I realize Intel had a few troubled years, and that having this feature
-in the kernel must be quite helpful to some users. But right now, it
-cannot be used unless one has a commercial relationship with Intel.
+ drivers/platform/x86/amd/hsmp/Kconfig | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-I am not advocating for the removal of this driver; this is just an
-update of the documentation to show that the publication of the firmware
-images necessary to use the driver might have fallen through the cracks,
-and might not happen soon.
-
-Kind regards,
-
-Anisse
----
- drivers/platform/x86/intel/ifs/ifs.h | 11 +++++++----
- 1 file changed, 7 insertions(+), 4 deletions(-)
-
-diff --git a/drivers/platform/x86/intel/ifs/ifs.h b/drivers/platform/x86/intel/ifs/ifs.h
-index 5c3c0dfa1bf8..9a7ad9cc9d08 100644
---- a/drivers/platform/x86/intel/ifs/ifs.h
-+++ b/drivers/platform/x86/intel/ifs/ifs.h
-@@ -23,9 +23,11 @@
-  * IFS Image
-  * ---------
-  *
-- * Intel provides a firmware file containing the scan tests via
-- * github [#f1]_.  Similar to microcode there is a separate file for each
-- * family-model-stepping. IFS Images are not applicable for some test types.
-+ * As of early 2025, Intel provides the firmware files containing the scan tests
-+ * to select customers [#f1]_. When this driver was merged in 2022, it was
-+ * announced that firmware files would be available via github [#f2]_. Similar
-+ * to microcode there is a separate file for each family-model-stepping. IFS
-+ * Images are not applicable for some test types.
-  * Wherever applicable the sysfs directory would provide a "current_batch" file
-  * (see below) for loading the image.
-  *
-@@ -125,7 +127,8 @@
-  * 2) Hardware allows for some number of cores to be tested in parallel.
-  * The driver does not make use of this, it only tests one core at a time.
-  *
-- * .. [#f1] https://github.com/intel/TBD
-+ * .. [#f1] https://www.intel.com/content/www/us/en/support/articles/000099537/processors/intel-xeon-processors.html
-+ * .. [#f2] https://github.com/intel/TBD
-  *
-  *
-  * Structural Based Functional Test at Field (SBAF):
+diff --git a/drivers/platform/x86/amd/hsmp/Kconfig b/drivers/platform/x86/amd/hsmp/Kconfig
+index d6f7a62d55b5..b60933806eed 100644
+--- a/drivers/platform/x86/amd/hsmp/Kconfig
++++ b/drivers/platform/x86/amd/hsmp/Kconfig
+@@ -7,11 +7,10 @@ config AMD_HSMP
+ 	tristate
+ 
+ menu "AMD HSMP Driver"
+-	depends on AMD_NODE || COMPILE_TEST
+ 
+ config AMD_HSMP_ACPI
+ 	tristate "AMD HSMP ACPI device driver"
+-	depends on ACPI
++	depends on ACPI || COMPILE_TEST
+ 	select AMD_HSMP
+ 	help
+ 	  Host System Management Port (HSMP) interface is a mailbox interface
+@@ -29,6 +28,7 @@ config AMD_HSMP_ACPI
+ 
+ config AMD_HSMP_PLAT
+ 	tristate "AMD HSMP platform device driver"
++	depends on AMD_NODE || COMPILE_TEST
+ 	select AMD_HSMP
+ 	help
+ 	  Host System Management Port (HSMP) interface is a mailbox interface
 -- 
-2.47.1
 
+The scope of AMD_NODE is reduced to only what needs it. And each option
+can be independently built to increase coverage.
+
+How does this sound?
+
+Thanks,
+Yazen
