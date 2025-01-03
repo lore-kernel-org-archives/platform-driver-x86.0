@@ -1,32 +1,32 @@
 Received: from todd.t-8ch.de (todd.t-8ch.de [159.69.126.157])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B1AAC1BEF99;
-	Fri,  3 Jan 2025 23:05:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7CD4D1C3F13;
+	Fri,  3 Jan 2025 23:05:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.69.126.157
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1735945520; cv=none; b=BfJRcBQ8FlGhXdtJo9qz79N6p5P09uOJoB9HwDvtkgD+sQrIbTj49vt+q7jV8/EQx+Dar1jU9KFBLHoiPZeDNKF2W8x7mpvrnC4QYIE1y8W9dkzeO9aSpiGKn/yOvAohPd/YnaaZvcmX4xcKmRwmGf41bNMNtahxMysIH9mC7bk=
+	t=1735945523; cv=none; b=Pv+kNBl45qGPYttma3L2YVWhYdFy+fFmZz+7uzTbRj6B+2B2TI1oIMB0mC7vNAIvPdau9NbMmJWIjFV/tbNqvJsxBFvFFHdAAYpKGkJyJWfKksiaufFnzN5/8+vN6DmpVLMFF6WiPKy6Ms2IUOVoDIb1rZh4FNH/BH2muLJn4rU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1735945520; c=relaxed/simple;
-	bh=GuO0NT1ncu1pG9y3++xbJrVIn8xZ+9gpWgAO8XU1H5g=;
+	s=arc-20240116; t=1735945523; c=relaxed/simple;
+	bh=KY+VV+ArU3kCRd4UFRbhENoyrPPNBvUKfm4XfLamlco=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=kZq+bo8LQmPRylWGMe+TeV7i0KgXXSrIzXgEg8cAIvpWBBr6s+9NcmuejEgq2WOIupKZH2qDY6Py8ynxFTqdAWDnk9LZAzLOjriPJJdJgG/A3UzqSp41zZhx6M5wVrYelQpJIi2CHsTb810sf9gly3VxY2W91qjCgktvNItJNc0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=weissschuh.net; spf=pass smtp.mailfrom=weissschuh.net; dkim=pass (1024-bit key) header.d=weissschuh.net header.i=@weissschuh.net header.b=dGZHS1uy; arc=none smtp.client-ip=159.69.126.157
+	 In-Reply-To:To:Cc; b=R/2YT2uF5pzAkYETyGI+pMJMMjCCGVqMaMZNelEm32pey+8Ylb2fIwixve81oizgszvZJs11ujYLgUOT++8/+XMabpWVSY3mPHh6bUAJ0uPFmDed9ijDnbbTQNpj3iP0q24qdXZ8c6rrpbwCrdTG2DiaOYPB8VvjFS2xafEbmVo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=weissschuh.net; spf=pass smtp.mailfrom=weissschuh.net; dkim=pass (1024-bit key) header.d=weissschuh.net header.i=@weissschuh.net header.b=Df2UYJkv; arc=none smtp.client-ip=159.69.126.157
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=weissschuh.net
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=weissschuh.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=weissschuh.net header.i=@weissschuh.net header.b="dGZHS1uy"
+	dkim=pass (1024-bit key) header.d=weissschuh.net header.i=@weissschuh.net header.b="Df2UYJkv"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=weissschuh.net;
 	s=mail; t=1735945513;
-	bh=GuO0NT1ncu1pG9y3++xbJrVIn8xZ+9gpWgAO8XU1H5g=;
+	bh=KY+VV+ArU3kCRd4UFRbhENoyrPPNBvUKfm4XfLamlco=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=dGZHS1uy2/SkVeXiAgHzNhc5u6tYWIdw8tT/4aZAuPBsLuKbhtKCjQiEvSxO4X2k8
-	 Xmd7DFs0ZF5iXcEQG8/49fVQ8ja4SHmZ4mrbYQErfA8CFJ8qmsMX0Qg66UIZ81/RJp
-	 ePpHuWDMajr5NK82Kg9Y/AvqUYWJ2XpQZEuVRumU=
+	b=Df2UYJkvioy5sqOhka7k7Xwk96fbJD/tYsaT1J3ikVJ3elJI2olIk0+Y8Aegvxbp+
+	 qZvDnMUkuzMOwX3t4jL77zgJ33QesJO72EYTww+obOQzP17XE9AYlSjJR+KebopDaM
+	 sW/HTnrNzdHloMuyuz/EKAu4dTA09lhj12JNq15g=
 From: =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <linux@weissschuh.net>
-Date: Sat, 04 Jan 2025 00:05:12 +0100
-Subject: [PATCH 4/6] platform/x86: hp-bioscfg: Directly use
- firmware_attributes_class
+Date: Sat, 04 Jan 2025 00:05:09 +0100
+Subject: [PATCH 1/6] platform/x86: firmware_attributes_class: Move include
+ linux/device/class.h
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -35,7 +35,7 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-Message-Id: <20250104-firmware-attributes-simplify-v1-4-949f9709e405@weissschuh.net>
+Message-Id: <20250104-firmware-attributes-simplify-v1-1-949f9709e405@weissschuh.net>
 References: <20250104-firmware-attributes-simplify-v1-0-949f9709e405@weissschuh.net>
 In-Reply-To: <20250104-firmware-attributes-simplify-v1-0-949f9709e405@weissschuh.net>
 To: Hans de Goede <hdegoede@redhat.com>, 
@@ -47,69 +47,47 @@ Cc: Joshua Grisham <josh@joshuagrisham.com>,
  Dell.Client.Kernel@dell.com, 
  =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <linux@weissschuh.net>
 X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1735945513; l=1947;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1735945513; l=1427;
  i=linux@weissschuh.net; s=20221212; h=from:subject:message-id;
- bh=GuO0NT1ncu1pG9y3++xbJrVIn8xZ+9gpWgAO8XU1H5g=;
- b=XW5xd5Jjy8GU3IJVZBlrzRfA0vP5auYjrcB0KajssKlXjVx5y1qNf73XzvX//ZVCaNWSHYmte
- 3TcWQbhFraFCiV4hTJ2YxdSim5/5AACPjaUrBrpF50L8tp6wC6RmPUu
+ bh=KY+VV+ArU3kCRd4UFRbhENoyrPPNBvUKfm4XfLamlco=;
+ b=4jiawZNmyM8uz291smGk0DmOykhs15VQTG/FymhGUPRv/nUeBWyfRglsqJ5eR3XEKnIsHv8GB
+ S9NlgJk6yy4AvPwrtwu8Jzegr86Cwmb6/yzU+mYiaE4KpzMFEwJIThP
 X-Developer-Key: i=linux@weissschuh.net; a=ed25519;
  pk=KcycQgFPX2wGR5azS7RhpBqedglOZVgRPfdFSPB1LNw=
 
-The usage of the lifecycle functions is not necessary anymore.
+The header firmware_attributes_class.h uses 'struct class'. It should
+also include the necessary dependency header.
 
 Signed-off-by: Thomas Weißschuh <linux@weissschuh.net>
 ---
- drivers/platform/x86/hp/hp-bioscfg/bioscfg.c | 14 +++-----------
- 1 file changed, 3 insertions(+), 11 deletions(-)
+ drivers/platform/x86/firmware_attributes_class.c | 1 -
+ drivers/platform/x86/firmware_attributes_class.h | 2 ++
+ 2 files changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/platform/x86/hp/hp-bioscfg/bioscfg.c b/drivers/platform/x86/hp/hp-bioscfg/bioscfg.c
-index 2dc50152158a3dd0401d9d9e1de288c0d76ef937..0b277b7e37dd6b598e4fe5de6dc0ac47300a8e3b 100644
---- a/drivers/platform/x86/hp/hp-bioscfg/bioscfg.c
-+++ b/drivers/platform/x86/hp/hp-bioscfg/bioscfg.c
-@@ -24,8 +24,6 @@ struct bioscfg_priv bioscfg_drv = {
- 	.mutex = __MUTEX_INITIALIZER(bioscfg_drv.mutex),
- };
+diff --git a/drivers/platform/x86/firmware_attributes_class.c b/drivers/platform/x86/firmware_attributes_class.c
+index 182a07d8ae3dfa8925bb5b71a43d0219c3cf0fa0..cbc56e5db59283ba99ac0b915ac5fb2432afbdc9 100644
+--- a/drivers/platform/x86/firmware_attributes_class.c
++++ b/drivers/platform/x86/firmware_attributes_class.c
+@@ -3,7 +3,6 @@
+ /* Firmware attributes class helper module */
  
--static const struct class *fw_attr_class;
--
- ssize_t display_name_language_code_show(struct kobject *kobj,
- 					struct kobj_attribute *attr,
- 					char *buf)
-@@ -972,11 +970,7 @@ static int __init hp_init(void)
- 	if (ret)
- 		return ret;
+ #include <linux/mutex.h>
+-#include <linux/device/class.h>
+ #include <linux/module.h>
+ #include "firmware_attributes_class.h"
  
--	ret = fw_attributes_class_get(&fw_attr_class);
--	if (ret)
--		goto err_unregister_class;
--
--	bioscfg_drv.class_dev = device_create(fw_attr_class, NULL, MKDEV(0, 0),
-+	bioscfg_drv.class_dev = device_create(&firmware_attributes_class, NULL, MKDEV(0, 0),
- 					      NULL, "%s", DRIVER_NAME);
- 	if (IS_ERR(bioscfg_drv.class_dev)) {
- 		ret = PTR_ERR(bioscfg_drv.class_dev);
-@@ -1043,10 +1037,9 @@ static int __init hp_init(void)
- 	release_attributes_data();
+diff --git a/drivers/platform/x86/firmware_attributes_class.h b/drivers/platform/x86/firmware_attributes_class.h
+index 363c75f1ac1b89df879a8689b070e6b11d3bb7fd..8e0f47cfdf92eb4dc8722b7d8371916af0d84efa 100644
+--- a/drivers/platform/x86/firmware_attributes_class.h
++++ b/drivers/platform/x86/firmware_attributes_class.h
+@@ -5,6 +5,8 @@
+ #ifndef FW_ATTR_CLASS_H
+ #define FW_ATTR_CLASS_H
  
- err_destroy_classdev:
--	device_destroy(fw_attr_class, MKDEV(0, 0));
-+	device_destroy(&firmware_attributes_class, MKDEV(0, 0));
- 
- err_unregister_class:
--	fw_attributes_class_put();
- 	hp_exit_attr_set_interface();
- 
- 	return ret;
-@@ -1055,9 +1048,8 @@ static int __init hp_init(void)
- static void __exit hp_exit(void)
- {
- 	release_attributes_data();
--	device_destroy(fw_attr_class, MKDEV(0, 0));
-+	device_destroy(&firmware_attributes_class, MKDEV(0, 0));
- 
--	fw_attributes_class_put();
- 	hp_exit_attr_set_interface();
- }
++#include <linux/device/class.h>
++
+ int fw_attributes_class_get(const struct class **fw_attr_class);
+ int fw_attributes_class_put(void);
  
 
 -- 
