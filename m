@@ -1,45 +1,46 @@
 Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0CC971A8F9A;
-	Fri,  3 Jan 2025 15:53:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF2221FA17E;
+	Fri,  3 Jan 2025 15:53:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1735919611; cv=none; b=OXOr+cvuzVDgY1sT7toi3BOJC68G2+iaXrdREMEDVl1UCkHsURKY5EMSv4llTeZNKQpC4rbvNlGPZrBxSLQ8EHfSH8JBBs3MRVJKj+JAy4b0QECA2jUkynPLMRfka7MhtahM0QEEyCHRupTIFn1Sx7YiDGhpVqLxsW87eCfV5bs=
+	t=1735919613; cv=none; b=oYLYzCnwwrnam+uHyrfSkWPRuBwffD/jVGny0dACXEbsjGCnYqIQWnk0X2ssydzrLRonns5t7moSOSWudM+t4ECfzPdNRoC3H9o7uYYTqL5o18ww5Irpxapcc42qJqazRmuyQtBa3jXVLnqyVDfmH0p3Vk1Z6ZAa1mKvunG3NLY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1735919611; c=relaxed/simple;
-	bh=GQKKSwkS5uDA7r+YxySsENhIVbI3hSNDZidksSZbixo=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=rV1F728jWCmUgnOKn4QiwmzWRm+jBn3guTGjGB5N7fJky1TrrCDqiN2eV73U8UVOAgTM4yhF8WB4ChcLzEWyt9Ei3SRRmZjyfnjMh9Pwox37GikdwcaRKPlEGufR8vbqUhESkI6ZWrE6C1HNUm832/+nt80lZzfcvOJIZW8XwCE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=f6/8774f; arc=none smtp.client-ip=192.198.163.14
+	s=arc-20240116; t=1735919613; c=relaxed/simple;
+	bh=PY1JL1lm7JzZjBFOh8RgsxyGeeUkXqbr3qzR81WTN+M=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=j5jgmpbyy/1IChAYocM8iC7eh7qZRkKhdLNo5OfOj5e4DFb7wCIzcwCydW4GhsSAgo4x8oyJ1OVxaZGEtPzMuvcPXceJDH9iX0p+hrbR+LUjHUG21QAqyuRXB8iPZbeV30QRzQ0Zdx0/1OOW2IauOsv1Dq8EdtfDAS/LAuCj29c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=N5R1dJwF; arc=none smtp.client-ip=192.198.163.14
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="f6/8774f"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="N5R1dJwF"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1735919610; x=1767455610;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=GQKKSwkS5uDA7r+YxySsENhIVbI3hSNDZidksSZbixo=;
-  b=f6/8774fMgq746KSSPXwNJ98j1UU3I2Cid++Tdw5ni9CWQpeiB8ztdiA
-   23Ebc00Rz+mkl+ocv9G/eTcObLNuBcrO9BLWdMrDiKi5XTjao7fN9KRBE
-   gt8lHE3TSps95v1s0sMbkBt58PGK5WentApeqhSWDeY+YDJAS2rIRbQOT
-   ESitMEyMv1wCgDJz+g5/NTj7+PYR6TSK+UsOoAQZdAkTQZRQHnp6gGrRd
-   bnStS3yjNIQoY6GELw1vGShFvGzeqesOx3Iy8s7WCh1SCaesBqTvGuYjj
-   t9lHGqP6LX/AKXI6DoV3GlAWHxukYd3Zh4yIoQeBLxxnVRVZJ68eMIsKo
+  t=1735919612; x=1767455612;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=PY1JL1lm7JzZjBFOh8RgsxyGeeUkXqbr3qzR81WTN+M=;
+  b=N5R1dJwFz81ZlTNFLu3q5Baxe3dyUqxemewTh3N3TIqbgklIZMY0lLjp
+   oryfJ1v7K+vL5OvIqigYwGcdMZ+J+ZaaV5djgipMzlNRXfjiB0tCUOz9P
+   gnxMgIW5ynm3dZmvfg1IEQZwE7eHmdou3ED3CPmT1HnH1jkz5Q8a5oiTm
+   R23z2C4MdkSvzhamswlnLjFzTdf8kzmU1W58TW4mqXONFQa7L8eIR0myN
+   SeTyLcH0E8vljVDmhd9/HZRi8cuqB/T5d3zE7alBZ4dOol6gnJSIRgD48
+   OM2LJF2KKwCJ5d1/7yPyWjFaFEdLcsA4pe+A+mMfClQpQAUR4lXa2znUu
    A==;
-X-CSE-ConnectionGUID: djBxYfWxSZOSdgaqApbheQ==
-X-CSE-MsgGUID: pidSExnLTb+1M9PgkI+oHw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11304"; a="36392095"
+X-CSE-ConnectionGUID: hZkyBCQHQpC4lQ9npChiUg==
+X-CSE-MsgGUID: 0pJlaQksR/+eqe+ubEvZzA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11304"; a="36392097"
 X-IronPort-AV: E=Sophos;i="6.12,286,1728975600"; 
-   d="scan'208";a="36392095"
+   d="scan'208";a="36392097"
 Received: from orviesa005.jf.intel.com ([10.64.159.145])
   by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Jan 2025 07:53:29 -0800
-X-CSE-ConnectionGUID: rcUI1X9BTfGE4xYero5PJg==
-X-CSE-MsgGUID: y89Re3hNT1mHacqaNiowUg==
+X-CSE-ConnectionGUID: UyuQIq4sRlas7CgNlNBaUw==
+X-CSE-MsgGUID: m8CHZHFVTOK5jc7T8tNtTQ==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
-   d="scan'208";a="106868355"
+   d="scan'208";a="106868356"
 Received: from spandruv-desk.jf.intel.com ([10.54.75.16])
   by orviesa005.jf.intel.com with ESMTP; 03 Jan 2025 07:53:29 -0800
 From: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
@@ -48,10 +49,12 @@ To: ilpo.jarvinen@linux.intel.com,
 Cc: platform-driver-x86@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
 	Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
-Subject: [PATCH 1/2] platform/x86/intel: power-domains: Add Clearwater Forest support
-Date: Fri,  3 Jan 2025 07:52:53 -0800
-Message-ID: <20250103155255.1488139-1-srinivas.pandruvada@linux.intel.com>
+Subject: [PATCH 2/2] platform/x86: ISST: Add Clearwater Forest to support list
+Date: Fri,  3 Jan 2025 07:52:54 -0800
+Message-ID: <20250103155255.1488139-2-srinivas.pandruvada@linux.intel.com>
 X-Mailer: git-send-email 2.47.1
+In-Reply-To: <20250103155255.1488139-1-srinivas.pandruvada@linux.intel.com>
+References: <20250103155255.1488139-1-srinivas.pandruvada@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -60,26 +63,26 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Add Clearwater Forest support (INTEL_ATOM_DARKMONT_X) to tpmi_cpu_ids
-to support domaid id mappings.
+Add Clearwater Forest (INTEL_ATOM_DARKMONT_X) to SST support list by
+adding to isst_cpu_ids.
 
 Signed-off-by: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
 ---
- drivers/platform/x86/intel/tpmi_power_domains.c | 1 +
+ drivers/platform/x86/intel/speed_select_if/isst_if_common.c | 1 +
  1 file changed, 1 insertion(+)
 
-diff --git a/drivers/platform/x86/intel/tpmi_power_domains.c b/drivers/platform/x86/intel/tpmi_power_domains.c
-index 603e7ded06a9..2f01cd22a6ee 100644
---- a/drivers/platform/x86/intel/tpmi_power_domains.c
-+++ b/drivers/platform/x86/intel/tpmi_power_domains.c
-@@ -81,6 +81,7 @@ static const struct x86_cpu_id tpmi_cpu_ids[] = {
- 	X86_MATCH_VFM(INTEL_GRANITERAPIDS_X,	NULL),
- 	X86_MATCH_VFM(INTEL_ATOM_CRESTMONT_X,	NULL),
- 	X86_MATCH_VFM(INTEL_ATOM_CRESTMONT,	NULL),
-+	X86_MATCH_VFM(INTEL_ATOM_DARKMONT_X,	NULL),
- 	X86_MATCH_VFM(INTEL_GRANITERAPIDS_D,	NULL),
- 	X86_MATCH_VFM(INTEL_PANTHERCOVE_X,	NULL),
- 	{}
+diff --git a/drivers/platform/x86/intel/speed_select_if/isst_if_common.c b/drivers/platform/x86/intel/speed_select_if/isst_if_common.c
+index 1e46e30dae96..dbcd3087aaa4 100644
+--- a/drivers/platform/x86/intel/speed_select_if/isst_if_common.c
++++ b/drivers/platform/x86/intel/speed_select_if/isst_if_common.c
+@@ -804,6 +804,7 @@ EXPORT_SYMBOL_GPL(isst_if_cdev_unregister);
+ static const struct x86_cpu_id isst_cpu_ids[] = {
+ 	X86_MATCH_VFM(INTEL_ATOM_CRESTMONT,	SST_HPM_SUPPORTED),
+ 	X86_MATCH_VFM(INTEL_ATOM_CRESTMONT_X,	SST_HPM_SUPPORTED),
++	X86_MATCH_VFM(INTEL_ATOM_DARKMONT_X,	SST_HPM_SUPPORTED),
+ 	X86_MATCH_VFM(INTEL_EMERALDRAPIDS_X,	0),
+ 	X86_MATCH_VFM(INTEL_GRANITERAPIDS_D,	SST_HPM_SUPPORTED),
+ 	X86_MATCH_VFM(INTEL_GRANITERAPIDS_X,	SST_HPM_SUPPORTED),
 -- 
 2.47.1
 
