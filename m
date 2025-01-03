@@ -1,93 +1,192 @@
-Received: from mail-pj1-f45.google.com (mail-pj1-f45.google.com [209.85.216.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mout.gmx.net (mout.gmx.net [212.227.17.22])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C3115189902;
-	Fri,  3 Jan 2025 19:53:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ECDF91474D3;
+	Fri,  3 Jan 2025 20:56:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.22
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1735933986; cv=none; b=rWXMQ8G24dUaCVUsiTU6cPgsGyBS6ALPJIc41jQ2EWtZj62eb/9H44tL2n3hejaByY91C1AMbEl8cdL1lLnF4D3rY6zT4UL1FBVmF2jrWZiSDGfbtf6VI7W5KZtDVRrk3yPNGAz3WAMjHtIF9rCJbh/TrQJROEfU3s2G2DuT5pE=
+	t=1735937796; cv=none; b=rF311e84q5OLl4CS4ZbY1Rt5RbGqRUKts2F7BSsXveN/4S1JvTkVccy/wfcozTkLPGp4jsLNxVm9uwudZ4PQRZK8XajfSAZOQx1zqdE/iHFRx+eGYdrwUxP8UdiUOVGS/gRSMaefZpnAw1TcSad8OaE3ZP0NmtFxf/Ilez8e3Gk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1735933986; c=relaxed/simple;
-	bh=NyRCBxInAIMeApyCkpI0Qk6QrUcI/YiW35pTSbFR4Xs=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=EEY86AwnK5W1pCKWhzk9/FjtpLDKiybmGpJR2efdDG9fqOXwVeUcy3Cgnjo/A4phU58BCDKyj9IRSrVaB4v2R6Uy8PCULho9Uc9jYyN0hQd37Wmi69zfalFX8qdDR9fpLo7KXD3nsQWzfB8rbCzaBAEY9m1A+SA5UELL6rT4jVQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Lhu70h16; arc=none smtp.client-ip=209.85.216.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1735937796; c=relaxed/simple;
+	bh=YDIpz7o+3jkj2vWjXrL3ZXo9r/RAG7yfa+VzOT7QO8I=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=M/GvqePxansemTE7RalUg+8QiHoCoSkkn/tq7ShbY3h4fuQ/1qjLYGPkjiOD2fvCiHOxFG3APCrE4Vd7fMI0HhvcRHKVxxO7kcG8IjFZsOqB7ZbpdNN7nCOTvSMLILK53G3n+yF+Ta43367Jsn/6fL4T6l/4vgAWufP+t/efx5o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b=Ujc0oxyL; arc=none smtp.client-ip=212.227.17.22
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Lhu70h16"
-Received: by mail-pj1-f45.google.com with SMTP id 98e67ed59e1d1-2ee50ffcf14so15860728a91.0;
-        Fri, 03 Jan 2025 11:53:04 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1735933984; x=1736538784; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=NyRCBxInAIMeApyCkpI0Qk6QrUcI/YiW35pTSbFR4Xs=;
-        b=Lhu70h16H6Kn92yQfA05fH551uP5S1dGNB2JsX9qazaoOd3Lvu3o0HZZdTAHIMjg75
-         dIYfr5xAQ/JjWCXJSJrObXU5snUeUvZUw4y6nUeeD4RjWFQZWpU0XxGLe8SuYEkexYUE
-         UN/zfBGN46UJ5TM3wFte/3qspHumkMXIZvuYZsQik25iJv5SgPUPEEf6ySb3gWed1feZ
-         C1cADeJXsOZE3pnuNiafhCY8HN0N5iSr4LWJ3GyMKpwySU5q8iecqWhGN4Vpd9JZN3A5
-         SXoPYgmeh1J23tumbQ+/VHIwAs07jDY1gP1XN438DOw+brMIIIJtIKrL+JQA6A5rizCV
-         0+bQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1735933984; x=1736538784;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=NyRCBxInAIMeApyCkpI0Qk6QrUcI/YiW35pTSbFR4Xs=;
-        b=sz54RgxaF1UsGlCZMpI6PoWTK83XzB1VNXsWMoONL/oU0zmEDj8d4GkH6nUhbLV+xU
-         L9qoIRkgPO365NPLUUEN8MRVDItwPS3lPfReR8XeblraxhtJPI+FbGjTdH7YD4xCZmfz
-         CPc2haOa6CEcbMxQMe4KyAPJDjXU78VXxr0y9MfnZNqSzjNoGSNmWsyx2SuGaKVNp9t6
-         l3ijESSQakSlrESWEOB3CCk4tjTF+wqQXWWdCc/lsA/glCsDvciNeoq1/oEr+QrBaBw/
-         gk4iwVBh84Nnm9J6qWE3F5QyThoGnZ1GwVNNjZGHe+Ewd8LYkSO9a3Ddj1ytWLKSYZd4
-         FaYA==
-X-Forwarded-Encrypted: i=1; AJvYcCVeLFaq5zbOO0+a/TuKNOnDkeFzebNLULRIeYGDnHm2bV4I7DPlojKaJXI+T8+UR2b+oze/NgntG0jakx4=@vger.kernel.org, AJvYcCXmJ4Y06EHBiRdN8XXCOCVqfJPDE0rYIZTcKNuqti9gGCLnK4ZDmksvzBFy2l/49WtfvEzYCx43VYW7EBrHkWzjd0kXdA==@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz+qSmLT2D+PiAVaXkP3k3p7/T+2oYI9VU9GoFj31SnW2CX9KCe
-	KrW3IWzicEFpFzW/8h/ro51gR3a20kT8sNwusYSI+jkuB0EpbyTlXMfWaWqvBJhmN5bcGc+gWao
-	jShyDd40pQDRuXkV8a9bqIabnRE8=
-X-Gm-Gg: ASbGncuRoqPmBJZQKKYDeMXZjL2a+c9ByN3Ph7mEUv/2Twy4J8aywibcWCP+v14HHSc
-	7IzgttaXB1y5Zf4egJgpMEOG/5iUMEetDI4kqB8hFOTcmkOXbeV/YwhUV39jv2JwVt5Mzzx0L
-X-Google-Smtp-Source: AGHT+IHZubrkOGX8r3lPYW1ICE2iMxSM/lvrUr/2b5hvoq3VUYvsSHMCxVk/bpkV+PYcs2XD810NOCPbNq/DYOWVt/o=
-X-Received: by 2002:a17:90a:f945:b0:2ef:949c:6f6b with SMTP id
- 98e67ed59e1d1-2f4437bf688mr83343757a91.13.1735933983907; Fri, 03 Jan 2025
- 11:53:03 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b="Ujc0oxyL"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.de;
+	s=s31663417; t=1735937775; x=1736542575; i=w_armin@gmx.de;
+	bh=K8rV6pJnFwBRfhgUSIirbdIMMGiEjtwKRhlcN1Wj8jc=;
+	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:To:Cc:
+	 References:From:In-Reply-To:Content-Type:
+	 Content-Transfer-Encoding:cc:content-transfer-encoding:
+	 content-type:date:from:message-id:mime-version:reply-to:subject:
+	 to;
+	b=Ujc0oxyLYmPZOb9trnPp0mQpYuxXgan90y/l2MrfExJPBq/8mbGga+DkmO6tezWQ
+	 14uVw/wjl4mtpIMPkMiBy7k01DMXvKj0+2zk8al/2ln7fvGxGIpAwse2d9GD0U7di
+	 Jp7f5NyhP7bosCqEiu/7dfqnTxJz4zNmNwPW9i3yxmEsmjOSbRQXYR5NtTPHbGh2O
+	 d0rOVZb7pZB7PUBnzcjUwDaERA4Jf6NXCEE4NiieYQOQlZnd3Pwag36B/BAXNaNex
+	 WMrIdFeB533r0Jnsw+q9XdB4A4TZQwaveZJPxgcu6EoppUgMXuIFDp5R1ez5j204H
+	 vgA37GWo8fPQ7x96ag==
+X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
+Received: from [192.168.0.14] ([91.14.230.110]) by mail.gmx.net (mrgmx105
+ [212.227.17.168]) with ESMTPSA (Nemesis) id 1MHXBp-1tGwfv3ICP-00EJ57; Fri, 03
+ Jan 2025 21:56:14 +0100
+Message-ID: <665df442-4970-49c3-aa95-5e83148b23e5@gmx.de>
+Date: Fri, 3 Jan 2025 21:56:10 +0100
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20241231140442.10076-1-hridesh699@gmail.com> <12ce2a4d-6a27-471e-b330-996753ff1bfb@gmx.de>
- <CALiyAon3r=VXFNZw7is4VWZoRnFFbrUUvLB9XeW+xkMLjXDyRA@mail.gmail.com> <tftomtw456sevajiid76bgenmxl2s5ycv4sckfgl7mdjbs5hxb@5vs36lxjtaxc>
-In-Reply-To: <tftomtw456sevajiid76bgenmxl2s5ycv4sckfgl7mdjbs5hxb@5vs36lxjtaxc>
-From: Hridesh MG <hridesh699@gmail.com>
-Date: Sat, 4 Jan 2025 01:22:27 +0530
-Message-ID: <CALiyAokg_-Mc2R_OL03AF32=EPcFS1+RYoA9G6r8iJj9ZEMtmA@mail.gmail.com>
-Subject: Re: [PATCH] platform/x86: acer-wmi: improve platform profile handling
-To: Kurt Borja <kuurtb@gmail.com>
-Cc: Armin Wolf <W_Armin@gmx.de>, "Lee, Chun-Yi" <jlee@suse.com>, Hans de Goede <hdegoede@redhat.com>, 
-	=?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, 
-	platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Shuah Khan <skhan@linuxfoundation.org>, onenowy@gmail.com
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4] platform/x86: samsung-galaxybook: Add
+ samsung-galaxybook driver
+To: Kurt Borja <kuurtb@gmail.com>, Joshua Grisham <josh@joshuagrisham.com>
+Cc: ilpo.jarvinen@linux.intel.com, hdegoede@redhat.com,
+ platform-driver-x86@vger.kernel.org, corbet@lwn.net,
+ linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20241226153031.49457-1-josh@joshuagrisham.com>
+ <mvp4rhnpzjdfyacuzczg2y5vms7hnarxxwbnk3pbtfx3mg3mrm@vzceo5cfjfl6>
+ <CAMF+KebdvjTKYAxWqk0dMaUc=jtqw624GKyc=j4gHJ2PBQK1gA@mail.gmail.com>
+ <v4ch4vicbofhr2sawc6synxzf552lxukr73f2qtothdedvoafh@or3ghcu3zqcm>
+Content-Language: en-US
+From: Armin Wolf <W_Armin@gmx.de>
+In-Reply-To: <v4ch4vicbofhr2sawc6synxzf552lxukr73f2qtothdedvoafh@or3ghcu3zqcm>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:5MPd//h6H1ZxNcGC+1khJu3KIowvQXL1OH4UuPSRkATsh3FiUlV
+ /OhlYuU4ouMbsAjmfOTbEFXblfOcEJWkAlyIYFzUjU7ppoJ+BraWxXrpGcn0mkxmZZ7TqNS
+ mOtnMk5URmA2UWahApDISGPXOiYyxiLu4ooaPl32JsTU+3oxf+DxQyCfU/UoAPhx4XBsVS/
+ +IBoXH+fM1+o14tEbRyPQ==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:1dKT4F93V04=;dXYq0vE2OQn8R2+f8wHMUS/V2eH
+ CmkawbNcSD5kpOL+Ng599AEYCwdOqV6Ebi+kpWRhZKl/SPBStRwgjG/dF12BjRcTVuiLUmHn8
+ FbtLsoGELR4Z7UUertNFiIeT6hUD/xdA1fpsQcX6nAtohjpqhvTUqQqGG9tuOVlzMcq+o741w
+ cWK2/UrgzPJLzKANLzN24+DhWd00LlebUZWtaZn//W5ijdWzHAEZSM/2NzfTO0iC/R0lgXBVI
+ tPPymBVWrYSecMMjJdXm/cnn/skP2a5/tdOy40G2CI0W3Mg3YSQFH3baIjUvRcNtYkgq2GDBh
+ rpMRCRRZDpT4RUCs8VE2Dqs0jf2Bf/u4Oef/dGOcWmWxkmQfKsdpiX8y9G7SICGRkhKl3waJP
+ i5lbOgHKvWU1BSsBnIpFYr1QCl5oG7g3/GzGXGpHURieYNSQdNyIYd4/LpgwP9vmPuWO/aLsN
+ 8gE+l4QBZoB837bk9rqf+YbLBP7ADLle5vzgc1Jh5pI59nzOCaOsx1zZ6rFy2TkQHZRWpCtaH
+ twE5M1MUjLQnJG95RUKWWBrm72vnz+0s73+FeqXd3LIzbPUNBGrlkOU3TUQ6LvX5kPH5ECg1b
+ XjKA7l2IVQGpLqV9J/RRDhSbkncyh24p35IZM2VOAYot6KJiwTXh9OLEigyETaYcoTxoAwIYR
+ Vlsyc/WmnssGxJA+532ORReTCaNPQkLclIrAx/Tqa6umNcmQ7OVjZOQBmHzdBLVO90Hfq4INY
+ BLAowFBq3JNHAsagIMjIMTmiMCK0TK3E+oVx9Yl08DG71G0sSjuSJNY5OzAZOceocIj3klDTl
+ T7yIQcQyVy5Ja+fb6xNkhfTmHJz/BlOYlmlf3/26zSv5eQbFTVspgSjP8sMTv/CV5s2pcGvzt
+ QFeIvC1iH1FPDHfrro25ueMIufqWSzvjYsmINYkevHg7yv82K0wFqofQLw4jpr5bbjnKY2fkl
+ l7gzewe9Aw8mRLQCACzDL10re9TCLk00s6jVa8ZGbKWHK8EMKBFUPGA6cvlcjVeSTrwnlptpj
+ FGNsWlIAFFjZnranwL8N456y5frdXWOWwCzTSrhVuSqR83ljVkwfLl+Hg0jtXq/S3wNwrat2K
+ YiE21wuhDUCstNFAdHTzy+bPZpPi5k
 
-> Do you perhaps know if users expect a thermal profile change on AC
-> connect/disconnect events on Windows? This would solve this discussion
-> [1].
-Yep, there is a profile change on AC disconnect on Windows.
-Specifically, it forces the balanced platform profile and returns to
-the last active profile on replugging (the UI disallows changing of
-profiles when disconnected but it is possible via WMI)
+Am 03.01.25 um 19:52 schrieb Kurt Borja:
 
-> From my testing, what I've found out is that even if we don't handle
-> on_AC, the profile is still set but the hardware will not put the
-> changes into effect until we plug in AC.
-I did some more testing and I was a bit mistaken in the way it works.
-While the system is unplugged it will still apply the three different
-profiles (as evident by the differing fan speeds) but the CPU will
-aggressively throttle under stress, placing an upper limit on the
-maximum clock rate, this limit is lifted upon plugging in AC.
+> On Fri, Jan 03, 2025 at 07:19:51PM +0100, Joshua Grisham wrote:
+>> Hi Kurt, thanks for the comments! Will respond inline below...
+>>
+>> Den m=C3=A5n 30 dec. 2024 kl 18:50 skrev Kurt Borja <kuurtb@gmail.com>:
+>>>> +     if (err)
+>>>> +             goto return_with_dbg;
+>>>> +
+>>>> +     galaxybook->has_kbd_backlight =3D true;
+>>>> +
+>>>> +     return 0;
+>>>> +
+>>>> +return_with_dbg:
+>>>> +     dev_dbg(&galaxybook->platform->dev,
+>>>> +             "failed to initialize kbd_backlight, error %d\n", err);
+>>>> +     return 0;
+>>> Return `err` here.
+>>>
+>> I actually intentionally want to return 0 here -- the feature is "not
+>> enabled" but other features of the driver can be (so probe should not
+>> fail and unload the module). Not all devices that have these ACPI IDs
+>> will have keyboard backlight (or various other features that are
+>> supported by this module), but do have other features, so those
+>> features that exist on the specific device should "work" ideally while
+>> others are not made available. This logic matches the behavior from
+>> before but just slightly refactored now to clean it up a bit. Per some
+>> other comments from Armin I will change a bit of this so the debug
+>> messages will be more clear at "point of use" so hopefully it will be
+>> even more clear; does this seem ok or should there also be a comment
+>> or clear text in the debug message that it will continue without
+>> failing the probe?
+> I thought this might have been the case, but you do propagate errors
+> from this method to the probe, even though it always returns 0, so it
+> seems that you wanted to return err instead.
+>
+> To me it would be better to make this method void like
+> galaxybook_profile_init() or galaxybook_battery_threshold_init(). But
+> I'd like to hear Armin's opinion.
 
---
+I am OK with returning 0 in case some errors are expected and should not c=
+ause a probe error.
+
+However errors coming from other subsystems (e.g. error during subsystem r=
+egistration) should usually
+be propagated so that the driver either registers all supported interfaces=
+ or none.
+
 Thanks,
-Hridesh MG
+Armin Wolf
+
+>>>> +     int mapped_profiles;
+>>>>   [...]
+>>>> +             /* if current mode value mapped to a supported platform=
+_profile_option, set it up */
+>>>> +             if (mode_profile !=3D IGNORE_PERFORMANCE_MODE_MAPPING) =
+{
+>>>> +                     mapped_profiles++;
+>>> mapped_profiles is uninitialized!!
+>>>
+>> Thank you! A total miss on my part .. and feels like just random
+>> chance that I have not had an issue so far (it seems like it has
+>> always grabbed fresh memory / a value that was already 0) but I will
+>> fix this :)
+> Thankfully, I think there are kernel configs to auto-initialize stack
+> variables to 0. That may be why you didn't encounter problems.
+>
+>>>> +     err =3D galaxybook_i8042_filter_install(galaxybook);
+>>>> +     if (err)
+>>>> +             return dev_err_probe(&galaxybook->platform->dev, err,
+>>>> +                                  "failed to initialize i8042_filter=
+\n");
+>>>> +
+>>>> +     return 0;
+>>>> +}
+>>>> +
+>>>> +static void galaxybook_remove(struct platform_device *pdev)
+>>>> +{
+>>>> +     if (galaxybook_ptr)
+>>>> +             galaxybook_ptr =3D NULL;
+>>> Please someone correct me if I'm wrong.
+>>>
+>>> Device resources get released after calling the .remove callback,
+>>> therefore there is a small window in which the i8042 filter is *still*
+>>> installed after this point, which means you could dereference a NULL
+>>> pointer.
+>>>
+>>> I suggest not using devres for the i8042 filter.
+>>>
+>> I believe you are correct, and I checked some of the driver core code
+>> and was able to pinpoint the exact sequence to confirm. This was also
+>> mentioned by Armin in a comment. My intention is that I will actually
+>> fold everything to do with this global pointer into the i8042 init /
+>> remove functions since it is the only thing that uses it, so hopefully
+>> all will work out ok. Also my intention further is if Armin's changes
+>> to add a context pointer to the i8042 filter hook get accepted and
+>> merged then I will move to that and remove this global pointer
+>> entirely :)
+> Yes, I'm also waiting for it to get merged. I want to implement a filter
+> in alienware-wmi.
+>
+>> Thanks again for looking into this, and please feel free to say if
+>> there is anything else you find or something I responded with here
+>> that does not sound good!
+> Sure :)
+>
+> ~ Kurt
+>
+>> Joshua
