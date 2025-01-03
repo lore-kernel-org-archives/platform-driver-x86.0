@@ -1,32 +1,31 @@
 Received: from todd.t-8ch.de (todd.t-8ch.de [159.69.126.157])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 186A31C2323;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B1B5A1C1F25;
 	Fri,  3 Jan 2025 23:05:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.69.126.157
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1735945520; cv=none; b=LA+BINOZHYsCanTrvQKIkXAJA7GGAbs3OjPjDvJBx2mSmTqAayfCGoSc1/phmsFp2hg3CfL6CZynDvahiZ58uz+iGDAsNyuA7gnm0sJulznfXRtSRcZJ/+P+qZSmMPPcEmMJzHiKZx82S96WvW7XBIMpi4QsEfYocwTetRota30=
+	t=1735945520; cv=none; b=h7oahFUhFwCQX6LPd0krhmHRd0HF+38+bPrdi6fbvNyo/RMwdeeE0u9rDM1SDkYWgohcrX4zGD1RPo0v9XDSOdW7LnIvnBD+9olf7z5nJ3mEd/oF5HC3wliETm52OzNs6i5xl/uXq07Dy1wXtHLTAqwq5mjQmASSFob0cxQzpx0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1735945520; c=relaxed/simple;
-	bh=JQ7kRMXzxNmfVpw6i5f3Vnk2H901HuT/uZam75RPzGw=;
+	bh=h/7xxDMHCuHgQRO1fVetToEREOiCIlqUj4Ypa1zfWFc=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=UU2BTHafDrGYCxUDWoP7qH5yxc/q6GbBzwh7IzCQdsri7p7ATU5koCa79dVBKoHeBIWgPh2E5Dp0ko/Dij0cmHmzA+CDW6na3myfK6GpMKDcPoEy1K17Z5/l2ZQ2+4xm6Xd4tEyEDHtHpCmWYDqjo3P+PMXF5C4oPtGmqT5G/Mc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=weissschuh.net; spf=pass smtp.mailfrom=weissschuh.net; dkim=pass (1024-bit key) header.d=weissschuh.net header.i=@weissschuh.net header.b=nG9h5CO3; arc=none smtp.client-ip=159.69.126.157
+	 In-Reply-To:To:Cc; b=aFQZeVdWVcB33pMoFmORYjdSldBzMR95ffA7c3Q8BX5bsEvxG4aaGShQ2sB9mgneZFpVXcqgnjD/hyJqibGBrwd2Db+IJJC+3fLWMjEprw5R9uclQMQ24oKbYbEbIe0a/raEHCrqm4stZCwzSW9RxXKg5Sg6MjBgIn9muDXTAAw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=weissschuh.net; spf=pass smtp.mailfrom=weissschuh.net; dkim=pass (1024-bit key) header.d=weissschuh.net header.i=@weissschuh.net header.b=p2UlfER/; arc=none smtp.client-ip=159.69.126.157
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=weissschuh.net
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=weissschuh.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=weissschuh.net header.i=@weissschuh.net header.b="nG9h5CO3"
+	dkim=pass (1024-bit key) header.d=weissschuh.net header.i=@weissschuh.net header.b="p2UlfER/"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=weissschuh.net;
-	s=mail; t=1735945514;
-	bh=JQ7kRMXzxNmfVpw6i5f3Vnk2H901HuT/uZam75RPzGw=;
+	s=mail; t=1735945513;
+	bh=h/7xxDMHCuHgQRO1fVetToEREOiCIlqUj4Ypa1zfWFc=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=nG9h5CO39Hm1438DnUtDRJirZQxiuJaTzrvEqXoTsavspO2E9Z6WPdhImFnbRzR4P
-	 mP5hJcVj5tDAu4Vm5rkPXis0PqB/lqC1EQ1QS83luQKF6PVybmzDLGSq8n5OVhYs7O
-	 3pOMc0bDrCU0dUO5s6+ek01bUtYKWHBfJkskPydk=
+	b=p2UlfER/g9QxyczO9XH5crGFBhuM31PodSossURTo7mcAAnCwpd9d76NzSbs3xfHc
+	 ZOzk7ncuRG2d387m4LYzyA0aTXGorHmTmUFbixSsX3Ke30voadjpC9C/XTuwCAnDM7
+	 +HvtLyNaawD/hPg2uDTSIeqJUgWHPxXFflLYPWpo=
 From: =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <linux@weissschuh.net>
-Date: Sat, 04 Jan 2025 00:05:13 +0100
-Subject: [PATCH 5/6] platform/x86: dell-sysman: Directly use
- firmware_attributes_class
+Date: Sat, 04 Jan 2025 00:05:10 +0100
+Subject: [PATCH 2/6] platform/x86: firmware_attributes_class: Simplify API
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -35,7 +34,7 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-Message-Id: <20250104-firmware-attributes-simplify-v1-5-949f9709e405@weissschuh.net>
+Message-Id: <20250104-firmware-attributes-simplify-v1-2-949f9709e405@weissschuh.net>
 References: <20250104-firmware-attributes-simplify-v1-0-949f9709e405@weissschuh.net>
 In-Reply-To: <20250104-firmware-attributes-simplify-v1-0-949f9709e405@weissschuh.net>
 To: Hans de Goede <hdegoede@redhat.com>, 
@@ -47,73 +46,108 @@ Cc: Joshua Grisham <josh@joshuagrisham.com>,
  Dell.Client.Kernel@dell.com, 
  =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <linux@weissschuh.net>
 X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1735945513; l=2211;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1735945513; l=3277;
  i=linux@weissschuh.net; s=20221212; h=from:subject:message-id;
- bh=JQ7kRMXzxNmfVpw6i5f3Vnk2H901HuT/uZam75RPzGw=;
- b=Z84qWVCveD2c/3XaX8A7d+/XmPPsnbrjJLL3Eb4MiP51p+quVTSq54ft9PT0ngivW8AY9Q937
- yWO9Kz5pcpHB1nbEcxHspkk1MMVN9bbYMl0VyaIT5KPP90Wr/Ojdg++
+ bh=h/7xxDMHCuHgQRO1fVetToEREOiCIlqUj4Ypa1zfWFc=;
+ b=qvZ9Cf05LaRkooqj+2iTwvqEowZaXfrVuv690CFopE/BSQ4kJYhyOVdyN8vbLtdrYv5Tdnx5E
+ Peb6eqT1s1BCRMxrtRYPJafRMKPHFixBwIh8XI3XpvACRGOujRINtn8
 X-Developer-Key: i=linux@weissschuh.net; a=ed25519;
  pk=KcycQgFPX2wGR5azS7RhpBqedglOZVgRPfdFSPB1LNw=
 
-The usage of the lifecycle functions is not necessary anymore.
+The module core already guarantees that a module can only be unloaded
+after all other modules using its symbols have been unloaded.
+As it's already the responsibility of the drivers using
+firmware_attributes_class to clean up their devices before unloading,
+the lifetime of the firmware_attributes_class can be bound to the
+lifetime of the module.
+This enables the direct usage of firmware_attributes_class from the
+drivers, without having to go through the lifecycle functions,
+leading to simplifications for both the subsystem and its users.
 
 Signed-off-by: Thomas Weißschuh <linux@weissschuh.net>
 ---
- drivers/platform/x86/dell/dell-wmi-sysman/sysman.c | 17 ++++-------------
- 1 file changed, 4 insertions(+), 13 deletions(-)
+ drivers/platform/x86/firmware_attributes_class.c | 40 +++++++++---------------
+ drivers/platform/x86/firmware_attributes_class.h |  1 +
+ 2 files changed, 15 insertions(+), 26 deletions(-)
 
-diff --git a/drivers/platform/x86/dell/dell-wmi-sysman/sysman.c b/drivers/platform/x86/dell/dell-wmi-sysman/sysman.c
-index 40ddc6eb75624e713dc4d2f7e92bc5f63fa4fde8..d00389b860e4ea0655c740c78bc3751f323b6370 100644
---- a/drivers/platform/x86/dell/dell-wmi-sysman/sysman.c
-+++ b/drivers/platform/x86/dell/dell-wmi-sysman/sysman.c
-@@ -25,7 +25,6 @@ struct wmi_sysman_priv wmi_priv = {
- /* reset bios to defaults */
- static const char * const reset_types[] = {"builtinsafe", "lastknowngood", "factory", "custom"};
- static int reset_option = -1;
--static const struct class *fw_attr_class;
+diff --git a/drivers/platform/x86/firmware_attributes_class.c b/drivers/platform/x86/firmware_attributes_class.c
+index cbc56e5db59283ba99ac0b915ac5fb2432afbdc9..87672c49e86ae3ef5b99aa99be532c1d84805adc 100644
+--- a/drivers/platform/x86/firmware_attributes_class.c
++++ b/drivers/platform/x86/firmware_attributes_class.c
+@@ -2,47 +2,35 @@
  
+ /* Firmware attributes class helper module */
  
- /**
-@@ -541,15 +540,11 @@ static int __init sysman_init(void)
- 		goto err_exit_bios_attr_pass_interface;
- 	}
+-#include <linux/mutex.h>
+ #include <linux/module.h>
+ #include "firmware_attributes_class.h"
  
--	ret = fw_attributes_class_get(&fw_attr_class);
--	if (ret)
--		goto err_exit_bios_attr_pass_interface;
+-static DEFINE_MUTEX(fw_attr_lock);
+-static int fw_attr_inuse;
 -
--	wmi_priv.class_dev = device_create(fw_attr_class, NULL, MKDEV(0, 0),
-+	wmi_priv.class_dev = device_create(&firmware_attributes_class, NULL, MKDEV(0, 0),
- 				  NULL, "%s", DRIVER_NAME);
- 	if (IS_ERR(wmi_priv.class_dev)) {
- 		ret = PTR_ERR(wmi_priv.class_dev);
--		goto err_unregister_class;
-+		goto err_exit_bios_attr_pass_interface;
- 	}
+-static const struct class firmware_attributes_class = {
++const struct class firmware_attributes_class = {
+ 	.name = "firmware-attributes",
+ };
++EXPORT_SYMBOL_GPL(firmware_attributes_class);
++
++static __init int fw_attributes_class_init(void)
++{
++	return class_register(&firmware_attributes_class);
++}
++module_init(fw_attributes_class_init);
++
++static __exit void fw_attributes_class_exit(void)
++{
++	class_unregister(&firmware_attributes_class);
++}
++module_exit(fw_attributes_class_exit);
  
- 	wmi_priv.main_dir_kset = kset_create_and_add("attributes", NULL,
-@@ -602,10 +597,7 @@ static int __init sysman_init(void)
- 	release_attributes_data();
- 
- err_destroy_classdev:
--	device_destroy(fw_attr_class, MKDEV(0, 0));
--
--err_unregister_class:
--	fw_attributes_class_put();
-+	device_destroy(&firmware_attributes_class, MKDEV(0, 0));
- 
- err_exit_bios_attr_pass_interface:
- 	exit_bios_attr_pass_interface();
-@@ -619,8 +611,7 @@ static int __init sysman_init(void)
- static void __exit sysman_exit(void)
+ int fw_attributes_class_get(const struct class **fw_attr_class)
  {
- 	release_attributes_data();
--	device_destroy(fw_attr_class, MKDEV(0, 0));
--	fw_attributes_class_put();
-+	device_destroy(&firmware_attributes_class, MKDEV(0, 0));
- 	exit_bios_attr_set_interface();
- 	exit_bios_attr_pass_interface();
+-	int err;
+-
+-	mutex_lock(&fw_attr_lock);
+-	if (!fw_attr_inuse) { /*first time class is being used*/
+-		err = class_register(&firmware_attributes_class);
+-		if (err) {
+-			mutex_unlock(&fw_attr_lock);
+-			return err;
+-		}
+-	}
+-	fw_attr_inuse++;
+ 	*fw_attr_class = &firmware_attributes_class;
+-	mutex_unlock(&fw_attr_lock);
+ 	return 0;
  }
+ EXPORT_SYMBOL_GPL(fw_attributes_class_get);
+ 
+ int fw_attributes_class_put(void)
+ {
+-	mutex_lock(&fw_attr_lock);
+-	if (!fw_attr_inuse) {
+-		mutex_unlock(&fw_attr_lock);
+-		return -EINVAL;
+-	}
+-	fw_attr_inuse--;
+-	if (!fw_attr_inuse) /* No more consumers */
+-		class_unregister(&firmware_attributes_class);
+-	mutex_unlock(&fw_attr_lock);
+ 	return 0;
+ }
+ EXPORT_SYMBOL_GPL(fw_attributes_class_put);
+diff --git a/drivers/platform/x86/firmware_attributes_class.h b/drivers/platform/x86/firmware_attributes_class.h
+index 8e0f47cfdf92eb4dc8722b7d8371916af0d84efa..ef6c3764a83497ad7e75b0102154c92ce476e5ae 100644
+--- a/drivers/platform/x86/firmware_attributes_class.h
++++ b/drivers/platform/x86/firmware_attributes_class.h
+@@ -7,6 +7,7 @@
+ 
+ #include <linux/device/class.h>
+ 
++extern const struct class firmware_attributes_class;
+ int fw_attributes_class_get(const struct class **fw_attr_class);
+ int fw_attributes_class_put(void);
+ 
 
 -- 
 2.47.1
