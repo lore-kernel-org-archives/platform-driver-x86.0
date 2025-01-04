@@ -1,137 +1,123 @@
-Received: from mail-pl1-f172.google.com (mail-pl1-f172.google.com [209.85.214.172])
+Received: from mail-pl1-f174.google.com (mail-pl1-f174.google.com [209.85.214.174])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 99D6B433B3;
-	Sat,  4 Jan 2025 08:55:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 218571C5F0E;
+	Sat,  4 Jan 2025 15:30:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1735980924; cv=none; b=rrx04vEXz7Y/sIADD4LSwhNaQTJaBeiZJq/TNVYmHtvmzUkb8D2k76CsaqzlMt5Qth5N/lkJrejiPPaIv/HJXr+/cRJoL2eTTHQcOPb8gzB8/uyVGSJ93jNhoCSfZXnKl0vx8BrdvD8/f98yoe/Lixcs8s/MN2+vA+zblfiMVXc=
+	t=1736004660; cv=none; b=vBNpwQuWcJtP/0RV4fNBODQMiC90IGIMu35qWHCWBA4e1HeXC8OBHnerIVMrCkSRrsXSYvJRSn+6C1VI8IEH8vCVqzDwq8L3bVyNfYivV6eW6USPC9p1KnM1ZLbI37dtbS8+ww4Jx8k5wqozvWkGpNDdylwlHvYMEFAxkNWf0nk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1735980924; c=relaxed/simple;
-	bh=T3zLbaU5n/7+VfUxdn5sk3LG0ICs3zpKwqsjbWHY0Ig=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=W31+MZUdPGt1k+50nC8iC7OJXyagprBgBHTqaZA00rZB4HKNv3ZFM8j0UMX755/hx0+C40EkMgZl0ZfzU81QYP7AKuMvAJo73Z2jBpidcKmadjjUxSdVasYZ30UuPXspireva4vTeQBPAVwvRS6rsuFkdYfUZ51smUDP4VEeQNI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=kCVY9xIa; arc=none smtp.client-ip=209.85.214.172
+	s=arc-20240116; t=1736004660; c=relaxed/simple;
+	bh=gYCUqoa/AQjN2mgGeJu7X4e9McIWS62U9byVzPGGQP0=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=HiChiHQz5tqICC60RlKJe0WHJg/DO87Ycltovg47IviX1nsYXPY+AWkpfjY+l6tLbzA7ZuIvydoOs7d3Q+RgDHv1O0FZpLN5vF5AkfpUinXk0yMUqSy3fdeXP8lwOdVd2ORsCjyT3uiGAP69Z4vI8UmmjsunNV+wrsI4lfArdQU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=cKic/teH; arc=none smtp.client-ip=209.85.214.174
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kCVY9xIa"
-Received: by mail-pl1-f172.google.com with SMTP id d9443c01a7336-2162c0f6a39so189419575ad.0;
-        Sat, 04 Jan 2025 00:55:22 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cKic/teH"
+Received: by mail-pl1-f174.google.com with SMTP id d9443c01a7336-21636268e43so104119305ad.2;
+        Sat, 04 Jan 2025 07:30:58 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1735980922; x=1736585722; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:reply-to
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:from:to:cc:subject:date:message-id:reply-to;
-        bh=CDzMXLxnbjwR/+ogZUNMnZgXM3wP9SzQQEno8Vk+oVA=;
-        b=kCVY9xIadx8pIFFi2GAy5cGPb99vlDivaeVs8vq/hIY0agioMVjlfZMJl3H3/ys1yc
-         aDV/WkgdhZa29iuNtCHRXKljecUm2zQDg35I+/WTvtzoPJZt9gJf8ACSbCI2oko+tJx1
-         1HLtN6Tt1+dePaagC1Un4ti1tiL2r93IYhBJy/Fpg1g36xraYXMr9YpGBdzMXWXfilbL
-         f2vPNtDlPbGQErwYABi4Z3V49vsVcva8UmCB3HSRisfzcvKpMR80SqU/y67chwVItIS8
-         wxZNHZ96cdsPwr91Y7p7648N0Yt8N5kDuXJZBQ3cNOESgISnUHnPC+W5Biz07OfoUseS
-         HAbw==
+        d=gmail.com; s=20230601; t=1736004658; x=1736609458; darn=vger.kernel.org;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=ceVKvsBoxPIjQ+Uh3ePZRvp1H4S74LllFdVn9G3RDnU=;
+        b=cKic/teHfFBjIKSE6IX3jFDaUaCp08ml28ZdOf49uqJtlHI1kcxcHJq9avt1GcGdpw
+         RlOhXTVutG2QgGXcdpNSdylVe2E04aVN1YexQBtnJIcY6t4UhW6P5AnRY8C9LHmrnNA8
+         H/ToReKeaR2XnVPlGS0U2zAPRQXL7oPkyVFdaEWkJ7kZ3JeGgFo7jjujLjePASn8SfK3
+         YS9xS2ITX9UWNv5NGO21oJloQVusebNBOFKyli1RhL+DkzUAjXDihjK4UqwqB+G4lutY
+         50GER+8H7IBk3VAtMXUjOlDtOeEsQODv8bfoJK0hOQvPCgTkJ/TNbWVKlCu100J/M1b7
+         zFXw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1735980922; x=1736585722;
-        h=content-transfer-encoding:in-reply-to:from:reply-to
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=CDzMXLxnbjwR/+ogZUNMnZgXM3wP9SzQQEno8Vk+oVA=;
-        b=w1x196rDU6gTs45qT/Fg3B01C8F22PcsWZ1y+H4C8s0I9IZpwRXd5zrmrdcSxD5QNn
-         hWhYqb+UJk7HKfJ6kvjAPb5Qrg0F8V5rO0hETYhviTAKH+ecKAlvJx602yagz0r3KWbY
-         Aa5jgeBdQwhLjolkgJHoXpS+TVFrcYQw5LpQ2ltl+PsS6zpQKe0RTAdStSWWx1wJyF5x
-         WGuucIylZJyiTb7nqLh7LgHAyFEa3bpRlUSZjaEc3r0fpxr7J6sIRZN0pKMizp96ZCKb
-         UQPLkn8G0inoBLESjO6j6WJX6xAsXYmX2Aune7n7roiSWYNwy51ZpkhxqU3Fx8a5falX
-         otZA==
-X-Forwarded-Encrypted: i=1; AJvYcCUclihCGgiBWFZgcUKNxyY/KkqmeDPjE2qRZoxCChYN2L6dJ9OpcmbrkTnop/IwqaSCciuAQnPyEoRpLTI=@vger.kernel.org, AJvYcCVOY3eqoj4KvG3OQCNBlYvrfOA/AOShcQV+CfdcAFl9pEdoB/3NUVxhjlpzpz4pGN6KJHuHH/mtE21Gqbd66Rbgkj8niw==@vger.kernel.org
-X-Gm-Message-State: AOJu0YxEFeuEdv7qEUSER65Cuz2iGdV8KIVbMz4XZi5n2WvDDLgglX5m
-	logrcsMKnN7Mi+b7UqTo2Jhet23PaCe9RrK65aygt/wFjIqZVdgC
-X-Gm-Gg: ASbGncvfEHuRli6fbxhWQCYorqDXfL8jFv/ChDfqPT0orXXfF4MHn/nxVD9II/BGbc3
-	3Vq5cPvgcdCFXqVh8h9QHrZ1mABzw6EFgtHUjGMyUiWEqXpGRxRhqMTQMDSC3rZSkPQ94PaQnvT
-	kvOlCOOgONqEsc5HqnqDyPxnhm6Z3WMHON61FGVnRzh8g/5i0ih4ZtMU1ACGBraKLXZyoVXiUEo
-	rH6qhYtesYkvn1rweI6hlbKcg9VMXgX4H+P5U6XlSuoXJum2EJOLfaFRQ==
-X-Google-Smtp-Source: AGHT+IGvCbbVjUx9cTuj7OjGOoeeQ7WTmTQOxM84YRBd+W4jDNCs/6yPJl1MgHq4zbHPqXPk/qZ0KA==
-X-Received: by 2002:a05:6a21:3382:b0:1e1:9e9f:ae4 with SMTP id adf61e73a8af0-1e5e1e87c5bmr64254760637.13.1735980921820;
-        Sat, 04 Jan 2025 00:55:21 -0800 (PST)
-Received: from [192.168.2.16] ([110.46.146.116])
-        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-842e32f7ea0sm25316395a12.78.2025.01.04.00.55.19
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 04 Jan 2025 00:55:21 -0800 (PST)
-Message-ID: <6a9385e6-8c5a-4d08-8ff9-728ac40792d2@gmail.com>
-Date: Sat, 4 Jan 2025 17:55:17 +0900
+        d=1e100.net; s=20230601; t=1736004658; x=1736609458;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=ceVKvsBoxPIjQ+Uh3ePZRvp1H4S74LllFdVn9G3RDnU=;
+        b=SRwKrWfwJe5/kafvRj9cQxCVsso8WCTcqjKDdGgDKAilOwP6d6r63cdTixEoqEuMSG
+         SePk64b7B22S/SJeKanfJS3w2u0czP8LLs4Yp4s0LhWyEOG3cTxiSdEeSHVCC3cL8Spv
+         VpQN/eZf9K+ViEGer/QfGCVNit+a7p+HQz6QE2Utux2baT/AVtB+f5WCtk9YjGl0IXHh
+         TE81LP5UmrTDXT8AHTTwSzlhp18vpAnbfX9rh6jUM7mmZilqRrk7wYCRYXS9A+OnEYKI
+         JqEmYfr4HhLF0i3A/1Q9z3YMKHO3jeruxscNC/Zn+lwyYyGMBgQZZ1IXYMjASjAfKlik
+         blEA==
+X-Forwarded-Encrypted: i=1; AJvYcCUm4VG0PlGrZ7kPL37C4TetsWfJdMiIq4ZJdo/ijKmfA3vN87Tppml4K52ohj2Nygb6s9mYOoq5C4ZyR/g=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxhWSjrUi730LQMlTC48E3T3dvzvr/MRpsAWbauXxKOEXmZcs+x
+	wqmhfIg6MXVM9aLlJOhZdizy2daaq1mJqphvAr5oOn7MlsWVzK6qyGI1vybZ/kU=
+X-Gm-Gg: ASbGnctZKqgrum9EeR51B098aO51nvWRYmdi+jOBtbNuAyov9aswrqTZ9EZetn+GlM+
+	6SKr4fuzx4tOz+Ev73WpyDaRz6CofP+9QeVsbnbg0Cc8GqKHgIYfyVuXY8ob/lXepfOE3yWE9oX
+	rRgAZ1UATcikzt4krg5GisnDfWI67yb6n972b3QJxOusxwe1TuIfni4PX9AORHrz22wej4Y+3Rh
+	kdJzVRAiVGEiNntnlHaTaZCeJA3ECJI2QCPVdPoX3EqqsU5kKXdY55+umM/wkqn
+X-Google-Smtp-Source: AGHT+IFZfpHZzx4TEdTABr1UD7rzQ5doiCkscDrCpSjS2R1Cfu7xuXGXwlaBxMbW4uguT0EIe23n0Q==
+X-Received: by 2002:a17:903:2c6:b0:216:3c36:69a7 with SMTP id d9443c01a7336-219e6f262admr748478775ad.45.1736004657686;
+        Sat, 04 Jan 2025 07:30:57 -0800 (PST)
+Received: from [172.19.0.1] ([2401:4900:315c:e91e:a8f1:4734:ec05:235a])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-219dc97182dsm262417815ad.82.2025.01.04.07.30.54
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 04 Jan 2025 07:30:57 -0800 (PST)
+From: Hridesh MG <hridesh699@gmail.com>
+Subject: [PATCH v2 0/3] platform/x86 acer-wmi: Improve platform profile
+ handling
+Date: Sat, 04 Jan 2025 20:59:19 +0530
+Message-Id: <20250104-platform_profile-v2-0-b58164718903@gmail.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] platform/x86: acer-wmi: improve platform profile handling
-To: Armin Wolf <W_Armin@gmx.de>, Hridesh MG <hridesh699@gmail.com>,
- Kurt Borja <kuurtb@gmail.com>
-Cc: "Lee, Chun-Yi" <jlee@suse.com>, Hans de Goede <hdegoede@redhat.com>,
- =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
- platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
- Shuah Khan <skhan@linuxfoundation.org>
-References: <20241231140442.10076-1-hridesh699@gmail.com>
- <12ce2a4d-6a27-471e-b330-996753ff1bfb@gmx.de>
- <CALiyAon3r=VXFNZw7is4VWZoRnFFbrUUvLB9XeW+xkMLjXDyRA@mail.gmail.com>
- <tftomtw456sevajiid76bgenmxl2s5ycv4sckfgl7mdjbs5hxb@5vs36lxjtaxc>
- <CALiyAokg_-Mc2R_OL03AF32=EPcFS1+RYoA9G6r8iJj9ZEMtmA@mail.gmail.com>
- <20e3ac66-b040-49a9-ab00-0adcfdaed2ff@gmx.de>
-Content-Language: en-US
-Reply-To: 20e3ac66-b040-49a9-ab00-0adcfdaed2ff@gmx.de
-From: SungHwan Jung <onenowy@gmail.com>
-In-Reply-To: <20e3ac66-b040-49a9-ab00-0adcfdaed2ff@gmx.de>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAM9TeWcC/x3MMQqAMAxA0atIZgsx4KBXEZGiiQbUllREKN7d4
+ viG/zMkNuUEfZXB+Nak4SyguoJ58+fKTpdiIKQWGyQXd39JsGOKFkR3djI3jN4LdYhQsmgs+vz
+ LYXzfDzcRsqdiAAAA
+X-Change-ID: 20250102-platform_profile-fc1e0aaf2900
+To: Hans de Goede <hdegoede@redhat.com>, 
+ =?utf-8?q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, 
+ Armin Wolf <W_Armin@gmx.de>
+Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ Shuah Khan <skhan@linuxfoundation.org>, Hridesh MG <hridesh699@gmail.com>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1736004654; l=1294;
+ i=hridesh699@gmail.com; s=20241114; h=from:subject:message-id;
+ bh=gYCUqoa/AQjN2mgGeJu7X4e9McIWS62U9byVzPGGQP0=;
+ b=TE0XEti39ToC8qgiVaclAwKqNKhHA0IdDu3SeKqYvOQuzEi35KDFHFPnwvYaf8we0cRE3dOg8
+ AHd8d+IWXmIAfrZht6JciZdeTVVyt0eIMf0huvqOJsOIuJnjUjeQAe/
+X-Developer-Key: i=hridesh699@gmail.com; a=ed25519;
+ pk=otVQutD5ZTsEpajsGv/haM3pQj0yofkuYrdNcaX5AUE=
 
+This patch improves the platform profile handling for laptops using the
+Acer Predator interface by making the following changes - 
 
+1) Using WMI calls to fetch the current platform profile instead of
+   directly accessing it from the EC.
+2) Using an ACPI bitmap to dynamically set platform_profile_choices.
+3) Simplifying the cycling of platform profiles by making use of
+   platform_profile_cycle()
 
-On 1/4/25 06:07, Armin Wolf wrote:
+v1->v2:
+[1]
+   - Fixed enum member alignment and reordered them
 
-> That is some very important information right here. The platform-profile
-> documentation states:
-> 
->     "Specifically when selecting a high performance profile the actual
-> achieved
->      performance may be limited by various factors such as: the heat
-> generated
->      by other components, room temperature, free air flow at the bottom
-> of a
->      laptop, etc. It is explicitly NOT a goal of this API to let
-> userspace know
->      about any sub-optimal conditions which are impeding reaching the
-> requested
->      performance level."
-> 
-> I think the AC handling is unnecessary in this case as the hardware
-> seems to accept different profiles
-> even when not running on AC. This would simplify the platform profile
-> cycling inside the driver and
-> allow us to use platform_profile_cycle().
-> 
-> I wonder if this special behavior of the acer-wmi driver is documented
-> somewhere. I am asking this since
-> this has a great potential to confuse users.
-The acer_thermal_profile_change function was made for predator phn16-71
-and tested with some predator laptop series.
+[2]
+   - Made use of test_bit to check bitmap values
+   - Replaced magic numbers with proper variables
 
-These predator series have the mode button that toggles between turbo or
-non-turbo or cycles each modes. And the predator sense app restricts
-these predator series to Eco and Balanced mode on battery.
-So this function includes on_AC to reflect these behaviors.(mentioned on
-comments)
+Link to v1: https://lore.kernel.org/platform-driver-x86/20241231140442.10076-1-hridesh699@gmail.com/
 
-platform_profile_cycle() is suitable for cycle mode by
-cycle_gaming_thermal_profile parameter and if there is no reason to
-restrict thermal profiles on battery, we don't need to handle on_AC. But
-I'm not sure why the manufacturer restricts the thermal profiles on
-battery on windows.
+Signed-off-by: Hridesh MG <hridesh699@gmail.com>
+---
+Hridesh MG (3):
+      platform/x86: acer-wmi: use WMI calls for platform profile handling
+      platform/x86: acer-wmi: use an ACPI bitmap to set the platform profile choices
+      platform/x86: acer-wmi: simplify platform profile cycling
 
-Thanks,
-SungHwan Jung
-> 
-> Thanks,
-> Armin Wolf
+ drivers/platform/x86/acer-wmi.c | 270 ++++++++++++++++++++++++----------------
+ 1 file changed, 161 insertions(+), 109 deletions(-)
+---
+base-commit: 8155b4ef3466f0e289e8fcc9e6e62f3f4dceeac2
+change-id: 20250102-platform_profile-fc1e0aaf2900
+
+Best regards,
+-- 
+Hridesh MG <hridesh699@gmail.com>
 
