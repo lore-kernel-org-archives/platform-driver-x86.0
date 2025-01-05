@@ -1,302 +1,109 @@
-Received: from mail-pl1-f177.google.com (mail-pl1-f177.google.com [209.85.214.177])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 722351CDA2E;
-	Sun,  5 Jan 2025 17:45:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 787491D07BA;
+	Sun,  5 Jan 2025 19:45:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736099111; cv=none; b=QphMVmw2QbYbQZkImrb1FD6S3+2EYBd1HvPXwuas3LeS3BW1Sr3aLl5CwxaEuurJWOU1oLUmrfwMNE5V5VRqH/m9zStIPF0wKTtmSwqWv1gewC3KTJTKEjpvAXQLlVRBQKpmEN0VhF6esEJOuIlfG8fiHgsxdoEJVcquljlVf0M=
+	t=1736106320; cv=none; b=d539pEb1HSLedEeyJUSxzqmBd1FeBvZaHtUpBGFb5mtWgwxzdSDNUxlLmGDq1jOSCYrWjIdGGILMX+9WxSLgsOdnDjXNCfoeoSEg4yaNNT2yFUvpVA1sjlEPF37VYEsqppeOEgItWEPLLjNrF5C041ovRpSqSPWy/pnvJ9+jqYc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736099111; c=relaxed/simple;
-	bh=aHxh6mXQm2Pomntp5Apy+gfeS3bWH/sypTFPY9It4WU=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=IwofaReCjTYRWf2Oed6v/z0+ZTT0HbN3kdXWdcaKZeeQm4s9D+KDA+x0d4w10D9bnc2jCaZH+9fdSl0IWQTKyB1/lP/sQqOBWU3fheMu1mub/imRHj3leVeQW7TRrBBb3XEAEQypUutdytGfiEHHyJZ1SUvK4h9aGQOc5N3icUQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=b6JXcFxz; arc=none smtp.client-ip=209.85.214.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1736106320; c=relaxed/simple;
+	bh=iBvD54JPeK5ixXvm/kmalDau6FZdHe/1SAO9TNCB+/E=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=UMQ4CFhuWKp+VNfpXVdCMj6kIrIqwPPq4ilgGqrtV+yGRR2P/EUZPDCyWI67DzMG770n5KWwfPAQHIQFnqoSczK72HE9L7eQp5k7TFrqvMFObePhzOVaBu8hSRFYCtHzh6OEHD5nqx8oRlN4SdGy/u+5KwOu9wUIE32e+/1TEv4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Ze2W/mt+; arc=none smtp.client-ip=198.175.65.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="b6JXcFxz"
-Received: by mail-pl1-f177.google.com with SMTP id d9443c01a7336-21661be2c2dso175958745ad.1;
-        Sun, 05 Jan 2025 09:45:09 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1736099108; x=1736703908; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=keJpUCOZO1G6z7AqbQ0oWlgGpxQddW7HrAwABR04sv0=;
-        b=b6JXcFxz3duKIR1E6JNFKhQtSQwjdx3pvo5WZvfbqHTjEjXEOmMESvHoHrNLjY7sov
-         COiqODh6CGxd7sR/urQM7wvxfk0DrXlRpmFlCfchA/jO3iBHN1EeWntRSqpmG5ZzffwE
-         JqecJYPqkLKY32UMeJmpAzKUjwvYt4CDMgBEePcdIVWj+BEOnUKrse5FGMhVJ2+KqpBG
-         9IRTaHk1cucO9JC4tGlzNVtftQKGSPbg4wFDFhxPDVnNG8bLZ547TZV4+iMQ4o1fbo9p
-         Qjda1rcDw/9zpEss723fUQyTfzm42+ppKchz6uiRWvAGnAZhD8uNF2+eBOUehv+EJgXn
-         AMbg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1736099108; x=1736703908;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=keJpUCOZO1G6z7AqbQ0oWlgGpxQddW7HrAwABR04sv0=;
-        b=s3486e++39sjzGcZrOa/eqXFftdoumkRA9SRErACZfcboVS/HpS1jpgYFbLTtGUlJa
-         JrGlDklvvKW2oflAi8hXP5CWiZEuea8xNnV0mUewcZldvRhLdTY5vZQXsUKhx2z4QtWJ
-         VRsjvFfmWo9G2n1zgyqTUENXBWt1feySJZqi5SJLhDM8p9nFoX94jkSEjCyZWtsqu17Q
-         yjjDz1WRryrsbTRI0WrhG9ClOAyvS276KH14A9CZwxPoM4S/2xmpah1eCJqTtwa3wOhY
-         bkbSHVbS8TNH1h0NuiQnNYgYZZP6JHXbBCbEpXMVKNJ+gD7StZbxQj5UNtzPeHEQH7ab
-         906g==
-X-Forwarded-Encrypted: i=1; AJvYcCUBs9RJU8AqnaJRJZ2ZIsbic0GeuY3H+AW26hQZJA7uMn2VNS5JCYNjl4hQ8wykrVq8lIR+L1Jgy3+yN9ls@vger.kernel.org, AJvYcCUP3SlOD63ftes+YDNB8QYBazhXkE+aDZQzL/5fxBlzUHREFnB5xYjb5i2gvdvL+tl7iVau+zfWa4bhHkKv@vger.kernel.org, AJvYcCVBCVjUhanCMUi2FVChZqOknrHzuMRNkqmrt0imdYDZKzAAuVA47OvlPmXTVxwRldD9Q2q5HTd6PVc=@vger.kernel.org, AJvYcCVf3cPSDZWegnGHRnXfl7bLA3Q5yBSNW7rAqYJyp7lqTZQPQiaQx0mE7q1GFHHYVdUoUuWmo//9AVV2Si725rKcXMydOQ==@vger.kernel.org, AJvYcCVmoQcRr6MrInIgWLapt8MDYiOcThi5zbQUfieajtBOpMbdUy9H7GRM0L0Jbqnt5c7VNTM/gkUbYcmGlX4=@vger.kernel.org, AJvYcCWnlDscV4feUVuGlO1OIaWdvZjVK6znaMAR/MHrL/3D+AGMbHrQDCZeB2wMSytBUllx/aa3nbPtOe+T@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz2acbmFhQfQMDV9+7XDncJ2KQxtRh9tpQd8ZwaLLM5k+0r8s2D
-	gzSXzqJamdk7pAuy5GS8C4r7ZOwv/YziC5n4NiAYOYS3H0qVopj8
-X-Gm-Gg: ASbGncsu4+RrqHRhH5Z3630l6aBTI/mTOa6O6RdCee8Wv56dlsusqUaXlBOVDcX/jkn
-	I96BFSj600NS9rKbcYJPhbIdvtY8/0bKgWqYEJ48AyUdBmBvqJxTEVj4sqYa8/iObVzffGhC8KW
-	O0eCYm7gufKYp4WFerw/xfw5N4LtdwagarVsF5cZJK4P7FvvYuIT/rugVIVdq2QA7VM7uOHX3B5
-	hWEm3DAeacaAE39xDCpiokS2/+2R5aBa6ZNkzKqlJaYOjYyOxR0L24=
-X-Google-Smtp-Source: AGHT+IF8HVsTW5i+utryOgn5ztd9UTIpIO2jnXnIbnTi49ubQnVwoyiKkRH9bWUyzLDJ6jx/N2MgsQ==
-X-Received: by 2002:a05:6a21:158d:b0:1e0:d89e:f5bc with SMTP id adf61e73a8af0-1e5e046155fmr91302343637.11.1736099108489;
-        Sun, 05 Jan 2025 09:45:08 -0800 (PST)
-Received: from nuvole.. ([144.202.86.13])
-        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-842abd5927fsm27375046a12.10.2025.01.05.09.44.54
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 05 Jan 2025 09:45:07 -0800 (PST)
-From: Pengyu Luo <mitltlatltl@gmail.com>
-To: Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Bjorn Andersson <andersson@kernel.org>,
-	Konrad Dybcio <konradybcio@kernel.org>,
-	Hans de Goede <hdegoede@redhat.com>,
-	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	Bryan O'Donoghue <bryan.odonoghue@linaro.org>,
-	Sebastian Reichel <sre@kernel.org>,
-	Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Jean Delvare <jdelvare@suse.com>,
-	Guenter Roeck <linux@roeck-us.net>
-Cc: devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-arm-msm@vger.kernel.org,
-	platform-driver-x86@vger.kernel.org,
-	linux-pm@vger.kernel.org,
-	linux-usb@vger.kernel.org,
-	linux-hwmon@vger.kernel.org,
-	Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
-	Pengyu Luo <mitltlatltl@gmail.com>
-Subject: [PATCH v2 5/5] arm64: dts: qcom: gaokun3: Add Embedded Controller node
-Date: Mon,  6 Jan 2025 01:41:59 +0800
-Message-ID: <20250105174159.227831-6-mitltlatltl@gmail.com>
-X-Mailer: git-send-email 2.47.1
-In-Reply-To: <20250105174159.227831-1-mitltlatltl@gmail.com>
-References: <20250105174159.227831-1-mitltlatltl@gmail.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Ze2W/mt+"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1736106319; x=1767642319;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=iBvD54JPeK5ixXvm/kmalDau6FZdHe/1SAO9TNCB+/E=;
+  b=Ze2W/mt+xfNLPqxI7rcpJ+EHKUPUpDorBofLTXwQXvwNCKOzcxCJD3Zh
+   NnGuHpS2H6puj78YuYzioPxvWeGiLzawOEbQrzOdlKuLzT1qIdbsoRkxC
+   mCqRGTcS2nVeVt504imYcypNRPLHEWfEFpYf9r0Xe1+oJSZ+FzUS9iZNR
+   8g0lPtbn/rUwUK9hAHgDCinma8cymgrE21Hs1N4DCPp3NBsNGiUooQD9A
+   Y0nBDdv95E7NMpWGv4cgkJFxAdaMzO8+0WfatD3OjgfuZa65PHMEzJxF4
+   blsgDW02TSS+1bAZIatU8HsLqcJvLPxTYyJTX5+sUacXWe4WdyR2ZWt1N
+   g==;
+X-CSE-ConnectionGUID: cErfh2v9RaeVu2J80FZZsg==
+X-CSE-MsgGUID: K1nd+Jo5R2C2SyjGc42zYQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11306"; a="39946019"
+X-IronPort-AV: E=Sophos;i="6.12,291,1728975600"; 
+   d="scan'208";a="39946019"
+Received: from fmviesa007.fm.intel.com ([10.60.135.147])
+  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Jan 2025 11:45:18 -0800
+X-CSE-ConnectionGUID: xSKKZzxPQ4S0keJ7S7ZZ6Q==
+X-CSE-MsgGUID: ysUBLt8xRgCPJOmvi2F5Ug==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.12,291,1728975600"; 
+   d="scan'208";a="102140161"
+Received: from lkp-server01.sh.intel.com (HELO d63d4d77d921) ([10.239.97.150])
+  by fmviesa007.fm.intel.com with ESMTP; 05 Jan 2025 11:45:16 -0800
+Received: from kbuild by d63d4d77d921 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1tUWYj-000Bx5-1Y;
+	Sun, 05 Jan 2025 19:45:13 +0000
+Date: Mon, 6 Jan 2025 03:44:20 +0800
+From: kernel test robot <lkp@intel.com>
+To: Kurt Borja <kuurtb@gmail.com>, platform-driver-x86@vger.kernel.org
+Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
+	ilpo.jarvinen@linux.intel.com, w_armin@gmx.de,
+	mario.limonciello@amd.com, hdegoede@redhat.com,
+	Dell.Client.Kernel@dell.com, linux-kernel@vger.kernel.org,
+	Kurt Borja <kuurtb@gmail.com>
+Subject: Re: [PATCH v3 16/20] platform/x86: Add alienware-wmi.h
+Message-ID: <202501060332.wvfPD58P-lkp@intel.com>
+References: <20250105153019.19206-18-kuurtb@gmail.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250105153019.19206-18-kuurtb@gmail.com>
 
-The Embedded Controller in the Huawei Matebook E Go is accessible on &i2c15
-and provides battery and adapter status, port orientation status, as well
-as HPD event notifications for two USB Type-C port, etc.
+Hi Kurt,
 
-Add the EC to the device tree and describe the relationship among
-the type-c ports, orientation switches and the QMP combo PHY.
+kernel test robot noticed the following build warnings:
 
-Signed-off-by: Pengyu Luo <mitltlatltl@gmail.com>
----
- .../boot/dts/qcom/sc8280xp-huawei-gaokun3.dts | 139 ++++++++++++++++++
- 1 file changed, 139 insertions(+)
+[auto build test WARNING on 6b228cfc52a6e9b7149cf51e247076963d6561cd]
 
-diff --git a/arch/arm64/boot/dts/qcom/sc8280xp-huawei-gaokun3.dts b/arch/arm64/boot/dts/qcom/sc8280xp-huawei-gaokun3.dts
-index 09b95f89e..ff5db8f63 100644
---- a/arch/arm64/boot/dts/qcom/sc8280xp-huawei-gaokun3.dts
-+++ b/arch/arm64/boot/dts/qcom/sc8280xp-huawei-gaokun3.dts
-@@ -28,6 +28,7 @@ / {
- 
- 	aliases {
- 		i2c4 = &i2c4;
-+		i2c15 = &i2c15;
- 		serial1 = &uart2;
- 	};
- 
-@@ -216,6 +217,40 @@ map1 {
- 		};
- 	};
- 
-+	usb0-sbu-mux {
-+			compatible = "pericom,pi3usb102", "gpio-sbu-mux";
-+
-+			select-gpios = <&tlmm 164 GPIO_ACTIVE_HIGH>;
-+
-+			pinctrl-0 = <&usb0_sbu_default>;
-+			pinctrl-names = "default";
-+
-+			orientation-switch;
-+
-+			port {
-+				usb0_sbu_mux: endpoint {
-+					remote-endpoint = <&ucsi0_sbu>;
-+				};
-+			};
-+	};
-+
-+	usb1-sbu-mux {
-+			compatible = "pericom,pi3usb102", "gpio-sbu-mux";
-+
-+			select-gpios = <&tlmm 47 GPIO_ACTIVE_HIGH>;
-+
-+			pinctrl-0 = <&usb1_sbu_default>;
-+			pinctrl-names = "default";
-+
-+			orientation-switch;
-+
-+			port {
-+				usb1_sbu_mux: endpoint {
-+					remote-endpoint = <&ucsi1_sbu>;
-+				};
-+			};
-+	};
-+
- 	wcn6855-pmu {
- 		compatible = "qcom,wcn6855-pmu";
- 
-@@ -584,6 +619,81 @@ touchscreen@4f {
- 
- };
- 
-+&i2c15 {
-+	clock-frequency = <400000>;
-+
-+	pinctrl-0 = <&i2c15_default>;
-+	pinctrl-names = "default";
-+
-+	status = "okay";
-+
-+	embedded-controller@38 {
-+		compatible = "huawei,gaokun3", "huawei,gaokun-ec";
-+		reg = <0x38>;
-+
-+		interrupts-extended = <&tlmm 107 IRQ_TYPE_LEVEL_LOW>;
-+
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+
-+		connector@0 {
-+			compatible = "usb-c-connector";
-+			reg = <0>;
-+			power-role = "dual";
-+			data-role = "dual";
-+
-+			ports {
-+				#address-cells = <1>;
-+				#size-cells = <0>;
-+
-+				port@0 {
-+					reg = <0>;
-+
-+					ucsi0_ss_in: endpoint {
-+						remote-endpoint = <&usb_0_qmpphy_out>;
-+					};
-+				};
-+
-+				port@1 {
-+					reg = <1>;
-+
-+					ucsi0_sbu: endpoint {
-+						remote-endpoint = <&usb0_sbu_mux>;
-+					};
-+				};
-+			};
-+		};
-+
-+		connector@1 {
-+			compatible = "usb-c-connector";
-+			reg = <1>;
-+			power-role = "dual";
-+			data-role = "dual";
-+
-+			ports {
-+				#address-cells = <1>;
-+				#size-cells = <0>;
-+
-+				port@0 {
-+					reg = <0>;
-+
-+					ucsi1_ss_in: endpoint {
-+						remote-endpoint = <&usb_1_qmpphy_out>;
-+					};
-+				};
-+
-+				port@1 {
-+					reg = <1>;
-+
-+					ucsi1_sbu: endpoint {
-+						remote-endpoint = <&usb1_sbu_mux>;
-+					};
-+				};
-+			};
-+		};
-+	};
-+};
-+
- &mdss0 {
- 	status = "okay";
- };
-@@ -1025,6 +1135,10 @@ &usb_0_qmpphy_dp_in {
- 	remote-endpoint = <&mdss0_dp0_out>;
- };
- 
-+&usb_0_qmpphy_out {
-+	remote-endpoint = <&ucsi0_ss_in>;
-+};
-+
- &usb_1 {
- 	status = "okay";
- };
-@@ -1054,6 +1168,10 @@ &usb_1_qmpphy_dp_in {
- 	remote-endpoint = <&mdss0_dp1_out>;
- };
- 
-+&usb_1_qmpphy_out {
-+	remote-endpoint = <&ucsi1_ss_in>;
-+};
-+
- &usb_2 {
- 	status = "okay";
- };
-@@ -1177,6 +1295,13 @@ i2c4_default: i2c4-default-state {
- 		bias-disable;
- 	};
- 
-+	i2c15_default: i2c15-default-state {
-+		pins = "gpio36", "gpio37";
-+		function = "qup15";
-+		drive-strength = <2>;
-+		bias-pull-up;
-+	};
-+
- 	mode_pin_active: mode-pin-state {
- 		pins = "gpio26";
- 		function = "gpio";
-@@ -1301,6 +1426,20 @@ tx-pins {
- 		};
- 	};
- 
-+	usb0_sbu_default: usb0-sbu-state {
-+		pins = "gpio164";
-+		function = "gpio";
-+		drive-strength = <16>;
-+		bias-disable;
-+	};
-+
-+	usb1_sbu_default: usb1-sbu-state {
-+		pins = "gpio47";
-+		function = "gpio";
-+		drive-strength = <16>;
-+		bias-disable;
-+	};
-+
- 	wcd_default: wcd-default-state {
- 		reset-pins {
- 			pins = "gpio106";
+url:    https://github.com/intel-lab-lkp/linux/commits/Kurt-Borja/platform-x86-alienware-wmi-Remove-unnecessary-check-at-module-exit/20250105-233751
+base:   6b228cfc52a6e9b7149cf51e247076963d6561cd
+patch link:    https://lore.kernel.org/r/20250105153019.19206-18-kuurtb%40gmail.com
+patch subject: [PATCH v3 16/20] platform/x86: Add alienware-wmi.h
+config: i386-buildonly-randconfig-006-20250105 (https://download.01.org/0day-ci/archive/20250106/202501060332.wvfPD58P-lkp@intel.com/config)
+compiler: clang version 19.1.3 (https://github.com/llvm/llvm-project ab51eccf88f5321e7c60591c5546b254b6afab99)
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250106/202501060332.wvfPD58P-lkp@intel.com/reproduce)
+
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202501060332.wvfPD58P-lkp@intel.com/
+
+All warnings (new ones prefixed by >>):
+
+   In file included from drivers/platform/x86/dell/alienware-wmi-base.c:17:
+>> drivers/platform/x86/dell/alienware-wmi.h:9:9: warning: 'pr_fmt' macro redefined [-Wmacro-redefined]
+       9 | #define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
+         |         ^
+   include/linux/printk.h:391:9: note: previous definition is here
+     391 | #define pr_fmt(fmt) fmt
+         |         ^
+   1 warning generated.
+
+
+vim +/pr_fmt +9 drivers/platform/x86/dell/alienware-wmi.h
+
+   > 9	#define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
+    10	
+
 -- 
-2.47.1
-
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
