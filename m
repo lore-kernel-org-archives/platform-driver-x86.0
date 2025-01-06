@@ -1,35 +1,60 @@
-Received: from vps-ovh.mhejs.net (vps-ovh.mhejs.net [145.239.82.108])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB91718A6AC;
-	Mon,  6 Jan 2025 17:40:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=145.239.82.108
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 54D1A19CC2A;
+	Mon,  6 Jan 2025 17:47:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736185256; cv=none; b=Se74kEr+IcngePg//6vhQiqcpJjeQs+ii0fbYEbO6mvXu460Ho7vwZXlnqMgzMUeXE9ApvEATsCBI2OLluFIpS/KHhk8N9vKqc2b03z8VnN99YoDyMsodQ8WtIUgRnCAUpaUwLpfRs/gZcH5hf2TZu3KzGBEEaALve1ponbFpGM=
+	t=1736185622; cv=none; b=Ll0dAg/CJZ9q+nkUw+47E2F9LAX+R3GgLn0zEADderckh1uHgf704bw3pWTC+VX8cT+UQKApwz0GFfl7CxcHucWnN16c9Wf+TA45tPIew/xw+vaj8Xjq8/VGTKWwf0eeyS6WdZNLpJBmPLqjktDIZc1zlTRM1+fXvfEBCqCyDzI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736185256; c=relaxed/simple;
-	bh=mH3YRufyI3lwlWVjmAWUHAyoS4z/6aDz7KpCtJNw9n8=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=DAU1dun2Y/+XftjBwA6X/bBEJ+myYQAfpqSGHRge1/R2IsGK5piGOEQV88M5bt7Jq5L6tuJB/vDnt7P1SzjbWfsKJwWRmtMSAmHdSuIZrhd535EBwHVxlpKcKDeFDf/dF70c/iQ/Lx1u9zoxBi2HCE6RYeO6g5DADMwcp8xwkwo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=maciej.szmigiero.name; spf=pass smtp.mailfrom=vps-ovh.mhejs.net; arc=none smtp.client-ip=145.239.82.108
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=maciej.szmigiero.name
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=vps-ovh.mhejs.net
-Received: from MUA
-	by vps-ovh.mhejs.net with esmtpsa  (TLS1.3) tls TLS_AES_256_GCM_SHA384
-	(Exim 4.98)
-	(envelope-from <mhej@vps-ovh.mhejs.net>)
-	id 1tUr5j-00000005J5c-3nMp;
-	Mon, 06 Jan 2025 18:40:39 +0100
-From: "Maciej S. Szmigiero" <mail@maciej.szmigiero.name>
-To: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>,
-	Mario Limonciello <mario.limonciello@amd.com>
-Cc: Hans de Goede <hdegoede@redhat.com>,
-	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	s=arc-20240116; t=1736185622; c=relaxed/simple;
+	bh=wNoTz3//1H6kuvXDNRwHMwL8KF9BlXYy2y6lToeVvcQ=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=fBCyBd5L3YUhATCFZHqsnSWOiwia3FQW15cz8AiEYPeEPNR7TryBQeTCEzm1nptxAFvUApkrQJOM/3xy/AYcVd1DerlnXdG1dmFbq7ulaiJdsKp+AXiufdBt5SXo4POpKVinTc6nk5FuHQ3FaYudgfWQfIHNZu0aBefDDQmb6M8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=KnCsu4LE; arc=none smtp.client-ip=198.175.65.19
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="KnCsu4LE"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1736185620; x=1767721620;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=wNoTz3//1H6kuvXDNRwHMwL8KF9BlXYy2y6lToeVvcQ=;
+  b=KnCsu4LEqUn/mr4VBrgUwfalhbjjUfkzrxhjjTUbzkaPdJ+QpyAa/II2
+   hV1vRdegJXLKkF7hK0hD21Fu2ZghtVMtatEKZUxjKHV6DcFXfhQ3LBRZU
+   hTt3JrjDlLRLwM0ZJYhOSz+X85jKjjiGTt6kceWX3kBAfFuLDSI31Qo35
+   qmUR6SxgCckea+6oujhsyA+rqYfEOZ/ZRElnOkdfq+shhf5hSgygi1kwv
+   2FSy0D+JV7gtEqNbKHx27KmSrWOtOjrsLg4ZAYr+LKcZI4sz/EqYy89cP
+   THgrYJmxY17aWAJUBhzxQhvDRDfOfaPJqKBygPoJ3RmtPa3jGPDyzHsZX
+   w==;
+X-CSE-ConnectionGUID: bY880R1qQaauJkYwh9WH0w==
+X-CSE-MsgGUID: 6S4Bi9dETCyBadpUR8dZxA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11307"; a="36220387"
+X-IronPort-AV: E=Sophos;i="6.12,293,1728975600"; 
+   d="scan'208";a="36220387"
+Received: from fmviesa008.fm.intel.com ([10.60.135.148])
+  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Jan 2025 09:47:00 -0800
+X-CSE-ConnectionGUID: 3qYg8OxFRXWtnmIUEXhCFQ==
+X-CSE-MsgGUID: O3HDJKr7Q2K0G33YFox6Ew==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.12,293,1728975600"; 
+   d="scan'208";a="102698635"
+Received: from dnelso2-mobl.amr.corp.intel.com (HELO debox1-desk4.lan) ([10.125.110.113])
+  by fmviesa008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Jan 2025 09:46:59 -0800
+From: "David E. Box" <david.e.box@linux.intel.com>
+To: irenic.rajneesh@gmail.com,
+	david.e.box@intel.com,
+	ilpo.jarvinen@linux.intel.com,
+	hdegoede@redhat.com,
 	platform-driver-x86@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v2] platform/x86/amd/pmc: Only disable IRQ1 wakeup where i8042 actually enabled it
-Date: Mon,  6 Jan 2025 18:40:34 +0100
-Message-ID: <c8f28c002ca3c66fbeeb850904a1f43118e17200.1736184606.git.mail@maciej.szmigiero.name>
-X-Mailer: git-send-email 2.47.1
+	linux-kernel@vger.kernel.org,
+	xi.pardee@linux.intel.com
+Cc: "David E. Box" <david.e.box@linux.intel.com>
+Subject: [PATCH] platform/x86/intel/pmc: Fix ioremap of bad address
+Date: Mon,  6 Jan 2025 09:46:52 -0800
+Message-ID: <20250106174653.1497128-1-david.e.box@linux.intel.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -37,61 +62,40 @@ List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Sender: mhej@vps-ovh.mhejs.net
 
-Wakeup for IRQ1 should be disabled only in cases where i8042 had actually
-enabled it, otherwise "wake_depth" for this IRQ will try to drop below zero
-and there will be an unpleasant WARN() logged:
-kernel: atkbd serio0: Disabling IRQ1 wakeup source to avoid platform firmware bug
-kernel: ------------[ cut here ]------------
-kernel: Unbalanced IRQ 1 wake disable
-kernel: WARNING: CPU: 10 PID: 6431 at kernel/irq/manage.c:920 irq_set_irq_wake+0x147/0x1a0
+In pmc_core_ssram_get_pmc(), the physical addresses for hidden SSRAM
+devices are retrieved from the MMIO region of the primary SSRAM device. If
+additional devices are not present, the address returned is zero.
+Currently, the code does not check for this condition, resulting in ioremap
+incorrectly attempting to map address 0. Add a check for a zero address and
+return 0 if no additional devices are found, as it is not an error for the
+device to be absent.
 
-To fix this call the PMC suspend handler only from the same set of
-dev_pm_ops handlers as i8042_pm_suspend() is called, which currently means
-just the ".suspend" handler.
-Before this patch the driver used DEFINE_SIMPLE_DEV_PM_OPS() to define its
-dev_pm_ops, which also called this handler on ".freeze" and ".poweroff".
-
-To reproduce this issue try hibernating (S4) the machine after a fresh boot
-without putting it into s2idle first.
-
-Fixes: 8e60615e8932 ("platform/x86/amd: pmc: Disable IRQ1 wakeup for RN/CZN")
-Reviewed-by: Mario Limonciello <mario.limonciello@amd.com>
-Signed-off-by: Maciej S. Szmigiero <mail@maciej.szmigiero.name>
+Signed-off-by: David E. Box <david.e.box@linux.intel.com>
+Fixes: a01486dc4bb1 ("platform/x86/intel/pmc: Cleanup SSRAM discovery")
 ---
+ drivers/platform/x86/intel/pmc/core_ssram.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-Changes from v1:
-* Reword the commit message slightly, as suggested by Ilpo.
+diff --git a/drivers/platform/x86/intel/pmc/core_ssram.c b/drivers/platform/x86/intel/pmc/core_ssram.c
+index 50ebfd586d3f..739569803017 100644
+--- a/drivers/platform/x86/intel/pmc/core_ssram.c
++++ b/drivers/platform/x86/intel/pmc/core_ssram.c
+@@ -269,8 +269,12 @@ pmc_core_ssram_get_pmc(struct pmc_dev *pmcdev, int pmc_idx, u32 offset)
+ 		/*
+ 		 * The secondary PMC BARS (which are behind hidden PCI devices)
+ 		 * are read from fixed offsets in MMIO of the primary PMC BAR.
++		 * If a device is not present, the value will be 0.
+ 		 */
+ 		ssram_base = get_base(tmp_ssram, offset);
++		if (!ssram_base)
++			return 0;
++
+ 		ssram = ioremap(ssram_base, SSRAM_HDR_SIZE);
+ 		if (!ssram)
+ 			return -ENOMEM;
 
-* Add Mario's "Reviewed-by:" tag.
+base-commit: 6b228cfc52a6e9b7149cf51e247076963d6561cd
+-- 
+2.43.0
 
- drivers/platform/x86/amd/pmc/pmc.c | 8 +++++++-
- 1 file changed, 7 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/platform/x86/amd/pmc/pmc.c b/drivers/platform/x86/amd/pmc/pmc.c
-index 26b878ee5191..a254debb9256 100644
---- a/drivers/platform/x86/amd/pmc/pmc.c
-+++ b/drivers/platform/x86/amd/pmc/pmc.c
-@@ -947,6 +947,10 @@ static int amd_pmc_suspend_handler(struct device *dev)
- {
- 	struct amd_pmc_dev *pdev = dev_get_drvdata(dev);
- 
-+	/*
-+	 * Must be called only from the same set of dev_pm_ops handlers
-+	 * as i8042_pm_suspend() is called: currently just from .suspend.
-+	 */
- 	if (pdev->disable_8042_wakeup && !disable_workarounds) {
- 		int rc = amd_pmc_wa_irq1(pdev);
- 
-@@ -959,7 +963,9 @@ static int amd_pmc_suspend_handler(struct device *dev)
- 	return 0;
- }
- 
--static DEFINE_SIMPLE_DEV_PM_OPS(amd_pmc_pm, amd_pmc_suspend_handler, NULL);
-+static const struct dev_pm_ops amd_pmc_pm = {
-+	.suspend = amd_pmc_suspend_handler,
-+};
- 
- static const struct pci_device_id pmc_pci_ids[] = {
- 	{ PCI_DEVICE(PCI_VENDOR_ID_AMD, AMD_CPU_ID_PS) },
