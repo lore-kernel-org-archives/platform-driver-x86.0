@@ -1,359 +1,229 @@
-Received: from mail-pl1-f174.google.com (mail-pl1-f174.google.com [209.85.214.174])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 79C7DEEB2;
-	Mon,  6 Jan 2025 09:23:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F4171DA100
+	for <platform-driver-x86@vger.kernel.org>; Mon,  6 Jan 2025 10:47:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736155436; cv=none; b=eGnVEdQtzDM/Y8dtqROpVVXJbYFzL00eHgSbJzmyLnWsH2nCFPdS6uYdpXp2awUup8+pnnUeBf+cP6QYtgByZRvPzHKNkFxUIy0Hmeu0NU+dcMx+45Iolf3aNXnzLNiGp/nGHPWeqaoOWPywrOExT/e/vnu59zBOTmNDdl/ON9k=
+	t=1736160475; cv=none; b=IyZ0SgUe8RqRVX3hbHQmlRyPrf60lMEjSm4mtJc4NND9AkrkCTsO0eabyUamF83710c/GRCcWZWQlwuf4jz+XtTlwMY5WaI8dU8WAUemsvAdiJWcbHrequ3hUH42s6rqsgnBdN9YqvkqrUvzk3sDnVXd/EZdyRYxh202FZ5Sy8w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736155436; c=relaxed/simple;
-	bh=y9leoPXPqutzk6SaXbsCxPmtWiljSdQJ8JUFmkkxQpI=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=qFc+KcKafNecqVIWssB2hWovd9m7wpU42P2SDz/ChjzhV9l1siwhMbfoQNcRhj2+I0xNfNd6awEAqFxrezpKCT0y1ZKgsA4kkNAAA4BOXOJMMOXiSR0fUpuWe2FOJz4rvYTcpy3maVRwViloBkdEJUP6qaO0+26pyQ1rbTP1o2w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=T3HrRguh; arc=none smtp.client-ip=209.85.214.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1736160475; c=relaxed/simple;
+	bh=Wky9+XUdARAMbjh8ONUbF5pCfdL4gfA5dGX7vwaaW74=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=UHvJz8YaxXvP/0KkHRsP+yZV56W9MeXWVERnj4JHoy6MPAfSnTtHTo2L9YNHCq26777VdjJJtLE4GYUudzenANLbnUdQQblrLvKjdINuU+woSoEfLQBwzfvG5/mSBFDf7X6HDNeIxXutQX/fw3f+cUZehgQj7KXohUVZpNB6XN0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=MaU2VVS7; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="T3HrRguh"
-Received: by mail-pl1-f174.google.com with SMTP id d9443c01a7336-216401de828so189265655ad.3;
-        Mon, 06 Jan 2025 01:23:54 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1736155434; x=1736760234; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=3mFlOOesLzWV9jHl0CvWryDo9a7928bRA/ndvzi3U34=;
-        b=T3HrRguhtRfsbE8+bEp0ESDkbXV2tZfizy8ubI5ux9gIlHQDkTqUmYbbI58T6z/Rx8
-         m5P5+104iXjSzvX6DATp73keda6jEfsiH10zrYFS+culVAeBHlbkLvzfUG1JoOAoERmZ
-         y+ZtWGROaUcmqkLBb6k1+euFs4htlv3qWwRRtz2HFItjxPOcYqufJOwhu+vZkI2fBtut
-         pKS9vfWcto6CTRNCuqcjv+p/tvpNrKaFXH37EkcGCSyjIFDtqmFV1TR9zNrbvyJZB2pt
-         Hq+N6SVvcwfVYMEh4ehB3pceTuh6ZBbL9ouSmd+4Omq6H1Re7xtdZZS6mF0cHtwstSfh
-         Yl+Q==
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="MaU2VVS7"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1736160472;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=htdVuyNJm1X6JysjMBjvXPql+8ZoPAOHWh4gNUaKIDg=;
+	b=MaU2VVS7hfjsj1b/I0IKgQpkzkADG09FcbADOP5RreNIqON1jOhjgTAH4UoLeZpJJjIvP6
+	rFdTEiDstk0lYkZBWvdLUPyI4LtdNXOULVutxr+sd0akmWuMdX1NehVSWjmlcnR5TIngZQ
+	APVeMES5Hb5hVlR8rbSVRVxmcGa1vWo=
+Received: from mail-ej1-f70.google.com (mail-ej1-f70.google.com
+ [209.85.218.70]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-54-w7CRgEGsOPakdJgp4ps_Og-1; Mon, 06 Jan 2025 05:47:51 -0500
+X-MC-Unique: w7CRgEGsOPakdJgp4ps_Og-1
+X-Mimecast-MFC-AGG-ID: w7CRgEGsOPakdJgp4ps_Og
+Received: by mail-ej1-f70.google.com with SMTP id a640c23a62f3a-aa6704ffcaeso397553266b.2
+        for <platform-driver-x86@vger.kernel.org>; Mon, 06 Jan 2025 02:47:50 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1736155434; x=1736760234;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=3mFlOOesLzWV9jHl0CvWryDo9a7928bRA/ndvzi3U34=;
-        b=XBuV5mrsDIF/QcHpLmROI3Fi48BekUUMojHi2qF+/ll+b3x7NRKZrm8etfhNySi4+5
-         PHWipgCagnrQnV9p2Mj9Bc8KXUYQ7/wWZKdi6sMsDDOEsZzAOIYnPRoVq5fSym3TGcTy
-         LEopVHoKTdI5///zb/j6uxQjIyMnsWbxM3sJa5IlG1C6qzPL0dYwFvf5Hx2iJtsz0FwI
-         B3qZmvnn4PABIy+bkiKEvZHn3DAW8vZ2NRJahgY7rGN41nJtBIn4lrA1zkjOu0yZX2oy
-         pdqeKWj4dKsXGX/dV5jUO+seVP7+4pGZZyubEeHkYpEtf7cYvLQ5iOAuFwvuAtMB626/
-         F7sQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUBLqVwMjoKaPAlavx9t+H0kxk1bzh6hijTo1kTDQYas1YOLao+hWbod0b0Kk4g3rM0jYW1aukHB7Ut@vger.kernel.org, AJvYcCVBlhw9jpbz3KLviHuzgJ4F+ZEpkCn6yIbGGjmSNMIcgxTrC3IXVn/M4dZd8ucRymoqsAAUsGby0fud@vger.kernel.org, AJvYcCVboQnyMoewVtJqLnvWdCSUP+gkyTSChUHc12o4wqRBBUNo7U/GPRLzLD8obZruTT3abp9QWno65MReyO37mg==@vger.kernel.org, AJvYcCWdXCibUrXdqMDLEx9pvNiIzLCOumfX5G0c3ZCaigGqPYEONUkLARv6UCX4Zm+IDLc05MXrmdXqCwSlouQr0SSi4oL4+Q==@vger.kernel.org, AJvYcCX/bTp4EN24fR/ZfhhljjYoTj+5WJNJbZ+eNcJzpslFcXJrOYbCqw/9cUg380uriuf06kMUANgh69AnvZQp@vger.kernel.org, AJvYcCXw3zbhA/je6EQvJQMavkhJ5bBQVnNvphL2KHisqpWqS4OMq+P4ea1IJDVYZoAE3RzA7SShNE6aRHc=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx27sp6nj2vfMp69FfpCgxcXGV0PDD0eEb9hkcqFXOJOedgKrp+
-	RZ7s4JgZ14BmtEFMYfrl8CxAEpi8filodRgs5+iK6s+sjUMpUqF3
-X-Gm-Gg: ASbGncv7ygCH0B2bITkVvb6mYuERCMuyDdzxPqWlnhoI9L9gtFnoaW/JurOFAlLQoIv
-	Rfu+YxfF5Y4KKfro2r5Ig5TOSLJkMC8mZQEd2mzNlyOdlkDPDkCt2brcUwi9YQ7jAscTcXrK24C
-	G8TTQvRqP9eYIbfd2oKLzza0mfK3AjLv19CzerBhom4o0ab4sRwVtjxYq/x7f5gYF4hDcW23/ow
-	CWS9TlZDYdlvGI8Ccuv1CLOLGpdLy6N+mpew2jDCC9RkXQdF/Wkq4g=
-X-Google-Smtp-Source: AGHT+IFNWgvknEaxxE/ZqSDN24QXJsDgOgSDSuKyBvBC/wiI20eX0ttoGoBq9myC9hh4RE2mGnAZNg==
-X-Received: by 2002:a17:902:ce86:b0:216:2f7f:ff69 with SMTP id d9443c01a7336-219e6e894c8mr693163105ad.5.1736155433560;
-        Mon, 06 Jan 2025 01:23:53 -0800 (PST)
-Received: from nuvole.. ([144.202.86.13])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-219dc964a67sm287766465ad.27.2025.01.06.01.23.41
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 06 Jan 2025 01:23:53 -0800 (PST)
-From: Pengyu Luo <mitltlatltl@gmail.com>
-To: dmitry.baryshkov@linaro.org
-Cc: andersson@kernel.org,
-	bryan.odonoghue@linaro.org,
-	conor+dt@kernel.org,
-	devicetree@vger.kernel.org,
-	gregkh@linuxfoundation.org,
-	hdegoede@redhat.com,
-	heikki.krogerus@linux.intel.com,
-	ilpo.jarvinen@linux.intel.com,
-	konradybcio@kernel.org,
-	krzk+dt@kernel.org,
-	linux-arm-msm@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-pm@vger.kernel.org,
-	linux-usb@vger.kernel.org,
-	mitltlatltl@gmail.com,
-	nikita@trvn.ru,
-	platform-driver-x86@vger.kernel.org,
-	robh@kernel.org,
-	sre@kernel.org
-Subject: Re: [PATCH 3/5] usb: typec: ucsi: add Huawei Matebook E Go (sc8280xp) ucsi driver
-Date: Mon,  6 Jan 2025 17:22:17 +0800
-Message-ID: <20250106092224.251115-1-mitltlatltl@gmail.com>
-X-Mailer: git-send-email 2.47.1
-In-Reply-To: <h4icxzxk5fzgkdhhk6disrervqmb4dqe3xlc432k7pgyzsk77u@pyfrrtyjslpo>
-References: <h4icxzxk5fzgkdhhk6disrervqmb4dqe3xlc432k7pgyzsk77u@pyfrrtyjslpo>
+        d=1e100.net; s=20230601; t=1736160469; x=1736765269;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=htdVuyNJm1X6JysjMBjvXPql+8ZoPAOHWh4gNUaKIDg=;
+        b=UDDu9d7cTNojXppF97btpUV/6V9ngirjYUKKhJ2x8f2AAl2IkNYPBuIwopc79ltZif
+         /eDksGC9dNcgAtZRVAuXAT8EDmAA2ScvdD6826N3Pge4QsZ846dOsMiE+FfRWZuyFE9n
+         g/a2CI3B80B8hg6j7sABRataKORIuEkcVD/gK/mKIc+vXSOO8WkG7VnHC+YwKBK+Fz7k
+         QibeZWuXGDiGhYKo5D75Ve+5Z4glpx5BZMHOYbdf3qM6VMqDOK2XqQ1EviCtTjR1vVbX
+         5r4Y/lf3iLEa6WsQvOs4MiGAy8g1e4G3MD/BGkzt4KUqCqhVOg1JaoZm/2BeiV4prjjR
+         u3qg==
+X-Forwarded-Encrypted: i=1; AJvYcCW1tkIVUPalWm3oQsFV2lGHiUrxAf+nC7Q7uacdvNsEkCpROs+iCIvt0//0w0L5zWPjlYusZCQpA9zu3ap6TAzaN9u4@vger.kernel.org
+X-Gm-Message-State: AOJu0YwzhmASEOLE/wC0AIvXvh8UfYm8geyxgVot6APYZZ+Skl/44VAP
+	WgdQCULyQbb9tNlqUnaEtBVY7Pc7yTNvTnQCzbnNAs/dx9Zlf7dJNBgG4dt5a58tLdpv0e9W1ov
+	4+HLT9SpHZNmfGihqcobJPiF2OeOunu43h07lq7biezTNCAo7q49+h2esjaUjWh3zctxD0s8B+8
+	HNFrodww==
+X-Gm-Gg: ASbGnctqg3lu3IbRHmVt8zEIQBJnt1mEO+4wy+UQMMQSAfZ67JcQ10G1EjG+WTojg9I
+	KGKsm31zR8GYnn4JZ9dcVqN3JzNQom5SypLmNxErg5FTapMM3urFttFXBufXQ60vMzRcEfN1aEo
+	jpNdi1w+5iVzhpAnp0TfGAIVHRT0/phl6m1qIIoYV+gIgUJWj8W4444DHQRtAEOD3h37lZWUryJ
+	BlO3+mK5DDhZgLQtR0qzMNEWv4hLrERp1jP35o2jq+OrMJTLP3RpFKNcBIi
+X-Received: by 2002:a17:907:9722:b0:aa6:668b:2733 with SMTP id a640c23a62f3a-aac2cc722acmr5736817366b.33.1736160469543;
+        Mon, 06 Jan 2025 02:47:49 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IE5OcAwk135evknQckwdyRKPq0l7QNHFXu4Dn43DuSttcHm8a75xgip8A7lrnKyZ5X1njC1yQ==
+X-Received: by 2002:a17:907:9722:b0:aa6:668b:2733 with SMTP id a640c23a62f3a-aac2cc722acmr5736814566b.33.1736160469068;
+        Mon, 06 Jan 2025 02:47:49 -0800 (PST)
+Received: from [10.40.98.157] ([78.108.130.194])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-aac0e82f90esm2226471966b.4.2025.01.06.02.47.48
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 06 Jan 2025 02:47:48 -0800 (PST)
+Message-ID: <ffb876f9-ddee-49f8-8a9a-2f2fba6005ad@redhat.com>
+Date: Mon, 6 Jan 2025 11:47:47 +0100
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v5] platform/x86: lenovo-wmi-camera: Use
+ SW_CAMERA_LENS_COVER instead of KEY_CAMERA_ACESS
+To: Ai Chao <aichao@kylinos.cn>, ilpo.jarvinen@linux.intel.com,
+ platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20250101102922.1784551-1-aichao@kylinos.cn>
+Content-Language: en-US
+From: Hans de Goede <hdegoede@redhat.com>
+In-Reply-To: <20250101102922.1784551-1-aichao@kylinos.cn>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 
-Please ignore the last email, I sent the wrong archive.
+Hi,
 
-On Mon, Jan 6, 2025 at 11:33 AM Dmitry Baryshkov <dmitry.baryshkov@linaro.org> wrote:
-> On Sun, Dec 29, 2024 at 05:05:47PM +0800, Pengyu Luo wrote:
-> > On Sun, Dec 29, 2024 at 12:40 PM Dmitry Baryshkov <dmitry.baryshkov@linaro.org> wrote:
-> > > On Sat, Dec 28, 2024 at 01:13:51AM +0800, Pengyu Luo wrote:
-> > > > The Huawei Matebook E Go (sc8280xp) tablet provides implements UCSI
-> > > > interface in the onboard EC. Add the glue driver to interface the
-> > > > platform's UCSI implementation.
-> > > >
-> > > > Signed-off-by: Pengyu Luo <mitltlatltl@gmail.com>
-> > > > ---
-> > > >  drivers/usb/typec/ucsi/Kconfig              |   9 +
-> > > >  drivers/usb/typec/ucsi/Makefile             |   1 +
-> > > >  drivers/usb/typec/ucsi/ucsi_huawei_gaokun.c | 481 ++++++++++++++++++++
-> > > >  3 files changed, 491 insertions(+)
-> > > >  create mode 100644 drivers/usb/typec/ucsi/ucsi_huawei_gaokun.c
-> > > >
-> > > > diff --git a/drivers/usb/typec/ucsi/Kconfig b/drivers/usb/typec/ucsi/Kconfig
-> > > > index 680e1b87b..0d0f07488 100644
-> > > > --- a/drivers/usb/typec/ucsi/Kconfig
-> > > > +++ b/drivers/usb/typec/ucsi/Kconfig
-> > > > @@ -78,4 +78,13 @@ config UCSI_LENOVO_YOGA_C630
-> > > >         To compile the driver as a module, choose M here: the module will be
-> > > >         called ucsi_yoga_c630.
+On 1-Jan-25 11:29 AM, Ai Chao wrote:
+> Use SW_CAMERA_LENS_COVER instead of KEY_CAMERA_ACESS_ENABLE and
+> KEY_CAMERA_ACESS_DISABLE. When the camera toggle switch was hit,
+> the lenovo-wmi-camera driver would report an event code.
+> 
+> Signed-off-by: Ai Chao <aichao@kylinos.cn>
+> ---
+> change for v5
+> -Add input_report_switch before input_register_device.
+> change for v4
+> -Add mutex_unlock and report a switch state of 0 if SW_CAMERA_ON.
+> change for v3
+> -Used input_register_device and input_allocate_device.
+> change for v2
+> -Only delays the input-device registration and switches to reporting SW_CAMERA_LENS_COVER.
 
-[...]
+Thanks, patch looks good to me:
 
-> > > > +
-> > > > +     spin_lock_irqsave(&port->lock, flags);
-> > > > +
-> > > > +     port->ccx = FIELD_GET(GAOKUN_CCX_MASK, dcc);
-> > > > +     port->mux = FIELD_GET(GAOKUN_MUX_MASK, dcc);
-> > > > +     port->mode = FIELD_GET(GAOKUN_DPAM_MASK, ddi);
-> > > > +     port->hpd_state = FIELD_GET(GAOKUN_HPD_STATE_MASK, ddi);
-> > > > +     port->hpd_irq = FIELD_GET(GAOKUN_HPD_IRQ_MASK, ddi);
-> > > > +
-> > > > +     switch (port->mux) {
-> > > > +     case USBC_MUX_NONE:
-> > > > +             port->svid = 0;
-> > > > +             break;
-> > > > +     case USBC_MUX_USB_2L:
-> > > > +             port->svid = USB_SID_PD;
-> > > > +             break;
-> > > > +     case USBC_MUX_DP_4L:
-> > > > +     case USBC_MUX_USB_DP:
-> > > > +             port->svid = USB_SID_DISPLAYPORT;
-> > > > +             if (port->ccx == USBC_CCX_REVERSE)
-> > > > +                     port->mode -= 6;
-> > >
-> > > I'd prefer it this were more explicit about what is happening.
-> > >
-> >
-> > If orientation is reverse, then we should minus 6, EC's logic.
-> > I will add a comment for it. Actually, this field is unused, I don't
-> > find the mux yet, so I cannot set it with this field. But I don't want
-> > to make things imcomplete, so keep it.
->
-> Which values are you expecting / getting there? The -6 is a pure magic.
-> Please replace this with a switch-case or something more obvious.
->
+Reviewed-by: Hans de Goede <hdegoede@redhat.com>
 
-In v2, I have deduced their meaning, with a switch to map them.
+Regards,
 
-> > Let me go off the topic, on my device, I can just use drm_aux_hpd_bridge_notify
-> > to enable altmode, usb functions well after I pluged out, I don't need set mode
-> > switch(orientation switch is required if orientation is reverse), which is quiet
-> > similar to Acer aspire 1. Is mux controlled also by QMP combo phy(see [1])?
-> >
-> > > > +             break;
-> > > > +     default:
-> > > > +             break;
-> > > > +     }
-> > > > +
-> > > > +     spin_unlock_irqrestore(&port->lock, flags);
-> > > > +}
-> > > > +
-> > > > +static int gaokun_ucsi_refresh(struct gaokun_ucsi *uec)
-> > > > +{
-> > > > +     struct gaokun_ucsi_reg ureg;
-> > > > +     int ret, idx;
-> > > > +
-> > > > +     ret = gaokun_ec_ucsi_get_reg(uec->ec, (u8 *)&ureg);
-> > > > +     if (ret)
-> > > > +             return -EIO;
-> > > > +
-> > > > +     uec->port_num = ureg.port_num;
-> > > > +     idx = GET_IDX(ureg.port_updt);
-> > > > +
-> > > > +     if (idx >= 0 && idx < ureg.port_num)
-> > > > +             gaokun_ucsi_port_update(&uec->ports[idx], ureg.port_data);
-> > > > +
-> > > > +     return idx;
-> > > > +}
-> > > > +
-> > > > +static void gaokun_ucsi_handle_altmode(struct gaokun_ucsi_port *port)
-> > > > +{
-> > > > +     struct gaokun_ucsi *uec = port->ucsi;
-> > > > +     int idx = port->idx;
-> > > > +
-> > > > +     if (idx >= uec->ucsi->cap.num_connectors || !uec->ucsi->connector) {
-> > > > +             dev_warn(uec->ucsi->dev, "altmode port out of range: %d\n", idx);
-> > > > +             return;
-> > > > +     }
-> > > > +
-> > > > +     /* UCSI callback .connector_status() have set orientation */
-> > > > +     if (port->bridge)
-> > > > +             drm_aux_hpd_bridge_notify(&port->bridge->dev,
-> > > > +                                       port->hpd_state ?
-> > > > +                                       connector_status_connected :
-> > > > +                                       connector_status_disconnected);
-> > >
-> > > Does your platform report any altmodes? What do you see in
-> > > /sys/class/typec/port0/port0.*/ ?
-> > >
-> >
-> > /sys/class/typec/port0/port0.0:
-> > active  mode  mode1  power  svid  uevent  vdo
-> >
-> > /sys/class/typec/port0/port0.1:
-> > active  mode  mode1  power  svid  uevent  vdo
-> >
-> > /sys/class/typec/port0/port0.2:
-> > active  mode  mode1  power  svid  uevent  vdo
-> >
-> > /sys/class/typec/port0/port0.3:
-> > active  mode  mode2  power  svid  uevent  vdo
-> >
-> > /sys/class/typec/port0/port0.4:
-> > active  mode  mode3  power  svid  uevent  vdo
->
-> please:
->
-> cat /sys/class/typec/port0/port0*/svid
-> cat /sys/class/typec/port0/port0*/vdo
->
-
-svid:
-8087
-ff01
-12d1
-12d1
-12d1
-
-vdo:
-0xff000001
-0xff1c1c46
-0xff000001
-0xff000002
-0xff000003
-
-> If DP is reported as one the altmodes, then it should be using the
-> DisplayPort AltMode driver, as suggested by Heikki.
->
-
-But this paltform cannot access to the partner device, related API
-requires a partner.
-
-BTW, it is unnecessary that implementing/call a DP Altmode driver for
-this platform. Currently, we can enter altmode with a HPD event notify.
-This point is quiet similar to Acer aspire 1. I mentioned this when we
-last talked about minus 6.
-
-> > > > +
-> > > > +     gaokun_ec_ucsi_pan_ack(uec->ec, port->idx);
-> > > > +}
-> > > > +
-> > > > +static void gaokun_ucsi_altmode_notify_ind(struct gaokun_ucsi *uec)
-> > > > +{
-> > > > +     int idx;
-> > > > +
-> > > > +     idx = gaokun_ucsi_refresh(uec);
-> > > > +     if (idx < 0)
-> > > > +             gaokun_ec_ucsi_pan_ack(uec->ec, idx);
-> > > > +     else
-> > > > +             gaokun_ucsi_handle_altmode(&uec->ports[idx]);
-> > > > +}
-> > > > +
-> > > > +/*
-> > > > + * USB event is necessary for enabling altmode, the event should follow
-> > > > + * UCSI event, if not after timeout(this notify may be disabled somehow),
-> > > > + * then force to enable altmode.
-> > > > + */
-> > > > +static void gaokun_ucsi_handle_no_usb_event(struct gaokun_ucsi *uec, int idx)
-> > > > +{
-> > > > +     struct gaokun_ucsi_port *port;
-> > > > +
-> > > > +     port = &uec->ports[idx];
-> > > > +     if (!wait_for_completion_timeout(&port->usb_ack, 2 * HZ)) {
-> > > > +             dev_warn(uec->dev, "No USB EVENT, triggered by UCSI EVENT");
-> > > > +             gaokun_ucsi_altmode_notify_ind(uec);
-> > > > +     }
-> > > > +}
-> > > > +
-
-[...]
-
-> > > > +
-> > > > +static void gaokun_ucsi_register_worker(struct work_struct *work)
-> > > > +{
-> > > > +     struct gaokun_ucsi *uec;
-> > > > +     struct ucsi *ucsi;
-> > > > +     int ret;
-> > > > +
-> > > > +     uec = container_of(work, struct gaokun_ucsi, work);
-> > > > +     ucsi = uec->ucsi;
-> > > > +
-> > > > +     ucsi->quirks = UCSI_NO_PARTNER_PDOS | UCSI_DELAY_DEVICE_PDOS;
-> > >
-> > > Does it crash in the same way as GLINK crashes (as you've set
-> > > UCSI_NO_PARTNER_PDOS)?
-> > >
-> >
-> > Yes, no partner can be detected, I checked. I think it is also handled by
-> > the firmware As you said in [2]
-> > > In some obscure cases (Qualcomm PMIC Glink) altmode is completely
-> > > handled by the firmware. Linux does not get proper partner altmode info.
->
-> This is a separate topic. Those two flags were added for a very
-> particular reason:
->
-> - To workaround firmware crash on requesting PDOs for a partner
-> - To delay requeting PDOs for the device because in the unconnected
->   state the GET_PDOS returns incorrect information
->
-> Are you sure that those two flags are necessary for your platform?
->
-
-Alright, I think I got things mixed up. Actually PDO requires UCSI only,
-not a partner device.
-
-I think I will remove it in v3 if it works well during the time. Rencetly,
-this platform works well without it. Thanks for pointing out.
-
-> >
-> > > > +
-> > > > +     ssleep(3); /* EC can't handle UCSI properly in the early stage */
-> > > > +
-> > > > +     ret = gaokun_ec_register_notify(uec->ec, &uec->nb);
-> > > > +     if (ret) {
-> > > > +             dev_err_probe(ucsi->dev, ret, "notifier register failed\n");
-> > > > +             return;
-> > > > +     }
-> > > > +
-> > > > +     ret = ucsi_register(ucsi);
-> > > > +     if (ret)
-> > > > +             dev_err_probe(ucsi->dev, ret, "ucsi register failed\n");
-> > > > +}
-> > > > +
-> > > > +static int gaokun_ucsi_register(struct gaokun_ucsi *uec)
-> > >
-> > > Please inline
-> > >
-> >
-> > I see.
-> >
-> > Best wishes
-> > Pengyu
-> >
-> > [1] https://elixir.bootlin.com/linux/v6.12.5/source/drivers/phy/qualcomm/phy-qcom-qmp-combo.c#L2679
-> > [2] https://lore.kernel.org/lkml/20240416-ucsi-glink-altmode-v1-0-890db00877ac@linaro.org
+Hans
 
 
-Best Wishes,
-Pengyu
+
+
+
+> 
+>  drivers/platform/x86/lenovo-wmi-camera.c | 67 ++++++++++++++++--------
+>  1 file changed, 44 insertions(+), 23 deletions(-)
+> 
+> diff --git a/drivers/platform/x86/lenovo-wmi-camera.c b/drivers/platform/x86/lenovo-wmi-camera.c
+> index 0c0bedaf7407..ceed441a0161 100644
+> --- a/drivers/platform/x86/lenovo-wmi-camera.c
+> +++ b/drivers/platform/x86/lenovo-wmi-camera.c
+> @@ -26,10 +26,38 @@ enum {
+>  	SW_CAMERA_ON	= 1,
+>  };
+>  
+> +static int camera_shutter_input_setup(struct wmi_device *wdev, u8 camera_mode)
+> +{
+> +	struct lenovo_wmi_priv *priv = dev_get_drvdata(&wdev->dev);
+> +	int err;
+> +
+> +	priv->idev = input_allocate_device();
+> +	if (!priv->idev)
+> +		return -ENOMEM;
+> +
+> +	priv->idev->name = "Lenovo WMI Camera Button";
+> +	priv->idev->phys = "wmi/input0";
+> +	priv->idev->id.bustype = BUS_HOST;
+> +	priv->idev->dev.parent = &wdev->dev;
+> +
+> +	input_set_capability(priv->idev, EV_SW, SW_CAMERA_LENS_COVER);
+> +
+> +	input_report_switch(priv->idev, SW_CAMERA_LENS_COVER,
+> +			    camera_mode == SW_CAMERA_ON ? 0 : 1);
+> +	input_sync(priv->idev);
+> +
+> +	err = input_register_device(priv->idev);
+> +	if (err) {
+> +		input_free_device(priv->idev);
+> +		priv->idev = NULL;
+> +	}
+> +
+> +	return err;
+> +}
+> +
+>  static void lenovo_wmi_notify(struct wmi_device *wdev, union acpi_object *obj)
+>  {
+>  	struct lenovo_wmi_priv *priv = dev_get_drvdata(&wdev->dev);
+> -	unsigned int keycode;
+>  	u8 camera_mode;
+>  
+>  	if (obj->type != ACPI_TYPE_BUFFER) {
+> @@ -55,11 +83,18 @@ static void lenovo_wmi_notify(struct wmi_device *wdev, union acpi_object *obj)
+>  
+>  	mutex_lock(&priv->notify_lock);
+>  
+> -	keycode = camera_mode == SW_CAMERA_ON ?
+> -		   KEY_CAMERA_ACCESS_ENABLE : KEY_CAMERA_ACCESS_DISABLE;
+> -	input_report_key(priv->idev, keycode, 1);
+> -	input_sync(priv->idev);
+> -	input_report_key(priv->idev, keycode, 0);
+> +	if (!priv->idev) {
+> +		if (camera_shutter_input_setup(wdev, camera_mode))
+> +			dev_warn(&wdev->dev, "Failed to register input device\n");
+> +
+> +		mutex_unlock(&priv->notify_lock);
+> +		return;
+> +	}
+> +
+> +	if (camera_mode == SW_CAMERA_ON)
+> +		input_report_switch(priv->idev, SW_CAMERA_LENS_COVER, 0);
+> +	else
+> +		input_report_switch(priv->idev, SW_CAMERA_LENS_COVER, 1);
+>  	input_sync(priv->idev);
+>  
+>  	mutex_unlock(&priv->notify_lock);
+> @@ -68,29 +103,12 @@ static void lenovo_wmi_notify(struct wmi_device *wdev, union acpi_object *obj)
+>  static int lenovo_wmi_probe(struct wmi_device *wdev, const void *context)
+>  {
+>  	struct lenovo_wmi_priv *priv;
+> -	int ret;
+>  
+>  	priv = devm_kzalloc(&wdev->dev, sizeof(*priv), GFP_KERNEL);
+>  	if (!priv)
+>  		return -ENOMEM;
+>  
+>  	dev_set_drvdata(&wdev->dev, priv);
+> -
+> -	priv->idev = devm_input_allocate_device(&wdev->dev);
+> -	if (!priv->idev)
+> -		return -ENOMEM;
+> -
+> -	priv->idev->name = "Lenovo WMI Camera Button";
+> -	priv->idev->phys = "wmi/input0";
+> -	priv->idev->id.bustype = BUS_HOST;
+> -	priv->idev->dev.parent = &wdev->dev;
+> -	input_set_capability(priv->idev, EV_KEY, KEY_CAMERA_ACCESS_ENABLE);
+> -	input_set_capability(priv->idev, EV_KEY, KEY_CAMERA_ACCESS_DISABLE);
+> -
+> -	ret = input_register_device(priv->idev);
+> -	if (ret)
+> -		return ret;
+> -
+>  	mutex_init(&priv->notify_lock);
+>  
+>  	return 0;
+> @@ -100,6 +118,9 @@ static void lenovo_wmi_remove(struct wmi_device *wdev)
+>  {
+>  	struct lenovo_wmi_priv *priv = dev_get_drvdata(&wdev->dev);
+>  
+> +	if (priv->idev)
+> +		input_unregister_device(priv->idev);
+> +
+>  	mutex_destroy(&priv->notify_lock);
+>  }
+>  
+
