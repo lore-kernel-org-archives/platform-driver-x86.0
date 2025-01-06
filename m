@@ -1,124 +1,194 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 239EF1DDA36;
-	Mon,  6 Jan 2025 12:30:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4EB3B6FB9
+	for <platform-driver-x86@vger.kernel.org>; Mon,  6 Jan 2025 12:33:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736166607; cv=none; b=aDCuLy+STRxXz8cmHlZDlWYRR8CGMaymqO3h+4KygWeiURIeD35WRfDXIDFbbUzIGkanWCq9YNGuvcBhDZ5UgOz0+yAHRYs990U7mh4efYA1pypCqiLgk3Ky8r0OBOruhoGpCJI0bv9Q5pBcOmpxo/nkl45HpnMMZ5YjdTVXUfY=
+	t=1736166790; cv=none; b=fNyzT6jUfnI8xib2YrOUvMQjtfH6fGW0uM2vIT68pvsFyp8ehXn/aI4ph9wuLsFvdyJ1ye7ARbh8bZvpQ07pXXGeK1/QWu/3szXpNxAjAHWw/Lo0tR3bGwsNf2KfrB0YLVIh3NqLXgKeQqW6fBBajKDSc6xtX9Td1RbUpPsNadg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736166607; c=relaxed/simple;
-	bh=dt9uunZPfoDIamCzQdNIaGK4eUqsz1QnKbTU0kwbDmY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=GHhfp3/eKZkqDm3sfcSQalyzO5pAY4Lxi3PkTjD0ODpXC6ROGT6HjHezBou6ZaQhkarze+bTDWLdNR6T8EUNE85jr1H86h0CKFbkVks3SI2RkwsX9CBi+AgruzaaYDDh0gadajjMKOVytH34a4IhtVh8idMIkC30N/R117WuXEY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=a9LQR9JG; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1736166790; c=relaxed/simple;
+	bh=1d0xYhQASJTpA0FOve8PkydoKfcc7r1Xx406s08Nwh0=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=R9CacFKE9t9fXmpDcR3l8UrwcOGOz9xJ8NtYwy6zPGysBZj9RAGCzM5eZMeqEUcn+SCO+08Mkc1NBBqEDknRqeYBUCI4c7irjTTJzHaO2WadYu3fSvFA/sAT6LnQIJDW/9liwJoIUP/vMNVmospedKL0a23KBPOKe6zKyIVlVNw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Og7grPIz; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="a9LQR9JG"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8AF4FC4CED2;
-	Mon,  6 Jan 2025 12:29:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1736166606;
-	bh=dt9uunZPfoDIamCzQdNIaGK4eUqsz1QnKbTU0kwbDmY=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=a9LQR9JGvR0xDzmmLzR5+XiZyNQkMMSzf8c1Gv73vWyzd8Q4iG15fZOWnWayXC50c
-	 0tJTFwh9hsvkZb+pipXUybbF6cvhVm9uycseeNmVAXjwQAUDWVeW1Osqr9dKcc7tOX
-	 TowLQZAdYm5ZjJLM7mOUJ7AVqQiTYWZ2AX6qzD//Q31W4vNBWwOqfiw7pQ/43Trfi1
-	 SavnRtZPCt+sRJZJ4+7V8ksKnIbRq2cVBTPNwYzKsD2rbq7ysZHuglAmFxg21mX60A
-	 lOv6rQXmXY+XPhQ/hc/XX2ipjv9lVQjaegFcLmoRP72x7KXjgoH5y/tcOUaYb4OsSF
-	 FO5tT8UKd6Fag==
-Message-ID: <12636552-b644-429b-8be0-44334fae6130@kernel.org>
-Date: Mon, 6 Jan 2025 13:29:57 +0100
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Og7grPIz"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1736166786;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=13zICaoH6HWKbaF5On5sHd2bs/GXQHSE10Trdh0xem8=;
+	b=Og7grPIzC/at7NfVlDuNTKlHqVw7RGA/kY2r1tv8uR+o1ToN1JyrmltnRw4brgA0v+35T4
+	21KgP6wtotD2J6zG/oIDx9B4IG/847YH86VjWe9xuITSRGkkoE6k1dpi/uqWNS+0F28bd3
+	zDRjts1RZfz5DaocGSd1WQiL1rkNpZ0=
+Received: from mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-86-dqjGZFRROgG4fTVs5rL1Hw-1; Mon,
+ 06 Jan 2025 07:33:05 -0500
+X-MC-Unique: dqjGZFRROgG4fTVs5rL1Hw-1
+X-Mimecast-MFC-AGG-ID: dqjGZFRROgG4fTVs5rL1Hw
+Received: from mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.17])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id B69A81954B03;
+	Mon,  6 Jan 2025 12:33:03 +0000 (UTC)
+Received: from x1.localdomain.com (unknown [10.39.193.170])
+	by mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id C90981956053;
+	Mon,  6 Jan 2025 12:33:00 +0000 (UTC)
+From: Hans de Goede <hdegoede@redhat.com>
+To: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	Andy Shevchenko <andy@kernel.org>,
+	Dell.Client.Kernel@dell.com
+Cc: Hans de Goede <hdegoede@redhat.com>,
+	=?UTF-8?q?Pali=20Roh=C3=A1r?= <pali@kernel.org>,
+	Paul Menzel <pmenzel@molgen.mpg.de>,
+	platform-driver-x86@vger.kernel.org
+Subject: [PATCH v11] platform/x86: dell-smo8800: Add support for probing for the accelerometer i2c address
+Date: Mon,  6 Jan 2025 13:32:59 +0100
+Message-ID: <20250106123259.45970-1-hdegoede@redhat.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 1/5] dt-bindings: platform: Add Huawei Matebook E Go EC
-To: Pengyu Luo <mitltlatltl@gmail.com>
-Cc: andersson@kernel.org, bryan.odonoghue@linaro.org, conor+dt@kernel.org,
- devicetree@vger.kernel.org, dmitry.baryshkov@linaro.org,
- gregkh@linuxfoundation.org, hdegoede@redhat.com,
- heikki.krogerus@linux.intel.com, ilpo.jarvinen@linux.intel.com,
- jdelvare@suse.com, konradybcio@kernel.org, krzk+dt@kernel.org,
- linux-arm-msm@vger.kernel.org, linux-hwmon@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
- linux-usb@vger.kernel.org, linux@roeck-us.net,
- platform-driver-x86@vger.kernel.org, robh@kernel.org, sre@kernel.org
-References: <md45rp2dmv7aibez2sxwzyjayfi4wbujshlc46hxi6v4jzlhfr@tpbtqv46hrlh>
- <20250106080657.240974-1-mitltlatltl@gmail.com>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- xsFNBFVDQq4BEAC6KeLOfFsAvFMBsrCrJ2bCalhPv5+KQF2PS2+iwZI8BpRZoV+Bd5kWvN79
- cFgcqTTuNHjAvxtUG8pQgGTHAObYs6xeYJtjUH0ZX6ndJ33FJYf5V3yXqqjcZ30FgHzJCFUu
- JMp7PSyMPzpUXfU12yfcRYVEMQrmplNZssmYhiTeVicuOOypWugZKVLGNm0IweVCaZ/DJDIH
- gNbpvVwjcKYrx85m9cBVEBUGaQP6AT7qlVCkrf50v8bofSIyVa2xmubbAwwFA1oxoOusjPIE
- J3iadrwpFvsZjF5uHAKS+7wHLoW9hVzOnLbX6ajk5Hf8Pb1m+VH/E8bPBNNYKkfTtypTDUCj
- NYcd27tjnXfG+SDs/EXNUAIRefCyvaRG7oRYF3Ec+2RgQDRnmmjCjoQNbFrJvJkFHlPeHaeS
- BosGY+XWKydnmsfY7SSnjAzLUGAFhLd/XDVpb1Een2XucPpKvt9ORF+48gy12FA5GduRLhQU
- vK4tU7ojoem/G23PcowM1CwPurC8sAVsQb9KmwTGh7rVz3ks3w/zfGBy3+WmLg++C2Wct6nM
- Pd8/6CBVjEWqD06/RjI2AnjIq5fSEH/BIfXXfC68nMp9BZoy3So4ZsbOlBmtAPvMYX6U8VwD
- TNeBxJu5Ex0Izf1NV9CzC3nNaFUYOY8KfN01X5SExAoVTr09ewARAQABzSVLcnp5c3p0b2Yg
- S296bG93c2tpIDxrcnprQGtlcm5lbC5vcmc+wsGVBBMBCgA/AhsDBgsJCAcDAgYVCAIJCgsE
- FgIDAQIeAQIXgBYhBJvQfg4MUfjVlne3VBuTQ307QWKbBQJgPO8PBQkUX63hAAoJEBuTQ307
- QWKbBn8P+QFxwl7pDsAKR1InemMAmuykCHl+XgC0LDqrsWhAH5TYeTVXGSyDsuZjHvj+FRP+
- gZaEIYSw2Yf0e91U9HXo3RYhEwSmxUQ4Fjhc9qAwGKVPQf6YuQ5yy6pzI8brcKmHHOGrB3tP
- /MODPt81M1zpograAC2WTDzkICfHKj8LpXp45PylD99J9q0Y+gb04CG5/wXs+1hJy/dz0tYy
- iua4nCuSRbxnSHKBS5vvjosWWjWQXsRKd+zzXp6kfRHHpzJkhRwF6ArXi4XnQ+REnoTfM5Fk
- VmVmSQ3yFKKePEzoIriT1b2sXO0g5QXOAvFqB65LZjXG9jGJoVG6ZJrUV1MVK8vamKoVbUEe
- 0NlLl/tX96HLowHHoKhxEsbFzGzKiFLh7hyboTpy2whdonkDxpnv/H8wE9M3VW/fPgnL2nPe
- xaBLqyHxy9hA9JrZvxg3IQ61x7rtBWBUQPmEaK0azW+l3ysiNpBhISkZrsW3ZUdknWu87nh6
- eTB7mR7xBcVxnomxWwJI4B0wuMwCPdgbV6YDUKCuSgRMUEiVry10xd9KLypR9Vfyn1AhROrq
- AubRPVeJBf9zR5UW1trJNfwVt3XmbHX50HCcHdEdCKiT9O+FiEcahIaWh9lihvO0ci0TtVGZ
- MCEtaCE80Q3Ma9RdHYB3uVF930jwquplFLNF+IBCn5JRzsFNBFVDXDQBEADNkrQYSREUL4D3
- Gws46JEoZ9HEQOKtkrwjrzlw/tCmqVzERRPvz2Xg8n7+HRCrgqnodIYoUh5WsU84N03KlLue
- MNsWLJBvBaubYN4JuJIdRr4dS4oyF1/fQAQPHh8Thpiz0SAZFx6iWKB7Qrz3OrGCjTPcW6ei
- OMheesVS5hxietSmlin+SilmIAPZHx7n242u6kdHOh+/SyLImKn/dh9RzatVpUKbv34eP1wA
- GldWsRxbf3WP9pFNObSzI/Bo3kA89Xx2rO2roC+Gq4LeHvo7ptzcLcrqaHUAcZ3CgFG88CnA
- 6z6lBZn0WyewEcPOPdcUB2Q7D/NiUY+HDiV99rAYPJztjeTrBSTnHeSBPb+qn5ZZGQwIdUW9
- YegxWKvXXHTwB5eMzo/RB6vffwqcnHDoe0q7VgzRRZJwpi6aMIXLfeWZ5Wrwaw2zldFuO4Dt
- 91pFzBSOIpeMtfgb/Pfe/a1WJ/GgaIRIBE+NUqckM+3zJHGmVPqJP/h2Iwv6nw8U+7Yyl6gU
- BLHFTg2hYnLFJI4Xjg+AX1hHFVKmvl3VBHIsBv0oDcsQWXqY+NaFahT0lRPjYtrTa1v3tem/
- JoFzZ4B0p27K+qQCF2R96hVvuEyjzBmdq2esyE6zIqftdo4MOJho8uctOiWbwNNq2U9pPWmu
- 4vXVFBYIGmpyNPYzRm0QPwARAQABwsF8BBgBCgAmAhsMFiEEm9B+DgxR+NWWd7dUG5NDfTtB
- YpsFAmA872oFCRRflLYACgkQG5NDfTtBYpvScw/9GrqBrVLuJoJ52qBBKUBDo4E+5fU1bjt0
- Gv0nh/hNJuecuRY6aemU6HOPNc2t8QHMSvwbSF+Vp9ZkOvrM36yUOufctoqON+wXrliEY0J4
- ksR89ZILRRAold9Mh0YDqEJc1HmuxYLJ7lnbLYH1oui8bLbMBM8S2Uo9RKqV2GROLi44enVt
- vdrDvo+CxKj2K+d4cleCNiz5qbTxPUW/cgkwG0lJc4I4sso7l4XMDKn95c7JtNsuzqKvhEVS
- oic5by3fbUnuI0cemeizF4QdtX2uQxrP7RwHFBd+YUia7zCcz0//rv6FZmAxWZGy5arNl6Vm
- lQqNo7/Poh8WWfRS+xegBxc6hBXahpyUKphAKYkah+m+I0QToCfnGKnPqyYIMDEHCS/RfqA5
- t8F+O56+oyLBAeWX7XcmyM6TGeVfb+OZVMJnZzK0s2VYAuI0Rl87FBFYgULdgqKV7R7WHzwD
- uZwJCLykjad45hsWcOGk3OcaAGQS6NDlfhM6O9aYNwGL6tGt/6BkRikNOs7VDEa4/HlbaSJo
- 7FgndGw1kWmkeL6oQh7wBvYll2buKod4qYntmNKEicoHGU+x91Gcan8mCoqhJkbqrL7+nXG2
- 5Q/GS5M9RFWS+nYyJh+c3OcfKqVcZQNANItt7+ULzdNJuhvTRRdC3g9hmCEuNSr+CLMdnRBY fv0=
-In-Reply-To: <20250106080657.240974-1-mitltlatltl@gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.17
 
-On 06/01/2025 09:06, Pengyu Luo wrote:
->>> +      - const: huawei,gaokun-ec
->>
->> There is no support for gaokun2 here, so I assume you checked and you
->> know these are compatible. What's more, you claim there is a generic
->> piece of hardware called gaokun-ec and everything in this family will be
->> compatible with it. Well, that's my standard disclaimer and disapproval
->> of using generic compatibles.
->>
->> So in general what you want here is *only one* compatible called
->> huawei,gaokun3-ec
->>
-> 
-> I agree with you. If there is a generic rule to follow, I am not familiar
-> with this. I have seen some bindings, using like this, so I followed it
-> recently.
+Unfortunately the SMOxxxx ACPI device does not contain the i2c-address
+of the accelerometer. So a DMI product-name to address mapping table
+is used.
 
-Generic rule is: wildcards and family names are not allowed. Now what
-"generic" means, is different for different devices. If unsure, always
-use only device-specific compatibles.
+Add support to have the kernel probe for the i2c-address for models
+which are not on the list.
 
+The new probing code sits behind a new probe_i2c_addr module parameter,
+which is disabled by default because probing might be dangerous.
 
+Link: https://lore.kernel.org/linux-i2c/4820e280-9ca4-4d97-9d21-059626161bfc@molgen.mpg.de/
+Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+---
+Changes in v11:
+- Change "At support" to "Add support" in commit message
+- Change "commandline" to "command line" in pr_info() message
 
-Best regards,
-Krzysztof
+Changes in v10:
+- Log "please report this upstream to platform-driver-x86@vger.kernel.org
+  so that a quirk can be added" on successful probe
+- Now a standalone patch since the rest of the series has been merged
+
+Changes in v8:
+- Use dev_err() / dev_dbg() where possible using &adap->dev as the device
+  for logging
+
+Changes in v6:
+- Use i2c_new_scanned_device() instead of re-inventing it
+
+Changes in v5:
+- Add "this may be dangerous warning" to MODULE_PARM_DESC(probe_i2c_addr)
+---
+ drivers/platform/x86/dell/dell-lis3lv02d.c | 56 ++++++++++++++++++++--
+ 1 file changed, 52 insertions(+), 4 deletions(-)
+
+diff --git a/drivers/platform/x86/dell/dell-lis3lv02d.c b/drivers/platform/x86/dell/dell-lis3lv02d.c
+index d2b34e10c5eb..c1596858dda6 100644
+--- a/drivers/platform/x86/dell/dell-lis3lv02d.c
++++ b/drivers/platform/x86/dell/dell-lis3lv02d.c
+@@ -15,6 +15,8 @@
+ #include <linux/workqueue.h>
+ #include "dell-smo8800-ids.h"
+ 
++#define LIS3_WHO_AM_I 0x0f
++
+ #define DELL_LIS3LV02D_DMI_ENTRY(product_name, i2c_addr)                 \
+ 	{                                                                \
+ 		.matches = {                                             \
+@@ -57,6 +59,42 @@ static u8 i2c_addr;
+ static struct i2c_client *i2c_dev;
+ static bool notifier_registered;
+ 
++static bool probe_i2c_addr;
++module_param(probe_i2c_addr, bool, 0444);
++MODULE_PARM_DESC(probe_i2c_addr, "Probe the i801 I2C bus for the accelerometer on models where the address is unknown, this may be dangerous.");
++
++static int detect_lis3lv02d(struct i2c_adapter *adap, unsigned short addr)
++{
++	union i2c_smbus_data smbus_data;
++	int err;
++
++	dev_info(&adap->dev, "Probing for lis3lv02d on address 0x%02x\n", addr);
++
++	err = i2c_smbus_xfer(adap, addr, 0, I2C_SMBUS_READ, LIS3_WHO_AM_I,
++			     I2C_SMBUS_BYTE_DATA, &smbus_data);
++	if (err < 0)
++		return 0; /* Not found */
++
++	/* valid who-am-i values are from drivers/misc/lis3lv02d/lis3lv02d.c */
++	switch (smbus_data.byte) {
++	case 0x32:
++	case 0x33:
++	case 0x3a:
++	case 0x3b:
++		break;
++	default:
++		dev_warn(&adap->dev, "Unknown who-am-i register value 0x%02x\n",
++			 smbus_data.byte);
++		return 0; /* Not found */
++	}
++
++	dev_info(&adap->dev,
++		 "Detected lis3lv02d on address 0x%02x, please report this upstream to platform-driver-x86@vger.kernel.org so that a quirk can be added\n",
++		 addr);
++
++	return 1; /* Found */
++}
++
+ static bool i2c_adapter_is_main_i801(struct i2c_adapter *adap)
+ {
+ 	/*
+@@ -97,10 +135,18 @@ static void instantiate_i2c_client(struct work_struct *work)
+ 	if (!adap)
+ 		return;
+ 
+-	info.addr = i2c_addr;
+ 	strscpy(info.type, "lis3lv02d", I2C_NAME_SIZE);
+ 
+-	i2c_dev = i2c_new_client_device(adap, &info);
++	if (i2c_addr) {
++		info.addr = i2c_addr;
++		i2c_dev = i2c_new_client_device(adap, &info);
++	} else {
++		/* First try address 0x29 (most used) and then try 0x1d */
++		static const unsigned short addr_list[] = { 0x29, 0x1d, I2C_CLIENT_END };
++
++		i2c_dev = i2c_new_scanned_device(adap, &info, addr_list, detect_lis3lv02d);
++	}
++
+ 	if (IS_ERR(i2c_dev)) {
+ 		dev_err(&adap->dev, "error %ld registering i2c_client\n", PTR_ERR(i2c_dev));
+ 		i2c_dev = NULL;
+@@ -169,12 +215,14 @@ static int __init dell_lis3lv02d_init(void)
+ 	put_device(dev);
+ 
+ 	lis3lv02d_dmi_id = dmi_first_match(lis3lv02d_devices);
+-	if (!lis3lv02d_dmi_id) {
++	if (!lis3lv02d_dmi_id && !probe_i2c_addr) {
+ 		pr_warn("accelerometer is present on SMBus but its address is unknown, skipping registration\n");
++		pr_info("Pass dell_lis3lv02d.probe_i2c_addr=1 on the kernel command line to probe, this may be dangerous!\n");
+ 		return 0;
+ 	}
+ 
+-	i2c_addr = (long)lis3lv02d_dmi_id->driver_data;
++	if (lis3lv02d_dmi_id)
++		i2c_addr = (long)lis3lv02d_dmi_id->driver_data;
+ 
+ 	/*
+ 	 * Register i2c-bus notifier + queue initial scan for lis3lv02d
+-- 
+2.47.1
+
