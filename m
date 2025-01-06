@@ -1,101 +1,165 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 54D1A19CC2A;
-	Mon,  6 Jan 2025 17:47:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F56513775E
+	for <platform-driver-x86@vger.kernel.org>; Mon,  6 Jan 2025 18:33:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736185622; cv=none; b=Ll0dAg/CJZ9q+nkUw+47E2F9LAX+R3GgLn0zEADderckh1uHgf704bw3pWTC+VX8cT+UQKApwz0GFfl7CxcHucWnN16c9Wf+TA45tPIew/xw+vaj8Xjq8/VGTKWwf0eeyS6WdZNLpJBmPLqjktDIZc1zlTRM1+fXvfEBCqCyDzI=
+	t=1736188411; cv=none; b=VXC4wcomiAicNLFpOSNryFCOx4EQKhBM9P0/IXVp53LGrUoB6sja60xBT01HMixJ9AatzQS7et3ue8HU3UB7+06/fKAYN8xeD7ZdsHnKRXx6rOFb+H6ikk6U5n9E6ih82Os8jX01w0vuqiKUUfjM14aFv4fRT2YNttI43h5AIJ8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736185622; c=relaxed/simple;
-	bh=wNoTz3//1H6kuvXDNRwHMwL8KF9BlXYy2y6lToeVvcQ=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=fBCyBd5L3YUhATCFZHqsnSWOiwia3FQW15cz8AiEYPeEPNR7TryBQeTCEzm1nptxAFvUApkrQJOM/3xy/AYcVd1DerlnXdG1dmFbq7ulaiJdsKp+AXiufdBt5SXo4POpKVinTc6nk5FuHQ3FaYudgfWQfIHNZu0aBefDDQmb6M8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=KnCsu4LE; arc=none smtp.client-ip=198.175.65.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1736188411; c=relaxed/simple;
+	bh=lg/svAvXiOmJQmZ2PTy/JRM5PafogJcNIhOx3rlMrs4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=gveINnXOTXABEAqIDHJ/55DtrRv79aSWD3UjXellRz2b8HkAvbrAhlFiyIaSGRVCsenlogIWry8X42KmmxDTXZL+bvritJvBMJrLT1vOXIotAkpIpD4kAG1WjFA5fhcMcBDZwZYYgNGTFSzyhHOZxJx2TDj/0Ku0hAg+F87Ulrg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=VawkUotK; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="KnCsu4LE"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1736185620; x=1767721620;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=wNoTz3//1H6kuvXDNRwHMwL8KF9BlXYy2y6lToeVvcQ=;
-  b=KnCsu4LEqUn/mr4VBrgUwfalhbjjUfkzrxhjjTUbzkaPdJ+QpyAa/II2
-   hV1vRdegJXLKkF7hK0hD21Fu2ZghtVMtatEKZUxjKHV6DcFXfhQ3LBRZU
-   hTt3JrjDlLRLwM0ZJYhOSz+X85jKjjiGTt6kceWX3kBAfFuLDSI31Qo35
-   qmUR6SxgCckea+6oujhsyA+rqYfEOZ/ZRElnOkdfq+shhf5hSgygi1kwv
-   2FSy0D+JV7gtEqNbKHx27KmSrWOtOjrsLg4ZAYr+LKcZI4sz/EqYy89cP
-   THgrYJmxY17aWAJUBhzxQhvDRDfOfaPJqKBygPoJ3RmtPa3jGPDyzHsZX
-   w==;
-X-CSE-ConnectionGUID: bY880R1qQaauJkYwh9WH0w==
-X-CSE-MsgGUID: 6S4Bi9dETCyBadpUR8dZxA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11307"; a="36220387"
-X-IronPort-AV: E=Sophos;i="6.12,293,1728975600"; 
-   d="scan'208";a="36220387"
-Received: from fmviesa008.fm.intel.com ([10.60.135.148])
-  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Jan 2025 09:47:00 -0800
-X-CSE-ConnectionGUID: 3qYg8OxFRXWtnmIUEXhCFQ==
-X-CSE-MsgGUID: O3HDJKr7Q2K0G33YFox6Ew==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.12,293,1728975600"; 
-   d="scan'208";a="102698635"
-Received: from dnelso2-mobl.amr.corp.intel.com (HELO debox1-desk4.lan) ([10.125.110.113])
-  by fmviesa008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Jan 2025 09:46:59 -0800
-From: "David E. Box" <david.e.box@linux.intel.com>
-To: irenic.rajneesh@gmail.com,
-	david.e.box@intel.com,
-	ilpo.jarvinen@linux.intel.com,
-	hdegoede@redhat.com,
-	platform-driver-x86@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	xi.pardee@linux.intel.com
-Cc: "David E. Box" <david.e.box@linux.intel.com>
-Subject: [PATCH] platform/x86/intel/pmc: Fix ioremap of bad address
-Date: Mon,  6 Jan 2025 09:46:52 -0800
-Message-ID: <20250106174653.1497128-1-david.e.box@linux.intel.com>
-X-Mailer: git-send-email 2.43.0
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="VawkUotK"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1736188408;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=lWlnkdv52RVIzR3sZQXxwd1WDf7fBB4R6QG+QsF7ePc=;
+	b=VawkUotK5ceKrDBm19LE51vO7tpZsWDkMrM5KV0YJEN98oOcmA7Orx1/RTbHB2/RIHMjLX
+	q5OuNcmm+WQlJsjWwCEIOZGnoEdwezMuAVyXDlk63LODx3wrivhuJpGhPj3sSdr6wUrMnf
+	4SsiDyJ3XkGYlln0h8Uh52o2rQFEsGo=
+Received: from mail-ej1-f72.google.com (mail-ej1-f72.google.com
+ [209.85.218.72]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-451-zrpDLbDTMUyaUg1hRDag4g-1; Mon, 06 Jan 2025 13:33:26 -0500
+X-MC-Unique: zrpDLbDTMUyaUg1hRDag4g-1
+X-Mimecast-MFC-AGG-ID: zrpDLbDTMUyaUg1hRDag4g
+Received: by mail-ej1-f72.google.com with SMTP id a640c23a62f3a-aa67f18cb95so674411366b.1
+        for <platform-driver-x86@vger.kernel.org>; Mon, 06 Jan 2025 10:33:26 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1736188405; x=1736793205;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=lWlnkdv52RVIzR3sZQXxwd1WDf7fBB4R6QG+QsF7ePc=;
+        b=dN2+YmmKGI/TUgKOVizdNzlXGn8NJRnC0IyeB4MwMJkxIXWYJ8iI37j3jHacu5GTZ7
+         tl6BOpX+AiwEGIXk2P0ECaiI+1xk/w/tlA0DxTrYpE58NGdCZn+AzhmEczjGwJPqQLFj
+         12ckVZnOcWqjjFhbpIaOclaZ+c8eabeuJkgbnvgqy6scE0erNNqta7v3OdmhxJbOo3ob
+         4GhDa2F6+qzLFnfAPy2ptuMWNwlhuPXnAa5H1yex2nkKDIBtIJD7ACbaJRsm6+VuPwS8
+         NT0m0vfUMNnvnmVMTo1X8qmNO+rTD1IaSa38D3OGW4wLyXolWYQ3RcjT8Ea9Jl24xRON
+         kHrA==
+X-Gm-Message-State: AOJu0Ywu+9j5D1mPn/k4cv8kdRweLBJV/ZV/sGvyIQGDAjQAsS0GJnAN
+	6edIGSoFEBNdimLt57mX96JwTKxsHVSmTQk6qIXyxm8MMlaHyE9NgVm710dQ4AgqWUSwNT/etvH
+	bX8WBCfR65XDphya/MDpzl3tj8A69OMnhcFajDysdiihaten7GBsjja/AsjpJb7i8bF6Sgpg=
+X-Gm-Gg: ASbGncs1k0QJV2cEWp6hrVbr2uTImZ32b4SQ/npTETcsRKKLLv9TJLPqplL6PUBXpsN
+	tlOzO9XFuvwJ05vIAwm2drvsD/4Da2XMbYY/2bEBfRZPQ1Vq9iamcAiLt7LM2Uyl01T0JmPh55m
+	+cVK2VMCnDcsfy+V/9J43qtoRSatZwuJnKBtCz8oTfPZJqPmFH31StGuVGDdmsGwfN86DZfCSJ9
+	YgKYp2FQ0GUsWjeIEv/HDyWvof9HO57QEH90CUORvcsdpqtam0hr5AtqfaZHL9rinExP64YKn5d
+	L+zB5fejC1lYQrhC4SzDenWWiHI3QqsLVhdfQF3KYDAc6dpZ04DKE5cgrUdGAY5bMm799R/ztIk
+	NdwYNvo8AhbQF15DS5lKolDyRvlfwhqk=
+X-Received: by 2002:a17:907:1c16:b0:aaf:208:fd3f with SMTP id a640c23a62f3a-aaf0209031bmr3287906266b.13.1736188405349;
+        Mon, 06 Jan 2025 10:33:25 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IGN4mTJJZxbklby5vcvnKrZdHwK40gGI80mqVEJPT/dyeSEVMoA9PDLDNBf7GmWLnojcifh+w==
+X-Received: by 2002:a17:907:1c16:b0:aaf:208:fd3f with SMTP id a640c23a62f3a-aaf0209031bmr3287903866b.13.1736188404917;
+        Mon, 06 Jan 2025 10:33:24 -0800 (PST)
+Received: from ?IPV6:2001:1c00:c32:7800:5bfa:a036:83f0:f9ec? (2001-1c00-0c32-7800-5bfa-a036-83f0-f9ec.cable.dynamic.v6.ziggo.nl. [2001:1c00:c32:7800:5bfa:a036:83f0:f9ec])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-aac0f066112sm2270145566b.179.2025.01.06.10.33.24
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 06 Jan 2025 10:33:24 -0800 (PST)
+Message-ID: <5d2ee19b-eb78-4c67-9a5f-82859d8ae8bc@redhat.com>
+Date: Mon, 6 Jan 2025 19:33:23 +0100
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: acer-wmi: Nitro button doesn't produce a WMI event
+To: Armin Wolf <W_Armin@gmx.de>, Hridesh MG <hridesh699@gmail.com>
+Cc: platform-driver-x86@vger.kernel.org
+References: <CALiyAom1xDH6A0Q2WNHCMUcpMJfM3pXO2DaW=bgHGUi8ZOpBbQ@mail.gmail.com>
+ <8b8749c1-59c8-4f95-a43e-055cf94f9597@gmx.de>
+ <CALiyAo=R1kcvwRpw22s=YU0YHUxR8T_WHLwSvDr=8Ahsenn-jA@mail.gmail.com>
+ <9c625119-e46e-464b-933d-9c836577f454@gmx.de>
+ <CALiyAo=7kVi4ipA5-xDfRYQ-gqyza0woYHUzwGuW5BccLOVHgg@mail.gmail.com>
+ <209f39ab-a312-45b5-981c-8324d9b8cd90@gmx.de>
+ <CALiyAon+5H_g1V-iNbjdLmjgYDJng+ePH0XeoYxijYurHj+uTg@mail.gmail.com>
+ <31c28ea2-881c-42e3-b754-8b52ca7f63fd@gmx.de>
+ <CALiyAo=_vGu50RoAPwFMv9J=mkaQWojAQxmB2qmwcEZ5Y8kfSg@mail.gmail.com>
+ <583bbdfe-5c5a-4541-b30a-97eb89f2e4c3@gmx.de>
+ <CALiyAo=Y1rh=OpTete0N=q2DrFh8CL449xAfSxfJuju+5tc_mQ@mail.gmail.com>
+ <ceb159f1-2900-4946-a9c9-088ba99d2d67@gmx.de>
+Content-Language: en-US, nl
+From: Hans de Goede <hdegoede@redhat.com>
+In-Reply-To: <ceb159f1-2900-4946-a9c9-088ba99d2d67@gmx.de>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-In pmc_core_ssram_get_pmc(), the physical addresses for hidden SSRAM
-devices are retrieved from the MMIO region of the primary SSRAM device. If
-additional devices are not present, the address returned is zero.
-Currently, the code does not check for this condition, resulting in ioremap
-incorrectly attempting to map address 0. Add a check for a zero address and
-return 0 if no additional devices are found, as it is not an error for the
-device to be absent.
+Hi all,
 
-Signed-off-by: David E. Box <david.e.box@linux.intel.com>
-Fixes: a01486dc4bb1 ("platform/x86/intel/pmc: Cleanup SSRAM discovery")
----
- drivers/platform/x86/intel/pmc/core_ssram.c | 4 ++++
- 1 file changed, 4 insertions(+)
+On 6-Jan-25 5:59 PM, Armin Wolf wrote:
+> Am 02.01.25 um 07:18 schrieb Hridesh MG:
+> 
+>> On Thu, Jan 2, 2025 at 1:51 AM Armin Wolf <W_Armin@gmx.de> wrote:
+>>> Am 01.01.25 um 20:53 schrieb Hridesh MG:
+>>>
+>>>>> This ACPI method should trigger the turbo mode button (found inside the DSDT table):
+>>>>>
+>>>>>           Method (_Q58, 0, NotSerialized)  // _Qxx: EC Query, xx=0x00-0xFF
+>>>>>            {
+>>>>>                   Debug = "=====PROJECT_QUERY_58====="
+>>>>>                    ^^^WMID.FEBC [Zero] = 0x07
+>>>>>                    ^^^WMID.FEBC [One] = 0x04
+>>>>>                    ^^^WMID.FEBC [0x02] = One
+>>>>>                    Notify (WMID, 0xBC) // Device-Specific
+>>>>>           }
+>>>>>
+>>>> I feel like an idiot right now but I just realized something: So far
+>>>> I've been assuming that the button I've been calling the "Turbo
+>>>> Button" worked the same way on both Nitro and Predator laptops, but
+>>>> that's not the case.
+>>>>
+>>>> On Predator laptops, the button directly enables Turbo mode but on the
+>>>> Nitro it only opens the Nitro Sense app. I had assumed that both
+>>>> buttons simply opened the app and that directly enabling Turbo mode
+>>>> was a feature provided by the Linux driver.
+>>>>
+>>>> Given this, the ACPI code that you linked earlier is probably for the
+>>>> Predator's "Turbo Button". Could it be that the button on my laptop
+>>>> doesn’t use that ACPI code at all, considering its functionality is
+>>>> completely different? (Though i doubt Acer would leave it in if it
+>>>> wasn't being used)
+>>> It is quite common for manufactures to just copy and paste ACPI code snippets, so it is not
+>>> unusual to have some unused code inside the ACPI tables.
+>>>
+>>> Did you receive any input events or dmesg messages when pressing that button?
+>>>
+>>> If no then it could also be that this button depends on the Intel THC touch controller to work,
+>>> take a look at https://lore.kernel.org/all/20241216014127.3722172-1-even.xu@intel.com for details
+>>> about the Intel THC controller.
+>>>
+>>> Thanks,
+>>> Armin Wolf
+>>>
+>> I do receive input events, it shows up with the keycode 433 and symbol
+>> XF86Presentation. I think you mentioned something regarding an i8042
+>> filter, can we use that to call the function to cycle between the
+>> profiles?
+> 
+> Since this is a valid keycode i advise against filtering it out. Instead it would make more
+> sense to allow userspace to control the turbo state for example trough a sysfs attribute.
+> 
+> Then you can use a userspace program to react to this key press.
 
-diff --git a/drivers/platform/x86/intel/pmc/core_ssram.c b/drivers/platform/x86/intel/pmc/core_ssram.c
-index 50ebfd586d3f..739569803017 100644
---- a/drivers/platform/x86/intel/pmc/core_ssram.c
-+++ b/drivers/platform/x86/intel/pmc/core_ssram.c
-@@ -269,8 +269,12 @@ pmc_core_ssram_get_pmc(struct pmc_dev *pmcdev, int pmc_idx, u32 offset)
- 		/*
- 		 * The secondary PMC BARS (which are behind hidden PCI devices)
- 		 * are read from fixed offsets in MMIO of the primary PMC BAR.
-+		 * If a device is not present, the value will be 0.
- 		 */
- 		ssram_base = get_base(tmp_ssram, offset);
-+		if (!ssram_base)
-+			return 0;
-+
- 		ssram = ioremap(ssram_base, SSRAM_HDR_SIZE);
- 		if (!ssram)
- 			return -ENOMEM;
+Since some laptops handle this completely in the EC, so far drivers
+which get an event for this have been reacting to this event
+themselves and calling the platform_profile_cycle() helper to cycle
+through the various performance profiles.
 
-base-commit: 6b228cfc52a6e9b7149cf51e247076963d6561cd
--- 
-2.43.0
+I think it would be best to do this here too.
+
+Regards,
+
+Hans
+
+
 
