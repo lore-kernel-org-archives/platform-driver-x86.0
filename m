@@ -1,91 +1,88 @@
-Received: from mail-pj1-f47.google.com (mail-pj1-f47.google.com [209.85.216.47])
+Received: from mail-pl1-f179.google.com (mail-pl1-f179.google.com [209.85.214.179])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E72F81D6DB1;
-	Mon,  6 Jan 2025 08:08:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F1E4E1D7989;
+	Mon,  6 Jan 2025 09:21:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736150915; cv=none; b=bTvvppr6Qxs/N/avigLqyBG+01UYIfX6PH8d/CgGzBhiBtnuTVK8xtUYbWhrufX/pE7ckiiJWbuOpnhPVdEy4pvsf0LNyHdYprvbuXGSIxpAH6azqehnnsHA8oRIhVUIAeW2WewXM6y5jcvyF0USG1EjY1JtR1NM3mWbQrousOg=
+	t=1736155320; cv=none; b=nNpyQnkCMEbHYX33Nxcp12mSUTr267PCNlijC0sYiV3tUJxezmq3O769qv25x9arMBiD/u7sasjszaM4yGe7gvff+qMHvarYATatVVXXa0sHOAmXGg2Mi9ZcHoydkV5KrEg9Cs3uHomntCz/js6JYO/GqOwjD5fHfqgDsGf1ZVM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736150915; c=relaxed/simple;
-	bh=wHGu/oSSwQUbQ328emg5bZckBobIHSpMg0a2PmUbvwY=;
+	s=arc-20240116; t=1736155320; c=relaxed/simple;
+	bh=1ERfz6MYRyQC9T7JOUIcmI7il21I2EZ+euGNycX8pHI=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=LkXZzDIoTpRANBffRoRox4EXRBygbkKX6judNWOafbLw6JKyf59twMCl4PjsbgiME7ZOaQ9laXCa/H6Zk9dmwkqOmjaw1b6nFTuuMWgJpsqPIeqQvWMGcSqcJ6xu+ap6Fhx81mF1bRLtLd9WNiUywZrV6hmDPW/5FC3ONBqRuI0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ViMH81LL; arc=none smtp.client-ip=209.85.216.47
+	 MIME-Version:Content-Type; b=IJcbDvPo5Rhf9R/rK4/zeSYuFjXgnVD/97uUKjqwE6/dEp1XrLCP6lbQRToXQlru0gZXFpREO1qPQ2b6cuxaoNAZkEBoGhOIZ4HYYbD3NgtMjlUcvuLQ1n6MlDz6bF9EBFsmvzy6ZyRhk6omWIxY6TiJgmkwGGrEz/ZBvfx//kk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=E6GmsdfZ; arc=none smtp.client-ip=209.85.214.179
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ViMH81LL"
-Received: by mail-pj1-f47.google.com with SMTP id 98e67ed59e1d1-2ee86a1a92dso16165867a91.1;
-        Mon, 06 Jan 2025 00:08:30 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="E6GmsdfZ"
+Received: by mail-pl1-f179.google.com with SMTP id d9443c01a7336-216426b0865so197143965ad.0;
+        Mon, 06 Jan 2025 01:21:58 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1736150909; x=1736755709; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1736155318; x=1736760118; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=miofxZI6eA3394zdcfXv5+YqJvoJUfGSz5V6LgQvf58=;
-        b=ViMH81LLGD3HHJYUMeVONlG1cf/a0FxNl9KiT+WkyBNtScMj1vUwRwhaRPTxNh/c1A
-         IMQ3LwKaVW25ZozeGa0sENsn+Nitl4fqGJe51oQHd3FIf57zS41KGEG7HdtEkpu2cu+m
-         2mkPSprjaU8QbcGBWpyQgcUD7yoyV1QobA8ypXSKEC71dUREuIndo1lBcbSDoYzc8ZWk
-         57wUkiaQ462k5VPT9rpWjLwGS6uTMlgItyTqADSIEptG/VM0FmPqSvQspDNzeTxyQiBK
-         NlV90tcb1I7BDTpaA0Yd1tGsy+wT8BzFGXEb9ujcd7RAQRUdLw381man/FOGvGfF7YWH
-         Efxg==
+        bh=JxlkzERHMH6O41FvyQTnmiC7rDKDMif6g1pkU6AYpeQ=;
+        b=E6GmsdfZfuCXjnGbEyafXTszkP4OWp9rU8iNlR300ssFq0XVAntMRRFeX9ZxiiGX0k
+         UYsJZPhyzK6obKqGzSK393qEeXWSVJS3htJ3hfoRDw0ksdJGPp8Sfs54KNC9OPJ21crE
+         sscBZGIV5ngXmbtu+bQFH3rZeL9HOowOR4P+WhvAAsYKoVimuJO6J1eK4FfVpmRUYRVr
+         l3ciIm4fv91Q+o0MkjUAcn3cIQLc0ycWAPdrdGfABPFmvFlfi7sK5dHwFF8Z9dwgVjA7
+         6KY+JZuE9mWipPWi+HzvZuJ5As8qd4K6DHbu8HTVdNvAM8M5Ax6d9JT317XkBlbx9K1M
+         3Yww==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1736150909; x=1736755709;
+        d=1e100.net; s=20230601; t=1736155318; x=1736760118;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=miofxZI6eA3394zdcfXv5+YqJvoJUfGSz5V6LgQvf58=;
-        b=M9JRmBV0axYBDBentYAZM/8bhDkvFw4Xv8dvJnDm+iWuSvI0A5BbAB4KXqMjkoa0Jd
-         23DBenR+XZu69G5SH6DttTFOZOhDM/mvMkB/xO8+UV3JDet+YWIGFU5w1gw0VFhy/m8N
-         kAwirGZutUxhdSRCWHD83wnBgsqM4ya8DUZMhTWiiQCFUX/OLMssDgijN0doZmZXAc7C
-         jG4OcxmQLc3MD27hnEctzPoohSogvFXJdN6Io1IE7sSkEvvmW5+5sj2reEoN69oWTqVy
-         2Uz9vsiOfJyEcCOYDoZLDW2gIAELQ3Vfrz7iZcna/qviDfwVp9O70pGT2iEpR2+5RZU7
-         HJ4w==
-X-Forwarded-Encrypted: i=1; AJvYcCVBArqLorEi5SKER+3e4BeUAZqzj0AjrlrqTHwFvP8xYhBvKWL8az/uec6w8oImw28Yp0fUjCIldFw=@vger.kernel.org, AJvYcCVb+pASWhmj+ExFvzEo52OgbIcVXrdtWdKe0V7K71igOvPdDwpe673KandRh9T131x4mFksRIyf0lR6@vger.kernel.org, AJvYcCW6sgn/c0paROiQbxxSBYpo4aelnPPB+sohbMh7EOh0BxIRYXESsaMYiRFX2QwRBx5/nGRaF6w4vDwX++s=@vger.kernel.org, AJvYcCWDctfJlbZTZ8Zmi3A/xNuxqT9sjkQVsrCZsNubakA+LVcnbkZOk3NYT46wX6dlOxxVPldjv2ZM7EHRxFdYwg==@vger.kernel.org, AJvYcCWMbWrnGHrrMtgVJG/33QA0mnGXemeC/ywOqtMMEI4nRiy0bODm6STqwoxa2o0habjDEkQjr5ZK9wKYj6XvDM5LNpOafg==@vger.kernel.org, AJvYcCXYXcdyBDmFEKD5HSbfeTr6SOPH5Ufxmf3EID6oYtxOKW0yrD+cuiB1f0OQr3pnrvpRs+504/g2b3Yf@vger.kernel.org, AJvYcCXzLk7yjHUkJcB4fjp+ECmqhuQIg4ZsEMYAeBKamNSFfdVgOT1GXqPS1aAd0L4QdrPs4x1hgJ7vCS2gGXzk@vger.kernel.org
-X-Gm-Message-State: AOJu0YwwbPDH2sZtTSph9a7GdiF3aQgZXdov4KXiXTmA+ocG42ZXtXHs
-	HcHOP1FOs6wlk5j4xxSyK6+/V4djrKVX3cCsXVoYBJ01Csj0G4xt
-X-Gm-Gg: ASbGncuxreFZPvoUozfhyASodh9aXYi8EnnwwiE+p64BMv32kvVYa43tGUG6V+OCuJR
-	r3GHbgg9ldVQABg+tla9UvhZPDT2ekpqNdAb2MfWIr0ZqDEkxzYKe1Pk+4Qlwidt5jOb3621IVh
-	pyFZZvDkW7zhCEmIkGrNw+ySZ7AOIcBFQxRdUeFPYvt+uXO/Jphb7Jx/At+GxsGZswrYE4BADKw
-	O/7zgWU11OTw+BbR92+BM6r4wqrwx6ImRWMPMjrgWmh5I8AbxN7P9g=
-X-Google-Smtp-Source: AGHT+IGAiCuLKBYIm5kxkrIB5POZheZeFzEP+YXQx/K+Y9+0ooTv3Jv3BCORj3F89XQMRfCWUOpLwg==
-X-Received: by 2002:a17:90b:134b:b0:2ef:316b:53fe with SMTP id 98e67ed59e1d1-2f452e4d0e5mr73686828a91.22.1736150908695;
-        Mon, 06 Jan 2025 00:08:28 -0800 (PST)
+        bh=JxlkzERHMH6O41FvyQTnmiC7rDKDMif6g1pkU6AYpeQ=;
+        b=pb6isiV8WX+StWs9JFbYvkondAwx0VRor+0Y9OjAXa3/5CEAY0/+zjZwDYDCCMGmtH
+         5TAWjHGtkUL47MdSF2QZoOoSamyu97PR2nLs4E+k/Ts7rGhDnbT63HVUZDxUeDWBod1Q
+         zUbajJHFEsEGX8mAzj0oscUbqhCHBWcWoMjxqxauTVp5KH6jCOLB1+idYRgB94sHYIEp
+         B9wu9UAAwNzfXFyegbESyynByGPxVCHqQXXzQX9D3A2BG91N56GcMf9A9TytcfY9mJbD
+         7ogLutEHPNvTa4AaB8riiTF64yYoQSIovBld+RpeuzK6roVCaY8YVgKl6yMBm2leJRvl
+         SKeQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUf9P6CFsLsJdVvwaKpwedz5CzL2kai0cV7ELFq+Eyb/GQCCdzcnRQR/y0prlnxtJzbEQlazOummAz9@vger.kernel.org, AJvYcCVskQaTsw+pm4sYEcWXTjqouzWv06Bb4ILFfO0o7K2HG0XNunt8ke3U/Eaq9KZNAFKcGJxCn/zhew0=@vger.kernel.org, AJvYcCWDMInTatkcM64qjhj/WIl5lsqXYhPt5ehhsa8km5iflJKfiIujJ0UixhuFXpY6b+IUeABA081pZ5dNaYDaWQ==@vger.kernel.org, AJvYcCWJRPbgH/G/V4YpniOUSMfRsO6m/qWru8nx2k46z07xjsYz1YT8NIRyxTHWC2RFUtG6amWyjlvquyiL2i87@vger.kernel.org, AJvYcCWgy5X8mWTsiVktFxJShXk0h/drBr8cMeWTR23pbit8jkAuJTT8EKGyuLwV6gZpt9MLCxYvYAVLTUjPsTdlmILPFdw5NQ==@vger.kernel.org, AJvYcCX1IOzRPBXvP5mZjmtW6TAMvWmO+yKWfXn/IjMUWGBp3VxnJ1od9RYhTmcZN5QI52WR2ok6pDsjlXPW@vger.kernel.org
+X-Gm-Message-State: AOJu0YzLG7oeyj6tvOQqXXFak9/Io01rGltQWHI7KkCHPWHMMarsVM1e
+	A5JjaW9ptqa7m7CynIwLPEhdC6WR1iWl3mdROWkf+pdb4SJ5g30G
+X-Gm-Gg: ASbGncv6lZfTftF2NPjgheQEIrh/U0SYz2j3yif8SQGElas3pLHWbzizOtTEjL5b1Eu
+	AnFw0WTJ1bE4I/yMhjV40T5IzGeZcpWKK6inHdLQuSAYs5Cc0HBFbL6xGwJu4I1O7vD9p6O36cO
+	MPlCXXrSqc9I8f3jMzgZg/U7/5QO7qqMU49AC8zVNdT0DRPiIPIrRmFJRk8zZZbGJH5tYRaZebT
+	eUh/TZPKVvT2IYGFr6dnYJfVueYOO9MkmbL9FXTQ2uOTN3EEUXksq4=
+X-Google-Smtp-Source: AGHT+IGXi8StYEb75Eg6Rkljy5nI7Vy5yRp7C2szzeFHsg3az38XaLogelqi1TMQsp13y4MetIR8BA==
+X-Received: by 2002:a17:903:2306:b0:205:4721:19c with SMTP id d9443c01a7336-219e6f1448cmr720559455ad.37.1736155318139;
+        Mon, 06 Jan 2025 01:21:58 -0800 (PST)
 Received: from nuvole.. ([144.202.86.13])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-2f4477ec330sm36530772a91.24.2025.01.06.00.08.14
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-842bdfb5759sm24173817a12.51.2025.01.06.01.21.46
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 06 Jan 2025 00:08:27 -0800 (PST)
+        Mon, 06 Jan 2025 01:21:57 -0800 (PST)
 From: Pengyu Luo <mitltlatltl@gmail.com>
-To: krzk@kernel.org
+To: dmitry.baryshkov@linaro.org
 Cc: andersson@kernel.org,
 	bryan.odonoghue@linaro.org,
 	conor+dt@kernel.org,
 	devicetree@vger.kernel.org,
-	dmitry.baryshkov@linaro.org,
 	gregkh@linuxfoundation.org,
 	hdegoede@redhat.com,
 	heikki.krogerus@linux.intel.com,
 	ilpo.jarvinen@linux.intel.com,
-	jdelvare@suse.com,
 	konradybcio@kernel.org,
 	krzk+dt@kernel.org,
 	linux-arm-msm@vger.kernel.org,
-	linux-hwmon@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
 	linux-pm@vger.kernel.org,
 	linux-usb@vger.kernel.org,
-	linux@roeck-us.net,
 	mitltlatltl@gmail.com,
+	nikita@trvn.ru,
 	platform-driver-x86@vger.kernel.org,
 	robh@kernel.org,
 	sre@kernel.org
-Subject: Re: [PATCH v2 1/5] dt-bindings: platform: Add Huawei Matebook E Go EC
-Date: Mon,  6 Jan 2025 16:06:56 +0800
-Message-ID: <20250106080657.240974-1-mitltlatltl@gmail.com>
+Subject: Re: [PATCH 1/5] dt-bindings: platform: Add Huawei Matebook E Go EC
+Date: Mon,  6 Jan 2025 17:20:27 +0800
+Message-ID: <20250106092028.250715-1-mitltlatltl@gmail.com>
 X-Mailer: git-send-email 2.47.1
-In-Reply-To: <md45rp2dmv7aibez2sxwzyjayfi4wbujshlc46hxi6v4jzlhfr@tpbtqv46hrlh>
-References: <md45rp2dmv7aibez2sxwzyjayfi4wbujshlc46hxi6v4jzlhfr@tpbtqv46hrlh>
+In-Reply-To: <h4icxzxk5fzgkdhhk6disrervqmb4dqe3xlc432k7pgyzsk77u@pyfrrtyjslpo>
+References: <h4icxzxk5fzgkdhhk6disrervqmb4dqe3xlc432k7pgyzsk77u@pyfrrtyjslpo>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -95,97 +92,50 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-On Mon, Jan 6, 2025 at 3:11 PM Krzysztof Kozlowski <krzk@kernel.org> wrote:
-> On Mon, Jan 06, 2025 at 01:41:55AM +0800, Pengyu Luo wrote:
-> > +maintainers:
-> > +  - Pengyu Luo <mitltlatltl@gmail.com>
-> > +
-> > +description:
-> > +  Different from other Qualcomm Snapdragon sc8180x and sc8280xp-based
-> > +  machines, the Huawei Matebook E Go tablets use embedded controllers
-> > +  while others use a system called PMIC GLink which handles battery,
-> > +  UCSI, USB Type-C DP Alt Mode. In addition, Huawei's implementation
-> > +  also handles additional features, such as charging thresholds, FN
-> > +  lock, smart charging, tablet lid status, thermal sensors, and more.
-> > +
-> > +properties:
-> > +  compatible:
-> > +    items:
-> > +      - enum:
-> > +          - huawei,gaokun2
-> > +          - huawei,gaokun3
->
-> Missing "-ec", because gaokun2/3 is the name of the board, apparently. You cannot
-> duplicate compatibles with different meanings and if you tested this you
-> would see errors.
->
-> I think I might mislead you during last talk, where I questioned what is
-> "gen2" etc.
+On Mon, Dec 30, 2024 at 3:28 PM Aiqun(Maria) Yu <quic_aiquny@quicinc.com> wrote:
+> On 12/29/2024 6:12 PM, Pengyu Luo wrote:
 >
 
-Agree
+[...]
 
-> > +      - const: huawei,gaokun-ec
+> >>
+> >
+> > Check the motherboard, https://postimg.cc/V5r4KCgx (Credit to Tianyu Gao <gty0622@gmail.com>)
 >
-> There is no support for gaokun2 here, so I assume you checked and you
-> know these are compatible. What's more, you claim there is a generic
-> piece of hardware called gaokun-ec and everything in this family will be
-> compatible with it. Well, that's my standard disclaimer and disapproval
-> of using generic compatibles.
+> The link is not accessible from my end. Could you please help follow the
+> document tips referenced by [1] if this content is important for the
+> overall naming design?
 >
-> So in general what you want here is *only one* compatible called
-> huawei,gaokun3-ec
+> Here are some snippets for reference:
+> "for 'volatile' documents, please create an entry in the kernel
+> bugzilla https://bugzilla.kernel.org and attach a copy of these documents
+> to the bugzilla entry. Finally, provide the URL of the bugzilla entry in
+> the changelog."
 >
+> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Documentation/process/maintainer-tip.rst
+> [1]
 
-I agree with you. If there is a generic rule to follow, I am not familiar
-with this. I have seen some bindings, using like this, so I followed it
-recently.
+I created one entry, then I got myself and the entry banned, :(
+I had written to them to explain this yesterday. No response.
 
-properties:
-  compatible:
-    items:
-      - enum:
-          - vendor0,device0
-          - vendor1,device1
-      - const: generic-device
+Title 'Huawei Matebook E Go, whose codename is Gaokun',
+In this entry, I explained why is it called gaokun, and why gen3.
 
-
-> > +
-> > +  reg:
-> > +    const: 0x38
-> > +
-> > +  '#address-cells':
-> > +    const: 1
-> > +
-> > +  '#size-cells':
-> > +    const: 0
-> > +
-> > +  interrupts:
-> > +    maxItems: 1
-> > +
-> > +patternProperties:
-> > +  '^connector@[01]$':
-> > +    $ref: /schemas/connector/usb-connector.yaml#
-> > +
-> > +    properties:
-> > +      reg:
-> > +        maxItems: 1
-> > +
-> > +required:
-> > +  - compatible
-> > +  - reg
-> > +  - interrupts
-> > +
-> > +additionalProperties: false
-> > +
-> > +examples:
-> > +  - |+
+> https://bugzilla.kernel.org/show_bug.cgi?id=219645
 >
-> Drop +
+> Artem S. Tashkinov (aros@gmx.com) changed:
 >
+>            What    |Removed                     |Added
+> ----------------------------------------------------------------------------
+>              Status|NEW                         |RESOLVED
+>               Group|                            |Junk
+>           Component|man-pages                   |Spam
+>             Version|unspecified                 |2.5
+>          Resolution|---                         |INVALID
+>            Assignee|documentation_man-pages@ker |other_spam@kernel-bugs.kern
+>                    |nel-bugs.osdl.org           |el.org
+>             Product|Documentation               |Other
 
-Agree
 
-
-Best Wishes,
+Best wishes,
 Pengyu
