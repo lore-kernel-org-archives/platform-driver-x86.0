@@ -1,91 +1,150 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-vs1-f52.google.com (mail-vs1-f52.google.com [209.85.217.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E3D411FB3
-	for <platform-driver-x86@vger.kernel.org>; Mon,  6 Jan 2025 03:52:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C96714B94B;
+	Mon,  6 Jan 2025 04:46:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.217.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736135546; cv=none; b=hfohgZZhZjmys51eCJwAga2UxM0NmXoLnIp7HOnPXX5Uj3OfVo7LK0+dqAbUokbp5WFQkAdI4o8xvZhXYmAo946OJEMI1UrhoO/CPggtgBW9+Gb9hrLIYNzPxD3boyzvnnwiF0kejlo3nAxRa2ufwK+rU9l+YZj5up3lieu3hcg=
+	t=1736138799; cv=none; b=RfNtTeJ5q9nmRnjObuHe4fa3wcMp5YVKEfVTunF0GpSTxGk4vBK6uBTZ40KeXApqXGvJJ5RwbAIAoTuxRozHk8kp+uZtYMFmRLlopaQvezwkh5gorWMICM34+Ysi62Vd0gXLoNi8L83RoA6Ov7zjudhd5ZFl+fAoahL279FjQFM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736135546; c=relaxed/simple;
-	bh=CnZG1qdGTJ54YdA3Tt0thdnKvYEbjR3Vk+2VX7rXP/s=;
-	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=HD2l9gmMUox+W3FF5ssfWOxzbtRmZjE3JB7gOzhe1+ZB0Msf+Xaq6TJoUauoxzzLaC9gI3VeGBxtSmDnKsOThBO1QcXJlXN0hfn4tek3S+44PChKbaPkH6OxJLIL1zSJbFoGQJK0go6ixkrTNyBdISBRWhbBs1qKmey/jdJx7Z8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fFDKuKwc; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1736138799; c=relaxed/simple;
+	bh=0UK9rbMYelMqeMWeC95Stip6XcGeeNC73TeXPHxGM2I=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=b54Hsx6LNfC37VfgSsDFkCMRkuxYaZZsUms6JGr8cGXN0Yd0OBHeHpznkrYfdj5aX1x+VWzspv26I6n1v4U7z6d0jd7gCrn7BFKZ9X+4Lg14Csg/vPUpA9MIQAioNnhdSr0Vstu0oxP9QOLGiKC6J5kZ/naFEnDvN8jStxGVl3s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ThRBAJzh; arc=none smtp.client-ip=209.85.217.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fFDKuKwc"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 4D1B8C4CEDF
-	for <platform-driver-x86@vger.kernel.org>; Mon,  6 Jan 2025 03:52:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1736135545;
-	bh=CnZG1qdGTJ54YdA3Tt0thdnKvYEbjR3Vk+2VX7rXP/s=;
-	h=From:To:Subject:Date:In-Reply-To:References:From;
-	b=fFDKuKwcwcyQUXXl6heQ0xKhpRMo+DbG70VtHgjU9AXh0czazEhWLb4Z/a7c/ldf0
-	 TMktVTR2L8mHs7dwCTodTKhkKYJD3dtlOy/xj1A6gyYDdIWz2eLjl46JKx/J7R9G+f
-	 YLdcl9gXRAKuT7nqbpyB19nNiEm9e25jOZXsNkiOCa+EpOKxZezcTR5cqvoz/N2oN2
-	 Ki0bf5yRibEMND+qTGfDqWfY5xuLO01yKnDW9hoj2WZUWzcbv7fDL8QN1DmkcOZUV6
-	 IsjPCxdiApIjMcjVg0i+3a9vOFesdDDHmFtgkEf2FPYiJAFXtMbTXliY9iJVPtV32s
-	 BT2Hn0iUXXTJQ==
-Received: by aws-us-west-2-korg-bugzilla-1.web.codeaurora.org (Postfix, from userid 48)
-	id 4233EC41616; Mon,  6 Jan 2025 03:52:25 +0000 (UTC)
-From: bugzilla-daemon@kernel.org
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ThRBAJzh"
+Received: by mail-vs1-f52.google.com with SMTP id ada2fe7eead31-4b2c0a7ef74so7897998137.2;
+        Sun, 05 Jan 2025 20:46:37 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1736138796; x=1736743596; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=aMfjSTD/Y23SgFVdemlIyRQvnFthuXsFFp+nN/PUiP0=;
+        b=ThRBAJzhZaEtFjGmMJIAqAnperpdRzlfwkgQ1jykY3lgRgfoIwJaxnAe8sS8U9djou
+         8OHpETt2aSZkVHp9hGALbWVTZDVEh+Z/Qv8qt9JEQM90gYRrigllgauudpFlLS/TzV9d
+         RzZVagnQB85orpP13v3+jN2a+ILkgkUvWtkvgGHfaS0OBBXktYeNBwiLSM/7LJXdEl6m
+         +0vecCYcmkOlCfItjAk4m9mrN9CLb8wtw4BLRND4rWTyaLDdKXJQJhabskiWo3oETPxu
+         llVaDoTaLodC0IjtYzJnlTwvT6r8FzEPEM09t9CrAbDCXoqAwCnuBlwcd0z5q9K0Y+2p
+         WHug==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1736138796; x=1736743596;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=aMfjSTD/Y23SgFVdemlIyRQvnFthuXsFFp+nN/PUiP0=;
+        b=bks9SRTPJdVU5OVy7XrV5omlb07+yfF4qyk0ZXkORpMMEn3aqGbrJRt0Ip27IJaOQD
+         EolR9mri80vpiODPUgao07/0wZ7Kcz27YBC323LGXG8fr8hdbmODs1TEV5V3ydjv9m7G
+         AvVRgjDKNdoQb6MHwTHEF/rieywd636ifEEUqjfcn6HHbxYmT4nMniyiblkrz5UqW0Xn
+         BGKkeTeoQRpz7KQmWaO2BIzzAxPavDY5ieS8jtaoZ7u6UAejxJsfPvZkHcPt5nWOehrb
+         AXQcc+xya0s5MdR391i9d06/BYdX2tJ62G8U5P6jjLLz3piRr4KrkVsKElWuLCoDOJWq
+         3iPw==
+X-Forwarded-Encrypted: i=1; AJvYcCUEQw4oNHRD9fQH5LLIVty4EYut40D6eo9k1V/qNlg+vlRa5IW87LRSPrDylpr5Q+6sWTWmy5WO4P4RGwjv@vger.kernel.org, AJvYcCXQ6WbT8N/9EDRv6Z6LfeybAu7vF0R1YZedqRMuEB19wAkOZqdiF98Z/dlmiHq0uY/OawcpJbJYASX5@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz4GWeAruEKIR3kss9VXaP5vm9B33YtRu+AjblOP4tGTctmcLWr
+	orZmDrkL5dxqb8iPd7WthKFPt5n2wB80mT8bsK7Odz3LLjJb16cm88E+4oUi
+X-Gm-Gg: ASbGnct/OGFrL57oRSjrKet4KGilaHbzBJw0EFsGDkRb2Yja8oPaPR2fB6eCOM1ghKS
+	HmH2OIBKEiLR2+0eK6pa8oKDg6g0caEeDPflmLDp7LaF3wZXHcI5lGVKzty/BudaCdqnBd6he/v
+	E36tMTXVuOQmiev9bp5dvMy1VCqmU2r5SCDveuRNaPAAW/pOr9P1vJoy7fFyipCaIf1gtWxRdXv
+	pzw3BO9OBXcdxmz/aHEQibNU47JmueEUO1UbMhxHK/LrWXkHBvCopyP9u+k/1fW
+X-Google-Smtp-Source: AGHT+IHAz58NwnGlKi8SyoMcgpW+cwu7YkwN6dC5ukWfnVdSdbxXzdJSnELWSOKyQgDq4dYG9qzPZw==
+X-Received: by 2002:a05:6102:6e88:b0:4af:e61d:e22f with SMTP id ada2fe7eead31-4b363593900mr10310184137.24.1736138796431;
+        Sun, 05 Jan 2025 20:46:36 -0800 (PST)
+Received: from localhost.localdomain ([2800:bf0:82:1159:1ea9:11b1:7af9:1277])
+        by smtp.gmail.com with ESMTPSA id ada2fe7eead31-4b2bf98d1c9sm7083507137.4.2025.01.05.20.46.31
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 05 Jan 2025 20:46:35 -0800 (PST)
+From: Kurt Borja <kuurtb@gmail.com>
 To: platform-driver-x86@vger.kernel.org
-Subject: [Bug 218305] Ryzen 7 7840HS gets stuck at 544MHz frequency after
- resuming after unplugging the power cord during sleep
-Date: Mon, 06 Jan 2025 03:52:24 +0000
-X-Bugzilla-Reason: None
-X-Bugzilla-Type: changed
-X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
-X-Bugzilla-Product: Drivers
-X-Bugzilla-Component: Platform_x86
-X-Bugzilla-Version: 2.5
-X-Bugzilla-Keywords: 
-X-Bugzilla-Severity: blocking
-X-Bugzilla-Who: aros@gmx.com
-X-Bugzilla-Status: RESOLVED
-X-Bugzilla-Resolution: INVALID
-X-Bugzilla-Priority: P3
-X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
-X-Bugzilla-Flags: 
-X-Bugzilla-Changed-Fields: 
-Message-ID: <bug-218305-215701-ZzIcIByNYp@https.bugzilla.kernel.org/>
-In-Reply-To: <bug-218305-215701@https.bugzilla.kernel.org/>
-References: <bug-218305-215701@https.bugzilla.kernel.org/>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Bugzilla-URL: https://bugzilla.kernel.org/
-Auto-Submitted: auto-generated
+Cc: josh@joshuagrisham.com,
+	hridesh699@gmail.com,
+	derekjohn.clark@gmail.com,
+	Kurt Borja <kuurtb@gmail.com>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Len Brown <lenb@kernel.org>,
+	Maximilian Luz <luzmaximilian@gmail.com>,
+	Hans de Goede <hdegoede@redhat.com>,
+	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	"Lee, Chun-Yi" <jlee@suse.com>,
+	Shyam Sundar S K <Shyam-sundar.S-k@amd.com>,
+	Corentin Chary <corentin.chary@gmail.com>,
+	"Luke D. Jones" <luke@ljones.dev>,
+	Lyndon Sanche <lsanche@lyndeno.ca>,
+	Ike Panhc <ike.pan@canonical.com>,
+	Henrique de Moraes Holschuh <hmh@hmh.eng.br>,
+	Armin Wolf <W_Armin@gmx.de>,
+	Mark Pearson <mpearson-lenovo@squebb.ca>,
+	Mario Limonciello <mario.limonciello@amd.com>,
+	Colin Ian King <colin.i.king@gmail.com>,
+	Alexis Belmonte <alexbelm48@gmail.com>,
+	=?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>,
+	Ai Chao <aichao@kylinos.cn>,
+	Gergo Koteles <soyer@irl.hu>,
+	linux-acpi@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Dell.Client.Kernel@dell.com,
+	ibm-acpi-devel@lists.sourceforge.net
+Subject: [RFC PATCH 0/3] ACPI: platform_profile: Let drivers dynamically refresh choices
+Date: Sun,  5 Jan 2025 23:45:48 -0500
+Message-ID: <20250106044605.12494-1-kuurtb@gmail.com>
+X-Mailer: git-send-email 2.47.1
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-https://bugzilla.kernel.org/show_bug.cgi?id=3D218305
+Hello,
 
---- Comment #83 from Artem S. Tashkinov (aros@gmx.com) ---
-(In reply to Mario Limonciello (AMD) from comment #82)
-> > But that makes it even more suspicious. Why would such a critical compo=
-nent
-> > be outsourced?
->=20
-> That's how the PC industry is.  This isn't an "AMD" specific thing.
->=20
-> > That almost sounds like a recipe for a disaster. Possibly even a securi=
-ty
-> > issue?
->=20
-> How is it any different than BIOS, or PD controller, or any other compone=
-nt?
-> OEM designs have OEM specific bugs.
+Some drivers may need to dynamically modify their selected `choices`.
+Such is the case of the acer-wmi driver, which implemented their own
+profile cycling method, because users expect different profiles to be
+available whether the laptop is on AC or not [1].
 
-I hope how the EC works and its firmware could be validated by AMD in the
-future. Or maybe you've already implemented that - I've not heard about this
-issue from Zen 5 owners.
+These series would allow acer-wmi to simplify this custom cycling method
+to use platform_profile_cycle(), as it's already being proposed in these
+series [2]; without changing expected behaviors, by refreshing their
+selected choices on AC connect/disconnect events, which would also solve
+this discussion [3].
 
---=20
-You may reply to this email to add a comment.
+Additionally, I think the platform_profile_ops approach would enable us
+to hide the platform_profile_handler in the future, and instead just pass
+the class device to get/set methods like the HWMON subsystem does.
 
-You are receiving this mail because:
-You are watching the assignee of the bug.=
+I think having this kind of flexibility is valuable. Let me know what you
+think!
+
+These series are based on top of pdx86/for-next branch.
+
+~ Kurt
+
+[1] https://lore.kernel.org/platform-driver-x86/6a9385e6-8c5a-4d08-8ff9-728ac40792d2@gmail.com/
+[2] https://lore.kernel.org/platform-driver-x86/20250104-platform_profile-v2-0-b58164718903@gmail.com/
+[3] https://lore.kernel.org/platform-driver-x86/20241210001657.3362-6-W_Armin@gmx.de/
+
+Kurt Borja (3):
+  ACPI: platform_profile: Add ops member to handlers
+  ACPI: platform_profile: Add `choices` to platform_profile_ops
+  ACPI: platform_profile: Add platform_profile_refresh_choices()
+
+ drivers/acpi/platform_profile.c               | 39 ++++++++++++--
+ .../surface/surface_platform_profile.c        | 24 ++++++---
+ drivers/platform/x86/acer-wmi.c               | 35 ++++++------
+ drivers/platform/x86/amd/pmf/sps.c            | 23 +++++---
+ drivers/platform/x86/asus-wmi.c               | 24 ++++++---
+ drivers/platform/x86/dell/alienware-wmi.c     | 19 ++++---
+ drivers/platform/x86/dell/dell-pc.c           | 34 +++++++-----
+ drivers/platform/x86/hp/hp-wmi.c              | 53 +++++++++++++------
+ drivers/platform/x86/ideapad-laptop.c         | 23 +++++---
+ .../platform/x86/inspur_platform_profile.c    | 22 +++++---
+ drivers/platform/x86/thinkpad_acpi.c          | 23 +++++---
+ include/linux/platform_profile.h              | 16 ++++--
+ 12 files changed, 237 insertions(+), 98 deletions(-)
+
+
+base-commit: 6b228cfc52a6e9b7149cf51e247076963d6561cd
+-- 
+2.47.1
+
