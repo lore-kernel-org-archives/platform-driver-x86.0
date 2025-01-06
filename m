@@ -1,160 +1,128 @@
-Received: from mail-ua1-f51.google.com (mail-ua1-f51.google.com [209.85.222.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A546A192B94;
-	Mon,  6 Jan 2025 04:47:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0BAAB1D6193;
+	Mon,  6 Jan 2025 07:11:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736138822; cv=none; b=QaFAS7EINjhDvQiQKGvXUyRCIvWdQEVWnwwDWrSR1xelTuPOW8cmiID4OSTvUcMqh/pvWNVJW+78oILDNwvY4AziWGiE2jKUYHp7xtpDdDxQMlFKn7RgbactSadABTUuRm41eoUZTZCF5Eql50kfREZziafAgKjXJUt6AzcpfWc=
+	t=1736147518; cv=none; b=PPRW77ElapkokDSroR2mrm8L1PN401loEiKr8sFqfcruITqelOL3GREbvBdc6ljo7ely9Nr4bOWAssqyq71q81AdyVWG28sO7GiTbCSt39Oiba7knrgBa98uKMfooIO2Fr/e5aFkPq/wxMT/p6BDn1WZ3AXSv+0IRGGX1bxdI0Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736138822; c=relaxed/simple;
-	bh=iqS56rdCDRQkd8dpkz0VGRA/xw51VU7F0mVu39SM+n0=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=P6fubAZVSWjnAVkh2cLxtwh8Ctf24y+q+PluToUIDZfdhTUV2+BR7d95kjeR9pUfVJX+yBo2Ax4S+GC7v2RLRglmKrmoZ+hc3Jmu6uzJ44ggUXM42mFjCwKeNce/guBit+cTxP8rduPPKYZVW/3lEBFB8dT4CkWvR8RZ0uwCwu4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=OfboWHD3; arc=none smtp.client-ip=209.85.222.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1736147518; c=relaxed/simple;
+	bh=oLCXSmrVBBsLo0CzHgC7aJIZWv4lFAGFHcrnLUBjFTM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Ahlh04Dj2kqwgaZHxvLYkgF+w0IkPXzReeaD7d3S50YscvVFuRp9NXFFlQ44MbKiZGin+kZcXqVwvQ3pGfKKgQQbnt7x8Vt9bXfPDZD8fgOc//hrERdTEV75SqT5/fToOjeqaOw41TUuDYXTQlGU+52CydmP6WMvvVYGTSuT+l8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HBUmDX/Z; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OfboWHD3"
-Received: by mail-ua1-f51.google.com with SMTP id a1e0cc1a2514c-85b88a685e6so5779135241.2;
-        Sun, 05 Jan 2025 20:47:00 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1736138819; x=1736743619; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=FXYdp/X/WGGGepK5thiLo0iYK0sMhuoGCqWWVppHTrs=;
-        b=OfboWHD3JfWQHyw/18CWW2Ec/k0E/PC1audEbdtq9njU40KjpUHraXv6gqlVEkIK0v
-         wpkleT1Hr14XmTn8vtjerVA2Uoap7nWhWDe15+GQ44otMtMFSFzCVS5fxj4LsVFUKOX/
-         apRhVWDXu9Rls2R4xLBAD35Jx4fYEQP0G5P6/WMUKuu3mkW5sPB3QlIdOlHY9PVt+82i
-         4q50bok5x6s6BMPxwzlZodoIsVXymB2jqOAqxDKKcKYIzmFz3Dd1ONtcH4oWr+1tg0lJ
-         iurub1su5Mmr8ngIsBqZUqeVtp0WW438gW6ByFgleLPz+qCP73Dj7OF419ZvipLIkUNX
-         K1BQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1736138819; x=1736743619;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=FXYdp/X/WGGGepK5thiLo0iYK0sMhuoGCqWWVppHTrs=;
-        b=g4HioUFk3z2Qln16ts2T6XI09x/4mfn92kEkOIWGApatUZvf0KQIBcQ0ZBuSnUt+wh
-         2Jnlckqqrp/noGZSXKmJl4QIZXiPVgPyzObxcIaYuaVHRWKdQ9aLMxu0LEjNUW6Er5j6
-         kyVpvQ/MMiGg515yMUP28X7FTPpKpVueXuz+/i/C0qxXzFo3/DVD4+OcH2I+0+9sL/zS
-         PX8m1ZbaAz+LadUDSS+o34LL6qKcNrysgtxA9HD1UrKKvv5XtEWo9a1dLy2UR6L7MOPQ
-         9o8fG2ZUnBeIbLN2B4eZe/X8kQChqh4waYN4wdFoezFpgJfxxdrVxRgQXCKmLZ6fkG4M
-         2QmA==
-X-Forwarded-Encrypted: i=1; AJvYcCVEo5/8YoNGb/L0bPzdiAk7z/UxW0apr9z3QMjfs7uDmO5rBsMphg6bhp85+bMUfBd8SxrCV06Dz/BN@vger.kernel.org, AJvYcCVOGp20OsOEb8L+Ft1hhIzIm2wKFm+DYyzWuoBd0TLsK0mIkyiiZLmlOA1ANgRWx+9Kscyb04uBdluU9KwI@vger.kernel.org
-X-Gm-Message-State: AOJu0YzlpNfFgGRqHm0+YXwy6dqdOXTVq0BhFBDvqV7S2tmmDhXawIGZ
-	HHRezdnQDl5WPzNSENoS8Hf0AHinSsbxcrGilBodw85XAR4BF/5mQlsAh9Ku
-X-Gm-Gg: ASbGnctrhTS3loqK/MAXUxtV5moScud2aE7jOpamZsetv7a+CiDoco+w636EdWcFRRs
-	IxSHePPrZG881OW/c9E1Cpr0JujI/GKx4acubyxIOMHVAwrQukJT525S1BARANCVP6C+H4CwxsC
-	U6K3uIhzhcwWRRdDHNJnTWgIZarHoYt19/bW7P5ErZtXACsBi6AGrWTp7dSPUmajg6iCPucIez9
-	lJZc27ZCzSX/qnwTfSMh2DnI+MTtaKtRCfAESCF0NNmLgTW+UOhXZafIgqCd9Su
-X-Google-Smtp-Source: AGHT+IG39OANV7S3S3UHkc84naX2A9O7SRpBXiBCtRQ04Xyx9rUtHVjQrTzCUI4c0+Rs8qBerMrkig==
-X-Received: by 2002:a05:6102:5127:b0:4b2:77df:4660 with SMTP id ada2fe7eead31-4b2cc3225demr43069341137.4.1736138818977;
-        Sun, 05 Jan 2025 20:46:58 -0800 (PST)
-Received: from localhost.localdomain ([2800:bf0:82:1159:1ea9:11b1:7af9:1277])
-        by smtp.gmail.com with ESMTPSA id ada2fe7eead31-4b2bf98d1c9sm7083507137.4.2025.01.05.20.46.54
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 05 Jan 2025 20:46:58 -0800 (PST)
-From: Kurt Borja <kuurtb@gmail.com>
-To: platform-driver-x86@vger.kernel.org
-Cc: josh@joshuagrisham.com,
-	hridesh699@gmail.com,
-	derekjohn.clark@gmail.com,
-	Kurt Borja <kuurtb@gmail.com>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Len Brown <lenb@kernel.org>,
-	Maximilian Luz <luzmaximilian@gmail.com>,
-	Hans de Goede <hdegoede@redhat.com>,
-	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	"Lee, Chun-Yi" <jlee@suse.com>,
-	Shyam Sundar S K <Shyam-sundar.S-k@amd.com>,
-	Corentin Chary <corentin.chary@gmail.com>,
-	"Luke D. Jones" <luke@ljones.dev>,
-	Lyndon Sanche <lsanche@lyndeno.ca>,
-	Ike Panhc <ike.pan@canonical.com>,
-	Henrique de Moraes Holschuh <hmh@hmh.eng.br>,
-	Armin Wolf <W_Armin@gmx.de>,
-	Mario Limonciello <mario.limonciello@amd.com>,
-	Mark Pearson <mpearson-lenovo@squebb.ca>,
-	Colin Ian King <colin.i.king@gmail.com>,
-	Alexis Belmonte <alexbelm48@gmail.com>,
-	Ai Chao <aichao@kylinos.cn>,
-	=?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>,
-	Gergo Koteles <soyer@irl.hu>,
-	linux-acpi@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Dell.Client.Kernel@dell.com,
-	ibm-acpi-devel@lists.sourceforge.net
-Subject: [RFC PATCH 3/3] ACPI: platform_profile: Add platform_profile_refresh_choices()
-Date: Sun,  5 Jan 2025 23:45:51 -0500
-Message-ID: <20250106044605.12494-4-kuurtb@gmail.com>
-X-Mailer: git-send-email 2.47.1
-In-Reply-To: <20250106044605.12494-1-kuurtb@gmail.com>
-References: <20250106044605.12494-1-kuurtb@gmail.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HBUmDX/Z"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AA48CC4CED6;
+	Mon,  6 Jan 2025 07:11:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1736147517;
+	bh=oLCXSmrVBBsLo0CzHgC7aJIZWv4lFAGFHcrnLUBjFTM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=HBUmDX/ZNH3ng9jNNgpjkne5Azv0/mD0yUnO8Xtjsqh9sfUogukNwxkVHgYXTq99T
+	 AFabrXUxdUnIWDcKrqvdrtJvu6CMpycSYezrajtvbSiDDBv92MgYOLkuxWgy/KumcC
+	 DKldYh8Lcm+4DzxhmYTVbFKw3PS/sfl7eU5BLLpUzDPXAyhAzBOBzeCdV+1LdBF0Zv
+	 eR9LC9Bti5XV2xES3XdLDWPAz2J/neJ54usqCt9QSro1GFigHL7xOgmY8cjgSQVIuv
+	 C5J90lBwbvS5ud8bfQnbyScDK2lh1hxpVIWY3p9K3Cpv6XBEMkByz3k4exYxnl/nsL
+	 6zLbwcXRUXVnw==
+Date: Mon, 6 Jan 2025 08:11:54 +0100
+From: Krzysztof Kozlowski <krzk@kernel.org>
+To: Pengyu Luo <mitltlatltl@gmail.com>
+Cc: Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Bjorn Andersson <andersson@kernel.org>, Konrad Dybcio <konradybcio@kernel.org>, 
+	Hans de Goede <hdegoede@redhat.com>, Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>, 
+	Bryan O'Donoghue <bryan.odonoghue@linaro.org>, Sebastian Reichel <sre@kernel.org>, 
+	Heikki Krogerus <heikki.krogerus@linux.intel.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+	Jean Delvare <jdelvare@suse.com>, Guenter Roeck <linux@roeck-us.net>, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, 
+	platform-driver-x86@vger.kernel.org, linux-pm@vger.kernel.org, linux-usb@vger.kernel.org, 
+	linux-hwmon@vger.kernel.org, Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+Subject: Re: [PATCH v2 1/5] dt-bindings: platform: Add Huawei Matebook E Go EC
+Message-ID: <md45rp2dmv7aibez2sxwzyjayfi4wbujshlc46hxi6v4jzlhfr@tpbtqv46hrlh>
+References: <20250105174159.227831-1-mitltlatltl@gmail.com>
+ <20250105174159.227831-2-mitltlatltl@gmail.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20250105174159.227831-2-mitltlatltl@gmail.com>
 
-Let drivers dynamically refresh selected choices safely, while holding
-`profile_lock`.
+On Mon, Jan 06, 2025 at 01:41:55AM +0800, Pengyu Luo wrote:
+> +maintainers:
+> +  - Pengyu Luo <mitltlatltl@gmail.com>
+> +
+> +description:
+> +  Different from other Qualcomm Snapdragon sc8180x and sc8280xp-based
+> +  machines, the Huawei Matebook E Go tablets use embedded controllers
+> +  while others use a system called PMIC GLink which handles battery,
+> +  UCSI, USB Type-C DP Alt Mode. In addition, Huawei's implementation
+> +  also handles additional features, such as charging thresholds, FN
+> +  lock, smart charging, tablet lid status, thermal sensors, and more.
+> +
+> +properties:
+> +  compatible:
+> +    items:
+> +      - enum:
+> +          - huawei,gaokun2
+> +          - huawei,gaokun3
 
-Signed-off-by: Kurt Borja <kuurtb@gmail.com>
----
- drivers/acpi/platform_profile.c  | 23 +++++++++++++++++++++++
- include/linux/platform_profile.h |  1 +
- 2 files changed, 24 insertions(+)
+Missing "-ec", because gaokun2/3 is the name of the board, apparently. You cannot
+duplicate compatibles with different meanings and if you tested this you
+would see errors.
 
-diff --git a/drivers/acpi/platform_profile.c b/drivers/acpi/platform_profile.c
-index ec749c2d0695..087280d786b1 100644
---- a/drivers/acpi/platform_profile.c
-+++ b/drivers/acpi/platform_profile.c
-@@ -459,6 +459,29 @@ int platform_profile_cycle(void)
- }
- EXPORT_SYMBOL_GPL(platform_profile_cycle);
- 
-+int platform_profile_refresh_choices(struct platform_profile_handler *pprof)
-+{
-+	unsigned long backup[BITS_TO_LONGS(PLATFORM_PROFILE_LAST)];
-+	int err;
-+
-+	scoped_cond_guard(mutex_intr, return -ERESTARTSYS, &profile_lock) {
-+		bitmap_copy(backup, pprof->choices, PLATFORM_PROFILE_LAST);
-+
-+		err = pprof->ops->choices(pprof);
-+		if (err) {
-+			bitmap_copy(pprof->choices, backup, PLATFORM_PROFILE_LAST);
-+			return err;
-+		}
-+
-+		_notify_class_profile(pprof->class_dev, NULL);
-+	}
-+
-+	sysfs_notify(acpi_kobj, NULL, "platform_profile");
-+
-+	return 0;
-+}
-+EXPORT_SYMBOL_GPL(platform_profile_refresh_choices);
-+
- int platform_profile_register(struct platform_profile_handler *pprof)
- {
- 	int err;
-diff --git a/include/linux/platform_profile.h b/include/linux/platform_profile.h
-index 7f266a60b41a..7d543dd8c164 100644
---- a/include/linux/platform_profile.h
-+++ b/include/linux/platform_profile.h
-@@ -50,6 +50,7 @@ int platform_profile_register(struct platform_profile_handler *pprof);
- int platform_profile_remove(struct platform_profile_handler *pprof);
- int devm_platform_profile_register(struct platform_profile_handler *pprof);
- int platform_profile_cycle(void);
-+int platform_profile_refresh_choices(struct platform_profile_handler *pprof);
- void platform_profile_notify(struct platform_profile_handler *pprof);
- 
- #endif  /*_PLATFORM_PROFILE_H_*/
--- 
-2.47.1
+I think I might mislead you during last talk, where I questioned what is
+"gen2" etc.
+
+> +      - const: huawei,gaokun-ec
+
+There is no support for gaokun2 here, so I assume you checked and you
+know these are compatible. What's more, you claim there is a generic
+piece of hardware called gaokun-ec and everything in this family will be
+compatible with it. Well, that's my standard disclaimer and disapproval
+of using generic compatibles.
+
+So in general what you want here is *only one* compatible called
+huawei,gaokun3-ec
+
+> +
+> +  reg:
+> +    const: 0x38
+> +
+> +  '#address-cells':
+> +    const: 1
+> +
+> +  '#size-cells':
+> +    const: 0
+> +
+> +  interrupts:
+> +    maxItems: 1
+> +
+> +patternProperties:
+> +  '^connector@[01]$':
+> +    $ref: /schemas/connector/usb-connector.yaml#
+> +
+> +    properties:
+> +      reg:
+> +        maxItems: 1
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +  - interrupts
+> +
+> +additionalProperties: false
+> +
+> +examples:
+> +  - |+
+
+Drop +
+
+Best regards,
+Krzysztof
 
