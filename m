@@ -1,158 +1,97 @@
-Received: from mout.gmx.net (mout.gmx.net [212.227.15.18])
+Received: from vps-ovh.mhejs.net (vps-ovh.mhejs.net [145.239.82.108])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 38EBA8634A
-	for <platform-driver-x86@vger.kernel.org>; Mon,  6 Jan 2025 16:59:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB91718A6AC;
+	Mon,  6 Jan 2025 17:40:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=145.239.82.108
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736182747; cv=none; b=u1+gH9AHVth5DtU9sMR1yYr9KI0pDlW7fZeS+08KQ+565AI5YleuGs5oi+hdZcRU2jZxv8GWppsEK4EvtxG0cHJH19VXRZMYBVZaSvdPgQ58OLMc8FyfbGFSDQE9XVqiFFEc2ClgJbU6v17rnY4LIUQKV96Xt014UANy72ojrUw=
+	t=1736185256; cv=none; b=Se74kEr+IcngePg//6vhQiqcpJjeQs+ii0fbYEbO6mvXu460Ho7vwZXlnqMgzMUeXE9ApvEATsCBI2OLluFIpS/KHhk8N9vKqc2b03z8VnN99YoDyMsodQ8WtIUgRnCAUpaUwLpfRs/gZcH5hf2TZu3KzGBEEaALve1ponbFpGM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736182747; c=relaxed/simple;
-	bh=GYagJQlAelxaTjIJO9tmBXrNbxpyNZdjjbhZCIougYk=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=YVHKNQ+7lkdzwHOQ2tXC+haYY/fEKAAhJ+7l5+e3GXN927EhwOBr0injFGhBkD7RhV+9+JpY3LORehMSRSFIrb/qlFlB/kTqf5UYtvsP2n1HMxGdFGeOJIS7YZZvP/NR4+aEFRwswcdRDIHJS9lsdX1Z/7VLn6nztEgNQpWYdCk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b=IkYI+Sbs; arc=none smtp.client-ip=212.227.15.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b="IkYI+Sbs"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.de;
-	s=s31663417; t=1736182741; x=1736787541; i=w_armin@gmx.de;
-	bh=TRhzlGa+KUGUyQBESTVVdf4gmdgmSxMtZiTOUDbjVGw=;
-	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:To:Cc:
-	 References:From:In-Reply-To:Content-Type:
-	 Content-Transfer-Encoding:cc:content-transfer-encoding:
-	 content-type:date:from:message-id:mime-version:reply-to:subject:
-	 to;
-	b=IkYI+SbsFe8TPB4CVTCkr+gfA+5gMSbBP0TV7E0W7XSmUxW1LNcnh2nKQPcjM8HP
-	 1UUekTcQ6J9iceex1SBJrMhefBNpSTHo9sKnnQ/Mn83rmwkLOFHCGFkswl8XZn+vc
-	 hb08HH79eohlW0nZ+avZ88BX0K3D2QPIjPXbEm2HhjWu2gyQFbI1HTno/K2hyWgFC
-	 yjk/s6GqMLnJ1en7rULb9qhPSo4NiwJk2ngn1aqHTuHFPgBY6ssUFghT2q4RRBQB3
-	 ZsS4z68lqtG4cWYMppj4clp9CgmWsDY5p8pSMO4mM8O1eC6VIU1ZxtD7dA5tt8ReI
-	 j/KzePf7zjHsVKcMsQ==
-X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
-Received: from [192.168.0.14] ([91.14.230.110]) by mail.gmx.net (mrgmx005
- [212.227.17.190]) with ESMTPSA (Nemesis) id 1MAwXr-1tK94m3RJx-007bVh; Mon, 06
- Jan 2025 17:59:01 +0100
-Message-ID: <ceb159f1-2900-4946-a9c9-088ba99d2d67@gmx.de>
-Date: Mon, 6 Jan 2025 17:59:01 +0100
+	s=arc-20240116; t=1736185256; c=relaxed/simple;
+	bh=mH3YRufyI3lwlWVjmAWUHAyoS4z/6aDz7KpCtJNw9n8=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=DAU1dun2Y/+XftjBwA6X/bBEJ+myYQAfpqSGHRge1/R2IsGK5piGOEQV88M5bt7Jq5L6tuJB/vDnt7P1SzjbWfsKJwWRmtMSAmHdSuIZrhd535EBwHVxlpKcKDeFDf/dF70c/iQ/Lx1u9zoxBi2HCE6RYeO6g5DADMwcp8xwkwo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=maciej.szmigiero.name; spf=pass smtp.mailfrom=vps-ovh.mhejs.net; arc=none smtp.client-ip=145.239.82.108
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=maciej.szmigiero.name
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=vps-ovh.mhejs.net
+Received: from MUA
+	by vps-ovh.mhejs.net with esmtpsa  (TLS1.3) tls TLS_AES_256_GCM_SHA384
+	(Exim 4.98)
+	(envelope-from <mhej@vps-ovh.mhejs.net>)
+	id 1tUr5j-00000005J5c-3nMp;
+	Mon, 06 Jan 2025 18:40:39 +0100
+From: "Maciej S. Szmigiero" <mail@maciej.szmigiero.name>
+To: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>,
+	Mario Limonciello <mario.limonciello@amd.com>
+Cc: Hans de Goede <hdegoede@redhat.com>,
+	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	platform-driver-x86@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v2] platform/x86/amd/pmc: Only disable IRQ1 wakeup where i8042 actually enabled it
+Date: Mon,  6 Jan 2025 18:40:34 +0100
+Message-ID: <c8f28c002ca3c66fbeeb850904a1f43118e17200.1736184606.git.mail@maciej.szmigiero.name>
+X-Mailer: git-send-email 2.47.1
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: acer-wmi: Nitro button doesn't produce a WMI event
-To: Hridesh MG <hridesh699@gmail.com>
-Cc: platform-driver-x86@vger.kernel.org
-References: <CALiyAom1xDH6A0Q2WNHCMUcpMJfM3pXO2DaW=bgHGUi8ZOpBbQ@mail.gmail.com>
- <8b8749c1-59c8-4f95-a43e-055cf94f9597@gmx.de>
- <CALiyAo=R1kcvwRpw22s=YU0YHUxR8T_WHLwSvDr=8Ahsenn-jA@mail.gmail.com>
- <9c625119-e46e-464b-933d-9c836577f454@gmx.de>
- <CALiyAo=7kVi4ipA5-xDfRYQ-gqyza0woYHUzwGuW5BccLOVHgg@mail.gmail.com>
- <209f39ab-a312-45b5-981c-8324d9b8cd90@gmx.de>
- <CALiyAon+5H_g1V-iNbjdLmjgYDJng+ePH0XeoYxijYurHj+uTg@mail.gmail.com>
- <31c28ea2-881c-42e3-b754-8b52ca7f63fd@gmx.de>
- <CALiyAo=_vGu50RoAPwFMv9J=mkaQWojAQxmB2qmwcEZ5Y8kfSg@mail.gmail.com>
- <583bbdfe-5c5a-4541-b30a-97eb89f2e4c3@gmx.de>
- <CALiyAo=Y1rh=OpTete0N=q2DrFh8CL449xAfSxfJuju+5tc_mQ@mail.gmail.com>
-Content-Language: en-US
-From: Armin Wolf <W_Armin@gmx.de>
-In-Reply-To: <CALiyAo=Y1rh=OpTete0N=q2DrFh8CL449xAfSxfJuju+5tc_mQ@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:KiEKe1uiAVjlpkf87iLsRfmu2ahxZ2xbkM3vbfIIKyf3icaG7Vm
- ETONQgXoQJ1UzVmR1xBk3KVy8BEsWE8VRfFKoes/vfgGtdrbVAcVVgt5EcDD2H8lIDDqF6o
- wmLL3dvcZDNiFQaQOH6/QIS5mEjiZX/SLXzaR/H3nk/SNaAgo13MOS1umHNNf9wM8Fvwndu
- ir3jxKHavVdaRLTfBTYYQ==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:872jie9Az/c=;V3aJWwJVqd/0jjb8ZsWftLUn11i
- Mh8qYGfHrFdb0hr/DEVRzr5fGRpYy68GmfSAz3hLFlFUtd12uJRba/U+HJYxTPrZBjgx33iPK
- heZTAn2Aw51rqLCoIJc9n24jNvVVu6lpK9j343PepAcD5nXwvYcjh8D7UzFkt5mOu+V4ezjcu
- 3U3N3oIRNVSJDv8dsIq4dXU1BCMJrpatxUQD2eC8bBgg9W0EB4vR9qxF5nmNTmlAMVGyAN+0q
- pGSdEDA2p1Oop/MqmsW9zCu9CvJMvadGYKsHR3nPDeZ4NwDjiiApkruMGnAVrB77yvJZW4E9z
- P6OE15/W/3VYX5UVjpZSNTKhcq7ugd4UL2KWlX8D59KVHYTviHzmzzUGgotaQTKG6mGodFvGr
- x1SofjXTJuOVekSUQ90RAOPHO+rlwCzZMzWfsV9uhgNiY2ab7jpLs3h1aO92kKi1u4n6zft51
- Majk/wl9vT71Mzv0sDFfXcHoG5ORAP8lwM03t4j4+StlJRFwMoNoTK5AFzR3OAs42HqsbPgb3
- U16Z4QejsCvO74y0zbz+zo1jWeM24IXgMMHutSE5Jru5TpFA3pHAN+WtXCzG80kvX6FoOv9od
- FwuWfCcvixAriwfRkytT6sMy3NVvyLt6BAiPQjIo0YcLi0ef7Sm3jmR2UD9d4bs/hdn7gltvy
- r3mQI4Fd3RffNCJGxF1cmAFje0IIRbKg7ch6nlE4DP1cLcb1rWXL7ls4juhyjG99AhPWYIiPK
- HkNFtdgwb946pg8BSIwt40yMXtjHsbLhTFPQ1ftq2VWE0tw/ZCCA3ZYxBwKrDbJYpaBMQARTC
- LWZyHUaS/atvHP7zvfeBKcGIcCyp6sUWT/j51PZvlkT1QOUzY+kD3IADRpbrkxhuEBoAkVLc1
- drkPPzqSiYBoIfcXvSeMm4rZvyBxAcENtf/K+WVSheZRAi/D9Iyj3XyfZuudca1F/n4pqOxBL
- SYVPXrkb8rFNsFGO0PQEwPyeROMmovV/+PIL3g8LqM3UPBo8yIlXIdn1wifBNmSeIYc/jTAYx
- dLpO5cbCKj7HOHhydK5JeY1SVk5f48lNCOYKEWgU5yh8TeUmSQpeSQydtwTFmgZ5mhUQ6oA3o
- E3QnjIFo/bLT9+/yCTJVf3NyFr98iX
+Content-Transfer-Encoding: 8bit
+Sender: mhej@vps-ovh.mhejs.net
 
-Am 02.01.25 um 07:18 schrieb Hridesh MG:
+Wakeup for IRQ1 should be disabled only in cases where i8042 had actually
+enabled it, otherwise "wake_depth" for this IRQ will try to drop below zero
+and there will be an unpleasant WARN() logged:
+kernel: atkbd serio0: Disabling IRQ1 wakeup source to avoid platform firmware bug
+kernel: ------------[ cut here ]------------
+kernel: Unbalanced IRQ 1 wake disable
+kernel: WARNING: CPU: 10 PID: 6431 at kernel/irq/manage.c:920 irq_set_irq_wake+0x147/0x1a0
 
-> On Thu, Jan 2, 2025 at 1:51=E2=80=AFAM Armin Wolf <W_Armin@gmx.de> wrote=
-:
->> Am 01.01.25 um 20:53 schrieb Hridesh MG:
->>
->>>> This ACPI method should trigger the turbo mode button (found inside t=
-he DSDT table):
->>>>
->>>>           Method (_Q58, 0, NotSerialized)  // _Qxx: EC Query, xx=3D0x=
-00-0xFF
->>>>            {
->>>>                   Debug =3D "=3D=3D=3D=3D=3DPROJECT_QUERY_58=3D=3D=3D=
-=3D=3D"
->>>>                    ^^^WMID.FEBC [Zero] =3D 0x07
->>>>                    ^^^WMID.FEBC [One] =3D 0x04
->>>>                    ^^^WMID.FEBC [0x02] =3D One
->>>>                    Notify (WMID, 0xBC) // Device-Specific
->>>>           }
->>>>
->>> I feel like an idiot right now but I just realized something: So far
->>> I've been assuming that the button I've been calling the "Turbo
->>> Button" worked the same way on both Nitro and Predator laptops, but
->>> that's not the case.
->>>
->>> On Predator laptops, the button directly enables Turbo mode but on the
->>> Nitro it only opens the Nitro Sense app. I had assumed that both
->>> buttons simply opened the app and that directly enabling Turbo mode
->>> was a feature provided by the Linux driver.
->>>
->>> Given this, the ACPI code that you linked earlier is probably for the
->>> Predator's "Turbo Button". Could it be that the button on my laptop
->>> doesn=E2=80=99t use that ACPI code at all, considering its functionali=
-ty is
->>> completely different? (Though i doubt Acer would leave it in if it
->>> wasn't being used)
->> It is quite common for manufactures to just copy and paste ACPI code sn=
-ippets, so it is not
->> unusual to have some unused code inside the ACPI tables.
->>
->> Did you receive any input events or dmesg messages when pressing that b=
-utton?
->>
->> If no then it could also be that this button depends on the Intel THC t=
-ouch controller to work,
->> take a look at https://lore.kernel.org/all/20241216014127.3722172-1-eve=
-n.xu@intel.com for details
->> about the Intel THC controller.
->>
->> Thanks,
->> Armin Wolf
->>
-> I do receive input events, it shows up with the keycode 433 and symbol
-> XF86Presentation. I think you mentioned something regarding an i8042
-> filter, can we use that to call the function to cycle between the
-> profiles?
+To fix this call the PMC suspend handler only from the same set of
+dev_pm_ops handlers as i8042_pm_suspend() is called, which currently means
+just the ".suspend" handler.
+Before this patch the driver used DEFINE_SIMPLE_DEV_PM_OPS() to define its
+dev_pm_ops, which also called this handler on ".freeze" and ".poweroff".
 
-Since this is a valid keycode i advise against filtering it out. Instead i=
-t would make more
-sense to allow userspace to control the turbo state for example trough a s=
-ysfs attribute.
+To reproduce this issue try hibernating (S4) the machine after a fresh boot
+without putting it into s2idle first.
 
-Then you can use a userspace program to react to this key press.
+Fixes: 8e60615e8932 ("platform/x86/amd: pmc: Disable IRQ1 wakeup for RN/CZN")
+Reviewed-by: Mario Limonciello <mario.limonciello@amd.com>
+Signed-off-by: Maciej S. Szmigiero <mail@maciej.szmigiero.name>
+---
 
-Thanks,
-Armin Wolf
+Changes from v1:
+* Reword the commit message slightly, as suggested by Ilpo.
 
-> --
-> Thanks,
-> Hridesh MG
->
+* Add Mario's "Reviewed-by:" tag.
+
+ drivers/platform/x86/amd/pmc/pmc.c | 8 +++++++-
+ 1 file changed, 7 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/platform/x86/amd/pmc/pmc.c b/drivers/platform/x86/amd/pmc/pmc.c
+index 26b878ee5191..a254debb9256 100644
+--- a/drivers/platform/x86/amd/pmc/pmc.c
++++ b/drivers/platform/x86/amd/pmc/pmc.c
+@@ -947,6 +947,10 @@ static int amd_pmc_suspend_handler(struct device *dev)
+ {
+ 	struct amd_pmc_dev *pdev = dev_get_drvdata(dev);
+ 
++	/*
++	 * Must be called only from the same set of dev_pm_ops handlers
++	 * as i8042_pm_suspend() is called: currently just from .suspend.
++	 */
+ 	if (pdev->disable_8042_wakeup && !disable_workarounds) {
+ 		int rc = amd_pmc_wa_irq1(pdev);
+ 
+@@ -959,7 +963,9 @@ static int amd_pmc_suspend_handler(struct device *dev)
+ 	return 0;
+ }
+ 
+-static DEFINE_SIMPLE_DEV_PM_OPS(amd_pmc_pm, amd_pmc_suspend_handler, NULL);
++static const struct dev_pm_ops amd_pmc_pm = {
++	.suspend = amd_pmc_suspend_handler,
++};
+ 
+ static const struct pci_device_id pmc_pci_ids[] = {
+ 	{ PCI_DEVICE(PCI_VENDOR_ID_AMD, AMD_CPU_ID_PS) },
