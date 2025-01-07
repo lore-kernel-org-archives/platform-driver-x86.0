@@ -1,209 +1,154 @@
-Received: from NAM04-DM6-obe.outbound.protection.outlook.com (mail-dm6nam04on2069.outbound.protection.outlook.com [40.107.102.69])
+Received: from todd.t-8ch.de (todd.t-8ch.de [159.69.126.157])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A1AAF1F941A;
-	Tue,  7 Jan 2025 22:29:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.102.69
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736288961; cv=fail; b=lJCjDhIV+Jppou+urPC5kMPHWVF7UlyDkXyZ+EdWv7LYOJX9CY3ui+7KvBG8XhyLlPijc7A4jSzlJTdyE3B7H3NycpOZnyt9ujKJ4X+BezZdwb13OMifuGNK5teK4OGHC8rO71I8SObRvmHc6VIs+OcpfaN8+Vb+NyY9qL3NTyo=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736288961; c=relaxed/simple;
-	bh=xjfVvZ1tTJQcU/5pcZ54OFDXcA8JLmNodnRrfoI6Ufw=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=azv/8ipL9SzcZof2eahxPljnqzpKb1tlR+b+wR5hSWA0poPVcKczBLr54+GhCFld/UCaJQsRNMvFYZaWZ49EBzo7eSEDXY2f/hwOy3g139AxCHcxMewjkymv+07Gnej+waP+Bh7wYxfKmF4qA+ts70Cy7Sf9iAdmvW1GcKLPVRg=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=b0nVSMBq; arc=fail smtp.client-ip=40.107.102.69
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 29C2486330;
+	Tue,  7 Jan 2025 22:47:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.69.126.157
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1736290027; cv=none; b=OSgzDC/qnqKnTprOexDX99u5XsHkMVdUoioM0kHrmxzCJeLF3Hj0s/Cp6Pjqq3xF7z4RBN1vdTuPKNWYco/G7Il1FDGu/G34LCjg9Ohfzquwy74oolN6BJhI3Yk1mGNOrj4RzO0Jn27voNI43mzLoo15gVkPVF5lJ85NSQncqqM=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1736290027; c=relaxed/simple;
+	bh=FoE3jLPlb8IbWzy60MFizu6s+vKA7KX8YCiVEN4pVws=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=qR0yfteBBpBTEQHLMeK4GJ5yf24NOz1nkCNursCsKjAjyaO8kHWxtFJ7lU+UfeEcBYPLnpAehGVco1qPzbikNfIQRfzmp5xi/J2KLt+2HFvGtlijS9Fox7c/Rtx3P5vU3ZzIbUuR4RxbYCYErh09XEdFvsNyO12tf3B/N2wtrpI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=weissschuh.net; spf=pass smtp.mailfrom=weissschuh.net; dkim=pass (1024-bit key) header.d=weissschuh.net header.i=@weissschuh.net header.b=uJ0DZkpY; arc=none smtp.client-ip=159.69.126.157
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=weissschuh.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=weissschuh.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="b0nVSMBq"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=keg2RUOtf2pCx66/7myTgUpz04hNsGdMdueirOxtBB7rjmlO/lNYUjKb2nmMs3vQn6hkRPn5p0eJmJCZLvbIsCUWxLVxx3ju0Rx4VPcuyd5wgeBiskUqXSyofZ8zNohNnRVOy63PpzzeJrEaqius/TYTAXNe0S4aduCVB+N6lcKNMKaLRYZnYPg0ysSfZipFY6PIcuOYMUUbhVXfbrw8I/YRqd+JCJHtbMR0NURY5CKqQZ3RyaPnaUXfJ55Cr62vDhjtBT+QGG1416wv8Og7YV/7Gb8lgQ3KlYp5MgW0GGzoMD/UBA3zA0ydz8ruJXT2IJlsQMewcU+whIwInsBQig==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=Hz/ojI6o+sEDWZAMKn+EMapoICQf8/2vD3yUaxG5JV0=;
- b=RRA/KAv0ISK7sGlVcctA29y5Th2bbQtU4oB2Fh4lCOYjtkQNZO5s1kPLLNKqr7H+RZSX+G26vuDRpfNi8N/MJJsZgFTHy5J6T6T4wkGt2jQDh7LAVlK0K5lMMWAxYdRijao+ib5t9Qfq7K4qI9CE1ZlcnywyDfJVKBkG/K6e/6zpBzddgVTtBaNK6RLZYnU1zrG+wMlhn07RnmfSyXlDC0uyo1Z6LspMOYQL1lTmkbf/jC5rmGP9IqZLYyoJHZ/c/+tK39RyBlEb1KJZZWm4uSDm0k+00w2EgVZOx87wgZz3qwnLawHhv+BpDftTC800idoVU6PV14s0zi8tUVxw4w==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=kernel.org smtp.mailfrom=amd.com; dmarc=pass
- (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
- dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Hz/ojI6o+sEDWZAMKn+EMapoICQf8/2vD3yUaxG5JV0=;
- b=b0nVSMBqT8zLtdp4clZJiWbQ8Gts7/J1W/pZd06OunwIQT26Vw0p0MVtV0gZtS0tDlLNkaui7KAxszPfqvTR2siQcN0VjCudzwC8gChcom8ZFVwlWKRW0kFYBn6BAINEo0s80nJ2/dSq/EqbG2VTalh7qRjCiaQiYQ2h6oS6mkE=
-Received: from SJ0PR13CA0237.namprd13.prod.outlook.com (2603:10b6:a03:2c1::32)
- by CYYPR12MB8939.namprd12.prod.outlook.com (2603:10b6:930:b8::10) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8314.17; Tue, 7 Jan
- 2025 22:29:12 +0000
-Received: from CO1PEPF000066E7.namprd05.prod.outlook.com
- (2603:10b6:a03:2c1:cafe::20) by SJ0PR13CA0237.outlook.office365.com
- (2603:10b6:a03:2c1::32) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.8335.10 via Frontend Transport; Tue,
- 7 Jan 2025 22:29:11 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
-Received: from SATLEXMB04.amd.com (165.204.84.17) by
- CO1PEPF000066E7.mail.protection.outlook.com (10.167.249.9) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.8335.7 via Frontend Transport; Tue, 7 Jan 2025 22:29:11 +0000
-Received: from purico-9eb2host.amd.com (10.180.168.240) by SATLEXMB04.amd.com
- (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Tue, 7 Jan
- 2025 16:29:08 -0600
-From: Yazen Ghannam <yazen.ghannam@amd.com>
-To: <yazen.ghannam@amd.com>, <x86@kernel.org>, Tony Luck
-	<tony.luck@intel.com>, Mario Limonciello <mario.limonciello@amd.com>, "Bjorn
- Helgaas" <bhelgaas@google.com>, Jean Delvare <jdelvare@suse.com>, "Guenter
- Roeck" <linux@roeck-us.net>, Shyam Sundar S K <Shyam-sundar.S-k@amd.com>,
-	"Hans de Goede" <hdegoede@redhat.com>, =?UTF-8?q?Ilpo=20J=C3=A4rvinen?=
-	<ilpo.jarvinen@linux.intel.com>, Naveen Krishna Chatradhi
-	<naveenkrishna.chatradhi@amd.com>, Suma Hegde <suma.hegde@amd.com>
-CC: <linux-kernel@vger.kernel.org>, <linux-edac@vger.kernel.org>,
-	<linux-pci@vger.kernel.org>, <linux-hwmon@vger.kernel.org>,
-	<platform-driver-x86@vger.kernel.org>
-Subject: [PATCH v3 12/12] x86/amd_node: Use defines for SMN register offsets
-Date: Tue, 7 Jan 2025 22:28:47 +0000
-Message-ID: <20250107222847.3300430-13-yazen.ghannam@amd.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20250107222847.3300430-1-yazen.ghannam@amd.com>
-References: <20250107222847.3300430-1-yazen.ghannam@amd.com>
+	dkim=pass (1024-bit key) header.d=weissschuh.net header.i=@weissschuh.net header.b="uJ0DZkpY"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=weissschuh.net;
+	s=mail; t=1736290023;
+	bh=FoE3jLPlb8IbWzy60MFizu6s+vKA7KX8YCiVEN4pVws=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=uJ0DZkpYsLi6UP8Yvl9hj8VKzHvBPuSHixUsbmqeYWCt5cxD0dwZN0o/gj984ci8V
+	 mzmlt8i9Napag4Ti/UQRXDx29GmZd73l7ljEYfoMy8v+4eT//v/YsxbpKrJvyLTRG0
+	 bLHTGDloi15iwBNnpRzO+P31yk7GNmVcl7n9vc2o=
+Date: Tue, 7 Jan 2025 23:47:02 +0100
+From: Thomas =?utf-8?Q?Wei=C3=9Fschuh?= <linux@weissschuh.net>
+To: Mario Limonciello <mario.limonciello@amd.com>
+Cc: Hans de Goede <hdegoede@redhat.com>, 
+	Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>, Armin Wolf <W_Armin@gmx.de>, platform-driver-x86@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, Joshua Grisham <josh@joshuagrisham.com>
+Subject: Re: [PATCH 2/2] platform/x86: firmware_attributes_class: Add test
+ driver
+Message-ID: <acf81e37-3b3a-48ef-8b7a-8e8c50a161a4@t-8ch.de>
+References: <20250107-pdx86-firmware-attributes-v1-0-9d75c04a3b52@weissschuh.net>
+ <20250107-pdx86-firmware-attributes-v1-2-9d75c04a3b52@weissschuh.net>
+ <a20d538e-421f-45fb-b169-f9d2eb4c6aee@amd.com>
+ <88ae2335-86dd-4cb2-8e20-88973a8e28b7@t-8ch.de>
+ <1f5b77f3-c427-496e-9c1d-3150177f29d6@amd.com>
+ <7f568cbd-b299-41c6-8786-25f225de8f4f@t-8ch.de>
+ <94769c30-af14-4111-8234-abf7e7333def@amd.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: SATLEXMB04.amd.com (10.181.40.145) To SATLEXMB04.amd.com
- (10.181.40.145)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CO1PEPF000066E7:EE_|CYYPR12MB8939:EE_
-X-MS-Office365-Filtering-Correlation-Id: 99ef55e5-7978-4fcf-8ec5-08dd2f6ab59d
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|36860700013|7416014|376014|1800799024|82310400026|921020;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?PrxOb2CZBgZg8ZPyhZJRNuDObvXfV/gyTKDnMgFQZ+XaJvhYgQJH5FBDma6L?=
- =?us-ascii?Q?F/rnvdv//4hiU85o77BJ0oqsSa+gJZ10vVHcV1+OuDZNhG3cYgFnvhkNiR5/?=
- =?us-ascii?Q?uRNJUDHIMl85E+utrSw/BA3jrVs0dN8TZu1viaRZMFCkJBSqxnctv9yFqytj?=
- =?us-ascii?Q?TgNoiuF9Tcjhpk8s2Ulv6OzRcwr21YGqQGPnk8AixgA9RIhdo5AJegZ7wgPC?=
- =?us-ascii?Q?1eLf6SfW643HQrw63WzCf8ybZJwxA/o2qf9hWOWQSdN9W/fJlGgW7QPvuZJd?=
- =?us-ascii?Q?DCCj41qjLtFiCVyesngyGkyZaK28uwCHEGO1O1mDLNgKTqiwTNxtTqheaB8l?=
- =?us-ascii?Q?iiEMVAazNS1AtA2gSn+1ZZOwhtvkWSwNIEk//HfgSsBoiITdp85G7IA7xjkG?=
- =?us-ascii?Q?GalDnNe5AMrJHOot6Y3zpnj6WSLlSH+krwxsjDVyZ+cnJMACm35DqAJKtKnB?=
- =?us-ascii?Q?wHw/hgu7DuE7A2pvDos2xnQkBG9fhx9JFkFk7wN5U6mSq1yk6lunR68eKBDq?=
- =?us-ascii?Q?iXq73XMQKrJoKvs+lj2gHQINtKgPBCkA8kOgjYTRppJwLQ6mGRblAOxRoJlK?=
- =?us-ascii?Q?eQWdQC6+tCbOGFiM+nxo7IL8gnA78Hg1mWfNm4NCoqRKGdCT0igLTMtRFlnu?=
- =?us-ascii?Q?bS3HxOT96w/PbkcBCIxL4d67x/NHOh3zjzBJWW4jaAqvRi9NEzbV5VT42vgi?=
- =?us-ascii?Q?UPO9XC1lSCdTpQ+b64nvRrcVWBgCgb2ckCbxUQRhTDc/mGcavFxt0ugeziFZ?=
- =?us-ascii?Q?n/6oPCEVlHsruJFtfKu7xrn/2rMZrlOrW3sMS8AVQUwnT+e/QhdDuU0PGh8C?=
- =?us-ascii?Q?0E6CdznBCx0MqSWnSg/mbYe+0ZZlF7BI9qbPsM3/BWullq4i9RMBd5pOk6up?=
- =?us-ascii?Q?P8/bIDh179YloRMP+eFqkedA72FAkOw/7xycPR3CbcfAAFHZGoxzmgKw7tXv?=
- =?us-ascii?Q?y1nwkC08Vi+O0kSTVRJVQDYyI3N/STyjbsvlbpNVRh2dulvR+klkmvSNdywc?=
- =?us-ascii?Q?EMibHrJMdk6O4H9LVNc5xwYJ6m3ztvRxdjqELxtHfnqJWAEBN5Y5Qb9YTFCv?=
- =?us-ascii?Q?oA4wkhzQrccrFlUZs7lHNMOxLY+VBkGDoqLiRAU2KaA6lxWRNhxg+WF2EIy+?=
- =?us-ascii?Q?WcAq0PsV09tjM0h7WNzfa8KPDCrmn51hXB9gRsjtANzftpVvEo4XAH4NgDJD?=
- =?us-ascii?Q?b8vT0qVjI9NSREJ7cLZF7UQ130bqo+Zl5bNJiM0xALfcVURF2iELlmq6FZK5?=
- =?us-ascii?Q?lZsw8flFwuRh4wM6+6jYAH8uxiucLl+MYSpljDs/rwMDdNjIOasICc28QLPY?=
- =?us-ascii?Q?g+Qmnw3fhQ2kHYWRvl2bgXleZOvJrRUW8kAWbMtlPNRIPgDovKrauLjcyTQs?=
- =?us-ascii?Q?aiK0nudfeoBZzbYJ6jsTB6DE6BWhdz83JPNdTYpn+dFa+K06qnLa2F/BiZzz?=
- =?us-ascii?Q?khD+T3wd2yp2w11srEjzBaYzBPrFQFO+flSApX3ICuLhGz4lNrz66Ep4Zem0?=
- =?us-ascii?Q?Gbwrqxf9o6XtUsCrq9fd48Qfrj+jqBCgBXup?=
-X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(36860700013)(7416014)(376014)(1800799024)(82310400026)(921020);DIR:OUT;SFP:1101;
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 07 Jan 2025 22:29:11.4956
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 99ef55e5-7978-4fcf-8ec5-08dd2f6ab59d
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	CO1PEPF000066E7.namprd05.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CYYPR12MB8939
+In-Reply-To: <94769c30-af14-4111-8234-abf7e7333def@amd.com>
 
-There are more than one SMN index/data pair available for software use.
-The register offsets are different, but the protocol is the same.
+On 2025-01-07 16:20:14-0600, Mario Limonciello wrote:
+> On 1/7/2025 16:13, Thomas Weißschuh wrote:
+> > On 2025-01-07 15:18:21-0600, Mario Limonciello wrote:
+> > > On 1/7/2025 14:50, Thomas Weißschuh wrote:
+> > > > On 2025-01-07 13:29:08-0600, Mario Limonciello wrote:
+> > > > > On 1/7/2025 11:05, Thomas Weißschuh wrote:
+> > > > > > The driver showcases the use of the new subsystem API.
+> > > > > > 
+> > > > > > Signed-off-by: Thomas Weißschuh <linux@weissschuh.net>
+> > > > > > ---
+> > > > > >     drivers/platform/x86/Kconfig                    | 12 ++++
+> > > > > >     drivers/platform/x86/Makefile                   |  1 +
+> > > > > >     drivers/platform/x86/firmware_attributes_test.c | 78 +++++++++++++++++++++++++
+> > > > > >     3 files changed, 91 insertions(+)
+> > > > > > 
+> > > > > > diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
+> > > > > > index 0258dd879d64be389f4dd9bc309fe089f23cc798..2a0e828657d2f07074944d6c42dc204fc8825a42 100644
+> > > > > > --- a/drivers/platform/x86/Kconfig
+> > > > > > +++ b/drivers/platform/x86/Kconfig
+> > > > > > @@ -1065,6 +1065,18 @@ source "drivers/platform/x86/x86-android-tablets/Kconfig"
+> > > > > >     config FW_ATTR_CLASS
+> > > > > >     	tristate
+> > > > > > +config FW_ATTR_TEST
+> > > > > > +	tristate "Firmware attribute test driver"
+> > > > > > +	select FW_ATTR_CLASS
+> > > > > > +	help
+> > > > > > +	  This driver provides a test user of the firmware attribute subsystem.
+> > > > > > +
+> > > > > > +	  An instance is created at /sys/class/firmware-attributes/test/
+> > > > > > +	  container various example attributes.
+> > > > > > +
+> > > > > > +	  To compile this driver as a module, choose M here: the module
+> > > > > > +	  will be called firmware_attributes_test.
+> > > > > > +
+> > > > > 
+> > > > > I think if you're going to be introducing a test driver it should be
+> > > > > compliant to what's in sysfs-class-firmware-attributes so that when it's
+> > > > > inevitably copy/pasted we end up with higher quality drivers.
+> > > > > 
+> > > > > That is you need at a minimum 'type', 'current_value', 'default_value',
+> > > > > 'display_name' and 'display_name_language_code'.  Then individual types
+> > > > > employ additional requirements.
+> > > > > 
+> > > > > I see 'type', 'current_value', and 'default_value, but I don't see
+> > > > > 'display_name' or 'display_name_language_code' here.
+> > > > > 
+> > > > > Furthermore as this is a "string" attribute you're supposed to also have a
+> > > > > "max_length" and "min_length".
+> > > > 
+> > > > Agreed that more examples are better.
+> > > > 
+> > > > But are these attributes really mandatory?
+> > > > "This attribute is mandatory" is only specified for "type" and>
+> > > "current_value".
+> > > 
+> > > Ah wow, I had thought they were, but you're right they're not!
+> > > 
+> > > > While "possible_values" certainly looks necessary for "enumeration",
+> > > > "min_length" for "strings" does so much less.
+> > > 
+> > > Even if they're not mandatory, I think it's better to include them for the
+> > > same copy/paste reason I mentioned though.
+> > 
+> > Thinking about it some more, which attributes should all be included?
+> > Having all of them in there could motivate driver authors to implement
+> > them all even it would mean filling in random values.
+> > The provided examples can already be copied-and-pasted and slightly
+> > adapted to add more attributes.
+> > 
+> > Also as for providing an even higher level interface. There exists a
+> > fairly big feature matrix. For example the display_name_language_code:
+> > * Is it used at all?
+> > * Is it the same for all attributes implemented by the driver and the
+> >    sysfs attribute can be reused for them all.
+> > * Should the same handler logic be reused between different settings which
+> >    only differ in their language code?
+> > 
+> > The answers seem to differ between each driver and having a uniform
+> > high-level interface that can handle all cases would look horrible.
+> > So I'd like to stick with the API provided currently for now and we can
+> > revisit it if there are more drivers.
+> > As mentioned before, the current API should be a decent baseline to
+> > build on top of.
+> > 
+> > 
+> > Thomas
+> 
+> How about just adding min_length and max_length?  Since you're adding a
+> string attribute then it makes a good example of a string attribute.
+> It should be pretty trivial; AFAICT it's 0 to PAGE_SIZE.
 
-Use defines for the SMN offset values and allow the index/data offsets
-to be passed to the read/write helper function.
+IMO attributes should only exist if they provide useful, driver-specific
+information. The proposed values are exactly what I'd like to avoid being
+copied around.
+min_length=0 does not add any information.
+max_length=PAGE_SIZE exposes an implementation detail of sysfs. If that
+limit should become an issue for a driver they can switch to a bin_attribute.
 
-This eases code reuse with other SMN users in the kernel.
+I would prefer using get_random_u32() for both attributes, so it's clear
+that they are only placeholders.
 
-Signed-off-by: Yazen Ghannam <yazen.ghannam@amd.com>
-Signed-off-by: Borislav Petkov (AMD) <bp@alien8.de>
-Link: https://lore.kernel.org/r/20241206161210.163701-14-yazen.ghannam@amd.com
----
- arch/x86/kernel/amd_node.c | 15 +++++++++------
- 1 file changed, 9 insertions(+), 6 deletions(-)
-
-diff --git a/arch/x86/kernel/amd_node.c b/arch/x86/kernel/amd_node.c
-index 45077e2e6f2f..d2ec7fd555c5 100644
---- a/arch/x86/kernel/amd_node.c
-+++ b/arch/x86/kernel/amd_node.c
-@@ -94,6 +94,9 @@ static struct pci_dev **amd_roots;
- /* Protect the PCI config register pairs used for SMN. */
- static DEFINE_MUTEX(smn_mutex);
- 
-+#define SMN_INDEX_OFFSET	0x60
-+#define SMN_DATA_OFFSET		0x64
-+
- /*
-  * SMN accesses may fail in ways that are difficult to detect here in the called
-  * functions amd_smn_read() and amd_smn_write(). Therefore, callers must do
-@@ -131,7 +134,7 @@ static DEFINE_MUTEX(smn_mutex);
-  * the operation is considered a success, and the caller does their own
-  * checking.
-  */
--static int __amd_smn_rw(u16 node, u32 address, u32 *value, bool write)
-+static int __amd_smn_rw(u8 i_off, u8 d_off, u16 node, u32 address, u32 *value, bool write)
- {
- 	struct pci_dev *root;
- 	int err = -ENODEV;
-@@ -145,21 +148,21 @@ static int __amd_smn_rw(u16 node, u32 address, u32 *value, bool write)
- 
- 	guard(mutex)(&smn_mutex);
- 
--	err = pci_write_config_dword(root, 0x60, address);
-+	err = pci_write_config_dword(root, i_off, address);
- 	if (err) {
- 		pr_warn("Error programming SMN address 0x%x.\n", address);
- 		return pcibios_err_to_errno(err);
- 	}
- 
--	err = (write ? pci_write_config_dword(root, 0x64, *value)
--		     : pci_read_config_dword(root, 0x64, value));
-+	err = (write ? pci_write_config_dword(root, d_off, *value)
-+		     : pci_read_config_dword(root, d_off, value));
- 
- 	return pcibios_err_to_errno(err);
- }
- 
- int __must_check amd_smn_read(u16 node, u32 address, u32 *value)
- {
--	int err = __amd_smn_rw(node, address, value, false);
-+	int err = __amd_smn_rw(SMN_INDEX_OFFSET, SMN_DATA_OFFSET, node, address, value, false);
- 
- 	if (PCI_POSSIBLE_ERROR(*value)) {
- 		err = -ENODEV;
-@@ -172,7 +175,7 @@ EXPORT_SYMBOL_GPL(amd_smn_read);
- 
- int __must_check amd_smn_write(u16 node, u32 address, u32 value)
- {
--	return __amd_smn_rw(node, address, &value, true);
-+	return __amd_smn_rw(SMN_INDEX_OFFSET, SMN_DATA_OFFSET, node, address, &value, true);
- }
- EXPORT_SYMBOL_GPL(amd_smn_write);
- 
--- 
-2.43.0
-
+But I'm also open to getting outvoted.
