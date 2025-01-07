@@ -1,108 +1,124 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
+Received: from mout.gmx.net (mout.gmx.net [212.227.15.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A71C18C01E;
-	Tue,  7 Jan 2025 17:44:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 933301E47C8;
+	Tue,  7 Jan 2025 17:58:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736271875; cv=none; b=XPb66lrkHrr00GslFrDg/cK1R63LiqdYQh4MQ2PlnfhgKkohWv7FZ/4UBQh6sQ7xpta+QR5nU4KksNMQxFyg4Lwkvr8CVUNJtRYzWcSLwMg3/l+mOHWUf47hhfnveHK59P3yfqnwCDyOScrA/kC5STUVcwI13WOzNEwHteuDY9E=
+	t=1736272738; cv=none; b=JrPlMQD0MrLy10zRtz6gRh9La2kazK3tVN6wgQ17YBpq22ABASO8gAOtWq1O3NZQxKUgcLbZfgNDPMSpJW9NdFXfXBIDsaaMfp0vooZneldJjyfQ1xPNyUy8s4MpiR3WHZxVVx5uNluGjnoatTS8k7a4oPQ0ZFG5TtE4pjtO0mE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736271875; c=relaxed/simple;
-	bh=2Yo/jYMa6G2VCfch/A17TBkdJM6L+KmbxoIbH4/a3Gg=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=Rdu8d7etmY4TuyUsPqU6ekr/mOkkEqVO0eZP8X8A+vFs4OJr/M2azASRgaYPQSi4b/j/rW/gbFqcMtKnGfya87f0DsvBlBKzknSRaqdcDzXZE7UdbFxmJ9Lm16u11tj2JgLrn5/gic6/IIk+yLK3N6RRgJ70+Xmq8SWyFQ78Soo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=IhneqM6j; arc=none smtp.client-ip=192.198.163.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1736272738; c=relaxed/simple;
+	bh=qJWeUU+73VHTE1pSgVoO3WDMBwO0Ubisw29xlxSq4vA=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=dvAV6NaYx1zbvzNe9gyQLKmLOtCfcskmsVO2wznMQlmXVjB/b+rYLDeohiZNB758w/C4a3QaoBZCcYtdJgn4H0n11o1iMtGggQI9utuH3/pHPH9bzUcU1PTotbi49BivfymPo3XagghLwE2N/Bv/40fIHgWcDs6plhLPv5V6alI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b=mRlBCYBx; arc=none smtp.client-ip=212.227.15.19
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="IhneqM6j"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1736271872; x=1767807872;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=2Yo/jYMa6G2VCfch/A17TBkdJM6L+KmbxoIbH4/a3Gg=;
-  b=IhneqM6jrEpPPa+g6u6r/5tUAYGJAbRgitntuwwa204i0H+4CLTxMcu6
-   DBURzAchaCjMabaPHNFcqqUymI3my+Rw49/9iTz6pL9G6RynXf8ZCyonF
-   wFUBGwUxL2TMBqQdqOW1GD7Woi278tXcXLhxJoJKsd6U3VJW4SZcAVvms
-   Hu9bi+nUCWcms5fDTq7NOKdIH4akqIeHtA8n3FZwLPTwRjfYoJ+KzNNqh
-   FEvvhWD0MYgvAwcZx7ik1ARWvg6Ger3luIMqd/TTvTMDqkgafkzr5dgJQ
-   1TxHv6UgFnYJiZ7l+2JGB5fX7R48ppAIXZOLxKx2Bso2J4oM/+GzFx+md
-   Q==;
-X-CSE-ConnectionGUID: xUhWiQ6iRRiNLIiviGZDoA==
-X-CSE-MsgGUID: ks4WRB/EQKmmJ2ctmMtZIA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11308"; a="36361303"
-X-IronPort-AV: E=Sophos;i="6.12,296,1728975600"; 
-   d="scan'208";a="36361303"
-Received: from orviesa001.jf.intel.com ([10.64.159.141])
-  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Jan 2025 09:44:31 -0800
-X-CSE-ConnectionGUID: lYxcOWNJTKaHGplmRhYSQg==
-X-CSE-MsgGUID: q/WMifpkQuK2zq3kk7gcYg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
-   d="scan'208";a="140182497"
-Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.206])
-  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Jan 2025 09:44:28 -0800
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Tue, 7 Jan 2025 19:44:25 +0200 (EET)
-To: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-cc: Illia Ostapyshyn <illia@yshyn.com>, LKML <linux-kernel@vger.kernel.org>, 
-    linux-input@vger.kernel.org, platform-driver-x86@vger.kernel.org, 
-    ibm-acpi-devel@lists.sourceforge.net, Hans de Goede <hdegoede@redhat.com>, 
-    Henrique de Moraes Holschuh <hmh@hmh.eng.br>
-Subject: Re: [PATCH 1/2] Input: allocate keycode for phone linking
-In-Reply-To: <8127d500-6eb4-d196-849a-48c3847ebc53@linux.intel.com>
-Message-ID: <a6e15842-1a05-888e-621c-fa185f20119d@linux.intel.com>
-References: <20241114173930.44983-1-illia@yshyn.com> <20241114173930.44983-2-illia@yshyn.com> <8127d500-6eb4-d196-849a-48c3847ebc53@linux.intel.com>
+	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b="mRlBCYBx"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.de;
+	s=s31663417; t=1736272619; x=1736877419; i=w_armin@gmx.de;
+	bh=TtiDa1KnMr3evyQh7y+y524gCipq49be15RnUho0jF4=;
+	h=X-UI-Sender-Class:From:To:Cc:Subject:Date:Message-Id:
+	 MIME-Version:Content-Transfer-Encoding:cc:
+	 content-transfer-encoding:content-type:date:from:message-id:
+	 mime-version:reply-to:subject:to;
+	b=mRlBCYBxKa9JzVgkBHwBA78CO64gE0oYh8hXhsGmKILDhso68duSWFyKhDGNvPW2
+	 PvacNxuf6hPtk0wJI8mCnkDg7H2ceM8NAQcQxOa5gmdV/7Lh5JVCEb9vt8n9+6XrR
+	 BwzSTWX70I3ymS+HEuZ1nuE7JDzgEsYK1tTmPRMl2//EIsfGWarvV8dRaH3HkvzA4
+	 uQB0/Qma53owSIyBbseBewZi/urUYn9M6j3c3SEgNxUgXmwm3YbByDFVnFiNJ74vm
+	 6IR4YrVWjG+IOIRddzRPkyzMCRUC8n1Sz/+IfdYNsQx2vE4p628CFe2wLLnXeYRX7
+	 a8qn34z2y1y5tP6/0Q==
+X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
+Received: from mx-inspiron.fritz.box ([91.14.230.110]) by mail.gmx.net
+ (mrgmx004 [212.227.17.190]) with ESMTPSA (Nemesis) id
+ 1MTRMs-1t1Pr43DcS-00LyjD; Tue, 07 Jan 2025 18:56:58 +0100
+From: Armin Wolf <W_Armin@gmx.de>
+To: jlee@suse.com,
+	ejohnsten@gmail.com
+Cc: hdegoede@redhat.com,
+	ilpo.jarvinen@linux.intel.com,
+	platform-driver-x86@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH] platform/x86: acer-wmi: Add support for Acer Predator PH16-72
+Date: Tue,  7 Jan 2025 18:56:52 +0100
+Message-Id: <20250107175652.3171-1-W_Armin@gmx.de>
+X-Mailer: git-send-email 2.39.5
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="8323328-609653861-1736271865=:1001"
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:5ottUGwjMNtdsqDf1anWZEtZ/Y5R9ko/g61XdHjmFaCsWiGGg2E
+ jeNxVCWJGTxqHebzRY/v50RG4TGsMWzztes7z0et4HCyQCIwmj0TmTPZIgb2SZ9dFHX0sKu
+ e3SVrLA7eI0G2FnA3dUlQLFPpZ0DKLkVGOc60TgXjk1yxAr0sFwn6EbAqEYo1d6+01vG+wB
+ MYspPVFsVMchgralvxoAQ==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:iLooj6uJ3Mg=;8Oc7rvFUJaKwjqA1ZOATWmLVJPY
+ Hf3anbnBzaaPBgh1AcwpSBEnVQwwAyVz+4tT4q4BDjs7jUWTDfTNOEpo6uXNQJfL0vUxInTbG
+ ULmVQeGBWnkWj7DXdqmxS7uu9e5fOIAV7Y9b2kDD8d6YlvChP0kUYuHG8ZiZm/Q+dduuQ4Tfs
+ skENsHs9EizjKPBAIZ35aisCPxgmNvQoBETpOOu23TxcfRowmDRzfsBNRQnlyFv9nr6cqRh7C
+ Cy1p3DgPFyhjC1mKk16NqZCtIDIi2jrNZhvKuGEAiAPaWjzdI5nKpIuD64PzBJuAsd2nzR3GK
+ 0LGNGN+U6eeOLkEvwSRglNanGmMlHQzb/WHslrNqyNu10l7PGxA9/Cw0ySZVptBxiGux67rDa
+ wwfiDsP/O5FHkzOaLlKu87VzTDrOmCEGt2QCSRES7aVBD5m2jx1TeONzszCiwo+llriOScLwi
+ p6lYdjPWmrq7TtDr7GwEMnC6WRueYb+dkgUWKgXj0qjpoXPy22r73rdD5ARtIrdEGgvpjQNWn
+ GR9D19u86ybapk7M9HhSjMYJVmdnLSX4TDJ/qYxJf0CeIwZkmcAQDvC0eU136XMSA+rLygDyZ
+ kRLu+Khty03WPehbqWh0LAw2WHCKjkv9hGW5uX+zblvdBvGonBKBH6/B8tD4LuKIIHhV+7R4W
+ asYGDOjE1HVopI1vAN7yLRI3ALFx0YzYGxRQ8JLWgBt8oqCNOAUaqpNWEgKB3NOxPN6Qmf4me
+ ed7u/Vz6ndn+BwKO3SxTDX2AohD8rl2+qcJnO0ue1oEYV3QRJ343FC/WGG+omW4QzL6Fp+/ei
+ inevwluPmaBrJidjTe5o4T9r2MTzEFpNKOag+RV7IQvu6pcTuutSSl+wlFRyIroJz2rL9Ogtj
+ h26tW/bbX6Qe0x2YrONQWnmONu30hMoPlzrOQGOhjFqgM3QNoOAyRGDspNGaQL22WjxpwCX0m
+ 0R+rf0O4xLrpVm/ZE/dKeawagWeFlHv+UtKYdLyyfS3w65aBsLbv4x/ur+K/8WKEHusx/mFj/
+ lQvqSM4tLfxKJAbDEkNMGcE2zE/CQUz907R8eNxm/mGfgcNBs6pKyEaazX3l5gpRrEqkMH40q
+ EG6UcpaWNDJNRurhwc7fD9IqixwH9o
 
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
+Add the Acer Predator PT16-72 to acer_quirks to provide support
+for the turbo button and predator_v4 interfaces.
 
---8323328-609653861-1736271865=:1001
-Content-Type: text/plain; charset=ISO-8859-15
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Tested-by: Eric Johnsten <ejohnsten@gmail.com>
+Signed-off-by: Armin Wolf <W_Armin@gmx.de>
+=2D--
+ drivers/platform/x86/acer-wmi.c | 16 ++++++++++++++++
+ 1 file changed, 16 insertions(+)
 
-On Mon, 2 Dec 2024, Ilpo J=E4rvinen wrote:
-> On Thu, 14 Nov 2024, Illia Ostapyshyn wrote:
->=20
-> > The F11 key on the new Lenovo Thinkpad T14 Gen 5, T16 Gen 3, and P14s
-> > Gen 5 laptops includes a symbol showing a smartphone and a laptop
-> > chained together.  According to the user manual, it starts the Microsof=
-t
-> > Phone Link software used to connect to Android/iOS devices and relay
-> > messages/calls or sync data.
-> >=20
-> > As there are no suitable keycodes for this action, introduce a new one.
-> >=20
-> > Signed-off-by: Illia Ostapyshyn <illia@yshyn.com>
-> > ---
-> >  include/uapi/linux/input-event-codes.h | 1 +
-> >  1 file changed, 1 insertion(+)
-> >=20
-> > diff --git a/include/uapi/linux/input-event-codes.h b/include/uapi/linu=
-x/input-event-codes.h
-> > index a4206723f503..5a199f3d4a26 100644
-> > --- a/include/uapi/linux/input-event-codes.h
-> > +++ b/include/uapi/linux/input-event-codes.h
-> > @@ -519,6 +519,7 @@
-> >  #define KEY_NOTIFICATION_CENTER=090x1bc=09/* Show/hide the notificatio=
-n center */
-> >  #define KEY_PICKUP_PHONE=090x1bd=09/* Answer incoming call */
-> >  #define KEY_HANGUP_PHONE=090x1be=09/* Decline incoming call */
-> > +#define KEY_LINK_PHONE=09=090x1bf   /* AL Phone Syncing */
->=20
-> Any thoughts about this Dmitry?
+diff --git a/drivers/platform/x86/acer-wmi.c b/drivers/platform/x86/acer-w=
+mi.c
+index b3043d78a7b3..57d6b680f5b9 100644
+=2D-- a/drivers/platform/x86/acer-wmi.c
++++ b/drivers/platform/x86/acer-wmi.c
+@@ -406,6 +406,13 @@ static struct quirk_entry quirk_acer_predator_ph315_5=
+3 =3D {
+ 	.gpu_fans =3D 1,
+ };
 
-Ping?
++static struct quirk_entry quirk_acer_predator_ph16_72 =3D {
++	.turbo =3D 1,
++	.cpu_fans =3D 1,
++	.gpu_fans =3D 1,
++	.predator_v4 =3D 1,
++};
++
+ static struct quirk_entry quirk_acer_predator_pt14_51 =3D {
+ 	.turbo =3D 1,
+ 	.cpu_fans =3D 1,
+@@ -611,6 +618,15 @@ static const struct dmi_system_id acer_quirks[] __ini=
+tconst =3D {
+ 		},
+ 		.driver_data =3D &quirk_acer_predator_v4,
+ 	},
++	{
++		.callback =3D dmi_matched,
++		.ident =3D "Acer Predator PH16-72",
++		.matches =3D {
++			DMI_MATCH(DMI_SYS_VENDOR, "Acer"),
++			DMI_MATCH(DMI_PRODUCT_NAME, "Predator PH16-72"),
++		},
++		.driver_data =3D &quirk_acer_predator_ph16_72,
++	},
+ 	{
+ 		.callback =3D dmi_matched,
+ 		.ident =3D "Acer Predator PH18-71",
+=2D-
+2.39.5
 
---=20
- i.
-
---8323328-609653861-1736271865=:1001--
