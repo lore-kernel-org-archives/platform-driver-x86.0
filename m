@@ -1,154 +1,117 @@
-Received: from todd.t-8ch.de (todd.t-8ch.de [159.69.126.157])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-vs1-f41.google.com (mail-vs1-f41.google.com [209.85.217.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 29C2486330;
-	Tue,  7 Jan 2025 22:47:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.69.126.157
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A22AB1E501C;
+	Tue,  7 Jan 2025 23:55:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.217.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736290027; cv=none; b=OSgzDC/qnqKnTprOexDX99u5XsHkMVdUoioM0kHrmxzCJeLF3Hj0s/Cp6Pjqq3xF7z4RBN1vdTuPKNWYco/G7Il1FDGu/G34LCjg9Ohfzquwy74oolN6BJhI3Yk1mGNOrj4RzO0Jn27voNI43mzLoo15gVkPVF5lJ85NSQncqqM=
+	t=1736294108; cv=none; b=jAF+8hB84SBEvUI2Y/V5vaY27QeePZuKVbiOfPS5UcSwAd9KhPFtj33E2jPLdgrHceBF21yj3a9O92KUbr/9Th38UalSLn4g7aKHceZ3dPZVGJ3FoozFKghMNYs9Gu4F5YiI/MBF2bOaruPg9hup8HdDfA3G2VpeEMAHQ6xxw5U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736290027; c=relaxed/simple;
-	bh=FoE3jLPlb8IbWzy60MFizu6s+vKA7KX8YCiVEN4pVws=;
+	s=arc-20240116; t=1736294108; c=relaxed/simple;
+	bh=ys1P1XHkex6K43m1+J8HnrsBVR3b7eB7bgs1QSer42Q=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=qR0yfteBBpBTEQHLMeK4GJ5yf24NOz1nkCNursCsKjAjyaO8kHWxtFJ7lU+UfeEcBYPLnpAehGVco1qPzbikNfIQRfzmp5xi/J2KLt+2HFvGtlijS9Fox7c/Rtx3P5vU3ZzIbUuR4RxbYCYErh09XEdFvsNyO12tf3B/N2wtrpI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=weissschuh.net; spf=pass smtp.mailfrom=weissschuh.net; dkim=pass (1024-bit key) header.d=weissschuh.net header.i=@weissschuh.net header.b=uJ0DZkpY; arc=none smtp.client-ip=159.69.126.157
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=weissschuh.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=weissschuh.net
+	 Content-Type:Content-Disposition:In-Reply-To; b=mLndPZDY+lkdSafvBCxBd8h8uRL9bb9P2MHiNqyLcxeyx5P5MnR31s1X0UwuDzeubRTlVO6dQ9Ud9NtJWGDcd1shW2OaiGlvDt9bMCuKIyT66+NGfXpNIlPa2oaGLgUvm/m+eGkeX7T5JQkYpO1FP+jPdya6o7awsX16LDN0gqM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=YyM+1/wz; arc=none smtp.client-ip=209.85.217.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=weissschuh.net header.i=@weissschuh.net header.b="uJ0DZkpY"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=weissschuh.net;
-	s=mail; t=1736290023;
-	bh=FoE3jLPlb8IbWzy60MFizu6s+vKA7KX8YCiVEN4pVws=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=uJ0DZkpYsLi6UP8Yvl9hj8VKzHvBPuSHixUsbmqeYWCt5cxD0dwZN0o/gj984ci8V
-	 mzmlt8i9Napag4Ti/UQRXDx29GmZd73l7ljEYfoMy8v+4eT//v/YsxbpKrJvyLTRG0
-	 bLHTGDloi15iwBNnpRzO+P31yk7GNmVcl7n9vc2o=
-Date: Tue, 7 Jan 2025 23:47:02 +0100
-From: Thomas =?utf-8?Q?Wei=C3=9Fschuh?= <linux@weissschuh.net>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YyM+1/wz"
+Received: by mail-vs1-f41.google.com with SMTP id ada2fe7eead31-4aff78a39e1so4655771137.1;
+        Tue, 07 Jan 2025 15:55:06 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1736294105; x=1736898905; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=4c5wQNHhQ/puZm+Vhhxkj+Bj0ZZhUMCl3+u+zMGX2HI=;
+        b=YyM+1/wzvoPbnlNssuN1FCram9w+NtBwoOsxU7uwicwfELDgVvCDSFJqVBH1Fg1u88
+         u6iwCLm/GwDesTNVTl4tnsRQ3WLTyHlgGLxB/Dk0tCODX4A+Op88phXwoJ9tg1G9CGN+
+         9MrNn5nXaK3L+njTCDkRzkHJmddK8tsoc+jLQLf8IrmDM206agK8Y3kNgTO/gBnBb9bO
+         HgT9K4QEn4BntWKsLps3JfqOca3G3X+zj9KLdz6m5GwcsVLyR3qs2MuoZ/snkA9YruEy
+         PeypoYWilGe5vXcoolL9gJWxY9f873f7AAeutgb8Rb53IO8BOdW+eH/l6IG4TVz71gNH
+         eyMg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1736294105; x=1736898905;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=4c5wQNHhQ/puZm+Vhhxkj+Bj0ZZhUMCl3+u+zMGX2HI=;
+        b=G9iWeeR+8PXFSYi8X1BmcdcLKn84C232Vb6q9KeNvpcdjrf+3nfCAti2sgIbc96aKJ
+         48+IaovKKbtXWlsFChrYOFJ+YMSvnzP5YnQ7Dne2nElXi7QGN2I0L/dvZ5LtLPNcpRE+
+         0HE6zPd9SPIz0Q0R9ZSdzFETfJ0x7bPub/kQfNjQXMyt5iAUk8vBvoXxlK5QMbw15g8i
+         nErzAOEp08w45XRKUbRRMV7ZphJjuCTXTN0JIZEAeOg9kMYEC9wbDxlxRsYdZbUxW80F
+         cR8RElUSKbrE8F4ra4DOyTzdkuf7bsSXnJo3JQ0SLN1RQ0dOC4k61xJFe91cj7VZoSCd
+         MQ6A==
+X-Forwarded-Encrypted: i=1; AJvYcCXD46IGocA9gKPX7c96HUxyLMBU7iqo9RznyBjVzL2pbBgBiiUCkZs6H8b1xM7Yn0jr4oL/SxujlMsswwk=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzNOgfFEmSTCoBLx4xiB1i+zDb+PsXIZe5TDFgAb96m7YDIlCTc
+	+fUPUdmz5p7KwR3btkMJRnR+lfpYGwDWLBPbleZTmv7Qcn36vRcL
+X-Gm-Gg: ASbGncscqBXzHp8IUrIWNfaNx9/1ZJg+sd0Q5u11DG2sVg3jeGiJn/O3SOYIWtt+SgT
+	KTqtyvAiVv4UVObMvUIrIiBmVNzr5Gg8kBw07hWkFrn3Y9ubUKlNKdmjFRq5f+6ke5s7Owh2RJ+
+	RwDDWLebr/ypAdbpeqaE/bs58EoMi11w5FFx86umUwj4OREeX5OHRnFO3Fd+VftlUjMCv2X3WHe
+	QgUX/ia8QCaZFGGE1T+/LKTviBRlqGTJRRtWot+QHqUu24uc6PNCzOd
+X-Google-Smtp-Source: AGHT+IF67ipnmFEUARJQPOaBMWefKC0GUEWAKgzyDEJltQFY1tBeX1EFxqAguTvdTekBcgqXlkKDPA==
+X-Received: by 2002:a05:6102:c12:b0:4af:a216:c0d0 with SMTP id ada2fe7eead31-4b3d0e08150mr867425137.0.1736294105489;
+        Tue, 07 Jan 2025 15:55:05 -0800 (PST)
+Received: from alphacentauri ([2800:bf0:179:113e:f067:4e25:4298:6451])
+        by smtp.gmail.com with ESMTPSA id a1e0cc1a2514c-8610ac1d4bbsm8151150241.2.2025.01.07.15.55.03
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 07 Jan 2025 15:55:04 -0800 (PST)
+Date: Tue, 7 Jan 2025 18:55:01 -0500
+From: Kurt Borja <kuurtb@gmail.com>
 To: Mario Limonciello <mario.limonciello@amd.com>
-Cc: Hans de Goede <hdegoede@redhat.com>, 
-	Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>, Armin Wolf <W_Armin@gmx.de>, platform-driver-x86@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, Joshua Grisham <josh@joshuagrisham.com>
-Subject: Re: [PATCH 2/2] platform/x86: firmware_attributes_class: Add test
- driver
-Message-ID: <acf81e37-3b3a-48ef-8b7a-8e8c50a161a4@t-8ch.de>
-References: <20250107-pdx86-firmware-attributes-v1-0-9d75c04a3b52@weissschuh.net>
- <20250107-pdx86-firmware-attributes-v1-2-9d75c04a3b52@weissschuh.net>
- <a20d538e-421f-45fb-b169-f9d2eb4c6aee@amd.com>
- <88ae2335-86dd-4cb2-8e20-88973a8e28b7@t-8ch.de>
- <1f5b77f3-c427-496e-9c1d-3150177f29d6@amd.com>
- <7f568cbd-b299-41c6-8786-25f225de8f4f@t-8ch.de>
- <94769c30-af14-4111-8234-abf7e7333def@amd.com>
+Cc: platform-driver-x86@vger.kernel.org, ilpo.jarvinen@linux.intel.com, 
+	w_armin@gmx.de, hdegoede@redhat.com, Dell.Client.Kernel@dell.com, 
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 20/20] platform/x86: alienware-wmi: Update header and
+ module information
+Message-ID: <cajjadvbgzt2fus5eimyuppmofyf5hfrqzrun7u7f6xr6fa6du@flxjaxvkywwv>
+References: <20250105153019.19206-2-kuurtb@gmail.com>
+ <20250105153019.19206-22-kuurtb@gmail.com>
+ <4ac2d62e-f452-4fcc-9f76-363f70a21f9a@amd.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <94769c30-af14-4111-8234-abf7e7333def@amd.com>
+In-Reply-To: <4ac2d62e-f452-4fcc-9f76-363f70a21f9a@amd.com>
 
-On 2025-01-07 16:20:14-0600, Mario Limonciello wrote:
-> On 1/7/2025 16:13, Thomas Weißschuh wrote:
-> > On 2025-01-07 15:18:21-0600, Mario Limonciello wrote:
-> > > On 1/7/2025 14:50, Thomas Weißschuh wrote:
-> > > > On 2025-01-07 13:29:08-0600, Mario Limonciello wrote:
-> > > > > On 1/7/2025 11:05, Thomas Weißschuh wrote:
-> > > > > > The driver showcases the use of the new subsystem API.
-> > > > > > 
-> > > > > > Signed-off-by: Thomas Weißschuh <linux@weissschuh.net>
-> > > > > > ---
-> > > > > >     drivers/platform/x86/Kconfig                    | 12 ++++
-> > > > > >     drivers/platform/x86/Makefile                   |  1 +
-> > > > > >     drivers/platform/x86/firmware_attributes_test.c | 78 +++++++++++++++++++++++++
-> > > > > >     3 files changed, 91 insertions(+)
-> > > > > > 
-> > > > > > diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
-> > > > > > index 0258dd879d64be389f4dd9bc309fe089f23cc798..2a0e828657d2f07074944d6c42dc204fc8825a42 100644
-> > > > > > --- a/drivers/platform/x86/Kconfig
-> > > > > > +++ b/drivers/platform/x86/Kconfig
-> > > > > > @@ -1065,6 +1065,18 @@ source "drivers/platform/x86/x86-android-tablets/Kconfig"
-> > > > > >     config FW_ATTR_CLASS
-> > > > > >     	tristate
-> > > > > > +config FW_ATTR_TEST
-> > > > > > +	tristate "Firmware attribute test driver"
-> > > > > > +	select FW_ATTR_CLASS
-> > > > > > +	help
-> > > > > > +	  This driver provides a test user of the firmware attribute subsystem.
-> > > > > > +
-> > > > > > +	  An instance is created at /sys/class/firmware-attributes/test/
-> > > > > > +	  container various example attributes.
-> > > > > > +
-> > > > > > +	  To compile this driver as a module, choose M here: the module
-> > > > > > +	  will be called firmware_attributes_test.
-> > > > > > +
-> > > > > 
-> > > > > I think if you're going to be introducing a test driver it should be
-> > > > > compliant to what's in sysfs-class-firmware-attributes so that when it's
-> > > > > inevitably copy/pasted we end up with higher quality drivers.
-> > > > > 
-> > > > > That is you need at a minimum 'type', 'current_value', 'default_value',
-> > > > > 'display_name' and 'display_name_language_code'.  Then individual types
-> > > > > employ additional requirements.
-> > > > > 
-> > > > > I see 'type', 'current_value', and 'default_value, but I don't see
-> > > > > 'display_name' or 'display_name_language_code' here.
-> > > > > 
-> > > > > Furthermore as this is a "string" attribute you're supposed to also have a
-> > > > > "max_length" and "min_length".
-> > > > 
-> > > > Agreed that more examples are better.
-> > > > 
-> > > > But are these attributes really mandatory?
-> > > > "This attribute is mandatory" is only specified for "type" and>
-> > > "current_value".
-> > > 
-> > > Ah wow, I had thought they were, but you're right they're not!
-> > > 
-> > > > While "possible_values" certainly looks necessary for "enumeration",
-> > > > "min_length" for "strings" does so much less.
-> > > 
-> > > Even if they're not mandatory, I think it's better to include them for the
-> > > same copy/paste reason I mentioned though.
+On Tue, Jan 07, 2025 at 03:30:06PM -0600, Mario Limonciello wrote:
+> On 1/5/2025 09:30, Kurt Borja wrote:
+> > Update module header and description. Additionally add myself as a module
+> > author.
 > > 
-> > Thinking about it some more, which attributes should all be included?
-> > Having all of them in there could motivate driver authors to implement
-> > them all even it would mean filling in random values.
-> > The provided examples can already be copied-and-pasted and slightly
-> > adapted to add more attributes.
+> > Reviewed-by: Armin Wolf <W_Armin@gmx.de>
+> > Signed-off-by: Kurt Borja <kuurtb@gmail.com>
+> Reviewed-by: Mario Limonciello <mario.limonciello@amd.com>
+
+Thank you very much for reviewing these series :)
+
+~ Kurt
+
+> > ---
+> >   drivers/platform/x86/dell/alienware-wmi-base.c | 4 +++-
+> >   1 file changed, 3 insertions(+), 1 deletion(-)
 > > 
-> > Also as for providing an even higher level interface. There exists a
-> > fairly big feature matrix. For example the display_name_language_code:
-> > * Is it used at all?
-> > * Is it the same for all attributes implemented by the driver and the
-> >    sysfs attribute can be reused for them all.
-> > * Should the same handler logic be reused between different settings which
-> >    only differ in their language code?
-> > 
-> > The answers seem to differ between each driver and having a uniform
-> > high-level interface that can handle all cases would look horrible.
-> > So I'd like to stick with the API provided currently for now and we can
-> > revisit it if there are more drivers.
-> > As mentioned before, the current API should be a decent baseline to
-> > build on top of.
-> > 
-> > 
-> > Thomas
+> > diff --git a/drivers/platform/x86/dell/alienware-wmi-base.c b/drivers/platform/x86/dell/alienware-wmi-base.c
+> > index 78101952094c..c98c65341233 100644
+> > --- a/drivers/platform/x86/dell/alienware-wmi-base.c
+> > +++ b/drivers/platform/x86/dell/alienware-wmi-base.c
+> > @@ -1,8 +1,9 @@
+> >   // SPDX-License-Identifier: GPL-2.0-or-later
+> >   /*
+> > - * Alienware AlienFX control
+> > + * Alienware special feature control
+> >    *
+> >    * Copyright (C) 2014 Dell Inc <Dell.Client.Kernel@dell.com>
+> > + * Copyright (C) 2025 Kurt Borja <kuurtb@gmail.com>
+> >    */
+> >   #include <linux/acpi.h>
+> > @@ -13,6 +14,7 @@
+> >   #include "alienware-wmi.h"
+> >   MODULE_AUTHOR("Mario Limonciello <mario.limonciello@outlook.com>");
+> > +MODULE_AUTHOR("Kurt Borja <kuurtb@gmail.com>");
+> >   MODULE_DESCRIPTION("Alienware special feature control");
+> >   MODULE_LICENSE("GPL");
 > 
-> How about just adding min_length and max_length?  Since you're adding a
-> string attribute then it makes a good example of a string attribute.
-> It should be pretty trivial; AFAICT it's 0 to PAGE_SIZE.
-
-IMO attributes should only exist if they provide useful, driver-specific
-information. The proposed values are exactly what I'd like to avoid being
-copied around.
-min_length=0 does not add any information.
-max_length=PAGE_SIZE exposes an implementation detail of sysfs. If that
-limit should become an issue for a driver they can switch to a bin_attribute.
-
-I would prefer using get_random_u32() for both attributes, so it's clear
-that they are only placeholders.
-
-But I'm also open to getting outvoted.
