@@ -1,62 +1,63 @@
-Received: from NAM02-BN1-obe.outbound.protection.outlook.com (mail-bn1nam02on2043.outbound.protection.outlook.com [40.107.212.43])
+Received: from NAM02-DM3-obe.outbound.protection.outlook.com (mail-dm3nam02on2046.outbound.protection.outlook.com [40.107.95.46])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8BF4D1F9409;
-	Tue,  7 Jan 2025 21:30:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.212.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D0F01F8692;
+	Tue,  7 Jan 2025 21:30:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.95.46
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736285433; cv=fail; b=ovF8dl9scIzzhGjuObOud1FYRivBK7dk+LWWCDuOIUFiqBIiMYjqmoQ9/jZFe7rfJ4SqZuo9F0MM2lDMH3awCEPBhySp5a9OlFyH13sj0DUKQ3ZzEcOkVKAMx9OrVP0AJ2OkBHRdmg1LEKgQIvCtPO0jF2x4CCWDUsj99Z1pioA=
+	t=1736285451; cv=fail; b=WFv7i4hv1Bu9Az9m3Zuc/WN5FFeur4rqr5oNKsWV49FN6bpt0OlCZBeGjbCs9blAitgw32WSo/3hZ37U7182wvZGZnhAy0iL3JS2lnG7o+lY7tlXAtUg6hWCDMKWFVcBaQbCCETjZLMr3RgiqaOgevemKHYgY8n8ZNCkZ5ManY0=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736285433; c=relaxed/simple;
-	bh=iQsy9r1O1Uyr24lhh+EZdQDAQfOvV9Yr207eSePQZNY=;
+	s=arc-20240116; t=1736285451; c=relaxed/simple;
+	bh=YJGzskx1xfKBzVzGvYNvfwc7abxtnzQUW6n3avt1ABs=;
 	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=c8lLrKm8AvGVJq1crV9bVkgQZR3UnNrlwaoTAbmnE58Hs+wDkMAY1z2wwSbvqUaYbCBIO7WSyvRG6JrCA5qul+ozgDq0ohFg0hdiJ2BFZ7o0h+c7Zz8YQ4uvjqFoywvd7e3gijpueGyNUOwFnHnhmz5ae0bqBrAM06Qigpd/I8c=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=qE42emoL; arc=fail smtp.client-ip=40.107.212.43
+	 Content-Type:MIME-Version; b=rxBC9qnTKjXfxdaiZLVR47y9VUtP9gKAHULgnNJ3+tmg1pcmjbDkqolZfaVqAhhe/MnmKVLo7OZkwgxRTu4E7Brq1ME4mp9ryW/TszAX7YABbsyXj62e9TDIsjb7bURxLfmOwcP+1b6nlwvy+jY9xTsA98mLrCCd+3HHOKGhp1g=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=Dh2UxBe8; arc=fail smtp.client-ip=40.107.95.46
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
 Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="qE42emoL"
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="Dh2UxBe8"
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=BHfGDfsoQ6IIhBvCKw2z9HO1mlb9Ra0Iuo+9+oWX41NL2O0GbHDleFicumo7YIDO7p7tBhp2xvjSm5zZKJdwyiptqcdD7ESZCucTdl2ODq3hYh84I0j4R/2H2kihoV3TvygNiLAyLuMNKfYB3607Lde2/UcwBKQnKUnGEjQ8PRvAhwxc5fqw2wO+Bv5Wz5VScHlOWuOBE9RizAsG+ltuSPOCY07sx7TgBTCLIdjhjm/DjXTKxh60bsZjGbSj89eojbwLN6+0xsRpv/eApAwHK4Q6MkmAE+AbuqsIdu8YQF4BVG2gRrsMZJaPRcm6vJFx4pWgpmo86KC13PodUVHxAA==
+ b=CLuPOXUK9bAj+ClNcvF6HhkRMCcMeKPeIkG2KWWdmJZueYBkYyZ+5DzmFN2mpDeYCNp3CFBqd/TioDoqgvv4iwdeAWHzkUBicMFO0njVyWEiLeWdYWqladKSdfa3cqTihRG0EEb1U6+o7LiRvasNGXUpk+1K86sHEV9VT3IlwsWRxklxX9H7igYjOTz1OsCrw1BaTZm+HZiB/svOgatGzXcHJxiEUZkqaF8iQNhvSZNibkFLQbUNVbInDjiTvFadxMoSeIhS8Zqvb8uNkp6ztJ8GewMjmoSeLF7htUT8qiJsZeMGtQL70RDVQYC7Tq7YysZzNUvCGOJo3Px2z2T/wA==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=74btqpMdoWhFwgrO+Bu1cvHESaGu3VycTNk4ZKWYXao=;
- b=MCuHtIkMtXqwXS1ztctlxjDI8tVFyf8E/1iPwBrU5gZZblL9bbnX5gFzI6eWP6og4xbzVaUR9cxqaaONn/h6EBf8328GMfrI3n9iBhqh+2BQZYXlVUHyNAflVhoE8I0Zdt9vsxnYa/tVLm4zLp6m6lJ/xmYnTtDNXtabHnOwicBcBmJ+cMfvn/pD/pEpLKYdkXkdQdscXQeolKVBe+eIn56emN7gmRTDkz0i8XMzmK9ZcDNDE7Jc7myK8een+gIHkvlkyZheJ5TO+je3+1MN/RATp8ukuo06apwT9rh6YOegRMQg1zbcbHf0YN5cAopu6qVeocXq0As2E9+jz5gPaw==
+ bh=yNUlvgihfoNUM4Hv8JXeanRlBjVxGDPalahp0Dz7vUo=;
+ b=hbMTlRK1thUxGsY/FJ10rBYcn5P698GPlJNn21DC2Q9b5tPuWh6DPv8moDUWGxom/hz9J52JMy7EHBwI/YJ8xnKJjjTnrF+QaFIx3omUtInKp+o1oz4YrrzWEmHBE1b8rSuTvwSa6Alipw5r24UtqOcdsLqVOVtiOI1lheAc8ePSt0XveXzyvlbyT/xRnOGQq46w8X5ohFVBGynoJnoayr+u48oN2HihQwxwSDAaOh0aCK3zTiudIXfRRovLdnF5QnO3/QjXGJ8bui+8S1cyd0WYWaYghJ4o5BqcICYvRe/gQk/2WOG6Uwa3WWPEWQ40t8YKuIxKEyytAQtdcdNwLA==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
  header.d=amd.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=74btqpMdoWhFwgrO+Bu1cvHESaGu3VycTNk4ZKWYXao=;
- b=qE42emoLSLlxi0GKv0rLyw3db5Sd1+BxwA1aEPLvPgaTAlcXk74HOKr3mzmTFYgd16BjBl7CrM+oKUwGqt3fYg4emvaNXqG2pFa6XHxfEg+OAPvYDsbIayTJ2aIoAl3iLl/wAlW3G3UYnhYkA/dBJZcDccMqE8iOmpvvYZxiH+k=
+ bh=yNUlvgihfoNUM4Hv8JXeanRlBjVxGDPalahp0Dz7vUo=;
+ b=Dh2UxBe8kyKqzNtCkRE5S7gkAbcVHaYgcJSnyZDlAsP3SNGo9A7/8U5fOXWFO798pNBq1hlMsyanKLBGsac/xuLUheeoSix7fNaknkJBwqnPxoQgk9L64a5a/QmE8g1r+orGUWvpG3HHXlfzbj2EvOkLzbGiDuVfNDoV5K5BKTc=
 Authentication-Results: dkim=none (message not signed)
  header.d=none;dmarc=none action=none header.from=amd.com;
 Received: from CY5PR12MB6108.namprd12.prod.outlook.com (2603:10b6:930:27::15)
  by MW5PR12MB5622.namprd12.prod.outlook.com (2603:10b6:303:198::13) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8314.17; Tue, 7 Jan
- 2025 21:30:24 +0000
+ 2025 21:30:43 +0000
 Received: from CY5PR12MB6108.namprd12.prod.outlook.com
  ([fe80::46e5:5b51:72c3:3754]) by CY5PR12MB6108.namprd12.prod.outlook.com
  ([fe80::46e5:5b51:72c3:3754%6]) with mapi id 15.20.8293.000; Tue, 7 Jan 2025
- 21:30:24 +0000
-Message-ID: <6c8bdb75-3101-48d0-960d-881c7cb4fb2f@amd.com>
-Date: Tue, 7 Jan 2025 15:30:23 -0600
+ 21:30:43 +0000
+Message-ID: <8595d06d-d84e-4816-89b9-dc498a4dfec4@amd.com>
+Date: Tue, 7 Jan 2025 15:30:41 -0600
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 13/20] platform/x86: alienware-wmi: Split DMI table
+Subject: Re: [PATCH v3 06/20] platform/x86: alienware_wmi: General cleanup of
+ WMAX methods
 To: Kurt Borja <kuurtb@gmail.com>, platform-driver-x86@vger.kernel.org
 Cc: ilpo.jarvinen@linux.intel.com, w_armin@gmx.de, hdegoede@redhat.com,
  Dell.Client.Kernel@dell.com, linux-kernel@vger.kernel.org
 References: <20250105153019.19206-2-kuurtb@gmail.com>
- <20250105153019.19206-15-kuurtb@gmail.com>
+ <20250105153019.19206-8-kuurtb@gmail.com>
 Content-Language: en-US
 From: Mario Limonciello <mario.limonciello@amd.com>
-In-Reply-To: <20250105153019.19206-15-kuurtb@gmail.com>
+In-Reply-To: <20250105153019.19206-8-kuurtb@gmail.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: SA9PR13CA0054.namprd13.prod.outlook.com
- (2603:10b6:806:22::29) To CY5PR12MB6108.namprd12.prod.outlook.com
+X-ClientProxiedBy: SA9PR13CA0036.namprd13.prod.outlook.com
+ (2603:10b6:806:22::11) To CY5PR12MB6108.namprd12.prod.outlook.com
  (2603:10b6:930:27::15)
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
@@ -66,583 +67,306 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
 X-MS-TrafficTypeDiagnostic: CY5PR12MB6108:EE_|MW5PR12MB5622:EE_
-X-MS-Office365-Filtering-Correlation-Id: 981ef398-91f8-46e8-bea8-08dd2f627efc
+X-MS-Office365-Filtering-Correlation-Id: 10a8f22a-2d00-42b6-99a8-08dd2f628a66
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|376014|366016|7053199007;
 X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?QVhRdVUxelgxUGp4cDlxeUloSXNtZzdnMUQxRkN0SHhzKzVvVXNuYjFJeUlk?=
- =?utf-8?B?eWl1VnFmQjlKVEk5Vm03WG5Ia1dvOTAzMGZSb3NuTTF3dC9xanVGZ0Z1U2FX?=
- =?utf-8?B?eDRBeE1la2xVbWp2RWwxNDU5NXp0SUM5aUVBNE81bFNqUklJRkp0UXgzNnAw?=
- =?utf-8?B?QUdWaVQ5cnNPbjc1Q0hCTC9XaGxvdk52R2ZHd29SU1NwRytPaEFMUitqUzh2?=
- =?utf-8?B?NTdyOVJRamhvOGZrZTUzKy81UkxVVHRzNTVYc3d2QmVXQS9yZVlMbHg4aUxJ?=
- =?utf-8?B?c1I0b2dqMzA1M3hpN2tWQUNkKzdNUFdpYVJ3aSthbU50MmZvNWtUZXhuY2tp?=
- =?utf-8?B?TTkvVEdkbFRldHd5ZjFkVVN6Y1BGVkJrdFNUZEs4Sm5vMzRiYlhTb2dwR0Nv?=
- =?utf-8?B?V2JqLzA0bEx1ZXZ4UmFPbjFZaWxYamNWRy9EckxnRFgvdWNPeGlRbHJCS0tP?=
- =?utf-8?B?N3E2UTN0UnRaNG9TZzB6bk1STDk3Ymg4UC9NUUlCdGNRWU9xcFlpQ09qVWhR?=
- =?utf-8?B?WnpYaktQRXBBaVRwVmFXaStpWXBQRFd1TUF5QVdhNFIwSFlUK2I4UUNHdlpT?=
- =?utf-8?B?TWVMS0RkeUd4cXVvL25CYWF0YVJLVFdYelZiQVhBRTRtQWdQbGZuWXdSZGZI?=
- =?utf-8?B?K3VON0V6eHRzM05sbVRNUWZDSXRjQzlWanBXdFFUVXBha0FIbnhQazVRYVo0?=
- =?utf-8?B?elpRTWY0OTFCekJ6Z2lyME9kTTZhQVhXbXJaa2M3M1FrRjg5clcrbnZteVRm?=
- =?utf-8?B?MjliNUNRMHB2eUhNY0pzSzVoSUNWdTNkVDR4MFlSMVFZNDY2YkNkUjB2OWVL?=
- =?utf-8?B?dDRFUDlkK3VzRjlNRm5yTVA0M2MvSmhhRS9KbkwzYVlqYms0LzdRaHM3d2J1?=
- =?utf-8?B?aThrVEN6azBoeDZ2T1BIbmQwTTZCRTFtNGM1djNJYWtkUDdoWllKY0wvcU9N?=
- =?utf-8?B?allxVnlkMCtzU3FKM1duR2d5d2NSK0hvK05KeGZsZDg0eTRiWlZveDhmQmpV?=
- =?utf-8?B?eEtqNmlncThwd1ljZ3hieHlUUjBPei9ZencydVFiT0JJMEttZkpBck02VXE1?=
- =?utf-8?B?S2tURFozVFdSUWozQ2cyRW1Zb1RjVlNLZ21OUzNpczkxa0NnT3Q5ditadHk5?=
- =?utf-8?B?WFNBWnZnZEorYVRhcXVMdGVoSkJvTWlReEdVa2dndHE2MVAvc1VtbG4zeFA1?=
- =?utf-8?B?QUdvbDlHdVRrUWVMaTYvODR4L3N1aUZNcUczc0hrTWdRc21CaURJVDBFVDJv?=
- =?utf-8?B?bXhoUVFJTFRPSzVqVG5RcTdvSUpoSzRtVmJ6QkprN0pVNDB6WmYyVVQ5RzBt?=
- =?utf-8?B?MkNKQmFjOTZkclhmVVBpUmNGZTJIei8zZkdqTzcwMVc1b0JKOGdjZU1rRWZ1?=
- =?utf-8?B?Zk9uTWkrUXJmVGRvaUNMRzQvQ25CdzY0NUxzNUZER1BUTXVJbDh1eFl6ZTBU?=
- =?utf-8?B?VGtBM0licHpVNkh3ck9LRlAzSnpmTUViRW1aTGd1bm5Jbi9FZEdaRGNEYnZ0?=
- =?utf-8?B?Ly9tajBhNWRvUkREakdCRmczZlgzSGxEWTQ2VTl4aklQZUcxMFVvVHpmeU5H?=
- =?utf-8?B?N2ZwZXlraWUvV01lc0djKzNNazRQeWZLajJPV29QT2NLblp3NjI1cHZ3Q0RE?=
- =?utf-8?B?WE0vZll6QzZJekFZMWFPdkZSUmxsM0hYUXlRdlM1ZzhlSnBtQWxnU1lXa0lZ?=
- =?utf-8?B?VnpndkpWNS9tUGZsY0ozTDdJSGhWU1Z6UzNTaTdtYlNsczB0azlxMVU1bTlt?=
- =?utf-8?B?SlZCM3JwVTZ1Mm11TldrdERzOXVFaDhIaW1hR2YzY2J0czZ1aXVZMmlTalFq?=
- =?utf-8?B?R3p6KzV0SmlVZDFlWG5iTmZudlJ6elpldEc4UUNKTmRoam1DV3dDNmhpc0JW?=
- =?utf-8?Q?77JzOTxvd0ES9?=
+	=?utf-8?B?b1dwSlpzdEhka3hjR2M4SGxydUNXNHZvaUQ5Unl5blVCWGZoblJQL1VrLzhn?=
+ =?utf-8?B?Zkw4K3kxUkUwYi9LblA5b2FaQ2hwakNWc0tWQWZpR0lXeFlydDErTWNFV3VE?=
+ =?utf-8?B?MVhBakhDNXh1UkpIYzZRZ0FzajVaU1RMaHFIVE9ibkJqZ1pIeDlMRHdlYy9I?=
+ =?utf-8?B?NjBrYktJQi9JN0ZRcUk2SW4xbzNXNURHbHV6c0NCNFYvUXpNUnJtdVh4dE1X?=
+ =?utf-8?B?VEh6T3l6NU1HWktCcm1DMnNYdVNVYWFQWC8yZG5jZzEvYkwxUFJiWXFpU2h6?=
+ =?utf-8?B?RjhmZ1d0ZXJkLzNMOG1zaU42MGRBVjZQZDZFQS9Bc0loT1RBRTRhMWhEdnpJ?=
+ =?utf-8?B?RU5PM3BRakIwaXBSRUpobVpuMldtVjFLS3UyMGJmdlBHbHRybWxTc0hpT0hN?=
+ =?utf-8?B?ZWV0c01LREdld0Z6THV6ZjBndnJjNDNsM24vMUkwOWJxQkJIcTZRVVRDSmZT?=
+ =?utf-8?B?N2tiNEE4bVdlL0NTNzBIRGVTRlVBaXQ4U2dBS2h5cVcrNHhoOUVxSmwwL1Vr?=
+ =?utf-8?B?WCtBUVJoNCtLaWFWdVRWelJYdE9aWEpsaEFQbFhlLzdaMG44ellWZUhOaldx?=
+ =?utf-8?B?S2lXS3h0YUJUT2RMdVBGdXNQOGRqSDdKbHU3YjlpN0ZvYmtST0NaLzZGSy9q?=
+ =?utf-8?B?WG5FZElod2RLNUFTSUl4VFhLNWNnd1VVbDBMdS9XUHJONStEQ2lpaURxTFFo?=
+ =?utf-8?B?L0orSlUrMGFUVGEvQk9DRjJ2aUNPUG9jbEQyZXVkdEFtRFRRUWxvUi9kUmZZ?=
+ =?utf-8?B?VWpVQ2VTaUcvNnErSCszVUpjdUNnN250Rk1RZzRMS3FyeEdNRW4zeGJpVEZD?=
+ =?utf-8?B?VTNkTHpPN2EwOUt6S0laNTE4ZFlQMnhHSERNYU8xRzd6Q1RLVzVHcEh6eGJ2?=
+ =?utf-8?B?RnFCUlIvb0hUdW9aMUhZVjBDa0Jrc2ltS09jaC9lNGFwb04zMWJUekhRMGsv?=
+ =?utf-8?B?K0hhbExiR3hVWk1SNitjcHlXTGRNZGQrYytmU0J5SHBOZkpRY1k2cFBvUTRz?=
+ =?utf-8?B?V0RRR09tUThVY3BkT3hJb0RCa3kwZTNPUGpudUhWdmNkeTZZb2NaS3JLYmpD?=
+ =?utf-8?B?VXVCaVlvOVZKQW1rKy9LeUtEbDZaYm9JZ2h2TGJHcXpHK2VlcVNOcnhsZWFH?=
+ =?utf-8?B?cGoyRnpYSEJPdlJLdXhwRmZQTFNoMkxvTjZUbXpKUmlXT28zakhRNjFEd2Y2?=
+ =?utf-8?B?U281RXJjV1NzR2M4amltSmoyVHBrUG1mb0c1ZUhJMWRVQ09QS05ONm9GTEFt?=
+ =?utf-8?B?SjFQYm1NTDgrTldPWWlCbThxaFVTZ002N0tETEFHWERkNFZNSXRwUDIwdUdB?=
+ =?utf-8?B?RlJXTjd0UFA3bjF4VTVDdGdWVzM1blZGSisrQlpKR1dxTVE3V0NLY2hyb3U4?=
+ =?utf-8?B?RWwycjRUU3NmS3lSRzYyYzVTRWdGYW9vdUVTRlkzdENhVEVUTXJWdi95YjBL?=
+ =?utf-8?B?TjF0aUd2WXh2WWk5dVpvWndsZU9JSHFOMzRwVHhiYVRFZEpVc01FMWlWbXRt?=
+ =?utf-8?B?S0VPM0oyRGxwRUN5Qjc4RkFLMDl3MmtnOWNYMkFDZi9ybW5yNVJFOXd5YXJD?=
+ =?utf-8?B?NzdlT1ZqU2RFb2ZKQkFwTTFUUkZ2RzZaR0xjbFZ2OTJtUmExV09IQk5JVmtF?=
+ =?utf-8?B?dWhRaFZQY1JRS3JFL0pVaUg0aERzbW1OWVhDajFyTFFGVWpVU1h4OWxGUnZz?=
+ =?utf-8?B?ZzluaHlsY3dzS1BSczV2bHFZckcxZ1MzRHZBbkpueGptbUFqU1pzQkdtdjl2?=
+ =?utf-8?B?cDdUUUVUN2c3aFVWaW0rWXAzZTdoL1lRZGV1TFZzc2NtUlUzRmQzS0tqYmZN?=
+ =?utf-8?B?NDErZnNzbmQ1bE5GcEZuSFFoS0NXYnJNOWhBOFRpdHViRUs4NjViTVByVTZ1?=
+ =?utf-8?Q?5/XDi/0q2+++6?=
 X-Forefront-Antispam-Report:
 	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CY5PR12MB6108.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(376014)(366016)(7053199007);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?MHRPZVBla2ZGQzZxczBLanFOWURvWCtqOVhnRWFwS2ZodllkQjl5K0JMN2o5?=
- =?utf-8?B?TEFXbzZtVHl5czJsK3BxTnlNdmJnTGFEMVg2VG1waC96aFVGTXYvRjZOeCs4?=
- =?utf-8?B?SVdkRlZZcEp2dkt2dUUwemI1TWtVWXErQ1IrQS9pZFp1U0ZaeTRRSnBwVGQx?=
- =?utf-8?B?Ync4eXpGZVhlVnU0b2NaKzgzQ0lUOGRpVW0xMzdWeGxrekJUMGlCYUVmVnN2?=
- =?utf-8?B?Vmk2ME0zczBSYVpNYVNJTHJmblE5SlI1d2dxdU00SVhhdTRvK29SOGEzUGZr?=
- =?utf-8?B?ZmpYL2ljS0xxWjd6SGZMUzdRdjRiNjRnRFRldm5WZmJvSmt3c0FqVDcxWmNJ?=
- =?utf-8?B?UnFUM3pFbjFvVXM0QTZhME12cHRIaHh1Z045SWZpbUJHdWhWb2xIc2lFK0dq?=
- =?utf-8?B?SUgwb2pNbFRNY2NscUxyY3N3M2N1eldMWmkvVVY0YXJXOWFQSERySVQ5S0dx?=
- =?utf-8?B?SnYyYkFIS3NPZk1aaFRPK1ZHdG14YWNvbEtDWEo2WndhV2tMczNtbjZORHZm?=
- =?utf-8?B?b1ZBUEs3Qlpmanl4NUZIQlROcGZrbjNMUUc2NTV6UXFvVTdZYzgvaVZDSDcw?=
- =?utf-8?B?Y1RHTjFYcGkvaFFlOFM2S0FRRUp1aGd4MEdpQVFraVNRdFhOOGhrREd0bTNQ?=
- =?utf-8?B?V3NVVlVqSm1YVnZRNjRtYmNZNDJCdzNJdFUwaWhBeDI2K0lsWEJhckNONzhr?=
- =?utf-8?B?U2I4cFBQNG9SVHRtb0Y1NXVPYUZQNS9yRnBDOVRWN24wTVl6Zi9PaHlveGRw?=
- =?utf-8?B?a0lwVHNYTFZDM09ya2Q0dXVKN0ptOUJBSFZLaWJnb2RubGxZV0hUUEVJZklV?=
- =?utf-8?B?WU05akFibEJUenlvYUovUmZCendJUm5PNWhZYnpqZGowSUdUaFJFRmdWVlJk?=
- =?utf-8?B?dWFyVmw4cWxENm1rMDEwK2VMTk1tODVNM290UEJCeFk3NWNnOHVNdkxqSTR5?=
- =?utf-8?B?MW9jU3gvdlYvTHl2N0JSeExDMHVnS2xkby9na3gvT2ZnNFdKTEJHRnk1MkdG?=
- =?utf-8?B?WnpaN3VQVVpvcUdnakxQRlhCZk0yNW9xbW82OXVXYkZQSHNuUDM5L0lSN2tZ?=
- =?utf-8?B?V3h3Y0c3dUZ4L2xZdDlqeDFoNENiVk1LS3YySW16clBSTDNJQlhudzgvaVBs?=
- =?utf-8?B?bCszcFAxWDlnYllxZWlqZXFMdnNnZDhKVWM2S1h5T0gwcW9NWUZIK0RDakcz?=
- =?utf-8?B?SmgzSG5mTzhtYVVUNWJ0ZXYvSjliTkdYVWVmcFBqc1hNQk4yakE3NVZqcXF0?=
- =?utf-8?B?SUlXUWJPYXkxb3FxYlNib0oyWlJHWDQ3TW1VOVV6aE9zRzRmaE9aalRzdHhu?=
- =?utf-8?B?YmhrOG5ld3NDVGFXMzRkb29PeFV3bFIzTzFFVi83TWR5bXZMNkpOZjZCZWlu?=
- =?utf-8?B?dFc3eSt2M3hTNGd1eEFmelgwQW1qSno3TSt4Tmxxb1Rma1BBbm4rN1JXakhX?=
- =?utf-8?B?S05YQ0NsTG14OThLT0tlWkNUMms1L3BadGRHMUNkblpOTzJaTG1ud0pWSHlz?=
- =?utf-8?B?TVBFNEVXdGk5aVc5dVZhNkVFbm1PN2VmYXIrVHFKMHNMZ2NHdTJ1dmd4S3ZF?=
- =?utf-8?B?UzhIeHdwcmQ5T3BvMXVMSVdTUExzWDVTWUFrMStEWm1IbUxuWXA3bGhTcGdL?=
- =?utf-8?B?SnlaMk1Jc1E0TDIrNFBQRU5DNlR2VFBMVGFUZW5VN0ZRd29ZcWlZd0xsaGpE?=
- =?utf-8?B?RFBocUdiVEFhMEQ5SFZndkdGcUhVTGVIWmVKTEpvUStyVlJreHJmNW9sS2VP?=
- =?utf-8?B?d0cwT1J3OWs2OUZNWFhIUThIT3JsV1ZIc0k0MWtCalhBOXRQZ0gzbG5Gd1hm?=
- =?utf-8?B?aDNyTUJrcDdkdWxuYlFSRjVObXZpVWxIU05jSGxVN0Z6bXYwL1Q0Nk1Ia2Nv?=
- =?utf-8?B?SysvL1gvL0EyZHQrK0MxYW15T2hzaFpiY1g4TVdNbnpCTDBFV0JTVkpac01l?=
- =?utf-8?B?c0pqSXFpdFVnZTRSR1hEUHBDSzhwSFZxOEp6S1B2cWZCejhvL3AxNDU2cWts?=
- =?utf-8?B?eGs1aWN3NFBkMmJ1eUlSWE5uTlRPK0MxMW9UNnFWQXhxaXdyS1djMmx6YTRo?=
- =?utf-8?B?SUdOdGVLUjlVQ01yNTVnTUthTnhNQWFmWFdZc205cElMUzJjYjBPUTVKWnd6?=
- =?utf-8?Q?/fAHY6vNiB8mJXjPOHWIf7O+1?=
+	=?utf-8?B?L2xqRWZkL25Uc1YybnZDVittKzhVZ09ZbmtPdHpLYkVYKzd4T2ZLQi9VeW5a?=
+ =?utf-8?B?VitoYS92R0hPQVVvNCtiT2Z5TFNLajFiK0p5NFkrTDNTUmJHcFNMSTNGUm8w?=
+ =?utf-8?B?VWU3bWxjZEh4T3ZVWGRVeFJTaWx1OVArWjNCTjVYMm1mNlorbFFDZlB5cHo5?=
+ =?utf-8?B?MlpQa1dvemZzRTA5RlNuVVZ1TUFhZDI5YkhKT1YrVFUwclA1MHRTS3pObVRx?=
+ =?utf-8?B?RWtsRWpheDFXb1c1ZEZ2aFQvVnZnQ2laa1g5SGFETlh4clFyYlRDL3dXaHRr?=
+ =?utf-8?B?bTJCZ1g3cDE5QU5YUlNwQjJxVlhjNk9DMENzVXJpbFE5RHJ0UDBLaXBwcnlU?=
+ =?utf-8?B?dTRoR1FqMmtpSDk1QmlqSnRpU2dWTkRLS1YzczFUQ3B4dEZNQzNqWlVBOHds?=
+ =?utf-8?B?ZklJMlB1dHBtR0tscDJRNm5GN1pSdVNiMlhhaG16VFJ3eDE3YVJWWFM4NDJx?=
+ =?utf-8?B?WU5HbW5TNmx2QWpDTXErcWlJa25FUWVHTGUrS2FKQzByUEY4TUdSK1d6NDZG?=
+ =?utf-8?B?RHVhL3pGNHZ5SkNOQ2JyeHdSSGI0THBSY0hHYmQ0Sml1TEl4OGY5WHJOSWgw?=
+ =?utf-8?B?N2JSVDVvSHg0Rkx6MWJQcFpCVXg5ZkJQckNLOHN1Z2FqaUZseG5iVVdOZTN3?=
+ =?utf-8?B?YVovcW5GMHIxNnhuMk9TMlp1akZTcXJEdWFMZ1lYc0l6N2h6OGJBVDlKcDlV?=
+ =?utf-8?B?R0FoNXNKTnpyZ0pQRHhLdW9YNTU3Y2swVktKVEFURHlDRWJjZTZ2L3hJayt3?=
+ =?utf-8?B?UVIzcjUrckkvSExqMWcyejBsaG9RSEFMTmdEV21NdDBTeXo0UEd1MGJpODBm?=
+ =?utf-8?B?ZlFyaHo0dTZsdFRoL0pQYVF1UkxKSGptMlNWR2pDTXA0djVaVzM4Qmt6TC9L?=
+ =?utf-8?B?SWJSZkNNRG1LWitIMzdRTDk0dTdvOW1MckNvMk5zM3JaN0wwNHVVSTNoSFhU?=
+ =?utf-8?B?cGRhNGVZcS9QVTFTQWlsQTNKYkt0TzUzMkdoemc4WFpITm9sa2RjVStZZEdF?=
+ =?utf-8?B?dXhnK3ZjMmt5VGZqRlF3TnVrWnAyZFByU2JSRWwxbEx6bkk5ZUZ3UGt5YW5N?=
+ =?utf-8?B?cHNKY2tHeU1NekkrYlUxRHFwcWo4OUxvaEw2d2V5ejdpRlhPTWxJTHRVSWdK?=
+ =?utf-8?B?QWtET090MnFMMkUvTzllZ1lUMTJDQ3RVbDNYOTdNYlZyS2g0dnRBY3JOcnlY?=
+ =?utf-8?B?SE1oSEpaUjYrbnR6eXhhcmxQa2NiSloyZnRxSGdOY2dOSitmQzFRc1RSbWwz?=
+ =?utf-8?B?V0NmKzJoVkZDZHI2VHJHdkNKR2l3WlVQUmlldjZiZUFkNTFpZElRN2pUWEIy?=
+ =?utf-8?B?L1BRRFZtZ3dBU1MyNTV6Y1ljTWpLeUc5YmxZczNmU3JqRDZCeTFPYVZ1T2hn?=
+ =?utf-8?B?Z0taSDBVVU9vSTRHWjk4SFRPaUIweXFoTzFJY2o5VlJwYk16T1B3a3gxakIv?=
+ =?utf-8?B?SzVFUXRDMFBLaENNeDk0Q0N2UDJyeWhjSjhZSDVRT3RUZEwwc3pFMVAxb0Mw?=
+ =?utf-8?B?RzdsL2o1Tlp5emxkT1ZKV0RiT005RTE3SnlpNUt4bUZrYStTdk5WT1BuaE11?=
+ =?utf-8?B?ajBYcnBXaFRHVEorSHkzM3VmMm1CNU9qcDRER1dDQjRBQkRJMFJ6QzdvTjRh?=
+ =?utf-8?B?NVFQcmUycUN0OVdHK3duNzFBM2VOemw3eC9nZ2hCY01LOVBMR3poZlVuMXAx?=
+ =?utf-8?B?bGtrOCtHWXZacFdTM1ArMGozZ3hCdDVZTFdlWWRlemhSNlFPLzRtQklyeldn?=
+ =?utf-8?B?WG1hWFo0T2tidElhdFJkMWVsUXBZZEk1cGpOa0xhV0JsaEZoZmEzemtNbHJT?=
+ =?utf-8?B?dXYyRDdjM0c5bEdsWlg4QWJSV1o3M0o4eWwvc0dqTmtCZGQ3a3VhWXpWU1Q5?=
+ =?utf-8?B?YVh1dTRKOWJFQkRmdzEzTzVZQ1NTeG1hMW85V1JIa3dMZWE5WDh5VGt2amkr?=
+ =?utf-8?B?UFY4NWRHbFo1ZlZFbUdoRDY3cDZzQzM3QmxocVB3eU9KcmdtaEd2bkF5eEJv?=
+ =?utf-8?B?ZmJHdDJsaHUwTGJqN0dqRnVpMklkRUQ1TEZyMXB1ZVNnVUJWb3dBcE9xUWt1?=
+ =?utf-8?B?UkV4WktFbnI0UUNvZm5kY1VvcmV6eU8wbzJGWGp1WTV5QVVjRHkzOEw2VTN3?=
+ =?utf-8?Q?z/5Y/jjFMsK/uBVoUOTztLoIH?=
 X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 981ef398-91f8-46e8-bea8-08dd2f627efc
+X-MS-Exchange-CrossTenant-Network-Message-Id: 10a8f22a-2d00-42b6-99a8-08dd2f628a66
 X-MS-Exchange-CrossTenant-AuthSource: CY5PR12MB6108.namprd12.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 07 Jan 2025 21:30:24.1282
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 07 Jan 2025 21:30:43.3547
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: caOiQRKTLyA23zGH8suOwJkwk7g1ZEVXa7MCfL5K5y19/nWjkFzgLeFMsjGxulQx8vOTEKusiOebXDXhUnXDPA==
+X-MS-Exchange-CrossTenant-UserPrincipalName: KWS1TziW47ADFtltVljxJc7fV1dqRQ8QdNeaw+dr/TBrnX0NbzHBrnks4TpRu3BoVatpRpm6hIcqfT6L3s5EhA==
 X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW5PR12MB5622
 
 On 1/5/2025 09:30, Kurt Borja wrote:
-> Split thermal features into a new DMI table to support upcoming file
-> split. While at it:
+> Reorder variable declaration from longest to shortest. Standarize
+> show/store method names of WMAX's sysfs groups.
 > 
-> Rename quirk_entry -> alienfx_features,
-> Rename quirks -> alienfx
-> 
-> and change hdmi_mux, amplifier and deepslp types to bool, because they are
-> already being implicitly used as bools.
-> 
+> Reviewed-by: Armin Wolf <W_Armin@gmx.de>
 > Signed-off-by: Kurt Borja <kuurtb@gmail.com>
 Reviewed-by: Mario Limonciello <mario.limonciello@amd.com>
 > ---
->   drivers/platform/x86/dell/alienware-wmi.c | 337 ++++++++++------------
->   1 file changed, 158 insertions(+), 179 deletions(-)
+>   drivers/platform/x86/dell/alienware-wmi.c | 67 +++++++++++------------
+>   1 file changed, 32 insertions(+), 35 deletions(-)
 > 
 > diff --git a/drivers/platform/x86/dell/alienware-wmi.c b/drivers/platform/x86/dell/alienware-wmi.c
-> index c75ad7ef3d54..e2fcb95b506c 100644
+> index 418abf46b593..190fee7539bf 100644
 > --- a/drivers/platform/x86/dell/alienware-wmi.c
 > +++ b/drivers/platform/x86/dell/alienware-wmi.c
-> @@ -113,102 +113,68 @@ static const enum platform_profile_option wmax_mode_to_platform_profile[THERMAL_
->   	[THERMAL_MODE_BASIC_PERFORMANCE]		= PLATFORM_PROFILE_PERFORMANCE,
->   };
->   
-> -struct quirk_entry {
-> +struct alienfx_quirks {
->   	u8 num_zones;
-> -	u8 hdmi_mux;
-> -	u8 amplifier;
-> -	u8 deepslp;
-> -	bool thermal;
-> -	bool gmode;
-> +	bool hdmi_mux;
-> +	bool amplifier;
-> +	bool deepslp;
->   };
->   
-> -static struct quirk_entry *quirks;
-> +static struct alienfx_quirks *alienfx;
->   
->   
-> -static struct quirk_entry quirk_inspiron5675 = {
-> +static struct alienfx_quirks quirk_inspiron5675 = {
->   	.num_zones = 2,
-> -	.hdmi_mux = 0,
-> -	.amplifier = 0,
-> -	.deepslp = 0,
-> -	.thermal = false,
-> -	.gmode = false,
-> +	.hdmi_mux = false,
-> +	.amplifier = false,
-> +	.deepslp = false,
->   };
->   
-> -static struct quirk_entry quirk_unknown = {
-> +static struct alienfx_quirks quirk_unknown = {
->   	.num_zones = 2,
-> -	.hdmi_mux = 0,
-> -	.amplifier = 0,
-> -	.deepslp = 0,
-> -	.thermal = false,
-> -	.gmode = false,
-> +	.hdmi_mux = false,
-> +	.amplifier = false,
-> +	.deepslp = false,
->   };
->   
-> -static struct quirk_entry quirk_x51_r1_r2 = {
-> +static struct alienfx_quirks quirk_x51_r1_r2 = {
->   	.num_zones = 3,
-> -	.hdmi_mux = 0,
-> -	.amplifier = 0,
-> -	.deepslp = 0,
-> -	.thermal = false,
-> -	.gmode = false,
-> +	.hdmi_mux = false,
-> +	.amplifier = false,
-> +	.deepslp = false,
->   };
->   
-> -static struct quirk_entry quirk_x51_r3 = {
-> +static struct alienfx_quirks quirk_x51_r3 = {
->   	.num_zones = 4,
-> -	.hdmi_mux = 0,
-> -	.amplifier = 1,
-> -	.deepslp = 0,
-> -	.thermal = false,
-> -	.gmode = false,
-> +	.hdmi_mux = false,
-> +	.amplifier = true,
-> +	.deepslp = false,
->   };
->   
-> -static struct quirk_entry quirk_asm100 = {
-> +static struct alienfx_quirks quirk_asm100 = {
->   	.num_zones = 2,
-> -	.hdmi_mux = 1,
-> -	.amplifier = 0,
-> -	.deepslp = 0,
-> -	.thermal = false,
-> -	.gmode = false,
-> +	.hdmi_mux = true,
-> +	.amplifier = false,
-> +	.deepslp = false,
->   };
->   
-> -static struct quirk_entry quirk_asm200 = {
-> +static struct alienfx_quirks quirk_asm200 = {
->   	.num_zones = 2,
-> -	.hdmi_mux = 1,
-> -	.amplifier = 0,
-> -	.deepslp = 1,
-> -	.thermal = false,
-> -	.gmode = false,
-> +	.hdmi_mux = true,
-> +	.amplifier = false,
-> +	.deepslp = true,
->   };
->   
-> -static struct quirk_entry quirk_asm201 = {
-> +static struct alienfx_quirks quirk_asm201 = {
->   	.num_zones = 2,
-> -	.hdmi_mux = 1,
-> -	.amplifier = 1,
-> -	.deepslp = 1,
-> -	.thermal = false,
-> -	.gmode = false,
-> -};
-> -
-> -static struct quirk_entry quirk_g_series = {
-> -	.num_zones = 2,
-> -	.hdmi_mux = 0,
-> -	.amplifier = 0,
-> -	.deepslp = 0,
-> -	.thermal = true,
-> -	.gmode = true,
-> -};
-> -
-> -static struct quirk_entry quirk_x_series = {
-> -	.num_zones = 2,
-> -	.hdmi_mux = 0,
-> -	.amplifier = 0,
-> -	.deepslp = 0,
-> -	.thermal = true,
-> -	.gmode = false,
-> +	.hdmi_mux = true,
-> +	.amplifier = true,
-> +	.deepslp = true,
->   };
->   
->   static int __init dmi_matched(const struct dmi_system_id *dmi)
+> @@ -725,14 +725,14 @@ static acpi_status alienware_wmax_command(void *in_args, size_t in_size,
+>    *	The HDMI mux sysfs node indicates the status of the HDMI input mux.
+>    *	It can toggle between standard system GPU output and HDMI input.
+>    */
+> -static ssize_t show_hdmi_cable(struct device *dev,
+> -			       struct device_attribute *attr, char *buf)
+> +static ssize_t cable_show(struct device *dev, struct device_attribute *attr,
+> +			  char *buf)
 >   {
-> -	quirks = dmi->driver_data;
-> +	alienfx = dmi->driver_data;
->   	return 1;
+> -	acpi_status status;
+> -	u32 out_data;
+>   	struct wmax_basic_args in_args = {
+>   		.arg = 0,
+>   	};
+> +	acpi_status status;
+> +	u32 out_data;
+>   	status =
+>   	    alienware_wmax_command(&in_args, sizeof(in_args),
+>   				   WMAX_METHOD_HDMI_CABLE, &out_data);
+> @@ -746,14 +746,14 @@ static ssize_t show_hdmi_cable(struct device *dev,
+>   	return sysfs_emit(buf, "unconnected connected [unknown]\n");
 >   }
 >   
-> @@ -240,42 +206,6 @@ static const struct dmi_system_id alienware_quirks[] __initconst = {
->   		},
->   		.driver_data = &quirk_asm201,
->   	},
-> -	{
-> -		.callback = dmi_matched,
-> -		.ident = "Alienware m17 R5",
-> -		.matches = {
-> -			DMI_MATCH(DMI_SYS_VENDOR, "Alienware"),
-> -			DMI_MATCH(DMI_PRODUCT_NAME, "Alienware m17 R5 AMD"),
-> -		},
-> -		.driver_data = &quirk_x_series,
-> -	},
-> -	{
-> -		.callback = dmi_matched,
-> -		.ident = "Alienware m18 R2",
-> -		.matches = {
-> -			DMI_MATCH(DMI_SYS_VENDOR, "Alienware"),
-> -			DMI_MATCH(DMI_PRODUCT_NAME, "Alienware m18 R2"),
-> -		},
-> -		.driver_data = &quirk_x_series,
-> -	},
-> -	{
-> -		.callback = dmi_matched,
-> -		.ident = "Alienware x15 R1",
-> -		.matches = {
-> -			DMI_MATCH(DMI_SYS_VENDOR, "Alienware"),
-> -			DMI_MATCH(DMI_PRODUCT_NAME, "Alienware x15 R1"),
-> -		},
-> -		.driver_data = &quirk_x_series,
-> -	},
-> -	{
-> -		.callback = dmi_matched,
-> -		.ident = "Alienware x17 R2",
-> -		.matches = {
-> -			DMI_MATCH(DMI_SYS_VENDOR, "Alienware"),
-> -			DMI_MATCH(DMI_PRODUCT_NAME, "Alienware x17 R2"),
-> -		},
-> -		.driver_data = &quirk_x_series,
-> -	},
->   	{
->   		.callback = dmi_matched,
->   		.ident = "Alienware X51 R1",
-> @@ -303,60 +233,6 @@ static const struct dmi_system_id alienware_quirks[] __initconst = {
->   		},
->   		.driver_data = &quirk_x51_r3,
->   	},
-> -	{
-> -		.callback = dmi_matched,
-> -		.ident = "Dell Inc. G15 5510",
-> -		.matches = {
-> -			DMI_MATCH(DMI_SYS_VENDOR, "Dell Inc."),
-> -			DMI_MATCH(DMI_PRODUCT_NAME, "Dell G15 5510"),
-> -		},
-> -		.driver_data = &quirk_g_series,
-> -	},
-> -	{
-> -		.callback = dmi_matched,
-> -		.ident = "Dell Inc. G15 5511",
-> -		.matches = {
-> -			DMI_MATCH(DMI_SYS_VENDOR, "Dell Inc."),
-> -			DMI_MATCH(DMI_PRODUCT_NAME, "Dell G15 5511"),
-> -		},
-> -		.driver_data = &quirk_g_series,
-> -	},
-> -	{
-> -		.callback = dmi_matched,
-> -		.ident = "Dell Inc. G15 5515",
-> -		.matches = {
-> -			DMI_MATCH(DMI_SYS_VENDOR, "Dell Inc."),
-> -			DMI_MATCH(DMI_PRODUCT_NAME, "Dell G15 5515"),
-> -		},
-> -		.driver_data = &quirk_g_series,
-> -	},
-> -	{
-> -		.callback = dmi_matched,
-> -		.ident = "Dell Inc. G3 3500",
-> -		.matches = {
-> -			DMI_MATCH(DMI_SYS_VENDOR, "Dell Inc."),
-> -			DMI_MATCH(DMI_PRODUCT_NAME, "G3 3500"),
-> -		},
-> -		.driver_data = &quirk_g_series,
-> -	},
-> -	{
-> -		.callback = dmi_matched,
-> -		.ident = "Dell Inc. G3 3590",
-> -		.matches = {
-> -			DMI_MATCH(DMI_SYS_VENDOR, "Dell Inc."),
-> -			DMI_MATCH(DMI_PRODUCT_NAME, "G3 3590"),
-> -		},
-> -		.driver_data = &quirk_g_series,
-> -	},
-> -	{
-> -		.callback = dmi_matched,
-> -		.ident = "Dell Inc. G5 5500",
-> -		.matches = {
-> -			DMI_MATCH(DMI_SYS_VENDOR, "Dell Inc."),
-> -			DMI_MATCH(DMI_PRODUCT_NAME, "G5 5500"),
-> -		},
-> -		.driver_data = &quirk_g_series,
-> -	},
->   	{
->   		.callback = dmi_matched,
->   		.ident = "Dell Inc. Inspiron 5675",
-> @@ -431,6 +307,103 @@ struct alienfx_platdata {
->   
->   static u8 interface;
->   
-> +struct awcc_quirks {
-> +	bool gmode;
-> +};
-> +
-> +static struct awcc_quirks g_series_quirks = {
-> +	.gmode = true,
-> +};
-> +
-> +static struct awcc_quirks generic_quirks = {
-> +	.gmode = false,
-> +};
-> +
-> +static const struct dmi_system_id awcc_dmi_table[] __initconst = {
-> +	{
-> +		.ident = "Alienware m17 R5",
-> +		.matches = {
-> +			DMI_MATCH(DMI_SYS_VENDOR, "Alienware"),
-> +			DMI_MATCH(DMI_PRODUCT_NAME, "Alienware m17 R5 AMD"),
-> +		},
-> +		.driver_data = &generic_quirks,
-> +	},
-> +	{
-> +		.ident = "Alienware m18 R2",
-> +		.matches = {
-> +			DMI_MATCH(DMI_SYS_VENDOR, "Alienware"),
-> +			DMI_MATCH(DMI_PRODUCT_NAME, "Alienware m18 R2"),
-> +		},
-> +		.driver_data = &generic_quirks,
-> +	},
-> +	{
-> +		.ident = "Alienware x15 R1",
-> +		.matches = {
-> +			DMI_MATCH(DMI_SYS_VENDOR, "Alienware"),
-> +			DMI_MATCH(DMI_PRODUCT_NAME, "Alienware x15 R1"),
-> +		},
-> +		.driver_data = &generic_quirks,
-> +	},
-> +	{
-> +		.ident = "Alienware x17 R2",
-> +		.matches = {
-> +			DMI_MATCH(DMI_SYS_VENDOR, "Alienware"),
-> +			DMI_MATCH(DMI_PRODUCT_NAME, "Alienware x17 R2"),
-> +		},
-> +		.driver_data = &generic_quirks,
-> +	},
-> +	{
-> +		.ident = "Dell Inc. G15 5510",
-> +		.matches = {
-> +			DMI_MATCH(DMI_SYS_VENDOR, "Dell Inc."),
-> +			DMI_MATCH(DMI_PRODUCT_NAME, "Dell G15 5510"),
-> +		},
-> +		.driver_data = &g_series_quirks,
-> +	},
-> +	{
-> +		.ident = "Dell Inc. G15 5511",
-> +		.matches = {
-> +			DMI_MATCH(DMI_SYS_VENDOR, "Dell Inc."),
-> +			DMI_MATCH(DMI_PRODUCT_NAME, "Dell G15 5511"),
-> +		},
-> +		.driver_data = &g_series_quirks,
-> +	},
-> +	{
-> +		.ident = "Dell Inc. G15 5515",
-> +		.matches = {
-> +			DMI_MATCH(DMI_SYS_VENDOR, "Dell Inc."),
-> +			DMI_MATCH(DMI_PRODUCT_NAME, "Dell G15 5515"),
-> +		},
-> +		.driver_data = &g_series_quirks,
-> +	},
-> +	{
-> +		.ident = "Dell Inc. G3 3500",
-> +		.matches = {
-> +			DMI_MATCH(DMI_SYS_VENDOR, "Dell Inc."),
-> +			DMI_MATCH(DMI_PRODUCT_NAME, "G3 3500"),
-> +		},
-> +		.driver_data = &g_series_quirks,
-> +	},
-> +	{
-> +		.ident = "Dell Inc. G3 3590",
-> +		.matches = {
-> +			DMI_MATCH(DMI_SYS_VENDOR, "Dell Inc."),
-> +			DMI_MATCH(DMI_PRODUCT_NAME, "G3 3590"),
-> +		},
-> +		.driver_data = &g_series_quirks,
-> +	},
-> +	{
-> +		.ident = "Dell Inc. G5 5500",
-> +		.matches = {
-> +			DMI_MATCH(DMI_SYS_VENDOR, "Dell Inc."),
-> +			DMI_MATCH(DMI_PRODUCT_NAME, "G5 5500"),
-> +		},
-> +		.driver_data = &g_series_quirks,
-> +	},
-> +};
-> +
-> +struct awcc_quirks *awcc;
-> +
->   static int alienware_wmi_command(struct wmi_device *wdev, u32 method_id,
->   				 void *in_args, size_t in_size, u32 *out_data)
+> -static ssize_t show_hdmi_source(struct device *dev,
+> -				struct device_attribute *attr, char *buf)
+> +static ssize_t source_show(struct device *dev, struct device_attribute *attr,
+> +			   char *buf)
 >   {
-> @@ -612,7 +585,7 @@ static DEVICE_ATTR_RW(lighting_control_state);
->   static umode_t zone_attr_visible(struct kobject *kobj,
->   				 struct attribute *attr, int n)
->   {
-> -	if (n < quirks->num_zones + 1)
-> +	if (n < alienfx->num_zones + 1)
->   		return attr->mode;
->   
->   	return 0;
-> @@ -620,7 +593,7 @@ static umode_t zone_attr_visible(struct kobject *kobj,
->   
->   static bool zone_group_visible(struct kobject *kobj)
->   {
-> -	return quirks->num_zones > 0;
-> +	return alienfx->num_zones > 0;
+> -	acpi_status status;
+> -	u32 out_data;
+>   	struct wmax_basic_args in_args = {
+>   		.arg = 0,
+>   	};
+> +	acpi_status status;
+> +	u32 out_data;
+>   	status =
+>   	    alienware_wmax_command(&in_args, sizeof(in_args),
+>   				   WMAX_METHOD_HDMI_STATUS, &out_data);
+> @@ -768,12 +768,11 @@ static ssize_t show_hdmi_source(struct device *dev,
+>   	return sysfs_emit(buf, "input gpu [unknown]\n");
 >   }
->   DEFINE_SYSFS_GROUP_VISIBLE(zone);
 >   
-> @@ -746,7 +719,7 @@ static DEVICE_ATTR_RW(source);
+> -static ssize_t toggle_hdmi_source(struct device *dev,
+> -				  struct device_attribute *attr,
+> -				  const char *buf, size_t count)
+> +static ssize_t source_store(struct device *dev, struct device_attribute *attr,
+> +			    const char *buf, size_t count)
+>   {
+> -	acpi_status status;
+>   	struct wmax_basic_args args;
+> +	acpi_status status;
+>   	if (strcmp(buf, "gpu\n") == 0)
+>   		args.arg = 1;
+>   	else if (strcmp(buf, "input\n") == 0)
+> @@ -791,9 +790,8 @@ static ssize_t toggle_hdmi_source(struct device *dev,
+>   	return count;
+>   }
+>   
+> -static DEVICE_ATTR(cable, S_IRUGO, show_hdmi_cable, NULL);
+> -static DEVICE_ATTR(source, S_IRUGO | S_IWUSR, show_hdmi_source,
+> -		   toggle_hdmi_source);
+> +static DEVICE_ATTR_RO(cable);
+> +static DEVICE_ATTR_RW(source);
 >   
 >   static bool hdmi_group_visible(struct kobject *kobj)
 >   {
-> -	return quirks->hdmi_mux;
-> +	return alienfx->hdmi_mux;
+> @@ -818,14 +816,14 @@ static const struct attribute_group hdmi_attribute_group = {
+>    * - Currently supports reading cable status
+>    * - Leaving expansion room to possibly support dock/undock events later
+>    */
+> -static ssize_t show_amplifier_status(struct device *dev,
+> -				     struct device_attribute *attr, char *buf)
+> +static ssize_t status_show(struct device *dev, struct device_attribute *attr,
+> +			   char *buf)
+>   {
+> -	acpi_status status;
+> -	u32 out_data;
+>   	struct wmax_basic_args in_args = {
+>   		.arg = 0,
+>   	};
+> +	acpi_status status;
+> +	u32 out_data;
+>   	status =
+>   	    alienware_wmax_command(&in_args, sizeof(in_args),
+>   				   WMAX_METHOD_AMPLIFIER_CABLE, &out_data);
+> @@ -839,7 +837,7 @@ static ssize_t show_amplifier_status(struct device *dev,
+>   	return sysfs_emit(buf, "unconnected connected [unknown]\n");
 >   }
->   DEFINE_SIMPLE_SYSFS_GROUP_VISIBLE(hdmi);
 >   
-> @@ -795,7 +768,7 @@ static DEVICE_ATTR_RO(status);
+> -static DEVICE_ATTR(status, S_IRUGO, show_amplifier_status, NULL);
+> +static DEVICE_ATTR_RO(status);
 >   
 >   static bool amplifier_group_visible(struct kobject *kobj)
 >   {
-> -	return quirks->amplifier;
-> +	return alienfx->amplifier;
+> @@ -862,14 +860,14 @@ static const struct attribute_group amplifier_attribute_group = {
+>    * Deep Sleep Control support
+>    * - Modifies BIOS setting for deep sleep control allowing extra wakeup events
+>    */
+> -static ssize_t show_deepsleep_status(struct device *dev,
+> -				     struct device_attribute *attr, char *buf)
+> +static ssize_t deepsleep_show(struct device *dev, struct device_attribute *attr,
+> +			      char *buf)
+>   {
+> -	acpi_status status;
+> -	u32 out_data;
+>   	struct wmax_basic_args in_args = {
+>   		.arg = 0,
+>   	};
+> +	acpi_status status;
+> +	u32 out_data;
+>   	status = alienware_wmax_command(&in_args, sizeof(in_args),
+>   					WMAX_METHOD_DEEP_SLEEP_STATUS, &out_data);
+>   	if (ACPI_SUCCESS(status)) {
+> @@ -884,12 +882,11 @@ static ssize_t show_deepsleep_status(struct device *dev,
+>   	return sysfs_emit(buf, "disabled s5 s5_s4 [unknown]\n");
 >   }
->   DEFINE_SIMPLE_SYSFS_GROUP_VISIBLE(amplifier);
 >   
-> @@ -868,7 +841,7 @@ static DEVICE_ATTR_RW(deepsleep);
+> -static ssize_t toggle_deepsleep(struct device *dev,
+> -				struct device_attribute *attr,
+> -				const char *buf, size_t count)
+> +static ssize_t deepsleep_store(struct device *dev, struct device_attribute *attr,
+> +			       const char *buf, size_t count)
+>   {
+> -	acpi_status status;
+>   	struct wmax_basic_args args;
+> +	acpi_status status;
+>   
+>   	if (strcmp(buf, "disabled\n") == 0)
+>   		args.arg = 0;
+> @@ -908,7 +905,7 @@ static ssize_t toggle_deepsleep(struct device *dev,
+>   	return count;
+>   }
+>   
+> -static DEVICE_ATTR(deepsleep, S_IRUGO | S_IWUSR, show_deepsleep_status, toggle_deepsleep);
+> +static DEVICE_ATTR_RW(deepsleep);
 >   
 >   static bool deepsleep_group_visible(struct kobject *kobj)
 >   {
-> -	return quirks->deepslp;
-> +	return alienfx->deepslp;
->   }
->   DEFINE_SIMPLE_SYSFS_GROUP_VISIBLE(deepsleep);
+> @@ -956,13 +953,13 @@ static bool is_wmax_thermal_code(u32 code)
 >   
-> @@ -1009,7 +982,7 @@ static int thermal_profile_set(struct platform_profile_handler *pprof,
+>   static int wmax_thermal_information(u8 operation, u8 arg, u32 *out_data)
 >   {
->   	struct awcc_priv *priv = container_of(pprof, struct awcc_priv, pp_handler);
+> -	acpi_status status;
+>   	struct wmax_u32_args in_args = {
+>   		.operation = operation,
+>   		.arg1 = arg,
+>   		.arg2 = 0,
+>   		.arg3 = 0,
+>   	};
+> +	acpi_status status;
 >   
-> -	if (quirks->gmode) {
-> +	if (awcc->gmode) {
->   		u32 gmode_status;
->   		int ret;
+>   	status = alienware_wmax_command(&in_args, sizeof(in_args),
+>   					WMAX_METHOD_THERMAL_INFORMATION,
+> @@ -979,13 +976,13 @@ static int wmax_thermal_information(u8 operation, u8 arg, u32 *out_data)
 >   
-> @@ -1075,7 +1048,7 @@ static int create_thermal_profile(struct wmi_device *wdev)
->   	if (bitmap_empty(priv->pp_handler.choices, PLATFORM_PROFILE_LAST))
->   		return -ENODEV;
+>   static int wmax_thermal_control(u8 profile)
+>   {
+> -	acpi_status status;
+>   	struct wmax_u32_args in_args = {
+>   		.operation = WMAX_OPERATION_ACTIVATE_PROFILE,
+>   		.arg1 = profile,
+>   		.arg2 = 0,
+>   		.arg3 = 0,
+>   	};
+> +	acpi_status status;
+>   	u32 out_data;
 >   
-> -	if (quirks->gmode) {
-> +	if (awcc->gmode) {
->   		priv->supported_thermal_profiles[PLATFORM_PROFILE_PERFORMANCE] =
->   			WMAX_THERMAL_MODE_GMODE;
+>   	status = alienware_wmax_command(&in_args, sizeof(in_args),
+> @@ -1003,13 +1000,13 @@ static int wmax_thermal_control(u8 profile)
 >   
-> @@ -1306,7 +1279,7 @@ static int wmax_wmi_probe(struct wmi_device *wdev, const void *context)
->   	struct platform_device *pdev;
+>   static int wmax_game_shift_status(u8 operation, u32 *out_data)
+>   {
+> -	acpi_status status;
+>   	struct wmax_u32_args in_args = {
+>   		.operation = operation,
+>   		.arg1 = 0,
+>   		.arg2 = 0,
+>   		.arg3 = 0,
+>   	};
+> +	acpi_status status;
+>   
+>   	status = alienware_wmax_command(&in_args, sizeof(in_args),
+>   					WMAX_METHOD_GAME_SHIFT_STATUS,
+> @@ -1078,11 +1075,11 @@ static int thermal_profile_set(struct platform_profile_handler *pprof,
+>   
+>   static int create_thermal_profile(struct platform_device *platform_device)
+>   {
+> -	u32 out_data;
+> +	enum platform_profile_option profile;
+> +	enum wmax_thermal_mode mode;
+>   	u8 sys_desc[4];
+>   	u32 first_mode;
+> -	enum wmax_thermal_mode mode;
+> -	enum platform_profile_option profile;
+> +	u32 out_data;
 >   	int ret;
 >   
-> -	if (quirks->thermal) {
-> +	if (awcc) {
->   		return alienware_awcc_setup(wdev);
->   	} else {
->   		ret = alienware_alienfx_setup(&pdata);
-> @@ -1327,7 +1300,7 @@ static void wmax_wmi_remove(struct wmi_device *wdev)
->   {
->   	struct platform_device *pdev;
->   
-> -	if (!quirks->thermal) {
-> +	if (!awcc) {
->   		pdev = dev_get_drvdata(&wdev->dev);
->   
->   		device_remove_groups(&pdev->dev, wmax_alienfx_groups);
-> @@ -1353,6 +1326,22 @@ static struct wmi_driver alienware_wmax_wmi_driver = {
->   
->   static int __init alienware_wmax_wmi_init(void)
->   {
-> +	const struct dmi_system_id *id;
-> +
-> +	id = dmi_first_match(awcc_dmi_table);
-> +	if (id)
-> +		awcc = id->driver_data;
-> +
-> +	if (force_platform_profile)
-> +		awcc = &generic_quirks;
-> +
-> +	if (force_gmode) {
-> +		if (awcc)
-> +			awcc->gmode = true;
-> +		else
-> +			pr_warn("force_gmode requires platform profile support\n");
-> +	}
-> +
->   	return wmi_driver_register(&alienware_wmax_wmi_driver);
->   }
->   
-> @@ -1366,18 +1355,8 @@ static int __init alienware_wmi_init(void)
->   	int ret;
->   
->   	dmi_check_system(alienware_quirks);
-> -	if (quirks == NULL)
-> -		quirks = &quirk_unknown;
-> -
-> -	if (force_platform_profile)
-> -		quirks->thermal = true;
-> -
-> -	if (force_gmode) {
-> -		if (quirks->thermal)
-> -			quirks->gmode = true;
-> -		else
-> -			pr_warn("force_gmode requires platform profile support\n");
-> -	}
-> +	if (!alienfx)
-> +		alienfx = &quirk_unknown;
->   
->   	if (wmi_has_guid(WMAX_CONTROL_GUID)) {
->   		interface = WMAX;
+>   	ret = wmax_thermal_information(WMAX_OPERATION_SYS_DESCRIPTION,
 
