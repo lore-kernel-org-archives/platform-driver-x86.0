@@ -1,103 +1,147 @@
-Received: from mail-pl1-f179.google.com (mail-pl1-f179.google.com [209.85.214.179])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from fhigh-a3-smtp.messagingengine.com (fhigh-a3-smtp.messagingengine.com [103.168.172.154])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D35215442C;
-	Tue,  7 Jan 2025 02:15:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DEC122594A5;
+	Tue,  7 Jan 2025 02:19:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.154
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736216145; cv=none; b=pVJvCCP6PdXVus/6ruL+jskp0Gb7mL6FcEX5Cur2YppMzZ295rSnotGXV7yEbmqawNJsirvsapCKwuYflIv2qfH+Pe6TX4FfeCtP7PsN2suFyFQHlX10mpPWzfevcoA2s8vzzxyVu1n4g9wusE8RNPsqzMKUUweqCEbEhvCZpcU=
+	t=1736216381; cv=none; b=uCS8cG8NgvnUezIdX1R6f15OESB5QZTiKQ1f7r+wiCyREV4PDFaUjA5DP0fPLR/FBqpLN/1OxFG3+fGog1c6fy1a5//i16QmX9e3H4UZwJLesqV2+ks/cOuHDhwEUl9ctHc+Xbj5W7tHZYqqFqHN8eLQz0JRa8Y3xii/s//0nog=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736216145; c=relaxed/simple;
-	bh=5WBulsK4IcIngHb57Zw0IqkxrAaHZAwEajneUW8KAVM=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=mSa9i/VioBjqorEBTEa1MvkaPgIx2T0RCaYqax+3qTvkTrXLVVYKemXRGt7yy3hwUh56jWbTnhxP/BaslYdDpT/l8LAhp+xlZ0aJ69TtZuQJh3AFAMtsP4ax2rB72LOK2kaJKJR3YtIJJEyE6SH5XM9/4uWMUjKdaOgXcDqfgSc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=DQferdPz; arc=none smtp.client-ip=209.85.214.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1736216381; c=relaxed/simple;
+	bh=whxcJEUUdxrpr853/By+jQ/3XvE0gYgglj51JD5j1jQ=;
+	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
+	 Subject:Content-Type; b=C/8W3vtv6YJ9Fto9tDw5gM3Llf6ez6fEudLLy1yA+H1TYSS6SgsFtDV8MB8qLsSFmH8ICej78DzsXMxnrydRmHHxF/7VHGNV5SSS7bxrcjiZuZ4i2IDqVSt37WM8c3myOyozAWCqYW6N50fSDBhYSpQtb4VOLcBG6F9o4X0EYt0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=squebb.ca; spf=pass smtp.mailfrom=squebb.ca; dkim=pass (2048-bit key) header.d=squebb.ca header.i=@squebb.ca header.b=1ey1cL42; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=ZGt1F8RM; arc=none smtp.client-ip=103.168.172.154
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=squebb.ca
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=squebb.ca
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DQferdPz"
-Received: by mail-pl1-f179.google.com with SMTP id d9443c01a7336-216728b1836so198260475ad.0;
-        Mon, 06 Jan 2025 18:15:41 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1736216140; x=1736820940; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=3ONS68bugKIHnAxtWThyeupsd8Td3ewB7zCmh+0VQBY=;
-        b=DQferdPzXBz7XMngkc/OlCgrInnXmeyxfpgU8kTVha1jIYWUl2O8qlpr5VayCbLIMX
-         GokFYyUmQ4D+S8L56xA6kF/M5xI5+kMtKuAL7IGzuJhe/Q17B6uRS8SPz28RYMWOGUpb
-         q5GUq6nhPF/qxzXU7Fmc/Y7LeiSIuF2HC6i/RnoDh4TG2uah3s0mXdm4r0stC4UVtgRS
-         /A7cOVKlwLO9HvvhXCBVQ1Ipqz7KBOJ4KiLavjiYeA4T12xpQGv9AF4x2X54gqkXdMa8
-         QZVni+9aBDsPBwuQZSs2Oq8YlD2Nyb7LEi/L3Ui0q8GEsYUfaB8KlqmqcNyMrEtHkKoc
-         OwOQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1736216140; x=1736820940;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=3ONS68bugKIHnAxtWThyeupsd8Td3ewB7zCmh+0VQBY=;
-        b=nzDI3ymzhkgOlYUlY8DP09uxkWUNYvv/7ckUpgw26Q+jou3zVTzklt/iSQSaLGMUvD
-         nHluiPUPtZBv/P2WME9iJkZ2xIqai5VEo2CzPGnyuL5UmtngYAFGWBVJhdNCVmoL3ayl
-         TMqu3mrfzuS5xXTVGdkQRiEvGRsF9K2zfTrLnmtFxzIv3f+5PiKqGKFHzZKJeDjbuAvW
-         BjMD8igNm/aQkP208zMPTv0G1yDJzQeHdURaVP+CC9Vg+b8ayu/IilpbA/hboHkMWW1s
-         i7HCalXmJNAuE+xIH4NM46buoEVF3Vs1YjT5mSk/mzVFNG8WRdlfnNdrLQvq6UENCtLz
-         lE8A==
-X-Forwarded-Encrypted: i=1; AJvYcCUHuhCm0wtGv4/ib+wmyxYQ8rOufiJ/QwjmQVdVQcbJJfzWm+uOJWBnJ1qlxEa16r4snu1YKLlg73E2u3R4ARiooe/DzQ==@vger.kernel.org, AJvYcCW12JxyBWqu4pDrEo/1u47F/2f9pUU0JXnYyjmIR4HUZdFJu+UaeHAeW42Gmi/ZVjuamvGN9YF/8Kh2eM4=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwJs7cNKCB5ez1KinWR5BW8m8oCQt0TGBn2SL0zdu3g4v6kxUKm
-	h3t2zsOAFjETGjy5+FuX/Bs2GFWAeunXG25gAkWphNxaDzlYlwpk
-X-Gm-Gg: ASbGncs6bx9WIZeiAId3pfD5+v7YBplg9suUsCJaL2ZjC8DVOFoFcQliqqU8sgogkns
-	Te0vCbEWm1WSCH9cndwRn9ETZaqTlxz0Tc3TTB3qKMOucabVv++B38lBFnAXiYuKa3Z2uIDpOxW
-	hlvdxGrWgNWiH9iDcl+EFzpCrj410bF7sLPsNqyaUhotF9nE1f4tS/2PGfCtY7MHp04T2x5dXC5
-	HGtP7k38P0JYvZ0/ZbzmPKdZwtE9pSRH6bVUqZV1ejYUYPJLZZiY2t8XNH9YX5SWuASYTSxV4bV
-	tuJ4MGe63e+x6ICv5TUyhbTUeEdJwquYlw6I7GfcUtkxmoqV
-X-Google-Smtp-Source: AGHT+IGa7C75rUKAJpnb5wgm/IovSZBfNO/MIHo+afXqVno43rno1rmvpHt5hwch2YwyPuf0JxFkWg==
-X-Received: by 2002:aa7:9319:0:b0:725:ef4b:de30 with SMTP id d2e1a72fcca58-72abde2ff67mr79923250b3a.14.1736216139596;
-        Mon, 06 Jan 2025 18:15:39 -0800 (PST)
-Received: from nitin-ThinkPad-X1-2-in-1-Gen-9.. (127.37.178.217.static.user.transix.jp. [217.178.37.127])
-        by smtp.googlemail.com with ESMTPSA id d2e1a72fcca58-72ac3214f81sm30184169b3a.166.2025.01.06.18.15.36
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 06 Jan 2025 18:15:39 -0800 (PST)
-From: Nitin Joshi <nitjoshi@gmail.com>
-To: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	Hans de Goede <hdegoede@redhat.com>
-Cc: Mark Pearson <mpearson-lenovo@squebb.ca>,
-	platform-driver-x86@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Nitin Joshi <nitjoshi@gmail.com>
-Subject: [PATCH] platform/x86: thinkpad-acpi: replace strcpy with strscpy
-Date: Tue,  7 Jan 2025 11:15:07 +0900
-Message-ID: <20250107021507.4786-1-nitjoshi@gmail.com>
-X-Mailer: git-send-email 2.43.0
+	dkim=pass (2048-bit key) header.d=squebb.ca header.i=@squebb.ca header.b="1ey1cL42";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="ZGt1F8RM"
+Received: from phl-compute-02.internal (phl-compute-02.phl.internal [10.202.2.42])
+	by mailfhigh.phl.internal (Postfix) with ESMTP id E29D111402C7;
+	Mon,  6 Jan 2025 21:19:37 -0500 (EST)
+Received: from phl-imap-10 ([10.202.2.85])
+  by phl-compute-02.internal (MEProxy); Mon, 06 Jan 2025 21:19:37 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=squebb.ca; h=cc
+	:cc:content-transfer-encoding:content-type:content-type:date
+	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to; s=fm3; t=1736216377;
+	 x=1736302777; bh=whxcJEUUdxrpr853/By+jQ/3XvE0gYgglj51JD5j1jQ=; b=
+	1ey1cL42WMzvARuyEMRIBMC9LrPdi4v1z8kYxhu9HtWXiDqYgLAPEM/YJYaJepdQ
+	42viM+jxqTLa9BjxvMk7vs0pvvyq6Quft1YhdN3rFHa8SO3EcYmNe9WbJkqo9OHV
+	CSvRpjpp4tWrAZR6nPlq53fH0FBB93pmYkoSSL09vH5dwl4/nFLSoon7ZSX/dnhj
+	FQaHqdPUY4G6n59yzCWOioEOpeB9GHoANzowt4vmpYEP7kb1Y95jJ84JTMnai15S
+	oFimElCd6b9YthOfSm9Zh0FnCVELSlI2ERJE16/l6nknsijXgHgiwfJc6LOJIGwi
+	nzT344WhGwaBMP8BFyTdpw==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:content-type:date:date:feedback-id:feedback-id
+	:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to:x-me-proxy
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=1736216377; x=
+	1736302777; bh=whxcJEUUdxrpr853/By+jQ/3XvE0gYgglj51JD5j1jQ=; b=Z
+	Gt1F8RM2WkZ6kPyG8jDXCR0gFgMelur824ObxECH0o+99a+rkOUVCwhKT/VgwKgG
+	L49JiS1yRKuuCKO22JKT/CHpHLxTcAL67Sp+pneD/kg7mnLUxGvOjB+bSEol8i9S
+	uPo5IwvIB9TNe9a9Nofhs2IuARRdHO5/F65oKqXgBN4cFK43sZSNQ8aRgfnTcG9/
+	vKZLS0D26ZKxa2t0fQg8OHqJEUl2PxZssQP0A56oEf9jL+vJf+Lz5AJslS4ebaoQ
+	45okAxLdEjW2TUMYnnhGAUJhl2jQh1oIpEPEn0uacPjYTDjwnMYaYWo2zyxopMao
+	1Rxof4lVitvQfXONL4J4A==
+X-ME-Sender: <xms:N498Z2nHU_4oIfOt9pJSv0DjOhtM-b3Zz8jYeDTPrH2CQedZRZX9nQ>
+    <xme:N498Z91ZlrnjbDpVHSGg5Crg5q9SyDUtI8q69U7NQvluvKljUn8HFCmU3gF-z1JPX
+    zpK3jlSJhI1kPvk3Pw>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefuddrudeguddggeeiucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggvpdfu
+    rfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnh
+    htshculddquddttddmnecujfgurhepofggfffhvfevkfgjfhfutgfgsehtjeertdertddt
+    necuhfhrohhmpedfofgrrhhkucfrvggrrhhsohhnfdcuoehmphgvrghrshhonhdqlhgvnh
+    hovhhosehsqhhuvggssgdrtggrqeenucggtffrrghtthgvrhhnpefhuedvheetgeehtdeh
+    tdevheduvdejjefggfeijedvgeekhfefleehkeehvdffheenucevlhhushhtvghrufhiii
+    gvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpehmphgvrghrshhonhdqlhgvnhhovhho
+    sehsqhhuvggssgdrtggrpdhnsggprhgtphhtthhopedvkedpmhhouggvpehsmhhtphhouh
+    htpdhrtghpthhtohepshhhhigrmhdqshhunhgurghrrdhsqdhksegrmhgurdgtohhmpdhr
+    tghpthhtohepmhgrrhhiohdrlhhimhhonhgtihgvlhhlohesrghmugdrtghomhdprhgtph
+    htthhopehurdhklhgvihhnvgdqkhhovghnihhgsegsrgihlhhisghrvgdrtghomhdprhgt
+    phhtthhopehikhgvrdhprghnsegtrghnohhnihgtrghlrdgtohhmpdhrtghpthhtohepug
+    gvlhhlrdgtlhhivghnthdrkhgvrhhnvghlseguvghllhdrtghomhdprhgtphhtthhopegr
+    lhgvgigsvghlmhegkeesghhmrghilhdrtghomhdprhgtphhtthhopegtohhlihhnrdhird
+    hkihhnghesghhmrghilhdrtghomhdprhgtphhtthhopegtohhrvghnthhinhdrtghhrghr
+    hiesghhmrghilhdrtghomhdprhgtphhtthhopeguvghrvghkjhhohhhnrdgtlhgrrhhkse
+    hgmhgrihhlrdgtohhm
+X-ME-Proxy: <xmx:N498Z0op3Y51SDYOkqk2ZtRdIMc3zl_Rj4aL8GdpBtAKS1PuWu4WYg>
+    <xmx:N498Z6l8XgiHhtNWEO08cmrs6tuPYrtJZ98SACGJ-AgIuRRydvNOlw>
+    <xmx:N498Z02uSipbzfLSVNWbIiB5OWdiFHmHWLWaQf4EhhsJw4B18mFmXQ>
+    <xmx:N498ZxsBSBBjfGCv60L6kw_rvshlfAmLt26kisLRkmnressUJp1b6w>
+    <xmx:OY98Z2HXH_teyoKA0gRjuLXUOjuzfNumWAgrVkQ-X9EycfIIeJIoCg9n>
+Feedback-ID: ibe194615:Fastmail
+Received: by mailuser.phl.internal (Postfix, from userid 501)
+	id F00793C0066; Mon,  6 Jan 2025 21:19:34 -0500 (EST)
+X-Mailer: MessagingEngine.com Webmail Interface
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Date: Mon, 06 Jan 2025 21:19:14 -0500
+From: "Mark Pearson" <mpearson-lenovo@squebb.ca>
+To: "Kurt Borja" <kuurtb@gmail.com>,
+ "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>
+Cc: josh@joshuagrisham.com, hridesh699@gmail.com,
+ "Derek J . Clark" <derekjohn.clark@gmail.com>,
+ "Rafael J. Wysocki" <rafael@kernel.org>, "Len Brown" <lenb@kernel.org>,
+ "Maximilian Luz" <luzmaximilian@gmail.com>,
+ "Hans de Goede" <hdegoede@redhat.com>,
+ =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+ "Lee Chun-Yi" <jlee@suse.com>,
+ "Shyam Sundar S K" <Shyam-sundar.S-k@amd.com>,
+ "Corentin Chary" <corentin.chary@gmail.com>,
+ "Luke D . Jones" <luke@ljones.dev>, "Lyndon Sanche" <lsanche@lyndeno.ca>,
+ "Ike Panhc" <ike.pan@canonical.com>,
+ "Henrique de Moraes Holschuh" <hmh@hmh.eng.br>,
+ "Armin Wolf" <W_Armin@gmx.de>, "Limonciello,
+ Mario" <mario.limonciello@amd.com>,
+ "Colin Ian King" <colin.i.king@gmail.com>,
+ "Alexis Belmonte" <alexbelm48@gmail.com>,
+ =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>,
+ "Ai Chao" <aichao@kylinos.cn>, "Gergo Koteles" <soyer@irl.hu>,
+ "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>,
+ linux-kernel@vger.kernel.org, Dell.Client.Kernel@dell.com,
+ ibm-acpi-devel@lists.sourceforge.net
+Message-Id: <33a5b6a2-e4df-4bfc-88a9-a9e8309c7f7a@app.fastmail.com>
+In-Reply-To: <20250106044605.12494-1-kuurtb@gmail.com>
+References: <20250106044605.12494-1-kuurtb@gmail.com>
+Subject: Re: [RFC PATCH 0/3] ACPI: platform_profile: Let drivers dynamically refresh
+ choices
+Content-Type: text/plain
+Content-Transfer-Encoding: 7bit
 
-strcpy() performs no bounds checking on the destination buffer. This
-could result in linear overflows beyond the end of the buffer, leading
-to all kinds of misbehaviors.[1]
+Hi Kurt,
 
-[1]: https://www.kernel.org/doc/html/latest/process/deprecated.html#strcpy
+On Sun, Jan 5, 2025, at 11:45 PM, Kurt Borja wrote:
+> Hello,
+>
+> Some drivers may need to dynamically modify their selected `choices`.
+> Such is the case of the acer-wmi driver, which implemented their own
+> profile cycling method, because users expect different profiles to be
+> available whether the laptop is on AC or not [1].
+>
+> These series would allow acer-wmi to simplify this custom cycling method
+> to use platform_profile_cycle(), as it's already being proposed in these
+> series [2]; without changing expected behaviors, by refreshing their
+> selected choices on AC connect/disconnect events, which would also solve
+> this discussion [3].
+>
+> Additionally, I think the platform_profile_ops approach would enable us
+> to hide the platform_profile_handler in the future, and instead just pass
+> the class device to get/set methods like the HWMON subsystem does.
+>
+> I think having this kind of flexibility is valuable. Let me know what you
+> think!
+>
 
-Signed-off-by: Nitin Joshi <nitjoshi@gmail.com>
----
- drivers/platform/x86/thinkpad_acpi.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+I personally would love to see how this would be used for the acer issue highlighted to see how it would work out. It feels like the series is short a patch :)
 
-diff --git a/drivers/platform/x86/thinkpad_acpi.c b/drivers/platform/x86/thinkpad_acpi.c
-index 2cfb2ac3f465..c9e2dfb942ec 100644
---- a/drivers/platform/x86/thinkpad_acpi.c
-+++ b/drivers/platform/x86/thinkpad_acpi.c
-@@ -11681,7 +11681,7 @@ static int __init set_ibm_param(const char *val, const struct kernel_param *kp)
- 		if (strcmp(ibm->name, kp->name) == 0 && ibm->write) {
- 			if (strlen(val) > sizeof(ibms_init[i].param) - 1)
- 				return -ENOSPC;
--			strcpy(ibms_init[i].param, val);
-+			strscpy(ibms_init[i].param, val);
- 			return 0;
- 		}
- 	}
--- 
-2.43.0
+As a side note, I did (many moons ago) propose a change to alter profiles used depending on AC/battery mode (in the thinkpad driver), and it was rejected as something that should be done in user space.
+Your use case does seem somewhat different, but it's similar enough that if you get it working I'd be interested to see if I can take advantage of the approach too.
 
+Mark
