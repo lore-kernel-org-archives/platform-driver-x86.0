@@ -1,349 +1,226 @@
-Received: from mout.gmx.net (mout.gmx.net [212.227.15.19])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 23F9F1F4287;
-	Tue,  7 Jan 2025 18:56:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.19
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736276223; cv=none; b=TxgWh7IgiLZQhXhmc2u/LC/gV69YZapvbcaJLXRJDdtIM1U9WXp5yhog3l7JLfufXBtg78mRq7a+GFEdSg5R09feXAWhDBJtosT23M4A4Fj6q5tp4vCxjfv5/yPtww4rhR3Yt+Zl1d8XaaKoYqEUt6MGXBbwIjfY9lYLf63SmHk=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736276223; c=relaxed/simple;
-	bh=hlrOoQuZ2iOvRVptBMLNGrdlDrff3FPyP6z9Pyt9gTU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=DEn0DjqNDWK0MDA7FJ0XaUX5yH7VPfASmJA9E/Um9WSxTrpUqwu/TlRE3zQIKADc3s7pNrmntIT00lrn1TyqES+0OXXmnKkzfadaOPWEc1pYmMr4lBT2eyiVgkDsCMWC65Fxc7uD41ACc7l5h/EZmtYrVleEmMC1iNUoNdKGbSw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b=hH+zkEjF; arc=none smtp.client-ip=212.227.15.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C0921F37B6
+	for <platform-driver-x86@vger.kernel.org>; Tue,  7 Jan 2025 19:00:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=192.198.163.17
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1736276454; cv=fail; b=Z5UPZepnwsVCqW4UKiBpw9WpGN0jzndkww2PAwmkx871wWU694EJzoI9pnMo4LZ9rL3nDN4mKYEXMrhBx3x1BzyLyPTP4xG0ZOMc4VgZOgJg5e2kC+yLO+wikOIzUiPKMaIWZSxBspTMaTCObZBLELpQKM7y5B6tfYML5OMqqu0=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1736276454; c=relaxed/simple;
+	bh=gyW9FwPnv/fgxsZ2g+W8oAhH7taLfkBjNTHs5A8Wj7k=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=meNuRNKILwGSAJYQielL687I40+qxQxQuoMWWTgZKP2jr7ZN24El6Wr8+c/2VzyB47ydUiGmVfabYqGNuaOvvMT0hqTwJwGEBtFjKVrz4iDa3VDYI97Shh+baCGu2M0A8g1D++XhT8QJd69tiCWq5QOfRe2t1OjvStYqitZdPYw=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=hndk47lT; arc=fail smtp.client-ip=192.198.163.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b="hH+zkEjF"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.de;
-	s=s31663417; t=1736276202; x=1736881002; i=w_armin@gmx.de;
-	bh=es+knW+B9Mbo8Dn3N1YWwT6eze0M2d/eVwtnlGRt90o=;
-	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:To:Cc:
-	 References:From:In-Reply-To:Content-Type:
-	 Content-Transfer-Encoding:cc:content-transfer-encoding:
-	 content-type:date:from:message-id:mime-version:reply-to:subject:
-	 to;
-	b=hH+zkEjFVhQUstr8nCo9uhLAUv6d4RYdyltCLN3xfVbyKapcePyh2RX2/Blp0rNe
-	 E9SZLnGkWP12GDRYbgUS6cZa2oAlo7vzRNx4jpACPvet8DoqDsweUrCUkFX+j6cOU
-	 covgqnXwPnxcmFR12HdiYcZyoUbfEPISDwAguKpX2tsu+WqSMwSsumaunVBxiZB9e
-	 apN3/lXhgENhc7Ocgx9yL7uXNSYSrrksrihM40Y12si9EAC+96PewzmqeKsaIKCYZ
-	 ocNkOIcMLtU0f5nO5JovnRywWOmfRNHqB6Br/T0Id53ltDNWIMTg0sT/jjwtcVlpB
-	 +djwV3B/fxocVvZK+Q==
-X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
-Received: from [192.168.0.14] ([91.14.230.110]) by mail.gmx.net (mrgmx004
- [212.227.17.190]) with ESMTPSA (Nemesis) id 1N7i8O-1taCmR2TVC-00vakc; Tue, 07
- Jan 2025 19:56:41 +0100
-Message-ID: <9f257ca1-946d-416f-8741-247592b3866c@gmx.de>
-Date: Tue, 7 Jan 2025 19:56:37 +0100
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="hndk47lT"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1736276452; x=1767812452;
+  h=from:to:cc:subject:date:message-id:references:
+   in-reply-to:content-id:content-transfer-encoding:
+   mime-version;
+  bh=gyW9FwPnv/fgxsZ2g+W8oAhH7taLfkBjNTHs5A8Wj7k=;
+  b=hndk47lT7+AILK8aUevhm+S6Wg8H8WuG04K2Rp+BaY8W+oLeGYEfzPv8
+   5YSiKxJvqrCMagcwuSdRoNO/MOsaVsU2u0GMxypz5soWdDxR4AnRfQkAh
+   6kzbDZZW2QGUbnEOJpt4npoMHwPX0yEOUUMCxK7UVuMcHODQCtLFGOISl
+   QVaYDkzxKxVcpBAPzE78zZrRmb7MhXRytqihFN30irQB14EeC6l4RZ8It
+   AvcrF9mzCiiRPfZM76BThKt5OGmAkKWX1zMijUHgyx1beGmrfkz4hHC+c
+   UFTBTiv8gfyHPXrGs6tvQ6r6xzTflRKbnPAj5jn6/GS4HrBuCYklbmGbw
+   A==;
+X-CSE-ConnectionGUID: FsCOVF43ToGF8LEIhqSqHA==
+X-CSE-MsgGUID: qMcViPcBStmq4OE7IeOkFw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11308"; a="36374073"
+X-IronPort-AV: E=Sophos;i="6.12,296,1728975600"; 
+   d="scan'208";a="36374073"
+Received: from fmviesa010.fm.intel.com ([10.60.135.150])
+  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Jan 2025 11:00:51 -0800
+X-CSE-ConnectionGUID: od/jPi6kTwWSALIYbcKDeg==
+X-CSE-MsgGUID: 39gAgMzmSgCoBAYxungLfQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.12,296,1728975600"; 
+   d="scan'208";a="103346014"
+Received: from orsmsx601.amr.corp.intel.com ([10.22.229.14])
+  by fmviesa010.fm.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 07 Jan 2025 11:00:51 -0800
+Received: from orsmsx601.amr.corp.intel.com (10.22.229.14) by
+ ORSMSX601.amr.corp.intel.com (10.22.229.14) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.44; Tue, 7 Jan 2025 11:00:50 -0800
+Received: from orsedg603.ED.cps.intel.com (10.7.248.4) by
+ orsmsx601.amr.corp.intel.com (10.22.229.14) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.44 via Frontend Transport; Tue, 7 Jan 2025 11:00:50 -0800
+Received: from NAM04-DM6-obe.outbound.protection.outlook.com (104.47.73.44) by
+ edgegateway.intel.com (134.134.137.100) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.44; Tue, 7 Jan 2025 11:00:22 -0800
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=JSk1xZr9VFjDMJGZs2q3P2j0haw7eGiKkJzxH081ezhn1jRqWBTAyUVPvzq6jZ6j2nOjlzNmdYM0sGzgJPag5p0ir/Jc3ovf4a33cQM+0GNq7Uh6+vMv2YarnA07qzpjcbEO4axGok8LV9IHk5a9Ce0iB15p4A3k0eANYpyEp2Ao6qouPzd13CSTAzZkqggzDS33rywV+Jn5/Lpo3noJR/AQt4puc+D5p+G1SCqE7Rc9MTNoJ43KpEQLozeo44tHS+0N1TN1/c7tl/f5ipxXDDkNfhTjjKx4t7win/mSJQ83E2KaihZR3CReGbP799XXQlezsOO+kl5TkKmwIwk3+Q==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=gyW9FwPnv/fgxsZ2g+W8oAhH7taLfkBjNTHs5A8Wj7k=;
+ b=tj0cSgvuoNvkR0brEIlu2JeWxvClCLVay/hMDB1ZA/pmahrvsywX3pvmHrYYap730UOjP/jLugiE4GwzRsiIwu4wihfx1ApGXyrJ5sM47ofT8qVH4aTNM7ednkoKRYyL/VjmiUsdFj3oiAQltI6Vgna/jYL+AHEK2Zu0rAXJj9pRrmJWdSi87SIidRHc+tQmbidC9XIPZhUG3qtaLYw3sLo+3xeIU7ws2HZBBEYrC73PFHo5AiTdWI3fq8fWwji3pDsVjARUPsLAj0wWTjYHckofZ06TIFq8NTqxjmlk3KEtG7ls3xsQt152Wdv72i5FXHJs6WzXe3fTUYcDwySiXA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Received: from DM8PR11MB5592.namprd11.prod.outlook.com (2603:10b6:8:35::6) by
+ PH8PR11MB8063.namprd11.prod.outlook.com (2603:10b6:510:252::15) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8314.17; Tue, 7 Jan
+ 2025 19:00:16 +0000
+Received: from DM8PR11MB5592.namprd11.prod.outlook.com
+ ([fe80::eaaf:292e:8706:bdfe]) by DM8PR11MB5592.namprd11.prod.outlook.com
+ ([fe80::eaaf:292e:8706:bdfe%4]) with mapi id 15.20.8314.015; Tue, 7 Jan 2025
+ 19:00:16 +0000
+From: "Pandruvada, Srinivas" <srinivas.pandruvada@intel.com>
+To: "ilpo.jarvinen@linux.intel.com" <ilpo.jarvinen@linux.intel.com>
+CC: "hdegoede@redhat.com" <hdegoede@redhat.com>,
+	"platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>
+Subject: Re: [GIT PULL]: tools/power/x86/intel-speed-select pull request for
+ 6.14-rc1
+Thread-Topic: [GIT PULL]: tools/power/x86/intel-speed-select pull request for
+ 6.14-rc1
+Thread-Index: AQHbXe06yhLYlVUUm0muMmvgprwLMrMLqosAgAAGXYA=
+Date: Tue, 7 Jan 2025 19:00:16 +0000
+Message-ID: <a8f8d32c0a55aa8bca4a4db98005d79805f66a25.camel@intel.com>
+References: <da3e36cd68264cb0c3362206a587c94492948472.camel@intel.com>
+	 <26123d25-164e-cb35-faef-90b6c45ac0b7@linux.intel.com>
+In-Reply-To: <26123d25-164e-cb35-faef-90b6c45ac0b7@linux.intel.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+user-agent: Evolution 3.52.4 (3.52.4-2.fc40) 
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: DM8PR11MB5592:EE_|PH8PR11MB8063:EE_
+x-ms-office365-filtering-correlation-id: 79d72166-52a5-4777-2b22-08dd2f4d862e
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;ARA:13230040|1800799024|366016|376014|38070700018;
+x-microsoft-antispam-message-info: =?utf-8?B?ZHZYUFpscnRETXBwaU1BOUVtZ3grNWdsYnE5MFRydmgvVVV1YW9lU3hXK21N?=
+ =?utf-8?B?WGpmOGR1bm1OZlZJL2RNNTFCaGVHRTdTOVZwQXR4c3EvUG5pM1JBS0dmWXZU?=
+ =?utf-8?B?K3BUa01DQ3NpSFRxWXBCRWZFRzFUNUJzcXBYSmg1TkNVdFF3YXQySlhmMmhM?=
+ =?utf-8?B?b2EyQkExOWJLWm8xME0zdmJVbzVZY0htSHVPQVd6UlJTQUREN0N6Ri9JaHlF?=
+ =?utf-8?B?c29VaDlHMHF2cDZxVkJxR0Y0K3g2MlBSa1E0NUE5SmcrN3RaTFV2blAxaDY3?=
+ =?utf-8?B?Mko4NloyZmdDU0Fpamk1a3pUUGdhYThqUy9CamlnTTFmRSthMzhrTkxIbG5n?=
+ =?utf-8?B?MTNMeW1sZ1l3QTN5NWlsaWZYemN2aksrWDFVMUhKcGJ3RTIrZ1J0U0xHQnh2?=
+ =?utf-8?B?aE1MUjZsRDVYaXBrRWNLTm54bW12Q1UvdWhQOUpjOWx3WUFXR1FST2FjbFY4?=
+ =?utf-8?B?ZkhIVnRHb296czNQMDhPZjZ6L2JTTHFEREp2VEhlZUFHMWZZZGxKRCtEWTJv?=
+ =?utf-8?B?ZHFiYVlDZHZwdXhRdUUwMFFac1laZ3hoZ2Z2UnNPYTV1OWk0djJXZmM3aFJY?=
+ =?utf-8?B?UjJjSmluKzIzaFUyMWlGZ0Y4Q1RtY0paU1NVSmVRV0xTSUVDdlRyZEdBRHpS?=
+ =?utf-8?B?TDFsL0gzOWhjNXlrV2RBZlphQ3FCY1hkNkVwTnRybUtPcDZ3RUYyNkExZnl3?=
+ =?utf-8?B?eURPdDhiNmVmd3h4KzE0bEVhK3MwU0N3ckVPbVJzM3JuNnlyOVZFeVNOTy9U?=
+ =?utf-8?B?akF1amJWOVN4RkhKUHRVYzR3a2NsLzVudlBLZ2lLWW10ekJNbmVvWUFLWXZr?=
+ =?utf-8?B?QzgrTDZweTN4em5Oa21rMTJZcEtpNEpvalRWckVyR3ZuS1IrV1l6Q1RrOEZJ?=
+ =?utf-8?B?Q1gvaUZvZGhPNXZESnBjNnpTSysyU1JrQ2VjYmRHUnltZWJvbDg3NDBQekVR?=
+ =?utf-8?B?bGxtVGZzWFVqZ2NGcFhuM1YrRjFDY1dhSlEvUUNQVjRUUmh4L2Y3clNEc0ov?=
+ =?utf-8?B?NEN4ZmZ4d2h6Z2d6bUxtem1aTHozSVlocGdRUEhYa0pWcmdCNlZld21LdmZD?=
+ =?utf-8?B?U3ZrRXBrNTljZk5MakxVWFlQZGdwMjJya3ZadUVmenVLT2hYTGdYNERVS0NG?=
+ =?utf-8?B?bzlBbHJtVmU1TzRZN291YUFuVDg4OTM3S3JJNG8xdXNZL2JvVkN3dHZ6eE92?=
+ =?utf-8?B?citkSE0xYzBBNFQ2SDNqM1ZxTGVocEprVmxzN1lYaERlMUYzOVdxa3FLczlt?=
+ =?utf-8?B?SUlUaEZIZlZsVHBMNkhvTHNwTlpSQWQ1U0hSbUl5UUEzV3p2a2Fxd00rU0FK?=
+ =?utf-8?B?TzVMT0hjYXpETGFYUlp1MTVFcEhUM0c2Zmw1ZExEdGFHZlJldm4xcDV4VHd4?=
+ =?utf-8?B?Ynh0VjRGZi9qbE8vUE1lbEw4WWFWTTJrelRpSDgrZTBWSWluM0pkNHA5NWdU?=
+ =?utf-8?B?MGVGNk9kWDY3KzBuQWhVV2FHZGdsQjlSaHNMR09obTZuamFBUjdsK0hTSUQ4?=
+ =?utf-8?B?ajN0S0M0TGVvUHVhN3R3WXdrb2k2aGtCN0MvUU44Q1lka29QWkpHQTd4WGM4?=
+ =?utf-8?B?a2pma1M4QlBLdTFicUUweTl1K2J2MHhOaEdXNGYxSnRJMTRSMGYzaFovYkIr?=
+ =?utf-8?B?SWU4RUZCVTg0ZGtGcGNkeWcxRm8yQ3E5Zlo1SnFaRTVWdG1NYjlyS2RNNTRZ?=
+ =?utf-8?B?NllKdXFDZHFMMzdJazAvdFBCNmtMQ3ZJeGdBbDkzMFVxVUZkbWlGeVd0YnQv?=
+ =?utf-8?B?WnA4TWtKblk5TEpYZG5LekROUW5hWW1VcGRPSnVQajZqTVNmTXE5QUVqNWRh?=
+ =?utf-8?B?RUNZbEEzMXZRRXlQQU9Eek9uUlJ4d1RvUWY2Y0w2MTFLZE1CMzRlOGNabzRP?=
+ =?utf-8?B?QS9lV3RGdEpNZDB2TXBMN09oWWl2eG5LSUtENEhVSmhpWUJFOWtKcTc0eVZX?=
+ =?utf-8?B?ZjJMelFGSEhTa3VmOGFHMWk5d3JtY21MU1Y0YjFSOUJVMkE5dmpIWXJzOEtM?=
+ =?utf-8?B?L1BZRUJQWmZnPT0=?=
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM8PR11MB5592.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(376014)(38070700018);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0: =?utf-8?B?akZlOFE1UGRRZ3pLd3ZLS0JnMzJvQ1BwY1JjeWpObGtqdTRaS0MzMERnVTFL?=
+ =?utf-8?B?WlNpVklXQ2EyQVRlN3FvSWRlcHFrcGRSTHdYbTlpTG1GNUJuL084QjNsMFdj?=
+ =?utf-8?B?cWVTYXoyM3BlWmlqbFE3L0hqdzBnMmJ0QjdBRnFBTHZENEV3SEVBcStuNWJn?=
+ =?utf-8?B?RCtRMmlwS2duTkMrclZBYU1ndFkwUFNiYjZ6Um1kaW5ybEhHckpZMjh0NTUv?=
+ =?utf-8?B?SHhtditKVzA5ZHRRYkdVbER3Z0RQTUVMSy82VCt5UklMT0VnTUE5YS9LR3Jp?=
+ =?utf-8?B?TUdCSHdMUXprMWUrdnlERHVvbFE3ZC9JdXh1ZXg1cDJmQ3Jwcld6Vk1yUHhE?=
+ =?utf-8?B?VFUvbWhKeTBzMHJtS0tNNitUYVZYSERSZmxqRUMzbVNMNW1RRXNBRWdGSjFF?=
+ =?utf-8?B?aW1tYmdWeVpWWW1KcUdjZDFCZzhYdEtudWlaZ1dKWnMwTlRIWFZSTUFCd3ZM?=
+ =?utf-8?B?QnlXRTE5eTdxclpJcEtuZlRKUndUaFBqNVRkWDZnZUZpc3I3d3BicXJrRFc0?=
+ =?utf-8?B?TWRNM1c1Tmw1a003T3ZUaDhDMXdZVmsvSzNUZStIQ2djK3orUTZISVRGN3lh?=
+ =?utf-8?B?cEZiek0rUEdzS0NtN1pSejVaeTluTFRlbC9nWDZtM3VpVjd4UXo3dEdjY3Nq?=
+ =?utf-8?B?NFI2VTNoZW91Qmc1ZlVGVlNpSjlTb0NDQjdKSGdaVjJsYTY2VlN2SlhXRHE4?=
+ =?utf-8?B?ME1KVnBNS3ptdDdWd3BWMnBzcU9vR0U1Q01HWUJGNHJFazFjcDFZU3lvTkVL?=
+ =?utf-8?B?T3lBdEpKUzVpbDUrbFd1SzM2YjNsVHE1bm1CbzVRWWxKZmpVS0hLOUpxVmRa?=
+ =?utf-8?B?ZWxsTWZrZzBvRy9uTXlseExhT2VyUHk4Z1NBQ2lBWmtnTlUvb3krQnllNXRM?=
+ =?utf-8?B?WWVqK2daTW9ibEVpSUpFUEpvOUE4ZEJIYzNqODZYQWdJRUtDQ1RIbHk0MlU1?=
+ =?utf-8?B?eVRDSjkvd1V4bXNmOVdrZDNaa3V4ZGZtT0JQWlduY1l4K0NZNGE1YUJ4azNs?=
+ =?utf-8?B?UUFiZXZ6REQwSHRWVHBia3Z6QnJEVjlEZHpRTlhqdWFLdHlsR05hQURSRjNG?=
+ =?utf-8?B?cGIxbU5NWE5QYVpYTWYySENqY1A4Nk1HNDlOOWsyVWtYTlZienlvTC9IOEg3?=
+ =?utf-8?B?MXVSTEtrSlBkWU5VS1hUZk5nMGVRNUJjRnhUUEh0V3V5d3I3RWsvVXNYR3pm?=
+ =?utf-8?B?ZEw2TmZYUnR0aWJ0MWJDSDZjOGgrMnoyV1BrdnJ6L09kRjBDQ1duM2ZvYkg2?=
+ =?utf-8?B?VUpEb2x2UXp2aGNuaytOaUpSeWo5a1AxY1hkRkpkZlVkeHpwWHNURDZ1MFBq?=
+ =?utf-8?B?YmhEQ25BM0RBU21FRHdWc2IydUtzcFlTWmRKU0NHSU91M0lkSFlXb1dCdHN0?=
+ =?utf-8?B?TlVXNlQrS0ZXRUFhZXpwbzZNZVVOTHRqbzJVSExra2FwYmlJakZJSGxGNlJ1?=
+ =?utf-8?B?SnJCMjdOcXRCZ3JaRXpQRm9ubkxSRndnajR2TnkwemlUL0lJajhodGZZb2lh?=
+ =?utf-8?B?NlpYdmQrTUEzeUpMRlFwL0FONDJLdjFQNjdJTjJ0ZVNYeUwzVHczcU02Vmd5?=
+ =?utf-8?B?dnZUaGFTNVVlUEtzVFc4b1YrWWhvZFFPS1hLUjA3ZzIvamxURUluQVc5Z2RT?=
+ =?utf-8?B?b0t4allGdXgwODhoMUREbVhCcFlCYVJVaHd2RUZRY2VsSE5LRGkvcHZpK0VQ?=
+ =?utf-8?B?SW5zQXlZNTJKZU42MjUyWU5HWFlxb1gvbUlEUTg1MWYzUC9kQWR5V2loMnQ1?=
+ =?utf-8?B?RGdkQVNKUlJaVVJWR05NOUNaUUxQQnBOZWhiSWQwaTgxQzBKYng0b0FnQjVx?=
+ =?utf-8?B?NXZJN01jKzhmU3VDM0lDL3lmOHovS3cxMUowalZRQ09yMTRaRVRlMzhzNHhr?=
+ =?utf-8?B?MDlBR3NlTk1waVF3Q1M2Tm5QZ0dtVTZncGNKQ3dqTUJXTDJHcnM4R1UyRVdq?=
+ =?utf-8?B?Z2hOMzdtcGhOSHNwa0ErVFJsN3RmaGUrSS9wRTY0VWgyelh0Z01IaGwxSlY4?=
+ =?utf-8?B?RHRtd3dXTW96QS9Ha2hDTEpZUVlGRWdQelY5SERIc0ZRL3pOUXRhV1Z6MElU?=
+ =?utf-8?B?aEc1UnMzY25DMlA3RHczRkhCemVPYVNvVTQxNjMxdVhvU0ZsUDl3TzFsdHZm?=
+ =?utf-8?B?d2RHTEdkTFVSYnhRd1Y0MW5JVnBoNktLNUZ3VGo2dkEvczUwZXF0bXVtbmxG?=
+ =?utf-8?Q?tClhI4g3p8zxIq3SBtaxbhE=3D?=
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <FE1E8E23C71DE74D938E3CDAEB1B919E@namprd11.prod.outlook.com>
+Content-Transfer-Encoding: base64
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4] platform/x86: samsung-galaxybook: Add
- samsung-galaxybook driver
-To: Joshua Grisham <josh@joshuagrisham.com>
-Cc: ilpo.jarvinen@linux.intel.com, hdegoede@redhat.com,
- platform-driver-x86@vger.kernel.org, corbet@lwn.net,
- linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20241226153031.49457-1-josh@joshuagrisham.com>
- <0fbe58a9-ecca-437f-aa30-9d3a17c2bd43@gmx.de>
- <CAMF+KeYdshNex2h4kLJari=kXVxgcOZw7GDutJrV6vKC0PTe6A@mail.gmail.com>
- <a8011f0f-1d44-42ec-9089-2da31f3852e2@gmx.de>
- <CAMF+KeZm8LCGsCZ9bosNYRCbv847CcZr+0mWeZtDQsk5QFRuyg@mail.gmail.com>
-Content-Language: en-US
-From: Armin Wolf <W_Armin@gmx.de>
-In-Reply-To: <CAMF+KeZm8LCGsCZ9bosNYRCbv847CcZr+0mWeZtDQsk5QFRuyg@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:he9uU9U71eOgpgIkljNqj5gg05s50CcpCZjudalxGJVDtQbiZd3
- zppbyWn8qJJ6GGMB6yZ4zFJAApxIBej5UhXpG8GaL6maFFNxRFPMjJOemPkyDS/IS9uGEI/
- d+gzoPSH0IfGoBVS01k630YxIllSSu2ZwHS0dnKzbwIRa+AxfJUI1NoI4dZ7f55IljV0oMx
- eOoYVYIWgfOKjByLjCDxg==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:t2I+83FXs6U=;Im2GY95dw5m6MtzmshhN/fLX0fW
- Z/cwxtqhfyiYkuxazJ1jMgePx2R3WWyIJsTZrKupyVFOqY3nl3U0qzwD1fyNPP5OX/+WEXGtr
- ea788KvInoViBvxFC1jVwivt/gHvogCQnN/vHiwEB4CWskXiMJYGiD022hQ9+gth4ZZFgpR//
- NfwGzhW+W4omPc2O+7v4iffQPaJihkfNu+KusFFUaFC1lTczz0hpA8Y2Wy4YI+n8iemyGp/iy
- Hrd9G6E09Ijp4TvkAyOzxcQ/TiFk568Pw5BScgVkyyA1DsWi3ubYR4/uHoqVwntQC85Hvsy/L
- IaWLJF8xJkj2ZXIo2YEODv1M4SrrwIUcHFqjZkadsXgLyAttQ4J5UeoyyTyA4rPj7CK/RJdqS
- PPUVbBXa4NXccqSUlZ2bylhxGwee2B9mNI/iRKhVqt6MlgT7VKgJ/ghha74ghb8bPclhIRKGS
- c8rqvf/pJnmepC93czrt7YKZCXKH+c4KMZLYqW652zr+Fvtm5qlNTNxTQJ6zByZSGZeDxgV+c
- RozBgZVvU06TsmedCCir/gQKQdfmwMmMt0zqbJi0sCknEXizAbYXND191fQUs/mXErbajqhNp
- V0mKdx0aKRNl0P/IbU6p2q3ZQtgm1EcupWz3ofPdNamEorFbwzUVbe/9NlV18ws2Wm8QmcNvq
- EdVBoFK+C65qyoh3DY5qLtXCcL9Cj3OIS52VaFdJgfVYu4V3ls1uJjLPZzaQB92oShaLFJ3yE
- DGwiI4aNP4JbeKB4kcJWr/hCI15j9Zia3toX1uHHQ5imqkW47uz10OyTBXCljEiWY2kf8zf1/
- sMoQJS0IsCYrMWQWqekGcIoqIAnw7iLb9+4jmTc4Af4Y6slq9sn7s7OjolKMzXZSoD8VzO0x2
- TI7DAgNmf3zhOljIBK2RcchvD6H3iPJRDVpsT+tru+fdspz4d2K495sLsVPx8g27qPFYN4k7I
- L4OEiMgjCtB6g4H5bgsTSaPoonuEDSf4V8l4kcyozdsykBMd+tnQ66GIdta41AbQxJnP3HQzF
- W919MRuBSK7MMMe7bNJVg1J7Cia7LHSB1OnalYnMcHzTDOELhMpLnbE1jH0JREOpnDvWF1jRU
- sE3Qh7GBQIQKzVKwPHKtGjgSuaO7iE
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: DM8PR11MB5592.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 79d72166-52a5-4777-2b22-08dd2f4d862e
+X-MS-Exchange-CrossTenant-originalarrivaltime: 07 Jan 2025 19:00:16.6254
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: YgZWPIl11P0DGHyhQRjSMF6fLc/P2gB6ToIKth3ocUyeQ4Gm77jUnIuic2Gz2DGbvchd/6QMkiSVeWrt//t7bt54wTrFboxjYIUORuOH3Q0=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH8PR11MB8063
+X-OriginatorOrg: intel.com
 
-Am 07.01.25 um 16:09 schrieb Joshua Grisham:
-
-> Hi again Armin! I think I am finally with you on most of this, I think
-> jet lag and general craziness made me a little extra dense for a week
-> or two :)
->
-> Den l=C3=B6r 4 jan. 2025 kl 07:28 skrev Armin Wolf <W_Armin@gmx.de>:
->> The reason for the firmware-attribute class original was that driver co=
-uld export BIOS settings
->> to userspace applications, together with some metadata (min/max values,=
- etc).
->>
->> Because of this the exact meaning of each firmware attribute is usually=
- only known to the user
->> changing those firmware attributes.
->>
->> Your driver is a bit special in that it knows the meaning of each firmw=
-are attribute. However
->> you still have to follow the firmware-attribute class ABI since userspa=
-ce applications do not
->> know this.
->>
-> Yes ok, as said, I am with you all now on this I think :)
->
-> As a prototype for v5 I have created a new struct for each "firmware
-> attribute" that helps me keep everything linked together with all of
-> the different sub attributes for each different "fw attribute"
-> including allowing a link back to my samsung_galaxybook instance
-> without using the global pointer. At the end of the day, if I wanted
-> to avoid using a global pointer, I needed a way to grab the private
-> data based on either the kobj or the attr parameters to the show/store
-> method of these individual sub attributes within each "firmware
-> attribute", so what I have done is added the kobj_attribute as a
-> struct member and then manually init+filled this kobj_attributes
-> during probe, so I can now grab the parent struct instance using
-> container_of() within the show/store functions which then gets me to
-> my pointer. I thought about using the kset or something else for this
-> but it seemed like kobj_attribute supported being a struct member
-> better and gave the least amount of headaches from what I could tell.
-
-Sounds reasonable to me.
-
-> After trying to fight my way through this problem, I have an idea of
-> what a better "dream scenario" would for me as a user/consumer of the
-> firmware attributes interface -- namely that there is some kind of way
-> to register and unregister by "type" (e.g. "I want a new enumeration
-> fw attr; here is its parent, its name, and all of the functions for
-> show/store of the required attributes, plus a data pointer that I can
-> pack together with my attribute/somehow reach within the show/store
-> functions"). I have handled a bit of this myself now in the working v5
-> of samsung-galaxybook (just a minimal version of what it requires) but
-> as said it currently relies on creating the kobj_attributes (at least
-> those where I need the pointer) as struct members that I can later use
-> with container_of() instead of creating static ones using the various
-> __ATTR.. macros.
->
-> Please feel free to say if any of this sounds totally (or partially?)
-> off, otherwise I will try to test a bit more, clean up, and work
-> through any checkpatch exceptions and get this sent as a v5.
-
-I think your current plan sounds good. Thomas already submitted a patch se=
-ries which
-provides a more abstract API for registering firmware attributes.
-
->>>>> +static void galaxybook_fw_attr_class_remove(void *data)
->>>>> +{
->>>>> +     device_destroy(fw_attr_class, MKDEV(0, 0));
->>>> Please use device_unregister() instead since multiple devices might s=
-hare the same devt of MKDEV(0, 0).
->>>> This would also allow you to remove the global variable "fw_attr_clas=
-s".
->>>>
->>> Here I am a bit confused on exactly how this would/should look; all
->>> existing usages of fw_attr_class I can see use exactly this same
->>> pattern: device_create() and then device_destroy() with MKDEV(0, 0).
->>> Taking a look at the latest proposed changes from Thomas and it stil
->>> seems the intention is the same, just that it is slightly simplified
->>> and use pointer to the firmware_attributes_class directly instead of
->>> fetching it using fw_attributes_class_get(). Or is there a better way
->>> to do this (including usage of device_unregister() and/or something
->>> different with the devt) that will help solve some other problem(s)?
->> This is the code of device_destroy():
->>
->> void device_destroy(const struct class *class, dev_t devt)
->> {
->>          struct device *dev;
->>
->>          dev =3D class_find_device_by_devt(class, devt);
->>          if (dev) {
->>                  put_device(dev);
->>                  device_unregister(dev);
->>          }
->> }
->>
->> if multiple devices of a given class are using the same devt (like MKDE=
-V(0, 0)) then
->> class_find_device_by_devt() might pick the wrong device.
->>
->> The fact that the other drivers are using this function is actually an =
-error. The only
->> reason why this error was not noticed until now seems to be that curren=
-tly only a single
->> driver using the firmware-attribute class is typically active at the sa=
-me time.
->>
-> Yes again sorry for being dense -- now with a little sleep and time to
-> marinate this makes total sense, and it is a lot easier to just use
-> device_unregister() like you say. This will be included in v5.
-
-I partly blame the comment of device_destroy(), at first glance it looks l=
-ike the
-natural complement of device_create(), even if its not.
-
-I will see if i can create a patch series to fix this.
-
->>> Also there are several other platform drivers that implement a very
->>> similar device attribute as ones that I have added here as a firmware
->>> attribute (namely I am thinking of "USB Charging" which exists in
->>> several other pdx86 drivers but a few other devices should/would
->>> probably support this kind of "Power on Lid Open" attribute as well);
->>> in the event that maintainers of those drivers should and eventually
->>> do migrate over to use the same or similar firmware attribute for this
->>> same kind of setting, should it include all of these attributes in the
->>> standard "enumeration" type attribute group or is it possible / would
->>> it make sense to have some sort of boolean-based fw attr type that is
->>> a bit more simple and a bit more self-explanatory?
->> Introducing a new "boolean" type would indeed be nice. This would allow=
- userspace application to use a simple
->> on/off slider instead of a dropdown menu when displaying such firmware =
-attributes.
->>
->> In this case you could drop the "possible_values" attribute.
->>
->> What is the opinion of the pdx86 maintainers on this proposal?
->>
-> Now that I have finally taken a better understanding of this, I see
-> your point. Yes, nice with a boolean that could give a slider in a GUI
-> or similar, but does not really change a whole lot in the driver
-> implementation. I will go with enumeration type for now as mentioned
-> and it can always be changed later if this new type comes.
-
-Ok.
-
->
->>> I am quite certain that the code can be cleaned up and/or refactored a
->>> bit, but I would hope that the result of the logic should stay the
->>> same (per what I described above); having said all of that, does it
->>> still make sense to try and simplify this somehow and/or any tips or
->>> recommendation how to achieve the desired result in a better way?
->> I am OK with you preferring the non-legacy modes over the legacy ones. =
-However trying to limit yourself
->> to the profiles currently supported by gnome (AFAIK uses platform-profi=
-les-daemon) is not a good idea.
->>
->> I would like to see a more static mapping be implemented:
->>
->> PERFORMANCE_MODE_ULTRA -> performance
->> PERFORMANCE_MODE_PERFORMANCE -> balanced-performance (can also be legac=
-y if non-legacy is not available)
->> PERFORMANCE_MODE_OPTIMIZED -> balanced (can also be legacy is non-legac=
-y is not available)
->> PERFORMANCE_MODE_QUIET -> quiet
->> PERFORMANCE_MODE_SILENT -> low-power
->>
->> In this case the platform-profiles-daemon would have a similar job as t=
-he Samsung service, which is to
->> determine a suitable mapping for the supported modes to {performance, b=
-alanced, powersave}.
->>
->> Looking at the code of the daemon it seems something similar is already=
- being done, but only for the profiles
->> "quiet" and "low-power" (one of which is getting mapped to the "powersa=
-ve" mode).
->>
->> I am confident that the daemon could be extended be a bit more intellig=
-ent when it comes to determine the
->> mapping of the other modes.
->>
-> I understand the thought here but my only problem and what sort of
-> "itches" at me is that most of these devices are not "Ultra" models
-> and they will never have an "Ultra" mode. For the non-Ultra models,
-> "Performance mode" *is* "Performance mode" (meaning, it is the mode
-> which prioritizes performance over anything else) so for me it feels
-> best if these non-Ultra models (again majority of these devices) can
-> have the Performance mode that they should have. And you can maybe
-> argue that "Ultra" is in fact its own mode entirely -- when you use
-> this mode on these devices, they really scream (the fans, mostly, that
-> is) and they get super hot haha :)
-
-Is this non-ultra performance mode any different than the ultra performanc=
-e mode
-in terms of performance gains, fan speed, etc?
-
-> Other than this Ultra vs Performance question, I do agree with you and
-> think it makes sense. My first thought if we want to actually
-> "simplify" this in this way is if there could actually exist a
-> platform profile called "ultra" then it would be just a perfect 1:1
-> mapping (other than taking legacy modes into account).
->
-> This "perfect fit" for samsung-galaxybook would be to create a new
-> platform profile called something like PLATFORM_PROFILE_ULTRA, but
-> that seems like a bit of a tall order... Would it make more sense to
-> implement this "ultra" mode using the new PLATFORM_PROFILE_CUSTOM and
-> then map them like this?
->
-> PERFORMANCE_MODE_ULTRA -> custom (named "ultra" if that is possible?)
-> PERFORMANCE_MODE_PERFORMANCE (or PERFORMANCE_MODE_PERFORMANCE_LEGACY)
-> -> performance
-> PERFORMANCE_MODE_OPTIMIZED (or PERFORMANCE_MODE_OPTIMIZED_LEGACY) -> bal=
-anced
-> PERFORMANCE_MODE_QUIET -> quiet
-> PERFORMANCE_MODE_SILENT -> low-power
->
-> Thought admittedly I am not 100% familiar with how
-> PLATFORM_PROFILE_CUSTOM is implemented to work; I have a vague memory
-> that I read somewhere that this was roughly the intention? But I am
-> not sure if it is actually implemented to work this way. But if it
-> will in fact work "out of the box" including with
-> platform_profile_cycle() for the hotkey then it seems like the
-> cleanest and easiest approach.
-
-PLATFORM_PROFILE_CUSTOM is meant to signal that the platform is not in a w=
-ell-defined
-profile state, usually due to manual tuning. So please do not use it for U=
-LTRA.
-
->
-> If this is possible, then my best guess for the logic for this mapping
-> in samsung-galaxybook could be changed to loop the "supported modes"
-> forwards instead of backwards, and just let the "legacy" modes be
-> written first (as they seem to always come first in the list), and
-> then in case the non-legacy mode exists later in the array, it will
-> just replace the already-mapped legacy value with the new non-legacy
-> value, and thus skip any kind of condition-based checking/mapping
-> entirely. Is that sort of more like what you had in mind?
-
-Can you be sure that legacy performance modes are always placed before non=
--legacy
-performance modes?
-
-If no then i suggest that you iterate over all supported modes and if you =
-encounter
-a legacy performance mode you check if the associated platform profile slo=
-t was already
-taken by a non-legacy performance mode. If that is the case you ignore tha=
-t legacy performance
-mode.
-
-If you are sure that the order is always the same then you can of course s=
-implify this by
-iterating forward. I will leave it to you to choose which one to implement=
-, as you seem
-to have more knowledge about the underlying hardware than me.
-
-Thanks,
-Armin Wolf
-
->> Thanks,
->> Armin Wolf
->>
-> Thanks again!
->
-> Joshua
->
->> [...]
+T24gVHVlLCAyMDI1LTAxLTA3IGF0IDIwOjM3ICswMjAwLCBJbHBvIErDpHJ2aW5lbiB3cm90ZToN
+Cj4gT24gRnJpLCAzIEphbiAyMDI1LCBQYW5kcnV2YWRhLCBTcmluaXZhcyB3cm90ZToNCj4gDQo+
+ID4gSGkgSGFucy9JbHBvLA0KPiA+IA0KPiA+IFB1bGwgcmVxdWVzdCBmb3IgSW50ZWwgU3BlZWQg
+U2VsZWN0IHZlcnNpb24gdjEuMjENCj4gPiBTdW1tYXJ5IG9mIGNoYW5nZToNCj4gPiAtIEZpeCBy
+ZXN0b3JpbmcgVFJMIGFmdGVyIFNTVC1URiBkaXNhYmxlIHRvIGN1cnJlbnQgY29uZmlnIGxldmVs
+DQo+ID4gaW5zdGVhZCBmb3IgbGV2ZWwgMA0KPiA+IA0KPiA+IFRoZSBiYXNlIGJyYW5jaCBmb3Ig
+dGhlc2UgY2hhbmdlcw0KPiA+IGh0dHBzOi8vZ2l0Lmtlcm5lbC5vcmcvcHViL3NjbS9saW51eC9r
+ZXJuZWwvZ2l0L3BkeDg2L3BsYXRmb3JtLWRyaXZlcnMteDg2LmdpdA0KPiA+IGJyYW5jaDogZm9y
+LW5leHQNCj4gPiANCj4gPiBUaGUgZm9sbG93aW5nIGNoYW5nZXMgc2luY2UgY29tbWl0DQo+ID4g
+YzQxNmEzZmVkNzhiOWIxZDkzNzU1ZDJjNWQ4MTA0NzY5NTU5YzRjYjoNCj4gPiANCj4gPiDCoCBN
+ZXJnZSBicmFuY2ggJ3BsYXRmb3JtLWRyaXZlcnMteDg2LXBsYXRmb3JtLXByb2ZpbGUnIGludG8g
+Zm9yLQ0KPiA+IG5leHQNCj4gPiAoMjAyNC0xMi0zMCAyMDoyMTowOSArMDIwMCkNCj4gPiANCj4g
+PiBhcmUgYXZhaWxhYmxlIGluIHRoZSBHaXQgcmVwb3NpdG9yeSBhdDoNCj4gPiANCj4gPiDCoCBo
+dHRwczovL2dpdGh1Yi5jb20vc3BhbmRydXZhZGEvbGludXgta2VybmVsLmdpdMKgaW50ZWwtc3N0
+DQo+ID4gDQo+ID4gZm9yIHlvdSB0byBmZXRjaCBjaGFuZ2VzIHVwIHRvDQo+ID4gNjAwYzhmMjQz
+MTljZWJlNjcxYTcwNzIyZGY5OWI4MDA2ZGFlYmUyMToNCj4gPiANCj4gPiDCoCB0b29scy9wb3dl
+ci94ODYvaW50ZWwtc3BlZWQtc2VsZWN0OiB2MS4yMSByZWxlYXNlICgyMDI1LTAxLTAzDQo+ID4g
+MDY6Mjk6MDMgLTA4MDApDQo+ID4gDQo+ID4gLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
+LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLQ0KPiA+IFNyaW5pdmFzIFBhbmRydXZh
+ZGEgKDIpOg0KPiA+IMKgwqDCoMKgwqAgdG9vbHMvcG93ZXIveDg2L2ludGVsLXNwZWVkLXNlbGVj
+dDogRml4IFRSTCByZXN0b3JlIGFmdGVyDQo+ID4gU1NULVRGDQo+ID4gZGlzYWJsZQ0KPiA+IMKg
+wqDCoMKgwqAgdG9vbHMvcG93ZXIveDg2L2ludGVsLXNwZWVkLXNlbGVjdDogdjEuMjEgcmVsZWFz
+ZQ0KPiA+IA0KPiA+IMKgdG9vbHMvcG93ZXIveDg2L2ludGVsLXNwZWVkLXNlbGVjdC9pc3N0LWNv
+bmZpZy5jwqDCoMKgIHwgMiArLQ0KPiA+IMKgdG9vbHMvcG93ZXIveDg2L2ludGVsLXNwZWVkLXNl
+bGVjdC9pc3N0LWNvcmUtdHBtaS5jIHwgMiArLQ0KPiA+IMKgMiBmaWxlcyBjaGFuZ2VkLCAyIGlu
+c2VydGlvbnMoKyksIDIgZGVsZXRpb25zKC0pDQo+IA0KPiBIaSBTcmluaXZhcywNCj4gDQo+IFB1
+bGxlZCBpbnRvIHJldmlldy1pbHBvLW5leHQgd2hlcmUgaXQgcHJvcGFnYXRlIGludG8gdGhlIGZv
+ci1uZXh0DQo+IGJyYW5jaC4NCj4gDQpIaSBJbHBvLA0KDQpUaGFua3MhDQoNCg==
