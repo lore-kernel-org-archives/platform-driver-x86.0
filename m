@@ -1,58 +1,59 @@
 Received: from NAM02-SN1-obe.outbound.protection.outlook.com (mail-sn1nam02on2068.outbound.protection.outlook.com [40.107.96.68])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A0C1C1F75B2;
-	Tue,  7 Jan 2025 21:30:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0D1B31F7574;
+	Tue,  7 Jan 2025 21:30:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.96.68
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736285405; cv=fail; b=DANcRlBG04q2MFtVTI8zq4WaoQ6C8PjTmESjKmyBzYtVajHFWtwwY0Uuw2P39xmj/hauMqnOK4H/8QbzrW/IsrKfqwE+po9PxTSbjyLOtUNCt1DgGUeZP/IRPYd1zeW5MX6ZmFmkI7yFCcJWdNupVQ27sfJLRB/WtjyYGMKeFaI=
+	t=1736285408; cv=fail; b=eMfi7KOqec5CbgYZQDUa8eR7tAja/Ib7qUMj11q3Hyr4dFyzzD/qLXFbIAgG8qWJpMNJhmC/5iDrdECYDDy6PM4PP02XUGQkSb4jFZpr5II+0czkQ2C0mXXfe5ARtkHxRXn9djmE9UMmUDqet6+FlefhlVZ/Wf7HvZ4oKCCfBuA=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736285405; c=relaxed/simple;
-	bh=1tUi1O2WSgPMnWITwYzyDvf5yUkvlJcl7x5rTd+jUH8=;
+	s=arc-20240116; t=1736285408; c=relaxed/simple;
+	bh=S8nCK7d0+2PGSqJrPpAHxuvOVCiYYzSn+598mgPYpbk=;
 	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=R6z43zyhnNIRd1lxrt7yQyMEu0qwhzwLHmL6RaMDqeznAT++6p1gbbkxLWa+thDbIcWTgQ7LnRWwcm3bOfuDrvfSTIAfLelxJgksXKnoOrkEi7aW+osNG1G1dY5H2za/HYrYS4zHxnnQn+omuVY7z4TTmly4EICAXXVxOttG3tY=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=mpYro+Js; arc=fail smtp.client-ip=40.107.96.68
+	 Content-Type:MIME-Version; b=uEIpIDTmBhD7RwUD3/xx3uMXygzBCKJ19i+hNmd875SBISgLIyhuWblt9c6aWgHIg/0jiRg8zazINbsDhid1ypntK+MuS3KwedGYmTKRuutf9RpTR2+UBakct/x/WxgTmoOdPdvtj80PCv3KeNeyrQsOYHs+gfIzK/O1HK6VqmE=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=b4RXWaue; arc=fail smtp.client-ip=40.107.96.68
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
 Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="mpYro+Js"
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="b4RXWaue"
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=K4S2wW7rZsLhKlABonAc6v1LOTyG2EpO3oQAR4m4lkNRsggz/aRPN02tENMVQSCT2nRKS3S7LgXFyIF6bkjTnoipxtdjpennuzFModA25k7dBAPT+MDr+sQD4A6D3GP75aAnUKA01PQfednMZzEGuFylHJNzUunb7ov+g6Pdwx/LbgLI9scoEOOghPbcgAt/al0aMLj2r6SwyzsXZTq1yjmGaUsL7LnSwexT4Ga+tuSrXcg9RwAWoO4O+t288lDqQJqSmewbUtnmJtMaE11OJkhS/rnX0ZCnTBrosvhonp/nTGaOnWsVYQK1DxsNa2LE3I+YYhoxkGKVsEwwieRnFg==
+ b=NRHTLisrOGV7MOcu1JUM15VctIECRz/SH69G2ExicUF80A7ohWzaO79wK1gf4JPhpC7MvPmh88tgdnEcJEeyMChnpkEGm/2XkaoTpE0mR5as4mZ3EJUnlh5zRED7Z3/IN8RmQ43goK54ofX6O06TL3UNt4XoEv6Xq+myauqszt7u1BkDT/eWUxB27uV56qLAKpKTZhShhQFkN7v8MQRioqtpo5Mh5YpheTH2Vf3EhylKbH7Cdtu6yZeLzbe+qxmjYDhBkeMzcaCufQz/TsNNQO1JH9hrsItufK0GS2R0xV/FDQ/ZprKZfbqpX0OSUWduYonIrW/HJdDOJwD84jl9CA==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=IbCezbVRPVKUGwB6ZucyCdZUnt+X8bvLBGTunHMx0YI=;
- b=P9Y//8UEHcPRpUG0skMnru3Ng9clp2L/IGCebK8JjhAlg72olmO6rmfZfMZWvR9fLe3HZxF0p9iU0ocVa9fKo1rcINRMdzAqLHi0/Ll2lzJQEVgRXbJJO6w6PO61VkBKln49Jgkab/5ZoXunIhklt+bELUJIXm9xWYOnJwB6B+VxofLgavnmFNgYxnbJnWuYZJgKHqFdnEftxhvt9W4YAxQ8VN6PI8ffkeIizAWPLoxpqsritl9wUwdy+/e8mpBRf7wmgeu1UGFK1mhmYsbGAWq0em2JRoGn7UAoq4FVAiscojbwaVZXGy6sfAymYNQR5hd051OLg6wnE5rs9VajjQ==
+ bh=J0oyQbEddW+eA9KcudgAqD7es6wvFMzCDI/PpKvLV5c=;
+ b=R2SWHwbxPQchDU1NDUm05cG629IC2LhRnLDYX8Tvv2GCU9rQwWHw8CrGr6nK0sR74gUf51EXwqPfYGcpol5N+cnrAnjhKEaq5V3z5JVGvO/ZgrxM7vUBiqcbjkU6Q69cdsZiH+VDr3WyMakIF9EUzZ1Kz3k1+3p9zo9SUHC5seJEyEIIo/27vYU2t9M/JLwXYAiilhtuNhjGOJ+jKzN5abu+aaARV+YPgJfpx3fs0A4i3yLFWyxzNLOzaC/X2hyzswjHfebm8UcxkUrvZS20xH9cn6xBIo9SQOyR3caP6NwM9bDoFRIpGD6Hfk5qgWuJIOmyL+lp0498y+fAHQYEnw==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
  header.d=amd.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=IbCezbVRPVKUGwB6ZucyCdZUnt+X8bvLBGTunHMx0YI=;
- b=mpYro+JsM2wh5mEUFofLcrIOZPwkUW7UtpCb5aXflmhacQ7I30dR4AH9LXWKjGPfgazVsn6QSvOzVqfYC+XAZG1W1+NqEGFlh8QnhbB+ZJs9OS/jtFTmZ3Mbw/VUByTXIL+ZsYk7G9oeMwjqyCBBbYyvSDeTSnZ5f/DNaJFFqBc=
+ bh=J0oyQbEddW+eA9KcudgAqD7es6wvFMzCDI/PpKvLV5c=;
+ b=b4RXWaueAAGcFoUY1M2dKnRCxVJdZuzaY3bDPljxFIJKuIIKfctNbYKZyMTgMmjaTzfXlXQ2u6JwKluUES95GAJG2fh2v8hjcTo20XeBxq5PbTsSnUP4baucGHxPgv+/UKKkLqEJYYkTx6fX1A5dafqgBqPdaR044hBynizXwTg=
 Authentication-Results: dkim=none (message not signed)
  header.d=none;dmarc=none action=none header.from=amd.com;
 Received: from CY5PR12MB6108.namprd12.prod.outlook.com (2603:10b6:930:27::15)
  by MW5PR12MB5622.namprd12.prod.outlook.com (2603:10b6:303:198::13) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8314.17; Tue, 7 Jan
- 2025 21:29:57 +0000
+ 2025 21:29:59 +0000
 Received: from CY5PR12MB6108.namprd12.prod.outlook.com
  ([fe80::46e5:5b51:72c3:3754]) by CY5PR12MB6108.namprd12.prod.outlook.com
  ([fe80::46e5:5b51:72c3:3754%6]) with mapi id 15.20.8293.000; Tue, 7 Jan 2025
- 21:29:56 +0000
-Message-ID: <a24e5301-5130-4133-b5ba-551172087b6e@amd.com>
-Date: Tue, 7 Jan 2025 15:29:56 -0600
+ 21:29:59 +0000
+Message-ID: <399430a5-eb7f-48b0-be4a-e1b404a200e0@amd.com>
+Date: Tue, 7 Jan 2025 15:29:59 -0600
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 18/20] platform/x86: dell: Modify Makefile alignment
+Subject: Re: [PATCH v3 19/20] platform/x86: Update alienware-wmi config
+ entries
 To: Kurt Borja <kuurtb@gmail.com>, platform-driver-x86@vger.kernel.org
 Cc: ilpo.jarvinen@linux.intel.com, w_armin@gmx.de, hdegoede@redhat.com,
  Dell.Client.Kernel@dell.com, linux-kernel@vger.kernel.org
 References: <20250105153019.19206-2-kuurtb@gmail.com>
- <20250105153019.19206-20-kuurtb@gmail.com>
+ <20250105153019.19206-21-kuurtb@gmail.com>
 Content-Language: en-US
 From: Mario Limonciello <mario.limonciello@amd.com>
-In-Reply-To: <20250105153019.19206-20-kuurtb@gmail.com>
+In-Reply-To: <20250105153019.19206-21-kuurtb@gmail.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 X-ClientProxiedBy: SA9PR13CA0054.namprd13.prod.outlook.com
@@ -66,159 +67,204 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
 X-MS-TrafficTypeDiagnostic: CY5PR12MB6108:EE_|MW5PR12MB5622:EE_
-X-MS-Office365-Filtering-Correlation-Id: e8ee8548-cb26-4c25-0c7e-08dd2f626ec7
+X-MS-Office365-Filtering-Correlation-Id: 096e01a6-42e2-4ebf-18b2-08dd2f62707a
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|376014|366016|7053199007;
 X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?K05xaWNwbXdMMUlrdytIbEl0T3B5a0g0RFFuSkNoaXYwanZTZjhZVVFiS1hE?=
- =?utf-8?B?aEZmR2pEbWtaWnNOaWJnc3dzVk1YeWIvZ3lVdHlKcVlsYU5hakZUUGJEcksz?=
- =?utf-8?B?WXQ3R05LcUZScE1TK3pUWU5pTkFHeGZSK1lRdkFSbTAxRUN6b2xvNTArNS82?=
- =?utf-8?B?UDFIVkVVWFZXT2xVbHZnZHNNREZLT1ZQWGJWbDFiRkMwNFM1ZDZzd2xnK2Fl?=
- =?utf-8?B?aWV3VFBnWGFHdW9ZWVp6djl5WlREN3hoWUd0MWJ4Wk9BSjhndnpreFZjOFlS?=
- =?utf-8?B?enFEWm81bGRtVzF5UVVjd3ZESWlERUIwZ0JZRUdGRFVNRFdqTHdUYVFlY2ln?=
- =?utf-8?B?Z0I0ZFdNa3BIK2N6L2lmK2tHRlJyYXluUTF6SUdPTGR5T09RenIvL25IeW9C?=
- =?utf-8?B?OFlBR3I2WXVkTmc4UW9IaTFkQTJkTEgrV1o0UzBHNG9KdGQ2OEZ5Q283dmJS?=
- =?utf-8?B?N0NneWhDZTlvT1hNR0Q3d3BOU1dPdHJnS21pWGsxWWdCcDgxUVN5VEQyQ0lv?=
- =?utf-8?B?Ym15OWp5c2E4MFdlUXhlZjNEbmF1dGk4cWRTekJ0d0YvSnAxT3duR0ZYUFVu?=
- =?utf-8?B?SGlwWEoyTTZvMlJzUk1jY25QOFFxS2FYcTVWNlpZdjJvbGcxbUlIM2JTWHdW?=
- =?utf-8?B?RW81V1h4cXBzZkdWK3hOcW1ORUlmZ24vZVhFZ0ZsU1M1aTF2bUR2L1BaOThE?=
- =?utf-8?B?bVZvbEpRMDR3WFEyWm9iSWZ1ZGVLQ25qVlRQZXFXRXRoVzVCOStQMFcyYUZI?=
- =?utf-8?B?R1hIVENndENXdVRKVlNnanA4cjkreFF2Y3A0THUyRmxadkMzNVhVZ1UxT2FW?=
- =?utf-8?B?RU9ENS9MVEM1SDdva0prVDNEeXRhVWU1KzNITHFjRVlmdFlya3I4bVJUeXor?=
- =?utf-8?B?K3A5K0ZTMUg0SFc0bDZXQXZDSExOU0ZtNkJKSzl4R0hobUIrdE9FQXZXa2Zq?=
- =?utf-8?B?S1BobDdvZUEyaFl4TXFvVWp5Z2ZrcG5rdFZRank1WW9QbUVaS2pmbi9oSlRz?=
- =?utf-8?B?TnBuOGJhZGpXOTg4SzFPd2ozeVFJc2xwdkpNMFh2UExodS9OWDdvMC9wd1Rq?=
- =?utf-8?B?TWUrRFpDb0ltcURyb2tjUVY3dHU1WTVHZVIrdXkrbHI5N0pjZE5pYXJBTThN?=
- =?utf-8?B?ZWVmNjVJSURETVJkSUF3cVA0OHZxTlZ5SHlJN2JCQmJ6UXJFdzNWYnFickNa?=
- =?utf-8?B?Sjd1T1UycDBQTURvbGtFa1RDUFVRUzhnZ0d6MWF6anUwNXZEbXBnK0hnNjZi?=
- =?utf-8?B?TENDbnMzQXhlc2Y3RUE0d0lJN1hlMTNIN1dBRitGMEpLa3kxRG9adFJnMUU5?=
- =?utf-8?B?RW5PZFNsa280OXkyVWNuNVNzbWt2a2lZN1QrVU9yN2hUNGdLQ0NaVTNXbVM4?=
- =?utf-8?B?ek04RTV2Q05pU0xiY0dXVHFkWTEwemRpUGRvRHd0bXNpNjNIOHN1NmVhTmZk?=
- =?utf-8?B?QXhiNGVnOThFZEtaRS9mQXQ2cWNiMzlVdnppelBOL3d4UmxwUjVmeit3QTcr?=
- =?utf-8?B?cGF6RFovRXFmaCs0ZEtnaE81SnFaQ3NYOVlISHhWVUtXVTJrZ0VDUXNja04w?=
- =?utf-8?B?Q2QybFlFMWM2ZDJoSTdVZ0I0UXdtSk83RUFxY0NHbTA1WGViZ3F6elk4aXVl?=
- =?utf-8?B?YlBkNWt3bGVSd0pBM2toYkxYYTlZeU5XY0NjZ3hHYkI2K1RIbC8rQUwvVkhH?=
- =?utf-8?B?WVFPb0c5MjNpamoyRlFlQ1BmcjExQWlXQmlJYW5QeEc1WktvZVdMSy9NaTJP?=
- =?utf-8?B?WTNHams4enVMdXZ4bTBLMC90RWhaZC92RytOYmFaWkh6emE1U2haQmRXZXB0?=
- =?utf-8?B?c0JoNnk0T2hZVmVPSUNpa3pVVXJ4RTBEZjlPNjBnMjZKN2Z0cTAzRWlNbUQ3?=
- =?utf-8?Q?3Ih8MihS8A3jA?=
+	=?utf-8?B?c2tMTTdkTHlLWFFGaWtydWpHNExrVU1heEhCdlNYdC9nOUlpSlRMd05jK3oy?=
+ =?utf-8?B?OFQvd0VORGVKV0NjbE8vRlY1VVBqVzBEVXhlbFBMMXFubGRtMlFYbG1BV2dO?=
+ =?utf-8?B?M2V4cEpEekwrUXQ1aU5PeTIraHBEWVkxYlVnb2VBNk94Wkl4Tk9wLysydm1n?=
+ =?utf-8?B?T2hERmM3MGF0Q0NnNHF5S25zRnc2R0VlQlpGczRvVXllWmd0KzV6NHZYZDcy?=
+ =?utf-8?B?VDMyd2lIN2pzc3BZTzZPMFRhVGxUVHd0cmtLZXc0VEw1bGpKOEtwTmRtU25U?=
+ =?utf-8?B?Rmk1MTZBbWIxSHNjc1lMaE9hQ2ZwN2NYeWFWaCt3L2VtNjlHYlZZSlR4NUpw?=
+ =?utf-8?B?U0JiMVNGNjZFY3JjM0ZQdEdiWkhYTjVwZmlYN2g0Q1ltcFE1cHVMSWRDWDhF?=
+ =?utf-8?B?L1MwdjBtOC9YU2UxYW8zeE4yUWxhQ0Y3SWRqVktYb1hnL205aG9McDQ1c25O?=
+ =?utf-8?B?ZGsxVUl5T3hKMFE5b2ZJakd0ZENtSmVrSjJsTVpSam9zOVlFbUR5eVdpTVAv?=
+ =?utf-8?B?cmVwQkF4cEdwY29ieDkrdEpIUEhJdU1NRXpJZVNUZHl0dVBQaDhZSWh6a004?=
+ =?utf-8?B?aktFVGp0S2pWWEV4aUQwRzR3SkY2cXoyZUVUb2sxckpRa1I5c0RweTdpR24v?=
+ =?utf-8?B?MXdvVlZjRzNNcUFZSmpmRG85djJzTCtqcUUxUW9DT2N3blpEbnhsSHVCMFE2?=
+ =?utf-8?B?VVNLRFByTEVTYnVpZk13ZHhXVUZRNW9HUitaU3k5SXlta0hPb3o0Kzh1dkU0?=
+ =?utf-8?B?ei9XZ1RCeElPVUM0SHN3bXlnVEljUXJMVXV3Zm1iL3Nuak5WbzJML0c2TGNJ?=
+ =?utf-8?B?U015Mm9ETnQzQ1I2LzlqN1AzMVAvTkZBc1FjRzJzN1ZmWjJKVTF2Z1hFdFNq?=
+ =?utf-8?B?OTlBdDZxTmRTbzc1VmxUanFaTGNtQmVzcnJ1R0gwc2gwckJvWmpIenBZM09W?=
+ =?utf-8?B?S3FzL1pUakFrYUNkaEJkRlhZamRkS1BCcGZFOWEwaTV5bkd6NVJIZllRR0VB?=
+ =?utf-8?B?MUlWRHNSdkpyRlZSSmFOZjlHdjhkME1TZ1JqSURFY09ybkZYdDBUVUpTZ3Fv?=
+ =?utf-8?B?NmRCRkRNbHlWc3NhL3liTHhwajl6WkhrbFBJM0lHRjlJQ0RrRG1sK0NBVisx?=
+ =?utf-8?B?anM3elNWUWlwYUVzMkRPMlFWY21qMXBwUWNuZTREVlBmamR4cmY5YUp0RDBZ?=
+ =?utf-8?B?R1ZrUmJlaXZDT3lkVEQvcytpcUpwNEpoa1preUh4MjNqRHlzTHdvYllYWGZ2?=
+ =?utf-8?B?UXY0VDdFZFdUTG0xRXBIdDFILzg2MjlWcjI0ajQzeGxDS3BXMG0rcU04UDFH?=
+ =?utf-8?B?MExZcG1vNWVBbEl1a1RhTzAyM1FJejRqeEJzeFA3dXh3Wm5kOEJMUk9yTzVU?=
+ =?utf-8?B?VkNqbG9mV2NxdU1RKzBKREkzRFNpUUp3RlNSK3JaL0dRMEx3Nk5ScUJkQ2w4?=
+ =?utf-8?B?RWV2SWxJSWxDcnVqdHhMOGdMUlhhalNOSHZudHVYTUhKQURnRmZmaTlBMnla?=
+ =?utf-8?B?ZGc2a05ldm0zcHQwSjJybUxxdjE0SWtRcXhOcmlzRjNuT25McHF5cFJXOGtr?=
+ =?utf-8?B?SGYySTA1YmE5TnVwdDNiSTdsM2V1aUdQcTBPV2VZc0Fhc1MxR1EvdVlvMUdR?=
+ =?utf-8?B?TU9LRXJYUzZraitxQjN6eUQzbkFvb2o3YzRULzVHUndGczhhUVVJZjRuS0NF?=
+ =?utf-8?B?RmEybW5ackE0amt0b2M1c1JsVFVTMUUrc2x6aFdYNHB2OEtkTUVxTldsdlNz?=
+ =?utf-8?B?Y1RUeFV2eHFGOVNFcDVEMmJ2NHFlTWlpeHRJT29VSDNNQ3lhWmxaTUc4SG9S?=
+ =?utf-8?B?aURpcUEyMUtIZnplaWpvaVBxcFdFUVN3SmJWSXY3Y0JPZW1LVVpKM3FiQ0Ns?=
+ =?utf-8?Q?/jbs1cG6up3Xb?=
 X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:pl;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CY5PR12MB6108.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(376014)(366016)(7053199007);DIR:OUT;SFP:1101;
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CY5PR12MB6108.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(376014)(366016)(7053199007);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?NkNZM0VxZDZKcWVHUSs5NjlKeDY5TUlSMjhISS93dWlXWkVYb1RVZzVTYm52?=
- =?utf-8?B?L0xXUlBEeFkzQWpGSDVJZm9ITEcwVWNFbmswL1dnR0FUN01pQzE0eWJnbjFP?=
- =?utf-8?B?YUdnOHV1RXlPSHpnNm96aVZaNXp3RnZ4ZCswS3ZNblIzU2Zla05KSm1Qd0hu?=
- =?utf-8?B?dmJuUzIzbWR1eFBRZVhNV1NURGZYQVF4QlRod1VzYW9FaUZva0VTS0dUV2Vo?=
- =?utf-8?B?a0wyd0F5T3ZFZnlDdjJ5NHczcmt5Qm5RMUI1a0ZRbU5qa0wyYllYNzF2SzFx?=
- =?utf-8?B?RExyOGExQkdmWVAvMjlzVFRwRHJHcUszYUFjMFpCN0lIU0FoZkpyOXl1VXo0?=
- =?utf-8?B?dlhlZ0o3V0tsU3VkNkxNeUpLeFhSa29Kd3VldmVmOGhCNUZpck5BKzRNOTl4?=
- =?utf-8?B?SXZDTFl2bSswM0QwY1NSRnhCeStlcUpXR2VTS1ZOOFduMHUwNHRuVHNGNUxw?=
- =?utf-8?B?U2VlNTlPd2VQRG9Rb0NneGF2R29hTUN3UTBWcVptUFNQZVdRY0toaVBJQTM1?=
- =?utf-8?B?amVrb2tkblcwT0NQWGZEWnFlWGZHd1JKZDJEeHo1cnc2K3A3MmRXem53RE1H?=
- =?utf-8?B?S0hRN05EMlRRQlkzRkxaMlhnRUtieXh3TlVtQXgzNWYwQ05uN0RVQVU0MHJs?=
- =?utf-8?B?bzl1Z09DRUpkY0RrOG1EZmdJUHdjMndHVW9YV1p3V1NiUnJWMVVsOERtQXpJ?=
- =?utf-8?B?dU9PaEppNEVwZitMNklleWJsY1dpZndGSkRDdE0xNmVvZG5CY2VoTDFmYWVo?=
- =?utf-8?B?WjF2UitWbThVWkJQR2JSRnp1ZEEvcWZRc1NLRThqQ2xSRDJ3Zks3U05FSVBl?=
- =?utf-8?B?TEM5OXhaQkFYU1U5ajVVOVI0N25uaUx2VmpjdHNNYzZ2em1vWThxUkM3U0V3?=
- =?utf-8?B?REJGSjFJVGNEWThETVBEZHllK0lDQS9lUXdCQmliYnlNclZXN0RJQ2tSb0lt?=
- =?utf-8?B?L1JaY1dib0xJOVgvS2kzZ3l3bDJ4MVZndkhtYWVjL0MwWk5zbThibWkrdm1V?=
- =?utf-8?B?RU1Sa1h0QVFkc1E1WlFyZHVyQktxN0dCRGNhUk9iV09sWFVTQk9PRUlUSy9G?=
- =?utf-8?B?UHlEVVFHY0xUdlZuVmRQUnhxQ1pFS3hZcWxBb1drK0tnUFg1b3U5SkJsMHZa?=
- =?utf-8?B?VEdxRjBHcG1xZEhna1dHV2FZTVJsYVpmZzAzcHFsODF1SnVWa21jbXFaOHJK?=
- =?utf-8?B?cElRYzAxZ3dLS25uMys4YWQ1bEs0aDdRNVl4bEV1Y2FSNC9FK1JWMlZJT2do?=
- =?utf-8?B?c1Z5WWxpd1RJUmhqdU9PeVUrQzdlcmU3K0xtUUNXbTlkQ3BCOElYVWhoclRU?=
- =?utf-8?B?YTdRV1h5Y2Uvc2duRWd2eE43bnlzQUlPMml5aTQ3S0plU3d0MEVCd3VsbTR3?=
- =?utf-8?B?Q1FyQlpIZ2thZFFENGVYc0EvR3FMcGRwOUlIVWFHQTVlQTNzaFUxajJtSUxV?=
- =?utf-8?B?NTFjcXdwaGNHNDFadGRGUEVuTGF0amdyTzMyZXozUkMvWjNiSXpZN0JYUUJo?=
- =?utf-8?B?SEZxM0RRUmtaM0kxSlh4L3ptSUhETXRNNkNXUjA3UmtIK3U3SGpreG5nN0pH?=
- =?utf-8?B?YWFKa0hXUzEvQUtrMnhLamNrZTJKQ2p2UzVYSXlNbE0vSGRQWFNOcTNndFZn?=
- =?utf-8?B?a2pkcSs1bVNaOENnUVlDQWhjNWhxTThCZzlQeVMrbGZCdXRYU2hlRjBvem9Z?=
- =?utf-8?B?N0I3N2YyRHFRWE83aW96YWt3RlluT1ZJZ0ZMU2RaUXBoeE94RmV1UFBENzBX?=
- =?utf-8?B?eVhIV21Zd1lvYVdxeEd2Tkl3TEovREFiNDZLTytHU0hqcmhCSDV6SmFJdlhn?=
- =?utf-8?B?M3FSRXhhRk9hWWt4WU1MUXVTaXhmUExLclpUdVJJYzkzY05ibngva0hJdW9y?=
- =?utf-8?B?bFVZN1JSV2xDSlZYTGFQZ3hlbjcwMVB6S2ZmdkxhYTJzeXJmNkdkUm05aEgw?=
- =?utf-8?B?LzlWMWFyWHJtQm9VTU5INjhDc1kvSUU5YmVLNnhSMCt6aXlTQ2luVlh0QUJh?=
- =?utf-8?B?a2o0ZExvRU94N2hzcXVnNCsvZU9jU0xIbnczb3E5WWR0M1l4SkR4MmRicnJx?=
- =?utf-8?B?b1JsK1JsUk1ORXg3RTI5bXBGKytpNkplSGNOT0ZTMExwTzQxblBQMEdmT0J6?=
- =?utf-8?Q?U+KYiodx7tz0On7UuLYc2meKV?=
+	=?utf-8?B?bjArSEN1a3pFQk1DWHdxS2NYdzBxSyt5WkcwUDZBWlY5Ry8yNzZJQ0tMbDNz?=
+ =?utf-8?B?eldmRGlnSkhMaFpQaGJNWVVKVkgxdktoUUpqMkRJRDB6Sk5Jcm9TTHZEUkJv?=
+ =?utf-8?B?eWJ2RnljT3NSb3FFZXJYOXdoSUxUU1lxUllDRWJ2NFFiNFY5bWlaNXBWeGNm?=
+ =?utf-8?B?VWlhcmRNK2Y1bzd0M3lrUnRVQTh4d3BTb2dMaTIrVE5pNURyOE5QaFFIOTEz?=
+ =?utf-8?B?amN2TEYybDArNVVCdGhLd045RUgxcGtGUjEwTEdmL0tjSEkrYjNVSXRHYnQy?=
+ =?utf-8?B?b3hJVlpNaFRManpSbEZqbmUxWi96VVBHVlFNUE11VVNrTWIyQVNCTThOeGVM?=
+ =?utf-8?B?akJSMU9MTWt3ck84S3VyNFdBdUhJRGR2Rm5iZEphTElSS1VWbUtoK2hLQXBo?=
+ =?utf-8?B?SVkvZjhuNytUZ0tSZ2lMWFoyTzU4cUFFNElrcW1GS0pBL0FaUWE0bzQ3TmFn?=
+ =?utf-8?B?M0l4T2dUTWFvamk5Ky9PNTJGT0pHMTY2eVpoNnUzU2d6M2lkdUNWbllKc3Fh?=
+ =?utf-8?B?cmpRTVlxZmNGWXVOVW1DL0UzNFg3OFhjdlJQRitzMnJRMDdVampNMExBazAz?=
+ =?utf-8?B?cElsdUN6Skxleit4bkdGZmxvMndidDZ2NkdQUTJ1U1pwU29nSG54Nm5MbE1K?=
+ =?utf-8?B?cGJ2N1BnNVFiUzJSYmoxbEFlYnVNNy9CRnRXM3A1NmhGVGV5Sm5DT2ZuTmtr?=
+ =?utf-8?B?NjJFUzFYR2VjcUdQVHJHMVIvSng3WXNlU2lWanFFZHJBZGVTQnArNXFDZGhQ?=
+ =?utf-8?B?bHM3Z09ldWdxanY4ZE9jY0dkMGRBcFFqeEVVS0FSYktjek05dFZ3bGxBOUM0?=
+ =?utf-8?B?Tm9OMUZiYmxaL25hUmRJOVNkK2tJVmFQdXBqZlprMStrQkYyNVVBaGI2WjFo?=
+ =?utf-8?B?di9rUDZ6TGk0ZGt6Zks5V1A0MVphNHl2NVRJczFFN0NmOGtqQUphY2h0dmtY?=
+ =?utf-8?B?MUZ0enhUWFArczBYRGFSVVRwK1ExWkFyWkxaRU0wQlM1bXc1TkhHT0h3Tk53?=
+ =?utf-8?B?T0x4b0pLb1pxRDZjKzJpK3FqK3lCY0pmQWlvYjdDV0RFR3FnWlhJb0Rtb1k4?=
+ =?utf-8?B?N2E2d2tkNWp1dE5MQ3FWM0E0cjRuQVhLOGJtRnBxd2ZEY1RyNkVLNHQzdTZK?=
+ =?utf-8?B?S1dkbVlVcnpBM0wrL2tzRnFNTGl4TzVDQlAwaE52aXMvT3NuTkJidUNTUWNF?=
+ =?utf-8?B?ZXo4TkFFNmVTc01ab09RN2hGRURUQmtaRlgwU1VXZGJhOWF3NENWUzhrR1U4?=
+ =?utf-8?B?ZG9VaGNWdno0aG81VHpIRDdVaUkvRThETTJFK2l3eW83YmRmYmRwQUFwVS81?=
+ =?utf-8?B?TUYrR0gxZ0Zlc3ZwcTJ0UGdlR3hiRmk3dUJOL0owcHVnTk40OHhwcWxaN1lq?=
+ =?utf-8?B?SXlSS3BaekFuWVBkVjRncmlIcWRpbTZXTjZ2TFpuLzNhWitTNGNoNGQvdU42?=
+ =?utf-8?B?VEpFSmtVQ0c2dU1pVUsrSTVGUmRkUW9oRmVmYi9mTXEwM3huSlUydzg3NVg2?=
+ =?utf-8?B?UnhKYk92M2Via21BWkVtQ0x3SXdDWHRuUmN1aHFseFdXcXFnYXljeVRLb0dH?=
+ =?utf-8?B?cXUybFBUUDdMNWFveHo3ZkxSVXpaMW5POVhhN28vbkNheEdRdEdmd0I5S3kx?=
+ =?utf-8?B?d3NVY1I4NjJzb3NDRU42RDZpSG5Wc3pURzlCTGlSSEZrVE82QVZxMzN0ekRa?=
+ =?utf-8?B?NXY3a3BNcGNzdTBaelh6Mlo5ZVc2aTlHR2FsWFphVEFoMmU5VnR5RW5nQWhZ?=
+ =?utf-8?B?bVZzY29qY01VTmtMMGduYTB0S0xieXM0L1k3T1JuRlJRUEhqWmFveTl0MjFR?=
+ =?utf-8?B?cm9lSUxYYTlUTEQ5eEVINVBJQkN6S0FWb0hpTU5KQU45MzJZZWZMUENET081?=
+ =?utf-8?B?VndSV2pSK0JWSUF2RkZGdXNqckloalZtYkNRQmEwTDhJMW9zOSt2anJTRXhv?=
+ =?utf-8?B?ZGl0VThLVDlaNUVENThqdzFkMjBtMWpFMVNzUEVnS3NiZE9mcllpUnRIaS9T?=
+ =?utf-8?B?NDgwWnVDNXd0WDNqQlNlYWw4ZThEZFNYOEp0aHRoK01Vb3Jqc09uOXhUMW9V?=
+ =?utf-8?B?QjZvWHB0a25DQ2NlM2lvaElEWWJ6KzNlU3Y4YmF2VFEvSHdqWjBwdkorMXFT?=
+ =?utf-8?Q?Yeqx7FPt9I2M/RVM4AH7uNqeG?=
 X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: e8ee8548-cb26-4c25-0c7e-08dd2f626ec7
+X-MS-Exchange-CrossTenant-Network-Message-Id: 096e01a6-42e2-4ebf-18b2-08dd2f62707a
 X-MS-Exchange-CrossTenant-AuthSource: CY5PR12MB6108.namprd12.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 07 Jan 2025 21:29:56.9194
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 07 Jan 2025 21:29:59.7813
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: Yh/50IW5VgEAkaNLrpeUAhMRyFBTFLT8TVsTYrV5Ws9p8lzON2PGAkhzzFEW+GSr5JWUFbtEwG50EYWioD+w/A==
+X-MS-Exchange-CrossTenant-UserPrincipalName: TADvzCzIiH0Kn7ttYZuTO4M5OK6OrzvauBD2gKGLi3p4jJQVHz8Ue3RFRL18DzuiNEACyFdcgQj7U2oZLHBTHA==
 X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW5PR12MB5622
 
 On 1/5/2025 09:30, Kurt Borja wrote:
-> Add one more TAB to each line to support upcoming changes.
+> Add config entries for each WMI driver managed by the alienware-wmi
+> module to be able to conditionally compile them.
 > 
 > Reviewed-by: Armin Wolf <W_Armin@gmx.de>
 > Signed-off-by: Kurt Borja <kuurtb@gmail.com>
 Reviewed-by: Mario Limonciello <mario.limonciello@amd.com>
 > ---
->   drivers/platform/x86/dell/Makefile | 48 +++++++++++++++---------------
->   1 file changed, 24 insertions(+), 24 deletions(-)
+>   drivers/platform/x86/dell/Kconfig         | 30 +++++++++++++++++++----
+>   drivers/platform/x86/dell/Makefile        |  4 +--
+>   drivers/platform/x86/dell/alienware-wmi.h | 23 +++++++++++++++++
+>   3 files changed, 50 insertions(+), 7 deletions(-)
 > 
+> diff --git a/drivers/platform/x86/dell/Kconfig b/drivers/platform/x86/dell/Kconfig
+> index d09060aedd3f..f8a0dffcaab7 100644
+> --- a/drivers/platform/x86/dell/Kconfig
+> +++ b/drivers/platform/x86/dell/Kconfig
+> @@ -18,15 +18,35 @@ config ALIENWARE_WMI
+>   	tristate "Alienware Special feature control"
+>   	default m
+>   	depends on ACPI
+> +	depends on ACPI_WMI
+> +	depends on DMI
+>   	depends on LEDS_CLASS
+>   	depends on NEW_LEDS
+> -	depends on ACPI_WMI
+> +	help
+> +	 This is a driver for controlling Alienware WMI driven features.
+> +
+> +	 On legacy devices, it exposes an interface for controlling the AlienFX
+> +	 zones on Alienware machines that don't contain a dedicated
+> +	 AlienFX USB MCU such as the X51 and X51-R2.
+> +
+> +	 On newer devices, it exposes the AWCC thermal control interface through
+> +	 known Kernel APIs.
+> +
+> +config ALIENWARE_WMI_LEGACY
+> +	bool "Alienware Legacy WMI device driver"
+> +	default y
+> +	depends on ALIENWARE_WMI
+> +	help
+> +	 Legacy Alienware WMI driver with AlienFX LED control capabilities.
+> +
+> +config ALIENWARE_WMI_WMAX
+> +	bool "Alienware WMAX WMI device driver"
+> +	default y
+> +	depends on ALIENWARE_WMI
+>   	select ACPI_PLATFORM_PROFILE
+>   	help
+> -	 This is a driver for controlling Alienware BIOS driven
+> -	 features.  It exposes an interface for controlling the AlienFX
+> -	 zones on Alienware machines that don't contain a dedicated AlienFX
+> -	 USB MCU such as the X51 and X51-R2.
+> +	 Alienware WMI driver with AlienFX LED, HDMI, amplifier, deep sleep and
+> +	 AWCC thermal control capabilities.
+>   
+>   config DCDBAS
+>   	tristate "Dell Systems Management Base Driver"
 > diff --git a/drivers/platform/x86/dell/Makefile b/drivers/platform/x86/dell/Makefile
-> index 03ba459f3d31..d5718ef34c48 100644
+> index d5718ef34c48..8ac9a933c770 100644
 > --- a/drivers/platform/x86/dell/Makefile
 > +++ b/drivers/platform/x86/dell/Makefile
-> @@ -4,27 +4,27 @@
->   # Dell x86 Platform-Specific Drivers
->   #
+> @@ -6,8 +6,8 @@
 >   
-> -obj-$(CONFIG_ALIENWARE_WMI)		+= alienware-wmi.o
-> -alienware-wmi-objs			:= alienware-wmi-base.o
-> -alienware-wmi-y				+= alienware-wmi-legacy.o
-> -alienware-wmi-y				+= alienware-wmi-wmax.o
-> -obj-$(CONFIG_DCDBAS)			+= dcdbas.o
-> -obj-$(CONFIG_DELL_LAPTOP)		+= dell-laptop.o
-> -obj-$(CONFIG_DELL_RBTN)			+= dell-rbtn.o
-> -obj-$(CONFIG_DELL_RBU)			+= dell_rbu.o
-> -obj-$(CONFIG_DELL_PC)			+= dell-pc.o
-> -obj-$(CONFIG_DELL_SMBIOS)		+= dell-smbios.o
-> -dell-smbios-objs			:= dell-smbios-base.o
-> -dell-smbios-$(CONFIG_DELL_SMBIOS_WMI)	+= dell-smbios-wmi.o
-> -dell-smbios-$(CONFIG_DELL_SMBIOS_SMM)	+= dell-smbios-smm.o
-> -obj-$(CONFIG_DELL_SMO8800)		+= dell-smo8800.o
-> -obj-$(CONFIG_DELL_SMO8800)		+= dell-lis3lv02d.o
-> -obj-$(CONFIG_DELL_UART_BACKLIGHT)	+= dell-uart-backlight.o
-> -obj-$(CONFIG_DELL_WMI)			+= dell-wmi.o
-> -dell-wmi-objs				:= dell-wmi-base.o
-> -dell-wmi-$(CONFIG_DELL_WMI_PRIVACY)	+= dell-wmi-privacy.o
-> -obj-$(CONFIG_DELL_WMI_AIO)		+= dell-wmi-aio.o
-> -obj-$(CONFIG_DELL_WMI_DESCRIPTOR)	+= dell-wmi-descriptor.o
-> -obj-$(CONFIG_DELL_WMI_DDV)		+= dell-wmi-ddv.o
-> -obj-$(CONFIG_DELL_WMI_LED)		+= dell-wmi-led.o
-> -obj-$(CONFIG_DELL_WMI_SYSMAN)		+= dell-wmi-sysman/
-> +obj-$(CONFIG_ALIENWARE_WMI)			+= alienware-wmi.o
-> +alienware-wmi-objs				:= alienware-wmi-base.o
-> +alienware-wmi-y					+= alienware-wmi-legacy.o
-> +alienware-wmi-y					+= alienware-wmi-wmax.o
-> +obj-$(CONFIG_DCDBAS)				+= dcdbas.o
-> +obj-$(CONFIG_DELL_LAPTOP)			+= dell-laptop.o
-> +obj-$(CONFIG_DELL_RBTN)				+= dell-rbtn.o
-> +obj-$(CONFIG_DELL_RBU)				+= dell_rbu.o
-> +obj-$(CONFIG_DELL_PC)				+= dell-pc.o
-> +obj-$(CONFIG_DELL_SMBIOS)			+= dell-smbios.o
-> +dell-smbios-objs				:= dell-smbios-base.o
-> +dell-smbios-$(CONFIG_DELL_SMBIOS_WMI)		+= dell-smbios-wmi.o
-> +dell-smbios-$(CONFIG_DELL_SMBIOS_SMM)		+= dell-smbios-smm.o
-> +obj-$(CONFIG_DELL_SMO8800)			+= dell-smo8800.o
-> +obj-$(CONFIG_DELL_SMO8800)			+= dell-lis3lv02d.o
-> +obj-$(CONFIG_DELL_UART_BACKLIGHT)		+= dell-uart-backlight.o
-> +obj-$(CONFIG_DELL_WMI)				+= dell-wmi.o
-> +dell-wmi-objs					:= dell-wmi-base.o
-> +dell-wmi-$(CONFIG_DELL_WMI_PRIVACY)		+= dell-wmi-privacy.o
-> +obj-$(CONFIG_DELL_WMI_AIO)			+= dell-wmi-aio.o
-> +obj-$(CONFIG_DELL_WMI_DESCRIPTOR)		+= dell-wmi-descriptor.o
-> +obj-$(CONFIG_DELL_WMI_DDV)			+= dell-wmi-ddv.o
-> +obj-$(CONFIG_DELL_WMI_LED)			+= dell-wmi-led.o
-> +obj-$(CONFIG_DELL_WMI_SYSMAN)			+= dell-wmi-sysman/
+>   obj-$(CONFIG_ALIENWARE_WMI)			+= alienware-wmi.o
+>   alienware-wmi-objs				:= alienware-wmi-base.o
+> -alienware-wmi-y					+= alienware-wmi-legacy.o
+> -alienware-wmi-y					+= alienware-wmi-wmax.o
+> +alienware-wmi-$(CONFIG_ALIENWARE_WMI_LEGACY)	+= alienware-wmi-legacy.o
+> +alienware-wmi-$(CONFIG_ALIENWARE_WMI_WMAX)	+= alienware-wmi-wmax.o
+>   obj-$(CONFIG_DCDBAS)				+= dcdbas.o
+>   obj-$(CONFIG_DELL_LAPTOP)			+= dell-laptop.o
+>   obj-$(CONFIG_DELL_RBTN)				+= dell-rbtn.o
+> diff --git a/drivers/platform/x86/dell/alienware-wmi.h b/drivers/platform/x86/dell/alienware-wmi.h
+> index e4b75b1acd10..a810767a0eb7 100644
+> --- a/drivers/platform/x86/dell/alienware-wmi.h
+> +++ b/drivers/platform/x86/dell/alienware-wmi.h
+> @@ -72,10 +72,33 @@ int alienware_wmi_command(struct wmi_device *wdev, u32 method_id,
+>   int alienware_alienfx_setup(struct alienfx_platdata *pdata);
+>   void alienware_alienfx_exit(struct wmi_device *wdev);
+>   
+> +#if IS_ENABLED(CONFIG_ALIENWARE_WMI_LEGACY)
+>   int __init alienware_legacy_wmi_init(void);
+>   void __exit alienware_legacy_wmi_exit(void);
+> +#else
+> +static inline int alienware_legacy_wmi_init(void)
+> +{
+> +	return -ENODEV;
+> +}
+> +
+> +static inline void alienware_legacy_wmi_exit(void)
+> +{
+> +}
+> +#endif
+>   
+> +#if IS_ENABLED(CONFIG_ALIENWARE_WMI_WMAX)
+>   int __init alienware_wmax_wmi_init(void);
+>   void __exit alienware_wmax_wmi_exit(void);
+> +#else
+> +static inline int alienware_wmax_wmi_init(void)
+> +{
+> +	return -ENODEV;
+> +}
+> +
+> +
+> +static inline void alienware_wmax_wmi_exit(void)
+> +{
+> +}
+> +#endif
+>   
+>   #endif
 
