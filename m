@@ -1,41 +1,87 @@
-Received: from todd.t-8ch.de (todd.t-8ch.de [159.69.126.157])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ua1-f49.google.com (mail-ua1-f49.google.com [209.85.222.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B21D1F3D4C;
-	Tue,  7 Jan 2025 17:15:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.69.126.157
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7CB4F1F37B8;
+	Tue,  7 Jan 2025 17:25:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736270115; cv=none; b=Curl4VckTy50TTWQmPNmAxHzKy9QG7DaPsGdquhZPO04qy0l0GszXGkKDAKfb/g+eeB6oxsaeVYc79WCmvx+m2xcT0RFhOY6nw8hpdNbNpWMIeGabKc8GCZZvjd7pQ5XDhgyRmYXEJqfyxFGyZSlsDfvrgFYdbRXz3iXod3cqVY=
+	t=1736270750; cv=none; b=InT2XO9Bl5kABkb2gKZOx1mEdvfhwAzjEpXMJFfLjDXlZRiX5vuzYhyBsBN3QYZVYLwsGP8gUANSvtbO1OzquN43RobcETVP52YRC/iP8pwzae+txBHhKwPXrnXeDLSIEceowo/XJk3Ct2663ZUGWzpl+YOltHKWHs7Z8D5V0nw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736270115; c=relaxed/simple;
-	bh=7GvcBgmCQu8yAzhhjQrKSKMNcd0lBDlK2iTz18DqqdQ=;
+	s=arc-20240116; t=1736270750; c=relaxed/simple;
+	bh=P9t+yMktnHNVfsv+x+epHKYdLj72zIeZxu8ub0Xdi3E=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=bMfg80Ux5ar4DfUcS5PMRGdeB6jEY6o0yiNW77PbNMM9M0xodRUC/qn9FrBqPtKQjUKfUX80GQHGSxMFN6DF3X73+xiXeTo93N74+t/gFiSny3O8oQz4UabareDGy4SrUGrAzO0FkcCURHHe8cONyvZJgIK5zHBZYrbOw3ABJw4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=t-8ch.de; spf=pass smtp.mailfrom=t-8ch.de; dkim=pass (1024-bit key) header.d=t-8ch.de header.i=@t-8ch.de header.b=ITRw6rtn; arc=none smtp.client-ip=159.69.126.157
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=t-8ch.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=t-8ch.de
+	 Content-Type:Content-Disposition:In-Reply-To; b=Mfa2Z+wzO5WWZNOBBgPoMwCQEDRYSDx8olQAof+4zGooryKhhe+xWNiBCV8jPJ29fq6FsYzoH5tSvPxuCjuEAYygMrnjcRezkIfALYGuYrrqpeBqjdpqwOnhkJ3r+khcU852et5dzNgjF88rRgCb3J5YHEt2sTqgUaDZUC5J0BU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=l4mvV88d; arc=none smtp.client-ip=209.85.222.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=t-8ch.de header.i=@t-8ch.de header.b="ITRw6rtn"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=t-8ch.de; s=mail;
-	t=1736270108; bh=7GvcBgmCQu8yAzhhjQrKSKMNcd0lBDlK2iTz18DqqdQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=ITRw6rtnyJDsWLCpn/uUsvqJ5gaTgvmlNGJXKSbAsrbnhE//MyvYnXY/QMhxVsdDF
-	 3H8VMjLY+Lbe5in3hxpO+v9JgqdH4gK/uCwMCQKi0cnXNAoYFeOi/bvhks3CqPZ3Ln
-	 aXq7z3DC1h9zfcdZ6PReyqaQk1vLxQAkal+ho+nY=
-Date: Tue, 7 Jan 2025 18:15:07 +0100
-From: Thomas =?utf-8?Q?Wei=C3=9Fschuh?= <thomas@t-8ch.de>
-To: Joshua Grisham <josh@joshuagrisham.com>
-Cc: Armin Wolf <W_Armin@gmx.de>, ilpo.jarvinen@linux.intel.com, 
-	hdegoede@redhat.com, platform-driver-x86@vger.kernel.org, corbet@lwn.net, 
-	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v4] platform/x86: samsung-galaxybook: Add
- samsung-galaxybook driver
-Message-ID: <d9c46324-ff88-4ee3-aa9b-a187a2caf22f@t-8ch.de>
-References: <20241226153031.49457-1-josh@joshuagrisham.com>
- <0fbe58a9-ecca-437f-aa30-9d3a17c2bd43@gmx.de>
- <CAMF+KeYdshNex2h4kLJari=kXVxgcOZw7GDutJrV6vKC0PTe6A@mail.gmail.com>
- <a8011f0f-1d44-42ec-9089-2da31f3852e2@gmx.de>
- <CAMF+KeZm8LCGsCZ9bosNYRCbv847CcZr+0mWeZtDQsk5QFRuyg@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="l4mvV88d"
+Received: by mail-ua1-f49.google.com with SMTP id a1e0cc1a2514c-85c436db302so5624241.0;
+        Tue, 07 Jan 2025 09:25:47 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1736270746; x=1736875546; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=DLpfsxsH8zBff1mg2vsy7m+Lf2nrbmoBVb1UPiwsnV8=;
+        b=l4mvV88dd+2J0O2yH0+RLmveHMA7L1EuEBPfLKuj+1C0utrP611SPBaEgKN2gN2KIr
+         krhjRQPF8nZbny3PSe7M+8P4a1MrharrBZ5AkCiGPCDvuU4mYVmdz8nA+1MMSojD8bZ2
+         gPf7T4IlQWUPdPI4pHHfRRRnQ3fIgptJe6FGR9cG6FkIJQjnBJFfKzGHk3Ntq4t4Da6e
+         LeV+g/TMa6Xsq7lJi1HtkGuDFPqzTXCAkhgYGZZO9r6c3tCHk8G4CGZP/JlcpPNjD+DQ
+         ClItgMh6eyWxXpBEiUQSL4kJ5ARBIDURplkfC201pAYjdv49I7gdwub/0QsevP8q2Tbm
+         6yzA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1736270746; x=1736875546;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=DLpfsxsH8zBff1mg2vsy7m+Lf2nrbmoBVb1UPiwsnV8=;
+        b=Ddzlj23jN5o3LA9NILoC/i4twsNAZ1X5Ts6TCQz8Ek0oPRIvoCmnEt+JWXWegCjewJ
+         H5rsh6EtjKeqHDZmkTeZoGB0YUSBqy547LjvPdhDSpqijF/WOSq6BTT0oLpq8129yu7K
+         TAwHNvrDg1SwA1Gpu5amFR1ZfS284Hr7/HAoCND62wUxml5y+58bCZux351x+zQ57FLr
+         c6yxVqby40FTClKjYt3yvyOk+lB8rD+a2qUNguzAeCdTOE+0g3jfl1gQT6m4ycAxu84D
+         Z1asIIjPhI6gEuD9GH/DmHl3d4SG2n6iYPhkVKcKqtFvB9EN3BLb+eE85xU0WMzZrlTs
+         XypA==
+X-Forwarded-Encrypted: i=1; AJvYcCUhhp1y3TnEEWcS+r2+rho4+u4MetNEhEgHdJg1fjBtv8YiyzuMQ8CsGCxHHo0/lIebzymYOfwWdOPl3oRJ@vger.kernel.org, AJvYcCWFptzJP5I83zBPDraVV0wwAUazCrtPsGSkTVrSI1XnV20YZ7k1VGcBLUDrYBdDzllBj9p1/RVUo15A@vger.kernel.org, AJvYcCWKIoPeQLRb+56nnexcBQZa78voJ0rbeAYANGNpm9NqvCgdmIRlSp41YXJWdXn6+zpb+/8gavLynXgUrBIxhJy6mvnZRg==@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzeh9LuvtSmUFRCysA+P+uqh8ZgdvpJC9xC8WJ/T76UOfnOQ/Aw
+	5a1Hamt/kZJ5AQ57MYxOwfc828O1ij8XZGrCPQCL7uDFXoI56b7DzwVlW2jt
+X-Gm-Gg: ASbGncvEQnOTY7IfZTrq1bIOOTZIp8JpzLnRuxncXQVyLKa/likSBW7j6DcVOAHjvdb
+	NHGxdsHRiI45A30chpd+VxxzGBOa5tuwe6YC6vSw8+3fgR3zYOKwFNW3L6STgErGPl0uJ9VPGu/
+	FAHYwO8mw8UiVw3Sp0o8zP1+Dky+PuhBCRytru6ShZ3ItCpzpS6ofsKmt53Q3fiWNWEK9a55Q1f
+	40L29vmkPLTZsj5I0rF2VYB872WM6+lrtfhvHGMOc8gZDJ+g4N52A==
+X-Google-Smtp-Source: AGHT+IEwvLhACfk74kgCoBRRXG3TNRsw6k9OAGNyK0Ns7EbFgnrcSon/7GQZYwV/4Gb5KlXn9/iUPQ==
+X-Received: by 2002:a05:6102:374b:b0:4af:fc7d:b74a with SMTP id ada2fe7eead31-4b3c1e1f315mr2971663137.2.1736270746331;
+        Tue, 07 Jan 2025 09:25:46 -0800 (PST)
+Received: from alphacentauri ([2800:bf0:82:1159:1ea9:11b1:7af9:1277])
+        by smtp.gmail.com with ESMTPSA id ada2fe7eead31-4b2bf9b9191sm7805259137.13.2025.01.07.09.25.41
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 07 Jan 2025 09:25:45 -0800 (PST)
+Date: Tue, 7 Jan 2025 12:25:40 -0500
+From: Kurt Borja <kuurtb@gmail.com>
+To: "Limonciello, Mario" <mario.limonciello@amd.com>
+Cc: Hridesh MG <hridesh699@gmail.com>, 
+	Mark Pearson <mpearson-lenovo@squebb.ca>, 
+	"platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>, josh@joshuagrisham.com, 
+	"Derek J . Clark" <derekjohn.clark@gmail.com>, "Rafael J. Wysocki" <rafael@kernel.org>, 
+	Len Brown <lenb@kernel.org>, Maximilian Luz <luzmaximilian@gmail.com>, 
+	Hans de Goede <hdegoede@redhat.com>, Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>, 
+	Lee Chun-Yi <jlee@suse.com>, Shyam Sundar S K <Shyam-sundar.S-k@amd.com>, 
+	Corentin Chary <corentin.chary@gmail.com>, "Luke D . Jones" <luke@ljones.dev>, 
+	Lyndon Sanche <lsanche@lyndeno.ca>, Ike Panhc <ike.pan@canonical.com>, 
+	Henrique de Moraes Holschuh <hmh@hmh.eng.br>, Armin Wolf <W_Armin@gmx.de>, 
+	Colin Ian King <colin.i.king@gmail.com>, Alexis Belmonte <alexbelm48@gmail.com>, 
+	Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>, Ai Chao <aichao@kylinos.cn>, Gergo Koteles <soyer@irl.hu>, 
+	"linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>, linux-kernel@vger.kernel.org, Dell.Client.Kernel@dell.com, 
+	ibm-acpi-devel@lists.sourceforge.net
+Subject: Re: [RFC PATCH 0/3] ACPI: platform_profile: Let drivers dynamically
+ refresh choices
+Message-ID: <zelin5tbkup26skhs3dwacwxl33h4ryzgrn3nefay7fxotb5v7@aumb6v7hexpc>
+References: <20250106044605.12494-1-kuurtb@gmail.com>
+ <33a5b6a2-e4df-4bfc-88a9-a9e8309c7f7a@app.fastmail.com>
+ <CALiyAonc81o1FreDaWiik3XaqKYVf=wYHX+vaE2_1w66LhJTnA@mail.gmail.com>
+ <2e71a4a9-6ec6-4ac7-8640-d80dcdfd7776@amd.com>
+ <CALiyAonp1eow2ht_Cmux0B5+-Ukx7YxsE59c4VzwfSvL61iQ5g@mail.gmail.com>
+ <205c47ef-6651-4a57-bbe4-adf1b8a25983@amd.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -45,76 +91,109 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAMF+KeZm8LCGsCZ9bosNYRCbv847CcZr+0mWeZtDQsk5QFRuyg@mail.gmail.com>
+In-Reply-To: <205c47ef-6651-4a57-bbe4-adf1b8a25983@amd.com>
 
-On 2025-01-07 16:09:51+0100, Joshua Grisham wrote:
-> Hi again Armin! I think I am finally with you on most of this, I think
-> jet lag and general craziness made me a little extra dense for a week
-> or two :)
+On Tue, Jan 07, 2025 at 10:47:39AM -0600, Limonciello, Mario wrote:
 > 
-> Den lör 4 jan. 2025 kl 07:28 skrev Armin Wolf <W_Armin@gmx.de>:
-> >
-> > The reason for the firmware-attribute class original was that driver could export BIOS settings
-> > to userspace applications, together with some metadata (min/max values, etc).
-> >
-> > Because of this the exact meaning of each firmware attribute is usually only known to the user
-> > changing those firmware attributes.
-> >
-> > Your driver is a bit special in that it knows the meaning of each firmware attribute. However
-> > you still have to follow the firmware-attribute class ABI since userspace applications do not
-> > know this.
-> >
 > 
-> Yes ok, as said, I am with you all now on this I think :)
+> On 1/7/2025 10:33 AM, Hridesh MG wrote:
+> > On Tue, Jan 7, 2025 at 9:21 PM Mario Limonciello
+> > <mario.limonciello@amd.com> wrote:
+> > > 
+> > > On 1/7/2025 07:14, Hridesh MG wrote:
+> > > > On Tue, Jan 7, 2025 at 7:49 AM Mark Pearson <mpearson-lenovo@squebb.ca> wrote:
+> > > > > 
+> > > > > Hi Kurt,
+> > > > > 
+> > > > > On Sun, Jan 5, 2025, at 11:45 PM, Kurt Borja wrote:
+> > > > > > Hello,
+> > > > > > 
+> > > > > > Some drivers may need to dynamically modify their selected `choices`.
+> > > > > > Such is the case of the acer-wmi driver, which implemented their own
+> > > > > > profile cycling method, because users expect different profiles to be
+> > > > > > available whether the laptop is on AC or not [1].
+> > > > > > 
+> > > > > > These series would allow acer-wmi to simplify this custom cycling method
+> > > > > > to use platform_profile_cycle(), as it's already being proposed in these
+> > > > > > series [2]; without changing expected behaviors, by refreshing their
+> > > > > > selected choices on AC connect/disconnect events, which would also solve
+> > > > > > this discussion [3].
+> > > > > > 
+> > > > > > Additionally, I think the platform_profile_ops approach would enable us
+> > > > > > to hide the platform_profile_handler in the future, and instead just pass
+> > > > > > the class device to get/set methods like the HWMON subsystem does.
+> > > > > > 
+> > > > > > I think having this kind of flexibility is valuable. Let me know what you
+> > > > > > think!
+> > > > > > 
+> > > > > 
+> > > > > I personally would love to see how this would be used for the acer issue highlighted to see how it would work out. It feels like the series is short a patch :)
+> > > > 
+> > > > I do think that having this flexibility would be good, as i was
+> > > > considering manually clearing the set bits and calling platform_notify
+> > > > for the acer series, but in my specific case (for devices using the
+> > > > predator v4 interface) it was found that the hardware was responsive
+> > > > to all profiles regardless of AC/battery mode so it made sense to
+> > > > leave this kind of artificial limiting of profiles to the
+> > > > userspace--similar to how the Windows driver handles it through the
+> > > > Nitro Sense app.
+> > > > 
+> > > > I feel like users should have the power to utilize their hardware in
+> > > > the way they want it to, though if there is a compelling reason to
+> > > > limit the profiles then i'd be more than happy to add this to the
+> > > > series :)
+> > > > 
+> > > > 
+> > > > --
+> > > > Hridesh MG
+> > > 
+> > > I agree with Mark, this series is missing the patch that shows exactly
+> > > how this would be used.  Furthermore; what exactly are the differences
+> > > in choices between AC or DC?
+> > On the predator series, the Windows OEM application only allows you to
+> > select the low-power and balanced platform profiles on DC. These
+> > profiles can however still be activated through WMI methods and the
+> > hardware will apply them.
 > 
-> As a prototype for v5 I have created a new struct for each "firmware
-> attribute" that helps me keep everything linked together with all of
-> the different sub attributes for each different "fw attribute"
-> including allowing a link back to my samsung_galaxybook instance
-> without using the global pointer. At the end of the day, if I wanted
-> to avoid using a global pointer, I needed a way to grab the private
-> data based on either the kobj or the attr parameters to the show/store
-> method of these individual sub attributes within each "firmware
-> attribute", so what I have done is added the kobj_attribute as a
-> struct member and then manually init+filled this kobj_attributes
-> during probe, so I can now grab the parent struct instance using
-> container_of() within the show/store functions which then gets me to
-> my pointer. I thought about using the kset or something else for this
-> but it seemed like kobj_attribute supported being a struct member
-> better and gave the least amount of headaches from what I could tell.
+> So on Windows if you are on DC and pick "performance" then go to AC it will
+> automatically switch you back to "balanced" and you can't pick "performance"
+> again until you go to "DC"?
 > 
-> After trying to fight my way through this problem, I have an idea of
-> what a better "dream scenario" would for me as a user/consumer of the
-> firmware attributes interface -- namely that there is some kind of way
-> to register and unregister by "type" (e.g. "I want a new enumeration
-> fw attr; here is its parent, its name, and all of the functions for
-> show/store of the required attributes, plus a data pointer that I can
-> pack together with my attribute/somehow reach within the show/store
-> functions"). I have handled a bit of this myself now in the working v5
-> of samsung-galaxybook (just a minimal version of what it requires) but
-> as said it currently relies on creating the kobj_attributes (at least
-> those where I need the pointer) as struct members that I can later use
-> with container_of() instead of creating static ones using the various
-> __ATTR.. macros.
+> This sounds totally counterintuitive to me at least.  If you're going to
+> gimp people on anything, gimp them on DC.
 > 
-> Please feel free to say if any of this sounds totally (or partially?)
-> off, otherwise I will try to test a bit more, clean up, and work
-> through any checkpatch exceptions and get this sent as a v5.
+> > 
+> > > To "userspace" I fail to understand how "balanced" is different from AC
+> > > to DC for example.
+> > It is not, the profiles or states themselves are not modified between
+> > AC and DC, just the switching between them is affected.
+> > 
+> 
+> IMO - just because Windows does this doesn't mean we need to in Linux. If
+> there are only 3 sets of profiles, I'm of the opinion we should let users
+> pick any of the 3 profiles in "AC" or "DC" state.
 
-Please take a look at my recent series[0].
+Hi!
 
-It provides an API similar to what you propose.
-Currently it does not provide an even higher level API with predefined
-structs for enumeration attributes etc. That is intentional for now as
-it is also meant to handle custom attribute types.
-Nothing would prevent a creation of such a convenience API on top of my
-series, however.
+After giving it some thought, I agree with you and Hridesh. Kernel
+should not limit profile choices if they *are* selectable.
 
-We'd need some coordination about landing the different patches,
-but that shouldn't really be a problem.
+If a "proof of concept" patch is still interesting I'll be glad to send
+it, otherwise I think my original idea has too many problems. User-space
+should be able to handle these special cases.
 
-> <snip>
+I think an attribute allowing/disallowing power sensitive values is
+interesting. Maybe allow users too attach/detach individual profiles
+from being selected/cycled? On that note, it would also be interesting to
+be able to detach invidivual "profile handlers" from the legacy
+`acpi_kobj`. But I'm not sure if this added complexity would be worth it.
 
-Thomas
+Anyway.. Mario, do you think hiding platform_profile_handler from
+drivers is something worth pursuing? Similar to what the hwmon class
+does. I feel having some struct members like `minor` and `choices`
+exposed, or having the profile_get/profile_set callbacks not being
+const, while it's not the end of the world, could be problematic.
 
-[0] https://lore.kernel.org/lkml/20250107-pdx86-firmware-attributes-v1-0-9d75c04a3b52@weissschuh.net/
+~ Kurt
+
+> 
