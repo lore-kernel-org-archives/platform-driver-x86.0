@@ -1,139 +1,301 @@
-Received: from mail-pj1-f53.google.com (mail-pj1-f53.google.com [209.85.216.53])
+Received: from mail-il1-f170.google.com (mail-il1-f170.google.com [209.85.166.170])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 81AA615C13A;
-	Tue,  7 Jan 2025 13:14:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CBD0E18EAD;
+	Tue,  7 Jan 2025 15:10:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736255693; cv=none; b=K5Q2AOQCkwQFKe8F88bP7iQlA/jfms2/w89BNBnPZVOjRfxdDZ9p6me+URqIIK0dFCZIwTCKg5rlqdnXB0pSBhzMO/ZvEyjkNtM3XpV0hwRf0Y/0k68JVbiEdZxHep/K626gMzgvLQ2uHERmLhkMBjM6rsa+HgQuV+z92wBlONk=
+	t=1736262607; cv=none; b=KyD1iXURWSPHdDZJv+jd1Lp7OnZYuisoTdVOklDzPxU2RAavgQGbE2SdJw7K3O8Otod2ac5ebUGYM5KD7A8uF7aLDRUFjacOAUzV2nJXKLdiVbObdF+N8rY48xrOKVzaXIKM8iIvcRCCPCxf95QwWgpBP4qDN3XIk5uSUAd4Xlw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736255693; c=relaxed/simple;
-	bh=f7D5Ua+7bgLqCmFzHGL8d66tzpk9fNZumGYyGs8NFP4=;
+	s=arc-20240116; t=1736262607; c=relaxed/simple;
+	bh=bqXVf8rJDMaSpLyIp+na2IdVI1wHKa7ObAjC9BDCgDA=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=PhoMNw8GxIk8lqGW/ot8lnYdLknOIUEj0Oe6L+qqlQtTEpBKZ7f7ROQLA3Ct0J5EtYKqo6Zt6pW4pgfsX+d5CBvuGbrzc3j9nDivdmBaSG3IUYZomMuAJUS2SMLAa3bX/H8jSTz2Wa0lS62pCr/zy4TYPffM3xYVVjIehi9O5io=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=aebIRft0; arc=none smtp.client-ip=209.85.216.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+	 To:Cc:Content-Type; b=eA6sejDNz7qVxBx5tUwRSRHTgBiojugtTTnZeiEtUX08udsI3GOqST/hQVqjCNngOeieg/VSxbC88kcaSG6A4ISAHQHjGcO+8LPZkAI5Tu6QiR1mVMQMXvd+HzCCG+6qimVeujWR7iO/yHVBaataHFCC0sb3XmoRlKd1D64zpA8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=joshuagrisham.com; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.166.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=joshuagrisham.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aebIRft0"
-Received: by mail-pj1-f53.google.com with SMTP id 98e67ed59e1d1-2f4448bf96fso17426012a91.0;
-        Tue, 07 Jan 2025 05:14:50 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1736255690; x=1736860490; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=f7D5Ua+7bgLqCmFzHGL8d66tzpk9fNZumGYyGs8NFP4=;
-        b=aebIRft05kYeM8AHLzj287rzGt2Bbzxwfw7VBaFEG3Qwh9y13XuexA0uVNbX/WxaC0
-         5pzd19rCvSvmh01RunXIRbVm47Lhk9l7u7siwFfpjhaPAHZ5ypEpyU2+cT6MtJMNLSmr
-         J5P8hsJdYSJVApLzhkB5qbnXY5Y5Fhinpv/72KKwlRCbE/6FX87s29zVlY2IVtDbAxUP
-         jHB+yV1pijqJbWQWIounW8LLB1YweEP8iCHBeUpjIr5ez/sTyC4KnshK75i36Vvq2281
-         cFl2EHNGMU1r7mAfHnnN9rz6mtx0wqpzyNabap9KDOX1Wstye5Dqr66FqC+4m+u3nufp
-         S27A==
+Received: by mail-il1-f170.google.com with SMTP id e9e14a558f8ab-3a8ed4c8647so114412895ab.1;
+        Tue, 07 Jan 2025 07:10:04 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1736255690; x=1736860490;
+        d=1e100.net; s=20230601; t=1736262604; x=1736867404;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=f7D5Ua+7bgLqCmFzHGL8d66tzpk9fNZumGYyGs8NFP4=;
-        b=Bh1YmirmBAmbP8Zk6QjZuauoWSYEjUvYx06FwiWGzcRf0489obnRdPwmT2KMo+gyqQ
-         bi/IQrzYiSqIHuBN5zXXkP2sek7n02Xr17U2U5A91WFX5QKEt2PuG5qFWbStOGWeTjmn
-         9WLnZ7jfZJhMhM3BBQtixiNz8xMs4pup7VEZjQbbx9E9fOYI0eGoyChl3QJodJQZLyjV
-         td1PutOJ24VjkB2rq/ogIZAB9iwtqUfj6jh2WadFtpGetvRablduYHk8JeMUJlAxxGOp
-         IvVKr5JTnyRYTErvjIIGeIo7YHi4VPcqMtKMpLFje5qEONziMNFOYKdMyI5UEutTSRlB
-         C/DQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUI4i4BbcarbqPNeNMY/+hCeCrii8kE73VwMAEA+Qzn6/KDDAwE9CsZfhkQWuai3DD1+8I+CkHtSQhT@vger.kernel.org, AJvYcCUajaYur/syyhu3t0MEvERfU1ahChasiW4rtZgFpnEGTwFHA/KS9u7Xd4SxOpW7GaSAephQC6ORdkwxrCscAJ1TXJKFbA==@vger.kernel.org, AJvYcCXC1RRF9RtasW2kxIuelGtF2CTjKMusTuQvSnYqKg7/I5m6JfUl66xyu9cV9Mg2eqev7t1knH1jodC/QGKp@vger.kernel.org
-X-Gm-Message-State: AOJu0YwvYeyxb3SOciWVrepu5HcviwF23rRPttbnO9QWWJfi9Kdthb/O
-	uf2yMDt3yuWezLZNJte367NXig/tSWD6LJPjPGwfgykOI7OqCYSgsQvTfCH2cEAYXSf+LUf/+J1
-	qCpd31Vt2aB178vfjDJH1rxkmokg=
-X-Gm-Gg: ASbGnctxWcfmnOvLZsjVoK8alMbUmPufyxvqMGc9RPO2CJoDCKy5DAR3oJRqZMHGJBq
-	NADvF0bkg/kVpeTQbzueDElb8BRWyHfnKa8S9/hfLbnX+uyFV2c2azrPNBPBKD3qu+5QMMrA=
-X-Google-Smtp-Source: AGHT+IE4gBeMEB+bwTMO3rtwtelEiVCem8tm0YyrT7HwH05hcKZU9QvpCJmA/01hI9IebPMSNY/P7//rWYkInLHtxzs=
-X-Received: by 2002:a17:90b:54c4:b0:2ee:cded:9ac7 with SMTP id
- 98e67ed59e1d1-2f452e38d72mr93343908a91.20.1736255689596; Tue, 07 Jan 2025
- 05:14:49 -0800 (PST)
+        bh=SV3X9GqlQhyB/vH9MfyAZyo468xz4O8lZd4eyZJAFs8=;
+        b=VxBGH+s8X8zi/E6rXNbWzLYC0roIqX9YkgoamqvO3i8WSexdXzC4nKQnuLqPQyRu/S
+         EkbHn+FBzkXqe5JcxEGXr2Otc4MOwfWpifRtX6cLVQMgDzOq51v7rAiGwXbUFdK+JJzK
+         MfDNb1NXvtPmaLJid5LKZTRmBlWAflWj45h8mXcO2xcOsJswlR6VsOZFobmG39Ncbms1
+         S7lv8zJRJ+kR5SZwwPatX64HOKB1ha42P3XNPV+nXNDucYiwp0eIeCXa2T6d97tadftU
+         CX3g2c/lgcWiUHnl1n/45UpHJ1AnMiLUfLSOrOd4TyjZ4DLwaaMYVkjsOM1tLDiGaAqb
+         gcpw==
+X-Forwarded-Encrypted: i=1; AJvYcCUeyXyds03w/p1FLWZt6yFrkvTOyohITaC4ooBwYzv11xotVsY/iY/03aG+DgTGC/I0+cLHjVv16z5zGxA3@vger.kernel.org, AJvYcCV/cwEKEpRGhrftsELFEBH585b9H35DaN0boDYlyLO6hh2F0AtDFh0kRoM7XQP1qqUqJeJsVT78RkE=@vger.kernel.org, AJvYcCV1xcXP1GvtXNzCmG2S3Z2uzYx5H3ESz3fZq4DkdlO8VTBRm+0MAWdmp0a0cZ3pXJFFPXguDamh5O/4HguLYZA8eSRIvg==@vger.kernel.org
+X-Gm-Message-State: AOJu0YxUWkTS4xC9olzfpN1lw/A51/0odz9faYGh686q+6XY0ew8/BzP
+	yl1VQ44GdWu65L2JHlskJu1WLqLl4tC55j59udasjVRy7m6mzAUou4FtbEDlswQ=
+X-Gm-Gg: ASbGncujrIp0BgqEdAwcpTfPNvSLV7Y+OR8N0pVEtq1g4KMqUC/HwjHSwF2kC0od3Xd
+	gLpjF62QwzjBXsx+Y/alOVc+POovrbNKmRwvRwJpe7Ijhtc4WWNPISBJwRu0AseKnQstnpihIyo
+	NxstQT0qLObUNHbw61lsO7MgIilUfLJSLGuv/HvPd22P+Nx2DGbKA01QSw2dRhhhSo4wfYBb1yi
+	INCfZ08YeGhFvF8XOfdttiFIkpsiBneNUgoqgVzc38VHMOYL8mY6Tw2dw1/e2ykWlx3Ej4HL8BA
+	xJWUHpObwgFAKSpLULL7iNSnPw==
+X-Google-Smtp-Source: AGHT+IEshIJPd0Rf2312Dr+azwmwhNL+SOk5oRSTezJ7imvqCat8JO45yP02aj1+UydMvp/M0f2UbQ==
+X-Received: by 2002:a05:6e02:12cb:b0:3a7:4826:b057 with SMTP id e9e14a558f8ab-3c2d591996emr542919015ab.21.1736262603866;
+        Tue, 07 Jan 2025 07:10:03 -0800 (PST)
+Received: from mail-il1-f173.google.com (mail-il1-f173.google.com. [209.85.166.173])
+        by smtp.gmail.com with ESMTPSA id 8926c6da1cb9f-4e68c189367sm10045287173.101.2025.01.07.07.10.03
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 07 Jan 2025 07:10:03 -0800 (PST)
+Received: by mail-il1-f173.google.com with SMTP id e9e14a558f8ab-3a8ed4c8647so114412785ab.1;
+        Tue, 07 Jan 2025 07:10:03 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCVrcSxA8BXgA6qezY2mZvzaYVpCRqPl/TJ/4BX+5Rcsyg9EVfxvK6MBL3AUPOaG8wCv9lG+w/40V7NNYPwDoiVAd3H6Sg==@vger.kernel.org, AJvYcCW6sZi2YE/ha2HR4BkjX7QzitFSOwtkC/H5Jc5m/6imZY+RUgRq6oJTDPdzaGkqmBRbW4yC0Rog2i4=@vger.kernel.org, AJvYcCXP/btT6+GzOj/gbkZCgDVsn8RgM2xUHKcZClFhuVaIj84bmySzWesBqecM0hkIzJ6i9aH3ECwgGlLBGc6t@vger.kernel.org
+X-Received: by 2002:a05:6e02:20ca:b0:3a7:7ec0:a3dc with SMTP id
+ e9e14a558f8ab-3c2d2d52a7fmr508104305ab.14.1736262603297; Tue, 07 Jan 2025
+ 07:10:03 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250106044605.12494-1-kuurtb@gmail.com> <33a5b6a2-e4df-4bfc-88a9-a9e8309c7f7a@app.fastmail.com>
-In-Reply-To: <33a5b6a2-e4df-4bfc-88a9-a9e8309c7f7a@app.fastmail.com>
-From: Hridesh MG <hridesh699@gmail.com>
-Date: Tue, 7 Jan 2025 18:44:13 +0530
-X-Gm-Features: AbW1kvZFdg73dmST_4wyASXDT7TrZUoeYV-z5vqluRnWxwA9ZHTnXngWd6BAzA0
-Message-ID: <CALiyAonc81o1FreDaWiik3XaqKYVf=wYHX+vaE2_1w66LhJTnA@mail.gmail.com>
-Subject: Re: [RFC PATCH 0/3] ACPI: platform_profile: Let drivers dynamically
- refresh choices
-To: Mark Pearson <mpearson-lenovo@squebb.ca>
-Cc: Kurt Borja <kuurtb@gmail.com>, 
-	"platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>, josh@joshuagrisham.com, 
-	"Derek J . Clark" <derekjohn.clark@gmail.com>, "Rafael J. Wysocki" <rafael@kernel.org>, 
-	Len Brown <lenb@kernel.org>, Maximilian Luz <luzmaximilian@gmail.com>, 
-	Hans de Goede <hdegoede@redhat.com>, =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, 
-	Lee Chun-Yi <jlee@suse.com>, Shyam Sundar S K <Shyam-sundar.S-k@amd.com>, 
-	Corentin Chary <corentin.chary@gmail.com>, "Luke D . Jones" <luke@ljones.dev>, 
-	Lyndon Sanche <lsanche@lyndeno.ca>, Ike Panhc <ike.pan@canonical.com>, 
-	Henrique de Moraes Holschuh <hmh@hmh.eng.br>, Armin Wolf <W_Armin@gmx.de>, 
-	"Limonciello, Mario" <mario.limonciello@amd.com>, Colin Ian King <colin.i.king@gmail.com>, 
-	Alexis Belmonte <alexbelm48@gmail.com>, =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= <u.kleine-koenig@baylibre.com>, 
-	Ai Chao <aichao@kylinos.cn>, Gergo Koteles <soyer@irl.hu>, 
-	"linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>, linux-kernel@vger.kernel.org, 
-	Dell.Client.Kernel@dell.com, ibm-acpi-devel@lists.sourceforge.net
+References: <20241226153031.49457-1-josh@joshuagrisham.com>
+ <0fbe58a9-ecca-437f-aa30-9d3a17c2bd43@gmx.de> <CAMF+KeYdshNex2h4kLJari=kXVxgcOZw7GDutJrV6vKC0PTe6A@mail.gmail.com>
+ <a8011f0f-1d44-42ec-9089-2da31f3852e2@gmx.de>
+In-Reply-To: <a8011f0f-1d44-42ec-9089-2da31f3852e2@gmx.de>
+From: Joshua Grisham <josh@joshuagrisham.com>
+Date: Tue, 7 Jan 2025 16:09:51 +0100
+X-Gmail-Original-Message-ID: <CAMF+KeZm8LCGsCZ9bosNYRCbv847CcZr+0mWeZtDQsk5QFRuyg@mail.gmail.com>
+Message-ID: <CAMF+KeZm8LCGsCZ9bosNYRCbv847CcZr+0mWeZtDQsk5QFRuyg@mail.gmail.com>
+Subject: Re: [PATCH v4] platform/x86: samsung-galaxybook: Add
+ samsung-galaxybook driver
+To: Armin Wolf <W_Armin@gmx.de>
+Cc: Joshua Grisham <josh@joshuagrisham.com>, ilpo.jarvinen@linux.intel.com, 
+	hdegoede@redhat.com, platform-driver-x86@vger.kernel.org, corbet@lwn.net, 
+	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Tue, Jan 7, 2025 at 7:49=E2=80=AFAM Mark Pearson <mpearson-lenovo@squebb=
-.ca> wrote:
+Hi again Armin! I think I am finally with you on most of this, I think
+jet lag and general craziness made me a little extra dense for a week
+or two :)
+
+Den l=C3=B6r 4 jan. 2025 kl 07:28 skrev Armin Wolf <W_Armin@gmx.de>:
 >
-> Hi Kurt,
+> The reason for the firmware-attribute class original was that driver coul=
+d export BIOS settings
+> to userspace applications, together with some metadata (min/max values, e=
+tc).
 >
-> On Sun, Jan 5, 2025, at 11:45 PM, Kurt Borja wrote:
-> > Hello,
-> >
-> > Some drivers may need to dynamically modify their selected `choices`.
-> > Such is the case of the acer-wmi driver, which implemented their own
-> > profile cycling method, because users expect different profiles to be
-> > available whether the laptop is on AC or not [1].
-> >
-> > These series would allow acer-wmi to simplify this custom cycling metho=
-d
-> > to use platform_profile_cycle(), as it's already being proposed in thes=
-e
-> > series [2]; without changing expected behaviors, by refreshing their
-> > selected choices on AC connect/disconnect events, which would also solv=
-e
-> > this discussion [3].
-> >
-> > Additionally, I think the platform_profile_ops approach would enable us
-> > to hide the platform_profile_handler in the future, and instead just pa=
-ss
-> > the class device to get/set methods like the HWMON subsystem does.
-> >
-> > I think having this kind of flexibility is valuable. Let me know what y=
-ou
-> > think!
-> >
+> Because of this the exact meaning of each firmware attribute is usually o=
+nly known to the user
+> changing those firmware attributes.
 >
-> I personally would love to see how this would be used for the acer issue =
-highlighted to see how it would work out. It feels like the series is short=
- a patch :)
+> Your driver is a bit special in that it knows the meaning of each firmwar=
+e attribute. However
+> you still have to follow the firmware-attribute class ABI since userspace=
+ applications do not
+> know this.
+>
 
-I do think that having this flexibility would be good, as i was
-considering manually clearing the set bits and calling platform_notify
-for the acer series, but in my specific case (for devices using the
-predator v4 interface) it was found that the hardware was responsive
-to all profiles regardless of AC/battery mode so it made sense to
-leave this kind of artificial limiting of profiles to the
-userspace--similar to how the Windows driver handles it through the
-Nitro Sense app.
+Yes ok, as said, I am with you all now on this I think :)
 
-I feel like users should have the power to utilize their hardware in
-the way they want it to, though if there is a compelling reason to
-limit the profiles then i'd be more than happy to add this to the
-series :)
+As a prototype for v5 I have created a new struct for each "firmware
+attribute" that helps me keep everything linked together with all of
+the different sub attributes for each different "fw attribute"
+including allowing a link back to my samsung_galaxybook instance
+without using the global pointer. At the end of the day, if I wanted
+to avoid using a global pointer, I needed a way to grab the private
+data based on either the kobj or the attr parameters to the show/store
+method of these individual sub attributes within each "firmware
+attribute", so what I have done is added the kobj_attribute as a
+struct member and then manually init+filled this kobj_attributes
+during probe, so I can now grab the parent struct instance using
+container_of() within the show/store functions which then gets me to
+my pointer. I thought about using the kset or something else for this
+but it seemed like kobj_attribute supported being a struct member
+better and gave the least amount of headaches from what I could tell.
 
+After trying to fight my way through this problem, I have an idea of
+what a better "dream scenario" would for me as a user/consumer of the
+firmware attributes interface -- namely that there is some kind of way
+to register and unregister by "type" (e.g. "I want a new enumeration
+fw attr; here is its parent, its name, and all of the functions for
+show/store of the required attributes, plus a data pointer that I can
+pack together with my attribute/somehow reach within the show/store
+functions"). I have handled a bit of this myself now in the working v5
+of samsung-galaxybook (just a minimal version of what it requires) but
+as said it currently relies on creating the kobj_attributes (at least
+those where I need the pointer) as struct members that I can later use
+with container_of() instead of creating static ones using the various
+__ATTR.. macros.
 
---
-Hridesh MG
+Please feel free to say if any of this sounds totally (or partially?)
+off, otherwise I will try to test a bit more, clean up, and work
+through any checkpatch exceptions and get this sent as a v5.
+
+> >>> +static void galaxybook_fw_attr_class_remove(void *data)
+> >>> +{
+> >>> +     device_destroy(fw_attr_class, MKDEV(0, 0));
+> >> Please use device_unregister() instead since multiple devices might sh=
+are the same devt of MKDEV(0, 0).
+> >> This would also allow you to remove the global variable "fw_attr_class=
+".
+> >>
+> > Here I am a bit confused on exactly how this would/should look; all
+> > existing usages of fw_attr_class I can see use exactly this same
+> > pattern: device_create() and then device_destroy() with MKDEV(0, 0).
+> > Taking a look at the latest proposed changes from Thomas and it stil
+> > seems the intention is the same, just that it is slightly simplified
+> > and use pointer to the firmware_attributes_class directly instead of
+> > fetching it using fw_attributes_class_get(). Or is there a better way
+> > to do this (including usage of device_unregister() and/or something
+> > different with the devt) that will help solve some other problem(s)?
+>
+> This is the code of device_destroy():
+>
+> void device_destroy(const struct class *class, dev_t devt)
+> {
+>         struct device *dev;
+>
+>         dev =3D class_find_device_by_devt(class, devt);
+>         if (dev) {
+>                 put_device(dev);
+>                 device_unregister(dev);
+>         }
+> }
+>
+> if multiple devices of a given class are using the same devt (like MKDEV(=
+0, 0)) then
+> class_find_device_by_devt() might pick the wrong device.
+>
+> The fact that the other drivers are using this function is actually an er=
+ror. The only
+> reason why this error was not noticed until now seems to be that currentl=
+y only a single
+> driver using the firmware-attribute class is typically active at the same=
+ time.
+>
+
+Yes again sorry for being dense -- now with a little sleep and time to
+marinate this makes total sense, and it is a lot easier to just use
+device_unregister() like you say. This will be included in v5.
+
+> > Also there are several other platform drivers that implement a very
+> > similar device attribute as ones that I have added here as a firmware
+> > attribute (namely I am thinking of "USB Charging" which exists in
+> > several other pdx86 drivers but a few other devices should/would
+> > probably support this kind of "Power on Lid Open" attribute as well);
+> > in the event that maintainers of those drivers should and eventually
+> > do migrate over to use the same or similar firmware attribute for this
+> > same kind of setting, should it include all of these attributes in the
+> > standard "enumeration" type attribute group or is it possible / would
+> > it make sense to have some sort of boolean-based fw attr type that is
+> > a bit more simple and a bit more self-explanatory?
+>
+> Introducing a new "boolean" type would indeed be nice. This would allow u=
+serspace application to use a simple
+> on/off slider instead of a dropdown menu when displaying such firmware at=
+tributes.
+>
+> In this case you could drop the "possible_values" attribute.
+>
+> What is the opinion of the pdx86 maintainers on this proposal?
+>
+
+Now that I have finally taken a better understanding of this, I see
+your point. Yes, nice with a boolean that could give a slider in a GUI
+or similar, but does not really change a whole lot in the driver
+implementation. I will go with enumeration type for now as mentioned
+and it can always be changed later if this new type comes.
+
+> > I am quite certain that the code can be cleaned up and/or refactored a
+> > bit, but I would hope that the result of the logic should stay the
+> > same (per what I described above); having said all of that, does it
+> > still make sense to try and simplify this somehow and/or any tips or
+> > recommendation how to achieve the desired result in a better way?
+>
+> I am OK with you preferring the non-legacy modes over the legacy ones. Ho=
+wever trying to limit yourself
+> to the profiles currently supported by gnome (AFAIK uses platform-profile=
+s-daemon) is not a good idea.
+>
+> I would like to see a more static mapping be implemented:
+>
+> PERFORMANCE_MODE_ULTRA -> performance
+> PERFORMANCE_MODE_PERFORMANCE -> balanced-performance (can also be legacy =
+if non-legacy is not available)
+> PERFORMANCE_MODE_OPTIMIZED -> balanced (can also be legacy is non-legacy =
+is not available)
+> PERFORMANCE_MODE_QUIET -> quiet
+> PERFORMANCE_MODE_SILENT -> low-power
+>
+> In this case the platform-profiles-daemon would have a similar job as the=
+ Samsung service, which is to
+> determine a suitable mapping for the supported modes to {performance, bal=
+anced, powersave}.
+>
+> Looking at the code of the daemon it seems something similar is already b=
+eing done, but only for the profiles
+> "quiet" and "low-power" (one of which is getting mapped to the "powersave=
+" mode).
+>
+> I am confident that the daemon could be extended be a bit more intelligen=
+t when it comes to determine the
+> mapping of the other modes.
+>
+
+I understand the thought here but my only problem and what sort of
+"itches" at me is that most of these devices are not "Ultra" models
+and they will never have an "Ultra" mode. For the non-Ultra models,
+"Performance mode" *is* "Performance mode" (meaning, it is the mode
+which prioritizes performance over anything else) so for me it feels
+best if these non-Ultra models (again majority of these devices) can
+have the Performance mode that they should have. And you can maybe
+argue that "Ultra" is in fact its own mode entirely -- when you use
+this mode on these devices, they really scream (the fans, mostly, that
+is) and they get super hot haha :)
+
+Other than this Ultra vs Performance question, I do agree with you and
+think it makes sense. My first thought if we want to actually
+"simplify" this in this way is if there could actually exist a
+platform profile called "ultra" then it would be just a perfect 1:1
+mapping (other than taking legacy modes into account).
+
+This "perfect fit" for samsung-galaxybook would be to create a new
+platform profile called something like PLATFORM_PROFILE_ULTRA, but
+that seems like a bit of a tall order... Would it make more sense to
+implement this "ultra" mode using the new PLATFORM_PROFILE_CUSTOM and
+then map them like this?
+
+PERFORMANCE_MODE_ULTRA -> custom (named "ultra" if that is possible?)
+PERFORMANCE_MODE_PERFORMANCE (or PERFORMANCE_MODE_PERFORMANCE_LEGACY)
+-> performance
+PERFORMANCE_MODE_OPTIMIZED (or PERFORMANCE_MODE_OPTIMIZED_LEGACY) -> balanc=
+ed
+PERFORMANCE_MODE_QUIET -> quiet
+PERFORMANCE_MODE_SILENT -> low-power
+
+Thought admittedly I am not 100% familiar with how
+PLATFORM_PROFILE_CUSTOM is implemented to work; I have a vague memory
+that I read somewhere that this was roughly the intention? But I am
+not sure if it is actually implemented to work this way. But if it
+will in fact work "out of the box" including with
+platform_profile_cycle() for the hotkey then it seems like the
+cleanest and easiest approach.
+
+If this is possible, then my best guess for the logic for this mapping
+in samsung-galaxybook could be changed to loop the "supported modes"
+forwards instead of backwards, and just let the "legacy" modes be
+written first (as they seem to always come first in the list), and
+then in case the non-legacy mode exists later in the array, it will
+just replace the already-mapped legacy value with the new non-legacy
+value, and thus skip any kind of condition-based checking/mapping
+entirely. Is that sort of more like what you had in mind?
+
+>
+> Thanks,
+> Armin Wolf
+>
+
+Thanks again!
+
+Joshua
+
+> [...]
