@@ -1,132 +1,138 @@
-Received: from fout-a7-smtp.messagingengine.com (fout-a7-smtp.messagingengine.com [103.168.172.150])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B78E41F37D6;
-	Tue,  7 Jan 2025 15:13:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.150
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D9201EE7BB;
+	Tue,  7 Jan 2025 15:48:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736262818; cv=none; b=uITjCDWiMMy2138Igy7jRpgwPQiXKAIomK87/TFLfZVo3E93SsXLuFbweo+CtYvceJFHSrTsFQXFtJedoKwO747d5bBD1ySmPYZwgzyNfRM5b+EAB5LkSa+7Pa7WZP6tMJ//cYwRVvQrglG0mXf/e0yXXWafhLWZ2M6Kd/QubBE=
+	t=1736264910; cv=none; b=PlR3OU2AHDlydmtdRqsZCu89WYTKyEWLEiPh9EZH0DiPpFTrGZ7eM9AP4aIn6j+bAjlsjTI/WG5Li75hrTVQC4XB/ee6j+Fi9xv3e3hMiWd7vwL1D4EShZ42f9mdml8Ioft3yQumI2O4ElFYprOGwchIjj5mtaBKzV8seR/RA04=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736262818; c=relaxed/simple;
-	bh=yY0SEnO1GZ8JGUjFua2jk06MhpxnWpYaVFuthE8MgRg=;
-	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
-	 Subject:Content-Type; b=GyVmLlT+iROTr7Gp4sf0mvmuubHieNNZojcpN/jMt4x6VuLcYXwd/wfGxx4BSnUAlrt/K5e2C5OFBtdzH8FpGSyt0c1G3v33bHRzK9+nbqCEiyBPvfewQl6vb9STXmqdBzsKivGAy96MXk/3SwnId7LYBes0HHbtPKAioi7lbPk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=squebb.ca; spf=pass smtp.mailfrom=squebb.ca; dkim=pass (2048-bit key) header.d=squebb.ca header.i=@squebb.ca header.b=ZLgfsMOo; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=bhh4/bz6; arc=none smtp.client-ip=103.168.172.150
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=squebb.ca
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=squebb.ca
+	s=arc-20240116; t=1736264910; c=relaxed/simple;
+	bh=CaHjk1NO/x+gFM2Y+rIaeQEdIEy2bxyc/1fziZMlsBM=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=iV8eMSywRN9N8pVmJiQzkNre+pGBXrfJoEypuL+CpcUKOE6nTx/mUggJa/2NsrZVXMbPhIi09Ew7Gcq3hucJHOYvXmNvDaPoQFoeU8nDntA8e4FK526aDXsBqq138NSV+b2MZzNMaR/7Fx8vXSiAOifgx/ncwBYvEjCZEn/XEvU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=OhOLfGZS; arc=none smtp.client-ip=198.175.65.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=squebb.ca header.i=@squebb.ca header.b="ZLgfsMOo";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="bhh4/bz6"
-Received: from phl-compute-02.internal (phl-compute-02.phl.internal [10.202.2.42])
-	by mailfout.phl.internal (Postfix) with ESMTP id A5BAF13801B3;
-	Tue,  7 Jan 2025 10:13:33 -0500 (EST)
-Received: from phl-imap-10 ([10.202.2.85])
-  by phl-compute-02.internal (MEProxy); Tue, 07 Jan 2025 10:13:33 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=squebb.ca; h=cc
-	:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to; s=fm3; t=1736262813;
-	 x=1736349213; bh=VxBI9ebHOtj6/K9Cxb8gn245PG+CQQLYZN7REN0z6Fs=; b=
-	ZLgfsMOo8nYg6wzbldxB/dhhlQGB3DXrpQ0Gz6n3lHxaI/tIC62DL5FBoqHAhMxx
-	Z/I4XDJSOD7CgSTKgtDCRY4WsbN9vUna+bJTevFOHT7V+StmHX5hDA4XR3dknU0b
-	InjDoHM2wboxtWMAkHREEAb7olVkvNT8AnBPLALS8ZWttSEXDZI1Tea0Qffs/BSt
-	4frlj7EhKQwfVMMVSQ+xAmCqNUfkVC/aAurKqr48UuxHuvHXigHrT2MPayi1UWQG
-	z8bMeERQRFyYf5tqN8SqXQv3SQVory+b3OEw+tasaxDsnEyeaQLepV5tfuq5ry3/
-	PL0bXi59UEF0ai1G34HQIw==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=1736262813; x=
-	1736349213; bh=VxBI9ebHOtj6/K9Cxb8gn245PG+CQQLYZN7REN0z6Fs=; b=b
-	hh4/bz6H/7gCoM5F8ohUkVnSHXQ5XGn7q5YLLCAXRoi1iwLn+R4PnOuBw15zpkVT
-	vSc5E6xspwLUWjTaemHrOkODPVuwcFCDAe2PETW1QaDxcXvPeNc3AX3IEbANgnNW
-	oSpdwD3oFscO1oJZ4Tikb28mTIsgByVtSbFBV0h6ClcVSy2LJ3X3cirSbolggGld
-	zf99Z7Cq0fWvQuKE9meUgU+lU99kFTsMdU+KlTDnus50MT2C9JCdololviTlABJ/
-	K1UFy3tJrB8jC6BA6GBKWbYrizt9x/FSSADple4TCEzLFPLV5rCspCu3WbBlISKd
-	bUHMSmBypYOyeE4h0vAfw==
-X-ME-Sender: <xms:nUR9Z08FMpTI_6Mlk4hLQWhO8S9K6o81xO23lYRHRITsoT_0Q-czNg>
-    <xme:nUR9Z8tY27jhx3jjXVjnhctlP-eA1NwLjy_0jVCZIfRdh_IckEel582lpff2_hyjR
-    jjRO5ZRBNvkGsZAMXk>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefuddrudegvddgjedvucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggvpdfu
-    rfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnh
-    htshculddquddttddmnecujfgurhepofggfffhvfevkfgjfhfutgfgsehtjeertdertddt
-    necuhfhrohhmpedfofgrrhhkucfrvggrrhhsohhnfdcuoehmphgvrghrshhonhdqlhgvnh
-    hovhhosehsqhhuvggssgdrtggrqeenucggtffrrghtthgvrhhnpedtffevgfethfevtedu
-    vdefleevkedtuddvlefghefgieekffejteejveffkedthfenucffohhmrghinhepkhgvrh
-    hnvghlrdhorhhgnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhf
-    rhhomhepmhhpvggrrhhsohhnqdhlvghnohhvohesshhquhgvsggsrdgtrgdpnhgspghrtg
-    hpthhtohephedpmhhouggvpehsmhhtphhouhhtpdhrtghpthhtohepnhhithhjohhshhhi
-    sehgmhgrihhlrdgtohhmpdhrtghpthhtohepihhlphhordhjrghrvhhinhgvnheslhhinh
-    hugidrihhnthgvlhdrtghomhdprhgtphhtthhopehhuggvghhovgguvgesrhgvughhrght
-    rdgtohhmpdhrtghpthhtoheplhhinhhugidqkhgvrhhnvghlsehvghgvrhdrkhgvrhhnvg
-    hlrdhorhhgpdhrtghpthhtohepphhlrghtfhhorhhmqdgurhhivhgvrhdqgiekieesvhhg
-    vghrrdhkvghrnhgvlhdrohhrgh
-X-ME-Proxy: <xmx:nUR9Z6CIr6Pbxa3fIbC_SdDPZY6oURBrkH8oHRLBRKYHeWZk5FuxWw>
-    <xmx:nUR9Z0dY4F5fIzl0lnN4qmbD_ha8wvnVkn1MybLQ2NjQWeiw8ERPyQ>
-    <xmx:nUR9Z5MkjSTpPFyh5i3H1Neh68kEEPNEIi7an-BYaUuQupATZ53oFA>
-    <xmx:nUR9Z-lAXxHkYbYp_O3WY28I72X7FHc7-e92T1iORds2KND4rQLuxQ>
-    <xmx:nUR9Z-qVna54BXiWUDS3tlwOHsVIvuixsLKqcptyECIVF6gGQ7bzMc5->
-Feedback-ID: ibe194615:Fastmail
-Received: by mailuser.phl.internal (Postfix, from userid 501)
-	id 13C7A3C0066; Tue,  7 Jan 2025 10:13:33 -0500 (EST)
-X-Mailer: MessagingEngine.com Webmail Interface
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="OhOLfGZS"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1736264909; x=1767800909;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=CaHjk1NO/x+gFM2Y+rIaeQEdIEy2bxyc/1fziZMlsBM=;
+  b=OhOLfGZS51JWDWQKR1kNdd6be3i9CSxcsRbsYAlNyMbkbEEJzfMSXgcW
+   2RLZULoguLPmmZDIq43TyGatjcGTUzbtKRSWKGLFgfQAYxTN3l4UcJzFL
+   9HZemvuAZJgVXL54woTPLh7piMwBhrnXQEUJijxvRHD3VpB7JXj6lOg74
+   0iMNmIPOV0iey0QegTEickzrbJRtL3pJ0uDROVdkWw/kX06jz3P/l6ZBC
+   kckh7XYrko34uF49jdYQuQyDjj8HOEKdOOXEadxscRP7PdbYHnw+vZzqa
+   wcE0DMju5B15u4ZJDpOQtNZ5Y2E8EdZ9Ywx9FZ6AaIJ6psIist/0/6K7l
+   g==;
+X-CSE-ConnectionGUID: InTC2WNwQ7a3zxFrG4Hdhg==
+X-CSE-MsgGUID: 874T0CPbRZu5igcLKG6YTg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11308"; a="47811359"
+X-IronPort-AV: E=Sophos;i="6.12,295,1728975600"; 
+   d="scan'208";a="47811359"
+Received: from fmviesa007.fm.intel.com ([10.60.135.147])
+  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Jan 2025 07:48:28 -0800
+X-CSE-ConnectionGUID: cbU9Ei/ISo2GpH/dNdhiWQ==
+X-CSE-MsgGUID: +gjx2I2WRuuADvC7Aaymaw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.12,296,1728975600"; 
+   d="scan'208";a="102705991"
+Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.206])
+  by fmviesa007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Jan 2025 07:48:23 -0800
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Tue, 7 Jan 2025 17:48:19 +0200 (EET)
+To: Kurt Borja <kuurtb@gmail.com>
+cc: platform-driver-x86@vger.kernel.org, W_Armin@gmx.de, 
+    Hans de Goede <hdegoede@redhat.com>, lenb@kernel.org, 
+    linux-acpi@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>, 
+    mario.limonciello@amd.com, Mark Pearson <mpearson-lenovo@squebb.ca>, 
+    "Rafael J. Wysocki" <rafael@kernel.org>, soyer@irl.hu
+Subject: Re: [PATCH v2 0/2] Device managed platform_profile_register()
+In-Reply-To: <q45nl5wdout46frnjbkufvi2pmyhz3cfyp72qyqrsnhpnlmhue@3no6u65stho2>
+Message-ID: <687daa3a-af4e-f959-aeb9-43fccd1b8989@linux.intel.com>
+References: <20241224140131.30362-2-kuurtb@gmail.com> <00b64207-ec35-5c99-9bdc-13c77e51e453@linux.intel.com> <q45nl5wdout46frnjbkufvi2pmyhz3cfyp72qyqrsnhpnlmhue@3no6u65stho2>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Date: Tue, 07 Jan 2025 10:13:11 -0500
-From: "Mark Pearson" <mpearson-lenovo@squebb.ca>
-To: "Nitin Joshi" <nitjoshi@gmail.com>,
- =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
- "Hans de Goede" <hdegoede@redhat.com>
-Cc: 
- "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>,
- linux-kernel@vger.kernel.org
-Message-Id: <2aa6e80b-a130-4a30-b174-dc21f90c2348@app.fastmail.com>
-In-Reply-To: <20250107021507.4786-1-nitjoshi@gmail.com>
-References: <20250107021507.4786-1-nitjoshi@gmail.com>
-Subject: Re: [PATCH] platform/x86: thinkpad-acpi: replace strcpy with strscpy
-Content-Type: text/plain
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/mixed; boundary="8323328-1276535145-1736264899=:1001"
 
-Hi Nitin,
+  This message is in MIME format.  The first part should be readable text,
+  while the remaining parts are likely unreadable without MIME-aware tools.
 
-On Mon, Jan 6, 2025, at 9:15 PM, Nitin Joshi wrote:
-> strcpy() performs no bounds checking on the destination buffer. This
-> could result in linear overflows beyond the end of the buffer, leading
-> to all kinds of misbehaviors.[1]
->
-> [1]: https://www.kernel.org/doc/html/latest/process/deprecated.html#strcpy
->
-> Signed-off-by: Nitin Joshi <nitjoshi@gmail.com>
-> ---
->  drivers/platform/x86/thinkpad_acpi.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/drivers/platform/x86/thinkpad_acpi.c 
-> b/drivers/platform/x86/thinkpad_acpi.c
-> index 2cfb2ac3f465..c9e2dfb942ec 100644
-> --- a/drivers/platform/x86/thinkpad_acpi.c
-> +++ b/drivers/platform/x86/thinkpad_acpi.c
-> @@ -11681,7 +11681,7 @@ static int __init set_ibm_param(const char 
-> *val, const struct kernel_param *kp)
->  		if (strcmp(ibm->name, kp->name) == 0 && ibm->write) {
->  			if (strlen(val) > sizeof(ibms_init[i].param) - 1)
->  				return -ENOSPC;
-> -			strcpy(ibms_init[i].param, val);
-> +			strscpy(ibms_init[i].param, val);
->  			return 0;
->  		}
->  	}
-> -- 
-> 2.43.0
+--8323328-1276535145-1736264899=:1001
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 
-Looks good to me.
-Reviewed-by: Mark Pearson <mpearson-lenovo@squebb.ca>
+On Tue, 31 Dec 2024, Kurt Borja wrote:
+> On Mon, Dec 30, 2024 at 08:31:28PM +0200, Ilpo J=E4rvinen wrote:
+> > On Tue, 24 Dec 2024, Kurt Borja wrote:
+> >=20
+> > > Hi :)
+> > >=20
+> > > This is meant to be merged on the pdx86 tree.
+> > >=20
+> > > ~ Kurt
+> > >=20
+> > > v2:
+> > >  - Replaced convoluted cast with intermediate variable (1/2)
+> > >  - Restored dropped empty line (1/2)
+> > >  - Couldn't incorporate Armin's second comment. I probably didn't
+> > >    understand it (1/2)
+> > > v1:=20
+> > >  - https://lore.kernel.org/platform-driver-x86/20241221070817.3764-2-=
+kuurtb@gmail.com
+> > >=20
+> > > Kurt Borja (2):
+> > >   ACPI: platform_profile: Add devm_platform_profile_register()
+> > >   alienware-wmi: Use devm_platform_profile_register()
+> > >=20
+> > >  drivers/acpi/platform_profile.c           | 29 +++++++++++++++++++++=
+++
+> > >  drivers/platform/x86/dell/alienware-wmi.c | 10 +-------
+> > >  include/linux/platform_profile.h          |  1 +
+> > >  3 files changed, 31 insertions(+), 9 deletions(-)
+> >=20
+> > Thanks. I've now applied these.
+> >=20
+> > The first patch is already in the for-next branch and the second is=20
+> > currently in the review-ilpo-next branch (as I wanted to retain ability=
+ to=20
+> > easily separate changes into platform_profile.c from the rest, they go =
+to=20
+> > their own branch first).
+>=20
+> Thanks Ilpo!
+>=20
+> Should I rebase the alienware-wmi rework patch series on top of
+> review-ilpo-next in v3? Currently it's on top of for-next branch.
 
-Mark
+Hi Kurt,
+
+You've probably seen it by now but in general, the content in those=20
+review-ilpo-* branches is just a staging area to what will become the=20
+for-next or fixes branch once LKP has been able to build test the changes.=
+=20
+If no issues appear, they'll become content of the for-next or fixes=20
+branch as is.
+
+In case of problems, I will rebase/edit/drop patches in the=20
+review-ilpo-* branches with a relatively low bar so it might not always=20
+be fast-forwardable but other than that minor annoyance, I see no issue in=
+=20
+basing your work on top of those branches (in particular, if you know=20
+there are going to be conflicts).
+
+I might rebase also fixes and for-next at times, but I try to avoid=20
+having to do that.
+
+--=20
+ i.
+
+--8323328-1276535145-1736264899=:1001--
