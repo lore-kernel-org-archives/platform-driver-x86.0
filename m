@@ -1,213 +1,156 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1C3B11EB9F4
-	for <platform-driver-x86@vger.kernel.org>; Tue,  7 Jan 2025 12:06:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D75F1E0DD1;
+	Tue,  7 Jan 2025 12:25:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736251599; cv=none; b=fl4UHbv1u4NWIKTMQz3XY3Kt3taBMaQB0GF0YsULwx39enOBj9G9shDIuI56RYQwGIeTYG3mzbammY8eBzSlUVkL2ovgLXa5WJMVv0khGxjrBErQTcP+lpA4m90a7ZPl/1wF887HOVeV/7hx7SDLIFDsi3FOXEDWrHJQL9RmPjc=
+	t=1736252714; cv=none; b=Om0sK8+fR8U6b9E076ZtlSg0pPopbtPjn0U1wWFFP8ClWlGCgOr3XnpqN/JM98/Zz9p/044t6XRc0TqTVW2oRSmHi0d+dmUfrN5LLcaH85AzBDW8k0bQgXVqYrBS9jdIdfLMNw+Qxbjhq6xZA3uuPJj561ViXxhE88zGRXB/BBo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736251599; c=relaxed/simple;
-	bh=y87AZ/8NP9+Lzg058btA43aWcEyN1NP0BaKjQl095/8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ChcsymJMkpTT0L8F70aRfESq1rH9V01GcI4IM9aAasqkQp9vjN2TtqmAhXoLGng1AfY4MKp9uJSPlL6wVr5KxAV8HqnzraJ/k9y62o0WYItMtGBaBpYNIOMfrrRnr8WSTPvEStaLnqOcdB7eJM5QR2PP1XrrjR5gVIvMuygSCaM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=dby1wCm9; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1736252714; c=relaxed/simple;
+	bh=uKpuN0WZd9vVEiVj4SEyuarv69NHmOZ8lL7reHm2oTY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=kq9EdqKnELP7KEloxS0f/tSwlcnLAe97uh62tpDA+qSD7MHAER2TwSK4cjf2Rlns6JRPEtXT0+A+lUHYCPcpclVm4W6gNFCdqA9e9tRKbaXjVH9OvqC3k8l47zlHnzCSy5PH6PMJARDTidLsnfSplk9a1M4Z2pUJwXZ8X/6THc4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=HwR6yB3t; arc=none smtp.client-ip=192.198.163.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="dby1wCm9"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1736251595;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=ywZTa74FPTmgZMpboBIHui9ayj6w9MDkwYSe6G0OT1s=;
-	b=dby1wCm9T3nsBdmmnPld2HXDwo49dM55RLwNwJwJuG1wpc2AkR6kFO/Op7I5S/oGf52Ahp
-	wX72pyxH+w6jmuP/0BYwTyMY9l/ivdWmXrSgDe+JBqp9qxTZBN2yUXRo9fbe2Kuq4wbEYi
-	GE/AEHrT7yDA4URAwX5LjNV+tXb3ebU=
-Received: from mail-ej1-f69.google.com (mail-ej1-f69.google.com
- [209.85.218.69]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-613-fWEYKaFAMpmvHaSBX5X8sg-1; Tue, 07 Jan 2025 07:06:35 -0500
-X-MC-Unique: fWEYKaFAMpmvHaSBX5X8sg-1
-X-Mimecast-MFC-AGG-ID: fWEYKaFAMpmvHaSBX5X8sg
-Received: by mail-ej1-f69.google.com with SMTP id a640c23a62f3a-aaf921b8a85so493068166b.0
-        for <platform-driver-x86@vger.kernel.org>; Tue, 07 Jan 2025 04:06:34 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1736251593; x=1736856393;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=ywZTa74FPTmgZMpboBIHui9ayj6w9MDkwYSe6G0OT1s=;
-        b=QvXD+zAp9axCmXy6cor9Y/w8lCP9JbIF1hr45guS6zZ4NxRMzw3XXR2wQAKmj2ca8t
-         vXg0dkZjHHgAt6VMdD6fx/GQHg6gDztxhfNTvA4T+AxEl7YVWjHuyWV36U7nc3dyuyTv
-         O6iX/m2uFcxPsjQBsGK6BrnB1pYZO0d10zApxa2IuVIUC3xa/uH5cYtCa6jrEiMKjiX4
-         78bz9F6196Gzia1QBC+RV5zK6BXj3njVYEKvRjVAhhzvDHlby+dZCC+99FiBlXHk38nq
-         ZbfyqOac26hqc4KnQNoq94NWN0PWqfcfxOqSMlf6TCI5ORDurWA+xs+PO4Yv0JZJ/1Xq
-         IyIg==
-X-Forwarded-Encrypted: i=1; AJvYcCVjs3LQYEuJgWzxYGC+9nEZyyZIXC5/qvmvFltBTi6AMqzKtxRtnuolvYJG+ITBR0cKFyuaN4Ay1/xQCx/jG2uwRaiL@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywp7JmvgHkxpxG81UiU2IR035FvvzdGiwo4DCUNc4E9Z50A8WpK
-	5s3qd9t+HpYQbA4yDr7rqRRJPdOe68khl8uaruJYClsrtUFqO93NP013QeFhQpFSSASHxeG94F+
-	/hLfeA8R/WHC9v+0quDwThpEi4ZHlt7nB40aK7+y+duxoZAFRJSN51L/eNeN5FL9v5sT2yqTwmY
-	PaZPYHZQ==
-X-Gm-Gg: ASbGncsAYYGjWDHPvU1W+l/gyoNRZCEGhakWrlXF96cHMCJNv0caAr+fYPnt9tYrwcE
-	yQQlPTP7qGSQQ/VtIpA7+5bJIlp2iTzfSmiXJkfVGAcWTrm+wrKZjMTq5YW2WxRd5vIe1Uu+T3W
-	uFYkA+fIq2FaWVYeVIxb+zwC5PWrxNYIKhxIiuFgW2pIm8dluiR/zy4iLnxTMETJ4+xzoMAWFSw
-	kwN/HOBilA3S2hRRhTIL0FYV32lKbqp7cuY+a4wrTNqqGY7rSYESfQVE1+ocd3SHNhq+G4x/AUX
-	ddv/Q3ZeEDh6OlEHxk7MiUNw0BcUdKRmhu4XHyUgljAQW7L7YzwnkMuAPCHOEN1pudYeF0KlYg/
-	EKmlPlfwJdt5JzwWYjxtBzLX8Glkab/o=
-X-Received: by 2002:a17:907:a089:b0:aa6:8e61:669d with SMTP id a640c23a62f3a-aac289357e7mr4304064466b.9.1736251593364;
-        Tue, 07 Jan 2025 04:06:33 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IHLUbli6VWn3070mb4PIpahkzszuBSZo7kmXVGXyc1RE0/IsFFFPwNF05NfRYGxDRGCCLdLmA==
-X-Received: by 2002:a17:907:a089:b0:aa6:8e61:669d with SMTP id a640c23a62f3a-aac289357e7mr4304060666b.9.1736251592807;
-        Tue, 07 Jan 2025 04:06:32 -0800 (PST)
-Received: from ?IPV6:2001:1c00:c32:7800:5bfa:a036:83f0:f9ec? (2001-1c00-0c32-7800-5bfa-a036-83f0-f9ec.cable.dynamic.v6.ziggo.nl. [2001:1c00:c32:7800:5bfa:a036:83f0:f9ec])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-aac0f06dea8sm2376650266b.192.2025.01.07.04.06.32
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 07 Jan 2025 04:06:32 -0800 (PST)
-Message-ID: <40254501-7448-4349-828b-834dd821740d@redhat.com>
-Date: Tue, 7 Jan 2025 13:06:31 +0100
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="HwR6yB3t"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1736252712; x=1767788712;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=uKpuN0WZd9vVEiVj4SEyuarv69NHmOZ8lL7reHm2oTY=;
+  b=HwR6yB3tga+ve/HVD6XO53mayDz/owyTh84N3LnALMMbxevNq9i8Vnhp
+   OqrN401bTSgH6cW8HGW7u1wk+cD47XFyHIS86jBPkgkVeEypjjdu/e6Kz
+   /FdWaKexbe+yu4a/MB1XIQCXSPxxcJiglwcJhczT1Wx7zW6UYcUToi062
+   hsUjpZN7oDzMlgou262qF7mafyX+NNYGpz5HPBKZdgaRu3+1Y3ShAJ4Yj
+   L4PHU9/Y5xHyiHVUJN4DL3ZSt3eDg5zyvzoEkrlHFDfiCKr5LSXPf/ooM
+   8ZHp+1Ds7IkYShhLCTPa43k42HZaG4HbWK79VMjGoMrpiIBzx5XxJxVOR
+   w==;
+X-CSE-ConnectionGUID: MFX+1PnaS2W5RQtAXPTCkA==
+X-CSE-MsgGUID: pnF3xunoQYSR6HwQJgbCbg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11308"; a="40378866"
+X-IronPort-AV: E=Sophos;i="6.12,295,1728975600"; 
+   d="scan'208";a="40378866"
+Received: from fmviesa001.fm.intel.com ([10.60.135.141])
+  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Jan 2025 04:25:11 -0800
+X-CSE-ConnectionGUID: +hXV3ZX9RpuUg18GG0ZvkQ==
+X-CSE-MsgGUID: oVObbeAYRLGujom+byUEaw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
+   d="scan'208";a="133645683"
+Received: from kuha.fi.intel.com ([10.237.72.152])
+  by fmviesa001.fm.intel.com with SMTP; 07 Jan 2025 04:25:06 -0800
+Received: by kuha.fi.intel.com (sSMTP sendmail emulation); Tue, 07 Jan 2025 14:25:05 +0200
+Date: Tue, 7 Jan 2025 14:25:05 +0200
+From: Heikki Krogerus <heikki.krogerus@linux.intel.com>
+To: Pengyu Luo <mitltlatltl@gmail.com>
+Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Bjorn Andersson <andersson@kernel.org>,
+	Konrad Dybcio <konradybcio@kernel.org>,
+	Hans de Goede <hdegoede@redhat.com>,
+	Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	Bryan O'Donoghue <bryan.odonoghue@linaro.org>,
+	Sebastian Reichel <sre@kernel.org>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Jean Delvare <jdelvare@suse.com>,
+	Guenter Roeck <linux@roeck-us.net>, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+	platform-driver-x86@vger.kernel.org, linux-pm@vger.kernel.org,
+	linux-usb@vger.kernel.org, linux-hwmon@vger.kernel.org,
+	Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+Subject: Re: [PATCH v2 2/5] platform: arm64: add Huawei Matebook E Go EC
+ driver
+Message-ID: <Z30dIRA4MdtCp63q@kuha.fi.intel.com>
+References: <20250105174159.227831-1-mitltlatltl@gmail.com>
+ <20250105174159.227831-3-mitltlatltl@gmail.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3] platform/x86: samsung-galaxybook: Add
- samsung-galaxybook driver
-To: Joshua Grisham <josh@joshuagrisham.com>
-Cc: =?UTF-8?Q?Thomas_Wei=C3=9Fschuh?= <linux@weissschuh.net>,
- ilpo.jarvinen@linux.intel.com, W_Armin@gmx.de,
- platform-driver-x86@vger.kernel.org, corbet@lwn.net,
- linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20241216103855.18457-1-josh@joshuagrisham.com>
- <13184052-baf2-4e7d-b8ef-9ba3f34d475a@t-8ch.de>
- <66897a27-5f81-46fc-898d-682456d7f37f@redhat.com>
- <CAMF+KeZ3uAWZuuPJcrrvTJS-TgyxkqXOY_w=wNw7eZQiUkV5YA@mail.gmail.com>
- <bfd9b7a4-ebef-49ff-8b86-bd61b1a06d38@redhat.com>
- <CAMF+KeZ2W27eL1KaCUFWPBQ=uc22NeEJKkYJrTYBef4buKd33A@mail.gmail.com>
-Content-Language: en-US, nl
-From: Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <CAMF+KeZ2W27eL1KaCUFWPBQ=uc22NeEJKkYJrTYBef4buKd33A@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250105174159.227831-3-mitltlatltl@gmail.com>
 
-Hi Joshua,
+Hi,
 
-On 7-Jan-25 12:36 PM, Joshua Grisham wrote:
-> Den mån 6 jan. 2025 kl 12:50 skrev Hans de Goede <hdegoede@redhat.com>:
->>
->> Hi,
->>
->> Sorry for the very slow reply.
->>
-> 
-> Hi Hans, not to worry and appreciate that you take the time! I have
-> been in good and capable hands with several eager and helpful
-> reviewers who are helping to push me in the right direction :) I
-> acknowledge everything from your message but will respond to only
-> certain points below:
-> 
->>> What exactly should they be named (any preference?)
->>
->> No preference for the naming, the firmware-attributes API just
->> specifies how userspace can find out if something is
->> an int/string/enumand valid values / range. Not naming of
->> the attributes.
->>
-> 
-> Now that I have had some time to get over jet lag and craziness from
-> the last few weeks, I think this has finally sunk in and I am with you
-> all on firmware-attributes :) I have decided to revert the naming a
-> bit on what I had most recently called "camera_lens_cover" to what
-> Samsung device users will be familiar with: "block_recording"; the
-> rest of the attributes within the enumeration type group will exist so
-> hopefully it will be pretty self-explanatory and also help to soothe
-> some of the "unexpected side effects" confusion. It will still report
-> SW_CAMERA_LENS_COVER to its own "Camera Lens Cover" input device, but
-> the firmware-attribute itself under samsung-galaxybook will be called
-> "block_recording".
-> 
->>> Other notifications that I am wondering what the "right" way to handle
->>> / using the right interface:
->>>
->>> - Are there better events to use for these which these devices are
->>> reporting for "ACPI_NOTIFY_DEVICE_ON_TABLE" and
->>> "ACPI_NOTIFY_DEVICE_OFF_TABLE" , i.e. some kind of standard
->>> "switch"-like notification that the motion sensor in the device has
->>> detected that it has been placed or lifted from a flat surface?
->>
->> The thinkpad_apci driver has /sys/bus/platform/devices/thinkpad_acpi/dytc_lapmode
->> which will read 1 when the laptop thinks it is not on a table (and thus will
->> limit max temperatures a bit to avoid someone getting a hot lap when
->> actually having the laptop on their lap.
->>
->> I'm not aware of any other drivers having something similar. I do think
->> that power-profiles-daemon checks the dytc_lapmode thing, so it might
->> be good to have some standard interface for this, but that would need
->> to be designed / decided upon .
->>
->> For v1 of your patch I would just dev_dbg() log these events and
->> otherwise do nothing.
->>
-> 
-> What I have landed on here is to forward along / generate acpi netlink
-> events against the platform driver name (samsung-galaxybook) for these
-> events, so for now users should be able to use acpid or similar
-> userspace tools if they really want to act on this, but otherwise
-> nothing else is being done by the driver. Please let me know if this
-> sounds like an ok approach or not and I can adjust accordingly. Also,
-> of course, if there is a different direction in the future where a
-> more formalized "userspace interface" for this is established, this
-> can be changed!
+> +/* -------------------------------------------------------------------------- */
+> +/* API For UCSI */
+> +
+> +int gaokun_ec_ucsi_read(struct gaokun_ec *ec,
+> +			u8 resp[GAOKUN_UCSI_READ_SIZE])
+> +{
+> +	u8 req[] = MKREQ(0x03, 0xD5, 0);
+> +	u8 _resp[] = MKRESP(GAOKUN_UCSI_READ_SIZE);
+> +	int ret;
+> +
+> +	ret = gaokun_ec_read(ec, req, sizeof(_resp), _resp);
+> +	if (ret)
+> +		return ret;
+> +
+> +	extr_resp(resp, _resp, GAOKUN_UCSI_READ_SIZE);
+> +	return 0;
+> +}
+> +EXPORT_SYMBOL_GPL(gaokun_ec_ucsi_read);
+> +
+> +int gaokun_ec_ucsi_write(struct gaokun_ec *ec,
+> +			 const u8 req[GAOKUN_UCSI_WRITE_SIZE])
+> +{
+> +	u8 _req[] = MKREQ(0x03, 0xD4, GAOKUN_UCSI_WRITE_SIZE);
+> +
+> +
+> +	refill_req(_req, req, GAOKUN_UCSI_WRITE_SIZE);
+> +
+> +	return gaokun_ec_write(ec, _req);
+> +}
+> +EXPORT_SYMBOL_GPL(gaokun_ec_ucsi_write);
+> +
+> +int gaokun_ec_ucsi_get_reg(struct gaokun_ec *ec, u8 *ureg)
+> +{
+> +	u8 req[] = MKREQ(0x03, 0xD3, 0);
+> +	u8 _resp[] = MKRESP(UCSI_REG_SIZE);
+> +	int ret;
+> +
+> +	ret = gaokun_ec_read(ec, req, sizeof(_resp), _resp);
+> +	if (ret)
+> +		return ret;
+> +
+> +	extr_resp(ureg, _resp, UCSI_REG_SIZE);
+> +
+> +	return 0;
+> +}
+> +EXPORT_SYMBOL_GPL(gaokun_ec_ucsi_get_reg);
 
-Generating acpi netlink events for this sounds good to me.
+Why not just take struct gaokun_ucsi_reg as parameter? I did not see
+this (or any of these) being used anywhere else except in your UCSI
+glue driver. So the prototype would be:
 
->>> - When the battery charge control end threshold is reached, there is
->>> an ACPI notification on this device as well that is the one I have
->>> marked "ACPI_NOTIFY_BATTERY_STATE_CHANGED" -- the Samsung background
->>> apps pop up a custom OSD that basically says something to the effect
->>> that their "Battery saver is protecting the battery by stopping
->>> charging" (can't remember the exact verbiage) and they change the
->>> battery icon, but without doing anything else in my driver currently
->>> the battery still reports state of "charging" even though it just sits
->>> constantly at the percentage (and has the charging icon in GNOME etc).
->>> I have seen the event come and go occasionally when I did not expect
->>> it, but my working theory is that maybe it is if/when the battery
->>> starts charging again if it dips too far below the target "end
->>> threshold" and then notifies again when the threshold has been
->>> reached. Armin also mentioned this before in a different mail; I guess
->>> I would hope/expect there is an event or a function I could call to
->>> have the state reflected correctly but I would not want that it
->>> negatively impacts the normal behavior of charging the battery itself
->>> (just that the state/icon would change would be ideal! as it functions
->>> perfectly, it is just that the state and icon are not accurate).
->>
->> ATM there is no userspace API to communicate e.g. "charging stopped
->> due to charge end threshold" and this is the first time I hear about
->> us getting events from the hw for this.
->>
->> So for this one too I would say just dev_dbg() log the event and
->> otherwise do nothing.
->>
->> We can always add an API later if we have an idea how userspace
->> could / will use this.
->>
-> 
-> Similar to above is where I landed for this one as well: what I have
-> done for now is forward along these notifications as acpi netlink
-> events on samsung-galaxybook, so users should be able to see and act
-> on them if they really want to, but otherwise they are completely
-> "new" / custom events that should not disturb anything (and as said
-> before, this can be changed later if/when any formalized userpace
-> interface is established for this kind of notification event).
+        int gaokun_ec_ucsi_get_reg(struct gaokun_ec *ec,
+                                   struct gaokun_ucsi_reg *reg);
 
-Same as above, generating acpi netlink events for this sounds good to me.
+> +int gaokun_ec_ucsi_pan_ack(struct gaokun_ec *ec, int port_id)
+> +{
+> +	u8 req[] = MKREQ(0x03, 0xD2, 1);
+> +	u8 data = 1 << port_id;
+> +
+> +	if (port_id == GAOKUN_UCSI_NO_PORT_UPDATE)
+> +		data = 0;
+> +
+> +	refill_req(req, &data, 1);
+> +
+> +	return gaokun_ec_write(ec, req);
+> +}
+> +EXPORT_SYMBOL_GPL(gaokun_ec_ucsi_pan_ack);
 
-Regard,
+I think you should add proper kernel doc comments to these exported
+functions.
 
-Hans
+thanks,
 
-
+-- 
+heikki
