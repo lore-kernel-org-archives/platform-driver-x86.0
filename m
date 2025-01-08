@@ -1,125 +1,189 @@
-Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E0CC1B4234;
-	Wed,  8 Jan 2025 08:57:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF723188713;
+	Wed,  8 Jan 2025 09:30:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736326636; cv=none; b=e0hiXc62EAPr9W4DvmvLSMukaBfuRsUEpyPKAgmlTxoNTKIB3TehmiHIMnVN3Y4i+znURjaksAwsaBGRIRp7qLckc3OG5nge9EhgSjY5pNJipMd5HUcjJm/hJOd1L6CkiH35rdL0fmiF6UYeuQWy38gcHPkbdVxNjIeOzoG3ohs=
+	t=1736328621; cv=none; b=Sf7gwS/WDZeiGCMsRi98AQ/xABOJvv5FNtXOMqF7TknIaRfb8a6ca6xDRc56SMVrmvza79rX7+c7eCfX1KGGPExQU+2arOZK/V/EA+iBG4rrKw/cxzke1TCwNVd4R5H1E8InYvgy9g47JbBjRZ4ok59ntkCZILxwEjJVzBOtwHI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736326636; c=relaxed/simple;
-	bh=lNXRDatOJu5AEUnpB47+yGQJKMHkwVb0q6YKIifgg78=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ay8fEgd56oBM8llJM5HYwHdqKpR+8wYuM/YRLPVLWIklGdnnudf/VqD8Hi/aKJScLRZ3ygjjh/brvVt8N9vS5u+wOGSqd9nyXQQeJ2GZgXlq95eLdLIwpnqgGQaAncxhWivaoq/C+S/xjyttHPx1wcOuBk3DyhX4Ojc9j2pemWQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=YBb8C4Ss; arc=none smtp.client-ip=65.109.113.108
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
+	s=arc-20240116; t=1736328621; c=relaxed/simple;
+	bh=rwv2YlrEP3Ydg5j3rAZIJfRoyDf3wmGEK6JTznxOgNo=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=ITrsDvP0unpHQ+G8XXvg9oslyaqQ1d1dN/dxLl8WGVcW6bkrXggZJZhVBPL+iZ01gHVB4+EbZ32HHueWDSgfyNx3UvLkv7kp+jESIesOE3m8bT2JnQIMFsYdlCHFKXns5PCozuxP8n8YrqSK9zWR7qDX3FHePokJGVWpdmnidu8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=DfKasDOM; arc=none smtp.client-ip=192.198.163.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="YBb8C4Ss"
-Received: from localhost (localhost.localdomain [127.0.0.1])
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id 206C540E0267;
-	Wed,  8 Jan 2025 08:57:12 +0000 (UTC)
-X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
-Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
-	header.d=alien8.de
-Received: from mail.alien8.de ([127.0.0.1])
-	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id jCyKyuwpsEUd; Wed,  8 Jan 2025 08:57:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
-	t=1736326627; bh=XU4yPGUMtN5AcrN8e10m2z+GGweQxfC2fsjHTizZiWw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=YBb8C4SslBsBPhyz7BVPU3EReDkLapSqcKfLIgykVCbUdovh04HrMA2+X7j9Vj9PH
-	 nodMQwb7ouT9hGXdso8ymi5Ab4Fc72GcIhxcDQLPWqePK6yFYMbBtqpt2op3jXsAMR
-	 ejG2cZIcFBVGuKrZ6YrbIvKSDLVPMqA/ODivTsOWlPdrw9CAhoNMjih5k6cvotaI0T
-	 oexepdFVmd7RCz9pdhtmSDXS8WVQ7vIjMWNNZ+9xDak86x6gxOHFmPjEEAH/vQUfdU
-	 79kNa/XRULQvIv+EOQecTYDAOU6tUkNTsrCILbO7bhEGcRDPobXtJTbgaVrEFV+XwA
-	 n9tC2LC1aKQ3bHejMGW6XGCTtgM3hPyQyj+lImCCB8xqzDuFQaDNaR1Ucg0zS2hm2Q
-	 iqAXxPSm5s/eCqnqPcV8/zvvmLO6UUyVn1ixee71oeaE+bwfREHtAlZcA6PVniH3Bt
-	 u3DEXrEm23gYBDSkKJxFqgDuHrGWS1yz9VyCeRS0PfSC4UHo10leDFfa4AXJPnYB55
-	 5gwTyBhRM38RIlxSaIwDM1U3bQfbaF/eV4G0320dlvvouYqF5JbZJimNA+HeoqZPPY
-	 YjfjtMONk/Aa2w5Qm1+/9SAbNXrD1c6sqRUqn3SEPlSopaxjqCkZxr1fzrq2lxxzSs
-	 jQeaalM+lK0rLSHTA5C3aqVs=
-Received: from zn.tnic (p200300eA971F9314329C23fFfeA6a903.dip0.t-ipconnect.de [IPv6:2003:ea:971f:9314:329c:23ff:fea6:a903])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
-	(No client certificate requested)
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 7E10440E0163;
-	Wed,  8 Jan 2025 08:56:50 +0000 (UTC)
-Date: Wed, 8 Jan 2025 09:56:44 +0100
-From: Borislav Petkov <bp@alien8.de>
-To: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
-Cc: Yazen Ghannam <yazen.ghannam@amd.com>, x86@kernel.org,
-	Tony Luck <tony.luck@intel.com>,
-	Mario Limonciello <mario.limonciello@amd.com>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Jean Delvare <jdelvare@suse.com>,
-	Guenter Roeck <linux@roeck-us.net>,
-	Hans de Goede <hdegoede@redhat.com>,
-	Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>,
-	Naveen Krishna Chatradhi <naveenkrishna.chatradhi@amd.com>,
-	Suma Hegde <suma.hegde@amd.com>, linux-kernel@vger.kernel.org,
-	linux-edac@vger.kernel.org, linux-pci@vger.kernel.org,
-	linux-hwmon@vger.kernel.org, platform-driver-x86@vger.kernel.org
-Subject: Re: [PATCH v3 09/12] x86/amd_nb: Move SMN access code to a new
- amd_node driver
-Message-ID: <20250108085644.GDZ349zHY1Z1ePbygE@fat_crate.local>
-References: <20250107222847.3300430-1-yazen.ghannam@amd.com>
- <20250107222847.3300430-10-yazen.ghannam@amd.com>
- <6b1a0d73-5800-44ca-a28d-f2cd7e3ef1bb@amd.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="DfKasDOM"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1736328619; x=1767864619;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version:content-id;
+  bh=rwv2YlrEP3Ydg5j3rAZIJfRoyDf3wmGEK6JTznxOgNo=;
+  b=DfKasDOMUcmmRuAip9PiehT6gNK+AynGpSCMBRQ3bnWATwzfTfZRcptM
+   07PfBw2SDv3dzlJR7VI2rMdiets3EjzKr8FAR3HQCojpcu6NLXoVgTgFC
+   KjZBYw8PIaDTQ28bimSOAzA4opkV0Zc9z01JfgiWkhds5WVZl4gujgM9V
+   ZCXKTBmyMub1zKbrbhtOJ0hlUElDTC7mUIHI1hSo1Oi3EybRhmHtooq0q
+   hyRTPQuvjxYPeNztq29MzijdalhTMaO0ihd8hLaYX2ej4nLfm9SbXbScC
+   bOTNMbxibg75LXfrFQ3jIB6tJMlIemK/Wt5iQbeBoUr4eT0hywqZg0ERE
+   A==;
+X-CSE-ConnectionGUID: snn+een8SHagSPufaQilWQ==
+X-CSE-MsgGUID: KS1JYc1jSn+7e9ts+slsyQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11308"; a="36707340"
+X-IronPort-AV: E=Sophos;i="6.12,297,1728975600"; 
+   d="scan'208";a="36707340"
+Received: from orviesa001.jf.intel.com ([10.64.159.141])
+  by fmvoesa109.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Jan 2025 01:30:18 -0800
+X-CSE-ConnectionGUID: tMqwkAkUQ5SJjTpPmAYwWg==
+X-CSE-MsgGUID: jSdTTzZfRlGeNedbxkXTmw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
+   d="scan'208";a="140371890"
+Received: from mbanciu-mobl.ger.corp.intel.com (HELO localhost) ([10.245.245.87])
+  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Jan 2025 01:30:15 -0800
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Wed, 8 Jan 2025 11:30:12 +0200 (EET)
+To: =?ISO-8859-15?Q?Thomas_Wei=DFschuh?= <linux@weissschuh.net>
+cc: Mario Limonciello <mario.limonciello@amd.com>, 
+    Hans de Goede <hdegoede@redhat.com>, Armin Wolf <W_Armin@gmx.de>, 
+    platform-driver-x86@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>, 
+    Joshua Grisham <josh@joshuagrisham.com>
+Subject: Re: [PATCH 2/2] platform/x86: firmware_attributes_class: Add test
+ driver
+In-Reply-To: <7f568cbd-b299-41c6-8786-25f225de8f4f@t-8ch.de>
+Message-ID: <39e1f247-3b9e-2919-439b-edf95bb7927d@linux.intel.com>
+References: <20250107-pdx86-firmware-attributes-v1-0-9d75c04a3b52@weissschuh.net> <20250107-pdx86-firmware-attributes-v1-2-9d75c04a3b52@weissschuh.net> <a20d538e-421f-45fb-b169-f9d2eb4c6aee@amd.com> <88ae2335-86dd-4cb2-8e20-88973a8e28b7@t-8ch.de>
+ <1f5b77f3-c427-496e-9c1d-3150177f29d6@amd.com> <7f568cbd-b299-41c6-8786-25f225de8f4f@t-8ch.de>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <6b1a0d73-5800-44ca-a28d-f2cd7e3ef1bb@amd.com>
+Content-Type: multipart/mixed; BOUNDARY="8323328-1728629321-1736328336=:1082"
+Content-ID: <df124118-f333-602e-d189-471424350d7f@linux.intel.com>
 
-On Wed, Jan 08, 2025 at 11:00:21AM +0530, Shyam Sundar S K wrote:
-> > diff --git a/drivers/platform/x86/amd/pmf/core.c b/drivers/platform/x86/amd/pmf/core.c
-> > index 06a97c533cb8..7f88f3121cf5 100644
-> > --- a/drivers/platform/x86/amd/pmf/core.c
-> > +++ b/drivers/platform/x86/amd/pmf/core.c
-> > @@ -8,13 +8,13 @@
-> >   * Author: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
-> >   */
-> >  
-> > -#include <asm/amd_nb.h>
-> >  #include <linux/debugfs.h>
-> >  #include <linux/iopoll.h>
-> >  #include <linux/module.h>
-> >  #include <linux/pci.h>
-> >  #include <linux/platform_device.h>
-> >  #include <linux/power_supply.h>
-> > +#include <asm/amd_node.h>
-> 
-> You can adjust the first header inclusion to maintain alphabetical order.
+  This message is in MIME format.  The first part should be readable text,
+  while the remaining parts are likely unreadable without MIME-aware tools.
 
-It is the linux/ namespace first, then arch-specific asm/ namespace in case
-the second gets to override some generic implementations from the first. You
-can grep the tree for examples.
+--8323328-1728629321-1736328336=:1082
+Content-Type: text/plain; CHARSET=ISO-8859-15
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-ID: <eca0fdb6-5146-00ac-177c-a8a72b91f60a@linux.intel.com>
 
-> >  #include "pmf.h"
-> >  
-> >  /* PMF-SMU communication registers */
-> > diff --git a/drivers/ras/amd/atl/Kconfig b/drivers/ras/amd/atl/Kconfig
-> > index 551680073e43..6e03942cd7da 100644
-> > --- a/drivers/ras/amd/atl/Kconfig
-> > +++ b/drivers/ras/amd/atl/Kconfig
-> > @@ -10,6 +10,7 @@
-> >  config AMD_ATL
-> >  	tristate "AMD Address Translation Library"
-> >  	depends on AMD_NB && X86_64 && RAS
-> > +	depends on AMD_NODE
-> 
-> the above "depends on" can be updated to:
+On Tue, 7 Jan 2025, Thomas Wei=DFschuh wrote:
 
-the ATL uses AMD_NB facilities (node_to_amd_nb()) so I'd prefer to have
-explicit dependencies in Kconfig.
+> On 2025-01-07 15:18:21-0600, Mario Limonciello wrote:
+> > On 1/7/2025 14:50, Thomas Wei=DFschuh wrote:
+> > > On 2025-01-07 13:29:08-0600, Mario Limonciello wrote:
+> > > > On 1/7/2025 11:05, Thomas Wei=DFschuh wrote:
+> > > > > The driver showcases the use of the new subsystem API.
+> > > > >=20
+> > > > > Signed-off-by: Thomas Wei=DFschuh <linux@weissschuh.net>
+> > > > > ---
+> > > > >    drivers/platform/x86/Kconfig                    | 12 ++++
+> > > > >    drivers/platform/x86/Makefile                   |  1 +
+> > > > >    drivers/platform/x86/firmware_attributes_test.c | 78 +++++++++=
+++++++++++++++++
+> > > > >    3 files changed, 91 insertions(+)
+> > > > >=20
+> > > > > diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/=
+Kconfig
+> > > > > index 0258dd879d64be389f4dd9bc309fe089f23cc798..2a0e828657d2f0707=
+4944d6c42dc204fc8825a42 100644
+> > > > > --- a/drivers/platform/x86/Kconfig
+> > > > > +++ b/drivers/platform/x86/Kconfig
+> > > > > @@ -1065,6 +1065,18 @@ source "drivers/platform/x86/x86-android-t=
+ablets/Kconfig"
+> > > > >    config FW_ATTR_CLASS
+> > > > >    =09tristate
+> > > > > +config FW_ATTR_TEST
+> > > > > +=09tristate "Firmware attribute test driver"
+> > > > > +=09select FW_ATTR_CLASS
+> > > > > +=09help
+> > > > > +=09  This driver provides a test user of the firmware attribute =
+subsystem.
+> > > > > +
+> > > > > +=09  An instance is created at /sys/class/firmware-attributes/te=
+st/
+> > > > > +=09  container various example attributes.
+> > > > > +
+> > > > > +=09  To compile this driver as a module, choose M here: the modu=
+le
+> > > > > +=09  will be called firmware_attributes_test.
+> > > > > +
+> > > >=20
+> > > > I think if you're going to be introducing a test driver it should b=
+e
+> > > > compliant to what's in sysfs-class-firmware-attributes so that when=
+ it's
+> > > > inevitably copy/pasted we end up with higher quality drivers.
+> > > >=20
+> > > > That is you need at a minimum 'type', 'current_value', 'default_val=
+ue',
+> > > > 'display_name' and 'display_name_language_code'.  Then individual t=
+ypes
+> > > > employ additional requirements.
+> > > >=20
+> > > > I see 'type', 'current_value', and 'default_value, but I don't see
+> > > > 'display_name' or 'display_name_language_code' here.
+> > > >=20
+> > > > Furthermore as this is a "string" attribute you're supposed to also=
+ have a
+> > > > "max_length" and "min_length".
+> > >=20
+> > > Agreed that more examples are better.
+> > >=20
+> > > But are these attributes really mandatory?
+> > > "This attribute is mandatory" is only specified for "type" and>
+> > "current_value".
+> >=20
+> > Ah wow, I had thought they were, but you're right they're not!
+> >=20
+> > > While "possible_values" certainly looks necessary for "enumeration",
+> > > "min_length" for "strings" does so much less.
+> >=20
+> > Even if they're not mandatory, I think it's better to include them for =
+the
+> > same copy/paste reason I mentioned though.
+>=20
+> Thinking about it some more, which attributes should all be included?
+> Having all of them in there could motivate driver authors to implement
+> them all even it would mean filling in random values.
+> The provided examples can already be copied-and-pasted and slightly
+> adapted to add more attributes.
 
--- 
-Regards/Gruss,
-    Boris.
+Hi,
 
-https://people.kernel.org/tglx/notes-about-netiquette
+Can't you like add comments to the optional ones to reduce the incentive=20
+to fill them with random junk as it's a lot easier to just delete them than=
+=20
+generating some random junk. So if a developer is unsure what to do a=20
+comment telling something is optional would help to lean towards 'I can=20
+safely delete this'?
+
+--=20
+ i.
+
+> Also as for providing an even higher level interface. There exists a
+> fairly big feature matrix. For example the display_name_language_code:
+> * Is it used at all?
+> * Is it the same for all attributes implemented by the driver and the
+>   sysfs attribute can be reused for them all.
+> * Should the same handler logic be reused between different settings whic=
+h
+>   only differ in their language code?
+>=20
+> The answers seem to differ between each driver and having a uniform
+> high-level interface that can handle all cases would look horrible.
+> So I'd like to stick with the API provided currently for now and we can
+> revisit it if there are more drivers.
+> As mentioned before, the current API should be a decent baseline to
+> build on top of.
+>=20
+>=20
+> Thomas
+>=20
+--8323328-1728629321-1736328336=:1082--
