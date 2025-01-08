@@ -1,129 +1,144 @@
-Received: from mail-ua1-f43.google.com (mail-ua1-f43.google.com [209.85.222.43])
+Received: from mail-pl1-f171.google.com (mail-pl1-f171.google.com [209.85.214.171])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B26419EEBF;
-	Wed,  8 Jan 2025 06:39:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6A5B09476;
+	Wed,  8 Jan 2025 08:45:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736318381; cv=none; b=YCfPU5x0h7zZJUolR/b7hblDcFoISPElMSuVUQKsdygTwVwKwqL4hAdMkUBlI3Yh6XUnXVIB7TS2MGDb6rxzRQb9yj5tHeanQFF2zE5o5jbDBcqlEn6gQ4B7ZxLsUKwENC01YkM6Yz/rGMKTs7g5Rgb847fvMPnXahmbn9oZx8A=
+	t=1736325957; cv=none; b=uihXQIHfUgWU31hQxzq7HRxQoL2zAZfBcmqlIK0IZfJM/ipiI5S0VdG9zeKV2xQxnWGdBUXCxAxHv1YEQQMPs0wjEFIhg91RWpWH3lDI0ZmnAoIBM38WPO3JctVdN1OU2kgTVNIr6R0CCbvrqv3JHPwGkcqWmlywcu+HIfxx7po=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736318381; c=relaxed/simple;
-	bh=Y2Rym7wN24H634GDba5XHQmmggHq37wC92W1HMI6jBY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=qC9lnmoq6xgkspTisVoKVhxP9DnZ0W950TwowFHpqTTW2PPmqB4OxdmRE78luIhCCH0/45LO3uz21ZoBaJHR4jpXufKbwj7IMHSAOzyh/MQ2wXx1RBxKXaAcVbq5h3wr0ZBK03GIPWUHq21GOCYhLbci8YbFmRiEJgBEyd+kOCA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Dd+Lco9J; arc=none smtp.client-ip=209.85.222.43
+	s=arc-20240116; t=1736325957; c=relaxed/simple;
+	bh=ZUU4tCbX4EUULK86ZGKSQTG9qn8erScW+Sxi4TTokRc=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=BfhQvmrZ8BDkZFPKxLI87n2H/k6di5lPJJxiiFWzi99x4KKEyzWpzZ6nFrQ/oXpxoEXgiTEh2g87fNk53NA+xS9/TTy6DTQQcIxub2WtD0I0/P9mwFZIcCJkPcSESvEAnTER+6Jrfi5pjpr1gohx/k4EWPcphqnGzNb6pO+0Kbo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=kvFRli6l; arc=none smtp.client-ip=209.85.214.171
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Dd+Lco9J"
-Received: by mail-ua1-f43.google.com with SMTP id a1e0cc1a2514c-85c4e74e2baso3127351241.0;
-        Tue, 07 Jan 2025 22:39:39 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kvFRli6l"
+Received: by mail-pl1-f171.google.com with SMTP id d9443c01a7336-21649a7bcdcso235585665ad.1;
+        Wed, 08 Jan 2025 00:45:56 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1736318379; x=1736923179; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=HctyhvaChLTZSAhLoKirYpByW1qn38IXcafGBCGBDRs=;
-        b=Dd+Lco9Jfujqw5Fz0za3eaQajO7zAPf+qczFkIKDKJZN3Qiby7pOWkB19V6yn2MmZg
-         pJhC0tEPCEtyBlmdXJGjVVG0rcZCfHHDdk9quLHxhf+ireFOiz6d5huNClNdmK0C8f7n
-         mRN6462V269gfOPqR4B0WdwUKr2Or+j7GPYDkObPNGCII6oJj1yWbkgpD9MzgEP0uNAP
-         oATE1SwNi+GyQABhcc1Zknt7rBfm2A9H4mkSeFSVV39CLjGKqGaabz+gt7zSONr5sIMA
-         lDS/OeYqQ/SncXADG48fuL5ARODEJhnNRr0OOBJQD6KQEALNfVVZAKPrFkNPr+zYfSFW
-         aJiA==
+        d=gmail.com; s=20230601; t=1736325955; x=1736930755; darn=vger.kernel.org;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=SlFEUazc058JPyyfCIwv0H4BXWMuDsFcpTTxRgMlJhY=;
+        b=kvFRli6l4m2CczLZHnFh9WM9rtcmyLDPIkkGQigcMx1R1NWLdYSDMyCUZ5s0aBy5cD
+         LfsGfCj9t6yvFuXLC04gYUZV0OW0mQpG41Z2kg1WRX0AcRthTH2EnZNK7+SL2AM7urZ2
+         zmqfNWfFgOI/iJBQELDB/jeSna0xKCJPkVIswTN6GO+8IJR20PhPfaxFQsnWylFB1Qgn
+         Cit5ahaluL390j1tqP1lFifpeW3ssgerzD19BS9BhR3O/Ag5U+iooy7r33LI/n3LeFJz
+         qs7LYHKaDc67OBCVSSI/Jdkciy+5H7+1rZYHoNAXZVlj315OZLtYbMk/+eyBGTbAlU7i
+         PxzQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1736318379; x=1736923179;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=HctyhvaChLTZSAhLoKirYpByW1qn38IXcafGBCGBDRs=;
-        b=D1gEe2ZfT5L5Tdpfxn8IV5WHHG4SiMsyOphxYWjixAq7FM/AENhZmaj8qGmY2uBkly
-         MwO+wgolXLHQ/9LAytnlZ0431B6UpKUV/laR8jt6ae93ETmmjlhCVGDGRN2ataMz/C+A
-         zkhb6DoNYUvzXn1wxxVdjie1saudnZLSAXQrvbQCqsqJ5xrxnDp9txEXk9E6hEH5Nbnf
-         /tfgx6TvD/oRnZr3+9jQkt28YYcUxBa6nAUs9Y8YZzLqkWP1ySKc+j5yv4Hb7mCLihGE
-         vdw9aA92Musvl4CXhEG5L12K40WXBUotc68SdlbX5VWoi3vtSKjp4Pg0Cyek2gAJHRaK
-         vB0Q==
-X-Forwarded-Encrypted: i=1; AJvYcCVgAnGHiK7nuMnnJkgpzN5ARCGyu/aT5jWqs7QX35uONkB6fDYg3WJI5Awiypmmhtyd2dVGeY+bVcrh@vger.kernel.org, AJvYcCWLzlr9XNR6ACEgCV3CHPyzT5FunUTLO1ujY4OvdpOpCqKnwARzeP0tL1X6CCS+YE95TPVisaDAzpxDy1lX@vger.kernel.org, AJvYcCXe80Zxm4yd34n8Htujzfjne2Uj4W0rxjVs/x6AwqxiVOyYHZe1fvxRa7J2IdRIWqXk94k0sSRxp4TAbo7ID/JhDIgj5w==@vger.kernel.org
-X-Gm-Message-State: AOJu0YzHEPx7zRHB1DfK7DCT34gksbSzgK6bC2KuYQAl4jxpzqOEmhIt
-	sEY3mCkTBmGn0r/kkWtYFG8NETfhaC54g8IRcbaNyNiumBL8mxdm
-X-Gm-Gg: ASbGncttvynZzM58QCT+AlGmjcOhvAobHk1zvsxVav7KPDhuyPkruOOnAvShAzxBWdf
-	D5l6ZSKqqesKHBhPoez5IEro7XNoDi6k9J1MlltnwHX4+eLUkV2tn4ALsopr+/G14qgz09/OaQ3
-	vDfOdah9Z4YEy0aN3M1ReePCgpCvA505qBWhUE9obZVjWEB76nuHkFKsrnavQT3DlqbYALbhFQ2
-	RwBxKsdW8AjOz7ZzPVhBUr7IErfwaFupq2nJyDcBSuAO2j8eAeXPw==
-X-Google-Smtp-Source: AGHT+IEtOp9GS/mUdKzXgnt0rnUKqaQvqnGHl+EKznX0I5rGzpwbicujKROtr/6Piq6xvztFo/bEug==
-X-Received: by 2002:a05:6102:1497:b0:4b2:4a38:7b8f with SMTP id ada2fe7eead31-4b3d10485c0mr1376005137.17.1736318379008;
-        Tue, 07 Jan 2025 22:39:39 -0800 (PST)
-Received: from alphacentauri ([2800:bf0:82:1159:1ea9:11b1:7af9:1277])
-        by smtp.gmail.com with ESMTPSA id a1e0cc1a2514c-8610ac4bce7sm8179585241.13.2025.01.07.22.39.35
+        d=1e100.net; s=20230601; t=1736325955; x=1736930755;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=SlFEUazc058JPyyfCIwv0H4BXWMuDsFcpTTxRgMlJhY=;
+        b=JNGFv5EOjqUwBbpIOczpugtxb5U4u/KSo3lLcy/Gawh/Wuk5OqYdE9LZhNZgt3o+Li
+         eCc7BwLSQQHuzcwLDlPREcbu4DSxSWQVHOU9V6ytTjH3iJ1+nSw9ZF58O2o7KzDkt35k
+         xOB5LxbYio6A5CqwSCB3D7I1QjlivffJ2YK1H+4tyxPMvLi/l+uCvbtoFafY4zA5jnk9
+         C7b3XrgfFsn7NKzI1Yod7fACGjuhx/UwyPghUHZGjUyfpONXcHg5NVBD1HxeuxcbO/sZ
+         iwYQcfH4eUZ8UB/Q7iYIhXMNFyLDpUI9NYsdD55LZF5YdPdXl+O74MSZ2ncOQOq8Ske2
+         bKOw==
+X-Forwarded-Encrypted: i=1; AJvYcCUmrDQhy0n1zhZd45hhpe3qCG/47zTWDh4m+fI1dQpmzf11as3LzuI3h4oaX1nPUw4dgpj1yS1ukgU99YY=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yyswu4Jz0tKyGw1i2Qq3odGYQp3hzPrb9XecJTTANrBqJT0eFyy
+	iqNWwDQUiER1//QSD+6W6orZ1G29rMXQONUQssQr8oQ+gA+ZBs08nABDF5oM3vo=
+X-Gm-Gg: ASbGnct41FpDiNQ2lisHS8i+1xuazUGKc7mkh6G6PzQy0URsBB7X2B0FAWBT9ZFdW9z
+	zMacLMxC62DmCOjoS0nVfm1UIDYXN7ldc3x1Xz8/IEYS4Prj9uIMqLLwy+Fm7CjwkyLZpw8Kx1a
+	AoAjqW0kJmt5fK6qnVYML28fdPH2fAFjUvkp0+clIo8POI0V1Q01mHoebFr/w+yLtoSVaFsAAP/
+	B102XnAC3rJwEpf9kW7sVtywOkjaUVlVUDJo1DFXQ7BipdfdVN4MoCVToBL3g==
+X-Google-Smtp-Source: AGHT+IEjYDS7o6t7AimLtKiUMMnbuhi27/P6OvwyLUFay41lySYdAxoLignYJYwCn9klRo62wzM+nw==
+X-Received: by 2002:a05:6a00:240f:b0:725:1d37:ebff with SMTP id d2e1a72fcca58-72d2201be04mr2617650b3a.22.1736325955154;
+        Wed, 08 Jan 2025 00:45:55 -0800 (PST)
+Received: from [10.113.16.67] ([175.184.253.10])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-72aad90c18fsm36150152b3a.184.2025.01.08.00.45.51
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 07 Jan 2025 22:39:38 -0800 (PST)
-Date: Wed, 8 Jan 2025 01:39:33 -0500
-From: Kurt Borja <kuurtb@gmail.com>
-To: "Limonciello, Mario" <mario.limonciello@amd.com>
-Cc: Hridesh MG <hridesh699@gmail.com>, 
-	Mark Pearson <mpearson-lenovo@squebb.ca>, 
-	"platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>, josh@joshuagrisham.com, 
-	"Derek J . Clark" <derekjohn.clark@gmail.com>, "Rafael J. Wysocki" <rafael@kernel.org>, 
-	Len Brown <lenb@kernel.org>, Maximilian Luz <luzmaximilian@gmail.com>, 
-	Hans de Goede <hdegoede@redhat.com>, Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>, 
-	Lee Chun-Yi <jlee@suse.com>, Shyam Sundar S K <Shyam-sundar.S-k@amd.com>, 
-	Corentin Chary <corentin.chary@gmail.com>, "Luke D . Jones" <luke@ljones.dev>, 
-	Lyndon Sanche <lsanche@lyndeno.ca>, Ike Panhc <ike.pan@canonical.com>, 
-	Henrique de Moraes Holschuh <hmh@hmh.eng.br>, Armin Wolf <W_Armin@gmx.de>, 
-	Colin Ian King <colin.i.king@gmail.com>, Alexis Belmonte <alexbelm48@gmail.com>, 
-	Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>, Ai Chao <aichao@kylinos.cn>, Gergo Koteles <soyer@irl.hu>, 
-	"linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>, linux-kernel@vger.kernel.org, Dell.Client.Kernel@dell.com, 
-	ibm-acpi-devel@lists.sourceforge.net
-Subject: Re: [RFC PATCH 0/3] ACPI: platform_profile: Let drivers dynamically
- refresh choices
-Message-ID: <sjno57hd66wvjlplnv42fgb7wt62y5xh2dpbsx2r22x6mlneth@ohnyf3za545l>
-References: <20250106044605.12494-1-kuurtb@gmail.com>
- <33a5b6a2-e4df-4bfc-88a9-a9e8309c7f7a@app.fastmail.com>
- <CALiyAonc81o1FreDaWiik3XaqKYVf=wYHX+vaE2_1w66LhJTnA@mail.gmail.com>
- <2e71a4a9-6ec6-4ac7-8640-d80dcdfd7776@amd.com>
- <CALiyAonp1eow2ht_Cmux0B5+-Ukx7YxsE59c4VzwfSvL61iQ5g@mail.gmail.com>
- <205c47ef-6651-4a57-bbe4-adf1b8a25983@amd.com>
- <zelin5tbkup26skhs3dwacwxl33h4ryzgrn3nefay7fxotb5v7@aumb6v7hexpc>
- <4cbfaa44-5ba6-4ccd-8db6-e74af8fe4bba@amd.com>
+        Wed, 08 Jan 2025 00:45:54 -0800 (PST)
+From: Hridesh MG <hridesh699@gmail.com>
+Subject: [PATCH v3 0/5] platform/x86 acer-wmi: Improve platform profile
+ handling
+Date: Wed, 08 Jan 2025 14:15:22 +0530
+Message-Id: <20250108-platform_profile-v3-0-ec3658d9be9c@gmail.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <4cbfaa44-5ba6-4ccd-8db6-e74af8fe4bba@amd.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIACI7fmcC/2WNQQ6CMBBFr0Jmbc20gIIr72GIqTiFSYA2LWk0p
+ He3krhy+V7y398gkGcKcCk28BQ5sF0ylIcC+lEvAwl+ZgaFqkaJSrhJr8b6+e68NTyRML0k1Nq
+ oFhHyzHky/NqTty7zyGG1/r0/RPW1v1j1H4tKoHjUjTxVZ9m0WF6HWfN07O0MXUrpA3gx5r2wA
+ AAA
+X-Change-ID: 20250102-platform_profile-fc1e0aaf2900
+To: Hans de Goede <hdegoede@redhat.com>, 
+ =?utf-8?q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, 
+ Armin Wolf <W_Armin@gmx.de>
+Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ Shuah Khan <skhan@linuxfoundation.org>, Hridesh MG <hridesh699@gmail.com>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1736325951; l=2033;
+ i=hridesh699@gmail.com; s=20241114; h=from:subject:message-id;
+ bh=ZUU4tCbX4EUULK86ZGKSQTG9qn8erScW+Sxi4TTokRc=;
+ b=VWfGv8CSRWhMnd0LQKHajw1zAQL5F04FXoQTNmPISQzBbL2W3yYu48AXhCiaZ3pbGG3SMb6lM
+ CbTqaJ4j0DJDjFdr03KSffl2PGS+/rIb2zrR9ABOdHtjWr5SpzWfhgs
+X-Developer-Key: i=hridesh699@gmail.com; a=ed25519;
+ pk=otVQutD5ZTsEpajsGv/haM3pQj0yofkuYrdNcaX5AUE=
 
-On Tue, Jan 07, 2025 at 11:28:06AM -0600, Limonciello, Mario wrote:
-> > 
-> > After giving it some thought, I agree with you and Hridesh. Kernel
-> > should not limit profile choices if they *are* selectable.
-> > 
-> > If a "proof of concept" patch is still interesting I'll be glad to send
-> > it, otherwise I think my original idea has too many problems. User-space
-> > should be able to handle these special cases.
-> > 
-> > I think an attribute allowing/disallowing power sensitive values is
-> > interesting. Maybe allow users too attach/detach individual profiles
-> > from being selected/cycled? On that note, it would also be interesting to
-> > be able to detach invidivual "profile handlers" from the legacy
-> > `acpi_kobj`. But I'm not sure if this added complexity would be worth it.
-> > 
-> > Anyway.. Mario, do you think hiding platform_profile_handler from
-> > drivers is something worth pursuing? Similar to what the hwmon class
-> > does. I feel having some struct members like `minor` and `choices`
-> > exposed, or having the profile_get/profile_set callbacks not being
-> > const, while it's not the end of the world, could be problematic.
-> 
-> Yeah, I think this is still an interesting idea that's still worth pursuing.
-> 
-> Making the API simpler for drivers is a net benefit and reduction in tech
-> debt.
+This patch improves the platform profile handling for laptops using the
+Acer Predator interface by making the following changes - 
 
-That's good to hear.
+1) Using WMI calls to fetch the current platform profile instead of
+   directly accessing it from the EC. A new helper function is
+   introduced for this purpose.
+2) Simplifying the cycling of platform profiles by making use of
+   platform_profile_cycle()
+3) Using an ACPI bitmap to dynamically set platform_profile_choices to
+   better reflect the supported profiles.
 
-I'm working on it! Hopefully I'll be able to submit it in a couple of
-days.
+The last patch also adds support for the Acer Nitro AN515-58 by adding
+it to the quirk list.
 
-~ Kurt
+Signed-off-by: Hridesh MG <hridesh699@gmail.com>
+---
+v1->v2:
+[1/3]
+   - Fixed enum member alignment and reordered them
 
-> 
+[2/3]
+   - Made use of test_bit to check bitmap values
+   - Replaced magic numbers with proper variables
+
+Link to v1: https://lore.kernel.org/platform-driver-x86/20241231140442.10076-1-hridesh699@gmail.com/
+
+v2->v3:
+[1/5]
+   - Removed a line which was supposed to be in another patch
+
+[3/5] 
+   - Moved checking of max performance profile to [4/5]
+   - Restored code in profile_set which updates last_non_turbo_profile
+
+Moved the supported profiles patch closer to the end of the series
+
+Link to v2: https://lore.kernel.org/r/20250104-platform_profile-v2-0-b58164718903@gmail.com
+
+---
+Hridesh MG (5):
+      platform/x86: acer-wmi: use WMI calls for platform profile handling
+      platform/x86: acer-wmi: use new helper function for setting overclocks
+      platform/x86: acer-wmi: simplify platform profile cycling
+      platform/x86: acer-wmi: use an ACPI bitmap to set the platform profile choices
+      platform/x86: acer-wmi: add support for Acer Nitro AN515-58
+
+ drivers/platform/x86/acer-wmi.c | 301 +++++++++++++++++++++++++---------------
+ 1 file changed, 188 insertions(+), 113 deletions(-)
+---
+base-commit: 8155b4ef3466f0e289e8fcc9e6e62f3f4dceeac2
+change-id: 20250102-platform_profile-fc1e0aaf2900
+
+Best regards,
+-- 
+Hridesh MG <hridesh699@gmail.com>
+
