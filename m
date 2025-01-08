@@ -1,225 +1,257 @@
-Received: from mail-vs1-f52.google.com (mail-vs1-f52.google.com [209.85.217.52])
+Received: from mail-io1-f48.google.com (mail-io1-f48.google.com [209.85.166.48])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CBA481FCCED;
-	Wed,  8 Jan 2025 13:51:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.217.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 450CC18D626;
+	Wed,  8 Jan 2025 21:37:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736344270; cv=none; b=g6MlDtpj1CNVAAOLsCx/hiAHZOuYlppoYmIvlPv8dBazF3nB4nsHQkGOmxffHovmkV24MAEos9tngsGWZycb6A3PRf0Bx0k/Z1wawAK7shfOhmkmmcNVs4pU7l/Us7Ue0QqktHs1FsiV4/O043soZOGKlsJof1O8n7SRT41hPTs=
+	t=1736372237; cv=none; b=nJwesbH2VBGfgK90xdA3qaLD33JXnxNXngSv/pWQA7CxY2s+t2xyEd1J/JYmRh5M/VJ01hNVrf9gJ38ir+G8t5FMKGwNAAgppBG5M1f9X1uUeCL1FZpR97iHIT6Imr0uoHpDQ5cWwdapzMf3XWen42WPoJ6ZeySzh/PnwivPN34=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736344270; c=relaxed/simple;
-	bh=iROGqFXiPgbk4GsUOBMu2UvAtt3elRT6mLAltz/vwK0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=IUrfl3KRavfq1P/n/5ZpyIf150KP40Wwi3rOKYNLnSRnNoRef7qyzdhl/IrjtOqfa/EV+ZcO8dvQHOtgboyQ11ebPv6iyp8o60dsaorg1OPvFmCSyxAX7Za6YVolR9bjs/xetfi3qe/3+0+i8Amj8W/lNSbsRSxZFxbgR8jErVI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=RkUVaOZg; arc=none smtp.client-ip=209.85.217.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+	s=arc-20240116; t=1736372237; c=relaxed/simple;
+	bh=kFFX/loN5gfU/XWf0hvJYB3hary3hW6cVZcZPtKcAi0=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=GqHbwB5GGZraVgyIEopG2AsVu7F2pjC8Z7BOVUXkMLI4upAu28KPWWdFATzdwVpXKNmpjUs8evzaraJWaaIa9FhXv8kuyyZAddy35iazy82PKgO76Oe2OqZXnvZWzB4n1nZaoB4limbSpRJww9/WAoFoEY3F4evpe+o4+/LukhQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=joshuagrisham.com; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.166.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=joshuagrisham.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RkUVaOZg"
-Received: by mail-vs1-f52.google.com with SMTP id ada2fe7eead31-4afdd15db60so4620334137.1;
-        Wed, 08 Jan 2025 05:51:08 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1736344268; x=1736949068; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=d+2kEhLhRkj0gpxkrGpaAWjsDgZAUCXYhIHHFiXlEZY=;
-        b=RkUVaOZgOWegh3bt8Du0Fd98G99If5K7//1Ti+3828lf+RiNiY/X5sfE94PP/fW4X0
-         cpj0dZZtPNA0DHiArOw/q30zBgTeUikxWjAgRP56dPqyqLPYJ3EyKf+S3iq5wA/bbxzx
-         TGJSLsNZhOn+FEZDAyaCahPx9/s4i6xlVaIjH34iUCN2ns1+5dHlfYiu6svE7nAOj9dV
-         beawNfknzjCJYy4LdfprV05FbUkZl30x2EFNlFQ9OsfyqPH8P7rFseckNIq5Rrjvoabe
-         yin95auQUZGk+RfdPtg6qFfEczrFwVqBA9/u/ui0Zsd3yvuV6EmQSZEvzd4f3hZlRcHf
-         x5Og==
+Received: by mail-io1-f48.google.com with SMTP id ca18e2360f4ac-84a1ce51187so6683839f.1;
+        Wed, 08 Jan 2025 13:37:15 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1736344268; x=1736949068;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=d+2kEhLhRkj0gpxkrGpaAWjsDgZAUCXYhIHHFiXlEZY=;
-        b=gNnPJZJcbZfsdniBm/5r7imYCGJYUW3E4JcIebmJSTR9lSolBgPlpQPBKeFhizFr7I
-         ddKCAIX+4/5mDeNS9YGsmB/7qGlLexaA6hGGEL5UYA4Kz+VBUEVy53t/U7/FOXak68J4
-         ZJkXOEiNDM72eNhK+FgM48rr8sHEoz/PzdQqAFLEhq8Z5FIA2gS18MQv0TwhXy5y98cb
-         HY4MNfaRoyFDCg3qW4fR3aGWm7ZgsEsOIjSwz0kKOGDIGvfWbbJWCLrnkVb/QmRrhSwO
-         t1OkG64/29kYbsz01yF6KM9PIH6Xzq6alQYLzGwQq7VYHt0LxxoPBGMiEDCRHGOE2qr2
-         rRLw==
-X-Forwarded-Encrypted: i=1; AJvYcCV1fvy3Yg/bzUhN40RU0wCOVQqCQaw8YEjd6+NSv3bkQhfZE5WQZmEOl8vxf3tEZRaHA8tftS7/yc3JBqk=@vger.kernel.org, AJvYcCXtQbHxviLCCldjTWQaxgLsLFjMw4amcrPfFeywBa8g8KC9pWTvsMJ7NQnnZ/7nQZtibxPASgg9UawFcldUiO2+40uRig==@vger.kernel.org
-X-Gm-Message-State: AOJu0YzUZXoxYt79ATtY+I5o3AjpZJglXkk8+PCsCOx1ilhFBQ0UEsaY
-	s9KteYTlkYoMXXcInjyXlHAtv/FEYg6+86qWQEqgwlRr4MmieYKo
-X-Gm-Gg: ASbGncvc2yee08KLhgbunWoz+Crm72l7/hY1WgkZLQUTxL7KCauSlDaYWPIaGbDkTom
-	A0x7JmD/c4sUXjGQ5K45buKB7PooJdntl3KVD5sz04NWQcajI2vCeDeD9PL0qYmqmtVKaGeFmD2
-	eRgAYKNMbszx1gyHdKAyEWJEHLPRvLmhxCl5SbdBXt/6eKdel5bCBkwslEAJwZ/xdiGRl0PCS+C
-	+OV55H7DrOWZ98kC7+U0IrOWdWujSCJZqR1YXWdvNmm2oL/gA0DHQ==
-X-Google-Smtp-Source: AGHT+IF8FP9/AXvHwdPGqZLHYCw/FtA+Q/HtNpq9fuYVUiYFPDwjp8oPCRgaccJ4tu5ELgn67CcOFA==
-X-Received: by 2002:a05:6102:6e88:b0:4b3:ece0:7daa with SMTP id ada2fe7eead31-4b3ece08829mr1104456137.23.1736344267568;
-        Wed, 08 Jan 2025 05:51:07 -0800 (PST)
-Received: from alphacentauri ([2800:bf0:82:1159:1ea9:11b1:7af9:1277])
-        by smtp.gmail.com with ESMTPSA id a1e0cc1a2514c-8610ac1d6d5sm8628129241.6.2025.01.08.05.51.05
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 08 Jan 2025 05:51:07 -0800 (PST)
-Date: Wed, 8 Jan 2025 08:51:04 -0500
-From: Kurt Borja <kuurtb@gmail.com>
-To: Hridesh MG <hridesh699@gmail.com>
-Cc: Hans de Goede <hdegoede@redhat.com>, 
-	Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>, Armin Wolf <W_Armin@gmx.de>, platform-driver-x86@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, Shuah Khan <skhan@linuxfoundation.org>
-Subject: Re: [PATCH v3 4/5] platform/x86: acer-wmi: use an ACPI bitmap to set
- the platform profile choices
-Message-ID: <ntiwr3bxaf66eqe7upu2qk3wwkemqo5qft76g2ybqydbs7qqjv@2vyn36qayp6o>
-References: <20250108-platform_profile-v3-0-ec3658d9be9c@gmail.com>
- <20250108-platform_profile-v3-4-ec3658d9be9c@gmail.com>
+        d=1e100.net; s=20230601; t=1736372234; x=1736977034;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=rkr035lGoBmwz9KK8ReaaYxQpEWXurjEKYgsDndAqWE=;
+        b=sX0LGDtiH4fetCdXQG0jbKi/R7lxvSj4mJ6cczpfJDYOMbpwh+hAVcZ+BNSiNGqCAq
+         9we+R8S0Bpg+jmalmhfo8UG/ytgXVkqiKCOmuyg0gT/Dk6/oPUjr8NoitUvRhncvR5rT
+         7QKMoyXEas1nKPO/yNE6JBIurTgMDGgoXnWSkS9fzSmreGG9Hk7YZoKRrkLuHlO4V68o
+         5/RpLPgrQX8p7YZ1QH2qQGhszZ+RC7z0btdL+427dvmp26Prz8YhAKm58xwWkaNedEyQ
+         XQOaJsOq88/pHG30BLFrJe1XcAYUStJF70BljIahaU665j7R7sHFjTf60oK4cKflywBX
+         azBw==
+X-Forwarded-Encrypted: i=1; AJvYcCUYe3vPBM0piH6JrSb8MwftNn4GV6Ce8Wt9tM/VOsk9gIZizLTKKOHI+eSv4NrEAXPDRGnMwYRAXkM=@vger.kernel.org, AJvYcCVRxlg+VsBaAkxbySaR4dV4ZUQkeUCZuF9yX1B0FQjrM2AWhuGJfSxmjHgGXLJTS8NfV+oF2v3IbJv/50Gimy7iGxp33Q==@vger.kernel.org, AJvYcCVU79Zj7AuuMw3kUMHeui5N0MNXXuLzc77dDlthI6L2ZAg7jfT99RYJGZClMj+3yxMRjKLsQOF4tjwz5/nb@vger.kernel.org
+X-Gm-Message-State: AOJu0YyA6UdannjaUXAYzPLw8cyQ3k9z6vPIKAwkropI9GgUU4dSTMY4
+	tCPZDmxckcgv03iIl+8K3U3irllacV0neXcTNH0kGKvqwa6OIuEGkLTAwkyl
+X-Gm-Gg: ASbGnctUiMzBKoy76yDg+b3jNKP19qjNDtiYrwrBuHHqmuOl/84EqTvc0OnsJ+83MJA
+	7rfyQSI+q493t4yUXV8bcV4sRNU1pIn+KF8e2B18AvD5WotDqJUesSXqJjbNVw+hxcGA5XLMMV/
+	4IMLm6Ga9xZwNUusaIOaiSdZs+Zt4cUkG9hDQlCupHvFHpnftGsuj74he+3yzkCtHaH5T5eOq+G
+	+iMDfpERO1M4a5+da9E3n8AGg8WxdFxXiK0jpQjhXBvWltXCfXs1J9Rnec9Z3gnmREprxgTBewj
+	K5cNqb/0TWAue0bEX1TMjWljNA==
+X-Google-Smtp-Source: AGHT+IEFjYultJ3p8PyY6/IYhiiw91MX8ljurrhXAk5QjM+siQ0uEMCir/KTwYgjmiV5fntkG4YBvg==
+X-Received: by 2002:a05:6602:4c06:b0:841:a652:b0c8 with SMTP id ca18e2360f4ac-84ce003c439mr470135839f.3.1736372234308;
+        Wed, 08 Jan 2025 13:37:14 -0800 (PST)
+Received: from mail-il1-f178.google.com (mail-il1-f178.google.com. [209.85.166.178])
+        by smtp.gmail.com with ESMTPSA id ca18e2360f4ac-84d61fca4f0sm199439f.44.2025.01.08.13.37.13
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 08 Jan 2025 13:37:13 -0800 (PST)
+Received: by mail-il1-f178.google.com with SMTP id e9e14a558f8ab-3a8f1c97ef1so583565ab.2;
+        Wed, 08 Jan 2025 13:37:13 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCUstPAUmrMs1hQfUo5i74JhyrvWGlyOfES3YND8qAsKP6P04KZe77aAYvxCNOx+xbW/7Jwbn82XhV4=@vger.kernel.org, AJvYcCWxEA7lPzZd8kLcFnvwGMyy7imhjfhgdKi9x55w/CqRp7VQdSuNwdtsb+k9zIC+AIGhGW1s9FZ9pE6saXkAfEYQd9PaHg==@vger.kernel.org, AJvYcCXsFkRRrH8DQHUuDthRIQJu5skKbQFY+S146rWGVc3CiCgH2q7w3k5uXCL9u7efq9rvdYMZTr4c5vfUhLAP@vger.kernel.org
+X-Received: by 2002:a92:cda6:0:b0:3a7:e0d1:e255 with SMTP id
+ e9e14a558f8ab-3ce3aa75a70mr38853085ab.23.1736372233405; Wed, 08 Jan 2025
+ 13:37:13 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250108-platform_profile-v3-4-ec3658d9be9c@gmail.com>
+References: <20241226153031.49457-1-josh@joshuagrisham.com> <fb019bc7-72ba-4b1b-9260-36cac76a5a60@t-8ch.de>
+In-Reply-To: <fb019bc7-72ba-4b1b-9260-36cac76a5a60@t-8ch.de>
+From: Joshua Grisham <josh@joshuagrisham.com>
+Date: Wed, 8 Jan 2025 22:37:01 +0100
+X-Gmail-Original-Message-ID: <CAMF+KebS6eEGEVzrO3Bm3CfL7OYP7-XxUp7hLiDiwUrjWOEJYQ@mail.gmail.com>
+X-Gm-Features: AbW1kvbmyuYMBguk01h3aHUr1AdfWMg0_FyKKmCBr1-LaIYtK-36cGslhh9a5E4
+Message-ID: <CAMF+KebS6eEGEVzrO3Bm3CfL7OYP7-XxUp7hLiDiwUrjWOEJYQ@mail.gmail.com>
+Subject: Re: [PATCH v4] platform/x86: samsung-galaxybook: Add
+ samsung-galaxybook driver
+To: =?UTF-8?Q?Thomas_Wei=C3=9Fschuh?= <thomas@t-8ch.de>
+Cc: Joshua Grisham <josh@joshuagrisham.com>, ilpo.jarvinen@linux.intel.com, 
+	hdegoede@redhat.com, W_Armin@gmx.de, platform-driver-x86@vger.kernel.org, 
+	corbet@lwn.net, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Wed, Jan 08, 2025 at 02:15:26PM +0530, Hridesh MG wrote:
-> Currently the choices for the platform profile are hardcoded. There is
-> an ACPI bitmap accessible via WMI that specifies the supported profiles,
-> use this bitmap to dynamically set the choices for the platform profile.
-> 
-> Link: https://lore.kernel.org/platform-driver-x86/ecb60ee5-3df7-4d7e-8ebf-8c162b339ade@gmx.de/
-> Signed-off-by: Hridesh MG <hridesh699@gmail.com>
-> ---
->  drivers/platform/x86/acer-wmi.c | 55 +++++++++++++++++++++++++++++------------
->  1 file changed, 39 insertions(+), 16 deletions(-)
-> 
-> diff --git a/drivers/platform/x86/acer-wmi.c b/drivers/platform/x86/acer-wmi.c
-> index 7968fe21507b1cf28fdc575139057c795e6a873b..6c98c1bb3bdce6a7c6559f6da4ff3c6ce56b60e3 100644
-> --- a/drivers/platform/x86/acer-wmi.c
-> +++ b/drivers/platform/x86/acer-wmi.c
-> @@ -33,6 +33,7 @@
->  #include <linux/units.h>
->  #include <linux/unaligned.h>
->  #include <linux/bitfield.h>
-> +#include <linux/bitmap.h>
->  
->  MODULE_AUTHOR("Carlos Corbacho");
->  MODULE_DESCRIPTION("Acer Laptop WMI Extras Driver");
-> @@ -127,6 +128,7 @@ enum acer_wmi_predator_v4_oc {
->  enum acer_wmi_gaming_misc_setting {
->  	ACER_WMID_MISC_SETTING_OC_1			= 0x0005,
->  	ACER_WMID_MISC_SETTING_OC_2			= 0x0007,
-> +	ACER_WMID_MISC_SETTING_SUPPORTED_PROFILES	= 0x000A,
->  	ACER_WMID_MISC_SETTING_PLATFORM_PROFILE		= 0x000B,
->  };
->  
-> @@ -1957,7 +1959,7 @@ static int
->  acer_predator_v4_platform_profile_set(struct platform_profile_handler *pprof,
->  				      enum platform_profile_option profile)
->  {
-> -	int err, tp;
-> +	int max_perf, err, tp;
->  
->  	switch (profile) {
->  	case PLATFORM_PROFILE_PERFORMANCE:
-> @@ -1983,7 +1985,10 @@ acer_predator_v4_platform_profile_set(struct platform_profile_handler *pprof,
->  	if (err)
->  		return err;
->  
-> -	if (tp != ACER_PREDATOR_V4_THERMAL_PROFILE_TURBO)
-> +	max_perf = find_last_bit(platform_profile_handler.choices,
-> +				 PLATFORM_PROFILE_LAST);
-> +
-> +	if (tp != max_perf)
+Hi Thomas! I was prepping my v5 patch to send in and trying to figure
+out everything I changed for the change list comments, but I stumbled
+on a few comments here that I wanted to ask you about as I realized I
+did not fully address them.
 
-You can't directly compare `tp` and `max_perf`. ACER_PREDATOR_V4 values
-may not match PLATFORM_PROFILE ones.
+Den fre 3 jan. 2025 kl 20:37 skrev Thomas Wei=C3=9Fschuh <thomas@t-8ch.de>:
+>
 
-It does in the case of PERFORMANCE and TURBO, but it does not in the
-case of QUIET and BALANCED.
+> > +This driver implements the
+> > +Documentation/userspace-api/sysfs-platform_profile.rst interface for w=
+orking
+>
+> You can make this real reST link which will be converted into a
+> hyperlink.
+>
 
-I suggest you store the actual ACER_PREDATOR_V4 max_perf when setting up
-the platform_profile.
+Here I actually tried this a few different ways (linking to the entire
+page instead of a specific section within the page) but would always
+get a warning and then no link when I built the docs. However, from
+finding other examples then I found just giving the path like this is
+actually giving me a link in both the htmldocs and pdfdocs with the
+title of the target page exactly as I wanted... with that in mind,
+does it seem ok to leave as-is or is there a syntax that you would
+recommend instead to link directly to a page (and not a section within
+a page)?
 
->  		last_non_turbo_profile = tp;
->  
->  	return 0;
-> @@ -1992,6 +1997,7 @@ acer_predator_v4_platform_profile_set(struct platform_profile_handler *pprof,
->  static int acer_platform_profile_setup(struct platform_device *device)
->  {
->  	if (quirks->predator_v4) {
-> +		unsigned long supported_profiles;
->  		int err;
->  
->  		platform_profile_handler.name = "acer-wmi";
-> @@ -2001,16 +2007,30 @@ static int acer_platform_profile_setup(struct platform_device *device)
->  		platform_profile_handler.profile_set =
->  			acer_predator_v4_platform_profile_set;
->  
-> -		set_bit(PLATFORM_PROFILE_PERFORMANCE,
-> -			platform_profile_handler.choices);
-> -		set_bit(PLATFORM_PROFILE_BALANCED_PERFORMANCE,
-> -			platform_profile_handler.choices);
-> -		set_bit(PLATFORM_PROFILE_BALANCED,
-> -			platform_profile_handler.choices);
-> -		set_bit(PLATFORM_PROFILE_QUIET,
-> -			platform_profile_handler.choices);
-> -		set_bit(PLATFORM_PROFILE_LOW_POWER,
-> -			platform_profile_handler.choices);
-> +		err = WMID_gaming_get_misc_setting(ACER_WMID_MISC_SETTING_SUPPORTED_PROFILES,
-> +						   (u8 *)&supported_profiles);
-> +		if (err)
-> +			return err;
-> +
-> +		if (test_bit(ACER_PREDATOR_V4_THERMAL_PROFILE_QUIET, &supported_profiles))
-> +			set_bit(PLATFORM_PROFILE_QUIET,
-> +				platform_profile_handler.choices);
-> +
-> +		if (test_bit(ACER_PREDATOR_V4_THERMAL_PROFILE_BALANCED, &supported_profiles))
-> +			set_bit(PLATFORM_PROFILE_BALANCED,
-> +				platform_profile_handler.choices);
-> +
-> +		if (test_bit(ACER_PREDATOR_V4_THERMAL_PROFILE_PERFORMANCE, &supported_profiles))
-> +			set_bit(PLATFORM_PROFILE_BALANCED_PERFORMANCE,
-> +				platform_profile_handler.choices);
-> +
-> +		if (test_bit(ACER_PREDATOR_V4_THERMAL_PROFILE_TURBO, &supported_profiles))
-> +			set_bit(PLATFORM_PROFILE_PERFORMANCE,
-> +				platform_profile_handler.choices);
-> +
-> +		if (test_bit(ACER_PREDATOR_V4_THERMAL_PROFILE_ECO, &supported_profiles))
-> +			set_bit(PLATFORM_PROFILE_LOW_POWER,
-> +				platform_profile_handler.choices);
->  
->  		err = platform_profile_register(&platform_profile_handler);
->  		if (err)
-> @@ -2028,11 +2048,11 @@ static int acer_platform_profile_setup(struct platform_device *device)
->  static int acer_thermal_profile_change(void)
->  {
->  	/*
-> -	 * This mode key will either cycle through each mode or toggle the turbo profile.
-> +	 * This mode key will either cycle through each mode or toggle the most performant profile.
->  	 */
->  	if (quirks->predator_v4) {
->  		u8 current_tp;
-> -		int err, tp;
-> +		int max_perf, err, tp;
->  
->  		if (cycle_gaming_thermal_profile) {
->  			platform_profile_cycle();
-> @@ -2042,11 +2062,14 @@ static int acer_thermal_profile_change(void)
->  			if (err)
->  				return err;
->  
-> -			if (current_tp == ACER_PREDATOR_V4_THERMAL_PROFILE_TURBO) {
-> +			max_perf = find_last_bit(platform_profile_handler.choices,
-> +						 PLATFORM_PROFILE_LAST);
-> +
-> +			if (current_tp == max_perf) {
+> > +static int galaxybook_acpi_method(struct samsung_galaxybook *galaxyboo=
+k, acpi_string method,
+> > +                               struct sawb *in_buf, size_t len, struct=
+ sawb *out_buf)
+>
+> in_buf and out_buf are always the same.
+>
+> > +{
+> > +     struct acpi_buffer output =3D {ACPI_ALLOCATE_BUFFER, NULL};
+> > +     union acpi_object in_obj, *out_obj;
+> > +     struct acpi_object_list input;
+> > +     acpi_status status;
+> > +     int err;
+> > +
+> > +     in_obj.type =3D ACPI_TYPE_BUFFER;
+> > +     in_obj.buffer.length =3D len;
+> > +     in_obj.buffer.pointer =3D (u8 *)in_buf;
+> > +
+> > +     input.count =3D 1;
+> > +     input.pointer =3D &in_obj;
+> > +
+> > +     status =3D acpi_evaluate_object_typed(galaxybook->acpi->handle, m=
+ethod, &input, &output,
+> > +                                         ACPI_TYPE_BUFFER);
+> > +
+> > +     if (ACPI_FAILURE(status)) {
+> > +             dev_err(&galaxybook->acpi->dev, "failed to execute method=
+ %s; got %s\n",
+> > +                     method, acpi_format_exception(status));
+> > +             return -EIO;
+> > +     }
+> > +
+> > +     out_obj =3D output.pointer;
+> > +
+> > +     if (out_obj->buffer.length !=3D len || out_obj->buffer.length < S=
+AWB_GUNM_POS + 1) {
+> > +             dev_err(&galaxybook->acpi->dev, "failed to execute method=
+ %s; "
+> > +                     "response length mismatch\n", method);
+> > +             err =3D -EPROTO;
+> > +             goto out_free;
+> > +     }
+> > +     if (out_obj->buffer.pointer[SAWB_RFLG_POS] !=3D RFLG_SUCCESS) {
+> > +             dev_err(&galaxybook->acpi->dev, "failed to execute method=
+ %s; "
+> > +                     "device did not respond with success code 0x%x\n"=
+,
+> > +                     method, RFLG_SUCCESS);
+> > +             err =3D -ENXIO;
+> > +             goto out_free;
+> > +     }
+> > +     if (out_obj->buffer.pointer[SAWB_GUNM_POS] =3D=3D GUNM_FAIL) {
+> > +             dev_err(&galaxybook->acpi->dev,
+> > +                     "failed to execute method %s; device responded wi=
+th failure code 0x%x\n",
+> > +                     method, GUNM_FAIL);
+> > +             err =3D -ENXIO;
+> > +             goto out_free;
+> > +     }
+> > +
+> > +     memcpy(out_buf, out_obj->buffer.pointer, len);
+>
+> Nit: This memcpy() could be avoided by having the ACPI core write directl=
+y
+> into out_buf. It would also remove the allocation.
+>
 
-Same as above.
+Now I have replaced in_buf and out_buf with just one parameter, buf.
+Now it feels like I cannot write directly to it (since I am reusing
+the same buf as the outgoing value) so have left the memcpy in place.
+I guess I would need to choose to have 2 buffers or use one and do a
+memcpy at the end like this (which is how I have it now in my v5
+draft) .. am I thinking wrong here and/or is there a preference
+between the two alternatives? I can just for now say that "usage" of
+this function in all of the other functions feels easier to just have
+one buffer... :)
 
-~ Kurt
+> > +static int power_on_lid_open_acpi_set(struct samsung_galaxybook *galax=
+ybook, const bool value)
+> > +{
+> > +     struct sawb buf =3D { 0 };
+> > +
+> > +     buf.safn =3D SAFN;
+> > +     buf.sasb =3D SASB_POWER_MANAGEMENT;
+> > +     buf.gunm =3D GUNM_POWER_MANAGEMENT;
+> > +     buf.guds[0] =3D GUDS_POWER_ON_LID_OPEN;
+> > +     buf.guds[1] =3D GUDS_POWER_ON_LID_OPEN_SET;
+> > +     buf.guds[2] =3D value ? 1 : 0;
+>
+> No need for the ternary.
+>
 
->  				tp = last_non_turbo_profile;
->  			} else {
->  				last_non_turbo_profile = current_tp;
-> -				tp = ACER_PREDATOR_V4_THERMAL_PROFILE_TURBO;
-> +				tp = max_perf;
->  			}
->  
->  			err = WMID_gaming_set_misc_setting(
+I did not have this before but it was requested to be added by Ilpo
+IIRC. I am ok with either way but would just need to know which is
+preferred between the two :)
+
+> > +static void galaxybook_i8042_filter_remove(void *data)
+> > +{
+> > +     struct samsung_galaxybook *galaxybook =3D data;
+> > +
+> > +     i8042_remove_filter(galaxybook_i8042_filter);
+> > +     if (galaxybook->has_kbd_backlight)
+> > +             cancel_work_sync(&galaxybook->kbd_backlight_hotkey_work);
+> > +     if (galaxybook->has_camera_lens_cover)
+> > +             cancel_work_sync(&galaxybook->camera_lens_cover_hotkey_wo=
+rk);
+> > +}
+> > +
+> > +static int galaxybook_i8042_filter_install(struct samsung_galaxybook *=
+galaxybook)
+> > +{
+> > +     int err;
+> > +
+> > +     if (!galaxybook->has_kbd_backlight && !galaxybook->has_camera_len=
+s_cover)
+> > +             return 0;
+> > +
+> > +     if (galaxybook->has_kbd_backlight)
+> > +             INIT_WORK(&galaxybook->kbd_backlight_hotkey_work,
+> > +                       galaxybook_kbd_backlight_hotkey_work);
+> > +
+> > +     if (galaxybook->has_camera_lens_cover)
+> > +             INIT_WORK(&galaxybook->camera_lens_cover_hotkey_work,
+> > +                       galaxybook_camera_lens_cover_hotkey_work);
+>
+> I would just always initialize and cancel the work_structs.
+> This is no hot path and it makes the code simpler.
+>
+
+I apologize but I don't think I am 100% following what you mean here.
+Is there an example or more information that can be provided so I can
+know what should be changed here?
+
+> > +     err =3D galaxybook_enable_acpi_notify(galaxybook);
+> > +     if (err)
+> > +             dev_warn(&galaxybook->platform->dev, "failed to enable AC=
+PI notifications; "
+> > +                      "some hotkeys will not be supported\n");
+>
+> Will this dev_warn() trigger always for certain devices? If so a
+> dev_info() would be more appropriate IMO.
+>
+
+Yes good point here; for the devices which have this condition, they
+will get this message every single time, so I will change it to info.
+I can also change it to debug if that makes even more sense.
+
+> [...]
+
+Other than these I think (hope) I have tried to address everything
+else from all other comments. I will hold off on sending this v5 in
+case you reply soon-ish but otherwise will go ahead and send it as-is
+in the next day or two just to keep the feedback cycle going.
+
+Thank you again!
+
+Best regards,
+Joshua
