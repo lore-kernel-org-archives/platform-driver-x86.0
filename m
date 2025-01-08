@@ -1,257 +1,147 @@
 Received: from mail-io1-f48.google.com (mail-io1-f48.google.com [209.85.166.48])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 450CC18D626;
-	Wed,  8 Jan 2025 21:37:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 41C6E185B6D;
+	Wed,  8 Jan 2025 22:01:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736372237; cv=none; b=nJwesbH2VBGfgK90xdA3qaLD33JXnxNXngSv/pWQA7CxY2s+t2xyEd1J/JYmRh5M/VJ01hNVrf9gJ38ir+G8t5FMKGwNAAgppBG5M1f9X1uUeCL1FZpR97iHIT6Imr0uoHpDQ5cWwdapzMf3XWen42WPoJ6ZeySzh/PnwivPN34=
+	t=1736373668; cv=none; b=U8sjGhpcK6EeuvioV4Q2pbZzpSmJ+u0ygE+BNxuC0ns3OLHAfZF0SGn6wbQvNgQb2DpKn0YQlDAIcJ7JCiI8ACPQwIXpAgss1tsva2mMTue8lUgctsZu3ZNslMna9QrXx/Hig+PjPrbxUUVRuaa7ve1+CbwEeMZwdWmqjHyC19s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736372237; c=relaxed/simple;
-	bh=kFFX/loN5gfU/XWf0hvJYB3hary3hW6cVZcZPtKcAi0=;
+	s=arc-20240116; t=1736373668; c=relaxed/simple;
+	bh=/x9HyJZbl6uG6TWcTIoRF/X0BeWAu+Hv5BGPosVlauc=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=GqHbwB5GGZraVgyIEopG2AsVu7F2pjC8Z7BOVUXkMLI4upAu28KPWWdFATzdwVpXKNmpjUs8evzaraJWaaIa9FhXv8kuyyZAddy35iazy82PKgO76Oe2OqZXnvZWzB4n1nZaoB4limbSpRJww9/WAoFoEY3F4evpe+o4+/LukhQ=
+	 To:Cc:Content-Type; b=UIJUbUgNEN0t/dVh6E9VFUuY5nmS8U9IIKY3JQ7VOeede2VaWniZMcLxInXrysD0EjLvuTUaBms/Usz6Wi3lTYyDOMp8G4hbLGhXTU6sVINrIzTI57vuhMlIu3X0ufi+PT4L4dUTngM0ItGCU1jLgXL35aMWPeQ7zf1ewJfMOB0=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=joshuagrisham.com; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.166.48
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=joshuagrisham.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-io1-f48.google.com with SMTP id ca18e2360f4ac-84a1ce51187so6683839f.1;
-        Wed, 08 Jan 2025 13:37:15 -0800 (PST)
+Received: by mail-io1-f48.google.com with SMTP id ca18e2360f4ac-844e1eb50e2so8547839f.0;
+        Wed, 08 Jan 2025 14:01:07 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1736372234; x=1736977034;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=rkr035lGoBmwz9KK8ReaaYxQpEWXurjEKYgsDndAqWE=;
-        b=sX0LGDtiH4fetCdXQG0jbKi/R7lxvSj4mJ6cczpfJDYOMbpwh+hAVcZ+BNSiNGqCAq
-         9we+R8S0Bpg+jmalmhfo8UG/ytgXVkqiKCOmuyg0gT/Dk6/oPUjr8NoitUvRhncvR5rT
-         7QKMoyXEas1nKPO/yNE6JBIurTgMDGgoXnWSkS9fzSmreGG9Hk7YZoKRrkLuHlO4V68o
-         5/RpLPgrQX8p7YZ1QH2qQGhszZ+RC7z0btdL+427dvmp26Prz8YhAKm58xwWkaNedEyQ
-         XQOaJsOq88/pHG30BLFrJe1XcAYUStJF70BljIahaU665j7R7sHFjTf60oK4cKflywBX
-         azBw==
-X-Forwarded-Encrypted: i=1; AJvYcCUYe3vPBM0piH6JrSb8MwftNn4GV6Ce8Wt9tM/VOsk9gIZizLTKKOHI+eSv4NrEAXPDRGnMwYRAXkM=@vger.kernel.org, AJvYcCVRxlg+VsBaAkxbySaR4dV4ZUQkeUCZuF9yX1B0FQjrM2AWhuGJfSxmjHgGXLJTS8NfV+oF2v3IbJv/50Gimy7iGxp33Q==@vger.kernel.org, AJvYcCVU79Zj7AuuMw3kUMHeui5N0MNXXuLzc77dDlthI6L2ZAg7jfT99RYJGZClMj+3yxMRjKLsQOF4tjwz5/nb@vger.kernel.org
-X-Gm-Message-State: AOJu0YyA6UdannjaUXAYzPLw8cyQ3k9z6vPIKAwkropI9GgUU4dSTMY4
-	tCPZDmxckcgv03iIl+8K3U3irllacV0neXcTNH0kGKvqwa6OIuEGkLTAwkyl
-X-Gm-Gg: ASbGnctUiMzBKoy76yDg+b3jNKP19qjNDtiYrwrBuHHqmuOl/84EqTvc0OnsJ+83MJA
-	7rfyQSI+q493t4yUXV8bcV4sRNU1pIn+KF8e2B18AvD5WotDqJUesSXqJjbNVw+hxcGA5XLMMV/
-	4IMLm6Ga9xZwNUusaIOaiSdZs+Zt4cUkG9hDQlCupHvFHpnftGsuj74he+3yzkCtHaH5T5eOq+G
-	+iMDfpERO1M4a5+da9E3n8AGg8WxdFxXiK0jpQjhXBvWltXCfXs1J9Rnec9Z3gnmREprxgTBewj
-	K5cNqb/0TWAue0bEX1TMjWljNA==
-X-Google-Smtp-Source: AGHT+IEFjYultJ3p8PyY6/IYhiiw91MX8ljurrhXAk5QjM+siQ0uEMCir/KTwYgjmiV5fntkG4YBvg==
-X-Received: by 2002:a05:6602:4c06:b0:841:a652:b0c8 with SMTP id ca18e2360f4ac-84ce003c439mr470135839f.3.1736372234308;
-        Wed, 08 Jan 2025 13:37:14 -0800 (PST)
-Received: from mail-il1-f178.google.com (mail-il1-f178.google.com. [209.85.166.178])
-        by smtp.gmail.com with ESMTPSA id ca18e2360f4ac-84d61fca4f0sm199439f.44.2025.01.08.13.37.13
+        d=1e100.net; s=20230601; t=1736373666; x=1736978466;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=/x9HyJZbl6uG6TWcTIoRF/X0BeWAu+Hv5BGPosVlauc=;
+        b=KR0mRZardMLepweaqAK5MPvhIJOmns5l1rbMu0KuK5xhCuXzOxej/QOOcnLDv1OQRn
+         MoAdBwep0SOVwyLVYLo4VUQ+YwG45/v64Ep2GlPJUbE3d2c1kZYfcsk4c+cKA7bA6Lww
+         29vmaywvk//d/2RATuUPJCsrlp/iF17huiK5uBbX7gUWnMqaule6ztx9HHTPbWpOyHOg
+         8CjrAyBLoz1h0gX3RtZ8+1Z40EZIR06/U4I6SwhI3bSf+spxgswpX3WnxUXlJqERJBnG
+         bWCGtkIBAhwBu4Bwy/2X9bImR2SBp8hA8c/VNdxcK7N6h/7oKGjynQ2De6vIjHXSGsLT
+         BARQ==
+X-Forwarded-Encrypted: i=1; AJvYcCU1t6yWFvOCZKe7OPDqw9rxD/DAhA18+0bmEqMRk5R4yHUR1uGASiFzsyuQZm5+5cOe+XPLtzeogv2FwSkMmkA9Fct4bg==@vger.kernel.org, AJvYcCWwvmdcHfGvqq65jnlfnL/wfy0WoZwdh0wd8ryTvEvuioWBlGLSpW0V+th4r8XkCHf9WIXFsFe5wYD2ocxa@vger.kernel.org, AJvYcCX6opmLJ1OEGazt2EszGQyA5zBr7YfBRPf7RfAlXstoWVcq78kQc5JJU5PihG4JpQUA8PO5x1h01Yc=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyWpQkxdrXc5jBdIWiSPlfjL0XhZeY2Q6c5SHTD75Am2N0S+jGn
+	7Pd3FfzvFHm/DpEbG8cbQXGJ9jtzvFrYVYO0zvBjxubaLIquJRHYa1MXR4wbvg8=
+X-Gm-Gg: ASbGncvrU4zXte2QcS1/MftmK5lMA3Jdwsbd/V6UFwxrTw8/XrkyBDPMbDCdL/ZyKbU
+	7/8ceIB1w+nkVfOuWnMCiYcVkB2HCGtb2i18snKJnSl6ZTJKKkJl8Z+EI2XxrLBgCmyGz/pTEIJ
+	0vKbLHEiuQQmL1QLReMgBWv1reMtiIR4FU2kejDFjrDpaYQNo3xpXUQ+IuSYDKkZSIGDj96SQLH
+	5FM6v+IpKdh3KR65Lf6ub6+S+NjEzjNFiVmhukKtc+0tlRC81R9eunuiAwBqLL0OZY3KXQOCXYR
+	3pwDTDssXcACEJ7M5kc8Tg==
+X-Google-Smtp-Source: AGHT+IFIM+A2NW3gEyE5KvXGub3uq2ldyvUi8QX0jiBVzcIQhHzXVekD5zUs+Mw/NHMVTIGq0J6gzg==
+X-Received: by 2002:a05:6602:2d96:b0:843:eb89:9655 with SMTP id ca18e2360f4ac-84ce01c3bbbmr416594139f.15.1736373664799;
+        Wed, 08 Jan 2025 14:01:04 -0800 (PST)
+Received: from mail-io1-f46.google.com (mail-io1-f46.google.com. [209.85.166.46])
+        by smtp.gmail.com with ESMTPSA id ca18e2360f4ac-84d4faef087sm1335539f.6.2025.01.08.14.01.04
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 08 Jan 2025 13:37:13 -0800 (PST)
-Received: by mail-il1-f178.google.com with SMTP id e9e14a558f8ab-3a8f1c97ef1so583565ab.2;
-        Wed, 08 Jan 2025 13:37:13 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCUstPAUmrMs1hQfUo5i74JhyrvWGlyOfES3YND8qAsKP6P04KZe77aAYvxCNOx+xbW/7Jwbn82XhV4=@vger.kernel.org, AJvYcCWxEA7lPzZd8kLcFnvwGMyy7imhjfhgdKi9x55w/CqRp7VQdSuNwdtsb+k9zIC+AIGhGW1s9FZ9pE6saXkAfEYQd9PaHg==@vger.kernel.org, AJvYcCXsFkRRrH8DQHUuDthRIQJu5skKbQFY+S146rWGVc3CiCgH2q7w3k5uXCL9u7efq9rvdYMZTr4c5vfUhLAP@vger.kernel.org
-X-Received: by 2002:a92:cda6:0:b0:3a7:e0d1:e255 with SMTP id
- e9e14a558f8ab-3ce3aa75a70mr38853085ab.23.1736372233405; Wed, 08 Jan 2025
- 13:37:13 -0800 (PST)
+        Wed, 08 Jan 2025 14:01:04 -0800 (PST)
+Received: by mail-io1-f46.google.com with SMTP id ca18e2360f4ac-844eb33827eso8803539f.2;
+        Wed, 08 Jan 2025 14:01:04 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCUUmWBCRluIALSZ8c4Qftopu8mWVtneHwwlWlYst2lyMcpF6cHuaLilh8PTAztG+ruGDPF99SsMOy8=@vger.kernel.org, AJvYcCVd7CRZn+gJVFh1gHtu1HLpyO+sW/pf04umtWLvM67IegSJTiTkjKMNZGnM49xqPEw1pPL8F+on95yfW9HEuS1g9dPmdw==@vger.kernel.org, AJvYcCWr2/teGLKkFrDLuOttUwhBZvslQsxxYvVQt183KHiLB9hDBxmQ084b3oC4hmnsRTms34WnjHsP7uIi2Bwm@vger.kernel.org
+X-Received: by 2002:a05:6e02:198e:b0:3a7:8d8e:e730 with SMTP id
+ e9e14a558f8ab-3ce3a8ec729mr26607735ab.22.1736373663907; Wed, 08 Jan 2025
+ 14:01:03 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20241226153031.49457-1-josh@joshuagrisham.com> <fb019bc7-72ba-4b1b-9260-36cac76a5a60@t-8ch.de>
-In-Reply-To: <fb019bc7-72ba-4b1b-9260-36cac76a5a60@t-8ch.de>
+References: <20241226153031.49457-1-josh@joshuagrisham.com>
+ <0fbe58a9-ecca-437f-aa30-9d3a17c2bd43@gmx.de> <CAMF+KeYdshNex2h4kLJari=kXVxgcOZw7GDutJrV6vKC0PTe6A@mail.gmail.com>
+ <a8011f0f-1d44-42ec-9089-2da31f3852e2@gmx.de> <CAMF+KeZm8LCGsCZ9bosNYRCbv847CcZr+0mWeZtDQsk5QFRuyg@mail.gmail.com>
+ <9f257ca1-946d-416f-8741-247592b3866c@gmx.de>
+In-Reply-To: <9f257ca1-946d-416f-8741-247592b3866c@gmx.de>
 From: Joshua Grisham <josh@joshuagrisham.com>
-Date: Wed, 8 Jan 2025 22:37:01 +0100
-X-Gmail-Original-Message-ID: <CAMF+KebS6eEGEVzrO3Bm3CfL7OYP7-XxUp7hLiDiwUrjWOEJYQ@mail.gmail.com>
-X-Gm-Features: AbW1kvbmyuYMBguk01h3aHUr1AdfWMg0_FyKKmCBr1-LaIYtK-36cGslhh9a5E4
-Message-ID: <CAMF+KebS6eEGEVzrO3Bm3CfL7OYP7-XxUp7hLiDiwUrjWOEJYQ@mail.gmail.com>
+Date: Wed, 8 Jan 2025 23:00:52 +0100
+X-Gmail-Original-Message-ID: <CAMF+KeZ0xOdu3LADEeAHAC22=hZFQXnkHM3oxko7E7urNisfGw@mail.gmail.com>
+X-Gm-Features: AbW1kvaIajHJzeALyZUyc2CcStPy5VJhoUsTJbLOMIFdzV3tkpe2Eg0pWkejtVE
+Message-ID: <CAMF+KeZ0xOdu3LADEeAHAC22=hZFQXnkHM3oxko7E7urNisfGw@mail.gmail.com>
 Subject: Re: [PATCH v4] platform/x86: samsung-galaxybook: Add
  samsung-galaxybook driver
-To: =?UTF-8?Q?Thomas_Wei=C3=9Fschuh?= <thomas@t-8ch.de>
+To: Armin Wolf <W_Armin@gmx.de>
 Cc: Joshua Grisham <josh@joshuagrisham.com>, ilpo.jarvinen@linux.intel.com, 
-	hdegoede@redhat.com, W_Armin@gmx.de, platform-driver-x86@vger.kernel.org, 
-	corbet@lwn.net, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
+	hdegoede@redhat.com, platform-driver-x86@vger.kernel.org, corbet@lwn.net, 
+	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-Hi Thomas! I was prepping my v5 patch to send in and trying to figure
-out everything I changed for the change list comments, but I stumbled
-on a few comments here that I wanted to ask you about as I realized I
-did not fully address them.
-
-Den fre 3 jan. 2025 kl 20:37 skrev Thomas Wei=C3=9Fschuh <thomas@t-8ch.de>:
+Den tis 7 jan. 2025 kl 19:56 skrev Armin Wolf <W_Armin@gmx.de>:
+>
+> Is this non-ultra performance mode any different than the ultra performance mode
+> in terms of performance gains, fan speed, etc?
 >
 
-> > +This driver implements the
-> > +Documentation/userspace-api/sysfs-platform_profile.rst interface for w=
-orking
+From what I can tell it ramps up the performance even more and might
+even also ramp up the performance of the GPU (these devices have a
+second dedicated GPU) a bit more. My understanding is that even for
+these models, "Performance" is considered a high performance mode, but
+that "Ultra" is like "super performance" ?
+
+Fan speed I think is mostly controlled based on temperature but it
+could also be that some thresholds are adjusted etc. All of this is
+unfortunately embedded within the EC so you cannot really see any
+voltage, clock, etc, or other differences on the CPU when these modes
+are used, even though it is clear from basic stress testing especially
+with the "Silent" / low-power mode that the CPU has been severely
+limited.
+
 >
-> You can make this real reST link which will be converted into a
-> hyperlink.
+> PLATFORM_PROFILE_CUSTOM is meant to signal that the platform is not in a well-defined
+> profile state, usually due to manual tuning. So please do not use it for ULTRA.
 >
 
-Here I actually tried this a few different ways (linking to the entire
-page instead of a specific section within the page) but would always
-get a warning and then no link when I built the docs. However, from
-finding other examples then I found just giving the path like this is
-actually giving me a link in both the htmldocs and pdfdocs with the
-title of the target page exactly as I wanted... with that in mind,
-does it seem ok to leave as-is or is there a syntax that you would
-recommend instead to link directly to a page (and not a section within
-a page)?
+Thank you yes I also realized this a bit more when I read through some
+of the proposed changes to other drivers in the mailing list!
 
-> > +static int galaxybook_acpi_method(struct samsung_galaxybook *galaxyboo=
-k, acpi_string method,
-> > +                               struct sawb *in_buf, size_t len, struct=
- sawb *out_buf)
+> > If this is possible, then my best guess for the logic for this mapping
+> > in samsung-galaxybook could be changed to loop the "supported modes"
+> > forwards instead of backwards, and just let the "legacy" modes be
+> > written first (as they seem to always come first in the list), and
+> > then in case the non-legacy mode exists later in the array, it will
+> > just replace the already-mapped legacy value with the new non-legacy
+> > value, and thus skip any kind of condition-based checking/mapping
+> > entirely. Is that sort of more like what you had in mind?
 >
-> in_buf and out_buf are always the same.
+> Can you be sure that legacy performance modes are always placed before non-legacy
+> performance modes?
 >
-> > +{
-> > +     struct acpi_buffer output =3D {ACPI_ALLOCATE_BUFFER, NULL};
-> > +     union acpi_object in_obj, *out_obj;
-> > +     struct acpi_object_list input;
-> > +     acpi_status status;
-> > +     int err;
-> > +
-> > +     in_obj.type =3D ACPI_TYPE_BUFFER;
-> > +     in_obj.buffer.length =3D len;
-> > +     in_obj.buffer.pointer =3D (u8 *)in_buf;
-> > +
-> > +     input.count =3D 1;
-> > +     input.pointer =3D &in_obj;
-> > +
-> > +     status =3D acpi_evaluate_object_typed(galaxybook->acpi->handle, m=
-ethod, &input, &output,
-> > +                                         ACPI_TYPE_BUFFER);
-> > +
-> > +     if (ACPI_FAILURE(status)) {
-> > +             dev_err(&galaxybook->acpi->dev, "failed to execute method=
- %s; got %s\n",
-> > +                     method, acpi_format_exception(status));
-> > +             return -EIO;
-> > +     }
-> > +
-> > +     out_obj =3D output.pointer;
-> > +
-> > +     if (out_obj->buffer.length !=3D len || out_obj->buffer.length < S=
-AWB_GUNM_POS + 1) {
-> > +             dev_err(&galaxybook->acpi->dev, "failed to execute method=
- %s; "
-> > +                     "response length mismatch\n", method);
-> > +             err =3D -EPROTO;
-> > +             goto out_free;
-> > +     }
-> > +     if (out_obj->buffer.pointer[SAWB_RFLG_POS] !=3D RFLG_SUCCESS) {
-> > +             dev_err(&galaxybook->acpi->dev, "failed to execute method=
- %s; "
-> > +                     "device did not respond with success code 0x%x\n"=
-,
-> > +                     method, RFLG_SUCCESS);
-> > +             err =3D -ENXIO;
-> > +             goto out_free;
-> > +     }
-> > +     if (out_obj->buffer.pointer[SAWB_GUNM_POS] =3D=3D GUNM_FAIL) {
-> > +             dev_err(&galaxybook->acpi->dev,
-> > +                     "failed to execute method %s; device responded wi=
-th failure code 0x%x\n",
-> > +                     method, GUNM_FAIL);
-> > +             err =3D -ENXIO;
-> > +             goto out_free;
-> > +     }
-> > +
-> > +     memcpy(out_buf, out_obj->buffer.pointer, len);
+> If no then i suggest that you iterate over all supported modes and if you encounter
+> a legacy performance mode you check if the associated platform profile slot was already
+> taken by a non-legacy performance mode. If that is the case you ignore that legacy performance
+> mode.
 >
-> Nit: This memcpy() could be avoided by having the ACPI core write directl=
-y
-> into out_buf. It would also remove the allocation.
+> If you are sure that the order is always the same then you can of course simplify this by
+> iterating forward. I will leave it to you to choose which one to implement, as you seem
+> to have more knowledge about the underlying hardware than me.
 >
 
-Now I have replaced in_buf and out_buf with just one parameter, buf.
-Now it feels like I cannot write directly to it (since I am reusing
-the same buf as the outgoing value) so have left the memcpy in place.
-I guess I would need to choose to have 2 buffers or use one and do a
-memcpy at the end like this (which is how I have it now in my v5
-draft) .. am I thinking wrong here and/or is there a preference
-between the two alternatives? I can just for now say that "usage" of
-this function in all of the other functions feels easier to just have
-one buffer... :)
+So far the order has always been the same for all devices I have seen
+from users in the community, it is just that certain modes are or are
+not present in the list depending on their support. However, based on
+your comment I think it is maybe safe to add a bit more logic just in
+case the modes suddenly come in a different or random order on some
+new device. I have also now simplified the mapping so it is mostly 1:1
+with one exception: if Ultra is found, then I map it to performance
+and re-map what was Performance to balanced-performance. Otherwise and
+for all other devices without Ultra, it is 1:1.
 
-> > +static int power_on_lid_open_acpi_set(struct samsung_galaxybook *galax=
-ybook, const bool value)
-> > +{
-> > +     struct sawb buf =3D { 0 };
-> > +
-> > +     buf.safn =3D SAFN;
-> > +     buf.sasb =3D SASB_POWER_MANAGEMENT;
-> > +     buf.gunm =3D GUNM_POWER_MANAGEMENT;
-> > +     buf.guds[0] =3D GUDS_POWER_ON_LID_OPEN;
-> > +     buf.guds[1] =3D GUDS_POWER_ON_LID_OPEN_SET;
-> > +     buf.guds[2] =3D value ? 1 : 0;
->
-> No need for the ternary.
->
-
-I did not have this before but it was requested to be added by Ilpo
-IIRC. I am ok with either way but would just need to know which is
-preferred between the two :)
-
-> > +static void galaxybook_i8042_filter_remove(void *data)
-> > +{
-> > +     struct samsung_galaxybook *galaxybook =3D data;
-> > +
-> > +     i8042_remove_filter(galaxybook_i8042_filter);
-> > +     if (galaxybook->has_kbd_backlight)
-> > +             cancel_work_sync(&galaxybook->kbd_backlight_hotkey_work);
-> > +     if (galaxybook->has_camera_lens_cover)
-> > +             cancel_work_sync(&galaxybook->camera_lens_cover_hotkey_wo=
-rk);
-> > +}
-> > +
-> > +static int galaxybook_i8042_filter_install(struct samsung_galaxybook *=
-galaxybook)
-> > +{
-> > +     int err;
-> > +
-> > +     if (!galaxybook->has_kbd_backlight && !galaxybook->has_camera_len=
-s_cover)
-> > +             return 0;
-> > +
-> > +     if (galaxybook->has_kbd_backlight)
-> > +             INIT_WORK(&galaxybook->kbd_backlight_hotkey_work,
-> > +                       galaxybook_kbd_backlight_hotkey_work);
-> > +
-> > +     if (galaxybook->has_camera_lens_cover)
-> > +             INIT_WORK(&galaxybook->camera_lens_cover_hotkey_work,
-> > +                       galaxybook_camera_lens_cover_hotkey_work);
->
-> I would just always initialize and cancel the work_structs.
-> This is no hot path and it makes the code simpler.
->
-
-I apologize but I don't think I am 100% following what you mean here.
-Is there an example or more information that can be provided so I can
-know what should be changed here?
-
-> > +     err =3D galaxybook_enable_acpi_notify(galaxybook);
-> > +     if (err)
-> > +             dev_warn(&galaxybook->platform->dev, "failed to enable AC=
-PI notifications; "
-> > +                      "some hotkeys will not be supported\n");
->
-> Will this dev_warn() trigger always for certain devices? If so a
-> dev_info() would be more appropriate IMO.
->
-
-Yes good point here; for the devices which have this condition, they
-will get this message every single time, so I will change it to info.
-I can also change it to debug if that makes even more sense.
+I have also tightened up and streamlined the logic a tiny bit so
+hopefully it will feel slightly more straight-forward in the new v5.
+This feels like an ok compromise if we should be using exactly the
+profiles which are currently available .. how does this sound?
 
 > [...]
+> Thanks,
+> Armin Wolf
+>
 
-Other than these I think (hope) I have tried to address everything
-else from all other comments. I will hold off on sending this v5 in
-case you reply soon-ish but otherwise will go ahead and send it as-is
-in the next day or two just to keep the feedback cycle going.
-
-Thank you again!
-
-Best regards,
+Thank you!
 Joshua
