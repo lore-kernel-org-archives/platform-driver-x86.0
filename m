@@ -1,64 +1,41 @@
-Received: from mail-wm1-f44.google.com (mail-wm1-f44.google.com [209.85.128.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mout.gmx.net (mout.gmx.net [212.227.15.19])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC11C18A959
-	for <platform-driver-x86@vger.kernel.org>; Thu,  9 Jan 2025 21:36:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 26C921FDE18;
+	Thu,  9 Jan 2025 21:36:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736458572; cv=none; b=C4ZEa3Z1GyBgSiQ08/EWftvkvjja5109OIrRyhGDfRp55kVKQuyhqw6yxkhmN5dveJTJEWCgg0Zq5GwxuRkXRHZ66NqzrVHHMvoCkYMSwTLXQEr/SG9noyGyPJuIo0i60fcE9tbi8m41L5/Vs1FrT1EWmn+3ye/9hper57K0k1M=
+	t=1736458611; cv=none; b=VVPo6ZXZb0GV3tzZmoIpjbjeQgec33Ckc38OdyM9SQwKjJusUUw4TQ0DqJkls1YkpaZarOfOeX5OPc1WNUL6wsjLDBlTPipw1635BZ6Avv1KXGFmxNwGrNFnvVshdI8KB+qCpltFkAOUarzrFOoEWKf+ag8Vgzv7U8DHCxOyj2Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736458572; c=relaxed/simple;
-	bh=nbxjV6qH6DUpf33ktiDfaWFETdM3EiHJyKTeJVx0V54=;
+	s=arc-20240116; t=1736458611; c=relaxed/simple;
+	bh=l0RB3I6i0T0OuPbfF0kh733DwnxZ6N585tNMBOTxZOU=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=oOaItekBQnUIYVjH5xg0ACCdQ/ca0kD0JzeG+0KA5jyZcsroWnGyVrY6pnMYfRkewU9JLh/nYWf37/0JX18vP2vH66MSFq1Vwbs3sE2WnvnekAmiu4i39ySc08edJr4PJXcKfX48qFYOMVUNr7u141h9kXnuS1XEbHL2fpbh3Bs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=qXAqpExJ; arc=none smtp.client-ip=209.85.128.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	 In-Reply-To:Content-Type; b=AHBIOVVlooXyD1LFlM45YJst4X+Hm/qOAgkA2/XFt3G3n5bFT4hdTkMw420kd62G5E+dS0uaepq2CGe3TMCNH8U9dOOhmiN6j3dV7O5Umy5WHac/PnalK3vY6T50lvuRUduSYXBDH91O+2N/6LDDYIUjX7MWosBGiU43W6pvfnI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b=Iw0dxFzN; arc=none smtp.client-ip=212.227.15.19
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="qXAqpExJ"
-Received: by mail-wm1-f44.google.com with SMTP id 5b1f17b1804b1-436202dd730so10848355e9.2
-        for <platform-driver-x86@vger.kernel.org>; Thu, 09 Jan 2025 13:36:10 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1736458569; x=1737063369; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=+9HPQZCVUAnZ7shlzpjc+vwRiCC2uUgOzI+dVfgh5t0=;
-        b=qXAqpExJbMxlHiQiayDWaVGxG6w3ALvCr+w65mAIMPqeM5pOeQ3WtmN7pb7fy8ucL0
-         OnLMUSK5sW1ZxT2cF9og3ZIIn+Xt3tFFHWd4nkl0jYsQw2cY6V2m3GBL89pQZtT1as4K
-         q8Ehdtc2KSgvTHGpLBS8AtUIaULFmpl/wwCrgtHItjhNzVlt/yDhJtltDg7qYWGucRuE
-         +tzb54JIN4QowCcTEV0HuSb1ZGbihh1el4AvhJFycgt2bSF8Fgv/vTEIx0W6RjpkQAnm
-         aumxc3UOx9fhr263SspdGLzoy2swZtWblV5jmWphmu8k8396PAIg7ec+bAKZNlHpZJbz
-         76JQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1736458569; x=1737063369;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=+9HPQZCVUAnZ7shlzpjc+vwRiCC2uUgOzI+dVfgh5t0=;
-        b=b+YPnBtyMW5LkRRxfi72zc6wdJtQyAW7pWwwO78GzV2B+O041hNttJaAimMDy1Gd0C
-         yBGLonnb7P5HWRNC6ejFdsNiLEGFRXA57/Fyy0zZCnZ+5m6EV0RMuMgtPGT3pCSUKmEc
-         wIti0MXSxxRYFP6Axo0SQIxDtKdHQoMPt4Z7TnJfhwukmQKx2ht+j82aaOU7Z/88jmrr
-         qe6bRK+OtwnjmfxAZS81a/+xjq23mwnjUsIgyPClVnsmJmPJby+Fadd1jA54lfpvQ0nL
-         6+/biR4lLu8beJqZjIIbbQbY9MoM7xgHN14od2Bd63Ukn7pUUxBbKeBPUfwuFyvsgPPc
-         afgQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVjCOddNxs7phtquCSwKTaIH/QJl/RICI5YG2sqQKK5u2qiYzZhZWjc3rHZHHFhzScsVr4w0STGQdLXelmlOmEE4B4K@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy6MwLvYNknfD0xsDHtNmdE1nQqcFsc3+rUnI3TldvFX6mg0BVZ
-	21FMi6peuwaG/gnYxmzBGpQmGhlaKcmR0iy2zyuF/6jZ2ZZEsdF4I5ihpza6Uxw=
-X-Gm-Gg: ASbGnctHBDnxoS7va9oDlQzDTispxsX2mgDNOwzAC/adchZagrAQc6LNjtDjUL+SjuF
-	iV1jPJrHvmemLOeeHKoC35c1DiTEmcz+32N/2HMJASFpt9oKJGOd7svPU8xnwnDrwQ/XV0VlNfM
-	DvF0RRz4OOJhqtFH3SUXDz2L4YfAkR5WNUZj2ShbjQNpyQhGRMNX8UA72ojZBaPFkme+cgRxyVl
-	wE7jbFp6yQiNnDrJlZ4Q3H5L3Nykd2uXguS55iTebW/RJIbyXjugqYkYfg1du7vMMKBGKaXGHro
-	NRIUu2lkqrTnD6u6XlVU
-X-Google-Smtp-Source: AGHT+IHX1eZQUCDD13aWYdJo9a1TwhTHPCfOsRihU3pob2ooEDoyXQhIkgJP+CnttpbBtjp0u3RDiQ==
-X-Received: by 2002:a05:600c:4e92:b0:434:fdbc:5ce5 with SMTP id 5b1f17b1804b1-436e2707f4amr75406735e9.29.1736458569346;
-        Thu, 09 Jan 2025 13:36:09 -0800 (PST)
-Received: from [192.168.10.46] (146725694.box.freepro.com. [130.180.211.218])
-        by smtp.googlemail.com with ESMTPSA id ffacd0b85a97d-38a8e38ef6asm2845178f8f.60.2025.01.09.13.36.08
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 09 Jan 2025 13:36:08 -0800 (PST)
-Message-ID: <6ed0eb0c-c31b-41b0-93ca-c6581249c7b7@linaro.org>
-Date: Thu, 9 Jan 2025 22:36:07 +0100
+	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b="Iw0dxFzN"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.de;
+	s=s31663417; t=1736458603; x=1737063403; i=w_armin@gmx.de;
+	bh=YCCSeRUB1/hYEH3xu7zZfCUwidZ1F3t39g2toAPUydE=;
+	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:To:Cc:
+	 References:From:In-Reply-To:Content-Type:
+	 Content-Transfer-Encoding:cc:content-transfer-encoding:
+	 content-type:date:from:message-id:mime-version:reply-to:subject:
+	 to;
+	b=Iw0dxFzN1ULStl5OLdcyDAUKY5SlkuKHjwyrlkqgse0UAEYIxoWTMAJ24pcpyNCe
+	 voejhVjJA3MlneJ3KgtRe6UZzK2M3NF5WSQrlOhYTj+BN3ROkz4ra4jitEFIqy9r+
+	 AfCJajDbXkpqfWUijQxkvrGacIwl/qmBZ6KTUZj+FJObbHRTs+6S1vfijG3kQLni7
+	 34aqmqfbbOX/lPs3P0DyaeDy50GvP2LqypDfQxT1Moil6QvJSCaONq+uiGnffJuVT
+	 a8vbKlYUhM9bi/MKifN8AKujIdVeEmnrChM6J+Kqu5/IUEwR3/J1I67ypE+RS6VIE
+	 +niLu4ClR7xBJooYUg==
+X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
+Received: from [192.168.0.69] ([91.14.230.110]) by mail.gmx.net (mrgmx005
+ [212.227.17.190]) with ESMTPSA (Nemesis) id 1MCKFk-1tfO7l0Vhy-004a3z; Thu, 09
+ Jan 2025 22:36:43 +0100
+Message-ID: <a568a6b7-64d0-4ac1-86ed-19fd96887241@gmx.de>
+Date: Thu, 9 Jan 2025 22:36:38 +0100
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -66,72 +43,208 @@ List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: Thermal driver with safeguards
-To: Werner Sembach <wse@tuxedocomputers.com>,
- "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>,
- "Rafael J . Wysocki" <rafael@kernel.org>
-Cc: rui.zhang@intel.com, Hans de Goede <hdegoede@redhat.com>,
- Armin Wolf <W_Armin@gmx.de>, =?UTF-8?Q?Ilpo_J=C3=A4rvinen?=
- <ilpo.jarvinen@linux.intel.com>,
- "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
- platform-driver-x86@vger.kernel.org
-References: <41483e2b-361b-4b84-88a7-24fc1eaae745@tuxedocomputers.com>
+Subject: Re: [PATCH v2 1/4] platform/x86: Add lenovo-wmi drivers Documentation
+To: "Derek J. Clark" <derekjohn.clark@gmail.com>,
+ Hans de Goede <hdegoede@redhat.com>,
+ =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Cc: Jonathan Corbet <corbet@lwn.net>, Mario Limonciello <superm1@kernel.org>,
+ Luke Jones <luke@ljones.dev>, Xino Ni <nijs1@lenovo.com>,
+ Zhixin Zhang <zhangzx36@lenovo.com>, Mia Shao <shaohz1@lenovo.com>,
+ Mark Pearson <mpearson-lenovo@squebb.ca>,
+ "Pierre-Loup A . Griffais" <pgriffais@valvesoftware.com>,
+ "Cody T . -H . Chiu" <codyit@gmail.com>, John Martens <johnfanv2@gmail.com>,
+ platform-driver-x86@vger.kernel.org, linux-doc@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <20250102004854.14874-1-derekjohn.clark@gmail.com>
+ <20250102004854.14874-2-derekjohn.clark@gmail.com>
 Content-Language: en-US
-From: Daniel Lezcano <daniel.lezcano@linaro.org>
-In-Reply-To: <41483e2b-361b-4b84-88a7-24fc1eaae745@tuxedocomputers.com>
+From: Armin Wolf <W_Armin@gmx.de>
+In-Reply-To: <20250102004854.14874-2-derekjohn.clark@gmail.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
+X-Provags-ID: V03:K1:aYz5rokSvJejkIBe64J58f6Hfo78eO1R0+gscn6vp0tJhlyl35U
+ bbQBS1hyzIf39BO+DoN4kejE3mL+5CpdF1hIZaJBa0hlagIAVNIfYeBbuhRjSGI8scWlxd9
+ Wo5ZlKyFgZf1Tko+J4qRfRgoO1trY/w6+7r1h2XCZIXn3plP47iBIUTVcaiRMp9t5KDgozS
+ HBLv07/LSYGBamzX7ZHkA==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:9WGyMRjH/DU=;GVQ58EwSwUC6VZVu4Qs0q74M4QL
+ fe5/KzD5XZ449LVNR30bco4/1U5qfdpcrolkwN8aPcodE7vgJgcIPqVsaTgSTsFLHq3gaUHpc
+ vAEuGgB9Z/8iD+hbE91Nlv95PA1OnmvC4DFVhb5EFdIJYDkrEaheDz5x42Y0We+vkBvJ54sg5
+ 5bpjNrA6dm7FBsOKMNcRVbbsFsDSttMmxeirr42QfH5kM2v7Xq8d+Q33iPyGNqhtA3rRjk3kG
+ nfHUqEh6dr5AcEOdi7LXcwb5/t9QnJovfQ46NvCLHA+CYxcsftUz5mdlpVNmChGyIVXaRfDeG
+ l9pEN+Md2PPbu3+kJYiB9YW5sgtC+4J280xiTl1c28+nCNrX/rZdKZrlwaHLONKhBBzuvdcLA
+ Iauu8EZ55dJNzTdoTc0hhSoeI/7+cNzz6ek8SirhikzoCYxxZWBetoltx92Pp/9i/m3AtWXJ+
+ WWVTJjYJzOxGVCj3YH2ijx9aUPh1TUXwgwYNVj+6eLEOtoB0hANgRtTM8kqi4DyShXEdVrR5j
+ mZrmjFohPS6rSe72SdcgEk1ODXNdWXqgXC5UAt7EtHPYfvMmqu7GiZdjWbm7QEf/okTK0Cp2b
+ JGVgp0mh+QftlW+llEjMquP6f2EHMPDfRZ0OWONR7Ap1K32zZi7ytzhK9kqezUVhIo2tKaQvB
+ aUTn5MYo9d/54H5WrObin20O9WsCqzxTFWfHuglACIJ05IxXuF2ZzQGyJWzGl/1VWrQAZtasH
+ Y10PT6imeJj16Sq597OehVwIEa6WJRhFCoKyDjqR2NS9aoEHZoKXhW+1de/VYDCGPBgDpw42F
+ e7CTUQEPy2BocgZhwObjztzEGnB4hnPF5ZgQrns7UTS2cztUcAIcKAc1p+W6kWlYEQvgxqy7r
+ 25/+p0cAB8f9BsNAUN9HfK+bfj7U6yNfBw/Ei7t6/y6+lTrGIgLjiQrRTHXZ48INVtQj3dhAz
+ cNIYH2h33t9QqPrZrwWbdOygW0EgGRlVGyQRD3y7Uc4ZM6jOFSskZVfWkWHS0MZTIXFm11F7w
+ czEHf00FpDFu0POlmumdaUpKopmBOKFuDnmjikbRm+owwHKtNqZDEKEJpcnFPZ/1idznErLL/
+ H6c8r1pMBY2trov81BwpD5tDtdqF5p
 
-On 02/12/2024 15:52, Werner Sembach wrote:
-> Hi,
-> 
-> given a pair of a temperature sensor and a fan, I want to implement a 
-> driver. that allows userspace to directly control the fan if it wants 
-> to. But have a minimum fan speed when certain high temperatures are 
-> reached to avoid crashes or hardware damage.
+Am 02.01.25 um 01:47 schrieb Derek J. Clark:
 
- From the userspace, use directly the thermal-engine which is currently 
-under development [1]. You can add your platform specific code in a 
-plugin while the thermal engine will catch all the thermal events and 
-pass them to it [2].
+> Adds documentation for all lenovo-wmi* drivers.
 
-The thermal engine has a configuration file which will setup the thermal 
-framework to be woken up at different temperatures.
+Hi,
 
-The thermal engine will be proposed for a distro package, so the 
-platform support will be automatically supported.
+while i would prefer separate documentation files for each driver, grouping them together for now
+is also fine. We can split them later should the combined file become to big.
 
-Beside the trip points can be setup in the device to act on higher 
-temperature.
+>
+> v2:
+> - Update description of Custom Profile to include the need to manually
+>    set it.
+> - Remove all references to Legion hardware.
+> - Add section for lemovo-wmi-camera.c driver as it follows the same
+>    naming convention.
+>
+> Signed-off-by: Derek J. Clark <derekjohn.clark@gmail.com>
+> ---
+>   Documentation/wmi/devices/lenovo-wmi.rst | 104 +++++++++++++++++++++++
+>   1 file changed, 104 insertions(+)
+>   create mode 100644 Documentation/wmi/devices/lenovo-wmi.rst
+>
+> diff --git a/Documentation/wmi/devices/lenovo-wmi.rst b/Documentation/wmi/devices/lenovo-wmi.rst
+> new file mode 100644
+> index 000000000000..62c2ec9505bd
+> --- /dev/null
+> +++ b/Documentation/wmi/devices/lenovo-wmi.rst
+> @@ -0,0 +1,104 @@
+> +.. SPDX-License-Identifier: GPL-2.0-or-later
+> +======================================================
+> +Lenovo WMI Interface Drivers (lenovo-wmi)
 
-What is unclear is how the fan is managed. I suggest to have a look at 
-pwm-fan.c in drivers/hwmon
+Since we are talking about multiple drivers, i suggest you change this line to:
 
-> e.g.
-> 
-> - temperature of target die is 80°C -> fan speed must be at least 30%
-> 
-> - temperature of target die is 90°C -> fan speed must be at least 40%
-> 
-> - temperature of target die is 105°C -> fan speed must be 100%
-> 
-> - temperature of target die is 110°C -> device shuts off to protect the 
-> hardware
-> 
-> Would the thermal subsystem be the right place for this to implement 
-> this protection in driver?
-> 
-> It already has functions around periodic temperature polling and trip 
-> points.
+	Lenovo WMI Interface Drivers (lenovo-wmi-*)
 
-[1] https://github.com/Linaro/libpm/tree/master
-[2] 
-https://github.com/Linaro/libpm/blob/master/thermal-engine/plugins/te-plugin-example-game.c
+> +======================================================
+> +
+> +Introduction
+> +============
+> +Lenovo WMI interfaces are broken up into multiple GUIDs, some of which
+> +require cross-references between GUIDs for some functionality. The "Custom
+> +Mode" interface is a legacy interface for managing and displaying CPU & GPU
+> +power and hwmon settings and readings. The "Other Method" interface is a
+> +modern interface that replaces most "Custom Mode" interface methods. The
+> +"GameZone" interface adds advanced features such as fan profiles and
+> +overclocking. The "Lighting" interface adds control of various status
+> +lights related to different hardware components.
+> +
+> +Each interface has a different data structure associated with it that
+> +provides detailed information about each attribute provided by the
+> +interface. These data structs are retrieved from additional WMI device
+> +data block GUIDs:
+> + - "Custom Mode" uses LENOVO_FAN_TABLE_DATA, LENOVO_FAN_TEST_DATA,
+> +   LENOVO_CPU_OVERCLOCKING_DATA, LENOVO_DISCRETE_DATA, and
+> +   LENOVO_GPU_OVERCLOCKING_DATA depending on the feature.
+> + - "Other Method" uses LENOVO_CAPABILITY_DATA_00,
+> +   LENOVO_CAPABILITY_DATA_01, and LENOVO_CAPABILITY_DATA_02 depending on
+> +   the feature.
+> + - "GameZone" uses LENOVO_GAMEZONE_CPU_OC_DATA and
+> +   LENOVO_GAMEZONE_GPU_OC_DATA depending on the feature.
+> + - The "Lighting" interface uses LENOVO_LIGHTING_DATA.
+> +
+> +.. note::
+> +   Currently only the "GameZone", "Other Method", and
+> +   LENOVO_CAPABILITY_DATA_01 interfaces are implemented by these drivers.
+> +
+> +GameZone
+> +--------
+> +WMI GUID "887B54E3-DDDC-4B2C-8B88-68A26A8835D0"
 
+Please add the MOF of the WMI class here so that future developers know which methods, etc
+the WMI interface supports.
 
--- 
-<http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
+> +
+> +The GameZone WMI interface provides platform-profile and fan curve settings
+> +for devices that fall under the "Gaming Series" of Lenovo devices.
+> +
+> +The following platform profiles are supported:
+> + - quiet
+> + - balanced
+> + - performance
+> + - custom
 
-Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
-<http://twitter.com/#!/linaroorg> Twitter |
-<http://www.linaro.org/linaro-blog/> Blog
+Please add some technical documentation about the WMI methods used by those functions. You can take a look at
+Documentation/wmi/devices/msi-wmi-platform.rst for inspiration.
+
+> +
+> +Custom Profile
+> +~~~~~~~~~~~~~~
+> +The custom profile represents a hardware mode on Lenovo devices that enables
+> +user modifications to Package Power Tracking (PPT) settings. When an
+> +attribute exposed by the "Other Method" WMI interface is to be modified,
+> +the GameZone driver must first be switched to the "custom" profile manually
+> +or the setting will have no effect. If another profile is set from the list
+> +of supported profiles, the BIOS will override any user PPT settings when
+> +switching to that profile.
+> +
+> +
+> +Other Method
+> +----------
+> +WMI GUID "DC2A8805-3A8C-41BA-A6F7-092E0089CD3B"
+> +
+> +The Other Method WMI interface uses the fw_attributes class to expose
+> +various WMI attributes provided by the interface in the sysfs. This enables
+> +CPU and GPU power limit tuning as well as various other attributes for
+> +devices that fall under the "Gaming Series" of Lenovo devices. Each
+> +attribute exposed by the Other Method interface has corresponding
+> +capability data blocks which allow the driver to probe details about the
+> +attribute. Each attibute has multiple pages, one for each of the platform
+> +profiles managed by the "GameZone" interface. For all properties only the
+> +"Custom" profile values are reported by this driver to ensure any userspace
+> +applications reading them have accurate tunable value ranges. Attributes
+> +are exposed in sysfs under the following path:
+> +/sys/class/firmware-attributes/lenovo-wmi-other/attributes
+
+Same as above.
+
+> +
+> +LENOVO_CAPABILITY_DATA_01
+> +~~~~~~~~~~~~~~~~~~~~~~~~~
+> +WMI GUID "7A8F5407-CB67-4D6E-B547-39B3BE018154"
+> +
+> +The LENOVO_CAPABILITY_DATA_01 interface provides information on various
+> +power limits of integrated CPU and GPU components.
+> +
+> +The following attributes are supported:
+> + - ppt_pl1_spl: Platform Profile Tracking Sustained Power Limit
+> + - ppt_pl2_sppt: Platform Profile Tracking Slow Package Power Tracking
+> + - ppt_pl3_fppt: Platform Profile Tracking Fast Package Power Tracking
+> +
+> +Each attribute has the following properties:
+> + - current_value
+> + - default_value
+> + - display_name
+> + - max_value
+> + - min_value
+> + - scalar_increment
+> + - type
+> +
+> +
+> + Camera
+> + ______
+
+I get the following error when trying to build the documentation:
+
+	Sphinx parallel build error:
+	docutils.utils.SystemMessage: /home/wolf/Dokumente/Kernel/platform-drivers-x86/Documentation/wmi/devices/lenovo-wmi.rst:99: (SEVERE/4) Unexpected section title.
+
+Please fix this.
+
+Also please add some technical details here to. However in this case this is optional since this patch series focuses
+on the Gaming Series drivers.
+
+Thanks,
+Armin Wolf
+
+> + WMI GUID "50C76F1F-D8E4-D895-0A3D-62F4EA400013"
+> +
+> + The Camera driver provides WMI event notifications for camera button
+> + toggling.
+> +
