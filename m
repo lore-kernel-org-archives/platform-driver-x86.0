@@ -1,159 +1,238 @@
-Received: from mout.gmx.net (mout.gmx.net [212.227.15.19])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.16])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3FE321E9B16;
-	Wed,  8 Jan 2025 23:13:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 313A61FDA;
+	Thu,  9 Jan 2025 08:34:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736378011; cv=none; b=hnLp18oDzvnuWQ6x98H2D89GbSsHzbwtXVKwl/WNOwsjIFqYISPdVhO8ueGcFhvYqRr4NN75pXHf2foNTZzjoo0qNkjUAG7ycxd8MtOVD0lObfUNru4NSR5AiP+UdoLB0WdNcSQ1Sjnl49uOBs4OWt5r1kNkEZkK2rrLBxz0vNg=
+	t=1736411690; cv=none; b=Io4n9npbTF7F/QfcbT8wetQxNa7+8cCH0wh9xkCZoXVN0IuMQDxcs23rj+dc/L96B+AZUAjL9sLnwak2F9RXRDjhhrAk28gcV2Ii9dz0NjgqNxJ0+DxxP8soneJAYkIVDf4lSyY7DuCO6gDB96MjcuA+6TFiMixt/E6yd0e1ETI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736378011; c=relaxed/simple;
-	bh=gQYWiUwQi9s1vkl77hB2LWnsAUzsmurc1CnhvOTT8Zc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=tw63kOkMzFPrH0IjBER5s3GYBkl+B+y4tI+Y5n8Is/vsLbMAH0aJPrX5Q4hdNiwFlXSs5b2TF2WW2Gn34h6zNOOSwklAQcmgMTfJ8+ltMrKvYZHqoB5OjWOdqeN5XBKCB0jTvURH+DMxCfOX95DOVPhgU3Dm3CDIRFtQ+tHqtVA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b=qpuiDumj; arc=none smtp.client-ip=212.227.15.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
+	s=arc-20240116; t=1736411690; c=relaxed/simple;
+	bh=EGVlCdRiyap1vP0GpkyslLcNoAzNIRwqBcWAKGshgGQ=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=kcRXTffqt2rLpOOn/6pB61UA32cjfZxnN/TncjyxeXaDxhIe9+Gvs9W9g48WlJYSB4u6zZ2m8gcMoXiDbZhHnBnBsPdcfw4gtSqwhq74KsBtUGYErOnAXBrm7FV7pKOebwgafTmISFjV6g/gMoWByqxQDK0ssZN8J0ARVhApN7g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=i8fb8XG8; arc=none smtp.client-ip=198.175.65.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b="qpuiDumj"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.de;
-	s=s31663417; t=1736377996; x=1736982796; i=w_armin@gmx.de;
-	bh=CNXvTzR9VfKX/YzY/WRNyPctkBMESRKDhRAmRYC7h7M=;
-	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:To:Cc:
-	 References:From:In-Reply-To:Content-Type:
-	 Content-Transfer-Encoding:cc:content-transfer-encoding:
-	 content-type:date:from:message-id:mime-version:reply-to:subject:
-	 to;
-	b=qpuiDumjtBlp51ls5AytkT0UKsSX45IBUtqWFiRux0mccND/He2yNGIsfId8GHy6
-	 O1r1/9kL26zZrB/IGtVv6Ye9ArraNVfHoi7RtPvBkgRurJk2cd9Bp4NuXeISx5lt2
-	 SZr7qHLcvV/JQLl/Zbt1A8AhCdsaB66HqDwM8etXW8q1xlEPQX7gFneX8klleXt3B
-	 zyOI6ReY1CtGEe9QexukhBtcDobLSy0Mx8waKtjWbt8MnVwtEeA+BKj1HYYCzywGf
-	 pJO4nINaPClNvugMFqPwJAMad6wMaYZ2PBpy6HCbWYDiPU51QGR7Mhuy+RcWpUwnW
-	 nvrlHjAHmgVH5pQIig==
-X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
-Received: from [192.168.0.69] ([91.14.230.110]) by mail.gmx.net (mrgmx004
- [212.227.17.190]) with ESMTPSA (Nemesis) id 1MTAFh-1t1FQK3lmh-00L9B5; Thu, 09
- Jan 2025 00:13:16 +0100
-Message-ID: <e66d8392-3d8b-4c96-8717-34e51867064b@gmx.de>
-Date: Thu, 9 Jan 2025 00:13:14 +0100
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="i8fb8XG8"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1736411688; x=1767947688;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version:content-id;
+  bh=EGVlCdRiyap1vP0GpkyslLcNoAzNIRwqBcWAKGshgGQ=;
+  b=i8fb8XG8BBBRxk4PabFcn9oVZrFLg2KVh4v4ml7rIeXNgVFJTt1K7pIU
+   q0wr7N883hepEZ97dCg1BNIHrlFVY2Vo8J4PDJ6thJ14BO8fxUSaKyURK
+   8jfL3JdFu8D6qK2Zdp03aMvxcc8WFBeXjwydXwleQn9QPUGBOh/a7MvUb
+   qNEu07nfSftcaJqPV/1/ey9cfXY3vzNznPlukEo0qkq0voKht6/n4QXxg
+   YY/HEbJZW6n9GAHKwuauBy7UZ4s4qC+e6ktxvBzZQafScV3lA2SelxwUY
+   iXG9eI6bAd31sNsEv07p0LewDmBsr5Mvjtg+TqI/G9FilMU1MKnI3p7c0
+   g==;
+X-CSE-ConnectionGUID: wfiiUjZdR5CMNfF2qInwqg==
+X-CSE-MsgGUID: yPs2Kr/gT+mpdjJ9uSYZyg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11309"; a="36822944"
+X-IronPort-AV: E=Sophos;i="6.12,300,1728975600"; 
+   d="scan'208";a="36822944"
+Received: from orviesa003.jf.intel.com ([10.64.159.143])
+  by orvoesa108.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Jan 2025 00:34:47 -0800
+X-CSE-ConnectionGUID: ez4sk8aERdODoozIQ1eaMw==
+X-CSE-MsgGUID: Tdp8+puPQZqfyYW17D/AVg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.11,199,1725346800"; 
+   d="scan'208";a="108397784"
+Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.210])
+  by ORVIESA003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Jan 2025 00:34:44 -0800
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Thu, 9 Jan 2025 10:34:40 +0200 (EET)
+To: =?ISO-8859-15?Q?Thomas_Wei=DFschuh?= <thomas@t-8ch.de>
+cc: Joshua Grisham <josh@joshuagrisham.com>, 
+    Hans de Goede <hdegoede@redhat.com>, W_Armin@gmx.de, 
+    platform-driver-x86@vger.kernel.org, corbet@lwn.net, 
+    linux-doc@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v4] platform/x86: samsung-galaxybook: Add samsung-galaxybook
+ driver
+In-Reply-To: <19caaf5c-dbdd-43a4-989f-35a810dbe91a@t-8ch.de>
+Message-ID: <c3e7e78b-a38c-dcc2-092d-e1809ae02a4c@linux.intel.com>
+References: <20241226153031.49457-1-josh@joshuagrisham.com> <fb019bc7-72ba-4b1b-9260-36cac76a5a60@t-8ch.de> <CAMF+KebS6eEGEVzrO3Bm3CfL7OYP7-XxUp7hLiDiwUrjWOEJYQ@mail.gmail.com> <19caaf5c-dbdd-43a4-989f-35a810dbe91a@t-8ch.de>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4] platform/x86: samsung-galaxybook: Add
- samsung-galaxybook driver
-To: Joshua Grisham <josh@joshuagrisham.com>
-Cc: ilpo.jarvinen@linux.intel.com, hdegoede@redhat.com,
- platform-driver-x86@vger.kernel.org, corbet@lwn.net,
- linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20241226153031.49457-1-josh@joshuagrisham.com>
- <0fbe58a9-ecca-437f-aa30-9d3a17c2bd43@gmx.de>
- <CAMF+KeYdshNex2h4kLJari=kXVxgcOZw7GDutJrV6vKC0PTe6A@mail.gmail.com>
- <a8011f0f-1d44-42ec-9089-2da31f3852e2@gmx.de>
- <CAMF+KeZm8LCGsCZ9bosNYRCbv847CcZr+0mWeZtDQsk5QFRuyg@mail.gmail.com>
- <9f257ca1-946d-416f-8741-247592b3866c@gmx.de>
- <CAMF+KeZ0xOdu3LADEeAHAC22=hZFQXnkHM3oxko7E7urNisfGw@mail.gmail.com>
-Content-Language: en-US
-From: Armin Wolf <W_Armin@gmx.de>
-In-Reply-To: <CAMF+KeZ0xOdu3LADEeAHAC22=hZFQXnkHM3oxko7E7urNisfGw@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Provags-ID: V03:K1:ZKLZZ7xBOmzgPpN5NR0fIZKj0x5JZbOs2X6Lgn4iNETABIQG5Av
- oE4VEuhcNKqJFSIS3zSjWY0aPReTl8Sx3/6gvaCIaVv5iH5TO+1EhSwHKJr59Q2poHB2t7J
- AMFQ7mnpyVSU7DsXpqyjK3lzjUWZDeacmGioFNZv0hoYa1beWCdIcushzNoUBoFsINrjUOO
- xium+zaYB9l57l9B6QbXw==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:QKL0oZHx75Y=;NJdhiRFXhIE99buBFeGSMNFU/AY
- X8Or1jpe32cq7aoqIFwUB8xEeyFFqXEp/TIBs6DBhsjKV/7j2Yy3eVFHbALdxUSEpT72FI6kF
- 7NQAHW67Y2LxZzsHLuUvtCQvcsV2jutGNRzT1Uj+u/pVZz26UjRyIu131G89JYez3teEcYvZj
- PmbREfL+C9IP/RnHQ4a/eztxkSZ/mPFOzWcTxlzfkISsiF1QdnGDyHRNQJHsStf1A4lHl56s5
- IiNiCLOKyJR+cfif5F9ILroe6bGdwmgAbjGn4zLfgXK5heaTdiRMjXkj09FnjlLsvoR1YmZNg
- EZIGhR8fYB4eYnEql/sRnF/4/6CVk1Wl+QiIDduEJwPF0ErUKE7+Z0bPmVcH/VNTXq02SHUrz
- iidChe982X13jmfzJ2MpB4MEdL9MiaxOgTRZmFvd03qOc6FXQRsl/LVxu/Mjj/1rfAmKc/fuZ
- /PoI8CzGqGefp2yHb3RwWKmk+YvKgPiT57hBvJtjxoLpzokSgf1asnBOV6eVhfftdxfmP2gVD
- C5/ICVP0HeAk5Uf4t6KBsvpuQevB3vc9JAZ72iv4BPsuXtf5uq7wVEc7Mi5nI42xQQdf3V6Dk
- dF54JNV9kPwuMtM9l9IJUrecpdqnh4hTU71SYF67y/Tkx5TxUDtxirUxUf7Ku/rxMPZjr1CSB
- eYVk/Bcnp9j8oFSeictUJuHrXYeQRpuLc6lEc/aolcE6rUjuO7JRDdkEGhA+YxAJkmALBGs1q
- eaJN1Exw1ybSuBI5jKtIh8As66F+GNvEpqStS4qAZiLQKP/jQY9+wG8HaMkqg1ugDwpI47gnd
- R/K0Wpz7V4hjWoYqYK27enynn0Hgn8CVGhfoFGAWVS5FO5Kabo88CI2s0I4vt+b32XLnbrgX0
- PYUy254wWjDTZN29tNn4nHH0VWOx4vo5+vIlggvoKlV7yQCpsCknFxBLJYRh3RN39UkZzY4T1
- 7PZDpMqif7UGslC15pDkQIdFGExcPkdKt7uoRVsN4jDaTAg6XPvCgUYgjSGc8SX7Sh7p5A21u
- AC1lgRyxWxzs6/vMYuW0obZp80gknLoYRpUg0XOJnAq+iDgVxRRyUBzjs/9SoyIf0SxGKOzyP
- U/nNUg7Od3RRIo1dmVAy6KMDNjGPID
+Content-Type: multipart/mixed; BOUNDARY="8323328-263380260-1736411415=:938"
+Content-ID: <8bdd376d-8e41-b552-289c-ddcb28b98d31@linux.intel.com>
 
-Am 08.01.25 um 23:00 schrieb Joshua Grisham:
+  This message is in MIME format.  The first part should be readable text,
+  while the remaining parts are likely unreadable without MIME-aware tools.
 
-> Den tis 7 jan. 2025 kl 19:56 skrev Armin Wolf <W_Armin@gmx.de>:
->> Is this non-ultra performance mode any different than the ultra performance mode
->> in terms of performance gains, fan speed, etc?
->>
->  From what I can tell it ramps up the performance even more and might
-> even also ramp up the performance of the GPU (these devices have a
-> second dedicated GPU) a bit more. My understanding is that even for
-> these models, "Performance" is considered a high performance mode, but
-> that "Ultra" is like "super performance" ?
->
-> Fan speed I think is mostly controlled based on temperature but it
-> could also be that some thresholds are adjusted etc. All of this is
-> unfortunately embedded within the EC so you cannot really see any
-> voltage, clock, etc, or other differences on the CPU when these modes
-> are used, even though it is clear from basic stress testing especially
-> with the "Silent" / low-power mode that the CPU has been severely
-> limited.
->
->> PLATFORM_PROFILE_CUSTOM is meant to signal that the platform is not in a well-defined
->> profile state, usually due to manual tuning. So please do not use it for ULTRA.
->>
-> Thank you yes I also realized this a bit more when I read through some
-> of the proposed changes to other drivers in the mailing list!
->
->>> If this is possible, then my best guess for the logic for this mapping
->>> in samsung-galaxybook could be changed to loop the "supported modes"
->>> forwards instead of backwards, and just let the "legacy" modes be
->>> written first (as they seem to always come first in the list), and
->>> then in case the non-legacy mode exists later in the array, it will
->>> just replace the already-mapped legacy value with the new non-legacy
->>> value, and thus skip any kind of condition-based checking/mapping
->>> entirely. Is that sort of more like what you had in mind?
->> Can you be sure that legacy performance modes are always placed before non-legacy
->> performance modes?
->>
->> If no then i suggest that you iterate over all supported modes and if you encounter
->> a legacy performance mode you check if the associated platform profile slot was already
->> taken by a non-legacy performance mode. If that is the case you ignore that legacy performance
->> mode.
->>
->> If you are sure that the order is always the same then you can of course simplify this by
->> iterating forward. I will leave it to you to choose which one to implement, as you seem
->> to have more knowledge about the underlying hardware than me.
->>
-> So far the order has always been the same for all devices I have seen
-> from users in the community, it is just that certain modes are or are
-> not present in the list depending on their support. However, based on
-> your comment I think it is maybe safe to add a bit more logic just in
-> case the modes suddenly come in a different or random order on some
-> new device. I have also now simplified the mapping so it is mostly 1:1
-> with one exception: if Ultra is found, then I map it to performance
-> and re-map what was Performance to balanced-performance. Otherwise and
-> for all other devices without Ultra, it is 1:1.
->
-> I have also tightened up and streamlined the logic a tiny bit so
-> hopefully it will feel slightly more straight-forward in the new v5.
-> This feels like an ok compromise if we should be using exactly the
-> profiles which are currently available .. how does this sound?
+--8323328-263380260-1736411415=:938
+Content-Type: text/plain; CHARSET=ISO-8859-15
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-ID: <e76eb181-4edb-cd95-5af1-6c1161dd33ec@linux.intel.com>
 
-OK, i can live with that. Looking forward to the v5 revision :).
+On Wed, 8 Jan 2025, Thomas Wei=DFschuh wrote:
+> On 2025-01-08 22:37:01+0100, Joshua Grisham wrote:
+> > Hi Thomas! I was prepping my v5 patch to send in and trying to figure
+> > out everything I changed for the change list comments, but I stumbled
+> > on a few comments here that I wanted to ask you about as I realized I
+> > did not fully address them.
+> >=20
+> > Den fre 3 jan. 2025 kl 20:37 skrev Thomas Wei=DFschuh <thomas@t-8ch.de>=
+:
+> > >
+> >=20
+> > > > +This driver implements the
+> > > > +Documentation/userspace-api/sysfs-platform_profile.rst interface f=
+or working
+> > >
+> > > You can make this real reST link which will be converted into a
+> > > hyperlink.
+> > >
+> >=20
+> > Here I actually tried this a few different ways (linking to the entire
+> > page instead of a specific section within the page) but would always
+> > get a warning and then no link when I built the docs. However, from
+> > finding other examples then I found just giving the path like this is
+> > actually giving me a link in both the htmldocs and pdfdocs with the
+> > title of the target page exactly as I wanted... with that in mind,
+> > does it seem ok to leave as-is or is there a syntax that you would
+> > recommend instead to link directly to a page (and not a section within
+> > a page)?
+>=20
+> If it works, then leave it as is.
+> To exact warning would have been nice though :-)
+>=20
+> Did you try :ref:`userspace-api/sysfs-platform_profile`?
+>=20
+> > > > +static int galaxybook_acpi_method(struct samsung_galaxybook *galax=
+ybook, acpi_string method,
+> > > > +                               struct sawb *in_buf, size_t len, st=
+ruct sawb *out_buf)
+> > >
+> > > in_buf and out_buf are always the same.
+> > >
+> > > > +{
+> > > > +     struct acpi_buffer output =3D {ACPI_ALLOCATE_BUFFER, NULL};
+> > > > +     union acpi_object in_obj, *out_obj;
+> > > > +     struct acpi_object_list input;
+> > > > +     acpi_status status;
+> > > > +     int err;
+> > > > +
+> > > > +     in_obj.type =3D ACPI_TYPE_BUFFER;
+> > > > +     in_obj.buffer.length =3D len;
+> > > > +     in_obj.buffer.pointer =3D (u8 *)in_buf;
+> > > > +
+> > > > +     input.count =3D 1;
+> > > > +     input.pointer =3D &in_obj;
+> > > > +
+> > > > +     status =3D acpi_evaluate_object_typed(galaxybook->acpi->handl=
+e, method, &input, &output,
+> > > > +                                         ACPI_TYPE_BUFFER);
+> > > > +
+> > > > +     if (ACPI_FAILURE(status)) {
+> > > > +             dev_err(&galaxybook->acpi->dev, "failed to execute me=
+thod %s; got %s\n",
+> > > > +                     method, acpi_format_exception(status));
+> > > > +             return -EIO;
+> > > > +     }
+> > > > +
+> > > > +     out_obj =3D output.pointer;
+> > > > +
+> > > > +     if (out_obj->buffer.length !=3D len || out_obj->buffer.length=
+ < SAWB_GUNM_POS + 1) {
+> > > > +             dev_err(&galaxybook->acpi->dev, "failed to execute me=
+thod %s; "
+> > > > +                     "response length mismatch\n", method);
+> > > > +             err =3D -EPROTO;
+> > > > +             goto out_free;
+> > > > +     }
+> > > > +     if (out_obj->buffer.pointer[SAWB_RFLG_POS] !=3D RFLG_SUCCESS)=
+ {
+> > > > +             dev_err(&galaxybook->acpi->dev, "failed to execute me=
+thod %s; "
+> > > > +                     "device did not respond with success code 0x%=
+x\n",
+> > > > +                     method, RFLG_SUCCESS);
+> > > > +             err =3D -ENXIO;
+> > > > +             goto out_free;
+> > > > +     }
+> > > > +     if (out_obj->buffer.pointer[SAWB_GUNM_POS] =3D=3D GUNM_FAIL) =
+{
+> > > > +             dev_err(&galaxybook->acpi->dev,
+> > > > +                     "failed to execute method %s; device responde=
+d with failure code 0x%x\n",
+> > > > +                     method, GUNM_FAIL);
+> > > > +             err =3D -ENXIO;
+> > > > +             goto out_free;
+> > > > +     }
+> > > > +
+> > > > +     memcpy(out_buf, out_obj->buffer.pointer, len);
+> > >
+> > > Nit: This memcpy() could be avoided by having the ACPI core write dir=
+ectly
+> > > into out_buf. It would also remove the allocation.
+> > >
+> >=20
+> > Now I have replaced in_buf and out_buf with just one parameter, buf.
+> > Now it feels like I cannot write directly to it (since I am reusing
+> > the same buf as the outgoing value) so have left the memcpy in place.
+> > I guess I would need to choose to have 2 buffers or use one and do a
+> > memcpy at the end like this (which is how I have it now in my v5
+> > draft) .. am I thinking wrong here and/or is there a preference
+> > between the two alternatives? I can just for now say that "usage" of
+> > this function in all of the other functions feels easier to just have
+> > one buffer... :)
+>=20
+> I'm not sure if there is a preference.
+>=20
+> But why can't you modify the buffer if it is shared between input and
+> output? The caller already has to accept that its buffer will be
+> overwritten.
+> If it is overwritten once or twice should not matter.
+>=20
+> But maybe I'm misunderstanding.
+>=20
+> > > > +static int power_on_lid_open_acpi_set(struct samsung_galaxybook *g=
+alaxybook, const bool value)
+> > > > +{
+> > > > +     struct sawb buf =3D { 0 };
+> > > > +
+> > > > +     buf.safn =3D SAFN;
+> > > > +     buf.sasb =3D SASB_POWER_MANAGEMENT;
+> > > > +     buf.gunm =3D GUNM_POWER_MANAGEMENT;
+> > > > +     buf.guds[0] =3D GUDS_POWER_ON_LID_OPEN;
+> > > > +     buf.guds[1] =3D GUDS_POWER_ON_LID_OPEN_SET;
+> > > > +     buf.guds[2] =3D value ? 1 : 0;
+> > >
+> > > No need for the ternary.
+> > >
+> >=20
+> > I did not have this before but it was requested to be added by Ilpo
+> > IIRC. I am ok with either way but would just need to know which is
+> > preferred between the two :)
+>=20
+> Then leave it as is.
 
-Thanks,
-Armin Wolf
+Yes, in the bool -> uXX conversions, I prefer explicit values even if they=
+=20
+in many cases happen to match to what C implicit conversion does (if the=20
+value wouldn't match to 1, you'd need to use that operator anyway).
 
->> [...]
->> Thanks,
->> Armin Wolf
->>
-> Thank you!
-> Joshua
->
+"true" and "BIT(0)" are conceptially distinct things even if they map to=20
+the same representation.
+
+Having the explicit conversion confirms the submitter (hopefully :-))=20
+spend a second to confirm that true =3D> 1 holds. Without the explicit=20
+conversion, it would be hard to see what went on inside the submitter=20
+head. I can ask for it today, but my perspective is long-term, say 5-10=20
+years from now, the person might no longer be around and somebody ends up=
+=20
+staring a commit which has such a problem. Explicit conversion avoids that=
+=20
+ambiguity. (Obviously such problems are quire rare but could happen.)
+
+--=20
+ i.
+--8323328-263380260-1736411415=:938--
