@@ -1,203 +1,267 @@
-Received: from mail-qt1-f169.google.com (mail-qt1-f169.google.com [209.85.160.169])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from NAM12-DM6-obe.outbound.protection.outlook.com (mail-dm6nam12on2080.outbound.protection.outlook.com [40.107.243.80])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 32F17219E86;
-	Thu,  9 Jan 2025 15:34:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.169
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736436884; cv=none; b=Z84eDcGk+llfdGTv4cXQ63OMTIaHmuGRTzRPMeCaQi8Dwq00MkygOuPmB11wrwmV/BYNV+1kx8YQWIbJh4SAWJBqotLReXblU/JcixRTaIhAJviZbyXT62tjAxg0SqlnhU7FPRHX+FgQKHtw7ZXySBbWn+gd4M4JioWTuYfefzI=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736436884; c=relaxed/simple;
-	bh=bdKRsYmuuXmMmMxFVeeErrNoZ16EZoRS1u+l14g3PIE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Nr463GZG2wgONiW/nEpXXHiXEVOGemE7DTsGKFAAxAUBqv/vGYbLrmLBBPi2VH6QkIlv+mIEVw4L8/VdgwthOvm3hMIOb80ndgaU68x3L5Y+hvfv9iB9ooMyA5ztUc5ad76HG6W5iat0bG5Y+tAi5weRe4rotsOuNy2zwedyyHk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=knGCRh0n; arc=none smtp.client-ip=209.85.160.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2942314F98;
+	Thu,  9 Jan 2025 15:37:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.243.80
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1736437033; cv=fail; b=FvfAityLuU3VM1XYj9mFn9MXKXAcP9Ea04Xpb5ukqlaHBNhy8Iyi5eVqkzUMbPV7MedGAoSvNT1Kpa04fSuo8rtiONOq20Snu7eEj1L8ddaLOaO8OQqo2q0pmU3MjDrEhZBnq/vFjCYjgNgCDNwjYzPEi5Yl00cZmCXkX7+3j2E=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1736437033; c=relaxed/simple;
+	bh=SMkEWkr8HErUd7eQjtBrr7BeljVq8bse4EgHA5sb79I=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=AFS0ND6aywcqpJUUJgs3CrEKyBDsZngCnhgz84m8YqTTBf9mQhP3SVZPCEUbXa06GrmPCrt79QhUzQyhGu20ww4nRp+eJsb5WrP1LwY6GToeZRz67YqhDJXkTtPd6vH8gSJBrdKxvF76AbLtCoOohlB9oaB7iB0O0SSIsk2H8UY=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=oc7Vb57R; arc=fail smtp.client-ip=40.107.243.80
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="knGCRh0n"
-Received: by mail-qt1-f169.google.com with SMTP id d75a77b69052e-46b1d40ac6bso7945641cf.0;
-        Thu, 09 Jan 2025 07:34:42 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1736436882; x=1737041682; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=cymu88LvmmG+IEbUUucWpxsbyUrh1DqD7aBJhTbHrT8=;
-        b=knGCRh0nnrd//KUeyuV7DGJZVY5R7/gukFo158YtoM5/W4TbvoY/3KgX7isXsYgcEI
-         CEhUe+zSL+ekdpwEmK58fmTKIDNT+AbEtzH5bqf7DbWV9Jmu4TOCh/dGNp7ZNq6OHXyU
-         Z8ZTuNJ3RdquzyhpRgf+Hp4QLGF/9wUH+cVeBmr0G2Jt2eBHRdE/8SFbC47BS6Nw6mbW
-         aOBX5kFhlW/4ufzob2UM/OOxDEte94CPChnQ0ee+utzSaNuEAvV3A9nt+9wC+Ynm9bz7
-         ZdZhM+YiwmrnKbZ3zVZG++Kfje42nrWB2kevEU0iAmazovUEA3iQhoc1ZJmN43xG+AcI
-         K7mA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1736436882; x=1737041682;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=cymu88LvmmG+IEbUUucWpxsbyUrh1DqD7aBJhTbHrT8=;
-        b=tR3CiaYBE6iLSnNKCcLA5evltzTUQCYc/TBdqS6vhggCXLdPPspuge/G9krxGjU1C+
-         5bYAMSmj1F2LXbWcjOzb5V604q0rQY9HaWe/dROR8W+nj1QliLw7/vZldPOetQImDAWA
-         AO7wemANneKnuPcbymF1cw9X+7kcnIR7fEx2XPDFQvuUCSxmZjxYsSnO48lxQw5z60Gj
-         AXJqt+6Q60EovyEn3xLmmqSlSS2ib8eW7ukMonTuQCbD4r5WmS41ESmkGmbn6fWfhkeY
-         d5KgrDxzOm42xM1EZ2EVauouAdYpdgbyhJuVVUphtI558hVF1PFYIDrVEDLUqWJneQY1
-         g4kw==
-X-Forwarded-Encrypted: i=1; AJvYcCVqPMElmLvVSP1RMK510Uu8osKYuk9LSV231dmk1vGcH6DgUgOayH3dOxvzEWjLjXER+Bkl+i76Pmz0MXa1oSoUBAyZ6A==@vger.kernel.org, AJvYcCVzdAYVuUH6q9CInhkfa0ZHFxE0AditIlMypMbB8+9A1eRt/30jFKWrISyvYF/ata7OFxCMbMBtjq1A0e4=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzzUFxr58w+MNfPFO5yEFR9Mq08MgrLJpTcuu6qbu0FLdHectlL
-	I61jOH7ABFIFpRJiuEHyNoCVnnUkgsJQOGA4akQbCmQBFwtiQWIhHWo3cA==
-X-Gm-Gg: ASbGncvY2+T2WpMjXGpGk7t77/UuT3v53mPVvQ57NvFIivKLWHhTykdTaNP2oiGfuNy
-	sBet0QH6nN27FNWC9E6p0JV7mo4LWFHUfvhx+J2oKNeG/und0gUe3J1Cza+RhXLcswI1TgrNTJt
-	7v6LTAhulAaY211iskHH+/1MhRx9mnz69zvJYoc6Keepsoje00z86kuHfqy07Rb/dXzoKE8nhye
-	e9/7x0EJv4bDdeebcnp8zjKNTZzXxewSLAzqJxQBEUYLDzFUJD0aQ==
-X-Google-Smtp-Source: AGHT+IHpnZzYfOerbu014qN3kkUAmwCRErWTtaVYq3JzoIoeuRAc9a1gQ6XnKV7eEtdYhrjYREN26w==
-X-Received: by 2002:ac8:58c2:0:b0:467:84a7:f312 with SMTP id d75a77b69052e-46c7b001a3emr59949631cf.11.1736436881967;
-        Thu, 09 Jan 2025 07:34:41 -0800 (PST)
-Received: from alphacentauri ([2800:bf0:82:1159:1ea9:11b1:7af9:1277])
-        by smtp.gmail.com with ESMTPSA id a1e0cc1a2514c-86231578d2bsm1082283241.29.2025.01.09.07.34.40
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 09 Jan 2025 07:34:41 -0800 (PST)
-Date: Thu, 9 Jan 2025 10:34:38 -0500
-From: Kurt Borja <kuurtb@gmail.com>
-To: Hridesh MG <hridesh699@gmail.com>
-Cc: Hans de Goede <hdegoede@redhat.com>, 
-	Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>, Armin Wolf <W_Armin@gmx.de>, platform-driver-x86@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, Shuah Khan <skhan@linuxfoundation.org>
-Subject: Re: [PATCH v3 4/5] platform/x86: acer-wmi: use an ACPI bitmap to set
- the platform profile choices
-Message-ID: <2hzdti3v4t65rxpaxofj35rdl6jbkymoc2txivjeddwr3a5nkz@ggltjtr7szty>
-References: <20250108-platform_profile-v3-0-ec3658d9be9c@gmail.com>
- <20250108-platform_profile-v3-4-ec3658d9be9c@gmail.com>
- <ntiwr3bxaf66eqe7upu2qk3wwkemqo5qft76g2ybqydbs7qqjv@2vyn36qayp6o>
- <CALiyAon=Ba37S2se92ckbOSTk6D5O6oykpHUbC_n64Gqy95pcg@mail.gmail.com>
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="oc7Vb57R"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=r8UUcAb0SDD5lbp4jU+vmERsKLLrePwSfrDF3K+w6ENTZsRGFhFdGjIP/lijnML2mbua/S17SBqrA6Mw6oTcyzJJB0GbsKrPo+sz3TCKDhk1x7dMGSP40vgGFRIOTSI90/CHJfvMc8TFKASf3oLW45vimz5Q33E95WXxzVl3WKaN/urepU3BcICxRjL4gARe0JTHWDqbu3TDxGSdFs6v4peKTeIhQ1fquOnDpWmPGjyttbNTpo4Lemmkz5Sev7oQuwFdkPZ0Q5SJ53UPxlExZAmQ2SczKLKI7QfC1CKnOpbfXgOJYPSG2ln27bZAm2PjWXsijprA5MQAeS2UcujUGg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=MgL6qi07kZkWhk4ynT/ru+uW7xz2WiV8+cLU6VwuBxE=;
+ b=ngh9BWeCgjyxUpP2zYykd43e9O30Z1Dd+2ErERIqNdqp9rBqtUj1RjEJNCH+/WnOZbhTjz/fm6OpQ/ZgzTx41ZENz8bp69C0F8khG/EbdSLvwUzHY3P445tpnGNMtRpl+aikIle8Fi9+xoJADLVIuAmjwO3f78PNdhJ5SaoTjWVG4NAeI9PdJjwUSpD1x3fMYphep7iwUOGyCC7WfcJyaLqTo2bksaNXwBlXTPsfB82cEcbIbK7yxWluJBdo2p+0aZ+7n0db4tp0bS+IhGSdZFfjl1N5Jkbkl6sTqk472UTtInDiv3RCultDG6Pw4FJRIYWwv6bC0Uw2wcr8RJi00w==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=MgL6qi07kZkWhk4ynT/ru+uW7xz2WiV8+cLU6VwuBxE=;
+ b=oc7Vb57RKYOh/tgKsmobVbSUVUMHHEz846eoSzxDotUWiuP5uqJi9mTgi8Ebvk7N+JugwvRoH06v1oKhGe0+CO0L3krjr9LAdbqcg0xXlr0QijK2Im+Q1FA+3ItKzWegPkiOPgYSbm2eNyhoZCW7jTe0V3W2Knco2Wcfr4MljX0=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from MN0PR12MB6101.namprd12.prod.outlook.com (2603:10b6:208:3cb::10)
+ by SA1PR12MB8742.namprd12.prod.outlook.com (2603:10b6:806:373::6) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8335.10; Thu, 9 Jan
+ 2025 15:37:08 +0000
+Received: from MN0PR12MB6101.namprd12.prod.outlook.com
+ ([fe80::37ee:a763:6d04:81ca]) by MN0PR12MB6101.namprd12.prod.outlook.com
+ ([fe80::37ee:a763:6d04:81ca%4]) with mapi id 15.20.8335.012; Thu, 9 Jan 2025
+ 15:37:08 +0000
+Message-ID: <b1926552-0b78-41f5-a6d9-04a77f1413a2@amd.com>
+Date: Thu, 9 Jan 2025 09:37:15 -0600
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 2/2] platform/x86: firmware_attributes_class: Add test
+ driver
+To: =?UTF-8?Q?Thomas_Wei=C3=9Fschuh?= <linux@weissschuh.net>,
+ =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Cc: Hans de Goede <hdegoede@redhat.com>, Armin Wolf <W_Armin@gmx.de>,
+ platform-driver-x86@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
+ Joshua Grisham <josh@joshuagrisham.com>
+References: <20250107-pdx86-firmware-attributes-v1-0-9d75c04a3b52@weissschuh.net>
+ <20250107-pdx86-firmware-attributes-v1-2-9d75c04a3b52@weissschuh.net>
+ <a20d538e-421f-45fb-b169-f9d2eb4c6aee@amd.com>
+ <88ae2335-86dd-4cb2-8e20-88973a8e28b7@t-8ch.de>
+ <1f5b77f3-c427-496e-9c1d-3150177f29d6@amd.com>
+ <7f568cbd-b299-41c6-8786-25f225de8f4f@t-8ch.de>
+ <39e1f247-3b9e-2919-439b-edf95bb7927d@linux.intel.com>
+ <c58ee2ba-7800-4da0-81a3-faa971515cab@t-8ch.de>
+Content-Language: en-US
+From: Mario Limonciello <mario.limonciello@amd.com>
+In-Reply-To: <c58ee2ba-7800-4da0-81a3-faa971515cab@t-8ch.de>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: SA1P222CA0118.NAMP222.PROD.OUTLOOK.COM
+ (2603:10b6:806:3c5::6) To MN0PR12MB6101.namprd12.prod.outlook.com
+ (2603:10b6:208:3cb::10)
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CALiyAon=Ba37S2se92ckbOSTk6D5O6oykpHUbC_n64Gqy95pcg@mail.gmail.com>
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: MN0PR12MB6101:EE_|SA1PR12MB8742:EE_
+X-MS-Office365-Filtering-Correlation-Id: 6a5d74b3-d8c6-4e3f-390f-08dd30c37a30
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|376014|1800799024|7053199007;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?TkFZdEtEakk1VUlIQVdTQWRaNUxIbEZsaG8xNTgrNDNSK0JIeWc0RXNZS3Mv?=
+ =?utf-8?B?OE0ramVvbXplMms2YTVrcUx3c2Y4V0hiQk1ic000RERpcG91SFZZUXVwcThr?=
+ =?utf-8?B?YnFrakIydkJFbUkxNzNvUTh0V2cwQk4vbTJYcW14UE9wcWpRcmRsWGU1TmJG?=
+ =?utf-8?B?cVZBbmdKTGJaVnNmbWRaWjFDd1d6VmlRUkIxd0dZU0UzSEVaSTVFdEtzaURZ?=
+ =?utf-8?B?Wkg2dlJqZFM1RWtMZXkvMDQ2Mit6elZHUzBTTkVwN21mUmpVdGViSWNSaG9Q?=
+ =?utf-8?B?OE9MZkxHYnlMNTgxSHV2WGN1NWwzQUtBWGorQTNuNnRGamZGeGRsaHdCd293?=
+ =?utf-8?B?TDNxU3NsZXNoVHJ2VkJPUHZzQzJockY1RGJZVzY4QXpkK05DbzVOTUswY2lu?=
+ =?utf-8?B?T1ljOHkvZmQ5YzBkV3c5V3hUcWNSY2xkRXZZT1pHRmxvekh6NXRXb3Z3NW5h?=
+ =?utf-8?B?WmJSdnNsdXNGYWJSdEpUeW1LakljRElxUFlTUk5xS3haaFNFTGhkMHhpYWhx?=
+ =?utf-8?B?TWtKcDNoR1BZSDdCNW1OdmpGOHdFbWcyOGdGMFN4eGxXZlp3QVRkQzJaZFBX?=
+ =?utf-8?B?TzhxSWNPQXlxVFJ3Q0JEVXdKNmg3ckJtSHhsRUR6a0VWMExDR3lwaTJtMjVK?=
+ =?utf-8?B?SkRjSmZrY1BPZFJrT2loV21xODFKdU8wZzk4VHZjUVQvZm8zVUtSbHJ0V2F1?=
+ =?utf-8?B?blNKL2UxeXVBU2JyMjhncUhucXovMEVLVWw0MVhHc2kvcm9PYVVWdkR0K1pM?=
+ =?utf-8?B?SUNWWXdWeWFzUDRpdk1VbG1zc2l0R1BCV0xrWVRaU2tVVXZHd1hMWXkwOVdD?=
+ =?utf-8?B?aHVrOURkVTIxUXgzWkVhK1ZiVkorNHVBcXNDN2g4YWQzdmhKaDQxREZaZ0VP?=
+ =?utf-8?B?Yjl3QUd6U0pXQ2laOGNjMVIwVFgxYkJ4UCtralhJMkw5djZaeDBLQUZWV25X?=
+ =?utf-8?B?M2RVRlZlRS95ZVNzY3NVUDVHRndOOWJ3K2ErYW9maXdrKzJLSmdQajNuNTFY?=
+ =?utf-8?B?MXNMZE1TSjlZK1Uvc0lJWGVCRVBoc0IyaVVxZ1Z5dWorSS8vd3d6WElISXFG?=
+ =?utf-8?B?N0dLVFRUVzBLUExxa3prZlJURFlYOVN6SW9iZm1KbndPb0liUjhGS0FHckRq?=
+ =?utf-8?B?cjlCbmFkQkhCMWxTZ3g4WEZtTWVnR05pdXpDcHVLMm9DL282TmN1VjR5Vm1j?=
+ =?utf-8?B?azMrS00zQytML1NRNml5QWtVc2t3dURvVkVOd2RqQWdqWlk0MTJ2cjdZWm15?=
+ =?utf-8?B?emNzUlFqbkNVaTlabTZjeHBkZGxxQm85SWpDWGdYUzBwR0RKZTJvTUwxb215?=
+ =?utf-8?B?dThKTFlsT2ZIaXFaa2ZXSUZMeTN5aTFCUUZHWTlSTWpQWVJydVRtKzZDdnh4?=
+ =?utf-8?B?cmJ3d0RTK0pmWGpnSVY0azNPS1RBOU5CekRZZjgzQkVCaVhScmpWWHN1d0ZI?=
+ =?utf-8?B?THEvbFJIRG0rREkzMEN2dTcyY2tqanVFSFJlY3U5dnRHQkpKUmVFek1URUJo?=
+ =?utf-8?B?UzRkVE1XMGNScGpCdVJwQzZXd0cxWm9wdFFndFhlTGtTOG45Qlg1WXJ4RzdL?=
+ =?utf-8?B?UU1Yb2RrdmJpd0sxSGpzb3pxRzNtMHpoRVpuK3JTSk9PclpRT0wzK091Um1s?=
+ =?utf-8?B?MHlJeGt1cWRsS3ozWXI0OTE1cmVsY2VQdURuM3lXampDMWRkdk55SnpMWU9T?=
+ =?utf-8?B?L1F4cnFpa3RUZFhhVFFuak9xeUdGWldKWklWTHd6bW1NTnpmL051U1lnYzNV?=
+ =?utf-8?B?K2QxNm5LbjE1Qldmc2ZTMzhnR3pOQTVGT0xHc1ZkWjFHLzhrbENieVZLNkp3?=
+ =?utf-8?B?TXVVUzducjFVMmxVT1pkWEQ1UjF0b0NMWGtHOVE5L0JGaVdXbjdLVVIyNFN3?=
+ =?utf-8?Q?dQv004pUPRR8i?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MN0PR12MB6101.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(376014)(1800799024)(7053199007);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?dEFKNXpPS3d3YnRqZklqK1R0bko3Q0R2djQ4dWVsYkJ3aTRoOEhhSlpVKzEw?=
+ =?utf-8?B?V3ZNZVhZdkJQcmxHMDl2eEI3ckpWTFZRV2YxZ0RZanZPY0laVGRwVHdoV2VM?=
+ =?utf-8?B?VDFlcHhPelZDYzQ2ZDhJektRZXhKUm5zREhnRWl2UVpYb2ZxZTFUKzNKTWUr?=
+ =?utf-8?B?UjR0U1htK0hEdkxPaE9DeGQ0RUNreFpsYWNKWTZ5eW9xeGYyNTREajVXeFdC?=
+ =?utf-8?B?ODE5QjQyamVZekZESFFXOUtXcmpUWkJTZlVTdGpMYUhISnJyL0F6eHRTVkxx?=
+ =?utf-8?B?UGd1ck1ITm9kY1ZSdnNqdkJIR0F0U0VpYlo0NjRIbVpudGFUV1VEOGRIakJX?=
+ =?utf-8?B?Z1FqUWJ5eXh2eUg0elowcmJkKytxMGg5WGJpNTlDcjN2Mjg1MFpMWXN4NnZz?=
+ =?utf-8?B?WHVOc1NwMzdjalR6c1p5NXh0bXkzVHpMN1hsUmxMMnBUZ2FxMUxENUhta05J?=
+ =?utf-8?B?N280akxoRUVRUVhDb2lFQlNERUxwQUQ4R3dMbGc5N1hrT1Byb25QaFpsNHI5?=
+ =?utf-8?B?VDU4clNRUjdkcmtERHlrSHVLTzAxY3JKbmpxcDFsSUR2WUpFeDQzRGlrWENS?=
+ =?utf-8?B?eWtsdFVoekN5b3c3UmR6V1BNK0hqbzNpZGFpUWVNektEUGhVWFQ0QWtUMi9Z?=
+ =?utf-8?B?U1ZsRWI1MTFKU3cxaDVjbmZDbWtsK1J4UER3WVE4b3h1NkRSVWRRemhlZGcr?=
+ =?utf-8?B?aytodndNbkoxSzBMbytXblhSOUhvRDA4UHJ3VzYwWVNmRkVDZG1IUVl0akNX?=
+ =?utf-8?B?S0JFbVNQQTJZN1kxTEtDUUFQZ2lybHZkUU41bFZMU0ZKK3ljN3dDaVppbEdF?=
+ =?utf-8?B?TUdvOWlMQlhsREtsYzdNL2dkcTU0dGF0ZGJ5dGtDN0crdXFlRjN4SnJ3aTRm?=
+ =?utf-8?B?Njd3MVZCOVB5NVV6eGhUNElIcFUvR3hOQTIzcjRHc3FybUhWMWI2bytCUG9T?=
+ =?utf-8?B?L0RSTUQ0VTJRQU9UUVhRVTRiN3dkdHJUMEdSVHIvTmo1ZU5uQlZkTjd3UnFy?=
+ =?utf-8?B?Q2V4bmdGWXlFTG90NnlrcFVzcllPWFNwUHU4aGg2Z21vd0N5S0FiU1piVVF1?=
+ =?utf-8?B?bmtjYlBQbVNmaWdiMlRiMWdqZHBnNVg3aTJybHpCdEVYT2I1cEN3R3FRTmE1?=
+ =?utf-8?B?dGxoUXVYVjdJakJsWjNLL1hjWFRsMERMUTN6SnM0L2p6U05LOUtsMHMxaWNm?=
+ =?utf-8?B?UnJDR0hDNjRJa0d1QjUyQS9zMFVQdTQ3QVFvRHhuSlF5TDk3R3U4QVRCeVFu?=
+ =?utf-8?B?aU90SjZRUnIxbFhvR2oxVytBV1pBNkowbU5CTUJOc2xXR2tIMXVxdFdkSTRE?=
+ =?utf-8?B?dFRxNkdicjA4KzBubXoyMDRDWVpsNUxURC9qdzFQY0ljS2Q3bVBVcXpwVDFL?=
+ =?utf-8?B?bGNzdy8wa2VhVFkrdlhUdHp0UEF3YXNLSWI1WnJJN2hXTUVIa0NDRithUHF6?=
+ =?utf-8?B?TEZ3N1hzR0NLU1VCd0g2VjlkV1ZLN0g1cnAyWUlYUnJmNDQ5bjhMWXcyNTRS?=
+ =?utf-8?B?a3YxSkJmSEV1WFJmQ0xXRGJqUDZtLzluWDN4bjRqUU4rVUtTb29qYlR5d0NQ?=
+ =?utf-8?B?NFgxSHBhVTVxSk4yMTNMVUVvUVNVMk1IWDZIL3RSY1FZNGwyekNNWmFxUFk1?=
+ =?utf-8?B?ZUM4Yng0VjgwOXR3bDNmZlF1WXFBZCtYa1F4R2JUSStBNlI1UExlSHk5NlZP?=
+ =?utf-8?B?NW5tVFVxaHRjUnNoVHIzWkhvcFZEMk5tVlJRZ2FJTUtHSlFaMW9JMWlPUVhm?=
+ =?utf-8?B?K2wxTUR6NUxzM09QbGoxN2RWVTd3KzRFM3I4MXNRS2FQSC93TktVZWVocVdz?=
+ =?utf-8?B?YmZWdFpJMGpIcEtuY3FDcU9OWlhyR2NwRXpQaE9lc3FPazJrbHVuTWhEOTZ2?=
+ =?utf-8?B?cW12T0x5b1dER3A1RzVnTkk1RVUvYzZudEwzS3Z3RmlUblpnOTJ3R0c2UEFQ?=
+ =?utf-8?B?ZnN2RWovR3R0T3dRdmFVc1VpNEk1S0hpaUFEaXRXUjNBVGNBN1FONWRrUEtH?=
+ =?utf-8?B?eVdOcE9kbVhybHVLd2lhYldNUllRTVVYYk4wR1FES0VvSWtHNzFjd0YxY3Fn?=
+ =?utf-8?B?anhrS1NuVFpjY2RXMHpuOGExd0dJODZuK1lGdUlhWmduWHVNQVJpMDRZZ1hC?=
+ =?utf-8?Q?tZRBoqh+tOZPzw1dUeMOnXsYV?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 6a5d74b3-d8c6-4e3f-390f-08dd30c37a30
+X-MS-Exchange-CrossTenant-AuthSource: MN0PR12MB6101.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 09 Jan 2025 15:37:08.5017
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: u/RvZ3aJ4oXGjDQH36BdeYRsvm+/FruT3iiarOsgCR4GVbsk3feFslzhLWD2TFNFJnADux1St+VHF72P54fwFQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA1PR12MB8742
 
-On Thu, Jan 09, 2025 at 04:40:14PM +0530, Hridesh MG wrote:
-> On Wed, Jan 8, 2025 at 7:21 PM Kurt Borja <kuurtb@gmail.com> wrote:
-> >
-> > On Wed, Jan 08, 2025 at 02:15:26PM +0530, Hridesh MG wrote:
-> > > Currently the choices for the platform profile are hardcoded. There is
-> > > an ACPI bitmap accessible via WMI that specifies the supported profiles,
-> > > use this bitmap to dynamically set the choices for the platform profile.
-> > >
-> > > Link: https://lore.kernel.org/platform-driver-x86/ecb60ee5-3df7-4d7e-8ebf-8c162b339ade@gmx.de/
-> > > Signed-off-by: Hridesh MG <hridesh699@gmail.com>
-> > > ---
-> > >  drivers/platform/x86/acer-wmi.c | 55 +++++++++++++++++++++++++++++------------
-> > >  1 file changed, 39 insertions(+), 16 deletions(-)
-> > >
-> > > diff --git a/drivers/platform/x86/acer-wmi.c b/drivers/platform/x86/acer-wmi.c
-> > > index 7968fe21507b1cf28fdc575139057c795e6a873b..6c98c1bb3bdce6a7c6559f6da4ff3c6ce56b60e3 100644
-> > > --- a/drivers/platform/x86/acer-wmi.c
-> > > +++ b/drivers/platform/x86/acer-wmi.c
-> > > @@ -33,6 +33,7 @@
-> > >  #include <linux/units.h>
-> > >  #include <linux/unaligned.h>
-> > >  #include <linux/bitfield.h>
-> > > +#include <linux/bitmap.h>
-> > >
-> > >  MODULE_AUTHOR("Carlos Corbacho");
-> > >  MODULE_DESCRIPTION("Acer Laptop WMI Extras Driver");
-> > > @@ -127,6 +128,7 @@ enum acer_wmi_predator_v4_oc {
-> > >  enum acer_wmi_gaming_misc_setting {
-> > >       ACER_WMID_MISC_SETTING_OC_1                     = 0x0005,
-> > >       ACER_WMID_MISC_SETTING_OC_2                     = 0x0007,
-> > > +     ACER_WMID_MISC_SETTING_SUPPORTED_PROFILES       = 0x000A,
-> > >       ACER_WMID_MISC_SETTING_PLATFORM_PROFILE         = 0x000B,
-> > >  };
-> > >
-> > > @@ -1957,7 +1959,7 @@ static int
-> > >  acer_predator_v4_platform_profile_set(struct platform_profile_handler *pprof,
-> > >                                     enum platform_profile_option profile)
-> > >  {
-> > > -     int err, tp;
-> > > +     int max_perf, err, tp;
-> > >
-> > >       switch (profile) {
-> > >       case PLATFORM_PROFILE_PERFORMANCE:
-> > > @@ -1983,7 +1985,10 @@ acer_predator_v4_platform_profile_set(struct platform_profile_handler *pprof,
-> > >       if (err)
-> > >               return err;
-> > >
-> > > -     if (tp != ACER_PREDATOR_V4_THERMAL_PROFILE_TURBO)
-> > > +     max_perf = find_last_bit(platform_profile_handler.choices,
-> > > +                              PLATFORM_PROFILE_LAST);
-> > > +
-> > > +     if (tp != max_perf)
-> >
-> > You can't directly compare `tp` and `max_perf`. ACER_PREDATOR_V4 values
-> > may not match PLATFORM_PROFILE ones.
-> >
-> > It does in the case of PERFORMANCE and TURBO, but it does not in the
-> > case of QUIET and BALANCED.
-> >
-> > I suggest you store the actual ACER_PREDATOR_V4 max_perf when setting up
-> > the platform_profile.
-> Ah this was quite a stupid mistake. I'm not sure why I even assumed
-> both were equivalent. I have one doubt though, if i set it during
-> profile setup, the code becomes quite verbose -
+On 1/9/2025 09:17, Thomas Weißschuh wrote:
+> On 2025-01-08 11:30:12+0200, Ilpo Järvinen wrote:
+>> On Tue, 7 Jan 2025, Thomas Weißschuh wrote:
+>>
+>>> On 2025-01-07 15:18:21-0600, Mario Limonciello wrote:
+>>>> On 1/7/2025 14:50, Thomas Weißschuh wrote:
+>>>>> On 2025-01-07 13:29:08-0600, Mario Limonciello wrote:
+>>>>>> On 1/7/2025 11:05, Thomas Weißschuh wrote:
+>>>>>>> The driver showcases the use of the new subsystem API.
+>>>>>>>
+>>>>>>> Signed-off-by: Thomas Weißschuh <linux@weissschuh.net>
+>>>>>>> ---
+>>>>>>>     drivers/platform/x86/Kconfig                    | 12 ++++
+>>>>>>>     drivers/platform/x86/Makefile                   |  1 +
+>>>>>>>     drivers/platform/x86/firmware_attributes_test.c | 78 +++++++++++++++++++++++++
+>>>>>>>     3 files changed, 91 insertions(+)
+>>>>>>>
+>>>>>>> diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
+>>>>>>> index 0258dd879d64be389f4dd9bc309fe089f23cc798..2a0e828657d2f07074944d6c42dc204fc8825a42 100644
+>>>>>>> --- a/drivers/platform/x86/Kconfig
+>>>>>>> +++ b/drivers/platform/x86/Kconfig
+>>>>>>> @@ -1065,6 +1065,18 @@ source "drivers/platform/x86/x86-android-tablets/Kconfig"
+>>>>>>>     config FW_ATTR_CLASS
+>>>>>>>     	tristate
+>>>>>>> +config FW_ATTR_TEST
+>>>>>>> +	tristate "Firmware attribute test driver"
+>>>>>>> +	select FW_ATTR_CLASS
+>>>>>>> +	help
+>>>>>>> +	  This driver provides a test user of the firmware attribute subsystem.
+>>>>>>> +
+>>>>>>> +	  An instance is created at /sys/class/firmware-attributes/test/
+>>>>>>> +	  container various example attributes.
+>>>>>>> +
+>>>>>>> +	  To compile this driver as a module, choose M here: the module
+>>>>>>> +	  will be called firmware_attributes_test.
+>>>>>>> +
+>>>>>>
+>>>>>> I think if you're going to be introducing a test driver it should be
+>>>>>> compliant to what's in sysfs-class-firmware-attributes so that when it's
+>>>>>> inevitably copy/pasted we end up with higher quality drivers.
+>>>>>>
+>>>>>> That is you need at a minimum 'type', 'current_value', 'default_value',
+>>>>>> 'display_name' and 'display_name_language_code'.  Then individual types
+>>>>>> employ additional requirements.
+>>>>>>
+>>>>>> I see 'type', 'current_value', and 'default_value, but I don't see
+>>>>>> 'display_name' or 'display_name_language_code' here.
+>>>>>>
+>>>>>> Furthermore as this is a "string" attribute you're supposed to also have a
+>>>>>> "max_length" and "min_length".
+>>>>>
+>>>>> Agreed that more examples are better.
+>>>>>
+>>>>> But are these attributes really mandatory?
+>>>>> "This attribute is mandatory" is only specified for "type" and>
+>>>> "current_value".
+>>>>
+>>>> Ah wow, I had thought they were, but you're right they're not!
+>>>>
+>>>>> While "possible_values" certainly looks necessary for "enumeration",
+>>>>> "min_length" for "strings" does so much less.
+>>>>
+>>>> Even if they're not mandatory, I think it's better to include them for the
+>>>> same copy/paste reason I mentioned though.
+>>>
+>>> Thinking about it some more, which attributes should all be included?
+>>> Having all of them in there could motivate driver authors to implement
+>>> them all even it would mean filling in random values.
+>>> The provided examples can already be copied-and-pasted and slightly
+>>> adapted to add more attributes.
+>>
+>> Can't you like add comments to the optional ones to reduce the incentive
+>> to fill them with random junk as it's a lot easier to just delete them than
+>> generating some random junk. So if a developer is unsure what to do a
+>> comment telling something is optional would help to lean towards 'I can
+>> safely delete this'?
 > 
->         /* Iterate through supported profiles in order of increasing
-> performance */
->         if (test_bit(ACER_PREDATOR_V4_THERMAL_PROFILE_ECO,
-> &supported_profiles)) {
->             set_bit(PLATFORM_PROFILE_LOW_POWER,
->                 platform_profile_handler.choices);
->             max_perf = ACER_PREDATOR_V4_THERMAL_PROFILE_ECO;
->         }
+> That would be possible. But I'm still not convinced.
+> If driver authors can't be expected to know how to implement their own
+> sysfs attribute groups from the similar provided examples as needed, we
+> would have to provide example code for sysfs attributes of all firmware
+> attributes. And that would be a lot of them.
 > 
->         if (test_bit(ACER_PREDATOR_V4_THERMAL_PROFILE_QUIET,
-> &supported_profiles)) {
->             set_bit(PLATFORM_PROFILE_QUIET,
->                 platform_profile_handler.choices);
->             max_perf = ACER_PREDATOR_V4_THERMAL_PROFILE_QUIET;
->         }
-> 
->         if (test_bit(ACER_PREDATOR_V4_THERMAL_PROFILE_BALANCED,
-> &supported_profiles)) {
->             set_bit(PLATFORM_PROFILE_BALANCED,
->                 platform_profile_handler.choices);
->             max_perf = ACER_PREDATOR_V4_THERMAL_PROFILE_BALANCED;
->         }
-> 
->         if (test_bit(ACER_PREDATOR_V4_THERMAL_PROFILE_PERFORMANCE,
-> &supported_profiles)) {
->             set_bit(PLATFORM_PROFILE_BALANCED_PERFORMANCE,
->                 platform_profile_handler.choices);
->             max_perf = ACER_PREDATOR_V4_THERMAL_PROFILE_PERFORMANCE;
->         }
-> 
->         if (test_bit(ACER_PREDATOR_V4_THERMAL_PROFILE_TURBO,
-> &supported_profiles)) {
->             set_bit(PLATFORM_PROFILE_PERFORMANCE,
->                 platform_profile_handler.choices);
->             max_perf = ACER_PREDATOR_V4_THERMAL_PROFILE_TURBO;
->         }
+> Also the attributes themselves would be highly repetitive. The
+> interesting logic would be how to wire it up the the rest of the driver,
+> and the example code can't provide copy-paste code for that.
 
-Hi Hridesh,
+Thinking about it a bit more what do you think about providing a macro 
+helper for drivers to use?  Think about how we have macros for pm ops 
+for example and drivers can optionally populate all fields with callbacks.
 
-It looks a bit verbose, but for me it's fine, it even caches the value. 
-If max_perf is a global variable now, rename it to something like 
-acer_predator_v4_max_perf.
+A macro for "enumeration" attributes, another for "string" attributes, 
+and another for "integer" attributes.
 
-> 
-> Is this fine? Maybe for readability's sake, I could lift it up into a
-> different function, like what you did in the RFC patch. Btw, thanks a lot
-> for the detailed reviews so far—they’ve been very helpful!
+For string it could have optional values .min_length and .max_length,
 
-Glad I can help :)
+For enumeration it can have a callback that gets you a pointer to a 
+string of possible options.
 
-~ Kurt
+For integer attributes it can have a field for scalar value etc.
 
-> 
-> --
-> Thanks,
-> Hridesh MG
