@@ -1,101 +1,183 @@
-Received: from mout-p-101.mailbox.org (mout-p-101.mailbox.org [80.241.56.151])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-vs1-f52.google.com (mail-vs1-f52.google.com [209.85.217.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE01E21A459
-	for <platform-driver-x86@vger.kernel.org>; Thu,  9 Jan 2025 14:57:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.241.56.151
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 123CF215162;
+	Thu,  9 Jan 2025 15:07:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.217.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736434646; cv=none; b=C2kuN+2cjMfyPMy/dXXwPXyWWA3Nae7vqtkocuwUB7nAk2EA2EQ6BG3U9izwUWzrkkJeUOi9RsVs744I91UIImfV4NmzUyBjeNg35T4xN8QtNK5RVkaCf0x4f2nfzS0Q3OxQ+UklfUQps+Nmq9ZNxTSsKNZG57Bo3LLFubbPHM8=
+	t=1736435271; cv=none; b=rZzEdycxwVAvkbW/DCPSEH4+sy1VuS9gUPoO+vTkvt40rOOxCvi7WAGzkIsH4sKNGSfVSl0BfQlvApYR4uWNd07+Xi7iCTlykLEsSz4rDzbbOnGZU0djEoQZlz89+hoGGsrA9YiljkmUMlO/vAP40D4VfpFHJbS7cvek7leu0Xc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736434646; c=relaxed/simple;
-	bh=7tQK1wBY4mJ8bG4Ad/Y+Y/toEwYxTRlAh9cV8ggwguo=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Y+Wk4Q+c4UdgyqvQx3Yofn4MNNMbw+PjvMEU284AcO+LC3Gu3drH5Ub4sEbkvpXriaEXY9roDaa6MZXGqD14aYmIYvvZL1R2IOVXzoikH4P6edvyJ9QvBkrbEUPpVDeVXrzHZftTCnJenKxpEto0Lu9Pwbim0TEvewGceRpcxpk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=mailbox.org; spf=pass smtp.mailfrom=mailbox.org; dkim=pass (2048-bit key) header.d=mailbox.org header.i=@mailbox.org header.b=fO878uUb; arc=none smtp.client-ip=80.241.56.151
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=mailbox.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mailbox.org
+	s=arc-20240116; t=1736435271; c=relaxed/simple;
+	bh=+moCUpL6u4XxrsURb1bfyf5rekPbmy7akn2O6PEWcCc=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Cusn2X1WkS9So+y/3br6BMeHYVwT5ld6ymjx5H2ZIfvYeZ5v0R3NqOl94eoynYLQbhb6M6h/l5XUSh+8QHdHcxQd2rE9v1/qPplm2UErNPJDzAZ4FqO+H5ZgQFSNp8kN42kprieu4e02AblO8FrhuUrC+jXp1eO83VjZnfa1zmI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=lZElWALz; arc=none smtp.client-ip=209.85.217.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=mailbox.org header.i=@mailbox.org header.b="fO878uUb"
-Received: from smtp102.mailbox.org (smtp102.mailbox.org [10.196.197.102])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mout-p-101.mailbox.org (Postfix) with ESMTPS id 4YTSYm5CWBz9t12;
-	Thu,  9 Jan 2025 15:57:16 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mailbox.org; s=mail20150812;
-	t=1736434636;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=+PIcf94QpdY4vCtUlne7B4MNOeArydMMKo6iwMMk+Eg=;
-	b=fO878uUbCoCdeKfyMJM/P/H8ESgCLhxica4T70sPqMzo02ZUC64kIP5/DDZFyBy6uGvroS
-	qj4+E+UfFKF1HlSTrksPLBUIaRjfe2FZfitY4UaND+4VL1d4+WAYDkUYqX0kYvTcl8TyYh
-	pqzf3tOtnLtuzsGjINUAqJyLVaI+inaMRTqGj31E0aagPPuFwQMRuyy/a64fVwqDJ/sKo8
-	lBBgYX6mCCC8C3QOLeBpYcDhtFAQ7roSTMDpXelKiya4KHNLKiN4rdNbvaKTIBnk86tPIB
-	Op1pTFuFHf9EiuVwSbrdQPkzaH0EAmRKu8jdGw9NfHd4Io+4q66DOiJT+jv9xQ==
-Message-ID: <7893ceda-5260-46f2-8a87-ffb7734fa99b@mailbox.org>
-Date: Thu, 9 Jan 2025 15:57:15 +0100
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lZElWALz"
+Received: by mail-vs1-f52.google.com with SMTP id ada2fe7eead31-4aff620b232so402290137.0;
+        Thu, 09 Jan 2025 07:07:49 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1736435269; x=1737040069; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=GoE7go3RrYEFTYajkK0L5YTSqdtFu88WCWiNyjfJPnc=;
+        b=lZElWALzwFIZY2lDYKEmBiQfu8Dwrdv08bqJYiUL2O/aDvm5Tu6MnVusmSyaa8M8nf
+         /aKKuPCwtIQDRHotBfYV0r4XCEYg8HsUIa+NN5XZ1ACmZqz0QrRedhjpZWlDirBoPlan
+         97XQoShwskNilh6Pb+VlagZjpKbs1MuypmmsIZjDGlxCrD1BDPpvOouDB79gV9ZNazP+
+         PDq902Zk0PsvXykFQjAh3KiGiWA/UMYJawIayvLxCiROKwJt7BMyK0/WEkbF3L5kcaIv
+         NzUutJyAVuHW3j2FiVh0f/uTXQkD6AiwRo7dWurQmF/mkUK5LVNWXblRESLZFUmRs/5R
+         Sumw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1736435269; x=1737040069;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=GoE7go3RrYEFTYajkK0L5YTSqdtFu88WCWiNyjfJPnc=;
+        b=wsWTCwC+VYwEO6R9zf0Cl6jM+Xflo8ZAAUpo8ffh/UyCxtwvJfFtLfJ0RrPBWXif4u
+         TyqNIC84BRjI4GPV+VROky1J3Hh3q0ItqtTHvW5MTyyJp/UX9YkbUyuenR7b120I3uxD
+         CV7vtV9fRB6do0D0PrzfWu0Db0LwZ5VcSHCEPGMGe+CFyZSySVIVE5jkJqYa3qvZFpCL
+         stSMFlS3sbSIwiOyAjAEzsvUDyWaiF7RCpavZjDqPNtF50a8WXboevM3bGDY8CH2hv7X
+         ZozOA6c977uZfnGA6vS3Sq1pPNXGnecVf84z/7Ciyi0I+WgWrog+4ppfiJz09pFIUOD5
+         S4Jw==
+X-Forwarded-Encrypted: i=1; AJvYcCUHExFZZ85VxdEUOQIA6vn+PttHXeKo9QlX4TNJ3UZgERIHeSeb/4lCE+B7+SVe1Jvgn41Jl+shBiS0@vger.kernel.org, AJvYcCWYWuVBFbdP19/StS2lOxWQUptihYs4OIOTV9J4DoiVBFLYAmmppW5ASfB4Uzbaa+vcfHGZEuDBHkiwSzv8@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxh7/jawe2WtEg9Zo6Z4M1MaV5BT5awawAIBPaYwdfN76H3GJDL
+	uN1IqDZa6Za/TiSjECJZ6+Ws4vWUzpAlxtQw/4kfvrBN/D8QmIipOrNRZqbj
+X-Gm-Gg: ASbGncuRFeC7K2kEHt97vnt05+9zPKKa/mIYLkjKFnXIK28GsW1H/1h2DTFfD1x2aaR
+	Fvfsi1YJkEeQgoI1pc3hfq5x0Gona8AE4QLB58C0L9AwAiGZpGoCLORga5p11b1N73MgvTuurrv
+	37UaFq7WbV2wPu6xEcjc2lGfvkwebU3NMJ7kVORrHGR/RgOAtGfSwad9AJNvGcU3pAerq4JR+lE
+	Ls/Yc3vJIPY/3laNL1ybfu7YyMvYi4MZxtfCke4OUkcQXK/1RsoMBEz+jhsrCtu
+X-Google-Smtp-Source: AGHT+IEwxvowKGZ8QIQOsUElQtm5MIUIo4vYsM4VuCZBWZOrM4bMMNQD3ZTA6ZeBJWBs8dq+bdq2fg==
+X-Received: by 2002:a05:6102:d86:b0:4b1:16f8:efc4 with SMTP id ada2fe7eead31-4b3d0f9fa0bmr6112503137.12.1736435268573;
+        Thu, 09 Jan 2025 07:07:48 -0800 (PST)
+Received: from localhost.localdomain ([2800:bf0:82:1159:1ea9:11b1:7af9:1277])
+        by smtp.gmail.com with ESMTPSA id ada2fe7eead31-4b608f4a5ddsm1019887137.11.2025.01.09.07.07.44
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 09 Jan 2025 07:07:47 -0800 (PST)
+From: Kurt Borja <kuurtb@gmail.com>
+To: platform-driver-x86@vger.kernel.org
+Cc: "Rafael J. Wysocki" <rafael@kernel.org>,
+	Len Brown <lenb@kernel.org>,
+	linux-acpi@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	"Mario Limonciello" <mario.limonciello@amd.com>,
+	"Armin Wolf" <W_Armin@gmx.de>,
+	Joshua Grisham <josh@joshuagrisham.com>,
+	"Derek J . Clark" <derekjohn.clark@gmail.com>,
+	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	"Hans de Goede" <hdegoede@redhat.com>,
+	Kurt Borja <kuurtb@gmail.com>,
+	Maximilian Luz <luzmaximilian@gmail.com>,
+	"Lee, Chun-Yi" <jlee@suse.com>,
+	Shyam Sundar S K <Shyam-sundar.S-k@amd.com>,
+	Corentin Chary <corentin.chary@gmail.com>,
+	"Luke D. Jones" <luke@ljones.dev>,
+	Lyndon Sanche <lsanche@lyndeno.ca>,
+	Ike Panhc <ike.pan@canonical.com>,
+	Henrique de Moraes Holschuh <hmh@hmh.eng.br>,
+	Mark Pearson <mpearson-lenovo@squebb.ca>,
+	Colin Ian King <colin.i.king@gmail.com>,
+	Alexis Belmonte <alexbelm48@gmail.com>,
+	Ai Chao <aichao@kylinos.cn>,
+	Gergo Koteles <soyer@irl.hu>,
+	Dell.Client.Kernel@dell.com,
+	ibm-acpi-devel@lists.sourceforge.net
+Subject: [PATCH 00/18] Hide platform_profile_handler from consumers
+Date: Thu,  9 Jan 2025 10:06:13 -0500
+Message-ID: <20250109150731.110799-1-kuurtb@gmail.com>
+X-Mailer: git-send-email 2.47.1
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Subject: Re: amdgpu 4k@120Hz / HDMI 2.1
-To: Mischa Baars <mjbaars1977.backup@gmail.com>
-Cc: amd-gfx@lists.freedesktop.org,
- Mario Limonciello <mario.limonciello@amd.com>,
- platform-driver-x86@vger.kernel.org
-References: <CA+b5WFEXPJ==vruf-6DHrhS7j3pnTaj_EQE08BimxqyaNvktQQ@mail.gmail.com>
- <d1028755-6a7a-4db4-bd4b-e5a2d682af61@amd.com>
- <CA+b5WFFa4hMeGnN0J2xd=FpU2Cxe_AjapWBpTFjfNhzUSOUAzA@mail.gmail.com>
- <0281e6f7-4ccd-4369-9182-d1580c9e6bc5@amd.com>
- <CA+b5WFEv1Qj3NYcwXaZz1EYW9omj7FmB8FdSKZnixsMNoi1+DQ@mail.gmail.com>
- <ddd7bf09-31aa-4e4a-93ea-b1336ced8578@amd.com>
- <CA+b5WFGDstoJTjgaT+hm4r-78zup1pLa2Ada7PqbTY=wCutSbA@mail.gmail.com>
- <98b3392f-2860-4a32-a769-b4dcd3f5dbbe@amd.com>
- <CA+b5WFGkDJhpRRywQLx2okttXGasBu6K8ScLZyakKrk1+FZWAw@mail.gmail.com>
- <5321c9af-6df7-4bf0-98b2-d6c4b2861374@mailbox.org>
- <CA+b5WFEjG1DE1+_gG0qwmEf4nQZFg=9O+rHDJZmiADL5Hi7fbA@mail.gmail.com>
-From: =?UTF-8?Q?Michel_D=C3=A4nzer?= <michel.daenzer@mailbox.org>
-Content-Language: en-CA
-In-Reply-To: <CA+b5WFEjG1DE1+_gG0qwmEf4nQZFg=9O+rHDJZmiADL5Hi7fbA@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-MBO-RS-ID: d8e73b97bab921b69da
-X-MBO-RS-META: e3bycfzjg6t1xar7phm19hhzjn63i3ng
 
-On 2025-01-09 12:00, Mischa Baars wrote:
-> On Mon, Jan 6, 2025 at 4:41 PM Michel Dänzer
-> <michel.daenzer@mailbox.org <mailto:michel.daenzer@mailbox.org>>
-> wrote:
-> 
->> I'm sort of a fan of Michael Abrash, as he inspired me to learn
->> programming assembly language a long time ago, but in his Graphics
->> Programming Black Book, Chapter 23 <https://www.phatcode.net/
->> res/224/files/html/ch23/23-03.html#Heading6> he shows how the CRTC
->> Index Register is used to change what is shown on the screen by
->> alternating between two memory pages at PAGE0_OFFSET and
->> PAGE1_OFFSET.
+Hello :)
 
-That's much lower level than OpenGL. OpenGL implementations can and do internally use page flipping under the right circumstances, it cannot be enforced via OpenGL / GLX / EGL APIs though, it's an implementation detail.
+These series removes every use of platform_profile_handler outside
+platform_profile.c and fundamentally modifies the platform profile API.
+
+Currently, drivers have to allocate a platform_profile_handler and then
+manually setup undocumented (as far as I know) members, before
+registering the class device. This approach leaves exposed internal
+members that should be managed *only* by the platform_profile module.
+This has not been a problem yet because the interface is very simple,
+but that could change in the future.
+
+These series tackles this problem by presenting a new interface which
+works around the following method:
+
+struct *platform_profile_register(struct device *dev, const char *name,
+				  void *drvdata,
+				  const struct platform_profile_ops *ops)
+
+Which now returns a pointer to the new allocated class device assigned
+with *drvdata. I think this both is easier to use for future developers
+and safer, because it protects internal structures that shouldn't be
+meddled with.
+
+If you want more details about this interface you can read patch [18/18]
+which adds kerneldoc to exported methods.
+
+These series would also make it trivial to implement a method that
+"updates" selected choices, in a similar fashion to how
+sysfs_update_group() updates attribute visibility. I proposed this a
+couple days ago [1], but no drivers currently need this, so I dropped
+the idea for the time being.
+
+Your feedback is much appreciated!
+
+Tested for the alienware-wmi driver on an Alienware x15 R1.
+
+~ Kurt
+
+[1] https://lore.kernel.org/platform-driver-x86/20250106044605.12494-1-kuurtb@gmail.com/
+
+Kurt Borja (18):
+  ACPI: platform_profile: Add `ops` member to handlers
+  ACPI: platform_profile: Add `choices` to platform_profile_ops
+  ACPI: platform_profile: Replace *class_dev member with class_dev
+  ACPI: platform_profile: Let drivers set drvdata to the class device
+  platform/surface: surface_platform_profile: Use
+    devm_platform_profile_register()
+  platform/x86: acer-wmi: Use devm_platform_profile_register()
+  platform/x86: amd: pmf: sps: Use devm_platform_profile_register()
+  platform/x86: asus-wmi: Use devm_platform_profile_register()
+  platform/x86: dell-pc: Use devm_platform_profile_register()
+  platform/x86: ideapad-laptop: Use devm_platform_profile_register()
+  platform/x86: hp-wmi: Use devm_platform_profile_register()
+  platform/x86: inspur_platform_profile: Use
+    devm_platform_profile_register()
+  platform/x86: thinkpad_acpi: Use devm_platform_profile_register()
+  ACPI: platform_profile: Remove platform_profile_handler from exported
+    symbols
+  ACPI: platform_profile: Remove platform_profile_handler from callbacks
+  ACPI: platform_profile: Move platform_profile_handler
+  ACPI: platform_profile: Clean platform_profile_handler
+  ACPI: platform_profile: Add documentation
+
+ .../ABI/testing/sysfs-class-platform-profile  |  44 +++++
+ drivers/acpi/platform_profile.c               | 168 +++++++++++++-----
+ .../surface/surface_platform_profile.c        |  48 ++---
+ drivers/platform/x86/acer-wmi.c               |  58 +++---
+ drivers/platform/x86/amd/pmf/core.c           |   1 -
+ drivers/platform/x86/amd/pmf/pmf.h            |   3 +-
+ drivers/platform/x86/amd/pmf/sps.c            |  47 ++---
+ drivers/platform/x86/asus-wmi.c               |  54 +++---
+ drivers/platform/x86/dell/alienware-wmi.c     |  34 ++--
+ drivers/platform/x86/dell/dell-pc.c           |  60 +++----
+ drivers/platform/x86/hp/hp-wmi.c              |  83 +++++----
+ drivers/platform/x86/ideapad-laptop.c         |  44 +++--
+ .../platform/x86/inspur_platform_profile.c    |  48 +++--
+ drivers/platform/x86/thinkpad_acpi.c          |  37 ++--
+ include/linux/platform_profile.h              |  27 ++-
+ 15 files changed, 454 insertions(+), 302 deletions(-)
+ create mode 100644 Documentation/ABI/testing/sysfs-class-platform-profile
 
 
-> The glDrawBuffer() <https://registry.khronos.org/OpenGL-Refpages/gl4/
-> html/glDrawBuffer.xhtml> reference page however does speak of
-> initial values for double buffered contexts and the use of both
-> front and back buffers.
-
-The OpenGL app can use single-buffered drawing to GL_FRONT if it doesn't care about the artifacts possible without double buffering.
-
-
-> Can you explain to me why we are only drawing in GL_BACK and how
-> that relates to what portion of memory is shown on the screen?
-
-A big point of GL_BACK (and double buffering in general) is that it's not what's currently visible on screen, so there can be no artifacts due to visible unfinished frame contents.
-
-
+base-commit: 6b228cfc52a6e9b7149cf51e247076963d6561cd
 -- 
-Earthling Michel Dänzer       \        GNOME / Xwayland / Mesa developer
-https://redhat.com             \               Libre software enthusiast
+2.47.1
+
