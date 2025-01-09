@@ -1,146 +1,178 @@
-Received: from mout.gmx.net (mout.gmx.net [212.227.17.22])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-vs1-f49.google.com (mail-vs1-f49.google.com [209.85.217.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 12F0521C9E7
-	for <platform-driver-x86@vger.kernel.org>; Thu,  9 Jan 2025 15:08:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.22
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F69921D018;
+	Thu,  9 Jan 2025 15:08:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.217.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736435312; cv=none; b=Eeh6GhXSm6hZhn2mLp5jaXVZmvQBEEotxLwQwAcBD7YQ3jirkD4ue0Kr5WGwIr9GJRtvk2YgfS0VGVvbTITicqr+eGQODGieHExwW9jZis67C5bDfb7p2q/qIC0m1zfzNyusxMejLkokh0JEsqJl3BYbn7Rxpe34mchQQqsQIpQ=
+	t=1736435314; cv=none; b=inPFXH3kMccMuOgRKGAAzpfT5GPvXAyVch4Fajv2pS2SJaup1hL03gMEMKuGfZ+affb0+eam8lkxrLqWzLrGRzGhNw5LVFcT3XR4xndyeHV67goG9JYnbAlOWI5mkj+WcrVYgcBzhMaktMq/T15ndxryC8ts1I5YMfwEh3obm8U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736435312; c=relaxed/simple;
-	bh=vNdLR0JloERF06YiA7vH/MVNHsjFyRr9YYqzSw3F8Ys=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=D0aitPo9UNH8S+7i22Ih053sY7vEtNOZ6Kuu26lfblgdfARduwqfa/zYErxYptJfIiIIFeHVfTgUVDgwziopnNovyEMXPpnqWYNa22VnXwO17IOsiMGDcglgatdkXRs7fRtwcWXTKA/T3Y6fVcGWQvOny44rg4ORH5UQmWpSmaY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b=sgZSDne0; arc=none smtp.client-ip=212.227.17.22
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
+	s=arc-20240116; t=1736435314; c=relaxed/simple;
+	bh=AgiCZajH9sjLEAC/PKeyz7IcBzBLd4dscfluYeRgNNk=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=Qxod6EW7n1MFiss2UlGjQgT67ThmOOc/a9Vi7gQjXZgjzbchxr83TWnMwN5B3mTg+Gpk/iRCijvq9Ce+zpPJF06GUUWOa5q7WKFnUfT4Z80l3nA9Afgr/xSYMoEm5syQDOyAe8IcJlB2c/dOd4jMkUYkSYNobHYHrY6H91OS5xk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=kVCd58VL; arc=none smtp.client-ip=209.85.217.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b="sgZSDne0"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.de;
-	s=s31663417; t=1736435306; x=1737040106; i=w_armin@gmx.de;
-	bh=f8od1lEXfwPOxINOTWonWmKIGVU35VQkrn7TwAGSOwU=;
-	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:To:Cc:
-	 References:From:In-Reply-To:Content-Type:
-	 Content-Transfer-Encoding:cc:content-transfer-encoding:
-	 content-type:date:from:message-id:mime-version:reply-to:subject:
-	 to;
-	b=sgZSDne0AJOVyc17FQfia8sC2zQBDn8oIjykAkj0LhKqgl9JmZTqPuYAzKc1F8t/
-	 SeI3EUtPPO8R/M7HiD0Tjt7HsNX3Azhynk32PU+wKWw9YBpMEd5NrV9wMgwHPrtw5
-	 XroC6OHsoWhqNbDP83yHyTFuQwM4exoMp4E/zJ7+JVqtOux1ROjF/quIyLTCjrKFF
-	 lrp9gCLJcSy+mN6AAqgKNcx6eo9ObxnAl8vBdywUxy17ynJcjAzIlv8CoNvAkUZsF
-	 6XCgLpWKcBpc1yQXb1HMKET+/CUJu8Ooq6cSsxlZgSVF4IcSo/rahzWHPq8gf1QTJ
-	 IhrDuZp6WOdtBF/7kw==
-X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
-Received: from [172.16.100.132] ([141.76.182.72]) by mail.gmx.net (mrgmx105
- [212.227.17.168]) with ESMTPSA (Nemesis) id 1N1fmq-1tcGwL3SZM-013PLQ; Thu, 09
- Jan 2025 16:08:25 +0100
-Message-ID: <ea8468ab-430e-4336-b1c5-6f6bc566950b@gmx.de>
-Date: Thu, 9 Jan 2025 16:08:25 +0100
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kVCd58VL"
+Received: by mail-vs1-f49.google.com with SMTP id ada2fe7eead31-4b11a11a4f0so407920137.3;
+        Thu, 09 Jan 2025 07:08:33 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1736435312; x=1737040112; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=gtcPmrAHgkUUo4sRfcFR6W1QqvjqY3PBg9aacIt0Kcs=;
+        b=kVCd58VLXvsl+oQY+aMD2nUBsa5iGZSEDA74emGCHCyWQe8Bh4mfrl3pVZrqMtH0+d
+         QcJYszSAb/e8W5s9HwfYjyx4fRNAq3GUMMkGOfzBwoo3WjnpInP4LMsSAL0W4lir+RnC
+         j1m1xuGhF1QGrhnxqWNmqahpszvnzfaFVZ6xIDol9iRnn2BIeTO4YQz2LSLk2oUF4erd
+         HA+8cJnxZfjzdO1xx+vPwzelNLGrsa4bXwEBJ7CMIjRXGjq85Pvo2vWqo3VSYvbSIHVD
+         mFvwPA/X5AtnPnSsN/niDdFAxkBPIZVIi/2Cf4Iwr3szcbJxP005dzv3JQ1r79XAs1pU
+         MCsA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1736435312; x=1737040112;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=gtcPmrAHgkUUo4sRfcFR6W1QqvjqY3PBg9aacIt0Kcs=;
+        b=QVZSLIVVdut5AtXxIneJwilgYlGcW27ANeeWn25i6htghLEY1ZueEgBa6cK6AZjEyC
+         GV26iUfwtObdAWDnQwgffc+1ICyWbPQugi5uAMB+8r0IdWLEgb//DdC2uNxCj+QOxjg7
+         FrFaQPqPWUcAqi/I/uCPpYDJg3aRoxVI1/d7nJhxKI0u++rctInjBIGqEOJRRavAWYfD
+         LpSxHUdfut3mh5WfpJEbZ0HFu9ktEnxnNOjIHfOhlFFmAJ6Lq/g8CEcfWAeANPLenRdm
+         zYnzn4L0Y5UTOOHOu3uLF3IiGvKgd590cq76UCtC2/rqkPAk/nWnbQV2/a9dpecWb26g
+         b9Ww==
+X-Forwarded-Encrypted: i=1; AJvYcCVRB7nKMicQEVKfk9BrH9uDMgZmKtYke6rERx+JzVcqG9B36m1fZWD64KvDwQWmkMX23PqSDIymZ4hu@vger.kernel.org, AJvYcCXG/hGRAwU83qEnEkytXW3nF7ikJLv1O3XZqiMXeBOif5a3ZLHq8Nw0GEyV5MIqIBrwI/HQ5rIAupS8Dm7r@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx5QHJaUrPBay8fwUDCBMhF6mc/CIqiP43Pcmc8jiV5lAJQFLRu
+	BZ+/nnLftM9dNH7bdeP7E+XPiZMDP3OkyveIPSO87JCDhpYw2aTVAnBjtHTJ
+X-Gm-Gg: ASbGncvjiUWRU1hH/NfYhbvVeI/0W2fsZ/XecODMfXRHcUgqyQg5LC9yTV/YSu5IRn9
+	MoYa+5cwUUcV/NIfZsv19YshG2sEtEIk/equKI91zkqVZE6I3436p1zo0nEy5HC4ucxJXiLWaJE
+	BsNAQ5UT5jHkXWlqPvD/a9KPCDaM9hw+QDJTfw8jFSu0n5OKyZDQACAijONufMyxb5qQz+F7odq
+	0vILH3nsH21WoXoTzTdm98hEkiTm9OHfi4XHnpLJS13tLAZxyZpICbnLH4EHAjQ
+X-Google-Smtp-Source: AGHT+IFMtfJ8yR7tBbL8mxs/WV+A3Jnd18ab6j3DFPxW2nqJWpQEUJz65hKjWpLExsDmpWKF/fxEGA==
+X-Received: by 2002:a05:6102:3ec1:b0:4b6:1a4e:9ed7 with SMTP id ada2fe7eead31-4b61a4ea005mr1464980137.5.1736435311971;
+        Thu, 09 Jan 2025 07:08:31 -0800 (PST)
+Received: from localhost.localdomain ([2800:bf0:82:1159:1ea9:11b1:7af9:1277])
+        by smtp.gmail.com with ESMTPSA id ada2fe7eead31-4b608f4a5ddsm1019887137.11.2025.01.09.07.08.29
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 09 Jan 2025 07:08:31 -0800 (PST)
+From: Kurt Borja <kuurtb@gmail.com>
+To: platform-driver-x86@vger.kernel.org
+Cc: "Rafael J. Wysocki" <rafael@kernel.org>,
+	Len Brown <lenb@kernel.org>,
+	linux-acpi@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	"Mario Limonciello" <mario.limonciello@amd.com>,
+	"Armin Wolf" <W_Armin@gmx.de>,
+	Joshua Grisham <josh@joshuagrisham.com>,
+	"Derek J . Clark" <derekjohn.clark@gmail.com>,
+	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	"Hans de Goede" <hdegoede@redhat.com>,
+	Kurt Borja <kuurtb@gmail.com>,
+	Maximilian Luz <luzmaximilian@gmail.com>,
+	"Lee, Chun-Yi" <jlee@suse.com>,
+	Shyam Sundar S K <Shyam-sundar.S-k@amd.com>,
+	Corentin Chary <corentin.chary@gmail.com>,
+	"Luke D. Jones" <luke@ljones.dev>,
+	Lyndon Sanche <lsanche@lyndeno.ca>,
+	Ike Panhc <ike.pan@canonical.com>,
+	Henrique de Moraes Holschuh <hmh@hmh.eng.br>,
+	Mark Pearson <mpearson-lenovo@squebb.ca>,
+	Colin Ian King <colin.i.king@gmail.com>,
+	Alexis Belmonte <alexbelm48@gmail.com>,
+	=?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>,
+	Ai Chao <aichao@kylinos.cn>,
+	Gergo Koteles <soyer@irl.hu>,
+	Dell.Client.Kernel@dell.com,
+	ibm-acpi-devel@lists.sourceforge.net
+Subject: [PATCH 07/18] platform/x86: amd: pmf: sps: Use devm_platform_profile_register()
+Date: Thu,  9 Jan 2025 10:06:20 -0500
+Message-ID: <20250109150731.110799-8-kuurtb@gmail.com>
+X-Mailer: git-send-email 2.47.1
+In-Reply-To: <20250109150731.110799-1-kuurtb@gmail.com>
+References: <20250109150731.110799-1-kuurtb@gmail.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: amdgpu 4k@120Hz / HDMI 2.1
-To: Mischa Baars <mjbaars1977.backup@gmail.com>,
- Mario Limonciello <mario.limonciello@amd.com>
-Cc: amd-gfx@lists.freedesktop.org, =?UTF-8?Q?Michel_D=C3=A4nzer?=
- <michel.daenzer@mailbox.org>, platform-driver-x86@vger.kernel.org
-References: <CA+b5WFEXPJ==vruf-6DHrhS7j3pnTaj_EQE08BimxqyaNvktQQ@mail.gmail.com>
- <d1028755-6a7a-4db4-bd4b-e5a2d682af61@amd.com>
- <CA+b5WFFa4hMeGnN0J2xd=FpU2Cxe_AjapWBpTFjfNhzUSOUAzA@mail.gmail.com>
- <0281e6f7-4ccd-4369-9182-d1580c9e6bc5@amd.com>
- <CA+b5WFEv1Qj3NYcwXaZz1EYW9omj7FmB8FdSKZnixsMNoi1+DQ@mail.gmail.com>
- <ddd7bf09-31aa-4e4a-93ea-b1336ced8578@amd.com>
- <CA+b5WFGDstoJTjgaT+hm4r-78zup1pLa2Ada7PqbTY=wCutSbA@mail.gmail.com>
- <98b3392f-2860-4a32-a769-b4dcd3f5dbbe@amd.com>
- <CA+b5WFGkDJhpRRywQLx2okttXGasBu6K8ScLZyakKrk1+FZWAw@mail.gmail.com>
- <5321c9af-6df7-4bf0-98b2-d6c4b2861374@mailbox.org>
- <CA+b5WFFkhQUcFO_45_6xmC4fk_GEFqbASt9rhGqBBYsothsHxQ@mail.gmail.com>
-Content-Language: en-US
-From: Armin Wolf <W_Armin@gmx.de>
-In-Reply-To: <CA+b5WFFkhQUcFO_45_6xmC4fk_GEFqbASt9rhGqBBYsothsHxQ@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:x2HjE0F4AFrTLWyaSJpuwbQgpqHxWe/c8Ud0MnoZloGm4L/pewm
- /ZouRqEbUvAijmsciQC4CT36bPZbxNhFXijSQYh2bLfnRNLq+wHKgKm+d6nXroHe3pNKI20
- d/OBTImBCceA4QlliGYLjklYtajYM8Jzrq2ackeJrrjqm2BxZFJelKiuBsYtbskwoxNquNv
- dEL08E24soXMY3Nx4UeAw==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:ah7sHLqDqLk=;Ti7WNj/5kdz4JGQ3ZnCtVGE1HQF
- AI3HCdwYT3pN4E+tdqE0BtGKM1h2JJOs4BHUEvp8iKjYt4202C4qFBZa34HTctqRzJWNidqYS
- R5MtrASGVxAyxJcjcYBxrwKm2/h1NwUK8TKPVWBzSj6K51GrcdCDQqgIdgbQkPZwr31y2JFA2
- 1fiHmFRTV623DXfRKU1VlLjIEhXeVKvgx3oNL+kWTZFu0K0pJy7Lfhz9+nZSqfhwkx578wDCB
- O7uMlnxaLrT2PxT8kmeL2bm6dlqEv8b0Eeec7FBtuvvSUpAy+rtFnVIl9W6BJm97cy6p5zceM
- gJoxOlsnKsGCdKotEHecNsJ6dwaImmCgdldT7BpG8Znr/4DLQaHKzA/99KWz9yFQRg0JVsXOA
- vxE9E56uYR9+w5eYCZ6L30HPxZ1esrlmZPtqJRq2ETexUwqGNEOrScspQ4/YRLcesGUJIMc0E
- q7FYQp+UNt9lZb0p6H5hTPj/6uuePkZYgJQNJrPVZC5BBUPGOqqswnf1B3PF7ya1sI3wyYezd
- nrq7Zd2KxuHheyjctO9YCwORxi5Xh4Q6El/uWJa2oRdvoQcGX+Woi7jLdZ2hvY5i2p+kwYKJo
- YWappXR/xPWIfjjP5x+217N4+SmHJuS8OoXJWz14OXCX4Mxfl9in//Qp6VSGZNTO4czdri3Ky
- kweyqOAYB2dup6gR+HY4ss0XjasHMtew+I6CYstgEwD6BOQyjXgRensu/7UQucAcOFH92GYry
- ZAr3CvlZGGZOnFF5RUlVVWClYXdRyfz+Tuiozv7L6kdHywj6VeNdadlRe6OKfUW2cqRCyqVmi
- 5B4fFQXyXE9T9Nf6pQ2I6aq1lX50IqnTBhBgNKuVzVcESfFMFoKdO6+0zoxF7pEFK3S5r80+V
- UZnFhUwFU5iyjva8O/WYg/yNI+m88qbfgVPrQ/hyWFWP5ThaU8RGy7zGrF8ubyX9f/2mY7yE/
- OeflF4ClduCZn51uBVCQmgMmJSsCTmGlBWd1/NZVfHsT5uX2wLYZsAzFOFAL47+Ek2f8FAUPU
- m9wSMYjh3slWVb4AN9reLEJ1SIX3Wbb1tv77Uu1I6P1X3UeOULnhKaQohcwGSlD135k14lnJJ
- 0t1luoqzxUSOPZopwwjkhLWRa/m7cV
+Content-Transfer-Encoding: 8bit
 
-Am 09.01.25 um 10:19 schrieb Mischa Baars:
-> On Mon, Jan 6, 2025 at 4:30=E2=80=AFAM Mario Limonciello
-> <mario.limonciello@amd.com> wrote:
->
->> When new specifications are made available it's not like the old one
->> suddenly becomes "open", so I don't see any reason that a new
->> specification would change anything.
-> I paid about =E2=82=AC3000 for my new PC, including =E2=82=AC300 for the=
- graphics card
-> with HDMI 2.1 output and about =E2=82=AC2000 for my new Samsung OLED TV =
-with 4
-> HDMI 2.1 inputs, and now you are telling me that I will not be able to
-> utilize them fully because the cable specification has not been made
-> publicly available?
->
-> Did someone forget to pay the people that design the cables? Because
-> that is what it sounds like. Why does Linux stay behind?
+Replace platform_profile_register() with it's device managed version.
+While at it, pass amd_pmf_dev to the class device as drvdata and replace
+uses of container_of() with dev_get_drvdata().
 
-Sadly the HDMI forum only provides the HDMI specification under a special =
-license which
-prohibits implementing it in open source drivers.
+Signed-off-by: Kurt Borja <kuurtb@gmail.com>
+---
+ drivers/platform/x86/amd/pmf/core.c |  1 -
+ drivers/platform/x86/amd/pmf/pmf.h  |  1 -
+ drivers/platform/x86/amd/pmf/sps.c  | 11 +++--------
+ 3 files changed, 3 insertions(+), 10 deletions(-)
 
-Since membership inside the HDMI forum costs 15000$ annually, i suspect th=
-at the HDMI forum
-is abusing its power to force people to join (and pay).
+diff --git a/drivers/platform/x86/amd/pmf/core.c b/drivers/platform/x86/amd/pmf/core.c
+index 57ee95a327be..1211a753fee8 100644
+--- a/drivers/platform/x86/amd/pmf/core.c
++++ b/drivers/platform/x86/amd/pmf/core.c
+@@ -371,7 +371,6 @@ static void amd_pmf_deinit_features(struct amd_pmf_dev *dev)
+ 	if (is_apmf_func_supported(dev, APMF_FUNC_STATIC_SLIDER_GRANULAR) ||
+ 	    is_apmf_func_supported(dev, APMF_FUNC_OS_POWER_SLIDER_UPDATE)) {
+ 		power_supply_unreg_notifier(&dev->pwr_src_notifier);
+-		amd_pmf_deinit_sps(dev);
+ 	}
+ 
+ 	if (dev->smart_pc_enabled) {
+diff --git a/drivers/platform/x86/amd/pmf/pmf.h b/drivers/platform/x86/amd/pmf/pmf.h
+index 56024eb40266..198bfe3306be 100644
+--- a/drivers/platform/x86/amd/pmf/pmf.h
++++ b/drivers/platform/x86/amd/pmf/pmf.h
+@@ -764,7 +764,6 @@ int amd_pmf_get_pprof_modes(struct amd_pmf_dev *pmf);
+ void amd_pmf_update_slider(struct amd_pmf_dev *dev, bool op, int idx,
+ 			   struct amd_pmf_static_slider_granular *table);
+ int amd_pmf_init_sps(struct amd_pmf_dev *dev);
+-void amd_pmf_deinit_sps(struct amd_pmf_dev *dev);
+ int apmf_get_static_slider_granular(struct amd_pmf_dev *pdev,
+ 				    struct apmf_static_slider_granular_output *output);
+ bool is_pprof_balanced(struct amd_pmf_dev *pmf);
+diff --git a/drivers/platform/x86/amd/pmf/sps.c b/drivers/platform/x86/amd/pmf/sps.c
+index 8e75ebd25e21..4f80a73eff9f 100644
+--- a/drivers/platform/x86/amd/pmf/sps.c
++++ b/drivers/platform/x86/amd/pmf/sps.c
+@@ -285,7 +285,7 @@ bool is_pprof_balanced(struct amd_pmf_dev *pmf)
+ static int amd_pmf_profile_get(struct platform_profile_handler *pprof,
+ 			       enum platform_profile_option *profile)
+ {
+-	struct amd_pmf_dev *pmf = container_of(pprof, struct amd_pmf_dev, pprof);
++	struct amd_pmf_dev *pmf = dev_get_drvdata(&pprof->class_dev);
+ 
+ 	*profile = pmf->current_profile;
+ 	return 0;
+@@ -366,7 +366,7 @@ int amd_pmf_power_slider_update_event(struct amd_pmf_dev *dev)
+ static int amd_pmf_profile_set(struct platform_profile_handler *pprof,
+ 			       enum platform_profile_option profile)
+ {
+-	struct amd_pmf_dev *pmf = container_of(pprof, struct amd_pmf_dev, pprof);
++	struct amd_pmf_dev *pmf = dev_get_drvdata(&pprof->class_dev);
+ 	int ret = 0;
+ 
+ 	pmf->current_profile = profile;
+@@ -425,15 +425,10 @@ int amd_pmf_init_sps(struct amd_pmf_dev *dev)
+ 	dev->pprof.ops = &amd_pmf_profile_ops;
+ 
+ 	/* Create platform_profile structure and register */
+-	err = platform_profile_register(&dev->pprof, NULL);
++	err = devm_platform_profile_register(&dev->pprof, dev);
+ 	if (err)
+ 		dev_err(dev->dev, "Failed to register SPS support, this is most likely an SBIOS bug: %d\n",
+ 			err);
+ 
+ 	return err;
+ }
+-
+-void amd_pmf_deinit_sps(struct amd_pmf_dev *dev)
+-{
+-	platform_profile_remove(&dev->pprof);
+-}
+-- 
+2.47.1
 
-I can feel your disappointment, but there is nothing we can do which does =
-not land us in court :(.
-
-Thanks,
-Armin Wolf
-
-> On Mon, Jan 6, 2025 at 4:41=E2=80=AFPM Michel D=C3=A4nzer <michel.daenze=
-r@mailbox.org> wrote:
->> On 2024-12-31 13:42, Mischa Baars wrote:
->>> In the meantime I also checked the framerate synchronization through
->>> glxgears at different resolutions and framerates. This does function
->>> as expected. Although I haven't yet inspected the glxgears source
->>> codes in detail, the OpenGL double buffering must be functional up to
->>> some level. This means that the problem must be confined to GTK and
->>> the GtkGLArea widget. Using GDK_BACKEND=3Dx11 I do get a double buffer=
-ed
->>> context, but the default buffer does not alternate between GL_FRONT
->>> and GL_BACK.
->> Yeah, that's not how double-buffering works in GL. The draw buffer is a=
-lways GL_BACK, SwapBuffers doesn't affect that (it just may internally cha=
-nge which actual buffer GL_BACK refers to).
->>
->> I don't see more context about the issue you're investigating, any poin=
-ters?
->>
->>
->> --
->> Earthling Michel D=C3=A4nzer       \        GNOME / Xwayland / Mesa dev=
-eloper
->> https://redhat.com             \               Libre software enthusias=
-t
