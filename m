@@ -1,481 +1,178 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
+Received: from NAM11-DM6-obe.outbound.protection.outlook.com (mail-dm6nam11on2058.outbound.protection.outlook.com [40.107.223.58])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B479120DD47;
-	Fri, 10 Jan 2025 12:27:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736512052; cv=none; b=Sh0IlACHJe9kCwPD+mhFN7A10nKTSArb9ZU020dFR28DH83acJdX2Q3dzdVZsP1AHRYgCu8Tf7Xl9xI7AdEQoT9TdGzfTmypolbmvbdxVmhuaGXuIxxZekxFLYK294iYTzIzjkqsqHlWWsq2798Q7R0UyiNLPwEDgZLyzL+fdFM=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736512052; c=relaxed/simple;
-	bh=f9FylgJj59fAmz/fHDmaPBuiqg9UIdFPtPa5lA00AmA=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=UvSALte6ANjWKBbu8FjCVoD4ah5s8WMzD4ORwXGUF8gg9q7pbPn04khaKtIWZolyMvPU5GnSCLl66UIEgLNnxdG+qj9DqxoF0bYVtCsBfwSJkkUQbvczEFcXMsY0M6iax9e9woT5dWRLsNPdwpUx2gjwum6rCM6xKPC0dZjYxdE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=VR6tAlXQ; arc=none smtp.client-ip=198.175.65.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 988BB20E330
+	for <platform-driver-x86@vger.kernel.org>; Fri, 10 Jan 2025 13:45:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.223.58
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1736516753; cv=fail; b=kd4BJxDSG8B5ZSkvCq2bYArhrxJVEUALpkh4y44nYH/1JoKNy9V0VL30EUxQUm8vk/jU8FvPuPSgOWJteUauYu9IuF3JbREZxEnzpaFX1kTXFpuwOsCu+FKPP7SowqPcxsCkZB9V2AeHFVBPUxdfMGHROk2eevixb7VwCC00Unk=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1736516753; c=relaxed/simple;
+	bh=ije9sqx73VFxDD+Rwteuoet8D7+IRzzPh00fpYH4mD8=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=g4t8bpdqHpXGPzKYbwI/vKJMWrcWZ9bwu3uO8IZnVFVolEjM1jEMr0qzRxJQt+N8ttQudTytN0uTY3FGxEIfy8dDAY7ISb0gMHW7MY3sL5s5HfOAD8FLz4onezRvzuk5LDxT30u+HM2SJ5qM9+v64XwHMiQOAa36w2eGn/RXP0Q=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=YjTLOXMc; arc=fail smtp.client-ip=40.107.223.58
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="VR6tAlXQ"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1736512051; x=1768048051;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=f9FylgJj59fAmz/fHDmaPBuiqg9UIdFPtPa5lA00AmA=;
-  b=VR6tAlXQyQPoq5MaqNnzsZ2vgW3SLKUt7Yl4i4UUcEeLMSoD7zbyroou
-   gAZ5TD3nNwtq07Tv37qOqIT8JjdqUhmg3NFMVSWU4oZCyTjLTgDPdZFZ5
-   ebCGvWVLAmc9LkDxaRqGKyzkekDZOI4fJqNfBNTZ478Pc7xqUOCpLraBI
-   Ks+WOQtBjWoZbiCdW29mvfo8q0tHzqpqXwZDzKbn5mHshr2PjbYDSIc82
-   1jJ2pYcGW4Dds8Cy5zFaWdgq25zbh5q1wNi4OX1gQVOvxpgFD9P33bgDR
-   GYiTJV25OQSUliMRwBp17Ka/o5vWV2nD32MnVgmQbc+7VAozJnxOwpzE1
-   w==;
-X-CSE-ConnectionGUID: AL26z5RzS4GgX4VKc3HGHA==
-X-CSE-MsgGUID: ucz+KPsrToC4VO1Ar3/USA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11311"; a="54220775"
-X-IronPort-AV: E=Sophos;i="6.12,303,1728975600"; 
-   d="scan'208";a="54220775"
-Received: from fmviesa003.fm.intel.com ([10.60.135.143])
-  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Jan 2025 04:27:31 -0800
-X-CSE-ConnectionGUID: 11edMklMTCej+KmzBfSlJQ==
-X-CSE-MsgGUID: kRkC6YAOSJuMe6unfrnf5w==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
-   d="scan'208";a="107764867"
-Received: from apaszkie-mobl2.apaszkie-mobl2 (HELO localhost) ([10.245.244.158])
-  by fmviesa003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Jan 2025 04:27:25 -0800
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Fri, 10 Jan 2025 14:27:21 +0200 (EET)
-To: "Derek J. Clark" <derekjohn.clark@gmail.com>
-cc: Hans de Goede <hdegoede@redhat.com>, Jonathan Corbet <corbet@lwn.net>, 
-    Mario Limonciello <superm1@kernel.org>, Luke Jones <luke@ljones.dev>, 
-    Xino Ni <nijs1@lenovo.com>, Zhixin Zhang <zhangzx36@lenovo.com>, 
-    Mia Shao <shaohz1@lenovo.com>, Mark Pearson <mpearson-lenovo@squebb.ca>, 
-    "Pierre-Loup A . Griffais" <pgriffais@valvesoftware.com>, 
-    "Cody T . -H . Chiu" <codyit@gmail.com>, 
-    John Martens <johnfanv2@gmail.com>, platform-driver-x86@vger.kernel.org, 
-    linux-doc@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2 2/4] platform/x86: Add Lenovo GameZone WMI Driver
-In-Reply-To: <20250102004854.14874-3-derekjohn.clark@gmail.com>
-Message-ID: <487ff49a-b521-600d-16bf-db3122295812@linux.intel.com>
-References: <20250102004854.14874-1-derekjohn.clark@gmail.com> <20250102004854.14874-3-derekjohn.clark@gmail.com>
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="YjTLOXMc"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=ywbIBf2JcdLtXsfzI5XDR3XG7X1jo4NebXWGD6dEsamMwBHFCTqdv12DKlMw82XD17u9PitumZ78WRjdehhdhBeCjVKvvd0iXQLP+9yXqoNCBVVOOuKtV1tXDocmKjkIQ/wkwX7l5r2bz/p8lHlRz6YzOMdcZOs76fm1AaYKlri54JMiVpSCQhItCFlI7goKUeOkxCsRPtvzhvUL2TEYCTRKvcY9Q1kAcv+DrAY6D3V5mnYKKQC/RN9PwCWEObRBZLluCTWMhe2tC33vBo0+ZDjnt2luEf1I8NlEZASFa7+GoO5+vX7VtryTa9ScYtsksRdp8ciCXALwoF2bm+Zicw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=1kDmyVjGRHqRBv9PWFxKoNbbmR/vDT4U7XALvXNWtwY=;
+ b=mh9PrRRU+oXj6xOl0rd7haGHoMPW/SqZ6xr5XIQRRaAA1ea2q6mA/l95Au92Q9n+NQY0IHH+iTDjBi4NGU1PNWfsZZXKqT1qcFnkumHN9Zxuth2Cj6Yv7kZu8h9/4yFfJ0PrDwYlDoExrrxKE8Ynktx5foTx2gMswRgNJYFMa6Xh6zI2hLAOxBfwKMePfV4zdfHlvm7TjoaNG4XTZmltLjIZ1RijwRVfwa52YBLIizJ2jclMamgj7oIcXXv5CK8UBZwLZH4URpEc/enNOJfrncn3KEBFIiH+hSwuPkFq1uprNQuH1YAed7i0hW0ROVB7RIK9tXWbzaTIEwVUkP09Dw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 216.228.117.160) smtp.rcpttodomain=redhat.com smtp.mailfrom=nvidia.com;
+ dmarc=pass (p=reject sp=reject pct=100) action=none header.from=nvidia.com;
+ dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=1kDmyVjGRHqRBv9PWFxKoNbbmR/vDT4U7XALvXNWtwY=;
+ b=YjTLOXMcLoRHjf2Ol4i+ct9/WbMTAdfgDZej+Gw02BMidcvFDAoedjDOIdtgpAeaQjRLsktq5/wjN/ePvz96kFR+nUT+g94TTIIK/CNqVPDf3Eug/7moDfRQb0zEOW88tRqySNmxVtXfrSq2/bvK3HVuYgpstsCB65wZyJj7Q1uGeTK7z4OMkjPk4bBKHHxv3ABON8Pvld++p36vWf/o5ElbbvEI5aNXWjcEtf360iz6WllJ63FRr7S/k6tDIC1ppkgGPGKukoKGwQX66F6Mdb8ymlnDvOyIOzLYfOQ4Idi2Gtb9PUPxnUSlWgyr1y2oY17a437Hp8tHn/fQiP7Aaw==
+Received: from SA1PR05CA0001.namprd05.prod.outlook.com (2603:10b6:806:2d2::6)
+ by DM4PR12MB7597.namprd12.prod.outlook.com (2603:10b6:8:10b::16) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8335.13; Fri, 10 Jan
+ 2025 13:45:48 +0000
+Received: from SA2PEPF00003AEB.namprd02.prod.outlook.com
+ (2603:10b6:806:2d2:cafe::f6) by SA1PR05CA0001.outlook.office365.com
+ (2603:10b6:806:2d2::6) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.8356.5 via Frontend Transport; Fri,
+ 10 Jan 2025 13:45:47 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 216.228.117.160)
+ smtp.mailfrom=nvidia.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=nvidia.com;
+Received-SPF: Pass (protection.outlook.com: domain of nvidia.com designates
+ 216.228.117.160 as permitted sender) receiver=protection.outlook.com;
+ client-ip=216.228.117.160; helo=mail.nvidia.com; pr=C
+Received: from mail.nvidia.com (216.228.117.160) by
+ SA2PEPF00003AEB.mail.protection.outlook.com (10.167.248.11) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.8335.7 via Frontend Transport; Fri, 10 Jan 2025 13:45:47 +0000
+Received: from rnnvmail201.nvidia.com (10.129.68.8) by mail.nvidia.com
+ (10.129.200.66) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.4; Fri, 10 Jan
+ 2025 05:45:38 -0800
+Received: from r-build-bsp-02.mtr.labs.mlnx (10.126.230.35) by
+ rnnvmail201.nvidia.com (10.129.68.8) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.4; Fri, 10 Jan 2025 05:45:36 -0800
+From: Vadim Pasternak <vadimp@nvidia.com>
+To: <hdegoede@redhat.com>, <ilpo.jarvinen@linux.intel.com>
+CC: <platform-driver-x86@vger.kernel.org>, Vadim Pasternak <vadimp@nvidia.com>
+Subject: [PATCH platform-next 00/11] platform/mellanox: Add support for new systems, amendments, relocate mlx-platform module
+Date: Fri, 10 Jan 2025 15:44:58 +0200
+Message-ID: <20250110134515.8164-1-vadimp@nvidia.com>
+X-Mailer: git-send-email 2.44.0
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: rnnvmail203.nvidia.com (10.129.68.9) To
+ rnnvmail201.nvidia.com (10.129.68.8)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: SA2PEPF00003AEB:EE_|DM4PR12MB7597:EE_
+X-MS-Office365-Filtering-Correlation-Id: 0a69ed3a-9dbe-4a40-7f8c-08dd317d16c5
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|36860700013|82310400026|1800799024|376014;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?Mm1xMFY4Y3ZBalFsaDRzN2IyUHUzdEphdVRPcEVaeVVWVFVQVU5SeVlaMHVi?=
+ =?utf-8?B?ODQ4MmdYc09IT0pMb0htZ21vSGlOZXNPTHBySTRiOUZzUmJINVFMZUZuODdn?=
+ =?utf-8?B?dmNIOTBiZ0xNL1phd0laR3ZLMEJHZytUUHpYelU3eWkvL2pwQ3BJejhSOENw?=
+ =?utf-8?B?N2lvYlZMMzg0TGJZYWhFYXErK3pGcVQ1QmtuSnUrbnlrZVlFZS9yWVVuNjc2?=
+ =?utf-8?B?Nm5ha2N5eE03Y3VIZnkrUG9TbGFnZkdtbzRRVDlLdUJETzY3aFpGazlSV1lh?=
+ =?utf-8?B?Vk55Vk9QVXRoMkdoQnhMd0o5eEVjVHk0Z0IvZkFLLzJ5aXk2UDdCUDc5YmRI?=
+ =?utf-8?B?NVFSMjJnd0RBbEZrNytkUC9meUtVaTNSQ3FER1p0bWgxbVJhL2MyTTNwR3VJ?=
+ =?utf-8?B?MUhyelRYK2h3bGxtTnVqanJmODgvS20xK2xJd2xKUXVuOEttYXBmaXBFNW80?=
+ =?utf-8?B?bk4wbDBTZHpCOWppV1JucFJyOWNJRDh2Q3hoQ0N6dXd3OWhXVGVkcUZGU1NR?=
+ =?utf-8?B?cldBN3N4U3ZkWmdseDBDTFcwb3RVUGFwWUhQZmRNWHdXTHN0WmpNVUF2V2hh?=
+ =?utf-8?B?djJTMEVCblA1UmxoMHRpSE0zbzVZZ1F1aVZ2QlQrYUJlRk8xZXJ4OEFoZ2FC?=
+ =?utf-8?B?SHpReUIxdnhpMUZpNHFNZGZWRHR3YUlVZFJZeVVTN1V5bHI3ajdHcXh0N01G?=
+ =?utf-8?B?eW5DVFI1WVQvVTNVdm5KQkt1azc5S1dWQzhtalpQbTE2TWhqT2g4UVJ2Y1Zz?=
+ =?utf-8?B?ZUk1TVVpTk9WRU9WVVZWc2VsZnhab2xqeXJodGN5U2x0bWhrSkZOTlF3azl3?=
+ =?utf-8?B?cWNFYlRSUDV1WENZTTN4QnZzMGZjdDNGRStWNVAwZTduSG9KSnJQSmNzWXpi?=
+ =?utf-8?B?dnR1QnN3MXRnOFJNa3oxSklFeDhhNEVWb2RJSDNxMXE5RUxjWVBIVFdDYUlF?=
+ =?utf-8?B?MzlVWmhDZzhtWlNTVFppVFNhKzFsOFlRZVB4anhoNUdaZHdMV2ZFbldzNmsw?=
+ =?utf-8?B?RmtMVFZTWXlaVmZDbU5RaXBGZnFWL3BPbU1XUFNLUERlRFVISXJENTVHcGQ5?=
+ =?utf-8?B?cDdJK2F2UUxBTFh6SFdWMmJMSzdxK2xnTmdLdTg5bnB0RzZRZkNpc1NPSnFl?=
+ =?utf-8?B?ZkR5NFUxTVFrVE0vR2xFZE9IT3Y2RzRhL2cvWE92dWo0L3crMlBzSHBuMFZv?=
+ =?utf-8?B?NnJwc0h6WFBmT3ZMODJZRThsV3pKVzdOYm0xNkxQTVkycjAzSjgzWGM0dlR2?=
+ =?utf-8?B?TWpoMmJ5aVc2SmFDZzY5ZXNyMlVDd3g5LzFkMmpPaVVlRjhKaTY0d3d1S2tU?=
+ =?utf-8?B?WE90YkdxNDJJcEdudjBOUWRtV1pvWk5mQTdybjhmMWFmU0JqeEMvdHVzbVpw?=
+ =?utf-8?B?SXZwQ3ZaYXRxSzkxYUpYdEpGeFhkTXViZ1hSeEo0c2d5VitES3ZGcThwOGVU?=
+ =?utf-8?B?QzE3RjJPYWh1S3JJai9GdVlJVVIzVGVLRXhsL0ZKMDY1RUFrckw5SjBiMUFh?=
+ =?utf-8?B?bHdDZTQrOFVLZWVZSW9ISlVpV3d5RkpOOER0TmFtMk1leUY0TTdxLzh5SVBr?=
+ =?utf-8?B?dy90M2JwbDVCVStJTGJOdVBlRzBybHVJOW91bllNcXQ2MTg4MVZFSVlReVhh?=
+ =?utf-8?B?WDRucm5DUG1PVkl2cDE3RHQ4bnJmaEZma3diTi9YcUlleU80NkpsRStNQU4w?=
+ =?utf-8?B?L3lTVndlOVhwTmd1dWxRT3B1RWFlZFR4TXFOTVBScWxKS3oyTGZ3VGpGRG42?=
+ =?utf-8?B?VXNSdEpXc3kzamkzdjVQUmFZTWVNcTR0QThScXpKQUNYY1NsYTErSzlvbjBM?=
+ =?utf-8?B?UkZwWVk4L21hVVJBQjJ4Vmh6VldnNWd1aWtwNGMrNEVudGxlNEs0OXNxd2pQ?=
+ =?utf-8?B?djBrZXpvSWllTnh6K1JXZmFmK1ZmL2NhUUZwU1FWSUlQWFVGWG5UUnhSN05R?=
+ =?utf-8?B?WE5aYm40OGdTQzNDcEpoNzBsc0UzNFlqdjk0ZXhldVpNRklBSGlBUjB3RE9K?=
+ =?utf-8?Q?saZqGC8V5PyvtEPvR0AFlvelEKtJ3w=3D?=
+X-Forefront-Antispam-Report:
+	CIP:216.228.117.160;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:dc6edge1.nvidia.com;CAT:NONE;SFS:(13230040)(36860700013)(82310400026)(1800799024)(376014);DIR:OUT;SFP:1101;
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 10 Jan 2025 13:45:47.7788
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 0a69ed3a-9dbe-4a40-7f8c-08dd317d16c5
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.117.160];Helo=[mail.nvidia.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	SA2PEPF00003AEB.namprd02.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM4PR12MB7597
 
-On Wed, 1 Jan 2025, Derek J. Clark wrote:
+The patchset contains:
+Patch #1: Relocation mlx-platform driver.
+Patch #2: Add cosmetic changes - removing spaces.
+Patch #3: Repurposing of one register.
+Patches #4 - #5: Add new field.
+Patches #6- #9: Introduce systems: new SN428 smart switch equipped with
+	DPU for offloading, new 2U systems SN5610 and SN5640, new compact
+	system SN2200 OCP rack complained.
+Patch #10 - Add documentation.
+Patch #11 - Modify MAINTANER list after relocation of mlx-platform.
 
-> Adds lenovo-wmi-gamezone.c which provides a driver for the Lenovo
-> GameZone WMI interface that comes on Lenovo "Gaming Series" hardware.
-> Provides ACPI platform profiles over WMI.
-> 
-> v2:
-> - Use devm_kzalloc to ensure driver can be instanced, remove global
->   reference.
-> - Ensure reverse Christmas tree for all variable declarations.
-> - Remove extra whitespace.
-> - Use guard(mutex) in all mutex instances, global mutex.
-> - Use pr_fmt instead of adding the driver name to each pr_err.
-> - Remove noisy pr_info usage.
-> - Rename gamezone_wmi to lenovo_wmi_gz_priv and gz_wmi to priv.
-> - Remove GZ_WMI symbol exporting.
-> 
-> Signed-off-by: Derek J. Clark <derekjohn.clark@gmail.com>
-> ---
->  MAINTAINERS                                |   7 +
->  drivers/platform/x86/Kconfig               |  11 ++
->  drivers/platform/x86/Makefile              |   1 +
->  drivers/platform/x86/lenovo-wmi-gamezone.c | 203 +++++++++++++++++++++
->  drivers/platform/x86/lenovo-wmi.h          | 105 +++++++++++
->  5 files changed, 327 insertions(+)
->  create mode 100644 drivers/platform/x86/lenovo-wmi-gamezone.c
->  create mode 100644 drivers/platform/x86/lenovo-wmi.h
-> 
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index baf0eeb9a355..8f8a6aec6b92 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -13034,6 +13034,13 @@ S:	Maintained
->  W:	http://legousb.sourceforge.net/
->  F:	drivers/usb/misc/legousbtower.c
->  
-> +LENOVO WMI drivers
-> +M:	Derek J. Clark <derekjohn.clark@gmail.com>
-> +L:	platform-driver-x86@vger.kernel.org
-> +S:	Maintained
-> +F:	drivers/platform/x86/lenovo-wmi-gamezone.c
-> +F:	drivers/platform/x86/lenovo-wmi.h
-> +
->  LETSKETCH HID TABLET DRIVER
->  M:	Hans de Goede <hdegoede@redhat.com>
->  L:	linux-input@vger.kernel.org
-> diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
-> index 0258dd879d64..9a6ac7fdec9f 100644
-> --- a/drivers/platform/x86/Kconfig
-> +++ b/drivers/platform/x86/Kconfig
-> @@ -459,6 +459,17 @@ config IBM_RTL
->  	 state = 0 (BIOS SMIs on)
->  	 state = 1 (BIOS SMIs off)
->  
-> +config LENOVO_WMI_GAMEZONE
-> +	tristate "Lenovo GameZone WMI Driver"
-> +	depends on ACPI_WMI
-> +	select ACPI_PLATFORM_PROFILE
-> +	help
-> +	  Say Y here if you have a WMI aware Lenovo Legion device and would like to use the
-> +	  platform-profile firmware interface.
-> +
-> +	  To compile this driver as a module, choose M here: the module will
-> +	  be called lenovo_wmi_gamezone.
-> +
->  config IDEAPAD_LAPTOP
->  	tristate "Lenovo IdeaPad Laptop Extras"
->  	depends on ACPI
-> diff --git a/drivers/platform/x86/Makefile b/drivers/platform/x86/Makefile
-> index e1b142947067..7cb29a480ed2 100644
-> --- a/drivers/platform/x86/Makefile
-> +++ b/drivers/platform/x86/Makefile
-> @@ -68,6 +68,7 @@ obj-$(CONFIG_THINKPAD_LMI)	+= think-lmi.o
->  obj-$(CONFIG_YOGABOOK)		+= lenovo-yogabook.o
->  obj-$(CONFIG_YT2_1380)		+= lenovo-yoga-tab2-pro-1380-fastcharger.o
->  obj-$(CONFIG_LENOVO_WMI_CAMERA)	+= lenovo-wmi-camera.o
-> +obj-$(CONFIG_LENOVO_WMI_GAMEZONE)	+= lenovo-wmi-gamezone.o
->  
->  # Intel
->  obj-y				+= intel/
-> diff --git a/drivers/platform/x86/lenovo-wmi-gamezone.c b/drivers/platform/x86/lenovo-wmi-gamezone.c
-> new file mode 100644
-> index 000000000000..da5e2bc41f39
-> --- /dev/null
-> +++ b/drivers/platform/x86/lenovo-wmi-gamezone.c
-> @@ -0,0 +1,203 @@
-> +// SPDX-License-Identifier: GPL-2.0-or-later
-> +/*
-> + * Lenovo GameZone WMI interface driver. The GameZone WMI interface provides
-> + * platform profile and fan curve settings for devices that fall under the
-> + * "Gaming Series" of Lenovo Legion devices.
-> + *
-> + * Copyright(C) 2024 Derek J. Clark <derekjohn.clark@gmail.com>
-> + */
-> +
-> +#include <linux/platform_profile.h>
-> +#include "lenovo-wmi.h"
-> +
-> +#define LENOVO_GAMEZONE_GUID "887B54E3-DDDC-4B2C-8B88-68A26A8835D0"
-> +
-> +/* Method IDs */
-> +#define WMI_METHOD_ID_SMARTFAN_SUPP 43 /* IsSupportSmartFan */
-> +#define WMI_METHOD_ID_SMARTFAN_SET 44 /* SetSmartFanMode */
-> +#define WMI_METHOD_ID_SMARTFAN_GET 45 /* GetSmartFanMode */
-> +
-> +static DEFINE_MUTEX(call_mutex);
-> +
-> +static const struct wmi_device_id lenovo_wmi_gamezone_id_table[] = {
-> +	{ LENOVO_GAMEZONE_GUID, NULL }, /* LENOVO_GAMEZONE_DATA */
-> +	{}
-> +};
-> +
-> +struct lenovo_wmi_gz_priv {
-> +	struct wmi_device *wdev;
-> +	enum platform_profile_option current_profile;
-> +	struct platform_profile_handler pprof;
-> +	bool platform_profile_support;
-> +};
-> +
-> +/* Platform Profile Methods */
-> +static int lenovo_wmi_gamezone_platform_profile_supported(
-> +	struct platform_profile_handler *pprof, int *supported)
-> +{
-> +	struct lenovo_wmi_gz_priv *priv;
-> +
-> +	priv = container_of(pprof, struct lenovo_wmi_gz_priv, pprof);
-> +
-> +	guard(mutex)(&call_mutex);
-> +	return lenovo_wmidev_evaluate_method_1(
-> +		priv->wdev, 0x0, WMI_METHOD_ID_SMARTFAN_SUPP, 0, supported);
-> +}
-> +
-> +static int
-> +lenovo_wmi_gamezone_profile_get(struct platform_profile_handler *pprof,
-> +				enum platform_profile_option *profile)
-> +{
-> +	struct lenovo_wmi_gz_priv *priv;
-> +	int sel_prof;
-> +	int err;
-> +
-> +	priv = container_of(pprof, struct lenovo_wmi_gz_priv, pprof);
-> +
-> +	guard(mutex)(&call_mutex);
-> +	err = lenovo_wmidev_evaluate_method_1(
-> +		priv->wdev, 0x0, WMI_METHOD_ID_SMARTFAN_GET, 0, &sel_prof);
-> +	if (err) {
-> +		pr_err("Error getting fan profile from WMI interface: %d\n",
-> +		       err);
-> +		return err;
-> +	}
-> +
-> +	switch (sel_prof) {
-> +	case SMARTFAN_MODE_QUIET:
-> +		*profile = PLATFORM_PROFILE_QUIET;
-> +		break;
-> +	case SMARTFAN_MODE_BALANCED:
-> +		*profile = PLATFORM_PROFILE_BALANCED;
-> +		break;
-> +	case SMARTFAN_MODE_PERFORMANCE:
-> +		*profile = PLATFORM_PROFILE_PERFORMANCE;
-> +		break;
-> +	case SMARTFAN_MODE_CUSTOM:
-> +		*profile = PLATFORM_PROFILE_CUSTOM;
-> +		break;
-> +	default:
-> +		return -EINVAL;
-> +	}
-> +	priv->current_profile = *profile;
-> +
-> +	return 0;
-> +}
-> +
-> +static int
-> +lenovo_wmi_gamezone_profile_set(struct platform_profile_handler *pprof,
-> +				enum platform_profile_option profile)
-> +{
-> +	struct lenovo_wmi_gz_priv *priv;
-> +	int sel_prof;
-> +	int err;
-> +
-> +	switch (profile) {
-> +	case PLATFORM_PROFILE_QUIET:
-> +		sel_prof = SMARTFAN_MODE_QUIET;
-> +		break;
-> +	case PLATFORM_PROFILE_BALANCED:
-> +		sel_prof = SMARTFAN_MODE_BALANCED;
-> +		break;
-> +	case PLATFORM_PROFILE_PERFORMANCE:
-> +		sel_prof = SMARTFAN_MODE_PERFORMANCE;
-> +		break;
-> +	case PLATFORM_PROFILE_CUSTOM:
-> +		sel_prof = SMARTFAN_MODE_CUSTOM;
-> +		break;
-> +	default:
-> +		return -EOPNOTSUPP;
-> +	}
-> +
-> +	priv = container_of(pprof, struct lenovo_wmi_gz_priv, pprof);
-> +
-> +	guard(mutex)(&call_mutex);
-> +	err = lenovo_wmidev_evaluate_method_1(
-> +		priv->wdev, 0x0, WMI_METHOD_ID_SMARTFAN_SET, sel_prof, NULL);
-> +	if (err) {
-> +		pr_err("Error setting fan profile on WMI interface: %u\n", err);
-> +		return err;
-> +	}
-> +
-> +	priv->current_profile = profile;
-> +	return 0;
-> +}
-> +
-> +/* Driver Setup */
-> +static int platform_profile_setup(struct lenovo_wmi_gz_priv *priv)
-> +{
-> +	int supported;
-> +	int err;
-> +
-> +	err = lenovo_wmi_gamezone_platform_profile_supported(&priv->pprof,
-> +							     &supported);
-> +	if (err) {
-> +		pr_err("Error checking platform profile support: %d\n", err);
-> +		return err;
-> +	}
-> +
-> +	priv->platform_profile_support = supported;
-> +
-> +	if (!supported)
-> +		return -EOPNOTSUPP;
-> +
-> +	priv->pprof.name = "lenovo-wmi-gamezone";
-> +	priv->pprof.profile_get = lenovo_wmi_gamezone_profile_get;
-> +	priv->pprof.profile_set = lenovo_wmi_gamezone_profile_set;
-> +
-> +	set_bit(PLATFORM_PROFILE_QUIET, priv->pprof.choices);
-> +	set_bit(PLATFORM_PROFILE_BALANCED, priv->pprof.choices);
-> +	set_bit(PLATFORM_PROFILE_PERFORMANCE, priv->pprof.choices);
-> +	set_bit(PLATFORM_PROFILE_CUSTOM, priv->pprof.choices);
-> +
-> +	err = lenovo_wmi_gamezone_profile_get(&priv->pprof,
-> +					      &priv->current_profile);
-> +	if (err) {
-> +		pr_err("Error getting current platform profile: %d\n", err);
-> +		return err;
-> +	}
-> +
-> +	guard(mutex)(&call_mutex);
-> +	err = platform_profile_register(&priv->pprof);
-> +	if (err) {
-> +		pr_err("Error registering platform profile: %d\n", err);
-> +		return err;
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +static int lenovo_wmi_gamezone_probe(struct wmi_device *wdev,
-> +				     const void *context)
-> +{
-> +	struct lenovo_wmi_gz_priv *priv;
-> +
-> +	priv = devm_kzalloc(&wdev->dev, sizeof(*priv), GFP_KERNEL);
-> +	if (!priv)
-> +		return -ENOMEM;
-> +
-> +	priv->wdev = wdev;
-> +	return platform_profile_setup(priv);
-> +}
-> +
-> +static void lenovo_wmi_gamezone_remove(struct wmi_device *wdev)
-> +{
-> +	struct lenovo_wmi_gz_priv *priv = dev_get_drvdata(&wdev->dev);
-> +
-> +	guard(mutex)(&call_mutex);
-> +	platform_profile_remove(&priv->pprof);
-> +}
-> +
-> +static struct wmi_driver lenovo_wmi_gamezone_driver = {
-> +	.driver = { .name = "lenovo_wmi_gamezone" },
-> +	.id_table = lenovo_wmi_gamezone_id_table,
-> +	.probe = lenovo_wmi_gamezone_probe,
-> +	.remove = lenovo_wmi_gamezone_remove,
-> +};
-> +
-> +module_wmi_driver(lenovo_wmi_gamezone_driver);
-> +
-> +MODULE_DEVICE_TABLE(wmi, lenovo_wmi_gamezone_id_table);
-> +MODULE_AUTHOR("Derek J. Clark <derekjohn.clark@gmail.com>");
-> +MODULE_DESCRIPTION("Lenovo GameZone WMI Driver");
-> +MODULE_LICENSE("GPL");
-> diff --git a/drivers/platform/x86/lenovo-wmi.h b/drivers/platform/x86/lenovo-wmi.h
-> new file mode 100644
-> index 000000000000..8a302c6c47cb
-> --- /dev/null
-> +++ b/drivers/platform/x86/lenovo-wmi.h
-> @@ -0,0 +1,105 @@
-> +/* SPDX-License-Identifier: GPL-2.0-or-later
-> + *
-> + * Lenovo Legion WMI interface driver. The Lenovo Legion WMI interface is
-> + * broken up into multiple GUID interfaces that require cross-references
-> + * between GUID's for some functionality. The "Custom Mode" interface is a
-> + * legacy interface for managing and displaying CPU & GPU power and hwmon
-> + * settings and readings. The "Other Mode" interface is a modern interface
-> + * that replaces or extends the "Custom Mode" interface methods. The
-> + * "GameZone" interface adds advanced features such as fan profiles and
-> + * overclocking. The "Lighting" interface adds control of various status
-> + * lights related to different hardware components. "Other Method" uses
-> + * the data structs LENOVO_CAPABILITY_DATA_00, LENOVO_CAPABILITY_DATA_01
-> + * and LENOVO_CAPABILITY_DATA_02 structs for capability information.
-> + *
-> + * Copyright(C) 2024 Derek J. Clark <derekjohn.clark@gmail.com>
-> + *
-> + */
-> +
-> +#define pr_fmt(fmt) "%s:%s: " fmt, KBUILD_MODNAME, __func__
+Vadim Pasternak (11):
+  mellanox: Relocate mlx-platform driver
+  platform: mellanox: mlx-platform: Cosmetic changes
+  platform: mellanox: mlx-platform: Change register name
+  platform_data/mlxreg: Add capability bit and mask fields
+  platform/mellanox: mlxreg-hotplug: Add support for new flavor of
+    capability registers
+  platform/mellanox: mlxreg-dpu: Add initial support for Nvidia DPU
+  platform: mellanox: Introduce support of Nvidia smart switch
+  platform: mellanox: mlx-platform: Add support for new Nvidia system
+  platform: mellanox: nvsw-sn2200: Add support for new system flavour
+  Documentation/ABI: Add new attribute for mlxreg-io sysfs interfaces
+  MAINTAINERS: Remove MELLANOX PLATFORM DRIVER item
 
-Don't include __func__ into pr_fmt(). Including __func__ into any >dbg 
-level message is not helpful to user, the error/warning/info should be 
-written in plain English, not in terms of code/function names.
-
-The usual pr_fmt() boilerplate is this:
-
-#define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
+ .../ABI/stable/sysfs-driver-mlxreg-io         |   96 +
+ MAINTAINERS                                   |    7 +-
+ drivers/platform/mellanox/Kconfig             |   25 +
+ drivers/platform/mellanox/Makefile            |    2 +
+ .../platform/{x86 => mellanox}/mlx-platform.c | 3665 ++++++++++++-----
+ drivers/platform/mellanox/mlxreg-dpu.c        |  622 +++
+ drivers/platform/mellanox/mlxreg-hotplug.c    |   23 +-
+ drivers/platform/mellanox/nvsw-sn2201.c       |  110 +-
+ drivers/platform/x86/Kconfig                  |   13 -
+ drivers/platform/x86/Makefile                 |    1 -
+ include/linux/platform_data/mlxreg.h          |    8 +
+ 11 files changed, 3490 insertions(+), 1082 deletions(-)
+ rename drivers/platform/{x86 => mellanox}/mlx-platform.c (81%)
+ create mode 100644 drivers/platform/mellanox/mlxreg-dpu.c
 
 -- 
- i.
+2.44.0
 
-> +
-> +#ifndef _LENOVO_WMI_H_
-> +#define _LENOVO_WMI_H_
-> +
-> +#include <linux/mutex.h>
-> +#include <linux/types.h>
-> +#include <linux/wmi.h>
-> +
-> +/* Platform Profile Modes */
-> +#define SMARTFAN_MODE_QUIET 0x01
-> +#define SMARTFAN_MODE_BALANCED 0x02
-> +#define SMARTFAN_MODE_PERFORMANCE 0x03
-> +#define SMARTFAN_MODE_CUSTOM 0xFF
-> +
-> +struct wmi_method_args {
-> +	u32 arg0;
-> +	u32 arg1;
-> +};
-> +
-> +/* General Use functions */
-> +static int lenovo_wmidev_evaluate_method(struct wmi_device *wdev, u8 instance,
-> +					 u32 method_id, struct acpi_buffer *in,
-> +					 struct acpi_buffer *out)
-> +{
-> +	acpi_status status;
-> +
-> +	status = wmidev_evaluate_method(wdev, instance, method_id, in, out);
-> +
-> +	if (ACPI_FAILURE(status))
-> +		return -EIO;
-> +
-> +	return 0;
-> +};
-> +
-> +int lenovo_wmidev_evaluate_method_2(struct wmi_device *wdev, u8 instance,
-> +				    u32 method_id, u32 arg0, u32 arg1,
-> +				    u32 *retval);
-> +
-> +int lenovo_wmidev_evaluate_method_2(struct wmi_device *wdev, u8 instance,
-> +				    u32 method_id, u32 arg0, u32 arg1,
-> +				    u32 *retval)
-> +{
-> +	struct wmi_method_args args = { arg0, arg1 };
-> +	struct acpi_buffer input = { (acpi_size)sizeof(args), &args };
-> +	struct acpi_buffer output = { ACPI_ALLOCATE_BUFFER, NULL };
-> +	union acpi_object *ret_obj = NULL;
-> +	int err;
-> +
-> +	err = lenovo_wmidev_evaluate_method(wdev, instance, method_id, &input,
-> +					    &output);
-> +
-> +	if (err) {
-> +		pr_err("Attempt to get method value failed.\n");
-> +		return err;
-> +	}
-> +
-> +	if (retval) {
-> +		ret_obj = (union acpi_object *)output.pointer;
-> +		if (!ret_obj) {
-> +			pr_err("Failed to get valid ACPI object from WMI interface\n");
-> +			return -EIO;
-> +		}
-> +		if (ret_obj->type != ACPI_TYPE_INTEGER) {
-> +			pr_err("WMI query returnd ACPI object with wrong type.\n");
-> +			kfree(ret_obj);
-> +			return -EIO;
-> +		}
-> +		*retval = (u32)ret_obj->integer.value;
-> +	}
-> +
-> +	kfree(ret_obj);
-> +
-> +	return 0;
-> +}
-> +
-> +int lenovo_wmidev_evaluate_method_1(struct wmi_device *wdev, u8 instance,
-> +				    u32 method_id, u32 arg0, u32 *retval);
-> +
-> +int lenovo_wmidev_evaluate_method_1(struct wmi_device *wdev, u8 instance,
-> +				    u32 method_id, u32 arg0, u32 *retval)
-> +{
-> +	return lenovo_wmidev_evaluate_method_2(wdev, instance, method_id, arg0,
-> +					       0, retval);
-> +}
-> +
-> +#endif /* !_LENOVO_WMI_H_ */
-> 
