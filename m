@@ -1,190 +1,359 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qk1-f181.google.com (mail-qk1-f181.google.com [209.85.222.181])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A0EFD20A5C8;
-	Fri, 10 Jan 2025 21:45:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D7608206F38;
+	Fri, 10 Jan 2025 21:53:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736545517; cv=none; b=AGOoWhkaZot98QWy+E9gzAr8SoAYZTqNlQeywekB2DPLEVwAEuyZYSRKyN9prOqmNaMMRJ/e2Q0U8xonAsOyULnrmtQ9WYLaoeeH5kWsF08SfzA4mDnwoOZejzHMWO9MqFRAwsOtAYvmj9pYMfQ+OEvRkYi+38isYNBXdZ0KftA=
+	t=1736545988; cv=none; b=fopNcSMoDLCfwYkvecxaFPNIvF3/DeTRTG7/y44k4CXUw0gx5rC3SR/ucThW3lsUJ7XycTFSTh0/hlsDQc2kn8Z7x7qGVJ18IzrAfgRCxKLYDvACYjfkAh2FB1qlMAeRh2jeFQ3kbbDWWxE3jm/V3t0FCmDoRMgfkvQzcqd09Oc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736545517; c=relaxed/simple;
-	bh=xJ9ceeeueJluSqw8A81wHH2lzb+kbQCceW1Q4h1ZH1Y=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Vw7aXA9+fngT7dBY77GZbDsP1KnJcQtOxkESvmcVpUP1widLqsy1wxZuU9DyQaijo1EFKrddTKnpkjWz6cYyAHC5gf+x1g4AdovWNOY/RZ3SzkTURCa2+1FRqyb2Xlu5Sp6FiiUR2hq6ZFNhu2GBd3rNuDIGaF1w/ObaT4nvqN0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=TM+4UqQE; arc=none smtp.client-ip=192.198.163.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1736545988; c=relaxed/simple;
+	bh=wjUMlN5z1ClIjldHeEDLxT+KgbS/iouFcX/YWQZHqO8=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=EWtwkYDpXdktnKBceGV7LKATq4maFqyz7KdCfR7aP8WUADaB0wd2voe78XL9TV58jAN8PJ57LhX94ChqFjh7nA8QS5NT4gLvZdEXYDpyQt7+RpeSR0/28HgC4hGmVnt62HYxCCpsla6OKnhGcas1HOkofZ22KSfJ07IklB3UOPs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=nChrLjO6; arc=none smtp.client-ip=209.85.222.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="TM+4UqQE"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1736545515; x=1768081515;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=xJ9ceeeueJluSqw8A81wHH2lzb+kbQCceW1Q4h1ZH1Y=;
-  b=TM+4UqQECH0JkDC1knHYhs7xXNxYldiXKL/rkmcOzNtBLIFmxTnp/Wmo
-   x6ya+LC4QPWCem6bOP1jRH5fVIAXb+juSJq4gvb+LZAiwOct3gmPfyxOb
-   xtzCUOkGEbUNNTUQtepsyQ+skf6GRup2TI4IoEPKA7E3DFV5qjAZNUsDn
-   Awkfk9e9ewvEPXZiMAoFH7Y0IQ0q9rmFZ5X+px5PH/RqmesUXdE10gY+J
-   w4ilbKUiLJN+QvXS15OUtYdqKu911ZWg9Qdh5r+s8bzD1G1r/A4OmBMu8
-   d1PK44SZ9GPrfcK9DCMklVeU3b7eq74xtGFExsKIqyLB0HkpjYG+TdsS3
-   Q==;
-X-CSE-ConnectionGUID: 2/DYJ1ZUQqe6ipfXWduLoA==
-X-CSE-MsgGUID: IFtC5L9lSa+mmkrkOP/X8A==
-X-IronPort-AV: E=McAfee;i="6700,10204,11311"; a="24460188"
-X-IronPort-AV: E=Sophos;i="6.12,305,1728975600"; 
-   d="scan'208";a="24460188"
-Received: from fmviesa002.fm.intel.com ([10.60.135.142])
-  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Jan 2025 13:45:13 -0800
-X-CSE-ConnectionGUID: HramPdvaShmQkYBvamrh9Q==
-X-CSE-MsgGUID: ZRGQhrpJRAWJ07uqz520og==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
-   d="scan'208";a="127134376"
-Received: from lkp-server01.sh.intel.com (HELO d63d4d77d921) ([10.239.97.150])
-  by fmviesa002.fm.intel.com with ESMTP; 10 Jan 2025 13:45:11 -0800
-Received: from kbuild by d63d4d77d921 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1tWMoX-000JmR-0N;
-	Fri, 10 Jan 2025 21:45:09 +0000
-Date: Sat, 11 Jan 2025 05:44:36 +0800
-From: kernel test robot <lkp@intel.com>
-To: Joshua Grisham <josh@joshuagrisham.com>, W_Armin@gmx.de,
-	thomas@t-8ch.de, kuurtb@gmail.com, ilpo.jarvinen@linux.intel.com,
-	hdegoede@redhat.com, platform-driver-x86@vger.kernel.org,
-	corbet@lwn.net, linux-doc@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: oe-kbuild-all@lists.linux.dev, Joshua Grisham <josh@joshuagrisham.com>
-Subject: Re: [PATCH v5] platform/x86: samsung-galaxybook: Add
- samsung-galaxybook driver
-Message-ID: <202501110509.FukyduTN-lkp@intel.com>
-References: <20250109220745.69977-1-josh@joshuagrisham.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nChrLjO6"
+Received: by mail-qk1-f181.google.com with SMTP id af79cd13be357-7bcf32a6582so7127385a.1;
+        Fri, 10 Jan 2025 13:53:06 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1736545986; x=1737150786; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=vQ5lYVSzY9mcd2ROq6Y8lJmDwYx1FuWpq+hscmWvjTM=;
+        b=nChrLjO6Mxfqon3fmdnZTVGe3GAf6VU4nlAQO4cFFasNnF7gPX9sdtGkJsP01qRM5f
+         naomR/NuX3aLmGY1hJEV0NkgNnjVaUI0Q2MPg2jPK5KXQKGM9YBuz9y15seqF1TIFjWx
+         KdyhStiL1TZ1WTXaQIAg3/XHe/Pz/tgNnFy617/3NdGf+7+rDzpN25X/VpXAOOEgZQOg
+         nSWCNQkaKhws3YwXXUQip9NVKQIHZ2AUsz89xUxJILF3/C3G2tQM3SXcpZUq1MeYCz+P
+         ZHkH2WJgtyAnPlLaIRY68daNKQoLOqoZT2xEsw8jTLSNNYIrUA27FGTgo3lRE0FvIQAW
+         tSEw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1736545986; x=1737150786;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=vQ5lYVSzY9mcd2ROq6Y8lJmDwYx1FuWpq+hscmWvjTM=;
+        b=L9mIGBi9+c1RHWOIVts+ibRd+qugJg6OK836ZJnRsjAU+MePzORftmKnl1nED4pih6
+         xm6ELghOLfeADw2a9+UB7Q88/6/isqNYKI/GsXYCWwiRHk9FDWmBHq1h8Si5BNKNmIj7
+         ty/Mqe2KvI6UpDxasBFwJQrG/nOwu59OjURLRuqP7HRDb/u9Wkk5OSe/LBWM1PPI5Jzh
+         yJ8HcBmPxvAU7+Xx0zuSurofX8Bx2GI+8n8Dw3/7sluwDk/90/FiKlV2hkNu+DCeYgZd
+         ywV+ML+Zkxgl3uyqISJDBI84/UYCfd599AVHb+7HI3mva5D6TF6z1rDVm8Lj1yBeGusE
+         c/bw==
+X-Forwarded-Encrypted: i=1; AJvYcCUx7zDN/wCfBzcJVgpDzx6xRYFkzk1wsUWwApzj6ZiS5V/JFVZUQeFncE1qL4bjL9ewUHz0FEaxiA4XsGjaYVePfy19sg==@vger.kernel.org, AJvYcCVEWXOwcD4czsgWFQezpZX6eeNNNcw/zwU8OePilJhp42ByWvM4D2FtsekSBfABxkee864OQbYaQ6Q=@vger.kernel.org, AJvYcCWJMZyBxzI02kWHME6d9EuLtmWQRIXb/f7H55AGA/j5Wc/+axU97nuKKntlxA687llWimfR7X/7Fs2Ju1JR@vger.kernel.org
+X-Gm-Message-State: AOJu0YwFLlh+6FieHEY0hSnMAiOFORIo/2dKjdW354uiHYQQPFCFZ02Q
+	cuFDxEGmIpJdHT8/5rAXORnZEQW9WaD58dqcBcMFvNqOHaT+EEVZ/1qNsg/RyRKYAfnYU90+9ys
+	NalZRQ+9REMLrkV5F8+U+oBgH4So=
+X-Gm-Gg: ASbGncsWuCt0/Y1e2NAHOgCjYOgiHN1DLmQ0wlBU6zOL4BWFmKY7fpzorkfD2HFM7eL
+	EQyxiiN+6sdffdac4rlE/zVd5Om55AEnq3tbH/kQ=
+X-Google-Smtp-Source: AGHT+IFkabY8O0/mgVgFehIYzi0rTEu2f9sPZT8TiICX3xypF1URg2sqXe45ys6MA1SNDSIVn5ZAeJ6lNqzuXxocEUc=
+X-Received: by 2002:a05:620a:2916:b0:7ac:c348:6a52 with SMTP id
+ af79cd13be357-7bcd97a1e92mr1530539385a.34.1736545985561; Fri, 10 Jan 2025
+ 13:53:05 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250109220745.69977-1-josh@joshuagrisham.com>
+References: <20250102004854.14874-1-derekjohn.clark@gmail.com>
+ <dc5375fb-1e2e-42b9-9174-3f4a70d914e7@kernel.org> <CAFqHKTkRhaci86qBE4Zc+EeV47T22y8fuesjWN_3WzFTuEnOPg@mail.gmail.com>
+ <c29e64fd-8e9c-4179-806e-db516576a153@gmx.de>
+In-Reply-To: <c29e64fd-8e9c-4179-806e-db516576a153@gmx.de>
+From: Derek John Clark <derekjohn.clark@gmail.com>
+Date: Fri, 10 Jan 2025 13:52:54 -0800
+X-Gm-Features: AbW1kvaBSBtog4kh5UA3G9lMLylrHaLkjytK5H5tQiGV7wLarrYoTzoOJcMqM-U
+Message-ID: <CAFqHKTmJKdZV2unLAZjRGSdjE5mB7H5ONuF2wfC9dnuFJ0R16g@mail.gmail.com>
+Subject: Re: [PATCH v2 0/4] platform/x86: Add Lenovo Gaming Series WMI Drivers
+To: Armin Wolf <W_Armin@gmx.de>
+Cc: Mario Limonciello <superm1@kernel.org>, Hans de Goede <hdegoede@redhat.com>, 
+	=?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, 
+	Jonathan Corbet <corbet@lwn.net>, Luke Jones <luke@ljones.dev>, Xino Ni <nijs1@lenovo.com>, 
+	Zhixin Zhang <zhangzx36@lenovo.com>, Mia Shao <shaohz1@lenovo.com>, 
+	Mark Pearson <mpearson-lenovo@squebb.ca>, 
+	"Pierre-Loup A . Griffais" <pgriffais@valvesoftware.com>, "Cody T . -H . Chiu" <codyit@gmail.com>, 
+	John Martens <johnfanv2@gmail.com>, platform-driver-x86@vger.kernel.org, 
+	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi Joshua,
+On Thu, Jan 9, 2025 at 3:20=E2=80=AFPM Armin Wolf <W_Armin@gmx.de> wrote:
+>
+> Am 02.01.25 um 19:27 schrieb Derek John Clark:
+>
+> > On Wed, Jan 1, 2025 at 8:01=E2=80=AFPM Mario Limonciello <superm1@kerne=
+l.org> wrote:
+> >>
+> >>
+> >> On 1/1/25 18:47, Derek J. Clark wrote:
+> >>> Adds support for the Lenovo "Gaming Series" of laptop hardware that u=
+se
+> >>> WMI interfaces that control various power settings. There are multipl=
+e WMI
+> >>> interfaces that work in concert to provide getting and setting values=
+ as
+> >>> well as validation of input. Currently only the "GameZone", "Other
+> >>> Mode", and "LENOVO_CAPABILITY_DATA_01" interfaces are implemented, bu=
+t
+> >>> I attempted to structure the driver so that adding the "Custom Mode",
+> >>> "Lighting", and other data block interfaces would be trivial in a lat=
+er
+> >>> patches.
+> >>>
+> >>> This driver is distinct from, but should be considered a replacement =
+for
+> >>> this patch:
+> >>> https://lore.kernel.org/all/20241118100503.14228-1-jonmail@163.com/
+> >>>
+> >>> This driver attempts to standardize the exposed sysfs by mirroring th=
+e
+> >>> asus-armoury driver currently under review. As such, a lot of
+> >>> inspiration has been drawn from that driver.
+> >>> https://lore.kernel.org/all/20240930000046.51388-1-luke@ljones.dev/
+> >>>
+> >>> The drivers have been tested by me on the Lenovo Legion Go.
+> >>>
+> >>> v2:
+> >>> - Broke up initial patch into a 4 patch series.
+> >>> - Removed all references to "Legion" in documentation, Kconfig,
+> >>>     driver structs, functions, etc. Everything now refers either to t=
+he
+> >>>     interface being used or the Lenovo "Gaming Series" of laptop hard=
+ware.
+> >>> - Fixed all Acked changes requested by Mario and Armin.
+> >>> - Capability Data is now cached before kset creation for each attribu=
+te.
+> >>>     If the lenovo-wmi-capdata01 interface is not present, fails to gr=
+ab
+> >>>     valid data, doesn't include the requested attribute id page, or t=
+he
+> >>>     data block indicates the attribute is not supported, the attribut=
+e will
+> >>>     not be created in sysfs.
+> >>> - The sysfs path for the firmware-attributes class was moved from
+> >>>     lenovo-legion-wmi to lenovo-wmi-other.
+> >>>
+> >>> - The Other Mode WMI interface no longer relies on gamezone as
+> >>>     discussed. However; this creates a problem that should be discuss=
+ed
+> >>>     here. The current_value attribute is now only accurate when the
+> >>>     "custom" profile is set on the device. Previously it would report=
+ the
+> >>>     value from the Capability Data 01 instance related to the current=
+ly
+> >>>     selected profile, which reported an accurate accounting of the cu=
+rrent
+> >>>     system state in all cases. I submitted this as-is since we discus=
+sed
+> >>>     removing that dependency, but I am not a fan of the current_value
+> >>>     attribute being incorrect for 3 of the 4 available profiles, espe=
+cially
+> >>>     when the data is available. There is also no way to -ENOTSUPP or
+> >>>     similar when not in custom mode as that would also require us to =
+know
+> >>>     the state of the gamezone interface. What I would prefer to do wo=
+uld be
+> >>>     to make the gamezone interface optional by treating custom as the
+> >>>     default mode in the current_value functions, then only update the=
+ mode
+> >>>     if a callback to get the current fan profile is a success. That w=
+ay the
+> >>>     logic will work with or without the GameZone interface, but it wi=
+ll be
+> >>>     greatly improved if it is present.
+> >>>
+> >> I agree there needs to be /some/ sort of dependency.
+> >> One thing I was thinking you could do is use:
+> >>
+> >> wmi_has_guid() to tell whether or not the "GZ" interface is even prese=
+nt
+> >> from the "Other" driver.  Move the GUID for the GZ interface into a
+> >> common header both drivers include.
+> >>
+> >> However that only helps in the case of a system that supports custom b=
+ut
+> >> not GZ.  I think you still will need some sort of symbol to either get=
+ a
+> >> pointer to the platform profile class or tell if the profile for the
+> >> driver is set to custom.
+> >>
+> >> I personally don't see a problem with a simple symbol like this:
+> >>
+> >> bool lenovo_wmi_gamezone_is_custom(void);
+> >>
+> >> You could then have your logic in all the store and show call a helper
+> >> something like this:
+> >>
+> >> static bool lenovo_wmi_custom_mode() {
+> >>          if (!wmi_has_guid(GZ_GUID)
+> >>                  return true;
+> >>
+> >>          if (!IS_REACHABLE(CONFIG_LENOVO_WMI_GAMEZONE))
+> >>                  return true;
+> >>
+> >>          return lenovo_wmi_gamezone_is_custom();
+> >> }
+> > I agree with checking wmi_has_guid() before calling anything across
+> > interfaces.
+>
+> Please do not use wmi_has_guid() for this as WMI devices can disappear
+> at any time.
+>
+> > As far as using a bool to determine if we are in custom,
+> > that seems to me like that would be a half measure. Since we would be
+> > calling across interfaces anyway there is a benefit to getting the
+> > full scope, where knowing only if we are in custom or not would just
+> > add the ability to exit early. What I would prefer is knowing the
+> > specific state of the hardware as it will allow me to call the
+> > specific method ID as related to the current profile. I'll elaborate a
+> > bit on what I mean.
+> >
+> > Each attribute ID corresponds to a specific fan profile mode for a
+> > specific attribute. It is used as both the data block ID in
+> > LENOVO_CAPABILITY_DATA_01, and as the first argument when using
+> > GetFeatureValue/SetFeatureValue on the Other Mode interface. I map
+> > these with the lenovo_wmi_attr_id struct. The fan mode value provided
+> > by the gamezone interface corresponds directly to the mode value in
+> > the ID. For example, ID 0x01010100 would provide the capability data
+> > for the CPU device (0x01), SPPT (0x01), in Quiet mode (0x01). There is
+> > no type ID for these attributes (0x00) like there are on some
+> > unimplemented attributes. Balanced mode is 0x02, Performance is 0x03,
+> > Extreme mode (Which the Go doesn't use and there is no analogue for in
+> > the kernel atm) is 0xE0, and custom mode is 0xFF. When the
+> > GetSmartFanMode method ID is called on the gamezone interface it
+> > returns one of these values, corresponding to the current state of the
+> > hardware. This allows us to call GetFeatureValue for the current
+> > profile. Currently we are always calling the custom mode method ID
+> > (0x0101FF00) in GetFeatureValue.
+> >
+> > If we want to avoid an additional wmi call in GZ, then grabbing it
+> > from the platform profile and translating it back would maybe suffice.
+> > In that case I would need to implement the
+> > LENOVO_GAMEZONE_SMART_FAN_MODE_EVENT GUID
+> > "D320289E-8FEA-41E0-86F9-611D83151B5F" to ensure that the profile is
+> > updated properly when the hardware is switched profiles using the
+> > physical buttons. This is probably a good idea anyway, but some
+> > guidance on implementing that would be nice as I think it would be an
+> > additional driver and then we have more cross referencing.
+>
+> I attached a prototype WMI driver for another device which had a similar =
+problem.
+> The solution was to provide a notifier so other event consumers can be no=
+tified
+> when an WMI event was received.
+>
+> Example event consumer callback code:
+>
+>         static int uniwill_wmi_notify_call(struct notifier_block *nb, uns=
+igned long action, void *data)
+>         {
+>                 if (action !=3D UNIWILL_OSD_PERF_MODE_CHANGED)
+>                         return NOTIFY_DONE;
+>
+>                 platform_profile_cycle();
+>
+>                 return NOTIFY_OK;
+>         }
+>
+> I would also suggest that you use a notifier for communicating with the g=
+amezone
+> interface. Then you just have to submit commands (as action values) in th=
+e form of events
+> which will then be processed by the available gamezone drivers (the resul=
+t can be stored in *data).
+>
+> Those gamezone drivers can then return NOTIFY_STOP which will ensure that=
+ only a single gamezone
+> driver can successfully process a given command.
+>
+> All in all the patch series seems to progress nicely. I am confident that=
+ we will solve the remaining issues.
+>
+> Thanks,
+> Armin Wolf
+>
 
-kernel test robot noticed the following build errors:
+That's a novel approach. There are some EVENT GUID's for the gamezone
+interface I'll need to incorporate to keep everything in sync. These
+devices have physical buttons (Fn+Q on laptops, Legion +Y button on
+handhelds) to cycle the profiles. I didn't add this previously because
+we were always updating it when called. I presume that each GUID will
+need a separate driver for this. Any advice or examples on how to use
+this to update the pprof in GameZone would be appreciated as I've
+never used .notify before.
 
-[auto build test ERROR on linus/master]
-[also build test ERROR on v6.13-rc6 next-20250110]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+My expected information flow will be these paths:
+Physical Button press -> WMI event GUID notifier driver -> Gamezone
+driver update & notify_call -> Other Mode save data to priv for lookup
+when current_value is checked and return STOP .
+or
+platform-profile class write from sysfs -> Gamezone driver update &
+notify_call ->Other Mode save data to priv for lookup when
+current_value is checked and return STOP .
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Joshua-Grisham/platform-x86-samsung-galaxybook-Add-samsung-galaxybook-driver/20250110-061059
-base:   linus/master
-patch link:    https://lore.kernel.org/r/20250109220745.69977-1-josh%40joshuagrisham.com
-patch subject: [PATCH v5] platform/x86: samsung-galaxybook: Add samsung-galaxybook driver
-config: x86_64-randconfig-077-20250111 (https://download.01.org/0day-ci/archive/20250111/202501110509.FukyduTN-lkp@intel.com/config)
-compiler: gcc-11 (Debian 11.3.0-12) 11.3.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250111/202501110509.FukyduTN-lkp@intel.com/reproduce)
+Thanks,
+Derek
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202501110509.FukyduTN-lkp@intel.com/
-
-All errors (new ones prefixed by >>):
-
-   drivers/platform/x86/samsung-galaxybook.c: In function 'galaxybook_profile_init':
-   drivers/platform/x86/samsung-galaxybook.c:759:36: error: 'struct platform_profile_handler' has no member named 'name'
-     759 |         galaxybook->profile_handler.name = DRIVER_NAME;
-         |                                    ^
-   drivers/platform/x86/samsung-galaxybook.c:760:36: error: 'struct platform_profile_handler' has no member named 'dev'
-     760 |         galaxybook->profile_handler.dev = &galaxybook->platform->dev;
-         |                                    ^
-   drivers/platform/x86/samsung-galaxybook.c:764:15: error: implicit declaration of function 'devm_platform_profile_register'; did you mean 'platform_profile_register'? [-Werror=implicit-function-declaration]
-     764 |         err = devm_platform_profile_register(&galaxybook->profile_handler);
-         |               ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-         |               platform_profile_register
-   In file included from include/linux/kobject.h:20,
-                    from include/linux/energy_model.h:7,
-                    from include/linux/device.h:16,
-                    from include/linux/acpi.h:14,
-                    from drivers/platform/x86/samsung-galaxybook.c:14:
-   drivers/platform/x86/samsung-galaxybook.c: In function 'galaxybook_fw_attr_init':
->> drivers/platform/x86/samsung-galaxybook.c:1057:33: error: 'fw_attr' is a pointer; did you mean to use '->'?
-    1057 |         sysfs_attr_init(&fw_attr.display_name);
-         |                                 ^
-   include/linux/sysfs.h:55:10: note: in definition of macro 'sysfs_attr_init'
-      55 |         (attr)->key = &__key;                           \
-         |          ^~~~
-   drivers/platform/x86/samsung-galaxybook.c:1063:33: error: 'fw_attr' is a pointer; did you mean to use '->'?
-    1063 |         sysfs_attr_init(&fw_attr.current_value);
-         |                                 ^
-   include/linux/sysfs.h:55:10: note: in definition of macro 'sysfs_attr_init'
-      55 |         (attr)->key = &__key;                           \
-         |          ^~~~
-   cc1: some warnings being treated as errors
-
-
-vim +1057 drivers/platform/x86/samsung-galaxybook.c
-
-  1031	
-  1032	static int galaxybook_fw_attr_init(struct samsung_galaxybook *galaxybook,
-  1033					   const enum galaxybook_fw_attr_id fw_attr_id,
-  1034					   int (*get_value)(struct samsung_galaxybook *galaxybook,
-  1035							    bool *value),
-  1036					   int (*set_value)(struct samsung_galaxybook *galaxybook,
-  1037							    const bool value))
-  1038	{
-  1039		struct galaxybook_fw_attr *fw_attr;
-  1040		struct attribute **attrs;
-  1041		int err;
-  1042	
-  1043		fw_attr = devm_kzalloc(&galaxybook->platform->dev, sizeof(*fw_attr), GFP_KERNEL);
-  1044		if (!fw_attr)
-  1045			return -ENOMEM;
-  1046	
-  1047		attrs = devm_kcalloc(&galaxybook->platform->dev, NUM_FW_ATTR_ENUM_ATTRS + 1,
-  1048				     sizeof(*attrs), GFP_KERNEL);
-  1049		if (!attrs)
-  1050			return -ENOMEM;
-  1051	
-  1052		attrs[0] = &fw_attr_type.attr;
-  1053		attrs[1] = &fw_attr_default_value.attr;
-  1054		attrs[2] = &fw_attr_possible_values.attr;
-  1055		attrs[3] = &fw_attr_display_name_language_code.attr;
-  1056	
-> 1057		sysfs_attr_init(&fw_attr.display_name);
-  1058		fw_attr->display_name.attr.name = "display_name";
-  1059		fw_attr->display_name.attr.mode = 0444;
-  1060		fw_attr->display_name.show = display_name_show;
-  1061		attrs[4] = &fw_attr->display_name.attr;
-  1062	
-  1063		sysfs_attr_init(&fw_attr.current_value);
-  1064		fw_attr->current_value.attr.name = "current_value";
-  1065		fw_attr->current_value.attr.mode = 0644;
-  1066		fw_attr->current_value.show = current_value_show;
-  1067		fw_attr->current_value.store = current_value_store;
-  1068		attrs[5] = &fw_attr->current_value.attr;
-  1069	
-  1070		attrs[6] = NULL;
-  1071	
-  1072		fw_attr->galaxybook = galaxybook;
-  1073		fw_attr->fw_attr_id = fw_attr_id;
-  1074		fw_attr->attr_group.name = galaxybook_fw_attr_name[fw_attr_id];
-  1075		fw_attr->attr_group.attrs = attrs;
-  1076		fw_attr->get_value = get_value;
-  1077		fw_attr->set_value = set_value;
-  1078	
-  1079		err = sysfs_create_group(&galaxybook->fw_attrs_kset->kobj, &fw_attr->attr_group);
-  1080		if (err)
-  1081			return err;
-  1082	
-  1083		return devm_add_action_or_reset(&galaxybook->platform->dev,
-  1084						galaxybook_fw_attr_remove, fw_attr);
-  1085	}
-  1086	
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+> >
+> > The simplest solution IMO would be to do something closer to what I
+> > was doing in v1 just for current_value_show, where we instantiate the
+> > mode variable as SMARTFAN_MODE_CUSTOM (0xFF) then check if the gz
+> > interface is present. If it is, pass the mode variable as a pointer to
+> > GZ where it can call GetSmartFanMode and update the value. Otherwise,
+> > bypass that block and treat it as custom. This does add an additional
+> > WMI call, but only when reading the current_value.
+> >
+> >>> - I did extensive testing of this firmware-attributes interface and i=
+ts
+> >>>     ability to retain the value set by the user. The SPL, SPPT, FPPT,=
+ and
+> >>>     platform profile all retain the users last setting when resuming =
+from
+> >>>     suspend, a full reboot, and a full shutdown. The only time the va=
+lues
+> >>>     are not preserved is when the user manually selects a new platfor=
+m
+> >>>     profile using either the pprof interface or the manual selection
+> >>>     button on the device, in which case you would not expect them to =
+be
+> >>>     retained as they were intentionally changed. Based on the previou=
+s
+> >>>     discussion it may be the case that older BIOS' will preserve the
+> >>>     settings even after changing profiles, though I haven't confirmed
+> >>>     this.
+> >> This is good to hear considering the concerns raised by some others.
+> >>
+> >> But FWIW we have nothing in the firmware attributes API documentation
+> >> that mandates what the firmware does for storage of settings across a
+> >> power cycle so this is currently up to the platform to decide.
+> >>> v1:
+> >>> https://lore.kernel.org/platform-driver-x86/CAFqHKTna+kJpHLo5s4Fm1TmH=
+cSSqSTr96JHDm0DJ0dxsZMkixA@mail.gmail.com/T/#t
+> >>>
+> >>> Suggested-by: Mario Limonciello <superm1@kernel.org>
+> >>> Signed-off-by: Derek J. Clark <derekjohn.clark@gmail.com>
+> >>>
+> >>> Derek J. Clark (4):
+> >>>     platform/x86: Add lenovo-wmi drivers Documentation
+> >>>     platform/x86: Add Lenovo GameZone WMI Driver
+> >>>     platform/x86: Add Lenovo Capability Data 01 WMI Driver
+> >>>     platform/x86: Add Lenovo Other Mode WMI Driver
+> >>>
+> >>>    Documentation/wmi/devices/lenovo-wmi.rst    | 104 ++++++
+> >>>    MAINTAINERS                                 |   9 +
+> >>>    drivers/platform/x86/Kconfig                |  34 ++
+> >>>    drivers/platform/x86/Makefile               |   3 +
+> >>>    drivers/platform/x86/lenovo-wmi-capdata01.c | 131 +++++++
+> >>>    drivers/platform/x86/lenovo-wmi-gamezone.c  | 203 +++++++++++
+> >>>    drivers/platform/x86/lenovo-wmi-other.c     | 385 ++++++++++++++++=
+++++
+> >>>    drivers/platform/x86/lenovo-wmi.h           | 241 ++++++++++++
+> >>>    8 files changed, 1110 insertions(+)
+> >>>    create mode 100644 Documentation/wmi/devices/lenovo-wmi.rst
+> >>>    create mode 100644 drivers/platform/x86/lenovo-wmi-capdata01.c
+> >>>    create mode 100644 drivers/platform/x86/lenovo-wmi-gamezone.c
+> >>>    create mode 100644 drivers/platform/x86/lenovo-wmi-other.c
+> >>>    create mode 100644 drivers/platform/x86/lenovo-wmi.h
+> >>>
