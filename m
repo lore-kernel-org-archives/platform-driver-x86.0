@@ -1,540 +1,190 @@
-Received: from mail-qv1-f54.google.com (mail-qv1-f54.google.com [209.85.219.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3B4992080C7;
-	Fri, 10 Jan 2025 21:34:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A0EFD20A5C8;
+	Fri, 10 Jan 2025 21:45:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736544876; cv=none; b=jUQK/aj3TkvKKqfocSlYvt5UDBDR5k2Ax802QkwyeB15fImQIosdkbP/WJ28Cj3c/TkaQilSlQP9wHNqN/fzEnEYRDpn4UVaQsYaboCZMqVvcU55p54Fk3Ho+nMX6vWEHYlF4flpVKeUVu6G4grsx70JNHWj2O+Y3iFcb9WYCQg=
+	t=1736545517; cv=none; b=AGOoWhkaZot98QWy+E9gzAr8SoAYZTqNlQeywekB2DPLEVwAEuyZYSRKyN9prOqmNaMMRJ/e2Q0U8xonAsOyULnrmtQ9WYLaoeeH5kWsF08SfzA4mDnwoOZejzHMWO9MqFRAwsOtAYvmj9pYMfQ+OEvRkYi+38isYNBXdZ0KftA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736544876; c=relaxed/simple;
-	bh=d4+pq6NWJN7NivY3ix+ll5iHrrIDwY1EA/bwoVGLJcs=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=IKQI4Ci6DXYFs6MDSbuzKaNzCidXjsGkEBAaDeO6UAzUS5188maLSidguIeAiKJOgZh9g+NSh1bte6MVk7002y8a0RKdW5eujm1/2uM40W/LpoBwM+GoJTpy+ojRr2cDzfuCf9JgOM5RZxqqU96rqhM4Eb0EST/N9FdBQi1tVIc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=KvkB1+sx; arc=none smtp.client-ip=209.85.219.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1736545517; c=relaxed/simple;
+	bh=xJ9ceeeueJluSqw8A81wHH2lzb+kbQCceW1Q4h1ZH1Y=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Vw7aXA9+fngT7dBY77GZbDsP1KnJcQtOxkESvmcVpUP1widLqsy1wxZuU9DyQaijo1EFKrddTKnpkjWz6cYyAHC5gf+x1g4AdovWNOY/RZ3SzkTURCa2+1FRqyb2Xlu5Sp6FiiUR2hq6ZFNhu2GBd3rNuDIGaF1w/ObaT4nvqN0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=TM+4UqQE; arc=none smtp.client-ip=192.198.163.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KvkB1+sx"
-Received: by mail-qv1-f54.google.com with SMTP id 6a1803df08f44-6d8f75b31bfso20214156d6.3;
-        Fri, 10 Jan 2025 13:34:33 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1736544873; x=1737149673; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Gvef7ty4ra1krF4LAgcXVU3KIgzmGLwKZ5TlRkvQuTg=;
-        b=KvkB1+sx/HR+1M2DZgrgyrFdsiefz+72CmW+Hq/3pxspz4lbKO8iLhJ3YS2YZUibMn
-         jPlJvcACbhHtq4p3K18K+ngmGVzzDPmzR6gliD4t6d+BcMqPW56PJxA0+U6k8hOLPesx
-         DHDLoM1AR5gmHfV9nE3vEFQjfY2NHA5H2RFMMAZ6Ther/pkSuWoRckr3SYxbh7zG1Dmr
-         YS99pjAuQ2BPxLscRI06zyqVQQF6/iPr/EtMeklhKZX3kFVRq/W2o9fq6/UzOc1Zq0cr
-         5+qVDYN3r15isw1JIHXJJyDQv9MDx+zrE1K1PJH9y68jC2YIYEm1fWM150gfakyqU5gS
-         yGqQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1736544873; x=1737149673;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Gvef7ty4ra1krF4LAgcXVU3KIgzmGLwKZ5TlRkvQuTg=;
-        b=ehtDSp2eSak5R1R5tpZhTR+/RFI0M2IHvIciWS7Ii7uUqF1dXska9onO35G3eGXUlo
-         YtcIO7HmB9osyelvjut/miTNf6vy+5oMauGexkbSOIIgeDlV+NCcs/azXEgH2skuBE1j
-         5z1Nh/eOqdpiE/52N65VmkZskHm7KsXWbQ0nCEOtBkLs7LlxxW/jCG9xTooGiLBzFfph
-         3Z89rH+uLwGxHL+2fd2+7eqF0HXx0vee7ncoGoQhucBlR/ktRybOBG1xn88UXFN+3VFn
-         0IvEtDMS4oVsX+LvMb2KzyZlTi0ZZUzow15IhEJMe6tQdIus8NzT7OkJMahQjHZu+uqX
-         4/CQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUgO9R4lE2CCvdijieC+jg+yNMkfFc77scOyFHgIev1jj2WdUl8izbO6RANpWIuvIUyZEqJ4zO6yJWFW/W9EkiUOVSFIA==@vger.kernel.org, AJvYcCVELiOsT3WO50aZPsIiR5BwMs4x+9MaHs2uQxYj807a2Slp4nzw8G9ANEvx8LqgMpUY4xV2DwPUOH0=@vger.kernel.org, AJvYcCVNsUUIKHWyPpDsDlxkO+vnHntHReyyELqO+bu+LBP/6Lbr7Ny9dT3A5o2tiZ1RHqbcsUBWHfhCeGwa+EkE@vger.kernel.org
-X-Gm-Message-State: AOJu0YyqvbnP9YXHgo5quybqN6EJ/4KUAhTcOu6gJRL0r2CO+/0yXttW
-	FR2oDBwq4TI3akZgQxrVgJjcTi144oGyambxamp3pDhk/VZvixTroGb9gcR1cefTNZw3EJ4TOfJ
-	dG8iWZHXUGNV6sKeyIKuBnD+CL20=
-X-Gm-Gg: ASbGncshJnp5ApS6Ffb9KlPtm8y6tyOefpoIdh/aH0+v2uX3WbuPp3E2rXYQMeRi7gY
-	50jUcq8HArXvQyVXir3a9iL8CFbf5Acl0abLkIPY=
-X-Google-Smtp-Source: AGHT+IHfcWCIgRdTzGZteAp/JUiXI2n4aHbiJMRxAxK4muCC0//ruGW8IYJvTURtJcdF9A3dD/RNuSCm4TYEf8zLM4g=
-X-Received: by 2002:a05:6214:e6a:b0:6d8:9872:adc1 with SMTP id
- 6a1803df08f44-6df9b2d0aa1mr179457206d6.38.1736544873004; Fri, 10 Jan 2025
- 13:34:33 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="TM+4UqQE"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1736545515; x=1768081515;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=xJ9ceeeueJluSqw8A81wHH2lzb+kbQCceW1Q4h1ZH1Y=;
+  b=TM+4UqQECH0JkDC1knHYhs7xXNxYldiXKL/rkmcOzNtBLIFmxTnp/Wmo
+   x6ya+LC4QPWCem6bOP1jRH5fVIAXb+juSJq4gvb+LZAiwOct3gmPfyxOb
+   xtzCUOkGEbUNNTUQtepsyQ+skf6GRup2TI4IoEPKA7E3DFV5qjAZNUsDn
+   Awkfk9e9ewvEPXZiMAoFH7Y0IQ0q9rmFZ5X+px5PH/RqmesUXdE10gY+J
+   w4ilbKUiLJN+QvXS15OUtYdqKu911ZWg9Qdh5r+s8bzD1G1r/A4OmBMu8
+   d1PK44SZ9GPrfcK9DCMklVeU3b7eq74xtGFExsKIqyLB0HkpjYG+TdsS3
+   Q==;
+X-CSE-ConnectionGUID: 2/DYJ1ZUQqe6ipfXWduLoA==
+X-CSE-MsgGUID: IFtC5L9lSa+mmkrkOP/X8A==
+X-IronPort-AV: E=McAfee;i="6700,10204,11311"; a="24460188"
+X-IronPort-AV: E=Sophos;i="6.12,305,1728975600"; 
+   d="scan'208";a="24460188"
+Received: from fmviesa002.fm.intel.com ([10.60.135.142])
+  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Jan 2025 13:45:13 -0800
+X-CSE-ConnectionGUID: HramPdvaShmQkYBvamrh9Q==
+X-CSE-MsgGUID: ZRGQhrpJRAWJ07uqz520og==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
+   d="scan'208";a="127134376"
+Received: from lkp-server01.sh.intel.com (HELO d63d4d77d921) ([10.239.97.150])
+  by fmviesa002.fm.intel.com with ESMTP; 10 Jan 2025 13:45:11 -0800
+Received: from kbuild by d63d4d77d921 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1tWMoX-000JmR-0N;
+	Fri, 10 Jan 2025 21:45:09 +0000
+Date: Sat, 11 Jan 2025 05:44:36 +0800
+From: kernel test robot <lkp@intel.com>
+To: Joshua Grisham <josh@joshuagrisham.com>, W_Armin@gmx.de,
+	thomas@t-8ch.de, kuurtb@gmail.com, ilpo.jarvinen@linux.intel.com,
+	hdegoede@redhat.com, platform-driver-x86@vger.kernel.org,
+	corbet@lwn.net, linux-doc@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Cc: oe-kbuild-all@lists.linux.dev, Joshua Grisham <josh@joshuagrisham.com>
+Subject: Re: [PATCH v5] platform/x86: samsung-galaxybook: Add
+ samsung-galaxybook driver
+Message-ID: <202501110509.FukyduTN-lkp@intel.com>
+References: <20250109220745.69977-1-josh@joshuagrisham.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250102004854.14874-1-derekjohn.clark@gmail.com>
- <20250102004854.14874-3-derekjohn.clark@gmail.com> <487ff49a-b521-600d-16bf-db3122295812@linux.intel.com>
-In-Reply-To: <487ff49a-b521-600d-16bf-db3122295812@linux.intel.com>
-From: Derek John Clark <derekjohn.clark@gmail.com>
-Date: Fri, 10 Jan 2025 13:34:22 -0800
-X-Gm-Features: AbW1kvbt1A7H8Wb8xd5OIQq3EAexpxNDFTyIPuzSD-iUMQGCZP75fz_yUmWLjY8
-Message-ID: <CAFqHKTm1fwag4kAZcCUDkaPU85mabW-_A01Aq9s4zLsQR3eDRw@mail.gmail.com>
-Subject: Re: [PATCH v2 2/4] platform/x86: Add Lenovo GameZone WMI Driver
-To: =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Cc: Hans de Goede <hdegoede@redhat.com>, Jonathan Corbet <corbet@lwn.net>, 
-	Mario Limonciello <superm1@kernel.org>, Luke Jones <luke@ljones.dev>, Xino Ni <nijs1@lenovo.com>, 
-	Zhixin Zhang <zhangzx36@lenovo.com>, Mia Shao <shaohz1@lenovo.com>, 
-	Mark Pearson <mpearson-lenovo@squebb.ca>, 
-	"Pierre-Loup A . Griffais" <pgriffais@valvesoftware.com>, "Cody T . -H . Chiu" <codyit@gmail.com>, 
-	John Martens <johnfanv2@gmail.com>, platform-driver-x86@vger.kernel.org, 
-	linux-doc@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250109220745.69977-1-josh@joshuagrisham.com>
 
-On Fri, Jan 10, 2025 at 4:27=E2=80=AFAM Ilpo J=C3=A4rvinen
-<ilpo.jarvinen@linux.intel.com> wrote:
->
-> On Wed, 1 Jan 2025, Derek J. Clark wrote:
->
-> > Adds lenovo-wmi-gamezone.c which provides a driver for the Lenovo
-> > GameZone WMI interface that comes on Lenovo "Gaming Series" hardware.
-> > Provides ACPI platform profiles over WMI.
-> >
-> > v2:
-> > - Use devm_kzalloc to ensure driver can be instanced, remove global
-> >   reference.
-> > - Ensure reverse Christmas tree for all variable declarations.
-> > - Remove extra whitespace.
-> > - Use guard(mutex) in all mutex instances, global mutex.
-> > - Use pr_fmt instead of adding the driver name to each pr_err.
-> > - Remove noisy pr_info usage.
-> > - Rename gamezone_wmi to lenovo_wmi_gz_priv and gz_wmi to priv.
-> > - Remove GZ_WMI symbol exporting.
-> >
-> > Signed-off-by: Derek J. Clark <derekjohn.clark@gmail.com>
-> > ---
-> >  MAINTAINERS                                |   7 +
-> >  drivers/platform/x86/Kconfig               |  11 ++
-> >  drivers/platform/x86/Makefile              |   1 +
-> >  drivers/platform/x86/lenovo-wmi-gamezone.c | 203 +++++++++++++++++++++
-> >  drivers/platform/x86/lenovo-wmi.h          | 105 +++++++++++
-> >  5 files changed, 327 insertions(+)
-> >  create mode 100644 drivers/platform/x86/lenovo-wmi-gamezone.c
-> >  create mode 100644 drivers/platform/x86/lenovo-wmi.h
-> >
-> > diff --git a/MAINTAINERS b/MAINTAINERS
-> > index baf0eeb9a355..8f8a6aec6b92 100644
-> > --- a/MAINTAINERS
-> > +++ b/MAINTAINERS
-> > @@ -13034,6 +13034,13 @@ S:   Maintained
-> >  W:   http://legousb.sourceforge.net/
-> >  F:   drivers/usb/misc/legousbtower.c
-> >
-> > +LENOVO WMI drivers
-> > +M:   Derek J. Clark <derekjohn.clark@gmail.com>
-> > +L:   platform-driver-x86@vger.kernel.org
-> > +S:   Maintained
-> > +F:   drivers/platform/x86/lenovo-wmi-gamezone.c
-> > +F:   drivers/platform/x86/lenovo-wmi.h
-> > +
-> >  LETSKETCH HID TABLET DRIVER
-> >  M:   Hans de Goede <hdegoede@redhat.com>
-> >  L:   linux-input@vger.kernel.org
-> > diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfi=
-g
-> > index 0258dd879d64..9a6ac7fdec9f 100644
-> > --- a/drivers/platform/x86/Kconfig
-> > +++ b/drivers/platform/x86/Kconfig
-> > @@ -459,6 +459,17 @@ config IBM_RTL
-> >        state =3D 0 (BIOS SMIs on)
-> >        state =3D 1 (BIOS SMIs off)
-> >
-> > +config LENOVO_WMI_GAMEZONE
-> > +     tristate "Lenovo GameZone WMI Driver"
-> > +     depends on ACPI_WMI
-> > +     select ACPI_PLATFORM_PROFILE
-> > +     help
-> > +       Say Y here if you have a WMI aware Lenovo Legion device and wou=
-ld like to use the
-> > +       platform-profile firmware interface.
-> > +
-> > +       To compile this driver as a module, choose M here: the module w=
-ill
-> > +       be called lenovo_wmi_gamezone.
-> > +
-> >  config IDEAPAD_LAPTOP
-> >       tristate "Lenovo IdeaPad Laptop Extras"
-> >       depends on ACPI
-> > diff --git a/drivers/platform/x86/Makefile b/drivers/platform/x86/Makef=
-ile
-> > index e1b142947067..7cb29a480ed2 100644
-> > --- a/drivers/platform/x86/Makefile
-> > +++ b/drivers/platform/x86/Makefile
-> > @@ -68,6 +68,7 @@ obj-$(CONFIG_THINKPAD_LMI)  +=3D think-lmi.o
-> >  obj-$(CONFIG_YOGABOOK)               +=3D lenovo-yogabook.o
-> >  obj-$(CONFIG_YT2_1380)               +=3D lenovo-yoga-tab2-pro-1380-fa=
-stcharger.o
-> >  obj-$(CONFIG_LENOVO_WMI_CAMERA)      +=3D lenovo-wmi-camera.o
-> > +obj-$(CONFIG_LENOVO_WMI_GAMEZONE)    +=3D lenovo-wmi-gamezone.o
-> >
-> >  # Intel
-> >  obj-y                                +=3D intel/
-> > diff --git a/drivers/platform/x86/lenovo-wmi-gamezone.c b/drivers/platf=
-orm/x86/lenovo-wmi-gamezone.c
-> > new file mode 100644
-> > index 000000000000..da5e2bc41f39
-> > --- /dev/null
-> > +++ b/drivers/platform/x86/lenovo-wmi-gamezone.c
-> > @@ -0,0 +1,203 @@
-> > +// SPDX-License-Identifier: GPL-2.0-or-later
-> > +/*
-> > + * Lenovo GameZone WMI interface driver. The GameZone WMI interface pr=
-ovides
-> > + * platform profile and fan curve settings for devices that fall under=
- the
-> > + * "Gaming Series" of Lenovo Legion devices.
-> > + *
-> > + * Copyright(C) 2024 Derek J. Clark <derekjohn.clark@gmail.com>
-> > + */
-> > +
-> > +#include <linux/platform_profile.h>
-> > +#include "lenovo-wmi.h"
-> > +
-> > +#define LENOVO_GAMEZONE_GUID "887B54E3-DDDC-4B2C-8B88-68A26A8835D0"
-> > +
-> > +/* Method IDs */
-> > +#define WMI_METHOD_ID_SMARTFAN_SUPP 43 /* IsSupportSmartFan */
-> > +#define WMI_METHOD_ID_SMARTFAN_SET 44 /* SetSmartFanMode */
-> > +#define WMI_METHOD_ID_SMARTFAN_GET 45 /* GetSmartFanMode */
-> > +
-> > +static DEFINE_MUTEX(call_mutex);
-> > +
-> > +static const struct wmi_device_id lenovo_wmi_gamezone_id_table[] =3D {
-> > +     { LENOVO_GAMEZONE_GUID, NULL }, /* LENOVO_GAMEZONE_DATA */
-> > +     {}
-> > +};
-> > +
-> > +struct lenovo_wmi_gz_priv {
-> > +     struct wmi_device *wdev;
-> > +     enum platform_profile_option current_profile;
-> > +     struct platform_profile_handler pprof;
-> > +     bool platform_profile_support;
-> > +};
-> > +
-> > +/* Platform Profile Methods */
-> > +static int lenovo_wmi_gamezone_platform_profile_supported(
-> > +     struct platform_profile_handler *pprof, int *supported)
-> > +{
-> > +     struct lenovo_wmi_gz_priv *priv;
-> > +
-> > +     priv =3D container_of(pprof, struct lenovo_wmi_gz_priv, pprof);
-> > +
-> > +     guard(mutex)(&call_mutex);
-> > +     return lenovo_wmidev_evaluate_method_1(
-> > +             priv->wdev, 0x0, WMI_METHOD_ID_SMARTFAN_SUPP, 0, supporte=
-d);
-> > +}
-> > +
-> > +static int
-> > +lenovo_wmi_gamezone_profile_get(struct platform_profile_handler *pprof=
-,
-> > +                             enum platform_profile_option *profile)
-> > +{
-> > +     struct lenovo_wmi_gz_priv *priv;
-> > +     int sel_prof;
-> > +     int err;
-> > +
-> > +     priv =3D container_of(pprof, struct lenovo_wmi_gz_priv, pprof);
-> > +
-> > +     guard(mutex)(&call_mutex);
-> > +     err =3D lenovo_wmidev_evaluate_method_1(
-> > +             priv->wdev, 0x0, WMI_METHOD_ID_SMARTFAN_GET, 0, &sel_prof=
-);
-> > +     if (err) {
-> > +             pr_err("Error getting fan profile from WMI interface: %d\=
-n",
-> > +                    err);
-> > +             return err;
-> > +     }
-> > +
-> > +     switch (sel_prof) {
-> > +     case SMARTFAN_MODE_QUIET:
-> > +             *profile =3D PLATFORM_PROFILE_QUIET;
-> > +             break;
-> > +     case SMARTFAN_MODE_BALANCED:
-> > +             *profile =3D PLATFORM_PROFILE_BALANCED;
-> > +             break;
-> > +     case SMARTFAN_MODE_PERFORMANCE:
-> > +             *profile =3D PLATFORM_PROFILE_PERFORMANCE;
-> > +             break;
-> > +     case SMARTFAN_MODE_CUSTOM:
-> > +             *profile =3D PLATFORM_PROFILE_CUSTOM;
-> > +             break;
-> > +     default:
-> > +             return -EINVAL;
-> > +     }
-> > +     priv->current_profile =3D *profile;
-> > +
-> > +     return 0;
-> > +}
-> > +
-> > +static int
-> > +lenovo_wmi_gamezone_profile_set(struct platform_profile_handler *pprof=
-,
-> > +                             enum platform_profile_option profile)
-> > +{
-> > +     struct lenovo_wmi_gz_priv *priv;
-> > +     int sel_prof;
-> > +     int err;
-> > +
-> > +     switch (profile) {
-> > +     case PLATFORM_PROFILE_QUIET:
-> > +             sel_prof =3D SMARTFAN_MODE_QUIET;
-> > +             break;
-> > +     case PLATFORM_PROFILE_BALANCED:
-> > +             sel_prof =3D SMARTFAN_MODE_BALANCED;
-> > +             break;
-> > +     case PLATFORM_PROFILE_PERFORMANCE:
-> > +             sel_prof =3D SMARTFAN_MODE_PERFORMANCE;
-> > +             break;
-> > +     case PLATFORM_PROFILE_CUSTOM:
-> > +             sel_prof =3D SMARTFAN_MODE_CUSTOM;
-> > +             break;
-> > +     default:
-> > +             return -EOPNOTSUPP;
-> > +     }
-> > +
-> > +     priv =3D container_of(pprof, struct lenovo_wmi_gz_priv, pprof);
-> > +
-> > +     guard(mutex)(&call_mutex);
-> > +     err =3D lenovo_wmidev_evaluate_method_1(
-> > +             priv->wdev, 0x0, WMI_METHOD_ID_SMARTFAN_SET, sel_prof, NU=
-LL);
-> > +     if (err) {
-> > +             pr_err("Error setting fan profile on WMI interface: %u\n"=
-, err);
-> > +             return err;
-> > +     }
-> > +
-> > +     priv->current_profile =3D profile;
-> > +     return 0;
-> > +}
-> > +
-> > +/* Driver Setup */
-> > +static int platform_profile_setup(struct lenovo_wmi_gz_priv *priv)
-> > +{
-> > +     int supported;
-> > +     int err;
-> > +
-> > +     err =3D lenovo_wmi_gamezone_platform_profile_supported(&priv->ppr=
-of,
-> > +                                                          &supported);
-> > +     if (err) {
-> > +             pr_err("Error checking platform profile support: %d\n", e=
-rr);
-> > +             return err;
-> > +     }
-> > +
-> > +     priv->platform_profile_support =3D supported;
-> > +
-> > +     if (!supported)
-> > +             return -EOPNOTSUPP;
-> > +
-> > +     priv->pprof.name =3D "lenovo-wmi-gamezone";
-> > +     priv->pprof.profile_get =3D lenovo_wmi_gamezone_profile_get;
-> > +     priv->pprof.profile_set =3D lenovo_wmi_gamezone_profile_set;
-> > +
-> > +     set_bit(PLATFORM_PROFILE_QUIET, priv->pprof.choices);
-> > +     set_bit(PLATFORM_PROFILE_BALANCED, priv->pprof.choices);
-> > +     set_bit(PLATFORM_PROFILE_PERFORMANCE, priv->pprof.choices);
-> > +     set_bit(PLATFORM_PROFILE_CUSTOM, priv->pprof.choices);
-> > +
-> > +     err =3D lenovo_wmi_gamezone_profile_get(&priv->pprof,
-> > +                                           &priv->current_profile);
-> > +     if (err) {
-> > +             pr_err("Error getting current platform profile: %d\n", er=
-r);
-> > +             return err;
-> > +     }
-> > +
-> > +     guard(mutex)(&call_mutex);
-> > +     err =3D platform_profile_register(&priv->pprof);
-> > +     if (err) {
-> > +             pr_err("Error registering platform profile: %d\n", err);
-> > +             return err;
-> > +     }
-> > +
-> > +     return 0;
-> > +}
-> > +
-> > +static int lenovo_wmi_gamezone_probe(struct wmi_device *wdev,
-> > +                                  const void *context)
-> > +{
-> > +     struct lenovo_wmi_gz_priv *priv;
-> > +
-> > +     priv =3D devm_kzalloc(&wdev->dev, sizeof(*priv), GFP_KERNEL);
-> > +     if (!priv)
-> > +             return -ENOMEM;
-> > +
-> > +     priv->wdev =3D wdev;
-> > +     return platform_profile_setup(priv);
-> > +}
-> > +
-> > +static void lenovo_wmi_gamezone_remove(struct wmi_device *wdev)
-> > +{
-> > +     struct lenovo_wmi_gz_priv *priv =3D dev_get_drvdata(&wdev->dev);
-> > +
-> > +     guard(mutex)(&call_mutex);
-> > +     platform_profile_remove(&priv->pprof);
-> > +}
-> > +
-> > +static struct wmi_driver lenovo_wmi_gamezone_driver =3D {
-> > +     .driver =3D { .name =3D "lenovo_wmi_gamezone" },
-> > +     .id_table =3D lenovo_wmi_gamezone_id_table,
-> > +     .probe =3D lenovo_wmi_gamezone_probe,
-> > +     .remove =3D lenovo_wmi_gamezone_remove,
-> > +};
-> > +
-> > +module_wmi_driver(lenovo_wmi_gamezone_driver);
-> > +
-> > +MODULE_DEVICE_TABLE(wmi, lenovo_wmi_gamezone_id_table);
-> > +MODULE_AUTHOR("Derek J. Clark <derekjohn.clark@gmail.com>");
-> > +MODULE_DESCRIPTION("Lenovo GameZone WMI Driver");
-> > +MODULE_LICENSE("GPL");
-> > diff --git a/drivers/platform/x86/lenovo-wmi.h b/drivers/platform/x86/l=
-enovo-wmi.h
-> > new file mode 100644
-> > index 000000000000..8a302c6c47cb
-> > --- /dev/null
-> > +++ b/drivers/platform/x86/lenovo-wmi.h
-> > @@ -0,0 +1,105 @@
-> > +/* SPDX-License-Identifier: GPL-2.0-or-later
-> > + *
-> > + * Lenovo Legion WMI interface driver. The Lenovo Legion WMI interface=
- is
-> > + * broken up into multiple GUID interfaces that require cross-referenc=
-es
-> > + * between GUID's for some functionality. The "Custom Mode" interface =
-is a
-> > + * legacy interface for managing and displaying CPU & GPU power and hw=
-mon
-> > + * settings and readings. The "Other Mode" interface is a modern inter=
-face
-> > + * that replaces or extends the "Custom Mode" interface methods. The
-> > + * "GameZone" interface adds advanced features such as fan profiles an=
-d
-> > + * overclocking. The "Lighting" interface adds control of various stat=
-us
-> > + * lights related to different hardware components. "Other Method" use=
-s
-> > + * the data structs LENOVO_CAPABILITY_DATA_00, LENOVO_CAPABILITY_DATA_=
-01
-> > + * and LENOVO_CAPABILITY_DATA_02 structs for capability information.
-> > + *
-> > + * Copyright(C) 2024 Derek J. Clark <derekjohn.clark@gmail.com>
-> > + *
-> > + */
-> > +
-> > +#define pr_fmt(fmt) "%s:%s: " fmt, KBUILD_MODNAME, __func__
->
-> Don't include __func__ into pr_fmt(). Including __func__ into any >dbg
-> level message is not helpful to user, the error/warning/info should be
-> written in plain English, not in terms of code/function names.
->
-> The usual pr_fmt() boilerplate is this:
->
-> #define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
->
-> --
->  i.
->
+Hi Joshua,
 
-Will do, thanks Ilpo.
+kernel test robot noticed the following build errors:
 
-Derek
+[auto build test ERROR on linus/master]
+[also build test ERROR on v6.13-rc6 next-20250110]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
 
-> > +
-> > +#ifndef _LENOVO_WMI_H_
-> > +#define _LENOVO_WMI_H_
-> > +
-> > +#include <linux/mutex.h>
-> > +#include <linux/types.h>
-> > +#include <linux/wmi.h>
-> > +
-> > +/* Platform Profile Modes */
-> > +#define SMARTFAN_MODE_QUIET 0x01
-> > +#define SMARTFAN_MODE_BALANCED 0x02
-> > +#define SMARTFAN_MODE_PERFORMANCE 0x03
-> > +#define SMARTFAN_MODE_CUSTOM 0xFF
-> > +
-> > +struct wmi_method_args {
-> > +     u32 arg0;
-> > +     u32 arg1;
-> > +};
-> > +
-> > +/* General Use functions */
-> > +static int lenovo_wmidev_evaluate_method(struct wmi_device *wdev, u8 i=
-nstance,
-> > +                                      u32 method_id, struct acpi_buffe=
-r *in,
-> > +                                      struct acpi_buffer *out)
-> > +{
-> > +     acpi_status status;
-> > +
-> > +     status =3D wmidev_evaluate_method(wdev, instance, method_id, in, =
-out);
-> > +
-> > +     if (ACPI_FAILURE(status))
-> > +             return -EIO;
-> > +
-> > +     return 0;
-> > +};
-> > +
-> > +int lenovo_wmidev_evaluate_method_2(struct wmi_device *wdev, u8 instan=
-ce,
-> > +                                 u32 method_id, u32 arg0, u32 arg1,
-> > +                                 u32 *retval);
-> > +
-> > +int lenovo_wmidev_evaluate_method_2(struct wmi_device *wdev, u8 instan=
-ce,
-> > +                                 u32 method_id, u32 arg0, u32 arg1,
-> > +                                 u32 *retval)
-> > +{
-> > +     struct wmi_method_args args =3D { arg0, arg1 };
-> > +     struct acpi_buffer input =3D { (acpi_size)sizeof(args), &args };
-> > +     struct acpi_buffer output =3D { ACPI_ALLOCATE_BUFFER, NULL };
-> > +     union acpi_object *ret_obj =3D NULL;
-> > +     int err;
-> > +
-> > +     err =3D lenovo_wmidev_evaluate_method(wdev, instance, method_id, =
-&input,
-> > +                                         &output);
-> > +
-> > +     if (err) {
-> > +             pr_err("Attempt to get method value failed.\n");
-> > +             return err;
-> > +     }
-> > +
-> > +     if (retval) {
-> > +             ret_obj =3D (union acpi_object *)output.pointer;
-> > +             if (!ret_obj) {
-> > +                     pr_err("Failed to get valid ACPI object from WMI =
-interface\n");
-> > +                     return -EIO;
-> > +             }
-> > +             if (ret_obj->type !=3D ACPI_TYPE_INTEGER) {
-> > +                     pr_err("WMI query returnd ACPI object with wrong =
-type.\n");
-> > +                     kfree(ret_obj);
-> > +                     return -EIO;
-> > +             }
-> > +             *retval =3D (u32)ret_obj->integer.value;
-> > +     }
-> > +
-> > +     kfree(ret_obj);
-> > +
-> > +     return 0;
-> > +}
-> > +
-> > +int lenovo_wmidev_evaluate_method_1(struct wmi_device *wdev, u8 instan=
-ce,
-> > +                                 u32 method_id, u32 arg0, u32 *retval)=
-;
-> > +
-> > +int lenovo_wmidev_evaluate_method_1(struct wmi_device *wdev, u8 instan=
-ce,
-> > +                                 u32 method_id, u32 arg0, u32 *retval)
-> > +{
-> > +     return lenovo_wmidev_evaluate_method_2(wdev, instance, method_id,=
- arg0,
-> > +                                            0, retval);
-> > +}
-> > +
-> > +#endif /* !_LENOVO_WMI_H_ */
-> >
+url:    https://github.com/intel-lab-lkp/linux/commits/Joshua-Grisham/platform-x86-samsung-galaxybook-Add-samsung-galaxybook-driver/20250110-061059
+base:   linus/master
+patch link:    https://lore.kernel.org/r/20250109220745.69977-1-josh%40joshuagrisham.com
+patch subject: [PATCH v5] platform/x86: samsung-galaxybook: Add samsung-galaxybook driver
+config: x86_64-randconfig-077-20250111 (https://download.01.org/0day-ci/archive/20250111/202501110509.FukyduTN-lkp@intel.com/config)
+compiler: gcc-11 (Debian 11.3.0-12) 11.3.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250111/202501110509.FukyduTN-lkp@intel.com/reproduce)
+
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202501110509.FukyduTN-lkp@intel.com/
+
+All errors (new ones prefixed by >>):
+
+   drivers/platform/x86/samsung-galaxybook.c: In function 'galaxybook_profile_init':
+   drivers/platform/x86/samsung-galaxybook.c:759:36: error: 'struct platform_profile_handler' has no member named 'name'
+     759 |         galaxybook->profile_handler.name = DRIVER_NAME;
+         |                                    ^
+   drivers/platform/x86/samsung-galaxybook.c:760:36: error: 'struct platform_profile_handler' has no member named 'dev'
+     760 |         galaxybook->profile_handler.dev = &galaxybook->platform->dev;
+         |                                    ^
+   drivers/platform/x86/samsung-galaxybook.c:764:15: error: implicit declaration of function 'devm_platform_profile_register'; did you mean 'platform_profile_register'? [-Werror=implicit-function-declaration]
+     764 |         err = devm_platform_profile_register(&galaxybook->profile_handler);
+         |               ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+         |               platform_profile_register
+   In file included from include/linux/kobject.h:20,
+                    from include/linux/energy_model.h:7,
+                    from include/linux/device.h:16,
+                    from include/linux/acpi.h:14,
+                    from drivers/platform/x86/samsung-galaxybook.c:14:
+   drivers/platform/x86/samsung-galaxybook.c: In function 'galaxybook_fw_attr_init':
+>> drivers/platform/x86/samsung-galaxybook.c:1057:33: error: 'fw_attr' is a pointer; did you mean to use '->'?
+    1057 |         sysfs_attr_init(&fw_attr.display_name);
+         |                                 ^
+   include/linux/sysfs.h:55:10: note: in definition of macro 'sysfs_attr_init'
+      55 |         (attr)->key = &__key;                           \
+         |          ^~~~
+   drivers/platform/x86/samsung-galaxybook.c:1063:33: error: 'fw_attr' is a pointer; did you mean to use '->'?
+    1063 |         sysfs_attr_init(&fw_attr.current_value);
+         |                                 ^
+   include/linux/sysfs.h:55:10: note: in definition of macro 'sysfs_attr_init'
+      55 |         (attr)->key = &__key;                           \
+         |          ^~~~
+   cc1: some warnings being treated as errors
+
+
+vim +1057 drivers/platform/x86/samsung-galaxybook.c
+
+  1031	
+  1032	static int galaxybook_fw_attr_init(struct samsung_galaxybook *galaxybook,
+  1033					   const enum galaxybook_fw_attr_id fw_attr_id,
+  1034					   int (*get_value)(struct samsung_galaxybook *galaxybook,
+  1035							    bool *value),
+  1036					   int (*set_value)(struct samsung_galaxybook *galaxybook,
+  1037							    const bool value))
+  1038	{
+  1039		struct galaxybook_fw_attr *fw_attr;
+  1040		struct attribute **attrs;
+  1041		int err;
+  1042	
+  1043		fw_attr = devm_kzalloc(&galaxybook->platform->dev, sizeof(*fw_attr), GFP_KERNEL);
+  1044		if (!fw_attr)
+  1045			return -ENOMEM;
+  1046	
+  1047		attrs = devm_kcalloc(&galaxybook->platform->dev, NUM_FW_ATTR_ENUM_ATTRS + 1,
+  1048				     sizeof(*attrs), GFP_KERNEL);
+  1049		if (!attrs)
+  1050			return -ENOMEM;
+  1051	
+  1052		attrs[0] = &fw_attr_type.attr;
+  1053		attrs[1] = &fw_attr_default_value.attr;
+  1054		attrs[2] = &fw_attr_possible_values.attr;
+  1055		attrs[3] = &fw_attr_display_name_language_code.attr;
+  1056	
+> 1057		sysfs_attr_init(&fw_attr.display_name);
+  1058		fw_attr->display_name.attr.name = "display_name";
+  1059		fw_attr->display_name.attr.mode = 0444;
+  1060		fw_attr->display_name.show = display_name_show;
+  1061		attrs[4] = &fw_attr->display_name.attr;
+  1062	
+  1063		sysfs_attr_init(&fw_attr.current_value);
+  1064		fw_attr->current_value.attr.name = "current_value";
+  1065		fw_attr->current_value.attr.mode = 0644;
+  1066		fw_attr->current_value.show = current_value_show;
+  1067		fw_attr->current_value.store = current_value_store;
+  1068		attrs[5] = &fw_attr->current_value.attr;
+  1069	
+  1070		attrs[6] = NULL;
+  1071	
+  1072		fw_attr->galaxybook = galaxybook;
+  1073		fw_attr->fw_attr_id = fw_attr_id;
+  1074		fw_attr->attr_group.name = galaxybook_fw_attr_name[fw_attr_id];
+  1075		fw_attr->attr_group.attrs = attrs;
+  1076		fw_attr->get_value = get_value;
+  1077		fw_attr->set_value = set_value;
+  1078	
+  1079		err = sysfs_create_group(&galaxybook->fw_attrs_kset->kobj, &fw_attr->attr_group);
+  1080		if (err)
+  1081			return err;
+  1082	
+  1083		return devm_add_action_or_reset(&galaxybook->platform->dev,
+  1084						galaxybook_fw_attr_remove, fw_attr);
+  1085	}
+  1086	
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
