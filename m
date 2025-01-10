@@ -1,489 +1,246 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f174.google.com (mail-il1-f174.google.com [209.85.166.174])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 32D1920E709;
-	Fri, 10 Jan 2025 14:39:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0425620A5FB;
+	Fri, 10 Jan 2025 15:59:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736519947; cv=none; b=tmTFtvatMu9F9s6Fmyw8yRKngDGT0VLMRFdCUyw77HVxR5DLzlb4ZeDCrHF/J6+w0JSTgykWY86L347qBVpU/7CdfWgvPvm5xrxdtXgnGGuAb7XjQprnorWBAZNqLnpw/S7ZKx0I0A+gnlj5B3iIRL4nmcTrays7oZwV76dtVec=
+	t=1736524771; cv=none; b=tca2jIxxdXst7dGrfLGpPf+zXWZx1qNuDhgvv6F62L6z+nM+bILXx5Eseqw1yTa+TUxdLrECjvW7G2sSwCRjK5rJ23BW0Y9v+kc3Ea7B3SKUuZM35RIJn6pd/9aLLaUk2BewsZWCRhZCmu45883dIlat3pIiA3Z0OP/fzFPwTL8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736519947; c=relaxed/simple;
-	bh=0lIIG1l/qpKaduDBvmrPgvj86O7kwir3WU5YUcyIb7U=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=A2cWEHKJ4BWpAkiYkVuU5owXZZbiTOjs6p6c0LHfjn9Uy3dB3xyE1RZYzf6nI4RKCYrrbTrui6sgCBgXblzVXCh8HKMfRcUMNbv35Ufbeq9D3oZp0qWbHVD4742C9q95Zyj24G29SMuclqKGYDvq9U8RcVfeRY0XfWfPnjE/Sj8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=StSnwqDF; arc=none smtp.client-ip=192.198.163.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="StSnwqDF"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1736519945; x=1768055945;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=0lIIG1l/qpKaduDBvmrPgvj86O7kwir3WU5YUcyIb7U=;
-  b=StSnwqDFxD7TxgnDqwNJGUMw0D72r4WYp+3zyk9G/PUN2gurPIm505oD
-   P6CYKAvMyM5xCfhWA54OOm6Mtss+YU4xKs3YZttzeqIacgI1TD9mGQDnv
-   FHGuBtVNvuZoKvYGHTpLM1VJLQTvjh3aZ2QTXAylDhGSYh5WOABR14BPI
-   mUNiXfJch/7WQYQRQQVtnLEz4XO5KcVG8fqNA4P9xdkoMgWySkajr5Gz1
-   1Vmb38vjxTdlJLjRGm6GYRPw3VqTD6i53KimozZ4M9zEPi0Gsk74vmMvs
-   crOg1X+xIW8FVx4M1YM3K7D4nA0n2e1OnzSyWSh+gePAo/TbU7hjj6dxT
-   g==;
-X-CSE-ConnectionGUID: BnB1NxgPQrOzTkrAO3Oqjw==
-X-CSE-MsgGUID: MSU0nwSNRIazjJd/2KTzlA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11311"; a="36031777"
-X-IronPort-AV: E=Sophos;i="6.12,303,1728975600"; 
-   d="scan'208";a="36031777"
-Received: from orviesa008.jf.intel.com ([10.64.159.148])
-  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Jan 2025 06:39:04 -0800
-X-CSE-ConnectionGUID: coH+or8jTz6B2HqNgNwnMw==
-X-CSE-MsgGUID: I6pra4SLRnqyCVLoQZ/bJA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
-   d="scan'208";a="104633306"
-Received: from apaszkie-mobl2.apaszkie-mobl2 (HELO localhost) ([10.245.244.158])
-  by orviesa008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Jan 2025 06:39:00 -0800
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Fri, 10 Jan 2025 16:38:56 +0200 (EET)
-To: Armin Wolf <W_Armin@gmx.de>
-cc: dmitry.torokhov@gmail.com, o2g.org.ru@gmail.com, 
-    Hans de Goede <hdegoede@redhat.com>, corentin.chary@gmail.com, 
-    luke@ljones.dev, mjg59@srcf.ucam.org, pali@kernel.org, 
-    eric.piel@tremplin-utc.net, jlee@suse.com, kenneth.t.chan@gmail.com, 
-    coproscefalo@gmail.com, linux-input@vger.kernel.org, 
-    platform-driver-x86@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>, 
-    josh@joshuagrisham.com
-Subject: Re: [PATCH v2] Input: i8042 - Add support for platform filter
- contexts
-In-Reply-To: <b44f5e56-e05a-4f0e-a9e0-2b5fe5cefa1f@gmx.de>
-Message-ID: <996ee62d-7a0e-5058-6ebe-0a9c51d3ea99@linux.intel.com>
-References: <20241222215042.7709-1-W_Armin@gmx.de> <b44f5e56-e05a-4f0e-a9e0-2b5fe5cefa1f@gmx.de>
+	s=arc-20240116; t=1736524771; c=relaxed/simple;
+	bh=VOf3joCRWku7JV0qqkb/JfzkQ/NlhMLlK3RE73Tu0Ec=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=A7o5jK4q1D6DjLkTSWzh1VeP8b2baWvA6aE0dsuTdBRqcuVoo3v5yYXtteuKqtAZ5h9u+wUdNZBx7C2fh/2tM+Txo13saow5ArCZJLABnLGer0Tk1Ej7sUpOLF4eKUOx0IVMRow+S02TC2NGi1n9rgAzwysUA1XTizKOWar78tc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=joshuagrisham.com; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.166.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=joshuagrisham.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-il1-f174.google.com with SMTP id e9e14a558f8ab-3a81324bbdcso13819405ab.1;
+        Fri, 10 Jan 2025 07:59:29 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1736524769; x=1737129569;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=jHBFG2hXwHCpEKoHsn8D+NY3oc8cJ69pO24XioRtFak=;
+        b=Map6Nm5WLajYQPZ7IukeVVurWm9363g5YSYjZ72xCueXXxjNe0iWqhM3Z+WEA+Kfk0
+         xG4TbwUCdCNQjAwSuEEv8DyKoeAf3PHE9VXL8/GvjW7XdDZyaeMhQ+OOzW8y20koPzGQ
+         pbfaZzQezAFAeNr09qXNYHtK5DG7VogWsE29+bnwlEFRoFUG8JWJDTR3s6qHx4y+65xi
+         aJEHF5XKJoFeti13w3IQRH92xw6ITpdYQ3AUSQXsDkool4Hdi55J2bB4QwZ2mCFFVya9
+         ri/ws+EGbejw4/oPFyVjoNLDeL8uuUVQ8/vEz8/mG8ESQnz4aCC3PKbHh6TxxBXnnFVp
+         UbRw==
+X-Forwarded-Encrypted: i=1; AJvYcCUvxzyEdoepoEdL2H8y3NuiJEvJsxTyWJISR0qq6rGSBzTq+KRFjW6PKQ9u+ez8YKpEHFn6xQRIgu8=@vger.kernel.org, AJvYcCVT8WGIi1dfMhz6N24Ksfd0zgm9I4/GyII60s1eMUYhB/TvAch2wJm+pHgTyqDGHDAjrrgEsJpWhlEjLRyxOElxqFLMxg==@vger.kernel.org, AJvYcCWb/05MEnGaxLKtqA4VWH/N/GVTuHzUE7/qsjZbZksqN+byfQKVKfMRZYYvW822QbynB6r6rXyOYgDDVIZM@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy2/j6Ad+t8m0elN9KP0kQxtHT8XeRJhktpsOleX5sH1kPEsq+x
+	T+yiNIRPDKSsZswWxT1+6/ACP5W6WVkjRB5EB/I9aL8Cts5X84cQqAu7siJ+jTg=
+X-Gm-Gg: ASbGnctgMqmfeoirVawvSjeD5kl3pDCVDKPKBgxJZcyUVeFMogqOva/L8OODPLvogy2
+	nLAP6ZNRkhmSU+GnDpa51Xf3NFk+4cevcDaf4EXkmA6dYyvw0dIqXR15icZjwI6pnG4k7KiEW+b
+	zYnzzI2tj5bCOYbYGrH1W9p0jX4VVDzDqsuPCKzaZQq/3AC0pkoMoAWVI/P7x7uKEZUHcvtjxJg
+	jQ3X4VVoFKOryIZVkWvm2AEn6wKDihXXiB7qUFnBzUPXsvgZeJcyMIz8hR+QM+lw5ShU0evnQtk
+	2YN7I2h2jW+7HbV3+BokDg==
+X-Google-Smtp-Source: AGHT+IEAdGK+Nhqi95tYqBxHQGi/KlTwHX8df1ZQ9G34mxVF90bIqSW+KiWFGDrOrpLy67+BtNNT5g==
+X-Received: by 2002:a05:6e02:1f8a:b0:3cc:b7e4:6264 with SMTP id e9e14a558f8ab-3ce3a892c05mr89228965ab.0.1736524768982;
+        Fri, 10 Jan 2025 07:59:28 -0800 (PST)
+Received: from mail-io1-f45.google.com (mail-io1-f45.google.com. [209.85.166.45])
+        by smtp.gmail.com with ESMTPSA id e9e14a558f8ab-3ce4addb410sm10371545ab.41.2025.01.10.07.59.28
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 10 Jan 2025 07:59:28 -0800 (PST)
+Received: by mail-io1-f45.google.com with SMTP id ca18e2360f4ac-844e61f3902so155165939f.0;
+        Fri, 10 Jan 2025 07:59:28 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCWUJmlBtqY3TgWF4KvgGCJuCq2eElY1My8G6NHHkzUJ7VvXJbbMxeMdCtKu32aOSPG/kzBHXHynb7Y=@vger.kernel.org, AJvYcCX39uAn24AmW5fe0JzUQXtuneS5z5fy75TaYzAB96OGTYeB0R47krls11Z5drdqXrDPm/WCLAUssFuLQhm1wyww9PZliQ==@vger.kernel.org, AJvYcCXkF8GDp8E3PvnWwXhG7Zn/ZPrdcbhdJRomOllDb1QdYvL9vv35JUipXOfBHSP6prGKNXSAoMVXq50K7Kpv@vger.kernel.org
+X-Received: by 2002:a05:6e02:13a2:b0:3a7:e732:472a with SMTP id
+ e9e14a558f8ab-3ce3a9a4ac6mr89825995ab.2.1736524767919; Fri, 10 Jan 2025
+ 07:59:27 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="8323328-409518992-1736519936=:1003"
+References: <20250109220745.69977-1-josh@joshuagrisham.com> <30f6644c-bf35-dd5e-4f1c-d1f1915b97da@linux.intel.com>
+In-Reply-To: <30f6644c-bf35-dd5e-4f1c-d1f1915b97da@linux.intel.com>
+From: Joshua Grisham <josh@joshuagrisham.com>
+Date: Fri, 10 Jan 2025 16:59:16 +0100
+X-Gmail-Original-Message-ID: <CAMF+KeaN_FXjEHOw72LD7GgfFyhjjXjY+ask4vxd1jV+zXn=Mw@mail.gmail.com>
+X-Gm-Features: AbW1kvYOduiRt--ToaafK15apWbhlB2OstFOd_AfbotoogeTRg7xNSAp_ZuqXSo
+Message-ID: <CAMF+KeaN_FXjEHOw72LD7GgfFyhjjXjY+ask4vxd1jV+zXn=Mw@mail.gmail.com>
+Subject: Re: [PATCH v5] platform/x86: samsung-galaxybook: Add
+ samsung-galaxybook driver
+To: =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Cc: Joshua Grisham <josh@joshuagrisham.com>, W_Armin@gmx.de, thomas@t-8ch.de, 
+	kuurtb@gmail.com, Hans de Goede <hdegoede@redhat.com>, platform-driver-x86@vger.kernel.org, 
+	corbet@lwn.net, linux-doc@vger.kernel.org, 
+	LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
+Hi Ilpo, thanks for taking the time! Few clarifications/comments below...
 
---8323328-409518992-1736519936=:1003
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Den fre 10 jan. 2025 kl 12:30 skrev Ilpo J=C3=A4rvinen
+<ilpo.jarvinen@linux.intel.com>:
+>
+> > +static int get_performance_mode_profile(struct samsung_galaxybook *gal=
+axybook,
+> > +                                     const u8 performance_mode,
+> > +                                     enum platform_profile_option *pro=
+file)
+> > +{
+> > +     for (int i =3D 0; i < PLATFORM_PROFILE_LAST; i++) {
+>
+> unsigned int is preferred for loop variables that never should become
+> negative.
+>
 
-On Thu, 2 Jan 2025, Armin Wolf wrote:
+Thanks for the catch! There are a few other places with a for loop
+using int i so I will go ahead and change all of them to unsigned ints
+for the next version unless you say otherwise.
 
-> Am 22.12.24 um 22:50 schrieb Armin Wolf:
->=20
-> > Currently the platform filter cannot access any driver-specific state
-> > which forces drivers installing a i8042 filter to have at least some
-> > kind of global pointer for their filter.
-> >=20
-> > This however might cause issues should such a driver probe multiple
-> > devices. Fix this by allowing callers of i8042_install_filter() to
-> > submit a context pointer which is then passed to the i8042 filter.
-> >=20
-> > Also introduce a separate type for the i8042 filter (i8042_filter_t)
-> > so that the function definitions can stay compact.
-> >=20
-> > Tested on a Dell Inspiron 3505.
->=20
-> Any updates on this?
+> > +     if (num_mapped =3D=3D 0) {
+> > +             dev_dbg(&galaxybook->platform->dev, "failed to map any pe=
+rformance modes\n");
+> > +             return 0;
+>
+> Should this return error instead? I assume it's because you want to
+> initialize with part of the features only but...
+>
 
-We haven't heard what Dimitry thinks of the reasonale you gave in v1.
+Yes at this point it is "no harm, no foul": the profile_handler has
+not been set up, platform profile has not been registered, and
+has_performance_mode is false, so I want that it just exits and the
+probe continues to init other features (e.g. devices with SAM0427 have
+kbd backlight controller and firmware attributes but not this specific
+performance_mode implementation, so for them this function will just
+stop anywhere along the way at whatever point it fails and just "not
+doing anything else" but still let them use the other features of the
+driver... all other features that then check against
+has_performance_mode will see that it is false and just skip that
+part). Does this still seem ok or is there any adjustment you would
+like to see for this?
 
-I'd like to have this as it allows us clean up the globals on pdx86 side=20
-even if i8042 is still limited to a single filter (and uses globals=20
-itself).
+> > +     /* if startup performance_mode fails to match a profile, try to s=
+et init mode */
+> > +     err =3D get_performance_mode_profile(galaxybook, performance_mode=
+, NULL);
+> > +     if (err) {
+> > +             if (init_performance_mode =3D=3D GB_PERFORMANCE_MODE_UNKN=
+OWN) {
+> > +                     dev_err(&galaxybook->platform->dev, "missing init=
+ial performance mode\n");
+> > +                     return -ENODATA;
+> > +             }
+> > +             err =3D performance_mode_acpi_set(galaxybook, init_perfor=
+mance_mode);
+> > +             if (err) {
+> > +                     dev_err(&galaxybook->platform->dev,
+> > +                             "failed to set initial performance mode 0=
+x%x\n",
+> > +                             init_performance_mode);
+> > +                     return err;
+>
+> ...why these two cases then result in failing everything vs. just platfor=
+m
+> profile feature? Not an end of the world but it feels inconsistent to me.
+>
 
---=20
- i.
+I am glad you bring this up, as it forces me think through this a few
+more rounds... basically what happens is that the device will always
+come up from a fresh boot with the value of 0x0 as the "current
+performance mode" as response from the ACPI method, even though for
+most devices value 0x0 is the "legacy" optimized value that should not
+be used.
 
-> > Reviewed-by: Ilpo J=C3=A4rvinen <ilpo.jarvinen@linux.intel.com>
-> > Signed-off-by: Armin Wolf <W_Armin@gmx.de>
-> > ---
-> > Changes since v1:
-> > - add kerneldoc for new typedef
-> > - add Reviewed-by tag
-> > ---
-> >   drivers/input/misc/ideapad_slidebar.c   |  4 ++--
-> >   drivers/input/serio/i8042.c             | 17 ++++++++-------
-> >   drivers/platform/x86/asus-nb-wmi.c      |  3 ++-
-> >   drivers/platform/x86/asus-wmi.c         |  2 +-
-> >   drivers/platform/x86/asus-wmi.h         |  3 +--
-> >   drivers/platform/x86/dell/dell-laptop.c |  6 +++---
-> >   drivers/platform/x86/hp/hp_accel.c      |  4 ++--
-> >   drivers/platform/x86/msi-laptop.c       |  6 +++---
-> >   drivers/platform/x86/panasonic-laptop.c |  4 ++--
-> >   drivers/platform/x86/toshiba_acpi.c     |  4 ++--
-> >   include/linux/i8042.h                   | 28 ++++++++++++++++++------=
--
-> >   11 files changed, 48 insertions(+), 33 deletions(-)
-> >=20
-> > diff --git a/drivers/input/misc/ideapad_slidebar.c
-> > b/drivers/input/misc/ideapad_slidebar.c
-> > index f6e5fc807b4d..ab2e0a401904 100644
-> > --- a/drivers/input/misc/ideapad_slidebar.c
-> > +++ b/drivers/input/misc/ideapad_slidebar.c
-> > @@ -121,7 +121,7 @@ static void slidebar_mode_set(u8 mode)
-> >   }
-> >=20
-> >   static bool slidebar_i8042_filter(unsigned char data, unsigned char s=
-tr,
-> > -=09=09=09=09  struct serio *port)
-> > +=09=09=09=09  struct serio *port, void *context)
-> >   {
-> >   =09static bool extended =3D false;
-> >=20
-> > @@ -219,7 +219,7 @@ static int __init ideapad_probe(struct platform_dev=
-ice*
-> > pdev)
-> >   =09input_set_capability(slidebar_input_dev, EV_ABS, ABS_X);
-> >   =09input_set_abs_params(slidebar_input_dev, ABS_X, 0, 0xff, 0, 0);
-> >=20
-> > -=09err =3D i8042_install_filter(slidebar_i8042_filter);
-> > +=09err =3D i8042_install_filter(slidebar_i8042_filter, NULL);
-> >   =09if (err) {
-> >   =09=09dev_err(&pdev->dev,
-> >   =09=09=09"Failed to install i8042 filter: %d\n", err);
-> > diff --git a/drivers/input/serio/i8042.c b/drivers/input/serio/i8042.c
-> > index 509330a27880..cab5a4c5baf5 100644
-> > --- a/drivers/input/serio/i8042.c
-> > +++ b/drivers/input/serio/i8042.c
-> > @@ -179,8 +179,8 @@ static struct platform_device *i8042_platform_devic=
-e;
-> >   static struct notifier_block i8042_kbd_bind_notifier_block;
-> >=20
-> >   static bool i8042_handle_data(int irq);
-> > -static bool (*i8042_platform_filter)(unsigned char data, unsigned char=
- str,
-> > -=09=09=09=09     struct serio *serio);
-> > +static i8042_filter_t i8042_platform_filter;
-> > +static void *i8042_platform_filter_context;
-> >=20
-> >   void i8042_lock_chip(void)
-> >   {
-> > @@ -194,8 +194,7 @@ void i8042_unlock_chip(void)
-> >   }
-> >   EXPORT_SYMBOL(i8042_unlock_chip);
-> >=20
-> > -int i8042_install_filter(bool (*filter)(unsigned char data, unsigned c=
-har
-> > str,
-> > -=09=09=09=09=09struct serio *serio))
-> > +int i8042_install_filter(i8042_filter_t filter, void *context)
-> >   {
-> >   =09guard(spinlock_irqsave)(&i8042_lock);
-> >=20
-> > @@ -203,12 +202,12 @@ int i8042_install_filter(bool (*filter)(unsigned =
-char
-> > data, unsigned char str,
-> >   =09=09return -EBUSY;
-> >=20
-> >   =09i8042_platform_filter =3D filter;
-> > +=09i8042_platform_filter_context =3D context;
-> >   =09return 0;
-> >   }
-> >   EXPORT_SYMBOL(i8042_install_filter);
-> >=20
-> > -int i8042_remove_filter(bool (*filter)(unsigned char data, unsigned ch=
-ar
-> > str,
-> > -=09=09=09=09       struct serio *port))
-> > +int i8042_remove_filter(i8042_filter_t filter)
-> >   {
-> >   =09guard(spinlock_irqsave)(&i8042_lock);
-> >=20
-> > @@ -216,6 +215,7 @@ int i8042_remove_filter(bool (*filter)(unsigned cha=
-r
-> > data, unsigned char str,
-> >   =09=09return -EINVAL;
-> >=20
-> >   =09i8042_platform_filter =3D NULL;
-> > +=09i8042_platform_filter_context =3D NULL;
-> >   =09return 0;
-> >   }
-> >   EXPORT_SYMBOL(i8042_remove_filter);
-> > @@ -480,7 +480,10 @@ static bool i8042_filter(unsigned char data, unsig=
-ned
-> > char str,
-> >   =09=09}
-> >   =09}
-> >=20
-> > -=09if (i8042_platform_filter && i8042_platform_filter(data, str, serio=
-))
-> > {
-> > +=09if (!i8042_platform_filter)
-> > +=09=09return false;
+In Windows, the Samsung background apps take care of this by storing
+last-used value from previous session and then re-applying it after
+startup (and the same happens with various userspace services on
+platform profile from what I have seen, actually).
+
+But since the driver does not map 0x0 to any valid profile unless the
+device only has the "legacy" optimized mode, then my function
+get_performance_mode_profile() will return -ENODATA in this initial
+startup state of 0x0. What I noticed is that the first time after this
+that you run platform_profile_cycle() after this, there is a little
+"hiccup" and an error "Failed to get profile for handler .." is
+printed in the kernel log from platform_profile.c (without pr_fmt by
+the way), but then it just works anyway and starts to pick up from the
+first enabled profile and then can continue to cycle.
+
+My bit of code here was to basically try to "force" to set the profile
+to whatever was successfully mapped as "balanced" upon a fresh startup
+so that when platform_profile_cycle() first runs there would not be
+any condition where get_performance_mode_profile() would return
+-ENODATA. Then the userspace tools would take over anyway and restore
+your last session's latest used profile so it would not matter so
+much. In the end, really the aim I guess is to avoid this error
+message in the kernel log, but otherwise everything works even though
+there is an error message printed, but this is maybe a bit overkill?
+And by the way, that, as you say, we should probably not fail the
+entire feature just because of this, but let the error happen anyway
+and let everything work after that.
+
+Possibly more "simple" alternatives I can think of off the top of my head:
+
+1. Let get_performance_mode_profile() return 0 instead of -ENODATA if
+nothing is matched , this way a non-mapped performance mode would
+always just set platform_profile_cycle() to the start of the cycle I
+guess/would hope? and/or add a special case in
+get_performance_mode_profile() for performance_mode=3D0 to just return 0
+to get the same effect ? (though what happens if we have not enabled
+PLATFORM_PROFILE_LOW_POWER in the choices? even though the function
+returned 0, will platform_profile see that 0 is not supported, and
+just keep moving on until it gets to the first one that is? If so then
+this will work, but I have not yet tested or fully checked the code to
+ensure that this will actually be the behavior...)
+
+2. Try to do the logic which I did with this init_performance_mode,
+but in case init_profile_mode is not set, just skip it and let the
+error come from platform_profile_cycle() anyway and it should start to
+work. In this case I think it would be good if the user is maybe
+flagged somehow and create a bug for this, because I would want to be
+able to work with them to see what modes are reported by their device
+and see if the mapping needs to be updated in some way.
+
+3. Do neither of these, remove everything with init_performance_mode,
+and just let platform_profile_cycle() fail upon startup and print the
+error message and then it should just start working after anyway.
+
+4. Map 0x0 performance_mode to PLATFORM_PROFILE_CUSTOM in case the
+"legacy" mode with this value is not mapped, then the hotkey would not
+work to cycle the profile at first as the user would be forced to set
+the profile to a value via either a GUI or the sysfs interface before
+they can begin to use the hotkey to cycle the profile. Once they do
+this the very first time, then the userspace tools should kick in
+after this (upon every restart for example) to set the profile to the
+prior session's last used profile and then the hotkey will start to
+work to cycle the profile anyway in that session without any
+intervention from the user at all (so it is the very first time that
+they start their environment up, assuming that the prior value does
+not get cleared somehow due to some combo like the module being
+removed/blacklisted and then they restart, then add it back, etc, or
+some other corner-case situation?)
+
+I do think that something should change, maybe the most
+straight-forward are either 1 or 2 in this list, but not sure if there
+are any opinions or preferences on these or if there are other better
+options I did not think of here?
+
+> > +static ssize_t current_value_store(struct kobject *kobj, struct kobj_a=
+ttribute *attr,
+> > +                                const char *buf, size_t count)
+> > +{
+> > +     struct galaxybook_fw_attr *fw_attr =3D
+> > +             container_of(attr, struct galaxybook_fw_attr, current_val=
+ue);
+> > +     struct samsung_galaxybook *galaxybook =3D fw_attr->galaxybook;
 > > +
-> > +=09if (i8042_platform_filter(data, str, serio,
-> > i8042_platform_filter_context)) {
-> >   =09=09dbg("Filtered out by platform filter\n");
-> >   =09=09return true;
-> >   =09}
-> > diff --git a/drivers/platform/x86/asus-nb-wmi.c
-> > b/drivers/platform/x86/asus-nb-wmi.c
-> > index ef04d396f61c..a3d4b98045f8 100644
-> > --- a/drivers/platform/x86/asus-nb-wmi.c
-> > +++ b/drivers/platform/x86/asus-nb-wmi.c
-> > @@ -50,7 +50,8 @@ MODULE_PARM_DESC(tablet_mode_sw, "Tablet mode detect:
-> > -1:auto 0:disable 1:kbd-do
-> >   static struct quirk_entry *quirks;
-> >   static bool atkbd_reports_vol_keys;
-> >=20
-> > -static bool asus_i8042_filter(unsigned char data, unsigned char str, s=
-truct
-> > serio *port)
-> > +static bool asus_i8042_filter(unsigned char data, unsigned char str, s=
-truct
-> > serio *port,
-> > +=09=09=09      void *context)
-> >   {
-> >   =09static bool extended_e0;
-> >   =09static bool extended_e1;
-> > diff --git a/drivers/platform/x86/asus-wmi.c
-> > b/drivers/platform/x86/asus-wmi.c
-> > index fdeebab96fc0..6c674de60ec0 100644
-> > --- a/drivers/platform/x86/asus-wmi.c
-> > +++ b/drivers/platform/x86/asus-wmi.c
-> > @@ -4824,7 +4824,7 @@ static int asus_wmi_add(struct platform_device *p=
-dev)
-> >   =09}
-> >=20
-> >   =09if (asus->driver->i8042_filter) {
-> > -=09=09err =3D i8042_install_filter(asus->driver->i8042_filter);
-> > +=09=09err =3D i8042_install_filter(asus->driver->i8042_filter, NULL);
-> >   =09=09if (err)
-> >   =09=09=09pr_warn("Unable to install key filter - %d\n", err);
-> >   =09}
-> > diff --git a/drivers/platform/x86/asus-wmi.h
-> > b/drivers/platform/x86/asus-wmi.h
-> > index d02f15fd3482..018dfde4025e 100644
-> > --- a/drivers/platform/x86/asus-wmi.h
-> > +++ b/drivers/platform/x86/asus-wmi.h
-> > @@ -73,8 +73,7 @@ struct asus_wmi_driver {
-> >   =09void (*key_filter) (struct asus_wmi_driver *driver, int *code,
-> >   =09=09=09    unsigned int *value, bool *autorelease);
-> >   =09/* Optional standard i8042 filter */
-> > -=09bool (*i8042_filter)(unsigned char data, unsigned char str,
-> > -=09=09=09     struct serio *serio);
-> > +=09i8042_filter_t=09=09i8042_filter;
-> >=20
-> >   =09int (*probe) (struct platform_device *device);
-> >   =09void (*detect_quirks) (struct asus_wmi_driver *driver);
-> > diff --git a/drivers/platform/x86/dell/dell-laptop.c
-> > b/drivers/platform/x86/dell/dell-laptop.c
-> > index 5671bd0deee7..58b860b88fff 100644
-> > --- a/drivers/platform/x86/dell/dell-laptop.c
-> > +++ b/drivers/platform/x86/dell/dell-laptop.c
-> > @@ -725,8 +725,8 @@ static void dell_update_rfkill(struct work_struct
-> > *ignored)
-> >   }
-> >   static DECLARE_DELAYED_WORK(dell_rfkill_work, dell_update_rfkill);
-> >=20
-> > -static bool dell_laptop_i8042_filter(unsigned char data, unsigned char=
- str,
-> > -=09=09=09      struct serio *port)
-> > +static bool dell_laptop_i8042_filter(unsigned char data, unsigned char=
- str,
-> > struct serio *port,
-> > +=09=09=09=09     void *context)
-> >   {
-> >   =09static bool extended;
-> >=20
-> > @@ -884,7 +884,7 @@ static int __init dell_setup_rfkill(void)
-> >   =09=09pr_warn("Unable to register dell rbtn notifier\n");
-> >   =09=09goto err_filter;
-> >   =09} else {
-> > -=09=09ret =3D i8042_install_filter(dell_laptop_i8042_filter);
-> > +=09=09ret =3D i8042_install_filter(dell_laptop_i8042_filter, NULL);
-> >   =09=09if (ret) {
-> >   =09=09=09pr_warn("Unable to install key filter\n");
-> >   =09=09=09goto err_filter;
-> > diff --git a/drivers/platform/x86/hp/hp_accel.c
-> > b/drivers/platform/x86/hp/hp_accel.c
-> > index 39a6530f5072..10d5af18d639 100644
-> > --- a/drivers/platform/x86/hp/hp_accel.c
-> > +++ b/drivers/platform/x86/hp/hp_accel.c
-> > @@ -267,7 +267,7 @@ static struct delayed_led_classdev hpled_led =3D {
-> >   };
-> >=20
-> >   static bool hp_accel_i8042_filter(unsigned char data, unsigned char s=
-tr,
-> > -=09=09=09=09  struct serio *port)
-> > +=09=09=09=09  struct serio *port, void *context)
-> >   {
-> >   =09static bool extended;
-> >=20
-> > @@ -326,7 +326,7 @@ static int lis3lv02d_probe(struct platform_device
-> > *device)
-> >   =09/* filter to remove HPQ6000 accelerometer data
-> >   =09 * from keyboard bus stream */
-> >   =09if (strstr(dev_name(&device->dev), "HPQ6000"))
-> > -=09=09i8042_install_filter(hp_accel_i8042_filter);
-> > +=09=09i8042_install_filter(hp_accel_i8042_filter, NULL);
-> >=20
-> >   =09INIT_WORK(&hpled_led.work, delayed_set_status_worker);
-> >   =09ret =3D led_classdev_register(NULL, &hpled_led.led_classdev);
-> > diff --git a/drivers/platform/x86/msi-laptop.c
-> > b/drivers/platform/x86/msi-laptop.c
-> > index e5391a37014d..c4b150fa093f 100644
-> > --- a/drivers/platform/x86/msi-laptop.c
-> > +++ b/drivers/platform/x86/msi-laptop.c
-> > @@ -806,8 +806,8 @@ static void msi_send_touchpad_key(struct work_struc=
-t
-> > *ignored)
-> >   }
-> >   static DECLARE_DELAYED_WORK(msi_touchpad_dwork, msi_send_touchpad_key=
-);
-> >=20
-> > -static bool msi_laptop_i8042_filter(unsigned char data, unsigned char =
-str,
-> > -=09=09=09=09struct serio *port)
-> > +static bool msi_laptop_i8042_filter(unsigned char data, unsigned char =
-str,
-> > struct serio *port,
-> > +=09=09=09=09    void *context)
-> >   {
-> >   =09static bool extended;
-> >=20
-> > @@ -996,7 +996,7 @@ static int __init load_scm_model_init(struct
-> > platform_device *sdev)
-> >   =09if (result)
-> >   =09=09goto fail_input;
-> >=20
-> > -=09result =3D i8042_install_filter(msi_laptop_i8042_filter);
-> > +=09result =3D i8042_install_filter(msi_laptop_i8042_filter, NULL);
-> >   =09if (result) {
-> >   =09=09pr_err("Unable to install key filter\n");
-> >   =09=09goto fail_filter;
-> > diff --git a/drivers/platform/x86/panasonic-laptop.c
-> > b/drivers/platform/x86/panasonic-laptop.c
-> > index 22ca70eb8227..2987b4db6009 100644
-> > --- a/drivers/platform/x86/panasonic-laptop.c
-> > +++ b/drivers/platform/x86/panasonic-laptop.c
-> > @@ -260,7 +260,7 @@ struct pcc_acpi {
-> >    * keypress events over the PS/2 kbd interface, filter these out.
-> >    */
-> >   static bool panasonic_i8042_filter(unsigned char data, unsigned char =
-str,
-> > -=09=09=09=09   struct serio *port)
-> > +=09=09=09=09   struct serio *port, void *context)
-> >   {
-> >   =09static bool extended;
-> >=20
-> > @@ -1100,7 +1100,7 @@ static int acpi_pcc_hotkey_add(struct acpi_device
-> > *device)
-> >   =09=09pcc->platform =3D NULL;
-> >   =09}
-> >=20
-> > -=09i8042_install_filter(panasonic_i8042_filter);
-> > +=09i8042_install_filter(panasonic_i8042_filter, NULL);
-> >   =09return 0;
-> >=20
-> >   out_platform:
-> > diff --git a/drivers/platform/x86/toshiba_acpi.c
-> > b/drivers/platform/x86/toshiba_acpi.c
-> > index 78a5aac2dcfd..5ad3a7183d33 100644
-> > --- a/drivers/platform/x86/toshiba_acpi.c
-> > +++ b/drivers/platform/x86/toshiba_acpi.c
-> > @@ -2755,7 +2755,7 @@ static int toshiba_acpi_enable_hotkeys(struct
-> > toshiba_acpi_dev *dev)
-> >   }
-> >=20
-> >   static bool toshiba_acpi_i8042_filter(unsigned char data, unsigned ch=
-ar
-> > str,
-> > -=09=09=09=09      struct serio *port)
-> > +=09=09=09=09      struct serio *port, void *context)
-> >   {
-> >   =09if (str & I8042_STR_AUXDATA)
-> >   =09=09return false;
-> > @@ -2915,7 +2915,7 @@ static int toshiba_acpi_setup_keyboard(struct
-> > toshiba_acpi_dev *dev)
-> >   =09if (ec_handle && acpi_has_method(ec_handle, "NTFY")) {
-> >   =09=09INIT_WORK(&dev->hotkey_work, toshiba_acpi_hotkey_work);
-> >=20
-> > -=09=09error =3D i8042_install_filter(toshiba_acpi_i8042_filter);
-> > +=09=09error =3D i8042_install_filter(toshiba_acpi_i8042_filter, NULL);
-> >   =09=09if (error) {
-> >   =09=09=09pr_err("Error installing key filter\n");
-> >   =09=09=09goto err_free_dev;
-> > diff --git a/include/linux/i8042.h b/include/linux/i8042.h
-> > index 95b07f8b77fe..00037c13abc8 100644
-> > --- a/include/linux/i8042.h
-> > +++ b/include/linux/i8042.h
-> > @@ -54,15 +54,29 @@
-> >=20
-> >   struct serio;
-> >=20
-> > +/**
-> > + * typedef i8042_filter_t - i8042 filter callback
-> > + * @data: Data received by the i8042 controller
-> > + * @str: Status register of the i8042 controller
-> > + * @serio: Serio of the i8042 controller
-> > + * @context: Context pointer associated with this callback
-> > + *
-> > + * This represents a i8042 filter callback which can be used with
-> > i8042_install_filter()
-> > + * and i8042_remove_filter() to filter the i8042 input for
-> > platform-specific key codes.
-> > + *
-> > + * Context: Interrupt context.
-> > + * Returns: true if the data should be filtered out, false if otherwis=
-e.
-> > + */
-> > +typedef bool (*i8042_filter_t)(unsigned char data, unsigned char str,
-> > struct serio *serio,
-> > +=09=09=09       void *context);
-> > +
-> >   #if defined(CONFIG_SERIO_I8042) || defined(CONFIG_SERIO_I8042_MODULE)
-> >=20
-> >   void i8042_lock_chip(void);
-> >   void i8042_unlock_chip(void);
-> >   int i8042_command(unsigned char *param, int command);
-> > -int i8042_install_filter(bool (*filter)(unsigned char data, unsigned c=
-har
-> > str,
-> > -=09=09=09=09=09struct serio *serio));
-> > -int i8042_remove_filter(bool (*filter)(unsigned char data, unsigned ch=
-ar
-> > str,
-> > -=09=09=09=09       struct serio *serio));
-> > +int i8042_install_filter(i8042_filter_t filter, void *context);
-> > +int i8042_remove_filter(i8042_filter_t filter);
-> >=20
-> >   #else
-> >=20
-> > @@ -79,14 +93,12 @@ static inline int i8042_command(unsigned char *para=
-m,
-> > int command)
-> >   =09return -ENODEV;
-> >   }
-> >=20
-> > -static inline int i8042_install_filter(bool (*filter)(unsigned char da=
-ta,
-> > unsigned char str,
-> > -=09=09=09=09=09struct serio *serio))
-> > +static inline int i8042_install_filter(i8042_filter_t filter, void
-> > *context)
-> >   {
-> >   =09return -ENODEV;
-> >   }
-> >=20
-> > -static inline int i8042_remove_filter(bool (*filter)(unsigned char dat=
-a,
-> > unsigned char str,
-> > -=09=09=09=09       struct serio *serio))
-> > +static inline int i8042_remove_filter(i8042_filter_t filter)
-> >   {
-> >   =09return -ENODEV;
-> >   }
-> > --
-> > 2.39.5
-> >=20
-> >=20
->=20
---8323328-409518992-1736519936=:1003--
+> > +     bool value;
+>
+> Remove the extra empty line from within variable declarations.
+>
+
+Yes sorry this was just a miss when so much got moved around due to
+the big changes between v4 and v5; will fix this and the other small
+straight-forward issues for v6 :)
+
+> --
+>  i.
+
+Thanks again!
+Joshua
