@@ -1,41 +1,41 @@
-Received: from mout.gmx.net (mout.gmx.net [212.227.17.20])
+Received: from mout.gmx.net (mout.gmx.net [212.227.17.22])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7EF5624B24E;
-	Fri, 10 Jan 2025 23:24:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.20
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3179F7E1;
+	Sat, 11 Jan 2025 00:01:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.22
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736551459; cv=none; b=KfcEnaC0VQKZG9AXN0HvvkL6+LB29KfA227Ed8qKyuy+iZiBfyPEGYVB9VT4TMNX1hcWL9stQxWR+OzFdKXp4hEuuRUuf9YN+GcsjLUPO4VEPwCLT0kOud7ZZ0tIujQIITWgGOnY4N2rwiPj7M4n/+Wy0iX/6ZSGLtJ4cPceW6U=
+	t=1736553695; cv=none; b=lS/LVFFqq6ohuHwLzfxEERarWlA7XkYdZPB1MqZ9t0AQNu48lfhk5TYjvjuItra0MNLovsSkZu6HJoaDCgH2WxUNp4e/WXKzUh3tbaPax5mS2i+aqs4yOCrXOCZFAzC4Oi/b7OonkOhyckwKKs6TECpySaj15l1WG9fHENszXKE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736551459; c=relaxed/simple;
-	bh=BfEiEc0mRiVZVEKvV7EmwhIn9iTScSwMYQwHC5Eeax0=;
+	s=arc-20240116; t=1736553695; c=relaxed/simple;
+	bh=Y9BfWuQriL7ALcM+x9ClP1LPlysYM4vP/ug8pPVGhyY=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=iRQ7ChN7vOrDFT7YWsMcVg9eO6/VvEn71Q5hHHHO/u3W1zJzwmKV1r1j118WZaBaNrOMv+xi4xHI1udD2SUL4NEwwyDtHapakk58BdfR+L3yFYSF9DzuFcav8Z8K/H90Mo2pODos7MT04D5eVs0lhfOKSg1h4hqxFKjZn9/ikRM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b=BcQwtmWM; arc=none smtp.client-ip=212.227.17.20
+	 In-Reply-To:Content-Type; b=fh44919MV6lSZErNYKJ/Blat8s3kyf1hiCryfbkw2GJdYDkvB60lb1vmhxQoJO9Zd8b9Hdg2gWNp/XqAYE4oeDSNLJNJ2NUCZ/+GRzq+AVg2HTjj6RKjxEJiVsfo2lN6fcm5Zl49yqoCsvVCXSgusLIBv9fJkKqYiXxASek4jfs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b=ZIs7A3B6; arc=none smtp.client-ip=212.227.17.22
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b="BcQwtmWM"
+	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b="ZIs7A3B6"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.de;
-	s=s31663417; t=1736551436; x=1737156236; i=w_armin@gmx.de;
-	bh=wCRNgED61Mlcr/6lN4lALlUtIPpcYZKVWP2jAp9FZ90=;
+	s=s31663417; t=1736553690; x=1737158490; i=w_armin@gmx.de;
+	bh=1Krug0v491F/5PIVgwP8y7jms7gdxRwqD3IgZxgdStQ=;
 	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:To:Cc:
 	 References:From:In-Reply-To:Content-Type:
 	 Content-Transfer-Encoding:cc:content-transfer-encoding:
 	 content-type:date:from:message-id:mime-version:reply-to:subject:
 	 to;
-	b=BcQwtmWMdFMWkQMhtkv1dY2CQQvYrSmHj6RpBiCt5ztAwkfpVKG64nOqlIsMDThL
-	 zU8HgvAx3VSbQJNPTBCp4GdVV4Uy7A+lwvehOyCBEDAn4FaapetAwvuVN90BhfM00
-	 6Tby1cxfoNdjxUwlIu8v6InlwpKOjv78xFKVgBuKPiC2aQsj4DS3Qz0/AFiVM44x2
-	 lDreA8RxIf4QdzDQQti4rPIVyaSzc9SV6F9fWmsSDKlUuZyOCU3TgFoPGaYZssZGY
-	 qvg84R3eR/Vpr3KTM0p9jBssNTs78cuPb+Rjg7PLdKRd3l+l7ptXSxtfo+FF9l7K5
-	 fJYzAXoq5e4drVo6gA==
+	b=ZIs7A3B6/A4ZPhck9F6U6iOnUY8hQdIpuGel1Ik1TQoZXVw/j215hJR7OqTzHz7d
+	 UTxdVPPuX06Y7SEUbdgT6W6HnUEsfUHpy84kTjkJLQoBWl1e9bWMxZ3CZmkt5sw9+
+	 ChBYvyecFX4LXbZJ14FLIAP8NiW6yDEcx3E5O6R13Vdj5kN9KQiEWzEglupdWGqgf
+	 Sd6nIjOOXZY5mnmTSJpwTKogk1fe544l1x4T0pZDPO079NArrtvToXyWozlvCHKyt
+	 GeIzbkdHvlqfMTiC6XC4GlH3BkYVkhs5ZnXViJE7jLYu0heWwjQiPYbcf/eBv97Up
+	 FAZ6S5Zdg69eOzwcJA==
 X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
 Received: from [192.168.0.69] ([91.14.230.110]) by mail.gmx.net (mrgmx105
- [212.227.17.168]) with ESMTPSA (Nemesis) id 1MJE27-1tqWrw3QOh-00LZay; Sat, 11
- Jan 2025 00:23:56 +0100
-Message-ID: <5c248a52-84e9-4900-aabe-43251c53f542@gmx.de>
-Date: Sat, 11 Jan 2025 00:23:52 +0100
+ [212.227.17.168]) with ESMTPSA (Nemesis) id 1N3bSt-1tNmBt0HEx-011U3C; Sat, 11
+ Jan 2025 01:01:30 +0100
+Message-ID: <dbaed77b-7fc4-4133-9f03-3d50c93e8b13@gmx.de>
+Date: Sat, 11 Jan 2025 01:01:28 +0100
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -43,7 +43,8 @@ List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 2/4] platform/x86: Add Lenovo GameZone WMI Driver
+Subject: Re: [PATCH v2 3/4] platform/x86: Add Lenovo Capability Data 01 WMI
+ Driver
 To: Derek John Clark <derekjohn.clark@gmail.com>
 Cc: Hans de Goede <hdegoede@redhat.com>,
  =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
@@ -56,46 +57,48 @@ Cc: Hans de Goede <hdegoede@redhat.com>,
  platform-driver-x86@vger.kernel.org, linux-doc@vger.kernel.org,
  linux-kernel@vger.kernel.org
 References: <20250102004854.14874-1-derekjohn.clark@gmail.com>
- <20250102004854.14874-3-derekjohn.clark@gmail.com>
- <32a788aa-ddf0-4ae1-a51f-0c15de2056c9@gmx.de>
- <CAFqHKT=hehh9xorpbYA=9JjBCyoP=LkiTccALCFb3kBv_6ybtQ@mail.gmail.com>
+ <20250102004854.14874-4-derekjohn.clark@gmail.com>
+ <7ebb09b7-337d-4a9c-ba5c-bed874209fd4@gmx.de>
+ <CAFqHKT=Lx3LbDTY=1YEmn9OmhrkQOnvA5yuJbJi2_8-+N-y-Aw@mail.gmail.com>
 Content-Language: en-US
 From: Armin Wolf <W_Armin@gmx.de>
-In-Reply-To: <CAFqHKT=hehh9xorpbYA=9JjBCyoP=LkiTccALCFb3kBv_6ybtQ@mail.gmail.com>
+In-Reply-To: <CAFqHKT=Lx3LbDTY=1YEmn9OmhrkQOnvA5yuJbJi2_8-+N-y-Aw@mail.gmail.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:Cpwj77s2ogNE7nsybWj3vsbYvBMLI9S7bRuKe/pRtkiJHQ2mRWt
- 2CQ4Bf07rXZh7cCGn4EK+xdMbZJf+pa5v5PE0wk8RH5Ood0hKRCjE7sqOqn+wVv4TUQgbiG
- xcr3ly82x/hmYEjRDLwE1AVJRdkutq1FsV/ROgn7XsdUWOeIztZu35zWQa/978mvy+clHBG
- xK661qq5KzI3d8tCDYAig==
+X-Provags-ID: V03:K1:RyGHUp6cVoHhsfOgwysyiu6nuPWEvPN0b4qje5DzBEEQoe84TGb
+ TwCQ27lTSdciBRa20MJoxPlIUoyRzMHkVkM+Z9WK0JK0Wk2DENK9LsVMr3qi72BuKDDAWlA
+ 5rZUWfjhAcFT+pFHs+fgC/v+tkeg+H4/KXkHicgjl3VVSQ0OvsrAQ0cI0BFrnseNigiVT1p
+ uhNZtvI+zB5WFOT+rJHUg==
 X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:/OPwCLmXys8=;deRHmQIb/TlvomQvQEezk21amSz
- EbLwq7GeRUD56naT/wEX8FCLVUfB/14ziPZEJpEPEgIaZf+qlcvYEUp+BwzQ1ROXlr9F9VqrS
- o3uQ1EPFSSwqbQzJ/9eyV5VNQVCTD5jbj6bKPrEzl/rIMqZiPXzu2ytMrcZOuYKri1NDljXDA
- nXBo83YKMTtlUCyZDMvjleJeCfjApkv9s/zx95afjiax7YIMQFKTrGgR6pUnXI2xIC4g8iPUS
- iYcs9JSSAuAl1jHUNNsZviNf+RV8imZ/vMNX+Ba5ff78QsKl+eugGoKJvYM/KeMyz+TrMXHNz
- VoZc/Z3glRBawYSxBl428yc46VQs71c45oU+ZPu0z6cJIig+8g3Be4EMaTGOQqkOAKoZ5UbLr
- Fj2MgfQFYbq5oly1Dq9pmbVWOI1mDJks4PYJx2pil/tK8D1Awin1dQ/Le+oKNuWoKHPUm099V
- 2ap5FTCsJMcAKSEfwT8IAPG+YB/U6rJ0L0j5hV1NQNHvCq3ISQDUtoOao6LbV7ovhBm/l6ELk
- HikH78hPZxDuTTo0nizllpliB6TS3d0ekzcKaxcsofTWQLVxqJovglLdEknbAkf6v0VeQERCe
- yUiI7/LPfWytDRnWX5At4lV+tP7S4f2LzCUrlvoXkSH/rZYBf1gSsT5755nm6W6RSUDUFZhnT
- zfr9E4z4kY4KmDVQYgjDOH3GHZ38S+hskFe19FfaMV+f/FEgZZr+mowUCeme8b3jmMBZ1Ja6n
- ZsTOX8q1DI1rF5FWujMkx+7AEAJZXYRB+6W8aWE1OXOXJAF3kXtrk8er88In/jAMJPU/47tte
- IVAcnHuY2dCtO6koCzuJCxAWChaV2mmtuRZzYgo11OkKDL17hRk+4hWAukEp3FpJ6yqLsE4xV
- JffkU9q2GTMPDaDZ1UoHX15WEFnnr6AjXWFCr3joODbokASnlgiR06IaJGwjQBCDeGmZ4cX8v
- MTYPN0SbPSKO6A/nMN0IVdVCIY2u+vZD98U6xtdm1h/MIzmvZD0KOT4isFYRqVzHflgy6DB8e
- HVsjUPNIamgW+7puAJ3HiTHCZoaM50+ZoXVSQGPCncqdVcHX8bMKM88D2D0CfvCA7J2UGVqkS
- cfH8QdqQ1NfUBGkxHUuA7FUz2Dst/0
+UI-OutboundReport: notjunk:1;M01:P0:y//5FqXAG2o=;zaVDweXslz5oh0+uEGL1ZgtJhTb
+ p6NklyuFOqzCkJ39F+OjxhHlfI+E/6V6LGOFhwHzrN494UcpwgWlpzItMkq/CEcbOMsuRPd14
+ tjl55xglsa4XRRrUUkts8czlocV99HalkCYL8ngY5VOd9++rIvI2AjLXbPetcrA0QuSMHUi5f
+ LBX6A7/DPlWRX+3plWUpYLZVb0kdVXmknoFEwY6ebkvj5iMlW6LJ3UPnALOWGdWouHhSkZV0M
+ w2PBC29j2GmJLh+iizyh5PDV4+CJpl5fpJeAbMHVctb7T9pg1qyTu5ufxl+4TcuZrdAgnJJtq
+ d33ty9Gz7+UBa6qRN7uxxqgBYIzoKubINp0As1C3t2gS77gh8IUqkUSzGGYAdaH80ezp/87yC
+ D9PH4+Ml7PJ3F4js39OiWsknTiL/gIz0lkTC9S6pkoXA8EBG7MB539veHPMVYBCAvqXz+utKX
+ VuhJ5rs+L5y8iY3q5koDxPj2GjOTo+TWTSfLP8pxY0xVtQ3nZjSWD7IXWe/d9mRZe3LIiQ5CC
+ X1kbOKWKOgpnw88TJEZ8w5F0Idg3p1eNZIYV+NoXDoAtFldRq7lYlzca4/GkizhXmeks0+pqM
+ x2R7eNjYnIaqq9if3ISBsbl1tN4rOUV6DwNSyUEgSSPo12aUE3G6QId+VzB1KA2G1rdKe860T
+ cOtjdBhAaaUxmSWItdCIYUs4SH+3GnAZnjjgIQvNueiCgrd3EdEQT04oh0LDpO59VEUEK9RIZ
+ aZuBGZlqj6j/h265Tnp5eE0Q5iTdASJOu2iAlpTRWeVBKb9s4O1L+p7IP/yVc3iB3BQ1tRU7j
+ 9YH70qCMynYUwYd1Brjv/oxeNUgP+YhMqSoRvMXMNLfvAn+Z3AvlZcLniJNh7zDCXaI9Ug5He
+ tdiFjJulW1NkYqUF9dn85YVVYcYdwVf5tjDz1DdOhr1AaKCNfcJcwcH9xfg4+eDSALae3zRxU
+ GeNNwJmPbZrxEEkZlNhKbe8eGA47/QAxrDzVf5lYF8pHKhXlKg6kBhKe68POcu9B8/0D3RxZY
+ FOCK9JNe250LVTCt/ZBcUbuLL28TgXKPhP+LlmNivnPsv1c/qtJpJRgQUGq7P4uRbQXTuW4+7
+ bJ6Gutupt8ntckrvln110s6h4F7op6
 
-Am 10.01.25 um 22:33 schrieb Derek John Clark:
+Am 10.01.25 um 23:11 schrieb Derek John Clark:
 
-> On Thu, Jan 9, 2025 at 2:12=E2=80=AFPM Armin Wolf <W_Armin@gmx.de> wrote=
+> On Thu, Jan 9, 2025 at 2:35=E2=80=AFPM Armin Wolf <W_Armin@gmx.de> wrote=
 :
 >> Am 02.01.25 um 01:47 schrieb Derek J. Clark:
 >>
->>> Adds lenovo-wmi-gamezone.c which provides a driver for the Lenovo
->>> GameZone WMI interface that comes on Lenovo "Gaming Series" hardware.
->>> Provides ACPI platform profiles over WMI.
+>>> Adds lenovo-wmi-capdata01.c which provides a driver for the
+>>> LENOVO_CAPABILITY_DATA_01 WMI data block that comes on "Other Method"
+>>> enabled hardware. Provides an interface for querying if a given
+>>> attribute is supported by the hardware, as well as its default_value,
+>>> max_value, min_value, and step increment.
 >>>
 >>> v2:
 >>> - Use devm_kzalloc to ensure driver can be instanced, remove global
@@ -105,554 +108,392 @@ Am 10.01.25 um 22:33 schrieb Derek John Clark:
 >>> - Use guard(mutex) in all mutex instances, global mutex.
 >>> - Use pr_fmt instead of adding the driver name to each pr_err.
 >>> - Remove noisy pr_info usage.
->>> - Rename gamezone_wmi to lenovo_wmi_gz_priv and gz_wmi to priv.
->>> - Remove GZ_WMI symbol exporting.
+>>> - Rename capdata_wmi to lenovo_wmi_cd01_priv and cd01_wmi to priv.
+>>> - Use list to get the lenovo_wmi_cd01_priv instance in
+>>>     lenovo_wmi_capdata01_get as none of the data provided by the macro=
+s
+>>>     that will use it can pass a member of the struct for use in
+>>>     container_of.
 >>>
 >>> Signed-off-by: Derek J. Clark <derekjohn.clark@gmail.com>
 >>> ---
->>>    MAINTAINERS                                |   7 +
->>>    drivers/platform/x86/Kconfig               |  11 ++
->>>    drivers/platform/x86/Makefile              |   1 +
->>>    drivers/platform/x86/lenovo-wmi-gamezone.c | 203 ++++++++++++++++++=
+>>>    MAINTAINERS                                 |   1 +
+>>>    drivers/platform/x86/Kconfig                |  11 ++
+>>>    drivers/platform/x86/Makefile               |   1 +
+>>>    drivers/platform/x86/lenovo-wmi-capdata01.c | 131 +++++++++++++++++=
 +++
->>>    drivers/platform/x86/lenovo-wmi.h          | 105 +++++++++++
->>>    5 files changed, 327 insertions(+)
->>>    create mode 100644 drivers/platform/x86/lenovo-wmi-gamezone.c
->>>    create mode 100644 drivers/platform/x86/lenovo-wmi.h
+>>>    drivers/platform/x86/lenovo-wmi.h           |  20 +++
+>>>    5 files changed, 164 insertions(+)
+>>>    create mode 100644 drivers/platform/x86/lenovo-wmi-capdata01.c
 >>>
 >>> diff --git a/MAINTAINERS b/MAINTAINERS
->>> index baf0eeb9a355..8f8a6aec6b92 100644
+>>> index 8f8a6aec6b92..c9374c395905 100644
 >>> --- a/MAINTAINERS
 >>> +++ b/MAINTAINERS
->>> @@ -13034,6 +13034,13 @@ S:   Maintained
->>>    W:  http://legousb.sourceforge.net/
->>>    F:  drivers/usb/misc/legousbtower.c
+>>> @@ -13038,6 +13038,7 @@ LENOVO WMI drivers
+>>>    M:  Derek J. Clark <derekjohn.clark@gmail.com>
+>>>    L:  platform-driver-x86@vger.kernel.org
+>>>    S:  Maintained
+>>> +F:   drivers/platform/x86/lenovo-wmi-capdata01.c
+>>>    F:  drivers/platform/x86/lenovo-wmi-gamezone.c
+>>>    F:  drivers/platform/x86/lenovo-wmi.h
 >>>
->>> +LENOVO WMI drivers
->>> +M:   Derek J. Clark <derekjohn.clark@gmail.com>
->>> +L:   platform-driver-x86@vger.kernel.org
->>> +S:   Maintained
->>> +F:   drivers/platform/x86/lenovo-wmi-gamezone.c
->>> +F:   drivers/platform/x86/lenovo-wmi.h
->>> +
->>>    LETSKETCH HID TABLET DRIVER
->>>    M:  Hans de Goede <hdegoede@redhat.com>
->>>    L:  linux-input@vger.kernel.org
 >>> diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconf=
 ig
->>> index 0258dd879d64..9a6ac7fdec9f 100644
+>>> index 9a6ac7fdec9f..a2c1ab47ad9e 100644
 >>> --- a/drivers/platform/x86/Kconfig
 >>> +++ b/drivers/platform/x86/Kconfig
->>> @@ -459,6 +459,17 @@ config IBM_RTL
->>>         state =3D 0 (BIOS SMIs on)
->>>         state =3D 1 (BIOS SMIs off)
+>>> @@ -470,6 +470,17 @@ config LENOVO_WMI_GAMEZONE
+>>>          To compile this driver as a module, choose M here: the module=
+ will
+>>>          be called lenovo_wmi_gamezone.
 >>>
->>> +config LENOVO_WMI_GAMEZONE
->>> +     tristate "Lenovo GameZone WMI Driver"
+>>> +config LENOVO_WMI_DATA01
+>>> +     tristate "Lenovo Legion WMI capability Data 01 Driver"
 >>> +     depends on ACPI_WMI
->>> +     select ACPI_PLATFORM_PROFILE
 >>> +     help
->>> +       Say Y here if you have a WMI aware Lenovo Legion device and wo=
-uld like to use the
->>> +       platform-profile firmware interface.
+>>> +       Say Y here if you have a WMI aware Lenovo Legion device in the=
+ "Gaming Series"
+>>> +       line of hardware. This interface is a dependency for exposing =
+tunable power
+>>> +       settings.
 >>> +
 >>> +       To compile this driver as a module, choose M here: the module =
 will
->>> +       be called lenovo_wmi_gamezone.
->> Could it be that the resulting kernel module is actually named lenovo-w=
-mi-gamezone?.
->> If yes then please adjust the config description.
+>>> +       be called lenovo_wmi_capdata01.
+>> Could it be that the resulting module will be called lenovo-wmi-capdata=
+01? Also if its a mere
+>> dependency without any value when being used alone then it would make s=
+ense to hide it from
+>> users by removing the help texts:
 >>
-> the .o/.ko are named as you described with -, but lsmod lists them
-> with _ which is how most would interact with the driver if manually
-> loading or blocking it. I'll put whichever you think is most
-> appropriate.
-
-I would prefer if you use the .ko names.
-
+>>          config LENOVO_WMI_DATA01
+>>                  tristate
+>>                  depends on ACPI_WMI
+>>
+> Makes sense, Will do
+>
 >>> +
 >>>    config IDEAPAD_LAPTOP
 >>>        tristate "Lenovo IdeaPad Laptop Extras"
 >>>        depends on ACPI
 >>> diff --git a/drivers/platform/x86/Makefile b/drivers/platform/x86/Make=
 file
->>> index e1b142947067..7cb29a480ed2 100644
+>>> index 7cb29a480ed2..6c96cc3f3855 100644
 >>> --- a/drivers/platform/x86/Makefile
 >>> +++ b/drivers/platform/x86/Makefile
->>> @@ -68,6 +68,7 @@ obj-$(CONFIG_THINKPAD_LMI)  +=3D think-lmi.o
->>>    obj-$(CONFIG_YOGABOOK)              +=3D lenovo-yogabook.o
+>>> @@ -69,6 +69,7 @@ obj-$(CONFIG_YOGABOOK)              +=3D lenovo-yoga=
+book.o
 >>>    obj-$(CONFIG_YT2_1380)              +=3D lenovo-yoga-tab2-pro-1380-=
 fastcharger.o
 >>>    obj-$(CONFIG_LENOVO_WMI_CAMERA)     +=3D lenovo-wmi-camera.o
->>> +obj-$(CONFIG_LENOVO_WMI_GAMEZONE)    +=3D lenovo-wmi-gamezone.o
+>>>    obj-$(CONFIG_LENOVO_WMI_GAMEZONE)   +=3D lenovo-wmi-gamezone.o
+>>> +obj-$(CONFIG_LENOVO_WMI_DATA01)      +=3D lenovo-wmi-capdata01.o
 >>>
 >>>    # Intel
 >>>    obj-y                               +=3D intel/
->>> diff --git a/drivers/platform/x86/lenovo-wmi-gamezone.c b/drivers/plat=
-form/x86/lenovo-wmi-gamezone.c
+>>> diff --git a/drivers/platform/x86/lenovo-wmi-capdata01.c b/drivers/pla=
+tform/x86/lenovo-wmi-capdata01.c
 >>> new file mode 100644
->>> index 000000000000..da5e2bc41f39
+>>> index 000000000000..b10a6e4b320f
 >>> --- /dev/null
->>> +++ b/drivers/platform/x86/lenovo-wmi-gamezone.c
->>> @@ -0,0 +1,203 @@
+>>> +++ b/drivers/platform/x86/lenovo-wmi-capdata01.c
+>>> @@ -0,0 +1,131 @@
 >>> +// SPDX-License-Identifier: GPL-2.0-or-later
 >>> +/*
->>> + * Lenovo GameZone WMI interface driver. The GameZone WMI interface p=
-rovides
->>> + * platform profile and fan curve settings for devices that fall unde=
-r the
->>> + * "Gaming Series" of Lenovo Legion devices.
+>>> + * LENOVO_CAPABILITY_DATA_01 WMI data block driver. This interface pr=
+ovides
+>>> + * information on tunable attributes used by the "Other Method" WMI i=
+nterface,
+>>> + * including if it is supported by the hardware, the default_value, m=
+ax_value,
+>>> + * min_value, and step increment.
 >>> + *
 >>> + * Copyright(C) 2024 Derek J. Clark <derekjohn.clark@gmail.com>
 >>> + */
 >>> +
->>> +#include <linux/platform_profile.h>
+>>> +#include <linux/list.h>
 >>> +#include "lenovo-wmi.h"
->> Please add the necessary includes here and do not rely on the header fi=
-le to pull them in.
+>>> +
+>>> +#define LENOVO_CAPABILITY_DATA_01_GUID "7A8F5407-CB67-4D6E-B547-39B3B=
+E018154"
+>>> +
+>>> +static DEFINE_MUTEX(cd01_call_mutex);
+>> Does the WMI interface really rely on such mutual exclusion of callers?=
+ If no then
+>> please remove this mutex.
 >>
-> Ack
+> As with the other drivers, will remove.
 >
+>>> +static DEFINE_MUTEX(cd01_list_mutex);
+>>> +static LIST_HEAD(cd01_wmi_list);
 >>> +
->>> +#define LENOVO_GAMEZONE_GUID "887B54E3-DDDC-4B2C-8B88-68A26A8835D0"
->>> +
->>> +/* Method IDs */
->>> +#define WMI_METHOD_ID_SMARTFAN_SUPP 43 /* IsSupportSmartFan */
->>> +#define WMI_METHOD_ID_SMARTFAN_SET 44 /* SetSmartFanMode */
->>> +#define WMI_METHOD_ID_SMARTFAN_GET 45 /* GetSmartFanMode */
->>> +
->>> +static DEFINE_MUTEX(call_mutex);
->>> +
->>> +static const struct wmi_device_id lenovo_wmi_gamezone_id_table[] =3D =
-{
->>> +     { LENOVO_GAMEZONE_GUID, NULL }, /* LENOVO_GAMEZONE_DATA */
+>>> +static const struct wmi_device_id lenovo_wmi_capdata01_id_table[] =3D=
+ {
+>>> +     { LENOVO_CAPABILITY_DATA_01_GUID, NULL },
 >>> +     {}
 >>> +};
->> Please move those device IDs closer to the driver struct which uses the=
-m.
->>
-> Ack
->
 >>> +
->>> +struct lenovo_wmi_gz_priv {
+>>> +struct lenovo_wmi_cd01_priv {
 >>> +     struct wmi_device *wdev;
->>> +     enum platform_profile_option current_profile;
->>> +     struct platform_profile_handler pprof;
->>> +     bool platform_profile_support;
+>>> +     struct list_head list;
 >>> +};
 >>> +
->>> +/* Platform Profile Methods */
->>> +static int lenovo_wmi_gamezone_platform_profile_supported(
->>> +     struct platform_profile_handler *pprof, int *supported)
->> Please use ./scripts/checkpatch --strict to catch any coding style viol=
-ations like this one.
->>
-> Ack. Sorry about that.
->
+>>> +static inline struct lenovo_wmi_cd01_priv *get_first_wmi_priv(void)
 >>> +{
->>> +     struct lenovo_wmi_gz_priv *priv;
->>> +
->>> +     priv =3D container_of(pprof, struct lenovo_wmi_gz_priv, pprof);
->> Is there a reason why you are not passing priv as an argument? If no th=
-en please pass priv
->> as an argument so you can avoid having to use container_of().
+>>> +     guard(mutex)(&cd01_list_mutex);
+>>> +     return list_first_entry_or_null(&cd01_wmi_list,
+>>> +                                     struct lenovo_wmi_cd01_priv, lis=
+t);
+>> Two things:
 >>
->>> +
->>> +     guard(mutex)(&call_mutex);
->> Is there a technical reason why you have to use a mutex for WMI method =
-access? If no then please remove
->> this mutex.
+>> 1. This will cause issues should a WMI device in this list be removed w=
+hile a
+>> consumer is using it. In this case you will need extend the scope of th=
+e list mutex.
 >>
-> We weren't sure and figured you would know best practice. I'll remove th=
-em.
->
->>> +     return lenovo_wmidev_evaluate_method_1(
->>> +             priv->wdev, 0x0, WMI_METHOD_ID_SMARTFAN_SUPP, 0, support=
-ed);
+>> 2. Do multiple capdata01 WMI devices exist in any systems? If no then p=
+lease consider
+>> using the component framework (https://docs.kernel.org/driver-api/compo=
+nent.html) which
+>> will simplify the interop between the consumer driver of capdata01 and =
+this driver.
+>>
+> I looked into this and struggled with it for a while, do you have any
+> good examples I can reference?
+> Will this allow me to pass struct lenovo_wmi_cd01_priv *priv to this
+> function from the other mode driver? If so, should I avoid calling it
+> priv since it will be accessible outside the driver?
+
+You can use the i915 GSC proxy code as a reference.
+
+For the component supplier (capdata01):
+
+- use drivers/gpu/drm/i915/gt/uc/intel_gsc_proxy.c as an example
+
+1. Register a component with component_add().
+2. Use the .bind callback inside struct component_ops to pass a pointer to=
+ an array of capdata01 items to the component master.
+
+For the component master (lenovo-wmi-other):
+
+- use drivers/misc/mei/gsc_proxy/mei_gsc_proxy.c as an example
+
+1. Add a match function using component_match_add(). I suggest that you im=
+plement a public function inside the capdata01 driver
+which does the following (pseudo code):
+
+	int lenovo_wmi_capdata01_match(struct device *dev, void *data)
+	{
+		return dev->driver =3D=3D &lenovo_wmi_capdata01_driver.driver;
+	}
+	EXPORT_SYMBOL_GPL(lenovo_wmi_capdata01_match);
+
+This function can then be used to match against the component provided by =
+lenovo-wmi-capdata01.
+
+2. Add the component master using component_master_add_with_match(). Use t=
+he .bind callback inside
+struct component_master_ops to register the firmware attribute class devic=
+e. You can use component_bind_all()
+to pass a pointer to the bound components. In this case this pointer can b=
+e used by the capdata01 driver
+to pass an array of capdata01 items to you.
+
+Keep in mind that you cannot use devres inside the .bind callbacks.
+
 >>> +}
 >>> +
->>> +static int
->>> +lenovo_wmi_gamezone_profile_get(struct platform_profile_handler *ppro=
-f,
->>> +                             enum platform_profile_option *profile)
+>>> +int lenovo_wmi_capdata01_get(struct lenovo_wmi_attr_id attr_id,
+>>> +                          struct capability_data_01 *cap_data)
 >>> +{
->>> +     struct lenovo_wmi_gz_priv *priv;
->>> +     int sel_prof;
->>> +     int err;
->>> +
->>> +     priv =3D container_of(pprof, struct lenovo_wmi_gz_priv, pprof);
->>> +
->>> +     guard(mutex)(&call_mutex);
->>> +     err =3D lenovo_wmidev_evaluate_method_1(
->>> +             priv->wdev, 0x0, WMI_METHOD_ID_SMARTFAN_GET, 0, &sel_pro=
-f);
->>> +     if (err) {
->>> +             pr_err("Error getting fan profile from WMI interface: %d=
-\n",
->>> +                    err);
->> Please just return here without printing anything, userspace does not b=
-enefit from such
->> an error message which only states the obvious.
+>>> +     u32 attribute_id =3D *(int *)&attr_id;
+>> This will cause alignment issues, please use FIELD_GET()/FIELD_PREP() t=
+o construct a u32 to
+>> pass to this function.
 >>
-> Ack all debug return messages.
+> Can do.
 >
->>> +             return err;
->>> +     }
+>>> +     struct lenovo_wmi_cd01_priv *priv;
+>>> +     union acpi_object *ret_obj;
+>>> +     int instance_idx;
+>>> +     int count;
 >>> +
->>> +     switch (sel_prof) {
->>> +     case SMARTFAN_MODE_QUIET:
->>> +             *profile =3D PLATFORM_PROFILE_QUIET;
+>>> +     priv =3D get_first_wmi_priv();
+>>> +     if (!priv)
+>>> +             return -ENODEV;
+>>> +
+>>> +     guard(mutex)(&cd01_call_mutex);
+>>> +     count =3D wmidev_instance_count(priv->wdev);
+>>> +     pr_info("Got instance count: %u\n", count);
+>>> +
+>>> +     for (instance_idx =3D 0; instance_idx < count; instance_idx++) {
+>>> +             ret_obj =3D wmidev_block_query(priv->wdev, instance_idx)=
+;
+>>> +             if (!ret_obj) {
+>>> +                     pr_err("WMI Data block query failed.\n");
+>>> +                     continue;
+>>> +             }
+>>> +
+>>> +             if (ret_obj->type !=3D ACPI_TYPE_BUFFER) {
+>>> +                     pr_err("WMI Data block query returned wrong type=
+.\n");
+>>> +                     kfree(ret_obj);
+>>> +                     continue;
+>>> +             }
+>>> +
+>>> +             if (ret_obj->buffer.length !=3D sizeof(*cap_data)) {
+>>> +                     pr_err("WMI Data block query returned wrong buff=
+er length: %u vice expected %lu.\n",
+>>> +                            ret_obj->buffer.length, sizeof(*cap_data)=
+);
+>>> +                     kfree(ret_obj);
+>>> +                     continue;
+>>> +             }
+>>> +
+>>> +             memcpy(cap_data, ret_obj->buffer.pointer,
+>>> +                    ret_obj->buffer.length);
+>>> +             kfree(ret_obj);
+>>> +
+>>> +             if (cap_data->id !=3D attribute_id)
+>>> +                     continue;
 >>> +             break;
->>> +     case SMARTFAN_MODE_BALANCED:
->>> +             *profile =3D PLATFORM_PROFILE_BALANCED;
->>> +             break;
->>> +     case SMARTFAN_MODE_PERFORMANCE:
->>> +             *profile =3D PLATFORM_PROFILE_PERFORMANCE;
->>> +             break;
->>> +     case SMARTFAN_MODE_CUSTOM:
->>> +             *profile =3D PLATFORM_PROFILE_CUSTOM;
->>> +             break;
->>> +     default:
+>>> +     }
+>> Maybe it would make sense to read this data during device initializatio=
+n and store it
+>> inside an array? This way looking up capability data would be _much_ fa=
+ster especially
+>> since WMI calls are usually quite slow.
+>>
+> I was looking into this as I agree that would be preferable but wasn't
+> able to get a working version. Since I don't know the array length at
+> compile time I tried using krealloc_array after getting
+> wmidev_instance_count to resize a capdata array stored in priv, but
+> that would result in the driver crashing for some reason. I'll take
+> another shot at it.
+
+I suggest you use devm_kmalloc_array(), with the first argument being the =
+return value of wmidev_instance_count().
+The second parameter will be the size of a capdata01 structure.
+
+Then you just need to fill-in the capdata01 structures using a for-loop.
+
+>> Also this function is way to noisy when it comes to error messages. Ple=
+ase leave this
+>> to the caller of this function.
+> Can do. If I don't get a ret_obj should I quit the loop here?
+
+You can continue the loop in such a case, so that the other attributes are=
+ still available to the lenovo-wmi-other driver.
+However please print a warning message if you skip an instance so that use=
+rs can find out why some attributes are missing.
+
+Thanks,
+Armin Wolf
+
+>>> +
+>>> +     if (cap_data->id !=3D attribute_id) {
+>>> +             pr_err("Unable to find capability data for attribute_id =
+%x\n",
+>>> +                    attribute_id);
 >>> +             return -EINVAL;
 >>> +     }
->>> +     priv->current_profile =3D *profile;
->> Please remove this unused variable from priv.
->>
-> Ack
->
 >>> +
 >>> +     return 0;
 >>> +}
+>>> +EXPORT_SYMBOL_NS_GPL(lenovo_wmi_capdata01_get, "CAPDATA_WMI");
 >>> +
->>> +static int
->>> +lenovo_wmi_gamezone_profile_set(struct platform_profile_handler *ppro=
-f,
->>> +                             enum platform_profile_option profile)
+>>> +static int lenovo_wmi_capdata01_probe(struct wmi_device *wdev,
+>>> +                                   const void *context)
+>>> +
 >>> +{
->>> +     struct lenovo_wmi_gz_priv *priv;
->>> +     int sel_prof;
->>> +     int err;
->>> +
->>> +     switch (profile) {
->>> +     case PLATFORM_PROFILE_QUIET:
->>> +             sel_prof =3D SMARTFAN_MODE_QUIET;
->>> +             break;
->>> +     case PLATFORM_PROFILE_BALANCED:
->>> +             sel_prof =3D SMARTFAN_MODE_BALANCED;
->>> +             break;
->>> +     case PLATFORM_PROFILE_PERFORMANCE:
->>> +             sel_prof =3D SMARTFAN_MODE_PERFORMANCE;
->>> +             break;
->>> +     case PLATFORM_PROFILE_CUSTOM:
->>> +             sel_prof =3D SMARTFAN_MODE_CUSTOM;
->>> +             break;
->>> +     default:
->>> +             return -EOPNOTSUPP;
->>> +     }
->>> +
->>> +     priv =3D container_of(pprof, struct lenovo_wmi_gz_priv, pprof);
->> Please assign priv during declaration.
->>
-> Ack
->
->>> +
->>> +     guard(mutex)(&call_mutex);
->>> +     err =3D lenovo_wmidev_evaluate_method_1(
->>> +             priv->wdev, 0x0, WMI_METHOD_ID_SMARTFAN_SET, sel_prof, N=
-ULL);
->>> +     if (err) {
->>> +             pr_err("Error setting fan profile on WMI interface: %u\n=
-", err);
->> Again, this error message only states the obvious, please remove it.
->>
->>> +             return err;
->>> +     }
->>> +
->>> +     priv->current_profile =3D profile;
->>> +     return 0;
->>> +}
->>> +
->>> +/* Driver Setup */
->>> +static int platform_profile_setup(struct lenovo_wmi_gz_priv *priv)
->>> +{
->>> +     int supported;
->>> +     int err;
->>> +
->>> +     err =3D lenovo_wmi_gamezone_platform_profile_supported(&priv->pp=
-rof,
->>> +                                                          &supported)=
-;
->>> +     if (err) {
->>> +             pr_err("Error checking platform profile support: %d\n", =
-err);
->>> +             return err;
->> Please use dev_err() here.
-> Ack
->
->>> +     }
->>> +
->>> +     priv->platform_profile_support =3D supported;
->> The value of platform_profile_support is not used anywhere, please remo=
-ve it.
->>
->>> +
->>> +     if (!supported)
->>> +             return -EOPNOTSUPP;
->> IMHO returning -ENODEV would make more sense here.
->>
-> Ack
->
->>> +
->>> +     priv->pprof.name =3D "lenovo-wmi-gamezone";
->>> +     priv->pprof.profile_get =3D lenovo_wmi_gamezone_profile_get;
->>> +     priv->pprof.profile_set =3D lenovo_wmi_gamezone_profile_set;
->>> +
->>> +     set_bit(PLATFORM_PROFILE_QUIET, priv->pprof.choices);
->>> +     set_bit(PLATFORM_PROFILE_BALANCED, priv->pprof.choices);
->>> +     set_bit(PLATFORM_PROFILE_PERFORMANCE, priv->pprof.choices);
->>> +     set_bit(PLATFORM_PROFILE_CUSTOM, priv->pprof.choices);
->>> +
->>> +     err =3D lenovo_wmi_gamezone_profile_get(&priv->pprof,
->>> +                                           &priv->current_profile);
->>> +     if (err) {
->>> +             pr_err("Error getting current platform profile: %d\n", e=
-rr);
->>> +             return err;
->>> +     }
->> Is there a technical reason for reading the current platform profile du=
-ring device
->> initialization(? If no then please remove this call.
->>
-> There isn't, just a misconception on my part. WIll remove.
->
->>> +
->>> +     guard(mutex)(&call_mutex);
->>> +     err =3D platform_profile_register(&priv->pprof);
->> Using devm_platform_profile_register() would make sense here. This func=
-tion was added very recently
->> so you have to base your patch series onto the for-next branch.
->>
-> Ack
->
->>> +     if (err) {
->>> +             pr_err("Error registering platform profile: %d\n", err);
->>> +             return err;
->>> +     }
->>> +
->>> +     return 0;
->>> +}
->>> +
->>> +static int lenovo_wmi_gamezone_probe(struct wmi_device *wdev,
->>> +                                  const void *context)
->>> +{
->>> +     struct lenovo_wmi_gz_priv *priv;
+>>> +     struct lenovo_wmi_cd01_priv *priv;
 >>> +
 >>> +     priv =3D devm_kzalloc(&wdev->dev, sizeof(*priv), GFP_KERNEL);
 >>> +     if (!priv)
 >>> +             return -ENOMEM;
 >>> +
 >>> +     priv->wdev =3D wdev;
->> Since you are using dev_get_drvdata(), you also need to use dev_set_drv=
-data() here, otherwise
->> dev_get_drvdata() will return no valid value.
->>
-> Ack
->
->>> +     return platform_profile_setup(priv);
+>>> +
+>>> +     guard(mutex)(&cd01_list_mutex);
+>>> +     list_add_tail(&priv->list, &cd01_wmi_list);
+>>> +
+>>> +     return 0;
 >>> +}
 >>> +
->>> +static void lenovo_wmi_gamezone_remove(struct wmi_device *wdev)
+>>> +static void lenovo_wmi_capdata01_remove(struct wmi_device *wdev)
 >>> +{
->>> +     struct lenovo_wmi_gz_priv *priv =3D dev_get_drvdata(&wdev->dev);
+>>> +     struct lenovo_wmi_cd01_priv *priv =3D dev_get_drvdata(&wdev->dev=
+);
 >>> +
->>> +     guard(mutex)(&call_mutex);
->>> +     platform_profile_remove(&priv->pprof);
+>>> +     guard(mutex)(&cd01_list_mutex);
+>>> +     list_del(&priv->list);
 >>> +}
 >>> +
->>> +static struct wmi_driver lenovo_wmi_gamezone_driver =3D {
->>> +     .driver =3D { .name =3D "lenovo_wmi_gamezone" },
->> Please set ".probe_type =3D PROBE_PREFER_ASYNCHRONOUS" here.
+>>> +static struct wmi_driver lenovo_wmi_capdata01_driver =3D {
+>>> +     .driver =3D { .name =3D "lenovo_wmi_capdata01" },
+>> Please set ".probe_type =3D PROBE_PREFER_ASYNCHRONOUS".
 >>
 > Ack
 >
->> Also does the selected fan profile remain the same after suspending or =
-hibernating?
->> If no then please add the necessary PM callbacks to save/restore the fa=
-n profile
->> before suspend/after resume if necessary.
->>
-> It remains the same after suspend, hibernate, reboot, and shutdown.
-
-Nice, so no special pm handling is necessary here :).
-
-Thanks,
-Armin Wolf
-
->
->>> +     .id_table =3D lenovo_wmi_gamezone_id_table,
->>> +     .probe =3D lenovo_wmi_gamezone_probe,
->>> +     .remove =3D lenovo_wmi_gamezone_remove,
->> Please set ".no_singleton =3D true" here.
+>>> +     .id_table =3D lenovo_wmi_capdata01_id_table,
+>>> +     .probe =3D lenovo_wmi_capdata01_probe,
+>>> +     .remove =3D lenovo_wmi_capdata01_remove,
+>> Please set ".no_singleton =3D true".
 >>
 > Ack
 >
+> Thanks,
+> Derek
+>
+>> Thanks,
+>> Armin Wolf
+>>
 >>> +};
 >>> +
->>> +module_wmi_driver(lenovo_wmi_gamezone_driver);
+>>> +module_wmi_driver(lenovo_wmi_capdata01_driver);
 >>> +
->>> +MODULE_DEVICE_TABLE(wmi, lenovo_wmi_gamezone_id_table);
+>>> +MODULE_DEVICE_TABLE(wmi, lenovo_wmi_capdata01_id_table);
 >>> +MODULE_AUTHOR("Derek J. Clark <derekjohn.clark@gmail.com>");
->>> +MODULE_DESCRIPTION("Lenovo GameZone WMI Driver");
+>>> +MODULE_DESCRIPTION("Lenovo Capability Data 01 WMI Driver");
 >>> +MODULE_LICENSE("GPL");
 >>> diff --git a/drivers/platform/x86/lenovo-wmi.h b/drivers/platform/x86/=
 lenovo-wmi.h
->>> new file mode 100644
->>> index 000000000000..8a302c6c47cb
->>> --- /dev/null
+>>> index 8a302c6c47cb..53cea84a956b 100644
+>>> --- a/drivers/platform/x86/lenovo-wmi.h
 >>> +++ b/drivers/platform/x86/lenovo-wmi.h
->>> @@ -0,0 +1,105 @@
->>> +/* SPDX-License-Identifier: GPL-2.0-or-later
->>> + *
->>> + * Lenovo Legion WMI interface driver. The Lenovo Legion WMI interfac=
-e is
->>> + * broken up into multiple GUID interfaces that require cross-referen=
-ces
->>> + * between GUID's for some functionality. The "Custom Mode" interface=
- is a
->>> + * legacy interface for managing and displaying CPU & GPU power and h=
-wmon
->>> + * settings and readings. The "Other Mode" interface is a modern inte=
-rface
->>> + * that replaces or extends the "Custom Mode" interface methods. The
->>> + * "GameZone" interface adds advanced features such as fan profiles a=
-nd
->>> + * overclocking. The "Lighting" interface adds control of various sta=
-tus
->>> + * lights related to different hardware components. "Other Method" us=
-es
->>> + * the data structs LENOVO_CAPABILITY_DATA_00, LENOVO_CAPABILITY_DATA=
-_01
->>> + * and LENOVO_CAPABILITY_DATA_02 structs for capability information.
->>> + *
->>> + * Copyright(C) 2024 Derek J. Clark <derekjohn.clark@gmail.com>
->>> + *
->>> + */
+>>> @@ -36,6 +36,22 @@ struct wmi_method_args {
+>>>        u32 arg1;
+>>>    };
+>>>
+>>> +struct lenovo_wmi_attr_id {
+>>> +     u32 mode_id : 16; /* Fan profile */
+>>> +     u32 feature_id : 8; /* Attribute (SPL/SPPT/...) */
+>>> +     u32 device_id : 8; /* CPU/GPU/... */
+>>> +} __packed;
 >>> +
->>> +#define pr_fmt(fmt) "%s:%s: " fmt, KBUILD_MODNAME, __func__
->>> +
->>> +#ifndef _LENOVO_WMI_H_
->>> +#define _LENOVO_WMI_H_
->>> +
->>> +#include <linux/mutex.h>
->>> +#include <linux/types.h>
->>> +#include <linux/wmi.h>
->>> +
->>> +/* Platform Profile Modes */
->>> +#define SMARTFAN_MODE_QUIET 0x01
->>> +#define SMARTFAN_MODE_BALANCED 0x02
->>> +#define SMARTFAN_MODE_PERFORMANCE 0x03
->>> +#define SMARTFAN_MODE_CUSTOM 0xFF
->>> +
->>> +struct wmi_method_args {
->>> +     u32 arg0;
->>> +     u32 arg1;
+>>> +/* Data struct for LENOVO_CAPABILITY_DATA_01 */
+>>> +struct capability_data_01 {
+>>> +     u32 id;
+>>> +     u32 supported;
+>>> +     u32 default_value;
+>>> +     u32 step;
+>>> +     u32 min_value;
+>>> +     u32 max_value;
 >>> +};
 >>> +
->>> +/* General Use functions */
->>> +static int lenovo_wmidev_evaluate_method(struct wmi_device *wdev, u8 =
-instance,
->>> +                                      u32 method_id, struct acpi_buff=
-er *in,
->>> +                                      struct acpi_buffer *out)
->>> +{
->>> +     acpi_status status;
+>>>    /* General Use functions */
+>>>    static int lenovo_wmidev_evaluate_method(struct wmi_device *wdev, u=
+8 instance,
+>>>                                         u32 method_id, struct acpi_buf=
+fer *in,
+>>> @@ -102,4 +118,8 @@ int lenovo_wmidev_evaluate_method_1(struct wmi_dev=
+ice *wdev, u8 instance,
+>>>                                               0, retval);
+>>>    }
+>>>
+>>> +/* LENOVO_CAPABILITY_DATA_01 exported functions */
+>>> +int lenovo_wmi_capdata01_get(struct lenovo_wmi_attr_id attr_id,
+>>> +                          struct capability_data_01 *cap_data);
 >>> +
->>> +     status =3D wmidev_evaluate_method(wdev, instance, method_id, in,=
- out);
->>> +
->>> +     if (ACPI_FAILURE(status))
->>> +             return -EIO;
->>> +
->>> +     return 0;
->>> +};
->>> +
->>> +int lenovo_wmidev_evaluate_method_2(struct wmi_device *wdev, u8 insta=
-nce,
->>> +                                 u32 method_id, u32 arg0, u32 arg1,
->>> +                                 u32 *retval);
->>> +
->>> +int lenovo_wmidev_evaluate_method_2(struct wmi_device *wdev, u8 insta=
-nce,
->>> +                                 u32 method_id, u32 arg0, u32 arg1,
->>> +                                 u32 *retval)
->>> +{
->>> +     struct wmi_method_args args =3D { arg0, arg1 };
->>> +     struct acpi_buffer input =3D { (acpi_size)sizeof(args), &args };
->>> +     struct acpi_buffer output =3D { ACPI_ALLOCATE_BUFFER, NULL };
->>> +     union acpi_object *ret_obj =3D NULL;
->>> +     int err;
->> Please order the variable declarations in reverse XMAS tree order.
->>
-> Ack
->
->>> +
->>> +     err =3D lenovo_wmidev_evaluate_method(wdev, instance, method_id,=
- &input,
->>> +                                         &output);
->>> +
->>> +     if (err) {
->>> +             pr_err("Attempt to get method value failed.\n");
->> Please remove any error messages in this part of the code, printing err=
-or messages should
->> ideally happen at the higher layers of the driver if necessary.
->>
->>> +             return err;
->>> +     }
->>> +
->>> +     if (retval) {
->>> +             ret_obj =3D (union acpi_object *)output.pointer;
->>> +             if (!ret_obj) {
->>> +                     pr_err("Failed to get valid ACPI object from WMI=
- interface\n");
->>> +                     return -EIO;
->> -ENODATA.
->>
-> Ack
->
->>> +             }
->>> +             if (ret_obj->type !=3D ACPI_TYPE_INTEGER) {
->>> +                     pr_err("WMI query returnd ACPI object with wrong=
- type.\n");
->>> +                     kfree(ret_obj);
->>> +                     return -EIO;
->> -ENXIO.
->>
-> Ack
->
->>> +             }
->>> +             *retval =3D (u32)ret_obj->integer.value;
->>> +     }
->>> +
->>> +     kfree(ret_obj);
->>> +
->>> +     return 0;
->>> +}
->>> +
->>> +int lenovo_wmidev_evaluate_method_1(struct wmi_device *wdev, u8 insta=
-nce,
->>> +                                 u32 method_id, u32 arg0, u32 *retval=
-);
->>> +
->>> +int lenovo_wmidev_evaluate_method_1(struct wmi_device *wdev, u8 insta=
-nce,
->>> +                                 u32 method_id, u32 arg0, u32 *retval=
-)
->>> +{
->>> +     return lenovo_wmidev_evaluate_method_2(wdev, instance, method_id=
-, arg0,
->>> +                                            0, retval);
->>> +}
->>> +
->>> +#endif /* !_LENOVO_WMI_H_ */
-> Thanks Armin,
-> Derek
+>>>    #endif /* !_LENOVO_WMI_H_ */
