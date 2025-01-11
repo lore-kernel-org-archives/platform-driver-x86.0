@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C6BB724B22C
-	for <platform-driver-x86@vger.kernel.org>; Sat, 11 Jan 2025 08:38:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ED1862BB15
+	for <platform-driver-x86@vger.kernel.org>; Sat, 11 Jan 2025 08:40:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736584732; cv=none; b=pPpJ6Rripp1HcPhDwvO5KczzJU+vlDlepwZeecJSv7s/LURUC3KSoWXXhLB3Cqm/DmgcLbvS8cXo0/c47NbFmAXMBQKqY4HS6LNxNhC2M2ay++b0399z/z1sGxKSupN3e+6rUwnRODq2IWclD83A4Royl5E7ZSdKfgDaIfjhNg0=
+	t=1736584839; cv=none; b=s4uR0aatuL2jyBnhfDh3O/UVdnw0tUJ1lwdYx8InrCGoTjV9Eb6moV0MxlFMH/pWWzNlBmeASiaA900HnNe5DDEdaKlPd/KLNX/hi1XQDbRPuop5wVxNOWI0h7ZRVBLoBWOkKbGc0sHt8m8hjmNS/gzIV9nqMdKjHI5d2bJ0ZjE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736584732; c=relaxed/simple;
-	bh=QR6dBOE13EYO9VaBdDuLkJGnDvR2mTiqIZuJON0VQz0=;
+	s=arc-20240116; t=1736584839; c=relaxed/simple;
+	bh=qD4vanxnN77rWmQADs0cE0nbydCWCKsIIRUmbUizKwU=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=J3aK4hF/6TYCrhd2mZiv9hcMe6mcGuYMHMon0hwxbhIUWdh9GbN5t7y7KVuO1Aadii7d1yopYQdTrrJDfnstn+IuJDGmlaknC/ctQwVubNnVhpIw1ztwDHGBKqjrGvNGZRdoG5WKHL6sB8ds/lqtQ10sxwJUXzI8B0W9ZZggtNY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=vGb75c14; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=tPIeUxhJyApMpiDvPw+mYzzpfTSHUq3zOdB9ULOgvfZnaj7FYdGCYMypMBEDaFjkHV07H7pN6Mlhq/GNpcxbK+8gF3IkPtkNraOY5MmhNHSqS/pCIg9kUZ9y9a8Lz8T7Nh9UTD/SP++kYg6g9assOhkU6soeB9MqzErMYVkLvYI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VdIDIcRa; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="vGb75c14"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 24BB6C4CED2;
-	Sat, 11 Jan 2025 08:38:49 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VdIDIcRa"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 83727C4CED2;
+	Sat, 11 Jan 2025 08:40:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1736584732;
-	bh=QR6dBOE13EYO9VaBdDuLkJGnDvR2mTiqIZuJON0VQz0=;
+	s=k20201202; t=1736584838;
+	bh=qD4vanxnN77rWmQADs0cE0nbydCWCKsIIRUmbUizKwU=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=vGb75c14kAzi8RgaCz9wDSdBZHNX/hdAbhsJ8MeVvD1e2r4v+t/ByX62MhUjATSCM
-	 epQIxTFo+N3Ib337lTCoN05875risqc2WkPN73/u0LmGfpcbiet08Y1JsDxj0fm1tI
-	 bcumReRtHxCm0N3acZYzXPZDSqNHMj3g59o1aK7B2RxmlUShpPP2Tx4Wjh1SHVbxyC
-	 /KkqADeUa+AiSP66jlcjJDG+uAtrsaZwb2rgj8JHQx1319n0GAPfwkqKieNRM4pWCB
-	 CCFEdbrPnAcUmDVfDvmYog9SHJay3Yt8uOW83g7KrBeesimk16so2wfk/oJ9QjQGzI
-	 JyO/4aI0gF1yQ==
-Message-ID: <f47671b2-8415-41e1-bccb-ba8e78090692@kernel.org>
-Date: Sat, 11 Jan 2025 09:38:47 +0100
+	b=VdIDIcRaaNixJRAQ60/LdOBPn+xVi5MXvnKbzMp9b+OwkpHF6ZSIvzOTp8QTm6a6y
+	 z1YjAnLVXEqTOMn7vTzxMdpuRAH6Hv/mFQXlZtoftgRBJOF5d7Ghd9bvl7C4IvEDN+
+	 vba4f+Bl+RAnHPH1+W4AYPhWTvCnL6rSA4ZI6pKo986HvgGpPRfLn/EkdDcB21pL1N
+	 ziP9DyQf2Rhxuh0zM7utPkpegNDIl13vKW+FNj+7o2xgQuW3mklqpi7oo31mL2twbo
+	 zFWqzGXkTsn8LgpvBgcWTLP6yXGfvfS+ZH1xwX+GuO0cZ/D9SJVwp8/Qy/C5eGGM8F
+	 Lt2DMpA6fBWbQ==
+Message-ID: <7f65cf30-e5fc-445e-80e3-034b6d85de3d@kernel.org>
+Date: Sat, 11 Jan 2025 09:40:34 +0100
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -35,13 +35,13 @@ List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH platform-next 11/11] MAINTAINERS: Remove MELLANOX PLATFORM
- DRIVER item
+Subject: Re: [PATCH platform-next 06/11] platform/mellanox: mlxreg-dpu: Add
+ initial support for Nvidia DPU
 To: Vadim Pasternak <vadimp@nvidia.com>, hdegoede@redhat.com,
  ilpo.jarvinen@linux.intel.com
 Cc: platform-driver-x86@vger.kernel.org
 References: <20250110134515.8164-1-vadimp@nvidia.com>
- <20250110134515.8164-12-vadimp@nvidia.com>
+ <20250110134515.8164-7-vadimp@nvidia.com>
 From: Krzysztof Kozlowski <krzk@kernel.org>
 Content-Language: en-US
 Autocrypt: addr=krzk@kernel.org; keydata=
@@ -87,18 +87,37 @@ Autocrypt: addr=krzk@kernel.org; keydata=
  uZwJCLykjad45hsWcOGk3OcaAGQS6NDlfhM6O9aYNwGL6tGt/6BkRikNOs7VDEa4/HlbaSJo
  7FgndGw1kWmkeL6oQh7wBvYll2buKod4qYntmNKEicoHGU+x91Gcan8mCoqhJkbqrL7+nXG2
  5Q/GS5M9RFWS+nYyJh+c3OcfKqVcZQNANItt7+ULzdNJuhvTRRdC3g9hmCEuNSr+CLMdnRBY fv0=
-In-Reply-To: <20250110134515.8164-12-vadimp@nvidia.com>
+In-Reply-To: <20250110134515.8164-7-vadimp@nvidia.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
 On 10/01/2025 14:45, Vadim Pasternak wrote:
-> -MELLANOX PLATFORM DRIVER
-> -M:	Vadim Pasternak <vadimp@nvidia.com>
-> -L:	platform-driver-x86@vger.kernel.org
-> -S:	Supported
-> -F:	drivers/platform/x86/mlx-platform.c
-This cannot be separate commit - your changes are non bisectable.
-Removal of file must be with maintainers update.
+> Provide platform support for Nvidia (DPU) Data Processor Unit for the
+> Smart Switch SN4280.
+> 
+> The Smart Switch equipped with:
+> - Nvidia COME module based on AMD EPYC™ Embedded 3451 CPU.
+> - Nvidia Spectrum-3 ASIC.
+> - Four DPUs, each equipped with Nvidia BF3 ARM based processor and
+>   with Lattice LFD2NX-40 FPGA device.
+> - 28xQSFP-DD external ports.
+> - Two power supplies.
+> - Four cooling drawers.
+> 
+> Drivers provides support for the platform management and monitoring
+> of DPU components.
+> It includes support for health events, resets and boot progress
+> indications logic, implemented by FPGA device.
+> 
+> Signed-off-by: Vadim Pasternak <vadimp@nvidia.com>
+> Reviewed-by: Ciju Rajan K <crajank@nvidia.com>
+
+Why the review is after your SoB? This was never done on the lists
+right? So first you received review internally and then sent a patch,
+
+You also need to Cc people whose tags you include. Please use standard
+tools for sending patches like git send-email or b4, which do it
+automatically.
 
 Best regards,
 Krzysztof
