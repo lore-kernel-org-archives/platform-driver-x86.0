@@ -1,126 +1,104 @@
-Received: from mail-il1-f180.google.com (mail-il1-f180.google.com [209.85.166.180])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 28047372;
-	Sat, 11 Jan 2025 05:47:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C6BB724B22C
+	for <platform-driver-x86@vger.kernel.org>; Sat, 11 Jan 2025 08:38:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736574460; cv=none; b=Hib+zCrAZWnqfA5w8Tzc2fJJwuJrdABJbO2pCgoveRcZse6JCq7F4tQxiMdvvxniHhjTy9/VW36X7rSir9xLlmkph8ofup8nPR1m7ro3CWgU6H/r5mgPp5M90zbKAgj+yH0yciULUM+UOOkknhqtu4xYOmL0jhj/cQkzOzpRn3w=
+	t=1736584732; cv=none; b=pPpJ6Rripp1HcPhDwvO5KczzJU+vlDlepwZeecJSv7s/LURUC3KSoWXXhLB3Cqm/DmgcLbvS8cXo0/c47NbFmAXMBQKqY4HS6LNxNhC2M2ay++b0399z/z1sGxKSupN3e+6rUwnRODq2IWclD83A4Royl5E7ZSdKfgDaIfjhNg0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736574460; c=relaxed/simple;
-	bh=bQpJaOMWdT4MazdkjrAukrXvt4SIu5IrMePG+kBnNoM=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=pkh/yDyvo4Y2dq7wLm3GeCWHrvy3Cw50b8nEUh+sFAcuXc74nBeoMJoQP0kRv/U0CET2C7kcQZCk5bkhRWsjzkXHI8xnljupE0a5Sk66CwPJhU5zyw2pwi54TwnyNNFHQKm4C5cDzlvhvF3zMlzRnjgeCoubVEwwEt4fXW09Dmg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ZGlTBcjt; arc=none smtp.client-ip=209.85.166.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1736584732; c=relaxed/simple;
+	bh=QR6dBOE13EYO9VaBdDuLkJGnDvR2mTiqIZuJON0VQz0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=J3aK4hF/6TYCrhd2mZiv9hcMe6mcGuYMHMon0hwxbhIUWdh9GbN5t7y7KVuO1Aadii7d1yopYQdTrrJDfnstn+IuJDGmlaknC/ctQwVubNnVhpIw1ztwDHGBKqjrGvNGZRdoG5WKHL6sB8ds/lqtQ10sxwJUXzI8B0W9ZZggtNY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=vGb75c14; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZGlTBcjt"
-Received: by mail-il1-f180.google.com with SMTP id e9e14a558f8ab-3a812618bc1so815515ab.3;
-        Fri, 10 Jan 2025 21:47:38 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1736574458; x=1737179258; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=nqy3hUMXBLqTshl0Kne8uMHjwI9ItLObnBiRXqIgRzM=;
-        b=ZGlTBcjtRTGJbz0C4hpKaaENUvf/JYPkB9KwVgIT0hAUvQvP029SUxw8eQvGCJVbgT
-         D2E3Eymu/rJDZGTuY/rhOy4bz4EjyHBeYmF0E/tSTIGBMIso7eyZpsz09Qh3oJhYbHlX
-         JBTaRo3J+yKPGK/1pUT4rRQKmBNj/YYBbQiXsxDjM6pxFXO7LQwkks5QjM/CEaqdunUe
-         U24oNjlLdtybBNcT14NvEyRhdk8KLdp4XqA5hMuTbd+Bi2TwcBp7zj7esO3UBK3bLGW6
-         ZKTHwlssyQsR1DcB538fWk+6z+BDvRmT7MyA9olTitomHtWMFFLmsX5UAtYblOSWl4qb
-         4Tfw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1736574458; x=1737179258;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=nqy3hUMXBLqTshl0Kne8uMHjwI9ItLObnBiRXqIgRzM=;
-        b=URUC5vlo8IezTKPSBE90Ctrc/+IaHJRa0A6zzLQErvtAnQeuhiVv+iLx/W/GpnNJfZ
-         S6u2c1agLrxHh7m1y0R2v92iGMDwrjTzKU82OQAJozKfgdc5RoUcN7YCozLiA/WEv6Ul
-         ODAazDkpBcCzjO2om+rUr11PXHYQfuaNiY3epFeo8HkMbLbSaaW2+gg9a14yX2EAzbWy
-         NSiF7ZVzC46IfDTsP+dXbucJyq8nXwYe+UITjzYeRMTp0wbizbji87rnYVYcVu/OGUt8
-         bXMaFZK/n6kf9EEjEXqHQrKnLaOvoAw87QRRXXURzCWaGx3MK8n4msqb60CCtb8NyU0B
-         9FTw==
-X-Forwarded-Encrypted: i=1; AJvYcCUl2lucgjI0YvnxPvYJ4tN5VOolH4WUiyN4LgHayMEc3yLE14cKBKmRktY+UKjL8BUPPISjPpizgByRPJ8=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxFN4sPFEJ+gKHVAATr5NYBtvcFVaYCRBKtCsITCsTOBRxab78t
-	syeDW6mqIJuh4O1hs0L51EZzhSuRjdmMrEhyQXy6NEhnfXpy8/c=
-X-Gm-Gg: ASbGnctbG9HsdMaoIgw6c3jXqPe2DPM9jjW1PdOTN/pJNxO/qO5VPqmGWhJ3cyYoBJE
-	kWqMQhiKkQ8CkOH9b66d558RSMdEiBKwYHohlq+3/OF+f6aAt3Q9nzbJw/IKi8sQDKlhG2v7lSo
-	YQE5FhTzlXH/+IMrY/UVUM4WMImnXzZJIqN8VRiA87L/tjiUPlTICRsJNb1px4gAbUz0olBxztA
-	BFnlrvUEtFzzr2ZSdGjLfijWWn0RiamppU57k8J1JFaGIheJdr/2A==
-X-Google-Smtp-Source: AGHT+IEtcNScmnhye4osThZaSMJQ2ckyCfvvCnrbx5Rc7c7ig60Rm0qTilgFvrRxAmCLKx5Nu8I+pA==
-X-Received: by 2002:a05:6e02:2164:b0:3a7:e9a1:8fff with SMTP id e9e14a558f8ab-3ce3a8bcf48mr25806975ab.4.1736574458206;
-        Fri, 10 Jan 2025 21:47:38 -0800 (PST)
-Received: from ise-alpha.. ([2620:0:e00:550a:642:1aff:fee8:511b])
-        by smtp.gmail.com with ESMTPSA id 8926c6da1cb9f-4ea1b717652sm1312253173.93.2025.01.10.21.47.36
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 10 Jan 2025 21:47:37 -0800 (PST)
-From: Chenyuan Yang <chenyuan0y@gmail.com>
-To: hdegoede@redhat.com,
-	ilpo.jarvinen@linux.intel.com,
-	rafael.j.wysocki@intel.com,
-	acelan.kao@canonical.com,
-	u.kleine-koenig@baylibre.com
-Cc: platform-driver-x86@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	zijie98@gmail.com,
-	Chenyuan Yang <chenyuan0y@gmail.com>
-Subject: [PATCH] platform/x86: dell-uart-backlight: fix NULL pointer dereference in probe
-Date: Fri, 10 Jan 2025 23:47:17 -0600
-Message-Id: <20250111054717.1830450-1-chenyuan0y@gmail.com>
-X-Mailer: git-send-email 2.34.1
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="vGb75c14"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 24BB6C4CED2;
+	Sat, 11 Jan 2025 08:38:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1736584732;
+	bh=QR6dBOE13EYO9VaBdDuLkJGnDvR2mTiqIZuJON0VQz0=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=vGb75c14kAzi8RgaCz9wDSdBZHNX/hdAbhsJ8MeVvD1e2r4v+t/ByX62MhUjATSCM
+	 epQIxTFo+N3Ib337lTCoN05875risqc2WkPN73/u0LmGfpcbiet08Y1JsDxj0fm1tI
+	 bcumReRtHxCm0N3acZYzXPZDSqNHMj3g59o1aK7B2RxmlUShpPP2Tx4Wjh1SHVbxyC
+	 /KkqADeUa+AiSP66jlcjJDG+uAtrsaZwb2rgj8JHQx1319n0GAPfwkqKieNRM4pWCB
+	 CCFEdbrPnAcUmDVfDvmYog9SHJay3Yt8uOW83g7KrBeesimk16so2wfk/oJ9QjQGzI
+	 JyO/4aI0gF1yQ==
+Message-ID: <f47671b2-8415-41e1-bccb-ba8e78090692@kernel.org>
+Date: Sat, 11 Jan 2025 09:38:47 +0100
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH platform-next 11/11] MAINTAINERS: Remove MELLANOX PLATFORM
+ DRIVER item
+To: Vadim Pasternak <vadimp@nvidia.com>, hdegoede@redhat.com,
+ ilpo.jarvinen@linux.intel.com
+Cc: platform-driver-x86@vger.kernel.org
+References: <20250110134515.8164-1-vadimp@nvidia.com>
+ <20250110134515.8164-12-vadimp@nvidia.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 fv0=
+In-Reply-To: <20250110134515.8164-12-vadimp@nvidia.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-The dell_uart_bl_serdev_probe() function calls devm_serdev_device_open()
-before setting the client ops via serdev_device_set_client_ops(). This
-ordering can trigger a NULL pointer dereference in the serdev controller's
-receive_buf handler, as it assumes serdev->ops is valid when
-SERPORT_ACTIVE is set.
+On 10/01/2025 14:45, Vadim Pasternak wrote:
+> -MELLANOX PLATFORM DRIVER
+> -M:	Vadim Pasternak <vadimp@nvidia.com>
+> -L:	platform-driver-x86@vger.kernel.org
+> -S:	Supported
+> -F:	drivers/platform/x86/mlx-platform.c
+This cannot be separate commit - your changes are non bisectable.
+Removal of file must be with maintainers update.
 
-This is similar to the issue fixed in commit 5e700b384ec1
-("platform/chrome: cros_ec_uart: properly fix race condition") where
-devm_serdev_device_open() was called before fully initializing the
-device.
-
-Fix the race by ensuring client ops are set before enabling the port via
-devm_serdev_device_open().
-
-Fixes: 484bae9e4d6a ("platform/x86: Add new Dell UART backlight driver")
-Signed-off-by: Chenyuan Yang <chenyuan0y@gmail.com>
----
- drivers/platform/x86/dell/dell-uart-backlight.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
-
-diff --git a/drivers/platform/x86/dell/dell-uart-backlight.c b/drivers/platform/x86/dell/dell-uart-backlight.c
-index 6e5dc7e3674f..41162ff1686b 100644
---- a/drivers/platform/x86/dell/dell-uart-backlight.c
-+++ b/drivers/platform/x86/dell/dell-uart-backlight.c
-@@ -283,16 +283,16 @@ static int dell_uart_bl_serdev_probe(struct serdev_device *serdev)
- 	init_waitqueue_head(&dell_bl->wait_queue);
- 	dell_bl->dev = dev;
- 
--	ret = devm_serdev_device_open(dev, serdev);
--	if (ret)
--		return dev_err_probe(dev, ret, "opening UART device\n");
--
- 	/* 9600 bps, no flow control, these are the default but set them to be sure */
- 	serdev_device_set_baudrate(serdev, 9600);
- 	serdev_device_set_flow_control(serdev, false);
- 	serdev_device_set_drvdata(serdev, dell_bl);
- 	serdev_device_set_client_ops(serdev, &dell_uart_bl_serdev_ops);
- 
-+	ret = devm_serdev_device_open(dev, serdev);
-+	if (ret)
-+		return dev_err_probe(dev, ret, "opening UART device\n");
-+
- 	get_version[0] = DELL_SOF(GET_CMD_LEN);
- 	get_version[1] = CMD_GET_VERSION;
- 	get_version[2] = dell_uart_checksum(get_version, 2);
--- 
-2.34.1
-
+Best regards,
+Krzysztof
