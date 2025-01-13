@@ -1,146 +1,185 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from NAM11-CO1-obe.outbound.protection.outlook.com (mail-co1nam11on2059.outbound.protection.outlook.com [40.107.220.59])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D8F95233139
-	for <platform-driver-x86@vger.kernel.org>; Mon, 13 Jan 2025 08:27:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736756823; cv=none; b=jvQu/RrzI2qaZTsh50tLNN/v1ojGJITZ7R0WEkAIOIicLZmALhb3zAtaamFSMYzbVc1JvNDUgbBCtjOC/VRV5wMex3cvjiKwiv7eA0S3zpuH6WAkLvjQg+NECcs/nTfWU5Ngg+k1sfvLV8J/VeNoon+F3boE9tCz0t34o8m6+rc=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736756823; c=relaxed/simple;
-	bh=l9OHTObN7XQ5JUO42fVJHPwm8XDBJkQvoeU8aITtzts=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=bqBucrmB5T/OupJQhXpvO8hAgIVq58cOsFdV/XRY+X5Kup4qYGrp9D7wMiYE7mTnOwa85GXrlFzZGJsCtScAA0gAARL8nnpjxj4Hp7KT2jA20Yol0Tdka5w7N4XxFrLOhVKApItJVkY2BOf9liL9nsOtqo3KFYA3n2awxc+n4RA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Bx/oHWUC; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7604A2343D8
+	for <platform-driver-x86@vger.kernel.org>; Mon, 13 Jan 2025 08:44:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.220.59
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1736757856; cv=fail; b=Zw7I9wSb5WCF/4q+SM/O0pi0e4uXRrVqwCFKDhf51nm8ywKE2P8sZ9mnvst9DypczPcAaMDQjblUjtq50cuJ/LPWI7yUtGXEU3xvPA4WKb7TkoGMB5FuKi+Dw1FX90BZX+Q8wp1GmswRwvfvVhFq7qTjFAUiRTPpGj6X1/plxb8=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1736757856; c=relaxed/simple;
+	bh=SaQRsHuJjHojBonYDDhFwqLbQHqepDdyBvAWPatz/TQ=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=DLk97DlVnSCl9aqiEoAQwDYtSN8g3HrzeHHCh3ANq/yHirl7jGzin7qeNUlTepxvvOZt4s8XrJj/1e5xsiwvNo5v2+k8Gk2vmNms2eFX1ubEfyANIMqiPJZE1Yxk8znhlEtJTlaM7a/aABfkZDYPc9FtYlouoeek2zuiDFbQSn8=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=YjbjRPKf; arc=fail smtp.client-ip=40.107.220.59
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Bx/oHWUC"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1736756820;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=NZEaafJZstJIFByjDm+P6F0jQ+mx9f+pSKn8vl03MSU=;
-	b=Bx/oHWUCFUAhOgV6Rj/cwGK10xQmKWsbBw/8RdhcYdixoU2KVxjw8knkdhBiwpG47XmeJz
-	vwJ/MS9ZFobKV3SXahU+mEMhFJqJNcP7dedNwFGgFDrixeH8H9vH/9fonFF8pYJLCb8vHc
-	wzGWIYXPgfWiY1zL98C4Tl1TflEAUWA=
-Received: from mail-ej1-f72.google.com (mail-ej1-f72.google.com
- [209.85.218.72]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-624-P1-vOtgHPt-oz_u93NC9mg-1; Mon, 13 Jan 2025 03:26:59 -0500
-X-MC-Unique: P1-vOtgHPt-oz_u93NC9mg-1
-X-Mimecast-MFC-AGG-ID: P1-vOtgHPt-oz_u93NC9mg
-Received: by mail-ej1-f72.google.com with SMTP id a640c23a62f3a-aa6a87f324cso349529366b.1
-        for <platform-driver-x86@vger.kernel.org>; Mon, 13 Jan 2025 00:26:58 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1736756818; x=1737361618;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=NZEaafJZstJIFByjDm+P6F0jQ+mx9f+pSKn8vl03MSU=;
-        b=rzWA8/KIG0V9wzOSd1eT4fszmYsOQYT9ko6AQcQGDWEvDmEudJNL6UtSn/OZ9fxkSb
-         vjsbls5ad8jTYj9DUARJJW3RmUPylt5P+qpzfxG+gu9KoAQzr3AG/2IacvQCNAHVMs5+
-         76By0AEQbYq48COPFXojzSBZI5JExgTxcXLepYnHcJG4Xuv4kCD0FW5E/zf2GfAV6VbS
-         nmxuaO6oSEXlD1AiluBV58vHSacU34GpkjhsCecTY7iTmk108aPdaLO/o+R0+rH2m/Ia
-         xhvqCAPobNDVo8iiyi6BdOFOlbm6rGUWZDOZ5z0v9hB/5KW3AA7cGfVZ8m3i+oHA/kkI
-         Itng==
-X-Gm-Message-State: AOJu0YxtxGfKJxKkz/RKURQGxh2cAmP7nqgS+5xDOZ0nXEhaZuiG10HC
-	yz7uEIjxkmPTjxGpN1NmfAyBHGC675iy2bhtH0fLKTRK1TXn2seNZOZoi3WqrUwLNK5MXOVaThL
-	9pwCRwOAMtIbbZScj9DaQ1NkyzNObidMHv2zrpzui+JU9ffdgcFRObdOl7yTssEwUKmsyG+0=
-X-Gm-Gg: ASbGncvBA+0VEHSA5g4dfgj8AQAphvkT7JdUgmpSnxrvO7o/AqpUVt/7C9/yj7C7X88
-	0G8pujzrpsubXgEq7V4BjrFATbiDu5/loCjun0SyTnqLoG+UI4ET7VdOqTnHylBDnRBfvSroOyj
-	QpiXm8BQC/9iUypy9/PQctUSiv98qLVsUoQlnalolSooKw9Do4I0q0+ERxSK8dFY83t8UOn94Ho
-	a+NBrb8q0xB1VhV/uSFiSuMRxEckb9R+L6fbVbFnwxEnrccWFJgK8V9ayaw
-X-Received: by 2002:a17:907:720e:b0:aa6:6c08:dc79 with SMTP id a640c23a62f3a-ab2ab741567mr1830307866b.35.1736756817743;
-        Mon, 13 Jan 2025 00:26:57 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IEUSvV7l8qqUlR5kHhwR9j1q87q1wKuHv4gJ7LeVt3N13BcvoWZVPKi19WGFJEJYLWtuyIytA==
-X-Received: by 2002:a17:907:720e:b0:aa6:6c08:dc79 with SMTP id a640c23a62f3a-ab2ab741567mr1830304466b.35.1736756817291;
-        Mon, 13 Jan 2025 00:26:57 -0800 (PST)
-Received: from [10.40.98.179] ([78.108.130.194])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ab2c906009bsm467355266b.25.2025.01.13.00.26.56
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 13 Jan 2025 00:26:56 -0800 (PST)
-Message-ID: <779aa078-96b6-4f97-821f-4454e65ab7bf@redhat.com>
-Date: Mon, 13 Jan 2025 09:26:56 +0100
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="YjbjRPKf"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=J96RByw5yIuo5SisM1j1wfg1DtfMgIENzcxGrvfoHlZni0LgN3AmrCsKhUFOZEqYj8BUsTKcGUDVQdL1qwTgYubsysKnChMkpIPaWFlo/obZtYjZCcPapvsEH1Et8FVJXJe7yeivHUSTv8Np3I423I1hRZOugsTRX7zTMC2SueIBTGoRrV2CmH4QiIOBsOM7xj8IL9EB5J2asJPlmnzZ6Awchof3gcAQaoNcf7M3UBzNQ2lxztON9IrFjkPnH4G128vvIv7cNWsxmnuLihS/CCdk+BYjUuTByb7/ZjvYW3Ud6hyI55vWVpAgVJWQ+3DOOwm6aEoH3Fxn3f8RzE7DNw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=0sHf5jxivzUDzf13+P8JBGoiBdC23i1iWiNLxoFKDjA=;
+ b=jsc+ECmtdHtZ52BIWgedKMwCRV2t7kA0mE9dER76zHTNgRCIfeDCBJX6d94lQvH1LFa3CoNx6ApxKblto/eeT1taKfxyfclIvOQTPwivqrYj4fQLu2aSbxLgnnH+cl8I0DzkRR3WfwkJacRaCo31fcV6IH7FcJ/nOJ7LSHOVAJ0MQxDx+tF88W6h9kBh095znOGABTTJa9f4lOIbmhS4DqczoArFRjk+an+/ocTvVRcgAcC6LaTWMsi/67BFX+/wiMki/1tREmdodRW2gqKyHVuB5OLj3IYTyPbehvCLfcT/fkaC5NBepE+YYYn1kpIXus3x0seJEHXBPPvqnrgmQA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 216.228.117.161) smtp.rcpttodomain=redhat.com smtp.mailfrom=nvidia.com;
+ dmarc=pass (p=reject sp=reject pct=100) action=none header.from=nvidia.com;
+ dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=0sHf5jxivzUDzf13+P8JBGoiBdC23i1iWiNLxoFKDjA=;
+ b=YjbjRPKfkmKiJpLjDL90DREyZ9WHpmFcBoiHzpHNT/wFrDkZKDHdntwHN21Oyi7/XGTCwlRVJ+CijMOIF4FLyCG5jkPmQd6NCI/ZUhNm47cHGN+5psaQPqNDzBSnSre0z8qkbkepCBpEPXcdTNPnVfykV4Hr0KE1L9xcFKTvOS5V5nc4qoX7RzmWet9r/AYrD+SMLjymJdX8KuWKJj2EsqLr9vY0xXncF6kFeZrRFElqIKB5+i82ehpwKT7IGE2srMBesg7LoncYIH/Ha+h1VPEl7quUo6HX/1MWEkKVOxBIYSnWAxPBtJ79Vhpz16p9OJMkLCGEc/qt4Z4kIO8O2g==
+Received: from CH5P222CA0021.NAMP222.PROD.OUTLOOK.COM (2603:10b6:610:1ee::10)
+ by SJ2PR12MB8954.namprd12.prod.outlook.com (2603:10b6:a03:541::7) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8335.17; Mon, 13 Jan
+ 2025 08:44:10 +0000
+Received: from DS2PEPF0000343C.namprd02.prod.outlook.com
+ (2603:10b6:610:1ee:cafe::a) by CH5P222CA0021.outlook.office365.com
+ (2603:10b6:610:1ee::10) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.8335.18 via Frontend Transport; Mon,
+ 13 Jan 2025 08:44:10 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 216.228.117.161)
+ smtp.mailfrom=nvidia.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=nvidia.com;
+Received-SPF: Pass (protection.outlook.com: domain of nvidia.com designates
+ 216.228.117.161 as permitted sender) receiver=protection.outlook.com;
+ client-ip=216.228.117.161; helo=mail.nvidia.com; pr=C
+Received: from mail.nvidia.com (216.228.117.161) by
+ DS2PEPF0000343C.mail.protection.outlook.com (10.167.18.39) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.8356.11 via Frontend Transport; Mon, 13 Jan 2025 08:44:10 +0000
+Received: from rnnvmail201.nvidia.com (10.129.68.8) by mail.nvidia.com
+ (10.129.200.67) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.4; Mon, 13 Jan
+ 2025 00:43:58 -0800
+Received: from r-build-bsp-02.mtr.labs.mlnx (10.126.231.35) by
+ rnnvmail201.nvidia.com (10.129.68.8) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.4; Mon, 13 Jan 2025 00:43:55 -0800
+From: Vadim Pasternak <vadimp@nvidia.com>
+To: <hdegoede@redhat.com>
+CC: <michaelsh@nvidia.com>, <crajank@nvidia.com>, <fradensky@nvidia.com>,
+	<oleksandrs@nvidia.com>, <platform-driver-x86@vger.kernel.org>, "Vadim
+ Pasternak" <vadimp@nvidia.com>
+Subject: [PATCH platform-next v2 00/10] platform/mellanox: Add support for new systems, amendments, relocate mlx-platform module
+Date: Mon, 13 Jan 2025 10:43:22 +0200
+Message-ID: <20250113084337.24763-1-vadimp@nvidia.com>
+X-Mailer: git-send-email 2.44.0
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] platform/x86: lenovo-yoga-tab2-pro-1380-fastcharger:
- fix race condition
-To: Chenyuan Yang <chenyuan0y@gmail.com>, ilpo.jarvinen@linux.intel.com
-Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
- zijie98@gmail.com
-References: <20250111180951.2277757-1-chenyuan0y@gmail.com>
-Content-Language: en-US
-From: Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <20250111180951.2277757-1-chenyuan0y@gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: rnnvmail201.nvidia.com (10.129.68.8) To
+ rnnvmail201.nvidia.com (10.129.68.8)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DS2PEPF0000343C:EE_|SJ2PR12MB8954:EE_
+X-MS-Office365-Filtering-Correlation-Id: f766d708-32ad-42df-2401-08dd33ae72f8
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|82310400026|1800799024|376014|36860700013;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?QUFIN3lkdmRJT3FrbUFTdjJ2TVc1QndORms5RkliYTJpZVJCZTVXa2dnL2tn?=
+ =?utf-8?B?aGNtM0FZMW90SXpwVWJrRkNMYmRBUFEzcTZsNkQ3MEc2elVGVU55V0N3VHVS?=
+ =?utf-8?B?YXlDNGU4NDB2OEp2eGd0TDNtT1BVWWJTR091d1RzL05HUkRQMS9Uc1hQcUxk?=
+ =?utf-8?B?eWYxdWVIdloreG5FcEl1Rk01bG55cFlnQlVxRGNkVERvQml4NndGODdHWm1W?=
+ =?utf-8?B?NWpXNTNLVWgybWVkOEk4VWQ0R3BPQUpSb2pYM1YzMWQ3ZjhPYTJya0xnY1U0?=
+ =?utf-8?B?RGV6SjZ2TUFwR3l0SlRJMitWVlVDdVdTM2RXbmFlY3Vka1dha1I3VXE2Rlcz?=
+ =?utf-8?B?akNXZE8yMTNhS1czRG40eitXSldDNzdaMkZpOXgwNUZ6T3M4Y09LdUg0Tkor?=
+ =?utf-8?B?aFlINDFqSitFa0cxNFJOWUM0SXZpb1h3ejFrSUlNVS9kbVNnOGdPTCtZdzJU?=
+ =?utf-8?B?U0k3WUtGc2l2VGRFRzVDMXBMVkxRVFRwUUNpUzVOc0VNcE9iM2poQUpFWHVz?=
+ =?utf-8?B?VGNublQvMUVZOVdBUUtBeGlqd2dieFo1cVNOaGh4WTJXQkJwS3h2RmlDUldG?=
+ =?utf-8?B?VjNZbElDcGVpTWFWTjlic2pWaXJtaTN2MkZlcVd3OXdZRWNQRzhoWDJVTE5X?=
+ =?utf-8?B?dVkrUGJ0a01CLzYxSHYzc2l5cU9GcTlKblN6SStMVDgvakZFZVpmS2FEeFVX?=
+ =?utf-8?B?YjZwczhCYXNMeGlsZVZ6dXM3MmFrZFV2R3NMZU0zdnFaUHhkbFJPc3FCNkNw?=
+ =?utf-8?B?YWFOMDJqN3dOd3ZJTzRaTmpxS0NJSHVsVW13dElqcGszeWsvd3pCTEhGV1RU?=
+ =?utf-8?B?cm9ITVpIMHpYWkpvTjRuc0tVeFJYak1LS0JPMFQ1WW5XZTdReG5YNm9VVkVr?=
+ =?utf-8?B?MmUwOUtkaTQxNGkrbnpJWUJEV1k3V2E2ZFBsenBGMUJDekJxOFlqS3Z5dGd0?=
+ =?utf-8?B?d3I2NjNGNVBCSncweDFhREVjMUpyOGkwcjcyVHhUTHRWclhnTEY3S08zTnNs?=
+ =?utf-8?B?OEJUV3Fzc09hQWFLazZ6UFdCbkVpR1BnbXpCb0Fmb255WGlIeGhnRGpJMmpG?=
+ =?utf-8?B?UWpLbkR0KzJEUGNzeE9CUUVXdTR5Nnl0NmVxbStqdEJUNTl3NXBLN2krR2Nh?=
+ =?utf-8?B?dng0djIzcnloTytjV2ZXYnh4N1N2Y3dDemlvZEROZXZKTXB6ekZzZ0U5VEZM?=
+ =?utf-8?B?OEdDYnVZYWVQc3hjb1ZMaW1UUHNUL0RjOVdISjNNK3N2dGhsWko3SU5YazVG?=
+ =?utf-8?B?a05LTU9QcXBoNDhLSVczZ2pjYWJ3bmJmalFxeHpjWUhBa3NTMkNlK0VnaUFU?=
+ =?utf-8?B?bHlBVGJsak1EZDVIU0psOEplMTFCM0tpcStwNlNRaXMrbkg2RkFBNm5RanUw?=
+ =?utf-8?B?Z0MxcFFYZ1lTZ29TeVZ3ajV1REx4V3Vudkh2b1dJT2tlVG9sY1RjRGJjNm0y?=
+ =?utf-8?B?UDJPa2k5S0ZRMWZXRFJDNldGdGhIblhYRGlrQllBWVZLaE85dlJNa2dyNW1U?=
+ =?utf-8?B?bEJRcGhxQ0RMVWRvME9mZ20zNG5iTHcxT0EyUHRJRUFJeElycjJ6clFMOW5l?=
+ =?utf-8?B?OUh6b1EzSVZzVGVsYTZZcjI4YllNK0pXYnNDSnVIY1htcGVGUmxiemhzMDZO?=
+ =?utf-8?B?eFI5eFM4Z2NLRXJQdHVML2dGdm8rQkxubm53b2pobjh4WmEybm9vR3VGb3lZ?=
+ =?utf-8?B?M3VINzAxN3QwYXdMMDNuY2pkV1RmQlBFR29DdVdNU3lTNDFkekgybDNxVHNS?=
+ =?utf-8?B?WGp0S2Q1SVJMQi9sdDliOVNVQ3JJYlRTdGJrQUNlczNCdWFLeFVPL3R0bU9V?=
+ =?utf-8?B?eGRFM2x3a1JzeHJ1VTlTOWRFS2dTZXFjN1RHa09UcnY5QVdrQVBTc0thekto?=
+ =?utf-8?B?UFVrQk5ENzZNUmhtSkpNZFdGWHhIcXhVWlg4SWVkb0MzVXVzbjhkaGNWQ3dz?=
+ =?utf-8?B?SDFyT0RyRWNKM29WOEZmNDVVaHAwcFJLSnZld3ZNbDRqbUlySXhVZmVkN21O?=
+ =?utf-8?B?dGR1Qi90RHJRPT0=?=
+X-Forefront-Antispam-Report:
+	CIP:216.228.117.161;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:dc6edge2.nvidia.com;CAT:NONE;SFS:(13230040)(82310400026)(1800799024)(376014)(36860700013);DIR:OUT;SFP:1101;
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 13 Jan 2025 08:44:10.1106
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: f766d708-32ad-42df-2401-08dd33ae72f8
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.117.161];Helo=[mail.nvidia.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	DS2PEPF0000343C.namprd02.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ2PR12MB8954
 
-Hi,
+The patchset contains:
+Patch #1: Relocation mlx-platform driver.
+	Change of MAINTANERS list after relocation of mlx-platform.
+Patch #2: Add cosmetic changes - removing spaces.
+Patch #3: Repurposing of one register.
+Patches #4 - #5: Add new field.
+Patches #6- #9: Introduce systems: new SN428 smart switch equipped with
+	DPU for offloading, new 2U systems SN5610 and SN5640, new compact
+	system SN2200 OCP rack complained.
+Patch #10 - Add documentation.
 
-On 11-Jan-25 7:09 PM, Chenyuan Yang wrote:
-> The yt2_1380_fc_serdev_probe() function calls devm_serdev_device_open()
-> before setting the client ops via serdev_device_set_client_ops(). This
-> ordering can trigger a NULL pointer dereference in the serdev controller's
-> receive_buf handler, as it assumes serdev->ops is valid when
-> SERPORT_ACTIVE is set.
-> 
-> This is similar to the issue fixed in commit 5e700b384ec1
-> ("platform/chrome: cros_ec_uart: properly fix race condition") where
-> devm_serdev_device_open() was called before fully initializing the
-> device.
-> 
-> Fix the race by ensuring client ops are set before enabling the port via
-> devm_serdev_device_open().
-> 
-> Note, serdev_device_set_baudrate() and serdev_device_set_flow_control()
-> calls should be after the devm_serdev_device_open() call.
-> 
-> Fixes: b2ed33e8d486 ("platform/x86: Add lenovo-yoga-tab2-pro-1380-fastcharger driver")
-> Signed-off-by: Chenyuan Yang <chenyuan0y@gmail.com>
-> CC: Hans de Goede <hdegoede@redhat.com>
+Vadim Pasternak (10):
+  mellanox: Relocate mlx-platform driver
+  platform: mellanox: mlx-platform: Cosmetic changes
+  platform: mellanox: mlx-platform: Change register name
+  platform_data/mlxreg: Add capability bit and mask fields
+  platform/mellanox: mlxreg-hotplug: Add support for new flavor of
+    capability registers
+  platform/mellanox: mlxreg-dpu: Add initial support for Nvidia DPU
+  platform: mellanox: Introduce support of Nvidia smart switch
+  platform: mellanox: mlx-platform: Add support for new Nvidia system
+  platform: mellanox: nvsw-sn2200: Add support for new system flavour
+  Documentation/ABI: Add new attribute for mlxreg-io sysfs interfaces
 
-Thanks, patch looks good to me:
-
-Reviewed-by: Hans de Goede <hdegoede@redhat.com>
-
-Regards,
-
-Hans
+v0->v2:
+ Comments pointed out by Krzysztof:
+ - Merge changes of MAINTANERS to the 1-st patch.
+ - Change order between SoB and RB.
 
 
+ .../ABI/stable/sysfs-driver-mlxreg-io         |   96 +
+ MAINTAINERS                                   |    7 +-
+ drivers/platform/mellanox/Kconfig             |   25 +
+ drivers/platform/mellanox/Makefile            |    2 +
+ .../platform/{x86 => mellanox}/mlx-platform.c | 3665 ++++++++++++-----
+ drivers/platform/mellanox/mlxreg-dpu.c        |  622 +++
+ drivers/platform/mellanox/mlxreg-hotplug.c    |   23 +-
+ drivers/platform/mellanox/nvsw-sn2201.c       |  110 +-
+ drivers/platform/x86/Kconfig                  |   13 -
+ drivers/platform/x86/Makefile                 |    1 -
+ include/linux/platform_data/mlxreg.h          |    8 +
+ 11 files changed, 3490 insertions(+), 1082 deletions(-)
+ rename drivers/platform/{x86 => mellanox}/mlx-platform.c (81%)
+ create mode 100644 drivers/platform/mellanox/mlxreg-dpu.c
 
-> ---
->  drivers/platform/x86/lenovo-yoga-tab2-pro-1380-fastcharger.c | 5 +++--
->  1 file changed, 3 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/platform/x86/lenovo-yoga-tab2-pro-1380-fastcharger.c b/drivers/platform/x86/lenovo-yoga-tab2-pro-1380-fastcharger.c
-> index d2699ca24f34..a96b215cd2c5 100644
-> --- a/drivers/platform/x86/lenovo-yoga-tab2-pro-1380-fastcharger.c
-> +++ b/drivers/platform/x86/lenovo-yoga-tab2-pro-1380-fastcharger.c
-> @@ -199,14 +199,15 @@ static int yt2_1380_fc_serdev_probe(struct serdev_device *serdev)
->  	if (ret)
->  		return ret;
->  
-> +	serdev_device_set_drvdata(serdev, fc);
-> +	serdev_device_set_client_ops(serdev, &yt2_1380_fc_serdev_ops);
-> +
->  	ret = devm_serdev_device_open(dev, serdev);
->  	if (ret)
->  		return dev_err_probe(dev, ret, "opening UART device\n");
->  
->  	serdev_device_set_baudrate(serdev, 600);
->  	serdev_device_set_flow_control(serdev, false);
-> -	serdev_device_set_drvdata(serdev, fc);
-> -	serdev_device_set_client_ops(serdev, &yt2_1380_fc_serdev_ops);
->  
->  	ret = devm_extcon_register_notifier_all(dev, fc->extcon, &fc->nb);
->  	if (ret)
+-- 
+2.44.0
 
