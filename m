@@ -1,172 +1,210 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1126620AF71
-	for <platform-driver-x86@vger.kernel.org>; Mon, 13 Jan 2025 16:25:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 853C81C5D77
+	for <platform-driver-x86@vger.kernel.org>; Mon, 13 Jan 2025 16:49:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736785512; cv=none; b=SfLDJL7iOjM4aGM697eIcddPNSr5lx2Y6E7IaKXi/pSLJRqI6SqtJrMSZjeVD0G8N1aRz7bMt0+VM+dXxdOeCEuzzF0D+fsetAnxp5wG8As65fUZE66e9070ChAhcSKyuRZe8B2N/r3aDLT6idXG2rNxFzB5tLbAA0R11wiNFMo=
+	t=1736786967; cv=none; b=MiSEst+Wc1T35J4rqQyio2QxEYQ2U4fsV7KfWzdmgpaIzi8wHlD2ZX0+ZQ7U3p2vNI88rKee8J/Xfv0Y9qsE9Hbz1dHZmCf+XL1FauoJ5gTNRxUwLiID2uswSM+Ri9V3Hgs82V03RqK8rlkAanqU3/x42NPqAFC75LI2RphfDAs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736785512; c=relaxed/simple;
-	bh=CMw0Lx6USALvSvZ5fFesZeOXHUUlVMm024mKlG8HH6c=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=ApU9fJ7lhhT20UCIPPNkzYYTYZpiXcTqbNSONLDgb8RjZ4EhEiMWs9DzI8I8kYkFgfSRQ5QWfRpJPgDTGFFQPGu4wYuqU4rLyrKVHyx8EPT0wwN1jwWvAY5izDCy5lLmbWBCdU+cmDa/Zkpmgcn05cbTXhEnqgodlm+LWensb6Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Zej0cRKc; arc=none smtp.client-ip=198.175.65.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1736786967; c=relaxed/simple;
+	bh=F7hp29fYxtqUB0Hf9fIChQCld83AcM1O5eMR1txTU70=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=kfsMrSvfwuS9NZtpF1Dbzr3QOgOquXfn8KNhHse4CzDRs6wr5ePPhPZEaKxx2nGQgHLfVDBL+qriDDXY7q/6A1W3CSquxkTev234vkaqxsPeIVwR6rTyFHiLcV24pBZWPrt5NUs7EhDQE3IysMOmrULvqjqg2ip4bFwdHZidpo0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=alpyashe; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Zej0cRKc"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1736785511; x=1768321511;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=CMw0Lx6USALvSvZ5fFesZeOXHUUlVMm024mKlG8HH6c=;
-  b=Zej0cRKcUeCBPeE4U4Lk77FNWxmirX2fvowtQkIB0yGpIyY6JsL25Q1w
-   aL/2onupbH8e69cON7AUe84Io1cnCWySpIrTJB+WvtSE5zcSP288J6XAf
-   yTUWabBG5B4veiyTCYg9vxtryPvjyR0MR610e22BGJRffg56aQUZZzW5+
-   p9LFpvOdXptWUJTeDj/blItp9gY5qLpuTvjhS/edim8lqPIlyOX3azysq
-   qaec8UmHyQKr0/Euz+xnr0YvZ4OAm04Wm0GCayhO6OIVRyAVAh1iLBvvx
-   IEBgIzOqTSiXL+QxYTxIazKRIVjgajutHtJnuqwhK1b+xRO+Lc+ySFVu3
-   w==;
-X-CSE-ConnectionGUID: crP6wPwcQESxWtcGhCaGCQ==
-X-CSE-MsgGUID: PzM6t4lvQ7SBsEZpBPRsdA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11314"; a="48059717"
-X-IronPort-AV: E=Sophos;i="6.12,310,1728975600"; 
-   d="scan'208";a="48059717"
-Received: from orviesa008.jf.intel.com ([10.64.159.148])
-  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Jan 2025 08:25:11 -0800
-X-CSE-ConnectionGUID: mDep+QOWSiWwxarr5NbBIw==
-X-CSE-MsgGUID: +CXiMpkcQfu0ZuX/q8siLA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
-   d="scan'208";a="105402575"
-Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.121])
-  by orviesa008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Jan 2025 08:25:08 -0800
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Mon, 13 Jan 2025 18:25:05 +0200 (EET)
-To: Vadim Pasternak <vadimp@nvidia.com>
-cc: Hans de Goede <hdegoede@redhat.com>, michaelsh@nvidia.com, 
-    crajank@nvidia.com, fradensky@nvidia.com, oleksandrs@nvidia.com, 
-    platform-driver-x86@vger.kernel.org
-Subject: Re: [PATCH platform-next v2 05/10] platform/mellanox: mlxreg-hotplug:
- Add support for new flavor of capability registers
-In-Reply-To: <20250113084337.24763-6-vadimp@nvidia.com>
-Message-ID: <afc22280-ec2f-619e-77a6-78a9b4f472b7@linux.intel.com>
-References: <20250113084337.24763-1-vadimp@nvidia.com> <20250113084337.24763-6-vadimp@nvidia.com>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="alpyashe"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1736786964;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=F1dDnjAx6WR8D0Awi14BY7UNGjJg0wAKtVvr3i7T8hU=;
+	b=alpyasheJJSmU7vOOxy60jQCDVX56VcnxjzgEVH+GZOwWizkztx4SaBG/vk8sqPjlkK9nT
+	8xhEI/aoyzMrdIhBeh1nbGuQvXv/Y34X6i1qdDPUXcY6IbGVuFIEPMuVFCl1p8VpredMAA
+	CEseu4LKRYe7YOE/uP4XYUQrb/GLBf8=
+Received: from mail-ej1-f69.google.com (mail-ej1-f69.google.com
+ [209.85.218.69]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-484-9rRLi84OOEOUsXpffYl-vw-1; Mon, 13 Jan 2025 11:49:23 -0500
+X-MC-Unique: 9rRLi84OOEOUsXpffYl-vw-1
+X-Mimecast-MFC-AGG-ID: 9rRLi84OOEOUsXpffYl-vw
+Received: by mail-ej1-f69.google.com with SMTP id a640c23a62f3a-aaf5ca740aeso396773266b.2
+        for <platform-driver-x86@vger.kernel.org>; Mon, 13 Jan 2025 08:49:22 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1736786962; x=1737391762;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=F1dDnjAx6WR8D0Awi14BY7UNGjJg0wAKtVvr3i7T8hU=;
+        b=hJo10ocFs1x7vZ3gqcOn2nZJ+9k4Q6tgdkM8BTStvtwJpLy5LPpuPlR3RxMr8Ti5hp
+         RpLwRSBE6C2jgQWwyQ/R3jAozBOnBu0DKDyT7YeHXQ7ilrOKgMKciPsqmpwlUJoTOlvW
+         AWw8x1viKBwKQx2LvupkPccqpPxF0KxA1lNTV9ohUK+H+CPWu3QITEpolk39CU3PBaNp
+         WEsyTgFAuwuApQGLRkaiEyj0pa8cxgViX4HNa/NxZC0wEOZETaeRR3BCqDqGY/Rziuvy
+         bev00nbyT5LjF/LbkagMyIpDhRV+iP0kIp8h7ZiCJ875ZdquuaHIGCh5blvfcAwby9EM
+         Cnjw==
+X-Forwarded-Encrypted: i=1; AJvYcCWVarbLAnlyfisH48sXohQL0Io6FMIhzE6cbIYa3Y4Iq1hR0EMMotUVcJ1svNCbN5u8VCbmOGc0z3yGbD1/uU1HM9IR@vger.kernel.org
+X-Gm-Message-State: AOJu0YzUaXfAW7mxWll+rpuzMLvHa4nDvbV/B1YwwL+8vg71+sJ/eWkV
+	2V0UVIr6GsfgC/6oo8SJABWubOpyaKz7wrWL3EwEO3zr8oKp64Ni12jFeyBab7Sd1Xyp5tpIg6i
+	BCPgWElBGpUVy5KQO2K2J8Mrbg5Zlq2oCu1OBgAvVjTmEGoXqDlu0YrLlSNwvvYAI5dKk/S4=
+X-Gm-Gg: ASbGncvUys0eaeztGb5vClTwg8WA1gBxwgeCDmMuRQKO1GKvGWT+mLNkRQ7sLglm/Fl
+	2myclysX/H0gaPj1qX39MNxuM+H/Hzr1riOHoHEgD7VJiA/FAX1WoIU1/qB8pC7sMdRboC1QtV1
+	CKAbtg6WfXCw0f/mWYPEIcsHtqcKX+UNfuXEZymnqrnmvmFuBgRBAsTpg/vxx6vTmAOuiBebmRY
+	upUROcg3YQfnrnjdles7JoBHOCjKH4I1n6ac0iqm2whQNPyTGgw/JMWWPeBhJi0uGVEsApXoMP7
+	+YS+GqVmfDJDOCjzprIX1qb+MxAi+sTuf9HWUo+vbdhrvNFIMb0QAtkrrwt/WKbL6XssaIhIx8I
+	0X6ZluU3MIW6oNX74CzPCKVO8RTZLwaU=
+X-Received: by 2002:a17:907:930b:b0:ab2:dc73:34bd with SMTP id a640c23a62f3a-ab2dc733505mr1465801966b.48.1736786961808;
+        Mon, 13 Jan 2025 08:49:21 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IFFqmpdX7SC0CIT5zFlctdW9JguhsetLprQskvO/O/JEnSA8nb03EQto3+gsz+LnmpQfDXdzg==
+X-Received: by 2002:a17:907:930b:b0:ab2:dc73:34bd with SMTP id a640c23a62f3a-ab2dc733505mr1465799766b.48.1736786961406;
+        Mon, 13 Jan 2025 08:49:21 -0800 (PST)
+Received: from ?IPV6:2001:1c00:c32:7800:5bfa:a036:83f0:f9ec? (2001-1c00-0c32-7800-5bfa-a036-83f0-f9ec.cable.dynamic.v6.ziggo.nl. [2001:1c00:c32:7800:5bfa:a036:83f0:f9ec])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ab2c964dc9dsm527471466b.178.2025.01.13.08.49.20
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 13 Jan 2025 08:49:20 -0800 (PST)
+Message-ID: <2b2a3d16-039c-4cdf-94b9-41d074558d97@redhat.com>
+Date: Mon, 13 Jan 2025 17:49:19 +0100
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v9 4/4] platform/x86: dell-smo8800: Add support for
+ probing for the accelerometer i2c address
+To: Andy Shevchenko <andy@kernel.org>,
+ =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Cc: Prasanth Ksr <prasanth.ksr@dell.com>, =?UTF-8?Q?Pali_Roh=C3=A1r?=
+ <pali@kernel.org>, Paul Menzel <pmenzel@molgen.mpg.de>,
+ Wolfram Sang <wsa@kernel.org>, eric.piel@tremplin-utc.net,
+ Marius Hoch <mail@mariushoch.de>, Dell.Client.Kernel@dell.com,
+ Kai Heng Feng <kai.heng.feng@canonical.com>,
+ platform-driver-x86@vger.kernel.org, Jean Delvare <jdelvare@suse.com>,
+ Andi Shyti <andi.shyti@kernel.org>, linux-i2c@vger.kernel.org
+References: <20241209183557.7560-1-hdegoede@redhat.com>
+ <20241209183557.7560-5-hdegoede@redhat.com>
+ <ee90da14-024e-4563-00ff-9b525e700106@linux.intel.com>
+ <67d6480a-6613-47a1-bf7d-b52532a5278c@redhat.com>
+ <049555a0-ad65-7aad-2a7c-fc2047629010@linux.intel.com>
+ <Z4Uy4FYgynLP3ZAp@smile.fi.intel.com>
+Content-Language: en-US, nl
+From: Hans de Goede <hdegoede@redhat.com>
+In-Reply-To: <Z4Uy4FYgynLP3ZAp@smile.fi.intel.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-Hi Vadim,
+Hi,
 
-I was no longer among the receipients despite being marked as M: for this 
-file. Also lkml is not there despite,
-
-scripts/get_maintainer.pl -f drivers/platform/mellanox/mlxreg-hotplug.c
-
-returning both so there's still something wrong in the way the receipients 
-are selected.
-
-On Mon, 13 Jan 2025, Vadim Pasternak wrote:
-
-> Hotplug platform data is common across the various systems, while
-> hotplug driver should be able to configure only the instances relevant
-> to specific system.
+On 13-Jan-25 4:36 PM, Andy Shevchenko wrote:
+> On Mon, Jan 13, 2025 at 05:17:43PM +0200, Ilpo Järvinen wrote:
+>> On Sat, 21 Dec 2024, Hans de Goede wrote:
+>>> On 17-Dec-24 5:48 PM, Ilpo Järvinen wrote:
+>>>> On Mon, 9 Dec 2024, Hans de Goede wrote:
 > 
-> For example, platform hoptplug data might contain descriptions for fan1,
-> fan2, ..., fan{n}, while some systems equipped with all 'n' fans,
-> others with less.
-> Same for power units, power controllers, ASICs and so on.
+> ...
 > 
-> For detection of the real number of equipped devices capability
-> registers are used.
-> These registers used to indicate presence of hotplug devices through
-> the bitmap.
+>>>> So what was the result of the private inquiry to Dell?
+>>>
+>>> On July 5th I send the following email to Prasanth Ksr
+>>> <prasanth.ksr@dell.com> which is the only dell.com address I could
+>>> find in MAINTAINERS other then Dell.Client.Kernel@dell.com which
+>>> does not seem to be monitored very actively:
+>>>
+>>> """
+>>> Hello Prasanth,
+>>>
+>>> I'm contacting you about a question lis3lv02d freelfall sensors /
+>>> accelerometers used on many (older) Dell laptop models. There
+>>> has been a question about this last December and a patch-set
+>>> trying to address part of this with Dell.Client.Kernel@dell.com
+>>> in the Cc but no-one seems to be responding to that email address
+>>> which is why I'm contacting you directly:
+>>>
+>>> https://lore.kernel.org/linux-i2c/4820e280-9ca4-4d97-9d21-059626161bfc@molgen.mpg.de/
+>>> https://lore.kernel.org/platform-driver-x86/20240704125643.22946-1-hdegoede@redhat.com/
+>>>
+>>> If you are not the right person to ask these questions to, then
+>>> please forward this email to the right person.
+>>>
+>>> The lis3lv02d sensors are I2C devices and are described in the ACPI
+>>> tables with an SMO88xx ACPI device node. The problem is that these
+>>> ACPI device nodes do not have an ACPI I2cResouce in there resource
+>>> (_CRS) list, so the I2C address of the sensor is unknown.
+>>>
+>>> When support was first added for these Dell provided a list of
+>>> model-name to I2C address mappings for the then current generation
+>>> of laptops, see:
+>>>
+>>> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/drivers/i2c/busses/i2c-i801.c#n1227
+>>>
+>>> And later the community added a few more mappings.
+>>>
+>>> Paul Menzel, the author of the email starting the discussion on this:
+>>>
+>>> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/drivers/i2c/busses/i2c-i801.c#n1227
+>>>
+>>> did a search for the kernel message which is printed when an SMO88xx
+>>> ACPI device is found but the i2c-address is unknown and Paul found
+>>> many models are missing from the mapping table (see Paul's email).
+>>>
+>>> Which leads us to the following questions:
+>>>
+>>> 1. Is there another, uniform (so not using a model name table)
+>>> way to find out the I2C address of the SMO88xx freefall sensor
+>>> from the ACPI or SMBIOS tables ?
+>>>
+>>> 2. If we need to keep using the model-name to I2C-address mapping
+>>> table can you help us complete it by providing the sensor's I2C
+>>> address for all models Paul has found where this is currently missing ?
+>>>
+>>> Regards,
+>>>
+>>> Hans
+>>> """
+>>>
+>>> Pali and Paul Menzel where in the Cc of this email.
+>>>
+>>>> Did they respond?
+>>>
+>>> I got a reply from Prasanth that they would forward my request to the
+>>> correct team. Then I got on off-list reply to the v6 patch-set from
+>>> David Wang from Dell with as relevant content "We are working on it."
+>>>
+>>>> Did they provide useful info?
+>>>
+>>> No further info was received after the "We are working on it." email.
+>>
+>> Hi Hans,
+>>
+>> So you didn't try to remind them after that at all?
+>>
+>> This kind of sounds a low priority item they just forgot to do and might have
+>> had an intention to follow through.
 > 
-> For some new big modular systems, these registers will provide presence
-> by counters.
-> 
-> Use slot parameter to determine whether capability register contains
-> bitmask or counter.
-> 
-> Some 'capability' registers can be shared between different resources.
-> Use fields 'capability_bit' and 'capability_mask' for getting only
-> relevant capability bits.
-> 
-> Reviewed-by: Felix Radensky <fradensky@nvidia.com>
-> Signed-off-by: Vadim Pasternak <vadimp@nvidia.com>
-> ---
->  drivers/platform/mellanox/mlxreg-hotplug.c | 23 ++++++++++++++++++++--
->  1 file changed, 21 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/platform/mellanox/mlxreg-hotplug.c b/drivers/platform/mellanox/mlxreg-hotplug.c
-> index 0ce9fff1f7d4..3e480c322353 100644
-> --- a/drivers/platform/mellanox/mlxreg-hotplug.c
-> +++ b/drivers/platform/mellanox/mlxreg-hotplug.c
-> @@ -274,6 +274,13 @@ static int mlxreg_hotplug_attr_init(struct mlxreg_hotplug_priv_data *priv)
->  			if (ret)
->  				return ret;
->  
-> +			if (!regval)
-> +				continue;
-> +
-> +			/* Remove non-relevant bits. */
-> +			if (item->capability_mask)
-> +				regval = rol32(regval & item->capability_mask,
-> +					       item->capability_bit);
+> Talking from my experience with other companies that could have done something
+> better I dare to say that this entire buzz for them is no-priority at all, like
+> "no money stuff", hence no attention given. That said, I believe ping won't
+> change anything here, however I agree that it _was_ worth to try to acquire any
+> response from them.
 
-Is the intention here to really do _rotate_ bits or is it just normal 
-shifting going on? It might be the bits might never rotate past 32-bit 
-boundary so it is effectively just shifting but labeling it as rotate is
-still wrong if bit rotate is not intended.
+Basically what Andy says above.
 
-I see there are also two pre-existing rol32() calls inside 
-drivers/platform/mellanox/ with one of them talking about "shift" so I 
-suspect they might be also wrongly using rol32() that does rotate
+Note that Dell's client team has been on the Cc for all the versions of
+this patch-set many of which were posted after the "We are working on it." email.
 
->  			item->mask = GENMASK((regval & item->mask) - 1, 0);
->  		}
->  
-> @@ -294,7 +301,19 @@ static int mlxreg_hotplug_attr_init(struct mlxreg_hotplug_priv_data *priv)
->  				if (ret)
->  					return ret;
->  
-> -				if (!(regval & data->bit)) {
-> +				/*
-> +				 * In case slot field is provided, capability
-> +				 * register contains counter, otherwise bitmask.
-> +				 * Skip non-relevant entries if slot set and
-> +				 * exceeds counter. Othewise validate entry by
-> +				 * matching bitmask.
-> +				 */
-> +				if (data->capability_mask)
-> +					regval = rol32(regval & data->capability_mask,
-> +						       data->capability_bit);
+For completeness sake I have just send a request for a status update on
+this to Prasanth and David from Dell.
 
-Another rol32() here?
+In the mean time it would be good IMO to merge v11 of this patch, if we
+get useful info from Dell after all we can modify the driver for this
+later.
 
-> +				if (data->slot > regval) {
-> +					break;
-> +				} else if (!(regval & data->bit) && !data->slot) {
->  					data++;
->  					continue;
->  				}
-> @@ -611,7 +630,7 @@ static int mlxreg_hotplug_set_irq(struct mlxreg_hotplug_priv_data *priv)
->  				if (ret)
->  					goto out;
->  
-> -				if (!(regval & data->bit))
-> +				if (!(regval & data->bit) && !data->slot)
->  					item->mask &= ~BIT(j);
->  			}
->  		}
-> 
+Regards,
 
--- 
- i.
+Hans
+
 
