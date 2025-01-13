@@ -1,65 +1,65 @@
-Received: from mail-pl1-f173.google.com (mail-pl1-f173.google.com [209.85.214.173])
+Received: from mail-pl1-f182.google.com (mail-pl1-f182.google.com [209.85.214.182])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E53723A577;
-	Mon, 13 Jan 2025 13:14:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5943723A58E;
+	Mon, 13 Jan 2025 13:14:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736774074; cv=none; b=MG9rSw16FDiElY6+P86gx39qwlzkH07Zdm8YO3swtfFYLGkvXitns2Fc8kthxXXEQ8DWHYIkNEKjHQ7S7b1cOoIt8JzAu4a2a+FP967XThlebldtjBbo1wFDCHvzCwNFwFlLsXrtSyrLQ5+lLJvmw9vGjoYSUQK8G8tUOpeuEbQ=
+	t=1736774076; cv=none; b=bQcjK5PrTKhvVeT9XHBFkdXXZi1qYIkyb74Fclk90KkVoNp3qcch37RWhGLsImBW8cAo24FjIUOc9s9OxkG+ZrELW2MAqPwKEOneD52WZ62q0BsMVB5GmzOWhlK+tJN03tTpSob/5gTYciTGBQZ9SY7bCZYuXLu9JtbR45irrKw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736774074; c=relaxed/simple;
-	bh=CUcKZGbJ60x3isr5m74jbYJ2wftVQa/D6dx5Db29T1I=;
+	s=arc-20240116; t=1736774076; c=relaxed/simple;
+	bh=9gOtIFNC+9p0devArM1OIQgXPradQhZJkE2B9DNLXEM=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=X2aX5lZcA4OBtvvJZQB+QiDtsH3ITg2hL86gzm0HBzt6CDtqcX0uEF/gk536ts3lzqShImCWtj6AqNHOZ9FAeH6kSBuuUmHTxqd9sbsX81bWUQbTj1cpmPfP7xXvYX0V+cSR9LIovVW/BEaVwEOkQLmWbt9z1rkNI4bsTJuFExo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=kSIB3kof; arc=none smtp.client-ip=209.85.214.173
+	 In-Reply-To:To:Cc; b=KVjIrJAEX1jbpr7wIIuOt1dCy7Y+QahQcNsDKrLtMAxzhdRvebhTsVYDxrnVJ+jTuVMAtJVn2vOqmZgGVnV9nfppWGqzHnK7fZ4g/iAIr14mZvKB0A+pObi4effZuljbgyXNlFhHPGUOs3gM5EPWjWWgUm9D24ptd5laWTADeh0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=HinWtXB6; arc=none smtp.client-ip=209.85.214.182
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kSIB3kof"
-Received: by mail-pl1-f173.google.com with SMTP id d9443c01a7336-2165448243fso87747185ad.1;
-        Mon, 13 Jan 2025 05:14:32 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HinWtXB6"
+Received: by mail-pl1-f182.google.com with SMTP id d9443c01a7336-2161eb94cceso50279655ad.2;
+        Mon, 13 Jan 2025 05:14:35 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1736774072; x=1737378872; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1736774074; x=1737378874; darn=vger.kernel.org;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=tdx58RbkE7UWGw0LJBrSEiuZu1+StplOv00uJ8AcIEE=;
-        b=kSIB3kofLLA9cmBhacldqhFZv0H8DGQcvZZcMwwTg0w3BuTQ9GoeRm5g4vdLpTs9T0
-         kSUgUXsDhS4L0G9pXdf1wwUEctoTq8miBGax+tIkRzSCfNUv942yGqfJ8uSMYxFnN/WV
-         6MfWl+cNtZBPKHKpyffqRvbQyyu4oD63XiV1BdR0s1vwF7nsQMQrMMoBFhy2YpGVwaVZ
-         exk8mwLKQmMAIVMe4fRBO8HoLukQh+O/vp2dl1WNZHzmJMuTLVyCELcOCu9pfEi6Q9Tt
-         0sq4XBBrkgApy/zpgjF5nJuApUq2FUwx5/QpXimiWJ84Wu/oNh70CJBS1RCmIHMsFszi
-         Qckw==
+        bh=0KjjxCDGj5y3C+fSOgT4oOkpbJF7wzDOY1kUuqtfuxk=;
+        b=HinWtXB6HCoLvRQ8zsUwJD4pKMG420Y2sTFJk/o9YI11aslGNrF0+uzRLGWXP6suax
+         phm0x3SpCo8qmTJsCVxSscMWROLhh17v5Bx46uDBItsbsKcT02d1LajlHrORK/AJfKzV
+         /t5tcCoCQJUxG/AOCzXjyp1aXhMXx6jz+WPtKxo16KV5Dj9NnEBJTCdHuCSL5pDRX5ee
+         jPouCiteQf+F1MCpHXLyw2Hm17hNA0EDs+GBcQKvod2wi6It+14GUWgSBN2igiytRsX7
+         64wVrurb8n+ulPVtDGrE9bNE3XSBDVGI3rmLGPkLKmw+WkDqhllM96I211sYkojETFJ9
+         JJmQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1736774072; x=1737378872;
+        d=1e100.net; s=20230601; t=1736774074; x=1737378874;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=tdx58RbkE7UWGw0LJBrSEiuZu1+StplOv00uJ8AcIEE=;
-        b=WNI3T98PbkXmBoC54oeMNTiRH+5mpfnOv5JjwhWEsY/D3hl1JNtXW/ogz4/Bvly66L
-         TDtDaveCqsI9h4/UQKgk6URmKjiSldozcAoiT4rArXBU0hs2DGqwYW34QWn5v/3M1/O5
-         DBLQ7vizWpAd8vIRYnvNSlCWPRNKbwCd8yRHW4XUBzWCYojS/FEIIUL7yDECwR5AQot6
-         NoSF8YtbhSseasj9N6GC77f7A/zZ0A/4uTcEQCAsdT/BuQ96tc3MHtFDZ4MvOeK8Nm9e
-         /roUgM8ci7a/CO/8iDE+LxMbc+YPLszWwS1lV9m3SNJUQluOEuKazOXGGuqy/kMAHcd2
-         w0xg==
-X-Forwarded-Encrypted: i=1; AJvYcCUIHIwhz4paxIjJaZO158Zj9WGdy3VOuPcnv5GhpYaMJenLS/vO7n60u90xfqhOLlY4YQ2Fjt2KoN+slhg=@vger.kernel.org
-X-Gm-Message-State: AOJu0YytmhHIvTptWL52uKUQyCDVqvF/NUdW5fAFefLQPm0LTxnlnTtw
-	e5eEaP/DQLvyfmsXoyUaLN7C1hYPj+D6F02MhMBmYQ3VdK/+b/6WKtauIXC8
-X-Gm-Gg: ASbGncs55gOebtpv7GHAGW+hWY0n6S1kxz0+1Pxm2qabwm4VoF0ZlXh9mO4SrnN8ENy
-	FM3P7MTeHmBCQy2FUMI2eU/U6V8KesCzrJxMf4e4MhkrG0PC1+MXBJNezyvxnSmbuRXIqSEC75b
-	z2w5NacWBU/bND/+jzfJ/efs4/wlKNs439ZUkXiJBE3CBIUstLg17AkUaTM/sPonhmCpC8rEXbh
-	uJnoiOguQqPIojaOSxdVGs4nBfubluGeZCq3/hRMhuLGifW5CA+lua7cRekpA==
-X-Google-Smtp-Source: AGHT+IGEZ3F1q1aROfxsG+xQZr4KKu+Wt5nnx4sy8ZKLupVcsA6ZJBTW4f5BZBlauV6Bt+/xy9N5IQ==
-X-Received: by 2002:a05:6a20:2594:b0:1e4:8fdd:8c77 with SMTP id adf61e73a8af0-1e88d13b502mr35724199637.8.1736774070722;
-        Mon, 13 Jan 2025 05:14:30 -0800 (PST)
+        bh=0KjjxCDGj5y3C+fSOgT4oOkpbJF7wzDOY1kUuqtfuxk=;
+        b=Z8VI4wmWTTwszqgKPFtq/7bymw1qN5EdQdyqbMhc8diRD6ED18hVtWhaaeo+LfQc45
+         Oy+RCCMKpaHjwARdXDIwzRn1DwpVws6Yvv52h19aCQtsSlZUTDwz0ZPYJB2qwERAabZS
+         xagOJ1NlCJnqvNgEDsrff5sv8VBUqkJgBKEPelBtDDmcnNEBAAVWfb7VgxR14y5Div/D
+         D8z271OtmEZPeh7hmqlmMmPw0s37wujPR8Uhhh74ks3AmTyeYhtrqmz1uhUeTguxC2cf
+         6vINz9chtAxgq6XW/C40BrIRRe/fh+SeREZMp7qK/JzI6VFH/nghZa115zFRVFGC9tix
+         stGA==
+X-Forwarded-Encrypted: i=1; AJvYcCUDW42PmFpXOZVQYe4Bq8lwUPls1EJd7d9t43at5iUhgrXy5oIk9DKuqUgmTQW3Vl9fzb9v+gIcDnj3dBA=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzrDByiP4bLo8viWAGMKqG0J0iEG1aL15TqoajEGhqWrvTAVc5V
+	yfuCUZY9qx5ND1Dd7Alsg5nrO/JAYu+x6eM21rAGn1GTY3to73WUZLwS3ZSG
+X-Gm-Gg: ASbGncuXcOXPyes+YGDdmzEjxZvg3yzd3fHhoHBBgDcLPVJeoSQc8d9kVE+H8t+js38
+	dwQw36P6YHhTr40YG8xsw5q1jtDOe2lSnrkRZ+EGDYf8nKJU2oa8N3uBjns7PD+YX3Ez3NMimtz
+	UdM8xspuC9/nMMDFjyda3iSmbWqQlExqlvuTLqjqLEe8fw/8uUPE+SQWfN7C4Rh5gTPlPg61UkO
+	AHttGbFizQrt39Z0SgQlWuOrHgyDOg6S0wEoDe2QJEoMucAtLw+SJPFBdTzdQ==
+X-Google-Smtp-Source: AGHT+IGLoFo3zIUtaKcfrg+ETQceT+Ur1KNUCw6BlEBI+xxlQek4/Eb9nJzu/3ZPwQ0DP6oCgcCFGg==
+X-Received: by 2002:a05:6a20:7fa1:b0:1e0:ce11:b0ce with SMTP id adf61e73a8af0-1e88d0a9418mr37681488637.35.1736774074442;
+        Mon, 13 Jan 2025 05:14:34 -0800 (PST)
 Received: from [10.113.16.67] ([117.193.77.254])
-        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-a31840e93absm6961209a12.20.2025.01.13.05.14.27
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-a31840e93absm6961209a12.20.2025.01.13.05.14.31
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 13 Jan 2025 05:14:30 -0800 (PST)
+        Mon, 13 Jan 2025 05:14:33 -0800 (PST)
 From: Hridesh MG <hridesh699@gmail.com>
-Date: Mon, 13 Jan 2025 18:44:11 +0530
-Subject: [PATCH v4 3/5] platform/x86: acer-wmi: simplify platform profile
- cycling
+Date: Mon, 13 Jan 2025 18:44:12 +0530
+Subject: [PATCH v4 4/5] platform/x86: acer-wmi: use an ACPI bitmap to set
+ the platform profile choices
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -68,7 +68,7 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250113-platform_profile-v4-3-23be0dff19f1@gmail.com>
+Message-Id: <20250113-platform_profile-v4-4-23be0dff19f1@gmail.com>
 References: <20250113-platform_profile-v4-0-23be0dff19f1@gmail.com>
 In-Reply-To: <20250113-platform_profile-v4-0-23be0dff19f1@gmail.com>
 To: Hans de Goede <hdegoede@redhat.com>, 
@@ -77,125 +77,160 @@ To: Hans de Goede <hdegoede@redhat.com>,
 Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, 
  Shuah Khan <skhan@linuxfoundation.org>, Hridesh MG <hridesh699@gmail.com>
 X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1736774055; l=3940;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1736774055; l=5593;
  i=hridesh699@gmail.com; s=20241114; h=from:subject:message-id;
- bh=CUcKZGbJ60x3isr5m74jbYJ2wftVQa/D6dx5Db29T1I=;
- b=HhGwKOLJnMpa/waivnbwNNVVMw2fSROSl0OL/2Bd3kFMwuSou8gl4mE5Is7ouBcnDhrIzoCu/
- CqggarbWNa3D5SFgR03bL2PAVEmsEQiyUN837/8tNLaXpqbUfdCVUbn
+ bh=9gOtIFNC+9p0devArM1OIQgXPradQhZJkE2B9DNLXEM=;
+ b=O8nOViNyXF1yZA0VaL39HjMYbJSpAO8BcSw1zPlgWwPwzRCADjz22mkPEasMAbRu7vUy0C4y1
+ vazr5/iR6eVAn0L5z3YOps0z5280bAqyGgS7ZtCqc+qxchmLIB28XU+
 X-Developer-Key: i=hridesh699@gmail.com; a=ed25519;
  pk=otVQutD5ZTsEpajsGv/haM3pQj0yofkuYrdNcaX5AUE=
 
-Make use of platform_profile_cycle() to simplify the logic used for
-cycling through the different platform profiles. Also remove the
-unnecessary handling for AC power, as the hardware accepts different
-profiles regardless of whether AC is plugged in.
+Currently the choices for the platform profile are hardcoded. There is
+an ACPI bitmap accessible via WMI that specifies the supported profiles,
+use this bitmap to dynamically set the choices for the platform profile.
 
-Link: https://lore.kernel.org/platform-driver-x86/20e3ac66-b040-49a9-ab00-0adcfdaed2ff@gmx.de/
+Link: https://lore.kernel.org/platform-driver-x86/ecb60ee5-3df7-4d7e-8ebf-8c162b339ade@gmx.de/
 Signed-off-by: Hridesh MG <hridesh699@gmail.com>
 ---
- drivers/platform/x86/acer-wmi.c | 78 ++++++++++-------------------------------
- 1 file changed, 19 insertions(+), 59 deletions(-)
+ drivers/platform/x86/acer-wmi.c | 67 ++++++++++++++++++++++++++++++++---------
+ 1 file changed, 52 insertions(+), 15 deletions(-)
 
 diff --git a/drivers/platform/x86/acer-wmi.c b/drivers/platform/x86/acer-wmi.c
-index f662e3740408f70e1e921a90fe75ce441fd239d0..88416c37eca0af2099b0c8d91b38912a4e5d108f 100644
+index 88416c37eca0af2099b0c8d91b38912a4e5d108f..37f8c2019925391185e1e0952dac563daf923320 100644
 --- a/drivers/platform/x86/acer-wmi.c
 +++ b/drivers/platform/x86/acer-wmi.c
-@@ -2028,76 +2028,36 @@ static int acer_platform_profile_setup(struct platform_device *device)
+@@ -33,6 +33,7 @@
+ #include <linux/units.h>
+ #include <linux/unaligned.h>
+ #include <linux/bitfield.h>
++#include <linux/bitmap.h>
+ 
+ MODULE_AUTHOR("Carlos Corbacho");
+ MODULE_DESCRIPTION("Acer Laptop WMI Extras Driver");
+@@ -127,6 +128,7 @@ enum acer_wmi_predator_v4_oc {
+ enum acer_wmi_gaming_misc_setting {
+ 	ACER_WMID_MISC_SETTING_OC_1			= 0x0005,
+ 	ACER_WMID_MISC_SETTING_OC_2			= 0x0007,
++	ACER_WMID_MISC_SETTING_SUPPORTED_PROFILES	= 0x000A,
+ 	ACER_WMID_MISC_SETTING_PLATFORM_PROFILE		= 0x000B,
+ };
+ 
+@@ -766,6 +768,9 @@ static bool platform_profile_support;
+  */
+ static int last_non_turbo_profile;
+ 
++/* The most performant supported profile */
++static int acer_predator_v4_max_perf;
++
+ enum acer_predator_v4_thermal_profile {
+ 	ACER_PREDATOR_V4_THERMAL_PROFILE_QUIET		= 0x00,
+ 	ACER_PREDATOR_V4_THERMAL_PROFILE_BALANCED	= 0x01,
+@@ -1983,7 +1988,7 @@ acer_predator_v4_platform_profile_set(struct platform_profile_handler *pprof,
+ 	if (err)
+ 		return err;
+ 
+-	if (tp != ACER_PREDATOR_V4_THERMAL_PROFILE_TURBO)
++	if (tp != acer_predator_v4_max_perf)
+ 		last_non_turbo_profile = tp;
+ 
+ 	return 0;
+@@ -1992,6 +1997,7 @@ acer_predator_v4_platform_profile_set(struct platform_profile_handler *pprof,
+ static int acer_platform_profile_setup(struct platform_device *device)
+ {
+ 	if (quirks->predator_v4) {
++		unsigned long supported_profiles;
+ 		int err;
+ 
+ 		platform_profile_handler.name = "acer-wmi";
+@@ -2001,16 +2007,46 @@ static int acer_platform_profile_setup(struct platform_device *device)
+ 		platform_profile_handler.profile_set =
+ 			acer_predator_v4_platform_profile_set;
+ 
+-		set_bit(PLATFORM_PROFILE_PERFORMANCE,
+-			platform_profile_handler.choices);
+-		set_bit(PLATFORM_PROFILE_BALANCED_PERFORMANCE,
+-			platform_profile_handler.choices);
+-		set_bit(PLATFORM_PROFILE_BALANCED,
+-			platform_profile_handler.choices);
+-		set_bit(PLATFORM_PROFILE_QUIET,
+-			platform_profile_handler.choices);
+-		set_bit(PLATFORM_PROFILE_LOW_POWER,
+-			platform_profile_handler.choices);
++		err = WMID_gaming_get_misc_setting(ACER_WMID_MISC_SETTING_SUPPORTED_PROFILES,
++						   (u8 *)&supported_profiles);
++		if (err)
++			return err;
++
++		/* Iterate through supported profiles in order of increasing performance */
++		if (test_bit(ACER_PREDATOR_V4_THERMAL_PROFILE_ECO, &supported_profiles)) {
++			set_bit(PLATFORM_PROFILE_LOW_POWER,
++				platform_profile_handler.choices);
++			acer_predator_v4_max_perf =
++				ACER_PREDATOR_V4_THERMAL_PROFILE_ECO;
++		}
++
++		if (test_bit(ACER_PREDATOR_V4_THERMAL_PROFILE_QUIET, &supported_profiles)) {
++			set_bit(PLATFORM_PROFILE_QUIET,
++				platform_profile_handler.choices);
++			acer_predator_v4_max_perf =
++				ACER_PREDATOR_V4_THERMAL_PROFILE_QUIET;
++		}
++
++		if (test_bit(ACER_PREDATOR_V4_THERMAL_PROFILE_BALANCED, &supported_profiles)) {
++			set_bit(PLATFORM_PROFILE_BALANCED,
++				platform_profile_handler.choices);
++			acer_predator_v4_max_perf =
++				ACER_PREDATOR_V4_THERMAL_PROFILE_BALANCED;
++		}
++
++		if (test_bit(ACER_PREDATOR_V4_THERMAL_PROFILE_PERFORMANCE, &supported_profiles)) {
++			set_bit(PLATFORM_PROFILE_BALANCED_PERFORMANCE,
++				platform_profile_handler.choices);
++			acer_predator_v4_max_perf =
++				ACER_PREDATOR_V4_THERMAL_PROFILE_PERFORMANCE;
++		}
++
++		if (test_bit(ACER_PREDATOR_V4_THERMAL_PROFILE_TURBO, &supported_profiles)) {
++			set_bit(PLATFORM_PROFILE_PERFORMANCE,
++				platform_profile_handler.choices);
++			acer_predator_v4_max_perf =
++				ACER_PREDATOR_V4_THERMAL_PROFILE_TURBO;
++		}
+ 
+ 		err = platform_profile_register(&platform_profile_handler);
+ 		if (err)
+@@ -2028,7 +2064,8 @@ static int acer_platform_profile_setup(struct platform_device *device)
  static int acer_thermal_profile_change(void)
  {
  	/*
--	 * This mode key can rotate each mode or toggle turbo mode.
--	 * On battery, only ECO and BALANCED mode are available.
-+	 * This mode key will either cycle through each mode or toggle the turbo profile.
+-	 * This mode key will either cycle through each mode or toggle the turbo profile.
++	 * This mode key will either cycle through each mode or toggle the
++	 * most performant profile.
  	 */
  	if (quirks->predator_v4) {
  		u8 current_tp;
--		int tp, err;
--		u64 on_AC;
-+		int err, tp;
+@@ -2042,10 +2079,10 @@ static int acer_thermal_profile_change(void)
+ 			if (err)
+ 				return err;
  
--		err = WMID_gaming_get_misc_setting(ACER_WMID_MISC_SETTING_PLATFORM_PROFILE,
--						   &current_tp);
--		if (err)
--			return err;
--
--		/* Check power source */
--		err = WMID_gaming_get_sys_info(ACER_WMID_CMD_GET_PREDATOR_V4_BAT_STATUS, &on_AC);
--		if (err < 0)
--			return err;
-+		if (cycle_gaming_thermal_profile) {
-+			platform_profile_cycle();
-+		} else {
-+			err = WMID_gaming_get_misc_setting(
-+				ACER_WMID_MISC_SETTING_PLATFORM_PROFILE, &current_tp);
-+			if (err)
-+				return err;
- 
--		switch (current_tp) {
--		case ACER_PREDATOR_V4_THERMAL_PROFILE_TURBO:
--			if (!on_AC)
--				tp = ACER_PREDATOR_V4_THERMAL_PROFILE_BALANCED;
--			else if (cycle_gaming_thermal_profile)
--				tp = ACER_PREDATOR_V4_THERMAL_PROFILE_ECO;
--			else
-+			if (current_tp == ACER_PREDATOR_V4_THERMAL_PROFILE_TURBO)
+-			if (current_tp == ACER_PREDATOR_V4_THERMAL_PROFILE_TURBO)
++			if (current_tp == acer_predator_v4_max_perf)
  				tp = last_non_turbo_profile;
--			break;
--		case ACER_PREDATOR_V4_THERMAL_PROFILE_PERFORMANCE:
--			if (!on_AC)
--				tp = ACER_PREDATOR_V4_THERMAL_PROFILE_BALANCED;
--			else
--				tp = ACER_PREDATOR_V4_THERMAL_PROFILE_TURBO;
--			break;
--		case ACER_PREDATOR_V4_THERMAL_PROFILE_BALANCED:
--			if (!on_AC)
--				tp = ACER_PREDATOR_V4_THERMAL_PROFILE_ECO;
--			else if (cycle_gaming_thermal_profile)
--				tp = ACER_PREDATOR_V4_THERMAL_PROFILE_PERFORMANCE;
--			else
--				tp = ACER_PREDATOR_V4_THERMAL_PROFILE_TURBO;
--			break;
--		case ACER_PREDATOR_V4_THERMAL_PROFILE_QUIET:
--			if (!on_AC)
--				tp = ACER_PREDATOR_V4_THERMAL_PROFILE_BALANCED;
--			else if (cycle_gaming_thermal_profile)
--				tp = ACER_PREDATOR_V4_THERMAL_PROFILE_BALANCED;
--			else
--				tp = ACER_PREDATOR_V4_THERMAL_PROFILE_TURBO;
--			break;
--		case ACER_PREDATOR_V4_THERMAL_PROFILE_ECO:
--			if (!on_AC)
--				tp = ACER_PREDATOR_V4_THERMAL_PROFILE_BALANCED;
--			else if (cycle_gaming_thermal_profile)
--				tp = ACER_PREDATOR_V4_THERMAL_PROFILE_QUIET;
  			else
- 				tp = ACER_PREDATOR_V4_THERMAL_PROFILE_TURBO;
--			break;
--		default:
--			return -EOPNOTSUPP;
--		}
+-				tp = ACER_PREDATOR_V4_THERMAL_PROFILE_TURBO;
++				tp = acer_predator_v4_max_perf;
  
--		err = WMID_gaming_set_misc_setting(ACER_WMID_MISC_SETTING_PLATFORM_PROFILE, tp);
--		if (err)
--			return err;
-+			err = WMID_gaming_set_misc_setting(
-+				ACER_WMID_MISC_SETTING_PLATFORM_PROFILE, tp);
-+			if (err)
-+				return err;
+ 			err = WMID_gaming_set_misc_setting(
+ 				ACER_WMID_MISC_SETTING_PLATFORM_PROFILE, tp);
+@@ -2053,7 +2090,7 @@ static int acer_thermal_profile_change(void)
+ 				return err;
  
--		/* Store non-turbo profile for turbo mode toggle*/
--		if (tp != ACER_PREDATOR_V4_THERMAL_PROFILE_TURBO)
--			last_non_turbo_profile = tp;
-+			/* Store last profile for toggle */
-+			if (current_tp != ACER_PREDATOR_V4_THERMAL_PROFILE_TURBO)
-+				last_non_turbo_profile = current_tp;
+ 			/* Store last profile for toggle */
+-			if (current_tp != ACER_PREDATOR_V4_THERMAL_PROFILE_TURBO)
++			if (current_tp != acer_predator_v4_max_perf)
+ 				last_non_turbo_profile = current_tp;
  
--		platform_profile_notify(&platform_profile_handler);
-+			platform_profile_notify(&platform_profile_handler);
-+		}
- 	}
- 
- 	return 0;
+ 			platform_profile_notify(&platform_profile_handler);
 
 -- 
 2.47.1
