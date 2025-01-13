@@ -1,171 +1,148 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C475231A56;
-	Mon, 13 Jan 2025 08:20:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 586DA233139
+	for <platform-driver-x86@vger.kernel.org>; Mon, 13 Jan 2025 08:26:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736756417; cv=none; b=ISCQfBcWkWQ2a+wVypGQnymnUsjrKcTO2bkQ04F8VtjLLbx76N2EpSL0UG8U1eQtZGL450upLG3a6IbHO0ZCP4fgmIqNmqgkTjw86xNUOSczVS4g3jINqfjulTprgxKucHmSXMnGf/jeieD4eNpy9XueidoSiB0MWxkgWixX7yw=
+	t=1736756809; cv=none; b=bkQ6ZSgpUEXFSaxASkdkHEphcmMTjvlHxTZUvAX2CkIPGadMVEuorAkG8PGK3TAAWABHCp/5ccoHdV0CgQuNDYewi1zfZdO00tgnHM9OyJaWv+SzUqWuUxe3e55/UHMoRZ2M96srnuqHFx3shFsUKANFG0xUmAsTKlBaHcD/E50=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736756417; c=relaxed/simple;
-	bh=5pLPcZ8yabrDbW3lp7BMwEn3TBAcxsnS1EE6kSEXj5M=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ZTuNHuF7PBq4LlPkZlxxockj2KIdEAdjQtKSgSeYSlVdWoQU+oe+MznPEHOTu5bdxSIncrRrT6ao0isFlBUBUq4Ebu0eSkAAa1JhkwblJGcfFWJfRGB+tY3SqogsXe7jtZBVuPvJ5CZU0caU9LXrbBG8wkBK5Rwsgbi7Flt+hr0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=B0YQetJb; arc=none smtp.client-ip=192.198.163.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1736756809; c=relaxed/simple;
+	bh=i5zD6dR1dmpK7v4v81V76xoqblVbKQVqRjfEmxPWkcY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=H3sj1keZVY2ZjbaL6JHMSekf6Lr0jYpNxyhc7A6pobyAy4owDu1fli07SayoMKg0WV6kx7pYFkQgpj+BxV9l39osUiki8LXCJzWi+0FMNEjwCjg8Q2vixIEOVkh3u484O5ivAk4ZBr10LrohmqOCbWfv4N3AhWEkgy9tpizNfVo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=B1WfWUF/; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="B0YQetJb"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1736756416; x=1768292416;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=5pLPcZ8yabrDbW3lp7BMwEn3TBAcxsnS1EE6kSEXj5M=;
-  b=B0YQetJbbQ2vYlebfX+aV7lcHZJJXVvH7WfP478ztnDjZ/PY0cxywiAV
-   H3MF07nVKuSCdHwdETXDr27O01FMLYeBkczNDkmVSGhKrd0deClIFMjR0
-   D1SCx6Resae9k9gIcleNobsQHqL0WNvxEC6F5Hr1cGWPXPdguta6jW+Vq
-   pRSjEX4XkTMupOcm7MiD+NjscsTGItHdrFlVJwb97g4HNEkVwowuqTIWZ
-   OVXmgZr5UvrmqDytiLQenqlliWAe5hRPYKheqhNvXwd4aqucLVOS1bvoj
-   kS9cPSmJC3CKgtg7YtZ8F8xz/QED+Bxv++BXOsa06O3+1WRo6sWSOSc1B
-   Q==;
-X-CSE-ConnectionGUID: 5hC61WEiQUik60EEiCoGFQ==
-X-CSE-MsgGUID: dY5RCiZKRTmoyCwX2uiqQQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11313"; a="40939594"
-X-IronPort-AV: E=Sophos;i="6.12,310,1728975600"; 
-   d="scan'208";a="40939594"
-Received: from fmviesa005.fm.intel.com ([10.60.135.145])
-  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Jan 2025 00:20:14 -0800
-X-CSE-ConnectionGUID: KCg7WpbAQcSYbAfxPDwFsA==
-X-CSE-MsgGUID: 5WI2NzFVT5qU7omgEtNt/A==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
-   d="scan'208";a="109033681"
-Received: from unknown (HELO smile.fi.intel.com) ([10.237.72.154])
-  by fmviesa005.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Jan 2025 00:20:10 -0800
-Received: from andy by smile.fi.intel.com with local (Exim 4.98)
-	(envelope-from <andriy.shevchenko@linux.intel.com>)
-	id 1tXFg6-00000000NVQ-3uAn;
-	Mon, 13 Jan 2025 10:20:06 +0200
-Date: Mon, 13 Jan 2025 10:20:06 +0200
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Takashi Iwai <tiwai@suse.de>
-Cc: Baojun Xu <baojun.xu@ti.com>, robh+dt@kernel.org, lgirdwood@gmail.com,
-	perex@perex.cz, shenghao-ding@ti.com, navada@ti.com,
-	13916275206@139.com, v-hampiholi@ti.com, v-po@ti.com,
-	linux-sound@vger.kernel.org, linux-kernel@vger.kernel.org,
-	liam.r.girdwood@intel.com, yung-chuan.liao@linux.intel.com,
-	broonie@kernel.org, antheas.dk@gmail.com,
-	"Rafael J. Wysocki" <rafael@kernel.org>, linux-acpi@vger.kernel.org,
-	Hans de Goede <hdegoede@redhat.com>,
-	=?iso-8859-1?B?IklscG8gSuRydmluZW4i?= <ilpo.jarvinen@linux.intel.com>,
-	platform-driver-x86@vger.kernel.org
-Subject: Re: [PATCH v12] ALSA: hda/tas2781: Add tas2781 hda SPI driver
-Message-ID: <Z4TMtilTTxbTnXNu@smile.fi.intel.com>
-References: <20241216122008.15425-1-baojun.xu@ti.com>
- <87bjwnzw1i.wl-tiwai@suse.de>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="B1WfWUF/"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1736756806;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=IozgCIuCRtFw3O7gk4V7WGjw9BsPbW9CxBefwmeOpzo=;
+	b=B1WfWUF/suays2fUQXt83Ex6x56oPK8BCVfZIS96kmoJIcSG7ESUcPEXTvJnkiTfUpGyDY
+	o3KCQzWcmjEFTODqkPeHTjYJTtHRtD0nbMo7frexhhpeebTZMTPx0SK9npqijsKRqhvgzK
+	N/E0NU6vQRwf+/jpvimHEsRHQCYhwcs=
+Received: from mail-ej1-f70.google.com (mail-ej1-f70.google.com
+ [209.85.218.70]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-324-Ub5f8CY0O1C2Z9KtRhPv7Q-1; Mon, 13 Jan 2025 03:26:44 -0500
+X-MC-Unique: Ub5f8CY0O1C2Z9KtRhPv7Q-1
+X-Mimecast-MFC-AGG-ID: Ub5f8CY0O1C2Z9KtRhPv7Q
+Received: by mail-ej1-f70.google.com with SMTP id a640c23a62f3a-aa622312962so380087366b.2
+        for <platform-driver-x86@vger.kernel.org>; Mon, 13 Jan 2025 00:26:44 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1736756803; x=1737361603;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=IozgCIuCRtFw3O7gk4V7WGjw9BsPbW9CxBefwmeOpzo=;
+        b=Evna7h4aRVG8XhGDw+Rfay2zQhFp/n35G87gTRhovElhPJeai8C1vqiOwRKCJuatVe
+         9zMeaFEdRzlMuiCcMcXgT5TLUWUme00p5VZAt5k8hEbb88pKktNXoq8jmBkQjzmNeiIt
+         6qvUPEO1j6hWx1ktW+4odvg8omRWyy6UTtDMbcGY9pR1z0ggEaYNhjSNz9cFgrJWeF3E
+         wGQLc7e+wJaeBw/0tF4qZsqF1UfID1Cxm+skVbL8XeRAqPnmx+vDQ7Aza2RRjqb/CtdB
+         ys1n0CurrMVRL0y+cTecPFxB7GfApFGCDE0F+MrknpSQVlq426Pv3aCy5fSuT8QwixSm
+         xkdA==
+X-Gm-Message-State: AOJu0YzfpnrlOQ0ot2CDtDvFU0akhQZwQ/Ygke3AHzBvUFg8n/Ak0HC1
+	sOtMOQhLvNb7J1o0LlT8P663oo09pJc9VRv0rxfISohacHbjC6+fQ7/OPBdB6PTK1dZeUWvS3c+
+	vd3HeAaVSnhPt2nKe4OjTrpKrAxHsnv/hFWXw2MQzfuBQuU8hW1N6I+oP4G9xjGFgEvoEPkQ=
+X-Gm-Gg: ASbGncu7sfczj3Am78l21i+fokTC3RRvl15dEbrQr35ZE2WF/9FT8NMsq9NMecpowCY
+	HMI04xMuVrk2XkFYGotEVvxxlpNtens1KEnujI00iyA5a/3gLLjoBkzcQ1itRENPdhkYO8JlMC5
+	OnF9VjBmJDRlKVEwJaG+679L9NHB1J08AYxNfz9AsOfhbiyHAonddoW/8TyaMxOJu9CZGcRIRbU
+	75XqXePLNgsuKwZ8EXZRoi6n7b3d/95BnvsEPjYyTgnPTuHg4+d/cZysH9k
+X-Received: by 2002:a17:907:6d1a:b0:aaf:ab71:69cd with SMTP id a640c23a62f3a-ab2ab558b75mr1917637266b.20.1736756803471;
+        Mon, 13 Jan 2025 00:26:43 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IGwZgHFVxFYDB23A1IPJkQKxFc9ZJ96CwJeYtxTwoXAyP1H7xIscXWZlEGhswvTIelsRuJzkw==
+X-Received: by 2002:a17:907:6d1a:b0:aaf:ab71:69cd with SMTP id a640c23a62f3a-ab2ab558b75mr1917635266b.20.1736756802963;
+        Mon, 13 Jan 2025 00:26:42 -0800 (PST)
+Received: from [10.40.98.179] ([78.108.130.194])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ab2c90d7432sm464991866b.49.2025.01.13.00.26.41
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 13 Jan 2025 00:26:42 -0800 (PST)
+Message-ID: <af6ef60f-d47f-4840-8466-4605ad59716f@redhat.com>
+Date: Mon, 13 Jan 2025 09:26:41 +0100
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <87bjwnzw1i.wl-tiwai@suse.de>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2] platform/x86: dell-uart-backlight: fix NULL pointer
+ dereference in probe
+To: Chenyuan Yang <chenyuan0y@gmail.com>, ilpo.jarvinen@linux.intel.com,
+ rafael.j.wysocki@intel.com, acelan.kao@canonical.com,
+ u.kleine-koenig@baylibre.com
+Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
+ zijie98@gmail.com
+References: <20250111180118.2274516-1-chenyuan0y@gmail.com>
+Content-Language: en-US
+From: Hans de Goede <hdegoede@redhat.com>
+In-Reply-To: <20250111180118.2274516-1-chenyuan0y@gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Fri, Jan 03, 2025 at 05:44:57PM +0100, Takashi Iwai wrote:
-> On Mon, 16 Dec 2024 13:20:08 +0100,
-> Baojun Xu wrote:
-> > 
-> > This patch was used to add TAS2781 devices on SPI support in sound/pci/hda.
-> > It use ACPI node descript about parameters of TAS2781 on SPI, it like:
-> >     Scope (_SB.PC00.SPI0)
-> >     {
-> >         Device (GSPK)
-> >         {
-> >             Name (_HID, "TXNW2781")  // _HID: Hardware ID
-> >             Method (_CRS, 0, NotSerialized)
-> >             {
-> >                 Name (RBUF, ResourceTemplate ()
-> >                 {
-> >                     SpiSerialBusV2 (...)
-> >                     SpiSerialBusV2 (...)
-> >                 }
-> >             }
-> >         }
-> >     }
-> > 
-> > And in platform/x86/serial-multi-instantiate.c, those spi devices will be
-> > added into system as a single SPI device, so TAS2781 SPI driver will
-> > probe twice for every single SPI device. And driver will also parser
-> > mono DSP firmware binary and RCA binary for itself.
-> > The code support Realtek as the primary codec.
-> > In patch version-10, add multi devices firmware binary support,
-> > to compatble with windows driver, they can share same firmware binary.
+Hi,
 
-...
-
-> So this series reached already v12, and we'd really like to take in
-> some form.  Although the code is still much more complex than I
-> wished, it's more or less readable and understandable in some level,
-> so I'm fine about the sound/* part.
+On 11-Jan-25 7:01 PM, Chenyuan Yang wrote:
+> The dell_uart_bl_serdev_probe() function calls devm_serdev_device_open()
+> before setting the client ops via serdev_device_set_client_ops(). This
+> ordering can trigger a NULL pointer dereference in the serdev controller's
+> receive_buf handler, as it assumes serdev->ops is valid when
+> SERPORT_ACTIVE is set.
 > 
-> OTOH, this contains also the changes for drivers/acpi/scan.c and
-> drivers/platform/x86/serial-multi-instantiate.c, and those need Acks
-> from the corresponding people, but it missed Cc to them (and MLs).
-> Now I put them to Cc.
+> This is similar to the issue fixed in commit 5e700b384ec1
+> ("platform/chrome: cros_ec_uart: properly fix race condition") where
+> devm_serdev_device_open() was called before fully initializing the
+> device.
 > 
-> Rafael, Hans, Ilpo, Andy, anyone else - could you guys check it?
+> Fix the race by ensuring client ops are set before enabling the port via
+> devm_serdev_device_open().
+> Note, serdev_device_set_baudrate() and
+> serdev_device_set_flow_control() calls should be
+> after the devm_serdev_device_open() call.
+> 
+> Fixes: 484bae9e4d6a ("platform/x86: Add new Dell UART backlight driver")
+> Signed-off-by: Chenyuan Yang <chenyuan0y@gmail.com>
+> CC: Hans de Goede <hdegoede@redhat.com>
 
-From ACPI ID usage perspective the changes are fine.
+Thanks, patch looks good to me:
 
-> > diff --git a/drivers/acpi/scan.c b/drivers/acpi/scan.c
-> > index 74dcccdc6482..55a9a3d5afa8 100644
-> > --- a/drivers/acpi/scan.c
-> > +++ b/drivers/acpi/scan.c
-> > @@ -1769,6 +1769,7 @@ static bool acpi_device_enumeration_by_parent(struct acpi_device *device)
-> >  		{"CSC3557", },
-> >  		{"INT33FE", },
-> >  		{"INT3515", },
-> > +		{"TXNW2781", },
-> >  		/* Non-conforming _HID for Cirrus Logic already released */
-> >  		{"CLSA0100", },
-> >  		{"CLSA0101", },
-> > diff --git a/drivers/platform/x86/serial-multi-instantiate.c b/drivers/platform/x86/serial-multi-instantiate.c
-> > index ed6b28505cd6..db030b0f176a 100644
-> > --- a/drivers/platform/x86/serial-multi-instantiate.c
-> > +++ b/drivers/platform/x86/serial-multi-instantiate.c
-> > @@ -384,6 +384,17 @@ static const struct smi_node cs35l57_hda = {
-> >  	.bus_type = SMI_AUTO_DETECT,
-> >  };
-> >  
-> > +static const struct smi_node tas2781_hda = {
-> > +	.instances = {
-> > +		{ "tas2781-hda", IRQ_RESOURCE_AUTO, 0 },
-> > +		{ "tas2781-hda", IRQ_RESOURCE_AUTO, 0 },
-> > +		{ "tas2781-hda", IRQ_RESOURCE_AUTO, 0 },
-> > +		{ "tas2781-hda", IRQ_RESOURCE_AUTO, 0 },
-> > +		{}
-> > +	},
-> > +	.bus_type = SMI_AUTO_DETECT,
-> > +};
-> > +
-> >  /*
-> >   * Note new device-ids must also be added to ignore_serial_bus_ids in
-> >   * drivers/acpi/scan.c: acpi_device_enumeration_by_parent().
-> > @@ -396,6 +407,7 @@ static const struct acpi_device_id smi_acpi_ids[] = {
-> >  	{ "CSC3556", (unsigned long)&cs35l56_hda },
-> >  	{ "CSC3557", (unsigned long)&cs35l57_hda },
-> >  	{ "INT3515", (unsigned long)&int3515_data },
-> > +	{ "TXNW2781", (unsigned long)&tas2781_hda },
-> >  	/* Non-conforming _HID for Cirrus Logic already released */
-> >  	{ "CLSA0100", (unsigned long)&cs35l41_hda },
-> >  	{ "CLSA0101", (unsigned long)&cs35l41_hda },
+Reviewed-by: Hans de Goede <hdegoede@redhat.com>
 
--- 
-With Best Regards,
-Andy Shevchenko
+Regards,
 
+Hans
+
+
+> ---
+>  drivers/platform/x86/dell/dell-uart-backlight.c | 5 +++--
+>  1 file changed, 3 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/platform/x86/dell/dell-uart-backlight.c b/drivers/platform/x86/dell/dell-uart-backlight.c
+> index 6e5dc7e3674f..bcc5c0f3bb4d 100644
+> --- a/drivers/platform/x86/dell/dell-uart-backlight.c
+> +++ b/drivers/platform/x86/dell/dell-uart-backlight.c
+> @@ -283,6 +283,9 @@ static int dell_uart_bl_serdev_probe(struct serdev_device *serdev)
+>  	init_waitqueue_head(&dell_bl->wait_queue);
+>  	dell_bl->dev = dev;
+>  
+> +	serdev_device_set_drvdata(serdev, dell_bl);
+> +	serdev_device_set_client_ops(serdev, &dell_uart_bl_serdev_ops);
+> +
+>  	ret = devm_serdev_device_open(dev, serdev);
+>  	if (ret)
+>  		return dev_err_probe(dev, ret, "opening UART device\n");
+> @@ -290,8 +293,6 @@ static int dell_uart_bl_serdev_probe(struct serdev_device *serdev)
+>  	/* 9600 bps, no flow control, these are the default but set them to be sure */
+>  	serdev_device_set_baudrate(serdev, 9600);
+>  	serdev_device_set_flow_control(serdev, false);
+> -	serdev_device_set_drvdata(serdev, dell_bl);
+> -	serdev_device_set_client_ops(serdev, &dell_uart_bl_serdev_ops);
+>  
+>  	get_version[0] = DELL_SOF(GET_CMD_LEN);
+>  	get_version[1] = CMD_GET_VERSION;
 
