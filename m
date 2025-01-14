@@ -1,72 +1,58 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 100E51C4617;
-	Tue, 14 Jan 2025 16:57:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 955E71B21AB;
+	Tue, 14 Jan 2025 17:13:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736873844; cv=none; b=uR4WK9hxIRdIYcqfon+8misedEVrD3HnP9Fky2LC6UQgxiw66vwtI8gRe5o1ub+ihwv4eVyg+K+pDNUiJvIl7fRxKalm7bBZ+n5nJNDxb2zSCK7c2pJQpKNfmz4jhXH5oKGLpn/cdch2BnIMdSbjuSEci8t9dF9qo6ZyGgrGiEA=
+	t=1736874797; cv=none; b=KtgONMLGzaalliMN5Jjf8cBYtCbX9EbuRhWLpgZRL6IEV/JqA7f95roNKD3wyAF9MI+699EGqmujxI3STF/XuaVv8UwTPxQq8DRQyQUlzWIyaCKC/vG9JansHfOr2x9YsTazvp4+2xHrh37yYv1jeFGEDPbULgfoP8wWhE1NVY0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736873844; c=relaxed/simple;
-	bh=BGR7gp3P1T6LTIpZ0AhjdKM+0EyL1mGRxJjubaWlvVE=;
+	s=arc-20240116; t=1736874797; c=relaxed/simple;
+	bh=v/lhlW+MWrFs3ZxnucpkK9SEvjW3VjFc1bROcWmjLwM=;
 	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=tio6xDayoianKwlpSfeX6JcR7z9YJWry4C2azAUWs3e1EOm6Q6OstyAKMbqaPTH1Atuj/vAwq1zezN8jGDKzCEV8r5iJWPT+2vinvIuSFwr9K8zcBovameTZOp2fgo6OOlHDLO+CFeyUuAARLCrtGphl6PqftQrNptrsIfNqrsA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=khAUWzwR; arc=none smtp.client-ip=192.198.163.17
+	 MIME-Version:Content-Type; b=faRJTlKb0ubThwXNXJky169L7CP0dVtFZJuft2VR38fpgewMcp+QRN/t/5fcdHofvy5MNrAqWLhSMTSocrljYF9T7+1oWatoznxjK+jFbfMIT9j4qm9SggI55qt3UwN8Crkhz83RXbycLLgCWBdJ4xS++mrIjAAtE4gj/0dNqoM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Vi+jldlm; arc=none smtp.client-ip=198.175.65.11
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="khAUWzwR"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Vi+jldlm"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1736873843; x=1768409843;
+  t=1736874796; x=1768410796;
   h=from:date:to:cc:subject:in-reply-to:message-id:
    references:mime-version;
-  bh=BGR7gp3P1T6LTIpZ0AhjdKM+0EyL1mGRxJjubaWlvVE=;
-  b=khAUWzwR5/rc/NeiGDkh7zLTtqb4Qu/1H+VePUzzDKmDPJ0Hdd9SOXXy
-   XSfSjo0Fb7oXVXOpdAm/du0hEvUNAXxUwPnrm5GeFtNfRWeYT2hgFw5En
-   YbJ2WypTXw1Ydfx39lY5iHJJrTNX2wLf/Gxu6wPsEL3fdrB/7f7fYazrm
-   oeAJcjwjw7B6RipYlkhcr25XYeB6qNsCFZvRO2mHX6RPFYRboB7LCfZK/
-   wX++cfY484msgURCzw50nL0ij4xkGCgKE6US2CoabdKoEPWq19GE/+rWm
-   7V8HSEl31Rq968697dy728t/MapfmbetQWzCoPpQ3fQ+oClmK5TZ4QhoI
-   A==;
-X-CSE-ConnectionGUID: 3wtvQJjxS9O/LkF23fHFWQ==
-X-CSE-MsgGUID: /YkKIwBuSIS51+/f1sID5Q==
-X-IronPort-AV: E=McAfee;i="6700,10204,11315"; a="37095406"
+  bh=v/lhlW+MWrFs3ZxnucpkK9SEvjW3VjFc1bROcWmjLwM=;
+  b=Vi+jldlmr3gPZ+YhWjWcATn5vP6tfUeZK4K2EKlItkefjUXzF8H8iCSF
+   VtpL+pJTlLw96cE9iSW3qvxFRs2zrMELfORLIU/wXO4z7ETBQOofPaosS
+   RSTwamXM4X+ZlPVxl+ZpMMknblJJ9AMFMFLLfKqzBTxfeE8xks2zAVv/h
+   6lbL8EaAeFCvbxjymQ48Vs0TocbnlweskAeZpxEz9fU2qIcaCV5nmkWXt
+   JwCLwhG73Kq4w1zVfzi+38HYOH6dyP/jEmH4A2BAQK1HKIA7Zrs4rzM60
+   pBxEWdqGPghQ8JQPY3FxZwaeGEBCFq7IGlH/npS+thbB5w16lNYCOooxE
+   Q==;
+X-CSE-ConnectionGUID: jCSDdy0HQumy21ZvhsSEhQ==
+X-CSE-MsgGUID: ZCTrxS+ZQw62nkvCPEvjCg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11315"; a="47671724"
 X-IronPort-AV: E=Sophos;i="6.12,314,1728975600"; 
-   d="scan'208";a="37095406"
-Received: from orviesa009.jf.intel.com ([10.64.159.149])
-  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Jan 2025 08:57:22 -0800
-X-CSE-ConnectionGUID: +oiblfeeS9O5N8NAdpNipw==
-X-CSE-MsgGUID: C2HJmBnaQUOp7g/pmJtkkA==
+   d="scan'208";a="47671724"
+Received: from orviesa008.jf.intel.com ([10.64.159.148])
+  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Jan 2025 09:13:15 -0800
+X-CSE-ConnectionGUID: AR87aroLSYyNiGzaTOLmaA==
+X-CSE-MsgGUID: rhk28/WTRIuZmLwFP7O32A==
 X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.12,314,1728975600"; 
-   d="scan'208";a="104613573"
+X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
+   d="scan'208";a="105727830"
 Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.54])
-  by orviesa009-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Jan 2025 08:57:14 -0800
+  by orviesa008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Jan 2025 09:13:13 -0800
 From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Tue, 14 Jan 2025 18:57:11 +0200 (EET)
-To: Kurt Borja <kuurtb@gmail.com>
-cc: platform-driver-x86@vger.kernel.org, 
-    "Rafael J. Wysocki" <rafael@kernel.org>, Len Brown <lenb@kernel.org>, 
-    linux-acpi@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>, 
-    Mario Limonciello <mario.limonciello@amd.com>, Armin Wolf <W_Armin@gmx.de>, 
-    Joshua Grisham <josh@joshuagrisham.com>, 
-    "Derek J. Clark" <derekjohn.clark@gmail.com>, 
-    Hans de Goede <hdegoede@redhat.com>, 
-    Maximilian Luz <luzmaximilian@gmail.com>, "Lee, Chun-Yi" <jlee@suse.com>, 
-    Shyam Sundar S K <Shyam-sundar.S-k@amd.com>, 
-    Corentin Chary <corentin.chary@gmail.com>, 
-    "Luke D. Jones" <luke@ljones.dev>, Lyndon Sanche <lsanche@lyndeno.ca>, 
-    Ike Panhc <ike.pan@canonical.com>, 
-    Henrique de Moraes Holschuh <hmh@hmh.eng.br>, 
-    Mark Pearson <mpearson-lenovo@squebb.ca>, 
-    Alexis Belmonte <alexbelm48@gmail.com>, Ai Chao <aichao@kylinos.cn>, 
-    Gergo Koteles <soyer@irl.hu>, Dell.Client.Kernel@dell.com, 
-    ibm-acpi-devel@lists.sourceforge.net
-Subject: Re: [PATCH v2 18/18] ACPI: platform_profile: Add documentation
-In-Reply-To: <20250114153726.11802-19-kuurtb@gmail.com>
-Message-ID: <0e10985e-2400-daee-00a9-3a6156214b3e@linux.intel.com>
-References: <20250114153726.11802-1-kuurtb@gmail.com> <20250114153726.11802-19-kuurtb@gmail.com>
+Date: Tue, 14 Jan 2025 19:13:09 +0200 (EET)
+To: Chenyuan Yang <chenyuan0y@gmail.com>
+cc: Hans de Goede <hdegoede@redhat.com>, platform-driver-x86@vger.kernel.org, 
+    LKML <linux-kernel@vger.kernel.org>, zijie98@gmail.com
+Subject: Re: [PATCH v2] platform/x86: lenovo-yoga-tab2-pro-1380-fastcharger:
+ fix race condition
+In-Reply-To: <20250111180951.2277757-1-chenyuan0y@gmail.com>
+Message-ID: <a973cd37-4d32-e5bd-fb66-3629f9414041@linux.intel.com>
+References: <20250111180951.2277757-1-chenyuan0y@gmail.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -75,180 +61,61 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 
-On Tue, 14 Jan 2025, Kurt Borja wrote:
+On Sat, 11 Jan 2025, Chenyuan Yang wrote:
 
-> Add kerneldoc and sysfs class documentation.
+> The yt2_1380_fc_serdev_probe() function calls devm_serdev_device_open()
+> before setting the client ops via serdev_device_set_client_ops(). This
+> ordering can trigger a NULL pointer dereference in the serdev controller's
+> receive_buf handler, as it assumes serdev->ops is valid when
+> SERPORT_ACTIVE is set.
 > 
-> Signed-off-by: Kurt Borja <kuurtb@gmail.com>
-> ---
->  .../ABI/testing/sysfs-class-platform-profile  | 44 +++++++++++++++++++
->  drivers/acpi/platform_profile.c               | 33 ++++++++++++++
->  include/linux/platform_profile.h              | 24 ++++++++++
->  3 files changed, 101 insertions(+)
->  create mode 100644 Documentation/ABI/testing/sysfs-class-platform-profile
+> This is similar to the issue fixed in commit 5e700b384ec1
+> ("platform/chrome: cros_ec_uart: properly fix race condition") where
+> devm_serdev_device_open() was called before fully initializing the
+> device.
 > 
-> diff --git a/Documentation/ABI/testing/sysfs-class-platform-profile b/Documentation/ABI/testing/sysfs-class-platform-profile
-> new file mode 100644
-> index 000000000000..b5a3600080bc
-> --- /dev/null
-> +++ b/Documentation/ABI/testing/sysfs-class-platform-profile
-> @@ -0,0 +1,44 @@
-> +What:		/sys/class/platform-profile/platform-profile-X/name
-> +Date:		January 2025
-> +Description:	Name of the class device given by the driver.
-> +
-> +		RO
-> +
-> +What:		/sys/class/platform-profile/platform-profile-X/choices
-> +Date:		January 2025
-> +Description:	This file contains a space-separated list of profiles supported for this device.
-> +
-> +		Drivers must use the following standard profile-names:
-> +
-> +		====================	========================================
-> +		low-power		Low power consumption
-> +		cool			Cooler operation
-> +		quiet			Quieter operation
-> +		balanced		Balance between low power consumption
-> +					and performance
-> +		balanced-performance	Balance between performance and low
-> +					power consumption with a slight bias
-> +					towards performance
-> +		performance		High performance operation
-> +		custom			Driver defined custom profile
-> +		====================	========================================
-> +
-> +		RO
-> +
-> +What:		/sys/class/platform-profile/platform-profile-X/profile
-> +Date:		January 2025
-> +Description:	Reading this file gives the current selected profile for this
-> +		device. Writing this file with one of the strings from
-> +		platform_profile_choices changes the profile to the new value.
-> +
-> +		This file can be monitored for changes by polling for POLLPRI,
-> +		POLLPRI will be signaled on any changes, independent of those
-> +		changes coming from a userspace write; or coming from another
-> +		source such as e.g. a hotkey triggered profile change handled
-> +		either directly by the embedded-controller or fully handled
-> +		inside the kernel.
-> +
-> +		This file may also emit the string 'custom' to indicate
-> +		that the driver is using a driver defined custom profile.
-> +
-> +		RW
-> diff --git a/drivers/acpi/platform_profile.c b/drivers/acpi/platform_profile.c
-> index c44989801f8e..9caddac695b8 100644
-> --- a/drivers/acpi/platform_profile.c
-> +++ b/drivers/acpi/platform_profile.c
-> @@ -426,6 +426,10 @@ static const struct attribute_group platform_profile_group = {
->  	.is_visible = profile_class_is_visible,
->  };
->  
-> +/**
-> + * platform_profile_notify - Notify class device and legacy sysfs interface
-> + * @dev: The class device
-> + */
->  void platform_profile_notify(struct device *dev)
->  {
->  	scoped_cond_guard(mutex_intr, return, &profile_lock) {
-> @@ -435,6 +439,11 @@ void platform_profile_notify(struct device *dev)
->  }
->  EXPORT_SYMBOL_GPL(platform_profile_notify);
->  
-> +/**
-> + * platform_profile_cycle - Cycles profiles available on all registered class devices
-> + *
-> + * Return: 0 on success, -errno on failure
-> + */
->  int platform_profile_cycle(void)
->  {
->  	enum platform_profile_option next = PLATFORM_PROFILE_LAST;
-> @@ -478,6 +487,15 @@ int platform_profile_cycle(void)
->  }
->  EXPORT_SYMBOL_GPL(platform_profile_cycle);
->  
-> +/**
-> + * platform_profile_register - Creates and registers a platform profile class device
-> + * @dev: Parent device
-> + * @name: Name of the class device
-> + * @drvdata: Driver data that will be attached to the class device
-> + * @ops: Platform profile's mandatory operations
-> + *
-> + * Return: pointer to the new class device on success, ERR_PTR on failure
-> + */
->  struct device *platform_profile_register(struct device *dev, const char *name,
->  					 void *drvdata,
->  					 const struct platform_profile_ops *ops)
-> @@ -544,6 +562,12 @@ struct device *platform_profile_register(struct device *dev, const char *name,
->  }
->  EXPORT_SYMBOL_GPL(platform_profile_register);
->  
-> +/**
-> + * platform_profile_remove - Unregisters a platform profile class device
-> + * @dev: Class device
-> + *
-> + * Return: 0
-> + */
->  int platform_profile_remove(struct device *dev)
->  {
->  	struct platform_profile_handler *pprof = to_pprof_handler(dev);
-> @@ -569,6 +593,15 @@ static void devm_platform_profile_release(struct device *dev, void *res)
->  	platform_profile_remove(*ppdev);
->  }
->  
-> +/**
-> + * devm_platform_profile_register - Device managed version of platform_profile_register
-> + * @dev: Parent device
-> + * @name: Name of the class device
-> + * @drvdata: Driver data that will be attached to the class device
-> + * @ops: Platform profile's mandatory operations
-> + *
-> + * Return: pointer to the new class device on success, ERR_PTR on failure
-> + */
->  struct device *devm_platform_profile_register(struct device *dev, const char *name,
->  					      void *drvdata,
->  					      const struct platform_profile_ops *ops)
-> diff --git a/include/linux/platform_profile.h b/include/linux/platform_profile.h
-> index eea1daf85616..eb4dc85dc18c 100644
-> --- a/include/linux/platform_profile.h
-> +++ b/include/linux/platform_profile.h
-> @@ -28,6 +28,30 @@ enum platform_profile_option {
->  	PLATFORM_PROFILE_LAST, /*must always be last */
->  };
->  
-> +/**
-> + * struct platform_profile_ops - platform profile operations
-> + * @probe:	Callback to setup choices available to the new class device.
-> + *		Parameters are:
-> + *		@drvdata: drvdata pointer passed to platform_profile_register.
-> + *		@choices: Empty choices bitmap which the driver has to manually
-> + *			  setup, by using set_bit() in bits corresponding to
-> + *			  platform_profile_option values. These values will only
-> + *			  be enforced when a new profile is selected from
-> + *			  user-space.
-> + * @profile_get: Callback that will be called when showing the current platform
-> + *		 profile.
-> + *		 Parameters are:
-> + *		 @dev: Class device.
-> + *		 @profile: Pointer to the profile which will be read from
-> + *			   user-space. Selected choices are not enforced when
-> + *			   modifying this value.
-> + * @profile_set: Callback that will be called when storing the new platform
-> + *		 profile.
-> + *		 Parameters are:
-> + *		 @dev: Class device.
-> + *		 @profile: New platform profile to be set. Guaranteed to be a
-> + *			   value selected in the @probe callback.
+> Fix the race by ensuring client ops are set before enabling the port via
+> devm_serdev_device_open().
+> 
+> Note, serdev_device_set_baudrate() and serdev_device_set_flow_control()
+> calls should be after the devm_serdev_device_open() call.
+> 
+> Fixes: b2ed33e8d486 ("platform/x86: Add lenovo-yoga-tab2-pro-1380-fastcharger driver")
+> Signed-off-by: Chenyuan Yang <chenyuan0y@gmail.com>
+> CC: Hans de Goede <hdegoede@redhat.com>
 
-Does kerneldoc render this sensibly?
+I've applied this and the other similar patch into the review-ilpo-fixes 
+branch.
 
-> + */
->  struct platform_profile_ops {
->  	int (*probe)(void *drvdata, unsigned long *choices);
->  	int (*profile_get)(struct device *dev, enum platform_profile_option *profile);
-> 
+I altered the shortlogs to: "platform/x86: xx: fix serdev race".
 
 -- 
  i.
 
+> ---
+>  drivers/platform/x86/lenovo-yoga-tab2-pro-1380-fastcharger.c | 5 +++--
+>  1 file changed, 3 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/platform/x86/lenovo-yoga-tab2-pro-1380-fastcharger.c b/drivers/platform/x86/lenovo-yoga-tab2-pro-1380-fastcharger.c
+> index d2699ca24f34..a96b215cd2c5 100644
+> --- a/drivers/platform/x86/lenovo-yoga-tab2-pro-1380-fastcharger.c
+> +++ b/drivers/platform/x86/lenovo-yoga-tab2-pro-1380-fastcharger.c
+> @@ -199,14 +199,15 @@ static int yt2_1380_fc_serdev_probe(struct serdev_device *serdev)
+>  	if (ret)
+>  		return ret;
+>  
+> +	serdev_device_set_drvdata(serdev, fc);
+> +	serdev_device_set_client_ops(serdev, &yt2_1380_fc_serdev_ops);
+> +
+>  	ret = devm_serdev_device_open(dev, serdev);
+>  	if (ret)
+>  		return dev_err_probe(dev, ret, "opening UART device\n");
+>  
+>  	serdev_device_set_baudrate(serdev, 600);
+>  	serdev_device_set_flow_control(serdev, false);
+> -	serdev_device_set_drvdata(serdev, fc);
+> -	serdev_device_set_client_ops(serdev, &yt2_1380_fc_serdev_ops);
+>  
+>  	ret = devm_extcon_register_notifier_all(dev, fc->extcon, &fc->nb);
+>  	if (ret)
+> 
