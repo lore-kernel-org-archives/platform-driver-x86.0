@@ -1,269 +1,248 @@
-Received: from mail-vk1-f172.google.com (mail-vk1-f172.google.com [209.85.221.172])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 131551FC7DC;
-	Tue, 14 Jan 2025 15:39:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B27321BD012;
+	Tue, 14 Jan 2025 15:41:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736869153; cv=none; b=T8Thfu7MbHXTKERctofGWi6pqVajs2xPF6ir2vQs4bSCvtKzsNCM8KWxJxAAcuqcxMM7VBFy7LMmc9CqBk2CzoZgjjf186mHKjLUheIvhuK88OtfA6BTmeTgfbjKa2aIexDh6ymODDfKFcxjlcW5r3i1REp7VoQ1DGcnu+Ti1fg=
+	t=1736869263; cv=none; b=kAzc5REk/cEstN4rXSk+L10I5dti3tJUz1dfBz34AkGH/wC9wJgigSnaUytV64yLgAi9r89N4ELvPRuyva/AjQ6bf13HgntKzV0xB8nTI+TE3K3hKveLTosIPljO5W6i3NNg4AG+Neq007PnGHPwiXDUzHBnWVy3EElstwPoQiw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736869153; c=relaxed/simple;
-	bh=LFD5HnUv6axyJM8IqskxceD+/1v3k1p/nSQV9BE4jMM=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=MCQ278nu/T3WINJGwZ2PElimUIg5z9xDJsUtqeYbKfNGFaUuj/migAmT1y7rQ09LFhUiYGTkqzRnsZF5fQSZ7LSHturbwQHWvoYwc2XkiqBMtOkisIIhGlpXZC9QMJz4zxNY1ACDZ7ESiSBfo+6Fp6dcuf+rQxk0nf/ufZzewSA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=nKAlP3Rg; arc=none smtp.client-ip=209.85.221.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1736869263; c=relaxed/simple;
+	bh=qn0liHuV+HqEbBeQ5aYzpXs6UUzCWEWNkcftd2sCrYI=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=Q3/2CcMXn2Q8dKmPBkLq+dyb5SrdhLtdabtf6Op4sW9mZHHqumz76d1I+h0smSajJkHc6titKcmkdHzqhDMXUvEEwQtkZ1afFp4rhZL03vtRxtwsxb9CxGqilR7I1RPnX7++Vk4nLnuneYEA0lEtn5LrtO4kiCYinTj4k801wm8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ZN2Vuu6e; arc=none smtp.client-ip=192.198.163.19
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nKAlP3Rg"
-Received: by mail-vk1-f172.google.com with SMTP id 71dfb90a1353d-518954032b2so1876756e0c.0;
-        Tue, 14 Jan 2025 07:39:10 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1736869149; x=1737473949; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=GI1j7X1Kt0Lk/pNjI2Hh5cyHCwMeZVYB/YjyicpVYZc=;
-        b=nKAlP3RgqzYbbkalsNeskZE3ihzrnhgfwqJED3XdimA1Csmt1FcmKfpG9jGRnM8+qe
-         V8Q6OYNEzztde2NQlQynVQVgN5Z4cfZOvNcib1so2w2iTJA2oDd6ajEimq5XNTOqVyzd
-         vXVzGkPVOzFy0tckyS7ZdLx9yCwzAAHaryFqoCR5vS4rWpF1zzH54qT1fFBD7CrHBOc7
-         x6kHPIz+4U1HCiZS28f4Ey2Pu/gKMvdNdIjDCXLQw+MIOVcMXlO2DGDDj1cUh8xbRAi0
-         1CqDo9n/LeZOuSzYQO/A8rNsfDDaz72LAXjp8xVCv0BmEZLKbGgd7tukih0Km5Y5wIFU
-         Ds6A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1736869149; x=1737473949;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=GI1j7X1Kt0Lk/pNjI2Hh5cyHCwMeZVYB/YjyicpVYZc=;
-        b=N0ykjdOYb/pbDEu3hDIcUJz9jwfFuCRcmX+E1fC2H+C0++fI/SC1zF99JGt4OxrBHn
-         LdqdFEDwunRFKxynZK2G+ZjVDxvPgmqeHacP0JQUd+u+tOstwLVdXehIXkMcI8n+70Yc
-         IdJc37OKeX14RvXIfwi6QeduMPX7hYhf8QJtKF/fDap4dNKdk8BDO9bUvQscVH+CJvWx
-         gem5I4cGfu9NjSVvatlw9cVaYAlnwjj2+v8i8MK15gOangxOHo0AaEDtngLLm90j5yBO
-         A9wl9ZY5czPkrBvPGZT39MBh0PfgUAFjlnF5bh6WfQsE8kgTDzP9bXBNUok/H05yhaWq
-         lt9A==
-X-Forwarded-Encrypted: i=1; AJvYcCWXiFtVJcvU03WHI1kQjc2YPVp6y2sqenBs8VjUgLx0Os4feU5rT+AP9rUmEKWxJw99le1CH2KhRH2K@vger.kernel.org, AJvYcCXMMmnpxcK5JEG37fUsaJLCEHrPmpZwXs8J0dm98la2fYmschmstGHy9whxNbCEmDZY+OE5ZroRl4UPZLz6@vger.kernel.org
-X-Gm-Message-State: AOJu0YyeuITCjoRrzLXgLLUJOfkN8xhSYqSQeQ8Awlayhben3+lnDQRV
-	twWwsW73joBU7j9LkU1OSotTZb3PV7gEIshNOLm+DlNH8BqyBXeo0RR/RA==
-X-Gm-Gg: ASbGncv/yNQ6qsw01UGpvKYaXPqoHaaitxCmEuAcgrdGbMsoGk+RJLWjW21P0i8cjda
-	aQL1HDLgFbwwW3kL1NKW6xfcX45OnvKgWaGWArc4+c8fa4Q+gTNc2UiSRK3AAsY96nFZ1TTvZpM
-	lRfmCOSEFtOo7CtBlQSw0Lh/5ZjbMaet7KkwiWKlW6h5GYWgmW5DZaEtRjV/w9ptOzFYOsgC6i/
-	NI4jdc3TO3nia93uB66iD8XDafAqfmBXMxMuzOyLHA8u4F8asgn5JQdK4lbWghy
-X-Google-Smtp-Source: AGHT+IGWjNg4O4IOHdix6orWFAznbRve1THMCUqMyQa/ychI5YFbMGSAl/AiMHif0ctQYondNL80+A==
-X-Received: by 2002:a05:6122:8f82:b0:51b:8949:c996 with SMTP id 71dfb90a1353d-51c6c48f340mr19515587e0c.9.1736869149474;
-        Tue, 14 Jan 2025 07:39:09 -0800 (PST)
-Received: from localhost.localdomain ([2800:bf0:82:1159:1ea9:11b1:7af9:1277])
-        by smtp.gmail.com with ESMTPSA id 71dfb90a1353d-51cd7c56d30sm277e0c.14.2025.01.14.07.39.06
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 14 Jan 2025 07:39:08 -0800 (PST)
-From: Kurt Borja <kuurtb@gmail.com>
-To: platform-driver-x86@vger.kernel.org
-Cc: "Rafael J. Wysocki" <rafael@kernel.org>,
-	"Len Brown" <lenb@kernel.org>,
-	linux-acpi@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	"Mario Limonciello" <mario.limonciello@amd.com>,
-	"Armin Wolf" <W_Armin@gmx.de>,
-	"Joshua Grisham" <josh@joshuagrisham.com>,
-	"Derek J. Clark" <derekjohn.clark@gmail.com>,
-	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	"Hans de Goede" <hdegoede@redhat.com>,
-	"Kurt Borja" <kuurtb@gmail.com>,
-	"Maximilian Luz" <luzmaximilian@gmail.com>,
-	"Lee, Chun-Yi" <jlee@suse.com>,
-	"Shyam Sundar S K" <Shyam-sundar.S-k@amd.com>,
-	"Corentin Chary" <corentin.chary@gmail.com>,
-	"Luke D. Jones" <luke@ljones.dev>,
-	"Lyndon Sanche" <lsanche@lyndeno.ca>,
-	"Ike Panhc" <ike.pan@canonical.com>,
-	"Henrique de Moraes Holschuh" <hmh@hmh.eng.br>,
-	"Mark Pearson" <mpearson-lenovo@squebb.ca>,
-	"Alexis Belmonte" <alexbelm48@gmail.com>,
-	"Ai Chao" <aichao@kylinos.cn>,
-	"Gergo Koteles" <soyer@irl.hu>,
-	Dell.Client.Kernel@dell.com,
-	ibm-acpi-devel@lists.sourceforge.net
-Subject: [PATCH v2 18/18] ACPI: platform_profile: Add documentation
-Date: Tue, 14 Jan 2025 10:37:26 -0500
-Message-ID: <20250114153726.11802-19-kuurtb@gmail.com>
-X-Mailer: git-send-email 2.47.1
-In-Reply-To: <20250114153726.11802-1-kuurtb@gmail.com>
-References: <20250114153726.11802-1-kuurtb@gmail.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ZN2Vuu6e"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1736869262; x=1768405262;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version:content-id;
+  bh=qn0liHuV+HqEbBeQ5aYzpXs6UUzCWEWNkcftd2sCrYI=;
+  b=ZN2Vuu6eIZjLpcyaRAiwSGsWRK9mKzaROu3jFt5SHE1t4vSjJlXhLvzs
+   A/2yoebuayhGnOrsQwil/PP2LYBxpTYOWyEuxvv7dr5Zd/IIrVl4ZY2jh
+   y4T1uzx3U1SdJhXo+r4FAPS9zRV2Pi6ie++wjYXjMYr8ZZgqeJElOxQVS
+   Qn9GvXyp6dtsyiQhi3RFuugn88G48R2i/Zlzv0VKUPJf1TQr64j+b9KvI
+   VYge5Te+VnuBLAfQBkAUZuXW8oTE0mKPclfV3Qpf+SxgC+5FVSIVlKLvO
+   1PqPBSN5Gmm69MIknySFIaA1fwgEKeF+robgZoYCa8J2Zkd40HqoLaLfh
+   A==;
+X-CSE-ConnectionGUID: Xht8FwqoRta4GJL6j7tNCg==
+X-CSE-MsgGUID: 8KJloBnlRkaGX15EFQqU8Q==
+X-IronPort-AV: E=McAfee;i="6700,10204,11315"; a="36382267"
+X-IronPort-AV: E=Sophos;i="6.12,314,1728975600"; 
+   d="scan'208";a="36382267"
+Received: from fmviesa007.fm.intel.com ([10.60.135.147])
+  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Jan 2025 07:41:00 -0800
+X-CSE-ConnectionGUID: 5HLHvUtqSW6Cs32LBcDWVw==
+X-CSE-MsgGUID: 8RF7edNCQ6+5zyjKd/T0yQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.12,314,1728975600"; 
+   d="scan'208";a="104784037"
+Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.54])
+  by fmviesa007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Jan 2025 07:40:55 -0800
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Tue, 14 Jan 2025 17:40:51 +0200 (EET)
+To: Pengyu Luo <mitltlatltl@gmail.com>
+cc: andersson@kernel.org, bryan.odonoghue@linaro.org, conor+dt@kernel.org, 
+    devicetree@vger.kernel.org, 
+    Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+    Hans de Goede <hdegoede@redhat.com>, heikki.krogerus@linux.intel.com, 
+    jdelvare@suse.com, konradybcio@kernel.org, krzk+dt@kernel.org, 
+    linux-arm-msm@vger.kernel.org, linux-hwmon@vger.kernel.org, 
+    LKML <linux-kernel@vger.kernel.org>, linux-pm@vger.kernel.org, 
+    linux-usb@vger.kernel.org, linux@roeck-us.net, 
+    platform-driver-x86@vger.kernel.org, robh@kernel.org, sre@kernel.org
+Subject: Re: [PATCH v3 2/6] platform: arm64: add Huawei Matebook E Go EC
+ driver
+In-Reply-To: <20250114083133.607318-1-mitltlatltl@gmail.com>
+Message-ID: <d2a42fc7-37a9-3fcc-4c35-e542ddb112e8@linux.intel.com>
+References: <402b261b-e51d-7121-1e13-b1bc1f5d40f5@linux.intel.com> <20250114083133.607318-1-mitltlatltl@gmail.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/mixed; BOUNDARY="8323328-1499874815-1736864506=:1077"
+Content-ID: <03944f23-5ba5-efab-3be2-7e7a72fa6aa4@linux.intel.com>
 
-Add kerneldoc and sysfs class documentation.
+  This message is in MIME format.  The first part should be readable text,
+  while the remaining parts are likely unreadable without MIME-aware tools.
 
-Signed-off-by: Kurt Borja <kuurtb@gmail.com>
----
- .../ABI/testing/sysfs-class-platform-profile  | 44 +++++++++++++++++++
- drivers/acpi/platform_profile.c               | 33 ++++++++++++++
- include/linux/platform_profile.h              | 24 ++++++++++
- 3 files changed, 101 insertions(+)
- create mode 100644 Documentation/ABI/testing/sysfs-class-platform-profile
+--8323328-1499874815-1736864506=:1077
+Content-Type: text/plain; CHARSET=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-ID: <839add08-5968-6c24-36a6-f31790b45694@linux.intel.com>
 
-diff --git a/Documentation/ABI/testing/sysfs-class-platform-profile b/Documentation/ABI/testing/sysfs-class-platform-profile
-new file mode 100644
-index 000000000000..b5a3600080bc
---- /dev/null
-+++ b/Documentation/ABI/testing/sysfs-class-platform-profile
-@@ -0,0 +1,44 @@
-+What:		/sys/class/platform-profile/platform-profile-X/name
-+Date:		January 2025
-+Description:	Name of the class device given by the driver.
-+
-+		RO
-+
-+What:		/sys/class/platform-profile/platform-profile-X/choices
-+Date:		January 2025
-+Description:	This file contains a space-separated list of profiles supported for this device.
-+
-+		Drivers must use the following standard profile-names:
-+
-+		====================	========================================
-+		low-power		Low power consumption
-+		cool			Cooler operation
-+		quiet			Quieter operation
-+		balanced		Balance between low power consumption
-+					and performance
-+		balanced-performance	Balance between performance and low
-+					power consumption with a slight bias
-+					towards performance
-+		performance		High performance operation
-+		custom			Driver defined custom profile
-+		====================	========================================
-+
-+		RO
-+
-+What:		/sys/class/platform-profile/platform-profile-X/profile
-+Date:		January 2025
-+Description:	Reading this file gives the current selected profile for this
-+		device. Writing this file with one of the strings from
-+		platform_profile_choices changes the profile to the new value.
-+
-+		This file can be monitored for changes by polling for POLLPRI,
-+		POLLPRI will be signaled on any changes, independent of those
-+		changes coming from a userspace write; or coming from another
-+		source such as e.g. a hotkey triggered profile change handled
-+		either directly by the embedded-controller or fully handled
-+		inside the kernel.
-+
-+		This file may also emit the string 'custom' to indicate
-+		that the driver is using a driver defined custom profile.
-+
-+		RW
-diff --git a/drivers/acpi/platform_profile.c b/drivers/acpi/platform_profile.c
-index c44989801f8e..9caddac695b8 100644
---- a/drivers/acpi/platform_profile.c
-+++ b/drivers/acpi/platform_profile.c
-@@ -426,6 +426,10 @@ static const struct attribute_group platform_profile_group = {
- 	.is_visible = profile_class_is_visible,
- };
- 
-+/**
-+ * platform_profile_notify - Notify class device and legacy sysfs interface
-+ * @dev: The class device
-+ */
- void platform_profile_notify(struct device *dev)
- {
- 	scoped_cond_guard(mutex_intr, return, &profile_lock) {
-@@ -435,6 +439,11 @@ void platform_profile_notify(struct device *dev)
- }
- EXPORT_SYMBOL_GPL(platform_profile_notify);
- 
-+/**
-+ * platform_profile_cycle - Cycles profiles available on all registered class devices
-+ *
-+ * Return: 0 on success, -errno on failure
-+ */
- int platform_profile_cycle(void)
- {
- 	enum platform_profile_option next = PLATFORM_PROFILE_LAST;
-@@ -478,6 +487,15 @@ int platform_profile_cycle(void)
- }
- EXPORT_SYMBOL_GPL(platform_profile_cycle);
- 
-+/**
-+ * platform_profile_register - Creates and registers a platform profile class device
-+ * @dev: Parent device
-+ * @name: Name of the class device
-+ * @drvdata: Driver data that will be attached to the class device
-+ * @ops: Platform profile's mandatory operations
-+ *
-+ * Return: pointer to the new class device on success, ERR_PTR on failure
-+ */
- struct device *platform_profile_register(struct device *dev, const char *name,
- 					 void *drvdata,
- 					 const struct platform_profile_ops *ops)
-@@ -544,6 +562,12 @@ struct device *platform_profile_register(struct device *dev, const char *name,
- }
- EXPORT_SYMBOL_GPL(platform_profile_register);
- 
-+/**
-+ * platform_profile_remove - Unregisters a platform profile class device
-+ * @dev: Class device
-+ *
-+ * Return: 0
-+ */
- int platform_profile_remove(struct device *dev)
- {
- 	struct platform_profile_handler *pprof = to_pprof_handler(dev);
-@@ -569,6 +593,15 @@ static void devm_platform_profile_release(struct device *dev, void *res)
- 	platform_profile_remove(*ppdev);
- }
- 
-+/**
-+ * devm_platform_profile_register - Device managed version of platform_profile_register
-+ * @dev: Parent device
-+ * @name: Name of the class device
-+ * @drvdata: Driver data that will be attached to the class device
-+ * @ops: Platform profile's mandatory operations
-+ *
-+ * Return: pointer to the new class device on success, ERR_PTR on failure
-+ */
- struct device *devm_platform_profile_register(struct device *dev, const char *name,
- 					      void *drvdata,
- 					      const struct platform_profile_ops *ops)
-diff --git a/include/linux/platform_profile.h b/include/linux/platform_profile.h
-index eea1daf85616..eb4dc85dc18c 100644
---- a/include/linux/platform_profile.h
-+++ b/include/linux/platform_profile.h
-@@ -28,6 +28,30 @@ enum platform_profile_option {
- 	PLATFORM_PROFILE_LAST, /*must always be last */
- };
- 
-+/**
-+ * struct platform_profile_ops - platform profile operations
-+ * @probe:	Callback to setup choices available to the new class device.
-+ *		Parameters are:
-+ *		@drvdata: drvdata pointer passed to platform_profile_register.
-+ *		@choices: Empty choices bitmap which the driver has to manually
-+ *			  setup, by using set_bit() in bits corresponding to
-+ *			  platform_profile_option values. These values will only
-+ *			  be enforced when a new profile is selected from
-+ *			  user-space.
-+ * @profile_get: Callback that will be called when showing the current platform
-+ *		 profile.
-+ *		 Parameters are:
-+ *		 @dev: Class device.
-+ *		 @profile: Pointer to the profile which will be read from
-+ *			   user-space. Selected choices are not enforced when
-+ *			   modifying this value.
-+ * @profile_set: Callback that will be called when storing the new platform
-+ *		 profile.
-+ *		 Parameters are:
-+ *		 @dev: Class device.
-+ *		 @profile: New platform profile to be set. Guaranteed to be a
-+ *			   value selected in the @probe callback.
-+ */
- struct platform_profile_ops {
- 	int (*probe)(void *drvdata, unsigned long *choices);
- 	int (*profile_get)(struct device *dev, enum platform_profile_option *profile);
--- 
-2.47.1
+On Tue, 14 Jan 2025, Pengyu Luo wrote:
+> On Tue, Jan 14, 2025 at 2:56=E2=80=AFAM Ilpo J=C3=A4rvinen <ilpo.jarvinen=
+@linux.intel.com> wrote:
+> > On Tue, 14 Jan 2025, Pengyu Luo wrote:
+> >=20
+> > > There are three variants of which Huawei released the first two
+> > > simultaneously.
+> > >
+> > > Huawei Matebook E Go LTE(sc8180x), codename seems to be gaokun2.
+> > > Huawei Matebook E Go(sc8280xp@3.0GHz), codename must be gaokun3. (see=
+ [1])
+> > > Huawei Matebook E Go 2023(sc8280xp@2.69GHz), codename should be also =
+gaokun3.
+> > >
+> > > Adding support for the latter two variants for now, this driver shoul=
+d
+> > > also work for the sc8180x variant according to acpi table files, but =
+I
+> > > don't have the device to test yet.
+> > >
+> > > Different from other Qualcomm Snapdragon sc8280xp based machines, the
+> > > Huawei Matebook E Go uses an embedded controller while others use
+> > > a system called PMIC GLink. This embedded controller can be used to
+> > > perform a set of various functions, including, but not limited to:
+> > >
+> > > - Battery and charger monitoring;
+> > > - Charge control and smart charge;
+> > > - Fn_lock settings;
+> > > - Tablet lid status;
+> > > - Temperature sensors;
+> > > - USB Type-C notifications (ports orientation,  DP alt mode HPD);
+> > > - USB Type-C PD (according to observation, up to 48w).
+> > >
+> > > Add a driver for the EC which creates devices for UCSI and power supp=
+ly
+> > > devices.
+> > >
+> > > [1] https://bugzilla.kernel.org/show_bug.cgi?id=3D219645
+> > >
+> > > Signed-off-by: Pengyu Luo <mitltlatltl@gmail.com>
 
+> > > +/**
+> > > + * gaokun_ec_psy_get_smart_charge_enable - check if smart charge is =
+enabled
+> > > + * @ec: The gaokun_ec
+> > > + * @on: The state
+> > > + *
+> > > + * Return: 0 on success or negative error code.
+> > > + */
+> > > +int gaokun_ec_psy_get_smart_charge_enable(struct gaokun_ec *ec, bool=
+ *on)
+> > > +{
+> > > +     /* GBAC */
+> > > +     *on =3D 0; /* clear other 3 Bytes */
+> >=20
+> > =3D false (as it's bool)
+> >=20
+> > What that comment means??? The type is bool so what "3 Bytes" ???
+> >=20
+>=20
+> We will write to the lowest Byte, the higher 3 Bytes are dirty, so clear =
+it.
+
+Are you saying you assume bool is 4 bytes long? I'd be cautious on making=
+=20
+assumptions on sizeof(bool).
+=20
+> We can also implememnt it like this
+>=20
+> int ret;
+> u8 resp;
+>=20
+> ret =3D gaokun_ec_read_byte(.., &resp);
+> if (ret)
+>         return ret;
+>=20
+> *on =3D !!resp;
+
+Yes, I prefer explicit u8 -> bool conversion like this.
+
+> > > +/* Fn lock */
+> > > +static int gaokun_ec_get_fn_lock(struct gaokun_ec *ec, bool *on)
+> > > +{
+> > > +     /* GFRS */
+> > > +     u8 req[] =3D MKREQ(0x02, 0x6B, 0);
+> >=20
+> > Does that random acronym map to one of the literal? In which case a def=
+ine
+> > would be more useful than a comment. (You seem to have a few similar
+> > comments preceeding the req definitions)
+> >=20
+>=20
+> They are ACPI method names/identifiers, it will be useful if someone want
+> to locate ACPI's implementations.
+
+Okay, I guess it's fine as is then.
+
+
+> > > +static int gaokun_ec_get_temp(struct gaokun_ec *ec, u8 idx, int *tem=
+p)
+> > > +{
+> > > +     /* GTMP */
+> > > +     u8 req[] =3D MKREQ(0x02, 0x61, 1, temp_reg[idx]);
+> > > +     u8 resp[] =3D MKRESP(sizeof(__le16));
+> > > +     __le16 tmp;
+> > > +     int ret;
+> > > +
+> > > +     ret =3D gaokun_ec_read(ec, req, sizeof(resp), resp);
+> > > +     if (ret)
+> > > +             return ret;
+> > > +
+> > > +     extr_resp((u8 *)&tmp, resp, sizeof(tmp));
+> > > +     *temp =3D le16_to_cpu(tmp) * 100; /* convert to HwMon's unit */
+> >=20
+> > extr_resp() does memcpy() but there should be no need to copy anything
+> > here. You just want to have __le16 pointer of the response data data.
+> >=20
+>=20
+> I think this would break abstraction, recently, these data are accessed b=
+y
+> extr_resp() and refill_req() only.
+
+If you want to keep doing it like that, not a big deal for me.
+
+There are different ways to do the abstraction though, and not all require
+memcpy() when changing a layer (e.g., a pointer advancing to the other=20
+layer).
+
+> > > +/* -----------------------------------------------------------------=
+--------- */
+> > > +/* EC */
+> > > +
+> > > +static irqreturn_t gaokun_ec_irq_handler(int irq, void *data)
+> > > +{
+> > > +     struct gaokun_ec *ec =3D data;
+> > > +     u8 req[] =3D MKREQ(EC_EVENT, EC_QUERY, 0);
+> >=20
+> > Great, here you have named them. Could you name all of the other litera=
+ls
+> > too, please.
+>=20
+> I mentioned this in previous version. Most of them are magic, it is hard =
+to
+> generalize them. We could name partial scmd according to specific functio=
+ns
+> (sysfs functions), their function names have implied registers' meaning, =
+and
+> these registers would be never reused in other functions.
+
+Fair (I didn't read every comment made to the previous version).
+
+> > > +/* -----------------------------------------------------------------=
+--------- */
+> > > +/* API For UCSI */
+> >=20
+> > for
+> >=20
+>=20
+> Agree
+
+For me, you don't need to reply "Agree", "Ack" or something along those=20
+lines if you're going to act on the feedback. Just make sure you don't=20
+forget them :-). It'll save us both some time when we focus on points that=
+=20
+need further discussion.
+
+--=20
+ i.
+--8323328-1499874815-1736864506=:1077--
