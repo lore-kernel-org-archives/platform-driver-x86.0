@@ -1,242 +1,188 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-vk1-f172.google.com (mail-vk1-f172.google.com [209.85.221.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BBC61146A79;
-	Tue, 14 Jan 2025 15:06:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 365A1232422;
+	Tue, 14 Jan 2025 15:38:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736867186; cv=none; b=ddgcC2oUgXoTT4ZuiAkosiYfcO9/K4iST8z81KEjCh0Ixd2FBB5qguqibyrxsChVKgKkU+yzsXvow1f00gCgfZ/SuB7CdKG7BiGqn3X5L1sJgOzy8XJiXtnuHat7enAU12KN0hE3QcXhgGh9PMd3DxAd8E7Zy4KMaStvBhi40rg=
+	t=1736869089; cv=none; b=Q9TBMsUu0h/H/dVfrJQETD1UlvBMmEaLiBbV0+p/AX2xnEQD44wC+l3EcuBtO1YpdMzFOssrXcE1OzQ3l0fkPa2ugin8gwcm0v12wyHds3qCzIonToulcgv64WZ2E/pxE5eEeOANIT/VKmbhhDOY8xy2JuVo9rj58raJWeHYfz4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736867186; c=relaxed/simple;
-	bh=J37/LSl+ENGwCp4QcUAox3lKvqPpORgrOd8+0kUZEQU=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=FhK1HEmh3TFjuZlaH6h5m7Zw4SkxekZ+WOJJyIEp7dCDnkzFnCwqDvMjGC45F4LRIvdfJyw/YPzo3vdTTac71bIzCfkgF2+J8qh3HFWTH+7gfpvjnPW/cCBqNCTtfEfnBjmOAUMnvgHi/osJY9fETQ8JlpGi3nkbxhneFDvd6Cw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=E/0tKw/4; arc=none smtp.client-ip=192.198.163.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1736869089; c=relaxed/simple;
+	bh=FKT7LpmC/KgLbkhhg563slhkYuuo+25wRKhGL6TGztM=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=sxhDiqOVBEc5GbtpZPPNNibxexjdBzgMvKJk3K4hJqmCaseILRootNgJ9GsMEyWTShWtwDiUfMoN3rTcECCBjnGvD7tEhBlScqo9Eccm4NE2OnTBE5QT9+JWEs4P3OqqfdFB/yeLpIhwF2dTX2mjxd4K0sPcZtlOVW4QhEFCDMM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ZQ7b/jtf; arc=none smtp.client-ip=209.85.221.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="E/0tKw/4"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1736867184; x=1768403184;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version:content-id;
-  bh=J37/LSl+ENGwCp4QcUAox3lKvqPpORgrOd8+0kUZEQU=;
-  b=E/0tKw/49N2jzI3SO/pryILJtiy4Ob2epaTaEgrnrSmbHGykyu3bSMSW
-   2exL8SxRlAbya5XJOlCcbrvLoTXD6t83hjTb9b/mmteXEWmlvl/bxeTRl
-   N+5b7k1yUdQWgONBGlLw9vVBvCRhpTuqQ0BhFa9UYgF1ZBcZF4/viJRy7
-   4sf8g6dys8SkCu+JbaIRrsC768AUx+DkObKbqy3W18QWdwoQlIA0nYn0S
-   bNOcN/p3Z6BFyv2Xgvic565wd1iZc6sZWU99sWD0GZVZDnOGu5s0WNuUM
-   eaG+qKJhiSqB3fQ0OcE/ppVLihdNWqq3byFsVKSFFat9KpZ6Id25DVHYa
-   A==;
-X-CSE-ConnectionGUID: XFioWdg5RGmWlVhEnTgErA==
-X-CSE-MsgGUID: RBv40/6ZSBCYkcj5l1dErA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11315"; a="47749431"
-X-IronPort-AV: E=Sophos;i="6.12,314,1728975600"; 
-   d="scan'208";a="47749431"
-Received: from orviesa005.jf.intel.com ([10.64.159.145])
-  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Jan 2025 07:06:24 -0800
-X-CSE-ConnectionGUID: Zc9jccgdT5SzF0aAP+b87A==
-X-CSE-MsgGUID: 8Za0BNZCT1CP4kkJ/XfvyA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
-   d="scan'208";a="109975204"
-Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.54])
-  by orviesa005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Jan 2025 07:06:20 -0800
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Tue, 14 Jan 2025 17:06:17 +0200 (EET)
-To: Andy Shevchenko <andy.shevchenko@gmail.com>
-cc: =?ISO-8859-15?Q?Pali_Roh=E1r?= <pali@kernel.org>, 
-    Hans de Goede <hdegoede@redhat.com>, Andy Shevchenko <andy@kernel.org>, 
-    Prasanth Ksr <prasanth.ksr@dell.com>, Paul Menzel <pmenzel@molgen.mpg.de>, 
-    Wolfram Sang <wsa@kernel.org>, eric.piel@tremplin-utc.net, 
-    Marius Hoch <mail@mariushoch.de>, Dell.Client.Kernel@dell.com, 
-    Kai Heng Feng <kai.heng.feng@canonical.com>, 
-    platform-driver-x86@vger.kernel.org, Jean Delvare <jdelvare@suse.com>, 
-    Andi Shyti <andi.shyti@kernel.org>, linux-i2c@vger.kernel.org
-Subject: Re: [PATCH v9 4/4] platform/x86: dell-smo8800: Add support for
- probing for the accelerometer i2c address
-In-Reply-To: <CAHp75VdnDqpeiWZDwZb0Cfx8n4L_8N1cQRb2MKSteWCZ+yOrfw@mail.gmail.com>
-Message-ID: <f0f7f8d1-d9ed-496a-e2b4-06f345ac8940@linux.intel.com>
-References: <20241209183557.7560-1-hdegoede@redhat.com> <20241209183557.7560-5-hdegoede@redhat.com> <ee90da14-024e-4563-00ff-9b525e700106@linux.intel.com> <67d6480a-6613-47a1-bf7d-b52532a5278c@redhat.com> <049555a0-ad65-7aad-2a7c-fc2047629010@linux.intel.com>
- <Z4Uy4FYgynLP3ZAp@smile.fi.intel.com> <2b2a3d16-039c-4cdf-94b9-41d074558d97@redhat.com> <20250113194702.j6ou2d7c3vn32unv@pali> <CAHp75VdnDqpeiWZDwZb0Cfx8n4L_8N1cQRb2MKSteWCZ+yOrfw@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZQ7b/jtf"
+Received: by mail-vk1-f172.google.com with SMTP id 71dfb90a1353d-51cd05384aaso216439e0c.0;
+        Tue, 14 Jan 2025 07:38:06 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1736869086; x=1737473886; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=S6OcBLSiXj43UWw6kP+ylSaU+o5she7C6HdRdC/cjns=;
+        b=ZQ7b/jtf0W/9dZ6/bHjdRVfFwz2EQkZX9vFHxw4gvaEt/1krABJ9YZAbPiR1E7NfLa
+         WneB2f4uzlccloDuILjRAFjbsXObRFiizrUig1wZSpSoRqBncGC17AY8/YheiuyUlGUx
+         D+kJNPj+eqP1g6q3+KUSEGQh+/eiPnFc8VQnILu6hOvZWWPq9Lvt3XmgG1iVRBeWlE2j
+         DjOIRUXmYsHW6ZBPz9+8gPAcq4VBUmVFacW1W2CV4/HGigTiUMH/zv9sW6q4Bsv/O4uP
+         Qej+WQeK53GBZfAo7RVvX5KntyD3TY/f1vYwK2QKsXcWIvn09uvX9tzavaMBEIy4AvIS
+         ju8g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1736869086; x=1737473886;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=S6OcBLSiXj43UWw6kP+ylSaU+o5she7C6HdRdC/cjns=;
+        b=tEzcFshGW3xxlu0lroGlIBNZGTtZBYeYo2Zo1QqQzx6de2o076b7ldEJFXLVvWQHb0
+         qbIqWnbkE/OrnW3pMMSntrP0bZ5sXjbpSBWScyBn3/a3/IPymJMmaKcEG/Pz0lX69wwy
+         boga5q0rfCyBrCb8hK6ZoUqM+wyIh9yo72QLWWQ6CrA4Y/NXgl3V4k/2MUPfWZjdIbLf
+         K+NIUjuON9HsDLvSJCaH5Upkni+1LPca2rXCL/UWgoqC4GYHLpyxjRJBGtyy0P3e/bSa
+         Nt9efsIWUoxMsaIVgxkJ2NhjTDJlZ/YxxSJEqWhqF722s7pi7asmOJpxefsyhsm29E9u
+         KlGg==
+X-Forwarded-Encrypted: i=1; AJvYcCVa4y+LOAsdw4srt/bs8FkJSbYuQB6ZLieioHF2KuTi+UxgylKHnG2TcL1Q7mcFZgIZvvL53K1Mwz2WgcdL@vger.kernel.org, AJvYcCXyHNR/y2UgFCHKo2hRFNCjpizciEZezHfzgapq2eVwqIwMusjNA/rnxjGZSgV6EGf4CmDKPThwsvQg@vger.kernel.org
+X-Gm-Message-State: AOJu0YzU+Y72ffRY6EI+yLnB8vlDZ91D4PrfUl7cL7xZdv0lnKRP5lUb
+	oftvzSm2Tp2dFUcrNLXRabxSe6fnKK9uttIXXuTxCP4FiwA182QfKIg6Ow==
+X-Gm-Gg: ASbGncvXcVZ2uqfcdCTxzPEmT6B5POxnHZiemN3JqbXT1Ni95FgEs7q90XSxQh0f+cq
+	op4EBbXPTNykqOKBObPXtdlVc6COyEMkfHoxAo3J2/ooXpMPd7q7OlcbUiSMnYZtiADltBJpaaI
+	nLgv31vlMEkZDB4tFkvoksdRtXzxjxjW+MHwYhSIggfwmEiq0+GuTRMQYwTm9ZnqyFwl3Feb40A
+	Ost2sO4f34rlRrwZDuFnZ7YScxcONApQZwtaTllXRIL6AmgURgjeb9c4UAf5waq
+X-Google-Smtp-Source: AGHT+IE8jHUpgvWGxondQBd2bR/hLYSS9v4Lm2B1k8zYGh7DUVExCKbtlPX9v9yTDrq0bu/Cbe1SZg==
+X-Received: by 2002:a05:6122:c94:b0:514:eeba:517 with SMTP id 71dfb90a1353d-51c6c532293mr19159278e0c.10.1736869085689;
+        Tue, 14 Jan 2025 07:38:05 -0800 (PST)
+Received: from localhost.localdomain ([2800:bf0:82:1159:1ea9:11b1:7af9:1277])
+        by smtp.gmail.com with ESMTPSA id 71dfb90a1353d-51cd7c56d30sm277e0c.14.2025.01.14.07.38.01
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 14 Jan 2025 07:38:04 -0800 (PST)
+From: Kurt Borja <kuurtb@gmail.com>
+To: platform-driver-x86@vger.kernel.org
+Cc: "Rafael J. Wysocki" <rafael@kernel.org>,
+	"Len Brown" <lenb@kernel.org>,
+	linux-acpi@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	"Mario Limonciello" <mario.limonciello@amd.com>,
+	"Armin Wolf" <W_Armin@gmx.de>,
+	"Joshua Grisham" <josh@joshuagrisham.com>,
+	"Derek J. Clark" <derekjohn.clark@gmail.com>,
+	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	"Hans de Goede" <hdegoede@redhat.com>,
+	"Kurt Borja" <kuurtb@gmail.com>,
+	"Maximilian Luz" <luzmaximilian@gmail.com>,
+	"Lee, Chun-Yi" <jlee@suse.com>,
+	"Shyam Sundar S K" <Shyam-sundar.S-k@amd.com>,
+	"Corentin Chary" <corentin.chary@gmail.com>,
+	"Luke D. Jones" <luke@ljones.dev>,
+	"Lyndon Sanche" <lsanche@lyndeno.ca>,
+	"Ike Panhc" <ike.pan@canonical.com>,
+	"Henrique de Moraes Holschuh" <hmh@hmh.eng.br>,
+	"Mark Pearson" <mpearson-lenovo@squebb.ca>,
+	"Alexis Belmonte" <alexbelm48@gmail.com>,
+	"Ai Chao" <aichao@kylinos.cn>,
+	"Gergo Koteles" <soyer@irl.hu>,
+	Dell.Client.Kernel@dell.com,
+	ibm-acpi-devel@lists.sourceforge.net
+Subject: [PATCH v2 00/18] Hide platform_profile_handler from consumers
+Date: Tue, 14 Jan 2025 10:37:08 -0500
+Message-ID: <20250114153726.11802-1-kuurtb@gmail.com>
+X-Mailer: git-send-email 2.47.1
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; BOUNDARY="8323328-238660009-1736866639=:1077"
-Content-ID: <4006fc8e-52df-0c42-d604-14aff15d19d3@linux.intel.com>
+Content-Transfer-Encoding: 8bit
 
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
+Hello,
 
---8323328-238660009-1736866639=:1077
-Content-Type: text/plain; CHARSET=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Content-ID: <1120c656-cc50-96f3-d33f-8f7cf0328930@linux.intel.com>
+As suggested by Mario, I moved patch 15/18 to position 3/18. This indeed
+simplified all diffs. Full reordering bellow.
 
-On Mon, 13 Jan 2025, Andy Shevchenko wrote:
+Series based on top of pdx86/for-next branch.
 
-> On Mon, Jan 13, 2025 at 9:47=E2=80=AFPM Pali Roh=C3=A1r <pali@kernel.org>=
- wrote:
-> > On Monday 13 January 2025 17:49:19 Hans de Goede wrote:
-> > > On 13-Jan-25 4:36 PM, Andy Shevchenko wrote:
-> > > > On Mon, Jan 13, 2025 at 05:17:43PM +0200, Ilpo J=C3=A4rvinen wrote:
-> > > >> On Sat, 21 Dec 2024, Hans de Goede wrote:
-> > > >>> On 17-Dec-24 5:48 PM, Ilpo J=C3=A4rvinen wrote:
-> > > >>>> On Mon, 9 Dec 2024, Hans de Goede wrote:
->=20
-> ...
->=20
-> > > >>>> So what was the result of the private inquiry to Dell?
-> > > >>>
-> > > >>> On July 5th I send the following email to Prasanth Ksr
-> > > >>> <prasanth.ksr@dell.com> which is the only dell.com address I coul=
-d
-> > > >>> find in MAINTAINERS other then Dell.Client.Kernel@dell.com which
-> > > >>> does not seem to be monitored very actively:
-> > > >>>
-> > > >>> """
-> > > >>> Hello Prasanth,
-> > > >>>
-> > > >>> I'm contacting you about a question lis3lv02d freelfall sensors /
-> > > >>> accelerometers used on many (older) Dell laptop models. There
-> > > >>> has been a question about this last December and a patch-set
-> > > >>> trying to address part of this with Dell.Client.Kernel@dell.com
-> > > >>> in the Cc but no-one seems to be responding to that email address
-> > > >>> which is why I'm contacting you directly:
-> > > >>>
-> > > >>> https://lore.kernel.org/linux-i2c/4820e280-9ca4-4d97-9d21-0596261=
-61bfc@molgen.mpg.de/
-> > > >>> https://lore.kernel.org/platform-driver-x86/20240704125643.22946-=
-1-hdegoede@redhat.com/
-> > > >>>
-> > > >>> If you are not the right person to ask these questions to, then
-> > > >>> please forward this email to the right person.
-> > > >>>
-> > > >>> The lis3lv02d sensors are I2C devices and are described in the AC=
-PI
-> > > >>> tables with an SMO88xx ACPI device node. The problem is that thes=
-e
-> > > >>> ACPI device nodes do not have an ACPI I2cResouce in there resourc=
-e
-> > > >>> (_CRS) list, so the I2C address of the sensor is unknown.
-> > > >>>
-> > > >>> When support was first added for these Dell provided a list of
-> > > >>> model-name to I2C address mappings for the then current generatio=
-n
-> > > >>> of laptops, see:
-> > > >>>
-> > > >>> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.gi=
-t/tree/drivers/i2c/busses/i2c-i801.c#n1227
-> > > >>>
-> > > >>> And later the community added a few more mappings.
-> > > >>>
-> > > >>> Paul Menzel, the author of the email starting the discussion on t=
-his:
-> > > >>>
-> > > >>> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.gi=
-t/tree/drivers/i2c/busses/i2c-i801.c#n1227
-> > > >>>
-> > > >>> did a search for the kernel message which is printed when an SMO8=
-8xx
-> > > >>> ACPI device is found but the i2c-address is unknown and Paul foun=
-d
-> > > >>> many models are missing from the mapping table (see Paul's email)=
-=2E
-> > > >>>
-> > > >>> Which leads us to the following questions:
-> > > >>>
-> > > >>> 1. Is there another, uniform (so not using a model name table)
-> > > >>> way to find out the I2C address of the SMO88xx freefall sensor
-> > > >>> from the ACPI or SMBIOS tables ?
-> > > >>>
-> > > >>> 2. If we need to keep using the model-name to I2C-address mapping
-> > > >>> table can you help us complete it by providing the sensor's I2C
-> > > >>> address for all models Paul has found where this is currently mis=
-sing ?
-> > > >>>
-> > > >>> Regards,
-> > > >>>
-> > > >>> Hans
-> > > >>> """
-> > > >>>
-> > > >>> Pali and Paul Menzel where in the Cc of this email.
-> > > >>>
-> > > >>>> Did they respond?
-> > > >>>
-> > > >>> I got a reply from Prasanth that they would forward my request to=
- the
-> > > >>> correct team. Then I got on off-list reply to the v6 patch-set fr=
-om
-> > > >>> David Wang from Dell with as relevant content "We are working on =
-it."
-> > > >>>
-> > > >>>> Did they provide useful info?
-> > > >>>
-> > > >>> No further info was received after the "We are working on it." em=
-ail.
-> > > >>
-> > > >> Hi Hans,
-> > > >>
-> > > >> So you didn't try to remind them after that at all?
-> > > >>
-> > > >> This kind of sounds a low priority item they just forgot to do and=
- might have
-> > > >> had an intention to follow through.
-> > > >
-> > > > Talking from my experience with other companies that could have don=
-e something
-> > > > better I dare to say that this entire buzz for them is no-priority =
-at all, like
-> > > > "no money stuff", hence no attention given. That said, I believe pi=
-ng won't
-> > > > change anything here, however I agree that it _was_ worth to try to=
- acquire any
-> > > > response from them.
-> > >
-> > > Basically what Andy says above.
-> > >
-> > > Note that Dell's client team has been on the Cc for all the versions =
-of
-> > > this patch-set many of which were posted after the "We are working on=
- it." email.
-> > >
-> > > For completeness sake I have just send a request for a status update =
-on
-> > > this to Prasanth and David from Dell.
-> > >
-> > > In the mean time it would be good IMO to merge v11 of this patch, if =
-we
-> > > get useful info from Dell after all we can modify the driver for this
-> > > later.
-> >
-> > No, this change should not be taken at all. This change has a chance to
-> > break booting or brick future dell devices. I'm not going to discuss it
-> > again, but saying that it is good just because you do not have anything
-> > better is not an argument to take such change. Also it is not an excuse
-> > to hide dangerous things behind module parameter. And if you have been
-> > doing to everything to ensure that companies would not want to tak with
-> > you then sorry it is only your problem, so please do not complain here.
->=20
-> With all respect, this is not how we should treat the Linux kernel
-> contributors and users (who want this feature to enable their
-> devices). We have a ton of dangerous and DANGEROUS parameters and
-> other algorithms here and there (in Linux kernel source tree),
+~ Kurt
+---
+v1 -> v2:
 
-I agree that more dangerous things pre-exist within the kernel already,
-and the danger seem exaggrated. In any case, it is behind a parameter=20
-requiring conscious decision to enable and even if enabled, it looks=20
-low risk.
+01 -> 04
+02 -> 05
+03 -> 01
+04 -> 02
+05 -> 06
+06 -> 07
+07 -> 08
+08 -> 09
+09 -> 10
+10 -> 11
+11 -> 12
+12 -> 13
+13 -> 14
+14 -> 15
+15 -> 03
 
-It seems Pali too expects them to not answer so I don't see much point=20
-in waiting as all are in agreement the best solution is not going to be=20
-available despite Hans' attempts to get the necessary info out from Dell.
+[1/18]
+  - Call put_device() if device_register() fails
 
-Thus, I'll take this patch into review-ilpo-next branch now.
+[2/18]
+  - Set and use drvdata for every driver in these series, instead of
+    patches 6-14
 
---=20
- i.
---8323328-238660009-1736866639=:1077--
+[4/18]
+  - Renamed the `choices` callback to `probe`
+
+[15/18]
+  - Improve error handling in amd/pmf
+  - Improve error handling in asus-wmi
+
+[18/18]
+  - Fix typo
+  - Added documentation to platform_profile_ops
+
+v1: https://lore.kernel.org/platform-driver-x86/20250109150731.110799-1-kuurtb@gmail.com/
+
+Kurt Borja (18):
+  ACPI: platform_profile: Replace *class_dev member with class_dev
+  ACPI: platform_profile: Let drivers set drvdata to the class device
+  ACPI: platform_profile: Remove platform_profile_handler from callbacks
+  ACPI: platform_profile: Add `ops` member to handlers
+  ACPI: platform_profile: Add `probe` to platform_profile_ops
+  platform/surface: surface_platform_profile: Use
+    devm_platform_profile_register()
+  platform/x86: acer-wmi: Use devm_platform_profile_register()
+  platform/x86: amd: pmf: sps: Use devm_platform_profile_register()
+  platform/x86: asus-wmi: Use devm_platform_profile_register()
+  platform/x86: dell-pc: Use devm_platform_profile_register()
+  platform/x86: ideapad-laptop: Use devm_platform_profile_register()
+  platform/x86: hp-wmi: Use devm_platform_profile_register()
+  platform/x86: inspur_platform_profile: Use
+    devm_platform_profile_register()
+  platform/x86: thinkpad_acpi: Use devm_platform_profile_register()
+  ACPI: platform_profile: Remove platform_profile_handler from exported
+    symbols
+  ACPI: platform_profile: Move platform_profile_handler
+  ACPI: platform_profile: Clean platform_profile_handler
+  ACPI: platform_profile: Add documentation
+
+ .../ABI/testing/sysfs-class-platform-profile  |  44 +++++
+ drivers/acpi/platform_profile.c               | 164 +++++++++++++-----
+ .../surface/surface_platform_profile.c        |  48 ++---
+ drivers/platform/x86/acer-wmi.c               |  58 +++----
+ drivers/platform/x86/amd/pmf/core.c           |   1 -
+ drivers/platform/x86/amd/pmf/pmf.h            |   3 +-
+ drivers/platform/x86/amd/pmf/sps.c            |  51 +++---
+ drivers/platform/x86/asus-wmi.c               |  55 +++---
+ drivers/platform/x86/dell/alienware-wmi.c     |  33 ++--
+ drivers/platform/x86/dell/dell-pc.c           |  60 ++++---
+ drivers/platform/x86/hp/hp-wmi.c              |  83 +++++----
+ drivers/platform/x86/ideapad-laptop.c         |  44 +++--
+ .../platform/x86/inspur_platform_profile.c    |  48 +++--
+ drivers/platform/x86/thinkpad_acpi.c          |  37 ++--
+ include/linux/platform_profile.h              |  51 ++++--
+ 15 files changed, 474 insertions(+), 306 deletions(-)
+ create mode 100644 Documentation/ABI/testing/sysfs-class-platform-profile
+
+
+base-commit: 58126788aa7726c0e91de6b25e6e332fa06089ab
+-- 
+2.47.1
+
