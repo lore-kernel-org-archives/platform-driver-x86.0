@@ -1,692 +1,615 @@
-Received: from NAM04-BN8-obe.outbound.protection.outlook.com (mail-bn8nam04on2069.outbound.protection.outlook.com [40.107.100.69])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D9AC812FB1B;
-	Tue, 14 Jan 2025 16:20:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.100.69
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736871626; cv=fail; b=uCyfGkFHuDc1A9v/QzX2rGAip0MkD68sdOpIT3GxwtpREyujwvbn9h3sozPTLeBRbMW7+yvQWIVBGfLRKGEI/lHEqKNr3ExbdRsD6EbLRflfQYbyGsSvc57P5yZYbf13bKe3SN3K3iEuznlO2AmMsWQEGA72HX5cf3bQYlCMlYQ=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736871626; c=relaxed/simple;
-	bh=2o6iAG2Ed6uw+LzA42Im03rtyM6j5/PrBa3WSWsJCs4=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=qvbMG/N61iqncErPbWK7h5KHoFwG1AVQkYypPG2yldlp860A0O5CQozzK+2FgwGmJl1yuaVOFXlcXemVBvPdBfrBXN5HKPBoM+FYHRtwh8+ONwLBhfgchs7VVr8b/mX1rJ9n8AgPxsiwmJ+pA+55Jf+pwTeDHosfRtKoGRtJHjQ=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=SGCcgVrR; arc=fail smtp.client-ip=40.107.100.69
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E2F14178395
+	for <platform-driver-x86@vger.kernel.org>; Tue, 14 Jan 2025 16:20:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.8
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1736871644; cv=none; b=nef/toPgE9WaQ/0PakdWzC+1oSnAUAnSN/ivpTeFAA+Unn6rfxGAc2BEg66x7ycWmHhcszchXPjko9TX6Trhfe1V9dpazgtAxv2wrDimdOi0wCWttpmOqpFeFCAXYElRlBDbJcAGGq/hSUkXB2jedpdQEYnni8qLy3muYDb5yR4=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1736871644; c=relaxed/simple;
+	bh=EBdRKcgh+BwgGD3TwWIEU+NgG/FUYuI7cz692nwbpVo=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=bXIJ8kQh8ENqPyNhfhOd25jK1XaN6fYESwtFzFWJzMEm76QxYC3EVCMPXN1Q358r2GWvMCSiXEQGZs0FT9Pg4kV76IjpI6jggGlZma9N9Q2i+DVqEcVPmCqUyaW+ZobZAocwjXwAffACsK100CTQN5wipxFOZKJQezT5WOMgYlc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=WPy+5FGU; arc=none smtp.client-ip=192.198.163.8
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="SGCcgVrR"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=bAArBDrmGRXj1mYqQK1hrXGVthmlQMYvSXtEK/IWl9pbtfXzjTumIsGRtmRLH/vaJza2ej/gM8hF8k9oIQWV+ZqXXu1jgfpHEOmoQxillAnTTAb5kZ+6g/3cTBSo6HoXy36mvIAoh81JoQlYOj7DXseRe2qZL7riiHUGU7/QMUCcFrfJ1zpt8rQXZ3zrjHuOoFwiLID86EbocDoIEjjue8pcwVi49eOVonZ9a2Ty/lCsuF7fYePTkOqO1skZTlQNcMH9QDxqFhj9LJqUBm/86ToldfMhjPz4qrKj5J8IW7P4Ag9A4JZClcuPlI54CZVm7n530x1ZfQ+pTF5Z9GunwA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=7Ran7gxwkp9gzUP8zXsCFJnAseG2gM+XXRGXe37Rsw8=;
- b=xji6/ILb1dOPk31TcZg9JIB5CkiRikpfdPvc13eqNfh2ibrUpotnuKj34UYxFVxoOYX+KYBicQyN6tfAsFoVwZSkBPHJb4g4XTLg86Lvk+TeuNdPs0zTsSTzSaReZnzgA4LB7jV9H+0NaPImEoQChkjrBiF2G2ZTUxhsTI6cbN5itT1V+IXlXi0iNEuHK4hNyhUgKTcj/56rHmI+iI1OcaMByqavsO1dwUoEytnKjmbgsWlvWxO7eMgr1/DVTsHUIq/+j2w5rN9akdGV67V4tH+awTIH9UayxxflKQFGQbCShMolK0mxsFvI3MBRKr10zjOFh/g5VI6uzFdi+ZwV6w==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=7Ran7gxwkp9gzUP8zXsCFJnAseG2gM+XXRGXe37Rsw8=;
- b=SGCcgVrRVwINKKS40f53PyjOBn7slQPBSNOq02tvH0YRyxlNxe/AprC2cZDQwe7Z3DkwJf+1XfIjq6HlsSMOhaNcfjMr9vQKxDGelC4re2ujg0CwqPGxM1RK5H99EiVY08Jp1olZdN0shv2Iig5XxVNRIDSdkZstDR+miWa4rGA=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from MN0PR12MB6101.namprd12.prod.outlook.com (2603:10b6:208:3cb::10)
- by IA0PR12MB8350.namprd12.prod.outlook.com (2603:10b6:208:40d::14) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8335.18; Tue, 14 Jan
- 2025 16:20:18 +0000
-Received: from MN0PR12MB6101.namprd12.prod.outlook.com
- ([fe80::37ee:a763:6d04:81ca]) by MN0PR12MB6101.namprd12.prod.outlook.com
- ([fe80::37ee:a763:6d04:81ca%4]) with mapi id 15.20.8335.017; Tue, 14 Jan 2025
- 16:20:18 +0000
-Message-ID: <a0a3fecf-6b03-48f8-a03d-a7076f31e2dc@amd.com>
-Date: Tue, 14 Jan 2025 10:20:15 -0600
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 05/18] ACPI: platform_profile: Add `probe` to
- platform_profile_ops
-To: Kurt Borja <kuurtb@gmail.com>, platform-driver-x86@vger.kernel.org
-Cc: "Rafael J. Wysocki" <rafael@kernel.org>, Len Brown <lenb@kernel.org>,
- linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org,
- Armin Wolf <W_Armin@gmx.de>, Joshua Grisham <josh@joshuagrisham.com>,
- "Derek J. Clark" <derekjohn.clark@gmail.com>,
- =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
- Hans de Goede <hdegoede@redhat.com>, Maximilian Luz
- <luzmaximilian@gmail.com>, "Lee, Chun-Yi" <jlee@suse.com>,
- Shyam Sundar S K <Shyam-sundar.S-k@amd.com>,
- Corentin Chary <corentin.chary@gmail.com>, "Luke D. Jones"
- <luke@ljones.dev>, Lyndon Sanche <lsanche@lyndeno.ca>,
- Ike Panhc <ike.pan@canonical.com>,
- Henrique de Moraes Holschuh <hmh@hmh.eng.br>,
- Mark Pearson <mpearson-lenovo@squebb.ca>,
- Alexis Belmonte <alexbelm48@gmail.com>, Ai Chao <aichao@kylinos.cn>,
- Gergo Koteles <soyer@irl.hu>, Dell.Client.Kernel@dell.com,
- ibm-acpi-devel@lists.sourceforge.net
-References: <20250114153726.11802-1-kuurtb@gmail.com>
- <20250114153726.11802-6-kuurtb@gmail.com>
-Content-Language: en-US
-From: Mario Limonciello <mario.limonciello@amd.com>
-In-Reply-To: <20250114153726.11802-6-kuurtb@gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: SA1P222CA0133.NAMP222.PROD.OUTLOOK.COM
- (2603:10b6:806:3c2::18) To MN0PR12MB6101.namprd12.prod.outlook.com
- (2603:10b6:208:3cb::10)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="WPy+5FGU"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1736871642; x=1768407642;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=EBdRKcgh+BwgGD3TwWIEU+NgG/FUYuI7cz692nwbpVo=;
+  b=WPy+5FGUjH9MIYOUQBuwd8CeU16e8dvti/PeAi9B1wpOp7mC9HnaOJea
+   WN/HGzyhp6ac2sHP6fulhTe0OLT0dmeIGwqhbRCmG3wY4upnDsOrCULAE
+   YDA0SJFdCEtMOtGVYoR9KKAE37oE89T0KsHox0qOtYp0ml5jJAGsT0ugh
+   3a4fyiG55pUVNlaBBA4LXCEqMvShQx1V6NKLM+yWTH+2Hb3MbL//dpeXq
+   ok/0vLiCbUXs6Lo1DWoYY6I/IZX+A63XK7rZoVbbPS4IlL2HBm52IR9BK
+   geQH56bsaWUHWq0PwuUp8WpEPd8K28RhAnPogv78+tqJq+yoptUEXm8Ep
+   w==;
+X-CSE-ConnectionGUID: FsVcpw4WSNeKxdzbMySSUg==
+X-CSE-MsgGUID: Tf0+eBBgT42kJQJ/1eQ2HA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11315"; a="54716671"
+X-IronPort-AV: E=Sophos;i="6.12,314,1728975600"; 
+   d="scan'208";a="54716671"
+Received: from fmviesa010.fm.intel.com ([10.60.135.150])
+  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Jan 2025 08:20:39 -0800
+X-CSE-ConnectionGUID: rcfQf7EhRTSBZe9iiJqwVA==
+X-CSE-MsgGUID: EgtONz9bT4W6jldoZNONRg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.12,314,1728975600"; 
+   d="scan'208";a="105363842"
+Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.54])
+  by fmviesa010-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Jan 2025 08:20:37 -0800
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Tue, 14 Jan 2025 18:20:33 +0200 (EET)
+To: Julien ROBIN <julien.robin28@free.fr>
+cc: Hans de Goede <hdegoede@redhat.com>, platform-driver-x86@vger.kernel.org
+Subject: Re: [PATCH v2] platform/x86: hp-wmi: Add fan and thermal profile
+ support for Victus 16-s1000
+In-Reply-To: <24b54c4c-6c4d-47a6-bc6f-1be8922bbf69@free.fr>
+Message-ID: <5dd4d3f4-a643-49fb-cf03-c68fb1bdd8e9@linux.intel.com>
+References: <24b54c4c-6c4d-47a6-bc6f-1be8922bbf69@free.fr>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: MN0PR12MB6101:EE_|IA0PR12MB8350:EE_
-X-MS-Office365-Filtering-Correlation-Id: d76c54ed-aaa1-4688-2332-08dd34b755ba
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|366016|1800799024|7416014|376014|7053199007;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?bXZ3V2ZDc3lDRUNtZU8rUk5RcXVHOVJidEhEZ2lFa0x3Wlc5MVNCeE15UmV2?=
- =?utf-8?B?VDhYdjFmSEhoVGlSV0FVZEdIOUZNUDdtcnpnV2RFYmsrUDdDL3NTaE5JNDk0?=
- =?utf-8?B?dU0yWmJRUDZKR2F5dlFsb2ZBc3ZlTGFDNGJZRk5Ic3BiL3VMa3FHK1Fnb0d0?=
- =?utf-8?B?UFJVaXlhMXRZSklwNXFFS01lUytUSm5UemNlbGlwRCszUE9CKzVvajl0c3A2?=
- =?utf-8?B?ZzRUR3ZLcmpkc2MwU1VxS0kyVVZ5T2p6Z0FYbllsZUpma2ZUdzJEckgrTDFp?=
- =?utf-8?B?WG1pVXlWN0ppOG9ZR0Z0MncwaGNDUG9Ha3dFcmticWVmWk83MVlvVWwweGYz?=
- =?utf-8?B?TiswU2Z3ZTMrU0RSdkJLVGd2V2k3QWdwR1V6MmZDdElEclhyV0RyWW1DQ0xO?=
- =?utf-8?B?QUJ1eTFRTVh0ODQyK3JmYlpqOFcvb3RCaERKN3pEQXhKM1VNQnZQei9FVUhK?=
- =?utf-8?B?aHBEZ3VMY0t4MmMrQ05abjlNWlRlcngvcEx6S240dnlTdk8rYUdHeXVKaDlz?=
- =?utf-8?B?WjdBeExmL25aS3BBdUlzMWRWUXFhUjRnYmErRDVKWnpaeVZlSzZ1WUpyZjBQ?=
- =?utf-8?B?eUFFeVNsUzJlMm9PT2pCNk1DbDlqRjFSN1o3TWRKY2k1aFVnM2RVOGZFRjNR?=
- =?utf-8?B?akJMdC9WcDBnMEFRa0tXVUwrMmttRkhsVXRCb1RDcVd0Q0Z2WjhOR2VybjNa?=
- =?utf-8?B?RzJRRytlaTNhQ2lJODNoOFd0c21VTXlvYnc3SHRvZmpOQXI4d3doUEFYc3d5?=
- =?utf-8?B?bXBNNUJKK0ZTb3kvTEVabERWSUg5S2Z0UjY3YVdNWm9rNHJvTGtnTjFXYVZW?=
- =?utf-8?B?eER6cDVVZlhTTjQvZmZIREU4TDB2dTBORUhNaDNUUEtDMnNCZGROK0V5aWE4?=
- =?utf-8?B?MGthaEdDU3lTQnBRcEIrZXJqNW0vWnN4QmpPRTY1RHVQeWV4N3FGQ1E3UURl?=
- =?utf-8?B?USs4TzZqQ241bTNiV2lpN2NhRzlrRmRTTEJNSkRscUMvUW5ILzVwZEZvUC9F?=
- =?utf-8?B?VnZRQ3BPenlqY1JWeTdGK0VLbk5ZRGdNSXUweG9oRHBSaWpXYkRkeUN5cFNU?=
- =?utf-8?B?RVR0enN4U25NSE5OYUkwSlVZNG5NTlA0bG1sbHlZNCtvMUVzTzVPeUV2VVFU?=
- =?utf-8?B?Nmcza1R6U24veXYyK0U4NzdHR1lNMkhUTEVLM2NQbElSU3NFcjd1MFVFajJ2?=
- =?utf-8?B?bjFmdTdmd2ZyTnVVMml0cVd2Z0V1SDdJYmdtcnlrYUE0OC93dlVSWGhFTzFS?=
- =?utf-8?B?S0xtTXZkaGJCek5xWDluNDcwbzN4YlRudDlJQ3lUdngxdlZyZkZvT1lBZ0lh?=
- =?utf-8?B?cktrQ3pUaW9jNEhsVWUxeG83SEsrSGFOeE9PeDUrd09nR2xmcHNQNnpFcnpW?=
- =?utf-8?B?S1RFeCs0cURLcUc0NEhBOGRmclN1blFZK2JMaVNMbDVWNHQyTnFhb0VCY3Rv?=
- =?utf-8?B?RkN2RWphWnljVmFYa1Rvd0hGazRiUm1WWTRaamx4TnlSUjRPd1hWc1Y3L250?=
- =?utf-8?B?Y1ZzdUFwZ05RQlFVWmd5SElUSjF2Zm5hQm96RVJMYVlHZ08zRkk5cWlZMFNW?=
- =?utf-8?B?N0p6Y2RWOUsybVhjNkFxNXBRNTdtc0p5RGR6L2lncUhoNEN0NzNydThnT2ZE?=
- =?utf-8?B?ZGgwTTJpdVhISWtVSkk4YXkrNGZlWkwwc093em9zb2RZaXNIM25PcmxPSUxW?=
- =?utf-8?B?OUlYbXFYZEtVVkRweFZRU1Zza2VKaUFOekYzQ3VjTVAxZzVYdWt0V0RLdElB?=
- =?utf-8?B?aWprQXltSU1yQ2pVaFBPOXduSThLdjd5d2grVEg3Q0ZZSFcvMTgxUlNWenlv?=
- =?utf-8?B?cWtxYU14d1JRNkRtQkpsQTA1WVk0QkZzV1F3Mk56K3RRcjdhRVIwOWZjc1dV?=
- =?utf-8?Q?DEvM6EdNPW1l+?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MN0PR12MB6101.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(7416014)(376014)(7053199007);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?bjFRUlI4RjZ2aUQramhzVmcyNkp0ODNiZi9rNUpMaWU3NWkyM0lydFpqRGRO?=
- =?utf-8?B?eEw2bThEaytqbWtOZWlKZWk2eVNVOURCRlhYK2ZrM24zQzU5Q1VpQVpGUm5m?=
- =?utf-8?B?MWVQZlBPUjVjUE8vWU51Z0hjems4dXNzM2RBcDBDUzRFQlZhQWZxRld5WWdo?=
- =?utf-8?B?N2M5cHZXZUt0UFVNY2EzNkZDSkhFUGJXV3lRSVZzU3JjMHpmaXZ2N0V1ZlZQ?=
- =?utf-8?B?RUtlNVdpdmdIdytBdk1TWGdwRlRVQVJleU1JUG5NemZUeWNzRHVIUk1xdHVX?=
- =?utf-8?B?MHR6bVR6eHl4ODZUS01mdlkwYzQ4VDh6NVhWelNkZXA0cG44dittMllTemtr?=
- =?utf-8?B?SS9DdzNiSm5Qajh2dlMwSnQ1MnM0eGtQSEt4aVlQTmVkVEQ1djVhLzI2Y21V?=
- =?utf-8?B?Uml1bDgwN0d5RDZncDRFN3U2Sm41TmVUdVdJUkNBNmFhUUcvZ3RpYzdWWllN?=
- =?utf-8?B?RzdOMXJmZkdiUnViczgybkp6TmtMU3RkMkNPVDJuSmpSUlE4ZjdVWWxhQklk?=
- =?utf-8?B?TWlZQWFIV3dmU2paN2NFWVQwNVhtdlhsYzJnVDRSZ05tYzBwbTg5RUJIYVlz?=
- =?utf-8?B?U1RjZE9nUmt6ejZhTUhpUHVRdDBzZWNrOHloOVY5NGFlUUUxb2dXTjgrNkNY?=
- =?utf-8?B?SnNNS2EwTHQxV01EN29QRklRSGdPeUhCUUREdjgydVAzbzRQMW9LYXhwSWVx?=
- =?utf-8?B?cHJ5b0E4L1BHNjZNOHNLVmJPbzkrQnh6QTdTdmtCSVZ1TkJhSHNIc01xS1Z1?=
- =?utf-8?B?NmFtODY0QlYwUnp6ZDhiNTMrNnZwMlhXcG1LdUo0Y3kxbEhzVFRaSU9jL2or?=
- =?utf-8?B?SGRnRjNYdkcxSXc3K0dXS1FETnJ5eEV3MVJsUzRGWnFZT25WckdKVXdwMTMv?=
- =?utf-8?B?THhIdHZhZyt2RFNnV3M5SXQyOTNjRStKT0wrbUZ2endoaWQwUlBVdlJob2J0?=
- =?utf-8?B?eHJMK1p4eFh2ZzFMQUZlZTdERDBRQ3VSWHhzTVRjbmQxTnZUVFMvMmVTU1VG?=
- =?utf-8?B?NUswSGhVUHVFSDRrY3VjQUpsLytqZVMrTDR0dnE3K3NjZ0ZvTmhUYTRBN296?=
- =?utf-8?B?WGxjckZFa0oza21SWk1GaThBOVoyQ0I2djJkTHNmVXV5R3NlbkRmTVpBMmtU?=
- =?utf-8?B?NzhvQ0R1Z3gzZXltRHhZVytLQUM1M1daakwycTJUODkrNDJuUEVLUVZNSlhm?=
- =?utf-8?B?b3FhZFVIZE9ta1dpNmpBR0VyRFFISC9ERDNHUnhkbHRQWXZESWtCKzhrT1lz?=
- =?utf-8?B?cmZsaE05a0dydkFXNm8zNGMrZ0p3OWQ0QXlTZlZZNEtHaHRrRU9KWEFXWHh4?=
- =?utf-8?B?LzFxcVYxOS9zbHFlMVhOanRtRXBxelZQTERZMW1ScUtUQXZjZXgyTEVGZ0hU?=
- =?utf-8?B?ZFhaand6dGljaGhYdFErNGNsTGNqenBIbGRLaktSbjZkZDZPeXFFbXQ4SWpY?=
- =?utf-8?B?Mm5QeGdyZkVrV2RuWEVMRXJuY0dmYlFNcWpCS0xHc2k3ZFFMSjhqVFdqLzNF?=
- =?utf-8?B?bmtwTGJ1ZDl4YWV1dzFCWnVpWEJ5VEQrMmdrcDRRSitvdmdsOUNQbFJ3U0F5?=
- =?utf-8?B?TW9xMklrTExEaitEN2tYUVp6VTZFenJZbjZiOW81NkZMVm5GZEd0RmR6cHFZ?=
- =?utf-8?B?dGJ0LzRmN1JTWDlyVS9uVGtzd1FrV3h6d0psMXd3ZjJlek0wQllMVFVVaDJo?=
- =?utf-8?B?TVV1WnVzVHJDOGt2djR5M1pONHlaaDBLSllFV0VMS0ZxeUJ6aDhKZ0VqNkJJ?=
- =?utf-8?B?OFlBbGJhM0VqZ04yMmppQjYyVWM0c2FjaExuOUtzZkI4NktHL3pGY3NpS3VV?=
- =?utf-8?B?MHpYNjZtMDVuaDdhWkVjb3JKMHUwckxUL2NST3JiVHU3REFLSyt5aUpvYlUr?=
- =?utf-8?B?K3JNKytuZ2d5UHltRHluTTZGd0pYU1NISDZNMzNmMkhaVkNMbS9zU3JFWDcv?=
- =?utf-8?B?aDdwdzlXRU9zekF3MnNTTHJvRjZDVjFXZjd6bmJwem03dmVJeDRIMHV0TG05?=
- =?utf-8?B?eHdTT1ZtU3k0SDhSSjFjc2pFZVBWd1EvcTR1T2xhOFo5SEhucHFDV0dTWC9N?=
- =?utf-8?B?T1JqQlRjWGdUQjUxRkpBTldaTVI0Qkg1Z2NXMTkvdnQrVTl5dXA2UTgrdVBl?=
- =?utf-8?Q?jgFbD0zWhtLUVvz2tRtkQseG4?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: d76c54ed-aaa1-4688-2332-08dd34b755ba
-X-MS-Exchange-CrossTenant-AuthSource: MN0PR12MB6101.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 14 Jan 2025 16:20:17.9911
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: bxRBP/0TAKTdDfba8bJUXXoRhy9lN9NCApZxia5SYyGiXxaydyAX/JCz4kt7XMT4SdQWJMoH2Af0A6PkKKtg2w==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA0PR12MB8350
+Content-Type: text/plain; charset=US-ASCII
 
-On 1/14/2025 09:37, Kurt Borja wrote:
-> Add a `probe` callback to platform_profile_ops, which lets drivers
-> initialize the choices member manually.
+On Tue, 14 Jan 2025, Julien ROBIN wrote:
+
+> The following patch adds support for HP Victus 16-s1000 laptop series,
+> by adding and fixing the following functionalities, which can be
+> accessed through hwmon and platform_profile sysfs:
 > 
-> Signed-off-by: Kurt Borja <kuurtb@gmail.com>
+>  - Functional measured fan speed reading
+>  - Ability to enable and disable maximum fan speed
+>  - Platform profiles full setting ability for CPU and GPU
+> 
+> It sets appropriates CPU and GPU power settings both on AC and battery
+> power sources, for low-power, balanced and performance modes.
+> 
+> It has been thoroughly tested on a 16-s1034nf laptop based on a 8C9C DMI
+> board name, and behavior of the driver on previous boards is left
+> untouched thanks to the separated lists of DMI board names.
+> 
+> Signed-off-by: Julien ROBIN <julien.robin28@free.fr>
 > ---
->   drivers/acpi/platform_profile.c               | 13 +++++++--
->   .../surface/surface_platform_profile.c        | 16 ++++++----
->   drivers/platform/x86/acer-wmi.c               | 24 ++++++++-------
->   drivers/platform/x86/amd/pmf/sps.c            | 15 ++++++----
->   drivers/platform/x86/asus-wmi.c               | 16 ++++++----
->   drivers/platform/x86/dell/alienware-wmi.c     | 24 +++++++++------
->   drivers/platform/x86/dell/dell-pc.c           | 26 ++++++++++-------
->   drivers/platform/x86/hp/hp-wmi.c              | 29 +++++++++++++------
->   drivers/platform/x86/ideapad-laptop.c         | 15 ++++++----
->   .../platform/x86/inspur_platform_profile.c    | 14 ++++++---
->   drivers/platform/x86/thinkpad_acpi.c          | 15 ++++++----
->   include/linux/platform_profile.h              |  1 +
->   12 files changed, 137 insertions(+), 71 deletions(-)
+> Changes since v1:
+> - More clear description of 0xFF special effect when setting power limits
+> - Added structs for clearer naming of power limits and GPU power modes settings
+> - Retrieve and keep current GPU slowdown temp threshold (instead of hard coded)
+> - Removed platform_profile_victus_s_get(), re-using platform_profile_omen_get()
+> - Changed char variable types to u8 where it was more relevant
+> - Moved some comments
+> - Minor typo / alignment corrections
+
+I wrote a few comments to the v1 thread as the relevant discussion was 
+there but they'll be relevant to a few places in this v2.
+
+> ---
+>  drivers/platform/x86/hp/hp-wmi.c | 364 ++++++++++++++++++++++++++++++-
+>  1 file changed, 352 insertions(+), 12 deletions(-)
 > 
-> diff --git a/drivers/acpi/platform_profile.c b/drivers/acpi/platform_profile.c
-> index 440654e21620..34e22b006ccc 100644
-> --- a/drivers/acpi/platform_profile.c
-> +++ b/drivers/acpi/platform_profile.c
-> @@ -466,12 +466,21 @@ int platform_profile_register(struct platform_profile_handler *pprof, void *drvd
->   	int err;
->   
->   	/* Sanity check the profile handler */
-> -	if (!pprof || bitmap_empty(pprof->choices, PLATFORM_PROFILE_LAST) ||
-> -	    !pprof->ops->profile_set || !pprof->ops->profile_get) {
-> +	if (!pprof || !pprof->ops->profile_set || !pprof->ops->profile_get ||
-> +	    !pprof->ops->probe) {
->   		pr_err("platform_profile: handler is invalid\n");
->   		return -EINVAL;
->   	}
->   
-> +	err = pprof->ops->probe(drvdata, pprof->choices);
-> +	if (err < 0)
-
-Any particular reason to specifically look for less than zero?  Did you 
-want to have the probe() return something positive in some circumstances?
-
-If not I think this should be fine:
-
-if (err)
-
-> +		return err;
-> +
-> +	if (bitmap_empty(pprof->choices, PLATFORM_PROFILE_LAST)) {
-> +		pr_err("platform_profile: no available profiles\n");
-
-Doesn't pr_fmt handle the prefix?
-
-> +		return -EINVAL;
-> +	}
-> +
->   	guard(mutex)(&profile_lock);
->   
->   	/* create class interface for individual handler */
-> diff --git a/drivers/platform/surface/surface_platform_profile.c b/drivers/platform/surface/surface_platform_profile.c
-> index 76967bfeeef8..48cfe9cb89c8 100644
-> --- a/drivers/platform/surface/surface_platform_profile.c
-> +++ b/drivers/platform/surface/surface_platform_profile.c
-> @@ -201,7 +201,18 @@ static int ssam_platform_profile_set(struct device *dev,
->   	return tp;
->   }
->   
-> +static int ssam_platform_profile_probe(void *drvdata, unsigned long *choices)
-> +{
-> +	set_bit(PLATFORM_PROFILE_LOW_POWER, choices);
-> +	set_bit(PLATFORM_PROFILE_BALANCED, choices);
-> +	set_bit(PLATFORM_PROFILE_BALANCED_PERFORMANCE, choices);
-> +	set_bit(PLATFORM_PROFILE_PERFORMANCE, choices);
-> +
-> +	return 0;
-> +}
-> +
->   static const struct platform_profile_ops ssam_platform_profile_ops = {
-> +	.probe = ssam_platform_profile_probe,
->   	.profile_get = ssam_platform_profile_get,
->   	.profile_set = ssam_platform_profile_set,
->   };
-> @@ -223,11 +234,6 @@ static int surface_platform_profile_probe(struct ssam_device *sdev)
->   
->   	tpd->has_fan = device_property_read_bool(&sdev->dev, "has_fan");
->   
-> -	set_bit(PLATFORM_PROFILE_LOW_POWER, tpd->handler.choices);
-> -	set_bit(PLATFORM_PROFILE_BALANCED, tpd->handler.choices);
-> -	set_bit(PLATFORM_PROFILE_BALANCED_PERFORMANCE, tpd->handler.choices);
-> -	set_bit(PLATFORM_PROFILE_PERFORMANCE, tpd->handler.choices);
-> -
->   	return platform_profile_register(&tpd->handler, tpd);
->   }
->   
-> diff --git a/drivers/platform/x86/acer-wmi.c b/drivers/platform/x86/acer-wmi.c
-> index 91ae48adf6cf..6953e36dbfde 100644
-> --- a/drivers/platform/x86/acer-wmi.c
-> +++ b/drivers/platform/x86/acer-wmi.c
-> @@ -1916,7 +1916,20 @@ acer_predator_v4_platform_profile_set(struct device *dev,
->   	return 0;
->   }
->   
-> +static int
-> +acer_predator_v4_platform_profile_probe(void *drvdata, unsigned long *choices)
-> +{
-> +	set_bit(PLATFORM_PROFILE_PERFORMANCE, choices);
-> +	set_bit(PLATFORM_PROFILE_BALANCED_PERFORMANCE, choices);
-> +	set_bit(PLATFORM_PROFILE_BALANCED, choices);
-> +	set_bit(PLATFORM_PROFILE_QUIET, choices);
-> +	set_bit(PLATFORM_PROFILE_LOW_POWER, choices);
-> +
-> +	return 0;
-> +}
-> +
->   static const struct platform_profile_ops acer_predator_v4_platform_profile_ops = {
-> +	.probe = acer_predator_v4_platform_profile_probe,
->   	.profile_get = acer_predator_v4_platform_profile_get,
->   	.profile_set = acer_predator_v4_platform_profile_set,
->   };
-> @@ -1931,17 +1944,6 @@ static int acer_platform_profile_setup(struct platform_device *device)
->   		platform_profile_handler.ops =
->   			&acer_predator_v4_platform_profile_ops;
->   
-> -		set_bit(PLATFORM_PROFILE_PERFORMANCE,
-> -			platform_profile_handler.choices);
-> -		set_bit(PLATFORM_PROFILE_BALANCED_PERFORMANCE,
-> -			platform_profile_handler.choices);
-> -		set_bit(PLATFORM_PROFILE_BALANCED,
-> -			platform_profile_handler.choices);
-> -		set_bit(PLATFORM_PROFILE_QUIET,
-> -			platform_profile_handler.choices);
-> -		set_bit(PLATFORM_PROFILE_LOW_POWER,
-> -			platform_profile_handler.choices);
-> -
->   		err = platform_profile_register(&platform_profile_handler, NULL);
->   		if (err)
->   			return err;
-> diff --git a/drivers/platform/x86/amd/pmf/sps.c b/drivers/platform/x86/amd/pmf/sps.c
-> index 6ae82ae86d22..e710405b581f 100644
-> --- a/drivers/platform/x86/amd/pmf/sps.c
-> +++ b/drivers/platform/x86/amd/pmf/sps.c
-> @@ -387,7 +387,17 @@ static int amd_pmf_profile_set(struct device *dev,
->   	return 0;
->   }
->   
-> +static int amd_pmf_profile_probe(void *drvdata, unsigned long *choices)
-> +{
-> +	set_bit(PLATFORM_PROFILE_LOW_POWER, choices);
-> +	set_bit(PLATFORM_PROFILE_BALANCED, choices);
-> +	set_bit(PLATFORM_PROFILE_PERFORMANCE, choices);
-> +
-> +	return 0;
-> +}
-> +
->   static const struct platform_profile_ops amd_pmf_profile_ops = {
-> +	.probe = amd_pmf_profile_probe,
->   	.profile_get = amd_pmf_profile_get,
->   	.profile_set = amd_pmf_profile_set,
->   };
-> @@ -414,11 +424,6 @@ int amd_pmf_init_sps(struct amd_pmf_dev *dev)
->   	dev->pprof.dev = dev->dev;
->   	dev->pprof.ops = &amd_pmf_profile_ops;
->   
-> -	/* Setup supported modes */
-> -	set_bit(PLATFORM_PROFILE_LOW_POWER, dev->pprof.choices);
-> -	set_bit(PLATFORM_PROFILE_BALANCED, dev->pprof.choices);
-> -	set_bit(PLATFORM_PROFILE_PERFORMANCE, dev->pprof.choices);
-> -
->   	/* Create platform_profile structure and register */
->   	err = platform_profile_register(&dev->pprof, dev);
->   	if (err)
-> diff --git a/drivers/platform/x86/asus-wmi.c b/drivers/platform/x86/asus-wmi.c
-> index d88860dd028b..3d77f7454953 100644
-> --- a/drivers/platform/x86/asus-wmi.c
-> +++ b/drivers/platform/x86/asus-wmi.c
-> @@ -3852,7 +3852,17 @@ static int asus_wmi_platform_profile_set(struct device *dev,
->   	return throttle_thermal_policy_write(asus);
->   }
->   
-> +static int asus_wmi_platform_profile_probe(void *drvdata, unsigned long *choices)
-> +{
-> +	set_bit(PLATFORM_PROFILE_QUIET, choices);
-> +	set_bit(PLATFORM_PROFILE_BALANCED, choices);
-> +	set_bit(PLATFORM_PROFILE_PERFORMANCE, choices);
-> +
-> +	return 0;
-> +}
-> +
->   static const struct platform_profile_ops asus_wmi_platform_profile_ops = {
-> +	.probe = asus_wmi_platform_profile_probe,
->   	.profile_get = asus_wmi_platform_profile_get,
->   	.profile_set = asus_wmi_platform_profile_set,
->   };
-> @@ -3885,12 +3895,6 @@ static int platform_profile_setup(struct asus_wmi *asus)
->   	asus->platform_profile_handler.dev = dev;
->   	asus->platform_profile_handler.ops = &asus_wmi_platform_profile_ops;
->   
-> -	set_bit(PLATFORM_PROFILE_QUIET, asus->platform_profile_handler.choices);
-> -	set_bit(PLATFORM_PROFILE_BALANCED,
-> -		asus->platform_profile_handler.choices);
-> -	set_bit(PLATFORM_PROFILE_PERFORMANCE,
-> -		asus->platform_profile_handler.choices);
-> -
->   	err = platform_profile_register(&asus->platform_profile_handler, asus);
->   	if (err == -EEXIST) {
->   		pr_warn("%s, a platform_profile handler is already registered\n", __func__);
-> diff --git a/drivers/platform/x86/dell/alienware-wmi.c b/drivers/platform/x86/dell/alienware-wmi.c
-> index f7a854d40575..0146d2f93be6 100644
-> --- a/drivers/platform/x86/dell/alienware-wmi.c
-> +++ b/drivers/platform/x86/dell/alienware-wmi.c
-> @@ -1078,12 +1078,7 @@ static int thermal_profile_set(struct device *dev,
->   	return wmax_thermal_control(supported_thermal_profiles[profile]);
->   }
->   
-> -static const struct platform_profile_ops awcc_platform_profile_ops = {
-> -	.profile_get = thermal_profile_get,
-> -	.profile_set = thermal_profile_set,
-> -};
-> -
-> -static int create_thermal_profile(struct platform_device *platform_device)
-> +static int thermal_profile_probe(void *drvdata, unsigned long *choices)
->   {
->   	enum platform_profile_option profile;
->   	enum wmax_thermal_mode mode;
-> @@ -1116,19 +1111,30 @@ static int create_thermal_profile(struct platform_device *platform_device)
->   		profile = wmax_mode_to_platform_profile[mode];
->   		supported_thermal_profiles[profile] = out_data;
->   
-> -		set_bit(profile, pp_handler.choices);
-> +		set_bit(profile, choices);
->   	}
->   
-> -	if (bitmap_empty(pp_handler.choices, PLATFORM_PROFILE_LAST))
-> +	if (bitmap_empty(choices, PLATFORM_PROFILE_LAST))
->   		return -ENODEV;
->   
->   	if (quirks->gmode) {
->   		supported_thermal_profiles[PLATFORM_PROFILE_PERFORMANCE] =
->   			WMAX_THERMAL_MODE_GMODE;
->   
-> -		set_bit(PLATFORM_PROFILE_PERFORMANCE, pp_handler.choices);
-> +		set_bit(PLATFORM_PROFILE_PERFORMANCE, choices);
->   	}
->   
-> +	return 0;
-> +}
-> +
-> +static const struct platform_profile_ops awcc_platform_profile_ops = {
-> +	.probe = thermal_profile_probe,
-> +	.profile_get = thermal_profile_get,
-> +	.profile_set = thermal_profile_set,
-> +};
-> +
-> +static int create_thermal_profile(struct platform_device *platform_device)
-> +{
->   	pp_handler.name = "alienware-wmi";
->   	pp_handler.dev = &platform_device->dev;
->   	pp_handler.ops = &awcc_platform_profile_ops;
-> diff --git a/drivers/platform/x86/dell/dell-pc.c b/drivers/platform/x86/dell/dell-pc.c
-> index 9010a231f209..32b3be0723f8 100644
-> --- a/drivers/platform/x86/dell/dell-pc.c
-> +++ b/drivers/platform/x86/dell/dell-pc.c
-> @@ -24,6 +24,7 @@
->   #include "dell-smbios.h"
->   
->   static struct platform_device *platform_device;
-> +static int supported_modes;
->   
->   static const struct dmi_system_id dell_device_table[] __initconst = {
->   	{
-> @@ -231,7 +232,22 @@ static int thermal_platform_profile_get(struct device *dev,
->   	return 0;
->   }
->   
-> +static int thermal_platform_profile_probe(void *drvdata, unsigned long *choices)
-> +{
-> +	if (supported_modes & DELL_QUIET)
-> +		set_bit(PLATFORM_PROFILE_QUIET, choices);
-> +	if (supported_modes & DELL_COOL_BOTTOM)
-> +		set_bit(PLATFORM_PROFILE_COOL, choices);
-> +	if (supported_modes & DELL_BALANCED)
-> +		set_bit(PLATFORM_PROFILE_BALANCED, choices);
-> +	if (supported_modes & DELL_PERFORMANCE)
-> +		set_bit(PLATFORM_PROFILE_PERFORMANCE, choices);
-> +
-> +	return 0;
-> +}
-> +
->   static const struct platform_profile_ops dell_pc_platform_profile_ops = {
-> +	.probe = thermal_platform_profile_probe,
->   	.profile_get = thermal_platform_profile_get,
->   	.profile_set = thermal_platform_profile_set,
->   };
-> @@ -239,7 +255,6 @@ static const struct platform_profile_ops dell_pc_platform_profile_ops = {
->   static int thermal_init(void)
->   {
->   	int ret;
-> -	int supported_modes;
->   
->   	/* If thermal commands are not supported, exit without error */
->   	if (!dell_smbios_class_is_supported(CLASS_INFO))
-> @@ -265,15 +280,6 @@ static int thermal_init(void)
->   	thermal_handler->dev = &platform_device->dev;
->   	thermal_handler->ops = &dell_pc_platform_profile_ops;
->   
-> -	if (supported_modes & DELL_QUIET)
-> -		set_bit(PLATFORM_PROFILE_QUIET, thermal_handler->choices);
-> -	if (supported_modes & DELL_COOL_BOTTOM)
-> -		set_bit(PLATFORM_PROFILE_COOL, thermal_handler->choices);
-> -	if (supported_modes & DELL_BALANCED)
-> -		set_bit(PLATFORM_PROFILE_BALANCED, thermal_handler->choices);
-> -	if (supported_modes & DELL_PERFORMANCE)
-> -		set_bit(PLATFORM_PROFILE_PERFORMANCE, thermal_handler->choices);
-> -
->   	/* Clean up if failed */
->   	ret = platform_profile_register(thermal_handler, NULL);
->   	if (ret)
 > diff --git a/drivers/platform/x86/hp/hp-wmi.c b/drivers/platform/x86/hp/hp-wmi.c
-> index 60328b35be74..75bcd8460e7c 100644
+> index 20c55bab3b8c..af7a3d942d5b 100644
 > --- a/drivers/platform/x86/hp/hp-wmi.c
 > +++ b/drivers/platform/x86/hp/hp-wmi.c
-> @@ -1488,6 +1488,23 @@ static int platform_profile_victus_set(struct device *dev,
->   	return 0;
->   }
->   
-> +static int hp_wmi_platform_profile_probe(void *drvdata, unsigned long *choices)
+> @@ -83,11 +83,16 @@ static const char * const omen_timed_thermal_profile_boards[] = {
+>  	"8BAD", "8A42", "8A15"
+>  };
+>  
+> -/* DMI Board names of Victus laptops */
+> +/* DMI Board names of Victus 16-d1xxx laptops */
+>  static const char * const victus_thermal_profile_boards[] = {
+>  	"8A25"
+>  };
+>  
+> +/* DMI Board names of Victus 16-s1000 laptops */
+> +static const char * const victus_s_thermal_profile_boards[] = {
+> +	"8C9C"
+> +};
+> +
+>  enum hp_wmi_radio {
+>  	HPWMI_WIFI	= 0x0,
+>  	HPWMI_BLUETOOTH	= 0x1,
+> @@ -147,12 +152,32 @@ enum hp_wmi_commandtype {
+>  	HPWMI_THERMAL_PROFILE_QUERY	= 0x4c,
+>  };
+>  
+> +struct victus_power_limits {
+> +	u8 pl1;
+> +	u8 pl2;
+> +	u8 pl4;
+> +	u8 cpu_gpu_concurrent_limit;
+> +};
+> +
+> +struct victus_gpu_power_modes {
+> +	u8 ctgp_enable;
+> +	u8 ppab_enable;
+> +	u8 dstate;
+> +	u8 gpu_slowdown_temp;
+> +};
+> +
+>  enum hp_wmi_gm_commandtype {
+> -	HPWMI_FAN_SPEED_GET_QUERY = 0x11,
+> -	HPWMI_SET_PERFORMANCE_MODE = 0x1A,
+> -	HPWMI_FAN_SPEED_MAX_GET_QUERY = 0x26,
+> -	HPWMI_FAN_SPEED_MAX_SET_QUERY = 0x27,
+> -	HPWMI_GET_SYSTEM_DESIGN_DATA = 0x28,
+> +	HPWMI_FAN_SPEED_GET_QUERY		= 0x11,
+> +	HPWMI_SET_PERFORMANCE_MODE		= 0x1A,
+> +	HPWMI_FAN_SPEED_MAX_GET_QUERY		= 0x26,
+> +	HPWMI_FAN_SPEED_MAX_SET_QUERY		= 0x27,
+> +	HPWMI_GET_SYSTEM_DESIGN_DATA		= 0x28,
+> +	HPWMI_FAN_COUNT_GET_QUERY		= 0x10,
+> +	HPWMI_GET_GPU_THERMAL_MODES_QUERY	= 0x21,
+> +	HPWMI_SET_GPU_THERMAL_MODES_QUERY	= 0x22,
+> +	HPWMI_SET_POWER_LIMITS_QUERY		= 0x29,
+> +	HPWMI_VICTUS_S_FAN_SPEED_GET_QUERY	= 0x2D,
+> +	HPWMI_FAN_SPEED_SET_QUERY		= 0x2E,
+>  };
+>  
+>  enum hp_wmi_command {
+> @@ -211,6 +236,11 @@ enum hp_thermal_profile_victus {
+>  	HP_VICTUS_THERMAL_PROFILE_QUIET			= 0x03,
+>  };
+>  
+> +enum hp_thermal_profile_victus_s {
+> +	HP_VICTUS_S_THERMAL_PROFILE_DEFAULT		= 0x00,
+> +	HP_VICTUS_S_THERMAL_PROFILE_PERFORMANCE		= 0x01,
+> +};
+> +
+>  enum hp_thermal_profile {
+>  	HP_THERMAL_PROFILE_PERFORMANCE	= 0x00,
+>  	HP_THERMAL_PROFILE_DEFAULT		= 0x01,
+> @@ -411,6 +441,26 @@ static int hp_wmi_perform_query(int query, enum hp_wmi_command command,
+>  	return ret;
+>  }
+>  
+> +/*
+> + * Calling this hp_wmi_get_fan_count_userdefine_trigger function also enables
+> + * and/or maintains the laptop in user defined thermal and fan states, instead
+> + * of using a fallback state. After a 120 seconds timeout however, the laptop
+> + * goes back to its fallback state.
+> + */
+> +static int hp_wmi_get_fan_count_userdefine_trigger(void)
 > +{
-> +	if (is_omen_thermal_profile()) {
-> +		set_bit(PLATFORM_PROFILE_COOL, choices);
-> +	} else if (is_victus_thermal_profile()) {
-> +		set_bit(PLATFORM_PROFILE_QUIET, choices);
-> +	} else {
-> +		set_bit(PLATFORM_PROFILE_QUIET, choices);
-> +		set_bit(PLATFORM_PROFILE_COOL, choices);
+> +	u8 fan_data[4] = { 0 };
+
+{} is enough to initialize the entire array.
+
+> +
+> +	int ret = hp_wmi_perform_query(HPWMI_FAN_COUNT_GET_QUERY, HPWMI_GM,
+> +				       &fan_data, sizeof(u8),
+> +				       sizeof(fan_data));
+> +
+> +	if (ret != 0)
+> +		return -EINVAL;
+> +
+> +	return fan_data[0]; /* Others bytes aren't providing fan count */
+> +}
+> +
+>  static int hp_wmi_get_fan_speed(int fan)
+>  {
+>  	u8 fsh, fsl;
+> @@ -429,6 +479,23 @@ static int hp_wmi_get_fan_speed(int fan)
+>  	return (fsh << 8) | fsl;
+>  }
+>  
+> +static int hp_wmi_get_fan_speed_victus_s(int fan)
+> +{
+> +	u8 fan_data[128] = { 0 };
+
+Ditto.
+
+> +
+> +	int ret = hp_wmi_perform_query(HPWMI_VICTUS_S_FAN_SPEED_GET_QUERY,
+> +				       HPWMI_GM, &fan_data, sizeof(u8),
+> +				       sizeof(fan_data));
+> +
+> +	if (ret != 0)
+> +		return -EINVAL;
+> +
+> +	if (fan >= 0 && fan < sizeof(fan_data))
+> +		return fan_data[fan] * 100;
+> +	else
+> +		return -EINVAL;
+> +}
+> +
+>  static int hp_wmi_read_int(int query)
+>  {
+>  	int val = 0, ret;
+> @@ -557,6 +624,29 @@ static int hp_wmi_fan_speed_max_set(int enabled)
+>  	return enabled;
+>  }
+>  
+> +static int hp_wmi_fan_speed_reset(void)
+> +{
+> +	int ret;
+> +	u8 fan_speed[2] = { 0 }; /* Restores automatic speed */
+> +
+> +	ret = hp_wmi_perform_query(HPWMI_FAN_SPEED_SET_QUERY, HPWMI_GM,
+> +				   &fan_speed, sizeof(fan_speed), 0);
+> +
+> +	return ret;
+> +}
+> +
+> +static int hp_wmi_fan_speed_max_reset(void)
+> +{
+> +	int ret = hp_wmi_fan_speed_max_set(0);
+> +
+> +	if (ret)
+
+To keep the call and its error handling together, please use this form:
+
+	int ret;
+
+	ret = hp_wmi_fan_speed_max_set(0);
+	if (ret)
+
+> +		return ret;
+> +
+> +	/* Disabling max fan speed on Victus s1xxx laptops needs a 2nd step: */
+> +	ret = hp_wmi_fan_speed_reset();
+> +	return ret;
+> +}
+
+
+-- 
+ i.
+
+
+
+> +
+>  static int hp_wmi_fan_speed_max_get(void)
+>  {
+>  	int val = 0, ret;
+> @@ -1472,6 +1562,162 @@ static int platform_profile_victus_set_ec(enum platform_profile_option profile)
+>  	return 0;
+>  }
+>  
+> +static bool is_victus_s_thermal_profile(void)
+> +{
+> +	const char *board_name = dmi_get_system_info(DMI_BOARD_NAME);
+> +
+> +	if (!board_name)
+> +		return false;
+> +
+> +	return match_string(victus_s_thermal_profile_boards,
+> +			    ARRAY_SIZE(victus_s_thermal_profile_boards),
+> +			    board_name) >= 0;
+> +}
+> +
+> +static int victus_s_gpu_thermal_profile_get(bool *ctgp_enable,
+> +					    bool *ppab_enable,
+> +					    u8 *dstate,
+> +					    u8 *gpu_slowdown_temp)
+> +{
+> +	int ret;
+> +	struct victus_gpu_power_modes gpu_power_modes;
+> +
+> +	ret = hp_wmi_perform_query(HPWMI_GET_GPU_THERMAL_MODES_QUERY, HPWMI_GM,
+> +				   &gpu_power_modes, sizeof(gpu_power_modes),
+> +				   sizeof(gpu_power_modes));
+> +
+> +	if (ret == 0) {
+> +		*ctgp_enable = gpu_power_modes.ctgp_enable ? true : false;
+> +		*ppab_enable = gpu_power_modes.ppab_enable ? true : false;
+> +		*dstate = gpu_power_modes.dstate;
+> +		*gpu_slowdown_temp = gpu_power_modes.gpu_slowdown_temp;
 > +	}
 > +
-> +	set_bit(PLATFORM_PROFILE_BALANCED, choices);
-> +	set_bit(PLATFORM_PROFILE_PERFORMANCE, choices);
-> +
-> +	return 0;
+> +	return ret;
 > +}
 > +
->   static int omen_powersource_event(struct notifier_block *nb,
->   				  unsigned long value,
->   				  void *data)
-> @@ -1566,16 +1583,19 @@ static inline void omen_unregister_powersource_event_handler(void)
->   }
->   
->   static const struct platform_profile_ops platform_profile_omen_ops = {
-> +	.probe = hp_wmi_platform_profile_probe,
->   	.profile_get = platform_profile_omen_get,
->   	.profile_set = platform_profile_omen_set,
->   };
->   
->   static const struct platform_profile_ops platform_profile_victus_ops = {
-> +	.probe = hp_wmi_platform_profile_probe,
->   	.profile_get = platform_profile_victus_get,
->   	.profile_set = platform_profile_victus_set,
->   };
->   
->   static const struct platform_profile_ops hp_wmi_platform_profile_ops = {
-> +	.probe = hp_wmi_platform_profile_probe,
->   	.profile_get = hp_wmi_platform_profile_get,
->   	.profile_set = hp_wmi_platform_profile_set,
->   };
-> @@ -1598,8 +1618,6 @@ static int thermal_profile_setup(struct platform_device *device)
->   			return err;
->   
->   		platform_profile_handler.ops = &platform_profile_omen_ops;
-> -
-> -		set_bit(PLATFORM_PROFILE_COOL, platform_profile_handler.choices);
->   	} else if (is_victus_thermal_profile()) {
->   		err = platform_profile_victus_get_ec(&active_platform_profile);
->   		if (err < 0)
-> @@ -1614,8 +1632,6 @@ static int thermal_profile_setup(struct platform_device *device)
->   			return err;
->   
->   		platform_profile_handler.ops = &platform_profile_victus_ops;
-> -
-> -		set_bit(PLATFORM_PROFILE_QUIET, platform_profile_handler.choices);
->   	} else {
->   		tp = thermal_profile_get();
->   
-> @@ -1631,15 +1647,10 @@ static int thermal_profile_setup(struct platform_device *device)
->   			return err;
->   
->   		platform_profile_handler.ops = &hp_wmi_platform_profile_ops;
-> -
-> -		set_bit(PLATFORM_PROFILE_QUIET, platform_profile_handler.choices);
-> -		set_bit(PLATFORM_PROFILE_COOL, platform_profile_handler.choices);
->   	}
->   
->   	platform_profile_handler.name = "hp-wmi";
->   	platform_profile_handler.dev = &device->dev;
-> -	set_bit(PLATFORM_PROFILE_BALANCED, platform_profile_handler.choices);
-> -	set_bit(PLATFORM_PROFILE_PERFORMANCE, platform_profile_handler.choices);
->   
->   	err = platform_profile_register(&platform_profile_handler, NULL);
->   	if (err)
-> diff --git a/drivers/platform/x86/ideapad-laptop.c b/drivers/platform/x86/ideapad-laptop.c
-> index 96e99513b0b5..050919a28d2b 100644
-> --- a/drivers/platform/x86/ideapad-laptop.c
-> +++ b/drivers/platform/x86/ideapad-laptop.c
-> @@ -1023,6 +1023,15 @@ static int dytc_profile_set(struct device *dev,
->   	return -EINTR;
->   }
->   
-> +static int dytc_profile_probe(void *drvdata, unsigned long *choices)
+> +static int victus_s_gpu_thermal_profile_set(bool ctgp_enable,
+> +					    bool ppab_enable,
+> +					    u8 dstate)
 > +{
-> +	set_bit(PLATFORM_PROFILE_LOW_POWER, choices);
-> +	set_bit(PLATFORM_PROFILE_BALANCED, choices);
-> +	set_bit(PLATFORM_PROFILE_PERFORMANCE, choices);
+> +	struct victus_gpu_power_modes gpu_power_modes;
+> +	int ret;
 > +
-> +	return 0;
+> +	bool current_ctgp_state, current_ppab_state;
+> +	u8 current_dstate, current_gpu_slowdown_temp;
+> +
+> +	/* Retrieving GPU slowdown temperature, in order to keep it unchanged */
+> +	ret = victus_s_gpu_thermal_profile_get(&current_ctgp_state,
+> +					       &current_ppab_state,
+> +					       &current_dstate,
+> +					       &current_gpu_slowdown_temp);
+> +
+> +	if (ret < 0) {
+> +		pr_warn("GPU modes not updated, unable to get slowdown temp\n");
+> +		return ret;
+> +	}
+> +
+> +	gpu_power_modes.ctgp_enable = ctgp_enable ? 0x01 : 0x00;
+> +	gpu_power_modes.ppab_enable = ppab_enable ? 0x01 : 0x00;
+> +	gpu_power_modes.dstate = dstate;
+> +	gpu_power_modes.gpu_slowdown_temp = current_gpu_slowdown_temp;
+> +
+> +
+> +	ret = hp_wmi_perform_query(HPWMI_SET_GPU_THERMAL_MODES_QUERY, HPWMI_GM,
+> +				   &gpu_power_modes, sizeof(gpu_power_modes), 0);
+> +
+> +	return ret;
 > +}
 > +
->   static void dytc_profile_refresh(struct ideapad_private *priv)
->   {
->   	enum platform_profile_option profile;
-> @@ -1064,6 +1073,7 @@ static const struct dmi_system_id ideapad_dytc_v4_allow_table[] = {
->   };
->   
->   static const struct platform_profile_ops dytc_profile_ops = {
-> +	.probe = dytc_profile_probe,
->   	.profile_get = dytc_profile_get,
->   	.profile_set = dytc_profile_set,
->   };
-> @@ -1112,11 +1122,6 @@ static int ideapad_dytc_profile_init(struct ideapad_private *priv)
->   	priv->dytc->priv = priv;
->   	priv->dytc->pprof.ops = &dytc_profile_ops;
->   
-> -	/* Setup supported modes */
-> -	set_bit(PLATFORM_PROFILE_LOW_POWER, priv->dytc->pprof.choices);
-> -	set_bit(PLATFORM_PROFILE_BALANCED, priv->dytc->pprof.choices);
-> -	set_bit(PLATFORM_PROFILE_PERFORMANCE, priv->dytc->pprof.choices);
-> -
->   	/* Create platform_profile structure and register */
->   	err = platform_profile_register(&priv->dytc->pprof, &priv->dytc);
->   	if (err)
-> diff --git a/drivers/platform/x86/inspur_platform_profile.c b/drivers/platform/x86/inspur_platform_profile.c
-> index d0a8e4eebffa..06df3aae9a56 100644
-> --- a/drivers/platform/x86/inspur_platform_profile.c
-> +++ b/drivers/platform/x86/inspur_platform_profile.c
-> @@ -164,7 +164,17 @@ static int inspur_platform_profile_get(struct device *dev,
->   	return 0;
->   }
->   
-> +static int inspur_platform_profile_probe(void *drvdata, unsigned long *choices)
+> +/* Note: providing 0x00 as PL1 and PL2 is restoring default values */
+> +static int victus_s_set_cpu_pl1_pl2(u8 pl1, u8 pl2)
 > +{
-> +	set_bit(PLATFORM_PROFILE_LOW_POWER, choices);
-> +	set_bit(PLATFORM_PROFILE_BALANCED, choices);
-> +	set_bit(PLATFORM_PROFILE_PERFORMANCE, choices);
+> +	int ret;
+> +	struct victus_power_limits power_limits;
 > +
-> +	return 0;
+> +	power_limits.pl1 = pl1;
+> +	power_limits.pl2 = pl2;
+> +	power_limits.pl4 = 0xFF; /* Keep current value */
+> +	power_limits.cpu_gpu_concurrent_limit = 0xFF; /* Keep current value */
+> +
+> +	/* Here, the 0xFF value has a special "ignore / don't change" meaning */
+> +	if (pl1 == 0xFF || pl2 == 0xFF)
+> +		return -EINVAL;
+> +
+> +	/* PL2 is not supposed to be lower than PL1 */
+> +	if (pl2 < pl1)
+> +		return -EINVAL;
+> +
+> +	ret = hp_wmi_perform_query(HPWMI_SET_POWER_LIMITS_QUERY, HPWMI_GM,
+> +				   &power_limits, sizeof(power_limits), 0);
+> +
+> +	return ret;
 > +}
 > +
->   static const struct platform_profile_ops inspur_platform_profile_ops = {
-> +	.probe = inspur_platform_profile_probe,
->   	.profile_get = inspur_platform_profile_get,
->   	.profile_set = inspur_platform_profile_set,
->   };
-> @@ -184,10 +194,6 @@ static int inspur_wmi_probe(struct wmi_device *wdev, const void *context)
->   	priv->handler.dev = &wdev->dev;
->   	priv->handler.ops = &inspur_platform_profile_ops;
->   
-> -	set_bit(PLATFORM_PROFILE_LOW_POWER, priv->handler.choices);
-> -	set_bit(PLATFORM_PROFILE_BALANCED, priv->handler.choices);
-> -	set_bit(PLATFORM_PROFILE_PERFORMANCE, priv->handler.choices);
-> -
->   	return platform_profile_register(&priv->handler, priv);
->   }
->   
-> diff --git a/drivers/platform/x86/thinkpad_acpi.c b/drivers/platform/x86/thinkpad_acpi.c
-> index 9978fd36a3d1..5c250867678f 100644
-> --- a/drivers/platform/x86/thinkpad_acpi.c
-> +++ b/drivers/platform/x86/thinkpad_acpi.c
-> @@ -10538,7 +10538,17 @@ static int dytc_profile_set(struct device *dev,
->   	return err;
->   }
->   
-> +static int dytc_profile_probe(void *drvdata, unsigned long *choices)
+> +static int platform_profile_victus_s_set_ec(enum platform_profile_option profile)
 > +{
-> +	set_bit(PLATFORM_PROFILE_LOW_POWER, choices);
-> +	set_bit(PLATFORM_PROFILE_BALANCED, choices);
-> +	set_bit(PLATFORM_PROFILE_PERFORMANCE, choices);
+> +	int err, tp;
+> +	bool gpu_ctgp_enable, gpu_ppab_enable;
+> +	u8 gpu_dstate; /* Test shows 1 = 100%, 2 = 50%, 3 = 25%, 4 = 12.5% */
+> +
+> +	switch (profile) {
+> +	case PLATFORM_PROFILE_PERFORMANCE:
+> +		tp = HP_VICTUS_S_THERMAL_PROFILE_PERFORMANCE;
+> +		gpu_ctgp_enable = true;
+> +		gpu_ppab_enable = true;
+> +		gpu_dstate = 1;
+> +		break;
+> +	case PLATFORM_PROFILE_BALANCED:
+> +		tp = HP_VICTUS_S_THERMAL_PROFILE_DEFAULT;
+> +		gpu_ctgp_enable = false;
+> +		gpu_ppab_enable = true;
+> +		gpu_dstate = 1;
+> +		break;
+> +	case PLATFORM_PROFILE_LOW_POWER:
+> +		tp = HP_VICTUS_S_THERMAL_PROFILE_DEFAULT;
+> +		gpu_ctgp_enable = false;
+> +		gpu_ppab_enable = false;
+> +		gpu_dstate = 1;
+> +		break;
+> +	default:
+> +		return -EOPNOTSUPP;
+> +	}
+> +
+> +	hp_wmi_get_fan_count_userdefine_trigger();
+> +
+> +	err = omen_thermal_profile_set(tp);
+> +	if (err < 0) {
+> +		pr_err("Failed to set platform profile %d: %d\n", profile, err);
+> +		return err;
+> +	}
+> +
+> +	err = victus_s_gpu_thermal_profile_set(gpu_ctgp_enable,
+> +					       gpu_ppab_enable,
+> +					       gpu_dstate);
+> +	if (err < 0) {
+> +		pr_err("Failed to set GPU profile %d: %d\n", profile, err);
+> +		return err;
+> +	}
 > +
 > +	return 0;
 > +}
 > +
->   static const struct platform_profile_ops dytc_profile_ops = {
-> +	.probe = dytc_profile_probe,
->   	.profile_get = dytc_profile_get,
->   	.profile_set = dytc_profile_set,
->   };
-> @@ -10584,11 +10594,6 @@ static int tpacpi_dytc_profile_init(struct ibm_init_struct *iibm)
->   {
->   	int err, output;
->   
-> -	/* Setup supported modes */
-> -	set_bit(PLATFORM_PROFILE_LOW_POWER, dytc_profile.choices);
-> -	set_bit(PLATFORM_PROFILE_BALANCED, dytc_profile.choices);
-> -	set_bit(PLATFORM_PROFILE_PERFORMANCE, dytc_profile.choices);
+> +static int platform_profile_victus_s_set(struct platform_profile_handler *pprof,
+> +					 enum platform_profile_option profile)
+> +{
+> +	int err;
+> +
+> +	guard(mutex)(&active_platform_profile_lock);
+> +
+> +	err = platform_profile_victus_s_set_ec(profile);
+> +	if (err < 0)
+> +		return err;
+> +
+> +	active_platform_profile = profile;
+> +
+> +	return 0;
+> +}
+> +
+>  static int platform_profile_victus_set(struct platform_profile_handler *pprof,
+>  				       enum platform_profile_option profile)
+>  {
+> @@ -1545,6 +1791,38 @@ static int omen_powersource_event(struct notifier_block *nb,
+>  	return NOTIFY_OK;
+>  }
+>  
+> +static int victus_s_powersource_event(struct notifier_block *nb,
+> +				      unsigned long value,
+> +				      void *data)
+> +{
+> +	struct acpi_bus_event *event_entry = data;
+> +	int err;
+> +
+> +	if (strcmp(event_entry->device_class, ACPI_AC_CLASS) != 0)
+> +		return NOTIFY_DONE;
+> +
+> +	pr_debug("Received power source device event\n");
+> +
+> +	/*
+> +	 * Switching to battery power source while Performance mode is active
+> +	 * needs manual triggering of CPU power limits. Same goes when switching
+> +	 * to AC power source while Performance mode is active. Other modes
+> +	 * however are automatically behaving without any manual action.
+> +	 * Seen on HP 16-s1034nf (board 8C9C) with F.11 and F.13 BIOS versions.
+> +	 */
+> +
+> +	if (active_platform_profile == PLATFORM_PROFILE_PERFORMANCE) {
+> +		pr_debug("Triggering CPU PL1/PL2 actualization\n");
+> +		err = victus_s_set_cpu_pl1_pl2(0, 0);
+> +		if (err)
+> +			pr_warn("Failed to actualize power limits: %d\n", err);
+> +
+> +		return NOTIFY_DONE;
+> +	}
+> +
+> +	return NOTIFY_OK;
+> +}
+> +
+>  static int omen_register_powersource_event_handler(void)
+>  {
+>  	int err;
+> @@ -1560,11 +1838,31 @@ static int omen_register_powersource_event_handler(void)
+>  	return 0;
+>  }
+>  
+> +static int victus_s_register_powersource_event_handler(void)
+> +{
+> +	int err;
+> +
+> +	platform_power_source_nb.notifier_call = victus_s_powersource_event;
+> +	err = register_acpi_notifier(&platform_power_source_nb);
+> +
+> +	if (err < 0) {
+> +		pr_warn("Failed to install ACPI power source notify handler\n");
+> +		return err;
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+>  static inline void omen_unregister_powersource_event_handler(void)
+>  {
+>  	unregister_acpi_notifier(&platform_power_source_nb);
+>  }
+>  
+> +static inline void victus_s_unregister_powersource_event_handler(void)
+> +{
+> +	unregister_acpi_notifier(&platform_power_source_nb);
+> +}
+> +
+>  static int thermal_profile_setup(void)
+>  {
+>  	int err, tp;
+> @@ -1603,6 +1901,22 @@ static int thermal_profile_setup(void)
+>  		platform_profile_handler.profile_set = platform_profile_victus_set;
+>  
+>  		set_bit(PLATFORM_PROFILE_QUIET, platform_profile_handler.choices);
+> +	} else if (is_victus_s_thermal_profile()) {
+> +		/*
+> +		 * Being unable to retrieve laptop's current thermal profile,
+> +		 * during this setup, we set it to Balanced by default.
+> +		 */
+> +		active_platform_profile = PLATFORM_PROFILE_BALANCED;
+> +
+> +		err = platform_profile_victus_s_set_ec(active_platform_profile);
+> +		if (err < 0)
+> +			return err;
+> +
+> +		platform_profile_handler.profile_get = platform_profile_omen_get;
+> +		platform_profile_handler.profile_set = platform_profile_victus_s_set;
+> +
+> +		/* Adding an equivalent to HP Omen software ECO mode: */
+> +		set_bit(PLATFORM_PROFILE_LOW_POWER, platform_profile_handler.choices);
+>  	} else {
+>  		tp = thermal_profile_get();
+>  
+> @@ -1628,9 +1942,14 @@ static int thermal_profile_setup(void)
+>  	set_bit(PLATFORM_PROFILE_PERFORMANCE, platform_profile_handler.choices);
+>  
+>  	err = platform_profile_register(&platform_profile_handler);
+> -	if (err)
+> +	if (err == -EEXIST) {
+> +		pr_warn("A platform profile handler is already registered\n");
+>  		return err;
 > -
->   	err = dytc_command(DYTC_CMD_QUERY, &output);
->   	if (err)
->   		return err;
-> diff --git a/include/linux/platform_profile.h b/include/linux/platform_profile.h
-> index 6013c05d7b86..5ad1ab7b75e4 100644
-> --- a/include/linux/platform_profile.h
-> +++ b/include/linux/platform_profile.h
-> @@ -31,6 +31,7 @@ enum platform_profile_option {
->   struct platform_profile_handler;
->   
->   struct platform_profile_ops {
-> +	int (*probe)(void *drvdata, unsigned long *choices);
->   	int (*profile_get)(struct device *dev, enum platform_profile_option *profile);
->   	int (*profile_set)(struct device *dev, enum platform_profile_option profile);
->   };
+> +	} else if (err) {
+> +		pr_err("Platform profile handler registration fail: %d\n", err);
+> +		return err;
+> +	}
+> +	pr_info("Registered as platform profile handler\n");
+>  	platform_profile_support = true;
+>  
+>  	return 0;
+> @@ -1759,8 +2078,13 @@ static umode_t hp_wmi_hwmon_is_visible(const void *data,
+>  	case hwmon_pwm:
+>  		return 0644;
+>  	case hwmon_fan:
+> -		if (hp_wmi_get_fan_speed(channel) >= 0)
+> -			return 0444;
+> +		if (is_victus_s_thermal_profile()) {
+> +			if (hp_wmi_get_fan_speed_victus_s(channel) >= 0)
+> +				return 0444;
+> +		} else {
+> +			if (hp_wmi_get_fan_speed(channel) >= 0)
+> +				return 0444;
+> +		}
+>  		break;
+>  	default:
+>  		return 0;
+> @@ -1776,7 +2100,10 @@ static int hp_wmi_hwmon_read(struct device *dev, enum hwmon_sensor_types type,
+>  
+>  	switch (type) {
+>  	case hwmon_fan:
+> -		ret = hp_wmi_get_fan_speed(channel);
+> +		if (is_victus_s_thermal_profile())
+> +			ret = hp_wmi_get_fan_speed_victus_s(channel);
+> +		else
+> +			ret = hp_wmi_get_fan_speed(channel);
+>  
+>  		if (ret < 0)
+>  			return ret;
+> @@ -1810,11 +2137,17 @@ static int hp_wmi_hwmon_write(struct device *dev, enum hwmon_sensor_types type,
+>  	case hwmon_pwm:
+>  		switch (val) {
+>  		case 0:
+> +			if (is_victus_s_thermal_profile())
+> +				hp_wmi_get_fan_count_userdefine_trigger();
+>  			/* 0 is no fan speed control (max), which is 1 for us */
+>  			return hp_wmi_fan_speed_max_set(1);
+>  		case 2:
+>  			/* 2 is automatic speed control, which is 0 for us */
+> -			return hp_wmi_fan_speed_max_set(0);
+> +			if (is_victus_s_thermal_profile()) {
+> +				hp_wmi_get_fan_count_userdefine_trigger();
+> +				return hp_wmi_fan_speed_max_reset();
+> +			} else
+> +				return hp_wmi_fan_speed_max_set(0);
+>  		default:
+>  			/* we don't support manual fan speed control */
+>  			return -EINVAL;
+> @@ -1893,6 +2226,10 @@ static int __init hp_wmi_init(void)
+>  		err = omen_register_powersource_event_handler();
+>  		if (err)
+>  			goto err_unregister_device;
+> +	} else if (is_victus_s_thermal_profile()) {
+> +		err = victus_s_register_powersource_event_handler();
+> +		if (err)
+> +			goto err_unregister_device;
+>  	}
+>  
+>  	return 0;
+> @@ -1912,6 +2249,9 @@ static void __exit hp_wmi_exit(void)
+>  	if (is_omen_thermal_profile() || is_victus_thermal_profile())
+>  		omen_unregister_powersource_event_handler();
+>  
+> +	if (is_victus_s_thermal_profile())
+> +		victus_s_unregister_powersource_event_handler();
+> +
+>  	if (wmi_has_guid(HPWMI_EVENT_GUID))
+>  		hp_wmi_input_destroy();
+>  
+> 
 
