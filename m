@@ -1,606 +1,235 @@
-Received: from n169-114.mail.139.com (n169-114.mail.139.com [120.232.169.114])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5746F233556;
-	Tue, 14 Jan 2025 06:57:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=120.232.169.114
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 72A2C240235;
+	Tue, 14 Jan 2025 07:19:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736837856; cv=none; b=nZDjNgWKn3Pd10vS70o5ZzeEEsapyXP34IFt6750RHvBla3Jb2quzuuo/g9VA2bddBVlhNNehwmVdbGwEeJBuq6jShrSUnaimHj8uru+Lwt/w3SzJN0JK5yWdh4R62eMLuG+LjCAGi8gGx5lGMsDvmX+jUzfy6qgByyBBHcZgII=
+	t=1736839170; cv=none; b=V+CPLPSEfrrtIXtdVDeAgLeDPDRCG8fMTdFo74vJBX2zBW0Iv5Z88ePibYouddRPnJiPGSucB1HbP76mJbCwf4aFTvLbEEsu7VmrWLSI2AyoFz/NzyTV+3uLojxBGJ7LuRrQ62rMr+mqZJuosXdqyAPjKBmDRlHo+o82MIejG98=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736837856; c=relaxed/simple;
-	bh=nxGsrbaqTBTEaExFAMolRpWu3fJ6iRSI4e2jII8zFDM=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
-	 In-Reply-To:Content-Type; b=MlntcMSRpAeFaOCQ/Y41DtJp8cA3fUO39yqc7DYKbEDc8FMonOnVKFwZ0/WD+7ciwe68pDelhGRZOYYSP8MbqPAGXtXy0GyY4YPPDWMTaUtm0uu5DqL5aTPksmn9QBUSEhoM1KT4CZiJbvqNQiTDNbLqGEIiDFHSPXQYZZ/e5Kc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=139.com; spf=pass smtp.mailfrom=139.com; arc=none smtp.client-ip=120.232.169.114
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=139.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=139.com
-X-RM-TagInfo: emlType=0                                       
-X-RM-SPAM:                                                                                        
-X-RM-SPAM-FLAG:00000000
-Received:from [IPV6:240e:404:1900:b194:b8ea:6de3:69f9:fa91] (unknown[240E:404:1900:B194:B8EA:6DE3:69F9:FA91])
-	by rmsmtp-lg-appmail-43-12057 (RichMail) with SMTP id 2f1967860a08d92-23f91;
-	Tue, 14 Jan 2025 14:54:05 +0800 (CST)
-X-RM-TRANSID:2f1967860a08d92-23f91
-Message-ID: <b02fbf19-280c-48b0-8853-40139a573d6a@139.com>
-Date: Tue, 14 Jan 2025 14:54:01 +0800
+	s=arc-20240116; t=1736839170; c=relaxed/simple;
+	bh=rGaK/SP7+YRqcfyhvr5tiXXegd0mAf18G8EAlxKv85I=;
+	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=GknLoZbbcOcmEPJ9DOee1eEWC1UcgSroB1Wli5G+MNXwIGq/fqiV3GVcbXH5oRgqSMsh4nAxnr9IoOXwXCb+29dJ5e5aeqV1Am9ydqic1A+NFCgb+GI/eu+5wL8MLZbN/YdSbqJ80T/SsM8BEOCNOdbEV7QI1WXiG1GgWZhyS/8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=LjGFhcJQ; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=6Sh2eX83; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=SDSo/7aH; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=tXTK0Xxs; arc=none smtp.client-ip=195.135.223.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="LjGFhcJQ";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="6Sh2eX83";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="SDSo/7aH";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="tXTK0Xxs"
+Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id 79FAB1F38F;
+	Tue, 14 Jan 2025 07:19:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1736839159; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=UAPv+kWa1BY3LhoCR5csO+fM7Ale+r5lPfIfcZtDhPU=;
+	b=LjGFhcJQFdFWIBU3J9xRI42wwLL8OJ+KdH5cxB/zlMfpokL+dNsLQjTM6ei6P3gPtYXIVH
+	0PEp9crRJgZGo/Z/90HQE2y+iT8dOcg7SS9j84Dn3lS4J51loIvP6v/uCJlZr03zgHmE23
+	Aws7o+MQAi5tMZv0nuwkGU794B3nZrM=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1736839159;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=UAPv+kWa1BY3LhoCR5csO+fM7Ale+r5lPfIfcZtDhPU=;
+	b=6Sh2eX83e6epFkZwbcnmckstsAbM3kRRe4izwsmzeUof2iCzua5Xx+vWh5oy5Uc43ZGcRA
+	KWpyHnO6TxksnxBA==
+Authentication-Results: smtp-out2.suse.de;
+	none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1736839158; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=UAPv+kWa1BY3LhoCR5csO+fM7Ale+r5lPfIfcZtDhPU=;
+	b=SDSo/7aHt3BAlc9VgnMjPW2jBQPQO1PYdLeyJIym9rfCCpr8MAycuJEQLvd14d5NjqA8NP
+	knlcE+3hUwBSP90W8qldNQF6FhIx5SQItOY/xu0ZR7pZg6JUUWGpVxCf6sWhe56CUvErdI
+	mRh8dDuB5+GJeH6TrbL8qBKNysw8TOA=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1736839158;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=UAPv+kWa1BY3LhoCR5csO+fM7Ale+r5lPfIfcZtDhPU=;
+	b=tXTK0Xxsu2/GpBeFcfVo54IoEJzRXFAZ8B0MmqEM6f62EkuOnx24lSl9ip6T4QafcdnLRw
+	XxTnHU7T9agxVjBg==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id DF61A139CB;
+	Tue, 14 Jan 2025 07:19:17 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id DkDXNPUPhmfdTwAAD6G6ig
+	(envelope-from <tiwai@suse.de>); Tue, 14 Jan 2025 07:19:17 +0000
+Date: Tue, 14 Jan 2025 08:19:17 +0100
+Message-ID: <87h661277u.wl-tiwai@suse.de>
+From: Takashi Iwai <tiwai@suse.de>
+To: Jackie Dong <xy-jackie@139.com>
+Cc: Takashi Iwai <tiwai@suse.de>,
+	Jackie EG1 Dong <dongeg1@lenovo.com>,
+	"perex@perex.cz" <perex@perex.cz>,
+	"tiwai@suse.com" <tiwai@suse.com>,
+	"bo.liu@senarytech.com" <bo.liu@senarytech.com>,
+	"kovalev@altlinux.org" <kovalev@altlinux.org>,
+	"me@oldherl.one" <me@oldherl.one>,
+	"jaroslaw.janik@gmail.com" <jaroslaw.janik@gmail.com>,
+	"songxiebing@kylinos.cn" <songxiebing@kylinos.cn>,
+	"kailang@realtek.com" <kailang@realtek.com>,
+	"sbinding@opensource.cirrus.com" <sbinding@opensource.cirrus.com>,
+	"simont@opensource.cirrus.com" <simont@opensource.cirrus.com>,
+	"josh@joshuagrisham.com" <josh@joshuagrisham.com>,
+	"rf@opensource.cirrus.com" <rf@opensource.cirrus.com>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>,
+	"linux-sound@vger.kernel.org" <linux-sound@vger.kernel.org>,
+	"mpearson-lenovo@squebb.ca" <mpearson-lenovo@squebb.ca>
+Subject: Re: [External] Re: [PATCH v2] ALSA: hda: Support for Ideapad hotkeymute LEDs
+In-Reply-To: <b02fbf19-280c-48b0-8853-40139a573d6a@139.com>
+References: <20241224083316.20222-1-xy-jackie@139.com>
+	<87ikr2dfnc.wl-tiwai@suse.de>
+	<SEYPR03MB8067D30F466738C51808461995092@SEYPR03MB8067.apcprd03.prod.outlook.com>
+	<87o70oylir.wl-tiwai@suse.de>
+	<da1959f2-a30e-45b4-bf64-2d413254d7bc@139.com>
+	<b02fbf19-280c-48b0-8853-40139a573d6a@139.com>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) Emacs/27.2 Mule/6.0
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [External] Re: [PATCH v2] ALSA: hda: Support for Ideapad
- hotkeymute LEDs
-From: Jackie Dong <xy-jackie@139.com>
-To: Takashi Iwai <tiwai@suse.de>, Jackie EG1 Dong <dongeg1@lenovo.com>
-Cc: "perex@perex.cz" <perex@perex.cz>, "tiwai@suse.com" <tiwai@suse.com>,
- "bo.liu@senarytech.com" <bo.liu@senarytech.com>,
- "kovalev@altlinux.org" <kovalev@altlinux.org>,
- "me@oldherl.one" <me@oldherl.one>,
- "jaroslaw.janik@gmail.com" <jaroslaw.janik@gmail.com>,
- "songxiebing@kylinos.cn" <songxiebing@kylinos.cn>,
- "kailang@realtek.com" <kailang@realtek.com>,
- "sbinding@opensource.cirrus.com" <sbinding@opensource.cirrus.com>,
- "simont@opensource.cirrus.com" <simont@opensource.cirrus.com>,
- "josh@joshuagrisham.com" <josh@joshuagrisham.com>,
- "rf@opensource.cirrus.com" <rf@opensource.cirrus.com>,
- "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
- "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>,
- "linux-sound@vger.kernel.org" <linux-sound@vger.kernel.org>,
- "mpearson-lenovo@squebb.ca" <mpearson-lenovo@squebb.ca>
-References: <20241224083316.20222-1-xy-jackie@139.com>
- <87ikr2dfnc.wl-tiwai@suse.de>
- <SEYPR03MB8067D30F466738C51808461995092@SEYPR03MB8067.apcprd03.prod.outlook.com>
- <87o70oylir.wl-tiwai@suse.de> <da1959f2-a30e-45b4-bf64-2d413254d7bc@139.com>
-Content-Language: en-US
-In-Reply-To: <da1959f2-a30e-45b4-bf64-2d413254d7bc@139.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: 8bit
+X-Spam-Level: 
+X-Spamd-Result: default: False [-1.80 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	SUSPICIOUS_RECIPS(1.50)[];
+	MID_CONTAINS_FROM(1.00)[];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	RCVD_TLS_ALL(0.00)[];
+	RCPT_COUNT_TWELVE(0.00)[19];
+	MIME_TRACE(0.00)[0:+];
+	ARC_NA(0.00)[];
+	TAGGED_RCPT(0.00)[];
+	TO_DN_EQ_ADDR_SOME(0.00)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	FREEMAIL_ENVRCPT(0.00)[139.com,gmail.com];
+	TO_DN_SOME(0.00)[];
+	FROM_EQ_ENVFROM(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	FREEMAIL_CC(0.00)[suse.de,lenovo.com,perex.cz,suse.com,senarytech.com,altlinux.org,oldherl.one,gmail.com,kylinos.cn,realtek.com,opensource.cirrus.com,joshuagrisham.com,vger.kernel.org,squebb.ca];
+	FREEMAIL_TO(0.00)[139.com];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	RCVD_COUNT_TWO(0.00)[2];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo,suse.de:mid]
+X-Spam-Score: -1.80
+X-Spam-Flag: NO
 
-On 1/6/25 20:49, Jackie Dong wrote:
-> On 2025/1/3 23:17, Takashi Iwai wrote:
->> On Mon, 30 Dec 2024 01:33:01 +0100,
->> Jackie EG1 Dong wrote:
->>>
->>>> On Tue, 24 Dec 2024 09:33:16 +0100,
->>> Â  > Jackie Dong wrote:
->>> Â  >>
->>> Â  >> --- a/sound/pci/hda/patch_realtek.c
->>> Â  >> +++ b/sound/pci/hda/patch_realtek.c
->>> Â  >> @@ -6934,6 +6934,16 @@ static void 
->>> alc_fixup_thinkpad_acpi(struct hda_codec *codec,
->>> Â  >>Â Â Â Â Â Â  hda_fixup_thinkpad_acpi(codec, fix, action);
->>> Â  >>Â Â  }
->>> Â  >>
->>> Â  >> +/* for hda_fixup_ideapad_acpi() */
->>> Â  >> +#include "ideapad_hotkey_led_helper.c"
->>> Â  >> +
->>> Â  >> +static void alc_fixup_ideapad_acpi(struct hda_codec *codec,
->>> Â  >> +Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â  const struct hda_fixup *fix, int action)
->>> Â  >> +{
->>> Â  >> +Â Â Â  alc_fixup_no_shutup(codec, fix, action); /* reduce click 
->>> noise */
->>> Â  >> +Â Â Â  hda_fixup_ideapad_acpi(codec, fix, action);
->>> Â  >> +}
->>> Â  >
->>> Â  > So this unconditionally call alc_fixup_no_shutup(), and thisÂ  > 
->>> introduces another behavior to the existing entry -- i.e. there is a  
->>> > chance of breakage.
->>> Â  >
->>> Â  > If we want to be very conservative, this call should be limited 
->>> toÂ  > Ideapad.
->>> Â  > For alc_fixup_no_shutup(codec, fix, action),
->>> Â  I want to keep same behavior with alc_fixup_thinkpad_apci() and 
->>> alc_fixup_idea_acpi() for one sound card. So, I add 
->>> alc_fixup_no_shutup() in alc_fixup_ideapad_acpi().
->>> ----------Related source code of patch_reatek.c are FYR as below.
->>> static void alc_fixup_thinkpad_acpi(struct hda_codec *codec,
->>> Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â  const struct hda_fixup *fix, int
->>> action)
->>> {
->>> Â Â Â Â Â Â Â Â Â  alc_fixup_no_shutup(codec, fix, action); /* reduce click 
->>> noise */
->>> Â Â Â Â Â Â Â Â Â  hda_fixup_thinkpad_acpi(codec, fix, action); }
->>>
->>> /* for hda_fixup_ideapad_acpi() */
->>> #include "ideapad_hotkey_led_helper.c"
->>>
->>> static void alc_fixup_ideapad_acpi(struct hda_codec *codec,
->>> Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â  const struct hda_fixup *fix, int 
->>> action) {
->>> Â Â Â Â Â Â Â Â Â  alc_fixup_no_shutup(codec, fix, action); /* reduce click 
->>> noise */
->>> Â Â Â Â Â Â Â Â Â  hda_fixup_ideapad_acpi(codec, fix, action);
->>> }
->>
->> Oh yeah, but then it can be bad in other way round; the chain call of
->> alc_fixup_thinkpad_acpi() contains alc_fixup_no_shutup() and the
->> alc_fixup_ideadpad_acpi() also contains alc_fixup_no_shutup().
->> That is, alc_fixup_no_shutup() will be called twice for Thinkpad.
->>
-> Many thanks to Takashi for your detail commentsÂ  and sample code, I 
-> understand it now.
+On Tue, 14 Jan 2025 07:54:01 +0100,
+Jackie Dong wrote:
 > 
-> I'll check the logic of the code and update the patch later.
+> On 1/6/25 20:49, Jackie Dong wrote:
+> > On 2025/1/3 23:17, Takashi Iwai wrote:
+> >> On Mon, 30 Dec 2024 01:33:01 +0100,
+> >> Jackie EG1 Dong wrote:
+> >>> 
+> >>>> On Tue, 24 Dec 2024 09:33:16 +0100,
+> >>>   > Jackie Dong wrote:
+> >>>   >>
+> >>>   >> --- a/sound/pci/hda/patch_realtek.c
+> >>>   >> +++ b/sound/pci/hda/patch_realtek.c
+> >>>   >> @@ -6934,6 +6934,16 @@ static void
+> >>> alc_fixup_thinkpad_acpi(struct hda_codec *codec,
+> >>>   >>       hda_fixup_thinkpad_acpi(codec, fix, action);
+> >>>   >>   }
+> >>>   >>
+> >>>   >> +/* for hda_fixup_ideapad_acpi() */
+> >>>   >> +#include "ideapad_hotkey_led_helper.c"
+> >>>   >> +
+> >>>   >> +static void alc_fixup_ideapad_acpi(struct hda_codec *codec,
+> >>>   >> +                   const struct hda_fixup *fix, int action)
+> >>>   >> +{
+> >>>   >> +    alc_fixup_no_shutup(codec, fix, action); /* reduce click
+> >>> noise */
+> >>>   >> +    hda_fixup_ideapad_acpi(codec, fix, action);
+> >>>   >> +}
+> >>>   >
+> >>>   > So this unconditionally call alc_fixup_no_shutup(), and this 
+> >>> > introduces another behavior to the existing entry -- i.e. there
+> >>> is a  > chance of breakage.
+> >>>   >
+> >>>   > If we want to be very conservative, this call should be
+> >>> limited to  > Ideapad.
+> >>>   > For alc_fixup_no_shutup(codec, fix, action),
+> >>>   I want to keep same behavior with alc_fixup_thinkpad_apci() and
+> >>> alc_fixup_idea_acpi() for one sound card. So, I add
+> >>> alc_fixup_no_shutup() in alc_fixup_ideapad_acpi().
+> >>> ----------Related source code of patch_reatek.c are FYR as below.
+> >>> static void alc_fixup_thinkpad_acpi(struct hda_codec *codec,
+> >>>                                       const struct hda_fixup *fix, int
+> >>> action)
+> >>> {
+> >>>           alc_fixup_no_shutup(codec, fix, action); /* reduce click
+> >>> noise */
+> >>>           hda_fixup_thinkpad_acpi(codec, fix, action); }
+> >>> 
+> >>> /* for hda_fixup_ideapad_acpi() */
+> >>> #include "ideapad_hotkey_led_helper.c"
+> >>> 
+> >>> static void alc_fixup_ideapad_acpi(struct hda_codec *codec,
+> >>>                                      const struct hda_fixup *fix,
+> >>> int action) {
+> >>>           alc_fixup_no_shutup(codec, fix, action); /* reduce click
+> >>> noise */
+> >>>           hda_fixup_ideapad_acpi(codec, fix, action);
+> >>> }
+> >> 
+> >> Oh yeah, but then it can be bad in other way round; the chain call of
+> >> alc_fixup_thinkpad_acpi() contains alc_fixup_no_shutup() and the
+> >> alc_fixup_ideadpad_acpi() also contains alc_fixup_no_shutup().
+> >> That is, alc_fixup_no_shutup() will be called twice for Thinkpad.
+> >> 
+> > Many thanks to Takashi for your detail comments  and sample code, I
+> > understand it now.
+> > 
+> > I'll check the logic of the code and update the patch later.
+> > 
+> > Best Regards,
+> > 
+> > Jackie Dong
 > 
-> Best Regards,
-> 
-> Jackie Dong
+> Hi Takashi,
+>   For this function, I added three debug message in patch_realtek.c as
+> below. I find alc_fixup_no_shutup() only run once, no matter it's in
+> alc_fixup_thinkpad_acpi(), or it's in alc_fixup_ideadpad_acpi(). Some
+> kernel log for your reference.
+>   So, I think the patch is ok for this concern.
+>   If you have any other concern for the patch, let me know.
+>   Thanks for your comment and guide in past.
 
-Hi Takashi,
-   For this function, I added three debug message in patch_realtek.c as 
-below. I find alc_fixup_no_shutup() only run once, no matter it's in 
-alc_fixup_thinkpad_acpi(), or it's in alc_fixup_ideadpad_acpi(). Some 
-kernel log for your reference.
-   So, I think the patch is ok for this concern.
-   If you have any other concern for the patch, let me know.
-   Thanks for your comment and guide in past.
+That's really weird.  Are you testing your v2 patch, right?
+(That is, the ALC269_FIXUP_LENOVO_XPAD_ACPI entry calls
+alc_fixup_ideadpad_acpi() and is chained with
+ALC269_FIXUP_THINKPAD_ACPI.  If this entry is really used, it *must*
+call the alc_fixup_thinkpad_acpi() as well.
 
-----------------------------------------------------------------------
-./sound/pci/hda/patch_realtek.c
-......
-  6122 static void alc_fixup_no_shutup(struct hda_codec *codec,
-  6123                                 const struct hda_fixup *fix, int 
-action)
-  6124 {
-  6125         if (action == HDA_FIXUP_ACT_PRE_PROBE) {
-  6126                 struct alc_spec *spec = codec->spec;
-  6127                 spec->no_shutup_pins = 1;
-  6128         }
-  6129         printk("This is from 
-alc_fixup_no_shutup++444444444444444444444444444444+-.\n");//Deg
-  6130 }
-......
-6929 #include "thinkpad_helper.c"
-  6930
-  6931 static void alc_fixup_thinkpad_acpi(struct hda_codec *codec,
-  6932                                     const struct hda_fixup *fix, 
-int action)
-  6933 {
-  6934         alc_fixup_no_shutup(codec, fix, action); /* reduce click 
-noise */ //Deg
-  6935         printk("This is from 
-alc_fixup_no_shutup++TTTTTTTTTTTTTTTTTTTTTTTTTTTTTTT+-.\n");//Deg
-  6936         hda_fixup_thinkpad_acpi(codec, fix, action);
-  6937 }
-  6938
-  6939 /* for hda_fixup_ideapad_acpi() */
-  6940 #include "ideapad_hotkey_led_helper.c"
-  6941
-  6942 static void alc_fixup_ideapad_acpi(struct hda_codec *codec,
-  6943                                    const struct hda_fixup *fix, 
-int action)
-  6944 {
-  6945         alc_fixup_no_shutup(codec, fix, action); /* reduce click 
-noise */ //Deg
-  6946         printk("This is from 
-alc_fixup_no_shutup++IIIIIIIIIIIIIIIIIIIIIIIIIIIIII+-.\n");//Deg
-  6947         hda_fixup_ideapad_acpi(codec, fix, action);
-  6948 }
-......
-
-----------------------------------------------------------------------
-Some log from /var/log/kerlog of ThinkBook 16 G8 IRL.
-......
-2025-01-13T16:24:34.109926+08:00 test-ThinkBook-16-G8-IRL kernel: 
-snd_hda_codec_realtek ehdaudio0D0: ALC257: picked fixup  for PCI SSID 
-17aa:0000
-2025-01-13T16:24:34.109927+08:00 test-ThinkBook-16-G8-IRL kernel: This 
-is from alc_fixup_no_shutup++444444444444444444444444444444+-.
-2025-01-13T16:24:34.109927+08:00 test-ThinkBook-16-G8-IRL kernel: This 
-is from alc_fixup_no_shutup++IIIIIIIIIIIIIIIIIIIIIIIIIIIIII+-.
-2025-01-13T16:24:34.109928+08:00 test-ThinkBook-16-G8-IRL kernel: 
-snd_hda_codec_realtek ehdaudio0D0: autoconfig for ALC257: line_outs=1 
-(0x14/0x0/0x0/0x0/0x0) type:speaker
-2025-01-13T16:24:34.109928+08:00 test-ThinkBook-16-G8-IRL kernel: 
-snd_hda_codec_realtek ehdaudio0D0:    speaker_outs=0 (0x0/0x0/0x0/0x0/0x0)
-2025-01-13T16:24:34.109929+08:00 test-ThinkBook-16-G8-IRL kernel: 
-snd_hda_codec_realtek ehdaudio0D0:    hp_outs=1 (0x21/0x0/0x0/0x0/0x0)
-2025-01-13T16:24:34.109929+08:00 test-ThinkBook-16-G8-IRL kernel: 
-snd_hda_codec_realtek ehdaudio0D0:    mono: mono_out=0x0
-2025-01-13T16:24:34.109930+08:00 test-ThinkBook-16-G8-IRL kernel: 
-snd_hda_codec_realtek ehdaudio0D0:    inputs:
-2025-01-13T16:24:34.109930+08:00 test-ThinkBook-16-G8-IRL kernel: 
-snd_hda_codec_realtek ehdaudio0D0:      Mic=0x19
-2025-01-13T16:24:34.109931+08:00 test-ThinkBook-16-G8-IRL kernel: This 
-is from alc_fixup_no_shutup++444444444444444444444444444444+-.
-2025-01-13T16:24:34.109931+08:00 test-ThinkBook-16-G8-IRL kernel: This 
-is from alc_fixup_no_shutup++IIIIIIIIIIIIIIIIIIIIIIIIIIIIII+-.
-2025-01-13T16:24:34.109932+08:00 test-ThinkBook-16-G8-IRL kernel: This 
-is from alc_fixup_no_shutup++444444444444444444444444444444+-.
-2025-01-13T16:24:34.109932+08:00 test-ThinkBook-16-G8-IRL kernel: This 
-is from alc_fixup_no_shutup++IIIIIIIIIIIIIIIIIIIIIIIIIIIIII+-.
-2025-01-13T16:24:34.109933+08:00 test-ThinkBook-16-G8-IRL kernel: This 
-is from alc_fixup_no_shutup++444444444444444444444444444444+-.
-2025-01-13T16:24:34.109933+08:00 test-ThinkBook-16-G8-IRL kernel: This 
-is from alc_fixup_no_shutup++IIIIIIIIIIIIIIIIIIIIIIIIIIIIII+-.
-2025-01-13T16:24:34.109934+08:00 test-ThinkBook-16-G8-IRL kernel: 
-skl_hda_dsp_generic skl_hda_dsp_generic: hda_dsp_hdmi_build_controls: no 
-PCM in topology for HDMI converter 3
-2025-01-13T16:24:34.109934+08:00 test-ThinkBook-16-G8-IRL kernel: 
-iwlwifi 0000:00:14.3: base HW address: a8:59:5f:e8:58:dc
-2025-01-13T16:24:34.109935+08:00 test-ThinkBook-16-G8-IRL kernel: input: 
-sof-hda-dsp Mic as 
-/devices/pci0000:00/0000:00:1f.3/skl_hda_dsp_generic/sound/card0/input19
-2025-01-13T16:24:34.109935+08:00 test-ThinkBook-16-G8-IRL kernel: input: 
-sof-hda-dsp Headphone as 
-/devices/pci0000:00/0000:00:1f.3/skl_hda_dsp_generic/sound/card0/input20
-2025-01-13T16:24:34.109936+08:00 test-ThinkBook-16-G8-IRL kernel: input: 
-sof-hda-dsp HDMI/DP,pcm=3 as 
-/devices/pci0000:00/0000:00:1f.3/skl_hda_dsp_generic/sound/card0/input21
-2025-01-13T16:24:34.109936+08:00 test-ThinkBook-16-G8-IRL kernel: input: 
-sof-hda-dsp HDMI/DP,pcm=4 as 
-/devices/pci0000:00/0000:00:1f.3/skl_hda_dsp_generic/sound/card0/input22
-2025-01-13T16:24:34.109937+08:00 test-ThinkBook-16-G8-IRL kernel: input: 
-sof-hda-dsp HDMI/DP,pcm=5 as 
-/devices/pci0000:00/0000:00:1f.3/skl_hda_dsp_generic/sound/card0/input23
-2025-01-13T16:24:34.109937+08:00 test-ThinkBook-16-G8-IRL kernel: 
-iwlwifi 0000:00:14.3 wlp0s20f3: renamed from wlan0
-2025-01-13T16:24:34.109938+08:00 test-ThinkBook-16-G8-IRL kernel: 
-Bluetooth: hci0: Waiting for firmware download to complete
-2025-01-13T16:24:34.109938+08:00 test-ThinkBook-16-G8-IRL kernel: 
-Bluetooth: hci0: Firmware loaded in 1480525 usecs
-2025-01-13T16:24:34.109939+08:00 test-ThinkBook-16-G8-IRL kernel: 
-Bluetooth: hci0: Waiting for device to boot
-2025-01-13T16:24:34.109939+08:00 test-ThinkBook-16-G8-IRL kernel: 
-Bluetooth: hci0: Device booted in 15688 usecs
-2025-01-13T16:24:34.109940+08:00 test-ThinkBook-16-G8-IRL kernel: 
-Bluetooth: hci0: Found Intel DDC parameters: intel/ibt-0040-0041.ddc
-2025-01-13T16:24:34.109940+08:00 test-ThinkBook-16-G8-IRL kernel: 
-Bluetooth: hci0: Applying Intel DDC parameters completed
-2025-01-13T16:24:34.109941+08:00 test-ThinkBook-16-G8-IRL kernel: 
-Bluetooth: hci0: Firmware timestamp 2023.48 buildtype 1 build 75324
-2025-01-13T16:24:34.109941+08:00 test-ThinkBook-16-G8-IRL kernel: 
-Bluetooth: hci0: Firmware SHA1: 0x23bac558
-2025-01-13T16:24:34.109942+08:00 test-ThinkBook-16-G8-IRL kernel: 
-Bluetooth: hci0: Fseq status: Success (0x00)
-2025-01-13T16:24:34.109942+08:00 test-ThinkBook-16-G8-IRL kernel: 
-Bluetooth: hci0: Fseq executed: 00.00.02.41
-2025-01-13T16:24:34.109942+08:00 test-ThinkBook-16-G8-IRL kernel: 
-Bluetooth: hci0: Fseq BT Top: 00.00.02.41
-2025-01-13T16:24:34.109943+08:00 test-ThinkBook-16-G8-IRL kernel: This 
-is from alc_fixup_no_shutup++444444444444444444444444444444+-.
-2025-01-13T16:24:34.109943+08:00 test-ThinkBook-16-G8-IRL kernel: This 
-is from alc_fixup_no_shutup++IIIIIIIIIIIIIIIIIIIIIIIIIIIIII+-.
-2025-01-13T16:24:34.109944+08:00 test-ThinkBook-16-G8-IRL kernel: 
-Bluetooth: BNEP (Ethernet Emulation) ver 1.3
-2025-01-13T16:24:34.109944+08:00 test-ThinkBook-16-G8-IRL kernel: 
-Bluetooth: BNEP filters: protocol multicast
-2025-01-13T16:24:34.109945+08:00 test-ThinkBook-16-G8-IRL kernel: 
-Bluetooth: BNEP socket layer initialized
-2025-01-13T16:24:34.109945+08:00 test-ThinkBook-16-G8-IRL kernel: 
-Bluetooth: MGMT ver 1.23
-2025-01-13T16:24:34.109946+08:00 test-ThinkBook-16-G8-IRL kernel: NET: 
-Registered PF_ALG protocol family
-2025-01-13T16:24:34.109946+08:00 test-ThinkBook-16-G8-IRL kernel: nvme 
-nvme0: using unchecked data buffer
-2025-01-13T16:24:34.132755+08:00 test-ThinkBook-16-G8-IRL kernel: NET: 
-Registered PF_QIPCRTR protocol family
-2025-01-13T16:24:34.796796+08:00 test-ThinkBook-16-G8-IRL kernel: 
-iwlwifi 0000:00:14.3: WFPM_UMAC_PD_NOTIFICATION: 0x20
-2025-01-13T16:24:34.796810+08:00 test-ThinkBook-16-G8-IRL kernel: 
-iwlwifi 0000:00:14.3: WFPM_LMAC2_PD_NOTIFICATION: 0x1f
-2025-01-13T16:24:34.796811+08:00 test-ThinkBook-16-G8-IRL kernel: 
-iwlwifi 0000:00:14.3: WFPM_AUTH_KEY_0: 0x90
-2025-01-13T16:24:34.796811+08:00 test-ThinkBook-16-G8-IRL kernel: 
-iwlwifi 0000:00:14.3: CNVI_SCU_SEQ_DATA_DW9: 0x0
-2025-01-13T16:24:34.796812+08:00 test-ThinkBook-16-G8-IRL kernel: 
-iwlwifi 0000:00:14.3: RFIm is deactivated, reason = 4
-2025-01-13T16:24:34.900941+08:00 test-ThinkBook-16-G8-IRL kernel: 
-iwlwifi 0000:00:14.3: Registered PHC clock: iwlwifi-PTP, with index: 1
-2025-01-13T16:24:35.092715+08:00 test-ThinkBook-16-G8-IRL kernel: 
-loop13: detected capacity change from 0 to 8
-2025-01-13T16:24:35.360758+08:00 test-ThinkBook-16-G8-IRL kernel: This 
-is from alc_fixup_no_shutup++444444444444444444444444444444+-.
-2025-01-13T16:24:35.360768+08:00 test-ThinkBook-16-G8-IRL kernel: This 
-is from alc_fixup_no_shutup++IIIIIIIIIIIIIIIIIIIIIIIIIIIIII+-.
-2025-01-13T16:24:35.476784+08:00 test-ThinkBook-16-G8-IRL kernel: 
-Bluetooth: RFCOMM TTY layer initialized
-2025-01-13T16:24:35.476792+08:00 test-ThinkBook-16-G8-IRL kernel: 
-Bluetooth: RFCOMM socket layer initialized
-2025-01-13T16:24:35.476793+08:00 test-ThinkBook-16-G8-IRL kernel: 
-Bluetooth: RFCOMM ver 1.11
-2025-01-13T16:24:36.000717+08:00 test-ThinkBook-16-G8-IRL kernel: 
-rfkill: input handler disabled
-2025-01-13T16:24:37.928735+08:00 test-ThinkBook-16-G8-IRL kernel: 
-wlp0s20f3: authenticate with c2:95:70:cf:7f:31 (local 
-address=a8:59:5f:e8:58:dc)
-2025-01-13T16:24:37.928746+08:00 test-ThinkBook-16-G8-IRL kernel: 
-wlp0s20f3: send auth to c2:95:70:cf:7f:31 (try 1/3)
-2025-01-13T16:24:37.960811+08:00 test-ThinkBook-16-G8-IRL kernel: 
-wlp0s20f3: authenticated
-2025-01-13T16:24:37.960839+08:00 test-ThinkBook-16-G8-IRL kernel: 
-wlp0s20f3: associate with c2:95:70:cf:7f:31 (try 1/3)
-2025-01-13T16:24:37.964860+08:00 test-ThinkBook-16-G8-IRL kernel: 
-wlp0s20f3: RX AssocResp from c2:95:70:cf:7f:31 (capab=0x531 status=0 aid=24)
-2025-01-13T16:24:37.972839+08:00 test-ThinkBook-16-G8-IRL kernel: 
-wlp0s20f3: associated
-2025-01-13T16:25:20.616738+08:00 test-ThinkBook-16-G8-IRL kernel: 
-kauditd_printk_skb: 156 callbacks suppressed
-2025-01-13T16:25:20.616752+08:00 test-ThinkBook-16-G8-IRL kernel: audit: 
-type=1400 audit(1736756720.611:168): apparmor="DENIED" 
-operation="capable" class="cap" 
-profile="/snap/snapd/23545/usr/lib/snapd/snap-confine" pid=2188 
-comm="snap-confine" capability=12  capname="net_admin"
-2025-01-13T16:25:20.616755+08:00 test-ThinkBook-16-G8-IRL kernel: audit: 
-type=1400 audit(1736756720.611:169): apparmor="DENIED" 
-operation="capable" class="cap" 
-profile="/snap/snapd/23545/usr/lib/snapd/snap-confine" pid=2188 
-comm="snap-confine" capability=38  capname="perfmon"
-2025-01-13T16:25:20.860725+08:00 test-ThinkBook-16-G8-IRL kernel: 
-rfkill: input handler enabled
-2025-01-13T16:25:20.984744+08:00 test-ThinkBook-16-G8-IRL kernel: This 
-is from alc_fixup_no_shutup++444444444444444444444444444444+-.
-2025-01-13T16:25:20.984754+08:00 test-ThinkBook-16-G8-IRL kernel: This 
-is from alc_fixup_no_shutup++IIIIIIIIIIIIIIIIIIIIIIIIIIIIII+-.
-2025-01-13T16:25:21.588723+08:00 test-ThinkBook-16-G8-IRL kernel: 
-rfkill: input handler disabled
-2025-01-13T16:25:23.560752+08:00 test-ThinkBook-16-G8-IRL kernel: audit: 
-type=1400 audit(1736756723.553:170): apparmor="DENIED" 
-operation="capable" class="cap" 
-profile="/snap/snapd/23545/usr/lib/snapd/snap-confine" pid=3165 
-comm="snap-confine" capability=12  capname="net_admin"
-2025-01-13T16:25:23.560790+08:00 test-ThinkBook-16-G8-IRL kernel: audit: 
-type=1400 audit(1736756723.553:171): apparmor="DENIED" 
-operation="capable" class="cap" 
-profile="/snap/snapd/23545/usr/lib/snapd/snap-confine" pid=3165 
-comm="snap-confine" capability=38  capname="perfmon"
-2025-01-13T16:25:55.972879+08:00 test-ThinkBook-16-G8-IRL kernel: This 
-is from alc_fixup_no_shutup++444444444444444444444444444444+-.
-2025-01-13T16:25:55.972922+08:00 test-ThinkBook-16-G8-IRL kernel: This 
-is from alc_fixup_no_shutup++IIIIIIIIIIIIIIIIIIIIIIIIIIIIII+-.
-2025-01-13T16:25:58.090951+08:00 test-ThinkBook-16-G8-IRL kernel: atkbd 
-serio0: Unknown key pressed (translated set 2, code 0xac on isa0060/serio0).
-......
-
-----------------------------------------------------------------------
-Some log from /var/log/kerlog of ThinkPad X1 Nano Gen1.
-......
-Jan 13 16:30:16 test-ThinkPad-X1-Nano-Gen-1 kernel: [    5.727147] This 
-is from alc_fixup_no_shutup++444444444444444444444444444444+-.
-Jan 13 16:30:16 test-ThinkPad-X1-Nano-Gen-1 kernel: [    5.727150] This 
-is from alc_fixup_no_shutup++TTTTTTTTTTTTTTTTTTTTTTTTTTTTTTT+-.
-Jan 13 16:30:16 test-ThinkPad-X1-Nano-Gen-1 kernel: [    5.727758] 
-snd_hda_codec_realtek ehdaudio0D0: autoconfig for ALC287: line_outs=2 
-(0x14/0x17/0x0/0x0/0x0) type:speaker
-Jan 13 16:30:16 test-ThinkPad-X1-Nano-Gen-1 kernel: [    5.727764] 
-snd_hda_codec_realtek ehdaudio0D0:    speaker_outs=0 (0x0/0x0/0x0/0x0/0x0)
-Jan 13 16:30:16 test-ThinkPad-X1-Nano-Gen-1 kernel: [    5.727777] 
-snd_hda_codec_realtek ehdaudio0D0:    hp_outs=1 (0x21/0x0/0x0/0x0/0x0)
-Jan 13 16:30:16 test-ThinkPad-X1-Nano-Gen-1 kernel: [    5.727779] 
-snd_hda_codec_realtek ehdaudio0D0:    mono: mono_out=0x0
-Jan 13 16:30:16 test-ThinkPad-X1-Nano-Gen-1 kernel: [    5.727781] 
-snd_hda_codec_realtek ehdaudio0D0:    inputs:
-Jan 13 16:30:16 test-ThinkPad-X1-Nano-Gen-1 kernel: [    5.727782] 
-snd_hda_codec_realtek ehdaudio0D0:      Mic=0x19
-Jan 13 16:30:16 test-ThinkPad-X1-Nano-Gen-1 kernel: [    5.732045] This 
-is from alc_fixup_no_shutup++444444444444444444444444444444+-.
-Jan 13 16:30:16 test-ThinkPad-X1-Nano-Gen-1 kernel: [    5.732059] This 
-is from alc_fixup_no_shutup++TTTTTTTTTTTTTTTTTTTTTTTTTTTTTTT+-.
-Jan 13 16:30:16 test-ThinkPad-X1-Nano-Gen-1 kernel: [    5.775739] This 
-is from alc_fixup_no_shutup++444444444444444444444444444444+-.
-Jan 13 16:30:16 test-ThinkPad-X1-Nano-Gen-1 kernel: [    5.775743] This 
-is from alc_fixup_no_shutup++TTTTTTTTTTTTTTTTTTTTTTTTTTTTTTT+-.
-Jan 13 16:30:16 test-ThinkPad-X1-Nano-Gen-1 kernel: [    5.776998] This 
-is from alc_fixup_no_shutup++444444444444444444444444444444+-.
-Jan 13 16:30:16 test-ThinkPad-X1-Nano-Gen-1 kernel: [    5.777000] This 
-is from alc_fixup_no_shutup++TTTTTTTTTTTTTTTTTTTTTTTTTTTTTTT+-.
-Jan 13 16:30:16 test-ThinkPad-X1-Nano-Gen-1 kernel: [    5.777636] 
-skl_hda_dsp_generic skl_hda_dsp_generic: hda_dsp_hdmi_build_controls: no 
-PCM in topology for HDMI converter 3
-Jan 13 16:30:16 test-ThinkPad-X1-Nano-Gen-1 kernel: [    5.812497] 
-input: sof-hda-dsp Mic as 
-/devices/pci0000:00/0000:00:1f.3/skl_hda_dsp_generic/sound/card0/input23
-Jan 13 16:30:16 test-ThinkPad-X1-Nano-Gen-1 kernel: [    5.812568] 
-input: sof-hda-dsp Headphone as 
-/devices/pci0000:00/0000:00:1f.3/skl_hda_dsp_generic/sound/card0/input24
-Jan 13 16:30:16 test-ThinkPad-X1-Nano-Gen-1 kernel: [    5.812826] 
-input: sof-hda-dsp HDMI/DP,pcm=3 as 
-/devices/pci0000:00/0000:00:1f.3/skl_hda_dsp_generic/sound/card0/input25
-Jan 13 16:30:16 test-ThinkPad-X1-Nano-Gen-1 kernel: [    5.812884] 
-input: sof-hda-dsp HDMI/DP,pcm=4 as 
-/devices/pci0000:00/0000:00:1f.3/skl_hda_dsp_generic/sound/card0/input26
-Jan 13 16:30:16 test-ThinkPad-X1-Nano-Gen-1 kernel: [    5.812930] 
-input: sof-hda-dsp HDMI/DP,pcm=5 as 
-/devices/pci0000:00/0000:00:1f.3/skl_hda_dsp_generic/sound/card0/input27
-Jan 13 16:30:16 test-ThinkPad-X1-Nano-Gen-1 kernel: [    5.841455] 
-Bluetooth: BNEP (Ethernet Emulation) ver 1.3
-Jan 13 16:30:16 test-ThinkPad-X1-Nano-Gen-1 kernel: [    5.841460] 
-Bluetooth: BNEP filters: protocol multicast
-Jan 13 16:30:16 test-ThinkPad-X1-Nano-Gen-1 kernel: [    5.841464] 
-Bluetooth: BNEP socket layer initialized
-Jan 13 16:30:16 test-ThinkPad-X1-Nano-Gen-1 kernel: [    6.142838] 
-iwlwifi 0000:00:14.3: Registered PHC clock: iwlwifi-PTP, with index: 0
-Jan 13 16:30:16 test-ThinkPad-X1-Nano-Gen-1 kernel: [    6.241587] This 
-is from alc_fixup_no_shutup++444444444444444444444444444444+-.
-Jan 13 16:30:16 test-ThinkPad-X1-Nano-Gen-1 kernel: [    6.241590] This 
-is from alc_fixup_no_shutup++TTTTTTTTTTTTTTTTTTTTTTTTTTTTTTT+-.
-Jan 13 16:30:17 test-ThinkPad-X1-Nano-Gen-1 kernel: [    7.175456] 
-loop14: detected capacity change from 0 to 8
-Jan 13 16:30:17 test-ThinkPad-X1-Nano-Gen-1 kernel: [    7.234454] 
-Bluetooth: hci0: Waiting for firmware download to complete
-Jan 13 16:30:17 test-ThinkPad-X1-Nano-Gen-1 kernel: [    7.234793] 
-Bluetooth: hci0: Firmware loaded in 1803474 usecs
-Jan 13 16:30:17 test-ThinkPad-X1-Nano-Gen-1 kernel: [    7.234871] 
-Bluetooth: hci0: Waiting for device to boot
-Jan 13 16:30:17 test-ThinkPad-X1-Nano-Gen-1 kernel: [    7.249852] 
-Bluetooth: hci0: Device booted in 14679 usecs
-Jan 13 16:30:17 test-ThinkPad-X1-Nano-Gen-1 kernel: [    7.250205] 
-Bluetooth: hci0: Found Intel DDC parameters: intel/ibt-19-0-4.ddc
-Jan 13 16:30:17 test-ThinkPad-X1-Nano-Gen-1 kernel: [    7.251900] 
-Bluetooth: hci0: Applying Intel DDC parameters completed
-Jan 13 16:30:17 test-ThinkPad-X1-Nano-Gen-1 kernel: [    7.252821] 
-Bluetooth: hci0: Firmware revision 0.4 build 206 week 22 2023
-Jan 13 16:30:17 test-ThinkPad-X1-Nano-Gen-1 kernel: [    7.254845] 
-Bluetooth: hci0: HCI LE Coded PHY feature bit is set, but its usage is 
-not supported.
-Jan 13 16:30:17 test-ThinkPad-X1-Nano-Gen-1 kernel: [    7.319888] 
-Bluetooth: MGMT ver 1.23
-Jan 13 16:30:17 test-ThinkPad-X1-Nano-Gen-1 kernel: [    7.322558] NET: 
-Registered PF_ALG protocol family
-Jan 13 16:30:17 test-ThinkPad-X1-Nano-Gen-1 kernel: [    7.618988] 
-rfkill: input handler disabled
-Jan 13 16:30:19 test-ThinkPad-X1-Nano-Gen-1 kernel: [    9.150754] 
-wlp0s20f3: authenticate with c2:95:70:cf:7f:31 (local 
-address=dc:41:a9:86:dc:a1)
-Jan 13 16:30:19 test-ThinkPad-X1-Nano-Gen-1 kernel: [    9.151962] 
-wlp0s20f3: send auth to c2:95:70:cf:7f:31 (try 1/3)
-Jan 13 16:30:19 test-ThinkPad-X1-Nano-Gen-1 kernel: [    9.180543] 
-wlp0s20f3: authenticated
-Jan 13 16:30:19 test-ThinkPad-X1-Nano-Gen-1 kernel: [    9.181813] 
-wlp0s20f3: associate with c2:95:70:cf:7f:31 (try 1/3)
-Jan 13 16:30:19 test-ThinkPad-X1-Nano-Gen-1 kernel: [    9.183387] 
-wlp0s20f3: RX AssocResp from c2:95:70:cf:7f:31 (capab=0x531 status=0 aid=25)
-Jan 13 16:30:19 test-ThinkPad-X1-Nano-Gen-1 kernel: [    9.196275] 
-wlp0s20f3: associated
-Jan 13 16:30:39 test-ThinkPad-X1-Nano-Gen-1 kernel: [   29.438595] 
-kauditd_printk_skb: 52 callbacks suppressed
-Jan 13 16:30:39 test-ThinkPad-X1-Nano-Gen-1 kernel: [   29.438598] 
-audit: type=1400 audit(1736757039.724:64): apparmor="DENIED" 
-operation="capable" class="cap" 
-profile="/snap/snapd/23545/usr/lib/snapd/snap-confine" pid=1542 
-comm="snap-confine" capability=12  capname="net_admin"
-Jan 13 16:30:39 test-ThinkPad-X1-Nano-Gen-1 kernel: [   29.438608] 
-audit: type=1400 audit(1736757039.724:65): apparmor="DENIED" 
-operation="capable" class="cap" 
-profile="/snap/snapd/23545/usr/lib/snapd/snap-confine" pid=1542 
-comm="snap-confine" capability=38  capname="perfmon"
-Jan 13 16:30:39 test-ThinkPad-X1-Nano-Gen-1 kernel: [   29.484757] 
-Bluetooth: RFCOMM TTY layer initialized
-Jan 13 16:30:39 test-ThinkPad-X1-Nano-Gen-1 kernel: [   29.484764] 
-Bluetooth: RFCOMM socket layer initialized
-Jan 13 16:30:39 test-ThinkPad-X1-Nano-Gen-1 kernel: [   29.484768] 
-Bluetooth: RFCOMM ver 1.11
-Jan 13 16:30:39 test-ThinkPad-X1-Nano-Gen-1 kernel: [   29.660767] 
-rfkill: input handler enabled
-Jan 13 16:30:40 test-ThinkPad-X1-Nano-Gen-1 kernel: [   29.861572] This 
-is from alc_fixup_no_shutup++444444444444444444444444444444+-.
-Jan 13 16:30:40 test-ThinkPad-X1-Nano-Gen-1 kernel: [   29.861577] This 
-is from alc_fixup_no_shutup++TTTTTTTTTTTTTTTTTTTTTTTTTTTTTTT+-.
-Jan 13 16:30:41 test-ThinkPad-X1-Nano-Gen-1 kernel: [   30.808052] 
-rfkill: input handler disabled
-Jan 13 16:30:42 test-ThinkPad-X1-Nano-Gen-1 kernel: [   32.255105] 
-audit: type=1400 audit(1736757042.540:66): apparmor="DENIED" 
-operation="capable" class="cap" 
-profile="/snap/snapd/23545/usr/lib/snapd/snap-confine" pid=2163 
-comm="snap-confine" capability=12  capname="net_admin"
-Jan 13 16:30:42 test-ThinkPad-X1-Nano-Gen-1 kernel: [   32.255113] 
-audit: type=1400 audit(1736757042.540:67): apparmor="DENIED" 
-operation="capable" class="cap" 
-profile="/snap/snapd/23545/usr/lib/snapd/snap-confine" pid=2163 
-comm="snap-confine" capability=38  capname="perfmon"
-Jan 13 16:31:35 test-ThinkPad-X1-Nano-Gen-1 kernel: [   85.593309] This 
-is from alc_fixup_no_shutup++444444444444444444444444444444+-.
-Jan 13 16:31:35 test-ThinkPad-X1-Nano-Gen-1 kernel: [   85.593316] This 
-is from alc_fixup_no_shutup++TTTTTTTTTTTTTTTTTTTTTTTTTTTTTTT+-.
-Jan 13 19:06:02 test-ThinkPad-X1-Nano-Gen-1 kernel: [ 9352.480329] 
-loop14: detected capacity change from 0 to 562880
-Jan 13 19:06:05 test-ThinkPad-X1-Nano-Gen-1 kernel: [ 9355.618422] 
-audit: type=1400 audit(1736766365.698:68): apparmor="STATUS" 
-operation="profile_replace" info="same as current profile, skipping" 
-profile="unconfined" name="/snap/snapd/23545/usr/lib/snapd/snap-confine" 
-pid=3116 comm="apparmor_parser"
-Jan 13 19:06:05 test-ThinkPad-X1-Nano-Gen-1 kernel: [ 9355.618433] 
-audit: type=1400 audit(1736766365.698:69): apparmor="STATUS" 
-operation="profile_replace" info="same as current profile, skipping" 
-profile="unconfined" 
-name="/snap/snapd/23545/usr/lib/snapd/snap-confine//mount-namespace-capture-helper" 
-pid=3116 comm="apparmor_parser"
-Jan 13 19:06:05 test-ThinkPad-X1-Nano-Gen-1 kernel: [ 9355.730349] 
-audit: type=1400 audit(1736766365.810:70): apparmor="STATUS" 
-operation="profile_replace" profile="unconfined" 
-name="snap.firefox.hook.configure" pid=3121 comm="apparmor_parser"
-Jan 13 19:06:05 test-ThinkPad-X1-Nano-Gen-1 kernel: [ 9355.764308] 
-audit: type=1400 audit(1736766365.846:71): apparmor="STATUS" 
-operation="profile_replace" profile="unconfined" 
-name="snap.firefox.hook.post-refresh" pid=3123 comm="apparmor_parser"
-Jan 13 19:06:05 test-ThinkPad-X1-Nano-Gen-1 kernel: [ 9355.766762] 
-audit: type=1400 audit(1736766365.846:72): apparmor="STATUS" 
-operation="profile_replace" profile="unconfined" 
-name="snap.firefox.hook.disconnect-plug-host-hunspell" pid=3122 
-comm="apparmor_parser"
-Jan 13 19:06:06 test-ThinkPad-X1-Nano-Gen-1 kernel: [ 9356.049245] 
-audit: type=1400 audit(1736766366.130:73): apparmor="STATUS" 
-operation="profile_replace" profile="unconfined" 
-name="snap.firefox.firefox" pid=3119 comm="apparmor_parser"
-Jan 13 19:06:06 test-ThinkPad-X1-Nano-Gen-1 kernel: [ 9356.088026] 
-audit: type=1400 audit(1736766366.170:74): apparmor="STATUS" 
-operation="profile_replace" profile="unconfined" 
-name="snap.firefox.geckodriver" pid=3120 comm="apparmor_parser"
-Jan 13 19:06:06 test-ThinkPad-X1-Nano-Gen-1 kernel: [ 9356.104996] 
-audit: type=1400 audit(1736766366.186:75): apparmor="STATUS" 
-operation="profile_replace" profile="unconfined" 
-name="snap-update-ns.firefox" pid=3118 comm="apparmor_parser"
-Jan 13 19:06:06 test-ThinkPad-X1-Nano-Gen-1 kernel: [ 9356.294691] 
-audit: type=1400 audit(1736766366.374:76): apparmor="STATUS" 
-operation="profile_replace" info="same as current profile, skipping" 
-profile="unconfined" name="/snap/snapd/23545/usr/lib/snapd/snap-confine" 
-pid=3204 comm="apparmor_parser"
-Jan 13 19:06:06 test-ThinkPad-X1-Nano-Gen-1 kernel: [ 9356.294696] 
-audit: type=1400 audit(1736766366.374:77): apparmor="STATUS" 
-operation="profile_replace" info="same as current profile, skipping" 
-profile="unconfined" 
-name="/snap/snapd/23545/usr/lib/snapd/snap-confine//mount-namespace-capture-helper" 
-pid=3204 comm="apparmor_parser"
-Jan 14 00:00:02 test-ThinkPad-X1-Nano-Gen-1 kernel: [26992.726977] 
-kauditd_printk_skb: 7 callbacks suppressed
-Jan 14 00:00:02 test-ThinkPad-X1-Nano-Gen-1 kernel: [26992.726981] 
-audit: type=1400 audit(1736784002.633:85): apparmor="DENIED" 
-operation="capable" class="cap" profile="/usr/sbin/cupsd" pid=4432 
-comm="cupsd" capability=12  capname="net_admin"
-Jan 14 03:54:13 test-ThinkPad-X1-Nano-Gen-1 kernel: [41043.929183] nvme 
-nvme0: using unchecked data buffer
-Jan 14 14:13:19 test-ThinkPad-X1-Nano-Gen-1 kernel: [78189.824014] This 
-is from alc_fixup_no_shutup++444444444444444444444444444444+-.
-Jan 14 14:13:19 test-ThinkPad-X1-Nano-Gen-1 kernel: [78189.824021] This 
-is from alc_fixup_no_shutup++TTTTTTTTTTTTTTTTTTTTTTTTTTTTTTT+-.
-Jan 14 14:37:32 test-ThinkPad-X1-Nano-Gen-1 kernel: [79643.222000] This 
-is from alc_fixup_no_shutup++444444444444444444444444444444+-.
-Jan 14 14:37:32 test-ThinkPad-X1-Nano-Gen-1 kernel: [79643.222006] This 
-is from alc_fixup_no_shutup++TTTTTTTTTTTTTTTTTTTTTTTTTTTTTTT+-.
-......
-
->> Instead, you can change like:
->>
->> --- a/sound/pci/hda/patch_realtek.c
->> +++ b/sound/pci/hda/patch_realtek.c
->> @@ -6925,11 +6925,16 @@ static void alc285_fixup_hp_envy_x360(struct 
->> hda_codec *codec,
->> Â  /* for hda_fixup_thinkpad_acpi() */
->> Â  #include "thinkpad_helper.c"
->> -static void alc_fixup_thinkpad_acpi(struct hda_codec *codec,
->> -Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â  const struct hda_fixup *fix, int action)
->> +/* for hda_fixup_ideapad_acpi() */
->> +#include "ideapad_hotkey_led_helper.c"
->> +
->> +/* generic fixup for both Lenovo Thinkpad and Ideapad */
->> +static void alc_fixup_xpad_acpi(struct hda_codec *codec,
->> +Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â  const struct hda_fixup *fix, int action)
->> Â  {
->> Â Â Â Â Â  alc_fixup_no_shutup(codec, fix, action); /* reduce click noise */
->> Â Â Â Â Â  hda_fixup_thinkpad_acpi(codec, fix, action);
->> +Â Â Â  hda_fixup_ideapad_acpi(codec, fix, action);
->> Â  }
->> Â  /* Fixup for Lenovo Legion 15IMHg05 speaker output on headset 
->> removal. */
->> @@ -8321,7 +8326,7 @@ static const struct hda_fixup alc269_fixups[] = {
->> Â Â Â Â Â  },
->> Â Â Â Â Â  [ALC269_FIXUP_THINKPAD_ACPI] = {
->> Â Â Â Â Â Â Â Â Â  .type = HDA_FIXUP_FUNC,
->> -Â Â Â Â Â Â Â  .v.func = alc_fixup_thinkpad_acpi,
->> +Â Â Â Â Â Â Â  .v.func = alc_fixup_xpad_acpi,
->> Â Â Â Â Â Â Â Â Â  .chained = true,
->> Â Â Â Â Â Â Â Â Â  .chain_id = ALC269_FIXUP_SKU_IGNORE,
->> Â Â Â Â Â  },
->>
->> Since hda_fixup_ideapad_acpi() is NOP except for Ideapad, this
->> shouldn't break other models, while it covers the Ideadpad now.
->>
->>
->> thanks,
->>
->> Takashi
-> 
+Please double-check.
 
 
+Takashi
