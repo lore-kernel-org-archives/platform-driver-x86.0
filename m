@@ -1,121 +1,239 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 955E71B21AB;
-	Tue, 14 Jan 2025 17:13:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 64FDD1D5154;
+	Tue, 14 Jan 2025 17:14:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736874797; cv=none; b=KtgONMLGzaalliMN5Jjf8cBYtCbX9EbuRhWLpgZRL6IEV/JqA7f95roNKD3wyAF9MI+699EGqmujxI3STF/XuaVv8UwTPxQq8DRQyQUlzWIyaCKC/vG9JansHfOr2x9YsTazvp4+2xHrh37yYv1jeFGEDPbULgfoP8wWhE1NVY0=
+	t=1736874841; cv=none; b=GDoDaDJP6jzJ4DOWpIvvK1O644QrUsMQpMQtkeF0VxgopEbmj8Q+EbzwPPW5M+5mHjFVO8tO7q83ZRL3DTBs85PCdUb8GeUaSrQCwBxRvcrI1Uln+CAsTPlCORMYYT9TsZUDE0qwit5eipn2afUqXZ7JxRvoR5FKeYIoaCsHYlA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736874797; c=relaxed/simple;
-	bh=v/lhlW+MWrFs3ZxnucpkK9SEvjW3VjFc1bROcWmjLwM=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=faRJTlKb0ubThwXNXJky169L7CP0dVtFZJuft2VR38fpgewMcp+QRN/t/5fcdHofvy5MNrAqWLhSMTSocrljYF9T7+1oWatoznxjK+jFbfMIT9j4qm9SggI55qt3UwN8Crkhz83RXbycLLgCWBdJ4xS++mrIjAAtE4gj/0dNqoM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Vi+jldlm; arc=none smtp.client-ip=198.175.65.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1736874841; c=relaxed/simple;
+	bh=6xElT7U2OxBKAh95+jSWPMTILfpv5e1HIARlEGGndd0=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Q3U36YqpLK7fpkM+lhg2yxO7jFe4YDXeE8lhg7r0oqXzBm+32XuaiPm1v/6n94WJQX1CK8j5ZKELFF55IRBHAA2jR0OSKc5sc27RIOZaChhGFK/fEfXiUGPBjJ0CxrZimRBcbi4zVYrWibBYtTRiISazwLLie2mlEX+1EA2FUB8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=vCcTuAr8; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Vi+jldlm"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1736874796; x=1768410796;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=v/lhlW+MWrFs3ZxnucpkK9SEvjW3VjFc1bROcWmjLwM=;
-  b=Vi+jldlmr3gPZ+YhWjWcATn5vP6tfUeZK4K2EKlItkefjUXzF8H8iCSF
-   VtpL+pJTlLw96cE9iSW3qvxFRs2zrMELfORLIU/wXO4z7ETBQOofPaosS
-   RSTwamXM4X+ZlPVxl+ZpMMknblJJ9AMFMFLLfKqzBTxfeE8xks2zAVv/h
-   6lbL8EaAeFCvbxjymQ48Vs0TocbnlweskAeZpxEz9fU2qIcaCV5nmkWXt
-   JwCLwhG73Kq4w1zVfzi+38HYOH6dyP/jEmH4A2BAQK1HKIA7Zrs4rzM60
-   pBxEWdqGPghQ8JQPY3FxZwaeGEBCFq7IGlH/npS+thbB5w16lNYCOooxE
-   Q==;
-X-CSE-ConnectionGUID: jCSDdy0HQumy21ZvhsSEhQ==
-X-CSE-MsgGUID: ZCTrxS+ZQw62nkvCPEvjCg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11315"; a="47671724"
-X-IronPort-AV: E=Sophos;i="6.12,314,1728975600"; 
-   d="scan'208";a="47671724"
-Received: from orviesa008.jf.intel.com ([10.64.159.148])
-  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Jan 2025 09:13:15 -0800
-X-CSE-ConnectionGUID: AR87aroLSYyNiGzaTOLmaA==
-X-CSE-MsgGUID: rhk28/WTRIuZmLwFP7O32A==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
-   d="scan'208";a="105727830"
-Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.54])
-  by orviesa008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Jan 2025 09:13:13 -0800
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Tue, 14 Jan 2025 19:13:09 +0200 (EET)
-To: Chenyuan Yang <chenyuan0y@gmail.com>
-cc: Hans de Goede <hdegoede@redhat.com>, platform-driver-x86@vger.kernel.org, 
-    LKML <linux-kernel@vger.kernel.org>, zijie98@gmail.com
-Subject: Re: [PATCH v2] platform/x86: lenovo-yoga-tab2-pro-1380-fastcharger:
- fix race condition
-In-Reply-To: <20250111180951.2277757-1-chenyuan0y@gmail.com>
-Message-ID: <a973cd37-4d32-e5bd-fb66-3629f9414041@linux.intel.com>
-References: <20250111180951.2277757-1-chenyuan0y@gmail.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="vCcTuAr8"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E38CBC4CEE3;
+	Tue, 14 Jan 2025 17:14:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1736874840;
+	bh=6xElT7U2OxBKAh95+jSWPMTILfpv5e1HIARlEGGndd0=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=vCcTuAr8mYL27YHh8RwCnact85gtObi1JRYhaE0AgI6rp0zdZmofghvWvN7yf+qwo
+	 CFONX3q4niYhPYt7UlQqvRIv2qLJyr8GacrvffcZfL/ljvpBIUq2Ie2jUJK5Y4kN9y
+	 OZEY6ccUDhMTUlsMb6WMjRk7z1yXCoysI2E3Rh5Sxng77DAh/4zKdVJYNYhO7u1XaS
+	 rmQNsp9fgqc9FxLsxSuDqYaNh1GCoO8QdXDrVuTUK9ste+0oaKnoLQDcfJrlHdyhC/
+	 s+OklTs2cEcQxz6EaW0X7qTsVOMP/nt0fh4pwbxvfsO7ldwHJuSoKSP0Wg7iN0TPD+
+	 lLslL/RyH1HTQ==
+Received: by mail-oi1-f170.google.com with SMTP id 5614622812f47-3eba7784112so3089934b6e.2;
+        Tue, 14 Jan 2025 09:14:00 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCXFVLqL1TcIG1PBpGGA7HqLIA03sA/th0XI1TBB4LLm3jeGhBm42fNSuv6RDxmchME8o1z8rY37LZmWBCPQ24NA09ysOg==@vger.kernel.org, AJvYcCXI6I3weo2HEqW4OuBXM6+0SpNMA+1OOFx3V/EpsASzfBQ9husipg4Oktf5i6u+NPaV+aXunWfCP4aORGb7@vger.kernel.org, AJvYcCXj2xJIbsKaKUAMrSLzrPwPX/6vONbrHKEdCBsgU9DR6DnoI2SVdCs0PNLDmZPbrYFvBi62hK2E4w24@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw1fezQzdSsM28CV0KFSNxBriC1hggF8qO1RbL5k556OhW7dDG2
+	WoTFxVpkyYGew4+0ONvY8mSSWz1jZBi2gWo0tvuJh45JN2XhceCBbefvIql3RuO6cEen5uhOEr6
+	nrLjPCE/F7LVM5tvEB5AmcBnSGJk=
+X-Google-Smtp-Source: AGHT+IEt3nGfMxwItJjhYapytL6AT8hJDw8/2MgLlURGGNP/SPCUu6W4hR86aukYTLfeIKl3SjrBI84mzzoUcdNL/kg=
+X-Received: by 2002:a05:6808:2797:b0:3ec:df52:a3c8 with SMTP id
+ 5614622812f47-3ef2ed70cdcmr13797668b6e.34.1736874840144; Tue, 14 Jan 2025
+ 09:14:00 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+References: <20250114153726.11802-1-kuurtb@gmail.com> <20250114153726.11802-16-kuurtb@gmail.com>
+ <b271023f-8a84-a48d-2d59-f0815014687b@linux.intel.com>
+In-Reply-To: <b271023f-8a84-a48d-2d59-f0815014687b@linux.intel.com>
+From: "Rafael J. Wysocki" <rafael@kernel.org>
+Date: Tue, 14 Jan 2025 18:13:48 +0100
+X-Gmail-Original-Message-ID: <CAJZ5v0i8HNj5ztnt2K=QqL6eCUCEFbcDgAt2AWWhG4UwHL_EuQ@mail.gmail.com>
+X-Gm-Features: AbW1kva6vQScZRlnDpQXOEObMQad5T55fCAdtzyYdgfxK0lrwuD5SajX6BkxvEs
+Message-ID: <CAJZ5v0i8HNj5ztnt2K=QqL6eCUCEFbcDgAt2AWWhG4UwHL_EuQ@mail.gmail.com>
+Subject: Re: [PATCH v2 15/18] ACPI: platform_profile: Remove
+ platform_profile_handler from exported symbols
+To: =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Cc: Kurt Borja <kuurtb@gmail.com>, platform-driver-x86@vger.kernel.org, 
+	"Rafael J. Wysocki" <rafael@kernel.org>, Len Brown <lenb@kernel.org>, linux-acpi@vger.kernel.org, 
+	LKML <linux-kernel@vger.kernel.org>, 
+	Mario Limonciello <mario.limonciello@amd.com>, Armin Wolf <W_Armin@gmx.de>, 
+	Joshua Grisham <josh@joshuagrisham.com>, "Derek J. Clark" <derekjohn.clark@gmail.com>, 
+	Hans de Goede <hdegoede@redhat.com>, Maximilian Luz <luzmaximilian@gmail.com>, 
+	"Lee, Chun-Yi" <jlee@suse.com>, Shyam Sundar S K <Shyam-sundar.S-k@amd.com>, 
+	Corentin Chary <corentin.chary@gmail.com>, "Luke D. Jones" <luke@ljones.dev>, 
+	Lyndon Sanche <lsanche@lyndeno.ca>, Ike Panhc <ike.pan@canonical.com>, 
+	Henrique de Moraes Holschuh <hmh@hmh.eng.br>, Mark Pearson <mpearson-lenovo@squebb.ca>, 
+	Alexis Belmonte <alexbelm48@gmail.com>, Ai Chao <aichao@kylinos.cn>, Gergo Koteles <soyer@irl.hu>, 
+	Dell.Client.Kernel@dell.com, ibm-acpi-devel@lists.sourceforge.net
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Sat, 11 Jan 2025, Chenyuan Yang wrote:
+On Tue, Jan 14, 2025 at 5:55=E2=80=AFPM Ilpo J=C3=A4rvinen
+<ilpo.jarvinen@linux.intel.com> wrote:
+>
+> On Tue, 14 Jan 2025, Kurt Borja wrote:
+>
+> > In order to protect the platform_profile_handler from API consumers,
+> > allocate it in platform_profile_register() and modify it's signature
+> > accordingly.
+> >
+> > Remove the platform_profile_handler from all consumer drivers and
+> > replace them with a pointer to the class device, which is
+> > now returned from platform_profile_register().
+> >
+> > Replace *pprof with a pointer to the class device in the rest of
+> > exported symbols.
+> >
+> > Signed-off-by: Kurt Borja <kuurtb@gmail.com>
+> > ---
+> >  drivers/acpi/platform_profile.c               | 87 ++++++++++++-------
+> >  .../surface/surface_platform_profile.c        | 11 ++-
+> >  drivers/platform/x86/acer-wmi.c               | 18 ++--
+> >  drivers/platform/x86/amd/pmf/pmf.h            |  2 +-
+> >  drivers/platform/x86/amd/pmf/sps.c            | 17 ++--
+> >  drivers/platform/x86/asus-wmi.c               | 20 ++---
+> >  drivers/platform/x86/dell/alienware-wmi.c     |  9 +-
+> >  drivers/platform/x86/dell/dell-pc.c           | 22 ++---
+> >  drivers/platform/x86/hp/hp-wmi.c              | 19 ++--
+> >  drivers/platform/x86/ideapad-laptop.c         | 14 +--
+> >  .../platform/x86/inspur_platform_profile.c    |  9 +-
+> >  drivers/platform/x86/thinkpad_acpi.c          | 14 ++-
+> >  include/linux/platform_profile.h              | 12 ++-
+> >  13 files changed, 125 insertions(+), 129 deletions(-)
+> >
+> > diff --git a/drivers/acpi/platform_profile.c b/drivers/acpi/platform_pr=
+ofile.c
+> > index 34e22b006ccc..2fae5e2fc962 100644
+> > --- a/drivers/acpi/platform_profile.c
+> > +++ b/drivers/acpi/platform_profile.c
+> > @@ -4,6 +4,7 @@
+> >
+> >  #include <linux/acpi.h>
+> >  #include <linux/bits.h>
+> > +#include <linux/cleanup.h>
+> >  #include <linux/init.h>
+> >  #include <linux/kdev_t.h>
+> >  #include <linux/mutex.h>
+> > @@ -213,9 +214,17 @@ static struct attribute *profile_attrs[] =3D {
+> >  };
+> >  ATTRIBUTE_GROUPS(profile);
+> >
+> > +static void pprof_device_release(struct device *dev)
+> > +{
+> > +     struct platform_profile_handler *pprof =3D to_pprof_handler(dev);
+> > +
+> > +     kfree(pprof);
+> > +}
+> > +
+> >  static const struct class platform_profile_class =3D {
+> >       .name =3D "platform-profile",
+> >       .dev_groups =3D profile_groups,
+> > +     .dev_release =3D pprof_device_release,
+> >  };
+> >
+> >  /**
+> > @@ -409,10 +418,10 @@ static const struct attribute_group platform_prof=
+ile_group =3D {
+> >       .is_visible =3D profile_class_is_visible,
+> >  };
+> >
+> > -void platform_profile_notify(struct platform_profile_handler *pprof)
+> > +void platform_profile_notify(struct device *dev)
+> >  {
+> >       scoped_cond_guard(mutex_intr, return, &profile_lock) {
+> > -             _notify_class_profile(&pprof->class_dev, NULL);
+> > +             _notify_class_profile(dev, NULL);
+> >       }
+> >       sysfs_notify(acpi_kobj, NULL, "platform_profile");
+> >  }
+> > @@ -461,40 +470,51 @@ int platform_profile_cycle(void)
+> >  }
+> >  EXPORT_SYMBOL_GPL(platform_profile_cycle);
+> >
+> > -int platform_profile_register(struct platform_profile_handler *pprof, =
+void *drvdata)
+> > +struct device *platform_profile_register(struct device *dev, const cha=
+r *name,
+> > +                                      void *drvdata,
+> > +                                      const struct platform_profile_op=
+s *ops)
+> >  {
+> > +     int minor;
+> >       int err;
+> >
+> > -     /* Sanity check the profile handler */
+> > -     if (!pprof || !pprof->ops->profile_set || !pprof->ops->profile_ge=
+t ||
+> > -         !pprof->ops->probe) {
+> > +     /* Sanity check */
+> > +     if (!dev || !name || !ops || !ops->profile_get ||
+> > +         !ops->profile_set || !ops->probe) {
+> >               pr_err("platform_profile: handler is invalid\n");
+> > -             return -EINVAL;
+> > +             return ERR_PTR(-EINVAL);
+> >       }
+> >
+> > -     err =3D pprof->ops->probe(drvdata, pprof->choices);
+> > +     struct platform_profile_handler *pprof __free(kfree) =3D kzalloc(
+> > +             sizeof(*pprof), GFP_KERNEL);
+> > +     if (!pprof)
+> > +             return ERR_PTR(-ENOMEM);
+> > +
+> > +     err =3D ops->probe(drvdata, pprof->choices);
+> >       if (err < 0)
+> > -             return err;
+> > +             return ERR_PTR(err);
+> >
+> >       if (bitmap_empty(pprof->choices, PLATFORM_PROFILE_LAST)) {
+> >               pr_err("platform_profile: no available profiles\n");
+> > -             return -EINVAL;
+> > +             return ERR_PTR(-EINVAL);
+> >       }
+> >
+> >       guard(mutex)(&profile_lock);
+> >
+> >       /* create class interface for individual handler */
+> > -     pprof->minor =3D ida_alloc(&platform_profile_ida, GFP_KERNEL);
+> > -     if (pprof->minor < 0)
+> > -             return pprof->minor;
+> > +     minor =3D ida_alloc(&platform_profile_ida, GFP_KERNEL);
+> > +     if (minor < 0)
+> > +             return ERR_PTR(minor);
+> >
+> > +     pprof->name =3D name;
+> > +     pprof->ops =3D ops;
+> > +     pprof->minor =3D minor;
+> >       pprof->class_dev.class =3D &platform_profile_class;
+> > -     pprof->class_dev.parent =3D pprof->dev;
+> > +     pprof->class_dev.parent =3D dev;
+> >       dev_set_drvdata(&pprof->class_dev, drvdata);
+> >       dev_set_name(&pprof->class_dev, "platform-profile-%d", pprof->min=
+or);
+> >       err =3D device_register(&pprof->class_dev);
+> >       if (err) {
+> > -             put_device(&pprof->class_dev);
+> > +             put_device(&no_free_ptr(pprof)->class_dev);
+> >               goto cleanup_ida;
+> >       }
+> >
+> > @@ -504,20 +524,21 @@ int platform_profile_register(struct platform_pro=
+file_handler *pprof, void *drvd
+> >       if (err)
+> >               goto cleanup_cur;
+> >
+> > -     return 0;
+> > +     return &no_free_ptr(pprof)->class_dev;
+> >
+> >  cleanup_cur:
+> > -     device_unregister(&pprof->class_dev);
+> > +     device_unregister(&no_free_ptr(pprof)->class_dev);
+>
+> I don't like how this is architected.
+>
+> IMO, no_free_ptr() should not appear on error/rollback paths. The pointer
+> is going to be freed despite the code just told it's not going to be
+> freed, which sends conflicting signals. Obviously, it is because this
+> function has relinquished its ownership of the pointer but as is it seems
+> a dangerous/confusing pattern.
 
-> The yt2_1380_fc_serdev_probe() function calls devm_serdev_device_open()
-> before setting the client ops via serdev_device_set_client_ops(). This
-> ordering can trigger a NULL pointer dereference in the serdev controller's
-> receive_buf handler, as it assumes serdev->ops is valid when
-> SERPORT_ACTIVE is set.
-> 
-> This is similar to the issue fixed in commit 5e700b384ec1
-> ("platform/chrome: cros_ec_uart: properly fix race condition") where
-> devm_serdev_device_open() was called before fully initializing the
-> device.
-> 
-> Fix the race by ensuring client ops are set before enabling the port via
-> devm_serdev_device_open().
-> 
-> Note, serdev_device_set_baudrate() and serdev_device_set_flow_control()
-> calls should be after the devm_serdev_device_open() call.
-> 
-> Fixes: b2ed33e8d486 ("platform/x86: Add lenovo-yoga-tab2-pro-1380-fastcharger driver")
-> Signed-off-by: Chenyuan Yang <chenyuan0y@gmail.com>
-> CC: Hans de Goede <hdegoede@redhat.com>
-
-I've applied this and the other similar patch into the review-ilpo-fixes 
-branch.
-
-I altered the shortlogs to: "platform/x86: xx: fix serdev race".
-
--- 
- i.
-
-> ---
->  drivers/platform/x86/lenovo-yoga-tab2-pro-1380-fastcharger.c | 5 +++--
->  1 file changed, 3 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/platform/x86/lenovo-yoga-tab2-pro-1380-fastcharger.c b/drivers/platform/x86/lenovo-yoga-tab2-pro-1380-fastcharger.c
-> index d2699ca24f34..a96b215cd2c5 100644
-> --- a/drivers/platform/x86/lenovo-yoga-tab2-pro-1380-fastcharger.c
-> +++ b/drivers/platform/x86/lenovo-yoga-tab2-pro-1380-fastcharger.c
-> @@ -199,14 +199,15 @@ static int yt2_1380_fc_serdev_probe(struct serdev_device *serdev)
->  	if (ret)
->  		return ret;
->  
-> +	serdev_device_set_drvdata(serdev, fc);
-> +	serdev_device_set_client_ops(serdev, &yt2_1380_fc_serdev_ops);
-> +
->  	ret = devm_serdev_device_open(dev, serdev);
->  	if (ret)
->  		return dev_err_probe(dev, ret, "opening UART device\n");
->  
->  	serdev_device_set_baudrate(serdev, 600);
->  	serdev_device_set_flow_control(serdev, false);
-> -	serdev_device_set_drvdata(serdev, fc);
-> -	serdev_device_set_client_ops(serdev, &yt2_1380_fc_serdev_ops);
->  
->  	ret = devm_extcon_register_notifier_all(dev, fc->extcon, &fc->nb);
->  	if (ret)
-> 
+I agree.
