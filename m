@@ -1,155 +1,143 @@
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mout.gmx.net (mout.gmx.net [212.227.15.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7596570816;
-	Wed, 15 Jan 2025 16:59:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E35073BB54;
+	Wed, 15 Jan 2025 19:08:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736960348; cv=none; b=ob84wb56OMl4iGxrJlK8xh80N9RRoi18MzD4z4XNH7qPi8pfPG/xjOD2pYa57pDppBczfxd4kNlJy+TVwUSkhjua0AKmEm7byLbYM3mSIL3SqmwWywI+Jkggrb9KyfzAiwiODidew9UbQiG4wqkYAaTFW6KiMkLVof85iDLAfoo=
+	t=1736968085; cv=none; b=WePxyFicvXyeyCdCaBJzUKjgeuVQuwHFJ3ZYGh56fwvEg0WvggsukpKMxCK+kJ6dUTacNML1Vs+pxvKqdQMXYHOmnPcEsFOgvUHYe2d2K6tThznOsTQLsB/nFo6Bogu/YpvAHOJlP2zuS6r7XyC6Lg5mL75hY/UhaX1fCU0jRFc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736960348; c=relaxed/simple;
-	bh=kbWbuDeb4qN7Z9yFOZ+Gbby59klpWxuekkPVeiYyH2A=;
-	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=UIlo2nlcxyb2KRrqcizrq+CSwoR2ZSnQIe6koHvx4AaZ12JFT5UkOyCP7qVB/scH5RWSaSUXzdDHE9g5Vy8or0iGGWhnNavO9jM/6rk6qXlRFxO+xNOki9nQxvgzU5E92PtoSU9kYgj0/0OWLYzrW+Gro7GMx6So1iMDri2Ye3k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=joCtCBez; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=GRVE0WAC; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=joCtCBez; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=GRVE0WAC; arc=none smtp.client-ip=195.135.223.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+	s=arc-20240116; t=1736968085; c=relaxed/simple;
+	bh=yKHk27ysIJdLeF9Vydk2MFU/GIKZyyc6EzmE/vT/P4o=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=rv364HyVE4O29L4siwdYSuTYzqPxOGGQzppX+lOUrJHx93b6gOjoEB72xZheAkpF+4dtD3CscoRo3qrpiIkrtdx+4J+BnR579FgHnfT4sE5gQNo/UQ/yKOXF2gf7bafDERl2jGKUzBckPBMTftGuRg/Mzx0jYIQ+YF0lxn8w28c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b=heiYmWBY; arc=none smtp.client-ip=212.227.15.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="joCtCBez";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="GRVE0WAC";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="joCtCBez";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="GRVE0WAC"
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id 6B8801F37E;
-	Wed, 15 Jan 2025 16:59:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1736960344; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=7cHeIcLFH2Le2MqrG+Ktd02IGFq/bF88bBMS+TMf/aM=;
-	b=joCtCBezNXegwlzp9aJWAoNwY3z7OB0V15Evx9O1TknPyZqFX89ySMxa+a5en9g2EAySXM
-	x80fpCoggZBjD3OWrwxyOU39ZaQpIXX8d+Mu3D07tNfuDSGTJbGv7RvN9YgpLv/VIK3UTW
-	vU6EBIUBVy7uSixc96Vm6wbXDb6J4a0=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1736960344;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=7cHeIcLFH2Le2MqrG+Ktd02IGFq/bF88bBMS+TMf/aM=;
-	b=GRVE0WAC99K3hpew8JWiux6dmqVusyd1OewpFJFPkLEVKnB4UwTI9+NHXLGkn0Lt8Jt80L
-	nXJRG1pOrFm2DWCg==
-Authentication-Results: smtp-out2.suse.de;
-	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=joCtCBez;
-	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=GRVE0WAC
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1736960344; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=7cHeIcLFH2Le2MqrG+Ktd02IGFq/bF88bBMS+TMf/aM=;
-	b=joCtCBezNXegwlzp9aJWAoNwY3z7OB0V15Evx9O1TknPyZqFX89ySMxa+a5en9g2EAySXM
-	x80fpCoggZBjD3OWrwxyOU39ZaQpIXX8d+Mu3D07tNfuDSGTJbGv7RvN9YgpLv/VIK3UTW
-	vU6EBIUBVy7uSixc96Vm6wbXDb6J4a0=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1736960344;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=7cHeIcLFH2Le2MqrG+Ktd02IGFq/bF88bBMS+TMf/aM=;
-	b=GRVE0WAC99K3hpew8JWiux6dmqVusyd1OewpFJFPkLEVKnB4UwTI9+NHXLGkn0Lt8Jt80L
-	nXJRG1pOrFm2DWCg==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id EAC9E13A6F;
-	Wed, 15 Jan 2025 16:59:03 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id wnyJN1fph2djJgAAD6G6ig
-	(envelope-from <tiwai@suse.de>); Wed, 15 Jan 2025 16:59:03 +0000
-Date: Wed, 15 Jan 2025 17:59:03 +0100
-Message-ID: <87y0zchv3c.wl-tiwai@suse.de>
-From: Takashi Iwai <tiwai@suse.de>
-To: Jackie Dong <xy-jackie@139.com>
-Cc: perex@perex.cz,
-	tiwai@suse.com,
-	bo.liu@senarytech.com,
-	kovalev@altlinux.org,
-	me@oldherl.one,
-	jaroslaw.janik@gmail.com,
-	songxiebing@kylinos.cn,
-	cs@tuxedo.de,
-	kailang@realtek.com,
-	sbinding@opensource.cirrus.com,
-	simont@opensource.cirrus.com,
-	josh@joshuagrisham.com,
-	rf@opensource.cirrus.com,
-	linux-kernel@vger.kernel.org,
-	linux-sound@vger.kernel.org,
-	platform-driver-x86@vger.kernel.org,
-	dongeg1@lenovo.com,
-	Mark Pearson <mpearson-lenovo@squebb.ca>
-Subject: Re: [PATCH v4] ALSA: hda: Support for Ideapad hotkey mute LEDs
-In-Reply-To: <20250115162515.15026-1-xy-jackie@139.com>
-References: <20250115162515.15026-1-xy-jackie@139.com>
-User-Agent: Wanderlust/2.15.9 (Almost Unreal) Emacs/27.2 Mule/6.0
+	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b="heiYmWBY"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.de;
+	s=s31663417; t=1736968079; x=1737572879; i=w_armin@gmx.de;
+	bh=TiSW3lXNKMYakqd5G9HxcSgDfSTEdZh7Q8EQ+SaH3SE=;
+	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:To:Cc:
+	 References:From:In-Reply-To:Content-Type:
+	 Content-Transfer-Encoding:cc:content-transfer-encoding:
+	 content-type:date:from:message-id:mime-version:reply-to:subject:
+	 to;
+	b=heiYmWBYLgPMe7GRu47elZHENQnOEW5AEP7BwTrbGcmgy2EZNDFPUUAPvuHIVast
+	 aPAF0zRPwFEYLC69Wp0op2E96XblSe3GV8yuohVnRJynuiHWs3xX6XVxaOfPEuD3F
+	 m1fN3bTYeekHvXHVmBwhTjgIio1qt1syDjDCiHql6tZ8a8RiLptLYi67xwo0QEU9l
+	 ++2jUypVviu7yiJsGBtHnOdGbN8c/FwvfYmFj5nu6PHw0ET02fIcFZsG0U8DHDEnI
+	 /JygKwC6Vgpy5FHzH4k87O7YBp7oLiSkE9ExalQ7O7j4FcMHwckk6FINcqmwXe3/X
+	 rIb8H7iBE/FlpQ+ogg==
+X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
+Received: from [192.168.0.69] ([91.14.230.110]) by mail.gmx.net (mrgmx005
+ [212.227.17.190]) with ESMTPSA (Nemesis) id 1MmDIo-1t7ugA39u4-00eBr6; Wed, 15
+ Jan 2025 20:07:58 +0100
+Message-ID: <71969195-db20-4e24-8caf-6fee389a7d70@gmx.de>
+Date: Wed, 15 Jan 2025 20:07:57 +0100
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
-Content-Type: text/plain; charset=US-ASCII
-X-Rspamd-Queue-Id: 6B8801F37E
-X-Spam-Score: -2.01
-X-Rspamd-Action: no action
-X-Spamd-Result: default: False [-2.01 / 50.00];
-	BAYES_HAM(-3.00)[99.99%];
-	SUSPICIOUS_RECIPS(1.50)[];
-	MID_CONTAINS_FROM(1.00)[];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	MX_GOOD(-0.01)[];
-	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	FREEMAIL_TO(0.00)[139.com];
-	ARC_NA(0.00)[];
-	RCPT_COUNT_TWELVE(0.00)[19];
-	RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	MIME_TRACE(0.00)[0:+];
-	SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	FREEMAIL_ENVRCPT(0.00)[139.com,gmail.com];
-	FREEMAIL_CC(0.00)[perex.cz,suse.com,senarytech.com,altlinux.org,oldherl.one,gmail.com,kylinos.cn,tuxedo.de,realtek.com,opensource.cirrus.com,joshuagrisham.com,vger.kernel.org,lenovo.com,squebb.ca];
-	RCVD_COUNT_TWO(0.00)[2];
-	FROM_EQ_ENVFROM(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	TO_DN_SOME(0.00)[];
-	RECEIVED_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:106:10:150:64:167:received];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	TAGGED_RCPT(0.00)[];
-	RCVD_TLS_ALL(0.00)[];
-	DKIM_TRACE(0.00)[suse.de:+];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:mid,suse.de:dkim,imap1.dmz-prg2.suse.org:rdns,imap1.dmz-prg2.suse.org:helo]
-X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 0/5] platform/x86 acer-wmi: Improve platform profile
+ handling
+To: Hridesh MG <hridesh699@gmail.com>,
+ =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Cc: Hans de Goede <hdegoede@redhat.com>, Kurt Borja <kuurtb@gmail.com>,
+ platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
+ Shuah Khan <skhan@linuxfoundation.org>
+References: <20250113-platform_profile-v4-0-23be0dff19f1@gmail.com>
+ <173695186401.7584.2765000569734785177.b4-ty@linux.intel.com>
+ <CALiyAonhojK1-z6iZSkHW=pnNOo7WGf_3ekxHnabDX0B4=xsvA@mail.gmail.com>
+Content-Language: en-US
+From: Armin Wolf <W_Armin@gmx.de>
+In-Reply-To: <CALiyAonhojK1-z6iZSkHW=pnNOo7WGf_3ekxHnabDX0B4=xsvA@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:7qY7VvPofs84BO+K0sEJE0k1OWa8RnkHaqvEeSXDNW5oHHK3bNu
+ 7pmxgsbP3tzvQ1UlFI726Iovw5+eCbR6QGHwWQ0wqCdUlggUjfnFHlPrvGM8Thrnttrhupp
+ hj9UeUArhLYwUNjVKNyzX88KdzzQBIciWmvqYm94ZGaXHhEg6r9vWuNtn6xcHeoAwWV3HdM
+ fHwzYJftpe7F8sVrsdFqg==
 X-Spam-Flag: NO
-X-Spam-Level: 
+UI-OutboundReport: notjunk:1;M01:P0:fFUQXzlN0Yo=;3lcseFgYXZfJq3EFSjeirAdgGr7
+ F9kTk26uaT9PIobNkXNCIbKLBzG9yV3yyzhELEupdquTWNd9tvgeTJgtH21BBjioIg41INNrN
+ k0Mw9yY/dyMhlmCiBgAjnJ9oTq17bXV/yOo6MvXj0vQs2Ai70O3o3FWJGAcrbtut86lkkcJLm
+ Hrj1sHK1dhpzaYaKdMPXbsqVek17zRFDt+dD3pfsr7agmvHglYPx+H3Rao6fCmvDO5y0BowkC
+ oLmIEMuhYKOghdvT9Uf0N+A3UoCcBN4cfVDGHsanMsJvqzd5IpA21JL52REq0TQCcRkMkeHyX
+ r2MhPYYFGLQjW9ESjT3QqiMobjNbKY6WQsSROL8CfkWMx7iBlKFMr4NwmN/bjkU/APNkp2Q3J
+ 93exnDeSrmuHBtqHO4qohBrznqEkqdCHPL0ZR7sbXuJOOZgPZG5uW0mM+mRIbur5KulF77ztc
+ 2Ldwd6I3KX9bHaX77tMjhvOf+O39G3BFRnYWp/jlBP1Ep/p/ZwD3eEQiEVAykGtQxsnyHxX6+
+ 4/UGZ817ZLCyiOsrCz4c8V63HGqNCvt3WqNG5YqS6A9HRGkydjsCzpSgApLtFddQuoTAtDAFV
+ xRZTccBq4Yun+sYykYWi1K1NoaqiSVG9tWiXRdYl65mJwSPGeFZ/ZPNEIxA53DCYspjRyRMdz
+ YSxRADubrRqjo5+EjsUe3VvgXIy1wcQNzzNgLCMY6Ai1HHi1uTtCRB+TcKHxtobrB6OHGzTSD
+ LRlUzPy4iljBMdrUmMOiQVjL1RYYbt3hVYQhN+ndZn2bSn3qMXxGAZhXSwVO4tcWHtWJzYogP
+ uL3HoC66VRRKvxdb6M549eTO27KXUmid7S+YSazSYpyd4OGr8R4LkT/FqwluDq68WOqd7+xyY
+ FiITg84RWVPaLJ2IDerurPn1XQBq2BS81OJUj2hq0HYxaGTSqk7eUShZmWw5jaTRofTjiVqeb
+ mGZJX6rIWJCR+6vNtymU/JGN9nTPbpo/lGha7xtE/2KEM1e6rFZ82oFwJkFm/hxBioHDRaVc6
+ I1Lz6Qiq2p4w2v+2NPP+M8pCd8QImuGOdpXDJz9WGvAnW+0nlp3he0RIRXPYAEJ35CTbr8rvb
+ yn97Vfta+0B9s7xuBK6rxrkLT3IVXNDsJRss05HBSDqh7pVq0NjNwnkoI/6tEB3CP5M1gIvMA
+ NuhA95zZhj7kyEoJICcvraUSpftHRwfhDqytFLuvU5Q==
 
-On Wed, 15 Jan 2025 17:25:15 +0100,
-Jackie Dong wrote:
-> 
-> New ideapad helper file with support for handling FN key mute LEDs.
-> Update conexant and realtec codec to add LED support.
-> 
-> Suggested-by: Mark Pearson <mpearson-lenovo@squebb.ca>
-> Signed-off-by: Jackie Dong  <xy-jackie@139.com>
+Am 15.01.25 um 16:23 schrieb Hridesh MG:
 
-Applied now.  Thanks.
+> On Wed, Jan 15, 2025 at 8:07=E2=80=AFPM Ilpo J=C3=A4rvinen
+> <ilpo.jarvinen@linux.intel.com> wrote:
+>> On Mon, 13 Jan 2025 18:44:08 +0530, Hridesh MG wrote:
+>>
+>>> This patch improves the platform profile handling for laptops using th=
+e
+>>> Acer Predator interface by making the following changes -
+>>>
+>>> 1) Using WMI calls to fetch the current platform profile instead of
+>>>     directly accessing it from the EC. A new helper function is
+>>>     introduced for this purpose.
+>>> 2) Simplifying the cycling of platform profiles by making use of
+>>>     platform_profile_cycle()
+>>> 3) Using an ACPI bitmap to dynamically set platform_profile_choices to
+>>>     better reflect the supported profiles.
+>>>
+>>> [...]
+>>
+>> Thank you for your contribution, it has been applied to my local
+>> review-ilpo-next branch. Note it will show up in the public
+>> platform-drivers-x86/review-ilpo-next branch only once I've pushed my
+>> local branch there, which might take a while.
+>>
+>> The list of commits applied:
+>> [1/5] platform/x86: acer-wmi: use WMI calls for platform profile handli=
+ng
+>>        commit: 2d76708c2221dde33d86aeef19f6d7d5f62148b4
+>> [2/5] platform/x86: acer-wmi: use new helper function for setting overc=
+locks
+>>        commit: cd44e09bb89d4a33514b9ec3d972f0d2d13f5cfd
+>> [3/5] platform/x86: acer-wmi: simplify platform profile cycling
+>>        commit: 61c461a90fbfc038d9663713f293d60fcb58c41d
+>> [4/5] platform/x86: acer-wmi: use an ACPI bitmap to set the platform pr=
+ofile choices
+>>        commit: 191e21f1a4c3948957adc037734449f4a965dec5
+>> [5/5] platform/x86: acer-wmi: add support for Acer Nitro AN515-58
+>>        commit: 549fcf58cf5837d401d0de906093169b05365609
+>>
+>> --
+>>   i.
+>>
+> Awesome, thanks a lot! I would like to once again thank Armin Wolf and
+> Kurt Borja for their guidance and help in creating this patchset, this
+> is my first meaningful [ to me atleast :) ] contribution to the kernel
+> and I'm quite proud of it. Working on this issue was pretty fun and I
+> learnt a lot regarding different things, it really did make me
+> appreciate kernel developers even more.
+>
+Thank you :).
 
+Your patch will not only be meaningful to you, since all other users of ac=
+er-wmi will now
+enjoy improved platform profile support for their machines.
 
-Takashi
+Thanks,
+Armin Wolf
+
