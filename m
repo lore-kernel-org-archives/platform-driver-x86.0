@@ -1,171 +1,128 @@
-Received: from mail-yb1-f174.google.com (mail-yb1-f174.google.com [209.85.219.174])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 57F5624A7CC;
-	Wed, 15 Jan 2025 14:41:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 75C6C134B0;
+	Wed, 15 Jan 2025 14:45:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736952117; cv=none; b=Y6SB7Jg+9A5KStfYyOOqS/t7uN3CiIuRbFmknGEweyDr7YgZSxxFIJfPGhkHf8y0aPNOMKRnaf8FPdZutxFNVhUXv67yKPwM6IAZspwCdJOlrhL67xU8eUJUK/ypJcq4vb9dur+OXzHuU19ZkmMrubZvJ4eCBbD/IASjDndsL7U=
+	t=1736952341; cv=none; b=sajOzyGh766JCUwaMfbFbInu/0VXnzArxWwC7JKmzzuKS1Sia0CfepVV7J4P+DRfuacr2Vd4lxfuhsQqcUsKXra39H2MtcZa3wAvILX4bas/yPYm1p3i5M2TEMIb88cctNQE9heVnhxkbfBHhVPTCYaT+bBhbuXTgYsYCnmxpuw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736952117; c=relaxed/simple;
-	bh=uf5q5nR7K3Imf5x3dYbMKzK+Aoh4Ju+D30UvqpqQ/kU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=u1JPO+RLZw5kSn9uF3HUXuT/ToxZPwM8PkFgJpF1QtoP44tqdmOT72MKy2Bzn+XB4WiiIpY4l0+xsP8KnNLzZ2VFEgFSt5OVbvB939WuYhf0EkwF83vEq06tSXDq4HtaoqNFHelqyIbNO0TeayD1UkTV5n18MVC1tYpxYyp3CUY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=MmbIOxnE; arc=none smtp.client-ip=209.85.219.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1736952341; c=relaxed/simple;
+	bh=hPlTnCzW9A1lPeUAg16lZDP22uxa3kvoJMsVMkY2wgQ=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=k0SElLpkR0NYHXUo8zr2lvvmRN9/w0tEBpPAF0is7owfBYO9+6JA3+8A30Xv8YfTzi9JiRxZ2XuzcAZnS3PsK+OveneIJuGMedepFH0iGCQtU3hanpHQy6TnzLbwSQk9DqQWrXzt6iahnLZgq1s6+wjSdoetyJy9bY3U2PD95+E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=BlzgOU3o; arc=none smtp.client-ip=192.198.163.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MmbIOxnE"
-Received: by mail-yb1-f174.google.com with SMTP id 3f1490d57ef6-e461015fbd4so9749769276.2;
-        Wed, 15 Jan 2025 06:41:56 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1736952115; x=1737556915; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=KxvIljh6afNT9xoNdKrI+27ipwmt2qwXhsTGdV3Ik+4=;
-        b=MmbIOxnE4T3XJYpZtZgP3ePhJ839MrQE0CN3O1QOBSWuAbPVPQT8OM6rRjKBylPK2g
-         N4b8LhvHhqDZCFH0CDbh3gMhwLrLpkvQFEwQLT5WfTCwow5xo9vCqSm5yq5uMM/PNb6l
-         WoU1jTmntk+HJr2wy9fJkZ3wFhaGEo/Xx2c9y/hmWjBEFTG9PIt5mh5RmGNRXGRy9GLS
-         9vk1E3LhqsPjW3Dx1uWccpThcrlEnk23BHdfV7A9YlqzCHt+IIAH6YY0G1GZvYnhUPEF
-         Js+76N6OhjNWANsUl48pCkKnQSgqKX8kWm11gAog4zcik0XqMQBDy/GU6p0gtHk0sLI8
-         +7dA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1736952115; x=1737556915;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=KxvIljh6afNT9xoNdKrI+27ipwmt2qwXhsTGdV3Ik+4=;
-        b=bKbjvBgWv44Xo3CEhiZWjtz5djWB5w4ab6lDVviBwaYw61a2ATah7RYsyCKu32jzpX
-         RFUImbp5w5aUIRBjxc/PYUmrR2RV69ST8faWPuz31lfsoD/iC7F1b2aV6A3OJdf/gcOk
-         YVcLr+ADcxHJUe3+U0uaSAapDyf9MROF4DtCZWdkIyR8YZFt/MvSxSjTEpdUQwMKqFMQ
-         qjL3hiaLe0lmV2K5DQyY4yeGVbctCPDi7r4cflia7VLZmpKY0VAVaq1t8PaF18qBBUwc
-         M9JAGlcSgRcYjurMkiC1ACIuBVsrtpuTUrm7ii0BXORJZOo/bkbZUiTzBbSyxTpUpLCq
-         GBLQ==
-X-Forwarded-Encrypted: i=1; AJvYcCV8sgL23/+ggv4Vo9gu84BDJuapYFYeSUokLtnIYEchN/Svc+R5OsPAWOSxbAyT61HZF3hCbckIKEp4@vger.kernel.org, AJvYcCXqEt1IE3gN3S6QZKHNRWbOjSKnP7o/Aw0DLgjqRoPCsfej6JwqTjYmFizLLaeBgqtgj20IpWaoenheTGJf@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz/QcNjGXlyiOPZq+EZ3GAtb2Q/cx6r53HU2vqZ2DRIzSbBGHm0
-	FsC31Jbltd59zxGF+AcbmkP//qDDAHTsA3a1q4H6+iaNbObBQ9lv
-X-Gm-Gg: ASbGncty7JgmO2/C6QpfEvxQwD1tHg3nTRuy9BekpF+o86ZXP3PkGZ5aCr75VCQMoWE
-	3XdRvYHJOVTefOdWz05p7HBBdn59hQTRiQEi8Orqweqk3LGlZsy6TM8mbgPqF7drvPiZE9Qghba
-	PxLuvCs9rlNto+UjzPVSHATW2707Bg0sjvcUio/IJvejd2YsI14iYbgADrNg71NPC4rDrwKD6W5
-	7WoBLlX2L5Kyi7EzYmLAvmM6wpwJ3dsg+DE3LkXhavWY8x/dr4f6Q==
-X-Google-Smtp-Source: AGHT+IHhXPLvl4jmA8MfwgjX7fTyAqrVS0P5ljIIeeMJD5AyQnklj6yPtxgkjrB7DdcifBDQg7Ko7w==
-X-Received: by 2002:a05:690c:9b0c:b0:6ef:4a1f:36aa with SMTP id 00721157ae682-6f53125ed2cmr251666027b3.20.1736952115109;
-        Wed, 15 Jan 2025 06:41:55 -0800 (PST)
-Received: from alphacentauri ([2800:bf0:82:1159:1ea9:11b1:7af9:1277])
-        by smtp.gmail.com with ESMTPSA id 00721157ae682-6f546dd70b5sm25125037b3.78.2025.01.15.06.41.51
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 15 Jan 2025 06:41:54 -0800 (PST)
-Date: Wed, 15 Jan 2025 09:41:50 -0500
-From: Kurt Borja <kuurtb@gmail.com>
-To: Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>
-Cc: platform-driver-x86@vger.kernel.org, 
-	"Rafael J. Wysocki" <rafael@kernel.org>, Len Brown <lenb@kernel.org>, linux-acpi@vger.kernel.org, 
-	LKML <linux-kernel@vger.kernel.org>, Mario Limonciello <mario.limonciello@amd.com>, 
-	Armin Wolf <W_Armin@gmx.de>, Joshua Grisham <josh@joshuagrisham.com>, 
-	"Derek J. Clark" <derekjohn.clark@gmail.com>, Hans de Goede <hdegoede@redhat.com>, 
-	Maximilian Luz <luzmaximilian@gmail.com>, "Lee, Chun-Yi" <jlee@suse.com>, 
-	Shyam Sundar S K <Shyam-sundar.S-k@amd.com>, Corentin Chary <corentin.chary@gmail.com>, 
-	"Luke D. Jones" <luke@ljones.dev>, Lyndon Sanche <lsanche@lyndeno.ca>, 
-	Ike Panhc <ike.pan@canonical.com>, Henrique de Moraes Holschuh <hmh@hmh.eng.br>, 
-	Mark Pearson <mpearson-lenovo@squebb.ca>, Alexis Belmonte <alexbelm48@gmail.com>, 
-	Ai Chao <aichao@kylinos.cn>, Gergo Koteles <soyer@irl.hu>, Dell.Client.Kernel@dell.com, 
-	ibm-acpi-devel@lists.sourceforge.net
-Subject: Re: [PATCH v3 09/19] platform/x86: asus-wmi: Use
- devm_platform_profile_register()
-Message-ID: <cknsfiukbw4uivdizha3orlgaee2haw2zdd4dpqikhmvspzdyt@riyt27f7lrtn>
-References: <20250115071022.4815-1-kuurtb@gmail.com>
- <20250115071022.4815-10-kuurtb@gmail.com>
- <9a00d65e-01a8-007f-9918-44b21b194803@linux.intel.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="BlzgOU3o"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1736952339; x=1768488339;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=hPlTnCzW9A1lPeUAg16lZDP22uxa3kvoJMsVMkY2wgQ=;
+  b=BlzgOU3o4le9lq44UXg2Zu4jH19LTz6kVRIp1gITJT9pmy8VEvlXioYN
+   eMz0SUXV3zECVsUh1N1ZRV2hLYTXqGO5YxwzdD9srRe0As8t7ke87JTvr
+   15zrkrKB9gHgUlUbFh/+xxCFEM3bmHVaQJoAiI9wQMwDkvozT1nvRwC+1
+   J3HB519sDNt4SxefryB4kHO3/vBjJfJ+4jwgW7bOGRMwG4y9jzFjniHdO
+   WYkDd9uUnCdM+0ijxZXGDA1O45J5t3xm37HelrBmTbhAwAAoA7AhUnat5
+   Hnx9beJDqvTrPhewuDeFuI8JZWiy39hIIbh+yWfhAmL08sF8ieTB+G7lg
+   A==;
+X-CSE-ConnectionGUID: vwBbElhCQL2b6FFiZnQZvQ==
+X-CSE-MsgGUID: U4pHm1kHSxeshhYg8l8jeQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11316"; a="62662459"
+X-IronPort-AV: E=Sophos;i="6.13,206,1732608000"; 
+   d="scan'208";a="62662459"
+Received: from fmviesa002.fm.intel.com ([10.60.135.142])
+  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Jan 2025 06:45:38 -0800
+X-CSE-ConnectionGUID: htISjbhWQPKfnadD7N9F3Q==
+X-CSE-MsgGUID: Hab/4JGdRtCEFdx0QhAdjg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
+   d="scan'208";a="128434214"
+Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.214])
+  by fmviesa002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Jan 2025 06:45:35 -0800
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Wed, 15 Jan 2025 16:45:31 +0200 (EET)
+To: Kurt Borja <kuurtb@gmail.com>
+cc: platform-driver-x86@vger.kernel.org, oe-kbuild-all@lists.linux.dev, 
+    Armin Wolf <W_Armin@gmx.de>, Mario Limonciello <mario.limonciello@amd.com>, 
+    Hans de Goede <hdegoede@redhat.com>, Dell.Client.Kernel@dell.com, 
+    LKML <linux-kernel@vger.kernel.org>, linux-next@vger.kernel.org, 
+    kernel test robot <lkp@intel.com>
+Subject: Re: [PATCH] platform/x86: alienware-wmi: Fix zone attribute
+ declaration
+In-Reply-To: <20250114174004.143859-2-kuurtb@gmail.com>
+Message-ID: <488547a0-3560-4350-38ec-649c36f2861d@linux.intel.com>
+References: <20250114174004.143859-2-kuurtb@gmail.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <9a00d65e-01a8-007f-9918-44b21b194803@linux.intel.com>
+Content-Type: text/plain; charset=US-ASCII
 
-On Wed, Jan 15, 2025 at 04:08:35PM +0200, Ilpo Järvinen wrote:
-> On Wed, 15 Jan 2025, Kurt Borja wrote:
-> 
-> > Replace platform_profile_register() with it's device managed version.
-> > 
-> > Reviewed-by: Mario Limonciello <mario.limonciello@amd.com>
-> > Signed-off-by: Kurt Borja <kuurtb@gmail.com>
-> > ---
-> >  drivers/platform/x86/asus-wmi.c | 9 ++-------
-> >  1 file changed, 2 insertions(+), 7 deletions(-)
-> > 
-> > diff --git a/drivers/platform/x86/asus-wmi.c b/drivers/platform/x86/asus-wmi.c
-> > index 3d77f7454953..f8437cff66df 100644
-> > --- a/drivers/platform/x86/asus-wmi.c
-> > +++ b/drivers/platform/x86/asus-wmi.c
-> > @@ -3895,12 +3895,12 @@ static int platform_profile_setup(struct asus_wmi *asus)
-> >  	asus->platform_profile_handler.dev = dev;
-> >  	asus->platform_profile_handler.ops = &asus_wmi_platform_profile_ops;
-> >  
-> > -	err = platform_profile_register(&asus->platform_profile_handler, asus);
-> > +	err = devm_platform_profile_register(&asus->platform_profile_handler, asus);
-> >  	if (err == -EEXIST) {
-> >  		pr_warn("%s, a platform_profile handler is already registered\n", __func__);
-> >  		return 0;
-> >  	} else if (err) {
-> > -		pr_err("%s, failed at platform_profile_register: %d\n", __func__, err);
-> > +		pr_err("%s, failed at devm_platform_profile_register: %d\n", __func__, err);
-> 
-> Hi,
-> 
-> I'm sorry I didn't notice this while passing through the patches 
-> yesterday.
-> 
-> Could you please make this error message plain english instead of piling 
-> even more kernel C specifics to it? Preferrably, an user seeing a kernel 
-> error message should not be required to know/understand any C, so don't 
-> print __func__ nor write function names into any error/warning/info level 
-> messages.
+On Tue, 14 Jan 2025, Kurt Borja wrote:
 
-Hi,
-
-Sure!
-
+> Statically declare `zone*` attributes.
 > 
-> Also, it should use dev_err() I think (platform_profile_setup() seems to
-> mix pr_*() & dev_*() prints with no good reason).
-
-I also think this should be dev_err, but I don't know this driver
-enough. Also I think driver specific platform_profile_register error
-messages are a bit redundant, as platform_profile_registers already logs
-most important failures with dev_err.
-
-~ Kurt
-
+> Fixes: 7c605f6460e8 ("platform/x86: alienware-wmi: Improve rgb-zones group creation")
+> Reported-by: kernel test robot <lkp@intel.com>
+> Closes: https://lore.kernel.org/oe-kbuild-all/202501142200.ezULWY9P-lkp@intel.com/
+> Signed-off-by: Kurt Borja <kuurtb@gmail.com>
+> ---
+>  drivers/platform/x86/dell/alienware-wmi.c | 8 ++++----
+>  1 file changed, 4 insertions(+), 4 deletions(-)
 > 
-> -- 
->  i.
+> diff --git a/drivers/platform/x86/dell/alienware-wmi.c b/drivers/platform/x86/dell/alienware-wmi.c
+> index b4b43f3e3fd9..d7f577e0d146 100644
+> --- a/drivers/platform/x86/dell/alienware-wmi.c
+> +++ b/drivers/platform/x86/dell/alienware-wmi.c
+> @@ -518,7 +518,7 @@ static ssize_t zone00_store(struct device *dev, struct device_attribute *attr,
+>  	return zone_store(dev, attr, buf, count, 0);
+>  }
+>  
+> -DEVICE_ATTR_RW(zone00);
+> +static DEVICE_ATTR_RW(zone00);
+>  
+>  static ssize_t zone01_show(struct device *dev, struct device_attribute *attr,
+>  			   char *buf)
+> @@ -532,7 +532,7 @@ static ssize_t zone01_store(struct device *dev, struct device_attribute *attr,
+>  	return zone_store(dev, attr, buf, count, 1);
+>  }
+>  
+> -DEVICE_ATTR_RW(zone01);
+> +static DEVICE_ATTR_RW(zone01);
+>  
+>  static ssize_t zone02_show(struct device *dev, struct device_attribute *attr,
+>  			   char *buf)
+> @@ -546,7 +546,7 @@ static ssize_t zone02_store(struct device *dev, struct device_attribute *attr,
+>  	return zone_store(dev, attr, buf, count, 2);
+>  }
+>  
+> -DEVICE_ATTR_RW(zone02);
+> +static DEVICE_ATTR_RW(zone02);
+>  
+>  static ssize_t zone03_show(struct device *dev, struct device_attribute *attr,
+>  			   char *buf)
+> @@ -560,7 +560,7 @@ static ssize_t zone03_store(struct device *dev, struct device_attribute *attr,
+>  	return zone_store(dev, attr, buf, count, 3);
+>  }
+>  
+> -DEVICE_ATTR_RW(zone03);
+> +static DEVICE_ATTR_RW(zone03);
+>  
+>  /*
+>   * Lighting control state device attribute (Global)
 > 
-> >  		return err;
-> >  	}
-> >  
-> > @@ -4859,8 +4859,6 @@ static int asus_wmi_add(struct platform_device *pdev)
-> >  fail_sysfs:
-> >  fail_custom_fan_curve:
-> >  fail_platform_profile_setup:
-> > -	if (asus->platform_profile_support)
-> > -		platform_profile_remove(&asus->platform_profile_handler);
-> >  fail_fan_boost_mode:
-> >  fail_platform:
-> >  	kfree(asus);
-> > @@ -4886,9 +4884,6 @@ static void asus_wmi_remove(struct platform_device *device)
-> >  	throttle_thermal_policy_set_default(asus);
-> >  	asus_wmi_battery_exit(asus);
-> >  
-> > -	if (asus->platform_profile_support)
-> > -		platform_profile_remove(&asus->platform_profile_handler);
-> > -
-> >  	kfree(asus);
-> >  }
-> >  
-> > 
+> base-commit: 58126788aa7726c0e91de6b25e6e332fa06089ab
+> 
+
+Thanks. I've folded this into the original commit in the review-ilpo-next 
+branch.
+
+-- 
+ i.
+
