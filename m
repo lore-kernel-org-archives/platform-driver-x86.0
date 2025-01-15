@@ -1,128 +1,125 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f54.google.com (mail-pj1-f54.google.com [209.85.216.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 75C6C134B0;
-	Wed, 15 Jan 2025 14:45:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 180B9155326;
+	Wed, 15 Jan 2025 15:23:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736952341; cv=none; b=sajOzyGh766JCUwaMfbFbInu/0VXnzArxWwC7JKmzzuKS1Sia0CfepVV7J4P+DRfuacr2Vd4lxfuhsQqcUsKXra39H2MtcZa3wAvILX4bas/yPYm1p3i5M2TEMIb88cctNQE9heVnhxkbfBHhVPTCYaT+bBhbuXTgYsYCnmxpuw=
+	t=1736954629; cv=none; b=FQyn4ssdjgXRH9C476jJ3Xu5ZbX4XDOGaIRJ2Ng1jYl3mE2OmNCnlom1Xt8bNoSv7GAkV+kGVkWHttgIO0dQrK4XXUESTjK9vM0HNkjLKX5USo70mY+YInKEFrakTDBIaEiEjkytjPaZdz+iSSRe/FI3UUzILKXW5OufJHTcgEU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736952341; c=relaxed/simple;
-	bh=hPlTnCzW9A1lPeUAg16lZDP22uxa3kvoJMsVMkY2wgQ=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=k0SElLpkR0NYHXUo8zr2lvvmRN9/w0tEBpPAF0is7owfBYO9+6JA3+8A30Xv8YfTzi9JiRxZ2XuzcAZnS3PsK+OveneIJuGMedepFH0iGCQtU3hanpHQy6TnzLbwSQk9DqQWrXzt6iahnLZgq1s6+wjSdoetyJy9bY3U2PD95+E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=BlzgOU3o; arc=none smtp.client-ip=192.198.163.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1736954629; c=relaxed/simple;
+	bh=Do31sWZewofIFJU2pJ1q53U4JYY8LBw9SSAizI681Qk=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=JDHjvN86LduR7f+nNPBj//Gmjf5n9DZm6Siz/Jf3Pr6wEZt0NnLlqkW3CP1EnApDZaMWQ/UKGugim2xvAPcZHSXcArG9x/kDGNE2Ff3V4FvbuqL9/wby0S9nSmR8K9f4qaqrMsmhre1xi0UvphhdQgAWG9CpFmCU37xLvNmLcuI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Hq8dUml/; arc=none smtp.client-ip=209.85.216.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="BlzgOU3o"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1736952339; x=1768488339;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=hPlTnCzW9A1lPeUAg16lZDP22uxa3kvoJMsVMkY2wgQ=;
-  b=BlzgOU3o4le9lq44UXg2Zu4jH19LTz6kVRIp1gITJT9pmy8VEvlXioYN
-   eMz0SUXV3zECVsUh1N1ZRV2hLYTXqGO5YxwzdD9srRe0As8t7ke87JTvr
-   15zrkrKB9gHgUlUbFh/+xxCFEM3bmHVaQJoAiI9wQMwDkvozT1nvRwC+1
-   J3HB519sDNt4SxefryB4kHO3/vBjJfJ+4jwgW7bOGRMwG4y9jzFjniHdO
-   WYkDd9uUnCdM+0ijxZXGDA1O45J5t3xm37HelrBmTbhAwAAoA7AhUnat5
-   Hnx9beJDqvTrPhewuDeFuI8JZWiy39hIIbh+yWfhAmL08sF8ieTB+G7lg
-   A==;
-X-CSE-ConnectionGUID: vwBbElhCQL2b6FFiZnQZvQ==
-X-CSE-MsgGUID: U4pHm1kHSxeshhYg8l8jeQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11316"; a="62662459"
-X-IronPort-AV: E=Sophos;i="6.13,206,1732608000"; 
-   d="scan'208";a="62662459"
-Received: from fmviesa002.fm.intel.com ([10.60.135.142])
-  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Jan 2025 06:45:38 -0800
-X-CSE-ConnectionGUID: htISjbhWQPKfnadD7N9F3Q==
-X-CSE-MsgGUID: Hab/4JGdRtCEFdx0QhAdjg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
-   d="scan'208";a="128434214"
-Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.214])
-  by fmviesa002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Jan 2025 06:45:35 -0800
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Wed, 15 Jan 2025 16:45:31 +0200 (EET)
-To: Kurt Borja <kuurtb@gmail.com>
-cc: platform-driver-x86@vger.kernel.org, oe-kbuild-all@lists.linux.dev, 
-    Armin Wolf <W_Armin@gmx.de>, Mario Limonciello <mario.limonciello@amd.com>, 
-    Hans de Goede <hdegoede@redhat.com>, Dell.Client.Kernel@dell.com, 
-    LKML <linux-kernel@vger.kernel.org>, linux-next@vger.kernel.org, 
-    kernel test robot <lkp@intel.com>
-Subject: Re: [PATCH] platform/x86: alienware-wmi: Fix zone attribute
- declaration
-In-Reply-To: <20250114174004.143859-2-kuurtb@gmail.com>
-Message-ID: <488547a0-3560-4350-38ec-649c36f2861d@linux.intel.com>
-References: <20250114174004.143859-2-kuurtb@gmail.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Hq8dUml/"
+Received: by mail-pj1-f54.google.com with SMTP id 98e67ed59e1d1-2ee51f8c47dso9130976a91.1;
+        Wed, 15 Jan 2025 07:23:47 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1736954627; x=1737559427; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=9hEO6UhBtlpmC4r6WmrbHwwvy+4WrvtJ+CBJpUnXx8s=;
+        b=Hq8dUml/QS4tWKsAbUMOrdE/gL50RBAPcUH9MfSaPDhYiCG5Mt+e3SIFL8/0VKlcZV
+         XXv5S141ly1xiaMlJjJOIDdu7+1fyoJRT2Z3hf3AmWcEzp2Z6KhiKIfILlnYwXszP36C
+         cbIX4V3WKs1muepFx7CkcG5EBOPKzDh5txGmBOudMU8jEpwp8J+WrUAmDcbZ2INOuITZ
+         rSwdcM14gst2GLJsjf5ui0nF4jvwhqfvj+VKgv81K0Xf8r8mu0jlet5Dbwxc47vMReAr
+         tmqhUaOCjTpLhzL3J4Uw82HhF/yqsvyGT5Z1fmAHTaODQrKW1U8mBCSRvoA1x49nNuSV
+         LKFQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1736954627; x=1737559427;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=9hEO6UhBtlpmC4r6WmrbHwwvy+4WrvtJ+CBJpUnXx8s=;
+        b=PUfC+pIbf6i0L2K1RW4/JWypPIxJiIYm784VXmMCVyx37GmOIfoElcC9mPxewPo8UH
+         3CY/n2Wg91jtPG+XZPbW4Y0Fvg1VDzLjTbaiTLLUsV3wHAbynq9C904TebsH6QUjGrsQ
+         M+9ShhBCBBO3Xuc0jYuludGxtbXe3UQXQQ/II2BIa47kvIIotd/njigjChvveCYPrZJi
+         AQAg0m93ODpjYXnh3Pga+uVqDNvVwd89GwwCXstfLtuk8RxCpi3a9go0HlozaqexAIBT
+         FgUfFp4tkyYhFTXFe9fpiLl0N+fcgCyC/RqAdWTSjq1kMsGEmYVUVo3lc4Q+89G1nN/b
+         ln4A==
+X-Forwarded-Encrypted: i=1; AJvYcCUcIaOl6RQNbboo8VzWOHXKZQnenb0vu0zgMlWIrgRKHnR21LM10++F1gY4YUqeIFI0AOE6+/TZIDc3MoXOiCSRp3nojA==@vger.kernel.org, AJvYcCWlnokyWMNKQ1Td+iEgPcEVCAMfMNVYUZsYxQnIGWZ7UbEmw2u/xW53eu097FNqfCN7szonYG9MZ6LHftc=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw9Qqxeg/8tjtvmx0EdS4zL6hI1I/manhKS8gS+G0KVzK9Z5ovG
+	GvxuTw7HGuiCIdKMRq+HKakllzgJ6DXRP2ZxwDCFQM/RMpQnLI6kH7AhL0gleR7OZVAKxl1ph4o
+	NLByS1buFB8boTfCi/9es4qRursg=
+X-Gm-Gg: ASbGncuaKdgXOfAvPkfPJASDgzasQ7ofbHQa96ArQQYQJeUX0f4Pq39jfe/ClgoKBRx
+	DEiKJaRz4pOUrN/hlYERyOdvWshPTULZES8bTGlM=
+X-Google-Smtp-Source: AGHT+IGxlAAtWQZ5eiG7FzK0qF5sTmYAei9PNxCeZfra4d5bVSE1VxKE199uSHWbnEvJZJnl6UFhgfpNB4eveHs/fA0=
+X-Received: by 2002:a17:90b:3a43:b0:2ee:f22a:61dd with SMTP id
+ 98e67ed59e1d1-2f548f3dc5amr35630867a91.32.1736954627189; Wed, 15 Jan 2025
+ 07:23:47 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+References: <20250113-platform_profile-v4-0-23be0dff19f1@gmail.com> <173695186401.7584.2765000569734785177.b4-ty@linux.intel.com>
+In-Reply-To: <173695186401.7584.2765000569734785177.b4-ty@linux.intel.com>
+From: Hridesh MG <hridesh699@gmail.com>
+Date: Wed, 15 Jan 2025 20:53:12 +0530
+X-Gm-Features: AbW1kvY7hvcOJ2_Kl2BHJ94FvGMkByQY9qF16bWGxFttA2lx5n5lXA2ca-PxH3c
+Message-ID: <CALiyAonhojK1-z6iZSkHW=pnNOo7WGf_3ekxHnabDX0B4=xsvA@mail.gmail.com>
+Subject: Re: [PATCH v4 0/5] platform/x86 acer-wmi: Improve platform profile handling
+To: =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Cc: Hans de Goede <hdegoede@redhat.com>, Armin Wolf <W_Armin@gmx.de>, Kurt Borja <kuurtb@gmail.com>, 
+	platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Shuah Khan <skhan@linuxfoundation.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, 14 Jan 2025, Kurt Borja wrote:
+On Wed, Jan 15, 2025 at 8:07=E2=80=AFPM Ilpo J=C3=A4rvinen
+<ilpo.jarvinen@linux.intel.com> wrote:
+>
+> On Mon, 13 Jan 2025 18:44:08 +0530, Hridesh MG wrote:
+>
+> > This patch improves the platform profile handling for laptops using the
+> > Acer Predator interface by making the following changes -
+> >
+> > 1) Using WMI calls to fetch the current platform profile instead of
+> >    directly accessing it from the EC. A new helper function is
+> >    introduced for this purpose.
+> > 2) Simplifying the cycling of platform profiles by making use of
+> >    platform_profile_cycle()
+> > 3) Using an ACPI bitmap to dynamically set platform_profile_choices to
+> >    better reflect the supported profiles.
+> >
+> > [...]
+>
+>
+> Thank you for your contribution, it has been applied to my local
+> review-ilpo-next branch. Note it will show up in the public
+> platform-drivers-x86/review-ilpo-next branch only once I've pushed my
+> local branch there, which might take a while.
+>
+> The list of commits applied:
+> [1/5] platform/x86: acer-wmi: use WMI calls for platform profile handling
+>       commit: 2d76708c2221dde33d86aeef19f6d7d5f62148b4
+> [2/5] platform/x86: acer-wmi: use new helper function for setting overclo=
+cks
+>       commit: cd44e09bb89d4a33514b9ec3d972f0d2d13f5cfd
+> [3/5] platform/x86: acer-wmi: simplify platform profile cycling
+>       commit: 61c461a90fbfc038d9663713f293d60fcb58c41d
+> [4/5] platform/x86: acer-wmi: use an ACPI bitmap to set the platform prof=
+ile choices
+>       commit: 191e21f1a4c3948957adc037734449f4a965dec5
+> [5/5] platform/x86: acer-wmi: add support for Acer Nitro AN515-58
+>       commit: 549fcf58cf5837d401d0de906093169b05365609
+>
+> --
+>  i.
+>
+Awesome, thanks a lot! I would like to once again thank Armin Wolf and
+Kurt Borja for their guidance and help in creating this patchset, this
+is my first meaningful [ to me atleast :) ] contribution to the kernel
+and I'm quite proud of it. Working on this issue was pretty fun and I
+learnt a lot regarding different things, it really did make me
+appreciate kernel developers even more.
 
-> Statically declare `zone*` attributes.
-> 
-> Fixes: 7c605f6460e8 ("platform/x86: alienware-wmi: Improve rgb-zones group creation")
-> Reported-by: kernel test robot <lkp@intel.com>
-> Closes: https://lore.kernel.org/oe-kbuild-all/202501142200.ezULWY9P-lkp@intel.com/
-> Signed-off-by: Kurt Borja <kuurtb@gmail.com>
-> ---
->  drivers/platform/x86/dell/alienware-wmi.c | 8 ++++----
->  1 file changed, 4 insertions(+), 4 deletions(-)
-> 
-> diff --git a/drivers/platform/x86/dell/alienware-wmi.c b/drivers/platform/x86/dell/alienware-wmi.c
-> index b4b43f3e3fd9..d7f577e0d146 100644
-> --- a/drivers/platform/x86/dell/alienware-wmi.c
-> +++ b/drivers/platform/x86/dell/alienware-wmi.c
-> @@ -518,7 +518,7 @@ static ssize_t zone00_store(struct device *dev, struct device_attribute *attr,
->  	return zone_store(dev, attr, buf, count, 0);
->  }
->  
-> -DEVICE_ATTR_RW(zone00);
-> +static DEVICE_ATTR_RW(zone00);
->  
->  static ssize_t zone01_show(struct device *dev, struct device_attribute *attr,
->  			   char *buf)
-> @@ -532,7 +532,7 @@ static ssize_t zone01_store(struct device *dev, struct device_attribute *attr,
->  	return zone_store(dev, attr, buf, count, 1);
->  }
->  
-> -DEVICE_ATTR_RW(zone01);
-> +static DEVICE_ATTR_RW(zone01);
->  
->  static ssize_t zone02_show(struct device *dev, struct device_attribute *attr,
->  			   char *buf)
-> @@ -546,7 +546,7 @@ static ssize_t zone02_store(struct device *dev, struct device_attribute *attr,
->  	return zone_store(dev, attr, buf, count, 2);
->  }
->  
-> -DEVICE_ATTR_RW(zone02);
-> +static DEVICE_ATTR_RW(zone02);
->  
->  static ssize_t zone03_show(struct device *dev, struct device_attribute *attr,
->  			   char *buf)
-> @@ -560,7 +560,7 @@ static ssize_t zone03_store(struct device *dev, struct device_attribute *attr,
->  	return zone_store(dev, attr, buf, count, 3);
->  }
->  
-> -DEVICE_ATTR_RW(zone03);
-> +static DEVICE_ATTR_RW(zone03);
->  
->  /*
->   * Lighting control state device attribute (Global)
-> 
-> base-commit: 58126788aa7726c0e91de6b25e6e332fa06089ab
-> 
-
-Thanks. I've folded this into the original commit in the review-ilpo-next 
-branch.
-
--- 
- i.
-
+--=20
+Thanks,
+Hridesh MG
