@@ -1,143 +1,127 @@
-Received: from mout.gmx.net (mout.gmx.net [212.227.15.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qt1-f176.google.com (mail-qt1-f176.google.com [209.85.160.176])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E35073BB54;
-	Wed, 15 Jan 2025 19:08:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7646F24A7CC;
+	Wed, 15 Jan 2025 20:02:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736968085; cv=none; b=WePxyFicvXyeyCdCaBJzUKjgeuVQuwHFJ3ZYGh56fwvEg0WvggsukpKMxCK+kJ6dUTacNML1Vs+pxvKqdQMXYHOmnPcEsFOgvUHYe2d2K6tThznOsTQLsB/nFo6Bogu/YpvAHOJlP2zuS6r7XyC6Lg5mL75hY/UhaX1fCU0jRFc=
+	t=1736971324; cv=none; b=WK02cE5Hbyr0809Jo2JeR2aSpa15fmzCz/BKUD0WKGTw6arOCCBq+Qy2jb29jDtTxcvfk7J38UFc7ILcyYjc3vUgA/R8DauRl6TxkKj7P0ZcYm4jrclO5jKmOn8XQqAO+P8BIKMLFHDWGh7WWUF2y6v0lcjfjfEOCnCi9nfHIEU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736968085; c=relaxed/simple;
-	bh=yKHk27ysIJdLeF9Vydk2MFU/GIKZyyc6EzmE/vT/P4o=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=rv364HyVE4O29L4siwdYSuTYzqPxOGGQzppX+lOUrJHx93b6gOjoEB72xZheAkpF+4dtD3CscoRo3qrpiIkrtdx+4J+BnR579FgHnfT4sE5gQNo/UQ/yKOXF2gf7bafDERl2jGKUzBckPBMTftGuRg/Mzx0jYIQ+YF0lxn8w28c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b=heiYmWBY; arc=none smtp.client-ip=212.227.15.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
+	s=arc-20240116; t=1736971324; c=relaxed/simple;
+	bh=7Yi9wQXCf9Oa/YptQFNYrR2iLrZLm20usJHaoqVMUNs=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=FVgiwqUbyxwRtIGpqf+9FD3JuWRpmInSbgp2o1ge8/74rBL9Kvx0wCcOKjniGg/8ufQ9HgIhVAbsWGrfmeO7dppKXcfcfuioju5VJghpyPjMKhvOHdFqyGGJ5PastfFVcf9x4u6SBm6AQC1iBX6Oyouj/ADa3ItPgChKCcVOnA0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=MZXsKAdJ; arc=none smtp.client-ip=209.85.160.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b="heiYmWBY"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.de;
-	s=s31663417; t=1736968079; x=1737572879; i=w_armin@gmx.de;
-	bh=TiSW3lXNKMYakqd5G9HxcSgDfSTEdZh7Q8EQ+SaH3SE=;
-	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:To:Cc:
-	 References:From:In-Reply-To:Content-Type:
-	 Content-Transfer-Encoding:cc:content-transfer-encoding:
-	 content-type:date:from:message-id:mime-version:reply-to:subject:
-	 to;
-	b=heiYmWBYLgPMe7GRu47elZHENQnOEW5AEP7BwTrbGcmgy2EZNDFPUUAPvuHIVast
-	 aPAF0zRPwFEYLC69Wp0op2E96XblSe3GV8yuohVnRJynuiHWs3xX6XVxaOfPEuD3F
-	 m1fN3bTYeekHvXHVmBwhTjgIio1qt1syDjDCiHql6tZ8a8RiLptLYi67xwo0QEU9l
-	 ++2jUypVviu7yiJsGBtHnOdGbN8c/FwvfYmFj5nu6PHw0ET02fIcFZsG0U8DHDEnI
-	 /JygKwC6Vgpy5FHzH4k87O7YBp7oLiSkE9ExalQ7O7j4FcMHwckk6FINcqmwXe3/X
-	 rIb8H7iBE/FlpQ+ogg==
-X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
-Received: from [192.168.0.69] ([91.14.230.110]) by mail.gmx.net (mrgmx005
- [212.227.17.190]) with ESMTPSA (Nemesis) id 1MmDIo-1t7ugA39u4-00eBr6; Wed, 15
- Jan 2025 20:07:58 +0100
-Message-ID: <71969195-db20-4e24-8caf-6fee389a7d70@gmx.de>
-Date: Wed, 15 Jan 2025 20:07:57 +0100
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MZXsKAdJ"
+Received: by mail-qt1-f176.google.com with SMTP id d75a77b69052e-467a37a2a53so2024501cf.2;
+        Wed, 15 Jan 2025 12:02:02 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1736971321; x=1737576121; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=EoSDSZwOF8a5VVtN8f70jSBvhuMPwgbv5dy0No8F5E0=;
+        b=MZXsKAdJUVMxCLlURQYJN/gyo74hMlES0rlfuM1AjEW1vifuhHOFAM/mVnI8BauKap
+         /tUiOsz0Y1Sskk9bq8PxczgHeLyF+bZGUcZl1Dzz4tkA53EKRYdtrQsGEoAFqSJyxSlu
+         xKuo8VWTKARiErSr9AJUPisi+kn/LgUsqnilrPHhRDhNnBVGgVmuzXafwkMNecppbH4g
+         fMH3iutOcuCcesRGqzIGKn/BSHIJ2El0dvYO0Lciz+s+1lPZ8Jcuw49od5guk3Ew4FCo
+         3Mfm98AP1ZAJ7+IAHOLIUidx715DK2rBY4wbL0m6lCQ4ZbSShBH5QtW+vqQFs13OpaX3
+         cWFw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1736971321; x=1737576121;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=EoSDSZwOF8a5VVtN8f70jSBvhuMPwgbv5dy0No8F5E0=;
+        b=rZmBxLsCFGV8PjwkeBeyPzGasCu9n/q26U5BSShr9gv/8h5kS1vlyJ1VsDvDbem9gL
+         QpuADNb5ZrZDLOTZyaObADxlyQ1dUObNX5RSJNFu6+bDr5irlFHjeDdJYNXmN77vSJHL
+         cLWkkSXl6JIPtxM6oB2kfriJE9TwiTfIjfzDKGBYe6PcE8jwN1EFvHy1xloQHpMyRBb0
+         A/wjCL6qLutT75v7DLR3a1m6ZsA1H3HSCEARbYLrazsYx+5NQs/3olflm1z7qqEJcaye
+         LFCuB5E/1AQxpjGwNS00C2WNZ3yvfwWWuOOc4yWe1OKemLt+bUoFs3VXewuHzBSMJOX+
+         peCg==
+X-Forwarded-Encrypted: i=1; AJvYcCVJUuYT5+bW2tMQkpiOW4sBUJTGpI5wpqZdzvZ34IgQl+K8cZTSiZ0P3kOymltLgSy3J+JOmD5ZnedylfX0@vger.kernel.org, AJvYcCXCQlXqF5/Gx0MqqF9F+1kUIQoh6Qpt+LriqI0um9XHpXrDF6w6l37bYVQkPclCaBb8U3pcseCSdYWj@vger.kernel.org
+X-Gm-Message-State: AOJu0YyLoJa6XWl9nhICIervpq4wEJZjBE7iWS1H9QvdJUbJ4CQOzjhJ
+	sn23dI3o4slE8TtuSz8i+Vb61j2Oa6uAoCavrpXreHbeYhpnZSUU
+X-Gm-Gg: ASbGncv9ltHDF2H2VQMq1IqbZL1033uPy+EBAdTHmAo9hHRryRst2Xm/VEVG6D7bsaj
+	Ryx67drr2BjjCC/cBNp6XIQOWZDJjibG2CCzZkXp0PrkMcciRc1bSK6/aFRgbFylvYt1N5ZDa1L
+	uWdpPBBhWEod/RisiAnMpe6teTmX+Ld0izCHXjb4RUQ2JoWCGWalynwUDXLrX9hc0gJ7Mn2l9yH
+	cq95jQerIjoGvVcCPL2ERsxnQ92N8DD/WG4XgjuqXGLwvy4JNOhA5lX
+X-Google-Smtp-Source: AGHT+IGMevjVBohoQpC5bCwsoBcn/4MAMRD39U6cz8jzxtQDjPU/Mq8XykjfEz4sT4E9SlXebMYDWQ==
+X-Received: by 2002:ac8:59ce:0:b0:467:5082:74bd with SMTP id d75a77b69052e-46c71083dcbmr504132481cf.34.1736971321122;
+        Wed, 15 Jan 2025 12:02:01 -0800 (PST)
+Received: from alphacentauri ([2800:bf0:179:113e:f067:4e25:4298:6451])
+        by smtp.gmail.com with ESMTPSA id a1e0cc1a2514c-8623154b329sm5868111241.27.2025.01.15.12.01.57
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 15 Jan 2025 12:02:00 -0800 (PST)
+Date: Wed, 15 Jan 2025 15:01:55 -0500
+From: Kurt Borja <kuurtb@gmail.com>
+To: Mario Limonciello <mario.limonciello@amd.com>
+Cc: platform-driver-x86@vger.kernel.org, 
+	"Rafael J. Wysocki" <rafael@kernel.org>, Len Brown <lenb@kernel.org>, linux-acpi@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, Armin Wolf <W_Armin@gmx.de>, 
+	Joshua Grisham <josh@joshuagrisham.com>, "Derek J. Clark" <derekjohn.clark@gmail.com>, 
+	Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>, Hans de Goede <hdegoede@redhat.com>, 
+	Maximilian Luz <luzmaximilian@gmail.com>, "Lee, Chun-Yi" <jlee@suse.com>, 
+	Shyam Sundar S K <Shyam-sundar.S-k@amd.com>, Corentin Chary <corentin.chary@gmail.com>, 
+	"Luke D. Jones" <luke@ljones.dev>, Lyndon Sanche <lsanche@lyndeno.ca>, 
+	Ike Panhc <ike.pan@canonical.com>, Henrique de Moraes Holschuh <hmh@hmh.eng.br>, 
+	Mark Pearson <mpearson-lenovo@squebb.ca>, Alexis Belmonte <alexbelm48@gmail.com>, 
+	Ai Chao <aichao@kylinos.cn>, Gergo Koteles <soyer@irl.hu>, Dell.Client.Kernel@dell.com, 
+	ibm-acpi-devel@lists.sourceforge.net
+Subject: Re: [PATCH v3 19/19] ACPI: platform_profile: Add a prefix to log
+ messages
+Message-ID: <gwwl4a7o4drpejm7czcciradzv5jyp7hmpwev5jswqlkkb65rq@vbmamxucdmom>
+References: <20250115071022.4815-1-kuurtb@gmail.com>
+ <20250115071022.4815-20-kuurtb@gmail.com>
+ <d90eabb9-37c0-4763-b87e-696456da4e85@amd.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 0/5] platform/x86 acer-wmi: Improve platform profile
- handling
-To: Hridesh MG <hridesh699@gmail.com>,
- =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Cc: Hans de Goede <hdegoede@redhat.com>, Kurt Borja <kuurtb@gmail.com>,
- platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
- Shuah Khan <skhan@linuxfoundation.org>
-References: <20250113-platform_profile-v4-0-23be0dff19f1@gmail.com>
- <173695186401.7584.2765000569734785177.b4-ty@linux.intel.com>
- <CALiyAonhojK1-z6iZSkHW=pnNOo7WGf_3ekxHnabDX0B4=xsvA@mail.gmail.com>
-Content-Language: en-US
-From: Armin Wolf <W_Armin@gmx.de>
-In-Reply-To: <CALiyAonhojK1-z6iZSkHW=pnNOo7WGf_3ekxHnabDX0B4=xsvA@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:7qY7VvPofs84BO+K0sEJE0k1OWa8RnkHaqvEeSXDNW5oHHK3bNu
- 7pmxgsbP3tzvQ1UlFI726Iovw5+eCbR6QGHwWQ0wqCdUlggUjfnFHlPrvGM8Thrnttrhupp
- hj9UeUArhLYwUNjVKNyzX88KdzzQBIciWmvqYm94ZGaXHhEg6r9vWuNtn6xcHeoAwWV3HdM
- fHwzYJftpe7F8sVrsdFqg==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:fFUQXzlN0Yo=;3lcseFgYXZfJq3EFSjeirAdgGr7
- F9kTk26uaT9PIobNkXNCIbKLBzG9yV3yyzhELEupdquTWNd9tvgeTJgtH21BBjioIg41INNrN
- k0Mw9yY/dyMhlmCiBgAjnJ9oTq17bXV/yOo6MvXj0vQs2Ai70O3o3FWJGAcrbtut86lkkcJLm
- Hrj1sHK1dhpzaYaKdMPXbsqVek17zRFDt+dD3pfsr7agmvHglYPx+H3Rao6fCmvDO5y0BowkC
- oLmIEMuhYKOghdvT9Uf0N+A3UoCcBN4cfVDGHsanMsJvqzd5IpA21JL52REq0TQCcRkMkeHyX
- r2MhPYYFGLQjW9ESjT3QqiMobjNbKY6WQsSROL8CfkWMx7iBlKFMr4NwmN/bjkU/APNkp2Q3J
- 93exnDeSrmuHBtqHO4qohBrznqEkqdCHPL0ZR7sbXuJOOZgPZG5uW0mM+mRIbur5KulF77ztc
- 2Ldwd6I3KX9bHaX77tMjhvOf+O39G3BFRnYWp/jlBP1Ep/p/ZwD3eEQiEVAykGtQxsnyHxX6+
- 4/UGZ817ZLCyiOsrCz4c8V63HGqNCvt3WqNG5YqS6A9HRGkydjsCzpSgApLtFddQuoTAtDAFV
- xRZTccBq4Yun+sYykYWi1K1NoaqiSVG9tWiXRdYl65mJwSPGeFZ/ZPNEIxA53DCYspjRyRMdz
- YSxRADubrRqjo5+EjsUe3VvgXIy1wcQNzzNgLCMY6Ai1HHi1uTtCRB+TcKHxtobrB6OHGzTSD
- LRlUzPy4iljBMdrUmMOiQVjL1RYYbt3hVYQhN+ndZn2bSn3qMXxGAZhXSwVO4tcWHtWJzYogP
- uL3HoC66VRRKvxdb6M549eTO27KXUmid7S+YSazSYpyd4OGr8R4LkT/FqwluDq68WOqd7+xyY
- FiITg84RWVPaLJ2IDerurPn1XQBq2BS81OJUj2hq0HYxaGTSqk7eUShZmWw5jaTRofTjiVqeb
- mGZJX6rIWJCR+6vNtymU/JGN9nTPbpo/lGha7xtE/2KEM1e6rFZ82oFwJkFm/hxBioHDRaVc6
- I1Lz6Qiq2p4w2v+2NPP+M8pCd8QImuGOdpXDJz9WGvAnW+0nlp3he0RIRXPYAEJ35CTbr8rvb
- yn97Vfta+0B9s7xuBK6rxrkLT3IVXNDsJRss05HBSDqh7pVq0NjNwnkoI/6tEB3CP5M1gIvMA
- NuhA95zZhj7kyEoJICcvraUSpftHRwfhDqytFLuvU5Q==
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <d90eabb9-37c0-4763-b87e-696456da4e85@amd.com>
 
-Am 15.01.25 um 16:23 schrieb Hridesh MG:
+On Wed, Jan 15, 2025 at 10:45:48AM -0600, Mario Limonciello wrote:
+> On 1/15/2025 01:10, Kurt Borja wrote:
+> > Declare a pr_fmt prefix.
+> > 
+> > Signed-off-by: Kurt Borja <kuurtb@gmail.com>
+> 
+> I had to do a bit of a double take because you removed the prefix in patch
+> 15/19 of one of existing messages.  So this makes sense at this place in the
+> series, thanks!
 
-> On Wed, Jan 15, 2025 at 8:07=E2=80=AFPM Ilpo J=C3=A4rvinen
-> <ilpo.jarvinen@linux.intel.com> wrote:
->> On Mon, 13 Jan 2025 18:44:08 +0530, Hridesh MG wrote:
->>
->>> This patch improves the platform profile handling for laptops using th=
-e
->>> Acer Predator interface by making the following changes -
->>>
->>> 1) Using WMI calls to fetch the current platform profile instead of
->>>     directly accessing it from the EC. A new helper function is
->>>     introduced for this purpose.
->>> 2) Simplifying the cycling of platform profiles by making use of
->>>     platform_profile_cycle()
->>> 3) Using an ACPI bitmap to dynamically set platform_profile_choices to
->>>     better reflect the supported profiles.
->>>
->>> [...]
->>
->> Thank you for your contribution, it has been applied to my local
->> review-ilpo-next branch. Note it will show up in the public
->> platform-drivers-x86/review-ilpo-next branch only once I've pushed my
->> local branch there, which might take a while.
->>
->> The list of commits applied:
->> [1/5] platform/x86: acer-wmi: use WMI calls for platform profile handli=
-ng
->>        commit: 2d76708c2221dde33d86aeef19f6d7d5f62148b4
->> [2/5] platform/x86: acer-wmi: use new helper function for setting overc=
-locks
->>        commit: cd44e09bb89d4a33514b9ec3d972f0d2d13f5cfd
->> [3/5] platform/x86: acer-wmi: simplify platform profile cycling
->>        commit: 61c461a90fbfc038d9663713f293d60fcb58c41d
->> [4/5] platform/x86: acer-wmi: use an ACPI bitmap to set the platform pr=
-ofile choices
->>        commit: 191e21f1a4c3948957adc037734449f4a965dec5
->> [5/5] platform/x86: acer-wmi: add support for Acer Nitro AN515-58
->>        commit: 549fcf58cf5837d401d0de906093169b05365609
->>
->> --
->>   i.
->>
-> Awesome, thanks a lot! I would like to once again thank Armin Wolf and
-> Kurt Borja for their guidance and help in creating this patchset, this
-> is my first meaningful [ to me atleast :) ] contribution to the kernel
-> and I'm quite proud of it. Working on this issue was pretty fun and I
-> learnt a lot regarding different things, it really did make me
-> appreciate kernel developers even more.
->
-Thank you :).
+Yes, I dropped the sanity check error message in favor of WARN_ON_ONCE
+because not passing that sanity check would just be a bug. Apart from
+that, there was only one more log message that needed the prefix and it
+didn't need to be modified.
 
-Your patch will not only be meaningful to you, since all other users of ac=
-er-wmi will now
-enjoy improved platform profile support for their machines.
+> 
+> Reviewed-by: Mario Limonciello <mario.limonciello@amd.com>
 
-Thanks,
-Armin Wolf
+Thanks!
 
+~ Kurt
+
+> 
+> > ---
+> >   drivers/acpi/platform_profile.c | 2 ++
+> >   1 file changed, 2 insertions(+)
+> > 
+> > diff --git a/drivers/acpi/platform_profile.c b/drivers/acpi/platform_profile.c
+> > index 4895f37dd549..c9e46b6e27da 100644
+> > --- a/drivers/acpi/platform_profile.c
+> > +++ b/drivers/acpi/platform_profile.c
+> > @@ -2,6 +2,8 @@
+> >   /* Platform profile sysfs interface */
+> > +#define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
+> > +
+> >   #include <linux/acpi.h>
+> >   #include <linux/bits.h>
+> >   #include <linux/cleanup.h>
+> 
