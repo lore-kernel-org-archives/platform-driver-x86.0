@@ -1,125 +1,232 @@
-Received: from mail-pj1-f54.google.com (mail-pj1-f54.google.com [209.85.216.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from n169-110.mail.139.com (n169-110.mail.139.com [120.232.169.110])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 180B9155326;
-	Wed, 15 Jan 2025 15:23:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D92B1DA21;
+	Wed, 15 Jan 2025 15:52:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=120.232.169.110
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736954629; cv=none; b=FQyn4ssdjgXRH9C476jJ3Xu5ZbX4XDOGaIRJ2Ng1jYl3mE2OmNCnlom1Xt8bNoSv7GAkV+kGVkWHttgIO0dQrK4XXUESTjK9vM0HNkjLKX5USo70mY+YInKEFrakTDBIaEiEjkytjPaZdz+iSSRe/FI3UUzILKXW5OufJHTcgEU=
+	t=1736956388; cv=none; b=hDCwOoNKDVUek2SdrIQwT0BeoMfjEtEY4ToUOsT6lygLIpPYe8jOsdWhJkAa/E/wXEedgatI11NHwp6cpCc4LyLYqMZfNO0qZhlKfVYqEpnaNnMSv9RPk6hUqCbWLqCpzrxReBqtVCOfBpB2xo8HryJCkoJK/gBCW4BZorKvahQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736954629; c=relaxed/simple;
-	bh=Do31sWZewofIFJU2pJ1q53U4JYY8LBw9SSAizI681Qk=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=JDHjvN86LduR7f+nNPBj//Gmjf5n9DZm6Siz/Jf3Pr6wEZt0NnLlqkW3CP1EnApDZaMWQ/UKGugim2xvAPcZHSXcArG9x/kDGNE2Ff3V4FvbuqL9/wby0S9nSmR8K9f4qaqrMsmhre1xi0UvphhdQgAWG9CpFmCU37xLvNmLcuI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Hq8dUml/; arc=none smtp.client-ip=209.85.216.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Hq8dUml/"
-Received: by mail-pj1-f54.google.com with SMTP id 98e67ed59e1d1-2ee51f8c47dso9130976a91.1;
-        Wed, 15 Jan 2025 07:23:47 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1736954627; x=1737559427; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=9hEO6UhBtlpmC4r6WmrbHwwvy+4WrvtJ+CBJpUnXx8s=;
-        b=Hq8dUml/QS4tWKsAbUMOrdE/gL50RBAPcUH9MfSaPDhYiCG5Mt+e3SIFL8/0VKlcZV
-         XXv5S141ly1xiaMlJjJOIDdu7+1fyoJRT2Z3hf3AmWcEzp2Z6KhiKIfILlnYwXszP36C
-         cbIX4V3WKs1muepFx7CkcG5EBOPKzDh5txGmBOudMU8jEpwp8J+WrUAmDcbZ2INOuITZ
-         rSwdcM14gst2GLJsjf5ui0nF4jvwhqfvj+VKgv81K0Xf8r8mu0jlet5Dbwxc47vMReAr
-         tmqhUaOCjTpLhzL3J4Uw82HhF/yqsvyGT5Z1fmAHTaODQrKW1U8mBCSRvoA1x49nNuSV
-         LKFQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1736954627; x=1737559427;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=9hEO6UhBtlpmC4r6WmrbHwwvy+4WrvtJ+CBJpUnXx8s=;
-        b=PUfC+pIbf6i0L2K1RW4/JWypPIxJiIYm784VXmMCVyx37GmOIfoElcC9mPxewPo8UH
-         3CY/n2Wg91jtPG+XZPbW4Y0Fvg1VDzLjTbaiTLLUsV3wHAbynq9C904TebsH6QUjGrsQ
-         M+9ShhBCBBO3Xuc0jYuludGxtbXe3UQXQQ/II2BIa47kvIIotd/njigjChvveCYPrZJi
-         AQAg0m93ODpjYXnh3Pga+uVqDNvVwd89GwwCXstfLtuk8RxCpi3a9go0HlozaqexAIBT
-         FgUfFp4tkyYhFTXFe9fpiLl0N+fcgCyC/RqAdWTSjq1kMsGEmYVUVo3lc4Q+89G1nN/b
-         ln4A==
-X-Forwarded-Encrypted: i=1; AJvYcCUcIaOl6RQNbboo8VzWOHXKZQnenb0vu0zgMlWIrgRKHnR21LM10++F1gY4YUqeIFI0AOE6+/TZIDc3MoXOiCSRp3nojA==@vger.kernel.org, AJvYcCWlnokyWMNKQ1Td+iEgPcEVCAMfMNVYUZsYxQnIGWZ7UbEmw2u/xW53eu097FNqfCN7szonYG9MZ6LHftc=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw9Qqxeg/8tjtvmx0EdS4zL6hI1I/manhKS8gS+G0KVzK9Z5ovG
-	GvxuTw7HGuiCIdKMRq+HKakllzgJ6DXRP2ZxwDCFQM/RMpQnLI6kH7AhL0gleR7OZVAKxl1ph4o
-	NLByS1buFB8boTfCi/9es4qRursg=
-X-Gm-Gg: ASbGncuaKdgXOfAvPkfPJASDgzasQ7ofbHQa96ArQQYQJeUX0f4Pq39jfe/ClgoKBRx
-	DEiKJaRz4pOUrN/hlYERyOdvWshPTULZES8bTGlM=
-X-Google-Smtp-Source: AGHT+IGxlAAtWQZ5eiG7FzK0qF5sTmYAei9PNxCeZfra4d5bVSE1VxKE199uSHWbnEvJZJnl6UFhgfpNB4eveHs/fA0=
-X-Received: by 2002:a17:90b:3a43:b0:2ee:f22a:61dd with SMTP id
- 98e67ed59e1d1-2f548f3dc5amr35630867a91.32.1736954627189; Wed, 15 Jan 2025
- 07:23:47 -0800 (PST)
+	s=arc-20240116; t=1736956388; c=relaxed/simple;
+	bh=PhWcjZmP6LL/nUEwVezHS4v46mxjgkBFjXBVbvvDOeE=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=sqreg3VbwHMFwTCcAo86Nb+jSM3f2S4YhkRzajhEtLF9zR/+tJDf2rAzxlBao+xhSHwWmpcCZmgyF9LsXa8k4cuzawPc1NirVMqRlchROD9orzbGQ2P75ZbHQp7OG9IIZkA5SkmUGfP3xdn9sPj83sH1r3QC1zRO3EtgKsy972w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=139.com; spf=pass smtp.mailfrom=139.com; arc=none smtp.client-ip=120.232.169.110
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=139.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=139.com
+X-RM-TagInfo: emlType=0                                       
+X-RM-SPAM:                                                                                        
+X-RM-SPAM-FLAG:00000000
+Received:from test-ThinkBook-16-G8-IRL.. (unknown[2409:8A00:7871:C6F0:5208:1445:325:B752])
+	by rmsmtp-lg-appmail-07-12085 (RichMail) with SMTP id 2f356787d8dc7bf-107c4;
+	Wed, 15 Jan 2025 23:48:57 +0800 (CST)
+X-RM-TRANSID:2f356787d8dc7bf-107c4
+From: Jackie Dong <xy-jackie@139.com>
+To: perex@perex.cz,
+	tiwai@suse.com,
+	bo.liu@senarytech.com,
+	kovalev@altlinux.org,
+	me@oldherl.one,
+	jaroslaw.janik@gmail.com,
+	songxiebing@kylinos.cn,
+	cs@tuxedo.de,
+	kailang@realtek.com,
+	sbinding@opensource.cirrus.com,
+	simont@opensource.cirrus.com,
+	josh@joshuagrisham.com,
+	rf@opensource.cirrus.com
+Cc: linux-kernel@vger.kernel.org,
+	linux-sound@vger.kernel.org,
+	platform-driver-x86@vger.kernel.org,
+	dongeg1@lenovo.com,
+	Jackie Dong <xy-jackie@139.com>,
+	Mark Pearson <mpearson-lenovo@squebb.ca>
+Subject: [PATCH v3] ALSA: hda: Support for Ideapad hotkey mute LEDs
+Date: Wed, 15 Jan 2025 23:48:11 +0800
+Message-ID: <20250115154811.11869-1-xy-jackie@139.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250113-platform_profile-v4-0-23be0dff19f1@gmail.com> <173695186401.7584.2765000569734785177.b4-ty@linux.intel.com>
-In-Reply-To: <173695186401.7584.2765000569734785177.b4-ty@linux.intel.com>
-From: Hridesh MG <hridesh699@gmail.com>
-Date: Wed, 15 Jan 2025 20:53:12 +0530
-X-Gm-Features: AbW1kvY7hvcOJ2_Kl2BHJ94FvGMkByQY9qF16bWGxFttA2lx5n5lXA2ca-PxH3c
-Message-ID: <CALiyAonhojK1-z6iZSkHW=pnNOo7WGf_3ekxHnabDX0B4=xsvA@mail.gmail.com>
-Subject: Re: [PATCH v4 0/5] platform/x86 acer-wmi: Improve platform profile handling
-To: =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Cc: Hans de Goede <hdegoede@redhat.com>, Armin Wolf <W_Armin@gmx.de>, Kurt Borja <kuurtb@gmail.com>, 
-	platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Shuah Khan <skhan@linuxfoundation.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Wed, Jan 15, 2025 at 8:07=E2=80=AFPM Ilpo J=C3=A4rvinen
-<ilpo.jarvinen@linux.intel.com> wrote:
->
-> On Mon, 13 Jan 2025 18:44:08 +0530, Hridesh MG wrote:
->
-> > This patch improves the platform profile handling for laptops using the
-> > Acer Predator interface by making the following changes -
-> >
-> > 1) Using WMI calls to fetch the current platform profile instead of
-> >    directly accessing it from the EC. A new helper function is
-> >    introduced for this purpose.
-> > 2) Simplifying the cycling of platform profiles by making use of
-> >    platform_profile_cycle()
-> > 3) Using an ACPI bitmap to dynamically set platform_profile_choices to
-> >    better reflect the supported profiles.
-> >
-> > [...]
->
->
-> Thank you for your contribution, it has been applied to my local
-> review-ilpo-next branch. Note it will show up in the public
-> platform-drivers-x86/review-ilpo-next branch only once I've pushed my
-> local branch there, which might take a while.
->
-> The list of commits applied:
-> [1/5] platform/x86: acer-wmi: use WMI calls for platform profile handling
->       commit: 2d76708c2221dde33d86aeef19f6d7d5f62148b4
-> [2/5] platform/x86: acer-wmi: use new helper function for setting overclo=
-cks
->       commit: cd44e09bb89d4a33514b9ec3d972f0d2d13f5cfd
-> [3/5] platform/x86: acer-wmi: simplify platform profile cycling
->       commit: 61c461a90fbfc038d9663713f293d60fcb58c41d
-> [4/5] platform/x86: acer-wmi: use an ACPI bitmap to set the platform prof=
-ile choices
->       commit: 191e21f1a4c3948957adc037734449f4a965dec5
-> [5/5] platform/x86: acer-wmi: add support for Acer Nitro AN515-58
->       commit: 549fcf58cf5837d401d0de906093169b05365609
->
-> --
->  i.
->
-Awesome, thanks a lot! I would like to once again thank Armin Wolf and
-Kurt Borja for their guidance and help in creating this patchset, this
-is my first meaningful [ to me atleast :) ] contribution to the kernel
-and I'm quite proud of it. Working on this issue was pretty fun and I
-learnt a lot regarding different things, it really did make me
-appreciate kernel developers even more.
 
---=20
-Thanks,
-Hridesh MG
+New ideapad helper file with support for handling FN key mute LEDs.
+Update conexant and realtec codec to add LED support.
+
+Suggested-by: Mark Pearson <mpearson-lenovo@squebb.ca>
+Signed-off-by: Jackie Dong  <xy-jackie@139.com>
+---
+Changed from v2:
+ - Removed alc_fixup_no_shutup() from alc_fixup_ideapad_acpi() to make
+   sure alc_fixup_no_shutup() only be called once for Thinkpad and
+   Ideapad.
+ 
+Changed from v1:
+ - Add a new enum CXT_FIXUP_LENOVO_XPAD_ACPI and define it as an entry in patch_conexant.c
+ - Add a new enum ALC269_FIXUP_LENOVO_XPAD_ACPI and define it as an entry in patch_realtek.c
+
+ sound/pci/hda/ideapad_hotkey_led_helper.c | 36 +++++++++++++++++++++++
+ sound/pci/hda/patch_conexant.c            | 13 +++++++-
+ sound/pci/hda/patch_realtek.c             | 19 +++++++++++-
+ 3 files changed, 66 insertions(+), 2 deletions(-)
+ create mode 100644 sound/pci/hda/ideapad_hotkey_led_helper.c
+
+diff --git a/sound/pci/hda/ideapad_hotkey_led_helper.c b/sound/pci/hda/ideapad_hotkey_led_helper.c
+new file mode 100644
+index 000000000000..c10d97964d49
+--- /dev/null
++++ b/sound/pci/hda/ideapad_hotkey_led_helper.c
+@@ -0,0 +1,36 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * Ideapad helper functions for Lenovo Ideapad LED control,
++ * It should be included from codec driver.
++ */
++
++#if IS_ENABLED(CONFIG_IDEAPAD_LAPTOP)
++
++#include <linux/acpi.h>
++#include <linux/leds.h>
++
++static bool is_ideapad(struct hda_codec *codec)
++{
++	return (codec->core.subsystem_id >> 16 == 0x17aa) &&
++	       (acpi_dev_found("LHK2019") || acpi_dev_found("VPC2004"));
++}
++
++static void hda_fixup_ideapad_acpi(struct hda_codec *codec,
++				   const struct hda_fixup *fix, int action)
++{
++	if (action == HDA_FIXUP_ACT_PRE_PROBE) {
++		if (!is_ideapad(codec))
++			return;
++		snd_hda_gen_add_mute_led_cdev(codec, NULL);
++		snd_hda_gen_add_micmute_led_cdev(codec, NULL);
++	}
++}
++
++#else /* CONFIG_IDEAPAD_LAPTOP */
++
++static void hda_fixup_ideapad_acpi(struct hda_codec *codec,
++				   const struct hda_fixup *fix, int action)
++{
++}
++
++#endif /* CONFIG_IDEAPAD_LAPTOP */
+diff --git a/sound/pci/hda/patch_conexant.c b/sound/pci/hda/patch_conexant.c
+index 538c37a78a56..4985e72b9094 100644
+--- a/sound/pci/hda/patch_conexant.c
++++ b/sound/pci/hda/patch_conexant.c
+@@ -291,6 +291,7 @@ enum {
+ 	CXT_FIXUP_GPIO1,
+ 	CXT_FIXUP_ASPIRE_DMIC,
+ 	CXT_FIXUP_THINKPAD_ACPI,
++	CXT_FIXUP_LENOVO_XPAD_ACPI,
+ 	CXT_FIXUP_OLPC_XO,
+ 	CXT_FIXUP_CAP_MIX_AMP,
+ 	CXT_FIXUP_TOSHIBA_P105,
+@@ -313,6 +314,9 @@ enum {
+ /* for hda_fixup_thinkpad_acpi() */
+ #include "thinkpad_helper.c"
+ 
++/* for hda_fixup_ideapad_acpi() */
++#include "ideapad_hotkey_led_helper.c"
++
+ static void cxt_fixup_stereo_dmic(struct hda_codec *codec,
+ 				  const struct hda_fixup *fix, int action)
+ {
+@@ -928,6 +932,12 @@ static const struct hda_fixup cxt_fixups[] = {
+ 		.type = HDA_FIXUP_FUNC,
+ 		.v.func = hda_fixup_thinkpad_acpi,
+ 	},
++	[CXT_FIXUP_LENOVO_XPAD_ACPI] = {
++		.type = HDA_FIXUP_FUNC,
++		.v.func = hda_fixup_ideapad_acpi,
++		.chained = true,
++		.chain_id = CXT_FIXUP_THINKPAD_ACPI,
++	},
+ 	[CXT_FIXUP_OLPC_XO] = {
+ 		.type = HDA_FIXUP_FUNC,
+ 		.v.func = cxt_fixup_olpc_xo,
+@@ -1119,7 +1129,7 @@ static const struct hda_quirk cxt5066_fixups[] = {
+ 	SND_PCI_QUIRK(0x17aa, 0x3977, "Lenovo IdeaPad U310", CXT_FIXUP_STEREO_DMIC),
+ 	SND_PCI_QUIRK(0x17aa, 0x3978, "Lenovo G50-70", CXT_FIXUP_STEREO_DMIC),
+ 	SND_PCI_QUIRK(0x17aa, 0x397b, "Lenovo S205", CXT_FIXUP_STEREO_DMIC),
+-	SND_PCI_QUIRK_VENDOR(0x17aa, "Thinkpad", CXT_FIXUP_THINKPAD_ACPI),
++	SND_PCI_QUIRK_VENDOR(0x17aa, "Thinkpad/Ideapad", CXT_FIXUP_LENOVO_XPAD_ACPI),
+ 	SND_PCI_QUIRK(0x1c06, 0x2011, "Lemote A1004", CXT_PINCFG_LEMOTE_A1004),
+ 	SND_PCI_QUIRK(0x1c06, 0x2012, "Lemote A1205", CXT_PINCFG_LEMOTE_A1205),
+ 	HDA_CODEC_QUIRK(0x2782, 0x12c3, "Sirius Gen1", CXT_PINCFG_TOP_SPEAKER),
+@@ -1133,6 +1143,7 @@ static const struct hda_model_fixup cxt5066_fixup_models[] = {
+ 	{ .id = CXT_FIXUP_HEADPHONE_MIC_PIN, .name = "headphone-mic-pin" },
+ 	{ .id = CXT_PINCFG_LENOVO_TP410, .name = "tp410" },
+ 	{ .id = CXT_FIXUP_THINKPAD_ACPI, .name = "thinkpad" },
++	{ .id = CXT_FIXUP_LENOVO_XPAD_ACPI, .name = "thinkpad-ideapad" },
+ 	{ .id = CXT_PINCFG_LEMOTE_A1004, .name = "lemote-a1004" },
+ 	{ .id = CXT_PINCFG_LEMOTE_A1205, .name = "lemote-a1205" },
+ 	{ .id = CXT_FIXUP_OLPC_XO, .name = "olpc-xo" },
+diff --git a/sound/pci/hda/patch_realtek.c b/sound/pci/hda/patch_realtek.c
+index 61ba5dc35b8b..c702974187d6 100644
+--- a/sound/pci/hda/patch_realtek.c
++++ b/sound/pci/hda/patch_realtek.c
+@@ -6934,6 +6934,15 @@ static void alc_fixup_thinkpad_acpi(struct hda_codec *codec,
+ 	hda_fixup_thinkpad_acpi(codec, fix, action);
+ }
+ 
++/* for hda_fixup_ideapad_acpi() */
++#include "ideapad_hotkey_led_helper.c"
++
++static void alc_fixup_ideapad_acpi(struct hda_codec *codec,
++				   const struct hda_fixup *fix, int action)
++{
++	hda_fixup_ideapad_acpi(codec, fix, action);
++}
++
+ /* Fixup for Lenovo Legion 15IMHg05 speaker output on headset removal. */
+ static void alc287_fixup_legion_15imhg05_speakers(struct hda_codec *codec,
+ 						  const struct hda_fixup *fix,
+@@ -7556,6 +7565,7 @@ enum {
+ 	ALC290_FIXUP_SUBWOOFER,
+ 	ALC290_FIXUP_SUBWOOFER_HSJACK,
+ 	ALC269_FIXUP_THINKPAD_ACPI,
++	ALC269_FIXUP_LENOVO_XPAD_ACPI,
+ 	ALC269_FIXUP_DMIC_THINKPAD_ACPI,
+ 	ALC269VB_FIXUP_INFINIX_ZERO_BOOK_13,
+ 	ALC269VC_FIXUP_INFINIX_Y4_MAX,
+@@ -8327,6 +8337,12 @@ static const struct hda_fixup alc269_fixups[] = {
+ 		.chained = true,
+ 		.chain_id = ALC269_FIXUP_SKU_IGNORE,
+ 	},
++	[ALC269_FIXUP_LENOVO_XPAD_ACPI] = {
++		.type = HDA_FIXUP_FUNC,
++		.v.func = alc_fixup_ideapad_acpi,
++		.chained = true,
++		.chain_id = ALC269_FIXUP_THINKPAD_ACPI,
++	},
+ 	[ALC269_FIXUP_DMIC_THINKPAD_ACPI] = {
+ 		.type = HDA_FIXUP_FUNC,
+ 		.v.func = alc_fixup_inv_dmic,
+@@ -11065,7 +11081,7 @@ static const struct hda_quirk alc269_fixup_vendor_tbl[] = {
+ 	SND_PCI_QUIRK_VENDOR(0x1025, "Acer Aspire", ALC271_FIXUP_DMIC),
+ 	SND_PCI_QUIRK_VENDOR(0x103c, "HP", ALC269_FIXUP_HP_MUTE_LED),
+ 	SND_PCI_QUIRK_VENDOR(0x104d, "Sony VAIO", ALC269_FIXUP_SONY_VAIO),
+-	SND_PCI_QUIRK_VENDOR(0x17aa, "Thinkpad", ALC269_FIXUP_THINKPAD_ACPI),
++	SND_PCI_QUIRK_VENDOR(0x17aa, "Lenovo XPAD", ALC269_FIXUP_LENOVO_XPAD_ACPI),
+ 	SND_PCI_QUIRK_VENDOR(0x19e5, "Huawei Matebook", ALC255_FIXUP_MIC_MUTE_LED),
+ 	{}
+ };
+@@ -11130,6 +11146,7 @@ static const struct hda_model_fixup alc269_fixup_models[] = {
+ 	{.id = ALC290_FIXUP_MONO_SPEAKERS_HSJACK, .name = "mono-speakers"},
+ 	{.id = ALC290_FIXUP_SUBWOOFER_HSJACK, .name = "alc290-subwoofer"},
+ 	{.id = ALC269_FIXUP_THINKPAD_ACPI, .name = "thinkpad"},
++	{.id = ALC269_FIXUP_LENOVO_XPAD_ACPI, .name = "lenovo xpad led"},
+ 	{.id = ALC269_FIXUP_DMIC_THINKPAD_ACPI, .name = "dmic-thinkpad"},
+ 	{.id = ALC255_FIXUP_ACER_MIC_NO_PRESENCE, .name = "alc255-acer"},
+ 	{.id = ALC255_FIXUP_ASUS_MIC_NO_PRESENCE, .name = "alc255-asus"},
+-- 
+2.43.0
+
+
