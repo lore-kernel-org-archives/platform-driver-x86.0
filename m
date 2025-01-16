@@ -1,185 +1,182 @@
-Received: from fout-a8-smtp.messagingengine.com (fout-a8-smtp.messagingengine.com [103.168.172.151])
+Received: from mout.gmx.net (mout.gmx.net [212.227.17.20])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC4E313B58C;
-	Thu, 16 Jan 2025 22:20:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.151
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA8E01DAC81;
+	Thu, 16 Jan 2025 22:39:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.20
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1737066041; cv=none; b=jiZAonDVhFmVNnddx0K17c3yPECCNKSzxUzusjbF74mCRzIm3HKK469MJ0gyUC0SlJb40EdPcxWtwQbDfCnVKbtr2Aq5BH4csNQwFjsDjL4aKvh/itARQ6vxhmX20u8OeY7cMS6D1QDv3GuKfrtARaqdQyGzF7In307Fk/3Xz90=
+	t=1737067188; cv=none; b=rjnCRFz7qFKHBSi1Zeny1GClaRSE03R7U1hoVGNxv2RrcElUgqWYS3cTzqoZrcj3ZAh9s3BMPws52K8JfkLEJi1sGDKQOdEO5j79PkNi8wRovBMCulPgB3cvzL67YXlrinOar7oohhW/uB34udM6/s1+9mHvO6D6clYkaQoW+OU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1737066041; c=relaxed/simple;
-	bh=SFy3ck1vf79DxRw1V7twdG5RfYfyfQDTCjMDg3pfv9U=;
-	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
-	 Subject:Content-Type; b=ditCwrTr0IyHopjdpa/Rod26qkErDVobyloBpsHNLOcA+45Vdlk59pH4l79lY4yFK0Z2hueDutr3V3vGKZy/TtJ5b144dPFEoSEapl7vfo6xiXaEzYSn7ZT+kp0QocIDalO1q7pzXEMIR4M2dXQK8H73QZPTqWu1OFBocOIRmew=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=squebb.ca; spf=pass smtp.mailfrom=squebb.ca; dkim=pass (2048-bit key) header.d=squebb.ca header.i=@squebb.ca header.b=uAMXcO8E; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=l8sJjVkF; arc=none smtp.client-ip=103.168.172.151
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=squebb.ca
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=squebb.ca
+	s=arc-20240116; t=1737067188; c=relaxed/simple;
+	bh=gOP/rLroOD+DvqbsgKwKMxhupfDmRnPIUDkBo1zn72k=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=IEJx9xQziH+SV8u4C29YDeA9k9lfEQpu52/LDJmJxiBoNNPsp78wIdaDCWDfTWUwcMZUuwh1XhzNE6RSlrYa8JEmwLpB1zCJpzRAaTKBKAKleXxvaAnj1u62QBO+uQvk76r+e7eGY215kKbtrRFgx8rHzGdSdG2K+M0LWCFqiwE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b=pr/lrjvi; arc=none smtp.client-ip=212.227.17.20
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=squebb.ca header.i=@squebb.ca header.b="uAMXcO8E";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="l8sJjVkF"
-Received: from phl-compute-02.internal (phl-compute-02.phl.internal [10.202.2.42])
-	by mailfout.phl.internal (Postfix) with ESMTP id C3FCC13802C2;
-	Thu, 16 Jan 2025 17:20:37 -0500 (EST)
-Received: from phl-imap-10 ([10.202.2.85])
-  by phl-compute-02.internal (MEProxy); Thu, 16 Jan 2025 17:20:37 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=squebb.ca; h=cc
-	:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to; s=fm3; t=1737066037;
-	 x=1737152437; bh=Vb4kmYiLpZR7cnqSwRqWr3BnMdy2IX6vkQzBpGLy1OY=; b=
-	uAMXcO8EhlWg6wgXZiY5hNTAz3eUj7kPHf/Q0wN8ObX15jEzaJmnXmu9JKDQk4ve
-	wXKwaQ7KkYR2vLG7uTcmRCv0O5gAjbMf/EXn/gmeWLDYYQCS+U87EaBOzvoap7rg
-	vqAvESB+RNotJovaILtAgGd5TQ9K8mfr+TdiDmntrnf8IDClxGNZ6h7HIO758p6s
-	bgkqldLiqQ3ul/sJ4cjHoO8syK1sD0IyBsxW6RCrB+jbO4wNP4Qg+rI4JW9xvEnw
-	YIwDV8yjsr798nzWTd/JqLygQaTWVfgFkJNLamR4iiPS64HWcG05vC7nXF/UBRrk
-	XUnx+j5mzWJULYaL9EgivA==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=1737066037; x=
-	1737152437; bh=Vb4kmYiLpZR7cnqSwRqWr3BnMdy2IX6vkQzBpGLy1OY=; b=l
-	8sJjVkFlhrQGKOEwlFAeyh66tQeKodAibtYzwvYBjEVD04j7zC8cn7cslJu8SkxW
-	gkBU8Tw/0E7f8D//MxNslNnpwu3W5+RkZ2eNO55Eai/ksPLS1c2REyRdOD+71njL
-	cwD7NVAWfkT+Q6FdkOngDNNyixH9qnFsMgofeTV2SB5u6OzcEdmitcnfVvEXfCRM
-	bLDQPtzZmb9aFXeYQipPuNaWrTyorhqJ/LeZZqe7DayM6aUX/QnzEtinTUj9BNCf
-	Lgsi8iy8yDdsvez0+OqgHTjWj/CdGhAkE0bFXVMDnNFnDKlwUWYrJvvbw/sctNHO
-	5jB2vd3+SLC5eh6arCQsQ==
-X-ME-Sender: <xms:M4aJZ4vWyXnX0wtMXsB0ogXp4yBC60Gw82981HCsoERhdvk2U1kj1w>
-    <xme:M4aJZ1dXy8tdBJHzUsfjl-M_KBjiKswgi9h8HHvNIfPOMxISncT4CydSvkD9sX8T6
-    4WjOwvu6KnUqSlo5Bs>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefuddrudeiuddgudehiecutefuodetggdotefrod
-    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpggftfghnshhusghstghrihgsvgdp
-    uffrtefokffrpgfnqfghnecuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivg
-    hnthhsucdlqddutddtmdenucfjughrpefoggffhffvvefkjghfufgtgfesthejredtredt
-    tdenucfhrhhomhepfdforghrkhcurfgvrghrshhonhdfuceomhhpvggrrhhsohhnqdhlvg
-    hnohhvohesshhquhgvsggsrdgtrgeqnecuggftrfgrthhtvghrnheptdffvefgtefhveet
-    uddvfeelveektdduvdelgfehgfeikeffjeetjeevffektdfhnecuffhomhgrihhnpehkvg
-    hrnhgvlhdrohhrghenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhl
-    fhhrohhmpehmphgvrghrshhonhdqlhgvnhhovhhosehsqhhuvggssgdrtggrpdhnsggprh
-    gtphhtthhopedvhedpmhhouggvpehsmhhtphhouhhtpdhrtghpthhtohepshhhhigrmhdq
-    shhunhgurghrrdhsqdhksegrmhgurdgtohhmpdhrtghpthhtohepmhgrrhhiohdrlhhimh
-    honhgtihgvlhhlohesrghmugdrtghomhdprhgtphhtthhopehikhgvrdhprghnsegtrghn
-    ohhnihgtrghlrdgtohhmpdhrtghpthhtohepuggvlhhlrdgtlhhivghnthdrkhgvrhhnvg
-    hlseguvghllhdrtghomhdprhgtphhtthhopegrlhgvgigsvghlmhegkeesghhmrghilhdr
-    tghomhdprhgtphhtthhopegtohhrvghnthhinhdrtghhrghrhiesghhmrghilhdrtghomh
-    dprhgtphhtthhopeguvghrvghkjhhohhhnrdgtlhgrrhhksehgmhgrihhlrdgtohhmpdhr
-    tghpthhtohepkhhuuhhrthgssehgmhgrihhlrdgtohhmpdhrtghpthhtoheplhhuiihmrg
-    igihhmihhlihgrnhesghhmrghilhdrtghomh
-X-ME-Proxy: <xmx:M4aJZzyyoGPMKmyZ86YezqbAXb2M1pDzZeKSdQG4h24I3IFRecrjaA>
-    <xmx:M4aJZ7M3wWf3jcBrhx-DFdZSt96NRGBkG-QYZwFqUVEfJq-dIT7I6A>
-    <xmx:M4aJZ49Nl5Tg_tdR5PgKIwUh0Cb6mmA4o_5k-_CdQuB8wcoX9L8n3w>
-    <xmx:M4aJZzUc1TY5pHQfVMAHkcc7KfsJotlztzIribiOlofU8UYWCjJpOA>
-    <xmx:NYaJZ2NiWWNPAwnG-Dcib6_9mooTYlRtxQp3Y0Hq-jmxk2BS-dOw0Oai>
-Feedback-ID: ibe194615:Fastmail
-Received: by mailuser.phl.internal (Postfix, from userid 501)
-	id 2874A3C0068; Thu, 16 Jan 2025 17:20:35 -0500 (EST)
-X-Mailer: MessagingEngine.com Webmail Interface
+	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b="pr/lrjvi"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.de;
+	s=s31663417; t=1737067180; x=1737671980; i=w_armin@gmx.de;
+	bh=do/Z1MIvI4yAPkCv+imwWF0Y/6dKxjoYpqHt8+ncmWc=;
+	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:To:Cc:
+	 References:From:In-Reply-To:Content-Type:
+	 Content-Transfer-Encoding:cc:content-transfer-encoding:
+	 content-type:date:from:message-id:mime-version:reply-to:subject:
+	 to;
+	b=pr/lrjviMDYO/4DNONi6uMpDlnUFf5eGC7p/pHZ0v4/MjSINb1hvQXDzbUjfPltG
+	 9wp+u2kPpp/Gy1X0z4kvsxgIpq4XR26SsTFfcLf7U7K/1IGtYlbXwyU/nISw3gYg/
+	 uo2dtVJr6k1Tt/CKD9I4iVN7uywwBBnvzALl5bhLLE6FLkbE7U2JiVVfgKDpC5eMe
+	 XjgawWWv6gmnXEmDW6TT8RaoNXU5+5gpWRiRw72PQ4e9izjHjkkPOtSLjkuDzXsVG
+	 5ItPEZlmtqwfQnMJmYcqA3kJ8BBBMan9fl6FseiR4Qkq49/WHzVtFc2fySvo7cl7m
+	 BaJve4naV2zJILAicA==
+X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
+Received: from [192.168.0.69] ([91.14.230.110]) by mail.gmx.net (mrgmx105
+ [212.227.17.168]) with ESMTPSA (Nemesis) id 1MZCbB-1u3CUU3129-00Vyjm; Thu, 16
+ Jan 2025 23:39:39 +0100
+Message-ID: <71316934-e717-4358-a529-e14c225dcda7@gmx.de>
+Date: Thu, 16 Jan 2025 23:39:37 +0100
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Date: Thu, 16 Jan 2025 17:20:14 -0500
-From: "Mark Pearson" <mpearson-lenovo@squebb.ca>
-To: "Kurt Borja" <kuurtb@gmail.com>,
- "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>
-Cc: "Rafael J. Wysocki" <rafael@kernel.org>, "Len Brown" <lenb@kernel.org>,
- "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>,
- linux-kernel@vger.kernel.org,
- "Limonciello, Mario" <mario.limonciello@amd.com>,
- "Armin Wolf" <W_Armin@gmx.de>, "Joshua Grisham" <josh@joshuagrisham.com>,
- "Derek J . Clark" <derekjohn.clark@gmail.com>,
- =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
- "Hans de Goede" <hdegoede@redhat.com>,
- "Maximilian Luz" <luzmaximilian@gmail.com>, "Lee Chun-Yi" <jlee@suse.com>,
- "Shyam Sundar S K" <Shyam-sundar.S-k@amd.com>,
- "Corentin Chary" <corentin.chary@gmail.com>,
- "Luke D . Jones" <luke@ljones.dev>, "Lyndon Sanche" <lsanche@lyndeno.ca>,
- "Ike Panhc" <ike.pan@canonical.com>,
- "Henrique de Moraes Holschuh" <hmh@hmh.eng.br>,
- "Alexis Belmonte" <alexbelm48@gmail.com>, "Ai Chao" <aichao@kylinos.cn>,
- "Gergo Koteles" <soyer@irl.hu>, Dell.Client.Kernel@dell.com,
- ibm-acpi-devel@lists.sourceforge.net
-Message-Id: <1eb2720a-c9af-4e5c-8df2-c4ce3c017d5c@app.fastmail.com>
-In-Reply-To: <20250116002721.75592-1-kuurtb@gmail.com>
-References: <20250116002721.75592-1-kuurtb@gmail.com>
-Subject: Re: [PATCH v4 00/19] Hide platform_profile_handler from consumers
-Content-Type: text/plain
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 00/20] platform/x86: alienware-wmi driver rework
+To: Kurt Borja <kuurtb@gmail.com>, platform-driver-x86@vger.kernel.org
+Cc: ilpo.jarvinen@linux.intel.com, mario.limonciello@amd.com,
+ hdegoede@redhat.com, Dell.Client.Kernel@dell.com,
+ linux-kernel@vger.kernel.org
+References: <20250105153019.19206-2-kuurtb@gmail.com>
+Content-Language: en-US
+From: Armin Wolf <W_Armin@gmx.de>
+In-Reply-To: <20250105153019.19206-2-kuurtb@gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
+X-Provags-ID: V03:K1:fxZXdvrz8QCUQMSDLfLt1/WxnTndp3FHsiK4tj9UMbwVOYvpIxQ
+ 5LQ+nBtN7Va3mSB9SiR1U1hSMlmMJnhbRkoXlcovEE35qA/jpvQiP3tETmowLXQaqrc+Dn6
+ KhO62o1mEZFj4QxIJiFGMZR6Fj7BtR8XUSWUEhmLWsHpAjnSdVrkylOxU1DL1ZoQ7qOP8Zn
+ uwTQNW67ndOalRsTA3QzA==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:KjURUVQNi0k=;tpukcin5R3UNeTSjxdW4Mai72yb
+ wARJa7nXGcrpMWzSUNgIrPkhEVkLyMxYJHTSMf/0bUOUUPhVKyHDoEDggOy2DurVXVlJ6RxYP
+ XlGXunNIzrd0Qp7dUewPC3Ux+nDN41DhZk8uBqZJh8QlaP5/+2M5mD3F18ipnBWc7nDiQz2xx
+ /rRfAz+bex7J86fH9/YSYLI/F4KqHW6Ur1myzbg7A2157jSWakJVhTpe61xwGIFFHbJVVhl9g
+ bRh1MgNl/BD7O1jKCO+WNiQLbTHN5zLafAQlJzc8QJKpD/j9BueFDpVfyY8CSQ8IiLXNCbpzW
+ vZIbLLxAi/n6S0nPba3NBD0oCC8yB4I8Fq9hSi/CWnmbiCNNNylbMRql51+jpO/I7P1XoENoe
+ K85/vZbXfy/oI/ofInTwhqwm8n6Ln5URI6Vp6KXRqwyJUMmS1aPXwGL8xKcbej+PeIGRtaf+0
+ vOTYP6nYjPEe94JKSuzxiRI5BCSox88KNeAlLPEHMG4fI/u9QWTyUGGdf4Cl2EKkYGJhnfYDQ
+ 7aHyyHbdoWcsqbxOi5a4LJX0BwsU59PjwmvEi/DJrYFSV10PzKOnHlCc/ksFpKIsE5q+z0ckE
+ SG4xtPN1h/QjBhh+bYurCDY5U2wlvEjv/jD6/9ezyk4cDH3e0FEJ1CA4t72bxhUba9RcSs/7w
+ /Uiqc5u2wcdRZ/HPEJVinsPpyp/AZMAEjBAvDXlwm0FEw8gxuSUnMKffEKBhC0EMuzyADAysi
+ wk8+f0I6dCFw3XYla2V2Rxg7KqUDAl+TErp+v4rv4GIAIDLTkcTYaHCd8gwmMkG7MbhKX3vMT
+ Fcj+nBuEF0VS0ncDHszh4jJ+51PLAuAl5qYqpeATViEWtlYNgqbIhbPWwe2NlGNpJrOVt2ngW
+ iZJsm5rLEJRd6r4ZvwqUpRbg0Y2LA82KzA/Vl8SaTwOKMORpsPdI2V+5R4DCX/5qWd8MuaGal
+ badb4fyxg+UbRV9esRFRhIiB6LKQLjRYWis3Lv8tEftyyYxrYgwxvlOFQCzk/U70JvpzERrA3
+ atO8GnMcf02ucsQBhcy+hKiIxftdcBuGMBfa3lJcjVmE0TkAWHmYXBahJ9MlywsujsqFDr5WI
+ yjrTqY4/rR3sbuXIUQQw0p0gx3i7JJIQG1LXILJcFLsFoKk/Cx+FClfGuDyjQRVOjcim5QoV/
+ sR7rQkQqdORr9WtvGHe39w6gLMiiDojiGaJdGVegu9A==
 
-Hi
+Am 05.01.25 um 16:30 schrieb Kurt Borja:
 
-On Wed, Jan 15, 2025, at 7:27 PM, Kurt Borja wrote:
-> Hi :)
+> Hello :)
 >
-> The merge window is about to open, so I rebased this patchset on top of
-> pdx86/review-ilpo-next to pick up acer-wmi latest commits, in case we
-> manage to squeeze this into v6.14.
->
+> I rebased this series on top of review-ilpo-next to pick up
+> alienware-wmi's latest commit.
+
+Hi,
+
+sorry for taking a bit long to respond. Could you send a v4 series without
+the already applied commits and which cleanly applies onto for-next?
+
+I will then try to review this series till the end of this week.
+
+Thanks,
+Armin Wolf
+
 > ~ Kurt
 > ---
-> v3 -> v4:
+> v2 -> v3:
 >
-> [09/19]
->   - Replace error message with a user-friendly one
+> [5/20]
+>   - Use traditional if statement in zone_attr_visible and return attr->mode
 >
-> v3: 
-> https://lore.kernel.org/platform-driver-x86/20250115071022.4815-1-kuurtb@gmail.com/
+> [7/20]
+>   - Remove quirks from priv
 >
-> Kurt Borja (19):
->   ACPI: platform_profile: Replace *class_dev member with class_dev
->   ACPI: platform_profile: Let drivers set drvdata to the class device
->   ACPI: platform_profile: Remove platform_profile_handler from callbacks
->   ACPI: platform_profile: Add `ops` member to handlers
->   ACPI: platform_profile: Add `probe` to platform_profile_ops
->   platform/surface: surface_platform_profile: Use
->     devm_platform_profile_register()
->   platform/x86: acer-wmi: Use devm_platform_profile_register()
->   platform/x86: amd: pmf: sps: Use devm_platform_profile_register()
->   platform/x86: asus-wmi: Use devm_platform_profile_register()
->   platform/x86: dell-pc: Use devm_platform_profile_register()
->   platform/x86: ideapad-laptop: Use devm_platform_profile_register()
->   platform/x86: hp-wmi: Use devm_platform_profile_register()
->   platform/x86: inspur_platform_profile: Use
->     devm_platform_profile_register()
->   platform/x86: thinkpad_acpi: Use devm_platform_profile_register()
->   ACPI: platform_profile: Remove platform_profile_handler from exported
->     symbols
->   ACPI: platform_profile: Move platform_profile_handler
->   ACPI: platform_profile: Clean platform_profile_handler
->   ACPI: platform_profile: Add documentation
->   ACPI: platform_profile: Add a prefix to log messages
+> [8/20]
+>   - Call alienware_alienfx_exit if device_add_groups fails
+>   - Call device_remove_groups on .remove
+>   - Return ret on alienware_wmi_init()
 >
->  .../ABI/testing/sysfs-class-platform-profile  |  44 +++++
->  drivers/acpi/platform_profile.c               | 172 +++++++++++++-----
->  .../surface/surface_platform_profile.c        |  48 ++---
->  drivers/platform/x86/acer-wmi.c               | 114 ++++++------
->  drivers/platform/x86/amd/pmf/core.c           |   1 -
->  drivers/platform/x86/amd/pmf/pmf.h            |   3 +-
->  drivers/platform/x86/amd/pmf/sps.c            |  51 +++---
->  drivers/platform/x86/asus-wmi.c               |  55 +++---
->  drivers/platform/x86/dell/alienware-wmi.c     |  34 ++--
->  drivers/platform/x86/dell/dell-pc.c           |  60 +++---
->  drivers/platform/x86/hp/hp-wmi.c              |  83 +++++----
->  drivers/platform/x86/ideapad-laptop.c         |  45 +++--
->  .../platform/x86/inspur_platform_profile.c    |  48 +++--
->  drivers/platform/x86/thinkpad_acpi.c          |  37 ++--
->  include/linux/platform_profile.h              |  37 ++--
->  15 files changed, 495 insertions(+), 337 deletions(-)
->  create mode 100644 Documentation/ABI/testing/sysfs-class-platform-profile
+> [9/20]
+>   - Directly return create_thermal_profile in alienware_awcc_setup()
+>   - Assign priv on declaration in alienware_awcc_exit()
+>
+> [10/20]
+>   - Fix alienware_wmi_command()
+>
+> [13/20]
+>   - Rename x_series_features -> generic_quirks
+>   - Rename g_series_features -> g_series_quirks
+>   - Keep previous module parameter logic
+>   - Additionally rename *quirks -> *alienfx
+>
+> [16/20]
+>   - Export *alienfx as an extern variable on alienware-wmi.h
+>   - Move pr_fmt to alienware-wmi.h
+>
+> [17/20]
+>   - 2024 -> 2025
+>
+> [20/20]
+>   - 2024 -> 2025
+>
+> [*/20]
+>   - Add platform/x86 prefix to commit messages
+>
+> v2: https://lore.kernel.org/platform-driver-x86/20241229194506.8268-2-kuurtb@gmail.com/
+>
+> Kurt Borja (20):
+>    platform/x86: alienware-wmi: Remove unnecessary check at module exit
+>    platform/x86: alienware-wmi: Move Lighting Control State
+>    platform/x86: alienware-wmi: Modify parse_rgb() signature
+>    platform/x86: alienware-wmi: Improve hdmi_mux, amplifier and deepslp
+>      group creation
+>    platform/x86: alienware-wmi: Improve rgb-zones group creation
+>    platform/x86: alienware_wmi: General cleanup of WMAX methods
+>    platform/x86: alienware-wmi: Add a state container for LED control
+>      feature
+>    platform/x86: alienware-wmi: Add WMI Drivers
+>    platform/x86: alienware-wmi: Add a state container for thermal control
+>      methods
+>    platform/x86: alienware-wmi: Refactor LED control methods
+>    platform/x86: alienware-wmi: Refactor hdmi, amplifier, deepslp methods
+>    platform/x86: alienware-wmi: Refactor thermal control methods
+>    platform/x86: alienware-wmi: Split DMI table
+>    MAINTAINERS: Update ALIENWARE WMI DRIVER entry
+>    platform/x86: Rename alienware-wmi.c
+>    platform/x86: Add alienware-wmi.h
+>    platform/x86: Split the alienware-wmi driver
+>    platform/x86: dell: Modify Makefile alignment
+>    platform/x86: Update alienware-wmi config entries
+>    platform/x86: alienware-wmi: Update header and module information
+>
+>   MAINTAINERS                                   |    4 +-
+>   drivers/platform/x86/dell/Kconfig             |   30 +-
+>   drivers/platform/x86/dell/Makefile            |   45 +-
+>   .../platform/x86/dell/alienware-wmi-base.c    |  488 +++++++
+>   .../platform/x86/dell/alienware-wmi-legacy.c  |   98 ++
+>   .../platform/x86/dell/alienware-wmi-wmax.c    |  767 ++++++++++
+>   drivers/platform/x86/dell/alienware-wmi.c     | 1261 -----------------
+>   drivers/platform/x86/dell/alienware-wmi.h     |  104 ++
+>   8 files changed, 1509 insertions(+), 1288 deletions(-)
+>   create mode 100644 drivers/platform/x86/dell/alienware-wmi-base.c
+>   create mode 100644 drivers/platform/x86/dell/alienware-wmi-legacy.c
+>   create mode 100644 drivers/platform/x86/dell/alienware-wmi-wmax.c
+>   delete mode 100644 drivers/platform/x86/dell/alienware-wmi.c
+>   create mode 100644 drivers/platform/x86/dell/alienware-wmi.h
 >
 >
-> base-commit: d98bf6a6ed61a8047e199495b0887cce392f8e5b
-> -- 
-> 2.48.1
-
-For the series up to v4 commit 15/19:
-Reviewed-by: Mark Pearson <mpearson-lenovo@squebb.ca>
-
-I need to go over the last few commits just once more, as there a few pieces I need to get my head around - and I'm not going to get it done this evening. Hope it's OK to add review for the bits that I have done.
-
-Thanks
-Mark
+> base-commit: 6b228cfc52a6e9b7149cf51e247076963d6561cd
