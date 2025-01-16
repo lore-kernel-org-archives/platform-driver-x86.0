@@ -1,118 +1,214 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD1511A0BF3;
-	Thu, 16 Jan 2025 11:20:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9DA8D1D90DB;
+	Thu, 16 Jan 2025 12:02:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1737026410; cv=none; b=gQh1NM3zhoxfwR4IkwYsFriKpio+CBY/pFnm+UqIBpnfbtHUJ+92LwjlDwYqs4LHfFNFp/Vt7st/gCM0yqjjSXsEcf9zNjBKTtqoPAinfwFEGT7ehp3j6PE3DEkaHEWTl9gUnpVzzhMMr6KpW9X47s6MECp0WvAAY0V2Y65Ue5c=
+	t=1737028969; cv=none; b=uGfocAeq8OtJBo/iVoaKUyh8sAzu+As8UZblXHCgmjtdiDlUJNPH239LIONfY8UfmRTDgLzkDSCiJ34FRiFaKi+jAAuBmvnaNcXun3w/YQgftQJGTCPW8RrTuyx6qlyeCAGIMwGmXneKUHhhLKHFPfR+M1HNqWZgc7dpMQId+dc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1737026410; c=relaxed/simple;
-	bh=ZqULpiITHqkatACT8fU/K6ikyPgTtkNalwLYN4RqyAw=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=STcspMMxFMlJIt1lIwSBJNC5tBxgKZDan8thTF6eYA83itE71BN09NLRx7UJdlQc3oHPszeGqHa87iJsinujOVFloEhjiZ6b00JwEEd7WUwClGsUvb2bJUaSm4rRC5Rn1YqxQSgeNKOaxB0e7GK3GNSMbg0IvIr4dwbuOULZ+jk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EjHtwlbv; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1737028969; c=relaxed/simple;
+	bh=NgMks3iOQKzMIwQHOtA+dP88k7Mk7eu8pT4IExXYSo4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=THJwlkuX+7d5s/IST1uBkAnctFpR2cj0PuaVt3iGd7cRdbbDmq05kuYh8SOui8L++yrXjItchj8PeyuyHgd3PQQNoHje9bQP4CvS9GdJp4x4YmFDUTlyI/TPKHV18SUQ6OufkgT7YfhThFDJn5MUHBEEfVvsLOCWZB3m41RkPjw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Kvb2l+YM; arc=none smtp.client-ip=198.175.65.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EjHtwlbv"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0357CC4CEDF;
-	Thu, 16 Jan 2025 11:20:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1737026410;
-	bh=ZqULpiITHqkatACT8fU/K6ikyPgTtkNalwLYN4RqyAw=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=EjHtwlbvA1Yjk8jveZAnOU0NL1NejpegusIGXrKYOyVEE+zY4+GemO6gfxk29kwHN
-	 TNibIqxy4YVgD8VVaioI3OP9ALmLejKAeY2TESjc6qQWfsEsL6T24bWEaLUBsmCJTB
-	 D1DX+vCypIcy1jXfl25Y5Hb0cqzHM/p67KDa2N+0j96tUdrQpkWaR2aJjMa9IcVIlI
-	 TdRb6kEAgXODKsd8PAlgx2BNZiUJV8t3xb6lBI02pavbkqymUQS9rjekgkYYryAL4/
-	 ErU09KVwEOkMdFB8BJjSQdI85Ai6DnVU1iTM6l2DpiBmBy08R2+qd5LY8Oh2zVqFyL
-	 FWql5xgyRwvWw==
-Message-ID: <0d152ea2-1512-4b12-a3c8-52715f1f1b94@kernel.org>
-Date: Thu, 16 Jan 2025 12:20:02 +0100
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Kvb2l+YM"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1737028968; x=1768564968;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=NgMks3iOQKzMIwQHOtA+dP88k7Mk7eu8pT4IExXYSo4=;
+  b=Kvb2l+YM6Bugdk95Dpd4an3MvnFbfS6A+4wNGv6W/NZhE+ycVTdJKQqE
+   6FeKKy1UAi7mishAGwjZkmbYcNPOI/kG8pUjA50XNCO2Xb7mUncLxs63Z
+   siwrYsbJX34eJgcylU8a995MMw3AxnfRTksiiOHULi1cIBUWR8QRBFVi7
+   iRvB/2ZzZcoqZOqyu5qpbKpNKHN7nQh6rDbM7FDCZZZjidbKmRrSXQc/0
+   RbER4Ni3SrgV8EgoC3HQu/NFUNLA4U22RWjSnMV4ThAhSzlCnUqFBKWWw
+   Ryaojg8b0DHAfkKAmqaEHXFozPdxFORy27XD+8hJk3wqV/NTwgVlYfED/
+   Q==;
+X-CSE-ConnectionGUID: D4jw5TItQkKQGr19JfWq6A==
+X-CSE-MsgGUID: QPrnRmHISyqn/OlijW6mIA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11316"; a="48806107"
+X-IronPort-AV: E=Sophos;i="6.13,209,1732608000"; 
+   d="scan'208";a="48806107"
+Received: from fmviesa006.fm.intel.com ([10.60.135.146])
+  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Jan 2025 04:02:47 -0800
+X-CSE-ConnectionGUID: 7XN/y71JSHqEoD3bBWgY0g==
+X-CSE-MsgGUID: vz555kR/Q5mWewTlcUEJsg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.13,209,1732608000"; 
+   d="scan'208";a="105293015"
+Received: from kuha.fi.intel.com ([10.237.72.152])
+  by fmviesa006.fm.intel.com with SMTP; 16 Jan 2025 04:02:19 -0800
+Received: by kuha.fi.intel.com (sSMTP sendmail emulation); Thu, 16 Jan 2025 14:02:18 +0200
+Date: Thu, 16 Jan 2025 14:02:18 +0200
+From: Heikki Krogerus <heikki.krogerus@linux.intel.com>
+To: Pengyu Luo <mitltlatltl@gmail.com>
+Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Bjorn Andersson <andersson@kernel.org>,
+	Konrad Dybcio <konradybcio@kernel.org>,
+	Hans de Goede <hdegoede@redhat.com>,
+	Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	Bryan O'Donoghue <bryan.odonoghue@linaro.org>,
+	Sebastian Reichel <sre@kernel.org>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Jean Delvare <jdelvare@suse.com>,
+	Guenter Roeck <linux@roeck-us.net>, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+	platform-driver-x86@vger.kernel.org, linux-pm@vger.kernel.org,
+	linux-usb@vger.kernel.org, linux-hwmon@vger.kernel.org
+Subject: Re: [PATCH v3 2/6] platform: arm64: add Huawei Matebook E Go EC
+ driver
+Message-ID: <Z4j1SicBtMZq4P9B@kuha.fi.intel.com>
+References: <20250113174945.590344-1-mitltlatltl@gmail.com>
+ <20250113175049.590511-1-mitltlatltl@gmail.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 3/3] arm64: dts: qcom: gaokun3: Add Embedded Controller
- node
-To: Pengyu Luo <mitltlatltl@gmail.com>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Bjorn Andersson <andersson@kernel.org>,
- Konrad Dybcio <konradybcio@kernel.org>, Hans de Goede <hdegoede@redhat.com>,
- =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
- Bryan O'Donoghue <bryan.odonoghue@linaro.org>,
- Jean Delvare <jdelvare@suse.com>, Guenter Roeck <linux@roeck-us.net>
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-arm-msm@vger.kernel.org, platform-driver-x86@vger.kernel.org,
- linux-hwmon@vger.kernel.org
-References: <20250116111559.83641-1-mitltlatltl@gmail.com>
- <20250116111559.83641-4-mitltlatltl@gmail.com>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 fv0=
-In-Reply-To: <20250116111559.83641-4-mitltlatltl@gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250113175049.590511-1-mitltlatltl@gmail.com>
 
-On 16/01/2025 12:15, Pengyu Luo wrote:
-> The Embedded Controller in the Huawei Matebook E Go is accessible on &i2c15
-> and provides battery and adapter status, port orientation status, as well
-> as HPD event notifications for two USB Type-C port, etc.
-> 
-> Add the EC to the device tree and describe the relationship among
-> the type-c connectors, role switches, orientation switches and the QMP
-> combo PHY.
-> 
-> Signed-off-by: Pengyu Luo <mitltlatltl@gmail.com>
-> ---
->  .../boot/dts/qcom/sc8280xp-huawei-gaokun3.dts | 163 ++++++++++++++++++
+Hi,
 
+> +static void gaokun_ec_remove(struct i2c_client *client)
+> +{
+> +	struct gaokun_ec *ec = i2c_get_clientdata(client);
+> +	hwmon_device_unregister(ec->hwmon_dev);
+> +}
 
-Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+You are missing black line after the declaration.
 
-Best regards,
-Krzysztof
+> +static const struct i2c_device_id gaokun_ec_id[] = {
+> +	{ "gaokun-ec", },
+> +	{ }
+> +};
+> +MODULE_DEVICE_TABLE(i2c, gaokun_ec_id);
+> +
+> +static const struct of_device_id gaokun_ec_of_match[] = {
+> +	{ .compatible = "huawei,gaokun3-ec", },
+> +	{ }
+> +};
+> +MODULE_DEVICE_TABLE(of, gaokun_ec_of_match);
+> +
+> +static const struct dev_pm_ops gaokun_ec_pm_ops = {
+> +	NOIRQ_SYSTEM_SLEEP_PM_OPS(gaokun_ec_suspend, gaokun_ec_resume)
+> +};
+> +
+> +static struct i2c_driver gaokun_ec_driver = {
+> +	.driver = {
+> +		.name = "gaokun-ec",
+> +		.of_match_table = gaokun_ec_of_match,
+> +		.pm = &gaokun_ec_pm_ops,
+> +		.dev_groups = gaokun_ec_groups,
+> +	},
+> +	.probe = gaokun_ec_probe,
+> +	.remove = gaokun_ec_remove,
+> +	.id_table = gaokun_ec_id,
+> +};
+> +module_i2c_driver(gaokun_ec_driver);
+> +
+> +MODULE_DESCRIPTION("HUAWEI Matebook E Go EC driver");
+> +MODULE_AUTHOR("Pengyu Luo <mitltlatltl@gmail.com>");
+> +MODULE_LICENSE("GPL");
+> diff --git a/include/linux/platform_data/huawei-gaokun-ec.h b/include/linux/platform_data/huawei-gaokun-ec.h
+> new file mode 100644
+> index 000000000..dfd177bd9
+> --- /dev/null
+> +++ b/include/linux/platform_data/huawei-gaokun-ec.h
+> @@ -0,0 +1,80 @@
+> +// SPDX-License-Identifier: GPL-2.0-only
+> +/*
+> + * Huawei Matebook E Go Embedded Controller
+> + *
+> + * Copyright (C) 2024 Pengyu Luo <mitltlatltl@gmail.com>
+> + */
+> +
+> +#ifndef __HUAWEI_GAOKUN_EC_H__
+> +#define __HUAWEI_GAOKUN_EC_H__
+> +
+> +#define GAOKUN_UCSI_CCI_SIZE	4
+> +#define GAOKUN_UCSI_DATA_SIZE	16
+> +#define GAOKUN_UCSI_READ_SIZE	(GAOKUN_UCSI_CCI_SIZE + GAOKUN_UCSI_DATA_SIZE)
+> +#define GAOKUN_UCSI_WRITE_SIZE	0x18
+> +
+> +#define GAOKUN_UCSI_NO_PORT_UPDATE	(-1)
+> +
+> +#define GAOKUN_SMART_CHARGE_DATA_SIZE	4 /* mode, delay, start, end */
+> +
+> +/* -------------------------------------------------------------------------- */
+> +
+> +struct gaokun_ec;
+> +struct gaokun_ucsi_reg;
+> +struct notifier_block;
+> +
+> +#define GAOKUN_MOD_NAME			"huawei_gaokun_ec"
+> +#define GAOKUN_DEV_PSY			"psy"
+> +#define GAOKUN_DEV_UCSI			"ucsi"
+> +
+> +/* -------------------------------------------------------------------------- */
+> +/* Common API */
+> +
+> +int gaokun_ec_register_notify(struct gaokun_ec *ec,
+> +			      struct notifier_block *nb);
+> +void gaokun_ec_unregister_notify(struct gaokun_ec *ec,
+> +				 struct notifier_block *nb);
+> +
+> +int gaokun_ec_read(struct gaokun_ec *ec, const u8 *req,
+> +		   size_t resp_len, u8 *resp);
+> +int gaokun_ec_write(struct gaokun_ec *ec, u8 *req);
+> +int gaokun_ec_read_byte(struct gaokun_ec *ec, u8 *req, u8 *byte);
+> +
+> +/* -------------------------------------------------------------------------- */
+> +/* API For PSY */
+> +
+> +int gaokun_ec_psy_multi_read(struct gaokun_ec *ec, u8 reg,
+> +			     size_t resp_len, u8 *resp);
+> +
+> +static inline int gaokun_ec_psy_read_byte(struct gaokun_ec *ec,
+> +					  u8 reg, u8 *byte)
+> +{
+> +	return gaokun_ec_psy_multi_read(ec, reg, sizeof(*byte), byte);
+> +}
+> +
+> +static inline int gaokun_ec_psy_read_word(struct gaokun_ec *ec,
+> +					  u8 reg, u16 *word)
+> +{
+> +	return gaokun_ec_psy_multi_read(ec, reg, sizeof(*word), (u8 *)word);
+> +}
+> +
+> +int gaokun_ec_psy_get_smart_charge(struct gaokun_ec *ec,
+> +				   u8 data[GAOKUN_SMART_CHARGE_DATA_SIZE]);
+> +int gaokun_ec_psy_set_smart_charge(struct gaokun_ec *ec,
+> +				   u8 data[GAOKUN_SMART_CHARGE_DATA_SIZE]);
+> +
+> +int gaokun_ec_psy_get_smart_charge_enable(struct gaokun_ec *ec, bool *on);
+> +int gaokun_ec_psy_set_smart_charge_enable(struct gaokun_ec *ec, bool on);
+> +
+> +/* -------------------------------------------------------------------------- */
+> +/* API For UCSI */
+> +
+> +int gaokun_ec_ucsi_read(struct gaokun_ec *ec, u8 resp[GAOKUN_UCSI_READ_SIZE]);
+> +int gaokun_ec_ucsi_write(struct gaokun_ec *ec,
+> +			 const u8 req[GAOKUN_UCSI_WRITE_SIZE]);
+> +
+> +int gaokun_ec_ucsi_get_reg(struct gaokun_ec *ec, struct gaokun_ucsi_reg *ureg);
+> +int gaokun_ec_ucsi_pan_ack(struct gaokun_ec *ec, int port_id);
+> +
+> +
+
+Here you have extra line.
+
+scripts/checkpatch.pl should find this kind issues for you.
+
+Br,
+
+-- 
+heikki
