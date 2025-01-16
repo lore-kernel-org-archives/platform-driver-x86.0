@@ -1,630 +1,539 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f50.google.com (mail-wr1-f50.google.com [209.85.221.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8BF6641C6A
-	for <platform-driver-x86@vger.kernel.org>; Thu, 16 Jan 2025 16:34:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6AAC31428E7
+	for <platform-driver-x86@vger.kernel.org>; Thu, 16 Jan 2025 17:31:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1737045243; cv=none; b=TJ7+Ei6rbgvf/py7W4YjJMxz24OwWVyFpIqbVZ0TIuLxJBnGMuMRnnL2/lvc6jjggTUw2zIedXWRn/ZyCnDnxiKevlwsjKj2DJ+sFqHeB4xlD8wjAjbvucgMstmWRn5Aey/FUAAC/pxddIGaElahS1NfEqmGymzoLmapPLnTKQM=
+	t=1737048721; cv=none; b=T4vnh7vaKz3csN0vfdrQbkyTH7bqd+gj7DezirvMvQlEXDmddh3anEOC3k4hMoLA5Kwlz7uDTWR6BaCKUInDCdBbn9n7cRrqDuJN8uqsBZsNWYwUiq9s4YF8V8yUo7b2OGoq6WPpQrLahu2jhBWzbdWbzXPPTTI2MhKXUlexUSo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1737045243; c=relaxed/simple;
-	bh=hs+7IfqFkoPMfwQTUCiJXMmzBWA/hKswYXwF4F8/LCg=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=SrHs4T5TsQ7d2fJp3EliXFC5FQgtl4OIIrG0m9DgKlIGj+qwiGW7QrFkfkaOo9dbkelEfmfEBy6gddtM8LK56F6xWVjvPRgVIuwT1nFMQC/8WCG267XFp/kOJSO2GOuTbjVevFZe8Eu+NUF6UgKTJQpg5FHnEfHAKccOhgTOKvo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=P1R97jOw; arc=none smtp.client-ip=198.175.65.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1737048721; c=relaxed/simple;
+	bh=g7hnVS/9DFvxbSkpr7z4nUE0zTvhyjp9IDBA53OKnR8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=UdlEJLCVQvghAN2jt+TLfRBx9LneG5uoWtziZEGR5p/FBib/xIg5MwwtDpWcXq4kDaI9mfDV9x74HbbgLUCqQiVlBA3pEs3WcR7Fm0tqoKannBo7MB0pzInETr97JeTRqov5LvEAuI9qhVuDdd17XKMQDK1lI64pDmiZaR/sMSg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=ogFbcxdr; arc=none smtp.client-ip=209.85.221.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="P1R97jOw"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1737045241; x=1768581241;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=hs+7IfqFkoPMfwQTUCiJXMmzBWA/hKswYXwF4F8/LCg=;
-  b=P1R97jOwaUddapL1IgZQFmZeDRy/CFR1WBBQ9HihEB3wj8eajAiY89eJ
-   TQ/tiLGDP8FVVRIB9R3+dIUtN9vMRoDMD9OYstfGvP/ISLFHwSVd+emfB
-   FuHfnGAiuV4JwdhcU94XMmLIOvGQ92U9mZrJ4Gcu3M9hxKzVJH/565cHE
-   Kz5aXTmVrEcBgeAneGvYxDV1Pk5El8X1jJWa1Q7wOiPeMMF85jyjl1PTJ
-   k7TyqnPiThuzhbGP8Oem3k+S9YuzkL7GaoXv3bEqlBkHFN91Xxb85Nu4A
-   evvMI+bmiA7tGPVtDIS4uFY4M58OwhydTTik43tOsaTlimrrZOmIB5cY4
-   A==;
-X-CSE-ConnectionGUID: fmlQx41hT3K8V/b2s11EKQ==
-X-CSE-MsgGUID: gcATEfprQy6KExi3E04e5w==
-X-IronPort-AV: E=McAfee;i="6700,10204,11317"; a="59919633"
-X-IronPort-AV: E=Sophos;i="6.13,209,1732608000"; 
-   d="scan'208";a="59919633"
-Received: from fmviesa004.fm.intel.com ([10.60.135.144])
-  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Jan 2025 08:34:01 -0800
-X-CSE-ConnectionGUID: drYQf3qoQhGphKLP3x+4rQ==
-X-CSE-MsgGUID: ahlIBiatRdmVSfGHYIJXfg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.13,209,1732608000"; 
-   d="scan'208";a="110529475"
-Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.116])
-  by fmviesa004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Jan 2025 08:33:58 -0800
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Thu, 16 Jan 2025 18:33:55 +0200 (EET)
-To: Julien ROBIN <julien.robin28@free.fr>
-cc: Hans de Goede <hdegoede@redhat.com>, platform-driver-x86@vger.kernel.org
-Subject: Re: [PATCH v4] platform/x86: hp-wmi: Add fan and thermal profile
- support for Victus 16-s1000
-In-Reply-To: <7e374fd6-407a-42cc-9836-387583cfce2c@free.fr>
-Message-ID: <f12e0b5a-488f-4876-888d-58beff9cb825@linux.intel.com>
-References: <7e374fd6-407a-42cc-9836-387583cfce2c@free.fr>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ogFbcxdr"
+Received: by mail-wr1-f50.google.com with SMTP id ffacd0b85a97d-38632b8ae71so965684f8f.0
+        for <platform-driver-x86@vger.kernel.org>; Thu, 16 Jan 2025 09:31:59 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1737048718; x=1737653518; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=mfv1jGgL1BThv2NuUinBU8GmNixat0dYcl5xyl3Fe8M=;
+        b=ogFbcxdr7gWoVCI2yWsGL2G0rEqbdhILuYQ1FJxjKfC7tLB/Mj7wYr4qRqCyzvxTbu
+         Jza1LqXGjC/A4rdR57UIuSARuyfMBmlitNDEEwFTQ2cAV1vfhisBcnrtzM45bcYWkA2O
+         rK+hVfsEhelGXtS4y5VkHBL0OlxHPQbq39s7aO0xwAN7hbUl+sy074+DM6RWyUnFDK7k
+         NgfHtiBc4mWFpBwGzIs0wIp6I3nZxW6IFykF7Vm6IweCMw42q3eBzUPthDMwbghk/TJU
+         KyvcpvWkrbzi+yxJ8LRVkBXC+WsvKYHuvwLHwhuRQujw4rfLTaXuQzjIsat04oZ+pKyp
+         zVcA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1737048718; x=1737653518;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=mfv1jGgL1BThv2NuUinBU8GmNixat0dYcl5xyl3Fe8M=;
+        b=OwMJ1/lYPJhSG5t9yv+b6CuERN7rp1p6DercnDGRmtEzjz4TSzusW9JFW+26GQstBr
+         t5O19h+V1kdn1YjSFezYkILWnctHJanCUdXQsrsQZb4xJyAN/6t3x104K0S9wyeWrPRI
+         kOjYbcqkEHA+f7c+bqcsOrcIaEYhAjMGZTAJo4j2iPuU5JXZGcOIM4avuIdcEA0mf6Of
+         ARCGe9GM8SB+iwoUn69bbQ1QudynlwloL1WhOcaOnHAfG0lStxzXmZ/qdvftvFe9mkWI
+         QDJGlUt/OPLH14hNW0rANeJLHFKSxs/zXxqkdd7pe+KWOx3kZZZJ1L1iYN1v3W7MuKR4
+         YJLw==
+X-Forwarded-Encrypted: i=1; AJvYcCXVzJAUxUs/a+nne4w6WZPkhsBo/MrhQhOJJe6aPjm23Q//UV5Z7Z5qp2ucI+p5qNG/6Qesj+rfkGZ8+nMBhHyK/qPQ@vger.kernel.org
+X-Gm-Message-State: AOJu0YyNTdO0hX44XmpYi0vVvgpvR3EyqREUE5KOOq8KWtNLXtOu9b7z
+	sSjHo13LDPY+eugpO20x4c/kGFtNsvQ8z+q83yhWCrjiKrGKIW6VyHoLncZbNgA=
+X-Gm-Gg: ASbGncvSX2dm3ip0JwvvkeZEku8CXtF/XLR6K5ETMC1xhbD/5oIWj1qetzxdjaLH0l4
+	ATRpA/nGcLj4xJMPf2GerQ4I4jWTzRouRHxA8mwJUh2hr0UAYv0w4OykZpFfA8yBLawW1YS99R8
+	+iKLJnkp11st83k3uF6+K10wvm88kMiEDUO04x3gfR+Vnj5Acra++a6DDtqIJ5bdk1DN9jZbjUW
+	kxLeNzafuU4mqHFKtROjI/qAVPqYKGQ1ZoakxrX7Z47695aUTA/xtw0fbrWRkMvrPKHRA==
+X-Google-Smtp-Source: AGHT+IES4zDTMhvfHpUBy469EOztsJYtc/z4Whq2FC2Dkvj8UVj/i9PwjgK6gKvYU0LieDSk8We1sg==
+X-Received: by 2002:a5d:64af:0:b0:38b:da31:3e3b with SMTP id ffacd0b85a97d-38bda313f4fmr15753982f8f.3.1737048717633;
+        Thu, 16 Jan 2025 09:31:57 -0800 (PST)
+Received: from [192.168.0.43] ([176.61.106.227])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4389041f603sm5696615e9.21.2025.01.16.09.31.56
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 16 Jan 2025 09:31:57 -0800 (PST)
+Message-ID: <65dc7d7f-cee5-4eff-9ab7-153b12be4f26@linaro.org>
+Date: Thu, 16 Jan 2025 17:31:55 +0000
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 2/3] platform: arm64: add Huawei Matebook E Go EC
+ driver
+To: Pengyu Luo <mitltlatltl@gmail.com>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Bjorn Andersson <andersson@kernel.org>,
+ Konrad Dybcio <konradybcio@kernel.org>, Hans de Goede <hdegoede@redhat.com>,
+ =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+ Jean Delvare <jdelvare@suse.com>, Guenter Roeck <linux@roeck-us.net>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-arm-msm@vger.kernel.org, platform-driver-x86@vger.kernel.org,
+ linux-hwmon@vger.kernel.org
+References: <20250116111559.83641-1-mitltlatltl@gmail.com>
+ <20250116111559.83641-3-mitltlatltl@gmail.com>
+Content-Language: en-US
+From: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
+In-Reply-To: <20250116111559.83641-3-mitltlatltl@gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Thu, 16 Jan 2025, Julien ROBIN wrote:
-
-> The following patch adds support for HP Victus 16-s1000 laptop series,
-> by adding and fixing the following functionalities, which can be
-> accessed through hwmon and platform_profile sysfs:
+On 16/01/2025 11:15, Pengyu Luo wrote:
+> There are three variants of which Huawei released the first two
+> simultaneously.
 > 
->  - Functional measured fan speed reading
->  - Ability to enable and disable maximum fan speed
->  - Platform profiles full setting ability for CPU and GPU
+> Huawei Matebook E Go LTE(sc8180x), codename seems to be gaokun2.
+> Huawei Matebook E Go(sc8280xp@3.0GHz), codename must be gaokun3. (see [1])
+> Huawei Matebook E Go 2023(sc8280xp@2.69GHz), codename should be also gaokun3.
 > 
-> It sets appropriates CPU and GPU power settings both on AC and battery
-> power sources, for low-power, balanced and performance modes.
+> Adding support for the latter two variants for now, this driver should
+> also work for the sc8180x variant according to acpi table files, but I
+> don't have the device to test yet.
 > 
-> It has been thoroughly tested on a 16-s1034nf laptop based on a 8C9C DMI
-> board name, and behavior of the driver on previous boards is left
-> untouched thanks to the separated lists of DMI board names.
+> Different from other Qualcomm Snapdragon sc8280xp based machines, the
+> Huawei Matebook E Go uses an embedded controller while others use
+> a system called PMIC GLink. This embedded controller can be used to
+> perform a set of various functions, including, but not limited to:
 > 
-> Signed-off-by: Julien ROBIN <julien.robin28@free.fr>
+> - Battery and charger monitoring;
+> - Charge control and smart charge;
+> - Fn_lock settings;
+> - Tablet lid status;
+> - Temperature sensors;
+> - USB Type-C notifications (ports orientation,  DP alt mode HPD);
+> - USB Type-C PD (according to observation, up to 48w).
+> 
+> Add a driver for the EC which creates devices for UCSI and power supply
+> devices.
+> 
+> This driver is inspired by the following drivers:
+>          drivers/platform/arm64/acer-aspire1-ec.c
+>          drivers/platform/arm64/lenovo-yoga-c630.c
+>          drivers/platform/x86/huawei-wmi.c
+> 
+> [1] https://bugzilla.kernel.org/show_bug.cgi?id=219645
+> 
+> Signed-off-by: Pengyu Luo <mitltlatltl@gmail.com>
 > ---
-> Changes since v3:
-> - Reduced the scope of coding style fixups
-> - Updated a comment
-> - Moved a parameter check at the beginning of its function
+>   MAINTAINERS                                   |   7 +
+>   drivers/platform/arm64/Kconfig                |  21 +
+>   drivers/platform/arm64/Makefile               |   1 +
+>   drivers/platform/arm64/huawei-gaokun-ec.c     | 787 ++++++++++++++++++
+>   .../linux/platform_data/huawei-gaokun-ec.h    |  80 ++
+>   5 files changed, 896 insertions(+)
+>   create mode 100644 drivers/platform/arm64/huawei-gaokun-ec.c
+>   create mode 100644 include/linux/platform_data/huawei-gaokun-ec.h
 > 
-> Changes since v2:
-> - Added 3 clearly named literal definitions, using them to avoid comments need
-> - Changed zero filled array initialization syntax from { 0 } to {}
-> - Removed blank lines between function calls and their associated error handling
-> - Separated variable declarations and their assignment to function calls return
-> 
-> Changes since v1:
-> - More clear description of 0xFF special effect when setting power limits
-> - Added structs for clearer naming of power limits and GPU power modes settings
-> - Retrieve and keep current GPU slowdown temp threshold (instead of hard coded)
-> - Removed platform_profile_victus_s_get(), re-using platform_profile_omen_get()
-> - Changed char variable types to u8 where it was more relevant
-> - Moved some comments
-> - Minor typo / alignment corrections
-> ---
->  drivers/platform/x86/hp/hp-wmi.c | 369 +++++++++++++++++++++++++++++--
->  1 file changed, 356 insertions(+), 13 deletions(-)
-> 
-> diff --git a/drivers/platform/x86/hp/hp-wmi.c b/drivers/platform/x86/hp/hp-wmi.c
-> index 20c55bab3b8c..8a5a606e1032 100644
-> --- a/drivers/platform/x86/hp/hp-wmi.c
-> +++ b/drivers/platform/x86/hp/hp-wmi.c
-> @@ -45,6 +45,10 @@ MODULE_ALIAS("wmi:5FB7F034-2C63-45E9-BE91-3D44E2C707E4");
->  #define HP_OMEN_EC_THERMAL_PROFILE_TIMER_OFFSET 0x63
->  #define HP_OMEN_EC_THERMAL_PROFILE_OFFSET 0x95
->  
-> +#define HP_FAN_SPEED_AUTOMATIC	 0x00
-> +#define HP_POWER_LIMIT_DEFAULT	 0x00
-> +#define HP_POWER_LIMIT_NO_CHANGE 0xFF
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index 33b9cd11a..27ff24e7d 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -10692,6 +10692,13 @@ S:	Maintained
+>   F:	Documentation/networking/device_drivers/ethernet/huawei/hinic.rst
+>   F:	drivers/net/ethernet/huawei/hinic/
+>   
+> +HUAWEI MATEBOOK E GO EMBEDDED CONTROLLER DRIVER
+> +M:	Pengyu Luo <mitltlatltl@gmail.com>
+> +S:	Maintained
+> +F:	Documentation/devicetree/bindings/platform/huawei,gaokun-ec.yaml
+> +F:	drivers/platform/arm64/huawei-gaokun-ec.c
+> +F:	include/linux/platform_data/huawei-gaokun-ec.h
 > +
->  #define ACPI_AC_CLASS "ac_adapter"
->  
->  #define zero_if_sup(tmp) (zero_insize_support?0:sizeof(tmp)) // use when zero insize is required
-> @@ -83,11 +87,16 @@ static const char * const omen_timed_thermal_profile_boards[] = {
->  	"8BAD", "8A42", "8A15"
->  };
->  
-> -/* DMI Board names of Victus laptops */
-> +/* DMI Board names of Victus 16-d1xxx laptops */
->  static const char * const victus_thermal_profile_boards[] = {
->  	"8A25"
->  };
->  
-> +/* DMI Board names of Victus 16-s1000 laptops */
-> +static const char * const victus_s_thermal_profile_boards[] = {
-> +	"8C9C"
-> +};
+>   HUGETLB SUBSYSTEM
+>   M:	Muchun Song <muchun.song@linux.dev>
+>   L:	linux-mm@kvack.org
+> diff --git a/drivers/platform/arm64/Kconfig b/drivers/platform/arm64/Kconfig
+> index f88395ea3..6ceee3c16 100644
+> --- a/drivers/platform/arm64/Kconfig
+> +++ b/drivers/platform/arm64/Kconfig
+> @@ -33,6 +33,27 @@ config EC_ACER_ASPIRE1
+>   	  laptop where this information is not properly exposed via the
+>   	  standard ACPI devices.
+>   
+> +config EC_HUAWEI_GAOKUN
+> +	tristate "Huawei Matebook E Go Embedded Controller driver"
+> +	depends on ARCH_QCOM || COMPILE_TEST
+> +	depends on I2C
+> +	depends on INPUT
+> +	select AUXILIARY_BUS
 > +
->  enum hp_wmi_radio {
->  	HPWMI_WIFI	= 0x0,
->  	HPWMI_BLUETOOTH	= 0x1,
-> @@ -147,12 +156,32 @@ enum hp_wmi_commandtype {
->  	HPWMI_THERMAL_PROFILE_QUERY	= 0x4c,
->  };
->  
-> +struct victus_power_limits {
-> +	u8 pl1;
-> +	u8 pl2;
-> +	u8 pl4;
-> +	u8 cpu_gpu_concurrent_limit;
-> +};
+> +	help
+> +	  Say Y here to enable the EC driver for the Huawei Matebook E Go
+> +	  which is a sc8280xp-based 2-in-1 tablet. The driver handles battery
+> +	  (information, charge control) and USB Type-C DP HPD events as well
+> +	  as some misc functions like the lid sensor and temperature sensors,
+> +	  etc.
 > +
-> +struct victus_gpu_power_modes {
-> +	u8 ctgp_enable;
-> +	u8 ppab_enable;
-> +	u8 dstate;
-> +	u8 gpu_slowdown_temp;
-> +};
+> +	  This driver provides battery and AC status support for the mentioned
+> +	  laptop where this information is not properly exposed via the
+> +	  standard ACPI devices.
 > +
->  enum hp_wmi_gm_commandtype {
-> -	HPWMI_FAN_SPEED_GET_QUERY = 0x11,
-> -	HPWMI_SET_PERFORMANCE_MODE = 0x1A,
-> -	HPWMI_FAN_SPEED_MAX_GET_QUERY = 0x26,
-> -	HPWMI_FAN_SPEED_MAX_SET_QUERY = 0x27,
-> -	HPWMI_GET_SYSTEM_DESIGN_DATA = 0x28,
-> +	HPWMI_FAN_SPEED_GET_QUERY		= 0x11,
-> +	HPWMI_SET_PERFORMANCE_MODE		= 0x1A,
-> +	HPWMI_FAN_SPEED_MAX_GET_QUERY		= 0x26,
-> +	HPWMI_FAN_SPEED_MAX_SET_QUERY		= 0x27,
-> +	HPWMI_GET_SYSTEM_DESIGN_DATA		= 0x28,
-> +	HPWMI_FAN_COUNT_GET_QUERY		= 0x10,
-> +	HPWMI_GET_GPU_THERMAL_MODES_QUERY	= 0x21,
-> +	HPWMI_SET_GPU_THERMAL_MODES_QUERY	= 0x22,
-> +	HPWMI_SET_POWER_LIMITS_QUERY		= 0x29,
-> +	HPWMI_VICTUS_S_FAN_SPEED_GET_QUERY	= 0x2D,
-> +	HPWMI_FAN_SPEED_SET_QUERY		= 0x2E,
->  };
->  
->  enum hp_wmi_command {
-> @@ -211,6 +240,11 @@ enum hp_thermal_profile_victus {
->  	HP_VICTUS_THERMAL_PROFILE_QUIET			= 0x03,
->  };
->  
-> +enum hp_thermal_profile_victus_s {
-> +	HP_VICTUS_S_THERMAL_PROFILE_DEFAULT		= 0x00,
-> +	HP_VICTUS_S_THERMAL_PROFILE_PERFORMANCE		= 0x01,
-> +};
+> +	  Say M or Y here to include this support.
 > +
->  enum hp_thermal_profile {
->  	HP_THERMAL_PROFILE_PERFORMANCE	= 0x00,
->  	HP_THERMAL_PROFILE_DEFAULT		= 0x01,
-> @@ -411,6 +445,26 @@ static int hp_wmi_perform_query(int query, enum hp_wmi_command command,
->  	return ret;
->  }
->  
+> +
+>   config EC_LENOVO_YOGA_C630
+>   	tristate "Lenovo Yoga C630 Embedded Controller driver"
+>   	depends on ARCH_QCOM || COMPILE_TEST
+> diff --git a/drivers/platform/arm64/Makefile b/drivers/platform/arm64/Makefile
+> index b2ae9114f..46a99eba3 100644
+> --- a/drivers/platform/arm64/Makefile
+> +++ b/drivers/platform/arm64/Makefile
+> @@ -6,4 +6,5 @@
+>   #
+>   
+>   obj-$(CONFIG_EC_ACER_ASPIRE1)	+= acer-aspire1-ec.o
+> +obj-$(CONFIG_EC_HUAWEI_GAOKUN)	+= huawei-gaokun-ec.o
+>   obj-$(CONFIG_EC_LENOVO_YOGA_C630) += lenovo-yoga-c630.o
+> diff --git a/drivers/platform/arm64/huawei-gaokun-ec.c b/drivers/platform/arm64/huawei-gaokun-ec.c
+> new file mode 100644
+> index 000000000..5b09b7d7c
+> --- /dev/null
+> +++ b/drivers/platform/arm64/huawei-gaokun-ec.c
+> @@ -0,0 +1,787 @@
+> +// SPDX-License-Identifier: GPL-2.0-only
 > +/*
-> + * Calling this hp_wmi_get_fan_count_userdefine_trigger function also enables
-> + * and/or maintains the laptop in user defined thermal and fan states, instead
-> + * of using a fallback state. After a 120 seconds timeout however, the laptop
-> + * goes back to its fallback state.
+> + * huawei-gaokun-ec - An EC driver for HUAWEI Matebook E Go
+> + *
+> + * Copyright (C) 2024-2025 Pengyu Luo <mitltlatltl@gmail.com>
 > + */
-> +static int hp_wmi_get_fan_count_userdefine_trigger(void)
-> +{
-> +	u8 fan_data[4] = {};
-> +	int ret;
 > +
-> +	ret = hp_wmi_perform_query(HPWMI_FAN_COUNT_GET_QUERY, HPWMI_GM,
-> +				   &fan_data, sizeof(u8),
-> +				   sizeof(fan_data));
-> +	if (ret != 0)
-> +		return -EINVAL;
+> +#include <linux/auxiliary_bus.h>
+> +#include <linux/cleanup.h>
+> +#include <linux/delay.h>
+> +#include <linux/device.h>
+> +#include <linux/hwmon.h>
+> +#include <linux/hwmon-sysfs.h>
+> +#include <linux/i2c.h>
+> +#include <linux/input.h>
+> +#include <linux/notifier.h>
+> +#include <linux/module.h>
+> +#include <linux/mutex.h>
+> +#include <linux/platform_data/huawei-gaokun-ec.h>
 > +
-> +	return fan_data[0]; /* Others bytes aren't providing fan count */
+> +#define EC_EVENT		0x06
+> +
+> +/* Also can be found in ACPI specification 12.3 */
+> +#define EC_READ			0x80
+> +#define EC_WRITE		0x81
+> +#define EC_BURST		0x82
+> +#define EC_QUERY		0x84
+> +
+> +#define EC_FN_LOCK_ON		0x5A
+> +#define EC_FN_LOCK_OFF		0x55
+> +
+> +#define EC_EVENT_LID		0x81
+> +
+> +#define EC_LID_STATE		0x80
+> +#define EC_LID_OPEN		BIT(1)
+> +
+> +#define UCSI_REG_SIZE		7
+> +
+> +/*
+> + * For tx, command sequences are arranged as
+> + * {master_cmd, slave_cmd, data_len, data_seq}
+> + */
+> +#define REQ_HDR_SIZE		3
+> +#define INPUT_SIZE_OFFSET	2
+> +#define REQ_LEN(req) (REQ_HDR_SIZE + req[INPUT_SIZE_OFFSET])
+> +
+> +/*
+> + * For rx, data sequences are arranged as
+> + * {status, data_len(unreliable), data_seq}
+> + */
+> +#define RESP_HDR_SIZE		2
+> +
+> +#define MKREQ(REG0, REG1, SIZE, ...)			\
+> +{							\
+> +	REG0, REG1, SIZE,				\
+> +	/* ## will remove comma when SIZE is 0 */	\
+> +	## __VA_ARGS__,					\
+> +	/* make sure len(pkt[3:]) >= SIZE */		\
+> +	[3 + SIZE] = 0,					\
 > +}
 > +
->  static int hp_wmi_get_fan_speed(int fan)
->  {
->  	u8 fsh, fsl;
-> @@ -429,6 +483,23 @@ static int hp_wmi_get_fan_speed(int fan)
->  	return (fsh << 8) | fsl;
->  }
->  
-> +static int hp_wmi_get_fan_speed_victus_s(int fan)
-> +{
-> +	u8 fan_data[128] = {};
-> +	int ret;
-> +
-> +	if (fan < 0 || fan >= sizeof(fan_data))
-> +		return -EINVAL;
-> +
-> +	ret = hp_wmi_perform_query(HPWMI_VICTUS_S_FAN_SPEED_GET_QUERY,
-> +				   HPWMI_GM, &fan_data, sizeof(u8),
-> +				   sizeof(fan_data));
-> +	if (ret != 0)
-> +		return -EINVAL;
-> +
-> +	return fan_data[fan] * 100;
+> +#define MKRESP(SIZE)				\
+> +{						\
+> +	[RESP_HDR_SIZE + SIZE - 1] = 0,		\
 > +}
 > +
->  static int hp_wmi_read_int(int query)
->  {
->  	int val = 0, ret;
-> @@ -557,6 +628,30 @@ static int hp_wmi_fan_speed_max_set(int enabled)
->  	return enabled;
->  }
->  
-> +static int hp_wmi_fan_speed_reset(void)
+> +/* Possible size 1, 4, 20, 24. Most of the time, the size is 1. */
+> +static inline void refill_req(u8 *dest, const u8 *src, size_t size)
+> +{
+> +	memcpy(dest + REQ_HDR_SIZE, src, size);
+> +}
+> +
+> +static inline void refill_req_byte(u8 *dest, const u8 *src)
+> +{
+> +	dest[REQ_HDR_SIZE] = *src;
+> +}
+> +
+> +/* Possible size 1, 2, 4, 7, 20. Most of the time, the size is 1. */
+> +static inline void extr_resp(u8 *dest, const u8 *src, size_t size)
+> +{
+> +	memcpy(dest, src + RESP_HDR_SIZE, size);
+> +}
+> +
+> +static inline void extr_resp_byte(u8 *dest, const u8 *src)
+> +{
+> +	*dest = src[RESP_HDR_SIZE];
+> +}
+> +
+> +static inline void *extr_resp_shallow(const u8 *src)
+> +{
+> +	return src + RESP_HDR_SIZE;
+> +}
+> +
+> +struct gaokun_ec {
+> +	struct i2c_client *client;
+> +	struct mutex lock; /* EC transaction lock */
+> +	struct blocking_notifier_head notifier_list;
+> +	struct device *hwmon_dev;
+> +	struct input_dev *idev;
+> +	bool suspended;
+> +};
+> +
+> +static int gaokun_ec_request(struct gaokun_ec *ec, const u8 *req,
+> +			     size_t resp_len, u8 *resp)
+> +{
+> +	struct i2c_client *client = ec->client;
+> +	struct i2c_msg msgs[2] = {
+> +		{
+> +			.addr = client->addr,
+> +			.flags = client->flags,
+> +			.len = REQ_LEN(req),
+> +			.buf = req,
+> +		}, {
+> +			.addr = client->addr,
+> +			.flags = client->flags | I2C_M_RD,
+> +			.len = resp_len,
+> +			.buf = resp,
+> +		},
+> +	};
+> +
+> +	guard(mutex)(&ec->lock);
+> +	i2c_transfer(client->adapter, msgs, ARRAY_SIZE(msgs));
+
+You should trap the result code of i2c_transfer() and push it up the 
+call stack.
+
+> +	usleep_range(2000, 2500); /* have a break, ACPI did this */
+> +
+> +	return *resp ? -EIO : 0;
+
+If the value @ *resp is non-zero return -EIO ?
+
+Why ?
+
+> +}
+> +
+> +/* -------------------------------------------------------------------------- */
+> +/* Common API */
+> +
+> +/**
+> + * gaokun_ec_read - Read from EC
+> + * @ec: The gaokun_ec structure
+> + * @req: The sequence to request
+> + * @resp_len: The size to read
+> + * @resp: The buffer to store response sequence
+> + *
+> + * This function is used to read data after writing a magic sequence to EC.
+> + * All EC operations depend on this function.
+> + *
+> + * Huawei uses magic sequences everywhere to complete various functions, all
+> + * these sequences are passed to ECCD(a ACPI method which is quiet similar
+> + * to gaokun_ec_request), there is no good abstraction to generalize these
+> + * sequences, so just wrap it for now. Almost all magic sequences are kept
+> + * in this file.
+> + *
+> + * Return: 0 on success or negative error code.
+> + */
+> +int gaokun_ec_read(struct gaokun_ec *ec, const u8 *req,
+> +		   size_t resp_len, u8 *resp)
+> +{
+> +	return gaokun_ec_request(ec, req, resp_len, resp);
+> +}
+> +EXPORT_SYMBOL_GPL(gaokun_ec_read);
+> +
+> +/**
+> + * gaokun_ec_write - Write to EC
+> + * @ec: The gaokun_ec structure
+> + * @req: The sequence to request
+> + *
+> + * This function has no big difference from gaokun_ec_read. When caller care
+> + * only write status and no actual data are returned, then use it.
+> + *
+> + * Return: 0 on success or negative error code.
+> + */
+> +int gaokun_ec_write(struct gaokun_ec *ec, const u8 *req)
+> +{
+> +	u8 ec_resp[] = MKRESP(0);
+> +
+> +	return gaokun_ec_request(ec, req, sizeof(ec_resp), ec_resp);
+> +}
+> +EXPORT_SYMBOL_GPL(gaokun_ec_write);
+> +
+> +int gaokun_ec_read_byte(struct gaokun_ec *ec, const u8 *req, u8 *byte)
 > +{
 > +	int ret;
-> +	u8 fan_speed[2] = { HP_FAN_SPEED_AUTOMATIC, HP_FAN_SPEED_AUTOMATIC };
+> +	u8 ec_resp[] = MKRESP(sizeof(*byte));
 > +
-> +	ret = hp_wmi_perform_query(HPWMI_FAN_SPEED_SET_QUERY, HPWMI_GM,
-> +				   &fan_speed, sizeof(fan_speed), 0);
+> +	ret = gaokun_ec_read(ec, req, sizeof(ec_resp), ec_resp);
+> +	extr_resp_byte(byte, ec_resp);
 > +
 > +	return ret;
 > +}
+> +EXPORT_SYMBOL_GPL(gaokun_ec_read_byte);
 > +
-> +static int hp_wmi_fan_speed_max_reset(void)
+> +/**
+> + * gaokun_ec_register_notify - Register a notifier callback for EC events.
+> + * @ec: The gaokun_ec structure
+> + * @nb: Notifier block pointer to register
+> + *
+> + * Return: 0 on success or negative error code.
+> + */
+> +int gaokun_ec_register_notify(struct gaokun_ec *ec, struct notifier_block *nb)
 > +{
+> +	return blocking_notifier_chain_register(&ec->notifier_list, nb);
+> +}
+> +EXPORT_SYMBOL_GPL(gaokun_ec_register_notify);
+> +
+> +/**
+> + * gaokun_ec_unregister_notify - Unregister notifier callback for EC events.
+> + * @ec: The gaokun_ec structure
+> + * @nb: Notifier block pointer to unregister
+> + *
+> + * Unregister a notifier callback that was previously registered with
+> + * gaokun_ec_register_notify().
+> + */
+> +void gaokun_ec_unregister_notify(struct gaokun_ec *ec, struct notifier_block *nb)
+> +{
+> +	blocking_notifier_chain_unregister(&ec->notifier_list, nb);
+> +}
+> +EXPORT_SYMBOL_GPL(gaokun_ec_unregister_notify);
+> +
+> +/* -------------------------------------------------------------------------- */
+> +/* API for PSY */
+> +
+> +/**
+> + * gaokun_ec_psy_multi_read - Read contiguous registers
+> + * @ec: The gaokun_ec structure
+> + * @reg: The start register
+> + * @resp_len: The number of registers to be read
+> + * @resp: The buffer to store response sequence
+> + *
+> + * Return: 0 on success or negative error code.
+> + */
+> +int gaokun_ec_psy_multi_read(struct gaokun_ec *ec, u8 reg,
+> +			     size_t resp_len, u8 *resp)
+> +{
+> +	u8 ec_req[] = MKREQ(0x02, EC_READ, 1, 0);
+> +	u8 ec_resp[] = MKRESP(1);
+> +	int i, ret;
+> +
+> +	for (i = 0; i < resp_len; ++i, reg++) {
+> +		refill_req_byte(ec_req, &reg);
+> +		ret = gaokun_ec_read(ec, ec_req, sizeof(ec_resp), ec_resp);
+> +		if (ret)
+> +			return ret;
+> +		extr_resp_byte(&resp[i], ec_resp);
+> +	}
+> +
+> +	return 0;
+> +}
+> +EXPORT_SYMBOL_GPL(gaokun_ec_psy_multi_read);
+> +
+> +/* Smart charge */
+> +
+> +/**
+> + * gaokun_ec_psy_get_smart_charge - Get smart charge data from EC
+> + * @ec: The gaokun_ec structure
+> + * @resp: The buffer to store response sequence (mode, delay, start, end)
+> + *
+> + * Return: 0 on success or negative error code.
+> + */
+> +int gaokun_ec_psy_get_smart_charge(struct gaokun_ec *ec,
+> +				   u8 resp[GAOKUN_SMART_CHARGE_DATA_SIZE])
+> +{
+> +	/* GBCM */
+> +	u8 ec_req[] = MKREQ(0x02, 0xE4, 0);
+> +	u8 ec_resp[] = MKRESP(GAOKUN_SMART_CHARGE_DATA_SIZE);
 > +	int ret;
 > +
-> +	ret = hp_wmi_fan_speed_max_set(0);
+> +	ret = gaokun_ec_read(ec, ec_req, sizeof(ec_resp), ec_resp);
 > +	if (ret)
 > +		return ret;
 > +
-> +	/* Disabling max fan speed on Victus s1xxx laptops needs a 2nd step: */
-> +	ret = hp_wmi_fan_speed_reset();
-> +	return ret;
+> +	extr_resp(resp, ec_resp, GAOKUN_SMART_CHARGE_DATA_SIZE);
+> +
+> +	return 0;
 > +}
+> +EXPORT_SYMBOL_GPL(gaokun_ec_psy_get_smart_charge);
 > +
->  static int hp_wmi_fan_speed_max_get(void)
->  {
->  	int val = 0, ret;
-> @@ -1472,6 +1567,161 @@ static int platform_profile_victus_set_ec(enum platform_profile_option profile)
->  	return 0;
->  }
->  
-> +static bool is_victus_s_thermal_profile(void)
+> +static inline bool are_thresholds_valid(u8 start, u8 end)
 > +{
-> +	const char *board_name;
-> +
-> +	board_name = dmi_get_system_info(DMI_BOARD_NAME);
-> +	if (!board_name)
-> +		return false;
-> +
-> +	return match_string(victus_s_thermal_profile_boards,
-> +			    ARRAY_SIZE(victus_s_thermal_profile_boards),
-> +			    board_name) >= 0;
-> +}
-> +
-> +static int victus_s_gpu_thermal_profile_get(bool *ctgp_enable,
-> +					    bool *ppab_enable,
-> +					    u8 *dstate,
-> +					    u8 *gpu_slowdown_temp)
-> +{
-> +	int ret;
-> +	struct victus_gpu_power_modes gpu_power_modes;
+> +	return end != 0 && start <= end && end <= 100;
 
-You could order the function local variables into reverse xmas tree order 
-(from the longest lines to the shortest). If it doesn't make sense 
-somewhere due to internal dependencies, it's not a big deal to diverge 
-at times (but probably doesn't happen within the context of this patch).
+Why 100 ? Still feels like an arbitrary number.
 
-> +	ret = hp_wmi_perform_query(HPWMI_GET_GPU_THERMAL_MODES_QUERY, HPWMI_GM,
-> +				   &gpu_power_modes, sizeof(gpu_power_modes),
-> +				   sizeof(gpu_power_modes));
-> +	if (ret == 0) {
-> +		*ctgp_enable = gpu_power_modes.ctgp_enable ? true : false;
-> +		*ppab_enable = gpu_power_modes.ppab_enable ? true : false;
-> +		*dstate = gpu_power_modes.dstate;
-> +		*gpu_slowdown_temp = gpu_power_modes.gpu_slowdown_temp;
-> +	}
-> +
-> +	return ret;
+Could you add a comment to explain where 100 comes from ?
+
 > +}
 > +
-> +static int victus_s_gpu_thermal_profile_set(bool ctgp_enable,
-> +					    bool ppab_enable,
-> +					    u8 dstate)
+> +/**
+> + * gaokun_ec_psy_set_smart_charge - Set smart charge data
+> + * @ec: The gaokun_ec structure
+> + * @req: The sequence to request (mode, delay, start, end)
+> + *
+> + * Return: 0 on success or negative error code.
+> + */
+> +int gaokun_ec_psy_set_smart_charge(struct gaokun_ec *ec,
+> +				   const u8 req[GAOKUN_SMART_CHARGE_DATA_SIZE])
 > +{
-> +	struct victus_gpu_power_modes gpu_power_modes;
-> +	int ret;
+> +	/* SBCM */
+> +	u8 ec_req[] = MKREQ(0x02, 0xE3, GAOKUN_SMART_CHARGE_DATA_SIZE);
 > +
-> +	bool current_ctgp_state, current_ppab_state;
-> +	u8 current_dstate, current_gpu_slowdown_temp;
-> +
-> +	/* Retrieving GPU slowdown temperature, in order to keep it unchanged */
-> +	ret = victus_s_gpu_thermal_profile_get(&current_ctgp_state,
-> +					       &current_ppab_state,
-> +					       &current_dstate,
-> +					       &current_gpu_slowdown_temp);
-> +	if (ret < 0) {
-> +		pr_warn("GPU modes not updated, unable to get slowdown temp\n");
-> +		return ret;
-> +	}
-> +
-> +	gpu_power_modes.ctgp_enable = ctgp_enable ? 0x01 : 0x00;
-> +	gpu_power_modes.ppab_enable = ppab_enable ? 0x01 : 0x00;
-> +	gpu_power_modes.dstate = dstate;
-> +	gpu_power_modes.gpu_slowdown_temp = current_gpu_slowdown_temp;
-> +
-> +
-> +	ret = hp_wmi_perform_query(HPWMI_SET_GPU_THERMAL_MODES_QUERY, HPWMI_GM,
-> +				   &gpu_power_modes, sizeof(gpu_power_modes), 0);
-> +
-> +	return ret;
-> +}
-> +
-> +/* Note: HP_POWER_LIMIT_DEFAULT can be used to restore default PL1 and PL2 */
-> +static int victus_s_set_cpu_pl1_pl2(u8 pl1, u8 pl2)
-> +{
-> +	int ret;
-> +	struct victus_power_limits power_limits;
-> +
-> +	power_limits.pl1 = pl1;
-> +	power_limits.pl2 = pl2;
-> +	power_limits.pl4 = HP_POWER_LIMIT_NO_CHANGE;
-> +	power_limits.cpu_gpu_concurrent_limit = HP_POWER_LIMIT_NO_CHANGE;
-> +
-> +	/* We need to know both PL1 and PL2 values in order to check them */
-> +	if (pl1 == HP_POWER_LIMIT_NO_CHANGE || pl2 == HP_POWER_LIMIT_NO_CHANGE)
+> +	if (!are_thresholds_valid(req[2], req[3]))
 > +		return -EINVAL;
 > +
-> +	/* PL2 is not supposed to be lower than PL1 */
-> +	if (pl2 < pl1)
-> +		return -EINVAL;
-
-Here too these validations could be done before assignments into 
-power_limits.
-
-> +	ret = hp_wmi_perform_query(HPWMI_SET_POWER_LIMITS_QUERY, HPWMI_GM,
-> +				   &power_limits, sizeof(power_limits), 0);
+> +	refill_req(ec_req, req, GAOKUN_SMART_CHARGE_DATA_SIZE);
 > +
-> +	return ret;
+> +	return gaokun_ec_write(ec, ec_req);
 > +}
+> +EXPORT_SYMBOL_GPL(gaokun_ec_psy_set_smart_charge);
 > +
-> +static int platform_profile_victus_s_set_ec(enum platform_profile_option profile)
+> +/* Smart charge enable */
+> +
+> +/**
+> + * gaokun_ec_psy_get_smart_charge_enable - Get smart charge state
+> + * @ec: The gaokun_ec structure
+> + * @on: The state
+> + *
+> + * Return: 0 on success or negative error code.
+> + */
+> +int gaokun_ec_psy_get_smart_charge_enable(struct gaokun_ec *ec, bool *on)
 > +{
-> +	int err, tp;
-> +	bool gpu_ctgp_enable, gpu_ppab_enable;
-> +	u8 gpu_dstate; /* Test shows 1 = 100%, 2 = 50%, 3 = 25%, 4 = 12.5% */
-> +
-> +	switch (profile) {
-> +	case PLATFORM_PROFILE_PERFORMANCE:
-> +		tp = HP_VICTUS_S_THERMAL_PROFILE_PERFORMANCE;
-> +		gpu_ctgp_enable = true;
-> +		gpu_ppab_enable = true;
-> +		gpu_dstate = 1;
-> +		break;
-> +	case PLATFORM_PROFILE_BALANCED:
-> +		tp = HP_VICTUS_S_THERMAL_PROFILE_DEFAULT;
-> +		gpu_ctgp_enable = false;
-> +		gpu_ppab_enable = true;
-> +		gpu_dstate = 1;
-> +		break;
-> +	case PLATFORM_PROFILE_LOW_POWER:
-> +		tp = HP_VICTUS_S_THERMAL_PROFILE_DEFAULT;
-> +		gpu_ctgp_enable = false;
-> +		gpu_ppab_enable = false;
-> +		gpu_dstate = 1;
-> +		break;
-> +	default:
-> +		return -EOPNOTSUPP;
-> +	}
-> +
-> +	hp_wmi_get_fan_count_userdefine_trigger();
-> +
-> +	err = omen_thermal_profile_set(tp);
-> +	if (err < 0) {
-> +		pr_err("Failed to set platform profile %d: %d\n", profile, err);
-> +		return err;
-> +	}
-> +
-> +	err = victus_s_gpu_thermal_profile_set(gpu_ctgp_enable,
-> +					       gpu_ppab_enable,
-> +					       gpu_dstate);
-> +	if (err < 0) {
-> +		pr_err("Failed to set GPU profile %d: %d\n", profile, err);
-> +		return err;
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +static int platform_profile_victus_s_set(struct platform_profile_handler *pprof,
-> +					 enum platform_profile_option profile)
-> +{
-> +	int err;
-> +
-> +	guard(mutex)(&active_platform_profile_lock);
-> +
-> +	err = platform_profile_victus_s_set_ec(profile);
-> +	if (err < 0)
-> +		return err;
-> +
-> +	active_platform_profile = profile;
-> +
-> +	return 0;
-> +}
-> +
->  static int platform_profile_victus_set(struct platform_profile_handler *pprof,
->  				       enum platform_profile_option profile)
->  {
-> @@ -1545,6 +1795,39 @@ static int omen_powersource_event(struct notifier_block *nb,
->  	return NOTIFY_OK;
->  }
->  
-> +static int victus_s_powersource_event(struct notifier_block *nb,
-> +				      unsigned long value,
-> +				      void *data)
-> +{
-> +	struct acpi_bus_event *event_entry = data;
-> +	int err;
-> +
-> +	if (strcmp(event_entry->device_class, ACPI_AC_CLASS) != 0)
-> +		return NOTIFY_DONE;
-> +
-> +	pr_debug("Received power source device event\n");
-> +
-> +	/*
-> +	 * Switching to battery power source while Performance mode is active
-> +	 * needs manual triggering of CPU power limits. Same goes when switching
-> +	 * to AC power source while Performance mode is active. Other modes
-> +	 * however are automatically behaving without any manual action.
-> +	 * Seen on HP 16-s1034nf (board 8C9C) with F.11 and F.13 BIOS versions.
-> +	 */
-> +
-> +	if (active_platform_profile == PLATFORM_PROFILE_PERFORMANCE) {
-> +		pr_debug("Triggering CPU PL1/PL2 actualization\n");
-> +		err = victus_s_set_cpu_pl1_pl2(HP_POWER_LIMIT_DEFAULT,
-> +					       HP_POWER_LIMIT_DEFAULT);
-> +		if (err)
-> +			pr_warn("Failed to actualize power limits: %d\n", err);
-> +
-> +		return NOTIFY_DONE;
-> +	}
-> +
-> +	return NOTIFY_OK;
-> +}
-> +
->  static int omen_register_powersource_event_handler(void)
->  {
->  	int err;
-> @@ -1560,11 +1843,30 @@ static int omen_register_powersource_event_handler(void)
->  	return 0;
->  }
->  
-> +static int victus_s_register_powersource_event_handler(void)
-> +{
-> +	int err;
-> +
-> +	platform_power_source_nb.notifier_call = victus_s_powersource_event;
-> +	err = register_acpi_notifier(&platform_power_source_nb);
-> +	if (err < 0) {
-> +		pr_warn("Failed to install ACPI power source notify handler\n");
-> +		return err;
-> +	}
-> +
-> +	return 0;
-> +}
-> +
->  static inline void omen_unregister_powersource_event_handler(void)
->  {
->  	unregister_acpi_notifier(&platform_power_source_nb);
->  }
->  
-> +static inline void victus_s_unregister_powersource_event_handler(void)
-> +{
-> +	unregister_acpi_notifier(&platform_power_source_nb);
-> +}
-> +
->  static int thermal_profile_setup(void)
->  {
->  	int err, tp;
-> @@ -1603,6 +1905,22 @@ static int thermal_profile_setup(void)
->  		platform_profile_handler.profile_set = platform_profile_victus_set;
->  
->  		set_bit(PLATFORM_PROFILE_QUIET, platform_profile_handler.choices);
-> +	} else if (is_victus_s_thermal_profile()) {
-> +		/*
-> +		 * Being unable to retrieve laptop's current thermal profile,
-> +		 * during this setup, we set it to Balanced by default.
-> +		 */
-> +		active_platform_profile = PLATFORM_PROFILE_BALANCED;
-> +
-> +		err = platform_profile_victus_s_set_ec(active_platform_profile);
-> +		if (err < 0)
-> +			return err;
-> +
-> +		platform_profile_handler.profile_get = platform_profile_omen_get;
-> +		platform_profile_handler.profile_set = platform_profile_victus_s_set;
-> +
-> +		/* Adding an equivalent to HP Omen software ECO mode: */
-> +		set_bit(PLATFORM_PROFILE_LOW_POWER, platform_profile_handler.choices);
->  	} else {
->  		tp = thermal_profile_get();
->  
-> @@ -1628,9 +1946,14 @@ static int thermal_profile_setup(void)
->  	set_bit(PLATFORM_PROFILE_PERFORMANCE, platform_profile_handler.choices);
->  
->  	err = platform_profile_register(&platform_profile_handler);
-> -	if (err)
-> +	if (err == -EEXIST) {
-> +		pr_warn("A platform profile handler is already registered\n");
->  		return err;
-> -
-> +	} else if (err) {
-> +		pr_err("Platform profile handler registration fail: %d\n", err);
-> +		return err;
-> +	}
-> +	pr_info("Registered as platform profile handler\n");
->  	platform_profile_support = true;
+> +	/* GBAC */
+> +	u8 ec_req[] = MKREQ(0x02, 0xE6, 0);
 
-This looked quite fine, there were a few small things mentioned above 
-that could still be improved (IMHO).
+0xE6 == SMART_CHARGE_ENABLE right ?
 
-In the meantime, I've applied the large thermal profile refactoring series 
-from Kurt which will cause some conflicts here so if you could in addition 
-rebase this on top of what's in the review-ilpo-next branch please.
+In which case instead of passing magic numbers inline, it would be nice 
+to declare an enum or set of defines that enumerates the command set and 
+then pass those values to MKREQ instead of the hex.
 
--- 
- i.
+Does the first parameter indicate write ? 0x02. 0x03 seems to indicate 
+read too ?
 
->  	return 0;
-> @@ -1759,8 +2082,13 @@ static umode_t hp_wmi_hwmon_is_visible(const void *data,
->  	case hwmon_pwm:
->  		return 0644;
->  	case hwmon_fan:
-> -		if (hp_wmi_get_fan_speed(channel) >= 0)
-> -			return 0444;
-> +		if (is_victus_s_thermal_profile()) {
-> +			if (hp_wmi_get_fan_speed_victus_s(channel) >= 0)
-> +				return 0444;
-> +		} else {
-> +			if (hp_wmi_get_fan_speed(channel) >= 0)
-> +				return 0444;
-> +		}
->  		break;
->  	default:
->  		return 0;
-> @@ -1776,8 +2104,10 @@ static int hp_wmi_hwmon_read(struct device *dev, enum hwmon_sensor_types type,
->  
->  	switch (type) {
->  	case hwmon_fan:
-> -		ret = hp_wmi_get_fan_speed(channel);
-> -
-> +		if (is_victus_s_thermal_profile())
-> +			ret = hp_wmi_get_fan_speed_victus_s(channel);
-> +		else
-> +			ret = hp_wmi_get_fan_speed(channel);
->  		if (ret < 0)
->  			return ret;
->  		*val = ret;
-> @@ -1810,11 +2140,17 @@ static int hp_wmi_hwmon_write(struct device *dev, enum hwmon_sensor_types type,
->  	case hwmon_pwm:
->  		switch (val) {
->  		case 0:
-> +			if (is_victus_s_thermal_profile())
-> +				hp_wmi_get_fan_count_userdefine_trigger();
->  			/* 0 is no fan speed control (max), which is 1 for us */
->  			return hp_wmi_fan_speed_max_set(1);
->  		case 2:
->  			/* 2 is automatic speed control, which is 0 for us */
-> -			return hp_wmi_fan_speed_max_set(0);
-> +			if (is_victus_s_thermal_profile()) {
-> +				hp_wmi_get_fan_count_userdefine_trigger();
-> +				return hp_wmi_fan_speed_max_reset();
-> +			} else
-> +				return hp_wmi_fan_speed_max_set(0);
->  		default:
->  			/* we don't support manual fan speed control */
->  			return -EINVAL;
-> @@ -1893,6 +2229,10 @@ static int __init hp_wmi_init(void)
->  		err = omen_register_powersource_event_handler();
->  		if (err)
->  			goto err_unregister_device;
-> +	} else if (is_victus_s_thermal_profile()) {
-> +		err = victus_s_register_powersource_event_handler();
-> +		if (err)
-> +			goto err_unregister_device;
->  	}
->  
->  	return 0;
-> @@ -1912,6 +2252,9 @@ static void __exit hp_wmi_exit(void)
->  	if (is_omen_thermal_profile() || is_victus_thermal_profile())
->  		omen_unregister_powersource_event_handler();
->  
-> +	if (is_victus_s_thermal_profile())
-> +		victus_s_unregister_powersource_event_handler();
-> +
->  	if (wmi_has_guid(HPWMI_EVENT_GUID))
->  		hp_wmi_input_destroy();
->  
-> 
+If so again please name the hex values as defines/enums and then pass 
+the descriptive names.
+
+Looking much more readable now though.
+
+---
+bod
