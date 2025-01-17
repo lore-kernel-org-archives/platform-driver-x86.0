@@ -1,76 +1,177 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-vk1-f169.google.com (mail-vk1-f169.google.com [209.85.221.169])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D41B11DC993
-	for <platform-driver-x86@vger.kernel.org>; Fri, 17 Jan 2025 04:19:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CCC068C11;
+	Fri, 17 Jan 2025 04:28:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1737087558; cv=none; b=BwQn3fGUcFGU84bDAuzg9ocTjEP8InsUMutbtZ9G6GwGwyi4nyJd1NxLTty5cejC/oITlVFYL50QsAGjR+XJO32XE/nGP3po6M4nK4NP1H94GoastmR9MZFPXDqVEiVaVVKxlpRnltJ0QGau+r4ytIXjNjS5h8GJP3mAdJFWODs=
+	t=1737088086; cv=none; b=d88+3CnappYhlOc5sSGyeb2GnLg/R/6rC1FNSXXEe0JWMo45LCmttvDW2XM1lUBbUdNCDkSEIfosMfPXA25TCFDj4jA0fD0DtGE0wEjIOppJDB+P6xSR3EtlzqKwIycKmp4d3QZJopKZEvpuwkl/w1gqQgvRY0W+/WTZtmqLDoY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1737087558; c=relaxed/simple;
-	bh=hMPf7EhLdCD3FPi1nrRVQnFC2jp5+CUq1x+Lup0NGKU=;
-	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=RP9i1Dm/PnguyCsI2CEtRthjjYDEwRKigZax4VRUJO8mRfKQQs8iw+o+q6Uz7QThkUMRsK+o2CP97n0yztzmnF5SN86RQat8IPXFPhFqsuAOrMPfxRyMomVIT9XuSFjW2oTn/lvwy3gdkIeTKmogsJI5gEpbExcJl5dkWs/p55M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=c/f7I8/v; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1737088086; c=relaxed/simple;
+	bh=zpvBOBIWNbcka/K1tkb9pFpfz2po0uC0iD567858Y7E=;
+	h=Mime-Version:Content-Type:Date:Message-Id:Cc:Subject:From:To:
+	 References:In-Reply-To; b=We47Ynr55ekhW12EWjbbEgBgDMQrSwPyPOeXQQJ2qxPpRXRwyoqhCRCAsOL6of8Zx4iRWEyVCXywxPg5kXwuhsDGdmNDp3E4dZcntFLawvCnW39frUM+6HFj72+GBIy+x5rUWwIFi/DzB6UHcleQVUw3VJqQxSQ+E4Qwe1Cib9g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=i7zUANY9; arc=none smtp.client-ip=209.85.221.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="c/f7I8/v"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 59E42C4CEE0
-	for <platform-driver-x86@vger.kernel.org>; Fri, 17 Jan 2025 04:19:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1737087555;
-	bh=hMPf7EhLdCD3FPi1nrRVQnFC2jp5+CUq1x+Lup0NGKU=;
-	h=From:To:Subject:Date:In-Reply-To:References:From;
-	b=c/f7I8/vTK9RnUClt1nqn0Hf5QQHBc6V/DpmvHzv5d/lCcj8SsGSQa5cqbHoixXBX
-	 jvZjVoQP8qX8EVCYAuzT6a1hjMJQuW+UdlxOR7VNraqvrO1iPHDeiiaG/QOOAHWqfw
-	 URWuEyXpBN/j1SRgM5HvFzenBapWgL93fAj76CyeOGQTbe8bsGbrfL6FC/enTUjjtm
-	 fQBntQCT2BCvsJcWAB2XNa+XOduQdSdELapA80PpLfWfbA+HykxYXkO8e/yjvRHTmF
-	 SauIpXrjMBKkshljfFQf05+g4qS/SQiS8Hez7rSUE27pYToKbUaK5+gRguKGl0kk/U
-	 fCQ89xovDT1/A==
-Received: by aws-us-west-2-korg-bugzilla-1.web.codeaurora.org (Postfix, from userid 48)
-	id 4D804C41612; Fri, 17 Jan 2025 04:19:15 +0000 (UTC)
-From: bugzilla-daemon@kernel.org
-To: platform-driver-x86@vger.kernel.org
-Subject: [Bug 219495] [TPM2] tpm_tis driver crashs during the boot time.
-Date: Fri, 17 Jan 2025 04:19:15 +0000
-X-Bugzilla-Reason: None
-X-Bugzilla-Type: changed
-X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
-X-Bugzilla-Product: Drivers
-X-Bugzilla-Component: Platform_x86
-X-Bugzilla-Version: 2.5
-X-Bugzilla-Keywords: 
-X-Bugzilla-Severity: normal
-X-Bugzilla-Who: andy.liang@hpe.com
-X-Bugzilla-Status: NEW
-X-Bugzilla-Resolution: 
-X-Bugzilla-Priority: P3
-X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
-X-Bugzilla-Flags: 
-X-Bugzilla-Changed-Fields: 
-Message-ID: <bug-219495-215701-HS7KzkRNWB@https.bugzilla.kernel.org/>
-In-Reply-To: <bug-219495-215701@https.bugzilla.kernel.org/>
-References: <bug-219495-215701@https.bugzilla.kernel.org/>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Bugzilla-URL: https://bugzilla.kernel.org/
-Auto-Submitted: auto-generated
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="i7zUANY9"
+Received: by mail-vk1-f169.google.com with SMTP id 71dfb90a1353d-51cccb020a9so903296e0c.0;
+        Thu, 16 Jan 2025 20:28:04 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1737088083; x=1737692883; darn=vger.kernel.org;
+        h=in-reply-to:references:to:from:subject:cc:message-id:date
+         :content-transfer-encoding:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=+bG3f7y/u6GJFmQaddU0I8bnKf7GyHxvKs5bkvgDY7Y=;
+        b=i7zUANY9s0QvFENNFXQyeYMHPml0kdC+bbTkXulavCiVyiYe6Rvqpd7NA6tkpXuACK
+         ulFHWlMT/9heQUU67GZUWb54BXtahccFxjzR2WLqpUrKI4dq6y2BcYUWfcVrbncleAmo
+         qSN/Z+J+CmXMjEeW9ZIuDQCizaAAyRbu7d6AR+3edN0m7hYWjMTkXZj3oVpgLHG9Hu29
+         TDTUWTmu49g79ktGYmdzeypWIMAnQ/WOun5fpDi3MQZldgk6mE5JVLPpAtgW/8XfAnCU
+         vTFTJheRevgR9hs/rIc+NCK+6LyUDbLH5DTQRbqonUooENK/lo5BcsO0vl0IkwKQYuyS
+         +Kog==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1737088083; x=1737692883;
+        h=in-reply-to:references:to:from:subject:cc:message-id:date
+         :content-transfer-encoding:mime-version:x-gm-message-state:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=+bG3f7y/u6GJFmQaddU0I8bnKf7GyHxvKs5bkvgDY7Y=;
+        b=t8Ifnn9FN9ofOMXomP2CsVzKcClwgFA3E8yg0H6Jnrz9hdNUehozjB5dRuS8yyu3Dq
+         UpRwtn+mB+pdex2fFqgu7VBCUJ4l0CQH68iElybTsNVFzNuiPvJsn2FxIvesfpwPDDwL
+         cxYYTTA+VhLuIBHIpXmk/0Glg3C42McXK31yH+Z9BcdSpVncIymySFfLpWeGm7JojkOL
+         5mz/MmDiOCeexX3goyB0IH0+G2sY2nrxHPYJGXyGnsNYB98mBaBe79p0Exbq6N6/wObb
+         CFjTOL7T4qhS5+pRIfY/UVQYW7KUivdoWouzWwF55BMT+wjLsxB4NK+2QctqxCau3Gss
+         2E9A==
+X-Forwarded-Encrypted: i=1; AJvYcCWLJglJOjv28CJvh883WzpweZCdEKH1XW8ZzUGzL5CZeaG8MvFHloVn8ct2e7IAvowAfEmwwFM/g4YQilbnoKCbEfiQPA==@vger.kernel.org, AJvYcCWz5uV0+tdQuKsOANHAqfjBi4i9239wvXq2ZmYAefF7JFcex3Uzh9WniHGtNS6KMVlNXS+/E54bIkEmXm2/@vger.kernel.org, AJvYcCXFANyqwgZyAhO8A6uMzwNBFAUba2B+MtjLCUMxnQIH+X9pWX6+7zSqxyBADLS+80B8CiqVyTqAdwDe@vger.kernel.org
+X-Gm-Message-State: AOJu0YzrN1DR9tidWRaNGfPAGzwDrPg0OrH8i9k0/qDekK9i4MrNcXl4
+	5/iAynsTz3XV/r+pjIWP3FjWEE3pbQCjCf3ZpCMhyEczaUsBmKDC
+X-Gm-Gg: ASbGncvGZlD8GJwdCBHLcH4BpLXYmGzz/K0qj/09dsE5vshvh3Z1ktDOZzTvkBMx1bI
+	pO1E6IyRALIKVeiHzEfDGE1Fbv6i0ehahgBuTixWOAH3EuBXJDdL/RU4DoA5/lbg0gObfB0KMWc
+	wAQhQ2ppdXtxqveQ/6OsMqMAdjTOjkbTHI3nwtUKHf1LWHFdfsShlZPPVtXDTpAAmQSvS90+6Wn
+	jwHoerHZwUYtCM3ABI97YKYIRywilF4EiiY77TEwML6iSCe
+X-Google-Smtp-Source: AGHT+IF1ne2Umtga57CR8UgTI5gtz1QiB6L3qwZlW//xYwFTBFhqKIhRn2Ws+Ti9QVlDmevNrv2K7A==
+X-Received: by 2002:a05:6122:885:b0:515:f586:5298 with SMTP id 71dfb90a1353d-51d5b2cbc82mr976773e0c.7.1737088083506;
+        Thu, 16 Jan 2025 20:28:03 -0800 (PST)
+Received: from localhost ([2800:bf0:82:1159:c837:3446:190b:188d])
+        by smtp.gmail.com with ESMTPSA id 71dfb90a1353d-51cf559bbe2sm248324e0c.11.2025.01.16.20.27.59
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 16 Jan 2025 20:28:02 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
+Mime-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date: Thu, 16 Jan 2025 23:27:58 -0500
+Message-Id: <D742BYPBXGJB.KVIXKVELQAG0@gmail.com>
+Cc: "Rafael J. Wysocki" <rafael@kernel.org>, "Len Brown" <lenb@kernel.org>,
+ "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>,
+ <linux-kernel@vger.kernel.org>, "Limonciello, Mario"
+ <mario.limonciello@amd.com>, "Armin Wolf" <W_Armin@gmx.de>, "Joshua
+ Grisham" <josh@joshuagrisham.com>, "Derek J . Clark"
+ <derekjohn.clark@gmail.com>, =?utf-8?q?Ilpo_J=C3=A4rvinen?=
+ <ilpo.jarvinen@linux.intel.com>, "Hans de Goede" <hdegoede@redhat.com>,
+ "Maximilian Luz" <luzmaximilian@gmail.com>, "Lee Chun-Yi" <jlee@suse.com>,
+ "Shyam Sundar S K" <Shyam-sundar.S-k@amd.com>, "Corentin Chary"
+ <corentin.chary@gmail.com>, "Luke D . Jones" <luke@ljones.dev>, "Lyndon
+ Sanche" <lsanche@lyndeno.ca>, "Ike Panhc" <ike.pan@canonical.com>,
+ "Henrique de Moraes Holschuh" <hmh@hmh.eng.br>, "Alexis Belmonte"
+ <alexbelm48@gmail.com>, "Ai Chao" <aichao@kylinos.cn>, "Gergo Koteles"
+ <soyer@irl.hu>, <Dell.Client.Kernel@dell.com>,
+ <ibm-acpi-devel@lists.sourceforge.net>
+Subject: Re: [PATCH v4 00/19] Hide platform_profile_handler from consumers
+From: "Kurt Borja" <kuurtb@gmail.com>
+To: "Mark Pearson" <mpearson-lenovo@squebb.ca>,
+ "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>
+X-Mailer: aerc 0.18.2-0-ge037c095a049
+References: <20250116002721.75592-1-kuurtb@gmail.com>
+ <1eb2720a-c9af-4e5c-8df2-c4ce3c017d5c@app.fastmail.com>
+In-Reply-To: <1eb2720a-c9af-4e5c-8df2-c4ce3c017d5c@app.fastmail.com>
 
-https://bugzilla.kernel.org/show_bug.cgi?id=3D219495
+On Thu Jan 16, 2025 at 5:20 PM -05, Mark Pearson wrote:
+> Hi
+>
+> On Wed, Jan 15, 2025, at 7:27 PM, Kurt Borja wrote:
+> > Hi :)
+> >
+> > The merge window is about to open, so I rebased this patchset on top of
+> > pdx86/review-ilpo-next to pick up acer-wmi latest commits, in case we
+> > manage to squeeze this into v6.14.
+> >
+> > ~ Kurt
+> > ---
+> > v3 -> v4:
+> >
+> > [09/19]
+> >   - Replace error message with a user-friendly one
+> >
+> > v3:=20
+> > https://lore.kernel.org/platform-driver-x86/20250115071022.4815-1-kuurt=
+b@gmail.com/
+> >
+> > Kurt Borja (19):
+> >   ACPI: platform_profile: Replace *class_dev member with class_dev
+> >   ACPI: platform_profile: Let drivers set drvdata to the class device
+> >   ACPI: platform_profile: Remove platform_profile_handler from callback=
+s
+> >   ACPI: platform_profile: Add `ops` member to handlers
+> >   ACPI: platform_profile: Add `probe` to platform_profile_ops
+> >   platform/surface: surface_platform_profile: Use
+> >     devm_platform_profile_register()
+> >   platform/x86: acer-wmi: Use devm_platform_profile_register()
+> >   platform/x86: amd: pmf: sps: Use devm_platform_profile_register()
+> >   platform/x86: asus-wmi: Use devm_platform_profile_register()
+> >   platform/x86: dell-pc: Use devm_platform_profile_register()
+> >   platform/x86: ideapad-laptop: Use devm_platform_profile_register()
+> >   platform/x86: hp-wmi: Use devm_platform_profile_register()
+> >   platform/x86: inspur_platform_profile: Use
+> >     devm_platform_profile_register()
+> >   platform/x86: thinkpad_acpi: Use devm_platform_profile_register()
+> >   ACPI: platform_profile: Remove platform_profile_handler from exported
+> >     symbols
+> >   ACPI: platform_profile: Move platform_profile_handler
+> >   ACPI: platform_profile: Clean platform_profile_handler
+> >   ACPI: platform_profile: Add documentation
+> >   ACPI: platform_profile: Add a prefix to log messages
+> >
+> >  .../ABI/testing/sysfs-class-platform-profile  |  44 +++++
+> >  drivers/acpi/platform_profile.c               | 172 +++++++++++++-----
+> >  .../surface/surface_platform_profile.c        |  48 ++---
+> >  drivers/platform/x86/acer-wmi.c               | 114 ++++++------
+> >  drivers/platform/x86/amd/pmf/core.c           |   1 -
+> >  drivers/platform/x86/amd/pmf/pmf.h            |   3 +-
+> >  drivers/platform/x86/amd/pmf/sps.c            |  51 +++---
+> >  drivers/platform/x86/asus-wmi.c               |  55 +++---
+> >  drivers/platform/x86/dell/alienware-wmi.c     |  34 ++--
+> >  drivers/platform/x86/dell/dell-pc.c           |  60 +++---
+> >  drivers/platform/x86/hp/hp-wmi.c              |  83 +++++----
+> >  drivers/platform/x86/ideapad-laptop.c         |  45 +++--
+> >  .../platform/x86/inspur_platform_profile.c    |  48 +++--
+> >  drivers/platform/x86/thinkpad_acpi.c          |  37 ++--
+> >  include/linux/platform_profile.h              |  37 ++--
+> >  15 files changed, 495 insertions(+), 337 deletions(-)
+> >  create mode 100644 Documentation/ABI/testing/sysfs-class-platform-prof=
+ile
+> >
+> >
+> > base-commit: d98bf6a6ed61a8047e199495b0887cce392f8e5b
+> > --=20
+> > 2.48.1
+>
+> For the series up to v4 commit 15/19:
+> Reviewed-by: Mark Pearson <mpearson-lenovo@squebb.ca>
 
---- Comment #71 from andy.liang@hpe.com ---
-The TPM issue is fixed with the kernel-default-6.4.0-150600.1.1.g2cf6431. T=
-he
-test machine is DL380Gen11 which is different than before. I've attached the
-logs. Please let me know if there is anything missing. Thank you.
+This covers the most important patches, thank you very much!
 
---=20
-You may reply to this email to add a comment.
+~ Kurt
 
-You are receiving this mail because:
-You are watching the assignee of the bug.=
+>
+> I need to go over the last few commits just once more, as there a few pie=
+ces I need to get my head around - and I'm not going to get it done this ev=
+ening. Hope it's OK to add review for the bits that I have done.
+>
+> Thanks
+> Mark
+
