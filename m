@@ -1,453 +1,195 @@
-Received: from mail-qk1-f179.google.com (mail-qk1-f179.google.com [209.85.222.179])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D724B1A2390;
-	Fri, 17 Jan 2025 17:15:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 87D4625A643;
+	Fri, 17 Jan 2025 17:19:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1737134125; cv=none; b=Uv3k0ff0S1F1oNjNs6ZVsWq35nZs5eFP9GmjSbpWVzLNeptgEHdalSGXonLddi5LLLgzkW+i5F9x/i5YlO0hQSdbEyAm5yv+aGKc/Svq0pLncki0mLu8MogjNA7/OfdkFjoRs7qbqu+Hq/cYJn2usHQxm1FpThjV+L3CbnG+rjI=
+	t=1737134401; cv=none; b=Zz7HwGUBbiLqeC3kf5o6qL5fBDDwJahJy9EavlVX5N4KwvDkDU8IhrXlU5rvfcrG8MrMbUb+FdGFddiWlDro3K0HNuu3o/w1ISsXZduwSEBVcc9B1IMMLMckMoSZPm1w9v4S6EPOiWv1Fa/P5jmhndLVOIvZsUnneM8r8U5NycE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1737134125; c=relaxed/simple;
-	bh=2wcUQzHnlr+p957i7HMNm0NnGd2V15gwnsqD829HkBM=;
-	h=Mime-Version:Content-Type:Date:Message-Id:Subject:From:To:Cc:
-	 References:In-Reply-To; b=d5my4U1vFjm+Awzu/J1MhekUlapIlEIUDbPnc0OxBiO0dc9ZcRkM3aRzoBu7fKPd5vQ7BdNgMePvzQekd0FRJHWzx85wGE4K1GaHWv5YDx0ICgS7RC1IXNJP9Z6A79FmKfm7GCqPi1+bwcSR04Hs33siR/DyS8oa17vnZIlA4J4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=C16W9czx; arc=none smtp.client-ip=209.85.222.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1737134401; c=relaxed/simple;
+	bh=Q7JXFmbEwyi2AuI6PcTDZpPbuZ/DFXBIQbTHw1eHUVM=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=CIsECBu5yoQdn/whW4mfmG3kpeBicZMKvTh6HdlbcLSocYjJ9GZkzVDeZZzRycVe7UXGs7xHAGtQD3HjJDIcgHBGJhW2yLy9FM7noStFjFkZQkMxXwGo3HrEh4ykKmkB+DcPOF7ckvROPhlwq9x/IHRzsoRoF2yGAo9vRko6IR8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=aStRgvEl; arc=none smtp.client-ip=198.175.65.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="C16W9czx"
-Received: by mail-qk1-f179.google.com with SMTP id af79cd13be357-7b6ed0de64aso238045185a.0;
-        Fri, 17 Jan 2025 09:15:23 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1737134123; x=1737738923; darn=vger.kernel.org;
-        h=in-reply-to:references:cc:to:from:subject:message-id:date
-         :content-transfer-encoding:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=jDk9/dy5U5rJhf5VTf4VVyJNki1UVahLaoZD4qQu4TQ=;
-        b=C16W9czxpVTEuuUaqZKjiScbuw++8XI8OI5xUrRb68r+PagIE9YTpzxw/TMzslhrl5
-         xBNVt05qXc3olYz4mn8VdcEzlGKUPKjKoMhlCCXZj+Zl82PKcAe1kXCk+XfWJSYI6iOf
-         EROCPmQSACRqXid27T+sfp+S0XBm2MH0n/ll1voT+Gpgnxx+pWxvtoDJt/pxJsRZ+pGO
-         l5pudFLy6F9GYwEBk3hOyARv4kFLmeQzkw2EV5HW0BUIs8E2jMkBAjP/nSPkz//Cn7Of
-         gOEdqVLS3js0ueRuVxYdAR9sa+1AzNqHmIr/2DkXoR6eFmwrL0ArW9NmgtgjqAcOHdwH
-         1QJQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1737134123; x=1737738923;
-        h=in-reply-to:references:cc:to:from:subject:message-id:date
-         :content-transfer-encoding:mime-version:x-gm-message-state:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=jDk9/dy5U5rJhf5VTf4VVyJNki1UVahLaoZD4qQu4TQ=;
-        b=Px8p3d7fevynehjOUcwhqrD2rtPi3CHt7psqR/vO5595NwnIS4/XPL69wcvAVoRnUq
-         qLRfgNr6n1f2wHEgKabbNhR8gNI3c+TbEOX4ycQyJfwbUQceLqmXvdcE3Nnvgg6mQngO
-         1YJBIxMYkrqQE0K5+zBYPnbcXQqB/Y37ZiB+d7SE7athiOBzTeLEszctsLru1xNC6gQY
-         fS7GXCHvhtQDTw51IOnIFJw1L8NDUA9QkxRs0lHhywr9fMU5VrkFNGJjD2b0sb0qaVAm
-         9wEJB3hNek1+HugQmwmTH5VFLdOvTUhTEAqOc6oC59iIwDaT1MKSDsJU993p8PGsdnHq
-         /Q7A==
-X-Forwarded-Encrypted: i=1; AJvYcCUpxzhuBPRa56k1ltMrV3MJ3CtDAGLyRJ1pM+1RdJPiGk664oia5/CscxTgjNEU0mTvZuAdgY/bl2UErpDfogKdFrhubQ==@vger.kernel.org, AJvYcCVfUsQEw60ytFH8hgOb8ao7yYvViV2kag2Ms9V45HlbYob9i5defXM0wNz0LtzQDyKMiqC7iS8ZxfaERA4=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz6CRamwTiOW4uQbhCJqdUtdUsM/CbEZAome9Y4ImXhA1pOuJI0
-	/iQlYP7YT+4WTVzGGSqEjrPWB5TGMuwFtbZXtzd7+tmnMyfAwZsd
-X-Gm-Gg: ASbGncuWwJTmhbYo3rMcNrHtysPhjxhSuaLDHkted9EKLDaskB91E0OkCjo4T9U4Nm9
-	xm+Cw4LuuehZPBPaKFwk9sFwbv/AzltZtF0zkoNy37615zmrnKQ1nrJT6sJ3b/7n/IjSdX1qBgX
-	3AYyBwOjOU+1hOCcN9UHNTgoxICBnV+6uSeRnwGknGIMmZyKjdHNKoVVaheXzgyHMnj0c2OCG6o
-	CvXvj0MEzU7LLF5GBc1PUQNrJmTZeTtrrtRCg7MmyEnsFxz
-X-Google-Smtp-Source: AGHT+IH72PBRsdoOknbo3MczWGwFq4tV0lDx8/ZMMUBj67fItj3mOauD030aZbUkiUNWLgupTqiJrg==
-X-Received: by 2002:a05:620a:3912:b0:7bc:de68:e932 with SMTP id af79cd13be357-7be5243f616mr1804070485a.23.1737134122685;
-        Fri, 17 Jan 2025 09:15:22 -0800 (PST)
-Received: from localhost ([2800:bf0:82:1159:c837:3446:190b:188d])
-        by smtp.gmail.com with ESMTPSA id a1e0cc1a2514c-8642cab2d48sm573451241.1.2025.01.17.09.15.20
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 17 Jan 2025 09:15:21 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="aStRgvEl"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1737134400; x=1768670400;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=Q7JXFmbEwyi2AuI6PcTDZpPbuZ/DFXBIQbTHw1eHUVM=;
+  b=aStRgvEl2pkELYJajHn9fmFCJxeqWQ+kFg4lE+erZA6ghGr4P+XRwHDn
+   C3dySYwWOSwVIOD1c9HS1rjZB6miukGh4Y731Tx+uH9iQal+Q0y3fJOtZ
+   zGZEVXescQ9x0A3p9T0QUTjsd23UQMy4EPGPvi58iPH6FFg1FGJaihLfC
+   bjEzN6iIP3F8v85n1jF0sxA5bIC/1Ac3EVetWARNuABhVDNnqdBFLaCTg
+   jnKSk4rdFTJXFmjF9JEii9yGOIuF5zR+GnDxxyA9QpnsBSHRcJMQUHJ+c
+   JaI+sP5kXCkzY3WWDBlZ87qHZBq/g+D9IfuNuPb59w6JTHnYBydtrLqSd
+   w==;
+X-CSE-ConnectionGUID: 5tsUmfbLQXWYNxFFb298gg==
+X-CSE-MsgGUID: yRZ3s45oQ9a09WdTnMq8vg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11318"; a="41339563"
+X-IronPort-AV: E=Sophos;i="6.13,212,1732608000"; 
+   d="scan'208";a="41339563"
+Received: from fmviesa007.fm.intel.com ([10.60.135.147])
+  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Jan 2025 09:19:59 -0800
+X-CSE-ConnectionGUID: eMatHeCPT+yvElMzb0Xgvg==
+X-CSE-MsgGUID: 7sD+sG0xRbykgSLbsRyNaA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.13,212,1732608000"; 
+   d="scan'208";a="105822656"
+Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.76])
+  by fmviesa007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Jan 2025 09:19:50 -0800
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Fri, 17 Jan 2025 19:19:47 +0200 (EET)
+To: Kurt Borja <kuurtb@gmail.com>
+cc: Mark Pearson <mpearson-lenovo@squebb.ca>, 
+    "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>, 
+    "Rafael J. Wysocki" <rafael@kernel.org>, Len Brown <lenb@kernel.org>, 
+    "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>, 
+    LKML <linux-kernel@vger.kernel.org>, 
+    "Limonciello, Mario" <mario.limonciello@amd.com>, 
+    Armin Wolf <W_Armin@gmx.de>, Joshua Grisham <josh@joshuagrisham.com>, 
+    "Derek J . Clark" <derekjohn.clark@gmail.com>, 
+    Hans de Goede <hdegoede@redhat.com>, 
+    Maximilian Luz <luzmaximilian@gmail.com>, Lee Chun-Yi <jlee@suse.com>, 
+    Shyam Sundar S K <Shyam-sundar.S-k@amd.com>, 
+    Corentin Chary <corentin.chary@gmail.com>, 
+    "Luke D . Jones" <luke@ljones.dev>, Lyndon Sanche <lsanche@lyndeno.ca>, 
+    Ike Panhc <ike.pan@canonical.com>, 
+    Henrique de Moraes Holschuh <hmh@hmh.eng.br>, 
+    Alexis Belmonte <alexbelm48@gmail.com>, Ai Chao <aichao@kylinos.cn>, 
+    Gergo Koteles <soyer@irl.hu>, Dell.Client.Kernel@dell.com, 
+    ibm-acpi-devel@lists.sourceforge.net
+Subject: Re: [PATCH v4 00/19] Hide platform_profile_handler from consumers
+In-Reply-To: <D74IM4AZ87C9.1R1S1KOA89PX7@gmail.com>
+Message-ID: <f8678f9c-56c2-b3a9-f24d-04c9433dba9f@linux.intel.com>
+References: <20250116002721.75592-1-kuurtb@gmail.com> <1eb2720a-c9af-4e5c-8df2-c4ce3c017d5c@app.fastmail.com> <3aab5072-f032-7458-56af-1d45e89a5d44@linux.intel.com> <D74IM4AZ87C9.1R1S1KOA89PX7@gmail.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+Content-Type: multipart/mixed; boundary="8323328-1934912631-1737134387=:932"
+
+  This message is in MIME format.  The first part should be readable text,
+  while the remaining parts are likely unreadable without MIME-aware tools.
+
+--8323328-1934912631-1737134387=:932
 Content-Type: text/plain; charset=UTF-8
-Date: Fri, 17 Jan 2025 12:15:19 -0500
-Message-Id: <D74INHNOTI0S.C7WFNTL0VLXA@gmail.com>
-Subject: Re: [PATCH v4 07/14] platform/x86: alienware-wmi: Split DMI table
-From: "Kurt Borja" <kuurtb@gmail.com>
-To: "Kurt Borja" <kuurtb@gmail.com>, <platform-driver-x86@vger.kernel.org>
-Cc: =?utf-8?q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, "Armin
- Wolf" <W_Armin@gmx.de>, "Mario Limonciello" <mario.limonciello@amd.com>,
- "Hans de Goede" <hdegoede@redhat.com>, <Dell.Client.Kernel@dell.com>,
- <linux-kernel@vger.kernel.org>
-X-Mailer: aerc 0.18.2-0-ge037c095a049
-References: <20250117081347.8573-1-kuurtb@gmail.com>
- <20250117081347.8573-8-kuurtb@gmail.com>
-In-Reply-To: <20250117081347.8573-8-kuurtb@gmail.com>
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 
-On Fri Jan 17, 2025 at 3:13 AM -05, Kurt Borja wrote:
-> Split thermal features into a new DMI table to support upcoming file
-> split. While at it:
->
-> Rename quirk_entry -> alienfx_features,
-> Rename quirks -> alienfx
->
-> and change hdmi_mux, amplifier and deepslp types to bool, because they ar=
-e
-> already being implicitly used as bools.
->
-> Reviewed-by: Mario Limonciello <mario.limonciello@amd.com>
-> Signed-off-by: Kurt Borja <kuurtb@gmail.com>
-> ---
->  drivers/platform/x86/dell/alienware-wmi.c | 337 ++++++++++------------
->  1 file changed, 158 insertions(+), 179 deletions(-)
->
-> diff --git a/drivers/platform/x86/dell/alienware-wmi.c b/drivers/platform=
-/x86/dell/alienware-wmi.c
-> index 877b3d9d7cab..5d9816521072 100644
-> --- a/drivers/platform/x86/dell/alienware-wmi.c
-> +++ b/drivers/platform/x86/dell/alienware-wmi.c
-> @@ -113,102 +113,68 @@ static const enum platform_profile_option wmax_mod=
-e_to_platform_profile[THERMAL_
->  	[THERMAL_MODE_BASIC_PERFORMANCE]		=3D PLATFORM_PROFILE_PERFORMANCE,
->  };
-> =20
-> -struct quirk_entry {
-> +struct alienfx_quirks {
->  	u8 num_zones;
-> -	u8 hdmi_mux;
-> -	u8 amplifier;
-> -	u8 deepslp;
-> -	bool thermal;
-> -	bool gmode;
-> +	bool hdmi_mux;
-> +	bool amplifier;
-> +	bool deepslp;
->  };
-> =20
-> -static struct quirk_entry *quirks;
-> +static struct alienfx_quirks *alienfx;
-> =20
-> =20
-> -static struct quirk_entry quirk_inspiron5675 =3D {
-> +static struct alienfx_quirks quirk_inspiron5675 =3D {
->  	.num_zones =3D 2,
-> -	.hdmi_mux =3D 0,
-> -	.amplifier =3D 0,
-> -	.deepslp =3D 0,
-> -	.thermal =3D false,
-> -	.gmode =3D false,
-> +	.hdmi_mux =3D false,
-> +	.amplifier =3D false,
-> +	.deepslp =3D false,
->  };
-> =20
-> -static struct quirk_entry quirk_unknown =3D {
-> +static struct alienfx_quirks quirk_unknown =3D {
->  	.num_zones =3D 2,
-> -	.hdmi_mux =3D 0,
-> -	.amplifier =3D 0,
-> -	.deepslp =3D 0,
-> -	.thermal =3D false,
-> -	.gmode =3D false,
-> +	.hdmi_mux =3D false,
-> +	.amplifier =3D false,
-> +	.deepslp =3D false,
->  };
-> =20
-> -static struct quirk_entry quirk_x51_r1_r2 =3D {
-> +static struct alienfx_quirks quirk_x51_r1_r2 =3D {
->  	.num_zones =3D 3,
-> -	.hdmi_mux =3D 0,
-> -	.amplifier =3D 0,
-> -	.deepslp =3D 0,
-> -	.thermal =3D false,
-> -	.gmode =3D false,
-> +	.hdmi_mux =3D false,
-> +	.amplifier =3D false,
-> +	.deepslp =3D false,
->  };
-> =20
-> -static struct quirk_entry quirk_x51_r3 =3D {
-> +static struct alienfx_quirks quirk_x51_r3 =3D {
->  	.num_zones =3D 4,
-> -	.hdmi_mux =3D 0,
-> -	.amplifier =3D 1,
-> -	.deepslp =3D 0,
-> -	.thermal =3D false,
-> -	.gmode =3D false,
-> +	.hdmi_mux =3D false,
-> +	.amplifier =3D true,
-> +	.deepslp =3D false,
->  };
-> =20
-> -static struct quirk_entry quirk_asm100 =3D {
-> +static struct alienfx_quirks quirk_asm100 =3D {
->  	.num_zones =3D 2,
-> -	.hdmi_mux =3D 1,
-> -	.amplifier =3D 0,
-> -	.deepslp =3D 0,
-> -	.thermal =3D false,
-> -	.gmode =3D false,
-> +	.hdmi_mux =3D true,
-> +	.amplifier =3D false,
-> +	.deepslp =3D false,
->  };
-> =20
-> -static struct quirk_entry quirk_asm200 =3D {
-> +static struct alienfx_quirks quirk_asm200 =3D {
->  	.num_zones =3D 2,
-> -	.hdmi_mux =3D 1,
-> -	.amplifier =3D 0,
-> -	.deepslp =3D 1,
-> -	.thermal =3D false,
-> -	.gmode =3D false,
-> +	.hdmi_mux =3D true,
-> +	.amplifier =3D false,
-> +	.deepslp =3D true,
->  };
-> =20
-> -static struct quirk_entry quirk_asm201 =3D {
-> +static struct alienfx_quirks quirk_asm201 =3D {
->  	.num_zones =3D 2,
-> -	.hdmi_mux =3D 1,
-> -	.amplifier =3D 1,
-> -	.deepslp =3D 1,
-> -	.thermal =3D false,
-> -	.gmode =3D false,
-> -};
-> -
-> -static struct quirk_entry quirk_g_series =3D {
-> -	.num_zones =3D 2,
-> -	.hdmi_mux =3D 0,
-> -	.amplifier =3D 0,
-> -	.deepslp =3D 0,
-> -	.thermal =3D true,
-> -	.gmode =3D true,
-> -};
-> -
-> -static struct quirk_entry quirk_x_series =3D {
-> -	.num_zones =3D 2,
-> -	.hdmi_mux =3D 0,
-> -	.amplifier =3D 0,
-> -	.deepslp =3D 0,
-> -	.thermal =3D true,
-> -	.gmode =3D false,
-> +	.hdmi_mux =3D true,
-> +	.amplifier =3D true,
-> +	.deepslp =3D true,
->  };
-> =20
->  static int __init dmi_matched(const struct dmi_system_id *dmi)
->  {
-> -	quirks =3D dmi->driver_data;
-> +	alienfx =3D dmi->driver_data;
->  	return 1;
->  }
-> =20
-> @@ -240,42 +206,6 @@ static const struct dmi_system_id alienware_quirks[]=
- __initconst =3D {
->  		},
->  		.driver_data =3D &quirk_asm201,
->  	},
-> -	{
-> -		.callback =3D dmi_matched,
-> -		.ident =3D "Alienware m17 R5",
-> -		.matches =3D {
-> -			DMI_MATCH(DMI_SYS_VENDOR, "Alienware"),
-> -			DMI_MATCH(DMI_PRODUCT_NAME, "Alienware m17 R5 AMD"),
-> -		},
-> -		.driver_data =3D &quirk_x_series,
-> -	},
-> -	{
-> -		.callback =3D dmi_matched,
-> -		.ident =3D "Alienware m18 R2",
-> -		.matches =3D {
-> -			DMI_MATCH(DMI_SYS_VENDOR, "Alienware"),
-> -			DMI_MATCH(DMI_PRODUCT_NAME, "Alienware m18 R2"),
-> -		},
-> -		.driver_data =3D &quirk_x_series,
-> -	},
-> -	{
-> -		.callback =3D dmi_matched,
-> -		.ident =3D "Alienware x15 R1",
-> -		.matches =3D {
-> -			DMI_MATCH(DMI_SYS_VENDOR, "Alienware"),
-> -			DMI_MATCH(DMI_PRODUCT_NAME, "Alienware x15 R1"),
-> -		},
-> -		.driver_data =3D &quirk_x_series,
-> -	},
-> -	{
-> -		.callback =3D dmi_matched,
-> -		.ident =3D "Alienware x17 R2",
-> -		.matches =3D {
-> -			DMI_MATCH(DMI_SYS_VENDOR, "Alienware"),
-> -			DMI_MATCH(DMI_PRODUCT_NAME, "Alienware x17 R2"),
-> -		},
-> -		.driver_data =3D &quirk_x_series,
-> -	},
->  	{
->  		.callback =3D dmi_matched,
->  		.ident =3D "Alienware X51 R1",
-> @@ -303,60 +233,6 @@ static const struct dmi_system_id alienware_quirks[]=
- __initconst =3D {
->  		},
->  		.driver_data =3D &quirk_x51_r3,
->  	},
-> -	{
-> -		.callback =3D dmi_matched,
-> -		.ident =3D "Dell Inc. G15 5510",
-> -		.matches =3D {
-> -			DMI_MATCH(DMI_SYS_VENDOR, "Dell Inc."),
-> -			DMI_MATCH(DMI_PRODUCT_NAME, "Dell G15 5510"),
-> -		},
-> -		.driver_data =3D &quirk_g_series,
-> -	},
-> -	{
-> -		.callback =3D dmi_matched,
-> -		.ident =3D "Dell Inc. G15 5511",
-> -		.matches =3D {
-> -			DMI_MATCH(DMI_SYS_VENDOR, "Dell Inc."),
-> -			DMI_MATCH(DMI_PRODUCT_NAME, "Dell G15 5511"),
-> -		},
-> -		.driver_data =3D &quirk_g_series,
-> -	},
-> -	{
-> -		.callback =3D dmi_matched,
-> -		.ident =3D "Dell Inc. G15 5515",
-> -		.matches =3D {
-> -			DMI_MATCH(DMI_SYS_VENDOR, "Dell Inc."),
-> -			DMI_MATCH(DMI_PRODUCT_NAME, "Dell G15 5515"),
-> -		},
-> -		.driver_data =3D &quirk_g_series,
-> -	},
-> -	{
-> -		.callback =3D dmi_matched,
-> -		.ident =3D "Dell Inc. G3 3500",
-> -		.matches =3D {
-> -			DMI_MATCH(DMI_SYS_VENDOR, "Dell Inc."),
-> -			DMI_MATCH(DMI_PRODUCT_NAME, "G3 3500"),
-> -		},
-> -		.driver_data =3D &quirk_g_series,
-> -	},
-> -	{
-> -		.callback =3D dmi_matched,
-> -		.ident =3D "Dell Inc. G3 3590",
-> -		.matches =3D {
-> -			DMI_MATCH(DMI_SYS_VENDOR, "Dell Inc."),
-> -			DMI_MATCH(DMI_PRODUCT_NAME, "G3 3590"),
-> -		},
-> -		.driver_data =3D &quirk_g_series,
-> -	},
-> -	{
-> -		.callback =3D dmi_matched,
-> -		.ident =3D "Dell Inc. G5 5500",
-> -		.matches =3D {
-> -			DMI_MATCH(DMI_SYS_VENDOR, "Dell Inc."),
-> -			DMI_MATCH(DMI_PRODUCT_NAME, "G5 5500"),
-> -		},
-> -		.driver_data =3D &quirk_g_series,
-> -	},
->  	{
->  		.callback =3D dmi_matched,
->  		.ident =3D "Dell Inc. Inspiron 5675",
-> @@ -431,6 +307,103 @@ struct alienfx_platdata {
-> =20
->  static u8 interface;
-> =20
-> +struct awcc_quirks {
-> +	bool gmode;
-> +};
-> +
-> +static struct awcc_quirks g_series_quirks =3D {
-> +	.gmode =3D true,
-> +};
-> +
-> +static struct awcc_quirks generic_quirks =3D {
-> +	.gmode =3D false,
-> +};
-> +
-> +static const struct dmi_system_id awcc_dmi_table[] __initconst =3D {
-> +	{
-> +		.ident =3D "Alienware m17 R5",
-> +		.matches =3D {
-> +			DMI_MATCH(DMI_SYS_VENDOR, "Alienware"),
-> +			DMI_MATCH(DMI_PRODUCT_NAME, "Alienware m17 R5 AMD"),
-> +		},
-> +		.driver_data =3D &generic_quirks,
-> +	},
-> +	{
-> +		.ident =3D "Alienware m18 R2",
-> +		.matches =3D {
-> +			DMI_MATCH(DMI_SYS_VENDOR, "Alienware"),
-> +			DMI_MATCH(DMI_PRODUCT_NAME, "Alienware m18 R2"),
-> +		},
-> +		.driver_data =3D &generic_quirks,
-> +	},
-> +	{
-> +		.ident =3D "Alienware x15 R1",
-> +		.matches =3D {
-> +			DMI_MATCH(DMI_SYS_VENDOR, "Alienware"),
-> +			DMI_MATCH(DMI_PRODUCT_NAME, "Alienware x15 R1"),
-> +		},
-> +		.driver_data =3D &generic_quirks,
-> +	},
-> +	{
-> +		.ident =3D "Alienware x17 R2",
-> +		.matches =3D {
-> +			DMI_MATCH(DMI_SYS_VENDOR, "Alienware"),
-> +			DMI_MATCH(DMI_PRODUCT_NAME, "Alienware x17 R2"),
-> +		},
-> +		.driver_data =3D &generic_quirks,
-> +	},
-> +	{
-> +		.ident =3D "Dell Inc. G15 5510",
-> +		.matches =3D {
-> +			DMI_MATCH(DMI_SYS_VENDOR, "Dell Inc."),
-> +			DMI_MATCH(DMI_PRODUCT_NAME, "Dell G15 5510"),
-> +		},
-> +		.driver_data =3D &g_series_quirks,
-> +	},
-> +	{
-> +		.ident =3D "Dell Inc. G15 5511",
-> +		.matches =3D {
-> +			DMI_MATCH(DMI_SYS_VENDOR, "Dell Inc."),
-> +			DMI_MATCH(DMI_PRODUCT_NAME, "Dell G15 5511"),
-> +		},
-> +		.driver_data =3D &g_series_quirks,
-> +	},
-> +	{
-> +		.ident =3D "Dell Inc. G15 5515",
-> +		.matches =3D {
-> +			DMI_MATCH(DMI_SYS_VENDOR, "Dell Inc."),
-> +			DMI_MATCH(DMI_PRODUCT_NAME, "Dell G15 5515"),
-> +		},
-> +		.driver_data =3D &g_series_quirks,
-> +	},
-> +	{
-> +		.ident =3D "Dell Inc. G3 3500",
-> +		.matches =3D {
-> +			DMI_MATCH(DMI_SYS_VENDOR, "Dell Inc."),
-> +			DMI_MATCH(DMI_PRODUCT_NAME, "G3 3500"),
-> +		},
-> +		.driver_data =3D &g_series_quirks,
-> +	},
-> +	{
-> +		.ident =3D "Dell Inc. G3 3590",
-> +		.matches =3D {
-> +			DMI_MATCH(DMI_SYS_VENDOR, "Dell Inc."),
-> +			DMI_MATCH(DMI_PRODUCT_NAME, "G3 3590"),
-> +		},
-> +		.driver_data =3D &g_series_quirks,
-> +	},
-> +	{
-> +		.ident =3D "Dell Inc. G5 5500",
-> +		.matches =3D {
-> +			DMI_MATCH(DMI_SYS_VENDOR, "Dell Inc."),
-> +			DMI_MATCH(DMI_PRODUCT_NAME, "G5 5500"),
-> +		},
-> +		.driver_data =3D &g_series_quirks,
-> +	},
-> +};
-> +
-> +struct awcc_quirks *awcc;
+On Fri, 17 Jan 2025, Kurt Borja wrote:
 
-I just noticed this should be static. I'll fix for v5 after Armin's
-feedback.
+> On Fri Jan 17, 2025 at 11:42 AM -05, Ilpo J=C3=A4rvinen wrote:
+> > On Thu, 16 Jan 2025, Mark Pearson wrote:
+> >
+> > > Hi
+> > >=20
+> > > On Wed, Jan 15, 2025, at 7:27 PM, Kurt Borja wrote:
+> > > > Hi :)
+> > > >
+> > > > The merge window is about to open, so I rebased this patchset on to=
+p of
+> > > > pdx86/review-ilpo-next to pick up acer-wmi latest commits, in case =
+we
+> > > > manage to squeeze this into v6.14.
+> > > >
+> > > > ~ Kurt
+> > > > ---
+> > > > v3 -> v4:
+> > > >
+> > > > [09/19]
+> > > >   - Replace error message with a user-friendly one
+> > > >
+> > > > v3:=20
+> > > > https://lore.kernel.org/platform-driver-x86/20250115071022.4815-1-k=
+uurtb@gmail.com/
+> > > >
+> > > > Kurt Borja (19):
+> > > >   ACPI: platform_profile: Replace *class_dev member with class_dev
+> > > >   ACPI: platform_profile: Let drivers set drvdata to the class devi=
+ce
+> > > >   ACPI: platform_profile: Remove platform_profile_handler from call=
+backs
+> > > >   ACPI: platform_profile: Add `ops` member to handlers
+> > > >   ACPI: platform_profile: Add `probe` to platform_profile_ops
+> > > >   platform/surface: surface_platform_profile: Use
+> > > >     devm_platform_profile_register()
+> > > >   platform/x86: acer-wmi: Use devm_platform_profile_register()
+> > > >   platform/x86: amd: pmf: sps: Use devm_platform_profile_register()
+> > > >   platform/x86: asus-wmi: Use devm_platform_profile_register()
+> > > >   platform/x86: dell-pc: Use devm_platform_profile_register()
+> > > >   platform/x86: ideapad-laptop: Use devm_platform_profile_register(=
+)
+> > > >   platform/x86: hp-wmi: Use devm_platform_profile_register()
+> > > >   platform/x86: inspur_platform_profile: Use
+> > > >     devm_platform_profile_register()
+> > > >   platform/x86: thinkpad_acpi: Use devm_platform_profile_register()
+> > > >   ACPI: platform_profile: Remove platform_profile_handler from expo=
+rted
+> > > >     symbols
+> > > >   ACPI: platform_profile: Move platform_profile_handler
+> > > >   ACPI: platform_profile: Clean platform_profile_handler
+> > > >   ACPI: platform_profile: Add documentation
+> > > >   ACPI: platform_profile: Add a prefix to log messages
+> > > >
+> > > >  .../ABI/testing/sysfs-class-platform-profile  |  44 +++++
+> > > >  drivers/acpi/platform_profile.c               | 172 +++++++++++++-=
+----
+> > > >  .../surface/surface_platform_profile.c        |  48 ++---
+> > > >  drivers/platform/x86/acer-wmi.c               | 114 ++++++------
+> > > >  drivers/platform/x86/amd/pmf/core.c           |   1 -
+> > > >  drivers/platform/x86/amd/pmf/pmf.h            |   3 +-
+> > > >  drivers/platform/x86/amd/pmf/sps.c            |  51 +++---
+> > > >  drivers/platform/x86/asus-wmi.c               |  55 +++---
+> > > >  drivers/platform/x86/dell/alienware-wmi.c     |  34 ++--
+> > > >  drivers/platform/x86/dell/dell-pc.c           |  60 +++---
+> > > >  drivers/platform/x86/hp/hp-wmi.c              |  83 +++++----
+> > > >  drivers/platform/x86/ideapad-laptop.c         |  45 +++--
+> > > >  .../platform/x86/inspur_platform_profile.c    |  48 +++--
+> > > >  drivers/platform/x86/thinkpad_acpi.c          |  37 ++--
+> > > >  include/linux/platform_profile.h              |  37 ++--
+> > > >  15 files changed, 495 insertions(+), 337 deletions(-)
+> > > >  create mode 100644 Documentation/ABI/testing/sysfs-class-platform-=
+profile
+> > > >
+> > > >
+> > > > base-commit: d98bf6a6ed61a8047e199495b0887cce392f8e5b
+> > > > --=20
+> > > > 2.48.1
+> > >=20
+> > > For the series up to v4 commit 15/19:
+> > > Reviewed-by: Mark Pearson <mpearson-lenovo@squebb.ca>
+> > >=20
+> > > I need to go over the last few commits just once more, as there a few=
+=20
+> > > pieces I need to get my head around - and I'm not going to get it don=
+e=20
+> > > this evening. Hope it's OK to add review for the bits that I have don=
+e.
+> >
+> > I, for the first time ever, tested filter-branch and after some initial=
+=20
+> > hickups on how to specify the commit range, got your Reviewed-bys added
+> > with single command :-).
+>=20
+> Awesome! I believe commit 15/19
+>=20
+> a213108c01e0 ("ACPI: platform_profile: Remove platform_profile_handler fr=
+om exported symbols")
+>=20
+> is still missing a rev-by by Mark, if there is still time.
 
-~ Kurt
+Thanks for noticing this. I just recalled the patch numbering wrong.
 
-> <snip>
+It should be fixed now.
+
+--=20
+ i.
+
+--8323328-1934912631-1737134387=:932--
