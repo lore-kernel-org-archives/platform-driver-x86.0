@@ -1,337 +1,109 @@
-Received: from mail-pl1-f174.google.com (mail-pl1-f174.google.com [209.85.214.174])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8ACD71FF1C3;
-	Fri, 17 Jan 2025 14:05:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6A9A113D897;
+	Fri, 17 Jan 2025 15:40:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.8
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1737122760; cv=none; b=Pth4RaBdTiHRgMiU6Jclf6KJ3HHxq3tG/qO4lyNujmSyO3GwTrviNVpsatbNIH65LvjctruLq8rHBP367z4lTU8pKw9ZzFeieQyYl5NXNblesxvzVljscqGXcjpu1/zT7z5N5iyxUund3ccdNUXZGFmMiADsiwJUN+fFlPto0N0=
+	t=1737128403; cv=none; b=MnQksgyMzTLVrcZV5Xlq8KMmIauz6DtN6MxTu1EPEo2DX6cJcahr8g5tHlWhCAUlsoh+iBS0fvKWU+OMdjjYU+NgBfpUjJvNjXFLUjoODDHCB//54uNKAWIsLZR1zi8aIFvlMYVNGbVCxLo2Z4vLwC3J1bZu/NlU9FWc9Mm9Fwo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1737122760; c=relaxed/simple;
-	bh=8FjgO75/c9jEZev52R+dHmynOFnK/JHLLOBKZ9TcRrM=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=SQennQBIobt/L9ql+HI2N7DB3AcIWN20T1bQUflPeBxZjUnyzqRBbDiUweU/vkvhiuuME7PjTKwNGCXw+mDo04Gl/lVMvC4Bu07dOksf15mXwgjTQrzjbkIei52RtjeDcxEJU4hGxjiaSERyJOQI3L9xc+rxw+eJVjPYF5v6gz4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=gQniv2y3; arc=none smtp.client-ip=209.85.214.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1737128403; c=relaxed/simple;
+	bh=vzosuO+PBp35NF3qcT9G/aPKAZei2LtqVukLeSr4bI4=;
+	h=From:To:Cc:Date:Subject:Message-ID:MIME-Version:Content-Type; b=XKPTGKeDJ9eFKm+lBsfFN50DaHK9QmcU3kl5qtFd2G1T8O30ADUwo5xPYGf2IuxMUaVa5T9bFzpDpEOGwuIowadkPgx+Ybw1JpxqyARYB47qiWYHYOo4z5Sn85+T04HXR7Fu6fk+f0OqIVa87xZBikHAoAb7mvNi+w+UEM2TMb8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=kIMG9OSp; arc=none smtp.client-ip=192.198.163.8
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gQniv2y3"
-Received: by mail-pl1-f174.google.com with SMTP id d9443c01a7336-2167141dfa1so39337795ad.1;
-        Fri, 17 Jan 2025 06:05:58 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1737122758; x=1737727558; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=fkneiOoL2vXr3mcByG9scZksV7uTRQnaFQoOiswSeYY=;
-        b=gQniv2y324e/AsdffTtjb9Y1kXElKlAP01Be2voy68oNYFnyJK28UPfVMzAMEHpjkh
-         QGO5PDODUIvSyRQJzVJQK4coCjrh3miGMiMktx9QNcWx9CTDB9VrqlJRUeXFKO7y551M
-         ysXThpTA5XGo7q3zneuTvRptiXJlAiBLx611pvYvOVFpepxj+Hnk9d5NMqm2FDMqaK6k
-         42muCwrXlCVU0U9Sdrz/d4n3i7r+UMgpSZqewIp1XLPd8sQ7SwohsodcVNXuxnxZBqNc
-         Nodz6Qw7r5ir9FXl8y8Kk6xDW5xlZ6SNvqZ2lIbJ/31SWOt7n5Xcx+7wb+XtpGborgvM
-         Ik6Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1737122758; x=1737727558;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=fkneiOoL2vXr3mcByG9scZksV7uTRQnaFQoOiswSeYY=;
-        b=dtOeYRJa6cHD0x+QGQM3+Jdew8RY1OOkoapPrQWXO88ck0zrDO80xAEpT0B6AEbefu
-         B//6Wgezbk+YFKsgadS3dvVYLzI95ZANXoTE90qmisRvvEHu63YMgv/2QQCswB+FsldB
-         On0MsAj0jGxOyvKvTTjM5XZfKV3R5Yr3l5poQ8niBKnisZJCzcKVihVug2ooczXSHPw/
-         jDXtq19hUglqk33yA8v2coLJ7Kk7x8RbyFPgpamwuWHZmWahCvn+n0E/Ts3QeJucbFaq
-         0U4Q6EdtRjE9/L0F99ZRsLybrdDp9e6eyQazZ4Sa867/JJkKbbS0SqI5AcT6I1Z5S7VN
-         YHmw==
-X-Forwarded-Encrypted: i=1; AJvYcCVGZgVZ8tJUTkZ/WCV+Ki77akKoJdRsitUmTLhLhonkUcHDV4T/fLVTYijwUfdlAQjVrzXi85jS12xbkwo6v1dQUxAhvA==@vger.kernel.org, AJvYcCWDTTkeAKw5CZ0dB8z3QZq7RV2Rexw2Omxpug+fG2cgrBlbP3lv3vv4+nKgiRHpNQOOFFrPKRpmAK6Y3YjE@vger.kernel.org, AJvYcCWhZdh9+1hge+gz0foc2/bCl8iJuzFg3pEl5sOhJuCaRVeFJSHUFc+N0sF1JSfUhRlek2CjUpwEvfXXChnZ@vger.kernel.org, AJvYcCXiKkNqVM7fkrKNz3XRl637s52wuJl32hu0NeKXlEa1PmXIw2UTPk1FaSSwHlCrYEsVosk8k2qTpnlEp/k=@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywza0DZzQdTycHUFFki1jGBrQUY8yEcfR6pwhFdBW624wpJasfX
-	F6ieJu9jMZs5RmAAgyfsQv0Otrsof8dOSqidyVGuLdVsmT46BN9o
-X-Gm-Gg: ASbGnct19BdafSEccsFTV669/UxerW8XtlxAWmSoZshkBHk22Hzbbu0c6Dcqe9ePjeY
-	GqMnMLujlP1u1OQycddd/xPjIE0e/yZ2PuJ8SarS/Ziv9Ta/2MkwYR3/15C/HjAVkssAyfZJSgX
-	lPCxAI1QqfYH70yXNK1Vmy0MFY3k1Xhg1i9YreuI+WXKka/9BYRPgXXhVPxwJyhwXOO7y0JbyI1
-	dap6sx0QWt022P4mYdDtv5X/7quZ3LZHJtTm+hY1B1hfno/8nii75s=
-X-Google-Smtp-Source: AGHT+IEXcduRJhqAcVpPIMoqR91F6Rbg+r1FP4Vb5qno2pPOY8BO8tungG1a+XaoUUnxNaJx7bdP6A==
-X-Received: by 2002:a17:903:94e:b0:215:58be:3349 with SMTP id d9443c01a7336-21c35db8133mr53735985ad.14.1737122757858;
-        Fri, 17 Jan 2025 06:05:57 -0800 (PST)
-Received: from nuvole.. ([144.202.86.13])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-21c2d3a8822sm16178375ad.140.2025.01.17.06.05.47
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 17 Jan 2025 06:05:57 -0800 (PST)
-From: Pengyu Luo <mitltlatltl@gmail.com>
-To: Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Bjorn Andersson <andersson@kernel.org>,
-	Konrad Dybcio <konradybcio@kernel.org>,
-	Hans de Goede <hdegoede@redhat.com>,
-	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	Bryan O'Donoghue <bryan.odonoghue@linaro.org>,
-	Jean Delvare <jdelvare@suse.com>,
-	Guenter Roeck <linux@roeck-us.net>
-Cc: devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-arm-msm@vger.kernel.org,
-	platform-driver-x86@vger.kernel.org,
-	linux-hwmon@vger.kernel.org,
-	Pengyu Luo <mitltlatltl@gmail.com>,
-	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Subject: [PATCH v5 3/3] arm64: dts: qcom: gaokun3: Add Embedded Controller node
-Date: Fri, 17 Jan 2025 22:03:48 +0800
-Message-ID: <20250117140348.180681-4-mitltlatltl@gmail.com>
-X-Mailer: git-send-email 2.48.1
-In-Reply-To: <20250117140348.180681-1-mitltlatltl@gmail.com>
-References: <20250117140348.180681-1-mitltlatltl@gmail.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="kIMG9OSp"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1737128402; x=1768664402;
+  h=from:to:cc:date:subject:message-id:mime-version:
+   content-transfer-encoding;
+  bh=vzosuO+PBp35NF3qcT9G/aPKAZei2LtqVukLeSr4bI4=;
+  b=kIMG9OSpvCQbCTutjFtH0D8az/C4S7e623wZdkCud9I/7zeVJAQ+1dC+
+   VsrREchGh9ZAoohZLzI9aYcFlz4LtqBC7uc1IY1auZVO3g+B9NH8mEiw0
+   ONjFY/RL6CsQwKl5DAVWvJEzjtgCrWB6T2g5dZvGFKcSkvTKVpHLpx8yy
+   0KwhqkioPHebAjxipQpmNRH9ew7YJSr/I4f6HE66xW4wUaBh8XVTOEUPR
+   eR39xdDxqvrFkTSEllVxJbfX5+7+Z9tQwkrgGAiOrkKZtyXlzoFchAZLd
+   /MYe553bDkWMo/RncIIoJ6rgJtbomSswb5yX17hMwBCSkMNfOSlM+t+8E
+   g==;
+X-CSE-ConnectionGUID: zSEVWcpPQXiqHMT5TEnYWg==
+X-CSE-MsgGUID: 2UYE/WUdSaClWs8k4UDSDA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11318"; a="55111620"
+X-IronPort-AV: E=Sophos;i="6.13,212,1732608000"; 
+   d="scan'208";a="55111620"
+Received: from orviesa006.jf.intel.com ([10.64.159.146])
+  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Jan 2025 07:40:01 -0800
+X-CSE-ConnectionGUID: +bMmmPmERqu/0Nlx5mr1+Q==
+X-CSE-MsgGUID: U4+0+KZCQpiiHFm5weMMzA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.13,212,1732608000"; 
+   d="scan'208";a="105881425"
+Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.76])
+  by orviesa006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Jan 2025 07:39:58 -0800
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: LKML <linux-kernel@vger.kernel.org>, PDx86 <platform-driver-x86@vger.kernel.org>, Hans de Goede <hdegoede@redhat.com>, Andy Shevchenko <andy@kernel.org>
+Date: Fri, 17 Jan 2025 17:38:24 +0200
+Subject: [GIT PULL] platform-drivers-x86 for v6.13-6
+Message-ID: <pdx86-pr-20250117173824-132461248@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-The Embedded Controller in the Huawei Matebook E Go is accessible on &i2c15
-and provides battery and adapter status, port orientation status, as well
-as HPD event notifications for two USB Type-C port, etc.
+Hi Linus,
 
-Add the EC to the device tree and describe the relationship among
-the type-c connectors, role switches, orientation switches and the QMP
-combo PHY.
+Here is a platform-drivers-x86 fixes PR for v6.13.
 
-Signed-off-by: Pengyu Luo <mitltlatltl@gmail.com>
-Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
----
- .../boot/dts/qcom/sc8280xp-huawei-gaokun3.dts | 163 ++++++++++++++++++
- 1 file changed, 163 insertions(+)
+Fixes:
 
-diff --git a/arch/arm64/boot/dts/qcom/sc8280xp-huawei-gaokun3.dts b/arch/arm64/boot/dts/qcom/sc8280xp-huawei-gaokun3.dts
-index 09b95f89e..1667c7157 100644
---- a/arch/arm64/boot/dts/qcom/sc8280xp-huawei-gaokun3.dts
-+++ b/arch/arm64/boot/dts/qcom/sc8280xp-huawei-gaokun3.dts
-@@ -28,6 +28,7 @@ / {
- 
- 	aliases {
- 		i2c4 = &i2c4;
-+		i2c15 = &i2c15;
- 		serial1 = &uart2;
- 	};
- 
-@@ -216,6 +217,40 @@ map1 {
- 		};
- 	};
- 
-+	usb0-sbu-mux {
-+		compatible = "pericom,pi3usb102", "gpio-sbu-mux";
-+
-+		select-gpios = <&tlmm 164 GPIO_ACTIVE_HIGH>;
-+
-+		pinctrl-0 = <&usb0_sbu_default>;
-+		pinctrl-names = "default";
-+
-+		orientation-switch;
-+
-+		port {
-+			usb0_sbu_mux: endpoint {
-+				remote-endpoint = <&ucsi0_sbu>;
-+			};
-+		};
-+	};
-+
-+	usb1-sbu-mux {
-+		compatible = "pericom,pi3usb102", "gpio-sbu-mux";
-+
-+		select-gpios = <&tlmm 47 GPIO_ACTIVE_HIGH>;
-+
-+		pinctrl-0 = <&usb1_sbu_default>;
-+		pinctrl-names = "default";
-+
-+		orientation-switch;
-+
-+		port {
-+			usb1_sbu_mux: endpoint {
-+				remote-endpoint = <&ucsi1_sbu>;
-+			};
-+		};
-+	};
-+
- 	wcn6855-pmu {
- 		compatible = "qcom,wcn6855-pmu";
- 
-@@ -584,6 +619,97 @@ touchscreen@4f {
- 
- };
- 
-+&i2c15 {
-+	clock-frequency = <400000>;
-+
-+	pinctrl-0 = <&i2c15_default>;
-+	pinctrl-names = "default";
-+
-+	status = "okay";
-+
-+	embedded-controller@38 {
-+		compatible = "huawei,gaokun3-ec";
-+		reg = <0x38>;
-+
-+		interrupts-extended = <&tlmm 107 IRQ_TYPE_LEVEL_LOW>;
-+
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+
-+		connector@0 {
-+			compatible = "usb-c-connector";
-+			reg = <0>;
-+			power-role = "dual";
-+			data-role = "dual";
-+
-+			ports {
-+				#address-cells = <1>;
-+				#size-cells = <0>;
-+
-+				port@0 {
-+					reg = <0>;
-+
-+					ucsi0_hs_in: endpoint {
-+						remote-endpoint = <&usb_0_dwc3_hs>;
-+					};
-+				};
-+
-+				port@1 {
-+					reg = <1>;
-+
-+					ucsi0_ss_in: endpoint {
-+						remote-endpoint = <&usb_0_qmpphy_out>;
-+					};
-+				};
-+
-+				port@2 {
-+					reg = <2>;
-+
-+					ucsi0_sbu: endpoint {
-+						remote-endpoint = <&usb0_sbu_mux>;
-+					};
-+				};
-+			};
-+		};
-+
-+		connector@1 {
-+			compatible = "usb-c-connector";
-+			reg = <1>;
-+			power-role = "dual";
-+			data-role = "dual";
-+
-+			ports {
-+				#address-cells = <1>;
-+				#size-cells = <0>;
-+
-+				port@0 {
-+					reg = <0>;
-+
-+					ucsi1_hs_in: endpoint {
-+						remote-endpoint = <&usb_1_dwc3_hs>;
-+					};
-+				};
-+
-+				port@1 {
-+					reg = <1>;
-+
-+					ucsi1_ss_in: endpoint {
-+						remote-endpoint = <&usb_1_qmpphy_out>;
-+					};
-+				};
-+
-+				port@2 {
-+					reg = <2>;
-+
-+					ucsi1_sbu: endpoint {
-+						remote-endpoint = <&usb1_sbu_mux>;
-+					};
-+				};
-+			};
-+		};
-+	};
-+};
-+
- &mdss0 {
- 	status = "okay";
- };
-@@ -1004,6 +1130,10 @@ &usb_0_dwc3 {
- 	dr_mode = "host";
- };
- 
-+&usb_0_dwc3_hs {
-+	remote-endpoint = <&ucsi0_hs_in>;
-+};
-+
- &usb_0_hsphy {
- 	vdda-pll-supply = <&vreg_l9d>;
- 	vdda18-supply = <&vreg_l1c>;
-@@ -1025,6 +1155,10 @@ &usb_0_qmpphy_dp_in {
- 	remote-endpoint = <&mdss0_dp0_out>;
- };
- 
-+&usb_0_qmpphy_out {
-+	remote-endpoint = <&ucsi0_ss_in>;
-+};
-+
- &usb_1 {
- 	status = "okay";
- };
-@@ -1033,6 +1167,10 @@ &usb_1_dwc3 {
- 	dr_mode = "host";
- };
- 
-+&usb_1_dwc3_hs {
-+	remote-endpoint = <&ucsi1_hs_in>;
-+};
-+
- &usb_1_hsphy {
- 	vdda-pll-supply = <&vreg_l4b>;
- 	vdda18-supply = <&vreg_l1c>;
-@@ -1054,6 +1192,10 @@ &usb_1_qmpphy_dp_in {
- 	remote-endpoint = <&mdss0_dp1_out>;
- };
- 
-+&usb_1_qmpphy_out {
-+	remote-endpoint = <&ucsi1_ss_in>;
-+};
-+
- &usb_2 {
- 	status = "okay";
- };
-@@ -1177,6 +1319,13 @@ i2c4_default: i2c4-default-state {
- 		bias-disable;
- 	};
- 
-+	i2c15_default: i2c15-default-state {
-+		pins = "gpio36", "gpio37";
-+		function = "qup15";
-+		drive-strength = <2>;
-+		bias-pull-up;
-+	};
-+
- 	mode_pin_active: mode-pin-state {
- 		pins = "gpio26";
- 		function = "gpio";
-@@ -1301,6 +1450,20 @@ tx-pins {
- 		};
- 	};
- 
-+	usb0_sbu_default: usb0-sbu-state {
-+		pins = "gpio164";
-+		function = "gpio";
-+		drive-strength = <16>;
-+		bias-disable;
-+	};
-+
-+	usb1_sbu_default: usb1-sbu-state {
-+		pins = "gpio47";
-+		function = "gpio";
-+		drive-strength = <16>;
-+		bias-disable;
-+	};
-+
- 	wcd_default: wcd-default-state {
- 		reset-pins {
- 			pins = "gpio106";
--- 
-2.48.1
+ - dell-uart-backlight: Fix serdev race
 
+ - lenovo-yoga-tab2-pro-1380-fastcharger: Fix serdev race
+
+Regards, i.
+
+
+The following changes since commit 1d7461d0c8330689117286169106af6531a747ed:
+
+  platform/x86: intel/pmc: Fix ioremap() of bad address (2025-01-07 17:30:11 +0200)
+
+are available in the Git repository at:
+
+  https://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git tags/platform-drivers-x86-v6.13-6
+
+for you to fetch changes up to 59616a91e5e74833b2008b56c66879857c616006:
+
+  platform/x86: lenovo-yoga-tab2-pro-1380-fastcharger: fix serdev race (2025-01-14 18:30:33 +0200)
+
+----------------------------------------------------------------
+platform-drivers-x86 for v6.13-6
+
+Fixes:
+
+ - dell-uart-backlight: Fix serdev race
+
+ - lenovo-yoga-tab2-pro-1380-fastcharger: Fix serdev race
+
+The following is an automated shortlog grouped by driver:
+
+dell-uart-backlight:
+ -  fix serdev race
+
+lenovo-yoga-tab2-pro-1380-fastcharger:
+ -  fix serdev race
+
+----------------------------------------------------------------
+Chenyuan Yang (2):
+      platform/x86: dell-uart-backlight: fix serdev race
+      platform/x86: lenovo-yoga-tab2-pro-1380-fastcharger: fix serdev race
+
+ drivers/platform/x86/dell/dell-uart-backlight.c              | 5 +++--
+ drivers/platform/x86/lenovo-yoga-tab2-pro-1380-fastcharger.c | 5 +++--
+ 2 files changed, 6 insertions(+), 4 deletions(-)
