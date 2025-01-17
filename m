@@ -1,37 +1,37 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BBE30A95C
-	for <platform-driver-x86@vger.kernel.org>; Fri, 17 Jan 2025 04:14:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2492925A658
+	for <platform-driver-x86@vger.kernel.org>; Fri, 17 Jan 2025 04:15:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1737087299; cv=none; b=KAYBUHB0G0ieMfKDBg6hVZKAVXMSLpravPO0fYTgsbBN/9xmJL2kVaTwbMCn3EIMGFyRcZHzVucTG+f8E/FVnchiJWsGFL0+tvzkwbdSZvJtqGNE77TVbnTZXjh0MqNTgQm2m4Zn4CvmiqoQsfQdTLijFyjv7gLdyKJASdpGffc=
+	t=1737087357; cv=none; b=Mid+Uijj+UdllyCuxg8d84FXFPNozUuqnpjUx/6Qqb4T2HUcEqBGg0ZllaX7SDhnNy9bXil/dYsHjpIWpRk5gi7OeSTfIxzqnotFYd9m0omPF0l3o1vpgtNPy8cej1XHs/QKjv/JHOZJgF/4agZWNwdYxEHLCIgriN1QYEf5dlc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1737087299; c=relaxed/simple;
-	bh=0Vi+5Y4Ux6bIxAgkLFFZad0MRwsyR7FxKsV8V5SAC3U=;
+	s=arc-20240116; t=1737087357; c=relaxed/simple;
+	bh=SMKxqSvKj32UPvlyPiI+1fvlLbJHB36b2xluvFmW6rw=;
 	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=hduWISK4OpIeP5jPpmRj9gmbXT1NKn1NcVmLKdpBzTdsv4QPzqnuOKsWAowjBb22Rh6Bfg4auuhVyP01tIHyaU5QWEofxtSa0+btLqTTXfNXWrr4MfLXW3TQFyw6gJRAwesddVfRphYxPYd4VfpyW4In06sP+D/60bpPCaAP9hI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=X2afntZu; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:MIME-Version; b=CesfGAhRtQYIb73Pp3yLWwJkaN4ZvZbKd4KjNGwd2cBDUR/dyTtA5+UL9Pf0S5Ooiu4QSG+nhrqzoB11kYJ/m2VELJRIEH1ZfJYcOPIpb1B3CLa5b8XOXWetFWRjQQqY69xxV7MMKZMmNE/i25zHDuPuphu0E7LAs096Ls+eahs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=s4vuIsVf; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="X2afntZu"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 4D5D6C4CEE0
-	for <platform-driver-x86@vger.kernel.org>; Fri, 17 Jan 2025 04:14:59 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="s4vuIsVf"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 95B3CC4CEE1
+	for <platform-driver-x86@vger.kernel.org>; Fri, 17 Jan 2025 04:15:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1737087299;
-	bh=0Vi+5Y4Ux6bIxAgkLFFZad0MRwsyR7FxKsV8V5SAC3U=;
+	s=k20201202; t=1737087356;
+	bh=SMKxqSvKj32UPvlyPiI+1fvlLbJHB36b2xluvFmW6rw=;
 	h=From:To:Subject:Date:In-Reply-To:References:From;
-	b=X2afntZu3YkapX+uk2q25G0gbxTQ1r4/9FSbC9iYvNtT+pUORI/1r9xt2mZ7hLIkD
-	 +IMsSAbSaMG9sYrQvg3JXmeXr6MZEeAMqop8EdrRS4xkGRYzaUpP57ZmhCuPQgiAea
-	 UVRuj0MVnqJ5mmcHlKNB77llWD7xLL8jP+HIzVSlELyr1oscN7W8Z3Y21FiDOL+vIB
-	 dcNqJv4hq/A9XKis9A56jj3wDr24Dbb98zEE7CdMN2NY4OO0bJHFfgr0ieCNhxL95W
-	 d67fODEfJUBRZlgk0JiKXtGWDVkCfQReML1CMxNEMpf1W8fjD0GK2daMWtAf801pxS
-	 ptdACKWu+bggw==
+	b=s4vuIsVfBCcVch2xTZRyBzA3gFZGJWNt4pX7kCb9tfduaG1970vr3aSOLpn1wZog/
+	 oY0/OxRSgr5Tn7sxpWzc/RYY1y34nYBktupj85QOKLeCqzkc1sICwidZQ49sIYax99
+	 wHVNgQYwjV2BOmJYlHWjStPuJaVwhmjU2oCMbu6vIpqIbqBxrZwSMpLpap4MJHA324
+	 rPc1Vy6XXyuXc0yMM389/bh75fNedsRWr2RZHRI7/PfqIodRShJ7Z9xpLLDq22+Dmh
+	 U89ODYTyAH3jh/EYAUtJG39D5Nh7r5YLAIRy1dR2iOkCQG7QacXd7OYbHBpXXj8NTV
+	 pB1MT5xcesvuQ==
 Received: by aws-us-west-2-korg-bugzilla-1.web.codeaurora.org (Postfix, from userid 48)
-	id 3FD52C41606; Fri, 17 Jan 2025 04:14:59 +0000 (UTC)
+	id 8F4A8C41606; Fri, 17 Jan 2025 04:15:56 +0000 (UTC)
 From: bugzilla-daemon@kernel.org
 To: platform-driver-x86@vger.kernel.org
 Subject: [Bug 219495] [TPM2] tpm_tis driver crashs during the boot time.
-Date: Fri, 17 Jan 2025 04:14:59 +0000
+Date: Fri, 17 Jan 2025 04:15:56 +0000
 X-Bugzilla-Reason: None
 X-Bugzilla-Type: changed
 X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
@@ -47,7 +47,7 @@ X-Bugzilla-Priority: P3
 X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
 X-Bugzilla-Flags: 
 X-Bugzilla-Changed-Fields: attachments.created
-Message-ID: <bug-219495-215701-v9YCBXnvgi@https.bugzilla.kernel.org/>
+Message-ID: <bug-219495-215701-jexSlOSCaC@https.bugzilla.kernel.org/>
 In-Reply-To: <bug-219495-215701@https.bugzilla.kernel.org/>
 References: <bug-219495-215701@https.bugzilla.kernel.org/>
 Content-Type: text/plain; charset="UTF-8"
@@ -63,10 +63,10 @@ MIME-Version: 1.0
 
 https://bugzilla.kernel.org/show_bug.cgi?id=3D219495
 
---- Comment #69 from andy.liang@hpe.com ---
-Created attachment 307498
-  --> https://bugzilla.kernel.org/attachment.cgi?id=3D307498&action=3Dedit
-v10-patch-binary_bios_measurements
+--- Comment #70 from andy.liang@hpe.com ---
+Created attachment 307499
+  --> https://bugzilla.kernel.org/attachment.cgi?id=3D307499&action=3Dedit
+v10-patch-kernel-default-6.4.0-150600.1.1.g2cf6431.log
 
 --=20
 You may reply to this email to add a comment.
