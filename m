@@ -1,109 +1,343 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6A9A113D897;
-	Fri, 17 Jan 2025 15:40:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.8
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4BA2B17FAC2;
+	Fri, 17 Jan 2025 15:51:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1737128403; cv=none; b=MnQksgyMzTLVrcZV5Xlq8KMmIauz6DtN6MxTu1EPEo2DX6cJcahr8g5tHlWhCAUlsoh+iBS0fvKWU+OMdjjYU+NgBfpUjJvNjXFLUjoODDHCB//54uNKAWIsLZR1zi8aIFvlMYVNGbVCxLo2Z4vLwC3J1bZu/NlU9FWc9Mm9Fwo=
+	t=1737129108; cv=none; b=BY7weL1i8UU6S0kOH0oRZp3PjiwtJnqA1hlOZoik8xj9CqJ3I1MHqNCetRKN7zc4xNtevXIkGzqrJ8/7z3hLj9dt9lR68XAZOPtbCUR0oANgNf5gJekwNIlMrNlb14C2tNuz/XDEYvsfeanMSoTuHPvemTaQJhvwTR212NJZIAo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1737128403; c=relaxed/simple;
-	bh=vzosuO+PBp35NF3qcT9G/aPKAZei2LtqVukLeSr4bI4=;
-	h=From:To:Cc:Date:Subject:Message-ID:MIME-Version:Content-Type; b=XKPTGKeDJ9eFKm+lBsfFN50DaHK9QmcU3kl5qtFd2G1T8O30ADUwo5xPYGf2IuxMUaVa5T9bFzpDpEOGwuIowadkPgx+Ybw1JpxqyARYB47qiWYHYOo4z5Sn85+T04HXR7Fu6fk+f0OqIVa87xZBikHAoAb7mvNi+w+UEM2TMb8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=kIMG9OSp; arc=none smtp.client-ip=192.198.163.8
+	s=arc-20240116; t=1737129108; c=relaxed/simple;
+	bh=B5V+XPr0ozMHNvK105RmAHyS+dhJuEy/yONGrS4GIdQ=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=JLNCZeZMkDs/cJVHedGbURjYuxy6JApweuyDkCb4mFN8GQISBRPgG87j700jML5tSAFTi+9/DHps4ZqM4UTVa9f6rr9veaMxiqywyb6GGB2XFI3R6TiDFvTn1OXaZizSqnpBJRnkC+eqoGgWK8t3fKlsOH5/YPM5+g67dJw72Pw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=E5gVwnca; arc=none smtp.client-ip=198.175.65.11
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="kIMG9OSp"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="E5gVwnca"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1737128402; x=1768664402;
-  h=from:to:cc:date:subject:message-id:mime-version:
-   content-transfer-encoding;
-  bh=vzosuO+PBp35NF3qcT9G/aPKAZei2LtqVukLeSr4bI4=;
-  b=kIMG9OSpvCQbCTutjFtH0D8az/C4S7e623wZdkCud9I/7zeVJAQ+1dC+
-   VsrREchGh9ZAoohZLzI9aYcFlz4LtqBC7uc1IY1auZVO3g+B9NH8mEiw0
-   ONjFY/RL6CsQwKl5DAVWvJEzjtgCrWB6T2g5dZvGFKcSkvTKVpHLpx8yy
-   0KwhqkioPHebAjxipQpmNRH9ew7YJSr/I4f6HE66xW4wUaBh8XVTOEUPR
-   eR39xdDxqvrFkTSEllVxJbfX5+7+Z9tQwkrgGAiOrkKZtyXlzoFchAZLd
-   /MYe553bDkWMo/RncIIoJ6rgJtbomSswb5yX17hMwBCSkMNfOSlM+t+8E
-   g==;
-X-CSE-ConnectionGUID: zSEVWcpPQXiqHMT5TEnYWg==
-X-CSE-MsgGUID: 2UYE/WUdSaClWs8k4UDSDA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11318"; a="55111620"
+  t=1737129107; x=1768665107;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=B5V+XPr0ozMHNvK105RmAHyS+dhJuEy/yONGrS4GIdQ=;
+  b=E5gVwnca6t2UL8z51HKIcTWPo7w3MaDepLXetk1Q97uhXG/a7VoP/hO2
+   gHAfXoE8CT+wCDWAbaWdpdl0AuyQyllgGg7/i986LGbALiHfzZeucbs9z
+   GWvRW9yRbOShSZsZhqHBi3dSSVBG+X+LXZ8+TYEg0Tu1HYHYSirTOY5/O
+   xiTh105C816EYCiuKxgC75iZX3KAYgpFNAJ2YRH1xZ6wgDqsksJEdoTU3
+   s95RpuNytZUtxtcoytRoF0yWTgIH9b2VWUFOHXZR9GOFLm02PlBuTajwr
+   NhmkekdfUsYo6wKOka/iM1nw0mr3DZHScRn/FiXCnrFom2TwsYMYLqgj1
+   A==;
+X-CSE-ConnectionGUID: pLxt4DKdTGWvIfmZPWyLgQ==
+X-CSE-MsgGUID: OGy+NBzBQReUayHDPfEBxw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11318"; a="48055375"
 X-IronPort-AV: E=Sophos;i="6.13,212,1732608000"; 
-   d="scan'208";a="55111620"
-Received: from orviesa006.jf.intel.com ([10.64.159.146])
-  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Jan 2025 07:40:01 -0800
-X-CSE-ConnectionGUID: +bMmmPmERqu/0Nlx5mr1+Q==
-X-CSE-MsgGUID: U4+0+KZCQpiiHFm5weMMzA==
+   d="scan'208";a="48055375"
+Received: from fmviesa010.fm.intel.com ([10.60.135.150])
+  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Jan 2025 07:51:46 -0800
+X-CSE-ConnectionGUID: 29fSSbRRR7KHEGUAnmdTzw==
+X-CSE-MsgGUID: Gh8SpIDbSHud8VA2VAKDDQ==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.13,212,1732608000"; 
-   d="scan'208";a="105881425"
+   d="scan'208";a="106389439"
 Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.76])
-  by orviesa006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Jan 2025 07:39:58 -0800
+  by fmviesa010-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Jan 2025 07:51:40 -0800
 From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: LKML <linux-kernel@vger.kernel.org>, PDx86 <platform-driver-x86@vger.kernel.org>, Hans de Goede <hdegoede@redhat.com>, Andy Shevchenko <andy@kernel.org>
-Date: Fri, 17 Jan 2025 17:38:24 +0200
-Subject: [GIT PULL] platform-drivers-x86 for v6.13-6
-Message-ID: <pdx86-pr-20250117173824-132461248@linux.intel.com>
+Date: Fri, 17 Jan 2025 17:51:36 +0200 (EET)
+To: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
+cc: Pengyu Luo <mitltlatltl@gmail.com>, andersson@kernel.org, 
+    conor+dt@kernel.org, devicetree@vger.kernel.org, 
+    Hans de Goede <hdegoede@redhat.com>, jdelvare@suse.com, 
+    konradybcio@kernel.org, krzk+dt@kernel.org, linux-arm-msm@vger.kernel.org, 
+    linux-hwmon@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>, 
+    linux@roeck-us.net, platform-driver-x86@vger.kernel.org, robh@kernel.org
+Subject: Re: [PATCH v4 2/3] platform: arm64: add Huawei Matebook E Go EC
+ driver
+In-Reply-To: <0a6c6586-3dd9-4af9-85f3-376f2788b21a@linaro.org>
+Message-ID: <3a88c45a-5f26-3a14-3ae8-aa09c00b1431@linux.intel.com>
+References: <65dc7d7f-cee5-4eff-9ab7-153b12be4f26@linaro.org> <20250116181532.134250-1-mitltlatltl@gmail.com> <0a6c6586-3dd9-4af9-85f3-376f2788b21a@linaro.org>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: multipart/mixed; boundary="8323328-478076918-1737129096=:932"
+
+  This message is in MIME format.  The first part should be readable text,
+  while the remaining parts are likely unreadable without MIME-aware tools.
+
+--8323328-478076918-1737129096=:932
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 
-Hi Linus,
+On Fri, 17 Jan 2025, Bryan O'Donoghue wrote:
 
-Here is a platform-drivers-x86 fixes PR for v6.13.
+> On 16/01/2025 18:15, Pengyu Luo wrote:
+> > On Fri, Jan 17, 2025 at 1:31=E2=80=AFAM Bryan O'Donoghue
+> > <bryan.odonoghue@linaro.org> wrote:
+> > > On 16/01/2025 11:15, Pengyu Luo wrote:
+> > > > +
+> > > > +     guard(mutex)(&ec->lock);
+> > > > +     i2c_transfer(client->adapter, msgs, ARRAY_SIZE(msgs));
+> > >=20
+> > > You should trap the result code of i2c_transfer() and push it up the
+> > > call stack.
+> > >=20
+> >=20
+> > This EC uses SMBus Protocol, I guess. Qualcomm I2C driver doesn't suppo=
+rt
+> > this though. The response structure define by SMBus I mentioned them ab=
+ove
+> > (Please also check ACPI specification 13.2.5)
+>=20
+> What difference does that make ? The i2c controller itself can return err=
+or
+> codes via i2c_transfer().
+>=20
+> You should trap those error codes and take action if they happen.
+>=20
+> >=20
+> > +/*
+> > + * For rx, data sequences are arranged as
+> > + * {status, data_len(unreliable), data_seq}
+> > + */
+> >=20
+> > So the first byte is status code.
+> >=20
+> > > > +     usleep_range(2000, 2500); /* have a break, ACPI did this */
+> > > > +
+> > > > +     return *resp ? -EIO : 0;
+> > >=20
+> > > If the value @ *resp is non-zero return -EIO ?
+> > >=20
+> > > Why ?
+> > >=20
+> >=20
+> > Mentioned above.
+>=20
+> Right, please try to take the result code of i2c_transfer() and if it
+> indicates error, transmit that error up the call stack.
+>=20
+>=20
+> >=20
+> > > > +}
+> > > > +
+> > > > +/*
+> > > > -------------------------------------------------------------------=
+-------
+> > > > */
+> > > > +/* Common API */
+> > > > +
+> > > > +/**
+> > > > + * gaokun_ec_read - Read from EC
+> > > > + * @ec: The gaokun_ec structure
+> > > > + * @req: The sequence to request
+> > > > + * @resp_len: The size to read
+> > > > + * @resp: The buffer to store response sequence
+> > > > + *
+> > > > + * This function is used to read data after writing a magic sequen=
+ce to
+> > > > EC.
+> > > > + * All EC operations depend on this function.
+> > > > + *
+> > > > + * Huawei uses magic sequences everywhere to complete various
+> > > > functions, all
+> > > > + * these sequences are passed to ECCD(a ACPI method which is quiet
+> > > > similar
+> > > > + * to gaokun_ec_request), there is no good abstraction to generali=
+ze
+> > > > these
+> > > > + * sequences, so just wrap it for now. Almost all magic sequences =
+are
+> > > > kept
+> > > > + * in this file.
+> > > > + *
+> > > > + * Return: 0 on success or negative error code.
+> > > > + */
+> > > > +int gaokun_ec_read(struct gaokun_ec *ec, const u8 *req,
+> > > > +                size_t resp_len, u8 *resp)
+> > > > +{
+> > > > +     return gaokun_ec_request(ec, req, resp_len, resp);
+> > > > +}
+> > > > +EXPORT_SYMBOL_GPL(gaokun_ec_read);
+> > > > +
+> > > > +/**
+> > > > + * gaokun_ec_write - Write to EC
+> > > > + * @ec: The gaokun_ec structure
+> > > > + * @req: The sequence to request
+> > > > + *
+> > > > + * This function has no big difference from gaokun_ec_read. When c=
+aller
+> > > > care
+> > > > + * only write status and no actual data are returned, then use it.
+> > > > + *
+> > > > + * Return: 0 on success or negative error code.
+> > > > + */
+> > > > +int gaokun_ec_write(struct gaokun_ec *ec, const u8 *req)
+> > > > +{
+> > > > +     u8 ec_resp[] =3D MKRESP(0);
+> > > > +
+> > > > +     return gaokun_ec_request(ec, req, sizeof(ec_resp), ec_resp);
+> > > > +}
+> > > > +EXPORT_SYMBOL_GPL(gaokun_ec_write);
+> > > > +
+> > > > +int gaokun_ec_read_byte(struct gaokun_ec *ec, const u8 *req, u8 *b=
+yte)
+> > > > +{
+> > > > +     int ret;
+> > > > +     u8 ec_resp[] =3D MKRESP(sizeof(*byte));
+> > > > +
+> > > > +     ret =3D gaokun_ec_read(ec, req, sizeof(ec_resp), ec_resp);
+> > > > +     extr_resp_byte(byte, ec_resp);
+> > > > +
+> > > > +     return ret;
+> > > > +}
+> > > > +EXPORT_SYMBOL_GPL(gaokun_ec_read_byte);
+> > > > +
+> > > > +/**
+> > > > + * gaokun_ec_register_notify - Register a notifier callback for EC
+> > > > events.
+> > > > + * @ec: The gaokun_ec structure
+> > > > + * @nb: Notifier block pointer to register
+> > > > + *
+> > > > + * Return: 0 on success or negative error code.
+> > > > + */
+> > > > +int gaokun_ec_register_notify(struct gaokun_ec *ec, struct
+> > > > notifier_block *nb)
+> > > > +{
+> > > > +     return blocking_notifier_chain_register(&ec->notifier_list, n=
+b);
+> > > > +}
+> > > > +EXPORT_SYMBOL_GPL(gaokun_ec_register_notify);
+> > > > +
+> > > > +/**
+> > > > + * gaokun_ec_unregister_notify - Unregister notifier callback for =
+EC
+> > > > events.
+> > > > + * @ec: The gaokun_ec structure
+> > > > + * @nb: Notifier block pointer to unregister
+> > > > + *
+> > > > + * Unregister a notifier callback that was previously registered w=
+ith
+> > > > + * gaokun_ec_register_notify().
+> > > > + */
+> > > > +void gaokun_ec_unregister_notify(struct gaokun_ec *ec, struct
+> > > > notifier_block *nb)
+> > > > +{
+> > > > +     blocking_notifier_chain_unregister(&ec->notifier_list, nb);
+> > > > +}
+> > > > +EXPORT_SYMBOL_GPL(gaokun_ec_unregister_notify);
+> > > > +
+> > > > +/*
+> > > > -------------------------------------------------------------------=
+-------
+> > > > */
+> > > > +/* API for PSY */
+> > > > +
+> > > > +/**
+> > > > + * gaokun_ec_psy_multi_read - Read contiguous registers
+> > > > + * @ec: The gaokun_ec structure
+> > > > + * @reg: The start register
+> > > > + * @resp_len: The number of registers to be read
+> > > > + * @resp: The buffer to store response sequence
+> > > > + *
+> > > > + * Return: 0 on success or negative error code.
+> > > > + */
+> > > > +int gaokun_ec_psy_multi_read(struct gaokun_ec *ec, u8 reg,
+> > > > +                          size_t resp_len, u8 *resp)
+> > > > +{
+> > > > +     u8 ec_req[] =3D MKREQ(0x02, EC_READ, 1, 0);
+> > > > +     u8 ec_resp[] =3D MKRESP(1);
+> > > > +     int i, ret;
+> > > > +
+> > > > +     for (i =3D 0; i < resp_len; ++i, reg++) {
+> > > > +             refill_req_byte(ec_req, &reg);
+> > > > +             ret =3D gaokun_ec_read(ec, ec_req, sizeof(ec_resp),
+> > > > ec_resp);
+> > > > +             if (ret)
+> > > > +                     return ret;
+> > > > +             extr_resp_byte(&resp[i], ec_resp);
+> > > > +     }
+> > > > +
+> > > > +     return 0;
+> > > > +}
+> > > > +EXPORT_SYMBOL_GPL(gaokun_ec_psy_multi_read);
+> > > > +
+> > > > +/* Smart charge */
+> > > > +
+> > > > +/**
+> > > > + * gaokun_ec_psy_get_smart_charge - Get smart charge data from EC
+> > > > + * @ec: The gaokun_ec structure
+> > > > + * @resp: The buffer to store response sequence (mode, delay, star=
+t,
+> > > > end)
+> > > > + *
+> > > > + * Return: 0 on success or negative error code.
+> > > > + */
+> > > > +int gaokun_ec_psy_get_smart_charge(struct gaokun_ec *ec,
+> > > > +                                u8 resp[GAOKUN_SMART_CHARGE_DATA_S=
+IZE])
+> > > > +{
+> > > > +     /* GBCM */
+> > > > +     u8 ec_req[] =3D MKREQ(0x02, 0xE4, 0);
+> > > > +     u8 ec_resp[] =3D MKRESP(GAOKUN_SMART_CHARGE_DATA_SIZE);
+> > > > +     int ret;
+> > > > +
+> > > > +     ret =3D gaokun_ec_read(ec, ec_req, sizeof(ec_resp), ec_resp);
+> > > > +     if (ret)
+> > > > +             return ret;
+> > > > +
+> > > > +     extr_resp(resp, ec_resp, GAOKUN_SMART_CHARGE_DATA_SIZE);
+> > > > +
+> > > > +     return 0;
+> > > > +}
+> > > > +EXPORT_SYMBOL_GPL(gaokun_ec_psy_get_smart_charge);
+> > > > +
+> > > > +static inline bool are_thresholds_valid(u8 start, u8 end)
+> > > > +{
+> > > > +     return end !=3D 0 && start <=3D end && end <=3D 100;
+> > >=20
+> > > Why 100 ? Still feels like an arbitrary number.
+> > >=20
+> > > Could you add a comment to explain where 100 comes from ?
+> > >=20
+> >=20
+> > You may don't get it. It is just a battery percentage, greater than 100=
+ is
+> > invalid.
+>=20
+> 100 meaning maximum capacity, good stuff.
+>=20
+> Please use a define with a descriptive name. That way the meaning is obvi=
+ous.
+>=20
+> In fact if the name of the function related to battery capacity then the
+> meaning of the numbers would be more obvious.
+>=20
+> static inline bool validate_battery_threshold_range(u8 start, u8 end) {
+> =09return end !=3D 0 && start <=3D end && end <=3D 100;
+> }
 
-Fixes:
+I suggest going with this latter option. 100% tends to be in its literal=20
+form elsewhere too. I suppose we don't even have a generic define for=20
+"100%", at least I don't recall coming across one nor found any with a=20
+quick git grep underneath include/.
 
- - dell-uart-backlight: Fix serdev race
+But I agree the naming of this function could be improved like you=20
+suggest.
 
- - lenovo-yoga-tab2-pro-1380-fastcharger: Fix serdev race
+--=20
+ i.
 
-Regards, i.
-
-
-The following changes since commit 1d7461d0c8330689117286169106af6531a747ed:
-
-  platform/x86: intel/pmc: Fix ioremap() of bad address (2025-01-07 17:30:11 +0200)
-
-are available in the Git repository at:
-
-  https://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git tags/platform-drivers-x86-v6.13-6
-
-for you to fetch changes up to 59616a91e5e74833b2008b56c66879857c616006:
-
-  platform/x86: lenovo-yoga-tab2-pro-1380-fastcharger: fix serdev race (2025-01-14 18:30:33 +0200)
-
-----------------------------------------------------------------
-platform-drivers-x86 for v6.13-6
-
-Fixes:
-
- - dell-uart-backlight: Fix serdev race
-
- - lenovo-yoga-tab2-pro-1380-fastcharger: Fix serdev race
-
-The following is an automated shortlog grouped by driver:
-
-dell-uart-backlight:
- -  fix serdev race
-
-lenovo-yoga-tab2-pro-1380-fastcharger:
- -  fix serdev race
-
-----------------------------------------------------------------
-Chenyuan Yang (2):
-      platform/x86: dell-uart-backlight: fix serdev race
-      platform/x86: lenovo-yoga-tab2-pro-1380-fastcharger: fix serdev race
-
- drivers/platform/x86/dell/dell-uart-backlight.c              | 5 +++--
- drivers/platform/x86/lenovo-yoga-tab2-pro-1380-fastcharger.c | 5 +++--
- 2 files changed, 6 insertions(+), 4 deletions(-)
+> >=20
+> > start: The battery percentage at which charging starts (0-100).
+> > stop: The battery percentage at which charging stops (1-100).
+>=20
+> Or just add this comment directly above the function.
+>=20
+> ---
+> bod
+>=20
+--8323328-478076918-1737129096=:932--
