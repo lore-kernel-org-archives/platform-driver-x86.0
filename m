@@ -1,61 +1,61 @@
-Received: from mail-vk1-f182.google.com (mail-vk1-f182.google.com [209.85.221.182])
+Received: from mail-yb1-f172.google.com (mail-yb1-f172.google.com [209.85.219.172])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9871C126C1E;
-	Sat, 18 Jan 2025 07:04:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1391F15FA7B;
+	Sat, 18 Jan 2025 07:15:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1737183878; cv=none; b=ab8E/MRkDaXbW2GIlFSeLA/16oYBAnOH6QM3e65Z725qJqMUS8VwHPi7AurQuJuS3im6SWYdNDvQ/Osv7jAA2Xg8P0arwa/rmoRC6Alhgf2a4sBCIYucxO3csXiue59OHHtk6+ZuE2M63HHwBAe36hpuAQevwQoutAx7Y+lNbkU=
+	t=1737184509; cv=none; b=NcbRXwMrfW23uE3w5aWRb/4rSnrPIBAeeZvIwUwpsnBuECSFKfSbFfK2f8dxfqlE22KLMotodX43NtiyWSeCR7+B1Cbrh4EE7FCZd54lBP91K7aGipOktg46uthnjMMq+zr0GlyMy94T036JN6zQ1p60q0WyfY4HsLmCPqoS290=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1737183878; c=relaxed/simple;
-	bh=C9/EEoHn1f3Z5ioE/+klUOECE7DllC1zFEM+Nlqppkw=;
-	h=Mime-Version:Content-Type:Date:Message-Id:Subject:From:To:
-	 References:In-Reply-To; b=KjHtV6OyS256X2i8E6xuQ9djhR3HqQt+y86+wDgZhRhU+I9VbZVRypUI3W0dM52IhnEA1SaMS85nHgImydaux8DbKLVA/qg5WV/OGEDnotlYjcbtieVL6al053RIgQRwmHaiYooZbPTQsxktplolwZvFHC7IzxZZBaHXyVsb45g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=JKYYCnsR; arc=none smtp.client-ip=209.85.221.182
+	s=arc-20240116; t=1737184509; c=relaxed/simple;
+	bh=wNmDHQ8sM22dpRZhb5SkhXcHhmnvoGxGCxxEaCjupL0=;
+	h=Mime-Version:Content-Type:Date:Message-Id:Subject:From:To:Cc:
+	 References:In-Reply-To; b=bIPY8l376OTAKDOZcVxU3Z0S6Mtzr7fsPSG9CkOHawQd9NYmuT7zF6THL+iPTsaOEyVrnGbTH358wCZUsWxcN/mFn54mf1oYRGxLaeJOvixV4oVHxO49YDStephEtYrbezyAGwgcPR12ks0pqykrOga0x3cD2s++hiFTgkDK0pc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=SjjeXcTR; arc=none smtp.client-ip=209.85.219.172
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JKYYCnsR"
-Received: by mail-vk1-f182.google.com with SMTP id 71dfb90a1353d-5187cd9b8e5so829829e0c.1;
-        Fri, 17 Jan 2025 23:04:36 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SjjeXcTR"
+Received: by mail-yb1-f172.google.com with SMTP id 3f1490d57ef6-e399e904940so4427171276.2;
+        Fri, 17 Jan 2025 23:15:07 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1737183875; x=1737788675; darn=vger.kernel.org;
-        h=in-reply-to:references:to:from:subject:message-id:date
+        d=gmail.com; s=20230601; t=1737184507; x=1737789307; darn=vger.kernel.org;
+        h=in-reply-to:references:cc:to:from:subject:message-id:date
          :content-transfer-encoding:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=gVKCHr4QLEmVsNcL8IwEutV4nA87a9Lr0Pa5Y+hfi6I=;
-        b=JKYYCnsRZ/MfNkR9y0olUorpyv+rnciM9jl6XqAugt0m+rkaFg5zBCTKitCfkTPoAV
-         B6jnQY4JPpsy//T/QjfSaKUzIRBggwr7TD5ZPan2MdPlKY6oePbu+FOGZ2WHVDX4bp8m
-         ZQjZugTqyXzk+T14sgQQu0vjrPPjkEDuipqYcwWqhAdScMqCEaCrWcX7YVFhstlNgQ89
-         KjhxPdDmXCHtWTY/KfkLPj1Zu0Ggv4bese3hKJx1gL/G4S2yIgVKykfzfEVuC7hs6+Yv
-         hqRQEowZODAklKWVJM9O1/GHJXB9IkMqsbfJ89MGU1B0SauyUlGJn/Xmeikmvmzyj4Ff
-         5+3Q==
+        bh=WRbs38OMS608qU4pUvkirXtgam3LtoRnMOdROZ49VxI=;
+        b=SjjeXcTRpLciRXMUpgF/lkrbL7oXcokzuPS3Uykp07Qq6fC2acwWppgW1FKA8xBCQ2
+         LxtkX0OqS/oI/VFZsL2RueqalqfVUv/eHFN6JrwKnojr3Nd8URuxzO1WI4sJ+55+4Px0
+         qwdf2al89xpiJSsocaf+98vkUh4L1FjVpmSq+o4iaGxF2PGuQq9/X5jdrp8kNHZ/z1fW
+         9CwBO83V+w2gh6GBYdNJxAI3hCY5HYkx4+r4pk3sIqphDv0tm4x1/lutPrOwOaxm6vXA
+         xPgVrQjT8kPuGX36qCP36PhqHzC3+PB4MKaMOJk7hAueVMyPpl5fEQZ810wioSC8UGsn
+         Xk8A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1737183875; x=1737788675;
-        h=in-reply-to:references:to:from:subject:message-id:date
+        d=1e100.net; s=20230601; t=1737184507; x=1737789307;
+        h=in-reply-to:references:cc:to:from:subject:message-id:date
          :content-transfer-encoding:mime-version:x-gm-message-state:from:to
          :cc:subject:date:message-id:reply-to;
-        bh=gVKCHr4QLEmVsNcL8IwEutV4nA87a9Lr0Pa5Y+hfi6I=;
-        b=fqsJ7HvZ9++3N/t01aGu5O9s89S9iOFcc/aTz2PKO+CnS5eaomGVUFBkymKG/CNAfY
-         5MuMzKnQgFiqE1kGVenuflL1bdJ2PBo8bPlogCeWVJtGwHaoFSl+9EX0Ei16bMmamodI
-         6UBl1ASbQZ2iShp4apRnY7o+mr4qTzmSYSB+jRd36XQ1+ya+abnWnfygkCAo4doextTY
-         W1Z6K4Y/XjYag9LMPF5HuBmmh1XAAmrjmrEsHFpN56fE54xJ+TEBq0Z90fiOFQ38CQdg
-         2jbt3gAnbJdZOhXyFgrqh67diq2WrVr94Z9p+Kw/RX44nLH5rOfvQbFr9JLTpZrcPoAI
-         RvcQ==
-X-Forwarded-Encrypted: i=1; AJvYcCW3LikQDs7O5aqf3lrwL/+BoMWeIBY4N45iKvEeZ6dhDCb7ALNeHYUdyWQ2ppDzwDWxDJ/IpXSzYEI4x3CA@vger.kernel.org, AJvYcCXAWN0v8n9z25oGI/k407nR5T8Qijw/aSEDmfSl+SeRz4uGuw69qzOjwR6Zzmzz5NHup+1Lny/a9S8ye66SYKXJUSVj8A==@vger.kernel.org, AJvYcCXoy3GDMqthbgFOsTeb6JwLuIXWIg/ynDDhu3uRj6k8DxFR2Tsea/pUz8qnNOWgiaW0HwCs7rpKu8A=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yygkn/Qp7Zmmy0jbaXzlEIVobjuGE050yMNvldOesk8eIePVYC9
-	jVa6Twp9zP/p43dFioe0yPXvStI0/WFCUKQXF72PlCMeAqWfl5n6kybPBQ==
-X-Gm-Gg: ASbGnctriJydJbSYEBJBjiO8uosg/7U3odF4MB95TDl5P1KO7LWsJV1U2Mg9QYWSSGk
-	dYRp9R+Wil3dtL/U8Du2a/Hl3bFWx0V9AZ6WDqJLa+4JdoriF5TH8tTGH5z8fh+vWb6BNjh2xln
-	5RLMgcG7aTnjvDqAHawK4735BiD5VYYSth38zs+ezreuSf6nyZpZ0bwIhEpZ0YXeuMsoNxj1MIE
-	FcEzZFI5t9w/0DK8O2/ohs51Qp8QJUCgHiYmkEuRS7sGxv0HsJLAlGWqvCGpg==
-X-Google-Smtp-Source: AGHT+IFNS0dSMdLMmRCxs4dI0d9cVarO2LLduE23a3O5xOe2nWx9eKm/M1WSaRWUavHNqBRoYo/FYw==
-X-Received: by 2002:a05:6122:1908:b0:518:965c:34a with SMTP id 71dfb90a1353d-51d592cb265mr5522444e0c.2.1737183875173;
-        Fri, 17 Jan 2025 23:04:35 -0800 (PST)
+        bh=WRbs38OMS608qU4pUvkirXtgam3LtoRnMOdROZ49VxI=;
+        b=nFz3EeAn/a5Dix46jZHAlGtZYhzpTE+OMTFqeQXJZVPNRpnNcPjPZCJhtMdkcKdkUc
+         Lq8QSMSkcx2cL4NuSExKG9M/ZnKCISIQE0Z7AuhLQoOMNUvKNc9gm6feBTJq6MgKchPx
+         euZWX+U+UdZhCqa1IPLRMb8zyWH8OAZnme15W6S7AfBWg870Wv1ZLd2ERvv1QY9Qpwzp
+         bG8IEvlhymh8q7D+1N5I2Z1uaHXte9sd38pTWvX+bwVcZk1d9Ws2QeLjp9xWsdtdTd+i
+         vctBmegh7kB0t98wwqNFBx0wkBJVeBosZLc13/fRSd4R/tWbquJ8nXPfvbruOizpqcn8
+         5tyA==
+X-Forwarded-Encrypted: i=1; AJvYcCUACP3McTQ0daaB9S/P0VxSAdWIUm8k7qBVJZBlkZW6y073mbybGW+QAv5NeN2QthFQAMHbbldC78a51Iaa@vger.kernel.org, AJvYcCVIO4dagF5Vm4DVP5DNRC8A/on0PUiwAIH+d95STpFRxAXf7xFjkodFkUMO+wohSrAFSqJ6VephO28=@vger.kernel.org, AJvYcCVLXguc6WqMNFH9+U/xIlY2cOHCIXndUU3F+aY6NGUuIHtpRrrbIoNxczmvOXmobq4xaFg2QOBCLpDFkyessVtvgwYyIA==@vger.kernel.org
+X-Gm-Message-State: AOJu0YySMZKq8y/dCWrDzIg7GmD5BiiIePO+RyHbAT5Q5ILADSURVK3/
+	434GKPljXT+SxYQoHy3SS0t1VlucyPFnE/+si7CvBo3Fh0QylGz7
+X-Gm-Gg: ASbGncuqOjWYaz0P0xayYdv5dKxErbPD6Jk5QVSl4V9dT+YIT7ctgbowVWrGMsIzJVF
+	FndVRgXVtdwVI/IYlu/5kdevwjK9qMy8bzbWYZ3G80yw5FxRm67OfYOWi3kGZd+0lSqqmXSMtbz
+	t8YZh7qoA6fo7cggopgX/6jU+s5gRpwIR43ovpT37Z70ZPAXIqjEw/mBltQqI6YgcLXADWYnKiv
+	A2y68inGlV1E15KLjfBuNG/KPhHkyWIfHAEQQqaX2npf0KsC6zg9bh5ygJDtA==
+X-Google-Smtp-Source: AGHT+IETriYVFOzah3uIWNkkcmVY7ey+ZRBFJithDddjKX9hPxRyO/lY+0YxK+7Twa3VUnjC1aHePg==
+X-Received: by 2002:a05:690c:c83:b0:6db:c847:c8c5 with SMTP id 00721157ae682-6f6eb67bca1mr49419627b3.16.1737184506905;
+        Fri, 17 Jan 2025 23:15:06 -0800 (PST)
 Received: from localhost ([2800:bf0:82:1159:c837:3446:190b:188d])
-        by smtp.gmail.com with ESMTPSA id 71dfb90a1353d-51cf55c8ca8sm640388e0c.23.2025.01.17.23.04.32
+        by smtp.gmail.com with ESMTPSA id 00721157ae682-6f6e63fddb1sm7225067b3.30.2025.01.17.23.15.04
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 17 Jan 2025 23:04:34 -0800 (PST)
+        Fri, 17 Jan 2025 23:15:06 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -64,371 +64,87 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 Content-Type: text/plain; charset=UTF-8
-Date: Sat, 18 Jan 2025 02:04:31 -0500
-Message-Id: <D750ADJIJO3T.JVSA3PBBPXGP@gmail.com>
-Subject: Re: [PATCH v7] platform/x86: samsung-galaxybook: Add
+Date: Sat, 18 Jan 2025 02:15:04 -0500
+Message-Id: <D750IFZQU40A.1KI8A2LYXID19@gmail.com>
+Subject: Re: [PATCH v6] platform/x86: samsung-galaxybook: Add
  samsung-galaxybook driver
 From: "Kurt Borja" <kuurtb@gmail.com>
-To: "Joshua Grisham" <josh@joshuagrisham.com>, <W_Armin@gmx.de>,
- <thomas@t-8ch.de>, <ilpo.jarvinen@linux.intel.com>, <hdegoede@redhat.com>,
- <platform-driver-x86@vger.kernel.org>, <corbet@lwn.net>,
- <linux-doc@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+To: "Joshua Grisham" <josh@joshuagrisham.com>,
+ =?utf-8?q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Cc: <W_Armin@gmx.de>, <thomas@t-8ch.de>, "Hans de Goede"
+ <hdegoede@redhat.com>, <platform-driver-x86@vger.kernel.org>,
+ <corbet@lwn.net>, <linux-doc@vger.kernel.org>, "LKML"
+ <linux-kernel@vger.kernel.org>
 X-Mailer: aerc 0.18.2-0-ge037c095a049
-References: <20250118004322.10062-1-josh@joshuagrisham.com>
-In-Reply-To: <20250118004322.10062-1-josh@joshuagrisham.com>
+References: <20250112150910.13489-1-josh@joshuagrisham.com>
+ <f91b823c-593d-dbdf-e453-878e61f329ec@linux.intel.com>
+ <CAMF+KebFL_9bF5UE4Pb7OQsQ6xJ6vWUXu5+4SWbnteVP_xOyaQ@mail.gmail.com>
+In-Reply-To: <CAMF+KebFL_9bF5UE4Pb7OQsQ6xJ6vWUXu5+4SWbnteVP_xOyaQ@mail.gmail.com>
+
+On Fri Jan 17, 2025 at 7:38 PM -05, Joshua Grisham wrote:
+> Hi Ilpo!
+>
+> Den fre 17 jan. 2025 kl 18:36 skrev Ilpo J=C3=A4rvinen
+> <ilpo.jarvinen@linux.intel.com>:
+> >
+> > > +     err =3D devm_platform_profile_register(&galaxybook->profile_han=
+dler);
+> > > +     if (err)
+> > > +             return err;
+> >
+> > As you might already know, I've in the meantime merged the Kurt's big
+> > platform_profile series so these need to the be rebased on top of that.
+> >
+> > --
+> >  i.
+> >
+>
+> Yes thank you! Actually I see that there is also an update to
+> firmware-attributes, i8042 filter, and platform_profile on for-next
+> that all now need to be implemented in this driver since the v6 of the
+> patch was posted. I have a working version drafted and will send it
+> shortly (along with the comment folding and spacing requests you
+> made).
+>
+> One question and maybe more directed to Kurt regarding the new
 
 Hi Joshua,
 
-I have some comments on the platform profile section. The most important
-one is the platform_profile probe one, the rest are suggetions.
+> platform_profile interface is that (similar to how I did it with the
+> above v6 implementation), it still feels cleanest to locally track the
+> different "choices" within samsung-galaxybook since it can vary
 
-On Fri Jan 17, 2025 at 7:43 PM -05, Joshua Grisham wrote:
-> Add a new driver for Samsung Galaxy Book series notebook devices with the
-> following features:
+You are guaranteed by the platform_profile API to only receive selected
+choices in the profile_set callback and there is no limitations to the
+profile_get one so I don't see the need to store the choices in any way.
+
+> depending on the model, and this get_performance_mode_profile()
+> function needs to be able to evaluate during runtime what choices are
+> set vs not.. so in my draft for v7 I have opted to add a private data
+> member for platform_profile_choices and set it up during "init" of the
+> platform driver pretty much exactly like how is done here in v6, and
+> then during the new platform_profile probe I am just copying the
+> choices set from the private member to the choices given in the probe
+
+You should just directly set choices in the probe, that is it's intended
+purpose. No need to set it first and then transfer them in the probe.
+
+> callback. I hope this will make sense but please do take an extra look
+> at this when I post v7 and see if it looks ok or if there is a better
+> way to do this (again keeping in mind that setting/getting during
+> runtime will need to be aware of what bits were set up).
+
+The platform_profile class takes care of this internally.
+
 >
-> - Keyboard backlight control
-> - Battery extension with charge control end threshold
-> - Controller for Samsung's performance modes using the platform profile
->   interface
-> - Adds firmware-attributes to control various system features
-> - Handles various hotkeys and notifications
->
-> Signed-off-by: Joshua Grisham <josh@joshuagrisham.com>
+> Thank you again!
 
-...
-
-> +/*
-> + * Platform Profile / Performance mode
-> + */
-> +
-> +static int performance_mode_acpi_set(struct samsung_galaxybook *galaxybo=
-ok,
-> +				     const u8 performance_mode)
-> +{
-> +	struct sawb buf =3D {};
-> +
-> +	buf.safn =3D GB_SAFN;
-> +	buf.sasb =3D GB_SASB_PERFORMANCE_MODE;
-> +	export_guid(buf.caid, &GB_PERFORMANCE_MODE_GUID);
-> +	buf.fncn =3D GB_FNCN_PERFORMANCE_MODE;
-> +	buf.subn =3D GB_SUBN_PERFORMANCE_MODE_SET;
-> +	buf.iob0 =3D performance_mode;
-> +
-> +	return galaxybook_acpi_method(galaxybook, GB_ACPI_METHOD_PERFORMANCE_MO=
-DE,
-> +				      &buf, GB_SAWB_LEN_PERFORMANCE_MODE);
-> +}
-> +
-> +static int performance_mode_acpi_get(struct samsung_galaxybook *galaxybo=
-ok, u8 *performance_mode)
-> +{
-> +	struct sawb buf =3D {};
-> +	int err;
-> +
-> +	buf.safn =3D GB_SAFN;
-> +	buf.sasb =3D GB_SASB_PERFORMANCE_MODE;
-> +	export_guid(buf.caid, &GB_PERFORMANCE_MODE_GUID);
-> +	buf.fncn =3D GB_FNCN_PERFORMANCE_MODE;
-> +	buf.subn =3D GB_SUBN_PERFORMANCE_MODE_GET;
-> +
-> +	err =3D galaxybook_acpi_method(galaxybook, GB_ACPI_METHOD_PERFORMANCE_M=
-ODE,
-> +				     &buf, GB_SAWB_LEN_PERFORMANCE_MODE);
-> +	if (err)
-> +		return err;
-> +
-> +	*performance_mode =3D buf.iob0;
-> +
-> +	return 0;
-> +}
-> +
-> +static int get_performance_mode_profile(struct samsung_galaxybook *galax=
-ybook,
-> +					const u8 performance_mode,
-> +					enum platform_profile_option *profile)
-> +{
-> +	switch (performance_mode) {
-> +	case GB_PERFORMANCE_MODE_SILENT:
-> +		*profile =3D PLATFORM_PROFILE_LOW_POWER;
-> +		break;
-> +	case GB_PERFORMANCE_MODE_QUIET:
-> +		*profile =3D PLATFORM_PROFILE_QUIET;
-> +		break;
-> +	case GB_PERFORMANCE_MODE_OPTIMIZED:
-> +	case GB_PERFORMANCE_MODE_OPTIMIZED_LEGACY:
-> +		*profile =3D PLATFORM_PROFILE_BALANCED;
-> +		break;
-> +	case GB_PERFORMANCE_MODE_PERFORMANCE:
-> +	case GB_PERFORMANCE_MODE_PERFORMANCE_LEGACY:
-> +		/* balanced-performance maps to Performance when Ultra exists */
-> +		if (test_bit(PLATFORM_PROFILE_BALANCED_PERFORMANCE,
-> +			     galaxybook->platform_profile_choices))
-> +			*profile =3D PLATFORM_PROFILE_BALANCED_PERFORMANCE;
-> +		else
-> +			*profile =3D PLATFORM_PROFILE_PERFORMANCE;
-> +		break;
-> +	case GB_PERFORMANCE_MODE_ULTRA:
-> +		*profile =3D PLATFORM_PROFILE_PERFORMANCE;
-> +		break;
-> +	case GB_PERFORMANCE_MODE_IGNORE1:
-> +	case GB_PERFORMANCE_MODE_IGNORE2:
-> +		return -EOPNOTSUPP;
-> +	default:
-> +		dev_warn(&galaxybook->platform->dev,
-> +			 "unrecognized performance mode 0x%x\n", performance_mode);
-> +		return -EOPNOTSUPP;
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +static int galaxybook_platform_profile_set(struct device *dev,
-> +					   enum platform_profile_option profile)
-> +{
-> +	struct samsung_galaxybook *galaxybook =3D dev_get_drvdata(dev);
-> +
-> +	return performance_mode_acpi_set(galaxybook,
-> +					 galaxybook->profile_performance_modes[profile]);
-> +}
-> +
-> +static int galaxybook_platform_profile_get(struct device *dev,
-> +					   enum platform_profile_option *profile)
-> +{
-> +	struct samsung_galaxybook *galaxybook =3D dev_get_drvdata(dev);
-> +	u8 performance_mode;
-> +	int err;
-> +
-> +	err =3D performance_mode_acpi_get(galaxybook, &performance_mode);
-> +	if (err)
-> +		return err;
-> +
-> +	return get_performance_mode_profile(galaxybook, performance_mode, profi=
-le);
-> +}
-> +
-> +static int galaxybook_platform_profile_probe(void *drvdata, unsigned lon=
-g *choices)
-> +{
-> +	struct samsung_galaxybook *galaxybook =3D drvdata;
-> +	int i;
-> +
-> +	for_each_set_bit(i, galaxybook->platform_profile_choices, PLATFORM_PROF=
-ILE_LAST)
-> +		set_bit(i, choices);
-
-The intended use of this callback is to "probe" for available choices
-here. You should move all galaxybook_performance_mode_profile_init()
-logic to this method. This would eliminate the need to have a copy of
-the choices bitmap.
-
-> +
-> +	return 0;
-> +}
-> +
-> +static const struct platform_profile_ops galaxybook_platform_profile_ops=
- =3D {
-> +	.probe =3D galaxybook_platform_profile_probe,
-> +	.profile_get =3D galaxybook_platform_profile_get,
-> +	.profile_set =3D galaxybook_platform_profile_set,
-> +};
-> +
-> +static int galaxybook_performance_mode_init(struct samsung_galaxybook *g=
-alaxybook)
-> +{
-> +	enum platform_profile_option profile =3D PLATFORM_PROFILE_LAST;
-> +	u8 performance_mode;
-> +	int err;
-> +	int i;
-> +
-> +	err =3D performance_mode_acpi_get(galaxybook, &performance_mode);
-> +	if (err)
-> +		return err;
-> +
-> +	err =3D get_performance_mode_profile(galaxybook, performance_mode, &pro=
-file);
-> +	if (err)
-
-If this method failed we can't safely continue. I think you should
-return here, else you may get an out of bounds access bellow.
-
-> +		dev_warn(&galaxybook->platform->dev,
-> +			 "initial startup performance mode 0x%x is not mapped\n",
-> +			 performance_mode);
-> +
-> +	for_each_set_bit(i, galaxybook->platform_profile_choices, PLATFORM_PROF=
-ILE_LAST)
-> +		dev_dbg(&galaxybook->platform->dev,
-> +			"enabled platform profile %d using performance mode 0x%x\n",
-> +			i, galaxybook->profile_performance_modes[i]);
-
-Maybe we can log this directly in the switch-case block inside
-galaxybook_performance_mode_profile_init() instead of having to iterate.
-
-> +
-> +	/* ensure startup performance_mode matches that mapped to its profile *=
-/
-> +	if (galaxybook->profile_performance_modes[profile] =3D=3D performance_m=
-ode)
-> +		return 0;
-> +
-> +	/* otherwise, if balanced is enabled, use it as the default */
-> +	if (test_bit(PLATFORM_PROFILE_BALANCED, galaxybook->platform_profile_ch=
-oices))
-> +		return performance_mode_acpi_set(galaxybook,
-> +			galaxybook->profile_performance_modes[PLATFORM_PROFILE_BALANCED]);
-> +
-> +	/* otherwise, find the first enabled profile and use that instead */
-> +	profile =3D find_next_bit_wrap(galaxybook->platform_profile_choices,
-> +				     PLATFORM_PROFILE_LAST,
-> +				     0);
-> +
-> +	if (profile =3D=3D PLATFORM_PROFILE_LAST) {
-> +		dev_err(&galaxybook->platform->dev,
-> +			"no platform profiles have been enabled\n");
-> +		return -EOPNOTSUPP;
-> +	}
-> +
-> +	return performance_mode_acpi_set(galaxybook,
-> +					 galaxybook->profile_performance_modes[profile]);
-> +}
-> +
-> +#define gb_pfmode(profile) galaxybook->profile_performance_modes[profile=
-]
-> +
-> +static int galaxybook_performance_mode_profile_init(struct samsung_galax=
-ybook *galaxybook)
-> +{
-> +	enum platform_profile_option profile;
-> +	struct sawb buf =3D {};
-> +	unsigned int i;
-> +	int err;
-> +
-> +	/* fetch supported performance mode values from ACPI method */
-> +	buf.safn =3D GB_SAFN;
-> +	buf.sasb =3D GB_SASB_PERFORMANCE_MODE;
-> +	export_guid(buf.caid, &GB_PERFORMANCE_MODE_GUID);
-> +	buf.fncn =3D GB_FNCN_PERFORMANCE_MODE;
-> +	buf.subn =3D GB_SUBN_PERFORMANCE_MODE_LIST;
-> +
-> +	err =3D galaxybook_acpi_method(galaxybook, GB_ACPI_METHOD_PERFORMANCE_M=
-ODE,
-> +				     &buf, GB_SAWB_LEN_PERFORMANCE_MODE);
-> +	if (err) {
-> +		dev_dbg(&galaxybook->platform->dev,
-> +			"failed to get supported performance modes, error %d\n", err);
-> +		return err;
-> +	}
-> +
-> +	/* set initial default profile performance mode mappings */
-> +	gb_pfmode(PLATFORM_PROFILE_LOW_POWER) =3D GB_PERFORMANCE_MODE_SILENT;
-> +	gb_pfmode(PLATFORM_PROFILE_QUIET) =3D GB_PERFORMANCE_MODE_QUIET;
-> +	gb_pfmode(PLATFORM_PROFILE_BALANCED) =3D GB_PERFORMANCE_MODE_OPTIMIZED_=
-LEGACY;
-> +	gb_pfmode(PLATFORM_PROFILE_PERFORMANCE) =3D GB_PERFORMANCE_MODE_PERFORM=
-ANCE_LEGACY;
-> +	gb_pfmode(PLATFORM_PROFILE_LAST) =3D GB_PERFORMANCE_MODE_INVALID;
-> +
-> +	/*
-> +	 * Value returned in iob0 will have the number of supported performance
-> +	 * modes per device. The performance mode values will then be given as =
-a
-> +	 * list after this (iob1-iobX). Loop through the supported values and
-> +	 * enable their mapped platform_profile choice, overriding "legacy"
-> +	 * values along the way if a non-legacy value exists.
-> +	 */
-> +	for (i =3D 1; i <=3D buf.iob0; i++) {
-> +		dev_dbg(&galaxybook->platform->dev,
-> +			"device supports performance mode 0x%x\n", buf.iob_values[i]);
-> +		err =3D get_performance_mode_profile(galaxybook, buf.iob_values[i], &p=
-rofile);
-
-Here we pass iob_values[i] through a switch-case block inside
-get_performance_mode_profile() and then we do it again bellow. Maybe
-this all could be done here, without having to call
-get_performance_mode_profile().
-
-> +		if (err)
-> +			continue;
-> +		switch (buf.iob_values[i]) {
-> +		case GB_PERFORMANCE_MODE_OPTIMIZED:
-> +			/* override legacy Optimized value */
-> +			gb_pfmode(profile) =3D GB_PERFORMANCE_MODE_OPTIMIZED;
-> +			break;
-> +		case GB_PERFORMANCE_MODE_PERFORMANCE:
-> +			/* override legacy Performance value */
-> +			gb_pfmode(profile) =3D GB_PERFORMANCE_MODE_PERFORMANCE;
-> +			break;
-> +		case GB_PERFORMANCE_MODE_ULTRA:
-> +			/*
-> +			 * if Ultra is supported, downgrade performance to
-> +			 * balanced-performance
-> +			 */
-
-I haven't been following the entire discussion, so I don't know if Armin
-changed his mind but I agree with him.=20
-
-I think GB_PERFORMANCE_MODE_PERFORMANCE_LEGACY should be statically
-mapped to BALANCED_PERFORMANCE and TURBO should be PERFORMANCE. This
-would simplify a lot of the logic here.
-
-> +			if (test_bit(PLATFORM_PROFILE_PERFORMANCE,
-> +				     galaxybook->platform_profile_choices)) {
-> +				gb_pfmode(PLATFORM_PROFILE_BALANCED_PERFORMANCE) =3D
-> +					gb_pfmode(PLATFORM_PROFILE_PERFORMANCE);
-> +				set_bit(PLATFORM_PROFILE_BALANCED_PERFORMANCE,
-> +					galaxybook->platform_profile_choices);
-> +			}
-> +			/* override performance profile to use Ultra's value */
-> +			gb_pfmode(profile) =3D GB_PERFORMANCE_MODE_ULTRA;
-> +			break;
-> +		default:
-> +			break;
-> +		}
-> +		set_bit(profile, galaxybook->platform_profile_choices);
-> +	}
-> +
-> +	err =3D galaxybook_performance_mode_init(galaxybook);
-
-If the main goal of this method is to set an initial profile maybe we
-can just directly set it after finding GB_PERFORMANCE_MODE_OPTIMIZED?
-
-This would eliminate a bit of indirection.
-
-Do you know if all devices support OPTIMIZED? either legacy or
-non-legacy.
-
-> +	if (err) {
-> +		dev_dbg(&galaxybook->platform->dev,
-> +			"failed to initialize performance mode, error %d\n", err);
-> +		return err;
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +static int galaxybook_platform_profile_init(struct samsung_galaxybook *g=
-alaxybook)
-> +{
-> +	struct device *ppdev;
-> +	int err;
-> +
-> +	err =3D galaxybook_performance_mode_profile_init(galaxybook);
-> +	if (err)
-> +		return 0;
-> +
-> +	galaxybook->has_performance_mode =3D true;
-> +
-> +	ppdev =3D devm_platform_profile_register(&galaxybook->platform->dev, DR=
-IVER_NAME,
-> +					       galaxybook, &galaxybook_platform_profile_ops);
-> +	if (IS_ERR(ppdev))
-> +		return PTR_ERR(ppdev);
-> +
-> +	platform_profile_notify(ppdev);
-
-No need to notify after registering. You can directly return
-PTR_ERR_OR_ZERO().
+If you still find this confusing or have questions let me know! I also
+left a couple of suggestions in the new version.
 
 ~ Kurt
 
-> <snip>
+>
+> Best regards,
+> Joshua
+
