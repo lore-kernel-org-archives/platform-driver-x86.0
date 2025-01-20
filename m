@@ -1,118 +1,75 @@
-Received: from mail-qk1-f175.google.com (mail-qk1-f175.google.com [209.85.222.175])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 706C11E2834;
-	Sun, 19 Jan 2025 22:06:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E26236D
+	for <platform-driver-x86@vger.kernel.org>; Mon, 20 Jan 2025 04:24:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1737324391; cv=none; b=HGf3CqyKF1Zve2AQ2nMyjhAUSsrQvKB1XxcTgCPBN2lby2tBs4gS4ZNQNOr1xB5tp+A7J7LXmn4GIorgh4iKNIJs+yIXLVL3aGWn96XnjMwm2TodgCCcoCRBfP9RFZLdjbrs2H9rE8BUA0LGPfZsIjeE9jXirTtzJNVDdc8OmtY=
+	t=1737347060; cv=none; b=VJeSDCS2gk1YMi0MU9jrZtJ/RqA0h9/SojLTnNtoKbAg/E10mEN8GXVdocOxf9+8pmOiKenWbNtbUnV6fIhOeSZrdjy6t3Og3KJ7DBEZ8xhpaqG/vDWJCz583GEz68dq0VfAPedPLJBD6rWaoBZkoTJlKrrbaIXzLeZhbiuvzek=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1737324391; c=relaxed/simple;
-	bh=uln2bSp8cCgoiDtrWN2ZC+ClZjMq3WgUM/z2IQmiA7Q=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Oe3HbUDuc2Py2hZWt4bjkuuZ9fo0DZYTjb/xovvxnDPA5D61ZXuZ+QI0JXM21sQWkdn7kvbN7rp8OkmH6yG+9B4x0XOJxOYUntmrk292l/snjLncEgm5JA4BL3VIkoiyV8Xr44un5W3qqwtWxKgBPfU1+CSODWxKBY8nrqJP9Rs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=SHryCTb2; arc=none smtp.client-ip=209.85.222.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1737347060; c=relaxed/simple;
+	bh=xKL5kWYiHHaXwF2r5J6/Z/RXNM9qL5oi1jAhZL7SBFk=;
+	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=skSOuXuCWSpI5Fe9/IGSwS826zC5Thxul46mriQqIstwLWaBfJmIQGsW58dvlETKSL1OVWZvGawu+yfAyg1un75fjJvU+tCwYdzImJV7a19IrV9mDF1jR2uKOA91Tw+tKVmQTfOVaZW8KRFQDFm1BdszWks7y0h2tTekdV+6/MY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=o9jwAMWk; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SHryCTb2"
-Received: by mail-qk1-f175.google.com with SMTP id af79cd13be357-7b6f8524f23so493715485a.2;
-        Sun, 19 Jan 2025 14:06:29 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1737324388; x=1737929188; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=HguH/5GHeVMnOVWR0BWd76PxkLkAFvISPM4MfQHocJ0=;
-        b=SHryCTb2t3jAg7Fe3DAnXhHGES67sKoCOG0OnTW7XD6j7Wl8NHkvaWInnz9gX/1QXo
-         LayVbAdhZdusqA2oXJ9n7RjyTlEp6GhpH1H7XEzy6Z3lNGtiBD+uyExIKJDTrT012Y9k
-         xxocWKRB/47FX29WakydItuHWA6rrqhOsbzXsrU0MBSYhjfqUuAX+zfyGLPZ+HMpWkFJ
-         Ozc5qF7T5lV6nkvGV1xjXSNUNr2q4aT6foKUVqJ5U0/s9gJy96hW9mX6FXgMItjoc6az
-         Nw6H6hCFzgLZPquhS9F5FL8pRWr+kp09P0aZ/lYEUTJrFr25m9wq/NcuABQEVmTDglRL
-         PO2w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1737324388; x=1737929188;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=HguH/5GHeVMnOVWR0BWd76PxkLkAFvISPM4MfQHocJ0=;
-        b=cNwDPqM9DUyXiefEU8H60Nn9xFLkaZfc6da8RnxXseVdCkZTvZUk3pdcZyJzGCk8pQ
-         4xulPiW3ujoj9w3J9kK1F+F0KmVselTz3QfJGcO+S5JmPUB2kMqj4uccZ9nxAaMFqdQ+
-         SwUvOwD1vromBNv2Jtu14IGZnMMkWyZ9Pc5YKz2hOkwBPglmYTtSA+6iRIILPK8eMcUQ
-         cBYCTXgmjCC+FYszA+I2HkT++K9e5nWB9ynEd+FK9rtMblRAtRFGdpUlEVsa0iE+Y84t
-         1euscjHp+NobzRo6u9HZb8zaRCbzgGT77Bti5U3cYnzj++DRWT8cyif93Jyjapz+s0R6
-         TvCQ==
-X-Forwarded-Encrypted: i=1; AJvYcCW73GQwswaYxHL21n3d4qJhX4obsiRW2Nu9Q7JVqUugP+l0CJUnTPt1EYTLHldQZvlb9Uj03OpoC0W4rcE=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxf9C2tNgnztJnMYCxgXSzlcqFpORfgEIpPTo2/As7+bKEyAKEV
-	cf2k3FPW1Wcdjv0hRmNi/SRXF96JzrTsmP7+p9iwhATf4JF/V6U/ERlqRQ==
-X-Gm-Gg: ASbGncv5GlF4Oo4Wy1gm27hF54tUe+XYooINGOxt+BUpuxxOXSLzhAkHgQB9/56boen
-	oq9NYAocl/i7PbvW6TDOsQcK3LqOVb0NSwuuJS6Rf/vOs83zmBgxzIwpAGiHdGY1T7rJzFBwxKA
-	UX6R0hW+u6VC5SMab8iSggmL1kmolXzBFt14GRXInwP6J2w0m5VnPwCZuDyuV4014QZzp/3XCPf
-	CLVNm40jHkEQwGSiyH4PnU6RfTmEDWAKQM/h8pgZogg76achxENUJRpNZvUGAdo1uEjfWo8xloM
-	vw==
-X-Google-Smtp-Source: AGHT+IFOA9eP3M0hOzcbMoyWyb8ro8AZ3iJCMGJPpMoFzzhBJlVe2e3lseBRDWO4GSKA4HIA/pr6PQ==
-X-Received: by 2002:a05:620a:408c:b0:7b7:142d:53d4 with SMTP id af79cd13be357-7be632480c8mr1573147985a.39.1737324388019;
-        Sun, 19 Jan 2025 14:06:28 -0800 (PST)
-Received: from localhost.localdomain ([2800:bf0:82:1159:c837:3446:190b:188d])
-        by smtp.gmail.com with ESMTPSA id af79cd13be357-7be614f0096sm369243085a.112.2025.01.19.14.06.26
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 19 Jan 2025 14:06:27 -0800 (PST)
-From: Kurt Borja <kuurtb@gmail.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="o9jwAMWk"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id F377EC4CEDD
+	for <platform-driver-x86@vger.kernel.org>; Mon, 20 Jan 2025 04:24:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1737347060;
+	bh=xKL5kWYiHHaXwF2r5J6/Z/RXNM9qL5oi1jAhZL7SBFk=;
+	h=From:To:Subject:Date:In-Reply-To:References:From;
+	b=o9jwAMWk5WXeztoCrOKSAF1gwqGcDfknu3ODq6ICIYXP4t1s0PunnryTfJbNk+E2W
+	 fl6TEuH+kunA/dFRi4INvKfw/OrAMmSQnppxKQCKoKvwhRUSk42Y4OE92xuSM466Al
+	 CdMsmefYPmjlnGZiCStbSaUux1Mks8Alac3GF8xq17au2GPwoxMxo8AnHies9j544p
+	 4Bzm574urlFDqKts5G9tdv/999fBt9zLJvRY7aWCQ3r9vMnXBAe6fwuB1xlwspcWVM
+	 VVb6KE2/x5h4CeDe4OP/mw8Okmik252iPb27Hw3Urqhe0xl9D18ByBSfggIK2IwTdw
+	 UsYIdDljzYRfw==
+Received: by aws-us-west-2-korg-bugzilla-1.web.codeaurora.org (Postfix, from userid 48)
+	id E3B00C41612; Mon, 20 Jan 2025 04:24:19 +0000 (UTC)
+From: bugzilla-daemon@kernel.org
 To: platform-driver-x86@vger.kernel.org
-Cc: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	"Armin Wolf" <W_Armin@gmx.de>,
-	"Mario Limonciello" <mario.limonciello@amd.com>,
-	"Hans de Goede" <hdegoede@redhat.com>,
-	Dell.Client.Kernel@dell.com,
-	linux-kernel@vger.kernel.org,
-	"Kurt Borja" <kuurtb@gmail.com>
-Subject: [PATCH v5 14/14] platform/x86: alienware-wmi: Update header and module information
-Date: Sun, 19 Jan 2025 17:05:42 -0500
-Message-ID: <20250119220542.3136-15-kuurtb@gmail.com>
-X-Mailer: git-send-email 2.48.1
-In-Reply-To: <20250119220542.3136-1-kuurtb@gmail.com>
-References: <20250119220542.3136-1-kuurtb@gmail.com>
+Subject: [Bug 219495] [TPM2] tpm_tis driver crashs during the boot time.
+Date: Mon, 20 Jan 2025 04:24:19 +0000
+X-Bugzilla-Reason: None
+X-Bugzilla-Type: changed
+X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
+X-Bugzilla-Product: Drivers
+X-Bugzilla-Component: Platform_x86
+X-Bugzilla-Version: 2.5
+X-Bugzilla-Keywords: 
+X-Bugzilla-Severity: normal
+X-Bugzilla-Who: andy.liang@hpe.com
+X-Bugzilla-Status: NEW
+X-Bugzilla-Resolution: 
+X-Bugzilla-Priority: P3
+X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
+X-Bugzilla-Flags: 
+X-Bugzilla-Changed-Fields: attachments.created
+Message-ID: <bug-219495-215701-2flkDhOxK8@https.bugzilla.kernel.org/>
+In-Reply-To: <bug-219495-215701@https.bugzilla.kernel.org/>
+References: <bug-219495-215701@https.bugzilla.kernel.org/>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Bugzilla-URL: https://bugzilla.kernel.org/
+Auto-Submitted: auto-generated
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
 
-Update module header and description. Additionally add myself as a module
-author.
+https://bugzilla.kernel.org/show_bug.cgi?id=3D219495
 
-Reviewed-by: Armin Wolf <W_Armin@gmx.de>
-Reviewed-by: Mario Limonciello <mario.limonciello@amd.com>
-Signed-off-by: Kurt Borja <kuurtb@gmail.com>
----
- drivers/platform/x86/dell/alienware-wmi-base.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+--- Comment #73 from andy.liang@hpe.com ---
+Created attachment 307507
+  --> https://bugzilla.kernel.org/attachment.cgi?id=3D307507&action=3Dedit
+v10-patch-6.12.9-lp155.1-binary_bios_measurements
 
-diff --git a/drivers/platform/x86/dell/alienware-wmi-base.c b/drivers/platform/x86/dell/alienware-wmi-base.c
-index d0f0b3c7a915..4561720fdf2f 100644
---- a/drivers/platform/x86/dell/alienware-wmi-base.c
-+++ b/drivers/platform/x86/dell/alienware-wmi-base.c
-@@ -1,8 +1,9 @@
- // SPDX-License-Identifier: GPL-2.0-or-later
- /*
-- * Alienware AlienFX control
-+ * Alienware special feature control
-  *
-  * Copyright (C) 2014 Dell Inc <Dell.Client.Kernel@dell.com>
-+ * Copyright (C) 2025 Kurt Borja <kuurtb@gmail.com>
-  */
- 
- #define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
-@@ -16,6 +17,7 @@
- #include "alienware-wmi.h"
- 
- MODULE_AUTHOR("Mario Limonciello <mario.limonciello@outlook.com>");
-+MODULE_AUTHOR("Kurt Borja <kuurtb@gmail.com>");
- MODULE_DESCRIPTION("Alienware special feature control");
- MODULE_LICENSE("GPL");
- 
--- 
-2.48.1
+--=20
+You may reply to this email to add a comment.
 
+You are receiving this mail because:
+You are watching the assignee of the bug.=
