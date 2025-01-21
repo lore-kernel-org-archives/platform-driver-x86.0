@@ -1,188 +1,135 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.16])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD4F71B4137;
-	Tue, 21 Jan 2025 11:11:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 509481D554;
+	Tue, 21 Jan 2025 12:19:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1737457894; cv=none; b=O6Ke2OiL6KB2bl8K2NAX8vARV+cc5kJ8XXn7zxtkxDusicgCV+bDkfYAKgb9r3o457FTHi3pQgkH031IZo31uVyJ0PGYenrQhVriF9mBd1n0tXPfwHNFS9ls7YU4QCF7J7cVK3C7aHFJ5b6X3BlyIlEmbVrQdmA51l8HZxXMzKA=
+	t=1737461956; cv=none; b=pD9/Bz4aysIW6XPHWwPDLywyoGJV3eq5N+T1okE+SwAF8wih78lS5bLWwhw4wTATcl5i3iFJPFmvL9aDQi4rKp/0/UUdNM2fwCI1xTrkMKtHpngj5cXX/50dPdE/tFqHwKjZRosVIxAh9MIOJX8sW2iZ0Lf65JJuowl6GAlrp/8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1737457894; c=relaxed/simple;
-	bh=cysbe4FY1tp0bS9+9uTv8FBGhHAHmN0OtDkm1ws2DYw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=q/69CAnLjp/rsd6kVp28schFB6Fc44RIMbThiY3yJPa8yVhmlQZ0qsseOPZsf2U8sBBY4DfhdhCCG4ZKgwHDezqZp9DalsYHcwL3t/eaJVwsdjGzZhO6C0Ys7HF5CzQ+g+nwP429DZtXR42M+hhoYtNNds+voKUa/a72w2D0Vzk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=XfoE8eNI; arc=none smtp.client-ip=198.175.65.16
+	s=arc-20240116; t=1737461956; c=relaxed/simple;
+	bh=sPesZWYC0ulEJj/gesJPmVOOyLfPgsGZKiiMssRCLcU=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=BIIoOnl1eOC7ze4x3NvELKOI0fgC8Rfysu5NS59XiOXKMNNhQ5x2SMP7J6H4XcPeeTBXKQBbMcXSJqXbWNnFRX82Pm0FezWVeTVNW8uUhe0mskhev+TdOhG4oaVUKoS5d0okybGAkBkeWcQIYGLb50txEHCarEuPQg34GaWGfWA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=jGxs+pk9; arc=none smtp.client-ip=192.198.163.14
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="XfoE8eNI"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="jGxs+pk9"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1737457894; x=1768993894;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=cysbe4FY1tp0bS9+9uTv8FBGhHAHmN0OtDkm1ws2DYw=;
-  b=XfoE8eNI8mumJ4nCTJrAkcBwnZnIQj96YWanpxWbdHIsJCFOdj1+4bD6
-   8lCz6mFOjrzm91wPJzSsnRhfUoCYOLrcQhISfqi4h9GcJn6o5Hw7NiEhx
-   +1oBX2KWSvBCoeE1lC2bM6jAwib8HP92/w+dmVa8ixLQ3DB8xByqr8YQ1
-   obWsIUj2Q/2gRUiwOecZU98IW5dwewdUOEw1A5TzCcwAaTGlTP5dIIRqL
-   iWIQF5zWDwbLM+3Gq3kXSPqsiMjClYrC/WjR7e6gb6U7RjF/tweDximTg
-   RCQhSMe9OQezO4VfIW7Usp2hv9i39MvIMEqO7+WwaMYIiqXZiZF9vgoXt
-   g==;
-X-CSE-ConnectionGUID: xhFeuIQITlS30fSx5CqXFw==
-X-CSE-MsgGUID: SK7w1q+GRyycvqqlTJQELA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11321"; a="38015849"
-X-IronPort-AV: E=Sophos;i="6.13,221,1732608000"; 
-   d="scan'208";a="38015849"
-Received: from orviesa002.jf.intel.com ([10.64.159.142])
-  by orvoesa108.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Jan 2025 03:11:33 -0800
-X-CSE-ConnectionGUID: 1ZqydIITTo2RJG2nu295lQ==
-X-CSE-MsgGUID: Byyayb3jTcm4GudZUQbaCA==
+  t=1737461955; x=1768997955;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=sPesZWYC0ulEJj/gesJPmVOOyLfPgsGZKiiMssRCLcU=;
+  b=jGxs+pk9Czd0TRSNFjT4SUeyymLccvvh0CKFcZHTdxZu97ZOO1kuWSOt
+   AmMxmV1CkWT3bNQPwNK1urxn53nI2FgN1zRwLJzi6NvzQDTXhpHl5aCZe
+   NUgo70btqPNZRNXjm5pqN09cHG2dFWZNyD5dBzXDlJx9eljNM2DozFwoe
+   CGYYqfkGuVXIoV3I2oPcY02w3X19LVhuAc5tw5TaxsOxFLKK/w0CBOjZP
+   nepX2xsI3RgPQtOTPd7mf7L/mmD4YTpWjslB3NWtts/Fh8cLTeSUImhKR
+   G/xP9bJvkr1/ZieQ5dOOrJurQE0NARn9nbcbL4PThwy/o07sohsC4Feba
+   Q==;
+X-CSE-ConnectionGUID: Ndw0UAZJQg+MRYZ3bRbGDQ==
+X-CSE-MsgGUID: kNelo3TwQaCvORPfdvV2+A==
+X-IronPort-AV: E=McAfee;i="6700,10204,11321"; a="38115461"
+X-IronPort-AV: E=Sophos;i="6.13,222,1732608000"; 
+   d="scan'208";a="38115461"
+Received: from orviesa004.jf.intel.com ([10.64.159.144])
+  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Jan 2025 04:19:14 -0800
+X-CSE-ConnectionGUID: gH3zVvHuQEysE1CEtIUNmw==
+X-CSE-MsgGUID: XYxDmMaMQhuYGVua7yV6Ig==
 X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.13,221,1732608000"; 
-   d="scan'208";a="137614808"
-Received: from turnipsi.fi.intel.com (HELO kekkonen.fi.intel.com) ([10.237.72.44])
-  by orviesa002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Jan 2025 03:11:31 -0800
-Received: from kekkonen.localdomain (localhost [127.0.0.1])
-	by kekkonen.fi.intel.com (Postfix) with SMTP id 7DC7011F944;
-	Tue, 21 Jan 2025 13:11:27 +0200 (EET)
-Date: Tue, 21 Jan 2025 11:11:27 +0000
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-From: Sakari Ailus <sakari.ailus@linux.intel.com>
-To: Hans de Goede <hdegoede@redhat.com>
-Cc: Daniel Scally <djrscally@gmail.com>,
-	Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	platform-driver-x86@vger.kernel.org,
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-	laurent.pinchart@ideasonboard.com, hverkuil@xs4all.nl,
-	linux-media@vger.kernel.org
-Subject: Re: [PATCH v2 1/1] platform/x86: int3472: Call "reset" GPIO "enable"
- for INT347E
-Message-ID: <Z4-A3znM3sNMA9Li@kekkonen.localdomain>
-References: <20250120101743.149169-1-sakari.ailus@linux.intel.com>
- <94978806-e077-4f45-a1a1-f4dd0cf07fad@redhat.com>
+X-IronPort-AV: E=Sophos;i="6.13,222,1732608000"; 
+   d="scan'208";a="111790831"
+Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.188])
+  by orviesa004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Jan 2025 04:19:00 -0800
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Tue, 21 Jan 2025 14:18:56 +0200 (EET)
+To: Huisong Li <lihuisong@huawei.com>
+cc: linux-hwmon@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>, 
+    linux-media@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+    arm-scmi@vger.kernel.org, Netdev <netdev@vger.kernel.org>, 
+    linux-rtc@vger.kernel.org, oss-drivers@corigine.com, 
+    linux-rdma@vger.kernel.org, platform-driver-x86@vger.kernel.org, 
+    linuxarm@huawei.com, linux@roeck-us.net, jdelvare@suse.com, 
+    kernel@maidavale.org, pauk.denis@gmail.com, james@equiv.tech, 
+    sudeep.holla@arm.com, cristian.marussi@arm.com, matt@ranostay.sg, 
+    mchehab@kernel.org, irusskikh@marvell.com, andrew+netdev@lunn.ch, 
+    davem@davemloft.net, edumazet@google.com, kuba@kernel.org, 
+    pabeni@redhat.com, saeedm@nvidia.com, leon@kernel.org, tariqt@nvidia.com, 
+    louis.peens@corigine.com, hkallweit1@gmail.com, linux@armlinux.org.uk, 
+    kabel@kernel.org, W_Armin@gmx.de, Hans de Goede <hdegoede@redhat.com>, 
+    alexandre.belloni@bootlin.com, krzk@kernel.org, 
+    jonathan.cameron@huawei.com, zhanjie9@hisilicon.com, 
+    zhenglifeng1@huawei.com, liuyonglong@huawei.com
+Subject: Re: [PATCH v1 19/21] platform/x86: dell-ddv: Fix the type of 'config'
+ in struct hwmon_channel_info to u64
+In-Reply-To: <20250121064519.18974-20-lihuisong@huawei.com>
+Message-ID: <844c5097-eeb7-7275-7558-83ca4e5ee4b2@linux.intel.com>
+References: <20250121064519.18974-1-lihuisong@huawei.com> <20250121064519.18974-20-lihuisong@huawei.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <94978806-e077-4f45-a1a1-f4dd0cf07fad@redhat.com>
+Content-Type: text/plain; charset=US-ASCII
 
-Hi Hans,
+On Tue, 21 Jan 2025, Huisong Li wrote:
 
-Thanks for the review.
+> The type of 'config' in struct hwmon_channel_info has been fixed to u64.
+> Modify the related code in driver to avoid compiling failure.
 
-On Tue, Jan 21, 2025 at 10:42:41AM +0100, Hans de Goede wrote:
-> Hi Sakari,
-> 
-> On 20-Jan-25 11:17 AM, Sakari Ailus wrote:
-> > The DT bindings for ov7251 specify "enable" GPIO (xshutdown in
-> > documentation) but the int3472 indiscriminately provides this as a "reset"
-> > GPIO to sensor drivers. Take this into account by assigning it as "enable"
-> > with active high polarity for INT347E devices, i.e. ov7251.
-> > 
-> > Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
-> > ---
-> > since v1:
-> > 
-> > - Fixed device name string.
-> > 
-> >  drivers/platform/x86/intel/int3472/discrete.c | 45 ++++++++++++++++---
-> >  1 file changed, 40 insertions(+), 5 deletions(-)
-> > 
-> > diff --git a/drivers/platform/x86/intel/int3472/discrete.c b/drivers/platform/x86/intel/int3472/discrete.c
-> > index d881b2cfcdfc..6404ef1eb4a7 100644
-> > --- a/drivers/platform/x86/intel/int3472/discrete.c
-> > +++ b/drivers/platform/x86/intel/int3472/discrete.c
-> > @@ -122,13 +122,47 @@ skl_int3472_gpiod_get_from_temp_lookup(struct int3472_discrete_device *int3472,
-> >  	return desc;
-> >  }
-> >  
-> > -static void int3472_get_func_and_polarity(u8 type, const char **func, u32 *polarity)
-> > +/**
-> > + * struct int3472_reset_gpio_map - Map "reset" GPIO to whatever is expected by
-> > + * the sensor driver (as in DT bindings)
-> > + * @devname: The name of the device without the instance number e.g. i2c-INT347E
-> > + * @func: The function, e.g. "enable"
-> > + * @polarity: GPIO_ACTIVE_{HIGH,LOW}
-> > + */
-> > +static const struct int3472_reset_gpio_map {
-> > +	const char *devname;
-> 
-> Instead of using a devname match this should be changed to using
-> proper ACPI HID matching.
-> 
-> Instead of passing int3472->sensor_name as extra argument to
-> int3472_get_func_and_polarity(), pass int3472->sensor which
-> is a "struct acpi_device *" and then use e.g. :
-> 
-> 	acpi_dev_hid_uid_match(int3472->sensor, "INT347E", NULL)
-> 
-> but then with the new sensor function argument
-> 
-> > +	const char *func;
-> > +	unsigned int polarity;
-> > +} int3472_reset_gpio_map[] = {
-> > +	{ "i2c-INT347E", "enable", GPIO_ACTIVE_HIGH },
-> > +};
-> 
-> Rather then having a mechanism for just the reset pin, I would prefer
-> to be able to remap any type to any type.
-> 
-> So I would like to see this struct changed to e.g. :
-> 
-> static struct int3472_gpio_map {
-> 	const char *hid;
-> 	u8 type_from;
-> 	u8 type_to;
-> 	const char *func;
+Does this mean that after applying part of your series but not yet this 
+patch, compile would fail? If so, it's unacceptable. At no point in a 
+patch series are you allowed to cause a compile failure because it hinders 
+'git bisect' that is an important troubleshooting tool.
 
-I'll place func before the u8 fields for fewer holes.
+So you might have to combine changes to drivers and API if you make an 
+API change that breaks driver build until driver too is changed. Note that 
+it will impact a lot how quickly your patches can be accepted as much 
+higher level of coordination is usually required if your patch is touching 
+things all over the place, but it cannot be avoided at times. And 
+requirement of doing minimal change only will be much much higher in such 
+a large scale change.
 
-> 	unsigned int polarity;
-> };
-> 
-> static const struct int3472_gpio_map[] = {
-> 	{ "INT347E", INT3472_GPIO_TYPE_RESET, INT3472_GPIO_TYPE_RESET, "enable", GPIO_ACTIVE_HIGH },
-> };
-> 
-> > +
-> > +static void int3472_get_func_and_polarity(const char *sensor_name, u8 type,
-> 
-> And change type to a * here ("u8 *type) so that its contents can be
-> overwritten by the mapping code
-> 
-> > +					  const char **func, u32 *polarity)
-> 
-> So the new function prototype would become:
-> 
-> static void int3472_get_func_and_polarity(struct acpi_device *sensor, u8 *type,
-> 					  const char **func, u32 *polarity)
-> 
-> 
-> >  {
-> 
-> and do the for loop here before the (now) "switch (*type)":
-> 
-> 	for (i = 0; i < ARRAY_SIZE(int3472_gpio_map); i++) {
-> 		if (*type != int3472_reset_gpio_map[i].type_from ||
-> 		    !acpi_dev_hid_uid_match(sensor, int3472_reset_gpio_map[i].hid, NULL))
-> 			continue;
-> 
-> 		*type = int3472_reset_gpio_map[i].type_to;
-> 		*func = int3472_reset_gpio_map[i].func;
-> 		*polarity = int3472_reset_gpio_map[i].polarity;
-> 		return;
-> 	}
-> 
-> This should give us a lot more flexibility for future mappings.
+--
+ i.
 
-I'll address these in v3 along with Ilpo's comments.
-
--- 
-Kind regards,
-
-Sakari Ailus
+> Signed-off-by: Huisong Li <lihuisong@huawei.com>
+> ---
+>  drivers/platform/x86/dell/dell-wmi-ddv.c | 6 +++---
+>  1 file changed, 3 insertions(+), 3 deletions(-)
+> 
+> diff --git a/drivers/platform/x86/dell/dell-wmi-ddv.c b/drivers/platform/x86/dell/dell-wmi-ddv.c
+> index e75cd6e1efe6..efb2278aabb9 100644
+> --- a/drivers/platform/x86/dell/dell-wmi-ddv.c
+> +++ b/drivers/platform/x86/dell/dell-wmi-ddv.c
+> @@ -86,7 +86,7 @@ struct thermal_sensor_entry {
+>  
+>  struct combined_channel_info {
+>  	struct hwmon_channel_info info;
+> -	u32 config[];
+> +	u64 config[];
+>  };
+>  
+>  struct combined_chip_info {
+> @@ -500,7 +500,7 @@ static const struct hwmon_ops dell_wmi_ddv_ops = {
+>  
+>  static struct hwmon_channel_info *dell_wmi_ddv_channel_create(struct device *dev, u64 count,
+>  							      enum hwmon_sensor_types type,
+> -							      u32 config)
+> +							      u64 config)
+>  {
+>  	struct combined_channel_info *cinfo;
+>  	int i;
+> @@ -543,7 +543,7 @@ static struct hwmon_channel_info *dell_wmi_ddv_channel_init(struct wmi_device *w
+>  							    struct dell_wmi_ddv_sensors *sensors,
+>  							    size_t entry_size,
+>  							    enum hwmon_sensor_types type,
+> -							    u32 config)
+> +							    u64 config)
+>  {
+>  	struct hwmon_channel_info *info;
+>  	int ret;
+> 
