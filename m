@@ -1,197 +1,128 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C909C136A
-	for <platform-driver-x86@vger.kernel.org>; Wed, 22 Jan 2025 10:58:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A4121E4AB;
+	Wed, 22 Jan 2025 13:42:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1737543485; cv=none; b=Cng0Bx0a9k4tidVdnRDm6UeGm/FMbD3mbql43HdAvWlqx9kRQHVlt90+Hhogmg7oGEUc6xq7l1ITfeAQ2mo9RNZjMY+5SyLVWiYcihjrMB49ov27+4pgECzlS3gZZVN/+7GYN/FJLrp3ZtTBxl52kCU35rlVbemgIymGdKev/+M=
+	t=1737553345; cv=none; b=bA/GHE1gyVtvoi0th7iIcX5WNwihcElZlAD4wfCNT4T4VoQBtnWC6eRcB4qvWSOkm4370W/K6ssN/0MEK1lqgw0nTV8qUhhY7HzEE16q13BhmjUBFytZW4jz39Rqlx5No2hhwuqUkrSDOz4kgwcJw7p7gJiNtNOtkb676ArQMzM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1737543485; c=relaxed/simple;
-	bh=O3BoVXUiSR3tcZqkEZsKNF8A8X+DqSqzS6SmzTB1QWI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=BsM+xbLX6dPE8bJz5q5vpM5K3JiqvTdBivQYKOPQAMzs09XNFDfbnQKNOZFzzUUoR94gTA+Ik9SITdIa6kQn8wiLPxpEDecksCXq/lcFV684kTgui/3IwVgTtwXarG0T+rMDmjKNNH53bmsBWdhpkAB+/8iV/XZPdzWtz7MP0/w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=jAtmAVJU; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1737553345; c=relaxed/simple;
+	bh=SXy33tsJ/rzaOVEDdS65atSF2bC1XFU19Y+BYJ3leNM=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=VDd7Iu3BqenWvSTbxiobcUTiSZO5RaIRb/QghIs5bYUah90ZWCiLobyfFURXtKDFqLq6QbLndaBVVh+0Kox1Hve7ElhZYSFjMgNdpIVypZR/RdHfvIHb1pF+x9uJrWTmqqxmNabNz+XjiLsEJXYBRJFSP0ligGPx05UhhjjszD0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=KbwsCXXS; arc=none smtp.client-ip=192.198.163.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="jAtmAVJU"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1737543482;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Fuj5O0KNPbmhoM+IK0q2tm4kulre2zcQR/geOoW4zrY=;
-	b=jAtmAVJUHjnaNuXIKxtGezHGfphrGDmhlw1M82U/7qBu2XlS0x/7GL3rV+yzBMD22R7IqN
-	hMR/dTBfpaJNzQZrKNF8camPMGLkclnKkh+KUhG6og84/ixw/D43HABp7cDvrSEfEy5Qir
-	UFJVM3y2YFh3qvQ80oRffRnuwZqEHfY=
-Received: from mail-ej1-f72.google.com (mail-ej1-f72.google.com
- [209.85.218.72]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-612-xrP79kCRNYykSNuxaBMtNg-1; Wed, 22 Jan 2025 05:58:01 -0500
-X-MC-Unique: xrP79kCRNYykSNuxaBMtNg-1
-X-Mimecast-MFC-AGG-ID: xrP79kCRNYykSNuxaBMtNg
-Received: by mail-ej1-f72.google.com with SMTP id a640c23a62f3a-ab39f65dc10so619511666b.1
-        for <platform-driver-x86@vger.kernel.org>; Wed, 22 Jan 2025 02:58:01 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1737543480; x=1738148280;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Fuj5O0KNPbmhoM+IK0q2tm4kulre2zcQR/geOoW4zrY=;
-        b=Tg/cnvzyu0Ju5x1hqV43akTN9oaVojRLaZS9wfTfW6pgY/zXphvjS5a56qqnZ6BF/P
-         NBr1PHnyl/j6gTHOhiaqMLqR3e/xhcMif7sLuvBpaqFVAA9Xm4PoAhAzowhvWfifZnMh
-         Lcccmr6QK2GWxCsdQ3sfaoJhh8CzJ6hieEddXnKmDhdebZOMWofkTxptWeoqYPXivs8F
-         wgIHwUQnl5zwJj14mmzdCdhnwPi9hheWmcmROVcF1jxr5YvrH6+F5KjHvD9ow2DBtcba
-         3UIAlbRbC2pnpclYzp8KiOdHoeZC5z+VBXm3RvnfI1toAsRYsOegKvykUPvE0//Hlgxk
-         sDDQ==
-X-Gm-Message-State: AOJu0YyAslP+dlYSH0gb5NriRm4iwjdYv6nwe/JHS2BubyFhpvPJF5cG
-	iLC5XGVWmY4UlCya5qFguFp7rLQuzy+LiWiJAriqqbfUsM3ocSrUaw+UuWHuoHuwYLmtp6paVWe
-	PLA5EnzsQ53y+PmOslsfx8Eys8cZuT4OEHivkKegDTW6DYCWCf5StaCTYGnWonX2NhrQYnn8=
-X-Gm-Gg: ASbGncuBz92BN3CbxYWLZ/bLBdhfNdSPjF9DgY9jBj0pU37Keu1tNcNiCG8w7/6u1uK
-	xgIb9RZ6xh8M3J4B9AXfT6gdI2bnAsATvk54d3ic3G9C4Knh35pFBB4Phs7o6JLgsJ9w9hLL3hc
-	JTnYCredZbCV3g+XIG/7PcxJ7mB1WWjJGQuPtc40fIx/2V60NgcTUhmIvGQ0qEtae+s9b0HtwRj
-	eaCHbq/z1VRER35zrjBJRUM4N61M1gDTFGSivETsUugyEQQ0o/d8xZ/WCm70q0suq3GC4IG8LhU
-	ocjJOgW7fduM+nvbS4iv0jOtcL19tZW363Rwb9lZsQZKSJ10I6oU6SUD92FaZccM7BcvV8exX2k
-	Q8uJTqwa5hy6W6ZUuM3Ls+ZakteEtX3j5YEasPeNMTj5G
-X-Received: by 2002:a17:907:3f9a:b0:aae:ee49:e000 with SMTP id a640c23a62f3a-ab38b106513mr1815737266b.18.1737543480018;
-        Wed, 22 Jan 2025 02:58:00 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IGuHDnb728XgTXuwVNm7JTl5l3APqpxP0L1JBcZBGXo/eahg8BQr0iFXyc9XXxWJhIZTzTV8A==
-X-Received: by 2002:a17:907:3f9a:b0:aae:ee49:e000 with SMTP id a640c23a62f3a-ab38b106513mr1815735166b.18.1737543479653;
-        Wed, 22 Jan 2025 02:57:59 -0800 (PST)
-Received: from ?IPV6:2001:1c00:c32:7800:5bfa:a036:83f0:f9ec? (2001-1c00-0c32-7800-5bfa-a036-83f0-f9ec.cable.dynamic.v6.ziggo.nl. [2001:1c00:c32:7800:5bfa:a036:83f0:f9ec])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ab384c5c470sm884670266b.26.2025.01.22.02.57.58
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 22 Jan 2025 02:57:59 -0800 (PST)
-Message-ID: <ee1b7609-dc9d-4183-a0ec-0db83ae3bdb2@redhat.com>
-Date: Wed, 22 Jan 2025 11:57:58 +0100
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="KbwsCXXS"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1737553343; x=1769089343;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=SXy33tsJ/rzaOVEDdS65atSF2bC1XFU19Y+BYJ3leNM=;
+  b=KbwsCXXS5Bpaazvh0i3pR2EYjANn+0oO1oaTjYnVUQXP8b+Ny+wfdJy0
+   Jnn7AKtDBsQQs5ELiJrTGsCtdeiSOa1fsoVOxbilJBs7TAI82DR46IP6I
+   BD85qJjTqG4kHZ8E7el0efBI4a44Pr/aFOJCFuLEvIPvk0VW2zSjcSdM5
+   /1X+pnRk32VzUXX4gF6GUQFB9bg5h8R7Qkj+pA7+YpBS9aiDTAjlmSYC8
+   emrMUvl0PD3ebqBhZsyP64bbaBp6yKx0dTYcZ5MzFFRKYddC/qQZPj646
+   yvSa+V5bEniyNA5KLDbKE/u++XBIPhseQwd8ziMDKzcAXuHU3Vn4RqJs/
+   g==;
+X-CSE-ConnectionGUID: /4oQqCoSQoSua15215zWQg==
+X-CSE-MsgGUID: cnYu+5r1SDyxSDMN/XBY6A==
+X-IronPort-AV: E=McAfee;i="6700,10204,11314"; a="49421959"
+X-IronPort-AV: E=Sophos;i="6.12,310,1728975600"; 
+   d="scan'208";a="49421959"
+Received: from fmviesa008.fm.intel.com ([10.60.135.148])
+  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Jan 2025 05:42:22 -0800
+X-CSE-ConnectionGUID: uGzm6ZSXQlKTMtDpghJ1qQ==
+X-CSE-MsgGUID: p2Ht3cgDR5OTlrb58XKMOQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.13,225,1732608000"; 
+   d="scan'208";a="107250922"
+Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.141])
+  by fmviesa008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Jan 2025 05:42:19 -0800
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Wed, 22 Jan 2025 15:42:15 +0200 (EET)
+To: Anisse Astier <anisse@astier.eu>
+cc: jithu.joseph@intel.com, ashok.raj.linux@gmail.com, 
+    Hans de Goede <hdegoede@redhat.com>, LKML <linux-kernel@vger.kernel.org>, 
+    platform-driver-x86@vger.kernel.org, tony.luck@intel.com
+Subject: Re: [PATCH v2] platform/x86/intel/ifs: Update documentation to match
+ current availability of firmware images
+In-Reply-To: <20250121183930.182315-1-anisse@astier.eu>
+Message-ID: <894eda78-d942-22a7-2349-b70ac3a9f836@linux.intel.com>
+References: <928769f4-081c-4655-ad8a-f7b65ea21749@intel.com> <20250121183930.182315-1-anisse@astier.eu>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 1/1] platform/x86: int3472: Call "reset" GPIO "enable"
- for INT347E
-To: Sakari Ailus <sakari.ailus@linux.intel.com>,
- Daniel Scally <djrscally@gmail.com>,
- =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Cc: platform-driver-x86@vger.kernel.org,
- Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
- laurent.pinchart@ideasonboard.com, hverkuil@xs4all.nl,
- linux-media@vger.kernel.org
-References: <20250122104344.245128-1-sakari.ailus@linux.intel.com>
-Content-Language: en-US, nl
-From: Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <20250122104344.245128-1-sakari.ailus@linux.intel.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=US-ASCII
 
-Hi Sakari,
+On Tue, 21 Jan 2025, Anisse Astier wrote:
 
-On 22-Jan-25 11:43 AM, Sakari Ailus wrote:
-> The DT bindings for ov7251 specify "enable" GPIO (xshutdown in
-> documentation) but the int3472 indiscriminately provides this as a "reset"
-> GPIO to sensor drivers. Take this into account by assigning it as "enable"
-> with active high polarity for INT347E devices, i.e. ov7251. "reset" with
-> active low polarity remains the default GPIO name for other devices.
+> Firmware images necessary for certain tests in the In-field scan[1] test
+> suite are not available at the moment[2], and require having access to
+> at least an Intel customer account[3].
 > 
-> Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
+> Update documentation to match current state, it can be updated again
+> when the images are finally published.
+> 
+> [1] https://www.intel.com/content/www/us/en/support/articles/000099537/processors/intel-xeon-processors.html
+> [2] https://cdrdv2.intel.com/v1/dl/getContent/826383?explicitVersion=true
+> [3] https://www.intel.com/content/www/us/en/secure/design/confidential/software-kits/kit-details.html?kitId=815180
+> 
+> Signed-off-by: Anisse Astier <anisse@astier.eu>
 > ---
-> since v2:
+> Changes since v1:
+>  - update commit message to clarify that only some tests need the firmware
+>    images, thanks Jithu for the suggestion!
 > 
-> - Implement a more generic GPIO mangling capability, as suggested by Hans
->   de Goede.
+> Regards,
 > 
-> - Include linux/array_size.h for ARRAY_SIZE().
-
-Thank you for the new version.
-
-This looks good to me now:
-
-Reviewed-by: Hans de Goede <hdegoede@redhat.com>
-
-Regards,
-
-Hans
-
-
-
-
-
+> Anisse
+> ---
+>  drivers/platform/x86/intel/ifs/ifs.h | 11 +++++++----
+>  1 file changed, 7 insertions(+), 4 deletions(-)
 > 
->  drivers/platform/x86/intel/int3472/discrete.c | 43 +++++++++++++++++--
->  1 file changed, 40 insertions(+), 3 deletions(-)
+> diff --git a/drivers/platform/x86/intel/ifs/ifs.h b/drivers/platform/x86/intel/ifs/ifs.h
+> index 5c3c0dfa1bf8..9a7ad9cc9d08 100644
+> --- a/drivers/platform/x86/intel/ifs/ifs.h
+> +++ b/drivers/platform/x86/intel/ifs/ifs.h
+> @@ -23,9 +23,11 @@
+>   * IFS Image
+>   * ---------
+>   *
+> - * Intel provides a firmware file containing the scan tests via
+> - * github [#f1]_.  Similar to microcode there is a separate file for each
+> - * family-model-stepping. IFS Images are not applicable for some test types.
+> + * As of early 2025, Intel provides the firmware files containing the scan tests
+> + * to select customers [#f1]_. When this driver was merged in 2022, it was
+> + * announced that firmware files would be available via github [#f2]_. Similar
+> + * to microcode there is a separate file for each family-model-stepping. IFS
+> + * Images are not applicable for some test types.
+>   * Wherever applicable the sysfs directory would provide a "current_batch" file
+>   * (see below) for loading the image.
+>   *
+> @@ -125,7 +127,8 @@
+>   * 2) Hardware allows for some number of cores to be tested in parallel.
+>   * The driver does not make use of this, it only tests one core at a time.
+>   *
+> - * .. [#f1] https://github.com/intel/TBD
+> + * .. [#f1] https://www.intel.com/content/www/us/en/support/articles/000099537/processors/intel-xeon-processors.html
+> + * .. [#f2] https://github.com/intel/TBD
+>   *
+>   *
+>   * Structural Based Functional Test at Field (SBAF):
 > 
-> diff --git a/drivers/platform/x86/intel/int3472/discrete.c b/drivers/platform/x86/intel/int3472/discrete.c
-> index d881b2cfcdfc..181675e57c39 100644
-> --- a/drivers/platform/x86/intel/int3472/discrete.c
-> +++ b/drivers/platform/x86/intel/int3472/discrete.c
-> @@ -2,6 +2,7 @@
->  /* Author: Dan Scally <djrscally@gmail.com> */
->  
->  #include <linux/acpi.h>
-> +#include <linux/array_size.h>
->  #include <linux/bitfield.h>
->  #include <linux/device.h>
->  #include <linux/gpio/consumer.h>
-> @@ -122,9 +123,44 @@ skl_int3472_gpiod_get_from_temp_lookup(struct int3472_discrete_device *int3472,
->  	return desc;
->  }
->  
-> -static void int3472_get_func_and_polarity(u8 type, const char **func, u32 *polarity)
-> +/**
-> + * struct int3472_gpio_map - Map GPIOs to whatever is expected by the
-> + * sensor driver (as in DT bindings)
-> + * @hid: The ACPI HID of the device without the instance number e.g. i2c-INT347E
-> + * @type_from: The GPIO type from ACPI ?SDT
-> + * @type_to: The assigned GPIO type, typically same as type_from
-> + * @func: The function, e.g. "enable"
-> + * @polarity: GPIO_ACTIVE_{HIGH,LOW}
-> + */
-> +struct int3472_gpio_map {
-> +	const char *hid;
-> +	u8 type_from;
-> +	u8 type_to;
-> +	const char *func;
-> +	unsigned int polarity;
-> +};
-> +
-> +static const struct int3472_gpio_map int3472_gpio_map[] = {
-> +	{ "INT347E", INT3472_GPIO_TYPE_RESET, INT3472_GPIO_TYPE_RESET, "enable", GPIO_ACTIVE_HIGH },
-> +};
-> +
-> +static void int3472_get_func_and_polarity(struct acpi_device *adev, u8 *type,
-> +					  const char **func, u32 *polarity)
->  {
-> -	switch (type) {
-> +	unsigned int i;
-> +
-> +	for (i = 0; i < ARRAY_SIZE(int3472_gpio_map); i++) {
-> +		if (*type != int3472_gpio_map[i].type_from ||
-> +		    !acpi_dev_hid_uid_match(adev, int3472_gpio_map[i].hid, NULL))
-> +			continue;
-> +
-> +		*type = int3472_gpio_map[i].type_to;
-> +		*func = int3472_gpio_map[i].func;
-> +		*polarity = int3472_gpio_map[i].polarity;
-> +		return;
-> +	}
-> +
-> +	switch (*type) {
->  	case INT3472_GPIO_TYPE_RESET:
->  		*func = "reset";
->  		*polarity = GPIO_ACTIVE_LOW;
-> @@ -217,7 +253,8 @@ static int skl_int3472_handle_gpio_resources(struct acpi_resource *ares,
->  
->  	type = FIELD_GET(INT3472_GPIO_DSM_TYPE, obj->integer.value);
->  
-> -	int3472_get_func_and_polarity(type, &func, &polarity);
-> +	int3472_get_func_and_polarity(int3472->sensor, &type, &func,
-> +				      &polarity);
->  
->  	pin = FIELD_GET(INT3472_GPIO_DSM_PIN, obj->integer.value);
->  	if (pin != agpio->pin_table[0])
+
+Thanks for the update. My intention is to apply this patch though the 
+fixes branch towards the end of the -rc cycle if those images are not 
+available by then.
+
+-- 
+ i.
 
