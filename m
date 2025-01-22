@@ -1,128 +1,178 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f181.google.com (mail-pl1-f181.google.com [209.85.214.181])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A4121E4AB;
-	Wed, 22 Jan 2025 13:42:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D9581212D69;
+	Wed, 22 Jan 2025 14:36:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1737553345; cv=none; b=bA/GHE1gyVtvoi0th7iIcX5WNwihcElZlAD4wfCNT4T4VoQBtnWC6eRcB4qvWSOkm4370W/K6ssN/0MEK1lqgw0nTV8qUhhY7HzEE16q13BhmjUBFytZW4jz39Rqlx5No2hhwuqUkrSDOz4kgwcJw7p7gJiNtNOtkb676ArQMzM=
+	t=1737556582; cv=none; b=fdCxk+IMrZKSSWPM08ZHB9UiulwVqBafOh/wY8wLxovS9pUNcCvyjrVihXIHyHAJT+9bQexrWdhr6zLnyTCU1lbUUgjaDqX25mVjInSbS0VbWDHuuOHe0fY07oZY3LSXjtQPJI4JJslok1RVEYrBrQNkzssTuemGm+Nd3jZ5YfY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1737553345; c=relaxed/simple;
-	bh=SXy33tsJ/rzaOVEDdS65atSF2bC1XFU19Y+BYJ3leNM=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=VDd7Iu3BqenWvSTbxiobcUTiSZO5RaIRb/QghIs5bYUah90ZWCiLobyfFURXtKDFqLq6QbLndaBVVh+0Kox1Hve7ElhZYSFjMgNdpIVypZR/RdHfvIHb1pF+x9uJrWTmqqxmNabNz+XjiLsEJXYBRJFSP0ligGPx05UhhjjszD0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=KbwsCXXS; arc=none smtp.client-ip=192.198.163.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1737556582; c=relaxed/simple;
+	bh=SMDAbuQwzc7MzSRZ8aXUBMVB6Jsmdf7IOz/yWT+L480=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=bMj69AUkbuOfUTZ3m/uHsPIwcYK+ZmAyB87c6Y5gJYd1AsdhAlNPVzIUfk/ejlpiqOQQdmYK15342sQk5DDFhgcW8XzElDrqd+boAE6WUdy81ocew9XestKp8exzdsREVcGjamVhDnMz3mOZpN2BHbWRpJU+o7pC3CrBqyVhVBo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=SQQxuy0r; arc=none smtp.client-ip=209.85.214.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="KbwsCXXS"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1737553343; x=1769089343;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=SXy33tsJ/rzaOVEDdS65atSF2bC1XFU19Y+BYJ3leNM=;
-  b=KbwsCXXS5Bpaazvh0i3pR2EYjANn+0oO1oaTjYnVUQXP8b+Ny+wfdJy0
-   Jnn7AKtDBsQQs5ELiJrTGsCtdeiSOa1fsoVOxbilJBs7TAI82DR46IP6I
-   BD85qJjTqG4kHZ8E7el0efBI4a44Pr/aFOJCFuLEvIPvk0VW2zSjcSdM5
-   /1X+pnRk32VzUXX4gF6GUQFB9bg5h8R7Qkj+pA7+YpBS9aiDTAjlmSYC8
-   emrMUvl0PD3ebqBhZsyP64bbaBp6yKx0dTYcZ5MzFFRKYddC/qQZPj646
-   yvSa+V5bEniyNA5KLDbKE/u++XBIPhseQwd8ziMDKzcAXuHU3Vn4RqJs/
-   g==;
-X-CSE-ConnectionGUID: /4oQqCoSQoSua15215zWQg==
-X-CSE-MsgGUID: cnYu+5r1SDyxSDMN/XBY6A==
-X-IronPort-AV: E=McAfee;i="6700,10204,11314"; a="49421959"
-X-IronPort-AV: E=Sophos;i="6.12,310,1728975600"; 
-   d="scan'208";a="49421959"
-Received: from fmviesa008.fm.intel.com ([10.60.135.148])
-  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Jan 2025 05:42:22 -0800
-X-CSE-ConnectionGUID: uGzm6ZSXQlKTMtDpghJ1qQ==
-X-CSE-MsgGUID: p2Ht3cgDR5OTlrb58XKMOQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.13,225,1732608000"; 
-   d="scan'208";a="107250922"
-Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.141])
-  by fmviesa008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Jan 2025 05:42:19 -0800
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Wed, 22 Jan 2025 15:42:15 +0200 (EET)
-To: Anisse Astier <anisse@astier.eu>
-cc: jithu.joseph@intel.com, ashok.raj.linux@gmail.com, 
-    Hans de Goede <hdegoede@redhat.com>, LKML <linux-kernel@vger.kernel.org>, 
-    platform-driver-x86@vger.kernel.org, tony.luck@intel.com
-Subject: Re: [PATCH v2] platform/x86/intel/ifs: Update documentation to match
- current availability of firmware images
-In-Reply-To: <20250121183930.182315-1-anisse@astier.eu>
-Message-ID: <894eda78-d942-22a7-2349-b70ac3a9f836@linux.intel.com>
-References: <928769f4-081c-4655-ad8a-f7b65ea21749@intel.com> <20250121183930.182315-1-anisse@astier.eu>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SQQxuy0r"
+Received: by mail-pl1-f181.google.com with SMTP id d9443c01a7336-2161eb95317so126448005ad.1;
+        Wed, 22 Jan 2025 06:36:20 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1737556580; x=1738161380; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:sender:from:to:cc:subject:date:message-id:reply-to;
+        bh=MUvXvaO0Ss+nXb466/o7COpKXUbAueaXJWixHz+8ykQ=;
+        b=SQQxuy0rrY0f5yE17Bvxd4cCYwvkWqgYl66D6PC5Qsb6Vw+Px5o9uQGv5CabPHWWKX
+         wsZPi/yn96zzCSckak13j/O5HeiI7QjTjJRHHwBc2Ji7mGIoE8gGxC9Fe1k0ph0ltIHh
+         cXL38wRvZHuHSvbNz/6p7s8XoasIstJoi8LapqX4sBd4CaWQ6n9XAmtWBY9XyUcPBOcV
+         br9APH9oZZrmQiyturDVw9Y6bF3nP5OD7/RZCyz4B0JWA8igWBs+MNs1je1rKVp5DC93
+         zMHhsdMt7ABN8+7guIQxUaegGyrgINCB0ElhrBfhuvBuuuiW05wqUN9jJKpUujzhwVc4
+         2iYA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1737556580; x=1738161380;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:sender:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=MUvXvaO0Ss+nXb466/o7COpKXUbAueaXJWixHz+8ykQ=;
+        b=rQdEaXGXY0F4jZpvl6UNScjWAo0yGya2w2+K7ifhYONO5DBJrRo0bV1EJtw+50NpXb
+         clknCeekRiGu484+xogAFngsT+FJACRtpougcggFYH5ezsmnQak5y+tTRFGaz3thsKA/
+         VElqxDtlT4ko6Kx+xcxRb6qs6oCClM5AP1mv9cqKkhcU0js31Hru4n6JWW4DfIwdBJ1F
+         wqWk9YIv151w8tAEBrDR8FiTUyb1IAhLtzbhCAiVgYYXw1j5Zzr098+LCwBlU4Ujyhhw
+         n9keJdJFK9OT012LISkXZ4iT64zoKZ0wAiwUCnx3OsuniaOD7tDNHGcgNhPV+7tnN2fG
+         7d0Q==
+X-Forwarded-Encrypted: i=1; AJvYcCU3KfOBiCyMppxjRiUEckMV+Q+/8CgYPgAIxoqIHPAPT4aNvvKuWPp8nLjv/gl4M7xti7EkuwWTNs5Pch4=@vger.kernel.org, AJvYcCV/LxnrqJoPbjKBK7w2z//l7YJmm/nbTcJBHAQN3e7xvfSKBMRUa5TLgjZN3Ki9HQrQZLTCuve4UzMP@vger.kernel.org, AJvYcCVC6D6U6QPN3pCNNQDeVDVWGHeF6ndlJ8RmOlaeIVADVTtI+6aYrtjj8K2yzmE902LqTA7tNFs0yQZl6w==@vger.kernel.org, AJvYcCVCqfF9/W0wdz6c4X3/LinQNekUzd5aravVvJIY2ZVo8oEl/P/elyjfptmXOYivr4vcqiSIC7JhTt3P1zs=@vger.kernel.org, AJvYcCX8+iZ9S1eg2A7Leru7pvel+B1OeJswa9yBAIXNWgP7PfG9YOnviDIWaWxeYeZZ+2MtJa98c0se@vger.kernel.org, AJvYcCXH+bJwSd7Qc8sec4/KWgeS/j0hK/By51d+qAgDvvHpm+GLahSzqTJRV4z3TAxwojOZ65cQW8RTnxlnfmddnunuKgTy1Q==@vger.kernel.org, AJvYcCXm18C5S+SAde06h7XGay4ucLK8vbTn/zf2uT/Wfv3d1d+3lhoYBEPE5N0QF+5z84lxUEIozKVVcg==@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywx6kzTk8V7SUVZmCm2GczSiN1hsRN7G/5Vnfu+T+RKqIZUYVAd
+	0LkFCwPhgjoQQAC7ADQcK63XiHz23oGRgPH4slFGGDbAA4/y/I/39ngqHg==
+X-Gm-Gg: ASbGncso2XhrClj/ZOaiQML1/uSrJ+j8TBo2n/1r3AT1yepKL2zdd9+sRGaTf8ReKmK
+	A7/ZcR+0zX25htVlB5dRjXhhhMTBQ2a9JbyePWwynJkxvKNBKk2oZh4wFe+ND3oWuRnR+ZiLA5Y
+	ddF98nVcvujv3vl/uOmUbUQU47Uq8k12/bWxCbAhA/2iK4dlKSIng32bZSeCmXXExvTLeKjFath
+	sEH/bUGAIXoV5fcXVkz/WMAB3CLWLwQ2K1iIoH7uz2rqDeNwe+/QA1Wwt9/hy7VnOFongj1r6im
+	PHW85dvPjFBe1dtlS0ysZDhoRWcBWoDjzRkRgBoXmvg=
+X-Google-Smtp-Source: AGHT+IE5AzrnFf/Nma9OYi02LQfUZX52yZkuUVNniayLmYZBB0ifS+2Uz1Ehi/Gv2whWoMr2zKYJnw==
+X-Received: by 2002:a17:902:c412:b0:215:ae3d:1dd7 with SMTP id d9443c01a7336-21c3540c88dmr336405415ad.19.1737556579588;
+        Wed, 22 Jan 2025 06:36:19 -0800 (PST)
+Received: from ?IPV6:2600:1700:e321:62f0:da43:aeff:fecc:bfd5? ([2600:1700:e321:62f0:da43:aeff:fecc:bfd5])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-21c2d3aca8asm96019665ad.130.2025.01.22.06.36.15
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 22 Jan 2025 06:36:18 -0800 (PST)
+Sender: Guenter Roeck <groeck7@gmail.com>
+Message-ID: <4e9d0552-b565-48e0-8183-d9cb5a85c76a@roeck-us.net>
+Date: Wed, 22 Jan 2025 06:36:15 -0800
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v1 00/21] hwmon: Fix the type of 'config' in struct
+ hwmon_channel_info to u64
+To: Krzysztof Kozlowski <krzk@kernel.org>,
+ "lihuisong (C)" <lihuisong@huawei.com>, linux-hwmon@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org, linux-media@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, arm-scmi@vger.kernel.org,
+ netdev@vger.kernel.org, linux-rtc@vger.kernel.org, oss-drivers@corigine.com,
+ linux-rdma@vger.kernel.org, platform-driver-x86@vger.kernel.org,
+ linuxarm@huawei.com, jdelvare@suse.com, kernel@maidavale.org,
+ pauk.denis@gmail.com, james@equiv.tech, sudeep.holla@arm.com,
+ cristian.marussi@arm.com, matt@ranostay.sg, mchehab@kernel.org,
+ irusskikh@marvell.com, andrew+netdev@lunn.ch, davem@davemloft.net,
+ edumazet@google.com, kuba@kernel.org, pabeni@redhat.com, saeedm@nvidia.com,
+ leon@kernel.org, tariqt@nvidia.com, louis.peens@corigine.com,
+ hkallweit1@gmail.com, linux@armlinux.org.uk, kabel@kernel.org,
+ W_Armin@gmx.de, hdegoede@redhat.com, ilpo.jarvinen@linux.intel.com,
+ alexandre.belloni@bootlin.com, jonathan.cameron@huawei.com,
+ zhanjie9@hisilicon.com, zhenglifeng1@huawei.com, liuyonglong@huawei.com
+References: <20250121064519.18974-1-lihuisong@huawei.com>
+ <870c6b3e-d4f9-4722-934e-00e9ddb84e2e@kernel.org>
+ <d42bf49b-e71b-d31e-2784-379076ebf370@huawei.com>
+ <4959c2c0-564a-4e3c-9650-228dede9a1f9@kernel.org>
+Content-Language: en-US
+From: Guenter Roeck <linux@roeck-us.net>
+Autocrypt: addr=linux@roeck-us.net; keydata=
+ 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
+ mDW4+i+XlNFUPUYMrIKi9joBhu18ssf5i5Q=
+In-Reply-To: <4959c2c0-564a-4e3c-9650-228dede9a1f9@kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On Tue, 21 Jan 2025, Anisse Astier wrote:
-
-> Firmware images necessary for certain tests in the In-field scan[1] test
-> suite are not available at the moment[2], and require having access to
-> at least an Intel customer account[3].
+On 1/21/25 23:51, Krzysztof Kozlowski wrote:
+> On 21/01/2025 09:14, lihuisong (C) wrote:
+>>
+>> 在 2025/1/21 15:47, Krzysztof Kozlowski 写道:
+>>> On 21/01/2025 07:44, Huisong Li wrote:
+>>>> The hwmon_device_register() is deprecated. When I try to repace it with
+>>>> hwmon_device_register_with_info() for acpi_power_meter driver, I found that
+>>>> the power channel attribute in linux/hwmon.h have to extend and is more
+>>>> than 32 after this replacement.
+>>>>
+>>>> However, the maximum number of hwmon channel attributes is 32 which is
+>>>> limited by current hwmon codes. This is not good to add new channel
+>>>> attribute for some hwmon sensor type and support more channel attribute.
+>>>>
+>>>> This series are aimed to do this. And also make sure that acpi_power_meter
+>>>> driver can successfully replace the deprecated hwmon_device_register()
+>>>> later.
+>>> Avoid combining independent patches into one patch bomb. Or explain the
+>>> dependencies and how is it supposed to be merged - that's why you have
+>>> cover letter here.
+>> These patches having a title ('Use HWMON_CHANNEL_INFO macro to simplify
+>> code') are also for this series.
+>> Or we need to modify the type of the 'xxx_config' array in these patches.
+>> If we directly use the macro HWMON_CHANNEL_INFO, the type of 'config'
+>> has been modifyed in patch 1/21 and these driver don't need to care this
+>> change.
 > 
-> Update documentation to match current state, it can be updated again
-> when the images are finally published.
-> 
-> [1] https://www.intel.com/content/www/us/en/support/articles/000099537/processors/intel-xeon-processors.html
-> [2] https://cdrdv2.intel.com/v1/dl/getContent/826383?explicitVersion=true
-> [3] https://www.intel.com/content/www/us/en/secure/design/confidential/software-kits/kit-details.html?kitId=815180
-> 
-> Signed-off-by: Anisse Astier <anisse@astier.eu>
-> ---
-> Changes since v1:
->  - update commit message to clarify that only some tests need the firmware
->    images, thanks Jithu for the suggestion!
-> 
-> Regards,
-> 
-> Anisse
-> ---
->  drivers/platform/x86/intel/ifs/ifs.h | 11 +++++++----
->  1 file changed, 7 insertions(+), 4 deletions(-)
-> 
-> diff --git a/drivers/platform/x86/intel/ifs/ifs.h b/drivers/platform/x86/intel/ifs/ifs.h
-> index 5c3c0dfa1bf8..9a7ad9cc9d08 100644
-> --- a/drivers/platform/x86/intel/ifs/ifs.h
-> +++ b/drivers/platform/x86/intel/ifs/ifs.h
-> @@ -23,9 +23,11 @@
->   * IFS Image
->   * ---------
->   *
-> - * Intel provides a firmware file containing the scan tests via
-> - * github [#f1]_.  Similar to microcode there is a separate file for each
-> - * family-model-stepping. IFS Images are not applicable for some test types.
-> + * As of early 2025, Intel provides the firmware files containing the scan tests
-> + * to select customers [#f1]_. When this driver was merged in 2022, it was
-> + * announced that firmware files would be available via github [#f2]_. Similar
-> + * to microcode there is a separate file for each family-model-stepping. IFS
-> + * Images are not applicable for some test types.
->   * Wherever applicable the sysfs directory would provide a "current_batch" file
->   * (see below) for loading the image.
->   *
-> @@ -125,7 +127,8 @@
->   * 2) Hardware allows for some number of cores to be tested in parallel.
->   * The driver does not make use of this, it only tests one core at a time.
->   *
-> - * .. [#f1] https://github.com/intel/TBD
-> + * .. [#f1] https://www.intel.com/content/www/us/en/support/articles/000099537/processors/intel-xeon-processors.html
-> + * .. [#f2] https://github.com/intel/TBD
->   *
->   *
->   * Structural Based Functional Test at Field (SBAF):
+> None of above addresses my concern. I am dropping the series from my
+> inbox/to-review box.
 > 
 
-Thanks for the update. My intention is to apply this patch though the 
-fixes branch towards the end of the -rc cycle if those images are not 
-available by then.
+If you need help with that, and if it wasn't obvious:
 
--- 
- i.
+NACK for the series
+
+Guenter
 
