@@ -1,93 +1,227 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D0DBF320B;
-	Thu, 23 Jan 2025 13:37:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA8698C07;
+	Thu, 23 Jan 2025 13:49:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1737639448; cv=none; b=tlPuTfw+BLpOyzg3WZX9sgypJZXyQS3FxyKUTWuVxM0+PiZz+iGV5YPTAN8/hSMWbu9hX+ZBymDhd3MMQOFErf/qgTF58hMRMvgw3P18jt9WZ4+FBSzGIk0W84PfbfISUMLHasMmkgSXLTotwitmMNX5ZufLENxswHzXvpiPsZs=
+	t=1737640157; cv=none; b=O1zsfPzQZz8cG78fc6m0Xp4CUbQMJoFkS5P7kA8KCjPlalmTSMSLemPC3JUrv9k6Nsaon8eEBVey6spexNYQ93Pi5d5E5pmGsrmRTa1pB6TYhEjEs70APr1eFR5P9iYDK7E//jDGNGbeXjEm1zZSoG8EIm0WQyEn2Ht6elrLVGY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1737639448; c=relaxed/simple;
-	bh=/8E+k6WiXG3U0ah0y48GfNRtRiS5f7GjN7DqVhDeLDk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=PqhKd5qfdU2eW+3DQemOtREjZQNq/3A0MVrbG4tCs+q4dcHVd9lY3QwdVI5BFvzYMn4Ayk6WXFxsfIamBBdyXLbFqAB6ADEbArA79iEoHRg/u+lPFPEUS6yGCMd0iKvtQdOT8A55t6+7Pc9IDBrvdQeLSQEPoCxHq3itK1wJ/ns=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=cRo0yHBy; arc=none smtp.client-ip=198.175.65.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1737640157; c=relaxed/simple;
+	bh=RFOZ2iCvzb/yzx0VqC1skGSN48jGaj2oiNOZblqoflg=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=iSOely2oS2Cbfzj5DJSClGJ+g5TiqBz6oma7R59liRTkTrJm0noJwiQwnMnpmHTsg200lsbcgoxGKQsbvNUwhd4HRgRBJe9HaHVoNBtdLOeyhit3DyQ5ZbZEYaGYeLQ68jyg39AmD2mhLkFfyZPRYD4OC6UCg/9kMeUbxg2rgPY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EPZeQvwj; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="cRo0yHBy"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1737639446; x=1769175446;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:content-transfer-encoding:in-reply-to;
-  bh=/8E+k6WiXG3U0ah0y48GfNRtRiS5f7GjN7DqVhDeLDk=;
-  b=cRo0yHByROg6Fd7T2IaupyAqhA5A2SHRZVv8o4N6uo4qJR5/b5ZfaK1O
-   Nnz6U0BRYSOpBDrQLLJxKA1x+h+P3c4TpDUWUi/vorCYNedOpebitZ8Hu
-   38ikSDWiwRfeiStzbG/4+L69u5IW9lrV+QnRBnAYrdNjSp0fm8jlPt8V0
-   noelO8FojsTLL+7X6+TSQss4MVJ36HQ5hjKHQAV+Sx0YttlXEi5SATbbm
-   UErXxQoFYSfKNUi6zPsf2sXtQf8LfehjZF9yJOl2J2lYtHdiH6Us0dAOO
-   y7Mz+mcTTsa1uLgIIXzEdZ3IjDrfbfVS3aK7uEFWVHMbLUR/77v0ZQg8c
-   Q==;
-X-CSE-ConnectionGUID: fPw8rPSsSIqTs0QXpkQ9oA==
-X-CSE-MsgGUID: FTbZXY0qTcuUcV44u7mehg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11324"; a="55551344"
-X-IronPort-AV: E=Sophos;i="6.13,228,1732608000"; 
-   d="scan'208";a="55551344"
-Received: from orviesa007.jf.intel.com ([10.64.159.147])
-  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Jan 2025 05:37:26 -0800
-X-CSE-ConnectionGUID: kzqa6K/yT1W5LDRcO/s27A==
-X-CSE-MsgGUID: cj4pRzrJT2mez2eEcGErvA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
-   d="scan'208";a="107888401"
-Received: from smile.fi.intel.com ([10.237.72.58])
-  by orviesa007.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Jan 2025 05:37:25 -0800
-Received: from andy by smile.fi.intel.com with local (Exim 4.98)
-	(envelope-from <andriy.shevchenko@linux.intel.com>)
-	id 1taxOb-00000004Puh-2WhQ;
-	Thu, 23 Jan 2025 15:37:21 +0200
-Date: Thu, 23 Jan 2025 15:37:21 +0200
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Cc: Sakari Ailus <sakari.ailus@linux.intel.com>,
-	Daniel Scally <djrscally@gmail.com>,
-	Hans de Goede <hdegoede@redhat.com>,
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EPZeQvwj"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EDC24C4CED3;
+	Thu, 23 Jan 2025 13:49:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1737640156;
+	bh=RFOZ2iCvzb/yzx0VqC1skGSN48jGaj2oiNOZblqoflg=;
+	h=From:To:Cc:Subject:Date:From;
+	b=EPZeQvwj9HgR4BT6b6p9XoayVKiQT6sfDC1fyuC5rsL7Sln1vlyBUj/iIsNmz+IpF
+	 UbePMjZpogFdrFew5X6FyfeT4o9TV3hhdVaQUkWGsch4HjFo0YhrFqYXHafD0c5hLy
+	 PFMnoJsDk6gykyp7dq4sDRQt+E6aCcKKSZUVSQrZOHfSIYP5Kk+Pqpgx5UHKFMUaPI
+	 F7hwy7QXEr4HHz4DGLZIDPB+EWe4bs5+fXpRw0MrAb1ejBNLyd5KEyWr133z8LYmr9
+	 HKDNp5MMBFyrYLFlr/a1uWAjVv7Mr3H6elqjqmirpvo13qSHoUZhRD8ywBCYK/x78G
+	 vum7eb0Aj7/bA==
+From: Arnd Bergmann <arnd@kernel.org>
+To: Jiri Kosina <jikos@kernel.org>,
+	Benjamin Tissoires <bentiss@kernel.org>,
+	Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+	Mark Pearson <mpearson-lenovo@squebb.ca>
+Cc: Arnd Bergmann <arnd@arndb.de>,
+	Basavaraj Natikar <basavaraj.natikar@amd.com>,
+	Even Xu <even.xu@intel.com>,
+	Xinpeng Sun <xinpeng.sun@intel.com>,
+	Maximilian Luz <luzmaximilian@gmail.com>,
+	Marcel Holtmann <marcel@holtmann.org>,
+	Johan Hedberg <johan.hedberg@gmail.com>,
+	Luiz Augusto von Dentz <luiz.dentz@gmail.com>,
+	Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+	linux-input@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
 	platform-driver-x86@vger.kernel.org,
-	laurent.pinchart@ideasonboard.com, hverkuil@xs4all.nl,
-	linux-media@vger.kernel.org
-Subject: Re: [PATCH v3 1/1] platform/x86: int3472: Call "reset" GPIO "enable"
- for INT347E
-Message-ID: <Z5JGEUqfzcGh7Wp2@smile.fi.intel.com>
-References: <20250122104344.245128-1-sakari.ailus@linux.intel.com>
- <Z5Eh-mX-RiWw9giI@smile.fi.intel.com>
- <Z5IIkM1i1MV42uvh@kekkonen.localdomain>
- <279b9682-ac78-bfa0-6e2f-08a22f76d867@linux.intel.com>
+	linux-usb@vger.kernel.org,
+	linux-bluetooth@vger.kernel.org
+Subject: [PATCH] hid: intel-thc: fix CONFIG_HID dependency
+Date: Thu, 23 Jan 2025 14:48:12 +0100
+Message-Id: <20250123134908.805346-1-arnd@kernel.org>
+X-Mailer: git-send-email 2.39.5
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <279b9682-ac78-bfa0-6e2f-08a22f76d867@linux.intel.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-On Thu, Jan 23, 2025 at 12:47:34PM +0200, Ilpo Järvinen wrote:
-> On Thu, 23 Jan 2025, Sakari Ailus wrote:
+From: Arnd Bergmann <arnd@arndb.de>
 
-...
+In drivers/hid/, most drivers depend on CONFIG_HID, while a couple of the
+drivers in subdirectories instead depend on CONFIG_HID_SUPPORT and use
+'select HID'. With the newly added INTEL_THC_HID, this causes a build
+warning for a circular dependency:
 
-> I'm like 'What?' ...I don't know why you guys are arguing about breaking the
-> 80 chars limit. :-D
+WARNING: unmet direct dependencies detected for HID
+  Depends on [m]: HID_SUPPORT [=y] && INPUT [=m]
+  Selected by [y]:
+  - INTEL_THC_HID [=y] && HID_SUPPORT [=y] && X86_64 [=y] && PCI [=y] && ACPI [=y]
 
-Sakari is too pedantic about this, and I'm the opposite.
-It's our main disagreement on the kernel code during the reviews.
+WARNING: unmet direct dependencies detected for INPUT_FF_MEMLESS
+  Depends on [m]: INPUT [=m]
+  Selected by [y]:
+  - HID_MICROSOFT [=y] && HID_SUPPORT [=y] && HID [=y]
+  - GREENASIA_FF [=y] && HID_SUPPORT [=y] && HID [=y] && HID_GREENASIA [=y]
+  - HID_WIIMOTE [=y] && HID_SUPPORT [=y] && HID [=y] && LEDS_CLASS [=y]
+  - ZEROPLUS_FF [=y] && HID_SUPPORT [=y] && HID [=y] && HID_ZEROPLUS [=y]
+  Selected by [m]:
+  - HID_ACRUX_FF [=y] && HID_SUPPORT [=y] && HID [=y] && HID_ACRUX [=m]
+  - HID_EMS_FF [=m] && HID_SUPPORT [=y] && HID [=y]
+  - HID_GOOGLE_STADIA_FF [=m] && HID_SUPPORT [=y] && HID [=y]
+  - PANTHERLORD_FF [=y] && HID_SUPPORT [=y] && HID [=y] && HID_PANTHERLORD [=m]
 
+It's better to be consistent and always use 'depends on HID' for HID
+drivers. The notable exception here is USB_KBD/USB_MOUSE, which are
+alternative implementations that do not depend on the HID subsystem.
+
+Do this by extending the "if HID" section below, which means that a few
+of the duplicate "depends on HID" and "depends on INPUT" statements
+can be removed in the process.
+
+Fixes: 1b2d05384c29 ("HID: intel-thc-hid: Add basic THC driver skeleton")
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+---
+ drivers/hid/Kconfig               | 10 ++++++----
+ drivers/hid/amd-sfh-hid/Kconfig   |  1 -
+ drivers/hid/i2c-hid/Kconfig       |  2 +-
+ drivers/hid/intel-ish-hid/Kconfig |  1 -
+ drivers/hid/intel-thc-hid/Kconfig |  1 -
+ drivers/hid/surface-hid/Kconfig   |  2 --
+ drivers/hid/usbhid/Kconfig        |  3 +--
+ net/bluetooth/hidp/Kconfig        |  3 +--
+ 8 files changed, 9 insertions(+), 14 deletions(-)
+
+diff --git a/drivers/hid/Kconfig b/drivers/hid/Kconfig
+index 8adb745c5b28..ed657ef7281c 100644
+--- a/drivers/hid/Kconfig
++++ b/drivers/hid/Kconfig
+@@ -1376,10 +1376,6 @@ endmenu
+ 
+ source "drivers/hid/bpf/Kconfig"
+ 
+-endif # HID
+-
+-source "drivers/hid/usbhid/Kconfig"
+-
+ source "drivers/hid/i2c-hid/Kconfig"
+ 
+ source "drivers/hid/intel-ish-hid/Kconfig"
+@@ -1390,4 +1386,10 @@ source "drivers/hid/surface-hid/Kconfig"
+ 
+ source "drivers/hid/intel-thc-hid/Kconfig"
+ 
++endif # HID
++
++# USB support may be used with HID disabled
++
++source "drivers/hid/usbhid/Kconfig"
++
+ endif # HID_SUPPORT
+diff --git a/drivers/hid/amd-sfh-hid/Kconfig b/drivers/hid/amd-sfh-hid/Kconfig
+index 329de5e12c1a..3291786a5ee6 100644
+--- a/drivers/hid/amd-sfh-hid/Kconfig
++++ b/drivers/hid/amd-sfh-hid/Kconfig
+@@ -5,7 +5,6 @@ menu "AMD SFH HID Support"
+ 
+ config AMD_SFH_HID
+ 	tristate "AMD Sensor Fusion Hub"
+-	depends on HID
+ 	depends on X86
+ 	help
+ 	  If you say yes to this option, support will be included for the
+diff --git a/drivers/hid/i2c-hid/Kconfig b/drivers/hid/i2c-hid/Kconfig
+index ef7c595c9403..e8d51f410cc1 100644
+--- a/drivers/hid/i2c-hid/Kconfig
++++ b/drivers/hid/i2c-hid/Kconfig
+@@ -2,7 +2,7 @@
+ menuconfig I2C_HID
+ 	tristate "I2C HID support"
+ 	default y
+-	depends on I2C && INPUT && HID
++	depends on I2C
+ 
+ if I2C_HID
+ 
+diff --git a/drivers/hid/intel-ish-hid/Kconfig b/drivers/hid/intel-ish-hid/Kconfig
+index 253dc10d35ef..568c8688784e 100644
+--- a/drivers/hid/intel-ish-hid/Kconfig
++++ b/drivers/hid/intel-ish-hid/Kconfig
+@@ -6,7 +6,6 @@ config INTEL_ISH_HID
+ 	tristate "Intel Integrated Sensor Hub"
+ 	default n
+ 	depends on X86
+-	depends on HID
+ 	help
+ 	  The Integrated Sensor Hub (ISH) enables the ability to offload
+ 	  sensor polling and algorithm processing to a dedicated low power
+diff --git a/drivers/hid/intel-thc-hid/Kconfig b/drivers/hid/intel-thc-hid/Kconfig
+index 91ec84902db8..0351d1137607 100644
+--- a/drivers/hid/intel-thc-hid/Kconfig
++++ b/drivers/hid/intel-thc-hid/Kconfig
+@@ -7,7 +7,6 @@ menu "Intel THC HID Support"
+ config INTEL_THC_HID
+ 	tristate "Intel Touch Host Controller"
+ 	depends on ACPI
+-	select HID
+ 	help
+ 	  THC (Touch Host Controller) is the name of the IP block in PCH that
+ 	  interfaces with Touch Devices (ex: touchscreen, touchpad etc.). It
+diff --git a/drivers/hid/surface-hid/Kconfig b/drivers/hid/surface-hid/Kconfig
+index 7ce9b5d641eb..d0cfd0d29926 100644
+--- a/drivers/hid/surface-hid/Kconfig
++++ b/drivers/hid/surface-hid/Kconfig
+@@ -1,7 +1,6 @@
+ # SPDX-License-Identifier: GPL-2.0+
+ menu "Surface System Aggregator Module HID support"
+ 	depends on SURFACE_AGGREGATOR
+-	depends on INPUT
+ 
+ config SURFACE_HID
+ 	tristate "HID transport driver for Surface System Aggregator Module"
+@@ -39,4 +38,3 @@ endmenu
+ 
+ config SURFACE_HID_CORE
+ 	tristate
+-	select HID
+diff --git a/drivers/hid/usbhid/Kconfig b/drivers/hid/usbhid/Kconfig
+index 7c2032f7f44d..f3194767a45e 100644
+--- a/drivers/hid/usbhid/Kconfig
++++ b/drivers/hid/usbhid/Kconfig
+@@ -5,8 +5,7 @@ menu "USB HID support"
+ config USB_HID
+ 	tristate "USB HID transport layer"
+ 	default y
+-	depends on USB && INPUT
+-	select HID
++	depends on HID
+ 	help
+ 	  Say Y here if you want to connect USB keyboards,
+ 	  mice, joysticks, graphic tablets, or any other HID based devices
+diff --git a/net/bluetooth/hidp/Kconfig b/net/bluetooth/hidp/Kconfig
+index 6746be07e222..e08aae35351a 100644
+--- a/net/bluetooth/hidp/Kconfig
++++ b/net/bluetooth/hidp/Kconfig
+@@ -1,8 +1,7 @@
+ # SPDX-License-Identifier: GPL-2.0-only
+ config BT_HIDP
+ 	tristate "HIDP protocol support"
+-	depends on BT_BREDR && INPUT && HID_SUPPORT
+-	select HID
++	depends on BT_BREDR && HID
+ 	help
+ 	  HIDP (Human Interface Device Protocol) is a transport layer
+ 	  for HID reports.  HIDP is required for the Bluetooth Human
 -- 
-With Best Regards,
-Andy Shevchenko
-
+2.39.5
 
