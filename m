@@ -1,73 +1,73 @@
-Received: from NAM11-BN8-obe.outbound.protection.outlook.com (mail-bn8nam11on2082.outbound.protection.outlook.com [40.107.236.82])
+Received: from NAM10-BN7-obe.outbound.protection.outlook.com (mail-bn7nam10on2056.outbound.protection.outlook.com [40.107.92.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8809415A85E
-	for <platform-driver-x86@vger.kernel.org>; Thu, 23 Jan 2025 19:09:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.236.82
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 77F8C199932
+	for <platform-driver-x86@vger.kernel.org>; Thu, 23 Jan 2025 19:10:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.92.56
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1737659359; cv=fail; b=gnsBKLqa4vLwzMsFr6/TAAutQA3YBHwMnBvSLvsqURsTO3T95/tPucebcYnZh2q1MtS5BXcpaiTvvpB68zxjxURGg38zUDmT8vvAyAO/SVaLI0b2i7wDFEYB5/N9zOU0pcWxwzkLU6oAtAjub372bWW/ZsZQYDNP2iZGzUM2XZw=
+	t=1737659443; cv=fail; b=TZVzpsaCj8fvnGLexs0cAoWKytQi2Pf0peMgN84JC0DpeNNX24PG9v2+dWb8xyPj9GjyzbUzoj7sBCvkABtY10og/9Hoc+dPRHqqFQLHOhAH+N5qjazSlSsAiW4owvKMzWrq7VkQnZsLSp7poQxlZHPmu2ZjKlRdckFPRADOa5k=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1737659359; c=relaxed/simple;
-	bh=67Kzs4hbM6GH/F1cHitOcDbje/kTVRrKd1hP6rgPzBE=;
+	s=arc-20240116; t=1737659443; c=relaxed/simple;
+	bh=dM78CiEF10KfQZVdA2uYOU7ee9XL53iHYCd89BEWLec=;
 	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=KxGP4Mq9bSIeJt6BwBtX9/vjOCkV9/M+FRmGd55l2tg1DUDUZj4568V/ZWu9tNizd2PM/HWlA3ty4cmdX8JrpvGqYB0b3jauy7ZzVUtJ5LaCQP2E6vWpAXctNDsK8t7dOqFfO87ILtXCFPsvPz8kxZxZQCHyIAd/y75dgmQxoMg=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=feHHnwSx; arc=fail smtp.client-ip=40.107.236.82
+	 MIME-Version:Content-Type; b=QJCdIou0b4W9HVoeIAakxULoUnI7E6H2ERZA4ylfKIxR5Zgq9wibsnJKDRdDymNo0ORL0ghycg8K02itlQBP1qXazKHTIvQpEZWIV1zQ4K4PkGtNEBac/QBgDHOd0lcFdi+JXL7JvNxWPOluyAbj0MUdRSbGt6earYla457kapI=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=M3t90M10; arc=fail smtp.client-ip=40.107.92.56
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
 Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="feHHnwSx"
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="M3t90M10"
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=PnTgIGSxm482TSRPdAS5CMFGDKt2kvwXz5omYamKEVFGs9Zg/WzGYy8vZyAIN9f2pvMMFFnUh5SbUi8UE09Itz9kqechTpAWuDCxbyA04oFqloOKbmZgBi9nYs6s1PmSwDUUdN3DcDukQK0hG5NaZJbA4uzEOy3A5u6dVkT9H2bPrF15CJIqdzGEU5IxA1PGX/mlTxGE0Qrn6x7SmoEw7EgaTwA3yOGh5cwtk47Et6PDHiT6w9Q1XqOcHcgoaboBDiz3C63XcMvNuj2dtmXmvzF26sXqBeCjHpKQ4botwQztkMxzNW4o7BpKeLsPVG9WxKyVT4x8/MlUk3PcGuvvjg==
+ b=FQOZ6vRYNYTxbWIIjQgrwJ3miJu+yehBsJBCeumYhhhSYX2W9o916r71ByL7BxGqnnY/IciO99FlE5w+JxEJlD1AQpVkHi4AymcIhDK6oP/WBzg3+a7BWV8lfqdtVHBAmlI7sXTjIlYg7t/uBAzMxmjYjf8e/n481MgPSdq3Eyl9O+bRFsAXaOyGzgLothCCOW/eyKSCa762cjiv1y3U7/H2ObLMdrGT8yKiyQlFK/p7Ly+1LunjLfEq9q/WXKm/DNvC2y9UZ0iMXVcayjufaHqrKrbd6SnrQNdYJRqRHv0TzZ6/0b9JZzz0lTUpa/f+ZaCnruy8/mUVnCkAMQ7tjg==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=l3s/5943YPllt4mq0NYheL/grPLWxI1/6HbAyx1QBFI=;
- b=nAVS5aJiyzyNmQmGe9WqqYxUN9GssjZw/rrQZIxeFSe3uPK7efJN7818m0R4TEfW/uVIy3+2usfqjPKhKLNMCgzXpydnvDW/9vhFhtalKF3z7EEuRjnrmr1J0+Vcw7Rqs0Oq02xJTy6Rtzs/rWpNIPexpwEaAxx80nXJLSMlDUJTOo466Yc82JBHRbLEeAMBwS1CiwHkoiEJFHa2L7ILgeolu7Den2EHm3puVriao8xOXOsBJQvpBDa68dPIoZbZRXSvBE46HEPltsxT1dZQahM05BmXveaUBfSfzh+hDcEW9Jh9+A6X4D/kFMOQDMLDbspWfbZ/WaW+nUYvA6HMCg==
+ bh=i1GPICH/CsYgtTeF+91GkQrmSijxAW1UibSKEz4z7ws=;
+ b=kTGLULswlCZjfzqiq1Ve2z5fOTHpo7vcuaMR1WkoIINFR+O2s7SJX8izOR/U7Zm1Ago7jIJBGCk8bjKWy6kbBo4LqDabfeym7MO8sFJswIGOYG1DnCzLo/haD4LSLLrzE57MQxkhDFG62veLRfjHrnAPVzv7BAPwxBrkOBfoKo54u5MW5jTUYh2dlLTgPOdhlbgXcIvkm7DErpAvCVJGIcPYbufDK+PRBiC3qFez0J7AouJ43XAdWZDB3CYP80qoyAJWhcPXzymrtGen/XlJSqxy+jAtYKLOvD36f6mfh8axdVxWE7fpvWwR+0EwvrEQNlSvdYDGSCd3QwSbbPutvA==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 216.228.117.161) smtp.rcpttodomain=linux.intel.com smtp.mailfrom=nvidia.com;
+ 216.228.117.160) smtp.rcpttodomain=linux.intel.com smtp.mailfrom=nvidia.com;
  dmarc=pass (p=reject sp=reject pct=100) action=none header.from=nvidia.com;
  dkim=none (message not signed); arc=none (0)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
  s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=l3s/5943YPllt4mq0NYheL/grPLWxI1/6HbAyx1QBFI=;
- b=feHHnwSxZe35BlDwkODJwpkMLBaKS4PfxoSb6xUE8OhwGD3KUPDxsxzt4LfsOHqLMcyweyb2Op4FLdThUl6HeF2viLuOY0JW/VuXha4OMS2XB2wVN9uuUr9vXWl5YRrABAfSFYbCqPMf+6jR94F7wp7Ocmp/lnKiN9qk668y1F55KUMXztirfHHHyIPb5JrHCMDoNjMC6SSLCmQILCKGTQJxiKK9M/U94a5W4UCXqq9S+qEeDBguFNih47mU2Piw/kIiysmsw8Vohpor1JR88RQHV39XDILmSdKnPJ23M6eHb1UNexDt+dOfP9L7ogagIPbXVs8CjptkbPgtr3nGpg==
-Received: from BL1PR13CA0340.namprd13.prod.outlook.com (2603:10b6:208:2c6::15)
- by LV8PR12MB9081.namprd12.prod.outlook.com (2603:10b6:408:188::12) with
+ bh=i1GPICH/CsYgtTeF+91GkQrmSijxAW1UibSKEz4z7ws=;
+ b=M3t90M10g5uoElrukRqc/9wgNeJCc0oQ2yW2IBnQruUzpUgVIOC39G3iza7OzWrfoldJ3mhRz+Pfvy6AsR++1kBt0S1EmM3MVn2vkYpXyA4QVIIe/YCOQAjILKe1224JCi0i7iOQWhhVCOcbrnY7lZVj0s2Xf4MyLgdCDhN6pBDQuv45QmHOT95oqXPUiMYL15A9iWxLpMBW3rNIDoVq/79OZCNJl9kHOka1Ox5nuIKLW5cF6QhuPnH2Pg8FeqsONbfS15x0cGKjHf0OBghGEIyq1IDqx9PhU1IenZ7hCs8/Yto9wmKSNBiqTxjjoBBXr7xKgBk3tWjV5ikYkjI+/g==
+Received: from CH0PR13CA0004.namprd13.prod.outlook.com (2603:10b6:610:b1::9)
+ by CH3PR12MB8459.namprd12.prod.outlook.com (2603:10b6:610:139::14) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8377.17; Thu, 23 Jan
- 2025 19:09:10 +0000
-Received: from BN2PEPF000055DD.namprd21.prod.outlook.com
- (2603:10b6:208:2c6:cafe::8c) by BL1PR13CA0340.outlook.office365.com
- (2603:10b6:208:2c6::15) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.8377.18 via Frontend Transport; Thu,
- 23 Jan 2025 19:09:10 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 216.228.117.161)
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8377.18; Thu, 23 Jan
+ 2025 19:10:32 +0000
+Received: from CH2PEPF0000009B.namprd02.prod.outlook.com
+ (2603:10b6:610:b1:cafe::11) by CH0PR13CA0004.outlook.office365.com
+ (2603:10b6:610:b1::9) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.8293.9 via Frontend Transport; Thu,
+ 23 Jan 2025 19:10:32 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 216.228.117.160)
  smtp.mailfrom=nvidia.com; dkim=none (message not signed)
  header.d=none;dmarc=pass action=none header.from=nvidia.com;
 Received-SPF: Pass (protection.outlook.com: domain of nvidia.com designates
- 216.228.117.161 as permitted sender) receiver=protection.outlook.com;
- client-ip=216.228.117.161; helo=mail.nvidia.com; pr=C
-Received: from mail.nvidia.com (216.228.117.161) by
- BN2PEPF000055DD.mail.protection.outlook.com (10.167.245.7) with Microsoft
+ 216.228.117.160 as permitted sender) receiver=protection.outlook.com;
+ client-ip=216.228.117.160; helo=mail.nvidia.com; pr=C
+Received: from mail.nvidia.com (216.228.117.160) by
+ CH2PEPF0000009B.mail.protection.outlook.com (10.167.244.23) with Microsoft
  SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.8398.0 via Frontend Transport; Thu, 23 Jan 2025 19:09:10 +0000
+ 15.20.8377.8 via Frontend Transport; Thu, 23 Jan 2025 19:10:32 +0000
 Received: from rnnvmail201.nvidia.com (10.129.68.8) by mail.nvidia.com
- (10.129.200.67) with Microsoft SMTP Server (version=TLS1_2,
+ (10.129.200.66) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.4; Thu, 23 Jan
- 2025 11:08:53 -0800
+ 2025 11:10:16 -0800
 Received: from r-build-bsp-02.mtr.labs.mlnx (10.126.231.35) by
  rnnvmail201.nvidia.com (10.129.68.8) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.4; Thu, 23 Jan 2025 11:08:51 -0800
+ 15.2.1544.4; Thu, 23 Jan 2025 11:10:13 -0800
 From: Vadim Pasternak <vadimp@nvidia.com>
 To: <ilpo.jarvinen@linux.intel.com>, <hdegoede@redhat.com>
 CC: <michaelsh@nvidia.com>, <crajank@nvidia.com>, <fradensky@nvidia.com>,
 	<oleksandrs@nvidia.com>, <platform-driver-x86@vger.kernel.org>, "Vadim
  Pasternak" <vadimp@nvidia.com>
-Subject: [PATCH v4 04/12] platform_data/mlxreg: Add capability bit and mask fields
-Date: Thu, 23 Jan 2025 21:08:08 +0200
-Message-ID: <20250123190818.3834-5-vadimp@nvidia.com>
+Subject: [PATCH v4 05/12] platform/mellanox: mlxreg-hotplug: Add support for new flavor of capability registers
+Date: Thu, 23 Jan 2025 21:08:09 +0200
+Message-ID: <20250123190818.3834-6-vadimp@nvidia.com>
 X-Mailer: git-send-email 2.44.0
 In-Reply-To: <20250123190818.3834-1-vadimp@nvidia.com>
 References: <20250123190818.3834-1-vadimp@nvidia.com>
@@ -83,104 +83,134 @@ X-ClientProxiedBy: rnnvmail203.nvidia.com (10.129.68.9) To
  rnnvmail201.nvidia.com (10.129.68.8)
 X-EOPAttributedMessage: 0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: BN2PEPF000055DD:EE_|LV8PR12MB9081:EE_
-X-MS-Office365-Filtering-Correlation-Id: 5875c602-4e1e-402c-93b0-08dd3be16af9
+X-MS-TrafficTypeDiagnostic: CH2PEPF0000009B:EE_|CH3PR12MB8459:EE_
+X-MS-Office365-Filtering-Correlation-Id: c2684960-7dab-4c0f-2885-08dd3be19bcf
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|1800799024|376014|36860700013|82310400026;
+	BCL:0;ARA:13230040|36860700013|82310400026|1800799024|376014;
 X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?ZbVOaUvubpdFVYY09efpeLIWY4SQE6awDwU06CkM3pgH1ayK2IyIpzpW8Luc?=
- =?us-ascii?Q?O+NRzWbJmEsT9SjdY5LOs3frwT02s7a7AZ5XgOWCZTEWZn6Pnidd2mVrd5XL?=
- =?us-ascii?Q?gC8tZoLO8KzdJKhCK62XIjjlhFS+42ax0ytlvnP0qJOcmaA1mv2zh138zvGO?=
- =?us-ascii?Q?e5SY++lpLDvGIm+RIqwhrxC7aFwcCUxzB2vqGr6ogBJAkTMYFVL/fi9icuIJ?=
- =?us-ascii?Q?nPqDFkWvmRn5ODZdDe15I1F2XAJxJv11HE6OFB8FVz2x8kB3zsvJy0l4ZaUq?=
- =?us-ascii?Q?BEfVeA4rF3QH6aptpGwIAt1PQb8thd+rGUKcEWVUzsIk9lfdNznN/AXnzzm3?=
- =?us-ascii?Q?G2n0lInKrDRnwVxV95vcV3J10ixi0WfXH5LBZHBautiLo37YVIybaCu+jnUd?=
- =?us-ascii?Q?8gl5k8wjP1pNJotxFaI0Z1L/srQv4GTuQelLw0W3ISQFbvR2gwH/amYO+s65?=
- =?us-ascii?Q?3jZlNHfIIg0jQEbfhMwQJEG1G1lP4J0cpGn9AS+H82d/cbiI86B65T3bcjor?=
- =?us-ascii?Q?bQyW3+2izOVM7FYJ27gVvP2NHdO2XmB1PRDeUe1JpihB0FvTZugn3wRtmPVm?=
- =?us-ascii?Q?aONIyHE6jDLSnuSxX/4Lo59ZSJF75Sauysyl1q60xJS4c3DJPWb3GV8zUUeh?=
- =?us-ascii?Q?Mt1UWTMXcbjY9Rxqp60k3FwFet0umd9vpxQxzyQC00D0rxeeS7cT8FsmJEwz?=
- =?us-ascii?Q?uhhR/akrjc75BtaXwV0dBEhZfjdpWBa0CdpzI4WXwBN6oBWukB46zOi4Dg0I?=
- =?us-ascii?Q?WsuQmmVdhNUkKOrX3GYlG5wV1N8YNHKkJm5r+99rgqy5/nyPKJllK3n/8LZT?=
- =?us-ascii?Q?YfJACzZh8DP3MSJXz+2uaaSQsL2qzMySgOzbv8fn6SYjVwj/sYObhkkM3MFx?=
- =?us-ascii?Q?XYfROHF2T2WzCAIT1vsEfpPEpNfQOKGcJpGhJckbtqwKVHteZHoKYieTOhCJ?=
- =?us-ascii?Q?JwW3YrwdGiDoz54KElgZlpmQv+MPZJjxqssg/2M8vcy4LBL3McfBX+6BPpGt?=
- =?us-ascii?Q?+IV14fXuJUk4bYIJJWT1cmwlyGBbag79xGGlZDTir4uraeNI7tic6Q63JYby?=
- =?us-ascii?Q?XBeyf93QwwoHhY6LrMvHa2jo9O0x+1H8Lp8lE0XkNURyHFgsvvs90ftiXe+Y?=
- =?us-ascii?Q?j0M/fjArfyw+LLm0/COk6G1ho36Uglz07fVB8S53owYVOkREVubrjPflxFBs?=
- =?us-ascii?Q?0q/2OfLefEcoiBe9abLmeAv3LPixCHyos2A/JJfz4KatU6QeZ5xsc4rl3umH?=
- =?us-ascii?Q?4PxEc5GAUFlqh28VKUdqmKqv0ebv0a9p/GYfQd88dk4jT/Xw1i9pjiRAxdSg?=
- =?us-ascii?Q?W/8WrSMUPIOEylKkw1MP3GlBplpklukRTYyd83MCbZ8ojzGIqv4nwvI/cJFw?=
- =?us-ascii?Q?h6hMR//TnirjB3Fo9nU58FKLbdY/8DW9s1PVUCdGj8QEv6jPYFUwcsx61B/F?=
- =?us-ascii?Q?HIBc1FH4FFqRoYFQHNMfL/5RIwR+Yd864R9Ag31fpPR30PbQVfmTFibO5xpE?=
- =?us-ascii?Q?N8hJyvPL3zArbhU=3D?=
+	=?us-ascii?Q?msuwpdbnjoRL6OT4iTdcORGW+wcro+VTXxaloUh44IrdaBMs48HV1SDDDRXT?=
+ =?us-ascii?Q?E4CI8Du0c1KzRl/orCPafA1H53msGWjzqJxcEvvCZkiJuZ1d9NQG5gfffqCm?=
+ =?us-ascii?Q?OnTEx5up8e3n1LLhT4FIhDPRa6XezItZZ5N34UsN6mU9HBEQ7BwebHEmg0rN?=
+ =?us-ascii?Q?ueHVYviG737Zem34uAihU/ZMQRmzdG4DJ4Mf8CHlo6SoCgXeNeR35ZgYjFM9?=
+ =?us-ascii?Q?ExsbtogGUoojd4HWXqzRm+C6LPJosHFu3k6m7Nbh6zAG0qC4XMkglZ8W/LHd?=
+ =?us-ascii?Q?kJhokDaalfkqQ29h4arAYAHxYIxiDztUK4aTrkVlMISW0auuy/kpp3f1J/ks?=
+ =?us-ascii?Q?UTEg5gznKExIFEua52EknyhYSv3xWNMpUmOHr174QYGd16/9vG+t2dUn/cCT?=
+ =?us-ascii?Q?Bz7yye67ke7Ec4PA1iuNWlBuOK3yoKZsqq5FQF0AfYP6ThMtfEZ74dgY8gb6?=
+ =?us-ascii?Q?Njx1Thdmi3TW7BwOMyFu4BQOqAmm63mI1kK2Thtt0ogFWdOvtOAeuXv0Cz+r?=
+ =?us-ascii?Q?uuUwc7NF/t26B9vIjKM7Oo4jdLcW5sxzz4iDU6KkPrRHZoVzSA1VP8ZOTHzM?=
+ =?us-ascii?Q?FpsN+4vMaZU7/l1pZxwjv6/libTiMlZJ6K2X0I2tqhdirUMvUZWWeXn6Keun?=
+ =?us-ascii?Q?7jLywDmLAcsdfvC7bijg7R20xNIfAlouX/WTgSTJnF/Sfdj8rXjrUG1QgEMM?=
+ =?us-ascii?Q?SoKLRTRJ6waUsiFLHhW5TxLMPCocDiyKY3D31cR1PPYR4pkmHO3uMk+7RNl4?=
+ =?us-ascii?Q?/gJCpz7RVO99OnVxkmwWcxD9x7ZCkV97+rzr2fEErlslT7b46sX9MoI9JTuT?=
+ =?us-ascii?Q?rtEiiQJn4irSTY5wVYA55Lh54VTs4Uaem7KcaNHyJgf6bKgKCX2p3bnZlvTu?=
+ =?us-ascii?Q?yuje3TeFtWVuLh0IGdm7bx4swD46GddfgxAxjlxn0SW14jtKTS4prI4GM5oF?=
+ =?us-ascii?Q?N3cqY64VPwo/onpQCpHhG/nPmVJqQL5ofqLmgaqUuva+fFaSmozITm/sXUa3?=
+ =?us-ascii?Q?VSZYo0jC5Iff7qMaJvd1mAab/5WOonLWx5lPrDo11klQn89VAX/5qg88F8Hr?=
+ =?us-ascii?Q?xbhxER+21vwVxWStph9yJcdP9DoUojTHt9LymxrvBdxgbAuCKvZkEcV1i89i?=
+ =?us-ascii?Q?fHuhglWNG6RrNWISmKwlH6ZuZPGD5yfCfGK+F8anZtDpEDNeQhqJthsnk1Hw?=
+ =?us-ascii?Q?QePwSqqcgt90KHxy92zb+vaWBf0f1r/qOr7JH5aFxIzMrWth0iRVfcl8ANF7?=
+ =?us-ascii?Q?eN8muXSQIoCsdvCQ7MssfhBsfh79WAcLlK6ePBOYw8sPDKKpPMJqDdoL+wRh?=
+ =?us-ascii?Q?641otYOwhUdNj3/sY4D7pBp9jEv0QXsJcNIvNzFL9Sem/wnft4qKP7K7xU6e?=
+ =?us-ascii?Q?b6ZVJBAwFlEDeJM21l41mJvjM/E2es5X8grbdVA12Ao/DJY4LMeR25877j+7?=
+ =?us-ascii?Q?2TwOzRs/CKaWRzuUNQ1B3p861camL3Z2BJ23vY1/r7fHcFA9IrbcO59zH+QK?=
+ =?us-ascii?Q?JNRWDdQeO2aMy+4=3D?=
 X-Forefront-Antispam-Report:
-	CIP:216.228.117.161;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:dc6edge2.nvidia.com;CAT:NONE;SFS:(13230040)(1800799024)(376014)(36860700013)(82310400026);DIR:OUT;SFP:1101;
+	CIP:216.228.117.160;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:dc6edge1.nvidia.com;CAT:NONE;SFS:(13230040)(36860700013)(82310400026)(1800799024)(376014);DIR:OUT;SFP:1101;
 X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 23 Jan 2025 19:09:10.2712
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 23 Jan 2025 19:10:32.2641
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 5875c602-4e1e-402c-93b0-08dd3be16af9
+X-MS-Exchange-CrossTenant-Network-Message-Id: c2684960-7dab-4c0f-2885-08dd3be19bcf
 X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.117.161];Helo=[mail.nvidia.com]
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.117.160];Helo=[mail.nvidia.com]
 X-MS-Exchange-CrossTenant-AuthSource:
-	BN2PEPF000055DD.namprd21.prod.outlook.com
+	CH2PEPF0000009B.namprd02.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Anonymous
 X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: LV8PR12MB9081
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH3PR12MB8459
+
+Hotplug platform data is common across the various systems, while
+hotplug driver should be able to configure only the instances relevant
+to specific system.
+
+For example, platform hoptplug data might contain descriptions for fan1,
+fan2, ..., fan{n}, while some systems equipped with all 'n' fans,
+others with less.
+Same for power units, power controllers, ASICs and so on.
+
+For detection of the real number of equipped devices capability
+registers are used.
+These registers used to indicate presence of hotplug devices through
+the bitmap.
+
+For some new big modular systems, these registers will provide presence
+by counters.
+
+Use slot parameter to determine whether capability register contains
+bitmask or counter.
 
 Some 'capability' registers can be shared between different resources.
-Add new fields 'capability_bit' and 'capability_mask' to structs
-'mlxreg_core_data' and 'mlxreg_core_item' for getting only relevant
-capability bits.
+Use fields 'capability_bit' and 'capability_mask' for getting only
+relevant capability bits.
 
 Reviewed-by: Felix Radensky <fradensky@nvidia.com>
 Signed-off-by: Vadim Pasternak <vadimp@nvidia.com>
 ---
- include/linux/platform_data/mlxreg.h | 8 ++++++++
- 1 file changed, 8 insertions(+)
+v2->v3
+Comments pointed out by Ilpo:
+- Change rol32() to shift left.
+---
+ drivers/platform/mellanox/mlxreg-hotplug.c | 22 ++++++++++++++++++++--
+ 1 file changed, 20 insertions(+), 2 deletions(-)
 
-diff --git a/include/linux/platform_data/mlxreg.h b/include/linux/platform_data/mlxreg.h
-index 0b9f81a6f753..d9f679752226 100644
---- a/include/linux/platform_data/mlxreg.h
-+++ b/include/linux/platform_data/mlxreg.h
-@@ -118,6 +118,8 @@ struct mlxreg_hotplug_device {
-  * @mask: attribute access mask;
-  * @bit: attribute effective bit;
-  * @capability: attribute capability register;
-+ * @capability_bit: started bit in attribute capability register;
-+ * @capability_mask: mask in attribute capability register;
-  * @reg_prsnt: attribute presence register;
-  * @reg_sync: attribute synch register;
-  * @reg_pwr: attribute power register;
-@@ -138,6 +140,8 @@ struct mlxreg_core_data {
- 	u32 mask;
- 	u32 bit;
- 	u32 capability;
-+	u32 capability_bit;
-+	u32 capability_mask;
- 	u32 reg_prsnt;
- 	u32 reg_sync;
- 	u32 reg_pwr;
-@@ -162,6 +166,8 @@ struct mlxreg_core_data {
-  * @reg: group interrupt status register;
-  * @mask: group interrupt mask;
-  * @capability: group capability register;
-+ * @capability_bit: started bit in attribute capability register;
-+ * @capability_mask: mask in attribute capability register;
-  * @cache: last status value for elements fro the same group;
-  * @count: number of available elements in the group;
-  * @ind: element's index inside the group;
-@@ -175,6 +181,8 @@ struct mlxreg_core_item {
- 	u32 reg;
- 	u32 mask;
- 	u32 capability;
-+	u32 capability_bit;
-+	u32 capability_mask;
- 	u32 cache;
- 	u8 count;
- 	u8 ind;
+diff --git a/drivers/platform/mellanox/mlxreg-hotplug.c b/drivers/platform/mellanox/mlxreg-hotplug.c
+index 0ce9fff1f7d4..c525b8754d48 100644
+--- a/drivers/platform/mellanox/mlxreg-hotplug.c
++++ b/drivers/platform/mellanox/mlxreg-hotplug.c
+@@ -274,6 +274,12 @@ static int mlxreg_hotplug_attr_init(struct mlxreg_hotplug_priv_data *priv)
+ 			if (ret)
+ 				return ret;
+ 
++			if (!regval)
++				continue;
++
++			/* Remove non-relevant bits. */
++			if (item->capability_mask)
++				regval = (regval & item->capability_mask) << item->capability_bit;
+ 			item->mask = GENMASK((regval & item->mask) - 1, 0);
+ 		}
+ 
+@@ -294,7 +300,19 @@ static int mlxreg_hotplug_attr_init(struct mlxreg_hotplug_priv_data *priv)
+ 				if (ret)
+ 					return ret;
+ 
+-				if (!(regval & data->bit)) {
++				/*
++				 * In case slot field is provided, capability
++				 * register contains counter, otherwise bitmask.
++				 * Skip non-relevant entries if slot set and
++				 * exceeds counter. Othewise validate entry by
++				 * matching bitmask.
++				 */
++				if (data->capability_mask)
++					regval = (regval & item->capability_mask) <<
++						 item->capability_bit;
++				if (data->slot > regval) {
++					break;
++				} else if (!(regval & data->bit) && !data->slot) {
+ 					data++;
+ 					continue;
+ 				}
+@@ -611,7 +629,7 @@ static int mlxreg_hotplug_set_irq(struct mlxreg_hotplug_priv_data *priv)
+ 				if (ret)
+ 					goto out;
+ 
+-				if (!(regval & data->bit))
++				if (!(regval & data->bit) && !data->slot)
+ 					item->mask &= ~BIT(j);
+ 			}
+ 		}
 -- 
 2.44.0
 
