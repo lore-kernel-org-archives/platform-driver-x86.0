@@ -1,340 +1,192 @@
-Received: from mail-pl1-f179.google.com (mail-pl1-f179.google.com [209.85.214.179])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from NAM12-MW2-obe.outbound.protection.outlook.com (mail-mw2nam12on2068.outbound.protection.outlook.com [40.107.244.68])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B83EE21322B;
-	Thu, 23 Jan 2025 15:27:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.179
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1737646025; cv=none; b=HWEFM0CJ3iBr2eJfTHkrPCm9o/O5fCEEZxv0UwE0LFcHP5+2XaaiAYlx4zrYMY4SvqEiaNoNdiofn4Yyer2IbKeGkf5N56F5YaoAhL/fucNwBNVr0vEnYWCX5c0piqE5Gzl/ZCmonAegxWUICWycmWKc24lCX3KgoeBwtBfsc58=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1737646025; c=relaxed/simple;
-	bh=MTePTFZO0fJY5+8Rwq04Zyp4iZ/qTd/L+xe/WvK/kzw=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=CkDtO8cyvjsI/b1cSHmyXTDYtb80Bk8dp3yQkKsYp+5mmjTjRgRl1DTr5omPETTniDrNh5az15xq/cO4mRuEbzSOC36TK48c1/MlBhWccXNi2Tb6AGuwEqhNuKhZBQSVOO0yJe9dTUGkUS6ZZmSacehfSFDddZguw9Mp/VN2y4w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=nkci6zzo; arc=none smtp.client-ip=209.85.214.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 855F61ADC90
+	for <platform-driver-x86@vger.kernel.org>; Thu, 23 Jan 2025 19:09:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.244.68
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1737659343; cv=fail; b=lm013bm6cOZ0u75hEH3TBGgbRJNGc5UnluzG4+A23xtBJVtv9YoQmQbNxJzdZDyqNg+WXXejoxCg298CfTQXXR9DPcl5RGrdtptP+rX1uWwkKXfq8ZSEcoMgVKHrOvn3eCz4sA66tAdDcfY16nsKcBs0joqXMvXaq0XQfH08Bp4=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1737659343; c=relaxed/simple;
+	bh=ZrLSjTUQzTAyFDnXVnVE+5ZifctxG0COs4BVnuLybq0=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=hiXQfRNrW4yKaBqHCtMouh6+BGTaC+io9A+qdgjRmRwScmWuJbuDg9K8ayZ8BsjFCqdNOYG4pSbQRB6jv5QFvsRd5nzoDuLDdDQqkyvh69IuK7Q0VKDUCsFCjliS1Hr/nmjaNyCpWZH+d+RYg9mr/oFl1SERGjSu9e8px78+hoQ=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=HU4mJPx5; arc=fail smtp.client-ip=40.107.244.68
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nkci6zzo"
-Received: by mail-pl1-f179.google.com with SMTP id d9443c01a7336-21631789fcdso30429005ad.1;
-        Thu, 23 Jan 2025 07:27:03 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1737646023; x=1738250823; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=U6kosElOaSMZSNtX69a/Hsyj1tzL+5G6ZJzdXAObE/E=;
-        b=nkci6zzo21Lkz+kGzYwoAPi8Fm/sictfW8Zit06qRcfKvPJ71KmLgw3khkKGLg+7ib
-         FbxK6Aw8okO6eCUlkvArbXfpRm0FaK/qcBhb+6oShoJLKGz09PXj0ffeHwirmu3GEFJy
-         L5k/9W7QPzJ3eD/eJVsxETx0YyFnau0bDXOvgOBWrzJojcfmdGd/VlCzgOcWM0CUy8kE
-         t+o+I1wZAihf5X1fR5rkRCV3QdzMpcWHEQY3CKntV3alQENgORZcSQnbpnYxW6ukqa6Q
-         vy4jnITe9C225fiV5r+iLGXlcyrAfTIkn3ZWOMmAWNCIjHNXido0w9hgPAAUpciMbyBB
-         mlHg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1737646023; x=1738250823;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=U6kosElOaSMZSNtX69a/Hsyj1tzL+5G6ZJzdXAObE/E=;
-        b=SZtbLPs08w/MUHNrF6dRIv3t3ZHwXnHrVLpJxFlDPce1vkD7WTXbIuaUAT9CuEf5bg
-         /wN/Mv2NCvQR3pw2qj4n2RNJ7EsAMeMFhfWCyDfTum/1opXmLJvQdJFQQHCZd63Yji9+
-         5PTCd6Peo/ivX1IOXa4+6OhtWw91/UVjiYV9dhfx1kL2WnYJwWOkuzCPsx/aFgyWzORG
-         Ub++WP71Mj+xArs/wf5cQ5YwQTOZs8Kg9l9rKj78yFdubKcLgTDgN2+c9+DPsvJBnhqJ
-         Nl4lacy9zUd8QLWo5MwPAly6YdoSiMIdm0ZAFxqij2D1CwcNm+Mas1VWMajFQ0iPJrUB
-         10AA==
-X-Forwarded-Encrypted: i=1; AJvYcCUiqK3x9JH1aDN8U1BOfVJPYAN1RPndrYmZufsUmO8Lr6YwsUqqXlcXhmrOhQ1W2j/NxoeUEbdURtKKvC4r@vger.kernel.org, AJvYcCUyST4BVrvhM7h7SxkfmqIIH+MPctNzkaxNzo3U9fE0wdkCpvcyj7CPyzTN2B4ZQq5/j7s4iO+DiYX6etA=@vger.kernel.org, AJvYcCWKsHOne/Ixue5xegryUCt2sKkTYfBvs8clk5UbvdPtAkBfc7CG2XPaUqoRsZrZm3rx6s1xZHXloQsJjIGL@vger.kernel.org, AJvYcCWsFTqpS5/HXTqilkl7oqV8A/Yq5uXA/vng2dkzaPzbwulMpwn6GMhYRDpJEImxtaCSnJPnfcUciSaplnM4U2FK+H6k6Q==@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz+qcgUCtQGYL5FjvHB6SvJcI8wl43BSzIc7MzTtXaXREuM1+e2
-	bnCCa0hXBbqD4aeePn4+MtDL6jH2rqsEXtYQv/nf0vJqYfzD3vNS
-X-Gm-Gg: ASbGncvpwNbtTMfaDF5ML8GVuHt2b4T9wBlKeOuxpHKu35ok8EV9p7n4D5/pUUd5JZs
-	MGo3FazQ5CGi63c9USCwP5+zgImMXE/PQf0O1xf0XUqYnwGXQRjqMdAGm9MSqqznOIycDcryIaw
-	jtID4PseXe1LSWrIzEQ9MVEGO0zxX1GHVzoSET+LcTm0kPqspkj7mWEqt2pNlPQ1uTKkDwFplHt
-	J8FqvxPhXhTp1h68yeNNu0+onKQD3mbyxOXhDJvEwtmUw7q/NZmCoqRtd91Zl7sxt7hvyJMrxBI
-	pkVA9/jcoff9Wv2r
-X-Google-Smtp-Source: AGHT+IHFlluqRzeoleihkx/bcTrNne6uQb8YuY7g6wHNtvViX8qKUhx6520LrDuU/chdPPdA2LdZDw==
-X-Received: by 2002:a05:6a20:9c8b:b0:1e1:b878:de64 with SMTP id adf61e73a8af0-1eb696aeb45mr6435398637.6.1737646022746;
-        Thu, 23 Jan 2025 07:27:02 -0800 (PST)
-Received: from SC8280XP.. ([144.202.86.13])
-        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-a9bcdcf707dsm11247915a12.32.2025.01.23.07.26.54
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 23 Jan 2025 07:27:02 -0800 (PST)
-From: Pengyu Luo <mitltlatltl@gmail.com>
-To: Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Bjorn Andersson <andersson@kernel.org>,
-	Konrad Dybcio <konradybcio@kernel.org>,
-	Hans de Goede <hdegoede@redhat.com>,
-	=?UTF-8?q?Ilpo=20J=C3=83=C2=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	Bryan O'Donoghue <bryan.odonoghue@linaro.org>,
-	Jean Delvare <jdelvare@suse.com>,
-	Guenter Roeck <linux@roeck-us.net>
-Cc: devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-arm-msm@vger.kernel.org,
-	platform-driver-x86@vger.kernel.org,
-	linux-hwmon@vger.kernel.org,
-	Pengyu Luo <mitltlatltl@gmail.com>,
-	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
-	Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
-Subject: [PATCH v6 3/3] arm64: dts: qcom: gaokun3: Add Embedded Controller node
-Date: Thu, 23 Jan 2025 23:25:59 +0800
-Message-ID: <20250123152559.52449-4-mitltlatltl@gmail.com>
-X-Mailer: git-send-email 2.47.1
-In-Reply-To: <20250123152559.52449-1-mitltlatltl@gmail.com>
-References: <20250123152559.52449-1-mitltlatltl@gmail.com>
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="HU4mJPx5"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=kkqT+379vYca+4Jx+iwxNI/C69m2zcBgWcSoR4MGkz255lQPfL67R5q+SBwveVmU4NCV5Dx50C+x+4m5vkBGCWXlPbMcZ6vlayxdUDMxKGqXWhBxsXY1edv6HS5UOTHhcg4foPApRcAEtcRJ29EsrbyI/d04aBf/VMRnTYaj7hD124RfT6Rw+UHa/nQZANUsLoI2rDby3Gz4BKPTfCdXAKnfSx5VHJsM+DrrL9SfoHy6kGgLKxoLnSvWEiSqRylBDYyrpF81KkKcnXZRKud7TlRYoa2ST9PkW6VXBFZBJ8jE9VsNyLUJWXjVFENfxuZP1FrTW4nk1qMLgPJBFHz8BA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=8izV0uUoQKnZf2Edwhq+wrSYF4oBU2jRJQZLGtY8Ntc=;
+ b=B7wgwk8WuM7GL+8qm8/xnJZnc1vq3H1+RQ4F+wbQriYUQcxRrQzPQpq028L3A7XDDMFk3xMLTbgH/IkoVIOpFv9k/Q08Vu9JrxP1bg5UJqiFjjOm4qTOxTOtFsd0Tq1GLtbUV6yrgyNvahVns5TNiAmMXCE6k22vfLuL/w1Ll+su8pzSub47T+yf6259LAkwJx6rq3ey/X+SFntfnq4Jw2Xzr9Q9eWf/NN4g3cYmI3YiAWKy6lRBq3NQz0FmnigONqSMp2zhHqYiJXSYXqfGb7pSqUbPUB9RD2AGekLW+5Sr2xv84HRRz/jXPpLT3Qb5b4IEjjCrLrG/1KsYJGrHFw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 216.228.117.161) smtp.rcpttodomain=linux.intel.com smtp.mailfrom=nvidia.com;
+ dmarc=pass (p=reject sp=reject pct=100) action=none header.from=nvidia.com;
+ dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=8izV0uUoQKnZf2Edwhq+wrSYF4oBU2jRJQZLGtY8Ntc=;
+ b=HU4mJPx5j6j5j6RzoKNQNb6SJzbATINLAjZKKikrpxgQTQ2D6hm/TWpHL0Tc+b6vEldGBM7tu91Bj6jDWOfW8xea4iS3LptM3qeJSE6A1wSzqE6MHorugIftNozaCKstgTyOjO3xTN732Kk0DDNBhxSMnJ1WQZ7xzUb05Iqve89aYMgxzt/uvPcgn9741aJi4fVoBFOY9lncetx9nuI4WUOKWTCn6vUZQEQ0DaDzL4XDyS1dloTyr2i2F5pPGX/sse0q8LhGyX0+gTiqRhjHoXGBplfPacwjLDYFrjc2p05mJWc8C2DO0E1pViscNrjp8yny7u9eQSNK+QKvhnj0jw==
+Received: from BN9PR03CA0655.namprd03.prod.outlook.com (2603:10b6:408:13b::30)
+ by BY5PR12MB4290.namprd12.prod.outlook.com (2603:10b6:a03:20e::8) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8356.22; Thu, 23 Jan
+ 2025 19:08:57 +0000
+Received: from BN2PEPF000055DE.namprd21.prod.outlook.com
+ (2603:10b6:408:13b:cafe::ef) by BN9PR03CA0655.outlook.office365.com
+ (2603:10b6:408:13b::30) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.8377.14 via Frontend Transport; Thu,
+ 23 Jan 2025 19:08:57 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 216.228.117.161)
+ smtp.mailfrom=nvidia.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=nvidia.com;
+Received-SPF: Pass (protection.outlook.com: domain of nvidia.com designates
+ 216.228.117.161 as permitted sender) receiver=protection.outlook.com;
+ client-ip=216.228.117.161; helo=mail.nvidia.com; pr=C
+Received: from mail.nvidia.com (216.228.117.161) by
+ BN2PEPF000055DE.mail.protection.outlook.com (10.167.245.8) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.8398.0 via Frontend Transport; Thu, 23 Jan 2025 19:08:55 +0000
+Received: from rnnvmail201.nvidia.com (10.129.68.8) by mail.nvidia.com
+ (10.129.200.67) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.4; Thu, 23 Jan
+ 2025 11:08:38 -0800
+Received: from r-build-bsp-02.mtr.labs.mlnx (10.126.231.35) by
+ rnnvmail201.nvidia.com (10.129.68.8) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.4; Thu, 23 Jan 2025 11:08:36 -0800
+From: Vadim Pasternak <vadimp@nvidia.com>
+To: <ilpo.jarvinen@linux.intel.com>, <hdegoede@redhat.com>
+CC: <michaelsh@nvidia.com>, <crajank@nvidia.com>, <fradensky@nvidia.com>,
+	<oleksandrs@nvidia.com>, <platform-driver-x86@vger.kernel.org>, "Vadim
+ Pasternak" <vadimp@nvidia.com>
+Subject: [PATCH v4 00/12] platform/mellanox: Add support for new systems, amendments, relocate mlx-platform module
+Date: Thu, 23 Jan 2025 21:08:04 +0200
+Message-ID: <20250123190818.3834-1-vadimp@nvidia.com>
+X-Mailer: git-send-email 2.44.0
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: rnnvmail203.nvidia.com (10.129.68.9) To
+ rnnvmail201.nvidia.com (10.129.68.8)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: BN2PEPF000055DE:EE_|BY5PR12MB4290:EE_
+X-MS-Office365-Filtering-Correlation-Id: d27b67b5-e8f4-4be6-a860-08dd3be16270
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|36860700013|1800799024|82310400026|376014;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?b2lSSTVhdXNNRUErY3dQMDNqN0FXWUpVVVdPTFBPM3dEQUVweGxlVzFtRlFr?=
+ =?utf-8?B?UERkd2hmM0s1Y2pTeGpqZnIwenNBaVVUbEhiNzdsTGZxNHdNTUNCUXNkTFIv?=
+ =?utf-8?B?ZEN2ZXdIemppNVkvbXNKSHN1SkZDMEQybWtnOG5iQTA4bk44TjNveFZ2ai90?=
+ =?utf-8?B?c1hCTWNzcVBqTzdHa0o5anZXV0JDendUeUFhMEd0aEI5ZzJaZ2xXc1padnBw?=
+ =?utf-8?B?aWlWcHRDaTdmMFgrQW80QVBFWXRqdzE1UnA1SWtjYnpyY1Z0a1VDQVBKRE05?=
+ =?utf-8?B?ODJvclZXMHpUM0JGZE43TG9CTG4yUEpqK0U0dFVHYzN3V2pTbWVnZUoxUU1t?=
+ =?utf-8?B?UWlFS1gzZHFoa0hzb1lCWms5UzVEWSszMkZpS3ZtZk9wc3VZOHJOSUVERGZQ?=
+ =?utf-8?B?eDJNM1VJU05HZEVYaVFOQUxrS0E5TkRoMElCL2IxMjVBQXNhZStIUDNmVEtN?=
+ =?utf-8?B?NVNNYjJYWWhCU0xqSTlCc3FGeXc0OGdBY3ZiZXBzOCs2WGVIZWxZazVFMG9L?=
+ =?utf-8?B?Y2U0dERleDYwa21uM3R1cHZKek53UWpsZVhpUU9yekFab2xyd1R6NUZyekVM?=
+ =?utf-8?B?dlM1dk8vMmZJQ0ZnMlZsdjUrVTI3dGd6dVFKSFB3TzdiQTRBOGRQR1BicndE?=
+ =?utf-8?B?QkE0cVVXdW02ZThCQlR0TFJvcnVqZHR3VUk0N0NZWkQxNHlscHd0eWZwZEl3?=
+ =?utf-8?B?Z3JHTjNGQ1RsKzlRQzQ3Sjdxa3ZsUjBBUy8vNGtOQWFnQmhqNGdjYjFzS21u?=
+ =?utf-8?B?dUJFQ0VZS21FbEt0YkZoTUZ6TmQ1Y2d4WnRtdmZ1Yy84cVd3WTdQZXVkWXBk?=
+ =?utf-8?B?Zk9Za0RxTlZ6L29JQy8rWFpGeGJGandzR3gyckova1VFdlRBeU1rSDNOYXl1?=
+ =?utf-8?B?NXU4MC8wbjlJdWdqb2dZRVpaM3k2dVdPLytyRHdheXdCbitsSkFONHYzMk5y?=
+ =?utf-8?B?YjBjVFVjV3BkbGx2TnlYeEE1ZGM5ZVBBa2pYdi90bFVhRDNKeFdVS3M3bWxG?=
+ =?utf-8?B?WEN0MUg2NlBIQkIwOFo2WkVRMkpBNU5KejluVDdJdVJsMzAzWmpQcGU0SFlQ?=
+ =?utf-8?B?VjRMYVlrTDU3TEZrYm02cVQ4MWJRaUhoajcwb0VNRUxDWUEySjNqeFE3MWo4?=
+ =?utf-8?B?MWZIYkJXVlI3TWkrbW1WdFhyRitOOUx0TXBmOEZwOEV1K21ma0hreFJDMDha?=
+ =?utf-8?B?eDNDb0dyZ0ZLaUlHbnJ1TDEvWkhVZmVzZlcyeUNwSit3dDR2bk9QeFlKR3Rl?=
+ =?utf-8?B?OCtpd2I4VU8yNjZMY0tDQWVSekZzUGw0TnhKQkV1QkZqcVVJbVR2K29jZVU5?=
+ =?utf-8?B?L1dvRFRTSldkS05QUWVIa2ZhbUFVZEg4Tk5uRkZZUm92K0VOT0N5YkpleERn?=
+ =?utf-8?B?TUJIZ3pmSG80YlhicjVyQ0hIYlpyMDBhaUtIZUZReThhVXV2RFovb3N2NFdT?=
+ =?utf-8?B?eFVSTldVNG1CeUZqZnBUYVVjUHg2MDlyd1JIVGlFVWxzaGlkT3dQUGxXcW9F?=
+ =?utf-8?B?OVlUUzc0bUp4Z1lZZHZPaFZwZkJyeXZlSkdaQmxvcncvMW5vSE1FN09QMUF1?=
+ =?utf-8?B?WjI0Q0lKdkoyQ1g3M3U1RWtLbkZqVHRUNmxIWkdBQ2czbXhNaXNUUHNjeFR5?=
+ =?utf-8?B?dEVFdHJEbFRHZC9pNkkrQUtIRlREaFJsNjhPV1drREtIQmVUem9OVEtJeHFl?=
+ =?utf-8?B?aGFlWVQvV2duNkJhbldEQXMyUndoRnlHNFNXRHpUdmo5cExGZUx4Ykx0N1ZK?=
+ =?utf-8?B?M0RzNVJBQnk4KythdDR4eFBpSVYzcTl3MGovMzlLcU1ETm1nY3lhZ0FFUGZB?=
+ =?utf-8?B?NGRJcWJDNHBqSkptWkpSSWtUSE01ek9odksvRzZ0NWJndzlPYm1oU3M4V2h3?=
+ =?utf-8?B?a3YzMnU2b1UrYnhJdW5Fbzhsa1cxT3djZTB6czBzSGlzbkRtZjF4b3lUSis2?=
+ =?utf-8?B?WUd5Wk9QQklENURtTFRKL0RvV0FpbkRPQVdiMHdlMlh2S3ZMK2FhVFhDbEdX?=
+ =?utf-8?B?d1dZUmlXUXdnPT0=?=
+X-Forefront-Antispam-Report:
+	CIP:216.228.117.161;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:dc6edge2.nvidia.com;CAT:NONE;SFS:(13230040)(36860700013)(1800799024)(82310400026)(376014);DIR:OUT;SFP:1101;
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 23 Jan 2025 19:08:55.9365
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: d27b67b5-e8f4-4be6-a860-08dd3be16270
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.117.161];Helo=[mail.nvidia.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	BN2PEPF000055DE.namprd21.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BY5PR12MB4290
 
-The Embedded Controller in the Huawei Matebook E Go is accessible on &i2c15
-and provides battery and adapter status, port orientation status, as well
-as HPD event notifications for two USB Type-C port, etc.
+The patchset contains:
+Patch #1: Relocation mlx-platform driver.
+	Change of MAINTANERS list after relocation of mlx-platform.
+Patches #2; #6; #9: Add cosmetic changes - removing spaces, style.
+Patch #3: Repurposing of one register.
+Patches #4 - #5: Add new field.
+Patches #6; #7; #9; #10 : Introduce systems: new SN428 smart switch
+	equipped with DPU for offloading, new 2U systems SN5610 and SN5640,
+	new compact system SN2200 OCP rack complained.
+Patch #12 - Add documentation.
 
-Add the EC to the device tree and describe the relationship among
-the type-c connectors, role switches, orientation switches and the QMP
-combo PHY.
+v3->v4:
+ Comments pointed out by Ilpo:
+ - Added inside pacthes.
+v2->v3:
+ Comments pointed out by Ilpo:
+ - Added inside pacthes.
+v0->v2:
+ Comments pointed out by Krzysztof:
+ - Merge changes of MAINTANERS to the 1-st patch.
+ - Change order between SoB and RB.
 
-Signed-off-by: Pengyu Luo <mitltlatltl@gmail.com>
-Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Reviewed-by: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
----
- .../boot/dts/qcom/sc8280xp-huawei-gaokun3.dts | 163 ++++++++++++++++++
- 1 file changed, 163 insertions(+)
+Vadim Pasternak (12):
+  mellanox: Relocate mlx-platform driver
+  platform: mellanox: mlx-platform: Cosmetic changes
+  platform: mellanox: mlx-platform: Change register name
+  platform_data/mlxreg: Add capability bit and mask fields
+  platform/mellanox: mlxreg-hotplug: Add support for new flavor of
+    capability registers
+  platform/mellanox: Rename field to improve code readability
+  platform/mellanox: mlxreg-dpu: Add initial support for Nvidia DPU
+  platform: mellanox: Introduce support of Nvidia smart switch
+  platform: mellanox: Cosmetic changes to improve code style
+  platform: mellanox: mlx-platform: Add support for new Nvidia system
+  platform: mellanox: nvsw-sn2200: Add support for new system flavour
+  Documentation/ABI: Add new attribute for mlxreg-io sysfs interfaces
 
-diff --git a/arch/arm64/boot/dts/qcom/sc8280xp-huawei-gaokun3.dts b/arch/arm64/boot/dts/qcom/sc8280xp-huawei-gaokun3.dts
-index 09b95f89e..1667c7157 100644
---- a/arch/arm64/boot/dts/qcom/sc8280xp-huawei-gaokun3.dts
-+++ b/arch/arm64/boot/dts/qcom/sc8280xp-huawei-gaokun3.dts
-@@ -28,6 +28,7 @@ / {
- 
- 	aliases {
- 		i2c4 = &i2c4;
-+		i2c15 = &i2c15;
- 		serial1 = &uart2;
- 	};
- 
-@@ -216,6 +217,40 @@ map1 {
- 		};
- 	};
- 
-+	usb0-sbu-mux {
-+		compatible = "pericom,pi3usb102", "gpio-sbu-mux";
-+
-+		select-gpios = <&tlmm 164 GPIO_ACTIVE_HIGH>;
-+
-+		pinctrl-0 = <&usb0_sbu_default>;
-+		pinctrl-names = "default";
-+
-+		orientation-switch;
-+
-+		port {
-+			usb0_sbu_mux: endpoint {
-+				remote-endpoint = <&ucsi0_sbu>;
-+			};
-+		};
-+	};
-+
-+	usb1-sbu-mux {
-+		compatible = "pericom,pi3usb102", "gpio-sbu-mux";
-+
-+		select-gpios = <&tlmm 47 GPIO_ACTIVE_HIGH>;
-+
-+		pinctrl-0 = <&usb1_sbu_default>;
-+		pinctrl-names = "default";
-+
-+		orientation-switch;
-+
-+		port {
-+			usb1_sbu_mux: endpoint {
-+				remote-endpoint = <&ucsi1_sbu>;
-+			};
-+		};
-+	};
-+
- 	wcn6855-pmu {
- 		compatible = "qcom,wcn6855-pmu";
- 
-@@ -584,6 +619,97 @@ touchscreen@4f {
- 
- };
- 
-+&i2c15 {
-+	clock-frequency = <400000>;
-+
-+	pinctrl-0 = <&i2c15_default>;
-+	pinctrl-names = "default";
-+
-+	status = "okay";
-+
-+	embedded-controller@38 {
-+		compatible = "huawei,gaokun3-ec";
-+		reg = <0x38>;
-+
-+		interrupts-extended = <&tlmm 107 IRQ_TYPE_LEVEL_LOW>;
-+
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+
-+		connector@0 {
-+			compatible = "usb-c-connector";
-+			reg = <0>;
-+			power-role = "dual";
-+			data-role = "dual";
-+
-+			ports {
-+				#address-cells = <1>;
-+				#size-cells = <0>;
-+
-+				port@0 {
-+					reg = <0>;
-+
-+					ucsi0_hs_in: endpoint {
-+						remote-endpoint = <&usb_0_dwc3_hs>;
-+					};
-+				};
-+
-+				port@1 {
-+					reg = <1>;
-+
-+					ucsi0_ss_in: endpoint {
-+						remote-endpoint = <&usb_0_qmpphy_out>;
-+					};
-+				};
-+
-+				port@2 {
-+					reg = <2>;
-+
-+					ucsi0_sbu: endpoint {
-+						remote-endpoint = <&usb0_sbu_mux>;
-+					};
-+				};
-+			};
-+		};
-+
-+		connector@1 {
-+			compatible = "usb-c-connector";
-+			reg = <1>;
-+			power-role = "dual";
-+			data-role = "dual";
-+
-+			ports {
-+				#address-cells = <1>;
-+				#size-cells = <0>;
-+
-+				port@0 {
-+					reg = <0>;
-+
-+					ucsi1_hs_in: endpoint {
-+						remote-endpoint = <&usb_1_dwc3_hs>;
-+					};
-+				};
-+
-+				port@1 {
-+					reg = <1>;
-+
-+					ucsi1_ss_in: endpoint {
-+						remote-endpoint = <&usb_1_qmpphy_out>;
-+					};
-+				};
-+
-+				port@2 {
-+					reg = <2>;
-+
-+					ucsi1_sbu: endpoint {
-+						remote-endpoint = <&usb1_sbu_mux>;
-+					};
-+				};
-+			};
-+		};
-+	};
-+};
-+
- &mdss0 {
- 	status = "okay";
- };
-@@ -1004,6 +1130,10 @@ &usb_0_dwc3 {
- 	dr_mode = "host";
- };
- 
-+&usb_0_dwc3_hs {
-+	remote-endpoint = <&ucsi0_hs_in>;
-+};
-+
- &usb_0_hsphy {
- 	vdda-pll-supply = <&vreg_l9d>;
- 	vdda18-supply = <&vreg_l1c>;
-@@ -1025,6 +1155,10 @@ &usb_0_qmpphy_dp_in {
- 	remote-endpoint = <&mdss0_dp0_out>;
- };
- 
-+&usb_0_qmpphy_out {
-+	remote-endpoint = <&ucsi0_ss_in>;
-+};
-+
- &usb_1 {
- 	status = "okay";
- };
-@@ -1033,6 +1167,10 @@ &usb_1_dwc3 {
- 	dr_mode = "host";
- };
- 
-+&usb_1_dwc3_hs {
-+	remote-endpoint = <&ucsi1_hs_in>;
-+};
-+
- &usb_1_hsphy {
- 	vdda-pll-supply = <&vreg_l4b>;
- 	vdda18-supply = <&vreg_l1c>;
-@@ -1054,6 +1192,10 @@ &usb_1_qmpphy_dp_in {
- 	remote-endpoint = <&mdss0_dp1_out>;
- };
- 
-+&usb_1_qmpphy_out {
-+	remote-endpoint = <&ucsi1_ss_in>;
-+};
-+
- &usb_2 {
- 	status = "okay";
- };
-@@ -1177,6 +1319,13 @@ i2c4_default: i2c4-default-state {
- 		bias-disable;
- 	};
- 
-+	i2c15_default: i2c15-default-state {
-+		pins = "gpio36", "gpio37";
-+		function = "qup15";
-+		drive-strength = <2>;
-+		bias-pull-up;
-+	};
-+
- 	mode_pin_active: mode-pin-state {
- 		pins = "gpio26";
- 		function = "gpio";
-@@ -1301,6 +1450,20 @@ tx-pins {
- 		};
- 	};
- 
-+	usb0_sbu_default: usb0-sbu-state {
-+		pins = "gpio164";
-+		function = "gpio";
-+		drive-strength = <16>;
-+		bias-disable;
-+	};
-+
-+	usb1_sbu_default: usb1-sbu-state {
-+		pins = "gpio47";
-+		function = "gpio";
-+		drive-strength = <16>;
-+		bias-disable;
-+	};
-+
- 	wcd_default: wcd-default-state {
- 		reset-pins {
- 			pins = "gpio106";
+ .../ABI/stable/sysfs-driver-mlxreg-io         |   96 +
+ MAINTAINERS                                   |    7 +-
+ drivers/platform/mellanox/Kconfig             |   25 +
+ drivers/platform/mellanox/Makefile            |    2 +
+ .../platform/{x86 => mellanox}/mlx-platform.c | 3769 ++++++++++++-----
+ drivers/platform/mellanox/mlxreg-dpu.c        |  619 +++
+ drivers/platform/mellanox/mlxreg-hotplug.c    |   30 +-
+ drivers/platform/mellanox/nvsw-sn2201.c       |  118 +-
+ drivers/platform/x86/Kconfig                  |   13 -
+ drivers/platform/x86/Makefile                 |    1 -
+ include/linux/platform_data/mlxreg.h          |   12 +-
+ 11 files changed, 3550 insertions(+), 1142 deletions(-)
+ rename drivers/platform/{x86 => mellanox}/mlx-platform.c (80%)
+ create mode 100644 drivers/platform/mellanox/mlxreg-dpu.c
+
 -- 
-2.47.1
+2.44.0
 
