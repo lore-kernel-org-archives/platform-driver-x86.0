@@ -1,260 +1,382 @@
-Received: from NAM10-BN7-obe.outbound.protection.outlook.com (mail-bn7nam10on2089.outbound.protection.outlook.com [40.107.92.89])
+Received: from mout.gmx.net (mout.gmx.net [212.227.15.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ED0131591EA
-	for <platform-driver-x86@vger.kernel.org>; Fri, 24 Jan 2025 17:30:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.92.89
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1737739845; cv=fail; b=DTvBc1TECSZpwZsKZxxaGD0/2VyYasA8EIGxBpACc6u2kRUflq1U/zjK3u6uTYsUdxugpxA26ctv1DLujtB+r06VdZoMCFZXc+EQWIeBjuN9q5CosL4tb87BpzOO7kEs5L5jQpJBMaCzxwskJs5rGIZmi5HjHpZ8sASPGn2hJoU=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1737739845; c=relaxed/simple;
-	bh=29E62jaDXqCKIB0V/AFpPgsc2C+LlZ3Oe3hOmXkDBJM=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=YqVwwIsATE+ZQtYdcq6bubUkYHRMKD9/vH8bSK8jmkgb6NVCsvXJS7oQXDFxo3TQy2ekxyEF57hn4vpbx6unpWCq+u6+y6EPpbEb+Sk0BreP4A7N/rF5heiNScsGrCJc0ZcP4Jvz0ifZZpukvbT60g6hrs1O3qf0ZOrvHnD6BKo=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=XFXXbRjn; arc=fail smtp.client-ip=40.107.92.89
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1140A1D54D8;
+	Fri, 24 Jan 2025 21:17:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.18
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1737753481; cv=none; b=LMeNOJTuXFDoNoUu9b1JskRHgqX+2hJIzjxu3ZD/b26ROzRHf0MWiWRQw9p81/Q34k0NVJuS3UQFOgVo6oIA/ifoKGQdAFh0ksJVCukA0NXMx72v6kG6K0O36kvz2daEu/QJ4uR0Ruiw1rCQfgR8rNJMMhVCFGTkh8SpfDMnwRg=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1737753481; c=relaxed/simple;
+	bh=Ze0p5frSQao19D67/gVXKYuW07ghACIeSt6lO4Ic3v0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=QjF4QxtnB4SGr2Vd00T1WcQnOuNGTMqMeoUfVlERDjNPi2gXl1zaOIWi5GfsgTA7Ept7OChXe5lTSnRqj5T4pV87QAZJ2uA5592S7wqdyXH3Hh0rcjjDS7V2ezcYDDPaIyPRo7AQxb8pf3oHYf3ZagpTOP+yM9CExL22Ecb5Z6w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b=Bs5SlB5Y; arc=none smtp.client-ip=212.227.15.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="XFXXbRjn"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=e2h8ZCsIAbGatKk9RSB4o1vOx1XFQ1p3k8lhT1Yx6Yqj9Z+taYpO88lEW6SuZResuWZ9xyo5dj9uwENYzp/LqFAzjUae9bqXbn85JBrxKjKHWpGzZKhMq6ddaVDAIgfzfiPQEll0+/HR10v0dRnaZInzYhiuGlfpRLYc/EJauUDOP72VuUFTZoWU1NSNNM3iP6owhvLYDdoB9KlpaoEiS1DmGkEjzkmMN2crGHr1DPQhOnbv5yoqTgzF6WBo05oYDX48OUrxZac7AnXwRqjdekf3kHKlmeer9KKrW2tvP2IAhSGgVbLr8xporyrlc0ybFPqfMJFlc1YYw1S+Oqfu9A==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=p6S2fwU+ji8u6GbAPz/hXm4Hcdcs6F56f7Dpiog+3EE=;
- b=csvOnAZvQEzpndmYGtvn2y41epGtij6qgIIjMEXs/fa76XTKyyem28THWwzLdTCs3IoaL2czJKDY9UScjmtYPZ0PaxBSaOS+20PzD/ziWqqkW4gL0hogxIjGZ2pRui3kaxyX/KOU0jkcnyDIFtzWz+CKcaqix7dpcp4AB61Bg40slP7XQAAfd2UDPeXG8IVdnepZLE9sXdVAT5Qf/lB1Wp6gsEGzgEerOu+CYkYzy5goHwMf2+vM2IaD9jJzxSkaFht4OHo8pmLi2pQKJvFsE3oxfjS5+Q4VRuIhwjegTz9qsyfdzC0vyS4TPfosfrKcr7/w6ui/QobH/1+9lpqj3A==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 216.228.117.160) smtp.rcpttodomain=linux.intel.com smtp.mailfrom=nvidia.com;
- dmarc=pass (p=reject sp=reject pct=100) action=none header.from=nvidia.com;
- dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=p6S2fwU+ji8u6GbAPz/hXm4Hcdcs6F56f7Dpiog+3EE=;
- b=XFXXbRjn2al/q8u1GUQJvEhTTADTowdifl8O4Bho8Zc4C9kYprCtL7Ji/qdwbFwwNAMPGfGU3OhToSTACQxGgJ3wBiaaC5a+z9NqoM3YBoAtc2AB0niN6MK0un+0H1FILLUgPcemTaeEXLZFuhzyL2byQI2eEDce1XsisJDNfZl3ulUE1yh2BbHcjfDx/yxovra5g1ve7XOslmRoYoUXcHN+bCVVqrHGiSyiqkYCbkfZsPL8WjPqWapk0hPkcMo+Xh7RDlNuUlqtUE4IOw4Q9O/g0gYawl1BoXT2QimiKJvedMard35wyCsWj7zK8PXGzb2FegroqdYRSISWhrl9dw==
-Received: from BN9PR03CA0366.namprd03.prod.outlook.com (2603:10b6:408:f7::11)
- by SN7PR12MB6714.namprd12.prod.outlook.com (2603:10b6:806:272::18) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8377.19; Fri, 24 Jan
- 2025 17:30:38 +0000
-Received: from BN3PEPF0000B36D.namprd21.prod.outlook.com
- (2603:10b6:408:f7:cafe::5f) by BN9PR03CA0366.outlook.office365.com
- (2603:10b6:408:f7::11) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.8377.19 via Frontend Transport; Fri,
- 24 Jan 2025 17:30:38 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 216.228.117.160)
- smtp.mailfrom=nvidia.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=nvidia.com;
-Received-SPF: Pass (protection.outlook.com: domain of nvidia.com designates
- 216.228.117.160 as permitted sender) receiver=protection.outlook.com;
- client-ip=216.228.117.160; helo=mail.nvidia.com; pr=C
-Received: from mail.nvidia.com (216.228.117.160) by
- BN3PEPF0000B36D.mail.protection.outlook.com (10.167.243.164) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.8398.0 via Frontend Transport; Fri, 24 Jan 2025 17:30:37 +0000
-Received: from rnnvmail201.nvidia.com (10.129.68.8) by mail.nvidia.com
- (10.129.200.66) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.4; Fri, 24 Jan
- 2025 09:30:18 -0800
-Received: from r-build-bsp-02.mtr.labs.mlnx (10.126.230.35) by
- rnnvmail201.nvidia.com (10.129.68.8) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.4; Fri, 24 Jan 2025 09:30:15 -0800
-From: Vadim Pasternak <vadimp@nvidia.com>
-To: <ilpo.jarvinen@linux.intel.com>, <hdegoede@redhat.com>
-CC: <michaelsh@nvidia.com>, <crajank@nvidia.com>, <fradensky@nvidia.com>,
-	<oleksandrs@nvidia.com>, <platform-driver-x86@vger.kernel.org>, "Vadim
- Pasternak" <vadimp@nvidia.com>
-Subject: [PATCH v5 12/12] Documentation/ABI: Add new attribute for mlxreg-io sysfs interfaces
-Date: Fri, 24 Jan 2025 19:26:30 +0200
-Message-ID: <20250124172632.22437-13-vadimp@nvidia.com>
-X-Mailer: git-send-email 2.44.0
-In-Reply-To: <20250124172632.22437-1-vadimp@nvidia.com>
-References: <20250124172632.22437-1-vadimp@nvidia.com>
+	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b="Bs5SlB5Y"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.de;
+	s=s31663417; t=1737753471; x=1738358271; i=w_armin@gmx.de;
+	bh=JlMgk2jk5xZFMSS8+QhddreKHDZ0OCkwsxPDzWBIv8w=;
+	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:To:Cc:
+	 References:From:In-Reply-To:Content-Type:
+	 Content-Transfer-Encoding:cc:content-transfer-encoding:
+	 content-type:date:from:message-id:mime-version:reply-to:subject:
+	 to;
+	b=Bs5SlB5Ydz5XWTozL8qzhImnuHv91iKPN0cR77EIrpcRBD2Wcv++cuQXceN8DVsO
+	 mBvYgDcnaFohh95xmX4prbDmEzVi5b2O8JvjmZiB2Njm4sbISJeNuj3d/cSGfRTM4
+	 q/nmlKPpjspzPC6RXZ2fZN9INY3hNq3wZl4DiyROnbb/9jRYZvkoRKC90Gjvk8+f4
+	 u2ACJ74lfVp8zZrX+koGQYBTxc5nm91UFz36gV+agpQB4QvvEN00k0eiYVEKo9rWe
+	 gZ3wysMhy0haSUosgnZljMMBnd4mDSjNjDd+uCyA3/UqyVKAHrE6clyNL27e2C8iZ
+	 aejoqDAfn/pfrfK4/A==
+X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
+Received: from [192.168.0.69] ([93.202.246.83]) by mail.gmx.net (mrgmx005
+ [212.227.17.190]) with ESMTPSA (Nemesis) id 1MtOKi-1tLhgn2D2k-017Msz; Fri, 24
+ Jan 2025 22:17:51 +0100
+Message-ID: <c48f0e80-3b38-4fdd-9ec4-d585c7c7c16e@gmx.de>
+Date: Fri, 24 Jan 2025 22:17:49 +0100
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: rnnvmail202.nvidia.com (10.129.68.7) To
- rnnvmail201.nvidia.com (10.129.68.8)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: BN3PEPF0000B36D:EE_|SN7PR12MB6714:EE_
-X-MS-Office365-Filtering-Correlation-Id: 94202b9c-464a-4ad9-12e7-08dd3c9cd13e
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|1800799024|36860700013|376014|82310400026;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?KBxgJ8mHfwocB+VK4amrjhthft4znt7gqRtgWbYAiRumon7JXSW0VzUDKRKI?=
- =?us-ascii?Q?c/Wn3gvdyFKVFMZsO3wo7fX9AatJBum/MjatiO01g5o7TkX83xaHeqiUsuY6?=
- =?us-ascii?Q?PRjPM1Hub/meaKyvyJuGu4usGo4iIioKDuiZqBmbfdSa5RNxuavFFOWBzXXh?=
- =?us-ascii?Q?IsGVAiKc5BR4Dhz8CL6InNSBo4Jyo4DT0N8RBj47Myhb11O1rVAzNYcLtRr9?=
- =?us-ascii?Q?5gkuBtgAbq0o5xZ1i2BMKNWpyDNo9Z1BeKXeKCn6PdModekKt3wVql8tp8JL?=
- =?us-ascii?Q?GxrtYQFndcQosGhf/k4qaSJX+eth4Ih9bRbNpTtfd93Skp63gMVA5VechgJS?=
- =?us-ascii?Q?boY8JQdeGGoOqhe+lwFPTrrmrzTDlq2fnDvZ7inEPGEWTfD+wDTl+7xonVXt?=
- =?us-ascii?Q?XawnA4rpikCfYKT8KUNtyd12ThtZtEwJgHfyo2ePa7V2kdfevYC/syltL/l9?=
- =?us-ascii?Q?u+Ina26TJdHPEJmob2TpE4ot/gVIU3vRrT8Zt1pzTOOMI03mhPVTFt5EcfAd?=
- =?us-ascii?Q?qqLsHe2pB7/fT9j3arMc8csatKu2BfBCKv3pVPvEtg7z49HOjI9mGeV9hKVb?=
- =?us-ascii?Q?sT6Kl+jdl2KoceQznUVXaPmmIHbyg+qEFX8z37dmFC5cmUezh1lpfKv1v8bw?=
- =?us-ascii?Q?1lDT21FUEmY4GCYo4Y2nAekuh+Y8X6CdZD9zNewUPa4bnNfjd8CT8oW7k3ag?=
- =?us-ascii?Q?dhFNOCh64Lda+baARzOjhMzWl+NosSBvlWIey/Ktvwr4Ap3z9R9cCq1KdZVm?=
- =?us-ascii?Q?oc+c7203IdTxFFjt39vCyxNjq6oLOnvM5gw1XBQZnyMRdWV+FFmSq0vxHo7Q?=
- =?us-ascii?Q?+1WzOZMMVfWdW1rXpwHvvExRPiOpXMsXT7JfdarHN8GI9azB55z4gcqJo5o3?=
- =?us-ascii?Q?nvOcKGBD/LzsXfJQVDyW5CVFhJNrnN1MH5gTHPelKrm/FxTV4Cj0Hqo9A9ot?=
- =?us-ascii?Q?ZoXY0KhDzB/nAyfr6wMNveQoXr/sfUjiQxOOlLP1gelQmz7iLn5SmvzSNcTF?=
- =?us-ascii?Q?RTfKnJY9NSWLXINLWHWt9ajBReap0JXP+V2FZx1EnWl+RfKHXeHeRELRWLv9?=
- =?us-ascii?Q?9HXRRNQ2j5HJsGqjrFssvBxGj0zP4I/s94RCvJ8yWs3p0dtdmZeG85CwEgF4?=
- =?us-ascii?Q?5UvywGP4mnXXQ8QvgFGyMsjDEKgA9UC8rWCvQz1XnMmrj/bR9cfx/COaqm/y?=
- =?us-ascii?Q?yCa+BLHgp6XA6pczuuFJf4RUscWbrmmz1uxIRyFY8G9fsNosolJzY0A+cTP/?=
- =?us-ascii?Q?CvL3ex4xig0lPjeltTd1PYI8WTqV82sza+7I690LxKyKnnAbYbEtlFaB/xHx?=
- =?us-ascii?Q?+zuRTY9tOFxG9hieXLmCv9WUmq1vCqG3usJg5kRM8holf0e3p1QTBl2J7lcL?=
- =?us-ascii?Q?UMGICDObHc63jPZgLsbrcSyTQiW/nOKrcwpfI4WDoZlaO0XYng19e8S8fqEU?=
- =?us-ascii?Q?Jp8gYk+XkCf6z5HfmseTwqnuQ5MxfTRXWxgE8TGaOXD87MJzAWnToF7z0yeR?=
- =?us-ascii?Q?e9wyAjzsVvJc+0A=3D?=
-X-Forefront-Antispam-Report:
-	CIP:216.228.117.160;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:dc6edge1.nvidia.com;CAT:NONE;SFS:(13230040)(1800799024)(36860700013)(376014)(82310400026);DIR:OUT;SFP:1101;
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 24 Jan 2025 17:30:37.7361
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 94202b9c-464a-4ad9-12e7-08dd3c9cd13e
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.117.160];Helo=[mail.nvidia.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	BN3PEPF0000B36D.namprd21.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN7PR12MB6714
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v5 02/14] platform/x86: alienware-wmi: Add WMI Drivers
+To: Kurt Borja <kuurtb@gmail.com>, platform-driver-x86@vger.kernel.org
+Cc: =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+ Mario Limonciello <mario.limonciello@amd.com>,
+ Hans de Goede <hdegoede@redhat.com>, Dell.Client.Kernel@dell.com,
+ linux-kernel@vger.kernel.org
+References: <20250119220542.3136-1-kuurtb@gmail.com>
+ <20250119220542.3136-3-kuurtb@gmail.com>
+Content-Language: en-US
+From: Armin Wolf <W_Armin@gmx.de>
+In-Reply-To: <20250119220542.3136-3-kuurtb@gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:+0wDkxodQCRPQdBbFM6457oiSy/m2j0dB+KOIFQgvOXLG/JVGAX
+ ZzdM0E8IwncbxN39e8U6bjC1EMtVmeRRFiRh/qvGHiQyG3CQk6oEDkEs/cyOzJ/WjyWYfVZ
+ LAqOyW2QD+EAGG0egNkmJLde1E6dnUsgcFrQsmhTt8qIRkbHrf1wkgMi81v5qWQOngv3wcz
+ wkQDfo/vnOBNraoK9TLpg==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:Tb2k6p3QzHA=;ZhCvF0KaigC4J8/qfIipdFat5pl
+ a7sAORVd58j2CpfMLCfTQJSD5EirPmoPKjjQt0nv6RSvVGU9kLoCbO9243rgtgCosuCBi6Ex5
+ neQ+z+4j1cMlhk+LOt5AyGH6KNosqatHW+YsD5Bqfobmh+cYVo3ZEKNDi09T2xVKTeXD9RdR4
+ SrBu95NiaRNi2fOol+5pdmfcAME6n5kskZK/To5dqUiFmPpbTqZXF9Lg5YEQtCOdHE9hCnXep
+ OpqyOFHAlXwpPbNqKv3+TLKyhGdlyKjIZjO2TRQE81qxbpGi2+I8RDxK3VA6ht0r4pCwZmaMs
+ r8fPBILhNDLC/2eDdAOIyCYcc+T9HsMDO3DyvSwWnPtqY7vAs2geQoUmh4X6Xvr9vFC+QCmuu
+ 5ozly8bvVp/XYwnrQ7s3Rmq4c8n3bYD3CLAlCHj6Ipoet0QYLVy42qKXMXgCv0nZJTpGOwo6J
+ geMZIWBnxLoGugQa1wxgUOHHUZGGtWivYu6zUkySZzv1iclu7YQg/CYXKceOrcBxcTUEW/MAJ
+ hbdk2LxFgmRihC1vNCiK1FG5GJiulXGzMLUUVjmVBKYlwMHVIxjd8tcHDLqXQaVCz4PRSyTKD
+ DenitwgYA4yqsRkD4a/VeAEymNoOW9wsd4sWye1pgzlvMpXgCIZE8tyIDryRj0hU7KcSh6ppN
+ iJVqPrqycfT14pFMUTpDwFqFQ/mRNIw372HUout2FHfXD/3xzPmYXGV6AngS//1gw8P8qy7uj
+ qAP6BzSTAqNQR1AB6ixOScm92JfmNmAPKT/Mor33fog4CRY/SpKYdiuZspPx2m0eUO6EWEUgM
+ XQU17kjrRTCIKrTPPgTAGjiePoLZ/iUStLVMZ8lSOeSMup6oa9Jpv7+TLPSKNvbJx7bb5ABej
+ 2xxT8lp4e7FnNxwsA8wzEfCWpGYTMHkD/Zz8vPy9SyBLM1cqu9fssGq6mcVfL4U0S9hR4mERR
+ p7x3Ypi0WOfn6r/+pbPRlJBW994qJbQguTJ+waJ24IKRtPCXX+qy1FzEmC5RaCWrS6DP+JWLY
+ soNvbpNz9ydD8bzAbqv3m1xILMGAS+ZQ0L2FH345Ft7niJslV2jEP4KJKomB2QPw6wsxun688
+ SnB4qKFCxsWMU1FYpkTqbOMJhgLQdL+i1D6UM8romTh8ZIYo2lP2lGGZqomDTaDfabhUPiQx0
+ jY2huJHcvVfX2Wlw6qlNMVvvDqpQDc82tI4AloSDqSuq8sxqall69AUZ/DqfG0/L9SkimX1K3
+ MyDfCY4HBlhTmpjpkJHh2E36g2EOOd7/LNmdxhVzrlzZV+iMwMnV9wXxSSww0/x6bHoMJ/MB1
+ cKJwiPxPWa2W4V2yxVNSnbolHWzEfu86Tey6fQU4uG+pCQ=
 
-Add documentation for the new attributes:
-- Request and response for access to protetced flashes:
-  "global_wp_request", "global_wp_response".
-  Only for systems equipped with BMC - grant can be provided only by
-  BMC in case its security policy allows to grant access.
-- Request to unlock ASICs, which has been shutdown due-to ASIC thermal
-  event: "shutdown_unlock".
-- Data processor Units (DPU) boot progress: "boot_progress".
-- DPU reset causes: "reset_aux_pwr_or_reload", "reset_dpu_thermal",
-  "reset_from_main_board".
-- Reset control for DPU components: "perst_rst", "phy_rst", "tpm_rst",
-  "usbphy_rst".
-- DPU Unified Fabric Manager upgrade - "ufm_upgrade".
-- Hardware Id of Data Process Unit board - "dpu_id".
+Am 19.01.25 um 23:05 schrieb Kurt Borja:
 
-Reviewed-by: Michael Shych <michaelsh@nvidia.com>
-Signed-off-by: Vadim Pasternak <vadimp@nvidia.com>
----
- .../ABI/stable/sysfs-driver-mlxreg-io         | 96 +++++++++++++++++++
- 1 file changed, 96 insertions(+)
+> Add WMI drivers for LEGACY and WMAX devices.
+>
+> This involves moving platform driver and device registration to a helper
+> function, which is now called from the driver's preferred WMI device
+> driver probe. However this is only done if !quirks->thermal because
+> newer WMAX interface doesn't support any of the features exposed by this
+> device.
+>
+> Only one driver is registered on module initialization to prevent
+> registering duplicate platform driver and device.
+>
+> Additionally, create_thermal_profile() now takes wmi_device * instead of
+> platform_device *.
 
-diff --git a/Documentation/ABI/stable/sysfs-driver-mlxreg-io b/Documentation/ABI/stable/sysfs-driver-mlxreg-io
-index 2cdfd09123da..ef6526a6de55 100644
---- a/Documentation/ABI/stable/sysfs-driver-mlxreg-io
-+++ b/Documentation/ABI/stable/sysfs-driver-mlxreg-io
-@@ -715,3 +715,99 @@ Description:	This file shows 1 in case the system reset happened due to the
- 		switch board.
- 
- 		The file is read only.
-+
-+What:		/sys/devices/platform/mlxplat/mlxreg-io/hwmon/hwmon*/global_wp_request
-+Date:		January 2025
-+KernelVersion:	6.14
-+Contact:	Vadim Pasternak <vadimp@nvidia.com>
-+Description:	This file when written 1 activates request to allow access to
-+		the write protected flashes. Such request can be performed only
-+		for system equipped with BMC (Board Management Controller),
-+		which can grant access to protected flashes. In case BMC allows
-+		access - it will respond with "global_wp_response". BMC decides
-+		regarding time window of granted access. After granted window is
-+		expired, BMC will change value back to 0.
-+		Default value is 0.
-+
-+		The file is read/write.
-+
-+What:		/sys/devices/platform/mlxplat/mlxreg-io/hwmon/hwmon*/global_wp_response
-+Date:		January 2025
-+KernelVersion:	6.14
-+Contact:	Vadim Pasternak <vadimp@nvidia.com>
-+Description:	This file, when set 1, indicates that access to protected
-+		flashes have been granted to host CPU by BMC.
-+		Default value is 0.
-+
-+		The file is read only.
-+
-+What:		/sys/devices/platform/mlxplat/mlxreg-io/hwmon/hwmon*/shutdown_unlock
-+Date:		January 2025
-+KernelVersion:	6.14
-+Contact:	Vadim Pasternak vadimp@nvidia.com
-+Description:	When ASICs are getting overheated, system protection
-+		hardware mechanism enforces system reboot. After system
-+		reboot ASICs come up in locked state. To unlock ASICs,
-+		this file should be written 1
-+		Default value is 0.
-+
-+		The file is read/write.
-+
-+What:		/sys/devices/platform/mlxplat/i2c_mlxcpld.*/i2c-*/i2c-*/*-00**/mlxreg-io.*/hwmon/hwmon*/boot_progress
-+Date:		January 2025
-+KernelVersion:	6.14
-+Contact:	Vadim Pasternak <vadimp@nvidia.com>
-+Description:	These files show the Data Process Unit board boot progress
-+		state. Valid states are:
-+		- 4 : OS starting.
-+		- 5 : OS running.
-+		- 6 : Low-Power Standby.
-+
-+		The file is read only.
-+
-+What:		/sys/devices/platform/mlxplat/i2c_mlxcpld.*/i2c-*/i2c-*/*-00**/mlxreg-io.*/hwmon/hwmon*/dpu_id
-+Date:		January 2025
-+KernelVersion:	6.14
-+Contact:	Vadim Pasternak <vadimp@nvidia.com>
-+Description:	This file shows hardware Id of Data Process Unit board.
-+
-+		The file is read only.
-+
-+What:		/sys/devices/platform/mlxplat/i2c_mlxcpld.*/i2c-*/i2c-*/*-00**/mlxreg-io.*/hwmon/hwmon*/reset_aux_pwr_or_reload
-+What:		/sys/devices/platform/mlxplat/i2c_mlxcpld.*/i2c-*/i2c-*/*-00**/mlxreg-io.*/hwmon/hwmon*/reset_dpu_thermal
-+What:		/sys/devices/platform/mlxplat/i2c_mlxcpld.*/i2c-*/i2c-*/*-00**/mlxreg-io.*/hwmon/hwmon*/reset_from_main_board
-+Date:		January 2025
-+KernelVersion:	6.14
-+Contact:	Vadim Pasternak <vadimp@nvidia.com>
-+Description:	These files show the Data Process Unit board reset cause, as
-+		following: reset due to power auxiliary outage or power reload, reset
-+		due to thermal shutdown, reset due to request from main board.
-+		Value 1 in file means this is reset cause, 0 - otherwise. Only one of
-+		the above causes could be 1 at the same time, representing only last
-+		reset cause.
-+
-+		The files are read only.
-+
-+What:		/sys/devices/platform/mlxplat/i2c_mlxcpld.*/i2c-*/i2c-*/*-00**/mlxreg-io.*/hwmon/hwmon*/perst_rst
-+What:		/sys/devices/platform/mlxplat/i2c_mlxcpld.*/i2c-*/i2c-*/*-00**/mlxreg-io.*/hwmon/hwmon*/phy_rst
-+What:		/sys/devices/platform/mlxplat/i2c_mlxcpld.*/i2c-*/i2c-*/*-00**/mlxreg-io.*/hwmon/hwmon*/tpm_rst
-+What:		/sys/devices/platform/mlxplat/i2c_mlxcpld.*/i2c-*/i2c-*/*-00**/mlxreg-io.*/hwmon/hwmon*/usbphy_rst
-+Date:		January 2025
-+KernelVersion:	6.14
-+Contact:	Vadim Pasternak <vadimp@nvidia.com>
-+Description:	These files allow to reset hardware components of Data Process
-+		Unit board. Respectively PCI, Ethernet PHY, TPM and USB PHY
-+		resets.
-+		Default values for all the attributes is 1. Writing 0 will
-+		cause reset of the related component.
-+
-+		The files are read/write.
-+
-+What:		/sys/devices/platform/mlxplat/i2c_mlxcpld.*/i2c-*/i2c-*/*-00**/mlxreg-io.*/hwmon/hwmon*/ufm_upgrade
-+Date:		January 2025
-+KernelVersion:	6.14
-+Contact:	Vadim Pasternak <vadimp@nvidia.com>
-+Description:	These files show status of Unified Fabric Manager upgrade.
-+		state. 0 - means upgrade is done, 1 - otherwise.
-+
-+		The file is read only.
--- 
-2.44.0
+Reviewed-by: Armin Wolf <W_Armin@gmx.de>
 
+> Signed-off-by: Kurt Borja <kuurtb@gmail.com>
+> ---
+>   drivers/platform/x86/dell/alienware-wmi.c | 192 ++++++++++++++++++----
+>   1 file changed, 156 insertions(+), 36 deletions(-)
+>
+> diff --git a/drivers/platform/x86/dell/alienware-wmi.c b/drivers/platfor=
+m/x86/dell/alienware-wmi.c
+> index 5779b025761b..5935bf74b66d 100644
+> --- a/drivers/platform/x86/dell/alienware-wmi.c
+> +++ b/drivers/platform/x86/dell/alienware-wmi.c
+> @@ -15,6 +15,7 @@
+>   #include <linux/platform_profile.h>
+>   #include <linux/dmi.h>
+>   #include <linux/leds.h>
+> +#include <linux/wmi.h>
+>
+>   #define LEGACY_CONTROL_GUID		"A90597CE-A997-11DA-B012-B622A1EF5492"
+>   #define LEGACY_POWER_CONTROL_GUID	"A80593CE-A997-11DA-B012-B622A1EF549=
+2"
+> @@ -39,8 +40,6 @@
+>   MODULE_AUTHOR("Mario Limonciello <mario.limonciello@outlook.com>");
+>   MODULE_DESCRIPTION("Alienware special feature control");
+>   MODULE_LICENSE("GPL");
+> -MODULE_ALIAS("wmi:" LEGACY_CONTROL_GUID);
+> -MODULE_ALIAS("wmi:" WMAX_CONTROL_GUID);
+>
+>   static bool force_platform_profile;
+>   module_param_unsafe(force_platform_profile, bool, 0);
+> @@ -412,7 +411,10 @@ struct alienfx_priv {
+>   	u8 lighting_control_state;
+>   };
+>
+> -static struct platform_device *platform_device;
+> +struct alienfx_platdata {
+> +	struct wmi_device *wdev;
+> +};
+> +
+>   static enum wmax_thermal_mode supported_thermal_profiles[PLATFORM_PROF=
+ILE_LAST];
+>
+>   static u8 interface;
+> @@ -1127,11 +1129,11 @@ static const struct platform_profile_ops awcc_pl=
+atform_profile_ops =3D {
+>   	.profile_set =3D thermal_profile_set,
+>   };
+>
+> -static int create_thermal_profile(struct platform_device *platform_devi=
+ce)
+> +static int create_thermal_profile(struct wmi_device *wdev)
+>   {
+>   	struct device *ppdev;
+>
+> -	ppdev =3D devm_platform_profile_register(&platform_device->dev, "alien=
+ware-wmi",
+> +	ppdev =3D devm_platform_profile_register(&wdev->dev, "alienware-wmi",
+>   					       NULL, &awcc_platform_profile_ops);
+>
+>   	return PTR_ERR_OR_ZERO(ppdev);
+> @@ -1166,6 +1168,10 @@ static int alienfx_probe(struct platform_device *=
+pdev)
+>
+>   static const struct attribute_group *alienfx_groups[] =3D {
+>   	&zone_attribute_group,
+> +	NULL
+> +};
+> +
+> +static const struct attribute_group *wmax_alienfx_groups[] =3D {
+>   	&hdmi_attribute_group,
+>   	&amplifier_attribute_group,
+>   	&deepsleep_attribute_group,
+> @@ -1180,18 +1186,140 @@ static struct platform_driver platform_driver =
+=3D {
+>   	.probe =3D alienfx_probe,
+>   };
+>
+> -static int __init alienware_wmi_init(void)
+> +static int alienware_alienfx_setup(struct alienfx_platdata *pdata)
+> +{
+> +	struct platform_device *pdev;
+> +
+> +	pdev =3D platform_device_register_data(NULL, "alienware-wmi",
+> +					     PLATFORM_DEVID_NONE, pdata,
+> +					     sizeof(*pdata));
+> +
+> +	dev_set_drvdata(&pdata->wdev->dev, pdev);
+> +
+> +	return PTR_ERR_OR_ZERO(pdev);
+> +}
+> +
+> +static void alienware_alienfx_exit(struct wmi_device *wdev)
+> +{
+> +	struct platform_device *pdev =3D dev_get_drvdata(&wdev->dev);
+> +
+> +	platform_device_unregister(pdev);
+> +}
+> +
+> +/*
+> + * Legacy WMI driver
+> + */
+> +static int legacy_wmi_probe(struct wmi_device *wdev, const void *contex=
+t)
+> +{
+> +	struct alienfx_platdata pdata =3D {
+> +		.wdev =3D wdev,
+> +	};
+> +
+> +	return alienware_alienfx_setup(&pdata);
+> +}
+> +
+> +static void legacy_wmi_remove(struct wmi_device *wdev)
+>   {
+> +	alienware_alienfx_exit(wdev);
+> +}
+> +
+> +static const struct wmi_device_id alienware_legacy_device_id_table[] =
+=3D {
+> +	{ LEGACY_CONTROL_GUID, NULL },
+> +	{ },
+> +};
+> +MODULE_DEVICE_TABLE(wmi, alienware_legacy_device_id_table);
+> +
+> +static struct wmi_driver alienware_legacy_wmi_driver =3D {
+> +	.driver =3D {
+> +		.name =3D "alienware-wmi-alienfx",
+> +		.probe_type =3D PROBE_PREFER_ASYNCHRONOUS,
+> +	},
+> +	.id_table =3D alienware_legacy_device_id_table,
+> +	.probe =3D legacy_wmi_probe,
+> +	.remove =3D legacy_wmi_remove,
+> +	.no_singleton =3D true,
+> +};
+> +
+> +static int __init alienware_legacy_wmi_init(void)
+> +{
+> +	return wmi_driver_register(&alienware_legacy_wmi_driver);
+> +}
+> +
+> +static void __exit alienware_legacy_wmi_exit(void)
+> +{
+> +	wmi_driver_unregister(&alienware_legacy_wmi_driver);
+> +}
+> +
+> +/*
+> + * WMAX WMI driver
+> + */
+> +static int wmax_wmi_probe(struct wmi_device *wdev, const void *context)
+> +{
+> +	struct alienfx_platdata pdata =3D {
+> +		.wdev =3D wdev,
+> +	};
+> +	struct platform_device *pdev;
+>   	int ret;
+>
+> -	if (wmi_has_guid(LEGACY_CONTROL_GUID))
+> -		interface =3D LEGACY;
+> -	else if (wmi_has_guid(WMAX_CONTROL_GUID))
+> -		interface =3D WMAX;
+> -	else {
+> -		pr_warn("alienware-wmi: No known WMI GUID found\n");
+> -		return -ENODEV;
+> +	if (quirks->thermal) {
+> +		return create_thermal_profile(wdev);
+> +	} else {
+> +		ret =3D alienware_alienfx_setup(&pdata);
+> +		if (ret < 0)
+> +			return ret;
+> +
+> +		pdev =3D dev_get_drvdata(&wdev->dev);
+> +
+> +		ret =3D device_add_groups(&pdev->dev, wmax_alienfx_groups);
+> +		if (ret < 0)
+> +			alienware_alienfx_exit(wdev);
+> +
+> +		return ret;
+> +	}
+> +}
+> +
+> +static void wmax_wmi_remove(struct wmi_device *wdev)
+> +{
+> +	struct platform_device *pdev;
+> +
+> +	if (!quirks->thermal) {
+> +		pdev =3D dev_get_drvdata(&wdev->dev);
+> +
+> +		device_remove_groups(&pdev->dev, wmax_alienfx_groups);
+> +		alienware_alienfx_exit(wdev);
+>   	}
+> +}
+> +
+> +static const struct wmi_device_id alienware_wmax_device_id_table[] =3D =
+{
+> +	{ WMAX_CONTROL_GUID, NULL },
+> +	{ },
+> +};
+> +MODULE_DEVICE_TABLE(wmi, alienware_wmax_device_id_table);
+> +
+> +static struct wmi_driver alienware_wmax_wmi_driver =3D {
+> +	.driver =3D {
+> +		.name =3D "alienware-wmi-wmax",
+> +		.probe_type =3D PROBE_PREFER_ASYNCHRONOUS,
+> +	},
+> +	.id_table =3D alienware_wmax_device_id_table,
+> +	.probe =3D wmax_wmi_probe,
+> +	.remove =3D wmax_wmi_remove,
+> +	.no_singleton =3D true,
+> +};
+> +
+> +static int __init alienware_wmax_wmi_init(void)
+> +{
+> +	return wmi_driver_register(&alienware_wmax_wmi_driver);
+> +}
+> +
+> +static void __exit alienware_wmax_wmi_exit(void)
+> +{
+> +	wmi_driver_unregister(&alienware_wmax_wmi_driver);
+> +}
+> +
+> +static int __init alienware_wmi_init(void)
+> +{
+> +	int ret;
+>
+>   	dmi_check_system(alienware_quirks);
+>   	if (quirks =3D=3D NULL)
+> @@ -1208,32 +1336,20 @@ static int __init alienware_wmi_init(void)
+>   	}
+>
+>   	ret =3D platform_driver_register(&platform_driver);
+> -	if (ret)
+> -		goto fail_platform_driver;
+> -	platform_device =3D platform_device_alloc("alienware-wmi", PLATFORM_DE=
+VID_NONE);
+> -	if (!platform_device) {
+> -		ret =3D -ENOMEM;
+> -		goto fail_platform_device1;
+> -	}
+> -	ret =3D platform_device_add(platform_device);
+> -	if (ret)
+> -		goto fail_platform_device2;
+> +	if (ret < 0)
+> +		return ret;
+>
+> -	if (quirks->thermal) {
+> -		ret =3D create_thermal_profile(platform_device);
+> -		if (ret)
+> -			goto fail_prep_thermal_profile;
+> +	if (wmi_has_guid(WMAX_CONTROL_GUID)) {
+> +		interface =3D WMAX;
+> +		ret =3D alienware_wmax_wmi_init();
+> +	} else {
+> +		interface =3D LEGACY;
+> +		ret =3D alienware_legacy_wmi_init();
+>   	}
+>
+> -	return 0;
+> +	if (ret < 0)
+> +		platform_driver_unregister(&platform_driver);
+>
+> -fail_prep_thermal_profile:
+> -	platform_device_del(platform_device);
+> -fail_platform_device2:
+> -	platform_device_put(platform_device);
+> -fail_platform_device1:
+> -	platform_driver_unregister(&platform_driver);
+> -fail_platform_driver:
+>   	return ret;
+>   }
+>
+> @@ -1241,7 +1357,11 @@ module_init(alienware_wmi_init);
+>
+>   static void __exit alienware_wmi_exit(void)
+>   {
+> -	platform_device_unregister(platform_device);
+> +	if (interface =3D=3D WMAX)
+> +		alienware_wmax_wmi_exit();
+> +	else
+> +		alienware_legacy_wmi_exit();
+> +
+>   	platform_driver_unregister(&platform_driver);
+>   }
+>
