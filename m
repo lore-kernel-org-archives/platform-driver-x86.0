@@ -1,150 +1,166 @@
-Received: from mout.gmx.net (mout.gmx.net [212.227.15.15])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ua1-f52.google.com (mail-ua1-f52.google.com [209.85.222.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F9951E7C3D
-	for <platform-driver-x86@vger.kernel.org>; Fri, 24 Jan 2025 21:38:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D66CD205E16;
+	Sat, 25 Jan 2025 03:27:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1737754702; cv=none; b=nc4jq2m7F+odgmRWuESbJojfNpErC3nxmz5JbYpwURbA1wz+1v+ug5TtImbGW04TkS5M8lF7QC/SI2Fdq3PuEK8IrCqT9SUCdX5KiHceZMw5cOH0L/iEbFycgcOq2vESctrwBUJ5bwh1a+KQCVtjbR/Kg7TmTDG/qjr16AxE9fU=
+	t=1737775674; cv=none; b=NcrCJ3E1oxJDONgj99EhbLbFA6Up5w7DrBSNwnDIRpAMCx8UuvVswlBZapQkXcbTDMIeyzvxGZGc7k/VxxMq7v3Qadh04g3ywTtTTZ05iEjv+H0FDigHb9ACZ5jWzNudPgvbNCsucBZvDbyfACO7FReJvemoMqQFdGZokpN8Fao=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1737754702; c=relaxed/simple;
-	bh=8sWSEmdG3GQ6SHN8mvPkds76hMWeBZTjpdV32dMTkAE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=DNYEokdw2hTEP9gw4xxBagAhHQ0NVw1LoUtJUeF6wVHZEq6tqlgBRa/hSp0GvJ4jiymcCbuOLRDhtfrtLT9Sls8UyggL1FFqiGSX5YXtdrSAhKbcZvQRvDacPS2tI6Rd++XrJ9xmoq0MfvOLNNfVE5K2JopQ0scz+3e1R14nNGU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b=DqnUebP4; arc=none smtp.client-ip=212.227.15.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
+	s=arc-20240116; t=1737775674; c=relaxed/simple;
+	bh=hSd9bNcaQZwM4MfIVp2CWQoHIc/E5DKLRSqnY+y0FXA=;
+	h=Mime-Version:Content-Type:Date:Message-Id:Cc:Subject:From:To:
+	 References:In-Reply-To; b=cS1lS1HZj9dCepW4AEtEE7litZacl0z9x6o0LQxRo3a8Eh5HzSYpP2xdL1wCfjod73cxkE83CTKI7CpP1NKd3M7s+JeB0RmwEdWvWexSflcuxogYh5NtHLGu64hSh6zbcsl60+RcLrHorA9yDkT4kTZ25t1Hq65S64T2gMZ7u48=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=KmZrLIop; arc=none smtp.client-ip=209.85.222.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b="DqnUebP4"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.de;
-	s=s31663417; t=1737754698; x=1738359498; i=w_armin@gmx.de;
-	bh=2HS8EjuhfkxkVvBY8Pp59WUZM2Vee6pZnsU4ApWvTIw=;
-	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:To:
-	 References:From:In-Reply-To:Content-Type:
-	 Content-Transfer-Encoding:cc:content-transfer-encoding:
-	 content-type:date:from:message-id:mime-version:reply-to:subject:
-	 to;
-	b=DqnUebP4nAIcYz5rG7tz8qLBWbwdsPjh2goTkyPkgmLEdj4CZ4cTMpXh3RbaH2x+
-	 kumwjItGgwTOtFkQBmIrKzi4G83hprQwn7zUo0sHGvagmYRHh6PcBS7VmzaOuFfTc
-	 ezJzx8JrhLh9MsH6Fak/TqnlgYd3VOaViCtS7aWM9CzlD4ohR3maGripuYazZXo4d
-	 skToBKzwPwLIyt7Kme7W0shWOBfeh36jWpIeI3Z7lpU4XeNB3ZjSm66EWnJ3YX1BA
-	 6rM+3/IPOVNUFl/lAzJ7iLPRr+tx7odQ0p4oMsc+gmte2kck5xwuJbYYkYUGpZBM2
-	 XddKdKBdcPBmgfDuPg==
-X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
-Received: from [192.168.0.69] ([93.202.246.83]) by mail.gmx.net (mrgmx004
- [212.227.17.190]) with ESMTPSA (Nemesis) id 1MC34h-1tle7w42sn-0041SW; Fri, 24
- Jan 2025 22:38:18 +0100
-Message-ID: <083e0184-19e9-4473-bebf-5536b3d5ec10@gmx.de>
-Date: Fri, 24 Jan 2025 22:38:16 +0100
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KmZrLIop"
+Received: by mail-ua1-f52.google.com with SMTP id a1e0cc1a2514c-860af3331feso2030835241.1;
+        Fri, 24 Jan 2025 19:27:52 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1737775671; x=1738380471; darn=vger.kernel.org;
+        h=in-reply-to:references:to:from:subject:cc:message-id:date
+         :content-transfer-encoding:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=rKZyX3M2AvcMPTG32gqq+OlQQHWiF3X4loTwwHWLMnM=;
+        b=KmZrLIophGcumRTJ/JNBPbZOywadZ62TjvR+ypLV69G8AFN9LPmK6txvN8B6tMzjm+
+         Nvfu0wFaZ0GWQy8e+DZinZbCxczWBRSOWrmNPfv27D0Gj4q7prLHd0RYp3J47UxeUwqW
+         QWWkDmjI33iJed9UzRAqNA8G41rkFuxiLV4NVMNB4B9XUUudlC6eJfWOyBWecNhiu4hO
+         l/AUzBzsd3ZPwiB3/1FzIGcuSz5/4bd6U3RluerrmgfmfNjxqjc0uCp8AXNKLy7w6ovf
+         wfry+2k54f8ju4wRgQhL28SQrI4q/XROHc9tqJiWNjHs9F1vT2MIaWnx9PTCe5Tku4ES
+         wnSw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1737775671; x=1738380471;
+        h=in-reply-to:references:to:from:subject:cc:message-id:date
+         :content-transfer-encoding:mime-version:x-gm-message-state:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=rKZyX3M2AvcMPTG32gqq+OlQQHWiF3X4loTwwHWLMnM=;
+        b=Hqmdd7XYSB1Vqoi9wZxi645o+zyJyDRP5gzt6UyqmkR0q0e1agipTh/V42DFhNhara
+         Rd90FM4hTVUxwEs92N2gcz5e3/P9DIbmU784LDx1hN+gRCW/Ib2aWy7xGRGgFj6gt8pX
+         xMSMWOIGyiLKBb64QN6zA1ZCVAYfRwJppZaWII4bKCxpJGRPG5ZNiW0vOCMFnzaw0vBF
+         kkWjAG5xbhX+z5vwPJS1J+kNzrhyV+D2bgv1AGOVumYM1d2HJp/zLcUtcB/75Pbp00Wg
+         +CptSjrxQf+B92H1ZZdp8x8Elu2JrNknLMIiWFK+0fhkTTbjBG8lkqyj4uWB+DnnZc4a
+         +1mQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUXHftx2FPM33kCz+ShhD2szEPWER1yfdY3AqAFSozrxFF4YYP7ymSrxxz5QhU8FVfEAQ5m8cy1B5oSR2nJu9dHdFM7Ew==@vger.kernel.org, AJvYcCX7d+DXsNHhpVp4da9rYP6fk41EIscK27k6tyeheaCW8ceLrByjwxkvy+e1inbzPCT0UGxGjM+TH4qLRmc=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwpX/BxNW58mrlkmp6ck645Sa8uYLln37e84v/bEi4dNIuMfamk
+	qw6TP1vYfFsXLXIvRD42iSY9FewRJdqIe1P1hMijhXojQmhiJ6meGOcFKw==
+X-Gm-Gg: ASbGncscRvnweMmrVGyf8hBO1yfp6UBY7/+TG1o5gkYkMesj6MPFw5+tybNTAmtcxYz
+	Jwbdt3D+poJVVbVAjIse8Dzg6zTuF9LbjZaHytNRJmgYfrrH6qao27LCfC3H56kLUG1hRASisXr
+	ZFv110dS01bLckS5m9SC6KASje4DjZeyyFPUu1FrUVdYTB+zJeR1RKU4VStxefATU3IWE8M/Hk+
+	KroJbQ77Duyv080J+TH5AGK6Ki8VXIIoQZrSZRP8V1VL58gHZ/HD8+lkioP9FKV+qvGJY+c
+X-Google-Smtp-Source: AGHT+IHO619aXuJjzJS1rhvKLeum+icQgSjIAMlPBgwKVZD1gpwIvdlJ6nV8t19b8GqjXnhqeRVwZw==
+X-Received: by 2002:a05:6102:c54:b0:4b5:aa81:7f12 with SMTP id ada2fe7eead31-4b709d1e543mr5704783137.12.1737775671568;
+        Fri, 24 Jan 2025 19:27:51 -0800 (PST)
+Received: from localhost ([2800:bf0:82:1159:c837:3446:190b:188d])
+        by smtp.gmail.com with ESMTPSA id a1e0cc1a2514c-864a9af3a3csm741220241.10.2025.01.24.19.27.49
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 24 Jan 2025 19:27:50 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: Need help fixing turbo button and power profiles on Acer Predator
- Helios Neo 16 (PHN16-72)
-To: Sourajyoti Basak <basak.sb2006@gmail.com>,
- platform-driver-x86@vger.kernel.org
-References: <e0f625f4-9c55-4021-ba43-668edb9fe80d@gmail.com>
-Content-Language: en-US
-From: Armin Wolf <W_Armin@gmx.de>
-In-Reply-To: <e0f625f4-9c55-4021-ba43-668edb9fe80d@gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Mime-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:pqUphRq9204lQ2zPe22fg+ej7d3OxHf/9jOP6YL2TytXIYNSAs7
- EP+0T4KxBaDUhKktA1J0POSzFs9PDfVCyqoj0XxiAdrep+6YHxAkWevQyaEZ3//Dx0RYPli
- ScGRb6M2R873eeOgs1HwUqPtPJ52x1ue2zzM/SiKvVKNd/poN5LUyCCPhzd+UatMyrAm6Qu
- b0UZ1ZcNv4Sdo7RwNsw1A==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:yB4pUVdPA7s=;bnouEjWonn6+BSgRM8ej7o1e76p
- 9VA8JVVY8MwkKAgWYptUrnYm0MdV/D1Fsa0waA1MOlHon1uWq8cJpirgZnUhHjLIeej9fuI19
- aaSidGLmC1Q8/g7KniKFAtWUrqFYs8okYNv3WmJ8ttVziZRrODiP7EjE13MuF7YgqQB1QedyE
- nhelt0emiaAeVhC0NjB/9EGxpiCE0iYLptyA2ErgrdNZZPL6WOY5sTZm04ObvqoQ67tsJrSF3
- XPf6nLwRkkPpt31JXyx5cVak9Bplzt+Gq8qVOWWiyXscshJndOD4SCOuTmVUd/7Q7KXNuQE8g
- Kj59T5IqI7uy5HpVkvipkO+RsBT89dMASevwdScsUhNjH1vXJu0i9xXAOurFLtE1T0AuMYhMz
- nLNL2qYPJ2IjHE+orSqMawC4lIGUwEG4fHZBIp+8YdrA5bdrvQFVHPvaVqiaCcE+pzHYzDF39
- CxMF+b1rFMFhlRlnyUr3eQPI4gJ7BEP1uf46kR8memwK+/0Qh0ov4RYNTznOEb8EApIwclMLy
- SfXxYiK48jRA7XE55YxZrc0a1EHd0wQIMCxG48iCAC/TFKK5XGVfUxsGWq2GDD6qsOTb9tPN6
- Q01h/OGT8B5e06NqTQITQZTNjw7xtbHY02/cyrQ0CwDZ6HATtOaxDOAQdgWRMCCbA+xkjrL+D
- IEnFThGMHq8Cjf+Kw0ba/svhjsMf7QQrypM2y4RulUvBdRHL11fCN9+ppiCEF83s/9Ri08Kjx
- AZejTVnCXpWI9fRBHu5/wrZwtyCbWOiBre6j4AgbX+FaNL5HZyhEotroEADlc4oWo7VRFhSxJ
- b8drPcHbMxpeSO6b36DIrb8fEKq7CAQIoHOr/+nE9ppeukGQab2kYoRJDNpbxfzgYVEUqsbg/
- cAvemlPVdaTWtwv5hq0vpF7I1r2wBItpk3OdjmtyMr6yHvQ0DbZNFvJ0BuONw/cw4djOWSHQC
- WDkJ0MQU+MPe52aUQBI8ORWyXwXjbbEMTDELA0Lv+ZTzNMePaMOmC1U40H/PON43TuzPgwfbS
- w1Rn8cU0qK8tWahjlf8gk+nGJguQ6tGBSUX3hjRekK6zrDYzYLzX1lScLbu5ipd/lP/v772hw
- zxS2P6sLukkMIPwl0VT8WKgDRcYyfFmcFS7KEDIXB13KPoeXZmbBJJS2NLmgdom4okgK9R/Zf
- Tx1u86oEpZSLwSzQqOW4e0Gr6k0C/0lGFzq2wKbZqQrUzoyOahpmn9od7Eq4+mTZz0uglKLIg
- W0PuFUUyzTel0GNpCQ9PNllI57+Ws+H8Ng==
+Content-Type: text/plain; charset=UTF-8
+Date: Fri, 24 Jan 2025 22:27:48 -0500
+Message-Id: <D7AU29BV2R4F.1T9EMUILIXZKZ@gmail.com>
+Cc: =?utf-8?q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, "Mario
+ Limonciello" <mario.limonciello@amd.com>, "Hans de Goede"
+ <hdegoede@redhat.com>, <Dell.Client.Kernel@dell.com>,
+ <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v5 00/14] platform/x86: alienware-wmi driver rework
+From: "Kurt Borja" <kuurtb@gmail.com>
+To: "Armin Wolf" <W_Armin@gmx.de>, <platform-driver-x86@vger.kernel.org>
+X-Mailer: aerc 0.19.0-0-gadd9e15e475d
+References: <20250119220542.3136-1-kuurtb@gmail.com>
+ <f60a6e96-cd13-4d2f-9024-2c01f4ad8f0a@gmx.de>
+In-Reply-To: <f60a6e96-cd13-4d2f-9024-2c01f4ad8f0a@gmx.de>
 
-Am 15.01.25 um 17:20 schrieb Sourajyoti Basak:
-
-> Hello,
+On Fri Jan 24, 2025 at 4:18 PM -05, Armin Wolf wrote:
+> Am 19.01.25 um 23:05 schrieb Kurt Borja:
 >
-> I am using an Acer Predator Helios Neo 16 (PHN16-72), and I have
-> encountered an issue with the turbo button functionality on the
-> default 6.10.10 kernel in the EndeavourOS live USB environment.
+>> Hi!
+>>
+>> Based on pdx86/for-next branch. Tested on an Alienware x15 R1.
 >
-> The turbo button does not cycle between power profiles as expected.
-> However, after applying the
-> [acer-predator-turbo-and-rgb-keyboard-linux-module](https://github.com/J=
-afarAkhondali/acer-predator-turbo-and-rgb-keyboard-linux-module)=E2=80=94w=
-hich
-> is a fork of the `acer-wmi` module=E2=80=94and patches
-> [1/5](https://lore.kernel.org/platform-driver-x86/20250113-platform_prof=
-ile-v4-0-23be0dff19f1@gmail.com/T/#m40bfb80c3a0c043ac038b28079fdabf3a82817=
-83)
-> and
-> [3/5](https://lore.kernel.org/platform-driver-x86/20250113-platform_prof=
-ile-v4-0-23be0dff19f1@gmail.com/T/#mc563cc0254709d02740942360a8ca47b9d6352=
-6c)
-> from this
-> [series](https://lore.kernel.org/platform-driver-x86/20250113-platform_p=
-rofile-v4-0-23be0dff19f1@gmail.com/T/#t),
-> the turbo button started cycling as intended.
+> Nice work!
 >
-> Additionally, the `/sys/firmware/acpi/platform_profile` file now
-> displays the proper profiles when cycling, confirming that the cycling
-> functionality is working as intended.
->
-> While some functionality appears to be working as expected, there are
-> a few issues:
-> 1. The turbo LED light switches correctly, and the keyboard backlight
-> turns off properly in eco mode.
-> 2. However, there is no change in the base fan speed between the power
-> modes.
-> 3. The maximum CPU clock speed achieved under `stress -c $(nproc)`
-> remains consistent across all modes:
-> =C2=A0=C2=A0 - All modes reach above ~2.5 GHz at some point.
-> =C2=A0=C2=A0 - The maximum observed clock speed is ~3.8 GHz.
->
-> Additionally, when switching from turbo mode to eco mode, the clock
-> speed briefly drops to ~1.5 GHz from ~3.5 GHz but ramps back up to
-> ~3.0 GHz shortly after.
->
-> I would appreciate guidance on how to resolve the discrepancies in fan
-> speed and CPU clock behavior between the power profiles.
+> I think the whole series is now ready to be merged.
 
-I know of another users who suffers from the same problems. Sadly i do not=
- know how to solve the fan speed issue.
+Hi Armin,
 
-However i have a experimental patch which does add support for manual fan =
-control to the acer-wmi driver.
-Please share the results of the following commands (needs root privileges)=
-:
+Thank you so much again for helping me get these series into shape. Your
+feedback is very appreciated!
 
-	busybox devmem 0xFE0B085B 8
-	busybox devmem 0xFE0B085C 8
+I'm going to rebase this one more time to pick up the fixes branch merge
+and this should be ready.=20
 
-Regarding the clocking issue: i have no clue why the CPU speeds goes up to=
- 3 GHz, did you install the Intel thermal daemon (thermald)?
+Also, I already have an HWMON support and manual fan control patchset
+ready, that I'll submit once this gets accepted.
 
-Thanks,
-Armin Wolf
+~ Kurt
 
 >
-> Thank you for your time and assistance.
+> Thanks,
+> Armin Wolf
 >
-> Best regards,
-> Sourajyoti Basak
+>>
+>> ~ Kurt
+>> ---
+>> v4 -> v5:
+>>
+>> [01/14]
+>>    - Remove mention to visibility methods in commit message
+>>
+>> [02/14]
+>>    - Register driver during module initialization
+>>    - Make wmi_device_id tables const
+>>    - Add .no_singleton =3D true to WMI drivers
+>>
+>> [04/14]
+>>    - Return -ENOMESG if out_data is true but obj is NULL or not of
+>>      ACPI_TYPE_INTEGER.
+>>
+>> v4: https://lore.kernel.org/platform-driver-x86/20250117081347.8573-1-ku=
+urtb@gmail.com/
+>>
+>> Kurt Borja (14):
+>>    platform/x86: alienware-wmi: Add a state container for LED control
+>>      feature
+>>    platform/x86: alienware-wmi: Add WMI Drivers
+>>    platform/x86: alienware-wmi: Add a state container for thermal contro=
+l
+>>      methods
+>>    platform/x86: alienware-wmi: Refactor LED control methods
+>>    platform/x86: alienware-wmi: Refactor hdmi, amplifier, deepslp method=
+s
+>>    platform/x86: alienware-wmi: Refactor thermal control methods
+>>    platform/x86: alienware-wmi: Split DMI table
+>>    MAINTAINERS: Update ALIENWARE WMI DRIVER entry
+>>    platform/x86: Rename alienware-wmi.c
+>>    platform/x86: Add alienware-wmi.h
+>>    platform/x86: Split the alienware-wmi driver
+>>    platform/x86: dell: Modify Makefile alignment
+>>    platform/x86: Update alienware-wmi config entries
+>>    platform/x86: alienware-wmi: Update header and module information
+>>
+>>   MAINTAINERS                                   |    4 +-
+>>   drivers/platform/x86/dell/Kconfig             |   30 +-
+>>   drivers/platform/x86/dell/Makefile            |   45 +-
+>>   .../platform/x86/dell/alienware-wmi-base.c    |  488 +++++++
+>>   .../platform/x86/dell/alienware-wmi-legacy.c  |  101 ++
+>>   .../platform/x86/dell/alienware-wmi-wmax.c    |  774 +++++++++++
+>>   drivers/platform/x86/dell/alienware-wmi.c     | 1235 -----------------
+>>   drivers/platform/x86/dell/alienware-wmi.h     |  102 ++
+>>   8 files changed, 1517 insertions(+), 1262 deletions(-)
+>>   create mode 100644 drivers/platform/x86/dell/alienware-wmi-base.c
+>>   create mode 100644 drivers/platform/x86/dell/alienware-wmi-legacy.c
+>>   create mode 100644 drivers/platform/x86/dell/alienware-wmi-wmax.c
+>>   delete mode 100644 drivers/platform/x86/dell/alienware-wmi.c
+>>   create mode 100644 drivers/platform/x86/dell/alienware-wmi.h
+>>
+>>
+>> base-commit: 4055e18bfbb7cf077da2bfd74615604b6ca51c6f
+
