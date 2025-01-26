@@ -1,48 +1,45 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 020F423F260;
-	Sun, 26 Jan 2025 15:09:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8527E2451D6;
+	Sun, 26 Jan 2025 15:09:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1737904141; cv=none; b=iruYrNfBCOK/5t1eZnubJY1Qs8+UhG4DQYcKRP6gucfVyR6uLdgj7CsNCOFV6Sroy+SdUoKtws8/dqSQ7LsJrLuZ3jUSNeVlTYvz0jGOMU7HoP9+a05IOisSk/2BiDYUdqB1uH/j92VqHEM1j+KGjz/GzcPPn+GBDWMqE6YsIqE=
+	t=1737904155; cv=none; b=hM7oddd43fts1CNvL91n3Pg2tP7W3qARBtA9pN27xCN3nEC0r4ZpO4tLQY2VSyjjDHgkAHFE4IIOs4uadSnq5YEpw8CUr/NhyFUGhxsn1r3qxwjzCKX8XSgruTXWfLTcD+JQyDUt5qpjPfAmx33vrhiXUOeTaZvdapiNvV3AClY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1737904141; c=relaxed/simple;
-	bh=409Qsl3ktDjiKfhhR4I8YWrT6z+l3599T++9fC/ZknE=;
+	s=arc-20240116; t=1737904155; c=relaxed/simple;
+	bh=kSW9BxWYGLCWm0wPaJ9MIvqC55F0Loeq4teWutAwFjE=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=UW0IPnDneiguGOwQ/6OkskYKgkh7EQOcggcplYGcRxb4QDKiJ+XcplyFRPyOFX5sgEcbKzEIlLQ+i94AONAQE9D3o2g8MTc4YuhPxOwwVvNFZPFm6xu8aUtR1UPhFTWs8QEo2j4vFXuB+MyJ5dlUwXevjvJUKsM0ogbSKDg/9G4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DOQkXRPW; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version:Content-Type; b=KpyWB1Glkc5bKryv5wyXEoH1dpsaOMPLIqtJ0RPgaxVaHqYz+/T+Dy7xS+XQshqMLzsE03hFjTU12vPTNdL4dPgJsEOSTqvDZruy03vVY/QHBqsHpjgG2bcGLVibc6HnZ082b+tlh++ukuynoQS7TSAANUQJ3XYXkRcoKYnLmEs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=euhhqIeY; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DOQkXRPW"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 59456C4CEE2;
-	Sun, 26 Jan 2025 15:08:59 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="euhhqIeY"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 913B3C4CEE4;
+	Sun, 26 Jan 2025 15:09:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1737904140;
-	bh=409Qsl3ktDjiKfhhR4I8YWrT6z+l3599T++9fC/ZknE=;
+	s=k20201202; t=1737904155;
+	bh=kSW9BxWYGLCWm0wPaJ9MIvqC55F0Loeq4teWutAwFjE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=DOQkXRPWspaqdwBRGNtF2OCrjQHLaaiOvHoijESN52T3J1qmP3Iz2tWzyShdcoocU
-	 sC5qnZvMaUgtAm5LEVF7R2DJFGgvt6USGwCvrOp25xDKYLo2FTdL5P4sj7lrcgOdE7
-	 Qpj7amPgswa1cr0D1XYQdJbytvTr2TR2lNEIDqHQ7TPSjWiRye9iPZTd1GLL2XYaST
-	 dv3pDZT5NqC3PecOVnJnCoaQtB5p8H1/JgLB3DFE7P13vGexGsthByZ8OqCjVnqyuf
-	 QshffHHM7hO5x7giVjtCysvmrhvf4utydswWGn4fBkrw+1gW5pqk+GdJyzAmrv3gzV
-	 D8p/60YxmvrPw==
+	b=euhhqIeY6TwjhpDLkDOxcAyqGTeLp4HAOFTuPB94+ezoiYSN0bX9ElIS6ZP1B4Nk7
+	 AnN1pXVYUOG6ove1gAwAxATaBWH6YrsuW/C2+EbzHNL/R+Ln8t1RgbPLEL6Y2q+aUt
+	 DZ4JRBZvWZmC2UuxDOo13vXmUhCga2rTUcYyVQoddQX+tAezTHRnFJWnVbVEiCdaCl
+	 1jOMuBPMoI917P8KK/BgkJ4hbNoRFAlhMiOEQ3LE9HvuZWwnYogD4WAWI7HSgpqka7
+	 8iC+p1t4zge4sOdTrO/GjyiiwQOAkzHqaQ95FxotNMguGQgcRLqpyKAzYWhKQ5EqjM
+	 DD4jcZ1cISnMA==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Armin Wolf <W_Armin@gmx.de>,
-	Farhan Anwar <farhan.anwar8@gmail.com>,
-	Rayan Margham <rayanmargham4@gmail.com>,
+Cc: Hans de Goede <hdegoede@redhat.com>,
 	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
 	Sasha Levin <sashal@kernel.org>,
-	jlee@suse.com,
-	hdegoede@redhat.com,
+	djrscally@gmail.com,
 	platform-driver-x86@vger.kernel.org
-Subject: [PATCH AUTOSEL 6.6 9/9] platform/x86: acer-wmi: Ignore AC events
-Date: Sun, 26 Jan 2025 10:08:37 -0500
-Message-Id: <20250126150839.962669-9-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 6.1 4/8] platform/x86: int3472: Check for adev == NULL
+Date: Sun, 26 Jan 2025 10:08:56 -0500
+Message-Id: <20250126150902.962837-4-sashal@kernel.org>
 X-Mailer: git-send-email 2.39.5
-In-Reply-To: <20250126150839.962669-1-sashal@kernel.org>
-References: <20250126150839.962669-1-sashal@kernel.org>
+In-Reply-To: <20250126150902.962837-1-sashal@kernel.org>
+References: <20250126150902.962837-1-sashal@kernel.org>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -52,51 +49,58 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
-X-stable-base: Linux 6.6.74
+X-stable-base: Linux 6.1.127
 Content-Transfer-Encoding: 8bit
 
-From: Armin Wolf <W_Armin@gmx.de>
+From: Hans de Goede <hdegoede@redhat.com>
 
-[ Upstream commit f6bfa25c6665f8721421ea94fe506cc22f1d4b43 ]
+[ Upstream commit cd2fd6eab480dfc247b737cf7a3d6b009c4d0f1c ]
 
-On the Acer Swift SFG14-41, the events 8 - 1 and 8 - 0 are printed on
-AC connect/disconnect. Ignore those events to avoid spamming the
-kernel log with error messages.
+Not all devices have an ACPI companion fwnode, so adev might be NULL. This
+can e.g. (theoretically) happen when a user manually binds one of
+the int3472 drivers to another i2c/platform device through sysfs.
 
-Reported-by: Farhan Anwar <farhan.anwar8@gmail.com>
-Closes: https://lore.kernel.org/platform-driver-x86/2ffb529d-e7c8-4026-a3b8-120c8e7afec8@gmail.com
-Tested-by: Rayan Margham <rayanmargham4@gmail.com>
+Add a check for adev not being set and return -ENODEV in that case to
+avoid a possible NULL pointer deref in skl_int3472_get_acpi_buffer().
+
+Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+Link: https://lore.kernel.org/r/20241209220522.25288-1-hdegoede@redhat.com
 Reviewed-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
-Signed-off-by: Armin Wolf <W_Armin@gmx.de>
-Link: https://lore.kernel.org/r/20250119201723.11102-2-W_Armin@gmx.de
 Signed-off-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/platform/x86/acer-wmi.c | 4 ++++
- 1 file changed, 4 insertions(+)
+ drivers/platform/x86/intel/int3472/discrete.c | 3 +++
+ drivers/platform/x86/intel/int3472/tps68470.c | 3 +++
+ 2 files changed, 6 insertions(+)
 
-diff --git a/drivers/platform/x86/acer-wmi.c b/drivers/platform/x86/acer-wmi.c
-index 377a0becd1a18..868faccfb8628 100644
---- a/drivers/platform/x86/acer-wmi.c
-+++ b/drivers/platform/x86/acer-wmi.c
-@@ -88,6 +88,7 @@ enum acer_wmi_event_ids {
- 	WMID_HOTKEY_EVENT = 0x1,
- 	WMID_ACCEL_OR_KBD_DOCK_EVENT = 0x5,
- 	WMID_GAMING_TURBO_KEY_EVENT = 0x7,
-+	WMID_AC_EVENT = 0x8,
- };
+diff --git a/drivers/platform/x86/intel/int3472/discrete.c b/drivers/platform/x86/intel/int3472/discrete.c
+index c42c3faa2c32d..0f16436e5804b 100644
+--- a/drivers/platform/x86/intel/int3472/discrete.c
++++ b/drivers/platform/x86/intel/int3472/discrete.c
+@@ -359,6 +359,9 @@ static int skl_int3472_discrete_probe(struct platform_device *pdev)
+ 	struct int3472_cldb cldb;
+ 	int ret;
  
- static const struct key_entry acer_wmi_keymap[] __initconst = {
-@@ -1999,6 +2000,9 @@ static void acer_wmi_notify(u32 value, void *context)
- 		if (return_value.key_num == 0x4)
- 			acer_toggle_turbo();
- 		break;
-+	case WMID_AC_EVENT:
-+		/* We ignore AC events here */
-+		break;
- 	default:
- 		pr_warn("Unknown function number - %d - %d\n",
- 			return_value.function, return_value.key_num);
++	if (!adev)
++		return -ENODEV;
++
+ 	ret = skl_int3472_fill_cldb(adev, &cldb);
+ 	if (ret) {
+ 		dev_err(&pdev->dev, "Couldn't fill CLDB structure\n");
+diff --git a/drivers/platform/x86/intel/int3472/tps68470.c b/drivers/platform/x86/intel/int3472/tps68470.c
+index 5b8d1a9620a5d..82fb2fbc1000f 100644
+--- a/drivers/platform/x86/intel/int3472/tps68470.c
++++ b/drivers/platform/x86/intel/int3472/tps68470.c
+@@ -152,6 +152,9 @@ static int skl_int3472_tps68470_probe(struct i2c_client *client)
+ 	int ret;
+ 	int i;
+ 
++	if (!adev)
++		return -ENODEV;
++
+ 	n_consumers = skl_int3472_fill_clk_pdata(&client->dev, &clk_pdata);
+ 	if (n_consumers < 0)
+ 		return n_consumers;
 -- 
 2.39.5
 
