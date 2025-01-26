@@ -1,45 +1,44 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3EA6D1F91ED;
-	Sun, 26 Jan 2025 15:08:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AABF21F91ED;
+	Sun, 26 Jan 2025 15:08:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1737904107; cv=none; b=B+ikc/uez3Jcxi9/018nuvo4OfMoJ0howBCLW9LhOiEG9CkqHoLivreRa9FdyA7gUEzGYar1D8KwhnjuF2790KuYJbJ29R1sSzvJNjc18xmAFyqsEm44kMgzDOGDwPATZGCmqy0GAK5AE6qCK+torFybECbk0a3tVx0qoeYeAC0=
+	t=1737904110; cv=none; b=AWg0sTB0N9vA2el02S52Q0AA08SXkh17yuySDTE2h+XJm01+hJW0kE0yuEXGUa8MVpPXSvu3/hlaCB2G5oNeRoqSvrUsjuaWLUvabOmB5eHx7KEzvb7p3NHqvsefMkhFxxHNwOAWUpQEF3Y0MdiZ5oBFPiNTiHcpxG2L8f0HBY4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1737904107; c=relaxed/simple;
-	bh=4EEkYC8RfrXsn6PfoJlp1U3L509s8rsmM7MazMtyP50=;
+	s=arc-20240116; t=1737904110; c=relaxed/simple;
+	bh=/ZpiW6b/tVfu7Ad3xX4q80EbA+HWOQd6Ao+l04QF8Lg=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=EKMIOZZhBoFY1irnmEtcof28HpSmKtVBpu+VE2TQ1O9WAxTPx0lFLK5Q60Dr3NK8iJsWg0JQ6lSLy7uz3ci7KPoL9qX/FS5KgoZ4Syfmir2jMIV1RAatDpLmANQiolor8DIE0IWp0XmN6zXfNQjPSMkak3biKgN0XvYfrg0K+vw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ufHG8HGf; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version:Content-Type; b=hgzsspXX6ZDYdV6z+mYcdrf1LoVvrZV0pxUcLil8gylGFMKsDneI+lG9bCyc8q3tpJWV2uKlwqg6pgO5wFLX0oqK89i0GKA+3DLcIecuaq1u6vex4bfrWTOJrPdQydjmF6o5q7qxw0QF0IuYDB0pI3nmnNPjIcLgK5ZUzwvga/4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=InNVNefk; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ufHG8HGf"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E8774C4CEE9;
-	Sun, 26 Jan 2025 15:08:25 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="InNVNefk"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 30576C4CEE3;
+	Sun, 26 Jan 2025 15:08:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1737904107;
-	bh=4EEkYC8RfrXsn6PfoJlp1U3L509s8rsmM7MazMtyP50=;
+	s=k20201202; t=1737904110;
+	bh=/ZpiW6b/tVfu7Ad3xX4q80EbA+HWOQd6Ao+l04QF8Lg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=ufHG8HGfoLjjBovXDFycI4eEyGWHhO9mgXvKgnkz5zyIfZ7AYmjV15ECqdysLF1/R
-	 uCRDprmMWVOxsRECctWjv6NjHVgRVot05lMCUTb9VcuwgYFe8Nj5v3ox8EBim6qKA6
-	 SqjXOX576vnTTm7Qv0W0gxxKxCT5oES0HW2/mdEjbwUeUPD9E17ITh5MmuK2zoTlx4
-	 V3nb/+muWTRF5hkOq6MOJfYYjHoh2Kjwxc6jvSG8Xnb10V6/eBCQB2zleHJ8flErOh
-	 STybfmzmqz59nV3aG+5cKqO/AvYSoEyi9g8PQgmcODE29cOAT6aTcAmSBGDnsQ/Okr
-	 h6n8c8Akp5+PA==
+	b=InNVNefkiFPYgOotVQEAdoNdVnh6UnZThumo1D1pmDj0Ecdm3us94IWsqbqghkKXG
+	 RF/NDk4tFvKLLaQIvqOKMtLEDxlOsTdZoab76dnjwrYM0NNUOxzw6yp88UB5jspFM6
+	 DIxEF3iuGSN7v/03klNgPhK7d7i3yQKFN5B79FV0DLQf8hAjYa4R8YLpcTOZ6t2kFZ
+	 rbeMlenaJxxvhemXpW7VjepjUrIbgUmrXj08AqMuRZLFYn/+ifQCAbHIQYDaJiOFMg
+	 7Tnj5B1JpV+C4Hyw5YSCVt9L8DYY1S3gXTjbp3lmDyRkpoB7/pVczlAuIzOZm49Jjm
+	 r+aZgUWif0DmQ==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
 Cc: Armin Wolf <W_Armin@gmx.de>,
-	Rayan Margham <rayanmargham4@gmail.com>,
-	Kurt Borja <kuurtb@gmail.com>,
+	Eric Johnsten <ejohnsten@gmail.com>,
 	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
 	Sasha Levin <sashal@kernel.org>,
 	jlee@suse.com,
 	hdegoede@redhat.com,
 	platform-driver-x86@vger.kernel.org
-Subject: [PATCH AUTOSEL 6.12 08/14] platform/x86: acer-wmi: Add support for Acer PH14-51
-Date: Sun, 26 Jan 2025 10:07:55 -0500
-Message-Id: <20250126150803.962459-8-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 6.12 10/14] platform/x86: acer-wmi: Add support for Acer Predator PH16-72
+Date: Sun, 26 Jan 2025 10:07:57 -0500
+Message-Id: <20250126150803.962459-10-sashal@kernel.org>
 X-Mailer: git-send-email 2.39.5
 In-Reply-To: <20250126150803.962459-1-sashal@kernel.org>
 References: <20250126150803.962459-1-sashal@kernel.org>
@@ -57,17 +56,14 @@ Content-Transfer-Encoding: 8bit
 
 From: Armin Wolf <W_Armin@gmx.de>
 
-[ Upstream commit 9741f9aa13f6dc3ff24e1d006b2ced5f460e6b6f ]
+[ Upstream commit c85b516b44d21e9cf751c4f73a6c235ed170d887 ]
 
-Add the Acer Predator PT14-51 to acer_quirks to provide support
-for the turbo button and predator_v4 hwmon interface.
+Add the Acer Predator PT16-72 to acer_quirks to provide support
+for the turbo button and predator_v4 interfaces.
 
-Reported-by: Rayan Margham <rayanmargham4@gmail.com>
-Closes: https://lore.kernel.org/platform-driver-x86/CACzB==6tUsCnr5musVMz-EymjTUCJfNtKzhMFYqMRU_h=kydXA@mail.gmail.com
-Tested-by: Rayan Margham <rayanmargham4@gmail.com>
+Tested-by: Eric Johnsten <ejohnsten@gmail.com>
 Signed-off-by: Armin Wolf <W_Armin@gmx.de>
-Reviewed-by: Kurt Borja <kuurtb@gmail.com>
-Link: https://lore.kernel.org/r/20241210001657.3362-2-W_Armin@gmx.de
+Link: https://lore.kernel.org/r/20250107175652.3171-1-W_Armin@gmx.de
 Reviewed-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
 Signed-off-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
@@ -76,39 +72,39 @@ Signed-off-by: Sasha Levin <sashal@kernel.org>
  1 file changed, 16 insertions(+)
 
 diff --git a/drivers/platform/x86/acer-wmi.c b/drivers/platform/x86/acer-wmi.c
-index 7169b84ccdb6e..844e623ddeb30 100644
+index 844e623ddeb30..f69916b2eea39 100644
 --- a/drivers/platform/x86/acer-wmi.c
 +++ b/drivers/platform/x86/acer-wmi.c
 @@ -398,6 +398,13 @@ static struct quirk_entry quirk_acer_predator_ph315_53 = {
  	.gpu_fans = 1,
  };
  
-+static struct quirk_entry quirk_acer_predator_pt14_51 = {
++static struct quirk_entry quirk_acer_predator_ph16_72 = {
 +	.turbo = 1,
 +	.cpu_fans = 1,
 +	.gpu_fans = 1,
 +	.predator_v4 = 1,
 +};
 +
- static struct quirk_entry quirk_acer_predator_v4 = {
- 	.predator_v4 = 1,
- };
-@@ -605,6 +612,15 @@ static const struct dmi_system_id acer_quirks[] __initconst = {
+ static struct quirk_entry quirk_acer_predator_pt14_51 = {
+ 	.turbo = 1,
+ 	.cpu_fans = 1,
+@@ -603,6 +610,15 @@ static const struct dmi_system_id acer_quirks[] __initconst = {
  		},
  		.driver_data = &quirk_acer_predator_v4,
  	},
 +	{
 +		.callback = dmi_matched,
-+		.ident = "Acer Predator PT14-51",
++		.ident = "Acer Predator PH16-72",
 +		.matches = {
 +			DMI_MATCH(DMI_SYS_VENDOR, "Acer"),
-+			DMI_MATCH(DMI_PRODUCT_NAME, "Predator PT14-51"),
++			DMI_MATCH(DMI_PRODUCT_NAME, "Predator PH16-72"),
 +		},
-+		.driver_data = &quirk_acer_predator_pt14_51,
++		.driver_data = &quirk_acer_predator_ph16_72,
 +	},
  	{
- 		.callback = set_force_caps,
- 		.ident = "Acer Aspire Switch 10E SW3-016",
+ 		.callback = dmi_matched,
+ 		.ident = "Acer Predator PH18-71",
 -- 
 2.39.5
 
