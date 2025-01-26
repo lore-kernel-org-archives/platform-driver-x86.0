@@ -1,31 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F2F471F9426;
-	Sun, 26 Jan 2025 15:09:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9DCF124817A;
+	Sun, 26 Jan 2025 15:09:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1737904163; cv=none; b=JFGldgP9A2v2N8LJZYGGjxsRsGOmoD7AGTCllGJrGO/EGvW8Q/j9/V3NBwKyToCXFxcczA3oJreiaq3x0Cl+AU5byZmTb6nDcI0Hvbi4MapRQhyqB6Rqdfa7BDXL+5khoiXRI3CcQ/xpacMh7WOOZ6vPO4Kb9Tf1hb9RPpSWd9M=
+	t=1737904171; cv=none; b=j7R344ia+ayS/LXukqgjkVcPRjuCFbnq2CjmwxBSGyMWVCSL210bEYTw3q2g05dc6QBgG//XBizBpRjwwz9hwB7jA8sjGxtRwHMa8HEHGOXF2fricz1dWoP9uOtEClgOUlzpbFyaAFgFYfmkBPl3OV/Z7axMPTYW7jQl02G67tc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1737904163; c=relaxed/simple;
-	bh=QEbgg2aTr7pFWXAMQu3jSyyJAKoQR6tg+4TN/cCgQGk=;
+	s=arc-20240116; t=1737904171; c=relaxed/simple;
+	bh=OerpSP185xebxhE/qOsOtyWzvkg5Fq4iSO69ExcvLog=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=HOnmf6qEM7zthdWi3flFHTDkdn4Pr2cgVYgafbvYTYXnJe+s9GV6uzU78hhwzeyyhsfWNj2WB7W1U2JQgx2LbMawcXrKwUr974cQypihi8RMBuq/tvoPMZ9hgSFek/T41FjL0yyXkAd8jHZIdpK2HNPI+hYaeL/FmXNUjFLVI2M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sik6PGaN; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version:Content-Type; b=isfuPhKYanlf6Xj50sONpxUn1PMNsNpWHNvrpKacRRjmfnZ4qduBVJ4aJQ1FUP+0xon7Gk/TP0MEz/s0fkSTtiRIuIwPw8sGnda+1TeQf/X3uyiNgnKhl28EVJF6hBRCmHzqrxOQuwUiHZf54iD6xfLG20M4VA1vLH0uj8Okft4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MrRFSiDU; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sik6PGaN"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6017CC4CED3;
-	Sun, 26 Jan 2025 15:09:21 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MrRFSiDU"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 00DD3C4CED3;
+	Sun, 26 Jan 2025 15:09:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1737904162;
-	bh=QEbgg2aTr7pFWXAMQu3jSyyJAKoQR6tg+4TN/cCgQGk=;
+	s=k20201202; t=1737904171;
+	bh=OerpSP185xebxhE/qOsOtyWzvkg5Fq4iSO69ExcvLog=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=sik6PGaNtwcu1Jqz4QxF+o1iuslzQ/ctqUFuCkA5mds/Qy7M8nqMvoQeioadH/RMV
-	 ZRwPHIyk2xrFR2UpG5Bhp9dcPeWVrO4HkzEH6p+PdQU7Lw7h0AwVv6gmZ1O44e1Qb5
-	 pH1wJ66sClFZkcJPuzZcB2TKRzMdAF8e+G3fCMILZxPmce9YfybjuS3FmvgqCf+A2+
-	 Z/6eAw1zWfX8fY7VpA3eXg2bU1dNk2FbbfYnHVA+fFyeyWgprV3ys2MFBSUxZRdnSW
-	 7+RQK+KOeTiOuQQmYBJfGUxF/Vd1mqiyji+wnTxweNuUFNLtSIXKoBnaFK49bcdIiS
-	 HlmYTXhaYILIA==
+	b=MrRFSiDULm5Bv+y6fkwEoj+ILdTEJeWKAxoHJRx3u0cgm9wVM6XZw1yaKOqXUvOf5
+	 y+zkhXtfWdh93jjDd0uA64f3UpwgdpTb3ave9JoQT3Ca2gUMrOtTV+pjchGjnjTbEL
+	 e9gyfk4bCaxsgI8mEcapbsB2rZmoNjkkcQxE/PCxoeDu5lgLm632Z1YnN1XI3tNZjh
+	 bhXTw0/AtVjpU99TcsZ7EOvT5L3SHhFitci+ucwRbCnP2oOraMI9yojeD1bIXcHCxH
+	 n/r2jYf/Jeqq7cTqJOycksyu0J10rKDmK0INhZlEPy7qasgzioo3R4RwekjtvkrIhf
+	 r0xtjig+ZOwkg==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
@@ -37,12 +37,12 @@ Cc: Armin Wolf <W_Armin@gmx.de>,
 	jlee@suse.com,
 	hdegoede@redhat.com,
 	platform-driver-x86@vger.kernel.org
-Subject: [PATCH AUTOSEL 6.1 8/8] platform/x86: acer-wmi: Ignore AC events
-Date: Sun, 26 Jan 2025 10:09:00 -0500
-Message-Id: <20250126150902.962837-8-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.15 3/3] platform/x86: acer-wmi: Ignore AC events
+Date: Sun, 26 Jan 2025 10:09:22 -0500
+Message-Id: <20250126150923.962963-3-sashal@kernel.org>
 X-Mailer: git-send-email 2.39.5
-In-Reply-To: <20250126150902.962837-1-sashal@kernel.org>
-References: <20250126150902.962837-1-sashal@kernel.org>
+In-Reply-To: <20250126150923.962963-1-sashal@kernel.org>
+References: <20250126150923.962963-1-sashal@kernel.org>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -52,7 +52,7 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
-X-stable-base: Linux 6.1.127
+X-stable-base: Linux 5.15.177
 Content-Transfer-Encoding: 8bit
 
 From: Armin Wolf <W_Armin@gmx.de>
@@ -76,7 +76,7 @@ Signed-off-by: Sasha Levin <sashal@kernel.org>
  1 file changed, 4 insertions(+)
 
 diff --git a/drivers/platform/x86/acer-wmi.c b/drivers/platform/x86/acer-wmi.c
-index ee67efdd54995..da765a7dedbc4 100644
+index 82516796a53b0..7ef80f517e76e 100644
 --- a/drivers/platform/x86/acer-wmi.c
 +++ b/drivers/platform/x86/acer-wmi.c
 @@ -88,6 +88,7 @@ enum acer_wmi_event_ids {
@@ -87,7 +87,7 @@ index ee67efdd54995..da765a7dedbc4 100644
  };
  
  static const struct key_entry acer_wmi_keymap[] __initconst = {
-@@ -1999,6 +2000,9 @@ static void acer_wmi_notify(u32 value, void *context)
+@@ -2067,6 +2068,9 @@ static void acer_wmi_notify(u32 value, void *context)
  		if (return_value.key_num == 0x4)
  			acer_toggle_turbo();
  		break;
