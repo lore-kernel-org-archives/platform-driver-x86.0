@@ -1,44 +1,44 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E6826230999;
-	Sun, 26 Jan 2025 15:07:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D3A34230D38;
+	Sun, 26 Jan 2025 15:07:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1737904075; cv=none; b=LNhhNL3qaIidAUvL2WzNzYG6glJHtMEAhmlOq+1lj9cg6R6mhs/LBJIChvI4hgFUOo65NBk509hS9gjEDbCZw+olB1GP9E64HiyWc47pUItA4nEHgyx41mSSGvblXaIxSNEr7jzJal7JIqp8CDrhRS1EHbN+2zy/bhtQksmr/ls=
+	t=1737904079; cv=none; b=DsqiNxyuOS1JYkjkFCwPkeUlLhPpJkRFD4iXDe/c5eAFtyRn0ZbsxukGQc76tVdzJ4+1uW8UVk3/u/opag1yk0GMxfZf9IiyeVXCvD9K/4PIg98AiqsEwsZuaKUh9kynWVRaHp+px3JxCyDKaaVm7r9xBx6ezM2M4xfHsUschyE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1737904075; c=relaxed/simple;
-	bh=Y/mqDBO9yXQYFtykR5TA+Ue9IMNZ9Vw3IH4GqzwFjaY=;
+	s=arc-20240116; t=1737904079; c=relaxed/simple;
+	bh=F3npVf/i4dskGmfuKD/PaL9nDNxLEEmW1yiw7GoDy6U=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Izo70Ved1bIpBo/b3fjEjTUgAfoiDLmYcYYVffl9bbNFhrclgeRgViLycA3raC4m/O7YreFHSSbvWuiEexNZvFUrh3BXe+64oWN2ihEf19Yp3GVBVIRcZarRjAVbBIiG6ELX1qhhR8Ig6qTqeFYfUArAGDczvwxF4KT90pu7EBA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tftBQLef; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version:Content-Type; b=gvXgXLO95ES22/csMg+ZFmKMnv3+0c6eGlR7ILLCqLcEbS9zQKTk7SMyyGNh2DJNda7uKMKHcq4GZp/xr8El8rhIhA1Z4zts1SWg2+wNcsoKHZjWjVbq3LaK5kxJMLKvKdC3GwFmkUSkCqBvKtB+N1IbGvnUguUi7UJVOubiIdA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=f2nBhvpR; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tftBQLef"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 72AA5C4CEE2;
-	Sun, 26 Jan 2025 15:07:53 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="f2nBhvpR"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AD619C4CEE3;
+	Sun, 26 Jan 2025 15:07:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1737904074;
-	bh=Y/mqDBO9yXQYFtykR5TA+Ue9IMNZ9Vw3IH4GqzwFjaY=;
+	s=k20201202; t=1737904079;
+	bh=F3npVf/i4dskGmfuKD/PaL9nDNxLEEmW1yiw7GoDy6U=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=tftBQLefpI4bJ3uF1pwddduY7hGTK5cdSloAc0BrJCMPXRi9DVAmpEXdKpKgzhjS7
-	 ZfNvSMomYnAMafZ4q29vBaRPnbR56PcId7MwK+9EEkMYnMek1z8RajAFSPEpxknmMj
-	 Uxk50XG5rnhRXeL1JgdPxJ5lrCU0+ct12HbEqBQzJl9aTYimPEVN0+TP/efucT3CiL
-	 XncVud2T/xc9vHBWANmt1WCyEchwtBVmY+HBEHozhLqEpuIfo4ZDoE+K0W2rvYFx6u
-	 UnemUkAi/IJcOtDHoqHpDcqG9WUgndqLq1y9BwDo23+F0qey5xwQHikdxLlh+B/eSE
-	 EK0En5qHVdkGw==
+	b=f2nBhvpR4RM63mgX7ZPmMvWafNBhV6WHoL8aSPM64fdVWSYhfVcKKztXXysnZhf9m
+	 evei6SmwLjYWk/yxEXxMw8dEe5YcPtxGN04ohjNCxOX76ABt3ZX1GDs6DvXZKq4cwZ
+	 iGBwTWCp9IgG/aw7LWa+Cm42aXy5z+z9JOTn1kd5AciUnTncngcHLBTg0IPfTpyU3f
+	 h5ZAiDwgQfE0MBvpnCIvg75ZOVdw7rsG76/U3UlFXVu3zWpjjmrFq8z4GstUemODO5
+	 v8GkVXgnJbHWst4coDrTIIPNqgQ0oTV08VaFlYWnfv7gPAMniuWZQrSTHfELxcMNSP
+	 DlfNwDKVT6G9w==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Armin Wolf <W_Armin@gmx.de>,
-	Eric Johnsten <ejohnsten@gmail.com>,
+Cc: Hridesh MG <hridesh699@gmail.com>,
+	Kurt Borja <kuurtb@gmail.com>,
 	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
 	Sasha Levin <sashal@kernel.org>,
 	jlee@suse.com,
 	hdegoede@redhat.com,
 	platform-driver-x86@vger.kernel.org
-Subject: [PATCH AUTOSEL 6.13 12/16] platform/x86: acer-wmi: Add support for Acer Predator PH16-72
-Date: Sun, 26 Jan 2025 10:07:14 -0500
-Message-Id: <20250126150720.961959-12-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 6.13 15/16] platform/x86: acer-wmi: add support for Acer Nitro AN515-58
+Date: Sun, 26 Jan 2025 10:07:17 -0500
+Message-Id: <20250126150720.961959-15-sashal@kernel.org>
 X-Mailer: git-send-email 2.39.5
 In-Reply-To: <20250126150720.961959-1-sashal@kernel.org>
 References: <20250126150720.961959-1-sashal@kernel.org>
@@ -54,57 +54,43 @@ X-Patchwork-Hint: Ignore
 X-stable-base: Linux 6.13
 Content-Transfer-Encoding: 8bit
 
-From: Armin Wolf <W_Armin@gmx.de>
+From: Hridesh MG <hridesh699@gmail.com>
 
-[ Upstream commit c85b516b44d21e9cf751c4f73a6c235ed170d887 ]
+[ Upstream commit 549fcf58cf5837d401d0de906093169b05365609 ]
 
-Add the Acer Predator PT16-72 to acer_quirks to provide support
-for the turbo button and predator_v4 interfaces.
+Add predator_v4 quirk for the Acer Nitro AN515-58 to enable fan speed
+monitoring and platform_profile handling.
 
-Tested-by: Eric Johnsten <ejohnsten@gmail.com>
-Signed-off-by: Armin Wolf <W_Armin@gmx.de>
-Link: https://lore.kernel.org/r/20250107175652.3171-1-W_Armin@gmx.de
+Signed-off-by: Hridesh MG <hridesh699@gmail.com>
+Reviewed-by: Kurt Borja <kuurtb@gmail.com>
+Link: https://lore.kernel.org/r/20250113-platform_profile-v4-5-23be0dff19f1@gmail.com
 Reviewed-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
 Signed-off-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/platform/x86/acer-wmi.c | 16 ++++++++++++++++
- 1 file changed, 16 insertions(+)
+ drivers/platform/x86/acer-wmi.c | 9 +++++++++
+ 1 file changed, 9 insertions(+)
 
 diff --git a/drivers/platform/x86/acer-wmi.c b/drivers/platform/x86/acer-wmi.c
-index 5cff538ee67fa..3c211eee95f42 100644
+index 3c211eee95f42..1b966b75cb979 100644
 --- a/drivers/platform/x86/acer-wmi.c
 +++ b/drivers/platform/x86/acer-wmi.c
-@@ -393,6 +393,13 @@ static struct quirk_entry quirk_acer_predator_ph315_53 = {
- 	.gpu_fans = 1,
- };
- 
-+static struct quirk_entry quirk_acer_predator_ph16_72 = {
-+	.turbo = 1,
-+	.cpu_fans = 1,
-+	.gpu_fans = 1,
-+	.predator_v4 = 1,
-+};
-+
- static struct quirk_entry quirk_acer_predator_pt14_51 = {
- 	.turbo = 1,
- 	.cpu_fans = 1,
-@@ -598,6 +605,15 @@ static const struct dmi_system_id acer_quirks[] __initconst = {
+@@ -578,6 +578,15 @@ static const struct dmi_system_id acer_quirks[] __initconst = {
  		},
- 		.driver_data = &quirk_acer_predator_v4,
+ 		.driver_data = &quirk_acer_travelmate_2490,
  	},
 +	{
 +		.callback = dmi_matched,
-+		.ident = "Acer Predator PH16-72",
++		.ident = "Acer Nitro AN515-58",
 +		.matches = {
 +			DMI_MATCH(DMI_SYS_VENDOR, "Acer"),
-+			DMI_MATCH(DMI_PRODUCT_NAME, "Predator PH16-72"),
++			DMI_MATCH(DMI_PRODUCT_NAME, "Nitro AN515-58"),
 +		},
-+		.driver_data = &quirk_acer_predator_ph16_72,
++		.driver_data = &quirk_acer_predator_v4,
 +	},
  	{
  		.callback = dmi_matched,
- 		.ident = "Acer Predator PH18-71",
+ 		.ident = "Acer Predator PH315-53",
 -- 
 2.39.5
 
