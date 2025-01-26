@@ -1,31 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E4E6205E2B;
-	Sun, 26 Jan 2025 15:01:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D70B214A9E;
+	Sun, 26 Jan 2025 15:03:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1737903717; cv=none; b=UK9jDSsX5oPFInDh8RqAZKdlqSQN3h3PLwLr1ZOjuXKsM9/0CFDfRtfeUK4VUWkjk7yNT7TX+tyG2Cgd6g+VmU/Jtqngs2wDm2A9O6Rg5O94X25Rf0torJCRy/g/RfmcigoWru5gvHsG6ZlxCqVJRpCF6EfUvRIT0Z1LFkY0vFg=
+	t=1737903781; cv=none; b=G9mM0L8tR1iMfCy9IrvLtDp1jOX1JqMqnh2nKR9z6BzpCKr36iYZa2x1zK1oAxuFxtpK15BfckmM3kx2WyaePJdTcEJ/ovj5bEqsy31fNAD8mPJGJNdaXQWodVxszLXbBR5JWJcoTyGc1t325eKbq+D6cc7VOVz2g6J/jlgkDSg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1737903717; c=relaxed/simple;
-	bh=5/DcTW5GFzMpIHQp8LpzmtT8mL0LL1Uy6jvOc2YQkb4=;
+	s=arc-20240116; t=1737903781; c=relaxed/simple;
+	bh=qBZkjaeQxQ07wNcU2MYWYdT6WrviT3pRyCwB3X08wnc=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=fbOV2y2okPrdgZv0MozGOPA/a/lTL1QnNPlg2HEwFwylp4IOj5EwwQoVDrhdPJWHR4P9iJSO7dNHQulRSEcN1EqP9kqWLh6+lYvzkm1/7oWD4o6WFHIECBTMZoBZUbE69C5cD1GPnl7u7SLd9BbTs5g8Z1EyVSBpSLmGAtOPe9Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Y4L73h5B; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=n5XBwZ3Jv7fcfDui2GWABweUNLJxTvLjmlpfQvdyfiSme+aqTCVaVb+x/G13Nelbp0nlGaQELX6/AafPOCequGtJU1NH9ZkDdYhVtiGXi/1KZlL73Rhq8SN2EHPl3DIj5byfDtYfHseZdy+88mT0l9ZDAFy5pq7kCDLO1o5JbCc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=S6K9wqqL; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Y4L73h5B"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EB956C4CED3;
-	Sun, 26 Jan 2025 15:01:55 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="S6K9wqqL"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 12C27C4CED3;
+	Sun, 26 Jan 2025 15:02:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1737903717;
-	bh=5/DcTW5GFzMpIHQp8LpzmtT8mL0LL1Uy6jvOc2YQkb4=;
+	s=k20201202; t=1737903781;
+	bh=qBZkjaeQxQ07wNcU2MYWYdT6WrviT3pRyCwB3X08wnc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=Y4L73h5BN0DiC6P+lgLRUFKGEa4ETu2et30SiyNAPFmBVTrwHLwTU1q6Y9AzjDf2T
-	 tdV1RXPFIpAW7g0N/HrnvAMUcXNxwl6dk66yp/mwwGArWmSQhlcDomV+M0NnZ4wuj5
-	 el0m2lsrMXIpSWzfUI8ZoRAWH/t2dP0lZIPlEI5rKxCT4CiDiKwjKqr3Wk1qPQ1TsF
-	 3i9d3pvbcMoFvCvxm69UPbljf1yo0VJcxT6UH4Qtba3kKaHrasWnoksS3LPrhnl+tf
-	 YVfjqEsyc1Z9uwAOkwIIvAlUBFgXh1rpJOWYrrVb/kRjan9Zybm0S8AK9sc1hoJ8qr
-	 Jzg85K/Acog7Q==
+	b=S6K9wqqL9j/aRjpcUBDV9MXCpI1mQJzaV4Z6V4ea665bawNH95+Dab5J/6zvfK468
+	 Usuo3FejkpXeHzodjrpiAdwiQgpkpfrrVu/PAcISN5YXevaTqC8t0Syae+F2Nim9EH
+	 f14t53qe+mFk402Meqyh/ttX9OFuV14QSNHKNjXh0tjJPF3uBhSzznPQXoUYssY00H
+	 NQWuEfJ8IS678s9y9pBOZZt5Udbx4QbRDHGNvKp8XpmRlHuL092+ewsa7RmvmwaTol
+	 pvlLuRaeWo2tfE8UeRyO+wFuORkH+uue9jy2aPXkGxjDTNn7xIyyZq+8FfzCWjxJJS
+	 oYcVXz+W1d0ow==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
@@ -40,12 +40,12 @@ Cc: "Luke D. Jones" <luke@ljones.dev>,
 	ilpo.jarvinen@linux.intel.com,
 	linux-input@vger.kernel.org,
 	platform-driver-x86@vger.kernel.org
-Subject: [PATCH AUTOSEL 6.13 29/35] HID: hid-asus: Disable OOBE mode on the ProArt P16
-Date: Sun, 26 Jan 2025 10:00:23 -0500
-Message-Id: <20250126150029.953021-29-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 6.12 23/29] HID: hid-asus: Disable OOBE mode on the ProArt P16
+Date: Sun, 26 Jan 2025 10:02:04 -0500
+Message-Id: <20250126150210.955385-23-sashal@kernel.org>
 X-Mailer: git-send-email 2.39.5
-In-Reply-To: <20250126150029.953021-1-sashal@kernel.org>
-References: <20250126150029.953021-1-sashal@kernel.org>
+In-Reply-To: <20250126150210.955385-1-sashal@kernel.org>
+References: <20250126150210.955385-1-sashal@kernel.org>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -54,7 +54,7 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
-X-stable-base: Linux 6.13
+X-stable-base: Linux 6.12.11
 Content-Transfer-Encoding: 8bit
 
 From: "Luke D. Jones" <luke@ljones.dev>
@@ -81,7 +81,7 @@ Signed-off-by: Sasha Levin <sashal@kernel.org>
  2 files changed, 31 insertions(+)
 
 diff --git a/drivers/hid/hid-asus.c b/drivers/hid/hid-asus.c
-index 506c6f377e7d6..46e3e42f9eb5f 100644
+index a4b47319ad8ea..bcdd168cdc6d7 100644
 --- a/drivers/hid/hid-asus.c
 +++ b/drivers/hid/hid-asus.c
 @@ -432,6 +432,26 @@ static int asus_kbd_get_functions(struct hid_device *hdev,
