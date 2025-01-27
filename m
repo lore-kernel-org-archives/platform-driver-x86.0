@@ -1,126 +1,98 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail.ispras.ru (mail.ispras.ru [83.149.199.84])
+	(using TLSv1.2 with cipher DHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0CBC21FDA65
-	for <platform-driver-x86@vger.kernel.org>; Mon, 27 Jan 2025 10:51:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B7B20EED7;
+	Mon, 27 Jan 2025 21:02:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=83.149.199.84
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1737975109; cv=none; b=JiTIWi6NP1GBl3JMHZ6GX6SFx2cX3XouLachdCoAxBwI7l7mikKmfJRZLcL93rXWhwe5L8KLkQZvB+hAxKekd64tPjfwmMOY4wPQB2Xys2AsURtYK8wCPiP1HBOohMsfaXP9a5n1xVNn/FZh1SNKfNwR85Byo9n/mBn6vK9ww2Q=
+	t=1738011742; cv=none; b=gbmVwGCqr8mhpmggYrLGmKql3fI3ZDl74N14b69xAlsKCK92uU5f3R9Pk5B5K/D3asq5Uyzd0ZeX3hXoCCn5fWboLRadp7vmunaOrHDMHBZRTl4SNAfKp4lUEONM9QrJ82uX9XR3eaIpLQ4FGcY+gkjrA1gndOoO4adddhRsRE0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1737975109; c=relaxed/simple;
-	bh=mWS+9+694GSsQoByy20+8LEEtkIWdin+mmWpimRNntI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=qaEQ57SeCYH8ixRIO6SupOPrIeR2aMnEvt9KSgV8xBjA+7r3tIiwo6cknBgwODjVmjlujnNXPVm+kCKq1+VJcv8m7DLZehDp0EHQzLSqGThxN8o8BEhVCANaEnuwU49r1lBNxaFHOeo4qD9ARZtTlKTPW4MONhIWjvA5c4j7cEs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=Xdg1V7eu; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+	s=arc-20240116; t=1738011742; c=relaxed/simple;
+	bh=hXM8l2VHSRTi9xYkeWs/kSyOQ7F8kv10d/EMYUFX2dk=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=UeYWkp+RQgHA95LIXkPc8kXB8t3y5w49K4Ub/ERsU/akAOg97sRkJo2varZXg+ZOVOc2NiRV+LTUl1PnSizj6at8CkeeeeLNwnEJaukSGKq+Br/TO8OPUPo27wuN2Ot1CpKGqiftONzvnhBOHOp7F+FDyuB4USkFfonXCb7K/Og=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ispras.ru; spf=pass smtp.mailfrom=ispras.ru; dkim=pass (1024-bit key) header.d=ispras.ru header.i=@ispras.ru header.b=nTivAsaK; arc=none smtp.client-ip=83.149.199.84
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ispras.ru
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ispras.ru
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="Xdg1V7eu"
-Received: from pps.filterd (m0279863.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 50R0xorE031640
-	for <platform-driver-x86@vger.kernel.org>; Mon, 27 Jan 2025 10:51:47 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	5TAo3NLH3Ad8L2mbH6/7KB9BjVRiKtULeosoRVXBiIE=; b=Xdg1V7eu3kjoDsZ2
-	v8jTYEEVt/L1SFFHuWUTtLm+s+zSgCMCaoqjzUs3xsh5y/39fK7ph7BPFC1y/br5
-	IKf904vgSs7WtG4HZPvf1F1n+yL/r17jYNfFCU53mZ+wt9umSpPxsB5ofWsIVoxN
-	/nzm9Zzb4qprA5Iy/cbAIJky/sioCdBlIKB7p5Q4v/konZ+hzbQunUa/uTi9DB9/
-	q8tuVzkZWJbFHqpGW/RqJ49pzuXoKNbFfPl22vdWPm3bg59HiK6iJd0czKG3l2IX
-	M51MGi0Q9P2yx4In3OfrY8pNg4gggTZtyRk0ORLZFlhIHWpJHa80x4BPqv6X7AzG
-	pCdz6w==
-Received: from mail-qt1-f197.google.com (mail-qt1-f197.google.com [209.85.160.197])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 44dhu9huk5-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <platform-driver-x86@vger.kernel.org>; Mon, 27 Jan 2025 10:51:47 +0000 (GMT)
-Received: by mail-qt1-f197.google.com with SMTP id d75a77b69052e-467922cf961so6222641cf.0
-        for <platform-driver-x86@vger.kernel.org>; Mon, 27 Jan 2025 02:51:47 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1737975106; x=1738579906;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=5TAo3NLH3Ad8L2mbH6/7KB9BjVRiKtULeosoRVXBiIE=;
-        b=ANiw6gz47hJBzSZOhTIGUzDOE4UiATviU7aZErB/zZ4XhUy2DnRYzCUn8Rdy7xG0oC
-         15Kmp1Pj1j/9fIEAPQHK1xtR8eTZp5SED1nSI0WqvVX2AMWe7JgdjfDD7c2yeog2BK8H
-         E+1Qb1Uu6EEX0/JFY/hJkdLgueuKmofg1V+JKyz+RZPCCXpmqMk+2F2UbgVpZGaMneVC
-         cVLpRm0F23uCz+I3yPxy0AzhS75zRkoX+/+2D11sjVo7eUretGXQ+TiBmgQqcTgHtQmo
-         N4Ia8T7Gp3EhCCCLKn5CxD/XbA7rP+6zQm3rZQKmLeYmlghk9fgxHzl8JcLLsB5o2jCf
-         uUxw==
-X-Forwarded-Encrypted: i=1; AJvYcCVRUHDg84xS+c+AKmzzIwOePRnbTfq2/Mo9QC19D2ARcK9+Waa8wbR0bPzDmllezlP7Ic5A7phVEPuUlJSeHRlN0IlT@vger.kernel.org
-X-Gm-Message-State: AOJu0YwOy4JdwokzZRURkJt97j5XqwjTBeYzaj4RH18ug5kLcAumWC4G
-	nFbWXwxBDLqL4snM++GLFaVg+o/2hyGbqBsTMfHV5Ic7sBm4lzA6u95xqsPv87i+ojwVxk8AoYf
-	sZ2/iOVZsiI0dk6vpV4dw+Cn4PRzL8CeNmHqPsVYWMsGK7loEo4RWIXLRBHDGvKoJsFR1HJmA
-X-Gm-Gg: ASbGnctzGGPSjDaqfBVyI+/ii0uQEMNwHjQf/55lO/5Wy+kvfArnn0G6Z+OG22qkEUF
-	E7R5o6Xkct3FoFDXZg27fTHKjwEs77WzkVCw+jLF30cyZiS2S2BFNkRBwRacTqnC7sIIoIaHKZJ
-	Q+O9vSwqtAFWzm9ys683IunOZOqY7wk4KYZzJB7bbfPprkoly1ge2KZgNn0yhIhw1iS1D4pvQL8
-	iw5fq3ak9x9drDpH+toT2rb9yE8YWYIq/AT+s+xfy1bHYUXvdL52NkbQVSe/4sO1kz5mOpkA+tk
-	e8/9J8Ed3tTI5l8oxOizesV6IJ+SDDJKwI+2SfxbpYJc7d7bO/6vpv5S7bY=
-X-Received: by 2002:a05:620a:2710:b0:7b6:c6f8:1d28 with SMTP id af79cd13be357-7be8b1ce456mr1339610885a.0.1737975106251;
-        Mon, 27 Jan 2025 02:51:46 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IGmipgG8GM4vQcl4ErqneekUMA+TqdfGQ/TRnU6ORUmcoAw+5fZFYtsSEdXIZ+Fkyyih/giyA==
-X-Received: by 2002:a05:620a:2710:b0:7b6:c6f8:1d28 with SMTP id af79cd13be357-7be8b1ce456mr1339608585a.0.1737975105928;
-        Mon, 27 Jan 2025 02:51:45 -0800 (PST)
-Received: from [192.168.65.90] (078088045245.garwolin.vectranet.pl. [78.88.45.245])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ab6760ab31dsm558813966b.89.2025.01.27.02.51.43
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 27 Jan 2025 02:51:45 -0800 (PST)
-Message-ID: <89351850-b7ec-40b8-ba6e-a69e682f245d@oss.qualcomm.com>
-Date: Mon, 27 Jan 2025 11:51:42 +0100
+	dkim=pass (1024-bit key) header.d=ispras.ru header.i=@ispras.ru header.b="nTivAsaK"
+Received: from fedora.intra.ispras.ru (unknown [10.10.165.8])
+	by mail.ispras.ru (Postfix) with ESMTPSA id BD8FF40737BC;
+	Mon, 27 Jan 2025 21:02:15 +0000 (UTC)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mail.ispras.ru BD8FF40737BC
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ispras.ru;
+	s=default; t=1738011735;
+	bh=o5wfFRTfB5nV7Kkjb7RpX4/eKAt2bf1s6LU8AcVyL1I=;
+	h=From:To:Cc:Subject:Date:From;
+	b=nTivAsaKnlA0cf9C/laD7bLFb1JC6IxfpH7m29zbUJn+zeFk7oBb8m6tYddyDgmpp
+	 QOhVGwjYLTlTEXCca9/5jGhJJP/BJ1gnv4X6bQ5zstGjJ3UUonB3vKXUhRNRtGYcF/
+	 SI8tht+OgppebUyjtTETirPSbEtvb8SK+JKbvYQI=
+From: Fedor Pchelkin <pchelkin@ispras.ru>
+To: Ike Panhc <ike.pan@canonical.com>,
+	Hans de Goede <hdegoede@redhat.com>
+Cc: Fedor Pchelkin <pchelkin@ispras.ru>,
+	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	Kurt Borja <kuurtb@gmail.com>,
+	Mark Pearson <mpearson-lenovo@squebb.ca>,
+	Mario Limonciello <mario.limonciello@amd.com>,
+	platform-driver-x86@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	lvc-project@linuxtesting.org
+Subject: [PATCH] platform/x86: ideapad-laptop: pass a correct pointer to the driver data
+Date: Tue, 28 Jan 2025 00:02:01 +0300
+Message-ID: <20250127210202.568691-1-pchelkin@ispras.ru>
+X-Mailer: git-send-email 2.48.1
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH RESEND v5 3/3] arm64: dts: qcom: gaokun3: Add Embedded
- Controller node
-To: Pengyu Luo <mitltlatltl@gmail.com>, Rob Herring <robh@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley
- <conor+dt@kernel.org>,
-        Bjorn Andersson <andersson@kernel.org>,
-        Konrad Dybcio <konradybcio@kernel.org>,
-        Hans de Goede <hdegoede@redhat.com>,
-        =?UTF-8?Q?Ilpo_J=C3=83=C2=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-        Bryan O'Donoghue <bryan.odonoghue@linaro.org>,
-        Jean Delvare <jdelvare@suse.com>, Guenter Roeck <linux@roeck-us.net>
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, platform-driver-x86@vger.kernel.org,
-        linux-hwmon@vger.kernel.org,
-        Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-References: <20250120164701.7918-1-mitltlatltl@gmail.com>
- <20250120164701.7918-4-mitltlatltl@gmail.com>
-Content-Language: en-US
-From: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
-In-Reply-To: <20250120164701.7918-4-mitltlatltl@gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Proofpoint-GUID: MD98fjB8SoIJjodxbQBjCSKWOvrCCZ5u
-X-Proofpoint-ORIG-GUID: MD98fjB8SoIJjodxbQBjCSKWOvrCCZ5u
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-01-27_04,2025-01-27_01,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0 impostorscore=0
- phishscore=0 adultscore=0 mlxlogscore=973 suspectscore=0 malwarescore=0
- clxscore=1015 mlxscore=0 lowpriorityscore=0 bulkscore=0 priorityscore=1501
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.19.0-2411120000
- definitions=main-2501270087
+Content-Transfer-Encoding: 8bit
 
-On 20.01.2025 5:47 PM, Pengyu Luo wrote:
-> The Embedded Controller in the Huawei Matebook E Go is accessible on &i2c15
-> and provides battery and adapter status, port orientation status, as well
-> as HPD event notifications for two USB Type-C port, etc.
-> 
-> Add the EC to the device tree and describe the relationship among
-> the type-c connectors, role switches, orientation switches and the QMP
-> combo PHY.
-> 
-> Signed-off-by: Pengyu Luo <mitltlatltl@gmail.com>
-> Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-> ---
+devm_platform_profile_register() expects a pointer to the private driver
+data but instead an address of the pointer variable is passed due to a
+typo. This leads to the crashes later:
 
-Reviewed-by: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+BUG: unable to handle page fault for address: 00000000fe0d0044
+PGD 0 P4D 0
+Oops: Oops: 0000 [#1] PREEMPT SMP NOPTI
+CPU: 6 UID: 0 PID: 1284 Comm: tuned Tainted: G        W          6.13.0+ #7
+Tainted: [W]=WARN
+Hardware name: LENOVO 21D0/LNVNB161216, BIOS J6CN45WW 03/17/2023
+RIP: 0010:__mutex_lock.constprop.0+0x6bf/0x7f0
+Call Trace:
+ <TASK>
+ dytc_profile_set+0x4a/0x140 [ideapad_laptop]
+ _store_and_notify+0x13/0x40 [platform_profile]
+ class_for_each_device+0x145/0x180
+ platform_profile_store+0xc0/0x130 [platform_profile]
+ kernfs_fop_write_iter+0x13e/0x1f0
+ vfs_write+0x290/0x450
+ ksys_write+0x6c/0xe0
+ do_syscall_64+0x82/0x160
+ entry_SYSCALL_64_after_hwframe+0x76/0x7e
 
-Konrad
+Found by Linux Verification Center (linuxtesting.org).
+
+Fixes: 249c576f0f9d ("ACPI: platform_profile: Let drivers set drvdata to the class device")
+Signed-off-by: Fedor Pchelkin <pchelkin@ispras.ru>
+---
+ drivers/platform/x86/ideapad-laptop.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/platform/x86/ideapad-laptop.c b/drivers/platform/x86/ideapad-laptop.c
+index dfb5d4b8c046..30bd366d7b58 100644
+--- a/drivers/platform/x86/ideapad-laptop.c
++++ b/drivers/platform/x86/ideapad-laptop.c
+@@ -1121,7 +1121,7 @@ static int ideapad_dytc_profile_init(struct ideapad_private *priv)
+ 
+ 	/* Create platform_profile structure and register */
+ 	priv->dytc->ppdev = devm_platform_profile_register(&priv->platform_device->dev,
+-							   "ideapad-laptop", &priv->dytc,
++							   "ideapad-laptop", priv->dytc,
+ 							   &dytc_profile_ops);
+ 	if (IS_ERR(priv->dytc->ppdev)) {
+ 		err = PTR_ERR(priv->dytc->ppdev);
+-- 
+2.48.1
+
