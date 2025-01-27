@@ -1,62 +1,62 @@
-Received: from mail-vs1-f53.google.com (mail-vs1-f53.google.com [209.85.217.53])
+Received: from mail-ua1-f45.google.com (mail-ua1-f45.google.com [209.85.222.45])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 558AC1FDA78;
-	Mon, 27 Jan 2025 04:04:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.217.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8FE9D1FDE03;
+	Mon, 27 Jan 2025 04:04:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1737950683; cv=none; b=uBuBtWtDIniJgQJm5Ji9V9mpI3uoEAa/t+RyXq73MoBJyJ5UlN7VoUKklizqJ3d02+Jbv1R0SNrp4Wp+RzwO8/c+B5mJVDxmAExU2/vBI90MvGTE4mO3d4e0/lhZSqdG0oTZ084FaNlWqOtAKvD6gFrvfQ9urHvEEQORc/pgVhs=
+	t=1737950687; cv=none; b=gOTmuvMdVtdeJMp/uErzVN1xOqrWAoI3HOtutx/23MOIlKasmDwOCZxIL5bpUmdJZBmgjnk9YRvD4g9A/akb0XNPYRbD2ElJ/3L+kv4K9O34eSSswgj+Ek7FVsiZo80RC3frwLxKGoCcnGx1hsOzRBGIqaQBI2d5JtihFlZSbkI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1737950683; c=relaxed/simple;
-	bh=kL+AeccpGKBOpTj5NyyjP82JZ92HXzkXFpv00JIDCPM=;
+	s=arc-20240116; t=1737950687; c=relaxed/simple;
+	bh=VjW4mkUZjcXxYgU/Te+r1RUPqPEDG3GvM9cPvP4j0jE=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=nNhmIkksvEwLyMN5OLG0/aDztMgG3jqz5IPfgboxWu/GBiu3TVEUV/2VBdUkygd+Urea1w2NGB69rdOfQQsDgKtuBaNeaHE/pplgfW6XM/UzWdXwa35i2Ls4zhhmBA296DGzfHg43hmDiQoZ+BJDqcTKwPI50pnAj9UCz+Zi/88=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=dRjQA0At; arc=none smtp.client-ip=209.85.217.53
+	 MIME-Version; b=S+rARkkgClQDPH4f8U4xFl/8ALs0BD6V7bItzLKQRqcDmSvYcj2WDIFqRKXwgHjMyFDR/Y47/lCBGCqBUPBTrVOUs1WGm8CHMgRoTmikFJGtDAd4Yd4c9CqhF6TSelW7DmR9iwAWUq0L6oH4ZxJ5eK0sGgnNjnkfzpAGIVfpgeo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Zx7fwYxA; arc=none smtp.client-ip=209.85.222.45
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dRjQA0At"
-Received: by mail-vs1-f53.google.com with SMTP id ada2fe7eead31-4afed7b7d1bso1083231137.2;
-        Sun, 26 Jan 2025 20:04:41 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Zx7fwYxA"
+Received: by mail-ua1-f45.google.com with SMTP id a1e0cc1a2514c-8641c7574a5so842240241.1;
+        Sun, 26 Jan 2025 20:04:44 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1737950680; x=1738555480; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1737950683; x=1738555483; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=+3VEsgFPjom4fznaJdTcJJcnqvZ2yVYhOQnuPC+vg2c=;
-        b=dRjQA0AtEiIN2HR8QeCmbRZQ8ShogKAXgnCWt9vSMwoMYriM6PtRP7FU/BL2N8FNlB
-         hHuZ8Zs/Rf2Du6rbC+Doh+DefoGNiua8Pu86J73l75XpnGuD77sLYYobPBWEkYghwkbi
-         rDEBeZypsmnkZSPcEAwQNGwX4gI4Kj//UmddZ2QXDBCaKSCUf3ltaZjVaeE8zAT5AU0u
-         oIm+140591wfW1GOjR5+OpxewQr3f+GI8wEOIGeNx+w+p8zpIONB3yTYtAeooV/d94V1
-         1y4jwyHq5/2LHHwR01+CwniPFr0Hd+nMpT9jXajXpXdF6m9rK2UegjRtu5LCdcTvVudD
-         Ofvw==
+        bh=dGKbQy+9KpagggPlYJ/rDgXdUjMqi9AujG3YDNpKx5M=;
+        b=Zx7fwYxAD6fYTRIGz3F79T56aLpgWaZvEgujhG2K1ABiEXAnef6UVC4LommYKyRWco
+         K7MtvXz1kGakKq13w801bRl2SllQmBwOuUzBK0KP3UuoEdY9r8E61NhbWAOcIP4MsdLE
+         0JfNlHy7QWznx29FoBUB9JWlOy/kw860vw5ubG+Psiim32vvXr1K/N1KsQIETi7qDjMb
+         x+EoiYsQ+Yov5a9dHbX0+bMD95kYAempGg03NHAr0sI95r8LlWf4k3FkkeVDrW02wbfy
+         tAfHvrrZYPzI5jfvki1QwJ8xvG/vC6wxasF/vJ3qKFZ2zZWdzTTessDr9Je1lQeRA8Ur
+         SQKQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1737950680; x=1738555480;
+        d=1e100.net; s=20230601; t=1737950683; x=1738555483;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=+3VEsgFPjom4fznaJdTcJJcnqvZ2yVYhOQnuPC+vg2c=;
-        b=baZrNyZSn/an3JaNV+X53vjb5CYoaDTrsCz1Mjvp0PqZ/23q2FJ6zAQw/vp6fqmBsB
-         HPcYLPGbwARk6zpo3k5N2LP933/qog1MVn5nTt/wRoxFLJPee5MqBtVmGxco6Ufjqyka
-         BzCaUyIFVwZTFIfbUIbsUPhQFv5g2MDSKBOQmsDk9WfjnHBgy3l0ZWS8k5xfPxtU9DR3
-         pqovTXt+QcO4CWUedozcQEr7oBeHP2l44X5QUXSkWB0A4il1dM5P/DML6VqLysJV6N7h
-         Z7zmgDfHz4obPWemMRj1sCmVPw0lp/8wi8djMLpZd4o3F7DQ6H+rdBTEqQEr+MptEqeO
-         DFWg==
-X-Forwarded-Encrypted: i=1; AJvYcCVA0GJuuDeV0cdL1IwsMX29QXpX0/Zkw4dxKOMjlefI/9023i+vd4txagDpgfzBpoxEKy7EkyGkW0wllZ8=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzHQAeP78uF5NYX7Bvcaqcq+SeSv4aN7I3kMXb5DJ9W3KabO8/Y
-	ZONUu2PhlhlscfN5eDG8vpncEDFSi5xi7bPHxOAq9HaioeTahydmYswbsQ==
-X-Gm-Gg: ASbGnct6OYtODAVC5jvMpM/Wf33yGnLCPRKv0OOF/fOf09zwdvww9jzN3a8Uq+TO9sS
-	OwNcWrBWHHxo1m3kfZmXmbba4TwIZWOd/XhP/c4H3CiXF90QsSY+GvPGWLOKIvRGdomoVuf2PTX
-	pxNGW7Nx9reualydb01dueYkxnKvzS6p5ddv9vozxGd84DPX0pnHw69C21/YoZW1mVij0FiTwAc
-	nk2p0EbI/toz2FEqQigPCIi22B0QqkuMlred7Xj4QKLvq0kDpl57Vx+vhG7/wPCL4z+EMoD1SI9
-	WIGQv1BPZBbe
-X-Google-Smtp-Source: AGHT+IEtUo7X7CjyP59xcwzTTDd1hSm9PXb0LD0AhrgbgAs57edxwxguXQTzX6uTUXIamInTBxa/+A==
-X-Received: by 2002:a05:6102:390e:b0:4b2:5c0a:98c1 with SMTP id ada2fe7eead31-4b690cb5750mr32750023137.22.1737950680048;
-        Sun, 26 Jan 2025 20:04:40 -0800 (PST)
+        bh=dGKbQy+9KpagggPlYJ/rDgXdUjMqi9AujG3YDNpKx5M=;
+        b=O7N84YQmG9IhYoO+09NknTtP5QFOnr9w35cbHZ59lattmysYocSjAxBahzdXz/wk6I
+         EXEqKlZ1NQpJf6kDUAt74Trfr0Y7r2wyh2rj1dMezKw1HoyeVfC/Q7nDNyTz2PcvkL3/
+         MtxR9Q4GR6c7d/QYl+UZ9M53aEqbmDA2XsFPKWyJgb/DAWhr89JcgaZkqmwSsWG5HDkh
+         1uvM3PpYiGZ4U181EAzz6hIqDpf1kAy26YBTyUURcBS/bE6QSdVZEZXiWfVp6gc2wBtF
+         0aZpugNOlv1yR1KnyGHyERt+ejTwE9eJ8WXtX3K/cV90jYe6DDj4ViSX16ovEmvOFSNO
+         EFGA==
+X-Forwarded-Encrypted: i=1; AJvYcCWtQh3e456Qp4WGXT5e7hjbvWZOhz63yfmqAF/6sLmSVbEpuV3XaJ1Zgu5uyfjes2orZ83ihqaIxPTkvXw=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxhSkH6FgwvizkyMTM0V+NmlZD3P01IcKyJLUPRnnpb6XeI/stP
+	YRPFIL540QEJBBy/6LxKxZR311kenxNMyg7RbZ7Kxqet4heUs8+KxqMoYA==
+X-Gm-Gg: ASbGncsvWsLjDkvnAzfaNH0MlhzYbr4mNnBDUQDTGjqMJGaGdVMWrZquTzYOOYPddsb
+	xLh1lm+Zj2Wi2EdP7n8PeZQDEUgjlJsg2V4hjoSxvC+UccSb1xxfV9cutf+4GjwnnT4qxAw1hEA
+	AqHrgKhBvJCLDunz5KOKCvaNLF9FmaBkl4uXXzU0tTZ8IebAUcybMpPQNYCC7ceiTNhGqXou6iG
+	UYPZUYQSThTb1VWy8m1NZNy5TmKWsWnuZk/UvbKHpIdFW8/Pi3XfLelGdlXMFuZ9oBoDdGcequb
+	FQu5i2jAWrEn
+X-Google-Smtp-Source: AGHT+IFF5U91Czt6fHYG4nKSsgTh1u/7cbu1QQw15PZvPuutFkCr8SZT9+fECG7YC6bXqI9f0+EWeg==
+X-Received: by 2002:a05:6102:4b08:b0:4af:c58f:4550 with SMTP id ada2fe7eead31-4b690ba200bmr35307473137.7.1737950682792;
+        Sun, 26 Jan 2025 20:04:42 -0800 (PST)
 Received: from localhost.localdomain ([2800:bf0:82:1159:c837:3446:190b:188d])
-        by smtp.gmail.com with ESMTPSA id a1e0cc1a2514c-864a9c176f0sm1733758241.23.2025.01.26.20.04.37
+        by smtp.gmail.com with ESMTPSA id a1e0cc1a2514c-864a9c176f0sm1733758241.23.2025.01.26.20.04.40
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 26 Jan 2025 20:04:39 -0800 (PST)
+        Sun, 26 Jan 2025 20:04:41 -0800 (PST)
 From: Kurt Borja <kuurtb@gmail.com>
 To: platform-driver-x86@vger.kernel.org
 Cc: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
@@ -66,9 +66,9 @@ Cc: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
 	Dell.Client.Kernel@dell.com,
 	linux-kernel@vger.kernel.org,
 	"Kurt Borja" <kuurtb@gmail.com>
-Subject: [PATCH v6 10/14] platform/x86: Add alienware-wmi.h
-Date: Sun, 26 Jan 2025 23:04:02 -0500
-Message-ID: <20250127040406.17112-11-kuurtb@gmail.com>
+Subject: [PATCH v6 11/14] platform/x86: Split the alienware-wmi driver
+Date: Sun, 26 Jan 2025 23:04:03 -0500
+Message-ID: <20250127040406.17112-12-kuurtb@gmail.com>
 X-Mailer: git-send-email 2.48.1
 In-Reply-To: <20250127040406.17112-1-kuurtb@gmail.com>
 References: <20250127040406.17112-1-kuurtb@gmail.com>
@@ -80,257 +80,1858 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Add a header file for alienware-wmi with shared resources to support the
-upcoming file split.
+Split alienware-wmi WMI drivers into different files. This is done
+seamlessly by copying and pasting, however some blocks are reordered.
 
 Reviewed-by: Armin Wolf <W_Armin@gmx.de>
+Reviewed-by: Mario Limonciello <mario.limonciello@amd.com>
 Signed-off-by: Kurt Borja <kuurtb@gmail.com>
 ---
- .../platform/x86/dell/alienware-wmi-base.c    | 69 +++-------------
- drivers/platform/x86/dell/alienware-wmi.h     | 80 +++++++++++++++++++
- 2 files changed, 90 insertions(+), 59 deletions(-)
- create mode 100644 drivers/platform/x86/dell/alienware-wmi.h
+ drivers/platform/x86/dell/Makefile            |   2 +
+ .../platform/x86/dell/alienware-wmi-base.c    | 859 ------------------
+ .../platform/x86/dell/alienware-wmi-legacy.c  | 101 ++
+ .../platform/x86/dell/alienware-wmi-wmax.c    | 782 ++++++++++++++++
+ drivers/platform/x86/dell/alienware-wmi.h     |   1 -
+ 5 files changed, 885 insertions(+), 860 deletions(-)
+ create mode 100644 drivers/platform/x86/dell/alienware-wmi-legacy.c
+ create mode 100644 drivers/platform/x86/dell/alienware-wmi-wmax.c
 
+diff --git a/drivers/platform/x86/dell/Makefile b/drivers/platform/x86/dell/Makefile
+index f8aec8502c2f..03ba459f3d31 100644
+--- a/drivers/platform/x86/dell/Makefile
++++ b/drivers/platform/x86/dell/Makefile
+@@ -6,6 +6,8 @@
+ 
+ obj-$(CONFIG_ALIENWARE_WMI)		+= alienware-wmi.o
+ alienware-wmi-objs			:= alienware-wmi-base.o
++alienware-wmi-y				+= alienware-wmi-legacy.o
++alienware-wmi-y				+= alienware-wmi-wmax.o
+ obj-$(CONFIG_DCDBAS)			+= dcdbas.o
+ obj-$(CONFIG_DELL_LAPTOP)		+= dell-laptop.o
+ obj-$(CONFIG_DELL_RBTN)			+= dell-rbtn.o
 diff --git a/drivers/platform/x86/dell/alienware-wmi-base.c b/drivers/platform/x86/dell/alienware-wmi-base.c
-index 5763f118cc3f..1302b85d3e7b 100644
+index 1302b85d3e7b..d0f0b3c7a915 100644
 --- a/drivers/platform/x86/dell/alienware-wmi-base.c
 +++ b/drivers/platform/x86/dell/alienware-wmi-base.c
-@@ -17,10 +17,7 @@
+@@ -8,97 +8,22 @@
+ #define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
+ 
+ #include <linux/acpi.h>
+-#include <linux/bitfield.h>
+-#include <linux/bits.h>
+ #include <linux/cleanup.h>
+ #include <linux/module.h>
+ #include <linux/platform_device.h>
+-#include <linux/platform_profile.h>
  #include <linux/dmi.h>
  #include <linux/leds.h>
- #include <linux/wmi.h>
--
--#define LEGACY_CONTROL_GUID		"A90597CE-A997-11DA-B012-B622A1EF5492"
--#define LEGACY_POWER_CONTROL_GUID	"A80593CE-A997-11DA-B012-B622A1EF5492"
--#define WMAX_CONTROL_GUID		"A70591CE-A997-11DA-B012-B622A1EF5492"
-+#include "alienware-wmi.h"
+-#include <linux/wmi.h>
+ #include "alienware-wmi.h"
  
- #define WMAX_METHOD_HDMI_SOURCE		0x1
- #define WMAX_METHOD_HDMI_STATUS		0x2
-@@ -55,18 +52,6 @@ enum INTERFACE_FLAGS {
+-#define WMAX_METHOD_HDMI_SOURCE		0x1
+-#define WMAX_METHOD_HDMI_STATUS		0x2
+-#define WMAX_METHOD_BRIGHTNESS		0x3
+-#define WMAX_METHOD_ZONE_CONTROL	0x4
+-#define WMAX_METHOD_HDMI_CABLE		0x5
+-#define WMAX_METHOD_AMPLIFIER_CABLE	0x6
+-#define WMAX_METHOD_DEEP_SLEEP_CONTROL	0x0B
+-#define WMAX_METHOD_DEEP_SLEEP_STATUS	0x0C
+-#define WMAX_METHOD_THERMAL_INFORMATION	0x14
+-#define WMAX_METHOD_THERMAL_CONTROL	0x15
+-#define WMAX_METHOD_GAME_SHIFT_STATUS	0x25
+-
+-#define WMAX_THERMAL_MODE_GMODE		0xAB
+-
+-#define WMAX_FAILURE_CODE		0xFFFFFFFF
+-
+ MODULE_AUTHOR("Mario Limonciello <mario.limonciello@outlook.com>");
+ MODULE_DESCRIPTION("Alienware special feature control");
+ MODULE_LICENSE("GPL");
+ 
+-static bool force_platform_profile;
+-module_param_unsafe(force_platform_profile, bool, 0);
+-MODULE_PARM_DESC(force_platform_profile, "Forces auto-detecting thermal profiles without checking if WMI thermal backend is available");
+-
+-static bool force_gmode;
+-module_param_unsafe(force_gmode, bool, 0);
+-MODULE_PARM_DESC(force_gmode, "Forces G-Mode when performance profile is selected");
+-
+ enum INTERFACE_FLAGS {
+ 	LEGACY,
  	WMAX,
  };
  
--enum LEGACY_CONTROL_STATES {
--	LEGACY_RUNNING = 1,
--	LEGACY_BOOTING = 0,
--	LEGACY_SUSPEND = 3,
+-enum WMAX_THERMAL_INFORMATION_OPERATIONS {
+-	WMAX_OPERATION_SYS_DESCRIPTION		= 0x02,
+-	WMAX_OPERATION_LIST_IDS			= 0x03,
+-	WMAX_OPERATION_CURRENT_PROFILE		= 0x0B,
 -};
 -
--enum WMAX_CONTROL_STATES {
--	WMAX_RUNNING = 0xFF,
--	WMAX_BOOTING = 0,
--	WMAX_SUSPEND = 3,
+-enum WMAX_THERMAL_CONTROL_OPERATIONS {
+-	WMAX_OPERATION_ACTIVATE_PROFILE		= 0x01,
 -};
 -
- enum WMAX_THERMAL_INFORMATION_OPERATIONS {
- 	WMAX_OPERATION_SYS_DESCRIPTION		= 0x02,
- 	WMAX_OPERATION_LIST_IDS			= 0x03,
-@@ -114,15 +99,7 @@ static const enum platform_profile_option wmax_mode_to_platform_profile[THERMAL_
- 	[THERMAL_MODE_BASIC_PERFORMANCE]		= PLATFORM_PROFILE_PERFORMANCE,
- };
- 
--struct alienfx_quirks {
--	u8 num_zones;
--	bool hdmi_mux;
--	bool amplifier;
--	bool deepslp;
+-enum WMAX_GAME_SHIFT_STATUS_OPERATIONS {
+-	WMAX_OPERATION_TOGGLE_GAME_SHIFT	= 0x01,
+-	WMAX_OPERATION_GET_GAME_SHIFT_STATUS	= 0x02,
 -};
 -
--static struct alienfx_quirks *alienfx;
+-enum WMAX_THERMAL_TABLES {
+-	WMAX_THERMAL_TABLE_BASIC		= 0x90,
+-	WMAX_THERMAL_TABLE_USTT			= 0xA0,
+-};
 -
-+struct alienfx_quirks *alienfx;
+-enum wmax_thermal_mode {
+-	THERMAL_MODE_USTT_BALANCED,
+-	THERMAL_MODE_USTT_BALANCED_PERFORMANCE,
+-	THERMAL_MODE_USTT_COOL,
+-	THERMAL_MODE_USTT_QUIET,
+-	THERMAL_MODE_USTT_PERFORMANCE,
+-	THERMAL_MODE_USTT_LOW_POWER,
+-	THERMAL_MODE_BASIC_QUIET,
+-	THERMAL_MODE_BASIC_BALANCED,
+-	THERMAL_MODE_BASIC_BALANCED_PERFORMANCE,
+-	THERMAL_MODE_BASIC_PERFORMANCE,
+-	THERMAL_MODE_LAST,
+-};
+-
+-static const enum platform_profile_option wmax_mode_to_platform_profile[THERMAL_MODE_LAST] = {
+-	[THERMAL_MODE_USTT_BALANCED]			= PLATFORM_PROFILE_BALANCED,
+-	[THERMAL_MODE_USTT_BALANCED_PERFORMANCE]	= PLATFORM_PROFILE_BALANCED_PERFORMANCE,
+-	[THERMAL_MODE_USTT_COOL]			= PLATFORM_PROFILE_COOL,
+-	[THERMAL_MODE_USTT_QUIET]			= PLATFORM_PROFILE_QUIET,
+-	[THERMAL_MODE_USTT_PERFORMANCE]			= PLATFORM_PROFILE_PERFORMANCE,
+-	[THERMAL_MODE_USTT_LOW_POWER]			= PLATFORM_PROFILE_LOW_POWER,
+-	[THERMAL_MODE_BASIC_QUIET]			= PLATFORM_PROFILE_QUIET,
+-	[THERMAL_MODE_BASIC_BALANCED]			= PLATFORM_PROFILE_BALANCED,
+-	[THERMAL_MODE_BASIC_BALANCED_PERFORMANCE]	= PLATFORM_PROFILE_BALANCED_PERFORMANCE,
+-	[THERMAL_MODE_BASIC_PERFORMANCE]		= PLATFORM_PROFILE_PERFORMANCE,
+-};
+-
+ struct alienfx_quirks *alienfx;
  
  static struct alienfx_quirks quirk_inspiron5675 = {
- 	.num_zones = 2,
-@@ -246,12 +223,6 @@ static const struct dmi_system_id alienware_quirks[] __initconst = {
+@@ -223,147 +148,8 @@ static const struct dmi_system_id alienware_quirks[] __initconst = {
  	{}
  };
  
--struct color_platform {
--	u8 blue;
--	u8 green;
--	u8 red;
+-struct wmax_brightness_args {
+-	u32 led_mask;
+-	u32 percentage;
+-};
+-
+-struct wmax_basic_args {
+-	u8 arg;
+-};
+-
+-struct legacy_led_args {
+-	struct color_platform colors;
+-	u8 brightness;
+-	u8 state;
 -} __packed;
 -
- struct wmax_brightness_args {
- 	u32 led_mask;
- 	u32 percentage;
-@@ -286,26 +257,6 @@ struct awcc_priv {
- 	enum wmax_thermal_mode supported_thermal_profiles[PLATFORM_PROFILE_LAST];
- };
- 
--struct alienfx_priv {
--	struct platform_device *pdev;
--	struct led_classdev global_led;
--	struct color_platform colors[4];
--	u8 global_brightness;
--	u8 lighting_control_state;
+-struct wmax_led_args {
+-	u32 led_mask;
+-	struct color_platform colors;
+-	u8 state;
+-} __packed;
+-
+-struct wmax_u32_args {
+-	u8 operation;
+-	u8 arg1;
+-	u8 arg2;
+-	u8 arg3;
 -};
 -
--struct alienfx_ops {
--	int (*upd_led)(struct alienfx_priv *priv, struct wmi_device *wdev,
--		       u8 location);
--	int (*upd_brightness)(struct alienfx_priv *priv, struct wmi_device *wdev,
--			      u8 brightness);
--};
--
--struct alienfx_platdata {
+-struct awcc_priv {
 -	struct wmi_device *wdev;
--	struct alienfx_ops ops;
+-	struct device *ppdev;
+-	enum wmax_thermal_mode supported_thermal_profiles[PLATFORM_PROFILE_LAST];
 -};
 -
  static u8 interface;
  
- struct awcc_quirks {
-@@ -413,8 +364,8 @@ static const struct dmi_system_id awcc_dmi_table[] __initconst = {
- 
- static struct awcc_quirks *awcc;
- 
--static int alienware_wmi_command(struct wmi_device *wdev, u32 method_id,
--				 void *in_args, size_t in_size, u32 *out_data)
-+int alienware_wmi_command(struct wmi_device *wdev, u32 method_id,
-+			  void *in_args, size_t in_size, u32 *out_data)
+-struct awcc_quirks {
+-	bool gmode;
+-};
+-
+-static struct awcc_quirks g_series_quirks = {
+-	.gmode = true,
+-};
+-
+-static struct awcc_quirks generic_quirks = {
+-	.gmode = false,
+-};
+-
+-static const struct dmi_system_id awcc_dmi_table[] __initconst = {
+-	{
+-		.ident = "Alienware m16 R1 AMD",
+-		.matches = {
+-			DMI_MATCH(DMI_SYS_VENDOR, "Alienware"),
+-			DMI_MATCH(DMI_PRODUCT_NAME, "Alienware m16 R1 AMD"),
+-		},
+-		.driver_data = &generic_quirks,
+-	},
+-	{
+-		.ident = "Alienware m17 R5",
+-		.matches = {
+-			DMI_MATCH(DMI_SYS_VENDOR, "Alienware"),
+-			DMI_MATCH(DMI_PRODUCT_NAME, "Alienware m17 R5 AMD"),
+-		},
+-		.driver_data = &generic_quirks,
+-	},
+-	{
+-		.ident = "Alienware m18 R2",
+-		.matches = {
+-			DMI_MATCH(DMI_SYS_VENDOR, "Alienware"),
+-			DMI_MATCH(DMI_PRODUCT_NAME, "Alienware m18 R2"),
+-		},
+-		.driver_data = &generic_quirks,
+-	},
+-	{
+-		.ident = "Alienware x15 R1",
+-		.matches = {
+-			DMI_MATCH(DMI_SYS_VENDOR, "Alienware"),
+-			DMI_MATCH(DMI_PRODUCT_NAME, "Alienware x15 R1"),
+-		},
+-		.driver_data = &generic_quirks,
+-	},
+-	{
+-		.ident = "Alienware x17 R2",
+-		.matches = {
+-			DMI_MATCH(DMI_SYS_VENDOR, "Alienware"),
+-			DMI_MATCH(DMI_PRODUCT_NAME, "Alienware x17 R2"),
+-		},
+-		.driver_data = &generic_quirks,
+-	},
+-	{
+-		.ident = "Dell Inc. G15 5510",
+-		.matches = {
+-			DMI_MATCH(DMI_SYS_VENDOR, "Dell Inc."),
+-			DMI_MATCH(DMI_PRODUCT_NAME, "Dell G15 5510"),
+-		},
+-		.driver_data = &g_series_quirks,
+-	},
+-	{
+-		.ident = "Dell Inc. G15 5511",
+-		.matches = {
+-			DMI_MATCH(DMI_SYS_VENDOR, "Dell Inc."),
+-			DMI_MATCH(DMI_PRODUCT_NAME, "Dell G15 5511"),
+-		},
+-		.driver_data = &g_series_quirks,
+-	},
+-	{
+-		.ident = "Dell Inc. G15 5515",
+-		.matches = {
+-			DMI_MATCH(DMI_SYS_VENDOR, "Dell Inc."),
+-			DMI_MATCH(DMI_PRODUCT_NAME, "Dell G15 5515"),
+-		},
+-		.driver_data = &g_series_quirks,
+-	},
+-	{
+-		.ident = "Dell Inc. G3 3500",
+-		.matches = {
+-			DMI_MATCH(DMI_SYS_VENDOR, "Dell Inc."),
+-			DMI_MATCH(DMI_PRODUCT_NAME, "G3 3500"),
+-		},
+-		.driver_data = &g_series_quirks,
+-	},
+-	{
+-		.ident = "Dell Inc. G3 3590",
+-		.matches = {
+-			DMI_MATCH(DMI_SYS_VENDOR, "Dell Inc."),
+-			DMI_MATCH(DMI_PRODUCT_NAME, "G3 3590"),
+-		},
+-		.driver_data = &g_series_quirks,
+-	},
+-	{
+-		.ident = "Dell Inc. G5 5500",
+-		.matches = {
+-			DMI_MATCH(DMI_SYS_VENDOR, "Dell Inc."),
+-			DMI_MATCH(DMI_PRODUCT_NAME, "G5 5500"),
+-		},
+-		.driver_data = &g_series_quirks,
+-	},
+-};
+-
+-static struct awcc_quirks *awcc;
+-
+ int alienware_wmi_command(struct wmi_device *wdev, u32 method_id,
+ 			  void *in_args, size_t in_size, u32 *out_data)
  {
- 	struct acpi_buffer out = {ACPI_ALLOCATE_BUFFER, NULL};
- 	struct acpi_buffer in = {in_size, in_args};
-@@ -1138,7 +1089,7 @@ static struct platform_driver platform_driver = {
- 	.probe = alienfx_probe,
+@@ -599,449 +385,6 @@ static enum led_brightness global_led_get(struct led_classdev *led_cdev)
+ 	return priv->global_brightness;
+ }
+ 
+-/*
+- *	The HDMI mux sysfs node indicates the status of the HDMI input mux.
+- *	It can toggle between standard system GPU output and HDMI input.
+- */
+-static ssize_t cable_show(struct device *dev, struct device_attribute *attr,
+-			  char *buf)
+-{
+-	struct alienfx_platdata *pdata = dev_get_platdata(dev);
+-	struct wmax_basic_args in_args = {
+-		.arg = 0,
+-	};
+-	u32 out_data;
+-	int ret;
+-
+-	ret = alienware_wmi_command(pdata->wdev, WMAX_METHOD_HDMI_CABLE,
+-				    &in_args, sizeof(in_args), &out_data);
+-
+-	if (!ret) {
+-		if (out_data == 0)
+-			return sysfs_emit(buf, "[unconnected] connected unknown\n");
+-		else if (out_data == 1)
+-			return sysfs_emit(buf, "unconnected [connected] unknown\n");
+-	}
+-
+-	pr_err("alienware-wmi: unknown HDMI cable status: %d\n", ret);
+-	return sysfs_emit(buf, "unconnected connected [unknown]\n");
+-}
+-
+-static ssize_t source_show(struct device *dev, struct device_attribute *attr,
+-			   char *buf)
+-{
+-	struct alienfx_platdata *pdata = dev_get_platdata(dev);
+-	struct wmax_basic_args in_args = {
+-		.arg = 0,
+-	};
+-	u32 out_data;
+-	int ret;
+-
+-	ret = alienware_wmi_command(pdata->wdev, WMAX_METHOD_HDMI_STATUS,
+-				    &in_args, sizeof(in_args), &out_data);
+-
+-	if (!ret) {
+-		if (out_data == 1)
+-			return sysfs_emit(buf, "[input] gpu unknown\n");
+-		else if (out_data == 2)
+-			return sysfs_emit(buf, "input [gpu] unknown\n");
+-	}
+-
+-	pr_err("alienware-wmi: unknown HDMI source status: %u\n", ret);
+-	return sysfs_emit(buf, "input gpu [unknown]\n");
+-}
+-
+-static ssize_t source_store(struct device *dev, struct device_attribute *attr,
+-			    const char *buf, size_t count)
+-{
+-	struct alienfx_platdata *pdata = dev_get_platdata(dev);
+-	struct wmax_basic_args args;
+-	int ret;
+-
+-	if (strcmp(buf, "gpu\n") == 0)
+-		args.arg = 1;
+-	else if (strcmp(buf, "input\n") == 0)
+-		args.arg = 2;
+-	else
+-		args.arg = 3;
+-	pr_debug("alienware-wmi: setting hdmi to %d : %s", args.arg, buf);
+-
+-	ret = alienware_wmi_command(pdata->wdev, WMAX_METHOD_HDMI_SOURCE, &args,
+-				    sizeof(args), NULL);
+-
+-	if (ret < 0)
+-		pr_err("alienware-wmi: HDMI toggle failed: results: %u\n", ret);
+-
+-	return count;
+-}
+-
+-static DEVICE_ATTR_RO(cable);
+-static DEVICE_ATTR_RW(source);
+-
+-static bool hdmi_group_visible(struct kobject *kobj)
+-{
+-	return alienfx->hdmi_mux;
+-}
+-DEFINE_SIMPLE_SYSFS_GROUP_VISIBLE(hdmi);
+-
+-static struct attribute *hdmi_attrs[] = {
+-	&dev_attr_cable.attr,
+-	&dev_attr_source.attr,
+-	NULL,
+-};
+-
+-static const struct attribute_group hdmi_attribute_group = {
+-	.name = "hdmi",
+-	.is_visible = SYSFS_GROUP_VISIBLE(hdmi),
+-	.attrs = hdmi_attrs,
+-};
+-
+-/*
+- * Alienware GFX amplifier support
+- * - Currently supports reading cable status
+- * - Leaving expansion room to possibly support dock/undock events later
+- */
+-static ssize_t status_show(struct device *dev, struct device_attribute *attr,
+-			   char *buf)
+-{
+-	struct alienfx_platdata *pdata = dev_get_platdata(dev);
+-	struct wmax_basic_args in_args = {
+-		.arg = 0,
+-	};
+-	u32 out_data;
+-	int ret;
+-
+-	ret = alienware_wmi_command(pdata->wdev, WMAX_METHOD_AMPLIFIER_CABLE,
+-				    &in_args, sizeof(in_args), &out_data);
+-
+-	if (!ret) {
+-		if (out_data == 0)
+-			return sysfs_emit(buf, "[unconnected] connected unknown\n");
+-		else if (out_data == 1)
+-			return sysfs_emit(buf, "unconnected [connected] unknown\n");
+-	}
+-
+-	pr_err("alienware-wmi: unknown amplifier cable status: %d\n", ret);
+-	return sysfs_emit(buf, "unconnected connected [unknown]\n");
+-}
+-
+-static DEVICE_ATTR_RO(status);
+-
+-static bool amplifier_group_visible(struct kobject *kobj)
+-{
+-	return alienfx->amplifier;
+-}
+-DEFINE_SIMPLE_SYSFS_GROUP_VISIBLE(amplifier);
+-
+-static struct attribute *amplifier_attrs[] = {
+-	&dev_attr_status.attr,
+-	NULL,
+-};
+-
+-static const struct attribute_group amplifier_attribute_group = {
+-	.name = "amplifier",
+-	.is_visible = SYSFS_GROUP_VISIBLE(amplifier),
+-	.attrs = amplifier_attrs,
+-};
+-
+-/*
+- * Deep Sleep Control support
+- * - Modifies BIOS setting for deep sleep control allowing extra wakeup events
+- */
+-static ssize_t deepsleep_show(struct device *dev, struct device_attribute *attr,
+-			      char *buf)
+-{
+-	struct alienfx_platdata *pdata = dev_get_platdata(dev);
+-	struct wmax_basic_args in_args = {
+-		.arg = 0,
+-	};
+-	u32 out_data;
+-	int ret;
+-
+-	ret = alienware_wmi_command(pdata->wdev, WMAX_METHOD_DEEP_SLEEP_STATUS,
+-				    &in_args, sizeof(in_args), &out_data);
+-
+-	if (!ret) {
+-		if (out_data == 0)
+-			return sysfs_emit(buf, "[disabled] s5 s5_s4\n");
+-		else if (out_data == 1)
+-			return sysfs_emit(buf, "disabled [s5] s5_s4\n");
+-		else if (out_data == 2)
+-			return sysfs_emit(buf, "disabled s5 [s5_s4]\n");
+-	}
+-
+-	pr_err("alienware-wmi: unknown deep sleep status: %d\n", ret);
+-	return sysfs_emit(buf, "disabled s5 s5_s4 [unknown]\n");
+-}
+-
+-static ssize_t deepsleep_store(struct device *dev, struct device_attribute *attr,
+-			       const char *buf, size_t count)
+-{
+-	struct alienfx_platdata *pdata = dev_get_platdata(dev);
+-	struct wmax_basic_args args;
+-	int ret;
+-
+-	if (strcmp(buf, "disabled\n") == 0)
+-		args.arg = 0;
+-	else if (strcmp(buf, "s5\n") == 0)
+-		args.arg = 1;
+-	else
+-		args.arg = 2;
+-	pr_debug("alienware-wmi: setting deep sleep to %d : %s", args.arg, buf);
+-
+-	ret = alienware_wmi_command(pdata->wdev, WMAX_METHOD_DEEP_SLEEP_CONTROL,
+-				    &args, sizeof(args), NULL);
+-
+-	if (!ret)
+-		pr_err("alienware-wmi: deep sleep control failed: results: %u\n", ret);
+-
+-	return count;
+-}
+-
+-static DEVICE_ATTR_RW(deepsleep);
+-
+-static bool deepsleep_group_visible(struct kobject *kobj)
+-{
+-	return alienfx->deepslp;
+-}
+-DEFINE_SIMPLE_SYSFS_GROUP_VISIBLE(deepsleep);
+-
+-static struct attribute *deepsleep_attrs[] = {
+-	&dev_attr_deepsleep.attr,
+-	NULL,
+-};
+-
+-static const struct attribute_group deepsleep_attribute_group = {
+-	.name = "deepsleep",
+-	.is_visible = SYSFS_GROUP_VISIBLE(deepsleep),
+-	.attrs = deepsleep_attrs,
+-};
+-
+-/*
+- * Thermal Profile control
+- *  - Provides thermal profile control through the Platform Profile API
+- */
+-#define WMAX_THERMAL_TABLE_MASK		GENMASK(7, 4)
+-#define WMAX_THERMAL_MODE_MASK		GENMASK(3, 0)
+-#define WMAX_SENSOR_ID_MASK		BIT(8)
+-
+-static bool is_wmax_thermal_code(u32 code)
+-{
+-	if (code & WMAX_SENSOR_ID_MASK)
+-		return false;
+-
+-	if ((code & WMAX_THERMAL_MODE_MASK) >= THERMAL_MODE_LAST)
+-		return false;
+-
+-	if ((code & WMAX_THERMAL_TABLE_MASK) == WMAX_THERMAL_TABLE_BASIC &&
+-	    (code & WMAX_THERMAL_MODE_MASK) >= THERMAL_MODE_BASIC_QUIET)
+-		return true;
+-
+-	if ((code & WMAX_THERMAL_TABLE_MASK) == WMAX_THERMAL_TABLE_USTT &&
+-	    (code & WMAX_THERMAL_MODE_MASK) <= THERMAL_MODE_USTT_LOW_POWER)
+-		return true;
+-
+-	return false;
+-}
+-
+-static int wmax_thermal_information(struct wmi_device *wdev, u8 operation,
+-				    u8 arg, u32 *out_data)
+-{
+-	struct wmax_u32_args in_args = {
+-		.operation = operation,
+-		.arg1 = arg,
+-		.arg2 = 0,
+-		.arg3 = 0,
+-	};
+-	int ret;
+-
+-	ret = alienware_wmi_command(wdev, WMAX_METHOD_THERMAL_INFORMATION,
+-				    &in_args, sizeof(in_args), out_data);
+-	if (ret < 0)
+-		return ret;
+-
+-	if (*out_data == WMAX_FAILURE_CODE)
+-		return -EBADRQC;
+-
+-	return 0;
+-}
+-
+-static int wmax_thermal_control(struct wmi_device *wdev, u8 profile)
+-{
+-	struct wmax_u32_args in_args = {
+-		.operation = WMAX_OPERATION_ACTIVATE_PROFILE,
+-		.arg1 = profile,
+-		.arg2 = 0,
+-		.arg3 = 0,
+-	};
+-	u32 out_data;
+-	int ret;
+-
+-	ret = alienware_wmi_command(wdev, WMAX_METHOD_THERMAL_CONTROL,
+-				    &in_args, sizeof(in_args), &out_data);
+-	if (ret)
+-		return ret;
+-
+-	if (out_data == WMAX_FAILURE_CODE)
+-		return -EBADRQC;
+-
+-	return 0;
+-}
+-
+-static int wmax_game_shift_status(struct wmi_device *wdev, u8 operation,
+-				  u32 *out_data)
+-{
+-	struct wmax_u32_args in_args = {
+-		.operation = operation,
+-		.arg1 = 0,
+-		.arg2 = 0,
+-		.arg3 = 0,
+-	};
+-	int ret;
+-
+-	ret = alienware_wmi_command(wdev, WMAX_METHOD_GAME_SHIFT_STATUS,
+-				    &in_args, sizeof(in_args), out_data);
+-
+-	if (ret < 0)
+-		return ret;
+-
+-	if (*out_data == WMAX_FAILURE_CODE)
+-		return -EOPNOTSUPP;
+-
+-	return 0;
+-}
+-
+-static int thermal_profile_get(struct device *dev,
+-			       enum platform_profile_option *profile)
+-{
+-	struct awcc_priv *priv = dev_get_drvdata(dev);
+-	u32 out_data;
+-	int ret;
+-
+-	ret = wmax_thermal_information(priv->wdev, WMAX_OPERATION_CURRENT_PROFILE,
+-				       0, &out_data);
+-
+-	if (ret < 0)
+-		return ret;
+-
+-	if (out_data == WMAX_THERMAL_MODE_GMODE) {
+-		*profile = PLATFORM_PROFILE_PERFORMANCE;
+-		return 0;
+-	}
+-
+-	if (!is_wmax_thermal_code(out_data))
+-		return -ENODATA;
+-
+-	out_data &= WMAX_THERMAL_MODE_MASK;
+-	*profile = wmax_mode_to_platform_profile[out_data];
+-
+-	return 0;
+-}
+-
+-static int thermal_profile_set(struct device *dev,
+-			       enum platform_profile_option profile)
+-{
+-	struct awcc_priv *priv = dev_get_drvdata(dev);
+-
+-	if (awcc->gmode) {
+-		u32 gmode_status;
+-		int ret;
+-
+-		ret = wmax_game_shift_status(priv->wdev,
+-					     WMAX_OPERATION_GET_GAME_SHIFT_STATUS,
+-					     &gmode_status);
+-
+-		if (ret < 0)
+-			return ret;
+-
+-		if ((profile == PLATFORM_PROFILE_PERFORMANCE && !gmode_status) ||
+-		    (profile != PLATFORM_PROFILE_PERFORMANCE && gmode_status)) {
+-			ret = wmax_game_shift_status(priv->wdev,
+-						     WMAX_OPERATION_TOGGLE_GAME_SHIFT,
+-						     &gmode_status);
+-
+-			if (ret < 0)
+-				return ret;
+-		}
+-	}
+-
+-	return wmax_thermal_control(priv->wdev,
+-				    priv->supported_thermal_profiles[profile]);
+-}
+-
+-static int thermal_profile_probe(void *drvdata, unsigned long *choices)
+-{
+-	enum platform_profile_option profile;
+-	struct awcc_priv *priv = drvdata;
+-	enum wmax_thermal_mode mode;
+-	u8 sys_desc[4];
+-	u32 first_mode;
+-	u32 out_data;
+-	int ret;
+-
+-	ret = wmax_thermal_information(priv->wdev, WMAX_OPERATION_SYS_DESCRIPTION,
+-				       0, (u32 *) &sys_desc);
+-	if (ret < 0)
+-		return ret;
+-
+-	first_mode = sys_desc[0] + sys_desc[1];
+-
+-	for (u32 i = 0; i < sys_desc[3]; i++) {
+-		ret = wmax_thermal_information(priv->wdev, WMAX_OPERATION_LIST_IDS,
+-					       i + first_mode, &out_data);
+-
+-		if (ret == -EIO)
+-			return ret;
+-
+-		if (ret == -EBADRQC)
+-			break;
+-
+-		if (!is_wmax_thermal_code(out_data))
+-			continue;
+-
+-		mode = out_data & WMAX_THERMAL_MODE_MASK;
+-		profile = wmax_mode_to_platform_profile[mode];
+-		priv->supported_thermal_profiles[profile] = out_data;
+-
+-		set_bit(profile, choices);
+-	}
+-
+-	if (bitmap_empty(choices, PLATFORM_PROFILE_LAST))
+-		return -ENODEV;
+-
+-	if (awcc->gmode) {
+-		priv->supported_thermal_profiles[PLATFORM_PROFILE_PERFORMANCE] =
+-			WMAX_THERMAL_MODE_GMODE;
+-
+-		set_bit(PLATFORM_PROFILE_PERFORMANCE, choices);
+-	}
+-
+-	return 0;
+-}
+-
+-static const struct platform_profile_ops awcc_platform_profile_ops = {
+-	.probe = thermal_profile_probe,
+-	.profile_get = thermal_profile_get,
+-	.profile_set = thermal_profile_set,
+-};
+-
+-static int alienware_awcc_setup(struct wmi_device *wdev)
+-{
+-	struct awcc_priv *priv;
+-
+-	priv = devm_kzalloc(&wdev->dev, sizeof(*priv), GFP_KERNEL);
+-	if (!priv)
+-		return -ENOMEM;
+-
+-	priv->wdev = wdev;
+-	dev_set_drvdata(&wdev->dev, priv);
+-
+-	priv->ppdev = devm_platform_profile_register(&wdev->dev, "alienware-wmi",
+-						     priv, &awcc_platform_profile_ops);
+-
+-	return PTR_ERR_OR_ZERO(priv->ppdev);
+-}
+-
+ /*
+  * Platform Driver
+  */
+@@ -1074,13 +417,6 @@ static const struct attribute_group *alienfx_groups[] = {
+ 	NULL
  };
  
--static int alienware_alienfx_setup(struct alienfx_platdata *pdata)
-+int alienware_alienfx_setup(struct alienfx_platdata *pdata)
- {
- 	struct platform_device *pdev;
- 
-@@ -1151,7 +1102,7 @@ static int alienware_alienfx_setup(struct alienfx_platdata *pdata)
- 	return PTR_ERR_OR_ZERO(pdev);
+-static const struct attribute_group *wmax_alienfx_groups[] = {
+-	&hdmi_attribute_group,
+-	&amplifier_attribute_group,
+-	&deepsleep_attribute_group,
+-	NULL
+-};
+-
+ static struct platform_driver platform_driver = {
+ 	.driver = {
+ 		.name = "alienware-wmi",
+@@ -1109,201 +445,6 @@ void alienware_alienfx_exit(struct wmi_device *wdev)
+ 	platform_device_unregister(pdev);
  }
  
--static void alienware_alienfx_exit(struct wmi_device *wdev)
-+void alienware_alienfx_exit(struct wmi_device *wdev)
+-/*
+- * Legacy WMI driver
+- */
+-static int legacy_wmi_update_led(struct alienfx_priv *priv,
+-				 struct wmi_device *wdev, u8 location)
+-{
+-	struct legacy_led_args legacy_args = {
+-		.colors = priv->colors[location],
+-		.brightness = priv->global_brightness,
+-		.state = 0,
+-	};
+-	struct acpi_buffer input;
+-	acpi_status status;
+-
+-	if (legacy_args.state != LEGACY_RUNNING) {
+-		legacy_args.state = priv->lighting_control_state;
+-
+-		input.length = sizeof(legacy_args);
+-		input.pointer = &legacy_args;
+-
+-		status = wmi_evaluate_method(LEGACY_POWER_CONTROL_GUID, 0,
+-					     location + 1, &input, NULL);
+-		if (ACPI_FAILURE(status))
+-			return -EIO;
+-
+-		return 0;
+-	}
+-
+-	return alienware_wmi_command(wdev, location + 1, &legacy_args,
+-				     sizeof(legacy_args), NULL);
+-}
+-
+-static int legacy_wmi_update_brightness(struct alienfx_priv *priv,
+-					struct wmi_device *wdev, u8 brightness)
+-{
+-	return legacy_wmi_update_led(priv, wdev, 0);
+-}
+-
+-static int legacy_wmi_probe(struct wmi_device *wdev, const void *context)
+-{
+-	struct alienfx_platdata pdata = {
+-		.wdev = wdev,
+-		.ops = {
+-			.upd_led = legacy_wmi_update_led,
+-			.upd_brightness = legacy_wmi_update_brightness,
+-		},
+-	};
+-
+-	return alienware_alienfx_setup(&pdata);
+-}
+-
+-static void legacy_wmi_remove(struct wmi_device *wdev)
+-{
+-	alienware_alienfx_exit(wdev);
+-}
+-
+-static const struct wmi_device_id alienware_legacy_device_id_table[] = {
+-	{ LEGACY_CONTROL_GUID, NULL },
+-	{ },
+-};
+-MODULE_DEVICE_TABLE(wmi, alienware_legacy_device_id_table);
+-
+-static struct wmi_driver alienware_legacy_wmi_driver = {
+-	.driver = {
+-		.name = "alienware-wmi-alienfx",
+-		.probe_type = PROBE_PREFER_ASYNCHRONOUS,
+-	},
+-	.id_table = alienware_legacy_device_id_table,
+-	.probe = legacy_wmi_probe,
+-	.remove = legacy_wmi_remove,
+-	.no_singleton = true,
+-};
+-
+-int __init alienware_legacy_wmi_init(void)
+-{
+-	return wmi_driver_register(&alienware_legacy_wmi_driver);
+-}
+-
+-void __exit alienware_legacy_wmi_exit(void)
+-{
+-	wmi_driver_unregister(&alienware_legacy_wmi_driver);
+-}
+-
+-/*
+- * WMAX WMI driver
+- */
+-static int wmax_wmi_update_led(struct alienfx_priv *priv,
+-			       struct wmi_device *wdev, u8 location)
+-{
+-	struct wmax_led_args in_args = {
+-		.led_mask = 1 << location,
+-		.colors = priv->colors[location],
+-		.state = priv->lighting_control_state,
+-	};
+-
+-	return alienware_wmi_command(wdev, WMAX_METHOD_ZONE_CONTROL, &in_args,
+-				     sizeof(in_args), NULL);
+-}
+-
+-static int wmax_wmi_update_brightness(struct alienfx_priv *priv,
+-				      struct wmi_device *wdev, u8 brightness)
+-{
+-	struct wmax_brightness_args in_args = {
+-		.led_mask = 0xFF,
+-		.percentage = brightness,
+-	};
+-
+-	return alienware_wmi_command(wdev, WMAX_METHOD_BRIGHTNESS, &in_args,
+-				     sizeof(in_args), NULL);
+-}
+-
+-static int wmax_wmi_probe(struct wmi_device *wdev, const void *context)
+-{
+-	struct alienfx_platdata pdata = {
+-		.wdev = wdev,
+-		.ops = {
+-			.upd_led = wmax_wmi_update_led,
+-			.upd_brightness = wmax_wmi_update_brightness,
+-		},
+-	};
+-	struct platform_device *pdev;
+-	int ret;
+-
+-	if (awcc) {
+-		return alienware_awcc_setup(wdev);
+-	} else {
+-		ret = alienware_alienfx_setup(&pdata);
+-		if (ret < 0)
+-			return ret;
+-
+-		pdev = dev_get_drvdata(&wdev->dev);
+-
+-		ret = device_add_groups(&pdev->dev, wmax_alienfx_groups);
+-		if (ret < 0)
+-			alienware_alienfx_exit(wdev);
+-
+-		return ret;
+-	}
+-}
+-
+-static void wmax_wmi_remove(struct wmi_device *wdev)
+-{
+-	struct platform_device *pdev;
+-
+-	if (!awcc) {
+-		pdev = dev_get_drvdata(&wdev->dev);
+-
+-		device_remove_groups(&pdev->dev, wmax_alienfx_groups);
+-		alienware_alienfx_exit(wdev);
+-	}
+-}
+-
+-static const struct wmi_device_id alienware_wmax_device_id_table[] = {
+-	{ WMAX_CONTROL_GUID, NULL },
+-	{ },
+-};
+-MODULE_DEVICE_TABLE(wmi, alienware_wmax_device_id_table);
+-
+-static struct wmi_driver alienware_wmax_wmi_driver = {
+-	.driver = {
+-		.name = "alienware-wmi-wmax",
+-		.probe_type = PROBE_PREFER_ASYNCHRONOUS,
+-	},
+-	.id_table = alienware_wmax_device_id_table,
+-	.probe = wmax_wmi_probe,
+-	.remove = wmax_wmi_remove,
+-	.no_singleton = true,
+-};
+-
+-int __init alienware_wmax_wmi_init(void)
+-{
+-	const struct dmi_system_id *id;
+-
+-	id = dmi_first_match(awcc_dmi_table);
+-	if (id)
+-		awcc = id->driver_data;
+-
+-	if (force_platform_profile)
+-		awcc = &generic_quirks;
+-
+-	if (force_gmode) {
+-		if (awcc)
+-			awcc->gmode = true;
+-		else
+-			pr_warn("force_gmode requires platform profile support\n");
+-	}
+-
+-	return wmi_driver_register(&alienware_wmax_wmi_driver);
+-}
+-
+-void __exit alienware_wmax_wmi_exit(void)
+-{
+-	wmi_driver_unregister(&alienware_wmax_wmi_driver);
+-}
+-
+ static int __init alienware_wmi_init(void)
  {
- 	struct platform_device *pdev = dev_get_drvdata(&wdev->dev);
- 
-@@ -1231,12 +1182,12 @@ static struct wmi_driver alienware_legacy_wmi_driver = {
- 	.no_singleton = true,
- };
- 
--static int __init alienware_legacy_wmi_init(void)
-+int __init alienware_legacy_wmi_init(void)
- {
- 	return wmi_driver_register(&alienware_legacy_wmi_driver);
- }
- 
--static void __exit alienware_legacy_wmi_exit(void)
-+void __exit alienware_legacy_wmi_exit(void)
- {
- 	wmi_driver_unregister(&alienware_legacy_wmi_driver);
- }
-@@ -1327,7 +1278,7 @@ static struct wmi_driver alienware_wmax_wmi_driver = {
- 	.no_singleton = true,
- };
- 
--static int __init alienware_wmax_wmi_init(void)
-+int __init alienware_wmax_wmi_init(void)
- {
- 	const struct dmi_system_id *id;
- 
-@@ -1348,7 +1299,7 @@ static int __init alienware_wmax_wmi_init(void)
- 	return wmi_driver_register(&alienware_wmax_wmi_driver);
- }
- 
--static void __exit alienware_wmax_wmi_exit(void)
-+void __exit alienware_wmax_wmi_exit(void)
- {
- 	wmi_driver_unregister(&alienware_wmax_wmi_driver);
- }
-diff --git a/drivers/platform/x86/dell/alienware-wmi.h b/drivers/platform/x86/dell/alienware-wmi.h
+ 	int ret;
+diff --git a/drivers/platform/x86/dell/alienware-wmi-legacy.c b/drivers/platform/x86/dell/alienware-wmi-legacy.c
 new file mode 100644
-index 000000000000..00b7505e1073
+index 000000000000..48f8a204c7cc
 --- /dev/null
-+++ b/drivers/platform/x86/dell/alienware-wmi.h
-@@ -0,0 +1,80 @@
-+/* SPDX-License-Identifier: GPL-2.0-or-later */
++++ b/drivers/platform/x86/dell/alienware-wmi-legacy.c
+@@ -0,0 +1,101 @@
++// SPDX-License-Identifier: GPL-2.0-or-later
 +/*
-+ * Alienware WMI special features driver
++ * Alienware LEGACY WMI device driver
 + *
-+ * Copyright (C) 2014 Dell Inc <Dell.Client.Kernel@dell.com>
-+ * Copyright (C) 2024 Kurt Borja <kuurtb@gmail.com>
++ * Copyright (C) 2025 Kurt Borja <kuurtb@gmail.com>
 + */
 +
-+#ifndef _ALIENWARE_WMI_H_
-+#define _ALIENWARE_WMI_H_
++#define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
 +
-+#include <linux/leds.h>
-+#include <linux/platform_device.h>
 +#include <linux/wmi.h>
++#include "alienware-wmi.h"
 +
-+#define LEGACY_CONTROL_GUID		"A90597CE-A997-11DA-B012-B622A1EF5492"
-+#define LEGACY_POWER_CONTROL_GUID	"A80593CE-A997-11DA-B012-B622A1EF5492"
-+#define WMAX_CONTROL_GUID		"A70591CE-A997-11DA-B012-B622A1EF5492"
-+
-+extern struct alienfx_quirks *alienfx;
-+
-+enum LEGACY_CONTROL_STATES {
-+	LEGACY_RUNNING = 1,
-+	LEGACY_BOOTING = 0,
-+	LEGACY_SUSPEND = 3,
-+};
-+
-+enum WMAX_CONTROL_STATES {
-+	WMAX_RUNNING = 0xFF,
-+	WMAX_BOOTING = 0,
-+	WMAX_SUSPEND = 3,
-+};
-+
-+struct alienfx_quirks {
-+	u8 num_zones;
-+	bool hdmi_mux;
-+	bool amplifier;
-+	bool deepslp;
-+};
-+
-+struct color_platform {
-+	u8 blue;
-+	u8 green;
-+	u8 red;
++struct legacy_led_args {
++	struct color_platform colors;
++	u8 brightness;
++	u8 state;
 +} __packed;
 +
-+struct alienfx_priv {
-+	struct platform_device *pdev;
-+	struct alienfx_quirks *quirks;
-+	struct led_classdev global_led;
-+	struct color_platform colors[4];
-+	u8 global_brightness;
-+	u8 lighting_control_state;
++
++/*
++ * Legacy WMI driver
++ */
++static int legacy_wmi_update_led(struct alienfx_priv *priv,
++				 struct wmi_device *wdev, u8 location)
++{
++	struct legacy_led_args legacy_args = {
++		.colors = priv->colors[location],
++		.brightness = priv->global_brightness,
++		.state = 0,
++	};
++	struct acpi_buffer input;
++	acpi_status status;
++
++	if (legacy_args.state != LEGACY_RUNNING) {
++		legacy_args.state = priv->lighting_control_state;
++
++		input.length = sizeof(legacy_args);
++		input.pointer = &legacy_args;
++
++		status = wmi_evaluate_method(LEGACY_POWER_CONTROL_GUID, 0,
++					     location + 1, &input, NULL);
++		if (ACPI_FAILURE(status))
++			return -EIO;
++
++		return 0;
++	}
++
++	return alienware_wmi_command(wdev, location + 1, &legacy_args,
++				     sizeof(legacy_args), NULL);
++}
++
++static int legacy_wmi_update_brightness(struct alienfx_priv *priv,
++					struct wmi_device *wdev, u8 brightness)
++{
++	return legacy_wmi_update_led(priv, wdev, 0);
++}
++
++static int legacy_wmi_probe(struct wmi_device *wdev, const void *context)
++{
++	struct alienfx_platdata pdata = {
++		.wdev = wdev,
++		.ops = {
++			.upd_led = legacy_wmi_update_led,
++			.upd_brightness = legacy_wmi_update_brightness,
++		},
++	};
++
++	return alienware_alienfx_setup(&pdata);
++}
++
++static void legacy_wmi_remove(struct wmi_device *wdev)
++{
++	alienware_alienfx_exit(wdev);
++}
++
++static const struct wmi_device_id alienware_legacy_device_id_table[] = {
++	{ LEGACY_CONTROL_GUID, NULL },
++	{ },
++};
++MODULE_DEVICE_TABLE(wmi, alienware_legacy_device_id_table);
++
++static struct wmi_driver alienware_legacy_wmi_driver = {
++	.driver = {
++		.name = "alienware-wmi-alienfx",
++		.probe_type = PROBE_PREFER_ASYNCHRONOUS,
++	},
++	.id_table = alienware_legacy_device_id_table,
++	.probe = legacy_wmi_probe,
++	.remove = legacy_wmi_remove,
++	.no_singleton = true,
 +};
 +
-+struct alienfx_ops {
-+	int (*upd_led)(struct alienfx_priv *priv, struct wmi_device *wdev,
-+		       u8 location);
-+	int (*upd_brightness)(struct alienfx_priv *priv, struct wmi_device *wdev,
-+			      u8 brightness);
++int __init alienware_legacy_wmi_init(void)
++{
++	return wmi_driver_register(&alienware_legacy_wmi_driver);
++}
++
++void __exit alienware_legacy_wmi_exit(void)
++{
++	wmi_driver_unregister(&alienware_legacy_wmi_driver);
++}
+diff --git a/drivers/platform/x86/dell/alienware-wmi-wmax.c b/drivers/platform/x86/dell/alienware-wmi-wmax.c
+new file mode 100644
+index 000000000000..c284024f600c
+--- /dev/null
++++ b/drivers/platform/x86/dell/alienware-wmi-wmax.c
+@@ -0,0 +1,782 @@
++// SPDX-License-Identifier: GPL-2.0-or-later
++/*
++ * Alienware WMAX WMI device driver
++ *
++ * Copyright (C) 2014 Dell Inc <Dell.Client.Kernel@dell.com>
++ * Copyright (C) 2025 Kurt Borja <kuurtb@gmail.com>
++ */
++
++#define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
++
++#include <linux/bitfield.h>
++#include <linux/bits.h>
++#include <linux/dmi.h>
++#include <linux/moduleparam.h>
++#include <linux/platform_profile.h>
++#include <linux/wmi.h>
++#include "alienware-wmi.h"
++
++#define WMAX_METHOD_HDMI_SOURCE			0x1
++#define WMAX_METHOD_HDMI_STATUS			0x2
++#define WMAX_METHOD_HDMI_CABLE			0x5
++#define WMAX_METHOD_AMPLIFIER_CABLE		0x6
++#define WMAX_METHOD_DEEP_SLEEP_CONTROL		0x0B
++#define WMAX_METHOD_DEEP_SLEEP_STATUS		0x0C
++#define WMAX_METHOD_BRIGHTNESS			0x3
++#define WMAX_METHOD_ZONE_CONTROL		0x4
++#define WMAX_METHOD_THERMAL_INFORMATION		0x14
++#define WMAX_METHOD_THERMAL_CONTROL		0x15
++#define WMAX_METHOD_GAME_SHIFT_STATUS		0x25
++
++#define WMAX_THERMAL_MODE_GMODE			0xAB
++
++#define WMAX_FAILURE_CODE			0xFFFFFFFF
++#define WMAX_THERMAL_TABLE_MASK			GENMASK(7, 4)
++#define WMAX_THERMAL_MODE_MASK			GENMASK(3, 0)
++#define WMAX_SENSOR_ID_MASK			BIT(8)
++
++static bool force_platform_profile;
++module_param_unsafe(force_platform_profile, bool, 0);
++MODULE_PARM_DESC(force_platform_profile, "Forces auto-detecting thermal profiles without checking if WMI thermal backend is available");
++
++static bool force_gmode;
++module_param_unsafe(force_gmode, bool, 0);
++MODULE_PARM_DESC(force_gmode, "Forces G-Mode when performance profile is selected");
++
++struct awcc_quirks {
++	bool gmode;
 +};
 +
-+struct alienfx_platdata {
++static struct awcc_quirks g_series_quirks = {
++	.gmode = true,
++};
++
++static struct awcc_quirks generic_quirks = {
++	.gmode = false,
++};
++
++static const struct dmi_system_id awcc_dmi_table[] __initconst = {
++	{
++		.ident = "Alienware m16 R1 AMD",
++		.matches = {
++			DMI_MATCH(DMI_SYS_VENDOR, "Alienware"),
++			DMI_MATCH(DMI_PRODUCT_NAME, "Alienware m16 R1 AMD"),
++		},
++		.driver_data = &g_series_quirks,
++	},
++	{
++		.ident = "Alienware m17 R5",
++		.matches = {
++			DMI_MATCH(DMI_SYS_VENDOR, "Alienware"),
++			DMI_MATCH(DMI_PRODUCT_NAME, "Alienware m17 R5 AMD"),
++		},
++		.driver_data = &generic_quirks,
++	},
++	{
++		.ident = "Alienware m18 R2",
++		.matches = {
++			DMI_MATCH(DMI_SYS_VENDOR, "Alienware"),
++			DMI_MATCH(DMI_PRODUCT_NAME, "Alienware m18 R2"),
++		},
++		.driver_data = &generic_quirks,
++	},
++	{
++		.ident = "Alienware x15 R1",
++		.matches = {
++			DMI_MATCH(DMI_SYS_VENDOR, "Alienware"),
++			DMI_MATCH(DMI_PRODUCT_NAME, "Alienware x15 R1"),
++		},
++		.driver_data = &generic_quirks,
++	},
++	{
++		.ident = "Alienware x17 R2",
++		.matches = {
++			DMI_MATCH(DMI_SYS_VENDOR, "Alienware"),
++			DMI_MATCH(DMI_PRODUCT_NAME, "Alienware x17 R2"),
++		},
++		.driver_data = &generic_quirks,
++	},
++	{
++		.ident = "Dell Inc. G15 5510",
++		.matches = {
++			DMI_MATCH(DMI_SYS_VENDOR, "Dell Inc."),
++			DMI_MATCH(DMI_PRODUCT_NAME, "Dell G15 5510"),
++		},
++		.driver_data = &g_series_quirks,
++	},
++	{
++		.ident = "Dell Inc. G15 5511",
++		.matches = {
++			DMI_MATCH(DMI_SYS_VENDOR, "Dell Inc."),
++			DMI_MATCH(DMI_PRODUCT_NAME, "Dell G15 5511"),
++		},
++		.driver_data = &g_series_quirks,
++	},
++	{
++		.ident = "Dell Inc. G15 5515",
++		.matches = {
++			DMI_MATCH(DMI_SYS_VENDOR, "Dell Inc."),
++			DMI_MATCH(DMI_PRODUCT_NAME, "Dell G15 5515"),
++		},
++		.driver_data = &g_series_quirks,
++	},
++	{
++		.ident = "Dell Inc. G3 3500",
++		.matches = {
++			DMI_MATCH(DMI_SYS_VENDOR, "Dell Inc."),
++			DMI_MATCH(DMI_PRODUCT_NAME, "G3 3500"),
++		},
++		.driver_data = &g_series_quirks,
++	},
++	{
++		.ident = "Dell Inc. G3 3590",
++		.matches = {
++			DMI_MATCH(DMI_SYS_VENDOR, "Dell Inc."),
++			DMI_MATCH(DMI_PRODUCT_NAME, "G3 3590"),
++		},
++		.driver_data = &g_series_quirks,
++	},
++	{
++		.ident = "Dell Inc. G5 5500",
++		.matches = {
++			DMI_MATCH(DMI_SYS_VENDOR, "Dell Inc."),
++			DMI_MATCH(DMI_PRODUCT_NAME, "G5 5500"),
++		},
++		.driver_data = &g_series_quirks,
++	},
++};
++
++enum WMAX_THERMAL_INFORMATION_OPERATIONS {
++	WMAX_OPERATION_SYS_DESCRIPTION		= 0x02,
++	WMAX_OPERATION_LIST_IDS			= 0x03,
++	WMAX_OPERATION_CURRENT_PROFILE		= 0x0B,
++};
++
++enum WMAX_THERMAL_CONTROL_OPERATIONS {
++	WMAX_OPERATION_ACTIVATE_PROFILE		= 0x01,
++};
++
++enum WMAX_GAME_SHIFT_STATUS_OPERATIONS {
++	WMAX_OPERATION_TOGGLE_GAME_SHIFT	= 0x01,
++	WMAX_OPERATION_GET_GAME_SHIFT_STATUS	= 0x02,
++};
++
++enum WMAX_THERMAL_TABLES {
++	WMAX_THERMAL_TABLE_BASIC		= 0x90,
++	WMAX_THERMAL_TABLE_USTT			= 0xA0,
++};
++
++enum wmax_thermal_mode {
++	THERMAL_MODE_USTT_BALANCED,
++	THERMAL_MODE_USTT_BALANCED_PERFORMANCE,
++	THERMAL_MODE_USTT_COOL,
++	THERMAL_MODE_USTT_QUIET,
++	THERMAL_MODE_USTT_PERFORMANCE,
++	THERMAL_MODE_USTT_LOW_POWER,
++	THERMAL_MODE_BASIC_QUIET,
++	THERMAL_MODE_BASIC_BALANCED,
++	THERMAL_MODE_BASIC_BALANCED_PERFORMANCE,
++	THERMAL_MODE_BASIC_PERFORMANCE,
++	THERMAL_MODE_LAST,
++};
++
++struct wmax_led_args {
++	u32 led_mask;
++	struct color_platform colors;
++	u8 state;
++} __packed;
++
++struct wmax_brightness_args {
++	u32 led_mask;
++	u32 percentage;
++};
++
++struct wmax_basic_args {
++	u8 arg;
++};
++
++struct wmax_u32_args {
++	u8 operation;
++	u8 arg1;
++	u8 arg2;
++	u8 arg3;
++};
++
++struct awcc_priv {
 +	struct wmi_device *wdev;
-+	struct alienfx_ops ops;
++	struct device *ppdev;
++	enum wmax_thermal_mode supported_thermal_profiles[PLATFORM_PROFILE_LAST];
 +};
 +
-+int alienware_wmi_command(struct wmi_device *wdev, u32 method_id,
-+			  void *in_args, size_t in_size, u32 *out_data);
++static const enum platform_profile_option wmax_mode_to_platform_profile[THERMAL_MODE_LAST] = {
++	[THERMAL_MODE_USTT_BALANCED]			= PLATFORM_PROFILE_BALANCED,
++	[THERMAL_MODE_USTT_BALANCED_PERFORMANCE]	= PLATFORM_PROFILE_BALANCED_PERFORMANCE,
++	[THERMAL_MODE_USTT_COOL]			= PLATFORM_PROFILE_COOL,
++	[THERMAL_MODE_USTT_QUIET]			= PLATFORM_PROFILE_QUIET,
++	[THERMAL_MODE_USTT_PERFORMANCE]			= PLATFORM_PROFILE_PERFORMANCE,
++	[THERMAL_MODE_USTT_LOW_POWER]			= PLATFORM_PROFILE_LOW_POWER,
++	[THERMAL_MODE_BASIC_QUIET]			= PLATFORM_PROFILE_QUIET,
++	[THERMAL_MODE_BASIC_BALANCED]			= PLATFORM_PROFILE_BALANCED,
++	[THERMAL_MODE_BASIC_BALANCED_PERFORMANCE]	= PLATFORM_PROFILE_BALANCED_PERFORMANCE,
++	[THERMAL_MODE_BASIC_PERFORMANCE]		= PLATFORM_PROFILE_PERFORMANCE,
++};
 +
-+int alienware_alienfx_setup(struct alienfx_platdata *pdata);
-+void alienware_alienfx_exit(struct wmi_device *wdev);
++static struct awcc_quirks *awcc;
 +
-+int __init alienware_legacy_wmi_init(void);
-+void __exit alienware_legacy_wmi_exit(void);
++/*
++ *	The HDMI mux sysfs node indicates the status of the HDMI input mux.
++ *	It can toggle between standard system GPU output and HDMI input.
++ */
++static ssize_t cable_show(struct device *dev, struct device_attribute *attr,
++			  char *buf)
++{
++	struct alienfx_platdata *pdata = dev_get_platdata(dev);
++	struct wmax_basic_args in_args = {
++		.arg = 0,
++	};
++	u32 out_data;
++	int ret;
 +
-+int __init alienware_wmax_wmi_init(void);
-+void __exit alienware_wmax_wmi_exit(void);
++	ret = alienware_wmi_command(pdata->wdev, WMAX_METHOD_HDMI_CABLE,
++				    &in_args, sizeof(in_args), &out_data);
 +
-+#endif
++	if (!ret) {
++		if (out_data == 0)
++			return sysfs_emit(buf, "[unconnected] connected unknown\n");
++		else if (out_data == 1)
++			return sysfs_emit(buf, "unconnected [connected] unknown\n");
++	}
++
++	pr_err("alienware-wmi: unknown HDMI cable status: %d\n", ret);
++	return sysfs_emit(buf, "unconnected connected [unknown]\n");
++}
++
++static ssize_t source_show(struct device *dev, struct device_attribute *attr,
++			   char *buf)
++{
++	struct alienfx_platdata *pdata = dev_get_platdata(dev);
++	struct wmax_basic_args in_args = {
++		.arg = 0,
++	};
++	u32 out_data;
++	int ret;
++
++	ret = alienware_wmi_command(pdata->wdev, WMAX_METHOD_HDMI_STATUS,
++				    &in_args, sizeof(in_args), &out_data);
++
++	if (!ret) {
++		if (out_data == 1)
++			return sysfs_emit(buf, "[input] gpu unknown\n");
++		else if (out_data == 2)
++			return sysfs_emit(buf, "input [gpu] unknown\n");
++	}
++
++	pr_err("alienware-wmi: unknown HDMI source status: %u\n", ret);
++	return sysfs_emit(buf, "input gpu [unknown]\n");
++}
++
++static ssize_t source_store(struct device *dev, struct device_attribute *attr,
++			    const char *buf, size_t count)
++{
++	struct alienfx_platdata *pdata = dev_get_platdata(dev);
++	struct wmax_basic_args args;
++	int ret;
++
++	if (strcmp(buf, "gpu\n") == 0)
++		args.arg = 1;
++	else if (strcmp(buf, "input\n") == 0)
++		args.arg = 2;
++	else
++		args.arg = 3;
++	pr_debug("alienware-wmi: setting hdmi to %d : %s", args.arg, buf);
++
++	ret = alienware_wmi_command(pdata->wdev, WMAX_METHOD_HDMI_SOURCE, &args,
++				    sizeof(args), NULL);
++
++	if (ret < 0)
++		pr_err("alienware-wmi: HDMI toggle failed: results: %u\n", ret);
++
++	return count;
++}
++
++static DEVICE_ATTR_RO(cable);
++static DEVICE_ATTR_RW(source);
++
++static bool hdmi_group_visible(struct kobject *kobj)
++{
++	return alienfx->hdmi_mux;
++}
++DEFINE_SIMPLE_SYSFS_GROUP_VISIBLE(hdmi);
++
++static struct attribute *hdmi_attrs[] = {
++	&dev_attr_cable.attr,
++	&dev_attr_source.attr,
++	NULL,
++};
++
++static const struct attribute_group hdmi_attribute_group = {
++	.name = "hdmi",
++	.is_visible = SYSFS_GROUP_VISIBLE(hdmi),
++	.attrs = hdmi_attrs,
++};
++
++/*
++ * Alienware GFX amplifier support
++ * - Currently supports reading cable status
++ * - Leaving expansion room to possibly support dock/undock events later
++ */
++static ssize_t status_show(struct device *dev, struct device_attribute *attr,
++			   char *buf)
++{
++	struct alienfx_platdata *pdata = dev_get_platdata(dev);
++	struct wmax_basic_args in_args = {
++		.arg = 0,
++	};
++	u32 out_data;
++	int ret;
++
++	ret = alienware_wmi_command(pdata->wdev, WMAX_METHOD_AMPLIFIER_CABLE,
++				    &in_args, sizeof(in_args), &out_data);
++
++	if (!ret) {
++		if (out_data == 0)
++			return sysfs_emit(buf, "[unconnected] connected unknown\n");
++		else if (out_data == 1)
++			return sysfs_emit(buf, "unconnected [connected] unknown\n");
++	}
++
++	pr_err("alienware-wmi: unknown amplifier cable status: %d\n", ret);
++	return sysfs_emit(buf, "unconnected connected [unknown]\n");
++}
++
++static DEVICE_ATTR_RO(status);
++
++static bool amplifier_group_visible(struct kobject *kobj)
++{
++	return alienfx->amplifier;
++}
++DEFINE_SIMPLE_SYSFS_GROUP_VISIBLE(amplifier);
++
++static struct attribute *amplifier_attrs[] = {
++	&dev_attr_status.attr,
++	NULL,
++};
++
++static const struct attribute_group amplifier_attribute_group = {
++	.name = "amplifier",
++	.is_visible = SYSFS_GROUP_VISIBLE(amplifier),
++	.attrs = amplifier_attrs,
++};
++
++/*
++ * Deep Sleep Control support
++ * - Modifies BIOS setting for deep sleep control allowing extra wakeup events
++ */
++static ssize_t deepsleep_show(struct device *dev, struct device_attribute *attr,
++			      char *buf)
++{
++	struct alienfx_platdata *pdata = dev_get_platdata(dev);
++	struct wmax_basic_args in_args = {
++		.arg = 0,
++	};
++	u32 out_data;
++	int ret;
++
++	ret = alienware_wmi_command(pdata->wdev, WMAX_METHOD_DEEP_SLEEP_STATUS,
++				    &in_args, sizeof(in_args), &out_data);
++
++	if (!ret) {
++		if (out_data == 0)
++			return sysfs_emit(buf, "[disabled] s5 s5_s4\n");
++		else if (out_data == 1)
++			return sysfs_emit(buf, "disabled [s5] s5_s4\n");
++		else if (out_data == 2)
++			return sysfs_emit(buf, "disabled s5 [s5_s4]\n");
++	}
++
++	pr_err("alienware-wmi: unknown deep sleep status: %d\n", ret);
++	return sysfs_emit(buf, "disabled s5 s5_s4 [unknown]\n");
++}
++
++static ssize_t deepsleep_store(struct device *dev, struct device_attribute *attr,
++			       const char *buf, size_t count)
++{
++	struct alienfx_platdata *pdata = dev_get_platdata(dev);
++	struct wmax_basic_args args;
++	int ret;
++
++	if (strcmp(buf, "disabled\n") == 0)
++		args.arg = 0;
++	else if (strcmp(buf, "s5\n") == 0)
++		args.arg = 1;
++	else
++		args.arg = 2;
++	pr_debug("alienware-wmi: setting deep sleep to %d : %s", args.arg, buf);
++
++	ret = alienware_wmi_command(pdata->wdev, WMAX_METHOD_DEEP_SLEEP_CONTROL,
++				    &args, sizeof(args), NULL);
++
++	if (!ret)
++		pr_err("alienware-wmi: deep sleep control failed: results: %u\n", ret);
++
++	return count;
++}
++
++static DEVICE_ATTR_RW(deepsleep);
++
++static bool deepsleep_group_visible(struct kobject *kobj)
++{
++	return alienfx->deepslp;
++}
++DEFINE_SIMPLE_SYSFS_GROUP_VISIBLE(deepsleep);
++
++static struct attribute *deepsleep_attrs[] = {
++	&dev_attr_deepsleep.attr,
++	NULL,
++};
++
++static const struct attribute_group deepsleep_attribute_group = {
++	.name = "deepsleep",
++	.is_visible = SYSFS_GROUP_VISIBLE(deepsleep),
++	.attrs = deepsleep_attrs,
++};
++
++static const struct attribute_group *wmax_alienfx_groups[] = {
++	&hdmi_attribute_group,
++	&amplifier_attribute_group,
++	&deepsleep_attribute_group,
++	NULL
++};
++
++/*
++ * Thermal Profile control
++ *  - Provides thermal profile control through the Platform Profile API
++ */
++static bool is_wmax_thermal_code(u32 code)
++{
++	if (code & WMAX_SENSOR_ID_MASK)
++		return false;
++
++	if ((code & WMAX_THERMAL_MODE_MASK) >= THERMAL_MODE_LAST)
++		return false;
++
++	if ((code & WMAX_THERMAL_TABLE_MASK) == WMAX_THERMAL_TABLE_BASIC &&
++	    (code & WMAX_THERMAL_MODE_MASK) >= THERMAL_MODE_BASIC_QUIET)
++		return true;
++
++	if ((code & WMAX_THERMAL_TABLE_MASK) == WMAX_THERMAL_TABLE_USTT &&
++	    (code & WMAX_THERMAL_MODE_MASK) <= THERMAL_MODE_USTT_LOW_POWER)
++		return true;
++
++	return false;
++}
++
++static int wmax_thermal_information(struct wmi_device *wdev, u8 operation,
++				    u8 arg, u32 *out_data)
++{
++	struct wmax_u32_args in_args = {
++		.operation = operation,
++		.arg1 = arg,
++		.arg2 = 0,
++		.arg3 = 0,
++	};
++	int ret;
++
++	ret = alienware_wmi_command(wdev, WMAX_METHOD_THERMAL_INFORMATION,
++				    &in_args, sizeof(in_args), out_data);
++	if (ret < 0)
++		return ret;
++
++	if (*out_data == WMAX_FAILURE_CODE)
++		return -EBADRQC;
++
++	return 0;
++}
++
++static int wmax_thermal_control(struct wmi_device *wdev, u8 profile)
++{
++	struct wmax_u32_args in_args = {
++		.operation = WMAX_OPERATION_ACTIVATE_PROFILE,
++		.arg1 = profile,
++		.arg2 = 0,
++		.arg3 = 0,
++	};
++	u32 out_data;
++	int ret;
++
++	ret = alienware_wmi_command(wdev, WMAX_METHOD_THERMAL_CONTROL,
++				    &in_args, sizeof(in_args), &out_data);
++	if (ret)
++		return ret;
++
++	if (out_data == WMAX_FAILURE_CODE)
++		return -EBADRQC;
++
++	return 0;
++}
++
++static int wmax_game_shift_status(struct wmi_device *wdev, u8 operation,
++				  u32 *out_data)
++{
++	struct wmax_u32_args in_args = {
++		.operation = operation,
++		.arg1 = 0,
++		.arg2 = 0,
++		.arg3 = 0,
++	};
++	int ret;
++
++	ret = alienware_wmi_command(wdev, WMAX_METHOD_GAME_SHIFT_STATUS,
++				    &in_args, sizeof(in_args), out_data);
++
++	if (ret < 0)
++		return ret;
++
++	if (*out_data == WMAX_FAILURE_CODE)
++		return -EOPNOTSUPP;
++
++	return 0;
++}
++
++static int thermal_profile_get(struct device *dev,
++			       enum platform_profile_option *profile)
++{
++	struct awcc_priv *priv = dev_get_drvdata(dev);
++	u32 out_data;
++	int ret;
++
++	ret = wmax_thermal_information(priv->wdev, WMAX_OPERATION_CURRENT_PROFILE,
++				       0, &out_data);
++
++	if (ret < 0)
++		return ret;
++
++	if (out_data == WMAX_THERMAL_MODE_GMODE) {
++		*profile = PLATFORM_PROFILE_PERFORMANCE;
++		return 0;
++	}
++
++	if (!is_wmax_thermal_code(out_data))
++		return -ENODATA;
++
++	out_data &= WMAX_THERMAL_MODE_MASK;
++	*profile = wmax_mode_to_platform_profile[out_data];
++
++	return 0;
++}
++
++static int thermal_profile_set(struct device *dev,
++			       enum platform_profile_option profile)
++{
++	struct awcc_priv *priv = dev_get_drvdata(dev);
++
++	if (awcc->gmode) {
++		u32 gmode_status;
++		int ret;
++
++		ret = wmax_game_shift_status(priv->wdev,
++					     WMAX_OPERATION_GET_GAME_SHIFT_STATUS,
++					     &gmode_status);
++
++		if (ret < 0)
++			return ret;
++
++		if ((profile == PLATFORM_PROFILE_PERFORMANCE && !gmode_status) ||
++		    (profile != PLATFORM_PROFILE_PERFORMANCE && gmode_status)) {
++			ret = wmax_game_shift_status(priv->wdev,
++						     WMAX_OPERATION_TOGGLE_GAME_SHIFT,
++						     &gmode_status);
++
++			if (ret < 0)
++				return ret;
++		}
++	}
++
++	return wmax_thermal_control(priv->wdev,
++				    priv->supported_thermal_profiles[profile]);
++}
++
++static int thermal_profile_probe(void *drvdata, unsigned long *choices)
++{
++	enum platform_profile_option profile;
++	struct awcc_priv *priv = drvdata;
++	enum wmax_thermal_mode mode;
++	u8 sys_desc[4];
++	u32 first_mode;
++	u32 out_data;
++	int ret;
++
++	ret = wmax_thermal_information(priv->wdev, WMAX_OPERATION_SYS_DESCRIPTION,
++				       0, (u32 *) &sys_desc);
++	if (ret < 0)
++		return ret;
++
++	first_mode = sys_desc[0] + sys_desc[1];
++
++	for (u32 i = 0; i < sys_desc[3]; i++) {
++		ret = wmax_thermal_information(priv->wdev, WMAX_OPERATION_LIST_IDS,
++					       i + first_mode, &out_data);
++
++		if (ret == -EIO)
++			return ret;
++
++		if (ret == -EBADRQC)
++			break;
++
++		if (!is_wmax_thermal_code(out_data))
++			continue;
++
++		mode = out_data & WMAX_THERMAL_MODE_MASK;
++		profile = wmax_mode_to_platform_profile[mode];
++		priv->supported_thermal_profiles[profile] = out_data;
++
++		set_bit(profile, choices);
++	}
++
++	if (bitmap_empty(choices, PLATFORM_PROFILE_LAST))
++		return -ENODEV;
++
++	if (awcc->gmode) {
++		priv->supported_thermal_profiles[PLATFORM_PROFILE_PERFORMANCE] =
++			WMAX_THERMAL_MODE_GMODE;
++
++		set_bit(PLATFORM_PROFILE_PERFORMANCE, choices);
++	}
++
++	return 0;
++}
++
++static const struct platform_profile_ops awcc_platform_profile_ops = {
++	.probe = thermal_profile_probe,
++	.profile_get = thermal_profile_get,
++	.profile_set = thermal_profile_set,
++};
++
++static int alienware_awcc_setup(struct wmi_device *wdev)
++{
++	struct awcc_priv *priv;
++
++	priv = devm_kzalloc(&wdev->dev, sizeof(*priv), GFP_KERNEL);
++	if (!priv)
++		return -ENOMEM;
++
++	priv->wdev = wdev;
++	dev_set_drvdata(&wdev->dev, priv);
++
++	priv->ppdev = devm_platform_profile_register(&wdev->dev, "alienware-wmi",
++						     priv, &awcc_platform_profile_ops);
++
++	return PTR_ERR_OR_ZERO(priv->ppdev);
++}
++
++/*
++ * WMAX WMI driver
++ */
++static int wmax_wmi_update_led(struct alienfx_priv *priv,
++			       struct wmi_device *wdev, u8 location)
++{
++	struct wmax_led_args in_args = {
++		.led_mask = 1 << location,
++		.colors = priv->colors[location],
++		.state = priv->lighting_control_state,
++	};
++
++	return alienware_wmi_command(wdev, WMAX_METHOD_ZONE_CONTROL, &in_args,
++				     sizeof(in_args), NULL);
++}
++
++static int wmax_wmi_update_brightness(struct alienfx_priv *priv,
++				      struct wmi_device *wdev, u8 brightness)
++{
++	struct wmax_brightness_args in_args = {
++		.led_mask = 0xFF,
++		.percentage = brightness,
++	};
++
++	return alienware_wmi_command(wdev, WMAX_METHOD_BRIGHTNESS, &in_args,
++				     sizeof(in_args), NULL);
++}
++
++static int wmax_wmi_probe(struct wmi_device *wdev, const void *context)
++{
++	struct alienfx_platdata pdata = {
++		.wdev = wdev,
++		.ops = {
++			.upd_led = wmax_wmi_update_led,
++			.upd_brightness = wmax_wmi_update_brightness,
++		},
++	};
++	struct platform_device *pdev;
++	int ret = 0;
++
++	if (awcc) {
++		return alienware_awcc_setup(wdev);
++	} else {
++		ret = alienware_alienfx_setup(&pdata);
++		if (ret < 0)
++			return ret;
++
++		pdev = dev_get_drvdata(&wdev->dev);
++
++		ret = device_add_groups(&pdev->dev, wmax_alienfx_groups);
++		if (ret < 0)
++			alienware_alienfx_exit(wdev);
++
++		return ret;
++	}
++}
++
++static void wmax_wmi_remove(struct wmi_device *wdev)
++{
++	struct platform_device *pdev;
++
++	if (!awcc) {
++		pdev = dev_get_drvdata(&wdev->dev);
++
++		device_remove_groups(&pdev->dev, wmax_alienfx_groups);
++		alienware_alienfx_exit(wdev);
++	}
++}
++
++static const struct wmi_device_id alienware_wmax_device_id_table[] = {
++	{ WMAX_CONTROL_GUID, NULL },
++	{ },
++};
++MODULE_DEVICE_TABLE(wmi, alienware_wmax_device_id_table);
++
++static struct wmi_driver alienware_wmax_wmi_driver = {
++	.driver = {
++		.name = "alienware-wmi-wmax",
++		.probe_type = PROBE_PREFER_ASYNCHRONOUS,
++	},
++	.id_table = alienware_wmax_device_id_table,
++	.probe = wmax_wmi_probe,
++	.remove = wmax_wmi_remove,
++	.no_singleton = true,
++};
++
++int __init alienware_wmax_wmi_init(void)
++{
++	const struct dmi_system_id *id;
++
++	id = dmi_first_match(awcc_dmi_table);
++	if (id)
++		awcc = id->driver_data;
++
++	if (force_platform_profile)
++		awcc = &generic_quirks;
++
++	if (force_gmode) {
++		if (awcc)
++			awcc->gmode = true;
++		else
++			pr_warn("force_gmode requires platform profile support\n");
++	}
++
++	return wmi_driver_register(&alienware_wmax_wmi_driver);
++}
++
++void __exit alienware_wmax_wmi_exit(void)
++{
++	wmi_driver_unregister(&alienware_wmax_wmi_driver);
++}
+diff --git a/drivers/platform/x86/dell/alienware-wmi.h b/drivers/platform/x86/dell/alienware-wmi.h
+index 00b7505e1073..188440ef096e 100644
+--- a/drivers/platform/x86/dell/alienware-wmi.h
++++ b/drivers/platform/x86/dell/alienware-wmi.h
+@@ -46,7 +46,6 @@ struct color_platform {
+ 
+ struct alienfx_priv {
+ 	struct platform_device *pdev;
+-	struct alienfx_quirks *quirks;
+ 	struct led_classdev global_led;
+ 	struct color_platform colors[4];
+ 	u8 global_brightness;
 -- 
 2.48.1
 
