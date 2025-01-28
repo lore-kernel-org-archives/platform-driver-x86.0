@@ -1,145 +1,191 @@
-Received: from mail-io1-f44.google.com (mail-io1-f44.google.com [209.85.166.44])
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D47A81DE89B;
-	Tue, 28 Jan 2025 19:18:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6C5B01D61B1;
+	Tue, 28 Jan 2025 19:28:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738091888; cv=none; b=M35/sGxqIbDnvYo14WxQOqrIFysoJkcaYKJwvFn3iITD7AgaopwuDledJZMMC+h9qFe2OHMB5UKXM8l2+QWhcXnLmE7Afb/SJ/gVgnemHI3RTqvibjKTwiCTjNbXvmwYlE/8fI4c7v2bzyEHUkV+xDWZNOldzXhjOkhQF3hNPhA=
+	t=1738092507; cv=none; b=l7YZFMKcCjRQvQY81vFJoelnz2e/BEBGbUvtBWEtUaaFD2soJvX2zhoJBVtXtGwivNIxXdrgRS3ii8HygqJsZso31H6WkPfxp+YrpS3JGIvOluSNWDwUSwIxC8MdbtUN+D7aMpC7+N7UtY2FTKjnroXZc2bKPth1PskBr6pHfYc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738091888; c=relaxed/simple;
-	bh=8OhhLl4Vx3PLMhVYqtpPgEulJwvqh3pI+Ncbg2aNwmE=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=frgtwJOKLIIxWAIYts8pDOGygE6TupmycUJOfbcDjZEdvqrRoRSqIvYUUNhF/7sS5Pv4mDwOaogOfUvPilpZFXXxVF1B8kw7+ljl2vjxkQ/uzHXxIDpSiiUAa6SQazPSStQWFpbrvirksU0T0wnNyV5OiteN30CBwH2xkn32tC4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=joshuagrisham.com; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.166.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=joshuagrisham.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-io1-f44.google.com with SMTP id ca18e2360f4ac-851c4f1fb18so153011439f.2;
-        Tue, 28 Jan 2025 11:18:06 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738091886; x=1738696686;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=8OhhLl4Vx3PLMhVYqtpPgEulJwvqh3pI+Ncbg2aNwmE=;
-        b=AmosMw8eJvaNMtxV4VF6wxLtNAHfJNWlwjw/FogMvxkX5eLH8l0v4d/WFK3Zqb4aAW
-         U7exySJ5l3gX5Fe9X+EjYPr4w2zq9YnGh2WCkBBZ55Cgda7m2v34yn6eeCSIKkwyEZrs
-         u5FtKNwcu1f9feWEL9PIAfekTS08MV8Ss3IbCm70HAL8vmCOeTSqTZG8P6liR3MPbsvH
-         Po+eYYQTcR2askwKeKnSGVgn3AtMPRx/85Dd2Ofy2LVxrFnT5V+B1rf7Pdl10p21UwmZ
-         fDRCJ030vwOqijYR2nK/rwZqQKAqzlYexBSYn0EtMuPg2R2oWbrBt7RFRGmWQMNJNe+W
-         9oow==
-X-Forwarded-Encrypted: i=1; AJvYcCV3dD46Jt/zBU/h+LOUoFzFuSIBevuinFUzGfoJiso2NFlh2/c5xisArmK9qCOQlgb2Cb98BFAzfSw=@vger.kernel.org, AJvYcCV9de2egIUJet0hLjuL2fX/RQAr52+7RcjWJXBX7prEFfnw89Njs0WbyQCcE0PICyuGisIgCjBtuydXGYpc@vger.kernel.org, AJvYcCXFwbNJ5dsy9olsB/ag+KFv5OmunHTi/0DKweENQuWBsXNqCsrwI5/WRmVr0YvHn2We9wXGTjaDXNHNgspo3h4XSA7OaA==@vger.kernel.org
-X-Gm-Message-State: AOJu0YwMY0PxdK2pUKIQc89AYgUveraTRueXME/bDD2ql2IUmNGUCEjT
-	jELn29KLefGsK1z9v1wdWc71/8xJvkSDKa+aUYnmfBITAEg26Ezk5FjyMXNUttY=
-X-Gm-Gg: ASbGncu4Gf//sp2r/dmFXjqHXSlYStCG29i7/Rh4joVu+mtabEQOp0Az/93rXNoOO2y
-	0EMGdcroVL67Be9/j+LtXOo5Oo40Li4Equ26Gd+NTGk2b+NlCMCBFERWSEbaTIL6DqTGx7U91VU
-	cn5rAwLFLUWu0G3DxtLGcZFXLwig3mK1m1IafNeBcIGicECitC1OqPRxB9zsPbrK/kKpU1WpUXi
-	QozYfRbR/JHaro4wToL0FGH+DaPoX0rWiofDUI+6tuXp6pWjFqh8+cbiVR26nmrdEPLSgM6lxzt
-	pO6X9MJqR22EfXZj+XMUP2Wp6h/LkA/O0BL3PFmwphZIPIsEydnPAsJ8lKxG
-X-Google-Smtp-Source: AGHT+IEesSbRpE31Mu71qJlrFXgJPYG8LKRa/INW1GZ+U38Sd0Qj86hvPUnrl5HjD4pbkBHw2CKtQg==
-X-Received: by 2002:a05:6602:1696:b0:84a:4f3a:fa2a with SMTP id ca18e2360f4ac-85411100c65mr51608339f.1.1738091885722;
-        Tue, 28 Jan 2025 11:18:05 -0800 (PST)
-Received: from mail-il1-f170.google.com (mail-il1-f170.google.com. [209.85.166.170])
-        by smtp.gmail.com with ESMTPSA id 8926c6da1cb9f-4ec1da31b81sm3307134173.52.2025.01.28.11.18.04
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 28 Jan 2025 11:18:04 -0800 (PST)
-Received: by mail-il1-f170.google.com with SMTP id e9e14a558f8ab-3cfdf301fa4so9684515ab.0;
-        Tue, 28 Jan 2025 11:18:04 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCVYBzVy9M6o4RjrCf9L3AMYQY7axZjvtLIwd22QNKylm2xOggU56BqsEsjPKkKm6rOjirYd9TEgGU4=@vger.kernel.org, AJvYcCWnhPM89DhMiAPqgnSqI5yzqPABnMXHpKLAdpLywRNJdSPZtHmToYfsN6IqlBo5RnU29/d1ptoyc4/NEMpn8qNqobG3hg==@vger.kernel.org, AJvYcCXH+isVImOcjLtjPb0bZo3DbxOM0skejphjGKuYHI4ue+/NUE4fhn1sXcdrqywcjP70h9GjDTcMEFilReHR@vger.kernel.org
-X-Received: by 2002:a05:6e02:98:b0:3ce:7fc3:9f76 with SMTP id
- e9e14a558f8ab-3cffe3e527cmr3513855ab.6.1738091884575; Tue, 28 Jan 2025
- 11:18:04 -0800 (PST)
+	s=arc-20240116; t=1738092507; c=relaxed/simple;
+	bh=n5k+kdOWFCqZ0uk5hOxAOpLLJkFFgvcFWETQFqM2RQo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=UUu4eFR40zzSH2EXMOHiwYtJd/SzYn73s+RjzRZ/7+P6AwQam/46t/382j8Dpp7XbJyuFgrx/+aqAUdPd7HtzZKBw/a3V2bUcXQzEGSuYR8aBubgYv8NfhIAD17UD2adLGzFMNQHxk0KX6TiJJXRmqM1GmvqLpmiwE86SIaQVSU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=X7DzgIEI; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=gjs0esMU; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=y688SLY7; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=9Rahx42h; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="X7DzgIEI";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="gjs0esMU";
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="y688SLY7";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="9Rahx42h"
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id 40D7E210F9;
+	Tue, 28 Jan 2025 19:28:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1738092497;
+	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
+	 cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=cu5AW9e6LIlMe18vHX/cu2btQmvEuNdVbxSGH23BpgQ=;
+	b=X7DzgIEIos5paB261Thz8Qi51sOVFwb5dSUTRRMycQLt/5T7754KjcgbjT+EPwV5fdLaaa
+	cvSOk6TY2qEeLsUeC5G5KNg4CQMIkX2ooAejwo/XceW1/fc11wYZyhlGSl7Q8n+cEjO9OJ
+	Ii8fxytnZFdNjyQYJ4iJxYMOiaYZluU=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1738092497;
+	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
+	 cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=cu5AW9e6LIlMe18vHX/cu2btQmvEuNdVbxSGH23BpgQ=;
+	b=gjs0esMUPchB4K4RtIem58fDt+M6QJS4Mh5QJBMLR40KmpfdO9OR+d1oMn3UBKFmkmzEEt
+	+M/96OKGcvLSGHBQ==
+Authentication-Results: smtp-out1.suse.de;
+	dkim=pass header.d=suse.cz header.s=susede2_rsa header.b=y688SLY7;
+	dkim=pass header.d=suse.cz header.s=susede2_ed25519 header.b=9Rahx42h
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1738092496;
+	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
+	 cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=cu5AW9e6LIlMe18vHX/cu2btQmvEuNdVbxSGH23BpgQ=;
+	b=y688SLY7/DL5p8EccbkUszio2tZbA94boT4rwz+ACMq588fgH+Vf8EqkXANQNYWiQFG7DT
+	anyf2Nx63Z/9IvWw9iThlkRnAXfe4qWQrFOQ8ghtd0mhYInrapGCBP4qDwcTlbxOa+r+Gv
+	qtAW+mLbxCjg/w5prt5Mp5mE0k5zC1A=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1738092496;
+	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
+	 cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=cu5AW9e6LIlMe18vHX/cu2btQmvEuNdVbxSGH23BpgQ=;
+	b=9Rahx42hI6P64ZFl8I0lTTg8Zv21R573Kl+t/8z5GIP+ELkdKbRYFovpEy1CA3oSmAZSUq
+	/XJL5V34JZcxoYCg==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id B4BB313625;
+	Tue, 28 Jan 2025 19:28:15 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id MMhrK88vmWf/FgAAD6G6ig
+	(envelope-from <dsterba@suse.cz>); Tue, 28 Jan 2025 19:28:15 +0000
+Date: Tue, 28 Jan 2025 20:28:14 +0100
+From: David Sterba <dsterba@suse.cz>
+To: Easwar Hariharan <eahariha@linux.microsoft.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>,
+	Yaron Avizrat <yaron.avizrat@intel.com>,
+	Oded Gabbay <ogabbay@kernel.org>,
+	Julia Lawall <Julia.Lawall@inria.fr>,
+	Nicolas Palix <nicolas.palix@imag.fr>,
+	James Smart <james.smart@broadcom.com>,
+	Dick Kennedy <dick.kennedy@broadcom.com>,
+	"James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>,
+	"Martin K. Petersen" <martin.petersen@oracle.com>,
+	Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>,
+	Chris Mason <clm@fb.com>, Josef Bacik <josef@toxicpanda.com>,
+	David Sterba <dsterba@suse.com>, Ilya Dryomov <idryomov@gmail.com>,
+	Dongsheng Yang <dongsheng.yang@easystack.cn>,
+	Jens Axboe <axboe@kernel.dk>, Xiubo Li <xiubli@redhat.com>,
+	Damien Le Moal <dlemoal@kernel.org>,
+	Niklas Cassel <cassel@kernel.org>, Carlos Maiolino <cem@kernel.org>,
+	"Darrick J. Wong" <djwong@kernel.org>,
+	Sebastian Reichel <sre@kernel.org>, Keith Busch <kbusch@kernel.org>,
+	Christoph Hellwig <hch@lst.de>, Sagi Grimberg <sagi@grimberg.me>,
+	Frank Li <Frank.Li@nxp.com>, Mark Brown <broonie@kernel.org>,
+	Shawn Guo <shawnguo@kernel.org>,
+	Sascha Hauer <s.hauer@pengutronix.de>,
+	Pengutronix Kernel Team <kernel@pengutronix.de>,
+	Fabio Estevam <festevam@gmail.com>,
+	Shyam Sundar S K <Shyam-sundar.S-k@amd.com>,
+	Hans de Goede <hdegoede@redhat.com>,
+	Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	Henrique de Moraes Holschuh <hmh@hmh.eng.br>,
+	Selvin Xavier <selvin.xavier@broadcom.com>,
+	Kalesh AP <kalesh-anakkur.purayil@broadcom.com>,
+	Jason Gunthorpe <jgg@ziepe.ca>, Leon Romanovsky <leon@kernel.org>,
+	cocci@inria.fr, linux-kernel@vger.kernel.org,
+	linux-scsi@vger.kernel.org, dri-devel@lists.freedesktop.org,
+	linux-sound@vger.kernel.org, linux-btrfs@vger.kernel.org,
+	ceph-devel@vger.kernel.org, linux-block@vger.kernel.org,
+	linux-ide@vger.kernel.org, linux-xfs@vger.kernel.org,
+	linux-pm@vger.kernel.org, linux-nvme@lists.infradead.org,
+	linux-spi@vger.kernel.org, imx@lists.linux.dev,
+	linux-arm-kernel@lists.infradead.org,
+	platform-driver-x86@vger.kernel.org,
+	ibm-acpi-devel@lists.sourceforge.net, linux-rdma@vger.kernel.org
+Subject: Re: [PATCH 05/16] btrfs: convert timeouts to secs_to_jiffies()
+Message-ID: <20250128192814.GZ5777@suse.cz>
+Reply-To: dsterba@suse.cz
+References: <20250128-converge-secs-to-jiffies-part-two-v1-0-9a6ecf0b2308@linux.microsoft.com>
+ <20250128-converge-secs-to-jiffies-part-two-v1-5-9a6ecf0b2308@linux.microsoft.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250118202632.8352-1-josh@joshuagrisham.com> <e67bf708-be8a-4331-b250-d2f31e38536b@t-8ch.de>
- <CAMF+Keb5UzEUeim=33JR=Vv8qK7xqGn_jjNdtZMQTFtrpKrgSA@mail.gmail.com> <D7B8WVUD7F4B.1BL2WE2BNRCX6@gmail.com>
-In-Reply-To: <D7B8WVUD7F4B.1BL2WE2BNRCX6@gmail.com>
-From: Joshua Grisham <josh@joshuagrisham.com>
-Date: Tue, 28 Jan 2025 20:17:53 +0100
-X-Gmail-Original-Message-ID: <CAMF+Kebx4sU+0p+pFaH1Lz4q1xApM8iS9UAYP=sZnE2GDa32ww@mail.gmail.com>
-X-Gm-Features: AWEUYZngrz9lEFuBRh-H1wNKkp4N_HGkDO6g5cGrCKBjGN6lb_FqH1mnMy4Wv1A
-Message-ID: <CAMF+Kebx4sU+0p+pFaH1Lz4q1xApM8iS9UAYP=sZnE2GDa32ww@mail.gmail.com>
-Subject: Re: [PATCH v8] platform/x86: samsung-galaxybook: Add
- samsung-galaxybook driver
-To: Kurt Borja <kuurtb@gmail.com>
-Cc: Joshua Grisham <josh@joshuagrisham.com>, =?UTF-8?Q?Thomas_Wei=C3=9Fschuh?= <linux@weissschuh.net>, 
-	W_Armin@gmx.de, ilpo.jarvinen@linux.intel.com, hdegoede@redhat.com, 
-	platform-driver-x86@vger.kernel.org, corbet@lwn.net, 
-	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250128-converge-secs-to-jiffies-part-two-v1-5-9a6ecf0b2308@linux.microsoft.com>
+User-Agent: Mutt/1.5.23.1-rc1 (2014-03-12)
+X-Rspamd-Queue-Id: 40D7E210F9
+X-Spam-Level: 
+X-Spamd-Result: default: False [-2.71 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	SUSPICIOUS_RECIPS(1.50)[];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	HAS_REPLYTO(0.30)[dsterba@suse.cz];
+	R_DKIM_ALLOW(-0.20)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	MX_GOOD(-0.01)[];
+	ARC_NA(0.00)[];
+	SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	TO_DN_SOME(0.00)[];
+	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	MIME_TRACE(0.00)[0:+];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	FROM_HAS_DN(0.00)[];
+	FREEMAIL_CC(0.00)[linux-foundation.org,intel.com,kernel.org,inria.fr,imag.fr,broadcom.com,HansenPartnership.com,oracle.com,perex.cz,suse.com,fb.com,toxicpanda.com,gmail.com,easystack.cn,kernel.dk,redhat.com,lst.de,grimberg.me,nxp.com,pengutronix.de,amd.com,linux.intel.com,hmh.eng.br,ziepe.ca,vger.kernel.org,lists.freedesktop.org,lists.infradead.org,lists.linux.dev,lists.sourceforge.net];
+	RCVD_TLS_ALL(0.00)[];
+	RCVD_COUNT_TWO(0.00)[2];
+	TO_MATCH_ENVRCPT_SOME(0.00)[];
+	REPLYTO_ADDR_EQ_FROM(0.00)[];
+	FROM_EQ_ENVFROM(0.00)[];
+	REPLYTO_DOM_NEQ_TO_DOM(0.00)[];
+	RCPT_COUNT_GT_50(0.00)[59];
+	RECEIVED_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:106:10:150:64:167:received];
+	MID_RHS_MATCH_FROM(0.00)[];
+	DKIM_TRACE(0.00)[suse.cz:+];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo,imap1.dmz-prg2.suse.org:rdns,suse.cz:replyto,suse.cz:dkim,suse.cz:mid,suse.com:email]
+X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
+X-Rspamd-Action: no action
+X-Spam-Score: -2.71
+X-Spam-Flag: NO
 
-Thank you Kurt!
+On Tue, Jan 28, 2025 at 06:21:50PM +0000, Easwar Hariharan wrote:
+> Commit b35108a51cf7 ("jiffies: Define secs_to_jiffies()") introduced
+> secs_to_jiffies().  As the value here is a multiple of 1000, use
+> secs_to_jiffies() instead of msecs_to_jiffies to avoid the multiplication.
+> 
+> This is converted using scripts/coccinelle/misc/secs_to_jiffies.cocci with
+> the following Coccinelle rules:
+> 
+> @depends on patch@
+> expression E;
+> @@
+> 
+> -msecs_to_jiffies
+> +secs_to_jiffies
+> (E
+> - * \( 1000 \| MSEC_PER_SEC \)
+> )
+> 
+> Signed-off-by: Easwar Hariharan <eahariha@linux.microsoft.com>
 
-Den l=C3=B6r 25 jan. 2025 kl 16:06 skrev Kurt Borja <kuurtb@gmail.com>:
->
-> Now I understand the original problem better. I didn't consider this
-> possibility when designing the callback.
->
-> While this is a fine solution I believe Thomas' EOPNOTSUPP solution is
-> the way to go. I think positive err value would be the safest but you
-> should wait for the advice of someone with more experience.
->
-> Aside from that I really like how the whole platform profile sections
-> works now. Good design choices :)
->
-> ~ Kurt
->
-> > <snip>
-
-Regarding using this positive error code internally within the module,
-I thought about maybe adding a comment to galaxybook_probe() before
-all of the inits which describe this a bit -- do you all think this
-will be helpful or is it clear enough / does not matter and can be
-skipped?
-
-I also realized that maybe it is worth to describe that a specific
-sequence is needed for doing these "enable feature" + init calls to
-the ACPI methods otherwise some devices were reported as starting to
-reject the payloads if the sequence was not followed.
-
-Based on these two then I have drafted a comment sort of like this to
-put in galaxybook_probe() before the init() calls:
-
-/*
-* Features must be enabled and initialized in the following order to
-* avoid failures seen on certain devices:
-* - GB_SASB_POWER_MANAGEMENT (including performance mode)
-* - GB_SASB_KBD_BACKLIGHT
-* - GB_SASB_BLOCK_RECORDING (as part of fw_attrs init)
-*
-* The init function for features which are not supported on all devices
-* will return EOPNOTSUPP (positive to differentiate it from upstream
-* error codes) if the feature is not working and should be ignored.
-*/
-
-Does adding something like this seem like it would help make
-everything more clear (especially thinking when new refactoring comes
-by other maintainers in X months/years/decades, it would probably help
-them to know these subtleties, right?)?
-
-If this comment (you all are welcome to suggest wording tweaks as
-well, of course!) plus the few other small tweaks make sense then I
-can prep this to send as a new version. But I am holding a bit in
-hopes that the 6.14 stuff gets merged to pdx86 for-next so that I can
-go ahead with implementing Thomas's new power supply extension
-interface at the same time.
-
-Because there are multiple variations to these devices, and there were
-some small issues that users with other devices found, I was
-thinking/hoping once all looks good for all reviewers, including
-implementing the power supply extension, that this could be merged in
-to for-next and then I can ask a few people with other supported
-devices to test this revamped (and in some ways completely refactored)
-driver directly from the branch so that we can try to catch any other
-issues that I did not see on my device before it is proposed as a
-candidate for mainline -- does that sound reasonable?
-
-Thanks again!
-
-Best regards,
-Joshua
+Acked-by: David Sterba <dsterba@suse.com>
