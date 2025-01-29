@@ -1,93 +1,92 @@
-Received: from todd.t-8ch.de (todd.t-8ch.de [159.69.126.157])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 796551E50E;
-	Tue, 28 Jan 2025 21:17:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.69.126.157
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EFFC543166;
+	Wed, 29 Jan 2025 00:16:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738099044; cv=none; b=rlK+PgDa7B4oPWWtgc2RonQkYfhETy3/UDObxLL/Bxd2vqo2x8Jmt5WQLh0UjqYpV5/YgoSVvhDp8I3QPRXoDOnqcQJzkvGH4/GXABURf3aER59SWAaZkp8RpGylTCFcYsfw9X4fzagTuC/9y92QUadUH0oPh0lPHRvRldH4wZU=
+	t=1738109807; cv=none; b=ofv9nweN/Unhza8ODLA/fSuHdda1p+DXhE523b/yp/k7zUNza6/CTuCcCaA7ZxUikgEn7PryvTLKZIwlc4xnbvCjWfnar6+D9GeT9shVnok7hIdjjguYjMJda68R6Bd/BJvgW1hkrY+545Nwx0mnOMBoUJR/oExBqV60GY6zX80=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738099044; c=relaxed/simple;
-	bh=I3OCB7E5f3b5De8XkNNPCLkp0lXOgj2B4g18+47DLd0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=g50A6F99Bpbvrmj4ekmyZM7gxpWkbAUPcRTZPJddCheRjgT5K4i6SRSQQdjmfRCmLYjeQe5K4/AobMuiI6tZAGo8e27a68UzCY/EVwylEwXR5QzOakcRJH9voPWsmC/bESeqSGdb2x2jtAFCJAmFglyfZxB7PjE3Np7RbP4pi1g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=weissschuh.net; spf=pass smtp.mailfrom=weissschuh.net; dkim=pass (1024-bit key) header.d=weissschuh.net header.i=@weissschuh.net header.b=FqZkNZ0l; arc=none smtp.client-ip=159.69.126.157
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=weissschuh.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=weissschuh.net
+	s=arc-20240116; t=1738109807; c=relaxed/simple;
+	bh=zZU6hynWCHp+6F/RCQmfqyOYkRbiqQZ0uQFQk367ytg=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=AeI2jjTOyzblWUgseBqsS4twqul6hxxLOzsNmtxWsBmQfrO132FEEf19nWxg/xk4CjJ/TQmWHqPc2unJvqvj4Ly0V13xd4XbehliYvkN3jUxIBz4PeI0EvXrNSJd9RcfmJ+KEFr7kgg0Ed2USPBCVjAFOEqXe6IuOGeoHCTyj9A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=AS2j4JP5; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=weissschuh.net header.i=@weissschuh.net header.b="FqZkNZ0l"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=weissschuh.net;
-	s=mail; t=1738099032;
-	bh=I3OCB7E5f3b5De8XkNNPCLkp0lXOgj2B4g18+47DLd0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=FqZkNZ0lJPMqnzqYdpDKphpfeAqfKSbsbtDIf3rD9KuIzuexL3EU9vqR5HkfKawAq
-	 5Gsg0bFZpkpCYMyaQIPgZchI3l9mNok6bG9gLVTiUNcggk//W/DsdSKEMsUCMfGkJI
-	 OzDsAbeRy7diL3D/+0HzfgRNnphgeviJ72BmiJpc=
-Date: Tue, 28 Jan 2025 22:17:11 +0100
-From: Thomas =?utf-8?Q?Wei=C3=9Fschuh?= <linux@weissschuh.net>
-To: Joshua Grisham <josh@joshuagrisham.com>
-Cc: Kurt Borja <kuurtb@gmail.com>, W_Armin@gmx.de, 
-	ilpo.jarvinen@linux.intel.com, hdegoede@redhat.com, platform-driver-x86@vger.kernel.org, 
-	corbet@lwn.net, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v8] platform/x86: samsung-galaxybook: Add
- samsung-galaxybook driver
-Message-ID: <628d5725-2d20-4298-862d-ad0e47782d15@t-8ch.de>
-References: <20250118202632.8352-1-josh@joshuagrisham.com>
- <e67bf708-be8a-4331-b250-d2f31e38536b@t-8ch.de>
- <CAMF+Keb5UzEUeim=33JR=Vv8qK7xqGn_jjNdtZMQTFtrpKrgSA@mail.gmail.com>
- <D7B8WVUD7F4B.1BL2WE2BNRCX6@gmail.com>
- <CAMF+Kebx4sU+0p+pFaH1Lz4q1xApM8iS9UAYP=sZnE2GDa32ww@mail.gmail.com>
+	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="AS2j4JP5"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 994C4C4CED3;
+	Wed, 29 Jan 2025 00:16:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linux-foundation.org;
+	s=korg; t=1738109806;
+	bh=zZU6hynWCHp+6F/RCQmfqyOYkRbiqQZ0uQFQk367ytg=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=AS2j4JP5RIAisJwaJPGo5rdD+WQkiOVOSd2qjWS7o62PB/KfGo+AtIeEIRlVi8ca4
+	 DcFpL5pMszZR4AoEDS94lZdMmpR+YhI7fvUGwBGQGj85DpwI7Ag5fgschNnRNtAEJ5
+	 EXSOU+Vpu5p468XbHO3vy3GdYQe6R4CubgmVMLqk=
+Date: Tue, 28 Jan 2025 16:16:43 -0800
+From: Andrew Morton <akpm@linux-foundation.org>
+To: Easwar Hariharan <eahariha@linux.microsoft.com>
+Cc: Yaron Avizrat <yaron.avizrat@intel.com>, Oded Gabbay
+ <ogabbay@kernel.org>, Julia Lawall <Julia.Lawall@inria.fr>, Nicolas Palix
+ <nicolas.palix@imag.fr>, James Smart <james.smart@broadcom.com>, Dick
+ Kennedy <dick.kennedy@broadcom.com>, "James E.J. Bottomley"
+ <James.Bottomley@HansenPartnership.com>, "Martin K. Petersen"
+ <martin.petersen@oracle.com>, Jaroslav Kysela <perex@perex.cz>, Takashi
+ Iwai <tiwai@suse.com>, Chris Mason <clm@fb.com>, Josef Bacik
+ <josef@toxicpanda.com>, David Sterba <dsterba@suse.com>, Ilya Dryomov
+ <idryomov@gmail.com>, Dongsheng Yang <dongsheng.yang@easystack.cn>, Jens
+ Axboe <axboe@kernel.dk>, Xiubo Li <xiubli@redhat.com>, Damien Le Moal
+ <dlemoal@kernel.org>, Niklas Cassel <cassel@kernel.org>, Carlos Maiolino
+ <cem@kernel.org>, "Darrick J. Wong" <djwong@kernel.org>, Sebastian Reichel
+ <sre@kernel.org>, Keith Busch <kbusch@kernel.org>, Christoph Hellwig
+ <hch@lst.de>, Sagi Grimberg <sagi@grimberg.me>, Frank Li
+ <Frank.Li@nxp.com>, Mark Brown <broonie@kernel.org>, Shawn Guo
+ <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix
+ Kernel Team <kernel@pengutronix.de>, Fabio Estevam <festevam@gmail.com>,
+ Shyam Sundar S K <Shyam-sundar.S-k@amd.com>, Hans de Goede
+ <hdegoede@redhat.com>, Ilpo =?ISO-8859-1?Q?J=E4rvinen?=
+ <ilpo.jarvinen@linux.intel.com>, Henrique de Moraes Holschuh
+ <hmh@hmh.eng.br>, Selvin Xavier <selvin.xavier@broadcom.com>, Kalesh AP
+ <kalesh-anakkur.purayil@broadcom.com>, Jason Gunthorpe <jgg@ziepe.ca>, Leon
+ Romanovsky <leon@kernel.org>, cocci@inria.fr, linux-kernel@vger.kernel.org,
+ linux-scsi@vger.kernel.org, dri-devel@lists.freedesktop.org,
+ linux-sound@vger.kernel.org, linux-btrfs@vger.kernel.org,
+ ceph-devel@vger.kernel.org, linux-block@vger.kernel.org,
+ linux-ide@vger.kernel.org, linux-xfs@vger.kernel.org,
+ linux-pm@vger.kernel.org, linux-nvme@lists.infradead.org,
+ linux-spi@vger.kernel.org, imx@lists.linux.dev,
+ linux-arm-kernel@lists.infradead.org, platform-driver-x86@vger.kernel.org,
+ ibm-acpi-devel@lists.sourceforge.net, linux-rdma@vger.kernel.org
+Subject: Re: [PATCH 00/16] Converge on using secs_to_jiffies() part two
+Message-Id: <20250128161643.289d9fe705ef2fdba0b82a52@linux-foundation.org>
+In-Reply-To: <20250128-converge-secs-to-jiffies-part-two-v1-0-9a6ecf0b2308@linux.microsoft.com>
+References: <20250128-converge-secs-to-jiffies-part-two-v1-0-9a6ecf0b2308@linux.microsoft.com>
+X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAMF+Kebx4sU+0p+pFaH1Lz4q1xApM8iS9UAYP=sZnE2GDa32ww@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-Hi Joshua,
+On Tue, 28 Jan 2025 18:21:45 +0000 Easwar Hariharan <eahariha@linux.microsoft.com> wrote:
 
-sorry for the late reply.
-
-On 2025-01-28 20:17:53+0100, Joshua Grisham wrote:
-> Thank you Kurt!
+> This is the second series (part 1*) that converts users of msecs_to_jiffies() that
+> either use the multiply pattern of either of:
+> - msecs_to_jiffies(N*1000) or
+> - msecs_to_jiffies(N*MSEC_PER_SEC)
 > 
-> Den lör 25 jan. 2025 kl 16:06 skrev Kurt Borja <kuurtb@gmail.com>:
-> >
-> > Now I understand the original problem better. I didn't consider this
-> > possibility when designing the callback.
-> >
-> > While this is a fine solution I believe Thomas' EOPNOTSUPP solution is
-> > the way to go. I think positive err value would be the safest but you
-> > should wait for the advice of someone with more experience.
-> >
-> > Aside from that I really like how the whole platform profile sections
-> > works now. Good design choices :)
-> >
-> > ~ Kurt
-> >
-> > > <snip>
+> where N is a constant or an expression, to avoid the multiplication.
 > 
-> Regarding using this positive error code internally within the module,
-> I thought about maybe adding a comment to galaxybook_probe() before
-> all of the inits which describe this a bit -- do you all think this
-> will be helpful or is it clear enough / does not matter and can be
-> skipped?
+> The conversion is made with Coccinelle with the secs_to_jiffies() script
+> in scripts/coccinelle/misc. Attention is paid to what the best change
+> can be rather than restricting to what the tool provides.
+> 
+> Andrew has kindly agreed to take the series through mm.git modulo the
+> patches maintainers want to pick through their own trees.
 
-To me that sounds reasonable.
+I added patches 2-16 to mm.git.  If any of these later get merged into
+a subsystem tree, Stephen will tell us and I'll drop the mm.git copy.
 
-<snip>
-
-> If this comment (you all are welcome to suggest wording tweaks as
-> well, of course!) plus the few other small tweaks make sense then I
-> can prep this to send as a new version. But I am holding a bit in
-> hopes that the 6.14 stuff gets merged to pdx86 for-next so that I can
-> go ahead with implementing Thomas's new power supply extension
-> interface at the same time.
-
-Nice :-)
-
-<snip>
