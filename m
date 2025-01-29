@@ -1,144 +1,163 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC2E82CA9;
-	Wed, 29 Jan 2025 13:13:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.8
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C45563C38;
+	Wed, 29 Jan 2025 13:47:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738156389; cv=none; b=PyFzC6kJ0jFowwD0nfgvsJ7ZZYxmaOnstxAaMY7iyEboxMcQuTEAv9FOOTgaL3DqsiTonJ4J77pZa1hEjrBVvFJUfnpWJTjXWdqYRGALTgduEE5c85PDYxd/CoFojB03+0NNsqD97xzar5ptK2/oIZbc+QhIXqQEOXwsEBMOdmE=
+	t=1738158431; cv=none; b=jJ3HaSPlOLAxWdX0elzDln2MG8ZhpsfrYAjg3jkCApO7OxJec6U83ty7TDdwLTrIUYb9pO9NbgRs9C8oTxuTQLaaBcA2xOOyKo1L/3JOEzgE/fnr7AtQWeNRU4huS6P6xnuep5wbWFHr8PMhwLHHYKrC0WCr7yatHVctsN0Bagg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738156389; c=relaxed/simple;
-	bh=uWLMAkjiPxmd0IZ1cdFsHKZZFguDfleylm6v197BRzQ=;
+	s=arc-20240116; t=1738158431; c=relaxed/simple;
+	bh=8SYv6mtEgfjDqz5gzDxWvuKmmngjVuTcnORh0azYyCw=;
 	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=ARMhNx1n9bES05kDWAepJ5y3q8rZYyi8p/4J8ZHrvQvT0EdpWvQfAQH1xqZo/87qDwRYT59eiSHTwVf7gcz2QxCNsu5Z7DxUThGsGNhsbMgLX+mswDSCUesSq1KyMaBY1fxIWD4dnZ7o/k0De5FAp3xhlzu4Ob1ycJU+VBKCveY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=SxBm5goJ; arc=none smtp.client-ip=192.198.163.8
+	 MIME-Version:Content-Type; b=toCbtC96ab9WhbrBouNGxOjA2l+zZ36bcpiNUQpvR849oAvKiMUlaXaBKc74WP6zEhFz8ArN0Y5WmwiW6acnsEjK56RqndWeyuwhzsQpUHHkKLllLZdlncPVgTUOqgPinCQyl3hTzq6EQcWju8q+1i6IVhoEq81tvWvJfpbCYRs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=i3snAP8j; arc=none smtp.client-ip=192.198.163.14
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="SxBm5goJ"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="i3snAP8j"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1738156388; x=1769692388;
+  t=1738158430; x=1769694430;
   h=from:date:to:cc:subject:in-reply-to:message-id:
    references:mime-version;
-  bh=uWLMAkjiPxmd0IZ1cdFsHKZZFguDfleylm6v197BRzQ=;
-  b=SxBm5goJ+drv5/j21Nr5L4bB4AiKSLqdl2lYsm1T+xntrZBkeN0w8M1G
-   F4+NyhAgrsl+fxFpq7CVKVv5bZ5TG8R2r9ALR7mZHn8ifAxDjViTWF9n2
-   Qfeq1wtGoBTmk2U4tQ7WMchq3EE+X/8v1H0sOUbLglOQs+gH1LZTe1tFI
-   rw9aLIelfb6Pk4CJOaoZdF+4IhUiy0K/KB7NE5qfaBpzkCHW714QRBeEk
-   Q+7U1kkK2AckCQsce2i90njW9G8nEXxHkKqoPxYUtVpVSotop9EE/u155
-   b1Aa+BuhHplKP3brftgSYN4fRO8fdv0S49WLNBP0cF4ag6En7yfknR6NS
-   A==;
-X-CSE-ConnectionGUID: Xq1YKzuARa+e19SIixMJMQ==
-X-CSE-MsgGUID: baOTcUmERJ+Zx4XQgK+dTw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11329"; a="56203313"
+  bh=8SYv6mtEgfjDqz5gzDxWvuKmmngjVuTcnORh0azYyCw=;
+  b=i3snAP8jXIHeErsz9hJRa50aBmKa0EBcqsFnqHkvbyuxoZUnBOixTqrU
+   AgipEZY20PBc1Higrt7SJB7acCKEKse5CHxE34i0NszSEi5CTi5AQ0YiP
+   B8p5NpoZE6TrZrACr2ueJ+5GCKRGQW0CmI+Bz1qkr+TFKKB/hOV1V2XJO
+   cCmH6t3bC0R/NGCUjNR02xcZOWs+IBJwrSnnIdf9MZMUDuxoUkkxsVMqT
+   a3gsj+on1xb4yvCS+CVYHFLDGm4bG37Z3nO+cXYHehE+u6WZF+AMpbaA0
+   LjQPQW5CHWxtXUCRKUcIaDCFGLd8HXiXYW0uA7oQl+LxUbF5Pacg3dwiJ
+   Q==;
+X-CSE-ConnectionGUID: 0ZnC+eFcRoejaeOzJc2yMg==
+X-CSE-MsgGUID: xI5XCawBTYqS3xpGnboHZQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11329"; a="38927513"
 X-IronPort-AV: E=Sophos;i="6.13,243,1732608000"; 
-   d="scan'208";a="56203313"
-Received: from fmviesa005.fm.intel.com ([10.60.135.145])
-  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Jan 2025 05:13:06 -0800
-X-CSE-ConnectionGUID: VQdEsMXqR8qBKjmeEKbOAw==
-X-CSE-MsgGUID: O+KtZNkvRJq7JgLfGnW4VQ==
+   d="scan'208";a="38927513"
+Received: from orviesa002.jf.intel.com ([10.64.159.142])
+  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Jan 2025 05:47:09 -0800
+X-CSE-ConnectionGUID: 7X8MdfXsRCmVWPRvxOmlEA==
+X-CSE-MsgGUID: v6aCDIzBQm6RtZKAc5ESAQ==
 X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
-   d="scan'208";a="113646751"
-Received: from ettammin-mobl2.ger.corp.intel.com (HELO localhost) ([10.245.245.222])
-  by fmviesa005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Jan 2025 05:12:52 -0800
+X-IronPort-AV: E=Sophos;i="6.13,243,1732608000"; 
+   d="scan'208";a="139926940"
+Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.222])
+  by orviesa002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Jan 2025 05:47:05 -0800
 From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Wed, 29 Jan 2025 15:12:49 +0200 (EET)
-To: Easwar Hariharan <eahariha@linux.microsoft.com>
-cc: Andrew Morton <akpm@linux-foundation.org>, 
-    Yaron Avizrat <yaron.avizrat@intel.com>, Oded Gabbay <ogabbay@kernel.org>, 
-    Julia Lawall <Julia.Lawall@inria.fr>, 
-    Nicolas Palix <nicolas.palix@imag.fr>, 
-    James Smart <james.smart@broadcom.com>, 
-    Dick Kennedy <dick.kennedy@broadcom.com>, 
-    "James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>, 
-    "Martin K. Petersen" <martin.petersen@oracle.com>, 
-    Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, 
-    Chris Mason <clm@fb.com>, Josef Bacik <josef@toxicpanda.com>, 
-    David Sterba <dsterba@suse.com>, Ilya Dryomov <idryomov@gmail.com>, 
-    Dongsheng Yang <dongsheng.yang@easystack.cn>, Jens Axboe <axboe@kernel.dk>, 
-    Xiubo Li <xiubli@redhat.com>, Damien Le Moal <dlemoal@kernel.org>, 
-    Niklas Cassel <cassel@kernel.org>, Carlos Maiolino <cem@kernel.org>, 
-    "Darrick J. Wong" <djwong@kernel.org>, Sebastian Reichel <sre@kernel.org>, 
-    Keith Busch <kbusch@kernel.org>, Christoph Hellwig <hch@lst.de>, 
-    Sagi Grimberg <sagi@grimberg.me>, Frank Li <Frank.Li@nxp.com>, 
-    Mark Brown <broonie@kernel.org>, Shawn Guo <shawnguo@kernel.org>, 
-    Sascha Hauer <s.hauer@pengutronix.de>, 
-    Pengutronix Kernel Team <kernel@pengutronix.de>, 
-    Fabio Estevam <festevam@gmail.com>, 
-    Shyam Sundar S K <Shyam-sundar.S-k@amd.com>, 
-    Hans de Goede <hdegoede@redhat.com>, 
-    Henrique de Moraes Holschuh <hmh@hmh.eng.br>, 
-    Selvin Xavier <selvin.xavier@broadcom.com>, 
-    Kalesh AP <kalesh-anakkur.purayil@broadcom.com>, 
-    Jason Gunthorpe <jgg@ziepe.ca>, Leon Romanovsky <leon@kernel.org>, 
-    cocci@inria.fr, LKML <linux-kernel@vger.kernel.org>, 
-    linux-scsi@vger.kernel.org, dri-devel@lists.freedesktop.org, 
-    linux-sound@vger.kernel.org, linux-btrfs@vger.kernel.org, 
-    ceph-devel@vger.kernel.org, linux-block@vger.kernel.org, 
-    linux-ide@vger.kernel.org, linux-xfs@vger.kernel.org, 
-    linux-pm@vger.kernel.org, linux-nvme@lists.infradead.org, 
-    linux-spi@vger.kernel.org, imx@lists.linux.dev, 
-    linux-arm-kernel@lists.infradead.org, platform-driver-x86@vger.kernel.org, 
-    ibm-acpi-devel@lists.sourceforge.net, linux-rdma@vger.kernel.org
-Subject: Re: [PATCH 14/16] platform/x86/amd/pmf: convert timeouts to
- secs_to_jiffies()
-In-Reply-To: <20250128-converge-secs-to-jiffies-part-two-v1-14-9a6ecf0b2308@linux.microsoft.com>
-Message-ID: <e8207616-6079-be0d-d482-6577616a4cc7@linux.intel.com>
-References: <20250128-converge-secs-to-jiffies-part-two-v1-0-9a6ecf0b2308@linux.microsoft.com> <20250128-converge-secs-to-jiffies-part-two-v1-14-9a6ecf0b2308@linux.microsoft.com>
+Date: Wed, 29 Jan 2025 15:47:02 +0200 (EET)
+To: Joshua Grisham <josh@joshuagrisham.com>
+cc: Kurt Borja <kuurtb@gmail.com>, 
+    =?ISO-8859-15?Q?Thomas_Wei=DFschuh?= <linux@weissschuh.net>, 
+    W_Armin@gmx.de, Hans de Goede <hdegoede@redhat.com>, 
+    platform-driver-x86@vger.kernel.org, corbet@lwn.net, 
+    linux-doc@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v8] platform/x86: samsung-galaxybook: Add samsung-galaxybook
+ driver
+In-Reply-To: <CAMF+Kebx4sU+0p+pFaH1Lz4q1xApM8iS9UAYP=sZnE2GDa32ww@mail.gmail.com>
+Message-ID: <7e968d58-4c9b-59de-ee2b-15086d6c918f@linux.intel.com>
+References: <20250118202632.8352-1-josh@joshuagrisham.com> <e67bf708-be8a-4331-b250-d2f31e38536b@t-8ch.de> <CAMF+Keb5UzEUeim=33JR=Vv8qK7xqGn_jjNdtZMQTFtrpKrgSA@mail.gmail.com> <D7B8WVUD7F4B.1BL2WE2BNRCX6@gmail.com>
+ <CAMF+Kebx4sU+0p+pFaH1Lz4q1xApM8iS9UAYP=sZnE2GDa32ww@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: multipart/mixed; boundary="8323328-2083116426-1738158422=:933"
 
-On Tue, 28 Jan 2025, Easwar Hariharan wrote:
+  This message is in MIME format.  The first part should be readable text,
+  while the remaining parts are likely unreadable without MIME-aware tools.
 
-> Commit b35108a51cf7 ("jiffies: Define secs_to_jiffies()") introduced
-> secs_to_jiffies().  As the value here is a multiple of 1000, use
-> secs_to_jiffies() instead of msecs_to_jiffies to avoid the multiplication.
-> 
-> This is converted using scripts/coccinelle/misc/secs_to_jiffies.cocci with
-> the following Coccinelle rules:
-> 
-> @depends on patch@
-> expression E;
-> @@
-> 
-> -msecs_to_jiffies
-> +secs_to_jiffies
-> (E
-> - * \( 1000 \| MSEC_PER_SEC \)
-> )
-> 
-> Signed-off-by: Easwar Hariharan <eahariha@linux.microsoft.com>
-> ---
->  drivers/platform/x86/amd/pmf/acpi.c | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/platform/x86/amd/pmf/acpi.c b/drivers/platform/x86/amd/pmf/acpi.c
-> index dd5780a1d06e1dc979fcff5bafd6729bc4937eab..6b7effe80b78b7389b320ee65fa5d2373f782a2f 100644
-> --- a/drivers/platform/x86/amd/pmf/acpi.c
-> +++ b/drivers/platform/x86/amd/pmf/acpi.c
-> @@ -220,7 +220,8 @@ static void apmf_sbios_heartbeat_notify(struct work_struct *work)
->  	if (!info)
->  		return;
->  
-> -	schedule_delayed_work(&dev->heart_beat, msecs_to_jiffies(dev->hb_interval * 1000));
-> +	schedule_delayed_work(&dev->heart_beat,
-> +			      secs_to_jiffies(dev->hb_interval));
->  	kfree(info);
->  }
+--8323328-2083116426-1738158422=:933
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 
-Hi,
+On Tue, 28 Jan 2025, Joshua Grisham wrote:
 
-So you made the line shorter but still added the newline char for some 
-reason even if the original didn't have one?? Please don't enforce 80 
-chars limit with patches like this.
+> Thank you Kurt!
+>=20
+> Den l=C3=B6r 25 jan. 2025 kl 16:06 skrev Kurt Borja <kuurtb@gmail.com>:
+> >
+> > Now I understand the original problem better. I didn't consider this
+> > possibility when designing the callback.
+> >
+> > While this is a fine solution I believe Thomas' EOPNOTSUPP solution is
+> > the way to go. I think positive err value would be the safest but you
+> > should wait for the advice of someone with more experience.
+> >
+> > Aside from that I really like how the whole platform profile sections
+> > works now. Good design choices :)
+> >
+> > ~ Kurt
+> >
+> > > <snip>
+>=20
+> Regarding using this positive error code internally within the module,
+> I thought about maybe adding a comment to galaxybook_probe() before
+> all of the inits which describe this a bit -- do you all think this
+> will be helpful or is it clear enough / does not matter and can be
+> skipped?
+>=20
+> I also realized that maybe it is worth to describe that a specific
+> sequence is needed for doing these "enable feature" + init calls to
+> the ACPI methods otherwise some devices were reported as starting to
+> reject the payloads if the sequence was not followed.
+>=20
+> Based on these two then I have drafted a comment sort of like this to
+> put in galaxybook_probe() before the init() calls:
+>=20
+> /*
+> * Features must be enabled and initialized in the following order to
+> * avoid failures seen on certain devices:
+> * - GB_SASB_POWER_MANAGEMENT (including performance mode)
+> * - GB_SASB_KBD_BACKLIGHT
+> * - GB_SASB_BLOCK_RECORDING (as part of fw_attrs init)
+> *
+> * The init function for features which are not supported on all devices
+> * will return EOPNOTSUPP (positive to differentiate it from upstream
+> * error codes) if the feature is not working and should be ignored.
+> */
+>=20
+> Does adding something like this seem like it would help make
+> everything more clear (especially thinking when new refactoring comes
+> by other maintainers in X months/years/decades, it would probably help
+> them to know these subtleties, right?)?
+>=20
+> If this comment (you all are welcome to suggest wording tweaks as
+> well, of course!) plus the few other small tweaks make sense then I
+> can prep this to send as a new version. But I am holding a bit in
+> hopes that the 6.14 stuff gets merged to pdx86 for-next so that I can
+> go ahead with implementing Thomas's new power supply extension
+> interface at the same time.
 
--- 
+Hi Joshua,
+
+In general, you don't need to wait for me to act because any commit in=20
+Linus' tree during merge window will be fast-forwardable to 6.14-rc1 which=
+=20
+is the commit I'll be basing for-next for 6.15. So you can just pick the=20
+latest commit on Linus' tree and rebase on top of it.
+
+If there ever are some commits applied already during the merge window=20
+into for-next, those would get rebased on top of rc1 once it's released.
+
+> Because there are multiple variations to these devices, and there were
+> some small issues that users with other devices found, I was
+> thinking/hoping once all looks good for all reviewers, including
+> implementing the power supply extension, that this could be merged in
+> to for-next and then I can ask a few people with other supported
+> devices to test this revamped (and in some ways completely refactored)
+> driver directly from the branch so that we can try to catch any other
+> issues that I did not see on my device before it is proposed as a
+> candidate for mainline -- does that sound reasonable?
+>=20
+> Thanks again!
+>=20
+> Best regards,
+> Joshua
+>=20
+
+--=20
  i.
 
+--8323328-2083116426-1738158422=:933--
