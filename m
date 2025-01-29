@@ -1,106 +1,134 @@
-Received: from mail-pj1-f47.google.com (mail-pj1-f47.google.com [209.85.216.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F83E17E019;
-	Wed, 29 Jan 2025 03:39:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.47
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 846505672;
+	Wed, 29 Jan 2025 05:05:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738121978; cv=none; b=GgvzO7DuT5ev/ScBdeNPDvv5xE/kk7q03TfifKtJ1iAUZr6+oHQG4JZYeJtCPXzBxTkOKBXGJ96K6vGDuf6/lbOqiUDFVWxZjNZC5ec4KbEgN5sFb37cztUfZhPHr+YvGLiL3IQGdYp+k5BdvRfQ4aY1YFvPKhVCaWwfPf5VHnU=
+	t=1738127161; cv=none; b=Y5pLflYrRA3NM2qEjG3GfyA6LIedtbQL8eco12VrCwDyTdhihIsmh/+YIGxwfAGV+gr7HRrRqwIJMK1HKOicwj2MckoyZjGkDca0c0D5ejnUEeqqysGFng0caVvA5ZVPzh+0T6sGhP9QMu8ASwyi+dTgkr++KC0XzPTFeoP2Y6k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738121978; c=relaxed/simple;
-	bh=ovJ0n869deeFzdOx96l6O1xvtzCVhDmflTgd5kN4zEs=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=MLDGFLnP3sSEZ/V77JtiFCdtUjO1vnI/G9SMTlad84fO7949zxaG36Omd/TlZucew1DieVDBYpd7aeJNWfHhsPpeZ5cc7WdMQoVSMoOeCtLYEYJUuXnU7UhFKj1SNvYS0aZEvr4ow7IT9JDG2vue/4DFh+ngLAMvgaMpUk3mKko=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=jIdLPmKm; arc=none smtp.client-ip=209.85.216.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1738127161; c=relaxed/simple;
+	bh=1JraPduu2r9pNYm2YHcnK9o4M5+DUcrW3XUMcbdBFTo=;
+	h=Message-ID:Date:MIME-Version:Cc:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=hhXYqBr5b+8CSNPBwpKTc5ew5B7AKMIfr7449OEQxYNa0daKrpAl45N0WIOEddm1Xl+GovdrglHXnbGD/5UunPmyag5tN+KMP5jLt7VxWE+wEDMtIARQjUziwGmW/5P/cNvzfJBw1bF+NgjNwGpwo2zrgXccjfvY++nsVl/6qb4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=AFX9oF9p; arc=none smtp.client-ip=13.77.154.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jIdLPmKm"
-Received: by mail-pj1-f47.google.com with SMTP id 98e67ed59e1d1-2eec9b3a1bbso8917389a91.3;
-        Tue, 28 Jan 2025 19:39:36 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1738121976; x=1738726776; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=+mduZYtEsLrzgm+/OUWELV0Cr4KLpgdlYn/+WrlpLrg=;
-        b=jIdLPmKm4mwDyJ1ddzhRHSI91iWMerMoQw1sLOyyPXw8flJQm6IYouctxCIVZaimHT
-         RmVDVEoN868JNNeQB2PgPbm7OQK+AmNm/UkhUSk+hG0VlCqZWVppAZCEatFMkuf3iPaq
-         Iyr2W0LBS+UCpqYBPEKXD+4ZP6BGtdESTruHaNSiTKHgJVp5m1XabFdhJX3NeVVsoZUu
-         NUFTIN1U0jhbUaRjtHvKVqkuG4jAylgPBcwLp8PtkdMS3aOBYDzAibMcbW7RO8yRkggU
-         xXRKo02mXOIWmiuzDaYq0+8Vtg+uHr+VVfNXr08CMKU0cxPx/S7TkZbBixpS7msPcg+j
-         IyLw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738121976; x=1738726776;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=+mduZYtEsLrzgm+/OUWELV0Cr4KLpgdlYn/+WrlpLrg=;
-        b=qRhkUeBTCQbwo50WGLxuKYuiooKNtRYm2M0naEVwESb3VcsKQydF7+dDv0Odv+8yh8
-         jHwoG67D1GFN5tMiA8uNxlYC6Rlcasm/ci+7WPfPEAmPKW8lxqzleliwaMcjLgAxg6K8
-         S7iN5YRH5I1g0QBJJvjfDayxFfATz13T0ToLVyU0grzuul7PIAFs6zv6vm05qS/rF8cA
-         s8LS5BKP4rnWCnHPVNo1+AssYlAYi+HxlYsrubmzOD6UZJIU6k6uwZJrXsjTvrWNCD8l
-         K3OJZ1QOBe8o5gaipBJK1lRczL9hvJKcio6FqH8Uhpy3xNmX0bmv2uG0/WkRmsv72QKy
-         vyNg==
-X-Forwarded-Encrypted: i=1; AJvYcCVKg6LPLnw1WQi09ET7Yrc53607gEMMBEYjKix2F/6nk3Ia+4gaqN8oICgbRdASpN9RnyOPUZKSa2yT484=@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywkkmuqd7UDwxsdgnodMwXuYzEQc//J+RoCvtLtEhICWdLFyCSJ
-	37v8jjETCFWhxv/5IcxY75wHpnwOccARAOrZgH4KVzOYsh3E2uYgVXFGRz54
-X-Gm-Gg: ASbGncs7ySHJWcPCfqnQzlbW8x6NWUCfqU1lKZLeLbkXKm+gwNetJjUmeSKc0QOsoM/
-	DmBtuVs3TfVQn6lpxslL0kBJlkV2VgmU1iU0Ws7RI5sVc9//IzltAO61xbD7UrguNLnHSQnM51p
-	MzhWX8LvH91BIGD5vywH9M3Ddtw1Ndj8yDiwWfj3L7r5K1ZmVsNt9kjyMtBz+CSm410VkIHMKoI
-	Ijo1IMlQqdoZw9BMgnrTQFNwVGjYdaqVMNG93DKFTwY8wxtqbK63MDyMS4sb/DTNpAhuA0Z8wiA
-	esb4QHs=
-X-Google-Smtp-Source: AGHT+IHoZqxa3FMGKCbkqV2nAK8bw7iBYkRL0aCARQhtUP3+U2lNWDkzfR6jLcHu5xyrHohYnTojww==
-X-Received: by 2002:a17:90b:3d45:b0:2ee:8358:385 with SMTP id 98e67ed59e1d1-2f83abb34bfmr2117860a91.4.1738121976144;
-        Tue, 28 Jan 2025 19:39:36 -0800 (PST)
-Received: from apollo.localdomain ([2601:646:8201:fd20::eb05])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-2f83bfbe630sm433852a91.41.2025.01.28.19.39.35
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 28 Jan 2025 19:39:35 -0800 (PST)
-From: Khem Raj <raj.khem@gmail.com>
-To: platform-driver-x86@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: Khem Raj <raj.khem@gmail.com>,
-	Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
-	Len Brown <len.brown@intel.com>
-Subject: [PATCH] tools/power/x86/intel-speed-select: Prefix header search path with sysroot
-Date: Tue, 28 Jan 2025 19:39:32 -0800
-Message-ID: <20250129033932.2576077-1-raj.khem@gmail.com>
-X-Mailer: git-send-email 2.48.1
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="AFX9oF9p"
+Received: from [100.65.200.247] (unknown [20.236.11.102])
+	by linux.microsoft.com (Postfix) with ESMTPSA id BF2B7203719A;
+	Tue, 28 Jan 2025 21:05:56 -0800 (PST)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com BF2B7203719A
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+	s=default; t=1738127158;
+	bh=Wht2thRDahYYxR+tegBEk8fX7Ubl7UHYL3NLzUC8OjY=;
+	h=Date:Cc:Subject:To:References:From:In-Reply-To:From;
+	b=AFX9oF9pTu72L24VZYqKx9K3J6cjX75OWwM6bx5F//N6XwqpIMkYxe0t1yv/1uANn
+	 K7CYPXdux4/ltP2jazP0+UvJCsUaSdS3dhpnc4wskhaa9xzVe+3duJMghpWbik88tx
+	 7xoRplm16e8Caydkk6cw2Nsk6naPDQhd3Kt6qY7Y=
+Message-ID: <2402812d-b818-4d1b-9653-767c9cd89dda@linux.microsoft.com>
+Date: Tue, 28 Jan 2025 21:05:58 -0800
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Cc: cocci@inria.fr, eahariha@linux.microsoft.com,
+ LKML <linux-kernel@vger.kernel.org>, kernel-janitors@vger.kernel.org,
+ linux-block@vger.kernel.org, linux-btrfs@vger.kernel.org,
+ linux-ide@vger.kernel.org, linux-nvme@lists.infradead.org,
+ linux-pm@vger.kernel.org, linux-rdma@vger.kernel.org,
+ linux-scsi@vger.kernel.org, linux-sound@vger.kernel.org,
+ linux-spi@vger.kernel.org, linux-xfs@vger.kernel.org,
+ ceph-devel@vger.kernel.org, platform-driver-x86@vger.kernel.org,
+ dri-devel@lists.freedesktop.org, ibm-acpi-devel@lists.sourceforge.net,
+ imx@lists.linux.dev, kernel@pengutronix.de,
+ linux-arm-kernel@lists.infradead.org,
+ Andrew Morton <akpm@linux-foundation.org>, Carlos Maiolino <cem@kernel.org>,
+ Chris Mason <clm@fb.com>, Christoph Hellwig <hch@lst.de>,
+ Damien Le Moal <dlemoal@kernel.org>, "Darrick J. Wong" <djwong@kernel.org>,
+ David Sterba <dsterba@suse.com>, Dick Kennedy <dick.kennedy@broadcom.com>,
+ Dongsheng Yang <dongsheng.yang@easystack.cn>,
+ Fabio Estevam <festevam@gmail.com>, Frank Li <Frank.Li@nxp.com>,
+ Hans de Goede <hdegoede@redhat.com>,
+ Henrique de Moraes Holschuh <hmh@hmh.eng.br>,
+ James Bottomley <James.Bottomley@HansenPartnership.com>,
+ James Smart <james.smart@broadcom.com>, Jaroslav Kysela <perex@perex.cz>,
+ Jason Gunthorpe <jgg@ziepe.ca>, Jens Axboe <axboe@kernel.dk>,
+ Josef Bacik <josef@toxicpanda.com>, Julia Lawall <Julia.Lawall@inria.fr>,
+ =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+ Ilya Dryomov <idryomov@gmail.com>,
+ Kalesh Anakkur Purayil <kalesh-anakkur.purayil@broadcom.com>,
+ Keith Busch <kbusch@kernel.org>, Leon Romanovsky <leon@kernel.org>,
+ Mark Brown <broonie@kernel.org>,
+ "Martin K. Petersen" <martin.petersen@oracle.com>,
+ Nicolas Palix <nicolas.palix@imag.fr>, Niklas Cassel <cassel@kernel.org>,
+ Oded Gabbay <ogabbay@kernel.org>, Ricardo Ribalda <ribalda@google.com>,
+ Sagi Grimberg <sagi@grimberg.me>, Sascha Hauer <s.hauer@pengutronix.de>,
+ Sebastian Reichel <sre@kernel.org>,
+ Selvin Xavier <selvin.xavier@broadcom.com>, Shawn Guo <shawnguo@kernel.org>,
+ Shyam Sundar S K <Shyam-sundar.S-k@amd.com>, Takashi Iwai <tiwai@suse.com>,
+ Victor Gambier <victor.gambier@inria.fr>, Xiubo Li <xiubli@redhat.com>,
+ Yaron Avizrat <yaron.avizrat@intel.com>
+Subject: Re: [PATCH 01/16] coccinelle: misc: secs_to_jiffies: Patch
+ expressions too
+To: Markus Elfring <Markus.Elfring@web.de>
+References: <20250128-converge-secs-to-jiffies-part-two-v1-1-9a6ecf0b2308@linux.microsoft.com>
+ <565fb1db-3618-4636-8820-1ca77dad07a2@web.de>
+From: Easwar Hariharan <eahariha@linux.microsoft.com>
+Content-Language: en-US
+In-Reply-To: <565fb1db-3618-4636-8820-1ca77dad07a2@web.de>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-This helps when using a cross-compiler for building intel-speed-select,
-currently, its hardcoded to pick libnl3 headers from build host which may
-not be same as build target when cross compiling.
+On 1/28/2025 1:02 PM, Markus Elfring wrote:
+>> Teach the script to suggest conversions for timeout patterns where the
+>> arguments to msecs_to_jiffies() are expressions as well.
+> 
+> I propose to take another look at implementation details for such a script variant
+> according to the semantic patch language.
+> 
+> 
+> …
+>> +++ b/scripts/coccinelle/misc/secs_to_jiffies.cocci
+>> @@ -11,12 +11,22 @@
+>>
+>>  virtual patch
+> …
+>> -@depends on patch@ constant C; @@
+>> +@depends on patch@
+>> +expression E;
+>> +@@
+>>
+>> -- msecs_to_jiffies(C * MSEC_PER_SEC)
+>> -+ secs_to_jiffies(C)
+>> +-msecs_to_jiffies
+>> ++secs_to_jiffies
+>> + (E
+>> +- * \( 1000 \| MSEC_PER_SEC \)
+>> + )
+> 
+> 1. I do not see a need to keep an SmPL rule for the handling of constants
+>    (or literals) after the suggested extension for expressions.
 
-cc -print-sysroot will print nothing if compiler is configured without
-a sysroot and result in same string as it is now.
+Can you explain why? Would the expression rule also address the cases
+where it's a constant or literal?
 
-Fixes errors with gcc configured with host include poisoning e.g.
+> 2. I find it nice that you indicate an attempt to make the shown SmPL code
+>    a bit more succinct.
+>    Unfortunately, further constraints should be taken better into account
+>    for the current handling of isomorphisms (and corresponding SmPL disjunctions).
+>    Thus I would find an SmPL rule (like the following) more appropriate.
+> 
 
-cc1: error: include location "/usr/include/libnl3" is unsafe for cross-compilation [-Werror=poison-system-directories]
+Sorry, I couldn't follow your sentence construction or reasoning here. I
+don't see how my patch is deficient, or different from your suggestion
+below, especially given that it follows your feedback from part 1:
+https://lore.kernel.org/all/9088f9a2-c4ab-4098-a255-25120df5c497@web.de/
 
-Signed-off-by: Khem Raj <raj.khem@gmail.com>
-Cc: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
-Cc: Len Brown <len.brown@intel.com>
----
- tools/power/x86/intel-speed-select/Makefile | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Can you point out specifically what SmPL isomorphisms or disjunctions
+are broken with the patch in its current state?
 
-diff --git a/tools/power/x86/intel-speed-select/Makefile b/tools/power/x86/intel-speed-select/Makefile
-index 7221f2f55e8b..8d3a02a20f3d 100644
---- a/tools/power/x86/intel-speed-select/Makefile
-+++ b/tools/power/x86/intel-speed-select/Makefile
-@@ -13,7 +13,7 @@ endif
- # Do not use make's built-in rules
- # (this improves performance and avoids hard-to-debug behaviour);
- MAKEFLAGS += -r
--override CFLAGS += -O2 -Wall -g -D_GNU_SOURCE -I$(OUTPUT)include -I/usr/include/libnl3
-+override CFLAGS += -O2 -Wall -g -D_GNU_SOURCE -I$(OUTPUT)include -I$(shell $(CC) -print-sysroot)/usr/include/libnl3
- override LDFLAGS += -lnl-genl-3 -lnl-3
- 
- ALL_TARGETS := intel-speed-select
+Thanks,
+Easwar
