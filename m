@@ -1,262 +1,353 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 63D36C13D
-	for <platform-driver-x86@vger.kernel.org>; Thu, 30 Jan 2025 14:00:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 66FD91E0B74
+	for <platform-driver-x86@vger.kernel.org>; Thu, 30 Jan 2025 15:34:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738245648; cv=none; b=amIpK4PmR4354nNg6e5JYE/hxFbcHbVuWXJcvaMbqbvw3OsiWSnGaQ5AaMMytStJWsfOOtlGJG0pRJ/HEBY6+NtfoLjVzxvHyDcBRsEoVnT5hgjYhpqADCfUL5ln6xRPMEhtH68JK2Dac/GgoDbbD0GSPSruiuea0lpzSaL793w=
+	t=1738251302; cv=none; b=TFQ/s6YoPBwUg3x+CruKOiBNkCwK0fUE1mvyusOZDnFUpZgb/jG2TDJwcmLAEoPLFqfZI2tQHUSAFoUnIx1qXwG+USKPmbKdugCLQmiAlczgnc+EqE9GnmvXTP/QbD5Pa8Jgt7QH0/gLgN03CxAxWadF1btoc19DvZAQvpurRmE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738245648; c=relaxed/simple;
-	bh=aJpkp7InaYydNvpRZDWndJBX9xM+VW/kg3kkESwZVfA=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=OdXZPFOrr3Raq0k3jOfXi6UPTsJItm+dpupQrXAkqy62TT8HdzjoBViT7zzS5+FEH6sqoVssgvnnlUitU6/hYv9eaM5Vo6KkRUxZr+1XysFbIfAh2o/882uAk4KZ8TLQkml9KH2D8233WNx9Fnffw+gMOttX8SKsd45c75EmVCs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=UXn4vhIH; arc=none smtp.client-ip=170.10.133.124
+	s=arc-20240116; t=1738251302; c=relaxed/simple;
+	bh=bOzJOVNw5T5OJSl/oNtgv8IAq5HmOvcfKMU2wDghLAY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=KI8lxXGcqPnp3/nvA61CLqm/j2eelxACg2zokLbcpyV5eTT+aUkIvwBjQ6YSuOpbpJBxQ9X8zPc+xioDttFJgIj5sdwZwn9hot12P43SaY7y51S19XG3VCduTir7gjp43MKsutSviLGFxQkXgCFD0srsBu4jgT50qsr2eJdf7wA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=DTRh+NGG; arc=none smtp.client-ip=170.10.129.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="UXn4vhIH"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="DTRh+NGG"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1738245645;
+	s=mimecast20190719; t=1738251298;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=5pEqdPkEqJQT8krAuLESl2ph61LT66PtGsU3+s8d+nc=;
-	b=UXn4vhIH8YQacFcK5KHYBNdJtm6beXlDDM0kZesHFwcl9AxV8fkOP/Vdmo/A0utRn063HE
-	ITqWhM2+qgYdhaNsiam+R4rEB8Yxvs/hGY7DdDOhtjFGq2OTJ1GHfqmp3WUs4gwmmC2Mpz
-	Deew9WI65wUe9FL0dCiD+uOaDIOyFpQ=
-Received: from mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-610-JPHgXIslOMGPcDoovm9fpQ-1; Thu,
- 30 Jan 2025 09:00:41 -0500
-X-MC-Unique: JPHgXIslOMGPcDoovm9fpQ-1
-X-Mimecast-MFC-AGG-ID: JPHgXIslOMGPcDoovm9fpQ
-Received: from mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.15])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id E025819560BA;
-	Thu, 30 Jan 2025 14:00:38 +0000 (UTC)
-Received: from shalem.redhat.com (unknown [10.39.195.0])
-	by mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id A1A0B1956094;
-	Thu, 30 Jan 2025 14:00:36 +0000 (UTC)
-From: Hans de Goede <hdegoede@redhat.com>
-To: Sebastian Reichel <sre@kernel.org>
-Cc: Hans de Goede <hdegoede@redhat.com>,
-	platform-driver-x86@vger.kernel.org,
-	linux-pm@vger.kernel.org,
-	=?UTF-8?q?Thomas=20Wei=C3=9Fschuh?= <linux@weissschuh.net>,
-	Armin Wolf <W_Armin@gmx.de>
-Subject: [PATCH] power: supply: core: Fix extension related lockdep warning
-Date: Thu, 30 Jan 2025 15:00:35 +0100
-Message-ID: <20250130140035.20636-1-hdegoede@redhat.com>
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=WFtq7TV6LjRRXFIAQLmWG4jq7OFQieGJ4PTjBFIZS2Q=;
+	b=DTRh+NGGcndHCcw8QLWDTpi2LAmgDV86i9/IywEFkZ4DfSDLl4dJ68heh9K0fgSUp7B4uX
+	Gma2a03fhC/DQu0A+qjcKnMJiuzL2eQSDDT4PWYKzA2GaqtnFaeYxUr9eUx4+HT8reEnad
+	kmqV6YDDrroJqs0N1nwn6U4FlkKtajM=
+Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
+ [209.85.221.72]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-403-fYKeLSn7MNmONVVqH11_hA-1; Thu, 30 Jan 2025 10:34:56 -0500
+X-MC-Unique: fYKeLSn7MNmONVVqH11_hA-1
+X-Mimecast-MFC-AGG-ID: fYKeLSn7MNmONVVqH11_hA
+Received: by mail-wr1-f72.google.com with SMTP id ffacd0b85a97d-38c24ac3415so767392f8f.2
+        for <platform-driver-x86@vger.kernel.org>; Thu, 30 Jan 2025 07:34:56 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738251295; x=1738856095;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=WFtq7TV6LjRRXFIAQLmWG4jq7OFQieGJ4PTjBFIZS2Q=;
+        b=AQkyxVEiQTzuwoJD/wyBtgQlm2b9QAa/LzgzW3jjAHojA4fznjj0aB6GMWQa2mUh5u
+         1Zv8qo3eNagcFFu0gU4Yasnxi8TvnX3b3qPp7Ql+/NkQICCjeEZmoSWIWxZv5F5OeX7M
+         JCUG4CGt1aQhot8tiuEo5F9ZaGNW0hdeRg7G6AdhmMytcggiGModMJXjGtMUfI+U0Mkx
+         w1lascJc51s6qWa/5u4KkuWZtw6FyB5T8vmBxf58Ro4pUyZF/2k9CzHs9P5fxUZsVICM
+         mUXBms05YUe4bNMecLXi0Gw4/kqYp8N+Z8XujZBLGHUgMhJ0bfSMK8F+39tZ0MGZebU0
+         mKfA==
+X-Forwarded-Encrypted: i=1; AJvYcCW3nVEcvP75jsdndakaiyOnsJWQVGi9gC/y6PJAb97cYJX4eF+8GLxWOkuon+prwN5lU7vLzxenB8DoA4IDW3ZxiURy@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy0QYY76Anu5OVh13sKBx+4QSfZFQAOUxfDrj7kZfaPz50l2TsK
+	UYADIAFj57h8cQILndk+uRE1gBkwD0EP3WLDbw9dl5HR8BRtsdywq6kprM6fyBBBx1uVVOR4uoi
+	EZyElcn/7KJWwl6enpzEyMCAfSSPAM56upcoSuXQl8V72ZGVd5fdP1yIYCMPoc4MHxBsmVgA=
+X-Gm-Gg: ASbGncu6IjAaq9/r6HcnEPxBQan6R1520zz+LPbH8JvMr2ULywVFn+FVUAYi+dWeyUf
+	Qy8U9f134zNk5IxyUYbN7sAWqVAJbKDKEm6h7Nej4iOyWyKLSowstf85mjxuMrT7yVou1HPdgfu
+	zmjTigdx58eovXY9NvwN2ntLxAoFdWEs451Qvuc3Nm98iU7ktAP8cNAWEWCnb65woNQ4UrU2wXh
+	hb3/pbThyLERkt1m1f99ZIfjXbA8gpXve4meSMAZyIjS/z+ygIUU2hWamMIqyoiMpI3BJaeatAX
+	uKN2nHbRIdoAwfaKr5oR98j/NAzYMPOfYJ28SNhzumh8OKnZkbkG374TiD/h5nDsYQCQQ4DFGC3
+	4kpDlx+5uXMBQWG7b3QFYNs99Rf2+kCbFG127i6FJ9RkETusdMRQtlVU=
+X-Received: by 2002:a5d:598c:0:b0:38a:50f7:24fa with SMTP id ffacd0b85a97d-38c520a682bmr7481423f8f.54.1738251295203;
+        Thu, 30 Jan 2025 07:34:55 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IESqX+gOKh31+j9IuoS2Z6tgFJCewICG+VcK4JB8knD1sF4n/JE8ADX2boGQu+9mkXUwRj3bg==
+X-Received: by 2002:a5d:598c:0:b0:38a:50f7:24fa with SMTP id ffacd0b85a97d-38c520a682bmr7481383f8f.54.1738251294678;
+        Thu, 30 Jan 2025 07:34:54 -0800 (PST)
+Received: from ?IPV6:2001:1c00:c32:7800:5bfa:a036:83f0:f9ec? (2001-1c00-0c32-7800-5bfa-a036-83f0-f9ec.cable.dynamic.v6.ziggo.nl. [2001:1c00:c32:7800:5bfa:a036:83f0:f9ec])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ab6e47a7b1asm138764066b.31.2025.01.30.07.34.53
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 30 Jan 2025 07:34:53 -0800 (PST)
+Message-ID: <ef5a8144-d60b-4719-926d-35e9fea5a435@redhat.com>
+Date: Thu, 30 Jan 2025 16:34:53 +0100
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: RFC: How to deal with the INT3472 handshake GPIO found on Intel
+ IPU6 MTL?
+To: "sakari.ailus@linux.intel.com" <sakari.ailus@linux.intel.com>
+Cc: Linux Media Mailing List <linux-media@vger.kernel.org>,
+ "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>,
+ Dan Scally <djrscally@gmail.com>, Bingbu Cao <bingbu.cao@intel.com>,
+ Alan Stern <stern@rowland.harvard.edu>, "duanek@chorus.net"
+ <duanek@chorus.net>
+References: <59f672c3-6d87-4ec7-9b7f-f44fe2cce934@redhat.com>
+ <Z5c6Yef3KBS6VbTC@kekkonen.localdomain>
+Content-Language: en-US, nl
+From: Hans de Goede <hdegoede@redhat.com>
+In-Reply-To: <Z5c6Yef3KBS6VbTC@kekkonen.localdomain>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.15
+Content-Transfer-Encoding: 7bit
 
-Since commit 6037802bbae8 ("power: supply: core: implement extension API")
-there is the following ABBA deadlock (simplified) between the LED trigger
-code and the power-supply code:
+Hi Sakari,
 
-1) When registering a power-supply class device, power_supply_register()
-calls led_trigger_register() from power_supply_create_triggers() in
-a scoped_guard(rwsem_read, &psy->extensions_sem) context.
-led_trigger_register() then in turn takes a LED subsystem lock.
-So here we have the following locking order:
+On 27-Jan-25 8:48 AM, sakari.ailus@linux.intel.com wrote:
+> Hi Hans,
+> 
+> Thanks for your e-mail.
+> 
+> On Wed, Jan 22, 2025 at 06:19:47PM +0100, Hans de Goede wrote:
+>> Hi All,
+>>
+>> Background / analysis:
+>> ----------------------
+>>
+>> New Intel Meteor Lake based laptops with IPU6 cameras have a new type 0x12
+>> pin defined in the INT3472 sensor companion device which describes
+>> the sensor's GPIOs.
+>>
+>> Based on what I know about this now, this pin seems to be used in at least
+>> 3 different scenarios:
+>>
+>> 1. To power-up / activate some unknown auxiliary IC on HP laptop designs
+>> where the sensor is directly connected to the main Meteor Lake SoC for
+>> I2C and GPIOs (no USB io-expander used). Example dyndbg int3472 output:
+>>
+>> HP Spectre x360 2-in-1 Laptop 16t-aa000/8C17, BIOS F.11 08/14/2024 (ov08x40):
+>> [    4.908016] int3472-discrete INT3472:01: unknown \_SB.GPI0 pin 65 active-high
+>> [    4.908019] int3472-discrete INT3472:01: GPIO type 0x12 unknown; the sensor may not work
+>> [    4.908100] int3472-discrete INT3472:01: privacy-led \_SB.GPI0 pin 107 active-high
+>> (and lsusb shows no Lattice NX## / Synaptics Sabre USB-io expander)
+>>
+>> 2. To make the Lattice chip in designs with the Lattice chip is used run
+>> the power-on sequence of the sensor which is handled by the Lattice chip
+>> firmware itself running the entire power-on/-down sequence when changing
+>> the GPIO value. Example dyndbg int3472 output:
+>>
+>> Dell Latitude 7450 (with patch to map handshake in INT3472) (ov02e10):
+>> [    5.110920] int3472-discrete INT3472:01: Sensor name OVTI02E1:00
+>> [    5.111908] int3472-discrete INT3472:01: Sensor module id: 'CIFNE24'
+>> [    5.113653] int3472-discrete INT3472:01: handshake \_SB.PC00.XHCI.RHUB.HS05.VGPO pin 0 active-high
+>> [    5.113676] int3472-discrete INT3472:01: privacy-led \_SB.PC00.XHCI.RHUB.HS05.VGPO pin 2 active-high
+>> (with 2ac1:20c9 Lattice NX33 USB IO-expander)
+> 
+> The good thing is that there's a datasheet
+> <URL:https://mm.digikey.com/Volume0/opasdata/d220001/medias/docus/5726/FPGA-DS-02104-0-92-CrossLink-NX-33-and-CrossLink-NX-33U.pdf>
+> so we don't need to guess.
+> 
+> Lattice NX-33 is more than an USB IO expenader. Most likely it acts as a
+> CSI-2 RX and CSI-2 TX and does something in between, like IVSC. It should
+> have its own driver, even if all it does is toggle GPIOs and sleep a
+> little.
 
-* Read-lock extensions_sem
-* Lock LED subsystem lock(s)
+I guess that what you mean is having something similar to:
 
-2) When registering a LED class device, with its default trigger set
-to a power-supply LED trigger (which has already been registered)
-The LED class code calls power_supply_led_trigger_activate() when
-setting up the default trigger. power_supply_led_trigger_activate()
-calls power_supply_get_property() to determine the initial value of
-to assign to the LED and that read-locks extensions_sem. So now we
-have the following locking order:
+drivers/media/pci/intel/ivsc/mei_csi.c
 
-* Lock LED subsystem lock(s)
-* Read-lock extensions_sem
+which just toggles the handshake GPIO on the s_stream() callback ?
 
-Fixing this is easy, there is no need to hold the extensions_sem when
-calling power_supply_create_triggers() since all triggers are always
-created rather then checking for the presence of certain attributes as
-power_supply_add_hwmon_sysfs() does. Move power_supply_create_triggers()
-out of the guard block to fix this.
+That would require injecting the Lattice NX33 into the media fwnode
+graph similar to how we are doing this for the ivsc. But where
+the ivsc triggers this on there being an ACPI fwnode, there does
+not appear to be any ACPI fwnode for the NX33 at least not
+on Alan's laptop where we know the handshake signal is necessary.
 
-Here is the lockdep report fixed by this change:
+https://github.com/intel/vision-drivers
 
-[   31.249343] ======================================================
-[   31.249378] WARNING: possible circular locking dependency detected
-[   31.249413] 6.13.0-rc6+ #251 Tainted: G         C  E
-[   31.249440] ------------------------------------------------------
-[   31.249471] (udev-worker)/553 is trying to acquire lock:
-[   31.249501] ffff892adbcaf660 (&psy->extensions_sem){.+.+}-{4:4}, at: power_supply_get_property.part.0+0x22/0x150
-[   31.249574]
-               but task is already holding lock:
-[   31.249603] ffff892adbc0bad0 (&led_cdev->trigger_lock){+.+.}-{4:4}, at: led_trigger_set_default+0x34/0xe0
-[   31.249657]
-               which lock already depends on the new lock.
+suggests that the new chip shows up as an i2c device when it
+actually is mitm-ing the sensor and here is "ls /sys/bus/i2c/devices"
+output for Alan's laptop with the usbio-i2c driver loaded:
 
-[   31.249696]
-               the existing dependency chain (in reverse order) is:
-[   31.249735]
-               -> #2 (&led_cdev->trigger_lock){+.+.}-{4:4}:
-[   31.249778]        down_write+0x3b/0xd0
-[   31.249803]        led_trigger_set_default+0x34/0xe0
-[   31.249833]        led_classdev_register_ext+0x311/0x3a0
-[   31.249863]        input_leds_connect+0x1dc/0x2a0
-[   31.249889]        input_attach_handler.isra.0+0x75/0x90
-[   31.249921]        input_register_device.cold+0xa1/0x150
-[   31.249955]        hidinput_connect+0x8a2/0xb80
-[   31.249982]        hid_connect+0x582/0x5c0
-[   31.250007]        hid_hw_start+0x3f/0x60
-[   31.250030]        hid_device_probe+0x122/0x1f0
-[   31.250053]        really_probe+0xde/0x340
-[   31.250080]        __driver_probe_device+0x78/0x110
-[   31.250105]        driver_probe_device+0x1f/0xa0
-[   31.250132]        __device_attach_driver+0x85/0x110
-[   31.250160]        bus_for_each_drv+0x78/0xc0
-[   31.250184]        __device_attach+0xb0/0x1b0
-[   31.250207]        bus_probe_device+0x94/0xb0
-[   31.250230]        device_add+0x64a/0x860
-[   31.250252]        hid_add_device+0xe5/0x240
-[   31.250279]        usbhid_probe+0x4dc/0x620
-[   31.250303]        usb_probe_interface+0xe4/0x2a0
-[   31.250329]        really_probe+0xde/0x340
-[   31.250353]        __driver_probe_device+0x78/0x110
-[   31.250377]        driver_probe_device+0x1f/0xa0
-[   31.250404]        __device_attach_driver+0x85/0x110
-[   31.250431]        bus_for_each_drv+0x78/0xc0
-[   31.250455]        __device_attach+0xb0/0x1b0
-[   31.250478]        bus_probe_device+0x94/0xb0
-[   31.250501]        device_add+0x64a/0x860
-[   31.250523]        usb_set_configuration+0x606/0x8a0
-[   31.250552]        usb_generic_driver_probe+0x3e/0x60
-[   31.250579]        usb_probe_device+0x3d/0x120
-[   31.250605]        really_probe+0xde/0x340
-[   31.250629]        __driver_probe_device+0x78/0x110
-[   31.250653]        driver_probe_device+0x1f/0xa0
-[   31.250680]        __device_attach_driver+0x85/0x110
-[   31.250707]        bus_for_each_drv+0x78/0xc0
-[   31.250731]        __device_attach+0xb0/0x1b0
-[   31.250753]        bus_probe_device+0x94/0xb0
-[   31.250776]        device_add+0x64a/0x860
-[   31.250798]        usb_new_device.cold+0x141/0x38f
-[   31.250828]        hub_event+0x1166/0x1980
-[   31.250854]        process_one_work+0x20f/0x580
-[   31.250879]        worker_thread+0x1d1/0x3b0
-[   31.250904]        kthread+0xee/0x120
-[   31.250926]        ret_from_fork+0x30/0x50
-[   31.250954]        ret_from_fork_asm+0x1a/0x30
-[   31.250982]
-               -> #1 (triggers_list_lock){++++}-{4:4}:
-[   31.251022]        down_write+0x3b/0xd0
-[   31.251045]        led_trigger_register+0x40/0x1b0
-[   31.251074]        power_supply_register_led_trigger+0x88/0x150
-[   31.251107]        power_supply_create_triggers+0x55/0xe0
-[   31.251135]        __power_supply_register.part.0+0x34e/0x4a0
-[   31.251164]        devm_power_supply_register+0x70/0xc0
-[   31.251190]        bq27xxx_battery_setup+0x1a1/0x6d0 [bq27xxx_battery]
-[   31.251235]        bq27xxx_battery_i2c_probe+0xe5/0x17f [bq27xxx_battery_i2c]
-[   31.251272]        i2c_device_probe+0x125/0x2b0
-[   31.251299]        really_probe+0xde/0x340
-[   31.251324]        __driver_probe_device+0x78/0x110
-[   31.251348]        driver_probe_device+0x1f/0xa0
-[   31.251375]        __driver_attach+0xba/0x1c0
-[   31.251398]        bus_for_each_dev+0x6b/0xb0
-[   31.251421]        bus_add_driver+0x111/0x1f0
-[   31.251445]        driver_register+0x6e/0xc0
-[   31.251470]        i2c_register_driver+0x41/0xb0
-[   31.251498]        do_one_initcall+0x5e/0x3a0
-[   31.251522]        do_init_module+0x60/0x220
-[   31.251550]        __do_sys_init_module+0x15f/0x190
-[   31.251575]        do_syscall_64+0x93/0x180
-[   31.251598]        entry_SYSCALL_64_after_hwframe+0x76/0x7e
-[   31.251629]
-               -> #0 (&psy->extensions_sem){.+.+}-{4:4}:
-[   31.251668]        __lock_acquire+0x13ce/0x21c0
-[   31.251694]        lock_acquire+0xcf/0x2e0
-[   31.251719]        down_read+0x3e/0x170
-[   31.251741]        power_supply_get_property.part.0+0x22/0x150
-[   31.251774]        power_supply_update_leds+0x8d/0x230
-[   31.251804]        power_supply_led_trigger_activate+0x18/0x20
-[   31.251837]        led_trigger_set+0x1fc/0x300
-[   31.251863]        led_trigger_set_default+0x90/0xe0
-[   31.251892]        led_classdev_register_ext+0x311/0x3a0
-[   31.251921]        devm_led_classdev_multicolor_register_ext+0x6e/0xb80 [led_class_multicolor]
-[   31.251969]        ktd202x_probe+0x464/0x5c0 [leds_ktd202x]
-[   31.252002]        i2c_device_probe+0x125/0x2b0
-[   31.252027]        really_probe+0xde/0x340
-[   31.252052]        __driver_probe_device+0x78/0x110
-[   31.252076]        driver_probe_device+0x1f/0xa0
-[   31.252103]        __driver_attach+0xba/0x1c0
-[   31.252125]        bus_for_each_dev+0x6b/0xb0
-[   31.252148]        bus_add_driver+0x111/0x1f0
-[   31.252172]        driver_register+0x6e/0xc0
-[   31.252197]        i2c_register_driver+0x41/0xb0
-[   31.252225]        do_one_initcall+0x5e/0x3a0
-[   31.252248]        do_init_module+0x60/0x220
-[   31.252274]        __do_sys_init_module+0x15f/0x190
-[   31.253986]        do_syscall_64+0x93/0x180
-[   31.255826]        entry_SYSCALL_64_after_hwframe+0x76/0x7e
-[   31.257614]
-               other info that might help us debug this:
+$ ls -l /sys/bus/i2c/devices
+total 0
+lrwxrwxrwx. 1 root root 0 Jan  6 08:46 i2c-0 -> ../../../devices/pci0000:00/0000:00:02.0/i2c-0/
+lrwxrwxrwx. 1 root root 0 Jan  6 08:46 i2c-1 -> ../../../devices/pci0000:00/0000:00:02.0/i2c-1/
+lrwxrwxrwx. 1 root root 0 Jan  6 08:46 i2c-10 -> ../../../devices/pci0000:00/0000:00:02.0/drm/card0/card0-DP-1/i2c-10/
+lrwxrwxrwx. 1 root root 0 Jan  6 08:46 i2c-11 -> ../../../devices/pci0000:00/0000:00:02.0/drm/card0/card0-DP-2/i2c-11/
+lrwxrwxrwx. 1 root root 0 Jan  6 08:46 i2c-12 -> ../../../devices/pci0000:00/0000:00:15.0/i2c_designware.0/i2c-12/
+lrwxrwxrwx. 1 root root 0 Jan  6 08:46 i2c-13 -> ../../../devices/pci0000:00/0000:00:15.3/i2c_designware.1/i2c-13/
+lrwxrwxrwx. 1 root root 0 Jan  6 08:46 i2c-14 -> ../../../devices/pci0000:00/0000:00:1f.4/i2c-14/
+lrwxrwxrwx. 1 root root 0 Jan  6 08:46 i2c-15 -> ../../../devices/pci0000:00/0000:00:14.0/usb3/3-5/3-5:1.0/usbio-i2c.2.auto/i2c-15/
+lrwxrwxrwx. 1 root root 0 Jan  6 08:46 i2c-16 -> ../../../devices/pci0000:00/0000:00:14.0/usb3/3-5/3-5:1.0/usbio-i2c.3.auto/i2c-16/
+lrwxrwxrwx. 1 root root 0 Jan  6 08:46 i2c-2 -> ../../../devices/pci0000:00/0000:00:02.0/i2c-2/
+lrwxrwxrwx. 1 root root 0 Jan  6 08:46 i2c-3 -> ../../../devices/pci0000:00/0000:00:02.0/i2c-3/
+lrwxrwxrwx. 1 root root 0 Jan  6 08:46 i2c-4 -> ../../../devices/pci0000:00/0000:00:02.0/i2c-4/
+lrwxrwxrwx. 1 root root 0 Jan  6 08:46 i2c-5 -> ../../../devices/pci0000:00/0000:00:02.0/i2c-5/
+lrwxrwxrwx. 1 root root 0 Jan  6 08:46 i2c-6 -> ../../../devices/pci0000:00/0000:00:02.0/i2c-6/
+lrwxrwxrwx. 1 root root 0 Jan  6 08:46 i2c-7 -> ../../../devices/pci0000:00/0000:00:02.0/i2c-7/
+lrwxrwxrwx. 1 root root 0 Jan  6 08:46 i2c-8 -> ../../../devices/pci0000:00/0000:00:02.0/i2c-8/
+lrwxrwxrwx. 1 root root 0 Jan  6 08:46 i2c-9 -> ../../../devices/pci0000:00/0000:00:02.0/drm/card0/card0-eDP-1/i2c-9/
+lrwxrwxrwx. 1 root root 0 Jan  6 08:46 i2c-HIMX1092:00 -> ../../../devices/pci0000:00/0000:00:14.0/usb3/3-5/3-5:1.0/usbio-i2c.2.auto/i2c-15/i2c-HIMX1092:00/
+lrwxrwxrwx. 1 root root 0 Jan  6 08:46 i2c-OVTI02E1:00 -> ../../../devices/pci0000:00/0000:00:14.0/usb3/3-5/3-5:1.0/usbio-i2c.3.auto/i2c-16/i2c-OVTI02E1:00/
+lrwxrwxrwx. 1 root root 0 Jan  6 08:46 i2c-VEN_0488:00 -> ../../../devices/pci0000:00/0000:00:15.3/i2c_designware.1/i2c-13/i2c-VEN_0488:00/
 
-[   31.257619] Chain exists of:
-                 &psy->extensions_sem --> triggers_list_lock --> &led_cdev->trigger_lock
+Notice there is no i2c device matching the devices expected by
+the vision-drivers.
 
-[   31.257630]  Possible unsafe locking scenario:
+I have heard that the X1 carbon gen 13 (lunar lake) does have
+such an i2c device.
 
-[   31.257632]        CPU0                    CPU1
-[   31.257633]        ----                    ----
-[   31.257634]   lock(&led_cdev->trigger_lock);
-[   31.257637]                                lock(triggers_list_lock);
-[   31.257640]                                lock(&led_cdev->trigger_lock);
-[   31.257643]   rlock(&psy->extensions_sem);
-[   31.257646]
-                *** DEADLOCK ***
+So I think that the CSI pass-through functionality is not used
+on Alan's laptop.
 
-[   31.289433] 4 locks held by (udev-worker)/553:
-[   31.289443]  #0: ffff892ad9658108 (&dev->mutex){....}-{4:4}, at: __driver_attach+0xaf/0x1c0
-[   31.289463]  #1: ffff892adbc0bbc8 (&led_cdev->led_access){+.+.}-{4:4}, at: led_classdev_register_ext+0x1c7/0x3a0
-[   31.289476]  #2: ffffffffad0e30b0 (triggers_list_lock){++++}-{4:4}, at: led_trigger_set_default+0x2c/0xe0
-[   31.289487]  #3: ffff892adbc0bad0 (&led_cdev->trigger_lock){+.+.}-{4:4}, at: led_trigger_set_default+0x34/0xe0
+Also the ivcs needed to be configured for number of CSI lanes +
+CSI frequency. That is not the case here. It is a fully opaque
+black box and Windows seems to treat it mostly as if it is
+not there at all.
 
-Fixes: 6037802bbae8 ("power: supply: core: implement extension API")
-Cc: Thomas Weißschuh <linux@weissschuh.net>
-Cc: Armin Wolf <W_Armin@gmx.de>
-Signed-off-by: Hans de Goede <hdegoede@redhat.com>
----
- drivers/power/supply/power_supply_core.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+I believe that it would be best to do the same as Windows and
+just make sure we toggle the handshake pin and otherwise forget
+about the chip being there. In my many years if experience with
+x86 hw primarily designed for Windows trying to behave differently
+from Windows only causes trouble.
 
-diff --git a/drivers/power/supply/power_supply_core.c b/drivers/power/supply/power_supply_core.c
-index d0bb52a7a036..76c340b38015 100644
---- a/drivers/power/supply/power_supply_core.c
-+++ b/drivers/power/supply/power_supply_core.c
-@@ -1592,11 +1592,11 @@ __power_supply_register(struct device *parent,
- 	if (rc)
- 		goto register_thermal_failed;
- 
--	scoped_guard(rwsem_read, &psy->extensions_sem) {
--		rc = power_supply_create_triggers(psy);
--		if (rc)
--			goto create_triggers_failed;
-+	rc = power_supply_create_triggers(psy);
-+	if (rc)
-+		goto create_triggers_failed;
- 
-+	scoped_guard(rwsem_read, &psy->extensions_sem) {
- 		rc = power_supply_add_hwmon_sysfs(psy);
- 		if (rc)
- 			goto add_hwmon_sysfs_failed;
--- 
-2.47.1
+If we were to try and model this as a separate v4l2-subdev
+in the media graph then then the questions become:
+
+1. When to inject such a node. The ivsc model of going by
+ACPI HID's very likely does not work (or maybe it does and
+we simply have not seen hw yet which actually uses the vision
+parts? That is what the vision-drivers git repo suggests).
+
+Going by the presence of a handshake pin in the INT3472 device
+is riddled with problems:
+
+a. It requires digging into the ACPI resources of a device
+not owned by the ipu-bridge code.
+
+b. Given the HP laptop example, likely also Alan's laptop
+the presence of a handshake pin on meteor lake laptops does
+not seem to guarantee the CSI signals are actually MITM-ed
+by a chip, so we will likely create false-positives.
+
+c. Some previous (alder/raptor lake) HP laptops advertise
+a handshake pin but already work since they seem to not use it,
+so more false-postive matches.
+
+2. Without an ACPI hid we have no struct-device/fwnode
+to use as parent for the extra v4l2-subdev, so what do we
+use for this ?
+
+3. What about models where the fwnode-s for the media graph
+come from ACPI MIPI discovery? We skip the ipu-bridge code
+there ...
+
+Combining these issues with the fact that the interface
+is now just a single GPIO of which we do not exactly know
+what it does, where as with the ivsc we actually needed
+to program a CSI2 lane-count + link-freq I do not believe
+that modelling this unknown hw controlled by the handshake
+pin as an extra node on the media graph is the right thing
+to do.
+
+ATM this feels much more like some power-sequencing thing,
+just one more regulator / clk / reset-pin which we need
+to set during power-up / -down.
+
+If in the future we get models where the ACPI HIDs claimed by:
+https://github.com/intel/vision-drivers/blob/main/drivers/misc/icvs/intel_cvs.c#L720
+actually show up then we can revisit this. It might make
+sense to treat things like the ivsc setup in that case and
+then if those too use the type 0x12 GPIO on the INT3472
+device we can use the same code as used by the ipu-bridge
+to create the extra media graph nodes to opt out of mapping
+type 0x12 to a vdd supply.
+
+Another solution would be to move even closer to what Windows
+does and switch the driver for the INT3472 ACPI device from
+mapping pins to gpio-lookups / clks / regulators to it controlling
+all the GPIOs listed in the INT3472 _DSM directly from runtime
+suspend/resume functions, using a runtime pm device link from
+the sensor to ensure that the INT3472 device is suspended / resumed
+at the right time.
+
+This would also solve all of the mapping issues discussed in relation
+to the ov7251 driver expecting an "enable" pin. I believe that this
+would be the closest mirror of what Windows actually does and thus
+is what will work without issues / quirks on the most laptop models.
+
+> Any thoughts, Bingbu?
+> 
+>>
+>> 3. For unknown reason (ACPI table bug? / not actually used) there is
+>> a handshake type pin in the INT3472 device on some older HP models with
+>> a hi556 sensor connected directly to the Alder Lake or Raptor Lake SoC,
+>> see e.g. the dmesg from: https://linux-hardware.org/?probe=a9a2e2ab03 :
+>>
+>> [    9.077107] int3472-discrete INT3472:01: reset \_SB.GPI0 pin number mismatch _DSM 141 resource 301
+>> [    9.077170] int3472-discrete INT3472:01: power-enable \_SB.GPI0 pin number mismatch _DSM 142 resource 302
+>> [    9.086727] int3472-discrete INT3472:01: GPIO type 0x12 unknown; the sensor may not work
+>>
+>> which is from a model where it has been confirmed that the FOSS stack
+>> works already even though we have no handshake GPIO support yet.
+>>
+>> Testing has shown that for things to work in scenario 1. and 2. the 0x12 /
+>> handshake type pin needs to be driven high, followed by a msleep of 25 ms.
+>>
+>> The 25 ms was taken from the out of tree drivers which specify this as
+>> minimum sleep for the Lattice case. For the HP without Lattice, the default
+>> 1 ms post reset delay also is not enough see:
+>> https://lore.kernel.org/linux-media/1664997903.107383327.1734874558698.JavaMail.zimbra@chorus.net/
+> 
+> Maybe that 25 ms is required for booting whatever runs on NX-33?
+
+Yes the comments in the out of tree driver refer to this being
+related to the Lattice fw.
+
+>> This applies to both the HP Spectre x360 16t without Lattice chip and
+>> the Dell Latitude 7450 with Lattice chip.
+>>
+>> I suspect that there might be some micro-controller or something running
+>> the power-on sequence in the HP Spectre x360 16t case too, but there it
+>> is just a standalone chip responding to the GPIO, not an USB attached chip
+>> also offering, e.g. an I2C + GPIO controller like the Lattice chip.
+> 
+> So there's nothing unusual there in terms of USB devices there?
+> 
+> Would you be able to dump the ACPI tables from the HP machine? (I don't
+> mind Dell either.)
+
+I have attached an acpidump from a HP Spectre x360 14-eu0xxx where
+the handshake pin appears to be necessary but there is no lattice chip here:
+
+https://bugzilla.redhat.com/show_bug.cgi?id=2333331
+
+Alan can you send Sakari an acpidump of your laptop ?
+
+<snip>
+
+> I'll need to dig a bit further, hoping to find out what that special GPIO
+> 0x12 is.
+
+Between this and the pin mapping discussion before I'm more and more
+convinced that we are going all wrong about this.
+
+The INT3472 device seems to purely be a power-sequencing device which
+I believe has its own driver separate from the sensor drivers under
+Windows and the ACPI _DEP link ensures that it gets powered-up before
+the sensor device does.
+
+We really should use this fw API as intended and simply have
+the INT3472 driver directly control the GPIOs from its own runtime
+suspend/resume methods and use a runtime-pm link to ensure
+the INT3472 device gets runtime-resumed before the sensor device
+gets runtime-resumed.
+
+This requires basically rewriting:
+drivers/platform/x86/intel/int3472/discrete.c
+but I believe that the end result will be cleaner / smaller and this
+should solve most problems surrounding this code once and for all
+avoiding us to have to revisit things all the time to work around
+the mismatch in expectations between the ACPI tables on Windows
+laptops and the devicetree-like setup the sensor drivers expect.
+
+Regards,
+
+Hans
+
+
+
+
+
 
