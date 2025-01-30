@@ -1,199 +1,227 @@
-Received: from fout-b7-smtp.messagingengine.com (fout-b7-smtp.messagingengine.com [202.12.124.150])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA7601E1C22;
-	Thu, 30 Jan 2025 15:45:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.150
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9983D1EC01F
+	for <platform-driver-x86@vger.kernel.org>; Thu, 30 Jan 2025 16:25:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738251933; cv=none; b=UxUC5+4yGK6sQ01Kpv7OxytxklT6nEBhoFgxWsyXrBXjk7MrEpGdjyBGswMkTnFlhOLLgFpy9yUOVBSfLKHAkW0yBKtXBWfmEPrZzr3BfVunnaWtdEEnvuvFS3a4BipXn8LOdc6H31HpHC7EcIIDg6rEclvUUC7mtXYMqzluilY=
+	t=1738254355; cv=none; b=cJsEQbsalNTNfl1HUumrMIzH4SJGqn4HfHXSn11nZQ9828c2GRcNLOhIeEdtJqBV9pirE31ZdOnAMEo+yqsx8mje/JDxM/CtGJz4I0svJVUEQTtR9jm88MjKMBoAGNqWDAtQpeC8f+MX6jR7P/S2uk5rnmfopaUKcWRgQsSQCDU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738251933; c=relaxed/simple;
-	bh=weQOwIjYJYH9Fvc6f2vO7vqMSQYvHZgRIwIM++ObIXE=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=edtuCWvQgy8PvgYwPd7dihdgih0jyf8BOcGRLEi9VN1M9cdohZbb+jGU8bod3D6OkRjzZiYq+CcHCBxTKccZI1+duxDbKqKIVN/2ksmMSiyT5aqdmXAdUul9EFK9+zXepfiCTIQVw/xYiq5O/JrJEtr06cluoEfnZFT3E/Ij19Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=squebb.ca; spf=pass smtp.mailfrom=squebb.ca; dkim=pass (2048-bit key) header.d=squebb.ca header.i=@squebb.ca header.b=f9D4XRCC; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=ZL3SUWyR; arc=none smtp.client-ip=202.12.124.150
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=squebb.ca
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=squebb.ca
+	s=arc-20240116; t=1738254355; c=relaxed/simple;
+	bh=7Lqg6NREYGWflm64mxMDprVkTQqsuRwJjcE3EcFO/II=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=A0WA/5oaM5gkNQ2NBvnRICbw2ptk/Xm2IvCiy6IREaRWBcRD3azy62KjFDFEwH6hzJ3/kTvvkpaoHqwU+o7dA6O7RLatQimjGZTdZImfV57riyMIbxDlGl8u6vp4Bx2mtjcMbfvBguTnsLiIhVDTkTdFvYqgREBdAPfsuUzdkSM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=FaDOceWH; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=squebb.ca header.i=@squebb.ca header.b="f9D4XRCC";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="ZL3SUWyR"
-Received: from phl-compute-11.internal (phl-compute-11.phl.internal [10.202.2.51])
-	by mailfout.stl.internal (Postfix) with ESMTP id 9D28D114010B;
-	Thu, 30 Jan 2025 10:45:29 -0500 (EST)
-Received: from phl-mailfrontend-01 ([10.202.2.162])
-  by phl-compute-11.internal (MEProxy); Thu, 30 Jan 2025 10:45:29 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=squebb.ca; h=cc
-	:cc:content-transfer-encoding:content-type:date:date:from:from
-	:in-reply-to:in-reply-to:message-id:mime-version:references
-	:reply-to:subject:subject:to:to; s=fm1; t=1738251929; x=
-	1738338329; bh=SgQyaIVGztkMCarUps60DVXh+PXZsKmvoBlXKnoc3d4=; b=f
-	9D4XRCCqfLJRx3YDZN8P9nk8ZahQVkNl/634bcnFN70UAi8EAdKJdhuz3+ruIuM0
-	+hPe9PEraBHrA6DWjaE7kNamSbP+vEhje/FbINXGQUB6LfdB8u0Q8+gVwHmwrtu8
-	cCDfDtWH7c7y3rTK3EBNkROiNhkMRki1N6TAu3OKnBh/Svi25gg5dTDQmWx2392Y
-	xeC50h7L3KW1MhHjJIFQyaWQdr4ajBaLRZ7OTVEbGJgoTJYyJi9r+AzkDXXnudkP
-	Pj1ZIQzpumqK8Rl11GmNqdCWUx2JMOJPrROOvA9dLZs0an92ryFmSiYO66klw6rK
-	AefG9hYsUx/QLEdCii29Q==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:date:date:feedback-id:feedback-id:from:from
-	:in-reply-to:in-reply-to:message-id:mime-version:references
-	:reply-to:subject:subject:to:to:x-me-proxy:x-me-sender
-	:x-me-sender:x-sasl-enc; s=fm3; t=1738251929; x=1738338329; bh=S
-	gQyaIVGztkMCarUps60DVXh+PXZsKmvoBlXKnoc3d4=; b=ZL3SUWyRHEYXIT1vv
-	RKPDyG7vVa82WYRWA3a+TQMTRnMJLa+9/wVp94O0NRM0qUi4EO5fE/Evn2zUnJuI
-	lfEYGQmC8oX0YJYIl92JFbfulEECMlBeTWD1M9NuXaNxYT8n1Yp7Gmy1HNkVvOGl
-	6s3KJIlTxv6PZ8hZQyxj57Pld12TlQyjCxU6NCwvbhZFUtXh+M6jpkVe0lc+W/wk
-	O6QeXIqa6KK3u6CMATZDidMBICHGzJOjM3k7ZVumjiF9oTDEbU4CJ2bLS6Ys5o81
-	NPH2g8T3DsAVNy+fHjEWMlfaAzqw0VyqcbJcVuE9k4EhEDNpiSIbEHng/9doYC5e
-	XvKFw==
-X-ME-Sender: <xms:mJ6bZ_oXhbNcsVoCMYdZLvDYFXHc_CiX2RVTn0CoVn5iAdIcqV9XIA>
-    <xme:mJ6bZ5rtozFamldEGOcwkkr_1aMwzLzIvpzelyie2Lk2H75rBDNcQBbm5lRFWDkDF
-    MXCp6EozJgmvwlKgsM>
-X-ME-Received: <xmr:mJ6bZ8PenPefoTHPN_SjIecfJGtxo0mBEKCvKvwyzWNOQ32av6CzJmpvcU6BoPJxr9IbvbMyI2zBMfNCNqdnJHRRSqac1IFjCHxC9Tt05dDe>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdeivddtucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggvpdfu
-    rfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucgoteeftdduqddtudculd
-    duhedmnecujfgurhephffvvefufffkofgjfhgggfestdekredtredttdenucfhrhhomhep
-    ofgrrhhkucfrvggrrhhsohhnuceomhhpvggrrhhsohhnqdhlvghnohhvohesshhquhgvsg
-    gsrdgtrgeqnecuggftrfgrthhtvghrnhepfedtvdejfeelffevhffgjeejheduteetieeg
-    uefgkefhhfegjeduueethefgvdffnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrg
-    hmpehmrghilhhfrhhomhepmhhpvggrrhhsohhnqdhlvghnohhvohesshhquhgvsggsrdgt
-    rgdpnhgspghrtghpthhtohephedpmhhouggvpehsmhhtphhouhhtpdhrtghpthhtohepmh
-    hpvggrrhhsohhnqdhlvghnohhvohesshhquhgvsggsrdgtrgdprhgtphhtthhopehhuggv
-    ghhovgguvgesrhgvughhrghtrdgtohhmpdhrtghpthhtohepihhlphhordhjrghrvhhinh
-    gvnheslhhinhhugidrihhnthgvlhdrtghomhdprhgtphhtthhopehplhgrthhfohhrmhdq
-    ughrihhvvghrqdigkeeisehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplh
-    hinhhugidqkhgvrhhnvghlsehvghgvrhdrkhgvrhhnvghlrdhorhhg
-X-ME-Proxy: <xmx:mJ6bZy53lRgbmINIPsq6csmHLeQ9V48KTlbLrZkpbWO-u06q3YeA7Q>
-    <xmx:mJ6bZ-7WYr9bXsKierJNjQvLRrHQ73FYF8bcQ-w0_6dex4yqu2UHRw>
-    <xmx:mJ6bZ6jzfVLjc6GEgIdjVsk4I6HkVfUCx20_-7098d2q2FQ8ymNeZw>
-    <xmx:mJ6bZw5ABwrH0xrsm9pFv8FHAucBOGV-96dmwXfi6DlxMLAxLKk2zw>
-    <xmx:mZ6bZwShGEEc2zIRfCDX0boMEIX4VnMDWAJd_07lyxjUdTpYeFiy9Ro3>
-Feedback-ID: ibe194615:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Thu,
- 30 Jan 2025 10:45:28 -0500 (EST)
-From: Mark Pearson <mpearson-lenovo@squebb.ca>
-To: mpearson-lenovo@squebb.ca
-Cc: hdegoede@redhat.com,
-	ilpo.jarvinen@linux.intel.com,
-	platform-driver-x86@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] platform/x86: thinkpad_acpi: Support for V9 DYTC platform profiles
-Date: Thu, 30 Jan 2025 10:45:15 -0500
-Message-ID: <20250130154520.26469-1-mpearson-lenovo@squebb.ca>
-X-Mailer: git-send-email 2.48.1
-In-Reply-To: <mpearson-lenovo@squebb.ca>
-References: <mpearson-lenovo@squebb.ca>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="FaDOceWH"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1738254352;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Hy38aCSXSqQp305EOx/F8NrfvRtmqoW5j4bK8F6Fzp8=;
+	b=FaDOceWHJHIfO6NPmM07Yw7DZgQTqPuhAF9rjOOnv2b9BknlLZ2daKyKSZL/6SdYQDVMLF
+	QnU5s4HkqwGCJ5yFrH44tT2vXB8pRjOrM6JPnZLAhTQZ7ldQvGxjhia+l2yYMRk6L8Tok6
+	6EMJ+LPwhpiMzALBaM1ujm3zrREV61I=
+Received: from mail-ed1-f69.google.com (mail-ed1-f69.google.com
+ [209.85.208.69]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-693-2bk7_hScNs-UOgXjnM6Klg-1; Thu, 30 Jan 2025 11:25:51 -0500
+X-MC-Unique: 2bk7_hScNs-UOgXjnM6Klg-1
+X-Mimecast-MFC-AGG-ID: 2bk7_hScNs-UOgXjnM6Klg
+Received: by mail-ed1-f69.google.com with SMTP id 4fb4d7f45d1cf-5da15447991so731755a12.3
+        for <platform-driver-x86@vger.kernel.org>; Thu, 30 Jan 2025 08:25:50 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738254349; x=1738859149;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=Hy38aCSXSqQp305EOx/F8NrfvRtmqoW5j4bK8F6Fzp8=;
+        b=sxp/ZZP287WwKQF+d8J/ZlI7zQrf/fdMginIRx6PwmkR5J64MWfxSA34kfWkLVP/Mg
+         mYM6h2eO1+7xCfgXK+qaqceI9CJZAYXv1IG9XaI3OgOVlpW4pIOdNjPgRU0AKMaaydwr
+         yn8S7Df+E5yzvMF8dib9PAmJZoYL/fAfP+Ui9vae6XAWndjt/XTtL5xKH5AEFerJ9SnC
+         dZoYcCrnr5IEoDUsaXahrtJmFGzVkA9+AIyhWN8oAGQaGl5pvp78ctg9ViLR57PbcR90
+         KIuZpU8gLvHTirXyIvVDSAZXoYQeNdip20lrPAYZVG5YH2OXiwA01sFn+T8busfOmwn+
+         iNyA==
+X-Forwarded-Encrypted: i=1; AJvYcCUOqn5SIgMcWgMVQ3Qyle/vhe+a87adUI7M9iLWDmVmOLc18FC70qGCOB7+2vH7CQps6zZWr/R0fsJaWn4rNr5crLhB@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywk9ADvzIX22Jeao780wjBwJWpS7/QDuDKJMgH5U6MHk27HKg1T
+	paCdoFDqHFVO8AG89Wrk0U2Ij17WDFYqSWNS066/xGFiqOL1WvqO1445e8r2GgX3T26785Yh9m5
+	GpMSJJ4OuO7QSY81z3OBVZNnI7DRA4Y9A71biQQnxQ0IKDezdisKvxeZ+sS5bPszLjqUM6SqBVg
+	uqCAxLhOrE
+X-Gm-Gg: ASbGncsoUnn9QPATdh3hufMVVktk8yi9KZiu8LOahbWE95fYmPPzmAqXKv45D+gikRc
+	nakm1IiYM35L+kRpeOwnkiR5480WKQXGXV6SNdnHuRxgIWXBA8dcmkK4EdfBTso86+AyVUp3tM6
+	JvH4m3hRfEb69nSt2FXbD3SpklMgCEtpkKrFv56S+S6RlBQZwCbmU9O8XHB2JOjcRAPxvpBwqTW
+	Rg8DqBh1vUdI6zisZYHZzlWjwvnl+b598TfFp3txMAHUuPF+bSMktCntCAhvDufDA9jIvkcI9oD
+	EU5quFWFZGSc5z0b0DI9ezQkZ6bpYEzrjmVId/ICUUYhZMSCMtHJ/XSXvJBIC4g673nflVsMUZO
+	y/VoxNF6ONz1UrvTpQacjFW051Oj+P93edhE3Mv4q+Q6AVv/E5mRfZwo=
+X-Received: by 2002:a05:6402:510f:b0:5dc:5ada:e0c7 with SMTP id 4fb4d7f45d1cf-5dc5efec13emr20789192a12.26.1738254349202;
+        Thu, 30 Jan 2025 08:25:49 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IGY3KxKvpN5lcr79kxTwcKeoCjuuN7CRVhpaL8K4DhHdEjBE6BXjDzpVPAmsIVIOyQNxYzWRA==
+X-Received: by 2002:a05:6402:510f:b0:5dc:5ada:e0c7 with SMTP id 4fb4d7f45d1cf-5dc5efec13emr20789130a12.26.1738254348717;
+        Thu, 30 Jan 2025 08:25:48 -0800 (PST)
+Received: from ?IPV6:2001:1c00:c32:7800:5bfa:a036:83f0:f9ec? (2001-1c00-0c32-7800-5bfa-a036-83f0-f9ec.cable.dynamic.v6.ziggo.nl. [2001:1c00:c32:7800:5bfa:a036:83f0:f9ec])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ab6e4a56cafsm142919766b.168.2025.01.30.08.25.47
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 30 Jan 2025 08:25:48 -0800 (PST)
+Message-ID: <5a12b6f5-c501-4c7f-b27b-c9e63fbcffa1@redhat.com>
+Date: Thu, 30 Jan 2025 17:25:47 +0100
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] platform/x86: thinkpad_acpi: Support for V9 DYTC platform
+ profiles
+To: Mark Pearson <mpearson-lenovo@squebb.ca>
+Cc: ilpo.jarvinen@linux.intel.com, platform-driver-x86@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <mpearson-lenovo@squebb.ca>
+ <20250130154520.26469-1-mpearson-lenovo@squebb.ca>
+Content-Language: en-US, nl
+From: Hans de Goede <hdegoede@redhat.com>
+In-Reply-To: <20250130154520.26469-1-mpearson-lenovo@squebb.ca>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Newer Thinkpad AMD platforms are using V9 DYTC and this changes the
-profiles used for PSC mode. Add support for this update.
-Tested on P14s G5 AMD
+Hi Mark,
 
-Signed-off-by: Mark Pearson <mpearson-lenovo@squebb.ca>
----
- drivers/platform/x86/thinkpad_acpi.c | 33 ++++++++++++++++++----------
- 1 file changed, 21 insertions(+), 12 deletions(-)
+On 30-Jan-25 4:45 PM, Mark Pearson wrote:
+> Newer Thinkpad AMD platforms are using V9 DYTC and this changes the
+> profiles used for PSC mode. Add support for this update.
+> Tested on P14s G5 AMD
+> 
+> Signed-off-by: Mark Pearson <mpearson-lenovo@squebb.ca>
+> ---
+>  drivers/platform/x86/thinkpad_acpi.c | 33 ++++++++++++++++++----------
+>  1 file changed, 21 insertions(+), 12 deletions(-)
+> 
+> diff --git a/drivers/platform/x86/thinkpad_acpi.c b/drivers/platform/x86/thinkpad_acpi.c
+> index 1fcb0f99695a..cae457bc0b07 100644
+> --- a/drivers/platform/x86/thinkpad_acpi.c
+> +++ b/drivers/platform/x86/thinkpad_acpi.c
+> @@ -10319,6 +10319,10 @@ static struct ibm_struct proxsensor_driver_data = {
+>  #define DYTC_MODE_PSC_BALANCE  5  /* Default mode aka balanced */
+>  #define DYTC_MODE_PSC_PERFORM  7  /* High power mode aka performance */
+>  
+> +#define DYTC_MODE_PSCV9_LOWPOWER 1  /* Low power mode */
+> +#define DYTC_MODE_PSCV9_BALANCE  3  /* Default mode aka balanced */
+> +#define DYTC_MODE_PSCV9_PERFORM  4  /* High power mode aka performance */
+> +
+>  #define DYTC_ERR_MASK       0xF  /* Bits 0-3 in cmd result are the error result */
+>  #define DYTC_ERR_SUCCESS      1  /* CMD completed successful */
+>  
+> @@ -10339,6 +10343,10 @@ static int dytc_capabilities;
+>  static bool dytc_mmc_get_available;
+>  static int profile_force;
+>  
+> +static int platform_psc_profile_lowpower = DYTC_MODE_PSC_LOWPOWER;
+> +static int platform_psc_profile_balanced = DYTC_MODE_PSC_BALANCE;
+> +static int platform_psc_profile_performance = DYTC_MODE_PSC_PERFORM;
+> +
+>  static int convert_dytc_to_profile(int funcmode, int dytcmode,
+>  		enum platform_profile_option *profile)
+>  {
+> @@ -10360,19 +10368,14 @@ static int convert_dytc_to_profile(int funcmode, int dytcmode,
+>  		}
+>  		return 0;
+>  	case DYTC_FUNCTION_PSC:
+> -		switch (dytcmode) {
+> -		case DYTC_MODE_PSC_LOWPOWER:
+> +		if (dytcmode == platform_psc_profile_lowpower)
+>  			*profile = PLATFORM_PROFILE_LOW_POWER;
+> -			break;
+> -		case DYTC_MODE_PSC_BALANCE:
+> +		else if (dytcmode == platform_psc_profile_balanced)
+>  			*profile =  PLATFORM_PROFILE_BALANCED;
+> -			break;
+> -		case DYTC_MODE_PSC_PERFORM:
+> +		else if (dytcmode == platform_psc_profile_performance)
+>  			*profile =  PLATFORM_PROFILE_PERFORMANCE;
+> -			break;
+> -		default: /* Unknown mode */
+> +		else
+>  			return -EINVAL;
+> -		}
+>  		return 0;
 
-diff --git a/drivers/platform/x86/thinkpad_acpi.c b/drivers/platform/x86/thinkpad_acpi.c
-index 1fcb0f99695a..cae457bc0b07 100644
---- a/drivers/platform/x86/thinkpad_acpi.c
-+++ b/drivers/platform/x86/thinkpad_acpi.c
-@@ -10319,6 +10319,10 @@ static struct ibm_struct proxsensor_driver_data = {
- #define DYTC_MODE_PSC_BALANCE  5  /* Default mode aka balanced */
- #define DYTC_MODE_PSC_PERFORM  7  /* High power mode aka performance */
- 
-+#define DYTC_MODE_PSCV9_LOWPOWER 1  /* Low power mode */
-+#define DYTC_MODE_PSCV9_BALANCE  3  /* Default mode aka balanced */
-+#define DYTC_MODE_PSCV9_PERFORM  4  /* High power mode aka performance */
-+
- #define DYTC_ERR_MASK       0xF  /* Bits 0-3 in cmd result are the error result */
- #define DYTC_ERR_SUCCESS      1  /* CMD completed successful */
- 
-@@ -10339,6 +10343,10 @@ static int dytc_capabilities;
- static bool dytc_mmc_get_available;
- static int profile_force;
- 
-+static int platform_psc_profile_lowpower = DYTC_MODE_PSC_LOWPOWER;
-+static int platform_psc_profile_balanced = DYTC_MODE_PSC_BALANCE;
-+static int platform_psc_profile_performance = DYTC_MODE_PSC_PERFORM;
-+
- static int convert_dytc_to_profile(int funcmode, int dytcmode,
- 		enum platform_profile_option *profile)
- {
-@@ -10360,19 +10368,14 @@ static int convert_dytc_to_profile(int funcmode, int dytcmode,
- 		}
- 		return 0;
- 	case DYTC_FUNCTION_PSC:
--		switch (dytcmode) {
--		case DYTC_MODE_PSC_LOWPOWER:
-+		if (dytcmode == platform_psc_profile_lowpower)
- 			*profile = PLATFORM_PROFILE_LOW_POWER;
--			break;
--		case DYTC_MODE_PSC_BALANCE:
-+		else if (dytcmode == platform_psc_profile_balanced)
- 			*profile =  PLATFORM_PROFILE_BALANCED;
--			break;
--		case DYTC_MODE_PSC_PERFORM:
-+		else if (dytcmode == platform_psc_profile_performance)
- 			*profile =  PLATFORM_PROFILE_PERFORMANCE;
--			break;
--		default: /* Unknown mode */
-+		else
- 			return -EINVAL;
--		}
- 		return 0;
- 	case DYTC_FUNCTION_AMT:
- 		/* For now return balanced. It's the closest we have to 'auto' */
-@@ -10393,19 +10396,19 @@ static int convert_profile_to_dytc(enum platform_profile_option profile, int *pe
- 		if (dytc_capabilities & BIT(DYTC_FC_MMC))
- 			*perfmode = DYTC_MODE_MMC_LOWPOWER;
- 		else if (dytc_capabilities & BIT(DYTC_FC_PSC))
--			*perfmode = DYTC_MODE_PSC_LOWPOWER;
-+			*perfmode = platform_psc_profile_lowpower;
- 		break;
- 	case PLATFORM_PROFILE_BALANCED:
- 		if (dytc_capabilities & BIT(DYTC_FC_MMC))
- 			*perfmode = DYTC_MODE_MMC_BALANCE;
- 		else if (dytc_capabilities & BIT(DYTC_FC_PSC))
--			*perfmode = DYTC_MODE_PSC_BALANCE;
-+			*perfmode = platform_psc_profile_balanced;
- 		break;
- 	case PLATFORM_PROFILE_PERFORMANCE:
- 		if (dytc_capabilities & BIT(DYTC_FC_MMC))
- 			*perfmode = DYTC_MODE_MMC_PERFORM;
- 		else if (dytc_capabilities & BIT(DYTC_FC_PSC))
--			*perfmode = DYTC_MODE_PSC_PERFORM;
-+			*perfmode = platform_psc_profile_performance;
- 		break;
- 	default: /* Unknown profile */
- 		return -EOPNOTSUPP;
-@@ -10599,6 +10602,7 @@ static int tpacpi_dytc_profile_init(struct ibm_init_struct *iibm)
- 	if (output & BIT(DYTC_QUERY_ENABLE_BIT))
- 		dytc_version = (output >> DYTC_QUERY_REV_BIT) & 0xF;
- 
-+	dbg_printk(TPACPI_DBG_INIT, "DYTC version %d\n", dytc_version);
- 	/* Check DYTC is enabled and supports mode setting */
- 	if (dytc_version < 5)
- 		return -ENODEV;
-@@ -10637,6 +10641,11 @@ static int tpacpi_dytc_profile_init(struct ibm_init_struct *iibm)
- 		}
- 	} else if (dytc_capabilities & BIT(DYTC_FC_PSC)) { /* PSC MODE */
- 		pr_debug("PSC is supported\n");
-+		if (dytc_version >= 9) { /* update profiles for DYTC 9 and up */
-+			platform_psc_profile_lowpower = DYTC_MODE_PSCV9_LOWPOWER;
-+			platform_psc_profile_balanced = DYTC_MODE_PSCV9_BALANCE;
-+			platform_psc_profile_performance = DYTC_MODE_PSCV9_PERFORM;
-+		}
- 	} else {
- 		dbg_printk(TPACPI_DBG_INIT, "No DYTC support available\n");
- 		return -ENODEV;
--- 
-2.47.1
+Maybe replace the removed '}' with an empty line instead of
+removing the entire line?
+
+Currently after your patch the new code looks like this:
+
+			...
+		else
+			return -EINVAL;
+		return 0;
+
+which look a bit weird, personally I would prefer:
+
+			...
+		else
+			return -EINVAL;
+
+		return 0;
+
+Otherwise this looks good to me:
+
+Reviewed-by: Hans de Goede <hdegoede@redhat.com>
+
+Regards,
+
+Hans
+
+
+
+
+
+>  	case DYTC_FUNCTION_AMT:
+>  		/* For now return balanced. It's the closest we have to 'auto' */
+> @@ -10393,19 +10396,19 @@ static int convert_profile_to_dytc(enum platform_profile_option profile, int *pe
+>  		if (dytc_capabilities & BIT(DYTC_FC_MMC))
+>  			*perfmode = DYTC_MODE_MMC_LOWPOWER;
+>  		else if (dytc_capabilities & BIT(DYTC_FC_PSC))
+> -			*perfmode = DYTC_MODE_PSC_LOWPOWER;
+> +			*perfmode = platform_psc_profile_lowpower;
+>  		break;
+>  	case PLATFORM_PROFILE_BALANCED:
+>  		if (dytc_capabilities & BIT(DYTC_FC_MMC))
+>  			*perfmode = DYTC_MODE_MMC_BALANCE;
+>  		else if (dytc_capabilities & BIT(DYTC_FC_PSC))
+> -			*perfmode = DYTC_MODE_PSC_BALANCE;
+> +			*perfmode = platform_psc_profile_balanced;
+>  		break;
+>  	case PLATFORM_PROFILE_PERFORMANCE:
+>  		if (dytc_capabilities & BIT(DYTC_FC_MMC))
+>  			*perfmode = DYTC_MODE_MMC_PERFORM;
+>  		else if (dytc_capabilities & BIT(DYTC_FC_PSC))
+> -			*perfmode = DYTC_MODE_PSC_PERFORM;
+> +			*perfmode = platform_psc_profile_performance;
+>  		break;
+>  	default: /* Unknown profile */
+>  		return -EOPNOTSUPP;
+> @@ -10599,6 +10602,7 @@ static int tpacpi_dytc_profile_init(struct ibm_init_struct *iibm)
+>  	if (output & BIT(DYTC_QUERY_ENABLE_BIT))
+>  		dytc_version = (output >> DYTC_QUERY_REV_BIT) & 0xF;
+>  
+> +	dbg_printk(TPACPI_DBG_INIT, "DYTC version %d\n", dytc_version);
+>  	/* Check DYTC is enabled and supports mode setting */
+>  	if (dytc_version < 5)
+>  		return -ENODEV;
+> @@ -10637,6 +10641,11 @@ static int tpacpi_dytc_profile_init(struct ibm_init_struct *iibm)
+>  		}
+>  	} else if (dytc_capabilities & BIT(DYTC_FC_PSC)) { /* PSC MODE */
+>  		pr_debug("PSC is supported\n");
+> +		if (dytc_version >= 9) { /* update profiles for DYTC 9 and up */
+> +			platform_psc_profile_lowpower = DYTC_MODE_PSCV9_LOWPOWER;
+> +			platform_psc_profile_balanced = DYTC_MODE_PSCV9_BALANCE;
+> +			platform_psc_profile_performance = DYTC_MODE_PSCV9_PERFORM;
+> +		}
+>  	} else {
+>  		dbg_printk(TPACPI_DBG_INIT, "No DYTC support available\n");
+>  		return -ENODEV;
 
