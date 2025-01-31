@@ -1,371 +1,244 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f50.google.com (mail-pj1-f50.google.com [209.85.216.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 729751E885
-	for <platform-driver-x86@vger.kernel.org>; Fri, 31 Jan 2025 09:20:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 376E71E885;
+	Fri, 31 Jan 2025 09:21:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738315237; cv=none; b=uqSz6seiGYjSZ5GNzl+h4xpR4q1bMYem3o8p6nvY/+4PlyLp+fAyZ70CtmnK96ixEswMtq8tYn2kEMWiGRaXQdxcAaoYzkpqwSfB4B0l5ksjnNzS378g09KdZe0WUtkJtUEuJ0BBdHFv8yzyocXYSoYcVct6Wm4RpZyMEVWppu8=
+	t=1738315314; cv=none; b=XMHqR2P8V1Cq39NidZPcCVVwpIKWVcMOqr8YP8FnDjq3+UMBnha2d/KZMx0+RfXV496eiUx/jOEoDyWp/7DvjO/s2TB47BDMxnQTsamPM0lxvUfXgpPS59R6AlceNayvxBvQm78PGZrPc32J/0Q8Gd0evHbVdDTr12Zwdml+EVg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738315237; c=relaxed/simple;
-	bh=CR6FcP/5wlKQ5MVClJvgxzfyUrPa61FY031/iANPRLI=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
-	 In-Reply-To:Content-Type; b=Xr4ampORhCQgx+RS0l87HKeb3Ugczdiyodu4H3xRtM/zCHCCdEYNfomWhDxxxos0vI6ux8G3g14Ie+ylOEQzekBxLmNFRMwn77PYxGBS17ncQZVxsZEuRWdF0Jhf2TbfQ+FfSrgzxuBByviR38WJBt/Dm+H+W14y4IUWqlkckhw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=XRbAIo3z; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1738315314; c=relaxed/simple;
+	bh=twC3YcyOJMBbuTM9ONY4IglfwfU6HbJbELN5+LXfSV0=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=ja20FAqzhKZ93cVTmml2TKDEVEe2VURMbK1CrpAqUbNRscib/G0eQTxLCsEXXMcq6W16r/HXXq99mggt0TKUREBFFZVSl9yLBsGIXkT8l/2Vx0vfOjRLD/FbkWnBc8++VAr35JHZdvWUapgvQ1kZav5EbNENrC3nC7lXujBh6Q4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=D0jI3E4Q; arc=none smtp.client-ip=209.85.216.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="XRbAIo3z"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1738315234;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=ZdewNyQreii2Kp8xHOI0wM4v+bwm/DeR8UvcuPNaXXQ=;
-	b=XRbAIo3zyt98oSMnPVL3EuNDimV1zJYqFPA5vGkOOsL3vyP7rj/maW+gq4pMNIRK9T5i6u
-	dfPC1LVWT43R7+fUFB9qWgmpLVLvL6VGAEA+cHJJHbXHms0U00R5EDA1PIhmlePmDEGRFG
-	h9uWWffmIQQu2FaA1+tmqOEN25NLWkA=
-Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com
- [209.85.221.69]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-218-XrD_PmuKOWqAfoEHMtjW5Q-1; Fri, 31 Jan 2025 04:20:32 -0500
-X-MC-Unique: XrD_PmuKOWqAfoEHMtjW5Q-1
-X-Mimecast-MFC-AGG-ID: XrD_PmuKOWqAfoEHMtjW5Q
-Received: by mail-wr1-f69.google.com with SMTP id ffacd0b85a97d-385d80576abso1215081f8f.3
-        for <platform-driver-x86@vger.kernel.org>; Fri, 31 Jan 2025 01:20:32 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="D0jI3E4Q"
+Received: by mail-pj1-f50.google.com with SMTP id 98e67ed59e1d1-2ef6c56032eso2315658a91.2;
+        Fri, 31 Jan 2025 01:21:52 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1738315312; x=1738920112; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=IeN22OSzEjvt98Q9TD9KISzsf453Gty7d8dO0aAuNd8=;
+        b=D0jI3E4Qcta5t6yU+6in/SIPiENcsSQb46YOuEQ0bOcrpC0rhL1uugK/4RAjKI+3HQ
+         RmbNoQU+V47+bDl65zmto716Tlx7yBOoiAUj2CBdBxFoJqbc/SOFY7OAg2lZR1+mhrDv
+         DJGirXKGZI74AD9hvW9Ng2cDZtCNCpPTR2FXbqy7JhbKUIkTqwkiJaIiE46VNvB8DO0P
+         03m3x9B5cA70IACADJL+Mflb3V1x44+OUnsxWP4TRKGRRcOxeqO5Dk/tRSfGO1PpBX9K
+         43vVBGJYWkCgFfl9AmVKHQf/YGnlV0VRgUSkTUrvNtUk7XruPVAXGk/wRkxvv/eE+Sdq
+         qDhw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738315231; x=1738920031;
-        h=content-transfer-encoding:in-reply-to:content-language:references
-         :cc:to:from:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=ZdewNyQreii2Kp8xHOI0wM4v+bwm/DeR8UvcuPNaXXQ=;
-        b=cOH+L5Nh1NdgJLv/pYd56emcoeLFn25ETt7KdLJ78P37b3mRmWpwwVjE9fRFGEQ2MY
-         /m5XWjuAdAw8iG+3gKrGc9srG/UcFgC0s0v5T8c3cF1eGCQ6FsqE3YyO34WuAnelBmWI
-         Y6BdsIDaQ/PzBtxn11YlfFCFMXnjxjObq8vE0plqMTbjmGEG9HbqhF3kU20RKMZNttro
-         PS/Sh9e+Hq4oo84D70Bu96NVigfYjv24dEyZCMiyhqy/ykU7URI940Szm6GsA4OgZnR/
-         GzL9XZcq2IytRmBDGaNwvk3/TB289kFzUzil8qanZGvw80CLjHwEg2i3Yb337czTSW7P
-         SOVQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXbprwiCizV9evNdzkqxJn2PH0LconrNtAY0ALv930JdPdBX5SaA0NXLDOuHQLzI+3iX4Nl0tsAywix6wTzBCzLlotc@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx4M0gljSu5KhN5HI+kqMaMCbHOL8NbfYv1kr3vw4WLL/gaNX8J
-	N26wylifCOLbeOdgLznh8CI38JEX520a1uUvLHLOiIcIiY8aPo6oS+f//bG7Nriu4wFJTH7yZcl
-	QolLmryKc+6Ef7kkS6+8Bli64tmY00gthB054gis6gQhl3ibdZBDrhmNH6HKqRriG6WYkoLY=
-X-Gm-Gg: ASbGncvFBxSvNjIN3iE+OXIMG3DWoSBZmfWk2TVJKB2KLXOA7wO0ZJKhOI/8OJeTDZs
-	GmGp99wuAmpR3cTlQlVK306D+0skmyacl3ub9f7McScuk7V2ncPMQp+3G9eFONR+N716H3zVt0M
-	55t24828XvIqSQlfSxf3AKRgStPhVvnRHRRLROyAhGmSc2KOx/KafQRhvHKt52KY4+W9M5Au5BU
-	qNMTHm0H1uCqzgMH78fTuTDIKQ7zJBmUJb44JvzAbR75j6Cg7DPkIvW69J3ON9A3Jo4HRibI4Yv
-	l7QsdtXA+Hxn5YDpZsH4iVJywAI4iRSxsnTz8KKnswjbdFKiIO7HaiAZVOrJAoRolv9m6hNx+Sf
-	X7heqmRAfvGRl03mvfceSx4wVcLFfde1VfG1RlTBfb3uicndFm6o4V34=
-X-Received: by 2002:a05:6000:1faa:b0:385:fb8d:865b with SMTP id ffacd0b85a97d-38c520a344emr11195657f8f.48.1738315231091;
-        Fri, 31 Jan 2025 01:20:31 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IHExTrcZzwenvAqJ1Ch0w0dA3kkVl7u270NoiKTXVmGWyCe+iZBQ4VU8tD057pJKRp6GR8r+g==
-X-Received: by 2002:a05:6000:1faa:b0:385:fb8d:865b with SMTP id ffacd0b85a97d-38c520a344emr11195596f8f.48.1738315230542;
-        Fri, 31 Jan 2025 01:20:30 -0800 (PST)
-Received: from ?IPV6:2001:1c00:c32:7800:5bfa:a036:83f0:f9ec? (2001-1c00-0c32-7800-5bfa-a036-83f0-f9ec.cable.dynamic.v6.ziggo.nl. [2001:1c00:c32:7800:5bfa:a036:83f0:f9ec])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ab6e4a567d3sm260072866b.169.2025.01.31.01.20.29
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 31 Jan 2025 01:20:29 -0800 (PST)
-Message-ID: <7530fc3f-7bd9-4375-b342-b6435bad9232@redhat.com>
-Date: Fri, 31 Jan 2025 10:20:29 +0100
+        d=1e100.net; s=20230601; t=1738315312; x=1738920112;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=IeN22OSzEjvt98Q9TD9KISzsf453Gty7d8dO0aAuNd8=;
+        b=fH6PAkW5M3FrJNq59ZV5hQQttBZhSmgp7g4kgFaPF6cbxgcJeOF4ujyxIWj+wDdHZA
+         USRQQvlc1CmRMNAw2IIlxVY6rW7xVBlXLTnI1ukZGgXNvqQxoB86cSphoPHYGctoNGA7
+         Wq2eBto0ujEcSrR2QHCSlof52tC4wLH1aTVHjHr01FsVcUj8n2uOLaorECaoZrvN25Bw
+         1RbK03W9pVfRhiYy03LVxD2aft54w4NbUEBZy7zjx9A4zV7IT3vdck0XVSVdC+naep/L
+         jHurg523QYq1TbumTGYEk7kdIEAH7+UG1jAWdxM7WfTsg6fg8D4doq6J91K1K+eYU07s
+         DAww==
+X-Forwarded-Encrypted: i=1; AJvYcCW7vAp76usIGr3Zs2+Doac1st/Y2Hw/DtTjeC/HLGvMuy9gtPpEST/G2G14LsTSp9UEsyK6G3TDrD1+3Vw=@vger.kernel.org, AJvYcCW9Fxzy5/19Q3d43r6SWNiKrwm7mSIpQ/O/SJ+/ZpjUQHgdd3AtdGKzxJPa6mhUdabvOO5oWoDMJkreGQ6+@vger.kernel.org, AJvYcCWCGsrPlUWWbZoN+2zGTmuHYANLWn0QxV+MvkncTQHSWk5Plg4od3NIeqhuCPUQ7ZvUO8/RMRTCHGNwMvsh@vger.kernel.org, AJvYcCXWgo4u7y9IxCa5cJhA6K/iiocXCpccsjwlRxJRuGOs791XZ17aa0cqc7dId+kThnqE1FvFgDrbbqppxn0IzphNqZRESA==@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx6KnW2wYNRtzfaAnsKEVtv9pKy6xNFn5eegh8/UVxP6sKXemUO
+	MFaTgUv9WTKwhcuByKm2wg608VOiW6sDwYKEZ8WYLd/IsYsbDYg0FfevLC4T
+X-Gm-Gg: ASbGnct1WXgO4+w0RdrH1J4thsQxo8K64Cvwo4p+1+ojjYiZYGEo+9taVzYzpRHhaE4
+	IIygMwPVUHRtfQTEAE1vr/tEQHhaRd8zq/isSiXHZR1j3n2A8IX0RNiD9LNEnAyUdwC07Tdryh1
+	k7fuzgWGAau+hoNrRhvD5NbphXkHMK0WFdLMPXWmDJuv6c2GRI9H78Dnzmr3fhnUglLnEyHkFNC
+	m6jzCmGrMAOsVtb4uz6KgOpOFV1lZwRsXji+rNAFYM7AloXVyY5OXt0yacJOLeWKDCj2Jf/srg6
+	1SyY8H8o//+w2726
+X-Google-Smtp-Source: AGHT+IGioM1AR/uwmWOKqUK4+pcO/uZw1qNjjKt/SsLAHjmfzc5juJtHOP5fQMHUCU2+AXs0hRZwMg==
+X-Received: by 2002:a17:90b:2d47:b0:2ee:cdea:ad91 with SMTP id 98e67ed59e1d1-2f83abda2f2mr16207596a91.15.1738315312218;
+        Fri, 31 Jan 2025 01:21:52 -0800 (PST)
+Received: from SC8280XP.. ([144.202.86.13])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-2f83bf93ef3sm5366629a91.30.2025.01.31.01.21.44
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 31 Jan 2025 01:21:51 -0800 (PST)
+From: Pengyu Luo <mitltlatltl@gmail.com>
+To: Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Bjorn Andersson <andersson@kernel.org>,
+	Konrad Dybcio <konradybcio@kernel.org>,
+	Hans de Goede <hdegoede@redhat.com>,
+	=?UTF-8?q?Ilpo=20J=C3=83=C2=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	Bryan O'Donoghue <bryan.odonoghue@linaro.org>,
+	Jean Delvare <jdelvare@suse.com>,
+	Guenter Roeck <linux@roeck-us.net>
+Cc: devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-arm-msm@vger.kernel.org,
+	platform-driver-x86@vger.kernel.org,
+	linux-hwmon@vger.kernel.org,
+	Pengyu Luo <mitltlatltl@gmail.com>
+Subject: [PATCH RESEND v6 0/3] platform: arm64: Huawei Matebook E Go embedded controller
+Date: Fri, 31 Jan 2025 17:21:36 +0800
+Message-ID: <20250131092139.6065-1-mitltlatltl@gmail.com>
+X-Mailer: git-send-email 2.47.1
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: RFC: How to deal with the INT3472 handshake GPIO found on Intel
- IPU6 MTL?
-From: Hans de Goede <hdegoede@redhat.com>
-To: "sakari.ailus@linux.intel.com" <sakari.ailus@linux.intel.com>
-Cc: Linux Media Mailing List <linux-media@vger.kernel.org>,
- "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>,
- Dan Scally <djrscally@gmail.com>, Bingbu Cao <bingbu.cao@intel.com>,
- Alan Stern <stern@rowland.harvard.edu>, "duanek@chorus.net"
- <duanek@chorus.net>
-References: <59f672c3-6d87-4ec7-9b7f-f44fe2cce934@redhat.com>
- <Z5c6Yef3KBS6VbTC@kekkonen.localdomain>
- <ef5a8144-d60b-4719-926d-35e9fea5a435@redhat.com>
-Content-Language: en-US, nl
-In-Reply-To: <ef5a8144-d60b-4719-926d-35e9fea5a435@redhat.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-Hi All,
+This adds binding, drivers and the DT support for the Huawei Matebook E Go
+(sc8280xp-based) Embedded Controller which is also found in Huawei Matebook
+E Go LTE (sc8180x-based), but I don't have the sc8180x one to perform
+tests, so this series enable support for sc8280xp variant only, this series
+provides the following features:
 
-On 30-Jan-25 4:34 PM, Hans de Goede wrote:
-> Hi Sakari,
-> 
-> On 27-Jan-25 8:48 AM, sakari.ailus@linux.intel.com wrote:
->> Hi Hans,
->>
->> Thanks for your e-mail.
->>
->> On Wed, Jan 22, 2025 at 06:19:47PM +0100, Hans de Goede wrote:
->>> Hi All,
->>>
->>> Background / analysis:
->>> ----------------------
->>>
->>> New Intel Meteor Lake based laptops with IPU6 cameras have a new type 0x12
->>> pin defined in the INT3472 sensor companion device which describes
->>> the sensor's GPIOs.
->>>
->>> Based on what I know about this now, this pin seems to be used in at least
->>> 3 different scenarios:
->>>
->>> 1. To power-up / activate some unknown auxiliary IC on HP laptop designs
->>> where the sensor is directly connected to the main Meteor Lake SoC for
->>> I2C and GPIOs (no USB io-expander used). Example dyndbg int3472 output:
->>>
->>> HP Spectre x360 2-in-1 Laptop 16t-aa000/8C17, BIOS F.11 08/14/2024 (ov08x40):
->>> [    4.908016] int3472-discrete INT3472:01: unknown \_SB.GPI0 pin 65 active-high
->>> [    4.908019] int3472-discrete INT3472:01: GPIO type 0x12 unknown; the sensor may not work
->>> [    4.908100] int3472-discrete INT3472:01: privacy-led \_SB.GPI0 pin 107 active-high
->>> (and lsusb shows no Lattice NX## / Synaptics Sabre USB-io expander)
->>>
->>> 2. To make the Lattice chip in designs with the Lattice chip is used run
->>> the power-on sequence of the sensor which is handled by the Lattice chip
->>> firmware itself running the entire power-on/-down sequence when changing
->>> the GPIO value. Example dyndbg int3472 output:
->>>
->>> Dell Latitude 7450 (with patch to map handshake in INT3472) (ov02e10):
->>> [    5.110920] int3472-discrete INT3472:01: Sensor name OVTI02E1:00
->>> [    5.111908] int3472-discrete INT3472:01: Sensor module id: 'CIFNE24'
->>> [    5.113653] int3472-discrete INT3472:01: handshake \_SB.PC00.XHCI.RHUB.HS05.VGPO pin 0 active-high
->>> [    5.113676] int3472-discrete INT3472:01: privacy-led \_SB.PC00.XHCI.RHUB.HS05.VGPO pin 2 active-high
->>> (with 2ac1:20c9 Lattice NX33 USB IO-expander)
->>
->> The good thing is that there's a datasheet
->> <URL:https://mm.digikey.com/Volume0/opasdata/d220001/medias/docus/5726/FPGA-DS-02104-0-92-CrossLink-NX-33-and-CrossLink-NX-33U.pdf>
->> so we don't need to guess.
->>
->> Lattice NX-33 is more than an USB IO expenader. Most likely it acts as a
->> CSI-2 RX and CSI-2 TX and does something in between, like IVSC. It should
->> have its own driver, even if all it does is toggle GPIOs and sleep a
->> little.
-> 
-> I guess that what you mean is having something similar to:
-> 
-> drivers/media/pci/intel/ivsc/mei_csi.c
-> 
-> which just toggles the handshake GPIO on the s_stream() callback ?
-> 
-> That would require injecting the Lattice NX33 into the media fwnode
-> graph similar to how we are doing this for the ivsc. But where
-> the ivsc triggers this on there being an ACPI fwnode, there does
-> not appear to be any ACPI fwnode for the NX33 at least not
-> on Alan's laptop where we know the handshake signal is necessary.
-> 
-> https://github.com/intel/vision-drivers
-> 
-> suggests that the new chip shows up as an i2c device when it
-> actually is mitm-ing the sensor and here is "ls /sys/bus/i2c/devices"
-> output for Alan's laptop with the usbio-i2c driver loaded:
-> 
-> $ ls -l /sys/bus/i2c/devices
-> total 0
-> lrwxrwxrwx. 1 root root 0 Jan  6 08:46 i2c-0 -> ../../../devices/pci0000:00/0000:00:02.0/i2c-0/
-> lrwxrwxrwx. 1 root root 0 Jan  6 08:46 i2c-1 -> ../../../devices/pci0000:00/0000:00:02.0/i2c-1/
-> lrwxrwxrwx. 1 root root 0 Jan  6 08:46 i2c-10 -> ../../../devices/pci0000:00/0000:00:02.0/drm/card0/card0-DP-1/i2c-10/
-> lrwxrwxrwx. 1 root root 0 Jan  6 08:46 i2c-11 -> ../../../devices/pci0000:00/0000:00:02.0/drm/card0/card0-DP-2/i2c-11/
-> lrwxrwxrwx. 1 root root 0 Jan  6 08:46 i2c-12 -> ../../../devices/pci0000:00/0000:00:15.0/i2c_designware.0/i2c-12/
-> lrwxrwxrwx. 1 root root 0 Jan  6 08:46 i2c-13 -> ../../../devices/pci0000:00/0000:00:15.3/i2c_designware.1/i2c-13/
-> lrwxrwxrwx. 1 root root 0 Jan  6 08:46 i2c-14 -> ../../../devices/pci0000:00/0000:00:1f.4/i2c-14/
-> lrwxrwxrwx. 1 root root 0 Jan  6 08:46 i2c-15 -> ../../../devices/pci0000:00/0000:00:14.0/usb3/3-5/3-5:1.0/usbio-i2c.2.auto/i2c-15/
-> lrwxrwxrwx. 1 root root 0 Jan  6 08:46 i2c-16 -> ../../../devices/pci0000:00/0000:00:14.0/usb3/3-5/3-5:1.0/usbio-i2c.3.auto/i2c-16/
-> lrwxrwxrwx. 1 root root 0 Jan  6 08:46 i2c-2 -> ../../../devices/pci0000:00/0000:00:02.0/i2c-2/
-> lrwxrwxrwx. 1 root root 0 Jan  6 08:46 i2c-3 -> ../../../devices/pci0000:00/0000:00:02.0/i2c-3/
-> lrwxrwxrwx. 1 root root 0 Jan  6 08:46 i2c-4 -> ../../../devices/pci0000:00/0000:00:02.0/i2c-4/
-> lrwxrwxrwx. 1 root root 0 Jan  6 08:46 i2c-5 -> ../../../devices/pci0000:00/0000:00:02.0/i2c-5/
-> lrwxrwxrwx. 1 root root 0 Jan  6 08:46 i2c-6 -> ../../../devices/pci0000:00/0000:00:02.0/i2c-6/
-> lrwxrwxrwx. 1 root root 0 Jan  6 08:46 i2c-7 -> ../../../devices/pci0000:00/0000:00:02.0/i2c-7/
-> lrwxrwxrwx. 1 root root 0 Jan  6 08:46 i2c-8 -> ../../../devices/pci0000:00/0000:00:02.0/i2c-8/
-> lrwxrwxrwx. 1 root root 0 Jan  6 08:46 i2c-9 -> ../../../devices/pci0000:00/0000:00:02.0/drm/card0/card0-eDP-1/i2c-9/
-> lrwxrwxrwx. 1 root root 0 Jan  6 08:46 i2c-HIMX1092:00 -> ../../../devices/pci0000:00/0000:00:14.0/usb3/3-5/3-5:1.0/usbio-i2c.2.auto/i2c-15/i2c-HIMX1092:00/
-> lrwxrwxrwx. 1 root root 0 Jan  6 08:46 i2c-OVTI02E1:00 -> ../../../devices/pci0000:00/0000:00:14.0/usb3/3-5/3-5:1.0/usbio-i2c.3.auto/i2c-16/i2c-OVTI02E1:00/
-> lrwxrwxrwx. 1 root root 0 Jan  6 08:46 i2c-VEN_0488:00 -> ../../../devices/pci0000:00/0000:00:15.3/i2c_designware.1/i2c-13/i2c-VEN_0488:00/
-> 
-> Notice there is no i2c device matching the devices expected by
-> the vision-drivers.
-> 
-> I have heard that the X1 carbon gen 13 (lunar lake) does have
-> such an i2c device.
-> 
-> So I think that the CSI pass-through functionality is not used
-> on Alan's laptop.
-> 
-> Also the ivcs needed to be configured for number of CSI lanes +
-> CSI frequency. That is not the case here. It is a fully opaque
-> black box and Windows seems to treat it mostly as if it is
-> not there at all.
-> 
-> I believe that it would be best to do the same as Windows and
-> just make sure we toggle the handshake pin and otherwise forget
-> about the chip being there. In my many years if experience with
-> x86 hw primarily designed for Windows trying to behave differently
-> from Windows only causes trouble.
-> 
-> If we were to try and model this as a separate v4l2-subdev
-> in the media graph then then the questions become:
-> 
-> 1. When to inject such a node. The ivsc model of going by
-> ACPI HID's very likely does not work (or maybe it does and
-> we simply have not seen hw yet which actually uses the vision
-> parts? That is what the vision-drivers git repo suggests).
-> 
-> Going by the presence of a handshake pin in the INT3472 device
-> is riddled with problems:
-> 
-> a. It requires digging into the ACPI resources of a device
-> not owned by the ipu-bridge code.
-> 
-> b. Given the HP laptop example, likely also Alan's laptop
-> the presence of a handshake pin on meteor lake laptops does
-> not seem to guarantee the CSI signals are actually MITM-ed
-> by a chip, so we will likely create false-positives.
-> 
-> c. Some previous (alder/raptor lake) HP laptops advertise
-> a handshake pin but already work since they seem to not use it,
-> so more false-postive matches.
-> 
-> 2. Without an ACPI hid we have no struct-device/fwnode
-> to use as parent for the extra v4l2-subdev, so what do we
-> use for this ?
-> 
-> 3. What about models where the fwnode-s for the media graph
-> come from ACPI MIPI discovery? We skip the ipu-bridge code
-> there ...
-> 
-> Combining these issues with the fact that the interface
-> is now just a single GPIO of which we do not exactly know
-> what it does, where as with the ivsc we actually needed
-> to program a CSI2 lane-count + link-freq I do not believe
-> that modelling this unknown hw controlled by the handshake
-> pin as an extra node on the media graph is the right thing
-> to do.
-> 
-> ATM this feels much more like some power-sequencing thing,
-> just one more regulator / clk / reset-pin which we need
-> to set during power-up / -down.
-> 
-> If in the future we get models where the ACPI HIDs claimed by:
-> https://github.com/intel/vision-drivers/blob/main/drivers/misc/icvs/intel_cvs.c#L720
-> actually show up then we can revisit this. It might make
-> sense to treat things like the ivsc setup in that case and
-> then if those too use the type 0x12 GPIO on the INT3472
-> device we can use the same code as used by the ipu-bridge
-> to create the extra media graph nodes to opt out of mapping
-> type 0x12 to a vdd supply.
-> 
-> Another solution would be to move even closer to what Windows
-> does and switch the driver for the INT3472 ACPI device from
-> mapping pins to gpio-lookups / clks / regulators to it controlling
-> all the GPIOs listed in the INT3472 _DSM directly from runtime
-> suspend/resume functions, using a runtime pm device link from
-> the sensor to ensure that the INT3472 device is suspended / resumed
-> at the right time.
-> 
-> This would also solve all of the mapping issues discussed in relation
-> to the ov7251 driver expecting an "enable" pin. I believe that this
-> would be the closest mirror of what Windows actually does and thus
-> is what will work without issues / quirks on the most laptop models.
-> 
->> Any thoughts, Bingbu?
->>
->>>
->>> 3. For unknown reason (ACPI table bug? / not actually used) there is
->>> a handshake type pin in the INT3472 device on some older HP models with
->>> a hi556 sensor connected directly to the Alder Lake or Raptor Lake SoC,
->>> see e.g. the dmesg from: https://linux-hardware.org/?probe=a9a2e2ab03 :
->>>
->>> [    9.077107] int3472-discrete INT3472:01: reset \_SB.GPI0 pin number mismatch _DSM 141 resource 301
->>> [    9.077170] int3472-discrete INT3472:01: power-enable \_SB.GPI0 pin number mismatch _DSM 142 resource 302
->>> [    9.086727] int3472-discrete INT3472:01: GPIO type 0x12 unknown; the sensor may not work
->>>
->>> which is from a model where it has been confirmed that the FOSS stack
->>> works already even though we have no handshake GPIO support yet.
->>>
->>> Testing has shown that for things to work in scenario 1. and 2. the 0x12 /
->>> handshake type pin needs to be driven high, followed by a msleep of 25 ms.
->>>
->>> The 25 ms was taken from the out of tree drivers which specify this as
->>> minimum sleep for the Lattice case. For the HP without Lattice, the default
->>> 1 ms post reset delay also is not enough see:
->>> https://lore.kernel.org/linux-media/1664997903.107383327.1734874558698.JavaMail.zimbra@chorus.net/
->>
->> Maybe that 25 ms is required for booting whatever runs on NX-33?
-> 
-> Yes the comments in the out of tree driver refer to this being
-> related to the Lattice fw.
-> 
->>> This applies to both the HP Spectre x360 16t without Lattice chip and
->>> the Dell Latitude 7450 with Lattice chip.
->>>
->>> I suspect that there might be some micro-controller or something running
->>> the power-on sequence in the HP Spectre x360 16t case too, but there it
->>> is just a standalone chip responding to the GPIO, not an USB attached chip
->>> also offering, e.g. an I2C + GPIO controller like the Lattice chip.
->>
->> So there's nothing unusual there in terms of USB devices there?
->>
->> Would you be able to dump the ACPI tables from the HP machine? (I don't
->> mind Dell either.)
-> 
-> I have attached an acpidump from a HP Spectre x360 14-eu0xxx where
-> the handshake pin appears to be necessary but there is no lattice chip here:
-> 
-> https://bugzilla.redhat.com/show_bug.cgi?id=2333331
-> 
-> Alan can you send Sakari an acpidump of your laptop ?
-> 
-> <snip>
-> 
->> I'll need to dig a bit further, hoping to find out what that special GPIO
->> 0x12 is.
-> 
-> Between this and the pin mapping discussion before I'm more and more
-> convinced that we are going all wrong about this.
-> 
-> The INT3472 device seems to purely be a power-sequencing device which
-> I believe has its own driver separate from the sensor drivers under
-> Windows and the ACPI _DEP link ensures that it gets powered-up before
-> the sensor device does.
-> 
-> We really should use this fw API as intended and simply have
-> the INT3472 driver directly control the GPIOs from its own runtime
-> suspend/resume methods and use a runtime-pm link to ensure
-> the INT3472 device gets runtime-resumed before the sensor device
-> gets runtime-resumed.
-> 
-> This requires basically rewriting:
-> drivers/platform/x86/intel/int3472/discrete.c
-> but I believe that the end result will be cleaner / smaller and this
-> should solve most problems surrounding this code once and for all
-> avoiding us to have to revisit things all the time to work around
-> the mismatch in expectations between the ACPI tables on Windows
-> laptops and the devicetree-like setup the sensor drivers expect.
+- battery and charger information report
+- charging thresholds control
+- FN lock (An alternative method)
+- LID switch detection
+- Temperature sensors
+- USB Type-C altmode
+- USB Type-C PD(high power)
 
-One remark about my idea to turn the INT3472 discrete driver into
-a power-sequencing driver and have it control all the GPIOs +
-timing itself. Using runtime suspend/resume with runtime-pm
-device links will not work since the i2c_client does not exist
-yet when the INT3472 driver binds and adding the links later
-is troublesome since as soon as the i2c_client is there
-the sensor driver my bind and that may want to power-up
-the sensor during probe().
+Thanks to the work of Bjorn and Dmitry([1]), the work of Nikita([2]),
+writing a EC driver won't be suffering. This work refers a lot to their
+work, also, many other works. I mentioned them in commit messages.
 
-So instead I think we should go with Sakari's suggestion from:
-https://lore.kernel.org/platform-driver-x86/Z49V5CqEt6H96LvJ@kekkonen.localdomain/
+Depends: https://lore.kernel.org/linux-arm-msm/20241220160530.444864-1-mitltlatltl@gmail.com
 
-to use a virtual GPIO controller offering a "reset" or
-"enable" con_id GPIO to the sensor and then do the
-power-sequencing based on that GPIO being set low/high by
-the sensor driver.
+[1] https://lore.kernel.org/all/20240614-yoga-ec-driver-v7-0-9f0b9b40ae76@linaro.org/
+[2] https://lore.kernel.org/all/20240315-aspire1-ec-v5-0-f93381deff39@trvn.ru/
 
-Regards,
+base-commit: 853d1f41ba73e78d22e7075d9a95670aab187eba
 
-Hans
+Signed-off-by: Pengyu Luo <mitltlatltl@gmail.com>
+---
+Changes in v6 RESEND:
+- add Reviewed-by tag (Ilpo)
+- remove extra line
+- rebased on tag next-20250131
+- Link to v6: https://lore.kernel.org/linux-arm-msm/20250123152559.52449-1-mitltlatltl@gmail.com
 
+Changes in v6:
+- refactor one ternary operator expression (Ilpo)
+- replace one expression with &= (Ilpo)
+- use devm_mutex_init() instead of mutex_init() (Ilpo)
+- add Reviewed-by tag for devicetree (Konrad)
+- add explicit cast (void *) to fix warnings when compiling
+- rebased on tag next-20250123
+- Link to v5: https://lore.kernel.org/linux-arm-msm/20250117140348.180681-1-mitltlatltl@gmail.com
 
+Changes in v5 RESEND:
+- rebased on tag next-20250120
+- Link to v5: https://lore.kernel.org/linux-arm-msm/20250117140348.180681-1-mitltlatltl@gmail.com
+
+Changes in v5:
+- handle return code of i2c_transfer() (Bryan)
+- rename threshold validatition function (Bryan)
+- add enumerates and defines for registers (Bryan)
+- drop extra line in header (Heikki)
+- add Reviewed-by tag for devicetree (Krzysztof)
+- Link to v4: https://lore.kernel.org/linux-arm-msm/20250116111559.83641-1-mitltlatltl@gmail.com
+
+Changes in v4:
+- use new API to register hwmon device instead of the deprecated one. (Guenter)
+- add Reviewed-by tag for dt-binding (Krzysztof)
+- drop unnecessary header (Ilpo)
+- use guard mutex (Ilpo)
+- improve comments and naming (Ilpo)
+- add a shallow copy version of extr_resp() (Ilpo)
+- add functions to handle resp and req whose size is 1
+- drop PSY and UCSI subdrivers, commit them once the base driver is upstreamed
+- Link to v3: https://lore.kernel.org/linux-arm-msm/20250113175049.590511-1-mitltlatltl@gmail.com
+
+Changes in v3:
+- Link to v2: https://lore.kernel.org/linux-arm-msm/20250105174159.227831-1-mitltlatltl@gmail.com
+
+dt-binding:
+- drop generic compatibles. (Krzysztof)
+- remove '+' to use literal block style. (Krzysztof)
+
+ec:
+- take struct gaokun_ucsi_reg as parameter (Heikki)
+- add almost all kernel doc comments (Krzysztof, Heikki)
+
+ucsi:
+- drop unnecessary ucsi quirks (Dmitry)
+- add UCSI v1.0 to ucsi.h (Heikki)
+- use gaokun_ucsi_read_cci() to read cci directly (Heikki)
+- drop unnecessary gaokun_ucsi_get_port_num (Heikki)
+- rename member port_num => num_ports (Heikki)
+- fix completion, forgot to signal threads in previous version
+
+dt:
+- fix indentation (Konrad)
+- add a link between role switch and connector
+
+Changes in v2:
+- Link to v1: https://lore.kernel.org/linux-arm-msm/20241227171353.404432-1-mitltlatltl@gmail.com
+
+global:
+- drop qcom's products(i.e. sc8180x, sx8280xp) everywhere, use 'product'-based instead(Krzysztof, Bryan)
+- drop Cc Nikita Travkin, we had discussed the device in PM.
+- add myself to MAINTAINERS
+
+dt-binding:
+- fix building (Rob Herring (Arm))
+- remove unnecessary code (Krzysztof)
+- add bugzilla documentation, insights of gaokun(see [1] or patch[1/5]) (Krzysztof, Aiqun(Maria))
+- explain the difference between PMIC GLink and gaokun EC (Aiqun(Maria))
+
+ec:
+- use Linux style comments (Krzysztof)
+- add a comment for mutex lock (Krzysztof)
+- add more kerneldoc for exported functions (Krzysztof)
+- eliminate unnecessary conditions (Bryan)
+- add a macro for check thresholds (Bryan)
+- improve English (Bryan)
+- use existing sysfs interface(hwmon, psy) whenever possible (Krzysztof)
+- use __le16 and related endianess conversion function for temp data (Ilpo)
+- drop alias for packet headers (Ilpo)
+- avoid hardcoding i2c msgs size (Aiqun(Maria))
+- add a comment for the sleep in critial region (Bryan, Aiqun(Maria))
+- use macro to construct packet (Bryan, Aiqun(Maria))
+
+wmi:
+- dropped
+
+ucsi:
+- reorder headers (Bryan)
+- a comment for the orientation map macro (Bryan)
+- make mux mode map more explicit(minus six is very clear now) (Bryan, Dmitry)
+- handle port update exceptions return (Bryan)
+- a comment for the UCSI quirks (Dmitry)
+- use the inline hint for the short register function (Dmitry)
+- use the API with delay to handle register instead of a direct sleep (Bryan)
+- handle unfinished initialization early
+
+psy:
+- add charging related sysfs to here (Krzysztof, Dmitry)
+- document ABI for power_supply sysfs (Krzysztof)
+- drop charging threshold, use smart charging instead
+
+dts:
+- correct indentation, properties' order. (Konrad)
+
+Pengyu Luo (3):
+  dt-bindings: platform: Add Huawei Matebook E Go EC
+  platform: arm64: add Huawei Matebook E Go EC driver
+  arm64: dts: qcom: gaokun3: Add Embedded Controller node
+
+ .../bindings/platform/huawei,gaokun-ec.yaml   | 124 +++
+ MAINTAINERS                                   |   7 +
+ .../boot/dts/qcom/sc8280xp-huawei-gaokun3.dts | 163 ++++
+ drivers/platform/arm64/Kconfig                |  20 +
+ drivers/platform/arm64/Makefile               |   1 +
+ drivers/platform/arm64/huawei-gaokun-ec.c     | 825 ++++++++++++++++++
+ .../linux/platform_data/huawei-gaokun-ec.h    |  79 ++
+ 7 files changed, 1219 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/platform/huawei,gaokun-ec.yaml
+ create mode 100644 drivers/platform/arm64/huawei-gaokun-ec.c
+ create mode 100644 include/linux/platform_data/huawei-gaokun-ec.h
+
+-- 
+2.47.1
 
