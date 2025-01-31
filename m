@@ -1,68 +1,72 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8985953368;
-	Fri, 31 Jan 2025 17:20:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5AB07155C88;
+	Fri, 31 Jan 2025 20:08:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738344016; cv=none; b=Mwu0E43fsUJ/sHbHkDzi/eJEgF1oj297e4hvSMroi3Z0XTisFdXirHKt/rZj7pw7Dthh01eogWdTQztP9AMHB8D4CZgkk2qI1+Jxh6iz66Bs+9sH/nsWgcp3cm8MOLcMiGpEKtwEYykLEuWaoq759oUrV+XzWD+tNiBxt/2ciYQ=
+	t=1738354090; cv=none; b=Cm0iRQlAAft+2GDNbzjGi7fjJYIa2G/uMWT4kDvwSyVjc+0yeT7eNoYicXmp8oXx+l10n0Flzb4LSbUrotSFZhqXMb2AHaBq1hZ9WVoSw9cRFnq7r0Dfem5kOZdkPZ5XkTmeI290zPFVl5PZV86puxIV120+wkdATCnrRy4oLdE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738344016; c=relaxed/simple;
-	bh=ltqN/95oH7uXi7rBojIwpxYHd0hyNTCytZ/VYy/F9/Q=;
+	s=arc-20240116; t=1738354090; c=relaxed/simple;
+	bh=COXth9vzC9L4DLry/6VVSSD8GXZn+nuLwV2IJYzQEqY=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=hZvWTXxbXPJHJHc49hl+o0iXOKRYqNDxkxG4W8mWv/NLTIEYlQ2FkowVIC2ucm+aybEXzRbqBBzKbScbBx1eLxzj09X2aPPWwgiyh6nU1xX2WKZNGv0ufGqET0srdYBQiLupWNfE6tFq+tmtz0RL+jVCkZXKHw8zI81ZdubHOrk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=cWwGJT0U; arc=none smtp.client-ip=198.175.65.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=ds3/R01Z3/jaDpLYHkitihVfZHjCilQJ9StT1SK3LzPhPCfBwnvzBWM1PtSqUSgUP4O/YZf0F3IBAvHoRva3AoRhYzwna+ywGZJJTwlLmmzNz+WTE4c8kM8Xv8rIHaDxng6HSPdQb8aggEkyfEgosDqX/GX4KXkLzXX4L55nVkE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=l0XR6LBg; arc=none smtp.client-ip=198.175.65.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="cWwGJT0U"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="l0XR6LBg"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1738344015; x=1769880015;
+  t=1738354088; x=1769890088;
   h=date:from:to:cc:subject:message-id:references:
    mime-version:in-reply-to;
-  bh=ltqN/95oH7uXi7rBojIwpxYHd0hyNTCytZ/VYy/F9/Q=;
-  b=cWwGJT0UCuDjZALW4YateEOi9SW5Y48ofsmaWE4L7euYHgVeb+yrWDbG
-   bZtFaOHEMZH+dsqHPtmFwztnLDFvElsmV4NbAd/1dKUqL1juBU0TdV02X
-   Pd/coOeyxZmBAkS/rD592iTZcyR4YKU7NVLoR1WfNTsgqo4++64x43xgt
-   B1BLotUCRdaZ1ZJ9Ul6HhFKeKDgO4KBJRihhMkHb8O2ENEHGRNYYeryzg
-   OG3ZFmm8DlTr4fxsmp0q9xpphaQJdujaXY+z33oDFQ+n70BLXSiS3nmpM
-   teGcCneDoLgprRjjaxaF7GBLwSFp8iLunSdIalBD+jr9A1kkCc0FW8UZy
-   g==;
-X-CSE-ConnectionGUID: lN2uaIR6RvWYIa8iK62slQ==
-X-CSE-MsgGUID: a6mHcmIHRcKU7kLkmsy2dw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11332"; a="61389378"
+  bh=COXth9vzC9L4DLry/6VVSSD8GXZn+nuLwV2IJYzQEqY=;
+  b=l0XR6LBgA9yOp/GxMcF0BLCdUMbGXMF2KQAWDL/GCsZHH3y8oxoJirH+
+   IU1NlIt4PW8IBGWAIdt3SP0qma4PAQKm3x0B+1aI8/YzsVZr77YthADBN
+   AaRxoRCNQaLXptxubWenhp7fv+aYUfnEtsZwptJ4Fz4k/itGJ4DmGWnus
+   yQ1MnLgvDFDIdJIXtus8emyTJuJBg61JcKdeTsfXF6A1EK5o+jJD9uHpO
+   98zViztUHLetMl2VuGY+rK16i9xM3zQQyNociiYQKdRCNBcMks8B2IEst
+   iHQfYhfhBEtByFnM8c0ieCNaYT4NmY6DOsRwphDvExd3JEt/HCxWDi7Dq
+   A==;
+X-CSE-ConnectionGUID: 2Y6NpFr/RiGI7pRPy9GyCg==
+X-CSE-MsgGUID: qLNJIE9uTy6XsIPl8ed78w==
+X-IronPort-AV: E=McAfee;i="6700,10204,11332"; a="50316415"
 X-IronPort-AV: E=Sophos;i="6.13,249,1732608000"; 
-   d="scan'208";a="61389378"
-Received: from orviesa009.jf.intel.com ([10.64.159.149])
-  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Jan 2025 09:20:14 -0800
-X-CSE-ConnectionGUID: xb9sY8fUTkixIHN+XaKPAg==
-X-CSE-MsgGUID: CfxAxRbdQAGPFgyR0heF8w==
+   d="scan'208";a="50316415"
+Received: from orviesa006.jf.intel.com ([10.64.159.146])
+  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Jan 2025 12:08:08 -0800
+X-CSE-ConnectionGUID: h5yofnzcQ4u8Trpgo7S3FQ==
+X-CSE-MsgGUID: PxFX4g1OS/GH68anfo97Hw==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.13,249,1732608000"; 
-   d="scan'208";a="109460345"
-Received: from smile.fi.intel.com ([10.237.72.58])
-  by orviesa009.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Jan 2025 09:20:12 -0800
-Received: from andy by smile.fi.intel.com with local (Exim 4.98)
-	(envelope-from <andriy.shevchenko@linux.intel.com>)
-	id 1tdugb-000000071Ov-0a7d;
-	Fri, 31 Jan 2025 19:20:09 +0200
-Date: Fri, 31 Jan 2025 19:20:08 +0200
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Sakari Ailus <sakari.ailus@linux.intel.com>
-Cc: Daniel Scally <djrscally@gmail.com>,
+   d="scan'208";a="109655773"
+Received: from lkp-server01.sh.intel.com (HELO d63d4d77d921) ([10.239.97.150])
+  by orviesa006.jf.intel.com with ESMTP; 31 Jan 2025 12:08:04 -0800
+Received: from kbuild by d63d4d77d921 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1tdxJ3-000n3L-1P;
+	Fri, 31 Jan 2025 20:08:01 +0000
+Date: Sat, 1 Feb 2025 04:07:19 +0800
+From: kernel test robot <lkp@intel.com>
+To: Pengyu Luo <mitltlatltl@gmail.com>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Bjorn Andersson <andersson@kernel.org>,
+	Konrad Dybcio <konradybcio@kernel.org>,
 	Hans de Goede <hdegoede@redhat.com>,
-	Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	platform-driver-x86@vger.kernel.org,
-	laurent.pinchart@ideasonboard.com, hverkuil@xs4all.nl,
-	linux-media@vger.kernel.org
-Subject: Re: [PATCH v4 2/3] platform/x86: int3472: Call "reset" GPIO "enable"
- for INT347E
-Message-ID: <Z50GSENeQ73XRTWz@smile.fi.intel.com>
-References: <20250131073707.1082931-1-sakari.ailus@linux.intel.com>
- <20250131073707.1082931-3-sakari.ailus@linux.intel.com>
- <Z5yya8BIK9GBtVEM@smile.fi.intel.com>
- <Z5y6oI9Z2ILqwu0B@kekkonen.localdomain>
+	Ilpo =?iso-8859-1?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>,
+	Bryan O'Donoghue <bryan.odonoghue@linaro.org>,
+	Jean Delvare <jdelvare@suse.com>,
+	Guenter Roeck <linux@roeck-us.net>
+Cc: oe-kbuild-all@lists.linux.dev, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+	platform-driver-x86@vger.kernel.org, linux-hwmon@vger.kernel.org,
+	Pengyu Luo <mitltlatltl@gmail.com>
+Subject: Re: [PATCH RESEND v6 2/3] platform: arm64: add Huawei Matebook E Go
+ EC driver
+Message-ID: <202502010344.KWDBQUG9-lkp@intel.com>
+References: <20250131092139.6065-3-mitltlatltl@gmail.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -71,34 +75,96 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <Z5y6oI9Z2ILqwu0B@kekkonen.localdomain>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+In-Reply-To: <20250131092139.6065-3-mitltlatltl@gmail.com>
 
-On Fri, Jan 31, 2025 at 11:57:20AM +0000, Sakari Ailus wrote:
-> On Fri, Jan 31, 2025 at 01:22:19PM +0200, Andy Shevchenko wrote:
-> > On Fri, Jan 31, 2025 at 09:37:06AM +0200, Sakari Ailus wrote:
+Hi Pengyu,
 
-...
+kernel test robot noticed the following build errors:
 
-> > > +		if (*type != int3472_gpio_map[i].type_from ||
-> > > +		    !acpi_dev_hid_uid_match(adev, int3472_gpio_map[i].hid, NULL))
-> > > +			continue;
-> > 
-> > I think in a split form it is easier to read and maintain:
-> > 
-> > 		if (!acpi_dev_hid_uid_match(adev, int3472_gpio_map[i].hid, NULL))
-> > 			continue;
-> > 
-> > 		if (*type != int3472_gpio_map[i].type_from)
-> > 			continue;
-> 
-> Works for me, with the order reverted. I'll send v5.
+[auto build test ERROR on 853d1f41ba73e78d22e7075d9a95670aab187eba]
 
-Hmm... I don't think the provided order is understandable.
-But let's continue discussion in v5 thread.
+url:    https://github.com/intel-lab-lkp/linux/commits/Pengyu-Luo/dt-bindings-platform-Add-Huawei-Matebook-E-Go-EC/20250131-172427
+base:   853d1f41ba73e78d22e7075d9a95670aab187eba
+patch link:    https://lore.kernel.org/r/20250131092139.6065-3-mitltlatltl%40gmail.com
+patch subject: [PATCH RESEND v6 2/3] platform: arm64: add Huawei Matebook E Go EC driver
+config: powerpc64-randconfig-003-20250201 (https://download.01.org/0day-ci/archive/20250201/202502010344.KWDBQUG9-lkp@intel.com/config)
+compiler: powerpc64-linux-gcc (GCC) 14.2.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250201/202502010344.KWDBQUG9-lkp@intel.com/reproduce)
+
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202502010344.KWDBQUG9-lkp@intel.com/
+
+All errors (new ones prefixed by >>):
+
+   powerpc64-linux-ld: warning: discarding dynamic section .glink
+   powerpc64-linux-ld: warning: discarding dynamic section .plt
+   powerpc64-linux-ld: linkage table error against `devm_hwmon_device_register_with_info'
+   powerpc64-linux-ld: stubs don't match calculated size
+   powerpc64-linux-ld: can not build stubs: bad value
+   powerpc64-linux-ld: drivers/platform/arm64/huawei-gaokun-ec.o: in function `gaokun_ec_probe':
+>> drivers/platform/arm64/huawei-gaokun-ec.c:786:(.text+0x16ac): undefined reference to `devm_hwmon_device_register_with_info'
+
+
+vim +786 drivers/platform/arm64/huawei-gaokun-ec.c
+
+   740	
+   741	static int gaokun_ec_probe(struct i2c_client *client)
+   742	{
+   743		struct device *dev = &client->dev;
+   744		struct gaokun_ec *ec;
+   745		int ret;
+   746	
+   747		ec = devm_kzalloc(dev, sizeof(*ec), GFP_KERNEL);
+   748		if (!ec)
+   749			return -ENOMEM;
+   750	
+   751		ret = devm_mutex_init(dev, &ec->lock);
+   752		if (ret)
+   753			return ret;
+   754	
+   755		ec->client = client;
+   756		i2c_set_clientdata(client, ec);
+   757		BLOCKING_INIT_NOTIFIER_HEAD(&ec->notifier_list);
+   758	
+   759		/* Lid switch */
+   760		ec->idev = devm_input_allocate_device(dev);
+   761		if (!ec->idev)
+   762			return -ENOMEM;
+   763	
+   764		ec->idev->name = "LID";
+   765		ec->idev->phys = "gaokun-ec/input0";
+   766		input_set_capability(ec->idev, EV_SW, SW_LID);
+   767	
+   768		ret = input_register_device(ec->idev);
+   769		if (ret)
+   770			return dev_err_probe(dev, ret, "Failed to register input device\n");
+   771	
+   772		ret = gaokun_aux_init(dev, GAOKUN_DEV_PSY, ec);
+   773		if (ret)
+   774			return ret;
+   775	
+   776		ret = gaokun_aux_init(dev, GAOKUN_DEV_UCSI, ec);
+   777		if (ret)
+   778			return ret;
+   779	
+   780		ret = devm_request_threaded_irq(dev, client->irq, NULL,
+   781						gaokun_ec_irq_handler, IRQF_ONESHOT,
+   782						dev_name(dev), ec);
+   783		if (ret)
+   784			return dev_err_probe(dev, ret, "Failed to request IRQ\n");
+   785	
+ > 786		ec->hwmon_dev = devm_hwmon_device_register_with_info(dev, "gaokun_ec_hwmon",
+   787								     ec, &gaokun_ec_hwmon_chip_info, NULL);
+   788		if (IS_ERR(ec->hwmon_dev))
+   789			return dev_err_probe(dev, PTR_ERR(ec->hwmon_dev),
+   790					     "Failed to register hwmon device\n");
+   791	
+   792		return 0;
+   793	}
+   794	
 
 -- 
-With Best Regards,
-Andy Shevchenko
-
-
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
