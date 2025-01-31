@@ -1,170 +1,145 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
+Received: from mail-106104.protonmail.ch (mail-106104.protonmail.ch [79.135.106.104])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5AB07155C88;
-	Fri, 31 Jan 2025 20:08:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 80F7225760
+	for <platform-driver-x86@vger.kernel.org>; Fri, 31 Jan 2025 20:40:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=79.135.106.104
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738354090; cv=none; b=Cm0iRQlAAft+2GDNbzjGi7fjJYIa2G/uMWT4kDvwSyVjc+0yeT7eNoYicXmp8oXx+l10n0Flzb4LSbUrotSFZhqXMb2AHaBq1hZ9WVoSw9cRFnq7r0Dfem5kOZdkPZ5XkTmeI290zPFVl5PZV86puxIV120+wkdATCnrRy4oLdE=
+	t=1738356058; cv=none; b=ECpNx4oINEmsmJOGjsC/VOVgF3O7mQxH8w9KZKU5sOpuHjI+ObdhK6S+5DlOvzRCdOW9PxKWpGsTpxN1/LOTRNjPNxg6eqMVxpKgrFxcnVo8c1lcTe23QpAqsGa1FQQ/KjNpfJ4nFloefAoD3YPV7wltzp+ljG9pVwuwKM/q0Ro=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738354090; c=relaxed/simple;
-	bh=COXth9vzC9L4DLry/6VVSSD8GXZn+nuLwV2IJYzQEqY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ds3/R01Z3/jaDpLYHkitihVfZHjCilQJ9StT1SK3LzPhPCfBwnvzBWM1PtSqUSgUP4O/YZf0F3IBAvHoRva3AoRhYzwna+ywGZJJTwlLmmzNz+WTE4c8kM8Xv8rIHaDxng6HSPdQb8aggEkyfEgosDqX/GX4KXkLzXX4L55nVkE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=l0XR6LBg; arc=none smtp.client-ip=198.175.65.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1738356058; c=relaxed/simple;
+	bh=syc1sIgEYukNEqJa8DChTmRlkTkcWqFoIiEqdImom5k=;
+	h=Date:To:From:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=TQBZECwxOzo5+sxt3QxRyAbpsoFY8+a7l4b6eNwgBHWk2JWtSpUn44bmEX+NO5k/Z7CIEmPlayKiLXAHZ+J5aFYz+ig4so01zcbgKQdEPIpjioIt0heVWzg4rvlLGCVwCRu9TrJC1gvlaBySGG0HHPqjX8MqywK6Ka0Wd2lD1EQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=proton.me; spf=pass smtp.mailfrom=proton.me; dkim=pass (2048-bit key) header.d=proton.me header.i=@proton.me header.b=Tuo2kscC; arc=none smtp.client-ip=79.135.106.104
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=proton.me
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=proton.me
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="l0XR6LBg"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1738354088; x=1769890088;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=COXth9vzC9L4DLry/6VVSSD8GXZn+nuLwV2IJYzQEqY=;
-  b=l0XR6LBgA9yOp/GxMcF0BLCdUMbGXMF2KQAWDL/GCsZHH3y8oxoJirH+
-   IU1NlIt4PW8IBGWAIdt3SP0qma4PAQKm3x0B+1aI8/YzsVZr77YthADBN
-   AaRxoRCNQaLXptxubWenhp7fv+aYUfnEtsZwptJ4Fz4k/itGJ4DmGWnus
-   yQ1MnLgvDFDIdJIXtus8emyTJuJBg61JcKdeTsfXF6A1EK5o+jJD9uHpO
-   98zViztUHLetMl2VuGY+rK16i9xM3zQQyNociiYQKdRCNBcMks8B2IEst
-   iHQfYhfhBEtByFnM8c0ieCNaYT4NmY6DOsRwphDvExd3JEt/HCxWDi7Dq
-   A==;
-X-CSE-ConnectionGUID: 2Y6NpFr/RiGI7pRPy9GyCg==
-X-CSE-MsgGUID: qLNJIE9uTy6XsIPl8ed78w==
-X-IronPort-AV: E=McAfee;i="6700,10204,11332"; a="50316415"
-X-IronPort-AV: E=Sophos;i="6.13,249,1732608000"; 
-   d="scan'208";a="50316415"
-Received: from orviesa006.jf.intel.com ([10.64.159.146])
-  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Jan 2025 12:08:08 -0800
-X-CSE-ConnectionGUID: h5yofnzcQ4u8Trpgo7S3FQ==
-X-CSE-MsgGUID: PxFX4g1OS/GH68anfo97Hw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.13,249,1732608000"; 
-   d="scan'208";a="109655773"
-Received: from lkp-server01.sh.intel.com (HELO d63d4d77d921) ([10.239.97.150])
-  by orviesa006.jf.intel.com with ESMTP; 31 Jan 2025 12:08:04 -0800
-Received: from kbuild by d63d4d77d921 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1tdxJ3-000n3L-1P;
-	Fri, 31 Jan 2025 20:08:01 +0000
-Date: Sat, 1 Feb 2025 04:07:19 +0800
-From: kernel test robot <lkp@intel.com>
-To: Pengyu Luo <mitltlatltl@gmail.com>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Bjorn Andersson <andersson@kernel.org>,
-	Konrad Dybcio <konradybcio@kernel.org>,
-	Hans de Goede <hdegoede@redhat.com>,
-	Ilpo =?iso-8859-1?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>,
-	Bryan O'Donoghue <bryan.odonoghue@linaro.org>,
-	Jean Delvare <jdelvare@suse.com>,
-	Guenter Roeck <linux@roeck-us.net>
-Cc: oe-kbuild-all@lists.linux.dev, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-	platform-driver-x86@vger.kernel.org, linux-hwmon@vger.kernel.org,
-	Pengyu Luo <mitltlatltl@gmail.com>
-Subject: Re: [PATCH RESEND v6 2/3] platform: arm64: add Huawei Matebook E Go
- EC driver
-Message-ID: <202502010344.KWDBQUG9-lkp@intel.com>
-References: <20250131092139.6065-3-mitltlatltl@gmail.com>
+	dkim=pass (2048-bit key) header.d=proton.me header.i=@proton.me header.b="Tuo2kscC"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=proton.me;
+	s=protonmail; t=1738356048; x=1738615248;
+	bh=Yi3JIUM6xwq3zGVkOrxOqLB0T0cu4+4SGhnD3OuiQYU=;
+	h=Date:To:From:Cc:Subject:Message-ID:Feedback-ID:From:To:Cc:Date:
+	 Subject:Reply-To:Feedback-ID:Message-ID:BIMI-Selector:
+	 List-Unsubscribe:List-Unsubscribe-Post;
+	b=Tuo2kscCycnFyLEJBFT7SltaKsLYC76K1zubFu/LdOzD9BI9SuFaZI13js8o4a5m8
+	 67F8dMo9+XJgoaMLqFycUIMBC+sQGPG3jgUY03Yy16qFvHZz4gT5RQ5Mdnp4tGwxU7
+	 +rifCb31lcXwh/NvMbjFgiyN2PDO+0flLE2B4x9vU4Z2vcU6qU2F4/rK+mwn/vJE54
+	 Q4q97i1WXjLKuFbY38MZQrmjqvcyMyDQRLEWQjCS7oEyrdq0fYD8xc3gKNz8xeAvH5
+	 lp3TfhvGJILnR3zaepAIe4OR+rkoxVWLBbUMKoMcsJpp5hjnlLdg2KDeUX8AMrXRnM
+	 UxntfMJXN447A==
+Date: Fri, 31 Jan 2025 20:40:40 +0000
+To: Henrique de Moraes Holschuh <hmh@hmh.eng.br>
+From: Sybil Isabel Dorsett <sybdorsett@proton.me>
+Cc: Hans de Goede <hdegoede@redhat.com>, =?utf-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, ibm-acpi-devel@lists.sourceforge.net, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, Sybil Isabel Dorsett <sybdorsett@proton.me>
+Subject: [PATCH] Fix invalid fan speed on ThinkPad X120e
+Message-ID: <20250131203854.6608-1-sybdorsett@proton.me>
+Feedback-ID: 131381098:user:proton
+X-Pm-Message-ID: 654a71d66ed105459ecb1103c6d9ea69b8661d1b
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250131092139.6065-3-mitltlatltl@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-Hi Pengyu,
+Fix fan speed reported in ticks per revolution on ThinkPad X120e
+by converting the reported value to RPM based on a 22.5 KHz clock.
 
-kernel test robot noticed the following build errors:
+Based on the information on
+https://www.thinkwiki.org/wiki/How_to_control_fan_speed,
+the same problem is highly likely to be relevant to at least Edge11,
+but Edge11 is not addressed in this patch.
 
-[auto build test ERROR on 853d1f41ba73e78d22e7075d9a95670aab187eba]
+Signed-off-by: Sybil Isabel Dorsett <sybdorsett@proton.me>
+---
+ drivers/platform/x86/thinkpad_acpi.c | 16 ++++++++++++++--
+ 1 file changed, 14 insertions(+), 2 deletions(-)
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Pengyu-Luo/dt-bindings-platform-Add-Huawei-Matebook-E-Go-EC/20250131-172427
-base:   853d1f41ba73e78d22e7075d9a95670aab187eba
-patch link:    https://lore.kernel.org/r/20250131092139.6065-3-mitltlatltl%40gmail.com
-patch subject: [PATCH RESEND v6 2/3] platform: arm64: add Huawei Matebook E Go EC driver
-config: powerpc64-randconfig-003-20250201 (https://download.01.org/0day-ci/archive/20250201/202502010344.KWDBQUG9-lkp@intel.com/config)
-compiler: powerpc64-linux-gcc (GCC) 14.2.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250201/202502010344.KWDBQUG9-lkp@intel.com/reproduce)
+diff --git a/drivers/platform/x86/thinkpad_acpi.c b/drivers/platform/x86/th=
+inkpad_acpi.c
+index 1fcb0f996..147a70af3 100644
+--- a/drivers/platform/x86/thinkpad_acpi.c
++++ b/drivers/platform/x86/thinkpad_acpi.c
+@@ -7885,6 +7885,7 @@ static struct ibm_struct volume_driver_data =3D {
+=20
+ #define FAN_NS_CTRL_STATUS=09BIT(2)=09=09/* Bit which determines control i=
+s enabled or not */
+ #define FAN_NS_CTRL=09=09BIT(4)=09=09/* Bit which determines control is by=
+ host or EC */
++#define FAN_CLOCK_TPM=09=09(22500*60)=09/* Ticks per minute for a 22.5 KHz=
+ clock */
+=20
+ enum {=09=09=09=09=09/* Fan control constants */
+ =09fan_status_offset =3D 0x2f,=09/* EC register 0x2f */
+@@ -7940,6 +7941,7 @@ static int fan_watchdog_maxinterval;
+=20
+ static bool fan_with_ns_addr;
+ static bool ecfw_with_fan_dec_rpm;
++static bool fan_speed_requires_conversion;
+=20
+ static struct mutex fan_mutex;
+=20
+@@ -8142,8 +8144,11 @@ static int fan_get_speed(unsigned int *speed)
+ =09=09=09     !acpi_ec_read(fan_rpm_offset + 1, &hi)))
+ =09=09=09return -EIO;
+=20
+-=09=09if (likely(speed))
++=09=09if (likely(speed)) {
+ =09=09=09*speed =3D (hi << 8) | lo;
++=09=09=09if (fan_speed_requires_conversion && *speed !=3D 0)
++=09=09=09=09*speed =3D FAN_CLOCK_TPM / *speed;
++=09=09}
+ =09=09break;
+ =09case TPACPI_FAN_RD_TPEC_NS:
+ =09=09if (!acpi_ec_read(fan_rpm_status_ns, &lo))
+@@ -8176,8 +8181,11 @@ static int fan2_get_speed(unsigned int *speed)
+ =09=09if (rc)
+ =09=09=09return -EIO;
+=20
+-=09=09if (likely(speed))
++=09=09if (likely(speed)) {
+ =09=09=09*speed =3D (hi << 8) | lo;
++=09=09=09if (fan_speed_requires_conversion && *speed !=3D 0)
++=09=09=09=09*speed =3D FAN_CLOCK_TPM / *speed;
++=09=09}
+ =09=09break;
+=20
+ =09case TPACPI_FAN_RD_TPEC_NS:
+@@ -8788,6 +8796,7 @@ static const struct attribute_group fan_driver_attr_g=
+roup =3D {
+ #define TPACPI_FAN_NOFAN=090x0008=09=09/* no fan available */
+ #define TPACPI_FAN_NS=09=090x0010=09=09/* For EC with non-Standard registe=
+r addresses */
+ #define TPACPI_FAN_DECRPM=090x0020=09=09/* For ECFW's with RPM in register=
+ as decimal */
++#define TPACPI_FAN_TPR=09=090x0040=09=09/* Fan speed is in Ticks Per Revol=
+ution */
+=20
+ static const struct tpacpi_quirk fan_quirk_table[] __initconst =3D {
+ =09TPACPI_QEC_IBM('1', 'Y', TPACPI_FAN_Q1),
+@@ -8817,6 +8826,7 @@ static const struct tpacpi_quirk fan_quirk_table[] __=
+initconst =3D {
+ =09TPACPI_Q_LNV3('R', '0', 'V', TPACPI_FAN_NS),=09/* 11e Gen5 KL-Y */
+ =09TPACPI_Q_LNV3('N', '1', 'O', TPACPI_FAN_NOFAN),=09/* X1 Tablet (2nd gen=
+) */
+ =09TPACPI_Q_LNV3('R', '0', 'Q', TPACPI_FAN_DECRPM),/* L480 */
++=09TPACPI_Q_LNV('8', 'F', TPACPI_FAN_TPR),=09=09/* ThinkPad x120e */
+ };
+=20
+ static int __init fan_init(struct ibm_init_struct *iibm)
+@@ -8887,6 +8897,8 @@ static int __init fan_init(struct ibm_init_struct *ii=
+bm)
+=20
+ =09=09=09if (quirks & TPACPI_FAN_Q1)
+ =09=09=09=09fan_quirk1_setup();
++=09=09=09if (quirks & TPACPI_FAN_TPR)
++=09=09=09=09fan_speed_requires_conversion =3D true;
+ =09=09=09/* Try and probe the 2nd fan */
+ =09=09=09tp_features.second_fan =3D 1; /* needed for get_speed to work */
+ =09=09=09res =3D fan2_get_speed(&speed);
+--=20
+2.39.5
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202502010344.KWDBQUG9-lkp@intel.com/
 
-All errors (new ones prefixed by >>):
-
-   powerpc64-linux-ld: warning: discarding dynamic section .glink
-   powerpc64-linux-ld: warning: discarding dynamic section .plt
-   powerpc64-linux-ld: linkage table error against `devm_hwmon_device_register_with_info'
-   powerpc64-linux-ld: stubs don't match calculated size
-   powerpc64-linux-ld: can not build stubs: bad value
-   powerpc64-linux-ld: drivers/platform/arm64/huawei-gaokun-ec.o: in function `gaokun_ec_probe':
->> drivers/platform/arm64/huawei-gaokun-ec.c:786:(.text+0x16ac): undefined reference to `devm_hwmon_device_register_with_info'
-
-
-vim +786 drivers/platform/arm64/huawei-gaokun-ec.c
-
-   740	
-   741	static int gaokun_ec_probe(struct i2c_client *client)
-   742	{
-   743		struct device *dev = &client->dev;
-   744		struct gaokun_ec *ec;
-   745		int ret;
-   746	
-   747		ec = devm_kzalloc(dev, sizeof(*ec), GFP_KERNEL);
-   748		if (!ec)
-   749			return -ENOMEM;
-   750	
-   751		ret = devm_mutex_init(dev, &ec->lock);
-   752		if (ret)
-   753			return ret;
-   754	
-   755		ec->client = client;
-   756		i2c_set_clientdata(client, ec);
-   757		BLOCKING_INIT_NOTIFIER_HEAD(&ec->notifier_list);
-   758	
-   759		/* Lid switch */
-   760		ec->idev = devm_input_allocate_device(dev);
-   761		if (!ec->idev)
-   762			return -ENOMEM;
-   763	
-   764		ec->idev->name = "LID";
-   765		ec->idev->phys = "gaokun-ec/input0";
-   766		input_set_capability(ec->idev, EV_SW, SW_LID);
-   767	
-   768		ret = input_register_device(ec->idev);
-   769		if (ret)
-   770			return dev_err_probe(dev, ret, "Failed to register input device\n");
-   771	
-   772		ret = gaokun_aux_init(dev, GAOKUN_DEV_PSY, ec);
-   773		if (ret)
-   774			return ret;
-   775	
-   776		ret = gaokun_aux_init(dev, GAOKUN_DEV_UCSI, ec);
-   777		if (ret)
-   778			return ret;
-   779	
-   780		ret = devm_request_threaded_irq(dev, client->irq, NULL,
-   781						gaokun_ec_irq_handler, IRQF_ONESHOT,
-   782						dev_name(dev), ec);
-   783		if (ret)
-   784			return dev_err_probe(dev, ret, "Failed to request IRQ\n");
-   785	
- > 786		ec->hwmon_dev = devm_hwmon_device_register_with_info(dev, "gaokun_ec_hwmon",
-   787								     ec, &gaokun_ec_hwmon_chip_info, NULL);
-   788		if (IS_ERR(ec->hwmon_dev))
-   789			return dev_err_probe(dev, PTR_ERR(ec->hwmon_dev),
-   790					     "Failed to register hwmon device\n");
-   791	
-   792		return 0;
-   793	}
-   794	
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
