@@ -1,147 +1,105 @@
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 710A41A3BD7
-	for <platform-driver-x86@vger.kernel.org>; Fri, 31 Jan 2025 09:52:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A1E021B6CE9
+	for <platform-driver-x86@vger.kernel.org>; Fri, 31 Jan 2025 11:09:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738317172; cv=none; b=tt/wHvCh8y5dNB7LF+oF0udcCJ/qT0f2DUbwvQ4T7zunN1N1s8K49dZx7p5rDsq4931bUuc4eo02qjZBBqnZqyJvYCZ07fW8wJz134KzmikmZVlTAkRIB6FwVyVKM0q7A3BYTDGZD8Zw8rI9iWj5tuV1GwII3p93UNdx33fwYU0=
+	t=1738321777; cv=none; b=FTMH+egkjbBSoG8plMP3+s45vf7Sk2mewG1w2l2AvsoR2aBRPqKAk3HpyWazyKziDlL/VZbix39UUDIpeVcQx12oKPvbXITNTVABRornzkQ30twk7VbQIJfiaOgaodVxkNpSdv1+ZFPnmoZLk4QIzMpU40tEVEzS8O2/iZAhdtU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738317172; c=relaxed/simple;
-	bh=hVQPADV4Ofycy2J0mQA9taSlh0ZXCF/YfCTEus0w+Cw=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=mX1QjH8Tv6vSI4BnCx3BGHYnWEedrym2AhQBFwgWWaA9Gt3uLcv1s/tEzX1tTcKpxYp4EOHYQwyeWCV8IT/Y1cu5tNeAHn/Tc6Mx1LgbKmL0ivMfBEUMghyeN5Rj2M+d+n9LWEkBdLEOERoD+CduvRg39drgHCKoz1bPe/otfpE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=wiYI3NBd; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=S+xNdr0S; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=wiYI3NBd; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=S+xNdr0S; arc=none smtp.client-ip=195.135.223.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+	s=arc-20240116; t=1738321777; c=relaxed/simple;
+	bh=x9d1xGmPkE+oKQpEmBlzYuWtZp+F4evGyoA0lUxS1M4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=rEjgf8kZyKQN2j25fw5Ax65RWh/GAehMg+5c5RUZjXztBceN7VH4K5evqaFSzsEyRrCjmYBEAXOVO0alJQLGDnj2/rU6kU2elrWp4Sb7torKoWQU5eGQRZe799nZvh8wOL7MONY0DGA8kesmtamtkXeWxz//86oP6x79mWbmbWU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=BWajdkI3; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="wiYI3NBd";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="S+xNdr0S";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="wiYI3NBd";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="S+xNdr0S"
-Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id 079D81F38D;
-	Fri, 31 Jan 2025 09:52:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1738317163; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="BWajdkI3"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1738321774;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=iDolVywQqxFcdon3dkfu/RVd//hsiduCuIML+Cb7zfo=;
-	b=wiYI3NBdITId8GE/A3fP8+lfaytL2pzzMMPsguBW85td3bfP0ZTnlNOEVfYXG05EZheo3Y
-	BFh0KCc4zbFI5clsaC/lg3nfl7ta0vBRnLnfozOdSSwISSJyLrlSth87qwnxNH7qBwp6hL
-	SXRW56K+tWGI/D9Ur9xN1xeWkw/0Nac=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1738317163;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=iDolVywQqxFcdon3dkfu/RVd//hsiduCuIML+Cb7zfo=;
-	b=S+xNdr0SJIyh/TUJkhcg+IUvU7EPbMgGVtOjhX+UCXV6ABAk8DKKDE/G6NjdaU/4Ft1Bv6
-	UHFUYYT8nROTNBAg==
-Authentication-Results: smtp-out2.suse.de;
-	none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1738317163; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=iDolVywQqxFcdon3dkfu/RVd//hsiduCuIML+Cb7zfo=;
-	b=wiYI3NBdITId8GE/A3fP8+lfaytL2pzzMMPsguBW85td3bfP0ZTnlNOEVfYXG05EZheo3Y
-	BFh0KCc4zbFI5clsaC/lg3nfl7ta0vBRnLnfozOdSSwISSJyLrlSth87qwnxNH7qBwp6hL
-	SXRW56K+tWGI/D9Ur9xN1xeWkw/0Nac=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1738317163;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=iDolVywQqxFcdon3dkfu/RVd//hsiduCuIML+Cb7zfo=;
-	b=S+xNdr0SJIyh/TUJkhcg+IUvU7EPbMgGVtOjhX+UCXV6ABAk8DKKDE/G6NjdaU/4Ft1Bv6
-	UHFUYYT8nROTNBAg==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id C9A29139B1;
-	Fri, 31 Jan 2025 09:52:42 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id aOLpL2qdnGcvJAAAD6G6ig
-	(envelope-from <tzimmermann@suse.de>); Fri, 31 Jan 2025 09:52:42 +0000
-From: Thomas Zimmermann <tzimmermann@suse.de>
-To: ilpo.jarvinen@linux.intel.com,
-	hdegoede@redhat.com
-Cc: platform-driver-x86@vger.kernel.org,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	Cezary Jackiewicz <cezary.jackiewicz@gmail.com>
-Subject: [PATCH 1/2] platform/x86: compal-laptop: Do not include <linux/fb.h>
-Date: Fri, 31 Jan 2025 10:51:09 +0100
-Message-ID: <20250131095235.125533-2-tzimmermann@suse.de>
-X-Mailer: git-send-email 2.48.1
-In-Reply-To: <20250131095235.125533-1-tzimmermann@suse.de>
-References: <20250131095235.125533-1-tzimmermann@suse.de>
+	bh=GLGYgl8/MWNtyMaIf3eWLayDJUjHN4wgPAgpqGY3uhM=;
+	b=BWajdkI3Up7JbDKfjIqjB6PIzRSC4j/KPzX1+CYLRk+7NUkIVW4a7m1xjHJPf4h5XGBtGN
+	4KDyNpblSq0YiAzIr9BmF9gqalmJaoHLm2II1ndBfrG3X14bOXn8XR2WsRx9HGMFOuzqlO
+	Ur+Jc9cQZkHQ0u6jDaFHyUG8PK40YDQ=
+Received: from mail-ej1-f69.google.com (mail-ej1-f69.google.com
+ [209.85.218.69]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-76-RxI5vgezMaGAtKUHCCZGww-1; Fri, 31 Jan 2025 06:09:32 -0500
+X-MC-Unique: RxI5vgezMaGAtKUHCCZGww-1
+X-Mimecast-MFC-AGG-ID: RxI5vgezMaGAtKUHCCZGww
+Received: by mail-ej1-f69.google.com with SMTP id a640c23a62f3a-ab7044083e5so28329266b.2
+        for <platform-driver-x86@vger.kernel.org>; Fri, 31 Jan 2025 03:09:32 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738321771; x=1738926571;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=GLGYgl8/MWNtyMaIf3eWLayDJUjHN4wgPAgpqGY3uhM=;
+        b=veeUfLVSU0OpOxoIlPpj34OZIs4QxCzCetOHwmFz8osoSYEQ5WEcWocTWEX++taHww
+         x7vrF9IPG7rL1qYKspZe8jzrFuyKhdSYP3ToDdjAvnUP/gPBTsarumNes9jkAIw+FvbL
+         WLGqv7qSslleNqjDM2XGkLcRRdyHHcWXZyT/gb+ZzngSyGftNhqvoaEONoZf+O4iSCiY
+         hk0orGf7wwxRF6F/Ov2JS74j9uKsBY6pJEhfeWZeklx5mzpY9o6QQbPe0pB152nFo8Rc
+         wQpEiAM7zGSrv8fy5Wh9wxancevXuSJUQNR0TjJkAwBd/SvsV9l+XkLARHiVH2f25Mbl
+         dUBQ==
+X-Gm-Message-State: AOJu0YyI5vf/mmCgFSMC6i1XEluPAnJJwTQUlKx4Q+VqfJVfrwk8pm7G
+	wd02r6NnuHqqeu3SBpAzUq00oyd8nR2fWkCuRAva7YdHhU6S0pzE/0ME53keO91HHhaa0g/UD4x
+	EURrW8C/4kRyZxSf+Ot7NIrQqQmciCa0wzvsZj0q1e632iAJlbBmHSUECZ6hM3GLy8nttt7M=
+X-Gm-Gg: ASbGncsN93GQGNShq8BQ6txLxIyU9MqOqCm2KddCqcK/c6NiynzYHEvmHVqCt5vHnPW
+	uSs1t+0R4Y4ax05VtUFQKPrdqvNyg0Wtt/po1/zVs/n8y0N3cHMcDeG3KSPVSYjiTGJ/jdCc7Hb
+	UqQXIJeSQDcyWfr4oCuoGSOVfgHOu9lCflhcKWqm2ofZ74/eA339ebcfxUGdiTLmtmfEIwNdLJP
+	CaTmKhAtRn1KkzzM/PWXtu83JzEP4H9nwEoBknNHXbiFTEQD1u5zDlHXVe9VgYB6zf4DntfPhuU
+	cTTYSc17wZx2Ml6M6/wPD93W8UNU6A+CCVaa6uHO4kHhUABmdnabNgucuyxoeGuZNhUOjR4OuKK
+	OXMgzlnLBzPmy5/K+6RbQokBfn/y+suknAWVLiqfx3EigeTmgpLpskug=
+X-Received: by 2002:a17:907:2d8f:b0:aaf:117f:1918 with SMTP id a640c23a62f3a-ab6cfcb35a6mr1211236966b.5.1738321771364;
+        Fri, 31 Jan 2025 03:09:31 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IFzalAugLvSS07+95mifwGHWZWg//I/awY5BJVajKjy5dnpKYF9UERXxhpkWdhLh6kmSqLiUQ==
+X-Received: by 2002:a17:907:2d8f:b0:aaf:117f:1918 with SMTP id a640c23a62f3a-ab6cfcb35a6mr1211233466b.5.1738321770938;
+        Fri, 31 Jan 2025 03:09:30 -0800 (PST)
+Received: from ?IPV6:2001:1c00:c32:7800:5bfa:a036:83f0:f9ec? (2001-1c00-0c32-7800-5bfa-a036-83f0-f9ec.cable.dynamic.v6.ziggo.nl. [2001:1c00:c32:7800:5bfa:a036:83f0:f9ec])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ab6e4a320e0sm276552366b.151.2025.01.31.03.09.30
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 31 Jan 2025 03:09:30 -0800 (PST)
+Message-ID: <518d9963-4427-449e-a07a-e1f9dffe4721@redhat.com>
+Date: Fri, 31 Jan 2025 12:09:29 +0100
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam-Level: 
-X-Spamd-Result: default: False [-5.30 / 50.00];
-	REPLY(-4.00)[];
-	BAYES_HAM(-3.00)[99.99%];
-	SUSPICIOUS_RECIPS(1.50)[];
-	MID_CONTAINS_FROM(1.00)[];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	R_MISSING_CHARSET(0.50)[];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	RCVD_TLS_ALL(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	TO_DN_SOME(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	TAGGED_RCPT(0.00)[];
-	ARC_NA(0.00)[];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	FROM_HAS_DN(0.00)[];
-	FREEMAIL_CC(0.00)[vger.kernel.org,suse.de,gmail.com];
-	RCPT_COUNT_FIVE(0.00)[5];
-	FROM_EQ_ENVFROM(0.00)[];
-	RCVD_COUNT_TWO(0.00)[2];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:email,suse.de:mid];
-	FREEMAIL_ENVRCPT(0.00)[gmail.com]
-X-Spam-Score: -5.30
-X-Spam-Flag: NO
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 0/2] platform/x86: Do not include <linux/fb.h>
+To: Thomas Zimmermann <tzimmermann@suse.de>, ilpo.jarvinen@linux.intel.com
+Cc: platform-driver-x86@vger.kernel.org
+References: <20250131095235.125533-1-tzimmermann@suse.de>
+Content-Language: en-US, nl
+From: Hans de Goede <hdegoede@redhat.com>
+In-Reply-To: <20250131095235.125533-1-tzimmermann@suse.de>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Nothing in this source file requires <linux/fb.h>. Remove the include
-statement.
+Hi,
 
-Signed-off-by: Thomas Zimmermann <tzimmermann@suse.de>
-Cc: Cezary Jackiewicz <cezary.jackiewicz@gmail.com>
----
- drivers/platform/x86/compal-laptop.c | 1 -
- 1 file changed, 1 deletion(-)
+On 31-Jan-25 10:51 AM, Thomas Zimmermann wrote:
+> These two drivers include <linux/fb.h>, presumably for backlight
+> support. It's no longer need, so remove the include statement.
+> 
+> Thomas Zimmermann (2):
+>   platform/x86: compal-laptop: Do not include <linux/fb.h>
+>   platform/x86: thinkpad-acpi: Do not include <linux/fb.h>
 
-diff --git a/drivers/platform/x86/compal-laptop.c b/drivers/platform/x86/compal-laptop.c
-index 58754bc5b5b17..abbebd4bfb151 100644
---- a/drivers/platform/x86/compal-laptop.c
-+++ b/drivers/platform/x86/compal-laptop.c
-@@ -69,7 +69,6 @@
- #include <linux/hwmon-sysfs.h>
- #include <linux/power_supply.h>
- #include <linux/sysfs.h>
--#include <linux/fb.h>
- #include <acpi/video.h>
- 
- /* ======= */
--- 
-2.48.1
+Thanks, series looks good to me:
+
+Reviewed-by: Hans de Goede <hdegoede@redhat.com>
+
+for the series.
+
+Regards,
+
+Hans
 
