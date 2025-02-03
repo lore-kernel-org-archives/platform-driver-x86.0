@@ -1,62 +1,62 @@
-Received: from mail-yb1-f180.google.com (mail-yb1-f180.google.com [209.85.219.180])
+Received: from mail-yb1-f178.google.com (mail-yb1-f178.google.com [209.85.219.178])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7172720FA94;
-	Mon,  3 Feb 2025 18:27:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2890720FAB6;
+	Mon,  3 Feb 2025 18:27:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738607260; cv=none; b=oyar8c7i/9r/A8dFGzLIBMm5R3HQyQ7dYX6r5BaEAazPMWknnukwChl8Fk+sCWHjQhNyirnF8rucXu0fgTiNyOfvVR2a+3l0T87K6d+fgkj9IaL79WFhgx90f4EJjJHB3PRMc/aCF6czlxs/gtlaeF2odMypB+nKK1B8zWYpCNg=
+	t=1738607263; cv=none; b=qqeAE1NG/G7+/UvrKRNCKgPX+TVzaDJoSdlfZtWupP1Cr9yDcWiOIyosBuyZwWawGo5kPWaD468q/ZSbwy5yVgYZDpDu1g50hy2u/6NwxOWQG8WzKmAl8eG5LXaVwyl6c4Xnc6M3NoOtQqMh/qPH7rvF76no+La0z0ur1uMVS+Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738607260; c=relaxed/simple;
-	bh=nIeE5O6wKBb88hOTGBMcFuN7pvj3KJG4kN1RUuCo3Gk=;
+	s=arc-20240116; t=1738607263; c=relaxed/simple;
+	bh=Woq4swbnYq3xsWIj3EtplDj2WuXqxSueFP8J8UTTZS4=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=n1WsdSZSfoQUyo0Le7EkzHYUnP44YCEv6Wf01Wf5tYDsmlr52UQPmm9TsusjbvEPI9GFvdVQj6xa3UEY+b30GgMBNMtnCmU3A1LiCZYypQERfqSgpnCWBvQHBLXMRkisbzs762Kf8Ha4Xvqc1BDMdRSzqCIMR1CNMMkJZfaMpHU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=O0/rpAWg; arc=none smtp.client-ip=209.85.219.180
+	 MIME-Version; b=s7GEZfqqI43oY82vUhNsvHkZSY7efHuT4l4ubyeS2XVoxJ65Uyjor5a7WbB4UvBgOMasDMX/U58+gaonwKEw+vIK8Q4cGK+jDPtDHgyeklFVQEeBEKoatVUlzotmar+He+nTGumIbS8dayOqgyMPIuaw7Hm96W3LkrahFYa65bc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=JUlHsli9; arc=none smtp.client-ip=209.85.219.178
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="O0/rpAWg"
-Received: by mail-yb1-f180.google.com with SMTP id 3f1490d57ef6-e549dd7201cso4673365276.0;
-        Mon, 03 Feb 2025 10:27:38 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JUlHsli9"
+Received: by mail-yb1-f178.google.com with SMTP id 3f1490d57ef6-e589c258663so4594945276.1;
+        Mon, 03 Feb 2025 10:27:40 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1738607257; x=1739212057; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1738607260; x=1739212060; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=lzABHP5CzaLvUmDBd2e0Y8hw1bkoD4rrP7ahn29JoF8=;
-        b=O0/rpAWgEMM1Tw1c7NRxFuuJ/k1ywoJ0A9XeNkcDIsMjIuH8i+mYPcTKdFuCgR8uWm
-         8qRxEMdAOJG2zTAXila5PzppsppWToYbHzjJTJgbm3JB90HhIVcRBzZXI/M1/UtCwiwo
-         OTL2D4g2GeDxw+Fh5qyg2lvnaq9lXImFBCfyTz9cCNU2NPNo8wi6tJt1kgYKO3d7b4vk
-         lxZEMyKgGuC9t1d7uUrkILD9Ozdk5M4DtA53GGxwgM3gy+CUfokcknG0Mn1YUH3yLhWt
-         ISNqKT7D+QOKmTFsrraOFcDW1UbYmtJ8fQBMW2SFAdItb3AvHwjCR0PgUKnTcszDEClW
-         dQ9w==
+        bh=H0Qac2DNxaP3+ckGylXZbGeHgHst/csov0aaJCMEn8w=;
+        b=JUlHsli9jMxxEkDrHZetieD05gZGwPZaeGoh1DgJ+qhuNgql716txQtTc6eQH347NT
+         1bVkTNK6wvIYSjtWkrDEQRlHm3hXY1LaN7Y6idrdmAOyswCrEHhQKBxrT4kcNvp2MjOM
+         QDKeOoP10aOPqAQ9ytcgrcGBZ3IJpHjpaeP+rvd9+TV07DJfZj+Ts8KEV/S2O1ktbeHN
+         YWbmmAK5o8tmScNcQZ0BQByqqIeTLH+/iZw07LzqIzUnexO3ZORhd4qY4UvogUcQOvQg
+         tpu1ifcXAYawysVVK3FE02EdXfYxslf+8hyzFiMqY4Pi7uE/aletYe9BXIwvQ0rSrRgq
+         UHcA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738607257; x=1739212057;
+        d=1e100.net; s=20230601; t=1738607260; x=1739212060;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=lzABHP5CzaLvUmDBd2e0Y8hw1bkoD4rrP7ahn29JoF8=;
-        b=a8jiKeQ8Ota8ZGh2Cv2p1zD4wdal5cZ1rSwh4Z5OIshol/jIBuUU4uSaV26WiBDR3x
-         hsEobanYMO0/DXIM6w/0sNDxmDraY3pwH3rLL5Uvr78V6HI3SdsZc4Lac4+2gX57V1fb
-         21x1KnMZcwyOLqhz997aNnK4MJJ/LWrdyIiS1JFhPHiwfJvtJdEcma1rwCmZQ9N5HBkk
-         GyVya/Ne+158+ghAM7A2OVCD1wdTuC7Mvz6eA6efrS9XQsuL4j0YhEfUv6O40DSPk0QZ
-         lXqvj8cZ9jYQcuqX1es012ZLS49gLmR63+1LfuN/WTE8dvIkZS6RLk21z+SEEenDXbap
-         288A==
-X-Forwarded-Encrypted: i=1; AJvYcCV7N07elDNDzcZ/ql0qHhnfe7GQEwMCOWf2bimC/8AfIuW5FkKvtyg4pd4Ya3ecyDqLAA4obE8D5uiP67U=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzznhK+SKe6mnbCTJyrXQakeDYvvvQGej2FB83ieH39jqO9WFvE
-	8zNIamtsaM/fsBpbypLDrFiLjpK79W9LY4pwhYqKRr9Jbi0EKb6tEGjJiw==
-X-Gm-Gg: ASbGncsudtbFsLg6hLipnLMa4nbUYdxVyURSy+uijCC1uoMGX85MHZyg17pGr8kLgXj
-	Dd2wOBx1lIRBNE71ufKqeQxdzZPi3P/U+fPUHjH1cgLeXj3d5QDJWMI+hqwJ5BW3y3KLFH3xlA8
-	Q6HxseJ3gjS33ufKF4rIHfaRfPzBfbJgUkC/AMocZL2bzTl6pacnDeLbvd0DUmLT57VIc30LSny
-	qmt63JMErB5WWp5V9u+cEsuWnNyOI/xujHcq9ny5b6zD1X7HhueTy9CySRlwhaHcw/aPJT8PM3V
-	ph1W4tkbJ9qKnk3yUJpQfpc=
-X-Google-Smtp-Source: AGHT+IEo2ZiceoSyXKXtgo+/Xvn95PRv6XPz5bAbcVxkATWcUlPN0LGP8qQ0toJs9jqh8JkveO2eGw==
-X-Received: by 2002:a05:6902:1546:b0:e57:f631:d26b with SMTP id 3f1490d57ef6-e58a4bfd28dmr15919735276.42.1738607257160;
-        Mon, 03 Feb 2025 10:27:37 -0800 (PST)
+        bh=H0Qac2DNxaP3+ckGylXZbGeHgHst/csov0aaJCMEn8w=;
+        b=QcSUsT0mmO9stRHfqSePH12P+dYNAtnniqYLsuGB49UPtvHVwDHFNUXYnHKIubguf1
+         EBJptM58O6CmcXmXsCnPwFqC/79LXzYSeOMkLDwCuA5NQnAUNqfMH9ZGqNLKByttAKHO
+         i4PLmz/lsnm7Nnh66cSiLC1bMrpzwirLxexKL0X+u1rOe57SgwQS60xPL+wucTrOsQ+c
+         uc8cmO61eUCvG4zsR0GzyNOqb7QnI7DrR4qkWtIwDzAR/F0T96Dz8ukB84sZHZ2ACMy1
+         CnnSdzgGvw7J48OaAJmIBQ2sbhbrW0mErxZcOnra9fc8fZp4PYi2TjHT3tzR8NUAWtiH
+         rZpQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVq7kyxviu83OcRG20E+xq1FZDG34b5O2WMKLuEy+qlm6ZB5brwHNHEBKRdnkJjXf0qNoWZO43hxPMuE3Y=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxF+86Dg2Rg6OwblC2iP2r6zI+HHWwglFCH1OO4bsuasT+Jmnce
+	0WEYlkIev/2YDoUSKg3PuaIX5NNsSKG3mbGUnZwfizg9vu9CWffGPVIqUA==
+X-Gm-Gg: ASbGncuoHc7X9LfDV3Fv7W5SqY4/xl0kOpG32V0eeENZSskHxEJztqp4rNuOyUjwHXl
+	JNTtPEAIjn+yV1mezmY4I8Mvrx0V/r7acx2+74dJQJhrjzAyIE7SVrrOHx5tbIqZBRLqd1xdP5k
+	pwOiIVfJU74opQoKPsnG3UPdNKzevfm/1zGqhYAGmFbSoDXeaouWJTNYdb4b1TTARFmIYCL415A
+	3J+1eDINMO7vfsvL7XeqzOIP42HReUborEyN/qET3iENhvqNxQmh35NeEHZPC3uRoclj+llbzrz
+	XuDjLjL6z7H/QHysrsZX6V4=
+X-Google-Smtp-Source: AGHT+IEI7bM36LuBwpYweDpXy37XFwkgcNcIo/5JkIWo12GcAgqcnp4BXmJDrk+beU2qNZ7juXHZDQ==
+X-Received: by 2002:a05:6902:2510:b0:e58:3209:bd9d with SMTP id 3f1490d57ef6-e58a4ac5664mr16543561276.17.1738607259802;
+        Mon, 03 Feb 2025 10:27:39 -0800 (PST)
 Received: from localhost.localdomain ([2800:bf0:82:3d2:4207:a956:ebad:2a64])
-        by smtp.gmail.com with ESMTPSA id 3f1490d57ef6-e5acb2bc726sm2142239276.30.2025.02.03.10.27.35
+        by smtp.gmail.com with ESMTPSA id 3f1490d57ef6-e5acb2bc726sm2142239276.30.2025.02.03.10.27.37
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 03 Feb 2025 10:27:36 -0800 (PST)
+        Mon, 03 Feb 2025 10:27:39 -0800 (PST)
 From: Kurt Borja <kuurtb@gmail.com>
 To: platform-driver-x86@vger.kernel.org
 Cc: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
@@ -66,9 +66,9 @@ Cc: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
 	Dell.Client.Kernel@dell.com,
 	linux-kernel@vger.kernel.org,
 	"Kurt Borja" <kuurtb@gmail.com>
-Subject: [PATCH v8 08/14] MAINTAINERS: Update ALIENWARE WMI DRIVER entry
-Date: Mon,  3 Feb 2025 13:27:07 -0500
-Message-ID: <20250203182713.27446-9-kuurtb@gmail.com>
+Subject: [PATCH v8 09/14] platform/x86: Rename alienware-wmi.c
+Date: Mon,  3 Feb 2025 13:27:08 -0500
+Message-ID: <20250203182713.27446-10-kuurtb@gmail.com>
 X-Mailer: git-send-email 2.48.1
 In-Reply-To: <20250203182713.27446-1-kuurtb@gmail.com>
 References: <20250203182713.27446-1-kuurtb@gmail.com>
@@ -80,35 +80,33 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Dell has been inactive in its maintainership role of this driver since
-around 2021. Due to this, add myself as a maintainer and update path
-to support upcoming changes.
+Rename alienware-wmi to support upcoming split.
 
 Reviewed-by: Armin Wolf <W_Armin@gmx.de>
 Reviewed-by: Mario Limonciello <mario.limonciello@amd.com>
 Signed-off-by: Kurt Borja <kuurtb@gmail.com>
 ---
- MAINTAINERS | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ drivers/platform/x86/dell/Makefile                               | 1 +
+ .../platform/x86/dell/{alienware-wmi.c => alienware-wmi-base.c}  | 0
+ 2 files changed, 1 insertion(+)
+ rename drivers/platform/x86/dell/{alienware-wmi.c => alienware-wmi-base.c} (100%)
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 896a307fa065..129df78d0298 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -792,10 +792,12 @@ F:	Documentation/admin-guide/perf/alibaba_pmu.rst
- F:	drivers/perf/alibaba_uncore_drw_pmu.c
+diff --git a/drivers/platform/x86/dell/Makefile b/drivers/platform/x86/dell/Makefile
+index bb3cbd470a46..f8aec8502c2f 100644
+--- a/drivers/platform/x86/dell/Makefile
++++ b/drivers/platform/x86/dell/Makefile
+@@ -5,6 +5,7 @@
+ #
  
- ALIENWARE WMI DRIVER
-+M:	Kurt Borja <kuurtb@gmail.com>
-+L:	platform-driver-x86@vger.kernel.org
- L:	Dell.Client.Kernel@dell.com
- S:	Maintained
- F:	Documentation/wmi/devices/alienware-wmi.rst
--F:	drivers/platform/x86/dell/alienware-wmi.c
-+F:	drivers/platform/x86/dell/alienware-wmi*
- 
- ALLEGRO DVT VIDEO IP CORE DRIVER
- M:	Michael Tretter <m.tretter@pengutronix.de>
+ obj-$(CONFIG_ALIENWARE_WMI)		+= alienware-wmi.o
++alienware-wmi-objs			:= alienware-wmi-base.o
+ obj-$(CONFIG_DCDBAS)			+= dcdbas.o
+ obj-$(CONFIG_DELL_LAPTOP)		+= dell-laptop.o
+ obj-$(CONFIG_DELL_RBTN)			+= dell-rbtn.o
+diff --git a/drivers/platform/x86/dell/alienware-wmi.c b/drivers/platform/x86/dell/alienware-wmi-base.c
+similarity index 100%
+rename from drivers/platform/x86/dell/alienware-wmi.c
+rename to drivers/platform/x86/dell/alienware-wmi-base.c
 -- 
 2.48.1
 
