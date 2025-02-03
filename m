@@ -1,59 +1,56 @@
 Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D5281FC118;
-	Mon,  3 Feb 2025 13:38:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C307205AC2
+	for <platform-driver-x86@vger.kernel.org>; Mon,  3 Feb 2025 13:38:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738589883; cv=none; b=oO7qyE7YK3C6sjF2h7UXXEI9dRDpS1D0R4wMPjRjvHHPE5B6D2UDw6rx6IOtpquY/aUnyfkcwAToA0yCYRKw4wjQfzz0uqRfn3Bngjd2qoJBLeUB4p2CCDb4B2lLtxQZJalZpxG9nGPSFcRcYNxtgLFuR3XIlpp9UXAEm487qvs=
+	t=1738589890; cv=none; b=XTn6nkbWba6gsdIJYiVxLzExI9qDbqcedhN/5se5vdi3vy5BM2zQqjVEaQWn5Ir8SWTLwC+E34JfluDLQfh9fKa3JWPPfHCL+V3k5WXHmz1175I1ugi7g2rR0QuYfxKWyngIYUH4xiMOW08oXB4RHULZp3mmzsTlbELJ3WEsQMM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738589883; c=relaxed/simple;
-	bh=RpQJf107msvPI8K23FYZ020hoAFNcjii+xY2AIj5tno=;
+	s=arc-20240116; t=1738589890; c=relaxed/simple;
+	bh=fM/ZRClWraXI3Z+8kTcI4xdgHN00SXkwdtH/eiVnaN4=;
 	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=JreF5Z0ziKWca4+lqka+jbIvr/XCjY8loP4u2cc1Xfk2q3/5jkSO4EWXP3l7e9aN5N347LPfAenyDbWfW5oobQLV935gXwoMHARCdw+an7McJImgEWyP8IEoCh3dXgN3WyWMuz+vpyyAimxdW9JYhNxAaIk70R7XJAr6xFlDpJc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ENl+XAHH; arc=none smtp.client-ip=192.198.163.16
+	 MIME-Version:Content-Type; b=cHygwSV7NkuHPsXUlEO1e9Bqux2Se9yiyBp+SKLKunM9FDY1uZXgS/uJ9bY6aYA7yvvgqApohJ5C9X3WQUzIjSCVkXViZp9m+qaFpwjGcyWhQG3vWm8EuInGBU6FJ65Hjjuxh9WFj453uBKF7RvqonzYorc6bqMyU+c65USMico=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=IkMwVwyG; arc=none smtp.client-ip=192.198.163.16
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ENl+XAHH"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="IkMwVwyG"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1738589882; x=1770125882;
+  t=1738589888; x=1770125888;
   h=from:to:cc:in-reply-to:references:subject:message-id:
    date:mime-version:content-transfer-encoding;
-  bh=RpQJf107msvPI8K23FYZ020hoAFNcjii+xY2AIj5tno=;
-  b=ENl+XAHH1gtcT/tAQX1uGLCwmnyuZEmQXncNmNpPknaClAl1cH2A3enu
-   JwRpqayLRzqp6Zm6JBlaUjbvR6wbQ1koSCAzXwC5POO/BD9xreqV0QWUK
-   +/I0mRPwPTNh/FsprbmfdLlzHVORLBBUsb+2rYTjKTt4Dgys69BA5v4CJ
-   NmInY4UdoPXVlFpLyWODQp98QS66MBkzOWZ8y2vMNwcSeTsYtYHYY83YQ
-   7MKs8hmrKrrNiuCgeM1e2qnGbkQElVanRxdGstjObF6ad9tQDcbC3Y1Xj
-   4OeUnBiXRvZrykzE32mZsr9GoyxLdGrQwTV2QJmVlkfx9ahK86rufLoYo
+  bh=fM/ZRClWraXI3Z+8kTcI4xdgHN00SXkwdtH/eiVnaN4=;
+  b=IkMwVwyGeLxsJv/M1RhCNgG2FxnS0Lb2vxedBZ849HjIMdjcBhLQb1TS
+   Hiff3bkhCIjsTUlaUiD/sRNRANkAh+ZIuTmufzb9gA7gWmIvUhzT34qzc
+   bW/JU7B8ArL+m9DKRPhqIHVU3bHk9MV1U41uNjfdBcEXH/h0g8M6D3KjZ
+   6fSfRdUnX4WH5vlg8x+KkaOIT1Jvz+5ffuBzHgNmx1BBgNRQkh5Wt7VHb
+   hdmDfYrldPgPdGHZweIT0DwoUH+ihOnH/tdK3sJdv28NaD3SxWUz3sLEA
+   tnrYKrbhoKMnD+umrcXSrpUKx1bjY9UBwoDFN2m1ix25tcV6EYKBnpRbl
    Q==;
-X-CSE-ConnectionGUID: Xm3L2eUETXqWix/BKSe3CQ==
-X-CSE-MsgGUID: mbT0x1pdQYOiK2qjn83vRA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11335"; a="26682746"
+X-CSE-ConnectionGUID: sqKaNbDaT2ajeIjowUr/tg==
+X-CSE-MsgGUID: bOX0c9DnQye8OfIi7rHk5A==
+X-IronPort-AV: E=McAfee;i="6700,10204,11335"; a="26682750"
 X-IronPort-AV: E=Sophos;i="6.13,255,1732608000"; 
-   d="scan'208";a="26682746"
+   d="scan'208";a="26682750"
 Received: from fmviesa004.fm.intel.com ([10.60.135.144])
-  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Feb 2025 05:38:01 -0800
-X-CSE-ConnectionGUID: aYa5Lzs+RqW8J99zgCJIJw==
-X-CSE-MsgGUID: Mt6Dgkb9RYm7g8q3tIQGCw==
+  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Feb 2025 05:38:08 -0800
+X-CSE-ConnectionGUID: FhLyt8pdTlC6uiRWnfbtlA==
+X-CSE-MsgGUID: 9Q1OIl9wRmSx3RnHes42kg==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.13,255,1732608000"; 
-   d="scan'208";a="115325231"
+   d="scan'208";a="115325244"
 Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.194])
-  by fmviesa004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Feb 2025 05:37:59 -0800
+  by fmviesa004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Feb 2025 05:38:06 -0800
 From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-To: vadimp@nvidia.com, hdegoede@redhat.com, 
- Xiangrong Li <xiangrongl@nvidia.com>
-Cc: davthompson@nvidia.com, asmaa@nvidia.com, 
- platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-In-Reply-To: <20250124144655.48564-1-xiangrongl@nvidia.com>
-References: <20250124144655.48564-1-xiangrongl@nvidia.com>
-Subject: Re: [PATCH v3] mlxbf-bootctl: Support sysfs entries for RTC
- battery status
-Message-Id: <173858987431.2591.10028148817647304373.b4-ty@linux.intel.com>
-Date: Mon, 03 Feb 2025 15:37:54 +0200
+To: hdegoede@redhat.com, Thomas Zimmermann <tzimmermann@suse.de>
+Cc: platform-driver-x86@vger.kernel.org
+In-Reply-To: <20250131095235.125533-1-tzimmermann@suse.de>
+References: <20250131095235.125533-1-tzimmermann@suse.de>
+Subject: Re: [PATCH 0/2] platform/x86: Do not include <linux/fb.h>
+Message-Id: <173858988194.2591.15690592935614698000.b4-ty@linux.intel.com>
+Date: Mon, 03 Feb 2025 15:38:01 +0200
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -64,14 +61,14 @@ Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
 X-Mailer: b4 0.13.0
 
-On Fri, 24 Jan 2025 14:46:55 +0000, Xiangrong Li wrote:
+On Fri, 31 Jan 2025 10:51:08 +0100, Thomas Zimmermann wrote:
 
-> This patch extends the mlxbf-bootctl driver's sysfs entries
-> to support read access for the board's RTC battery status.
-> A successful read from this attribute returns the status of
-> the board's RTC battery. The RTC battery status register is
-> also cleared upon successful read operation.
+> These two drivers include <linux/fb.h>, presumably for backlight
+> support. It's no longer need, so remove the include statement.
 > 
+> Thomas Zimmermann (2):
+>   platform/x86: compal-laptop: Do not include <linux/fb.h>
+>   platform/x86: thinkpad-acpi: Do not include <linux/fb.h>
 > 
 > [...]
 
@@ -82,8 +79,10 @@ platform-drivers-x86/review-ilpo-next branch only once I've pushed my
 local branch there, which might take a while.
 
 The list of commits applied:
-[1/1] mlxbf-bootctl: Support sysfs entries for RTC battery status
-      commit: 5d40a8577559250029ff571de38ffcbc226a63d7
+[1/2] platform/x86: compal-laptop: Do not include <linux/fb.h>
+      commit: e87af94c0794ae19c7ed58996d847f1466f67446
+[2/2] platform/x86: thinkpad-acpi: Do not include <linux/fb.h>
+      commit: 1bcfd16b12265ff29c2e2d8c977a9dcbf2649020
 
 --
  i.
