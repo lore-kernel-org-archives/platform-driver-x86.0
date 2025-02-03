@@ -1,198 +1,162 @@
-Received: from mail-qt1-f170.google.com (mail-qt1-f170.google.com [209.85.160.170])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail-0301.mail-europe.com (mail-0301.mail-europe.com [188.165.51.139])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E613208A7;
-	Mon,  3 Feb 2025 16:15:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9153420B1E2
+	for <platform-driver-x86@vger.kernel.org>; Mon,  3 Feb 2025 16:33:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=188.165.51.139
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738599337; cv=none; b=S6rVABoji/GUy1O6IG7jq1rB5zYgZ+uhNwyuzoy5cuXStU4Zo4EoR8zPBNg5mUDpefUuvM8zkeeZIDP5PKUJoW/Bfz9mGWmOOA08KJHYvueQ04I0zCNw8nGJeuD+wTIqH5nng8fkl40Gk8oC2k4gPsE7BJV09ESiAOgA3BVy+DE=
+	t=1738600412; cv=none; b=MjO9XhCVt7eknQVhhe+QPjutHkomFRAx2We4R8R7dReLb/WJSr45s0t4UX7DTjUrC3xGM6WDIxukfwtS39p+lOmjA7KBrN3erOfHdzMgw/i5NkCgWDPB/B302ElHPtbAJxvmpngzLZ1mxaYXMwyUUmyaAelPL3ma3I/edgU9e7I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738599337; c=relaxed/simple;
-	bh=jUwhSe87g02uoy84SImiW3iRnVIQ00CyAOokehw2rvw=;
-	h=Mime-Version:Content-Type:Date:Message-Id:From:To:Cc:Subject:
-	 References:In-Reply-To; b=hgh/XyXEfGJKN56k68C3SwX4wVnqVqUxBigeu6lMSzml3ar3H4h5QBy3J4YY+xQnOkD4hE9G+RcOLCYzaAWx8YiStmr2kmczoFXQqCrOqcrSnV9Cwjn+1pjha/l8i35bv2/tQrbN9P4r6e2sm3JnoSmxNDFJVg7T2NGRzbPUbzg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=JItIBMR7; arc=none smtp.client-ip=209.85.160.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1738600412; c=relaxed/simple;
+	bh=4FxZf6PO+HZtWwc5YXEjBWvdgHDvOD9yZAGRbpAR2J4=;
+	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=dbPYcPnYFzRy5sVD/t2NYo9nV6uafzJntjKtlmYDhPGMQ2uHD7m01DtS7XKxgdMGmUEjVv+kpY4KBszt6la4XT9SnxoXTbSPHvMYIX1HmNXcpIuPwHWGfCAPqZ+sv2nUiy7ZylPPwZGxw7E2G3Wx7Opw5Ra/huWCxZRAYwbTluU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=proton.me; spf=pass smtp.mailfrom=proton.me; dkim=pass (2048-bit key) header.d=proton.me header.i=@proton.me header.b=GBT17cpy; arc=none smtp.client-ip=188.165.51.139
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=proton.me
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=proton.me
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JItIBMR7"
-Received: by mail-qt1-f170.google.com with SMTP id d75a77b69052e-4678cce3d60so47276391cf.2;
-        Mon, 03 Feb 2025 08:15:35 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1738599334; x=1739204134; darn=vger.kernel.org;
-        h=in-reply-to:references:subject:cc:to:from:message-id:date
-         :content-transfer-encoding:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=3tS/7qTS4m70JkAze3DpkSpMUHgCMv050Qq58puGuWY=;
-        b=JItIBMR7Q5nURpcEcD/3BE1w7JT02laSUcOwI99yImfu2t5hBfoX+4oS3EbLMszHfU
-         +iOFQSqO6hfuuhTHrLq9jZGmKjSzEKyOcKUscbgAIKlrNuN7udDcqiDHHtinZJtQevZE
-         LCntGi0sS7QcFTKzJ+oPjjA62mDuL/s37p7Mu2LIgJRPzXLecG4ZUNrLi4LlFFvpcEtk
-         VIvXg9lUWcRHdyQKgj8yrg08imDh194iQs5CRMPZiV28y0zN2llSnV+TNl/PEmuLu5fw
-         22O3zHpyKkGGWPa3N+ll5p8ApSY/ywKGwCfSC6U5LKl1ljYvVyhKAeEZ2ziR+LPUgITH
-         3C2g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738599334; x=1739204134;
-        h=in-reply-to:references:subject:cc:to:from:message-id:date
-         :content-transfer-encoding:mime-version:x-gm-message-state:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=3tS/7qTS4m70JkAze3DpkSpMUHgCMv050Qq58puGuWY=;
-        b=oJyBarGnZjOfHJ8rrL8tfw7LvsG7ryqs2vxbcUU1dZykeghrV0v2M2GVmhTnHh2skA
-         ous1QwqPsD1oOsXW3gxD9jFQfXHKgWvGmmfL5cAbVRGIYnGo9aySuzCI6u6c1MWrtj4L
-         CIEXuFchd5UErbNq595PsCKRbk3YjrCBbHn76VzsSbQD6nIL/BZFM3I2UyQOzDmQI3Nn
-         bdDsSUtR8eRuevpHKmucQB9WGsbi+heuM8B+giK2dTBrF1AbeHfPjmCrXumHiF+5SMCW
-         K64nhgWf0J6lbbufCrdBqrxh5/wJTheunfJCB9MbC7Zdu5LABykzqQoJjHC8mXJ9O4nP
-         JDyQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVZMbN7jNkQRhYdDIBSrSfizxVpD1ijGFLwzUW6IZVA6CfqaXflfjoYIGjkOOWKxJ9JeD2uyexW9MosAkkHZ2AS6U2q6g==@vger.kernel.org, AJvYcCVnYatb6X/CxtbIqeoB2eBUq3CRSEeAgo0Zz+qgJeO2zy1UddZJNQQ7jW1QQFmrU7BL+1aBD2Dnt4HF1/k=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzxI34xNwdtavrIPsxjL7aBq0cM11gTM7XKlp+M57jfTSzPECUS
-	nlyIkSC8IYlpQOaKJVbwD4U+9A6MfiyndC2zw5UdT0MbfPE/O7X5
-X-Gm-Gg: ASbGncsULzlbo4jLJcLso0ngsQdACqigOcIVz73XsWbTGG0siqRoQC0jdGy0iodKVmS
-	t9Pll4nOG4PZCyJQfHUAcGjoAI41Ww+2aOQVdJbjLo9OEAujPW/FqDVAWJ4bA0dIS268zLCXP3Z
-	8mUW5rSSsLuYhk3Eeeeu6C752T4HlEcVVdMXAXueACDZ2rIakVQaIOSDErv3Wcip1wCKkrWiXuG
-	dn6xOd+/PSJLCYcJ3T00LoD3vgGp5W5fp0XmwYL/V+0j0z6a5T6oudcTyfPkOBmdP9QT5VpvHMU
-	X2OEgB8=
-X-Google-Smtp-Source: AGHT+IFRBhTOmGMRTDgquhOoPafkUNQIAOUKTz9yGcentgDY3hJhT0Mux0KPf2YTh1eh35gTqFTb7Q==
-X-Received: by 2002:a05:620a:f0f:b0:7b6:6d5a:d51b with SMTP id af79cd13be357-7bffcdafb19mr2967329085a.52.1738599334052;
-        Mon, 03 Feb 2025 08:15:34 -0800 (PST)
-Received: from localhost ([2800:bf0:82:3d2:4207:a956:ebad:2a64])
-        by smtp.gmail.com with ESMTPSA id a1e0cc1a2514c-8669407cc41sm1708989241.8.2025.02.03.08.15.32
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 03 Feb 2025 08:15:33 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=proton.me header.i=@proton.me header.b="GBT17cpy"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=proton.me;
+	s=protonmail; t=1738600399; x=1738859599;
+	bh=AJTsKlsqdY6CdLAM6+LsVciIKFmhX3Tnbrvy9w0xnSU=;
+	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
+	 Feedback-ID:From:To:Cc:Date:Subject:Reply-To:Feedback-ID:
+	 Message-ID:BIMI-Selector:List-Unsubscribe:List-Unsubscribe-Post;
+	b=GBT17cpyznJZMgFQBzpqcugIw62LUd7LF28OH6igsCmB2Xfd4QgmBnHEQ1VBztbc2
+	 IK7AtCTBrnno7V3BY94gCMadvAqtkm3ZYsUIswQA9bRm1iP8LOIW97PxMwe3y/8hPW
+	 G1r09qc7SREohzKQ9RIayfpNwC7zm+7g0sJfhPZNLj2wXcevOhnQPGp/0VtVBatttR
+	 zGnbIu5/Swk8yHsT8cFZ/IvYG/rlqubBTc6TWA1yenQsVffbudll51kgXsaCT7lwJx
+	 2smiOCVwGlpQTOCfuczV3QlsFJgIUV1OX3xtbkYT8N4AEMpjBhwr7LncM7Z2GzY0nR
+	 OrmkxQvp6SviQ==
+Date: Mon, 03 Feb 2025 16:33:15 +0000
+To: =?utf-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+From: Sybil Isabel Dorsett <sybdorsett@proton.me>
+Cc: Henrique de Moraes Holschuh <hmh@hmh.eng.br>, Hans de Goede <hdegoede@redhat.com>, ibm-acpi-devel@lists.sourceforge.net, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v3] platform/x86: thinkpad_acpi: Fix invalid fan speed on ThinkPad X120e
+Message-ID: <20250203163255.5525-1-sybdorsett@proton.me>
+In-Reply-To: <cc7c8e94-4340-3d1e-03b4-2f738067d24f@linux.intel.com>
+References: <20250131203854.6608-1-sybdorsett@proton.me> <69e279a3-7fd5-9dc3-680d-7415022dc5e4@linux.intel.com> <20250203130232.3481-1-sybdorsett@proton.me> <d20f933c-8041-bc8d-13c2-98d89ccfa524@linux.intel.com> <cc7c8e94-4340-3d1e-03b4-2f738067d24f@linux.intel.com>
+Feedback-ID: 131381098:user:proton
+X-Pm-Message-ID: bce36cd16a7c78ee9a96a99d3f3ce52c7f07d628
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Mon, 03 Feb 2025 11:15:31 -0500
-Message-Id: <D7IY0YO7DFXE.1V78T6V77EDF2@gmail.com>
-From: "Kurt Borja" <kuurtb@gmail.com>
-To: "Armin Wolf" <W_Armin@gmx.de>, <platform-driver-x86@vger.kernel.org>
-Cc: =?utf-8?q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, "Mario
- Limonciello" <mario.limonciello@amd.com>, "Hans de Goede"
- <hdegoede@redhat.com>, <Dell.Client.Kernel@dell.com>,
- <linux-kernel@vger.kernel.org>, "Greg Kroah-Hartman"
- <gregkh@linuxfoundation.org>
-Subject: Re: [PATCH v7 00/14] platform/x86: alienware-wmi driver rework
-X-Mailer: aerc 0.20.1-0-g2ecb8770224a
-References: <20250203062055.2915-1-kuurtb@gmail.com>
- <7d4e693e-5d12-4c55-9db8-7f7dd45e8086@gmx.de>
-In-Reply-To: <7d4e693e-5d12-4c55-9db8-7f7dd45e8086@gmx.de>
 
-On Mon Feb 3, 2025 at 10:34 AM -05, Armin Wolf wrote:
-> Am 03.02.25 um 07:20 schrieb Kurt Borja:
->
->> Hi!
->>
->> I bring some last minute modifications.
->>
->> I found commit
->>
->> 	8d8fc146dd7a ("nvmem: core: switch to use device_add_groups()")
->>
->> which states that it's unnecesary to call device_remove_groups() when
->> the device is removed, so I dropped it to simplify things.
->
-> What? That sound quite strange to me. I CCed Greg because i am curious ho=
-w this
-> should work.
+On ThinkPad X120e, fan speed is reported in ticks per revolution
+rather than RPM.
 
-I'm curious too!=20
+Recalculate the fan speed value reported for ThinkPad X120e
+to RPM based on a 22.5 kHz clock.
 
-I found it while searching for something like devm_device_add_groups
-which it turns out, was removed from the kernel.
+Based on the information on
+https://www.thinkwiki.org/wiki/How_to_control_fan_speed,
+the same problem is highly likely to be relevant to at least Edge11,
+but Edge11 is not addressed in this patch.
 
->
->>
->> I also found commit
->>
->> 	957961b6dcc8 ("hwmon: (oxp-sensors) Move tt_toggle attribute to dev_gro=
-ups")
->>
->> which states that no driver should add sysfs groups while probing the
->> device as it races with userspace, so I re-added PROBE_FORCE_SYNCHRONOUS
->> to the platform driver, so groups are added only after the device has
->> finished probing.
->
-> Using PROBE_FORCE_SYNCHRONOUS is not going to solve this problem here, pl=
-ease remove it.
+Signed-off-by: Sybil Isabel Dorsett <sybdorsett@proton.me>
+Reviewed-by: Ilpo J=C3=A4rvinen <ilpo.jarvinen@linux.intel.com>
+---
 
-Yes, I'm going for Ilpo's .dev_groups approach.
+Notes:
+    v3: changed the commit message (no changes in the code) to address
+        further comments from Ilpo.
+    v2: addressed review comments from Ilpo
+        - name of the new variable is changed
+          from "fan_speed_requires_conversion" to "fan_speed_in_tpr";
+        - rephrased the commit message;
+        - "KHz" is respelled as "kHz".
 
-~ Kurt
+ drivers/platform/x86/thinkpad_acpi.c | 16 ++++++++++++++--
+ 1 file changed, 14 insertions(+), 2 deletions(-)
 
->
-> Thanks,
-> Armin Wolf
->
->> I'm not 100% sure that the second commit message applies here, but it is
->> revd-by Greg K-H so I added it just in case.
->>
->> Aside from that, I added .pprof to awcc_quirks because I'm going to add
->> support for new features after this series, and it makes sense that
->> force_platform_profile only forces the pprof and not other upcoming
->> features.
->>
->> ~ Kurt
->> ---
->> [02/14]
->>    - In alienware_alienfx_setup() add a devm action to remove the create=
-d
->>      platform device
->>    - Drop device_remove_groups() in WMAX .remove callback
->>    - Add PROBE_FORCE_SYNCHRONOUS to the platform driver
->>    - Drop .remove callbacks on both WMI drivers
->>
->> [03/14]
->>    - Add awcc_platform_profile_init() to create the platform_profile
->>      device on quirks->thermal =3D=3D true condition
->>
->> [07/14]
->>    - Add .pprof to awcc_quirks
->>
->> [10/14]
->>    - Drop unused member `quirks` on `alienfx_priv` (remnant of another
->>      version)
->>
->> v6: https://lore.kernel.org/platform-driver-x86/20250127040406.17112-1-k=
-uurtb@gmail.com/
->>
->> Kurt Borja (14):
->>    platform/x86: alienware-wmi: Add a state container for LED control
->>      feature
->>    platform/x86: alienware-wmi: Add WMI Drivers
->>    platform/x86: alienware-wmi: Add a state container for thermal contro=
-l
->>      methods
->>    platform/x86: alienware-wmi: Refactor LED control methods
->>    platform/x86: alienware-wmi: Refactor hdmi, amplifier, deepslp method=
-s
->>    platform/x86: alienware-wmi: Refactor thermal control methods
->>    platform/x86: alienware-wmi: Split DMI table
->>    MAINTAINERS: Update ALIENWARE WMI DRIVER entry
->>    platform/x86: Rename alienware-wmi.c
->>    platform/x86: Add alienware-wmi.h
->>    platform/x86: Split the alienware-wmi driver
->>    platform/x86: dell: Modify Makefile alignment
->>    platform/x86: Update alienware-wmi config entries
->>    platform/x86: alienware-wmi: Update header and module information
->>
->>   MAINTAINERS                                   |    4 +-
->>   drivers/platform/x86/dell/Kconfig             |   30 +-
->>   drivers/platform/x86/dell/Makefile            |   45 +-
->>   .../platform/x86/dell/alienware-wmi-base.c    |  496 +++++++
->>   .../platform/x86/dell/alienware-wmi-legacy.c  |   95 ++
->>   .../platform/x86/dell/alienware-wmi-wmax.c    |  790 +++++++++++
->>   drivers/platform/x86/dell/alienware-wmi.c     | 1249 -----------------
->>   drivers/platform/x86/dell/alienware-wmi.h     |  101 ++
->>   8 files changed, 1534 insertions(+), 1276 deletions(-)
->>   create mode 100644 drivers/platform/x86/dell/alienware-wmi-base.c
->>   create mode 100644 drivers/platform/x86/dell/alienware-wmi-legacy.c
->>   create mode 100644 drivers/platform/x86/dell/alienware-wmi-wmax.c
->>   delete mode 100644 drivers/platform/x86/dell/alienware-wmi.c
->>   create mode 100644 drivers/platform/x86/dell/alienware-wmi.h
->>
->>
->> base-commit: 05dbaf8dd8bf537d4b4eb3115ab42a5fb40ff1f5
+diff --git a/drivers/platform/x86/thinkpad_acpi.c b/drivers/platform/x86/th=
+inkpad_acpi.c
+index 1fcb0f996..e7778ea41 100644
+--- a/drivers/platform/x86/thinkpad_acpi.c
++++ b/drivers/platform/x86/thinkpad_acpi.c
+@@ -7885,6 +7885,7 @@ static struct ibm_struct volume_driver_data =3D {
+=20
+ #define FAN_NS_CTRL_STATUS=09BIT(2)=09=09/* Bit which determines control i=
+s enabled or not */
+ #define FAN_NS_CTRL=09=09BIT(4)=09=09/* Bit which determines control is by=
+ host or EC */
++#define FAN_CLOCK_TPM=09=09(22500*60)=09/* Ticks per minute for a 22.5 kHz=
+ clock */
+=20
+ enum {=09=09=09=09=09/* Fan control constants */
+ =09fan_status_offset =3D 0x2f,=09/* EC register 0x2f */
+@@ -7940,6 +7941,7 @@ static int fan_watchdog_maxinterval;
+=20
+ static bool fan_with_ns_addr;
+ static bool ecfw_with_fan_dec_rpm;
++static bool fan_speed_in_tpr;
+=20
+ static struct mutex fan_mutex;
+=20
+@@ -8142,8 +8144,11 @@ static int fan_get_speed(unsigned int *speed)
+ =09=09=09     !acpi_ec_read(fan_rpm_offset + 1, &hi)))
+ =09=09=09return -EIO;
+=20
+-=09=09if (likely(speed))
++=09=09if (likely(speed)) {
+ =09=09=09*speed =3D (hi << 8) | lo;
++=09=09=09if (fan_speed_in_tpr && *speed !=3D 0)
++=09=09=09=09*speed =3D FAN_CLOCK_TPM / *speed;
++=09=09}
+ =09=09break;
+ =09case TPACPI_FAN_RD_TPEC_NS:
+ =09=09if (!acpi_ec_read(fan_rpm_status_ns, &lo))
+@@ -8176,8 +8181,11 @@ static int fan2_get_speed(unsigned int *speed)
+ =09=09if (rc)
+ =09=09=09return -EIO;
+=20
+-=09=09if (likely(speed))
++=09=09if (likely(speed)) {
+ =09=09=09*speed =3D (hi << 8) | lo;
++=09=09=09if (fan_speed_in_tpr && *speed !=3D 0)
++=09=09=09=09*speed =3D FAN_CLOCK_TPM / *speed;
++=09=09}
+ =09=09break;
+=20
+ =09case TPACPI_FAN_RD_TPEC_NS:
+@@ -8788,6 +8796,7 @@ static const struct attribute_group fan_driver_attr_g=
+roup =3D {
+ #define TPACPI_FAN_NOFAN=090x0008=09=09/* no fan available */
+ #define TPACPI_FAN_NS=09=090x0010=09=09/* For EC with non-Standard registe=
+r addresses */
+ #define TPACPI_FAN_DECRPM=090x0020=09=09/* For ECFW's with RPM in register=
+ as decimal */
++#define TPACPI_FAN_TPR=09=090x0040=09=09/* Fan speed is in Ticks Per Revol=
+ution */
+=20
+ static const struct tpacpi_quirk fan_quirk_table[] __initconst =3D {
+ =09TPACPI_QEC_IBM('1', 'Y', TPACPI_FAN_Q1),
+@@ -8817,6 +8826,7 @@ static const struct tpacpi_quirk fan_quirk_table[] __=
+initconst =3D {
+ =09TPACPI_Q_LNV3('R', '0', 'V', TPACPI_FAN_NS),=09/* 11e Gen5 KL-Y */
+ =09TPACPI_Q_LNV3('N', '1', 'O', TPACPI_FAN_NOFAN),=09/* X1 Tablet (2nd gen=
+) */
+ =09TPACPI_Q_LNV3('R', '0', 'Q', TPACPI_FAN_DECRPM),/* L480 */
++=09TPACPI_Q_LNV('8', 'F', TPACPI_FAN_TPR),=09=09/* ThinkPad x120e */
+ };
+=20
+ static int __init fan_init(struct ibm_init_struct *iibm)
+@@ -8887,6 +8897,8 @@ static int __init fan_init(struct ibm_init_struct *ii=
+bm)
+=20
+ =09=09=09if (quirks & TPACPI_FAN_Q1)
+ =09=09=09=09fan_quirk1_setup();
++=09=09=09if (quirks & TPACPI_FAN_TPR)
++=09=09=09=09fan_speed_in_tpr =3D true;
+ =09=09=09/* Try and probe the 2nd fan */
+ =09=09=09tp_features.second_fan =3D 1; /* needed for get_speed to work */
+ =09=09=09res =3D fan2_get_speed(&speed);
+--=20
+2.39.5
+
 
