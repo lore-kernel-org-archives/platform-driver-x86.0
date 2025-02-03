@@ -1,212 +1,179 @@
-Received: from mail-io1-f53.google.com (mail-io1-f53.google.com [209.85.166.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mout.gmx.net (mout.gmx.net [212.227.15.19])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D334A200B8C;
-	Mon,  3 Feb 2025 15:28:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D767F200B8C;
+	Mon,  3 Feb 2025 15:34:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738596515; cv=none; b=qRaV8pX34FufgzCI8Po8/8dZIo4Jx1k+j0o4RV3k2O2lRxOpvvxjH12ibjsNkRUxHHGf5/nKdSYhR3dsxiAV6IOsCB4Uw8zKqJYK/o7/akqvS6QNquLkTGnxsWX1Ae5oB8krbjoYW5lCtxo4g8gp9SewLmYUTlR3gRRO743WEnA=
+	t=1738596875; cv=none; b=NLnXQ4zegOnEjmaWEpt3qY9QR1jTHjkpGV+3keIzN/gQbTEKpIepyLtO2sQzAvMA5/AZlRysaEzPNzKPIaugpWt70Qn6qmvitLgeRTK0iy7/3VwTwoirGijkf+7TVKsNcMXDMUuOo04RvNVRvQdVuOev1+S5b2EzQCo0Z32THQM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738596515; c=relaxed/simple;
-	bh=taTtsBr5Otz5EEF3tDTDTV5VOSbi/2UfRO8hESGOzgo=;
-	h=Mime-Version:Content-Type:Date:Message-Id:To:Cc:Subject:From:
-	 References:In-Reply-To; b=E9PByQQA/x/S27lAPzrwIyT9hopA6cm97P/Leu8+lnWe7X8WQN1BGF/ftbbf2m358CTuv9Y1iuY5iu99J9NIVYEfag71smZCJuqjWS0gc4mSpT8+IfeOazkrPQqkxPDR304vfw1tCkP1q/siwWJIuK6q9uB0UbM49G6JOiUZYM8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=nCSxn80B; arc=none smtp.client-ip=209.85.166.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1738596875; c=relaxed/simple;
+	bh=5SzEa1JxlUYyNAN8a4VMXz7YUjG9MTEPqfd0+b1WBuw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=fmlkqOU8J6a4lxg6WNKXzSlNrHgri767SO/TlJmJIfwZLWBcILHEga63KqwlhMwiMU/risOx7Zpxauaa2A5Ped48Y/uZGxx9Kldid/dHXSr0qx8TG0tihJi3KjRR+E1DTTc+IFWgMd27faWinPD4ioxq4DqipwaY1+BsT9y+MsM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b=LjypTLWK; arc=none smtp.client-ip=212.227.15.19
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nCSxn80B"
-Received: by mail-io1-f53.google.com with SMTP id ca18e2360f4ac-844ce6d0716so318094639f.1;
-        Mon, 03 Feb 2025 07:28:33 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1738596513; x=1739201313; darn=vger.kernel.org;
-        h=in-reply-to:references:from:subject:cc:to:message-id:date
-         :content-transfer-encoding:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=cwx/jJuVpXV8nrQOzPoCgA/xl5QSG0sKDpq8AoK3/hQ=;
-        b=nCSxn80BedsOkPvDxRbUa2q0bN01wWVFl/qOntU4NyVBDZ7dOBMqgx0PMq2oahHbF+
-         qv1oF8Byt4qGlGkt5O/KaROH1HhWONSzDDlNPSOGLpZQ6f5CgqkF2A2ZrS1UlfJhLpnJ
-         foD9iltGse7ud/mFcJxl/Pt/OibydRTHWrmKYVOVntuItoUc3K9BHOifQAQaz0/r6WcV
-         ZPtu6syRSFNPgZwZYaP3bRSNYd3Gzq5jItY2CT1kav5TaOKXT/dcksEm7hC1xpYmNJl8
-         l9Pm55XbkaRX55pVfFF/catS3RbEzi13n3MrQugq4eoQYl2AVhSI+60OIfjFnHcSL2jh
-         oUEw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738596513; x=1739201313;
-        h=in-reply-to:references:from:subject:cc:to:message-id:date
-         :content-transfer-encoding:mime-version:x-gm-message-state:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=cwx/jJuVpXV8nrQOzPoCgA/xl5QSG0sKDpq8AoK3/hQ=;
-        b=ARC9o53/anknBFejvc9Du4+4gVftwMxPeP+eIZnDDlJoyQh29WF0D54J5ZgdiNcBa1
-         aZeQ0tsIgN8gZLRbE428G58YdtqDcVQWhzwYj6aG0UEwAhc5j5Y8TNwgh922IMPBPf5I
-         gLPXPdQAbfN9yqpiIo1Av1+AuZEIk6+r21eQc5vi9iznRFyeEa5kTailrg7elNFyfXbn
-         dss5Cyve29vZ7e5ggRd+0H7iRwGg9pvGVpgOK/LUylF0XosgJoeiqqpbI5oxIzlfegnY
-         oQkE4wSv6YuQDuih4sieLokCxTw+k6NjfO6TC1bnZ5Lq3K0eJL339Jv6eHJDc2+yCBq5
-         Zhvg==
-X-Forwarded-Encrypted: i=1; AJvYcCXEju2GpJ3ewGkrtE2ocuYrBNaFPfSl4YzbCtzESPtJ9wErstb41F2WKNObhnkZzD3giQjJJHYdJBQkLNU=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx92xwg3YCcaOJhCJXPpmPODQANNb84kZ5ISHTowfXiDYbIrRor
-	mpSr9HgAdjluwPSeCtlo8zf0nh8PX1Pf/ZbC8bCJfZ83enQnUvpAardDUA==
-X-Gm-Gg: ASbGncsG2ThQikMcPqGWRw42NSp7DyjTZEOENuKddKBvfw8x9IkxTcQKNHREgt+d0Gk
-	/ciXN0whBLoRyxLNiIYdX7n/3pCoAuLdGUbzJ+a8H20NBhT0peHofLKSRERQpP1enjNj0Sg0+JJ
-	SOcl9GmZq1YalveJvam4YkLo2X7EghJ4Q+wV0bi8/rSnF4iCnETC9MYgIi5c7/XBrrtWUmvRgId
-	4NqjYMgJgT9DC4tEno1C6oOC7TTHN+eq+fJ3Ld9W4tvyMRnQxGTcpdGLcsmsCglCjYdeG3dhvvH
-	4qSIjaM=
-X-Google-Smtp-Source: AGHT+IFyYrE6OkOtE9jg0ZaWEEiM5EY7Tvgr9Z5x4ZS/eWbFIvdLghA9xZFJwwT3nVllGCsjWWqOAA==
-X-Received: by 2002:a05:6122:da4:b0:516:1582:f72e with SMTP id 71dfb90a1353d-51e9e30993dmr18043878e0c.2.1738596502184;
-        Mon, 03 Feb 2025 07:28:22 -0800 (PST)
-Received: from localhost ([2800:bf0:82:3d2:4207:a956:ebad:2a64])
-        by smtp.gmail.com with ESMTPSA id 71dfb90a1353d-51eb1be9729sm1244933e0c.7.2025.02.03.07.28.19
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 03 Feb 2025 07:28:21 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b="LjypTLWK"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.de;
+	s=s31663417; t=1738596862; x=1739201662; i=w_armin@gmx.de;
+	bh=rd6sVNZknlgcJC0VpNb2HMex6eIhE5fV9/oNgWEBbpA=;
+	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:To:Cc:
+	 References:From:In-Reply-To:Content-Type:
+	 Content-Transfer-Encoding:cc:content-transfer-encoding:
+	 content-type:date:from:message-id:mime-version:reply-to:subject:
+	 to;
+	b=LjypTLWKBSINlD+0AsySawxad+QnACSiTpudetZSF7eOXbY0sg8EOo/G0lzgYrE+
+	 Y6o9JjDeRoI3LUxykD+DB1BXEWy6GPrT2i+9P3sj7lBrVfNlTLLwPqEu4aFwBHaaJ
+	 AvCFG+4J9lkHKWKL2GhOqTeLZjcmMxxcYp/ABqll8VrrutXAwWOsTLq4Qi9VeevEj
+	 NMIvz2A6jdGnWDn9xRbjVhJm+znb/1UEkAYVA5EwLdeckin4dz4OztKhh6eGehgGz
+	 jsc5/k0lroIHKkXa5MiQ0wJDLQWAl7sLwZs3aNGcCate1+kCR3GA/se7eg+XHCw54
+	 GdogakXe0ZCQdocbXA==
+X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
+Received: from [192.168.0.69] ([91.14.238.232]) by mail.gmx.net (mrgmx005
+ [212.227.17.190]) with ESMTPSA (Nemesis) id 1MAwXr-1tYcfH1NzF-007b6J; Mon, 03
+ Feb 2025 16:34:22 +0100
+Message-ID: <7d4e693e-5d12-4c55-9db8-7f7dd45e8086@gmx.de>
+Date: Mon, 3 Feb 2025 16:34:20 +0100
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Mon, 03 Feb 2025 10:28:18 -0500
-Message-Id: <D7IX0TG9FN1I.2GU5APPCH2PG0@gmail.com>
-To: =?utf-8?q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Cc: <platform-driver-x86@vger.kernel.org>, "Armin Wolf" <W_Armin@gmx.de>,
- "Mario Limonciello" <mario.limonciello@amd.com>, "Hans de Goede"
- <hdegoede@redhat.com>, <Dell.Client.Kernel@dell.com>, "LKML"
- <linux-kernel@vger.kernel.org>
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
 Subject: Re: [PATCH v7 00/14] platform/x86: alienware-wmi driver rework
-From: "Kurt Borja" <kuurtb@gmail.com>
-X-Mailer: aerc 0.20.1-0-g2ecb8770224a
+To: Kurt Borja <kuurtb@gmail.com>, platform-driver-x86@vger.kernel.org
+Cc: =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+ Mario Limonciello <mario.limonciello@amd.com>,
+ Hans de Goede <hdegoede@redhat.com>, Dell.Client.Kernel@dell.com,
+ linux-kernel@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 References: <20250203062055.2915-1-kuurtb@gmail.com>
- <c6e10cdd-6fba-6e8b-0913-66766cb9248e@linux.intel.com>
- <D7ISQ5PQLOLR.2P6D3M7W54PA3@gmail.com>
- <30f4bdff-caf7-45ce-5997-70c1c36a71ae@linux.intel.com>
- <D7IV1P2LAXRV.21V72EQZ7RMFZ@gmail.com>
- <a2086a6b-6e2a-faab-6dd1-d13d3bceccfa@linux.intel.com>
-In-Reply-To: <a2086a6b-6e2a-faab-6dd1-d13d3bceccfa@linux.intel.com>
+Content-Language: en-US
+From: Armin Wolf <W_Armin@gmx.de>
+In-Reply-To: <20250203062055.2915-1-kuurtb@gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Provags-ID: V03:K1:VbzyLfjVDqThDCZB0usINCGxuP5vmdD09Dhrkl2vbgixKM2/19Z
+ huk27PFkx239aNZXx2GgcXvitVc+pQIMQewR0QLaOQos1WyXuScJyt5I5UKkMudT3fbO2Yf
+ zhbQt5/cfhykTzXqtTFNWNwW5aTMTcqPOUu2fFWYQHkYb6rT+pQgZzIwD1a8j3P/Ca6joaF
+ GUCYX9d/fv2fQsNV+LWMw==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:zyPpT/Hzh8I=;4uh59PajUW+fL0/IoqYiHAOOB3g
+ j5Nc3nfriDOLmlMvq7qeOCjkbSKAUguIdMiDcgC2hS0GF1Fs6vEUjTrdNK3clWOBz+MgeF+vA
+ miWhBxWGsV75jMl9KplApqGxy87fUCqCTGUNFmDsXoixxm9m4nevlmEw1sJJ6rfA2mi9AINHz
+ BRCo9ExmyUKc25O3E5Ly5n+HdJcv5YSCOKuC1ywlTdMUiQzG5QtjUDd5D7oNWRx9M+qZyhCDD
+ dycjkwzwDo4w/YX2y1ZzZdF94TinLpkaa7sEE6stksx3JWPI6tQZMvNCtxhmhvYPXMF/GlglK
+ 2SPPStcD3Mm8VBbgP2D5U6z8u6rDV1jO8CLmzJS5Q12HAuyq1/19EgrxKjzUOpl2+RMhEQ7VX
+ oxVSuH/TyYZ0H3R4hNPQsyeNonnVXTjwMBvKxVwSS5sC8QU8+zMSn+dbRcOYdfXmr+gMKblc5
+ L1CCj9eS350KMnSY/D5+cBl269Fv5t0AYYVHb9GrO4VBZGby4xJBO+usEDgjnlhGsGE7kfn63
+ rSegNg2M1lFVqkDaNPrmCFmwuq9KAI8HY8+4FCg8dqTJja5+1g5hK9U7A2PWgNkZloA1AZL1o
+ 7aY+IhkwIdh3ooWB8oQlbwNl6/3oNa0ivkmUj6IY7lzU7PT5zBMi9nkouLAUDMzKWVACRoMk+
+ 6erizPP89/Q57m/JfsL+1saJey8Xk0cadbAW8PVLp1TL2tOKDAx3TtfPaKDpK4vBYXKfXGlGq
+ 2OYLLJCZvLHGc07SB34ZiJKPxwv1Q08dr3vHK/zMVaft2x+4UIDUwcVqVe8RstNStGt1cyQx5
+ F7fXm02ywJs92gAU2K3GZCD4dl+H8F4FWWiae60JW+ROUSG4R6YB5j7FWNAGQ/PcjYzw5JFls
+ kxdkye7g+pUJyx/SMkBCiEAsKG0PtNFNQaRaH9pAI3Oty/iP2GN8cgv01xXwlmsQPMnlJry59
+ LI3EJOlEJsv+OWLyNso4KFZoDZ0KSJAysUOaxkl1RB2FcTPqzirzOyrRBfyMraovVbrs09s7s
+ abCGqNS0Hy33WFHaaEqgIESesWJuWfiKr7gfB6cPCmyWpxo8doPCInAlIfKbNcadQ5X1G9QOF
+ R/l2iJ92KTtp7sBmk5vq52G6Ee33EOpfVPgeyTnU6zvQLQZNPO8VLrl9FbuGCWSsNIuMIXJnN
+ 8Pp7BN/k2ulC0+wMpn3EmJlS0JjHytAwxF5yBIOBDDGAV4qltCH8Hgzg/wIS+rWuFa0sSDTrJ
+ w3imsCWlFoxCb/B7RhQcTXHLLzxBoMAG/oJos6W+tNWR1FQ5XxMN7QlGUYZNX/KXEAuX223G4
+ KG5yJSjlr9eHVHUIt6pMd4/h6gJDTkCEsk3lGiwpi3wRwo=
 
-On Mon Feb 3, 2025 at 9:09 AM -05, Ilpo J=C3=A4rvinen wrote:
-> On Mon, 3 Feb 2025, Kurt Borja wrote:
->
->> On Mon Feb 3, 2025 at 7:55 AM -05, Ilpo J=C3=A4rvinen wrote:
->> > On Mon, 3 Feb 2025, Kurt Borja wrote:
->> >
->> >> On Mon Feb 3, 2025 at 4:20 AM -05, Ilpo J=C3=A4rvinen wrote:
->> >> > On Mon, 3 Feb 2025, Kurt Borja wrote:
->> >> >
->> >> >> Hi!
->> >> >>
->> >> >> I bring some last minute modifications.
->> >> >>=20
->> >> >> I found commit
->> >> >>=20
->> >> >> 	8d8fc146dd7a ("nvmem: core: switch to use device_add_groups()")
->> >> >>=20
->> >> >> which states that it's unnecesary to call device_remove_groups() w=
-hen
->> >> >> the device is removed, so I dropped it to simplify things.
->> >> >
->> >> > Hi Kurt,
->> >>=20
->> >> Hi Ilpo,
->> >>=20
->> >> >
->> >> >> I also found commit
->> >> >>=20
->> >> >> 	957961b6dcc8 ("hwmon: (oxp-sensors) Move tt_toggle attribute to d=
-ev_groups")
->> >> >>=20
->> >> >> which states that no driver should add sysfs groups while probing =
-the
->> >> >> device as it races with userspace, so I re-added PROBE_FORCE_SYNCH=
-RONOUS
->> >> >> to the platform driver, so groups are added only after the device =
-has
->> >> >> finished probing.
->> >> >>
->> >> >> I'm not 100% sure that the second commit message applies here, but=
- it is
->> >> >> revd-by Greg K-H so I added it just in case.
->> >> >
->> >> > Which is why .dev_groups should be used as it is able to avoid thos=
-e=20
->> >> > races on driver core level.
->> >>=20
->> >> In previous discussions with Armin we agreed it made more sense to mo=
-ve
->> >> WMAX-only groups from alienware-wmi-base.c to alienware-wmi-wmax.c wh=
-en
->> >> splitting.
->> >>=20
->> >> I have no problem in moving them back to .dev_groups though.
->> >>=20
->> >> >
->> >> > Why you call device_add_groups() at all? Can't you just insert it i=
-nto=20
->> >> > .dev_groups member in alienware_wmax_wmi_driver?
->> >>=20
->> >> I'd love to do this as it would simplify things a LOT, but some
->> >> user-space tools might expect this attributes to be exposed by the
->> >> "fake" platform device located at
->> >>=20
->> >> /sys/devices/platform/alienware-wmi
->> >>=20
->> >> If it were not for this, I would expose every attribute in the WMI
->> >> device.
->> >
->> > Ah, sorry, I didn't pay attention where they were added to. I vaguely=
-=20
->> > recall that discussion.
->> >
->> > But still, you could make the groups available through .h and just add=
-=20
->> > them directly into alienfx_groups (with an #ifdef/#else in .h), or is=
-=20
->> > there again something I don't see?
->>=20
->> What do you think about something like:
->>=20
->> alienware-wmi.h
->> ---------------
->>=20
->> #if IS_ENABLED(CONFIG_ALIENWARE_WMI_WMAX)
->> #define WMAX_ONLY_GROUP(name)		(wmax_##name)
->>=20
->> extern const struct attribute_group wmax_hdmi_attribute_group;
->> ...
->> #else
->> #define WMAX_ONLY_GROUP(name)		NULL
->> #endif
->>=20
->> alienware-wmi-base.c
->> --------------------
->> ...
->> static const struct attribute_group *alienfx_groups[] =3D {
->> 	&zone_attribute_group,
->> 	WMAX_ONLY_GROUP(hdmi_attribute_group),
->> 	WMAX_ONLY_GROUP(amplifier_attribute_group),
->> 	WMAX_ONLY_GROUP(deepsleep_attribute_group),
->
-> IMHO, just define WMAX_GROUPS in the header and use it here.
->
-> Similar to e.g. ARCH_PCI_DEV_GROUPS in drivers/pci/pci-sysfs.c.
+Am 03.02.25 um 07:20 schrieb Kurt Borja:
 
-Thanks for the example, I was overthinking it. I'll send a v8 with this
-approach!
+> Hi!
+>
+> I bring some last minute modifications.
+>
+> I found commit
+>
+> 	8d8fc146dd7a ("nvmem: core: switch to use device_add_groups()")
+>
+> which states that it's unnecesary to call device_remove_groups() when
+> the device is removed, so I dropped it to simplify things.
 
-~ Kurt
+What? That sound quite strange to me. I CCed Greg because i am curious how this
+should work.
 
 >
->> 	NULL
->> ...
->>=20
->> };
->>=20
->> >
->> > Obviously, .is_visible functions need to be extended slightly to filte=
-r=20
->> > out by interface but that should be relatively easy too. Also, the gro=
-up=20
->> > variable names should be properly prefixed when making them cross file=
-=20
->> > boundary like that.
->>=20
+> I also found commit
+>
+> 	957961b6dcc8 ("hwmon: (oxp-sensors) Move tt_toggle attribute to dev_groups")
+>
+> which states that no driver should add sysfs groups while probing the
+> device as it races with userspace, so I re-added PROBE_FORCE_SYNCHRONOUS
+> to the platform driver, so groups are added only after the device has
+> finished probing.
 
+Using PROBE_FORCE_SYNCHRONOUS is not going to solve this problem here, please remove it.
+
+Thanks,
+Armin Wolf
+
+> I'm not 100% sure that the second commit message applies here, but it is
+> revd-by Greg K-H so I added it just in case.
+>
+> Aside from that, I added .pprof to awcc_quirks because I'm going to add
+> support for new features after this series, and it makes sense that
+> force_platform_profile only forces the pprof and not other upcoming
+> features.
+>
+> ~ Kurt
+> ---
+> [02/14]
+>    - In alienware_alienfx_setup() add a devm action to remove the created
+>      platform device
+>    - Drop device_remove_groups() in WMAX .remove callback
+>    - Add PROBE_FORCE_SYNCHRONOUS to the platform driver
+>    - Drop .remove callbacks on both WMI drivers
+>
+> [03/14]
+>    - Add awcc_platform_profile_init() to create the platform_profile
+>      device on quirks->thermal == true condition
+>
+> [07/14]
+>    - Add .pprof to awcc_quirks
+>
+> [10/14]
+>    - Drop unused member `quirks` on `alienfx_priv` (remnant of another
+>      version)
+>
+> v6: https://lore.kernel.org/platform-driver-x86/20250127040406.17112-1-kuurtb@gmail.com/
+>
+> Kurt Borja (14):
+>    platform/x86: alienware-wmi: Add a state container for LED control
+>      feature
+>    platform/x86: alienware-wmi: Add WMI Drivers
+>    platform/x86: alienware-wmi: Add a state container for thermal control
+>      methods
+>    platform/x86: alienware-wmi: Refactor LED control methods
+>    platform/x86: alienware-wmi: Refactor hdmi, amplifier, deepslp methods
+>    platform/x86: alienware-wmi: Refactor thermal control methods
+>    platform/x86: alienware-wmi: Split DMI table
+>    MAINTAINERS: Update ALIENWARE WMI DRIVER entry
+>    platform/x86: Rename alienware-wmi.c
+>    platform/x86: Add alienware-wmi.h
+>    platform/x86: Split the alienware-wmi driver
+>    platform/x86: dell: Modify Makefile alignment
+>    platform/x86: Update alienware-wmi config entries
+>    platform/x86: alienware-wmi: Update header and module information
+>
+>   MAINTAINERS                                   |    4 +-
+>   drivers/platform/x86/dell/Kconfig             |   30 +-
+>   drivers/platform/x86/dell/Makefile            |   45 +-
+>   .../platform/x86/dell/alienware-wmi-base.c    |  496 +++++++
+>   .../platform/x86/dell/alienware-wmi-legacy.c  |   95 ++
+>   .../platform/x86/dell/alienware-wmi-wmax.c    |  790 +++++++++++
+>   drivers/platform/x86/dell/alienware-wmi.c     | 1249 -----------------
+>   drivers/platform/x86/dell/alienware-wmi.h     |  101 ++
+>   8 files changed, 1534 insertions(+), 1276 deletions(-)
+>   create mode 100644 drivers/platform/x86/dell/alienware-wmi-base.c
+>   create mode 100644 drivers/platform/x86/dell/alienware-wmi-legacy.c
+>   create mode 100644 drivers/platform/x86/dell/alienware-wmi-wmax.c
+>   delete mode 100644 drivers/platform/x86/dell/alienware-wmi.c
+>   create mode 100644 drivers/platform/x86/dell/alienware-wmi.h
+>
+>
+> base-commit: 05dbaf8dd8bf537d4b4eb3115ab42a5fb40ff1f5
