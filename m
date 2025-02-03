@@ -1,119 +1,136 @@
-Received: from mout.gmx.net (mout.gmx.net [212.227.17.20])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yb1-f174.google.com (mail-yb1-f174.google.com [209.85.219.174])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B888820E038;
-	Mon,  3 Feb 2025 18:24:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.20
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E074D20D4E4;
+	Mon,  3 Feb 2025 18:27:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738607071; cv=none; b=GyAYXBRn2PGkHY/gU+2M5rPqtwvAaIOejedGcKV4zN5Wm4zmJ6zHNPbEU+HErsiu/h/oEhpdZjCwixUN5gdd/8izhp4sPLDUln1J2bUYYG73y41LeOC75vCjgXuRlO5WKFrpbCoSeNZSUnyEHNbcHzt8mgXMyMmL1yDTeNksEfM=
+	t=1738607246; cv=none; b=GM8oVNA43Iff9O9tTnYckq4+aOexHzUL6i9s4AuUUAYVUEg7N/dS6ERVMj9qYEq8q1sdoBF9j2cIEKSC2wQE3wzQidJ6rpEOdoDOdNHdGI6V7zazd7IxgzbEtLMrrQOI/JDNwtmV1kvN5KX2qPe6cvIdpwKshyEzCgnwGOkskc8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738607071; c=relaxed/simple;
-	bh=ID+lTHjLVqPJ/7xdhI9bJLFn9teO4+JhdZK9zVjbwuc=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=g+IpM6UDBaxELt6dSREMQqVWzBr6uxL5mAV23c5lD6pKlC7Z0a9aCeKfOhaG61zNBFMdIDpdKN6RAuFL6Cj3kjPlHL6SbMIyck+7ykmfFCAb03FGI3z9XfC725W49Dui4focqCcunj6Zkq7oCOufHcU3R2KvsBVqaLI4v99Dwhg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b=aWhPhmlR; arc=none smtp.client-ip=212.227.17.20
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
+	s=arc-20240116; t=1738607246; c=relaxed/simple;
+	bh=DDrvRo+Gf+PGOeNtRceL+ZPExeki5R1qCPGmDylntFw=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=RkLnNIGf+oHdbzcs3FzFp54IPm8wWl27Q4sN8JekYDhUWYPPSz+w5YSsyYsQ6sctbV7lr5FLMUgj+ckzRaL7T5zeei/zDNwy/5xkriXbHKovDg4fOtNFgOInCqYBlLsyxTCqt0CNxJk6jBNsWYB3KRE6oTP/jybzzrYyzLwJidc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=hfL28yvE; arc=none smtp.client-ip=209.85.219.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b="aWhPhmlR"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.de;
-	s=s31663417; t=1738607039; x=1739211839; i=w_armin@gmx.de;
-	bh=RuoP/0xYYt9z3bJOrdWbm40zFLkGkpfWsyjNl2p49Lk=;
-	h=X-UI-Sender-Class:From:To:Cc:Subject:Date:Message-Id:In-Reply-To:
-	 References:MIME-Version:Content-Transfer-Encoding:cc:
-	 content-transfer-encoding:content-type:date:from:message-id:
-	 mime-version:reply-to:subject:to;
-	b=aWhPhmlRArsn+pDgJ2w/O1mTO55kfaAAZn58tcZ+hb2T/3SNnY7FghUnQx4ZaDHI
-	 6aQ2VvbDUNusgIJorWP9rBDNlIvzLjvBjG8tL5/+NLu+j2MromQvTN4p+zx684FjM
-	 0B/iK7Usdp6gX4v4pYatzKA7aXInMEpKiZaIbI9jV8OBrD16sqalIxqID2XESWPaG
-	 Gc5/XCsQpZgqRri7wix1JPchGYmsm2q+mT+HAnGZXoM8Z4DMOiUvWjJM/993J55V6
-	 qgK5b5jpYxbkqEkE1//ZUNvhSL0JkLp3bcCcgnYa3/Fr4InePKvr0ofCeih/J1IBg
-	 Uz6qFEXEUE+dqQ9bqA==
-X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
-Received: from mx-amd-b650.fritz.box ([91.14.238.232]) by mail.gmx.net
- (mrgmx105 [212.227.17.168]) with ESMTPSA (Nemesis) id
- 1N4zAy-1tFxlr1lkC-0106gf; Mon, 03 Feb 2025 19:23:59 +0100
-From: Armin Wolf <W_Armin@gmx.de>
-To: james@equiv.tech,
-	markpearson@lenovo.com,
-	jorge.lopez2@hp.com
-Cc: jdelvare@suse.com,
-	linux@roeck-us.net,
-	linux-hwmon@vger.kernel.org,
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hfL28yvE"
+Received: by mail-yb1-f174.google.com with SMTP id 3f1490d57ef6-e4419a47887so4167052276.0;
+        Mon, 03 Feb 2025 10:27:24 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1738607243; x=1739212043; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=tiUpiHeXkdztXT5xTNGwjsZk7BUT4ndX6tVOpDnPzgY=;
+        b=hfL28yvENdrhCgzXrD0pXNMeVi2x5wlvnQzt8dsK1lF9ychIM98bSpCUnh7XV5h3TP
+         EsWIKu9AXXjG2HkqLdA7KS6UjynopFHCytjPYlIcO/kLmwlTuaL/AtBobktYmiM1y2gZ
+         6hZqjI3eWNlCve4wcRmQwPeeQL616neTIMJ4RfotIzWYWha1XOIJ9RA2TPfrxqgUi+11
+         xyuQTy6IRGSOXMq0u+u0mbWwco1mBluUAFPfwm7yohyvTBtqwqy9nxZHs+bEx/+9ZKmd
+         5jU4PtkAP4/2HkVzYflp6PjIIyLeI3bgFLpOUNTY7VqeT6ayM5miwluXtui6bbjZcHuH
+         b01w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738607243; x=1739212043;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=tiUpiHeXkdztXT5xTNGwjsZk7BUT4ndX6tVOpDnPzgY=;
+        b=QeTSbECpBghkTc9kSmslkN1hJuZ5QY5168xkqqmlZAqHF9BU1+EK03MBoq6ZLC04q9
+         o7fIndSMmEE1cLjpQbPvaqBfwzY9rpVg/a5q4QJ3yw0oOwt8u7dcnCup/WM0JYwmAJqX
+         tu+VUCHdmteNQv4iudVnCrbr0tkOwyec8Wl98daMY0jCQ2hUqlkRX4nWZFap/JgoBxQ2
+         HBYN7ePjmu9F0fOaTaeATa5EgycPRPl0C7C2f4BXnLFF13LKAzQY2JFypXJ7cyyFU4UH
+         1CXkGzr9VUd4ZWI7fl1I+iqlafGnXNjKBPtHinka5sCv/v681+wSV3/NKTh7sTWw2NO7
+         zwhg==
+X-Forwarded-Encrypted: i=1; AJvYcCVWi0SD9PobH0UZfUqk8HYMYHVwM+KQuttZiLh2eIso86gJyeTAMp+9GrQ/TmXGYq3umTzfJ22bTz9VFiQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy5We+6SIWNRX8EHfvB+2hXCGeAQGJibJXZrLpQaSSYpYI08ukL
+	7NhSZBltcKDY5NJ9d8sxvceHm6wJfqh0HKx1NMA1W73TO5LUZbUpJdvQYg==
+X-Gm-Gg: ASbGncvSebKxAFM7JYdjjPej9iXPBt0HGeG9arTwAToXAZ9DDSJoQnMDpIdOYKHTNcD
+	UIu7sAtmrLNdQyTvbJBLtsrfC/xUzqsaQByv6+SXFWerUj9dzhCMYiQ/jswt01UXgYXx4NP+a1R
+	2CokRKr6AoITwbTYiO/fu9wNZgRl3gGLa1UZTpwrRstH7UcyLO0QB6Lt71nsnco4M/Fnt/lXfS9
+	Tu02iXLdlrPpARFDA21sX6cKQF/pjkCcPjxPDYFV9Ya5/OKWOMkoYKPBRpMIpujUnsZhDaCZAW6
+	L6epj/XK0JO1Ibri3DsQeyY=
+X-Google-Smtp-Source: AGHT+IF55q07Igklw8fu/B9WG+YvwYJc8TqjO9/fVFWQXRRP5VWIzTDPTjLk+aawBozNwmSHdndqng==
+X-Received: by 2002:a05:6902:1105:b0:e57:e500:16d with SMTP id 3f1490d57ef6-e58a4bcae81mr17647831276.39.1738607243450;
+        Mon, 03 Feb 2025 10:27:23 -0800 (PST)
+Received: from localhost.localdomain ([2800:bf0:82:3d2:4207:a956:ebad:2a64])
+        by smtp.gmail.com with ESMTPSA id 3f1490d57ef6-e5acb2bc726sm2142239276.30.2025.02.03.10.27.21
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 03 Feb 2025 10:27:23 -0800 (PST)
+From: Kurt Borja <kuurtb@gmail.com>
+To: platform-driver-x86@vger.kernel.org
+Cc: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	"Armin Wolf" <W_Armin@gmx.de>,
+	"Mario Limonciello" <mario.limonciello@amd.com>,
+	"Hans de Goede" <hdegoede@redhat.com>,
+	Dell.Client.Kernel@dell.com,
 	linux-kernel@vger.kernel.org,
-	hdegoede@redhat.com,
-	ilpo.jarvinen@linux.intel.com,
-	platform-driver-x86@vger.kernel.org,
-	corbet@lwn.net,
-	linux-doc@vger.kernel.org
-Subject: [PATCH 7/7] platform/x86: wmi: Update documentation regarding the GUID-based API
-Date: Mon,  3 Feb 2025 19:23:22 +0100
-Message-Id: <20250203182322.384883-8-W_Armin@gmx.de>
-X-Mailer: git-send-email 2.39.5
-In-Reply-To: <20250203182322.384883-1-W_Armin@gmx.de>
-References: <20250203182322.384883-1-W_Armin@gmx.de>
+	"Kurt Borja" <kuurtb@gmail.com>
+Subject: [PATCH v8 00/14] platform/x86: alienware-wmi driver rework
+Date: Mon,  3 Feb 2025 13:26:59 -0500
+Message-ID: <20250203182713.27446-1-kuurtb@gmail.com>
+X-Mailer: git-send-email 2.48.1
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:6wNh6ZLBhn/RTk1uI75rS1eo+d5PKvpI3IUTypVYdaxgUADGLyB
- agytg809oy6KvZRjQsDGpuJIZGos0r92nQZiAeCHicdZvD45ZewgETSrltkawq/BR/DG+kX
- pk7uINd1aSzUocKO13d3sH+DEW55aonnzupH/qTr2lsT02YPDiQZmuDVHJhzyA4Ay4URbvo
- 7XFix0eHzgYs+YE8+IE2Q==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:9wiWRpfj7xw=;LWzqhLjD36c8j2gTfbmciDyXoWM
- OIZz1QSBdDMriNr/kZMaAdiE0rIIC3xw/qwJDo6Ejm/LKvJLiVV3yNqx7Or2LKHswMBubkLA/
- 3jS8uC1sLk2Ca9lAhAy0gY52OFMoeCUYA4jodICWzNJHv08vI0rMyEPIN6sruLwcvQpwqkLzV
- djJ1mqnwRDV6W1QKA581rAkLuNPQu02RRtHArPnKJPDEqayk41dR2+vbEPit5CSxnaTITOxny
- tiJugjKXIQzi2/A7gcxvbt/UXXK9teD9kOGHYp5JZ+TzGAmWyTT2OnFPOhehKWdxiSFdgm/zt
- 7zMJt3RlbJnBNpwwBXviprf7E1q1Rsh3oq6gh3iRGOgnBr8qasPwL5Z5cj2DtyhnUmpq+u/dQ
- BwqZukMRki+A3NuenpSlGMNP/lFR9XAzzwYCOFDwTuzOm8sOBIlZfHKqleSyMVQaP9ihxVaxl
- 9VbZw+d/Uo68vBMUjXzNr7tXdf4K9bipBQ0vypWTu+Kv+2p/Pq0/9UlpDyodiHpMdhixm2iJe
- I+fnzs1nbQHFeKRInHI7jldHZvxTmsXromwTf56gqajE7w5rh0SvIH1Vv+YU/A6abO6m18thb
- reFWPsdeXsDP+Dj6B9wcWVpXBVDhiQ6lD6LhYJCmu7oW9sFz4xFKaPxGqnwg+mDqAA6i8kNBx
- LWu6oG3LvtH2cJr3xMEyJ041nDzzefswavSQzXPmobPxsMn5hs7v3cGAFcU4Y8kS2Z4B5fEm1
- MDbwekjN5PsFMEkEq2F6M3n3/B5JIgbi8MrxvsrCJauO2HelHITumQZpakqBhkivWP8T0H6na
- 7CWFF+4r76b1HndoSz/EN3Z53uZ66hFFHX+WldBkcNFL3GQoScDYXG5aCJ8lAYxv5eVbJZ8y/
- EFYSPVdYStBV5+VaN9Av6EIOPGDjQnMtNGku0aDn0qRjRzuQdP23vd6K8sKxec5woSwiwF7n8
- XBPgKVrWiemorU29olBzIQlOKRoWNPDiEcmoRiBp8lp2rG8ECYtAwdpmLYmw0SFkQCoMAvODh
- CGm6N26miQ2PBKoJT+EhiMmUefpvDKNlRWtD4tJublZTiS7ydszhzCi3UgpeAt3C7yRqY+csP
- tj5Yh7lo8X8OLDF+pwehWPJqWawztz4ncPFdLSp38t+7MY254rqXQlcWptx5/v+S7gPhVRcxN
- bYe9XTlN4q04YTy8ignR7uxZHC9mpi1JCMFtK7dx0g4Alkb4+CNf5MIF0jIR6MnYxMciHtRHt
- btvNxJPRcGYCyoTB6ucii4zoAHtkxcHU/Qnvqm1SUw3xdt5+3BUpzoVSLZbw4/twdBV+A4kYn
- V6SdPj/krlLVoKdPsoGOCDxkte0OHWwhveg0AGTXiXmyzE=
+Content-Transfer-Encoding: 8bit
 
-Warn WMI driver developers to not use GUID-based and non-GUID-based
-functions for querying WMI data blocks and handling WMI events
-simultaneously on the same device, as this will corrupt the WMI device
-state and might thus lead to erratic behaviour.
+Hello!
 
-Signed-off-by: Armin Wolf <W_Armin@gmx.de>
-=2D--
- Documentation/wmi/driver-development-guide.rst | 4 ++++
- 1 file changed, 4 insertions(+)
+---
+[02/14]
+  - Dropped device_add_groups from wmax_wmi_probe
+  - Added `interface == WMAX` condition to WMAX's groups visibility
 
-diff --git a/Documentation/wmi/driver-development-guide.rst b/Documentatio=
-n/wmi/driver-development-guide.rst
-index f7e1089a0559..99ef21fc1c1e 100644
-=2D-- a/Documentation/wmi/driver-development-guide.rst
-+++ b/Documentation/wmi/driver-development-guide.rst
-@@ -96,6 +96,10 @@ on a given machine.
- Because of this, WMI drivers should use the state container design patter=
-n as described in
- Documentation/driver-api/driver-model/design-patterns.rst.
+[10/14]
+  - Add prefix to WMAX groups variable names
+  - Exported WMAX groups as extern variables in header file
+  - Exported `interface` as `alienware_interface` in header file
+  - Added WMAX_DEV_GROUPS macro to add WMAX groups to the platform 
+    driver .dev_groups
 
-+.. warning:: Using both GUID-based and non-GUID-based functions for query=
-ing WMI data blocks and
-+             handling WMI events simultaneously on the same device is gua=
-ranteed to corrupt the
-+             WMI device state and might lead to erratic behaviour.
-+
- WMI method drivers
- ------------------
+[13/14]
+  - Define empty WMAX_DEV_GROUPS in case CONFIG_ALIENWARE_WMI_WMAX is
+    not enabled
 
-=2D-
-2.39.5
+v7: https://lore.kernel.org/platform-driver-x86/20250203062055.2915-1-kuurtb@gmail.com/
+
+Kurt Borja (14):
+  platform/x86: alienware-wmi: Add a state container for LED control
+    feature
+  platform/x86: alienware-wmi: Add WMI Drivers
+  platform/x86: alienware-wmi: Add a state container for thermal control
+    methods
+  platform/x86: alienware-wmi: Refactor LED control methods
+  platform/x86: alienware-wmi: Refactor hdmi, amplifier, deepslp methods
+  platform/x86: alienware-wmi: Refactor thermal control methods
+  platform/x86: alienware-wmi: Split DMI table
+  MAINTAINERS: Update ALIENWARE WMI DRIVER entry
+  platform/x86: Rename alienware-wmi.c
+  platform/x86: Add alienware-wmi.h
+  platform/x86: Split the alienware-wmi driver
+  platform/x86: dell: Modify Makefile alignment
+  platform/x86: Update alienware-wmi config entries
+  platform/x86: alienware-wmi: Update header and module information
+
+ MAINTAINERS                                   |    4 +-
+ drivers/platform/x86/dell/Kconfig             |   30 +-
+ drivers/platform/x86/dell/Makefile            |   45 +-
+ .../platform/x86/dell/alienware-wmi-base.c    |  491 +++++++
+ .../platform/x86/dell/alienware-wmi-legacy.c  |   95 ++
+ .../platform/x86/dell/alienware-wmi-wmax.c    |  775 ++++++++++
+ drivers/platform/x86/dell/alienware-wmi.c     | 1249 -----------------
+ drivers/platform/x86/dell/alienware-wmi.h     |  117 ++
+ 8 files changed, 1530 insertions(+), 1276 deletions(-)
+ create mode 100644 drivers/platform/x86/dell/alienware-wmi-base.c
+ create mode 100644 drivers/platform/x86/dell/alienware-wmi-legacy.c
+ create mode 100644 drivers/platform/x86/dell/alienware-wmi-wmax.c
+ delete mode 100644 drivers/platform/x86/dell/alienware-wmi.c
+ create mode 100644 drivers/platform/x86/dell/alienware-wmi.h
+
+
+base-commit: 2014c95afecee3e76ca4a56956a936e23283f05b
+-- 
+2.48.1
 
