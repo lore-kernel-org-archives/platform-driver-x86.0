@@ -1,189 +1,122 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 184111FC118;
-	Tue,  4 Feb 2025 06:12:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A9B668635E;
+	Tue,  4 Feb 2025 08:07:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738649535; cv=none; b=dDLnB9bNN3FL1EPLhBz2IkrnDiilS8yDLk8Ng+J7NAC9675TvCERRNz+tvjQNn0VpyENsVe25u+KJAdybQ+XD1SlXFMNlRYv565sDeE6RCsCIat5txXdbFW22vz50efE81CcaPxaxALQzGXRP16mOcHQq4z3KX/bGY0lRsHnFME=
+	t=1738656458; cv=none; b=uMdy7FsbdfJDlkjTCTcdZ5uWiMux3KJzI9A4sz+joMV9gGvi3NOPfa17htao1tiyAG81zQIECC3HHCYKWxbTYZMaVr0astCfkvXm/Hl6mlebogySWimyODk2EGO/FSS7IUoU2wIGTS6aPZyNFS3CJPuXez+daVeERRzFmH7Fifw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738649535; c=relaxed/simple;
-	bh=W5Mb/B6A83zl1/Y0M78kvYdb8/k9rXB+WieYOqYQnF4=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=A9M7Qa0dBbcaSDUaqAyCklIQ/JVIGgkf2fYypMNKK07l2p85wouk0n7jSU4SuUKD7wxW4KOl1DRsu5cukK02Gk3ZTcX82eDEnfUtraWjKiL0dQiMy687bJXwPunYGMsQzkuH2XMU9HpvGJMqBGS9AT5l8s/8UWBakjeKV2RWO68=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=VYU7S09W; arc=none smtp.client-ip=192.198.163.10
+	s=arc-20240116; t=1738656458; c=relaxed/simple;
+	bh=r9TLmA9/WZWk+LmP47qvtpsschxzMwnvqbIcWOhTw8c=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=G0PnfKt+f9Hlvf1eeJi66HdzIM3BzF+40CQw0xW3t3AAZjGJuK2zREzqjZfEMBZMgyOpWqdM8M6WtZENX4iP39fOTzKuiStO6bYq7h88kKTWATx8bz6h3arT5zAypaYUCWffN5ZB8HeEr8ljT/DrRYqMqVQs3AQvK7+x1E5EegI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=eK0C6BFX; arc=none smtp.client-ip=192.198.163.16
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="VYU7S09W"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="eK0C6BFX"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1738649534; x=1770185534;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=W5Mb/B6A83zl1/Y0M78kvYdb8/k9rXB+WieYOqYQnF4=;
-  b=VYU7S09WpYUICXOz+p3pXEPXoM77A9k4N8XNU3BZiUjaT3cQI2bYu2S8
-   qxpS46GghtPvw6ysgRrn21VH/v05TVXsETgoqU5xI4vzfE5ljX4dl7yup
-   cxHKaQ4UvzVp1qrtE8xZDPTivbY+Bw8mEFnKTcHxxHYr98Ek8Lji4Gqi9
-   pyzyMmy6fYXafHEaPGz6TJUFQtHmDT97WpAEo2AF3DwVwmFU44uou3DRa
-   twUPRXYPF8tUSzFk9LBsBJzUMdhTSble8qfPbIz2g5ZBR7rLNCtp0MA4O
-   FWuxGHFfkl7hk4aOo6HW4eRZhngOFZ6XWMJI1UyK6dpK4RXt8yslEqPo7
-   g==;
-X-CSE-ConnectionGUID: eJLBu0L5R+q76CYADrIsaQ==
-X-CSE-MsgGUID: mB0hWYKQThy5Vg26Komfog==
-X-IronPort-AV: E=McAfee;i="6700,10204,11314"; a="50579743"
-X-IronPort-AV: E=Sophos;i="6.12,310,1728975600"; 
-   d="scan'208";a="50579743"
-Received: from orviesa009.jf.intel.com ([10.64.159.149])
-  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Feb 2025 22:12:13 -0800
-X-CSE-ConnectionGUID: +NRpEiNBSn+simhqIS2LrA==
-X-CSE-MsgGUID: f5GJdTAlSKKBVCLLmj9gyQ==
-X-ExtLoop1: 1
+  t=1738656457; x=1770192457;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=r9TLmA9/WZWk+LmP47qvtpsschxzMwnvqbIcWOhTw8c=;
+  b=eK0C6BFXZsoKB13UCXqiPqiYuzKJYbkx1PRK6Xp4WaIazwHX4CQKVR8B
+   Rg3lJ9fPryEFa1Mz66fzUUwwA5sIbShewJShalX6Wq0PIYpcSpCpm/ybx
+   uwq7R5UyMZ4GNhJUZwEsFtvMmkgOZ0Cqzmc1IS+so+u4PplyjtWND1U5n
+   +YJGXHHPU6xGsjI+fr9gWfIXkO/npG5W5c2+lBfTvk+V3mxUosOoqApWK
+   FlzTOwWVbbbHekicjRQ8J1OtuD7taHAtCUzfBp/RmeciRcK8y6Z4hnWC7
+   CTqib3F4Hb3VSHtDcMUfeMOHIYyFB2LmH7BP7OemneAZSL5X+n/g+VTL/
+   Q==;
+X-CSE-ConnectionGUID: bIO9y8mWSlar5kf9QNKS9A==
+X-CSE-MsgGUID: 0P3F3HRnTvmPV2USwKRCGQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11335"; a="26772113"
 X-IronPort-AV: E=Sophos;i="6.13,258,1732608000"; 
-   d="scan'208";a="110279244"
-Received: from yongliang-ubuntu20-ilbpg12.png.intel.com ([10.88.227.39])
-  by orviesa009.jf.intel.com with ESMTP; 03 Feb 2025 22:12:06 -0800
-From: Choong Yong Liang <yong.liang.choong@linux.intel.com>
-To: Simon Horman <horms@kernel.org>,
-	Jose Abreu <joabreu@synopsys.com>,
-	Jose Abreu <Jose.Abreu@synopsys.com>,
-	David E Box <david.e.box@linux.intel.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>,
-	Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	"H . Peter Anvin" <hpa@zytor.com>,
-	Rajneesh Bhardwaj <irenic.rajneesh@gmail.com>,
-	David E Box <david.e.box@intel.com>,
-	Andrew Lunn <andrew+netdev@lunn.ch>,
-	"David S . Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>,
-	Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-	Alexandre Torgue <alexandre.torgue@foss.st.com>,
-	Jiawen Wu <jiawenwu@trustnetic.com>,
-	Mengyuan Lou <mengyuanlou@net-swift.com>,
-	Heiner Kallweit <hkallweit1@gmail.com>,
-	Russell King <linux@armlinux.org.uk>,
-	Hans de Goede <hdegoede@redhat.com>,
-	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	Richard Cochran <richardcochran@gmail.com>,
-	Andrew Halaney <ahalaney@redhat.com>,
-	Serge Semin <fancer.lancer@gmail.com>
-Cc: x86@kernel.org,
-	linux-kernel@vger.kernel.org,
-	netdev@vger.kernel.org,
-	platform-driver-x86@vger.kernel.org,
-	linux-stm32@st-md-mailman.stormreply.com,
-	linux-arm-kernel@lists.infradead.org
-Subject: [PATCH net-next v6 7/7] stmmac: intel: interface switching support for ADL-N platform
-Date: Tue,  4 Feb 2025 14:10:20 +0800
-Message-Id: <20250204061020.1199124-8-yong.liang.choong@linux.intel.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20250204061020.1199124-1-yong.liang.choong@linux.intel.com>
-References: <20250204061020.1199124-1-yong.liang.choong@linux.intel.com>
+   d="scan'208";a="26772113"
+Received: from fmviesa005.fm.intel.com ([10.60.135.145])
+  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Feb 2025 00:07:36 -0800
+X-CSE-ConnectionGUID: Gpv2k4NMTwav5AbLDhiOKg==
+X-CSE-MsgGUID: AxWs5vyBR/S2yAQqnxR43Q==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
+   d="scan'208";a="115141667"
+Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.75])
+  by fmviesa005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Feb 2025 00:07:32 -0800
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Tue, 4 Feb 2025 10:07:29 +0200 (EET)
+To: Jithu Joseph <jithu.joseph@intel.com>
+cc: Hans de Goede <hdegoede@redhat.com>, LKML <linux-kernel@vger.kernel.org>, 
+    platform-driver-x86@vger.kernel.org, tony.luck@intel.com, 
+    ashok.raj.linux@gmail.com, anisse@astier.eu
+Subject: Re: [PATCH] platform/x86/intel/ifs: Update documentation with image
+ download path
+In-Reply-To: <20250131205315.1585663-1-jithu.joseph@intel.com>
+Message-ID: <50ba78dc-f60d-63de-80fd-ef9b1fc68c72@linux.intel.com>
+References: <20250131205315.1585663-1-jithu.joseph@intel.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
 
-The intel_config_serdes function was provided to handle interface mode
-changes for the ADL-N platform.
+On Fri, 31 Jan 2025, Jithu Joseph wrote:
 
-The Modphy register lane was provided to configure the serdes when
-changing interface modes.
+> The documentation previously listed the path to download In Field Scan
+> (IFS) test images as "TBD".
+> 
+> Update the documentation to include the correct image download location.
+> Also move the download link to the appropriate section within the doc.
+> 
+> Signed-off-by: Jithu Joseph <jithu.joseph@intel.com>
 
-Signed-off-by: Michael Sit Wei Hong <michael.wei.hong.sit@intel.com>
-Signed-off-by: Choong Yong Liang <yong.liang.choong@linux.intel.com>
----
- .../net/ethernet/stmicro/stmmac/dwmac-intel.c | 47 ++++++++++++++++++-
- .../net/ethernet/stmicro/stmmac/dwmac-intel.h |  2 +
- 2 files changed, 48 insertions(+), 1 deletion(-)
+I've applied this patch into the fixes branch with Anisse added as
+Reported-by.
 
-diff --git a/drivers/net/ethernet/stmicro/stmmac/dwmac-intel.c b/drivers/net/ethernet/stmicro/stmmac/dwmac-intel.c
-index de561a00f902..b5180cf303e2 100644
---- a/drivers/net/ethernet/stmicro/stmmac/dwmac-intel.c
-+++ b/drivers/net/ethernet/stmicro/stmmac/dwmac-intel.c
-@@ -951,6 +951,51 @@ static int adls_sgmii_phy1_data(struct pci_dev *pdev,
- static struct stmmac_pci_info adls_sgmii1g_phy1_info = {
- 	.setup = adls_sgmii_phy1_data,
- };
-+
-+static int adln_common_data(struct pci_dev *pdev,
-+			    struct plat_stmmacenet_data *plat)
-+{
-+	struct intel_priv_data *intel_priv = plat->bsp_priv;
-+
-+	plat->rx_queues_to_use = 6;
-+	plat->tx_queues_to_use = 4;
-+	plat->clk_ptp_rate = 204800000;
-+
-+	plat->safety_feat_cfg->tsoee = 1;
-+	plat->safety_feat_cfg->mrxpee = 0;
-+	plat->safety_feat_cfg->mestee = 1;
-+	plat->safety_feat_cfg->mrxee = 1;
-+	plat->safety_feat_cfg->mtxee = 1;
-+	plat->safety_feat_cfg->epsi = 0;
-+	plat->safety_feat_cfg->edpp = 0;
-+	plat->safety_feat_cfg->prtyen = 0;
-+	plat->safety_feat_cfg->tmouten = 0;
-+
-+	intel_priv->tsn_lane_registers = adln_tsn_lane_registers;
-+	intel_priv->max_tsn_lane_registers = ARRAY_SIZE(adln_tsn_lane_registers);
-+
-+	return intel_mgbe_common_data(pdev, plat);
-+}
-+
-+static int adln_sgmii_phy0_data(struct pci_dev *pdev,
-+				struct plat_stmmacenet_data *plat)
-+{
-+	struct intel_priv_data *intel_priv = plat->bsp_priv;
-+
-+	plat->bus_id = 1;
-+	plat->phy_interface = PHY_INTERFACE_MODE_SGMII;
-+	plat->serdes_powerup = intel_serdes_powerup;
-+	plat->serdes_powerdown = intel_serdes_powerdown;
-+	plat->config_serdes = intel_config_serdes;
-+	intel_priv->pid_modphy = PID_MODPHY1;
-+
-+	return adln_common_data(pdev, plat);
-+}
-+
-+static struct stmmac_pci_info adln_sgmii1g_phy0_info = {
-+	.setup = adln_sgmii_phy0_data,
-+};
-+
- static const struct stmmac_pci_func_data galileo_stmmac_func_data[] = {
- 	{
- 		.func = 6,
-@@ -1333,7 +1378,7 @@ static const struct pci_device_id intel_eth_pci_id_table[] = {
- 	{ PCI_DEVICE_DATA(INTEL, TGLH_SGMII1G_1, &tgl_sgmii1g_phy1_info) },
- 	{ PCI_DEVICE_DATA(INTEL, ADLS_SGMII1G_0, &adls_sgmii1g_phy0_info) },
- 	{ PCI_DEVICE_DATA(INTEL, ADLS_SGMII1G_1, &adls_sgmii1g_phy1_info) },
--	{ PCI_DEVICE_DATA(INTEL, ADLN_SGMII1G, &tgl_sgmii1g_phy0_info) },
-+	{ PCI_DEVICE_DATA(INTEL, ADLN_SGMII1G, &adln_sgmii1g_phy0_info) },
- 	{ PCI_DEVICE_DATA(INTEL, RPLP_SGMII1G, &tgl_sgmii1g_phy0_info) },
- 	{}
- };
-diff --git a/drivers/net/ethernet/stmicro/stmmac/dwmac-intel.h b/drivers/net/ethernet/stmicro/stmmac/dwmac-intel.h
-index 093eed977ab0..2c6b50958988 100644
---- a/drivers/net/ethernet/stmicro/stmmac/dwmac-intel.h
-+++ b/drivers/net/ethernet/stmicro/stmmac/dwmac-intel.h
-@@ -124,8 +124,10 @@ static const struct pmc_serdes_regs pid_modphy1_2p5g_regs[] = {
- 	{}
- };
- 
-+static const int adln_tsn_lane_registers[] = {6};
- static const int ehl_tsn_lane_registers[] = {7, 8, 9, 10, 11};
- #else
-+static const int adln_tsn_lane_registers[] = {};
- static const int ehl_tsn_lane_registers[] = {};
- #endif /* CONFIG_INTEL_PMC_IPC */
- 
+Thanks Anisse for raising this issue and Jithu for getting the gears 
+moving to provide an useful resolution.
+
+> ---
+>  drivers/platform/x86/intel/ifs/ifs.h | 9 ++++-----
+>  1 file changed, 4 insertions(+), 5 deletions(-)
+> 
+> diff --git a/drivers/platform/x86/intel/ifs/ifs.h b/drivers/platform/x86/intel/ifs/ifs.h
+> index 5c3c0dfa1bf8..41fc21e7ef14 100644
+> --- a/drivers/platform/x86/intel/ifs/ifs.h
+> +++ b/drivers/platform/x86/intel/ifs/ifs.h
+> @@ -23,12 +23,14 @@
+>   * IFS Image
+>   * ---------
+>   *
+> - * Intel provides a firmware file containing the scan tests via
+> - * github [#f1]_.  Similar to microcode there is a separate file for each
+> + * Intel provides firmware files containing the scan tests via the webpage [#f1]_.
+> + * Look under "In-Field Scan Test Images Download" section towards the
+> + * end of the page. Similar to microcode there are separate files for each
+>   * family-model-stepping. IFS Images are not applicable for some test types.
+>   * Wherever applicable the sysfs directory would provide a "current_batch" file
+>   * (see below) for loading the image.
+>   *
+> + * .. [#f1] https://intel.com/InFieldScan
+>   *
+>   * IFS Image Loading
+>   * -----------------
+> @@ -125,9 +127,6 @@
+>   * 2) Hardware allows for some number of cores to be tested in parallel.
+>   * The driver does not make use of this, it only tests one core at a time.
+>   *
+> - * .. [#f1] https://github.com/intel/TBD
+> - *
+> - *
+>   * Structural Based Functional Test at Field (SBAF):
+>   * -------------------------------------------------
+>   *
+> 
+> base-commit: ffd294d346d185b70e28b1a28abe367bbfe53c04
+> 
+
 -- 
-2.34.1
+ i.
 
