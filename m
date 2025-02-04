@@ -1,63 +1,110 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-io1-f52.google.com (mail-io1-f52.google.com [209.85.166.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CCF39217715;
-	Tue,  4 Feb 2025 18:39:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B08D81547D8;
+	Tue,  4 Feb 2025 19:56:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738694360; cv=none; b=p0929JMq64xfNyEs+ap3iHugpLAqSHwWwV4/KtRnFwGsxw6W+2RH7Gd5ZZhVcTdBqOdW17nvVqJdorpJUVQ4VaNKdYigD+WlxUmiPQIa4fU9uzV2x6AUTN7VjOc7SMf9gLaUVdu2vJLteHzRbyghacXG12qhhaMuNYZQykfWbe8=
+	t=1738698968; cv=none; b=Qc8LSkE0r6giKTAELFyH0T+6i3qKobxNG5opl2Gd1rA62QepD6Rv9C6ps1GTBWqFCTsAVwamI3W7exBwdZGoTdjNDKQ6yOqJ3iuvBbz0BoCTo2ddt2HXnXtxMsCIq+wZGXAO0DRh3jnu8vWBXu2NWNh5mEsrBTriUlBKqlk+UF0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738694360; c=relaxed/simple;
-	bh=DJk+IMCtm789I+uHk9Hw/YuUQBXDoupzw/+koEsxNNg=;
-	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=l2B+NgRHcJ7nbUgGljQ695XA+4u349N53M6gQofp8c2iRSe9r+DNzXAaMQBfRF7E70NtbiB2XggoZiqTkNHW9JpTeXpr3ub9bbqpBzCtLmSUVT8OcyzeeZi7qRE5RJzWq4/XMxbVpYahXfdwLS7hRNK0zLaLzcJxHQloJPgXrsg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CJ8ybcxe; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CJ8ybcxe"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 45CABC4CEDF;
-	Tue,  4 Feb 2025 18:39:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738694360;
-	bh=DJk+IMCtm789I+uHk9Hw/YuUQBXDoupzw/+koEsxNNg=;
-	h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
-	b=CJ8ybcxealHSTmDdcXaIZG/MSs2a2Aat/L7viYYQ9oWWTHPQO7DK9dS9MFxKNgjyt
-	 SJwnNlGyOl6Oh1H0NKR2N8xn4GoBzsBa47peF58SjiAeCJZnZLNrLq2/ID+usoybUU
-	 vHHW/RxGb1zIbkAgc8sNJatvIMxTnDXIoqPiAyI+mxvPUmFQuI2NnNoETPgFFbJoeg
-	 moJ9kwOorYPvt7oKDozFyv3PEnRF41T3tCicmjFpRFR5WYnJxXG6FHlYj+TCgUaDYY
-	 MGUf0fMRLGWYMP23K6WXAilYbrRZcW6tQR/IsUOpIWV6fxx9UciaS/sLpF/J5/SJBy
-	 8b8ijN90qSijA==
-Received: from [10.30.226.235] (localhost [IPv6:::1])
-	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id AE17E380AA7E;
-	Tue,  4 Feb 2025 18:39:48 +0000 (UTC)
-Subject: Re: [GIT PULL] platform-drivers-x86 for v6.14-2
-From: pr-tracker-bot@kernel.org
-In-Reply-To: <pdx86-pr-20250204103633-1857020998@linux.intel.com>
-References: <pdx86-pr-20250204103633-1857020998@linux.intel.com>
-X-PR-Tracked-List-Id: <platform-driver-x86.vger.kernel.org>
-X-PR-Tracked-Message-Id: <pdx86-pr-20250204103633-1857020998@linux.intel.com>
-X-PR-Tracked-Remote: https://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git tags/platform-drivers-x86-v6.14-2
-X-PR-Tracked-Commit-Id: a787ab73e2e43c0a3df10bc8d9b9b7a679129d49
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: f5a2601378af1ea1e2a51d613e49e629159dc956
-Message-Id: <173869438737.99131.490078309556739538.pr-tracker-bot@kernel.org>
-Date: Tue, 04 Feb 2025 18:39:47 +0000
-To: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>, LKML <linux-kernel@vger.kernel.org>, PDx86 <platform-driver-x86@vger.kernel.org>, Hans de Goede <hdegoede@redhat.com>, Andy Shevchenko <andy@kernel.org>
+	s=arc-20240116; t=1738698968; c=relaxed/simple;
+	bh=aI9ZF1XsSaAHZMRa+wJn3AAK8KCwn394QBaR32V7BUQ=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=jyP18QIcxDp3cesbmNyqkKaIdWmygoQCdzF19bWz75CnlLgQ2I4Tyku1YFj6x+og7ni+nT2EtZY6jpPayMf3p2eQ+7rqDw2FehNvdxc9X5O/h0KgdP167dX5nKyvbY3PRIY/0DX33lcOktP0/j79V3Gl9ewz8BBPeiGPI62KfeQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=joshuagrisham.com; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.166.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=joshuagrisham.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-io1-f52.google.com with SMTP id ca18e2360f4ac-844e10ef3cfso412626739f.2;
+        Tue, 04 Feb 2025 11:56:06 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738698966; x=1739303766;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=swmAYw4M/WeTjADPtUccgFgxLP9bW9FlyGrjKCzqSbc=;
+        b=juuitPWPsxXb0JKWGpHEC1Ne9aHvXLIpRbbR0PZqi3EWwG4kg6vl+LhY+vVDz9o4mq
+         /5DIcwqnCWrW4d3zSb19R2Nl+3FoL55KNX4wBY133tqjnyHd8PrTLbG/OxvmM6LWqhZI
+         tlITB43tFCINsYpPX0BsIQsv9ovFnLl8voqQblPk1Nj/yRMv6LkFqNithcBUWkhiKNIk
+         tI5xjU1RvTxUpD6PLuZGaT6/o3kH/N3cRmtg2N8Zg4sOZymy+z/HkC0r5XBGUfcfIn3x
+         2h7MBCJ0JM6C2h/61+U5diut493b7oL1yiujYoXM9Gl9XtIz+MjJzaAPCHp3dLyjwGJp
+         B7nA==
+X-Forwarded-Encrypted: i=1; AJvYcCU/h7QN6c8anBUKMAzMezAEVC1FEpbD5nsupT67AJQhZEbVYaD0oJrNRKAxqePIrath/v0og3+LRCiLtQrEIEFN3TKIZQ==@vger.kernel.org, AJvYcCU88rADsASVRGnLsVsxxCanAqZdfb2qdvHBLrfF4WPWqChTNANa7E8DZ7Sy4YeDXp1EZ6f51Tz8cFf4rzXs@vger.kernel.org, AJvYcCUBnHrmgWQzu4QqQLRYOJIecKlT2z+4eldNS8OYQjtFxBeymWN9AK1QgBJp6Deie6126cZ+d0TY1Co=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzfaIfUOlybTxSrpvlw2gW+1OSZbxaxuoD/3fTxctQDsWNhNTBH
+	AOfAFXDWIXpruojnt5Kv2ehjkuTfViwqmmFmWayq/WPLdXvg5xfWe2/1/vyEF8U=
+X-Gm-Gg: ASbGnctjm34/AB+k7+ka40JZI58YA3R5E2cyXtC7WLdipJmM5AfUogzE8228Wm2Cas/
+	phK4CPSnrbZgw1YRgMGSCMSSg5xoGp6nVcS5mey5fiAoS4NBvfJSuOK1+SZuqRcJd/2ymuJW8EY
+	HdmAUhxNYR3jfFXvR6sODo3juRye4s2x1n7PyvUNQQTErNFn458tCAhQpRxH1yEANxbw3HF6YQK
+	hqKyXYVnioyBJ6GaPg4tQdC9F67Y4kRm8Zrv8NEmbSgic5s7MPlmjSXodhIcf9o6RtNSNBWB07W
+	uKCCBGR1juXpaAEbnUi2EWvDj389N1YBWg4WzWvXEdV+hqh5Eh24Jo3g3mDA
+X-Google-Smtp-Source: AGHT+IEVNW3vyhYJXf152VA7WyXzzMcqwgVnLYJKtOgtogLM8acDSAs1y+KqNdxPsGV0dKxuhDcenQ==
+X-Received: by 2002:a05:6e02:2208:b0:3d0:443d:a5a4 with SMTP id e9e14a558f8ab-3d04f47995emr2295205ab.2.1738698965751;
+        Tue, 04 Feb 2025 11:56:05 -0800 (PST)
+Received: from mail-il1-f174.google.com (mail-il1-f174.google.com. [209.85.166.174])
+        by smtp.gmail.com with ESMTPSA id e9e14a558f8ab-3d00a4fd469sm30251585ab.13.2025.02.04.11.56.05
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 04 Feb 2025 11:56:05 -0800 (PST)
+Received: by mail-il1-f174.google.com with SMTP id e9e14a558f8ab-3d03d2bd7d2so10753925ab.0;
+        Tue, 04 Feb 2025 11:56:05 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCUOZhoeWQut2Hqmjd1U/muZFnPZFBamq1KTlFjbfyU7Av70Rq0UbRc+O0///47994/p0w5siOuz/nQRPJd0@vger.kernel.org, AJvYcCWO956BF6U82FlpNRYpDe5hUyswuUoIiS1tX1XhfG5WXtmT3zO/kVVDX0eGLI0cwVxo40Z0wXnSwmg=@vger.kernel.org, AJvYcCWSrJCFZZzDEgigbA4NW/9dgDOSy2IeIdku2zuCFjb3FXI9+BvB7H/iObVgP0HBt1VccjH+Oh3f/jtJ9hGLnJOsx8miZw==@vger.kernel.org
+X-Received: by 2002:a05:6e02:10:b0:3d0:11ff:a782 with SMTP id
+ e9e14a558f8ab-3d04f5c68b7mr1789565ab.9.1738698965370; Tue, 04 Feb 2025
+ 11:56:05 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+References: <20250201105450.193450-1-josh@joshuagrisham.com> <a22ecdd5-a2a5-4f6b-0a1a-e1bc115dc01f@linux.intel.com>
+In-Reply-To: <a22ecdd5-a2a5-4f6b-0a1a-e1bc115dc01f@linux.intel.com>
+From: Joshua Grisham <josh@joshuagrisham.com>
+Date: Tue, 4 Feb 2025 20:55:53 +0100
+X-Gmail-Original-Message-ID: <CAMF+KeZ+XdAxVtSw5aMZ9O=J4AFeyVozduV+PYZSNLHaG=SOww@mail.gmail.com>
+X-Gm-Features: AWEUYZnCPWsyTDh1EkwfhqdVw5W-kUnp97vaM0_G4cUrpfkIuxfLbaJOb9gfyTQ
+Message-ID: <CAMF+KeZ+XdAxVtSw5aMZ9O=J4AFeyVozduV+PYZSNLHaG=SOww@mail.gmail.com>
+Subject: Re: [PATCH v10] platform/x86: samsung-galaxybook: Add
+ samsung-galaxybook driver
+To: =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Cc: W_Armin@gmx.de, thomas@t-8ch.de, kuurtb@gmail.com, 
+	Hans de Goede <hdegoede@redhat.com>, platform-driver-x86@vger.kernel.org, corbet@lwn.net, 
+	linux-doc@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>, 
+	=?UTF-8?Q?Thomas_Wei=C3=9Fschuh?= <linux@weissschuh.net>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-The pull request you sent on Tue, 04 Feb 2025 10:36:33 +0200:
+Den m=C3=A5n 3 feb. 2025 kl 16:02 skrev Ilpo J=C3=A4rvinen
+<ilpo.jarvinen@linux.intel.com>:
+>
+> On Sat, 1 Feb 2025, Joshua Grisham wrote:
+>
+> > Add a new driver for Samsung Galaxy Book series notebook devices with t=
+he
+> > following features:
+> >
+> > - Keyboard backlight control
+> > - Battery hook for installing power supply extension to add charge
+> >   control end threshold
+> > - Controller for Samsung's performance modes using the platform profile
+> >   interface
+> > - Adds firmware-attributes to control various system features
+> > - Handles various hotkeys and notifications
+> >
+> > Signed-off-by: Joshua Grisham <josh@joshuagrisham.com>
+> > Reviewed-by: Thomas Wei=C3=9Fschuh <linux@weissschuh.net>
+> > Reviewed-by: Armin Wolf <W_Armin@gmx.de>
+>
+> I've applied this to review-ilpo-next.
+>
+> Thanks a lot to all who have taken time to help in getting this into
+> shape!
+>
+> --
+>  i.
 
-> https://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git tags/platform-drivers-x86-v6.14-2
+Thank you Ilpo!
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/f5a2601378af1ea1e2a51d613e49e629159dc956
+Agreed completely and special thanks to Armin, Thomas, and Kurt for
+all of the extra time, help, and guidance along the way!
 
-Thank you!
-
--- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/prtracker.html
+Best regards,
+Joshua
