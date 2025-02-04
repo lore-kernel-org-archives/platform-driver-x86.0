@@ -1,102 +1,143 @@
-Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [78.32.30.218])
+Received: from mout.gmx.net (mout.gmx.net [212.227.15.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E5ED82101BD;
-	Tue,  4 Feb 2025 12:09:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=78.32.30.218
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B72121127D;
+	Tue,  4 Feb 2025 13:06:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738670987; cv=none; b=C+WxczdxmSZmSunx4kbZb4yhkBmRrS+vsN0YUJ715cZkkmCgvoQ0Jbf/AWiGCNffsgl8NiPnZUlaO0bsgg1Ro+XqXMJ8rMZRBRv+LhjueK+pk0XaZ194nt+Z/uREydt6Y6jTrsQA3zbya+FPM9w7xmLN6JhdQCM7tIivDtceMZM=
+	t=1738674420; cv=none; b=aNryl5CLgnXSjcwlk7lmLCXS1xEcdYo+FXwHHCjaXFoKi42AqhwnRaKXvtz1qBrd4gm34+7Lt5K3PsBsvRoFEwm//Dsvt6/Gaexh0gooA/lii1U5klKEspDrH5VDdgRsTAVHQOPcmRt1I4EfR/kKW+TGL4j2XkBd9pLKTbop+O0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738670987; c=relaxed/simple;
-	bh=d8BFEH60jD/R5jxvAVRS4XOFB9XxrdufokPf3pA63BU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=l7T4Abn9yU47sPo8I+rBApTG0CPr0/EPYEn4qUzBkdrbeFX0ipk4XX7yzCtoQu7ECZxpeDgORfX0/ZB6Wx/P29tild3poTrgzWX2llaf0PhwIryfD0UmY8OYZyVIfJJUddnHMLGZuqt9OaZ1dODEMAvfLpbI4YdP6QizY5m0NMY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk; spf=none smtp.mailfrom=armlinux.org.uk; dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b=grjh7xGP; arc=none smtp.client-ip=78.32.30.218
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=armlinux.org.uk
+	s=arc-20240116; t=1738674420; c=relaxed/simple;
+	bh=2yjIa/gYvxvIpPrLvTh6dm6Hw5rnrXT7n/EHoV/hjSI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=LSEqTmyLcnuq1cc7v2z5tHDudxv5ynQsZ2iCbDPHB0s0zQfO8Hy9TYespba9EtSOKWvk4bULl3cnQfyryZTNcWthR6IJmhmbNQ1H7JkEjoTVKXu8PGH2mcExt5q1cP4KfDWrHHfQw6/ssA9DO74PGjRkoAciSaawbcWl3zUarOI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b=QwuqUM+Z; arc=none smtp.client-ip=212.227.15.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="grjh7xGP"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
-	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-	List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=rox8IBA4TOog/Xi9d+CxsHeyf4Lozl25g79JAYxmrsE=; b=grjh7xGPy1aXjV8j/7VAJRQ/3Q
-	Zq+FAY0cDbRfh8SEOCyMIV1sMNeR3vmdA4pZtUw+BnlN6lhG2on+Btf+bSiva7Db/YMxo3UGx9Oro
-	9NpsoE4iXTuhscCT73b1FFUfGw/NpiYwJw03GvNr7R74HprHXSBG91FnziUApwNBAVuNBN0vN3vVQ
-	NM9Y34zvc+ynj9Gt07JXEehZEc4GfFbRKq1vvfRLBqmB9q4XfR8hCmC99NPeOidVjlz2C/poPwJwx
-	B8/RLvAKHGc9fg+IFjS8I9g9n2f8zGD1y+5e64/F6tdwo8zhM6iEceRokQhidTowc8xIC9O9DjWJq
-	JVdGvBZA==;
-Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:43894)
-	by pandora.armlinux.org.uk with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.96)
-	(envelope-from <linux@armlinux.org.uk>)
-	id 1tfHji-0003Tg-3A;
-	Tue, 04 Feb 2025 12:09:03 +0000
-Received: from linux by shell.armlinux.org.uk with local (Exim 4.96)
-	(envelope-from <linux@shell.armlinux.org.uk>)
-	id 1tfHje-0001NM-1y;
-	Tue, 04 Feb 2025 12:08:58 +0000
-Date: Tue, 4 Feb 2025 12:08:58 +0000
-From: "Russell King (Oracle)" <linux@armlinux.org.uk>
-To: Choong Yong Liang <yong.liang.choong@linux.intel.com>
-Cc: Simon Horman <horms@kernel.org>, Jose Abreu <joabreu@synopsys.com>,
-	Jose Abreu <Jose.Abreu@synopsys.com>,
-	David E Box <david.e.box@linux.intel.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	"H . Peter Anvin" <hpa@zytor.com>,
-	Rajneesh Bhardwaj <irenic.rajneesh@gmail.com>,
-	David E Box <david.e.box@intel.com>,
-	Andrew Lunn <andrew+netdev@lunn.ch>,
-	"David S . Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-	Alexandre Torgue <alexandre.torgue@foss.st.com>,
-	Jiawen Wu <jiawenwu@trustnetic.com>,
-	Mengyuan Lou <mengyuanlou@net-swift.com>,
-	Heiner Kallweit <hkallweit1@gmail.com>,
-	Hans de Goede <hdegoede@redhat.com>,
-	Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	Richard Cochran <richardcochran@gmail.com>,
-	Andrew Halaney <ahalaney@redhat.com>,
-	Serge Semin <fancer.lancer@gmail.com>, x86@kernel.org,
-	linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-	platform-driver-x86@vger.kernel.org,
-	linux-stm32@st-md-mailman.stormreply.com,
-	linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH net-next v6 4/7] stmmac: intel: configure SerDes
- according to the interface mode
-Message-ID: <Z6IDWiRF73sdVWob@shell.armlinux.org.uk>
-References: <20250204061020.1199124-1-yong.liang.choong@linux.intel.com>
- <20250204061020.1199124-5-yong.liang.choong@linux.intel.com>
+	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b="QwuqUM+Z"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.de;
+	s=s31663417; t=1738674385; x=1739279185; i=w_armin@gmx.de;
+	bh=3nMUmjZ6SzIybrs1YTTzsTCpRbyyW9/v2yB7+kADQMA=;
+	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:To:Cc:
+	 References:From:In-Reply-To:Content-Type:
+	 Content-Transfer-Encoding:cc:content-transfer-encoding:
+	 content-type:date:from:message-id:mime-version:reply-to:subject:
+	 to;
+	b=QwuqUM+ZtDW2d8djGS9nj7OQIye3qZgIfHpP944B22rnwJ4ryOIYtTTwan9cchTd
+	 jHzoSyrD03HzYBXZJG9Wu65f+H08wzeo0go1lP2DsZRv5wV8l8YUnMCj/BPHzBNzt
+	 hA17DdG9i8ga6lL2eLKDAIEQR3VkIFBlLmZh6GxtMSc/8AZ5ylLXcnuy/IK2NdK38
+	 yMtsIHWvNMP8W8E7y+AGT+5e6mPlfTOtECjgfmUO/BnImYo2Tn7aNsyRKmb05FrlP
+	 AzsBjjjgknJFVp0mu+f6wwERvy1CuyYbODOajvSsh3JyPlXVw4WKXeiA5CGk7GFTO
+	 uQLWtILrHX7WyhPUbw==
+X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
+Received: from [172.16.20.206] ([141.76.8.142]) by mail.gmx.net (mrgmx004
+ [212.227.17.190]) with ESMTPSA (Nemesis) id 1MK3Rs-1tzjQt0wgw-00PByQ; Tue, 04
+ Feb 2025 14:06:25 +0100
+Message-ID: <cbea0f2a-a66f-4ed8-9b19-6010b188f69f@gmx.de>
+Date: Tue, 4 Feb 2025 14:06:20 +0100
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250204061020.1199124-5-yong.liang.choong@linux.intel.com>
-Sender: Russell King (Oracle) <linux@armlinux.org.uk>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 4/7] platform/x86: hp-bioscfg: Use wmi_instance_count()
+To: =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Cc: james@equiv.tech, markpearson@lenovo.com, jorge.lopez2@hp.com,
+ jdelvare@suse.com, linux@roeck-us.net, linux-hwmon@vger.kernel.org,
+ LKML <linux-kernel@vger.kernel.org>, Hans de Goede <hdegoede@redhat.com>,
+ platform-driver-x86@vger.kernel.org, corbet@lwn.net,
+ linux-doc@vger.kernel.org
+References: <20250203182322.384883-1-W_Armin@gmx.de>
+ <20250203182322.384883-5-W_Armin@gmx.de>
+ <a02aa367-2ce8-ba6d-adc7-b91552566142@linux.intel.com>
+Content-Language: en-US
+From: Armin Wolf <W_Armin@gmx.de>
+In-Reply-To: <a02aa367-2ce8-ba6d-adc7-b91552566142@linux.intel.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:pbyC/Aj0TUVRa0zJcatrDoyo2v/HsbWObtnz3K8eJ2AiNZ4WoQD
+ 2XfPhyXxGMrZ5D+z3YlPpy7bOATjGNzNpkvDnkpLw/Fcd7O7brSsbCZRDw3PC6pBvLTMS6t
+ cfdkWqMGwsDm3/+9cHpJUana/GP6v0kMQmXoU2G1BnM5pAws5/QQA34dXYPYBlFfFZtNeOh
+ LzMcv33+rXUj4nOjSEnOA==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:42e13bcLyAc=;1+JDnpgQpq8HwvUMrz+coya/Rjb
+ hgGa1S+/WqNZqjdNnC3rr9ig3oA+kYSVv3VEXchmAz0Qm/SuiHNthmuCPqmmZFlN/K9KsmRPC
+ fQhSQ1maq2kCCTp4ijqM6aKxx0nVYzqAnDhFZZBqh1z5fYWKo21wEdRbuJN65FNo5I7PEijrO
+ eC7xFU/JbX9ic3c3zsmrmNa6EufU/3e+Mpt7jVTkLQLuOAogWtkuaZthHQXrvT9SAFNd840d6
+ Oixy7LxWcMAAgLWUhAa7EdwpbLTDeo3yJULLD0TC6zLEH4pKwiuVcTPBCnzSTGaJEfO4rk4fr
+ /mWKlpX758gNjafPGGEHpvaSIwXcSM+weOTpIAfGq9gr6FS68xmIga6ZB0OoeNiyZNMd6Adyx
+ x7ZH25dU4up3n+mvRrvAYeMToZhrFlAtEKoNwIssR/RzjhC2K93HmPcgBRaC7Yg7UHreUexoo
+ lLqXJoT8qjHle44LVQetzf/N2mXF5RuDwru9rwY6X91EHKF9P4jtq8iYT/gdRXW0v79IBFe3H
+ RzcPI+yPNFYXRZZnaNf5nakc2FyGHQ7h4XH/1Mu2bYPt7TO5NNDZ/zRf3IfIEqanPA5oaEoRD
+ bfdJ8g3bmzOh/WgCEHBW3ynz80YADJQ2Zecr2Key386hooXYBWwobsdKLVyQBEeJrNpke8tqN
+ oASM74ywAtWeRoPZywWjNpGBpVABTxbw56ake+scOQ4DKCnSDSEqfyziuDtq0Nf33IBLFgcjp
+ r0/OJxqp/H/fWSM+yeNylUQxXUVr5Aqnp3F0U46/nYuCT+J5QhyzNCnB2wYwPjQCKsVKFL6DL
+ 6ovtPddDNJiNU0CDXqocDfG7um6HU2kb67CpXKcaFRBvflodUJ9bF130iT4lW7Uvv25OaQ4fp
+ RaaQr/fkwEwkaiwtihqmYqtxIMSGGYrJj4vzkBPeQ4y8Ig/V7czVZO9UWwNVLrRx+WPNqJdUs
+ ZTFMDJDI8GdH93YwYhR/XEpekUiJaEwcUrWMKF5rmCNtnkETUqX5lumPn3zW6YgJj56McEAwx
+ uBtBQKw5ehLkSJFAuDP+hRet3Fa91RloOSLUG0AziHEcnGfG0WjmtHw9gZXjDvxHS3PPdOnob
+ 1kDrwV5u/MKTBw+I91ePB+q1/XsO4pHA+wjLgSj6BieFWmmvzUJiYycetd5nGf/hbGhvfJpcu
+ JZckGmvWJGOKgl30c2RI1iTYZ0Y0pS4VvfyJlW3b7BZM5ozelldPLQY/y2vE5d7goFrJBIYcC
+ RMPeWxYQQHq6nENU2q36GTg8TNCy+Pz3oVaURrLjw1Az0/9ANOQFL5oAXiDXRaDxyjH3YZH8a
+ ktCKBpsSJFGR01QsiqpbP/kTr27bL1hG7bMKzqdlKznOhqBl5mQLjki3VQ1aclHOGcWI55i1i
+ lrShun8DQCOV8liBy5rDFSK0gTHAYYCyoAmucX5/O/YzTXH4MStP9EVQtmWNgte5NLuOSjpRC
+ wtM9SyjMyyoNxfCvjJ/XFHVSHKNI=
 
-On Tue, Feb 04, 2025 at 02:10:17PM +0800, Choong Yong Liang wrote:
-> +	int (*config_serdes)(struct net_device *ndev,
-> +			     void *priv,
-> +			     phy_interface_t interface);
+Am 04.02.25 um 11:37 schrieb Ilpo J=C3=A4rvinen:
 
-Since you call this from phylink's mac_finish() method, I would much
-rather the call down into platform code was also called the same so
-we don't end up with a proliferation of methods called from that
-function. As such, please also arrange for it to pass the AN mode as
-well.
+> On Mon, 3 Feb 2025, Armin Wolf wrote:
+>
+>> The WMI core already knows the instance count of a WMI guid.
+>> Use this information instead of querying all possible instances
+>> which is slow and might be unreliable.
+>>
+>> Signed-off-by: Armin Wolf <W_Armin@gmx.de>
+>> ---
+>>   drivers/platform/x86/hp/hp-bioscfg/bioscfg.c | 13 +++++--------
+>>   1 file changed, 5 insertions(+), 8 deletions(-)
+>>
+>> diff --git a/drivers/platform/x86/hp/hp-bioscfg/bioscfg.c b/drivers/pla=
+tform/x86/hp/hp-bioscfg/bioscfg.c
+>> index 0b277b7e37dd..63c78b4d8258 100644
+>> --- a/drivers/platform/x86/hp/hp-bioscfg/bioscfg.c
+>> +++ b/drivers/platform/x86/hp/hp-bioscfg/bioscfg.c
+>> @@ -388,16 +388,13 @@ union acpi_object *hp_get_wmiobj_pointer(int inst=
+ance_id, const char *guid_strin
+>>    */
+>>   int hp_get_instance_count(const char *guid_string)
+>>   {
+>> -	union acpi_object *wmi_obj =3D NULL;
+>> -	int i =3D 0;
+>> +	int ret;
+>>
+>> -	do {
+>> -		kfree(wmi_obj);
+>> -		wmi_obj =3D hp_get_wmiobj_pointer(i, guid_string);
+>> -		i++;
+>> -	} while (wmi_obj);
+>> +	ret =3D wmi_instance_count(guid_string);
+>> +	if (ret < 0)
+>> +		return 0;
+>>
+>> -	return i - 1;
+>> +	return ret;
+>>   }
+> Hi Armin,
+>
+> While it is the existing way of doing things, I don't like how the error
+> is not properly passed on here. And if the error handling is pushed
+> upwards to the calling sites, then this entire function becomes useless
+> and wmi_instance_count() could be used directly in the callers.
+>
+The thing is that for the hp-bioscfg driver, a missing WMI GUID is not an =
+error.
+In this case 0 instances are available.
 
-Thanks.
+I would keep this function for now.
 
--- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTP is here! 80Mbps down 10Mbps up. Decent connectivity at last!
+Thanks,
+Armin Wolf
+
