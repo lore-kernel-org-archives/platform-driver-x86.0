@@ -1,122 +1,109 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
+Received: from mout.gmx.net (mout.gmx.net [212.227.17.21])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 89550139CE3;
-	Tue,  4 Feb 2025 08:38:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 330D119C54B;
+	Tue,  4 Feb 2025 09:41:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.21
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738658312; cv=none; b=lHwkuUFrIk2vuYczBPtZF+iYIHi3yF86F8+Md/JqnTFvq46b/u8p0RCEUQIQrttOaetJ9KSSf2dI7i0pkHK1NXI7BW9DWl8DjiLTOZFVHKrHqegTlyKIxsERwXvGJS7DkKO16QQGSnD+b15eGhDzA8HRUqLNwgiPcXiP8IjNyP0=
+	t=1738662107; cv=none; b=dtl99/B87/XNCwpGCdG5YnJdHyrq/C6dNkNoPW9Ur8uLWsMti6zXxKePXpJ+3oURwRCsnGWQv6RZP7VI3qEubStGIxbU3WX85T9+HsMcWZMmNQ5kr9uYLdUiFRfPh0mSocy/XLb5smRUTWbygHGmmOxVdX6kiELSWyAbIKhrn7o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738658312; c=relaxed/simple;
-	bh=Bs8rbK+mkdS/XaSvZ9jbWwELEvoKibCPcrjqSGSqHVI=;
-	h=From:To:Cc:Date:Subject:Message-ID:MIME-Version:Content-Type; b=p/LfkpfbqhcOEc5QRCfkWcHf9ke4i+uhWHWqv9wbs2kiC4PwQYd2SP7SpJX8Hqo84PrwyJmuD1Ypejv7Q4Ef0aXkKihRKqfm1yH0TfrRen6CfyRCN3kSSgMjhKLcp8/JlbZL0C76qoHc6LRfQmWOM5VGkTwHKH3nvnYuduVNc6g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=gdsPnHXL; arc=none smtp.client-ip=192.198.163.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1738662107; c=relaxed/simple;
+	bh=hmDF/89UGFdHZOQdLxKg7A6Ve4yC4JgSL47ZunD8KSY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=cDfsR2qR4ad5p6+JXo7kaaFhczCvaRyPbcYSs7iB9hY0WdmFy/PJLOI3vMiwDsuVmxFqAbxwyljclD1jyf6tcfGUIRvm3mvW3U7HsMTRpF4OLkeD47dyespg9gh1o+cKr/ikN6hTuu5jA7MhHfTG9Xj96Tm7OZzPD1kXJeMTW4s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b=Af7vOTZB; arc=none smtp.client-ip=212.227.17.21
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="gdsPnHXL"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1738658310; x=1770194310;
-  h=from:to:cc:date:subject:message-id:mime-version:
-   content-transfer-encoding;
-  bh=Bs8rbK+mkdS/XaSvZ9jbWwELEvoKibCPcrjqSGSqHVI=;
-  b=gdsPnHXLGyAoVPVUsFlHuk0haxZOQDnugN21QJvNsOn2YUfeJL/QF95S
-   gQWWSVtsdpipQF9jX/sEY4YtjmwOsgBVx+m3YxjMjviVASsImtJ8jha/3
-   kgum30Xlcm6atVCmdwHA77Q+FnmrkzFTa5dhyBR+4MfZHvPXBF5ToN9eK
-   S/soWXHuW8RCLe88GdeirEsCZZ4JDnWT+nJSb7OlkElJgENfnMGXaow0N
-   h+SqriUOw/DladX7ozuzpTkigFfJx1964hPYMCnQNuWJi9sDG7cMCA1Ld
-   XpCkdOYLYHRmc8cCDYd6jh2I7igYKRsIwzMbwmOnBVAys9wzJ1cuPDiMX
-   g==;
-X-CSE-ConnectionGUID: iXMC5K7AT4y9tWLNv3gOGg==
-X-CSE-MsgGUID: hEdfWGUrTH6qVC6ae/CQ+g==
-X-IronPort-AV: E=McAfee;i="6700,10204,11335"; a="26774420"
-X-IronPort-AV: E=Sophos;i="6.13,258,1732608000"; 
-   d="scan'208";a="26774420"
-Received: from orviesa006.jf.intel.com ([10.64.159.146])
-  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Feb 2025 00:38:29 -0800
-X-CSE-ConnectionGUID: JV22+CyLSJ+sa+0KInZUPA==
-X-CSE-MsgGUID: S1LTLGXBR+GEuGHiQg6X0Q==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.13,258,1732608000"; 
-   d="scan'208";a="110497680"
-Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.75])
-  by orviesa006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Feb 2025 00:38:28 -0800
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: LKML <linux-kernel@vger.kernel.org>, PDx86 <platform-driver-x86@vger.kernel.org>, Hans de Goede <hdegoede@redhat.com>, Andy Shevchenko <andy@kernel.org>
-Date: Tue, 04 Feb 2025 10:36:33 +0200
-Subject: [GIT PULL] platform-drivers-x86 for v6.14-2
-Message-ID: <pdx86-pr-20250204103633-1857020998@linux.intel.com>
+	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b="Af7vOTZB"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.de;
+	s=s31663417; t=1738662086; x=1739266886; i=w_armin@gmx.de;
+	bh=hmDF/89UGFdHZOQdLxKg7A6Ve4yC4JgSL47ZunD8KSY=;
+	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:To:Cc:
+	 References:From:In-Reply-To:Content-Type:
+	 Content-Transfer-Encoding:cc:content-transfer-encoding:
+	 content-type:date:from:message-id:mime-version:reply-to:subject:
+	 to;
+	b=Af7vOTZB3lttaz7BnG+m/qhQlgy+6XhWQJdSIuXW2kknv6jQBpOFyasU8FqJxPj+
+	 eHD3DXP2R4pqgpHOOe9869geKIZHJrRRuriTWtHsSeuAVc+ykX+J8SKNjcEmIc7dl
+	 1qmy09O919IZHxhCB+Me0pWI8dPzzZjKdtae541CZe4iCX3PiPzLao99FJCQUxw3C
+	 tr78v2TlJ71VhWxUJttg2FyUaUfsm8AswVVDd6yKzQWW41LtYXNbNQDfjWRvtftO3
+	 udv7kBxGEOGcdlsh4zC45HTeunT6E9OOgnDEIvaE83PNnJbO0N2ugHvYEVrOU+zm1
+	 WdmdcJN70XVX9c221Q==
+X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
+Received: from [192.168.0.69] ([91.14.238.232]) by mail.gmx.net (mrgmx105
+ [212.227.17.168]) with ESMTPSA (Nemesis) id 1MFKGP-1tclXb22cD-00Gd8h; Tue, 04
+ Feb 2025 10:41:26 +0100
+Message-ID: <e14ca038-e9fa-445d-a26c-de91d99fbd24@gmx.de>
+Date: Tue, 4 Feb 2025 10:41:23 +0100
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/7] hwmon: (hp-wmi-sensors) Use the WMI bus API when
+ accessing sensors
+To: Guenter Roeck <linux@roeck-us.net>, james@equiv.tech,
+ markpearson@lenovo.com, jorge.lopez2@hp.com
+Cc: jdelvare@suse.com, linux-hwmon@vger.kernel.org,
+ linux-kernel@vger.kernel.org, hdegoede@redhat.com,
+ ilpo.jarvinen@linux.intel.com, platform-driver-x86@vger.kernel.org,
+ corbet@lwn.net, linux-doc@vger.kernel.org
+References: <20250203182322.384883-1-W_Armin@gmx.de>
+ <20250203182322.384883-2-W_Armin@gmx.de>
+ <0266e0b1-43fb-473b-995d-bb92662505c0@roeck-us.net>
+Content-Language: en-US
+From: Armin Wolf <W_Armin@gmx.de>
+In-Reply-To: <0266e0b1-43fb-473b-995d-bb92662505c0@roeck-us.net>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Provags-ID: V03:K1:BK3HowZ6nOqAceZkqq/8+FkRoAINgf+3zJLWGY7e8AvVCxWWuZi
+ KTg77SgZzNuvj6g1FD2B4WK0gRcbvL7Ty7ZWH0R41ixUpmdLmFFQBwRU68N+7sa/mtcwbjX
+ SgziYqUtEeLt2AGUxXLEEZ9pivfZxy8aZSE/fS6xxgwzoIzURCY13nW0UhJYl8w/8Wc92f2
+ QenH9EXpjd6hm0JW/1UxQ==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:HBVKY/kMOA0=;kIV38TsmmZZUPu1R6id+wR1nCNY
+ 1/q4Yr6jPM3qT+XoNa1KNNfsF3MGyrOPzJXrHX7J1bPXjEv8vICUcEG7q+Q7inhgjuzZ8LdXk
+ MjA44z29HNS6RhTN9HitpvnY7PLaFa/bUdMheg6xQtMacO3vTrVlgRwUZkKug8bX6cjR4zfNT
+ v9PR9imdIOFVH5OcxzcWDSGlkYdWSlt/FEKlJczWox4zTHxrXpwf/9FmV9OOW88m05qAlYcMh
+ GRQx0HLm0lEktt6ArlElg/Du3DdsjTEyWTqpA2dbhXBLwhHVBRRKejR4rBr7vfnZHrfyPM4Ej
+ rslSj3SowX8N54eSJXpGYNxt76DnhXjhDi5OESieXV3ppwGCu4f2fAv/H6QUXjLpTHW1UL5IM
+ Qul41eMMDlpEPx1EA4ENmJyom0Hy1tIGgtFlcVqr7NKLKvwcy1tFOrLOnv9CRAnF3B175I44K
+ lIM254w89suEsCYKHF0htAaiBweLVdEKF4DHcF+HAuwe0+s7Fwzy3UIawBFNzBJXoJJioLRVo
+ MQt2XDCNJOaXtci9h+tsnHZrLq/p5VC6TjGwdboM1nAm1NZaB49P9zdY0y2uOjSG6QOekjB7A
+ 7MyVC17bOMmtyBLvyzMH44RUeBTMgfNKl6avI6qBI7InMJWynsRjjUtsI2USiEy42TSCx+xKX
+ wzJdAJsVx69f75Z3+76lgNeAmXRdRxEcisgOU0pRNw7lDhItIqRhbj+i2w51qHjvG/eryhQFE
+ D6li4TOASHxESZEB59auK1/Ip/l0/h8U1E4UQWKOq5QsCVHKvyXOjhsMi2v4KBjPCFTFdGZa4
+ GYLT+0tlUXbNGnrGq5Vl6ozTwvN0t5G9/IX/wkl/Df30HY69T26WeBPUdWgBieBeXRXCDPohC
+ NOzGboepy1v/QcwKyi61TUv2zHnp5msC8kvWti8ne1AB4mQXQa9+WzORzcbsWSbmyWl/RgMFF
+ ho0K4pnTfvj4epOt5cYKjmfGaZV5WBrxczfDBkEMC+piTX+2mPMORK6J7YWsk2L+V/X3MAWpv
+ mcITkE0nBrgEPoiAW4kjZUEQIfYm6j8sVSZzmBH4SKbnmt/dGE6lN0ab8Aiam8SPQnUZQ5cuY
+ FmD/N6rYYZ88lO0CWkMK52aLolmwN03a5nlh0goLOMNS3kdVFG0K0xOTvV13FvAX4X/SXTCag
+ UfpXLJGb2gDC/FsQNyFMotjjyE1bXKk4MGAcxhVNyveBCG2Y8xAsngbUQKKmg2UQFNqiYvfJC
+ nUCIAe4RVt48rSkrchRNUzuJrwLRIteoa7AR+EAjOS5t1Iv45gwFf+T//BgUn8VaKmv4+PC/V
+ sT4gRZKjydcjVy3yAJNuaHZpJglcu6KHVZD2btacJLw8KY=
 
-Hi Linus,
+Am 04.02.25 um 02:18 schrieb Guenter Roeck:
 
-Here is a platform-drivers-x86 fixes PR for v6.14.
+> On 2/3/25 10:23, Armin Wolf wrote:
+>> Since the driver already binds to HP_WMI_NUMERIC_SENSOR_GUID, using
+>> wmidev_block_query() allows for faster sensor access.
+>>
+>> Signed-off-by: Armin Wolf <W_Armin@gmx.de>
+>
+> Acked-by: Guenter Roeck <linux@roeck-us.net>
+>
+> ... assuming the series will be applied together. Please let me know
+> if this patch should be applied through hwmon.
+>
+> Guenter
 
-Fixes:
+Hi,
 
- - ideapad-laptop: Pass a correct pointer to the driver data
+i would like to have this patch merged through the pdx86 tree.
 
- - intel/ifs: Provide a link to the IFS test images
+Thanks,
+Armin Wolf
 
- - intel/pmc: Use large enough type when decoding LTR value
-
-Regards, i.
-
-
-The following changes since commit 2014c95afecee3e76ca4a56956a936e23283f05b:
-
-  Linux 6.14-rc1 (2025-02-02 15:39:26 -0800)
-
-are available in the Git repository at:
-
-  https://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git tags/platform-drivers-x86-v6.14-2
-
-for you to fetch changes up to a787ab73e2e43c0a3df10bc8d9b9b7a679129d49:
-
-  platform/x86/intel/ifs: Update documentation with image download path (2025-02-04 10:00:45 +0200)
-
-----------------------------------------------------------------
-platform-drivers-x86 for v6.14-2
-
-Fixes:
-
- - ideapad-laptop: Pass a correct pointer to the driver data
-
- - intel/ifs: Provide a link to the IFS test images
-
- - intel/pmc: Use large enough type when decoding LTR value
-
-The following is an automated shortlog grouped by driver:
-
-ideapad-laptop:
- -  pass a correct pointer to the driver data
-
-intel/ifs:
- -  Update documentation with image download path
-
-intel: pmc:
- -  fix ltr decode in pmc_core_ltr_show()
-
-----------------------------------------------------------------
-Dmitry Kandybka (1):
-      platform/x86/intel: pmc: fix ltr decode in pmc_core_ltr_show()
-
-Fedor Pchelkin (1):
-      platform/x86: ideapad-laptop: pass a correct pointer to the driver data
-
-Jithu Joseph (1):
-      platform/x86/intel/ifs: Update documentation with image download path
-
- drivers/platform/x86/ideapad-laptop.c | 2 +-
- drivers/platform/x86/intel/ifs/ifs.h  | 9 ++++-----
- drivers/platform/x86/intel/pmc/core.c | 4 ++--
- 3 files changed, 7 insertions(+), 8 deletions(-)
