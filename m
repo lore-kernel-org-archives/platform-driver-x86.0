@@ -1,156 +1,106 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail.tuxedocomputers.com (mail.tuxedocomputers.com [157.90.84.7])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B6C1781ACA;
-	Wed,  5 Feb 2025 06:50:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 074CE1A83ED;
+	Wed,  5 Feb 2025 16:21:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=157.90.84.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738738246; cv=none; b=H9/i2u+6qoiQAiBJPLBewl9NxZf5yUzp3gHI9wgqLo2QIvH7QILzriPysVepQTVjcvlz3+5PAYZDQHNMCotpuUV+pvaKpOgLplqsaZ0M6uMHkZOTttrUpq7ZTlrtRaI/5xZIUyaIZEhgw9oVM7ML/L0gI2QpwLjblC34v0MTUwA=
+	t=1738772488; cv=none; b=KvZuq+vpkkJHrahvx3HWJ+4mjsN/1EgxLYgU1E6F53QwZHFNWwaW9ZyHCoJZQH4mNaPAFFF8GlFUacC21Qlzf/8brPIXDBQgq0fyJy2q0cLMRXTMPtsgBTYCHlj2wmjI7JWHhqlaadPROW0Y0jYGak10xOlWbTRIq/YMjpkC4Ec=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738738246; c=relaxed/simple;
-	bh=55hxtyx4DMhF2qYY+kBeRk1DqvJKGJ9IUbKzhKO8vbg=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=e/EhxuY1VQiw0nvJF3TLZHpji+7makHByp2jbmjKgQFuMCoTmMEnNrRyTQ+5tvoyJ2ntJ/vhpV0UjfF/IzuwusTd+fXBvy9HWEI5ig48oIkCgcPAdofyQaXWY6CP4dOx9NXbSYKhTw+iOFJDlG1isczb4t+6KTagyHRt/N0XbyE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=nhPqipja; arc=none smtp.client-ip=198.175.65.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1738772488; c=relaxed/simple;
+	bh=2DNQADN7pp+le24xGXf6k5UgfsW76QzM6fsRSbiQY/w=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=TH1qDYASRQWxiDIfZpJ7LCJa2HB37RH38Mnz05YB8NM+u/BECoJXv2U9GAWxVlNAJkyGYQruVxYw2knnYfxT0m1IirIDerCgTPW5ennt8b0SfprM7VKSZ0NW17yxw/5XAvjMXAaWDVZD8VWCoH92Y1gvOCM+ipdIyzzRWTxbnRI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=tuxedocomputers.com; spf=pass smtp.mailfrom=tuxedocomputers.com; dkim=pass (1024-bit key) header.d=tuxedocomputers.com header.i=@tuxedocomputers.com header.b=W25dn78h; arc=none smtp.client-ip=157.90.84.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=tuxedocomputers.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tuxedocomputers.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="nhPqipja"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1738738245; x=1770274245;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=55hxtyx4DMhF2qYY+kBeRk1DqvJKGJ9IUbKzhKO8vbg=;
-  b=nhPqipjarUlvAQgFPw0DZquSzEriwI7ib5RgFAzJdk267ojoBmHAK8Cy
-   tHcEyJtyYY78etwxTeKwx7b7qP2fTdNVKSjDjO+6/dO9zY2OOYH2bJset
-   8AJI1Rbg0ihZ3Aouhib5q0cbPUK4t2RBfHRh8TVGgQdmaJAexL7Z/HBJG
-   c1EgAtctSooBTjxZ6Y5Xb6Ua+vr2agnxh/k2EFmtrmWSeT8aT2vlCWQi4
-   UO+Igk8as8CqNoYLXyk772FCOBE7tZXbBOx4F8eWYL6g/SLyUkfJ5LDcM
-   yrSzfV/plUwaPp+0EbbvrRgxnwF2zL8tz/Kn7j2icxVHoSRL9nqLaZm8A
-   A==;
-X-CSE-ConnectionGUID: n1DyovVeSVm4N8O9bareYg==
-X-CSE-MsgGUID: vES0pDkRRKabU9xeLDhYaw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11336"; a="39175591"
-X-IronPort-AV: E=Sophos;i="6.13,260,1732608000"; 
-   d="scan'208";a="39175591"
-Received: from fmviesa009.fm.intel.com ([10.60.135.149])
-  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Feb 2025 22:50:44 -0800
-X-CSE-ConnectionGUID: oo32QqH1QrmHW2tYAHIDrw==
-X-CSE-MsgGUID: W8AT1xq9Tz+DU8R6MpUXgA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.13,260,1732608000"; 
-   d="scan'208";a="111400846"
-Received: from choongyo-mobl.gar.corp.intel.com (HELO [10.247.100.100]) ([10.247.100.100])
-  by fmviesa009-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Feb 2025 22:50:35 -0800
-Message-ID: <c25c2da7-18fa-46b7-b992-fb5b17a01749@linux.intel.com>
-Date: Wed, 5 Feb 2025 14:50:31 +0800
+	dkim=pass (1024-bit key) header.d=tuxedocomputers.com header.i=@tuxedocomputers.com header.b="W25dn78h"
+Received: from wse-pc.fritz.box (pd9e59260.dip0.t-ipconnect.de [217.229.146.96])
+	(Authenticated sender: wse@tuxedocomputers.com)
+	by mail.tuxedocomputers.com (Postfix) with ESMTPA id 706062FC0079;
+	Wed,  5 Feb 2025 17:21:16 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=tuxedocomputers.com;
+	s=default; t=1738772476;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=jfgNw/sFpnsNIWvl27HWsqu0tv0PJPndFa2C+AYRXaA=;
+	b=W25dn78h6+f8rUN+JITzeNYy+vEC5SbOlwXE8WA1DD88FqqjMLZ9QdD3XoWgbEbo5lN/b+
+	YYwkWg11b0pG9gjIdNHzZ/LDKr5UOwk2/yPa1SubTss6jWvskkE7DtS3nXhkwj8EQC8DKu
+	5LndYp55+VjyfcmZLqZfA4pNBsxU5ZA=
+Authentication-Results: mail.tuxedocomputers.com;
+	auth=pass smtp.auth=wse@tuxedocomputers.com smtp.mailfrom=wse@tuxedocomputers.com
+From: Werner Sembach <wse@tuxedocomputers.com>
+To: hdegoede@redhat.com,
+	ilpo.jarvinen@linux.intel.com,
+	wse@tuxedocomputers.com,
+	ukleinek@kernel.org,
+	jdelvare@suse.com,
+	linux@roeck-us.net
+Cc: linux-kernel@vger.kernel.org,
+	platform-driver-x86@vger.kernel.org,
+	linux-pwm@vger.kernel.org,
+	linux-hwmon@vger.kernel.org
+Subject: [RFC PATCH 0/1] platform/x86/tuxedo: Implement TUXEDO TUXI ACPI TFAN via hwmon
+Date: Wed,  5 Feb 2025 17:19:19 +0100
+Message-ID: <20250205162109.222619-1-wse@tuxedocomputers.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH net-next v6 1/7] net: phylink: use act_link_an_mode to
- determine PHY
-To: "Russell King (Oracle)" <linux@armlinux.org.uk>
-Cc: Simon Horman <horms@kernel.org>, Jose Abreu <joabreu@synopsys.com>,
- Jose Abreu <Jose.Abreu@synopsys.com>,
- David E Box <david.e.box@linux.intel.com>,
- Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
- Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>,
- "H . Peter Anvin" <hpa@zytor.com>,
- Rajneesh Bhardwaj <irenic.rajneesh@gmail.com>,
- David E Box <david.e.box@intel.com>, Andrew Lunn <andrew+netdev@lunn.ch>,
- "David S . Miller" <davem@davemloft.net>, Eric Dumazet
- <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
- Paolo Abeni <pabeni@redhat.com>, Maxime Coquelin
- <mcoquelin.stm32@gmail.com>, Alexandre Torgue
- <alexandre.torgue@foss.st.com>, Jiawen Wu <jiawenwu@trustnetic.com>,
- Mengyuan Lou <mengyuanlou@net-swift.com>,
- Heiner Kallweit <hkallweit1@gmail.com>, Hans de Goede <hdegoede@redhat.com>,
- =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
- Richard Cochran <richardcochran@gmail.com>,
- Andrew Halaney <ahalaney@redhat.com>, Serge Semin <fancer.lancer@gmail.com>,
- x86@kernel.org, linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
- platform-driver-x86@vger.kernel.org,
- linux-stm32@st-md-mailman.stormreply.com,
- linux-arm-kernel@lists.infradead.org
-References: <20250204061020.1199124-1-yong.liang.choong@linux.intel.com>
- <20250204061020.1199124-2-yong.liang.choong@linux.intel.com>
- <Z6ICO06RbJ1ulDh1@shell.armlinux.org.uk>
-Content-Language: en-US
-From: Choong Yong Liang <yong.liang.choong@linux.intel.com>
-In-Reply-To: <Z6ICO06RbJ1ulDh1@shell.armlinux.org.uk>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
+This Implements fan controls for userspace for the TUXEDO Sirius 16 Gen 1 & 2.
 
+It also adds safeguards that userspace cannot go below certain fanspeeds at
+certain temperatures. My suspicion that this is necessary was proven correct
+during testing of this patch: The former version had the highest safeguard level
+as 40% fanspeed at temperatures above 90°C. But after letting the device run
+like that with a CPU + GPU load for a short period of time, it turned off.
 
-On 4/2/2025 8:04 pm, Russell King (Oracle) wrote:
-> On Tue, Feb 04, 2025 at 02:10:14PM +0800, Choong Yong Liang wrote:
->> When the interface mode is SGMII and act_link_an_mode is MLO_AN_INBAND,
->> switching to the 2500BASE-X interface mode will trigger
->> phylink_major_config, and act_link_an_mode will be updated to MLO_AN_PHY
->> in phylink_pcs_neg_mode when the PCS does not support in-band mode.
->> The MAC and PCS will configure according to the interface mode
->> and act_link_an_mode.
-> 
-> act_link_an_mode must only ever be updated by phylink_major_config()
-> since it defines state for the currently configured mode, and must
-> stay in sync with how the hardware has been programmed at all times.
-> 
->> However, when the interface goes link down and then link up again, the MAC
->> will attempt to attach the PHY.
-> 
-> Why is the MAC trying to disconnect and reconnect the PHY on link
-> changes? Do you really mean "link down" and "link up" as in "connection
-> with the link partner" or do you mean administratively taking the
-> interface down and up (which is a completely different thing.)
-> 
+It was hot to the touch above the keyboard and it doesn't turn on anymore since
+then. Even after letting it cool down overnight. So I probably fried the
+mainboard.
 
-The "link down" and "link up" I mention in this part refer to using the 
-command:
-ifconfig <interface> down/up
+This cut my testing short for the time being and is the reason why this is send
+as an RFC. It should however work and now has two additional min fanspeeds: 60%
+at 95°C and 100% at 100°C.
 
->> The interface mode remains as 2500BASE-X,
->> but cfg_link_an_mode still holds MLO_AN_INBAND. This causes a failure to
->> attach the PHY.
-> 
-> Hmm.
-> 
-> pl->link_interface is the configured setting from firmware etc and doesn't
-> change.
-> 
-> pl->cfg_link_an_mode is the configured mode from firmware etc which was
-> passed to phylink_create(), and again doesn't change.
-> 
-> So there should be no difference unless something weird is going on,
-> which as you're talking about stmmac, could be the case.
-> 
+Enforcing these minimum fanspeeds at the EC-firmware level is not possible as we
+only have access to the EC-firmware as a binary blob.
 
-Thank you for pointing that out.
+Werner Sembach (1):
+  platform/x86/tuxedo: Implement TUXEDO TUXI ACPI TFAN via hwmon
 
-I think I was confused between pl->link_interface and
-pl->link_config.interface. The function phylink_attach_phy() uses
-pl->link_interface, whereas phylink_expects_phy() uses
-pl->link_config.interface.
+ MAINTAINERS                                   |   6 +
+ drivers/platform/x86/Kconfig                  |   2 +
+ drivers/platform/x86/Makefile                 |   3 +
+ drivers/platform/x86/tuxedo/Kbuild            |   6 +
+ drivers/platform/x86/tuxedo/Kconfig           |   6 +
+ drivers/platform/x86/tuxedo/nbxx/Kbuild       |   9 +
+ drivers/platform/x86/tuxedo/nbxx/Kconfig      |  13 +
+ .../x86/tuxedo/nbxx/acpi_tuxi_hwmon.c         | 421 ++++++++++++++++++
+ .../x86/tuxedo/nbxx/acpi_tuxi_hwmon.h         |  14 +
+ .../platform/x86/tuxedo/nbxx/acpi_tuxi_init.c |  60 +++
+ .../platform/x86/tuxedo/nbxx/acpi_tuxi_init.h |  16 +
+ .../platform/x86/tuxedo/nbxx/acpi_tuxi_util.c |  58 +++
+ .../platform/x86/tuxedo/nbxx/acpi_tuxi_util.h |  84 ++++
+ 13 files changed, 698 insertions(+)
+ create mode 100644 drivers/platform/x86/tuxedo/Kbuild
+ create mode 100644 drivers/platform/x86/tuxedo/Kconfig
+ create mode 100644 drivers/platform/x86/tuxedo/nbxx/Kbuild
+ create mode 100644 drivers/platform/x86/tuxedo/nbxx/Kconfig
+ create mode 100644 drivers/platform/x86/tuxedo/nbxx/acpi_tuxi_hwmon.c
+ create mode 100644 drivers/platform/x86/tuxedo/nbxx/acpi_tuxi_hwmon.h
+ create mode 100644 drivers/platform/x86/tuxedo/nbxx/acpi_tuxi_init.c
+ create mode 100644 drivers/platform/x86/tuxedo/nbxx/acpi_tuxi_init.h
+ create mode 100644 drivers/platform/x86/tuxedo/nbxx/acpi_tuxi_util.c
+ create mode 100644 drivers/platform/x86/tuxedo/nbxx/acpi_tuxi_util.h
 
-When the interface switches from SGMII to 2500BASE-X,
-pl->link_config.interface is updated by phylink_major_config().
-So, when the STMMAC link goes down and comes up again,
-it is blocked by phylink_expects_phy().
-At this point, pl->cfg_link_an_mode is MLO_AN_INBAND and 
-pl->link_config.interface is 2500BASE-X.
-
-Since phylink_expects_phy() is trying to achieve the same checking 
-condition as phylink_attach_phy(), it should use pl->link_interface for the 
-check as well.
-
-Does that make sense to you?
-
-> More information needed, but as this patch currently stands, I deem it
-> to be incorrect, sorry.
-> 
+-- 
+2.43.0
 
