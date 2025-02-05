@@ -1,124 +1,156 @@
-Received: from fout-b2-smtp.messagingengine.com (fout-b2-smtp.messagingengine.com [202.12.124.145])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2540825A650;
-	Wed,  5 Feb 2025 06:38:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.145
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B6C1781ACA;
+	Wed,  5 Feb 2025 06:50:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738737519; cv=none; b=P8Q4beBvgSbeQr3E+pKsRhk+hFvtfmiWqvZ3/j9v9eK39OWxuBIMzzS06msMasJJDWbMqnn6ysDyalhvjEUVu6sVDV9y6NCje5utydi7UIv8y69VGIThay8Tq5JexB2yMuBfP1g6NxdF4BBU7V0qepbw/KVkz9mOwBRnopFGdeA=
+	t=1738738246; cv=none; b=H9/i2u+6qoiQAiBJPLBewl9NxZf5yUzp3gHI9wgqLo2QIvH7QILzriPysVepQTVjcvlz3+5PAYZDQHNMCotpuUV+pvaKpOgLplqsaZ0M6uMHkZOTttrUpq7ZTlrtRaI/5xZIUyaIZEhgw9oVM7ML/L0gI2QpwLjblC34v0MTUwA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738737519; c=relaxed/simple;
-	bh=oGGEoTbhUslddBF7TXm4peqQH5LwAUTJzBsVa7uU3nw=;
-	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
-	 Subject:Content-Type; b=hiAFAL0geqJb5vB9BhFC6j7L266IDCgG/RrtrzyJRtlsH8jVGNMxTgIKPHQIethuf7/G4JZIuJabxtxG3uKprM+rcEBVY8Lo7FrJJzXRnCurvxNtQuCrlsqaiu2wA3OEzgwOcWB+FiEPIbo1LEkZ7LW9dembrlvxwddBODY4tYk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=astier.eu; spf=pass smtp.mailfrom=astier.eu; dkim=pass (2048-bit key) header.d=astier.eu header.i=@astier.eu header.b=4mneROW1; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=bV/Gz4v/; arc=none smtp.client-ip=202.12.124.145
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=astier.eu
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=astier.eu
+	s=arc-20240116; t=1738738246; c=relaxed/simple;
+	bh=55hxtyx4DMhF2qYY+kBeRk1DqvJKGJ9IUbKzhKO8vbg=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=e/EhxuY1VQiw0nvJF3TLZHpji+7makHByp2jbmjKgQFuMCoTmMEnNrRyTQ+5tvoyJ2ntJ/vhpV0UjfF/IzuwusTd+fXBvy9HWEI5ig48oIkCgcPAdofyQaXWY6CP4dOx9NXbSYKhTw+iOFJDlG1isczb4t+6KTagyHRt/N0XbyE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=nhPqipja; arc=none smtp.client-ip=198.175.65.19
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=astier.eu header.i=@astier.eu header.b="4mneROW1";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="bV/Gz4v/"
-Received: from phl-compute-01.internal (phl-compute-01.phl.internal [10.202.2.41])
-	by mailfout.stl.internal (Postfix) with ESMTP id E4B9811401B2;
-	Wed,  5 Feb 2025 01:38:35 -0500 (EST)
-Received: from phl-imap-06 ([10.202.2.83])
-  by phl-compute-01.internal (MEProxy); Wed, 05 Feb 2025 01:38:36 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=astier.eu; h=cc
-	:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to; s=fm3; t=1738737515;
-	 x=1738823915; bh=oGGEoTbhUslddBF7TXm4peqQH5LwAUTJzBsVa7uU3nw=; b=
-	4mneROW1H/IX5MKJLxWnp/hOy3Z8/tSjkE+2l0Nrc2gt3h7UqM5QFVXvaAOyS3OL
-	dVfIJfjfWkO7ns4VAZGAU90nTRQBvRDXq0duN+smwXlp6cXQq8BQ0NNBcXfy5BEU
-	Q5afYbY33y3EgijMaKtraPzIb0c+vKrutrXNkttUWcrByHOqKgCcsYonHde1vvsz
-	R392rm42YVSh7hL9eujwDymu+9NWaAPinDbRktAEwN3Eq4YT1R88ehIGtCNLpUkd
-	/2U7dk97u9Cd2EXoBG4dJeEVp9e12z6oP4z2afgEHtpicX1WHZ055waCtjDPnFJl
-	vJL/tmTx7ol2H5zq4dQd5g==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=1738737515; x=
-	1738823915; bh=oGGEoTbhUslddBF7TXm4peqQH5LwAUTJzBsVa7uU3nw=; b=b
-	V/Gz4v/TUbcnXxc+EJU4ym2v8A5YD1D+9/qCRCGmXBIjg47KLqLOPqMtabl+KHz3
-	jHAlKQhMVCQl5O6lHX22SwkprRqSLYROU8FM2oSGZwl9i9tcbjtG5D5zfFiOl9+g
-	rj0d6R2a4VN8cWXZg63/Fr7FLuxvm46PGuFlC8NSUO2aO+mbx2fdC27qhsCeSX+x
-	xUdxrMNPHeBRkv+X39xt0TSXDNBnlWTEzidBsjnlU9RAzAUSAKlLa49rKvdIM2TG
-	R+wpiJWzyO3sN6qXOauwoJIdePrvKBjLAkpQwKyzTLqzQOrklmBucKS6/4EubXw8
-	1nJgFq3Ea8NLd7fxVnjsA==
-X-ME-Sender: <xms:awejZ4WKsKdO1P9-RTrDUwWk8eoGAYNvR4Tdp3ZKTwdwizs1Jw5dEA>
-    <xme:awejZ8mUMFOfYv1y6YLHKx8rY-56Ivu-wVyDkIYGULv7OelM21jOQyZ4ot8tChYtW
-    TJ4C0RjhbU8Hdmssng>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvvdejfecutefuodetggdotefrod
-    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpggftfghnshhusghstghrihgsvgdp
-    uffrtefokffrpgfnqfghnecuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivg
-    hnthhsucdlqddutddtmdenucfjughrpefoggffhffvvefkjghfufgtgfesthhqredtredt
-    jeenucfhrhhomhepfdetnhhishhsvgcutehsthhivghrfdcuoegrnhhishhsvgesrghsth
-    hivghrrdgvuheqnecuggftrfgrthhtvghrnhepkeevuddtgefhveefveejhfdvhfdtheet
-    teefvdfgvdfffeevueefudeutefhgeefnecuvehluhhsthgvrhfuihiivgeptdenucfrrg
-    hrrghmpehmrghilhhfrhhomheprghnihhsshgvsegrshhtihgvrhdrvghupdhnsggprhgt
-    phhtthhopeejpdhmohguvgepshhmthhpohhuthdprhgtphhtthhopegrshhhohhkrdhrrg
-    hjrdhlihhnuhigsehgmhgrihhlrdgtohhmpdhrtghpthhtohepjhhithhhuhdrjhhoshgv
-    phhhsehinhhtvghlrdgtohhmpdhrtghpthhtohepthhonhihrdhluhgtkhesihhnthgvlh
-    drtghomhdprhgtphhtthhopehilhhpohdrjhgrrhhvihhnvghnsehlihhnuhigrdhinhht
-    vghlrdgtohhmpdhrtghpthhtohephhguvghgohgvuggvsehrvgguhhgrthdrtghomhdprh
-    gtphhtthhopehlihhnuhigqdhkvghrnhgvlhesvhhgvghrrdhkvghrnhgvlhdrohhrghdp
-    rhgtphhtthhopehplhgrthhfohhrmhdqughrihhvvghrqdigkeeisehvghgvrhdrkhgvrh
-    hnvghlrdhorhhg
-X-ME-Proxy: <xmx:awejZ8ZHCID8xwg6zXZfxIyGHbVD1LNgzUc49RtIdgRRlcQ0kW5Quw>
-    <xmx:awejZ3XfbRdWeDMnsDFCCctbs9DEIewjG8QztEu3yC_M3TDF2UAKCw>
-    <xmx:awejZykHq2Lmth-IPFCPXcQRlXQjKfUV60ORGfGPvCDiq-Io75W6hA>
-    <xmx:awejZ8d-81P0ledixWQ38kemKHSrEhhygNcmx-C6lmnC_Fj9gA-kUQ>
-    <xmx:awejZwabmURMLsdbghyPCMuY_iYDGTq0EpnFeuKxLpL_GD-u2aOxRfuP>
-Feedback-ID: iccec46d4:Fastmail
-Received: by mailuser.phl.internal (Postfix, from userid 501)
-	id 5D48129C006F; Wed,  5 Feb 2025 01:38:35 -0500 (EST)
-X-Mailer: MessagingEngine.com Webmail Interface
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="nhPqipja"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1738738245; x=1770274245;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=55hxtyx4DMhF2qYY+kBeRk1DqvJKGJ9IUbKzhKO8vbg=;
+  b=nhPqipjarUlvAQgFPw0DZquSzEriwI7ib5RgFAzJdk267ojoBmHAK8Cy
+   tHcEyJtyYY78etwxTeKwx7b7qP2fTdNVKSjDjO+6/dO9zY2OOYH2bJset
+   8AJI1Rbg0ihZ3Aouhib5q0cbPUK4t2RBfHRh8TVGgQdmaJAexL7Z/HBJG
+   c1EgAtctSooBTjxZ6Y5Xb6Ua+vr2agnxh/k2EFmtrmWSeT8aT2vlCWQi4
+   UO+Igk8as8CqNoYLXyk772FCOBE7tZXbBOx4F8eWYL6g/SLyUkfJ5LDcM
+   yrSzfV/plUwaPp+0EbbvrRgxnwF2zL8tz/Kn7j2icxVHoSRL9nqLaZm8A
+   A==;
+X-CSE-ConnectionGUID: n1DyovVeSVm4N8O9bareYg==
+X-CSE-MsgGUID: vES0pDkRRKabU9xeLDhYaw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11336"; a="39175591"
+X-IronPort-AV: E=Sophos;i="6.13,260,1732608000"; 
+   d="scan'208";a="39175591"
+Received: from fmviesa009.fm.intel.com ([10.60.135.149])
+  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Feb 2025 22:50:44 -0800
+X-CSE-ConnectionGUID: oo32QqH1QrmHW2tYAHIDrw==
+X-CSE-MsgGUID: W8AT1xq9Tz+DU8R6MpUXgA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.13,260,1732608000"; 
+   d="scan'208";a="111400846"
+Received: from choongyo-mobl.gar.corp.intel.com (HELO [10.247.100.100]) ([10.247.100.100])
+  by fmviesa009-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Feb 2025 22:50:35 -0800
+Message-ID: <c25c2da7-18fa-46b7-b992-fb5b17a01749@linux.intel.com>
+Date: Wed, 5 Feb 2025 14:50:31 +0800
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Date: Wed, 05 Feb 2025 07:37:49 +0100
-From: "Anisse Astier" <anisse@astier.eu>
-To: "Joseph, Jithu" <jithu.joseph@intel.com>,
- =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Cc: "Hans de Goede" <hdegoede@redhat.com>,
- LKML <linux-kernel@vger.kernel.org>, platform-driver-x86@vger.kernel.org,
- tony.luck@intel.com, ashok.raj.linux@gmail.com
-Message-Id: <6b2479c7-e82a-4239-a329-10082c4e7e80@app.fastmail.com>
-In-Reply-To: <b6157185-9c9e-49f2-9e4d-03ad6e26f898@intel.com>
-References: <20250131205315.1585663-1-jithu.joseph@intel.com>
- <50ba78dc-f60d-63de-80fd-ef9b1fc68c72@linux.intel.com>
- <2ab4c849-dfc2-4427-b6df-2f2c070e7933@intel.com>
- <f33148f4-f9f2-4b7c-81df-346b750eb2dc@app.fastmail.com>
- <b6157185-9c9e-49f2-9e4d-03ad6e26f898@intel.com>
-Subject: Re: [PATCH] platform/x86/intel/ifs: Update documentation with image download
- path
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH net-next v6 1/7] net: phylink: use act_link_an_mode to
+ determine PHY
+To: "Russell King (Oracle)" <linux@armlinux.org.uk>
+Cc: Simon Horman <horms@kernel.org>, Jose Abreu <joabreu@synopsys.com>,
+ Jose Abreu <Jose.Abreu@synopsys.com>,
+ David E Box <david.e.box@linux.intel.com>,
+ Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
+ Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>,
+ "H . Peter Anvin" <hpa@zytor.com>,
+ Rajneesh Bhardwaj <irenic.rajneesh@gmail.com>,
+ David E Box <david.e.box@intel.com>, Andrew Lunn <andrew+netdev@lunn.ch>,
+ "David S . Miller" <davem@davemloft.net>, Eric Dumazet
+ <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
+ Paolo Abeni <pabeni@redhat.com>, Maxime Coquelin
+ <mcoquelin.stm32@gmail.com>, Alexandre Torgue
+ <alexandre.torgue@foss.st.com>, Jiawen Wu <jiawenwu@trustnetic.com>,
+ Mengyuan Lou <mengyuanlou@net-swift.com>,
+ Heiner Kallweit <hkallweit1@gmail.com>, Hans de Goede <hdegoede@redhat.com>,
+ =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+ Richard Cochran <richardcochran@gmail.com>,
+ Andrew Halaney <ahalaney@redhat.com>, Serge Semin <fancer.lancer@gmail.com>,
+ x86@kernel.org, linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+ platform-driver-x86@vger.kernel.org,
+ linux-stm32@st-md-mailman.stormreply.com,
+ linux-arm-kernel@lists.infradead.org
+References: <20250204061020.1199124-1-yong.liang.choong@linux.intel.com>
+ <20250204061020.1199124-2-yong.liang.choong@linux.intel.com>
+ <Z6ICO06RbJ1ulDh1@shell.armlinux.org.uk>
+Content-Language: en-US
+From: Choong Yong Liang <yong.liang.choong@linux.intel.com>
+In-Reply-To: <Z6ICO06RbJ1ulDh1@shell.armlinux.org.uk>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
 
 
-Mer 05 f=C3=A9vr 2025, =C3=A0 07:31, Joseph, Jithu a =C3=A9crit=E2=80=AF:
-> On 2/4/2025 9:50 PM, Anisse Astier wrote:
->>=20
->> Thanks for the update, and the Reported-by tag.
->>=20
->> Does this patch mean you got confirmation that the scan tests firmwar=
-e images will stay restricted to Intel customers with an NDA?
->
-> On the contrary, Intel is making the images publicly available.=20
-> A new section has been added towards the end of the page[1], allowing=20
-> anyone to download the images without requiring an NDA.
+On 4/2/2025 8:04 pm, Russell King (Oracle) wrote:
+> On Tue, Feb 04, 2025 at 02:10:14PM +0800, Choong Yong Liang wrote:
+>> When the interface mode is SGMII and act_link_an_mode is MLO_AN_INBAND,
+>> switching to the 2500BASE-X interface mode will trigger
+>> phylink_major_config, and act_link_an_mode will be updated to MLO_AN_PHY
+>> in phylink_pcs_neg_mode when the PCS does not support in-band mode.
+>> The MAC and PCS will configure according to the interface mode
+>> and act_link_an_mode.
+> 
+> act_link_an_mode must only ever be updated by phylink_major_config()
+> since it defines state for the currently configured mode, and must
+> stay in sync with how the hardware has been programmed at all times.
+> 
+>> However, when the interface goes link down and then link up again, the MAC
+>> will attempt to attach the PHY.
+> 
+> Why is the MAC trying to disconnect and reconnect the PHY on link
+> changes? Do you really mean "link down" and "link up" as in "connection
+> with the link partner" or do you mean administratively taking the
+> interface down and up (which is a completely different thing.)
+> 
 
-Wow, that's great news!
-(I had read the page a bit too quickly, sorry!)
+The "link down" and "link up" I mention in this part refer to using the 
+command:
+ifconfig <interface> down/up
 
-I see the download link for EMR, does it mean SRF and GNR are upcoming? =
-What about SPR?
+>> The interface mode remains as 2500BASE-X,
+>> but cfg_link_an_mode still holds MLO_AN_INBAND. This causes a failure to
+>> attach the PHY.
+> 
+> Hmm.
+> 
+> pl->link_interface is the configured setting from firmware etc and doesn't
+> change.
+> 
+> pl->cfg_link_an_mode is the configured mode from firmware etc which was
+> passed to phylink_create(), and again doesn't change.
+> 
+> So there should be no difference unless something weird is going on,
+> which as you're talking about stmmac, could be the case.
+> 
 
-Kind regards,
+Thank you for pointing that out.
 
-Anisse=20
+I think I was confused between pl->link_interface and
+pl->link_config.interface. The function phylink_attach_phy() uses
+pl->link_interface, whereas phylink_expects_phy() uses
+pl->link_config.interface.
+
+When the interface switches from SGMII to 2500BASE-X,
+pl->link_config.interface is updated by phylink_major_config().
+So, when the STMMAC link goes down and comes up again,
+it is blocked by phylink_expects_phy().
+At this point, pl->cfg_link_an_mode is MLO_AN_INBAND and 
+pl->link_config.interface is 2500BASE-X.
+
+Since phylink_expects_phy() is trying to achieve the same checking 
+condition as phylink_attach_phy(), it should use pl->link_interface for the 
+check as well.
+
+Does that make sense to you?
+
+> More information needed, but as this patch currently stands, I deem it
+> to be incorrect, sorry.
+> 
+
