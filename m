@@ -1,201 +1,137 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
+Received: from fhigh-b1-smtp.messagingengine.com (fhigh-b1-smtp.messagingengine.com [202.12.124.152])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 10615DF59;
-	Wed,  5 Feb 2025 00:16:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DB4AC21D597;
+	Wed,  5 Feb 2025 05:50:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.152
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738714571; cv=none; b=qNHOfsOQ82uEohUlUcwXL9/hrvejtmXhmZUVCX3BGCMQ8eJN7p3vslenxBBrwfCI1pZBYDOtbpnFj8g5W3eTW+R6+IhTCi+eMDITbD4FcFwkiwu3LzCg1+JgB6YsqE+bhTdH+LxoLb07j/5TzKiRdUjMOMgHalCBI9DqZ5d8578=
+	t=1738734652; cv=none; b=QqWtPLMmmR7qVtb6uV45ptGIqyvynW7wxLnAswbjzAzqy6zWMntXmsRhiSO9RCQ2/ho7h9gWp9zkIUTTLzyaNc8CvFibkrvCoFL6VbqfacF5hB0MWWujcnfU11Z0cwshL16XGx5X20hFupUJ+OVfyW/d3Bf70g/NDGN5qyctGNM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738714571; c=relaxed/simple;
-	bh=unlo8h2nlxc0mJ7Rfna53U2JX5Ru3ysrO2+jaPbnyvU=;
-	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=pGHIuI+ugKtTiUkpl8L/IEcQysZpWimirALvgVZ7kBEVSr0kO5BKKEbVRooIVTL9Jie2X6Bh9WQqgDOA2DgGxmSoORSXf6ZpJA0aVk5akR0fr56Wo+F1ItgCb76vBC4W8No6wIZoa5e+NS8ehj11Nr8HRqWlz6lJp1dCCVEkipw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=MLfk+/pp; arc=none smtp.client-ip=198.175.65.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1738734652; c=relaxed/simple;
+	bh=cLr4iYqJiMgxPThR0EwaYSmoWZxZS/Cfa4/3x+SuUeE=;
+	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
+	 Subject:Content-Type; b=AugSpIPW8CAM6zVbPPjs1kU7ts3kjlDo/3uoQDQISCDEM+BJiFF4UpmLALhVOxLBA471t8la16+XeNQ4Vr6E8dPFNvuE4fB2SEcmEd597iqyhsaixUZOfy0VDPq8nyvjYy0bHjAGn+XXOWcUl6RWEGSycBFnXHCLu66JZcR0ltQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=astier.eu; spf=pass smtp.mailfrom=astier.eu; dkim=pass (2048-bit key) header.d=astier.eu header.i=@astier.eu header.b=G0ZNG59O; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=FFiB5MXy; arc=none smtp.client-ip=202.12.124.152
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=astier.eu
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=astier.eu
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="MLfk+/pp"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1738714571; x=1770250571;
-  h=from:to:subject:date:message-id:in-reply-to:references:
-   mime-version:content-transfer-encoding;
-  bh=unlo8h2nlxc0mJ7Rfna53U2JX5Ru3ysrO2+jaPbnyvU=;
-  b=MLfk+/ppL9u6Ibalyq5XjwTndAfhrf4zZkd1vB3tQDEE0OWxV+1L/G2x
-   3HOszgAAYLjaeeRlkKvW8iKoNb8FeZ0c15QSaf4WgSkbl+LTGJAw71lHU
-   ENeK8A/83cTib4j/PruHyiqFxHtqeDO3VR1TtGZrNPcUOqy0kd4uadcXg
-   pmSZ6Cp9xRJQS9ELXoJdY7dXQAqDXAb46+iI1LiGeLYnA4pMr5Pjil5Ix
-   g7tDSBKVuDCMohQHA9XhFpiv9E+PeJYw/41H4gep4537X4xXehcpHmmxc
-   sSwYAdXavD09XIihhkNJlum8msMnko7jWpTmDuag8X3jHA19ZjeSRXkDL
-   g==;
-X-CSE-ConnectionGUID: JpHPRruETTqA1k19kXuOIg==
-X-CSE-MsgGUID: hE1Rh9KrS1WeN9r63/pfdQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11314"; a="39372373"
-X-IronPort-AV: E=Sophos;i="6.12,310,1728975600"; 
-   d="scan'208";a="39372373"
-Received: from fmviesa007.fm.intel.com ([10.60.135.147])
-  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Feb 2025 16:16:08 -0800
-X-CSE-ConnectionGUID: ulk86YJaSKmLNo1OuhVWtg==
-X-CSE-MsgGUID: m+gl23C5SN6MyrZjanhKRA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.13,260,1732608000"; 
-   d="scan'208";a="110635700"
-Received: from tfalcon-desk.amr.corp.intel.com (HELO xpardee-desk.lan) ([10.124.223.214])
-  by fmviesa007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Feb 2025 16:16:07 -0800
-From: Xi Pardee <xi.pardee@linux.intel.com>
-To: xi.pardee@linux.intel.com,
-	rajvi0912@gmail.com,
-	irenic.rajneesh@gmail.com,
-	david.e.box@linux.intel.com,
-	hdegoede@redhat.com,
-	ilpo.jarvinen@linux.intel.com,
-	platform-driver-x86@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-pm@vger.kernel.org
-Subject: [PATCH v5 5/5] platform/x86/intel/pmc: Add Arrow Lake U/H support to intel_pmc_core driver
-Date: Tue,  4 Feb 2025 16:15:57 -0800
-Message-ID: <20250205001601.689782-6-xi.pardee@linux.intel.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20250205001601.689782-1-xi.pardee@linux.intel.com>
-References: <20250205001601.689782-1-xi.pardee@linux.intel.com>
+	dkim=pass (2048-bit key) header.d=astier.eu header.i=@astier.eu header.b="G0ZNG59O";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="FFiB5MXy"
+Received: from phl-compute-01.internal (phl-compute-01.phl.internal [10.202.2.41])
+	by mailfhigh.stl.internal (Postfix) with ESMTP id B643E25401B0;
+	Wed,  5 Feb 2025 00:50:48 -0500 (EST)
+Received: from phl-imap-06 ([10.202.2.83])
+  by phl-compute-01.internal (MEProxy); Wed, 05 Feb 2025 00:50:48 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=astier.eu; h=cc
+	:cc:content-transfer-encoding:content-type:content-type:date
+	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to; s=fm3; t=1738734648;
+	 x=1738821048; bh=mgLlWBpsfhLoLswmkshRBzxurIXhuTKDbsJTVWV9ivk=; b=
+	G0ZNG59OQBkaT7tpkK+T353ZFVNDfCmx/dD4ZedIRuEL0XHB+w2ha0n/mP6XnRK8
+	SakNAY9Qi1UpaNTPkFWu/L/9EsGijEjrG8klvsXoNdGudKPP7RtU4SzO5aJ1qMIs
+	Y3JE4GqWTScXuN8zk0gSSrKuuripnL9nK8kN4iN6rWpvvMLXO4RX4qUnimAsrqYn
+	+xwG3i0r7xSPWER0DtRHwYghmUbwuuOSA8izEpc5v75fYoSGPHNdhYmN7o+ZeEYm
+	cVeNGHkHr8JpeFA4U1nR/D/lovUhLgb5lLxo7xwyNl00qDUWsgfQww9oZEFpf+qf
+	4QKH2PEeWzyflfhD5enh0w==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:content-type:date:date:feedback-id:feedback-id
+	:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to:x-me-proxy
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=1738734648; x=
+	1738821048; bh=mgLlWBpsfhLoLswmkshRBzxurIXhuTKDbsJTVWV9ivk=; b=F
+	FiB5MXyeEkFP6dprUEV0yw6z2Y6c0oJqg80U7Mnsh1iClffSGxrnwioWIFYC1VyS
+	sMx93UBWCgRoSEgnQVII9lItA4xD+AIctRiIPwlHJlX27o4oQh6Al08WL9Nrn6og
+	8lszqWIOg6HvG2TL/wBjCZTdFd7sTZO9HBhgPbYr37B0bCBvQSMBpPmsEygKO6IM
+	wbDsIos85KH4RpjlmJFPI5NgSdArfzGU2tTWDt1o+pHx6A4VXYsNdeKrQZt74WOq
+	mrSHlLCpbvetR0LMb3V0ay5fikgkbYx2F+k6lTUD8rLXi9LtaEeJgnRMxUndfI3u
+	sfY9dJyPn5wXzrEix64SA==
+X-ME-Sender: <xms:OPyiZ32v5t3opbQvxvbF4q_E2tnPA4YSQkZ--lCQB-kR7clIwufvhA>
+    <xme:OPyiZ2EiFTJNMmssXu5CuJKj3TLkgjttzne0VTq0ILeQHJ4hOrBMf-4W_7Mo3cNsL
+    huPnnyVPiw2p0thaUw>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvvdeigecutefuodetggdotefrod
+    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpggftfghnshhusghstghrihgsvgdp
+    uffrtefokffrpgfnqfghnecuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivg
+    hnthhsucdlqddutddtmdenucfjughrpefoggffhffvvefkjghfufgtgfesthhqredtredt
+    jeenucfhrhhomhepfdetnhhishhsvgcutehsthhivghrfdcuoegrnhhishhsvgesrghsth
+    hivghrrdgvuheqnecuggftrfgrthhtvghrnhepkeevuddtgefhveefveejhfdvhfdtheet
+    teefvdfgvdfffeevueefudeutefhgeefnecuvehluhhsthgvrhfuihiivgeptdenucfrrg
+    hrrghmpehmrghilhhfrhhomheprghnihhsshgvsegrshhtihgvrhdrvghupdhnsggprhgt
+    phhtthhopeejpdhmohguvgepshhmthhpohhuthdprhgtphhtthhopegrshhhohhkrdhrrg
+    hjrdhlihhnuhigsehgmhgrihhlrdgtohhmpdhrtghpthhtohepjhhithhhuhdrjhhoshgv
+    phhhsehinhhtvghlrdgtohhmpdhrtghpthhtohepthhonhihrdhluhgtkhesihhnthgvlh
+    drtghomhdprhgtphhtthhopehilhhpohdrjhgrrhhvihhnvghnsehlihhnuhigrdhinhht
+    vghlrdgtohhmpdhrtghpthhtohephhguvghgohgvuggvsehrvgguhhgrthdrtghomhdprh
+    gtphhtthhopehlihhnuhigqdhkvghrnhgvlhesvhhgvghrrdhkvghrnhgvlhdrohhrghdp
+    rhgtphhtthhopehplhgrthhfohhrmhdqughrihhvvghrqdigkeeisehvghgvrhdrkhgvrh
+    hnvghlrdhorhhg
+X-ME-Proxy: <xmx:OPyiZ34hrxY8YFU-_-4er241uzm2oj7z0chXKpZQY-967VQz90R_3A>
+    <xmx:OPyiZ83is2momIjGzdHXK9vhA0T7942bfAU8KeLPJC0Gk8iHWfFcBg>
+    <xmx:OPyiZ6GDm7aNWQc6dNy04DyBFUfRZ_v4-nHCzBsIiQ9l3APtWkoJKA>
+    <xmx:OPyiZ99NzO9EUYJI0wwJdBeR2fqajx-yxYrJEvSdQECe2ZSqJco_Kw>
+    <xmx:OPyiZ_7tAjVDsv-gTIkOQqjtD6I7CLNqDp6mwI6gRYqTbSoAUnvkTBWl>
+Feedback-ID: iccec46d4:Fastmail
+Received: by mailuser.phl.internal (Postfix, from userid 501)
+	id 453F729C006F; Wed,  5 Feb 2025 00:50:48 -0500 (EST)
+X-Mailer: MessagingEngine.com Webmail Interface
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Date: Wed, 05 Feb 2025 06:50:28 +0100
+From: "Anisse Astier" <anisse@astier.eu>
+To: "Joseph, Jithu" <jithu.joseph@intel.com>,
+ =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Cc: "Hans de Goede" <hdegoede@redhat.com>,
+ LKML <linux-kernel@vger.kernel.org>, platform-driver-x86@vger.kernel.org,
+ tony.luck@intel.com, ashok.raj.linux@gmail.com
+Message-Id: <f33148f4-f9f2-4b7c-81df-346b750eb2dc@app.fastmail.com>
+In-Reply-To: <2ab4c849-dfc2-4427-b6df-2f2c070e7933@intel.com>
+References: <20250131205315.1585663-1-jithu.joseph@intel.com>
+ <50ba78dc-f60d-63de-80fd-ef9b1fc68c72@linux.intel.com>
+ <2ab4c849-dfc2-4427-b6df-2f2c070e7933@intel.com>
+Subject: Re: [PATCH] platform/x86/intel/ifs: Update documentation with image download
+ path
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-Add Arrow Lake U and Arrow Lake H support in intel_pmc_core driver.
+Hi Jithu,
 
-Signed-off-by: Rajvi Jingar <rajvi.jingar@linux.intel.com>
-Signed-off-by: Xi Pardee <xi.pardee@linux.intel.com>
----
- drivers/platform/x86/intel/pmc/arl.c  | 37 +++++++++++++++++++++++++++
- drivers/platform/x86/intel/pmc/core.c |  2 ++
- drivers/platform/x86/intel/pmc/core.h |  2 ++
- 3 files changed, 41 insertions(+)
+Mar 04 f=C3=A9vr 2025, =C3=A0 22:10, Joseph, Jithu a =C3=A9crit=E2=80=AF:
+> On 2/4/2025 12:07 AM, Ilpo J=C3=A4rvinen wrote:
+>> On Fri, 31 Jan 2025, Jithu Joseph wrote:
+>>=20
+>>> The documentation previously listed the path to download In Field Sc=
+an
+>>> (IFS) test images as "TBD".
+>>>
+>>> Update the documentation to include the correct image download locat=
+ion.
+>>> Also move the download link to the appropriate section within the do=
+c.
+>>>
+>>> Signed-off-by: Jithu Joseph <jithu.joseph@intel.com>
+>>=20
+>> I've applied this patch into the fixes branch with Anisse added as
+>> Reported-by.
+>
+> Thank you, Anisse,  for reporting this, and apologies for missing the=20
+> Reported-by tag.
+>
+> Thanks Ilpo for taking the patch and Tony for your inputs on how to go=20
+> about this.
+>
+>>=20
+>> Thanks Anisse for raising this issue and Jithu for getting the gears=20
+>> moving to provide an useful resolution.
 
-diff --git a/drivers/platform/x86/intel/pmc/arl.c b/drivers/platform/x86/intel/pmc/arl.c
-index 2e604f934f068..f62763865207b 100644
---- a/drivers/platform/x86/intel/pmc/arl.c
-+++ b/drivers/platform/x86/intel/pmc/arl.c
-@@ -16,6 +16,7 @@
- #define IOEP_LPM_REQ_GUID	0x5077612
- #define SOCS_LPM_REQ_GUID	0x8478657
- #define PCHS_LPM_REQ_GUID	0x9684572
-+#define SOCM_LPM_REQ_GUID	0x2625030
- 
- static const u8 ARL_LPM_REG_INDEX[] = {0, 4, 5, 6, 8, 9, 10, 11, 12, 13, 14, 15, 16, 20};
- 
-@@ -650,6 +651,7 @@ const struct pmc_reg_map arl_pchs_reg_map = {
- 	.etr3_offset = ETR3_OFFSET,
- };
- 
-+#define PMC_DEVID_SOCM 0x777f
- #define PMC_DEVID_SOCS 0xae7f
- #define PMC_DEVID_IOEP 0x7ecf
- #define PMC_DEVID_PCHS 0x7f27
-@@ -669,11 +671,17 @@ static struct pmc_info arl_pmc_info_list[] = {
- 		.devid	= PMC_DEVID_PCHS,
- 		.map	= &arl_pchs_reg_map,
- 	},
-+	{
-+		.guid	= SOCM_LPM_REQ_GUID,
-+		.devid	= PMC_DEVID_SOCM,
-+		.map	= &mtl_socm_reg_map,
-+	},
- 	{}
- };
- 
- #define ARL_NPU_PCI_DEV			0xad1d
- #define ARL_GNA_PCI_DEV			0xae4c
-+#define ARL_H_GNA_PCI_DEV		0x774c
- /*
-  * Set power state of select devices that do not have drivers to D3
-  * so that they do not block Package C entry.
-@@ -684,6 +692,12 @@ static void arl_d3_fixup(void)
- 	pmc_core_set_device_d3(ARL_GNA_PCI_DEV);
- }
- 
-+static void arl_h_d3_fixup(void)
-+{
-+	pmc_core_set_device_d3(ARL_NPU_PCI_DEV);
-+	pmc_core_set_device_d3(ARL_H_GNA_PCI_DEV);
-+}
-+
- static int arl_resume(struct pmc_dev *pmcdev)
- {
- 	arl_d3_fixup();
-@@ -691,6 +705,13 @@ static int arl_resume(struct pmc_dev *pmcdev)
- 	return cnl_resume(pmcdev);
- }
- 
-+static int arl_h_resume(struct pmc_dev *pmcdev)
-+{
-+	arl_h_d3_fixup();
-+
-+	return cnl_resume(pmcdev);
-+}
-+
- struct pmc_dev_info arl_pmc_dev = {
- 	.pci_func = 0,
- 	.dmu_guid = ARL_PMT_DMU_GUID,
-@@ -701,8 +722,24 @@ struct pmc_dev_info arl_pmc_dev = {
- 	.init = arl_core_init,
- };
- 
-+struct pmc_dev_info arl_h_pmc_dev = {
-+	.pci_func = 2,
-+	.dmu_guid = ARL_PMT_DMU_GUID,
-+	.regmap_list = arl_pmc_info_list,
-+	.map = &mtl_socm_reg_map,
-+	.suspend = cnl_suspend,
-+	.resume = arl_h_resume,
-+	.init = arl_h_core_init,
-+};
-+
- int arl_core_init(struct pmc_dev *pmcdev, struct pmc_dev_info *pmc_dev_info)
- {
- 	arl_d3_fixup();
- 	return generic_core_init(pmcdev, pmc_dev_info);
- }
-+
-+int arl_h_core_init(struct pmc_dev *pmcdev, struct pmc_dev_info *pmc_dev_info)
-+{
-+	arl_h_d3_fixup();
-+	return generic_core_init(pmcdev, pmc_dev_info);
-+}
-diff --git a/drivers/platform/x86/intel/pmc/core.c b/drivers/platform/x86/intel/pmc/core.c
-index 628cb22221fbc..d819478fea29a 100644
---- a/drivers/platform/x86/intel/pmc/core.c
-+++ b/drivers/platform/x86/intel/pmc/core.c
-@@ -1410,6 +1410,8 @@ static const struct x86_cpu_id intel_pmc_core_ids[] = {
- 	X86_MATCH_VFM(INTEL_RAPTORLAKE_S,	&adl_pmc_dev),
- 	X86_MATCH_VFM(INTEL_METEORLAKE_L,	&mtl_pmc_dev),
- 	X86_MATCH_VFM(INTEL_ARROWLAKE,		&arl_pmc_dev),
-+	X86_MATCH_VFM(INTEL_ARROWLAKE_H,	&arl_h_pmc_dev),
-+	X86_MATCH_VFM(INTEL_ARROWLAKE_U,	&arl_h_pmc_dev),
- 	X86_MATCH_VFM(INTEL_LUNARLAKE_M,	&lnl_pmc_dev),
- 	{}
- };
-diff --git a/drivers/platform/x86/intel/pmc/core.h b/drivers/platform/x86/intel/pmc/core.h
-index 94039930422b3..0f0ee97ee00a8 100644
---- a/drivers/platform/x86/intel/pmc/core.h
-+++ b/drivers/platform/x86/intel/pmc/core.h
-@@ -624,9 +624,11 @@ extern struct pmc_dev_info tgl_pmc_dev;
- extern struct pmc_dev_info adl_pmc_dev;
- extern struct pmc_dev_info mtl_pmc_dev;
- extern struct pmc_dev_info arl_pmc_dev;
-+extern struct pmc_dev_info arl_h_pmc_dev;
- extern struct pmc_dev_info lnl_pmc_dev;
- 
- int arl_core_init(struct pmc_dev *pmcdev, struct pmc_dev_info *pmc_dev_info);
-+int arl_h_core_init(struct pmc_dev *pmcdev, struct pmc_dev_info *pmc_dev_info);
- int mtl_core_init(struct pmc_dev *pmcdev, struct pmc_dev_info *pmc_dev_info);
- int lnl_core_init(struct pmc_dev *pmcdev, struct pmc_dev_info *pmc_dev_info);
- int tgl_core_init(struct pmc_dev *pmcdev, struct pmc_dev_info *pmc_dev_info);
--- 
-2.43.0
+Thanks for the update, and the Reported-by tag.
 
+Does this patch mean you got confirmation that the scan tests firmware i=
+mages will stay restricted to Intel customers with an NDA?
+
+Regards,
+
+Anisse
