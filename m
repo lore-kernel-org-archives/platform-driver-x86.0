@@ -1,254 +1,203 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f52.google.com (mail-pj1-f52.google.com [209.85.216.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3766D235361;
-	Thu,  6 Feb 2025 16:46:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8642919F41C;
+	Thu,  6 Feb 2025 18:57:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738860409; cv=none; b=g2IfAwgT5nklH0LjKhGgWDU3CCF8+i6DF0b+oGcAWRuqz5L4P/asLpKguMrNWH8bSir3AC29VilaLN781VIRq4PSXKRFHAFUZsljWWNyZPXv7+XjPm2oMKasZlREJ4jnoQtdg+YL4B3ypwF1dnIw+b76+4AbdkkgxIUf7j2boTQ=
+	t=1738868235; cv=none; b=M2Nvg8fA1JKfxH1YjgOwFHnRZwzrJd0puFwXII6VQmu9UxA+Jlaxny7cxH9/q/HFDXakNsSgwyUqyGxbIvyb+TvyhrO6AZS2PgmBXM0RkwIMU4ZHst4fKyJp1QuJBFc5glrW0i444Q6nbacFC6NFP4TAV4PCGP7zD/gEMgDDf1A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738860409; c=relaxed/simple;
-	bh=ATMIiU+Ci2luWIZJIX8XTUarrtJN3EZMmLUtcy7ySfw=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=FXdrdXk9fs1r2kOWxXRR338EfRPw1vEbaaQt3fYyHMiSuMDELI0MQDBSoAYczcUViYXr4lUmHGkhF8BC23qhYhHN1UehZeNtIcwGEgaxYaclTjgN0qKaSWISy4laFSJyn0qAPD/IDcbAyqIrhcyVYSHDF/9/B4CVRmtiUWE6iWI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=eFCLfZYo; arc=none smtp.client-ip=198.175.65.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1738868235; c=relaxed/simple;
+	bh=ICTHLkNI8uenWV7g6R/GrB177W+ZTQCmPi0pt+LPgqM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ha2k0iaksi4cOYfG37mc9t2jRYzise5hX/FUT0yCG75kWo/+Qg+0sV6LJ5ka6LZ6mwAho6ZvYRV46RKGtNJE0qYaL22ChX4sBLAamU0XFgLi8tkhc7a8/CbQECW7WCqbhYIAJVrlRCeivqYXnEdXZ6SwDFnurgrFaJjK/PHIYrM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=bjiEPYyE; arc=none smtp.client-ip=209.85.216.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="eFCLfZYo"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1738860408; x=1770396408;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=ATMIiU+Ci2luWIZJIX8XTUarrtJN3EZMmLUtcy7ySfw=;
-  b=eFCLfZYoIUcYaZuCR/V6K1S3EZ0ysEkQRW+iLJmdHJFMj1UHpU+Di0qv
-   Z1okRRUaacmqXr05rCvcRFOduoXjJScyDfpN8QbFGrGvK7z+CC3F1oSBu
-   xG3i1gmA0TTym71FUK+GJEY7ILyrD7r+RlF9hr+0ogUs5m+y8LI42+s9k
-   A8r5dySER3GKTKdFouwps7tjAkETcyILKAdbKDpwloOyoqf8XoJlECr8S
-   nThwwrEIT8U6bcQrfrOF7WOp1bZG32CXFSMxEsUtfSfAj2KWnjGITx+Q2
-   7zcHgk+YYo4keyn0yopqre83MpQLTbyPHXT0N7OR8uEEsPK3XDHKR+QOk
-   Q==;
-X-CSE-ConnectionGUID: OrrKYed7SciGuQ2XLa3xog==
-X-CSE-MsgGUID: qmLzls3zThy3NKxOGowl8g==
-X-IronPort-AV: E=McAfee;i="6700,10204,11336"; a="39346505"
-X-IronPort-AV: E=Sophos;i="6.13,264,1732608000"; 
-   d="scan'208";a="39346505"
-Received: from fmviesa007.fm.intel.com ([10.60.135.147])
-  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Feb 2025 08:46:26 -0800
-X-CSE-ConnectionGUID: QIWgW/mPR46JvsO+fjSr2w==
-X-CSE-MsgGUID: vTDDBNblR1GMyl+aqdgkDQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.13,264,1732608000"; 
-   d="scan'208";a="111176227"
-Received: from mgoodin-mobl2.amr.corp.intel.com (HELO [10.125.110.238]) ([10.125.110.238])
-  by fmviesa007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Feb 2025 08:46:23 -0800
-Message-ID: <063bd012-d377-4d3d-9dcc-57e360d8f462@intel.com>
-Date: Thu, 6 Feb 2025 08:46:24 -0800
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bjiEPYyE"
+Received: by mail-pj1-f52.google.com with SMTP id 98e67ed59e1d1-2f43d17b0e3so2254374a91.0;
+        Thu, 06 Feb 2025 10:57:13 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1738868233; x=1739473033; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:sender
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=82K+z0ceVWUKcAwS9weEhngLkfHESnW14b0aAwDilfQ=;
+        b=bjiEPYyEMLCc+gsEMQarbo5pLU0sxZyVqE5TrhkgYiDoy+GqaUYgYU3LAPxLIrhzaD
+         j57+UyDfK+MgoaDsKjKZB5OjS5uGLkqQ4moZSsabIfJ2KiPW4XDUc/lNTAfy3bt3Qa9W
+         EK8HIGTGzjwcBXwbFtZ9Z+yY2CKyu8DjEGzrIyYd6EWRiPShDOZOf+ZHY0B3wTlX4nmv
+         MU2NoaRTYv+pHI5FJ1qBYKOF3Wt3Tt2SgQ2R+WpwBo8Ul0HErXEaZcg/fkuvwhJ/FaoX
+         AdSjOvGsTrbsr3OgLpO22uyds9wWUP9scWey7lj41D+ZCJar9R/2qdx/YZdfuRxg2X4X
+         1Sgg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738868233; x=1739473033;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:sender
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=82K+z0ceVWUKcAwS9weEhngLkfHESnW14b0aAwDilfQ=;
+        b=wwTj47tHNdfnHenWqII3CqDTdQZ+hKEnNz3S3tHGHJh1BKCxWoKm9fhB1iHlNs2LmY
+         8qySihRK3JRgxptDMd0FBMPMhdwcWyjVgg4Ub3jEr7GBrjvQp4eHghuPpCgvkGK4j56s
+         ur57LuyyUinm+0LSXueKIR70T0Dv/8fLDPZ1uCPADuS0sHRWTKq0GZ9wtNMHWgxM+H7G
+         D6yXLaMj0gziSdagqCHpvErlVv8SywKxp8RRLaor0z4FwjHwIaogUwG7+TSvCYj7MlHm
+         hBy+0pot6i65joZXWTpqX/7hskjMBTF4q1zIb9dXwy8+h3eMcbKdTlw3tAE/HBfYAtJE
+         9a3g==
+X-Forwarded-Encrypted: i=1; AJvYcCVR7IvB2HblHyQrmLUrBeixe6l+w0FzTKHbhUBB7SafsmXIcb5ElYdr7zFI2KzQaz7bzz1j8d/eSoJjlIZq@vger.kernel.org, AJvYcCVT12fusF2bz5u9kkWzTtuF4Elcdbs/sIl3GTy9aVtcBWUabM7i/djYZNFe6bjowzC6oRDlLhSnvimRkQ==@vger.kernel.org, AJvYcCX8n6jtjVaPweiaJqgakx8/IWHAH4KX/na5MtGlzVJCI3dpWvNkCPZAaTUjzV2uUJc6MVVZdNDjrKOyCRMJe0RfaQHXhg==@vger.kernel.org, AJvYcCXdiOe7IJjJbyhZ5ZFtUu1tqpw4A+Nz6TYOSPMnR6RNIrOB+cHwVSeaafYPqd9yqS6M0ugyAEukeoOd@vger.kernel.org
+X-Gm-Message-State: AOJu0YzFRIqD67Kb/V2MQolmy/g4ZBdEdLJ8qStRMJ5czMZvMWjWm/aK
+	UP0mGI41mP936cWoJB9Uc/F+BgZNKCUPoPin+jB6kXVmlw7AwKWdW2okYA==
+X-Gm-Gg: ASbGncuISp5mERCNTs+EBubsYhNs1GDKc9zJjFxLIyg1Nz2t9ni5IWp+vMbXoMdLK7P
+	9kKJjnziwUC9FUhIeS1LG8sMi8zsxn1AGZAay93uL731R2qtaIGBVVU6jvkZ46g3R1VtoYRoOer
+	np5noXY6I8Y+gjkw2TUQQYu6nynbnurDxONLGdiZ5kgTMrYV7LXOKTBGiXv7ZAGVlrz4y96xS44
+	4WymSUzKJygFpeZB92d4WD/gsdTJ9xrcSXs7BfmhtqvgHUlgGRyaqM3GBpptFIUY3r1LwJ4Wq8o
+	iIZKvbo33dmAl9WqWYXqduoQ+Gnw
+X-Google-Smtp-Source: AGHT+IFN/hC89p8LJjykf6EKYdtkVx3YVsEozRNXXkCoj639HLrRZRD4vGCcVwU8AJEe7FeaJHu4tQ==
+X-Received: by 2002:a17:90b:3ec9:b0:2ee:9b2c:3253 with SMTP id 98e67ed59e1d1-2fa243fc606mr199914a91.30.1738868232501;
+        Thu, 06 Feb 2025 10:57:12 -0800 (PST)
+Received: from server.roeck-us.net ([2600:1700:e321:62f0:da43:aeff:fecc:bfd5])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-21f3687c8f7sm16353975ad.178.2025.02.06.10.57.11
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 06 Feb 2025 10:57:11 -0800 (PST)
+Sender: Guenter Roeck <groeck7@gmail.com>
+Date: Thu, 6 Feb 2025 10:57:10 -0800
+From: Guenter Roeck <linux@roeck-us.net>
+To: Werner Sembach <wse@tuxedocomputers.com>
+Cc: hdegoede@redhat.com, ilpo.jarvinen@linux.intel.com, ukleinek@kernel.org,
+	jdelvare@suse.com, linux-kernel@vger.kernel.org,
+	platform-driver-x86@vger.kernel.org, linux-pwm@vger.kernel.org,
+	linux-hwmon@vger.kernel.org
+Subject: Re: [RFC PATCH 1/1] platform/x86/tuxedo: Implement TUXEDO TUXI ACPI
+ TFAN via hwmon
+Message-ID: <8f0a9bd6-52dd-442f-b0fd-73cf7028d9f0@roeck-us.net>
+References: <20250205162109.222619-1-wse@tuxedocomputers.com>
+ <20250205162109.222619-2-wse@tuxedocomputers.com>
+ <767538f2-d79e-44e4-a671-4be56a3cfe44@roeck-us.net>
+ <fce7929b-87e7-4c9a-8a54-ab678c5dc6b4@tuxedocomputers.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH net-next v7 3/7] arch: x86: add IPC mailbox accessor
- function and add SoC register access
-To: Choong Yong Liang <yong.liang.choong@linux.intel.com>,
- Simon Horman <horms@kernel.org>, Jose Abreu <joabreu@synopsys.com>,
- Jose Abreu <Jose.Abreu@synopsys.com>,
- David E Box <david.e.box@linux.intel.com>,
- Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
- Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>,
- "H . Peter Anvin" <hpa@zytor.com>,
- Rajneesh Bhardwaj <irenic.rajneesh@gmail.com>,
- David E Box <david.e.box@intel.com>, Andrew Lunn <andrew+netdev@lunn.ch>,
- "David S . Miller" <davem@davemloft.net>, Eric Dumazet
- <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
- Paolo Abeni <pabeni@redhat.com>, Maxime Coquelin
- <mcoquelin.stm32@gmail.com>, Alexandre Torgue
- <alexandre.torgue@foss.st.com>, Jiawen Wu <jiawenwu@trustnetic.com>,
- Mengyuan Lou <mengyuanlou@net-swift.com>,
- Heiner Kallweit <hkallweit1@gmail.com>, Russell King
- <linux@armlinux.org.uk>, Hans de Goede <hdegoede@redhat.com>,
- =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
- Richard Cochran <richardcochran@gmail.com>,
- Serge Semin <fancer.lancer@gmail.com>
-Cc: x86@kernel.org, linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
- platform-driver-x86@vger.kernel.org,
- linux-stm32@st-md-mailman.stormreply.com,
- linux-arm-kernel@lists.infradead.org
-References: <20250206131859.2960543-1-yong.liang.choong@linux.intel.com>
- <20250206131859.2960543-4-yong.liang.choong@linux.intel.com>
-From: Dave Hansen <dave.hansen@intel.com>
-Content-Language: en-US
-Autocrypt: addr=dave.hansen@intel.com; keydata=
- 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
-In-Reply-To: <20250206131859.2960543-4-yong.liang.choong@linux.intel.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <fce7929b-87e7-4c9a-8a54-ab678c5dc6b4@tuxedocomputers.com>
 
-On 2/6/25 05:18, Choong Yong Liang wrote:
+On Thu, Feb 06, 2025 at 10:28:01AM +0100, Werner Sembach wrote:
+
+[ ... ]
+
+> > > +        temp = retval * 100 - 272000;
+> > > +
+> > > +        for (j = 0; temp_levels[j].temp; ++j) {
+> > > +            temp_low = j == 0 ? -272000 : temp_levels[j-1].temp;
+> > > +            temp_high = temp_levels[j].temp;
+> > > +            if (driver_data->temp_level[i] > j)
+> > > +                temp_high -= 2000; // hysteresis
+> > > +
+> > > +            if (temp >= temp_low && temp < temp_high)
+> > > +                driver_data->temp_level[i] = j;
+> > > +        }
+> > > +        if (temp >= temp_high)
+> > > +            driver_data->temp_level[i] = j;
+> > > +
+> > > +        temp_level = driver_data->temp_level[i];
+> > > +        min_speed = temp_level == 0 ?
+> > > +            0 : temp_levels[temp_level-1].min_speed;
+> > > +        curr_speed = driver_data->curr_speed[i];
+> > > +        want_speed = driver_data->want_speed[i];
+> > > +
+> > > +        if (want_speed < min_speed) {
+> > > +            if (curr_speed < min_speed)
+> > > +                write_speed(dev, i, min_speed);
+> > > +        } else if (curr_speed != want_speed)
+> > > +            write_speed(dev, i, want_speed);
+> > > +    }
+> > > +
+> > > +    schedule_delayed_work(&driver_data->work, TUXI_SAFEGUARD_PERIOD);
+> > > +}
+> > 
+> > This is not expected functionality of a hardware monitoring driver.
+> > Hardware monmitoring drivers should not replicate userspace or
+> > thermal subsystem functionality.
+> > 
+> > This would be unacceptable in drivers/hwmon/.
 > 
-> - Exports intel_pmc_ipc() for host access to the PMC IPC mailbox
-> - Add support to use IPC command allows host to access SoC registers 
-> through PMC firmware that are otherwise inaccessible to the host due
-> to security policies.
+> Problem is: The thermal subsystem doesn't do this either as far as I can tell.
+> 
+> See this: https://lore.kernel.org/all/453e0df5-416b-476e-9629-c40534ecfb72@tuxedocomputers.com/
+> and this: https://lore.kernel.org/all/41483e2b-361b-4b84-88a7-24fc1eaae745@tuxedocomputers.com/
+> thread.
+> 
+> The short version is: The Thermal subsystem always allows userspace to
+> select the "userspace" governor which has no way for the kernel to enforce a
+> minimum speed.
+> 
+You can specify thermal parameters / limits using devicetree. Also, drivers
+can always enforce value ranges.
 
-I'm not quite parsing that second bullet as a complete sentence.
+> As far as I can tell the Thermal subsystem would require a new governor for
+> the behavior i want to archive and more importantly, a way to restrict which
+> governors userspace can select.
+> 
+> As to why I don't want grant userspace full control: The firmware is
+> perfectly fine with accepting potentially mainboard frying settings (as
+> mentioned in the cover letter) and the lowest level I can write code for is
+> the kernel driver. So that's the location I need to prevent this.
+> 
 
-But that sounds scary! Why is the fact that they are "otherwise
-inaccessible" relevant here?
+It is ok for the kernel to accept and enforce _limits_ (such as lower and upper
+ranges for temperatures) when they are written. That is not what the code here
+does.
 
-...
-> diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
-> index 87198d957e2f..631c1f10776c 100644
-> --- a/arch/x86/Kconfig
-> +++ b/arch/x86/Kconfig
-> @@ -688,6 +688,15 @@ config X86_AMD_PLATFORM_DEVICE
->  	  I2C and UART depend on COMMON_CLK to set clock. GPIO driver is
->  	  implemented under PINCTRL subsystem.
->  
-> +config INTEL_PMC_IPC
-> +	tristate "Intel Core SoC Power Management Controller IPC mailbox"
-> +	depends on ACPI
-> +	help
-> +	  This option enables sideband register access support for Intel SoC
-> +	  power management controller IPC mailbox.
-> +
-> +	  If you don't require the option or are in doubt, say N.
+> Also hwmon is not purely a hardware monitoring, it also allows writing
+> fanspeeds. Or did I miss something and this shouldn't actually be used?
+> 
 
-Could we perhaps beef this up a bit to help users figure out if they
-want to turn this on? Really the only word in the entire help text
-that's useful is "Intel".
+If doesn't actively control fan speeds, though. It just tells the firmware what
+the limits or target values are.
 
-I'm not even sure we *want* to expose this to users. Can we just leave
-it as:
+> > 
+> > Personally I think this is way too complicated. It would make much more sense
+> > to assume a reasonable maximum (say, 16) and use fixed size arrays to access
+> > the data. The is_visible function can then simply return 0 for larger channel
+> > values if the total number of fans is less than the ones configured in the
+> > channel information.
+> Didn't know it was possible to filter extra entries out completely with the
+> is_visible function, thanks for the tip.
+> > 
+> > Also, as already mentioned, there is no range check of fan_count. This will
+> > cause some oddities if the system ever claims to have 256+ fans.
+> Will not happen, but i guess a singular additional if in the init doesn't
+> hurt, i can add it.
 
-	config INTEL_PMC_IPC
-		def_tristate n
-		depends on ACPI
+You are making the assumption that the firmware always provides correct
+values.
 
-so that it only gets enabled by the "select" in the other patches?
+I fully agree that repeated range checks for in-kernel API functions are
+useless. However, values should still be checked when a value enters
+the kernel, either via userspace or via hardware, even more so if that value
+is used to determine, like here, the amount of memory allocated. Or, worse,
+if the value is reported as 32-bit value and written into an 8-byte variable.
 
-> + * Authors: Choong Yong Liang <yong.liang.choong@linux.intel.com>
-> + *          David E. Box <david.e.box@linux.intel.com>
+> > 
+> > > +    *hwmdev = devm_hwmon_device_register_with_info(&pdev->dev,
+> > > +                               "tuxedo_nbxx_acpi_tuxi",
+> > > +                               driver_data, &hwminfo,
+> > > +                               NULL);
+> > > +    if (PTR_ERR_OR_ZERO(*hwmdev))
+> > > +        return PTR_ERR_OR_ZERO(*hwmdev);
+> > > +
+> > Why not just return hwmdev ?
+> because if hwmon is NULL it is still an error, i have to look again at what
+> actually is returned by PTR_ERR_OR_ZERO on zero.
 
-I'd probably just leave the authors bit out. It might have been useful
-in the 90's, but that's what git is for today.
+That seems a bit philosophical. The caller would have to check for
+PTR_ERR_OR_ZERO() instead of checking for < 0.
 
-> +	obj = buffer.pointer;
-> +	/* Check if the number of elements in package is 5 */
-> +	if (obj && obj->type == ACPI_TYPE_PACKAGE && obj->package.count == 5) {
-> +		const union acpi_object *objs = obj->package.elements;
-> +
+On a side note, the code now returns 0 if devm_hwmon_device_register_with_info()
+returned NULL.  devm_hwmon_device_register_with_info() never returns NULL,
+so that doesn't make a difference in practice, but, still, this should
+at least use PTR_ERR().
 
-The comment there is just not super useful. It might be useful to say
-*why* the number of elements needs to be 5.
-
-> +EXPORT_SYMBOL(intel_pmc_ipc);
-> +
-> +MODULE_LICENSE("GPL");
-> +MODULE_DESCRIPTION("Intel PMC IPC Mailbox accessor");
-
-Honestly, is this even worth being a module? How much code are we
-talking about here?
-
-> diff --git a/include/linux/platform_data/x86/intel_pmc_ipc.h b/include/linux/platform_data/x86/intel_pmc_ipc.h
-> new file mode 100644
-> index 000000000000..d47b89f873fc
-> --- /dev/null
-> +++ b/include/linux/platform_data/x86/intel_pmc_ipc.h
-> @@ -0,0 +1,34 @@
-> +/* SPDX-License-Identifier: GPL-2.0 */
-> +/*
-> + * Intel Core SoC Power Management Controller Header File
-> + *
-> + * Copyright (c) 2023, Intel Corporation.
-> + * All Rights Reserved.
-...
-
-This copyright is a _bit_ funky. It's worth at least saying in the cover
-letter that this patch has been sitting untouched for over a year, thus
-the old copyright.
-
-Or, if you've done actual work with it, I'd assume the copyright needs
-to get updated.
-
-> +struct pmc_ipc_cmd {
-> +	u32 cmd;
-> +	u32 sub_cmd;
-> +	u32 size;
-> +	u32 wbuf[4];
-> +};
-> +
-> +/**
-> + * intel_pmc_ipc() - PMC IPC Mailbox accessor
-> + * @ipc_cmd:  struct pmc_ipc_cmd prepared with input to send
-
-You probably don't need to restate the literal type of ipc_cmd.
-
-> + * @rbuf:     Allocated u32[4] array for returned IPC data
-
-The "Allocated" thing here threw me a bit. Does this mean it *must* be
-"allocated" as in it comes from kmalloc()? Or can it be on the stack? Or
-part of a static variable?
-
-> + * Return: 0 on success. Non-zero on mailbox error
-> + */
-> +int intel_pmc_ipc(struct pmc_ipc_cmd *ipc_cmd, u32 *rbuf);
-
-Also, if it can *only* be u32[4], then the best way to declare it is:
-
-struct pmc_ipc_rbuf {
-	u32 buf[4];
-};
-
-and:
-
-int intel_pmc_ipc(struct pmc_ipc_cmd *ipc_cmd,
-		  struct pmc_ipc_rbuf rbuf *rbuf);
-
-Then you don't need a comment saying that it must be a u32[4]. It's
-implied in the structure.
+Guenter
