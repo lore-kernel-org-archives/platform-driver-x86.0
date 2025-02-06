@@ -1,95 +1,189 @@
-Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail.tuxedocomputers.com (mail.tuxedocomputers.com [157.90.84.7])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F0B2237713;
-	Thu,  6 Feb 2025 22:49:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D38242417C2;
+	Thu,  6 Feb 2025 22:55:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=157.90.84.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738882148; cv=none; b=nvuUPrTB2yjaAcbH7C+BIbOTNBtX+DesF6WyTULyQyYU5qLUC/6nA6QOjqAMQZV9KEwfwk8dSddYIWQehN/9knajOIbjBkDqMVGEZlk8AGiL4gvnH0nEfdfiyQRyfMWLocDq3CFPLNe1N2D3g04sBqqoeP9dBZx7tfEvIh6ezJI=
+	t=1738882513; cv=none; b=lq3cfNg/X3ZDI/W2jipPHRn0J3pEAPHZ8a7ICARFOqLL+yy9KH2SQRISzBIKcFLtMx/TXugAMdvPuOAJW3K8N5BLU1JeRLuUK4eHKHIjMHUJhPUaZKXzy3N5z6G24L3KAUZFNVa2wqJGkZNsgsSKYdRxfWNXgS22s7LLMNvLaFY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738882148; c=relaxed/simple;
-	bh=QnQFc5ZW75ig736Zq4+Ro2NikvR2vGrF6BVl9X/+chs=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=kWqmFl095VlHJFUL7wxYtjkRKWs+2jjGAdGMvq/WsuVux+L2N7OUyxsi533eKctKSf57ReCZYfk3BHNS7fw7iwNtUcB3ema9zJpOHIv2X1rWZwF2Fqv5fjY0WPv2PP2g37DCFRLYyZWxLE7jt+M5igyRXDUE2yLPc+bDsVsMrfI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=juRHjv2n; arc=none smtp.client-ip=156.67.10.101
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
+	s=arc-20240116; t=1738882513; c=relaxed/simple;
+	bh=YYdN1Kt1DwBE5SingtFdRP/lncfdN0zEaD8UX3Cqml0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=mVazMv1szAu1SAAAReJGpMm3LC5/xDlnZDqTmQkW3Pf4aPaDdeI8xiQ7qkMuA0rh4rkzL9YewTcz75/FbX7U2Z9uQOkB3tOkDprhnj0BJlQ+yXkRqbDL6Z8Xk7TAdLyo2blUYswwYALAM5qHV+0NwWJDQYHIHBUYdQv3nGQ4dfM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=tuxedocomputers.com; spf=pass smtp.mailfrom=tuxedocomputers.com; dkim=pass (1024-bit key) header.d=tuxedocomputers.com header.i=@tuxedocomputers.com header.b=KjwVdq0g; arc=none smtp.client-ip=157.90.84.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=tuxedocomputers.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tuxedocomputers.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="juRHjv2n"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
-	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
-	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
-	bh=XOSx2sfWIkI9mBDKykXkoY9x3FYft266g8j9/dZB04w=; b=juRHjv2n+fKYuD6WHRHIhhjvlh
-	Vtjwc9Xzmg7ts41hb/43PvfAfwxPd9MLLH/y29BoqJABpBBgu22W//cuSVwMjd2uxaAP2r23YSybs
-	v/04cy12RHHAmaMg3Q9oLy6gSYR1UdA3DKKT5UbSKLYry/46OQfOKlvTLQEujH8VaXTA=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
-	(envelope-from <andrew@lunn.ch>)
-	id 1tgAfS-00Bemr-0z; Thu, 06 Feb 2025 23:48:18 +0100
-Date: Thu, 6 Feb 2025 23:48:18 +0100
-From: Andrew Lunn <andrew@lunn.ch>
-To: Dave Hansen <dave.hansen@intel.com>
-Cc: Choong Yong Liang <yong.liang.choong@linux.intel.com>,
-	Simon Horman <horms@kernel.org>, Jose Abreu <joabreu@synopsys.com>,
-	Jose Abreu <Jose.Abreu@synopsys.com>,
-	David E Box <david.e.box@linux.intel.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	"H . Peter Anvin" <hpa@zytor.com>,
-	Rajneesh Bhardwaj <irenic.rajneesh@gmail.com>,
-	David E Box <david.e.box@intel.com>,
-	Andrew Lunn <andrew+netdev@lunn.ch>,
-	"David S . Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-	Alexandre Torgue <alexandre.torgue@foss.st.com>,
-	Jiawen Wu <jiawenwu@trustnetic.com>,
-	Mengyuan Lou <mengyuanlou@net-swift.com>,
-	Heiner Kallweit <hkallweit1@gmail.com>,
-	Russell King <linux@armlinux.org.uk>,
-	Hans de Goede <hdegoede@redhat.com>,
-	Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	Richard Cochran <richardcochran@gmail.com>,
-	Serge Semin <fancer.lancer@gmail.com>, x86@kernel.org,
-	linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-	platform-driver-x86@vger.kernel.org,
-	linux-stm32@st-md-mailman.stormreply.com,
-	linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH net-next v7 3/7] arch: x86: add IPC mailbox accessor
- function and add SoC register access
-Message-ID: <9f6f009d-a2c0-4a6c-b9df-4045f767f8ab@lunn.ch>
-References: <20250206131859.2960543-1-yong.liang.choong@linux.intel.com>
- <20250206131859.2960543-4-yong.liang.choong@linux.intel.com>
- <063bd012-d377-4d3d-9dcc-57e360d8f462@intel.com>
+	dkim=pass (1024-bit key) header.d=tuxedocomputers.com header.i=@tuxedocomputers.com header.b="KjwVdq0g"
+Received: from [192.168.42.27] (pd9e59260.dip0.t-ipconnect.de [217.229.146.96])
+	(Authenticated sender: wse@tuxedocomputers.com)
+	by mail.tuxedocomputers.com (Postfix) with ESMTPSA id 6917C2FC0175;
+	Thu,  6 Feb 2025 23:55:01 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=tuxedocomputers.com;
+	s=default; t=1738882501;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=othQGzWmL0Q7Z0rMwroilwPIHL1b9SoaEjv46hzMfMc=;
+	b=KjwVdq0goTA1ITUjxDm6ydkwvUQTnEnJtsdg33IId/TeIjzcJTKYCpPq2Dde216qwyaF8C
+	/gCvh6S6sQodeaiVSFREvvjoES2lg20BdIH0Ldwm3aBUkV8/kFGJAry77K2BKlLJ+MnEYS
+	dT1hV3gODuphevqAebTsQOUWdAiCAlQ=
+Authentication-Results: mail.tuxedocomputers.com;
+	auth=pass smtp.auth=wse@tuxedocomputers.com smtp.mailfrom=wse@tuxedocomputers.com
+Message-ID: <b32284b7-ddc8-4fb5-82f8-20199b0dec5a@tuxedocomputers.com>
+Date: Thu, 6 Feb 2025 23:55:01 +0100
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <063bd012-d377-4d3d-9dcc-57e360d8f462@intel.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFC PATCH 1/1] platform/x86/tuxedo: Implement TUXEDO TUXI ACPI
+ TFAN via hwmon
+To: Guenter Roeck <linux@roeck-us.net>
+Cc: hdegoede@redhat.com, ilpo.jarvinen@linux.intel.com, ukleinek@kernel.org,
+ jdelvare@suse.com, linux-kernel@vger.kernel.org,
+ platform-driver-x86@vger.kernel.org, linux-pwm@vger.kernel.org,
+ linux-hwmon@vger.kernel.org
+References: <20250205162109.222619-1-wse@tuxedocomputers.com>
+ <20250205162109.222619-2-wse@tuxedocomputers.com>
+ <767538f2-d79e-44e4-a671-4be56a3cfe44@roeck-us.net>
+ <fce7929b-87e7-4c9a-8a54-ab678c5dc6b4@tuxedocomputers.com>
+ <8f0a9bd6-52dd-442f-b0fd-73cf7028d9f0@roeck-us.net>
+Content-Language: en-US
+From: Werner Sembach <wse@tuxedocomputers.com>
+In-Reply-To: <8f0a9bd6-52dd-442f-b0fd-73cf7028d9f0@roeck-us.net>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On Thu, Feb 06, 2025 at 08:46:24AM -0800, Dave Hansen wrote:
-> On 2/6/25 05:18, Choong Yong Liang wrote:
-> > 
-> > - Exports intel_pmc_ipc() for host access to the PMC IPC mailbox
-> > - Add support to use IPC command allows host to access SoC registers 
-> > through PMC firmware that are otherwise inaccessible to the host due
-> > to security policies.
-> 
-> I'm not quite parsing that second bullet as a complete sentence.
-> 
-> But that sounds scary! Why is the fact that they are "otherwise
-> inaccessible" relevant here?
 
-And i wounder what other interesting things can be accessed in this
-indirect manor, which the security policy would not otherwise allow.
+Am 06.02.25 um 19:57 schrieb Guenter Roeck:
+> On Thu, Feb 06, 2025 at 10:28:01AM +0100, Werner Sembach wrote:
+>
+> [ ... ]
+>
+>>>> +        temp = retval * 100 - 272000;
+>>>> +
+>>>> +        for (j = 0; temp_levels[j].temp; ++j) {
+>>>> +            temp_low = j == 0 ? -272000 : temp_levels[j-1].temp;
+>>>> +            temp_high = temp_levels[j].temp;
+>>>> +            if (driver_data->temp_level[i] > j)
+>>>> +                temp_high -= 2000; // hysteresis
+>>>> +
+>>>> +            if (temp >= temp_low && temp < temp_high)
+>>>> +                driver_data->temp_level[i] = j;
+>>>> +        }
+>>>> +        if (temp >= temp_high)
+>>>> +            driver_data->temp_level[i] = j;
+>>>> +
+>>>> +        temp_level = driver_data->temp_level[i];
+>>>> +        min_speed = temp_level == 0 ?
+>>>> +            0 : temp_levels[temp_level-1].min_speed;
+>>>> +        curr_speed = driver_data->curr_speed[i];
+>>>> +        want_speed = driver_data->want_speed[i];
+>>>> +
+>>>> +        if (want_speed < min_speed) {
+>>>> +            if (curr_speed < min_speed)
+>>>> +                write_speed(dev, i, min_speed);
+>>>> +        } else if (curr_speed != want_speed)
+>>>> +            write_speed(dev, i, want_speed);
+>>>> +    }
+>>>> +
+>>>> +    schedule_delayed_work(&driver_data->work, TUXI_SAFEGUARD_PERIOD);
+>>>> +}
+>>> This is not expected functionality of a hardware monitoring driver.
+>>> Hardware monmitoring drivers should not replicate userspace or
+>>> thermal subsystem functionality.
+>>>
+>>> This would be unacceptable in drivers/hwmon/.
+>> Problem is: The thermal subsystem doesn't do this either as far as I can tell.
+>>
+>> See this: https://lore.kernel.org/all/453e0df5-416b-476e-9629-c40534ecfb72@tuxedocomputers.com/
+>> and this: https://lore.kernel.org/all/41483e2b-361b-4b84-88a7-24fc1eaae745@tuxedocomputers.com/
+>> thread.
+>>
+>> The short version is: The Thermal subsystem always allows userspace to
+>> select the "userspace" governor which has no way for the kernel to enforce a
+>> minimum speed.
+>>
+> You can specify thermal parameters / limits using devicetree. Also, drivers
+> can always enforce value ranges.
 
-Somebody is going to have fun here. Or is already have fun here.
+Sorry for my noob question: What do you mean with devicetree in x86 context?
 
-	 Andrew
+I only want to enforce a value range at a certain temperature, if the 
+device is cool, the fan can be turned off for example.
+
+>
+>> As far as I can tell the Thermal subsystem would require a new governor for
+>> the behavior i want to archive and more importantly, a way to restrict which
+>> governors userspace can select.
+>>
+>> As to why I don't want grant userspace full control: The firmware is
+>> perfectly fine with accepting potentially mainboard frying settings (as
+>> mentioned in the cover letter) and the lowest level I can write code for is
+>> the kernel driver. So that's the location I need to prevent this.
+>>
+> It is ok for the kernel to accept and enforce _limits_ (such as lower and upper
+> ranges for temperatures) when they are written. That is not what the code here
+> does.
+
+It conditionally enforces a minimum fanspeed.
+
+So is the problem that hwmon drivers are only allowed to enforce 
+unconditional limits?
+
+>
+>> Also hwmon is not purely a hardware monitoring, it also allows writing
+>> fanspeeds. Or did I miss something and this shouldn't actually be used?
+>>
+> If doesn't actively control fan speeds, though. It just tells the firmware what
+> the limits or target values are.
+What is the difference if it tells the firmware a target fanspeed, which 
+can be ignored by it, or a driver a target fanspeed, which can be 
+ignored by it?
+>
+>>> Personally I think this is way too complicated. It would make much more sense
+>>> to assume a reasonable maximum (say, 16) and use fixed size arrays to access
+>>> the data. The is_visible function can then simply return 0 for larger channel
+>>> values if the total number of fans is less than the ones configured in the
+>>> channel information.
+>> Didn't know it was possible to filter extra entries out completely with the
+>> is_visible function, thanks for the tip.
+>>> Also, as already mentioned, there is no range check of fan_count. This will
+>>> cause some oddities if the system ever claims to have 256+ fans.
+>> Will not happen, but i guess a singular additional if in the init doesn't
+>> hurt, i can add it.
+> You are making the assumption that the firmware always provides correct
+> values.
+>
+> I fully agree that repeated range checks for in-kernel API functions are
+> useless. However, values should still be checked when a value enters
+> the kernel, either via userspace or via hardware, even more so if that value
+> is used to determine, like here, the amount of memory allocated. Or, worse,
+> if the value is reported as 32-bit value and written into an 8-byte variable.
+ok
+>
+>>>> +    *hwmdev = devm_hwmon_device_register_with_info(&pdev->dev,
+>>>> +                               "tuxedo_nbxx_acpi_tuxi",
+>>>> +                               driver_data, &hwminfo,
+>>>> +                               NULL);
+>>>> +    if (PTR_ERR_OR_ZERO(*hwmdev))
+>>>> +        return PTR_ERR_OR_ZERO(*hwmdev);
+>>>> +
+>>> Why not just return hwmdev ?
+>> because if hwmon is NULL it is still an error, i have to look again at what
+>> actually is returned by PTR_ERR_OR_ZERO on zero.
+> That seems a bit philosophical. The caller would have to check for
+> PTR_ERR_OR_ZERO() instead of checking for < 0.
+>
+> On a side note, the code now returns 0 if devm_hwmon_device_register_with_info()
+> returned NULL.  devm_hwmon_device_register_with_info() never returns NULL,
+> so that doesn't make a difference in practice, but, still, this should
+> at least use PTR_ERR().
+ok
+>
+> Guenter
