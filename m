@@ -1,39 +1,50 @@
-Received: from mail.tuxedocomputers.com (mail.tuxedocomputers.com [157.90.84.7])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B5964148FED;
-	Thu,  6 Feb 2025 16:18:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=157.90.84.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3766D235361;
+	Thu,  6 Feb 2025 16:46:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738858689; cv=none; b=Aubo6P/a0IE+BcfOAr0Ktr8HR+IR1k7/izrq46r48GxIftY+SMIJ8qKgEZaR4WHcxGwCOx0MryYPa2grEDnxZYAh0VerWjAO6acCDqltEx6GhelZpvDfuv8/3oSvikBod78U7fJPX76yZe8HxV75T0W0hyHPsH1WzCGQD1bTuik=
+	t=1738860409; cv=none; b=g2IfAwgT5nklH0LjKhGgWDU3CCF8+i6DF0b+oGcAWRuqz5L4P/asLpKguMrNWH8bSir3AC29VilaLN781VIRq4PSXKRFHAFUZsljWWNyZPXv7+XjPm2oMKasZlREJ4jnoQtdg+YL4B3ypwF1dnIw+b76+4AbdkkgxIUf7j2boTQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738858689; c=relaxed/simple;
-	bh=CrTRD0J2fEP8KCGRaT3yUv6KCossMoANGMgXmbM0pOE=;
+	s=arc-20240116; t=1738860409; c=relaxed/simple;
+	bh=ATMIiU+Ci2luWIZJIX8XTUarrtJN3EZMmLUtcy7ySfw=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=C5tg3G4XjZFP8D70G8ZGCCcYGP1xSZZsUb4A2qGhKsdiGwHXhtRr0sI3saekHSx65BebeRcqUtRM5UsIR2HiB6trNAtIJdnAVckZws8i/dEJNvX6MncSlDoZ0LoksjX+3GJY5mvFxgYppBQoSBWh7v0kBXmDw9i52NFuZ90Aby8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=tuxedocomputers.com; spf=pass smtp.mailfrom=tuxedocomputers.com; dkim=pass (1024-bit key) header.d=tuxedocomputers.com header.i=@tuxedocomputers.com header.b=LPmRIDn9; arc=none smtp.client-ip=157.90.84.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=tuxedocomputers.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tuxedocomputers.com
+	 In-Reply-To:Content-Type; b=FXdrdXk9fs1r2kOWxXRR338EfRPw1vEbaaQt3fYyHMiSuMDELI0MQDBSoAYczcUViYXr4lUmHGkhF8BC23qhYhHN1UehZeNtIcwGEgaxYaclTjgN0qKaSWISy4laFSJyn0qAPD/IDcbAyqIrhcyVYSHDF/9/B4CVRmtiUWE6iWI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=eFCLfZYo; arc=none smtp.client-ip=198.175.65.19
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=tuxedocomputers.com header.i=@tuxedocomputers.com header.b="LPmRIDn9"
-Received: from [192.168.42.116] (pd9e59260.dip0.t-ipconnect.de [217.229.146.96])
-	(Authenticated sender: wse@tuxedocomputers.com)
-	by mail.tuxedocomputers.com (Postfix) with ESMTPSA id 98AAA2FC004D;
-	Thu,  6 Feb 2025 17:18:02 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=tuxedocomputers.com;
-	s=default; t=1738858683;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=n6LU6zxKiKUC5NfzSCWaT/v4KeZZVvnTobPxq3yz3vM=;
-	b=LPmRIDn9W4tGg1fEFn+ROJWLxSSh+TZN9vt2CnIdSvbBRMmqhjaMuH0z/Tm54i8YWPCDuN
-	rqVshu/6BwtWCL795QIhsVpaePiRc3gEyqinXdHw5IZvVqPG0p58QhvHG/FkGUnL//9V4G
-	YdU62clPVHUamV8z8BoKV/RACAXahVA=
-Authentication-Results: mail.tuxedocomputers.com;
-	auth=pass smtp.auth=wse@tuxedocomputers.com smtp.mailfrom=wse@tuxedocomputers.com
-Message-ID: <b69e2766-2238-4913-ae2d-21d8716f2eef@tuxedocomputers.com>
-Date: Thu, 6 Feb 2025 17:18:02 +0100
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="eFCLfZYo"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1738860408; x=1770396408;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=ATMIiU+Ci2luWIZJIX8XTUarrtJN3EZMmLUtcy7ySfw=;
+  b=eFCLfZYoIUcYaZuCR/V6K1S3EZ0ysEkQRW+iLJmdHJFMj1UHpU+Di0qv
+   Z1okRRUaacmqXr05rCvcRFOduoXjJScyDfpN8QbFGrGvK7z+CC3F1oSBu
+   xG3i1gmA0TTym71FUK+GJEY7ILyrD7r+RlF9hr+0ogUs5m+y8LI42+s9k
+   A8r5dySER3GKTKdFouwps7tjAkETcyILKAdbKDpwloOyoqf8XoJlECr8S
+   nThwwrEIT8U6bcQrfrOF7WOp1bZG32CXFSMxEsUtfSfAj2KWnjGITx+Q2
+   7zcHgk+YYo4keyn0yopqre83MpQLTbyPHXT0N7OR8uEEsPK3XDHKR+QOk
+   Q==;
+X-CSE-ConnectionGUID: OrrKYed7SciGuQ2XLa3xog==
+X-CSE-MsgGUID: qmLzls3zThy3NKxOGowl8g==
+X-IronPort-AV: E=McAfee;i="6700,10204,11336"; a="39346505"
+X-IronPort-AV: E=Sophos;i="6.13,264,1732608000"; 
+   d="scan'208";a="39346505"
+Received: from fmviesa007.fm.intel.com ([10.60.135.147])
+  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Feb 2025 08:46:26 -0800
+X-CSE-ConnectionGUID: QIWgW/mPR46JvsO+fjSr2w==
+X-CSE-MsgGUID: vTDDBNblR1GMyl+aqdgkDQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.13,264,1732608000"; 
+   d="scan'208";a="111176227"
+Received: from mgoodin-mobl2.amr.corp.intel.com (HELO [10.125.110.238]) ([10.125.110.238])
+  by fmviesa007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Feb 2025 08:46:23 -0800
+Message-ID: <063bd012-d377-4d3d-9dcc-57e360d8f462@intel.com>
+Date: Thu, 6 Feb 2025 08:46:24 -0800
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -41,89 +52,203 @@ List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v5 0/1] platform/x86/tuxedo: Add virtual LampArray for
- TUXEDO NB04 devices
-To: Pavel Machek <pavel@ucw.cz>, Armin Wolf <W_Armin@gmx.de>
-Cc: hdegoede@redhat.com, ilpo.jarvinen@linux.intel.com, bentiss@kernel.org,
- dri-devel@lists.freedesktop.org, jelle@vdwaa.nl, jikos@kernel.org,
- lee@kernel.org, linux-input@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-leds@vger.kernel.org, miguel.ojeda.sandonis@gmail.com,
- ojeda@kernel.org, onitake@gmail.com, cs@tuxedo.de,
- platform-driver-x86@vger.kernel.org, bpf@vger.kernel.org
-References: <20250121225510.751444-1-wse@tuxedocomputers.com>
- <aa91e17f-0ea8-4645-a0f9-57c016e36a9e@gmx.de> <Z53f7VNIgUWWFn9l@duo.ucw.cz>
+Subject: Re: [PATCH net-next v7 3/7] arch: x86: add IPC mailbox accessor
+ function and add SoC register access
+To: Choong Yong Liang <yong.liang.choong@linux.intel.com>,
+ Simon Horman <horms@kernel.org>, Jose Abreu <joabreu@synopsys.com>,
+ Jose Abreu <Jose.Abreu@synopsys.com>,
+ David E Box <david.e.box@linux.intel.com>,
+ Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
+ Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>,
+ "H . Peter Anvin" <hpa@zytor.com>,
+ Rajneesh Bhardwaj <irenic.rajneesh@gmail.com>,
+ David E Box <david.e.box@intel.com>, Andrew Lunn <andrew+netdev@lunn.ch>,
+ "David S . Miller" <davem@davemloft.net>, Eric Dumazet
+ <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
+ Paolo Abeni <pabeni@redhat.com>, Maxime Coquelin
+ <mcoquelin.stm32@gmail.com>, Alexandre Torgue
+ <alexandre.torgue@foss.st.com>, Jiawen Wu <jiawenwu@trustnetic.com>,
+ Mengyuan Lou <mengyuanlou@net-swift.com>,
+ Heiner Kallweit <hkallweit1@gmail.com>, Russell King
+ <linux@armlinux.org.uk>, Hans de Goede <hdegoede@redhat.com>,
+ =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+ Richard Cochran <richardcochran@gmail.com>,
+ Serge Semin <fancer.lancer@gmail.com>
+Cc: x86@kernel.org, linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+ platform-driver-x86@vger.kernel.org,
+ linux-stm32@st-md-mailman.stormreply.com,
+ linux-arm-kernel@lists.infradead.org
+References: <20250206131859.2960543-1-yong.liang.choong@linux.intel.com>
+ <20250206131859.2960543-4-yong.liang.choong@linux.intel.com>
+From: Dave Hansen <dave.hansen@intel.com>
 Content-Language: en-US
-From: Werner Sembach <wse@tuxedocomputers.com>
-In-Reply-To: <Z53f7VNIgUWWFn9l@duo.ucw.cz>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Autocrypt: addr=dave.hansen@intel.com; keydata=
+ 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
+In-Reply-To: <20250206131859.2960543-4-yong.liang.choong@linux.intel.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-Hi,
+On 2/6/25 05:18, Choong Yong Liang wrote:
+> 
+> - Exports intel_pmc_ipc() for host access to the PMC IPC mailbox
+> - Add support to use IPC command allows host to access SoC registers 
+> through PMC firmware that are otherwise inaccessible to the host due
+> to security policies.
 
-Am 01.02.25 um 09:48 schrieb Pavel Machek:
-> Hi!
->
->>> I now got my feet a little wet with hid-bpf regarding something else, and
->>> with that knowledge I would leave the long arrays in the beginning in the
->>> kernel code for the time being:
->>>
->>> sirius_16_ansii_kbl_mapping and sirius_16_iso_kbl_mapping are required
->>> during initialization so they have to exist in the kernel code anyway.
->>>
->>> report_descriptor will most likly not change even for future models and
->>> afaik having report_descriptors in kernel drivers is not unheard of.
->>>
->>> So the only things that could be meaningfully moved to a hid-bpf program
->>> are the sirius_16_*_kbl_mapping_pos_* arrays. But for these is have to give
->>> out some fallback value anyway for the case where a hid-bpf file is missing
->>> or fails to load. So why not use real world values from my test device for
->>> these values?
->>>
->>> As soon as there is a future device that can use the same driver with just
->>> these pos arrays different, then I would implement that change via a bpf
->>> program instead of a change to the kernel driver.
->>>
->>> Let me know if you too think this is a sensefull approach?
->>>
->>>
->>> Another question: Would this patch need to wait for a userspace
->>> implementation of lamp array before it can get accepted?
->> It would be nice if you could test the LampArray implementation. But other than that
->> userspace can catch up later.
->>
->> Still, i am interested in the opinion of the LED maintainers
->> regarding the fake HID interface.
-> Comments from previous review were not addressed.
->
-> Most importantly, this is not a way to do kernel interface. We want
-> reasonable interface that can be documented and modified as needed. We
-> want to pass /dev/input to userspace, not raw HID. This is not ok.
+I'm not quite parsing that second bullet as a complete sentence.
 
-There are already 2 endless discussions about this:
+But that sounds scary! Why is the fact that they are "otherwise
+inaccessible" relevant here?
 
-https://lore.kernel.org/all/1fb08a74-62c7-4d0c-ba5d-648e23082dcb@tuxedocomputers.com/
+...
+> diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
+> index 87198d957e2f..631c1f10776c 100644
+> --- a/arch/x86/Kconfig
+> +++ b/arch/x86/Kconfig
+> @@ -688,6 +688,15 @@ config X86_AMD_PLATFORM_DEVICE
+>  	  I2C and UART depend on COMMON_CLK to set clock. GPIO driver is
+>  	  implemented under PINCTRL subsystem.
+>  
+> +config INTEL_PMC_IPC
+> +	tristate "Intel Core SoC Power Management Controller IPC mailbox"
+> +	depends on ACPI
+> +	help
+> +	  This option enables sideband register access support for Intel SoC
+> +	  power management controller IPC mailbox.
+> +
+> +	  If you don't require the option or are in doubt, say N.
 
-https://lore.kernel.org/all/73c36418-34d6-46cf-9f10-6ca5e569274f@tuxedocomputers.com/
+Could we perhaps beef this up a bit to help users figure out if they
+want to turn this on? Really the only word in the entire help text
+that's useful is "Intel".
 
-And a shorter one before that:
+I'm not even sure we *want* to expose this to users. Can we just leave
+it as:
 
-https://lore.kernel.org/all/30cbbf20-08cf-a69b-4f58-359a9802e86f@tuxedocomputers.com/
+	config INTEL_PMC_IPC
+		def_tristate n
+		depends on ACPI
 
-The brief:
+so that it only gets enabled by the "select" in the other patches?
 
-- LampArray is a standard that will hit the Linux world anyway.
+> + * Authors: Choong Yong Liang <yong.liang.choong@linux.intel.com>
+> + *          David E. Box <david.e.box@linux.intel.com>
 
-- The alternative proposal via a led matrix does not even really fit keyboards, 
-and does not at all fit all other device types.
+I'd probably just leave the authors bit out. It might have been useful
+in the 90's, but that's what git is for today.
 
-Hans and Benjamin already agree with me that LampArray is the way to go.
+> +	obj = buffer.pointer;
+> +	/* Check if the number of elements in package is 5 */
+> +	if (obj && obj->type == ACPI_TYPE_PACKAGE && obj->package.count == 5) {
+> +		const union acpi_object *objs = obj->package.elements;
+> +
 
-So after over 2 years can I please have a final decision on how to implement this?
+The comment there is just not super useful. It might be useful to say
+*why* the number of elements needs to be 5.
 
-Regards,
+> +EXPORT_SYMBOL(intel_pmc_ipc);
+> +
+> +MODULE_LICENSE("GPL");
+> +MODULE_DESCRIPTION("Intel PMC IPC Mailbox accessor");
 
-Werner
+Honestly, is this even worth being a module? How much code are we
+talking about here?
 
->
-> Best regards,
-> 								Pavel
+> diff --git a/include/linux/platform_data/x86/intel_pmc_ipc.h b/include/linux/platform_data/x86/intel_pmc_ipc.h
+> new file mode 100644
+> index 000000000000..d47b89f873fc
+> --- /dev/null
+> +++ b/include/linux/platform_data/x86/intel_pmc_ipc.h
+> @@ -0,0 +1,34 @@
+> +/* SPDX-License-Identifier: GPL-2.0 */
+> +/*
+> + * Intel Core SoC Power Management Controller Header File
+> + *
+> + * Copyright (c) 2023, Intel Corporation.
+> + * All Rights Reserved.
+...
+
+This copyright is a _bit_ funky. It's worth at least saying in the cover
+letter that this patch has been sitting untouched for over a year, thus
+the old copyright.
+
+Or, if you've done actual work with it, I'd assume the copyright needs
+to get updated.
+
+> +struct pmc_ipc_cmd {
+> +	u32 cmd;
+> +	u32 sub_cmd;
+> +	u32 size;
+> +	u32 wbuf[4];
+> +};
+> +
+> +/**
+> + * intel_pmc_ipc() - PMC IPC Mailbox accessor
+> + * @ipc_cmd:  struct pmc_ipc_cmd prepared with input to send
+
+You probably don't need to restate the literal type of ipc_cmd.
+
+> + * @rbuf:     Allocated u32[4] array for returned IPC data
+
+The "Allocated" thing here threw me a bit. Does this mean it *must* be
+"allocated" as in it comes from kmalloc()? Or can it be on the stack? Or
+part of a static variable?
+
+> + * Return: 0 on success. Non-zero on mailbox error
+> + */
+> +int intel_pmc_ipc(struct pmc_ipc_cmd *ipc_cmd, u32 *rbuf);
+
+Also, if it can *only* be u32[4], then the best way to declare it is:
+
+struct pmc_ipc_rbuf {
+	u32 buf[4];
+};
+
+and:
+
+int intel_pmc_ipc(struct pmc_ipc_cmd *ipc_cmd,
+		  struct pmc_ipc_rbuf rbuf *rbuf);
+
+Then you don't need a comment saying that it must be a u32[4]. It's
+implied in the structure.
