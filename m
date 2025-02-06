@@ -1,316 +1,147 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
+Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [78.32.30.218])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E0BED1EA7D7;
-	Thu,  6 Feb 2025 13:31:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C3C311624F1;
+	Thu,  6 Feb 2025 15:31:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=78.32.30.218
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738848689; cv=none; b=Tlgh5C3Z9wEZLQq2dcaRl+cJt0EH/xr2oFBegaTVNn/HR1jt5NqWKyoZypqLghIDVxoSTuuq+8c32YWmiJdnqAPjB9fyW1ehQUA8f4Avno9X0eRMiNnuF4l0iu+lclMSWpmN2Y8whJL91zMpDndiqLsjzlkeTJBgzz7ZarKv/5I=
+	t=1738855893; cv=none; b=rSu0JAvOIZuZFP3vmfTTvzDJ94sXF5Rrz/DNqWkJx+lwrbvqDZ0YQb7RfBwC0HI4i5EiQgld1cpVUW/EypGqlUENUtWXAw6c4vTD5kNvdymq8dr9reeaGO//hrj8cm5CdJ3jdAR0H7DtUlNksuc6YTPkVPLl9eesKnkW+tuKn8Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738848689; c=relaxed/simple;
-	bh=UvKy4mZrPC8JYTufGCS5mcN3Cwb0i4boDW9z3KaHTf4=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=g1uzTnBWfCwAiTOkNMOBZjLTV4UGM/M1FeUig6uklk9Zr63ZK7DXkPsIjhWjXc7tVqynEHI586TmvnQt10rUcvpbWjbkw7aqlREARCt5ehV4TAH6cCKdfaIHVWcIx/fbsnhhwbyZuHPVxtnRVKiwjNJkHD5Dmlk9AL4sdn9tebY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=OLtN2An8; arc=none smtp.client-ip=198.175.65.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1738855893; c=relaxed/simple;
+	bh=U7rfiEVLIQsb2FlQZ09+zMrIO5/nfqM6NR7c4p887yY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=FUUdsufzHoU7VzVcbag+S9icZI83+mzTwhny2EonLN+Cr2kRG3kv/sHvxwLVYZb2no26z52RpzkXrLAimXmrfqEu2svWsymiBKRMMShw65b1IdlyOhwTDRUzyeSvSRNNaS/YVCaAWsjJUTltuDwUUS1jNwB0Z+TTK8bl5wR7x7A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk; spf=none smtp.mailfrom=armlinux.org.uk; dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b=wFMh7IIq; arc=none smtp.client-ip=78.32.30.218
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=armlinux.org.uk
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="OLtN2An8"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1738848688; x=1770384688;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=UvKy4mZrPC8JYTufGCS5mcN3Cwb0i4boDW9z3KaHTf4=;
-  b=OLtN2An8/w/u37IDKn3YnKk7QpgKugx+WXa5l2zGR6lopC5Yq/mkjN9S
-   s3oIP/6j2iPt3vge9uMjw/yt3t/fqoJn8Haq5NOOel6L12MYPBsyHcfNp
-   XVjQDuV2MxWWkH7GCuPLQRV9GyqOf20aD689/R4K1XWon6EPfijypGzvn
-   7cuJe8RihKlJbv/Fb5ANTswOS/lAakWly0K1fMu9AZ32QCo6f0K97lECI
-   wHl/XepX9S64WhHkxvoh8r9ZogHA8pawAzhfJyStw865svoBU17ECowIW
-   odgXeIRFujwExQ/m+tCYYBlofog4fklNx9xAWuUX2JlF9tdr2kURmlqzO
-   g==;
-X-CSE-ConnectionGUID: 7tVkhoOJQqWOVfvW7qrIYg==
-X-CSE-MsgGUID: AI9LUI2iTM2DcGOJYQv8wA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11336"; a="50438701"
-X-IronPort-AV: E=Sophos;i="6.13,264,1732608000"; 
-   d="scan'208";a="50438701"
-Received: from orviesa010.jf.intel.com ([10.64.159.150])
-  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Feb 2025 05:31:27 -0800
-X-CSE-ConnectionGUID: 6wNgtWa/SG6rDVMtMIhggA==
-X-CSE-MsgGUID: yi0yOvUlQh+wxtzF/iDp2g==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
-   d="scan'208";a="111062150"
-Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.165])
-  by orviesa010-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Feb 2025 05:31:17 -0800
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Thu, 6 Feb 2025 15:31:14 +0200 (EET)
+	dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="wFMh7IIq"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
+	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+	List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=cQ0FdpNgHOekWmP2VoCpsk8gYuzsChIxdkx5orIICcA=; b=wFMh7IIqWLcDH4ZdUBSwhGC7hT
+	KAple1XmoomeYbrKzex41iFR/7byyI62Rmox1VtsvppXUxxDoq5L0fgJf4nGLPX9/4vdsjn81cIcy
+	ySrNV3KlsBTXGKznowYajXxOw6ivDfvB8TRz26mgBQTYCmh24NqZ1evcB+M7LXHGj6vc6TS7LZwGt
+	USN46/YhkZzAd1KiVjlJbJejwwc2xJVVdJyKafyppyyK0LukdKxmTHaXua2pWNERrsvpsyAy32jsO
+	UE3XUNH74+8kogXNTDPyepANF3PN20DY4ymDPjhitqNQzodxxNaaVwWXJoWHEdlingxOKpluTEzZH
+	vAXhaGEw==;
+Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:54766)
+	by pandora.armlinux.org.uk with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.96)
+	(envelope-from <linux@armlinux.org.uk>)
+	id 1tg3py-0002c8-0a;
+	Thu, 06 Feb 2025 15:30:42 +0000
+Received: from linux by shell.armlinux.org.uk with local (Exim 4.96)
+	(envelope-from <linux@shell.armlinux.org.uk>)
+	id 1tg3pp-0003WN-2X;
+	Thu, 06 Feb 2025 15:30:33 +0000
+Date: Thu, 6 Feb 2025 15:30:33 +0000
+From: "Russell King (Oracle)" <linux@armlinux.org.uk>
 To: Choong Yong Liang <yong.liang.choong@linux.intel.com>
-cc: Simon Horman <horms@kernel.org>, Jose Abreu <joabreu@synopsys.com>, 
-    Jose Abreu <Jose.Abreu@synopsys.com>, 
-    David E Box <david.e.box@linux.intel.com>, 
-    Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, 
-    Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>, 
-    "H . Peter Anvin" <hpa@zytor.com>, 
-    Rajneesh Bhardwaj <irenic.rajneesh@gmail.com>, 
-    David E Box <david.e.box@intel.com>, Andrew Lunn <andrew+netdev@lunn.ch>, 
-    "David S . Miller" <davem@davemloft.net>, 
-    Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, 
-    Paolo Abeni <pabeni@redhat.com>, 
-    Maxime Coquelin <mcoquelin.stm32@gmail.com>, 
-    Alexandre Torgue <alexandre.torgue@foss.st.com>, 
-    Jiawen Wu <jiawenwu@trustnetic.com>, 
-    Mengyuan Lou <mengyuanlou@net-swift.com>, 
-    Heiner Kallweit <hkallweit1@gmail.com>, 
-    Russell King <linux@armlinux.org.uk>, Hans de Goede <hdegoede@redhat.com>, 
-    Richard Cochran <richardcochran@gmail.com>, 
-    Serge Semin <fancer.lancer@gmail.com>, x86@kernel.org, 
-    LKML <linux-kernel@vger.kernel.org>, Netdev <netdev@vger.kernel.org>, 
-    platform-driver-x86@vger.kernel.org, 
-    linux-stm32@st-md-mailman.stormreply.com, 
-    linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH net-next v7 4/7] stmmac: intel: configure SerDes according
- to the interface mode
-In-Reply-To: <20250206131859.2960543-5-yong.liang.choong@linux.intel.com>
-Message-ID: <c15078bf-b6f3-5b4b-82ca-668d47168ce0@linux.intel.com>
-References: <20250206131859.2960543-1-yong.liang.choong@linux.intel.com> <20250206131859.2960543-5-yong.liang.choong@linux.intel.com>
+Cc: Simon Horman <horms@kernel.org>, Jose Abreu <joabreu@synopsys.com>,
+	Jose Abreu <Jose.Abreu@synopsys.com>,
+	David E Box <david.e.box@linux.intel.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	"H . Peter Anvin" <hpa@zytor.com>,
+	Rajneesh Bhardwaj <irenic.rajneesh@gmail.com>,
+	David E Box <david.e.box@intel.com>,
+	Andrew Lunn <andrew+netdev@lunn.ch>,
+	"David S . Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+	Alexandre Torgue <alexandre.torgue@foss.st.com>,
+	Jiawen Wu <jiawenwu@trustnetic.com>,
+	Mengyuan Lou <mengyuanlou@net-swift.com>,
+	Heiner Kallweit <hkallweit1@gmail.com>,
+	Hans de Goede <hdegoede@redhat.com>,
+	Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	Richard Cochran <richardcochran@gmail.com>,
+	Serge Semin <fancer.lancer@gmail.com>, x86@kernel.org,
+	linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+	platform-driver-x86@vger.kernel.org,
+	linux-stm32@st-md-mailman.stormreply.com,
+	linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH net-next v7 2/7] net: pcs: xpcs: re-initiate clause 37
+ Auto-negotiation
+Message-ID: <Z6TVmdCZeWerAZKP@shell.armlinux.org.uk>
+References: <20250206131859.2960543-1-yong.liang.choong@linux.intel.com>
+ <20250206131859.2960543-3-yong.liang.choong@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250206131859.2960543-3-yong.liang.choong@linux.intel.com>
+Sender: Russell King (Oracle) <linux@armlinux.org.uk>
 
-On Thu, 6 Feb 2025, Choong Yong Liang wrote:
+On Thu, Feb 06, 2025 at 09:18:54PM +0800, Choong Yong Liang wrote:
+> The xpcs_switch_interface_mode function was introduced to handle
+> interface switching.
+> 
+> According to the XPCS datasheet, a soft reset is required to initiate
+> Clause 37 auto-negotiation when the XPCS switches interface modes.
 
-> Intel platform will configure the SerDes through PMC API based on the
-> provided interface mode.
-> 
-> This patch adds several new functions below:-
-> - intel_tsn_lane_is_available(): This new function reads FIA lane
->   ownership registers and common lane registers through IPC commands
->   to know which lane the mGbE port is assigned to.
-> - intel_mac_finish(): To configure the SerDes based on the assigned
->   lane and latest interface mode, it sends IPC command to the PMC through
->   PMC driver/API. The PMC acts as a proxy for R/W on behalf of the driver.
-> - intel_set_reg_access(): Set the register access to the available TSN
->   interface.
-> 
-> Signed-off-by: Choong Yong Liang <yong.liang.choong@linux.intel.com>
-> ---
->  drivers/net/ethernet/stmicro/stmmac/Kconfig   |   2 +
->  .../net/ethernet/stmicro/stmmac/dwmac-intel.c | 146 +++++++++++++++++-
->  .../net/ethernet/stmicro/stmmac/dwmac-intel.h |  29 ++++
->  include/linux/stmmac.h                        |   4 +
->  4 files changed, 179 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/net/ethernet/stmicro/stmmac/Kconfig b/drivers/net/ethernet/stmicro/stmmac/Kconfig
-> index 4cc85a36a1ab..25154b915b02 100644
-> --- a/drivers/net/ethernet/stmicro/stmmac/Kconfig
-> +++ b/drivers/net/ethernet/stmicro/stmmac/Kconfig
-> @@ -307,6 +307,8 @@ config DWMAC_INTEL
->  	default X86
->  	depends on X86 && STMMAC_ETH && PCI
->  	depends on COMMON_CLK
-> +	depends on ACPI
-> +	select INTEL_PMC_IPC
->  	help
->  	  This selects the Intel platform specific bus support for the
->  	  stmmac driver. This driver is used for Intel Quark/EHL/TGL.
-> diff --git a/drivers/net/ethernet/stmicro/stmmac/dwmac-intel.c b/drivers/net/ethernet/stmicro/stmmac/dwmac-intel.c
-> index 48acba5eb178..837fd3fbaedb 100644
-> --- a/drivers/net/ethernet/stmicro/stmmac/dwmac-intel.c
-> +++ b/drivers/net/ethernet/stmicro/stmmac/dwmac-intel.c
-> @@ -5,15 +5,30 @@
->  #include <linux/clk-provider.h>
->  #include <linux/pci.h>
->  #include <linux/dmi.h>
-> +#include <linux/platform_data/x86/intel_pmc_ipc.h>
->  #include "dwmac-intel.h"
->  #include "dwmac4.h"
->  #include "stmmac.h"
->  #include "stmmac_ptp.h"
->  
-> +struct pmc_serdes_regs {
-> +	u8 index;
-> +	u32 val;
-> +};
-> +
-> +struct pmc_serdes_reg_info {
-> +	const struct pmc_serdes_regs *regs;
-> +	u8 num_regs;
-> +};
-> +
->  struct intel_priv_data {
->  	int mdio_adhoc_addr;	/* mdio address for serdes & etc */
->  	unsigned long crossts_adj;
->  	bool is_pse;
-> +	const int *tsn_lane_regs;
-> +	int max_tsn_lane_regs;
-> +	struct pmc_serdes_reg_info pid_1g;
-> +	struct pmc_serdes_reg_info pid_2p5g;
->  };
->  
->  /* This struct is used to associate PCI Function of MAC controller on a board,
-> @@ -35,6 +50,42 @@ struct stmmac_pci_info {
->  	int (*setup)(struct pci_dev *pdev, struct plat_stmmacenet_data *plat);
->  };
->  
-> +static const struct pmc_serdes_regs pid_modphy3_1g_regs[] = {
-> +	{ PID_MODPHY3_B_MODPHY_PCR_LCPLL_DWORD0,	B_MODPHY_PCR_LCPLL_DWORD0_1G },
-> +	{ PID_MODPHY3_N_MODPHY_PCR_LCPLL_DWORD2,	N_MODPHY_PCR_LCPLL_DWORD2_1G },
-> +	{ PID_MODPHY3_N_MODPHY_PCR_LCPLL_DWORD7,	N_MODPHY_PCR_LCPLL_DWORD7_1G },
-> +	{ PID_MODPHY3_N_MODPHY_PCR_LPPLL_DWORD10,	N_MODPHY_PCR_LPPLL_DWORD10_1G },
-> +	{ PID_MODPHY3_N_MODPHY_PCR_CMN_ANA_DWORD30,	N_MODPHY_PCR_CMN_ANA_DWORD30_1G },
-> +	{}
-> +};
-> +
-> +static const struct pmc_serdes_regs pid_modphy3_2p5g_regs[] = {
-> +	{ PID_MODPHY3_B_MODPHY_PCR_LCPLL_DWORD0,	B_MODPHY_PCR_LCPLL_DWORD0_2P5G },
-> +	{ PID_MODPHY3_N_MODPHY_PCR_LCPLL_DWORD2,	N_MODPHY_PCR_LCPLL_DWORD2_2P5G },
-> +	{ PID_MODPHY3_N_MODPHY_PCR_LCPLL_DWORD7,	N_MODPHY_PCR_LCPLL_DWORD7_2P5G },
-> +	{ PID_MODPHY3_N_MODPHY_PCR_LPPLL_DWORD10,	N_MODPHY_PCR_LPPLL_DWORD10_2P5G },
-> +	{ PID_MODPHY3_N_MODPHY_PCR_CMN_ANA_DWORD30,	N_MODPHY_PCR_CMN_ANA_DWORD30_2P5G },
-> +	{}
-> +};
-> +
-> +static const struct pmc_serdes_regs pid_modphy1_1g_regs[] = {
-> +	{ PID_MODPHY1_B_MODPHY_PCR_LCPLL_DWORD0,	B_MODPHY_PCR_LCPLL_DWORD0_1G },
-> +	{ PID_MODPHY1_N_MODPHY_PCR_LCPLL_DWORD2,	N_MODPHY_PCR_LCPLL_DWORD2_1G },
-> +	{ PID_MODPHY1_N_MODPHY_PCR_LCPLL_DWORD7,	N_MODPHY_PCR_LCPLL_DWORD7_1G },
-> +	{ PID_MODPHY1_N_MODPHY_PCR_LPPLL_DWORD10,	N_MODPHY_PCR_LPPLL_DWORD10_1G },
-> +	{ PID_MODPHY1_N_MODPHY_PCR_CMN_ANA_DWORD30,	N_MODPHY_PCR_CMN_ANA_DWORD30_1G },
-> +	{}
-> +};
-> +
-> +static const struct pmc_serdes_regs pid_modphy1_2p5g_regs[] = {
-> +	{ PID_MODPHY1_B_MODPHY_PCR_LCPLL_DWORD0,	B_MODPHY_PCR_LCPLL_DWORD0_2P5G },
-> +	{ PID_MODPHY1_N_MODPHY_PCR_LCPLL_DWORD2,	N_MODPHY_PCR_LCPLL_DWORD2_2P5G },
-> +	{ PID_MODPHY1_N_MODPHY_PCR_LCPLL_DWORD7,	N_MODPHY_PCR_LCPLL_DWORD7_2P5G },
-> +	{ PID_MODPHY1_N_MODPHY_PCR_LPPLL_DWORD10,	N_MODPHY_PCR_LPPLL_DWORD10_2P5G },
-> +	{ PID_MODPHY1_N_MODPHY_PCR_CMN_ANA_DWORD30,	N_MODPHY_PCR_CMN_ANA_DWORD30_2P5G },
-> +	{}
-> +};
-> +
->  static int stmmac_pci_find_phy_addr(struct pci_dev *pdev,
->  				    const struct dmi_system_id *dmi_list)
->  {
-> @@ -93,7 +144,7 @@ static int intel_serdes_powerup(struct net_device *ndev, void *priv_data)
->  	data &= ~SERDES_RATE_MASK;
->  	data &= ~SERDES_PCLK_MASK;
->  
-> -	if (priv->plat->max_speed == 2500)
-> +	if (priv->plat->phy_interface == PHY_INTERFACE_MODE_2500BASEX)
->  		data |= SERDES_RATE_PCIE_GEN2 << SERDES_RATE_PCIE_SHIFT |
->  			SERDES_PCLK_37p5MHZ << SERDES_PCLK_SHIFT;
->  	else
-> @@ -415,6 +466,95 @@ static void intel_mgbe_pse_crossts_adj(struct intel_priv_data *intel_priv,
->  	}
->  }
->  
-> +static int intel_tsn_lane_is_available(struct net_device *ndev,
-> +				       struct intel_priv_data *intel_priv)
+Hmm. Given that description, taking it literally, claus 37
+auto-negotiation is 1000BASE-X, not Cisco SGMII (which isn't an IEEE
+802.3 standard.) Are you absolutely sure that this applies to Cisco
+SGMII?
+
+If the reset is required when switching to SGMII, should it be done
+before or after configuring the XPCS for SGMII?
+
+Also, if the reset is required, what happens if we're already using
+SGMII, but AN has been disabled temporarily and is then re-enabled?
+Is a reset required?
+
+What about 1000BASE-X when AN is enabled or disabled and then switching
+to SGMII?
+
+> +static int xpcs_switch_to_aneg_c37_sgmii(const struct dw_xpcs_compat *compat,
+> +					 struct dw_xpcs *xpcs,
+> +					 unsigned int neg_mode)
 > +{
-> +	struct stmmac_priv *priv = netdev_priv(ndev);
-> +	struct pmc_ipc_cmd tmp = {};
-> +	u32 rbuf[4] = {};
-> +	int ret = 0, i, j;
-> +	const int max_fia_regs = 5;
+> +	bool an_c37_enabled;
+> +	int ret, mdio_ctrl;
 > +
-> +	tmp.cmd = IPC_SOC_REGISTER_ACCESS;
-> +	tmp.sub_cmd = IPC_SOC_SUB_CMD_READ;
+> +	if (neg_mode == PHYLINK_PCS_NEG_INBAND_ENABLED) {
+> +		mdio_ctrl = xpcs_read(xpcs, MDIO_MMD_VEND2, MII_BMCR);
+> +		if (mdio_ctrl < 0)
+> +			return mdio_ctrl;
 > +
-> +	for (i = 0; i < max_fia_regs; i++) {
+> +		an_c37_enabled = mdio_ctrl & BMCR_ANENABLE;
+> +		if (!an_c37_enabled) {
 
-Usually, defines are used for true consts.
+I don't think that we need "an_c37_enabled" here, I think simply:
 
-> +		tmp.wbuf[0] = R_PCH_FIA_15_PCR_LOS1_REG_BASE + i;
-> +
-> +		ret = intel_pmc_ipc(&tmp, rbuf);
-> +		if (ret < 0) {
-> +			netdev_info(priv->dev, "Failed to read from PMC.\n");
-> +			return ret;
-> +		}
-> +
-> +		for (j = 0; j <= intel_priv->max_tsn_lane_regs; j++)
-> +			if ((rbuf[0] >>
-> +				(4 * (intel_priv->tsn_lane_regs[j] % 8)) &
-> +					B_PCH_FIA_PCR_L0O) == 0xB)
+		if (!(mdio_ctrl & BMCR_ANENABLE)) {
+
+would be sufficient.
+
+> +			//Perform soft reset to initiate C37 auto-negotiation
+> +			ret = xpcs_soft_reset(xpcs, compat);
+> +			if (ret)
 > +				return ret;
+> +		}
 > +	}
-> +
-> +	return ret;
-> +}
-> +
-> +static int intel_set_reg_access(const struct pmc_serdes_regs *regs, int max_regs)
-> +{
-> +	int ret = 0, i;
-> +
-> +	for (i = 0; i < max_regs; i++) {
-> +		struct pmc_ipc_cmd tmp = {};
-> +		u32 buf[4] = {};
-> +
-> +		tmp.cmd = IPC_SOC_REGISTER_ACCESS;
-> +		tmp.sub_cmd = IPC_SOC_SUB_CMD_WRITE;
-> +		tmp.wbuf[0] = (u32)regs[i].index;
-> +		tmp.wbuf[1] = regs[i].val;
-> +
-> +		ret = intel_pmc_ipc(&tmp, buf);
-> +		if (ret < 0)
-> +			return ret;
-> +	}
-> +
-> +	return ret;
-> +}
-> +
-> +static int intel_mac_finish(struct net_device *ndev,
-> +			    void *intel_data,
-> +			    unsigned int mode,
-> +			    phy_interface_t interface)
-> +{
-> +	struct intel_priv_data *intel_priv = intel_data;
-> +	struct stmmac_priv *priv = netdev_priv(ndev);
-> +	const struct pmc_serdes_regs *regs;
-> +	int max_regs = 0;
-> +	int ret = 0;
-> +
-> +	ret = intel_tsn_lane_is_available(ndev, intel_priv);
-> +	if (ret < 0) {
-> +		netdev_info(priv->dev, "No TSN lane available to set the registers.\n");
-> +		return ret;
-> +	}
-> +
-> +	if (interface == PHY_INTERFACE_MODE_2500BASEX) {
-> +		regs = intel_priv->pid_2p5g.regs;
-> +		max_regs = intel_priv->pid_2p5g.num_regs;
-> +	} else {
-> +		regs = intel_priv->pid_1g.regs;
-> +		max_regs = intel_priv->pid_1g.num_regs;
-> +	}
-> +
-> +	ret = intel_set_reg_access(regs, max_regs);
-> +	if (ret < 0)
-> +		return ret;
+> +	return 0;
 
-This looks much cleaner now, thanks the update.
+I'm also wondering (as above) whether this soft reset needs to happen
+_after_ xpcs_config_aneg_c37_sgmii() has done its work - this function
+temporarily disables AN while it's doing its work.
 
-However, the intel_priv fields you introduced are not setup until patch 
-6/7? Will this cause NULL ptr deref issues in between the two changes? By 
-introducing the reg arrays in this patch but only use them after patch 6, 
-you'll also get unused variable warnings out of them in between the 
-changes which is unacceptable.
-
-> +
-> +	priv->plat->phy_interface = interface;
-> +
-> +	intel_serdes_powerdown(ndev, intel_priv);
-> +	intel_serdes_powerup(ndev, intel_priv);
-> +
-> +	return ret;
-> +}
-
+I'm also wondering whether AN being disabled is really a deciding
+factor (e.g. when switching from 1000BASE-X AN-enabled to SGMII, is a
+reset required?)
 
 -- 
- i.
-
+RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
+FTTP is here! 80Mbps down 10Mbps up. Decent connectivity at last!
