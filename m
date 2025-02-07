@@ -1,285 +1,134 @@
-Received: from mail.tuxedocomputers.com (mail.tuxedocomputers.com [157.90.84.7])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.15])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3DF4723C8D6;
-	Fri,  7 Feb 2025 18:44:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=157.90.84.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 28E361B415C;
+	Fri,  7 Feb 2025 20:03:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738953889; cv=none; b=YMQEVP0f0MslU20Pk3q85HIh+VEYixmzQSgjvUptAkKlgprGXnyZbTwYZu8iLbsF+ZubQha6xoV06SrnveIZ3mdcJpzxY5jZNPTGgCTpigESaHGjzmWSBmTqjbViNSTErQzUk9BjDZHh4OubBm3vqj5yajs2njGQVBiYySfQxSg=
+	t=1738958584; cv=none; b=G1HtTS0qbWfAkBFouX7bAHpqC7O5AOtwfTM5O6xNIScTsPRs3Zk+37d9CJgnHaUJ7t30l7qDN7oXihAg3Y/H/1tZaHiciskTzSFkUJ9vPety618vHqWlz+J2AU2L21gCgzAD6y2tJJWl5s0nVRZ35KVF36xkUTkz8IG/bfbtvqs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738953889; c=relaxed/simple;
-	bh=AsQurwdDOgdIjFL3cRJVYdubuIPI0faKGIQ2IIj4y9o=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=h4xf7LIEVCoPqUwnELocL95M5OW0lYLRSiNxj1SQl2TnKQubv6WMSCvNkWsanxhejTblhh9vmWVr48/6Amr0O5qlUmZqIA2IVo1sNHx8go+PuiyDnJoEem3NBuyWpxzVs/gYkJJW+fqiltdvQDom5gHZZwJuE8szfBlkEjEnj40=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=tuxedocomputers.com; spf=pass smtp.mailfrom=tuxedocomputers.com; dkim=pass (1024-bit key) header.d=tuxedocomputers.com header.i=@tuxedocomputers.com header.b=BqRLI3RY; arc=none smtp.client-ip=157.90.84.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=tuxedocomputers.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tuxedocomputers.com
+	s=arc-20240116; t=1738958584; c=relaxed/simple;
+	bh=u4zVraTyuGvK4Z0Swz4Xx8h7XQdjp7S93iHbSrvP6S8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=lMCrLErMrj7Oa0ps6AklNFNpEBAcwTY8XcW8u5+JnPQbhIrj97x4LCFKL+iHO8LNSekLWfTA1kVd5NFyISADiX4BHgaHbG/TBhPqYElhhH730CvLZa026dJIsJGaLkGdrqf7o9A2aWPBfAzM9Jc2/8rA0ksrSBHLVKyW/gdfN1A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=SEVWRcY7; arc=none smtp.client-ip=192.198.163.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=tuxedocomputers.com header.i=@tuxedocomputers.com header.b="BqRLI3RY"
-Received: from [192.168.42.116] (pd9e59260.dip0.t-ipconnect.de [217.229.146.96])
-	(Authenticated sender: wse@tuxedocomputers.com)
-	by mail.tuxedocomputers.com (Postfix) with ESMTPSA id A06D82FC006B;
-	Fri,  7 Feb 2025 19:44:42 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=tuxedocomputers.com;
-	s=default; t=1738953883;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=m0/Npr2aYsuX4RiSHrF3i7/a3fwJRJEpxwy130oXDFg=;
-	b=BqRLI3RY7dmVpp/MORJ9m3MamQvcOFLieRE2FGrScQ/zfZjTxQpW7ZNE2qJ1fJrqt4z/Xj
-	yNYGTEpRKTdDbXuh3Tq7W89D7n6PR/RpIiLUMkn1ygAX395tBinIqCqE3IAp3PyBIMq0Jq
-	1zSvrpjJtarGFbUUsLft/0qT4UmTAFI=
-Authentication-Results: mail.tuxedocomputers.com;
-	auth=pass smtp.auth=wse@tuxedocomputers.com smtp.mailfrom=wse@tuxedocomputers.com
-Message-ID: <4a5e6ff0-7783-46f0-b0af-78f85d555ac8@tuxedocomputers.com>
-Date: Fri, 7 Feb 2025 19:44:41 +0100
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="SEVWRcY7"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1738958582; x=1770494582;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=u4zVraTyuGvK4Z0Swz4Xx8h7XQdjp7S93iHbSrvP6S8=;
+  b=SEVWRcY7HBlu0P03FpBV/ABBT3WeYOg5kOOVIUaFvp1eE9tZuAKT1h2x
+   FlKcaRO3151zjoH5LLaUsI6stzFhmDCXy9jbnXmLNVxaxbsidES+EMLV5
+   KpX9tWNS/S3c1Awnf8OORs2wNMeCiuBJsjoKB117L/AJtCR1IbC3P2cpM
+   qIP9rZj1vSbyQac8v9WVCA2fXkOtlVHCvp5b7+Ax1r/UZetQpXIJv6/3z
+   eHshRYOHCixh/If0RZcNT+7XFAXpmwApzVlVRdDI4oD3anwNk4F/8gEkW
+   Zab8DFmCaaSS28RnJh/sWwRnJDPbcxef4MPr93HJHQxHC7/1aLOqpPfyY
+   A==;
+X-CSE-ConnectionGUID: r0/AzyEJTGGbL1cfLhdkVw==
+X-CSE-MsgGUID: 66RPgvYIQ2yf4Ic5EQ8Zlg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11338"; a="39765567"
+X-IronPort-AV: E=Sophos;i="6.13,268,1732608000"; 
+   d="scan'208";a="39765567"
+Received: from fmviesa008.fm.intel.com ([10.60.135.148])
+  by fmvoesa109.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Feb 2025 12:03:01 -0800
+X-CSE-ConnectionGUID: Bdxix+M2QL6AZzVjEoTyLw==
+X-CSE-MsgGUID: nlp2W7G7Saelv/jbYxT6iA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.13,268,1732608000"; 
+   d="scan'208";a="111831783"
+Received: from turnipsi.fi.intel.com (HELO kekkonen.fi.intel.com) ([10.237.72.44])
+  by fmviesa008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Feb 2025 12:02:59 -0800
+Received: from kekkonen.localdomain (localhost [127.0.0.1])
+	by kekkonen.fi.intel.com (Postfix) with SMTP id E21BB1202DE;
+	Fri,  7 Feb 2025 22:02:56 +0200 (EET)
+Date: Fri, 7 Feb 2025 20:02:56 +0000
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+From: Sakari Ailus <sakari.ailus@linux.intel.com>
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: Daniel Scally <djrscally@gmail.com>,
+	Hans de Goede <hdegoede@redhat.com>,
+	Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	platform-driver-x86@vger.kernel.org,
+	laurent.pinchart@ideasonboard.com, hverkuil@xs4all.nl,
+	linux-media@vger.kernel.org
+Subject: Re: [PATCH v6 2/3] platform/x86: int3472: Call "reset" GPIO "enable"
+ for INT347E
+Message-ID: <Z6Zm8GaCqIZe27Nt@kekkonen.localdomain>
+References: <20250207134126.1769183-1-sakari.ailus@linux.intel.com>
+ <20250207134126.1769183-3-sakari.ailus@linux.intel.com>
+ <Z6YnIJWmZpjolOda@smile.fi.intel.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC PATCH 1/1] platform/x86/tuxedo: Implement TUXEDO TUXI ACPI
- TFAN via hwmon
-To: =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Cc: Hans de Goede <hdegoede@redhat.com>, ukleinek@kernel.org,
- jdelvare@suse.com, linux@roeck-us.net, LKML <linux-kernel@vger.kernel.org>,
- platform-driver-x86@vger.kernel.org, linux-pwm@vger.kernel.org,
- linux-hwmon@vger.kernel.org
-References: <20250205162109.222619-1-wse@tuxedocomputers.com>
- <20250205162109.222619-2-wse@tuxedocomputers.com>
- <dde736d4-6343-30e3-2bab-6eebbf4515e9@linux.intel.com>
- <358c235f-14e4-43ef-bc82-9ad5d54f0976@tuxedocomputers.com>
- <d99bb466-f9e6-9e86-8a0c-55f51655fb6f@linux.intel.com>
-Content-Language: en-US
-From: Werner Sembach <wse@tuxedocomputers.com>
-In-Reply-To: <d99bb466-f9e6-9e86-8a0c-55f51655fb6f@linux.intel.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <Z6YnIJWmZpjolOda@smile.fi.intel.com>
 
+Hi Andy,
 
-Am 07.02.25 um 12:53 schrieb Ilpo Järvinen:
-> On Thu, 6 Feb 2025, Werner Sembach wrote:
->> Am 06.02.25 um 10:51 schrieb Ilpo Järvinen:
->>> On Wed, 5 Feb 2025, Werner Sembach wrote:
->>>
->>>> The TUXEDO Sirius 16 Gen1 & Gen2 have the custom TUXEDO Interface (TUXI)
->>>> ACPI interface which currently consists of the TFAN device. This has ACPI
->>>> functions to control the built in fans and monitor fan speeds and CPU and
->>>> GPU temprature.
->>>>
->>>> This driver implements this TFAN device via the hwmon subsystem with an
->>>> added temprature check that ensure a minimum fanspeed at certain
->>>> tempratures. This allows userspace controlled, but hardware safe, custom
->>> temperatures
->> thx for spotting
->>>> fan curves.
->>>>
->>>> Signed-off-by: Werner Sembach <wse@tuxedocomputers.com>
->
->>>> +	for (i = 0; i < driver_data->fan_count; ++i) {
->>>> +		params[0] = i;
->>>> +		tuxi_tfan_method(pdev, TUXI_TFAN_METHOD_GET_FAN_TEMPERATURE,
->>>> +				 params, 1, &retval);
->>>> +		temp = retval * 100 - 272000;
->>>> +
->>>> +		for (j = 0; temp_levels[j].temp; ++j) {
->>>> +			temp_low = j == 0 ? -272000 : temp_levels[j-1].temp;
->>> Please add a define for 272000 magic, or do you actually want to use one
->>> of the _kelvin conversion functions in linux/units.h ?
->> I just realized that it should be 273000.
->>
->> Using the conversion functions would make it more complicated because the ec
->> pretends to return to a 10th degree precision but actually only return to a
->> full degree precission.
->>
->> So i would need to cut of the last digit, convert and then readd it. When i do
->> it directly in the code i can just use 273000 instead of 273150 and just
->> ignore the last digits.
-> Fine, but add a local define for it then with a comment about the
-> precision compared with the generic define/conversion functions.
-ack
->
->>> Missing spaces around - operator.
->>>
->>>> +			temp_high = temp_levels[j].temp;
->>>> +			if (driver_data->temp_level[i] > j)
->>>> +				temp_high -= 2000; // hysteresis
->>> 2 * MILLIDEGREE_PER_DEGREE ?
->>>
->>> Use define for it so you can place HYSTERESIS into its name and forgo the
->>> comment.
->> kk
->>>> +
->>>> +			if (temp >= temp_low && temp < temp_high)
->>>> +				driver_data->temp_level[i] = j;
->>>> +		}
->>>> +		if (temp >= temp_high)
->>>> +			driver_data->temp_level[i] = j;
->>> This loop should be in a helper I think. Naming it reasonably would also
->>> make it easier to understand what the loop does.
->> only place i use it, i could just add a comment, but i can also do it in a
->> separate function.
-> I know it's the only user but what the loop does is relatively complex,
-> and requires a few variables, etc. Is relatively self-contained
-> algorithmically.
->
-> Splitting into two functions, both functions could be more focused and
-> clear on their intent. Cleverly naming the helper function such that it
-> explain what happens in it, can often help to avoid the need to add any
-> comments (comments may be needed at times, but when we can avoid one
-> there's one place less to get out-of-sync with the code, which tends to
-> happen with comments :-)).
-ack
->
-> But I see Guenther was against some parts of this so please don't take my
-> style related comments as overruling his objections.
-yes v2 will come once i know what i should implement
->
->
->>>> diff --git a/drivers/platform/x86/tuxedo/nbxx/acpi_tuxi_util.c
->>>> b/drivers/platform/x86/tuxedo/nbxx/acpi_tuxi_util.c
->>>> new file mode 100644
->>>> index 0000000000000..292b739a161e7
->>>> --- /dev/null
->>>> +++ b/drivers/platform/x86/tuxedo/nbxx/acpi_tuxi_util.c
->>>> @@ -0,0 +1,58 @@
->>>> +// SPDX-License-Identifier: GPL-2.0-or-later
->>>> +/*
->>>> + * Copyright (C) 2024-2025 Werner Sembach wse@tuxedocomputers.com
->>>> + */
->>>> +
->>>> +#include <linux/acpi.h>
-> Btw just noticed, #include at least for kcalloc/kfree is missing.
-ack
->
->>>> +
->>>> +#include "acpi_tuxi_init.h"
->>>> +
->>> Remove empty line but see first what I note below.
->> kk
->>>> +#include "acpi_tuxi_util.h"
->>>> +
->>>> +static int __acpi_eval_intarray_in_int_out(acpi_handle handle,
->>>> +					   acpi_string pathname,
->>>> +					   unsigned long long *params,
->>>> +					   u32 pcount,
->>>> +					   unsigned long long *retval)
->>> There's only single caller of this function, so I question the need for
->>> using an utility function.
->> It's in preparation for if the TUXI device get another subdevice besides TFAN.
->>
->> Currently nothing is planed but i though this doesn't hurt.
->>
->>>> +{
->>>> +	struct acpi_object_list arguments;
->>>> +	unsigned long long data;
->>>> +	acpi_status status;
->>>> +
->>>> +	if (pcount > 0) {
->>>> +		pr_debug("Params:\n");
->>>> +
->>>> +		arguments.count = pcount;
->>>> +		arguments.pointer = kcalloc(pcount,
->>>> sizeof(*arguments.pointer),
->>>> +					    GFP_KERNEL);
->>>> +		for (int i = 0; i < pcount; ++i) {
->>> unsigned int
->> kk
->>>> +			pr_debug("%llu\n", params[i]);
->>>> +
->>>> +			arguments.pointer[i].type = ACPI_TYPE_INTEGER;
->>>> +			arguments.pointer[i].integer.value = params[i];
->>>> +		}
->>>> +		status = acpi_evaluate_integer(handle, pathname, &arguments,
->>>> +					       &data);
->>>> +		kfree(arguments.pointer);
->>> You can use cleanup.h to handle freeing.
->> will look into it
->>
->>>> +	} else {
->>>> +		status = acpi_evaluate_integer(handle, pathname, NULL, &data);
->>> This call should be on the main level. You can use ?: operator for the
->>> only parameter you're changing for it between the currently diverging
->>> code paths.
->> then the kcalloc call happens every time even if it is not required.
-> No it won't, you'd allocate only if pcount > 0 (in a similar block as
-> now):
->
-> #include <linux/cleanup.h>
-> #include <linux/slab.h>
+On Fri, Feb 07, 2025 at 05:30:40PM +0200, Andy Shevchenko wrote:
+> On Fri, Feb 07, 2025 at 03:41:25PM +0200, Sakari Ailus wrote:
+> > The DT bindings for ov7251 specify "enable" GPIO (xshutdown in
+> > documentation) but the int3472 indiscriminately provides this as a "reset"
+> > GPIO to sensor drivers. Take this into account by assigning it as "enable"
+> > with active high polarity for INT347E devices, i.e. ov7251. "reset" with
+> > active low polarity remains the default GPIO name for other devices.
+> 
 > ...
->
-> 	union acpi_object __free(kfree) *obj = NULL;
->
-> 	if (pcount > 0)
-> 		obj = kcalloc(...);
->
-> 		arguments.count = ...;
-> 		arguments.pointer = obj;
-> 		...
-> 	}
->
-> 	status = acpi_evaluate_integer(handle, pathname,
-> 				       pcount ? arguments : NULL, &data);
-> 	if (ACPI_FAILURE(status))
-> 		...
->
-> __free() will handle kfree(obj) for you, you don't call kfree() manually.
->
->> also i don't know if ?-operator in a function call is good to read.
-> It is much better than duplicating almost the same call, by using ?: it
-> is obvious that only single parameter is being altered, whereas on split
-> calls, the code reader has to do the compare.
-ok
->
->
->>>> + * Arg0: Fan index
->>>> + * Returns: Speed sensor value in revolutions per minute
->>>> + */
->>>> +#define TUXI_TFAN_METHOD_GET_FAN_RPM		"GRPM"
->>>> +
->>>> +int tuxi_tfan_method(struct acpi_device *device, acpi_string method,
->>>> +		     unsigned long long *params, u32 pcount,
->>>> +		     unsigned long long *retval);
->>>> +
->>>> +#endif // __PLATFORM_X86_TUXEDO_NBXX_ACPI_TUXI_UTIL_H__
->>>>
->>> What is the reason for splitting this into so many files? Are there going
->>> to be other users of the code that is split into separate files? For the
->>> init/deinit code, surely not.
->>>
->>> It will be considerably harder to track call chains, etc. when the
->>> function cannot be found in the same file so you better provide a really
->>> good reason for going so extreme with the split.
->> Same as above: in preparation for the future if there is another TUXI
->> subdevice other then TFAN.
->>
->> Also to section of the hwmon logic as I might want to reuse it for other odms
->> in the future albeit it would then need to get passed the acpi-write function
->> in a dynamic way.
->>
->> And imho it not harder to follow over different files, there is a lot of
->> external function references anyway, so having something setup to
->> automatically jump to a function definition in a different file is already
->> required to quickly parse the code.
-> For library type APIs, one usually doesn't read those functions. I'm
-> talking about functions within the driver. For well-structured and
-> well-named code, jumping all over the place not a requirement at all
-> because the interfaces that cross file boundaries are well architected and
-> rest is self-contained and self-explanatory. I see you started to defend
-> the suboptimal split with everybody does that argument ;-).
+> 
+> > +static const struct int3472_gpio_map int3472_gpio_map[] = {
+> > +	{ "INT347E", INT3472_GPIO_TYPE_RESET, INT3472_GPIO_TYPE_RESET, false, "enable" },
+> > +};
+> > +
+> > +static void int3472_get_func_and_polarity(struct acpi_device *adev, u8 *type,
+> > +					  const char **func, unsigned long *gpio_flags)
+> >  {
+> > -	switch (type) {
+> > +	unsigned int i;
+> > +
+> > +	for (i = 0; i < ARRAY_SIZE(int3472_gpio_map); i++) {
+> > +		/*
+> > +		 * Map the firmware-provided GPIO to whatever a driver expects
+> > +		 * (as in DT bindings). First check if the requested GPIO name
+> 
+> What name?
 
-It is sectioned off in a logical way.
+Right, I was accidentally thinking of a driver here. How about:
 
-The _util file contains a helper function that you don't need to know the 
-implementation details for the logic of the driver itself and the _init file 
-just has boilerplate code except the singular acpi_get_handle line.
+Map the firmware-provided GPIO type to whatever a driver expects (as in DT
+bindings). First check if the type matches with the GPIO map, then further
+check that the device _HID matches.
 
->
-> Your references to "future" sound quite vague, if there are no immediate
-> plans for such drivers to exist, I'd just do such rearranging of code when
-> the supposed other drivers actually happens (which often is never).
->
+> 
+> > +		 * matches the GPIO map, then see that the device _HID matches.
+> > +		 */
+> > +		if (*type != int3472_gpio_map[i].type_from)
+> > +			continue;
+> > +
+> > +		if (!acpi_dev_hid_uid_match(adev, int3472_gpio_map[i].hid, NULL))
+> > +			continue;
+> 
+> I still think this is unusual and confusing order of checks.
+> 
+> At the end, it is up to the PDx86 maintainers.
+> 
+> > +		*type = int3472_gpio_map[i].type_to;
+> > +		*gpio_flags = int3472_gpio_map[i].polarity_low ?
+> > +			      GPIO_ACTIVE_LOW : GPIO_ACTIVE_HIGH;
+> > +		*func = int3472_gpio_map[i].func;
+> > +		return;
+> > +	}
+> 
+
+-- 
+Regards,
+
+Sakari Ailus
