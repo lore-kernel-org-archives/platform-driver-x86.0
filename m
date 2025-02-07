@@ -1,97 +1,91 @@
-Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EED8F1F37C6;
-	Fri,  7 Feb 2025 13:32:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B0B61F4196;
+	Fri,  7 Feb 2025 13:41:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738935180; cv=none; b=BdNS6QUZ1IZ/PlU/gdUSqEggyKCCq2HPley2dtkWxLqpyO9vGmF7wbL7RvcIwkadvoseXphazT1K38YVPaCO/D4gbYXuUnZqLVXGj2YurpKm7TUVeV0WDxkoTo0sOJr84KqdDDdGIG86MtMP9TuZEHeywwcmfVQy/iiZRL/AvW0=
+	t=1738935694; cv=none; b=j7JNXtkbx5s1f4wxFQ/HKDOk314Pybj7c/h7lrM44+lZt76rXQ59iwhd7u/lK1/s2ZZ5bbux9J+egmeSWvfUdzGMvAQDUN83CQU5iX2AI+3ufv7OHGP5sUbPWhqAggmSudWJexqa7x1xAIQhGqe5QkOd+ahn9e0JTBSWzM/OZyU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738935180; c=relaxed/simple;
-	bh=WFmNlRT/1piaJgm4c0NfJA8P9P62SmS6UdgYC76xKuM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=lk38cJ16Ey8FIinMe+8P/TJBLgRZIXuZZVPVOCRinveHpZ5g2JLjyr3lirPcz5+LPq9v0UZXetaJLaIld+i+Lmmrn7Vigp00UnhxzrPBE7SKycbYFOTZaQ+KU13X8TGMF7G8Ojh1RmGNFUXhw1rsJCxQt92PgNJ3tzaPLXtb380=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=ikZHdtyb; arc=none smtp.client-ip=156.67.10.101
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
+	s=arc-20240116; t=1738935694; c=relaxed/simple;
+	bh=v0h29GVxB3ysMUMfKgQu8n60ZttZaCsSX6W7o5T2hBQ=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=e0M4KCcliH/1Md+4OcYfvGHtWn64zn1o6zRLULh3AiLmSk9X116OSNpWqAZKJ7sT2amrbGXdB2C1QzLufqioBo1f4t6aeq++D4CxsvxK/2z45XLVmO/5PNyFJXsHxWvsunFnfQwmhjui///aaDnMaq04Rp2Z8AANj1ilgXGdoT8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=XgVEz2LE; arc=none smtp.client-ip=192.198.163.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="ikZHdtyb"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
-	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
-	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
-	bh=7B6nKxsZ/sgpbYSbmczXl/HDAlWGMnjUjIEUqDEu3fE=; b=ikZHdtybyl/A4VFw2VkwQGYUTI
-	I5VXMO2Dsq9C6j9NPVSnVHI8byHRtV/uaWU/t71xO8V9YWONlWrw4NkA31Qgj7jaXKhYUM+5sSJwd
-	EGZH7ss/mH8O6TO7DqY00Yy1HTQRU6CUGICBH3CUAKUQ5s0GbwiSc7s9zIREc3Phv1Fs=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
-	(envelope-from <andrew@lunn.ch>)
-	id 1tgOT6-00Br1x-S2; Fri, 07 Feb 2025 14:32:28 +0100
-Date: Fri, 7 Feb 2025 14:32:28 +0100
-From: Andrew Lunn <andrew@lunn.ch>
-To: Choong Yong Liang <yong.liang.choong@linux.intel.com>
-Cc: "Russell King (Oracle)" <linux@armlinux.org.uk>,
-	Simon Horman <horms@kernel.org>, Jose Abreu <joabreu@synopsys.com>,
-	Jose Abreu <Jose.Abreu@synopsys.com>,
-	David E Box <david.e.box@linux.intel.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	"H . Peter Anvin" <hpa@zytor.com>,
-	Rajneesh Bhardwaj <irenic.rajneesh@gmail.com>,
-	David E Box <david.e.box@intel.com>,
-	Andrew Lunn <andrew+netdev@lunn.ch>,
-	"David S . Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-	Alexandre Torgue <alexandre.torgue@foss.st.com>,
-	Jiawen Wu <jiawenwu@trustnetic.com>,
-	Mengyuan Lou <mengyuanlou@net-swift.com>,
-	Heiner Kallweit <hkallweit1@gmail.com>,
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="XgVEz2LE"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1738935693; x=1770471693;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=v0h29GVxB3ysMUMfKgQu8n60ZttZaCsSX6W7o5T2hBQ=;
+  b=XgVEz2LE5M+SEGeTeBrweVbwp81kKWy0M1/W/UJaYO36JF7H175+n+ql
+   nDwLdGJxFnxg7m+6jWZI9+BvwNHTAOuaiYdzyCQHbiDjak9I65EdMwu9V
+   HBMpQrZRJ+8ljN9dY9LgqEpiXufEG9OFuyaAtrZqEI4k6/pSlfLsGEBQi
+   9+Qbt17aqYWFBWW0cht/xnMRyKkYqbwAHzFlU4XZZlBVAoWGTsUoypMPa
+   3EFL3cHb+eVOfA/WWrdMZZxnHpNGgll0zsmBIwuMQSDJuFdw36DXVFCR1
+   FnXgA+3NOtyLgNhlBpVdqVJmxOxomQnxazwmsKf02lg5j706qblgPEig7
+   A==;
+X-CSE-ConnectionGUID: iBmvhvbfSwm77Zao/OVHIg==
+X-CSE-MsgGUID: x06+abJ5TQekqUNHliXX8g==
+X-IronPort-AV: E=McAfee;i="6700,10204,11338"; a="42416934"
+X-IronPort-AV: E=Sophos;i="6.13,267,1732608000"; 
+   d="scan'208";a="42416934"
+Received: from fmviesa010.fm.intel.com ([10.60.135.150])
+  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Feb 2025 05:41:32 -0800
+X-CSE-ConnectionGUID: RKCoKrSARb+mk2w8I5mdRg==
+X-CSE-MsgGUID: /SvIlFbQRVG30lH9dJ86qA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.13,267,1732608000"; 
+   d="scan'208";a="112040281"
+Received: from turnipsi.fi.intel.com (HELO kekkonen.fi.intel.com) ([10.237.72.44])
+  by fmviesa010-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Feb 2025 05:41:30 -0800
+Received: from svinhufvud.intel.com (maa-artisokka.localdomain [192.168.240.50])
+	by kekkonen.fi.intel.com (Postfix) with ESMTP id 97D8E1202DE;
+	Fri,  7 Feb 2025 15:41:26 +0200 (EET)
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+From: Sakari Ailus <sakari.ailus@linux.intel.com>
+To: Daniel Scally <djrscally@gmail.com>,
 	Hans de Goede <hdegoede@redhat.com>,
-	Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	Richard Cochran <richardcochran@gmail.com>,
-	Serge Semin <fancer.lancer@gmail.com>, x86@kernel.org,
-	linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-	platform-driver-x86@vger.kernel.org,
-	linux-stm32@st-md-mailman.stormreply.com,
-	linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH net-next v7 2/7] net: pcs: xpcs: re-initiate clause 37
- Auto-negotiation
-Message-ID: <12e86fbe-9515-4b81-951c-8bf86e2939d6@lunn.ch>
-References: <20250206131859.2960543-1-yong.liang.choong@linux.intel.com>
- <20250206131859.2960543-3-yong.liang.choong@linux.intel.com>
- <Z6TVmdCZeWerAZKP@shell.armlinux.org.uk>
- <564ede5d-9f53-40be-9305-63f63b384e15@linux.intel.com>
+	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Cc: platform-driver-x86@vger.kernel.org,
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	laurent.pinchart@ideasonboard.com,
+	hverkuil@xs4all.nl,
+	linux-media@vger.kernel.org
+Subject: [PATCH v6 0/3] int3472: Support GPIO con_id based on _HID
+Date: Fri,  7 Feb 2025 15:41:23 +0200
+Message-Id: <20250207134126.1769183-1-sakari.ailus@linux.intel.com>
+X-Mailer: git-send-email 2.39.5
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <564ede5d-9f53-40be-9305-63f63b384e15@linux.intel.com>
+Content-Transfer-Encoding: 8bit
 
-> Good point. I cannot find this scenario in the datasheet. Please allow me
-> some time to test this scenario. I will update you with the results.
+Hi folks,
 
-By data sheet, do you mean documentation from Synopsis, or is this an
-internal document? Assuming the hardware engineers have not hacked up
-the Synopsis IP too much, the Synopsis documentation is probably the
-most accurate you have.
+One patch turned into a set, the second patch being the original one.
 
-> > What about 1000BASE-X when AN is enabled or disabled and then switching
-> > to SGMII?
-> > 
-> According to the datasheet, a soft reset is required.
+since v5:
 
-Do you know if this is specific to Intels integration of the Synopsis
-IP, or this is part of the core licensed IP?
+- Add a comment to the GPIO mapping code.
 
-We need to understand when we need a quirk because intel did something
-odd, or it is part of the licensed IP and should happen for all
-devices using the IP.
+- Align ternary operator conditionals right of "= " on the previous line.
 
-	Andrew
+Sakari Ailus (3):
+  platform/x86: int3472: Use correct type for "polarity", call it
+    gpio_flags
+  platform/x86: int3472: Call "reset" GPIO "enable" for INT347E
+  platform/x86: int3472: Call "func" "con_id" instead
+
+ drivers/platform/x86/intel/int3472/discrete.c | 105 +++++++++++++-----
+ 1 file changed, 75 insertions(+), 30 deletions(-)
+
+-- 
+2.39.5
+
