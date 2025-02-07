@@ -1,50 +1,50 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 743B716C684;
-	Fri,  7 Feb 2025 09:20:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7079319ABBB;
+	Fri,  7 Feb 2025 09:53:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738920044; cv=none; b=Um6CpGgH1ecv/1q4GiLx4oX68QJd3okXx6EnQ+o2v+is9DIbAjiSwP34m2mEqh68fZQndjJiBvgZz//bDsQFdJoTS3iE6XYPeTW1rwMeqwqOmT+3vW20tHG7fR3xjfzTayaCzWeiFujUHf5xCiBnwOcm2VvohqJWIU00ZzoXSJc=
+	t=1738922031; cv=none; b=CDhZccQ03eVJ25tsBVzN4vgAS1nmrmpMbsvkp9YRQTLYuaQhVdSH5f3s0bYLht54uJezyZQRrg8srdoaDei51UHfMqgGO8vjZI+lsdtQ2PreZOkOehkgAjdkN4aM7bzhE81Xl0bEnsQsvCxmgKCKRZJ+M0LcPeVzyLTXP2cSxiE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738920044; c=relaxed/simple;
-	bh=hA2SG/by2VlZkg0k+rBAIateDa8Wr9F6Pl3v/Hw6QSU=;
+	s=arc-20240116; t=1738922031; c=relaxed/simple;
+	bh=hlTuVm1xxYrUR9UPnzCM2Z9PktNqKKSfUmGDWh3FPCs=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=SubGo9z5pVQ5wUQ+ChjUmebZtagaSlMmfBMZHrHxIJ1M2vnZo4L8O3HtlgtDjXh8rM/up5LS1RSfxVzWOkjMAwhyvXFDilGCLA6RnQj9w3b+qoNu1h6FMFrwawhTyV4l18iNyRsKumlINSK6gCqP8NDM4G8tRZ58gXukiTjML1M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=fZWljDPb; arc=none smtp.client-ip=198.175.65.19
+	 In-Reply-To:Content-Type; b=Ios/txeJns5KD6ZSXq8vl2D3gygdEfHicoXC5c+0AWWRO+95iwuxFrJHq9rPoz23dxD9E+u6tSF2mfmP40FNFTw6F7x5Id607WDwGef9rfer7UmxZLw6nre8KEUsIFQA5MrOv77lejwRZVYl/FMpePoRgpAkZq7WlgrTzm417KQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=U0q7ywoP; arc=none smtp.client-ip=198.175.65.11
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="fZWljDPb"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="U0q7ywoP"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1738920042; x=1770456042;
+  t=1738922030; x=1770458030;
   h=message-id:date:mime-version:subject:to:cc:references:
    from:in-reply-to:content-transfer-encoding;
-  bh=hA2SG/by2VlZkg0k+rBAIateDa8Wr9F6Pl3v/Hw6QSU=;
-  b=fZWljDPb6Dt6BamXlxUgRg/BGeXNvgwfCEJrECIl1AXkmStsvGBxXdd6
-   KiBxMDtqf9ELAwe1i3PNFA3SNtfNmIzaQqSSgPrORD+dsHDCSyHT1Zn72
-   JvlDEBWozaeJIZwr3xE0ARQdDERWMQwCBmVejzG3Oy1PSqvuq19DOtQhA
-   RVjFdS7fgoyNQ1TI3+SEny5dqfXkvTMv8zT0n3tgO/G8XN4rxdauo7zhx
-   S/cWcvohZKvHGC7YtNGEzEKwR4N2hEHyudg1KuigqRKFhQ6IaAyHf/JS1
-   71oGDga8WKNrWhqV11+sDQ3MDKNj9eovKdIsekPibuJSy8vQ1qW1mtKkA
-   g==;
-X-CSE-ConnectionGUID: Sfb1Be4gSV6/KJUHXJ31Vw==
-X-CSE-MsgGUID: qX5FiCzlRuCILTKoPOQATg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11336"; a="39428950"
+  bh=hlTuVm1xxYrUR9UPnzCM2Z9PktNqKKSfUmGDWh3FPCs=;
+  b=U0q7ywoPl7UkHnU5SHIrNGTuuyjot8QwmEW+P83FLrfgoxmlzDZprbXu
+   u6jW+3SKTlcOZcPGk03QXXWgiSEyZNDNOGObrg8j+ybsd2zcMT4ADuC8D
+   4jRA60OjONF4EEK03YBOdXw3/BMdMAqV/b9F2ghtQDbh7vOB3Ddvse3T0
+   zAYHXtBTPgDt9fzznkzVcir0mB3XwSwbXCH1otgRp1UJ3f+fzBxpt0nSb
+   F/vWiNHOufncPZf2Cvnc+SLgnUIig1djT7Oaj/6g7ewLTv4a1br3xL4Gh
+   ciTk7W1D9JABZw7Z91e7gfkU4Z/ikr9wQieMx8R7mTE+Rcq13g8GNPi21
+   Q==;
+X-CSE-ConnectionGUID: QtkVWnLmR/GPFnc1qpU1NA==
+X-CSE-MsgGUID: PyWjkGqXSgydnupqnKieVQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11336"; a="49800804"
 X-IronPort-AV: E=Sophos;i="6.13,266,1732608000"; 
-   d="scan'208";a="39428950"
-Received: from orviesa001.jf.intel.com ([10.64.159.141])
-  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Feb 2025 01:20:40 -0800
-X-CSE-ConnectionGUID: Rs/q4v6kTrSfo8mlMCbvMQ==
-X-CSE-MsgGUID: 4DBwnz/7TVqAchVWKhRZfg==
+   d="scan'208";a="49800804"
+Received: from orviesa008.jf.intel.com ([10.64.159.148])
+  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Feb 2025 01:53:49 -0800
+X-CSE-ConnectionGUID: WwnCJ8nBS7qhQMAwq3M/2g==
+X-CSE-MsgGUID: wUf5a5DCSSSsebhSBlTGRg==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
-   d="scan'208";a="148692076"
+   d="scan'208";a="112379199"
 Received: from choongyo-mobl.gar.corp.intel.com (HELO [10.247.39.73]) ([10.247.39.73])
-  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Feb 2025 01:20:32 -0800
-Message-ID: <564ede5d-9f53-40be-9305-63f63b384e15@linux.intel.com>
-Date: Fri, 7 Feb 2025 17:20:29 +0800
+  by orviesa008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Feb 2025 01:53:40 -0800
+Message-ID: <ceb6cee6-9cfb-4363-9d23-dfd21f78d486@linux.intel.com>
+Date: Fri, 7 Feb 2025 17:53:37 +0800
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -52,9 +52,9 @@ List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH net-next v7 2/7] net: pcs: xpcs: re-initiate clause 37
- Auto-negotiation
-To: "Russell King (Oracle)" <linux@armlinux.org.uk>
+Subject: Re: [PATCH net-next v7 4/7] stmmac: intel: configure SerDes according
+ to the interface mode
+To: =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
 Cc: Simon Horman <horms@kernel.org>, Jose Abreu <joabreu@synopsys.com>,
  Jose Abreu <Jose.Abreu@synopsys.com>,
  David E Box <david.e.box@linux.intel.com>,
@@ -69,117 +69,86 @@ Cc: Simon Horman <horms@kernel.org>, Jose Abreu <joabreu@synopsys.com>,
  <mcoquelin.stm32@gmail.com>, Alexandre Torgue
  <alexandre.torgue@foss.st.com>, Jiawen Wu <jiawenwu@trustnetic.com>,
  Mengyuan Lou <mengyuanlou@net-swift.com>,
- Heiner Kallweit <hkallweit1@gmail.com>, Hans de Goede <hdegoede@redhat.com>,
- =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+ Heiner Kallweit <hkallweit1@gmail.com>, Russell King
+ <linux@armlinux.org.uk>, Hans de Goede <hdegoede@redhat.com>,
  Richard Cochran <richardcochran@gmail.com>,
  Serge Semin <fancer.lancer@gmail.com>, x86@kernel.org,
- linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+ LKML <linux-kernel@vger.kernel.org>, Netdev <netdev@vger.kernel.org>,
  platform-driver-x86@vger.kernel.org,
  linux-stm32@st-md-mailman.stormreply.com,
  linux-arm-kernel@lists.infradead.org
 References: <20250206131859.2960543-1-yong.liang.choong@linux.intel.com>
- <20250206131859.2960543-3-yong.liang.choong@linux.intel.com>
- <Z6TVmdCZeWerAZKP@shell.armlinux.org.uk>
+ <20250206131859.2960543-5-yong.liang.choong@linux.intel.com>
+ <c15078bf-b6f3-5b4b-82ca-668d47168ce0@linux.intel.com>
 Content-Language: en-US
 From: Choong Yong Liang <yong.liang.choong@linux.intel.com>
-In-Reply-To: <Z6TVmdCZeWerAZKP@shell.armlinux.org.uk>
+In-Reply-To: <c15078bf-b6f3-5b4b-82ca-668d47168ce0@linux.intel.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
 
 
-On 6/2/2025 11:30 pm, Russell King (Oracle) wrote:
-> On Thu, Feb 06, 2025 at 09:18:54PM +0800, Choong Yong Liang wrote:
->> The xpcs_switch_interface_mode function was introduced to handle
->> interface switching.
->>
->> According to the XPCS datasheet, a soft reset is required to initiate
->> Clause 37 auto-negotiation when the XPCS switches interface modes.
-> 
-> Hmm. Given that description, taking it literally, claus 37
-> auto-negotiation is 1000BASE-X, not Cisco SGMII (which isn't an IEEE
-> 802.3 standard.) Are you absolutely sure that this applies to Cisco
-> SGMII?
-> 
-Hi Russell,
-
-Yes, you are correct that Clause 37 auto-negotiation is for 1000BASE-X. 
-However, I do not believe it applies to Cisco SGMII. The XPCS implements 
-Clause 37 auto-negotiation for both 1000BASE-X and SGMII.
-
-> If the reset is required when switching to SGMII, should it be done
-> before or after configuring the XPCS for SGMII?
-> 
-A soft reset is required before configuring the XPCS for SGMII. Based on 
-the existing XPCS handling in the initial state, the xpcs_create() function 
-will be called, and then xpcs->need_reset will be set to true. Later on, 
-phylink_major_config() will call xpcs_pre_config() to perform the 
-xpcs_soft_reset(), and then it will continue with xpcs_config().
-
-I apologize for missing this patch: 
-https://patchwork.kernel.org/project/netdevbpf/patch/E1svfMA-005ZI3-Va@rmk-PC.armlinux.org.uk/
-
-I think I should move xpcs_switch_interface_mode() to xpcs_pre_config() and 
-just update xpcs->need_reset instead of implementing my own method for 
-calling xpcs_soft_reset().
-
-> Also, if the reset is required, what happens if we're already using
-> SGMII, but AN has been disabled temporarily and is then re-enabled?
-> Is a reset required?
-> 
-Good point. I cannot find this scenario in the datasheet. Please allow me 
-some time to test this scenario. I will update you with the results.
-
-> What about 1000BASE-X when AN is enabled or disabled and then switching
-> to SGMII?
-> 
-According to the datasheet, a soft reset is required.
-
->> +static int xpcs_switch_to_aneg_c37_sgmii(const struct dw_xpcs_compat *compat,
->> +					 struct dw_xpcs *xpcs,
->> +					 unsigned int neg_mode)
+On 6/2/2025 9:31 pm, Ilpo Järvinen wrote:
+>> +static int intel_tsn_lane_is_available(struct net_device *ndev,
+>> +				       struct intel_priv_data *intel_priv)
 >> +{
->> +	bool an_c37_enabled;
->> +	int ret, mdio_ctrl;
+>> +	struct stmmac_priv *priv = netdev_priv(ndev);
+>> +	struct pmc_ipc_cmd tmp = {};
+>> +	u32 rbuf[4] = {};
+>> +	int ret = 0, i, j;
+>> +	const int max_fia_regs = 5;
 >> +
->> +	if (neg_mode == PHYLINK_PCS_NEG_INBAND_ENABLED) {
->> +		mdio_ctrl = xpcs_read(xpcs, MDIO_MMD_VEND2, MII_BMCR);
->> +		if (mdio_ctrl < 0)
->> +			return mdio_ctrl;
+>> +	tmp.cmd = IPC_SOC_REGISTER_ACCESS;
+>> +	tmp.sub_cmd = IPC_SOC_SUB_CMD_READ;
 >> +
->> +		an_c37_enabled = mdio_ctrl & BMCR_ANENABLE;
->> +		if (!an_c37_enabled) {
+>> +	for (i = 0; i < max_fia_regs; i++) {
 > 
-> I don't think that we need "an_c37_enabled" here, I think simply:
+> Usually, defines are used for true consts.
 > 
-> 		if (!(mdio_ctrl & BMCR_ANENABLE)) {
-> 
-> would be sufficient.
-> 
->> +			//Perform soft reset to initiate C37 auto-negotiation
->> +			ret = xpcs_soft_reset(xpcs, compat);
->> +			if (ret)
->> +				return ret;
->> +		}
+Hi Ilpo,
+Thank you for your feedback. I used const int max_fia_regs = 5; to leverage 
+type safety and scope control in modern C. However, I understand that 
+#define is a common practice. Please let me know if you prefer I switch to 
+#define for consistency.
+
+>> +static int intel_mac_finish(struct net_device *ndev,
+>> +			    void *intel_data,
+>> +			    unsigned int mode,
+>> +			    phy_interface_t interface)
+>> +{
+>> +	struct intel_priv_data *intel_priv = intel_data;
+>> +	struct stmmac_priv *priv = netdev_priv(ndev);
+>> +	const struct pmc_serdes_regs *regs;
+>> +	int max_regs = 0;
+>> +	int ret = 0;
+>> +
+>> +	ret = intel_tsn_lane_is_available(ndev, intel_priv);
+>> +	if (ret < 0) {
+>> +		netdev_info(priv->dev, "No TSN lane available to set the registers.\n");
+>> +		return ret;
 >> +	}
->> +	return 0;
+>> +
+>> +	if (interface == PHY_INTERFACE_MODE_2500BASEX) {
+>> +		regs = intel_priv->pid_2p5g.regs;
+>> +		max_regs = intel_priv->pid_2p5g.num_regs;
+>> +	} else {
+>> +		regs = intel_priv->pid_1g.regs;
+>> +		max_regs = intel_priv->pid_1g.num_regs;
+>> +	}
+>> +
+>> +	ret = intel_set_reg_access(regs, max_regs);
+>> +	if (ret < 0)
+>> +		return ret;
 > 
-> I'm also wondering (as above) whether this soft reset needs to happen
-> _after_ xpcs_config_aneg_c37_sgmii() has done its work - this function
-> temporarily disables AN while it's doing its work.
+> This looks much cleaner now, thanks the update.
 > 
-Based on the programming sequence in the datasheet, it is not necessary to 
-perform a soft reset after xpcs_config_aneg_c37_sgmii() has completed its work.
-
-> I'm also wondering whether AN being disabled is really a deciding
-> factor (e.g. when switching from 1000BASE-X AN-enabled to SGMII, is a
-> reset required?)
+> However, the intel_priv fields you introduced are not setup until patch
+> 6/7? Will this cause NULL ptr deref issues in between the two changes? By
+> introducing the reg arrays in this patch but only use them after patch 6,
+> you'll also get unused variable warnings out of them in between the
+> changes which is unacceptable.
 > 
-
-Thank you for pointing this out. The datasheet only mentions performing a 
-soft reset when switching to the 1000BASE-X and SGMII interfaces, and it 
-does not specify whether AN needs to be enabled or disabled. I thought 
-adding a check would reduce the calls to the soft reset. However, I did not 
-consider the scenario of switching from 1000BASE-X with AN enabled to SGMII 
-with AN enabled. This scenario might cause regression. I will remove all 
-the checks and just perform a soft reset when switching to the SGMII interface.
+Thank you for pointing out the potential issues with the intel_priv fields. 
+I will move the changes from patch 6 into this patch to avoid NULL pointer 
+de-reference issues and unused variable warnings. This will ensure 
+everything is properly set up and used within the same patch.
