@@ -1,108 +1,147 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
+Received: from mout.gmx.net (mout.gmx.net [212.227.17.20])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D15B1DED48;
-	Fri,  7 Feb 2025 12:00:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE7CF33EC
+	for <platform-driver-x86@vger.kernel.org>; Fri,  7 Feb 2025 12:41:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.20
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738929627; cv=none; b=tyKEgMEYZ4qzmVGb+r+ZdmTBJxYygrmNXwAcvk8AjnLF0dmMd2eabky3RskBUNiZ8Ph+t9xChmtrR/QAVXDirV/IGSxi1Qy69j6BzABrtDFgZk/Gct0HgbkL3/J0lLQpfZw6/uPHhx2h2+7W6CGxu2pBA9kJHNRRPqTj2VRHWT8=
+	t=1738932070; cv=none; b=BYtwdr780D6PcJQXafhH+WMjYtnd6SWtR7wOCKkAPb/GD1ZnR6Xnuu/NER7MON/CrbrGh79RM4hy0VUup6L2XqzcTEXdTAsxxc5AQ6hih+8bSRPwJwrwasdTTLHtR87lbE1X5cfF3o7c18iJkgHSi2OP5JNnyvZQ/35W6x/MxX4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738929627; c=relaxed/simple;
-	bh=9DOQkMl0/esVKMop1h6H/JDDIemeS24TPNpLd8BOQWo=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=NuE1sHb7fEOz9GUKpUJuw/p7wtfxMogp+W1nku5c5OG8kwzijXmrC22nTicW5otLqgvzCicUVDI/82xVjZ2yatePWBI5dcikG++vHmJYNv5bPKcFKTI5Dn6zhxkPq82tFWs1X9TvtrOoXtN0lw6MASb1v/xd3RGxPjUD+k/z8yU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=BeSlt9qq; arc=none smtp.client-ip=198.175.65.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1738932070; c=relaxed/simple;
+	bh=nn6zUh5mP73h6zr47u9YdA8m87mX8oGNU5giWtrs4Yo=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=H7eT6IBGp7FE3tt+IyxPap8AQ6v2aTxuEcyOys53IKPqWKeQsjICe0mByC/4myjlek/PIiTE9EL3q+X69wLvT7k8gky7r2b3KXEcl4cUO3hKwaTRogBhymIHltoB9GtQjPe2Asf4rprts7p3JGplMd0XCX2EDkJPEErXwollb90=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b=QHK6T/CZ; arc=none smtp.client-ip=212.227.17.20
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="BeSlt9qq"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1738929626; x=1770465626;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=9DOQkMl0/esVKMop1h6H/JDDIemeS24TPNpLd8BOQWo=;
-  b=BeSlt9qqFQST2A0fV5yspf4W2PsooT+psylE73amY8UB9ypTYyUeZ8Dj
-   ytKgW6s5UeLjfZ1lsn0rUu4XDOEFgYV6yTSU3RRUChPsQF1/LAuzxPXJL
-   po7JvO7LxgqVRDilnomptwfVHcEzMvjmCipT5Ub1y3lxWrNAr1v1DWuvs
-   YAXir389JGwXMx6tRUPmJ4pz4jYimZCjdFXU/RG0KQIcfX7IDDFOLeYEC
-   5FAI2AS7MaXunZdx5OjuqZZ+HoWvYXa2G7koUWs4YAkY1LnBFZlcMdrmU
-   k0walDmctctAJhyA4PqxRcEGnE4qiY95i2qXmj1TLKEiNtulf5ScRl8BN
-   w==;
-X-CSE-ConnectionGUID: jvvVFW8lTguaaUGtDkMJbg==
-X-CSE-MsgGUID: oegaJOarQlioeh1T7oyFFA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11336"; a="43328131"
-X-IronPort-AV: E=Sophos;i="6.13,267,1732608000"; 
-   d="scan'208";a="43328131"
-Received: from fmviesa010.fm.intel.com ([10.60.135.150])
-  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Feb 2025 04:00:25 -0800
-X-CSE-ConnectionGUID: aCm93eehR625ClZSMy3FNA==
-X-CSE-MsgGUID: jMb7RbwfT8GEu6h3rODHpQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.13,267,1732608000"; 
-   d="scan'208";a="112021095"
-Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.116])
-  by fmviesa010-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Feb 2025 04:00:21 -0800
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Fri, 7 Feb 2025 14:00:17 +0200 (EET)
-To: Joshua Grisham <josh@joshuagrisham.com>
-cc: markgross@kernel.org, Hans de Goede <hdegoede@redhat.com>, 
-    platform-driver-x86@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>, 
-    W_Armin@gmx.de, thomas@t-8ch.de, kuurtb@gmail.com
-Subject: Re: [PATCH] platform/x86: samsung-galaxybook: Fix sysfs_attr_init
- of fw attrs
-In-Reply-To: <20250206225707.12962-1-josh@joshuagrisham.com>
-Message-ID: <7a9b72a9-cb08-3ef4-8472-a38bb2a88608@linux.intel.com>
-References: <20250206225707.12962-1-josh@joshuagrisham.com>
+	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b="QHK6T/CZ"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.de;
+	s=s31663417; t=1738932065; x=1739536865; i=w_armin@gmx.de;
+	bh=nn6zUh5mP73h6zr47u9YdA8m87mX8oGNU5giWtrs4Yo=;
+	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:To:
+	 References:From:In-Reply-To:Content-Type:
+	 Content-Transfer-Encoding:cc:content-transfer-encoding:
+	 content-type:date:from:message-id:mime-version:reply-to:subject:
+	 to;
+	b=QHK6T/CZGhYkztN+sthTDZxgsQLnBXpSVlgz6/v24G8tQAFlstjcTkDDG26mF/AH
+	 ZxEV7eF+V7se5isdzicJkJJvl810Ed3+rFhBIiHWBqELb0Z3rJBAvkjxBR9v8p7Ga
+	 IL2795MVPtGF/cakGm5zuXCm695reoymVZFfuSeq8mDO48SFXqIRUZFb0R7wlfRSh
+	 OkJLkVbRXyUvVHSM7ii+NNEHBbK+REBV7nw0FvM6KG1YvhyLBH2LJyeBJe4T+9fKL
+	 hunvshS/yZdhQ+LXe5pm9KvP2SxiC5Xxpzb28QdX8jE0iM2mhgIBAZ/vPd85oP9EU
+	 bzhw1W7bN3WKaUSZjQ==
+X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
+Received: from [192.168.0.69] ([87.177.78.219]) by mail.gmx.net (mrgmx105
+ [212.227.17.168]) with ESMTPSA (Nemesis) id 1N2mFY-1tGpSe3cUe-00yard; Fri, 07
+ Feb 2025 13:41:04 +0100
+Message-ID: <e430d262-8c1e-4c8f-88eb-98a71117e8bf@gmx.de>
+Date: Fri, 7 Feb 2025 13:41:04 +0100
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+User-Agent: Mozilla Thunderbird
+Subject: Re: Need help fixing turbo button and power profiles on Acer Predator
+ Helios Neo 16 (PHN16-72)
+To: Sourajyoti Basak <basak.sb2006@gmail.com>,
+ platform-driver-x86@vger.kernel.org
+References: <e0f625f4-9c55-4021-ba43-668edb9fe80d@gmail.com>
+ <083e0184-19e9-4473-bebf-5536b3d5ec10@gmx.de>
+ <4d281c36-4996-4518-9db3-e11780f6fbfe@gmail.com>
+Content-Language: en-US
+From: Armin Wolf <W_Armin@gmx.de>
+In-Reply-To: <4d281c36-4996-4518-9db3-e11780f6fbfe@gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:Ojvj5DRnNgSgSTaeKOu8rDXTdWzD8dSlG80Pau76jZG4wDeZUtz
+ +Od4ux0/VfNO5cWoLfAqoUBvxe3hWpHITZv1gBKneu33THBVbz8l88+5OC+3L3TpUgFUEOs
+ TMH+WgahsG6q6rPjiDRoAsbbfwZsO5a7D8gHnudzQlVDy0r5sNidZ89OxzvkEiy9yFZD9v+
+ PP+QUPyvx4biU4zgIHPZg==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:O77giQwHwHQ=;u0wa5SrM96oZVyosi9zkK+wP+Nb
+ m1oJcNYJ6kYFd6n8gaw2Iqdo9JvF5EoSKrK81RpxirovG2YDK8C8tmHArmgawyl7KXzf+Jodu
+ 4lmHfZ8EFaNOztaQgyD3zQzOy3ADjvdCljMXc1kL/DRSF3ilB25O8MWDuxl/5cfhDAi/x0+iY
+ EdTtOcnNbMieFUoVxzYC94UVpBg8HYBiMuZGMEJinUyhvpoMWcvkTjZsyMbwVUuMfIleqpGeo
+ Aao4jUVx4LfNaCPWXgaLmCUViE+8CFy01LBcV9asD1ZTqsR/vVVfY2UTKgOWMRLwuMuN1lxrt
+ jxAggZ5F24lzp+OS9oosF2UUJ3pBWJfo1UbJoYVimpBfz6mWc3LWIIi6MUzxP0HB6JXmiGtnm
+ N/JZnz2wPZXFSno/8ZTwQMYe0O0dFjwrTD2BOAKmAYpsuEk3xdicC5ZucDzwEKqyeqUCoHhma
+ 47a0ss9IU8VEGyZ9c6iZtQhxY4nuvXePJQj+fiqrz6eKawBpzYRAoxqGbZVHMBffZwSf/Oi1I
+ QbNETyGSzeEwTYem9IYoMwH9Wog5xCDMwHPBQ4Z5DEWN1GcQEw9gtE8B67QmFDZZvej/aee2B
+ zrV0VjlnKGl/xItN7n2WL+Qdefr7tSHx6Ev6az+14ucy4z4cwfVIBafXREjoXnA2FU5rw8HiI
+ Za5/gFEKV74n3GjVYNMgrHkD2x+NzeZ9/uuOINuZgDMpR5et1RfDZnIH/Br8CK8BHsnMARPAP
+ BU+AWCj3l+mjsFdOyudDcCvTwc6uEp3Xc44y6JuEa0lIVlHS27Xy06mr1BFpXw68g3SSTB5l8
+ YO+mufmFwbg343xNQ2zAJ+tlbnzpoIewiSBPg2G0qyWK+QZlkbaaphSs5TUFWwFAmc0FLMhKi
+ ppce2E2AdHWDME+B3Z4YruzHvSecM5Zwc6BtQSZnFgI2VFYOhzuWcwuNSsLH4Eo/hXcKr5acj
+ oL4Q9f/0PQHYedgFHj7RcqultIGnuSkabxLS3FYr/Vx3NKujq012ROKW3ytJqKWrdZFEE3B8O
+ /dMi+ZsZF5DPBKxOdqR0cdgDqkZxvcMWHF6g1udrXfqIPD2++uf0UomTUZj6t5mcqkOus8tm1
+ FRQS8oZfWCAB5cw7e0VlUAJwM+RENv2Weqmlas1wl1wp/rs9ujPlLWqzPAEJJ73RnwG74XJHg
+ y6f8dP0cHyzpF1ETJkl5mIkxIQPOaVxad+edSS0An2wi1AJwt6ljMXD8IOg58Uj1F53Pmoy3b
+ bgz4/sBUA6FJc9JXI2xWyKEMgvjtibKJ+6o+U/CCTKQfaBTmcKNvwsVnM47df+iYWHzI2HqjC
+ Lbz2pFstG3fXB1gf1I004Fs2xFfGrZKT0RmIfyLlTArrSSo2CJ/h8Wy3ahLPlqGz1Dqa+u01+
+ Vi2nGslfaAbYUYK78ZrEYVWXWTcjg+e9Nsu1keZH6F5OhataWxiyLUZju1Y9+/RUUJSiaoVWv
+ +e8fPQIJWmSGpe4R7DRrW9kEV0tQ=
 
-On Thu, 6 Feb 2025, Joshua Grisham wrote:
+Am 07.02.25 um 06:40 schrieb Sourajyoti Basak:
 
-> Fixes sysfs_attr_init bug in samsung-galaxybook as reported in [1].
-> 
-> Should be applied after
->   commit f97634611408 ("platform/x86: samsung-galaxybook: Add samsung-galaxybook driver")
-> 
-> Tested with CONFIG_DEBUG_LOCK_ALLOC=y on a Samsung Galaxy Book2 Pro.
-> 
-> [1]: https://lore.kernel.org/linux-next/20250206133652.71bbf1d3@canb.auug.org.au/
-> 
-> Signed-off-by: Joshua Grisham <josh@joshuagrisham.com>
-> ---
->  drivers/platform/x86/samsung-galaxybook.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/platform/x86/samsung-galaxybook.c b/drivers/platform/x86/samsung-galaxybook.c
-> index 9c658a45d..de1ed2dc6 100644
-> --- a/drivers/platform/x86/samsung-galaxybook.c
-> +++ b/drivers/platform/x86/samsung-galaxybook.c
-> @@ -1011,13 +1011,13 @@ static int galaxybook_fw_attr_init(struct samsung_galaxybook *galaxybook,
->  	attrs[2] = &fw_attr_possible_values.attr;
->  	attrs[3] = &fw_attr_display_name_language_code.attr;
->  
-> -	sysfs_attr_init(&fw_attr.display_name);
-> +	sysfs_attr_init(&fw_attr->display_name.attr);
->  	fw_attr->display_name.attr.name = "display_name";
->  	fw_attr->display_name.attr.mode = 0444;
->  	fw_attr->display_name.show = display_name_show;
->  	attrs[4] = &fw_attr->display_name.attr;
->  
-> -	sysfs_attr_init(&fw_attr.current_value);
-> +	sysfs_attr_init(&fw_attr->current_value.attr);
->  	fw_attr->current_value.attr.name = "current_value";
->  	fw_attr->current_value.attr.mode = 0644;
->  	fw_attr->current_value.show = current_value_show;
-> 
+> Hi all,
+>
+> I initially replied only to Armin by mistake. Resending this to the
+> mailing list for visibility.
+>
+> > On 25/01/25 3:08 am, Armin Wolf wrote:
+> > Please share the results of the following commands (needs root
+> privileges):
+> >
+> > ```
+> > busybox devmem 0xFE0B085B 8
+> > busybox devmem 0xFE0B085C 8
+> > ```
+>
+> I tried running these commands, but `busybox` on EndeavourOS does not
+> support the `devmem` applet. Instead, I used the
+> [`devmem`](https://aur.archlinux.org/packages/devmem) package from the
+> AUR.
+>
+> Here are the outputs:
+>
+> ```
+> # devmem 0xFE0B085B b
+> /dev/mem opened.
+> Memory mapped at address 0x760fdfaae000.
+> Value at address 0xFE0B085B (0x760fdfaae85b): 0x0
+>
+> # devmem 0xFE0B085C b
+> /dev/mem opened.
+> Memory mapped at address 0x7f5ba88f8000.
+> Value at address 0xFE0B085C (0x7f5ba88f885c): 0x0
+> ```
+>
+> > Regarding the clocking issue: I have no clue why the CPU speed goes
+> up to 3 GHz. Did you install the Intel thermal daemon (`thermald`)?
+>
+> Yes, `thermald` was installed on the live USB when I performed the tests=
+.
+>
+> Thanks for your time and assistance.
+>
+> Best regards,
+> Sourajyoti Basak
+>
+Alright, the values seem useless to me, so we have to try something differ=
+ent.
 
-Thanks, I've folded this into the commit that already was in the
-review-ilpo-next branch.
+Can you dual-boot into Windows? If yes then you can use wmie2 (https://git=
+hub.com/vinaypamnani/wmie2) to execute WMI methods.
 
--- 
- i.
+I this case i would like you to execute the "GetGamingFanBehavior" method =
+of the "AcerGamingFunction" object located inside the root/WMI namespace.
+This method take a single parameter called "gmInput". Please check what ha=
+ppens if "gmInput" is set to 0, 1, 4, 8 and 16 and share the result of eac=
+h
+method call.
+
+Thanks,
+Armin Wolf
 
