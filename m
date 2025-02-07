@@ -1,275 +1,131 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yb1-f172.google.com (mail-yb1-f172.google.com [209.85.219.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8DCB41F37C6;
-	Fri,  7 Feb 2025 13:44:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2A5A33398B;
+	Fri,  7 Feb 2025 14:08:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738935892; cv=none; b=OqPLGJM/zNO/MbQcuw0qYAW8lQbdaSOMMJZhFsYusAZxG1pb9MfL3yB+V/6hCU03WOSi8mBtDhTlENNEp/VPtLbwxO6XLQqdGC+KoAXWof1aw3H6QkOm8gLSMiWyAaOnqUHy4tRcVvBg7Ro8Qkgn/hZf3AKPsAWhZdBO/2tmd2w=
+	t=1738937290; cv=none; b=TjM6ps4ldPNmHFQ8qlDw6PJD8CsIIDe2+ofkDIOW+kzKt90PzacjYtPFJEL2nzf3Qj38FiU92lPDiyzIhDKNCwS3nd1WuIRiwaretGUqihCYB5ZM7P4pn6LYPvb50jJ3711wrkt0mBFMIzQwtDyWqqTbUgsuWWSdaBmLEHPHE+g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738935892; c=relaxed/simple;
-	bh=1zL7Fg4vCZS/oEqct4wtAyYB2ekpq1aQUl/RbG8Z+wg=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=oGi04pNrifwxYuI7dQa4Q4itcW83+5gEu4w8fjrb1jMcXzyYi/Iph6+AcMmgMID6lIwosFfVzXRY+yieIK1+AtOI5eJH47q5f9AzEafgskGwfZ3LFTgk4EEr4J5lXYqtVAGSxdz4+dP5g0HaH0pFsLvaSOE+j74wfULksDKrazc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=CysocBJC; arc=none smtp.client-ip=192.198.163.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1738937290; c=relaxed/simple;
+	bh=waUGYQylZsvTC2lQroLCbM/1tw6SegVtb+pycmZdjM4=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=qsj7X6Lg/X907mEC2lRs+5vYVOIKhM69piE3b5a8M0+wmQnHXA7swJuVDBva9evlWzVdsPdGLjB+5cqcRLA3exObgu9yTko2mYd9GMaSAidbEcWkawWbjZdt+XtrDP4GzhLtvblRyPWP6YllahvhuRiwSr6DB7G4HfnGKhsRIxk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=OBYzAYFd; arc=none smtp.client-ip=209.85.219.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="CysocBJC"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1738935890; x=1770471890;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=1zL7Fg4vCZS/oEqct4wtAyYB2ekpq1aQUl/RbG8Z+wg=;
-  b=CysocBJCrLv8dCnPXiHUklRZ8X3mnLun29d7zL5AIjAuv3IagP7Ag313
-   HOxQctwfQ5glvkgwk1vV6UGE3Tlpisjbf977LOjQU5tK/uGpWvAqBEwNf
-   WezMZ0t7lLNUhzcVC1kBGhOY5nBo3QdFaZ2IEFkSyseimXjQAK2rD45yF
-   UCB7KFCwa4as2n4W1fqhShrNfdZq93Nanw+H9JLQg1aUEMXMgXhh2VeGJ
-   pFYMLojuGCTSuHKOdvI1agZa948clok/qfy+F44KDHGb91+Zk33a+gpuW
-   PcSWN69DLaOSwt8mVEufgMXGx/5CzWOz6bC0kgxyEk60MyvMmIMYEs6sk
-   w==;
-X-CSE-ConnectionGUID: Klugmw40TGWIgjWi7nFVtw==
-X-CSE-MsgGUID: XRagqok/TPyOE605TDXb2A==
-X-IronPort-AV: E=McAfee;i="6700,10204,11338"; a="42417308"
-X-IronPort-AV: E=Sophos;i="6.13,267,1732608000"; 
-   d="scan'208";a="42417308"
-Received: from fmviesa004.fm.intel.com ([10.60.135.144])
-  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Feb 2025 05:44:50 -0800
-X-CSE-ConnectionGUID: NZv3X7+xSBa3hvzjmpdOFA==
-X-CSE-MsgGUID: qpZyKO/IQaKqv2ruqstzCw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.13,267,1732608000"; 
-   d="scan'208";a="116575950"
-Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.116])
-  by fmviesa004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Feb 2025 05:44:47 -0800
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Fri, 7 Feb 2025 15:44:44 +0200 (EET)
-To: Kurt Borja <kuurtb@gmail.com>
-cc: platform-driver-x86@vger.kernel.org, Armin Wolf <W_Armin@gmx.de>, 
-    Mario Limonciello <mario.limonciello@amd.com>, 
-    Hans de Goede <hdegoede@redhat.com>, Dell.Client.Kernel@dell.com, 
-    LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v8 05/14] platform/x86: alienware-wmi: Refactor hdmi,
- amplifier, deepslp methods
-In-Reply-To: <20250203182713.27446-6-kuurtb@gmail.com>
-Message-ID: <2a6d6549-6033-65f3-838c-8ac9332b0749@linux.intel.com>
-References: <20250203182713.27446-1-kuurtb@gmail.com> <20250203182713.27446-6-kuurtb@gmail.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OBYzAYFd"
+Received: by mail-yb1-f172.google.com with SMTP id 3f1490d57ef6-e573136107bso1803066276.3;
+        Fri, 07 Feb 2025 06:08:08 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1738937287; x=1739542087; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=Ro3oOT+B3Q2DLskPRmtiJGhr5n3xItH0zu9B9q4hXzY=;
+        b=OBYzAYFddCDWfgRXS//53LdHUW2iclhjbyCCbjCvyV1TUm7QbBfZfy8DEtPZDoGTZg
+         fFxV8i+8eGnbblHVN3aM+W3+hpK6qxkIFubaJZb4erora+HVREdnTmPgdscktyiyG8KY
+         dlvYzVIKd5WtO2KjG64Kcwu5vny0viFD4nmREXH857MW3Jow/5Wje1ZHG/jQWd6aXMI6
+         0UqHkILrF13DxzUR+CJ8p3Wpwrpf3nwm93Gb/yaFwJ2l7EJ2bBKNGypN37gVLZNTGXa7
+         1NSbW6PWAAx6smi3TG9aQEyQl31I6bJqrpHvqFYt9Rzs3tjH+9ApWytIpQBBYHaRBAah
+         ONZQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738937287; x=1739542087;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=Ro3oOT+B3Q2DLskPRmtiJGhr5n3xItH0zu9B9q4hXzY=;
+        b=shb4dVplBEUm/+Yd7UieKeH/28PfeJaYp8em2snlUU/Mw4EWZbj9Eq3e9f3xYJejXj
+         SJcp9H7Hk7WpDq4r3E1bptqt0W0NvXehKoHk9O1TljLQgd71/ltytQaE59R1L4xhnhSK
+         +OosnsVjxOs/DZxqtQxuIV7w2hBeLF6l4rhOE3zv/NrfTPCJpBv1XtCoHRvsZMTCeQWW
+         wpCIwOq+s/uizrnE7bW2XIymfo1TDaZUOKv4G8x8cyKX5mXoj/4KrHCvtvi/EZG1ISX2
+         8yjPaSRHiLUHC8tXHNxXulRwOZ69bEq9yPo+bgHvwSey11KDs0yE7AKyv2JPDBlmgBcl
+         bejA==
+X-Forwarded-Encrypted: i=1; AJvYcCUrIodTTSNAfDrpiBivdvmjErPUoecOSJLVGJw3daxokhsiTs51h6X74t5JmgGn2n6fLjQrox+NvlAGJUY=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz4JvNeHwlrD+kgx8CLYE4VvbO0e5mi71Jfyc6BB9ygYpsQK7vz
+	hQmof6Sc4G4ctVnJtTO4+HC8/rDINKlYrVWl/HHWqlRVssmCH3eJcx/J7A==
+X-Gm-Gg: ASbGncsAZqr9ojK/XDpmM2L9SzBXACwr8DXJ+d371L/8OEm0ogUX+8mFGTuzximMLc4
+	/61suskVzHlYEJx5nhZG8xsqf+YJ+mp5OiqmP8bPzpWWVK4AQcJKBRTRomMBBkMENZBKcvTW4xU
+	Vg5vIK1PqRJUCUCR0fBK0xBJe8ksI0ymBguljjQNwfaxAi3E0zeDhj/X1ocXiiItnB4KgcEAqVH
+	qRuyl2zOBCsNjcuhOK23w4I4mM51rjMU0xaTj6C8cVX1b0TF0WL5gM65M/lJZyyNmdo4mGHMKXY
+	sJ5JsQsD8+xWYjLHBaLmVoY=
+X-Google-Smtp-Source: AGHT+IEtku4Nw1Bp9IDIWNWXOLntkCce9vM4vyoQtv7tK+M1iD64rIR8FS+eMVfk/RJzIcfGeBjbJA==
+X-Received: by 2002:a05:690c:9c0f:b0:6f7:56f7:2398 with SMTP id 00721157ae682-6f9b284504emr27217287b3.7.1738937287453;
+        Fri, 07 Feb 2025 06:08:07 -0800 (PST)
+Received: from localhost.localdomain ([2800:bf0:82:3d2:4207:a956:ebad:2a64])
+        by smtp.gmail.com with ESMTPSA id 00721157ae682-6f9a000f577sm5525607b3.118.2025.02.07.06.08.05
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 07 Feb 2025 06:08:06 -0800 (PST)
+From: Kurt Borja <kuurtb@gmail.com>
+To: platform-driver-x86@vger.kernel.org
+Cc: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	"Armin Wolf" <W_Armin@gmx.de>,
+	"Mario Limonciello" <mario.limonciello@amd.com>,
+	"Hans de Goede" <hdegoede@redhat.com>,
+	Dell.Client.Kernel@dell.com,
+	linux-kernel@vger.kernel.org,
+	"Kurt Borja" <kuurtb@gmail.com>
+Subject: [PATCH v9 00/14] platform/x86: alienware-wmi driver rework
+Date: Fri,  7 Feb 2025 09:07:29 -0500
+Message-ID: <20250207140743.16822-1-kuurtb@gmail.com>
+X-Mailer: git-send-email 2.48.1
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 8bit
 
-On Mon, 3 Feb 2025, Kurt Borja wrote:
+Hi!
 
-> Refactor show/store methods for hdmi, amplifier, deepslp sysfs groups to
-> use alienware_wmi_command() instead of alienware_wmax_command() which
-> uses deprecated WMI methods.
-> 
-> Reviewed-by: Armin Wolf <W_Armin@gmx.de>
-> Signed-off-by: Kurt Borja <kuurtb@gmail.com>
-> ---
->  drivers/platform/x86/dell/alienware-wmi.c | 80 +++++++++++++----------
->  1 file changed, 45 insertions(+), 35 deletions(-)
-> 
-> diff --git a/drivers/platform/x86/dell/alienware-wmi.c b/drivers/platform/x86/dell/alienware-wmi.c
-> index 525d25a1fa6c..412caf0e3b84 100644
-> --- a/drivers/platform/x86/dell/alienware-wmi.c
-> +++ b/drivers/platform/x86/dell/alienware-wmi.c
-> @@ -711,53 +711,57 @@ static acpi_status alienware_wmax_command(void *in_args, size_t in_size,
->  static ssize_t cable_show(struct device *dev, struct device_attribute *attr,
->  			  char *buf)
->  {
-> +	struct alienfx_platdata *pdata = dev_get_platdata(dev);
->  	struct wmax_basic_args in_args = {
->  		.arg = 0,
->  	};
-> -	acpi_status status;
->  	u32 out_data;
-> +	int ret;
-> +
-> +	ret = alienware_wmi_command(pdata->wdev, WMAX_METHOD_HDMI_CABLE,
-> +				    &in_args, sizeof(in_args), &out_data);
->  
-> -	status =
-> -	    alienware_wmax_command(&in_args, sizeof(in_args),
-> -				   WMAX_METHOD_HDMI_CABLE, &out_data);
-> -	if (ACPI_SUCCESS(status)) {
-> +	if (!ret) {
->  		if (out_data == 0)
->  			return sysfs_emit(buf, "[unconnected] connected unknown\n");
->  		else if (out_data == 1)
->  			return sysfs_emit(buf, "unconnected [connected] unknown\n");
->  	}
-> -	pr_err("alienware-wmi: unknown HDMI cable status: %d\n", status);
-> +
-> +	pr_err("alienware-wmi: unknown HDMI cable status: %d\n", ret);
->  	return sysfs_emit(buf, "unconnected connected [unknown]\n");
->  }
->  
->  static ssize_t source_show(struct device *dev, struct device_attribute *attr,
->  			   char *buf)
->  {
-> +	struct alienfx_platdata *pdata = dev_get_platdata(dev);
->  	struct wmax_basic_args in_args = {
->  		.arg = 0,
->  	};
-> -	acpi_status status;
->  	u32 out_data;
-> +	int ret;
->  
-> -	status =
-> -	    alienware_wmax_command(&in_args, sizeof(in_args),
-> -				   WMAX_METHOD_HDMI_STATUS, &out_data);
-> +	ret = alienware_wmi_command(pdata->wdev, WMAX_METHOD_HDMI_STATUS,
-> +				    &in_args, sizeof(in_args), &out_data);
->  
-> -	if (ACPI_SUCCESS(status)) {
-> +	if (!ret) {
->  		if (out_data == 1)
->  			return sysfs_emit(buf, "[input] gpu unknown\n");
->  		else if (out_data == 2)
->  			return sysfs_emit(buf, "input [gpu] unknown\n");
->  	}
-> -	pr_err("alienware-wmi: unknown HDMI source status: %u\n", status);
-> +
-> +	pr_err("alienware-wmi: unknown HDMI source status: %u\n", ret);
->  	return sysfs_emit(buf, "input gpu [unknown]\n");
->  }
->  
->  static ssize_t source_store(struct device *dev, struct device_attribute *attr,
->  			    const char *buf, size_t count)
->  {
-> +	struct alienfx_platdata *pdata = dev_get_platdata(dev);
->  	struct wmax_basic_args args;
-> -	acpi_status status;
-> +	int ret;
->  
->  	if (strcmp(buf, "gpu\n") == 0)
->  		args.arg = 1;
-> @@ -767,12 +771,12 @@ static ssize_t source_store(struct device *dev, struct device_attribute *attr,
->  		args.arg = 3;
->  	pr_debug("alienware-wmi: setting hdmi to %d : %s", args.arg, buf);
->  
-> -	status = alienware_wmax_command(&args, sizeof(args),
-> -					WMAX_METHOD_HDMI_SOURCE, NULL);
-> +	ret = alienware_wmi_command(pdata->wdev, WMAX_METHOD_HDMI_SOURCE, &args,
-> +				    sizeof(args), NULL);
-> +
-> +	if (ret < 0)
-> +		pr_err("alienware-wmi: HDMI toggle failed: results: %u\n", ret);
->  
-> -	if (ACPI_FAILURE(status))
-> -		pr_err("alienware-wmi: HDMI toggle failed: results: %u\n",
-> -		       status);
->  	return count;
->  }
->  
-> @@ -805,22 +809,24 @@ static const struct attribute_group hdmi_attribute_group = {
->  static ssize_t status_show(struct device *dev, struct device_attribute *attr,
->  			   char *buf)
->  {
-> +	struct alienfx_platdata *pdata = dev_get_platdata(dev);
->  	struct wmax_basic_args in_args = {
->  		.arg = 0,
->  	};
-> -	acpi_status status;
->  	u32 out_data;
-> +	int ret;
->  
-> -	status =
-> -	    alienware_wmax_command(&in_args, sizeof(in_args),
-> -				   WMAX_METHOD_AMPLIFIER_CABLE, &out_data);
-> -	if (ACPI_SUCCESS(status)) {
-> +	ret = alienware_wmi_command(pdata->wdev, WMAX_METHOD_AMPLIFIER_CABLE,
-> +				    &in_args, sizeof(in_args), &out_data);
-> +
-> +	if (!ret) {
+I addressed the style issues in the last version.
 
-Hi, I noticed one minor style problem while trying to apply these I'd 
-like to get addressed before I take them.
+~ Kurt
+---
+[05/14]
+  - Removed empty lines between call and error handling in all cases
 
-Could you please remove the empty line in between the call and its error 
-handling for the calls you touch. There are a few such cases at least in 
-this patch.
+[06/14]
+  - Removed empty lines between call and error handling in
+    wmax_game_shift_status()
 
-Thanks in advance.
+v8: https://lore.kernel.org/platform-driver-x86/20250203182713.27446-1-kuurtb@gmail.com/
 
+Kurt Borja (14):
+  platform/x86: alienware-wmi: Add a state container for LED control
+    feature
+  platform/x86: alienware-wmi: Add WMI Drivers
+  platform/x86: alienware-wmi: Add a state container for thermal control
+    methods
+  platform/x86: alienware-wmi: Refactor LED control methods
+  platform/x86: alienware-wmi: Refactor hdmi, amplifier, deepslp methods
+  platform/x86: alienware-wmi: Refactor thermal control methods
+  platform/x86: alienware-wmi: Split DMI table
+  MAINTAINERS: Update ALIENWARE WMI DRIVER entry
+  platform/x86: Rename alienware-wmi.c
+  platform/x86: Add alienware-wmi.h
+  platform/x86: Split the alienware-wmi driver
+  platform/x86: dell: Modify Makefile alignment
+  platform/x86: Update alienware-wmi config entries
+  platform/x86: alienware-wmi: Update header and module information
+
+ MAINTAINERS                                   |    4 +-
+ drivers/platform/x86/dell/Kconfig             |   30 +-
+ drivers/platform/x86/dell/Makefile            |   45 +-
+ .../platform/x86/dell/alienware-wmi-base.c    |  491 +++++++
+ .../platform/x86/dell/alienware-wmi-legacy.c  |   95 ++
+ .../platform/x86/dell/alienware-wmi-wmax.c    |  768 ++++++++++
+ drivers/platform/x86/dell/alienware-wmi.c     | 1249 -----------------
+ drivers/platform/x86/dell/alienware-wmi.h     |  117 ++
+ 8 files changed, 1523 insertions(+), 1276 deletions(-)
+ create mode 100644 drivers/platform/x86/dell/alienware-wmi-base.c
+ create mode 100644 drivers/platform/x86/dell/alienware-wmi-legacy.c
+ create mode 100644 drivers/platform/x86/dell/alienware-wmi-wmax.c
+ delete mode 100644 drivers/platform/x86/dell/alienware-wmi.c
+ create mode 100644 drivers/platform/x86/dell/alienware-wmi.h
+
+
+base-commit: e75394bbf4838857f57b6c5d00f1e56c46cd6c11
 -- 
- i.
+2.48.1
 
->  		if (out_data == 0)
->  			return sysfs_emit(buf, "[unconnected] connected unknown\n");
->  		else if (out_data == 1)
->  			return sysfs_emit(buf, "unconnected [connected] unknown\n");
->  	}
-> -	pr_err("alienware-wmi: unknown amplifier cable status: %d\n", status);
-> +
-> +	pr_err("alienware-wmi: unknown amplifier cable status: %d\n", ret);
->  	return sysfs_emit(buf, "unconnected connected [unknown]\n");
->  }
->  
-> @@ -850,15 +856,17 @@ static const struct attribute_group amplifier_attribute_group = {
->  static ssize_t deepsleep_show(struct device *dev, struct device_attribute *attr,
->  			      char *buf)
->  {
-> +	struct alienfx_platdata *pdata = dev_get_platdata(dev);
->  	struct wmax_basic_args in_args = {
->  		.arg = 0,
->  	};
-> -	acpi_status status;
->  	u32 out_data;
-> +	int ret;
->  
-> -	status = alienware_wmax_command(&in_args, sizeof(in_args),
-> -					WMAX_METHOD_DEEP_SLEEP_STATUS, &out_data);
-> -	if (ACPI_SUCCESS(status)) {
-> +	ret = alienware_wmi_command(pdata->wdev, WMAX_METHOD_DEEP_SLEEP_STATUS,
-> +				    &in_args, sizeof(in_args), &out_data);
-> +
-> +	if (!ret) {
->  		if (out_data == 0)
->  			return sysfs_emit(buf, "[disabled] s5 s5_s4\n");
->  		else if (out_data == 1)
-> @@ -866,15 +874,17 @@ static ssize_t deepsleep_show(struct device *dev, struct device_attribute *attr,
->  		else if (out_data == 2)
->  			return sysfs_emit(buf, "disabled s5 [s5_s4]\n");
->  	}
-> -	pr_err("alienware-wmi: unknown deep sleep status: %d\n", status);
-> +
-> +	pr_err("alienware-wmi: unknown deep sleep status: %d\n", ret);
->  	return sysfs_emit(buf, "disabled s5 s5_s4 [unknown]\n");
->  }
->  
->  static ssize_t deepsleep_store(struct device *dev, struct device_attribute *attr,
->  			       const char *buf, size_t count)
->  {
-> +	struct alienfx_platdata *pdata = dev_get_platdata(dev);
->  	struct wmax_basic_args args;
-> -	acpi_status status;
-> +	int ret;
->  
->  	if (strcmp(buf, "disabled\n") == 0)
->  		args.arg = 0;
-> @@ -884,12 +894,12 @@ static ssize_t deepsleep_store(struct device *dev, struct device_attribute *attr
->  		args.arg = 2;
->  	pr_debug("alienware-wmi: setting deep sleep to %d : %s", args.arg, buf);
->  
-> -	status = alienware_wmax_command(&args, sizeof(args),
-> -					WMAX_METHOD_DEEP_SLEEP_CONTROL, NULL);
-> +	ret = alienware_wmi_command(pdata->wdev, WMAX_METHOD_DEEP_SLEEP_CONTROL,
-> +				    &args, sizeof(args), NULL);
-> +
-> +	if (!ret)
-> +		pr_err("alienware-wmi: deep sleep control failed: results: %u\n", ret);
->  
-> -	if (ACPI_FAILURE(status))
-> -		pr_err("alienware-wmi: deep sleep control failed: results: %u\n",
-> -			status);
->  	return count;
->  }
->  
-> 
