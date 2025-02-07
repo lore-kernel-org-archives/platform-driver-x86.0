@@ -1,64 +1,50 @@
-Received: from mail-pj1-f44.google.com (mail-pj1-f44.google.com [209.85.216.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2DEF913CFA6
-	for <platform-driver-x86@vger.kernel.org>; Fri,  7 Feb 2025 05:40:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 743B716C684;
+	Fri,  7 Feb 2025 09:20:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738906837; cv=none; b=U6Gm5e6sY9Ds+eg2+o8GVlkPJagjXMMTlkm27PTbji+vpdFmwZCWX9PeQqFJFUJ5c0o8ZmNzTkApKzrxbwGi0BRf83i8O+IslKhQ6TUgcLVE39xNp7MSff3Od0AbUzvrGu9J7lOYH53Df/mv1mKyNK7qRBQQATqWbA+DmL1f5to=
+	t=1738920044; cv=none; b=Um6CpGgH1ecv/1q4GiLx4oX68QJd3okXx6EnQ+o2v+is9DIbAjiSwP34m2mEqh68fZQndjJiBvgZz//bDsQFdJoTS3iE6XYPeTW1rwMeqwqOmT+3vW20tHG7fR3xjfzTayaCzWeiFujUHf5xCiBnwOcm2VvohqJWIU00ZzoXSJc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738906837; c=relaxed/simple;
-	bh=TE3ZkntdWZY1tJD+ylejE+pOPsaxni1UYah5iPCiO2w=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=of/vEAUs5Fl1o807gLeXbbrEKJORoghqdYFWQgIVKkgkgmFiLfMXvpMFHBJm9K0SvCUTcQWmJZ1Uo1+A2zS/pakSUp1RRYNqzfU75CeVyXzahuxFI+GZMV9r6B8CcJhYh40MDzhMU0/5dZyhq5HyG5lW9RgV0dxd+tROxenc938=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=DC6xILfI; arc=none smtp.client-ip=209.85.216.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1738920044; c=relaxed/simple;
+	bh=hA2SG/by2VlZkg0k+rBAIateDa8Wr9F6Pl3v/Hw6QSU=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=SubGo9z5pVQ5wUQ+ChjUmebZtagaSlMmfBMZHrHxIJ1M2vnZo4L8O3HtlgtDjXh8rM/up5LS1RSfxVzWOkjMAwhyvXFDilGCLA6RnQj9w3b+qoNu1h6FMFrwawhTyV4l18iNyRsKumlINSK6gCqP8NDM4G8tRZ58gXukiTjML1M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=fZWljDPb; arc=none smtp.client-ip=198.175.65.19
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DC6xILfI"
-Received: by mail-pj1-f44.google.com with SMTP id 98e67ed59e1d1-2f9e415fa42so3015259a91.1
-        for <platform-driver-x86@vger.kernel.org>; Thu, 06 Feb 2025 21:40:35 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1738906835; x=1739511635; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:to:subject:user-agent:mime-version:date:message-id:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=7KUwompBu1IwxxBZZchUvDtpIHsBnqr6cs+KLUlA5Hc=;
-        b=DC6xILfIycxEGKTZyD3JtkfRsYYoC2yF65Tx2KO1FyXYE6qJyZy+w1MBl6neR+u+Y2
-         E4Nmm1WiAPAzqYg9gT5nm2QClr0/lQB8N7fC/+xOJgju2FZfISzCRIWZUojQm0hIgnO7
-         ZAuNs236IX/ehROEP+d4szHDiojvrRMYHGyAUjuQ6G1UskvvPFOGV+ZrhCMipmWLjsQM
-         TsHnWuhSCHdqAvyQlCSJjOfCacNdN8aEv97uZRh/dqexfW8R90qqAjspKuUSV6/OQyE4
-         95zkS/zdL0Jhxk+sN6A+6Rq7sbZndS2CUMBNSrdMNZk8kEfAJWgx+bNJswqOUWoHBjnj
-         YSKg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738906835; x=1739511635;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=7KUwompBu1IwxxBZZchUvDtpIHsBnqr6cs+KLUlA5Hc=;
-        b=cJ9Y9uG73XjuIeQQG4DKER+WBuY13+2aHbz/vo8piA9tjmCJ0HODt5i4St8CWOs7aO
-         lxcc2N7XH7VkeXXtw2FWOwxTM9KPyNaVpkuzpQXEaPoWX4ZUzTA/nxjiTtyQyCTN/wIg
-         +WewOpAwUNUM2q2Oa4KNSWrlbRxz8KuUdTA7zfC1SKvnxbx1I7HB3slbbC8YnN3mQJjM
-         MeqQJtzN6PmNVRWrFS+rHL0DWo/rK7c1ZfF2I1M1G2YaUu+Xm8uzNHG2WAOlKgxa2WOS
-         opKMF36zJrIZmcB/cV6BJOAb8cNHKMQTzTPDNCF0idybk4//aEt/Xy2xIAK0ricLaL3W
-         bzjg==
-X-Forwarded-Encrypted: i=1; AJvYcCUCEZJFLhqjH39IV1xMuLXEXv1lbFCk9h1i6Clbt3txeKILFl+JKtosg0nJeQh9dPmJILqCwHBSDY+EnXnv5mo658cA@vger.kernel.org
-X-Gm-Message-State: AOJu0YyKzMTnF49WwjOPYnotx3zzOKh3f0yohOaWQfueAQU75RkH+sL0
-	Q0MgFAwexWwjPvsyFI/78J8mzpR4b9Va04shoYhmGDyJQAqUwXoM4GfZCg==
-X-Gm-Gg: ASbGnctis/wbcxLpJOEyL8vkaEG2BgJmQytYAqFHjWv9TiJol5DaYLLhyYkX48ZN5q/
-	hDfbZro9x/TrMF20QceTzCVHBJmb3ZhINEN9iJzAq1BDKHSdyKLzttvGiBJMiQuWhPwKwLdcr15
-	ZrOsQoK9u5maVFqKz+1BnG5z33odu6lnkwsKIdkwOdKg3WwD8HQ2IGN5//eWNKNQivTzf9109tB
-	kicZdlXAABLJQtxGg2ZyNnRV+/mdiLekbpL098feMkdZpM4vWwdbukWK8Mtp2kq4xIOVP5dLPuL
-	p6YaEvDF8FpluwKxk13GKkfFHVluMupaDidpaMXeMpXXsfqddxpf6Be3K6qCvoIcvF/k3w==
-X-Google-Smtp-Source: AGHT+IGf7gIhVDh1udg/WSmnB1eiYq5StBbW5R5hItDUJy1UBnmabvxlq/TNRE38AhCwQKF+2xOR7A==
-X-Received: by 2002:a17:90b:5282:b0:2fa:b84:b31f with SMTP id 98e67ed59e1d1-2fa243e9f8dmr2986760a91.25.1738906835247;
-        Thu, 06 Feb 2025 21:40:35 -0800 (PST)
-Received: from ?IPV6:2401:4900:6299:3a25:4b7c:a6b6:9696:10e1? ([2401:4900:6299:3a25:4b7c:a6b6:9696:10e1])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-2fa09a1848asm2456971a91.12.2025.02.06.21.40.33
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 06 Feb 2025 21:40:34 -0800 (PST)
-Message-ID: <4d281c36-4996-4518-9db3-e11780f6fbfe@gmail.com>
-Date: Fri, 7 Feb 2025 11:10:30 +0530
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="fZWljDPb"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1738920042; x=1770456042;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=hA2SG/by2VlZkg0k+rBAIateDa8Wr9F6Pl3v/Hw6QSU=;
+  b=fZWljDPb6Dt6BamXlxUgRg/BGeXNvgwfCEJrECIl1AXkmStsvGBxXdd6
+   KiBxMDtqf9ELAwe1i3PNFA3SNtfNmIzaQqSSgPrORD+dsHDCSyHT1Zn72
+   JvlDEBWozaeJIZwr3xE0ARQdDERWMQwCBmVejzG3Oy1PSqvuq19DOtQhA
+   RVjFdS7fgoyNQ1TI3+SEny5dqfXkvTMv8zT0n3tgO/G8XN4rxdauo7zhx
+   S/cWcvohZKvHGC7YtNGEzEKwR4N2hEHyudg1KuigqRKFhQ6IaAyHf/JS1
+   71oGDga8WKNrWhqV11+sDQ3MDKNj9eovKdIsekPibuJSy8vQ1qW1mtKkA
+   g==;
+X-CSE-ConnectionGUID: Sfb1Be4gSV6/KJUHXJ31Vw==
+X-CSE-MsgGUID: qX5FiCzlRuCILTKoPOQATg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11336"; a="39428950"
+X-IronPort-AV: E=Sophos;i="6.13,266,1732608000"; 
+   d="scan'208";a="39428950"
+Received: from orviesa001.jf.intel.com ([10.64.159.141])
+  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Feb 2025 01:20:40 -0800
+X-CSE-ConnectionGUID: Rs/q4v6kTrSfo8mlMCbvMQ==
+X-CSE-MsgGUID: 4DBwnz/7TVqAchVWKhRZfg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
+   d="scan'208";a="148692076"
+Received: from choongyo-mobl.gar.corp.intel.com (HELO [10.247.39.73]) ([10.247.39.73])
+  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Feb 2025 01:20:32 -0800
+Message-ID: <564ede5d-9f53-40be-9305-63f63b384e15@linux.intel.com>
+Date: Fri, 7 Feb 2025 17:20:29 +0800
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -66,56 +52,134 @@ List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: Need help fixing turbo button and power profiles on Acer Predator
- Helios Neo 16 (PHN16-72)
-To: Armin Wolf <W_Armin@gmx.de>, platform-driver-x86@vger.kernel.org
-References: <e0f625f4-9c55-4021-ba43-668edb9fe80d@gmail.com>
- <083e0184-19e9-4473-bebf-5536b3d5ec10@gmx.de>
+Subject: Re: [PATCH net-next v7 2/7] net: pcs: xpcs: re-initiate clause 37
+ Auto-negotiation
+To: "Russell King (Oracle)" <linux@armlinux.org.uk>
+Cc: Simon Horman <horms@kernel.org>, Jose Abreu <joabreu@synopsys.com>,
+ Jose Abreu <Jose.Abreu@synopsys.com>,
+ David E Box <david.e.box@linux.intel.com>,
+ Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
+ Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>,
+ "H . Peter Anvin" <hpa@zytor.com>,
+ Rajneesh Bhardwaj <irenic.rajneesh@gmail.com>,
+ David E Box <david.e.box@intel.com>, Andrew Lunn <andrew+netdev@lunn.ch>,
+ "David S . Miller" <davem@davemloft.net>, Eric Dumazet
+ <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
+ Paolo Abeni <pabeni@redhat.com>, Maxime Coquelin
+ <mcoquelin.stm32@gmail.com>, Alexandre Torgue
+ <alexandre.torgue@foss.st.com>, Jiawen Wu <jiawenwu@trustnetic.com>,
+ Mengyuan Lou <mengyuanlou@net-swift.com>,
+ Heiner Kallweit <hkallweit1@gmail.com>, Hans de Goede <hdegoede@redhat.com>,
+ =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+ Richard Cochran <richardcochran@gmail.com>,
+ Serge Semin <fancer.lancer@gmail.com>, x86@kernel.org,
+ linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+ platform-driver-x86@vger.kernel.org,
+ linux-stm32@st-md-mailman.stormreply.com,
+ linux-arm-kernel@lists.infradead.org
+References: <20250206131859.2960543-1-yong.liang.choong@linux.intel.com>
+ <20250206131859.2960543-3-yong.liang.choong@linux.intel.com>
+ <Z6TVmdCZeWerAZKP@shell.armlinux.org.uk>
 Content-Language: en-US
-From: Sourajyoti Basak <basak.sb2006@gmail.com>
-In-Reply-To: <083e0184-19e9-4473-bebf-5536b3d5ec10@gmx.de>
+From: Choong Yong Liang <yong.liang.choong@linux.intel.com>
+In-Reply-To: <Z6TVmdCZeWerAZKP@shell.armlinux.org.uk>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 
-Hi all,
 
-I initially replied only to Armin by mistake. Resending this to the 
-mailing list for visibility.
 
- > On 25/01/25 3:08 am, Armin Wolf wrote:
- > Please share the results of the following commands (needs root 
-privileges):
- >
- > ```
- > busybox devmem 0xFE0B085B 8
- > busybox devmem 0xFE0B085C 8
- > ```
+On 6/2/2025 11:30 pm, Russell King (Oracle) wrote:
+> On Thu, Feb 06, 2025 at 09:18:54PM +0800, Choong Yong Liang wrote:
+>> The xpcs_switch_interface_mode function was introduced to handle
+>> interface switching.
+>>
+>> According to the XPCS datasheet, a soft reset is required to initiate
+>> Clause 37 auto-negotiation when the XPCS switches interface modes.
+> 
+> Hmm. Given that description, taking it literally, claus 37
+> auto-negotiation is 1000BASE-X, not Cisco SGMII (which isn't an IEEE
+> 802.3 standard.) Are you absolutely sure that this applies to Cisco
+> SGMII?
+> 
+Hi Russell,
 
-I tried running these commands, but `busybox` on EndeavourOS does not 
-support the `devmem` applet. Instead, I used the 
-[`devmem`](https://aur.archlinux.org/packages/devmem) package from the 
-AUR.
+Yes, you are correct that Clause 37 auto-negotiation is for 1000BASE-X. 
+However, I do not believe it applies to Cisco SGMII. The XPCS implements 
+Clause 37 auto-negotiation for both 1000BASE-X and SGMII.
 
-Here are the outputs:
+> If the reset is required when switching to SGMII, should it be done
+> before or after configuring the XPCS for SGMII?
+> 
+A soft reset is required before configuring the XPCS for SGMII. Based on 
+the existing XPCS handling in the initial state, the xpcs_create() function 
+will be called, and then xpcs->need_reset will be set to true. Later on, 
+phylink_major_config() will call xpcs_pre_config() to perform the 
+xpcs_soft_reset(), and then it will continue with xpcs_config().
 
-```
-# devmem 0xFE0B085B b
-/dev/mem opened.
-Memory mapped at address 0x760fdfaae000.
-Value at address 0xFE0B085B (0x760fdfaae85b): 0x0
+I apologize for missing this patch: 
+https://patchwork.kernel.org/project/netdevbpf/patch/E1svfMA-005ZI3-Va@rmk-PC.armlinux.org.uk/
 
-# devmem 0xFE0B085C b
-/dev/mem opened.
-Memory mapped at address 0x7f5ba88f8000.
-Value at address 0xFE0B085C (0x7f5ba88f885c): 0x0
-```
+I think I should move xpcs_switch_interface_mode() to xpcs_pre_config() and 
+just update xpcs->need_reset instead of implementing my own method for 
+calling xpcs_soft_reset().
 
- > Regarding the clocking issue: I have no clue why the CPU speed goes 
-up to 3 GHz. Did you install the Intel thermal daemon (`thermald`)?
+> Also, if the reset is required, what happens if we're already using
+> SGMII, but AN has been disabled temporarily and is then re-enabled?
+> Is a reset required?
+> 
+Good point. I cannot find this scenario in the datasheet. Please allow me 
+some time to test this scenario. I will update you with the results.
 
-Yes, `thermald` was installed on the live USB when I performed the tests.
+> What about 1000BASE-X when AN is enabled or disabled and then switching
+> to SGMII?
+> 
+According to the datasheet, a soft reset is required.
 
-Thanks for your time and assistance.
+>> +static int xpcs_switch_to_aneg_c37_sgmii(const struct dw_xpcs_compat *compat,
+>> +					 struct dw_xpcs *xpcs,
+>> +					 unsigned int neg_mode)
+>> +{
+>> +	bool an_c37_enabled;
+>> +	int ret, mdio_ctrl;
+>> +
+>> +	if (neg_mode == PHYLINK_PCS_NEG_INBAND_ENABLED) {
+>> +		mdio_ctrl = xpcs_read(xpcs, MDIO_MMD_VEND2, MII_BMCR);
+>> +		if (mdio_ctrl < 0)
+>> +			return mdio_ctrl;
+>> +
+>> +		an_c37_enabled = mdio_ctrl & BMCR_ANENABLE;
+>> +		if (!an_c37_enabled) {
+> 
+> I don't think that we need "an_c37_enabled" here, I think simply:
+> 
+> 		if (!(mdio_ctrl & BMCR_ANENABLE)) {
+> 
+> would be sufficient.
+> 
+>> +			//Perform soft reset to initiate C37 auto-negotiation
+>> +			ret = xpcs_soft_reset(xpcs, compat);
+>> +			if (ret)
+>> +				return ret;
+>> +		}
+>> +	}
+>> +	return 0;
+> 
+> I'm also wondering (as above) whether this soft reset needs to happen
+> _after_ xpcs_config_aneg_c37_sgmii() has done its work - this function
+> temporarily disables AN while it's doing its work.
+> 
+Based on the programming sequence in the datasheet, it is not necessary to 
+perform a soft reset after xpcs_config_aneg_c37_sgmii() has completed its work.
 
-Best regards,
-Sourajyoti Basak
+> I'm also wondering whether AN being disabled is really a deciding
+> factor (e.g. when switching from 1000BASE-X AN-enabled to SGMII, is a
+> reset required?)
+> 
+
+Thank you for pointing this out. The datasheet only mentions performing a 
+soft reset when switching to the 1000BASE-X and SGMII interfaces, and it 
+does not specify whether AN needs to be enabled or disabled. I thought 
+adding a check would reduce the calls to the soft reset. However, I did not 
+consider the scenario of switching from 1000BASE-X with AN enabled to SGMII 
+with AN enabled. This scenario might cause regression. I will remove all 
+the checks and just perform a soft reset when switching to the SGMII interface.
