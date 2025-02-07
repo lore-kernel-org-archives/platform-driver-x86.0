@@ -1,123 +1,124 @@
-Received: from mail-ua1-f50.google.com (mail-ua1-f50.google.com [209.85.222.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D993E1EB19B;
-	Fri,  7 Feb 2025 15:21:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BED341EB1B7;
+	Fri,  7 Feb 2025 15:30:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738941690; cv=none; b=NuPdapiq3a5UzH4JDw+JEkRgSftAfkbHyn5FGElHxv7JLYNC25WhyQiyqnn1ZjoU9YJa3holIwGouSZvs7REXQJGuHq+ZbWyeBDy+mi0SwKbOomKCiBwsDQiSynFvpTE/WR1UJ9oyrWz4Df98Ws5MIPGr89R4bJhCTXtL9Jiun0=
+	t=1738942248; cv=none; b=NaDQa8kjEh5CnAnfReH0jy0c5IlNXCZ8x21zu3mtzHodW/orEE+9g3ycxfnm5QMoKFPQTKps+5dBw8MEjgldkoP1/oa3sdYRgsUrNhhntSeMXciAkXKK3wC/+KpwSc8e7Xg1FfHO0856H5Db26n3a7lbzaDVNBYNAjtdtAwTzlM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738941690; c=relaxed/simple;
-	bh=6xSu6yqLwW31sE1dgN0w1jhIDjrnggzQLcHIvx6aJY4=;
-	h=Mime-Version:Content-Type:Date:Message-Id:From:To:Cc:Subject:
-	 References:In-Reply-To; b=KR0CLuveXvGp5O9b57bnMAx++73vUqPzGrESlyxzwzWquf/Ra8pPt6s6a8RNiiFUZ9UTwPw5ilfviskFzFYks+fKPj5lZMWdTxRu0KhXJU+1J3vO5GHGxCvkHs+/GwNi+76koaP5Zubdk3IC4fWNJl88DdZgbC7iaB/PtQlyEJM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=PmKz3ggB; arc=none smtp.client-ip=209.85.222.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1738942248; c=relaxed/simple;
+	bh=33UvXvLxL9OwUW3HcEGi9jwWfVDI+fdzoULLBVvaa1Y=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=XgeaBqgluuVxEfMaWYlsVNbKSwB668Gi6nF/typyX/Pr16gRpg503vMmwjq6N26H4d/UcRO8QZ5+tPIbgZExBVLfoD2WEtClH9v1SF/H5bzJk9c76/wO8DjGmhCyGJMsbvfZWrSDEHoG9crjmrBnDT1j8Poo4w1wyXLO3m/VKYo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ZkMss3CM; arc=none smtp.client-ip=192.198.163.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PmKz3ggB"
-Received: by mail-ua1-f50.google.com with SMTP id a1e0cc1a2514c-866de72bb82so595128241.1;
-        Fri, 07 Feb 2025 07:21:28 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1738941688; x=1739546488; darn=vger.kernel.org;
-        h=in-reply-to:references:subject:cc:to:from:message-id:date
-         :content-transfer-encoding:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=B8o/GhPihbNO9n7sVY3uJzY0pqAnywK5EAV3nB+mum0=;
-        b=PmKz3ggBh65lBiTpYhTtPqTf+c0ngM5XX/BHbw7EEnOJicFZ/TYtAAjcwBlpai/KT2
-         UTTRz7LmXoKLSrlIYYbwkACy8UMx9a7jYGam6xsEgk48Kqam19aFoRhBFHOfAba1zxi6
-         mPQRKrF/Juzfm5lr5ryri0A+MGN7/WPhr6UHn+bf4TeRdMg3Sf8OSSPXGP4GZb0jHhXB
-         2IrG42elUwYkSECM9CHPoVfSmlyA7pRNxQmPI+O4Iegur5tjNNJDmJNh83Vke9+AnOQk
-         +6ltdbEXK+Mkie0qnGrPY/LhIgpNUzfXXb9+qp215dc5Rll3aUNm1/orvJQTRBwYCGzM
-         5gaw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738941688; x=1739546488;
-        h=in-reply-to:references:subject:cc:to:from:message-id:date
-         :content-transfer-encoding:mime-version:x-gm-message-state:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=B8o/GhPihbNO9n7sVY3uJzY0pqAnywK5EAV3nB+mum0=;
-        b=PXs7Z1rwJfeIugI7TktfvuIo0R7sFYarlBTPPmE53vAaN3Lh+A//AcCWVwKzB3KM5R
-         OjBjsB1SCP5T9WT794H+H+cNmOq2mrFowz6yv+vnT3EvqvSxxbfILmi6AQUQX8tZa5oY
-         4NDe+gRXgQx2RsZ2JtT74WbpvevWAhdWQcHRU+YI02D0aNrP2puJCXxqLdZc7Euhq0T0
-         q7H1NKw5xBuyHIzZQGuBqtxOFUsSYimw7itmbUjYsbOXyqd76BJPFKq7qLdnb2Z7a7rF
-         Do9YmJLtv/Vg5tNq0AugagoJ1+d36pI4PpCncIH+IC8fk1y26Z4DG4+EEhUdWXVzHIel
-         1d8w==
-X-Forwarded-Encrypted: i=1; AJvYcCU7uKl55+w8r27SkFRfYNEdT873e1+4yxqa5y0dHvn31HYVyqW0rZqeQQfAKLLs6xEB4NFBwKyE6Rnrg3E=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwRcD4Q9f54uatWTE75448F8v01OK/fvIuZ64CW+/pn/1ZTiVNL
-	C7BWMBAg2bDfI7tZPvVqw+Mc9ahmKujMV9OKXLgEYelmjYC0ImSv
-X-Gm-Gg: ASbGnctM6FUs6Ku5Elrm5QlifjC+W8DehvxdCMG6k6Fop6BJGmA0BxhEQ/HUZZrBQgb
-	2KhHFcax4C/NUIi8PVnHdOPBD1Wc9lhz3frxyvupqFbMVZ6UVnzS7EMHEnu/vLRs3EXIj0bjhCx
-	KUjT6MIFvz4EIPiOKmZt3ggY/gXlH37B71P9gHBnTIbfZQrOU5AjluZiK2CXxtNRT6AXbLnVY5F
-	SypkEb8tojRIF8ZLVB131xgVzboLabF3t51SGEKBgXfmumdeyZ48W2c80cWHdkYPUyiY/4KSS4D
-	6O6P7zg=
-X-Google-Smtp-Source: AGHT+IH4HSLNswnaBV+62T9qy945S5J+DA4t49k1tTtj0C2j6pL0p1EbbH3BUqbk6oRJea2LtqwlQw==
-X-Received: by 2002:a05:6122:2191:b0:518:6286:87a4 with SMTP id 71dfb90a1353d-51f2e0f7e02mr2796332e0c.4.1738941687215;
-        Fri, 07 Feb 2025 07:21:27 -0800 (PST)
-Received: from localhost ([2800:bf0:82:3d2:4207:a956:ebad:2a64])
-        by smtp.gmail.com with ESMTPSA id 71dfb90a1353d-51f2295a7fcsm531558e0c.46.2025.02.07.07.21.25
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 07 Feb 2025 07:21:26 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ZkMss3CM"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1738942247; x=1770478247;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=33UvXvLxL9OwUW3HcEGi9jwWfVDI+fdzoULLBVvaa1Y=;
+  b=ZkMss3CMduaYZWPDZmkuPk0gtQzwkRbRxW8XU869r3UtYk4aWuJmqp6O
+   O1cScvE14VULYbtgTPehR6+Dka7ldjcCGhPP/V4aJ6051vLfe7c3RalEp
+   TvdnMS10cPwt2cw9CBUBVZAkwfM6jx1xfsAUvJMmTevfPXmHELj6EkUc9
+   BlMLBdmRZ7Hos/EaTzHHUOGwB6Bj9+9+VZIUGiN0HUBVYy8LnxbKyYlRb
+   5W9whBR1/KzOjJDXtn0wcqAvQxdhhuRdzkB9maMeIw5hyNnTvoHLdCJ69
+   hdkD76xp4r9GGUVfKMPeGCd2VZ7DMM0cVx/gzwcn/qIkoMoNESkNE2QTu
+   A==;
+X-CSE-ConnectionGUID: qfdU2OBhSE2ZgTjDhgP7kw==
+X-CSE-MsgGUID: uqG5TzQXRzipCnpmLQKJVQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11338"; a="42427073"
+X-IronPort-AV: E=Sophos;i="6.13,267,1732608000"; 
+   d="scan'208";a="42427073"
+Received: from orviesa009.jf.intel.com ([10.64.159.149])
+  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Feb 2025 07:30:46 -0800
+X-CSE-ConnectionGUID: SbOOhTJYSkePUfFim8DKOw==
+X-CSE-MsgGUID: AqevHr+ES1+Cbl1dREyWSw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.13,267,1732608000"; 
+   d="scan'208";a="111333749"
+Received: from smile.fi.intel.com ([10.237.72.58])
+  by orviesa009.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Feb 2025 07:30:44 -0800
+Received: from andy by smile.fi.intel.com with local (Exim 4.98)
+	(envelope-from <andriy.shevchenko@linux.intel.com>)
+	id 1tgQJU-000000097ZY-1CZV;
+	Fri, 07 Feb 2025 17:30:40 +0200
+Date: Fri, 7 Feb 2025 17:30:40 +0200
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Sakari Ailus <sakari.ailus@linux.intel.com>
+Cc: Daniel Scally <djrscally@gmail.com>,
+	Hans de Goede <hdegoede@redhat.com>,
+	Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	platform-driver-x86@vger.kernel.org,
+	laurent.pinchart@ideasonboard.com, hverkuil@xs4all.nl,
+	linux-media@vger.kernel.org
+Subject: Re: [PATCH v6 2/3] platform/x86: int3472: Call "reset" GPIO "enable"
+ for INT347E
+Message-ID: <Z6YnIJWmZpjolOda@smile.fi.intel.com>
+References: <20250207134126.1769183-1-sakari.ailus@linux.intel.com>
+ <20250207134126.1769183-3-sakari.ailus@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Fri, 07 Feb 2025 10:21:24 -0500
-Message-Id: <D7MBDPIDK7XS.3DONIQK22EIBH@gmail.com>
-From: "Kurt Borja" <kuurtb@gmail.com>
-To: =?utf-8?q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Cc: <platform-driver-x86@vger.kernel.org>, "Armin Wolf" <W_Armin@gmx.de>,
- "Mario Limonciello" <mario.limonciello@amd.com>, "Hans de Goede"
- <hdegoede@redhat.com>, <Dell.Client.Kernel@dell.com>, "LKML"
- <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v9 11/14] platform/x86: Split the alienware-wmi driver
-X-Mailer: aerc 0.20.1-0-g2ecb8770224a
-References: <20250207140743.16822-1-kuurtb@gmail.com>
- <20250207140743.16822-12-kuurtb@gmail.com>
- <85e378b4-a434-efe1-fd16-416fc3ce3691@linux.intel.com>
-In-Reply-To: <85e378b4-a434-efe1-fd16-416fc3ce3691@linux.intel.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250207134126.1769183-3-sakari.ailus@linux.intel.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-On Fri Feb 7, 2025 at 10:05 AM -05, Ilpo J=C3=A4rvinen wrote:
-> On Fri, 7 Feb 2025, Kurt Borja wrote:
->
->> Split alienware-wmi WMI drivers into different files. This is done
->> seamlessly by copying and pasting, however some blocks are reordered.
->>=20
->> Reviewed-by: Armin Wolf <W_Armin@gmx.de>
->> Reviewed-by: Mario Limonciello <mario.limonciello@amd.com>
->> Signed-off-by: Kurt Borja <kuurtb@gmail.com>
->
-> Hi,
->
-> Can you please check there's no error in driver_data assignments as the=
-=20
-> numbers in removed & added lines do not match:
+On Fri, Feb 07, 2025 at 03:41:25PM +0200, Sakari Ailus wrote:
+> The DT bindings for ov7251 specify "enable" GPIO (xshutdown in
+> documentation) but the int3472 indiscriminately provides this as a "reset"
+> GPIO to sensor drivers. Take this into account by assigning it as "enable"
+> with active high polarity for INT347E devices, i.e. ov7251. "reset" with
+> active low polarity remains the default GPIO name for other devices.
 
-Hi Ilpo,
+...
 
-There was indeed a wrong assignment to Alienware m16 r1 AMD, I'm not
-really sure how it happened but it's fixed now!
+> +static const struct int3472_gpio_map int3472_gpio_map[] = {
+> +	{ "INT347E", INT3472_GPIO_TYPE_RESET, INT3472_GPIO_TYPE_RESET, false, "enable" },
+> +};
+> +
+> +static void int3472_get_func_and_polarity(struct acpi_device *adev, u8 *type,
+> +					  const char **func, unsigned long *gpio_flags)
+>  {
+> -	switch (type) {
+> +	unsigned int i;
+> +
+> +	for (i = 0; i < ARRAY_SIZE(int3472_gpio_map); i++) {
+> +		/*
+> +		 * Map the firmware-provided GPIO to whatever a driver expects
+> +		 * (as in DT bindings). First check if the requested GPIO name
 
-I'll send a v10. I apologize for the noise.
+What name?
 
->
-> $ git diff-tree -p 73224c076cf2fa2968d61584c62937f6180c8e71 | grep driver=
-_data | rev | sort | rev | uniq -c
+> +		 * matches the GPIO map, then see that the device _HID matches.
+> +		 */
+> +		if (*type != int3472_gpio_map[i].type_from)
+> +			continue;
+> +
+> +		if (!acpi_dev_hid_uid_match(adev, int3472_gpio_map[i].hid, NULL))
+> +			continue;
 
-Thanks for this amazing trick btw.
+I still think this is unusual and confusing order of checks.
 
-~ Kurt
+At the end, it is up to the PDx86 maintainers.
 
->       1 +               awcc =3D id->driver_data;
->       1 -               awcc =3D id->driver_data;
->       4 +               .driver_data =3D &generic_quirks,
->       5 -               .driver_data =3D &generic_quirks,
->       7 +               .driver_data =3D &g_series_quirks,
->       6 -               .driver_data =3D &g_series_quirks,
->
-> (That commit id is from my staging tree, not available to you but it's=20
-> this patch.)
+> +		*type = int3472_gpio_map[i].type_to;
+> +		*gpio_flags = int3472_gpio_map[i].polarity_low ?
+> +			      GPIO_ACTIVE_LOW : GPIO_ACTIVE_HIGH;
+> +		*func = int3472_gpio_map[i].func;
+> +		return;
+> +	}
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
 
