@@ -1,103 +1,121 @@
-Received: from mail-lf1-f43.google.com (mail-lf1-f43.google.com [209.85.167.43])
+Received: from mail-pj1-f44.google.com (mail-pj1-f44.google.com [209.85.216.44])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 57D632417C2;
-	Thu,  6 Feb 2025 22:57:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2DEF913CFA6
+	for <platform-driver-x86@vger.kernel.org>; Fri,  7 Feb 2025 05:40:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738882658; cv=none; b=KI+Qt9A9+XlwHJGkCSi82yASZWHTl6NlTHFt2GHrTunljhpI5OS7j9SoJqaZU1KpqH3SWnXqj1sxG6fUol+y44sZ/iSZt7y0N4GYGL8CghWW1GEf3xKxuiWyDxY1Fuc67N0hFnZNxF0iFNfxvGqIAxJWVkXLu7WlXYto0jYwZkk=
+	t=1738906837; cv=none; b=U6Gm5e6sY9Ds+eg2+o8GVlkPJagjXMMTlkm27PTbji+vpdFmwZCWX9PeQqFJFUJ5c0o8ZmNzTkApKzrxbwGi0BRf83i8O+IslKhQ6TUgcLVE39xNp7MSff3Od0AbUzvrGu9J7lOYH53Df/mv1mKyNK7qRBQQATqWbA+DmL1f5to=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738882658; c=relaxed/simple;
-	bh=SKCpGU3U3+4OR7yQ54+uvbD7yw9OxlV27Ag45UwY42M=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=aeNoNMTxf7io/ywtpk95ctLfu111/RNn3OK/Up1uhqQEkLn/jxqLy25ja3RuyRLL1u0FNcrEd6jnSNRROubTscWmOZpRR8k1F7NOd1b4ZBNQhRqICPPnXf4/mxWbR1LJTF9YrxcCPf616rYqaP32zlKz9Ej6BbyxLyoyPgevqS4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=joshuagrisham.com; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.167.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=joshuagrisham.com
+	s=arc-20240116; t=1738906837; c=relaxed/simple;
+	bh=TE3ZkntdWZY1tJD+ylejE+pOPsaxni1UYah5iPCiO2w=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=of/vEAUs5Fl1o807gLeXbbrEKJORoghqdYFWQgIVKkgkgmFiLfMXvpMFHBJm9K0SvCUTcQWmJZ1Uo1+A2zS/pakSUp1RRYNqzfU75CeVyXzahuxFI+GZMV9r6B8CcJhYh40MDzhMU0/5dZyhq5HyG5lW9RgV0dxd+tROxenc938=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=DC6xILfI; arc=none smtp.client-ip=209.85.216.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-lf1-f43.google.com with SMTP id 2adb3069b0e04-53e3778bffdso1489672e87.0;
-        Thu, 06 Feb 2025 14:57:35 -0800 (PST)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DC6xILfI"
+Received: by mail-pj1-f44.google.com with SMTP id 98e67ed59e1d1-2f9e415fa42so3015259a91.1
+        for <platform-driver-x86@vger.kernel.org>; Thu, 06 Feb 2025 21:40:35 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1738906835; x=1739511635; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:to:subject:user-agent:mime-version:date:message-id:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=7KUwompBu1IwxxBZZchUvDtpIHsBnqr6cs+KLUlA5Hc=;
+        b=DC6xILfIycxEGKTZyD3JtkfRsYYoC2yF65Tx2KO1FyXYE6qJyZy+w1MBl6neR+u+Y2
+         E4Nmm1WiAPAzqYg9gT5nm2QClr0/lQB8N7fC/+xOJgju2FZfISzCRIWZUojQm0hIgnO7
+         ZAuNs236IX/ehROEP+d4szHDiojvrRMYHGyAUjuQ6G1UskvvPFOGV+ZrhCMipmWLjsQM
+         TsHnWuhSCHdqAvyQlCSJjOfCacNdN8aEv97uZRh/dqexfW8R90qqAjspKuUSV6/OQyE4
+         95zkS/zdL0Jhxk+sN6A+6Rq7sbZndS2CUMBNSrdMNZk8kEfAJWgx+bNJswqOUWoHBjnj
+         YSKg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738882654; x=1739487454;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=744zLEEWocD0C+1Ymbg2RMfIV1Vd1B45VeC2J2Ht/8U=;
-        b=bdzEfV116CFlaJwdfAOV7OxAtpGIygHZc2k9utyzKd55nx9nxkljPlotOd9hjuLncn
-         M8UEdGWSCXsMWBCjquiD6zaRlZnSHno3yNJbSwiIrqkckvv2rsK5ZGZrNspBB7gbQOAS
-         JC3Sq1Jfp5fSRVCQ8YrsG7dvuxa6v9cSwEXZEj3sQzwnZEZD0isDKNE1WD7pYzy6rwxw
-         cmcvvEulbyYoEpTHUQ9hgIR55txujubCTs2hudKDb5MP0lJF3brH18pOnGKbmTcSVuKN
-         +0FCK9ElagM1WUlmX05PynRDT4lBEwO7UiSgorZWf6TJxCC2DwQ2/x+Ls8XfBZ0qMhDF
-         7pLg==
-X-Forwarded-Encrypted: i=1; AJvYcCUpu0Eh72eOLC7W8zQFa7r2r/vzh9GgOsAdgf3sWvVm+w6zXyHvRdOTs95CcI0xK9nf6Onr5srXCgdZALL53+YqUU4s3w==@vger.kernel.org, AJvYcCVhZiUPLgdhcG5IDNAQQGU7lyxObzhM4SkmYfzVDZtvx8H2sG3eCHswQ/CBR6/BUmDMBLc5yCWRiWZ8r4c=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yyfwza/Jmy1MhS0UsYJK4o6fgaURg5kLpl82T7pTt0L5tjzr6Xh
-	mlIu6s/Z8QYZpwfV7xJKAKj1QM6tGGrdp85hGr/U6tbfp4efeQ7UgXXx1AlpImM=
-X-Gm-Gg: ASbGnct0GN/kVBZlrEdR0IybuqIv+FMm9XuY57dCp4PEkhdJyNyHJwRXqdy+UsgXwOC
-	ENB1wv29F+kCmtzQxGMCvTSrmCpqAL4pqx2QYBFVgSV/QNzU+/h4UXkBKyPW++HgXUwwOo+rgDm
-	5OII8aoRxdTDdjLJtukRgR/1oXbnD+AEpxrj70ziTScNm30n/Pjf8HIyTPWnSjY/wMTZTuEGCDq
-	5qMazWe6oCQaANuj+0sf9Br6sHT01zy2cJVyWWhyayfC5MOijJx+IBzDyzcvVlFcuuCBPDqI3ww
-	HQv69D7d6rTVqHyIXIYhFqrolM4wRDm406MXn1hk2HqM7llfQzC12lHa
-X-Google-Smtp-Source: AGHT+IEd+C3AZW5A/bVVj9gxEcmH+plOyGm3pvUpUUfhSAo5KDPX+amMlUP5wVyRpCozKSaBLj/CWQ==
-X-Received: by 2002:a05:6512:b9c:b0:53f:231e:6f92 with SMTP id 2adb3069b0e04-54414ae0a19mr208257e87.34.1738882654049;
-        Thu, 06 Feb 2025 14:57:34 -0800 (PST)
-Received: from galaxybook.local (82-183-24-76.customers.ownit.se. [82.183.24.76])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-544105542bfsm253025e87.69.2025.02.06.14.57.32
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 06 Feb 2025 14:57:32 -0800 (PST)
-From: Joshua Grisham <josh@joshuagrisham.com>
-To: markgross@kernel.org,
-	ilpo.jarvinen@linux.intel.com,
-	hdegoede@redhat.com,
-	platform-driver-x86@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: W_Armin@gmx.de,
-	thomas@t-8ch.de,
-	kuurtb@gmail.com,
-	Joshua Grisham <josh@joshuagrisham.com>
-Subject: [PATCH] platform/x86: samsung-galaxybook: Fix sysfs_attr_init of fw attrs
-Date: Thu,  6 Feb 2025 23:57:07 +0100
-Message-ID: <20250206225707.12962-1-josh@joshuagrisham.com>
-X-Mailer: git-send-email 2.45.2
+        d=1e100.net; s=20230601; t=1738906835; x=1739511635;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=7KUwompBu1IwxxBZZchUvDtpIHsBnqr6cs+KLUlA5Hc=;
+        b=cJ9Y9uG73XjuIeQQG4DKER+WBuY13+2aHbz/vo8piA9tjmCJ0HODt5i4St8CWOs7aO
+         lxcc2N7XH7VkeXXtw2FWOwxTM9KPyNaVpkuzpQXEaPoWX4ZUzTA/nxjiTtyQyCTN/wIg
+         +WewOpAwUNUM2q2Oa4KNSWrlbRxz8KuUdTA7zfC1SKvnxbx1I7HB3slbbC8YnN3mQJjM
+         MeqQJtzN6PmNVRWrFS+rHL0DWo/rK7c1ZfF2I1M1G2YaUu+Xm8uzNHG2WAOlKgxa2WOS
+         opKMF36zJrIZmcB/cV6BJOAb8cNHKMQTzTPDNCF0idybk4//aEt/Xy2xIAK0ricLaL3W
+         bzjg==
+X-Forwarded-Encrypted: i=1; AJvYcCUCEZJFLhqjH39IV1xMuLXEXv1lbFCk9h1i6Clbt3txeKILFl+JKtosg0nJeQh9dPmJILqCwHBSDY+EnXnv5mo658cA@vger.kernel.org
+X-Gm-Message-State: AOJu0YyKzMTnF49WwjOPYnotx3zzOKh3f0yohOaWQfueAQU75RkH+sL0
+	Q0MgFAwexWwjPvsyFI/78J8mzpR4b9Va04shoYhmGDyJQAqUwXoM4GfZCg==
+X-Gm-Gg: ASbGnctis/wbcxLpJOEyL8vkaEG2BgJmQytYAqFHjWv9TiJol5DaYLLhyYkX48ZN5q/
+	hDfbZro9x/TrMF20QceTzCVHBJmb3ZhINEN9iJzAq1BDKHSdyKLzttvGiBJMiQuWhPwKwLdcr15
+	ZrOsQoK9u5maVFqKz+1BnG5z33odu6lnkwsKIdkwOdKg3WwD8HQ2IGN5//eWNKNQivTzf9109tB
+	kicZdlXAABLJQtxGg2ZyNnRV+/mdiLekbpL098feMkdZpM4vWwdbukWK8Mtp2kq4xIOVP5dLPuL
+	p6YaEvDF8FpluwKxk13GKkfFHVluMupaDidpaMXeMpXXsfqddxpf6Be3K6qCvoIcvF/k3w==
+X-Google-Smtp-Source: AGHT+IGf7gIhVDh1udg/WSmnB1eiYq5StBbW5R5hItDUJy1UBnmabvxlq/TNRE38AhCwQKF+2xOR7A==
+X-Received: by 2002:a17:90b:5282:b0:2fa:b84:b31f with SMTP id 98e67ed59e1d1-2fa243e9f8dmr2986760a91.25.1738906835247;
+        Thu, 06 Feb 2025 21:40:35 -0800 (PST)
+Received: from ?IPV6:2401:4900:6299:3a25:4b7c:a6b6:9696:10e1? ([2401:4900:6299:3a25:4b7c:a6b6:9696:10e1])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-2fa09a1848asm2456971a91.12.2025.02.06.21.40.33
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 06 Feb 2025 21:40:34 -0800 (PST)
+Message-ID: <4d281c36-4996-4518-9db3-e11780f6fbfe@gmail.com>
+Date: Fri, 7 Feb 2025 11:10:30 +0530
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: Need help fixing turbo button and power profiles on Acer Predator
+ Helios Neo 16 (PHN16-72)
+To: Armin Wolf <W_Armin@gmx.de>, platform-driver-x86@vger.kernel.org
+References: <e0f625f4-9c55-4021-ba43-668edb9fe80d@gmail.com>
+ <083e0184-19e9-4473-bebf-5536b3d5ec10@gmx.de>
+Content-Language: en-US
+From: Sourajyoti Basak <basak.sb2006@gmail.com>
+In-Reply-To: <083e0184-19e9-4473-bebf-5536b3d5ec10@gmx.de>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 
-Fixes sysfs_attr_init bug in samsung-galaxybook as reported in [1].
+Hi all,
 
-Should be applied after
-  commit f97634611408 ("platform/x86: samsung-galaxybook: Add samsung-galaxybook driver")
+I initially replied only to Armin by mistake. Resending this to the 
+mailing list for visibility.
 
-Tested with CONFIG_DEBUG_LOCK_ALLOC=y on a Samsung Galaxy Book2 Pro.
+ > On 25/01/25 3:08 am, Armin Wolf wrote:
+ > Please share the results of the following commands (needs root 
+privileges):
+ >
+ > ```
+ > busybox devmem 0xFE0B085B 8
+ > busybox devmem 0xFE0B085C 8
+ > ```
 
-[1]: https://lore.kernel.org/linux-next/20250206133652.71bbf1d3@canb.auug.org.au/
+I tried running these commands, but `busybox` on EndeavourOS does not 
+support the `devmem` applet. Instead, I used the 
+[`devmem`](https://aur.archlinux.org/packages/devmem) package from the 
+AUR.
 
-Signed-off-by: Joshua Grisham <josh@joshuagrisham.com>
----
- drivers/platform/x86/samsung-galaxybook.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+Here are the outputs:
 
-diff --git a/drivers/platform/x86/samsung-galaxybook.c b/drivers/platform/x86/samsung-galaxybook.c
-index 9c658a45d..de1ed2dc6 100644
---- a/drivers/platform/x86/samsung-galaxybook.c
-+++ b/drivers/platform/x86/samsung-galaxybook.c
-@@ -1011,13 +1011,13 @@ static int galaxybook_fw_attr_init(struct samsung_galaxybook *galaxybook,
- 	attrs[2] = &fw_attr_possible_values.attr;
- 	attrs[3] = &fw_attr_display_name_language_code.attr;
- 
--	sysfs_attr_init(&fw_attr.display_name);
-+	sysfs_attr_init(&fw_attr->display_name.attr);
- 	fw_attr->display_name.attr.name = "display_name";
- 	fw_attr->display_name.attr.mode = 0444;
- 	fw_attr->display_name.show = display_name_show;
- 	attrs[4] = &fw_attr->display_name.attr;
- 
--	sysfs_attr_init(&fw_attr.current_value);
-+	sysfs_attr_init(&fw_attr->current_value.attr);
- 	fw_attr->current_value.attr.name = "current_value";
- 	fw_attr->current_value.attr.mode = 0644;
- 	fw_attr->current_value.show = current_value_show;
--- 
-2.45.2
+```
+# devmem 0xFE0B085B b
+/dev/mem opened.
+Memory mapped at address 0x760fdfaae000.
+Value at address 0xFE0B085B (0x760fdfaae85b): 0x0
 
+# devmem 0xFE0B085C b
+/dev/mem opened.
+Memory mapped at address 0x7f5ba88f8000.
+Value at address 0xFE0B085C (0x7f5ba88f885c): 0x0
+```
+
+ > Regarding the clocking issue: I have no clue why the CPU speed goes 
+up to 3 GHz. Did you install the Intel thermal daemon (`thermald`)?
+
+Yes, `thermald` was installed on the live USB when I performed the tests.
+
+Thanks for your time and assistance.
+
+Best regards,
+Sourajyoti Basak
