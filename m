@@ -1,198 +1,122 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4727B1D5CFA;
-	Fri,  7 Feb 2025 22:56:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 68E5A611E;
+	Sat,  8 Feb 2025 03:33:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738968992; cv=none; b=dBbxdsKRH7N57eotDUyIlZUmLP+1W7kNi+URMQUW+DJZPV1m90ti+yLzn0Ms4VBg4+mzstMMc6gRXt7pwT0XEATaCwx/jmAVUAzCm12BW1gn8/RWJBCHkPcJLQjHOKfxjiEOFCyn3WsjTHJmkjqkYCKfISpsXlrrSSW/reOscEk=
+	t=1738985631; cv=none; b=MYuhKtwlYrH887i1B5PoEajS76d9jwCxArey3Pt1wDSLaLFCYHjQFHRq3OjAQtBaYBIelkc/oTzM06BPoPckRXEGVUjcsdE+UTFmuTTxyQHxE2YsSO2wo8xKrRNUe9bd9ojab4WFTK5AdYg9mHHVIm06dWruedVLlj5ZK/gMKwk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738968992; c=relaxed/simple;
-	bh=RkvEGYhbSe1gp4o7hhEdKFJndjMTQnqtE5Y33SBVvEE=;
-	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=iQnm1jCq6noXtDmXVS6IQwe/divJb7DQ9AOaX7uBn7xmJRtsvsFYcoX2FIDFOZvZ3oq21sD+Zm4BUC9SWncq58qwTi3BVbFyj1hUQ8+124E9IE+w6i18NFJUeCGTwHyaxWgJp9sRNGiotfm9c2lmyNVoS5VrKcAcXDeUi+TYBuM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=iLS3csVY; arc=none smtp.client-ip=192.198.163.18
+	s=arc-20240116; t=1738985631; c=relaxed/simple;
+	bh=E4ef/ftjH8Y83ESfkZ/ek4OwMIc3mSgBksj42G9pEyE=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=ul9pRFqSUXXvr9Yc1YIcaYE0qjvZCEVE+Q18dqvfLisHYZ34HyDCEg5aAnlsz5Lgjeo1I4MWZITUj/gSjv+76nofXiM2ugqM8g8uXs2eswBgBGDFM6pqnMmEmSNeHG9/yzfmFLFnuEhXr0AzE6GBm6wpzsw/fPFNmX2js0YZKII=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=JrWCyfyD; arc=none smtp.client-ip=198.175.65.21
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="iLS3csVY"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="JrWCyfyD"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1738968991; x=1770504991;
-  h=from:to:subject:date:message-id:in-reply-to:references:
-   mime-version:content-transfer-encoding;
-  bh=RkvEGYhbSe1gp4o7hhEdKFJndjMTQnqtE5Y33SBVvEE=;
-  b=iLS3csVYE3OhaDZ3E7J/tFw2zS6WhvOTwsK041P/FucHKxcM/TWn3Rb/
-   k1W/s8DmpwffCXUL7epRCXn0hoFNjkuaFCNUUwj26nWveArVAIv/YuHBA
-   v+PLT4S4ehUgbjgVx26elJkQ9frteSVS7Epu59LM3eT4lLR11UW6zGXRT
-   iixilkfIh1pOV38c4lLnLNTKyNd6fjddNE126RU1QkNgAr0HieIUNvNXT
-   JG4vGvFnmmX9jhDNftdMFaJK0U5DffvzIDc8jv0xhL7soFlL/B7NNWxEG
-   0S3CGKD2c5PwENWqAWxyFlDloYQT4fmd+u6iJaS4uHoI6X4zxCP18A6r8
-   A==;
-X-CSE-ConnectionGUID: 9jIVl0kaTIitxg7R80o4cQ==
-X-CSE-MsgGUID: m5WVgyfDQsydDalqDIdHvQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11338"; a="38855859"
+  t=1738985629; x=1770521629;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=E4ef/ftjH8Y83ESfkZ/ek4OwMIc3mSgBksj42G9pEyE=;
+  b=JrWCyfyDRTOUk0ngRY1C6TlxxztxhAuYGx0241kebH9QXtskTfEqynL7
+   LcP5cQHqCRGFLlx8g/bRNaQh+/b36nGXmXJxGXuWxAlql40gede9SWN2I
+   ek4aDW99n4kC+Bixd2+Ep9m24/yDbQJybBqqaM/bvdK9TG0A13tGJ4+RU
+   vUMj6cxeF6dvmgJ4aPo6yCJiajnURrPfQxfwkdrhNuuPZoLGX3i9unG1z
+   apfqvCfHYdiNR7iNYjCaipJ7uRoI87R8TJp+vIHOOpFxyy1+BiBsJuvZ2
+   fKrpQPHhzQaGpkosgpeNSrz62QsfvjrxV4wZGqWMRmGPtc5ETCIT6vkfu
+   w==;
+X-CSE-ConnectionGUID: IYAVMl0NSkuhQGMCWUWMTg==
+X-CSE-MsgGUID: UkVjxFPiS7eiJ1jNRFIsyA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11338"; a="39541413"
 X-IronPort-AV: E=Sophos;i="6.13,268,1732608000"; 
-   d="scan'208";a="38855859"
-Received: from orviesa009.jf.intel.com ([10.64.159.149])
-  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Feb 2025 14:56:31 -0800
-X-CSE-ConnectionGUID: au7s15nNSPC8M++5q0aWlw==
-X-CSE-MsgGUID: ps6TkpumSYGTmFF1LGFAQQ==
+   d="scan'208";a="39541413"
+Received: from fmviesa007.fm.intel.com ([10.60.135.147])
+  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Feb 2025 19:33:48 -0800
+X-CSE-ConnectionGUID: KfrjFuMpRnayDLYzhLb9nA==
+X-CSE-MsgGUID: nahwQkBJSY+cDoGI/mkrIA==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.13,268,1732608000"; 
-   d="scan'208";a="111422031"
-Received: from ssimmeri-mobl2.amr.corp.intel.com (HELO xpardee-desk.lan) ([10.124.221.44])
-  by orviesa009-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Feb 2025 14:56:29 -0800
-From: Xi Pardee <xi.pardee@linux.intel.com>
-To: xi.pardee@linux.intel.com,
-	rajvi0912@gmail.com,
-	irenic.rajneesh@gmail.com,
-	david.e.box@linux.intel.com,
-	hdegoede@redhat.com,
-	ilpo.jarvinen@linux.intel.com,
-	platform-driver-x86@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-pm@vger.kernel.org
-Subject: [PATCH v6 6/6] platform/x86/intel/pmc: Add Arrow Lake U/H support to intel_pmc_core driver
-Date: Fri,  7 Feb 2025 14:56:12 -0800
-Message-ID: <20250207225615.401235-7-xi.pardee@linux.intel.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20250207225615.401235-1-xi.pardee@linux.intel.com>
-References: <20250207225615.401235-1-xi.pardee@linux.intel.com>
+   d="scan'208";a="111621205"
+Received: from choongyo-mobl.gar.corp.intel.com (HELO [10.247.21.123]) ([10.247.21.123])
+  by fmviesa007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Feb 2025 19:33:41 -0800
+Message-ID: <71887246-d30f-4134-8c6d-b379477b2457@linux.intel.com>
+Date: Sat, 8 Feb 2025 11:33:38 +0800
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH net-next v7 2/7] net: pcs: xpcs: re-initiate clause 37
+ Auto-negotiation
+To: Andrew Lunn <andrew@lunn.ch>
+Cc: "Russell King (Oracle)" <linux@armlinux.org.uk>,
+ Simon Horman <horms@kernel.org>, Jose Abreu <joabreu@synopsys.com>,
+ Jose Abreu <Jose.Abreu@synopsys.com>,
+ David E Box <david.e.box@linux.intel.com>,
+ Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
+ Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>,
+ "H . Peter Anvin" <hpa@zytor.com>,
+ Rajneesh Bhardwaj <irenic.rajneesh@gmail.com>,
+ David E Box <david.e.box@intel.com>, Andrew Lunn <andrew+netdev@lunn.ch>,
+ "David S . Miller" <davem@davemloft.net>, Eric Dumazet
+ <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
+ Paolo Abeni <pabeni@redhat.com>, Maxime Coquelin
+ <mcoquelin.stm32@gmail.com>, Alexandre Torgue
+ <alexandre.torgue@foss.st.com>, Jiawen Wu <jiawenwu@trustnetic.com>,
+ Mengyuan Lou <mengyuanlou@net-swift.com>,
+ Heiner Kallweit <hkallweit1@gmail.com>, Hans de Goede <hdegoede@redhat.com>,
+ =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+ Richard Cochran <richardcochran@gmail.com>,
+ Serge Semin <fancer.lancer@gmail.com>, x86@kernel.org,
+ linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+ platform-driver-x86@vger.kernel.org,
+ linux-stm32@st-md-mailman.stormreply.com,
+ linux-arm-kernel@lists.infradead.org
+References: <20250206131859.2960543-1-yong.liang.choong@linux.intel.com>
+ <20250206131859.2960543-3-yong.liang.choong@linux.intel.com>
+ <Z6TVmdCZeWerAZKP@shell.armlinux.org.uk>
+ <564ede5d-9f53-40be-9305-63f63b384e15@linux.intel.com>
+ <12e86fbe-9515-4b81-951c-8bf86e2939d6@lunn.ch>
+Content-Language: en-US
+From: Choong Yong Liang <yong.liang.choong@linux.intel.com>
+In-Reply-To: <12e86fbe-9515-4b81-951c-8bf86e2939d6@lunn.ch>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Add Arrow Lake U and Arrow Lake H support in intel_pmc_core driver.
 
-Signed-off-by: Rajvi Jingar <rajvi.jingar@linux.intel.com>
-Signed-off-by: Xi Pardee <xi.pardee@linux.intel.com>
----
- drivers/platform/x86/intel/pmc/arl.c  | 37 +++++++++++++++++++++++++++
- drivers/platform/x86/intel/pmc/core.c |  2 ++
- drivers/platform/x86/intel/pmc/core.h |  1 +
- 3 files changed, 40 insertions(+)
 
-diff --git a/drivers/platform/x86/intel/pmc/arl.c b/drivers/platform/x86/intel/pmc/arl.c
-index f57da4e01f6f9..54b0e8e56de92 100644
---- a/drivers/platform/x86/intel/pmc/arl.c
-+++ b/drivers/platform/x86/intel/pmc/arl.c
-@@ -16,6 +16,7 @@
- #define IOEP_LPM_REQ_GUID	0x5077612
- #define SOCS_LPM_REQ_GUID	0x8478657
- #define PCHS_LPM_REQ_GUID	0x9684572
-+#define SOCM_LPM_REQ_GUID	0x2625030
- 
- static const u8 ARL_LPM_REG_INDEX[] = {0, 4, 5, 6, 8, 9, 10, 11, 12, 13, 14, 15, 16, 20};
- 
-@@ -650,6 +651,7 @@ const struct pmc_reg_map arl_pchs_reg_map = {
- 	.etr3_offset = ETR3_OFFSET,
- };
- 
-+#define PMC_DEVID_SOCM 0x777f
- #define PMC_DEVID_SOCS 0xae7f
- #define PMC_DEVID_IOEP 0x7ecf
- #define PMC_DEVID_PCHS 0x7f27
-@@ -669,11 +671,17 @@ static struct pmc_info arl_pmc_info_list[] = {
- 		.devid	= PMC_DEVID_PCHS,
- 		.map	= &arl_pchs_reg_map,
- 	},
-+	{
-+		.guid	= SOCM_LPM_REQ_GUID,
-+		.devid	= PMC_DEVID_SOCM,
-+		.map	= &mtl_socm_reg_map,
-+	},
- 	{}
- };
- 
- #define ARL_NPU_PCI_DEV			0xad1d
- #define ARL_GNA_PCI_DEV			0xae4c
-+#define ARL_H_GNA_PCI_DEV		0x774c
- /*
-  * Set power state of select devices that do not have drivers to D3
-  * so that they do not block Package C entry.
-@@ -684,6 +692,12 @@ static void arl_d3_fixup(void)
- 	pmc_core_set_device_d3(ARL_GNA_PCI_DEV);
- }
- 
-+static void arl_h_d3_fixup(void)
-+{
-+	pmc_core_set_device_d3(ARL_NPU_PCI_DEV);
-+	pmc_core_set_device_d3(ARL_H_GNA_PCI_DEV);
-+}
-+
- static int arl_resume(struct pmc_dev *pmcdev)
- {
- 	arl_d3_fixup();
-@@ -691,12 +705,25 @@ static int arl_resume(struct pmc_dev *pmcdev)
- 	return cnl_resume(pmcdev);
- }
- 
-+static int arl_h_resume(struct pmc_dev *pmcdev)
-+{
-+	arl_h_d3_fixup();
-+
-+	return cnl_resume(pmcdev);
-+}
-+
- static int arl_core_init(struct pmc_dev *pmcdev, struct pmc_dev_info *pmc_dev_info)
- {
- 	arl_d3_fixup();
- 	return generic_core_init(pmcdev, pmc_dev_info);
- }
- 
-+static int arl_h_core_init(struct pmc_dev *pmcdev, struct pmc_dev_info *pmc_dev_info)
-+{
-+	arl_h_d3_fixup();
-+	return generic_core_init(pmcdev, pmc_dev_info);
-+}
-+
- struct pmc_dev_info arl_pmc_dev = {
- 	.pci_func = 0,
- 	.dmu_guid = ARL_PMT_DMU_GUID,
-@@ -706,3 +733,13 @@ struct pmc_dev_info arl_pmc_dev = {
- 	.resume = arl_resume,
- 	.init = arl_core_init,
- };
-+
-+struct pmc_dev_info arl_h_pmc_dev = {
-+	.pci_func = 2,
-+	.dmu_guid = ARL_PMT_DMU_GUID,
-+	.regmap_list = arl_pmc_info_list,
-+	.map = &mtl_socm_reg_map,
-+	.suspend = cnl_suspend,
-+	.resume = arl_h_resume,
-+	.init = arl_h_core_init,
-+};
-diff --git a/drivers/platform/x86/intel/pmc/core.c b/drivers/platform/x86/intel/pmc/core.c
-index 06821c41fbeb9..bd90d38e62e94 100644
---- a/drivers/platform/x86/intel/pmc/core.c
-+++ b/drivers/platform/x86/intel/pmc/core.c
-@@ -1410,6 +1410,8 @@ static const struct x86_cpu_id intel_pmc_core_ids[] = {
- 	X86_MATCH_VFM(INTEL_RAPTORLAKE_S,	&adl_pmc_dev),
- 	X86_MATCH_VFM(INTEL_METEORLAKE_L,	&mtl_pmc_dev),
- 	X86_MATCH_VFM(INTEL_ARROWLAKE,		&arl_pmc_dev),
-+	X86_MATCH_VFM(INTEL_ARROWLAKE_H,	&arl_h_pmc_dev),
-+	X86_MATCH_VFM(INTEL_ARROWLAKE_U,	&arl_h_pmc_dev),
- 	X86_MATCH_VFM(INTEL_LUNARLAKE_M,	&lnl_pmc_dev),
- 	{}
- };
-diff --git a/drivers/platform/x86/intel/pmc/core.h b/drivers/platform/x86/intel/pmc/core.h
-index b004b784bfeb2..987fde3ffc1ce 100644
---- a/drivers/platform/x86/intel/pmc/core.h
-+++ b/drivers/platform/x86/intel/pmc/core.h
-@@ -624,6 +624,7 @@ extern struct pmc_dev_info tgl_pmc_dev;
- extern struct pmc_dev_info adl_pmc_dev;
- extern struct pmc_dev_info mtl_pmc_dev;
- extern struct pmc_dev_info arl_pmc_dev;
-+extern struct pmc_dev_info arl_h_pmc_dev;
- extern struct pmc_dev_info lnl_pmc_dev;
- 
- void cnl_suspend(struct pmc_dev *pmcdev);
--- 
-2.43.0
+On 7/2/2025 9:32 pm, Andrew Lunn wrote:
+>> Good point. I cannot find this scenario in the datasheet. Please allow me
+>> some time to test this scenario. I will update you with the results.
+> 
+> By data sheet, do you mean documentation from Synopsis, or is this an
+> internal document? Assuming the hardware engineers have not hacked up
+> the Synopsis IP too much, the Synopsis documentation is probably the
+> most accurate you have.
+> 
+>>> What about 1000BASE-X when AN is enabled or disabled and then switching
+>>> to SGMII?
+>>>
+>> According to the datasheet, a soft reset is required.
+> 
+> Do you know if this is specific to Intels integration of the Synopsis
+> IP, or this is part of the core licensed IP?
+> 
+> We need to understand when we need a quirk because intel did something
+> odd, or it is part of the licensed IP and should happen for all
+> devices using the IP.
+> 
+> 	Andrew
+> 
 
+Hi Andrew,
+
+Thank you for your questions. Just to clarify, when I mention the 
+"datasheet," I am referring to the documentation from "Synopsis - 
+DesignWare Cores Ethernet PCS" and not specific to Intel's documentation.
