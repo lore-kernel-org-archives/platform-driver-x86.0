@@ -1,87 +1,157 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f46.google.com (mail-wm1-f46.google.com [209.85.128.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A750222566;
-	Mon, 10 Feb 2025 14:57:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 636B6225A25;
+	Mon, 10 Feb 2025 15:53:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739199461; cv=none; b=c3FqMv9+KPjpHCLFxKVw4YhpOKMkBjME2QfK4m3rfx9JN1wBAtGznebFvjZziJLyz5Cxr0lrQFp/L3Bc6JsyCncy6mznCEBUDSS6qy6c1Ve6Gb88nqV1BMLPflMQk618Cj+HcekWTyX4hbGXWuM0gUchUH+wR45MciTA09ByxHI=
+	t=1739202836; cv=none; b=VTDqi3HO1o0XbdebpM+Vjg72sfXmWaLuyJuSNo4uVIPFrhWSKwiz4DEKqMuTHxGZmAOCG+QJVvnepF2fpogiBFKfcn2L0TMUOn/ktV60Ra+Uen7YhBGZG/cjMCXj+kydqSj4aOPlBrcy6+YHoIjwfoX5gDZdXt/ItfKXb2URz4s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739199461; c=relaxed/simple;
-	bh=roz7Amt882FN5/NfmsS3VPitTiCQLfLXOgUxYhzn3cs=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=JwPJ6w7MownvSHTrDmFpiDLq+J/U+Rpj3lvxQXVsqp0/R2RIPfvx2fhTaULSneCwEyjsapP/nCPOGqzXLrRF4BMCHQpLU9xYysqUSNLxf8LSmdVKLVksm/OPmhxA2AysAf6N6m2vHSSTju4fBNYxet9OO8wjkCRVGy+W5oOoDpQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=S6Jj+JxB; arc=none smtp.client-ip=192.198.163.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1739202836; c=relaxed/simple;
+	bh=cIgi1DHgDfNqKjDJ0XcW+59oMsLbTI9nYXSJyVdXZeo=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=gW2jpAUM3RjejtRXaFZpjnKYP3ywzXYSEZXg39esafmTg3dZjIvuAoG96feqPScnd8AZhYIuexuf4XbiO5ldlekKF2dzhF1rO7nBARtI2PAHQZnwwkGnIaijwOyy0HLgUxgMzrCkjyN5PUiaC2WaXjROynVFR4cZOHZVsjiMALY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=UfLNFWCl; arc=none smtp.client-ip=209.85.128.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="S6Jj+JxB"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1739199460; x=1770735460;
-  h=from:to:cc:in-reply-to:references:subject:message-id:
-   date:mime-version:content-transfer-encoding;
-  bh=roz7Amt882FN5/NfmsS3VPitTiCQLfLXOgUxYhzn3cs=;
-  b=S6Jj+JxBfdfw998T9izTbDHhuu+6wCeAB8d2XbPQK3BPC0frSGIVG6K7
-   no5ykh9ptv6JClodm7pe3SxO/wNLKdvrjgvQIt2SzzWdBhWMpVU65tESU
-   yMNksRW0KHFnrbCvUYGaKUtvBEGavC3lnsQy8b3UEuo46lgLHjGK1+9Wf
-   o6g/RJsDJ7ZDqTqnMyZMwUMSNanFYmBUteFPDvA0GYqfWPmPjCbQHr0lc
-   UdXUA9rGSkbA1lRrSuwj8YPpZD2dpPwWSERH398wlhArQD+chrUDWrCrz
-   Kz9AbmNFK6GiHtyrVQjR7jPI8/yuz4Nepkz4gC4pVc+9uWpgqRpPM5HUy
-   Q==;
-X-CSE-ConnectionGUID: kHrJ544jTNSp3KOO7g0s8A==
-X-CSE-MsgGUID: nUfroH/OQTiQYwLHKX0ZHg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11341"; a="65134991"
-X-IronPort-AV: E=Sophos;i="6.13,274,1732608000"; 
-   d="scan'208";a="65134991"
-Received: from orviesa008.jf.intel.com ([10.64.159.148])
-  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Feb 2025 06:57:20 -0800
-X-CSE-ConnectionGUID: ZEmIWfSsStChT+zPyvUoTw==
-X-CSE-MsgGUID: Cfg6lExASaqFqUSZMitzfA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
-   d="scan'208";a="113089610"
-Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.72])
-  by orviesa008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Feb 2025 06:57:14 -0800
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-To: Mark Pearson <mpearson-lenovo@squebb.ca>
-Cc: hdegoede@redhat.com, platform-driver-x86@vger.kernel.org, 
- linux-kernel@vger.kernel.org
-In-Reply-To: <20250206193953.58365-1-mpearson-lenovo@squebb.ca>
-References: <mpearson-lenovo@squebb.ca>
- <20250206193953.58365-1-mpearson-lenovo@squebb.ca>
-Subject: Re: [PATCH v2] platform/x86: thinkpad_acpi: Support for V9 DYTC
- platform profiles
-Message-Id: <173919942921.8268.14156457834157623584.b4-ty@linux.intel.com>
-Date: Mon, 10 Feb 2025 16:57:09 +0200
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UfLNFWCl"
+Received: by mail-wm1-f46.google.com with SMTP id 5b1f17b1804b1-43934d6b155so11843915e9.1;
+        Mon, 10 Feb 2025 07:53:54 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1739202832; x=1739807632; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=eNWUTPT+t4grgeyPMpGy9NCUbuKV1aJrX2mhHwdTFfE=;
+        b=UfLNFWCl9kM5bUc5G/ftt6f89j9ABEwpMgp5FBx6p09Rwu5PwpXj7ULsBdc6LpiOj6
+         YKpThlv8HzXV/9Hd+WYRW8Li9JJcN6Dpu4SJ2ZE3F+mWlL4QtE0Ly8i7I/o/5chR9oNR
+         899rhQCP3WAL2dGhbpazrKe7mfsVYKTIiI4jzawByr4TjCz4bu5YZs7hlvSD0A35DV0K
+         aURDIO2gZdM4C6vmGZ8gCbXUjeHr/fT6TrH9dV0jyMkykK+kJKFdRBRaIAbK1MCA9jfX
+         c1AXy73PxqjNwTmEvLzLJeMpjxm4FQqWJ5f2SmWOGDhzG/m3B6lVXiu5OqJH8bCtW+XL
+         3D2w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1739202832; x=1739807632;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=eNWUTPT+t4grgeyPMpGy9NCUbuKV1aJrX2mhHwdTFfE=;
+        b=eXWo3NfP7Tyj5OLO8H54tNCpCU0ELUaF9bktXfUAF0yiXWrhAD2ejUI1bMxs6Hq33w
+         jzEzJN4mQf+UnKg6dYArzRd9+wO5DKDQKCKaTkezirBgbOMsMHVcA2im+/gJLjQpcHxE
+         0Q2/S8McJJgey0N7ABTkivxgMSqoAr3ZIizqCk/eVG4UKJt1VzGbBKCBGUHwenbktnEw
+         9r8c3KPUUWTlGydb3L6aTxasdmTb0i6p6nSuyRuu441ec7z58oMZ1ZwVNGyLBmDseKAK
+         s27DsIwb3a3WqnDTpQjHmEcJrGm+qPiw0bdwYx4TBwhLMBfvkaTqORGBTbXCjgiI0Awz
+         98KQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUXtQYtkr9XQuq5hSowiR1/mrOq4h9olCdv5wulXqvK3X9p9T261tuIJ2x6cXmEzW4boJedOLypFdXvQbg=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy9TXZmUrmdFaUcon+EHoHYBZfefmeYENx57xtbzUcqWZ16dTMF
+	Ou8iZsFg9Ml5NdHM1KKrSKoBFuLwFv/If9GZloTjXpfo+qjOs/6N
+X-Gm-Gg: ASbGncvb5tLpkxfiUu/mbQ1QFaV/GQSvViwKFruKQ3CokqbrEUEZ7cw9Pq6Q4NgYng6
+	u4ODJb/5YCOIGuORNobkJ0bsQkmuH6VxHf7Xju88WWk8DzY4CZP6udh0ah2OlNvf4ew7dzP2Zmm
+	TC/zVgWrl0Wu2zwMDYd+ZAQkj5lDjPkyTSUL7QeXqu05+0PILTIZCbodsZGWoytUWzgpU3lsNSs
+	x7J/jDbriuDJ0RiclfomrwiWfYV1tFwUb1KtAqVZ2q/oH2RsGoMKOP5IovGqNisbqM1xAh1GmTT
+	7iPbn+qi8116x7WyDi4kOLd0GuT+OdUOOHypePZb0Yc=
+X-Google-Smtp-Source: AGHT+IEtBivb0snLHXxsE1OSuLQfg6PxESIGs0lSyDRH+k1gbp4GS40kpyPhzr07l3BmUp2vchm9SQ==
+X-Received: by 2002:a05:600c:1ca9:b0:439:4c7f:e167 with SMTP id 5b1f17b1804b1-4394c7fe345mr3217405e9.1.1739202832420;
+        Mon, 10 Feb 2025 07:53:52 -0800 (PST)
+Received: from localhost.localdomain ([2a02:2f0e:c501:f600:21cb:f6d7:4e65:6e28])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4390d896d70sm183980335e9.0.2025.02.10.07.53.51
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 10 Feb 2025 07:53:52 -0800 (PST)
+From: Ovidiu Panait <ovidiu.panait.oss@gmail.com>
+To: ike.pan@canonical.com,
+	hdegoede@redhat.com,
+	ilpo.jarvinen@linux.intel.com
+Cc: platform-driver-x86@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Ovidiu Panait <ovidiu.panait.oss@gmail.com>
+Subject: [PATCH] platform/x86: ideapad-laptop: use dev_groups to register attribute groups
+Date: Mon, 10 Feb 2025 17:53:33 +0200
+Message-ID: <20250210155333.1145867-1-ovidiu.panait.oss@gmail.com>
+X-Mailer: git-send-email 2.47.1
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Mailer: b4 0.13.0
+Content-Transfer-Encoding: 8bit
 
-On Thu, 06 Feb 2025 14:39:41 -0500, Mark Pearson wrote:
+Instead of manually adding/removing attribute groups, set
+(struct device_driver).dev_groups pointer to have the driver
+core do it.
 
-> Newer Thinkpad AMD platforms are using V9 DYTC and this changes the
-> profiles used for PSC mode. Add support for this update.
-> Tested on P14s G5 AMD
-> 
-> 
+Signed-off-by: Ovidiu Panait <ovidiu.panait.oss@gmail.com>
+---
+ drivers/platform/x86/ideapad-laptop.c | 23 ++---------------------
+ 1 file changed, 2 insertions(+), 21 deletions(-)
 
-
-Thank you for your contribution, it has been applied to my local
-review-ilpo-fixes branch. Note it will show up in the public
-platform-drivers-x86/review-ilpo-fixes branch only once I've pushed my
-local branch there, which might take a while.
-
-The list of commits applied:
-[1/1] platform/x86: thinkpad_acpi: Support for V9 DYTC platform profiles
-      commit: 9cff907cbf8c7fb5345918dbcc7b74a01656f34f
-
---
- i.
+diff --git a/drivers/platform/x86/ideapad-laptop.c b/drivers/platform/x86/ideapad-laptop.c
+index 30bd366d7b58..17a09b7784ed 100644
+--- a/drivers/platform/x86/ideapad-laptop.c
++++ b/drivers/platform/x86/ideapad-laptop.c
+@@ -854,6 +854,7 @@ static const struct attribute_group ideapad_attribute_group = {
+ 	.is_visible = ideapad_is_visible,
+ 	.attrs = ideapad_attributes
+ };
++__ATTRIBUTE_GROUPS(ideapad_attribute);
+ 
+ /*
+  * DYTC Platform profile
+@@ -1244,21 +1245,6 @@ static void ideapad_unregister_rfkill(struct ideapad_private *priv, int dev)
+ 	rfkill_destroy(priv->rfk[dev]);
+ }
+ 
+-/*
+- * Platform device
+- */
+-static int ideapad_sysfs_init(struct ideapad_private *priv)
+-{
+-	return device_add_group(&priv->platform_device->dev,
+-				&ideapad_attribute_group);
+-}
+-
+-static void ideapad_sysfs_exit(struct ideapad_private *priv)
+-{
+-	device_remove_group(&priv->platform_device->dev,
+-			    &ideapad_attribute_group);
+-}
+-
+ /*
+  * input device
+  */
+@@ -2175,10 +2161,6 @@ static int ideapad_acpi_add(struct platform_device *pdev)
+ 
+ 	ideapad_check_features(priv);
+ 
+-	err = ideapad_sysfs_init(priv);
+-	if (err)
+-		return err;
+-
+ 	ideapad_debugfs_init(priv);
+ 
+ 	err = ideapad_input_init(priv);
+@@ -2265,7 +2247,6 @@ static int ideapad_acpi_add(struct platform_device *pdev)
+ 
+ input_failed:
+ 	ideapad_debugfs_exit(priv);
+-	ideapad_sysfs_exit(priv);
+ 
+ 	return err;
+ }
+@@ -2293,7 +2274,6 @@ static void ideapad_acpi_remove(struct platform_device *pdev)
+ 	ideapad_kbd_bl_exit(priv);
+ 	ideapad_input_exit(priv);
+ 	ideapad_debugfs_exit(priv);
+-	ideapad_sysfs_exit(priv);
+ }
+ 
+ #ifdef CONFIG_PM_SLEEP
+@@ -2325,6 +2305,7 @@ static struct platform_driver ideapad_acpi_driver = {
+ 		.name   = "ideapad_acpi",
+ 		.pm     = &ideapad_pm,
+ 		.acpi_match_table = ACPI_PTR(ideapad_device_ids),
++		.dev_groups = ideapad_attribute_groups,
+ 	},
+ };
+ 
+-- 
+2.47.1
 
