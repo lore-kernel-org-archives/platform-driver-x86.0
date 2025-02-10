@@ -1,162 +1,153 @@
-Received: from NAM12-BN8-obe.outbound.protection.outlook.com (mail-bn8nam12on2057.outbound.protection.outlook.com [40.107.237.57])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yb1-f178.google.com (mail-yb1-f178.google.com [209.85.219.178])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 314541B86F7
-	for <platform-driver-x86@vger.kernel.org>; Mon, 10 Feb 2025 20:35:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.237.57
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739219752; cv=fail; b=Tc9u8m7wcwGECIV6pPROo/q7vLGRndeBOuEVCFKdaKIjxRwLoUYKY7Y8H36Kn3K3PHgPiIgj+NYordOy+py421wjqAHPHCRzhqQgr9PVH9aRwGOEdpUkJU9XQy0yUU5npF5IqLXushpdGhdASUSmcA2BG2yepdJDdSR6Xb0IJeU=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739219752; c=relaxed/simple;
-	bh=xVDPldcY3kuxmX2mxWjQXFhzxFAJF4hitjlbVcgs8l8=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=gKQk0UlzuNeJAzhE8FoDiu3Viwg7DQRc/fTEkUXN4/YxW7DIAhty5o146rd7+VDfSYlO29AbOdIZ6NFI8wzgNofZdTu3ViaY2NR/0zeYN4JFtuWkNAuTKu1aVVboEZ3zEks6Pa5vqSn2JHBYU+8nFwDrsjP1pNAaxZIAsvn9BaY=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=fNcE5ptF; arc=fail smtp.client-ip=40.107.237.57
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8CB0C264609;
+	Mon, 10 Feb 2025 21:07:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.178
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1739221630; cv=none; b=mLCh+YWodcRo6AcsZl5Bhkly1q5Ey06Y6oTblvEb6De8olS94Hmn4mnfYcJhYReaRU3uZgwElmAnAe3Jy1jA6qzz/OXtE06xOte6PIXoNmERuF95CYyto4miV7Sj3SlEvmldlm+LL7a0kptVsny8qMFlW+w+1iCyQiJMN/PlzF0=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1739221630; c=relaxed/simple;
+	bh=+kPqt7rv2eQ+xlea0zrpRcUrZQgB64sz2FU7SSBIwmg=;
+	h=Mime-Version:Content-Type:Date:Message-Id:To:Cc:Subject:From:
+	 References:In-Reply-To; b=Mbg8GIGOLXA170VjTJip4YEJHuOQ3sVNI0IfxqdeDu4Fmkz5GDlNcDFphRSf5l+Rl2V4xkIIOAPMhnJqpunN231yYSFOfpnZIOyhRZwD9xF+mm4hPGXn8TBRvjwK8Yq6sE/4clUhwZPFvTOACj/GtvJmjQPo2v9M+P6U+RJPcFg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=VGl4ZRt0; arc=none smtp.client-ip=209.85.219.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="fNcE5ptF"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=DM6g2B+c3EF909DD0Wo0gQhkUpXrHsBjJaODgwDvJmQ2IPob8BFmHQw1allAdiu5qfvq+OB/Ds5BRAgHOLAJ2rns3VFZRa6pFJ7DCMThlWyCxOu6+8sNf5DM+oWf0n4GxupD+6Xo8F4CoME99hpNiKstu3KmOTomHuf0fN8gthLHocw1qzHJFwWi7XfauKPs8JyJxTfZeVgcRCEisC3tAhFIFBO6D8m7mgc0H7I+yIWz6/MG48iwymaYD+WlyBpII21P4TH7Z6EpBBpuv16SnnlW2PqeKBv8vIAoLpWmLEdJu0y6lIrgXKY60DahFDPInBkV0GC8h4ci7ZS6pFUYew==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=pGuxachURQtj+5SHd1lDgskFgz9W7RBkrjxIl+rnEtA=;
- b=ra4UrOcie1CxqPZoVqgaJf8jHOn77UziJvHGWHWFahEianLKxQLYNP9i+u86VHYq1nDF8oe2f+WW7HV8Bpg34osCsKsvGLMT+Ka4SL6VL8CX8KCluCzlwSzb3NsbsjBxG2DR9QRCMPNfgdz7fuFrK9lbRlGSBRrfztQhojbkfK3j1MdILIvmxPm9++kgyJD9jOpoBwfbNuIgWBFQiRz02EglKrfQCQ+Tzjwr1mI/9kUcYN53pGuqe80zGA5wjdfoEbmVXaAMeJrDRHrlareJ+bGtggYN10jYj+AOmsIqWcEHb7sO5f82d4rnomUKYjXCPqbxCyMYtPFlOehSiIAhTw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 216.228.117.160) smtp.rcpttodomain=redhat.com smtp.mailfrom=nvidia.com;
- dmarc=pass (p=reject sp=reject pct=100) action=none header.from=nvidia.com;
- dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=pGuxachURQtj+5SHd1lDgskFgz9W7RBkrjxIl+rnEtA=;
- b=fNcE5ptFGFhAkU/FsRufCkhG+A/bK4b19vDx9Tbf/uL/LTaqp0Zt0tsEYOcqMAh9+NpsN0+S17IkphaXA/f7UYkKJ2MGWAL7U6X+QcoLkhigx1ugOU9TGHBIPtKnbwaGppbNRhvd36UDhqVOWsC9aUx4yXsuGZreGjYoSx0p3C5JtKxjq/5RrOrDDUKUZSEFwrAMKbsZRsj1nbzncuqp8/1dqcT273Ju5VprKv4HipHb8/P8NPpIGfK4Mqhr0yeTi+8hTypPb3CF4E9w7zqZMkuBuu9SA/tr5dllqMaF6aieYbim09B+F+/giLtonJ4Or0muTpRaiXwfGdVXJvEoNQ==
-Received: from SJ0PR03CA0153.namprd03.prod.outlook.com (2603:10b6:a03:338::8)
- by SA1PR12MB9470.namprd12.prod.outlook.com (2603:10b6:806:459::19) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8422.18; Mon, 10 Feb
- 2025 20:35:47 +0000
-Received: from SA2PEPF000015CD.namprd03.prod.outlook.com
- (2603:10b6:a03:338:cafe::9e) by SJ0PR03CA0153.outlook.office365.com
- (2603:10b6:a03:338::8) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.8398.31 via Frontend Transport; Mon,
- 10 Feb 2025 20:35:47 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 216.228.117.160)
- smtp.mailfrom=nvidia.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=nvidia.com;
-Received-SPF: Pass (protection.outlook.com: domain of nvidia.com designates
- 216.228.117.160 as permitted sender) receiver=protection.outlook.com;
- client-ip=216.228.117.160; helo=mail.nvidia.com; pr=C
-Received: from mail.nvidia.com (216.228.117.160) by
- SA2PEPF000015CD.mail.protection.outlook.com (10.167.241.203) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.8445.10 via Frontend Transport; Mon, 10 Feb 2025 20:35:47 +0000
-Received: from rnnvmail201.nvidia.com (10.129.68.8) by mail.nvidia.com
- (10.129.200.66) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.4; Mon, 10 Feb
- 2025 12:35:24 -0800
-Received: from r-build-bsp-02.mtr.labs.mlnx (10.126.230.35) by
- rnnvmail201.nvidia.com (10.129.68.8) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.14; Mon, 10 Feb 2025 12:35:22 -0800
-From: Vadim Pasternak <vadimp@nvidia.com>
-To: <hdegoede@redhat.com>, <ilpo.jarvinen@linux.intel.com>
-CC: <michaelsh@nvidia.com>, <crajank@nvidia.com>, <fradensky@nvidia.com>,
-	<oleksandrs@nvidia.com>, <platform-driver-x86@vger.kernel.org>, "Vadim
- Pasternak" <vadimp@nvidia.com>
-Subject: [PATCH 1/1] MAINTAINERS: Add documentation reference for Mellanox platform
-Date: Mon, 10 Feb 2025 22:34:45 +0200
-Message-ID: <20250210203451.29712-1-vadimp@nvidia.com>
-X-Mailer: git-send-email 2.44.0
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VGl4ZRt0"
+Received: by mail-yb1-f178.google.com with SMTP id 3f1490d57ef6-e5b1837d182so4803538276.0;
+        Mon, 10 Feb 2025 13:07:08 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1739221627; x=1739826427; darn=vger.kernel.org;
+        h=in-reply-to:references:from:subject:cc:to:message-id:date
+         :content-transfer-encoding:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=fsvIvPn83x29h5FtGetNQuqdMJAAK+W7Iwpsc5MKvE8=;
+        b=VGl4ZRt027JJVcFi2JUQKiuDdAc15QAVQkDvLUf6wy5IozPW2f0cG737U4cYhpyV+H
+         9vgUHFjLv70jE1SSmaCr+ICmxPIIq3xH4KU1DzgL2YaDs2a5v0btbKgY0ueyb6EbjCaa
+         GG4iKiTUjNuXH2JeZroKuomSkK8t5lwaT/bJvpDbDlBnZ/LB/qDHOq1DOrOVgaGatxCP
+         4YgYiXZK/ICJndmHjl7OVJDwOhtcMTuAKP9WvnL2wa0XzGWWnGXFHdpGx6sIN+vrip2z
+         WghXhyYDrROhcGWAg8/YpBm3rNg3O0UBc9VauSPbk/R1O1gFvvMrX+4W4Roxe03rQFqr
+         /tnA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1739221627; x=1739826427;
+        h=in-reply-to:references:from:subject:cc:to:message-id:date
+         :content-transfer-encoding:mime-version:x-gm-message-state:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=fsvIvPn83x29h5FtGetNQuqdMJAAK+W7Iwpsc5MKvE8=;
+        b=qrU0HPWJnCz2u+xX7VSjoylfjVmK0tOHNvfd8vv5QfCWe5tdXEorm6otgYOTANaXAp
+         Zpm3bqqo9/0VJsa0wfiuaYXpcjOLgsq1OyKoEZVgxVFgIHkGkg1EuwTJnUReuMk34XwE
+         6cWEGInlAX45CZ0cb25UyLmsXtijhUPbsGcZvBlOwOfzl2C1KAVMPMJlpkGprEvswm2r
+         4C9jr90MIM7KQh571sR3UX+g6SP/PIUZFfroQRPyepJ7ESFwSyY/g7DBr+0rQ1S6juli
+         zG/+THfZfMoF/3Z2F/QND5epiOi5CCL8OeMjAxSFTzCGHGUknPOttkc00kGnMzFdIRLQ
+         xfig==
+X-Forwarded-Encrypted: i=1; AJvYcCU6OG1a6kZeF+KzSFAmz0elfnSxLzRVhpwRyyzu/iwB++03RDSFiSwA68D1sTxg2hHiakJjDFNAGJfeOvoXHA1hRNfG7w==@vger.kernel.org, AJvYcCUi6+9gihs+sqUWLE4RYiErMgWsJaGzStfqVVDRhWiQfCvParEd+gArKUEmrfvltFO0M8A3wN6QKcpixoQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx8fmVBMta2ojICu8M8MoQcXcQKnQZJp8t2eE0ZMMvY8hWmMqZ8
+	xYkdVnj04hv5h9oLcbMMjrO6gkzR2DjnZiiYjprsWlmHIDtVOKh7W9DD+A==
+X-Gm-Gg: ASbGncsWylWj8shQ6RTB64qqbVy1nMQ917Olp4GqTf1gpxt8/bPzoGszH/Y6+EBwEsg
+	4UrcxX2QoR2/jPkgFpBagJAT8MoiF9iGyHkavXDP0geBKcIcfgs7NfUH11uWzA38Nu7QGb9nyoq
+	HXAR/kbtCnqUNLZtQF1uVvQyyODZTRlqXmm79cdp4eorSuH5a/ykV4A9q+Q2Bbg0sZLXdBrF4X5
+	IG5W5xvGvWZV0G2XuCYKbZRfPK4FEWLQeI7M1Y1x3TMYVoG10nZK29QSvU6WefU9m5RDvW00K82
+	5/bq/e6CkQ==
+X-Google-Smtp-Source: AGHT+IEhTsp6AiDF9ybTJsMqL0IHWixCS2kK0c4He5Bpcxogyqi3gHVCnRNE1R9UsIvw3ZdfHQUR1Q==
+X-Received: by 2002:a05:6902:15c6:b0:e59:a174:85e7 with SMTP id 3f1490d57ef6-e5d94529b31mr1475288276.17.1739221627371;
+        Mon, 10 Feb 2025 13:07:07 -0800 (PST)
+Received: from localhost ([2800:bf0:179:113e:f067:4e25:4298:6451])
+        by smtp.gmail.com with ESMTPSA id 3f1490d57ef6-e5b3a48b167sm2799220276.53.2025.02.10.13.07.06
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 10 Feb 2025 13:07:07 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: rnnvmail201.nvidia.com (10.129.68.8) To
- rnnvmail201.nvidia.com (10.129.68.8)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SA2PEPF000015CD:EE_|SA1PR12MB9470:EE_
-X-MS-Office365-Filtering-Correlation-Id: c18f3474-0c56-4355-29d0-08dd4a127ffd
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|1800799024|376014|36860700013|82310400026;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?QWtGYmI5WEJ6aTZJVVVkMk53cXA5azNKTXhCMFBPVnRVOE9OTExGUng1cEVp?=
- =?utf-8?B?b0tYZkQ4ajFXVlVtWU45QmZUSUoyb2JaMjUvOEVsRjJBQWN0QlN5NU5ONm1W?=
- =?utf-8?B?VlRrV005QmlVUjZQck5xdm56QUhBVWJpZGRIWGo1R09jWmorWnEzV2N5Sis5?=
- =?utf-8?B?QkNPdkduRmp0SXZlZEUzMXFJa240WEgrdXZrcHg5ZXZtV1dtVUJ1b1hrdG8r?=
- =?utf-8?B?d0pXcFIxcE52MUd4RHpFZEhjaTdGUnVOVHdGR0YvaGJYQkpLdlFDNDBFS1dE?=
- =?utf-8?B?Q3ZCVzVRRkg2dFFwQ1dzVkRidVpPVXJzMW00Z0FPeDErM3d0a1IrUlhKTHl0?=
- =?utf-8?B?TlhQQUhtQnZKTDZ3UWhEcktwSlRGeGVlMldhZU9CcGxWN0xXOGJSNjFMRFVN?=
- =?utf-8?B?MkhVT1FlVngyYVhHTjlNR2F6Y0hJZmV0MXRpbGN2Q2lwelZkcEFKbll6aGJZ?=
- =?utf-8?B?TWlFL21paXV1NlY1WlUxWkRkdTdPSWNkWlpLRVpQZnNobUVFaDFJa1JpVHE4?=
- =?utf-8?B?N1VIUWpPM2lxYTRhTHZ4UVJpM0ZSemFlUVU1R0pVMyswaHVGV2tjVit5bTdJ?=
- =?utf-8?B?Q0taUDJsTlFUSElUNHN4MnZvMzIweCtBM0s5UkNWZzNvMVRlajdkUHFMQWNz?=
- =?utf-8?B?MHlMbU9VYnpYSGRJbnhycFRRb2U2Qk52ZTdCQ29kaGVSbmZjbnBQWlcxVy9t?=
- =?utf-8?B?UG9uWlNwbzhIc2Jva2xMRk9nc0w2WWZGOHFnNmNNWWR3V1VzZU9BcTU1ZG5n?=
- =?utf-8?B?YkROazdTc2NHRk4rSkx1bWhsTlBlTlpWSzVUM2ZjK2tCamRCUWVwNHBCVHFF?=
- =?utf-8?B?RnhxazFLODg0WTRLSEdlSDZiREE5R2FKcVZLYmxZMTByTnM1Vm1pUWJRbTI2?=
- =?utf-8?B?dGQ2OVhpcWdxWGRjSTZKM2lUYlg5WVZzbXlRcUlrb0hIemtjQzlZelFEVEd2?=
- =?utf-8?B?dXBrQ0V4cUpDcDRocUM4b3hVb3dVWjExTjJKNVJsejZsY2MwV2lUQisxa2VG?=
- =?utf-8?B?ZmFsL1JvWUtqL2d4Y1VDamNlaW00RXJoQ0plNysyM2NZUGpZTGltcXZqWW5u?=
- =?utf-8?B?VnhwNHBwdHVyRG1oUzFuWS9UYjEyMUlrQjNUSlBLWVZQaU5mZ3JleEcvc1lC?=
- =?utf-8?B?UG9tWW1LT3JncGd5ZWhsc01FclFCSmsyT251U0lZZkovYkJTdnBVSzZreEZi?=
- =?utf-8?B?bkd3bmY1dGt5Q0NRcTY0cTljVitvVmNtZm0xZzFUdHJ6WHNWZmpEcUxRZjU3?=
- =?utf-8?B?SzY0TWpFY0ZzZHI0T1VZaDFackxrcDNJSWczdzliaml3S2huWEVzakR5V08v?=
- =?utf-8?B?Nk5NTGVCR1UwekIwMUt0ZWErT0c4cFBaT0VrQjAxeXltcFh5TDE4OFpsMWRj?=
- =?utf-8?B?WnJ2TklXUWx6WC9POEpJbjBON0hPMkQ0VS9FeUZJOWtNb3IvZXBvcUU3V0xM?=
- =?utf-8?B?U2d5dHc5alpQdU1jZXUwcEJFb2NUQk1MSTJaVXFkVGJ4Z3F2eUlkRUV4dFFJ?=
- =?utf-8?B?MGFWcHh6UjB6cytXaDBZcXBmZTRpc0tJVFYyUXkvNFg0NHI1MDBWU2MxL0dt?=
- =?utf-8?B?Rmd0dFBGVWluUmNDR1FmdFpLYTIxSXJ0L3MyS05vMXVZYklyWmdMd2JXNm5n?=
- =?utf-8?B?QjBKcW1mOXlWenBGK0JRVVkydDFDRWVpUUZsS2JuMjVMZ09JUHhaL3IvdEdN?=
- =?utf-8?B?WGlNWm80RkZjRlRMSUVZVUlDaG85dmwwbjE0ZGtSZlhaM1dIVlBITWlraVRm?=
- =?utf-8?B?QU8wS1A2ZEFVbGR4bHkxbXVWTGdhVXVVLzJFdlZyR0RWQmRnK3VraGtLVEt6?=
- =?utf-8?B?bVk2TVpvNCtRaUVVM25TaXJlSERrRWpQVG9CcGc0eW5MVFhCSy9xc0FsdUZO?=
- =?utf-8?B?Nlo1L3BxNXBDMVRjTEYzZm81Q2dncXpmN2ZhTmZINHNEMXUyU1ErRlIrVzNa?=
- =?utf-8?B?U21XZlZTY1FHOW4ySDFYVmdIQWlLaE5KMFI0a01jTVUrTWYyMzhpQkQ2OVdt?=
- =?utf-8?Q?A4V58jxW0RvR4yDFk7G79vJKu0YICE=3D?=
-X-Forefront-Antispam-Report:
-	CIP:216.228.117.160;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:dc6edge1.nvidia.com;CAT:NONE;SFS:(13230040)(1800799024)(376014)(36860700013)(82310400026);DIR:OUT;SFP:1101;
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 10 Feb 2025 20:35:47.2392
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: c18f3474-0c56-4355-29d0-08dd4a127ffd
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.117.160];Helo=[mail.nvidia.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	SA2PEPF000015CD.namprd03.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA1PR12MB9470
+Mime-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date: Mon, 10 Feb 2025 16:07:05 -0500
+Message-Id: <D7P2M0PTVM84.2W5QT7R0Y3T50@gmail.com>
+To: "Mark Pearson" <mpearson-lenovo@squebb.ca>
+Cc: <hdegoede@redhat.com>, <ilpo.jarvinen@linux.intel.com>,
+ <platform-driver-x86@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2] platform/x86: thinkpad_acpi: Fix registration of
+ tpacpi platform driver
+From: "Kurt Borja" <kuurtb@gmail.com>
+X-Mailer: aerc 0.20.1-0-g2ecb8770224a
+References: <mpearson-lenovo@squebb.ca>
+ <20250210201656.4165-1-mpearson-lenovo@squebb.ca>
+In-Reply-To: <20250210201656.4165-1-mpearson-lenovo@squebb.ca>
 
-Add reference for Documentation/ABI/stable/sysfs-driver-mlxreg-io
-under "MELLANOX HARDWARE PLATFORM SUPPORT".
+On Mon Feb 10, 2025 at 3:16 PM -05, Mark Pearson wrote:
+> When reviewing and testing the recent platform profile changes I had
+> missed that they prevent the tpacpi platform driver from registering.
+> This error is seen in the kernel logs, and the various tpacpi entries
+> are not created:
+> [ 7550.642171] platform thinkpad_acpi: Resources present before probing
+>
+> This happens because devm_platform_profile_register() is called before
+> tpacpi_pdev probes (thanks to Kurt Borja for identifying root cause)
+>
+> For now revert back to the old platform_profile_register to fix the
+> issue. Will work on re-implementing this later as more testing is needed
+> for full solution.
 
-Signed-off-by: Vadim Pasternak <vadimp@nvidia.com>
-Reported-by: kernel test robot <lkp@intel.com>
-Closes: https://lore.kernel.org/oe-kbuild-all/202502032336.lauIV68J-lkp@intel.com/
----
- MAINTAINERS | 1 +
- 1 file changed, 1 insertion(+)
+If you don't mind I can work on this patch on the for-next branch, so we
+may use devm_ on the next release cycle to avoid merge conflicts.
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 1b1031dfa481..7c8a671f28c0 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -15028,6 +15028,7 @@ M:	Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
- M:	Vadim Pasternak <vadimp@nvidia.com>
- L:	platform-driver-x86@vger.kernel.org
- S:	Supported
-+F:	Documentation/ABI/stable/sysfs-driver-mlxreg-io
- F:	Documentation/ABI/testing/sysfs-platform-mellanox-bootctl
- F:	drivers/platform/mellanox/
- F:	include/linux/platform_data/mlxreg.h
--- 
-2.44.0
+>
+> Tested on X1 Carbon G12.
+>
+> Fixes: 31658c916fa6 ("platform/x86: thinkpad_acpi: Use devm_platform_prof=
+ile_register()")
+>
+> Signed-off-by: Mark Pearson <mpearson-lenovo@squebb.ca>
+
+Reviewed-by: Kurt Borja <kuurtb@gmail.com>
+
+> ---
+> Changes in v2:
+>   Modified approach to instead revert to old platform_profile_register
+> method. Will revisit using devm_ version in the future as more testing
+> needed.
+>
+>  drivers/platform/x86/thinkpad_acpi.c | 10 ++++++++--
+>  1 file changed, 8 insertions(+), 2 deletions(-)
+>
+> diff --git a/drivers/platform/x86/thinkpad_acpi.c b/drivers/platform/x86/=
+thinkpad_acpi.c
+> index 1fcb0f99695a..85d01bd5dc31 100644
+> --- a/drivers/platform/x86/thinkpad_acpi.c
+> +++ b/drivers/platform/x86/thinkpad_acpi.c
+> @@ -10646,8 +10646,8 @@ static int tpacpi_dytc_profile_init(struct ibm_in=
+it_struct *iibm)
+>  			"DYTC version %d: thermal mode available\n", dytc_version);
+> =20
+>  	/* Create platform_profile structure and register */
+> -	tpacpi_pprof =3D devm_platform_profile_register(&tpacpi_pdev->dev, "thi=
+nkpad-acpi",
+> -						      NULL, &dytc_profile_ops);
+> +	tpacpi_pprof =3D platform_profile_register(&tpacpi_pdev->dev, "thinkpad=
+-acpi-profile",
+> +						 NULL, &dytc_profile_ops);
+>  	/*
+>  	 * If for some reason platform_profiles aren't enabled
+>  	 * don't quit terminally.
+> @@ -10665,8 +10665,14 @@ static int tpacpi_dytc_profile_init(struct ibm_i=
+nit_struct *iibm)
+>  	return 0;
+>  }
+> =20
+> +static void dytc_profile_exit(void)
+> +{
+> +	platform_profile_remove(tpacpi_pprof);
+> +}
+> +
+>  static struct ibm_struct  dytc_profile_driver_data =3D {
+>  	.name =3D "dytc-profile",
+> +	.exit =3D dytc_profile_exit,
+>  };
+> =20
+>  /***********************************************************************=
+**
 
