@@ -1,59 +1,60 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1BF661F540F;
-	Mon, 10 Feb 2025 11:54:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A2F611F63E8;
+	Mon, 10 Feb 2025 11:58:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739188441; cv=none; b=O6+3+Kjwl5iH5S+Vd6sWao49OszYAYQwQO8kkMEIyYHKSgtbW0gWB02wr3f9D1KOEKIHHeNMMadDBVz1rA0rejCA3VC8XOoSCGLVPweGtudMLrq8efzFXd9e5o/VLVLWEE2nEcvXzX2tNNdyG9UrZm98egnXqWZe8bO/k0KY4J0=
+	t=1739188695; cv=none; b=OJsohykqp/m7TIJRmWGc4MnzNw6TqpDcsb92TA2JYDpQXBFG5jUAowrUAEp7FrmBSozDQ1T5bMVZ5ABBRcg8LS49Ru2WHEhT4dGABHPz34H0M/S2DRgEes07icvD6d/ggNnnSv/B1MAryVVd2Zzn6+wtBlE2dGFO+QDo9PSh5hI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739188441; c=relaxed/simple;
-	bh=fwBsOwRN1A/Jp7S+cgWPSpot60MFhxTObVWy6wVXaWY=;
+	s=arc-20240116; t=1739188695; c=relaxed/simple;
+	bh=Avi8Jp4lXtNhe6dygVfFalnwotyIhkW4f+KRhkFCo4g=;
 	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=PXPu0xqcYtF2QTW0mLXP84wmJeB/yp1Mou66zj40w9RO1h9KyyX9ez+hnN5pwXORJE5s2R7Z69XoBkyDrvnjq8JlUizGCM4S0pYKQ9j0ScJiNCkUKdB5omzNNSIPoIiM5n+FeV2dyCeKP1+dZIPvMdoXiB7d2scS1uR7q9WOa6I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=P3QKSvvP; arc=none smtp.client-ip=192.198.163.18
+	 MIME-Version:Content-Type; b=jp5wnhEA1OTLz4wEyEab3C+phxDJb9+DWUDFT9dCCUMAot7W5Vbi/mYsVVv9kYSkPk/fA4XAfn2G9szbvtRNXP+h8hh0uTSJc/MW9owxhdwXGVYpt70IcYQmklzeAPq4NvHI+4MPrZtTxOGkJpSjvrQpNzlAks2+6N0lW/JvBF4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=FhW7dZuf; arc=none smtp.client-ip=198.175.65.12
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="P3QKSvvP"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="FhW7dZuf"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1739188440; x=1770724440;
+  t=1739188693; x=1770724693;
   h=from:date:to:cc:subject:in-reply-to:message-id:
    references:mime-version;
-  bh=fwBsOwRN1A/Jp7S+cgWPSpot60MFhxTObVWy6wVXaWY=;
-  b=P3QKSvvPSTE7vHbbLPll4gsnEQMxlMiV/jwdasDJqH+uW5eSxTbRi6Da
-   oir3b79zEYEFTpribBseRMl3JHPSGSoMv68jyWRbezdxQr3R4KsobEMTn
-   /UlpsE6iYiWpug8YzYbfrj5JePdWpyV2jms4Om0XZQUVWucWdmx1tTxXO
-   gCLNFkfYZfvdG+bMF4sQfCgTqyfxOkfNt/nArvv1YrSqZoGHz7pCZiOBs
-   mT+IE+EVBnT+/eySNUbdlrnENcfB/UbOFxtcVjrPAShyrhNCdjldHY3GB
-   UDD4o9vxpYnhayVOAraBEfa12ScvSP3QUZRla3PgCFhnOHUYL1qjBs7Pe
-   Q==;
-X-CSE-ConnectionGUID: Fm5Ke0DgQkeTprdrYyzznA==
-X-CSE-MsgGUID: xs8tzpQ+RumJ4t6+5auusw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11340"; a="39000496"
+  bh=Avi8Jp4lXtNhe6dygVfFalnwotyIhkW4f+KRhkFCo4g=;
+  b=FhW7dZufJQan6AsxqFTAwEO83bKujX+FhxBvPxXbFH5MF9Y3wTA6byIN
+   3JZ5VElnvZlfBHYGinrqH+jIZ8Z4Kv/ReUU6/+3eqpqlTjRl5kBeldPCX
+   RsMXV9zvdt4zrZ/f+Tljo68GRLMtvVv5X6e4IxCmO9qxSU/I55JvxP+Kl
+   3goIudxy9SgEeTqr9gHWKxhB56HbKvC6v7m9sopMNSpSXN3tNfTypo+gi
+   DSJM/VbbrZncMzNhLZv2FE2xzfdX8LKbLYSze08gCLdo+58uHp3kIPGcD
+   vPhNeJzMl4QnE5lB+df8Lz0eqMgYSw7uv6FzYbh4YkgvpHewB78e0LU4m
+   A==;
+X-CSE-ConnectionGUID: PdRbncyOTZ2CTukDyM4L7g==
+X-CSE-MsgGUID: r64XYF0sTyybZKJb14fAfA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11340"; a="51156162"
 X-IronPort-AV: E=Sophos;i="6.13,274,1732608000"; 
-   d="scan'208";a="39000496"
-Received: from orviesa002.jf.intel.com ([10.64.159.142])
-  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Feb 2025 03:53:59 -0800
-X-CSE-ConnectionGUID: FiJr0id7RuC+tG52n0RUwA==
-X-CSE-MsgGUID: XcnpHrcASLSf1HV2vEzS+Q==
+   d="scan'208";a="51156162"
+Received: from orviesa010.jf.intel.com ([10.64.159.150])
+  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Feb 2025 03:58:13 -0800
+X-CSE-ConnectionGUID: tGsI6Nf+RcK38Fr/ELC9lA==
+X-CSE-MsgGUID: eeot4O6BQRawInG5lVj1Qw==
 X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.13,274,1732608000"; 
-   d="scan'208";a="143036069"
+X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
+   d="scan'208";a="112010875"
 Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.72])
-  by orviesa002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Feb 2025 03:53:57 -0800
+  by orviesa010-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Feb 2025 03:58:09 -0800
 From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Mon, 10 Feb 2025 13:53:53 +0200 (EET)
-To: Kurt Borja <kuurtb@gmail.com>
-cc: platform-driver-x86@vger.kernel.org, Armin Wolf <W_Armin@gmx.de>, 
-    Mario Limonciello <mario.limonciello@amd.com>, 
-    Hans de Goede <hdegoede@redhat.com>, Dell.Client.Kernel@dell.com, 
-    LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v10 00/14] platform/x86: alienware-wmi driver rework
-In-Reply-To: <20250207154610.13675-1-kuurtb@gmail.com>
-Message-ID: <fd4524a6-0b1f-d929-61a5-b1ad188c938a@linux.intel.com>
-References: <20250207154610.13675-1-kuurtb@gmail.com>
+Date: Mon, 10 Feb 2025 13:58:06 +0200 (EET)
+To: Xi Pardee <xi.pardee@linux.intel.com>
+cc: rajvi0912@gmail.com, irenic.rajneesh@gmail.com, 
+    david.e.box@linux.intel.com, Hans de Goede <hdegoede@redhat.com>, 
+    platform-driver-x86@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>, 
+    linux-pm@vger.kernel.org
+Subject: Re: [PATCH v6 5/6] platform/x86:intel/pmc: Move arch specific action
+ to init function
+In-Reply-To: <20250207225615.401235-6-xi.pardee@linux.intel.com>
+Message-ID: <69b2b41b-5fcd-a7f2-576a-b00f2d390d8e@linux.intel.com>
+References: <20250207225615.401235-1-xi.pardee@linux.intel.com> <20250207225615.401235-6-xi.pardee@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -62,55 +63,96 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 
-On Fri, 7 Feb 2025, Kurt Borja wrote:
+On Fri, 7 Feb 2025, Xi Pardee wrote:
 
-> One more correction. I apologize for the noise!
+> Move arch specific action from core.c to the init() function of spt.c.
+> 
+> Signed-off-by: Xi Pardee <xi.pardee@linux.intel.com>
+> ---
+>  drivers/platform/x86/intel/pmc/core.c | 13 -------------
+>  drivers/platform/x86/intel/pmc/spt.c  | 21 +++++++++++++++++++++
+>  2 files changed, 21 insertions(+), 13 deletions(-)
+> 
+> diff --git a/drivers/platform/x86/intel/pmc/core.c b/drivers/platform/x86/intel/pmc/core.c
+> index 628cb22221fbc..06821c41fbeb9 100644
+> --- a/drivers/platform/x86/intel/pmc/core.c
+> +++ b/drivers/platform/x86/intel/pmc/core.c
+> @@ -1416,11 +1416,6 @@ static const struct x86_cpu_id intel_pmc_core_ids[] = {
+>  
+>  MODULE_DEVICE_TABLE(x86cpu, intel_pmc_core_ids);
+>  
+> -static const struct pci_device_id pmc_pci_ids[] = {
+> -	{ PCI_VDEVICE(INTEL, SPT_PMC_PCI_DEVICE_ID) },
+> -	{ }
+> -};
+> -
+>  /*
+>   * This quirk can be used on those platforms where
+>   * the platform BIOS enforces 24Mhz crystal to shutdown
+> @@ -1531,14 +1526,6 @@ static int pmc_core_probe(struct platform_device *pdev)
+>  	if (!pmcdev->pkgc_res_cnt)
+>  		return -ENOMEM;
+>  
+> -	/*
+> -	 * Coffee Lake has CPU ID of Kaby Lake and Cannon Lake PCH. So here
+> -	 * Sunrisepoint PCH regmap can't be used. Use Cannon Lake PCH regmap
+> -	 * in this case.
+> -	 */
+> -	if (pmc_dev_info == &spt_pmc_dev && !pci_dev_present(pmc_pci_ids))
+> -		pmc_dev_info = &cnp_pmc_dev;
+> -
+>  	mutex_init(&pmcdev->lock);
+>  
+>  	if (pmc_dev_info->init)
+> diff --git a/drivers/platform/x86/intel/pmc/spt.c b/drivers/platform/x86/intel/pmc/spt.c
+> index 956b2ec1c7510..9289cd76b0145 100644
+> --- a/drivers/platform/x86/intel/pmc/spt.c
+> +++ b/drivers/platform/x86/intel/pmc/spt.c
+> @@ -8,6 +8,8 @@
+>   *
+>   */
+>  
+> +#include <linux/pci.h>
+> +
+>  #include "core.h"
+>  
+>  const struct pmc_bit_map spt_pll_map[] = {
+> @@ -134,6 +136,25 @@ const struct pmc_reg_map spt_reg_map = {
+>  	.pm_vric1_offset = SPT_PMC_VRIC1_OFFSET,
+>  };
+>  
+> +static const struct pci_device_id pmc_pci_ids[] = {
+> +	{ PCI_VDEVICE(INTEL, SPT_PMC_PCI_DEVICE_ID) },
+> +	{ }
+> +};
+> +
+> +static int spt_core_init(struct pmc_dev *pmcdev, struct pmc_dev_info *pmc_dev_info)
+> +{
+> +	/*
+> +	 * Coffee Lake has CPU ID of Kaby Lake and Cannon Lake PCH. So here
+> +	 * Sunrisepoint PCH regmap can't be used. Use Cannon Lake PCH regmap
+> +	 * in this case.
+> +	 */
+> +	if (!pci_dev_present(pmc_pci_ids))
+> +		return generic_core_init(pmcdev, &cnp_pmc_dev);
+> +
+> +	return generic_core_init(pmcdev, pmc_dev_info);
+> +}
+> +
+>  struct pmc_dev_info spt_pmc_dev = {
+>  	.map = &spt_reg_map,
+> +	.init = spt_core_init,
+>  };
+> 
 
-Applied to review-ilpo-next. Thanks.
+Hi,
+
+I've applied all but this patch into the review-ilpo-next branch.
+
+This change is good otherwise but I'd prefer the pmc_pci_ids be named 
+better such that it actually relates to why it exists :-). So please 
+respin this patch.
 
 -- 
  i.
 
-> ~ Kurt
-> ---
-> [11/14]
->   - Fix .driver_data of Alienware m16 R1 AMD
-> 
-> v9: https://lore.kernel.org/platform-driver-x86/20250207140743.16822-1-kuurtb@gmail.com/
-> 
-> Kurt Borja (14):
->   platform/x86: alienware-wmi: Add a state container for LED control
->     feature
->   platform/x86: alienware-wmi: Add WMI Drivers
->   platform/x86: alienware-wmi: Add a state container for thermal control
->     methods
->   platform/x86: alienware-wmi: Refactor LED control methods
->   platform/x86: alienware-wmi: Refactor hdmi, amplifier, deepslp methods
->   platform/x86: alienware-wmi: Refactor thermal control methods
->   platform/x86: alienware-wmi: Split DMI table
->   MAINTAINERS: Update ALIENWARE WMI DRIVER entry
->   platform/x86: Rename alienware-wmi.c
->   platform/x86: Add alienware-wmi.h
->   platform/x86: Split the alienware-wmi driver
->   platform/x86: dell: Modify Makefile alignment
->   platform/x86: Update alienware-wmi config entries
->   platform/x86: alienware-wmi: Update header and module information
-> 
->  MAINTAINERS                                   |    4 +-
->  drivers/platform/x86/dell/Kconfig             |   30 +-
->  drivers/platform/x86/dell/Makefile            |   45 +-
->  .../platform/x86/dell/alienware-wmi-base.c    |  491 +++++++
->  .../platform/x86/dell/alienware-wmi-legacy.c  |   95 ++
->  .../platform/x86/dell/alienware-wmi-wmax.c    |  768 ++++++++++
->  drivers/platform/x86/dell/alienware-wmi.c     | 1249 -----------------
->  drivers/platform/x86/dell/alienware-wmi.h     |  117 ++
->  8 files changed, 1523 insertions(+), 1276 deletions(-)
->  create mode 100644 drivers/platform/x86/dell/alienware-wmi-base.c
->  create mode 100644 drivers/platform/x86/dell/alienware-wmi-legacy.c
->  create mode 100644 drivers/platform/x86/dell/alienware-wmi-wmax.c
->  delete mode 100644 drivers/platform/x86/dell/alienware-wmi.c
->  create mode 100644 drivers/platform/x86/dell/alienware-wmi.h
-> 
-> 
-> base-commit: e75394bbf4838857f57b6c5d00f1e56c46cd6c11
-> 
