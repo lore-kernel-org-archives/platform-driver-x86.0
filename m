@@ -1,168 +1,126 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1DF0A22258C;
-	Mon, 10 Feb 2025 18:11:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 47E402505AC;
+	Mon, 10 Feb 2025 19:52:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739211095; cv=none; b=cVdx7bYush0Zj79Sgvfog7usMRxw2zNaFXA2SBUBFYNvWbaxmPlw3S4/L0wiZBoCN6DLHqSXIbV8qM+0rfSGFFysp9GgrJ6/PGn0prJHDHYsr6JaR9TUoj/A5PGpZNVJiLgqtawHXSAcyd1Tt9BKIMBUbnMLffGaZKYqqr7J01k=
+	t=1739217158; cv=none; b=EtnG5ySVIshxkC+YReJfQ3cmlK0yNAGPrHx57qDQL2K5te1ozdzmFCi8rz3NlStdLEF+gDqwfe08OuiYkhOWRntzWdrJ0OMvGbO36awNO7+jCcDSEWtneEndQcDy9De2npOB+TVE0SCm55Iq3WnXITG3YiYZq6pvEVBP9Jz/ji8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739211095; c=relaxed/simple;
-	bh=TiwNFmrau+blS58gEo8VQ35n8oWuHMrryKJ6O8GxiTc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=JztBpgppdA8M/NYHHxrt6A5IAHxMhxh8G79EVO0ixC6SJLoTHGb+imz5SvrGsNp/XNJcwBKwVYq9nj+REGkL+i76dbneqANoqLYHVnXer3QQk37JSQXubm3n/UE82udv90OGNGZiNA6R0DkJD0z/CpLriRaeBdchblsFQ4LEHP0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=FjsOHtvG; arc=none smtp.client-ip=198.175.65.11
+	s=arc-20240116; t=1739217158; c=relaxed/simple;
+	bh=A1smERkQ7tLAEPCrqvp+5IIzk4F01vWVmsR3HQOXMNs=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=HUmqvlzuIgjVxSm7aU38AnFNWm5nNlG0QUrXSOZklvgP/UaJxwA8kIBV57puNigr/3S8v4ai4WJOceH25YZGW8ZiNl50IKE8HU7SAHgQlJ3JVHAHmw6pzhWVFJ7q54hWPxI7GHHyFXpgtNw/IJJ7QB4SGpxITLkILYsV6yzKAck=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=oLHU6J4o; arc=none smtp.client-ip=192.198.163.14
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="FjsOHtvG"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="oLHU6J4o"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1739211095; x=1770747095;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=TiwNFmrau+blS58gEo8VQ35n8oWuHMrryKJ6O8GxiTc=;
-  b=FjsOHtvGgU9QXgJ1Oh/2lCfkZCg+MDJSQeniczmrrpt7GqWx9It73LqF
-   JWwwJ7XU9c4r5mtB3sJtN4X2FmwwKgyHelXAtXckxXw/n9NLGX2meIs5+
-   hP+QgMd5hdWeh9UZ5PMg0WCdn1kGlBxmkYFNXb22rZsuYpaf22wQHFJSy
-   5uersQHJEtXqxt8a4oA4vf7hMTXt1/Lt+6D4RBM6iMSf9s7nfjkTZKWiy
-   n37ns7Wbj7jh+EJxSwoXWQQYoyE2sS13IizsZBztW0FF8mshGYCTUUkqU
-   5p4b0DQnnhkxOsukHlw6hX5BsIfs6SUEvuGcvm1a92ZfAtFGEVlPo+hzd
-   w==;
-X-CSE-ConnectionGUID: Sj0VqO/0TkSfQDAYShRujg==
-X-CSE-MsgGUID: Rf7hrAV6QYKk1htujVjiDA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11341"; a="50036399"
+  t=1739217156; x=1770753156;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=A1smERkQ7tLAEPCrqvp+5IIzk4F01vWVmsR3HQOXMNs=;
+  b=oLHU6J4oXyxeQtzT443niKF4ucs3NPyQUtiNNvw2j0LNqGvnNC3xZhlB
+   rIer/pHZNAap5Dd0xrdxdhtT8RqcfmehKg+j9DiBiwNVaaaG/QYKPKaAX
+   +B9EIxQXZoIjS0nOamlaVPTZdGcp9ehqytAOUNrPqp7fBQGzLdYCQ9IKA
+   iDfHjcAEjXcWeKvt/9NDsv6VqDsheUHfHPyhrXf84Q+GInvoReG1VxXE3
+   dHECSi3+Ik9sXMZm4y1mkVzu49v00zhXWQVfaqzd0CyFbYfm1e2O1rLsf
+   N68iHqqutmOR//rhCZXC4Vx9CUUxI1aYPStN6tJmLF0zrqUTQcHshdmBI
+   A==;
+X-CSE-ConnectionGUID: +WtRKza/QhSJaar4p0/Zeg==
+X-CSE-MsgGUID: y9rmVOabSu2QLNba37IJfQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11341"; a="40085020"
 X-IronPort-AV: E=Sophos;i="6.13,275,1732608000"; 
-   d="scan'208";a="50036399"
-Received: from orviesa010.jf.intel.com ([10.64.159.150])
-  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Feb 2025 10:11:34 -0800
-X-CSE-ConnectionGUID: gdyjt1ghROawv8LDB2oSKA==
-X-CSE-MsgGUID: 5U7N7k1sQHytulrx69CPEg==
+   d="scan'208";a="40085020"
+Received: from orviesa002.jf.intel.com ([10.64.159.142])
+  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Feb 2025 11:52:35 -0800
+X-CSE-ConnectionGUID: UIjBdXxFRiqVc8DukIR9MQ==
+X-CSE-MsgGUID: 3Oml8hwSSJK9uKMxeFskNA==
 X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
-   d="scan'208";a="112120129"
-Received: from xpardee-mobl.amr.corp.intel.com (HELO [10.246.158.142]) ([10.246.158.142])
-  by orviesa010-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Feb 2025 10:11:33 -0800
-Message-ID: <ff3c976e-2e2f-4a95-b53e-e3199f332e23@linux.intel.com>
-Date: Mon, 10 Feb 2025 10:11:29 -0800
+X-IronPort-AV: E=Sophos;i="6.13,275,1732608000"; 
+   d="scan'208";a="143148720"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by orviesa002.jf.intel.com with ESMTP; 10 Feb 2025 11:52:33 -0800
+Received: by black.fi.intel.com (Postfix, from userid 1003)
+	id C517A10F; Mon, 10 Feb 2025 21:52:31 +0200 (EET)
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	linux-gpio@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	platform-driver-x86@vger.kernel.org
+Cc: Mika Westerberg <mika.westerberg@linux.intel.com>,
+	Andy Shevchenko <andy@kernel.org>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Hans de Goede <hdegoede@redhat.com>,
+	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Subject: [PATCH v1 1/2] pwm: lpss: Clarify the bypass member semantics in struct pwm_lpss_boardinfo
+Date: Mon, 10 Feb 2025 21:44:50 +0200
+Message-ID: <20250210195230.490904-2-andriy.shevchenko@linux.intel.com>
+X-Mailer: git-send-email 2.45.1.3035.g276e886db78b
+In-Reply-To: <20250210195230.490904-1-andriy.shevchenko@linux.intel.com>
+References: <20250210195230.490904-1-andriy.shevchenko@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v6 5/6] platform/x86:intel/pmc: Move arch specific action
- to init function
-To: =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Cc: rajvi0912@gmail.com, irenic.rajneesh@gmail.com,
- david.e.box@linux.intel.com, Hans de Goede <hdegoede@redhat.com>,
- platform-driver-x86@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
- linux-pm@vger.kernel.org
-References: <20250207225615.401235-1-xi.pardee@linux.intel.com>
- <20250207225615.401235-6-xi.pardee@linux.intel.com>
- <69b2b41b-5fcd-a7f2-576a-b00f2d390d8e@linux.intel.com>
-Content-Language: en-US
-From: Xi Pardee <xi.pardee@linux.intel.com>
-In-Reply-To: <69b2b41b-5fcd-a7f2-576a-b00f2d390d8e@linux.intel.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
 
+Instead of an odd comment, cite the documentation, which says more clearly
+what's going on with the programming flow on some of the Intel SoCs.
 
-On 2/10/2025 3:58 AM, Ilpo Järvinen wrote:
-> On Fri, 7 Feb 2025, Xi Pardee wrote:
->
->> Move arch specific action from core.c to the init() function of spt.c.
->>
->> Signed-off-by: Xi Pardee <xi.pardee@linux.intel.com>
->> ---
->>   drivers/platform/x86/intel/pmc/core.c | 13 -------------
->>   drivers/platform/x86/intel/pmc/spt.c  | 21 +++++++++++++++++++++
->>   2 files changed, 21 insertions(+), 13 deletions(-)
->>
->> diff --git a/drivers/platform/x86/intel/pmc/core.c b/drivers/platform/x86/intel/pmc/core.c
->> index 628cb22221fbc..06821c41fbeb9 100644
->> --- a/drivers/platform/x86/intel/pmc/core.c
->> +++ b/drivers/platform/x86/intel/pmc/core.c
->> @@ -1416,11 +1416,6 @@ static const struct x86_cpu_id intel_pmc_core_ids[] = {
->>   
->>   MODULE_DEVICE_TABLE(x86cpu, intel_pmc_core_ids);
->>   
->> -static const struct pci_device_id pmc_pci_ids[] = {
->> -	{ PCI_VDEVICE(INTEL, SPT_PMC_PCI_DEVICE_ID) },
->> -	{ }
->> -};
->> -
->>   /*
->>    * This quirk can be used on those platforms where
->>    * the platform BIOS enforces 24Mhz crystal to shutdown
->> @@ -1531,14 +1526,6 @@ static int pmc_core_probe(struct platform_device *pdev)
->>   	if (!pmcdev->pkgc_res_cnt)
->>   		return -ENOMEM;
->>   
->> -	/*
->> -	 * Coffee Lake has CPU ID of Kaby Lake and Cannon Lake PCH. So here
->> -	 * Sunrisepoint PCH regmap can't be used. Use Cannon Lake PCH regmap
->> -	 * in this case.
->> -	 */
->> -	if (pmc_dev_info == &spt_pmc_dev && !pci_dev_present(pmc_pci_ids))
->> -		pmc_dev_info = &cnp_pmc_dev;
->> -
->>   	mutex_init(&pmcdev->lock);
->>   
->>   	if (pmc_dev_info->init)
->> diff --git a/drivers/platform/x86/intel/pmc/spt.c b/drivers/platform/x86/intel/pmc/spt.c
->> index 956b2ec1c7510..9289cd76b0145 100644
->> --- a/drivers/platform/x86/intel/pmc/spt.c
->> +++ b/drivers/platform/x86/intel/pmc/spt.c
->> @@ -8,6 +8,8 @@
->>    *
->>    */
->>   
->> +#include <linux/pci.h>
->> +
->>   #include "core.h"
->>   
->>   const struct pmc_bit_map spt_pll_map[] = {
->> @@ -134,6 +136,25 @@ const struct pmc_reg_map spt_reg_map = {
->>   	.pm_vric1_offset = SPT_PMC_VRIC1_OFFSET,
->>   };
->>   
->> +static const struct pci_device_id pmc_pci_ids[] = {
->> +	{ PCI_VDEVICE(INTEL, SPT_PMC_PCI_DEVICE_ID) },
->> +	{ }
->> +};
->> +
->> +static int spt_core_init(struct pmc_dev *pmcdev, struct pmc_dev_info *pmc_dev_info)
->> +{
->> +	/*
->> +	 * Coffee Lake has CPU ID of Kaby Lake and Cannon Lake PCH. So here
->> +	 * Sunrisepoint PCH regmap can't be used. Use Cannon Lake PCH regmap
->> +	 * in this case.
->> +	 */
->> +	if (!pci_dev_present(pmc_pci_ids))
->> +		return generic_core_init(pmcdev, &cnp_pmc_dev);
->> +
->> +	return generic_core_init(pmcdev, pmc_dev_info);
->> +}
->> +
->>   struct pmc_dev_info spt_pmc_dev = {
->>   	.map = &spt_reg_map,
->> +	.init = spt_core_init,
->>   };
->>
-> Hi,
->
-> I've applied all but this patch into the review-ilpo-next branch.
->
-> This change is good otherwise but I'd prefer the pmc_pci_ids be named
-> better such that it actually relates to why it exists :-). So please
-> respin this patch.
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+---
+ include/linux/platform_data/x86/pwm-lpss.h | 33 ++++++++++++++++++++--
+ 1 file changed, 30 insertions(+), 3 deletions(-)
 
-
-Hi,
-
-Thanks! I will change the name in next version.
-
-Xi
+diff --git a/include/linux/platform_data/x86/pwm-lpss.h b/include/linux/platform_data/x86/pwm-lpss.h
+index 752c06b47cc8..f0349edb47f4 100644
+--- a/include/linux/platform_data/x86/pwm-lpss.h
++++ b/include/linux/platform_data/x86/pwm-lpss.h
+@@ -15,9 +15,36 @@ struct pwm_lpss_boardinfo {
+ 	unsigned int npwm;
+ 	unsigned long base_unit_bits;
+ 	/*
+-	 * Some versions of the IP may stuck in the state machine if enable
+-	 * bit is not set, and hence update bit will show busy status till
+-	 * the reset. For the rest it may be otherwise.
++	 * NOTE:
++	 * Intel Broxton, Apollo Lake, and Gemini Lake have different programming flow.
++	 *
++	 * Initial Enable or First Activation
++	 * 1. Program the base unit and on time divisor values.
++	 * 2. Set the software update bit.
++	 * 3. Poll in a loop on the PWMCTRL bit until software update bit is cleared.+
++	 * 4. Enable the PWM output by setting PWM Enable.
++	 * 5. Repeat the above steps for the next PWM Module.
++	 *
++	 * Dynamic update while PWM is Enabled
++	 * 1. Program the base unit and on-time divisor values.
++	 * 2. Set the software update bit.
++	 * 3. Repeat the above steps for the next PWM module.
++	 *
++	 * + After setting PWMCTRL register's SW update bit, hardware automatically
++	 * deasserts the SW update bit after a brief delay. It was observed that
++	 * setting of PWM enable is typically done via read-modify-write of the PWMCTRL
++	 * register. If there is no/little delay between setting software update bit
++	 * and setting enable bit via read-modify-write, it is possible that the read
++	 * could return with software enable as 1. In that case, the last write to set
++	 * enable to 1 could also set sw_update to 1. If this happens, sw_update gets
++	 * stuck and the driver code can hang as it explicitly waits for sw_update bit
++	 * to be 0 after setting the enable bit to 1. To avoid this race condition,
++	 * SW should poll on the software update bit to make sure that it is 0 before
++	 * doing the read-modify-write to set the enable bit to 1.
++	 *
++	 * Also, we noted that if sw_update bit was set in step #1 above then when it
++	 * is set again in step #2, sw_update bit never gets cleared and the flow hangs.
++	 * As such, we need to make sure that sw_update bit is 0 when doing step #1.
+ 	 */
+ 	bool bypass;
+ 	/*
+-- 
+2.45.1.3035.g276e886db78b
 
