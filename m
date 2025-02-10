@@ -1,99 +1,80 @@
-Received: from mail-yw1-f174.google.com (mail-yw1-f174.google.com [209.85.128.174])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 07846208D7;
-	Mon, 10 Feb 2025 04:00:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A99B1CCB4B;
+	Mon, 10 Feb 2025 10:45:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739160032; cv=none; b=VdjXq5+RJps92jpKN4bHcz2rKJ7RCVB0m/XPHu11Zhknvdafl1Fv4U3TwP7ZAWVKz7MA8vrxu5/DZKppxcKGKRapDJiLF8s1VsLB7mZdfKV/VwcolC04tV10AWJdQdCFrBnaPqU332IReFdkQQbF9C7cwJvXkZKntCUzaoCuUdA=
+	t=1739184308; cv=none; b=h7HplexMRKQIA7eOxZ1EaCi/+ZxH12/mDkzTAB381KhPAWVfzT1qS5gYSzAgPZWZaq/GwapkP2oPi7ivq4Q3NNi78M16xIcucYLlmYP7jtDORBlMI5Mnvz6IJg+VebazpkM3/Jbi6z/VmWhmYiTx8eoyHfQYao5Lw9LAdqUZh1Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739160032; c=relaxed/simple;
-	bh=sAigv+ZBWOzceL+5Qv+lyjh0RApPCEiILO5iemSK3No=;
-	h=Mime-Version:Content-Type:Date:Message-Id:Cc:Subject:From:To:
-	 References:In-Reply-To; b=uWNM6tkFnA84KP6DRFvbo+yNMeZrnSjMmHpvJcMHQTThRyEj88D9BJiqo62s71syDV7byiNDzrAQx2rvZhTgo+hohbFNZICXAvW4uhcXzRQIb0CMngzUQQ0rjHtL5JCExQw2y0iS2l/IDSCycNXw3NIX5qZTDiYHR/ekfap5ojk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=AtOBI2eR; arc=none smtp.client-ip=209.85.128.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1739184308; c=relaxed/simple;
+	bh=eSZeUFy/G6cO3KWYEVevQh1yjcxqEc9wdDC1k4a+lKw=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=L13SV2UuXJxUhDDnoYwaIEhFD8gSTILM11H9Bni8D+PRIV4CGBA5stXH+gVR2wZTsyouerildTj8ClrpJEAgXOvRZvCsPZXC6JThN35QNgUtQAM/u68z2rsToczwm5HEVFZyvWJa5b0Y1IeMoRLTvElaPsbZOTJs2AbDc5qD2Rk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=JNQ15yBG; arc=none smtp.client-ip=192.198.163.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AtOBI2eR"
-Received: by mail-yw1-f174.google.com with SMTP id 00721157ae682-6f6c90b51c3so30915297b3.2;
-        Sun, 09 Feb 2025 20:00:30 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1739160030; x=1739764830; darn=vger.kernel.org;
-        h=in-reply-to:references:to:from:subject:cc:message-id:date
-         :content-transfer-encoding:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=vmdcIHm53nyzDfWeNL0sIm/BNqO0dVi7BIogLdz6YDY=;
-        b=AtOBI2eR0EsWYFFpLyRYy9nallFKUgn+9x4wNx09G37EKAuLbed7/IYjFeUNs57VNj
-         /3OT0ZSPBm5S5uTzuqBdGE2QJ897WA4TbNhZliWwSxBzIaHZXHirS00wWEHF4nuL0xEr
-         kQgoES203cc9B7DshUSzAPF3uoUWZENsVKDKuOxQVUHJppmEQXaUlIa+a7xRD0f2M9Pi
-         7ffz5scBg7NKVrr7THkitVJykmZGUBbDBAzSf2+dMxHATKMHzbsNwq3A95/TTfW5Lh3u
-         RmUOjhGL5zo4Iw+4N4N1ihlaacvrjGKAd7fJMgCgikrZcK9s8VNtRL1DO02AT4WIsFfD
-         CQGQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739160030; x=1739764830;
-        h=in-reply-to:references:to:from:subject:cc:message-id:date
-         :content-transfer-encoding:mime-version:x-gm-message-state:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=vmdcIHm53nyzDfWeNL0sIm/BNqO0dVi7BIogLdz6YDY=;
-        b=FkKCp71g9PyBznMJR2ldngHniqBaac2t6jEu6h7x95gCuEcxu0okfCUXFUD/kjA0j3
-         YJHnYOyA4rFS72Fu8smxfFLjRj0TdEJDQ883Cw5OKEsdyGxbOGfyZ7qnQ+zVj5Tvc7HP
-         CvnFoQ8cokyVoEOAw1NGYbeN3gT4hvn0Tnkfjnmr005mw7uY8527Zs0t0i31KFaz9+mA
-         0XDOpP9Jj/WKim3gg7nct+H+pHl4KJTtihK5ku0qAQ8gn3KcHzieLK0N8rT2v9PWQl3v
-         NdR+xLSOKgvfpMd5kRcMzWzv3+JFu6uvOkG5ttP1dvp13ZzXnejib0F1l3KhAGy0bItR
-         zH+Q==
-X-Forwarded-Encrypted: i=1; AJvYcCUPrHEERPE0CFjCMYkJS2ecAf0KSntMjX/ttuK9/Er66iA9cOfousWd+/ZJic2887L54yE79uwthRWFySRjGHSJ//bl@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx0uBy8kxJDJ5YE7ohk4jLiOsSY+FdzV8u51ZL09Rbb5H7HUDZc
-	PilY0fSxED8b39tRzlr+epzxxdxZnxJHT/Dbx18i/XyYS4HXN52W
-X-Gm-Gg: ASbGnct9mGnQpHR9hvbk8mmagKVRZO/2CZ1+O1cs+2P+3g+04G6FyRd6aWT2Rc6z3NI
-	+54M6Q2fD6FKSEhin4eHaz4QUvuCD4t57ViQ9XJk9Uls7pOVMTyKUF1tkMfqxzUZUhgJh5dhKGy
-	cGPTe4gTvAFlV0GVWsfKAk9AgrD2pgsj5C9uY9kDZ7fPZvXENl5cjiq0qaBmVeVLXJadtgqGut9
-	OYyQ6vPuhLGpioZVE60LCIxy+BHRBzK2hSniKHS+2Knt50qB50roOjC3V1bfs4CQr9lJHvOkB0L
-	9Qbuc18=
-X-Google-Smtp-Source: AGHT+IEG4FMCFIxLPkkJQ7+BUTLW5bSukFt1CP/qFIrPPQa1CzuDjPQmFWWQTuxXegura/RcNc7cmg==
-X-Received: by 2002:a05:690c:c08:b0:6f9:525d:a096 with SMTP id 00721157ae682-6f9b280fd6fmr103731377b3.3.1739160029722;
-        Sun, 09 Feb 2025 20:00:29 -0800 (PST)
-Received: from localhost ([2800:bf0:82:3d2:4207:a956:ebad:2a64])
-        by smtp.gmail.com with ESMTPSA id 00721157ae682-6f99fceff5csm14706147b3.9.2025.02.09.20.00.27
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 09 Feb 2025 20:00:28 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="JNQ15yBG"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1739184307; x=1770720307;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=eSZeUFy/G6cO3KWYEVevQh1yjcxqEc9wdDC1k4a+lKw=;
+  b=JNQ15yBGbrWLS6kX6gIm2k2ebh6puxXmvd4GwQXtOi017Ss2zuGjVk1I
+   DoE2Dg1b3NFkM+o2+yWBt4wpK3GajP1OAkb2DN8eHqXVB/5ye+PInc5GW
+   uf6zFsZmvGZUomsT7+P0HuFM8sPmMSfFvNaSznvytzVFB99xbbHHlmEsy
+   lqTGDiEmSPJ6keo1024+y00aCCKSS9MdisFWRmE06lVvM0UTOLf7uluAe
+   cn1VHGsGnFWIE2H7MO8G1Lp8yHSla9n3dAhYPw+b7egSs9Ugyk3ZNQ6bR
+   qjb6AMkxncdfSe8+awfjTAmTuzRgT+FjkCu/GFb/NrzT4tfqoex6xE+m8
+   A==;
+X-CSE-ConnectionGUID: 5C7uTODkSqO0oWTjo2Vq/Q==
+X-CSE-MsgGUID: soVubZ8JTtWH4lLe1fIMLA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11340"; a="39645481"
+X-IronPort-AV: E=Sophos;i="6.13,274,1732608000"; 
+   d="scan'208";a="39645481"
+Received: from fmviesa004.fm.intel.com ([10.60.135.144])
+  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Feb 2025 02:45:06 -0800
+X-CSE-ConnectionGUID: T340+QBVRmC0YFwRejoKjA==
+X-CSE-MsgGUID: Q/4T5LzHSdiDqxg4Jzvngw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.13,274,1732608000"; 
+   d="scan'208";a="117217332"
+Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.72])
+  by fmviesa004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Feb 2025 02:45:03 -0800
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Mon, 10 Feb 2025 12:45:00 +0200 (EET)
+To: Jackie Dong <xy-jackie@139.com>
+cc: Hans de Goede <hdegoede@redhat.com>, LKML <linux-kernel@vger.kernel.org>, 
+    platform-driver-x86@vger.kernel.org, dongeg1@lenovo.com, 
+    Mark Pearson <mpearson-lenovo@squebb.ca>
+Subject: Re: [PATCH v3] platform/x86: lenovo-super-hotkey-wmi.c: Support for
+ mic and audio mute LEDs
+In-Reply-To: <20250208144114.11685-1-xy-jackie@139.com>
+Message-ID: <59c73f9e-2b3c-0a52-3328-257dcbb52a90@linux.intel.com>
+References: <20250208144114.11685-1-xy-jackie@139.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Sun, 09 Feb 2025 23:00:27 -0500
-Message-Id: <D7OGRYOVJDJR.1JJOZXO4FIAZC@gmail.com>
-Cc: <linux-kernel@vger.kernel.org>, <platform-driver-x86@vger.kernel.org>,
- <dongeg1@lenovo.com>, "Mark Pearson" <mpearson-lenovo@squebb.ca>
-Subject: Re: [PATCH v3] platform/x86: lenovo-super-hotkey-wmi.c: Support for
- mic and audio mute LEDs
-From: "Kurt Borja" <kuurtb@gmail.com>
-To: "Jackie Dong" <xy-jackie@139.com>, <hdegoede@redhat.com>,
- <ilpo.jarvinen@linux.intel.com>
-X-Mailer: aerc 0.20.1-0-g2ecb8770224a
-References: <20250208144114.11685-1-xy-jackie@139.com>
-In-Reply-To: <20250208144114.11685-1-xy-jackie@139.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
 
-Hi Jackie,
+On Sat, 8 Feb 2025, Jackie Dong wrote:
 
-I noticed a few things while going through your patch:
-
-On Sat Feb 8, 2025 at 9:41 AM -05, Jackie Dong wrote:
 > Implement Lenovo utility data WMI calls needed to make LEDs
 > work on Ideapads that support this GUID.
 > This enables the mic and audio LEDs to be updated correctly.
->
+> 
 > Tested on below samples.
 > ThinkBook 13X Gen4 IMH
 > ThinkBook 14 G6 ABP
 > ThinkBook 16p Gen4-21J8
 > ThinkBook 16p Gen8-IRL
 > ThinkBook 16p G7+ ASP
->
+> 
 > Signed-off-by: Jackie Dong <xy-jackie@139.com>
 > Suggested-by: Mark Pearson <mpearson-lenovo@squebb.ca>
 > ---
@@ -104,26 +85,26 @@ On Sat Feb 8, 2025 at 9:41 AM -05, Jackie Dong wrote:
 >  - Moved struct wmi_device *led_wdev in lenovo_super_hotkey_wmi_private,
 >    and use container_of() to the led_wdev pointer.
 >  - Replaced sizeof(struct wmi_led_args) by sizeof(led_arg)
->  - Added condtions checking for obj && obj->type =3D=3D ACPI_TYPE_INTEGER
+>  - Added condtions checking for obj && obj->type == ACPI_TYPE_INTEGER
 >    and free the ACPI object after get the required value.
 >  - Removed led_classdev_unregister() after led_reg_failed label, but
 >    add lenovo_super_hotkey_wmi_remove(struct wmi_device *wdev) to free
 >    resource.
 >  - Removed IDEAPAD_WMI_EVENT_FN_KEYS/IDEAPAD_WMI_EVENT_LUD_KEYS related
 >    source codes and only keep LUD_WMI_METHOD_GUID.
->
+> 
 > Changes in v2:
 >  - Update code layout and formatting as recommended in review
 >  - Improved error handling in ideapad_wmi_led_init
 >  - Separated a WMI driver named lenovo-super-hotkey-wmi.c from
 >    ideapad-lap.c, it's only for Lenovo Super Hotkey WMI devices.
->
+> 
 >  drivers/platform/x86/Kconfig                  |   9 +
 >  drivers/platform/x86/Makefile                 |   1 +
 >  .../platform/x86/lenovo-super-hotkey-wmi.c    | 248 ++++++++++++++++++
 >  3 files changed, 258 insertions(+)
 >  create mode 100644 drivers/platform/x86/lenovo-super-hotkey-wmi.c
->
+> 
 > diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
 > index 0258dd879d64..c1792e8f04e1 100644
 > --- a/drivers/platform/x86/Kconfig
@@ -131,35 +112,32 @@ On Sat Feb 8, 2025 at 9:41 AM -05, Jackie Dong wrote:
 > @@ -475,6 +475,15 @@ config IDEAPAD_LAPTOP
 >  	  This is a driver for Lenovo IdeaPad netbooks contains drivers for
 >  	  rfkill switch, hotkey, fan control and backlight control.
-> =20
+>  
 > +config LENOVO_SUPER_HOTKEY_WMI
 > +	tristate "Lenovo Super Hotkey Utility WMI extras driver"
 > +	depends on ACPI_WMI
 > +	depends on IDEAPAD_LAPTOP
 > +	help
-> +	  This driver provides WMI support for Lenovo customized hotkeys functi=
-on
+> +	  This driver provides WMI support for Lenovo customized hotkeys function
 > +	  of Lenovo NoteBooks which are for Consumer and SMB customers, such as
 > +	  Ideapad/YOGA/XiaoXin/Gaming/ThinkBook and so on.
 > +
 >  config LENOVO_YMC
 >  	tristate "Lenovo Yoga Tablet Mode Control"
 >  	depends on ACPI_WMI
-> diff --git a/drivers/platform/x86/Makefile b/drivers/platform/x86/Makefil=
-e
+> diff --git a/drivers/platform/x86/Makefile b/drivers/platform/x86/Makefile
 > index e1b142947067..598335da9f55 100644
 > --- a/drivers/platform/x86/Makefile
 > +++ b/drivers/platform/x86/Makefile
-> @@ -61,6 +61,7 @@ obj-$(CONFIG_UV_SYSFS)       +=3D uv_sysfs.o
+> @@ -61,6 +61,7 @@ obj-$(CONFIG_UV_SYSFS)       += uv_sysfs.o
 >  # IBM Thinkpad and Lenovo
->  obj-$(CONFIG_IBM_RTL)		+=3D ibm_rtl.o
->  obj-$(CONFIG_IDEAPAD_LAPTOP)	+=3D ideapad-laptop.o
-> +obj-$(CONFIG_LENOVO_SUPER_HOTKEY_WMI)	+=3D lenovo-super-hotkey-wmi.o
->  obj-$(CONFIG_LENOVO_YMC)	+=3D lenovo-ymc.o
->  obj-$(CONFIG_SENSORS_HDAPS)	+=3D hdaps.o
->  obj-$(CONFIG_THINKPAD_ACPI)	+=3D thinkpad_acpi.o
-> diff --git a/drivers/platform/x86/lenovo-super-hotkey-wmi.c b/drivers/pla=
-tform/x86/lenovo-super-hotkey-wmi.c
+>  obj-$(CONFIG_IBM_RTL)		+= ibm_rtl.o
+>  obj-$(CONFIG_IDEAPAD_LAPTOP)	+= ideapad-laptop.o
+> +obj-$(CONFIG_LENOVO_SUPER_HOTKEY_WMI)	+= lenovo-super-hotkey-wmi.o
+>  obj-$(CONFIG_LENOVO_YMC)	+= lenovo-ymc.o
+>  obj-$(CONFIG_SENSORS_HDAPS)	+= hdaps.o
+>  obj-$(CONFIG_THINKPAD_ACPI)	+= thinkpad_acpi.o
+> diff --git a/drivers/platform/x86/lenovo-super-hotkey-wmi.c b/drivers/platform/x86/lenovo-super-hotkey-wmi.c
 > new file mode 100644
 > index 000000000000..e677bd11fa2f
 > --- /dev/null
@@ -175,6 +153,9 @@ tform/x86/lenovo-super-hotkey-wmi.c
 > +#include <linux/leds.h>
 > +#include <linux/wmi.h>
 > +#include "ideapad-laptop.h"
+
+Add an empty line before the local includes.
+
 > +
 > +/* Lenovo Super Hotkey WMI GUIDs */
 > +#define LUD_WMI_METHOD_GUID	"CE6C0974-0407-4F50-88BA-4FC3B6559AD8"
@@ -198,16 +179,16 @@ tform/x86/lenovo-super-hotkey-wmi.c
 > +
 > +/* Values of input parameters to SetFeature of audio LED and Mic LED */
 > +enum hotkey_set_feature {
-> +	MIC_MUTE_LED_ON =3D 1,
+> +	MIC_MUTE_LED_ON = 1,
 > +	MIC_MUTE_LED_OFF,
-> +	AUDIO_MUTE_LED_ON =3D 4,
+> +	AUDIO_MUTE_LED_ON = 4,
 > +	AUDIO_MUTE_LED_OFF,
 > +};
 > +
 > +#define LSH_ACPI_LED_MAX 2
 > +
 > +enum lenovo_super_hotkey_wmi_event_type {
-> +	LSH_WMI_EVENT_LUD_KEYS =3D 2,
+> +	LSH_WMI_EVENT_LUD_KEYS = 2,
 > +};
 > +
 > +struct lenovo_super_hotkey_wmi_private {
@@ -221,35 +202,30 @@ tform/x86/lenovo-super-hotkey-wmi.c
 > +	AUDIO_MUTE,
 > +};
 > +
-> +static int lsh_wmi_mute_led_set(enum mute_led_type led_type, struct led_=
-classdev *led_cdev,
+> +static int lsh_wmi_mute_led_set(enum mute_led_type led_type, struct led_classdev *led_cdev,
 > +				enum led_brightness brightness)
 > +
 > +{
-> +	struct lenovo_super_hotkey_wmi_private *wpriv =3D container_of(led_cdev=
-,
+> +	struct lenovo_super_hotkey_wmi_private *wpriv = container_of(led_cdev,
 > +			struct lenovo_super_hotkey_wmi_private, cdev[led_type]);
-> +	struct wmi_led_args led_arg =3D {0, 0, 0};
+> +	struct wmi_led_args led_arg = {0, 0, 0};
 > +	struct acpi_buffer input;
 > +	acpi_status status;
 > +
 > +	switch (led_type) {
 > +	case MIC_MUTE:
-> +		led_arg.id =3D brightness =3D=3D LED_ON ? MIC_MUTE_LED_ON : MIC_MUTE_L=
-ED_OFF;
+> +		led_arg.id = brightness == LED_ON ? MIC_MUTE_LED_ON : MIC_MUTE_LED_OFF;
 > +		break;
 > +	case AUDIO_MUTE:
-> +		led_arg.id =3D brightness =3D=3D LED_ON ? AUDIO_MUTE_LED_ON : AUDIO_MU=
-TE_LED_OFF;
+> +		led_arg.id = brightness == LED_ON ? AUDIO_MUTE_LED_ON : AUDIO_MUTE_LED_OFF;
 > +		break;
 > +	default:
 > +		return -EINVAL;
 > +	}
 > +
-> +	input.length =3D sizeof(led_arg);
-> +	input.pointer =3D &led_arg;
-> +	status =3D wmidev_evaluate_method(wpriv->led_wdev, 0, WMI_LUD_SET_FEATU=
-RE, &input, NULL);
+> +	input.length = sizeof(led_arg);
+> +	input.pointer = &led_arg;
+> +	status = wmidev_evaluate_method(wpriv->led_wdev, 0, WMI_LUD_SET_FEATURE, &input, NULL);
 > +	if (ACPI_FAILURE(status))
 > +		return -EIO;
 > +
@@ -269,108 +245,82 @@ RE, &input, NULL);
 > +	return lsh_wmi_mute_led_set(MIC_MUTE, led_cdev, brightness);
 > +}
 > +
-> +static int lenovo_super_hotkey_wmi_led_init(enum mute_led_type led_type,=
- struct device *dev)
+> +static int lenovo_super_hotkey_wmi_led_init(enum mute_led_type led_type, struct device *dev)
 > +{
-> +	struct lenovo_super_hotkey_wmi_private *wpriv =3D dev_get_drvdata(dev);
-> +	struct acpi_buffer output =3D { ACPI_ALLOCATE_BUFFER, NULL };
+> +	struct lenovo_super_hotkey_wmi_private *wpriv = dev_get_drvdata(dev);
+> +	struct acpi_buffer output = { ACPI_ALLOCATE_BUFFER, NULL };
 > +	struct acpi_buffer input;
 > +	union acpi_object *obj;
-> +	int led_version, err =3D 0;
+> +	int led_version, err = 0;
 > +	unsigned int wmiarg;
 > +	acpi_status status;
 > +
 > +	switch (led_type) {
 > +	case MIC_MUTE:
-> +		wmiarg =3D WMI_LUD_GET_MICMUTE_LED_VER;
+> +		wmiarg = WMI_LUD_GET_MICMUTE_LED_VER;
 > +		break;
 > +	case AUDIO_MUTE:
-> +		wmiarg =3D WMI_LUD_GET_AUDIOMUTE_LED_VER;
+> +		wmiarg = WMI_LUD_GET_AUDIOMUTE_LED_VER;
 > +		break;
 > +	default:
 > +		return -EINVAL;
 > +	}
 > +
-> +	input.length =3D sizeof(wmiarg);
-> +	input.pointer =3D &wmiarg;
-> +	status =3D wmidev_evaluate_method(wpriv->led_wdev, 0, WMI_LUD_GET_SUPPO=
-RT, &input, &output);
+> +	input.length = sizeof(wmiarg);
+> +	input.pointer = &wmiarg;
+> +	status = wmidev_evaluate_method(wpriv->led_wdev, 0, WMI_LUD_GET_SUPPORT, &input, &output);
 > +	if (ACPI_FAILURE(status))
 > +		return -EIO;
 > +
-> +	obj =3D output.pointer;
-> +	if (obj && obj->type =3D=3D ACPI_TYPE_INTEGER) {
-> +		led_version =3D obj->integer.value;
+> +	obj = output.pointer;
+> +	if (obj && obj->type == ACPI_TYPE_INTEGER) {
+> +		led_version = obj->integer.value;
 > +		kfree(output.pointer);
-
-Maybe you should use <linux/cleanup.h> instead, to avoid memory bugs.
-Something like:
-
-	union acpi_object *obj __free(kfree) =3D out.pointer
-
 > +	} else {
-> +		err =3D -EIO;
+> +		err = -EIO;
 > +		goto led_error;
 > +	}
 > +
-> +	wpriv->cdev[led_type].max_brightness =3D LED_ON;
-> +	wpriv->cdev[led_type].dev =3D dev;
-
-The .dev field in led_classdev is where the class device is stored by
-the LED core. Drivers should not set this.
-
-> +	wpriv->cdev[led_type].flags =3D LED_CORE_SUSPENDRESUME;
+> +	wpriv->cdev[led_type].max_brightness = LED_ON;
+> +	wpriv->cdev[led_type].dev = dev;
+> +	wpriv->cdev[led_type].flags = LED_CORE_SUSPENDRESUME;
 > +
 > +	switch (led_type) {
 > +	case MIC_MUTE:
-> +		if (led_version !=3D WMI_LUD_SUPPORT_MICMUTE_LED_VER) {
-> +			err =3D -EIO;
+> +		if (led_version != WMI_LUD_SUPPORT_MICMUTE_LED_VER) {
+> +			err = -EIO;
 > +			goto led_error;
-
-Double free.
-
 > +		}
-> +		wpriv->cdev[led_type].name =3D "platform::micmute";
-> +		wpriv->cdev[led_type].brightness_set_blocking =3D &lsh_wmi_micmute_led=
-_set;
-> +		wpriv->cdev[led_type].default_trigger =3D "audio-micmute";
+> +		wpriv->cdev[led_type].name = "platform::micmute";
+> +		wpriv->cdev[led_type].brightness_set_blocking = &lsh_wmi_micmute_led_set;
+> +		wpriv->cdev[led_type].default_trigger = "audio-micmute";
 > +
-> +		err =3D devm_led_classdev_register(dev, &wpriv->cdev[led_type]);
+> +		err = devm_led_classdev_register(dev, &wpriv->cdev[led_type]);
 > +		if (err < 0)
 > +			goto led_reg_failed;
-
-Double free.
-
 > +
 > +		break;
 > +	case AUDIO_MUTE:
-> +		if (led_version !=3D WMI_LUD_SUPPORT_AUDIOMUTE_LED_VER) {
-> +			err =3D -EIO;
+> +		if (led_version != WMI_LUD_SUPPORT_AUDIOMUTE_LED_VER) {
+> +			err = -EIO;
 > +			goto led_error;
-
-Double free.
-
 > +		}
-> +		wpriv->cdev[led_type].name =3D "platform::mute";
-> +		wpriv->cdev[led_type].brightness_set_blocking =3D &lsh_wmi_audiomute_l=
-ed_set;
-> +		wpriv->cdev[led_type].default_trigger =3D "audio-mute";
+> +		wpriv->cdev[led_type].name = "platform::mute";
+> +		wpriv->cdev[led_type].brightness_set_blocking = &lsh_wmi_audiomute_led_set;
+> +		wpriv->cdev[led_type].default_trigger = "audio-mute";
 > +
-> +		err =3D devm_led_classdev_register(dev, &wpriv->cdev[led_type]);
+> +		err = devm_led_classdev_register(dev, &wpriv->cdev[led_type]);
 > +		if (err < 0)
 > +			goto led_reg_failed;
-
-Double free.
-
 > +
 > +		break;
 > +	default:
-> +		err =3D -EINVAL;
+> +		err = -EINVAL;
 > +		dev_err(dev, "Unknown LED type %d\n", led_type);
+
+Add include.
+
 > +		goto led_error;
-
-Double free.
-
 > +	}
 > +
 > +	return 0;
@@ -380,6 +330,9 @@ Double free.
 > +
 > +led_error:
 > +	kfree(obj);
+
+Add include.
+
 > +	return err;
 > +}
 > +
@@ -389,28 +342,20 @@ Double free.
 > +	lenovo_super_hotkey_wmi_led_init(AUDIO_MUTE, dev);
 > +}
 > +
-> +static int lenovo_super_hotkey_wmi_probe(struct wmi_device *wdev, const =
-void *context)
+> +static int lenovo_super_hotkey_wmi_probe(struct wmi_device *wdev, const void *context)
 > +{
 > +	struct lenovo_super_hotkey_wmi_private *wpriv;
 > +
-> +	wpriv =3D devm_kzalloc(&wdev->dev, sizeof(*wpriv), GFP_KERNEL);
+> +	wpriv = devm_kzalloc(&wdev->dev, sizeof(*wpriv), GFP_KERNEL);
 > +	if (!wpriv)
 > +		return -ENOMEM;
 > +
-> +	*wpriv =3D *(const struct lenovo_super_hotkey_wmi_private *)context;
-
-The .event context is only used inside this function, so I believe this
-copy is unnecessary.
-
+> +	*wpriv = *(const struct lenovo_super_hotkey_wmi_private *)context;
 > +
 > +	dev_set_drvdata(&wdev->dev, wpriv);
 > +
-> +	if (wpriv->event =3D=3D LSH_WMI_EVENT_LUD_KEYS) {
-
-This check is maybe unnecessary.
-
-> +		wpriv->led_wdev =3D wdev;
+> +	if (wpriv->event == LSH_WMI_EVENT_LUD_KEYS) {
+> +		wpriv->led_wdev = wdev;
 > +		lenovo_super_hotkey_wmi_leds_setup(&wdev->dev);
 > +	}
 > +
@@ -419,47 +364,36 @@ This check is maybe unnecessary.
 > +
 > +static void lenovo_super_hotkey_wmi_remove(struct wmi_device *wdev)
 > +{
-> +	struct lenovo_super_hotkey_wmi_private *wpriv =3D dev_get_drvdata(&wdev=
-->dev);
+> +	struct lenovo_super_hotkey_wmi_private *wpriv = dev_get_drvdata(&wdev->dev);
 > +	unsigned int i;
 > +
-> +	for (i =3D 0; i < LSH_ACPI_LED_MAX; i++)
+> +	for (i = 0; i < LSH_ACPI_LED_MAX; i++)
 > +		led_classdev_unregister(&wpriv->cdev[i]);
-
-devm_led_classdev_register() was used so this is not needed.
-
 > +
 > +	kfree(wpriv);
-
-devm_kzalloc() was used to allocate wpriv so this is not needed and
-probably double free.
-
---
-~ Kurt
-
 > +}
-> +static const struct lenovo_super_hotkey_wmi_private lsk_wmi_context_lud_=
-keys =3D {
-> +	.event =3D LSH_WMI_EVENT_LUD_KEYS
+> +static const struct lenovo_super_hotkey_wmi_private lsk_wmi_context_lud_keys = {
+> +	.event = LSH_WMI_EVENT_LUD_KEYS
 > +};
 > +
-> +static const struct wmi_device_id lenovo_super_hotkey_wmi_id_table[] =3D=
- {
+> +static const struct wmi_device_id lenovo_super_hotkey_wmi_id_table[] = {
 > +	{ LUD_WMI_METHOD_GUID, &lsk_wmi_context_lud_keys }, /* Utility data */
 > +	{ }
 > +};
 > +
 > +MODULE_DEVICE_TABLE(wmi, lenovo_super_hotkey_wmi_id_table);
-> +
-> +static struct wmi_driver lenovo_super_hotkey_wmi_driver =3D {
-> +	 .driver =3D {
-> +		 .name =3D "lenovo_super_hotkey_wmi",
-> +		 .probe_type =3D PROBE_PREFER_ASYNCHRONOUS
+
+Add include.
+
+> +static struct wmi_driver lenovo_super_hotkey_wmi_driver = {
+> +	 .driver = {
+> +		 .name = "lenovo_super_hotkey_wmi",
+> +		 .probe_type = PROBE_PREFER_ASYNCHRONOUS
 > +	 },
-> +	 .id_table =3D lenovo_super_hotkey_wmi_id_table,
-> +	 .probe =3D lenovo_super_hotkey_wmi_probe,
-> +	 .remove =3D lenovo_super_hotkey_wmi_remove,
-> +	 .no_singleton =3D true,
+> +	 .id_table = lenovo_super_hotkey_wmi_id_table,
+> +	 .probe = lenovo_super_hotkey_wmi_probe,
+> +	 .remove = lenovo_super_hotkey_wmi_remove,
+> +	 .no_singleton = true,
 > +};
 > +
 > +module_wmi_driver(lenovo_super_hotkey_wmi_driver);
@@ -468,4 +402,8 @@ keys =3D {
 > +MODULE_AUTHOR("Jackie Dong <dongeg1@lenovo.com>");
 > +MODULE_DESCRIPTION("Lenovo Super Hotkey Utility WMI extras driver");
 > +MODULE_LICENSE("GPL");
+> 
+
+-- 
+ i.
 
