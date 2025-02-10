@@ -1,133 +1,120 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f179.google.com (mail-pl1-f179.google.com [209.85.214.179])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 82AE9231A26;
-	Mon, 10 Feb 2025 14:07:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 340A9252906
+	for <platform-driver-x86@vger.kernel.org>; Mon, 10 Feb 2025 14:50:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739196460; cv=none; b=PKxRVMFt5PbiQsBPsU1UP/nreb5fR9N7bmoblwaE/1DHYfvffGUqTkr999DhOnLPPZ5x2r8ZHXkcFpRk7zW/SMJkDXnDfY3GuXqdHhx/WbeMe8b20m774RRSqpvL2wWmfwLiUoYHE4t6wI5tDh7XCX3zXKFfHjvkG6+WgZYkVGM=
+	t=1739199023; cv=none; b=oFNFoeeNGlM+BuxhIDFkALS/P3TxaZCL+CdXRZrn92iC/Nh5gKo+ziuz/q0gLhNkd/8c/vtJ3DAo+Urq7io6GgXKAOx4rQkj2f1du4eUuuiUteIko/npiMt+mfuid3P21ONBoiR5axav543S0PTXawYode7yaC3PRsPi+GgqXsU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739196460; c=relaxed/simple;
-	bh=XwSYNhVbOfSulcnrTNMkbediCB2ZsjYWDP6Iqs5aXDw=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=RM58UhwnrVQPaVD+VkScTiNUecqxe9n2Jx5XOV3AohbChPVMlZ7ITzjjqiQt8ZPW82ZZsl8xtFZopAH/RWqLjbroJrq4TFGKgjyDesgZ82XA+InaA7pQ/3WxdkMIVmXy3i+1M1wZtQ5fGR15uJo43974RqDirAUnNwHkYZBOIPk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=S+UzHjGt; arc=none smtp.client-ip=192.198.163.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1739199023; c=relaxed/simple;
+	bh=iAwQLDOIv8+9R8kO8fwAJAG9mycJA8DrXUGu7DeZJe0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=tE1AapobkXrEQvgucv9IrJuH7baisY4110Jo89gw21RIBkrTZ/P1hr/chuc/FFetCgTU0v1xfHHlz6WmmMzSSmclcRzib5+yyy7ovIXSDrM6b+fXy/DfYswKmPjK/XBE+TQXye5kAc5FjyLGF7EOdZ/dY9v/5QDLCFZJzxut9HQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=C7KVEXkG; arc=none smtp.client-ip=209.85.214.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="S+UzHjGt"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1739196458; x=1770732458;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version:content-id;
-  bh=XwSYNhVbOfSulcnrTNMkbediCB2ZsjYWDP6Iqs5aXDw=;
-  b=S+UzHjGtXHb5YFGCGpM6Vt2jMWwBgIW0DQjpY1FRPNizLtpUxPyCewHD
-   pzry6ZmGGfP+0vzWeCoeiShmtejoRbKjsyIVXs6rt0olkV7bx3cq0FoHk
-   FL+0XH5JTtcdzOtn32rKfrdkrP21ijoIiZGV+5/gp4IcBrM5eMCAp0lwR
-   4M3BzVuyeq4+LelcND4Um/9BsmOh0niSd70JP+pa2nEN80dn3JceBRNhf
-   7IiqdbaFoOidWjbeAfU434WcehDrOxqTeHDKmO1ncpCk60g7660cW5GrW
-   yisGAPbqbVTDHrd1/3jzDIWp6bW7cOUU7q2Xnqz3DEtVIeNRaJtiD/177
-   A==;
-X-CSE-ConnectionGUID: BsE7/uL/Q0+mv/wgeLtY2g==
-X-CSE-MsgGUID: CxM3J1mZT4ub4t5yAz8Fiw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11341"; a="50416611"
-X-IronPort-AV: E=Sophos;i="6.13,274,1732608000"; 
-   d="scan'208";a="50416611"
-Received: from fmviesa005.fm.intel.com ([10.60.135.145])
-  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Feb 2025 06:07:37 -0800
-X-CSE-ConnectionGUID: apRFwDyPT0aryd3XND7vsg==
-X-CSE-MsgGUID: rmivH04SSaC6tthq/RTPCQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
-   d="scan'208";a="116787704"
-Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.72])
-  by fmviesa005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Feb 2025 06:07:35 -0800
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Mon, 10 Feb 2025 16:07:31 +0200 (EET)
-To: Kurt Borja <kuurtb@gmail.com>
-cc: platform-driver-x86@vger.kernel.org, Armin Wolf <W_Armin@gmx.de>, 
-    Mario Limonciello <mario.limonciello@amd.com>, 
-    Hans de Goede <hdegoede@redhat.com>, Dell.Client.Kernel@dell.com, 
-    LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v9 11/14] platform/x86: Split the alienware-wmi driver
-In-Reply-To: <D7OT982LY0H1.1P6XUU7YTDDMB@gmail.com>
-Message-ID: <a360d20e-4c14-18db-64d0-99149cd89d0e@linux.intel.com>
-References: <20250207140743.16822-1-kuurtb@gmail.com> <20250207140743.16822-12-kuurtb@gmail.com> <85e378b4-a434-efe1-fd16-416fc3ce3691@linux.intel.com> <D7MBDPIDK7XS.3DONIQK22EIBH@gmail.com> <c314c485-7a6f-b10a-2d80-45a8c5fb331e@linux.intel.com>
- <D7OT982LY0H1.1P6XUU7YTDDMB@gmail.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="C7KVEXkG"
+Received: by mail-pl1-f179.google.com with SMTP id d9443c01a7336-21f0444b478so63403815ad.0
+        for <platform-driver-x86@vger.kernel.org>; Mon, 10 Feb 2025 06:50:20 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1739199020; x=1739803820; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:to:subject:user-agent:mime-version:date:message-id:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=F6WQ5ygikr4qz5412rdFjWwDTcjtVUuZA/MDE/mxffA=;
+        b=C7KVEXkGhV4XSXcjJ+tQCoKjiOEx9NFAfySnwQHuKuKtvTVQ1fDbVqtAy22mQH+CUo
+         oBjRGjFE/pJhpKbPCe1VGYYDo8UOvAYs4LP7ox6uNOGglIFi322jYEEKzjRRy6Fw7srP
+         iG5zibeLaMCN7NM0etoHSscNxlpzUt6uAt7rpo1Chi2lX5OyYQjURrWr9kCv8OEWCRDz
+         Vm4lIiubQCFHAQcYMHCxQakBqWVz6Hb0pTkrtrMIIBAJoTmZHcc9k/3ZyOUR88GmycZt
+         nRbWMLKsfsPY9RO7YMQiY4V8XLLalqPFHovZBFmU2m8OOeXJkgFsYboX6y6cROsZnmAk
+         2LkQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1739199020; x=1739803820;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=F6WQ5ygikr4qz5412rdFjWwDTcjtVUuZA/MDE/mxffA=;
+        b=rHpk3yNM6P0EptKv8XJ+ch1AO6altIGksX0MK3RpfZ6ZRDPkBZUAs1R+MpZ12jMjUX
+         2RNqXgZZUkD6RukyiSqUprbbtLM7zIdzpc4mJL4XBI+TrOMh22EqFc98DgYXPxglhAMf
+         tY779uzKaGKa7FuEZvaWWrHHXn0lB8E1dKSt0fQBBD0KYnwxH7fZMmSkHw1dGe8UJQ5H
+         SpPnC6wuyCAVdZEfhXWWY2KSydT+HeEBHO8VC6yk/Be7b5DFli3GWiFDbLEt4rcxlpMp
+         xporsWImznYDxoedEfSdcUXvW8Z0Gbq0iUYft8GqzF9XnrBlLw32QHioEK47bWM91ZN6
+         6Gvw==
+X-Forwarded-Encrypted: i=1; AJvYcCVh0m1CWlkaHZbcVqDyMpgtVjG/jL4DIhafgB30UHvQRDodGe6uvPXDjd/qikh1wZ7MM7UJL7NvHCUEEHCAC1/s5iEh@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx79VHPfKS74091uzmTMjqIlZDE0kHbX+PX8gbNu7yxIhb0IZfO
+	r8cBAQBx0vCPBVC3B2IkA49QCOKWzPcnA/YQZNtKCf8Pe87bvrNEqlolYw==
+X-Gm-Gg: ASbGncvF+wv+XxFG+Sv3QN95H9zX72p3ZquX916Y0aMIISYwNKMQx05RNrCGBO8NcgB
+	MS5gdOK+rVuHeVXI2Pl06LdUUan544OFh1G/La91E35KecGqtlCzKwxerWTaG2FFvURlwgcqCg7
+	F6Y507iwrBw7illmNZfU8nIf3j1G6Em+T+8JNqF9A4A8ddcfDWZGf4aGlGm60P5ZXULQ+to+p4f
+	JZyLiTdHtOQtMM+VS2agc6yuaH4eus/RCZU14AJ8kFM1BlDco5tVQxcV9qfQ/8wFy0yomyUylS4
+	qJuiDycyO+PPz4cd/eMebMxaWMlReqN1w6bsmxmz8hjU9aDtF5gAuCt9zZsxI1Za
+X-Google-Smtp-Source: AGHT+IHTbWy+sa3la7KpXjJhKhTbcdjHzzvwGzSDGgN695HMc4WrkHzrayxx+FGPQaU6oDRtOI/4yQ==
+X-Received: by 2002:a17:902:cf11:b0:21a:7cbe:3a9a with SMTP id d9443c01a7336-21f4e6ba756mr240134145ad.14.1739199020219;
+        Mon, 10 Feb 2025 06:50:20 -0800 (PST)
+Received: from ?IPV6:2409:40f4:a4:4dc6:236b:72be:5c03:5c13? ([2409:40f4:a4:4dc6:236b:72be:5c03:5c13])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-21f3683d529sm80253225ad.145.2025.02.10.06.50.17
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 10 Feb 2025 06:50:19 -0800 (PST)
+Message-ID: <5c88b97e-d345-4b0d-9bc2-b8abff3a6513@gmail.com>
+Date: Mon, 10 Feb 2025 20:20:08 +0530
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; BOUNDARY="8323328-1272725192-1739195375=:936"
-Content-ID: <0b03cdd4-eb34-784b-0786-981b9e737f6f@linux.intel.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: Need help fixing turbo button and power profiles on Acer Predator
+ Helios Neo 16 (PHN16-72)
+To: Armin Wolf <W_Armin@gmx.de>, platform-driver-x86@vger.kernel.org
+References: <e0f625f4-9c55-4021-ba43-668edb9fe80d@gmail.com>
+ <083e0184-19e9-4473-bebf-5536b3d5ec10@gmx.de>
+ <4d281c36-4996-4518-9db3-e11780f6fbfe@gmail.com>
+ <e430d262-8c1e-4c8f-88eb-98a71117e8bf@gmx.de>
+Content-Language: en-US
+From: Sourajyoti Basak <basak.sb2006@gmail.com>
+In-Reply-To: <e430d262-8c1e-4c8f-88eb-98a71117e8bf@gmx.de>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
+On 07/02/25 6:11 pm, Armin Wolf wrote:
 
---8323328-1272725192-1739195375=:936
-Content-Type: text/plain; CHARSET=ISO-8859-15
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Content-ID: <0c930be4-3019-5d9a-e24c-b27e2f3b2a3a@linux.intel.com>
+> Alright, the values seem useless to me, so we have to try something 
+> different.
+> 
+> Can you dual-boot into Windows? If yes then you can use wmie2 (https:// 
+> github.com/vinaypamnani/wmie2) to execute WMI methods.
+> 
+> I this case i would like you to execute the "GetGamingFanBehavior" 
+> method of the "AcerGamingFunction" object located inside the root/WMI 
+> namespace.
+> This method take a single parameter called "gmInput". Please check what 
+> happens if "gmInput" is set to 0, 1, 4, 8 and 16 and share the result of 
+> each
+> method call.
+> 
+> Thanks,
+> Armin Wolf
+> 
 
-On Mon, 10 Feb 2025, Kurt Borja wrote:
+Hi Armin,
 
-> On Mon Feb 10, 2025 at 6:53 AM -05, Ilpo J=E4rvinen wrote:
+I ran the `GetGamingFanBehavior` function with the inputs you requested. 
+Here are the results:
 
-> > It is one of the reasons why I prefer to have move patches do as little=
-=20
-> > extra work as possible because I can use pipelines to verify the pre an=
-d=20
-> > post content is identical.
-> >
-> > I usually starting by diffing - and + lines in the diff which is how I=
-=20
-> > came across this one too. In the best case there are no code line chang=
-es=20
-> > at all but all changes are in the boilerplate, it gives very high=20
-> > confidence on the move being done correctly. When a rebase conflicts,=
-=20
-> > everyone (me included), might introduce unintended changes to move-only=
-=20
-> > patches so I tend to check even my own move patches in similar fashion =
-to=20
-> > avoid making stupid mistakes.
->=20
-> Speaking of this. Let's say I want to add a new model to the DMI list,
-> how should I go about it?=20
->=20
-> If I base it on the fixes branches it's going to conflict when merging
-> with Linus, and even worse, it would need to be manually added to
-> alienware-wmi-wmax.c every time it happens.
->=20
-> My solution is to just base the added models on the for-next branch. Of
-> course users wouldn't get this until v6.15 but I'd prefer not to give
-> you or some other maintainer extra work.
->=20
-> Another solution is to make two patches one for for-next and one for
-> stable, but I don't know if people do this to begin with.
->=20
-> What do you think about this?
 
-It is possible for me to merge the fixes branch containing the new model=20
-into for-next to avoid Linus having to deal with such conflicts. However,=
-=20
-it only moves the stable conflicts problem by one kernel release because=20
-after 6.14 is released, all new additions will be based on the 6.15 code=20
-anyway so any patch going into stable will have to deal with the conflicts.
++-------+--------+
+| Input | Output |
++-------+--------+
+|     0 |      2 |
+|     1 |    256 |
+|     4 |   8192 |
+|     8 |  16384 |
+|    16 |      0 |
++-------+--------+
 
-If you so prefer, it is fine for me if you want base them on for-next=20
-after such a major restructuring, I won't complain. But as you said,=20
-there's a small delay until stable will pick them up. They do actually=20
-start to pick the patches into stable right after 6.15-rc1 (and=20
-sometimes even during the merge window), not only after 6.15 release.
 
-You do get a FAILED mail from the stable maintainers if a patch they=20
-wanted to apply doesn't apply without conflicts and then can send them
-a backported version.
-
---=20
- i.
---8323328-1272725192-1739195375=:936--
+Best regards,
+Sourajyoti Basak
