@@ -1,120 +1,99 @@
-Received: from mail-pl1-f179.google.com (mail-pl1-f179.google.com [209.85.214.179])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 340A9252906
-	for <platform-driver-x86@vger.kernel.org>; Mon, 10 Feb 2025 14:50:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F1F0C2397B9;
+	Mon, 10 Feb 2025 14:57:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739199023; cv=none; b=oFNFoeeNGlM+BuxhIDFkALS/P3TxaZCL+CdXRZrn92iC/Nh5gKo+ziuz/q0gLhNkd/8c/vtJ3DAo+Urq7io6GgXKAOx4rQkj2f1du4eUuuiUteIko/npiMt+mfuid3P21ONBoiR5axav543S0PTXawYode7yaC3PRsPi+GgqXsU=
+	t=1739199435; cv=none; b=pymYC1SLPb0zZ/OzA/75kCETjEAkUa6VK6yrvMe7Jaf/0be6i7zOHgZXaoJOKWMbwauRh7aVOSTsnvnCgvzbZExwA2fYaElSo9ToWe0JdzJpvscK2fahZe4k3h1a+g8H8VsX38a0vZILzkMB6VaSJDXcLFW/VcBJ/TxqsB9z9Ik=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739199023; c=relaxed/simple;
-	bh=iAwQLDOIv8+9R8kO8fwAJAG9mycJA8DrXUGu7DeZJe0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=tE1AapobkXrEQvgucv9IrJuH7baisY4110Jo89gw21RIBkrTZ/P1hr/chuc/FFetCgTU0v1xfHHlz6WmmMzSSmclcRzib5+yyy7ovIXSDrM6b+fXy/DfYswKmPjK/XBE+TQXye5kAc5FjyLGF7EOdZ/dY9v/5QDLCFZJzxut9HQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=C7KVEXkG; arc=none smtp.client-ip=209.85.214.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1739199435; c=relaxed/simple;
+	bh=4ICcj8QdOWU1kXHtu8nmsMNpiM1O67Af20gHNKdHi/s=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=fWU5VDcHeJzZVyyNAXTxTcKhD2O0lZbpl6KpDFMdJ20U17pD1dzHw/CMmhyTr3tA/chOzn5wP+nLQN8G80SbnIy3M5VQwWqD1l6ZFwKOiYBCYGNyHqsNHCAcLOO7B2UuR+iDLy1cyXsiYa3l2EDZD2zR15EhRR4fB+fAWx1F9N0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=XTSh+rMO; arc=none smtp.client-ip=192.198.163.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="C7KVEXkG"
-Received: by mail-pl1-f179.google.com with SMTP id d9443c01a7336-21f0444b478so63403815ad.0
-        for <platform-driver-x86@vger.kernel.org>; Mon, 10 Feb 2025 06:50:20 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1739199020; x=1739803820; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:to:subject:user-agent:mime-version:date:message-id:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=F6WQ5ygikr4qz5412rdFjWwDTcjtVUuZA/MDE/mxffA=;
-        b=C7KVEXkGhV4XSXcjJ+tQCoKjiOEx9NFAfySnwQHuKuKtvTVQ1fDbVqtAy22mQH+CUo
-         oBjRGjFE/pJhpKbPCe1VGYYDo8UOvAYs4LP7ox6uNOGglIFi322jYEEKzjRRy6Fw7srP
-         iG5zibeLaMCN7NM0etoHSscNxlpzUt6uAt7rpo1Chi2lX5OyYQjURrWr9kCv8OEWCRDz
-         Vm4lIiubQCFHAQcYMHCxQakBqWVz6Hb0pTkrtrMIIBAJoTmZHcc9k/3ZyOUR88GmycZt
-         nRbWMLKsfsPY9RO7YMQiY4V8XLLalqPFHovZBFmU2m8OOeXJkgFsYboX6y6cROsZnmAk
-         2LkQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739199020; x=1739803820;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=F6WQ5ygikr4qz5412rdFjWwDTcjtVUuZA/MDE/mxffA=;
-        b=rHpk3yNM6P0EptKv8XJ+ch1AO6altIGksX0MK3RpfZ6ZRDPkBZUAs1R+MpZ12jMjUX
-         2RNqXgZZUkD6RukyiSqUprbbtLM7zIdzpc4mJL4XBI+TrOMh22EqFc98DgYXPxglhAMf
-         tY779uzKaGKa7FuEZvaWWrHHXn0lB8E1dKSt0fQBBD0KYnwxH7fZMmSkHw1dGe8UJQ5H
-         SpPnC6wuyCAVdZEfhXWWY2KSydT+HeEBHO8VC6yk/Be7b5DFli3GWiFDbLEt4rcxlpMp
-         xporsWImznYDxoedEfSdcUXvW8Z0Gbq0iUYft8GqzF9XnrBlLw32QHioEK47bWM91ZN6
-         6Gvw==
-X-Forwarded-Encrypted: i=1; AJvYcCVh0m1CWlkaHZbcVqDyMpgtVjG/jL4DIhafgB30UHvQRDodGe6uvPXDjd/qikh1wZ7MM7UJL7NvHCUEEHCAC1/s5iEh@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx79VHPfKS74091uzmTMjqIlZDE0kHbX+PX8gbNu7yxIhb0IZfO
-	r8cBAQBx0vCPBVC3B2IkA49QCOKWzPcnA/YQZNtKCf8Pe87bvrNEqlolYw==
-X-Gm-Gg: ASbGncvF+wv+XxFG+Sv3QN95H9zX72p3ZquX916Y0aMIISYwNKMQx05RNrCGBO8NcgB
-	MS5gdOK+rVuHeVXI2Pl06LdUUan544OFh1G/La91E35KecGqtlCzKwxerWTaG2FFvURlwgcqCg7
-	F6Y507iwrBw7illmNZfU8nIf3j1G6Em+T+8JNqF9A4A8ddcfDWZGf4aGlGm60P5ZXULQ+to+p4f
-	JZyLiTdHtOQtMM+VS2agc6yuaH4eus/RCZU14AJ8kFM1BlDco5tVQxcV9qfQ/8wFy0yomyUylS4
-	qJuiDycyO+PPz4cd/eMebMxaWMlReqN1w6bsmxmz8hjU9aDtF5gAuCt9zZsxI1Za
-X-Google-Smtp-Source: AGHT+IHTbWy+sa3la7KpXjJhKhTbcdjHzzvwGzSDGgN695HMc4WrkHzrayxx+FGPQaU6oDRtOI/4yQ==
-X-Received: by 2002:a17:902:cf11:b0:21a:7cbe:3a9a with SMTP id d9443c01a7336-21f4e6ba756mr240134145ad.14.1739199020219;
-        Mon, 10 Feb 2025 06:50:20 -0800 (PST)
-Received: from ?IPV6:2409:40f4:a4:4dc6:236b:72be:5c03:5c13? ([2409:40f4:a4:4dc6:236b:72be:5c03:5c13])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-21f3683d529sm80253225ad.145.2025.02.10.06.50.17
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 10 Feb 2025 06:50:19 -0800 (PST)
-Message-ID: <5c88b97e-d345-4b0d-9bc2-b8abff3a6513@gmail.com>
-Date: Mon, 10 Feb 2025 20:20:08 +0530
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="XTSh+rMO"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1739199434; x=1770735434;
+  h=from:to:cc:in-reply-to:references:subject:message-id:
+   date:mime-version:content-transfer-encoding;
+  bh=4ICcj8QdOWU1kXHtu8nmsMNpiM1O67Af20gHNKdHi/s=;
+  b=XTSh+rMOxRvOA8sdeEZ12wgvLaIO3zFVzvGbbuvZpBFfltGPw29YrFpw
+   oQWsd+ht2L7BwWGxeOk58xTZ7jyy8z1rRivpn+5LARINsgsISvs2MB4Pf
+   ycMLcNJqR4GDor23p+oQATaE981DPTpXaiLXnBqViTrVjlB/V1dNrUU3l
+   uwuzXCvL42FPGLvnefTfq5Mv9FWcSZviX+a9Qm9nl0Q6jrwTH2MSOS8yk
+   rRocHPeBFrstILAXBiHJMkpWVrzI9LhWI71YCv6eecflAcNILzW6SEs9U
+   5xCb+ATBPHOTSyizT57OrCnsAAr7KN881uWLe4H88xLGV9ScbqpIngI9a
+   A==;
+X-CSE-ConnectionGUID: LIONdeNYQjSyO6hhUNLwXg==
+X-CSE-MsgGUID: 2pt8J8FlQ6yonNGpnwRVug==
+X-IronPort-AV: E=McAfee;i="6700,10204,11341"; a="65134915"
+X-IronPort-AV: E=Sophos;i="6.13,274,1732608000"; 
+   d="scan'208";a="65134915"
+Received: from orviesa008.jf.intel.com ([10.64.159.148])
+  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Feb 2025 06:57:12 -0800
+X-CSE-ConnectionGUID: INQMVpnbSk2zCSi368zCmQ==
+X-CSE-MsgGUID: 0YminiqsT+euDpMsEd701w==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
+   d="scan'208";a="113089551"
+Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.72])
+  by orviesa008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Feb 2025 06:57:06 -0800
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+To: Sybil Isabel Dorsett <sybdorsett@proton.me>
+Cc: Henrique de Moraes Holschuh <hmh@hmh.eng.br>, 
+ Hans de Goede <hdegoede@redhat.com>, ibm-acpi-devel@lists.sourceforge.net, 
+ platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+In-Reply-To: <20250203163255.5525-1-sybdorsett@proton.me>
+References: <20250131203854.6608-1-sybdorsett@proton.me>
+ <69e279a3-7fd5-9dc3-680d-7415022dc5e4@linux.intel.com>
+ <20250203130232.3481-1-sybdorsett@proton.me>
+ <d20f933c-8041-bc8d-13c2-98d89ccfa524@linux.intel.com>
+ <cc7c8e94-4340-3d1e-03b4-2f738067d24f@linux.intel.com>
+ <20250203163255.5525-1-sybdorsett@proton.me>
+Subject: Re: [PATCH v3] platform/x86: thinkpad_acpi: Fix invalid fan speed
+ on ThinkPad X120e
+Message-Id: <173919942123.8268.13577857743094201898.b4-ty@linux.intel.com>
+Date: Mon, 10 Feb 2025 16:57:01 +0200
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: Need help fixing turbo button and power profiles on Acer Predator
- Helios Neo 16 (PHN16-72)
-To: Armin Wolf <W_Armin@gmx.de>, platform-driver-x86@vger.kernel.org
-References: <e0f625f4-9c55-4021-ba43-668edb9fe80d@gmail.com>
- <083e0184-19e9-4473-bebf-5536b3d5ec10@gmx.de>
- <4d281c36-4996-4518-9db3-e11780f6fbfe@gmail.com>
- <e430d262-8c1e-4c8f-88eb-98a71117e8bf@gmx.de>
-Content-Language: en-US
-From: Sourajyoti Basak <basak.sb2006@gmail.com>
-In-Reply-To: <e430d262-8c1e-4c8f-88eb-98a71117e8bf@gmx.de>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
+X-Mailer: b4 0.13.0
 
-On 07/02/25 6:11 pm, Armin Wolf wrote:
+On Mon, 03 Feb 2025 16:33:15 +0000, Sybil Isabel Dorsett wrote:
 
-> Alright, the values seem useless to me, so we have to try something 
-> different.
+> On ThinkPad X120e, fan speed is reported in ticks per revolution
+> rather than RPM.
 > 
-> Can you dual-boot into Windows? If yes then you can use wmie2 (https:// 
-> github.com/vinaypamnani/wmie2) to execute WMI methods.
+> Recalculate the fan speed value reported for ThinkPad X120e
+> to RPM based on a 22.5 kHz clock.
 > 
-> I this case i would like you to execute the "GetGamingFanBehavior" 
-> method of the "AcerGamingFunction" object located inside the root/WMI 
-> namespace.
-> This method take a single parameter called "gmInput". Please check what 
-> happens if "gmInput" is set to 0, 1, 4, 8 and 16 and share the result of 
-> each
-> method call.
+> Based on the information on
+> https://www.thinkwiki.org/wiki/How_to_control_fan_speed,
+> the same problem is highly likely to be relevant to at least Edge11,
+> but Edge11 is not addressed in this patch.
 > 
-> Thanks,
-> Armin Wolf
-> 
-
-Hi Armin,
-
-I ran the `GetGamingFanBehavior` function with the inputs you requested. 
-Here are the results:
+> [...]
 
 
-+-------+--------+
-| Input | Output |
-+-------+--------+
-|     0 |      2 |
-|     1 |    256 |
-|     4 |   8192 |
-|     8 |  16384 |
-|    16 |      0 |
-+-------+--------+
+Thank you for your contribution, it has been applied to my local
+review-ilpo-fixes branch. Note it will show up in the public
+platform-drivers-x86/review-ilpo-fixes branch only once I've pushed my
+local branch there, which might take a while.
 
+The list of commits applied:
+[1/1] platform/x86: thinkpad_acpi: Fix invalid fan speed on ThinkPad X120e
+      commit: 1046cac109225eda0973b898e053aeb3d6c10e1d
 
-Best regards,
-Sourajyoti Basak
+--
+ i.
+
