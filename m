@@ -1,266 +1,171 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
+Received: from NAM11-BN8-obe.outbound.protection.outlook.com (mail-bn8nam11on2083.outbound.protection.outlook.com [40.107.236.83])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2F24D1EC00B;
-	Tue, 11 Feb 2025 07:28:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.11
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739258938; cv=none; b=ge3nYM6UYQ5s1JQCTVb0kKgLfLfoAitbNlGCZMoCyGREE7/vvzHNkq2yk4d+uPQZ0qzjGct1Zn1oM2MoWoqPFw22VOL7qh5NP/Wm+thV+F21gkBvp4gu/AE4V8KRgGovLIe2rTaqNyoogcDDCctPUxTlEoSRRZV9vbXI7jw3BwU=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739258938; c=relaxed/simple;
-	bh=MNDf1Y65PaR7afnDQp+Khj0ZPczDBRJCAIcSt/0VX2I=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=iKkRv2h8pwHIapaUkOK1M7J9DRfkGBGf0/wz23ePfJhP3xrkTylB5PoFzhXEel15PlsprEXzS9PKkSHOfbZg3iqmELXZCiMGZVbx0TgWb9BxH8cMgb3GeWXHMePKiC+T7smqjbvloU6HzmwLpquMV3gK0VomdIfqhvCaWrU7KzI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=YP/SP733; arc=none smtp.client-ip=192.198.163.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C9A071EF0A9
+	for <platform-driver-x86@vger.kernel.org>; Tue, 11 Feb 2025 09:19:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.236.83
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1739265597; cv=fail; b=B/mbeBzb5vBFm/nth+CNmicFebjizgFmNhL2e9gyj9qMavulSZGnfSSc3Q7eCJFAOBNemmIYXWaO1nkj4Ewn+Ctcelec5vFi0cK+pWBDWGrtT+VhY11ZZRWfidWJ/PNa1ERu8NMOAa/071m7EwFGzcw9pBfqUZ4nLeb5tGkyi3c=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1739265597; c=relaxed/simple;
+	bh=+ammnAsuFfLFxI4Ktqx1eF0Gg03sTciVAii0WPd+4AI=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=dIAdYFuXqWvHoYIr9tcEn+zwQdOrFvlH4p6f/hdC9ThBUUfaFUNe/accP4OR32BzQQdmPqHXBqZ40k+zsoshR2WgZLpNlxkk8DiLaJiMKBXNfhv8t8GwnYJWJCEAfybNdpNkQRSk12jOCIROaBaCY5YmuOWj8lJCVMR6j3T5WzA=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=Vhakozbc; arc=fail smtp.client-ip=40.107.236.83
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="YP/SP733"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1739258937; x=1770794937;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=MNDf1Y65PaR7afnDQp+Khj0ZPczDBRJCAIcSt/0VX2I=;
-  b=YP/SP7339QwDPh23B3gIgF3JbaTgmF2eJraVE5R3CcL7wysjqPB6Emzl
-   UJtw3zMm1/2irx0ZwMhqmwn10rkUOs07yf9T6hkx3ONn3Rcutj5r28ETQ
-   6wTE2TA9MUTsrRTvCI5gljJ5wxeRth2OimesvBBq10zi97SlTKoHfAadm
-   TDI9NDPiDR4c2tPj1dHac27vvzM9JR3BlLnPhi7nvlFnD0rLge4Dpgj/Y
-   4bOaZB1/MK6UR2PEFIW03aF24ZNSGYaBiuZvBd9LmsviMKCcZZXd60eUP
-   PREEd5qcm/a4MGnYj+U3V6EY7pUJP9xeckB7kUiZFbBzM21eH+dn2GnDv
-   g==;
-X-CSE-ConnectionGUID: zrRpcw3hQtqz3ZOW5kudcQ==
-X-CSE-MsgGUID: 175eslV4S+qSaW51QU/8yw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11341"; a="50498312"
-X-IronPort-AV: E=Sophos;i="6.13,276,1732608000"; 
-   d="scan'208";a="50498312"
-Received: from orviesa009.jf.intel.com ([10.64.159.149])
-  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Feb 2025 23:28:56 -0800
-X-CSE-ConnectionGUID: 0wMcz7K1RyaALvpI/3dY+Q==
-X-CSE-MsgGUID: IQyE+KM+QESOXtxotXFHIg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.13,276,1732608000"; 
-   d="scan'208";a="112193904"
-Received: from turnipsi.fi.intel.com (HELO kekkonen.fi.intel.com) ([10.237.72.44])
-  by orviesa009-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Feb 2025 23:28:54 -0800
-Received: from svinhufvud.intel.com (maa-artisokka.localdomain [192.168.240.50])
-	by kekkonen.fi.intel.com (Postfix) with ESMTP id DEC1D11F88A;
-	Tue, 11 Feb 2025 09:28:49 +0200 (EET)
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-From: Sakari Ailus <sakari.ailus@linux.intel.com>
-To: Daniel Scally <djrscally@gmail.com>,
-	Hans de Goede <hdegoede@redhat.com>,
-	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Cc: platform-driver-x86@vger.kernel.org,
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-	laurent.pinchart@ideasonboard.com,
-	hverkuil@xs4all.nl,
-	linux-media@vger.kernel.org
-Subject: [PATCH v7 3/3] platform/x86: int3472: Call "func" "con_id" instead
-Date: Tue, 11 Feb 2025 09:28:41 +0200
-Message-Id: <20250211072841.7713-4-sakari.ailus@linux.intel.com>
-X-Mailer: git-send-email 2.39.5
-In-Reply-To: <20250211072841.7713-1-sakari.ailus@linux.intel.com>
-References: <20250211072841.7713-1-sakari.ailus@linux.intel.com>
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="Vhakozbc"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=AHJks4zdxbogDUECU1gGZ7H57IRE9n/kfy2ArHv2JUZKjr3f5uEks8mjMTMU/RMRE/3gu62r4MqSN55RGyEz3XKb2DlaIdI0fsbDWXvVbCe7BNadVQEV+3rZ28lGgEZ4iZaigSFTAY+ms96T+5EwkiJ0pWbJMyTzK96SrmQG6jtPlD/VaJsA0NqomqB5S0m5ZpH1Nit8K49P28Fl5tHu/9aLJmUuZ7JaGUstXdFobqysZEBHtp+05xx1Yh7mF5Q2YnFYjJRCwPPIii1OVpPqeBECYuUmEaKhJ1bOANRw9h31FUuR4vSfTfUsZhlP1CcRZAacafxLwCWaUqYLnRX4kQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=7MLyXqJFtxvLmTzaf0K1HRAhT0A/AMlD/RZ6D8r9vX8=;
+ b=s0YDloIKg1+xnIyJvhLQkW0PBoBxTaHLHcG+q33RIi/A58LMzhZPTrusBQa93f2s59Qi/CuseVccPTZ0jdt7vc5tGdt52eRW1yWgzZvxfAAMf2mzuGjPQ/aIcLh5gM2PQx9yITxF8McwFK+KiiQJBk2Jv3Lc4LhVsRVSNILCZiqnxvIxQayChWTHF9vHm+8v7OSflrlPebbV+euWNIr9DaL36PoYw5JcDmpMczbdpXG93EWjJ+iiLiXBnTbPqPJzRxgN0+u+9qV+aVht1xuDE2Bz1nQrNg0cqP6cQ3ezViaZD7fByvorrQDTvA5/fcEpRZwDvNXC2nTTMCJWla+7cw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 216.228.117.161) smtp.rcpttodomain=redhat.com smtp.mailfrom=nvidia.com;
+ dmarc=pass (p=reject sp=reject pct=100) action=none header.from=nvidia.com;
+ dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=7MLyXqJFtxvLmTzaf0K1HRAhT0A/AMlD/RZ6D8r9vX8=;
+ b=Vhakozbcy6oOuCKFKOR3cn+BA5kPrxxqxle8q9oAK4Ma7mZ9r1jcmqop284yyBCxkPw8LHhxZ9hRbVHAyP0SUwhWSR0PC/2paw2ySg2rnAQYztDtORbEzKYmctDNFx3ZOU93plp4iPUHxA0jnUdXSv2rO/RgMaC3dXz9ls6hwfAqJ9/PaQqmmwqhdCxetoCD7+Dx0W2t6TnF1BvLSdBkmW5UE5ZS3z2PesCC6l/KUoOSUCyL5RgGS3ZeRmt3TbJ/7TpswCt2YObet/DnsUedQbfjjoIKHId1tkKtYG8MvCkzBN9lU5gbdQ8F/CbaBfpxlIY4t7H6kufYbXRAhNKC0Q==
+Received: from DS0PR17CA0010.namprd17.prod.outlook.com (2603:10b6:8:191::26)
+ by SJ1PR12MB6100.namprd12.prod.outlook.com (2603:10b6:a03:45d::20) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8422.18; Tue, 11 Feb
+ 2025 09:19:51 +0000
+Received: from DS2PEPF00003446.namprd04.prod.outlook.com
+ (2603:10b6:8:191:cafe::5a) by DS0PR17CA0010.outlook.office365.com
+ (2603:10b6:8:191::26) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.8398.31 via Frontend Transport; Tue,
+ 11 Feb 2025 09:19:51 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 216.228.117.161)
+ smtp.mailfrom=nvidia.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=nvidia.com;
+Received-SPF: Pass (protection.outlook.com: domain of nvidia.com designates
+ 216.228.117.161 as permitted sender) receiver=protection.outlook.com;
+ client-ip=216.228.117.161; helo=mail.nvidia.com; pr=C
+Received: from mail.nvidia.com (216.228.117.161) by
+ DS2PEPF00003446.mail.protection.outlook.com (10.167.17.73) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.8445.10 via Frontend Transport; Tue, 11 Feb 2025 09:19:51 +0000
+Received: from rnnvmail201.nvidia.com (10.129.68.8) by mail.nvidia.com
+ (10.129.200.67) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.4; Tue, 11 Feb
+ 2025 01:19:39 -0800
+Received: from r-build-bsp-02.mtr.labs.mlnx (10.126.231.35) by
+ rnnvmail201.nvidia.com (10.129.68.8) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.14; Tue, 11 Feb 2025 01:19:37 -0800
+From: Vadim Pasternak <vadimp@nvidia.com>
+To: <hdegoede@redhat.com>, <ilpo.jarvinen@linux.intel.com>
+CC: <michaelsh@nvidia.com>, <crajank@nvidia.com>, <fradensky@nvidia.com>,
+	<oleksandrs@nvidia.com>, <platform-driver-x86@vger.kernel.org>, "Vadim
+ Pasternak" <vadimp@nvidia.com>
+Subject: [PATCH v6 0/9] Add support for new systems, amendments
+Date: Tue, 11 Feb 2025 11:19:03 +0200
+Message-ID: <20250211091912.36787-1-vadimp@nvidia.com>
+X-Mailer: git-send-email 2.44.0
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: rnnvmail201.nvidia.com (10.129.68.8) To
+ rnnvmail201.nvidia.com (10.129.68.8)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DS2PEPF00003446:EE_|SJ1PR12MB6100:EE_
+X-MS-Office365-Filtering-Correlation-Id: b0a804f9-0ee1-4d18-eba4-08dd4a7d3d59
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|376014|82310400026|36860700013|1800799024;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?UTd3RkJhc0Z5SGhDNjhURitJS3NEeTFROTA4SnVtSlp6Ty9RQXRJb0RpOVR6?=
+ =?utf-8?B?YjliN1dxeDhXb3NyVjNsUDIyMmhtdkFJS25KSW1aa2dvc2JTQ1BVS0VCcVRt?=
+ =?utf-8?B?eWtNUUo2ZnpFN0RnZUw2NDlaOVBjQzcrTUNFY3UwQ0xJaUVEdUpNdk1hVW1H?=
+ =?utf-8?B?bC9KUG81UXFnMW4yT2g3VDZMakRVSGNvOThBdktPQ0habkpxdm0zQXYyUWZ2?=
+ =?utf-8?B?WmJhRXNxU0dnQzErTDBtRGJQZzQ5SnJEdjhBYXBpcXZzcTBna3RHUHlObUxS?=
+ =?utf-8?B?NEtiNERTUmswajA1WTE0R1V2bG5UbDZ6UG1CMXVOaEFvOXVIY3R6dGwrVmdn?=
+ =?utf-8?B?REQ1cWZPRkdVeVdwNkltWDFIcGI3VWd5K01MS3V3Rk1JQXJRTk1GU01DNy9r?=
+ =?utf-8?B?UGxKM3ZlWlBxQ1pHZzNiUnpmZVNOcDh2ZUFjc1BIY0w3cmE3L2lnS0szdktn?=
+ =?utf-8?B?SEVkUVd1cWxMRjJyZk52NmVrdURreGlKbHpyYWdZNDZoVFFXanBONFRMeEww?=
+ =?utf-8?B?VzdsTCtBVVFBeGZmb1pUMDJEY01EMkpjVVc0aVNPMmYxRkwvUXA2c0svNmtI?=
+ =?utf-8?B?UkJDL1ZZVDB1WGJvRlI2bTgzbzhEQlZONjBhendNcXdGQWhKS0F5a3V4MVBt?=
+ =?utf-8?B?NjBKRFRDcC9IanEzNjBBaVJUdWl5TGZSUkt5K3FocjZrbTFmSFhLMHhHOURl?=
+ =?utf-8?B?dE1EOERqcnBLdGY3MEZzWTFFeUVaQndNSnRPRjhFOWF5MlY0OW1NMHJmSHZW?=
+ =?utf-8?B?UHBYRkpQZllNUDFCUVNoN1p0RFV5YzFxajh3QlJ5TWhCc0ZNeHVCY09zRStl?=
+ =?utf-8?B?dmFNUk1SZk80eStYMk52TDhuRm4zTUwrRXNNTEwvdC9vM2p1ZkVCMFMzQmpC?=
+ =?utf-8?B?VVRVR0FCdUI3MFdROCs5c0gvRU0xYXdVT3U1TjUycThTR0xiS3FnTVJ3UWV3?=
+ =?utf-8?B?Q3hsN1pUV3VkYk8xU2cvTkNFcWoreDBlQjJSZUJpVVB1eVZMMWFBSi9hbHVl?=
+ =?utf-8?B?SWlnMDIyQUE1UkRpOGl4QTZFUFo5ZHdTTTNCOWRiRkNpSkxSMStTbEVNbjRz?=
+ =?utf-8?B?Wnc0Z25TVENTRGNXN1d0Ykt3RDBLdEZCREIzUktqYzJOZlkwaUw3VDhmUnNM?=
+ =?utf-8?B?SmVEVUM3eGh1dVRLVENGVUZTU3NKYlQ2Q09uallVbHk5bVRtNGg4RlZnZG1v?=
+ =?utf-8?B?VUxvdmdUN3BEMDFuS3Z5OHBYZ3BsWmF6bFlJZ1JOQyttWFliL3o2Q2t3VW4w?=
+ =?utf-8?B?NzFtdGJVR2FPcEdWNW03akxka3I3M29FNGhPbElkQXVYN0duQXpObGVWU2Q1?=
+ =?utf-8?B?K295Njlaak5Ldms1S281T0lkSDYzSVJ0WlRFZzZRL0RkZktrTkFvMDVxd0RH?=
+ =?utf-8?B?bURZSnBZR3B6TkdQTWtZTXZpRVgvY0gzRHR1ekd1QkZkMTVwWWlvZEtWMy9J?=
+ =?utf-8?B?SmF0Rm5oSjBnOEYvZ0s0a2xDaThlY3ZBY1JXYVpmOWMzZE1lcWF3b0Z5UlpC?=
+ =?utf-8?B?UWNBOHBIV1RBdHVMc1dZWjBMNWtpUytuT2huUjNrb2NQM3c2VjhTVnF3cm9O?=
+ =?utf-8?B?QXpLeDkveTZETHpYRGJzMTB6UEJzVXhHRnBjNUlMMGJrZVFqTUtBS095bGtC?=
+ =?utf-8?B?SWo5eXZ6SUdiczZzYk9XM3JpREU0akxRVXlCSEt0U3IyNXVGWVFUdC93V3Vz?=
+ =?utf-8?B?Mm1NVzl6U2xQaHQ0blI0K0V3M29MY2I5amRPcC9aNWlqRXdiMmZ5d1dyckw4?=
+ =?utf-8?B?eHk1QitUQ2poQzRyNEFVbm1rZ1hqTXl4SUVXRFI1dDNoSmJZVFNLcUJxTEo1?=
+ =?utf-8?B?S0hkTWNleXlNOHBOYTgyVWdpNnhjUjZoZWl2VUhqbjd5VE9vdGNKRTV3dW5X?=
+ =?utf-8?B?bGlpRE12OXBsY3ZMOG9NUXQ0bkdUOFpwTm12ZE5oUGFhc2k1OHJPaFJFQTdS?=
+ =?utf-8?B?UjFCREVFSWhWVzdwZS9IUFFoSUp3eDF4UElPc1lRSWJlZVlYT2Y2aytuQWtr?=
+ =?utf-8?Q?OhxUaBlYUxf/f/MGJ/+csmAMWiybr8=3D?=
+X-Forefront-Antispam-Report:
+	CIP:216.228.117.161;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:dc6edge2.nvidia.com;CAT:NONE;SFS:(13230040)(376014)(82310400026)(36860700013)(1800799024);DIR:OUT;SFP:1101;
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 11 Feb 2025 09:19:51.5742
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: b0a804f9-0ee1-4d18-eba4-08dd4a7d3d59
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.117.161];Helo=[mail.nvidia.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	DS2PEPF00003446.namprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ1PR12MB6100
 
-"con_id" is an established variable name for the GPIO naming for drivers.
-Use it instead of "func" in the int3472 driver, too.
+The patchset contains:
+Patches #1; #2: Add new field.
+Patches #3; #5: Add cosmetic changes - removing spaces, style.
+Patches #4; #5; #6; #7 : Introduce systems: new SN428 smart switch
+	equipped with DPU for offloading, new 2U systems SN5610 and SN5640,
+	new compact system SN2200 OCP rack complained.
+Patch #8 - Add documentation.
 
-Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
-Reviewed-by: Hans de Goede <hdegoede@redhat.com>
-Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
----
- drivers/platform/x86/intel/int3472/discrete.c | 48 +++++++++----------
- 1 file changed, 24 insertions(+), 24 deletions(-)
+Vadim Pasternak (9):
+  platform_data/mlxreg: Add capability mask fields
+  platform/mellanox mlxreg-hotplug: Add support for new flavor of
+    capability registers
+  platform/mellanox: Rename field to improve code readability
+  platform/mellanox: mlxreg-dpu: Add initial support for Nvidia DPU
+  platform: mellanox: Introduce support of Nvidia smart switch
+  platform: mellanox: Cosmetic changes to improve code style
+  platform: mellanox: mlx-platform: Add support for new Nvidia system
+  platform: mellanox: nvsw-sn2200: Add support for new system flavour
+  Documentation/ABI: Add new attribute for mlxreg-io sysfs interfaces
 
-diff --git a/drivers/platform/x86/intel/int3472/discrete.c b/drivers/platform/x86/intel/int3472/discrete.c
-index 092252eb95a8..30ff8f3ea1f5 100644
---- a/drivers/platform/x86/intel/int3472/discrete.c
-+++ b/drivers/platform/x86/intel/int3472/discrete.c
-@@ -56,7 +56,7 @@ static void skl_int3472_log_sensor_module_name(struct int3472_discrete_device *i
- 
- static int skl_int3472_fill_gpiod_lookup(struct gpiod_lookup *table_entry,
- 					 struct acpi_resource_gpio *agpio,
--					 const char *func, unsigned long gpio_flags)
-+					 const char *con_id, unsigned long gpio_flags)
- {
- 	char *path = agpio->resource_source.string_ptr;
- 	struct acpi_device *adev;
-@@ -71,14 +71,14 @@ static int skl_int3472_fill_gpiod_lookup(struct gpiod_lookup *table_entry,
- 	if (!adev)
- 		return -ENODEV;
- 
--	*table_entry = GPIO_LOOKUP(acpi_dev_name(adev), agpio->pin_table[0], func, gpio_flags);
-+	*table_entry = GPIO_LOOKUP(acpi_dev_name(adev), agpio->pin_table[0], con_id, gpio_flags);
- 
- 	return 0;
- }
- 
- static int skl_int3472_map_gpio_to_sensor(struct int3472_discrete_device *int3472,
- 					  struct acpi_resource_gpio *agpio,
--					  const char *func, unsigned long gpio_flags)
-+					  const char *con_id, unsigned long gpio_flags)
- {
- 	int ret;
- 
-@@ -88,7 +88,7 @@ static int skl_int3472_map_gpio_to_sensor(struct int3472_discrete_device *int347
- 	}
- 
- 	ret = skl_int3472_fill_gpiod_lookup(&int3472->gpios.table[int3472->n_sensor_gpios],
--					    agpio, func, gpio_flags);
-+					    agpio, con_id, gpio_flags);
- 	if (ret)
- 		return ret;
- 
-@@ -101,7 +101,7 @@ static int skl_int3472_map_gpio_to_sensor(struct int3472_discrete_device *int347
- static struct gpio_desc *
- skl_int3472_gpiod_get_from_temp_lookup(struct int3472_discrete_device *int3472,
- 				       struct acpi_resource_gpio *agpio,
--				       const char *func, unsigned long gpio_flags)
-+				       const char *con_id, unsigned long gpio_flags)
- {
- 	struct gpio_desc *desc;
- 	int ret;
-@@ -112,12 +112,12 @@ skl_int3472_gpiod_get_from_temp_lookup(struct int3472_discrete_device *int3472,
- 		return ERR_PTR(-ENOMEM);
- 
- 	lookup->dev_id = dev_name(int3472->dev);
--	ret = skl_int3472_fill_gpiod_lookup(&lookup->table[0], agpio, func, gpio_flags);
-+	ret = skl_int3472_fill_gpiod_lookup(&lookup->table[0], agpio, con_id, gpio_flags);
- 	if (ret)
- 		return ERR_PTR(ret);
- 
- 	gpiod_add_lookup_table(lookup);
--	desc = devm_gpiod_get(int3472->dev, func, GPIOD_OUT_LOW);
-+	desc = devm_gpiod_get(int3472->dev, con_id, GPIOD_OUT_LOW);
- 	gpiod_remove_lookup_table(lookup);
- 
- 	return desc;
-@@ -129,7 +129,7 @@ skl_int3472_gpiod_get_from_temp_lookup(struct int3472_discrete_device *int3472,
-  * @hid: The ACPI HID of the device without the instance number e.g. INT347E
-  * @type_from: The GPIO type from ACPI ?SDT
-  * @type_to: The assigned GPIO type, typically same as @type_from
-- * @func: The function, e.g. "enable"
-+ * @con_id: The name of the GPIO for the device
-  * @polarity_low: GPIO_ACTIVE_LOW true if the @polarity_low is true,
-  * GPIO_ACTIVE_HIGH otherwise
-  */
-@@ -138,15 +138,15 @@ struct int3472_gpio_map {
- 	u8 type_from;
- 	u8 type_to;
- 	bool polarity_low;
--	const char *func;
-+	const char *con_id;
- };
- 
- static const struct int3472_gpio_map int3472_gpio_map[] = {
- 	{ "INT347E", INT3472_GPIO_TYPE_RESET, INT3472_GPIO_TYPE_RESET, false, "enable" },
- };
- 
--static void int3472_get_func_and_polarity(struct acpi_device *adev, u8 *type,
--					  const char **func, unsigned long *gpio_flags)
-+static void int3472_get_con_id_and_polarity(struct acpi_device *adev, u8 *type,
-+					    const char **con_id, unsigned long *gpio_flags)
- {
- 	unsigned int i;
- 
-@@ -165,33 +165,33 @@ static void int3472_get_func_and_polarity(struct acpi_device *adev, u8 *type,
- 		*type = int3472_gpio_map[i].type_to;
- 		*gpio_flags = int3472_gpio_map[i].polarity_low ?
- 			      GPIO_ACTIVE_LOW : GPIO_ACTIVE_HIGH;
--		*func = int3472_gpio_map[i].func;
-+		*con_id = int3472_gpio_map[i].con_id;
- 		return;
- 	}
- 
- 	switch (*type) {
- 	case INT3472_GPIO_TYPE_RESET:
--		*func = "reset";
-+		*con_id = "reset";
- 		*gpio_flags = GPIO_ACTIVE_LOW;
- 		break;
- 	case INT3472_GPIO_TYPE_POWERDOWN:
--		*func = "powerdown";
-+		*con_id = "powerdown";
- 		*gpio_flags = GPIO_ACTIVE_LOW;
- 		break;
- 	case INT3472_GPIO_TYPE_CLK_ENABLE:
--		*func = "clk-enable";
-+		*con_id = "clk-enable";
- 		*gpio_flags = GPIO_ACTIVE_HIGH;
- 		break;
- 	case INT3472_GPIO_TYPE_PRIVACY_LED:
--		*func = "privacy-led";
-+		*con_id = "privacy-led";
- 		*gpio_flags = GPIO_ACTIVE_HIGH;
- 		break;
- 	case INT3472_GPIO_TYPE_POWER_ENABLE:
--		*func = "power-enable";
-+		*con_id = "power-enable";
- 		*gpio_flags = GPIO_ACTIVE_HIGH;
- 		break;
- 	default:
--		*func = "unknown";
-+		*con_id = "unknown";
- 		*gpio_flags = GPIO_ACTIVE_HIGH;
- 		break;
- 	}
-@@ -238,7 +238,7 @@ static int skl_int3472_handle_gpio_resources(struct acpi_resource *ares,
- 	union acpi_object *obj;
- 	struct gpio_desc *gpio;
- 	const char *err_msg;
--	const char *func;
-+	const char *con_id;
- 	unsigned long gpio_flags;
- 	int ret;
- 
-@@ -262,26 +262,26 @@ static int skl_int3472_handle_gpio_resources(struct acpi_resource *ares,
- 
- 	type = FIELD_GET(INT3472_GPIO_DSM_TYPE, obj->integer.value);
- 
--	int3472_get_func_and_polarity(int3472->sensor, &type, &func, &gpio_flags);
-+	int3472_get_con_id_and_polarity(int3472->sensor, &type, &con_id, &gpio_flags);
- 
- 	pin = FIELD_GET(INT3472_GPIO_DSM_PIN, obj->integer.value);
- 	/* Pin field is not really used under Windows and wraps around at 8 bits */
- 	if (pin != (agpio->pin_table[0] & 0xff))
- 		dev_dbg(int3472->dev, FW_BUG "%s %s pin number mismatch _DSM %d resource %d\n",
--			func, agpio->resource_source.string_ptr, pin, agpio->pin_table[0]);
-+			con_id, agpio->resource_source.string_ptr, pin, agpio->pin_table[0]);
- 
- 	active_value = FIELD_GET(INT3472_GPIO_DSM_SENSOR_ON_VAL, obj->integer.value);
- 	if (!active_value)
- 		gpio_flags ^= GPIO_ACTIVE_LOW;
- 
--	dev_dbg(int3472->dev, "%s %s pin %d active-%s\n", func,
-+	dev_dbg(int3472->dev, "%s %s pin %d active-%s\n", con_id,
- 		agpio->resource_source.string_ptr, agpio->pin_table[0],
- 		str_high_low(gpio_flags == GPIO_ACTIVE_HIGH));
- 
- 	switch (type) {
- 	case INT3472_GPIO_TYPE_RESET:
- 	case INT3472_GPIO_TYPE_POWERDOWN:
--		ret = skl_int3472_map_gpio_to_sensor(int3472, agpio, func, gpio_flags);
-+		ret = skl_int3472_map_gpio_to_sensor(int3472, agpio, con_id, gpio_flags);
- 		if (ret)
- 			err_msg = "Failed to map GPIO pin to sensor\n";
- 
-@@ -289,7 +289,7 @@ static int skl_int3472_handle_gpio_resources(struct acpi_resource *ares,
- 	case INT3472_GPIO_TYPE_CLK_ENABLE:
- 	case INT3472_GPIO_TYPE_PRIVACY_LED:
- 	case INT3472_GPIO_TYPE_POWER_ENABLE:
--		gpio = skl_int3472_gpiod_get_from_temp_lookup(int3472, agpio, func, gpio_flags);
-+		gpio = skl_int3472_gpiod_get_from_temp_lookup(int3472, agpio, con_id, gpio_flags);
- 		if (IS_ERR(gpio)) {
- 			ret = PTR_ERR(gpio);
- 			err_msg = "Failed to get GPIO\n";
+ .../ABI/stable/sysfs-driver-mlxreg-io         |   96 +
+ drivers/platform/mellanox/Kconfig             |   12 +
+ drivers/platform/mellanox/Makefile            |    1 +
+ drivers/platform/mellanox/mlx-platform.c      | 3683 ++++++++++++-----
+ drivers/platform/mellanox/mlxreg-dpu.c        |  619 +++
+ drivers/platform/mellanox/mlxreg-hotplug.c    |   33 +-
+ drivers/platform/mellanox/nvsw-sn2201.c       |  112 +-
+ include/linux/platform_data/mlxreg.h          |    8 +-
+ 8 files changed, 3488 insertions(+), 1076 deletions(-)
+ create mode 100644 drivers/platform/mellanox/mlxreg-dpu.c
+
 -- 
-2.39.5
+2.44.0
 
