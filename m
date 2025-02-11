@@ -1,84 +1,180 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yb1-f180.google.com (mail-yb1-f180.google.com [209.85.219.180])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 683C3261599;
-	Tue, 11 Feb 2025 17:45:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9314C41C7F;
+	Tue, 11 Feb 2025 17:46:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739295922; cv=none; b=nIRKoZ63PlqQKTvsZIm5HPGvUhINAOomaBnmAzxeog1+LrgqqYCp1RalgQ9mJU8X9Jl1k8fAzKhf9K6MtPBeZukWOJbDP1ieQwOl/G4S30PXhWQBwrblEUlthi9al2i4FBIr8IzbGRWzFki185lEGm80Uy8OgNXb8t4BO6hJBpM=
+	t=1739296005; cv=none; b=iD4F1zHO6b2No0tRv6SvnHvGF/GP8NYc6HRwHM2RbWSTO2JeCqpgBesQiRbNZRjktUOWvgqW+Qz1cfb2xZmmToRtERCoj1sth7XtqudiqyfZ28OlkQ74A5KWdS6v4pfifIjEKkDCxyuDmIvVwAeJkGHb2jhu8sGiKOfUQnQ8TGg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739295922; c=relaxed/simple;
-	bh=025NWQSnvY+LgecFbYkNP8Yv/ZISvzowgReUeSLUZdI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=fna0oySTz87eQhFaRhqTvcX3kEz0OFwDz9b6045HzEeVYSKCNWF45Z0zoNy/euFzfg3OWsfx0kxNC33VUNr6cwuHmdhjtJa+go6LNYUnay4IvG0w+F0hMs1Oir2VVjDFNJGGwjETnCuYP7L/+E0uCbSk5ViYVkV3UwBjsWAQBqw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=gkSD1Uje; arc=none smtp.client-ip=192.198.163.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1739296005; c=relaxed/simple;
+	bh=OM750PX+GM6omgY7H5ZVkXVZczPIRx2AABuP2iIlJ3k=;
+	h=Mime-Version:Content-Type:Date:Message-Id:To:Cc:Subject:From:
+	 References:In-Reply-To; b=OlH+W7Odi2DT84cOvZokKp5B3wb0z42UT6rHFBU2wTgn9KP4EBjlQgflAvZCnYFUXjcTNZ7Id/PQ1CeiXxfhwjfk3/9SKfE6X/XcpyIATN8CBbspaUnL/ZmXNB/iDqpkbA3O924jJerspQzrWpcUYhc5vmbiqJOQ25NrxdPN0v8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=a23pctpw; arc=none smtp.client-ip=209.85.219.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="gkSD1Uje"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1739295921; x=1770831921;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:content-transfer-encoding:in-reply-to;
-  bh=025NWQSnvY+LgecFbYkNP8Yv/ZISvzowgReUeSLUZdI=;
-  b=gkSD1UjeBRAqojj88W0weD3fkl1T1XZKnUF+tc5afZw4lwoRBnLVeU5Q
-   zJYE47O5UNq02qiXq1Xu35lnzmIYXAMBQZNGbYKl2T1Bd08aWM/jJPy0B
-   v2oNmqfTnoOiiZNl0KQjrli2Tn6vBZF20c8XyLxgy4o216+wjvCoXEsO6
-   Mkm/CoY++lCt6O9WxAJtvPxRqQ1YKm+8x5gB0oefVLhwr6N6g6sy7JR8O
-   SKi/ifPhueEZ1KVxaK0j66ww7L4mytxJ6BtTivNXIApc28GdoVPFrvn1b
-   jqVvbFA9Kemzcxuc8ku4o90sAWm3tJSnpiUg9lyrVHODUdm0ocwjq+aiS
-   w==;
-X-CSE-ConnectionGUID: J7rT0fp2TQuXb/TmpxQ3MA==
-X-CSE-MsgGUID: +YGoSeABTUizG6vtPGJwWA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11314"; a="51356083"
-X-IronPort-AV: E=Sophos;i="6.12,310,1728975600"; 
-   d="scan'208";a="51356083"
-Received: from fmviesa007.fm.intel.com ([10.60.135.147])
-  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Feb 2025 09:45:19 -0800
-X-CSE-ConnectionGUID: c+myg93oRNGx6TF+qdJKfg==
-X-CSE-MsgGUID: 1HJzdcfdQp+SporFjwtZ/w==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.13,278,1732608000"; 
-   d="scan'208";a="112562200"
-Received: from turnipsi.fi.intel.com (HELO kekkonen.fi.intel.com) ([10.237.72.44])
-  by fmviesa007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Feb 2025 09:45:17 -0800
-Received: from kekkonen.localdomain (localhost [127.0.0.1])
-	by kekkonen.fi.intel.com (Postfix) with ESMTP id C1B6B11F7F0;
-	Tue, 11 Feb 2025 19:45:14 +0200 (EET)
-Date: Tue, 11 Feb 2025 17:45:14 +0000
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-From: Sakari Ailus <sakari.ailus@linux.intel.com>
-To: Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Cc: Hans de Goede <hdegoede@redhat.com>,
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-	Daniel Scally <djrscally@gmail.com>,
-	platform-driver-x86@vger.kernel.org,
-	laurent.pinchart@ideasonboard.com, hverkuil@xs4all.nl,
-	linux-media@vger.kernel.org
-Subject: Re: [PATCH v7 0/3] int3472: Support GPIO con_id based on _HID
-Message-ID: <Z6uMqiB_cKzM9-iu@kekkonen.localdomain>
-References: <20250211072841.7713-1-sakari.ailus@linux.intel.com>
- <Z6shGGy2FPVc5mEK@smile.fi.intel.com>
- <64b617e1-bf52-442e-be56-71c76d973edd@redhat.com>
- <1938d858-6d66-69f8-5952-9cecf133f254@linux.intel.com>
- <Z6uFGYcUXbbRMERY@kekkonen.localdomain>
- <6c05f3ad-fc2e-19d1-d583-8026afc1363f@linux.intel.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="a23pctpw"
+Received: by mail-yb1-f180.google.com with SMTP id 3f1490d57ef6-e53a91756e5so4936248276.1;
+        Tue, 11 Feb 2025 09:46:43 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1739296002; x=1739900802; darn=vger.kernel.org;
+        h=in-reply-to:references:from:subject:cc:to:message-id:date
+         :content-transfer-encoding:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=17z9WvxPFneZGd1ktho08KBzK3IXZzOqjdsa7bOBhic=;
+        b=a23pctpwr8C4SfqDSuuPIKiYMzrKqi5DrBoYcuIvUS7VIhH4AQ0q1Hd48Yj8iy/6O+
+         JAXcEkLBR1UIXeJbGK7OFivweD3MG+yU6COdpvSii5SKU4JTvDurONqhCjF+A+6k8D03
+         k8fAIf3m2eqPgfyIdqJlu3tUYFHGY8jMQMQqlgYd0j+6FxfIqZiGGj6XIgGp49eLi0i2
+         vBwjGi9lQLa98zEBi0XFWvOSc6gK8FKl5foxg9/N7AEuxEYpEijC2lx2t9PWdaZ+1BVc
+         JcK8N33/uR3U7S6LD7+K2XnOTvHYyNlQ3UsireQCvC7Ho+FLyupE+hFodBdR5x3BYfuY
+         /H+g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1739296002; x=1739900802;
+        h=in-reply-to:references:from:subject:cc:to:message-id:date
+         :content-transfer-encoding:mime-version:x-gm-message-state:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=17z9WvxPFneZGd1ktho08KBzK3IXZzOqjdsa7bOBhic=;
+        b=kzxAL8/zLHMguWD/4koOfaI0rnRDieaZx3mJvZJCnDGzHWrqGgHyBQZ1uW21bbKde6
+         TyTlNwIr7dIv16im4kVB76rdN2Aiwblwmz2PRYEGYw40F8/dQZZ+rFXXuBaybQUQpll7
+         VkzV37WJHmc0UHoOp+LhGBsfTxTd/B0Pxwgqk1MIhLuo8Sz2VNRJ5tHFzDK1xz7Mwr13
+         t1TgjARq7r+kqI//QPcYj+EFRqcbPtZSC84JOqhIvb0pPGNLg8lFihOIFKkHaV6q44Rh
+         YIcH4fx5KCqj7KPcckpr1vG5UZb9lDzoSZlQWjwuCXo6d3ZDmXd69+CiTcGDKZc6ZKKc
+         0HjQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWsaPu+vTpgg8Bxk5FngD32/CKGWBJNA7+y1NQj7H25V4WTmwyclHsAHO34NLV7u7x4K5xGhHBR6nrrQ8Q=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yyc2NZMZkPh1RUmT7/VxcAjG0QZJe2JHZcqh3IPwCgzFdexsrkv
+	wznCeQuRxqqFHvMLFjHX11BiQh+ChnNK1BvAQxQvtA8A/caL+upB1B/FDw==
+X-Gm-Gg: ASbGncvjPyunXO/dd8bOOMODJNFd3lkDcYdDGrEjFxKkS3uegDGLABraWU2Gm6cFRWk
+	OT3K/MXyQ45dU5yw8M9bCtTGCX3iJHs5p1zoK4kGs/MTdehDvrkPqkdoJOeKxg/1uN0IXx/XAA3
+	rRxnya3BMbMx9cIFvani+EE/T8ZnMFE1H1RpWHiEn4Id80qvfT8kHNZhg826qAm9yDVoVuElGzO
+	YBRYkWqYQuugwQuGpB60nGIizKqgvgzx9dCrcdJgCJ/WzR0OkhTZsj1X0gACPcz4dAA1uRm6HCp
+	JmoE67eN
+X-Google-Smtp-Source: AGHT+IGQ5gC01hdvr8VTf5YsoGXb2UXG0Q2y2gUYXEM0i0qQhqueht93GdaXYRKV0bYPjinm6/0yLw==
+X-Received: by 2002:a05:6902:1105:b0:e5a:c8ea:3287 with SMTP id 3f1490d57ef6-e5d9f120803mr263805276.25.1739296002478;
+        Tue, 11 Feb 2025 09:46:42 -0800 (PST)
+Received: from localhost ([2800:bf0:61:1288:72d5:e7e1:d832:2e3d])
+        by smtp.gmail.com with ESMTPSA id 3f1490d57ef6-e5b3a1f3602sm3423416276.12.2025.02.11.09.46.41
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 11 Feb 2025 09:46:42 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <6c05f3ad-fc2e-19d1-d583-8026afc1363f@linux.intel.com>
+Mime-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date: Tue, 11 Feb 2025 12:46:40 -0500
+Message-Id: <D7PSZ410LJW6.3VNZ4VU0H5VUC@gmail.com>
+To: "Andy Shevchenko" <andriy.shevchenko@intel.com>
+Cc: <platform-driver-x86@vger.kernel.org>, =?utf-8?q?Ilpo_J=C3=A4rvinen?=
+ <ilpo.jarvinen@linux.intel.com>, "Armin Wolf" <W_Armin@gmx.de>, "Mario
+ Limonciello" <mario.limonciello@amd.com>, "Hans de Goede"
+ <hdegoede@redhat.com>, <Dell.Client.Kernel@dell.com>,
+ <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v10 02/14] platform/x86: alienware-wmi: Add WMI Drivers
+From: "Kurt Borja" <kuurtb@gmail.com>
+X-Mailer: aerc 0.20.1-0-g2ecb8770224a
+References: <20250207154610.13675-1-kuurtb@gmail.com>
+ <20250207154610.13675-3-kuurtb@gmail.com>
+ <Z6t7IjcOFuAbztfn@black.fi.intel.com>
+In-Reply-To: <Z6t7IjcOFuAbztfn@black.fi.intel.com>
 
-On Tue, Feb 11, 2025 at 07:28:51PM +0200, Ilpo Järvinen wrote:
-> Patches 1 & 2 are now in the review-ilpo-fixes branch.
+On Tue Feb 11, 2025 at 11:30 AM -05, Andy Shevchenko wrote:
+> On Fri, Feb 07, 2025 at 10:45:58AM -0500, Kurt Borja wrote:
+>> Add WMI drivers for LEGACY and WMAX devices.
+>>=20
+>> This involves moving the platform device registration to a helper
+>> function that is now called from the driver's preferred WMI device
+>> driver probe. In the case of the WMAX this is done only if
+>> `!quirks->thermal` because the newer WMAX interface doesn't support any
+>> of the LED features of this driver. This also eliminates the need to
+>> check for `quirks->num_zones > 0` inside alienfx_probe().
+>>=20
+>> Only one WMI driver is registered on module initialization to prevent
+>> registering a duplicate platform device.
+>>=20
+>> Additionally, create_thermal_profile() now takes wmi_device * instead of
+>> platform_device *.
+>
+> ...
+>
+>> +static int alienware_alienfx_setup(struct alienfx_platdata *pdata)
+>> +{
+>> +	struct device *dev =3D &pdata->wdev->dev;
+>> +	struct platform_device *pdev;
+>>  	int ret;
+>> =20
+>> +	pdev =3D platform_device_register_data(NULL, "alienware-wmi",
+>> +					     PLATFORM_DEVID_NONE, pdata,
+>> +					     sizeof(*pdata));
+>> +	if (IS_ERR(pdev))
+>> +		return PTR_ERR(pdev);
+>> +
+>> +	dev_set_drvdata(dev, pdev);
+>> +	ret =3D devm_add_action_or_reset(dev, alienware_alienfx_remove, pdev);
+>> +	if (ret)
+>> +		return ret;
+>> +
+>> +	return 0;
+>
+> 	return devm_add_action_or_reset(...);
 
-Thank you!
+Right!
 
--- 
-Sakari Ailus
+>
+>> +}
+>
+> ...
+>
+>> +static const struct wmi_device_id alienware_legacy_device_id_table[] =
+=3D {
+>> +	{ LEGACY_CONTROL_GUID, NULL },
+>
+> Drop that ' , NULL' part, it makes an additional burden if the type of th=
+e
+> driver_data is ever changed.
+
+Makes sense.
+
+>
+>> +	{ },
+>
+> No comma in the terminator entries.
+
+Makes sense.
+
+>
+>> +};
+>
+> ...
+>
+>> +static const struct wmi_device_id alienware_wmax_device_id_table[] =3D =
+{
+>> +	{ WMAX_CONTROL_GUID, NULL },
+>> +	{ },
+>> +};
+>
+> Ditto.
+>
+> ...
+>
+>> +static int __init alienware_wmax_wmi_init(void)
+>> +{
+>> +	return wmi_driver_register(&alienware_wmax_wmi_driver);
+>> +}
+>> +
+>> +static void __exit alienware_wmax_wmi_exit(void)
+>> +{
+>> +	wmi_driver_unregister(&alienware_wmax_wmi_driver);
+>> +}
+>
+> I believe we have module_wmi_driver() which can be used after the split
+> (haven't checked those patches yet).
+
+This module has two WMI drivers, so I believe this can't be used.
+
+--=20
+ ~ Kurt
+
