@@ -1,159 +1,155 @@
-Received: from fhigh-b8-smtp.messagingengine.com (fhigh-b8-smtp.messagingengine.com [202.12.124.159])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CCD6E26BDAB;
-	Tue, 11 Feb 2025 16:22:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.159
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 192F52AE6A;
+	Tue, 11 Feb 2025 16:30:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739290932; cv=none; b=oHzvL3pEAjEPsO5lmB1W7vLp649QZDUw+i2vYPy67fpb7n1QHSR3FIejy5Hczpwt1ozl3fGC0shwGu0sgM5/p8wk+LgMlmqQcx37R4mGlxAAhXlCQz0EwktLSPDneopHsmhAzDonyzuUNblGCuDZhXFuJF6zlNlYpDiO5gwaLHg=
+	t=1739291434; cv=none; b=LgMYzjOB0YjMyUptvN5gQSg6ZCQyzpBCYGa3WszZQZ6Q9IP3hshbLW6uXQ5BGfS1LlH5reTjaxv3Gx0TpMTwtwZSdDy3xfcjvHq6Eq0EYWnuX6wr2cH4iloV9ngl/xB+d+CU3n35/gfligxgEMBA+eKvwbUYqwAz1sIL2m/PbN4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739290932; c=relaxed/simple;
-	bh=JSxBHagSzB9B0z9YXPH5Ke79A63Pz+yK2fGp70M/YX0=;
-	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
-	 Subject:Content-Type; b=H4tGVhB3ThUKLds8311PZMicyiCaRM8HUwAhLq1rKx+gHQ6t9Qnmhfqj/anqbhoniBG77fs+vRTajzSFuZeL0UrLtr+pT7ya2o1x+KHNvDiIf+gW82ugnoLxFpyHzS8RXUMyMFjl63y1xt01/6Gv15XEiw1DB35ZpS9w+ujPeSs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=squebb.ca; spf=pass smtp.mailfrom=squebb.ca; dkim=pass (2048-bit key) header.d=squebb.ca header.i=@squebb.ca header.b=BteTbhp9; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=Em3RpVec; arc=none smtp.client-ip=202.12.124.159
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=squebb.ca
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=squebb.ca
+	s=arc-20240116; t=1739291434; c=relaxed/simple;
+	bh=cHhVe3lnCIHIlSu/fg/SHyBljFFWdesuVmKgHAUgfu4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=KUoTU4H3CGbwV3oJgjyrqvNeFrjS0LF0JZ41NyXhQ7TzXmxC4o782MWSRquUGJMCeDQ/o6G3kjYWYj20Miy2b0Zu6mYhY72Wyd63yFPIEM71UqT08lt56yhBkqa3kOqC4EOEBUi1KoO4wMsWk0h1hvpCVScqIuRdwrJLQEHMp9Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=L9/gZbCw; arc=none smtp.client-ip=192.198.163.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=squebb.ca header.i=@squebb.ca header.b="BteTbhp9";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="Em3RpVec"
-Received: from phl-compute-02.internal (phl-compute-02.phl.internal [10.202.2.42])
-	by mailfhigh.stl.internal (Postfix) with ESMTP id CC9C325401AD;
-	Tue, 11 Feb 2025 11:22:08 -0500 (EST)
-Received: from phl-imap-10 ([10.202.2.85])
-  by phl-compute-02.internal (MEProxy); Tue, 11 Feb 2025 11:22:08 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=squebb.ca; h=cc
-	:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to; s=fm1; t=1739290928;
-	 x=1739377328; bh=Rt556EkNhVf+ojQDmMoE1+XCec7AG5GACYdUBY5RicY=; b=
-	BteTbhp94WyWiRJtSm8BS+71xk3Xn7LCgMkQ3F/pAVRLiZvhC5UBl4/aekQYghe4
-	r1iG/v0S7DMscbxXRbEUE8tA6XPXOXdMwF/rcM75Ouxy2gciT0xpoCJkTpgQ/8Cn
-	e3woTSmWTdIYb3JBYA/3sQilifc48SfIS+bCzE0wT8pKk77fSOE4PoXWp4ahpRCY
-	Z4Iomku6aVnSdKgsRrt9MZTiOhx4WjGTEgrXDFend1vcBHCtFSmE7a/Fwu3DNyrK
-	d3ADpUYp5U+2owmbIOOQcujr/TAN6kMNzWNVaBzN+1/wXsZUkG/UWDq5krF4pHuW
-	61AHBUylllJHvI3N0E3ebQ==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=1739290928; x=
-	1739377328; bh=Rt556EkNhVf+ojQDmMoE1+XCec7AG5GACYdUBY5RicY=; b=E
-	m3RpVect8P1ekmCJbI+uq9q7r8XrDf4wp8Rpq9PoAG0npnhWIRzStZXuDQgkLpW6
-	Wj+jRNjh/aOecFJppKwYQMmo8bQ5VsN6VkK7dp+OTh0ZyvK1Ole73h/Y8+kroRQb
-	kWZJUdLd2A9MyyxT7TxcUTI8mJ1wSB4zqcJhYBiVg5ZXkAk5QR/PXp47z24+Jl5T
-	BNsd5j98Cm/n/pxXiU9Mv8U50cHoVniuM/Bu88jjmpPVD+zCw6hT9nRs9cOne28e
-	ACTB54hUq9slsvKLO1PYVcgCbCwzYo5AzrG5vNSdR2NBwY4Dvcp4AF977VYQUWbp
-	QyVkFBWaWCB7WsmHXsuEA==
-X-ME-Sender: <xms:MHmrZ6xCDUwVzJ-XN8gumtuMRSan6qmlu0s_Hzz5Sv1sZ4YzzSgX_g>
-    <xme:MHmrZ2QHEjL_77cZOehb2N7BYhPOKjcyODRSo8prqqVsukRDc5DHsrib9vxDqPI1E
-    3dn1K2EqLn_gCD0ofA>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdegudegiecutefuodetggdotefrod
-    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpggftfghnshhusghstghrihgsvgdp
-    uffrtefokffrpgfnqfghnecuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivg
-    hnthhsucdlqddutddtmdenucfjughrpefoggffhffvvefkjghfufgtgfesthejredtredt
-    tdenucfhrhhomhepfdforghrkhcurfgvrghrshhonhdfuceomhhpvggrrhhsohhnqdhlvg
-    hnohhvohesshhquhgvsggsrdgtrgeqnecuggftrfgrthhtvghrnhephfeuvdehteeghedt
-    hedtveehuddvjeejgffgieejvdegkefhfeelheekhedvffehnecuvehluhhsthgvrhfuih
-    iivgeptdenucfrrghrrghmpehmrghilhhfrhhomhepmhhpvggrrhhsohhnqdhlvghnohhv
-    ohesshhquhgvsggsrdgtrgdpnhgspghrtghpthhtohephedpmhhouggvpehsmhhtphhouh
-    htpdhrtghpthhtohepkhhuuhhrthgssehgmhgrihhlrdgtohhmpdhrtghpthhtohepihhl
-    phhordhjrghrvhhinhgvnheslhhinhhugidrihhnthgvlhdrtghomhdprhgtphhtthhope
-    hhuggvghhovgguvgesrhgvughhrghtrdgtohhmpdhrtghpthhtoheplhhinhhugidqkhgv
-    rhhnvghlsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtohepphhlrghtfhhorh
-    hmqdgurhhivhgvrhdqgiekieesvhhgvghrrdhkvghrnhgvlhdrohhrgh
-X-ME-Proxy: <xmx:MHmrZ8VV4QMBs4AKQEgRSiNjKqWevtO_n329_HlXvDjpgkqgdXAXvQ>
-    <xmx:MHmrZwjvf0Zgwj4diIFpjJF2eVxFfwAMdXaEuYxf2tZNS2J0pFIv_A>
-    <xmx:MHmrZ8C63Xx9kM4xD-ASP2ra7NWmoRrJXae-SUHOGnIdNw5B62OzkQ>
-    <xmx:MHmrZxKgF4qHtf62feNY4Noui5GN_aQ5-cF0Q8XI8WFynfmgUWbyyA>
-    <xmx:MHmrZ__p64bpHfIN8ONmtKyWJIH_FTOg7UP57CjPa4EsYZubZUFl8uD9>
-Feedback-ID: ibe194615:Fastmail
-Received: by mailuser.phl.internal (Postfix, from userid 501)
-	id 2A34A3C0066; Tue, 11 Feb 2025 11:22:08 -0500 (EST)
-X-Mailer: MessagingEngine.com Webmail Interface
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="L9/gZbCw"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1739291432; x=1770827432;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=cHhVe3lnCIHIlSu/fg/SHyBljFFWdesuVmKgHAUgfu4=;
+  b=L9/gZbCw1VKTWWVz/9DbtIx7v26ourLKkw6hDgJ+vcS/Re4E3nYgkrGm
+   F/2LfQysi/NQVYj6TZgjrk+Zu9TRSfDxAEUCk7qIliKjYfxo+J2IlQqwn
+   t/ecc52BjCH6A+1/xc/6oGQXxFczf/DtNlREAZd6+ozXN+IjLBHTNFxoD
+   O0aKp8BYeG4KYMWVgjh8RPucfZ5U4Snj2Ky2MikQQa5L3bIAuyujBbNVV
+   I+2mhInbC1e+1PJwr0fl1h6CcX3C0TiRJ6ayT5XvkH4nHad2pixz32mxo
+   qYqkW9N9pMXwLN5BPswAdbAVMaA9jNByd1ahzCm/fi+/+o/tlsNnsVM3k
+   w==;
+X-CSE-ConnectionGUID: 1+IOLPFIRGOprJSutrZKOQ==
+X-CSE-MsgGUID: ocvsyDVzQR6xzaWCmInXww==
+X-IronPort-AV: E=McAfee;i="6700,10204,11342"; a="39802282"
+X-IronPort-AV: E=Sophos;i="6.13,278,1732608000"; 
+   d="scan'208";a="39802282"
+Received: from orviesa009.jf.intel.com ([10.64.159.149])
+  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Feb 2025 08:30:30 -0800
+X-CSE-ConnectionGUID: 7hmef146TemXHrdIlZ1N/w==
+X-CSE-MsgGUID: knwsERq+S12G/QnS/D+DSQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.13,278,1732608000"; 
+   d="scan'208";a="112322563"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by orviesa009.jf.intel.com with ESMTP; 11 Feb 2025 08:30:28 -0800
+Received: by black.fi.intel.com (Postfix, from userid 1003)
+	id D49BB8F; Tue, 11 Feb 2025 18:30:26 +0200 (EET)
+Date: Tue, 11 Feb 2025 18:30:26 +0200
+From: Andy Shevchenko <andriy.shevchenko@intel.com>
+To: Kurt Borja <kuurtb@gmail.com>
+Cc: platform-driver-x86@vger.kernel.org,
+	Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	Armin Wolf <W_Armin@gmx.de>,
+	Mario Limonciello <mario.limonciello@amd.com>,
+	Hans de Goede <hdegoede@redhat.com>, Dell.Client.Kernel@dell.com,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v10 02/14] platform/x86: alienware-wmi: Add WMI Drivers
+Message-ID: <Z6t7IjcOFuAbztfn@black.fi.intel.com>
+References: <20250207154610.13675-1-kuurtb@gmail.com>
+ <20250207154610.13675-3-kuurtb@gmail.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Date: Tue, 11 Feb 2025 11:21:46 -0500
-From: "Mark Pearson" <mpearson-lenovo@squebb.ca>
-To: "Kurt Borja" <kuurtb@gmail.com>
-Cc: "Hans de Goede" <hdegoede@redhat.com>,
- =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
- "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>,
- linux-kernel@vger.kernel.org
-Message-Id: <12c1ce59-d58f-4a05-831b-cd75efee84ba@app.fastmail.com>
-In-Reply-To: <D7PD2KZCQJ4Z.BXO2PAN86IKH@gmail.com>
-References: <mpearson-lenovo@squebb.ca>
- <20250210201656.4165-1-mpearson-lenovo@squebb.ca>
- <D7PD2KZCQJ4Z.BXO2PAN86IKH@gmail.com>
-Subject: Re: [PATCH v2] platform/x86: thinkpad_acpi: Fix registration of tpacpi
- platform driver
-Content-Type: text/plain
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250207154610.13675-3-kuurtb@gmail.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-Hi Kurt
+On Fri, Feb 07, 2025 at 10:45:58AM -0500, Kurt Borja wrote:
+> Add WMI drivers for LEGACY and WMAX devices.
+> 
+> This involves moving the platform device registration to a helper
+> function that is now called from the driver's preferred WMI device
+> driver probe. In the case of the WMAX this is done only if
+> `!quirks->thermal` because the newer WMAX interface doesn't support any
+> of the LED features of this driver. This also eliminates the need to
+> check for `quirks->num_zones > 0` inside alienfx_probe().
+> 
+> Only one WMI driver is registered on module initialization to prevent
+> registering a duplicate platform device.
+> 
+> Additionally, create_thermal_profile() now takes wmi_device * instead of
+> platform_device *.
 
-On Tue, Feb 11, 2025, at 12:18 AM, Kurt Borja wrote:
-> On Mon Feb 10, 2025 at 3:16 PM -05, Mark Pearson wrote:
->> When reviewing and testing the recent platform profile changes I had
->> missed that they prevent the tpacpi platform driver from registering.
->> This error is seen in the kernel logs, and the various tpacpi entries
->> are not created:
->> [ 7550.642171] platform thinkpad_acpi: Resources present before probing
->>
->> This happens because devm_platform_profile_register() is called before
->> tpacpi_pdev probes (thanks to Kurt Borja for identifying root cause)
->>
->> For now revert back to the old platform_profile_register to fix the
->> issue. Will work on re-implementing this later as more testing is needed
->> for full solution.
->>
->> Tested on X1 Carbon G12.
->>
->> Fixes: 31658c916fa6 ("platform/x86: thinkpad_acpi: Use devm_platform_profile_register()")
->>
->> Signed-off-by: Mark Pearson <mpearson-lenovo@squebb.ca>
->> ---
->> Changes in v2:
->>   Modified approach to instead revert to old platform_profile_register
->> method. Will revisit using devm_ version in the future as more testing
->> needed.
->>
->>  drivers/platform/x86/thinkpad_acpi.c | 10 ++++++++--
->>  1 file changed, 8 insertions(+), 2 deletions(-)
->>
->> diff --git a/drivers/platform/x86/thinkpad_acpi.c b/drivers/platform/x86/thinkpad_acpi.c
->> index 1fcb0f99695a..85d01bd5dc31 100644
->> --- a/drivers/platform/x86/thinkpad_acpi.c
->> +++ b/drivers/platform/x86/thinkpad_acpi.c
->> @@ -10646,8 +10646,8 @@ static int tpacpi_dytc_profile_init(struct ibm_init_struct *iibm)
->>  			"DYTC version %d: thermal mode available\n", dytc_version);
->>  
->>  	/* Create platform_profile structure and register */
->> -	tpacpi_pprof = devm_platform_profile_register(&tpacpi_pdev->dev, "thinkpad-acpi",
->> -						      NULL, &dytc_profile_ops);
->> +	tpacpi_pprof = platform_profile_register(&tpacpi_pdev->dev, "thinkpad-acpi-profile",
->> +						 NULL, &dytc_profile_ops);
->>  	/*
->>  	 * If for some reason platform_profiles aren't enabled
->>  	 * don't quit terminally.
->> @@ -10665,8 +10665,14 @@ static int tpacpi_dytc_profile_init(struct ibm_init_struct *iibm)
->>  	return 0;
->>  }
->>  
->> +static void dytc_profile_exit(void)
->> +{
->> +	platform_profile_remove(tpacpi_pprof);
->
-> I just noticed this will be called even if platform_profile_register()
-> fails, as the comment suggests.
->
-> We need to check for IS_ERR_OR_NULL() before unregistering.
+...
 
-Agreed - will add.
-Thanks
-Mark
+> +static int alienware_alienfx_setup(struct alienfx_platdata *pdata)
+> +{
+> +	struct device *dev = &pdata->wdev->dev;
+> +	struct platform_device *pdev;
+>  	int ret;
+>  
+> +	pdev = platform_device_register_data(NULL, "alienware-wmi",
+> +					     PLATFORM_DEVID_NONE, pdata,
+> +					     sizeof(*pdata));
+> +	if (IS_ERR(pdev))
+> +		return PTR_ERR(pdev);
+> +
+> +	dev_set_drvdata(dev, pdev);
+> +	ret = devm_add_action_or_reset(dev, alienware_alienfx_remove, pdev);
+> +	if (ret)
+> +		return ret;
+> +
+> +	return 0;
+
+	return devm_add_action_or_reset(...);
+
+> +}
+
+...
+
+> +static const struct wmi_device_id alienware_legacy_device_id_table[] = {
+> +	{ LEGACY_CONTROL_GUID, NULL },
+
+Drop that ' , NULL' part, it makes an additional burden if the type of the
+driver_data is ever changed.
+
+> +	{ },
+
+No comma in the terminator entries.
+
+> +};
+
+...
+
+> +static const struct wmi_device_id alienware_wmax_device_id_table[] = {
+> +	{ WMAX_CONTROL_GUID, NULL },
+> +	{ },
+> +};
+
+Ditto.
+
+...
+
+> +static int __init alienware_wmax_wmi_init(void)
+> +{
+> +	return wmi_driver_register(&alienware_wmax_wmi_driver);
+> +}
+> +
+> +static void __exit alienware_wmax_wmi_exit(void)
+> +{
+> +	wmi_driver_unregister(&alienware_wmax_wmi_driver);
+> +}
+
+I believe we have module_wmi_driver() which can be used after the split
+(haven't checked those patches yet).
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
