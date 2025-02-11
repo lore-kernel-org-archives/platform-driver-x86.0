@@ -1,118 +1,120 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yb1-f172.google.com (mail-yb1-f172.google.com [209.85.219.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B0F9C26156C;
-	Tue, 11 Feb 2025 17:28:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 48825261563;
+	Tue, 11 Feb 2025 17:31:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739294940; cv=none; b=RzsidNFsjDfITC5mnBg9bEzfkrVzWbwKW7MHo+6DtKiuOPoBx5Z3TpFfgQu72HckRUQmtDbm+nF/2uoikgVCd9waIOeWRNt4cU2UATHqPTXaYek5URqW/GBElSSooKC3pPiPL9djqM7ZhWfvcoMpzBHeEIv58fxSNgLA9XbstMA=
+	t=1739295100; cv=none; b=mxzKJwMqL9t+4hfM00/6OAVlV2hDxjIgK0U71+9DfjxNz6VNVJ7LzmfZweQ2Md5zLRHRTV3FDzMpyfdltlIpPNhXwxOtX+7dQqFt9mJTyypVT7mhwvDJYgxOm/jW9JLByX2l6m/UDnAgn3W9FYDKfx2zYZOtZsr2QXn4UxQeuL4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739294940; c=relaxed/simple;
-	bh=yqTd5VxPM2HALcKrWqePO/E2bPmibZM6ZDbK9f/qdQc=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=CGwhr8U4iANfrgpjdcd0YpgkI3oXSkJ0CHOfQiFYloqsCMTR57+dLiZxWClY6jj1zqc3HBWI9gTD6Ubg+m16C2XlZSmHjyi4bLhk9EOZiXgOfpzLS1qIHr0NQNXDytZ6OeTtcMm56wwG4yIQrroahwXilK6pauyab8Vqlk6zPYg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=DwtlwCFa; arc=none smtp.client-ip=192.198.163.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1739295100; c=relaxed/simple;
+	bh=RNicKc7mCVst/dWcEvNqihoEoVkeIlWZ2yuMeNIASNM=;
+	h=Mime-Version:Content-Type:Date:Message-Id:Cc:Subject:From:To:
+	 References:In-Reply-To; b=EErdbsz/XcCFdLw1ZkGYRRS+EwJQ/3soXvM/g3v+cuNV5HB491eEDzWCQEwl+Im0+Tin76g/v4ruJKVzD2sDcNyvjoI/55tlta6DowtMVGbo59wFV0meJ0wQX6QWA8gZ4OkAWJwNcZkq6ALQHlKb+ipd7JsEQa+0/9dP8nUSeCM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=LmxAZwUF; arc=none smtp.client-ip=209.85.219.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="DwtlwCFa"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1739294938; x=1770830938;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=yqTd5VxPM2HALcKrWqePO/E2bPmibZM6ZDbK9f/qdQc=;
-  b=DwtlwCFaXus/Okc0xf0LVwFqcUNVsSsbjiDayzxFKUI2xo/JwVe8Ehuo
-   6VYrzjliXZHy5kK9NP4iJ+rnkVqZedSdkntX9qeVCuTe3YdOfQpLcN1+t
-   qswew9EThw72j4Vxrw7qrW3sePIY4okUk8QfseoHwoRLgixpEy6EQVnoR
-   HlQSLMGAWKflfMgb9HvOthME0bX1QE5cBrk4dNszQEBqUogoCj94yxZBz
-   oDYgqkErKviFNZOOJ4R+vSsHelQaGoHezmaR4EsdvFAaNGon7M/wYXuS0
-   wDzo6LFMvN4An/jBjWzf8DfqShSIVBdcJVgYeKhf/jEXbH3DJ0XQaraYw
-   g==;
-X-CSE-ConnectionGUID: rGDpJV8pQymNKzI5g2WqJw==
-X-CSE-MsgGUID: sKg5wRGVQ6KV4jpwNcfnJA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11342"; a="27527306"
-X-IronPort-AV: E=Sophos;i="6.13,278,1732608000"; 
-   d="scan'208";a="27527306"
-Received: from orviesa010.jf.intel.com ([10.64.159.150])
-  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Feb 2025 09:28:58 -0800
-X-CSE-ConnectionGUID: mdu/PIm+THiW+FRCIQCgMQ==
-X-CSE-MsgGUID: uqkq9O78RnW3Yg7KPTWRTg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
-   d="scan'208";a="112431618"
-Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.14])
-  by orviesa010-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Feb 2025 09:28:55 -0800
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Tue, 11 Feb 2025 19:28:51 +0200 (EET)
-To: Sakari Ailus <sakari.ailus@linux.intel.com>
-cc: Hans de Goede <hdegoede@redhat.com>, 
-    Andy Shevchenko <andriy.shevchenko@linux.intel.com>, 
-    Daniel Scally <djrscally@gmail.com>, platform-driver-x86@vger.kernel.org, 
-    laurent.pinchart@ideasonboard.com, hverkuil@xs4all.nl, 
-    linux-media@vger.kernel.org
-Subject: Re: [PATCH v7 0/3] int3472: Support GPIO con_id based on _HID
-In-Reply-To: <Z6uFGYcUXbbRMERY@kekkonen.localdomain>
-Message-ID: <6c05f3ad-fc2e-19d1-d583-8026afc1363f@linux.intel.com>
-References: <20250211072841.7713-1-sakari.ailus@linux.intel.com> <Z6shGGy2FPVc5mEK@smile.fi.intel.com> <64b617e1-bf52-442e-be56-71c76d973edd@redhat.com> <1938d858-6d66-69f8-5952-9cecf133f254@linux.intel.com> <Z6uFGYcUXbbRMERY@kekkonen.localdomain>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LmxAZwUF"
+Received: by mail-yb1-f172.google.com with SMTP id 3f1490d57ef6-e587cca1e47so5315879276.0;
+        Tue, 11 Feb 2025 09:31:38 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1739295098; x=1739899898; darn=vger.kernel.org;
+        h=in-reply-to:references:to:from:subject:cc:message-id:date
+         :content-transfer-encoding:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=13lDDGr8ZQiww5P+iBAzNtKRpypMG26CE3DxSq0NSsU=;
+        b=LmxAZwUFrCWR+E5r7H6yxEj2LDY6cYE/p6vdQatPD3sA3tWh9/jczTk9eEM4ghBQ4q
+         rK1nVg1nph1WpmNjvschbN+07enCBUOLsbQC4kUovTSYFYP8KOug0pkAW7UCtoQoGNjh
+         T/ZKvrtFO0q2DGQ+xyL3LTs0s1i2NZEKugy0liLdkQsge1d8XsSqmVp9HGO6vHVytzjD
+         jBjkxenpL1NykPFfWpk6YFZuG1RhGooC2p3S7oCKcTOstozuyOvvBv6P7Oq2VTfbeJGq
+         JZUgzscAub4l5LwGPxVC8TrM2WygJ3KAufASo7Fmd8RUeJ3NukrmDDXDwddYgkj+u2x5
+         6NsQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1739295098; x=1739899898;
+        h=in-reply-to:references:to:from:subject:cc:message-id:date
+         :content-transfer-encoding:mime-version:x-gm-message-state:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=13lDDGr8ZQiww5P+iBAzNtKRpypMG26CE3DxSq0NSsU=;
+        b=NnJJWLfk9f2oHa+O4Fx6e/k8OZghcZX8tSQT08sJ+05rRReLnS17DlI3aL42D5VAFY
+         E7D4GDDX4ICKvZlM2zWbd6zszVtuaoIOpA6cFKP5sffKf/R0EJOpI3ZFBine4RNc69N+
+         +jLDWWvvqAZ+/yyECaDrjgBej8R3sl5fzZZRX3nVxp627JS666Du+U5SRu3TA8bR3JvD
+         Hw3skzUCBIzjVTU8HU+EFfjnwX1XfuCeTdWnZOveTFiiebxl21VqtlYCHuHnt5W/nmys
+         BEPKMBoLLwWhSUJwmwnvc0g6gce5c9MZM2Z6rbWC/3aVIfMLvRbClUm1zQmINXwyJ85X
+         Ji/Q==
+X-Forwarded-Encrypted: i=1; AJvYcCXPwK2bY0YSewt6km9ScevkjKOdmF9GkXe8eth5W3vMnXLgULStXlkwdoQL5vQcBtmuG5nLZQTVIrS3QK8=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyCOSPENM6kHfgCvp50dx7AIsYQq9d4pLugJkIYOWPNJsZekGg3
+	UJp7WD8xnd0YtbHrh2FvjkZ/vC8ZoDQEAJfHrzLUrb9p5WSw2eGl
+X-Gm-Gg: ASbGncvy2py5rJ9V0TxHex05we03KvgQqV56U72a8kwyhYddEyx3ISQpmZ0mcMEOXF/
+	1YP0nHVAgLnnFlv6zKPIfDxzpqalQWrO45ymlIkbxQhyl2Ee6MIi1MRr6wdQLv5bpPOsEINO+BY
+	P7eobsh5Fl5mloxzdxtAFJYfEjU+GCB1LlBJAOC6wszCgvAQas1ql8R7l3cWwvkuUyqHZVa3kBD
+	jQpbPyXhkX9wzY91bNc/lUPi3gWEELdTaa62oDNHMR3MJPcwLBBvgVx/vyxiJxDbQoQqWUj7V7T
+	Z5yT5/f+
+X-Google-Smtp-Source: AGHT+IH6vXqS4xor6iNT/+QQDlIpy5sRDeTuhdk0bj0bh8IIQcu1/i0kXALqRXwbOEnkTvi3Mwi6iQ==
+X-Received: by 2002:a05:6902:11c7:b0:e57:442a:befd with SMTP id 3f1490d57ef6-e5d9f16d588mr236577276.32.1739295096704;
+        Tue, 11 Feb 2025 09:31:36 -0800 (PST)
+Received: from localhost ([2800:bf0:61:1288:72d5:e7e1:d832:2e3d])
+        by smtp.gmail.com with ESMTPSA id 3f1490d57ef6-e5b3a48b167sm3409304276.53.2025.02.11.09.31.35
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 11 Feb 2025 09:31:36 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="8323328-1284692048-1739294931=:4237"
+Mime-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date: Tue, 11 Feb 2025 12:31:34 -0500
+Message-Id: <D7PSNJVIIQ6Q.99BIJKP7H2YU@gmail.com>
+Cc: <platform-driver-x86@vger.kernel.org>, =?utf-8?q?Ilpo_J=C3=A4rvinen?=
+ <ilpo.jarvinen@linux.intel.com>, "Armin Wolf" <W_Armin@gmx.de>, "Mario
+ Limonciello" <mario.limonciello@amd.com>, "Hans de Goede"
+ <hdegoede@redhat.com>, <Dell.Client.Kernel@dell.com>,
+ <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v10 09/14] platform/x86: Rename alienware-wmi.c
+From: "Kurt Borja" <kuurtb@gmail.com>
+To: "Andy Shevchenko" <andriy.shevchenko@intel.com>
+X-Mailer: aerc 0.20.1-0-g2ecb8770224a
+References: <20250207154610.13675-1-kuurtb@gmail.com>
+ <20250207154610.13675-10-kuurtb@gmail.com>
+ <Z6t9naLPpVl_L9hw@black.fi.intel.com>
+In-Reply-To: <Z6t9naLPpVl_L9hw@black.fi.intel.com>
 
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
+Hi Andy,
 
---8323328-1284692048-1739294931=:4237
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Thank you for your review!
 
-On Tue, 11 Feb 2025, Sakari Ailus wrote:
-> On Tue, Feb 11, 2025 at 04:32:12PM +0200, Ilpo J=E4rvinen wrote:
-> > On Tue, 11 Feb 2025, Hans de Goede wrote:
-> > > On 11-Feb-25 11:06 AM, Andy Shevchenko wrote:
-> > > > On Tue, Feb 11, 2025 at 09:28:38AM +0200, Sakari Ailus wrote:
-> > > >> One patch turned into a set, the second patch being the original o=
-ne.
-> > > >>
-> > > >> since v6:
-> > > >>
-> > > >> - Reword the comment regarding GPIO map processing.
-> > > >=20
-> > > > Hans, Ilpo, I think this is in good enough shape
-> > > > (the order of the checks I'm still not happy about
-> > > >  we can amend later on if required). Can it be taken?
-> > >=20
-> > > Yes this looks good to me. Ilpo can you merge these 3 as fixes
-> > > for the 6.14 cycle ?
-> >=20
-> > Currently, these don't appear in lore for some reason (not in=20
-> > patchwork)...
-> >=20
-> > Sakari, could you please resend the series v7 so that it hopefully gets=
-=20
-> > picked up by lore and is easier for me to apply them using the normal=
-=20
-> > tools I've.
->=20
-> Lore is up again, getting the patches from there should therefore work (I
-> tried it).
->=20
-> >=20
-> > The last patch IMO falls outside of even borderline for fixes. I think=
-=20
-> > I'll put it into for-next after merging the two first ones from fixes=
-=20
-> > branch into for-next.
->=20
-> Sounds reasonable.
+On Tue Feb 11, 2025 at 11:41 AM -05, Andy Shevchenko wrote:
+> On Fri, Feb 07, 2025 at 10:46:05AM -0500, Kurt Borja wrote:
+>> Rename alienware-wmi to support upcoming split.
+>
+> (the change that is caught by my eye and induced this review session)
+>
+> ...
+>
+>>  obj-$(CONFIG_ALIENWARE_WMI)		+=3D alienware-wmi.o
+>> +alienware-wmi-objs			:=3D alienware-wmi-base.o
+>
+> objs is incorrect! Please use correct y instead.
 
-Patches 1 & 2 are now in the review-ilpo-fixes branch.
+I want to understand what is exactly wrong here. This `objs` pattern is
+used a lot in this file, so I just copied it. For example [1].
+
+Is it wrong to do it here for a single file? Is it wrong to do it at
+all?
+
+My goal is to split the file, but link it all together in a single
+module.
+
+[1] https://elixir.bootlin.com/linux/v6.14-rc2/source/drivers/platform/x86/=
+dell/Makefile#L14
 
 --=20
- i.
+ ~ Kurt
 
---8323328-1284692048-1739294931=:4237--
+>
+>>  obj-$(CONFIG_DCDBAS)			+=3D dcdbas.o
+>>  obj-$(CONFIG_DELL_LAPTOP)		+=3D dell-laptop.o
+>>  obj-$(CONFIG_DELL_RBTN)			+=3D dell-rbtn.o
+
