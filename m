@@ -1,51 +1,51 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C27D325332A;
-	Tue, 11 Feb 2025 16:33:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 25A452580D9;
+	Tue, 11 Feb 2025 16:37:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739291632; cv=none; b=axwyk1Tzs4jVAHye0YXGYw2gK0FfKOfmemq9NcnEvcrnSNgMxM+1EE8VydN0GUjiD+HwDt4Vt9vaW59J1zhV1+1FtD2v1AqVtSEl5RBacp7jPGrNrlU8Z+L/Tm12JNTy8wtnPEpHOZuIWnS7aA5/cyLCXCvoKbufI5khsaC0c4I=
+	t=1739291856; cv=none; b=uzN65JuClEhImzMaTxYGAeZITpM29+S0gGT2FXahaq1M+/ztmkONuMe52w6+XvCliZjfv3CNS3906jQcbqX1yoNUNzcrZXk2WKpsvXn79WXh70gKUJ2o+Gzn1qqMj+LdQzDYz3h4wfwZq/MAlH8XPjUrOG8PU8L1S+OmxwT7f0M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739291632; c=relaxed/simple;
-	bh=NiU17ZiL7r9njo66V2OXrxgI1jtsjxyiCos9qiXsT/A=;
+	s=arc-20240116; t=1739291856; c=relaxed/simple;
+	bh=hcwZMqLxIT7u1tOWKgzkrJXenrowwi+qLEbQbK2WC0A=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=meeLdcX+UxXRLxeQmjHlrJmmSkfcQyJrmJdpr8evahOOQjDJcMgMmLGqsRcRz1tN5bdPR2iaGyqgxN5z89wDO3vShsC5iEm5TWUTccu35/zZXK/IpdxBsjgVKu0jEbMBbIQtgU5UUPA8LIMpScM4+NCj/AUlO0bu6APD44Wo11Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=U4YfXNEw; arc=none smtp.client-ip=198.175.65.9
+	 Content-Type:Content-Disposition:In-Reply-To; b=csDSu27iyLi+5jG8H2LKlW5xxn8da8Q0AhzSbeZJ4G7nqbtPVeL2le5vAaNQpd5s7giN+H4CerFHQyF/x3ZX46NoryBZ8GNcyo+JB77Ul4a5Gh2kD+OM8ydIWle/7OFJBXk5IF4lSxUzzlsb9h3dTMc193rVzIbcjVbBIAQ8qH4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=eDPOzy+j; arc=none smtp.client-ip=198.175.65.19
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="U4YfXNEw"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="eDPOzy+j"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1739291630; x=1770827630;
+  t=1739291855; x=1770827855;
   h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=NiU17ZiL7r9njo66V2OXrxgI1jtsjxyiCos9qiXsT/A=;
-  b=U4YfXNEwWrRiaPP9pT8OcC6+zSyIQtGK9zr14xIaCYDAIqgSD+Dp/g0R
-   8ts54nX9AMEZrFRjb/peXVmFuREEh7YA54rk+zo1WshjqfaJppxygjMwm
-   HZ8KDlZnYI9NCu0alvK5c+vwXMlRlUTzOfIW68665TNRnkM1+XEtV7+SR
-   XFe4rupdYUWbs/5fiY2JjKpEBfAD1hBE1VpKXGl9/I0EtptTcd/E3pUoB
-   2FCiJeM3l1p3qvq7NCS8YTfq51wkX4Uh0Fy47gxBEKgAQOXqujmTZWRuJ
-   KOBHQvwG+38V8eZ9C37bQc+Bi1srHnOvNbcMeZ9l7NohNDqwFd4zuyUBH
-   w==;
-X-CSE-ConnectionGUID: K6I/9dZPTwWZ47W2NcVaig==
-X-CSE-MsgGUID: 13lHL14QSIGrkL8lgNJZxg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11342"; a="62389088"
+   mime-version:content-transfer-encoding:in-reply-to;
+  bh=hcwZMqLxIT7u1tOWKgzkrJXenrowwi+qLEbQbK2WC0A=;
+  b=eDPOzy+j9BujVssGyuPFb86unQOfABWMPDe8QhF/OFHCLgnX9MbIaCyT
+   gcty/DNX8f7lANsqbosQ/d1a4PBQpP+QSdNw/NnsCDzL7ku1/cVgr+Pe0
+   qr1I/2v3mHS0g+0mEqTA5dj7RZpziBgUaZvWUtq4AH7SeFwmejkLmPXMG
+   0KLZUXzvhOouCzHl0hvgBNhdexRn97qcXlDRp48o+OHsLIOAswEBIkFWD
+   Np15XObfIUvW7qjMyQ/Nsaqt+kks15gIXbrYVrZtd+CXxLSKC3Js/kthu
+   ChlSfXaBmig1rm1TAMugJb1hsZ1rPKANVZr6hC5pg4+v/EEjiBrjTjHer
+   Q==;
+X-CSE-ConnectionGUID: qwt8OXLjSRyJKTAtdcjGgQ==
+X-CSE-MsgGUID: Q4p5g9l6TgSyPUJSt/tpSA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11342"; a="39783093"
 X-IronPort-AV: E=Sophos;i="6.13,278,1732608000"; 
-   d="scan'208";a="62389088"
-Received: from fmviesa002.fm.intel.com ([10.60.135.142])
-  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Feb 2025 08:33:50 -0800
-X-CSE-ConnectionGUID: MuvdhWw1SSe7ORDRKW5o0A==
-X-CSE-MsgGUID: Bm0eJ+ZYS3GOiHoh0NJ5dA==
+   d="scan'208";a="39783093"
+Received: from orviesa007.jf.intel.com ([10.64.159.147])
+  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Feb 2025 08:37:34 -0800
+X-CSE-ConnectionGUID: SydUbG5dRaG440IrlEtoig==
+X-CSE-MsgGUID: 0ZjCvwzuRv+FkzqvigaXtw==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
-   d="scan'208";a="135822447"
+   d="scan'208";a="113047173"
 Received: from black.fi.intel.com ([10.237.72.28])
-  by fmviesa002.fm.intel.com with ESMTP; 11 Feb 2025 08:33:48 -0800
+  by orviesa007.jf.intel.com with ESMTP; 11 Feb 2025 08:37:33 -0800
 Received: by black.fi.intel.com (Postfix, from userid 1003)
-	id CBADA8F; Tue, 11 Feb 2025 18:33:46 +0200 (EET)
-Date: Tue, 11 Feb 2025 18:33:46 +0200
+	id 5FE848F; Tue, 11 Feb 2025 18:37:31 +0200 (EET)
+Date: Tue, 11 Feb 2025 18:37:31 +0200
 From: Andy Shevchenko <andriy.shevchenko@intel.com>
 To: Kurt Borja <kuurtb@gmail.com>
 Cc: platform-driver-x86@vger.kernel.org,
@@ -54,105 +54,83 @@ Cc: platform-driver-x86@vger.kernel.org,
 	Mario Limonciello <mario.limonciello@amd.com>,
 	Hans de Goede <hdegoede@redhat.com>, Dell.Client.Kernel@dell.com,
 	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v10 04/14] platform/x86: alienware-wmi: Refactor LED
- control methods
-Message-ID: <Z6t76t_4nIXwFX5Q@black.fi.intel.com>
+Subject: Re: [PATCH v10 05/14] platform/x86: alienware-wmi: Refactor hdmi,
+ amplifier, deepslp methods
+Message-ID: <Z6t8y7VvZL6UDEck@black.fi.intel.com>
 References: <20250207154610.13675-1-kuurtb@gmail.com>
- <20250207154610.13675-5-kuurtb@gmail.com>
+ <20250207154610.13675-6-kuurtb@gmail.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20250207154610.13675-5-kuurtb@gmail.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20250207154610.13675-6-kuurtb@gmail.com>
 Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-On Fri, Feb 07, 2025 at 10:46:00AM -0500, Kurt Borja wrote:
-> Both WMI devices handled by this module specify a distinct interface for
-> LED control. Previously this module handled this by dynamically adapting
-> arguments passed to wmi_evaluate_method() based on the `interface`
-> global variable.
-> 
-> To avoid the use of global variables, and enable the migration to
-> non-deprecated WMI methods, let the WMI drivers define upd_led and
-> upd_brightness operations, which completely replace
-> alienware_update_led() and wmax_brightness().
-> 
-> Also define alienware_wmi_command(), which serves as a wrapper for
-> wmidev_evaluate_method(). This new method is very similar to
-> alienware_wmax_command() but is WMI device agnostic.
+On Fri, Feb 07, 2025 at 10:46:01AM -0500, Kurt Borja wrote:
+> Refactor show/store methods for hdmi, amplifier, deepslp sysfs groups to
+> use alienware_wmi_command() instead of alienware_wmax_command() which
+> uses deprecated WMI methods.
 
 ...
 
-> +static int alienware_wmi_command(struct wmi_device *wdev, u32 method_id,
-> +				 void *in_args, size_t in_size, u32 *out_data)
-> +{
-> +	struct acpi_buffer out = {ACPI_ALLOCATE_BUFFER, NULL};
-> +	struct acpi_buffer in = {in_size, in_args};
-> +	acpi_status ret;
+> +	pr_err("alienware-wmi: unknown HDMI cable status: %d\n", ret);
+
+Rather introduce pr_fmt() and drop all these prefixes.
+
+> +	if (!ret) {
+
+Traditional patter is to check for errors:
+
+	if (ret) {
+		...do error handling...
+	}
+
+>  		if (out_data == 1)
+>  			return sysfs_emit(buf, "[input] gpu unknown\n");
+
+>  		else if (out_data == 2)
+
+Redundant 'else'.
+
+>  			return sysfs_emit(buf, "input [gpu] unknown\n");
+>  	}
+> -	pr_err("alienware-wmi: unknown HDMI source status: %u\n", status);
 > +
-> +	ret = wmidev_evaluate_method(wdev, 0, method_id, &in, out_data ? &out : NULL);
-> +	if (ACPI_FAILURE(ret))
-> +		return -EIO;
-> +
-> +	union acpi_object *obj __free(kfree) = out.pointer;
+> +	pr_err("alienware-wmi: unknown HDMI source status: %u\n", ret);
+>  	return sysfs_emit(buf, "input gpu [unknown]\n");
 
-Actually we have ACPI_FREE(), but it's not big deal (as of today) to use kfree().
-
-> +	if (out_data) {
-> +		if (obj && obj->type == ACPI_TYPE_INTEGER)
-> +			*out_data = (u32)obj->integer.value;
-
-Unneeded casting.
-
-> +		else
-> +			return -ENOMSG;
-> +	}
-> +
-> +	return 0;
-> +}
 
 ...
 
-> +	if (legacy_args.state != LEGACY_RUNNING) {
+>  	if (strcmp(buf, "gpu\n") == 0)
 
-With inverted conditional and duplicated line it will all look better.
-
-> +		legacy_args.state = priv->lighting_control_state;
-> +
-> +		input.length = sizeof(legacy_args);
-> +		input.pointer = &legacy_args;
-> +
-> +		status = wmi_evaluate_method(LEGACY_POWER_CONTROL_GUID, 0,
-> +					     location + 1, &input, NULL);
-> +		if (ACPI_FAILURE(status))
-> +			return -EIO;
-> +
-> +		return 0;
-> +	}
-> +
-> +	return alienware_wmi_command(wdev, location + 1, &legacy_args,
-> +				     sizeof(legacy_args), NULL);
+Wow! This should be fixed to use sysfs_streq()
 
 ...
 
-> +static int wmax_wmi_update_brightness(struct alienfx_priv *priv,
-> +				      struct wmi_device *wdev, u8 brightness)
-> +{
-> +	struct wmax_brightness_args in_args = {
-> +		.led_mask = 0xFF,
+> +		pr_err("alienware-wmi: HDMI toggle failed: results: %u\n", ret);
 
-GENMASK()?
+pr_fmt()
 
-> +		.percentage = brightness,
-> +	};
-> +
-> +	return alienware_wmi_command(wdev, WMAX_METHOD_BRIGHTNESS, &in_args,
-> +				     sizeof(in_args), NULL);
-> +}
+...
+
+> +	pr_err("alienware-wmi: unknown amplifier cable status: %d\n", ret);
+
+Ditto.
+
+Also note, if you have a struct device available, use the respective dev_*()
+macros instead.
+
+...
+
+>  	if (strcmp(buf, "disabled\n") == 0)
+
+sysfs_streq() / sysfs_match_string() — whatever suits better.
 
 -- 
 With Best Regards,
