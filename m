@@ -1,95 +1,87 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.15])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1AD0F1E9B06;
-	Tue, 11 Feb 2025 07:05:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7DC7D1EB9F4;
+	Tue, 11 Feb 2025 07:28:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739257553; cv=none; b=oRc7ofuDKVFpKK3CtkDMQyp79WnNESy4eV0YEKa4UF0ywtfeO92VUPdSOHictVd0hEsSBQhszTwCDCd80HuYe9aOct59vyVWuqeNyoXBwdUXOOjqal133qor6PZaTwGtRoj1vyM4xhdXXQXfRW6e6WLZmMycegwSpna4B1czATQ=
+	t=1739258935; cv=none; b=NI7Na+qjij1WTSFXS+ZmRWxgbe1YUKZ/yY7RqUgak96RXu+j/da0PWI+WjDmKpDUKGPwmYGo4fyRXpe1mBphdpYnRxv7qOA/F/AglwuhP6gYr5l7nK0ahAuRtlH/3J9DrX+e+DKKnNmcvRaE1LrEwkemOVDRrciIGyXt23/Mx+g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739257553; c=relaxed/simple;
-	bh=hajK+H8/OOzhf2LpTlRWz2++os+SDAm2g05VQUq4XZE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Jny7y2ibVa9zgkk70ghY9DlgIsERi6SMUbemEDWSuimABExeXypulYNin0f6g3jFKuSRfu5AxvVYJ5o5cMSDrFRUZs81TLi8cBJ1wL9ihskKebgcPRqzSRYHXDyfmg1VEywFKfQO2QW+Ix6XUesAFy1eRDp/k8pQPZyKGbfmKjM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=SjDoB5BQ; arc=none smtp.client-ip=192.198.163.15
+	s=arc-20240116; t=1739258935; c=relaxed/simple;
+	bh=dHcsq92/2DclvmgXPQM04Jjv3sq2oMWvLWLfE1lhLyk=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=BMLGN0N5MpY//Oa1S1QsvjdIMTtkINjqRVuwyJovzW4DYNsWu3XzyvJPGRIy6vlPXLRTAyQ8MPbY08UZNPjM0MxZmAydkL6gdHimrg/XBySgrYkj8YEFSv/8bQ4nRS3Xy6gKOGWWDN9i06XZA7/80ZZxv/tNdKdcbq+5zDh73t8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=OUMgI7At; arc=none smtp.client-ip=192.198.163.11
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="SjDoB5BQ"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="OUMgI7At"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1739257551; x=1770793551;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=hajK+H8/OOzhf2LpTlRWz2++os+SDAm2g05VQUq4XZE=;
-  b=SjDoB5BQFzGUuqdDHdGoVKJP7+U6kfLXhskvRF7Ff3T7+mmBiwTrU7sX
-   pzBTGF8nmNVt5EcxS6x8S0EUaINjaPAujrzhhJxQhi5ufcPYEhEM8vKkf
-   TnRpASSsdxc3pQ2AU8amPWb3NaY2+7MfB9U2b3ehv2l1kHmekz9TOhejf
-   +PgdSiGX6WPwm8YFj/XFe6MzqhePjou1AGygcVEHuA/bMxWok8NNKo8M2
-   EnQj3TSyCs9ynw67o5y89UqFr06CloSZx/e+c1YZjr+V+LR0EdOuSTzqM
-   6h2BW2za/IUABngeWbJJgIztO65BHilJbIuRskBC8lZXKHReB8F7jjn7p
-   A==;
-X-CSE-ConnectionGUID: NqXb9PKERf+UUN3o3G5Rcg==
-X-CSE-MsgGUID: QEDzxWHJT2qR6RTayfh5GA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11341"; a="40008336"
+  t=1739258934; x=1770794934;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=dHcsq92/2DclvmgXPQM04Jjv3sq2oMWvLWLfE1lhLyk=;
+  b=OUMgI7At9crjz5TzzEinNgeF5+Kfo3D2ueZZSAOnWkDU4k0i5HXcMu6N
+   XzIkkAFvR4qSY0NQ2lD6QHU9Wy2+e+fp9esZ2LNlMpHHxkkVe2BanSKrS
+   0pLDHrchoxWgxCCiAX6bl137TRzvi+z8pOlbA5WAvTmXEFU9FCezPBIf5
+   u1S7g2oRuMpWVsWQkHKFt9XtMPiw5HQBL3XmUIDB27pQh38dpHputROlz
+   IBPBuWeUO4joYRQvKyOjo7x3jX0FIPUPct+zxZ2Iku+bXXvfjpF3shYAC
+   fuDGqkjDI6aCE0P2QR/1nK5Badhb718Waxp2pomUhfzyVUXT/dxBgGQCd
+   Q==;
+X-CSE-ConnectionGUID: k4BAiELYT/a1CaY3NV9s+Q==
+X-CSE-MsgGUID: nbsje1T/RiWP0eCSAXb1fg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11341"; a="50498296"
 X-IronPort-AV: E=Sophos;i="6.13,276,1732608000"; 
-   d="scan'208";a="40008336"
-Received: from orviesa008.jf.intel.com ([10.64.159.148])
-  by fmvoesa109.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Feb 2025 23:05:50 -0800
-X-CSE-ConnectionGUID: w6VhlQP/TS2Vgnke3Ll7Jw==
-X-CSE-MsgGUID: +bp9aVKwS2aoPGMxXh7Bcg==
+   d="scan'208";a="50498296"
+Received: from orviesa009.jf.intel.com ([10.64.159.149])
+  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Feb 2025 23:28:52 -0800
+X-CSE-ConnectionGUID: VmnNgNtAS7uFIwM6wpPzMg==
+X-CSE-MsgGUID: piFVcFLNTp+I0iK9yCrlfg==
 X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
-   d="scan'208";a="113317099"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by orviesa008.jf.intel.com with ESMTP; 10 Feb 2025 23:05:48 -0800
-Received: by black.fi.intel.com (Postfix, from userid 1001)
-	id 8B9662CA; Tue, 11 Feb 2025 09:05:46 +0200 (EET)
-Date: Tue, 11 Feb 2025 09:05:46 +0200
-From: Mika Westerberg <mika.westerberg@linux.intel.com>
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-	platform-driver-x86@vger.kernel.org,
-	Andy Shevchenko <andy@kernel.org>,
-	Linus Walleij <linus.walleij@linaro.org>,
+X-IronPort-AV: E=Sophos;i="6.13,276,1732608000"; 
+   d="scan'208";a="112193888"
+Received: from turnipsi.fi.intel.com (HELO kekkonen.fi.intel.com) ([10.237.72.44])
+  by orviesa009-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Feb 2025 23:28:50 -0800
+Received: from svinhufvud.intel.com (maa-artisokka.localdomain [192.168.240.50])
+	by kekkonen.fi.intel.com (Postfix) with ESMTP id 7581711F7E8;
+	Tue, 11 Feb 2025 09:28:45 +0200 (EET)
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+From: Sakari Ailus <sakari.ailus@linux.intel.com>
+To: Daniel Scally <djrscally@gmail.com>,
 	Hans de Goede <hdegoede@redhat.com>,
-	Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>,
-	Alexis GUILLEMET <alexis.guillemet@dunasys.com>
-Subject: Re: [PATCH v1 0/2] pinctrl: intel: Fix PWM initialisation
-Message-ID: <20250211070546.GY3713119@black.fi.intel.com>
-References: <20250210195230.490904-1-andriy.shevchenko@linux.intel.com>
+	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Cc: platform-driver-x86@vger.kernel.org,
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	laurent.pinchart@ideasonboard.com,
+	hverkuil@xs4all.nl,
+	linux-media@vger.kernel.org
+Subject: [PATCH v7 0/3] int3472: Support GPIO con_id based on _HID
+Date: Tue, 11 Feb 2025 09:28:38 +0200
+Message-Id: <20250211072841.7713-1-sakari.ailus@linux.intel.com>
+X-Mailer: git-send-email 2.39.5
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20250210195230.490904-1-andriy.shevchenko@linux.intel.com>
+Content-Transfer-Encoding: 8bit
 
-On Mon, Feb 10, 2025 at 09:44:49PM +0200, Andy Shevchenko wrote:
-> It appears that PWM instantiated from pinctrl-intel is configured
-> to a wrong flow. This mini-series to fix the issue. Note, patch 1
-> is comprehensive documentation paragraph to explain what the difference
-> in the programming flow and what the SoCs are affected.
-> 
-> The issue had been reported privately, hence no Closes tag.
-> I haven't added the Tested-by, so to make sure that it (still) works
-> I ask Alexis to give the formal Tag here in a response to the series.
-> 
-> The idea is to route this via pin control tree as there are already two patches
-> against PWM handling in pinctrl-intel. There is no need to backport that, it's
-> optional, because it wasn't worked from day 1, and hence no Cc: stable@.
-> 
-> Cc: Alexis GUILLEMET<alexis.guillemet@dunasys.com>
-> 
-> Andy Shevchenko (2):
->   pwm: lpss: Clarify the bypass member semantics in struct
->     pwm_lpss_boardinfo
->   pinctrl: intel: Fix wrong bypass assignment in
->     intel_pinctrl_probe_pwm()
+One patch turned into a set, the second patch being the original one.
 
-Both,
+since v6:
 
-Reviewed-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+- Reword the comment regarding GPIO map processing.
+
+Sakari Ailus (3):
+  platform/x86: int3472: Use correct type for "polarity", call it
+    gpio_flags
+  platform/x86: int3472: Call "reset" GPIO "enable" for INT347E
+  platform/x86: int3472: Call "func" "con_id" instead
+
+ drivers/platform/x86/intel/int3472/discrete.c | 105 +++++++++++++-----
+ 1 file changed, 75 insertions(+), 30 deletions(-)
+
+-- 
+2.39.5
+
