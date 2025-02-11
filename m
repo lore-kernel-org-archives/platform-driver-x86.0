@@ -1,62 +1,62 @@
-Received: from mail-yw1-f179.google.com (mail-yw1-f179.google.com [209.85.128.179])
+Received: from mail-yw1-f176.google.com (mail-yw1-f176.google.com [209.85.128.176])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 20CD91E2838;
-	Tue, 11 Feb 2025 17:52:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2728E261564;
+	Tue, 11 Feb 2025 17:53:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739296323; cv=none; b=NVx1CIhQQsvY9HJNn6TPVY25Y6/3i2Ni4vP7pvvmiYmKUj2rgu2yBhHu6CiYIYyFnEaKj12QGlhlN2+FbaIxr4gbMnfmp6mkevmEacDH/Dp+YGberKqBx3Jg0JErSwp54CzpkwN06INskUVmbDrdB+X2cE6lPgApLvYO2CxXMng=
+	t=1739296403; cv=none; b=cnFy7hWhr44k2QJNykq5udV6FTosSZCrjSH3b9/F7hfsII6AtNc5zJR8ETw7a5ERLMrz/3xQ1wwHLtQlLB7q010cctRl+4Ih1G0EF/y4XJYOFFiQ0EcmmHornlueFdWkqT0e/QrAfALUDvvlQZB7oR5KPot925pCtH9DvjcQKrw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739296323; c=relaxed/simple;
-	bh=LIkAy4ET0bdltWGfkdDtlEuheEJbDlRUHW/Bb2K4/wI=;
-	h=Mime-Version:Content-Type:Date:Message-Id:Cc:Subject:From:To:
-	 References:In-Reply-To; b=ux8lLyuHd9XtTut6MDzYbEf6VldFOazE+a3ASdj6MhuTn7+tcd3dSuMUdrzVlrJRXG3fsNF/gAVKEoHtEI7tCJu6SteQfcyL6Xcaf1iSMTSX2iDli85vQQmkC3FXy01SZZZHvOPRBuCCFQNdBuSLrpg55Fy4dQRPJetEmAUCbg0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=MRkNlHxE; arc=none smtp.client-ip=209.85.128.179
+	s=arc-20240116; t=1739296403; c=relaxed/simple;
+	bh=uQpT1QYu5IAeE3EIPfDH7a3lqxCAmkxME3bYVaBRe/s=;
+	h=Mime-Version:Content-Type:Date:Message-Id:To:Cc:Subject:From:
+	 References:In-Reply-To; b=VaGhQ0NRlv58cDe+YWwvqh+jNWQkpML5LnQIRgTGAgtDM3aLdPHVoWgjwu0xO5IhPtMnlucQvTdCpSsuWwe3HItWxdDzL2YFRYDk5O18WQkrWmMqf+iv+9BX08Fc/0ZdlqvQqHz4l0qVHtZxxj1wKcRj/YbTuro970mkVrBHhLU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=hJm9ehFp; arc=none smtp.client-ip=209.85.128.176
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MRkNlHxE"
-Received: by mail-yw1-f179.google.com with SMTP id 00721157ae682-6f8c58229f1so54327b3.0;
-        Tue, 11 Feb 2025 09:52:01 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hJm9ehFp"
+Received: by mail-yw1-f176.google.com with SMTP id 00721157ae682-6f9aa66cbe8so43463577b3.1;
+        Tue, 11 Feb 2025 09:53:21 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1739296321; x=1739901121; darn=vger.kernel.org;
-        h=in-reply-to:references:to:from:subject:cc:message-id:date
+        d=gmail.com; s=20230601; t=1739296401; x=1739901201; darn=vger.kernel.org;
+        h=in-reply-to:references:from:subject:cc:to:message-id:date
          :content-transfer-encoding:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=5qwXQA675KH9nLYOUbW2kE+0rvscD1TwrOIlUfISHVo=;
-        b=MRkNlHxEWsjn4uFhhxNEiwBffZfqy/eAeugxt1fA/jU3WPIssmM5QrzTa3vqfi8BfZ
-         PU8lQ/rcLxPzD89n1zRbYxzoKPHL5xYWMkfS+Gt8E6UpV9Uz7bwlUe2GmcXqyFN78J+p
-         aeCjxEmKSnLvmW/vCl35+LEt6VfhAo/fUQIkKuHFitbMian6rb3KIFu3X3m2cxqbRPPo
-         S4a+O+yriNZIfAVprcRDI8XgtwW54nQIEiIf0LFmIQysFuad69z2CJsefFb8+1zJwHNe
-         c53R3MRMYEWLjerCOvYqwo55hpgMaYgD9uHahl4GIwJSHiK8SyiIsqthLsUx/5UEPD3k
-         bz2A==
+        bh=UpCjDUwze0zuYi1LV7c+ctFeg8ySVaPm+FwIwe3wPpI=;
+        b=hJm9ehFpgVncUG4G8EtcB6cCLfwdbKSemmK6iRp46AIc6eOmcpP0PV4MpW3ffSzn5D
+         mEu00xXAyoBhzwwJrY9aVbi0lnAa5iDJEgtwvJAhBl7hM250UP/jTXbk+yPlFnugf9z5
+         7epOkb+F8truBCUvbcEEtPhLFFIHv1J5uOewH8zoTLu1gfMgSKg1BBg0hehH61IYjBF5
+         XtFCD1bhWKfDnkUuBbjbOso+egNZ71hXpIIjDUdSYDEjmdZVIquN3cNUXD2u53VfahL2
+         Lfldu1y4QsaMAQkEHKRq+jaGROrA9t73T2+KnpAC1tfDqPTPOnVIQNpg5jlhq6TdxzyL
+         ZNfg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739296321; x=1739901121;
-        h=in-reply-to:references:to:from:subject:cc:message-id:date
+        d=1e100.net; s=20230601; t=1739296401; x=1739901201;
+        h=in-reply-to:references:from:subject:cc:to:message-id:date
          :content-transfer-encoding:mime-version:x-gm-message-state:from:to
          :cc:subject:date:message-id:reply-to;
-        bh=5qwXQA675KH9nLYOUbW2kE+0rvscD1TwrOIlUfISHVo=;
-        b=qKsKupd4GqZbvw8z7ilvGe+Y9ePZwH0M3uu4OYPme5i8itctAPAjNywmlPZrXi8O1V
-         wiyKXwy3UYFTyKkIy2VMtPqPovHY5vm8lGQ8/0q9dqmGbE92jr9i0pqBiFq2kRlj75+J
-         A7RVvWiasGE8yryPse5Aa80cn2APC9H83gjh8wSBXLoya+W5SaVtc0WpJzSW+QA/l1U4
-         YvfX9zgF8vNcbxFXt6RL0So9i2oEYqsu/NwZVbgyJogFTH078tK8pRu2/gf/1NHkwAZj
-         04OXuQNTm5B9rGMF06y3KGwl6EjPNR7sxdY6oQwc1eTUsVqMwpJpg/Qn+00Mj922L5sF
-         ct1g==
-X-Forwarded-Encrypted: i=1; AJvYcCVvHJeB1VhSYMPpNcN4wcH7ncNC73sOFjSzJz7xZjAACM8Az/95KjkzxVjgMY7Gs/LuW3yn5HqIctn50xs=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxWxWBceQk460T/VWiDEo1GeQLMD21TDL31f4uQh3tS7Uqhe0vQ
-	2YmsAQPouaBoVnu3pcbZ1rMwzvPmRRa+Axk+cZO/yrT+lwCXCBtI
-X-Gm-Gg: ASbGncurAAcOOWb2+AniyauOe2itLADQPVPInvYzxJzmuyAPlix+Vs/MhMZl4/8+A88
-	U5aGtSourVYoK4alLzx7TEcp4dXJ0jX3EnZNRTHnAXQEDrDdYrGoggS5HnAzis7Ew9nCaLWp4Mi
-	fQvID4goizYQpXWpsYTq4HVuOnpQULmOUsKuRhQP16urqH4uOyIf1ay2cqrQWal6fhDYrjiaELK
-	Lfek77ZOkxTUI5ktJ5UOJQHnkbqPw6WaZBX6QWgGYU1OPw5QK9h7UHID0+cdi1zlLy+eooFe+D1
-	bA0ejyxC
-X-Google-Smtp-Source: AGHT+IEGB4LloUYbMjYTmnK3fbUs2QwDyFmUwfUIA/kw8Ul8N8ZJt9fz+hiyupyhTwnSgFgGRPgcQQ==
-X-Received: by 2002:a05:690c:6887:b0:6f7:9f95:d916 with SMTP id 00721157ae682-6fb0c53aca2mr55400847b3.16.1739296321007;
-        Tue, 11 Feb 2025 09:52:01 -0800 (PST)
+        bh=UpCjDUwze0zuYi1LV7c+ctFeg8ySVaPm+FwIwe3wPpI=;
+        b=bzZ+aqNDFe8VbXUYp+zH6k7Y6omX+759FWSUalyKFNhZoqD4FiKfKfj4jx7czHTMju
+         7gLr5Dye+IeFCOWLy0FYp2kRHwwOQ4xglnp9mp6Kme5HZ61vfg+uLhVKuJdhEl+2VrRu
+         kv1V/gNkVP/y4De7ZjDuDZYLPioQep9oC0yI65NZZQRPtish1JNhywarPUI9OLpfM5zZ
+         JK/mZo8ReLCDonR2r3WKy7tZLkmHWROQVDS1sNrdCcTWBtWT1xYCa4cQq+MrUruE/TDJ
+         ZKAUYLbdJVrjjoo983WsJucE7GDa2Xp0tULhW9H9fagKf720i+KOTVigHRvlJ2zcC2UO
+         zPiA==
+X-Forwarded-Encrypted: i=1; AJvYcCUgYESopbV0gEj07a/k8X/gqHNInbUE5TDFItnNXYS/MsRl4fA8U3LDVgQtifQ3vnSP0CSaf7DS1Jrjo7I=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyN0RDJ+11856e8Awl0fQ48djg3WMy3LAcjFk1pYOv30QBorphr
+	RpdMFg+Vg1pesd4fuegEvCcX/o/yRCmLDymT7TZnB8TLJX7aCEm7
+X-Gm-Gg: ASbGncuCONAa7Zpx0OGVQH/Z9yM9SIcmdnWtIlGed+8yguMbTqbYQpQtiPAdsPedSEP
+	i9lPFjTR/DcDys5GlLKJWvw+Hbc6jl9cdQOA/Vuz/HYaJy48NbE7XAix6RdUqNyLmjCM/X/RsKt
+	uH5uzKV/tWKwSMyU2fUFGAL/KYnqOJ6UVZYotnKM+0KCPMNxfHbYzpyRiDT7gWEe1IUM+azYudb
+	mJUY6uzDlzPa3b+RLAU0odARBUfadNz5LmWD3wJr0532fHNgxSGAYrvzJGRh6ohs5aQq8r1tMnE
+	j1Oj431n
+X-Google-Smtp-Source: AGHT+IE+1MbO7swBdbqVmQ1R5hbbZRNVO+d4Pg3Pn5Hz0uCVNDyXo+xAK0o9rI36e+rJ3JGV7WbVvw==
+X-Received: by 2002:a05:690c:3687:b0:6f9:aecf:ab34 with SMTP id 00721157ae682-6fb1f2d5ad0mr4850017b3.38.1739296401070;
+        Tue, 11 Feb 2025 09:53:21 -0800 (PST)
 Received: from localhost ([2800:bf0:61:1288:72d5:e7e1:d832:2e3d])
-        by smtp.gmail.com with ESMTPSA id 00721157ae682-6f99ffc0aeasm22128447b3.96.2025.02.11.09.51.59
+        by smtp.gmail.com with ESMTPSA id 00721157ae682-6f99ff6a5b0sm22131017b3.93.2025.02.11.09.53.19
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 11 Feb 2025 09:52:00 -0800 (PST)
+        Tue, 11 Feb 2025 09:53:20 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -65,97 +65,51 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 Content-Type: text/plain; charset=UTF-8
-Date: Tue, 11 Feb 2025 12:51:59 -0500
-Message-Id: <D7PT36DCB1P5.2YE8H1MHFAE15@gmail.com>
+Date: Tue, 11 Feb 2025 12:53:18 -0500
+Message-Id: <D7PT472556KX.JXEW7Q9EFR1U@gmail.com>
+To: "Andy Shevchenko" <andriy.shevchenko@intel.com>
 Cc: <platform-driver-x86@vger.kernel.org>, =?utf-8?q?Ilpo_J=C3=A4rvinen?=
  <ilpo.jarvinen@linux.intel.com>, "Armin Wolf" <W_Armin@gmx.de>, "Mario
  Limonciello" <mario.limonciello@amd.com>, "Hans de Goede"
  <hdegoede@redhat.com>, <Dell.Client.Kernel@dell.com>,
  <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v10 05/14] platform/x86: alienware-wmi: Refactor hdmi,
- amplifier, deepslp methods
+Subject: Re: [PATCH v10 07/14] platform/x86: alienware-wmi: Split DMI table
 From: "Kurt Borja" <kuurtb@gmail.com>
-To: "Andy Shevchenko" <andriy.shevchenko@intel.com>
 X-Mailer: aerc 0.20.1-0-g2ecb8770224a
 References: <20250207154610.13675-1-kuurtb@gmail.com>
- <20250207154610.13675-6-kuurtb@gmail.com>
- <Z6t8y7VvZL6UDEck@black.fi.intel.com>
-In-Reply-To: <Z6t8y7VvZL6UDEck@black.fi.intel.com>
+ <20250207154610.13675-8-kuurtb@gmail.com>
+ <Z6t9VD3r4ZodtQW8@black.fi.intel.com>
+In-Reply-To: <Z6t9VD3r4ZodtQW8@black.fi.intel.com>
 
-On Tue Feb 11, 2025 at 11:37 AM -05, Andy Shevchenko wrote:
-> On Fri, Feb 07, 2025 at 10:46:01AM -0500, Kurt Borja wrote:
->> Refactor show/store methods for hdmi, amplifier, deepslp sysfs groups to
->> use alienware_wmi_command() instead of alienware_wmax_command() which
->> uses deprecated WMI methods.
+On Tue Feb 11, 2025 at 11:39 AM -05, Andy Shevchenko wrote:
+> On Fri, Feb 07, 2025 at 10:46:03AM -0500, Kurt Borja wrote:
+>> Split thermal features into a new DMI table to support upcoming file
+>> split. While at it:
+>>=20
+>> Rename quirk_entry -> alienfx_quirks,
+>> Rename quirks -> alienfx
+>>=20
+>> and change hdmi_mux, amplifier and deepslp types to bool, because they a=
+re
+>> already being implicitly used as bools.
 >
 > ...
 >
->> +	pr_err("alienware-wmi: unknown HDMI cable status: %d\n", ret);
+>> +struct awcc_quirks {
+>> +	bool pprof;
+>> +	bool gmode;
 >
-> Rather introduce pr_fmt() and drop all these prefixes.
+> Wouldn't it be better to have them as bitfields?
 
-This was not introduced by me so it probably requires a different patch.
-
->
->> +	if (!ret) {
->
-> Traditional patter is to check for errors:
-
-I wanted to change as little as possible the original function, as in my
-opinion this would require a different patch.
+Yes, I like this.
 
 >
-> 	if (ret) {
-> 		...do error handling...
-> 	}
+> 	unsigned int pprof:1;
+> 	...
 >
->>  		if (out_data =3D=3D 1)
->>  			return sysfs_emit(buf, "[input] gpu unknown\n");
+> On 5th quirk (if ever happens) this will gain memory.
 >
->>  		else if (out_data =3D=3D 2)
->
-> Redundant 'else'.
->
->>  			return sysfs_emit(buf, "input [gpu] unknown\n");
->>  	}
->> -	pr_err("alienware-wmi: unknown HDMI source status: %u\n", status);
->> +
->> +	pr_err("alienware-wmi: unknown HDMI source status: %u\n", ret);
->>  	return sysfs_emit(buf, "input gpu [unknown]\n");
->
->
-> ...
->
->>  	if (strcmp(buf, "gpu\n") =3D=3D 0)
->
-> Wow! This should be fixed to use sysfs_streq()
->
-> ...
->
->> +		pr_err("alienware-wmi: HDMI toggle failed: results: %u\n", ret);
->
-> pr_fmt()
->
-> ...
->
->> +	pr_err("alienware-wmi: unknown amplifier cable status: %d\n", ret);
->
-> Ditto.
->
-> Also note, if you have a struct device available, use the respective dev_=
-*()
-> macros instead.
-
-Same as above, this was not my line to begin with so I left it as is.
-
->
-> ...
->
->>  	if (strcmp(buf, "disabled\n") =3D=3D 0)
->
-> sysfs_streq() / sysfs_match_string() =E2=80=94 whatever suits better.
-
-I can send fixes for these tho. IMO this requiere different patches.
+>> +};
 
 --=20
  ~ Kurt
