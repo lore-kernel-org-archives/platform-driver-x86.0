@@ -1,172 +1,158 @@
-Received: from fhigh-a5-smtp.messagingengine.com (fhigh-a5-smtp.messagingengine.com [103.168.172.156])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yb1-f181.google.com (mail-yb1-f181.google.com [209.85.219.181])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A210226462C;
-	Mon, 10 Feb 2025 21:28:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.156
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2F59A442C;
+	Tue, 11 Feb 2025 00:08:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739222933; cv=none; b=TtKsEd9GkLkjlIt/YCiIRG22HcZ7/JXuw7f0HDrXVI2E4FQhZc3xh2RbJ07Whf3R3Gci9yG7pLxeSnthItxzoRqMwB8Fqf3zbiFx+JFe3Pk2kS4N91u4WNEqpxKZHMgCiyPqnyCKYDq5+NV4qrkEMrYsyENC/Pm3+nU91QEI4wo=
+	t=1739232495; cv=none; b=LA03tbEXEtGA/oEux980LJst9+LNjq+7hTxeDcayNAybVXwnubskwuus2SWPjbRHHfFdYIcvviQl3Wn2+/DtuU6ywhYoPJfQPlybCVd5QFFJ/3itB/No8s53k3y+BCLjMNeIw62XDyYdff92u90UlDOB9+U2ACYLlfHMDwx54FU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739222933; c=relaxed/simple;
-	bh=bVZ5t5fsZAusGFyr5P4UAKPWHSOZ34rhFh8yodn5C3M=;
-	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
-	 Subject:Content-Type; b=QAi38rdRh7wW61aEwenJTmtDnp+DHVdqa5Ql92U27BJ8nySDbHbT07TSK7RNlH45IcQPvnirjJ4OPxFOLWAAzspoyFP6SUJ3zrkUkxgfMiX8OEqeH3DsetCGBC6iX3+DRa5zep3bGHg28zldOlF3N0qb32c0SFnoAAN9KH+tego=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=squebb.ca; spf=pass smtp.mailfrom=squebb.ca; dkim=pass (2048-bit key) header.d=squebb.ca header.i=@squebb.ca header.b=ekb7G0v0; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=mTs1hzCK; arc=none smtp.client-ip=103.168.172.156
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=squebb.ca
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=squebb.ca
+	s=arc-20240116; t=1739232495; c=relaxed/simple;
+	bh=r8ssS56hAPXtodtixrj272AAWEE0+ByT/2dXmcrHiMk=;
+	h=Mime-Version:Content-Type:Date:Message-Id:Subject:From:To:Cc:
+	 References:In-Reply-To; b=oj6Zxf13YNkLGj4WYD4RlIwpCTBz65YaQgBX0vzfOXTpJKUXkS8bvmctkbYpFvXv+pZmurke8GZsZQ3gHLLsxDs4X6oRLCRzN32mzTolr3lwQJR0zY/6KAUcN3EvsF86iWQ3U/EVScDnlO8LJH44opRKnWIji82NPdp9VMGzYBk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Ylz93osI; arc=none smtp.client-ip=209.85.219.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=squebb.ca header.i=@squebb.ca header.b="ekb7G0v0";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="mTs1hzCK"
-Received: from phl-compute-02.internal (phl-compute-02.phl.internal [10.202.2.42])
-	by mailfhigh.phl.internal (Postfix) with ESMTP id BA53D1140177;
-	Mon, 10 Feb 2025 16:28:49 -0500 (EST)
-Received: from phl-imap-10 ([10.202.2.85])
-  by phl-compute-02.internal (MEProxy); Mon, 10 Feb 2025 16:28:49 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=squebb.ca; h=cc
-	:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to; s=fm1; t=1739222929;
-	 x=1739309329; bh=MvVN3NAr+mgeFObkmvsgF3X/GXCbUiZvuTrTyduN0rU=; b=
-	ekb7G0v0GUtKKbByOsufkfvcd1ozvhK0goEhDbSkTg9n5KBXvzXquv4Jzs0FcfG9
-	TuYcnpPNWTy/kf9tPYpPdzbd9Cn+dyEc+j3/y/Eq7ceEB/EZ3dCFdAj32Y/g+gjA
-	jFX1mENzsY4veRjUr+O1ltqYtqONdWVEGksGwI3dIjtJb72r6+LsE23sZz1BAQ44
-	+E6eeAfq2M9zCjxDK3MBkT93SpqxClcSFmR63p0dkLCgrH1vubBuIMvf4MfCuzYE
-	b3wX0AFfJNQrXmB+hh4exDMV1gAZ8PL+ahcPFQbtCj4Hq5M9QrRO84BMCKKfnTtB
-	nGeAvxpS9sTiTYuxXd+y8g==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=1739222929; x=
-	1739309329; bh=MvVN3NAr+mgeFObkmvsgF3X/GXCbUiZvuTrTyduN0rU=; b=m
-	Ts1hzCKRXf5csmsp6EOAx+LmFd0MmG0KmGnp08rX0sJUh3kdw+/ALhmdNj9h+ZRR
-	RjJkmo8W6GGHQ3OVDzLIm9BdlCZWaL5LCirCEJuUveIkXvlXxPFs+QaN5Y9pd4RL
-	mzEJVyeapVU0XkMEqMzF461K7tg1ASGogcUbctC9bWpZyY7tOcJ62tmQ3xl46+DY
-	H53jf8Zdodv32eyLv8wNk6p/i5LgHZa51NPGOmckunGU+FJEOwgjAXFQuzrQteAv
-	PDVJhttYXajmMYTyMNlW3bhvy/nLXn7yivk6iWZ5qQTV7bDHk/d2U7UV/dAt/5iH
-	69h8wfdnZFSR9efd1XTmg==
-X-ME-Sender: <xms:kW-qZ-9XQfYGYFLN8D2PnosnrfvyVNqcDYufrlA8PCQbTqNy4McrXw>
-    <xme:kW-qZ-tGHSlPwL5EvcSZmIi5KsOqxuCCi4QUJLKNMOn2W-TPw4GJeYW0j5y8WVo42
-    qg_0WDsVoQPbzvRE48>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdefleduiecutefuodetggdotefrod
-    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpggftfghnshhusghstghrihgsvgdp
-    uffrtefokffrpgfnqfghnecuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivg
-    hnthhsucdlqddutddtmdenucfjughrpefoggffhffvvefkjghfufgtgfesthejredtredt
-    tdenucfhrhhomhepfdforghrkhcurfgvrghrshhonhdfuceomhhpvggrrhhsohhnqdhlvg
-    hnohhvohesshhquhgvsggsrdgtrgeqnecuggftrfgrthhtvghrnhephfeuvdehteeghedt
-    hedtveehuddvjeejgffgieejvdegkefhfeelheekhedvffehnecuvehluhhsthgvrhfuih
-    iivgeptdenucfrrghrrghmpehmrghilhhfrhhomhepmhhpvggrrhhsohhnqdhlvghnohhv
-    ohesshhquhgvsggsrdgtrgdpnhgspghrtghpthhtohephedpmhhouggvpehsmhhtphhouh
-    htpdhrtghpthhtohepkhhuuhhrthgssehgmhgrihhlrdgtohhmpdhrtghpthhtohepihhl
-    phhordhjrghrvhhinhgvnheslhhinhhugidrihhnthgvlhdrtghomhdprhgtphhtthhope
-    hhuggvghhovgguvgesrhgvughhrghtrdgtohhmpdhrtghpthhtoheplhhinhhugidqkhgv
-    rhhnvghlsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtohepphhlrghtfhhorh
-    hmqdgurhhivhgvrhdqgiekieesvhhgvghrrdhkvghrnhgvlhdrohhrgh
-X-ME-Proxy: <xmx:kW-qZ0CsMvH7Xbok4WwyA3pmv15olqjQb3JlCvHj6hxM4qEuhXBp5w>
-    <xmx:kW-qZ2dDOMlKYNu4TwLW1tBdKL72tEdI2OEEe6RLrL-hWiQ9NRoxAg>
-    <xmx:kW-qZzMBu-pYMQEy-M7LEABygsRLqIV2EEaM42DbukQnMEzz0Dd0_Q>
-    <xmx:kW-qZwnxncprA4fgCqY2fsk0YQRbSoW2c5Ixzk8sv2P6YSTXKQU8QQ>
-    <xmx:kW-qZ4pnqdzOa6gqf_Y59i2OpoHCVYhtX6-IIa1rsyY9EToHpXPBiLds>
-Feedback-ID: ibe194615:Fastmail
-Received: by mailuser.phl.internal (Postfix, from userid 501)
-	id 737F23C0066; Mon, 10 Feb 2025 16:28:49 -0500 (EST)
-X-Mailer: MessagingEngine.com Webmail Interface
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ylz93osI"
+Received: by mail-yb1-f181.google.com with SMTP id 3f1490d57ef6-e46ac799015so3643817276.0;
+        Mon, 10 Feb 2025 16:08:13 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1739232493; x=1739837293; darn=vger.kernel.org;
+        h=in-reply-to:references:cc:to:from:subject:message-id:date
+         :content-transfer-encoding:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=r8ssS56hAPXtodtixrj272AAWEE0+ByT/2dXmcrHiMk=;
+        b=Ylz93osI/bg3J1cQPctIAQ109VEEpzbSBeXmliZZp2Anrrs7o7mUBcDhlmOU8VX3sU
+         et7Wqb2jcD3VewwOBgM4PYw2Z6G+XR+e9YtXpJ99SiZGoHsrVDXyUJD3XnGVCxPmSK1r
+         WUxywVLsHGvQecVFVUbA/ic38rFpCJEZJNb/3wydA1okOoZ94ieDoxQGwyrcif1ORH0w
+         k2/K8huru68hkvcojCinM+dRoCtYa2hqv1Ja6UzhTKENgycXxxilDP8ENe2pNFfFFlMI
+         WF6662Um+K4nWxMWlK7wW6Tj7fgwGPQlaBQBuZKCT0irDPd9LEXeOPqKtiKpiBdHMXrY
+         E1cA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1739232493; x=1739837293;
+        h=in-reply-to:references:cc:to:from:subject:message-id:date
+         :content-transfer-encoding:mime-version:x-gm-message-state:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=r8ssS56hAPXtodtixrj272AAWEE0+ByT/2dXmcrHiMk=;
+        b=QX8166xwvnDXGfEuZybmgoMcsp4i2lWSYa+iPKV0TN3ONfLdpjFwrajTS69YyRAykT
+         2bq6/UkLKu7/1ZPsXBCjurRcGU02pef0Wpd6q1MHsf6QcgR9kUlnjMVqRl7e8ObLGZJl
+         vLNBCls6Zi+Vq5BGBX2bb1obMCAv+CpiDjpXRJJkkJ4cOJAUER4SaVyBE58jJIqgx88d
+         4qi0ooDtTh2mcdqz/1Nui3QQgnuy5Jhybj08vw/QRpnPu3VRqGJgS3UVdTmqHPtSDhLC
+         JSMJ6KfGs0v/agOopcaKTCyXh4fPVgqyVik6zDhavwEm9UnFFwSPdKLu9W62zIiUuWB+
+         iAEg==
+X-Forwarded-Encrypted: i=1; AJvYcCUR3ZfZ4o3mk+rmDS3JepSKmF4BqfTD36L4d+lxe1wqrBYP4AwIsneTHJs4mI1Od/GMJRTp81wv9XfiIJc=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yyop/CoJuoC5RBLdxOwvqIp9Aet6mofKCSHEsVPZNvDhJMoApZa
+	iZj/1x0rMIY5DUS8LualqA4bI/DO+IzIvF5lL2LtQolFuWw5FcFK
+X-Gm-Gg: ASbGncvHVIY5tMYEAhibpkzJ2GrdcnLF4Wve7bCDoTmHhDHjnikadab8HtOfa021G4M
+	eV8JAY7TK5jkoD8JDEZTbL/Shj9FWC9ECdBE9VT2xrcRzLk97viVG3W7PUZ53SttdVbk42WM5II
+	HxuWKvIGQFf+uT+b3DMVZhq1F06j8TWn19ALbn9BJC2QOrJ3p3SXGSjH83KhWQ6ws/0ilmPeZ3t
+	jDEgGXpLlKjhi5MJ8qNOQMJN9a2Ejlfqx/9LPZpe3oHGtqDkFj/YAtZ0QekUU4/zu+bJyj5dgMx
+	zoucM5+0Wg==
+X-Google-Smtp-Source: AGHT+IE5Cq1f5OxVeQM8FVcVASOEov5DIu32EsqiCXrw2pP3XmXDo2/OaYq/ink7dXLhTJGR4M+1gQ==
+X-Received: by 2002:a05:6902:120c:b0:e5a:e655:be68 with SMTP id 3f1490d57ef6-e5b4619ef5bmr13094379276.13.1739232493005;
+        Mon, 10 Feb 2025 16:08:13 -0800 (PST)
+Received: from localhost ([2800:bf0:179:113e:f067:4e25:4298:6451])
+        by smtp.gmail.com with ESMTPSA id 3f1490d57ef6-e5b3a4898d1sm2798124276.51.2025.02.10.16.08.11
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 10 Feb 2025 16:08:12 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Date: Mon, 10 Feb 2025 16:28:29 -0500
-From: "Mark Pearson" <mpearson-lenovo@squebb.ca>
-To: "Kurt Borja" <kuurtb@gmail.com>
-Cc: "Hans de Goede" <hdegoede@redhat.com>,
- =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
- "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>,
- linux-kernel@vger.kernel.org
-Message-Id: <9bde54ed-f1c9-44f6-ba49-23f100fb9060@app.fastmail.com>
-In-Reply-To: <D7P2M0PTVM84.2W5QT7R0Y3T50@gmail.com>
-References: <mpearson-lenovo@squebb.ca>
- <20250210201656.4165-1-mpearson-lenovo@squebb.ca>
- <D7P2M0PTVM84.2W5QT7R0Y3T50@gmail.com>
-Subject: Re: [PATCH v2] platform/x86: thinkpad_acpi: Fix registration of tpacpi
- platform driver
-Content-Type: text/plain
-Content-Transfer-Encoding: 7bit
+Mime-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date: Mon, 10 Feb 2025 19:08:09 -0500
+Message-Id: <D7P6GNOLB1QL.2IHCSTG7671L3@gmail.com>
+Subject: Re: [PATCH v9 11/14] platform/x86: Split the alienware-wmi driver
+From: "Kurt Borja" <kuurtb@gmail.com>
+To: =?utf-8?q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Cc: <platform-driver-x86@vger.kernel.org>, "Armin Wolf" <W_Armin@gmx.de>,
+ "Mario Limonciello" <mario.limonciello@amd.com>, "Hans de Goede"
+ <hdegoede@redhat.com>, <Dell.Client.Kernel@dell.com>, "LKML"
+ <linux-kernel@vger.kernel.org>
+X-Mailer: aerc 0.20.1-0-g2ecb8770224a
+References: <20250207140743.16822-1-kuurtb@gmail.com>
+ <20250207140743.16822-12-kuurtb@gmail.com>
+ <85e378b4-a434-efe1-fd16-416fc3ce3691@linux.intel.com>
+ <D7MBDPIDK7XS.3DONIQK22EIBH@gmail.com>
+ <c314c485-7a6f-b10a-2d80-45a8c5fb331e@linux.intel.com>
+ <D7OT982LY0H1.1P6XUU7YTDDMB@gmail.com>
+ <a360d20e-4c14-18db-64d0-99149cd89d0e@linux.intel.com>
+In-Reply-To: <a360d20e-4c14-18db-64d0-99149cd89d0e@linux.intel.com>
 
-Hi Kurt,
-
-On Mon, Feb 10, 2025, at 4:07 PM, Kurt Borja wrote:
-> On Mon Feb 10, 2025 at 3:16 PM -05, Mark Pearson wrote:
->> When reviewing and testing the recent platform profile changes I had
->> missed that they prevent the tpacpi platform driver from registering.
->> This error is seen in the kernel logs, and the various tpacpi entries
->> are not created:
->> [ 7550.642171] platform thinkpad_acpi: Resources present before probing
->>
->> This happens because devm_platform_profile_register() is called before
->> tpacpi_pdev probes (thanks to Kurt Borja for identifying root cause)
->>
->> For now revert back to the old platform_profile_register to fix the
->> issue. Will work on re-implementing this later as more testing is needed
->> for full solution.
+On Mon Feb 10, 2025 at 9:07 AM -05, Ilpo J=C3=A4rvinen wrote:
+> On Mon, 10 Feb 2025, Kurt Borja wrote:
 >
-> If you don't mind I can work on this patch on the for-next branch, so we
-> may use devm_ on the next release cycle to avoid merge conflicts.
+>> On Mon Feb 10, 2025 at 6:53 AM -05, Ilpo J=C3=A4rvinen wrote:
 >
-
-For sure :) Holler if you need anything.
-
->>
->> Tested on X1 Carbon G12.
->>
->> Fixes: 31658c916fa6 ("platform/x86: thinkpad_acpi: Use devm_platform_profile_register()")
->>
->> Signed-off-by: Mark Pearson <mpearson-lenovo@squebb.ca>
+>> > It is one of the reasons why I prefer to have move patches do as littl=
+e=20
+>> > extra work as possible because I can use pipelines to verify the pre a=
+nd=20
+>> > post content is identical.
+>> >
+>> > I usually starting by diffing - and + lines in the diff which is how I=
+=20
+>> > came across this one too. In the best case there are no code line chan=
+ges=20
+>> > at all but all changes are in the boilerplate, it gives very high=20
+>> > confidence on the move being done correctly. When a rebase conflicts,=
+=20
+>> > everyone (me included), might introduce unintended changes to move-onl=
+y=20
+>> > patches so I tend to check even my own move patches in similar fashion=
+ to=20
+>> > avoid making stupid mistakes.
+>>=20
+>> Speaking of this. Let's say I want to add a new model to the DMI list,
+>> how should I go about it?=20
+>>=20
+>> If I base it on the fixes branches it's going to conflict when merging
+>> with Linus, and even worse, it would need to be manually added to
+>> alienware-wmi-wmax.c every time it happens.
+>>=20
+>> My solution is to just base the added models on the for-next branch. Of
+>> course users wouldn't get this until v6.15 but I'd prefer not to give
+>> you or some other maintainer extra work.
+>>=20
+>> Another solution is to make two patches one for for-next and one for
+>> stable, but I don't know if people do this to begin with.
+>>=20
+>> What do you think about this?
 >
-> Reviewed-by: Kurt Borja <kuurtb@gmail.com>
+> It is possible for me to merge the fixes branch containing the new model=
+=20
+> into for-next to avoid Linus having to deal with such conflicts. However,=
+=20
+> it only moves the stable conflicts problem by one kernel release because=
+=20
+> after 6.14 is released, all new additions will be based on the 6.15 code=
+=20
+> anyway so any patch going into stable will have to deal with the conflict=
+s.
+>
+> If you so prefer, it is fine for me if you want base them on for-next=20
+> after such a major restructuring, I won't complain. But as you said,=20
+> there's a small delay until stable will pick them up. They do actually=20
 
-Thanks for the review
-Mark
+A small delay of a couple of months :p
+
+> start to pick the patches into stable right after 6.15-rc1 (and=20
+> sometimes even during the merge window), not only after 6.15 release.
+
+I will do it like this then, I'd prefer no conflicts.
+
+Thanks!
+
+--=20
+ ~ Kurt
 
 >
->> ---
->> Changes in v2:
->>   Modified approach to instead revert to old platform_profile_register
->> method. Will revisit using devm_ version in the future as more testing
->> needed.
->>
->>  drivers/platform/x86/thinkpad_acpi.c | 10 ++++++++--
->>  1 file changed, 8 insertions(+), 2 deletions(-)
->>
->> diff --git a/drivers/platform/x86/thinkpad_acpi.c b/drivers/platform/x86/thinkpad_acpi.c
->> index 1fcb0f99695a..85d01bd5dc31 100644
->> --- a/drivers/platform/x86/thinkpad_acpi.c
->> +++ b/drivers/platform/x86/thinkpad_acpi.c
->> @@ -10646,8 +10646,8 @@ static int tpacpi_dytc_profile_init(struct ibm_init_struct *iibm)
->>  			"DYTC version %d: thermal mode available\n", dytc_version);
->>  
->>  	/* Create platform_profile structure and register */
->> -	tpacpi_pprof = devm_platform_profile_register(&tpacpi_pdev->dev, "thinkpad-acpi",
->> -						      NULL, &dytc_profile_ops);
->> +	tpacpi_pprof = platform_profile_register(&tpacpi_pdev->dev, "thinkpad-acpi-profile",
->> +						 NULL, &dytc_profile_ops);
->>  	/*
->>  	 * If for some reason platform_profiles aren't enabled
->>  	 * don't quit terminally.
->> @@ -10665,8 +10665,14 @@ static int tpacpi_dytc_profile_init(struct ibm_init_struct *iibm)
->>  	return 0;
->>  }
->>  
->> +static void dytc_profile_exit(void)
->> +{
->> +	platform_profile_remove(tpacpi_pprof);
->> +}
->> +
->>  static struct ibm_struct  dytc_profile_driver_data = {
->>  	.name = "dytc-profile",
->> +	.exit = dytc_profile_exit,
->>  };
->>  
->>  /*************************************************************************
+> You do get a FAILED mail from the stable maintainers if a patch they=20
+> wanted to apply doesn't apply without conflicts and then can send them
+> a backported version.
+
