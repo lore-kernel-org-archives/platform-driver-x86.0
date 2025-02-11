@@ -1,31 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ECEE81E47D9;
-	Tue, 11 Feb 2025 01:30:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 465501F0E42;
+	Tue, 11 Feb 2025 01:31:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739237411; cv=none; b=kkwNsCvzCwzjy+eWQ/h08zB9fUie6yLsTaluIFsFwh+nhquRF/EUrjaVJvyIH0YvVf6FGIMKjNFWT/Hs3lmu23u6/0LYEpW1KXPyFib1S1flZ9qJ01xmRi+h7iccxu/pYOuOy2NUpLS2t8bacfJEPZ11FjW1DsHF9y4H40lMLbA=
+	t=1739237462; cv=none; b=CGZX6M4ZUncE2TASsQfCV+GQ9si0VPWwgcRKxjGwh+LMKl87v809tqsCToA0L1CRn0rCxIWFmfAyCQZZNuwrImgJz+ZDHcJR3WXKXo+XX1s4jXXUFpE/h24xHgIqdCeQLPkFqkPpJTMsNn13SX22aWIcz+s3DZ5tZ3WAudDjhMM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739237411; c=relaxed/simple;
-	bh=sVEkcRzrEhXt9u0KidfaTh9ZsEa8K7TLUmMTnJodGWQ=;
+	s=arc-20240116; t=1739237462; c=relaxed/simple;
+	bh=bjvXG49dTpKT0QJS7J3gn7tqEEJFTEJiy5VTXshl5+E=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=ARULCb7mArMx4IRdB6xhUE52Hzcg1wcoXflZoo2pej8zn9M70hRHtEkBdfZ9OD/bhNXMnoDS3XMLhKNrn06Adp87tdyM7jmXZRT/RMXrKYXSBtekR5UbtZ2H7UmvSiB1Km7TY5eFZ1rdyh30gd8Jxcc1Bo1xBaCM5e9GoTDeJ3w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tu56s+Q8; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version:Content-Type; b=FyLA1I7A3iyXhcj27tzuB4qm3GfmjKbShsr9/WaRzvqgwsW3tzCGa8+0ytsQm2PHjoF/C5Al6C6yGn170nDd8X+u4zLbR3WbUenDefXhFjo3uk2Hpt9ShiCZOyTEf/LzhI4K0AQi1KUuNjLQXmOn86zVDifqyfY3eRzc9MX0jKc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WN8sMJQO; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tu56s+Q8"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D14F7C4CEE5;
-	Tue, 11 Feb 2025 01:30:09 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WN8sMJQO"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2A408C4CED1;
+	Tue, 11 Feb 2025 01:31:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1739237410;
-	bh=sVEkcRzrEhXt9u0KidfaTh9ZsEa8K7TLUmMTnJodGWQ=;
+	s=k20201202; t=1739237462;
+	bh=bjvXG49dTpKT0QJS7J3gn7tqEEJFTEJiy5VTXshl5+E=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=tu56s+Q8pEUNxq/1jMR19t22aHc1aM+W7NKP/nV8+T7QAkULsk1ybgxDzkt0Nrwxm
-	 trBy7zVumd6iuxF/nUhNERdqYj/bEEYBqKszpcr2A9fyC1wrGCEHx63dTMVd4fjzpM
-	 ji/Gj5YUpUZ1obh9Crema4TBKFvVezDS4cSYlckdkdX9gDk7cJxtWDyBNCgj1rckDi
-	 zR2gB7DEXQDcgNvch7NMz9+dOdwlangRYdh9YaHdHY6bQR54bvSXDDXYZGsvqEB1OD
-	 n+XYCwxKVOh84b7HvsnP7/nl8rWnBN0tPL6s66cIYSIu44rrSkGXc59TAwLgp5JUl3
-	 oh8NV8OcmNNgg==
+	b=WN8sMJQOyxDhlmYeuoxjX1r0VyNrkXWyCAyxwz/i9DX3IcnY39TKKDSKvOEOikMe5
+	 dY+58A6gDyTwtoPgA8w5gI8VpKmZJlaFDMp/J4xDIhI/lEdn6hNfjObAFqtnXu+M9s
+	 eMOu3RmQUruX9MMchqAiIhJZRTKP0wZpn2DOv0gvyrVHgY7t6n2+ARvs7zwceuIcbg
+	 cC0OA1hfYDEU5ikf7OagnGlelFEM0oJnx8BHOFF3tGmSh4gonP47pW33GoN/qO5Mwj
+	 Pox6VJCT1CLM4HtpOotgFin53A1IApsplVAenty7V7HZdelQtn+xp9jdOJO5r7dFy+
+	 h/gUQoP2tFmWg==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
@@ -36,12 +36,12 @@ Cc: Dmitry Kandybka <d.kandybka@gmail.com>,
 	david.e.box@intel.com,
 	hdegoede@redhat.com,
 	platform-driver-x86@vger.kernel.org
-Subject: [PATCH AUTOSEL 6.13 10/21] platform/x86/intel: pmc: fix ltr decode in pmc_core_ltr_show()
-Date: Mon, 10 Feb 2025 20:29:43 -0500
-Message-Id: <20250211012954.4096433-10-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 6.12 09/19] platform/x86/intel: pmc: fix ltr decode in pmc_core_ltr_show()
+Date: Mon, 10 Feb 2025 20:30:37 -0500
+Message-Id: <20250211013047.4096767-9-sashal@kernel.org>
 X-Mailer: git-send-email 2.39.5
-In-Reply-To: <20250211012954.4096433-1-sashal@kernel.org>
-References: <20250211012954.4096433-1-sashal@kernel.org>
+In-Reply-To: <20250211013047.4096767-1-sashal@kernel.org>
+References: <20250211013047.4096767-1-sashal@kernel.org>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -51,7 +51,7 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
-X-stable-base: Linux 6.13.2
+X-stable-base: Linux 6.12.13
 Content-Transfer-Encoding: 8bit
 
 From: Dmitry Kandybka <d.kandybka@gmail.com>
@@ -76,7 +76,7 @@ Signed-off-by: Sasha Levin <sashal@kernel.org>
  1 file changed, 2 insertions(+), 2 deletions(-)
 
 diff --git a/drivers/platform/x86/intel/pmc/core.c b/drivers/platform/x86/intel/pmc/core.c
-index 3e7f99ac8c941..c5dae640a0b2b 100644
+index 4e9c8c96c8cce..257c03c59fd95 100644
 --- a/drivers/platform/x86/intel/pmc/core.c
 +++ b/drivers/platform/x86/intel/pmc/core.c
 @@ -625,8 +625,8 @@ static u32 convert_ltr_scale(u32 val)
