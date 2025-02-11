@@ -1,155 +1,154 @@
-Received: from mail-yb1-f180.google.com (mail-yb1-f180.google.com [209.85.219.180])
+Received: from mail-ua1-f49.google.com (mail-ua1-f49.google.com [209.85.222.49])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 76B901E32B7;
-	Tue, 11 Feb 2025 05:18:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C0B6A2F5E;
+	Tue, 11 Feb 2025 05:46:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739251140; cv=none; b=gFIn9k/nJfhsVW+5c/pTUiV+bfHbOFTi2Sy1DRW9VhwQrEMEEqm9GIsLt0xsUyUEgZN85oQW1pcy/1SLJ8hQ7re9cCTSrfjHxXRt2N1UVLp93DJXNtrjeULWdHw9ZWjmn5R++tH/5o1td42+AL9bJYz62gxx4rfJhtJrWW+VgNw=
+	t=1739252795; cv=none; b=RUHdG8jRzUlWqMxZlib9RkhwRZiMJdP3RgjG5xUgL/M9ePJKPwWj0+0f1WWmEw9YufohOWAQvfk5+Smzijztv+TsOTLnPe8u7W25SQFpGQjd+KmEl3nNb1OHOBKynD7H91oZx1M2D6JUKoI0HZJAFmKPq31NoFr/s5vWkUAADXQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739251140; c=relaxed/simple;
-	bh=vCpVS8jOZHbPPE/OgBcFBOxXGX5qaeUoEsJTt/C2pg8=;
-	h=Mime-Version:Content-Type:Date:Message-Id:Cc:Subject:From:To:
-	 References:In-Reply-To; b=uKWPmT8ajBbSXSWNH4FqXTZnRbdio6KQSLUHNsKj2+2XHApKLjMoOE57R03/2YgZVEHVrZ8+9eWDZYWqwR98xeFzYJJlOtp1GJxqX8c+Duije05iOLQzWMkr/VVhBGkmDcw7HzI/OtmxWqZuLQuvOI+CJ/3F1Njo2VQpSdSW4Cs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=U2b3SAJB; arc=none smtp.client-ip=209.85.219.180
+	s=arc-20240116; t=1739252795; c=relaxed/simple;
+	bh=aDVCUTPGW3J74vVSYJ1HTC+bsu+y9lCjR3mOgNaEKcI=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=o0hCiu4zRaP/6smrGZzSNTNb0W3r/SLKy+JLzB2LFyhLBiHMx199NpdtrzqinxysI1iY4GviYGRu0F7Z15FkkxMOLsFYx6nlx2apCSQJguoZrXSrAeUhAUE6rSC5HZdcWLsP8GMnCONxA5NqCJV2YxQe4Rq56xHBJwG5jOW789M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Apobd/wV; arc=none smtp.client-ip=209.85.222.49
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="U2b3SAJB"
-Received: by mail-yb1-f180.google.com with SMTP id 3f1490d57ef6-e5ad75ca787so4407356276.0;
-        Mon, 10 Feb 2025 21:18:58 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Apobd/wV"
+Received: by mail-ua1-f49.google.com with SMTP id a1e0cc1a2514c-867129fdb0aso2117249241.1;
+        Mon, 10 Feb 2025 21:46:33 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1739251137; x=1739855937; darn=vger.kernel.org;
-        h=in-reply-to:references:to:from:subject:cc:message-id:date
-         :content-transfer-encoding:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=5FLcaTqIq+5/22Fa0xh0wsEUzfZy2dYLRFZvFZsw6xw=;
-        b=U2b3SAJBZOI7Eb+CLUD2cz0sY7Kx+SRjC+pcvlJH7g0akuANO2jR0edHNhiGrz4ASq
-         Cavi1xxWX+nbsR/7UNJuEow2VIVRfTdOtZXmAfyxnxLx2+4q8dmchGN8m6ato0Q4SNWy
-         D9eyi86qkEOHkiVNvnNqbZxBxedB4h1b5Wo7vrlL7lysBJs1aeuj1FbC4Lq6b1aRBLB2
-         F2owxSebx9QYKZyrB9ykkGo7MctRAug7DD70Mn3CFkKoSmBu16WuZNiCH6u/Bym4aoEl
-         vxecL+3+o9kAZuUb1CjdzZa865oAp6VKALEZLlZyI1s/92oOV6kJyPz8ihZZKtTjwD58
-         cWWg==
+        d=gmail.com; s=20230601; t=1739252792; x=1739857592; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=RNElTNu6sqcvjdUtzkTAHmhDqJhBhVf7/OzwWAdWVmU=;
+        b=Apobd/wVFxWa7wktShV3RlMn4r70T93VF6pygpYbDcl4DaROnZgLZXZs7x7yL5juWg
+         VL7eXQ7DEWY5ETbgDEm3mv5aMEEoGpLC/Ma3/syHkIsFrhKiULJAQ0hRhd/AyC/6Pe31
+         JRTcztHTZ1d0FcUSVMPP4sVvft6ugY5xs4B5QgbdHGLAHUdIAVNrqE2UotgNzbRu4PoF
+         XfWjQRiy33GzB6FGSC7Pwr31+Y0j30x9T1RJ8i8HHu3tjL85ayJjcLMW2SgT2z0EZ1YV
+         5lp7WDNYkTHhv5EpnsczGU7Whek+XpCKl+komB/i9v5ekx70xLhOmfqqUy1Xz0CGUTCk
+         18bQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739251137; x=1739855937;
-        h=in-reply-to:references:to:from:subject:cc:message-id:date
-         :content-transfer-encoding:mime-version:x-gm-message-state:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=5FLcaTqIq+5/22Fa0xh0wsEUzfZy2dYLRFZvFZsw6xw=;
-        b=uMpiALpTMIJlvXOJfFamAuktHfHSQJwSkDXJr0/xjyGI+D10VVTk2iW0PbMdXton0Z
-         GqFq+EHg6DpWtT1xbdq6u3oREmTYzNLwQ2ByAu5osfwthRiobhU0CCp4o96j71TupvWY
-         BIW7kegwvL47GVAPvonlzXSOicU4rHC+6fpG9n5mpAL99xRf2mZJLZLcqLAn0V1U1Uvq
-         QJ3+N64U2XAne2/fB/3vM4FUIuKYtbOylBnw1gVlfWabFkCMSSWCGZ3bXvU8yDrnQrD5
-         uzbp5pwVz+n6JJErTY08vaBSOUDyZ1MKgvE+qSNilifyXmcImSU0tgMUbLegDmweL2v3
-         WRTA==
-X-Forwarded-Encrypted: i=1; AJvYcCUmz1a1+uczRzmthntzqRvhvnT33zTz9pVR8bI10dFG0ckHUnyD7wv7pjd5DRTP+VToTRxODs4nPWiGAinGWfj5ec8tgg==@vger.kernel.org, AJvYcCVOFwr3dnPjm1xKULJXoJtPHbkOcadZfG2+IHB130jOCD6+MRvtWGWuMLo4hvO0w1vEuzv8FJMudMGkWSQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzgRnAoLX75CYOEFrgYol89/3HWnaaej5L5YHDOCKrawIHfKg90
-	wHLnbyVqWS2a0aNPLgNbcLubV6JAWytC0ZQluJfrnZC0qaeNvUbO
-X-Gm-Gg: ASbGncuWfHbaWFO4qmV1AJ9qcB4atJTBW39J23E4QFG7ugeHPz9YFp40QOwUOIOJP+0
-	f3fXqR9P7B3lw9tfITQqzgWYRd89idH6ZE+lbzUaoxDzihDc23TYLgZRPCjVyr5yKoQf7FUL5y+
-	XXXJNc1OLWSufICamHB1FJzd+KcO9T4tdE6WJb3ubw4S2oB5B9fEwT5GV/OKn3bheF+junVR82O
-	h4ADfOIHywvPPzUx1R3nsOTJ9sz1FfteOUOkTHbeIn0psh/KPU3R0Pm5sYJvd2jeD6uLpgLZkSx
-	PArPnFs=
-X-Google-Smtp-Source: AGHT+IG2JDBFmsNOysv14fjTvcjSExz9fFVSy5eowYU5Z6oWJyUxJHR8TtwFmA96mHGHNSw+/vhieg==
-X-Received: by 2002:a05:6902:12cf:b0:e58:b99:6a5b with SMTP id 3f1490d57ef6-e5d944affb9mr2710073276.8.1739251137257;
-        Mon, 10 Feb 2025 21:18:57 -0800 (PST)
-Received: from localhost ([2800:bf0:82:3d2:4207:a956:ebad:2a64])
-        by smtp.gmail.com with ESMTPSA id 3f1490d57ef6-e5b3a1ef167sm2961722276.11.2025.02.10.21.18.55
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 10 Feb 2025 21:18:56 -0800 (PST)
+        d=1e100.net; s=20230601; t=1739252792; x=1739857592;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=RNElTNu6sqcvjdUtzkTAHmhDqJhBhVf7/OzwWAdWVmU=;
+        b=w9QALAtInQ4UJL539OFu5Oa5YZJ+92w/dry3Lj5iEcAvEN9sugJfU8WaMhL2KSHtuU
+         X/R3l33ljfJfMVzXrR4Hzlk7OCeNKsjk3u+xO4KKsniT+R2j8GVObIgD0ST0DXWt4Un/
+         Qdp+fxD8/4xe9vsm2zz5GKZKyp0//zU61I0wU6iz76vqPaxyhVZ0YgCl3EdOqIWTKjZ3
+         3MvqzoRi6pbjJrb5LvQwgr4v2B5nBmiFuTBGGHzdFSK2lBXdTlbRuUnfbXTzEl7xlkv9
+         hgWCXjdNxNg0yXzJXjSzASzrbiILnaxd2IiF7KXEaQcm+UPpcGdUeA4pDhKXOCgoWSNR
+         X/kQ==
+X-Forwarded-Encrypted: i=1; AJvYcCU4fKm8L8Lz2aHI7yDf/03KopC2XrKTmssmUHtCPv0hQu0P0tHAnBFJRDIaJhc6iyLE9X9KhrBWkQWCZ4F1@vger.kernel.org, AJvYcCVQuo6or94icAQJcWXw41/l0PLMiom3JFfkwP63BSt2pe4WJwdpwNQ68klHmXplzHZjUF+8cGdsRTAsFRAUPd7+iJ5o7w==@vger.kernel.org, AJvYcCXHYGkBuyp5X+ol2C6Aj5vlPSdLluC9xyJSH1Z1i4Ihkxhr+fEcoVbGN290fkkcJePtcLj424bhJ8+a@vger.kernel.org
+X-Gm-Message-State: AOJu0YyYXL1QPnbkNSEcZXHG1SGefNulwye4KG/93FuAOr7m8zlUqjYx
+	FT0jD4i7zGsVXrdEgRhIWMYwe/E02Kr/HYBGDewqMpr2n23QCpzx
+X-Gm-Gg: ASbGncsbINTjP+PF4F3MnfGKzxql+7SGUUbyZeLVDlJH4xFULCf1WXtXNonwK91i6sp
+	QW3+J4wKNybPxWFn0vOgbuOtuVFjAr8Zn8Q1afZ1nHXVp9y3L8bzCm9XirGoonsf+KbrsUe8mKv
+	9aRHblQffyz79U1kJ1n8BJShI2BZfiYV7Z7pc7zsKsrq4mNsD+50TAoToVoMtRnTh4izzbb/khr
+	pSLKmFhVO5WzJijJXIpwpE4xA9uYmAEDBP5ndOV/iBEfKSyjOuf1SJniHq4VynQnZkOIkK1pIFi
+	So+iMttAE7QaonJvOFgqK5M=
+X-Google-Smtp-Source: AGHT+IGpCycxeHiwIkdQyJmFgzjzfjrOWUvHTwR+SUeC0c35B+tfnHuLh92U7uKVsTqUzGtr4bgN1w==
+X-Received: by 2002:a05:6102:205c:b0:4ba:99b5:60f5 with SMTP id ada2fe7eead31-4ba99b567d4mr5620870137.23.1739252792542;
+        Mon, 10 Feb 2025 21:46:32 -0800 (PST)
+Received: from localhost.localdomain ([2800:bf0:82:3d2:4207:a956:ebad:2a64])
+        by smtp.gmail.com with ESMTPSA id a1e0cc1a2514c-866f96809besm1717371241.13.2025.02.10.21.46.30
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 10 Feb 2025 21:46:31 -0800 (PST)
+From: Kurt Borja <kuurtb@gmail.com>
+To: "Rafael J. Wysocki" <rafael@kernel.org>
+Cc: Len Brown <lenb@kernel.org>,
+	linux-acpi@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	Mario Limonciello <mario.limonciello@amd.com>,
+	platform-driver-x86@vger.kernel.org,
+	Kurt Borja <kuurtb@gmail.com>
+Subject: [PATCH] ACPI: platform_profile: Improve platform_profile_unregister
+Date: Tue, 11 Feb 2025 00:46:13 -0500
+Message-ID: <20250211054613.15609-1-kuurtb@gmail.com>
+X-Mailer: git-send-email 2.48.1
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Tue, 11 Feb 2025 00:18:54 -0500
-Message-Id: <D7PD2KZCQJ4Z.BXO2PAN86IKH@gmail.com>
-Cc: <hdegoede@redhat.com>, <ilpo.jarvinen@linux.intel.com>,
- <platform-driver-x86@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2] platform/x86: thinkpad_acpi: Fix registration of
- tpacpi platform driver
-From: "Kurt Borja" <kuurtb@gmail.com>
-To: "Mark Pearson" <mpearson-lenovo@squebb.ca>
-X-Mailer: aerc 0.20.1-0-g2ecb8770224a
-References: <mpearson-lenovo@squebb.ca>
- <20250210201656.4165-1-mpearson-lenovo@squebb.ca>
-In-Reply-To: <20250210201656.4165-1-mpearson-lenovo@squebb.ca>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-On Mon Feb 10, 2025 at 3:16 PM -05, Mark Pearson wrote:
-> When reviewing and testing the recent platform profile changes I had
-> missed that they prevent the tpacpi platform driver from registering.
-> This error is seen in the kernel logs, and the various tpacpi entries
-> are not created:
-> [ 7550.642171] platform thinkpad_acpi: Resources present before probing
->
-> This happens because devm_platform_profile_register() is called before
-> tpacpi_pdev probes (thanks to Kurt Borja for identifying root cause)
->
-> For now revert back to the old platform_profile_register to fix the
-> issue. Will work on re-implementing this later as more testing is needed
-> for full solution.
->
-> Tested on X1 Carbon G12.
->
-> Fixes: 31658c916fa6 ("platform/x86: thinkpad_acpi: Use devm_platform_prof=
-ile_register()")
->
-> Signed-off-by: Mark Pearson <mpearson-lenovo@squebb.ca>
-> ---
-> Changes in v2:
->   Modified approach to instead revert to old platform_profile_register
-> method. Will revisit using devm_ version in the future as more testing
-> needed.
->
->  drivers/platform/x86/thinkpad_acpi.c | 10 ++++++++--
->  1 file changed, 8 insertions(+), 2 deletions(-)
->
-> diff --git a/drivers/platform/x86/thinkpad_acpi.c b/drivers/platform/x86/=
-thinkpad_acpi.c
-> index 1fcb0f99695a..85d01bd5dc31 100644
-> --- a/drivers/platform/x86/thinkpad_acpi.c
-> +++ b/drivers/platform/x86/thinkpad_acpi.c
-> @@ -10646,8 +10646,8 @@ static int tpacpi_dytc_profile_init(struct ibm_in=
-it_struct *iibm)
->  			"DYTC version %d: thermal mode available\n", dytc_version);
-> =20
->  	/* Create platform_profile structure and register */
-> -	tpacpi_pprof =3D devm_platform_profile_register(&tpacpi_pdev->dev, "thi=
-nkpad-acpi",
-> -						      NULL, &dytc_profile_ops);
-> +	tpacpi_pprof =3D platform_profile_register(&tpacpi_pdev->dev, "thinkpad=
--acpi-profile",
-> +						 NULL, &dytc_profile_ops);
->  	/*
->  	 * If for some reason platform_profiles aren't enabled
->  	 * don't quit terminally.
-> @@ -10665,8 +10665,14 @@ static int tpacpi_dytc_profile_init(struct ibm_i=
-nit_struct *iibm)
->  	return 0;
->  }
-> =20
-> +static void dytc_profile_exit(void)
-> +{
-> +	platform_profile_remove(tpacpi_pprof);
+Drivers usually call this method on error/exit paths and do not check
+for it's return value, which is always 0 anyway, so make it void. This
+is safe to do as currently all drivers use
+devm_platform_profile_register().
 
-I just noticed this will be called even if platform_profile_register()
-fails, as the comment suggests.
+While at it improve the style and make the function safer by checking
+for IS_ERR_OR_NULL before dereferencing the device pointer.
 
-We need to check for IS_ERR_OR_NULL() before unregistering.
+Signed-off-by: Kurt Borja <kuurtb@gmail.com>
+---
+Hi Rafael,
 
---=20
- ~ Kurt
+Please tell me if you prefer different commits for this. Also, should we
+WARN_ON(IS_ERR_OR_NULL(dev))?
 
-> +}
-> +
->  static struct ibm_struct  dytc_profile_driver_data =3D {
->  	.name =3D "dytc-profile",
-> +	.exit =3D dytc_profile_exit,
->  };
-> =20
->  /***********************************************************************=
-**
+Based on the acpi branch of the linux-pm tree.
+
+~ Kurt
+---
+ drivers/acpi/platform_profile.c  | 15 ++++++---------
+ include/linux/platform_profile.h |  2 +-
+ 2 files changed, 7 insertions(+), 10 deletions(-)
+
+diff --git a/drivers/acpi/platform_profile.c b/drivers/acpi/platform_profile.c
+index fc92e43d0fe9..59d82386a073 100644
+--- a/drivers/acpi/platform_profile.c
++++ b/drivers/acpi/platform_profile.c
+@@ -569,24 +569,21 @@ EXPORT_SYMBOL_GPL(platform_profile_register);
+ /**
+  * platform_profile_remove - Unregisters a platform profile class device
+  * @dev: Class device
+- *
+- * Return: 0
+  */
+-int platform_profile_remove(struct device *dev)
++void platform_profile_remove(struct device *dev)
+ {
+ 	struct platform_profile_handler *pprof = to_pprof_handler(dev);
+-	int id;
++
++	if (IS_ERR_OR_NULL(dev))
++		return;
++
+ 	guard(mutex)(&profile_lock);
+ 
+-	id = pprof->minor;
++	ida_free(&platform_profile_ida, pprof->minor);
+ 	device_unregister(&pprof->dev);
+-	ida_free(&platform_profile_ida, id);
+ 
+ 	sysfs_notify(acpi_kobj, NULL, "platform_profile");
+-
+ 	sysfs_update_group(acpi_kobj, &platform_profile_group);
+-
+-	return 0;
+ }
+ EXPORT_SYMBOL_GPL(platform_profile_remove);
+ 
+diff --git a/include/linux/platform_profile.h b/include/linux/platform_profile.h
+index 8ab5b0e8eb2c..d5499eca9e1d 100644
+--- a/include/linux/platform_profile.h
++++ b/include/linux/platform_profile.h
+@@ -47,7 +47,7 @@ struct platform_profile_ops {
+ struct device *platform_profile_register(struct device *dev, const char *name,
+ 					 void *drvdata,
+ 					 const struct platform_profile_ops *ops);
+-int platform_profile_remove(struct device *dev);
++void platform_profile_remove(struct device *dev);
+ struct device *devm_platform_profile_register(struct device *dev, const char *name,
+ 					      void *drvdata,
+ 					      const struct platform_profile_ops *ops);
+
+base-commit: 3e3e377dd1f300bbdd230533686ce9c9f4f8a90d
+-- 
+2.48.1
 
