@@ -1,130 +1,98 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4BF6422D4C7
-	for <platform-driver-x86@vger.kernel.org>; Tue, 11 Feb 2025 14:52:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 15E5B2512F1;
+	Tue, 11 Feb 2025 15:13:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739285573; cv=none; b=de+UKHYcUY8ZP6W+7vA1Y2pElPC7yENt3QbX1jmrxyWvO6od7BaNNjXkuWGGinRVvHSAY8j7NuThe+i1gX+xrGXYOJPFn94d4HaiJGI4poW+zx0OkWJnUQZGxLVmiNOxU2XT98Owgu6Hr5U3PiIhnrm/EtBbqiYY5FrMG6nIBXA=
+	t=1739286826; cv=none; b=K4289SYQaGCRkM3t73+MkovjDXxdsGWbNxJsQdrlRVA/x+VY8weAuHHiAIUjwrtT0BBnHa4xXYKKmAwnly6t8DNp2nfoW/pjBsK5OEd3/oz3eKRmhfyVhH1Q8kUBLSehUirYxMjeB3GQOlJgMwPqOMJxbNEVwANZkBTl9peRrpE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739285573; c=relaxed/simple;
-	bh=pClRSUDqQbd81cOYbNFPBF0ZXdhuiF70wTFkESAdeMQ=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=a2XvPO5DOhhn8fNmXeo7yd7qOAVU0iRwpq4BMSJC6QMmJQslbJ/jJWBlsalHaUNHlHzxtL1nmxjFQRAWxtSc0ZFlFGo8qDfzK9BsvceSyOy8KP/E2hDiCs+B9XoKSDrbPS/hqNpa88Eo/0fu7LFQRFywT8fO1gYFQAkWczS5jTs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=fzWyOO6e; arc=none smtp.client-ip=192.198.163.12
+	s=arc-20240116; t=1739286826; c=relaxed/simple;
+	bh=xylAchuR2cIHzidtaeBV3LQBinHKdr9a/tRrIgpY0BY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ihOWSxanrz/gUb7NKTgt7FOBwGOFAhSz5g7N7i/kVrJAaJPUCix2BixS3A8Bty1QBZ20BjSt4YLj7u6jAMZqAekZDXcdAAjBAzqq1X1+INw2uvNmclLOKnIpJ7SHy6m0wWLoEPJXMhHnZSJy4heSs3ujVLxj6mYNWRZcpdPwsBw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=jA6eaqUT; arc=none smtp.client-ip=198.175.65.12
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="fzWyOO6e"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="jA6eaqUT"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1739285572; x=1770821572;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=pClRSUDqQbd81cOYbNFPBF0ZXdhuiF70wTFkESAdeMQ=;
-  b=fzWyOO6eoZnBPnb67A/lIz25V7LS+cwvbmg2kdJGJs3ykoMyIb0gY3Yx
-   tXr/gO2qyNRMYiJ4+tF/HnQRe0otGybnaJwg+Sh3i+XBuHT2b1h/CydKp
-   9a49DBblub/9z7hBVeOhXjIzJzDS/0+jX4KnZxotxk8xIitCRJo6XCRDk
-   D/28/eGD0aMYovSQHm0FBLjVsTMrAmmgpNrZBoOaa5jk/kRopJFZFtANv
-   QqAwFf6e0DbcEdzagphxbTWzk4yMLLUp6k6Fubjv7ZS7LOG3dpUsm3y9j
-   +FKNNXeLMeRzFkIqgVTJJ9kAg6dlBBegsK+BK8BZNxij1K7AdDN+KV7si
-   A==;
-X-CSE-ConnectionGUID: AhqvLsD8QZCv/gycmsuvNQ==
-X-CSE-MsgGUID: Dvmd2vLjRa2YbvANWdHMzg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11342"; a="43835286"
+  t=1739286825; x=1770822825;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:content-transfer-encoding:in-reply-to;
+  bh=xylAchuR2cIHzidtaeBV3LQBinHKdr9a/tRrIgpY0BY=;
+  b=jA6eaqUTEsSjBnPgfa8XXY4dM+VFPvBN2HuGOl1eIDrFqHE71MoFo8vH
+   xCP3GP0OJfyCv76/mQvqs9sK6o/Z1hvRZX/+rsJ3DKT4YZ1O30njS2QHg
+   uThzfQSHpx6Ag3F44TEAgFG3TrIeDKnP1bCYUD/CYyCmuIHs0yKZdzQ7p
+   HtS0Il3pEQSVoHkdo7csaZAdgiP04xGC7uNzGubQkeFGJxciUtO4Pjm01
+   x6cVvl1QltWe6InOKkWMS7Uw+ge8pRq0R/n0o9ybs/7guVEKsJHiJu5F2
+   ehaHYl4O4rE6x3BQQxHOeR6M4zVZdVBeTU6pnkUPIez2LCW4xIOV2Ce4A
+   g==;
+X-CSE-ConnectionGUID: a73bcn9EQvK0StmX2wCfhg==
+X-CSE-MsgGUID: qyoYGPrgT7G5cHGai9VQiQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11342"; a="51303596"
 X-IronPort-AV: E=Sophos;i="6.13,277,1732608000"; 
-   d="scan'208";a="43835286"
-Received: from fmviesa004.fm.intel.com ([10.60.135.144])
-  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Feb 2025 06:52:51 -0800
-X-CSE-ConnectionGUID: lBeBSDc5TFSkfUTb7iOMtg==
-X-CSE-MsgGUID: 0a/e2Mn7QeC4RZJCMeyqWw==
+   d="scan'208";a="51303596"
+Received: from orviesa006.jf.intel.com ([10.64.159.146])
+  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Feb 2025 07:13:44 -0800
+X-CSE-ConnectionGUID: Lj/hSzQ8SNCg6FziJ3dkCw==
+X-CSE-MsgGUID: zu6Y0bGxTwS3D0UlepAMmA==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.13,277,1732608000"; 
-   d="scan'208";a="117612613"
-Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.14])
-  by fmviesa004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Feb 2025 06:52:49 -0800
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Tue, 11 Feb 2025 16:52:45 +0200 (EET)
-To: Vadim Pasternak <vadimp@nvidia.com>
-cc: Hans de Goede <hdegoede@redhat.com>, michaelsh@nvidia.com, 
-    crajank@nvidia.com, fradensky@nvidia.com, oleksandrs@nvidia.com, 
-    platform-driver-x86@vger.kernel.org
-Subject: Re: [PATCH v6 5/9] platform: mellanox: Introduce support of Nvidia
- smart switch
-In-Reply-To: <20250211091912.36787-6-vadimp@nvidia.com>
-Message-ID: <9966de14-ffbb-b134-6f5f-d5e181874fef@linux.intel.com>
-References: <20250211091912.36787-1-vadimp@nvidia.com> <20250211091912.36787-6-vadimp@nvidia.com>
+   d="scan'208";a="112506832"
+Received: from smile.fi.intel.com ([10.237.72.58])
+  by orviesa006.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Feb 2025 07:13:43 -0800
+Received: from andy by smile.fi.intel.com with local (Exim 4.98)
+	(envelope-from <andriy.shevchenko@linux.intel.com>)
+	id 1thrxD-0000000AXYX-1YuK;
+	Tue, 11 Feb 2025 17:13:39 +0200
+Date: Tue, 11 Feb 2025 17:13:39 +0200
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Cc: Hans de Goede <hdegoede@redhat.com>,
+	Sakari Ailus <sakari.ailus@linux.intel.com>,
+	Daniel Scally <djrscally@gmail.com>,
+	platform-driver-x86@vger.kernel.org,
+	laurent.pinchart@ideasonboard.com, hverkuil@xs4all.nl,
+	linux-media@vger.kernel.org
+Subject: Re: [PATCH v7 0/3] int3472: Support GPIO con_id based on _HID
+Message-ID: <Z6tpI_zUbpXEr8qr@smile.fi.intel.com>
+References: <20250211072841.7713-1-sakari.ailus@linux.intel.com>
+ <Z6shGGy2FPVc5mEK@smile.fi.intel.com>
+ <64b617e1-bf52-442e-be56-71c76d973edd@redhat.com>
+ <1938d858-6d66-69f8-5952-9cecf133f254@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="8323328-173801367-1739285565=:4237"
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <1938d858-6d66-69f8-5952-9cecf133f254@linux.intel.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
+On Tue, Feb 11, 2025 at 04:32:12PM +0200, Ilpo Järvinen wrote:
+> On Tue, 11 Feb 2025, Hans de Goede wrote:
 
---8323328-173801367-1739285565=:4237
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+...
 
-On Tue, 11 Feb 2025, Vadim Pasternak wrote:
+> Currently, these don't appear in lore for some reason (not in 
+> patchwork)...
 
-> Provide platform support for Nvidia Smart Switch SN4280.
->=20
-> The Smart Switch equipped with:
-> - Nvidia COME module based on AMD EPYC=E2=84=A2 Embedded 3451 CPU.
-> - Nvidia Spectrum-3 ASIC.
-> - Four DPUs, each equipped with Nvidia BF3 ARM based processor and
->   with Lattice LFD2NX-40 FPGA device.
-> - 28xQSFP-DD external ports.
-> - Two power supplies.
-> - Four cooling drawers.
->=20
-> Reviewed-by: Ciju Rajan K <crajank@nvidia.com>
-> Signed-off-by: Vadim Pasternak <vadimp@nvidia.com>
-> ---
-> v5->v6
-> Comments pointed out by Ilpo:
-> - Add missing coma in structure 'mlxplat_mlxcpld_xdr_led_data'.
-> - Merge lines in structure 'mlxplat_mlxcpld_regmap_smart_switch'.
-> - s/int/unsigned int/ in 'mlxplat_dmi_smart_switch_matched'.
->=20
-> v4->v5
-> Comments pointed out by Ilpo:
-> - Add blank lines in mlxplat_dmi_smart_switch_matched().
-> - Style fixes: remove empty space after the condition fix while() loop.
-> ---
->  drivers/platform/mellanox/mlx-platform.c | 1966 +++++++++++++++++++---
->  1 file changed, 1712 insertions(+), 254 deletions(-)
->=20
+FWIW, lore seems down. DDoS on kernel.org? (I dunno)
 
-> @@ -6390,8 +7829,25 @@
->  =09=09}
->  =09}
-> =20
-> +=09/* Add DPU drivers. */
-> +=09for (i =3D 0; i < MLXPLAT_CPLD_DPU_MAX_DEVS; i++) {
-> +=09=09if (mlxplat_dpu_data[i]) {
+> Sakari, could you please resend the series v7 so that it hopefully gets 
+> picked up by lore and is easier for me to apply them using the normal 
+> tools I've.
 
-You can reverse the logic and use continue to lower the indentation level.
+Usually lore picks them up when it restores. But it's up to you, of course,
+how to proceed. Just my 2c.
 
-> +=09=09=09priv->pdev_dpu[i] =3D
-> +=09=09=09=09platform_device_register_resndata(&mlxplat_dev->dev, "mlxreg=
--dpu",
-> +=09=09=09=09=09=09=09=09  i, NULL, 0, mlxplat_dpu_data[i],
-> +=09=09=09=09=09=09=09=09  sizeof(*mlxplat_dpu_data[i]));
-> +=09=09=09if (IS_ERR(priv->pdev_dpu[i])) {
-> +=09=09=09=09err =3D PTR_ERR(priv->pdev_dpu[i]);
-> +=09=09=09=09goto fail_platform_dpu_register;
-> +=09=09=09}
-> +=09=09}
-> +=09}
-> +
->  =09return 0;
+-- 
+With Best Regards,
+Andy Shevchenko
 
---=20
- i.
 
---8323328-173801367-1739285565=:4237--
