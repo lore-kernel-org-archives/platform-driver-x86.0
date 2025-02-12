@@ -1,149 +1,93 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2827D271811;
-	Wed, 12 Feb 2025 01:06:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0E08027182B
+	for <platform-driver-x86@vger.kernel.org>; Wed, 12 Feb 2025 03:10:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739322386; cv=none; b=D15xJ+C4ydskHVB7T2k1woTEyPoe9TUPkAPDaRRBqRpKy0YMJL9fO7fFLRkDndQt5jK8IqbORMVFlIg2ZFpulzUpTG0FbpC5bN6p6M3Y7jXE/bR1Y2dUts+g3O0S+VcRrMSPgkcLrlQXFUmGTsZpzgeuu3zTLQDPHgHSVvtf7zk=
+	t=1739329823; cv=none; b=O9jJZ1x0lacshWvoZYpdZxgRWjG0GvpO5/M+KIwJ5eu8xZ7EBM9uQ15XM5+v7ZlJWDAvmR8iXQbUIGkXir+8CG9d/80UglvBt5mOP1UDj6U06U+Vop27hNs9+mgd4eYbl4cgVveBJyr69RExgGFS3f9S0qcxHytTEx1BHORM4VY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739322386; c=relaxed/simple;
-	bh=lPLtbO08wzB1FZuAkE1t6UltO8e/hBN62YEOAPcWXpY=;
-	h=From:To:Subject:Date:Message-ID:MIME-Version; b=h+DJtsjFyERBEuN//nTvvwuoBKG87WwQbHmXWd6MJcQ8+1/B9jVzwJOEzjMpO6k+vtNv+lS/TdMuJV+ViqHYRsguulCoLunL7sOiDurrLE3nQuKagCETvy2CfzR+BXC75seL6x3/8jnLp4AWn+aQTkoREh1Oxx8R4W9qfUAA14E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=hfcBKe/C; arc=none smtp.client-ip=198.175.65.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1739329823; c=relaxed/simple;
+	bh=hab+BVjAkXTRvKPLNYGF3Az2Tl77D88ZneFiKkuDj1I=;
+	h=From:To:Subject:Date:Message-ID:Content-Type:MIME-Version; b=gxVfYlqqulmXOp4k65YBVyiGlWi45t31KbiwKWZZbeRY6VRmq5hYEu2hytAGQQ621FKMgoRAhn1ee3iiiUSxc9a5ylFuLnzZU8WLVA2qkzj60EJwk2Mpjs9J7uis9W+02AwzRZaIiAf6jUmFE3SVA4lLs3Cx2EGxx+1hERXqOG8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EV87hgdu; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="hfcBKe/C"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1739322385; x=1770858385;
-  h=from:to:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=lPLtbO08wzB1FZuAkE1t6UltO8e/hBN62YEOAPcWXpY=;
-  b=hfcBKe/CY3cHrs3D0kE37KsvP/Fp9eUVxyxVoLnUu0A3dBGbSXDVQdyF
-   PNpL262CU399KzWLGPufIUdv+WS9IRxCWZGdT1H158oX12K6pbIQBRuZi
-   s26cdRZgdrjcp6FW2Z+IrEWVZ94JtjZrTwbJL/iLJWsi7VLeJHhWfgb59
-   mvOFIipqWmnNmMp5bGFw/zDpceGRiQubdsyqrg9422qpbOwTpp1Gr5gVb
-   w32XXAVZO6ipUEt+9gzxId2aPEc3geVSRIx9SpwCKwcMwNoZJjLSMVTNx
-   gzfIDFOqGkDkaiT7fPQdhGXmKksexCTOk3sOJiHBrrBifD0q0w459u2Xd
-   g==;
-X-CSE-ConnectionGUID: 3eBHkES+RaOR9FF0ma1P7w==
-X-CSE-MsgGUID: gqSQhn18StSHgKX1HZoazA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11342"; a="50187930"
-X-IronPort-AV: E=Sophos;i="6.13,279,1732608000"; 
-   d="scan'208";a="50187930"
-Received: from orviesa001.jf.intel.com ([10.64.159.141])
-  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Feb 2025 17:06:24 -0800
-X-CSE-ConnectionGUID: j4ShramuSlaO3SHJzaSjsw==
-X-CSE-MsgGUID: genqVSeeToGdVVdxvmP+nQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
-   d="scan'208";a="149853272"
-Received: from iweiny-desk3.amr.corp.intel.com (HELO xpardee-desk.lan) ([10.124.222.126])
-  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Feb 2025 17:06:23 -0800
-From: Xi Pardee <xi.pardee@linux.intel.com>
-To: xi.pardee@linux.intel.com,
-	irenic.rajneesh@gmail.com,
-	david.e.box@linux.intel.com,
-	hdegoede@redhat.com,
-	ilpo.jarvinen@linux.intel.com,
-	platform-driver-x86@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-pm@vger.kernel.org
-Subject: [PATCH v2] platform/x86:intel/pmc: Move arch specific action to init function
-Date: Tue, 11 Feb 2025 17:05:56 -0800
-Message-ID: <20250212010621.1003663-1-xi.pardee@linux.intel.com>
-X-Mailer: git-send-email 2.43.0
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EV87hgdu"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 6B4ECC4CEE6
+	for <platform-driver-x86@vger.kernel.org>; Wed, 12 Feb 2025 03:10:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1739329822;
+	bh=hab+BVjAkXTRvKPLNYGF3Az2Tl77D88ZneFiKkuDj1I=;
+	h=From:To:Subject:Date:From;
+	b=EV87hgduY8zU0UxXurYJqaRDjo17miyPG3eQFmn0gc/Rr0k7TA/8q5VI0XjClEAfH
+	 81GTwv5VSsX/lE3dxum6+XumGSVzlnNVcUUvqeCkqUtE/AdtfZcAU15nHaLsZdVYfI
+	 DQ1UKvI7Tsc6D0AQTRicDAi680kDggD0qAUGlSBqxPlPx91w+t6JOF5nWjFSGpyF1Z
+	 xxmCeIJO8YOKazojP71UggHxpn9Fb1iHx01/ABvlASfXu6u6xYv7C02GHv28VtUcVy
+	 U5HSFHXfbt3VXexfBITYwtf8uynz6zXcL2dJAvxWwX6+hAE0vsis4S1/MM6N2ekJoq
+	 g4s7Lpou44zcQ==
+Received: by aws-us-west-2-korg-bugzilla-1.web.codeaurora.org (Postfix, from userid 48)
+	id 538E3C41612; Wed, 12 Feb 2025 03:10:22 +0000 (UTC)
+From: bugzilla-daemon@kernel.org
+To: platform-driver-x86@vger.kernel.org
+Subject: [Bug 219774] New: Interrupt Affinity Inquiry
+Date: Wed, 12 Feb 2025 03:10:22 +0000
+X-Bugzilla-Reason: None
+X-Bugzilla-Type: new
+X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
+X-Bugzilla-Product: Drivers
+X-Bugzilla-Component: Platform_x86
+X-Bugzilla-Version: 2.5
+X-Bugzilla-Keywords: 
+X-Bugzilla-Severity: normal
+X-Bugzilla-Who: 553216989@qq.com
+X-Bugzilla-Status: NEW
+X-Bugzilla-Resolution: 
+X-Bugzilla-Priority: P3
+X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
+X-Bugzilla-Flags: 
+X-Bugzilla-Changed-Fields: bug_id short_desc product version rep_platform
+ op_sys bug_status bug_severity priority component assigned_to reporter
+ cf_regression
+Message-ID: <bug-219774-215701@https.bugzilla.kernel.org/>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Bugzilla-URL: https://bugzilla.kernel.org/
+Auto-Submitted: auto-generated
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
 
-Move arch specific action from core.c to the init() function of spt.c.
+https://bugzilla.kernel.org/show_bug.cgi?id=3D219774
 
-Signed-off-by: Xi Pardee <xi.pardee@linux.intel.com>
----
-v2->v1:
-- Change the name of pmc_pci_ids to spt_pmc_pci_id
+            Bug ID: 219774
+           Summary: Interrupt Affinity Inquiry
+           Product: Drivers
+           Version: 2.5
+          Hardware: All
+                OS: Linux
+            Status: NEW
+          Severity: normal
+          Priority: P3
+         Component: Platform_x86
+          Assignee: drivers_platform_x86@kernel-bugs.osdl.org
+          Reporter: 553216989@qq.com
+        Regression: No
 
- drivers/platform/x86/intel/pmc/core.c | 13 -------------
- drivers/platform/x86/intel/pmc/spt.c  | 21 +++++++++++++++++++++
- 2 files changed, 21 insertions(+), 13 deletions(-)
+Hello, I have a technical question I=E2=80=99d like to ask. I noticed that =
+when an
+interrupt uses both smp_affinity and effective_affinity, it is forced to bi=
+nd
+to the CPU specified by effective_affinity. May I ask which part of the code
+makes effective_affinity override and take effect over smp_affinity? I woul=
+d be
+very grateful if you could help me with this. Thank you very much in advanc=
+e.
 
-diff --git a/drivers/platform/x86/intel/pmc/core.c b/drivers/platform/x86/intel/pmc/core.c
-index d819478fea29a..bd90d38e62e94 100644
---- a/drivers/platform/x86/intel/pmc/core.c
-+++ b/drivers/platform/x86/intel/pmc/core.c
-@@ -1418,11 +1418,6 @@ static const struct x86_cpu_id intel_pmc_core_ids[] = {
- 
- MODULE_DEVICE_TABLE(x86cpu, intel_pmc_core_ids);
- 
--static const struct pci_device_id pmc_pci_ids[] = {
--	{ PCI_VDEVICE(INTEL, SPT_PMC_PCI_DEVICE_ID) },
--	{ }
--};
--
- /*
-  * This quirk can be used on those platforms where
-  * the platform BIOS enforces 24Mhz crystal to shutdown
-@@ -1533,14 +1528,6 @@ static int pmc_core_probe(struct platform_device *pdev)
- 	if (!pmcdev->pkgc_res_cnt)
- 		return -ENOMEM;
- 
--	/*
--	 * Coffee Lake has CPU ID of Kaby Lake and Cannon Lake PCH. So here
--	 * Sunrisepoint PCH regmap can't be used. Use Cannon Lake PCH regmap
--	 * in this case.
--	 */
--	if (pmc_dev_info == &spt_pmc_dev && !pci_dev_present(pmc_pci_ids))
--		pmc_dev_info = &cnp_pmc_dev;
--
- 	mutex_init(&pmcdev->lock);
- 
- 	if (pmc_dev_info->init)
-diff --git a/drivers/platform/x86/intel/pmc/spt.c b/drivers/platform/x86/intel/pmc/spt.c
-index 956b2ec1c7510..440594acac6cf 100644
---- a/drivers/platform/x86/intel/pmc/spt.c
-+++ b/drivers/platform/x86/intel/pmc/spt.c
-@@ -8,6 +8,8 @@
-  *
-  */
- 
-+#include <linux/pci.h>
-+
- #include "core.h"
- 
- const struct pmc_bit_map spt_pll_map[] = {
-@@ -134,6 +136,25 @@ const struct pmc_reg_map spt_reg_map = {
- 	.pm_vric1_offset = SPT_PMC_VRIC1_OFFSET,
- };
- 
-+static const struct pci_device_id spt_pmc_pci_id[] = {
-+	{ PCI_VDEVICE(INTEL, SPT_PMC_PCI_DEVICE_ID) },
-+	{ }
-+};
-+
-+static int spt_core_init(struct pmc_dev *pmcdev, struct pmc_dev_info *pmc_dev_info)
-+{
-+	/*
-+	 * Coffee Lake has CPU ID of Kaby Lake and Cannon Lake PCH. So here
-+	 * Sunrisepoint PCH regmap can't be used. Use Cannon Lake PCH regmap
-+	 * in this case.
-+	 */
-+	if (!pci_dev_present(spt_pmc_pci_id))
-+		return generic_core_init(pmcdev, &cnp_pmc_dev);
-+
-+	return generic_core_init(pmcdev, pmc_dev_info);
-+}
-+
- struct pmc_dev_info spt_pmc_dev = {
- 	.map = &spt_reg_map,
-+	.init = spt_core_init,
- };
--- 
-2.43.0
+--=20
+You may reply to this email to add a comment.
 
+You are receiving this mail because:
+You are watching the assignee of the bug.=
