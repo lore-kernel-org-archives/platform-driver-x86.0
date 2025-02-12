@@ -1,195 +1,172 @@
-Received: from fout-a4-smtp.messagingengine.com (fout-a4-smtp.messagingengine.com [103.168.172.147])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f52.google.com (mail-ed1-f52.google.com [209.85.208.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 68306271838;
-	Wed, 12 Feb 2025 16:19:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.147
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6A4F81DEFDD
+	for <platform-driver-x86@vger.kernel.org>; Wed, 12 Feb 2025 16:46:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739377143; cv=none; b=i1fZufyI17WDOesx/iyCCAAY7GxCBojrUVqyuucZ6WGI7/gTDmmhNY1HjfSI1NKT5cjtK/GSu7Jaj6cRLtb/RebeXnTt6e1pDZ0fzpechUqYHbTcdLMB8nb+NPBxk/UEyrxR5fIKZeYzrIjd100JDCK5yJxVA+uWajtSR4PPhM4=
+	t=1739378765; cv=none; b=T0dLGmw2CIIdMktPGWzIaSV86HMWSrbCSn4+oEmovEzlWUVpiXxqunDiPuvQnj1AIOa//lY8FKM8n6agRCvJUbNiNeco40/n7LRB8SLftsS9tN0vNts1/LqYBXak1HFKgEL5F2b858GSWZyp3iJN4NZzALrOa8J8WxAm+GHtFJ0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739377143; c=relaxed/simple;
-	bh=fd1rIWNKriThu5rXMUK4vGL5RkrKeBtxW8qklvaN7Pc=;
-	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
-	 Subject:Content-Type; b=AjCByNWJbRM6rkpOzmrozUEEOmw7qC40ydM9B4K0goj0NMXX3ggyD2ERzDshuzY6mhY8E38AbTMb88jVEvWcuHp+0HP02lX94qL30OxUzF9UYxyFtVrc4VrQdfGneJ4rQWrsWjb3YlrJwlz++E91DaHAWoKYOyPpgRwL/1cxFak=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=squebb.ca; spf=pass smtp.mailfrom=squebb.ca; dkim=pass (2048-bit key) header.d=squebb.ca header.i=@squebb.ca header.b=dYd+v54K; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=ED1ZDPAc; arc=none smtp.client-ip=103.168.172.147
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=squebb.ca
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=squebb.ca
+	s=arc-20240116; t=1739378765; c=relaxed/simple;
+	bh=BULMItlD7UmqT+FeS+xvhAotN9kxf42G+uPp6a158Mo=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=FWHUxAnHMZC6lW6/tKBS2k2GZPPYvJzjuBeM4r+YJWmhauGHDwZh6uK8Dbu5DxVpbUQDvA0gqMaBucD335soEbhCORGS7X25VQ2XSCSFf1Wn8dN9aWwnmlH1wjmyJI6FW6a3IjbK6rn1BWk6urf+K1pqquB0l85ROF94sytP/pU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=TOOPV9PS; arc=none smtp.client-ip=209.85.208.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=squebb.ca header.i=@squebb.ca header.b="dYd+v54K";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="ED1ZDPAc"
-Received: from phl-compute-02.internal (phl-compute-02.phl.internal [10.202.2.42])
-	by mailfout.phl.internal (Postfix) with ESMTP id 4B4BD1380187;
-	Wed, 12 Feb 2025 11:18:59 -0500 (EST)
-Received: from phl-imap-13 ([10.202.2.103])
-  by phl-compute-02.internal (MEProxy); Wed, 12 Feb 2025 11:18:59 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=squebb.ca; h=cc
-	:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to; s=fm1; t=1739377139;
-	 x=1739463539; bh=trX84HWVK09hJRuBlQRaYQRJ4SXe28SbidelccD92CM=; b=
-	dYd+v54K2k3nKF5j8jMqk5gvfPhQyz5OuaWJcRI0+vy9AegID6/p8hJfe51RgWT0
-	qj3/5VRViE1B8eFtzCUu/VdNATAZc2essu/Amu08pHn5/Rgcxs9vxc2BS6Y5HCN5
-	6kxHskw2TjOe4KW3LaeC/BSE9Lat9BUtvibPFykp0w+8K61w4gNruSymeH6NNiNN
-	u3Gx/YuzCgLRWeb4Wu4nW4CL/Gi6CkqHbJnWkyW1mTu1Z5A18sKRET2Ywo+Dy9FR
-	QaKs1SY1MXUScg6NLXZI+cnwooRislnqwjEXVvyxSWAq9whtNVMxRDx1sZs+ZLg0
-	nJStPt/e0a3t5lrGLE41TA==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=1739377139; x=
-	1739463539; bh=trX84HWVK09hJRuBlQRaYQRJ4SXe28SbidelccD92CM=; b=E
-	D1ZDPAcADbkRVcqY0+FfTrI8fBOfU8aJDVnGEOyGg0NeihyHnutEPN0xcC/OPHSD
-	f3RLEQH3bJOUaRnRJFqAyqrJoeiQKdRPvQ/oLvhrowW/KQkKTo7QA5qZwA6Td9I6
-	nqIQAGM22MSUWj6YBJ2JGk4DwkXe+IeIXGlDAJw32tzbpjUPHTdBfoG3X4N93MTL
-	EJHV6iwGDT6AQwAyqG3manD7iM8U+RxvR9SBvo/tn+KpkFbuN6zUnBhFa9wvQHVi
-	ZvXlfgZbBzZRtHochuuS3alt7/n5Mt7TrP7BUt7vRVySaQAcuHPGzqvrV/V/fLTc
-	6+zJSG52f2ZHvEjH3IysA==
-X-ME-Sender: <xms:88msZx_pETY8sGcRp9bCZn2p47yhvsyMB4rUqPuS8Nimx2w7LHnLVg>
-    <xme:88msZ1s4nC-Da5UHkW8U8znTTgzYSGUOMNZeWeGQoIVd9jRwfb1CJMCuEL8WyhbdG
-    lr0WQ7mmDB-q74KHhM>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdeggeefhecutefuodetggdotefrod
-    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpggftfghnshhusghstghrihgsvgdp
-    uffrtefokffrpgfnqfghnecuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivg
-    hnthhsucdlqddutddtmdenucfjughrpefoggffhffvvefkjghfufgtgfesthhqredtredt
-    jeenucfhrhhomhepfdforghrkhcurfgvrghrshhonhdfuceomhhpvggrrhhsohhnqdhlvg
-    hnohhvohesshhquhgvsggsrdgtrgeqnecuggftrfgrthhtvghrnhephfevkeejueeukeef
-    hfelleejheeuudfgteffvdetkeffjeduleffvdejkeefhedvnecuvehluhhsthgvrhfuih
-    iivgeptdenucfrrghrrghmpehmrghilhhfrhhomhepmhhpvggrrhhsohhnqdhlvghnohhv
-    ohesshhquhgvsggsrdgtrgdpnhgspghrtghpthhtohephedpmhhouggvpehsmhhtphhouh
-    htpdhrtghpthhtohepkhhuuhhrthgssehgmhgrihhlrdgtohhmpdhrtghpthhtohepihhl
-    phhordhjrghrvhhinhgvnheslhhinhhugidrihhnthgvlhdrtghomhdprhgtphhtthhope
-    hhuggvghhovgguvgesrhgvughhrghtrdgtohhmpdhrtghpthhtoheplhhinhhugidqkhgv
-    rhhnvghlsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtohepphhlrghtfhhorh
-    hmqdgurhhivhgvrhdqgiekieesvhhgvghrrdhkvghrnhgvlhdrohhrgh
-X-ME-Proxy: <xmx:88msZ_AYanWMMrDeB_NlW4EAW1-O-2mvN3iRSbroPVEEwQrZEYNYVQ>
-    <xmx:88msZ1eqt7I4XV9T66ke-kARspIJkyh2OBQ8mMakm7zXiCiruTBn_g>
-    <xmx:88msZ2N1tdE4Xd01E9VJl7KMVOi15G3ECvPnhUlJVg9YyQgPdpwf5g>
-    <xmx:88msZ3mJ5OMvakrO-0sznubxvQ6_KPv1rI1utD8MIC7vMcwzc-0P7w>
-    <xmx:88msZzo1FHqZdbY0OsnALn5pYDY-XUZxh3OuBuGun1zbgc3eyB17wZxs>
-Feedback-ID: ibe194615:Fastmail
-Received: by mailuser.phl.internal (Postfix, from userid 501)
-	id 074AB1F00072; Wed, 12 Feb 2025 11:18:59 -0500 (EST)
-X-Mailer: MessagingEngine.com Webmail Interface
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="TOOPV9PS"
+Received: by mail-ed1-f52.google.com with SMTP id 4fb4d7f45d1cf-5de63846e56so8480872a12.1
+        for <platform-driver-x86@vger.kernel.org>; Wed, 12 Feb 2025 08:46:03 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1739378761; x=1739983561; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=7/UVNzfG26hpAhqe/4xRhycTEgEJVFinn+tffb17O7s=;
+        b=TOOPV9PS9Bmi3g/f5j5x/20vyT6gwfScW7C7L/jMWKHmVmUtgGovtDWbtr6CNwRHS3
+         6/9e0sYHijaZXO7Q/qoInb7ZEmpagwbamP3TDKZE9E2XLGb3budFDBlz9A0LAmTNlik+
+         0IV6AYKL+ZeUNCu4tFZ8ooc0kj0A7Os849HoU=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1739378761; x=1739983561;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=7/UVNzfG26hpAhqe/4xRhycTEgEJVFinn+tffb17O7s=;
+        b=foDbRl4CZ6VX90D+yH48NzU0T1DKrUfgTQSl3a8KXtHEFn5dufd/3tDsW4Tgy+K/RB
+         Ugy4qK4JT/hsBIOBGyGMDEkX3nIw3A/SLBUmxezu2ecsMpBlzFe0+klXtQ1y0bRqPLhO
+         wVi21q+I7+cYWsXSijGs6fgQPHkvabUbpj6iTLV6krh+5bxtaZD7x2oFbbp6kQGaFoyI
+         1ph4FEIDZY34BzQYp7VW7kiDDAfjr3wuiTVcMi5SiSgumxNwx28YMdIhHLGf8K/NndD7
+         l64tc15eTtIXf8Ys3Rb7WiC+9spDtrruvKMBV4z5xe1eU5evwlAiXIKq5xjBOx89ecRE
+         Pejw==
+X-Forwarded-Encrypted: i=1; AJvYcCUoWYeMh7OjDz7eEDRMHUTLmDFM3c4QpfbfMh7BNpdxhYRvRRhwJFNDJR807rDDrtBogk7C3Gzn+WETnmfoQGZeuvA8@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz0wVfdwmUjGSFjYsU6SKB9XxGN7bI4YPOFrt9klhBpyd+B9HOK
+	XFTrahKlh17ewusQZ9kWIC/VCzk3c/4Eic9QAMxx/bggr6nyugP9GVOSQoCAT/kQN4GzLlln7y3
+	9k1U3
+X-Gm-Gg: ASbGncvG9hbgscTK0jy1tWyGk/a61FoVcA6pGfd5Jn5cil6l7ik9q33tLUI3axjh5h+
+	HykiQR7eT8EodQCRaIdDZLtsZEut2gr5K/agVBZ0dp6O5Szo2hkOaB8BPKK+55cNN74GTaA2Qjs
+	2bY1bgnOoFi3zU0WpoyQn2F+YzyZxSoVv50X98kqNGf3xqTfpQD10ROUAh7ozNj9dJLNCthaiAH
+	ObQJGtSpuPbpJfH4fPcvQ5HDBEDsdyA3cXBx8n9CXK+USGXE6OrYjMzY2abECgx34sRluMDi6yY
+	XfP7Oj5ndQqW0XnEEMkoZd+77pdrMkaydcZScdTuP+inNv9bFrmjz1s=
+X-Google-Smtp-Source: AGHT+IFA5v+Zuz7LYv5QAlq4VZL3xmeVmPE1UV8oJDVGIy4hDAeFlRhJ6daqNdjR+iiF7cTr9J1h+A==
+X-Received: by 2002:a05:6402:13cf:b0:5dc:929a:a726 with SMTP id 4fb4d7f45d1cf-5deb0bd6a79mr2782978a12.26.1739378760646;
+        Wed, 12 Feb 2025 08:46:00 -0800 (PST)
+Received: from mail-ed1-f41.google.com (mail-ed1-f41.google.com. [209.85.208.41])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5de59f893ebsm9156335a12.45.2025.02.12.08.45.59
+        for <platform-driver-x86@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 12 Feb 2025 08:45:59 -0800 (PST)
+Received: by mail-ed1-f41.google.com with SMTP id 4fb4d7f45d1cf-5de63846e56so8480769a12.1
+        for <platform-driver-x86@vger.kernel.org>; Wed, 12 Feb 2025 08:45:59 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCULU45hhQVeUoEx/RmTm9osQAzRhSJhMwwFcBlW5ketvgqXapjK8Xs5AYP/8ctdRkTRDDckTWHezAnZZGsagr3GZ0I6@vger.kernel.org
+X-Received: by 2002:a05:6512:1195:b0:545:9e1:e824 with SMTP id
+ 2adb3069b0e04-545184bc12fmr1571346e87.48.1739378317154; Wed, 12 Feb 2025
+ 08:38:37 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Date: Wed, 12 Feb 2025 11:18:38 -0500
-From: "Mark Pearson" <mpearson-lenovo@squebb.ca>
-To: =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Cc: "Hans de Goede" <hdegoede@redhat.com>,
- "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>,
- LKML <linux-kernel@vger.kernel.org>, "Kurt Borja" <kuurtb@gmail.com>
-Message-Id: <20c82ad3-03c2-45df-9835-b8dd63fdbb9e@app.fastmail.com>
-In-Reply-To: <6112b35f-fdb4-4beb-490e-03569ce9f17e@linux.intel.com>
-References: <mpearson-lenovo@squebb.ca>
- <20250211173620.16522-1-mpearson-lenovo@squebb.ca>
- <D7PSW9W74P7I.GBMKQD7EGPXT@gmail.com>
- <6112b35f-fdb4-4beb-490e-03569ce9f17e@linux.intel.com>
-Subject: Re: [PATCH v3] platform/x86: thinkpad_acpi: Fix registration of tpacpi
- platform driver
-Content-Type: text/plain; charset=utf-8
+References: <20250211-aux-device-create-helper-v3-0-7edb50524909@baylibre.com> <20250211-aux-device-create-helper-v3-3-7edb50524909@baylibre.com>
+In-Reply-To: <20250211-aux-device-create-helper-v3-3-7edb50524909@baylibre.com>
+From: Doug Anderson <dianders@chromium.org>
+Date: Wed, 12 Feb 2025 08:38:25 -0800
+X-Gmail-Original-Message-ID: <CAD=FV=WQsFzAmpcqSG-eAm6SW-i3Q7EdbxEKyuhyovVXVRxC8A@mail.gmail.com>
+X-Gm-Features: AWEUYZnEAQCx0nU_sk8MYOvtfC7Gu1h5Zsl0lbrfbQPnQTV4y2laVQqsVCR6NTE
+Message-ID: <CAD=FV=WQsFzAmpcqSG-eAm6SW-i3Q7EdbxEKyuhyovVXVRxC8A@mail.gmail.com>
+Subject: Re: [PATCH v3 3/7] drm/bridge: ti-sn65dsi86: use the auxiliary device
+ creation helper
+To: Jerome Brunet <jbrunet@baylibre.com>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Dave Ertman <david.m.ertman@intel.com>, 
+	Ira Weiny <ira.weiny@intel.com>, "Rafael J. Wysocki" <rafael@kernel.org>, Stephen Boyd <sboyd@kernel.org>, 
+	Arnd Bergmann <arnd@arndb.de>, Danilo Krummrich <dakr@kernel.org>, 
+	Conor Dooley <conor.dooley@microchip.com>, Daire McNamara <daire.mcnamara@microchip.com>, 
+	Philipp Zabel <p.zabel@pengutronix.de>, Andrzej Hajda <andrzej.hajda@intel.com>, 
+	Neil Armstrong <neil.armstrong@linaro.org>, Robert Foss <rfoss@kernel.org>, 
+	Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, Jonas Karlman <jonas@kwiboo.se>, 
+	Jernej Skrabec <jernej.skrabec@gmail.com>, 
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>, 
+	Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
+	Hans de Goede <hdegoede@redhat.com>, =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, 
+	"Bryan O'Donoghue" <bryan.odonoghue@linaro.org>, 
+	Vladimir Kondratiev <vladimir.kondratiev@mobileye.com>, 
+	Gregory CLEMENT <gregory.clement@bootlin.com>, =?UTF-8?B?VGjDqW8gTGVicnVu?= <theo.lebrun@bootlin.com>, 
+	Michael Turquette <mturquette@baylibre.com>, Abel Vesa <abelvesa@kernel.org>, 
+	Peng Fan <peng.fan@nxp.com>, Shawn Guo <shawnguo@kernel.org>, 
+	Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>, 
+	Fabio Estevam <festevam@gmail.com>, Kevin Hilman <khilman@baylibre.com>, 
+	Martin Blumenstingl <martin.blumenstingl@googlemail.com>, linux-kernel@vger.kernel.org, 
+	linux-riscv@lists.infradead.org, dri-devel@lists.freedesktop.org, 
+	platform-driver-x86@vger.kernel.org, linux-mips@vger.kernel.org, 
+	linux-clk@vger.kernel.org, imx@lists.linux.dev, 
+	linux-arm-kernel@lists.infradead.org, linux-amlogic@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Wed, Feb 12, 2025, at 6:50 AM, Ilpo J=C3=A4rvinen wrote:
-> On Tue, 11 Feb 2025, Kurt Borja wrote:
->
->> On Tue Feb 11, 2025 at 12:36 PM -05, Mark Pearson wrote:
->> > When reviewing and testing the recent platform profile changes I had
->> > missed that they prevent the tpacpi platform driver from registerin=
-g.
->> > This error is seen in the kernel logs, and the various tpacpi entri=
-es
->> > are not created:
->> > [ 7550.642171] platform thinkpad_acpi: Resources present before pro=
-bing
->> >
->> > This happens because devm_platform_profile_register() is called bef=
-ore
->> > tpacpi_pdev probes (thanks to Kurt Borja for identifying root cause)
->> >
->> > For now revert back to the old platform_profile_register to fix the
->> > issue. Will work on re-implementing this later as more testing is n=
-eeded
->> > for full solution.
->
-> Hi Mark,
->
-> I've applied this to the review-ilpo-branch. I had to rewrite parts of=20
-> your changelog though to not say "I did/will do this and that". In fut=
-ure,
-> please just state the simple facts. What the issue is and so on, do no=
-t=20
-> write a story about how you came to find that out. :-)
->
-Ah - apologies, and thank you.
-Mark
+Hi,
 
-> --=20
->  i.
+On Tue, Feb 11, 2025 at 9:28=E2=80=AFAM Jerome Brunet <jbrunet@baylibre.com=
+> wrote:
 >
->> > Tested on X1 Carbon G12.
->> >
->> > Fixes: 31658c916fa6 ("platform/x86: thinkpad_acpi: Use devm_platfor=
-m_profile_register()")
->> >
->> > Signed-off-by: Mark Pearson <mpearson-lenovo@squebb.ca>
->>=20
->> I believe this is done now!
->>=20
->> Reviewed-by: Kurt Borja <kuurtb@gmail.com>
->>=20
->> > ---
->> > Changes in v2:
->> > Modified approach to instead revert to old platform_profile_register
->> > method. Will revisit using devm_ version in the future as more test=
-ing
->> > needed.
->> > Changes in v3:
->> > Add check if tpacpi_pprof is valid before releasing.
->> >
->> >  drivers/platform/x86/thinkpad_acpi.c | 11 +++++++++--
->> >  1 file changed, 9 insertions(+), 2 deletions(-)
->> >
->> > diff --git a/drivers/platform/x86/thinkpad_acpi.c b/drivers/platfor=
-m/x86/thinkpad_acpi.c
->> > index 1fcb0f99695a..9f6d7e26e700 100644
->> > --- a/drivers/platform/x86/thinkpad_acpi.c
->> > +++ b/drivers/platform/x86/thinkpad_acpi.c
->> > @@ -10646,8 +10646,8 @@ static int tpacpi_dytc_profile_init(struct =
-ibm_init_struct *iibm)
->> >  			"DYTC version %d: thermal mode available\n", dytc_version);
->> > =20
->> >  	/* Create platform_profile structure and register */
->> > -	tpacpi_pprof =3D devm_platform_profile_register(&tpacpi_pdev->dev=
-, "thinkpad-acpi",
->> > -						      NULL, &dytc_profile_ops);
->> > +	tpacpi_pprof =3D platform_profile_register(&tpacpi_pdev->dev, "th=
-inkpad-acpi-profile",
->> > +						 NULL, &dytc_profile_ops);
->> >  	/*
->> >  	 * If for some reason platform_profiles aren't enabled
->> >  	 * don't quit terminally.
->> > @@ -10665,8 +10665,15 @@ static int tpacpi_dytc_profile_init(struct=
- ibm_init_struct *iibm)
->> >  	return 0;
->> >  }
->> > =20
->> > +static void dytc_profile_exit(void)
->> > +{
->> > +	if (!IS_ERR_OR_NULL(tpacpi_pprof))
->> > +		platform_profile_remove(tpacpi_pprof);
->> > +}
->> > +
->> >  static struct ibm_struct  dytc_profile_driver_data =3D {
->> >  	.name =3D "dytc-profile",
->> > +	.exit =3D dytc_profile_exit,
->> >  };
->> > =20
->> >  /*****************************************************************=
-********
->>
+> The auxiliary device creation of this driver is simple enough to
+> use the available auxiliary device creation helper.
+>
+> Use it and remove some boilerplate code.
+>
+> Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
+> ---
+>  drivers/gpu/drm/bridge/ti-sn65dsi86.c | 84 +++++++++--------------------=
+------
+>  1 file changed, 20 insertions(+), 64 deletions(-)
+
+Thanks for creating the helpers and getting rid of some boilerplate!
+This conflicts with commit 574f5ee2c85a ("drm/bridge: ti-sn65dsi86:
+Fix multiple instances") which is in drm-next, though. Please resolve.
+
+Since nothing here is urgent, I would assume patch #1 would land and
+then we'd just wait until it made it to mainline before landing the
+other patches in their respective trees?
+
+
+> -static int ti_sn65dsi86_add_aux_device(struct ti_sn65dsi86 *pdata,
+> -                                      struct auxiliary_device **aux_out,
+> -                                      const char *name)
+> -{
+> -       struct device *dev =3D pdata->dev;
+> -       struct auxiliary_device *aux;
+> -       int ret;
+> -
+> -       aux =3D kzalloc(sizeof(*aux), GFP_KERNEL);
+> -       if (!aux)
+> -               return -ENOMEM;
+> -
+> -       aux->name =3D name;
+> -       aux->dev.parent =3D dev;
+> -       aux->dev.release =3D ti_sn65dsi86_aux_device_release;
+> -       device_set_of_node_from_dev(&aux->dev, dev);
+> -       ret =3D auxiliary_device_init(aux);
+> -       if (ret) {
+> -               kfree(aux);
+> -               return ret;
+> -       }
+> -       ret =3D devm_add_action_or_reset(dev, ti_sn65dsi86_uninit_aux, au=
+x);
+> -       if (ret)
+> -               return ret;
+> -
+> -       ret =3D auxiliary_device_add(aux);
+> -       if (ret)
+> -               return ret;
+> -       ret =3D devm_add_action_or_reset(dev, ti_sn65dsi86_delete_aux, au=
+x);
+> -       if (!ret)
+> -               *aux_out =3D aux;
+
+I notice that your new code has one fewer devm_add_action_or_reset()
+than the code here which you're replacing. That means it needs to call
+"uninit" explicitly in one extra place. It still seems clean enough,
+though, so I don't have any real objections to the way you're doing it
+there. ;-)
+
+-Doug
