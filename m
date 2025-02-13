@@ -1,86 +1,61 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B927C221570;
-	Thu, 13 Feb 2025 12:57:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8355A23F420;
+	Thu, 13 Feb 2025 13:17:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739451424; cv=none; b=iw64Gt6p1PR2zT4uoYjDuSIf28QbJKxSM8sUHV9fAQ2i4p0bhkejbyDjzhskF/HHCZbc/hGBVCzkkJ96m3wY8YG7iXConIS6Z1HNqQYTu/QM8MZwcuEogCBoFQ8JNXeHBfjVA2UgPhc03BY9gkIf9t7NYu3nvutJV7dBH08KaeM=
+	t=1739452634; cv=none; b=n1DG42NuhnurANz1cs7xmPgpeCnhF0hKS5xWGSDmSI/Jp8E2Bmtbc8IQ47f/ubNK2X/HlJ1sWEVtmRyJ4kFIVXS8kSI37+2siULkqurhV/pgynbH3VgseMmEK/YFnQde6SoGTveBx17LXmeNd8H7OnP/3xXUAEIFGvgZUlepUtg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739451424; c=relaxed/simple;
-	bh=4XOKJP5C9KasCvv9RRiGNI4Xj2vhZlzPXtPpNzDC/WM=;
+	s=arc-20240116; t=1739452634; c=relaxed/simple;
+	bh=B6LIoz76z42FvSq9wox6H1rI2ql14MAd7eBVBROWw34=;
 	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=ZSbBxm5A9ZZG8cNYzI4hznFQoOXvTMNGR0ASKVE5DnXg49PgX86BWG6E7Hqse2OvYTQR/W+EuyHDa4U17K8BlhRQT6bM5YMLjSjy5AZjMYYPS9KOHG8YSuiTwKN5nFCd3P8eVR1mvY9e6NQXHgSYzVW8YuwkH30iu/ZmiqZzoc0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=QU/FYJCz; arc=none smtp.client-ip=198.175.65.9
+	 MIME-Version:Content-Type; b=JRU2RptH90i9GgmipTpEK83sXiEsJbPMZTi2d1C2C2kA4Cpew5toRdmhkJY7a5qu1xubzE78ofDuuvvw5Y5GfVkDttlXXnlGgk/8VcTcfQ8g0W/dpAxM+z1IcszyUkd21tYB8G93OQzjtac+qICLSJau1T0W4DoddssQrfvZnII=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=QhRSisuz; arc=none smtp.client-ip=198.175.65.13
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="QU/FYJCz"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="QhRSisuz"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1739451422; x=1770987422;
+  t=1739452633; x=1770988633;
   h=from:date:to:cc:subject:in-reply-to:message-id:
    references:mime-version;
-  bh=4XOKJP5C9KasCvv9RRiGNI4Xj2vhZlzPXtPpNzDC/WM=;
-  b=QU/FYJCzhIjzo341v5A/bg6Od6h6HOghiZjSzvMJwjLy7tkDdbaLDc3L
-   3FFQFlSzxPr4TiUjEqPJo7kUwGb+CJlX6fml6y+ARJxgKKWrInznl0O20
-   xoHWDA4AWpaj3ZbWNfyiZ77ENjnQXBj6naZu3bojquWjkZrNUtBGTRwYi
-   V4fHdJArHD7/nmaZ+9EtaZpcF/KyYixSoCfM8yjCCEU1l1ybslvNDMdN/
-   /A/DDm2dR4mLiZihRKt83z0lMXcLYFYgurfLko6Qo8tumBavM6NaZfmXH
-   PHqo44MoHM/oxaqq+dYLJBl6AzO4gUh3ZMHrx8FhCkqKMk867R0z/nORR
+  bh=B6LIoz76z42FvSq9wox6H1rI2ql14MAd7eBVBROWw34=;
+  b=QhRSisuzSTH1ZKt4gf4R4WARIYYi/8LNYjVp14KbdxjmabPsscz1nxOw
+   ySA15utEHCoSeZWLP+nZZcuws+sh3doTy6qrs/0nX65XtjlUOWI5nXsFn
+   4YyD/CnjN+y3yvaeMWKgcew0o352cmXpfY1SIXq/O/Qya4TDWTsTkJ40z
+   le4xMaNq/BSz4ciKD6wtYd/XhEIkql0s9zZYLghZuav2Pf0AgmUINrH5j
+   4RtTrgesGDZ50d6Cv51FPxOWVRtyf5PHwr1l3aNHozx2XnXEja8EEpG6c
+   vzV16563rzTcD2QqcTaJ2RR7geXPBT1t1KzgP7845STqq5Stfq07iOEVb
    g==;
-X-CSE-ConnectionGUID: 0ZO1uGS+RGqoS01anVe/DA==
-X-CSE-MsgGUID: Mu+f7V+SQqGjuugVvUO1oQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11344"; a="62619422"
+X-CSE-ConnectionGUID: 6tcsXL7xSEeKExQ84x9H2Q==
+X-CSE-MsgGUID: eo4kq021QWq3zT7Yjppf9Q==
+X-IronPort-AV: E=McAfee;i="6700,10204,11344"; a="51134996"
 X-IronPort-AV: E=Sophos;i="6.13,282,1732608000"; 
-   d="scan'208";a="62619422"
-Received: from orviesa010.jf.intel.com ([10.64.159.150])
-  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Feb 2025 04:57:01 -0800
-X-CSE-ConnectionGUID: ThDS0Z6ISMGS8HTigpxZiA==
-X-CSE-MsgGUID: x6AFKZzsRDeJj1srwh0IiQ==
+   d="scan'208";a="51134996"
+Received: from orviesa006.jf.intel.com ([10.64.159.146])
+  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Feb 2025 05:17:12 -0800
+X-CSE-ConnectionGUID: Fv40il9nTj+lujsTW6THIw==
+X-CSE-MsgGUID: LbHAWfgGQ9SUcGg83Pgv2g==
 X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
-   d="scan'208";a="112973137"
+X-IronPort-AV: E=Sophos;i="6.13,282,1732608000"; 
+   d="scan'208";a="113086389"
 Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.48])
-  by orviesa010-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Feb 2025 04:56:46 -0800
+  by orviesa006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Feb 2025 05:17:08 -0800
 From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Thu, 13 Feb 2025 14:56:44 +0200 (EET)
-To: Jerome Brunet <jbrunet@baylibre.com>
-cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
-    Dave Ertman <david.m.ertman@intel.com>, Ira Weiny <ira.weiny@intel.com>, 
-    "Rafael J. Wysocki" <rafael@kernel.org>, Stephen Boyd <sboyd@kernel.org>, 
-    Arnd Bergmann <arnd@arndb.de>, Danilo Krummrich <dakr@kernel.org>, 
-    Conor Dooley <conor.dooley@microchip.com>, 
-    Daire McNamara <daire.mcnamara@microchip.com>, 
-    Philipp Zabel <p.zabel@pengutronix.de>, 
-    Douglas Anderson <dianders@chromium.org>, 
-    Andrzej Hajda <andrzej.hajda@intel.com>, 
-    Neil Armstrong <neil.armstrong@linaro.org>, Robert Foss <rfoss@kernel.org>, 
-    Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, 
-    Jonas Karlman <jonas@kwiboo.se>, Jernej Skrabec <jernej.skrabec@gmail.com>, 
-    Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
-    Maxime Ripard <mripard@kernel.org>, 
-    Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, 
-    Simona Vetter <simona@ffwll.ch>, Hans de Goede <hdegoede@redhat.com>, 
-    Bryan O'Donoghue <bryan.odonoghue@linaro.org>, 
-    Vladimir Kondratiev <vladimir.kondratiev@mobileye.com>, 
-    Gregory CLEMENT <gregory.clement@bootlin.com>, 
-    =?ISO-8859-15?Q?Th=E9o_Lebrun?= <theo.lebrun@bootlin.com>, 
-    Michael Turquette <mturquette@baylibre.com>, 
-    Abel Vesa <abelvesa@kernel.org>, Peng Fan <peng.fan@nxp.com>, 
-    Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, 
-    Pengutronix Kernel Team <kernel@pengutronix.de>, 
-    Fabio Estevam <festevam@gmail.com>, Kevin Hilman <khilman@baylibre.com>, 
-    Martin Blumenstingl <martin.blumenstingl@googlemail.com>, 
-    LKML <linux-kernel@vger.kernel.org>, linux-riscv@lists.infradead.org, 
-    dri-devel@lists.freedesktop.org, platform-driver-x86@vger.kernel.org, 
-    linux-mips@vger.kernel.org, linux-clk@vger.kernel.org, imx@lists.linux.dev, 
-    linux-arm-kernel@lists.infradead.org, linux-amlogic@lists.infradead.org
-Subject: Re: [PATCH v3 4/7] platform: arm64: lenovo-yoga-c630: use the
- auxiliary device creation helper
-In-Reply-To: <20250211-aux-device-create-helper-v3-4-7edb50524909@baylibre.com>
-Message-ID: <0e83224d-9517-48f4-f030-b622c5d39d48@linux.intel.com>
-References: <20250211-aux-device-create-helper-v3-0-7edb50524909@baylibre.com> <20250211-aux-device-create-helper-v3-4-7edb50524909@baylibre.com>
+Date: Thu, 13 Feb 2025 15:17:03 +0200 (EET)
+To: Armin Wolf <W_Armin@gmx.de>
+cc: james@equiv.tech, markpearson@lenovo.com, jorge.lopez2@hp.com, 
+    jdelvare@suse.com, linux@roeck-us.net, linux-hwmon@vger.kernel.org, 
+    LKML <linux-kernel@vger.kernel.org>, Hans de Goede <hdegoede@redhat.com>, 
+    platform-driver-x86@vger.kernel.org, corbet@lwn.net, 
+    linux-doc@vger.kernel.org
+Subject: Re: [PATCH 3/7] platform/x86: think-lmi: Use WMI bus API when
+ accessing BIOS settings
+In-Reply-To: <20250203182322.384883-4-W_Armin@gmx.de>
+Message-ID: <0dd7bda3-bf76-228b-27f3-f057e80e3a03@linux.intel.com>
+References: <20250203182322.384883-1-W_Armin@gmx.de> <20250203182322.384883-4-W_Armin@gmx.de>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -89,83 +64,134 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 
-On Tue, 11 Feb 2025, Jerome Brunet wrote:
+On Mon, 3 Feb 2025, Armin Wolf wrote:
 
-> The auxiliary device creation of this driver is simple enough to
-> use the available auxiliary device creation helper.
+> Since the driver already binds to LENOVO_BIOS_SETTING_GUID, using
+> wmidev_block_query() inside tlmi_setting() allows for faster
+> access to BIOS settings.
 > 
-> Use it and remove some boilerplate code.
-> 
-> Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
+> Signed-off-by: Armin Wolf <W_Armin@gmx.de>
 > ---
->  drivers/platform/arm64/lenovo-yoga-c630.c | 42 +++----------------------------
->  1 file changed, 4 insertions(+), 38 deletions(-)
+>  drivers/platform/x86/think-lmi.c | 23 +++++++++--------------
+>  drivers/platform/x86/think-lmi.h |  2 ++
+>  2 files changed, 11 insertions(+), 14 deletions(-)
 > 
-> diff --git a/drivers/platform/arm64/lenovo-yoga-c630.c b/drivers/platform/arm64/lenovo-yoga-c630.c
-> index 1f05c9a6a89d5ee146144062f5d2e36795c56639..921a93d4ea39ac54344cc964e2805e974cc7e808 100644
-> --- a/drivers/platform/arm64/lenovo-yoga-c630.c
-> +++ b/drivers/platform/arm64/lenovo-yoga-c630.c
-> @@ -191,50 +191,16 @@ void yoga_c630_ec_unregister_notify(struct yoga_c630_ec *ec, struct notifier_blo
+> diff --git a/drivers/platform/x86/think-lmi.c b/drivers/platform/x86/think-lmi.c
+> index 2c94a4af9a1d..0fc275e461be 100644
+> --- a/drivers/platform/x86/think-lmi.c
+> +++ b/drivers/platform/x86/think-lmi.c
+> @@ -344,20 +344,14 @@ static int tlmi_opcode_setting(char *setting, const char *value)
+>  	return ret;
 >  }
->  EXPORT_SYMBOL_GPL(yoga_c630_ec_unregister_notify);
->  
-> -static void yoga_c630_aux_release(struct device *dev)
-> -{
-> -	struct auxiliary_device *adev = to_auxiliary_dev(dev);
-> -
-> -	kfree(adev);
-> -}
-> -
-> -static void yoga_c630_aux_remove(void *data)
-> -{
-> -	struct auxiliary_device *adev = data;
-> -
-> -	auxiliary_device_delete(adev);
-> -	auxiliary_device_uninit(adev);
-> -}
-> -
->  static int yoga_c630_aux_init(struct device *parent, const char *name,
->  			      struct yoga_c630_ec *ec)
+> 
+> -static int tlmi_setting(int item, char **value, const char *guid_string)
+> +static int tlmi_setting(struct wmi_device *wdev, int item, char **value)
 >  {
->  	struct auxiliary_device *adev;
-> -	int ret;
-> -
-> -	adev = kzalloc(sizeof(*adev), GFP_KERNEL);
-> -	if (!adev)
-> -		return -ENOMEM;
-> -
-> -	adev->name = name;
-> -	adev->id = 0;
-> -	adev->dev.parent = parent;
-> -	adev->dev.release = yoga_c630_aux_release;
-> -	adev->dev.platform_data = ec;
->  
-> -	ret = auxiliary_device_init(adev);
-> -	if (ret) {
-> -		kfree(adev);
-> -		return ret;
-> -	}
-> -
-> -	ret = auxiliary_device_add(adev);
-> -	if (ret) {
-> -		auxiliary_device_uninit(adev);
-> -		return ret;
-> -	}
-> +	adev = devm_auxiliary_device_create(parent, name, ec, 0);
-> +	if (IS_ERR(adev))
-> +		return PTR_ERR(adev);
->  
-> -	return devm_add_action_or_reset(parent, yoga_c630_aux_remove, adev);
-> +	return 0;
-
-return PTR_ERR_OR_ZERO()
-
->  }
->  
->  static int yoga_c630_ec_probe(struct i2c_client *client)
+> -	struct acpi_buffer output = { ACPI_ALLOCATE_BUFFER, NULL };
+>  	union acpi_object *obj;
+> -	acpi_status status;
+>  	int ret;
 > 
-> 
+> -	status = wmi_query_block(guid_string, item, &output);
+> -	if (ACPI_FAILURE(status))
+> -		return -EIO;
+> -
+> -	obj = output.pointer;
+> +	obj = wmidev_block_query(wdev, item);
+>  	if (!obj)
+> -		return -ENODATA;
+> +		return -EIO;
+
+Hi Armin,
+
+I'm trying to understand why there are these back and forth changes in the 
+error code.
+
+It almost looks to me like wmidev_block_query() would want to return the 
+error code itself because after you abstracted this code using 
+wmidev_block_query(), you had to change the error code because you no 
+longer have access to the key detail to decide which error code should be 
+returned. That is, use ERR_PTR() inside wmidev_block_query() and the 
+callers should just pass that error code on with IS_ERR & friends?
 
 -- 
  i.
 
+>  	ret = tlmi_extract_output_string(obj, value);
+>  	kfree(obj);
+> @@ -995,7 +989,7 @@ static ssize_t current_value_show(struct kobject *kobj, struct kobj_attribute *a
+>  	char *item, *value;
+>  	int ret;
+> 
+> -	ret = tlmi_setting(setting->index, &item, LENOVO_BIOS_SETTING_GUID);
+> +	ret = tlmi_setting(setting->wdev, setting->index, &item);
+>  	if (ret)
+>  		return ret;
+> 
+> @@ -1588,7 +1582,7 @@ static struct tlmi_pwd_setting *tlmi_create_auth(const char *pwd_type,
+>  	return new_pwd;
+>  }
+> 
+> -static int tlmi_analyze(void)
+> +static int tlmi_analyze(struct wmi_device *wdev)
+>  {
+>  	int i, ret;
+> 
+> @@ -1625,7 +1619,7 @@ static int tlmi_analyze(void)
+>  		char *item = NULL;
+> 
+>  		tlmi_priv.setting[i] = NULL;
+> -		ret = tlmi_setting(i, &item, LENOVO_BIOS_SETTING_GUID);
+> +		ret = tlmi_setting(wdev, i, &item);
+>  		if (ret)
+>  			break;
+>  		if (!item)
+> @@ -1648,6 +1642,7 @@ static int tlmi_analyze(void)
+>  			kfree(item);
+>  			goto fail_clear_attr;
+>  		}
+> +		setting->wdev = wdev;
+>  		setting->index = i;
+>  		strscpy(setting->display_name, item);
+>  		/* If BIOS selections supported, load those */
+> @@ -1666,7 +1661,7 @@ static int tlmi_analyze(void)
+>  			 */
+>  			char *optitem, *optstart, *optend;
+> 
+> -			if (!tlmi_setting(setting->index, &optitem, LENOVO_BIOS_SETTING_GUID)) {
+> +			if (!tlmi_setting(setting->wdev, setting->index, &optitem)) {
+>  				optstart = strstr(optitem, "[Optional:");
+>  				if (optstart) {
+>  					optstart += strlen("[Optional:");
+> @@ -1791,7 +1786,7 @@ static int tlmi_probe(struct wmi_device *wdev, const void *context)
+>  {
+>  	int ret;
+> 
+> -	ret = tlmi_analyze();
+> +	ret = tlmi_analyze(wdev);
+>  	if (ret)
+>  		return ret;
+> 
+> diff --git a/drivers/platform/x86/think-lmi.h b/drivers/platform/x86/think-lmi.h
+> index f267d8b46957..a80452482227 100644
+> --- a/drivers/platform/x86/think-lmi.h
+> +++ b/drivers/platform/x86/think-lmi.h
+> @@ -4,6 +4,7 @@
+>  #define _THINK_LMI_H_
+> 
+>  #include <linux/types.h>
+> +#include <linux/wmi.h>
+> 
+>  #define TLMI_SETTINGS_COUNT  256
+>  #define TLMI_SETTINGS_MAXLEN 512
+> @@ -87,6 +88,7 @@ struct tlmi_pwd_setting {
+>  /* Attribute setting details */
+>  struct tlmi_attr_setting {
+>  	struct kobject kobj;
+> +	struct wmi_device *wdev;
+>  	int index;
+>  	char display_name[TLMI_SETTINGS_MAXLEN];
+>  	char *possible_values;
+> --
+> 2.39.5
+> 
