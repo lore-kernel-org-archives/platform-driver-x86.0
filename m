@@ -1,117 +1,234 @@
-Received: from mout.gmx.net (mout.gmx.net [212.227.15.15])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yb1-f174.google.com (mail-yb1-f174.google.com [209.85.219.174])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 19CF91DDA18;
-	Fri, 14 Feb 2025 22:13:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A45BA1953A9;
+	Fri, 14 Feb 2025 22:21:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739571220; cv=none; b=bQKyamMbcV9mMXy2IRD4eK3T5nZKYcTzSPtLJwilxAvHjN4/SVPg2mLMcClrlPga+sHgd2aAuJ7HhxsVGN6ONbXey6chdma3FiOxuGAYiNuJGhHyoc35bGqYun8mtp+r0iYHeQodRC7iA+hEWzvg2bSFNUXg9IadzS1Fu1Ff0js=
+	t=1739571665; cv=none; b=oG3iwyJexfyKDdafrtkXE+p6UT5voiOb12G6gT4o39Qc/sxyxJFdXdbB2UH8Fh/bXtqifcaaKYRD9vXKx4U+4mNPzEe87gRiO+VbR6SbZwm4NrUs4mQgCh50O+wENSr2bArmEoeCZSmNTjvWsK66lYlmIGsH7BGrH3XSQSR2r1c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739571220; c=relaxed/simple;
-	bh=ba+hn+IBiz5wojCra6hymsACBfDSU5cpcyTnl70wcJM=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=r4+owbehTWmAWg0P95QT3WZuVMAtyXiBDZIe02ibgj/C4M9AdPUUtyt+YND7PL4xrTqx28tEsTZAIMH1m3b5Qpvu7HXZvxILbflnApE3qXUCs9ob0dh0XSs9TMeylJhpcmvg7LUg1PfYGhqKgy+m93xW1HYqtThCy3oJdU/q404=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b=exJYMU0T; arc=none smtp.client-ip=212.227.15.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
+	s=arc-20240116; t=1739571665; c=relaxed/simple;
+	bh=P/RRMN7AF8IFICtHDY7oRoDtgj4lkWR22FjVtVNQ/OU=;
+	h=Mime-Version:Content-Type:Date:Message-Id:Cc:Subject:From:To:
+	 References:In-Reply-To; b=WkNZ1UFfbJ9Xl6WLsH5Y73OEUDrIMjUVCatiOklm0MQixv/SOafVi/83GYa+9yET9PDXlnaYJI9U3/Dynmal84IgsYXuCr7FvBoqWBclD7dwOBdeb6I768d6ZQpyeevdRgOtjQlR/fn4tePnOItjCIigJXrb3MXSJRIGceXwJjI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=akpQF6NY; arc=none smtp.client-ip=209.85.219.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b="exJYMU0T"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.de;
-	s=s31663417; t=1739571216; x=1740176016; i=w_armin@gmx.de;
-	bh=xB8nfcIGfWAml1wS6DRi4V1OxOYZOMijucslZC0RTIw=;
-	h=X-UI-Sender-Class:From:To:Cc:Subject:Date:Message-Id:In-Reply-To:
-	 References:MIME-Version:Content-Transfer-Encoding:cc:
-	 content-transfer-encoding:content-type:date:from:message-id:
-	 mime-version:reply-to:subject:to;
-	b=exJYMU0TwtBR1SJjNOn4BYPTgJBVumYgbz7U0sDChGBSyEVUxcHDK0eTpCUto/af
-	 XrGdbxXwYtolEy1wQrhB1jX7oCKmrGmAifLTG8+XMTbXiL90K3KzR9U6RCjd8BebL
-	 MUQ9ZV0dm94HmggwZVOgAPTIqMlM4I4itU+68caOA9tkZ87HIPmIpEzn7vvKTycXq
-	 aq+4BFcrx6QeevptHZmTWBUx9/IuFy5Ni+l+l89JppQWOZPw8LEisp1rFKLhV2idR
-	 5KTYdLMXrdyo3btz3R0xoPUrfEBZInNBpfFBCgkHv7nFu/e6JgYsTRj9uaAgeGtbD
-	 /5aIyxrmPUB0KVDXeg==
-X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
-Received: from mx-amd-b650.fritz.box ([87.177.78.219]) by mail.gmx.net
- (mrgmx005 [212.227.17.190]) with ESMTPSA (Nemesis) id
- 1N5VHM-1tKAfl44ja-00zr26; Fri, 14 Feb 2025 23:13:36 +0100
-From: Armin Wolf <W_Armin@gmx.de>
-To: jlee@suse.com,
-	basak.sb2006@gmail.com,
-	rayanmargham4@gmail.com
-Cc: hdegoede@redhat.com,
-	ilpo.jarvinen@linux.intel.com,
-	platform-driver-x86@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [RFC PATCH 3/3] platform/x86: acer-wmi: Enable fan control for PH16-72 and PT14-51
-Date: Fri, 14 Feb 2025 23:13:22 +0100
-Message-Id: <20250214221322.47298-4-W_Armin@gmx.de>
-X-Mailer: git-send-email 2.39.5
-In-Reply-To: <20250214221322.47298-1-W_Armin@gmx.de>
-References: <20250214221322.47298-1-W_Armin@gmx.de>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="akpQF6NY"
+Received: by mail-yb1-f174.google.com with SMTP id 3f1490d57ef6-e5dab3f372aso2017306276.1;
+        Fri, 14 Feb 2025 14:21:03 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1739571662; x=1740176462; darn=vger.kernel.org;
+        h=in-reply-to:references:to:from:subject:cc:message-id:date
+         :content-transfer-encoding:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=HBPGRdyN7h2fkoOnWWbLDJG7PIvR+TIVzq4NHRIF6Pg=;
+        b=akpQF6NYbM2TCt3ibAzflnO/1FplmtG7iNVZ1k+w/HQXLEjQjIhgTqFGZkHyXzLi4r
+         cFa4gz7zdhcXhrztUW59A3XZIcZJyceehGZBBSPzTddug+xiD4KB4Qq5SY4cJnTYaMoX
+         stAgO0FpQEsvEp/Rs2LtwEwX92jJsWXL0plPVHNr2yypPZyHWRrCn8o9R8uXr/WjqQKw
+         /3u/Ubot6kdws8OqqTBMV2KiQdf5NNH4qmg9x5Htu7JMGreccAyZ0+AdKP9HtGZ+FAEu
+         FjCL0Lu2LSjY0fMGtF/NAukINmRgHhpk1GN/U8GBRxuEqiQE9OxOcVcCL+ddOQ24UBEN
+         pBVQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1739571662; x=1740176462;
+        h=in-reply-to:references:to:from:subject:cc:message-id:date
+         :content-transfer-encoding:mime-version:x-gm-message-state:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=HBPGRdyN7h2fkoOnWWbLDJG7PIvR+TIVzq4NHRIF6Pg=;
+        b=FxGsMT4SPeNLOHiSmq9c0PY2bNvOcqZx+Rgdw/uIn6M7zVwNtpRdE4AFcuDY/Ly7Jh
+         gMNdT+vN/6EiW/X1cHJC6knTZQlUCkKbvkr2DuQCnv6AXCwp7Sxi8UF5vWLToUXf18Db
+         /2uZW5GWFgdrCPBRmwlQSeKh3HkE4GaWSEGFlIFaEUTJijUugD+rzGqe9dEKy67OUBJp
+         iab8lbMTS9GdxwmfnYaijfEcFGxNl4Ndfo5ThXSHY5d+haEiGkPFp3fjFCugUS1rr8Za
+         nPm+Luh1mRFUyZrnmkatcVrQP8LJpGJakJGoBySxNceztNat7sksfJgnfk/1nKpSuP9k
+         HtEg==
+X-Forwarded-Encrypted: i=1; AJvYcCV9qJLoWVCm44ykdcSwIV7FUKXSGKwTIiTpQBP8Ov9LM78voEK0YP9//lqRSu+wkyYQ5pr23H1FzPQLM6o=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxnS8xYN0WndqDdKEOtylTFpVFuPVpGzZAVNxBjrXUYhsros3EI
+	OG1aPVbKlEWammgdONl+FHUnAwoHyWlVHld3gIHVlxzeLPhemB80
+X-Gm-Gg: ASbGncvKHlwmiCmOEt6hsDkJdVq94QIIAv3h1pc78Q3sJ2ZlNrWWb0h+31PKXEEflLI
+	gTlP7aOVaRjfeqdjb5YOznDgByzz6esDe5r+4hnFxHOLM4LZDyB2E7DduzcTvKrbGb6wuzgqBmW
+	2BIoP0spN/aW0NtxJbyfGeMFB3O1aDOjj91aF0npJ9ozcCbhe5wsEG3GpvgTp2rooE+/W2K+oCR
+	rFg4CV5/qiukccqlvtnfwQfLPPc2Jm13oqK5Ze5m2GCF/gASeo/qU7lsd/iQ0G5OIgP8CFtWMO+
+	RXkw9ds=
+X-Google-Smtp-Source: AGHT+IElibYHHLBXYhijveLyI6yk8PVx1RQ0B3R7NKp/2QB4o9FD4fvD7SIBkkCd8p8FAHR63jarbA==
+X-Received: by 2002:a05:6902:3483:b0:e58:b99:6a5b with SMTP id 3f1490d57ef6-e5dc980afebmr815410276.8.1739571662537;
+        Fri, 14 Feb 2025 14:21:02 -0800 (PST)
+Received: from localhost ([2800:bf0:82:3d2:9e61:1a62:1a8c:3e62])
+        by smtp.gmail.com with ESMTPSA id 3f1490d57ef6-e5dadeca97bsm1237760276.32.2025.02.14.14.21.00
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 14 Feb 2025 14:21:01 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
+Mime-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:h7/6J+EORcteXthSIviSokhcGBTy+kDnJLN+kTO/DlegZ23urgd
- p7volsIYHcdfSpEqEregNVGQlfoZwvJ3x7RSh5Ke7LS25L17hGo5L5j4FnC6DzGObTF421l
- 2aaGeE1BUx3IoZA0lJ/Zs1a/0LplMycuereRdMrJT8wDkszkFdHf3xzzgJ7Vkcih1qsQ01Z
- xzimeTNr1buGHWqvWyWCQ==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:1XHGzZrp/z0=;9MBh75K3zSza1kS/i/94r6U0+oT
- g4Tb7dknFZIJm57UZnFjWdeGTGh8olQP3TWGzzE9h+XG32keaBnHUldM85zLHhMy4casp2hf5
- 57o0bcJY5cr/a38fROLrmBIhVl8wur6L4eidqvcMXDVUsBJYzrLBeLJBXhL8WSjQavhWmFudU
- hnDTo8IvJ6XPuVA2NcjjhDeSJs48rCk0yby/BX/SOJVLzaVdWHwk8bXwPF8+0p3rZsVQYH0UI
- mbwLbsGauWW37x0wQiEJNsDLkAK6OLsVMmFVp+8ArnpaHaIKD83p0zNerIV7AWzal3WQ+gkYZ
- fLkHUpEWOL3/7k6Ao3Lj/P8MOPPxVniRoEVfq8/J+7FoKxIgQug5MRSSJ52QCY2i2fiSDrRbx
- kteD+m2E4WE0Os3pkSAkQWyAnTaXgu120Q/6+1Fh+FWxeWtMadA4sNNxkdEqWT+0bsuSqXAAw
- 3lyGaf6APc1FWP87CEQModDO+2baHbFBV5vsPbAaEkvSzFArnDlDzyrrEgc/7ZvE+5tzVd83N
- n4w0joMXoyTzcHnobNNCtAHoRl+efSRSuWLgLuWoop2vO78BOVC6zjJEJG1KC2hG1xQKWux6W
- s+Qi+QnKHXpBUyeiaCD42180PdvJfQFWm0oAroSJNuNfhZiGxaM6vcvAqUJbvSABmW1selyRi
- cPYi+r9+G3k43v0sgsV7+MuWjlqP5weBdzvugzi6QfMoPdp7zKahG+ZrNb6e/eL6hVIqKmSps
- z7zCTgphGmE9SxtyeGzTBKImjjVvFhiirqvDUhOi0xqzp28A0KS5Iakod39o1x/2QaXLEaCDU
- LME1MKV2eP3OaanDEADu8klrpp89faUQkyMZTQfUBsnwReuz5VjzlmNosdRggydrp4adoekcl
- kGf1bc6s9mNqwNwRKasAEgwZapgmYDBClAJ8AtnfHn0UrKXHvZrQ22f/8mzkTm8hHJvSREC+x
- +ojKmjx2AmzsFDICDCS4eFHS8/DU3DSBYP2hp5tL6cqUx83oIaEV4OGstS+zLDoILVtztgs0Z
- qWMXz5XcJJbLB3aeZoonplHwnosuKU6NbGj8foJMyH+v7KGRudtCk5uSAb6gkBiQGKQUpBLG4
- d0dkNV7TBQ1UuPbfEGvq+sLem6zrPNqAq3MmXuFg3SLRyIT9KuDF0mljZ9WZyMkQUjtp6Esl8
- ypFZjs/duU0KDc9XjMTQNNEbo4oXFCJAohlFd1nOCsnPTOKwjmsCrw95yw+mUL4/7r8HsXYGz
- WoG8b8KzNJV6I2YarIaYeY9zjPhbc5w9FnzgyzrW+wy1ya8evIxT0/NW0oGclpPckD53DmKj3
- Wif8Q4MCim0HFN5K5NKqMw6vvmxK4sZMYvV1uAW53PituegTlTle6Yd80WgTRNxR93YD05Zhy
- Jeb/7zJstSVISMW/AHZIMfzjIPmOnD9MfhA5rKhxfO+5wVn2y6qu82x9HH
+Content-Type: text/plain; charset=UTF-8
+Date: Fri, 14 Feb 2025 17:21:00 -0500
+Message-Id: <D7SIOS9FABGO.1ZOTYZJ4PWMTA@gmail.com>
+Cc: <platform-driver-x86@vger.kernel.org>, =?utf-8?q?Ilpo_J=C3=A4rvinen?=
+ <ilpo.jarvinen@linux.intel.com>, "Armin Wolf" <W_Armin@gmx.de>, "Mario
+ Limonciello" <mario.limonciello@amd.com>, "Hans de Goede"
+ <hdegoede@redhat.com>, <Dell.Client.Kernel@dell.com>,
+ <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v10 11/14] platform/x86: Split the alienware-wmi driver
+From: "Kurt Borja" <kuurtb@gmail.com>
+To: "Andy Shevchenko" <andriy.shevchenko@intel.com>
+X-Mailer: aerc 0.20.1-0-g2ecb8770224a
+References: <20250207154610.13675-1-kuurtb@gmail.com>
+ <20250207154610.13675-12-kuurtb@gmail.com>
+ <Z6uBJ9AC5XgZTlJG@black.fi.intel.com> <D7PT98IDXMUV.G2F1LRF8BX7@gmail.com>
+ <Z6ufIQADzILVMusc@smile.fi.intel.com>
+In-Reply-To: <Z6ufIQADzILVMusc@smile.fi.intel.com>
 
-Both machines support the necessary WMI methods, so enable fan control
-for them.
+Hi Andy,
 
-Signed-off-by: Armin Wolf <W_Armin@gmx.de>
-=2D--
- drivers/platform/x86/acer-wmi.c | 2 ++
- 1 file changed, 2 insertions(+)
+On Tue Feb 11, 2025 at 2:04 PM -05, Andy Shevchenko wrote:
+> On Tue, Feb 11, 2025 at 12:59:53PM -0500, Kurt Borja wrote:
+>> On Tue Feb 11, 2025 at 11:56 AM -05, Andy Shevchenko wrote:
+>> > On Fri, Feb 07, 2025 at 10:46:07AM -0500, Kurt Borja wrote:
+>
+> ...
+>
+>> >>  obj-$(CONFIG_ALIENWARE_WMI)		+=3D alienware-wmi.o
+>> >>  alienware-wmi-objs			:=3D alienware-wmi-base.o
+>> >> +alienware-wmi-y				+=3D alienware-wmi-legacy.o
+>> >> +alienware-wmi-y				+=3D alienware-wmi-wmax.o
+>> >
+>> > Oh my... it's even inconsistent!
+>>=20
+>> Again, this is an already used pattern:
+>
+>> 	https://elixir.bootlin.com/linux/v6.14-rc2/source/drivers/platform/x86/=
+dell/Makefile#L14
+>>=20
+>> I add configuration entries later. Is the order of the changes wrong? or
+>> is it the entire approach? Do other modules here need a fix?
+>
+> Again, it doesn't mean it's correct.
+>
+> Maybe other modules also need that, I don't remember, but you may `git lo=
+g
+> --no-merges --author=3D"Andy" --grep objs` to see changes I made in the p=
+ast.
 
-diff --git a/drivers/platform/x86/acer-wmi.c b/drivers/platform/x86/acer-w=
-mi.c
-index e24f5a323f95..05cbe8f96f21 100644
-=2D-- a/drivers/platform/x86/acer-wmi.c
-+++ b/drivers/platform/x86/acer-wmi.c
-@@ -466,6 +466,7 @@ static struct quirk_entry quirk_acer_predator_ph16_72 =
-=3D {
- 	.cpu_fans =3D 1,
- 	.gpu_fans =3D 1,
- 	.predator_v4 =3D 1,
-+	.pwm =3D 1,
- };
+Sorry!
 
- static struct quirk_entry quirk_acer_predator_pt14_51 =3D {
-@@ -473,6 +474,7 @@ static struct quirk_entry quirk_acer_predator_pt14_51 =
-=3D {
- 	.cpu_fans =3D 1,
- 	.gpu_fans =3D 1,
- 	.predator_v4 =3D 1,
-+	.pwm =3D 1,
- };
+Everything made more sense after reading the docs and checking your
+commits.
 
- static struct quirk_entry quirk_acer_predator_v4 =3D {
-=2D-
-2.39.5
+I submitted a patch fixing this. Thank you for pointing it out!
 
+>
+> ...
+>
+>> >> +	if (!ret) {
+>> >> +		if (out_data =3D=3D 0)
+>> >> +			return sysfs_emit(buf, "[disabled] s5 s5_s4\n");
+>> >> +		else if (out_data =3D=3D 1)
+>> >> +			return sysfs_emit(buf, "disabled [s5] s5_s4\n");
+>> >> +		else if (out_data =3D=3D 2)
+>> >> +			return sysfs_emit(buf, "disabled s5 [s5_s4]\n");
+>> >
+>> > The whole code inherited same issues like redundant 'else'. Please, re=
+factor.
+>>=20
+>> This is not my code, so a separate patch would be needed.
+>
+> Okay!
+>
+> ...
+>
+>> >> +	if (strcmp(buf, "disabled\n") =3D=3D 0)
+>> >> +		args.arg =3D 0;
+>> >> +	else if (strcmp(buf, "s5\n") =3D=3D 0)
+>> >> +		args.arg =3D 1;
+>> >> +	else
+>> >> +		args.arg =3D 2;
+>> >
+>> > sysfs_match_string()
+>>=20
+>> Same as above.
+>
+> Same as above :-)
+>
+> ...
+>
+>> >> +	if ((code & WMAX_THERMAL_TABLE_MASK) =3D=3D WMAX_THERMAL_TABLE_USTT=
+ &&
+>> >> +	    (code & WMAX_THERMAL_MODE_MASK) <=3D THERMAL_MODE_USTT_LOW_POWE=
+R)
+>> >> +		return true;
+>> >> +
+>> >> +	return false;
+>> >
+>> > 	return ...
+>> >
+>> > but if you wish, this one is okay.
+>>=20
+>> This was done for readibility. Also this would require a different
+>> patch.
+>
+> No need, I'm fine with the current approach, just to show the alternative=
+s.
+>
+> ...
+>
+>> >> +	ret =3D wmax_thermal_information(priv->wdev, WMAX_OPERATION_SYS_DES=
+CRIPTION,
+>> >> +				       0, (u32 *) &sys_desc);
+>> >
+>> > How do you guarantee an alignment? Yes, it might be good for the speci=
+fic
+>> > hardware, but in general this is broken code.
+>>=20
+>> This is a good question. I'm not really sure how to fix this tho. Is it
+>> fine to just pass a __packed struct? Also this would require another
+>> patch.
+>
+> Usual approach here is to use one of get_unaligned_le32(), get_unaligned_=
+be32()
+> depending on the byte ordering.
+>
+>> >> +	if (ret < 0)
+>> >> +		return ret;
+>
+> ...
+>
+>> >> +		set_bit(profile, choices);
+>> >
+>> > Do you need it to be atomic?
+>>=20
+>> I don't think so. `choices` belongs to this thread only.
+>
+> So, __set_bit() will suffice then.
+
+For some reason I thought `set_bit` was the non-atomic one. This is good
+to know.
+
+>
+> ...
+>
+>> >> +void __exit alienware_wmax_wmi_exit(void)
+>> >> +{
+>> >> +	wmi_driver_unregister(&alienware_wmax_wmi_driver);
+>> >> +}
+>> >
+>> > Why not moving these boilerplate to ->probe() and use module_wmi_drive=
+r()?
+>>=20
+>> This 3 files are a single module and it has two WMI drivers so this
+>> can't be used.
+>
+> Can it be split to two separate modules then?
+
+These two WMI drivers share a lot of features on old alienware models.
+Hence why I decided to link them together. IMO this bit of boilerplate
+is a fair tradeoff.
+
+Thank you again for your feedback. I was completely unaware of some
+things you pointed out. I will implement your suggestions soon.
+
+--=20
+ ~ Kurt
