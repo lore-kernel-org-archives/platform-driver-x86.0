@@ -1,340 +1,292 @@
-Received: from mail-pl1-f172.google.com (mail-pl1-f172.google.com [209.85.214.172])
+Received: from mail-wm1-f42.google.com (mail-wm1-f42.google.com [209.85.128.42])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF322268C79;
-	Fri, 14 Feb 2025 18:07:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A2B5618A6B8
+	for <platform-driver-x86@vger.kernel.org>; Fri, 14 Feb 2025 18:16:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739556460; cv=none; b=WC9B5xLbxTLKlnY1MVaAlBAPsuYzB5u8grs9XIydlemm9pl+wMNct5aeTdJP+tmHj2Nov3VwA1p2uJFD+7fA46nrAcGq4ARqmMmSM3+RoTkeBXiSlEaFeq+5Ac1hbZ8QviSdsruBHktC7fKNsaVX18rWQUpm21+ZkbI8tVVRBqI=
+	t=1739556995; cv=none; b=c/Vn6A8h64FUwEWFDIbCesj2hYu7sK3tv9gywxIz8afHimjJxHGMPprQNxuBckdc+mT8aIVSTidwMEFPHi6RKkzNCkXT1Nh7Jty0597RjZNTYMhdTLrH43nPWDUzyRn52inpgPeLaP/qdZAIujl19fFmcSYX0oA0zPSpvzpHFF0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739556460; c=relaxed/simple;
-	bh=3x4K+SD5PYi2ViO8I6/HZjgmfGn/z75JBWV4fnL2QJU=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Butj1J0/1egyzt30HIZQYtMWEc+cFmQZ15GV4XrvAQWD+7XDPOzKK15ca7/Lwl+lmB0kfE6tHf80WFJ76+c9eAekPGOALriKY2W7a0NRk32MrjyNEZdgQOZItLBLV5eak5oTeysGkjfcNWWeec7mEBcUnTnTKoXsiNlJ/anS/FQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=cDn6+Ip4; arc=none smtp.client-ip=209.85.214.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1739556995; c=relaxed/simple;
+	bh=nDKtV9ySw4mozGGWlDjjCWMvxLbaCdy6txFVjPMX6KY=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=sK46PpVIBrKsd5hSh2wF+EoVL+OjSro1xVp4RxChyYOhK0Wmkyy3lZml3JskGSVVp2ZYbw11vrBqbiUP7rwkNMYFs8jVYkF13v8jfRQHqso0+xasZfLwiYybfSjVG2fhcy1X5WG5ct9tM7lIxPTUEC5Gw4sTOl93JQ8bOQg7Pl4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=Tm1JuBk/; arc=none smtp.client-ip=209.85.128.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cDn6+Ip4"
-Received: by mail-pl1-f172.google.com with SMTP id d9443c01a7336-21f6d2642faso63536765ad.1;
-        Fri, 14 Feb 2025 10:07:38 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="Tm1JuBk/"
+Received: by mail-wm1-f42.google.com with SMTP id 5b1f17b1804b1-4396a24118dso7884455e9.0
+        for <platform-driver-x86@vger.kernel.org>; Fri, 14 Feb 2025 10:16:33 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1739556458; x=1740161258; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=6V49PP2OXvDHhbvnLGV7YUEo0KCZSY47T2HrIiGDuHw=;
-        b=cDn6+Ip4YB3aeAD3tNMJVzPtztlnynjcoMwyGD3ZXQkfwTQrImAEE4IQSfcxaCQQhy
-         8pBxwD6zu0MiKtbjfgiRT2yqdpAZS85sltiXpmOwtjor+e6tOVLGwm8knHpAfbjZt1GY
-         mxq8Dn47gpGcXktzBi+2XHCy427tsi+eoQc6PtKN5MbDKfN+5qDLaSUd+ZR71CbmE49W
-         kd23bKKmkAXTLLUwcMuTGJ04+I6nhRQeWfkWM2CSRkQ+PqxKTgK1Fe3QRwnhQRxv/w9E
-         LhR5Ge8ybC9DDyjbdFpr1D8GJgs5dXWMo6U7RkFllFU+dKQhebRhtjhg6YLHlmR7Bs9A
-         OxNw==
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1739556992; x=1740161792; darn=vger.kernel.org;
+        h=mime-version:message-id:date:user-agent:references:in-reply-to
+         :subject:cc:to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=WpzQbnLdagNuUxuQR/6JxQR5FVOFTqBbuMpnc5Onjr8=;
+        b=Tm1JuBk/vh8PRcm7UXbEwZLsNE55/+5jj7Kxme0JUz4YPZ5T5uR+wmr/7hzTNWdQUS
+         sQRW2+3XsR2pqXkwp+cp060sIH4VxY81201GN+vmD0sg3EV48bdE6kkfa2tomXbmXtjq
+         80srL3oyHO5RG4E5kHHcqa3CE1scr2KpoLg7TKvsNEEnhaYcXq0ZjrT2VSGSK/CWMJCo
+         qA8FiU6e9uMA8EHw8fWLMGE6byH4mT7TKgwegVQrImMMaNzTTmjAa9KqZ6xpB+pLY//D
+         onQQ0IaFdQx0zOIBraGqtdCfKMXNSVmmCU5XZOUCVP6nFzbziTm8M+mCpCZ9zjzUH7pu
+         STsg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739556458; x=1740161258;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=6V49PP2OXvDHhbvnLGV7YUEo0KCZSY47T2HrIiGDuHw=;
-        b=LEinPdwId2mpLaXz96KSiwpDjqY6HT/vaoOixSI0nXQIQNnN3BmSF9kWrvIOPXe2Ht
-         GzAZAZtneFdg+wtF/C4jFRUtT9sd34Hj0BSkvb0R3/D35WwgPR5EM5i0nrccleWHuUEj
-         dqm4RBONd9Aiv7UjowLSO0gCjqM1GBocyNkQgaFsLQWIJ8V7pzYOqQSGtDC/gszLzEiU
-         qjpWKpGWje3nsFyT8o8bOR9bY2Tq2P3xd5nCal8LBfig3b9+GYPSax546KBo1XbJ12Os
-         tELc97n/LjkUtH+L6PAEIUZU8koEpuTs0R8pBoF6JN0iHSZWGhJroy4+xl5RIyZAN/lX
-         Q2fg==
-X-Forwarded-Encrypted: i=1; AJvYcCUYF1h5kNy36Xg7UL1lbnefACBCucW5Kk3vyR1ZsdBP/hBFHO0D+1rV2b+qurkgf/lexCwzwsx0YK6Wegpx@vger.kernel.org, AJvYcCUeBU4NhwSjBzkRccmkm6zF2yWDRZVi2HGp5GN7Ixy8TriS8Yhd+5zVZHR3LsdeENSYLZKHx3pcUUUY5lXz@vger.kernel.org, AJvYcCVmvzu9q0eolVTFhBCmVtsmy0CYGsW3udGMEhSdrUV1Zaslvpy2sJ0jGDDB6eOpdmjOOB3h+X3N2KRFU9hiz86ebtgMPw==@vger.kernel.org, AJvYcCXgnsdRkbnSNrfyb7wRH+Fv1XxfzLC5yA8dHxXpZpp+VHDlACATWxLdXXBcL7+vYIs67ouAsFNHcAa7L8k=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzCSZtYZIrM+zNa/unMHa+i89TcxGD/lFzgED8pV0MbvbDo+5/0
-	SBUArB0/+wukzZ+1harzHIKm+pnSVtgw5ikIT6zULMOUYvkVTCDS
-X-Gm-Gg: ASbGnctMT2w3z90qrZbrRLWzyqyG25TmrJG9Sj1TI1bvrcd3eOQ+gmMacyQX0mxRoGu
-	wUcjMbeg0qAsXZe2LJBOLH972QkYK3pBzlO/wz7KEvmtSz/tfohrlcrAN03ZtEyHwmUreXByh91
-	aw/bkJfYoc5fMHzdMuvn+B5E/PhxeXZ7QEz+Z6S6V4TaBfq8+zMil9JCFKJsGo1CZJ7keV6JvhS
-	GRsRLy49qUAuGcQ12hz/5TnVvrJPS0dR+1p87CCg/w/St0wSrYQBw5H1e2gHrUJ1iSr5XAZFi+i
-	cagxMikUXuEbc4by
-X-Google-Smtp-Source: AGHT+IFdqcOwrSbPxFE6udXiTud4ePffb512nZRYqbbNtQdie7/rchVUrYM0lC8PJwGVHc/43AGZhQ==
-X-Received: by 2002:a17:902:e5c6:b0:21b:b3c9:38ff with SMTP id d9443c01a7336-221040bccafmr1893635ad.37.1739556457820;
-        Fri, 14 Feb 2025 10:07:37 -0800 (PST)
-Received: from SC8280XP.. ([144.202.86.13])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-220d545d051sm31599105ad.108.2025.02.14.10.07.28
+        d=1e100.net; s=20230601; t=1739556992; x=1740161792;
+        h=mime-version:message-id:date:user-agent:references:in-reply-to
+         :subject:cc:to:from:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=WpzQbnLdagNuUxuQR/6JxQR5FVOFTqBbuMpnc5Onjr8=;
+        b=Ra29nS+EBS5OR0tG//lE7pM94RenTyPjlVGFXhOETaJwbuhBoUSbMY25FWWiNJ2NqI
+         7JS4cS4tUA1jhpe5EWHJs/Nmew55efTHte3X+tLBM2nBYkIDYSi4jnu90H+aAu54ms08
+         AUGswkiVvRw7P/gNXQaZNWmkwFYWohbjIUOuuoh+f0dSOwpcH216fdy1VYLH4ygeMekT
+         VnVorT7fq7c1rKkkdP9MP/z7jz+Ce+sEriC+oPI6gGtEZ/YOHRt5XiBtVakgJHZSk6ee
+         uLt4ianJa++jVsOjHlBlKywf8P6dY/xNqCASyP1AjGrs3l6hFysTcU5aGvi5usrqHTRl
+         JNEQ==
+X-Forwarded-Encrypted: i=1; AJvYcCW42VMZwOADVKDkmhsTblR6ZENFNoJiYmNtdmekuT3y2NKBxERxhcBNOfGigWwiIKwpSja4Lw/xSl3tQSk3syQh75FM@vger.kernel.org
+X-Gm-Message-State: AOJu0YzmTnX6im+aSQOqzuav2dAbP8CHoatDNaVK0DVg3aKj5pBgfCoF
+	NjKJ0WC48LWTAi4yOTQ7ZD5qcnpXQoHa/UF4grvrl2bVt7xPYFWeEHuNCY23ZsU=
+X-Gm-Gg: ASbGncu3rZvf/neoCam6mZBuXGN+PqtCvkN56XQ8W8QHkuolNsu/6x+chKvkFWswjFv
+	jZ50UdvdFibDKYxOoOIETv+9K8B7Gpzrj92OJp47N+zuM1dd1DNLBWRbqkGC5k2pqRK8OKOKGYO
+	N1mixw7GqeTo1KHo7A4FSuWIzUyD3OgQ30CyK0lEr9/Z12O9BgHwLpZppI4iBOfE73Cd2wjlhdK
+	n2qN+P5cS0WEwxYsv4WMXz394xUjmJEuL8lgr+W/LGF4ncrF97hLZ84ruj4K2gYWUlaJfrAfLxK
+	zy5cXqpaaFVdHw==
+X-Google-Smtp-Source: AGHT+IFBN3j/Zjv2CLSxpQNFmRLH07Um+mn6wIlqNWgyJFTqmPU8STnXQY2KZybJYPY9YWV6H4qloQ==
+X-Received: by 2002:a05:6000:154c:b0:38f:2025:9c2b with SMTP id ffacd0b85a97d-38f20259e49mr13952599f8f.33.1739556991710;
+        Fri, 14 Feb 2025 10:16:31 -0800 (PST)
+Received: from localhost ([2a01:e0a:3c5:5fb1:7018:8c7:bdd4:3436])
+        by smtp.gmail.com with UTF8SMTPSA id ffacd0b85a97d-38f258cccd3sm5221627f8f.23.2025.02.14.10.16.30
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 14 Feb 2025 10:07:37 -0800 (PST)
-From: Pengyu Luo <mitltlatltl@gmail.com>
-To: Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Bjorn Andersson <andersson@kernel.org>,
-	Konrad Dybcio <konradybcio@kernel.org>,
-	Hans de Goede <hdegoede@redhat.com>,
-	=?UTF-8?q?Ilpo=20J=C3=83=C2=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	Bryan O'Donoghue <bryan.odonoghue@linaro.org>,
-	Jean Delvare <jdelvare@suse.com>,
-	Guenter Roeck <linux@roeck-us.net>
-Cc: devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-arm-msm@vger.kernel.org,
-	platform-driver-x86@vger.kernel.org,
-	linux-hwmon@vger.kernel.org,
-	Pengyu Luo <mitltlatltl@gmail.com>,
-	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
-	Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
-Subject: [PATCH v7 3/3] arm64: dts: qcom: gaokun3: Add Embedded Controller node
-Date: Sat, 15 Feb 2025 02:06:56 +0800
-Message-ID: <20250214180656.28599-4-mitltlatltl@gmail.com>
-X-Mailer: git-send-email 2.48.1
-In-Reply-To: <20250214180656.28599-1-mitltlatltl@gmail.com>
-References: <20250214180656.28599-1-mitltlatltl@gmail.com>
+        Fri, 14 Feb 2025 10:16:31 -0800 (PST)
+From: Jerome Brunet <jbrunet@baylibre.com>
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Dave Ertman <david.m.ertman@intel.com>,  Ira Weiny
+ <ira.weiny@intel.com>,  "Rafael J. Wysocki" <rafael@kernel.org>,  Stephen
+ Boyd <sboyd@kernel.org>,  Arnd Bergmann <arnd@arndb.de>,  Danilo Krummrich
+ <dakr@kernel.org>,  Conor Dooley <conor.dooley@microchip.com>,  Daire
+ McNamara <daire.mcnamara@microchip.com>,  Philipp Zabel
+ <p.zabel@pengutronix.de>,  Douglas Anderson <dianders@chromium.org>,
+  Andrzej Hajda <andrzej.hajda@intel.com>,  Neil Armstrong
+ <neil.armstrong@linaro.org>,  Robert Foss <rfoss@kernel.org>,  Laurent
+ Pinchart <Laurent.pinchart@ideasonboard.com>,  Jonas Karlman
+ <jonas@kwiboo.se>,  Jernej Skrabec <jernej.skrabec@gmail.com>,  Maarten
+ Lankhorst <maarten.lankhorst@linux.intel.com>,  Maxime Ripard
+ <mripard@kernel.org>,  Thomas Zimmermann <tzimmermann@suse.de>,  David
+ Airlie <airlied@gmail.com>,  Simona Vetter <simona@ffwll.ch>,  Hans de
+ Goede <hdegoede@redhat.com>,  Ilpo =?utf-8?Q?J=C3=A4rvinen?=
+ <ilpo.jarvinen@linux.intel.com>,  Bryan O'Donoghue
+ <bryan.odonoghue@linaro.org>,  Vladimir Kondratiev
+ <vladimir.kondratiev@mobileye.com>,  Gregory CLEMENT
+ <gregory.clement@bootlin.com>,  =?utf-8?Q?Th=C3=A9o?= Lebrun
+ <theo.lebrun@bootlin.com>,
+  Michael Turquette <mturquette@baylibre.com>,  Abel Vesa
+ <abelvesa@kernel.org>,  Peng Fan <peng.fan@nxp.com>,  Shawn Guo
+ <shawnguo@kernel.org>,  Sascha Hauer <s.hauer@pengutronix.de>,
+  Pengutronix Kernel Team <kernel@pengutronix.de>,  Fabio Estevam
+ <festevam@gmail.com>,  Kevin Hilman <khilman@baylibre.com>,  Martin
+ Blumenstingl <martin.blumenstingl@googlemail.com>,
+  linux-kernel@vger.kernel.org,  linux-riscv@lists.infradead.org,
+  dri-devel@lists.freedesktop.org,  platform-driver-x86@vger.kernel.org,
+  linux-mips@vger.kernel.org,  linux-clk@vger.kernel.org,
+  imx@lists.linux.dev,  linux-arm-kernel@lists.infradead.org,
+  linux-amlogic@lists.infradead.org
+Subject: Re: [PATCH v3 1/7] driver core: auxiliary bus: add device creation
+ helpers
+In-Reply-To: <2025021437-washout-stonewall-d13e@gregkh> (Greg Kroah-Hartman's
+	message of "Fri, 14 Feb 2025 17:33:35 +0100")
+References: <20250211-aux-device-create-helper-v3-0-7edb50524909@baylibre.com>
+	<20250211-aux-device-create-helper-v3-1-7edb50524909@baylibre.com>
+	<2025021437-washout-stonewall-d13e@gregkh>
+User-Agent: mu4e 1.12.8; emacs 29.4
+Date: Fri, 14 Feb 2025 19:16:30 +0100
+Message-ID: <1jwmdsxugx.fsf@starbuckisacylon.baylibre.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 
-The Embedded Controller in the Huawei Matebook E Go is accessible on &i2c15
-and provides battery and adapter status, port orientation status, as well
-as HPD event notifications for two USB Type-C port, etc.
+On Fri 14 Feb 2025 at 17:33, Greg Kroah-Hartman <gregkh@linuxfoundation.org> wrote:
 
-Add the EC to the device tree and describe the relationship among
-the type-c connectors, role switches, orientation switches and the QMP
-combo PHY.
+> On Tue, Feb 11, 2025 at 06:27:58PM +0100, Jerome Brunet wrote:
+>> Add helper functions to create a device on the auxiliary bus.
+>> 
+>> This is meant for fairly simple usage of the auxiliary bus, to avoid having
+>> the same code repeated in the different drivers.
+>> 
+>> Suggested-by: Stephen Boyd <sboyd@kernel.org>
+>> Cc: Arnd Bergmann <arnd@arndb.de>
+>> Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
+>> ---
+>>  drivers/base/auxiliary.c      | 88 +++++++++++++++++++++++++++++++++++++++++++
+>>  include/linux/auxiliary_bus.h | 10 +++++
+>>  2 files changed, 98 insertions(+)
+>
+> I like the idea, see much the same of what I recently did for the "faux"
+> bus here:
+> 	https://lore.kernel.org/all/2025021023-sandstorm-precise-9f5d@gregkh/
 
-Signed-off-by: Pengyu Luo <mitltlatltl@gmail.com>
-Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Reviewed-by: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
----
- .../boot/dts/qcom/sc8280xp-huawei-gaokun3.dts | 163 ++++++++++++++++++
- 1 file changed, 163 insertions(+)
+Reading this, I'm getting the feeling that some (most?) simple auxiliary
+driver might be better off migrating to "faux", instead of what I'm
+proposing here ? Is this what you are suggesting ?
 
-diff --git a/arch/arm64/boot/dts/qcom/sc8280xp-huawei-gaokun3.dts b/arch/arm64/boot/dts/qcom/sc8280xp-huawei-gaokun3.dts
-index 09b95f89e..1667c7157 100644
---- a/arch/arm64/boot/dts/qcom/sc8280xp-huawei-gaokun3.dts
-+++ b/arch/arm64/boot/dts/qcom/sc8280xp-huawei-gaokun3.dts
-@@ -28,6 +28,7 @@ / {
- 
- 	aliases {
- 		i2c4 = &i2c4;
-+		i2c15 = &i2c15;
- 		serial1 = &uart2;
- 	};
- 
-@@ -216,6 +217,40 @@ map1 {
- 		};
- 	};
- 
-+	usb0-sbu-mux {
-+		compatible = "pericom,pi3usb102", "gpio-sbu-mux";
-+
-+		select-gpios = <&tlmm 164 GPIO_ACTIVE_HIGH>;
-+
-+		pinctrl-0 = <&usb0_sbu_default>;
-+		pinctrl-names = "default";
-+
-+		orientation-switch;
-+
-+		port {
-+			usb0_sbu_mux: endpoint {
-+				remote-endpoint = <&ucsi0_sbu>;
-+			};
-+		};
-+	};
-+
-+	usb1-sbu-mux {
-+		compatible = "pericom,pi3usb102", "gpio-sbu-mux";
-+
-+		select-gpios = <&tlmm 47 GPIO_ACTIVE_HIGH>;
-+
-+		pinctrl-0 = <&usb1_sbu_default>;
-+		pinctrl-names = "default";
-+
-+		orientation-switch;
-+
-+		port {
-+			usb1_sbu_mux: endpoint {
-+				remote-endpoint = <&ucsi1_sbu>;
-+			};
-+		};
-+	};
-+
- 	wcn6855-pmu {
- 		compatible = "qcom,wcn6855-pmu";
- 
-@@ -584,6 +619,97 @@ touchscreen@4f {
- 
- };
- 
-+&i2c15 {
-+	clock-frequency = <400000>;
-+
-+	pinctrl-0 = <&i2c15_default>;
-+	pinctrl-names = "default";
-+
-+	status = "okay";
-+
-+	embedded-controller@38 {
-+		compatible = "huawei,gaokun3-ec";
-+		reg = <0x38>;
-+
-+		interrupts-extended = <&tlmm 107 IRQ_TYPE_LEVEL_LOW>;
-+
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+
-+		connector@0 {
-+			compatible = "usb-c-connector";
-+			reg = <0>;
-+			power-role = "dual";
-+			data-role = "dual";
-+
-+			ports {
-+				#address-cells = <1>;
-+				#size-cells = <0>;
-+
-+				port@0 {
-+					reg = <0>;
-+
-+					ucsi0_hs_in: endpoint {
-+						remote-endpoint = <&usb_0_dwc3_hs>;
-+					};
-+				};
-+
-+				port@1 {
-+					reg = <1>;
-+
-+					ucsi0_ss_in: endpoint {
-+						remote-endpoint = <&usb_0_qmpphy_out>;
-+					};
-+				};
-+
-+				port@2 {
-+					reg = <2>;
-+
-+					ucsi0_sbu: endpoint {
-+						remote-endpoint = <&usb0_sbu_mux>;
-+					};
-+				};
-+			};
-+		};
-+
-+		connector@1 {
-+			compatible = "usb-c-connector";
-+			reg = <1>;
-+			power-role = "dual";
-+			data-role = "dual";
-+
-+			ports {
-+				#address-cells = <1>;
-+				#size-cells = <0>;
-+
-+				port@0 {
-+					reg = <0>;
-+
-+					ucsi1_hs_in: endpoint {
-+						remote-endpoint = <&usb_1_dwc3_hs>;
-+					};
-+				};
-+
-+				port@1 {
-+					reg = <1>;
-+
-+					ucsi1_ss_in: endpoint {
-+						remote-endpoint = <&usb_1_qmpphy_out>;
-+					};
-+				};
-+
-+				port@2 {
-+					reg = <2>;
-+
-+					ucsi1_sbu: endpoint {
-+						remote-endpoint = <&usb1_sbu_mux>;
-+					};
-+				};
-+			};
-+		};
-+	};
-+};
-+
- &mdss0 {
- 	status = "okay";
- };
-@@ -1004,6 +1130,10 @@ &usb_0_dwc3 {
- 	dr_mode = "host";
- };
- 
-+&usb_0_dwc3_hs {
-+	remote-endpoint = <&ucsi0_hs_in>;
-+};
-+
- &usb_0_hsphy {
- 	vdda-pll-supply = <&vreg_l9d>;
- 	vdda18-supply = <&vreg_l1c>;
-@@ -1025,6 +1155,10 @@ &usb_0_qmpphy_dp_in {
- 	remote-endpoint = <&mdss0_dp0_out>;
- };
- 
-+&usb_0_qmpphy_out {
-+	remote-endpoint = <&ucsi0_ss_in>;
-+};
-+
- &usb_1 {
- 	status = "okay";
- };
-@@ -1033,6 +1167,10 @@ &usb_1_dwc3 {
- 	dr_mode = "host";
- };
- 
-+&usb_1_dwc3_hs {
-+	remote-endpoint = <&ucsi1_hs_in>;
-+};
-+
- &usb_1_hsphy {
- 	vdda-pll-supply = <&vreg_l4b>;
- 	vdda18-supply = <&vreg_l1c>;
-@@ -1054,6 +1192,10 @@ &usb_1_qmpphy_dp_in {
- 	remote-endpoint = <&mdss0_dp1_out>;
- };
- 
-+&usb_1_qmpphy_out {
-+	remote-endpoint = <&ucsi1_ss_in>;
-+};
-+
- &usb_2 {
- 	status = "okay";
- };
-@@ -1177,6 +1319,13 @@ i2c4_default: i2c4-default-state {
- 		bias-disable;
- 	};
- 
-+	i2c15_default: i2c15-default-state {
-+		pins = "gpio36", "gpio37";
-+		function = "qup15";
-+		drive-strength = <2>;
-+		bias-pull-up;
-+	};
-+
- 	mode_pin_active: mode-pin-state {
- 		pins = "gpio26";
- 		function = "gpio";
-@@ -1301,6 +1450,20 @@ tx-pins {
- 		};
- 	};
- 
-+	usb0_sbu_default: usb0-sbu-state {
-+		pins = "gpio164";
-+		function = "gpio";
-+		drive-strength = <16>;
-+		bias-disable;
-+	};
-+
-+	usb1_sbu_default: usb1-sbu-state {
-+		pins = "gpio47";
-+		function = "gpio";
-+		drive-strength = <16>;
-+		bias-disable;
-+	};
-+
- 	wcd_default: wcd-default-state {
- 		reset-pins {
- 			pins = "gpio106";
+Few Q:
+Is there some sort of 'platform_data' (sorry for the lack of a better
+term, no provocation intended ;) ) ... it there a
+simple way to pass an arbitrary struct to the created device with 'faux' ?
+
+The difference between aux and faux I'm seeing it that aux seems to
+decouple things a bit more. The only thing aux needs is a module name to
+pop something up, while faux needs a reference to the ops instead.
+
+I can see the appeal to use aux for maintainers trying to decouple
+different subsystems.
+
+>
+> Some review comments:
+>
+>> diff --git a/drivers/base/auxiliary.c b/drivers/base/auxiliary.c
+>> index afa4df4c5a3f371b91d8dd8c4325495d32ad1291..0f697c9c243dc9a50498a52362806db594345faf 100644
+>> --- a/drivers/base/auxiliary.c
+>> +++ b/drivers/base/auxiliary.c
+>> @@ -385,6 +385,94 @@ void auxiliary_driver_unregister(struct auxiliary_driver *auxdrv)
+>>  }
+>>  EXPORT_SYMBOL_GPL(auxiliary_driver_unregister);
+>>  
+>> +static void auxiliary_device_release(struct device *dev)
+>> +{
+>> +	struct auxiliary_device *auxdev = to_auxiliary_dev(dev);
+>> +
+>> +	kfree(auxdev);
+>> +}
+>> +
+>> +static struct auxiliary_device *auxiliary_device_create(struct device *dev,
+>> +							const char *modname,
+>> +							const char *devname,
+>> +							void *platform_data,
+>
+> Can you have the caller set the platform_data if they need/want it after
+> the device is created?  Or do you need that in the probe callback?
+
+My assumption was that it is needed in probe, but I guess that entirely
+depends on the driver. If that was ever needed, it could be added later
+I think.
+
+>
+> And can't this be a global function too for those that don't want to
+> deal with devm stuff?
+
+There was a note about that in the cover-letter of the v1 but I did not
+repeat it after.
+
+It can be exported but I had no use for it so I thought It was better not
+export it until it was actually needed. I really do not have a strong
+preference over this.
+
+>
+>> +							int id)
+>> +{
+>> +	struct auxiliary_device *auxdev;
+>> +	int ret;
+>> +
+>> +	auxdev = kzalloc(sizeof(*auxdev), GFP_KERNEL);
+>> +	if (!auxdev)
+>> +		return ERR_PTR(-ENOMEM);
+>
+> Ick, who cares what the error value really is?  Why not just do NULL or
+> a valid pointer?  That makes the caller much simpler to handle, right?
+>
+
+Sure why not
+
+>> +
+>> +	auxdev->id = id;
+>> +	auxdev->name = devname;
+>> +	auxdev->dev.parent = dev;
+>> +	auxdev->dev.platform_data = platform_data;
+>> +	auxdev->dev.release = auxiliary_device_release;
+>> +	device_set_of_node_from_dev(&auxdev->dev, dev);
+>> +
+>> +	ret = auxiliary_device_init(auxdev);
+>
+> Only way this will fail is if you forgot to set parent or a valid name.
+> So why not check for devname being non-NULL above this?
+
+If auxiliary_device_init() ever changes it would be easy to forget to
+update that and lead to something nasty to debug, don't you think ?
+
+If you are OK with this, I could update in this direction.
+
+>
+>> +	if (ret) {
+>> +		kfree(auxdev);
+>> +		return ERR_PTR(ret);
+>> +	}
+>> +
+>> +	ret = __auxiliary_device_add(auxdev, modname);
+>> +	if (ret) {
+>> +		/*
+>> +		 * NOTE: It may look odd but auxdev should not be freed
+>> +		 * here. auxiliary_device_uninit() calls device_put()
+>> +		 * which call the device release function, freeing auxdev.
+>> +		 */
+>> +		auxiliary_device_uninit(auxdev);
+>
+> Yes it is odd, are you SURE you should be calling device_del() on the
+> device if this fails?  auxiliary_device_uninit(), makes sense so why not
+> just call that here?
+
+I'm confused ... I am call auxiliary_device_uninit() here. What do you
+mean ? 
+
+>
+>> +		return ERR_PTR(ret);
+>> +	}
+>> +
+>> +	return auxdev;
+>> +}
+>> +
+>> +static void auxiliary_device_destroy(void *_auxdev)
+>> +{
+>> +	struct auxiliary_device *auxdev = _auxdev;
+>> +
+>> +	auxiliary_device_delete(auxdev);
+>> +	auxiliary_device_uninit(auxdev);
+>> +}
+>> +
+>> +/**
+>> + * __devm_auxiliary_device_create - create a device on the auxiliary bus
+>> + * @dev: parent device
+>> + * @modname: module name used to create the auxiliary driver name.
+>> + * @devname: auxiliary bus device name
+>> + * @platform_data: auxiliary bus device platform data
+>> + * @id: auxiliary bus device id
+>> + *
+>> + * Device managed helper to create an auxiliary bus device.
+>> + * The device create matches driver 'modname.devname' on the auxiliary bus.
+>> + */
+>> +struct auxiliary_device *__devm_auxiliary_device_create(struct device *dev,
+>> +							const char *modname,
+>> +							const char *devname,
+>> +							void *platform_data,
+>> +							int id)
+>> +{
+>> +	struct auxiliary_device *auxdev;
+>> +	int ret;
+>> +
+>> +	auxdev = auxiliary_device_create(dev, modname, devname, platform_data, id);
+>> +	if (IS_ERR(auxdev))
+>> +		return auxdev;
+>> +
+>> +	ret = devm_add_action_or_reset(dev, auxiliary_device_destroy,
+>> +				       auxdev);
+>
+> Oh this is going to be messy, but I trust that callers know what they
+> are doing here.  Good luck!  :)
+>
+> thanks,
+>
+> greg k-h
+
 -- 
-2.48.1
-
+Jerome
