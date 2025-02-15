@@ -1,181 +1,256 @@
-Received: from mail-yw1-f173.google.com (mail-yw1-f173.google.com [209.85.128.173])
+Received: from mail-vk1-f173.google.com (mail-vk1-f173.google.com [209.85.221.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B4C8C2B9C6;
-	Sat, 15 Feb 2025 00:03:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6A332151985;
+	Sat, 15 Feb 2025 01:30:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739577797; cv=none; b=CrRlVuOU3/jWNgwH08S+QGD23W/uBT4dsESgvkTkv6lLmIYeZYKrOVPjmyq72BSa6LQEPsj+/dM2SYTW7/jJsYdACZi1Rdg2EnbXqAikzeG+MjCXQnBIIP2QKqNL6vnhTlRVixvfdS/Fn7F9mgTdia+Xph3TeGbupp0+KmSPMb0=
+	t=1739583036; cv=none; b=TIzCzsGTitnrclWl8keF/qBwYKoewA4IHm5RKCtR5C2tL4Hby81+8ER3cN0lPjZ4bkxM75/jqdpXnCSRB1MzTb3Zyr9UOZtgGYBiGzNulBnWVFREXcahk5FZf1Ze5FHO7B5PV6WANLGworAM5x0ScePzLw1qqsbDqMvnhM2u5Yc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739577797; c=relaxed/simple;
-	bh=UZt3Sx5BqortNKMQ/4+d7A6bnmyYPHqSwK6q2bElWv8=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=oOiH0yi3IAdeNPHeGwasqbKg4jzPlCW1a+nrBZzifVrzSXOiWcSF8xqt+1ZOt1lqo1CdB30T5x+FX9zndZaySnjWha0lS+zjLDuEhHAs4J6wYrGSlAFKWAZTqRw9s/B1KcdEKY9bUxcq5HZ+AjcKwdKrb+nRV7oMF88UndWMQQE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=hgzHoSrT; arc=none smtp.client-ip=209.85.128.173
+	s=arc-20240116; t=1739583036; c=relaxed/simple;
+	bh=Spjd0+CPKcnwg6LOWxgLFJqDtJsQv/sjsOlQKMMo/oU=;
+	h=Mime-Version:Content-Type:Date:Message-Id:From:To:Cc:Subject:
+	 References:In-Reply-To; b=cN6zN+S+793hLqc0qupQkgXkHTK07YkeJbGcrTL+E+FVH45MskUds5LDMHYCJh+m0Fv8MjQX4H1bIp99Ca/WN//XzvPt7mC88u8LmMnuH1Zw56Z2AhdHlgS4XGtTGSd8P2+V0chVd0flCEnBht8LC+u7SQ8hTAXjdc31hCKFsC4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=G/pEEj8S; arc=none smtp.client-ip=209.85.221.173
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hgzHoSrT"
-Received: by mail-yw1-f173.google.com with SMTP id 00721157ae682-6fb3a611afdso17626837b3.0;
-        Fri, 14 Feb 2025 16:03:15 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="G/pEEj8S"
+Received: by mail-vk1-f173.google.com with SMTP id 71dfb90a1353d-51eb1818d4fso1700948e0c.1;
+        Fri, 14 Feb 2025 17:30:34 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1739577794; x=1740182594; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+        d=gmail.com; s=20230601; t=1739583033; x=1740187833; darn=vger.kernel.org;
+        h=in-reply-to:references:subject:cc:to:from:message-id:date
+         :content-transfer-encoding:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=7degOyP+5HxIUK+nkGc+HV6cv18/eI0UzCJ3KUecVYU=;
-        b=hgzHoSrTUzgmJbMS8i4+bRkgLCKBkzwpj3Oq4ztRAWGV1n8Qi1/dIP7DLMrFlxVjrp
-         VT59Pn+pzKwhRnVuGTfGU0oeTO9rCrFiojHOHJ+UMJdSIFF7i1yNU+2qYfJ3Wh8TkPI7
-         +y1UC4vSV2C4eHj+9AiYkMO2JjABNLYJLVH3Sn7BhFJr/rT/JJocKX6ItbXrRKNzG+qR
-         ONtMaMRJavZaij46TM7Uhes5k9+eQbTMzKfKM0jF3o/lX44XsSDXM7hb2LYdDtEgfLCw
-         HuVU8L23lY/yT64LgX74wz4QOq+crSL+OW60zqvJ4AWqOp0lm59eeYXKYd9BoJXwvmCo
-         pz1g==
+        bh=TSGM5ho1Yts9mu8HW67wgopxLYvRJsKN317227YXOfo=;
+        b=G/pEEj8SCv6HLLY9k/9u5FmsNOM6uJzYwdturi8zXkbEhd68NJ6aeS4CFI6XT8DcnU
+         u/lbsSljclOGEPDwHIbOpVeWrcjxyybwL7dVevU1mDY2QiefeigPBKwPlQEEE96u2clR
+         0ulcJRwWqwTtuyP79NffxTCqyxOUn+gjQHlIpgcs1kwHw50PhGMhO+u0bIzWQKSK2F+h
+         dWNNZGsMcV6UxAThWxvIU99cfp1Ab0m8hmWmZFnV7VhSMtC7y9wppSvQT/oDxauFHX6/
+         C6RH7b87av2aUmj6TAX50z3iTzX47n58U1JbkUhyzcbX6LkZGbDgdvjtwQxNiIuZYeaQ
+         lKcA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739577794; x=1740182594;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=7degOyP+5HxIUK+nkGc+HV6cv18/eI0UzCJ3KUecVYU=;
-        b=cvqaj5YUT6i0FjUx8wlP2kYCDWYQJH8a7f2V/95zCZ75dP4sQ51Lkyad9NUYmJth60
-         lA/i3k/onPRpj/7IqsOnSHvdPntEvIxRNHa1+pm7TLZGwcGjT03Y1lyFM0541p6jLe7Y
-         MdKUiXHhv9ejjdgCssBBqDD9x+/eofXLpVO5sCLgB5Z7rp/dx7c9NOJ+q+ZiFZ7l4mPU
-         hVkOy8cqqKJbNBGLoPJBYwJOfBO7fROOS1LyoY4+4iBo0GgFhDZK3he6B1aqHnAL4rJl
-         6xIhuRFv3xn3dHwyRGqwKejkFeoOb8frZlkR+8YgMYPOEFJWxHs6atmazKIaQs8B+LdX
-         37eQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVPlGXXoB7sx+SG66r2HrMJmQVawrXqsdpoa1wdE+utyiaUtMqBECY5vWfngqXE0oZCW/1ocgjiuH87F/Y=@vger.kernel.org, AJvYcCVvS/dAL6kFnL0GJfC/U6FnnT92BkW6W1bpR/S24/0ymV5hn5jDKJLQuFI2sZBgu6U5fTObHx10igepi58M8WjswxU0BQ==@vger.kernel.org
-X-Gm-Message-State: AOJu0YypKXJqbcGA/pahAvV1ADGYRDdh1NE1JwwBIyyzpJhAFiNLu8j6
-	LFTuo596p76BnKVxt298oU3uaU1dzXVzrHptCxLBKly1ta/GyLdf
-X-Gm-Gg: ASbGncsKL4IiaAJzAz/d7ZMSm2ClZ+oCJC/uj9x9/2H54pFRhS+TjzeH2KiTWhVi5fj
-	ZLAEpu4HrCkfjmRVe7uHAJv2bpI8A+0URrVCPBxebxI33RV9WzgVpSEBPEqhRbFi5h52qIGft+f
-	OnSUq88uKShgZZyEQMmzbvMS6tS//hHJpPe8m97j7xwUs7NAg8XjxR98oDnOlz83TEznYr8jEAY
-	FAJVm3UPJDehht2aWLQRgKW7r9Ivenq0atEKGVxNfIUeqVJTqSt2JtkR7zN5KvGB0x8qO1cjbKt
-	CM4LKvueGaF2PsvWjXWStaM=
-X-Google-Smtp-Source: AGHT+IGF82wIiXajjjsnCjQpmX9L/21cH1U7GHhNpZZYOWpxlPHY2CkxftG5WiXmNCzCI5UcjpMspg==
-X-Received: by 2002:a05:690c:640f:b0:6f9:983f:4365 with SMTP id 00721157ae682-6fb58390c8cmr12268617b3.36.1739577794594;
-        Fri, 14 Feb 2025 16:03:14 -0800 (PST)
-Received: from localhost.localdomain ([2800:bf0:82:3d2:9e61:1a62:1a8c:3e62])
-        by smtp.gmail.com with ESMTPSA id 00721157ae682-6fb35d586e5sm9844207b3.17.2025.02.14.16.03.12
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 14 Feb 2025 16:03:14 -0800 (PST)
-From: Kurt Borja <kuurtb@gmail.com>
-To: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	Mark Pearson <mpearson-lenovo@squebb.ca>
-Cc: "Hans de Goede" <hdegoede@redhat.com>,
-	Henrique de Moraes Holschuh <hmh@hmh.eng.br>,
-	ibm-acpi-devel@lists.sourceforge.net,
-	platform-driver-x86@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Kurt Borja <kuurtb@gmail.com>
-Subject: [PATCH 2/2] platform/x86: thinkpad_acpi: Move HWMON initialization to tpacpi_hwmon_pdriver's probe
-Date: Fri, 14 Feb 2025 19:03:02 -0500
-Message-ID: <20250215000302.19753-3-kuurtb@gmail.com>
-X-Mailer: git-send-email 2.48.1
-In-Reply-To: <20250215000302.19753-1-kuurtb@gmail.com>
-References: <20250215000302.19753-1-kuurtb@gmail.com>
+        d=1e100.net; s=20230601; t=1739583033; x=1740187833;
+        h=in-reply-to:references:subject:cc:to:from:message-id:date
+         :content-transfer-encoding:mime-version:x-gm-message-state:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=TSGM5ho1Yts9mu8HW67wgopxLYvRJsKN317227YXOfo=;
+        b=QhnfJtFnKjqN/6cMQnDnjoOdQHxJr8n7rXI2pyVvxrZxNMeByjHK8rcKM23GqvTNQx
+         SwPr6uRIraCpTtnRSRDPzwivB+sz1ah6/hqfym7mrlPud+t7BeyPBBqfT1pRQtwFLuGC
+         k37qxwPCwOs5esH7wSlDoYMqQuJw4sEDysUsjp/cXVHNGPS4oCTckSs88a8j+0rFFNBM
+         D8c040yyNrMuViNwiJUFBhcS/q3AHkx8lYj7kelZAWx+XbCnn2zPYwH/8GL+p4A1RdxZ
+         Mji0ajvFPiERPTFCGG37qWpV+N/LE8DMo52xB8+5zOsRhfCSK+HGN8UgVWMLmiXe3kQP
+         rmIg==
+X-Forwarded-Encrypted: i=1; AJvYcCVc/8RyeqcUTqfmgRmuRBfALLlmPmYu7hbmaKjRxueOYqdaDPL6O5zth7sUfq1Hllgq+AHa1UR2un6h13L6imqlAjqnpw==@vger.kernel.org, AJvYcCVmtOSNQKrs+/6Zqf5+9LTzHoyTfkzcW7ovjLDuIlz/azAK3QUq1vOAQBQFWPhFAAZOa9HPOKJOV9c8pUE=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxz85qUvRCpKywJUW0z1b0vcchuNMa2PD7CM4603Id9qCai+7b1
+	23WCjMw4x1mAG+opRCLI+FGMpGfiw25d8ob3nRI/yNU0gJA0f4Ja
+X-Gm-Gg: ASbGncuWp9ipHWeP/g6BxLdv7LMmIxld9vMkrXSKaDwb9sZQVwj3MRLpKBZgAUlrdWn
+	i8y2DUwvXfa4/n6bs5+pYyKW6nOrSOZnFrkcu1I4oo6IRCAtTwdlzBwOacnAPW4fCFawGCgxGeu
+	2q4ynrG6+UfGYE42edMHJgIyeoi57xNQyQjwSYX2kaewm6Sw997soDZs9kAlB3324Oa7uXc4bQj
+	F6rtVnWQCFoat6zP6AMAAkf3VIAYq3AYoYAii4ymNZ0mvOqoBnkDoqwsZORvn44g3RK8DJW76Xe
+	BE+OYtE=
+X-Google-Smtp-Source: AGHT+IHqvEQ4auzkcaLR2teW9yEnTAwZ5BacKnVAy+LW2WTgyrGiPtTi7NFoVsIbxQj+wr4MPSvXsg==
+X-Received: by 2002:a05:6122:2701:b0:520:6773:e5ba with SMTP id 71dfb90a1353d-5209da6bf7emr868075e0c.2.1739583033152;
+        Fri, 14 Feb 2025 17:30:33 -0800 (PST)
+Received: from localhost ([2800:bf0:82:3d2:9e61:1a62:1a8c:3e62])
+        by smtp.gmail.com with ESMTPSA id 71dfb90a1353d-52097e27968sm463557e0c.18.2025.02.14.17.30.30
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 14 Feb 2025 17:30:32 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Mime-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date: Fri, 14 Feb 2025 20:30:30 -0500
+Message-Id: <D7SMPVK7KM8E.3VYTBGLEVS109@gmail.com>
+From: "Kurt Borja" <kuurtb@gmail.com>
+To: "Armin Wolf" <W_Armin@gmx.de>, <jlee@suse.com>,
+ <basak.sb2006@gmail.com>, <rayanmargham4@gmail.com>
+Cc: <hdegoede@redhat.com>, <ilpo.jarvinen@linux.intel.com>,
+ <platform-driver-x86@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: Re: [RFC PATCH 1/3] platform/x86: acer-wmi: Fix setting of fan
+ behavior
+X-Mailer: aerc 0.20.1-0-g2ecb8770224a
+References: <20250214221322.47298-1-W_Armin@gmx.de>
+ <20250214221322.47298-2-W_Armin@gmx.de>
+In-Reply-To: <20250214221322.47298-2-W_Armin@gmx.de>
 
-Let the driver core manage the lifetime of the HWMON device, by
-registering it inside tpacpi_hwmon_pdriver's probe and using
-devm_hwmon_device_register_with_groups().
+Hi Armin,
 
-Signed-off-by: Kurt Borja <kuurtb@gmail.com>
----
- drivers/platform/x86/thinkpad_acpi.c | 44 +++++++++++-----------------
- 1 file changed, 17 insertions(+), 27 deletions(-)
+On Fri Feb 14, 2025 at 5:13 PM -05, Armin Wolf wrote:
+> After studying the linuwu_sense driver
+> (https://github.com/0x7375646F/Linuwu-Sense) i was able to understand
+> the meaning of the SetGamingFanBehavior() WMI method:
+>
+> - the first 16-bit are a bitmap of all fans affected by a fan behavior
+>   change request.
+>
+> - the next 8 bits contain four fan mode fields (2-bit), each being
+>   associated with a bit inside the fan bitmap.
+>
+> There are three fan modes: auto, turbo and custom.
+>
+> Use this newfound knowledge to fix the turbo fan handling by setting
+> the correct bits before calling SetGamingFanBehavior(). Also check
+> the result of the WMI method call and return an error should the ACPI
+> firmware signal failure.
+>
+> Signed-off-by: Armin Wolf <W_Armin@gmx.de>
+> ---
+>  drivers/platform/x86/acer-wmi.c | 75 +++++++++++++++++++++++----------
+>  1 file changed, 52 insertions(+), 23 deletions(-)
+>
+> --
+> 2.39.5
+>
+> diff --git a/drivers/platform/x86/acer-wmi.c b/drivers/platform/x86/acer-=
+wmi.c
+> index 69336bd778ee..f20a882e3650 100644
+> --- a/drivers/platform/x86/acer-wmi.c
+> +++ b/drivers/platform/x86/acer-wmi.c
+> @@ -68,10 +68,19 @@ MODULE_LICENSE("GPL");
+>  #define ACER_WMID_SET_GAMING_LED_METHODID 2
+>  #define ACER_WMID_GET_GAMING_LED_METHODID 4
+>  #define ACER_WMID_GET_GAMING_SYS_INFO_METHODID 5
+> -#define ACER_WMID_SET_GAMING_FAN_BEHAVIOR 14
+> +#define ACER_WMID_SET_GAMING_FAN_BEHAVIOR_METHODID 14
+>  #define ACER_WMID_SET_GAMING_MISC_SETTING_METHODID 22
+>  #define ACER_WMID_GET_GAMING_MISC_SETTING_METHODID 23
+>
+> +#define ACER_GAMING_FAN_BEHAVIOR_ID_MASK GENMASK_ULL(15, 0)
+> +#define ACER_GAMING_FAN_BEHAVIOR_SET_MODE_MASK GENMASK_ULL(23, 16)
+> +
+> +#define ACER_GAMING_FAN_BEHAVIOR_CPU BIT(0)
+> +#define ACER_GAMING_FAN_BEHAVIOR_GPU BIT(3)
+> +
+> +#define ACER_GAMING_FAN_BEHAVIOR_CPU_MODE_MASK GENMASK(1, 0)
+> +#define ACER_GAMING_FAN_BEHAVIOR_GPU_MODE_MASK GENMASK(7, 6)
+> +
+>  #define ACER_GAMING_MISC_SETTING_STATUS_MASK GENMASK_ULL(7, 0)
+>  #define ACER_GAMING_MISC_SETTING_INDEX_MASK GENMASK_ULL(7, 0)
+>  #define ACER_GAMING_MISC_SETTING_VALUE_MASK GENMASK_ULL(15, 8)
+> @@ -121,6 +130,12 @@ enum acer_wmi_predator_v4_sensor_id {
+>  	ACER_WMID_SENSOR_GPU_TEMPERATURE	=3D 0x0A,
+>  };
+>
+> +enum acer_wmi_gaming_fan_mode {
+> +	ACER_WMID_FAN_MODE_AUTO		=3D 0x01,
+> +	ACER_WMID_FAN_MODE_TURBO	=3D 0x02,
+> +	ACER_WMID_FAN_MODE_CUSTOM	=3D 0x03,
+> +};
+> +
+>  enum acer_wmi_predator_v4_oc {
+>  	ACER_WMID_OC_NORMAL			=3D 0x0000,
+>  	ACER_WMID_OC_TURBO			=3D 0x0002,
+> @@ -1565,9 +1580,6 @@ static acpi_status WMID_gaming_set_u64(u64 value, u=
+32 cap)
+>  	case ACER_CAP_TURBO_LED:
+>  		method_id =3D ACER_WMID_SET_GAMING_LED_METHODID;
+>  		break;
+> -	case ACER_CAP_TURBO_FAN:
+> -		method_id =3D ACER_WMID_SET_GAMING_FAN_BEHAVIOR;
+> -		break;
+>  	default:
+>  		return AE_BAD_PARAMETER;
+>  	}
+> @@ -1618,25 +1630,42 @@ static int WMID_gaming_get_sys_info(u32 command, =
+u64 *out)
+>  	return 0;
+>  }
+>
+> +static int WMID_gaming_set_fan_behavior(u16 fan_bitmap, u8 mode_bitmap)
+> +{
+> +	acpi_status status;
+> +	u64 input =3D 0;
+> +	u64 result;
+> +
+> +	input |=3D FIELD_PREP(ACER_GAMING_FAN_BEHAVIOR_ID_MASK, fan_bitmap);
+> +	input |=3D FIELD_PREP(ACER_GAMING_FAN_BEHAVIOR_SET_MODE_MASK, mode_bitm=
+ap);
+> +
+> +	status =3D WMI_gaming_execute_u64(ACER_WMID_SET_GAMING_FAN_BEHAVIOR_MET=
+HODID, input,
+> +					&result);
+> +	if (ACPI_FAILURE(status))
+> +		return -EIO;
+> +
+> +	/* TODO: Proper error handling */
+> +	pr_notice("Fan behavior return status: %llu\n", result);
+> +
+> +	return 0;
+> +}
+> +
+>  static void WMID_gaming_set_fan_mode(u8 fan_mode)
+>  {
+> -	/* fan_mode =3D 1 is used for auto, fan_mode =3D 2 used for turbo*/
+> -	u64 gpu_fan_config1 =3D 0, gpu_fan_config2 =3D 0;
+> -	int i;
+> -
+> -	if (quirks->cpu_fans > 0)
+> -		gpu_fan_config2 |=3D 1;
+> -	for (i =3D 0; i < (quirks->cpu_fans + quirks->gpu_fans); ++i)
+> -		gpu_fan_config2 |=3D 1 << (i + 1);
 
-diff --git a/drivers/platform/x86/thinkpad_acpi.c b/drivers/platform/x86/thinkpad_acpi.c
-index ad9de48cc122..a7e82157bd67 100644
---- a/drivers/platform/x86/thinkpad_acpi.c
-+++ b/drivers/platform/x86/thinkpad_acpi.c
-@@ -367,7 +367,6 @@ static struct {
- 	u32 beep_needs_two_args:1;
- 	u32 mixer_no_level_control:1;
- 	u32 battery_force_primary:1;
--	u32 sensors_pdrv_registered:1;
- 	u32 hotkey_poll_active:1;
- 	u32 has_adaptive_kbd:1;
- 	u32 kbd_lang:1;
-@@ -11815,12 +11814,10 @@ static void thinkpad_acpi_module_exit(void)
- {
- 	tpacpi_lifecycle = TPACPI_LIFE_EXITING;
- 
--	if (tpacpi_hwmon)
--		hwmon_device_unregister(tpacpi_hwmon);
--	if (tp_features.sensors_pdrv_registered)
-+	if (tpacpi_sensors_pdev) {
- 		platform_driver_unregister(&tpacpi_hwmon_pdriver);
--	if (tpacpi_sensors_pdev)
- 		platform_device_unregister(tpacpi_sensors_pdev);
-+	}
- 
- 	if (tpacpi_pdev) {
- 		platform_driver_unregister(&tpacpi_pdriver);
-@@ -11891,6 +11888,17 @@ static int __init tpacpi_pdriver_probe(struct platform_device *pdev)
- 	return ret;
- }
- 
-+static int __init tpacpi_hwmon_pdriver_probe(struct platform_device *pdev)
-+{
-+	tpacpi_hwmon = devm_hwmon_device_register_with_groups(
-+		&tpacpi_sensors_pdev->dev, TPACPI_NAME, NULL, tpacpi_hwmon_groups);
-+
-+	if (IS_ERR(tpacpi_hwmon))
-+		pr_err("unable to register hwmon device\n");
-+
-+	return PTR_ERR_OR_ZERO(tpacpi_hwmon);
-+}
-+
- static int __init thinkpad_acpi_module_init(void)
- {
- 	const struct dmi_system_id *dmi_id;
-@@ -11964,37 +11972,19 @@ static int __init thinkpad_acpi_module_init(void)
- 		return ret;
- 	}
- 
--	tpacpi_sensors_pdev = platform_device_register_simple(
--						TPACPI_HWMON_DRVR_NAME,
--						PLATFORM_DEVID_NONE, NULL, 0);
-+	tpacpi_sensors_pdev = platform_create_bundle(&tpacpi_hwmon_pdriver,
-+						     tpacpi_hwmon_pdriver_probe,
-+						     NULL, 0, NULL, 0);
- 	if (IS_ERR(tpacpi_sensors_pdev)) {
- 		ret = PTR_ERR(tpacpi_sensors_pdev);
- 		tpacpi_sensors_pdev = NULL;
--		pr_err("unable to register hwmon platform device\n");
-+		pr_err("unable to register hwmon platform device/driver bundle\n");
- 		thinkpad_acpi_module_exit();
- 		return ret;
- 	}
- 
- 	tpacpi_lifecycle = TPACPI_LIFE_RUNNING;
- 
--	ret = platform_driver_register(&tpacpi_hwmon_pdriver);
--	if (ret) {
--		pr_err("unable to register hwmon platform driver\n");
--		thinkpad_acpi_module_exit();
--		return ret;
--	}
--	tp_features.sensors_pdrv_registered = 1;
--
--	tpacpi_hwmon = hwmon_device_register_with_groups(
--		&tpacpi_sensors_pdev->dev, TPACPI_NAME, NULL, tpacpi_hwmon_groups);
--	if (IS_ERR(tpacpi_hwmon)) {
--		ret = PTR_ERR(tpacpi_hwmon);
--		tpacpi_hwmon = NULL;
--		pr_err("unable to register hwmon device\n");
--		thinkpad_acpi_module_exit();
--		return ret;
--	}
--
- 	return 0;
- }
- 
--- 
-2.48.1
+This was not replicated bellow. Just to be sure, are there no fans at
+BIT(1) and BIT(2)?
+
+
+> -	for (i =3D 0; i < quirks->gpu_fans; ++i)
+> -		gpu_fan_config2 |=3D 1 << (i + 3);
+> -	if (quirks->cpu_fans > 0)
+> -		gpu_fan_config1 |=3D fan_mode;
+> -	for (i =3D 0; i < (quirks->cpu_fans + quirks->gpu_fans); ++i)
+> -		gpu_fan_config1 |=3D fan_mode << (2 * i + 2);
+
+Same as above.
+
+--=20
+ ~ Kurt
+
+> -	for (i =3D 0; i < quirks->gpu_fans; ++i)
+> -		gpu_fan_config1 |=3D fan_mode << (2 * i + 6);
+> -	WMID_gaming_set_u64(gpu_fan_config2 | gpu_fan_config1 << 16, ACER_CAP_T=
+URBO_FAN);
+> +	u16 mode_bitmap =3D 0;
+> +	u16 fan_bitmap =3D 0;
+> +
+> +	if (quirks->cpu_fans > 0) {
+> +		fan_bitmap |=3D ACER_GAMING_FAN_BEHAVIOR_CPU;
+> +		mode_bitmap |=3D FIELD_PREP(ACER_GAMING_FAN_BEHAVIOR_CPU_MODE_MASK, fa=
+n_mode);
+> +	}
+> +
+> +	if (quirks->gpu_fans > 0) {
+> +		fan_bitmap |=3D ACER_GAMING_FAN_BEHAVIOR_GPU;
+> +		mode_bitmap |=3D FIELD_PREP(ACER_GAMING_FAN_BEHAVIOR_GPU_MODE_MASK, fa=
+n_mode);
+> +	}
+> +
+> +	WMID_gaming_set_fan_behavior(fan_bitmap, mode_bitmap);
+>  }
+>
+>  static int WMID_gaming_set_misc_setting(enum acer_wmi_gaming_misc_settin=
+g setting, u8 value)
+> @@ -1923,7 +1952,7 @@ static int acer_toggle_turbo(void)
+>  		WMID_gaming_set_u64(0x1, ACER_CAP_TURBO_LED);
+>
+>  		/* Set FAN mode to auto */
+> -		WMID_gaming_set_fan_mode(0x1);
+> +		WMID_gaming_set_fan_mode(ACER_WMID_FAN_MODE_AUTO);
+>
+>  		/* Set OC to normal */
+>  		if (has_cap(ACER_CAP_TURBO_OC)) {
+> @@ -1937,7 +1966,7 @@ static int acer_toggle_turbo(void)
+>  		WMID_gaming_set_u64(0x10001, ACER_CAP_TURBO_LED);
+>
+>  		/* Set FAN mode to turbo */
+> -		WMID_gaming_set_fan_mode(0x2);
+> +		WMID_gaming_set_fan_mode(ACER_WMID_FAN_MODE_TURBO);
+>
+>  		/* Set OC to turbo mode */
+>  		if (has_cap(ACER_CAP_TURBO_OC)) {
 
