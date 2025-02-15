@@ -1,234 +1,116 @@
-Received: from mail-yb1-f174.google.com (mail-yb1-f174.google.com [209.85.219.174])
+Received: from mail-yw1-f173.google.com (mail-yw1-f173.google.com [209.85.128.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A45BA1953A9;
-	Fri, 14 Feb 2025 22:21:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2179411185;
+	Sat, 15 Feb 2025 00:03:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739571665; cv=none; b=oG3iwyJexfyKDdafrtkXE+p6UT5voiOb12G6gT4o39Qc/sxyxJFdXdbB2UH8Fh/bXtqifcaaKYRD9vXKx4U+4mNPzEe87gRiO+VbR6SbZwm4NrUs4mQgCh50O+wENSr2bArmEoeCZSmNTjvWsK66lYlmIGsH7BGrH3XSQSR2r1c=
+	t=1739577792; cv=none; b=QYTMuNDRvMR42mopJhU/0yAmdRWs1VG5593MGqHzK1VFYo8a950pHVUkAJ6MS70GZOTWwpciF+UqD01b1Xl10tXHRTDbGtxTwl88w4fYeLVffcvVamIuVanlJtetzY31LW2gHuDGbeE9m3z9sgz90YqPWlfE+SWBfDxMp/Tlj70=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739571665; c=relaxed/simple;
-	bh=P/RRMN7AF8IFICtHDY7oRoDtgj4lkWR22FjVtVNQ/OU=;
-	h=Mime-Version:Content-Type:Date:Message-Id:Cc:Subject:From:To:
-	 References:In-Reply-To; b=WkNZ1UFfbJ9Xl6WLsH5Y73OEUDrIMjUVCatiOklm0MQixv/SOafVi/83GYa+9yET9PDXlnaYJI9U3/Dynmal84IgsYXuCr7FvBoqWBclD7dwOBdeb6I768d6ZQpyeevdRgOtjQlR/fn4tePnOItjCIigJXrb3MXSJRIGceXwJjI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=akpQF6NY; arc=none smtp.client-ip=209.85.219.174
+	s=arc-20240116; t=1739577792; c=relaxed/simple;
+	bh=7PW9ECbTvbxLratiQ5RGwLyR8ihQ/4Nt9a7Gx+Sn52E=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=NO/QTvoeCRGZ9C+dIiES5+Q8bpTxGP5igxg+JvxC2K+oJlKyirVjyole9putfr98OKd8Whu+9yX5GEeHlvjDiNo2tTNhyExAk4Krbf+kr4hNj7KNYV9dfuKDEOMlkSifK3GdyOp8xwX62396ojrDc5XqopB9Eci2GNmcvE5RGR0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=VkPyDyvD; arc=none smtp.client-ip=209.85.128.173
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="akpQF6NY"
-Received: by mail-yb1-f174.google.com with SMTP id 3f1490d57ef6-e5dab3f372aso2017306276.1;
-        Fri, 14 Feb 2025 14:21:03 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VkPyDyvD"
+Received: by mail-yw1-f173.google.com with SMTP id 00721157ae682-6f754678c29so25456317b3.0;
+        Fri, 14 Feb 2025 16:03:10 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1739571662; x=1740176462; darn=vger.kernel.org;
-        h=in-reply-to:references:to:from:subject:cc:message-id:date
-         :content-transfer-encoding:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=HBPGRdyN7h2fkoOnWWbLDJG7PIvR+TIVzq4NHRIF6Pg=;
-        b=akpQF6NYbM2TCt3ibAzflnO/1FplmtG7iNVZ1k+w/HQXLEjQjIhgTqFGZkHyXzLi4r
-         cFa4gz7zdhcXhrztUW59A3XZIcZJyceehGZBBSPzTddug+xiD4KB4Qq5SY4cJnTYaMoX
-         stAgO0FpQEsvEp/Rs2LtwEwX92jJsWXL0plPVHNr2yypPZyHWRrCn8o9R8uXr/WjqQKw
-         /3u/Ubot6kdws8OqqTBMV2KiQdf5NNH4qmg9x5Htu7JMGreccAyZ0+AdKP9HtGZ+FAEu
-         FjCL0Lu2LSjY0fMGtF/NAukINmRgHhpk1GN/U8GBRxuEqiQE9OxOcVcCL+ddOQ24UBEN
-         pBVQ==
+        d=gmail.com; s=20230601; t=1739577790; x=1740182590; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=oNvPfToKnR/rR/b+ekcS3fLQgOP+3Z1umibcOsqYhhE=;
+        b=VkPyDyvDM+Qj6HXa7Zjc+MiaQcDal7izD5hW/euaS06MVE1bdp4+aWTDWRXMLiUNv/
+         vxrefnmEXXhQZ1rQlkKaxkagb7mN4Z184SsTt3oFznQsi+LjqoByqMEk2TnLJWAdZf4A
+         Ro1WCgnz25uoCR8fFk2Z26BM3NSJ6fqIDXDfamqhdl4rlvnIqND2A9PhB8ubhvShPIYR
+         fQJD6Xt+QlQ4p0kUC+QfO4ATG3/vwB6Zq91++2De5oejmVMsgZZRhJdLNMIulq8DXei9
+         Dt8TTURf5QBxgFvWG5drVWzLxya7VCXxQ3TxhBB0w97T9yjXZmgeliqkI+HvTUqtBwSf
+         18iw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739571662; x=1740176462;
-        h=in-reply-to:references:to:from:subject:cc:message-id:date
-         :content-transfer-encoding:mime-version:x-gm-message-state:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=HBPGRdyN7h2fkoOnWWbLDJG7PIvR+TIVzq4NHRIF6Pg=;
-        b=FxGsMT4SPeNLOHiSmq9c0PY2bNvOcqZx+Rgdw/uIn6M7zVwNtpRdE4AFcuDY/Ly7Jh
-         gMNdT+vN/6EiW/X1cHJC6knTZQlUCkKbvkr2DuQCnv6AXCwp7Sxi8UF5vWLToUXf18Db
-         /2uZW5GWFgdrCPBRmwlQSeKh3HkE4GaWSEGFlIFaEUTJijUugD+rzGqe9dEKy67OUBJp
-         iab8lbMTS9GdxwmfnYaijfEcFGxNl4Ndfo5ThXSHY5d+haEiGkPFp3fjFCugUS1rr8Za
-         nPm+Luh1mRFUyZrnmkatcVrQP8LJpGJakJGoBySxNceztNat7sksfJgnfk/1nKpSuP9k
-         HtEg==
-X-Forwarded-Encrypted: i=1; AJvYcCV9qJLoWVCm44ykdcSwIV7FUKXSGKwTIiTpQBP8Ov9LM78voEK0YP9//lqRSu+wkyYQ5pr23H1FzPQLM6o=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxnS8xYN0WndqDdKEOtylTFpVFuPVpGzZAVNxBjrXUYhsros3EI
-	OG1aPVbKlEWammgdONl+FHUnAwoHyWlVHld3gIHVlxzeLPhemB80
-X-Gm-Gg: ASbGncvKHlwmiCmOEt6hsDkJdVq94QIIAv3h1pc78Q3sJ2ZlNrWWb0h+31PKXEEflLI
-	gTlP7aOVaRjfeqdjb5YOznDgByzz6esDe5r+4hnFxHOLM4LZDyB2E7DduzcTvKrbGb6wuzgqBmW
-	2BIoP0spN/aW0NtxJbyfGeMFB3O1aDOjj91aF0npJ9ozcCbhe5wsEG3GpvgTp2rooE+/W2K+oCR
-	rFg4CV5/qiukccqlvtnfwQfLPPc2Jm13oqK5Ze5m2GCF/gASeo/qU7lsd/iQ0G5OIgP8CFtWMO+
-	RXkw9ds=
-X-Google-Smtp-Source: AGHT+IElibYHHLBXYhijveLyI6yk8PVx1RQ0B3R7NKp/2QB4o9FD4fvD7SIBkkCd8p8FAHR63jarbA==
-X-Received: by 2002:a05:6902:3483:b0:e58:b99:6a5b with SMTP id 3f1490d57ef6-e5dc980afebmr815410276.8.1739571662537;
-        Fri, 14 Feb 2025 14:21:02 -0800 (PST)
-Received: from localhost ([2800:bf0:82:3d2:9e61:1a62:1a8c:3e62])
-        by smtp.gmail.com with ESMTPSA id 3f1490d57ef6-e5dadeca97bsm1237760276.32.2025.02.14.14.21.00
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 14 Feb 2025 14:21:01 -0800 (PST)
+        d=1e100.net; s=20230601; t=1739577790; x=1740182590;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=oNvPfToKnR/rR/b+ekcS3fLQgOP+3Z1umibcOsqYhhE=;
+        b=A1cMSy0FzygxLnTb6V60eOsdE4Qw4ofIBiIqVp9Nmpa6XWBKGVQVmTKYpiuaszGNH4
+         axcTk3MEOs3Q7/wQQWM6vu8AXr+baKg8nQU6bH7XRingJbDs7C4pK/ES1+lmlqVyzQ8H
+         RcHhxI2IJ/91aWxdfG7N5i7zdFHls0aJLqUDZ6Gcq8p/sITI+GRLD97s4w9DsGgpXtLL
+         TbnLyiP6rUHYhIpNDjubGG3LExAPVs8gGWqIIhi1e0X9SszXcyJ7I2zlsutAnefTbs8v
+         sH+4phINPlbHngH5BFcqI5wULkE+yRBN9bPFRudlg6E9tSSPuHsob2I0gEFNsuyGy7Sb
+         9txw==
+X-Forwarded-Encrypted: i=1; AJvYcCUMpsweSCBDHRx8++lbrBN2FBZv8O7IU5E3rjOy63zLhLPiHaIU2n2Qf6V0XTG2LlXIWxVGmC70UD9ibbpOqanN5EfQmg==@vger.kernel.org, AJvYcCUPcO7KQbyr2w0NDfKjmafODRpy9Tmb3wSH7QYQcVaFthXdf6grXEOoL7mvPpxH2OJeNOvngwhINkD6+qQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yyuil3nYMrmdqEQZnMeX9fQ/vsEFdllmisi33JF7VX3Rm+yVvkX
+	qdWm84EoGDwdw+SNw0jjCldHjXvZu/9RGOFsdObOifV7hPJ6GuS7
+X-Gm-Gg: ASbGncu3+ODEa/wTWqoH+rq7RaqN9vMJTGobwF6UgdMGOq1SZQ2s6wDnmJUNnB8Y3CZ
+	/+Qid3oHmBsT9/5Hw/Rs8DNZAoZ/x03hdtkifXgGJF+IaFH+sG5oEH1OviPP9sVAHh6JQBFoLIP
+	jvaQNMa+9Aa4K6reu+jBii8iigKG92sj6NeAwp0e1NOwF1YicZLhRJkiVFNs5ajq4w8x+sK3Btk
+	d55+PObyegENMbz+ipPfIEm4hmAsCMuLIBriFEofP6k4yyd7nCiZU8vw/o47eBIfEv/2ReBmgOP
+	gPPQvP05ljvmXsZ4cUMKb5o=
+X-Google-Smtp-Source: AGHT+IFzWDzEi24i/nz1De+3xJ3ckkugm3ihnELKtJEzL0femZ/Le90PGY4M2oc8iPbhpg6LLOokug==
+X-Received: by 2002:a05:690c:498a:b0:6f6:7b3f:2a68 with SMTP id 00721157ae682-6fb5837e82dmr17829787b3.31.1739577789988;
+        Fri, 14 Feb 2025 16:03:09 -0800 (PST)
+Received: from localhost.localdomain ([2800:bf0:82:3d2:9e61:1a62:1a8c:3e62])
+        by smtp.gmail.com with ESMTPSA id 00721157ae682-6fb35d586e5sm9844207b3.17.2025.02.14.16.03.08
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 14 Feb 2025 16:03:09 -0800 (PST)
+From: Kurt Borja <kuurtb@gmail.com>
+To: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	Mark Pearson <mpearson-lenovo@squebb.ca>
+Cc: "Hans de Goede" <hdegoede@redhat.com>,
+	Henrique de Moraes Holschuh <hmh@hmh.eng.br>,
+	ibm-acpi-devel@lists.sourceforge.net,
+	platform-driver-x86@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Kurt Borja <kuurtb@gmail.com>
+Subject: [PATCH 0/2] platform/x86: thinkpad_acpi: Enable devres for subdriver .init callbacks
+Date: Fri, 14 Feb 2025 19:03:00 -0500
+Message-ID: <20250215000302.19753-1-kuurtb@gmail.com>
+X-Mailer: git-send-email 2.48.1
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Fri, 14 Feb 2025 17:21:00 -0500
-Message-Id: <D7SIOS9FABGO.1ZOTYZJ4PWMTA@gmail.com>
-Cc: <platform-driver-x86@vger.kernel.org>, =?utf-8?q?Ilpo_J=C3=A4rvinen?=
- <ilpo.jarvinen@linux.intel.com>, "Armin Wolf" <W_Armin@gmx.de>, "Mario
- Limonciello" <mario.limonciello@amd.com>, "Hans de Goede"
- <hdegoede@redhat.com>, <Dell.Client.Kernel@dell.com>,
- <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v10 11/14] platform/x86: Split the alienware-wmi driver
-From: "Kurt Borja" <kuurtb@gmail.com>
-To: "Andy Shevchenko" <andriy.shevchenko@intel.com>
-X-Mailer: aerc 0.20.1-0-g2ecb8770224a
-References: <20250207154610.13675-1-kuurtb@gmail.com>
- <20250207154610.13675-12-kuurtb@gmail.com>
- <Z6uBJ9AC5XgZTlJG@black.fi.intel.com> <D7PT98IDXMUV.G2F1LRF8BX7@gmail.com>
- <Z6ufIQADzILVMusc@smile.fi.intel.com>
-In-Reply-To: <Z6ufIQADzILVMusc@smile.fi.intel.com>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-Hi Andy,
+Hi all,
 
-On Tue Feb 11, 2025 at 2:04 PM -05, Andy Shevchenko wrote:
-> On Tue, Feb 11, 2025 at 12:59:53PM -0500, Kurt Borja wrote:
->> On Tue Feb 11, 2025 at 11:56 AM -05, Andy Shevchenko wrote:
->> > On Fri, Feb 07, 2025 at 10:46:07AM -0500, Kurt Borja wrote:
->
-> ...
->
->> >>  obj-$(CONFIG_ALIENWARE_WMI)		+=3D alienware-wmi.o
->> >>  alienware-wmi-objs			:=3D alienware-wmi-base.o
->> >> +alienware-wmi-y				+=3D alienware-wmi-legacy.o
->> >> +alienware-wmi-y				+=3D alienware-wmi-wmax.o
->> >
->> > Oh my... it's even inconsistent!
->>=20
->> Again, this is an already used pattern:
->
->> 	https://elixir.bootlin.com/linux/v6.14-rc2/source/drivers/platform/x86/=
-dell/Makefile#L14
->>=20
->> I add configuration entries later. Is the order of the changes wrong? or
->> is it the entire approach? Do other modules here need a fix?
->
-> Again, it doesn't mean it's correct.
->
-> Maybe other modules also need that, I don't remember, but you may `git lo=
-g
-> --no-merges --author=3D"Andy" --grep objs` to see changes I made in the p=
-ast.
+It was reported by Mark [1] that if subdrivers used devres, the
+tpacpi_pdev wouldn't bind successfully to the device, thus failing to
+create the various sysfs attributes that this driver exposes.
 
-Sorry!
+The original problem is already fixed, however a complete solution was
+due.
 
-Everything made more sense after reading the docs and checking your
-commits.
+The approach I took is to let the driver core manage the lifetimes of
+the subdrivers (details in Patch [1/2]). This enables devres for
+subdrivers and IMO makes the code more maintainable (because of the
+lifetime gurantees).
 
-I submitted a patch fixing this. Thank you for pointing it out!
+This was compile tested only, because (unfortunately) I don't own a
+thinkpad so some testing is absolutely required, as this is an extremely
+intricate driver.
 
->
-> ...
->
->> >> +	if (!ret) {
->> >> +		if (out_data =3D=3D 0)
->> >> +			return sysfs_emit(buf, "[disabled] s5 s5_s4\n");
->> >> +		else if (out_data =3D=3D 1)
->> >> +			return sysfs_emit(buf, "disabled [s5] s5_s4\n");
->> >> +		else if (out_data =3D=3D 2)
->> >> +			return sysfs_emit(buf, "disabled s5 [s5_s4]\n");
->> >
->> > The whole code inherited same issues like redundant 'else'. Please, re=
-factor.
->>=20
->> This is not my code, so a separate patch would be needed.
->
-> Okay!
->
-> ...
->
->> >> +	if (strcmp(buf, "disabled\n") =3D=3D 0)
->> >> +		args.arg =3D 0;
->> >> +	else if (strcmp(buf, "s5\n") =3D=3D 0)
->> >> +		args.arg =3D 1;
->> >> +	else
->> >> +		args.arg =3D 2;
->> >
->> > sysfs_match_string()
->>=20
->> Same as above.
->
-> Same as above :-)
->
-> ...
->
->> >> +	if ((code & WMAX_THERMAL_TABLE_MASK) =3D=3D WMAX_THERMAL_TABLE_USTT=
- &&
->> >> +	    (code & WMAX_THERMAL_MODE_MASK) <=3D THERMAL_MODE_USTT_LOW_POWE=
-R)
->> >> +		return true;
->> >> +
->> >> +	return false;
->> >
->> > 	return ...
->> >
->> > but if you wish, this one is okay.
->>=20
->> This was done for readibility. Also this would require a different
->> patch.
->
-> No need, I'm fine with the current approach, just to show the alternative=
-s.
->
-> ...
->
->> >> +	ret =3D wmax_thermal_information(priv->wdev, WMAX_OPERATION_SYS_DES=
-CRIPTION,
->> >> +				       0, (u32 *) &sys_desc);
->> >
->> > How do you guarantee an alignment? Yes, it might be good for the speci=
-fic
->> > hardware, but in general this is broken code.
->>=20
->> This is a good question. I'm not really sure how to fix this tho. Is it
->> fine to just pass a __packed struct? Also this would require another
->> patch.
->
-> Usual approach here is to use one of get_unaligned_le32(), get_unaligned_=
-be32()
-> depending on the byte ordering.
->
->> >> +	if (ret < 0)
->> >> +		return ret;
->
-> ...
->
->> >> +		set_bit(profile, choices);
->> >
->> > Do you need it to be atomic?
->>=20
->> I don't think so. `choices` belongs to this thread only.
->
-> So, __set_bit() will suffice then.
+Based on top of the for-next branch.
 
-For some reason I thought `set_bit` was the non-atomic one. This is good
-to know.
+~ Kurt
+---
+[1] https://lore.kernel.org/platform-driver-x86/20250208091438.5972-1-mpearson-lenovo@squebb.ca/#t
 
->
-> ...
->
->> >> +void __exit alienware_wmax_wmi_exit(void)
->> >> +{
->> >> +	wmi_driver_unregister(&alienware_wmax_wmi_driver);
->> >> +}
->> >
->> > Why not moving these boilerplate to ->probe() and use module_wmi_drive=
-r()?
->>=20
->> This 3 files are a single module and it has two WMI drivers so this
->> can't be used.
->
-> Can it be split to two separate modules then?
+Kurt Borja (2):
+  platform/x86: thinkpad_acpi: Move subdriver initialization to
+    tpacpi_pdriver's probe.
+  platform/x86: thinkpad_acpi: Move HWMON initialization to
+    tpacpi_hwmon_pdriver's probe
 
-These two WMI drivers share a lot of features on old alienware models.
-Hence why I decided to link them together. IMO this bit of boilerplate
-is a fair tradeoff.
+ drivers/platform/x86/thinkpad_acpi.c | 176 ++++++++++++---------------
+ 1 file changed, 77 insertions(+), 99 deletions(-)
 
-Thank you again for your feedback. I was completely unaware of some
-things you pointed out. I will implement your suggestions soon.
 
---=20
- ~ Kurt
+base-commit: d497c47481f8e8f13e3191c9a707ed942d3bb3d7
+-- 
+2.48.1
+
