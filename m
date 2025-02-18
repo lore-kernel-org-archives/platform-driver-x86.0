@@ -1,214 +1,134 @@
-Received: from mail-yb1-f169.google.com (mail-yb1-f169.google.com [209.85.219.169])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 24BFD2356D6;
-	Tue, 18 Feb 2025 18:39:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 80E421EB5EF;
+	Tue, 18 Feb 2025 19:08:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739903959; cv=none; b=o6DzHMW/V/9jzvCNlpmBi9j4FDTgU1mhJrCRof10IZyb2CHbfeoRy+w6LTPQ/tUWdvAVOd+XM9a62UgcGpk1nPBivCfw7fsLlVWjwrPTqJCgsdW8oRtBLQPRWwUl1aOHHKgCOZGEYeF8WaVhtcydI3hTy1v5O43dCtKl6u5Jj08=
+	t=1739905730; cv=none; b=qgvidEVNWIoD8+P5im+C31fySwoF+tZuEzZw2hyWSOkSKZM2BbJK6faLy1EZKwQR+FpuOLmrxaCQqVmOfmQbD7vKeUdQIEq72Dmc9Xmo/CXD/eet5zGf8lSW5VyWnGD5vULDGrxpiT12VhsctohoKwcEnRszaeSdnfkcOEjyBic=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739903959; c=relaxed/simple;
-	bh=oEi8+DJ1Od9anjCSCDXHxWN91goXMv9PGcjFAatOkQw=;
-	h=Mime-Version:Content-Type:Date:Message-Id:Cc:Subject:From:To:
-	 References:In-Reply-To; b=IpdNs5w+gGfPKy8DBhOCwNQxlocDvqfBfhGMDAEk7EPZbCJhNYZK2pXkRTSSSxYx4KlUoeWMHlKm/YYCin+kKP1YY9i9DmatRUhah3B0K+EWoKqn+A/TvaIqCVumKZXVNG6ryDsqi3pH8IKg9cHpTyLi3j5FnBW0uwaazAVphd0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=RMjf4+94; arc=none smtp.client-ip=209.85.219.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1739905730; c=relaxed/simple;
+	bh=K3sJ5nwbX7JLTwQvKdPj0CaC9qj7MLTP0Lm01nfHmGY=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=cEVOmF+Cvl1fjai6vTH/803XK3DK0d3APNdLXLTplxvAli9VluQR0IzS5QeKI+/BmJlsWXP/v+xkR920fXH5i0I1CmQltkfKVkOdf+s07Qg+GddbS8LSVI21y2oP5uQreoOBHB0CrIHqRrtL60P0HgiefXbh6RC8/vL2+NstWBU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kpxBBL9g; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RMjf4+94"
-Received: by mail-yb1-f169.google.com with SMTP id 3f1490d57ef6-e5dcc3b0c77so2866592276.0;
-        Tue, 18 Feb 2025 10:39:15 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1739903955; x=1740508755; darn=vger.kernel.org;
-        h=in-reply-to:references:to:from:subject:cc:message-id:date
-         :content-transfer-encoding:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=A602ukX61G8SHfGgV9Mfn3RDCkXOuF+pNpwRiPxAdqk=;
-        b=RMjf4+94YQO9sV1NMSnJO6So3XEnUiJHICbP3k//rk+BKlGrEyBmVdjfUOaOKoP/40
-         xfVLWd+75luQpFucA7jyzVUhuJ4K4fAuHI8Avf5tIxpQjBeqM4hAV1EG2H5myssJdpfS
-         8rFztHjEG+tXpRNI8JZYpt/+vusd9fHrQ3tvberfOglVc4bEWaTJIwMPXcAWZ9gbomBF
-         y4gdvPEQ+4T6ffyhBpP2KQu4yKWDk8H0nNHtqk4jA0MP6NDAh7gyrxeWc86pJ586D3mu
-         5KYq1QioRuG6/I9GUmPiB9+VI8SAhtjiNEzgr/wenqSpF7Qrc0IQg0cBHvgK26X6a0xt
-         3hkw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739903955; x=1740508755;
-        h=in-reply-to:references:to:from:subject:cc:message-id:date
-         :content-transfer-encoding:mime-version:x-gm-message-state:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=A602ukX61G8SHfGgV9Mfn3RDCkXOuF+pNpwRiPxAdqk=;
-        b=PVYFC9qm26pIcq6BS54SGSH3Zm4Y0ONoX20J/MwGfRcpTzoh0GcFWggS/guDb3ATnB
-         Qfeg89lrRr2ySHeiiWV2dWxrtKTIb07f/3azldBT+m7LjOR9E1Sh+KUFKgekAj7UcumA
-         0FS7vaZSM1u7dYIS3Cc5ZNRGaI3E59ksW6cExUKf0aI9gSluM/1OdZrlGJjVPE2txFcS
-         rcDMSHWxj0MkRPn9pMhQnTFlGKD8jBDqpNPFJdm3JJAStBUSmtNhGUiRWfGC8ORGCHfQ
-         JvMtlL2ptGEh74AgZcNb4ZEES1D66+D2pioLaMupvNHLfsSMnuD5ESwD2eLuGalTNkEh
-         1Edw==
-X-Forwarded-Encrypted: i=1; AJvYcCU+PJYf0iMH+WPVKwDn7LnZDHUz/0CC1wc/4q/F2oRKr+BKP7P04T+729/PVpNJ0qUAQM8JoFdvV3iSNoKtCAf9N1breA==@vger.kernel.org, AJvYcCW88FE6JX1sfQFtfLSVNjZP021Qt6da+MJ87Zjzl8SuCxs9QK6Enmo2/wrvQ4QkW4jpSXXbfZVBCgeNA7g=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwW8MLkK3oI9140PJyX0lKySoNKeMdUzNVtQedaZSNCXlk0sQfw
-	V2yMD7P/jPhOVze3MyyoxhA/UT4X9Onbehfw7e3i2OXNn+pHVGfa
-X-Gm-Gg: ASbGncu4FYbuKMObrqCySrzAd5gftRkpAPVQ10QEB7Za/i9x/3XE7+pnoK8rcGAiUT9
-	gJxQDXUi+ml2LovGER2q3NH7NKHkriR39ygNU8E/U/MQ7GvcLLFRrRv3sYUy+Mu47Zq9aepgVZJ
-	ADvdfoy8l31vc15jZmDblhkik3YkxnO4nuCTYrDgYr4QzAvUSQbA06o/CuoWttGlFiWNTG+zhI+
-	v/IFEwk7Z6LLmtfZvKDr3PRS7NVBa40rFzT/GbewKkg4fJB5iR1i8bsK8SqNwSP5j0uqMSaPvFj
-	XAjfYRk=
-X-Google-Smtp-Source: AGHT+IF305OorZ6/B8Lr9PTjWCJ+kGoRs7RrVraUg+lZw/ZCLTQLJPtD1mmjf6z1EbXKxty6ICpHdg==
-X-Received: by 2002:a05:6902:108e:b0:e5d:d6b8:2317 with SMTP id 3f1490d57ef6-e5e0a1400admr641263276.44.1739903954958;
-        Tue, 18 Feb 2025 10:39:14 -0800 (PST)
-Received: from localhost ([2800:bf0:82:3d2:9e61:1a62:1a8c:3e62])
-        by smtp.gmail.com with ESMTPSA id 3f1490d57ef6-e5dae0d9f25sm3289866276.36.2025.02.18.10.39.13
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 18 Feb 2025 10:39:14 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kpxBBL9g"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 28818C4CEE2;
+	Tue, 18 Feb 2025 19:08:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1739905730;
+	bh=K3sJ5nwbX7JLTwQvKdPj0CaC9qj7MLTP0Lm01nfHmGY=;
+	h=From:To:Cc:Subject:Date:From;
+	b=kpxBBL9gmLdj94qp0jUz2wl98Gr+uaX2RCTYfx/+fSiCHMG1r4l0SUcGL4hNkR6P2
+	 V+u2Ju8HIFkai23Zm1Rt7KSmOrqMN8eHYXjhz0Cucj0Lx4Mu3AYncQ5g2bJs3c5vKD
+	 7vsI81VLqfVbs/UulbEa8NIHd334f7ivLITImIzyPRHyNbCxKA3spBD5uEKOXZyp1/
+	 gdcx3CMMoKQ+2ZtEVuDFGSqUlPEe76JUVe0V275Zho/c/v4o5bjFIS+19tPInQ0LtC
+	 WqFkU78xdvN9hoJOWiSkerWgJqke6h8a9LCjct8RoeDSBsdQx73siTJGIcwDgjmJdL
+	 YVX4qHbCAAa3g==
+From: Mario Limonciello <superm1@kernel.org>
+To: Hans de Goede <hdegoede@redhat.com>,
+	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Cc: Mario Limonciello <mario.limonciello@amd.com>,
+	Perry Yuan <perry.yuan@amd.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>,
+	Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	x86@kernel.org (maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)),
+	"H . Peter Anvin" <hpa@zytor.com>,
+	Jonathan Corbet <corbet@lwn.net>,
+	Huang Rui <ray.huang@amd.com>,
+	"Gautham R . Shenoy" <gautham.shenoy@amd.com>,
+	"Rafael J . Wysocki" <rafael@kernel.org>,
+	Viresh Kumar <viresh.kumar@linaro.org>,
+	platform-driver-x86@vger.kernel.org (open list:AMD HETERO CORE HARDWARE FEEDBACK DRIVER),
+	linux-kernel@vger.kernel.org (open list:X86 ARCHITECTURE (32-BIT AND 64-BIT)),
+	linux-doc@vger.kernel.org (open list:DOCUMENTATION),
+	linux-pm@vger.kernel.org (open list:AMD PSTATE DRIVER)
+Subject: [PATCH v8 00/13] Add support for AMD hardware feedback interface
+Date: Tue, 18 Feb 2025 13:08:09 -0600
+Message-ID: <20250218190822.1039982-1-superm1@kernel.org>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Date: Tue, 18 Feb 2025 13:39:12 -0500
-Message-Id: <D7VSH5I5ERDG.2QR7V6W3JX2LM@gmail.com>
-Cc: "Hans de Goede" <hdegoede@redhat.com>, "Henrique de Moraes Holschuh"
- <hmh@hmh.eng.br>, <ibm-acpi-devel@lists.sourceforge.net>,
- "platform-driver-x86@vger.kernel.org"
- <platform-driver-x86@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 2/2] platform/x86: thinkpad_acpi: Move HWMON
- initialization to tpacpi_hwmon_pdriver's probe
-From: "Kurt Borja" <kuurtb@gmail.com>
-To: "Mark Pearson" <mpearson-lenovo@squebb.ca>,
- =?utf-8?q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-X-Mailer: aerc 0.20.1-0-g2ecb8770224a
-References: <20250215000302.19753-1-kuurtb@gmail.com>
- <20250215000302.19753-3-kuurtb@gmail.com>
- <9a98e10c-dd14-45a9-96ec-6ebca8b68616@app.fastmail.com>
-In-Reply-To: <9a98e10c-dd14-45a9-96ec-6ebca8b68616@app.fastmail.com>
+Content-Transfer-Encoding: 8bit
 
-Hi Mark,
+From: Mario Limonciello <mario.limonciello@amd.com>
 
-On Tue Feb 18, 2025 at 11:50 AM -05, Mark Pearson wrote:
-> Hi Kurt,
->
-> On Fri, Feb 14, 2025, at 7:03 PM, Kurt Borja wrote:
->> Let the driver core manage the lifetime of the HWMON device, by
->> registering it inside tpacpi_hwmon_pdriver's probe and using
->> devm_hwmon_device_register_with_groups().
->>
->> Signed-off-by: Kurt Borja <kuurtb@gmail.com>
->> ---
->>  drivers/platform/x86/thinkpad_acpi.c | 44 +++++++++++-----------------
->>  1 file changed, 17 insertions(+), 27 deletions(-)
->>
->> diff --git a/drivers/platform/x86/thinkpad_acpi.c=20
->> b/drivers/platform/x86/thinkpad_acpi.c
->> index ad9de48cc122..a7e82157bd67 100644
->> --- a/drivers/platform/x86/thinkpad_acpi.c
->> +++ b/drivers/platform/x86/thinkpad_acpi.c
->> @@ -367,7 +367,6 @@ static struct {
->>  	u32 beep_needs_two_args:1;
->>  	u32 mixer_no_level_control:1;
->>  	u32 battery_force_primary:1;
->> -	u32 sensors_pdrv_registered:1;
->>  	u32 hotkey_poll_active:1;
->>  	u32 has_adaptive_kbd:1;
->>  	u32 kbd_lang:1;
->> @@ -11815,12 +11814,10 @@ static void thinkpad_acpi_module_exit(void)
->>  {
->>  	tpacpi_lifecycle =3D TPACPI_LIFE_EXITING;
->>=20
->> -	if (tpacpi_hwmon)
->> -		hwmon_device_unregister(tpacpi_hwmon);
->> -	if (tp_features.sensors_pdrv_registered)
->> +	if (tpacpi_sensors_pdev) {
->>  		platform_driver_unregister(&tpacpi_hwmon_pdriver);
->> -	if (tpacpi_sensors_pdev)
->>  		platform_device_unregister(tpacpi_sensors_pdev);
->> +	}
->>=20
->>  	if (tpacpi_pdev) {
->>  		platform_driver_unregister(&tpacpi_pdriver);
->> @@ -11891,6 +11888,17 @@ static int __init tpacpi_pdriver_probe(struct=
-=20
->> platform_device *pdev)
->>  	return ret;
->>  }
->>=20
->> +static int __init tpacpi_hwmon_pdriver_probe(struct platform_device *pd=
-ev)
->> +{
->> +	tpacpi_hwmon =3D devm_hwmon_device_register_with_groups(
->> +		&tpacpi_sensors_pdev->dev, TPACPI_NAME, NULL, tpacpi_hwmon_groups);
->> +
->> +	if (IS_ERR(tpacpi_hwmon))
->> +		pr_err("unable to register hwmon device\n");
->> +
->> +	return PTR_ERR_OR_ZERO(tpacpi_hwmon);
->> +}
->> +
->>  static int __init thinkpad_acpi_module_init(void)
->>  {
->>  	const struct dmi_system_id *dmi_id;
->> @@ -11964,37 +11972,19 @@ static int __init thinkpad_acpi_module_init(vo=
-id)
->>  		return ret;
->>  	}
->>=20
->> -	tpacpi_sensors_pdev =3D platform_device_register_simple(
->> -						TPACPI_HWMON_DRVR_NAME,
->> -						PLATFORM_DEVID_NONE, NULL, 0);
->> +	tpacpi_sensors_pdev =3D platform_create_bundle(&tpacpi_hwmon_pdriver,
->> +						     tpacpi_hwmon_pdriver_probe,
->> +						     NULL, 0, NULL, 0);
->>  	if (IS_ERR(tpacpi_sensors_pdev)) {
->>  		ret =3D PTR_ERR(tpacpi_sensors_pdev);
->>  		tpacpi_sensors_pdev =3D NULL;
->> -		pr_err("unable to register hwmon platform device\n");
->> +		pr_err("unable to register hwmon platform device/driver bundle\n");
->>  		thinkpad_acpi_module_exit();
->>  		return ret;
->>  	}
->>=20
->>  	tpacpi_lifecycle =3D TPACPI_LIFE_RUNNING;
->>=20
->> -	ret =3D platform_driver_register(&tpacpi_hwmon_pdriver);
->> -	if (ret) {
->> -		pr_err("unable to register hwmon platform driver\n");
->> -		thinkpad_acpi_module_exit();
->> -		return ret;
->> -	}
->> -	tp_features.sensors_pdrv_registered =3D 1;
->> -
->> -	tpacpi_hwmon =3D hwmon_device_register_with_groups(
->> -		&tpacpi_sensors_pdev->dev, TPACPI_NAME, NULL, tpacpi_hwmon_groups);
->> -	if (IS_ERR(tpacpi_hwmon)) {
->> -		ret =3D PTR_ERR(tpacpi_hwmon);
->> -		tpacpi_hwmon =3D NULL;
->> -		pr_err("unable to register hwmon device\n");
->> -		thinkpad_acpi_module_exit();
->> -		return ret;
->> -	}
->> -
->>  	return 0;
->>  }
->>=20
->> --=20
->> 2.48.1
->
-> Thanks for doing this.
+The AMD Heterogeneous core design and Hardware Feedback Interface (HFI)
+provide behavioral classification and a dynamically updated ranking table
+for the scheduler to use when choosing cores for tasks.
 
-Glad to help :)
+Threads are classified during runtime into enumerated classes.
+Currently, the driver supports 3 classes (0 through 2). These classes
+represent thread performance/power characteristics that may benefit from
+special scheduling behaviors. The real-time thread classification is
+consumed by the operating system and is used to inform the scheduler of
+where the thread should be placed for optimal performance or energy efficiency.
 
->
-> For the series - all looks good and I tested on a X1 Carbon 12 and confir=
-med the Thinkpad devices are there under /sys/devices/thinkpad_acpi and /sy=
-s/class/hwmon. Didn't find any issues.
->
-> Reviewed-by: Mark Pearson <mpearson-lenovo@squebb.ca>
-> Tested-by: Mark Pearson <mpearson-lenovo@squebb.ca>
+The thread classification helps to select CPU from a ranking table that describes
+an efficiency and performance ranking for each classification from two dimensions.
 
-Thank you! Making changes to this driver is a bit scary.
+The ranking data provided by the ranking table are numbers ranging from 0 to 255,
+where a higher performance value indicates higher performance capability and a higher
+efficiency value indicates greater efficiency. All the CPU cores are ranked into
+different class IDs. Within each class ranking, the cores may have different ranking
+values. Therefore, picking from each classification ID will later allow the scheduler
+to select the best core while threads are classified into the specified workload class.
 
---=20
- ~ Kurt
+This series was originally submitted by Perry Yuan [1] but he is now doing a different
+role and he asked me to take over.
 
->
-> Mark
+Link: https://lore.kernel.org/all/cover.1724748733.git.perry.yuan@amd.com/
+
+On applicable hardware this series has between a 2% and 5% improvement across various
+benchmarks.
+
+There is however a cost associated with clearing history on the process context switch.
+On average it increases the delay by 119ns, and also has a wider range in delays
+(the standard deviation is 25% greater).
+
+Mario Limonciello (5):
+  MAINTAINERS: Add maintainer entry for AMD Hardware Feedback Driver
+  cpufreq/amd-pstate: Disable preferred cores on designs with workload
+    classification
+  platform/x86/amd: hfi: Set ITMT priority from ranking data
+  platform/x86/amd: hfi: Add debugfs support
+  x86/itmt: Add debugfs file to show core priorities
+
+Perry Yuan (8):
+  Documentation: x86: Add AMD Hardware Feedback Interface documentation
+  x86/msr-index: define AMD heterogeneous CPU related MSR
+  platform/x86: hfi: Introduce AMD Hardware Feedback Interface Driver
+  platform/x86: hfi: parse CPU core ranking data from shared memory
+  platform/x86: hfi: init per-cpu scores for each class
+  platform/x86: hfi: add online and offline callback support
+  platform/x86: hfi: add power management callback
+  x86/process: Clear hardware feedback history for AMD processors
+
+ Documentation/arch/x86/amd-hfi.rst    | 127 ++++++
+ Documentation/arch/x86/index.rst      |   1 +
+ MAINTAINERS                           |   9 +
+ arch/x86/include/asm/msr-index.h      |   5 +
+ arch/x86/kernel/itmt.c                |  23 ++
+ arch/x86/kernel/process_64.c          |   4 +
+ drivers/cpufreq/amd-pstate.c          |   6 +
+ drivers/platform/x86/amd/Kconfig      |   1 +
+ drivers/platform/x86/amd/Makefile     |   1 +
+ drivers/platform/x86/amd/hfi/Kconfig  |  21 +
+ drivers/platform/x86/amd/hfi/Makefile |   7 +
+ drivers/platform/x86/amd/hfi/hfi.c    | 550 ++++++++++++++++++++++++++
+ 12 files changed, 755 insertions(+)
+ create mode 100644 Documentation/arch/x86/amd-hfi.rst
+ create mode 100644 drivers/platform/x86/amd/hfi/Kconfig
+ create mode 100644 drivers/platform/x86/amd/hfi/Makefile
+ create mode 100644 drivers/platform/x86/amd/hfi/hfi.c
+
+-- 
+2.43.0
 
