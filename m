@@ -1,66 +1,66 @@
-Received: from mail-ed1-f47.google.com (mail-ed1-f47.google.com [209.85.208.47])
+Received: from mail-ed1-f44.google.com (mail-ed1-f44.google.com [209.85.208.44])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A1B51F582B
-	for <platform-driver-x86@vger.kernel.org>; Tue, 18 Feb 2025 19:30:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB0F21F5854
+	for <platform-driver-x86@vger.kernel.org>; Tue, 18 Feb 2025 19:30:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739907054; cv=none; b=NA2bDQ9H2ukVC60Gu9uO4EASbRKyKeeN9cfSNg92Y8ieUW0nW2sy1y6Gp6WnU//lrYwtM80/doUblVArzfgGSuWa6KjfZ/TU9R5SqHnqWRA0YyVkq5bfWNFoIBXXyfNM89XI+cMX+6lQMtZG3iYRtfCZzfrj0EfpazRq6kKf4QY=
+	t=1739907056; cv=none; b=KwdUKv8SlvXtZ7Ex+64wCbpnBlUZBE7hy74N+6gQC9d89HI+P9qzhCQ+VRlspv9fv5HuGZZBexl46knfpXU6AcPys8ttZw7JbHO8ix7E9q7Qhbz+lTtIiXLobva9iVfQqv/A7WGZXDwdnJC0H6dGm7e2t798p1eT9ICMySib6A4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739907054; c=relaxed/simple;
-	bh=RfNdAqHaKYXIX+EYOkQ5lgsT/Z6MiVQ0NUsu4u5DgDM=;
+	s=arc-20240116; t=1739907056; c=relaxed/simple;
+	bh=ma6EXu0EtX44zpd7hqJ6kC+ikAUaUrZisGtu8UlCCLk=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=t2ADmsPmzc/2Yl6MiqlVpbgtUX7fN7d+86QHZA6e+YufYrSLOMew2LFMN4EFwo6k8N8KDVoBax4owsAAl5ukSMz6Ko+/hXdbq8Jy4hxxmAF5S0M/KD3Fc6X2ZGjfUJZZSSCjrBUkyDVhwkvsjrEUg4vWr44quHEApSCmSpmv6SM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=cBgDL0iJ; arc=none smtp.client-ip=209.85.208.47
+	 In-Reply-To:To:Cc; b=FgMzZuxPze2KN3fluAFukaf0kV9R/NTHl85HHJ9ckqgUl6wSC+nTiMWl/peHEJ+qqr23Vj5OWIrx4wz9ZBGSxEHgE7TnZnPlEj3sMINbh2HGsn78FHTyR+9mXWfEFUqrEzdqXt0J+DO3xobq8fi/0tfTLIFZwLbsltp42iEIaFw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=G8YH15ZZ; arc=none smtp.client-ip=209.85.208.44
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="cBgDL0iJ"
-Received: by mail-ed1-f47.google.com with SMTP id 4fb4d7f45d1cf-5e08064b4ddso1159371a12.1
-        for <platform-driver-x86@vger.kernel.org>; Tue, 18 Feb 2025 11:30:52 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="G8YH15ZZ"
+Received: by mail-ed1-f44.google.com with SMTP id 4fb4d7f45d1cf-5deb1266031so10428447a12.2
+        for <platform-driver-x86@vger.kernel.org>; Tue, 18 Feb 2025 11:30:54 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1739907051; x=1740511851; darn=vger.kernel.org;
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1739907053; x=1740511853; darn=vger.kernel.org;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=V2IJA96cn2epCMiVThMTa+CHJ1H46iDl1Xl8KOw8NEU=;
-        b=cBgDL0iJiAiR3wj5cwBqhlcg3CezOnwe0hvHo2dKVh15VdH6Jxic+DtNXZq67TGeRb
-         zgUsK3n6XPlbyCqfl7LwD4+ReYuabu2ys6f9ugwufdKJJc/YbAZKerKhlexltXQrS4Xy
-         +viZUSS+/p5NPcUj/PgcUbHzwjJGT4MdLBaAvgB8seZ+vCSLjQbX1rkLiwL6Jytd2lY/
-         f0KzrTHblUe59LwoOHARWP2YgaudB7KBhCreQ3PskhwORw2pn/ibCszMiHAytnsImerH
-         qS92b6NU8lRY4YsF2MqR7t3lg3VBdI9zY2ASSGmzEvdBOz8L4WJD8sn48+M+D0Ow0/y+
-         06/Q==
+        bh=Rf7170qq7Y3fQ7uVc37Bv/W29DRyxfOGfDaN3M72oXs=;
+        b=G8YH15ZZBqaCVp4firJutU6x52xqffbjzYDWrvpB7HXF+3PDOz51BXM7sSlHmHBTmt
+         USTJctCjI2t57aHPWma9ZDed2ZkJfRov8zqjZL2UcU/qpuVlPg/bPVwJbBRwAc9XLiq1
+         zouj0M5iDyrKWNyqr2GzCA14Ktu8ayYFflXN/qOdwxMOc373XoX8FhyCTYVsAarpkYrs
+         nah1gRH4C6wWSHXUmsqfyZKtCfs6YxKrwIM89iDDwSX9/V9/MAkrKa7y5X/Afp6x0BpR
+         KJjc10fYX5LMf7Ba0f6F8R9poCjzGRM3iLOchOVnJ9FRn/xCcJzkkWyT2GA7FYDfMaz9
+         zZng==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739907051; x=1740511851;
+        d=1e100.net; s=20230601; t=1739907053; x=1740511853;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=V2IJA96cn2epCMiVThMTa+CHJ1H46iDl1Xl8KOw8NEU=;
-        b=NclF3cpwLx53O3kbAhUbnBhlL2hfGF1uRP1rM2KHQ4npXY2w9yBoLb28rFR0ZWY8bH
-         syF4ayeAuSRvhjiF1t5/VEzKyQkxtDNWZFHumRMrx/ViJnMT4DDtVLISWSzoWD6oKSLe
-         8QCyKgLIBe04INGeW3iuypDJtUWkRniBCWKsh4/2Mj8Y559BzK3h6QiFKFbtyFMoInN4
-         MCM9uigvtzLqUuNaMnHBZ2BA6OQ3nKJxUE1M6v5tRClo6yBqCpmL6GHw5fVL87o2NoQ7
-         LeD94FqNMup3kWR4hkPEiw+TxQxsWmHGnHMKKnkkP6Gmbmit/CU1nm2n+5TaaqAXlqd3
-         PoEQ==
-X-Forwarded-Encrypted: i=1; AJvYcCX16gIdWMNG6Yov+uPyQCH6AZh46/QvXt+CkWuLWfTb1+QcYU979QQAJAwnFLg6si//r/SWs42n37ZmdFp/ImydNoRs@vger.kernel.org
-X-Gm-Message-State: AOJu0Yze6vYgO1CWhzDl7AepozwUPbmqFEXpWSoDK8qiVCXdtcpuPCdw
-	7C7tYSWQKhHXx0qffZmOgDKAbvjRGVszAkspgtBdaeiR31PkYP+IjPA++6rGApU=
-X-Gm-Gg: ASbGncuTf2yAb4kWE5wU47P8p612F12oMx2I6CvCuNethDAa6MuJBOfft7SBNWg5Hw4
-	Dr6mjXOJRBVMWzWkLOVbx5k3RMGMgeEJGdGO20+bmvt6lvCXGXMiNg9hmv4KWgiJAXeD4k6ueRB
-	BULLK17NgBFL/nm4jf0I0ere/OIGP5BOz0/MF3fWQ2Vxb7HlQd1/3sPSNgI1lrSGrbyZ+73CRfd
-	n54sEFgE++jGQvT2P1fNBJjTzZXJy8dAGHs9IpHd/LSviMvnG79lusXXlIEkOdDuIPUkwheEzRd
-	QZjzDyMYVIEXzwdNdxWIsMDB4C/W
-X-Google-Smtp-Source: AGHT+IHXtRDavoFEuaxpZTZMT0EqHfm1KbVfaahxr8Qdj+LPqSMJy9KjmSUTGyYJHs3yvBW2gyEYug==
-X-Received: by 2002:a05:6402:1ec8:b0:5e0:69b3:441c with SMTP id 4fb4d7f45d1cf-5e069b34491mr6798656a12.26.1739907050796;
-        Tue, 18 Feb 2025 11:30:50 -0800 (PST)
+        bh=Rf7170qq7Y3fQ7uVc37Bv/W29DRyxfOGfDaN3M72oXs=;
+        b=NNqK/Awglg5NWcmXod3fnQcdQjg1JjFqEaaOcAqYnnYloplRhjkESDfuZOkY5qhegk
+         45CSA+ocrNvTaOxmgQ/OHso9IjwbDC38UBO039g1C8EEUtd+3m9EiKqZNZFYY35Fskie
+         d2o6WtPHR6Tr1rvIQnfsEMBRPnLqyflZ8y5U14jSvgsCUihOyUVIOs6tfCO/Bf0XO6h3
+         EdFAUaRNyh4PMFeBhG0VFk+HihyWMcL82/L9LwfL4KSZHShKhk012sdA9FwiwxTUnBjc
+         4vZkVYPj2RqIlIeIdDy4buECVx89m12+6OFMT60hvkMhX0vjF8nLvSSJDhZu6RZQi5Jk
+         SMWw==
+X-Forwarded-Encrypted: i=1; AJvYcCVo8fKO/u8MujjZmFO675ttcgBqGRix1jsfDY+eDWFp/4BkN0K3v9bdfb/uQ2facDcZYIjqAKrv5VreoUhDbn0Cu+MN@vger.kernel.org
+X-Gm-Message-State: AOJu0YwU/jTYih1ze0Rc9SE+A+7xC8yo+IRjAkWt7++hRgSNpw8WGK1a
+	hiDvW99KzwXVtYZ2AMo4T6pTEBxGEjkPU3pelR+swV6td5mgzUgH4Q12klKiUmk=
+X-Gm-Gg: ASbGncup9Us97LkkJ4Pe+RuAoC1u3xZJHCmg68iPXe96EMr9UaH4PrZKeZ2LM1d0T2l
+	X/69C/XSsnUe9XU7woc0N+J3Q+uzL323Ssed/YjwGNxXuGhaXb7AiLeTXxENdEn+QIgb+MkCnA8
+	aij0CTYVSPnJFPMsSPj6DbID9Fox8rFK/dhakWhB45NuL5zV4GeTrXWQ7r2Bd2MsxuGk4tbuRTK
+	K18fjnq8dlaLCREq7/fZG5eLO0Fw+DZALB6ajiS0ErPNHeALKekSYuW/1s5OkyNv1HZ7KXHYuN/
+	rMi6Ne+0ttcYesgiCwdwd6sopCkX
+X-Google-Smtp-Source: AGHT+IHpHIYxB4dVNZ3LyzCs91SySOLLXWjws+ryoYBHtygC8Wxu6MzjUCPyJSfIFH4a8C/yd6uRcA==
+X-Received: by 2002:a05:6402:51cb:b0:5e0:82a0:50dd with SMTP id 4fb4d7f45d1cf-5e082a05797mr2098352a12.27.1739907052712;
+        Tue, 18 Feb 2025 11:30:52 -0800 (PST)
 Received: from toaster.baylibre.com ([2a01:e0a:3c5:5fb1:cbaf:af0:839d:fb4a])
-        by smtp.googlemail.com with ESMTPSA id 4fb4d7f45d1cf-5dece1c3ce5sm9338985a12.17.2025.02.18.11.30.47
+        by smtp.googlemail.com with ESMTPSA id 4fb4d7f45d1cf-5dece1c3ce5sm9338985a12.17.2025.02.18.11.30.50
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 18 Feb 2025 11:30:49 -0800 (PST)
+        Tue, 18 Feb 2025 11:30:52 -0800 (PST)
 From: Jerome Brunet <jbrunet@baylibre.com>
-Date: Tue, 18 Feb 2025 20:29:51 +0100
-Subject: [PATCH v4 6/8] reset: eyeq: drop device_set_of_node_from_dev()
- done by parent
+Date: Tue, 18 Feb 2025 20:29:52 +0100
+Subject: [PATCH v4 7/8] clk: clk-imx8mp-audiomix: use the auxiliary device
+ creation helper
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -68,8 +68,8 @@ List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-Message-Id: <20250218-aux-device-create-helper-v4-6-c3d7dfdea2e6@baylibre.com>
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250218-aux-device-create-helper-v4-7-c3d7dfdea2e6@baylibre.com>
 References: <20250218-aux-device-create-helper-v4-0-c3d7dfdea2e6@baylibre.com>
 In-Reply-To: <20250218-aux-device-create-helper-v4-0-c3d7dfdea2e6@baylibre.com>
 To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
@@ -105,63 +105,115 @@ Cc: linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org,
  linux-arm-kernel@lists.infradead.org, linux-amlogic@lists.infradead.org, 
  Jerome Brunet <jbrunet@baylibre.com>
 X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1584; i=jbrunet@baylibre.com;
- h=from:subject:message-id; bh=Ay58eJ7ot5/ul3WJ0A2vWFebi7iz9JDlKKz/MQBcPk0=;
- b=owEBbQKS/ZANAwAKAeb8Dxw38tqFAcsmYgBntN/UNRwYRSxCacN/wjpG+gTD5T1KG1hcBQsMM
- QnDuvUYONiJAjMEAAEKAB0WIQT04VmuGPP1bV8btxvm/A8cN/LahQUCZ7Tf1AAKCRDm/A8cN/La
- hWCyEACe+SnGCN6YdYLKgHmg2tCmpB+scSaVfptOtiiCaNmkm2ceymUua+hl4HQuc+cggoymEAI
- NRoyFjvpDwxEsenxo50indBSo4J+xKz/BxfWgchbJ5jBN98rcIbG8qbRJoK6bofmL8VieWY/C9n
- QziuMeen3+L6VIqwheLwS89czpdFIbtEchmvyO7447kPZT/f9tcqTtHyZZQ9ZWmUEPqyytQH3g1
- FXnb/QkITd2cOjX8fiWKCwqHnHuZZioCk73ybWlnXFChDFTJO1C/Kubw+Ku8ou5Oi1eNm5DpAKD
- AnhlKqHvcd9jAybx2STZQG34ILyCq0PGKCqdShGQNi3dEiokHFL3C08wZwHaieTJgG/BRqHDLxd
- +zWCAJ1BPN4sHUG0VUhEU1N3y5PLQTlN+fqW1PfZs66fZF3RWN2m6IST2cjtFQqOp9qEe9VL2m9
- h+b2UEflNPJZnzrxvGsMYOa1GOe3xEDN35bjBbnpOKh+SqsEnFVFvC/O08+02k2pGEvuCJgPAjN
- cmFW/PiIsKprUWk5c8WAdIAGfcL4OPNoHW/au92eXmWfXnZY45TkkT8Hkk2hgbQosUEC1eOtFKf
- MF1kq+BTKv4twjueAZWSPLgmQ+t+yWBdXZDVBktP2ocMRM8KOEqTeFZuMEw7Sebi/SXGVa4YK25
- DPOtNJY5VIKPj0g==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2798; i=jbrunet@baylibre.com;
+ h=from:subject:message-id; bh=ma6EXu0EtX44zpd7hqJ6kC+ikAUaUrZisGtu8UlCCLk=;
+ b=owEBbQKS/ZANAwAKAeb8Dxw38tqFAcsmYgBntN/VIh7m+Cn8Gx+R/npCxGvJH4NCUefaxFlhn
+ gu0IqWnjBiJAjMEAAEKAB0WIQT04VmuGPP1bV8btxvm/A8cN/LahQUCZ7Tf1QAKCRDm/A8cN/La
+ hYVyD/90MBlzLttiipSPEDV3EdUFxIRifW8CB/ozE3YsCyj2v/DltrmPk563MQ5pa8itqfo5hkU
+ 4A8uKNAUHs14NclRLizOGn6E2OBZW/tn4ElVBMO65CtqbYyOtqBnsWDcaS758f/TBsB/KzwIRqe
+ u/MdB86COXZ7E0Yx33885Shus9RahC6bGdvoBax0KzyWXB28Zfs56Dpy4haxed1jB0YzQnGrtWx
+ pZ6HQxrdNKrS1V4FWGSzPl5f1oazL81zZnYpSBz200B7CNxKcAEEAMCMMIANqSAhDDxXaynOTSp
+ WYqRQirSRpdrRSgogove/vJqlyJQEvkEoP08xVSBRUH0k8jPl8AyeIy1RrwvPiTPgoekvpMSb+8
+ DMkOah/WLuym+3gJnOq9dtIg+X/ZPE7iPKreaC4TIHkCRQ4enqoO0BaYy2G/W5t+uDGBzxhsqFH
+ CpQYATnH9X7aGhTIgcEatDE5NENzgl26jip0Dl2U6fTkcbRiYzRHwqdqqqlwsbZ6l9EooZL+6f4
+ 5kPCwJXOzUKfvTD8tNkD/GUpx8I1zc3pQ7R7KzzLxiiOG6oyQqm+HLCl/Bzr+afc+t51LbakoAm
+ t6Qd2Q3tmZH1iA0sds5miFLH45OdqHtXeqrKPzPI+3W8oH37DOBtnvGssDoHjB8HiBJ1Bx4Xdg9
+ OxcTaNJ3Vo552uA==
 X-Developer-Key: i=jbrunet@baylibre.com; a=openpgp;
  fpr=F29F26CF27BAE1A9719AE6BDC3C92AAF3E60AED9
 
-From: Théo Lebrun <theo.lebrun@bootlin.com>
+The auxiliary device creation of this driver is simple enough to
+use the available auxiliary device creation helper.
 
-Our parent driver (clk-eyeq) now does the
-	device_set_of_node_from_dev(dev, dev->parent)
-call through the newly introduced devm_auxiliary_device_create() helper.
+Use it and remove some boilerplate code.
 
-Doing it again in the reset-eyeq probe would be redundant.
-Drop both the WARN_ON() and the device_set_of_node_from_dev() call.
-Also fix the following comment that talks about "our newfound OF node".
-
-Signed-off-by: Théo Lebrun <theo.lebrun@bootlin.com>
 Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
 ---
- drivers/reset/reset-eyeq.c | 13 ++-----------
- 1 file changed, 2 insertions(+), 11 deletions(-)
+ drivers/clk/imx/clk-imx8mp-audiomix.c | 49 ++++++-----------------------------
+ 1 file changed, 8 insertions(+), 41 deletions(-)
 
-diff --git a/drivers/reset/reset-eyeq.c b/drivers/reset/reset-eyeq.c
-index 02d50041048b42921e3e511148cd29f215b5fc5e..8018fa895427bb1e51ea23b99803dc7fe6108421 100644
---- a/drivers/reset/reset-eyeq.c
-+++ b/drivers/reset/reset-eyeq.c
-@@ -420,17 +420,8 @@ static int eqr_probe(struct auxiliary_device *adev,
- 	int ret;
+diff --git a/drivers/clk/imx/clk-imx8mp-audiomix.c b/drivers/clk/imx/clk-imx8mp-audiomix.c
+index c409fc7e061869988f83c7df3ef7860500426323..fa15a5ed59e304687317b5a23c845a0588890bee 100644
+--- a/drivers/clk/imx/clk-imx8mp-audiomix.c
++++ b/drivers/clk/imx/clk-imx8mp-audiomix.c
+@@ -230,61 +230,28 @@ struct clk_imx8mp_audiomix_priv {
  
- 	/*
--	 * We are an auxiliary device of clk-eyeq. We do not have an OF node by
--	 * default; let's reuse our parent's OF node.
--	 */
--	WARN_ON(dev->of_node);
--	device_set_of_node_from_dev(dev, dev->parent);
--	if (!dev->of_node)
--		return -ENODEV;
+ #if IS_ENABLED(CONFIG_RESET_CONTROLLER)
+ 
+-static void clk_imx8mp_audiomix_reset_unregister_adev(void *_adev)
++static int clk_imx8mp_audiomix_reset_controller_register(struct device *dev)
+ {
+-	struct auxiliary_device *adev = _adev;
 -
--	/*
--	 * Using our newfound OF node, we can get match data. We cannot use
--	 * device_get_match_data() because it does not match reused OF nodes.
-+	 * Get match data. We cannot use device_get_match_data() because it does
-+	 * not accept reused OF nodes; see device_set_of_node_from_dev().
- 	 */
- 	match = of_match_node(dev->driver->of_match_table, dev->of_node);
- 	if (!match || !match->data)
+-	auxiliary_device_delete(adev);
+-	auxiliary_device_uninit(adev);
+-}
+-
+-static void clk_imx8mp_audiomix_reset_adev_release(struct device *dev)
+-{
+-	struct auxiliary_device *adev = to_auxiliary_dev(dev);
+-
+-	kfree(adev);
+-}
+-
+-static int clk_imx8mp_audiomix_reset_controller_register(struct device *dev,
+-							 struct clk_imx8mp_audiomix_priv *priv)
+-{
+-	struct auxiliary_device *adev __free(kfree) = NULL;
+-	int ret;
++	struct auxiliary_device *adev;
+ 
+ 	if (!of_property_present(dev->of_node, "#reset-cells"))
+ 		return 0;
+ 
+-	adev = kzalloc(sizeof(*adev), GFP_KERNEL);
++	adev = devm_auxiliary_device_create(dev, "reset", NULL);
+ 	if (!adev)
+-		return -ENOMEM;
+-
+-	adev->name = "reset";
+-	adev->dev.parent = dev;
+-	adev->dev.release = clk_imx8mp_audiomix_reset_adev_release;
+-
+-	ret = auxiliary_device_init(adev);
+-	if (ret)
+-		return ret;
++		return -ENODEV;
+ 
+-	ret = auxiliary_device_add(adev);
+-	if (ret) {
+-		auxiliary_device_uninit(adev);
+-		return ret;
+-	}
+-
+-	return devm_add_action_or_reset(dev, clk_imx8mp_audiomix_reset_unregister_adev,
+-					no_free_ptr(adev));
++	return 0;
+ }
+ 
+ #else /* !CONFIG_RESET_CONTROLLER */
+ 
+-static int clk_imx8mp_audiomix_reset_controller_register(struct device *dev,
+-							 struct clk_imx8mp_audiomix_priv *priv)
++static int clk_imx8mp_audiomix_reset_controller_register(struct device *dev)
+ {
+ 	return 0;
+ }
+ 
+-#endif /* !CONFIG_RESET_CONTROLLER */
++#endif
+ 
+ static void clk_imx8mp_audiomix_save_restore(struct device *dev, bool save)
+ {
+@@ -408,7 +375,7 @@ static int clk_imx8mp_audiomix_probe(struct platform_device *pdev)
+ 	if (ret)
+ 		goto err_clk_register;
+ 
+-	ret = clk_imx8mp_audiomix_reset_controller_register(dev, priv);
++	ret = clk_imx8mp_audiomix_reset_controller_register(dev);
+ 	if (ret)
+ 		goto err_clk_register;
+ 
 
 -- 
 2.47.2
