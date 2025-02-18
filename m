@@ -1,105 +1,154 @@
-Received: from mail-vs1-f52.google.com (mail-vs1-f52.google.com [209.85.217.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D5E761EFFA7;
-	Tue, 18 Feb 2025 19:41:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.217.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CEA7A1DED48;
+	Tue, 18 Feb 2025 20:25:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739907709; cv=none; b=JogmrhAuCy6BqDcN8O9h0JihpU7DSbfbUnckXhUuhXyXyK5FlU+8mg1TTStxPU+PmJg/K5yIm48LfASsh+vWG+bHWWuecCLF9leVwhit0/pqMi2nVcAaptARok2Kf2q8tg/pluSnRLnTnl02Pi/Cu86mu6vdDME7lYJ0KYb/cB4=
+	t=1739910327; cv=none; b=srKQybZr6P/roK7gNt16VgWQ0DwsC7W0Tfm/X7P4t5PXyiXyf7iTOw+0mv6/jMSU5rWd973UEIqAg+m6OhdqOrYf+ZU9Bm2e6xM4GkgNEzPvkwPrzVT1CMZlCUPTSGebZuZQshTboMBNIWNmRQpNk1Lgh5//arHPA5x9Xa6K+bQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739907709; c=relaxed/simple;
-	bh=GMhY2X6oUkz9NAXj5l8fbYvKnOZ0XDHBM4sQNLT/xkY=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=kjcYaiYFQBzgP2ECxQczfsHEw1x/t622/Mcj167he7sEVzaUr/F+9W9+t1u5sociGD1oRAy0mmOOq5ix6CBCGtBaQEB7bkrPIY0XztJ4gD4/FHwPH4cKiWqncKW9M6c2943K047fBBANW53u8G4DT0ll+1+pmmGs1OkOahQqbg0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=NdboW2Tr; arc=none smtp.client-ip=209.85.217.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1739910327; c=relaxed/simple;
+	bh=W40fmn0GF/iCbSU8PYbR+qEbaLnLwXnRe7e9jdruoeM=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=IunqpRLupgPfouf/13v+NcErbgQQW2Ju6KHzEsuZpwdNWMux1c5GyZBJv9vgtY6NSYMcdJwNpSlXr9i2Y1oQfTKmBRayVB++M7WMWFH3jchnHXHHyfRAvHZqkmTJBX+cVPBEJJZb6CsDDk2N/2ocN60/IYOI1E2BCL676b7mre8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lMZb6sDn; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NdboW2Tr"
-Received: by mail-vs1-f52.google.com with SMTP id ada2fe7eead31-4be76fecac5so399959137.1;
-        Tue, 18 Feb 2025 11:41:47 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1739907707; x=1740512507; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=vrSeJ2SSKPXe9psA+CXvKcG3ZPT5cBDgTCavvEP5NnQ=;
-        b=NdboW2TrSfk+y8e56gY/prSiFkE7XKykqtDm6K3c/xcf0EAJjF0aoMV9XKBfS0J5KR
-         Cl5/xhWPuf2LFxiNCdW6/CpDA+PQQmcWJ6vjeslu8GWyzUAjVMG5NvbUikNV/VNT6GBi
-         2NHyEyyTs17hxD/u07EYfoJ0sBpcD5xMpH2Mf8ukMRxbtsOD1dYevV2JY8Lq8/h4bxNT
-         QbVE1Y+LtxwnIc/sz+6fx0rWqC1WgHiEmRpdQp3CcN0SALPzeGfykDXLNc+Fc2GUl0uy
-         W88KXLO0kOJ5rkk+hU9YliLfBgp1k2zfIia16jdCyQUN5AEeBcbZbZlmyAmAGOK6PAyB
-         6/Hw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739907707; x=1740512507;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=vrSeJ2SSKPXe9psA+CXvKcG3ZPT5cBDgTCavvEP5NnQ=;
-        b=gZ9cLi+u31oIuiP+LvkvakdZyZxNNW0+wDhcDdzQ6KRQPOfuE78Q+wepi62aMumxsO
-         e2uE4cT3Lqz5ZiRcMltwQirMvZ5W6yjjcaFGE42NaUOlgDuIw0kD13NOPhU1rpgcsEY7
-         vphIoet7kO/hNH3icb0Q9m4xGHTaF3bEubdz40umsZtxv0S/+XfFj5xIS9Wk51LsouwC
-         mrLcCCN6RsWtSi+VpZD0r5WExu3q2I/CJRndTV/oChCyzXVPxYCmgrMp76y8VPM8KbFB
-         LBitecHFOrjICDWba/trwL8De/GEEqPeKPZ3agX7D4pHmiUsOKnbu1RBGfZek7J8+qMv
-         NDfw==
-X-Forwarded-Encrypted: i=1; AJvYcCXTjNF20Pp+tljTgnrXOgPqhkX08hZI7+4qD3YIKG9Ve6ZcHGdbp2QAlyT2nIXk594WORsDdlnUFziy/H4=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwACT8Z3lzemqPXJ5xJJJ1JQFthY5cn0gL5efeBbOWrplyF8KxQ
-	s2SBrtzOrrOo5E7aY0kUU7akRgg/VfMzIk7LlXAGREITDyaOBYI2
-X-Gm-Gg: ASbGnctPQXVwGxcRKcNfpHGfImlyyuaY2RZIJXG2J6VB4vKes9sW5FWQNp7eMSXVT/g
-	IiUg6t85zyIMLYNV6R+Kf5UE2r2xPJXdNYDNNLXNBfVOBgxO8JOLW5WFWfJP4levsDOLICiR2Qf
-	I6ZoarniV089VXAX2ejBWmG24MVux9SHOpJZ+eW1Z/jBPX96+qX2P/QOCQwXlIifG5rq2Q/PNnD
-	WKvEMhXiEjcWC+mhn06qukcFcgxK148+R3OlbUjpJ9TK6HPhNjdJhMJ8yT5+s3Sfb5CVg1I7OVZ
-	VDmudMZjlWQASquHxN8zLms=
-X-Google-Smtp-Source: AGHT+IGJFLMla5373xo+8cLotDHzX6Nxqhx2kzLdmNkFtOjJ/5PGdFOMf1n3hDNQa+8VqFZP7cHPAg==
-X-Received: by 2002:a67:e70a:0:b0:4bb:d062:447 with SMTP id ada2fe7eead31-4bd3fc61509mr9227291137.5.1739907706734;
-        Tue, 18 Feb 2025 11:41:46 -0800 (PST)
-Received: from localhost.localdomain ([2800:bf0:82:3d2:9e61:1a62:1a8c:3e62])
-        by smtp.gmail.com with ESMTPSA id ada2fe7eead31-4bc68dd766bsm2305214137.20.2025.02.18.11.41.44
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 18 Feb 2025 11:41:45 -0800 (PST)
-From: Kurt Borja <kuurtb@gmail.com>
-To: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Cc: platform-driver-x86@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Hans de Goede <hdegoede@redhat.com>,
-	Mario Limonciello <mario.limonciello@amd.com>,
-	Kurt Borja <kuurtb@gmail.com>,
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-	Jithu Joseph <jithu.joseph@intel.com>,
-	Ashok Raj <ashok.raj.linux@gmail.com>,
-	Tony Luck <tony.luck@intel.com>
-Subject: [PATCH 4/4] platform/x86: intel: Use *-y instead of *-objs in Makefile
-Date: Tue, 18 Feb 2025 14:41:11 -0500
-Message-ID: <20250218194113.26589-5-kuurtb@gmail.com>
-X-Mailer: git-send-email 2.48.1
-In-Reply-To: <20250218194113.26589-1-kuurtb@gmail.com>
-References: <20250218194113.26589-1-kuurtb@gmail.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lMZb6sDn"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BAD42C4CEE2;
+	Tue, 18 Feb 2025 20:25:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1739910327;
+	bh=W40fmn0GF/iCbSU8PYbR+qEbaLnLwXnRe7e9jdruoeM=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=lMZb6sDnL8H7R4cjwdG/lbPUVUzv5W75M6qDtkQc/4RPhjBCMm9LMFDEtLrYG7iiq
+	 mPV94YxilUrlmyPVPgqPOHQ7e5DV9kAbvPYGYKL9MAGSceWzE+u7x3RqLyEJ6imjwL
+	 92n1L7ZInzV5N2Vo6at940mICAspthhWM+Ww7LRxo8KNI9/MrfvYhszAtx/rphw0xg
+	 jb9hGFqZ0RU48inID6mdZpbKXD32S+he6kxv/xW6wdvhSQRuN1mLxdsggNHJiCOR9u
+	 0+Iow2IMrP9DpecbT0sQBNVdThovErJWsHX92JKlHZRBP19EETX57ZpokbqFNaqx5h
+	 FJviz7EVvTKDg==
+From: Sasha Levin <sashal@kernel.org>
+To: linux-kernel@vger.kernel.org,
+	stable@vger.kernel.org
+Cc: Sybil Isabel Dorsett <sybdorsett@proton.me>,
+	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	Sasha Levin <sashal@kernel.org>,
+	hmh@hmh.eng.br,
+	hdegoede@redhat.com,
+	ibm-acpi-devel@lists.sourceforge.net,
+	platform-driver-x86@vger.kernel.org
+Subject: [PATCH AUTOSEL 6.13 15/31] platform/x86: thinkpad_acpi: Fix invalid fan speed on ThinkPad X120e
+Date: Tue, 18 Feb 2025 15:24:35 -0500
+Message-Id: <20250218202455.3592096-15-sashal@kernel.org>
+X-Mailer: git-send-email 2.39.5
+In-Reply-To: <20250218202455.3592096-1-sashal@kernel.org>
+References: <20250218202455.3592096-1-sashal@kernel.org>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+X-stable: review
+X-Patchwork-Hint: Ignore
+X-stable-base: Linux 6.13.3
 Content-Transfer-Encoding: 8bit
 
-The `objs` suffix is reserved for user-space tools. Use the `y` suffix
-instead, which is usually used for kernel drivers.
+From: Sybil Isabel Dorsett <sybdorsett@proton.me>
 
-Suggested-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Signed-off-by: Kurt Borja <kuurtb@gmail.com>
+[ Upstream commit 1046cac109225eda0973b898e053aeb3d6c10e1d ]
+
+On ThinkPad X120e, fan speed is reported in ticks per revolution
+rather than RPM.
+
+Recalculate the fan speed value reported for ThinkPad X120e
+to RPM based on a 22.5 kHz clock.
+
+Based on the information on
+https://www.thinkwiki.org/wiki/How_to_control_fan_speed,
+the same problem is highly likely to be relevant to at least Edge11,
+but Edge11 is not addressed in this patch.
+
+Signed-off-by: Sybil Isabel Dorsett <sybdorsett@proton.me>
+Reviewed-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
+Link: https://lore.kernel.org/r/20250203163255.5525-1-sybdorsett@proton.me
+Signed-off-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/platform/x86/intel/ifs/Makefile | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/platform/x86/thinkpad_acpi.c | 16 ++++++++++++++--
+ 1 file changed, 14 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/platform/x86/intel/ifs/Makefile b/drivers/platform/x86/intel/ifs/Makefile
-index 30f035ef5581..c3e417bce9b6 100644
---- a/drivers/platform/x86/intel/ifs/Makefile
-+++ b/drivers/platform/x86/intel/ifs/Makefile
-@@ -1,3 +1,3 @@
- obj-$(CONFIG_INTEL_IFS)		+= intel_ifs.o
+diff --git a/drivers/platform/x86/thinkpad_acpi.c b/drivers/platform/x86/thinkpad_acpi.c
+index 2cfb2ac3f465a..05d77f87e235e 100644
+--- a/drivers/platform/x86/thinkpad_acpi.c
++++ b/drivers/platform/x86/thinkpad_acpi.c
+@@ -7883,6 +7883,7 @@ static struct ibm_struct volume_driver_data = {
  
--intel_ifs-objs			:= core.o load.o runtest.o sysfs.o
-+intel_ifs-y			:= core.o load.o runtest.o sysfs.o
+ #define FAN_NS_CTRL_STATUS	BIT(2)		/* Bit which determines control is enabled or not */
+ #define FAN_NS_CTRL		BIT(4)		/* Bit which determines control is by host or EC */
++#define FAN_CLOCK_TPM		(22500*60)	/* Ticks per minute for a 22.5 kHz clock */
+ 
+ enum {					/* Fan control constants */
+ 	fan_status_offset = 0x2f,	/* EC register 0x2f */
+@@ -7938,6 +7939,7 @@ static int fan_watchdog_maxinterval;
+ 
+ static bool fan_with_ns_addr;
+ static bool ecfw_with_fan_dec_rpm;
++static bool fan_speed_in_tpr;
+ 
+ static struct mutex fan_mutex;
+ 
+@@ -8140,8 +8142,11 @@ static int fan_get_speed(unsigned int *speed)
+ 			     !acpi_ec_read(fan_rpm_offset + 1, &hi)))
+ 			return -EIO;
+ 
+-		if (likely(speed))
++		if (likely(speed)) {
+ 			*speed = (hi << 8) | lo;
++			if (fan_speed_in_tpr && *speed != 0)
++				*speed = FAN_CLOCK_TPM / *speed;
++		}
+ 		break;
+ 	case TPACPI_FAN_RD_TPEC_NS:
+ 		if (!acpi_ec_read(fan_rpm_status_ns, &lo))
+@@ -8174,8 +8179,11 @@ static int fan2_get_speed(unsigned int *speed)
+ 		if (rc)
+ 			return -EIO;
+ 
+-		if (likely(speed))
++		if (likely(speed)) {
+ 			*speed = (hi << 8) | lo;
++			if (fan_speed_in_tpr && *speed != 0)
++				*speed = FAN_CLOCK_TPM / *speed;
++		}
+ 		break;
+ 
+ 	case TPACPI_FAN_RD_TPEC_NS:
+@@ -8786,6 +8794,7 @@ static const struct attribute_group fan_driver_attr_group = {
+ #define TPACPI_FAN_NOFAN	0x0008		/* no fan available */
+ #define TPACPI_FAN_NS		0x0010		/* For EC with non-Standard register addresses */
+ #define TPACPI_FAN_DECRPM	0x0020		/* For ECFW's with RPM in register as decimal */
++#define TPACPI_FAN_TPR		0x0040		/* Fan speed is in Ticks Per Revolution */
+ 
+ static const struct tpacpi_quirk fan_quirk_table[] __initconst = {
+ 	TPACPI_QEC_IBM('1', 'Y', TPACPI_FAN_Q1),
+@@ -8815,6 +8824,7 @@ static const struct tpacpi_quirk fan_quirk_table[] __initconst = {
+ 	TPACPI_Q_LNV3('R', '0', 'V', TPACPI_FAN_NS),	/* 11e Gen5 KL-Y */
+ 	TPACPI_Q_LNV3('N', '1', 'O', TPACPI_FAN_NOFAN),	/* X1 Tablet (2nd gen) */
+ 	TPACPI_Q_LNV3('R', '0', 'Q', TPACPI_FAN_DECRPM),/* L480 */
++	TPACPI_Q_LNV('8', 'F', TPACPI_FAN_TPR),		/* ThinkPad x120e */
+ };
+ 
+ static int __init fan_init(struct ibm_init_struct *iibm)
+@@ -8885,6 +8895,8 @@ static int __init fan_init(struct ibm_init_struct *iibm)
+ 
+ 			if (quirks & TPACPI_FAN_Q1)
+ 				fan_quirk1_setup();
++			if (quirks & TPACPI_FAN_TPR)
++				fan_speed_in_tpr = true;
+ 			/* Try and probe the 2nd fan */
+ 			tp_features.second_fan = 1; /* needed for get_speed to work */
+ 			res = fan2_get_speed(&speed);
 -- 
-2.48.1
+2.39.5
 
