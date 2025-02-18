@@ -1,155 +1,214 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yb1-f169.google.com (mail-yb1-f169.google.com [209.85.219.169])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 31D7A26FDB7;
-	Tue, 18 Feb 2025 18:04:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 24BFD2356D6;
+	Tue, 18 Feb 2025 18:39:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739901885; cv=none; b=tYkNZ7Hxp97VJZbHjphKfszSb1zp3q+nIhM0vy/tmhjR39N5no+glz0EgS+OuKRgHPql95F1qTDhkH+6M7uUYGJNgb1FH5zFPoWXe9gMQ/HEf6ru3lnZC4K3ZvL52Ir6dWI28Z/dMxzLIbZsUWxdsiwUcPFz/dK3o/b4VYPVH1M=
+	t=1739903959; cv=none; b=o6DzHMW/V/9jzvCNlpmBi9j4FDTgU1mhJrCRof10IZyb2CHbfeoRy+w6LTPQ/tUWdvAVOd+XM9a62UgcGpk1nPBivCfw7fsLlVWjwrPTqJCgsdW8oRtBLQPRWwUl1aOHHKgCOZGEYeF8WaVhtcydI3hTy1v5O43dCtKl6u5Jj08=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739901885; c=relaxed/simple;
-	bh=K1MQgtQMpAYOKptLlvAi8++cnfRAKCe3hfbb1sB6G/o=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=BpUfgYBSQb8EdO80cwOHc0eipusvCdax8xGGhL9fpBmpce6zP2FfZXueJgUAo40So01MGdFwB6tjpb3FeYJLJHvHzPzfstlNafd3ChR2dnS7Sw2n+wwE0rFLqyOXZI+ktLgPxrywEtvZg4OwEJOz+Bm13YXazif154h3C7ji1Q4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sbbJCtyT; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1739903959; c=relaxed/simple;
+	bh=oEi8+DJ1Od9anjCSCDXHxWN91goXMv9PGcjFAatOkQw=;
+	h=Mime-Version:Content-Type:Date:Message-Id:Cc:Subject:From:To:
+	 References:In-Reply-To; b=IpdNs5w+gGfPKy8DBhOCwNQxlocDvqfBfhGMDAEk7EPZbCJhNYZK2pXkRTSSSxYx4KlUoeWMHlKm/YYCin+kKP1YY9i9DmatRUhah3B0K+EWoKqn+A/TvaIqCVumKZXVNG6ryDsqi3pH8IKg9cHpTyLi3j5FnBW0uwaazAVphd0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=RMjf4+94; arc=none smtp.client-ip=209.85.219.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sbbJCtyT"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A642EC4CEE8;
-	Tue, 18 Feb 2025 18:04:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1739901883;
-	bh=K1MQgtQMpAYOKptLlvAi8++cnfRAKCe3hfbb1sB6G/o=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=sbbJCtyTPzPc1wAb0IKtxW4rYOfUMNfnCgLtkihQbbVVrl7gBotnz/JoB78mfMMzU
-	 ZAETI2iJR8ir5rljSwVgTurZXCfoQ9bp46CdXgSPTRAx/Q8lsnnFpGOcWI9V7/1/9b
-	 5v15Q9P4tU4gRBIIo4o2fSxrw2Qf0Or7oIMFHYk3kr0SsD24Bi/+hk26t6+134Vgd8
-	 4bNI1yS5SH5yk/PqDl3g7SS39VYNGRV96owwLfKuMtl7X4psJTXa+POPkV1zhwCXgK
-	 teVr0pKlUcJNF99/lnLWLFNzLvRUKzdYL2aLXjJ0OgqwIGhcpcSj4xbGqbiayx2UCo
-	 091jx0v2ATV4g==
-Received: by mail-oo1-f53.google.com with SMTP id 006d021491bc7-5fc69795ecbso2833013eaf.1;
-        Tue, 18 Feb 2025 10:04:43 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCUULLxf3sWZhCicmt92iG2gIDuy+R+aEXlm3ErLTHRFZwoLCGlGM3GccR0q/U6AOT6nieJ/BXYeBQdhsAeYUViGgDywcw==@vger.kernel.org, AJvYcCV/YTHDhAaJkaHh1nUZ/I0qV0rzXefYnx0d9a/4gxVo6MpvHw+qniv8VCPl6++Jw2v0r5v/8t1ckddz@vger.kernel.org, AJvYcCVMoDcx/fpYikixSQVMIjrV2C0hBVGl2N+nVkkQGM4WmoFZkHOfhW+0iDzcFsjZZG0/FtRTCWvvnPhSOHTI@vger.kernel.org
-X-Gm-Message-State: AOJu0YyegoYwQ653TI9AgUXN2u/0vZyBKqp0mNwnbZ+QZweuqGF8Yc1T
-	B4R4c8Zf7KDfvQuCwhBvypMOavWqdc4m3lmX5PujdUbmsrhbM+quVxlVPJa1bJuX2RqUHPqSwGj
-	FmBeET7+7mW+/3vRb3q4ZDVVViFo=
-X-Google-Smtp-Source: AGHT+IEBd/lGYlmKz5IXPZRcAwCG/IQG41R5xdPwkp1MAQpKXaru0Z1ZlEhvqLP4dIAk+b2rEWmAmE1R/PBN/D71JJg=
-X-Received: by 2002:a05:6808:2188:b0:3f4:b6f:c49 with SMTP id
- 5614622812f47-3f40b6f0e2emr1754189b6e.15.1739901882996; Tue, 18 Feb 2025
- 10:04:42 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RMjf4+94"
+Received: by mail-yb1-f169.google.com with SMTP id 3f1490d57ef6-e5dcc3b0c77so2866592276.0;
+        Tue, 18 Feb 2025 10:39:15 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1739903955; x=1740508755; darn=vger.kernel.org;
+        h=in-reply-to:references:to:from:subject:cc:message-id:date
+         :content-transfer-encoding:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=A602ukX61G8SHfGgV9Mfn3RDCkXOuF+pNpwRiPxAdqk=;
+        b=RMjf4+94YQO9sV1NMSnJO6So3XEnUiJHICbP3k//rk+BKlGrEyBmVdjfUOaOKoP/40
+         xfVLWd+75luQpFucA7jyzVUhuJ4K4fAuHI8Avf5tIxpQjBeqM4hAV1EG2H5myssJdpfS
+         8rFztHjEG+tXpRNI8JZYpt/+vusd9fHrQ3tvberfOglVc4bEWaTJIwMPXcAWZ9gbomBF
+         y4gdvPEQ+4T6ffyhBpP2KQu4yKWDk8H0nNHtqk4jA0MP6NDAh7gyrxeWc86pJ586D3mu
+         5KYq1QioRuG6/I9GUmPiB9+VI8SAhtjiNEzgr/wenqSpF7Qrc0IQg0cBHvgK26X6a0xt
+         3hkw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1739903955; x=1740508755;
+        h=in-reply-to:references:to:from:subject:cc:message-id:date
+         :content-transfer-encoding:mime-version:x-gm-message-state:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=A602ukX61G8SHfGgV9Mfn3RDCkXOuF+pNpwRiPxAdqk=;
+        b=PVYFC9qm26pIcq6BS54SGSH3Zm4Y0ONoX20J/MwGfRcpTzoh0GcFWggS/guDb3ATnB
+         Qfeg89lrRr2ySHeiiWV2dWxrtKTIb07f/3azldBT+m7LjOR9E1Sh+KUFKgekAj7UcumA
+         0FS7vaZSM1u7dYIS3Cc5ZNRGaI3E59ksW6cExUKf0aI9gSluM/1OdZrlGJjVPE2txFcS
+         rcDMSHWxj0MkRPn9pMhQnTFlGKD8jBDqpNPFJdm3JJAStBUSmtNhGUiRWfGC8ORGCHfQ
+         JvMtlL2ptGEh74AgZcNb4ZEES1D66+D2pioLaMupvNHLfsSMnuD5ESwD2eLuGalTNkEh
+         1Edw==
+X-Forwarded-Encrypted: i=1; AJvYcCU+PJYf0iMH+WPVKwDn7LnZDHUz/0CC1wc/4q/F2oRKr+BKP7P04T+729/PVpNJ0qUAQM8JoFdvV3iSNoKtCAf9N1breA==@vger.kernel.org, AJvYcCW88FE6JX1sfQFtfLSVNjZP021Qt6da+MJ87Zjzl8SuCxs9QK6Enmo2/wrvQ4QkW4jpSXXbfZVBCgeNA7g=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwW8MLkK3oI9140PJyX0lKySoNKeMdUzNVtQedaZSNCXlk0sQfw
+	V2yMD7P/jPhOVze3MyyoxhA/UT4X9Onbehfw7e3i2OXNn+pHVGfa
+X-Gm-Gg: ASbGncu4FYbuKMObrqCySrzAd5gftRkpAPVQ10QEB7Za/i9x/3XE7+pnoK8rcGAiUT9
+	gJxQDXUi+ml2LovGER2q3NH7NKHkriR39ygNU8E/U/MQ7GvcLLFRrRv3sYUy+Mu47Zq9aepgVZJ
+	ADvdfoy8l31vc15jZmDblhkik3YkxnO4nuCTYrDgYr4QzAvUSQbA06o/CuoWttGlFiWNTG+zhI+
+	v/IFEwk7Z6LLmtfZvKDr3PRS7NVBa40rFzT/GbewKkg4fJB5iR1i8bsK8SqNwSP5j0uqMSaPvFj
+	XAjfYRk=
+X-Google-Smtp-Source: AGHT+IF305OorZ6/B8Lr9PTjWCJ+kGoRs7RrVraUg+lZw/ZCLTQLJPtD1mmjf6z1EbXKxty6ICpHdg==
+X-Received: by 2002:a05:6902:108e:b0:e5d:d6b8:2317 with SMTP id 3f1490d57ef6-e5e0a1400admr641263276.44.1739903954958;
+        Tue, 18 Feb 2025 10:39:14 -0800 (PST)
+Received: from localhost ([2800:bf0:82:3d2:9e61:1a62:1a8c:3e62])
+        by smtp.gmail.com with ESMTPSA id 3f1490d57ef6-e5dae0d9f25sm3289866276.36.2025.02.18.10.39.13
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 18 Feb 2025 10:39:14 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <20250212190308.21209-1-kuurtb@gmail.com>
-In-Reply-To: <20250212190308.21209-1-kuurtb@gmail.com>
-From: "Rafael J. Wysocki" <rafael@kernel.org>
-Date: Tue, 18 Feb 2025 19:04:31 +0100
-X-Gmail-Original-Message-ID: <CAJZ5v0iPGihaxsC02cgqzHqXJ+TfbPp0fJBWyWwPDC_wdEqtZA@mail.gmail.com>
-X-Gm-Features: AWEUYZmOsYPysd-LRwcUv6jOiLJG6xUnyJGOt3SJxECO4_0hWY41yXZ98KQydRE
-Message-ID: <CAJZ5v0iPGihaxsC02cgqzHqXJ+TfbPp0fJBWyWwPDC_wdEqtZA@mail.gmail.com>
-Subject: Re: [PATCH v2] ACPI: platform_profile: Improve platform_profile_unregister
-To: Kurt Borja <kuurtb@gmail.com>
-Cc: "Rafael J. Wysocki" <rafael@kernel.org>, Len Brown <lenb@kernel.org>, linux-acpi@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, 
-	=?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, 
-	Mario Limonciello <mario.limonciello@amd.com>, platform-driver-x86@vger.kernel.org, 
-	Mark Pearson <mpearson-lenovo@squebb.ca>
-Content-Type: text/plain; charset="UTF-8"
+Mime-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date: Tue, 18 Feb 2025 13:39:12 -0500
+Message-Id: <D7VSH5I5ERDG.2QR7V6W3JX2LM@gmail.com>
+Cc: "Hans de Goede" <hdegoede@redhat.com>, "Henrique de Moraes Holschuh"
+ <hmh@hmh.eng.br>, <ibm-acpi-devel@lists.sourceforge.net>,
+ "platform-driver-x86@vger.kernel.org"
+ <platform-driver-x86@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 2/2] platform/x86: thinkpad_acpi: Move HWMON
+ initialization to tpacpi_hwmon_pdriver's probe
+From: "Kurt Borja" <kuurtb@gmail.com>
+To: "Mark Pearson" <mpearson-lenovo@squebb.ca>,
+ =?utf-8?q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+X-Mailer: aerc 0.20.1-0-g2ecb8770224a
+References: <20250215000302.19753-1-kuurtb@gmail.com>
+ <20250215000302.19753-3-kuurtb@gmail.com>
+ <9a98e10c-dd14-45a9-96ec-6ebca8b68616@app.fastmail.com>
+In-Reply-To: <9a98e10c-dd14-45a9-96ec-6ebca8b68616@app.fastmail.com>
 
-On Wed, Feb 12, 2025 at 8:03=E2=80=AFPM Kurt Borja <kuurtb@gmail.com> wrote=
-:
->
-> Drivers usually call this method on error/exit paths and do not check
-> for it's return value, which is always 0 anyway, so make it void. This
-> is safe to do as currently all drivers use
-> devm_platform_profile_register().
->
-> While at it improve the style and make the function safer by checking
-> for IS_ERR_OR_NULL before dereferencing the device pointer.
->
-> Signed-off-by: Kurt Borja <kuurtb@gmail.com>
-> ---
-> Hi all,
->
-> I made a little modification that I forgot in the last version.
->
-> Rafael, please tell me if you prefer different commits for this. Also
-> should we WARN_ON(IS_ERR_OR_NULL)?
->
-> Based on the acpi branch of the linux-pm tree.
->
-> ~ Kurt
->
-> Changes in v2:
->   - Get reference to pprof after checking for IS_ERR_OR_NULL(dev)
->   - CC Mark Pearson (sorry!)
->
->  drivers/acpi/platform_profile.c  | 19 +++++++++----------
->  include/linux/platform_profile.h |  2 +-
->  2 files changed, 10 insertions(+), 11 deletions(-)
->
-> diff --git a/drivers/acpi/platform_profile.c b/drivers/acpi/platform_prof=
-ile.c
-> index fc92e43d0fe9..ed9c0cc9ea9c 100644
-> --- a/drivers/acpi/platform_profile.c
-> +++ b/drivers/acpi/platform_profile.c
-> @@ -569,24 +569,23 @@ EXPORT_SYMBOL_GPL(platform_profile_register);
->  /**
->   * platform_profile_remove - Unregisters a platform profile class device
->   * @dev: Class device
-> - *
-> - * Return: 0
->   */
-> -int platform_profile_remove(struct device *dev)
-> +void platform_profile_remove(struct device *dev)
->  {
-> -       struct platform_profile_handler *pprof =3D to_pprof_handler(dev);
-> -       int id;
-> +       struct platform_profile_handler *pprof;
-> +
-> +       if (IS_ERR_OR_NULL(dev))
-> +               return;
-> +
-> +       pprof =3D to_pprof_handler(dev);
-> +
->         guard(mutex)(&profile_lock);
->
-> -       id =3D pprof->minor;
-> +       ida_free(&platform_profile_ida, pprof->minor);
->         device_unregister(&pprof->dev);
-> -       ida_free(&platform_profile_ida, id);
->
->         sysfs_notify(acpi_kobj, NULL, "platform_profile");
-> -
->         sysfs_update_group(acpi_kobj, &platform_profile_group);
-> -
-> -       return 0;
->  }
->  EXPORT_SYMBOL_GPL(platform_profile_remove);
->
-> diff --git a/include/linux/platform_profile.h b/include/linux/platform_pr=
-ofile.h
-> index 8ab5b0e8eb2c..d5499eca9e1d 100644
-> --- a/include/linux/platform_profile.h
-> +++ b/include/linux/platform_profile.h
-> @@ -47,7 +47,7 @@ struct platform_profile_ops {
->  struct device *platform_profile_register(struct device *dev, const char =
-*name,
->                                          void *drvdata,
->                                          const struct platform_profile_op=
-s *ops);
-> -int platform_profile_remove(struct device *dev);
-> +void platform_profile_remove(struct device *dev);
->  struct device *devm_platform_profile_register(struct device *dev, const =
-char *name,
->                                               void *drvdata,
->                                               const struct platform_profi=
-le_ops *ops);
->
-> base-commit: 3e3e377dd1f300bbdd230533686ce9c9f4f8a90d
-> --
+Hi Mark,
 
-Applied as 6.15 material with minor edits in the changelog, thanks!
+On Tue Feb 18, 2025 at 11:50 AM -05, Mark Pearson wrote:
+> Hi Kurt,
+>
+> On Fri, Feb 14, 2025, at 7:03 PM, Kurt Borja wrote:
+>> Let the driver core manage the lifetime of the HWMON device, by
+>> registering it inside tpacpi_hwmon_pdriver's probe and using
+>> devm_hwmon_device_register_with_groups().
+>>
+>> Signed-off-by: Kurt Borja <kuurtb@gmail.com>
+>> ---
+>>  drivers/platform/x86/thinkpad_acpi.c | 44 +++++++++++-----------------
+>>  1 file changed, 17 insertions(+), 27 deletions(-)
+>>
+>> diff --git a/drivers/platform/x86/thinkpad_acpi.c=20
+>> b/drivers/platform/x86/thinkpad_acpi.c
+>> index ad9de48cc122..a7e82157bd67 100644
+>> --- a/drivers/platform/x86/thinkpad_acpi.c
+>> +++ b/drivers/platform/x86/thinkpad_acpi.c
+>> @@ -367,7 +367,6 @@ static struct {
+>>  	u32 beep_needs_two_args:1;
+>>  	u32 mixer_no_level_control:1;
+>>  	u32 battery_force_primary:1;
+>> -	u32 sensors_pdrv_registered:1;
+>>  	u32 hotkey_poll_active:1;
+>>  	u32 has_adaptive_kbd:1;
+>>  	u32 kbd_lang:1;
+>> @@ -11815,12 +11814,10 @@ static void thinkpad_acpi_module_exit(void)
+>>  {
+>>  	tpacpi_lifecycle =3D TPACPI_LIFE_EXITING;
+>>=20
+>> -	if (tpacpi_hwmon)
+>> -		hwmon_device_unregister(tpacpi_hwmon);
+>> -	if (tp_features.sensors_pdrv_registered)
+>> +	if (tpacpi_sensors_pdev) {
+>>  		platform_driver_unregister(&tpacpi_hwmon_pdriver);
+>> -	if (tpacpi_sensors_pdev)
+>>  		platform_device_unregister(tpacpi_sensors_pdev);
+>> +	}
+>>=20
+>>  	if (tpacpi_pdev) {
+>>  		platform_driver_unregister(&tpacpi_pdriver);
+>> @@ -11891,6 +11888,17 @@ static int __init tpacpi_pdriver_probe(struct=
+=20
+>> platform_device *pdev)
+>>  	return ret;
+>>  }
+>>=20
+>> +static int __init tpacpi_hwmon_pdriver_probe(struct platform_device *pd=
+ev)
+>> +{
+>> +	tpacpi_hwmon =3D devm_hwmon_device_register_with_groups(
+>> +		&tpacpi_sensors_pdev->dev, TPACPI_NAME, NULL, tpacpi_hwmon_groups);
+>> +
+>> +	if (IS_ERR(tpacpi_hwmon))
+>> +		pr_err("unable to register hwmon device\n");
+>> +
+>> +	return PTR_ERR_OR_ZERO(tpacpi_hwmon);
+>> +}
+>> +
+>>  static int __init thinkpad_acpi_module_init(void)
+>>  {
+>>  	const struct dmi_system_id *dmi_id;
+>> @@ -11964,37 +11972,19 @@ static int __init thinkpad_acpi_module_init(vo=
+id)
+>>  		return ret;
+>>  	}
+>>=20
+>> -	tpacpi_sensors_pdev =3D platform_device_register_simple(
+>> -						TPACPI_HWMON_DRVR_NAME,
+>> -						PLATFORM_DEVID_NONE, NULL, 0);
+>> +	tpacpi_sensors_pdev =3D platform_create_bundle(&tpacpi_hwmon_pdriver,
+>> +						     tpacpi_hwmon_pdriver_probe,
+>> +						     NULL, 0, NULL, 0);
+>>  	if (IS_ERR(tpacpi_sensors_pdev)) {
+>>  		ret =3D PTR_ERR(tpacpi_sensors_pdev);
+>>  		tpacpi_sensors_pdev =3D NULL;
+>> -		pr_err("unable to register hwmon platform device\n");
+>> +		pr_err("unable to register hwmon platform device/driver bundle\n");
+>>  		thinkpad_acpi_module_exit();
+>>  		return ret;
+>>  	}
+>>=20
+>>  	tpacpi_lifecycle =3D TPACPI_LIFE_RUNNING;
+>>=20
+>> -	ret =3D platform_driver_register(&tpacpi_hwmon_pdriver);
+>> -	if (ret) {
+>> -		pr_err("unable to register hwmon platform driver\n");
+>> -		thinkpad_acpi_module_exit();
+>> -		return ret;
+>> -	}
+>> -	tp_features.sensors_pdrv_registered =3D 1;
+>> -
+>> -	tpacpi_hwmon =3D hwmon_device_register_with_groups(
+>> -		&tpacpi_sensors_pdev->dev, TPACPI_NAME, NULL, tpacpi_hwmon_groups);
+>> -	if (IS_ERR(tpacpi_hwmon)) {
+>> -		ret =3D PTR_ERR(tpacpi_hwmon);
+>> -		tpacpi_hwmon =3D NULL;
+>> -		pr_err("unable to register hwmon device\n");
+>> -		thinkpad_acpi_module_exit();
+>> -		return ret;
+>> -	}
+>> -
+>>  	return 0;
+>>  }
+>>=20
+>> --=20
+>> 2.48.1
+>
+> Thanks for doing this.
+
+Glad to help :)
+
+>
+> For the series - all looks good and I tested on a X1 Carbon 12 and confir=
+med the Thinkpad devices are there under /sys/devices/thinkpad_acpi and /sy=
+s/class/hwmon. Didn't find any issues.
+>
+> Reviewed-by: Mark Pearson <mpearson-lenovo@squebb.ca>
+> Tested-by: Mark Pearson <mpearson-lenovo@squebb.ca>
+
+Thank you! Making changes to this driver is a bit scary.
+
+--=20
+ ~ Kurt
+
+>
+> Mark
+
