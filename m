@@ -1,47 +1,47 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 297AC1DF26A;
-	Tue, 18 Feb 2025 20:25:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E53C1FECB8;
+	Tue, 18 Feb 2025 20:26:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739910332; cv=none; b=qnL7crNmjXRhhjzghr+Mqo6cKvazioEQJPVoZ+iXSkZREdnvZXpEJPEsxLPOZ3GZjNac3WnBXDxUMMg66Qt9vtFnzg92cfMD337yZRvvbWGFsRBW6+cHNiarrcm0hw3wQWvVnEib/gqZ4FI8tgAWRf3nHGfEL4C7FE+a4FCzkj0=
+	t=1739910413; cv=none; b=edhXYu0vfUpB0e44uFVZuZkpFTXXV0fQ1ohfNAVQdZjypk8e43IDTeTgAwDFrb8t+VKShGWL/6lgS8YNbMd2V3G+alYwkLbpuMLFR37nNVHKx00I4rdf90r2CEXLXCGz9D06vl0qV4KZcJcZCUVXmar+9/v6fUMljrk9R8FHGGs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739910332; c=relaxed/simple;
-	bh=Y2tahZ7GjToKkjcaduLXw05/ckAmfifJ5mXk3WykwGg=;
+	s=arc-20240116; t=1739910413; c=relaxed/simple;
+	bh=W40fmn0GF/iCbSU8PYbR+qEbaLnLwXnRe7e9jdruoeM=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=cwwXhAa2CzYOUQua7PKIgQFLIgrQlF09nbf/QNXJdlYhh4Hcgm8ZGLFpy2J/gl6VFWdxAxKGAJcRgN4106FdHZb7QQG3PRyRUoC//khQ854dgh0OIKOO1f3Jw7swBEWd7wl+qx3Zh4wjn6TT5sNUqmiGdDFHqOblHCHnDZMySSo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lJyZZFdw; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version:Content-Type; b=oJcf5pKZcEzIeoEeBETT2IgnsbCM+QHAltOA0yqNO23VNdnV+/A1ne0//JvVKMcHi1UOGP/5pBOGWqHUDDc9bt6hiLWpUbGWyaPCgGzuGnFj8nXxD7xYwFu6GpGnRIMX41IBKnh80E1hlQkpHkL1pmRecFiX7o3jkawl0IsGiE4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oJGRf/Yy; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lJyZZFdw"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 15BDDC4CEE8;
-	Tue, 18 Feb 2025 20:25:30 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oJGRf/Yy"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 48E4AC4CEE8;
+	Tue, 18 Feb 2025 20:26:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1739910332;
-	bh=Y2tahZ7GjToKkjcaduLXw05/ckAmfifJ5mXk3WykwGg=;
+	s=k20201202; t=1739910413;
+	bh=W40fmn0GF/iCbSU8PYbR+qEbaLnLwXnRe7e9jdruoeM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=lJyZZFdwP5KlE91HxD91ApEeMaH11xQHWBdrlfO/PBukg3IRdp3CwYNE4pXxJvezn
-	 pbOltsxvvHh1hZ2uQKxJC3PKG8Kw4py9kA/wZ3qpQtxOX64cdB4w4/FZZDToFuL0Rv
-	 1Kl/pk/zMQyH/CauKLH9XYlVe1vZH93Gh06kYzuQ6k5qkqFlToUWx/qy+fhYhfEh9Q
-	 LQNyoO9Z80L5XiCp3LNZhma/jYaruN+geimWUtEOivmJiGX3uXr2YZcHAuGSCsiNKq
-	 ZV4V8oDx9H6VjkBQSzC0lIuzb78utNuuK8Ju9q4Wz7eZ9HTFLJHAgO6PaS2WoS9zJe
-	 +0e7Rk2gGOOBw==
+	b=oJGRf/YyJMgRT8qpEWa0rpeSCanStzLawbW5v3MC8qxqUPbafdrQ0sxW6AAkDaapa
+	 O/sFIgfrxTbm5tWL9zkI48WysRiNlpwcwGcRJVqaXB8yr+HP68u5AbcExvTtBcf69o
+	 +vUj5Qmwp7TivhKQaMd1bFAdmbrjKev8MRWhEpf8diHw9jrZBvWrnS6rtcfcOpADau
+	 olXbo455XMragsRhW+qYggAk6GLD6OCR+02xO4ydItxUvlzKp4rHsicGWgapu2zokB
+	 A3NKH/u88nXjHrM463XjITrjFwMyXOLJiN35IXk3ob60tWtr0B+5dEC4aJepl8QM8f
+	 3va6avURKAm5A==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Sakari Ailus <sakari.ailus@linux.intel.com>,
-	Hans de Goede <hdegoede@redhat.com>,
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+Cc: Sybil Isabel Dorsett <sybdorsett@proton.me>,
 	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
 	Sasha Levin <sashal@kernel.org>,
-	djrscally@gmail.com,
+	hmh@hmh.eng.br,
+	hdegoede@redhat.com,
+	ibm-acpi-devel@lists.sourceforge.net,
 	platform-driver-x86@vger.kernel.org
-Subject: [PATCH AUTOSEL 6.13 18/31] platform/x86: int3472: Call "reset" GPIO "enable" for INT347E
-Date: Tue, 18 Feb 2025 15:24:38 -0500
-Message-Id: <20250218202455.3592096-18-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 6.12 15/31] platform/x86: thinkpad_acpi: Fix invalid fan speed on ThinkPad X120e
+Date: Tue, 18 Feb 2025 15:26:01 -0500
+Message-Id: <20250218202619.3592630-15-sashal@kernel.org>
 X-Mailer: git-send-email 2.39.5
-In-Reply-To: <20250218202455.3592096-1-sashal@kernel.org>
-References: <20250218202455.3592096-1-sashal@kernel.org>
+In-Reply-To: <20250218202619.3592630-1-sashal@kernel.org>
+References: <20250218202619.3592630-1-sashal@kernel.org>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -51,108 +51,104 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
-X-stable-base: Linux 6.13.3
+X-stable-base: Linux 6.12.15
 Content-Transfer-Encoding: 8bit
 
-From: Sakari Ailus <sakari.ailus@linux.intel.com>
+From: Sybil Isabel Dorsett <sybdorsett@proton.me>
 
-[ Upstream commit 569617dbbd06286fb73f3f1c2ac91e51d863c7de ]
+[ Upstream commit 1046cac109225eda0973b898e053aeb3d6c10e1d ]
 
-The DT bindings for ov7251 specify "enable" GPIO (xshutdown in
-documentation) but the int3472 indiscriminately provides this as a "reset"
-GPIO to sensor drivers. Take this into account by assigning it as "enable"
-with active high polarity for INT347E devices, i.e. ov7251. "reset" with
-active low polarity remains the default GPIO name for other devices.
+On ThinkPad X120e, fan speed is reported in ticks per revolution
+rather than RPM.
 
-Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
-Reviewed-by: Hans de Goede <hdegoede@redhat.com>
-Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Link: https://lore.kernel.org/r/20250211072841.7713-3-sakari.ailus@linux.intel.com
+Recalculate the fan speed value reported for ThinkPad X120e
+to RPM based on a 22.5 kHz clock.
+
+Based on the information on
+https://www.thinkwiki.org/wiki/How_to_control_fan_speed,
+the same problem is highly likely to be relevant to at least Edge11,
+but Edge11 is not addressed in this patch.
+
+Signed-off-by: Sybil Isabel Dorsett <sybdorsett@proton.me>
 Reviewed-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
+Link: https://lore.kernel.org/r/20250203163255.5525-1-sybdorsett@proton.me
 Signed-off-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/platform/x86/intel/int3472/discrete.c | 52 +++++++++++++++++--
- 1 file changed, 48 insertions(+), 4 deletions(-)
+ drivers/platform/x86/thinkpad_acpi.c | 16 ++++++++++++++--
+ 1 file changed, 14 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/platform/x86/intel/int3472/discrete.c b/drivers/platform/x86/intel/int3472/discrete.c
-index 8205993d3b5c4..a80c981caa340 100644
---- a/drivers/platform/x86/intel/int3472/discrete.c
-+++ b/drivers/platform/x86/intel/int3472/discrete.c
-@@ -2,6 +2,7 @@
- /* Author: Dan Scally <djrscally@gmail.com> */
+diff --git a/drivers/platform/x86/thinkpad_acpi.c b/drivers/platform/x86/thinkpad_acpi.c
+index 2cfb2ac3f465a..05d77f87e235e 100644
+--- a/drivers/platform/x86/thinkpad_acpi.c
++++ b/drivers/platform/x86/thinkpad_acpi.c
+@@ -7883,6 +7883,7 @@ static struct ibm_struct volume_driver_data = {
  
- #include <linux/acpi.h>
-+#include <linux/array_size.h>
- #include <linux/bitfield.h>
- #include <linux/device.h>
- #include <linux/gpio/consumer.h>
-@@ -122,10 +123,53 @@ skl_int3472_gpiod_get_from_temp_lookup(struct int3472_discrete_device *int3472,
- 	return desc;
- }
+ #define FAN_NS_CTRL_STATUS	BIT(2)		/* Bit which determines control is enabled or not */
+ #define FAN_NS_CTRL		BIT(4)		/* Bit which determines control is by host or EC */
++#define FAN_CLOCK_TPM		(22500*60)	/* Ticks per minute for a 22.5 kHz clock */
  
--static void int3472_get_func_and_polarity(u8 type, const char **func,
--					  unsigned long *gpio_flags)
-+/**
-+ * struct int3472_gpio_map - Map GPIOs to whatever is expected by the
-+ * sensor driver (as in DT bindings)
-+ * @hid: The ACPI HID of the device without the instance number e.g. INT347E
-+ * @type_from: The GPIO type from ACPI ?SDT
-+ * @type_to: The assigned GPIO type, typically same as @type_from
-+ * @func: The function, e.g. "enable"
-+ * @polarity_low: GPIO_ACTIVE_LOW true if the @polarity_low is true,
-+ * GPIO_ACTIVE_HIGH otherwise
-+ */
-+struct int3472_gpio_map {
-+	const char *hid;
-+	u8 type_from;
-+	u8 type_to;
-+	bool polarity_low;
-+	const char *func;
-+};
-+
-+static const struct int3472_gpio_map int3472_gpio_map[] = {
-+	{ "INT347E", INT3472_GPIO_TYPE_RESET, INT3472_GPIO_TYPE_RESET, false, "enable" },
-+};
-+
-+static void int3472_get_func_and_polarity(struct acpi_device *adev, u8 *type,
-+					  const char **func, unsigned long *gpio_flags)
- {
--	switch (type) {
-+	unsigned int i;
-+
-+	for (i = 0; i < ARRAY_SIZE(int3472_gpio_map); i++) {
-+		/*
-+		 * Map the firmware-provided GPIO to whatever a driver expects
-+		 * (as in DT bindings). First check if the type matches with the
-+		 * GPIO map, then further check that the device _HID matches.
-+		 */
-+		if (*type != int3472_gpio_map[i].type_from)
-+			continue;
-+
-+		if (!acpi_dev_hid_uid_match(adev, int3472_gpio_map[i].hid, NULL))
-+			continue;
-+
-+		*type = int3472_gpio_map[i].type_to;
-+		*gpio_flags = int3472_gpio_map[i].polarity_low ?
-+			      GPIO_ACTIVE_LOW : GPIO_ACTIVE_HIGH;
-+		*func = int3472_gpio_map[i].func;
-+		return;
-+	}
-+
-+	switch (*type) {
- 	case INT3472_GPIO_TYPE_RESET:
- 		*func = "reset";
- 		*gpio_flags = GPIO_ACTIVE_LOW;
-@@ -218,7 +262,7 @@ static int skl_int3472_handle_gpio_resources(struct acpi_resource *ares,
+ enum {					/* Fan control constants */
+ 	fan_status_offset = 0x2f,	/* EC register 0x2f */
+@@ -7938,6 +7939,7 @@ static int fan_watchdog_maxinterval;
  
- 	type = FIELD_GET(INT3472_GPIO_DSM_TYPE, obj->integer.value);
+ static bool fan_with_ns_addr;
+ static bool ecfw_with_fan_dec_rpm;
++static bool fan_speed_in_tpr;
  
--	int3472_get_func_and_polarity(type, &func, &gpio_flags);
-+	int3472_get_func_and_polarity(int3472->sensor, &type, &func, &gpio_flags);
+ static struct mutex fan_mutex;
  
- 	pin = FIELD_GET(INT3472_GPIO_DSM_PIN, obj->integer.value);
- 	if (pin != agpio->pin_table[0])
+@@ -8140,8 +8142,11 @@ static int fan_get_speed(unsigned int *speed)
+ 			     !acpi_ec_read(fan_rpm_offset + 1, &hi)))
+ 			return -EIO;
+ 
+-		if (likely(speed))
++		if (likely(speed)) {
+ 			*speed = (hi << 8) | lo;
++			if (fan_speed_in_tpr && *speed != 0)
++				*speed = FAN_CLOCK_TPM / *speed;
++		}
+ 		break;
+ 	case TPACPI_FAN_RD_TPEC_NS:
+ 		if (!acpi_ec_read(fan_rpm_status_ns, &lo))
+@@ -8174,8 +8179,11 @@ static int fan2_get_speed(unsigned int *speed)
+ 		if (rc)
+ 			return -EIO;
+ 
+-		if (likely(speed))
++		if (likely(speed)) {
+ 			*speed = (hi << 8) | lo;
++			if (fan_speed_in_tpr && *speed != 0)
++				*speed = FAN_CLOCK_TPM / *speed;
++		}
+ 		break;
+ 
+ 	case TPACPI_FAN_RD_TPEC_NS:
+@@ -8786,6 +8794,7 @@ static const struct attribute_group fan_driver_attr_group = {
+ #define TPACPI_FAN_NOFAN	0x0008		/* no fan available */
+ #define TPACPI_FAN_NS		0x0010		/* For EC with non-Standard register addresses */
+ #define TPACPI_FAN_DECRPM	0x0020		/* For ECFW's with RPM in register as decimal */
++#define TPACPI_FAN_TPR		0x0040		/* Fan speed is in Ticks Per Revolution */
+ 
+ static const struct tpacpi_quirk fan_quirk_table[] __initconst = {
+ 	TPACPI_QEC_IBM('1', 'Y', TPACPI_FAN_Q1),
+@@ -8815,6 +8824,7 @@ static const struct tpacpi_quirk fan_quirk_table[] __initconst = {
+ 	TPACPI_Q_LNV3('R', '0', 'V', TPACPI_FAN_NS),	/* 11e Gen5 KL-Y */
+ 	TPACPI_Q_LNV3('N', '1', 'O', TPACPI_FAN_NOFAN),	/* X1 Tablet (2nd gen) */
+ 	TPACPI_Q_LNV3('R', '0', 'Q', TPACPI_FAN_DECRPM),/* L480 */
++	TPACPI_Q_LNV('8', 'F', TPACPI_FAN_TPR),		/* ThinkPad x120e */
+ };
+ 
+ static int __init fan_init(struct ibm_init_struct *iibm)
+@@ -8885,6 +8895,8 @@ static int __init fan_init(struct ibm_init_struct *iibm)
+ 
+ 			if (quirks & TPACPI_FAN_Q1)
+ 				fan_quirk1_setup();
++			if (quirks & TPACPI_FAN_TPR)
++				fan_speed_in_tpr = true;
+ 			/* Try and probe the 2nd fan */
+ 			tp_features.second_fan = 1; /* needed for get_speed to work */
+ 			res = fan2_get_speed(&speed);
 -- 
 2.39.5
 
