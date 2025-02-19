@@ -1,34 +1,32 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 42CD41C84A9;
-	Wed, 19 Feb 2025 13:19:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1CFDE1E5B65;
+	Wed, 19 Feb 2025 14:20:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739971167; cv=none; b=J8QmLOWnINxKV2reKt61Svi5eBhWS5vVSej1DKf0iSjAy0NS2sOz3SlAtpUujX0OvWNFEQUjF9T0dYFE7lIEBhGtu9iJKuUiMOv5OOKwiJjvYixzUv8j1QinX3+luuPum5DLtMrdthwApj1KKhMRwfbYW+gG3Clu7NAJorsGxJM=
+	t=1739974852; cv=none; b=jGVAvEPkANxJZ8mxH3UoC3Nzd/vzhjn1NobQrnr0QBHxZ4v43tgPVCXmzHJqCbhmQfGaOOGGNz/QXaDsBSRbFTQXyJRr9IYUuLESOB+m2BURrv04X+nYWVnIoYO+6nWbNFURj8aT/ko18TwCkxpnVx0vC36eP/lcWJvnYYZ1hlI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739971167; c=relaxed/simple;
-	bh=RcuQPWBAOebggXpc49oXCroXSGfFXw0R3wUoVFgSYw0=;
+	s=arc-20240116; t=1739974852; c=relaxed/simple;
+	bh=jOlrkiD0YDVnxiss19yqwIELdl/2yHZAb820zbK7+Y4=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=WvXuSMXNAovZ4IujWzgVxdchoI/POpfRfB5hdK5zZLLim1FZk6O75SmIH2pk17FXII8pPobYNJ8E87z8kKZNOolK1BzDStRRliWn7zHpxJPQnDILQM65uiwbtCccpTTCmBQc5Z6L49Wq7Gc++LVXtQEpzGaWK3ZUOmwVzOLwiSk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=TZH/bQk4; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=NP0HukTbwe3YeQfR+1hbqTSrG7QzGPXRrOh8n+D/9+qq8CouyLZ14iMsTf68kb/p9dABhWYOOYsnvNRN9OK1C7vYB7Pp0/rslzdAKDia4ebWw5LcXCbLrbVLauVlUylmO1NKNYWhtyL6lwItNFQM8GAUANE5HSEnvrekLPwnboI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=eIwtcQJF; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="TZH/bQk4"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 26083C4CED1;
-	Wed, 19 Feb 2025 13:19:26 +0000 (UTC)
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="eIwtcQJF"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 05A12C4CED1;
+	Wed, 19 Feb 2025 14:20:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1739971166;
-	bh=RcuQPWBAOebggXpc49oXCroXSGfFXw0R3wUoVFgSYw0=;
+	s=korg; t=1739974851;
+	bh=jOlrkiD0YDVnxiss19yqwIELdl/2yHZAb820zbK7+Y4=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=TZH/bQk4qL6+2tnUJqqWBkPPTthw5gu9C17UymFAIupjP536vP5/A2uuLTBTsi5EM
-	 G6Cwv45NY3dyN2GbwkOU/ec7M/aKurvYZOZohZZHB3xEdjNwkIGxGcUW3qgOJrXUR0
-	 jXyHDhQTIbUsWIurk+PCF0wp5cC3JQAlgnZOUB20=
-Date: Wed, 19 Feb 2025 14:19:23 +0100
+	b=eIwtcQJFf0s+4hIHMz0Xth5Km8xhl2Lj7ZaQuf7QLCMOqOAThRQfWtj3OOU8+Ik2C
+	 CytUQ7xJ4zfZOAOJvCrqBSZxlDw0azh39huA2Zuu5ZtJlOIL5m02V31EfAhhq1xWd3
+	 QyVWZb0x+NzZ+cKpwIfGziYdpiVNagt0okrwp+Cw=
+Date: Wed, 19 Feb 2025 15:20:48 +0100
 From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-Cc: Jerome Brunet <jbrunet@baylibre.com>,
-	Dave Ertman <david.m.ertman@intel.com>,
-	Ira Weiny <ira.weiny@intel.com>,
+To: Jerome Brunet <jbrunet@baylibre.com>
+Cc: Dave Ertman <david.m.ertman@intel.com>, Ira Weiny <ira.weiny@intel.com>,
 	"Rafael J. Wysocki" <rafael@kernel.org>,
 	Stephen Boyd <sboyd@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
 	Danilo Krummrich <dakr@kernel.org>,
@@ -68,12 +66,9 @@ Cc: Jerome Brunet <jbrunet@baylibre.com>,
 	linux-amlogic@lists.infradead.org
 Subject: Re: [PATCH v4 1/8] driver core: auxiliary bus: add device creation
  helpers
-Message-ID: <2025021937-trodden-snowdrop-99be@gregkh>
+Message-ID: <2025021938-swan-facedown-e96a@gregkh>
 References: <20250218-aux-device-create-helper-v4-0-c3d7dfdea2e6@baylibre.com>
  <20250218-aux-device-create-helper-v4-1-c3d7dfdea2e6@baylibre.com>
- <crtrciitrlqkxh5mxvnbdjy6zoxny5onse7xgbw7biozg6myux@grp3ketgl2uh>
- <2025021922-spongy-swirl-0746@gregkh>
- <eskvhtljnrkhm6vmqy52gkweexj3tcethejeywcoib4la72jcl@ojuqcazpvht4>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -82,110 +77,16 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <eskvhtljnrkhm6vmqy52gkweexj3tcethejeywcoib4la72jcl@ojuqcazpvht4>
+In-Reply-To: <20250218-aux-device-create-helper-v4-1-c3d7dfdea2e6@baylibre.com>
 
-On Wed, Feb 19, 2025 at 02:08:22PM +0200, Dmitry Baryshkov wrote:
-> On Wed, Feb 19, 2025 at 11:13:14AM +0100, Greg Kroah-Hartman wrote:
-> > On Wed, Feb 19, 2025 at 11:06:02AM +0200, Dmitry Baryshkov wrote:
-> > > On Tue, Feb 18, 2025 at 08:29:46PM +0100, Jerome Brunet wrote:
-> > > > Add helper functions to create a device on the auxiliary bus.
-> > > > 
-> > > > This is meant for fairly simple usage of the auxiliary bus, to avoid having
-> > > > the same code repeated in the different drivers.
-> > > > 
-> > > > Suggested-by: Stephen Boyd <sboyd@kernel.org>
-> > > > Cc: Arnd Bergmann <arnd@arndb.de>
-> > > > Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
-> > > > ---
-> > > >  drivers/base/auxiliary.c      | 108 ++++++++++++++++++++++++++++++++++++++++++
-> > > >  include/linux/auxiliary_bus.h |  17 +++++++
-> > > >  2 files changed, 125 insertions(+)
-> > > > 
-> > > > diff --git a/drivers/base/auxiliary.c b/drivers/base/auxiliary.c
-> > > > index afa4df4c5a3f371b91d8dd8c4325495d32ad1291..a6d46c2759be81a0739f07528d5959c2a76eb8a8 100644
-> > > > --- a/drivers/base/auxiliary.c
-> > > > +++ b/drivers/base/auxiliary.c
-> > > > @@ -385,6 +385,114 @@ void auxiliary_driver_unregister(struct auxiliary_driver *auxdrv)
-> > > >  }
-> > > >  EXPORT_SYMBOL_GPL(auxiliary_driver_unregister);
-> > > >  
-> > > > +static void auxiliary_device_release(struct device *dev)
-> > > > +{
-> > > > +	struct auxiliary_device *auxdev = to_auxiliary_dev(dev);
-> > > > +
-> > > > +	kfree(auxdev);
-> > > > +}
-> > > > +
-> > > > +/**
-> > > > + * auxiliary_device_create - create a device on the auxiliary bus
-> > > > + * @dev: parent device
-> > > > + * @modname: module name used to create the auxiliary driver name.
-> > > > + * @devname: auxiliary bus device name
-> > > > + * @platform_data: auxiliary bus device platform data
-> > > > + * @id: auxiliary bus device id
-> > > > + *
-> > > > + * Helper to create an auxiliary bus device.
-> > > > + * The device created matches driver 'modname.devname' on the auxiliary bus.
-> > > > + */
-> > > > +struct auxiliary_device *auxiliary_device_create(struct device *dev,
-> > > > +						 const char *modname,
-> > > > +						 const char *devname,
-> > > > +						 void *platform_data,
-> > > > +						 int id)
-> > > > +{
-> > > > +	struct auxiliary_device *auxdev;
-> > > > +	int ret;
-> > > > +
-> > > > +	auxdev = kzalloc(sizeof(*auxdev), GFP_KERNEL);
-> > > > +	if (!auxdev)
-> > > > +		return NULL;
-> > > > +
-> > > > +	auxdev->id = id;
-> > > > +	auxdev->name = devname;
-> > > > +	auxdev->dev.parent = dev;
-> > > > +	auxdev->dev.platform_data = platform_data;
-> > > > +	auxdev->dev.release = auxiliary_device_release;
-> > > > +	device_set_of_node_from_dev(&auxdev->dev, dev);
-> > > > +
-> > > > +	ret = auxiliary_device_init(auxdev);
-> > > > +	if (ret) {
-> > > > +		kfree(auxdev);
-> > > > +		return NULL;
-> > > > +	}
-> > > > +
-> > > > +	ret = __auxiliary_device_add(auxdev, modname);
-> > > > +	if (ret) {
-> > > 
-> > > This loses possible error return values from __auxiliary_device_add().
-> > 
-> > Why does that really matter?
+On Tue, Feb 18, 2025 at 08:29:46PM +0100, Jerome Brunet wrote:
+> Add helper functions to create a device on the auxiliary bus.
 > 
-> At the very least the caller (or caller of a caller) can call
-> dev_err_probe() or dev_err("%pe"). With the current implementation as
-> everybody maps NULL to -ENOMEM the error message will be cryptic.
+> This is meant for fairly simple usage of the auxiliary bus, to avoid having
+> the same code repeated in the different drivers.
 > 
-> Or just having a cryptic value in the logs.
+> Suggested-by: Stephen Boyd <sboyd@kernel.org>
+> Cc: Arnd Bergmann <arnd@arndb.de>
+> Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
 
-So all you can get here could be:
-	-ENOMEM - memory couldn't be allocated somewhere
-	-EINVAL - wrong parameters sent to auxiliary_device_init() or __auxiliary_device_add()
-	-EEXIST - duplicate name
-
-And if -EEXIST happens, you will get a kernel log splat from sysfs
-showing you that something went wrong.
-
-So while I understand the need to be specific here in reporting the
-exact error, I fail to understand how it really matters at all.  A
-driver writer really only wants to know "did it work?" and have a simple
-way to test it.
-
-IS_ERR_OR_NULL() and then getting the error using PTR_ERR() is rough and
-feels like boilerplate code that everyone gets wrong (how many times do
-people accidentally only check for NULL?).
-
-Anyway, I'm for simple apis, and NULL or valid pointer seems simple to
-me.
-
-thanks,
-
-greg k-h
+Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
