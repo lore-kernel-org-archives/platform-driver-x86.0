@@ -1,97 +1,169 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D42B315B971
-	for <platform-driver-x86@vger.kernel.org>; Wed, 19 Feb 2025 10:06:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 17F872862A1;
+	Wed, 19 Feb 2025 10:13:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739959615; cv=none; b=alOAC9bZe1ER0qKfi9hB48Sp80O3ezo7zgZWNyULCHzuSj9tj/QFThiqgg3klfleFXqAWuINwLGB/RVC1i5QfMXukRgeQbUlCcbJFUUSkacI7y+2A98y5T730yTWhbvrUrp5Qn+3LGvG94XhRSQddI4B2EeKlCUtDbVdnG805DY=
+	t=1739959999; cv=none; b=decUiUzvOHP/DB4tNME6IdlpIxmFg7XiZxbpS3wa/1neOJQjeUAQiR1KbUkC4zuQH2TbVHBIQZAUF4d1eLvyjdg9HLbNyuY+rnKwktRMPd8Yoj1lPAarHioNx4BXu8tCou/5aO/DrW5qALbouTtdmseXC2URcv6HMdYF7lAuvQs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739959615; c=relaxed/simple;
-	bh=2rNefNk4d8k03KvHlinOxaAgUt1eZZxZvdwOHZwpbCQ=;
-	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=N3jOf/0M1Eg43Qc8qu8hNhpH0Uz+QGjOmT6zmhu4LU7LvPMoNi271PdvLgHWIptFNRKvkptfhLG5Jeec3LEK4RMfwu20xLeMJLVy9E5H4El2uyJXUhWiJ3SsXturmNSxSEUwyx5Tnddangd2t6dJjto/LFF6wQhnQsMt6CseeRk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FbKiZkQg; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1739959999; c=relaxed/simple;
+	bh=fMTgCZ4pkvP3/QIoF7iwpCmqEdcG6A1koNbMDvsj2dk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=aov2Bk8RY+eTZ4wflic/7PYWbkQDymoSSRkIEOJqvebmWRuk5R3WeHv2wi+BpxT6prqfkpFd6K1Y8hjux27ZYDdDzko4zlNkYmMMF16SzfvJCPmzL0WQOjfEPrqhKBhhq2JZbfTj34TK2DvP876ewxWKWGDQJptkN56sDm0MuJM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=LHj7SUL6; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FbKiZkQg"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 514F8C4CEE7
-	for <platform-driver-x86@vger.kernel.org>; Wed, 19 Feb 2025 10:06:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1739959615;
-	bh=2rNefNk4d8k03KvHlinOxaAgUt1eZZxZvdwOHZwpbCQ=;
-	h=From:To:Subject:Date:In-Reply-To:References:From;
-	b=FbKiZkQgjswuCw9PYD944ugoqV1ZVoOe+OHRhzTwkdqKB4o+1seROw4oGbROBPHhV
-	 V+LNi6uCdD9auMKpTa4Mgi5P3N9JI+vA+2KGcH5FqOifcxyjbvAaIX7qvc3LcogAbR
-	 z0Xc52+5w/Aizcy0A0pp2ym7b7JLq7v6otUs5WKg7fvwUK44FuK8Yf1T2xPd8mrR2w
-	 5Wm69m2PPghUA2jupHr7DPTkHNEvPX71RmM7WLuCthK/IMp4Jc3XJhcJfQnGkHxqLf
-	 8q7ffWNWP9HYsXk2g+IPtmnseZQ0APO10ooNTWnrRmNSF++tZgjVfDRlT0ACP04FG5
-	 pswMfmRSV5TVQ==
-Received: by aws-us-west-2-korg-bugzilla-1.web.codeaurora.org (Postfix, from userid 48)
-	id 3EC5EC41614; Wed, 19 Feb 2025 10:06:55 +0000 (UTC)
-From: bugzilla-daemon@kernel.org
-To: platform-driver-x86@vger.kernel.org
-Subject: [Bug 218863] [BAD FIRMWARE] amd-pmf AMDI0102:00: ta invoke cmd init
- failed err: 60005
-Date: Wed, 19 Feb 2025 10:06:54 +0000
-X-Bugzilla-Reason: None
-X-Bugzilla-Type: changed
-X-Bugzilla-Watch-Reason: CC drivers_platform_x86@kernel-bugs.osdl.org
-X-Bugzilla-Product: Platform Specific/Hardware
-X-Bugzilla-Component: x86-64
-X-Bugzilla-Version: 2.5
-X-Bugzilla-Keywords: 
-X-Bugzilla-Severity: low
-X-Bugzilla-Who: yaroslav@lll.gd
-X-Bugzilla-Status: NEW
-X-Bugzilla-Resolution: 
-X-Bugzilla-Priority: P3
-X-Bugzilla-Assigned-To: shyam-sundar.s-k@amd.com
-X-Bugzilla-Flags: 
-X-Bugzilla-Changed-Fields: cc
-Message-ID: <bug-218863-215701-kUv6XRRqGE@https.bugzilla.kernel.org/>
-In-Reply-To: <bug-218863-215701@https.bugzilla.kernel.org/>
-References: <bug-218863-215701@https.bugzilla.kernel.org/>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Bugzilla-URL: https://bugzilla.kernel.org/
-Auto-Submitted: auto-generated
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="LHj7SUL6"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id F40B3C4CED1;
+	Wed, 19 Feb 2025 10:13:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1739959997;
+	bh=fMTgCZ4pkvP3/QIoF7iwpCmqEdcG6A1koNbMDvsj2dk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=LHj7SUL6hr9dnxeuMouAoZl+TqgPJkJnt6OxeGZBVnwjG1an8QfGZTZhAz67SUNMi
+	 V5LaRH/n8f0+cZvr3kZbgPWLsV3MQceZE5n+wYuzRWmC4ZHELcec25299VKUrxRVkD
+	 lwg+grq7xKKnKHBmMBQEKZrZR5rJUGwcEwJFWwx8=
+Date: Wed, 19 Feb 2025 11:13:14 +0100
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+Cc: Jerome Brunet <jbrunet@baylibre.com>,
+	Dave Ertman <david.m.ertman@intel.com>,
+	Ira Weiny <ira.weiny@intel.com>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Stephen Boyd <sboyd@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
+	Danilo Krummrich <dakr@kernel.org>,
+	Conor Dooley <conor.dooley@microchip.com>,
+	Daire McNamara <daire.mcnamara@microchip.com>,
+	Philipp Zabel <p.zabel@pengutronix.de>,
+	Douglas Anderson <dianders@chromium.org>,
+	Andrzej Hajda <andrzej.hajda@intel.com>,
+	Neil Armstrong <neil.armstrong@linaro.org>,
+	Robert Foss <rfoss@kernel.org>,
+	Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
+	Jonas Karlman <jonas@kwiboo.se>,
+	Jernej Skrabec <jernej.skrabec@gmail.com>,
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Maxime Ripard <mripard@kernel.org>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+	Hans de Goede <hdegoede@redhat.com>,
+	Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	Bryan O'Donoghue <bryan.odonoghue@linaro.org>,
+	Vladimir Kondratiev <vladimir.kondratiev@mobileye.com>,
+	Gregory CLEMENT <gregory.clement@bootlin.com>,
+	=?iso-8859-1?Q?Th=E9o?= Lebrun <theo.lebrun@bootlin.com>,
+	Michael Turquette <mturquette@baylibre.com>,
+	Abel Vesa <abelvesa@kernel.org>, Peng Fan <peng.fan@nxp.com>,
+	Shawn Guo <shawnguo@kernel.org>,
+	Sascha Hauer <s.hauer@pengutronix.de>,
+	Pengutronix Kernel Team <kernel@pengutronix.de>,
+	Fabio Estevam <festevam@gmail.com>,
+	Kevin Hilman <khilman@baylibre.com>,
+	Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+	linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org,
+	dri-devel@lists.freedesktop.org,
+	platform-driver-x86@vger.kernel.org, linux-mips@vger.kernel.org,
+	linux-clk@vger.kernel.org, imx@lists.linux.dev,
+	linux-arm-kernel@lists.infradead.org,
+	linux-amlogic@lists.infradead.org
+Subject: Re: [PATCH v4 1/8] driver core: auxiliary bus: add device creation
+ helpers
+Message-ID: <2025021922-spongy-swirl-0746@gregkh>
+References: <20250218-aux-device-create-helper-v4-0-c3d7dfdea2e6@baylibre.com>
+ <20250218-aux-device-create-helper-v4-1-c3d7dfdea2e6@baylibre.com>
+ <crtrciitrlqkxh5mxvnbdjy6zoxny5onse7xgbw7biozg6myux@grp3ketgl2uh>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <crtrciitrlqkxh5mxvnbdjy6zoxny5onse7xgbw7biozg6myux@grp3ketgl2uh>
 
-https://bugzilla.kernel.org/show_bug.cgi?id=3D218863
+On Wed, Feb 19, 2025 at 11:06:02AM +0200, Dmitry Baryshkov wrote:
+> On Tue, Feb 18, 2025 at 08:29:46PM +0100, Jerome Brunet wrote:
+> > Add helper functions to create a device on the auxiliary bus.
+> > 
+> > This is meant for fairly simple usage of the auxiliary bus, to avoid having
+> > the same code repeated in the different drivers.
+> > 
+> > Suggested-by: Stephen Boyd <sboyd@kernel.org>
+> > Cc: Arnd Bergmann <arnd@arndb.de>
+> > Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
+> > ---
+> >  drivers/base/auxiliary.c      | 108 ++++++++++++++++++++++++++++++++++++++++++
+> >  include/linux/auxiliary_bus.h |  17 +++++++
+> >  2 files changed, 125 insertions(+)
+> > 
+> > diff --git a/drivers/base/auxiliary.c b/drivers/base/auxiliary.c
+> > index afa4df4c5a3f371b91d8dd8c4325495d32ad1291..a6d46c2759be81a0739f07528d5959c2a76eb8a8 100644
+> > --- a/drivers/base/auxiliary.c
+> > +++ b/drivers/base/auxiliary.c
+> > @@ -385,6 +385,114 @@ void auxiliary_driver_unregister(struct auxiliary_driver *auxdrv)
+> >  }
+> >  EXPORT_SYMBOL_GPL(auxiliary_driver_unregister);
+> >  
+> > +static void auxiliary_device_release(struct device *dev)
+> > +{
+> > +	struct auxiliary_device *auxdev = to_auxiliary_dev(dev);
+> > +
+> > +	kfree(auxdev);
+> > +}
+> > +
+> > +/**
+> > + * auxiliary_device_create - create a device on the auxiliary bus
+> > + * @dev: parent device
+> > + * @modname: module name used to create the auxiliary driver name.
+> > + * @devname: auxiliary bus device name
+> > + * @platform_data: auxiliary bus device platform data
+> > + * @id: auxiliary bus device id
+> > + *
+> > + * Helper to create an auxiliary bus device.
+> > + * The device created matches driver 'modname.devname' on the auxiliary bus.
+> > + */
+> > +struct auxiliary_device *auxiliary_device_create(struct device *dev,
+> > +						 const char *modname,
+> > +						 const char *devname,
+> > +						 void *platform_data,
+> > +						 int id)
+> > +{
+> > +	struct auxiliary_device *auxdev;
+> > +	int ret;
+> > +
+> > +	auxdev = kzalloc(sizeof(*auxdev), GFP_KERNEL);
+> > +	if (!auxdev)
+> > +		return NULL;
+> > +
+> > +	auxdev->id = id;
+> > +	auxdev->name = devname;
+> > +	auxdev->dev.parent = dev;
+> > +	auxdev->dev.platform_data = platform_data;
+> > +	auxdev->dev.release = auxiliary_device_release;
+> > +	device_set_of_node_from_dev(&auxdev->dev, dev);
+> > +
+> > +	ret = auxiliary_device_init(auxdev);
+> > +	if (ret) {
+> > +		kfree(auxdev);
+> > +		return NULL;
+> > +	}
+> > +
+> > +	ret = __auxiliary_device_add(auxdev, modname);
+> > +	if (ret) {
+> 
+> This loses possible error return values from __auxiliary_device_add().
 
-Yaroslav (yaroslav@lll.gd) changed:
+Why does that really matter?
 
-           What    |Removed                     |Added
-----------------------------------------------------------------------------
-                 CC|                            |yaroslav@lll.gd
+> I'd suggest to return ERR_PTR(ret) here and in the
+> auxiliary_device_init() chunks and ERR_PTR(-ENOMEM) in case of kzalloc()
+> failure.
 
---- Comment #36 from Yaroslav (yaroslav@lll.gd) ---
-Have the same message
+Will the caller do something different based on the error value here?
+All we care is that this worked or not, the specific error isn't going
+to matter for device creation like this.
 
-System:
+thanks,
 
-  Host: elitebook Kernel: 6.13.3-cachyos1.fc41.x86_64 arch: x86_64 bits: 64
-    compiler: gcc v: 14.2.1 clocksource: tsc
-  Desktop: KDE Plasma v: 6.3.0 tk: Qt v: N/A wm: kwin_wayland with: krunner
-    vt: 2 dm: SDDM Distro: Fedora Linux 41 (KDE Plasma)
-Machine:
-  Type: Laptop System: HP product: HP EliteBook 845 14 inch G10 Notebook PC
-  Mobo: HP model: 8B6E v: KBC Version 60.34.00
-    part-nu: 818N0EA#ABU UEFI: HP v: 82 Ver. 01.07.00
-    date: 11/14/2024
-CPU:
-  model: AMD Ryzen 9 PRO 7940HS w/ Radeon 780M
-
-[    5.375196] amd-pmf AMDI0102:00: ta invoke cmd init failed err: 60005
-[    5.396214] amd-pmf AMDI0102:00: registered PMF device successfully
-
---=20
-You may reply to this email to add a comment.
-
-You are receiving this mail because:
-You are watching someone on the CC list of the bug.=
+greg k-h
