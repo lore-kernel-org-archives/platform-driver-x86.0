@@ -1,131 +1,107 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yb1-f182.google.com (mail-yb1-f182.google.com [209.85.219.182])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C0C01FF60B
-	for <platform-driver-x86@vger.kernel.org>; Thu, 20 Feb 2025 16:00:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 97B591FAC5F;
+	Thu, 20 Feb 2025 16:13:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740067254; cv=none; b=bYNIjt33ydfDYkBSDN1yu1Wo59qQdma5mol1brkNHv8a7wWZGODbyIYANZxsuv4SwJu6TkBSfjzvJRCwxBsYJVzU7SM9J34jjF+j5R2PK2MikNmkIa5x09XQ/MGjr8E4Pv30dzPNMP6quH+00gYYme0meW+MHYmKzXJYqjrNQn0=
+	t=1740068010; cv=none; b=usTgQOq9RPT++cOuOPbwXcMVmQGyLnrpbItUTrbvdVAjFaGVZm2ZBdfe5hY+CE2bi6xeaQuiOOyRFcHy+MDJlAbHzoxtYL0HS27uvQh7E3KBZ0dEsxxRClOdQ+yT64AThymnf9umhGUuZVf1Om7Ubo+zr+1kQOQ9gu92lILF+k0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740067254; c=relaxed/simple;
-	bh=5XdsLSZyGrEMQjML+VnNbb8ludYR18BG4ObC3M5zCkI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=HjxQqhugfsjQgj1ietq0TyJy91Q4aZGMVytY6LWIHHdkiO7MQC+A0KRYMCPfp4rXqDWCDrebxfFQlTCrt0UG45jXB53Rynr3N/JobMl6fdsQDKHK1pLrC8QUkU9OUTRpM0t/9jnF53n8yXVic7QkTxGpttUiAuH5Hk9m33b9eC0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=PQDk2xjg; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1740068010; c=relaxed/simple;
+	bh=+eN6d/gwmzthWaj3PJG4Q5vXE7wNTtxP1spv+1Zf4QA=;
+	h=Mime-Version:Content-Type:Date:Message-Id:To:Cc:Subject:From:
+	 References:In-Reply-To; b=i0/aQ/rwMLjjMhsVmCqWXjxJ4WGGGKOXH9Tl4vb9oyNz9JGYZaTINkLdh1rHs5MFVnuRlR487XHbpbHVo5cOAU9UoGQWxMOKyuBXwsqBq2vm+WvM+0PUhQ2qfmlVkOnMXnsPKRbiHkcwGH43pyOhH5Rjx9dCs9JvP+IM6K/U0A8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=mzCaAAfG; arc=none smtp.client-ip=209.85.219.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="PQDk2xjg"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1740067251;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=8LQPacTD/w30sjA4ALnvBz9RZeNrFXZknDU/oG0PKd8=;
-	b=PQDk2xjgRHbwim8M9YTvZI8WOujF9VwbL0K/Sl7/y9XOgCPNLxMaRKjl6i0jxIHXu8fQH9
-	wnWtVLXO2pK1N3M8+reeUzm3zk3UdiqpcsUyaPT+XQO/+3PcwGorKNmAMxPZziapVGxRbW
-	Eqm3zC5rzluuI5eocWg7WYTbsK5VdxA=
-Received: from mail-ed1-f70.google.com (mail-ed1-f70.google.com
- [209.85.208.70]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-422-ITjRBdJBN_yHR8MGFZnBdA-1; Thu, 20 Feb 2025 11:00:50 -0500
-X-MC-Unique: ITjRBdJBN_yHR8MGFZnBdA-1
-X-Mimecast-MFC-AGG-ID: ITjRBdJBN_yHR8MGFZnBdA_1740067248
-Received: by mail-ed1-f70.google.com with SMTP id 4fb4d7f45d1cf-5d9f21e17cfso939434a12.0
-        for <platform-driver-x86@vger.kernel.org>; Thu, 20 Feb 2025 08:00:48 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mzCaAAfG"
+Received: by mail-yb1-f182.google.com with SMTP id 3f1490d57ef6-e5dd697475dso904503276.3;
+        Thu, 20 Feb 2025 08:13:28 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1740068007; x=1740672807; darn=vger.kernel.org;
+        h=in-reply-to:references:from:subject:cc:to:message-id:date
+         :content-transfer-encoding:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=+eN6d/gwmzthWaj3PJG4Q5vXE7wNTtxP1spv+1Zf4QA=;
+        b=mzCaAAfGqZkl0U2JnKNS5VP741jsimJidIGzOdeuTfchckAY532lEOWHqTTF+oOfX5
+         xg7+GUBvRnDtJPWGTGaFwKTHMpx+QxekA1+I7Ysc1q273xx6MAcfqmwcXcBwhP83ebXj
+         qn1Z1ZAWrgw6+VeQUAhP1i8DoB5yJbif/xvWX7h7zLq6GSgXB8O3m76Hfk+AwHacjYiE
+         6lZq+N3puOLtIXOoB9O937QZyJNt8y/FdqKzK4jAAcIcgSLg6S9LWzDbdICiQavNG7x6
+         tCoKNOuIdQsA0k8AWTdLZvUHbDYmkQAf/HOKqpvTih3yun9uUCn6QmYbLefvSS1/F8VU
+         /KmQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740067247; x=1740672047;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=8LQPacTD/w30sjA4ALnvBz9RZeNrFXZknDU/oG0PKd8=;
-        b=vUXO7+JwODCaFQ0ueXO5TZqCW5X80MqzqTmL+zfVAYtXd2c1dCB04M2ARH/DKy7/GJ
-         mHn+p8Oe0dPnRFFQPVCf8BsKSSIhNtzGnR/zQdkYVMlTbK+rlLW1Sg/v0scOFH4+MfkH
-         R0mCkOmnmHy3hbdvgbbRmoiqVb44Ziia4zq66pJ4cDtWMYtb1Gm9oHJyyGk2sGGR3cn7
-         CqelGJBseSGgX9N99/FjqVenN7+bDvPB9tNJ0tIFRRSWv/fncOOeUcaU8niSzZ3gq0b4
-         M4i3A18Yi6Z+tq1EqJfY7GMK2vDSzdI9TODEtJ4gy1/txI46kcjhH25naEqU0ffOu1f/
-         5kIQ==
-X-Forwarded-Encrypted: i=1; AJvYcCV5RGkFQbW1g4sCcUM8LtZG2sUyuqmEDjzt+RutD/KPKBFmy40wj+mqawfBh1+0hzfOwfobweuhiy6N9pQdEBVnoDnx@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy1vekXywKLY9B+3yA3WeIAmMBdiMoeP6AqEbTdFy/b5l31Jw1D
-	HeYICCcEdKOwH2h6/bXCeSuJUDmQBmnycP8YRRTI1mKsZqQTxD5xgjYy2QjVW0Xn1/rilDkCewz
-	Z/Tc+qN6ts1RG6zYJuIs+1GgaN8n5fm+XNor3hzj6SIROc+6YoqO7e2JsT01/SZnypams4alGKF
-	NvMns=
-X-Gm-Gg: ASbGncs+ZsoUief98IFgk0TSmPS7h3vqs/qEPWp5umpprYAHvlJpnCGgmqqWTWxaEL7
-	HigTNEQK2QoNVwRqyOV26kY92SC3o5ykZDOxXqqKoK+aXWQXvfS8erKpMxqj3m6kpMC7ODYxaFn
-	TpgQKrc5/xssHz9naLqSoi42LmXHvLGRVV0yWC535vuprdISf4Mlln5Lp9oRucR9d+nLopsfksf
-	UFGV7+sLz/9hB+YxHKbVZB1J6gCl0r6dHBHk7EYv7GGj0LdJJBAF6hUHaM7j1/BSPZF4J5mwjCU
-	H/d9bN6Ifnkvj44yWreqN11Odgm6heeqCd2UAMUuPPivdF/sSW7Qd6T1owRTnlmUvOZcT7tc1TB
-	1PoL3oTwfgOCZyfBRQVdbavEgSFkIvcz16bdMLs22vF/K0Np6vTtT98M=
-X-Received: by 2002:a05:6402:388e:b0:5da:a97:ad73 with SMTP id 4fb4d7f45d1cf-5e089516f4fmr8379776a12.13.1740067247053;
-        Thu, 20 Feb 2025 08:00:47 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IEpT0q11Z1DTpQPdQfV/p3TRgWEOp87CTUo++H3Q8CObptKIbS2A7bmyBejVrY1+IO9Zio0sQ==
-X-Received: by 2002:a05:6402:388e:b0:5da:a97:ad73 with SMTP id 4fb4d7f45d1cf-5e089516f4fmr8379706a12.13.1740067246514;
-        Thu, 20 Feb 2025 08:00:46 -0800 (PST)
-Received: from ?IPV6:2001:1c00:c32:7800:5bfa:a036:83f0:f9ec? (2001-1c00-0c32-7800-5bfa-a036-83f0-f9ec.cable.dynamic.v6.ziggo.nl. [2001:1c00:c32:7800:5bfa:a036:83f0:f9ec])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5dece1b4f70sm12233386a12.12.2025.02.20.08.00.45
+        d=1e100.net; s=20230601; t=1740068007; x=1740672807;
+        h=in-reply-to:references:from:subject:cc:to:message-id:date
+         :content-transfer-encoding:mime-version:x-gm-message-state:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=+eN6d/gwmzthWaj3PJG4Q5vXE7wNTtxP1spv+1Zf4QA=;
+        b=Klhww+dXuIJWoZZSRVOzcRye+lZsNnViWrJ8jf1C9ZPLFV8tmOIT+GQ019BuDtWEN3
+         V58dzJ0Ba8HgS4WJfZOVBtsjN3fMHNpoN7ODIurDbYqV7q39q89P5iYQfiWL90kEJum0
+         BDj5nK/SDpETL2hEe6Izd+tjHlbhxuzn2bkork0GPG42Jr3zo3NGjFoqRmai6lqe18J0
+         dV16f4lLnyre+X8aSs9PRNBWAMxz97nToMbfd+rmEJnbRCMRr0xlKNtb4TM5VgVdjJFL
+         KHQupSDOtVqm1vcftIslH4hRhCy7KC5rL1/VqubB5FlmkSGQf3KsqGwBbu9KVDKiy5Zq
+         01og==
+X-Forwarded-Encrypted: i=1; AJvYcCVPQaLMvX447nkCoKHQMiZq09t36IHAdWPQdBTrrJpaJpr3oDiodMLhAA76okotA3xtJ7VcDE9I7P8clSQ=@vger.kernel.org, AJvYcCWSlttKE0uRAHQ1ZVywq6UU8O3ublBfn3MEyEFLNEZe2A/u6M9o5UiRi+dqGYYoVPnmr8GzUYZwIxU5P8wUABN6gM8/MA==@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw8js+B/F0DlXTFzbcnLbdJMzT9sb6MjR40LjjWXU3YVndWJRwV
+	gQf3WnX5JbQ0NsWSwR6YqECieFqzhadE4pejB5Gf9JYQ+3zipDIr
+X-Gm-Gg: ASbGncudbBtiWaCw9v1+xzwS8plt+4Fs6ujgFmdPI+aAfq7KM6uvnUfNdWNtDe8AqAX
+	RKW/cO5G2vMjwhg43hddzZrzCJahaPgAYDfjWxEOA6roavPZEfi3APs5enPW16R/cXrKlLhTsyG
+	WpUkrXvvOZ1jxDFJ9jKFzvW8SIZf6U06Gk+bOU9jwLMZNvXjIP16Qv5M1Vmk992/+qblq36QzA3
+	QpS91AI6rxcHdUA11N0JZS4IGdGczjWk37U9BKKfI11zWTz194Qs4jtAvotEMTahzHQO//Gczj9
+	+cdThXE=
+X-Google-Smtp-Source: AGHT+IGSVM/i2hChDhGyNgXI3GIH42R844Aoshhfyxgttqai26nz2LXkoqtKiP8ZMRon2xnaZUFyBQ==
+X-Received: by 2002:a05:690c:4485:b0:6f9:7fae:495a with SMTP id 00721157ae682-6fb5837e996mr200044437b3.35.1740068007485;
+        Thu, 20 Feb 2025 08:13:27 -0800 (PST)
+Received: from localhost ([2800:bf0:82:3d2:9e61:1a62:1a8c:3e62])
+        by smtp.gmail.com with ESMTPSA id 00721157ae682-6fb9b56e565sm12735247b3.33.2025.02.20.08.13.25
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 20 Feb 2025 08:00:45 -0800 (PST)
-Message-ID: <9e8e6f1c-a3b5-4bcd-bf3e-399e78ed8258@redhat.com>
-Date: Thu, 20 Feb 2025 17:00:45 +0100
+        Thu, 20 Feb 2025 08:13:26 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] platform/x86: intel-hid: fix volume buttons on Microsoft
- Surface Go 4 tablet
-To: Dmitry Panchenko | d-Systems <dmitry@d-systems.ee>,
- platform-driver-x86@vger.kernel.org
-References: <20250220154016.3620917-1-dmitry@d-systems.ee>
-Content-Language: en-US, nl
-From: Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <20250220154016.3620917-1-dmitry@d-systems.ee>
+Mime-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Date: Thu, 20 Feb 2025 11:13:25 -0500
+Message-Id: <D7XEMM16VWRF.319M6S1VD7L17@gmail.com>
+To: "Andy Shevchenko" <andriy.shevchenko@linux.intel.com>
+Cc: =?utf-8?q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+ <platform-driver-x86@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+ "Hans de Goede" <hdegoede@redhat.com>, "Mario Limonciello"
+ <mario.limonciello@amd.com>, "Prasanth Ksr" <prasanth.ksr@dell.com>,
+ <Dell.Client.Kernel@dell.com>
+Subject: Re: [PATCH 1/4] platform/x86: dell: dell-wmi-sysman: Use *-y
+ instead of *-objs in Makefile
+From: "Kurt Borja" <kuurtb@gmail.com>
+X-Mailer: aerc 0.20.1-0-g2ecb8770224a
+References: <20250218194113.26589-1-kuurtb@gmail.com>
+ <20250218194113.26589-2-kuurtb@gmail.com>
+ <Z7XsJMwFhZLk-0S4@smile.fi.intel.com>
+In-Reply-To: <Z7XsJMwFhZLk-0S4@smile.fi.intel.com>
 
-Hi,
+On Wed Feb 19, 2025 at 9:35 AM -05, Andy Shevchenko wrote:
+> On Tue, Feb 18, 2025 at 02:41:08PM -0500, Kurt Borja wrote:
+>> The `objs` suffix is reserved for user-space tools. Use the `y` suffix
+>> instead, which is usually used for kernel drivers.
+>
+> I haven't received a cover letter. Please, make sure when you send a vers=
+ion of
+> the few patches under the same thread you add a cover letter. You may con=
+sider
+> using my "smart" (not really) script [1] to send patch series to LKML.
 
-On 20-Feb-25 4:39 PM, Dmitry Panchenko | d-Systems wrote:
-> From: Dmitry Panchenko <dmitry@d-systems.ee>
-> 
-> Volume buttons on Microsoft Surface Go 4 tablet didn't send any events.
-> Add Surface Go 4 DMI match to button_array_table to fix this.
-> 
-> Signed-off-by: Dmitry Panchenko <dmitry@d-systems.ee>
+Hi Andy,
 
-Thanks, patch looks good to me:
+Yes, I messed up the Cc list.
 
-Reviewed-by: Hans de Goede <hdegoede@redhat.com>
+>
+> [1]: https://github.com/andy-shev/home-bin-tools/blob/master/ge2maintaine=
+r.sh
 
-Regards,
+Thank you very much!! I'm using that from now on :)
 
-Hans
-
-
-
-> ---
->  drivers/platform/x86/intel/hid.c | 7 +++++++
->  1 file changed, 7 insertions(+)
-> 
-> diff --git a/drivers/platform/x86/intel/hid.c b/drivers/platform/x86/intel/hid.c
-> index 927a2993f616..88a1a9ff2f34 100644
-> --- a/drivers/platform/x86/intel/hid.c
-> +++ b/drivers/platform/x86/intel/hid.c
-> @@ -139,6 +139,13 @@ static const struct dmi_system_id button_array_table[] = {
->  			DMI_MATCH(DMI_PRODUCT_NAME, "Surface Go 3"),
->  		},
->  	},
-> +	{
-> +		.ident = "Microsoft Surface Go 4",
-> +		.matches = {
-> +			DMI_MATCH(DMI_SYS_VENDOR, "Microsoft Corporation"),
-> +			DMI_MATCH(DMI_PRODUCT_NAME, "Surface Go 4"),
-> +		},
-> +	},
->  	{ }
->  };
->  
-
+--=20
+ ~ Kurt
