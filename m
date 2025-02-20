@@ -1,107 +1,165 @@
-Received: from mail-yb1-f182.google.com (mail-yb1-f182.google.com [209.85.219.182])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from NAM10-MW2-obe.outbound.protection.outlook.com (mail-mw2nam10on2104.outbound.protection.outlook.com [40.107.94.104])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 97B591FAC5F;
-	Thu, 20 Feb 2025 16:13:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.182
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740068010; cv=none; b=usTgQOq9RPT++cOuOPbwXcMVmQGyLnrpbItUTrbvdVAjFaGVZm2ZBdfe5hY+CE2bi6xeaQuiOOyRFcHy+MDJlAbHzoxtYL0HS27uvQh7E3KBZ0dEsxxRClOdQ+yT64AThymnf9umhGUuZVf1Om7Ubo+zr+1kQOQ9gu92lILF+k0=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740068010; c=relaxed/simple;
-	bh=+eN6d/gwmzthWaj3PJG4Q5vXE7wNTtxP1spv+1Zf4QA=;
-	h=Mime-Version:Content-Type:Date:Message-Id:To:Cc:Subject:From:
-	 References:In-Reply-To; b=i0/aQ/rwMLjjMhsVmCqWXjxJ4WGGGKOXH9Tl4vb9oyNz9JGYZaTINkLdh1rHs5MFVnuRlR487XHbpbHVo5cOAU9UoGQWxMOKyuBXwsqBq2vm+WvM+0PUhQ2qfmlVkOnMXnsPKRbiHkcwGH43pyOhH5Rjx9dCs9JvP+IM6K/U0A8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=mzCaAAfG; arc=none smtp.client-ip=209.85.219.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7CA6020CCE6
+	for <platform-driver-x86@vger.kernel.org>; Thu, 20 Feb 2025 17:23:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.94.104
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1740072237; cv=fail; b=G8wLiBTqp2SL55QRM2/Nku8cha90PTMuoqKK6lxwiQ5vKd04QoqLGG2US/VV8TrL0fQFsWBhriuBLepWHcFEIPyvTDKEvxBQUEcjqZyE4agqoeGBNkWz12jwvFAs0TvZgeubGqOISZelzqaUaEwXJfYN1Xr2qpcJ8b1Fa7osN9M=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1740072237; c=relaxed/simple;
+	bh=aDU/CA/8mssccocRD+qEFybKK2ihwqXUK9Z0I6TikPs=;
+	h=From:To:Cc:Subject:Date:Message-ID:Content-Type:MIME-Version; b=Wa3I8SQS/BAhxZLx6bD3+WKtHzC86ll99kjWzqRCjrvUJxA1OihBKZ1aQCfWsSTX5Q7JMu+AiYJpp5O+hd/UPe+2rgLwASNaKMM/cqf8m6dt9rpC9aXKGxccwsqSBuKaQ3p0aEGIT4p2vM1QHV8ByGkgcZcZSwztbe3UQR1yIzI=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=ipt.br; spf=pass smtp.mailfrom=ipt.br; dkim=pass (1024-bit key) header.d=ipt.br header.i=@ipt.br header.b=dLPw5/cz; arc=fail smtp.client-ip=40.107.94.104
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=ipt.br
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ipt.br
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mzCaAAfG"
-Received: by mail-yb1-f182.google.com with SMTP id 3f1490d57ef6-e5dd697475dso904503276.3;
-        Thu, 20 Feb 2025 08:13:28 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1740068007; x=1740672807; darn=vger.kernel.org;
-        h=in-reply-to:references:from:subject:cc:to:message-id:date
-         :content-transfer-encoding:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=+eN6d/gwmzthWaj3PJG4Q5vXE7wNTtxP1spv+1Zf4QA=;
-        b=mzCaAAfGqZkl0U2JnKNS5VP741jsimJidIGzOdeuTfchckAY532lEOWHqTTF+oOfX5
-         xg7+GUBvRnDtJPWGTGaFwKTHMpx+QxekA1+I7Ysc1q273xx6MAcfqmwcXcBwhP83ebXj
-         qn1Z1ZAWrgw6+VeQUAhP1i8DoB5yJbif/xvWX7h7zLq6GSgXB8O3m76Hfk+AwHacjYiE
-         6lZq+N3puOLtIXOoB9O937QZyJNt8y/FdqKzK4jAAcIcgSLg6S9LWzDbdICiQavNG7x6
-         tCoKNOuIdQsA0k8AWTdLZvUHbDYmkQAf/HOKqpvTih3yun9uUCn6QmYbLefvSS1/F8VU
-         /KmQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740068007; x=1740672807;
-        h=in-reply-to:references:from:subject:cc:to:message-id:date
-         :content-transfer-encoding:mime-version:x-gm-message-state:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=+eN6d/gwmzthWaj3PJG4Q5vXE7wNTtxP1spv+1Zf4QA=;
-        b=Klhww+dXuIJWoZZSRVOzcRye+lZsNnViWrJ8jf1C9ZPLFV8tmOIT+GQ019BuDtWEN3
-         V58dzJ0Ba8HgS4WJfZOVBtsjN3fMHNpoN7ODIurDbYqV7q39q89P5iYQfiWL90kEJum0
-         BDj5nK/SDpETL2hEe6Izd+tjHlbhxuzn2bkork0GPG42Jr3zo3NGjFoqRmai6lqe18J0
-         dV16f4lLnyre+X8aSs9PRNBWAMxz97nToMbfd+rmEJnbRCMRr0xlKNtb4TM5VgVdjJFL
-         KHQupSDOtVqm1vcftIslH4hRhCy7KC5rL1/VqubB5FlmkSGQf3KsqGwBbu9KVDKiy5Zq
-         01og==
-X-Forwarded-Encrypted: i=1; AJvYcCVPQaLMvX447nkCoKHQMiZq09t36IHAdWPQdBTrrJpaJpr3oDiodMLhAA76okotA3xtJ7VcDE9I7P8clSQ=@vger.kernel.org, AJvYcCWSlttKE0uRAHQ1ZVywq6UU8O3ublBfn3MEyEFLNEZe2A/u6M9o5UiRi+dqGYYoVPnmr8GzUYZwIxU5P8wUABN6gM8/MA==@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw8js+B/F0DlXTFzbcnLbdJMzT9sb6MjR40LjjWXU3YVndWJRwV
-	gQf3WnX5JbQ0NsWSwR6YqECieFqzhadE4pejB5Gf9JYQ+3zipDIr
-X-Gm-Gg: ASbGncudbBtiWaCw9v1+xzwS8plt+4Fs6ujgFmdPI+aAfq7KM6uvnUfNdWNtDe8AqAX
-	RKW/cO5G2vMjwhg43hddzZrzCJahaPgAYDfjWxEOA6roavPZEfi3APs5enPW16R/cXrKlLhTsyG
-	WpUkrXvvOZ1jxDFJ9jKFzvW8SIZf6U06Gk+bOU9jwLMZNvXjIP16Qv5M1Vmk992/+qblq36QzA3
-	QpS91AI6rxcHdUA11N0JZS4IGdGczjWk37U9BKKfI11zWTz194Qs4jtAvotEMTahzHQO//Gczj9
-	+cdThXE=
-X-Google-Smtp-Source: AGHT+IGSVM/i2hChDhGyNgXI3GIH42R844Aoshhfyxgttqai26nz2LXkoqtKiP8ZMRon2xnaZUFyBQ==
-X-Received: by 2002:a05:690c:4485:b0:6f9:7fae:495a with SMTP id 00721157ae682-6fb5837e996mr200044437b3.35.1740068007485;
-        Thu, 20 Feb 2025 08:13:27 -0800 (PST)
-Received: from localhost ([2800:bf0:82:3d2:9e61:1a62:1a8c:3e62])
-        by smtp.gmail.com with ESMTPSA id 00721157ae682-6fb9b56e565sm12735247b3.33.2025.02.20.08.13.25
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 20 Feb 2025 08:13:26 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=ipt.br header.i=@ipt.br header.b="dLPw5/cz"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=G6I0vLPcTf7XJL84KWwb/JlvZepZtuGsGE42ipz71gu8CsXzy7mcVwVC6WVf6u0YSoshBMtcJZJnLCUZH2hX9tiyuY1cpQtQs6inDmkrYKFMPMKSpeONxIKXoZJUSy20y0K2/ee9BY0CBIl4dBpQgiTRrJ/cc/W4wSDq3xAV/8OOW8FdJedWw+LFEO+EV6rNnBH92ioG0Tu0XuaLnvzYos1cc/+QpDcDDuN0LyxeaksqE/ET85u2xsf9zJfHh6f86fk0IiTvuvD/j5CHzkTv/6Izzl6caiKrH20wTpoTseNI0TeUkmYyvR75Hyz8MZNac7Nh4FMYl426O7volS8mbw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=jipqbNFMrOhoElzZn3YEuYEMuszK21IcDdJHtGx4tOI=;
+ b=BM3Vhf/m9UwywZvmkVMRDpLQqpQV0X+61H5uzeT/yqNWOei4a7G7OMi5tjb3mo3aFqey+AjiFp3dOoSeF+A74kchEnHw1wOJacaWEYHaOgBeOZUN8GgsKknk/JYz+ADJVwNCPe0Vw/QxSLdjb035jDr4pMsaEewnTGDZjP9E+dPfZkKKzjIdY/DYYavKWkB0jt5FufySTPhLoV5NxpEIk/2fMhn4K5KorcSk2yTBKT4TA8CZqxa/VfwobWIWOErZ/HLwO4tRQBXMkSGNBQpe6TK3o/QF1mA7qazBunGj3Dpw3j8VED9RJVc2Gj1RA/P+xDKnhXzsfE5TheuXkZDpyA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=ipt.br; dmarc=pass action=none header.from=ipt.br; dkim=pass
+ header.d=ipt.br; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ipt.br; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=jipqbNFMrOhoElzZn3YEuYEMuszK21IcDdJHtGx4tOI=;
+ b=dLPw5/czEIOJCu/cO72/SRL+yrXtGxjgxlsWtu2GsBlnL/8mJ2rELABn5h6RKE7kkh6Bi93YLCuoIlVkPBa9Rx18Kr7NVJsm7Hj9Ig/cMhGEToRGQ1EBguVbcHTI1WYbMXzJXAj5791C64r7fBfwuTmjYUvPYXVm/0WMQYf/P/0=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=ipt.br;
+Received: from SCZP152MB5520.LAMP152.PROD.OUTLOOK.COM (2603:10d6:300:20::10)
+ by CPWP152MB4613.LAMP152.PROD.OUTLOOK.COM (2603:10d6:103:12e::12) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8466.17; Thu, 20 Feb
+ 2025 17:23:50 +0000
+Received: from SCZP152MB5520.LAMP152.PROD.OUTLOOK.COM
+ ([fe80::f21e:b9ca:4738:fe43]) by SCZP152MB5520.LAMP152.PROD.OUTLOOK.COM
+ ([fe80::f21e:b9ca:4738:fe43%6]) with mapi id 15.20.8466.015; Thu, 20 Feb 2025
+ 17:23:49 +0000
+From: Matheus Polkorny <mpolkorny@ipt.br>
+To: hdegoede@redhat.com,
+	ilpo.jarvinen@linux.intel.com
+Cc: platform-driver-x86@vger.kernel.org,
+	mpolkorny@ipt.br
+Subject: [PATCH] platform/x86: ideapad-laptop: Userspace expects F20 for mic-mute
+Date: Thu, 20 Feb 2025 14:19:43 -0300
+Message-ID: <20250220171942.1381605-2-mpolkorny@ipt.br>
+X-Mailer: git-send-email 2.47.2
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: BLAPR03CA0106.namprd03.prod.outlook.com
+ (2603:10b6:208:32a::21) To SCZP152MB5520.LAMP152.PROD.OUTLOOK.COM
+ (2603:10d6:300:20::10)
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Thu, 20 Feb 2025 11:13:25 -0500
-Message-Id: <D7XEMM16VWRF.319M6S1VD7L17@gmail.com>
-To: "Andy Shevchenko" <andriy.shevchenko@linux.intel.com>
-Cc: =?utf-8?q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
- <platform-driver-x86@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
- "Hans de Goede" <hdegoede@redhat.com>, "Mario Limonciello"
- <mario.limonciello@amd.com>, "Prasanth Ksr" <prasanth.ksr@dell.com>,
- <Dell.Client.Kernel@dell.com>
-Subject: Re: [PATCH 1/4] platform/x86: dell: dell-wmi-sysman: Use *-y
- instead of *-objs in Makefile
-From: "Kurt Borja" <kuurtb@gmail.com>
-X-Mailer: aerc 0.20.1-0-g2ecb8770224a
-References: <20250218194113.26589-1-kuurtb@gmail.com>
- <20250218194113.26589-2-kuurtb@gmail.com>
- <Z7XsJMwFhZLk-0S4@smile.fi.intel.com>
-In-Reply-To: <Z7XsJMwFhZLk-0S4@smile.fi.intel.com>
+MIME-Version: 1.0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: SCZP152MB5520:EE_|CPWP152MB4613:EE_
+X-MS-Office365-Filtering-Correlation-Id: cc45e726-5c36-4da7-9295-08dd51d356bb
+X-MS-Exchange-AtpMessageProperties: SA
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|52116014|376014|1800799024|366016|38350700014;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?QT5yoqA5Yv0+DTbBFbbgJOWcqb2YnHJPj3DIiJ7ejFi0rQf0RdBx/fjfPIll?=
+ =?us-ascii?Q?I4TgaAO2uDJXBEPhmJN//Q6pC0jKFe7BzJwBc9/O53MPcJMXSf2JjpZFanKA?=
+ =?us-ascii?Q?zwZ8nA8QBYJjSSjV3EXoyvr36vsLMu1lrhOSbWP0R24+XoyfQsnJaCHiSI1X?=
+ =?us-ascii?Q?I1W55TGoF7c93HUoYx40juVsn6GuKdNx0zG/dDY4OIdrDdZbP7EYLwS3L2zY?=
+ =?us-ascii?Q?t0jJ60jorBNvch+l25CPwBfskplm1Q+gHSvdBMx+8GnrH2EDbfBkKm/fSEos?=
+ =?us-ascii?Q?oBXwQCeOWEHY5AbLSaveX2/+Dwm8sM5KJX4PTmhShzEsuS7XkIGW1zBc0ign?=
+ =?us-ascii?Q?qOvJwzBeMN3VubPoB5cVYzb/7waGy0+5KbclWHusZQXq9e8UPAhb8tidBm6K?=
+ =?us-ascii?Q?XglbxGF6CjoO2BNaqlQlpVsNLnda/oOjm0vczQSQl4UjJ/dK4GoV8B3Blhth?=
+ =?us-ascii?Q?cuK1K2PomKvU59RkxsJZ+Y/WKRbsJSXjD/eguFmmbiYMCrWfJdJBIQS361x9?=
+ =?us-ascii?Q?5g3r5TUwGwfmVaFcsNchVRlUpNcaXN65RWZ2Cuv1S3kiVo/p3Dy6ogigwuCs?=
+ =?us-ascii?Q?A3gsBSIqImS0xu72R/63EzpOKjIEmWuK1MVEtr7reiTLjj7x+hHJflU8IC9/?=
+ =?us-ascii?Q?gfysqiS0P0vWdeEfm/TnWc4EZnFDgPaogzht4SuCgAPKM+uUxGWqmmqU+msc?=
+ =?us-ascii?Q?6Ujwr3g7C2tWOdaiFciLpxOEoYrgupDIplgOGudEu59xbSJ4HL3t+ogOp6Uq?=
+ =?us-ascii?Q?y6x1nLKFlBkBo6BjIdbMDaiXIBS3VvyNDHY94p9UW/0mJhyYB4BDDKYZrasq?=
+ =?us-ascii?Q?4aoXRkdeA5eGRVPSKkfj47K3Khr22m//rEl1YLYn/otdo8UFvY5RcWeM7CXE?=
+ =?us-ascii?Q?fjrJBLsMEm19pw3CouPyXER2N4cOBrWxaHLPiq1jl+Ugf7bzgDYVP0fT7963?=
+ =?us-ascii?Q?ZNk+HQ9k6VMUFhkvaLCBigOK6Y5TbEbEATylP9g0dIxpI+by2bra6N1Cjqrl?=
+ =?us-ascii?Q?VR7nVJY/doBWcuNtNReBoALQn0tY/do/byMT/4soqofVWi4Jo3QSoLReswUf?=
+ =?us-ascii?Q?zcNXku8YDjchvourax63sC48XOPuuJq6Dh2MQTNPRy1hLo6p1kAS17ccC2BA?=
+ =?us-ascii?Q?VOUYPA3EY+moOCMamUthttu4hqyB7s4DvvxIXtMyLUlLTl0FhteFtW4yJQp2?=
+ =?us-ascii?Q?g/sUQ/2totN91uNyuYtcjBebtgKDqB7n9g+moF88FSilLw6Ir4see93CG8Ul?=
+ =?us-ascii?Q?ZltHW/6/QXYsqchRXZnE0NUoHKv5cB4GQFI4af0UDG4RVaPT91szca4Yp0zQ?=
+ =?us-ascii?Q?EI5kYsDklAG9lByv9Nao2urn2ATtqrcywbv2YI1YQJm1lzltOnJs8KDlbVo2?=
+ =?us-ascii?Q?V8vsL+LB+4mvEqzfoN1q2r+NIkP8Sm7WAveF5uz+SYzPFpW9ZWmpk/KAPR+c?=
+ =?us-ascii?Q?VjBehh0had47gWk3d7baxT5SeC4aC8st?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SCZP152MB5520.LAMP152.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFS:(13230040)(52116014)(376014)(1800799024)(366016)(38350700014);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?NheRwYNK+JESKtfA07/TlvdmRaXn6o/wx8z28Yb3LOaNVFJJMMh3QGXoH0dR?=
+ =?us-ascii?Q?PRf1e9fTWJc5CE05Bpub4qz4i9vgUkrNx6n4+8hu88IFVpplTTbv/woqyJLv?=
+ =?us-ascii?Q?Srd3ydPzNWH5M/26N+We58/VRTdmnqz0349SEKBPakdSxxDRCfRL0GsAlxxs?=
+ =?us-ascii?Q?7XSTTc++myPA1Jn4+Albu9g/x8JzKTcoDU/IqvCxIMDjj5sjvCfjG4P4gn09?=
+ =?us-ascii?Q?FIJmJ72OAxpyeRCU1J4i6F2qalgV4pYsKFvJNxbANEuloCyOQTSxH4+Zk0fa?=
+ =?us-ascii?Q?Hn0Jtdp50aiBwVrqAKfbna5cIB/+vXNWRxg+0gg7NwU+h0Vz0+ZhU7Lxu/yC?=
+ =?us-ascii?Q?JODlC4DbMvypakBXQdNq+iwK6xNfyP+t3OwIJ7aVmJ7HOdFBD51mPnk0AkQR?=
+ =?us-ascii?Q?xMjt84epWqzFLaXRHcH4mz4B4JaKspAxb8SCVv43jeEX+Yhzx90vR3b2HPOO?=
+ =?us-ascii?Q?/zMw6sdxZOjzQOJ5nQD88WzNMH21JUytsvjZ8m2F3fUNsUnvmmvzKmmVfvGm?=
+ =?us-ascii?Q?gR9ZvTkAZzJPWCCDtCPWsneRvuG7V2LfHWDq9T0TQwnAO6MhNym6wrxl0Sdz?=
+ =?us-ascii?Q?WlgrvKTZ/4kxBVfe7bVj8w784od984eETn2bx728irG//3yrRBtcQXl1ZB51?=
+ =?us-ascii?Q?V+E3lDEqecsQbEJZ7EK0Hk3/vvtHe6ktnRx+n1CanMTaQAODhG8b8paV9tnZ?=
+ =?us-ascii?Q?14BDaL/ZqcTIMwOtl17EKLUaOpaCcfhmJKz70zX30mNAR3vinMZhY0HmDtc7?=
+ =?us-ascii?Q?0qR4RX5U4JLY+uaqNIqHARuvpkAHHrzZl2XDfHEtuB3Ugpq/fugXL4oRSaAs?=
+ =?us-ascii?Q?wH3feHQJ5sMcCFf1ActajfHoXNf6N6upZ5V7YiphQ1gbJl3OJRMao82L3XGz?=
+ =?us-ascii?Q?jPU+7/lsntSZbM+D6gDIXXGH/C8ee5CBCWkrQEJzEvI4xrULg1XB2aDYiMXv?=
+ =?us-ascii?Q?q7UhKhIkPVfJ/eIIrW4bOaae3WkHWbFY6B5ITxQjh46KDQiTHxJif/qYJd5m?=
+ =?us-ascii?Q?ZN3h5Lg5sflDgeCGbLc6Hu/VJNhKn/4yH7phgRiGXZTWIpNlYa1/nAj91WTA?=
+ =?us-ascii?Q?Gi3ra+TRsa949IiVWQ0Fg/uJ/FbKA6BD/l7oXVMgOKhLutDixSRg2xJii2Vb?=
+ =?us-ascii?Q?r8CEQ50G2BQHUxiK+zI44Nkk8qXHPrticnFil5AqIUVmkXceIE67bP5tPBDM?=
+ =?us-ascii?Q?jvGKqatX8UxMGhl8jRGLWCIyUhh5dhrTUQIcmVH12C0u4lt4vqG5tacztYhQ?=
+ =?us-ascii?Q?MW69tiyHocv0jdEaUxro1NXBWWv95wJYMIpScTIba9POj6z8xzjLjGWyCpqb?=
+ =?us-ascii?Q?RLNQ/55oajl4p/M8aTJxO/iN/OshiRjcw/Ce07eoEYO3nKUbf3u3AL6thIE0?=
+ =?us-ascii?Q?Ey6KTdBBC6UA1MhVgcJfoLijmqNDFnystECPuUZ9s+t+lbFBxlv01wARnbRp?=
+ =?us-ascii?Q?f30o5FNjPD7esV0p+br2ykwqSnIE0EOC7n6gHmmmhcr1AidZN3dY2e67YyvH?=
+ =?us-ascii?Q?7uttPjpI5MSEup5RZFRTzQZ3HRqR161XmpxkkoBl0lW+TVE6dt0hL/P+86aO?=
+ =?us-ascii?Q?VeeeMLenP23hvA2UZSVjCoULgtSv042JZ3+vJyDt?=
+X-OriginatorOrg: ipt.br
+X-MS-Exchange-CrossTenant-Network-Message-Id: cc45e726-5c36-4da7-9295-08dd51d356bb
+X-MS-Exchange-CrossTenant-AuthSource: SCZP152MB5520.LAMP152.PROD.OUTLOOK.COM
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 20 Feb 2025 17:23:49.5815
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: aab57f47-5b85-4924-8047-691190100bd7
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: NZIQGvdh5qX2UKBeaF8RLCSN9ngAYrKwSDifazvPaDiLhb6oOJcb1kXOgSTD2N4wN8uMqZIMvcF66JnUjgv0MA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CPWP152MB4613
 
-On Wed Feb 19, 2025 at 9:35 AM -05, Andy Shevchenko wrote:
-> On Tue, Feb 18, 2025 at 02:41:08PM -0500, Kurt Borja wrote:
->> The `objs` suffix is reserved for user-space tools. Use the `y` suffix
->> instead, which is usually used for kernel drivers.
->
-> I haven't received a cover letter. Please, make sure when you send a vers=
-ion of
-> the few patches under the same thread you add a cover letter. You may con=
-sider
-> using my "smart" (not really) script [1] to send patch series to LKML.
+In Lenovo LOQ 15IRX9, userspace expects F20 for mic-mute
+KEY_MICMUTE does not work.
+Other machines, such as LOQ 15APH8 and LOQ 15IRH8, also
+use F20 for mic-mute.
 
-Hi Andy,
+Signed-off-by: Matheus Polkorny <mpolkorny@ipt.br>
+---
+ drivers/platform/x86/ideapad-laptop.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Yes, I messed up the Cc list.
+diff --git a/drivers/platform/x86/ideapad-laptop.c b/drivers/platform/x86/ideapad-laptop.c
+index 30bd366d7b58..6420e28c08ec 100644
+--- a/drivers/platform/x86/ideapad-laptop.c
++++ b/drivers/platform/x86/ideapad-laptop.c
+@@ -1306,7 +1306,7 @@ static const struct key_entry ideapad_keymap[] = {
+ 	/* Refresh Rate Toggle */
+ 	{ KE_KEY,	0x0a | IDEAPAD_WMI_KEY, { KEY_REFRESH_RATE_TOGGLE } },
+ 	/* Specific to some newer models */
+-	{ KE_KEY,	0x3e | IDEAPAD_WMI_KEY, { KEY_MICMUTE } },
++	{ KE_KEY,	0x3e | IDEAPAD_WMI_KEY, { KEY_F20 } },
+ 	{ KE_KEY,	0x3f | IDEAPAD_WMI_KEY, { KEY_RFKILL } },
+ 
+ 	{ KE_END },
+-- 
+2.47.2
 
->
-> [1]: https://github.com/andy-shev/home-bin-tools/blob/master/ge2maintaine=
-r.sh
-
-Thank you very much!! I'm using that from now on :)
-
---=20
- ~ Kurt
