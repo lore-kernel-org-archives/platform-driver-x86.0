@@ -1,52 +1,50 @@
-Received: from mail.d-sys.org (70-31-180-213.sta.estpak.ee [213.180.31.70])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0B43C1B4F21
-	for <platform-driver-x86@vger.kernel.org>; Wed, 19 Feb 2025 22:08:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.180.31.70
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E65614AD29;
+	Thu, 20 Feb 2025 02:12:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740002897; cv=none; b=CKW589PjEOCioPgtoUL3CfqlCGESIo/lbj+1zWhagSf9aX17IARX9HP6F8O5Jk0hKPg52G8sBuUmpEKaRB47h1QSKOVZ4/iFdrFUaBBo6M35nl/CeHxWHyO6lbFTnyNDB2aoqqSwbhZC47hHzymRUhZEYFOutRAd905pSnSLZTQ=
+	t=1740017547; cv=none; b=dhFTp/wskWS/3t7Pvi6AmT6/Y7Lgbv3fs2yIOegBh84HEQaPZRem3Bo9f+HGh2r6KuF/4hkbRx7+a4e4YLlZ6LuaoePaLATiKjUbK9c++yVqULIfuWAOgA0+jRGA80toxItrWONjv2l3RDmjsIIgcBrxhb1dnXTB1a39TmWTu5U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740002897; c=relaxed/simple;
-	bh=8zdfuEZgx24AjSZ2AAvXc2A+5n7sOVtex6AUsK5M2hA=;
-	h=Content-Type:Message-ID:Date:MIME-Version:Subject:References:To:
-	 From:In-Reply-To; b=cTupkTq9UU/oHiS+MULeEImErRnN8bfinl1oi+Wnme8JWx0+BPu36x4Whwe97jef2vLNh/R0LAEMPnKLh9Bckp46Mhs0Tr/+P9Pd7Uo8Orxjksywv5LW8n+dSC54Bu/8Tj8XxfGxK8Kzz/FO2OjldZBPCsttGfYMK4tMDyv3yII=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=d-systems.ee; spf=pass smtp.mailfrom=d-systems.ee; dkim=pass (2048-bit key) header.d=d-systems.ee header.i=@d-systems.ee header.b=rWe9YJiw; dkim=pass (2048-bit key) header.d=d-systems.ee header.i=@d-systems.ee header.b=rWe9YJiw; arc=none smtp.client-ip=213.180.31.70
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=d-systems.ee
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=d-systems.ee
+	s=arc-20240116; t=1740017547; c=relaxed/simple;
+	bh=4GOWM9o6duBwNSk0MN9yfWLhHhK9OLJQXgL3slB8rzo=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Ml+p2UJ3V/lfMhkAy5CcC1Ap1TUwTXKuAqrp/gATotGsnOQuQi75rCn9KrAZj0ls+AKz8u09iLKkbXHhAAsK2flLBnj3WFn+5HWrl3wpZnPr81hi3wF2/31c6dhjRT8VxBqOFr+JquTPgcwn1m8Q5xiz/CD38k5NXQwfYQT1yjA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=fplhP5QS; arc=none smtp.client-ip=198.175.65.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=d-systems.ee header.i=@d-systems.ee header.b="rWe9YJiw";
-	dkim=pass (2048-bit key) header.d=d-systems.ee header.i=@d-systems.ee header.b="rWe9YJiw"
-Received: from mail.d-sys.org (localhost [127.0.0.1])
-	by mail.d-sys.org (Postfix) with ESMTP id E6FA36097F;
-	Thu, 20 Feb 2025 00:08:12 +0200 (EET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=d-systems.ee; s=mail;
-	t=1740002892; bh=8zdfuEZgx24AjSZ2AAvXc2A+5n7sOVtex6AUsK5M2hA=;
-	h=Date:Subject:References:To:From:In-Reply-To;
-	b=rWe9YJiwUe5O+CA6PSSp7DOUh9FYzjCbdGTvvSqYOW7h8NUdvC2tdNbXvTN/WuE94
-	 M8TnUPbosfWOOshqrI2/C8WQiIlbxL+J5Si/Agl1gVsY8+OFlt3ns5dPm81QJB5OCK
-	 i2tgHDfIzdoWTBfee7+IY9yGJ8mCi5i1/yr07jrDxHakWy3Fn8yH0UR1l7kyTYnhLY
-	 x/Zi3GlRHOqFlRLDYmNriCH5RFRAcG8Yxt/X0JDLhgA7ItsP8iVliJ8Z56T5TLrHRq
-	 koLEc8tIq41uI17NjuXffvPDGNOnK26sIMC2F96IaTjLk2mu3KmehRIDG4HjdEHXDD
-	 iijmwW4MzK/PQ==
-Received: from [10.255.10.44] (GW.ds.local [10.255.0.1])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(Client did not present a certificate)
-	by mail.d-sys.org (Postfix) with ESMTPSA id CD6CD60655;
-	Thu, 20 Feb 2025 00:08:12 +0200 (EET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=d-systems.ee; s=mail;
-	t=1740002892; bh=8zdfuEZgx24AjSZ2AAvXc2A+5n7sOVtex6AUsK5M2hA=;
-	h=Date:Subject:References:To:From:In-Reply-To;
-	b=rWe9YJiwUe5O+CA6PSSp7DOUh9FYzjCbdGTvvSqYOW7h8NUdvC2tdNbXvTN/WuE94
-	 M8TnUPbosfWOOshqrI2/C8WQiIlbxL+J5Si/Agl1gVsY8+OFlt3ns5dPm81QJB5OCK
-	 i2tgHDfIzdoWTBfee7+IY9yGJ8mCi5i1/yr07jrDxHakWy3Fn8yH0UR1l7kyTYnhLY
-	 x/Zi3GlRHOqFlRLDYmNriCH5RFRAcG8Yxt/X0JDLhgA7ItsP8iVliJ8Z56T5TLrHRq
-	 koLEc8tIq41uI17NjuXffvPDGNOnK26sIMC2F96IaTjLk2mu3KmehRIDG4HjdEHXDD
-	 iijmwW4MzK/PQ==
-Content-Type: multipart/mixed; boundary="------------AY0c00WoB0ADLtlWIEQWGxrr"
-Message-ID: <c455b3c7-f408-4d7c-979f-83f07f94e845@d-systems.ee>
-Date: Thu, 20 Feb 2025 00:08:12 +0200
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="fplhP5QS"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1740017545; x=1771553545;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=4GOWM9o6duBwNSk0MN9yfWLhHhK9OLJQXgL3slB8rzo=;
+  b=fplhP5QSLzoCJGwatTqvOGwjdlloWZohx9a75Sz3slNIMZYVshsNbJQV
+   XQKkc+jBlHA55mz4nFGZEssVIU+3tfHxMjwJdnn+rxi/ad4N63TyF+b73
+   SCpPSzle8j29Lg+02F0UmQJVJnYrhpJeHB8pD4Or2ykS8PKh9eqAaHR2B
+   rkdJBD98HbfJzrOfL8uGOSR4F1L12XoFBa19jrONQbF82LMhdGSinpcah
+   3hW/kVYwjZ3RRN/IAP8m6WPr1zA21T+J3vfg3Z8zaQNjTsELMF+i4wO1k
+   v6kmoHbgEpQIUbNS2TYZ8lK7/NRb/OxOvACHcCI2tAS7bMOEFvzru/nj1
+   g==;
+X-CSE-ConnectionGUID: 9Da3u3RZTIW6krSQ3RDifA==
+X-CSE-MsgGUID: z8ovE+urTgi9tz7L/TcXQQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11350"; a="44554551"
+X-IronPort-AV: E=Sophos;i="6.13,300,1732608000"; 
+   d="scan'208";a="44554551"
+Received: from fmviesa006.fm.intel.com ([10.60.135.146])
+  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Feb 2025 18:12:24 -0800
+X-CSE-ConnectionGUID: YqxEkxR6RByijTI3qHobrg==
+X-CSE-MsgGUID: cCeY1AXzS7ODnxJwAyxXZg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.13,300,1732608000"; 
+   d="scan'208";a="114738857"
+Received: from choongyo-mobl.gar.corp.intel.com (HELO [10.247.53.67]) ([10.247.53.67])
+  by fmviesa006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Feb 2025 18:12:17 -0800
+Message-ID: <be0689a5-2202-4231-9e97-49e9576236a2@linux.intel.com>
+Date: Thu, 20 Feb 2025 10:12:14 +0800
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -54,44 +52,52 @@ List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: intel-hid: fix volume buttons on Microsoft Surface Go 4 tablet
-References: <bea773df-9fd0-455e-87c9-d46f9d5b6feb@d-systems.ee>
+Subject: Re: [PATCH net-next v7 2/7] net: pcs: xpcs: re-initiate clause 37
+ Auto-negotiation
+To: "Russell King (Oracle)" <linux@armlinux.org.uk>
+Cc: Simon Horman <horms@kernel.org>, Jose Abreu <joabreu@synopsys.com>,
+ Jose Abreu <Jose.Abreu@synopsys.com>,
+ David E Box <david.e.box@linux.intel.com>,
+ Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
+ Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>,
+ "H . Peter Anvin" <hpa@zytor.com>,
+ Rajneesh Bhardwaj <irenic.rajneesh@gmail.com>,
+ David E Box <david.e.box@intel.com>, Andrew Lunn <andrew+netdev@lunn.ch>,
+ "David S . Miller" <davem@davemloft.net>, Eric Dumazet
+ <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
+ Paolo Abeni <pabeni@redhat.com>, Maxime Coquelin
+ <mcoquelin.stm32@gmail.com>, Alexandre Torgue
+ <alexandre.torgue@foss.st.com>, Jiawen Wu <jiawenwu@trustnetic.com>,
+ Mengyuan Lou <mengyuanlou@net-swift.com>,
+ Heiner Kallweit <hkallweit1@gmail.com>, Hans de Goede <hdegoede@redhat.com>,
+ =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+ Richard Cochran <richardcochran@gmail.com>,
+ Serge Semin <fancer.lancer@gmail.com>, x86@kernel.org,
+ linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+ platform-driver-x86@vger.kernel.org,
+ linux-stm32@st-md-mailman.stormreply.com,
+ linux-arm-kernel@lists.infradead.org
+References: <20250206131859.2960543-1-yong.liang.choong@linux.intel.com>
+ <20250206131859.2960543-3-yong.liang.choong@linux.intel.com>
+ <Z6TVmdCZeWerAZKP@shell.armlinux.org.uk>
 Content-Language: en-US
-To: ilpo.jarvinen@linux.intel.co, platform-driver-x86@vger.kernel.org
-From: Dmitry Panchenko | d-Systems <dmitry@d-systems.ee>
-In-Reply-To: <bea773df-9fd0-455e-87c9-d46f9d5b6feb@d-systems.ee>
-X-Forwarded-Message-Id: <bea773df-9fd0-455e-87c9-d46f9d5b6feb@d-systems.ee>
-X-AV-Checked: ClamAV using ClamSMTP
-
-This is a multi-part message in MIME format.
---------------AY0c00WoB0ADLtlWIEQWGxrr
+From: Choong Yong Liang <yong.liang.choong@linux.intel.com>
+In-Reply-To: <Z6TVmdCZeWerAZKP@shell.armlinux.org.uk>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 
-Hello,
 
-Volume buttons on Microsoft Surface Go 4 tablet didn't send any events. 
-Adding Surface Go 4 to button_array_table fix this.
 
-The patch is attached.
+On 6/2/2025 11:30 pm, Russell King (Oracle) wrote:
+> Also, if the reset is required, what happens if we're already using
+> SGMII, but AN has been disabled temporarily and is then re-enabled?
+> Is a reset required?
+> 
 
-Signed-off-by: Dmitry Panchenko <dmitry@d-systems.ee>
--- 
+Hi Russell,
 
-Kind regards,
-Dmitry Panchenko
---------------AY0c00WoB0ADLtlWIEQWGxrr
-Content-Type: text/x-patch; charset=UTF-8; name="hid.c.patch"
-Content-Disposition: attachment; filename="hid.c.patch"
-Content-Transfer-Encoding: base64
+When we use SGMII with XPCS, the AN is disabled and then re-enabled. This 
+process does not involve any PCS configuration, so a reset is not required.
 
-LS0tIG9yaWdpbmFsL2RyaXZlcnMvcGxhdGZvcm0veDg2L2ludGVsL2hpZC5jCTIwMjUtMDEt
-MTcgMTY6MTA6MjIuMDAwMDAwMDAwICswMjAwCisrKyBmaXhlZC9kcml2ZXJzL3BsYXRmb3Jt
-L3g4Ni9pbnRlbC9oaWQuYwkyMDI1LTAyLTE5IDIyOjIyOjUxLjY4MjM4MjI0OSArMDIwMApA
-QCAtMTI4LDYgKzEyOCwxMyBAQAogCQkJRE1JX01BVENIKERNSV9QUk9EVUNUX05BTUUsICJT
-dXJmYWNlIEdvIDMiKSwKIAkJfSwKIAl9LAorCXsKKwkJLmlkZW50ID0gIk1pY3Jvc29mdCBT
-dXJmYWNlIEdvIDQiLAorCQkubWF0Y2hlcyA9IHsKKwkJCURNSV9NQVRDSChETUlfU1lTX1ZF
-TkRPUiwgIk1pY3Jvc29mdCBDb3Jwb3JhdGlvbiIpLAorCQkJRE1JX01BVENIKERNSV9QUk9E
-VUNUX05BTUUsICJTdXJmYWNlIEdvIDQiKSwKKwkJfSwKKwl9LAogCXsgfQogfTsKCg==
-
---------------AY0c00WoB0ADLtlWIEQWGxrr--
+I tested it with stmmac (dwmac5) + xpcs + Marvell (88E1510) PHY, and it 
+works fine when AN is temporarily disabled and then re-enabled without a reset.
