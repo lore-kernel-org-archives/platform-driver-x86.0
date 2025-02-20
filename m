@@ -1,179 +1,195 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f51.google.com (mail-pj1-f51.google.com [209.85.216.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 420361CDA0B;
-	Thu, 20 Feb 2025 02:29:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C79051F473A
+	for <platform-driver-x86@vger.kernel.org>; Thu, 20 Feb 2025 12:25:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740018584; cv=none; b=lsvM96X7z8NQ8/Km8JM6coL5tH5IgYGZ1SSQeR2UkYr3yt7BCanDFUDa4LJkbvcnJdN6F1wCADPNyU3s6vI3MIVkCsbhhsIr8awAdVXbdTBFeR/SdSZWP7//DXbrvujs7SUPmWHl345Gf4Mf1Thf3W3NLppVFfyB7gIbFOS30Ns=
+	t=1740054352; cv=none; b=Z8yukOb//5tcjqypGYePltv6amuwxTwNuBZubgw3kEjJ/T+FyJTZeBsuqsdWzLm3LQSnAKvSHZsUe1nPrCtGJa1VBwf9GSKmm1VJEmoAO3CkAMogoEmBTKyNQlCHVLjphwtPAD4Iaw1FYmNXz7GAyWsC9INcVqsSmy3V+dEwznw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740018584; c=relaxed/simple;
-	bh=qHJy/wVMlxB0RzaDnffLNI7sYULYz+gIzJ4B57XyBGM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=uQglsCGF3uUNxP0bv3cs6vfzQrbnhT7y/m8Vfe0aFdpqgZlK9OsefjatvMEaqiAre9t3YmkYER99LC2+GgKJdkA4O9YQxqdzvw5q5H0aGQbTwUU7rR+xxki7lpWdc88XTg/PtBfECQ7jA+PydtWe3y36zYnFH/ZrWLt5qOT6fFY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=T8w2jzFB; arc=none smtp.client-ip=192.198.163.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1740054352; c=relaxed/simple;
+	bh=ObMopkh5nf3fJxp3LjBl1Ml6Sd+kK9sdIbeJsEyHFb8=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=l9ycy1N4yyCydvix7ly9xMC/wmEpo3DK20niE2j/LxfTZ+llMq72hjffYReH1P5vMwq0eXd4jYzfCxSh+hYcGWvQB4An+kdxquS/us0zhfMAepV8lbJ9c80ITkb1I/vQ8mpw7ruOnCrpnpB7ZTzEwQI2+G6viCTXGPOTmvuxMRs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=mYf+q1BY; arc=none smtp.client-ip=209.85.216.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="T8w2jzFB"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1740018582; x=1771554582;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=qHJy/wVMlxB0RzaDnffLNI7sYULYz+gIzJ4B57XyBGM=;
-  b=T8w2jzFBD2L/Lc05xl6Qe+LwU33TLhHTUtsz9GXS3wKy/gHflQblIt17
-   qIu3uc5Yjc6zP286KxBq+2JYunNzGqcZKG5q/7uADVfIG9SmWrhyXXNWl
-   Qc7VwThWPyJcxD6wdBFoZU3CnJIs/s3tiq+n65SM9R/gZQhLxO1sup1Mb
-   jgkwcOp2YgSqU9ky8w6r5w1Jh3526gEq3dhcaMXj83rWwoDiIKkUdgsbE
-   Xipucw1VOZeBP9JAwxjbFLKM+kBSzrb4jY7buELHZRDt/gqdxaHNKtRAN
-   TE/V1yzbciay77y8O0ZMBDbBZIB4F/6H3CN6bdJ4izQzQBE+1mmtFpKuF
-   Q==;
-X-CSE-ConnectionGUID: BXsuu4ihQzSUEW78DqUT0A==
-X-CSE-MsgGUID: I7Z1Y4dlSw+umG/1IcKWvw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11350"; a="28378259"
-X-IronPort-AV: E=Sophos;i="6.13,300,1732608000"; 
-   d="scan'208";a="28378259"
-Received: from fmviesa009.fm.intel.com ([10.60.135.149])
-  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Feb 2025 18:29:41 -0800
-X-CSE-ConnectionGUID: ZqGHmeIwRl65QQYDBiVAyw==
-X-CSE-MsgGUID: 0W87J4dIQfylMzMyKIP0yw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.13,300,1732608000"; 
-   d="scan'208";a="115572775"
-Received: from choongyo-mobl.gar.corp.intel.com (HELO [10.247.53.67]) ([10.247.53.67])
-  by fmviesa009-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Feb 2025 18:29:34 -0800
-Message-ID: <0307750b-dd98-4718-8c3c-928df6a80ef5@linux.intel.com>
-Date: Thu, 20 Feb 2025 10:29:31 +0800
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mYf+q1BY"
+Received: by mail-pj1-f51.google.com with SMTP id 98e67ed59e1d1-2fbfa8c73a6so1689882a91.2
+        for <platform-driver-x86@vger.kernel.org>; Thu, 20 Feb 2025 04:25:50 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1740054350; x=1740659150; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=HfNoK6QGklcF15Zq/NWUxbDwRJVUx2YVgCWKrAHQQbg=;
+        b=mYf+q1BYd0UtppSrf21gLiY35rVAAtGcTM9OzAvP6EIz75NpV9S7QROcJqCdSm4XST
+         TiiSquwQt6hzUejRXZd/44ccvVE4uL8881Dpwoh1sv4TDFgYayFyjyE6x9kON0UipkPQ
+         hlCvnbI9Q2n44x1sdqGe7F9SO3tBHrw8emJGxQU1nKC3H1Bk33ywvMF4itErOzxqbaTx
+         TxMn1ArTDrW6VXWkwDljblURaALYOv9rfVHtus6Lx7SVjTx4RfBAXvJgr5f/U9ZZtuxG
+         iES6T20sL1jo4A2rhMwe0MZQo7NekGhLnjhajC5OsrxT7ZBo0aakCH7Lzi/F/dWp5tDd
+         OIlw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1740054350; x=1740659150;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=HfNoK6QGklcF15Zq/NWUxbDwRJVUx2YVgCWKrAHQQbg=;
+        b=SSOGc9bu673P54dGDHhkHrJAO7GHOlObmf2ijnzoPB8X04Cx81996JFN+JgfevMoY7
+         6mBDHdwABlgQAe6x1hFuObHJ6bcfuwBW63VPzGIPJc2QrVW0/zOETjtnCDHZ8ZyH7Ki3
+         UmENOaDP4xh7K1WOELMgirQ+zjizDoxdO+7sICfUVBvM1EKGwZYpM+9kfnF2mS11/Twc
+         +3JcoXKEfa3yurVuo5z3BnHT7IL+ValjLxvZ1tVEQXTuHruukHVCP2kfwz4RRSGPMzC2
+         Bd0+bz36j/FvM6L2dKf0PqI/QfQywjMsYO2OOuvT570zXWmaIXBAVbkFiDpNdFThKSZu
+         hcHg==
+X-Forwarded-Encrypted: i=1; AJvYcCXqTC39WCkNtl2L2Z0WpIJ5B8lz6BRtSGuhwHVFurDPlv2GJeLIHTYKj22cq2IpucMKhPCZZEbQezsPZjXjfK0LR0Bm@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzo8OfvMKOQVNx56LJ86kMokf2/rd9/Vo8tRdn7kScIxJzZLxJo
+	Ybh6AeccJyGq7/KPN/GCnblEpA17Q1lcObQ92tIt9Umx6FieFTfUa8v5Vs4kPWYwCKxHQ+OXNPM
+	lNkdFPFrs/Aed8XQR7inYfbkwfN59hT6r
+X-Gm-Gg: ASbGncsFnZfBobkr0Y7GyJvwWVPcPmy7K30kIQX+JWGiCxZrEtX2n7FxxRyrbDZak6V
+	iXG8peBPgOF1843VjJzCYVbQNwUKJVSP0JGP7Byom5V8UuhYZSqM24eGY+0cT82SmBxAsDNjujQ
+	==
+X-Google-Smtp-Source: AGHT+IERLZtW7EqmlkqVfdTxKKlKbRwf5+fZMoMtSLrE6YY9XWK0l75KGNXk+PoJh/UDVuvOfo/uPkSlBRlnJHXBMNs=
+X-Received: by 2002:a17:90b:3a84:b0:2fa:17dd:6afa with SMTP id
+ 98e67ed59e1d1-2fc40f21e37mr38505096a91.17.1740054349862; Thu, 20 Feb 2025
+ 04:25:49 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH net-next v7 3/7] arch: x86: add IPC mailbox accessor
- function and add SoC register access
-To: david.e.box@linux.intel.com, Dave Hansen <dave.hansen@intel.com>,
- Simon Horman <horms@kernel.org>, Jose Abreu <joabreu@synopsys.com>,
- Jose Abreu <Jose.Abreu@synopsys.com>, Thomas Gleixner <tglx@linutronix.de>,
- Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
- Dave Hansen <dave.hansen@linux.intel.com>, "H . Peter Anvin"
- <hpa@zytor.com>, Rajneesh Bhardwaj <irenic.rajneesh@gmail.com>,
- Andrew Lunn <andrew+netdev@lunn.ch>, "David S . Miller"
- <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
- Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
- Maxime Coquelin <mcoquelin.stm32@gmail.com>,
- Alexandre Torgue <alexandre.torgue@foss.st.com>,
- Jiawen Wu <jiawenwu@trustnetic.com>, Mengyuan Lou
- <mengyuanlou@net-swift.com>, Heiner Kallweit <hkallweit1@gmail.com>,
- Russell King <linux@armlinux.org.uk>, Hans de Goede <hdegoede@redhat.com>,
- =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
- Richard Cochran <richardcochran@gmail.com>,
- Serge Semin <fancer.lancer@gmail.com>
-Cc: x86@kernel.org, linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
- platform-driver-x86@vger.kernel.org,
- linux-stm32@st-md-mailman.stormreply.com,
- linux-arm-kernel@lists.infradead.org
-References: <20250206131859.2960543-1-yong.liang.choong@linux.intel.com>
- <20250206131859.2960543-4-yong.liang.choong@linux.intel.com>
- <063bd012-d377-4d3d-9dcc-57e360d8f462@intel.com>
- <4cf99d5f9b63aec22c24c445dea9a80d71f5f024.camel@linux.intel.com>
-Content-Language: en-US
-From: Choong Yong Liang <yong.liang.choong@linux.intel.com>
-In-Reply-To: <4cf99d5f9b63aec22c24c445dea9a80d71f5f024.camel@linux.intel.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+References: <20231010172037.611063-3-teackot@gmail.com> <20231010172037.611063-7-teackot@gmail.com>
+ <974c5-8032-28e0-fd2f-9fbc9d413e4b@linux.intel.com> <c447f107-df52-92d1-fdd3-96b76860621e@redhat.com>
+ <72d7f17d-25a6-dc6-453a-af553ae2349@linux.intel.com> <52c170f7-92fe-b814-1587-ffba3c82ec43@redhat.com>
+In-Reply-To: <52c170f7-92fe-b814-1587-ffba3c82ec43@redhat.com>
+From: N K <teackot@gmail.com>
+Date: Thu, 20 Feb 2025 15:25:38 +0300
+X-Gm-Features: AWEUYZn54_vhRUeTPbRmOMzNV1xceI6rqUOVwh7cTA6BT4My56Si6VLvyZMktWA
+Message-ID: <CAPXvF07Nh4dgxF57jVxuOit=MPoX1-mNWvbey61HGt+UB065AQ@mail.gmail.com>
+Subject: Re: [PATCH 2/5] platform/x86: msi-ec: Add fw version and release date attributes
+To: Hans de Goede <hdegoede@redhat.com>
+Cc: =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, 
+	platform-driver-x86@vger.kernel.org, Aakash Singh <mail@singhaakash.dev>, 
+	Jose Angel Pastrana <japp0005@red.ujaen.es>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
+Hi,
 
+On Wed, Oct 18, 2023 at 5:34=E2=80=AFPM Hans de Goede <hdegoede@redhat.com>=
+ wrote:
+>
+> Hi,
+>
+> On 10/12/23 14:56, Ilpo J=C3=A4rvinen wrote:
+> > Hi Hans,
+> >
+> > You missed the one question I had for you. I put it now conviniently at
+> > the end of the quote block below...
+> >
+> > On Thu, 12 Oct 2023, Hans de Goede wrote:
+> >>
+> >> Great to see that you are working on upstreaming more of the
+> >> out-of-tree msi-ec functionality. Thank you for working on this.
+> >>
+> >> On 10/11/23 14:41, Ilpo J=C3=A4rvinen wrote:
+> >>> On Tue, 10 Oct 2023, Nikita Kravets wrote:
+> >>>
+> >>>> Create a root attribute group and add the first platform device
+> >>>> attributes: firmware version and firmware release date. Firmware
+> >>>> version attribute uses an already present ec_get_firmware_version()
+> >>>> function. Both features are present on all supported laptops.
+> >>>>
+> >>>> Cc: Aakash Singh <mail@singhaakash.dev>
+> >>>> Cc: Jose Angel Pastrana <japp0005@red.ujaen.es>
+> >>>> Signed-off-by: Nikita Kravets <teackot@gmail.com>
+> >>>> ---
+> >
+> >>>> +static ssize_t fw_release_date_show(struct device *device,
+> >>>> +                              struct device_attribute *attr, char *=
+buf)
+> >>>> +{
+> >>>> +  u8 rdate[MSI_EC_FW_DATE_LENGTH + 1];
+> >>>> +  u8 rtime[MSI_EC_FW_TIME_LENGTH + 1];
+> >>>> +  int result;
+> >>>> +  int year, month, day, hour, minute, second;
+> >>>> +
+> >>>> +  memset(rdate, 0, MSI_EC_FW_DATE_LENGTH + 1);
+> >>>
+> >>> sizeof(*rdate) is safer so please use it.
+> >>>
+> >>>> +  result =3D ec_read_seq(MSI_EC_FW_DATE_ADDRESS,
+> >>>> +                       rdate,
+> >>>> +                       MSI_EC_FW_DATE_LENGTH);
+> >>>> +  if (result < 0)
+> >>>> +          return result;
+> >>>> +
+> >>>> +  result =3D sscanf(rdate, "%02d%02d%04d", &month, &day, &year);
+> >>>
+> >>> There fields would naturally be %u and unsigned but see the other com=
+ment
+> >>> below before doing this change.
+> >>>
+> >>>> +  if (result !=3D 3)
+> >>>> +          return -EINVAL;
+> >>>
+> >>> EINVAL should be returned if the input was invalid but here the data
+> >>> itself is not okay so some other errno would be better.
+> >>>
+> >>>> +  memset(rtime, 0, MSI_EC_FW_TIME_LENGTH + 1);
+> >>>
+> >>> sizeof() like above.
+> >>>
+> >>>> +  result =3D ec_read_seq(MSI_EC_FW_TIME_ADDRESS,
+> >>>> +                       rtime,
+> >>>> +                       MSI_EC_FW_TIME_LENGTH);
+> >>>> +  if (result < 0)
+> >>>> +          return result;
+> >>>> +
+> >>>> +  result =3D sscanf(rtime, "%02d:%02d:%02d", &hour, &minute, &secon=
+d);
+> >>>> +  if (result !=3D 3)
+> >>>> +          return -EINVAL;
+> >>>
+> >>> Ditto.
+> >>>
+> >>>> +
+> >>>> +  return sysfs_emit(buf, "%04d/%02d/%02d %02d:%02d:%02d\n", year, m=
+onth, day,
+> >>>> +                    hour, minute, second);
+> >>>
+> >>> It would be kind of nice to use %pt formatting here instead of custom
+> >>> datetime format, however, it would either require converting to time6=
+4_t
+> >>> or using struct rtc_time. The latter would naturally have the right f=
+ields
+> >>> but they're not unsigned so my comment above about %u is not going to=
+ work
+> >>> well with it.
+> >>>
+> >>> I'm also a bit unsure whether it's appropriate to use that struct out=
+side
+> >>> of rtc realm. vsprintf.c seems to convert time64_t into rtc_time befo=
+re
+> >>> printing though.
+> >>>
+> >>> Hans, do you have any idea about the struct rtc_time?
+>
+> I don't really have any good ideas how to handle this. I agree that
+> using %pt might be a good idea, but then as you say the data would first
+> need to be converted to a struct rtc_time. All in all I think it is
+> probably best to stick with the DIY formatting of the time.
+> But I've no objections to doing the rtc_time conversion if people
+> think that is cleaner / better.
 
-On 20/2/2025 1:01 am, David E. Box wrote:
-> On Thu, 2025-02-06 at 08:46 -0800, Dave Hansen wrote:
->> On 2/6/25 05:18, Choong Yong Liang wrote:
->>>
->>> - Exports intel_pmc_ipc() for host access to the PMC IPC mailbox
->>> - Add support to use IPC command allows host to access SoC registers
->>> through PMC firmware that are otherwise inaccessible to the host due
->>> to security policies.
->> I'm not quite parsing that second bullet as a complete sentence.
->>
->> But that sounds scary! Why is the fact that they are "otherwise
->> inaccessible" relevant here?
-> 
-> The PMC IPC mailbox is a host interface to the PMC. Its purpose is to allow the
-> host to access certain areas of the PMC that are restricted from direct MMIO
-> access due to security policies. Other parts of the PMC are accessible via MMIO
-> (most of what the intel_pmc_core driver touches with is MMIO), so I think the
-> original statement was trying to explain why the mailbox is needed instead of
-> MMIO in this case. However, I agree that the mention of security policies is not
-> relevant to the change itself.
-> 
->> ...
->>> diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
->>> index 87198d957e2f..631c1f10776c 100644
->>> --- a/arch/x86/Kconfig
->>> +++ b/arch/x86/Kconfig
->>> @@ -688,6 +688,15 @@ config X86_AMD_PLATFORM_DEVICE
->>>   	  I2C and UART depend on COMMON_CLK to set clock. GPIO driver is
->>>   	  implemented under PINCTRL subsystem.
->>>   
->>> +config INTEL_PMC_IPC
->>> +	tristate "Intel Core SoC Power Management Controller IPC mailbox"
->>> +	depends on ACPI
->>> +	help
->>> +	  This option enables sideband register access support for Intel
->>> SoC
->>> +	  power management controller IPC mailbox.
->>> +
->>> +	  If you don't require the option or are in doubt, say N.
->>
->> Could we perhaps beef this up a bit to help users figure out if they
->> want to turn this on? Really the only word in the entire help text
->> that's useful is "Intel".
->>
->> I'm not even sure we *want* to expose this to users. Can we just leave
->> it as:
->>
->> 	config INTEL_PMC_IPC
->> 		def_tristate n
->> 		depends on ACPI
->>
->> so that it only gets enabled by the "select" in the other patches?
-> 
-> I agree with this change Choong. This can be selected by the driver that's using
-> it. There's no need to expose it to users.
-> 
->>
->>> + * Authors: Choong Yong Liang <yong.liang.choong@linux.intel.com>
->>> + *          David E. Box <david.e.box@linux.intel.com>
->>
->> I'd probably just leave the authors bit out. It might have been useful
->> in the 90's, but that's what git is for today.
->>
->>> +	obj = buffer.pointer;
->>> +	/* Check if the number of elements in package is 5 */
->>> +	if (obj && obj->type == ACPI_TYPE_PACKAGE && obj->package.count ==
->>> 5) {
->>> +		const union acpi_object *objs = obj->package.elements;
->>> +
->>
->> The comment there is just not super useful. It might be useful to say
->> *why* the number of elements needs to be 5.
->>
->>> +EXPORT_SYMBOL(intel_pmc_ipc);
->>> +
->>> +MODULE_LICENSE("GPL");
->>> +MODULE_DESCRIPTION("Intel PMC IPC Mailbox accessor");
->>
->> Honestly, is this even worth being a module? How much code are we
->> talking about here?
-> 
-> Yeah, this doesn't need to be a module either.
-> 
-> David
-> 
+I am working on this set of patches again, and I think using %pt and rtc_ti=
+me
+would be a little cleaner because rtc_time has all the required fields.
+I noticed that vsprintf.c doesn't use the tm_yday and tm_wday fields,
+however, is it safe to ignore them and assume they won't be used in the fut=
+ure?
+If not, having to calculate them will probably make the code worse.
 
-Hi David,
-
-Thank you for the confirmation.
-Let's work together to address the comments.
+Regards,
+Nikita
