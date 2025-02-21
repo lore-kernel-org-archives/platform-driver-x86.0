@@ -1,39 +1,39 @@
 Received: from mail.tuxedocomputers.com (mail.tuxedocomputers.com [157.90.84.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1A720207DF8;
-	Fri, 21 Feb 2025 11:39:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B207F209681;
+	Fri, 21 Feb 2025 11:50:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=157.90.84.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740137977; cv=none; b=LmF0+eq1qNKRVBFuO5WVyR+DXkmYSaYfZEynwCb3/2zrewlDBkCEpBcLIOoQpwqs3XnchNNCRVXcHHVk8hEpv+iwaMg8r36uvZ+k/TvbEC6Dd8VvTtNPPM6hG0V0PtV0X2zctJt129q6qkVgIX44FTPt6x5jgOj1cb5uCazPweU=
+	t=1740138623; cv=none; b=Cmay3QM8yeaXRad378hWkK0LHqQC1MWcLcFXY1WarCqKJjL9lWHKlUQ1fB4BtTESZuXBPZ86PREQo+OpoFB+epE2miYgoP685MGCOwCYvv0oo0BAcVanLind6lDtiTOym7bKliGOaqgmPTht+IWDNaB6K8CsWPhbNvakCS55tH4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740137977; c=relaxed/simple;
-	bh=Sml3o/HkUO8vLaWWXWZk2o3At1Jy/794DhB7GIldb6s=;
+	s=arc-20240116; t=1740138623; c=relaxed/simple;
+	bh=Ax1HLOrCM4FuTAt8HYk3+RIVVxX7+VlgLIn7Jnlyv68=;
 	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
-	 In-Reply-To:Content-Type; b=FanRKyu7Iw3SFIxYfNJFJwrxER4X442MQRy8gCB/2U7j3rZYv+xWJIUArfpVFyBERgWElyQZqIVaLrnS98MknBPtCnlEHcWSoBcbOoMCQXcx7kEOijrNwGvS+eTSyt0+KdZJRpok5R44feWBTiDJGJ9o+/yxIU2qtYzXiGPScMU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=tuxedocomputers.com; spf=pass smtp.mailfrom=tuxedocomputers.com; dkim=pass (1024-bit key) header.d=tuxedocomputers.com header.i=@tuxedocomputers.com header.b=deOZsFKN; arc=none smtp.client-ip=157.90.84.7
+	 In-Reply-To:Content-Type; b=m/MxzqzqKmSyamxvxoz45+1yi+WavmqwzUcRzX6kYgUjj3uqCigt/x7PK1HW5rtbBJ0qESjxZqxNlqQqGf3FrYoZ+ja5puc829l7SMI83IH9C3UUBUqI/iwJekLzbi3fDYzTGNYJngugPVvt7cQnMBWyUNS8B0gc0Ov/Id3+FLE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=tuxedocomputers.com; spf=pass smtp.mailfrom=tuxedocomputers.com; dkim=pass (1024-bit key) header.d=tuxedocomputers.com header.i=@tuxedocomputers.com header.b=btR5qn/J; arc=none smtp.client-ip=157.90.84.7
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=tuxedocomputers.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tuxedocomputers.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=tuxedocomputers.com header.i=@tuxedocomputers.com header.b="deOZsFKN"
+	dkim=pass (1024-bit key) header.d=tuxedocomputers.com header.i=@tuxedocomputers.com header.b="btR5qn/J"
 Received: from [192.168.42.116] (pd9e59d4d.dip0.t-ipconnect.de [217.229.157.77])
 	(Authenticated sender: wse@tuxedocomputers.com)
-	by mail.tuxedocomputers.com (Postfix) with ESMTPSA id 305C82FC0182;
-	Fri, 21 Feb 2025 12:39:25 +0100 (CET)
+	by mail.tuxedocomputers.com (Postfix) with ESMTPSA id EF6BC2FC0182;
+	Fri, 21 Feb 2025 12:50:16 +0100 (CET)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=tuxedocomputers.com;
-	s=default; t=1740137966;
+	s=default; t=1740138617;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=LqXUo1FZ4TpebA15goo8baRIskVIN6WUi38uv9gPwFc=;
-	b=deOZsFKNmuJi0lPeSPivrTX2+2wjtvvKLqs7wSbApPPMJx4ziaoUyUlgNkvW+JfIP1tVeh
-	7e/mRwslMZtcjVNpm2dPNZABksf3cyyJYZwFCmc00DVTLG8/NOqGPhZOwxBn6/nU2bACwZ
-	wdhXvtekzZvIu+hG/nglgxoVs3tvMok=
+	bh=ntN7Ken4o08cAX1i2z6UfMc3CME1b/XumOkdtvbq90M=;
+	b=btR5qn/JQZ2iM9Z6Qbqzm/UmO/OMIde4ej5pERpuC3eETwAT8pHKMz6AUIKnWCToZlZAU+
+	/X5twyqGS+nefMFbZx2YpTS3yzfB7Rtmjzup7pjS6YSnwLw+pZ6TEGzSM6OPzbRIVitOpm
+	R9lA9Lc+l3h/gWNXJ5X+Ac/+G521zdY=
 Authentication-Results: mail.tuxedocomputers.com;
 	auth=pass smtp.auth=wse@tuxedocomputers.com smtp.mailfrom=wse@tuxedocomputers.com
-Message-ID: <ea88c72e-a03f-4aac-9182-ece94fb99e54@tuxedocomputers.com>
-Date: Fri, 21 Feb 2025 12:39:24 +0100
+Message-ID: <cde97a29-bfe6-4dba-a059-b6df91814e6c@tuxedocomputers.com>
+Date: Fri, 21 Feb 2025 12:50:16 +0100
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -41,106 +41,163 @@ List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v5 0/1] platform/x86/tuxedo: Add virtual LampArray for
- TUXEDO NB04 devices
+Subject: Re: [RFC PATCH 1/1] platform/x86/tuxedo: Implement TUXEDO TUXI ACPI
+ TFAN via hwmon
 From: Werner Sembach <wse@tuxedocomputers.com>
-To: Pavel Machek <pavel@ucw.cz>, Armin Wolf <W_Armin@gmx.de>,
- Benjamin Tissoires <bentiss@kernel.org>, Hans de Goede <hdegoede@redhat.com>
-Cc: ilpo.jarvinen@linux.intel.com, dri-devel@lists.freedesktop.org,
- jelle@vdwaa.nl, jikos@kernel.org, lee@kernel.org,
- linux-input@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-leds@vger.kernel.org, miguel.ojeda.sandonis@gmail.com,
- ojeda@kernel.org, onitake@gmail.com, cs@tuxedo.de,
- platform-driver-x86@vger.kernel.org, bpf@vger.kernel.org
-References: <20250121225510.751444-1-wse@tuxedocomputers.com>
- <aa91e17f-0ea8-4645-a0f9-57c016e36a9e@gmx.de> <Z53f7VNIgUWWFn9l@duo.ucw.cz>
- <b69e2766-2238-4913-ae2d-21d8716f2eef@tuxedocomputers.com>
+To: Guenter Roeck <linux@roeck-us.net>
+Cc: hdegoede@redhat.com, ilpo.jarvinen@linux.intel.com, ukleinek@kernel.org,
+ jdelvare@suse.com, linux-kernel@vger.kernel.org,
+ platform-driver-x86@vger.kernel.org, linux-pwm@vger.kernel.org,
+ linux-hwmon@vger.kernel.org
+References: <20250205162109.222619-1-wse@tuxedocomputers.com>
+ <20250205162109.222619-2-wse@tuxedocomputers.com>
+ <767538f2-d79e-44e4-a671-4be56a3cfe44@roeck-us.net>
+ <fce7929b-87e7-4c9a-8a54-ab678c5dc6b4@tuxedocomputers.com>
+ <8f0a9bd6-52dd-442f-b0fd-73cf7028d9f0@roeck-us.net>
+ <b32284b7-ddc8-4fb5-82f8-20199b0dec5a@tuxedocomputers.com>
 Content-Language: en-US
-In-Reply-To: <b69e2766-2238-4913-ae2d-21d8716f2eef@tuxedocomputers.com>
+In-Reply-To: <b32284b7-ddc8-4fb5-82f8-20199b0dec5a@tuxedocomputers.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
 
 Hi,
 
-Am 06.02.25 um 17:18 schrieb Werner Sembach:
-> Hi,
+Am 06.02.25 um 23:55 schrieb Werner Sembach:
 >
-> Am 01.02.25 um 09:48 schrieb Pavel Machek:
->> Hi!
+> Am 06.02.25 um 19:57 schrieb Guenter Roeck:
+>> On Thu, Feb 06, 2025 at 10:28:01AM +0100, Werner Sembach wrote:
 >>
->>>> I now got my feet a little wet with hid-bpf regarding something else, and
->>>> with that knowledge I would leave the long arrays in the beginning in the
->>>> kernel code for the time being:
+>> [ ... ]
+>>
+>>>>> +        temp = retval * 100 - 272000;
+>>>>> +
+>>>>> +        for (j = 0; temp_levels[j].temp; ++j) {
+>>>>> +            temp_low = j == 0 ? -272000 : temp_levels[j-1].temp;
+>>>>> +            temp_high = temp_levels[j].temp;
+>>>>> +            if (driver_data->temp_level[i] > j)
+>>>>> +                temp_high -= 2000; // hysteresis
+>>>>> +
+>>>>> +            if (temp >= temp_low && temp < temp_high)
+>>>>> +                driver_data->temp_level[i] = j;
+>>>>> +        }
+>>>>> +        if (temp >= temp_high)
+>>>>> +            driver_data->temp_level[i] = j;
+>>>>> +
+>>>>> +        temp_level = driver_data->temp_level[i];
+>>>>> +        min_speed = temp_level == 0 ?
+>>>>> +            0 : temp_levels[temp_level-1].min_speed;
+>>>>> +        curr_speed = driver_data->curr_speed[i];
+>>>>> +        want_speed = driver_data->want_speed[i];
+>>>>> +
+>>>>> +        if (want_speed < min_speed) {
+>>>>> +            if (curr_speed < min_speed)
+>>>>> +                write_speed(dev, i, min_speed);
+>>>>> +        } else if (curr_speed != want_speed)
+>>>>> +            write_speed(dev, i, want_speed);
+>>>>> +    }
+>>>>> +
+>>>>> +    schedule_delayed_work(&driver_data->work, TUXI_SAFEGUARD_PERIOD);
+>>>>> +}
+>>>> This is not expected functionality of a hardware monitoring driver.
+>>>> Hardware monmitoring drivers should not replicate userspace or
+>>>> thermal subsystem functionality.
 >>>>
->>>> sirius_16_ansii_kbl_mapping and sirius_16_iso_kbl_mapping are required
->>>> during initialization so they have to exist in the kernel code anyway.
->>>>
->>>> report_descriptor will most likly not change even for future models and
->>>> afaik having report_descriptors in kernel drivers is not unheard of.
->>>>
->>>> So the only things that could be meaningfully moved to a hid-bpf program
->>>> are the sirius_16_*_kbl_mapping_pos_* arrays. But for these is have to give
->>>> out some fallback value anyway for the case where a hid-bpf file is missing
->>>> or fails to load. So why not use real world values from my test device for
->>>> these values?
->>>>
->>>> As soon as there is a future device that can use the same driver with just
->>>> these pos arrays different, then I would implement that change via a bpf
->>>> program instead of a change to the kernel driver.
->>>>
->>>> Let me know if you too think this is a sensefull approach?
->>>>
->>>>
->>>> Another question: Would this patch need to wait for a userspace
->>>> implementation of lamp array before it can get accepted?
->>> It would be nice if you could test the LampArray implementation. But other 
->>> than that
->>> userspace can catch up later.
+>>>> This would be unacceptable in drivers/hwmon/.
+>>> Problem is: The thermal subsystem doesn't do this either as far as I can tell.
 >>>
->>> Still, i am interested in the opinion of the LED maintainers
->>> regarding the fake HID interface.
->> Comments from previous review were not addressed.
+>>> See this: 
+>>> https://lore.kernel.org/all/453e0df5-416b-476e-9629-c40534ecfb72@tuxedocomputers.com/
+>>> and this: 
+>>> https://lore.kernel.org/all/41483e2b-361b-4b84-88a7-24fc1eaae745@tuxedocomputers.com/
+>>> thread.
+>>>
+>>> The short version is: The Thermal subsystem always allows userspace to
+>>> select the "userspace" governor which has no way for the kernel to enforce a
+>>> minimum speed.
+>>>
+>> You can specify thermal parameters / limits using devicetree. Also, drivers
+>> can always enforce value ranges.
+>
+> Sorry for my noob question: What do you mean with devicetree in x86 context?
+>
+> I only want to enforce a value range at a certain temperature, if the device 
+> is cool, the fan can be turned off for example.
+Gentle bump
+>
 >>
->> Most importantly, this is not a way to do kernel interface. We want
->> reasonable interface that can be documented and modified as needed. We
->> want to pass /dev/input to userspace, not raw HID. This is not ok.
+>>> As far as I can tell the Thermal subsystem would require a new governor for
+>>> the behavior i want to archive and more importantly, a way to restrict which
+>>> governors userspace can select.
+>>>
+>>> As to why I don't want grant userspace full control: The firmware is
+>>> perfectly fine with accepting potentially mainboard frying settings (as
+>>> mentioned in the cover letter) and the lowest level I can write code for is
+>>> the kernel driver. So that's the location I need to prevent this.
+>>>
+>> It is ok for the kernel to accept and enforce _limits_ (such as lower and upper
+>> ranges for temperatures) when they are written. That is not what the code here
+>> does.
 >
-> There are already 2 endless discussions about this:
+> It conditionally enforces a minimum fanspeed.
 >
-> https://lore.kernel.org/all/1fb08a74-62c7-4d0c-ba5d-648e23082dcb@tuxedocomputers.com/ 
+> So is the problem that hwmon drivers are only allowed to enforce unconditional 
+> limits?
+Here too.
 >
->
-> https://lore.kernel.org/all/73c36418-34d6-46cf-9f10-6ca5e569274f@tuxedocomputers.com/ 
->
->
-> And a shorter one before that:
->
-> https://lore.kernel.org/all/30cbbf20-08cf-a69b-4f58-359a9802e86f@tuxedocomputers.com/ 
->
->
-> The brief:
->
-> - LampArray is a standard that will hit the Linux world anyway.
->
-> - The alternative proposal via a led matrix does not even really fit 
-> keyboards, and does not at all fit all other device types.
->
-> Hans and Benjamin already agree with me that LampArray is the way to go.
->
-> So after over 2 years can I please have a final decision on how to implement 
-> this?
+>>
+>>> Also hwmon is not purely a hardware monitoring, it also allows writing
+>>> fanspeeds. Or did I miss something and this shouldn't actually be used?
+>>>
+>> If doesn't actively control fan speeds, though. It just tells the firmware what
+>> the limits or target values are.
+> What is the difference if it tells the firmware a target fanspeed, which can 
+> be ignored by it, or a driver a target fanspeed, which can be ignored by it?
 
-Any update?
+Here too.
 
 Best regards,
 
 Werner Sembach
 
->
-> Regards,
->
-> Werner
->
 >>
->> Best regards,
->>                                 Pavel
+>>>> Personally I think this is way too complicated. It would make much more sense
+>>>> to assume a reasonable maximum (say, 16) and use fixed size arrays to access
+>>>> the data. The is_visible function can then simply return 0 for larger channel
+>>>> values if the total number of fans is less than the ones configured in the
+>>>> channel information.
+>>> Didn't know it was possible to filter extra entries out completely with the
+>>> is_visible function, thanks for the tip.
+>>>> Also, as already mentioned, there is no range check of fan_count. This will
+>>>> cause some oddities if the system ever claims to have 256+ fans.
+>>> Will not happen, but i guess a singular additional if in the init doesn't
+>>> hurt, i can add it.
+>> You are making the assumption that the firmware always provides correct
+>> values.
+>>
+>> I fully agree that repeated range checks for in-kernel API functions are
+>> useless. However, values should still be checked when a value enters
+>> the kernel, either via userspace or via hardware, even more so if that value
+>> is used to determine, like here, the amount of memory allocated. Or, worse,
+>> if the value is reported as 32-bit value and written into an 8-byte variable.
+> ok
+>>
+>>>>> +    *hwmdev = devm_hwmon_device_register_with_info(&pdev->dev,
+>>>>> +                               "tuxedo_nbxx_acpi_tuxi",
+>>>>> +                               driver_data, &hwminfo,
+>>>>> +                               NULL);
+>>>>> +    if (PTR_ERR_OR_ZERO(*hwmdev))
+>>>>> +        return PTR_ERR_OR_ZERO(*hwmdev);
+>>>>> +
+>>>> Why not just return hwmdev ?
+>>> because if hwmon is NULL it is still an error, i have to look again at what
+>>> actually is returned by PTR_ERR_OR_ZERO on zero.
+>> That seems a bit philosophical. The caller would have to check for
+>> PTR_ERR_OR_ZERO() instead of checking for < 0.
+>>
+>> On a side note, the code now returns 0 if devm_hwmon_device_register_with_info()
+>> returned NULL.  devm_hwmon_device_register_with_info() never returns NULL,
+>> so that doesn't make a difference in practice, but, still, this should
+>> at least use PTR_ERR().
+> ok
+>>
+>> Guenter
