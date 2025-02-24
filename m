@@ -1,85 +1,134 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from linux1587.grserver.gr (linux1587.grserver.gr [185.138.42.100])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 034712747B
-	for <platform-driver-x86@vger.kernel.org>; Mon, 24 Feb 2025 15:19:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D1211A5B8B;
+	Mon, 24 Feb 2025 19:51:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.138.42.100
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740410373; cv=none; b=hbwDR6QgfcLsrfZjpPnRYJoUQ7iozFu32/pgSnpc6RC3bnEBiKsvNw/slcdpMGjIWgC/Nii5EINC4tMze5kdCpf6ZWGHnY+yPuogNRmeKwnvbwR3jJYeTmJpvw68ji5XjWPVvo8c7Bhznh2aC2iJvTbClAgeURDin3WllhH/UmE=
+	t=1740426674; cv=none; b=gTd20xvfetnvKK3V3azDiK11q4HfD7wLUcNT+FCJOmYXu5aC9ntb/2Tvw6o8n/85HpLDIjidkqgvMf5mtjrB77eewdVrS21y4F3YA6cp7Vgj8XXP2Xtxd+iCPJnZASZPo+ck8P2vrZfk5MU40pFs8v3MINQ5RxY6yIfflw65/zg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740410373; c=relaxed/simple;
-	bh=kOCFxklNplb5nsmcarhijmsBYhzSfuM28QlaFV6DonU=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=s06U1cforxloxeXf4vfZIaV/KbM/h0HViujDC1t6Rn+jcxtD0QBDspKz+CuOwDLVTiyHYfvE1RbtByskzvcZBE4U5JXYX2jJ9mVTL6LO0qDMIba0ZMmKTN0mlzKIFZxxR1bJmIgZgZDT2+OhPuki1lBtV14ezq/RJQCDtnNcmpA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Ms0CkBsh; arc=none smtp.client-ip=198.175.65.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1740426674; c=relaxed/simple;
+	bh=hcgJfw/7wOHsNOEBoUBiG14kJhwqkh4zp5hmxOiaJ5Q=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=WjxnC5oXodltWqnahbyQQ6ZcAMEd7zcrAOaOEMoHF9ap6U5DE92hD3vbkkwFEWFRANwPXMXOXJHtUZviVQrq6ja3x11YYiaSr3bS1XocJFnBct7tGkTvVb8lk7NZkXC17w2qojcdDRcleuHBCNCKhZ4BQVJ1Xy/m6Pj3L7q7TR4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=antheas.dev; spf=pass smtp.mailfrom=antheas.dev; dkim=pass (1024-bit key) header.d=antheas.dev header.i=@antheas.dev header.b=IJDkqEoo; arc=none smtp.client-ip=185.138.42.100
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=antheas.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=antheas.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Ms0CkBsh"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1740410373; x=1771946373;
-  h=from:to:cc:in-reply-to:references:subject:message-id:
-   date:mime-version:content-transfer-encoding;
-  bh=kOCFxklNplb5nsmcarhijmsBYhzSfuM28QlaFV6DonU=;
-  b=Ms0CkBshH8arY2E9E1p+Q3lNkgNGqNyqwmv9/okJ7LoT68+dBBNkJYv/
-   76qNY2CnIaLDWJ0Yd6MB1/5EnCmRWsYv2oPboT3JFlS7ieTouht3bzQN7
-   LEWhJ70p++nn/1s41YTDRfNfvCB4qABR5tQQDn52BytcPmsDVISYiYUrj
-   DxLFN+BVS/7qpKOFUC6q9/6MWx2xm6bE2KD4U0+DAabftMz5wdgnKcXGl
-   dB2/WAsfL38bh+phYXylOtJmMfY3ehGR6QWU/OGqC0D0hiGptC6fA0foB
-   8ffXOcJh9jfPA95g7YE7ClGadAZNmU8GEcpnbzH1iC59x2n/FxcJamPe3
-   w==;
-X-CSE-ConnectionGUID: ceHqOUhER3mW2cPVfsz3xA==
-X-CSE-MsgGUID: wtXoYFezT8ybW/M7OUstZA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11355"; a="63636763"
-X-IronPort-AV: E=Sophos;i="6.13,309,1732608000"; 
-   d="scan'208";a="63636763"
-Received: from fmviesa009.fm.intel.com ([10.60.135.149])
-  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Feb 2025 07:19:32 -0800
-X-CSE-ConnectionGUID: RcWXwy0KSAOPil4/Bxil8w==
-X-CSE-MsgGUID: POqCKA3uQtK+FMKKYKPihQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.13,309,1732608000"; 
-   d="scan'208";a="116713089"
-Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.233])
-  by fmviesa009-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Feb 2025 07:19:28 -0800
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-To: hdegoede@redhat.com, Vadim Pasternak <vadimp@nvidia.com>
-Cc: michaelsh@nvidia.com, crajank@nvidia.com, fradensky@nvidia.com, 
- oleksandrs@nvidia.com, platform-driver-x86@vger.kernel.org
-In-Reply-To: <20250210203451.29712-1-vadimp@nvidia.com>
-References: <20250210203451.29712-1-vadimp@nvidia.com>
-Subject: Re: [PATCH 1/1] MAINTAINERS: Add documentation reference for
- Mellanox platform
-Message-Id: <174041036374.17410.17317326016166749032.b4-ty@linux.intel.com>
-Date: Mon, 24 Feb 2025 17:19:23 +0200
+	dkim=pass (1024-bit key) header.d=antheas.dev header.i=@antheas.dev header.b="IJDkqEoo"
+Received: from localhost.localdomain (unknown [IPv6:2a05:f6c2:511b:0:8d8a:5967:d692:ea4e])
+	by linux1587.grserver.gr (Postfix) with ESMTPSA id 3E7B92E092FE;
+	Mon, 24 Feb 2025 21:51:06 +0200 (EET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=antheas.dev;
+	s=default; t=1740426668;
+	bh=nV6M1/9xoq45Ft8blytZcpP9OHrrGYYTleMHHH0uXsU=; h=From:To:Subject;
+	b=IJDkqEooTtAATgziBepLyqCS6dKmwyVYUMRq6anzWCL7rqV+st3bao8OfD8Qxfzdd
+	 W3GhAjeKcdHj9f179pyWj4XMKfbyNDhZNR3cMdwrbF/4Mx7e8f6O+kUeZZC8nQKjzh
+	 +A7mjCIF1xz3OLFL8scFFbMZjHGiwAlJVqjwf/sU=
+Authentication-Results: linux1587.grserver.gr;
+	spf=pass (sender IP is 2a05:f6c2:511b:0:8d8a:5967:d692:ea4e) smtp.mailfrom=lkml@antheas.dev smtp.helo=localhost.localdomain
+Received-SPF: pass (linux1587.grserver.gr: connection is authenticated)
+From: Antheas Kapenekakis <lkml@antheas.dev>
+To: mario.limonciello@amd.com,
+	mpearson-lenovo@squebb.ca
+Cc: ilpo.jarvinen@linux.intel.com,
+	lenb@kernel.org,
+	linux-acpi@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	platform-driver-x86@vger.kernel.org,
+	rafael@kernel.org,
+	hdegoede@redhat.com,
+	me@kylegospodneti.ch,
+	Antheas Kapenekakis <lkml@antheas.dev>
+Subject: [PATCH 0/3] ACPI: platform_profile: fix legacy sysfs with multiple
+ handlers
+Date: Mon, 24 Feb 2025 20:50:56 +0100
+Message-ID: <20250224195059.10185-1-lkml@antheas.dev>
+X-Mailer: git-send-email 2.48.1
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Mailer: b4 0.13.0
+Content-Transfer-Encoding: 8bit
+X-PPP-Message-ID: 
+ <174042666777.337.18039573887564455104@linux1587.grserver.gr>
+X-PPP-Vhost: antheas.dev
+X-Virus-Scanned: clamav-milter 0.103.11 at linux1587.grserver.gr
+X-Virus-Status: Clean
 
-On Mon, 10 Feb 2025 22:34:45 +0200, Vadim Pasternak wrote:
+On the Asus Z13 (2025), a device that would need the amd-pmf quirk that
+was removed on the platform_profile refactor, we see the following output
+from the sysfs platform profile:
 
-> Add reference for Documentation/ABI/stable/sysfs-driver-mlxreg-io
-> under "MELLANOX HARDWARE PLATFORM SUPPORT".
-> 
-> 
+$ cat /sys/firmware/acpi/platform_profile_choices
+balanced performance
 
+I.e., the quiet profile is missing. Which is a major regression in terms of
+power efficiency and affects both tuned, and ppd (it also affected my
+software but I fixed that on Saturday). This would affect any laptop that
+loads both amd-pmf and asus-wmi (around 15 models give or take?).
 
-Thank you for your contribution, it has been applied to my local
-review-ilpo-next branch. Note it will show up in the public
-platform-drivers-x86/review-ilpo-next branch only once I've pushed my
-local branch there, which might take a while.
+The problem stems from the fact that asus-wmi uses quiet, and amd-pmf uses
+low-power. While it is not clear to me what the amd-pmf module is supposed
+to do here, and perhaps some autodetection should be done and make it bail,
+if we assume it should be kept, then there is a small refactor that is
+needed to maintain the existing ABI interface.
 
-The list of commits applied:
-[1/1] MAINTAINERS: Add documentation reference for Mellanox platform
-      commit: 5ad6d62c9b183314ec1c64a95a26636e973e736a
+This is the subject of this patch series.
 
---
- i.
+Essentially, we introduce the concept of a "secondary" handler. Secondary
+handlers work exactly the same, except for the fact they are able to
+receive all profile names through the sysfs interface. The expectation
+here would be that the handlers choose the closest appropriate profile
+they have, and this is what I did for the amd-pmf handler.
+
+In their own platform_profile namespace, these handlers still work normally
+and only accept the profiles from their probe functions, with -ENOSUP for
+the rest.
+
+In the absence of a primary handler, the options of all secondary handlers
+are unioned in the legacy sysfs, which prevents them from hiding each
+other's options.
+
+With this patch series applied, the sysfs interface will look like this:
+
+$ cat /sys/firmware/acpi/platform_profile_choices
+quiet balanced performance
+
+And writing quiet to it results in the profile being applied to both
+platform profile handlers.
+
+$ echo low-power > /sys/firmware/acpi/platform_profile
+bash: echo: write error: Operation not supported
+$ echo quiet > /sys/firmware/acpi/platform_profile
+$ cat /sys/class/platform-profile/platform-profile-*/{name,profile}
+asus-wmi
+amd-pmf
+quiet
+quiet
+
+Agreed ABI still works:
+$ echo quiet > /sys/class/platform-profile/platform-profile-0/profile
+$ echo quiet > /sys/class/platform-profile/platform-profile-1/profile
+bash: echo: write error: Operation not supported
+$ echo low-power > /sys/class/platform-profile/platform-profile-0/profile
+bash: echo: write error: Operation not supported
+$ echo low-power > /sys/class/platform-profile/platform-profile-1/profile
+
+Antheas Kapenekakis (3):
+  ACPI: platform_profile: Add support for secondary handlers
+  ACPI: platform_profile: add all options to amd-pmf as a secondary
+    handler
+  ACPI: platform_profile: Do not hide options missing in secondary
+    handlers
+
+ drivers/acpi/platform_profile.c    | 57 +++++++++++++++++++++++++-----
+ drivers/platform/x86/amd/pmf/spc.c |  3 ++
+ drivers/platform/x86/amd/pmf/sps.c |  8 +++++
+ include/linux/platform_profile.h   |  7 ++++
+ 4 files changed, 67 insertions(+), 8 deletions(-)
+
+-- 
+2.48.1
 
