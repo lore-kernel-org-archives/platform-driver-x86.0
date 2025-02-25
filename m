@@ -1,165 +1,117 @@
-Received: from fout-a6-smtp.messagingengine.com (fout-a6-smtp.messagingengine.com [103.168.172.149])
+Received: from fout-a7-smtp.messagingengine.com (fout-a7-smtp.messagingengine.com [103.168.172.150])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B405256C68;
-	Tue, 25 Feb 2025 06:13:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.149
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9744D261360;
+	Tue, 25 Feb 2025 08:17:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.150
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740464020; cv=none; b=JV8h8M39lW0mv7DhBES/6wKqIWG6rnNpXzBcQJbNq59ydJyRxizbAx5McZlHk2roiaRAd+t+P60QIU1PvZY3EaJ58dkhEJhJsmISVjwq9qWbneX2Hwc49PUcuZ4T9uN3+fTiEvaZMEdUbY2KDkkRh0DbEmISQDYwCaG5leThFJA=
+	t=1740471475; cv=none; b=goesgCRCGaYVRsNA1JUiQ6N4rhXlSK8pThVxbXXZf1uSwOHbJ+cMpg/lBChcDSxP93RsUPiFR29hU+u3vPc3j0ACe7s+Vs1Y5Ix6nZzWpHZF+TmQEcp/l0xSQR5uyxBJ6kpISYvcfHntJWvbElRd1ihoBQxt/JR7jFdo/xIJ214=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740464020; c=relaxed/simple;
-	bh=0bNrTd+0Kri939AjowYkwp5sI3m8I9so+4v3iNbKFNc=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=MylY6py2i3wyJjoKwd3I2D9lBLFUTDzIxgT4s7jgLEGCEByQE/uDIzZD3Lv4CljwEQvCzv1obXIviVvGdWL+QZaiVOPIamFSEMFRsNsUd4BHiT77soELOCs0LAlFXCS2noJ5mcM82Q3bZdAZ83heW71jm21SWyHhjoR/BWeK5VY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ljones.dev; spf=none smtp.mailfrom=ljones.dev; dkim=pass (2048-bit key) header.d=ljones.dev header.i=@ljones.dev header.b=Fqj4ChlC; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=e1LoKoWI; arc=none smtp.client-ip=103.168.172.149
+	s=arc-20240116; t=1740471475; c=relaxed/simple;
+	bh=+U8N0q/4tVwBbUeq2+WhDUghvs71woUXYAKsqO4KBIw=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=TBajCOqQ45l9y/ijWFttli6JfBN3CJPJ0WA7QJWce1Zwj5810aDsYAF4snIKhuW5pi4NkiOLnC1V8vR8PZQrGGkhLY3Nl9ZvI7Ynt0J8qK62jm2VcsAxClNSWXhtwUOvPENDyI6s1XdClWr5RIjOQ9L+knnst9PjMp5ntw84VPI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ljones.dev; spf=none smtp.mailfrom=ljones.dev; dkim=pass (2048-bit key) header.d=ljones.dev header.i=@ljones.dev header.b=QX/Bvna7; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=LP3VBxZg; arc=none smtp.client-ip=103.168.172.150
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ljones.dev
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=ljones.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ljones.dev header.i=@ljones.dev header.b="Fqj4ChlC";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="e1LoKoWI"
-Received: from phl-compute-03.internal (phl-compute-03.phl.internal [10.202.2.43])
-	by mailfout.phl.internal (Postfix) with ESMTP id 2587113816C4;
-	Tue, 25 Feb 2025 01:13:36 -0500 (EST)
-Received: from phl-mailfrontend-02 ([10.202.2.163])
-  by phl-compute-03.internal (MEProxy); Tue, 25 Feb 2025 01:13:36 -0500
+	dkim=pass (2048-bit key) header.d=ljones.dev header.i=@ljones.dev header.b="QX/Bvna7";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="LP3VBxZg"
+Received: from phl-compute-06.internal (phl-compute-06.phl.internal [10.202.2.46])
+	by mailfout.phl.internal (Postfix) with ESMTP id 626F31381684;
+	Tue, 25 Feb 2025 03:17:52 -0500 (EST)
+Received: from phl-mailfrontend-01 ([10.202.2.162])
+  by phl-compute-06.internal (MEProxy); Tue, 25 Feb 2025 03:17:52 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ljones.dev; h=cc
-	:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to; s=fm2; t=1740464016;
-	 x=1740550416; bh=66pDvVk6+iDQJbtSXtpwsgbq4SfVodI4UVwSnweQfZ4=; b=
-	Fqj4ChlCV6CGNNn0iS4msDiYQ+4+GvJYES/bix1GYkljSYFBzOLSENl5a4xV8xfi
-	/kvSAiqPZdlL4h4cCU4WspxzvkAClTu3ITfIeZOJSsdZzkW8aN6/sTgZHKHjeZBc
-	s8sF+AXRm6PKI0uMiA3AoxzjZbyM2/uCFPYf87iFGw8TeBXhLIIinbxHuN2NxtRT
-	Qg+7OmkNE08QpAaWXM074DdKjVCPgv+qLizEjPu2XNs3P2YQFhcTboeA+DB1FDlc
-	mIflIbi5Q8IhpKSXjW0APJhFcIieeMKTiEohQ5B7Cq2gfA4QqySPLkWLgYSZTkLL
-	og9BiHo3ArdkI3cH6Ei4rw==
+	:cc:content-transfer-encoding:content-type:date:date:from:from
+	:in-reply-to:message-id:mime-version:reply-to:subject:subject:to
+	:to; s=fm2; t=1740471472; x=1740557872; bh=bdIllsSKWBpK9vaOW5DvD
+	l4NNgJuhqdEomPLmN+ytAA=; b=QX/Bvna7Q5Bk650sS0FtRueZco53KDOdvjtmP
+	ROtsXWCvYEjuV+IA7tZgh320E12GYd+ErtPVXqVkQWFzYZiqCpwpgTBx04uKwaeE
+	wlGaC5psouT3Qn1Oc+P+Z5T+WGWU6FPBLk5d/9Rc1U+BDyp7VHbDE4ZOXUE84Cxf
+	T7uS8aLW9ntYgtqHAYit72x65KinpPgLGv5mVUJK0jtwihn/On/zjJZB0nGd5UX4
+	2E/NwaHrB6hxovB+qwCxJ06G05i91vYAdaP9usklR+KF/z/j7eld4ZYO9pDYwZhs
+	0qZuAgifZtnpxNzLQCjPNzDBCxvjKhckm5FgraqBbKekOLlBQ==
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
 	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; t=1740464016; x=
-	1740550416; bh=66pDvVk6+iDQJbtSXtpwsgbq4SfVodI4UVwSnweQfZ4=; b=e
-	1LoKoWIiSoMw2FFxNGrUxCEcXKyxI90SWeuEZZ1Zt9Rd0P12Qv1RPLdu906UX0BE
-	iMPRW/zkrTiW6Puq/fgBfsi1oyyzwXnGH5loRuEp5ScVFCKv3iW4lgE1jvVJXrjT
-	2ClCzP7iNUSiydBevhWsJHFWkKPJR3exS7SIEu57soKHRLcQjG9khl4jWIlWk5wd
-	F8cPuwE9b9yPWeaQVxssnIJmyIEFfYi0XBvPWQq0EiKRArEAyRIifyTCgiYARrrV
-	JR4M1Acg0EKg+LEXNrlxAJSgtOMeH+juRmt5R51vXSxaFtOAFKKk/Iq0OATlA+oQ
-	sxSkqH8GkUlEsvRbspFqw==
-X-ME-Sender: <xms:j1-9Z3Bz5Fxt4lGOsdVaBNttyE9O7CSPvTfyvgYXhiiyaSYAX0kaPw>
-    <xme:j1-9Z9jiMaBrAanuNvJdT9cros7R6u7phBKcruChjsF96Fj_sjIs1H_NTarY0vJjV
-    OleacGE3BJGmvEkD4c>
-X-ME-Received: <xmr:j1-9Zyn-i20TFebVjb5013k1IyNtdN8CTs7KarOxzdP6o-gDGUrgRNKAc2WAbr3Cn2niS5xt2xk4SP7s9w>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdektdelgecutefuodetggdotefrod
+	:content-type:date:date:feedback-id:feedback-id:from:from
+	:in-reply-to:message-id:mime-version:reply-to:subject:subject:to
+	:to:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; t=
+	1740471472; x=1740557872; bh=bdIllsSKWBpK9vaOW5DvDl4NNgJuhqdEomP
+	LmN+ytAA=; b=LP3VBxZgDQ+OK0y2CZotJg2dzv2SMvMaYa6yV05y9s7KyYSLbLw
+	6nnapv/oA/Pmf4X57M+8gG6pZ7vCLAvPLtbFuoysdW1Tu+kH7zQcCyMZs3ms05Xn
+	5yGDwxZwRdr8ZJlZNBRGiselYFQkZJ+M/Lv/iweOX6eSMxzdUNTOkrLgcUi/j4FL
+	kKiRpATgJZLnUY4hRJYAXffDepdrgDXcS6E95MNNDXjbvt0GkBILwMGqkOKKHykZ
+	gHH8Po28YAUd8HQWwhK6mT1PNV8upaEvn0AlbevXvj0WLwWIhHpHk8bwPcxaMwhR
+	4D2o1YKlJucvYUzAcQYxGU6DmxXAF5BL+YQ==
+X-ME-Sender: <xms:r3y9Z747xVkjSwoKD1mfX8K0QkpQhVqf5SKYHDQoYNsjSgrF7D9b_Q>
+    <xme:r3y9Zw5AxYtavcuVhw9jG4PtcDEJq8ze6kv67hAW-DzZFSZxK2jVPSuTCwZw4g_Zx
+    K3NZPcsFQF-MFOpqAI>
+X-ME-Received: <xmr:r3y9Zycy0eJqZqnGS-9INZvYSfoVj2gWcJ_Z-CK95Z88FGAkixHYyEjTLeQH4cqa4WhtY9MPZ0oUM9Sgyw>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdekuddvtdcutefuodetggdotefrod
     ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpggftfghnshhusghstghrihgsvgdp
-    uffrtefokffrpgfnqfghnecuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivg
-    hnthhsucdlqddutddtmdenucfjughrpefkuffhvfevffgjfhgtgfgfggesthhqredttder
-    jeenucfhrhhomhepnfhukhgvucflohhnvghsuceolhhukhgvsehljhhonhgvshdruggvvh
-    eqnecuggftrfgrthhtvghrnhepkeefffeujeevueejueegleelhedtgedvledukedttdff
-    hfeifeelvdduheefjeeinecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrg
-    hilhhfrhhomheplhhukhgvsehljhhonhgvshdruggvvhdpnhgspghrtghpthhtohepiedp
-    mhhouggvpehsmhhtphhouhhtpdhrtghpthhtohepmhgrrhhiohdrlhhimhhonhgtihgvlh
-    hlohesrghmugdrtghomhdprhgtphhtthhopehplhgrthhfohhrmhdqughrihhvvghrqdig
-    keeisehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtoheptghorhgvnhhtihhnrd
-    gthhgrrhihsehgmhgrihhlrdgtohhmpdhrtghpthhtohephhguvghgohgvuggvsehrvggu
-    hhgrthdrtghomhdprhgtphhtthhopehilhhpohdrjhgrrhhvihhnvghnsehlihhnuhigrd
-    hinhhtvghlrdgtohhmpdhrtghpthhtoheplhhinhhugidqkhgvrhhnvghlsehvghgvrhdr
-    khgvrhhnvghlrdhorhhg
-X-ME-Proxy: <xmx:j1-9Z5x5o4sAMjF9hDDrRHGya6_sQ4H_EpZk6FdAcaGfZTyQjdl6hQ>
-    <xmx:kF-9Z8Sz8POeMpYxl4tMpcynCIuqLA6MyhlJSvvQoqoGqDuvyo_gyA>
-    <xmx:kF-9Z8Y-lVDcHP_SE2ZXg9a1Ji6sOCDCWoqagwayjQfLqAb-UMf_lw>
-    <xmx:kF-9Z9QvF2srdtSlt8ASmMdOVbelwn128eJPxq1XwG8PSLPM9iPYzg>
-    <xmx:kF-9ZxJ40EA_2UhlkPz5GbUS5cd2RhwGKKP8KzVEFl35dAwPnTB4epCV>
+    uffrtefokffrpgfnqfghnecuuegrihhlohhuthemuceftddtnecunecujfgurhephffvve
+    fufffkofgggfestdekredtredttdenucfhrhhomhepnfhukhgvucflohhnvghsuceolhhu
+    khgvsehljhhonhgvshdruggvvheqnecuggftrfgrthhtvghrnheptdektdeitdetueehue
+    etteffffeggfefhfeitddvgeeifeejheelheffjefggfehnecuvehluhhsthgvrhfuihii
+    vgeptdenucfrrghrrghmpehmrghilhhfrhhomheplhhukhgvsehljhhonhgvshdruggvvh
+    dpnhgspghrtghpthhtohepkedpmhhouggvpehsmhhtphhouhhtpdhrtghpthhtoheplhhi
+    nhhugidqkhgvrhhnvghlsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtohephh
+    guvghgohgvuggvsehrvgguhhgrthdrtghomhdprhgtphhtthhopehilhhpohdrjhgrrhhv
+    ihhnvghnsehlihhnuhigrdhinhhtvghlrdgtohhmpdhrtghpthhtohepphhlrghtfhhorh
+    hmqdgurhhivhgvrhdqgiekieesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthho
+    pehlihhnuhigqdhinhhpuhhtsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtoh
+    epsggvnhhtihhssheskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepjhhikhhosheskhgv
+    rhhnvghlrdhorhhgpdhrtghpthhtoheplhhukhgvsehljhhonhgvshdruggvvh
+X-ME-Proxy: <xmx:r3y9Z8LQ-NjSBWs7btz_OQi93yjr0wsYVuhWKvfowFf3e8hzNe3ZeQ>
+    <xmx:r3y9Z_Lymtivsx3a4kfMmAiPsxjivQB1Gt1pVbZPPA9ZQGoY9-47tg>
+    <xmx:r3y9Z1x5PcRS0wc01Xi3Irq48tk3_9Q2gy5-e-S5XnRnUHqCXJH_Lg>
+    <xmx:r3y9Z7LlouR3llojwESBJN7jh7SQb2Oi6uoFD9g4BsYFLuSD-90MHw>
+    <xmx:sHy9Z8rpVkA8w7Z-S9UgUweEOeMyic2PMHFOY3ZeaHNVy49GORCy9uXZ>
 Feedback-ID: i5ec1447f:Fastmail
 Received: by mail.messagingengine.com (Postfix) with ESMTPA; Tue,
- 25 Feb 2025 01:13:33 -0500 (EST)
-Message-ID: <0d67e31ce334085b815f79f9c57a2c4e35870423.camel@ljones.dev>
-Subject: Re: [PATCH] platform/x86: asus-wmi: change quiet to low-power
+ 25 Feb 2025 03:17:48 -0500 (EST)
 From: Luke Jones <luke@ljones.dev>
-To: Mario Limonciello <mario.limonciello@amd.com>, 
-	platform-driver-x86@vger.kernel.org
-Cc: corentin.chary@gmail.com, hdegoede@redhat.com, 
-	ilpo.jarvinen@linux.intel.com, linux-kernel@vger.kernel.org
-Date: Tue, 25 Feb 2025 19:13:29 +1300
-In-Reply-To: <7a958091-84a0-4ec5-bd4a-3e5f973772e0@amd.com>
-References: <20250224223551.16918-1-luke@ljones.dev>
-	 <7a958091-84a0-4ec5-bd4a-3e5f973772e0@amd.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.54.3 (3.54.3-1.fc41) 
+To: linux-kernel@vger.kernel.org
+Cc: hdegoede@redhat.com,
+	ilpo.jarvinen@linux.intel.com,
+	platform-driver-x86@vger.kernel.org,
+	linux-input@vger.kernel.org,
+	bentiss@kernel.org,
+	jikos@kernel.org,
+	Luke Jones <luke@ljones.dev>
+Subject: [PATCH 0/2] hid-asus: asus-wmi: refactor Ally suspend/resume
+Date: Tue, 25 Feb 2025 21:17:42 +1300
+Message-ID: <20250225081744.92841-1-luke@ljones.dev>
+X-Mailer: git-send-email 2.48.1
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-On Mon, 2025-02-24 at 18:39 -0800, Mario Limonciello wrote:
-> On 2/24/2025 16:35, Luke Jones wrote:
-> > From: "Luke D. Jones" <luke@ljones.dev>
-> >=20
-> > Change the profile name "quiet" to "low-power" to match the AMD
-> > name. The
-> > primary reason for this is to match AMD naming for
-> > platform_profiles and
-> > allow both to match. It does not affect Intel machines.
-> >=20
-> > The quiet profile is essentially a low-power profile which tweaks
-> > both TDP and fans - this applies to 80+ ASUS laptops.
-> >=20
-> > Signed-off-by: Luke D. Jones <luke@ljones.dev>
->=20
-> Reviewed-by: Mario Limonciello <mario.limonciello@amd.com>
->=20
-> IMO - this should have a fixes tag since this should probably go in
-> the=20
-> 6.14 cycle too.
->=20
-> Fixes: 688834743d67 ("ACPI: platform_profile: Allow multiple
-> handlers")
->=20
+This short series refactors the Ally suspend/resume functionality in the
+asus-wmi driver along with adding support for ROG Ally MCU version checking.
 
-Good point, thanks. I assume when pulled in this can be added?
+The version checking is then used to toggle the use of older CSEE call hacks
+that were initially used to combat Ally suspend/wake issues arising from the MCU
+not clearing a particular flag on resume. ASUS have since corrected this
+especially for Linux in newer firmware versions.
 
-> > ---
-> > =C2=A0 drivers/platform/x86/asus-wmi.c | 6 +++---
-> > =C2=A0 1 file changed, 3 insertions(+), 3 deletions(-)
-> >=20
-> > diff --git a/drivers/platform/x86/asus-wmi.c
-> > b/drivers/platform/x86/asus-wmi.c
-> > index d22748f1e154..de19c3b3d8fb 100644
-> > --- a/drivers/platform/x86/asus-wmi.c
-> > +++ b/drivers/platform/x86/asus-wmi.c
-> > @@ -3945,7 +3945,7 @@ static int
-> > asus_wmi_platform_profile_get(struct device *dev,
-> > =C2=A0=C2=A0		*profile =3D PLATFORM_PROFILE_PERFORMANCE;
-> > =C2=A0=C2=A0		break;
-> > =C2=A0=C2=A0	case ASUS_THROTTLE_THERMAL_POLICY_SILENT:
-> > -		*profile =3D PLATFORM_PROFILE_QUIET;
-> > +		*profile =3D PLATFORM_PROFILE_LOW_POWER;
-> > =C2=A0=C2=A0		break;
-> > =C2=A0=C2=A0	default:
-> > =C2=A0=C2=A0		return -EINVAL;
-> > @@ -3969,7 +3969,7 @@ static int
-> > asus_wmi_platform_profile_set(struct device *dev,
-> > =C2=A0=C2=A0	case PLATFORM_PROFILE_BALANCED:
-> > =C2=A0=C2=A0		tp =3D ASUS_THROTTLE_THERMAL_POLICY_DEFAULT;
-> > =C2=A0=C2=A0		break;
-> > -	case PLATFORM_PROFILE_QUIET:
-> > +	case PLATFORM_PROFILE_LOW_POWER:
-> > =C2=A0=C2=A0		tp =3D ASUS_THROTTLE_THERMAL_POLICY_SILENT;
-> > =C2=A0=C2=A0		break;
-> > =C2=A0=C2=A0	default:
-> > @@ -3982,7 +3982,7 @@ static int
-> > asus_wmi_platform_profile_set(struct device *dev,
-> > =C2=A0=20
-> > =C2=A0 static int asus_wmi_platform_profile_probe(void *drvdata,
-> > unsigned long *choices)
-> > =C2=A0 {
-> > -	set_bit(PLATFORM_PROFILE_QUIET, choices);
-> > +	set_bit(PLATFORM_PROFILE_LOW_POWER, choices);
-> > =C2=A0=C2=A0	set_bit(PLATFORM_PROFILE_BALANCED, choices);
-> > =C2=A0=C2=A0	set_bit(PLATFORM_PROFILE_PERFORMANCE, choices);
-> > =C2=A0=20
->=20
+- hid-asus requests the MCU version and displays a warning if the version is
+  older than the one that fixes the issue.
+- hid-asus awill also toggle the CSEE hack off, and mcu_powersave to on if the
+version is high enough.
 
+Luke D. Jones (2):
+  hid-asus: check ROG Ally MCU version and warn
+  platform/x86: asus-wmi: Refactor Ally suspend/resume
+
+ drivers/hid/hid-asus.c                     | 101 ++++++++++++++++-
+ drivers/platform/x86/asus-wmi.c            | 124 ++++++++++++++-------
+ include/linux/platform_data/x86/asus-wmi.h |  15 +++
+ 3 files changed, 199 insertions(+), 41 deletions(-)
+
+--
+2.48.1
