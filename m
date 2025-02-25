@@ -1,41 +1,41 @@
-Received: from mout.gmx.net (mout.gmx.net [212.227.17.22])
+Received: from mout.gmx.net (mout.gmx.net [212.227.17.21])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE9591547E3;
-	Tue, 25 Feb 2025 15:56:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.22
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6EAB42AEE4;
+	Tue, 25 Feb 2025 15:59:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.21
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740499014; cv=none; b=ASD4sQdJZmDoGUNi4TJMoyNDToA7UH2zgE5MebKNWX31cuMEtFyUcMn1x3CRXR3qVX3scAJNNO5rmqHNu8YvBJC7PhEMSSiFWZfdgDrCZ6G+0lk6oLG30pxH6qNNgiWWTK/DuYUFOTYk355c/zccXKEH3hkQO4apc6jVJm3wAeA=
+	t=1740499196; cv=none; b=Cv3JrP6hPDhQuOXrYuBo2ryQZA/ueiWmBrldGMba7bKLid47Mo1lqoFNU5LFdcmlJwXzE7AOdwOpAABoZLp6vku8ph/LlEhd/PvKY/k5DoCwwz0JlMm0xnEpmnAmJiPxXr19ASwtX0/YvE49r/slyQlD20j0ktalmLm13/R67yY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740499014; c=relaxed/simple;
-	bh=OYkwmAIKSpghP5IQFeaupaUzK0ZNGLi6KNmWBZ3eaS4=;
+	s=arc-20240116; t=1740499196; c=relaxed/simple;
+	bh=vU/jJyxqtXWQ08fyslpvzJxRG6WC82WSeVW8eQEOgRI=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Lbgp9z4FBP6rfIlYLtB2YK8F5iFgHNiXAoMQ5vrfWmtUUYv7CuaKRv6uKJfAh/lgF5VQUMRpfAs7LZfQgdT0DW/PJjSAQQ3GCQ+1BlzrMs0owTMSpP1b0aaDlvgfIerGlMyU71G+SYD4T55Aen8uaukavhG8NBVj/fOKf/iRS7U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b=KBfOf/ZZ; arc=none smtp.client-ip=212.227.17.22
+	 In-Reply-To:Content-Type; b=t516W4m4WOabMhOILiD4NzDRD0IP/wcHw9NvxQNVS2aDBTZKBQAt9cf2p0YtJFFiZizLXM4rrB3e/5qnvGlqEIJFqOurM6wqWhVO3Ehj86PwU55w2lUbnOkn6mcNMosYKIisAPP/tLnvhE2ieQN2m/1wKzcBhOCEoehjxv2tJuc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b=PxWNJ4R0; arc=none smtp.client-ip=212.227.17.21
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b="KBfOf/ZZ"
+	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b="PxWNJ4R0"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.de;
-	s=s31663417; t=1740498990; x=1741103790; i=w_armin@gmx.de;
-	bh=srZ3cQwVaVpTGG/bBGMZgmA/CakDxnKVsPHw83xHEdI=;
+	s=s31663417; t=1740499189; x=1741103989; i=w_armin@gmx.de;
+	bh=VoH3BvQCgsX1U5LuCaZ1VFv1FfMkRAgbcCzq9pEohVo=;
 	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:To:Cc:
 	 References:From:In-Reply-To:Content-Type:
 	 Content-Transfer-Encoding:cc:content-transfer-encoding:
 	 content-type:date:from:message-id:mime-version:reply-to:subject:
 	 to;
-	b=KBfOf/ZZYQrPM1+MsUR93V2zK0R+zvYFWZpGIVXttFf4dHt7GI/Hnoquxml7NgXB
-	 Gaage7oOSXna/tkmF76kv7yX8z8e4XyPP7ohoH7RkkFfULaDjcnmTF9sw9SpiEFXy
-	 BHaLFXABmxaw1bOh8CCmnd1MJPpUIJfGvnurTc2jDFcgEPRQErmuRk3s53AyOTOcD
-	 Bj4FbPmxvzxHce8wdnysmgxPhSgTtRfHIJxBEOq0dCS7utG4L243Srnrs45PHq2S5
-	 JDYh1xfCo5cnfSHcuc/8iqBHNjtbp2dbg0bZntfQgDfXjYvgD99kp46PhVn4wz3yA
-	 YG4Qeas0Q48GvLjP+w==
+	b=PxWNJ4R0KtYNt+o+1bJ+QNLqTMAB5MWRY5wRzg48O+TuUVYW3hq5sASzSmpqEj6i
+	 +By/W20NpAgvJNKFXoN/rb/GtsfVulSgt31T9MxEUS2pG0xosYJWVToUZ8bggjFkW
+	 JEOSq7nLudixysSa/V3UY27no6VjFwl9WitH/UZSh0Qka2e1CRHU87z++3E2RNr9R
+	 YjA+jwEtrF9NnhG8MIg2q/oH3I84fasAJbg/OgQjp82wpBklPc0Tyt3SAWxCbZXE2
+	 x8x9xcBW/mNtBViObf0KTepY5/si8+lTWwXxpbTHxbCsbp1QAPhg/csPq3KbXhRGO
+	 frOhAI97WqH45+Nh7Q==
 X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
-Received: from [192.168.0.69] ([87.177.78.219]) by mail.gmx.net (mrgmx104
- [212.227.17.168]) with ESMTPSA (Nemesis) id 1MI5UN-1tYvCD0RWB-00GorX; Tue, 25
- Feb 2025 16:56:30 +0100
-Message-ID: <5cff4286-2800-4bc0-b243-5244d19a64b7@gmx.de>
-Date: Tue, 25 Feb 2025 16:56:27 +0100
+Received: from [192.168.0.69] ([87.177.78.219]) by mail.gmx.net (mrgmx105
+ [212.227.17.168]) with ESMTPSA (Nemesis) id 1MrhUK-1szJAn1sBw-00aIYO; Tue, 25
+ Feb 2025 16:59:49 +0100
+Message-ID: <9aab6df8-892c-40d2-9834-954ca764d5f4@gmx.de>
+Date: Tue, 25 Feb 2025 16:59:47 +0100
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -43,182 +43,123 @@ List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 0/3] ACPI: platform_profile: fix legacy sysfs with
- multiple handlers
-To: Antheas Kapenekakis <lkml@antheas.dev>, Luke Jones <luke@ljones.dev>
-Cc: Mark Pearson <mpearson-lenovo@squebb.ca>,
- "Limonciello, Mario" <mario.limonciello@amd.com>,
- =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
- Len Brown <lenb@kernel.org>,
- "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>,
- linux-kernel@vger.kernel.org,
- "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>,
- "Rafael J. Wysocki" <rafael@kernel.org>, Hans de Goede
- <hdegoede@redhat.com>, me@kylegospodneti.ch
-References: <20250224195059.10185-1-lkml@antheas.dev>
- <1c0c988b-8fe6-4857-9556-6ac6880b76ff@app.fastmail.com>
- <633bbd2d5469db5595f66c9eb6ea3172ab7c56b7.camel@ljones.dev>
- <CAGwozwGmDHMRbURuCvWsk8VTJEf-eFXTh+mamB1sKaHX5DO8WA@mail.gmail.com>
- <f5d39d3c932a78a5021877230c212c620edc586e.camel@ljones.dev>
- <CAGwozwEWZxWzcTjPby4OeUz+CCXbvQAkvCExo-Qc7=r-0-6BCg@mail.gmail.com>
+Subject: Re: [PATCH] platform/x86: asus-wmi: change quiet to low-power
+To: Luke Jones <luke@ljones.dev>,
+ Mario Limonciello <mario.limonciello@amd.com>,
+ platform-driver-x86@vger.kernel.org
+Cc: corentin.chary@gmail.com, hdegoede@redhat.com,
+ ilpo.jarvinen@linux.intel.com, linux-kernel@vger.kernel.org,
+ Antheas Kapenekakis <lkml@antheas.dev>
+References: <20250224223551.16918-1-luke@ljones.dev>
+ <7a958091-84a0-4ec5-bd4a-3e5f973772e0@amd.com>
+ <0d67e31ce334085b815f79f9c57a2c4e35870423.camel@ljones.dev>
 Content-Language: en-US
 From: Armin Wolf <W_Armin@gmx.de>
-In-Reply-To: <CAGwozwEWZxWzcTjPby4OeUz+CCXbvQAkvCExo-Qc7=r-0-6BCg@mail.gmail.com>
+In-Reply-To: <0d67e31ce334085b815f79f9c57a2c4e35870423.camel@ljones.dev>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:Wm1BxrcI+H7lLNebIARIG6GX2ucnHDeZiYuD1eUhtXOLYzOTxBr
- DCDJnBJI94nbKfup8euTI880mfhDsfFqcaHVgWBnp2d/+vRxdLc0XM+63wMwb3lhOpgmk/s
- Kh8AvtEM/9WicO2ckN/ZZe8yqEuvZgyP542YiaCpqYAQ376DGVxwwcsH8tfnWsEobw8+N81
- FRM/gPX6F+gLXp/uzEA5w==
+X-Provags-ID: V03:K1:aBR4wKS7B+kEl44VvOkPmuHEPmld0+ugeeXQtJHAIqLGRMkC06M
+ OvQLPUsPJOvHJ6+9SSAd7lCYTMAR0ajuLBDmjOkhhXc98P89akh1a04mnel8Wnto2iciEvB
+ cOBshWvngeEGXQFvLBkNYyDHcPBczRivettYPE2v7tq3dpu3JD/+rt4XdJsPQdeRxN5o5aO
+ 2R5fBtGUNn2dQjy9cZvqw==
 X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:22hNWHYS/18=;Y4SztS7VQqmm8TTDhaf3aoTyMnn
- bGW9zfEvamUOnBCnMaFD/1dfVnYWiHReI4Ux1dAXMTl7AExAtLcfkndRzVW4pTZ41aICNon1y
- GUJmeYyk+I1AMOstYaq4ZzyOasDMg65iBJdgfll/mA8mKqdVBOjsNLgsDiv9w/ZUZxMlkUfwR
- 4Cw1elyXMLaWbjmqIaMLIfpC88kdYmOOsEskJEu9N21bLnFsofIPl2aiNO4ZZC5+d77V51GNk
- Z43QkBG0Cjh88PLs3BNMtOOtpxPsahIIgViF26euDveiPfG0VddfFZPucVMT/sYldfC5y1h1M
- 9M2D/z2EQuxDhhCAxvXfMnEg82JAdqT/2sUMCpmPX+y8jiGtBLFYxezIfwjl2YFRLr5WIylAg
- 6LthGvKZcMGSODNsaCaAcuk/+Wedsi6VWvBuGwMm6YjkjPMsbEL10PfBp/gVAFaLV7rxxlA03
- 7hJK9Ay0JM0sYOyFIQ4FNujvpjVbEeY9WzNejDm3h4/I8i93MBK2hetXqxAMSOpcfxrYpPbXs
- W7SZn2GnOjnUZx1r3psv66NEOyVhPJ9kKFBOULa4aYUtfUAV6RMcQB0D3JDhPs3AgZT1V8Kbh
- 2n1kGlkrKRmZ4iKv5hTqdxf7A7ZDx5spH4RFU0QPWhUT19/5Gco5e4iLak45LEdR13/lxLOrZ
- J3pJeu1bec73XGMtgTQJfofzdv3/FHn0z2CU+BjtAjoIAIcyYeJj+YgnKzQdjk3u8jdyLE958
- O1CRC7tyzDf8K+FHVqGF/TQhG/hB81oQLpvwxKL/zvYoSM2MYjRdY1rOfdyf3HSpyWIZCvR3X
- 7kDbWZZ/8VfftmiHwJWKYYGRkLYsp0Ni/f2R1Db/MW9R5jmCwzvEqWE8CsM+YMutpotakE1Ez
- II4YJu3t6zJ1yhyE0v1xKNYTU+VEJ4drlIhliNG1V2vMSugSQPQfCAdQbHT0Sd7FyW3OFe+rC
- MIHeOq8uqy2OgOJlqm7wewNTAUd+/yS4r5cmFho0PkGaG0o2WtbDdTUXl0PKeObGIYXjAdZaY
- qx6A4c9Z9C54oZw3lf1hZCgVZ+DhEVUPeeFNgQsViYCWg3h2aKnbgO/FKATjTVPdDFMaJanG6
- FnQLmQIk4bD0O/WaRi4e6n5xxk4bAu6aA3ql2Je2Q4otfnmnUTszd/Aqqu8BD6E/6LvF63UP1
- IgIfIdSk/eT7xswyAmDiGS1qaANVHpsElS0FzOb9sdjlKOUeJYCQ01QZhlrZ7wQoq6VjHvHi9
- yu5RJqiU3nGKdWlaS1pMhyUAlmTqxqYIXLzyYDB7Bs1JHNI66HUmq4UQuuQAd7CXWNzBHDlLQ
- fuYkvaN2bl6Ea9iwtv8NfYY37fpp7OeLmKA2TXJWlcK3fFtfKz9knHsOh67G51BXPzS0q9aBC
- 3zpDG4uh5wuhdKx1a4UcvuTUF0w+gi8x7Fa1dHgRYuKpgrgBuVj8Ipgy6s
+UI-OutboundReport: notjunk:1;M01:P0:GU357jzTE48=;1yIagCdh0kKUVMPbRHlT3u+6Xrh
+ WrVPJi16bBu8/KgbMkO5H864iQe8ApKySUYdC/X/YQBXhaFLlA+E7WVwv2pLW7ykd7YXxY+Kx
+ 23PcULWJHzD/4+RvnU7aNuGJVRL3Vw7pvVybcoFLF5GHZHx39Jl1mH4182CI1RrsXJ8Luoxrm
+ GMw/IHzCQLzTxeWgvYrww5S+6tFsZZ066nl/UZCbGtlaPpUAj3Mq0qxzHQaQ0e9nGKbo4jAqb
+ 2hVOSi9imBg5C3h07PGhjQ31coeckwZsvdJhvnInxkw+zQnIixiB7M8ePiFScjaU12GL2jImm
+ pJL2ugypCJXVdRgrx0NOlEGanEN11yBh0Log5v6VecRmUJ/KcaYrH2ySsHMzNrK+Q5KEmVfmg
+ zAyd1R3KJS9WxMO1yHNTvzUy2woPjCCDg1JtARod8sLxElGuFGph2OlAvporHonkNQban1+In
+ ZtKmWiJt5+tfLnBeKAOWYe2rHqnX8BcwJrp9YK/c/X3fQ9YS4N1Ymqfb4YynvpQBpEGtT9gC/
+ Wm8XIA9qXJa5KEvFc9UWit6gEPPcppPreBhfQYnJXRIx3GzbeKf+Ioo1QWXfedi6H+NSo49ab
+ JoGSAYJqW9p8YO78Q6BlJ37uznty9v+Csr1uav4DVATQWoD9LLMiumxapNCmYfPkl1SfXlM0x
+ zfIeNeIbIA8rGYjcCBK19CgOI4VaTpcNXP1+kchfA/+gFIaNINSQ6qwcjhKNZD0XNAZDDTQg7
+ M8aCcfwIKw4LxWdx80vR9YA4oKELYbAgaWkSK2FbEFOUUnb29PLwyEwfTEJK/1hqrNLEpXTQ6
+ cT4ZKB67GQ/9j4T0XoPdqhfhXXgekN1L64cTwsiwQDp2p6FU+T3iVp9NuoAfWuVJqLxqwm2/d
+ gP+6+6dJgwe+NItZDO5qJaGjHOVYqnWB/lQpyWp2rg3179M7iOVULZALsWZ7zw/EepYOQAuj0
+ oKvus8vIF9N1uCJl7y/qMRIZ4NDmcSqINpGFxB3FJxIhWWdvUY2a2iPrurk+Ygt1M/XLgnhhu
+ A8U//ocnQ18vQgCZh+uuV1cWYhJBkUAtMnCgJIQmZ7Owv6fXxCpX5DHvbitYrZbq8pPO6yHpW
+ vc7/11FE0cKcZHPlVUyKl117hYTVAZ1iUT09heTjdCLhG/PxA3uFQTnnDnXc0NSZ+S65PFS7K
+ nuowX6hL+SXM9mA31IvQOhyhuxR1oTeUIZDYDnG1c+boQlhbQocqqmy7N48Obikt8gm8h2Obo
+ 1lfXQeSAZJUnfp87nRiNeLw4U2iV6JVbAkbW/R+wPMXWYbQX6HG3pfY+3lunU8AJUV9BT3rF5
+ eo0BmjpwOQ8o4SGzQCfCgLltul4PBm//kVGjUQ23bquUjcAuf3XUf3Amy27LwcgapbJ+uX5AT
+ 4rp2vm49NpK+1tlEngb9BncRiwV3TyHJuFRkHeBvVdvF9wpGBwSIwWfFk3
 
-Am 25.02.25 um 03:26 schrieb Antheas Kapenekakis:
+Am 25.02.25 um 07:13 schrieb Luke Jones:
 
->> If these "scripts" use `platform_profile_choices` to get their
->> selections and verify they are available then there should be zero
->> breakage. If they don't then they should be updated to be correct.
-> Yeah, if any Asus users wrote scripts for their laptops to e.g., "echo
-> quiet | sudo tee /sys/firmware/acpi/platform_profile" or used TLP let
-> them spend a few days finding out why kernel 6.14 does not work. They
-> should have written a 300 line bash script instead.
+> On Mon, 2025-02-24 at 18:39 -0800, Mario Limonciello wrote:
+>> On 2/24/2025 16:35, Luke Jones wrote:
+>>> From: "Luke D. Jones" <luke@ljones.dev>
+>>>
+>>> Change the profile name "quiet" to "low-power" to match the AMD
+>>> name. The
+>>> primary reason for this is to match AMD naming for
+>>> platform_profiles and
+>>> allow both to match. It does not affect Intel machines.
+>>>
+>>> The quiet profile is essentially a low-power profile which tweaks
+>>> both TDP and fans - this applies to 80+ ASUS laptops.
+>>>
+>>> Signed-off-by: Luke D. Jones <luke@ljones.dev>
+>> Reviewed-by: Mario Limonciello <mario.limonciello@amd.com>
+>>
+>> IMO - this should have a fixes tag since this should probably go in
+>> the
+>> 6.14 cycle too.
+>>
+>> Fixes: 688834743d67 ("ACPI: platform_profile: Allow multiple
+>> handlers")
+>>
+> Good point, thanks. I assume when pulled in this can be added?
 
-Hi,
+Antheas is concerned that this patch might break brittle userspace scripts
+like "echo quiet | sudo tee /sys/firmware/acpi/platform_profile".
 
-using "echo quiet | sudo tee /sys/firmware/acpi/platform_profile" is quite
-brittle, as some hardware will populate the available profiles dynamically=
-.
-
-Still breaking userspace is indeed not an option here, so we have to think
-of something else.
-
->> In any case I am in the process of finalising an update to use the new
->> platform_profile API including "custom". Please don't begin trying to
->> break things just to be "first". My work has been ongoing for this
->   drivers/acpi/platform_profile.c    | 57 +++++++++++++++++++++++++-----
->   drivers/platform/x86/amd/pmf/spc.c |  3 ++
->   drivers/platform/x86/amd/pmf/sps.c |  8 +++++
->   include/linux/platform_profile.h   |  7 ++++
->
-> I do not see the name Asus here. This is a compatibility patch. You
-> should try it before commenting on it further. Looking at my ACPI
-> database, there are at least a few Ayaneos, GPDs, and Legion laptops
-> that have the ACPI bindings for pmf, this is not an Asus issue.
->
-> By the way, I have merged your patch series on Bazzite (well... a
-> cleaned up version that does not happen to crash your own software...)
-> and it happens to work fine with this patch (I know you said platform
-> profiles are not in yet). I still use the asus-wmi APIs personally.
->
-> sudo fwupdmgr get-bios-setting
-> Authenticating=E2=80=A6          [ -                                    =
- ]
-> ppt_pl3_fppt:
->    Setting type:         Integer
->    Current Value:        80
->    Description:          Set the CPU slow package limit
->    Read Only:            False
->    Minimum value:        5
-> ...
->
->> in my spare time for months.
-> Let me comment on this a bit further. Hobbies are good to have and it
-> is nice you found one you like. However, a lot of people are spending
-> a lot of money on their Asus laptops and are actually starting to
-> depend on Linux. If they cannot depend on you or your hobby for
-> support, you should at least make sure to not interfere with parallel
-> efforts for that support, if not try to be synergistic.
-
-This whole driver was likely written by someone as a hobby, so you already
-depend on a hobby here.
-
-That being said, i agree that fixes have a priority over new features, and
-i think everyone agrees on that.
-
-> I did not make this patch to one up you or rush it. This issue is a
-> blocker for deploying our 6.13 kernel. Since this kernel needs to work
-> for the Z13 and pmf quirks are dead ends now (I also got annoyed by
-> asus users complaining about their fan curves being wrong because pmf
-> blew up), I pulled in Mario's platform profile series early, only to
-> find this issue. Botching the asus-wmi platform handler did not meet
-> my standards, so I had to make this series. Also, since I could not
-> pull in Kurk's series, and his changes were extensive, I had to make
-> this series twice, and test it twice.
->
-> Good news is this series works and the kernel is on its way to be
-> deployed in a few days. Flatpak fix came in clutch today too with
-> 6.13.4.
->
-> Antheas
->
-Maybe the current strategy of the legacy platform-profile interface can be=
- extended
-without introducing the "secondary handler" concept.
-
-The current strategy only advertises platform profiles supported by all ha=
-ndlers, and
-as you pointed out this causes problems for users on certain devices.
-
-I was thinking that be can change this strategy to advertise all platform =
-profiles supported
-by at least one handler can then do something like this:
-
-  - handler 1: supports low_power, balanced and performance
-
-  - handler 2: supports quiet, balanced and balanced-performance
-
--> legacy interface advertises low_power, quiet, balanced, balanced-perfor=
-mance and performance
-
-When setting low_power, the closes equivalent is picked for handlers which=
- do not support low_power:
-
-  - handler 1: setting low_power
-
-  - handler 2: setting quiet
-
-When setting quiet, the same happens:
-
-  - handler 1: setting balanced
-
-  - handler 2: setting quiet
-
-Basically all profiles get treated like a range:
-
-low_power <- lower end of the performance range
-cool,
-quiet,
-balanced,
-balanced-performance,
-performance <- upper end of the performance range
-
-The only problem will be that getting the current platform profile would b=
-e more difficult, as
-the legacy handler has to determine the lowest currently selected platform=
- profile.
-
-Would this approach be OK?
+Maybe we should instead change the strategy used by the legacy platform-pr=
+ofile
+handler when selecting supported profiles?
 
 Thanks,
-Armin Wolf
+Armin Wolff
 
+>>> ---
+>>>  =C2=A0 drivers/platform/x86/asus-wmi.c | 6 +++---
+>>>  =C2=A0 1 file changed, 3 insertions(+), 3 deletions(-)
+>>>
+>>> diff --git a/drivers/platform/x86/asus-wmi.c
+>>> b/drivers/platform/x86/asus-wmi.c
+>>> index d22748f1e154..de19c3b3d8fb 100644
+>>> --- a/drivers/platform/x86/asus-wmi.c
+>>> +++ b/drivers/platform/x86/asus-wmi.c
+>>> @@ -3945,7 +3945,7 @@ static int
+>>> asus_wmi_platform_profile_get(struct device *dev,
+>>>  =C2=A0=C2=A0		*profile =3D PLATFORM_PROFILE_PERFORMANCE;
+>>>  =C2=A0=C2=A0		break;
+>>>  =C2=A0=C2=A0	case ASUS_THROTTLE_THERMAL_POLICY_SILENT:
+>>> -		*profile =3D PLATFORM_PROFILE_QUIET;
+>>> +		*profile =3D PLATFORM_PROFILE_LOW_POWER;
+>>>  =C2=A0=C2=A0		break;
+>>>  =C2=A0=C2=A0	default:
+>>>  =C2=A0=C2=A0		return -EINVAL;
+>>> @@ -3969,7 +3969,7 @@ static int
+>>> asus_wmi_platform_profile_set(struct device *dev,
+>>>  =C2=A0=C2=A0	case PLATFORM_PROFILE_BALANCED:
+>>>  =C2=A0=C2=A0		tp =3D ASUS_THROTTLE_THERMAL_POLICY_DEFAULT;
+>>>  =C2=A0=C2=A0		break;
+>>> -	case PLATFORM_PROFILE_QUIET:
+>>> +	case PLATFORM_PROFILE_LOW_POWER:
+>>>  =C2=A0=C2=A0		tp =3D ASUS_THROTTLE_THERMAL_POLICY_SILENT;
+>>>  =C2=A0=C2=A0		break;
+>>>  =C2=A0=C2=A0	default:
+>>> @@ -3982,7 +3982,7 @@ static int
+>>> asus_wmi_platform_profile_set(struct device *dev,
+>>>
+>>>  =C2=A0 static int asus_wmi_platform_profile_probe(void *drvdata,
+>>> unsigned long *choices)
+>>>  =C2=A0 {
+>>> -	set_bit(PLATFORM_PROFILE_QUIET, choices);
+>>> +	set_bit(PLATFORM_PROFILE_LOW_POWER, choices);
+>>>  =C2=A0=C2=A0	set_bit(PLATFORM_PROFILE_BALANCED, choices);
+>>>  =C2=A0=C2=A0	set_bit(PLATFORM_PROFILE_PERFORMANCE, choices);
+>>>
+>
