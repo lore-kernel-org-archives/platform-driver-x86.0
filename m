@@ -1,165 +1,129 @@
-Received: from mout.gmx.net (mout.gmx.net [212.227.17.21])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f52.google.com (mail-lf1-f52.google.com [209.85.167.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6EAB42AEE4;
-	Tue, 25 Feb 2025 15:59:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.21
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8317E183CB0
+	for <platform-driver-x86@vger.kernel.org>; Tue, 25 Feb 2025 16:05:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740499196; cv=none; b=Cv3JrP6hPDhQuOXrYuBo2ryQZA/ueiWmBrldGMba7bKLid47Mo1lqoFNU5LFdcmlJwXzE7AOdwOpAABoZLp6vku8ph/LlEhd/PvKY/k5DoCwwz0JlMm0xnEpmnAmJiPxXr19ASwtX0/YvE49r/slyQlD20j0ktalmLm13/R67yY=
+	t=1740499519; cv=none; b=h+qFAGGvv9Y5omJCRJ7C2o5vctkh4ZGq6xdNlokHCelC+IcsadM82Aw+CWnM9B7K8ngJEj3TOlu1PAuMpdYB+zuzX95ksshs04QmgC4dVuflK7f85gza7Yad38zzhkbYYMh/Hvk2le45eoql0Cewly0DL+IGhQIK8gCkzqcbPLc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740499196; c=relaxed/simple;
-	bh=vU/jJyxqtXWQ08fyslpvzJxRG6WC82WSeVW8eQEOgRI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=t516W4m4WOabMhOILiD4NzDRD0IP/wcHw9NvxQNVS2aDBTZKBQAt9cf2p0YtJFFiZizLXM4rrB3e/5qnvGlqEIJFqOurM6wqWhVO3Ehj86PwU55w2lUbnOkn6mcNMosYKIisAPP/tLnvhE2ieQN2m/1wKzcBhOCEoehjxv2tJuc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b=PxWNJ4R0; arc=none smtp.client-ip=212.227.17.21
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
+	s=arc-20240116; t=1740499519; c=relaxed/simple;
+	bh=rCByvJMOjUxh8ZzB5E/B1+AmONBCyWA+/sUB1yHUqbk=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=L0z+oFuiKGcm45dFZK73kBF2iKfLH6NKC2W7iHkhyvvbt8f/FzmGqPvzJ4yOYGFzJaLh+4IlouITYBHDR48TLS/qGt6BVoU9QCt9rYU7osJyoDWBXnwXXv3guWCEma6K3onidBVckUu/PFt2zQt8u2Vc6rTLfM/amOnA7zNQe9k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=GzmYvBrP; arc=none smtp.client-ip=209.85.167.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b="PxWNJ4R0"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.de;
-	s=s31663417; t=1740499189; x=1741103989; i=w_armin@gmx.de;
-	bh=VoH3BvQCgsX1U5LuCaZ1VFv1FfMkRAgbcCzq9pEohVo=;
-	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:To:Cc:
-	 References:From:In-Reply-To:Content-Type:
-	 Content-Transfer-Encoding:cc:content-transfer-encoding:
-	 content-type:date:from:message-id:mime-version:reply-to:subject:
-	 to;
-	b=PxWNJ4R0KtYNt+o+1bJ+QNLqTMAB5MWRY5wRzg48O+TuUVYW3hq5sASzSmpqEj6i
-	 +By/W20NpAgvJNKFXoN/rb/GtsfVulSgt31T9MxEUS2pG0xosYJWVToUZ8bggjFkW
-	 JEOSq7nLudixysSa/V3UY27no6VjFwl9WitH/UZSh0Qka2e1CRHU87z++3E2RNr9R
-	 YjA+jwEtrF9NnhG8MIg2q/oH3I84fasAJbg/OgQjp82wpBklPc0Tyt3SAWxCbZXE2
-	 x8x9xcBW/mNtBViObf0KTepY5/si8+lTWwXxpbTHxbCsbp1QAPhg/csPq3KbXhRGO
-	 frOhAI97WqH45+Nh7Q==
-X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
-Received: from [192.168.0.69] ([87.177.78.219]) by mail.gmx.net (mrgmx105
- [212.227.17.168]) with ESMTPSA (Nemesis) id 1MrhUK-1szJAn1sBw-00aIYO; Tue, 25
- Feb 2025 16:59:49 +0100
-Message-ID: <9aab6df8-892c-40d2-9834-954ca764d5f4@gmx.de>
-Date: Tue, 25 Feb 2025 16:59:47 +0100
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="GzmYvBrP"
+Received: by mail-lf1-f52.google.com with SMTP id 2adb3069b0e04-548430564d9so3424364e87.2
+        for <platform-driver-x86@vger.kernel.org>; Tue, 25 Feb 2025 08:05:16 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1740499512; x=1741104312; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=lwUSC8OCkUHVVAACMeGE7Ik1ANgp9jf6fyVgqusnzdY=;
+        b=GzmYvBrPgSl/t3EpsqdLPYuDi20yNBU+MokSgvE5iKmImiJoCkjDu2Y/OknVGqRfzq
+         ll6LBJsL2XPEck9qeuxXuDGvNtacV0VFGnO+12N/puz0U7LDz8wD/qtJth/5fkge8v0T
+         Dq0VjW8l29iUyQB2+QIZbMcIcT07YNKUTaI+g=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1740499512; x=1741104312;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=lwUSC8OCkUHVVAACMeGE7Ik1ANgp9jf6fyVgqusnzdY=;
+        b=VghNQFzMlVbH7ZCLjbVXVz/2LJMxOVnXWhUwB9gLPU017U71fGQTEln3beihyGPaMq
+         ogXWJkfHqvaFCC7ghuS6Lbv24m89Z5saS1reI7gRbU8EF36D94YoAgb5KxaE2WEcuPve
+         lSyxnuSTzCfN83maN31D0CtNVViREJQWrHzYIDGl/dSt5/KSgBQdLoRShK36d1b8Ocps
+         xordisC3oKdAsm0OwGxID9AC5aynBqEL5pn/3GvYxLfNFyOHX/XhV0ZHlxWtq3sf+6zJ
+         DchB2XpsQzARVrf+ko8rqc+Y5sJ3NPvWlFrLF+OghYnQXMRyA2ARMZwe/6FfydFq+3TM
+         6GRQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXUzTmokntoznev0wapuPA4GVnSHxUhN9HEl4XvBvf7e18a1o29ng7qA4/l6zNJ0xvBBOaUwpTWlSWPyM1D2xDQIoWT@vger.kernel.org
+X-Gm-Message-State: AOJu0YxakVJtZ+iSsTHNAHVjV4dr/rojOdKLsc7jgBunfAesPIcmmB0b
+	EtBEu6JAe4xBKcOpNZwGpQ/2VcxMJq4EwBaOhr66kjBUEvv5Dn96EHTkn+tZr88paUplJc23hMD
+	Xjrr8
+X-Gm-Gg: ASbGnct/73zr1a8cpPugn+pAMb0T56dZSRsgJ50EYrFAnM/qJdrc3/i6m0ZetAV4zBa
+	sC5LyqmkD2oRAyeaO3HuK00GIg2G6Wp0Rdrqo+pWyjZTUZ/PAV7kf4CEfb21uPL7uuGfTBE9S6z
+	BVY6+Y4qSxO/oDR5vawxnawjVKpLU3puc4tvQ3JwZn8N8FzIOd2JZdu6ZXYjTT0hzDPA54HX5PU
+	YwwhcfBKKg+fOk0DzUaMQCEfSdLxOFgzNFZFF/qJZrhm5iQg+qXmURJHKKWEV+aDr+onOpIMGLu
+	iNAxnDakfgFFf5U1veSHdqhjfP0UP4ylcQX8qoRM2uBe4fN+pNYQiSYTCpNWD8yDGw==
+X-Google-Smtp-Source: AGHT+IFFQs8xS1U8RCMxqbe4aFU40mnELdTwiz8/4xBFwP/Ls82biHVprN+N2L5mEe9cVHWcizB+0Q==
+X-Received: by 2002:a05:6512:108e:b0:545:2b24:c711 with SMTP id 2adb3069b0e04-5483913b263mr6203369e87.21.1740499512079;
+        Tue, 25 Feb 2025 08:05:12 -0800 (PST)
+Received: from mail-lf1-f42.google.com (mail-lf1-f42.google.com. [209.85.167.42])
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-548514efce0sm209717e87.118.2025.02.25.08.05.09
+        for <platform-driver-x86@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 25 Feb 2025 08:05:11 -0800 (PST)
+Received: by mail-lf1-f42.google.com with SMTP id 2adb3069b0e04-5452c29bacfso6268914e87.3
+        for <platform-driver-x86@vger.kernel.org>; Tue, 25 Feb 2025 08:05:09 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCVhVs6wzbF/0L9sAiClKBqK+LJCwrR2YlVOCgbWGjBMVRmssxr8IfrgHg+LW+38ERUDgOz5qSVAOSlhU+4VNC1bfDLc@vger.kernel.org
+X-Received: by 2002:a05:6512:1241:b0:547:6723:93b6 with SMTP id
+ 2adb3069b0e04-5483909d1d1mr6678553e87.0.1740499509419; Tue, 25 Feb 2025
+ 08:05:09 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] platform/x86: asus-wmi: change quiet to low-power
-To: Luke Jones <luke@ljones.dev>,
- Mario Limonciello <mario.limonciello@amd.com>,
- platform-driver-x86@vger.kernel.org
-Cc: corentin.chary@gmail.com, hdegoede@redhat.com,
- ilpo.jarvinen@linux.intel.com, linux-kernel@vger.kernel.org,
- Antheas Kapenekakis <lkml@antheas.dev>
-References: <20250224223551.16918-1-luke@ljones.dev>
- <7a958091-84a0-4ec5-bd4a-3e5f973772e0@amd.com>
- <0d67e31ce334085b815f79f9c57a2c4e35870423.camel@ljones.dev>
-Content-Language: en-US
-From: Armin Wolf <W_Armin@gmx.de>
-In-Reply-To: <0d67e31ce334085b815f79f9c57a2c4e35870423.camel@ljones.dev>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+References: <20250218-aux-device-create-helper-v4-0-c3d7dfdea2e6@baylibre.com> <20250218-aux-device-create-helper-v4-3-c3d7dfdea2e6@baylibre.com>
+In-Reply-To: <20250218-aux-device-create-helper-v4-3-c3d7dfdea2e6@baylibre.com>
+From: Doug Anderson <dianders@chromium.org>
+Date: Tue, 25 Feb 2025 08:04:57 -0800
+X-Gmail-Original-Message-ID: <CAD=FV=Vb+Wb6wJ42jUBxVVNp9P87BiqHZgoY+Tw6W3fO==FF6g@mail.gmail.com>
+X-Gm-Features: AWEUYZm3vRrajChqqVao9eJTA9wadMF2aiVVZGdKkNeW96YTlQauMsPFnVVKvC0
+Message-ID: <CAD=FV=Vb+Wb6wJ42jUBxVVNp9P87BiqHZgoY+Tw6W3fO==FF6g@mail.gmail.com>
+Subject: Re: [PATCH v4 3/8] drm/bridge: ti-sn65dsi86: use the auxiliary device
+To: Jerome Brunet <jbrunet@baylibre.com>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Dave Ertman <david.m.ertman@intel.com>, 
+	Ira Weiny <ira.weiny@intel.com>, "Rafael J. Wysocki" <rafael@kernel.org>, Stephen Boyd <sboyd@kernel.org>, 
+	Arnd Bergmann <arnd@arndb.de>, Danilo Krummrich <dakr@kernel.org>, 
+	Conor Dooley <conor.dooley@microchip.com>, Daire McNamara <daire.mcnamara@microchip.com>, 
+	Philipp Zabel <p.zabel@pengutronix.de>, Andrzej Hajda <andrzej.hajda@intel.com>, 
+	Neil Armstrong <neil.armstrong@linaro.org>, Robert Foss <rfoss@kernel.org>, 
+	Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, Jonas Karlman <jonas@kwiboo.se>, 
+	Jernej Skrabec <jernej.skrabec@gmail.com>, 
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>, 
+	Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
+	Hans de Goede <hdegoede@redhat.com>, =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, 
+	"Bryan O'Donoghue" <bryan.odonoghue@linaro.org>, 
+	Vladimir Kondratiev <vladimir.kondratiev@mobileye.com>, 
+	Gregory CLEMENT <gregory.clement@bootlin.com>, =?UTF-8?B?VGjDqW8gTGVicnVu?= <theo.lebrun@bootlin.com>, 
+	Michael Turquette <mturquette@baylibre.com>, Abel Vesa <abelvesa@kernel.org>, 
+	Peng Fan <peng.fan@nxp.com>, Shawn Guo <shawnguo@kernel.org>, 
+	Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>, 
+	Fabio Estevam <festevam@gmail.com>, Kevin Hilman <khilman@baylibre.com>, 
+	Martin Blumenstingl <martin.blumenstingl@googlemail.com>, linux-kernel@vger.kernel.org, 
+	linux-riscv@lists.infradead.org, dri-devel@lists.freedesktop.org, 
+	platform-driver-x86@vger.kernel.org, linux-mips@vger.kernel.org, 
+	linux-clk@vger.kernel.org, imx@lists.linux.dev, 
+	linux-arm-kernel@lists.infradead.org, linux-amlogic@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:aBR4wKS7B+kEl44VvOkPmuHEPmld0+ugeeXQtJHAIqLGRMkC06M
- OvQLPUsPJOvHJ6+9SSAd7lCYTMAR0ajuLBDmjOkhhXc98P89akh1a04mnel8Wnto2iciEvB
- cOBshWvngeEGXQFvLBkNYyDHcPBczRivettYPE2v7tq3dpu3JD/+rt4XdJsPQdeRxN5o5aO
- 2R5fBtGUNn2dQjy9cZvqw==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:GU357jzTE48=;1yIagCdh0kKUVMPbRHlT3u+6Xrh
- WrVPJi16bBu8/KgbMkO5H864iQe8ApKySUYdC/X/YQBXhaFLlA+E7WVwv2pLW7ykd7YXxY+Kx
- 23PcULWJHzD/4+RvnU7aNuGJVRL3Vw7pvVybcoFLF5GHZHx39Jl1mH4182CI1RrsXJ8Luoxrm
- GMw/IHzCQLzTxeWgvYrww5S+6tFsZZ066nl/UZCbGtlaPpUAj3Mq0qxzHQaQ0e9nGKbo4jAqb
- 2hVOSi9imBg5C3h07PGhjQ31coeckwZsvdJhvnInxkw+zQnIixiB7M8ePiFScjaU12GL2jImm
- pJL2ugypCJXVdRgrx0NOlEGanEN11yBh0Log5v6VecRmUJ/KcaYrH2ySsHMzNrK+Q5KEmVfmg
- zAyd1R3KJS9WxMO1yHNTvzUy2woPjCCDg1JtARod8sLxElGuFGph2OlAvporHonkNQban1+In
- ZtKmWiJt5+tfLnBeKAOWYe2rHqnX8BcwJrp9YK/c/X3fQ9YS4N1Ymqfb4YynvpQBpEGtT9gC/
- Wm8XIA9qXJa5KEvFc9UWit6gEPPcppPreBhfQYnJXRIx3GzbeKf+Ioo1QWXfedi6H+NSo49ab
- JoGSAYJqW9p8YO78Q6BlJ37uznty9v+Csr1uav4DVATQWoD9LLMiumxapNCmYfPkl1SfXlM0x
- zfIeNeIbIA8rGYjcCBK19CgOI4VaTpcNXP1+kchfA/+gFIaNINSQ6qwcjhKNZD0XNAZDDTQg7
- M8aCcfwIKw4LxWdx80vR9YA4oKELYbAgaWkSK2FbEFOUUnb29PLwyEwfTEJK/1hqrNLEpXTQ6
- cT4ZKB67GQ/9j4T0XoPdqhfhXXgekN1L64cTwsiwQDp2p6FU+T3iVp9NuoAfWuVJqLxqwm2/d
- gP+6+6dJgwe+NItZDO5qJaGjHOVYqnWB/lQpyWp2rg3179M7iOVULZALsWZ7zw/EepYOQAuj0
- oKvus8vIF9N1uCJl7y/qMRIZ4NDmcSqINpGFxB3FJxIhWWdvUY2a2iPrurk+Ygt1M/XLgnhhu
- A8U//ocnQ18vQgCZh+uuV1cWYhJBkUAtMnCgJIQmZ7Owv6fXxCpX5DHvbitYrZbq8pPO6yHpW
- vc7/11FE0cKcZHPlVUyKl117hYTVAZ1iUT09heTjdCLhG/PxA3uFQTnnDnXc0NSZ+S65PFS7K
- nuowX6hL+SXM9mA31IvQOhyhuxR1oTeUIZDYDnG1c+boQlhbQocqqmy7N48Obikt8gm8h2Obo
- 1lfXQeSAZJUnfp87nRiNeLw4U2iV6JVbAkbW/R+wPMXWYbQX6HG3pfY+3lunU8AJUV9BT3rF5
- eo0BmjpwOQ8o4SGzQCfCgLltul4PBm//kVGjUQ23bquUjcAuf3XUf3Amy27LwcgapbJ+uX5AT
- 4rp2vm49NpK+1tlEngb9BncRiwV3TyHJuFRkHeBvVdvF9wpGBwSIwWfFk3
 
-Am 25.02.25 um 07:13 schrieb Luke Jones:
+Hi,
 
-> On Mon, 2025-02-24 at 18:39 -0800, Mario Limonciello wrote:
->> On 2/24/2025 16:35, Luke Jones wrote:
->>> From: "Luke D. Jones" <luke@ljones.dev>
->>>
->>> Change the profile name "quiet" to "low-power" to match the AMD
->>> name. The
->>> primary reason for this is to match AMD naming for
->>> platform_profiles and
->>> allow both to match. It does not affect Intel machines.
->>>
->>> The quiet profile is essentially a low-power profile which tweaks
->>> both TDP and fans - this applies to 80+ ASUS laptops.
->>>
->>> Signed-off-by: Luke D. Jones <luke@ljones.dev>
->> Reviewed-by: Mario Limonciello <mario.limonciello@amd.com>
->>
->> IMO - this should have a fixes tag since this should probably go in
->> the
->> 6.14 cycle too.
->>
->> Fixes: 688834743d67 ("ACPI: platform_profile: Allow multiple
->> handlers")
->>
-> Good point, thanks. I assume when pulled in this can be added?
-
-Antheas is concerned that this patch might break brittle userspace scripts
-like "echo quiet | sudo tee /sys/firmware/acpi/platform_profile".
-
-Maybe we should instead change the strategy used by the legacy platform-pr=
-ofile
-handler when selecting supported profiles?
-
-Thanks,
-Armin Wolff
-
->>> ---
->>>  =C2=A0 drivers/platform/x86/asus-wmi.c | 6 +++---
->>>  =C2=A0 1 file changed, 3 insertions(+), 3 deletions(-)
->>>
->>> diff --git a/drivers/platform/x86/asus-wmi.c
->>> b/drivers/platform/x86/asus-wmi.c
->>> index d22748f1e154..de19c3b3d8fb 100644
->>> --- a/drivers/platform/x86/asus-wmi.c
->>> +++ b/drivers/platform/x86/asus-wmi.c
->>> @@ -3945,7 +3945,7 @@ static int
->>> asus_wmi_platform_profile_get(struct device *dev,
->>>  =C2=A0=C2=A0		*profile =3D PLATFORM_PROFILE_PERFORMANCE;
->>>  =C2=A0=C2=A0		break;
->>>  =C2=A0=C2=A0	case ASUS_THROTTLE_THERMAL_POLICY_SILENT:
->>> -		*profile =3D PLATFORM_PROFILE_QUIET;
->>> +		*profile =3D PLATFORM_PROFILE_LOW_POWER;
->>>  =C2=A0=C2=A0		break;
->>>  =C2=A0=C2=A0	default:
->>>  =C2=A0=C2=A0		return -EINVAL;
->>> @@ -3969,7 +3969,7 @@ static int
->>> asus_wmi_platform_profile_set(struct device *dev,
->>>  =C2=A0=C2=A0	case PLATFORM_PROFILE_BALANCED:
->>>  =C2=A0=C2=A0		tp =3D ASUS_THROTTLE_THERMAL_POLICY_DEFAULT;
->>>  =C2=A0=C2=A0		break;
->>> -	case PLATFORM_PROFILE_QUIET:
->>> +	case PLATFORM_PROFILE_LOW_POWER:
->>>  =C2=A0=C2=A0		tp =3D ASUS_THROTTLE_THERMAL_POLICY_SILENT;
->>>  =C2=A0=C2=A0		break;
->>>  =C2=A0=C2=A0	default:
->>> @@ -3982,7 +3982,7 @@ static int
->>> asus_wmi_platform_profile_set(struct device *dev,
->>>
->>>  =C2=A0 static int asus_wmi_platform_profile_probe(void *drvdata,
->>> unsigned long *choices)
->>>  =C2=A0 {
->>> -	set_bit(PLATFORM_PROFILE_QUIET, choices);
->>> +	set_bit(PLATFORM_PROFILE_LOW_POWER, choices);
->>>  =C2=A0=C2=A0	set_bit(PLATFORM_PROFILE_BALANCED, choices);
->>>  =C2=A0=C2=A0	set_bit(PLATFORM_PROFILE_PERFORMANCE, choices);
->>>
+On Tue, Feb 18, 2025 at 11:30=E2=80=AFAM Jerome Brunet <jbrunet@baylibre.co=
+m> wrote:
 >
+> The auxiliary device creation of this driver is simple enough to
+> use the available auxiliary device creation helper.
+>
+> Use it and remove some boilerplate code.
+>
+> Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
+> ---
+>  drivers/gpu/drm/bridge/ti-sn65dsi86.c | 49 +++++------------------------=
+------
+>  1 file changed, 7 insertions(+), 42 deletions(-)
+
+Reviewed-by: Douglas Anderson <dianders@chromium.org>
+
+I'll snooze this for a bunch of weeks and check back to see if this
+can be landed in drm-misc-next every once in a while. If you notice
+that drm-misc-next has the necessary patches before I do then feel
+free to poke me and I'll commit it.
+
+-Doug
