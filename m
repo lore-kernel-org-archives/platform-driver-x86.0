@@ -1,197 +1,153 @@
-Received: from smtp.smtpout.orange.fr (smtp-71.smtpout.orange.fr [80.12.242.71])
-	(using TLSv1.2 with cipher AES128-GCM-SHA256 (128/128 bits))
+Received: from mail-pl1-f172.google.com (mail-pl1-f172.google.com [209.85.214.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 85F4320D513;
-	Tue, 25 Feb 2025 21:26:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.12.242.71
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3445518DB04;
+	Tue, 25 Feb 2025 22:00:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740518769; cv=none; b=K2XBLsaMFGr69Gd50SMpcToi3ovwV74tYkqFZAg6Jxv6k49cndqDdvcuvXlnFpbfzOdDzGWEp+GNNd9N2iHXB0d8msDq6Ll46lE6jp36YgykWKnnprBSaADuoa1HJy08bq/7Xx+d7Y8cKpiG5TOYC6r+sxh7hu70yB0C8WE4fZ8=
+	t=1740520849; cv=none; b=UfEmZwYYbwL7YFE8W5DXjYX/E1ExSqIvGw+hFikdDcGLzJuZC9Br7vGOJJQZSMOGCxL7pxq+oH+ZHaoy3Vzl4NEQ3X5CmmnP0RYi9x64x3Vbwz8as8YNy5Oj7fkMba91vblE5ivhZXstiS0HY4tn5lJnIULmXwI8KF0WHV843bA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740518769; c=relaxed/simple;
-	bh=pyuUKKIK/oqDwIAa4v1WeQ0xbo398GEv1psrnk7fMjY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=CSYtzlNPG/uxjKGROYZKov/fs5BZippQgLF/3+StNMqQgXF4DpRPRup1aaWoPmeNPfqb9HR/q9f4Ca7HqBu6skGE+hBoovEY6VahB7ttC7RmbFFYg09DUON/+aYLY+FegjFMuvI8YbuTfNrLG5vXjqW8XSXTXZlMbFR/x4f+jcY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr; spf=pass smtp.mailfrom=wanadoo.fr; dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b=siYU52+w; arc=none smtp.client-ip=80.12.242.71
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wanadoo.fr
+	s=arc-20240116; t=1740520849; c=relaxed/simple;
+	bh=RNm65QYAVgpRA3ro29fG8ikUByn3M+cakGh4NEAcs4Y=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=bdVGStEyuo0Z3NEpDO475Cj5SQf71YNPFIx1hXVwx9ZqFs9y4IWV1DBui2hum27n3XWpwQGVV3GeUrxNoE02HK3Hf8tesFab300mbgZVXy2wKJ/iajx7MTe3lD+/F/SivgCR3Nl8u4saN4jLVkhjaLn4/CVa8IvQXpdpsf8HTlg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=KWIO8p1R; arc=none smtp.client-ip=209.85.214.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b="siYU52+w"
-Received: from [192.168.1.37] ([90.11.132.44])
-	by smtp.orange.fr with ESMTPA
-	id n2R0tkeFQ4iG7n2R3t60Fm; Tue, 25 Feb 2025 22:25:57 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wanadoo.fr;
-	s=t20230301; t=1740518758;
-	bh=CDOnVbuHRa5TlckniZ+QbcxrKwAHtppPzAjAscxNHSY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:From;
-	b=siYU52+wZ9L1fww+iQDN9rtYX6/aPczL9atUE2l26+nq1Ri8dh3TYGdKOZSOl8FUk
-	 XrbU+P2TpuXPZmylEcNVhm7IGsserFCZYBNjOT562ZUYjLqKjMa1SJH893MOHidh6R
-	 OQATR7VDki3fiHZfHEF2JqtwL04PZvB0Oj0pypFUs2f2NaghtKWNKg5zY+oKMy9gx3
-	 hJDV0lXDGXzAw1PjH65vHLOKoP3lFuSvJzAbZkaII3cDH1jfDHrdCDL8+lHftSY/+S
-	 CY90Fz3FaFYxcLZzbR4khlsrjLfgaLUxO0uOmAn+6ltyDhAKQJ99yzzK2ZVeFXSo2U
-	 OrHC+r+ja1CFQ==
-X-ME-Helo: [192.168.1.37]
-X-ME-Auth: bWFyaW9uLmphaWxsZXRAd2FuYWRvby5mcg==
-X-ME-Date: Tue, 25 Feb 2025 22:25:58 +0100
-X-ME-IP: 90.11.132.44
-Message-ID: <44dd2b5b-d91c-4daf-ab75-ed4030180028@wanadoo.fr>
-Date: Tue, 25 Feb 2025 22:25:45 +0100
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KWIO8p1R"
+Received: by mail-pl1-f172.google.com with SMTP id d9443c01a7336-220ca204d04so102424125ad.0;
+        Tue, 25 Feb 2025 14:00:47 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1740520847; x=1741125647; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=LkgmoiPvcQgjbdtHJ8zqyvbS8YBHxv17CNJXQL+7xas=;
+        b=KWIO8p1RxoKC9AvGbttcWDjhHCzPQ2AVdtP1HdROHYpjPRkS7jnGaThUXXRfEZW664
+         r4XQXYB1Zzn4/9fP6c4h0apP6yTJWr3odFTEKYDM19K1qsHoU7PVfW/MlpF7fRyg8T7c
+         bChtHyhhI3pOOjOWhO4sOGybRLZgJUacL6rFmLjmU9NozFQYEkCTLZrYZuOAr8c8xm7L
+         piH/hCPIi14ACXtVSbB/VQEjK/Pc2U+x7iCoOICrEgr404G8R9pl06TfhLmoZ18oOxVB
+         KoVLw+akRad2dhjfkLxFcE3y5WpGk/R0X9HeisLXar1Z4z/XWzdejfuRjXkD/pE5e9WK
+         QG3w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1740520847; x=1741125647;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=LkgmoiPvcQgjbdtHJ8zqyvbS8YBHxv17CNJXQL+7xas=;
+        b=AIRKAn4+ZN7dJtszlNLtLeBzcu+Kef3S93Gw+1GmwGKZuli4c+jDpXdEYXLyXAO836
+         AvaQMq4eVoEAoZCLvItDLDq0yAvSqP2bxHA4s7dwQFO909GM2h/+pmuZ2bG/uJFOV/nf
+         XiIpSKnIKz3iw6X79lnAb6dGJ3vc94wmhqBNvnOEG9xIk0x7KoWvL5yuhw1oJaiQsYvF
+         0dxbGiG9RCPLiItRlML5EcDqI5RyKfHKUMRLxTIRL6GkPNUgmjEqVLjPBuPi2jjsGjsh
+         q+vFlO4EZ3JOZkyUwtRAxxaTZTalPv13boMKLBnvy89cSCfWJ+PojDyTM7KYBnvSBvU8
+         AxUw==
+X-Forwarded-Encrypted: i=1; AJvYcCUTLnfHp6zEApMcEgX/jKnd9Wf5ktUJPTQhml8T/tgD9Mu3C8wdauyy7QTGLgLWra0765APEHyVmSUTy54u@vger.kernel.org, AJvYcCVFMYa+1d/n1+MHvZ7Z1OEX8/6zk91C2SUJwtySwViZH48yFT12N0D7eAdNPabSXSEqNuCHEQ1rhjfXsPbf+Mq9coSPVQ==@vger.kernel.org, AJvYcCXpM80NaqicqOhNbpS23lzt5tol2m6EW7YCFML6KuYlHzg2iZ6NV+MCyyJZbeoD6dRMTTE4xNDVz/Q=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx6pCYOHquRfKIi9eDK33ZjkrHquELj++U6x7X/nB5M7FhSFcjE
+	y2lP2vmHOOat3D471kVLV4lUU/iBRjVNi3n1YJexJaoWA75kRtGL
+X-Gm-Gg: ASbGncteNKU6BXNNyP/kH8rJfOuH9+bNUTgarMKoWMp0w4rCBlW9SmeoVjl8QqUrJX0
+	dt3iwQMYXSr6Pf12GzG8ufwDqXP8bCd6pMRDnQ0cgQnJXitizdFGrUvgS2AJ/S+eNxqgU3dLe8o
+	4oy5CNQ7C/BA5s1NhkpTWpwXseow1RwoIMTxhUifn1m2dO98KoEQhJu4WkU5k3Zw8+4sJ/UsVWD
+	0lnZ+81zPxc6ix8YbH4JSLGK3UA5e+k06LGyqr1q6U7bPqah3Lcy5ZPxevTn8Aj/SXuCTdxB5Po
+	ZFzNIqVjkRvERPB+sKHJSlJ7gy+/Z4Bd8BjyqW8JaE1DZejlUu6Gz+UdCYn17O4BoTx6mKQKNQR
+	P3RBtkRl1mBIY4rnWueIwlBOGW+N41ansE61Eo9O9r1Q=
+X-Google-Smtp-Source: AGHT+IHSoH5gEHhmrQME0JdH9Y25pdCOtj/IncPehWT7c2sPue0/sW23QAmFGwFjJFvspX0JL0qXew==
+X-Received: by 2002:a05:6a00:1808:b0:730:f1b7:9bc4 with SMTP id d2e1a72fcca58-7348bda7ee6mr1404731b3a.4.1740520846936;
+        Tue, 25 Feb 2025 14:00:46 -0800 (PST)
+Received: from localhost.localdomain (108-228-232-20.lightspeed.sndgca.sbcglobal.net. [108.228.232.20])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-7347a6f912fsm2114122b3a.61.2025.02.25.14.00.44
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 25 Feb 2025 14:00:45 -0800 (PST)
+From: "Derek J. Clark" <derekjohn.clark@gmail.com>
+To: Hans de Goede <hdegoede@redhat.com>,
+	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Cc: Armin Wolf <W_Armin@gmx.de>,
+	Jonathan Corbet <corbet@lwn.net>,
+	Mario Limonciello <superm1@kernel.org>,
+	Luke Jones <luke@ljones.dev>,
+	Xino Ni <nijs1@lenovo.com>,
+	Zhixin Zhang <zhangzx36@lenovo.com>,
+	Mia Shao <shaohz1@lenovo.com>,
+	Mark Pearson <mpearson-lenovo@squebb.ca>,
+	"Pierre-Loup A . Griffais" <pgriffais@valvesoftware.com>,
+	"Cody T . -H . Chiu" <codyit@gmail.com>,
+	John Martens <johnfanv2@gmail.com>,
+	"Derek J . Clark" <derekjohn.clark@gmail.com>,
+	platform-driver-x86@vger.kernel.org,
+	linux-doc@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v3 0/4] platform/x86: Add Lenovo Gaming Series WMI Drivers
+Date: Tue, 25 Feb 2025 13:59:51 -0800
+Message-ID: <20250225220037.16073-1-derekjohn.clark@gmail.com>
+X-Mailer: git-send-email 2.48.1
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 07/16] libceph: convert timeouts to secs_to_jiffies()
-To: Easwar Hariharan <eahariha@linux.microsoft.com>
-Cc: Frank.Li@nxp.com, James.Bottomley@HansenPartnership.com,
- Julia.Lawall@inria.fr, Shyam-sundar.S-k@amd.com, akpm@linux-foundation.org,
- axboe@kernel.dk, broonie@kernel.org, cassel@kernel.org, cem@kernel.org,
- ceph-devel@vger.kernel.org, clm@fb.com, cocci@inria.fr,
- dick.kennedy@broadcom.com, djwong@kernel.org, dlemoal@kernel.org,
- dongsheng.yang@easystack.cn, dri-devel@lists.freedesktop.org,
- dsterba@suse.com, festevam@gmail.com, hch@lst.de, hdegoede@redhat.com,
- hmh@hmh.eng.br, ibm-acpi-devel@lists.sourceforge.net, idryomov@gmail.com,
- ilpo.jarvinen@linux.intel.com, imx@lists.linux.dev,
- james.smart@broadcom.com, jgg@ziepe.ca, josef@toxicpanda.com,
- kalesh-anakkur.purayil@broadcom.com, kbusch@kernel.org,
- kernel@pengutronix.de, leon@kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-block@vger.kernel.org,
- linux-btrfs@vger.kernel.org, linux-ide@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-nvme@lists.infradead.org,
- linux-pm@vger.kernel.org, linux-rdma@vger.kernel.org,
- linux-scsi@vger.kernel.org, linux-sound@vger.kernel.org,
- linux-spi@vger.kernel.org, linux-xfs@vger.kernel.org,
- martin.petersen@oracle.com, nicolas.palix@imag.fr, ogabbay@kernel.org,
- perex@perex.cz, platform-driver-x86@vger.kernel.org, s.hauer@pengutronix.de,
- sagi@grimberg.me, selvin.xavier@broadcom.com, shawnguo@kernel.org,
- sre@kernel.org, tiwai@suse.com, xiubli@redhat.com, yaron.avizrat@intel.com
-References: <20250225-converge-secs-to-jiffies-part-two-v3-0-a43967e36c88@linux.microsoft.com>
- <20250225-converge-secs-to-jiffies-part-two-v3-7-a43967e36c88@linux.microsoft.com>
-Content-Language: en-US, fr-FR
-From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-In-Reply-To: <20250225-converge-secs-to-jiffies-part-two-v3-7-a43967e36c88@linux.microsoft.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
 
-Le 25/02/2025 à 21:17, Easwar Hariharan a écrit :
-> Commit b35108a51cf7 ("jiffies: Define secs_to_jiffies()") introduced
-> secs_to_jiffies().  As the value here is a multiple of 1000, use
-> secs_to_jiffies() instead of msecs_to_jiffies() to avoid the multiplication
-> 
-> This is converted using scripts/coccinelle/misc/secs_to_jiffies.cocci with
-> the following Coccinelle rules:
-> 
-> @depends on patch@ expression E; @@
-> 
-> -msecs_to_jiffies(E * 1000)
-> +secs_to_jiffies(E)
-> 
-> @depends on patch@ expression E; @@
-> 
-> -msecs_to_jiffies(E * MSEC_PER_SEC)
-> +secs_to_jiffies(E)
-> 
-> While here, remove the no-longer necessary checks for range since there's
-> no multiplication involved.
+Adds support for the Lenovo "Gaming Series" of laptop hardware that use
+WMI interfaces that control various power settings. There are multiple WMI
+interfaces that work in concert to provide getting and setting values as
+well as validation of input. Currently only the "Gamezone", "Other
+Mode", and "LENOVO_CAPABILITY_DATA_01" interfaces are implemented, but
+I attempted to structure the driver so that adding the "Custom Mode",
+"Lighting", and other data block interfaces would be trivial in a later
+patches.
 
-No sure it is correct.
+This driver is distinct from, but should be considered a replacement for
+this patch:
+https://lore.kernel.org/all/20241118100503.14228-1-jonmail@163.com/
 
-Same comment as on patch 06/16, available at [1].
+This driver attempts to standardize the exposed sysfs by mirroring the
+asus-armoury driver currently under review. As such, a lot of
+inspiration has been drawn from that driver.
+https://lore.kernel.org/all/20240930000046.51388-1-luke@ljones.dev/
 
-CJ
+The drivers have been tested by me on the Lenovo Legion Go and Legion Go
+S.
 
-[1]: 
-https://lore.kernel.org/linux-kernel/e53d7586-b278-4338-95a2-fa768d5d8b5e@wanadoo.fr/
+v3:
+- Added notifier chain to Gamezone and Other Mode drivers.
+- Added component framework to lenovo-wmi-other driver with
+  lenovo-wmi-capdata01 acting as a component.
+- Completed all suggestions from v2.
+- Checkpatch produces CHECK complaints about the Other Mode macros
+  reusing some variable names. This don't appear to create the condition
+  it highlights in my testing.
 
-> 
-> Acked-by: Ilya Dryomov <idryomov@gmail.com>
-> Signed-off-by: Easwar Hariharan <eahariha@linux.microsoft.com>
-> ---
->   include/linux/ceph/libceph.h | 12 ++++++------
->   net/ceph/ceph_common.c       | 18 ++++++------------
->   net/ceph/osd_client.c        |  3 +--
->   3 files changed, 13 insertions(+), 20 deletions(-)
-> 
-> diff --git a/include/linux/ceph/libceph.h b/include/linux/ceph/libceph.h
-> index 733e7f93db66a7a29a4a8eba97e9ebf2c49da1f9..5f57128ef0c7d018341c15cc59288aa47edec646 100644
-> --- a/include/linux/ceph/libceph.h
-> +++ b/include/linux/ceph/libceph.h
-> @@ -72,15 +72,15 @@ struct ceph_options {
->   /*
->    * defaults
->    */
-> -#define CEPH_MOUNT_TIMEOUT_DEFAULT	msecs_to_jiffies(60 * 1000)
-> -#define CEPH_OSD_KEEPALIVE_DEFAULT	msecs_to_jiffies(5 * 1000)
-> -#define CEPH_OSD_IDLE_TTL_DEFAULT	msecs_to_jiffies(60 * 1000)
-> +#define CEPH_MOUNT_TIMEOUT_DEFAULT	secs_to_jiffies(60)
-> +#define CEPH_OSD_KEEPALIVE_DEFAULT	secs_to_jiffies(5)
-> +#define CEPH_OSD_IDLE_TTL_DEFAULT	secs_to_jiffies(60)
->   #define CEPH_OSD_REQUEST_TIMEOUT_DEFAULT 0  /* no timeout */
->   #define CEPH_READ_FROM_REPLICA_DEFAULT	0  /* read from primary */
->   
-> -#define CEPH_MONC_HUNT_INTERVAL		msecs_to_jiffies(3 * 1000)
-> -#define CEPH_MONC_PING_INTERVAL		msecs_to_jiffies(10 * 1000)
-> -#define CEPH_MONC_PING_TIMEOUT		msecs_to_jiffies(30 * 1000)
-> +#define CEPH_MONC_HUNT_INTERVAL		secs_to_jiffies(3)
-> +#define CEPH_MONC_PING_INTERVAL		secs_to_jiffies(10)
-> +#define CEPH_MONC_PING_TIMEOUT		secs_to_jiffies(30)
->   #define CEPH_MONC_HUNT_BACKOFF		2
->   #define CEPH_MONC_HUNT_MAX_MULT		10
->   
-> diff --git a/net/ceph/ceph_common.c b/net/ceph/ceph_common.c
-> index 4c6441536d55b6323f4b9d93b5d4837cd4ec880c..c2a2c3bcc4e91a628c99bd1cef1211d54389efa2 100644
-> --- a/net/ceph/ceph_common.c
-> +++ b/net/ceph/ceph_common.c
-> @@ -527,29 +527,23 @@ int ceph_parse_param(struct fs_parameter *param, struct ceph_options *opt,
->   
->   	case Opt_osdkeepalivetimeout:
->   		/* 0 isn't well defined right now, reject it */
-> -		if (result.uint_32 < 1 || result.uint_32 > INT_MAX / 1000)
-> +		if (result.uint_32 < 1)
->   			goto out_of_range;
-> -		opt->osd_keepalive_timeout =
-> -		    msecs_to_jiffies(result.uint_32 * 1000);
-> +		opt->osd_keepalive_timeout = secs_to_jiffies(result.uint_32);
->   		break;
->   	case Opt_osd_idle_ttl:
->   		/* 0 isn't well defined right now, reject it */
-> -		if (result.uint_32 < 1 || result.uint_32 > INT_MAX / 1000)
-> +		if (result.uint_32 < 1)
->   			goto out_of_range;
-> -		opt->osd_idle_ttl = msecs_to_jiffies(result.uint_32 * 1000);
-> +		opt->osd_idle_ttl = secs_to_jiffies(result.uint_32);
->   		break;
->   	case Opt_mount_timeout:
->   		/* 0 is "wait forever" (i.e. infinite timeout) */
-> -		if (result.uint_32 > INT_MAX / 1000)
-> -			goto out_of_range;
-> -		opt->mount_timeout = msecs_to_jiffies(result.uint_32 * 1000);
-> +		opt->mount_timeout = secs_to_jiffies(result.uint_32);
->   		break;
->   	case Opt_osd_request_timeout:
->   		/* 0 is "wait forever" (i.e. infinite timeout) */
-> -		if (result.uint_32 > INT_MAX / 1000)
-> -			goto out_of_range;
-> -		opt->osd_request_timeout =
-> -		    msecs_to_jiffies(result.uint_32 * 1000);
-> +		opt->osd_request_timeout = secs_to_jiffies(result.uint_32);
->   		break;
->   
->   	case Opt_share:
-> diff --git a/net/ceph/osd_client.c b/net/ceph/osd_client.c
-> index b24afec241382b60d775dd12a6561fa23a7eca45..ba61a48b4388c2eceb5b7a299906e7f90191dd5d 100644
-> --- a/net/ceph/osd_client.c
-> +++ b/net/ceph/osd_client.c
-> @@ -4989,8 +4989,7 @@ int ceph_osdc_notify(struct ceph_osd_client *osdc,
->   	linger_submit(lreq);
->   	ret = linger_reg_commit_wait(lreq);
->   	if (!ret)
-> -		ret = linger_notify_finish_wait(lreq,
-> -				 msecs_to_jiffies(2 * timeout * MSEC_PER_SEC));
-> +		ret = linger_notify_finish_wait(lreq, secs_to_jiffies(2 * timeout));
->   	else
->   		dout("lreq %p failed to initiate notify %d\n", lreq, ret);
->   
-> 
+v2:
+https://lore.kernel.org/platform-driver-x86/20250102004854.14874-1-derekjohn.clark@gmail.com/t/#m9682cee65783ff3a9e927f2ad1f55c4cbfc37615
+v1:
+https://lore.kernel.org/platform-driver-x86/CAFqHKTna+kJpHLo5s4Fm1TmHcSSqSTr96JHDm0DJ0dxsZMkixA@mail.gmail.com/T/#t
+
+Suggested-by: Mario Limonciello <superm1@kernel.org>
+Signed-off-by: Derek J. Clark <derekjohn.clark@gmail.com>
+Derek J. Clark (4):
+  platform/x86: Add lenovo-wmi drivers Documentation
+  platform/x86: Add Lenovo Gamezone WMI Driver
+  platform/x86: Add Lenovo Capability Data 01 WMI Driver
+  platform/x86: Add Lenovo Other Mode WMI Driver
+
+ .../wmi/devices/lenovo-wmi-gamezone.rst       | 355 +++++++++++
+ .../wmi/devices/lenovo-wmi-other-method.rst   | 142 +++++
+ MAINTAINERS                                   |  12 +
+ drivers/platform/x86/Kconfig                  |  35 ++
+ drivers/platform/x86/Makefile                 |   4 +
+ drivers/platform/x86/lenovo-wmi-capdata01.c   | 140 +++++
+ drivers/platform/x86/lenovo-wmi-gamezone.c    | 374 ++++++++++++
+ drivers/platform/x86/lenovo-wmi-other.c       | 549 ++++++++++++++++++
+ drivers/platform/x86/lenovo-wmi.c             |  77 +++
+ drivers/platform/x86/lenovo-wmi.h             |  94 +++
+ 10 files changed, 1782 insertions(+)
+ create mode 100644 Documentation/wmi/devices/lenovo-wmi-gamezone.rst
+ create mode 100644 Documentation/wmi/devices/lenovo-wmi-other-method.rst
+ create mode 100644 drivers/platform/x86/lenovo-wmi-capdata01.c
+ create mode 100644 drivers/platform/x86/lenovo-wmi-gamezone.c
+ create mode 100644 drivers/platform/x86/lenovo-wmi-other.c
+ create mode 100644 drivers/platform/x86/lenovo-wmi.c
+ create mode 100644 drivers/platform/x86/lenovo-wmi.h
+
+-- 
+2.48.1
 
