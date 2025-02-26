@@ -1,106 +1,138 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from linux1587.grserver.gr (linux1587.grserver.gr [185.138.42.100])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C7D511E1E19;
-	Wed, 26 Feb 2025 21:47:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 87F5525BAA0;
+	Wed, 26 Feb 2025 22:15:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.138.42.100
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740606462; cv=none; b=LNg5uVT0owsQoHPnTndYyEPxmtXhoig6Yqhkzl5cCH0SYVwEhXamOP7HvRU60DkzkkqbnpnsR5p9wK4I0No8YAQ9l8GunAa5S2jf04ObRhnpl9lzSekkO8PL0eWUD9xYQSN/7I1rGgvk6xDx2ZlrlBCg2p2ruHowrh1nsjebxqw=
+	t=1740608145; cv=none; b=gxFQY9wl26Ui1tg93tD3bzYao7AWaBdSnPogGCp3j/LhbFwIt/BI+kZohNK5j8raFwZKOil4oIVgcZQWWs8KN8jcxnQ10Pw+z0mCZKQbethrSs5OdT1ofX17yJjBMVwTIDx8qMl5sovTXiwStrhfcLAv/Do4ROFV8AxO/e1ZeD0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740606462; c=relaxed/simple;
-	bh=oenYRvg0xo1hqY4TCIz0FMAJohQgmJguqQ7rj5rTx8E=;
-	h=From:To:Subject:Date:Message-ID:MIME-Version; b=Er/rY8hu6I2UgPb0xu8xU5xfEFHQEr3AuROistoP0EbY7L7ZMXs0HTjLRDWCnqKPZvGeMVDl2T/oeobWa4AYVeRCHgFAxljPcdZr+REGLtivrfIiiZtmH+nzC/X0zHeNfCuB/KK+/vJZp86U5ctRT8ku0QR/vJ0d9/BaiFUtVJY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ShtI3Gt2; arc=none smtp.client-ip=198.175.65.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1740608145; c=relaxed/simple;
+	bh=nB+jmAHxPZ3soQmc5wLgDtK8Av2gzHEq4MFA/UQ0nAA=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=cxwLrXLNF1lX/lP00AIuIhdVrtGlNqPgf9hfmhhpeP1sO9a8n6Aabqoi2KzdWuQ+IpVIKf4/OiqvVDwqcz0+jkLYqvaT0xtSXKcBk2OW8/+G2+mOi8retCuXUU2ff2l24aq5PSjb/SwWZP0CJaHZ7oC+TwhKBV7hFI52NGsxx2I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=antheas.dev; spf=pass smtp.mailfrom=antheas.dev; dkim=pass (1024-bit key) header.d=antheas.dev header.i=@antheas.dev header.b=2P7POLzv; arc=none smtp.client-ip=185.138.42.100
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=antheas.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=antheas.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ShtI3Gt2"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1740606461; x=1772142461;
-  h=from:to:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=oenYRvg0xo1hqY4TCIz0FMAJohQgmJguqQ7rj5rTx8E=;
-  b=ShtI3Gt2KAmTO9WLphSWG6o2WoEcJxCN2Qr8acSkksxx6U/KhMiEJr8L
-   k9mBy/8Ttl+82KOqwQHEuekKDKuBXnIKVedz3ivbwCCvwGMcXgHUN2wxh
-   e5LZ3oXm7jsdiMsKIM+/elhyru2ZKizISNTKFFXFM07pKQ2LVzLW9Tgig
-   sYOLPhTIAcDiCt4W3ge/yCy3AJR8/2HgtzyA0cIG6bJe6Ct1SAIuKLxdh
-   f10pLWgwfVlpF5tY4w5jSgd7f/HKcsls6dp5VZ/3tZltXAXuWMHPwmpcu
-   rmq461Nq9r7Zr/vMS/SX7wzjSpmtIG71mmNX4e8zIYAgZ+2Wgf50LH6sx
-   Q==;
-X-CSE-ConnectionGUID: FS6B79ioQFyKavn95eHclA==
-X-CSE-MsgGUID: qEudSXq6Qzqj9QTanZ7abQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11357"; a="51684200"
-X-IronPort-AV: E=Sophos;i="6.13,318,1732608000"; 
-   d="scan'208";a="51684200"
-Received: from orviesa002.jf.intel.com ([10.64.159.142])
-  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Feb 2025 13:47:40 -0800
-X-CSE-ConnectionGUID: ZSlfOwEBROKj1tuQlpSRgw==
-X-CSE-MsgGUID: ybLoDQ6qQFehurQtRlLbtA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.13,318,1732608000"; 
-   d="scan'208";a="147649804"
-Received: from mgoodin-mobl2.amr.corp.intel.com (HELO debox1-desk4.intel.com) ([10.125.108.21])
-  by orviesa002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Feb 2025 13:47:40 -0800
-From: "David E. Box" <david.e.box@linux.intel.com>
-To: david.e.box@linux.intel.com,
-	hdegoede@redhat.com,
-	ilpo.jarvinen@linux.intel.com,
-	platform-driver-x86@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] platform/x86/intel/vsec: Add Diamond Rapids support
-Date: Wed, 26 Feb 2025 13:47:27 -0800
-Message-ID: <20250226214728.1256747-1-david.e.box@linux.intel.com>
-X-Mailer: git-send-email 2.43.0
+	dkim=pass (1024-bit key) header.d=antheas.dev header.i=@antheas.dev header.b="2P7POLzv"
+Received: from mail-lj1-f174.google.com (mail-lj1-f174.google.com [209.85.208.174])
+	by linux1587.grserver.gr (Postfix) with ESMTPSA id 49D992E08410;
+	Thu, 27 Feb 2025 00:15:31 +0200 (EET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=antheas.dev;
+	s=default; t=1740608131;
+	bh=VgIwtkMZ00hXOGNLHlqyEU83xt25hqz8jtzstHZ0Rbo=;
+	h=Received:From:Subject:To;
+	b=2P7POLzvQF3ldZmQNpUlDEFHdn0IgH8qKgCOmnUTM3OVCKMov+Y4ix8k1TuzJyKjF
+	 ejkfIwUpm63e0H48uLRXS7s1dQAeVlAq976pudNSQglUvw/Zg0cfvQQOkmus8pqsGi
+	 L2iqIYJ0imAwPkR4RlhEaJ4ytgCMtfQ6j6kdcBh4=
+Authentication-Results: linux1587.grserver.gr;
+        spf=pass (sender IP is 209.85.208.174) smtp.mailfrom=lkml@antheas.dev smtp.helo=mail-lj1-f174.google.com
+Received-SPF: pass (linux1587.grserver.gr: connection is authenticated)
+Received: by mail-lj1-f174.google.com with SMTP id
+ 38308e7fff4ca-30613802a6bso3677941fa.1;
+        Wed, 26 Feb 2025 14:15:31 -0800 (PST)
+X-Forwarded-Encrypted: i=1;
+ AJvYcCWC/VeId7UW2g0rq3aKHg0Dbwo8w+1i8hvXGSCgLaINgtUizuL7yCaoDcHWuU6ikhzWEQuBSJnIIUzqpU3vQ4l30NL0jw==@vger.kernel.org,
+ AJvYcCXFb1Z5hxbFf0PJNBvvHd4C7UUQIxBPrQ0faAF1f7vLMqAtDC7qcidA6ApVWl/BslS8b0ZIWUKIGmAS@vger.kernel.org,
+ AJvYcCXh1Ug0b9tAHmHAUuDmyXarW+ebGELeyH+S7D0Lp2JXOYLJE2KUMP865YBwBejckuwaBOUHi7BT7uSTPO+F@vger.kernel.org
+X-Gm-Message-State: AOJu0YyqtzEVj4qHg4EZvAUrxz6WgGkrTa0IqzNlM8kFnrdnnvLA5ze7
+	NyzMj3S7ikiv1cPUlZW21vBw8McAoij+XklJxFhWeRXORcejmWA/Qio4X2rGB7TDKqw7YEaJu/U
+	xAcKJXzmfI7eq44RH37qwbABImUU=
+X-Google-Smtp-Source: 
+ AGHT+IFg4wyGK6VF2wjPjpIZ8OKnRzWWaJZk6o/Gjb7Is6KTQDwhUqgOfMyd55qPLWosSWcc5Up9ckS22GBNFVqu8cQ=
+X-Received: by 2002:a2e:968b:0:b0:304:68e5:eabd with SMTP id
+ 38308e7fff4ca-30a80c0f0admr41386401fa.3.1740608130090; Wed, 26 Feb 2025
+ 14:15:30 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20250224195059.10185-1-lkml@antheas.dev>
+ <1c0c988b-8fe6-4857-9556-6ac6880b76ff@app.fastmail.com>
+ <633bbd2d5469db5595f66c9eb6ea3172ab7c56b7.camel@ljones.dev>
+ <CAGwozwGmDHMRbURuCvWsk8VTJEf-eFXTh+mamB1sKaHX5DO8WA@mail.gmail.com>
+ <9fa91732-3085-4e79-9a8f-b38263ee7d08@gmx.de>
+ <CAGwozwHZCLaVD8iRgRxvQNqw3v+T9J+omMF+JoNe1r=+S1-OsA@mail.gmail.com>
+ <CAGwozwEEbsLOJROm7rW-240Zoqh3K_JOtZE_NL8AnLy1eChR6A@mail.gmail.com>
+ <CAJZ5v0jpSN_Tq6D3OrRj5KDuXwqVuzcwyNXwEuL90fr=juH48g@mail.gmail.com>
+ <CAGwozwHAKbR4y9cW8H0nmESS7yv6RrXtgcZyEdz1Wy2e8tAdqQ@mail.gmail.com>
+ <CAJZ5v0ihavOHCzfqMc7nd7HUaxYta7-vBBTo6WoJ3gDduZ6iRA@mail.gmail.com>
+In-Reply-To: 
+ <CAJZ5v0ihavOHCzfqMc7nd7HUaxYta7-vBBTo6WoJ3gDduZ6iRA@mail.gmail.com>
+From: Antheas Kapenekakis <lkml@antheas.dev>
+Date: Wed, 26 Feb 2025 23:15:16 +0100
+X-Gmail-Original-Message-ID: 
+ <CAGwozwEkGDfhUoCSM6eA-1QN3-pCixT-YVPBNY4bLUZYxvff8Q@mail.gmail.com>
+X-Gm-Features: AQ5f1JqPcnpjoEwypmX0Ot_L-bCpE2CHv_Ze7HXHX5i7ZuRYsRKVxaYGbPY5yHs
+Message-ID: 
+ <CAGwozwEkGDfhUoCSM6eA-1QN3-pCixT-YVPBNY4bLUZYxvff8Q@mail.gmail.com>
+Subject: Re: [PATCH 0/3] ACPI: platform_profile: fix legacy sysfs with
+ multiple handlers
+To: "Rafael J. Wysocki" <rafael@kernel.org>
+Cc: Armin Wolf <W_Armin@gmx.de>, Luke Jones <luke@ljones.dev>,
+	Mark Pearson <mpearson-lenovo@squebb.ca>,
+	"Limonciello, Mario" <mario.limonciello@amd.com>,
+	=?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	Len Brown <lenb@kernel.org>,
+ "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>,
+	linux-kernel@vger.kernel.org,
+	"platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>,
+ Hans de Goede <hdegoede@redhat.com>,
+	me@kylegospodneti.ch
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-PPP-Message-ID: 
+ <174060813166.13020.1806907721096684722@linux1587.grserver.gr>
+X-PPP-Vhost: antheas.dev
+X-Virus-Scanned: clamav-milter 0.103.11 at linux1587.grserver.gr
+X-Virus-Status: Clean
 
-Add PCI ID for the Diamond Rapids Platforms
+On Wed, 26 Feb 2025 at 21:04, Rafael J. Wysocki <rafael@kernel.org> wrote:
+>
+> Top-posting not welcome.
 
-Signed-off-by: David E. Box <david.e.box@linux.intel.com>
----
- drivers/platform/x86/intel/vsec.c | 7 +++++++
- 1 file changed, 7 insertions(+)
+?
 
-diff --git a/drivers/platform/x86/intel/vsec.c b/drivers/platform/x86/intel/vsec.c
-index 77d17decb318..931ad606dee4 100644
---- a/drivers/platform/x86/intel/vsec.c
-+++ b/drivers/platform/x86/intel/vsec.c
-@@ -695,6 +695,11 @@ static const struct intel_vsec_platform_info oobmsm_info = {
- 	.caps = VSEC_CAP_TELEMETRY | VSEC_CAP_SDSI | VSEC_CAP_TPMI,
- };
- 
-+/* DMR OOBMSM info */
-+static const struct intel_vsec_platform_info dmr_oobmsm_info = {
-+	.caps = VSEC_CAP_TELEMETRY | VSEC_CAP_TPMI,
-+};
-+
- /* TGL info */
- static const struct intel_vsec_platform_info tgl_info = {
- 	.caps = VSEC_CAP_TELEMETRY,
-@@ -711,6 +716,7 @@ static const struct intel_vsec_platform_info lnl_info = {
- #define PCI_DEVICE_ID_INTEL_VSEC_MTL_M		0x7d0d
- #define PCI_DEVICE_ID_INTEL_VSEC_MTL_S		0xad0d
- #define PCI_DEVICE_ID_INTEL_VSEC_OOBMSM		0x09a7
-+#define PCI_DEVICE_ID_INTEL_VSEC_OOBMSM_DMR	0x09a1
- #define PCI_DEVICE_ID_INTEL_VSEC_RPL		0xa77d
- #define PCI_DEVICE_ID_INTEL_VSEC_TGL		0x9a0d
- #define PCI_DEVICE_ID_INTEL_VSEC_LNL_M		0x647d
-@@ -721,6 +727,7 @@ static const struct pci_device_id intel_vsec_pci_ids[] = {
- 	{ PCI_DEVICE_DATA(INTEL, VSEC_MTL_M, &mtl_info) },
- 	{ PCI_DEVICE_DATA(INTEL, VSEC_MTL_S, &mtl_info) },
- 	{ PCI_DEVICE_DATA(INTEL, VSEC_OOBMSM, &oobmsm_info) },
-+	{ PCI_DEVICE_DATA(INTEL, VSEC_OOBMSM_DMR, &dmr_oobmsm_info) },
- 	{ PCI_DEVICE_DATA(INTEL, VSEC_RPL, &tgl_info) },
- 	{ PCI_DEVICE_DATA(INTEL, VSEC_TGL, &tgl_info) },
- 	{ PCI_DEVICE_DATA(INTEL, VSEC_LNL_M, &lnl_info) },
+> On Wed, Feb 26, 2025 at 8:52=E2=80=AFPM Antheas Kapenekakis <lkml@antheas=
+.dev> wrote:
+> > >
+> > > What about adding "quiet" as a "hidden choice" to amd-pmf such that i=
+t
+> > > would allow the test_bit(*bit, handler->choices) check in
+> > > _store_class_profile() to pass, but it would not cause this "choice"
+> > > to become visible in the new I/F (or when amd-pmf becomes the only
+> > > platform-profile driver) and it would be aliased to "low-power"
+> > > internally?
+> >
+> > This is what this patch series essentially does. It makes amd-pmf
+> > accept all choices but only show its own in its own handler and when
+> > it is the only option
+>
+> No, it does more than this.
 
-base-commit: 2014c95afecee3e76ca4a56956a936e23283f05b
--- 
-2.43.0
+I would say functionality-wise no. The patch could be minified further.
 
+>  For instance, it is not necessary to do
+> anything about PLATFORM_PROFILE_BALANCED_PERFORMANCE in it.
+
+I do not see a difference between QUIET and BALANCED_PERFORMANCE, any
+driver occluding either causes the same issue. Severity is debatably
+lower on BP though.
+
+> The structure of it is questionable either.  It really should be two
+> patches, one modifying the ACPI platform-profile driver and the other
+> changing amd-pmf on top of this.
+
+Ack. I can spin it up as 2 patches.
+
+> Moreover, I'm not entirely convinced that the "secondary" driver
+> concept is needed to address the problem at hand.
+
+Any suggestions on that front would be welcome. This is just the way I
+came up with doing it.
+
+Best,
+Antheas
