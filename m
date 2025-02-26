@@ -1,95 +1,107 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A30D62755E3;
-	Wed, 26 Feb 2025 20:04:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1552827561C;
+	Wed, 26 Feb 2025 20:38:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740600246; cv=none; b=bL1hg46uO72ChM+WVF4Xw19N4I2tNNlM/Ulj/ncPhKHJJWIQsYclm8r6rKWvjycfizDTjpun1REio0uX7p0h3N80xfjetQRbmdLfCHbQt3L2lhrnn1+xicCUzC6GVKT+J+qoQDDwCc0l0g1kxlwKH2a0MDwjUFwn8gHcIHZseIg=
+	t=1740602334; cv=none; b=WQ4PmwmEnNIRTGDpcRIBQXd7wchdvHqpnXQJKsJBoFIxAJuz1qAd8tFYa0SJakHfdyIaBacXEo4G19eyT/sUjw0vSn3xf0Ypxg4beIUkVACZQZ4JS9mwNVpth8ciyTcMJOE1FLjneSPooaYdXb7clMXOYtPFJNpbm5PLFpV4PsQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740600246; c=relaxed/simple;
-	bh=TEzuRaG/DddpK/PHwUH8U2dSWp8EgG9o2fX0TJTsrYY=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=BzxXcsv+YYK9/m7KdS1R0QgQn2SN4aE8E+oqlBkWmVUFnklRUgA9Ru+4bLOIMrd9dExsdJkii65wgqdCeozWf1bEocd/C4Q5gHANxO1mRp04lsNuJuV/0ewjc4pUrnM6+XbJZmOgykALt+5ilvjZsZ9WXTTLzY2yWAiYwHAdxHk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=aEE76be7; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1740602334; c=relaxed/simple;
+	bh=7XYXLxmDs/g+GFsdMP00ShC9As4ZJdRFjOnafekKWK4=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=WgKiS3Iqan7ZZIsHFJI/HVGDUAWTs2KgNl4AJzVxc3fZwliMwyIOG7gEG8w8heSViu3Y9XlnSJztXB/IxcrsFZXY/wksy8RcAFA36vzq5g9lu+IKYEJMD1c6HhC9jI4k1cAeQvtMlv02GxEdrcPpMcsEba8BjgbzgzzGB3qyAv8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=fV8iNAC7; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="aEE76be7"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 23ED8C4CEED;
-	Wed, 26 Feb 2025 20:04:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1740600246;
-	bh=TEzuRaG/DddpK/PHwUH8U2dSWp8EgG9o2fX0TJTsrYY=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=aEE76be78Tibfhj5ci/hKGs4cr160aeVv3GfxjB3V4BkxnosKIN1erpbvc6gFnzCK
-	 4AUWH6W98DJSGyBkg1OJArSerHeLcb1Un99mpbwmbNbtr53Yorw0mbGsir9HT4nDSD
-	 DnB/PISnpoxUXmfUvyCorTMSaiWMnI8OVJyoy/BRImcoqCSniCerKuFo2AStEhgja8
-	 yd1M2lbNkJTb9JqPDe17dL6cZfIsPe1Q5ETUo32r+Y3G/p3mHivtSR7RFC+YbFsnO9
-	 jIettVdwiuXE24i/0yIR7hHbi8av+j9rvsI/a6qiRCC+5utkpEgEJVsAy7IL9fhMlT
-	 YQKeYbMoXbQEA==
-Received: by mail-oa1-f44.google.com with SMTP id 586e51a60fabf-2b2b6019a74so127229fac.0;
-        Wed, 26 Feb 2025 12:04:06 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCVqtUtB4XyKbx+uVJW3iglfWVr1MvUq91AQfd2l5jECot5b7cerLtyVC4Xum+CKxfA1nWhJhMoujUP7@vger.kernel.org, AJvYcCWVkULl5Wf2SN7STHh2IVJGia9WsYX1UfXrY/1WLb8cjYyw9rSfTdqisBX1oKH+gO+Q5fI1cnClXWhl1a2O@vger.kernel.org, AJvYcCWl6ve5uyKf91HClauzQ5XHTz9DqPVk82Y+fxggZ/ae/6IkuPyPmpgy7ZKZ+fP6GTCNES90af7NwNhpEXPWLZQKHlNTwg==@vger.kernel.org
-X-Gm-Message-State: AOJu0YyNTCJo17af/lVRq/6ESYDU/iGPHfcp8+gG77hJfKBr1/gZn18p
-	cNpdR4NizgbfxacByo5p3mAkuK6n9Uc304j6Uwp1ZejsmTVq6CHSoBLrXbCDbaK8hUkr5Vu/YOn
-	1a86ZEycZ/NAZwQWiP6jiS7cWKY8=
-X-Google-Smtp-Source: AGHT+IEY2rezCj+Pbf56cexfs6JUuar/OFfeZ7bjGQQUMHfNj2PeunEsDNmFvFqnpJMAQZke7m6gTetAPmzawe0BW6w=
-X-Received: by 2002:a05:6870:4e08:b0:296:9c08:51a3 with SMTP id
- 586e51a60fabf-2c13083d874mr2859275fac.39.1740600245330; Wed, 26 Feb 2025
- 12:04:05 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="fV8iNAC7"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A6862C4CED6;
+	Wed, 26 Feb 2025 20:38:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linux-foundation.org;
+	s=korg; t=1740602333;
+	bh=7XYXLxmDs/g+GFsdMP00ShC9As4ZJdRFjOnafekKWK4=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=fV8iNAC7l4sOXlbbBPxr62ebH5w2CCdPAcSqIvutoYztu5oPQJIO+VleFuSaNJwgu
+	 4XgUTLEITbZ/EXzbMYjOUaYvhSzh8lkiZR+OX0Og6mdEO8tbUqzELkCgiiGXTD8w+8
+	 VA5I1aWrxf8HjtmXFunV8nM5CekAUj0+LkOLORow=
+Date: Wed, 26 Feb 2025 12:38:51 -0800
+From: Andrew Morton <akpm@linux-foundation.org>
+To: Mark Brown <broonie@kernel.org>
+Cc: Easwar Hariharan <eahariha@linux.microsoft.com>, Yaron Avizrat
+ <yaron.avizrat@intel.com>, Oded Gabbay <ogabbay@kernel.org>, Julia Lawall
+ <Julia.Lawall@inria.fr>, Nicolas Palix <nicolas.palix@imag.fr>, James Smart
+ <james.smart@broadcom.com>, Dick Kennedy <dick.kennedy@broadcom.com>,
+ "James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>,
+ "Martin K. Petersen" <martin.petersen@oracle.com>, Jaroslav Kysela
+ <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, Chris Mason <clm@fb.com>,
+ Josef Bacik <josef@toxicpanda.com>, David Sterba <dsterba@suse.com>, Ilya
+ Dryomov <idryomov@gmail.com>, Dongsheng Yang <dongsheng.yang@easystack.cn>,
+ Jens Axboe <axboe@kernel.dk>, Xiubo Li <xiubli@redhat.com>, Damien Le Moal
+ <dlemoal@kernel.org>, Niklas Cassel <cassel@kernel.org>, Carlos Maiolino
+ <cem@kernel.org>, "Darrick J. Wong" <djwong@kernel.org>, Sebastian Reichel
+ <sre@kernel.org>, Keith Busch <kbusch@kernel.org>, Christoph Hellwig
+ <hch@lst.de>, Sagi Grimberg <sagi@grimberg.me>, Frank Li
+ <Frank.Li@nxp.com>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer
+ <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>,
+ Fabio Estevam <festevam@gmail.com>, Shyam Sundar S K
+ <Shyam-sundar.S-k@amd.com>, Hans de Goede <hdegoede@redhat.com>, Ilpo
+ =?ISO-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>, Henrique de
+ Moraes Holschuh <hmh@hmh.eng.br>, Selvin Xavier
+ <selvin.xavier@broadcom.com>, Kalesh AP
+ <kalesh-anakkur.purayil@broadcom.com>, Jason Gunthorpe <jgg@ziepe.ca>, Leon
+ Romanovsky <leon@kernel.org>, cocci@inria.fr, linux-kernel@vger.kernel.org,
+ linux-scsi@vger.kernel.org, dri-devel@lists.freedesktop.org,
+ linux-sound@vger.kernel.org, linux-btrfs@vger.kernel.org,
+ ceph-devel@vger.kernel.org, linux-block@vger.kernel.org,
+ linux-ide@vger.kernel.org, linux-xfs@vger.kernel.org,
+ linux-pm@vger.kernel.org, linux-nvme@lists.infradead.org,
+ linux-spi@vger.kernel.org, imx@lists.linux.dev,
+ linux-arm-kernel@lists.infradead.org, platform-driver-x86@vger.kernel.org,
+ ibm-acpi-devel@lists.sourceforge.net, linux-rdma@vger.kernel.org, Takashi
+ Iwai <tiwai@suse.de>, Carlos Maiolino <cmaiolino@redhat.com>
+Subject: Re: [PATCH v3 00/16] Converge on using secs_to_jiffies() part two
+Message-Id: <20250226123851.a50e727d0a1bfe639ece4a72@linux-foundation.org>
+In-Reply-To: <79b24031-5776-4eb3-960b-32b0530647fb@sirena.org.uk>
+References: <20250225-converge-secs-to-jiffies-part-two-v3-0-a43967e36c88@linux.microsoft.com>
+	<79b24031-5776-4eb3-960b-32b0530647fb@sirena.org.uk>
+X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <20250224195059.10185-1-lkml@antheas.dev> <1c0c988b-8fe6-4857-9556-6ac6880b76ff@app.fastmail.com>
- <633bbd2d5469db5595f66c9eb6ea3172ab7c56b7.camel@ljones.dev>
- <CAGwozwGmDHMRbURuCvWsk8VTJEf-eFXTh+mamB1sKaHX5DO8WA@mail.gmail.com>
- <9fa91732-3085-4e79-9a8f-b38263ee7d08@gmx.de> <CAGwozwHZCLaVD8iRgRxvQNqw3v+T9J+omMF+JoNe1r=+S1-OsA@mail.gmail.com>
- <CAGwozwEEbsLOJROm7rW-240Zoqh3K_JOtZE_NL8AnLy1eChR6A@mail.gmail.com>
- <CAJZ5v0jpSN_Tq6D3OrRj5KDuXwqVuzcwyNXwEuL90fr=juH48g@mail.gmail.com> <CAGwozwHAKbR4y9cW8H0nmESS7yv6RrXtgcZyEdz1Wy2e8tAdqQ@mail.gmail.com>
-In-Reply-To: <CAGwozwHAKbR4y9cW8H0nmESS7yv6RrXtgcZyEdz1Wy2e8tAdqQ@mail.gmail.com>
-From: "Rafael J. Wysocki" <rafael@kernel.org>
-Date: Wed, 26 Feb 2025 21:03:53 +0100
-X-Gmail-Original-Message-ID: <CAJZ5v0ihavOHCzfqMc7nd7HUaxYta7-vBBTo6WoJ3gDduZ6iRA@mail.gmail.com>
-X-Gm-Features: AQ5f1JqeNmjFzwNh05J_-uJo8wYCv8v7712qge6zXzFr_hwhPrTT_JCTCea2b8I
-Message-ID: <CAJZ5v0ihavOHCzfqMc7nd7HUaxYta7-vBBTo6WoJ3gDduZ6iRA@mail.gmail.com>
-Subject: Re: [PATCH 0/3] ACPI: platform_profile: fix legacy sysfs with
- multiple handlers
-To: Antheas Kapenekakis <lkml@antheas.dev>
-Cc: "Rafael J. Wysocki" <rafael@kernel.org>, Armin Wolf <W_Armin@gmx.de>, Luke Jones <luke@ljones.dev>, 
-	Mark Pearson <mpearson-lenovo@squebb.ca>, 
-	"Limonciello, Mario" <mario.limonciello@amd.com>, 
-	=?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, 
-	Len Brown <lenb@kernel.org>, "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>, 
-	linux-kernel@vger.kernel.org, 
-	"platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>, Hans de Goede <hdegoede@redhat.com>, 
-	me@kylegospodneti.ch
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-Top-posting not welcome.
+On Wed, 26 Feb 2025 11:29:53 +0000 Mark Brown <broonie@kernel.org> wrote:
 
-On Wed, Feb 26, 2025 at 8:52=E2=80=AFPM Antheas Kapenekakis <lkml@antheas.d=
-ev> wrote:
-> >
-> > What about adding "quiet" as a "hidden choice" to amd-pmf such that it
-> > would allow the test_bit(*bit, handler->choices) check in
-> > _store_class_profile() to pass, but it would not cause this "choice"
-> > to become visible in the new I/F (or when amd-pmf becomes the only
-> > platform-profile driver) and it would be aliased to "low-power"
-> > internally?
->
-> This is what this patch series essentially does. It makes amd-pmf
-> accept all choices but only show its own in its own handler and when
-> it is the only option
+> On Tue, Feb 25, 2025 at 08:17:14PM +0000, Easwar Hariharan wrote:
+> > This is the second series (part 1*) that converts users of msecs_to_jiffies() that
+> > either use the multiply pattern of either of:
+> > - msecs_to_jiffies(N*1000) or
+> > - msecs_to_jiffies(N*MSEC_PER_SEC)
+> > 
+> > where N is a constant or an expression, to avoid the multiplication.
+> 
+> Please don't combine patches for multiple subsystems into a single
+> series if there's no dependencies between them, it just creates
+> confusion about how things get merged, problems for tooling and makes
+> everything more noisy.  It's best to split things up per subsystem in
+> that case.
 
-No, it does more than this.  For instance, it is not necessary to do
-anything about PLATFORM_PROFILE_BALANCED_PERFORMANCE in it.
+I asked for this.  I'll merge everything, spend a few weeks gathering
+up maintainer acks.  Anything which a subsystem maintainer merges will
+be reported by Stephen and I'll drop that particular patch.
 
-The structure of it is questionable either.  It really should be two
-patches, one modifying the ACPI platform-profile driver and the other
-changing amd-pmf on top of this.
+This way, nothing gets lost.  I take this approach often and it works.
 
-Moreover, I'm not entirely convinced that the "secondary" driver
-concept is needed to address the problem at hand.
+If these were sent as a bunch of individual patches then it would be up
+to the sender to keep track of what has been merged and what hasn't. 
+That person will be resending some stragglers many times.  Until they
+give up and some patches get permanently lost.
+
+Scale all that across many senders and the whole process becomes costly
+and unreliable.  Whereas centralizing it on akpm is more efficient,
+more reliable, more scalable, lower latency and less frustrating for
+senders.
+
