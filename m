@@ -1,107 +1,106 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1552827561C;
-	Wed, 26 Feb 2025 20:38:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C7D511E1E19;
+	Wed, 26 Feb 2025 21:47:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740602334; cv=none; b=WQ4PmwmEnNIRTGDpcRIBQXd7wchdvHqpnXQJKsJBoFIxAJuz1qAd8tFYa0SJakHfdyIaBacXEo4G19eyT/sUjw0vSn3xf0Ypxg4beIUkVACZQZ4JS9mwNVpth8ciyTcMJOE1FLjneSPooaYdXb7clMXOYtPFJNpbm5PLFpV4PsQ=
+	t=1740606462; cv=none; b=LNg5uVT0owsQoHPnTndYyEPxmtXhoig6Yqhkzl5cCH0SYVwEhXamOP7HvRU60DkzkkqbnpnsR5p9wK4I0No8YAQ9l8GunAa5S2jf04ObRhnpl9lzSekkO8PL0eWUD9xYQSN/7I1rGgvk6xDx2ZlrlBCg2p2ruHowrh1nsjebxqw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740602334; c=relaxed/simple;
-	bh=7XYXLxmDs/g+GFsdMP00ShC9As4ZJdRFjOnafekKWK4=;
-	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=WgKiS3Iqan7ZZIsHFJI/HVGDUAWTs2KgNl4AJzVxc3fZwliMwyIOG7gEG8w8heSViu3Y9XlnSJztXB/IxcrsFZXY/wksy8RcAFA36vzq5g9lu+IKYEJMD1c6HhC9jI4k1cAeQvtMlv02GxEdrcPpMcsEba8BjgbzgzzGB3qyAv8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=fV8iNAC7; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1740606462; c=relaxed/simple;
+	bh=oenYRvg0xo1hqY4TCIz0FMAJohQgmJguqQ7rj5rTx8E=;
+	h=From:To:Subject:Date:Message-ID:MIME-Version; b=Er/rY8hu6I2UgPb0xu8xU5xfEFHQEr3AuROistoP0EbY7L7ZMXs0HTjLRDWCnqKPZvGeMVDl2T/oeobWa4AYVeRCHgFAxljPcdZr+REGLtivrfIiiZtmH+nzC/X0zHeNfCuB/KK+/vJZp86U5ctRT8ku0QR/vJ0d9/BaiFUtVJY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ShtI3Gt2; arc=none smtp.client-ip=198.175.65.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="fV8iNAC7"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A6862C4CED6;
-	Wed, 26 Feb 2025 20:38:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linux-foundation.org;
-	s=korg; t=1740602333;
-	bh=7XYXLxmDs/g+GFsdMP00ShC9As4ZJdRFjOnafekKWK4=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=fV8iNAC7l4sOXlbbBPxr62ebH5w2CCdPAcSqIvutoYztu5oPQJIO+VleFuSaNJwgu
-	 4XgUTLEITbZ/EXzbMYjOUaYvhSzh8lkiZR+OX0Og6mdEO8tbUqzELkCgiiGXTD8w+8
-	 VA5I1aWrxf8HjtmXFunV8nM5CekAUj0+LkOLORow=
-Date: Wed, 26 Feb 2025 12:38:51 -0800
-From: Andrew Morton <akpm@linux-foundation.org>
-To: Mark Brown <broonie@kernel.org>
-Cc: Easwar Hariharan <eahariha@linux.microsoft.com>, Yaron Avizrat
- <yaron.avizrat@intel.com>, Oded Gabbay <ogabbay@kernel.org>, Julia Lawall
- <Julia.Lawall@inria.fr>, Nicolas Palix <nicolas.palix@imag.fr>, James Smart
- <james.smart@broadcom.com>, Dick Kennedy <dick.kennedy@broadcom.com>,
- "James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>,
- "Martin K. Petersen" <martin.petersen@oracle.com>, Jaroslav Kysela
- <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, Chris Mason <clm@fb.com>,
- Josef Bacik <josef@toxicpanda.com>, David Sterba <dsterba@suse.com>, Ilya
- Dryomov <idryomov@gmail.com>, Dongsheng Yang <dongsheng.yang@easystack.cn>,
- Jens Axboe <axboe@kernel.dk>, Xiubo Li <xiubli@redhat.com>, Damien Le Moal
- <dlemoal@kernel.org>, Niklas Cassel <cassel@kernel.org>, Carlos Maiolino
- <cem@kernel.org>, "Darrick J. Wong" <djwong@kernel.org>, Sebastian Reichel
- <sre@kernel.org>, Keith Busch <kbusch@kernel.org>, Christoph Hellwig
- <hch@lst.de>, Sagi Grimberg <sagi@grimberg.me>, Frank Li
- <Frank.Li@nxp.com>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer
- <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>,
- Fabio Estevam <festevam@gmail.com>, Shyam Sundar S K
- <Shyam-sundar.S-k@amd.com>, Hans de Goede <hdegoede@redhat.com>, Ilpo
- =?ISO-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>, Henrique de
- Moraes Holschuh <hmh@hmh.eng.br>, Selvin Xavier
- <selvin.xavier@broadcom.com>, Kalesh AP
- <kalesh-anakkur.purayil@broadcom.com>, Jason Gunthorpe <jgg@ziepe.ca>, Leon
- Romanovsky <leon@kernel.org>, cocci@inria.fr, linux-kernel@vger.kernel.org,
- linux-scsi@vger.kernel.org, dri-devel@lists.freedesktop.org,
- linux-sound@vger.kernel.org, linux-btrfs@vger.kernel.org,
- ceph-devel@vger.kernel.org, linux-block@vger.kernel.org,
- linux-ide@vger.kernel.org, linux-xfs@vger.kernel.org,
- linux-pm@vger.kernel.org, linux-nvme@lists.infradead.org,
- linux-spi@vger.kernel.org, imx@lists.linux.dev,
- linux-arm-kernel@lists.infradead.org, platform-driver-x86@vger.kernel.org,
- ibm-acpi-devel@lists.sourceforge.net, linux-rdma@vger.kernel.org, Takashi
- Iwai <tiwai@suse.de>, Carlos Maiolino <cmaiolino@redhat.com>
-Subject: Re: [PATCH v3 00/16] Converge on using secs_to_jiffies() part two
-Message-Id: <20250226123851.a50e727d0a1bfe639ece4a72@linux-foundation.org>
-In-Reply-To: <79b24031-5776-4eb3-960b-32b0530647fb@sirena.org.uk>
-References: <20250225-converge-secs-to-jiffies-part-two-v3-0-a43967e36c88@linux.microsoft.com>
-	<79b24031-5776-4eb3-960b-32b0530647fb@sirena.org.uk>
-X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ShtI3Gt2"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1740606461; x=1772142461;
+  h=from:to:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=oenYRvg0xo1hqY4TCIz0FMAJohQgmJguqQ7rj5rTx8E=;
+  b=ShtI3Gt2KAmTO9WLphSWG6o2WoEcJxCN2Qr8acSkksxx6U/KhMiEJr8L
+   k9mBy/8Ttl+82KOqwQHEuekKDKuBXnIKVedz3ivbwCCvwGMcXgHUN2wxh
+   e5LZ3oXm7jsdiMsKIM+/elhyru2ZKizISNTKFFXFM07pKQ2LVzLW9Tgig
+   sYOLPhTIAcDiCt4W3ge/yCy3AJR8/2HgtzyA0cIG6bJe6Ct1SAIuKLxdh
+   f10pLWgwfVlpF5tY4w5jSgd7f/HKcsls6dp5VZ/3tZltXAXuWMHPwmpcu
+   rmq461Nq9r7Zr/vMS/SX7wzjSpmtIG71mmNX4e8zIYAgZ+2Wgf50LH6sx
+   Q==;
+X-CSE-ConnectionGUID: FS6B79ioQFyKavn95eHclA==
+X-CSE-MsgGUID: qEudSXq6Qzqj9QTanZ7abQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11357"; a="51684200"
+X-IronPort-AV: E=Sophos;i="6.13,318,1732608000"; 
+   d="scan'208";a="51684200"
+Received: from orviesa002.jf.intel.com ([10.64.159.142])
+  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Feb 2025 13:47:40 -0800
+X-CSE-ConnectionGUID: ZSlfOwEBROKj1tuQlpSRgw==
+X-CSE-MsgGUID: ybLoDQ6qQFehurQtRlLbtA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.13,318,1732608000"; 
+   d="scan'208";a="147649804"
+Received: from mgoodin-mobl2.amr.corp.intel.com (HELO debox1-desk4.intel.com) ([10.125.108.21])
+  by orviesa002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Feb 2025 13:47:40 -0800
+From: "David E. Box" <david.e.box@linux.intel.com>
+To: david.e.box@linux.intel.com,
+	hdegoede@redhat.com,
+	ilpo.jarvinen@linux.intel.com,
+	platform-driver-x86@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH] platform/x86/intel/vsec: Add Diamond Rapids support
+Date: Wed, 26 Feb 2025 13:47:27 -0800
+Message-ID: <20250226214728.1256747-1-david.e.box@linux.intel.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-On Wed, 26 Feb 2025 11:29:53 +0000 Mark Brown <broonie@kernel.org> wrote:
+Add PCI ID for the Diamond Rapids Platforms
 
-> On Tue, Feb 25, 2025 at 08:17:14PM +0000, Easwar Hariharan wrote:
-> > This is the second series (part 1*) that converts users of msecs_to_jiffies() that
-> > either use the multiply pattern of either of:
-> > - msecs_to_jiffies(N*1000) or
-> > - msecs_to_jiffies(N*MSEC_PER_SEC)
-> > 
-> > where N is a constant or an expression, to avoid the multiplication.
-> 
-> Please don't combine patches for multiple subsystems into a single
-> series if there's no dependencies between them, it just creates
-> confusion about how things get merged, problems for tooling and makes
-> everything more noisy.  It's best to split things up per subsystem in
-> that case.
+Signed-off-by: David E. Box <david.e.box@linux.intel.com>
+---
+ drivers/platform/x86/intel/vsec.c | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
-I asked for this.  I'll merge everything, spend a few weeks gathering
-up maintainer acks.  Anything which a subsystem maintainer merges will
-be reported by Stephen and I'll drop that particular patch.
+diff --git a/drivers/platform/x86/intel/vsec.c b/drivers/platform/x86/intel/vsec.c
+index 77d17decb318..931ad606dee4 100644
+--- a/drivers/platform/x86/intel/vsec.c
++++ b/drivers/platform/x86/intel/vsec.c
+@@ -695,6 +695,11 @@ static const struct intel_vsec_platform_info oobmsm_info = {
+ 	.caps = VSEC_CAP_TELEMETRY | VSEC_CAP_SDSI | VSEC_CAP_TPMI,
+ };
+ 
++/* DMR OOBMSM info */
++static const struct intel_vsec_platform_info dmr_oobmsm_info = {
++	.caps = VSEC_CAP_TELEMETRY | VSEC_CAP_TPMI,
++};
++
+ /* TGL info */
+ static const struct intel_vsec_platform_info tgl_info = {
+ 	.caps = VSEC_CAP_TELEMETRY,
+@@ -711,6 +716,7 @@ static const struct intel_vsec_platform_info lnl_info = {
+ #define PCI_DEVICE_ID_INTEL_VSEC_MTL_M		0x7d0d
+ #define PCI_DEVICE_ID_INTEL_VSEC_MTL_S		0xad0d
+ #define PCI_DEVICE_ID_INTEL_VSEC_OOBMSM		0x09a7
++#define PCI_DEVICE_ID_INTEL_VSEC_OOBMSM_DMR	0x09a1
+ #define PCI_DEVICE_ID_INTEL_VSEC_RPL		0xa77d
+ #define PCI_DEVICE_ID_INTEL_VSEC_TGL		0x9a0d
+ #define PCI_DEVICE_ID_INTEL_VSEC_LNL_M		0x647d
+@@ -721,6 +727,7 @@ static const struct pci_device_id intel_vsec_pci_ids[] = {
+ 	{ PCI_DEVICE_DATA(INTEL, VSEC_MTL_M, &mtl_info) },
+ 	{ PCI_DEVICE_DATA(INTEL, VSEC_MTL_S, &mtl_info) },
+ 	{ PCI_DEVICE_DATA(INTEL, VSEC_OOBMSM, &oobmsm_info) },
++	{ PCI_DEVICE_DATA(INTEL, VSEC_OOBMSM_DMR, &dmr_oobmsm_info) },
+ 	{ PCI_DEVICE_DATA(INTEL, VSEC_RPL, &tgl_info) },
+ 	{ PCI_DEVICE_DATA(INTEL, VSEC_TGL, &tgl_info) },
+ 	{ PCI_DEVICE_DATA(INTEL, VSEC_LNL_M, &lnl_info) },
 
-This way, nothing gets lost.  I take this approach often and it works.
-
-If these were sent as a bunch of individual patches then it would be up
-to the sender to keep track of what has been merged and what hasn't. 
-That person will be resending some stragglers many times.  Until they
-give up and some patches get permanently lost.
-
-Scale all that across many senders and the whole process becomes costly
-and unreliable.  Whereas centralizing it on akpm is more efficient,
-more reliable, more scalable, lower latency and less frustrating for
-senders.
+base-commit: 2014c95afecee3e76ca4a56956a936e23283f05b
+-- 
+2.43.0
 
