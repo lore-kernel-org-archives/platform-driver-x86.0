@@ -1,242 +1,206 @@
-Received: from mail-ej1-f48.google.com (mail-ej1-f48.google.com [209.85.218.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 022C026B095
-	for <platform-driver-x86@vger.kernel.org>; Wed, 26 Feb 2025 07:29:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F33F51E1DE6;
+	Wed, 26 Feb 2025 07:50:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740554945; cv=none; b=kAIytmZ1yXbF1H50wY4gVgqZua2Mp0A+TAuC/8omZtkGnyN37H160+moZg/+uj548iCAn5nrmB6Ea/WJJeJ9/XUHJSCt3F3WXBC0ZCGiYYJyiQ2FRZ4s25g3y5HB05adqPkXPaDYRdwdu0hF/jE9nBdr9s6ghPHRg1le+IiPv0w=
+	t=1740556208; cv=none; b=IwSbe+F/3sajFyf75ZpdO6byfF6gRtp0mCGA8SFaWIpDR7ZDkya2NJXrahBQuzhK4qtqJbSmKrGBl0KVu4mAM6yzqcziEVkrasuWIwi48mNeXKxF6nHRCjLR6SfCgSrOF9R8IuntRXFrdTYjucEUKzxKml6/P3wobVvAbujoJBA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740554945; c=relaxed/simple;
-	bh=6zbN5jOaaksOEj+lbfcyYF58FVbBR2uEiZ1U9Xm0Q7A=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=V5PQL5qylQWs8bs1quDz9ZD/cDylRITA6C63HKjK0zIgyr1qDK9yWWaVERJsTmuLi4KGGfwfrLXlzdfcphNNFMSb/R29tabAENsi9C/umbGA8tWXIs8bUcXxq7KrX278wTDKEvFzZkZiiZxIzFiKKzQ9Z8PzEg+1s8bE/2KrBsg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=DPnzDNfL; arc=none smtp.client-ip=209.85.218.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+	s=arc-20240116; t=1740556208; c=relaxed/simple;
+	bh=8EIhzlM2gLlOBarT9qw4PuIMvUldVxztIuTe/SPq5U0=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=dElg0U9tLs0t5TFUwMbyK54NcfPHrcBQTx6PV1j1IAjaN048URfuLKn4xW8bEiu24MRwDFwa635xouWvaSgs8inCUBpBpdXU8/LdX7cCWW1ILVqokXNXqkbpgVjbH2Fo3dAHlrwFMKPjuJr5/Bw6CgpBdMdFyn04gw1OOmSmmJc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Snl7o7CH; arc=none smtp.client-ip=192.198.163.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="DPnzDNfL"
-Received: by mail-ej1-f48.google.com with SMTP id a640c23a62f3a-abec925a135so285306866b.0
-        for <platform-driver-x86@vger.kernel.org>; Tue, 25 Feb 2025 23:29:00 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1740554939; x=1741159739; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Jy5UzyKzocsSx5cSXomfjfFL//CTemBkcuebkephmC0=;
-        b=DPnzDNfLR7XZTTtbDw+DuW1lx1StRSsipS09fizN5cRrJGW7tcTHqO5NSG7xYdoHX2
-         o6tzx9bfAow0wJAO8wvFqoZHbs4mPyUkYNJ6p4x4X2XVpneFKc09+/l/Yb7I0rXWNvZf
-         59PADbwRVs1Z2Ld7EANg+3GvujiSVL9sTJFNAfRUgh+fg6qGE9wORi/b9D6BsDA1wVBw
-         nERAEUIHLAgGAaFUFnLURjg/tr13IDXYc82dy/A6pzvk+xS3FFlJBWRs/jLhn1DVfYvd
-         oBGL2zkNNM7XMhVb58ZA7Zr8kDt7ripM7lDqQoP5adxc4THLPzMH4Ps/LDy2jBnSEDqQ
-         ZvWg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740554939; x=1741159739;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Jy5UzyKzocsSx5cSXomfjfFL//CTemBkcuebkephmC0=;
-        b=c0Jiei34zqdQRZq4KdqhWUeZkB+QbHB6Q3/xDZnY9fHjQXaE9MVTqXoiXpl7aKYUto
-         5SA8e4fzN+spq64B7O9Fpwn1YVc9fYyMubqgGUv2ZS638umAaPoszJ8VUy9/Q6oggLLB
-         fPUdXaNa5ntsG8YcSxMbclpEyK8XB2VNmtSIEzOQQdWiOaiutp8Z3Q0Ry1oRoXphq99P
-         Mgbxuuil3D9Y6v0wlVvM+PkAkVplmldZS+9p3eKiHAnLx9C/qAU5RMH+D70ncJ02xoV7
-         st72Cmnny/TIINYaTcAh48IMiFz/ZVgFFJNOx8APXFWNxM7ScFG0wrxSW5jfKijCp0Uy
-         PxZA==
-X-Forwarded-Encrypted: i=1; AJvYcCVWKhjhdfjLVxQ9QHSQI3GAYOxlrytzsufPGzvdw+0ddE9jyDM+nJv7mESDFuassjNNJgB5F/OrnswJ4JD0A14Jv5Ma@vger.kernel.org
-X-Gm-Message-State: AOJu0YyBdfxX7teN0XDs2oX2pYiQ1wLE2A7b7NVKR/lPxouR4hQW0TFy
-	vXaCyIONWRwRiji5ywmgjCNByNoogQQSG48woQmnSgcA1I2y2ZbgobjtlV9YvH+y1AyG9r9v6qC
-	7AVJLvpZ/y1BH5A9ezKjmxmrGRodjwAneRazgbw==
-X-Gm-Gg: ASbGncvKLvRZaNZszjIn3FmeKiMzQukWNApMJO6B7Nesk+InXCfu5f199ebp4UMLARc
-	8MiQQp6LGTtSFwwn1E9J18/dU9O1wGKj6M1Cm+81vN5cYJGPtKdvCPSckSLXbVPAKEKzWM0Q50Y
-	Eulw2yyg==
-X-Google-Smtp-Source: AGHT+IFYP8Tba+z3P6zhrfLVohTtXs/BwRHQBKKRVXu59ZSzqEPbWtjoPmnK2n59Ee5Tugvqu0RIdPnu12lt6iEjWaU=
-X-Received: by 2002:a17:906:18b1:b0:ab6:ed8a:601f with SMTP id
- a640c23a62f3a-abeeed1123amr202024966b.12.1740554939189; Tue, 25 Feb 2025
- 23:28:59 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Snl7o7CH"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1740556206; x=1772092206;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=8EIhzlM2gLlOBarT9qw4PuIMvUldVxztIuTe/SPq5U0=;
+  b=Snl7o7CHq98Ozc3ZrYtwezH8jvDI0A/o6AWyC+s6aj0Y3i0byKiKlDjc
+   wuhoS4DIpzi9hul/JtdM345Z6iR2N7NQlGOg+5CGOZEKQWIl2nZR1AVKF
+   S5PDx7qb5m58izw5gzKQPb80FAxfFnHwI6ZipL47AjjaAYWE7FvX+DmLP
+   DKr4BuW2ubkabWs9qkUYgG4Wsw47J1SWpktm8cZOUkYjic5qIPujAniCr
+   LvlPaOzHMauk5EyLyLKlPtoVWcySzRFKNZbVai4S+9CFmi+s0yVSZYIL3
+   jx6PMDsiMoBFowB3PSiwuGLrGr1V1kq5J/jWo+u5iNj3lNvgQER15m1ZU
+   g==;
+X-CSE-ConnectionGUID: fejwfJYKQge88umUvYDAJQ==
+X-CSE-MsgGUID: rEMmmsFqR2GQAdkRZgEe3w==
+X-IronPort-AV: E=McAfee;i="6700,10204,11356"; a="45304958"
+X-IronPort-AV: E=Sophos;i="6.13,316,1732608000"; 
+   d="scan'208";a="45304958"
+Received: from fmviesa003.fm.intel.com ([10.60.135.143])
+  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Feb 2025 23:49:55 -0800
+X-CSE-ConnectionGUID: YViQm8QORYaoX5S3GrZdIw==
+X-CSE-MsgGUID: NzyRZrwHQuSYgVocsSPURQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
+   d="scan'208";a="120742932"
+Received: from yongliang-ubuntu20-ilbpg12.png.intel.com ([10.88.227.39])
+  by fmviesa003.fm.intel.com with ESMTP; 25 Feb 2025 23:49:48 -0800
+From: Choong Yong Liang <yong.liang.choong@linux.intel.com>
+To: Simon Horman <horms@kernel.org>,
+	Jose Abreu <joabreu@synopsys.com>,
+	Jose Abreu <Jose.Abreu@synopsys.com>,
+	David E Box <david.e.box@linux.intel.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>,
+	Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	"H . Peter Anvin" <hpa@zytor.com>,
+	Rajneesh Bhardwaj <irenic.rajneesh@gmail.com>,
+	David E Box <david.e.box@intel.com>,
+	Andrew Lunn <andrew+netdev@lunn.ch>,
+	"David S . Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>,
+	Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+	Alexandre Torgue <alexandre.torgue@foss.st.com>,
+	Jiawen Wu <jiawenwu@trustnetic.com>,
+	Mengyuan Lou <mengyuanlou@net-swift.com>,
+	Heiner Kallweit <hkallweit1@gmail.com>,
+	Russell King <linux@armlinux.org.uk>,
+	Hans de Goede <hdegoede@redhat.com>,
+	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	Richard Cochran <richardcochran@gmail.com>,
+	Serge Semin <fancer.lancer@gmail.com>
+Cc: x86@kernel.org,
+	linux-kernel@vger.kernel.org,
+	netdev@vger.kernel.org,
+	platform-driver-x86@vger.kernel.org,
+	linux-stm32@st-md-mailman.stormreply.com,
+	linux-arm-kernel@lists.infradead.org
+Subject: [PATCH net-next v8 0/6] Enable SGMII and 2500BASEX interface mode switching for Intel platforms
+Date: Wed, 26 Feb 2025 15:48:31 +0800
+Message-Id: <20250226074837.1679988-1-yong.liang.choong@linux.intel.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250225-converge-secs-to-jiffies-part-two-v3-0-a43967e36c88@linux.microsoft.com>
- <20250225-converge-secs-to-jiffies-part-two-v3-6-a43967e36c88@linux.microsoft.com>
- <e53d7586-b278-4338-95a2-fa768d5d8b5e@wanadoo.fr>
-In-Reply-To: <e53d7586-b278-4338-95a2-fa768d5d8b5e@wanadoo.fr>
-From: Daniel Vacek <neelx@suse.com>
-Date: Wed, 26 Feb 2025 08:28:48 +0100
-X-Gm-Features: AQ5f1JpekOKemtGu2BHsnbGs6fr563e7jHjxxRB5HZ2bESNce9YNZRbPCIKk9Cc
-Message-ID: <CAPjX3Fcr+BoMRgZGbqqgpF+w-sHU+SqGT8QJ3QCp8uvJbnaFsQ@mail.gmail.com>
-Subject: Re: [PATCH v3 06/16] rbd: convert timeouts to secs_to_jiffies()
-To: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-Cc: Easwar Hariharan <eahariha@linux.microsoft.com>, Frank.Li@nxp.com, 
-	James.Bottomley@hansenpartnership.com, Julia.Lawall@inria.fr, 
-	Shyam-sundar.S-k@amd.com, akpm@linux-foundation.org, axboe@kernel.dk, 
-	broonie@kernel.org, cassel@kernel.org, cem@kernel.org, 
-	ceph-devel@vger.kernel.org, clm@fb.com, cocci@inria.fr, 
-	dick.kennedy@broadcom.com, djwong@kernel.org, dlemoal@kernel.org, 
-	dongsheng.yang@easystack.cn, dri-devel@lists.freedesktop.org, 
-	dsterba@suse.com, festevam@gmail.com, hch@lst.de, hdegoede@redhat.com, 
-	hmh@hmh.eng.br, ibm-acpi-devel@lists.sourceforge.net, idryomov@gmail.com, 
-	ilpo.jarvinen@linux.intel.com, imx@lists.linux.dev, james.smart@broadcom.com, 
-	jgg@ziepe.ca, josef@toxicpanda.com, kalesh-anakkur.purayil@broadcom.com, 
-	kbusch@kernel.org, kernel@pengutronix.de, leon@kernel.org, 
-	linux-arm-kernel@lists.infradead.org, linux-block@vger.kernel.org, 
-	linux-btrfs@vger.kernel.org, linux-ide@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-nvme@lists.infradead.org, 
-	linux-pm@vger.kernel.org, linux-rdma@vger.kernel.org, 
-	linux-scsi@vger.kernel.org, linux-sound@vger.kernel.org, 
-	linux-spi@vger.kernel.org, linux-xfs@vger.kernel.org, 
-	martin.petersen@oracle.com, nicolas.palix@imag.fr, ogabbay@kernel.org, 
-	perex@perex.cz, platform-driver-x86@vger.kernel.org, s.hauer@pengutronix.de, 
-	sagi@grimberg.me, selvin.xavier@broadcom.com, shawnguo@kernel.org, 
-	sre@kernel.org, tiwai@suse.com, xiubli@redhat.com, yaron.avizrat@intel.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Tue, 25 Feb 2025 at 22:10, Christophe JAILLET
-<christophe.jaillet@wanadoo.fr> wrote:
->
-> Le 25/02/2025 =C3=A0 21:17, Easwar Hariharan a =C3=A9crit :
-> > Commit b35108a51cf7 ("jiffies: Define secs_to_jiffies()") introduced
-> > secs_to_jiffies().  As the value here is a multiple of 1000, use
-> > secs_to_jiffies() instead of msecs_to_jiffies() to avoid the multiplica=
-tion
-> >
-> > This is converted using scripts/coccinelle/misc/secs_to_jiffies.cocci w=
-ith
-> > the following Coccinelle rules:
-> >
-> > @depends on patch@ expression E; @@
-> >
-> > -msecs_to_jiffies(E * 1000)
-> > +secs_to_jiffies(E)
-> >
-> > @depends on patch@ expression E; @@
-> >
-> > -msecs_to_jiffies(E * MSEC_PER_SEC)
-> > +secs_to_jiffies(E)
-> >
-> > While here, remove the no-longer necessary check for range since there'=
-s
-> > no multiplication involved.
->
-> I'm not sure this is correct.
-> Now you multiply by HZ and things can still overflow.
+During the interface mode change, the 'phylink_major_config' function will
+be triggered in phylink. The modification of the following functions will
+support the switching between SGMII and 2500BASE-X interface modes for
+the Intel platform:
 
-This does not deal with any additional multiplications. If there is an
-overflow, it was already there before to begin with, IMO.
+- xpcs_switch_interface_mode: Re-initiates clause 37 auto-negotiation for
+  the SGMII interface mode to perform auto-negotiation.
+- mac_finish: Configures the SerDes according to the interface mode.
 
-> Hoping I got casting right:
+With the above changes, the code will work as follows during the interface
+mode change. The PCS will reconfigure according to the pcs_neg_mode and the
+selected interface mode. Then, the MAC driver will perform SerDes
+configuration in 'mac_finish' based on the selected interface mode. During
+the SerDes configuration, the selected interface mode will identify TSN
+lane registers from FIA and then send IPC commands to the Power Management
+Controller (PMC) through the PMC driver/API. The PMC will act as a proxy to
+program the PLL registers.
 
-Maybe not exactly? See below...
+Change log:
+v1 -> v2: 
+ - Add static to pmc_lpm_modes declaration
+ - Add cur_link_an_mode to the kernel doc
+ - Combine 2 commits i.e. "stmmac: intel: Separate driver_data of ADL-N
+ from TGL" and "net: stmmac: Add 1G/2.5G auto-negotiation
+ support for ADL-N" into 1 commit.
 
-> #define MSEC_PER_SEC    1000L
-> #define HZ 100
->
->
-> #define secs_to_jiffies(_secs) (unsigned long)((_secs) * HZ)
->
-> static inline unsigned long _msecs_to_jiffies(const unsigned int m)
-> {
->         return (m + (MSEC_PER_SEC / HZ) - 1) / (MSEC_PER_SEC / HZ);
-> }
->
-> int main() {
->
->         int n =3D INT_MAX - 5;
->
->         printf("res  =3D %ld\n", secs_to_jiffies(n));
->         printf("res  =3D %ld\n", _msecs_to_jiffies(1000 * n));
+v2 -> v3:
+ - Create `pmc_ipc.c` file for `intel_pmc_ipc()` function and 
+ allocate the file in `arch/x86/platform/intel/` directory.
+ - Update phylink's AN mode during phy interface change and 
+ not exposing phylink's AN mode into phylib.
+ 
+ v3 -> v4:
+ - Introduce `allow_switch_interface` flag to have all ethtool 
+ link modes that are supported and advertised will be published.
+ - Introduce `mac_get_pcs_neg_mode` function that selects the PCS 
+ negotiation mode according to the interface mode.
+ - Remove pcs-xpcs.c changes and handle pcs during `mac_select_pcs`
+ function
+ - Configure SerDes base on the interface on `mac_finish` function.
+ 
+ v4 -> v5:
+ - remove 'allow_switch_interface' related patches.
+ - remove 'mac_select_pcs' related patches.
+ - add a soft reset according to XPCS datasheet for re-initiate Clause 37
+ auto-negotiation when switching to SGMII interface mode.
 
-I think the format should actually be %lu giving the below results:
+v5 -> v6:
+- Remove 'mac_get_pcs_neg_mode' related patches. 
+  The pcs_neg_mode is properly handled by the
+  'net: add negotiation of in-band capabilities' patch series:
+  https://patchwork.kernel.org/project/netdevbpf/cover/Z08kCwxdkU4n2V6x@shell.armlinux.org.uk/
+- Using act_link_an_mode to determine PHY, as cfg_link_an_mode was not
+  updated for the 2500BASE-X interface mode, caused a failure to link up.
+- Clean up and standardize the interface mode switch for xpcs.
 
-res  =3D 18446744073709551016
-res  =3D 429496130
+v6 -> v7:
+- Remove the "net: phylink: use act_link_an_mode to determine PHY" patch.
+- Use pl->link_interface in phylink_expects_phy().
+- Remove priv->plat->serdes_powerup in intel_tsn_lane_is_available() as it is
+  always true.
+- Refactor the code in intel_config_serdes().
+- Rename intel_config_serdes() to intel_mac_finish() with an AN mode parameter.
+- Define the magic number as "max_fia_regs".
+- Store the pointer and the number of elements in the platform info structure.
+- Move the arrays to the C file.
 
-Which is still wrong nonetheless. But here, *both* results are wrong
-as the expected output should be 214748364200 which you'll get with
-the correct helper/macro.
+v7 -> v8:
+- Move xpcs_switch_interface_mode() into xpcs_pre_config().
+- Move the "stmmac: intel: interface switching support for EHL platform" commit
+  into "stmmac: intel: configure SerDes according to the interface mode" to
+  resolve the "defined but not used" error.
+- Changes for the "arch: x86: add IPC mailbox accessor function and add SoC register access" commit:
+    - Rephrase the second bullet in the patch description.
+    - Remove 'config INTEL_PMC_IPC' from Kconfig, as discussed.
+    - Remove the authors from intel_pmc_ipc.h.
+    - Define VALID_IPC_RESPONSE for package.count.
+    - Update the copyright year to 2025.
+    - Create struct pmc_ipc_rbuf.
+    - Update the function description for intel_pmc_ipc().
 
-But note another thing, the 1000 * (INT_MAX - 5) already overflows
-even before calling _msecs_to_jiffies(). See?
 
-Now, you'll get that mentioned correct result with:
+v1: https://patchwork.kernel.org/project/netdevbpf/cover/20230622041905.629430-1-yong.liang.choong@linux.intel.com/
+v2: https://patchwork.kernel.org/project/netdevbpf/cover/20230804084527.2082302-1-yong.liang.choong@linux.intel.com/
+v3: https://patchwork.kernel.org/project/netdevbpf/cover/20230921121946.3025771-1-yong.liang.choong@linux.intel.com/
+v4: https://patchwork.kernel.org/project/netdevbpf/cover/20240129130253.1400707-1-yong.liang.choong@linux.intel.com/
+v5: https://patchwork.kernel.org/project/netdevbpf/cover/20240215030500.3067426-1-yong.liang.choong@linux.intel.com/
+v6: https://patchwork.kernel.org/project/netdevbpf/cover/20250204061020.1199124-1-yong.liang.choong@linux.intel.com/
+v7: https://patchwork.kernel.org/project/netdevbpf/cover/20250206131859.2960543-1-yong.liang.choong@linux.intel.com/
 
-#define secs_to_jiffies(_secs) ((unsigned long)(_secs) * HZ)
+Choong Yong Liang (5):
+  net: phylink: use pl->link_interface in phylink_expects_phy()
+  net: pcs: xpcs: re-initiate clause 37 Auto-negotiation
+  stmmac: intel: configure SerDes according to the interface mode
+  net: stmmac: configure SerDes on mac_finish
+  stmmac: intel: interface switching support for ADL-N platform
 
-Still, why unsigned? What if you wanted to convert -5 seconds to jiffies?
+David E. Box (1):
+  arch: x86: add IPC mailbox accessor function and add SoC register
+    access
 
->         return 0;
-> }
->
->
-> gives :
->
-> res  =3D -600
-> res  =3D 429496130
->
-> with msec, the previous code would catch the overflow, now it overflows
-> silently.
+ MAINTAINERS                                   |   1 +
+ drivers/net/ethernet/stmicro/stmmac/Kconfig   |   1 +
+ .../net/ethernet/stmicro/stmmac/dwmac-intel.c | 231 +++++++++++++++++-
+ .../net/ethernet/stmicro/stmmac/dwmac-intel.h |  29 +++
+ .../net/ethernet/stmicro/stmmac/stmmac_main.c |  13 +
+ drivers/net/pcs/pcs-xpcs-wx.c                 |   4 +-
+ drivers/net/pcs/pcs-xpcs.c                    |  29 ++-
+ drivers/net/phy/phylink.c                     |   2 +-
+ .../linux/platform_data/x86/intel_pmc_ipc.h   |  94 +++++++
+ include/linux/stmmac.h                        |   4 +
+ 10 files changed, 394 insertions(+), 14 deletions(-)
+ create mode 100644 include/linux/platform_data/x86/intel_pmc_ipc.h
 
-What compiler options are you using? I'm not getting any warnings.
+-- 
+2.34.1
 
-> untested, but maybe:
->         if (result.uint_32 > INT_MAX / HZ)
->                 goto out_of_range;
->
-> ?
->
-> CJ
->
->
-> >
-> > Acked-by: Ilya Dryomov <idryomov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.or=
-g>
-> > Signed-off-by: Easwar Hariharan <eahariha-1pm0nblsJy7Jp67UH1NAhkEOCMrvL=
-tNR@public.gmane.org>
-> > ---
-> >   drivers/block/rbd.c | 8 +++-----
-> >   1 file changed, 3 insertions(+), 5 deletions(-)
-> >
-> > diff --git a/drivers/block/rbd.c b/drivers/block/rbd.c
-> > index faafd7ff43d6ef53110ab3663cc7ac322214cc8c..41207133e21e9203192adf3=
-b92390818e8fa5a58 100644
-> > --- a/drivers/block/rbd.c
-> > +++ b/drivers/block/rbd.c
-> > @@ -108,7 +108,7 @@ static int atomic_dec_return_safe(atomic_t *v)
-> >   #define RBD_OBJ_PREFIX_LEN_MAX      64
-> >
-> >   #define RBD_NOTIFY_TIMEOUT  5       /* seconds */
-> > -#define RBD_RETRY_DELAY              msecs_to_jiffies(1000)
-> > +#define RBD_RETRY_DELAY              secs_to_jiffies(1)
-> >
-> >   /* Feature bits */
-> >
-> > @@ -4162,7 +4162,7 @@ static void rbd_acquire_lock(struct work_struct *=
-work)
-> >               dout("%s rbd_dev %p requeuing lock_dwork\n", __func__,
-> >                    rbd_dev);
-> >               mod_delayed_work(rbd_dev->task_wq, &rbd_dev->lock_dwork,
-> > -                 msecs_to_jiffies(2 * RBD_NOTIFY_TIMEOUT * MSEC_PER_SE=
-C));
-> > +                 secs_to_jiffies(2 * RBD_NOTIFY_TIMEOUT));
-> >       }
-> >   }
-> >
-> > @@ -6283,9 +6283,7 @@ static int rbd_parse_param(struct fs_parameter *p=
-aram,
-> >               break;
-> >       case Opt_lock_timeout:
-> >               /* 0 is "wait forever" (i.e. infinite timeout) */
-> > -             if (result.uint_32 > INT_MAX / 1000)
-> > -                     goto out_of_range;
-> > -             opt->lock_timeout =3D msecs_to_jiffies(result.uint_32 * 1=
-000);
-> > +             opt->lock_timeout =3D secs_to_jiffies(result.uint_32);
-> >               break;
-> >       case Opt_pool_ns:
-> >               kfree(pctx->spec->pool_ns);
-> >
->
->
