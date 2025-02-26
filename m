@@ -1,119 +1,186 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from fout-a3-smtp.messagingengine.com (fout-a3-smtp.messagingengine.com [103.168.172.146])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC38F204C0E;
-	Wed, 26 Feb 2025 02:00:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 509A6224B0E;
+	Wed, 26 Feb 2025 03:08:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.146
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740535254; cv=none; b=Ac8bv3WFnuTt+qAefCTBDyBEwesrrFTkPJOTWpIOXzgnqq5uXZV7HOpStZ/d5oSdU6Ko3OG+QvUCKs1qNIaVpOtUcopO98p9hj1wG4phE5Tt4JXyGDZ3H1wifqNWdOzupzXRHzQz84e8V1LeWMFECPND2zwue/QWRe8ldZ9FppY=
+	t=1740539307; cv=none; b=Bdj0YFK0nTVbiJY5V44/U8mQRmXmYtZE8FqKQdArSvaLM6a+NqtAXT4mlAp0Zfoh6YV0wnKe2P7UIWAV+BH8Fsejc0fzaTRK3u3YI/2pbUhIcR3TjLU9GXS2THb5jmYZ8vByXIGPXOKXX8LmHlkExrFtEGocqQl4IVYY6ci4UYY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740535254; c=relaxed/simple;
-	bh=QOAgMMGKbnJ6hZHvx6ZJYTRK+iZXq18TAlHT3acDveU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=GfO2ZztXI0yR4SOtWmiMQuv2Miry7HPEoSwkKM5fHVWBj3q2p3eBEVkJZHQlOM7vs2hrEG273wOgSP80vhC0d7LYHKkdMLPOuR9lJVurP96SLc/GCyV1MaG9WKzlgij04TdeSDC9fSAyRDkE7VaZgT86tR+k5I1zbftL+L9n/bI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lbvJaOgP; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1740539307; c=relaxed/simple;
+	bh=+WpUxyhixO+xvs7xpfPGl9WG65KdWQhk1GqatJbAmIA=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=tPzIMKd8QYBCampZqgYc576tfbOODYgL5A6wktvellaLwrJV4LTaR1aGs1J862vLx46uoU459acVtYbRyALqTMz/8FGiJGC0s7+s+A4uvfE4ic5RedRKPaty2IIO4lqbLPVc3Mg+0dRGEfcLt8uWWuD2FTVqSSDyMXEvYAZ8Zd8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ljones.dev; spf=none smtp.mailfrom=ljones.dev; dkim=pass (2048-bit key) header.d=ljones.dev header.i=@ljones.dev header.b=XpNjFti0; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=vnVNPGAc; arc=none smtp.client-ip=103.168.172.146
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ljones.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=ljones.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lbvJaOgP"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E76A4C4CEDD;
-	Wed, 26 Feb 2025 02:00:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1740535253;
-	bh=QOAgMMGKbnJ6hZHvx6ZJYTRK+iZXq18TAlHT3acDveU=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=lbvJaOgPkZbnkOP5hNZv3kt8F37sM5wVNdz5pQoKBOvWJpcWyMv2mVC7qw0zww0FC
-	 tw0rFBZp3tLMdImqLCpGhcY34tv8uho+Lu2q/YVztsAQwyT0nOq0d2HlE+yumDi+2G
-	 NnGD4V7HBDpFdEYrgDp0+8hLWBlWldNGcN9+JQ1uf7k8Z8tTkCxsl34NLWQ8Vawbdb
-	 K9795FHlijgsdEKshsQNQoxr3/DEjO/bi0eHV3p1/sO3PbUu61pZGpWQwOCIptZowS
-	 rIy49xymFJKzj4FXwPSz54+5ZyqnT56OBQv1abO0kJMDp0bQ7XnwlRxW3/2snteMgS
-	 vdipJDYHPyQ2Q==
-Message-ID: <2632bed9-4e4a-494a-bb89-d5aac64f854e@kernel.org>
-Date: Wed, 26 Feb 2025 11:00:37 +0900
+	dkim=pass (2048-bit key) header.d=ljones.dev header.i=@ljones.dev header.b="XpNjFti0";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="vnVNPGAc"
+Received: from phl-compute-11.internal (phl-compute-11.phl.internal [10.202.2.51])
+	by mailfout.phl.internal (Postfix) with ESMTP id 363381380A38;
+	Tue, 25 Feb 2025 22:08:24 -0500 (EST)
+Received: from phl-mailfrontend-01 ([10.202.2.162])
+  by phl-compute-11.internal (MEProxy); Tue, 25 Feb 2025 22:08:24 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ljones.dev; h=cc
+	:cc:content-transfer-encoding:content-type:content-type:date
+	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to; s=fm2; t=1740539304;
+	 x=1740625704; bh=+WpUxyhixO+xvs7xpfPGl9WG65KdWQhk1GqatJbAmIA=; b=
+	XpNjFti0qRuBGJ7Y9PHjuVG4AT2iF8uGzdGtR5Nok2cgCd/NKZwPHK9K2E+GGJEt
+	cUirfpENXMLiMCjdWu64QJbopozD8ry9rrH6yvvjZY3xe5Tf2MKSAFprTg6rawd7
+	jp6i153322NzQNxvcWUzXnKXjoGHKm4hfkGWYaCkC0HRRAreNQtfptrRU+mKyitu
+	0hiEGVVDEdfc4EadMI4rlEa73C+29dFFF+RLHMpEtGz0PwOVKXGTIiZt+6eiIj5+
+	js3NzoYQiWaaUcZB5CTynnR6S4uGI1kplLSi24yHPYX05ayGhZ9EqUYexErefRpU
+	gbrbOIRPidu4d/dk1orsGw==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:content-type:date:date:feedback-id:feedback-id
+	:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to:x-me-proxy
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; t=1740539304; x=
+	1740625704; bh=+WpUxyhixO+xvs7xpfPGl9WG65KdWQhk1GqatJbAmIA=; b=v
+	nVNPGAcajaKNdC7/3mswz1ulFKg6vmBW4MVV0o+0HoMWeB+dTttQ64VOAHiEF4zY
+	g03CKAb95lNgrEJq3WBR+2N63IwhcR8QnxEvHsHMlpo3UdQBc1eix7wig1i3BZMV
+	RW9jK7y2tFoe9HqhnTceXegfNp3sbDJ39SJIy6CAQXToQVTI0UzrMUFKkbnrPe+K
+	V47owvczDJ+UQFJzWRgNqdzn5ix/kp5txG9jk74lHT1p/eNTxdZjJrx1u5MT1Vai
+	fGHbhySNF5xg12NILi2oDelOIOpM+NQ1XIy3t81mgZ+Z9Q0FRsLpPs8iCV6H+CKO
+	KJPf7aCmBLuc5DOk1udrg==
+X-ME-Sender: <xms:poW-Z6r2beDFH8rRGoNn9Fq-uiKbcCy2bEl5tSzac9Psz8vE4qi0GA>
+    <xme:poW-Z4reHHOyTTgFuNcfJDVnSB3CVldJyruj5ieJLDtA_cy39SrMI3wGgVcOjPH4s
+    lB8E9k5kJhJthEP5Lc>
+X-ME-Received: <xmr:poW-Z_MU072OqUA7AMRqBjQOVBPBkLX3-1TN9ZwDstDH3ZWn0Pd3rpNobMnSFX0W-6Djbp7Cce_2xt6clQ>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdekfeeghecutefuodetggdotefrod
+    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpggftfghnshhusghstghrihgsvgdp
+    uffrtefokffrpgfnqfghnecuuegrihhlohhuthemuceftddtnecunecujfgurhepkffuhf
+    fvveffjghftgfgfgggsehtqhertddtreejnecuhfhrohhmpefnuhhkvgculfhonhgvshcu
+    oehluhhkvgeslhhjohhnvghsrdguvghvqeenucggtffrrghtthgvrhhnpeekfeffueejve
+    eujeeugeelleehtdegvdeludektddtfffhieefledvudehfeejieenucevlhhushhtvghr
+    ufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpehluhhkvgeslhhjohhnvghsrd
+    guvghvpdhnsggprhgtphhtthhopeekpdhmohguvgepshhmthhpohhuthdprhgtphhtthho
+    pehlkhhmlhesrghnthhhvggrshdruggvvhdprhgtphhtthhopegsvghnthhishhssehkvg
+    hrnhgvlhdrohhrghdprhgtphhtthhopehhuggvghhovgguvgesrhgvughhrghtrdgtohhm
+    pdhrtghpthhtohepihhlphhordhjrghrvhhinhgvnheslhhinhhugidrihhnthgvlhdrtg
+    homhdprhgtphhtthhopehjihhkohhssehkvghrnhgvlhdrohhrghdprhgtphhtthhopehl
+    ihhnuhigqdhinhhpuhhtsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplh
+    hinhhugidqkhgvrhhnvghlsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtohep
+    phhlrghtfhhorhhmqdgurhhivhgvrhdqgiekieesvhhgvghrrdhkvghrnhgvlhdrohhrgh
+X-ME-Proxy: <xmx:poW-Z56pmcbhkl_KT2ceEZY_uuK_KAg-_3lpL42XRuuEyZzlPbT6NQ>
+    <xmx:poW-Z57wvDvW4JbTh1TLLWSZZVM58qXCxh5y8zmen_F5g1zoJvJc4Q>
+    <xmx:poW-Z5gDL4ZB-yKqfN1qLmfsYiUbQ5jN16LuYM4IzrFzLZ7J68Md6g>
+    <xmx:poW-Zz6p_PG8aZfyKBKKcAPxSy7zZ6GBc17kUIfnly0sBvFdZwWjVQ>
+    <xmx:qIW-Z0YfA_3rIN5rM7NbJisHV8xukvenfwH4LGWJQoPY1EdkGcE_9kkX>
+Feedback-ID: i5ec1447f:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Tue,
+ 25 Feb 2025 22:08:20 -0500 (EST)
+Message-ID: <027706ba7b19a4eefb51aeddb5d10cc235751780.camel@ljones.dev>
+Subject: Re: [PATCH 2/2] platform/x86: asus-wmi: Refactor Ally suspend/resume
+From: Luke Jones <luke@ljones.dev>
+To: Antheas Kapenekakis <lkml@antheas.dev>
+Cc: bentiss@kernel.org, hdegoede@redhat.com, ilpo.jarvinen@linux.intel.com, 
+	jikos@kernel.org, linux-input@vger.kernel.org,
+ linux-kernel@vger.kernel.org, 	platform-driver-x86@vger.kernel.org
+Date: Wed, 26 Feb 2025 16:08:15 +1300
+In-Reply-To: <20250225141549.11165-1-lkml@antheas.dev>
+References: <20250225081744.92841-3-luke@ljones.dev>
+	 <20250225141549.11165-1-lkml@antheas.dev>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.54.3 (3.54.3-1.fc41) 
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 08/16] ata: libata-zpodd: convert timeouts to
- secs_to_jiffies()
-To: Easwar Hariharan <eahariha@linux.microsoft.com>,
- Andrew Morton <akpm@linux-foundation.org>
-Cc: Yaron Avizrat <yaron.avizrat@intel.com>, Oded Gabbay
- <ogabbay@kernel.org>, Julia Lawall <Julia.Lawall@inria.fr>,
- Nicolas Palix <nicolas.palix@imag.fr>, James Smart
- <james.smart@broadcom.com>, Dick Kennedy <dick.kennedy@broadcom.com>,
- "James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>,
- "Martin K. Petersen" <martin.petersen@oracle.com>,
- Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>,
- Chris Mason <clm@fb.com>, Josef Bacik <josef@toxicpanda.com>,
- David Sterba <dsterba@suse.com>, Ilya Dryomov <idryomov@gmail.com>,
- Dongsheng Yang <dongsheng.yang@easystack.cn>, Jens Axboe <axboe@kernel.dk>,
- Xiubo Li <xiubli@redhat.com>, Niklas Cassel <cassel@kernel.org>,
- Carlos Maiolino <cem@kernel.org>, "Darrick J. Wong" <djwong@kernel.org>,
- Sebastian Reichel <sre@kernel.org>, Keith Busch <kbusch@kernel.org>,
- Christoph Hellwig <hch@lst.de>, Sagi Grimberg <sagi@grimberg.me>,
- Frank Li <Frank.Li@nxp.com>, Mark Brown <broonie@kernel.org>,
- Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>,
- Pengutronix Kernel Team <kernel@pengutronix.de>,
- Fabio Estevam <festevam@gmail.com>,
- Shyam Sundar S K <Shyam-sundar.S-k@amd.com>,
- Hans de Goede <hdegoede@redhat.com>,
- =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
- Henrique de Moraes Holschuh <hmh@hmh.eng.br>,
- Selvin Xavier <selvin.xavier@broadcom.com>,
- Kalesh AP <kalesh-anakkur.purayil@broadcom.com>,
- Jason Gunthorpe <jgg@ziepe.ca>, Leon Romanovsky <leon@kernel.org>,
- cocci@inria.fr, linux-kernel@vger.kernel.org, linux-scsi@vger.kernel.org,
- dri-devel@lists.freedesktop.org, linux-sound@vger.kernel.org,
- linux-btrfs@vger.kernel.org, ceph-devel@vger.kernel.org,
- linux-block@vger.kernel.org, linux-ide@vger.kernel.org,
- linux-xfs@vger.kernel.org, linux-pm@vger.kernel.org,
- linux-nvme@lists.infradead.org, linux-spi@vger.kernel.org,
- imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
- platform-driver-x86@vger.kernel.org, ibm-acpi-devel@lists.sourceforge.net,
- linux-rdma@vger.kernel.org
-References: <20250225-converge-secs-to-jiffies-part-two-v3-0-a43967e36c88@linux.microsoft.com>
- <20250225-converge-secs-to-jiffies-part-two-v3-8-a43967e36c88@linux.microsoft.com>
- <ff51bcfc-10c8-4461-9f82-ea1d5ed784f8@linux.microsoft.com>
-From: Damien Le Moal <dlemoal@kernel.org>
-Content-Language: en-US
-Organization: Western Digital Research
-In-Reply-To: <ff51bcfc-10c8-4461-9f82-ea1d5ed784f8@linux.microsoft.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
 
-On 2/26/25 5:24 AM, Easwar Hariharan wrote:
-> On 2/25/2025 12:17 PM, Easwar Hariharan wrote:
->> Commit b35108a51cf7 ("jiffies: Define secs_to_jiffies()") introduced
->> secs_to_jiffies().  As the value here is a multiple of 1000, use
->> secs_to_jiffies() instead of msecs_to_jiffies() to avoid the multiplication
->>
->> This is converted using scripts/coccinelle/misc/secs_to_jiffies.cocci with
->> the following Coccinelle rules:
->>
->> @depends on patch@
->> expression E;
->> @@
->>
->> -msecs_to_jiffies
->> +secs_to_jiffies
->> (E
->> - * \( 1000 \| MSEC_PER_SEC \)
->> )
->>
->> Signed-off-by: Easwar Hariharan <eahariha@linux.microsoft.com>
->> ---
-> 
-> This was meant to carry Damien's ack once the subject line was fixed[1], but I fixed
-> the subject line and missed adding the ack in. Damien, would you like to ack again?
+On Tue, 2025-02-25 at 15:15 +0100, Antheas Kapenekakis wrote:
+> Hi Luke,
+> setting MCU powersave too close to the boot-up sequence can cause the
+> controller of the original Ally to malfunction.
 
-Looks like Andrew already applied the patch, which is fine.
-But nevertheless:
+Read the code. It doesn't, as it is set by hid driver. Zero issues in
+all our testing.
 
-Acked-by: Damien Le Moal <dlemoal@kernel.org>
+> Which is why you created
+> this little init sequence in which you call CSEE manually. In
+> addition,
 
+No it wasn't.
 
--- 
-Damien Le Moal
-Western Digital Research
+> MCU powersave (which is called Extreme Standby in Windows and you
+> named
+> incorrectly in asus-wmi), causes a very large 8 second delay in the
+
+That is a UI label. ASUS call it Mcu Powersave in internal emails to
+me. It is also called *MCUPowerSaving in their source code.
+
+> resume
+> process. It should under no circumstance be set enabled by default.
+>=20
+> Users that want it can enable it manually. Following, distributions
+> that
+> want it and lack the appropriate configuration interface can use a
+> udev
+> rule with an 8 second delay to enable it, and then, the udev rule
+> should
+> first check if mcu_powersave is disabled before enabling it. This is
+> because writing to it even with the same value causes an issue
+> regardless.
+>=20
+
+No it does not.
+
+> Therefore, please remove both parts of it from the second patch in
+> your
+> series and produce a v2, which contains no hints of CSEE. When you
+> do:
+>=20
+> Suggested-by: Antheas Kapenekakis <lkml@antheas.dev>
+>=20
+
+No. You've suggested changes with zero testing, simply in an attempt to
+get a tag.
+
+> Following, when you do finish the new Asus Armoury patch series,
+> please
+> rename MCU powersave to extreme standby, and add a suggested-by in
+> the
+> appropriate patch. Since to avoid user confusion, the names should
+> match
+> their windows branding.
+>=20
+
+No. See first response.
+
+> During our testing of the controller, we found that the lack of a
+> delay
+> causes the RGB of both the Ally and the Ally X to malfunction, so
+
+This is to do with your own code in userspace.=20
+
+> this is
+> a small nack for me (the old quirk is preferable in that regard). But
+> then
+> again, this patch series is not getting anywhere close to our users
+> even
+> if it is accepted, so you can do as you wish (given appropriate
+> attribution).
+>=20
+
+Your message attempts to frame this as a personal matter ("small nack
+for me," "you can do as you wish") rather than providing substantive
+technical feedback appropriate for LKML.
+
+To be clear: This patch is submitted for mainline Linux kernel
+consideration, not your downstream project. Your NACK lacks technical
+merit relevant to mainline development, as you yourself acknowledge
+these changes would not affect your users.
+
+As I am the maintainer on this driver I will proceed with the
+submission process as there are no valid technical objections to
+address. Further non-technical commentary on this thread is
+unnecessary.
+
+Cheers,
+Luke.
