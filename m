@@ -1,253 +1,125 @@
-Received: from mail-ej1-f41.google.com (mail-ej1-f41.google.com [209.85.218.41])
+Received: from linux1587.grserver.gr (linux1587.grserver.gr [185.138.42.100])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7829F20CCEA
-	for <platform-driver-x86@vger.kernel.org>; Wed, 26 Feb 2025 08:29:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D0DF258CED;
+	Wed, 26 Feb 2025 09:17:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.138.42.100
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740558592; cv=none; b=Ml+Cfo5KbnYFRxmL8blc0RluHqb4iwp6Nz/F57DHlAMBgyOjfIyUkHQELIO62gq3lmL3ccYAh70w5hd2Lohg/8Kt4ZKSbsOKHki4UqHRez2Vuo7KI235Wh85RsB+AUgHFTadeKTxHUrmnyfS3ub7gmv4IqwhIT7WS7JPmtBCGc0=
+	t=1740561448; cv=none; b=PvpcKUgUIaKPGlT88aKv5Pij9yudEy0gbOdyVcNpBII5FgIC/0GVlFnqMYw31kJoT0ZRn4QIxZzeTT1DOKFp3Bs1xANQLSnCqkYJjoiH1Y9Alqc0b71mINnZDRWCare8rnB26CrnScr7EIn5Ono8haSiAh+06xgb1DNGqL2N6oc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740558592; c=relaxed/simple;
-	bh=+w08B6WQFLWGoY7KAUzC4ng4zpNF75XfE1/K5F/1xRU=;
+	s=arc-20240116; t=1740561448; c=relaxed/simple;
+	bh=UrvdQpPYbFyEzQ2dj9Ih1Yo65Ligf3U8qQjl/It0xdE=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Xe05wW/DiYw1ZqMBxh0j6pgOdxcbIkJjo4CCQ4Hs3EV+y9i3TfeTfo8o+3u27HMRbB0VIiHKwgpRn921KHWijP51RX9nYtr3KaadOoeWiL01WrDUDtezu78R6i+7m6HJXdqPM4N+m+ruM01VQlSDdz+nmY4U2rKPX9fZGsVbovk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=Hm/CYtcW; arc=none smtp.client-ip=209.85.218.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+	 To:Cc:Content-Type; b=AhYmxeVCSJiDhkb4uqDRx0eFhiF3nqUXNTweCFz86cwhwnKwRpa71XndPetx5lqpuqwEFW0hg1vHguE072k8Jn3dqjorwydFqnWfwhbLe3x/ZaYPEaOwRq0+Aro0LzD6j3k5mK35gPZEo9wRTo61VLQkwQzjy3iU2KwjOTjnPOA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=antheas.dev; spf=pass smtp.mailfrom=antheas.dev; dkim=pass (1024-bit key) header.d=antheas.dev header.i=@antheas.dev header.b=Ko46NzC3; arc=none smtp.client-ip=185.138.42.100
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=antheas.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=antheas.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="Hm/CYtcW"
-Received: by mail-ej1-f41.google.com with SMTP id a640c23a62f3a-abb9709b5b5so1187371966b.2
-        for <platform-driver-x86@vger.kernel.org>; Wed, 26 Feb 2025 00:29:49 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1740558588; x=1741163388; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=qd/P01QUb5F02hWZoi0IIwP5a5sgbN5wVj3NeUV9KKE=;
-        b=Hm/CYtcWSPW1k4fv9hDPqmE66S4dHDlH3+8R0sXYWiBdQitIDMEmtvpLhZI/Y5By9S
-         sKR7EEAWBP9y+hDW8nyhlSKuiTppxodU/pVlJAOgF6i/xxuAmdB3c+uBfd9mqRuVNfkm
-         1nhKI4KTfI2DVSCdQJax6zLJQSfl0Nir+9hLn1CXgOyXpo0ydvtgt1ILpZsIKfIze3f7
-         2ebGtc2bWVp0iTe6doS09oetqbmoeXAtO4D0lkQ6bDEIq2tJhJh7Mc+kWvYod31kDaMR
-         SK6SfwUwNyNGVyKGLHuM2oEtVFrf4Pzxk945NBPutBBNUiSSSx4OHm3lFzog+Lh4xehk
-         6bNA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740558588; x=1741163388;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=qd/P01QUb5F02hWZoi0IIwP5a5sgbN5wVj3NeUV9KKE=;
-        b=YnOpdBRLf4gD6/O77VJPfnHuVHXiCXcOaC5SCdLxJj9DVEk7s2Rivrz27elXtwOCUt
-         hMM4y3Ix4p3WxK0Zmfx/pANnEMfDx+sPDyS8k0h5kN6PfkfiEsVmV2qFk94uCgtFIBSQ
-         f3bhpqzaIIvAsV7H+xff6zno0aWY7HH0DZffwLtPsPfdVIrtBkrP8AsAiyWCBi3bjbVl
-         VTfeaoP2h6zNnWrVfEcX5GPlgFOC4E+oNNjTVanSH3AemfrG/HW7s0W0/OZR2T4f3u/M
-         twCFFVwQ8J8AF4M+U5yFyLD/D6fNcxdodpE7tRhq0it16JliD/yaxKFJQsCTK+SEhXAb
-         V1Fg==
-X-Forwarded-Encrypted: i=1; AJvYcCWwwAQWp81dOCgTyUtvKed1dOE+6JrFiObH7WXYf7mo3Oqe4mfWisTTs5FuG3fbFkZ4SiYbh4pZinsg959mWKhI3u4y@vger.kernel.org
-X-Gm-Message-State: AOJu0YynkBkDCO1H8B7WKgNyjyKm1a3IZdqolsculYf9EREc6J5xg3ur
-	VgYA/nTvjOdo8h0qK1YvPEFpw5eCWS8vkyP5gkwGhMkXHjEcHgm9m+1qr/aFz/8I1E/jy4PYVpF
-	WnmW99qzuHkwvugUpbyHQTxt6uHI1oGegIEhNBg==
-X-Gm-Gg: ASbGncvLEb8KMqbB+gHC5G8o0B8tg5EC/jiVLVQMN6KbPQhUK1r6HHa53bg2lY8E7T4
-	PY7wqCfBbl8BFik806E1gNb9Hyaafw4pjV9GRK342aT32UI3rW2i7QMLxWpLLyx63jn+oazAOKt
-	yKbiENvQ==
-X-Google-Smtp-Source: AGHT+IHCBmf3hFVyDRWrbNjNMJpg3u3tAe5Gkum3edJXg5+W5jYzpdGCY2CkRcaqBj3q4FkgF3ZBCF2Ur/l8ZS65ls8=
-X-Received: by 2002:a17:907:7711:b0:ab7:c152:a3ca with SMTP id
- a640c23a62f3a-abed0c66952mr598124866b.6.1740558587743; Wed, 26 Feb 2025
- 00:29:47 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=antheas.dev header.i=@antheas.dev header.b="Ko46NzC3"
+Received: from mail-lf1-f51.google.com (mail-lf1-f51.google.com [209.85.167.51])
+	by linux1587.grserver.gr (Postfix) with ESMTPSA id C70472E07CBC;
+	Wed, 26 Feb 2025 11:17:21 +0200 (EET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=antheas.dev;
+	s=default; t=1740561442;
+	bh=UrvdQpPYbFyEzQ2dj9Ih1Yo65Ligf3U8qQjl/It0xdE=;
+	h=Received:From:Subject:To;
+	b=Ko46NzC38Uto0/HdECvQEuenxC1oVRlMADJjViH4Fbmn0qJ86vGVzG5+HV65nWRcF
+	 ZtLxSt2MOQJZGw94BQqiJFC2szJLL08zRz2vavnJwV159K/sfJDI5kMOmFvThKSdGi
+	 j3xZwbnmLxFqVw/vvN9zJk/6hrRlTxEEWbyexrvA=
+Authentication-Results: linux1587.grserver.gr;
+        spf=pass (sender IP is 209.85.167.51) smtp.mailfrom=lkml@antheas.dev smtp.helo=mail-lf1-f51.google.com
+Received-SPF: pass (linux1587.grserver.gr: connection is authenticated)
+Received: by mail-lf1-f51.google.com with SMTP id
+ 2adb3069b0e04-545316f80beso5871927e87.1;
+        Wed, 26 Feb 2025 01:17:21 -0800 (PST)
+X-Forwarded-Encrypted: i=1;
+ AJvYcCUZUmLVXgEGDJVbUTsF/xGaBPOTljVvfdFvyqTrk+V9ut04FWAY2XZha+G2zEmNc87T6hQF9xW9HP/RU4XcM4RYMt2XTw==@vger.kernel.org,
+ AJvYcCVOOrJEiIWCtMRzPQZCrJ+1NBO7ljGvR4B42pWSKnIU2A1F2oAEi68A9ehTfAx2t5G4qMSdd0j+ndqHHg==@vger.kernel.org,
+ AJvYcCXyFz4Z/AiWn/RNhuORzSWhXPCL/Z1wUosg93tDozQT6lcZdBzZpihmUHui3wh6Mb9B5+zsvWleWcwH0ef2@vger.kernel.org
+X-Gm-Message-State: AOJu0YzDegkWK9PxbqZxog6bMfc7Z1otV1k57J0QJPxFHLNjt/vuuwZf
+	Mn5Ioq/v/3cZAUEEwU/zKOScuaimM1aenWJjPSi37amp56+7Ne+Qzk8Vvblv2KfjTc8kMM/7HYp
+	lDexqaAOh/L8ii/ufi+KXc0Oemjw=
+X-Google-Smtp-Source: 
+ AGHT+IGE2unUDzjwlB+bHwcYrpsMI+bA11uuE3Y2N915MIkq7/W/KAO/zXWqzdfS2aUXpr/1kDL2iTudXSCcU3xlmWA=
+X-Received: by 2002:a05:6512:b98:b0:545:353:4d46 with SMTP id
+ 2adb3069b0e04-548510d8085mr3569969e87.25.1740561438044; Wed, 26 Feb 2025
+ 01:17:18 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250225-converge-secs-to-jiffies-part-two-v3-0-a43967e36c88@linux.microsoft.com>
- <20250225-converge-secs-to-jiffies-part-two-v3-6-a43967e36c88@linux.microsoft.com>
- <e53d7586-b278-4338-95a2-fa768d5d8b5e@wanadoo.fr> <CAPjX3Fcr+BoMRgZGbqqgpF+w-sHU+SqGT8QJ3QCp8uvJbnaFsQ@mail.gmail.com>
- <7b8346a1-8a7d-4fcf-a026-119d77f2ca85@wanadoo.fr>
-In-Reply-To: <7b8346a1-8a7d-4fcf-a026-119d77f2ca85@wanadoo.fr>
-From: Daniel Vacek <neelx@suse.com>
-Date: Wed, 26 Feb 2025 09:29:36 +0100
-X-Gm-Features: AQ5f1Jrr13SgxwVjT6ysFNM9oHlwZl6dEEKFUrutAasFQHuednVFm1EELk7zLLU
-Message-ID: <CAPjX3Fc1UuWvih_krriaF32aPCbGP0SPg2TSrBA8Xb7a=Ozc5Q@mail.gmail.com>
-Subject: Re: [PATCH v3 06/16] rbd: convert timeouts to secs_to_jiffies()
-To: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-Cc: Frank.Li@nxp.com, James.Bottomley@hansenpartnership.com, 
-	Julia.Lawall@inria.fr, Shyam-sundar.S-k@amd.com, akpm@linux-foundation.org, 
-	axboe@kernel.dk, broonie@kernel.org, cassel@kernel.org, cem@kernel.org, 
-	ceph-devel@vger.kernel.org, clm@fb.com, cocci@inria.fr, 
-	dick.kennedy@broadcom.com, djwong@kernel.org, dlemoal@kernel.org, 
-	dongsheng.yang@easystack.cn, dri-devel@lists.freedesktop.org, 
-	dsterba@suse.com, eahariha@linux.microsoft.com, festevam@gmail.com, 
-	hch@lst.de, hdegoede@redhat.com, hmh@hmh.eng.br, 
-	ibm-acpi-devel@lists.sourceforge.net, idryomov@gmail.com, 
-	ilpo.jarvinen@linux.intel.com, imx@lists.linux.dev, james.smart@broadcom.com, 
-	jgg@ziepe.ca, josef@toxicpanda.com, kalesh-anakkur.purayil@broadcom.com, 
-	kbusch@kernel.org, kernel@pengutronix.de, leon@kernel.org, 
-	linux-arm-kernel@lists.infradead.org, linux-block@vger.kernel.org, 
-	linux-btrfs@vger.kernel.org, linux-ide@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-nvme@lists.infradead.org, 
-	linux-pm@vger.kernel.org, linux-rdma@vger.kernel.org, 
-	linux-scsi@vger.kernel.org, linux-sound@vger.kernel.org, 
-	linux-spi@vger.kernel.org, linux-xfs@vger.kernel.org, 
-	martin.petersen@oracle.com, nicolas.palix@imag.fr, ogabbay@kernel.org, 
-	perex@perex.cz, platform-driver-x86@vger.kernel.org, s.hauer@pengutronix.de, 
-	sagi@grimberg.me, selvin.xavier@broadcom.com, shawnguo@kernel.org, 
-	sre@kernel.org, tiwai@suse.com, xiubli@redhat.com, yaron.avizrat@intel.com
+References: <20250225081744.92841-3-luke@ljones.dev>
+ <20250225141549.11165-1-lkml@antheas.dev>
+ <027706ba7b19a4eefb51aeddb5d10cc235751780.camel@ljones.dev>
+In-Reply-To: <027706ba7b19a4eefb51aeddb5d10cc235751780.camel@ljones.dev>
+From: Antheas Kapenekakis <lkml@antheas.dev>
+Date: Wed, 26 Feb 2025 10:17:06 +0100
+X-Gmail-Original-Message-ID: 
+ <CAGwozwGwjM7hGOm+6iDHg7Q1StbEYRm=cU-8Cx4v==V1d9W4=w@mail.gmail.com>
+X-Gm-Features: AQ5f1JoUUV8wL4l4QGiQyFCh4eYRWD5JRzpX6lnpzo7KYr3xHPc7DEnzTOG9sfo
+Message-ID: 
+ <CAGwozwGwjM7hGOm+6iDHg7Q1StbEYRm=cU-8Cx4v==V1d9W4=w@mail.gmail.com>
+Subject: Re: [PATCH 2/2] platform/x86: asus-wmi: Refactor Ally suspend/resume
+To: Luke Jones <luke@ljones.dev>
+Cc: bentiss@kernel.org, hdegoede@redhat.com, ilpo.jarvinen@linux.intel.com,
+	jikos@kernel.org, linux-input@vger.kernel.org, linux-kernel@vger.kernel.org,
+	platform-driver-x86@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-PPP-Message-ID: 
+ <174056144234.18095.2788953362654973868@linux1587.grserver.gr>
+X-PPP-Vhost: antheas.dev
+X-Virus-Scanned: clamav-milter 0.103.11 at linux1587.grserver.gr
+X-Virus-Status: Clean
 
-On Wed, 26 Feb 2025 at 09:10, Christophe JAILLET
-<christophe.jaillet@wanadoo.fr> wrote:
->
-> Le 26/02/2025 =C3=A0 08:28, Daniel Vacek a =C3=A9crit :
-> > On Tue, 25 Feb 2025 at 22:10, Christophe JAILLET
-> > <christophe.jaillet-39ZsbGIQGT5GWvitb5QawA@public.gmane.org> wrote:
-> >>
-> >> Le 25/02/2025 =C3=A0 21:17, Easwar Hariharan a =C3=A9crit :
-> >>> Commit b35108a51cf7 ("jiffies: Define secs_to_jiffies()") introduced
-> >>> secs_to_jiffies().  As the value here is a multiple of 1000, use
-> >>> secs_to_jiffies() instead of msecs_to_jiffies() to avoid the multipli=
-cation
-> >>>
-> >>> This is converted using scripts/coccinelle/misc/secs_to_jiffies.cocci=
- with
-> >>> the following Coccinelle rules:
-> >>>
-> >>> @depends on patch@ expression E; @@
-> >>>
-> >>> -msecs_to_jiffies(E * 1000)
-> >>> +secs_to_jiffies(E)
-> >>>
-> >>> @depends on patch@ expression E; @@
-> >>>
-> >>> -msecs_to_jiffies(E * MSEC_PER_SEC)
-> >>> +secs_to_jiffies(E)
-> >>>
-> >>> While here, remove the no-longer necessary check for range since ther=
-e's
-> >>> no multiplication involved.
-> >>
-> >> I'm not sure this is correct.
-> >> Now you multiply by HZ and things can still overflow.
-> >
-> > This does not deal with any additional multiplications. If there is an
-> > overflow, it was already there before to begin with, IMO.
-> >
-> >> Hoping I got casting right:
-> >
-> > Maybe not exactly? See below...
-> >
-> >> #define MSEC_PER_SEC    1000L
-> >> #define HZ 100
-> >>
-> >>
-> >> #define secs_to_jiffies(_secs) (unsigned long)((_secs) * HZ)
-> >>
-> >> static inline unsigned long _msecs_to_jiffies(const unsigned int m)
-> >> {
-> >>          return (m + (MSEC_PER_SEC / HZ) - 1) / (MSEC_PER_SEC / HZ);
-> >> }
-> >>
-> >> int main() {
-> >>
-> >>          int n =3D INT_MAX - 5;
-> >>
-> >>          printf("res  =3D %ld\n", secs_to_jiffies(n));
-> >>          printf("res  =3D %ld\n", _msecs_to_jiffies(1000 * n));
-> >
-> > I think the format should actually be %lu giving the below results:
-> >
-> > res  =3D 18446744073709551016
-> > res  =3D 429496130
-> >
-> > Which is still wrong nonetheless. But here, *both* results are wrong
-> > as the expected output should be 214748364200 which you'll get with
-> > the correct helper/macro.
-> >
-> > But note another thing, the 1000 * (INT_MAX - 5) already overflows
-> > even before calling _msecs_to_jiffies(). See?
->
-> Agreed and intentional in my test C code.
->
-> That is the point.
->
-> The "if (result.uint_32 > INT_MAX / 1000)" in the original code was
-> handling such values.
+Hi Luke,
+using your maintainer status and your NDA creds to veto my comments
+will not go well for you if you end up breaking the driver.
 
-I see. But that was rather an unrelated side-effect. Still you're
-right, it needs to be handled carefully not to remove additional
-guarantees which were implied unintentionally. At least in places
-where these were provided in the first place.
+Yes, I have done extensive testing with setting the powersave
+parameter. I have supported it since September. It is very easy to
+break the controller if you start writing to it randomly. In fact,
+when I pushed it out [1], it never got out of testing because I got
+three user reports about it so I had to make a revised version [2].
+Notice there is a day difference between the versions. We never needed
+a boot workaround for the original ally, and if you ask me, the reason
+your driver here includes that is because in all your testing you set
+the powersave parameter.
 
-> >
-> > Now, you'll get that mentioned correct result with:
-> >
-> > #define secs_to_jiffies(_secs) ((unsigned long)(_secs) * HZ)
->
-> Not looked in details, but I think I would second on you on this, in
-> this specific example. Not sure if it would handle all possible uses of
-> secs_to_jiffies().
+When it comes to RGB, without a quirk it looks to me as if the MCU
+hardlocks and stops accepting RGB commands. I am pretty sure I wrote
+to it manually, but excuse me if I am wrong as there have been 5
+months since I did the testing for it.
 
-Yeah, I was referring only in context of the example you presented,
-not for the rest of the kernel. Sorry about the confusion.
+In your new armoury driver, you tried to make internal names
+accessible to users via the BIOS interface to make it more user
+friendly. In this case, you need to use the names Asus uses in
+Windows, otherwise users will get confused. Failing that, asus-wmi is
+a perfectly fine driver as it is, with mcu_powersave as an internal
+parameter.
 
-> But it is not how secs_to_jiffies() is defined up to now. See [1].
->
-> [1]:
-> https://elixir.bootlin.com/linux/v6.14-rc4/source/include/linux/jiffies.h=
-#L540
->
-> >
-> > Still, why unsigned? What if you wanted to convert -5 seconds to jiffie=
-s?
->
-> See commit bb2784d9ab495 which added the cast.
+As far as I am concerned, the whole Ally issue boils down to the
+Modern Standby firmware notifications in the Linux kernel being in the
+wrong place. You can see it in the Microsoft documentation [3]. The
+Display Off call should happen when the display turns off, not after
+the kernel has suspended. This change will need to eventually happen,
+as Asus is not the only handheld manufacturer doing this. All
+manufacturers turn off their xpad controller via those notifications,
+including Lenovo, GPD, OneXPlayer, and MSI. Fortunately, this issue
+seems to only affect asus in a major way, although I suspect it causes
+a quality degradation in other manufacturers as well.
 
-Hmmm, fishy. Maybe a function would be better than a macro?
+Given that I do have a custom kernel now and i can rewrite it as I see
+fit, I am giving you carte blanche when it comes to the mainline
+kernel. As far as I am concerned, my Ally 1st gen/X integration
+finished last November. So I will not be revisiting it or doing any
+additional testing to validate any new claims or changes. I will just
+be removing them and pointing users to my kernel.
 
-> >
-> >>          return 0;
-> >> }
-> >>
-> >>
-> >> gives :
-> >>
-> >> res  =3D -600
-> >> res  =3D 429496130
-> >>
-> >> with msec, the previous code would catch the overflow, now it overflow=
-s
-> >> silently.
-> >
-> > What compiler options are you using? I'm not getting any warnings.
->
-> I mean, with:
->         if (result.uint_32 > INT_MAX / 1000)
->                 goto out_of_range;
-> the overflow would be handled *at runtime*.
+Best,
+Antheas
 
-Got it. But that may still fail if you configure HZ to 5000 or
-anything above 1000. Not that anyone should go this way but...
-
-> Without such a check, an unexpected value could be stored in
-> opt->lock_timeout.
->
-> I think that a test is needed and with secs_to_jiffies(), I tentatively
-> proposed:
->         if (result.uint_32 > INT_MAX / HZ)
->                 goto out_of_range;
-
-Right, that should correctly handle any HZ value. Looks good to me.
-
-> CJ
->
-> >
-> >> untested, but maybe:
-> >>          if (result.uint_32 > INT_MAX / HZ)
-> >>                  goto out_of_range;
-> >>
-> >> ?
-> >>
-> >> CJ
-> >>
->
-> ...
+[1] https://github.com/hhd-dev/adjustor/releases/tag/v3.5.0
+[2] https://github.com/hhd-dev/adjustor/releases/tag/v3.5.1
+[3] https://learn.microsoft.com/en-us/windows-hardware/design/device-experiences/modern-standby-firmware-notifications
