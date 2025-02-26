@@ -1,138 +1,157 @@
-Received: from linux1587.grserver.gr (linux1587.grserver.gr [185.138.42.100])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 87F5525BAA0;
-	Wed, 26 Feb 2025 22:15:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.138.42.100
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 60B2F25CC80;
+	Wed, 26 Feb 2025 22:27:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740608145; cv=none; b=gxFQY9wl26Ui1tg93tD3bzYao7AWaBdSnPogGCp3j/LhbFwIt/BI+kZohNK5j8raFwZKOil4oIVgcZQWWs8KN8jcxnQ10Pw+z0mCZKQbethrSs5OdT1ofX17yJjBMVwTIDx8qMl5sovTXiwStrhfcLAv/Do4ROFV8AxO/e1ZeD0=
+	t=1740608820; cv=none; b=POV7BqsHltpNjnKUrPjztvHFEcZ+6WK3ydlheME3M4koO1aiqck8q7NT25G405El5rtfgRuB3QEwKf9RJJyYHXvHlUtZhmyly0gHR7LsnR9oRhSCfzvpWlvw6VCClD5Z8bOUkvP/JXKoscYGJaJ2vy5lErpyxHSQkNCDLz6xf/0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740608145; c=relaxed/simple;
-	bh=nB+jmAHxPZ3soQmc5wLgDtK8Av2gzHEq4MFA/UQ0nAA=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=cxwLrXLNF1lX/lP00AIuIhdVrtGlNqPgf9hfmhhpeP1sO9a8n6Aabqoi2KzdWuQ+IpVIKf4/OiqvVDwqcz0+jkLYqvaT0xtSXKcBk2OW8/+G2+mOi8retCuXUU2ff2l24aq5PSjb/SwWZP0CJaHZ7oC+TwhKBV7hFI52NGsxx2I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=antheas.dev; spf=pass smtp.mailfrom=antheas.dev; dkim=pass (1024-bit key) header.d=antheas.dev header.i=@antheas.dev header.b=2P7POLzv; arc=none smtp.client-ip=185.138.42.100
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=antheas.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=antheas.dev
+	s=arc-20240116; t=1740608820; c=relaxed/simple;
+	bh=O5zZ7g63I+0ZeYH00JZerlvbNik71qO0CgwvkTnWcIs=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=B3PfCFO5hiCvcw4q9HDa7O6w1BcxdYyvtboUer8VaVjxnn/e+ZoolJsLiRIbGay97ZQtUsYOjEzMOr7VY1p+umFvz0OMlOvg2ZwM6UAP/drhv8KyxVLzlcvlp3L1hhaU+OvDLXbJxsvPqX8FyP+yA7mTntWmpXd1Tj4wcbQBGQY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=aqYqpdVV; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=antheas.dev header.i=@antheas.dev header.b="2P7POLzv"
-Received: from mail-lj1-f174.google.com (mail-lj1-f174.google.com [209.85.208.174])
-	by linux1587.grserver.gr (Postfix) with ESMTPSA id 49D992E08410;
-	Thu, 27 Feb 2025 00:15:31 +0200 (EET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=antheas.dev;
-	s=default; t=1740608131;
-	bh=VgIwtkMZ00hXOGNLHlqyEU83xt25hqz8jtzstHZ0Rbo=;
-	h=Received:From:Subject:To;
-	b=2P7POLzvQF3ldZmQNpUlDEFHdn0IgH8qKgCOmnUTM3OVCKMov+Y4ix8k1TuzJyKjF
-	 ejkfIwUpm63e0H48uLRXS7s1dQAeVlAq976pudNSQglUvw/Zg0cfvQQOkmus8pqsGi
-	 L2iqIYJ0imAwPkR4RlhEaJ4ytgCMtfQ6j6kdcBh4=
-Authentication-Results: linux1587.grserver.gr;
-        spf=pass (sender IP is 209.85.208.174) smtp.mailfrom=lkml@antheas.dev smtp.helo=mail-lj1-f174.google.com
-Received-SPF: pass (linux1587.grserver.gr: connection is authenticated)
-Received: by mail-lj1-f174.google.com with SMTP id
- 38308e7fff4ca-30613802a6bso3677941fa.1;
-        Wed, 26 Feb 2025 14:15:31 -0800 (PST)
-X-Forwarded-Encrypted: i=1;
- AJvYcCWC/VeId7UW2g0rq3aKHg0Dbwo8w+1i8hvXGSCgLaINgtUizuL7yCaoDcHWuU6ikhzWEQuBSJnIIUzqpU3vQ4l30NL0jw==@vger.kernel.org,
- AJvYcCXFb1Z5hxbFf0PJNBvvHd4C7UUQIxBPrQ0faAF1f7vLMqAtDC7qcidA6ApVWl/BslS8b0ZIWUKIGmAS@vger.kernel.org,
- AJvYcCXh1Ug0b9tAHmHAUuDmyXarW+ebGELeyH+S7D0Lp2JXOYLJE2KUMP865YBwBejckuwaBOUHi7BT7uSTPO+F@vger.kernel.org
-X-Gm-Message-State: AOJu0YyqtzEVj4qHg4EZvAUrxz6WgGkrTa0IqzNlM8kFnrdnnvLA5ze7
-	NyzMj3S7ikiv1cPUlZW21vBw8McAoij+XklJxFhWeRXORcejmWA/Qio4X2rGB7TDKqw7YEaJu/U
-	xAcKJXzmfI7eq44RH37qwbABImUU=
-X-Google-Smtp-Source: 
- AGHT+IFg4wyGK6VF2wjPjpIZ8OKnRzWWaJZk6o/Gjb7Is6KTQDwhUqgOfMyd55qPLWosSWcc5Up9ckS22GBNFVqu8cQ=
-X-Received: by 2002:a2e:968b:0:b0:304:68e5:eabd with SMTP id
- 38308e7fff4ca-30a80c0f0admr41386401fa.3.1740608130090; Wed, 26 Feb 2025
- 14:15:30 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="aqYqpdVV"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8D179C4CED6;
+	Wed, 26 Feb 2025 22:26:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1740608820;
+	bh=O5zZ7g63I+0ZeYH00JZerlvbNik71qO0CgwvkTnWcIs=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=aqYqpdVVpkD5NJn6jpo0cdClxOspwzsi8RCKpRnA88J5OPdmx1mMru31LZxBFgp96
+	 SZb3oRy0Fxzg1qr18ZQYO7NtEHrnW1kSYRo35qghO1/ESXhb4R4oAXKE6PoHpaKtQk
+	 rw/ltpwe8XfbrUtfiq6lveoAbVX0jopaapPwU3slyk58T6gzgfoVr9fY71ajwj3kUT
+	 xvbk1I9lC3b2larN7+jztDKNXSrFhP0QhpXpDklrqd7y0o0NsfVUuwegc/GYneM1Nf
+	 LoD2swB/LWax0rd/I8YAe0yQ9kMiS9zB3fdg0qmIVaFo3k/1cDqwlB1rT1yn4zBMcR
+	 ST+zf0908vWAA==
+Date: Wed, 26 Feb 2025 22:26:46 +0000
+From: Mark Brown <broonie@kernel.org>
+To: Andrew Morton <akpm@linux-foundation.org>
+Cc: Easwar Hariharan <eahariha@linux.microsoft.com>,
+	Yaron Avizrat <yaron.avizrat@intel.com>,
+	Oded Gabbay <ogabbay@kernel.org>,
+	Julia Lawall <Julia.Lawall@inria.fr>,
+	Nicolas Palix <nicolas.palix@imag.fr>,
+	James Smart <james.smart@broadcom.com>,
+	Dick Kennedy <dick.kennedy@broadcom.com>,
+	"James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>,
+	"Martin K. Petersen" <martin.petersen@oracle.com>,
+	Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>,
+	Chris Mason <clm@fb.com>, Josef Bacik <josef@toxicpanda.com>,
+	David Sterba <dsterba@suse.com>, Ilya Dryomov <idryomov@gmail.com>,
+	Dongsheng Yang <dongsheng.yang@easystack.cn>,
+	Jens Axboe <axboe@kernel.dk>, Xiubo Li <xiubli@redhat.com>,
+	Damien Le Moal <dlemoal@kernel.org>,
+	Niklas Cassel <cassel@kernel.org>, Carlos Maiolino <cem@kernel.org>,
+	"Darrick J. Wong" <djwong@kernel.org>,
+	Sebastian Reichel <sre@kernel.org>, Keith Busch <kbusch@kernel.org>,
+	Christoph Hellwig <hch@lst.de>, Sagi Grimberg <sagi@grimberg.me>,
+	Frank Li <Frank.Li@nxp.com>, Shawn Guo <shawnguo@kernel.org>,
+	Sascha Hauer <s.hauer@pengutronix.de>,
+	Pengutronix Kernel Team <kernel@pengutronix.de>,
+	Fabio Estevam <festevam@gmail.com>,
+	Shyam Sundar S K <Shyam-sundar.S-k@amd.com>,
+	Hans de Goede <hdegoede@redhat.com>,
+	Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	Henrique de Moraes Holschuh <hmh@hmh.eng.br>,
+	Selvin Xavier <selvin.xavier@broadcom.com>,
+	Kalesh AP <kalesh-anakkur.purayil@broadcom.com>,
+	Jason Gunthorpe <jgg@ziepe.ca>, Leon Romanovsky <leon@kernel.org>,
+	cocci@inria.fr, linux-kernel@vger.kernel.org,
+	linux-scsi@vger.kernel.org, dri-devel@lists.freedesktop.org,
+	linux-sound@vger.kernel.org, linux-btrfs@vger.kernel.org,
+	ceph-devel@vger.kernel.org, linux-block@vger.kernel.org,
+	linux-ide@vger.kernel.org, linux-xfs@vger.kernel.org,
+	linux-pm@vger.kernel.org, linux-nvme@lists.infradead.org,
+	linux-spi@vger.kernel.org, imx@lists.linux.dev,
+	linux-arm-kernel@lists.infradead.org,
+	platform-driver-x86@vger.kernel.org,
+	ibm-acpi-devel@lists.sourceforge.net, linux-rdma@vger.kernel.org,
+	Takashi Iwai <tiwai@suse.de>,
+	Carlos Maiolino <cmaiolino@redhat.com>
+Subject: Re: [PATCH v3 00/16] Converge on using secs_to_jiffies() part two
+Message-ID: <594169fd-5ba6-42d5-ad35-bb8c7720904b@sirena.org.uk>
+References: <20250225-converge-secs-to-jiffies-part-two-v3-0-a43967e36c88@linux.microsoft.com>
+ <79b24031-5776-4eb3-960b-32b0530647fb@sirena.org.uk>
+ <20250226123851.a50e727d0a1bfe639ece4a72@linux-foundation.org>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250224195059.10185-1-lkml@antheas.dev>
- <1c0c988b-8fe6-4857-9556-6ac6880b76ff@app.fastmail.com>
- <633bbd2d5469db5595f66c9eb6ea3172ab7c56b7.camel@ljones.dev>
- <CAGwozwGmDHMRbURuCvWsk8VTJEf-eFXTh+mamB1sKaHX5DO8WA@mail.gmail.com>
- <9fa91732-3085-4e79-9a8f-b38263ee7d08@gmx.de>
- <CAGwozwHZCLaVD8iRgRxvQNqw3v+T9J+omMF+JoNe1r=+S1-OsA@mail.gmail.com>
- <CAGwozwEEbsLOJROm7rW-240Zoqh3K_JOtZE_NL8AnLy1eChR6A@mail.gmail.com>
- <CAJZ5v0jpSN_Tq6D3OrRj5KDuXwqVuzcwyNXwEuL90fr=juH48g@mail.gmail.com>
- <CAGwozwHAKbR4y9cW8H0nmESS7yv6RrXtgcZyEdz1Wy2e8tAdqQ@mail.gmail.com>
- <CAJZ5v0ihavOHCzfqMc7nd7HUaxYta7-vBBTo6WoJ3gDduZ6iRA@mail.gmail.com>
-In-Reply-To: 
- <CAJZ5v0ihavOHCzfqMc7nd7HUaxYta7-vBBTo6WoJ3gDduZ6iRA@mail.gmail.com>
-From: Antheas Kapenekakis <lkml@antheas.dev>
-Date: Wed, 26 Feb 2025 23:15:16 +0100
-X-Gmail-Original-Message-ID: 
- <CAGwozwEkGDfhUoCSM6eA-1QN3-pCixT-YVPBNY4bLUZYxvff8Q@mail.gmail.com>
-X-Gm-Features: AQ5f1JqPcnpjoEwypmX0Ot_L-bCpE2CHv_Ze7HXHX5i7ZuRYsRKVxaYGbPY5yHs
-Message-ID: 
- <CAGwozwEkGDfhUoCSM6eA-1QN3-pCixT-YVPBNY4bLUZYxvff8Q@mail.gmail.com>
-Subject: Re: [PATCH 0/3] ACPI: platform_profile: fix legacy sysfs with
- multiple handlers
-To: "Rafael J. Wysocki" <rafael@kernel.org>
-Cc: Armin Wolf <W_Armin@gmx.de>, Luke Jones <luke@ljones.dev>,
-	Mark Pearson <mpearson-lenovo@squebb.ca>,
-	"Limonciello, Mario" <mario.limonciello@amd.com>,
-	=?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	Len Brown <lenb@kernel.org>,
- "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>,
-	linux-kernel@vger.kernel.org,
-	"platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>,
- Hans de Goede <hdegoede@redhat.com>,
-	me@kylegospodneti.ch
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="ktE/+HW2BMMja6u3"
+Content-Disposition: inline
+In-Reply-To: <20250226123851.a50e727d0a1bfe639ece4a72@linux-foundation.org>
+X-Cookie: I've been there.
+
+
+--ktE/+HW2BMMja6u3
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
-X-PPP-Message-ID: 
- <174060813166.13020.1806907721096684722@linux1587.grserver.gr>
-X-PPP-Vhost: antheas.dev
-X-Virus-Scanned: clamav-milter 0.103.11 at linux1587.grserver.gr
-X-Virus-Status: Clean
 
-On Wed, 26 Feb 2025 at 21:04, Rafael J. Wysocki <rafael@kernel.org> wrote:
->
-> Top-posting not welcome.
+On Wed, Feb 26, 2025 at 12:38:51PM -0800, Andrew Morton wrote:
+> On Wed, 26 Feb 2025 11:29:53 +0000 Mark Brown <broonie@kernel.org> wrote:
 
-?
+> > Please don't combine patches for multiple subsystems into a single
+> > series if there's no dependencies between them, it just creates
+> > confusion about how things get merged, problems for tooling and makes
+> > everything more noisy.  It's best to split things up per subsystem in
+> > that case.
 
-> On Wed, Feb 26, 2025 at 8:52=E2=80=AFPM Antheas Kapenekakis <lkml@antheas=
-.dev> wrote:
-> > >
-> > > What about adding "quiet" as a "hidden choice" to amd-pmf such that i=
-t
-> > > would allow the test_bit(*bit, handler->choices) check in
-> > > _store_class_profile() to pass, but it would not cause this "choice"
-> > > to become visible in the new I/F (or when amd-pmf becomes the only
-> > > platform-profile driver) and it would be aliased to "low-power"
-> > > internally?
-> >
-> > This is what this patch series essentially does. It makes amd-pmf
-> > accept all choices but only show its own in its own handler and when
-> > it is the only option
->
-> No, it does more than this.
+> I asked for this.  I'll merge everything, spend a few weeks gathering
+> up maintainer acks.  Anything which a subsystem maintainer merges will
+> be reported by Stephen and I'll drop that particular patch.
 
-I would say functionality-wise no. The patch could be minified further.
+> This way, nothing gets lost.  I take this approach often and it works.
 
->  For instance, it is not necessary to do
-> anything about PLATFORM_PROFILE_BALANCED_PERFORMANCE in it.
+I've only started seeing these in the past few weeks, but we do have a
+bunch of people routinely doing cross tree stuff who split things up and
+it seems to work OK there.
 
-I do not see a difference between QUIET and BALANCED_PERFORMANCE, any
-driver occluding either causes the same issue. Severity is debatably
-lower on BP though.
+> If these were sent as a bunch of individual patches then it would be up
+> to the sender to keep track of what has been merged and what hasn't.=20
+> That person will be resending some stragglers many times.  Until they
+> give up and some patches get permanently lost.
 
-> The structure of it is questionable either.  It really should be two
-> patches, one modifying the ACPI platform-profile driver and the other
-> changing amd-pmf on top of this.
+Surely the sender can just CC you on each individual thing just as well?
+Ensuring things get picked up is great, but it's not clear to me that
+copying everyone on a cross tree series is helping with that.
 
-Ack. I can spin it up as 2 patches.
+> Scale all that across many senders and the whole process becomes costly
+> and unreliable.  Whereas centralizing it on akpm is more efficient,
+> more reliable, more scalable, lower latency and less frustrating for
+> senders.
 
-> Moreover, I'm not entirely convinced that the "secondary" driver
-> concept is needed to address the problem at hand.
+Whereas copying everyone means all the maintainers see something that
+looks terribly complicated in their inboxes and have to figure out if
+there are actually any dependencies in the series and how it's supposed
+to be handed, and then every reply goes to a huge CC list.  That's not
+good for either getting people to look at things or general noise
+avoidance, especially for people who are expecting to get cross tree
+serieses which do have dependencies that need to be managed.
 
-Any suggestions on that front would be welcome. This is just the way I
-came up with doing it.
+There's also some bad failure modes as soon as anyone has any sort of
+comment on the series, suddenly everyone's got a coding style debate or
+whatever in their inboxes they can pile into.
 
-Best,
-Antheas
+--ktE/+HW2BMMja6u3
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAme/lSYACgkQJNaLcl1U
+h9DO/Qf/a9HWwKcXS5+hFxQJSm6QW0NLy2NbqHre8UKfa7aKUVgjHmVnb1gIAdSh
+gY+WUz9p7S+67TovmO+FlVs/KDBaHyw8J0auw2I/uFK7bDhNHXtiUi32jBCyuQD4
+w+yhOC50NrB6ZXh/FpBk8EXI4DSUoaL5z6KMVYItTTfl0lCtBbTGJSAPXswWc3u1
+5ZXriY5GR9Q2MwY4Fs6QN6pbKucqtpxnhiL26E8ic/kdpVh6ZGEoFhFWweV6nD/+
+ttggFNcFA98M8YYEySK/p9ls4PyRF4dXL+oQWEXWvylpGogCDAcCj7Igb8CuyJRn
+G2+ftlgr6xEk4hOBnRKBY7Ts/BcKqg==
+=3AEq
+-----END PGP SIGNATURE-----
+
+--ktE/+HW2BMMja6u3--
