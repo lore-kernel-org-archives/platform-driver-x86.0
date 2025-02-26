@@ -1,125 +1,95 @@
-Received: from out-181.mta1.migadu.com (out-181.mta1.migadu.com [95.215.58.181])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F5FA237702
-	for <platform-driver-x86@vger.kernel.org>; Wed, 26 Feb 2025 19:07:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A30D62755E3;
+	Wed, 26 Feb 2025 20:04:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740596866; cv=none; b=gvZMjkVvb3cP9JVvAxHoweKMC7+0eF8v6bsQdKM8yNMw3T9imQ5VdiYhGmReug8xoBDDO0FXhZDmtzeXaQDg+74HV1vRXtuVc6+3hmkK+XTriIy/bqPAQjIEzEibPtxYXM2ADyOCtofRFxr7RhRLn/7UpAbzQT9vN+D7wzZqUiU=
+	t=1740600246; cv=none; b=bL1hg46uO72ChM+WVF4Xw19N4I2tNNlM/Ulj/ncPhKHJJWIQsYclm8r6rKWvjycfizDTjpun1REio0uX7p0h3N80xfjetQRbmdLfCHbQt3L2lhrnn1+xicCUzC6GVKT+J+qoQDDwCc0l0g1kxlwKH2a0MDwjUFwn8gHcIHZseIg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740596866; c=relaxed/simple;
-	bh=vaZR9Hnj++wdm9p2gOfT46UizyWXUgiuV8N/tsFe4CQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=gAGEilav6YBMvuwuF9X892h+IqLzGlPOOSTDBkx9XDyMPanOl/+5V+mUgt9Cr7Ocs4Kqafm10HSSY5H6e9sS9Bs40BcpeRBU0L1ElBsCVPlv5DVFTITmWQrBunJGcRZondZa17vmYPYdTXeaxZTED8aaHou6xmYqz7JO/7lgNzM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=X3Mi75tV; arc=none smtp.client-ip=95.215.58.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1740600246; c=relaxed/simple;
+	bh=TEzuRaG/DddpK/PHwUH8U2dSWp8EgG9o2fX0TJTsrYY=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=BzxXcsv+YYK9/m7KdS1R0QgQn2SN4aE8E+oqlBkWmVUFnklRUgA9Ru+4bLOIMrd9dExsdJkii65wgqdCeozWf1bEocd/C4Q5gHANxO1mRp04lsNuJuV/0ewjc4pUrnM6+XbJZmOgykALt+5ilvjZsZ9WXTTLzY2yWAiYwHAdxHk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=aEE76be7; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="X3Mi75tV"
-Message-ID: <1d495444-5287-453f-8d20-6d578c4edb36@linux.dev>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1740596862;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=j71fEwNAw6vMemf2qgdxvV8cBNKsWsP3YOvG0aBa448=;
-	b=X3Mi75tVIKy5oeu+mDylHxr1bM+aq2YD2tiPCVIof4NAN9q4CO+6jCwl07Czw4D4nC2jdA
-	rVzqHV2LCNnikpVG4DU8Ha2+Obse2084q7JAyhPMPrWJLXjim0LNpmWMqBokF9NAldfs0J
-	wfQrE53G3GT4zBSP13cXqqcmkcRw30c=
-Date: Wed, 26 Feb 2025 11:07:36 -0800
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="aEE76be7"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 23ED8C4CEED;
+	Wed, 26 Feb 2025 20:04:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1740600246;
+	bh=TEzuRaG/DddpK/PHwUH8U2dSWp8EgG9o2fX0TJTsrYY=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=aEE76be78Tibfhj5ci/hKGs4cr160aeVv3GfxjB3V4BkxnosKIN1erpbvc6gFnzCK
+	 4AUWH6W98DJSGyBkg1OJArSerHeLcb1Un99mpbwmbNbtr53Yorw0mbGsir9HT4nDSD
+	 DnB/PISnpoxUXmfUvyCorTMSaiWMnI8OVJyoy/BRImcoqCSniCerKuFo2AStEhgja8
+	 yd1M2lbNkJTb9JqPDe17dL6cZfIsPe1Q5ETUo32r+Y3G/p3mHivtSR7RFC+YbFsnO9
+	 jIettVdwiuXE24i/0yIR7hHbi8av+j9rvsI/a6qiRCC+5utkpEgEJVsAy7IL9fhMlT
+	 YQKeYbMoXbQEA==
+Received: by mail-oa1-f44.google.com with SMTP id 586e51a60fabf-2b2b6019a74so127229fac.0;
+        Wed, 26 Feb 2025 12:04:06 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCVqtUtB4XyKbx+uVJW3iglfWVr1MvUq91AQfd2l5jECot5b7cerLtyVC4Xum+CKxfA1nWhJhMoujUP7@vger.kernel.org, AJvYcCWVkULl5Wf2SN7STHh2IVJGia9WsYX1UfXrY/1WLb8cjYyw9rSfTdqisBX1oKH+gO+Q5fI1cnClXWhl1a2O@vger.kernel.org, AJvYcCWl6ve5uyKf91HClauzQ5XHTz9DqPVk82Y+fxggZ/ae/6IkuPyPmpgy7ZKZ+fP6GTCNES90af7NwNhpEXPWLZQKHlNTwg==@vger.kernel.org
+X-Gm-Message-State: AOJu0YyNTCJo17af/lVRq/6ESYDU/iGPHfcp8+gG77hJfKBr1/gZn18p
+	cNpdR4NizgbfxacByo5p3mAkuK6n9Uc304j6Uwp1ZejsmTVq6CHSoBLrXbCDbaK8hUkr5Vu/YOn
+	1a86ZEycZ/NAZwQWiP6jiS7cWKY8=
+X-Google-Smtp-Source: AGHT+IEY2rezCj+Pbf56cexfs6JUuar/OFfeZ7bjGQQUMHfNj2PeunEsDNmFvFqnpJMAQZke7m6gTetAPmzawe0BW6w=
+X-Received: by 2002:a05:6870:4e08:b0:296:9c08:51a3 with SMTP id
+ 586e51a60fabf-2c13083d874mr2859275fac.39.1740600245330; Wed, 26 Feb 2025
+ 12:04:05 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Subject: Re: [PATCH v3 0/4] platform/x86: Add Lenovo Gaming Series WMI Drivers
-To: "Derek J. Clark" <derekjohn.clark@gmail.com>,
- Hans de Goede <hdegoede@redhat.com>,
- =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Cc: Armin Wolf <W_Armin@gmx.de>, Jonathan Corbet <corbet@lwn.net>,
- Mario Limonciello <superm1@kernel.org>, Luke Jones <luke@ljones.dev>,
- Xino Ni <nijs1@lenovo.com>, Zhixin Zhang <zhangzx36@lenovo.com>,
- Mia Shao <shaohz1@lenovo.com>, Mark Pearson <mpearson-lenovo@squebb.ca>,
- "Pierre-Loup A . Griffais" <pgriffais@valvesoftware.com>,
- "Cody T . -H . Chiu" <codyit@gmail.com>, John Martens <johnfanv2@gmail.com>,
- platform-driver-x86@vger.kernel.org, linux-doc@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <20250225220037.16073-1-derekjohn.clark@gmail.com>
-Content-Language: en-US
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Matthew Schwartz <matthew.schwartz@linux.dev>
-In-Reply-To: <20250225220037.16073-1-derekjohn.clark@gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Migadu-Flow: FLOW_OUT
+References: <20250224195059.10185-1-lkml@antheas.dev> <1c0c988b-8fe6-4857-9556-6ac6880b76ff@app.fastmail.com>
+ <633bbd2d5469db5595f66c9eb6ea3172ab7c56b7.camel@ljones.dev>
+ <CAGwozwGmDHMRbURuCvWsk8VTJEf-eFXTh+mamB1sKaHX5DO8WA@mail.gmail.com>
+ <9fa91732-3085-4e79-9a8f-b38263ee7d08@gmx.de> <CAGwozwHZCLaVD8iRgRxvQNqw3v+T9J+omMF+JoNe1r=+S1-OsA@mail.gmail.com>
+ <CAGwozwEEbsLOJROm7rW-240Zoqh3K_JOtZE_NL8AnLy1eChR6A@mail.gmail.com>
+ <CAJZ5v0jpSN_Tq6D3OrRj5KDuXwqVuzcwyNXwEuL90fr=juH48g@mail.gmail.com> <CAGwozwHAKbR4y9cW8H0nmESS7yv6RrXtgcZyEdz1Wy2e8tAdqQ@mail.gmail.com>
+In-Reply-To: <CAGwozwHAKbR4y9cW8H0nmESS7yv6RrXtgcZyEdz1Wy2e8tAdqQ@mail.gmail.com>
+From: "Rafael J. Wysocki" <rafael@kernel.org>
+Date: Wed, 26 Feb 2025 21:03:53 +0100
+X-Gmail-Original-Message-ID: <CAJZ5v0ihavOHCzfqMc7nd7HUaxYta7-vBBTo6WoJ3gDduZ6iRA@mail.gmail.com>
+X-Gm-Features: AQ5f1JqeNmjFzwNh05J_-uJo8wYCv8v7712qge6zXzFr_hwhPrTT_JCTCea2b8I
+Message-ID: <CAJZ5v0ihavOHCzfqMc7nd7HUaxYta7-vBBTo6WoJ3gDduZ6iRA@mail.gmail.com>
+Subject: Re: [PATCH 0/3] ACPI: platform_profile: fix legacy sysfs with
+ multiple handlers
+To: Antheas Kapenekakis <lkml@antheas.dev>
+Cc: "Rafael J. Wysocki" <rafael@kernel.org>, Armin Wolf <W_Armin@gmx.de>, Luke Jones <luke@ljones.dev>, 
+	Mark Pearson <mpearson-lenovo@squebb.ca>, 
+	"Limonciello, Mario" <mario.limonciello@amd.com>, 
+	=?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, 
+	Len Brown <lenb@kernel.org>, "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>, 
+	linux-kernel@vger.kernel.org, 
+	"platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>, Hans de Goede <hdegoede@redhat.com>, 
+	me@kylegospodneti.ch
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-For the series on both Lenovo Legion Go and Legion Go S, all platform profile selection and power controls have been working consistently over several hours with numerous adjustments and many suspend/resume cycles. Tested on Arch Linux w/ kernel 6.14-rc1 compiled from platform-drivers-x86. 
+Top-posting not welcome.
 
-Tested-by: Matthew Schwartz <matthew.schwartz@linux.dev> 
+On Wed, Feb 26, 2025 at 8:52=E2=80=AFPM Antheas Kapenekakis <lkml@antheas.d=
+ev> wrote:
+> >
+> > What about adding "quiet" as a "hidden choice" to amd-pmf such that it
+> > would allow the test_bit(*bit, handler->choices) check in
+> > _store_class_profile() to pass, but it would not cause this "choice"
+> > to become visible in the new I/F (or when amd-pmf becomes the only
+> > platform-profile driver) and it would be aliased to "low-power"
+> > internally?
+>
+> This is what this patch series essentially does. It makes amd-pmf
+> accept all choices but only show its own in its own handler and when
+> it is the only option
 
-On 2/25/25 1:59 PM, Derek J. Clark wrote:
-> Adds support for the Lenovo "Gaming Series" of laptop hardware that use
-> WMI interfaces that control various power settings. There are multiple WMI
-> interfaces that work in concert to provide getting and setting values as
-> well as validation of input. Currently only the "Gamezone", "Other
-> Mode", and "LENOVO_CAPABILITY_DATA_01" interfaces are implemented, but
-> I attempted to structure the driver so that adding the "Custom Mode",
-> "Lighting", and other data block interfaces would be trivial in a later
-> patches.
-> 
-> This driver is distinct from, but should be considered a replacement for
-> this patch:
-> https://lore.kernel.org/all/20241118100503.14228-1-jonmail@163.com/
-> 
-> This driver attempts to standardize the exposed sysfs by mirroring the
-> asus-armoury driver currently under review. As such, a lot of
-> inspiration has been drawn from that driver.
-> https://lore.kernel.org/all/20240930000046.51388-1-luke@ljones.dev/
-> 
-> The drivers have been tested by me on the Lenovo Legion Go and Legion Go
-> S.
-> 
-> v3:
-> - Added notifier chain to Gamezone and Other Mode drivers.
-> - Added component framework to lenovo-wmi-other driver with
->   lenovo-wmi-capdata01 acting as a component.
-> - Completed all suggestions from v2.
-> - Checkpatch produces CHECK complaints about the Other Mode macros
->   reusing some variable names. This don't appear to create the condition
->   it highlights in my testing.
-> 
-> v2:
-> https://lore.kernel.org/platform-driver-x86/20250102004854.14874-1-derekjohn.clark@gmail.com/t/#m9682cee65783ff3a9e927f2ad1f55c4cbfc37615
-> v1:
-> https://lore.kernel.org/platform-driver-x86/CAFqHKTna+kJpHLo5s4Fm1TmHcSSqSTr96JHDm0DJ0dxsZMkixA@mail.gmail.com/T/#t
-> 
-> Suggested-by: Mario Limonciello <superm1@kernel.org>
-> Signed-off-by: Derek J. Clark <derekjohn.clark@gmail.com>
-> Derek J. Clark (4):
->   platform/x86: Add lenovo-wmi drivers Documentation
->   platform/x86: Add Lenovo Gamezone WMI Driver
->   platform/x86: Add Lenovo Capability Data 01 WMI Driver
->   platform/x86: Add Lenovo Other Mode WMI Driver
-> 
->  .../wmi/devices/lenovo-wmi-gamezone.rst       | 355 +++++++++++
->  .../wmi/devices/lenovo-wmi-other-method.rst   | 142 +++++
->  MAINTAINERS                                   |  12 +
->  drivers/platform/x86/Kconfig                  |  35 ++
->  drivers/platform/x86/Makefile                 |   4 +
->  drivers/platform/x86/lenovo-wmi-capdata01.c   | 140 +++++
->  drivers/platform/x86/lenovo-wmi-gamezone.c    | 374 ++++++++++++
->  drivers/platform/x86/lenovo-wmi-other.c       | 549 ++++++++++++++++++
->  drivers/platform/x86/lenovo-wmi.c             |  77 +++
->  drivers/platform/x86/lenovo-wmi.h             |  94 +++
->  10 files changed, 1782 insertions(+)
->  create mode 100644 Documentation/wmi/devices/lenovo-wmi-gamezone.rst
->  create mode 100644 Documentation/wmi/devices/lenovo-wmi-other-method.rst
->  create mode 100644 drivers/platform/x86/lenovo-wmi-capdata01.c
->  create mode 100644 drivers/platform/x86/lenovo-wmi-gamezone.c
->  create mode 100644 drivers/platform/x86/lenovo-wmi-other.c
->  create mode 100644 drivers/platform/x86/lenovo-wmi.c
->  create mode 100644 drivers/platform/x86/lenovo-wmi.h
-> 
+No, it does more than this.  For instance, it is not necessary to do
+anything about PLATFORM_PROFILE_BALANCED_PERFORMANCE in it.
 
+The structure of it is questionable either.  It really should be two
+patches, one modifying the ACPI platform-profile driver and the other
+changing amd-pmf on top of this.
+
+Moreover, I'm not entirely convinced that the "secondary" driver
+concept is needed to address the problem at hand.
