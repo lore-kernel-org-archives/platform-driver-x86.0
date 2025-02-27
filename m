@@ -1,112 +1,131 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B4BA22576C;
-	Thu, 27 Feb 2025 09:03:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DD7CE1DDD1;
+	Thu, 27 Feb 2025 11:17:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740646985; cv=none; b=SXR8cJvgeK28GNoIUbBSC2CPnlCrYcK/9dVqrQpjDaOGIlyGtuwOtFQzhJipfNsUeKFa/BIMsHrA1G2R803n1cQaxQVYJz9d+QJehmR/Yf+HaVqdBnH8oJyFsNBBR3+r4BDXyug7fcHXuRTj/6ijAVIDeeyMWCfqhxBC2jokAUY=
+	t=1740655071; cv=none; b=sLiprThhxp/HKSakvwFOR1XNzlBP9iEehm1Cozj2xPhnxHtZ5ar6o4bSZGLtiUcjUSrNByuVYsv2WXLcX5i9DqwmvbJSdVVVpq6mVCrvyxD+IEfRPvAxQHA0ZIeKQYO2DffA+vCI90V8EC7Rw+LuFeh1wMFcPetzbUKHoDDRDS8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740646985; c=relaxed/simple;
-	bh=NVCpCk+nbSUsNJ/EU7EEuGOPqCNbb7okhZbn+Sil+6M=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=tiKcbViOayNAePsy0pUklxZwqZAKz5ZhJDjiW/QdW5lHGaxT+Vo5tfm0VqNhLPVFOMwAeAQi6wKqh5GEy+E3dflZVAGVaC6KcIWdzpA9FRLlTu4DM+sBdi+mk0OWcEJ+q7823JMaOAgky+oPyeIZyWfWStoybPumk/gacdR9Byw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nLspYqEw; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1740655071; c=relaxed/simple;
+	bh=CNhFV9T14sh7OY2SRFlpy7R8+gM04CqgJ0xYvF9HFpo=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=qdTIOCSbsRouaWTTTkkv4YyARemOy81YHCM8Ibpgr7OSw0CXP6uWbhIRa0FK7F2B42S5Tb4qdd9np2WFimudh27tJ4k17eXJJCHWVp05zPCu2SEe/LH3cwyDcXLjUiDn6S+NYragqIFRvJtjrjVo8gguc+KBau5+kJe7+i6zkDo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=jPNjd8QA; arc=none smtp.client-ip=198.175.65.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nLspYqEw"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9B7E3C4CEDD;
-	Thu, 27 Feb 2025 09:02:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1740646984;
-	bh=NVCpCk+nbSUsNJ/EU7EEuGOPqCNbb7okhZbn+Sil+6M=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=nLspYqEw609cIT0ad0o594ZSe9+944oOqgtsX4PvzoyBCh2CjxvcaZKHcRlfZbkg3
-	 o98sgutNPNtNQvtB1V2TWfdkxk0jvPKNau6dHa8OKjnpZRzHC9C6ErL5o2r0XNXfYe
-	 ynD51HJPuofVM3zovm3pWhAZDAaeGPoIRj6tCVyu8o4t7sFTQlvipwFQwyRdAzsR2d
-	 B6voWJuIrlI+Cf1lPSYN2ZjYhqS7rvygaip7lyyFeeh6HBrO8Q/DpezIvl2iQUtyVl
-	 OXwKmfMuglQQ5kuzM1Q6kxE36HyfrIokC3I3woeNs2DsuZou71wXc13B0RkvyLg9Ys
-	 NykE1mhZbbdJQ==
-Date: Thu, 27 Feb 2025 10:02:45 +0100
-From: Carlos Maiolino <cem@kernel.org>
-To: Andrew Morton <akpm@linux-foundation.org>
-Cc: Mark Brown <broonie@kernel.org>, 
-	Easwar Hariharan <eahariha@linux.microsoft.com>, Yaron Avizrat <yaron.avizrat@intel.com>, 
-	Oded Gabbay <ogabbay@kernel.org>, Julia Lawall <Julia.Lawall@inria.fr>, 
-	Nicolas Palix <nicolas.palix@imag.fr>, James Smart <james.smart@broadcom.com>, 
-	Dick Kennedy <dick.kennedy@broadcom.com>, "James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>, 
-	"Martin K. Petersen" <martin.petersen@oracle.com>, Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, 
-	Chris Mason <clm@fb.com>, Josef Bacik <josef@toxicpanda.com>, 
-	David Sterba <dsterba@suse.com>, Ilya Dryomov <idryomov@gmail.com>, 
-	Dongsheng Yang <dongsheng.yang@easystack.cn>, Jens Axboe <axboe@kernel.dk>, Xiubo Li <xiubli@redhat.com>, 
-	Damien Le Moal <dlemoal@kernel.org>, Niklas Cassel <cassel@kernel.org>, 
-	"Darrick J. Wong" <djwong@kernel.org>, Sebastian Reichel <sre@kernel.org>, 
-	Keith Busch <kbusch@kernel.org>, Christoph Hellwig <hch@lst.de>, Sagi Grimberg <sagi@grimberg.me>, 
-	Frank Li <Frank.Li@nxp.com>, Shawn Guo <shawnguo@kernel.org>, 
-	Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>, 
-	Fabio Estevam <festevam@gmail.com>, Shyam Sundar S K <Shyam-sundar.S-k@amd.com>, 
-	Hans de Goede <hdegoede@redhat.com>, Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>, 
-	Henrique de Moraes Holschuh <hmh@hmh.eng.br>, Selvin Xavier <selvin.xavier@broadcom.com>, 
-	Kalesh AP <kalesh-anakkur.purayil@broadcom.com>, Jason Gunthorpe <jgg@ziepe.ca>, 
-	Leon Romanovsky <leon@kernel.org>, cocci@inria.fr, linux-kernel@vger.kernel.org, 
-	linux-scsi@vger.kernel.org, dri-devel@lists.freedesktop.org, linux-sound@vger.kernel.org, 
-	linux-btrfs@vger.kernel.org, ceph-devel@vger.kernel.org, linux-block@vger.kernel.org, 
-	linux-ide@vger.kernel.org, linux-xfs@vger.kernel.org, linux-pm@vger.kernel.org, 
-	linux-nvme@lists.infradead.org, linux-spi@vger.kernel.org, imx@lists.linux.dev, 
-	linux-arm-kernel@lists.infradead.org, platform-driver-x86@vger.kernel.org, 
-	ibm-acpi-devel@lists.sourceforge.net, linux-rdma@vger.kernel.org, Takashi Iwai <tiwai@suse.de>, 
-	Carlos Maiolino <cmaiolino@redhat.com>
-Subject: Re: [PATCH v3 00/16] Converge on using secs_to_jiffies() part two
-Message-ID: <3apo7evpkvcy5mafw7zdatr3n7lytugvfmumq2zou4nifyptnc@ucbu4c5g5jrq>
-References: <20250225-converge-secs-to-jiffies-part-two-v3-0-a43967e36c88@linux.microsoft.com>
- <79b24031-5776-4eb3-960b-32b0530647fb@sirena.org.uk>
- <hJl1qb89zCHWejINoRSGGIO0m7NNi3wAmY9N_VC7royLnZoyL-ZozLkmLO-vCPlYc55-IPh76PIB_2_aKKjp1A==@protonmail.internalid>
- <20250226123851.a50e727d0a1bfe639ece4a72@linux-foundation.org>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="jPNjd8QA"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1740655070; x=1772191070;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=CNhFV9T14sh7OY2SRFlpy7R8+gM04CqgJ0xYvF9HFpo=;
+  b=jPNjd8QA/cmsBgf2MsfeALyTkg6vEvSV9xzSxwahOdKFiEoNAFU5EwxT
+   RDipRbNKcP5tiS2Z1eiaNWjx6pcRT/610pI+TdZBKbiq+dD3FV+UdYGyD
+   1FfIZXXOxsi1SzYujA8ynJ5AOY5GFj4xw7tQylVqSIvMfFefdv824ZfUT
+   ZVN84HkLX683KbumMMR8DwJTqi8XKGTJtJ8jQwdmF6astiQEGBinMJAFq
+   G8L+HlWlPs5YqNL0ibnX8YIjbb3yn839nVa16gChDLfVUMiCm0fELcK2L
+   g5i1ABUxm37lv9hxZhx5fzyAAxAPFFs20dxQ/Kv+3Obkak/bWApYT/5Bw
+   w==;
+X-CSE-ConnectionGUID: bPkUtZsIS4SM4zlGlNy5Bw==
+X-CSE-MsgGUID: DO6GtJHJQheOZQrZSPgFuQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11357"; a="58955498"
+X-IronPort-AV: E=Sophos;i="6.13,319,1732608000"; 
+   d="scan'208";a="58955498"
+Received: from fmviesa008.fm.intel.com ([10.60.135.148])
+  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Feb 2025 03:17:49 -0800
+X-CSE-ConnectionGUID: 3Tb9u1sUQPaKicuPXGkj2w==
+X-CSE-MsgGUID: 45DyLiKXRPyvMBlpNWZcDw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.13,319,1732608000"; 
+   d="scan'208";a="117172315"
+Received: from choongyo-mobl.gar.corp.intel.com (HELO [10.247.81.210]) ([10.247.81.210])
+  by fmviesa008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Feb 2025 03:17:41 -0800
+Message-ID: <1ff2fcac-d9d5-4c70-a101-f7026b50646a@linux.intel.com>
+Date: Thu, 27 Feb 2025 19:17:39 +0800
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250226123851.a50e727d0a1bfe639ece4a72@linux-foundation.org>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH net-next v8 1/6] net: phylink: use pl->link_interface in
+ phylink_expects_phy()
+To: "Russell King (Oracle)" <linux@armlinux.org.uk>
+Cc: Simon Horman <horms@kernel.org>, Jose Abreu <joabreu@synopsys.com>,
+ Jose Abreu <Jose.Abreu@synopsys.com>,
+ David E Box <david.e.box@linux.intel.com>,
+ Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
+ Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>,
+ "H . Peter Anvin" <hpa@zytor.com>,
+ Rajneesh Bhardwaj <irenic.rajneesh@gmail.com>,
+ David E Box <david.e.box@intel.com>, Andrew Lunn <andrew+netdev@lunn.ch>,
+ "David S . Miller" <davem@davemloft.net>, Eric Dumazet
+ <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
+ Paolo Abeni <pabeni@redhat.com>, Maxime Coquelin
+ <mcoquelin.stm32@gmail.com>, Alexandre Torgue
+ <alexandre.torgue@foss.st.com>, Jiawen Wu <jiawenwu@trustnetic.com>,
+ Mengyuan Lou <mengyuanlou@net-swift.com>,
+ Heiner Kallweit <hkallweit1@gmail.com>, Hans de Goede <hdegoede@redhat.com>,
+ =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+ Richard Cochran <richardcochran@gmail.com>,
+ Serge Semin <fancer.lancer@gmail.com>, x86@kernel.org,
+ linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+ platform-driver-x86@vger.kernel.org,
+ linux-stm32@st-md-mailman.stormreply.com,
+ linux-arm-kernel@lists.infradead.org
+References: <20250226074837.1679988-1-yong.liang.choong@linux.intel.com>
+ <20250226074837.1679988-2-yong.liang.choong@linux.intel.com>
+ <Z780cM9bejxhzTXO@shell.armlinux.org.uk>
+Content-Language: en-US
+From: Choong Yong Liang <yong.liang.choong@linux.intel.com>
+In-Reply-To: <Z780cM9bejxhzTXO@shell.armlinux.org.uk>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Wed, Feb 26, 2025 at 12:38:51PM -0800, Andrew Morton wrote:
-> On Wed, 26 Feb 2025 11:29:53 +0000 Mark Brown <broonie@kernel.org> wrote:
-> 
-> > On Tue, Feb 25, 2025 at 08:17:14PM +0000, Easwar Hariharan wrote:
-> > > This is the second series (part 1*) that converts users of msecs_to_jiffies() that
-> > > either use the multiply pattern of either of:
-> > > - msecs_to_jiffies(N*1000) or
-> > > - msecs_to_jiffies(N*MSEC_PER_SEC)
-> > >
-> > > where N is a constant or an expression, to avoid the multiplication.
-> >
-> > Please don't combine patches for multiple subsystems into a single
-> > series if there's no dependencies between them, it just creates
-> > confusion about how things get merged, problems for tooling and makes
-> > everything more noisy.  It's best to split things up per subsystem in
-> > that case.
-> 
-> I asked for this.  I'll merge everything, spend a few weeks gathering
-> up maintainer acks.  Anything which a subsystem maintainer merges will
-> be reported by Stephen and I'll drop that particular patch.
 
-I'm removing this from my queue then and let it go through your tree.
-Cheers,
 
-Carlos
-
+On 26/2/2025 11:34 pm, Russell King (Oracle) wrote:
+> On Wed, Feb 26, 2025 at 03:48:32PM +0800, Choong Yong Liang wrote:
+>> The phylink_expects_phy() function allows MAC drivers to check if they are
+>> expecting a PHY to attach. The checking condition in phylink_expects_phy()
+>> aims to achieve the same result as the checking condition in
+>> phylink_attach_phy().
+>>
+>> However, the checking condition in phylink_expects_phy() uses
+>> pl->link_config.interface, while phylink_attach_phy() uses
+>> pl->link_interface.
+>>
+>> Initially, both pl->link_interface and pl->link_config.interface are set
+>> to SGMII, and pl->cfg_link_an_mode is set to MLO_AN_INBAND.
+>>
+>> When the interface switches from SGMII to 2500BASE-X,
+>> pl->link_config.interface is updated by phylink_major_config().
+>> At this point, pl->cfg_link_an_mode remains MLO_AN_INBAND, and
+>> pl->link_config.interface is set to 2500BASE-X.
+>> Subsequently, when the STMMAC link goes down and comes up again,
+>> it is blocked by phylink_expects_phy().
 > 
-> This way, nothing gets lost.  I take this approach often and it works.
+> I thought we ascertained that it's not "link goes down" but when the
+> interface is taken down administratively. "Link goes down" to most
+> people mean an event such as the network cable being unplugged.
+> Please fix the patch description.
 > 
-> If these were sent as a bunch of individual patches then it would be up
-> to the sender to keep track of what has been merged and what hasn't.
-> That person will be resending some stragglers many times.  Until they
-> give up and some patches get permanently lost.
+>> Since phylink_expects_phy() and phylink_attach_phy() aim to achieve the
+>> same result, phylink_expects_phy() should check pl->link_interface,
+>> which never changes, instead of pl->link_config.interface, which is
+>> updated by phylink_major_config().
+>>
+>> Signed-off-by: Choong Yong Liang <yong.liang.choong@linux.intel.com>
 > 
-> Scale all that across many senders and the whole process becomes costly
-> and unreliable.  Whereas centralizing it on akpm is more efficient,
-> more reliable, more scalable, lower latency and less frustrating for
-> senders.
+> With, and *only* with the above fixed:
 > 
+> Reviewed-by: Russell King (Oracle) <rmk+kernel@armlinux.org.uk>
+> 
+> Thanks!
+> 
+Thank you for your feedback and clarification. I will update the patch 
+description to accurately reflect the administrative interface down scenario.
