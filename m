@@ -1,248 +1,332 @@
-Received: from NAM12-DM6-obe.outbound.protection.outlook.com (mail-dm6nam12on2040.outbound.protection.outlook.com [40.107.243.40])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from linux1587.grserver.gr (linux1587.grserver.gr [185.138.42.100])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F08021F0984;
-	Fri, 28 Feb 2025 17:02:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.243.40
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740762177; cv=fail; b=DxVDnVzGan8NNSlCGgWKVcCJ7XGfNg8ikOOFx1S4sArs0HPoKaAVsbm2AaJkhE+p5JjJr4PFg00CmltgW/seg8yaZIXhdic7M8czXe/Urd1ILE7NUfF2StXXWigoxemX9DyWfUH77YFG6cfzJ3e39HlmE0j6CTM5V6UiA4V8a8A=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740762177; c=relaxed/simple;
-	bh=NLvGxCB4lTIpmj8xRYtXEQvXcYJKJi311SKxwzjSdjs=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=Kk71zCNXt1kNl3O16kcK+Dfvd1KSH1SLNhDUZZN+QJfACNN2WuE6wYRNvIg0srb0n3DxVfZDNYHqIcrIkGs/IBKHxxm1ihjUgAR7bVdUkpl2YRklRCq3Z+kfZpNin4gqdGHVMbGsuCzi0kYVQY3aGNb44yCKEzFMj6jy8LRIwDE=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=X6rOPmif; arc=fail smtp.client-ip=40.107.243.40
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B3ED1F4C89;
+	Fri, 28 Feb 2025 17:15:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.138.42.100
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1740762949; cv=none; b=uZ2KF9zc76KpeRK8aDO6iLH6pANnrwIPyf6f4E0P07bHqx39+4xGcGkrtKrtAMJISjROoybomxqwH/K57goHDJh/dwjhqWE6ET59LlIag9PcWM8JyjAfyS+vYjMmyQt5axnw2RNgPJp7CIMb1bhOBXAkdsT1Q12svatTGcFeDH8=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1740762949; c=relaxed/simple;
+	bh=ZiztYP8bsTpFB8X72N5P0bW3ZsOX8ZuVEgP4olNm6nI=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=taC7IVh4hFSKdrrEMAiw3Xg9t6nkbTRBe415WXNmwmrTjaJb0nkQd8EoP5C9lppAUi3cVJ9+230/FI6Za8V062tzSxAj7C7g612oVTWNJSoPWQMhs34oK7PlUqetjW8VCv18iSuGMBzLvBseyHmFwaBpZBMPta7MvrOS7Lgz9oI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=antheas.dev; spf=pass smtp.mailfrom=antheas.dev; dkim=pass (1024-bit key) header.d=antheas.dev header.i=@antheas.dev header.b=y98c23vX; arc=none smtp.client-ip=185.138.42.100
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=antheas.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=antheas.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="X6rOPmif"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=AnbNTsw3do5zmnpR2wrDvSg7LypVlIJC7n4Fr47np99emdc3YAk6Pf4KwRP0VS9zvTyYm8I7ffdOtFOmvgcTPYymMZljjl8pbyA/6P4FJacznTFfCmP+vRtOpKino0Ga0XiIvwH6YWoolobSyN/VAYJ+hU8aAFPqigrRu2te917xIN3x/rzEq0e3q6b5p0/AQmgNFM+ImB4FAXsjC6+8ejkP5ieJBuR5usvTh5Tw2eB9VQHSmsCTRCbG8TFvMdvgGjQ4OhuCuiOXtYT0fcVNpoW78M1dkrKjLB3oc8o/cTqt6r1Uo8tvEnauPR5QJ1MfAATtsqTYebM8vMaKuCbP4Q==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=7QEZx+aSqy0DWgRVcUJ46/s4znUqi4SASYmZFI9+iPc=;
- b=tQMyZPl7GUGmMUKHAqGcRO+o2xtXyd4OUykBXzIYJRPFG7qzHr+fil8AazEnwPMBkpAuy8nsK72CIxIHVVYLp4tP+5uUxkA2Kbxze+/E/OXQXl4dzQayd6f+nrqUjX0TLL66QjZS1FKpvnz9F59t8vpCvz9NJlbwJnKW+HeASS1q66Nnspje2l9CZ7DIVGfcptF7q+tUrYcct9roV76AJZsaLRG9Eyjqf5IrLA1xS+kjzlG9Xk+xblCSRNhJiNimuz7gDT9HMllodAUB0zE5voogsSjupujfd+WgFVdg/R5VgVzggQcFtXykB1K/I8jmylBghWMWMrVH1oqD84nlVw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=redhat.com smtp.mailfrom=amd.com; dmarc=pass
- (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
- dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=7QEZx+aSqy0DWgRVcUJ46/s4znUqi4SASYmZFI9+iPc=;
- b=X6rOPmifYE+A7ldq6lPpdnDnWaU3fX4lBN47z0csity15ra3dJEiXb8yo0lEkQ6wFiAalacUewbSKq8EkO2CHqFBrDFHnfw9T4nQ1l8nMkSOckGnQwnTze2j7r01VRLeRhHcRdhBixeZSyaVLmjvbNec1IvLakaCXAtrNMLeoYE=
-Received: from SJ0PR13CA0047.namprd13.prod.outlook.com (2603:10b6:a03:2c2::22)
- by SA3PR12MB7805.namprd12.prod.outlook.com (2603:10b6:806:319::20) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8489.22; Fri, 28 Feb
- 2025 17:02:53 +0000
-Received: from MWH0EPF000A6732.namprd04.prod.outlook.com
- (2603:10b6:a03:2c2:cafe::56) by SJ0PR13CA0047.outlook.office365.com
- (2603:10b6:a03:2c2::22) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.8511.9 via Frontend Transport; Fri,
- 28 Feb 2025 17:02:52 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
-Received: from SATLEXMB04.amd.com (165.204.84.17) by
- MWH0EPF000A6732.mail.protection.outlook.com (10.167.249.24) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.8489.16 via Frontend Transport; Fri, 28 Feb 2025 17:02:52 +0000
-Received: from maple-stxh-09.amd.com (10.180.168.240) by SATLEXMB04.amd.com
- (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Fri, 28 Feb
- 2025 11:02:51 -0600
-From: Pratap Nirujogi <pratap.nirujogi@amd.com>
-To: <hdegoede@redhat.com>, <ilpo.jarvinen@linux.intel.com>
-CC: <platform-driver-x86@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	<benjamin.chan@amd.com>, Pratap Nirujogi <pratap.nirujogi@amd.com>
-Subject: [PATCH] platform/x86: amd: Add ISP platform info
-Date: Fri, 28 Feb 2025 12:02:36 -0500
-Message-ID: <20250228170238.3484860-1-pratap.nirujogi@amd.com>
-X-Mailer: git-send-email 2.43.0
+	dkim=pass (1024-bit key) header.d=antheas.dev header.i=@antheas.dev header.b="y98c23vX"
+Received: from mail-lj1-f179.google.com (mail-lj1-f179.google.com [209.85.208.179])
+	by linux1587.grserver.gr (Postfix) with ESMTPSA id 83F912E08E57;
+	Fri, 28 Feb 2025 19:15:34 +0200 (EET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=antheas.dev;
+	s=default; t=1740762935;
+	bh=2b2EqF3JcoemetZAF/Ymx2Rl5XMFwIx+GyHRh+KG1hc=;
+	h=Received:From:Subject:To;
+	b=y98c23vXuK3aAP/S7c9V00c3glmWJv/v6W0aPHV9KqcM6LwX5U5cSxh3weez6SVhD
+	 PhPu5iaJlw9A4U7Zhfls1nUCD3qGTaFje4OVobcPh41vH7fCj78Yoh0dSnu/slBUKp
+	 OYLL3Sh11VE04urUnSGees5D2XXYpzDGmEVR3eps=
+Authentication-Results: linux1587.grserver.gr;
+        spf=pass (sender IP is 209.85.208.179) smtp.mailfrom=lkml@antheas.dev smtp.helo=mail-lj1-f179.google.com
+Received-SPF: pass (linux1587.grserver.gr: connection is authenticated)
+Received: by mail-lj1-f179.google.com with SMTP id
+ 38308e7fff4ca-307325f2436so25246131fa.0;
+        Fri, 28 Feb 2025 09:15:34 -0800 (PST)
+X-Forwarded-Encrypted: i=1;
+ AJvYcCUdQhSBf/qh8xF9WZrKoc4NVrWg9CYD9LucUdP0/rUy1a5t7AyOgor19y/p1mlGyWPt755PBUk4Vd04@vger.kernel.org,
+ AJvYcCVERVw7ltvjz8wtwHEUHDc5/fmpPj+xTq5DZKmmV7+xRKzYOfb6Cb1DTL9DVrlaIEI/BIdntwakyrtcUGw7@vger.kernel.org,
+ AJvYcCWgl/Dloj10ezAWY034z+VWHTOa6g8QDH/XntAg42BHzQMe0OkcP6XlZa/SNgUJvFrs6jFUuVWps4vhsHJx9/s1Jzqndg==@vger.kernel.org
+X-Gm-Message-State: AOJu0YxlFyYSIvYIaja8afJmeDMuSV16rqg4OdpfX0zPQ73kGjbtHJde
+	RgnJqJ9GHb6IrpMECiVCDYDMHzwc9tu4jycRM8zALhaHPeprF2lEWaf3Zkh6r4T3EJ500HeWLC0
+	/ReVW06PEgXbk7Qxq2nr9QjqjBj0=
+X-Google-Smtp-Source: 
+ AGHT+IG319y4sJ0Wf4snos6bgIsBLMeDKrQDMygneAgNjZ48an8kOVa8nKwcDnvL9Uy73icOnrSOVv4ASkswCmRCY38=
+X-Received: by 2002:a2e:bc09:0:b0:300:1de5:59e3 with SMTP id
+ 38308e7fff4ca-30b93216728mr14248621fa.2.1740762933693; Fri, 28 Feb 2025
+ 09:15:33 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: SATLEXMB03.amd.com (10.181.40.144) To SATLEXMB04.amd.com
- (10.181.40.145)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: MWH0EPF000A6732:EE_|SA3PR12MB7805:EE_
-X-MS-Office365-Filtering-Correlation-Id: 5d6faf70-fd90-449a-72ed-08dd5819bd26
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|36860700013|1800799024|82310400026|376014;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?bgnCjE6Df0GmLRxPXGpfE99TgcLTz+HXjevUk8MUmmEcX4W5WwafgWPMJT4q?=
- =?us-ascii?Q?fysXGKwiYYD2jR6XoUc7eRIR4bl2T3aBcinyeOd0je6ZZItkR2TWUrs2yCp9?=
- =?us-ascii?Q?YUd18ORygiozAnhOcpXuZuiTEivx5jf8cLFfReLwjXh1YcRfodUcaEd7g5Ph?=
- =?us-ascii?Q?uGdXtgAWmOlNGlbLlYLMQJHks05T/LfNHWbNJuxSF+iPdCT45ck3BsxoY8gb?=
- =?us-ascii?Q?tEUc1NWfP8VZyD/Q9b8sZXr6WdTAIdEaxla5uysG0DkJbVxIaLaTQNr8c97f?=
- =?us-ascii?Q?M7DJmJh9aUvW9ZDQsukUVVXiOpBjQFUarvn/9lDkZ1sU2xN1SQmkARdaE6a4?=
- =?us-ascii?Q?0nTyy+mUBhRJLgeYvdo5+haVFdAD7ORQZA43fTlKAZKqK4CaZkO/FBCPVlg+?=
- =?us-ascii?Q?If6OM3kCyY3TNdfpIrQH3Yr9vFjqCZRNg0fM/1ma6qFoDHWLclPTBw6kGsjR?=
- =?us-ascii?Q?BMCPwOWekHM9rU8wzQg4zS0xrs3sg2I/ajJn7YC9+03RC1s0s7Z9qKsAMg50?=
- =?us-ascii?Q?8ckvO7+EFi9J9XyK5ZCD1L3/mYRJsk1L7Frn2Bs/ojOPMr2JxFW9aPOg3UzN?=
- =?us-ascii?Q?H+hUk4MhycyF1cezZVJAZT12+ZjTMoxTZdK0gXj/j9oIS3MQuMRaQ+wA/bnE?=
- =?us-ascii?Q?xnGErXMw/24JlmXYJLeQ+OGZh8No4YY1l5OLRkt+2rMAkD/Xv6STkjAvSaZl?=
- =?us-ascii?Q?mwWWcb9E1RvcduEpL392E4neJmwP0dTP4tHHDqL39GkcS0Jgk3fnHKLkfD7x?=
- =?us-ascii?Q?Ji80ptC6xzOja6UqVANg2Z98MtO6j4ST3c7DTnBQv+IbiEnLw3FdvgctX/fz?=
- =?us-ascii?Q?4DzSdBv2Cp4hvKGrzwxCyw5pvfYjMr30whfE/bS9oTTTt/KizXu0fStNjG2q?=
- =?us-ascii?Q?ZkRwHwplIeQERdXARNthcQnoNnNJbDVBNWk1QFeFbWE60kmzWJZX6Fs1voKW?=
- =?us-ascii?Q?bjqrK+KpzFQRtdSShbv1IvwEf/mb1+/hV/p+CoKmEl5TDNWqnXxz4oIRlIsY?=
- =?us-ascii?Q?tc4zgeVQDMARzC2/glHrWeDfWvb47Y7ogoDoJWsYLRO9f0PsbnG2l5rSArmd?=
- =?us-ascii?Q?NAMVlVkolKBZe70B7fjrSHQe0kNWcKDx6Q7Pj+pbWrLh9lhG161PddIMsp+I?=
- =?us-ascii?Q?WJ7/SmMojvF3deCH4mwbWtrJeDe2U+QmUwat1KcKBAlILAq5A/caC8RPc91E?=
- =?us-ascii?Q?gtbNiGmrrw+4NpikEk7cWcRJF3eOMDjEUHJKIaXQxwdq4tNGEi8mhKhTB0Fh?=
- =?us-ascii?Q?qdAQHv9WFmPmPElPBYyFN9SgrSdrUEyG+wej/TBc0yU7mVXuzgN7EoGy7+OR?=
- =?us-ascii?Q?23xuRHWdJhh09gPYs9qpP6+NhYra369fShvg0SKwhqAT609LoskKADxOscRg?=
- =?us-ascii?Q?shR70lf3ZcOOmLOlVlZuZUQBEoS69CIdeyHRUyZ6lBZ9bvQOTlCQy2eGxJ8E?=
- =?us-ascii?Q?tVjeeyOC+hi15P0eeHkW5Y8p/7UXcTRePuKt1+nLU9qMRZbBhj+sKSIm3drx?=
- =?us-ascii?Q?hWowsYMU50jquvY=3D?=
-X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(36860700013)(1800799024)(82310400026)(376014);DIR:OUT;SFP:1101;
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 28 Feb 2025 17:02:52.5756
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 5d6faf70-fd90-449a-72ed-08dd5819bd26
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	MWH0EPF000A6732.namprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA3PR12MB7805
+References: <20250228170155.2623386-1-superm1@kernel.org>
+ <20250228170155.2623386-2-superm1@kernel.org>
+In-Reply-To: <20250228170155.2623386-2-superm1@kernel.org>
+From: Antheas Kapenekakis <lkml@antheas.dev>
+Date: Fri, 28 Feb 2025 18:15:21 +0100
+X-Gmail-Original-Message-ID: 
+ <CAGwozwHtCOm0tmnzkQOHY6doPzenXsg+LnO5MH4Q5DJPQRfB3w@mail.gmail.com>
+X-Gm-Features: AQ5f1JpdnaYXZ4tAvf9SuQhfvgSgc4SZm-7887dotZrRn8oOMZp8qOmjL99koK8
+Message-ID: 
+ <CAGwozwHtCOm0tmnzkQOHY6doPzenXsg+LnO5MH4Q5DJPQRfB3w@mail.gmail.com>
+Subject: Re: [PATCH 1/3] ACPI: platform_profile: Add support for hidden
+ choices
+To: Mario Limonciello <superm1@kernel.org>
+Cc: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>,
+ "Rafael J . Wysocki" <rafael@kernel.org>,
+	Hans de Goede <hdegoede@redhat.com>,
+ =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	"Luke D . Jones" <luke@ljones.dev>, Mark Pearson <mpearson-lenovo@squebb.ca>,
+	"open list:AMD PMF DRIVER" <platform-driver-x86@vger.kernel.org>,
+	open list <linux-kernel@vger.kernel.org>,
+	"open list:ACPI" <linux-acpi@vger.kernel.org>,
+ "Derek J . Clark" <derekjohn.clark@gmail.com>,
+	me@kylegospodneti.ch, Denis Benato <benato.denis96@gmail.com>,
+	Mario Limonciello <mario.limonciello@amd.com>
+Content-Type: text/plain; charset="UTF-8"
+X-PPP-Message-ID: 
+ <174076293491.3947.16851476048369669821@linux1587.grserver.gr>
+X-PPP-Vhost: antheas.dev
+X-Virus-Scanned: clamav-milter 0.103.11 at linux1587.grserver.gr
+X-Virus-Status: Clean
 
-Add ov05c i2c boardinfo and GPIO pin info for AMD ISP platform.
+LGTM. Although patch is a bit more complicated.
 
-Details of the resources added:
+I do not have time to test this today. I can try tomorrow.
 
-- Added i2c bus number for AMD ISP platform is 99.
-- Added GPIO 85 to allow ISP driver to enable and disable ISP access.
-- Added GPIO 0 to allow sensor driver to enable and disable sensor module.
-
-Signed-off-by: Pratap Nirujogi <pratap.nirujogi@amd.com>
----
- drivers/platform/x86/amd/Kconfig   | 11 +++++
- drivers/platform/x86/amd/Makefile  |  1 +
- drivers/platform/x86/amd/amd_isp.c | 72 ++++++++++++++++++++++++++++++
- 3 files changed, 84 insertions(+)
- create mode 100644 drivers/platform/x86/amd/amd_isp.c
-
-diff --git a/drivers/platform/x86/amd/Kconfig b/drivers/platform/x86/amd/Kconfig
-index c3e086ea64fc..4b373edd750d 100644
---- a/drivers/platform/x86/amd/Kconfig
-+++ b/drivers/platform/x86/amd/Kconfig
-@@ -32,3 +32,14 @@ config AMD_WBRF
- 
- 	  This mechanism will only be activated on platforms that advertise a
- 	  need for it.
-+
-+config AMD_ISP_PLATFORM
-+	bool "AMD platform with ISP4 that supports Camera sensor device"
-+	depends on I2C && X86_64 && AMD_ISP4
-+	help
-+	  For AMD platform that support Image signal processor generation 4, it
-+	  is necessary to add platform specific camera sensor module board info
-+	  which includes the sensor driver device id and the i2c address.
-+
-+	  If you have a AMD platform that support ISP4 and with a sensor
-+	  connected to it, say Y here
-diff --git a/drivers/platform/x86/amd/Makefile b/drivers/platform/x86/amd/Makefile
-index 56f62fc9c97b..0d89e2d4f7e6 100644
---- a/drivers/platform/x86/amd/Makefile
-+++ b/drivers/platform/x86/amd/Makefile
-@@ -10,3 +10,4 @@ obj-$(CONFIG_AMD_PMC)		+= pmc/
- obj-$(CONFIG_AMD_HSMP)		+= hsmp/
- obj-$(CONFIG_AMD_PMF)		+= pmf/
- obj-$(CONFIG_AMD_WBRF)		+= wbrf.o
-+obj-$(CONFIG_AMD_ISP_PLATFORM)	+= amd_isp.o
-diff --git a/drivers/platform/x86/amd/amd_isp.c b/drivers/platform/x86/amd/amd_isp.c
-new file mode 100644
-index 000000000000..751f209e9509
---- /dev/null
-+++ b/drivers/platform/x86/amd/amd_isp.c
-@@ -0,0 +1,72 @@
-+/* SPDX-License-Identifier: MIT */
-+/*
-+ * Copyright 2025 Advanced Micro Devices, Inc.
-+ *
-+ * Permission is hereby granted, free of charge, to any person obtaining a
-+ * copy of this software and associated documentation files (the "Software"),
-+ * to deal in the Software without restriction, including without limitation
-+ * the rights to use, copy, modify, merge, publish, distribute, sublicense,
-+ * and/or sell copies of the Software, and to permit persons to whom the
-+ * Software is furnished to do so, subject to the following conditions:
-+ *
-+ * The above copyright notice and this permission notice shall be included in
-+ * all copies or substantial portions of the Software.
-+ *
-+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.  IN NO EVENT SHALL
-+ * THE COPYRIGHT HOLDER(S) OR AUTHOR(S) BE LIABLE FOR ANY CLAIM, DAMAGES OR
-+ * OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,
-+ * ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
-+ * OTHER DEALINGS IN THE SOFTWARE.
-+ */
-+
-+#include <linux/init.h>
-+#include <linux/i2c.h>
-+#include <linux/kernel.h>
-+#include <linux/gpio/machine.h>
-+
-+#define AMDISP_I2C_BUS		99
-+
-+static struct gpiod_lookup_table isp_gpio_table = {
-+	.dev_id = "amd_isp_capture",
-+	.table = {
-+		GPIO_LOOKUP("AMDI0030:00", 85, "enable_isp", GPIO_ACTIVE_HIGH),
-+		{ }
-+	},
-+};
-+
-+static struct gpiod_lookup_table isp_sensor_gpio_table = {
-+	.dev_id = "ov05c",
-+	.table = {
-+		GPIO_LOOKUP("amdisp-pinctrl", 0, "sensor0_enable", GPIO_ACTIVE_HIGH),
-+		{ }
-+	},
-+};
-+
-+static struct i2c_board_info sensor_info = {
-+	.dev_name = "ov05c",
-+	I2C_BOARD_INFO("ov05c", 0x10),
-+};
-+
-+static int __init amd_isp_init(void)
-+{
-+	int ret;
-+
-+	gpiod_add_lookup_table(&isp_gpio_table);
-+	gpiod_add_lookup_table(&isp_sensor_gpio_table);
-+
-+	ret = i2c_register_board_info(AMDISP_I2C_BUS, &sensor_info, 1);
-+	if (ret)
-+		pr_err("%s: cannot register i2c board devices:%s",
-+		       __func__, sensor_info.dev_name);
-+
-+	return ret;
-+}
-+
-+arch_initcall(amd_isp_init);
-+
-+MODULE_AUTHOR("Benjamin Chan <benjamin.chan@amd.com>");
-+MODULE_AUTHOR("Pratap Nirujogi <pratap.nirujogi@amd.com>");
-+MODULE_DESCRIPTION("AMD ISP Platform parameters");
-+MODULE_LICENSE("GPL and additional rights");
--- 
-2.43.0
-
+On Fri, 28 Feb 2025 at 18:02, Mario Limonciello <superm1@kernel.org> wrote:
+>
+> From: Mario Limonciello <mario.limonciello@amd.com>
+>
+> When two drivers don't support all the same profiles the legacy interface
+> only exports the common profiles.
+>
+> This causes problems for cases where one driver uses low-power but another
+> uses quiet because the result is that neither is exported to sysfs.
+>
+> To allow two drivers to disagree, add support for "hidden choices".
+> Hidden choices are platform profiles that a driver supports to be
+> compatible with the platform profile of another driver.
+>
+> Fixes: 688834743d67 ("ACPI: platform_profile: Allow multiple handlers")
+> Reported-by: Antheas Kapenekakis <lkml@antheas.dev>
+> Closes: https://lore.kernel.org/platform-driver-x86/e64b771e-3255-42ad-9257-5b8fc6c24ac9@gmx.de/T/#mc068042dd29df36c16c8af92664860fc4763974b
+> Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
+> ---
+> Cc: "Luke D. Jones" <luke@ljones.dev>
+>  drivers/acpi/platform_profile.c  | 94 +++++++++++++++++++++++++-------
+>  include/linux/platform_profile.h |  3 +
+>  2 files changed, 76 insertions(+), 21 deletions(-)
+>
+> diff --git a/drivers/acpi/platform_profile.c b/drivers/acpi/platform_profile.c
+> index 2ad53cc6aae53..ef9444482db19 100644
+> --- a/drivers/acpi/platform_profile.c
+> +++ b/drivers/acpi/platform_profile.c
+> @@ -21,9 +21,15 @@ struct platform_profile_handler {
+>         struct device dev;
+>         int minor;
+>         unsigned long choices[BITS_TO_LONGS(PLATFORM_PROFILE_LAST)];
+> +       unsigned long hidden_choices[BITS_TO_LONGS(PLATFORM_PROFILE_LAST)];
+>         const struct platform_profile_ops *ops;
+>  };
+>
+> +struct aggregate_choices_data {
+> +       unsigned long aggregate[BITS_TO_LONGS(PLATFORM_PROFILE_LAST)];
+> +       int count;
+> +};
+> +
+>  static const char * const profile_names[] = {
+>         [PLATFORM_PROFILE_LOW_POWER] = "low-power",
+>         [PLATFORM_PROFILE_COOL] = "cool",
+> @@ -73,7 +79,7 @@ static int _store_class_profile(struct device *dev, void *data)
+>
+>         lockdep_assert_held(&profile_lock);
+>         handler = to_pprof_handler(dev);
+> -       if (!test_bit(*bit, handler->choices))
+> +       if (!test_bit(*bit, handler->choices) && !test_bit(*bit, handler->hidden_choices))
+>                 return -EOPNOTSUPP;
+>
+>         return handler->ops->profile_set(dev, *bit);
+> @@ -239,21 +245,44 @@ static const struct class platform_profile_class = {
+>  /**
+>   * _aggregate_choices - Aggregate the available profile choices
+>   * @dev: The device
+> - * @data: The available profile choices
+> + * @arg: struct aggregate_choices_data
+>   *
+>   * Return: 0 on success, -errno on failure
+>   */
+> -static int _aggregate_choices(struct device *dev, void *data)
+> +static int _aggregate_choices(struct device *dev, void *arg)
+>  {
+> +       unsigned long tmp[BITS_TO_LONGS(PLATFORM_PROFILE_LAST)];
+> +       struct aggregate_choices_data *data = arg;
+>         struct platform_profile_handler *handler;
+> -       unsigned long *aggregate = data;
+>
+>         lockdep_assert_held(&profile_lock);
+>         handler = to_pprof_handler(dev);
+> -       if (test_bit(PLATFORM_PROFILE_LAST, aggregate))
+> -               bitmap_copy(aggregate, handler->choices, PLATFORM_PROFILE_LAST);
+> +       bitmap_or(tmp, handler->choices, handler->hidden_choices, PLATFORM_PROFILE_LAST);
+> +       if (test_bit(PLATFORM_PROFILE_LAST, data->aggregate))
+> +               bitmap_copy(data->aggregate, tmp, PLATFORM_PROFILE_LAST);
+>         else
+> -               bitmap_and(aggregate, handler->choices, aggregate, PLATFORM_PROFILE_LAST);
+> +               bitmap_and(data->aggregate, tmp, data->aggregate, PLATFORM_PROFILE_LAST);
+> +       data->count++;
+> +
+> +       return 0;
+> +}
+> +
+> +/**
+> + * _remove_hidden_choices - Remove hidden choices from aggregate data
+> + * @dev: The device
+> + * @arg: struct aggregate_choices_data
+> + *
+> + * Return: 0 on success, -errno on failure
+> + */
+> +static int _remove_hidden_choices(struct device *dev, void *arg)
+> +{
+> +       struct aggregate_choices_data *data = arg;
+> +       struct platform_profile_handler *handler;
+> +
+> +       lockdep_assert_held(&profile_lock);
+> +       handler = to_pprof_handler(dev);
+> +       bitmap_andnot(data->aggregate, handler->choices,
+> +                     handler->hidden_choices, PLATFORM_PROFILE_LAST);
+>
+>         return 0;
+>  }
+> @@ -270,22 +299,31 @@ static ssize_t platform_profile_choices_show(struct device *dev,
+>                                              struct device_attribute *attr,
+>                                              char *buf)
+>  {
+> -       unsigned long aggregate[BITS_TO_LONGS(PLATFORM_PROFILE_LAST)];
+> +       struct aggregate_choices_data data = {
+> +               .aggregate = { [0 ... BITS_TO_LONGS(PLATFORM_PROFILE_LAST) - 1] = ~0UL },
+> +               .count = 0,
+> +       };
+>         int err;
+>
+> -       set_bit(PLATFORM_PROFILE_LAST, aggregate);
+> +       set_bit(PLATFORM_PROFILE_LAST, data.aggregate);
+>         scoped_cond_guard(mutex_intr, return -ERESTARTSYS, &profile_lock) {
+>                 err = class_for_each_device(&platform_profile_class, NULL,
+> -                                           aggregate, _aggregate_choices);
+> +                                           &data, _aggregate_choices);
+>                 if (err)
+>                         return err;
+> +               if (data.count == 1) {
+> +                       err = class_for_each_device(&platform_profile_class, NULL,
+> +                                                   &data, _remove_hidden_choices);
+> +                       if (err)
+> +                               return err;
+> +               }
+>         }
+>
+>         /* no profile handler registered any more */
+> -       if (bitmap_empty(aggregate, PLATFORM_PROFILE_LAST))
+> +       if (bitmap_empty(data.aggregate, PLATFORM_PROFILE_LAST))
+>                 return -EINVAL;
+>
+> -       return _commmon_choices_show(aggregate, buf);
+> +       return _commmon_choices_show(data.aggregate, buf);
+>  }
+>
+>  /**
+> @@ -373,7 +411,10 @@ static ssize_t platform_profile_store(struct device *dev,
+>                                       struct device_attribute *attr,
+>                                       const char *buf, size_t count)
+>  {
+> -       unsigned long choices[BITS_TO_LONGS(PLATFORM_PROFILE_LAST)];
+> +       struct aggregate_choices_data data = {
+> +               .aggregate = { [0 ... BITS_TO_LONGS(PLATFORM_PROFILE_LAST) - 1] = ~0UL },
+> +               .count = 0,
+> +       };
+>         int ret;
+>         int i;
+>
+> @@ -381,13 +422,13 @@ static ssize_t platform_profile_store(struct device *dev,
+>         i = sysfs_match_string(profile_names, buf);
+>         if (i < 0 || i == PLATFORM_PROFILE_CUSTOM)
+>                 return -EINVAL;
+> -       set_bit(PLATFORM_PROFILE_LAST, choices);
+> +       set_bit(PLATFORM_PROFILE_LAST, data.aggregate);
+>         scoped_cond_guard(mutex_intr, return -ERESTARTSYS, &profile_lock) {
+>                 ret = class_for_each_device(&platform_profile_class, NULL,
+> -                                           choices, _aggregate_choices);
+> +                                           &data, _aggregate_choices);
+>                 if (ret)
+>                         return ret;
+> -               if (!test_bit(i, choices))
+> +               if (!test_bit(i, data.aggregate))
+>                         return -EOPNOTSUPP;
+>
+>                 ret = class_for_each_device(&platform_profile_class, NULL, &i,
+> @@ -453,12 +494,15 @@ EXPORT_SYMBOL_GPL(platform_profile_notify);
+>   */
+>  int platform_profile_cycle(void)
+>  {
+> +       struct aggregate_choices_data data = {
+> +               .aggregate = { [0 ... BITS_TO_LONGS(PLATFORM_PROFILE_LAST) - 1] = ~0UL },
+> +               .count = 0,
+> +       };
+>         enum platform_profile_option next = PLATFORM_PROFILE_LAST;
+>         enum platform_profile_option profile = PLATFORM_PROFILE_LAST;
+> -       unsigned long choices[BITS_TO_LONGS(PLATFORM_PROFILE_LAST)];
+>         int err;
+>
+> -       set_bit(PLATFORM_PROFILE_LAST, choices);
+> +       set_bit(PLATFORM_PROFILE_LAST, data.aggregate);
+>         scoped_cond_guard(mutex_intr, return -ERESTARTSYS, &profile_lock) {
+>                 err = class_for_each_device(&platform_profile_class, NULL,
+>                                             &profile, _aggregate_profiles);
+> @@ -470,14 +514,14 @@ int platform_profile_cycle(void)
+>                         return -EINVAL;
+>
+>                 err = class_for_each_device(&platform_profile_class, NULL,
+> -                                           choices, _aggregate_choices);
+> +                                           &data, _aggregate_choices);
+>                 if (err)
+>                         return err;
+>
+>                 /* never iterate into a custom if all drivers supported it */
+> -               clear_bit(PLATFORM_PROFILE_CUSTOM, choices);
+> +               clear_bit(PLATFORM_PROFILE_CUSTOM, data.aggregate);
+>
+> -               next = find_next_bit_wrap(choices,
+> +               next = find_next_bit_wrap(data.aggregate,
+>                                           PLATFORM_PROFILE_LAST,
+>                                           profile + 1);
+>
+> @@ -532,6 +576,14 @@ struct device *platform_profile_register(struct device *dev, const char *name,
+>                 return ERR_PTR(-EINVAL);
+>         }
+>
+> +       if (ops->hidden_choices) {
+> +               err = ops->hidden_choices(drvdata, pprof->hidden_choices);
+> +               if (err) {
+> +                       dev_err(dev, "platform_profile hidden_choices failed\n");
+> +                       return ERR_PTR(err);
+> +               }
+> +       }
+> +
+>         guard(mutex)(&profile_lock);
+>
+>         /* create class interface for individual handler */
+> diff --git a/include/linux/platform_profile.h b/include/linux/platform_profile.h
+> index 8ab5b0e8eb2c1..8c9df7dadd5d3 100644
+> --- a/include/linux/platform_profile.h
+> +++ b/include/linux/platform_profile.h
+> @@ -33,6 +33,8 @@ enum platform_profile_option {
+>   * @probe: Callback to setup choices available to the new class device. These
+>   *        choices will only be enforced when setting a new profile, not when
+>   *        getting the current one.
+> + * @hidden_choices: Callback to setup choices that are not visible to the user
+> + *                 but can be set by the driver.
+>   * @profile_get: Callback that will be called when showing the current platform
+>   *              profile in sysfs.
+>   * @profile_set: Callback that will be called when storing a new platform
+> @@ -40,6 +42,7 @@ enum platform_profile_option {
+>   */
+>  struct platform_profile_ops {
+>         int (*probe)(void *drvdata, unsigned long *choices);
+> +       int (*hidden_choices)(void *drvdata, unsigned long *choices);
+>         int (*profile_get)(struct device *dev, enum platform_profile_option *profile);
+>         int (*profile_set)(struct device *dev, enum platform_profile_option profile);
+>  };
+> --
+> 2.43.0
+>
