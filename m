@@ -1,151 +1,110 @@
-Received: from linux1587.grserver.gr (linux1587.grserver.gr [185.138.42.100])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6542D3594D;
-	Sat,  1 Mar 2025 14:06:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.138.42.100
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA90F179BC;
+	Sat,  1 Mar 2025 14:32:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740838019; cv=none; b=VyHblQhm8q37p+9NgTWAOvF5QALY+FHG4tYlfVYSWiiTQN9Ru67dSTc5rRlLIInSGkRmgEo5sVvjS2DM1Bkac1TI+KJDH9oq75g5a58yT2Cj60L/qIsnvGaZfttP4Zq4C+OISf6TMHWgwqAfLKIogaWCxg+wed81oMI49PuUGbQ=
+	t=1740839564; cv=none; b=c11DrQkHjV2r8l/aPbDg5Au97iEePf6G2o9JilaVZsV+ItudYHzBUtV6ginyz5Jgb77DFOwIBlrqz8qtTNYtKGyh4FSY1upm/bHM6z/kK58RBXqahqwIoZ0d1sYwxUMYqznfQpF2zOaULbkKnHZ0uZj3gq6MGqIg4LqRJoL9bVo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740838019; c=relaxed/simple;
-	bh=vrPYk6k8//Z0LQK1regWtHWe5PuTPpuqGxoiQap+kko=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=AVpKxuXu/B9qFnHD9SocLUjJpRDdEsSKzHGBfXqFZoo1Ige1sOBbMXts7g9sxEymlD7myQDOFZIG/dwkAsdWyrglyHBTD7pCX0MYGWw1rbS27+9q6IsCx4VLAydB/62HY3AEHxi72r802ASFhVquANh2OkIb13XIz0usd18SW24=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=antheas.dev; spf=pass smtp.mailfrom=antheas.dev; dkim=pass (1024-bit key) header.d=antheas.dev header.i=@antheas.dev header.b=1qTyQF7Y; arc=none smtp.client-ip=185.138.42.100
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=antheas.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=antheas.dev
+	s=arc-20240116; t=1740839564; c=relaxed/simple;
+	bh=bLqzk0hZGh7JUidUtBf7joPxGae5Rem2KwHG3iQ/B5o=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Kd4kXoB6Rnu2Y29ng3fl6pvOEKvObLmEafH06hZV0h+hXkSnO19RqxwX97Ukg2fOyuTIxo34A8vQCiteniHs3vEy4/Q13dVlvYHMT1seOri6FauqVif8PahAP0RTCz6tom3lNGxMNFCbZ7eWEid4qJ0qr9Nrm6YkrwjREy3rDgo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=OAoiW8o1; arc=none smtp.client-ip=192.198.163.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=antheas.dev header.i=@antheas.dev header.b="1qTyQF7Y"
-Received: from mail-lj1-f175.google.com (mail-lj1-f175.google.com [209.85.208.175])
-	by linux1587.grserver.gr (Postfix) with ESMTPSA id 6F4CC2E0901F;
-	Sat,  1 Mar 2025 16:06:53 +0200 (EET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=antheas.dev;
-	s=default; t=1740838014;
-	bh=RwsK4RjSMl7klWHS4mPb9Zf8jMU2TS66K1Ehm0StR5U=;
-	h=Received:From:Subject:To;
-	b=1qTyQF7YzRIBgHtlYVPNqoNbgGB6rEXeEZ8RmfnhAqeO2CnMjCps+skvNqp6UiW6K
-	 /cv1GcriHXGxtnOkuHQB6MnAn2uf9Cg4C5WJMMtizCihXnueTmO5Vnki4GCVUHzqCO
-	 ovAZcWxUN5oC53C2a7JKPelmZa+51dkyNwjccnVA=
-Authentication-Results: linux1587.grserver.gr;
-        spf=pass (sender IP is 209.85.208.175) smtp.mailfrom=lkml@antheas.dev smtp.helo=mail-lj1-f175.google.com
-Received-SPF: pass (linux1587.grserver.gr: connection is authenticated)
-Received: by mail-lj1-f175.google.com with SMTP id
- 38308e7fff4ca-30b99c6cd35so13308271fa.0;
-        Sat, 01 Mar 2025 06:06:53 -0800 (PST)
-X-Forwarded-Encrypted: i=1;
- AJvYcCWXYsg0xK99nkRhCzAAw5Aka41IZE3D9XrCiyjqO0LoIYt1n4wPtLRrNOb/4gMpkYD/I9jGq8QilZ4a@vger.kernel.org,
- AJvYcCXIAN551vPDQTC6kxIcx5r7TC4QDCHqWlOkueIpj8zwAmzd7kf7+EehQQ7CXxcqGZGReO+uKftlnG+YKJwYO3O/XNcSvA==@vger.kernel.org,
- AJvYcCXw4Ignh3Epe/4Lkk9v+tl8FPtg9fJPGo4BYHZXiyuNPoxvxE937g8plKDW2dGJyUJKaHouIbl8v3CElk0V@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy4kkpQYBrzKFbyTkLLh8yF490JXJMQcVkSKsWuSTOPoCUGewgZ
-	7rBoAzGCAcwt22uL1Tvd8952UqONZBQ/5NSjQSDuHSqZyshRojWWX+K34LFoticE2K5vTuB5abn
-	NszkALLsTV3SX72TDz0pj4GkQhLA=
-X-Google-Smtp-Source: 
- AGHT+IFBhQ5fJmY292t4rD6gX1zynSjGq+0ykDB3y5hBEMyDS0YcEgbUhfceJRUcrDeFbeUJcCa/d2vI3cUQrmq7+5o=
-X-Received: by 2002:a2e:91cb:0:b0:307:e498:1269 with SMTP id
- 38308e7fff4ca-30b9330796fmr24702791fa.37.1740838012713; Sat, 01 Mar 2025
- 06:06:52 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="OAoiW8o1"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1740839563; x=1772375563;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=bLqzk0hZGh7JUidUtBf7joPxGae5Rem2KwHG3iQ/B5o=;
+  b=OAoiW8o1X74ULXwoVLtFsw3Gr5RI7x0p8j2GjMKFqSUi3UDsun0Ob8zM
+   QXpZsWd0sjGz5RXsA24iuynPmNwwR+tpLd2e6TF7SNymvsVuQ7768CN3H
+   dVbacf90lIBi5B3iPmHe4NIaGc4Bdn0cxN7UiWMCg49RoYHj3zZkYGAz6
+   REpRceUGNz+0bQDhrcD8aNfcK8DDOQCWfIh6n6DzD7+dPd4HIboxQhMPC
+   Cx1PfdX28qC8ZEkJAl9KyErEGdPX36sGW7L9eXKKvtJx0jr1+1o+YPu7M
+   8UqeFlPxfejMQth1OpwqeeA3+koFvNe6Ji5hFCJDJA/c+IWaHyLDKpt/U
+   g==;
+X-CSE-ConnectionGUID: A22VN2dmRi+UwSU1gRt47Q==
+X-CSE-MsgGUID: /D1bdRd5SdScxkq/eSWtFA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11359"; a="45676808"
+X-IronPort-AV: E=Sophos;i="6.13,325,1732608000"; 
+   d="scan'208";a="45676808"
+Received: from fmviesa010.fm.intel.com ([10.60.135.150])
+  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Mar 2025 06:32:42 -0800
+X-CSE-ConnectionGUID: 6t94cAUDRsy77tuNTdIZRw==
+X-CSE-MsgGUID: R9SOZY+fQTi+Kcp+lGgBnQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.13,325,1732608000"; 
+   d="scan'208";a="118089574"
+Received: from lkp-server02.sh.intel.com (HELO 76cde6cc1f07) ([10.239.97.151])
+  by fmviesa010.fm.intel.com with ESMTP; 01 Mar 2025 06:32:39 -0800
+Received: from kbuild by 76cde6cc1f07 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1toNss-000GKE-2g;
+	Sat, 01 Mar 2025 14:32:12 +0000
+Date: Sat, 1 Mar 2025 22:31:17 +0800
+From: kernel test robot <lkp@intel.com>
+To: Antheas Kapenekakis <lkml@antheas.dev>, linux-hwmon@vger.kernel.org
+Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
+	linux-doc@vger.kernel.org, linux-pm@vger.kernel.org,
+	platform-driver-x86@vger.kernel.org,
+	Guenter Roeck <linux@roeck-us.net>,
+	Jean Delvare <jdelvare@suse.com>, Jonathan Corbet <corbet@lwn.net>,
+	Joaquin Ignacio Aramendia <samsagax@gmail.com>,
+	Derek J Clark <derekjohn.clark@gmail.com>,
+	Kevin Greenberg <kdgreenberg234@protonmail.com>,
+	Joshua Tam <csinaction@pm.me>,
+	Parth Menon <parthasarathymenon@gmail.com>,
+	Eileen <eileen@one-netbook.com>,
+	Antheas Kapenekakis <lkml@antheas.dev>
+Subject: Re: [PATCH v2 11/12] platform/x86: oxpec: Move hwmon/oxp-sensors to
+ platform/x86
+Message-ID: <202503012254.EtBZW7gW-lkp@intel.com>
+References: <20250222161824.172511-12-lkml@antheas.dev>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250228170155.2623386-1-superm1@kernel.org>
- <20250228170155.2623386-2-superm1@kernel.org>
- <D84F6QF8EU3D.3RUI1PKXP2DZ3@gmail.com>
- <6f56571a-3090-4323-a29d-008b916abf39@kernel.org>
- <CAGwozwGFLQxGEQ-nb+d9yrikz=fx+u48mpTYUyUtvgFD-9ypQg@mail.gmail.com>
- <09674d15-d639-4cb3-837a-9575f0028a76@kernel.org>
-In-Reply-To: <09674d15-d639-4cb3-837a-9575f0028a76@kernel.org>
-From: Antheas Kapenekakis <lkml@antheas.dev>
-Date: Sat, 1 Mar 2025 15:06:40 +0100
-X-Gmail-Original-Message-ID: 
- <CAGwozwFm1HeLNtJNGOdQCe_poWeNNeOB=3EzizFx_p2rB-RXbQ@mail.gmail.com>
-X-Gm-Features: AQ5f1JqIjbWgJGnwdOm0VcOOeHeD8d1OlDPG9mXO8Pk0MD74jIyMxcQSnj2yTDg
-Message-ID: 
- <CAGwozwFm1HeLNtJNGOdQCe_poWeNNeOB=3EzizFx_p2rB-RXbQ@mail.gmail.com>
-Subject: Re: [PATCH 1/3] ACPI: platform_profile: Add support for hidden
- choices
-To: Mario Limonciello <superm1@kernel.org>
-Cc: Kurt Borja <kuurtb@gmail.com>,
- Shyam Sundar S K <Shyam-sundar.S-k@amd.com>,
-	"Rafael J . Wysocki" <rafael@kernel.org>,
- Hans de Goede <hdegoede@redhat.com>,
-	=?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	"Luke D . Jones" <luke@ljones.dev>, Mark Pearson <mpearson-lenovo@squebb.ca>,
-	"open list:AMD PMF DRIVER" <platform-driver-x86@vger.kernel.org>,
-	open list <linux-kernel@vger.kernel.org>,
-	"open list:ACPI" <linux-acpi@vger.kernel.org>,
- "Derek J . Clark" <derekjohn.clark@gmail.com>,
-	me@kylegospodneti.ch, Denis Benato <benato.denis96@gmail.com>,
-	Mario Limonciello <mario.limonciello@amd.com>, Armin Wolf <W_Armin@gmx.de>
-Content-Type: text/plain; charset="UTF-8"
-X-PPP-Message-ID: 
- <174083801397.2184.11357227051122834707@linux1587.grserver.gr>
-X-PPP-Vhost: antheas.dev
-X-Virus-Scanned: clamav-milter 0.103.11 at linux1587.grserver.gr
-X-Virus-Status: Clean
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250222161824.172511-12-lkml@antheas.dev>
 
-On Sat, 1 Mar 2025 at 14:52, Mario Limonciello <superm1@kernel.org> wrote:
->
-> >>> Let me know what you think!
-> >>
-> >> I don't really like that profiles can get out of sync, this is asking
-> >> for a non-deterministic behavior that can be difficult to diagnose
-> >> issues and also difficult for userspace to work with.
-> >
-> > I agree with Mario here. Imagine two drivers, one with low-power and
-> > one with quiet. They both begin at performance.
-> >
-> > Then, userspace software gets confused (incl. ppd) and sets firmware
-> > profile to low-power. The latter gets left in performance, causing
-> > excess drain.
-> >
-> > I do not believe the legacy interface should be deprecated. Right now,
-> > amd-pmf is a NOOP in most devices
->
-> "Most" devices is not accurate.  There are a lot of devices that it does
-> enable.  In the gaming space right now it's often behaving as a no-op.
+Hi Antheas,
 
-That would be a fair description. Can you give some examples of
-devices that use the interface? Devices with and without vendor
-software.
+kernel test robot noticed the following build errors:
 
-> > so there is actually 0 reason for
-> > generic power handlers to move to the new API. Just extra work. So
-> > lets make sure the legacy endpoint works properly for the foreseeable
-> > future.
-> >
-> > Also, when power handlers start moving to the new interface, they will
-> > hardcode choices based on the name. As they should. TDP needs to be
-> > customized per device/manufacturer. So moving handlers between
-> > low-power and quiet will not be possible.
-> >
-> > @Mario: I do not have a device with an amd-pmf integration. All of
-> > mine have stub handlers. I would expect that a properly configured pmf
-> > handler for e.g., Asus would do the same as the armoury interface, so
-> > that users do not have to rely to vendor software on WIndows. Then
-> > power profiles would be synced between windows and armoury. In that
-> > case, we have a problem of setting the power mode twice. What would be
-> > the mitigation for something like that?
-> >
-> > Antheas
->
-> "Power mode" is a concept, it doesn't just apply to configuring sPPT and
-> fPPT.  I envisage that a vendor that actively uses PMF and their own
-> interface would be changing different things by the different interfaces.
->
-> For "example" PMF may reconfigure sPPT, fPPT, STT and STAPM but their
-> driver may notify their EC to change a fan curve.
+[auto build test ERROR on groeck-staging/hwmon-next]
+[also build test ERROR on sre-power-supply/for-next amd-pstate/linux-next amd-pstate/bleeding-edge rafael-pm/linux-next rafael-pm/bleeding-edge linus/master v6.14-rc4 next-20250228]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
 
-No. If PMF changes these values it also needs to change the fan curve
-itself via the BIOS notification. Doing otherwise would lead to
-situations where users do not install the vendor driver and cook their
-device. So I expect that when PMF controls things it controls
-everything. I would expect if vendors fallback to the pmf firmware
-notifications while also providing vendor software there would be some
-synergy between them, such as changing which fan preset is selected by
-the PMF interface.
+url:    https://github.com/intel-lab-lkp/linux/commits/Antheas-Kapenekakis/hwmon-oxp-sensors-Distinguish-the-X1-variants/20250223-003148
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/groeck/linux-staging.git hwmon-next
+patch link:    https://lore.kernel.org/r/20250222161824.172511-12-lkml%40antheas.dev
+patch subject: [PATCH v2 11/12] platform/x86: oxpec: Move hwmon/oxp-sensors to platform/x86
+config: x86_64-randconfig-078-20250301 (https://download.01.org/0day-ci/archive/20250301/202503012254.EtBZW7gW-lkp@intel.com/config)
+compiler: clang version 19.1.7 (https://github.com/llvm/llvm-project cd708029e0b2869e80abe31ddb175f7c35361f90)
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250301/202503012254.EtBZW7gW-lkp@intel.com/reproduce)
 
-> If we really end up with a situation that vendor interface and PMF do
-> the same thing we can cross that bridge then.
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202503012254.EtBZW7gW-lkp@intel.com/
+
+All errors (new ones prefixed by >>):
+
+>> ld.lld: error: undefined symbol: devm_hwmon_device_register_with_info
+   >>> referenced by oxpec.c:1051 (drivers/platform/x86/oxpec.c:1051)
+   >>>               vmlinux.o:(oxp_platform_probe)
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
