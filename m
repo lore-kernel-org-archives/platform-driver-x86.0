@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D8231E522;
-	Sat,  1 Mar 2025 13:52:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B0F4A28F5;
+	Sat,  1 Mar 2025 14:02:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740837140; cv=none; b=ZGevIo7FxDJX70XF54z50P4qvzc/UgSXj9HawKlpLvihbrTH8oZrtok2HPr00eH9wX1izrSFIru7hsyuwriSyoQK3wdTq7vbHpsuYgJmR18hnODClueE/vxEFxsEGwqQkip2BYgxoxZRunA7gku7NOlKgM0y6JvilLLU2hcejog=
+	t=1740837763; cv=none; b=e3xvE7KLu0YDNR/gF1bEOkkaSxzCzgoSmgLAFqPewrgTIBVa+RheZ5AysGf7PTUexU7fKzM0UWzi3qOMoiEFHRD0wJd3Frfr+qlUwBadCpUXaCnBVtsBHD85MDMeelRYZt0LuM+OWzPMVm/0ZUtHXP5Ak2M6FbuiDXoljBVC7Vs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740837140; c=relaxed/simple;
-	bh=6Bih9s9N8cIQd39nOyUIaKyFZAl5RW/d0MiIvTb1BN8=;
+	s=arc-20240116; t=1740837763; c=relaxed/simple;
+	bh=tzPeWVqmlqR6dCtoKdzVKM7Fo5aS+MQua2+QiLeXfyU=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=VcuPRCZUhI5YLOX0KplHDE3K8H6GgUCC1rrD/xYQQscKLiLk3iA+KswnSHRtFKl0mqXUVsQV9UJPnwCT7R8ftsqMVnO1QVcQDKb4orTcvzMDpz8Qd30pryNBned/HSDIiRmn4+KqRoeJ1ygOC6VgX14v1gM6Y6o6LzOse+0ruhQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gwDH8z8O; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=mfi4pNBAhz3s2IROOH1Q2jThQE6IA8dXsKyerywlvVUNpA1Yw4wkaIrbidGFbePUXcePWHNPQzRTAlcpmREkuS7doBqGx4AAClAthRA0OV3Z+MhvVdELOTFqqjYvqJKsIYyrRK29mtQ2cqHukSja2+QBtVxteZiVzBOI3Vn/QB0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tesgMA8F; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gwDH8z8O"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D6D41C4CEDD;
-	Sat,  1 Mar 2025 13:52:17 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tesgMA8F"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9F4FBC4CEDD;
+	Sat,  1 Mar 2025 14:02:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1740837139;
-	bh=6Bih9s9N8cIQd39nOyUIaKyFZAl5RW/d0MiIvTb1BN8=;
+	s=k20201202; t=1740837761;
+	bh=tzPeWVqmlqR6dCtoKdzVKM7Fo5aS+MQua2+QiLeXfyU=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=gwDH8z8OahVL4xJA79BSFzl7HEPM7doRZjfSKnxZoU3kMzB88v6kMiOVpXDcpFdJh
-	 zs6W07NQU7AzganEDppq2f1uCUY58tpTK/I9Z47WpICjT2jLgGwX7ZpVlHfzxKNApJ
-	 nGNFq4BEUatEqqM2QD3AssKKV7ZXQLYLZmQHgx/0B2gqhzqmXyfsxn5+LsOruDVzkg
-	 XkMn9rM866oirhkmt0sRNbw2PKuzs82YlG8ksdSUtA92Ee+5b1K2ZlV/msHFfkjEVP
-	 FedWp37l2KN3BSG9vQec8hZhCCxbV4o2y/I2soiRGLD7W262fUpWjO9T+ap+W67o0L
-	 ikCxpsnK+lzjw==
-Message-ID: <09674d15-d639-4cb3-837a-9575f0028a76@kernel.org>
-Date: Sat, 1 Mar 2025 07:52:15 -0600
+	b=tesgMA8FfBZK6yBL2yA1LJC9FfadgdOhJbLK/xoN6cdjVDXEeLI7Ss1YeD1rJzqZx
+	 9VWvirJEcBJXiDrHzrov6WXWcv4VXI9EMmBjX7VtIqQLwcOrmimNz1IwICGoECGedr
+	 UBbiPM8uZghcAJqsj5L0a+IU9Zxw62vANKasxUZ288duQPzLYjTg83ItoGm/Y4xyG0
+	 9qVZt8yHLvXxd4qn2cfowY6h8XGJ3nk373D9TgV7vJ0pRh3h+OXPBHEXG23aNw+Jpt
+	 nXJhkFKyPF5FK2YOEeF9GzePYaSYsYM2l5MJkbc86kEMcS5c0Tlv4YipeoWofL94uI
+	 LdFgNFzjZJk7Q==
+Message-ID: <ac0a2d39-aecb-4f24-8198-906f660edb17@kernel.org>
+Date: Sat, 1 Mar 2025 15:02:35 +0100
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -35,77 +35,82 @@ List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/3] ACPI: platform_profile: Add support for hidden
- choices
-To: Antheas Kapenekakis <lkml@antheas.dev>
-Cc: Kurt Borja <kuurtb@gmail.com>, Shyam Sundar S K
- <Shyam-sundar.S-k@amd.com>, "Rafael J . Wysocki" <rafael@kernel.org>,
- Hans de Goede <hdegoede@redhat.com>,
- =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
- "Luke D . Jones" <luke@ljones.dev>, Mark Pearson
- <mpearson-lenovo@squebb.ca>,
- "open list:AMD PMF DRIVER" <platform-driver-x86@vger.kernel.org>,
- open list <linux-kernel@vger.kernel.org>,
- "open list:ACPI" <linux-acpi@vger.kernel.org>,
- "Derek J . Clark" <derekjohn.clark@gmail.com>, me@kylegospodneti.ch,
- Denis Benato <benato.denis96@gmail.com>,
- Mario Limonciello <mario.limonciello@amd.com>, Armin Wolf <W_Armin@gmx.de>
-References: <20250228170155.2623386-1-superm1@kernel.org>
- <20250228170155.2623386-2-superm1@kernel.org>
- <D84F6QF8EU3D.3RUI1PKXP2DZ3@gmail.com>
- <6f56571a-3090-4323-a29d-008b916abf39@kernel.org>
- <CAGwozwGFLQxGEQ-nb+d9yrikz=fx+u48mpTYUyUtvgFD-9ypQg@mail.gmail.com>
+Subject: Re: [PATCH] platform/x86: amd: Add ISP platform info
+To: Pratap Nirujogi <pratap.nirujogi@amd.com>, hdegoede@redhat.com,
+ ilpo.jarvinen@linux.intel.com
+Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
+ benjamin.chan@amd.com
+References: <20250228170238.3484860-1-pratap.nirujogi@amd.com>
 Content-Language: en-US
-From: Mario Limonciello <superm1@kernel.org>
-In-Reply-To: <CAGwozwGFLQxGEQ-nb+d9yrikz=fx+u48mpTYUyUtvgFD-9ypQg@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 fv0=
+In-Reply-To: <20250228170238.3484860-1-pratap.nirujogi@amd.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
->>> Let me know what you think!
->>
->> I don't really like that profiles can get out of sync, this is asking
->> for a non-deterministic behavior that can be difficult to diagnose
->> issues and also difficult for userspace to work with.
-> 
-> I agree with Mario here. Imagine two drivers, one with low-power and
-> one with quiet. They both begin at performance.
-> 
-> Then, userspace software gets confused (incl. ppd) and sets firmware
-> profile to low-power. The latter gets left in performance, causing
-> excess drain.
-> 
-> I do not believe the legacy interface should be deprecated. Right now,
-> amd-pmf is a NOOP in most devices 
+On 28/02/2025 18:02, Pratap Nirujogi wrote:
+> + *
+> + * Permission is hereby granted, free of charge, to any person obtaining a
+> + * copy of this software and associated documentation files (the "Software"),
+> + * to deal in the Software without restriction, including without limitation
+> + * the rights to use, copy, modify, merge, publish, distribute, sublicense,
+> + * and/or sell copies of the Software, and to permit persons to whom the
+> + * Software is furnished to do so, subject to the following conditions:
+> + *
+> + * The above copyright notice and this permission notice shall be included in
+> + * all copies or substantial portions of the Software.
+> + *
+> + * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+> + * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+> + * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.  IN NO EVENT SHALL
+> + * THE COPYRIGHT HOLDER(S) OR AUTHOR(S) BE LIABLE FOR ANY CLAIM, DAMAGES OR
+> + * OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,
+> + * ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+> + * OTHER DEALINGS IN THE SOFTWARE.
 
-"Most" devices is not accurate.  There are a lot of devices that it does 
-enable.  In the gaming space right now it's often behaving as a no-op.
+Same comments as for your other patches.
 
-> so there is actually 0 reason for
-> generic power handlers to move to the new API. Just extra work. So
-> lets make sure the legacy endpoint works properly for the foreseeable
-> future.
-> 
-> Also, when power handlers start moving to the new interface, they will
-> hardcode choices based on the name. As they should. TDP needs to be
-> customized per device/manufacturer. So moving handlers between
-> low-power and quiet will not be possible.
-> 
-> @Mario: I do not have a device with an amd-pmf integration. All of
-> mine have stub handlers. I would expect that a properly configured pmf
-> handler for e.g., Asus would do the same as the armoury interface, so
-> that users do not have to rely to vendor software on WIndows. Then
-> power profiles would be synced between windows and armoury. In that
-> case, we have a problem of setting the power mode twice. What would be
-> the mitigation for something like that?
-> 
-> Antheas
-
-"Power mode" is a concept, it doesn't just apply to configuring sPPT and 
-fPPT.  I envisage that a vendor that actively uses PMF and their own 
-interface would be changing different things by the different interfaces.
-
-For "example" PMF may reconfigure sPPT, fPPT, STT and STAPM but their 
-driver may notify their EC to change a fan curve.
-
-If we really end up with a situation that vendor interface and PMF do 
-the same thing we can cross that bridge then.
+Best regards,
+Krzysztof
