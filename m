@@ -1,289 +1,116 @@
-Received: from mail-pj1-f53.google.com (mail-pj1-f53.google.com [209.85.216.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6C87C23F383;
-	Sat,  1 Mar 2025 17:01:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9EECA1C3308;
+	Sat,  1 Mar 2025 18:08:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740848511; cv=none; b=QZVAnIxUq2xel4B36HLMgwWetbKu7RWzxAP0t8aCuOK2ZW4+f5/y7sof3JqrdkWfWt0W7bKlDssJzpuRPoUH64W/2c3G8oiIk8SlavrXPttrT1eSjBbyhsdUd6TCrGz9uVQPO/k2JiLbtPs/3G9giTi93ENBYy4EosA7VkVCKn4=
+	t=1740852495; cv=none; b=hu6STwf50wCFx1z5jGM1xOL5XX2upMssBSG+FYJI2z4fP+fiQusPOBxpfUQwOWpgR5qIDNt4byHHNJxVZW9wI2r6Cf2n9NYhy8R9AeB3Mq/8tgTRHike32KIqgS0AYcZkatAKvzwTo4XXjSKOIA7KD347rDyUftAuj5/9fp2+tc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740848511; c=relaxed/simple;
-	bh=Kbeiv5NmwYXQwTc/Blhda4uepZd7xSzOcK2EtIq77w0=;
-	h=Date:From:To:CC:Subject:In-Reply-To:References:Message-ID:
-	 MIME-Version:Content-Type; b=bwSE4+541MX9EppOul7b8YEbyNaXLK6z/Z6m7cwTpkaAFyX6IXkqEvQxJz6pD4vOj9qbUgfGZ3m9KjbWO/9rIOr0wm66hNXR24MNsgszdOpagf1JvO/duCgDNlliw66XjRGWfPId11Q+f24s3byMhcmY8ltsor6bHwnhuNWiqmQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=mRjk3SAx; arc=none smtp.client-ip=209.85.216.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1740852495; c=relaxed/simple;
+	bh=W55l/pUCAdveWF379Cya8xRZuTSRTba/xGgojnWUq6E=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=bMCXFEZu+UyJqU1amirGUHbJkoxiwQnk46OKHMW3bYm8mMXz3LQZL4xDqyba8zFCwKs+mhqIo1bbHWgQj+KFnN46vXU3yESD9xIxZmgKrw0puIhCDT98nqb7+sfT4ymmGtA9Bb9t9LdRpBcAWcFz7uriDhJ2+WvjROP6ooU4aWY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=gXDi+HrY; arc=none smtp.client-ip=198.175.65.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mRjk3SAx"
-Received: by mail-pj1-f53.google.com with SMTP id 98e67ed59e1d1-2f9d3d0f55dso5140765a91.1;
-        Sat, 01 Mar 2025 09:01:49 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1740848509; x=1741453309; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:references
-         :in-reply-to:user-agent:subject:cc:to:from:date:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=7/2X3E+ufEyGacyHRfP/J9mxx/bJpOOjwIZygGFz1oo=;
-        b=mRjk3SAxou9u+Oo/OoKw3RhLlI04nwim16rzrK0ZpcFTGIQlhtB6fWrpG3R9F1IlN3
-         dOjLXZjSfhbHkH2r4fvF5Rz9YN8uTh4A4M3imfpfWBaxIwdoBXgqkwrnTDqmFJhTDjKp
-         UahskqTZHwP31QVvNb5tFYkZFCvSjWjaP+kzlWY3xZKm/tqIFFFQMckQqaLIINlx020t
-         ZJO1STC4EVQn91XsdzRXs7wZ/AguijvMAaKK9Jumu3KBbw7Axt1rzLBHvb20RlBQAWD6
-         w1NVUXNe5EAwkmaqd+kHyrccKvDp9Mm/xVOzk9h/LwU5+kHuGN+KW5fo9xRG6YOs9jXP
-         B4/g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740848509; x=1741453309;
-        h=content-transfer-encoding:mime-version:message-id:references
-         :in-reply-to:user-agent:subject:cc:to:from:date:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=7/2X3E+ufEyGacyHRfP/J9mxx/bJpOOjwIZygGFz1oo=;
-        b=eEUreIyBMvipo7wHvg2JyIpWkaURWlZGTeXbJfz1r855fhAlAFwGi4z2bBBpsWNo8i
-         GM760G8ikBCXJxXyK/pH+jkPokRKAeX4do13dfSO+8ZiO7W4I2vSZ2L2KJGcTNBRj5ot
-         d+hj183ipS1YK27qnxg7M+G4JuX9OybSAG9BULGFvqUc7L06n0/qlfDxvmCT0Iq8qK0m
-         epwz3pXaNOcGnTlTp2qzb11vKYv9hW77SaR+X0V66XJ2i2dlEeN0p2u4+8bKiVW+tire
-         AczC8agAthhlg9If7B5v+Up8n6AMratHmAkSCo1GGM1MKMZSbXRZcsGTj1KSZb2kc4o0
-         cw9g==
-X-Forwarded-Encrypted: i=1; AJvYcCV0jJZd9NpUp7HIjF72EnHpvPTd+OPojvX0Z+j6WtAmUwMWA6La0GYApE5h2pHjaUIWWPQmvBENTNE=@vger.kernel.org, AJvYcCVI0njHZiO+aNZhDuKfkYeWssUvUKDYBvzHQzDkqahRsp388y4XDj00tnGSK4ALZLJNDEtk+TTC94M=@vger.kernel.org, AJvYcCXACzN8Ule6kZsghdKBDiBtlwPs4mZ1lXHbsrt8Nt7v5YKC7MhMuzgj7KIiHxpvHVCOW0K8dXZgkSlmvRHAztMoHa5+Tw==@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy3+lzxrdEgxvT4fgyBf+03v82hCR0q/ASjnJrQEBvxV6pOJ6Ub
-	FSkI2LOOY6IenJEDFyeiOfvvqehD4cmN06D+mTutUlBdKUYuV16l
-X-Gm-Gg: ASbGnctti8L2G+8u4FaEipf0vayLI9POkWDK706gMULCGwSUSn1KDtAC3C6Lg1mS1/W
-	yD4P5NCpWNNEqyEO+Mstq77mNH1LEGDc8FkuZTGT0iv8tX5cPpZ+E+mf2zHijfu65v7r0xdCQQP
-	f07hl9nz2AZ+OW2jeiqDcqOmvT16UhJx9vVb6WDpJUsS3iunWl/kRsiXMps0Klh5rUN6JGRMI8R
-	vmj8U+jK58LQMPez2v0j0YuGa4sBFiGjf9WNqDnuniFb7CT4QWFR8lApaGcmbBTbFtPO4kQ7byS
-	RR1+B8FS0NWnZNRvUkkAqxzXGrrfAbB4JaW3uPMeRabGWauSIHI=
-X-Google-Smtp-Source: AGHT+IHyO3wrPQCGOPeX5LnNaDczUa1xTdaxB9NgvmydCUW6cwYbJHsEjZfmhFSXX3H6LuhcFdlf1Q==
-X-Received: by 2002:a17:90b:3909:b0:2fe:9783:afd3 with SMTP id 98e67ed59e1d1-2febab2ffa0mr11971600a91.2.1740848508543;
-        Sat, 01 Mar 2025 09:01:48 -0800 (PST)
-Received: from ?IPv6:::1? ([2607:fb91:161:844d:ad2:fe52:5203:b867])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-2fe825d2b66sm7987062a91.22.2025.03.01.09.01.47
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 01 Mar 2025 09:01:48 -0800 (PST)
-Date: Sat, 01 Mar 2025 09:01:43 -0800
-From: "Derek J. Clark" <derekjohn.clark@gmail.com>
-To: Antheas Kapenekakis <lkml@antheas.dev>
-CC: linux-hwmon@vger.kernel.org, linux-doc@vger.kernel.org,
- linux-pm@vger.kernel.org, platform-driver-x86@vger.kernel.org,
- Guenter Roeck <linux@roeck-us.net>, Jean Delvare <jdelvare@suse.com>,
- Jonathan Corbet <corbet@lwn.net>,
- Joaquin Ignacio Aramendia <samsagax@gmail.com>,
- Kevin Greenberg <kdgreenberg234@protonmail.com>,
- Joshua Tam <csinaction@pm.me>, Parth Menon <parthasarathymenon@gmail.com>,
- Eileen <eileen@one-netbook.com>
-Subject: =?US-ASCII?Q?Re=3A_=5BPATCH_v2_06/12=5D_hwmon=3A_=28oxp-senso?=
- =?US-ASCII?Q?rs=29_Add_turbo_led_support_to_X1_devices?=
-User-Agent: Thunderbird for Android
-In-Reply-To: <CAGwozwG6=XZyujL4CMhe8keqw879LNgZC7N+JQ2v8xrB=3KF-Q@mail.gmail.com>
-References: <20250222161824.172511-1-lkml@antheas.dev> <20250222161824.172511-7-lkml@antheas.dev> <7C8385B2-9E18-4AE2-A3C3-A4F2E0931D53@gmail.com> <CAGwozwFFOCE0J7FLUgDHnd5xEgjSpAhM02UTSBnXJq1YsvdYFg@mail.gmail.com> <611B4C30-091F-41BC-876C-59314D7F1E5E@gmail.com> <CAGwozwG6=XZyujL4CMhe8keqw879LNgZC7N+JQ2v8xrB=3KF-Q@mail.gmail.com>
-Message-ID: <8AA8A9D6-B07E-4D6A-B4A7-EFDA5AF881AD@gmail.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="gXDi+HrY"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1740852494; x=1772388494;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=W55l/pUCAdveWF379Cya8xRZuTSRTba/xGgojnWUq6E=;
+  b=gXDi+HrYjLH7yI1iXHuP5MjbHydgEkoW6t1UjmUqVH/gLEnDNSlDSij7
+   hixOCB+V9t7ivLVNHzfo30DecpjJbwDv1XyMMZXSsxhgMnyQgWY0jHjqT
+   6kbZ7a7uBtoIHRNX8/ww0rg9G6QAqK771W9h4syUdh1hKdmuyYf+22/7j
+   ZFlBcoU5QRWpck9e1oc3jOhezM4l0DfZ++DmPy0mfy93p43pkKUYbHTnn
+   QWsOvYyYJ3p1YcH+w1kHZeERJem0TL/6ri9CNmdXVJSpC+mtSvqWfPOMy
+   fR8/2RuQzUTmHDUp8l5kPj8/9w5QBc7WLTUQXRSB1OHbSvSISp9jEbTDA
+   Q==;
+X-CSE-ConnectionGUID: 2Ho9+vjITa6K1br1Ovhe/g==
+X-CSE-MsgGUID: JltUvSh4SbGN40y0EC6jNA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11360"; a="52751290"
+X-IronPort-AV: E=Sophos;i="6.13,325,1732608000"; 
+   d="scan'208";a="52751290"
+Received: from orviesa003.jf.intel.com ([10.64.159.143])
+  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Mar 2025 10:08:13 -0800
+X-CSE-ConnectionGUID: QiERENeURFOimTASE61rGg==
+X-CSE-MsgGUID: cFNZt0FoRbSKrY/nnMbfhA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.13,325,1732608000"; 
+   d="scan'208";a="122574038"
+Received: from lkp-server02.sh.intel.com (HELO 76cde6cc1f07) ([10.239.97.151])
+  by orviesa003.jf.intel.com with ESMTP; 01 Mar 2025 10:08:09 -0800
+Received: from kbuild by 76cde6cc1f07 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1toRFu-000GXe-2W;
+	Sat, 01 Mar 2025 18:08:06 +0000
+Date: Sun, 2 Mar 2025 02:07:53 +0800
+From: kernel test robot <lkp@intel.com>
+To: "Derek J. Clark" <derekjohn.clark@gmail.com>,
+	Hans de Goede <hdegoede@redhat.com>,
+	Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Cc: oe-kbuild-all@lists.linux.dev, Armin Wolf <W_Armin@gmx.de>,
+	Jonathan Corbet <corbet@lwn.net>,
+	Mario Limonciello <superm1@kernel.org>,
+	Luke Jones <luke@ljones.dev>, Xino Ni <nijs1@lenovo.com>,
+	Zhixin Zhang <zhangzx36@lenovo.com>, Mia Shao <shaohz1@lenovo.com>,
+	Mark Pearson <mpearson-lenovo@squebb.ca>,
+	"Pierre-Loup A . Griffais" <pgriffais@valvesoftware.com>,
+	"Cody T . -H . Chiu" <codyit@gmail.com>,
+	John Martens <johnfanv2@gmail.com>,
+	"Derek J . Clark" <derekjohn.clark@gmail.com>,
+	platform-driver-x86@vger.kernel.org, linux-doc@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 1/4] platform/x86: Add lenovo-wmi drivers Documentation
+Message-ID: <202503020122.t8BHxWLm-lkp@intel.com>
+References: <20250225220037.16073-2-derekjohn.clark@gmail.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250225220037.16073-2-derekjohn.clark@gmail.com>
 
+Hi Derek,
 
+kernel test robot noticed the following build warnings:
 
-On March 1, 2025 8:52:38 AM PST, Antheas Kapenekakis <lkml@antheas=2Edev> =
-wrote:
->On Sat, 1 Mar 2025 at 17:42, Derek J=2E Clark <derekjohn=2Eclark@gmail=2E=
-com> wrote:
->>
->>
->>
->> On March 1, 2025 7:54:22 AM PST, Antheas Kapenekakis <lkml@antheas=2Ede=
-v> wrote:
->> >On Sat, 1 Mar 2025 at 16:14, Derek J=2E Clark <derekjohn=2Eclark@gmail=
-=2Ecom> wrote:
->> >>
->> >>
->> >>
->> >> On February 22, 2025 8:18:17 AM PST, Antheas Kapenekakis <lkml@anthe=
-as=2Edev> wrote:
->> >> >The X1 and X1 mini lineups feature an LED nested within their turbo
->> >> >button=2E When turbo takeover is not enabled, the turbo button allo=
-ws
->> >> >the device to switch from 18W to 25W TDP=2E When the device is in t=
-he
->> >> >25W TDP mode, the LED is turned on=2E
->> >> >
->> >> >However, when we engage turbo takeover, the turbo led remains on it=
-s
->> >> >last state, which might be illuminated and cannot be currently
->> >> >controlled=2E Therefore, add the register that controls it under sy=
-sfs,
->> >> >to allow userspace to turn it off once engaging turbo takeover and
->> >> >then control it as they wish=2E
->> >> >
->> >> >As part of researching this topic, I verified that other OneXPlayer
->> >> >devices do not have a turbo led, which makes this feature only
->> >> >applicable to X1 and X1 mini devices=2E
->> >>
->> >> Antheas,
->> >>
->> >> Do you mean a turbo LED That can be set via EC? OXP devices have had=
- an LED to indicate turbo all the way back to the 1S and mini AMD=2E I'm no=
-t sure if they can be set prior to X1, but this is incorrect as posted=2E
->> >
->> >Do not confuse the keyboard LED button with the turbo button=2E The X1
->> >has two LEDs=2E Only the turbo one can be controlled=2E
->> >
->>
->> This would be pretty difficult to do=2E On the 1S it has the text TURBO=
-=2E This video shows it at 09:40
->>
->> https://youtu=2Ebe/AYrVKLD2J_k?si=3DbnwwQKY7MdqbbnCY
->>
->> It would be better to just point out that it became configurable on the=
- X1=2E
->
->I asked around and I think the OXP 2, MiniPro, and OneXFly models do
->not have it=2E I can edit the comment and say I added it for the X1=2E
->
->If you have an 1S, can you use rweverything and find the register for it?
+[auto build test WARNING on amd-pstate/linux-next]
+[also build test WARNING on amd-pstate/bleeding-edge linus/master v6.14-rc4 next-20250228]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
 
-Not necessary, 1S EC predates the one they started using in the Mini AMD a=
-nd has no configurable options=2E The original mini AMD is also unlikely to=
- support this as only my unit with an experimental BIOS nobody else install=
-ed can even do the takeover=2E X1+ should be fine=2E
+url:    https://github.com/intel-lab-lkp/linux/commits/Derek-J-Clark/platform-x86-Add-lenovo-wmi-drivers-Documentation/20250226-060548
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/superm1/linux.git linux-next
+patch link:    https://lore.kernel.org/r/20250225220037.16073-2-derekjohn.clark%40gmail.com
+patch subject: [PATCH v3 1/4] platform/x86: Add lenovo-wmi drivers Documentation
+reproduce: (https://download.01.org/0day-ci/archive/20250302/202503020122.t8BHxWLm-lkp@intel.com/reproduce)
 
-- Derek
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202503020122.t8BHxWLm-lkp@intel.com/
 
->> >> >Signed-off-by: Antheas Kapenekakis <lkml@antheas=2Edev>
->> >> >---
->> >> > drivers/hwmon/oxp-sensors=2Ec | 84 +++++++++++++++++++++++++++++++=
-++++++
->> >> > 1 file changed, 84 insertions(+)
->> >> >
->> >> >diff --git a/drivers/hwmon/oxp-sensors=2Ec b/drivers/hwmon/oxp-sens=
-ors=2Ec
->> >> >index 1c01636582d7=2E=2E9c43ec0fc994 100644
->> >> >--- a/drivers/hwmon/oxp-sensors=2Ec
->> >> >+++ b/drivers/hwmon/oxp-sensors=2Ec
->> >> >@@ -101,6 +101,12 @@ static enum oxp_board board;
->> >> >  */
->> >> > #define OXP_X1_CHARGE_BYPASS_MASK_S3S5 0x02
->> >> >
->> >> >+/* X1 Turbo LED */
->> >> >+#define OXP_X1_TURBO_LED_REG           0x57
->> >> >+
->> >> >+#define OXP_X1_TURBO_LED_OFF           0x01
->> >> >+#define OXP_X1_TURBO_LED_ON            0x02
->> >> >+
->> >>
->> >> Not a blocker for me on this series, but we should consider looking =
-at creating some enums in the future to capture functionality in a more con=
-cise way=2E There are quite a few define's at this point and enums offer a =
-little bit of value validation=2E
->> >
->> >There should probably be a refactor in the future=2E Yes=2E I would te=
-nd
->> >towards using a driver struct=2E=2E=2E
->> >
->> >> > enum charge_type_value_index {
->> >> >       CT_OFF,
->> >> >       CT_S0,
->> >> >@@ -466,6 +472,73 @@ static ssize_t tt_toggle_show(struct device *d=
-ev,
->> >> >
->> >> > static DEVICE_ATTR_RW(tt_toggle);
->> >> >
->> >> >+/* Callbacks for turbo toggle attribute */
->> >> >+static umode_t tt_led_is_visible(struct kobject *kobj,
->> >> >+                                  struct attribute *attr, int n)
->> >> >+{
->> >> >+      switch (board) {
->> >> >+      case oxp_x1:
->> >> >+              return attr->mode;
->> >> >+      default:
->> >> >+              break;
->> >> >+      }
->> >> >+      return 0;
->> >> >+}
->> >> >+
->> >> >+static ssize_t tt_led_store(struct device *dev,
->> >> >+                             struct device_attribute *attr, const =
-char *buf,
->> >> >+                             size_t count)
->> >> >+{
->> >> >+      u8 reg, val;
->> >> >+      int rval;
->> >> >+      bool value;
->> >> >+
->> >> >+      rval =3D kstrtobool(buf, &value);
->> >> >+      if (rval)
->> >> >+              return rval;
->> >> >+
->> >> >+      switch (board) {
->> >> >+      case oxp_x1:
->> >> >+              reg =3D OXP_X1_TURBO_LED_REG;
->> >> >+              val =3D value ? OXP_X1_TURBO_LED_ON : OXP_X1_TURBO_L=
-ED_OFF;
->> >> >+              break;
->> >> >+      default:
->> >> >+              return -EINVAL;
->> >> >+      }
->> >> >+      rval =3D write_to_ec(reg, val);
->> >> >+
->> >> >+      if (rval)
->> >> >+              return rval;
->> >> >+
->> >> >+      return count;
->> >> >+}
->> >> >+
->> >> >+static ssize_t tt_led_show(struct device *dev,
->> >> >+                            struct device_attribute *attr, char *b=
-uf)
->> >> >+{
->> >> >+      int retval;
->> >> >+      u8 reg;
->> >> >+      long enval;
->> >> >+      long val;
->> >> >+
->> >> >+      switch (board) {
->> >> >+      case oxp_x1:
->> >> >+              reg =3D OXP_2_TURBO_SWITCH_REG;
->> >> >+              enval =3D OXP_X1_TURBO_LED_ON;
->> >> >+              break;
->> >> >+      default:
->> >> >+              return -EINVAL;
->> >> >+      }
->> >> >+
->> >> >+      retval =3D read_from_ec(reg, 1, &val);
->> >> >+      if (retval)
->> >> >+              return retval;
->> >> >+
->> >> >+      return sysfs_emit(buf, "%d\n", val =3D=3D enval);
->> >> >+}
->> >> >+
->> >> >+static DEVICE_ATTR_RW(tt_led);
->> >> >+
->> >> > /* Callbacks for turbo toggle attribute */
->> >> > static bool charge_control_supported(void)
->> >> > {
->> >> >@@ -894,8 +967,19 @@ static struct attribute_group oxp_tt_toggle_at=
-tribute_group =3D {
->> >> >       =2Eattrs =3D oxp_tt_toggle_attrs,
->> >> > };
->> >> >
->> >> >+static struct attribute *oxp_tt_led_attrs[] =3D {
->> >> >+      &dev_attr_tt_led=2Eattr,
->> >> >+      NULL
->> >> >+};
->> >> >+
->> >> >+static struct attribute_group oxp_tt_led_attribute_group =3D {
->> >> >+      =2Eis_visible =3D tt_led_is_visible,
->> >> >+      =2Eattrs =3D oxp_tt_led_attrs,
->> >> >+};
->> >> >+
->> >> > static const struct attribute_group *oxp_ec_groups[] =3D {
->> >> >       &oxp_tt_toggle_attribute_group,
->> >> >+      &oxp_tt_led_attribute_group,
->> >> >       NULL
->> >> > };
->> >> >
->> >> - Derek
->>
->> - Derek
+All warnings (new ones prefixed by >>):
+
+   Warning: Documentation/translations/ja_JP/SubmittingPatches references a file that doesn't exist: linux-2.6.12-vanilla/Documentation/dontdiff
+   Warning: Documentation/translations/zh_CN/admin-guide/README.rst references a file that doesn't exist: Documentation/dev-tools/kgdb.rst
+   Warning: Documentation/translations/zh_CN/dev-tools/gdb-kernel-debugging.rst references a file that doesn't exist: Documentation/dev-tools/gdb-kernel-debugging.rst
+   Warning: Documentation/translations/zh_TW/admin-guide/README.rst references a file that doesn't exist: Documentation/dev-tools/kgdb.rst
+   Warning: Documentation/translations/zh_TW/dev-tools/gdb-kernel-debugging.rst references a file that doesn't exist: Documentation/dev-tools/gdb-kernel-debugging.rst
+>> Warning: MAINTAINERS references a file that doesn't exist: Documentation/wmi/devices/lenovo-wmi-other.rst
+   Warning: MAINTAINERS references a file that doesn't exist: Documentation/devicetree/bindings/misc/fsl,qoriq-mc.txt
+   Warning: MAINTAINERS references a file that doesn't exist: Documentation/devicetree/bindings/leds/backlight/ti,lp8864.yaml
+   Warning: lib/Kconfig.debug references a file that doesn't exist: Documentation/dev-tools/fault-injection/fault-injection.rst
+   Using alabaster theme
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
