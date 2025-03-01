@@ -1,189 +1,126 @@
-Received: from linux1587.grserver.gr (linux1587.grserver.gr [185.138.42.100])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A63DC1487D1;
-	Sat,  1 Mar 2025 15:56:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.138.42.100
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E3EE31487D1;
+	Sat,  1 Mar 2025 16:03:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740844568; cv=none; b=oKZ+rXrEPH8nUKUXfo/cwy9tX8yS71ESwzsZc6h+KtwFA7E9q7MXx7gpGQPRMJ6FnkBg7MPheqlj/k90qA+uBlbmLTBP4XFhK2hIl2/2r/P+kpr1HTS2I6YGicc0zwUZ8lgC0Em6NIYLUaNVvVtSSEqxTyHqD+zKOhzLd/rmrhQ=
+	t=1740844995; cv=none; b=uof1r+RfL6l1Er7iTvBiP+rgaD1hsxXHHsW4F8VTH3eqjZaJopIcSIvROqw0+3ohZ8fdu5docxKkaxoEa2oBfQ6nzJR8iT99SmCvyiWGRP6HDrhxtiSWjllYUq7g/Puxdrf1RSMYdYa8dFC0ZIdn2ywcACRdU4JFNE6gmtxcGbE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740844568; c=relaxed/simple;
-	bh=NIqL8hGrsJATCA+dT2perFa5d3gcwP5HTyaVYpxAEB4=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=D+s9+jdXbDDio9vCvjaV2WkOCJkJsIJ1jslq0DGN6ZeYimGTZgUTWdnPnpEKEPHCImgQi1z7YJYt7y3lbbXeF0emBIXxQ0yu+jcb4u//ANXNEzcycia0InXnE6T4Syx2ks4TI0gwnkeOxS4xROr8gLpjCw1VvZIWnFrahnYygIo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=antheas.dev; spf=pass smtp.mailfrom=antheas.dev; dkim=pass (1024-bit key) header.d=antheas.dev header.i=@antheas.dev header.b=pEMAGqoZ; arc=none smtp.client-ip=185.138.42.100
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=antheas.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=antheas.dev
+	s=arc-20240116; t=1740844995; c=relaxed/simple;
+	bh=eFuOUuXJbMPwC2kemdWKpdpEneyzzQTSTYZreEr9L2o=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=TS0De1hGQR2yYTrU1xv9cMaJox//8czwZeD2b43cqMNe22lu0sBlpBYjGUAbWhjeNt2gLKrthQPDj3tkO/mSVfNEWkgNvBNSGQ8MgkXblAStbQcM2IY2khOXtvtBLnKOtvMLy+dbHQkcnOfuvmUPMJsMdkgIOxX6rOH6CgtYuDs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Pkgc1cuW; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=antheas.dev header.i=@antheas.dev header.b="pEMAGqoZ"
-Received: from mail-lj1-f180.google.com (mail-lj1-f180.google.com [209.85.208.180])
-	by linux1587.grserver.gr (Postfix) with ESMTPSA id 3C4752E09122;
-	Sat,  1 Mar 2025 17:56:00 +0200 (EET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=antheas.dev;
-	s=default; t=1740844563;
-	bh=FoAP55sxsjPGW40zZ3pv/kjYegOuf4agryCQ87sBqF0=;
-	h=Received:From:Subject:To;
-	b=pEMAGqoZpjK9CLtvssNQECUsQDoSpXNajUrtO2n3IdDxuC5bJNQEKKhCIYKPnwnG4
-	 H5H+eTc04MyBvrilImj4/YeDocklPi2FMgeVhiw5uU/b+mQgmebacKGy06mBoKml7M
-	 kgoQqI/vxngI8+OEKb028/rHGZ+VbH9qQ2V0VieA=
-Authentication-Results: linux1587.grserver.gr;
-        spf=pass (sender IP is 209.85.208.180) smtp.mailfrom=lkml@antheas.dev smtp.helo=mail-lj1-f180.google.com
-Received-SPF: pass (linux1587.grserver.gr: connection is authenticated)
-Received: by mail-lj1-f180.google.com with SMTP id
- 38308e7fff4ca-307325f2436so32680451fa.0;
-        Sat, 01 Mar 2025 07:56:00 -0800 (PST)
-X-Forwarded-Encrypted: i=1;
- AJvYcCWMyyS1Di+8OkfMMeVFWcN0pjbMb2A8ogY/vxjBu7+99EpskwiMaRMHLeFOQ/1xuRZEebwnN9Ns4dQ=@vger.kernel.org,
- AJvYcCXQ1aWzh2OHUAs74qwS8I2aANFMlTJuLELSuCEVPA9MXzPLiQrVmde4Pc5OOKOJhkmcZy/84R0SrWxpIUCqxg6dw0m8Pw==@vger.kernel.org,
- AJvYcCXn2JjIghNJE3jIdsznYlXkN57IiN52BzX/BWxKmRGbDVg1ui2yKSK54PwAlHhS27JImd/wg3CNjto=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxAUOfWBSyuINZCIuW8LEf4SWRFsB0KXQQiKKCFkpbHpJSnskah
-	gOskte40v2pPWXMeDlqSACYjayJe9mX4UPc+Qg5EX7AdHxYxUyGLFWiQ5ntQyDeQ0f+bhG4nhK/
-	lKfKQ6l5voX1+FV7Ibiqj8N8k9Nw=
-X-Google-Smtp-Source: 
- AGHT+IERQNIqjY3OwTbS9MIXsWTeJdIc5u4VbvpQMMpMu9Qo0GcgXat1TEfOrguJmnA3XwdNGXRWo0B8Am8v0268njE=
-X-Received: by 2002:a2e:b892:0:b0:308:f4cc:952e with SMTP id
- 38308e7fff4ca-30b9323689fmr27912661fa.11.1740844559596; Sat, 01 Mar 2025
- 07:55:59 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Pkgc1cuW"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CE927C4CEDD;
+	Sat,  1 Mar 2025 16:03:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1740844994;
+	bh=eFuOUuXJbMPwC2kemdWKpdpEneyzzQTSTYZreEr9L2o=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=Pkgc1cuWOPS7Pv9Wu+g3FoX4QxSUT5NP1s7ezesjiN5UR/n8okP9f9A6ESQ525Vsr
+	 aHcP/S2AaMIPGNVCSgI4AuGVRlwlMi/CohWdmchPOWm/A0ogfbXKAVZGxovvp0lWob
+	 FsEj5t4OWgZdb4bzjYA2GDv5M7yTBoohiQVWnfp0iz9z8bXBL++lLMF5qXBv9CPlgn
+	 GML8VQnIBqi93HnAED8jdJur77hrfSKSU6yDUwxisfVFIyLt/wVPPcWxP35roPhP6N
+	 9gbJaqnx3s4sTWU3snk8fqwcbWBA507yQFTslTfDVTNiOKTQLnSvoAMGU4MaDF6lWN
+	 RgYr90Dtxb2sw==
+Message-ID: <59634335-9365-454b-8f07-1b8f564e5f29@kernel.org>
+Date: Sat, 1 Mar 2025 10:03:10 -0600
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250222161824.172511-1-lkml@antheas.dev>
- <20250222161824.172511-8-lkml@antheas.dev>
- <45CB603E-1CD9-4BC8-80C4-107A4943E9CC@gmail.com>
-In-Reply-To: <45CB603E-1CD9-4BC8-80C4-107A4943E9CC@gmail.com>
-From: Antheas Kapenekakis <lkml@antheas.dev>
-Date: Sat, 1 Mar 2025 16:55:47 +0100
-X-Gmail-Original-Message-ID: 
- <CAGwozwH6Jb9Mgan9FrfUOs_1Y96JYT5WzG1s4LbQkv-WE3F0eA@mail.gmail.com>
-X-Gm-Features: AQ5f1Jp0lvLwZZLkqdaGnC0y5Ekpuxav1OWL7T-nuSDTUUrRo7WZo8xvR23ESjQ
-Message-ID: 
- <CAGwozwH6Jb9Mgan9FrfUOs_1Y96JYT5WzG1s4LbQkv-WE3F0eA@mail.gmail.com>
-Subject: Re: [PATCH v2 07/12] hwmon: (oxp-sensors) Move pwm_enable read to its
- own function
-To: "Derek J. Clark" <derekjohn.clark@gmail.com>
-Cc: linux-hwmon@vger.kernel.org, linux-doc@vger.kernel.org,
-	linux-pm@vger.kernel.org, platform-driver-x86@vger.kernel.org,
-	Guenter Roeck <linux@roeck-us.net>, Jean Delvare <jdelvare@suse.com>,
- Jonathan Corbet <corbet@lwn.net>,
-	Joaquin Ignacio Aramendia <samsagax@gmail.com>,
- Kevin Greenberg <kdgreenberg234@protonmail.com>,
-	Joshua Tam <csinaction@pm.me>, Parth Menon <parthasarathymenon@gmail.com>,
-	Eileen <eileen@one-netbook.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-PPP-Message-ID: 
- <174084456063.31626.4334524677069695525@linux1587.grserver.gr>
-X-PPP-Vhost: antheas.dev
-X-Virus-Scanned: clamav-milter 0.103.11 at linux1587.grserver.gr
-X-Virus-Status: Clean
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/3] ACPI: platform_profile: Add support for hidden
+ choices
+To: Antheas Kapenekakis <lkml@antheas.dev>
+Cc: Kurt Borja <kuurtb@gmail.com>, Shyam Sundar S K
+ <Shyam-sundar.S-k@amd.com>, "Rafael J . Wysocki" <rafael@kernel.org>,
+ Hans de Goede <hdegoede@redhat.com>,
+ =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+ "Luke D . Jones" <luke@ljones.dev>, Mark Pearson
+ <mpearson-lenovo@squebb.ca>,
+ "open list:AMD PMF DRIVER" <platform-driver-x86@vger.kernel.org>,
+ open list <linux-kernel@vger.kernel.org>,
+ "open list:ACPI" <linux-acpi@vger.kernel.org>,
+ "Derek J . Clark" <derekjohn.clark@gmail.com>, me@kylegospodneti.ch,
+ Denis Benato <benato.denis96@gmail.com>,
+ Mario Limonciello <mario.limonciello@amd.com>, Armin Wolf <W_Armin@gmx.de>
+References: <20250228170155.2623386-1-superm1@kernel.org>
+ <20250228170155.2623386-2-superm1@kernel.org>
+ <D84F6QF8EU3D.3RUI1PKXP2DZ3@gmail.com>
+ <6f56571a-3090-4323-a29d-008b916abf39@kernel.org>
+ <CAGwozwGFLQxGEQ-nb+d9yrikz=fx+u48mpTYUyUtvgFD-9ypQg@mail.gmail.com>
+ <09674d15-d639-4cb3-837a-9575f0028a76@kernel.org>
+ <CAGwozwFm1HeLNtJNGOdQCe_poWeNNeOB=3EzizFx_p2rB-RXbQ@mail.gmail.com>
+Content-Language: en-US
+From: Mario Limonciello <superm1@kernel.org>
+In-Reply-To: <CAGwozwFm1HeLNtJNGOdQCe_poWeNNeOB=3EzizFx_p2rB-RXbQ@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Sat, 1 Mar 2025 at 16:22, Derek J. Clark <derekjohn.clark@gmail.com> wro=
-te:
->
->
->
-> On February 22, 2025 8:18:18 AM PST, Antheas Kapenekakis <lkml@antheas.de=
-v> wrote:
-> >Currently, this driver breaks sysfs by using auto as 0 and manual as 1.
->
-> It breaks hwmon ABI convention, the sysfs is fully functional. Please be =
-more accurate as maintainers may misunderstand the problem here. This comme=
-nt applies to 8/12 as well. You should probably link the discussion where t=
-his was identified as well for context.
->
-> <https://lore.kernel.org/linux-hwmon/20241027174836.8588-1-derekjohn.clar=
-k@gmail.com/T/#u>
 
-Sure, I can add a closes and tweak the wording.
 
-> >However, for pwm_enable, 0 is full speed, 1 is manual, and 2 is auto.
-> >For the correction to be possible, this means that the pwm_enable
-> >endpoint will need access to both pwm enable and value (as for
-> >the 0th value, the fan needs to be set to full power).
-> >
-> >Therefore, begin by moving the current pwm_enable read to its own
-> >function, oxp_pwm_enable.
-> >
-> >Signed-off-by: Antheas Kapenekakis <lkml@antheas.dev>
-> >---
-> > drivers/hwmon/oxp-sensors.c | 50 ++++++++++++++++++++-----------------
-> > 1 file changed, 27 insertions(+), 23 deletions(-)
-> >
-> >diff --git a/drivers/hwmon/oxp-sensors.c b/drivers/hwmon/oxp-sensors.c
-> >index 9c43ec0fc994..1da1e1655f96 100644
-> >--- a/drivers/hwmon/oxp-sensors.c
-> >+++ b/drivers/hwmon/oxp-sensors.c
-> >@@ -762,6 +762,32 @@ static int oxp_pwm_disable(void)
-> >       }
-> > }
-> >
-> >+static int oxp_pwm_read(long *val)
-> >+{
-> >+      switch (board) {
-> >+      case orange_pi_neo:
-> >+              return read_from_ec(ORANGEPI_SENSOR_PWM_ENABLE_REG, 1, va=
-l);
-> >+      case aok_zoe_a1:
-> >+      case aya_neo_2:
-> >+      case aya_neo_air:
-> >+      case aya_neo_air_1s:
-> >+      case aya_neo_air_plus_mendo:
-> >+      case aya_neo_air_pro:
-> >+      case aya_neo_flip:
-> >+      case aya_neo_geek:
-> >+      case aya_neo_kun:
-> >+      case oxp_2:
-> >+      case oxp_fly:
-> >+      case oxp_mini_amd:
-> >+      case oxp_mini_amd_a07:
-> >+      case oxp_mini_amd_pro:
-> >+      case oxp_x1:
-> >+              return read_from_ec(OXP_SENSOR_PWM_ENABLE_REG, 1, val);
-> >+      default:
-> >+              return -EOPNOTSUPP;
-> >+      }
-> >+}
-> >+
-> > /* Callbacks for hwmon interface */
-> > static umode_t oxp_ec_hwmon_is_visible(const void *drvdata,
-> >                                      enum hwmon_sensor_types type, u32 =
-attr, int channel)
-> >@@ -859,29 +885,7 @@ static int oxp_platform_read(struct device *dev, en=
-um hwmon_sensor_types type,
-> >                       }
-> >                       return 0;
-> >               case hwmon_pwm_enable:
-> >-                      switch (board) {
-> >-                      case orange_pi_neo:
-> >-                              return read_from_ec(ORANGEPI_SENSOR_PWM_E=
-NABLE_REG, 1, val);
-> >-                      case aok_zoe_a1:
-> >-                      case aya_neo_2:
-> >-                      case aya_neo_air:
-> >-                      case aya_neo_air_1s:
-> >-                      case aya_neo_air_plus_mendo:
-> >-                      case aya_neo_air_pro:
-> >-                      case aya_neo_flip:
-> >-                      case aya_neo_geek:
-> >-                      case aya_neo_kun:
-> >-                      case oxp_2:
-> >-                      case oxp_fly:
-> >-                      case oxp_mini_amd:
-> >-                      case oxp_mini_amd_a07:
-> >-                      case oxp_mini_amd_pro:
-> >-                      case oxp_x1:
-> >-                              return read_from_ec(OXP_SENSOR_PWM_ENABLE=
-_REG, 1, val);
-> >-                      default:
-> >-                              break;
-> >-                      }
-> >-                      break;
-> >+                      return oxp_pwm_read(val);
-> >               default:
-> >                       break;
-> >               }
->
-> - Derek
+On 3/1/25 08:06, Antheas Kapenekakis wrote:
+> On Sat, 1 Mar 2025 at 14:52, Mario Limonciello <superm1@kernel.org> wrote:
+>>
+>>>>> Let me know what you think!
+>>>>
+>>>> I don't really like that profiles can get out of sync, this is asking
+>>>> for a non-deterministic behavior that can be difficult to diagnose
+>>>> issues and also difficult for userspace to work with.
+>>>
+>>> I agree with Mario here. Imagine two drivers, one with low-power and
+>>> one with quiet. They both begin at performance.
+>>>
+>>> Then, userspace software gets confused (incl. ppd) and sets firmware
+>>> profile to low-power. The latter gets left in performance, causing
+>>> excess drain.
+>>>
+>>> I do not believe the legacy interface should be deprecated. Right now,
+>>> amd-pmf is a NOOP in most devices
+>>
+>> "Most" devices is not accurate.  There are a lot of devices that it does
+>> enable.  In the gaming space right now it's often behaving as a no-op.
+> 
+> That would be a fair description. Can you give some examples of
+> devices that use the interface? Devices with and without vendor
+> software.
+
+Off hand the Framework 13 and 16 AMD both use PMF exclusively.  So do a 
+bunch of HP commercial laptops.
+
+Mark can keep me honest, but I want to say the Strix Thinkpad laptops 
+have both PMF and vendor interface (thinkpad-acpi).
+  >>
+>> "Power mode" is a concept, it doesn't just apply to configuring sPPT and
+>> fPPT.  I envisage that a vendor that actively uses PMF and their own
+>> interface would be changing different things by the different interfaces.
+>>
+>> For "example" PMF may reconfigure sPPT, fPPT, STT and STAPM but their
+>> driver may notify their EC to change a fan curve.
+> 
+> No. If PMF changes these values it also needs to change the fan curve
+> itself via the BIOS notification. Doing otherwise would lead to
+> situations where users do not install the vendor driver and cook their
+> device. 
+
+Fan curves are just that; curves.  They just control how quickly fans 
+ramp up not whether or not they "work".
+
+But in any case; that's a firmware issue not a platform profile design 
+issue.
+
+> So I expect that when PMF controls things it controls
+> everything. I would expect if vendors fallback to the pmf firmware
+> notifications while also providing vendor software there would be some
+> synergy between them, such as changing which fan preset is selected by
+> the PMF interface.
+> 
+
+I can't control what vendors do; it's their decision how to manage their 
+systems.  All I can do is provide infrastructure to help.
