@@ -1,116 +1,212 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
+Received: from fout-a7-smtp.messagingengine.com (fout-a7-smtp.messagingengine.com [103.168.172.150])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9EECA1C3308;
-	Sat,  1 Mar 2025 18:08:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 149981C695;
+	Sun,  2 Mar 2025 03:23:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.150
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740852495; cv=none; b=hu6STwf50wCFx1z5jGM1xOL5XX2upMssBSG+FYJI2z4fP+fiQusPOBxpfUQwOWpgR5qIDNt4byHHNJxVZW9wI2r6Cf2n9NYhy8R9AeB3Mq/8tgTRHike32KIqgS0AYcZkatAKvzwTo4XXjSKOIA7KD347rDyUftAuj5/9fp2+tc=
+	t=1740885814; cv=none; b=NlK/Zn/FdvShzR6a4m06IXf2ki+3Ps3YWQ+419Z+yl0DeYzCJLOcwyDmohjXclM7LnpzlTvJgtyQLluk4T+KkYConVEzCvsIuzqZdCSWAAWQbedwsRCtcfZq+LHouLfEJnN1NL4AiyDompvXTBFAyQNi4AhRv6EU8gLgvHxjuqU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740852495; c=relaxed/simple;
-	bh=W55l/pUCAdveWF379Cya8xRZuTSRTba/xGgojnWUq6E=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=bMCXFEZu+UyJqU1amirGUHbJkoxiwQnk46OKHMW3bYm8mMXz3LQZL4xDqyba8zFCwKs+mhqIo1bbHWgQj+KFnN46vXU3yESD9xIxZmgKrw0puIhCDT98nqb7+sfT4ymmGtA9Bb9t9LdRpBcAWcFz7uriDhJ2+WvjROP6ooU4aWY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=gXDi+HrY; arc=none smtp.client-ip=198.175.65.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1740885814; c=relaxed/simple;
+	bh=WPf+KF2WIzKDClC0rl7S2pBiWMZDE5SaCG/7d4ehSZM=;
+	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
+	 Subject:Content-Type; b=tt06+6RFGq3mRhyIa+4Tz1QUpJYezcO+yoSZis5Vh60RPwR/VRyDWS45A2DBOFHrjwG1dn1W1VcFAZ7+J212c7bhKrPmZ0EXjwanVZ5NJ/D7tM6YjOucDThTWT6Zh8NzGqv2w1T4AYV1zuQ2HCjRPJ4KmhwZ6wpd/CJ2wlEV6F4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=squebb.ca; spf=pass smtp.mailfrom=squebb.ca; dkim=pass (2048-bit key) header.d=squebb.ca header.i=@squebb.ca header.b=mFjvI+9Z; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=tC10bKHw; arc=none smtp.client-ip=103.168.172.150
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=squebb.ca
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=squebb.ca
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="gXDi+HrY"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1740852494; x=1772388494;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=W55l/pUCAdveWF379Cya8xRZuTSRTba/xGgojnWUq6E=;
-  b=gXDi+HrYjLH7yI1iXHuP5MjbHydgEkoW6t1UjmUqVH/gLEnDNSlDSij7
-   hixOCB+V9t7ivLVNHzfo30DecpjJbwDv1XyMMZXSsxhgMnyQgWY0jHjqT
-   6kbZ7a7uBtoIHRNX8/ww0rg9G6QAqK771W9h4syUdh1hKdmuyYf+22/7j
-   ZFlBcoU5QRWpck9e1oc3jOhezM4l0DfZ++DmPy0mfy93p43pkKUYbHTnn
-   QWsOvYyYJ3p1YcH+w1kHZeERJem0TL/6ri9CNmdXVJSpC+mtSvqWfPOMy
-   fR8/2RuQzUTmHDUp8l5kPj8/9w5QBc7WLTUQXRSB1OHbSvSISp9jEbTDA
-   Q==;
-X-CSE-ConnectionGUID: 2Ho9+vjITa6K1br1Ovhe/g==
-X-CSE-MsgGUID: JltUvSh4SbGN40y0EC6jNA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11360"; a="52751290"
-X-IronPort-AV: E=Sophos;i="6.13,325,1732608000"; 
-   d="scan'208";a="52751290"
-Received: from orviesa003.jf.intel.com ([10.64.159.143])
-  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Mar 2025 10:08:13 -0800
-X-CSE-ConnectionGUID: QiERENeURFOimTASE61rGg==
-X-CSE-MsgGUID: cFNZt0FoRbSKrY/nnMbfhA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.13,325,1732608000"; 
-   d="scan'208";a="122574038"
-Received: from lkp-server02.sh.intel.com (HELO 76cde6cc1f07) ([10.239.97.151])
-  by orviesa003.jf.intel.com with ESMTP; 01 Mar 2025 10:08:09 -0800
-Received: from kbuild by 76cde6cc1f07 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1toRFu-000GXe-2W;
-	Sat, 01 Mar 2025 18:08:06 +0000
-Date: Sun, 2 Mar 2025 02:07:53 +0800
-From: kernel test robot <lkp@intel.com>
-To: "Derek J. Clark" <derekjohn.clark@gmail.com>,
-	Hans de Goede <hdegoede@redhat.com>,
-	Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Cc: oe-kbuild-all@lists.linux.dev, Armin Wolf <W_Armin@gmx.de>,
-	Jonathan Corbet <corbet@lwn.net>,
-	Mario Limonciello <superm1@kernel.org>,
-	Luke Jones <luke@ljones.dev>, Xino Ni <nijs1@lenovo.com>,
-	Zhixin Zhang <zhangzx36@lenovo.com>, Mia Shao <shaohz1@lenovo.com>,
-	Mark Pearson <mpearson-lenovo@squebb.ca>,
-	"Pierre-Loup A . Griffais" <pgriffais@valvesoftware.com>,
-	"Cody T . -H . Chiu" <codyit@gmail.com>,
-	John Martens <johnfanv2@gmail.com>,
-	"Derek J . Clark" <derekjohn.clark@gmail.com>,
-	platform-driver-x86@vger.kernel.org, linux-doc@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 1/4] platform/x86: Add lenovo-wmi drivers Documentation
-Message-ID: <202503020122.t8BHxWLm-lkp@intel.com>
-References: <20250225220037.16073-2-derekjohn.clark@gmail.com>
+	dkim=pass (2048-bit key) header.d=squebb.ca header.i=@squebb.ca header.b="mFjvI+9Z";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="tC10bKHw"
+Received: from phl-compute-06.internal (phl-compute-06.phl.internal [10.202.2.46])
+	by mailfout.phl.internal (Postfix) with ESMTP id D2C3F1380EF8;
+	Sat,  1 Mar 2025 22:23:30 -0500 (EST)
+Received: from phl-imap-10 ([10.202.2.85])
+  by phl-compute-06.internal (MEProxy); Sat, 01 Mar 2025 22:23:30 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=squebb.ca; h=cc
+	:cc:content-transfer-encoding:content-type:content-type:date
+	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to; s=fm2; t=1740885810;
+	 x=1740972210; bh=EXRTfR75mciVRw9h+kwh8V3AdBDrsScfn1nZm7ynIwE=; b=
+	mFjvI+9ZCIccdQRgeTPptT6mGMP6fJlsFLO2YXF30av7M8rQ4607+2PWau2QmL3g
+	2vVzkKIEa/CfmJDP4grDSValCiC06H5096nxvB4snJZlBWKRVs1oYFrJdPDQRzoM
+	bOOPRcGvUIUVswMUEDRfHBEzLxZyXzr18i0BjykYo3HQFcBIBvB6CV1Ub7JsZpTL
+	i1fxRNgnesrwfWsiqBeugCpEISRVSZjtqIOM3YfVkErXSemop7jzLjek+KRSdlpn
+	xUw/DA9Siq2s46wAHeDRYuK3NpUwqE8bQTG49OXrrx+xDj+2lGjYcbEbTU8gsqlK
+	WHOZwxFeoYgMfwg82p+1nA==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:content-type:date:date:feedback-id:feedback-id
+	:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to:x-me-proxy
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; t=1740885810; x=
+	1740972210; bh=EXRTfR75mciVRw9h+kwh8V3AdBDrsScfn1nZm7ynIwE=; b=t
+	C10bKHwRA9SSuttTEQ5i8DMhI6eD5LBZqNe+OPDKsdfkByAvh+mJDzVi/FtpTxUg
+	ncL1jFT117LdloGuTZAxzyx4jBvJxBtJjuC9SKWp6j0YRDBI7R7NgrmGqkHn94om
+	9DKdU6iWIyVvRYCljIBubRn/jtaJLTrftzk9sGMV9dgjUHWColVP4dMTfhPLDC4S
+	h7CIS9IjIhjSToyS+9A2QjQGZB6PMHY2Pd8vMIQFjb7EneljeLLxMc+C+FrvN+MK
+	3M3bSzeovPHYRiaA0F9VtWAxKStPHJGwN7vIN4GNMrcwG4knFa6CikW0UBTFa8vO
+	Eqcj8oD01iiQcAms9KaLg==
+X-ME-Sender: <xms:Mc_DZ8eAiEn6lMIMZRxqOmjnFuSNx-6tjyJs5TS6wpPPopqstsMgoA>
+    <xme:Mc_DZ-O6O4TWUrys-LicX_D61IFOgnInetd-cXlF8oBwIqx5EhdWsSWGrkbCnEpwR
+    GDBpfRxYFMKHEBVN5M>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdelheduvdcutefuodetggdotefrod
+    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpggftfghnshhusghstghrihgsvgdp
+    uffrtefokffrpgfnqfghnecuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivg
+    hnthhsucdlqddutddtmdenucfjughrpefoggffhffvvefkjghfufgtgfesthejredtredt
+    tdenucfhrhhomhepfdforghrkhcurfgvrghrshhonhdfuceomhhpvggrrhhsohhnqdhlvg
+    hnohhvohesshhquhgvsggsrdgtrgeqnecuggftrfgrthhtvghrnhephfeuvdehteeghedt
+    hedtveehuddvjeejgffgieejvdegkefhfeelheekhedvffehnecuvehluhhsthgvrhfuih
+    iivgeptdenucfrrghrrghmpehmrghilhhfrhhomhepmhhpvggrrhhsohhnqdhlvghnohhv
+    ohesshhquhgvsggsrdgtrgdpnhgspghrtghpthhtohepudeipdhmohguvgepshhmthhpoh
+    huthdprhgtphhtthhopehshhihrghmqdhsuhhnuggrrhdrshdqkhesrghmugdrtghomhdp
+    rhgtphhtthhopehmrghrihhordhlihhmohhntghivghllhhosegrmhgurdgtohhmpdhrtg
+    hpthhtoheplhhkmhhlsegrnhhthhgvrghsrdguvghvpdhrtghpthhtohepsggvnhgrthho
+    rdguvghnihhsleeisehgmhgrihhlrdgtohhmpdhrtghpthhtohepuggvrhgvkhhjohhhnh
+    drtghlrghrkhesghhmrghilhdrtghomhdprhgtphhtthhopehkuhhurhhtsgesghhmrghi
+    lhdrtghomhdprhgtphhtthhopeifpggrrhhmihhnsehgmhigrdguvgdprhgtphhtthhope
+    hrrghfrggvlheskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepshhuphgvrhhmudeskhgv
+    rhhnvghlrdhorhhg
+X-ME-Proxy: <xmx:Mc_DZ9jc-hHUDaNysPljslLlAiq_lB9WM610a9leVQXbIO5B_lST0A>
+    <xmx:Mc_DZx-EPTYawQQ4H6Xgqsx1fOezXl811108F8pWa-LbGzBOQAWieQ>
+    <xmx:Mc_DZ4vfvEcP5lGH5LDMGjKbrZp7BE8x1xMsPQ_OssygLRVaSmLcgQ>
+    <xmx:Mc_DZ4GsTFv1IHporuaPaw1QUjme83th2U5rZfaopuKEbD3RKkUznQ>
+    <xmx:Ms_DZ8PMXtWZtHEPhiGecT1QBcN-VgGqkCvNCIvIYAaF7JsMFOJ0_rkS>
+Feedback-ID: ibe194615:Fastmail
+Received: by mailuser.phl.internal (Postfix, from userid 501)
+	id CECCA3C0066; Sat,  1 Mar 2025 22:23:29 -0500 (EST)
+X-Mailer: MessagingEngine.com Webmail Interface
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250225220037.16073-2-derekjohn.clark@gmail.com>
+Date: Sat, 01 Mar 2025 22:23:09 -0500
+From: "Mark Pearson" <mpearson-lenovo@squebb.ca>
+To: "Antheas Kapenekakis" <lkml@antheas.dev>,
+ "Mario Limonciello" <superm1@kernel.org>
+Cc: "Kurt Borja" <kuurtb@gmail.com>,
+ "Shyam Sundar S K" <Shyam-sundar.S-k@amd.com>,
+ "Rafael J. Wysocki" <rafael@kernel.org>,
+ "Hans de Goede" <hdegoede@redhat.com>,
+ =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+ "Luke D . Jones" <luke@ljones.dev>,
+ "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>,
+ "open list" <linux-kernel@vger.kernel.org>,
+ "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>,
+ "Derek J . Clark" <derekjohn.clark@gmail.com>, me@kylegospodneti.ch,
+ "Denis Benato" <benato.denis96@gmail.com>,
+ "Limonciello, Mario" <mario.limonciello@amd.com>,
+ "Armin Wolf" <W_Armin@gmx.de>
+Message-Id: <299cc6b8-a43b-4bc0-a7dd-ce3bde5f1a48@app.fastmail.com>
+In-Reply-To: 
+ <CAGwozwEVDkArYZLg+pvZrh02TtGM4+6EH5GCRpjxEAwMH4xZ+A@mail.gmail.com>
+References: <20250228170155.2623386-1-superm1@kernel.org>
+ <20250228170155.2623386-2-superm1@kernel.org>
+ <D84F6QF8EU3D.3RUI1PKXP2DZ3@gmail.com>
+ <6f56571a-3090-4323-a29d-008b916abf39@kernel.org>
+ <CAGwozwGFLQxGEQ-nb+d9yrikz=fx+u48mpTYUyUtvgFD-9ypQg@mail.gmail.com>
+ <09674d15-d639-4cb3-837a-9575f0028a76@kernel.org>
+ <CAGwozwFm1HeLNtJNGOdQCe_poWeNNeOB=3EzizFx_p2rB-RXbQ@mail.gmail.com>
+ <59634335-9365-454b-8f07-1b8f564e5f29@kernel.org>
+ <CAGwozwEVDkArYZLg+pvZrh02TtGM4+6EH5GCRpjxEAwMH4xZ+A@mail.gmail.com>
+Subject: Re: [PATCH 1/3] ACPI: platform_profile: Add support for hidden choices
+Content-Type: text/plain
+Content-Transfer-Encoding: 7bit
 
-Hi Derek,
 
-kernel test robot noticed the following build warnings:
 
-[auto build test WARNING on amd-pstate/linux-next]
-[also build test WARNING on amd-pstate/bleeding-edge linus/master v6.14-rc4 next-20250228]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+On Sat, Mar 1, 2025, at 11:15 AM, Antheas Kapenekakis wrote:
+> On Sat, 1 Mar 2025 at 17:04, Mario Limonciello <superm1@kernel.org> wrote:
+>>
+>>
+>>
+>> On 3/1/25 08:06, Antheas Kapenekakis wrote:
+>> > On Sat, 1 Mar 2025 at 14:52, Mario Limonciello <superm1@kernel.org> wrote:
+>> >>
+>> >>>>> Let me know what you think!
+>> >>>>
+>> >>>> I don't really like that profiles can get out of sync, this is asking
+>> >>>> for a non-deterministic behavior that can be difficult to diagnose
+>> >>>> issues and also difficult for userspace to work with.
+>> >>>
+>> >>> I agree with Mario here. Imagine two drivers, one with low-power and
+>> >>> one with quiet. They both begin at performance.
+>> >>>
+>> >>> Then, userspace software gets confused (incl. ppd) and sets firmware
+>> >>> profile to low-power. The latter gets left in performance, causing
+>> >>> excess drain.
+>> >>>
+>> >>> I do not believe the legacy interface should be deprecated. Right now,
+>> >>> amd-pmf is a NOOP in most devices
+>> >>
+>> >> "Most" devices is not accurate.  There are a lot of devices that it does
+>> >> enable.  In the gaming space right now it's often behaving as a no-op.
+>> >
+>> > That would be a fair description. Can you give some examples of
+>> > devices that use the interface? Devices with and without vendor
+>> > software.
+>>
+>> Off hand the Framework 13 and 16 AMD both use PMF exclusively.  So do a
+>> bunch of HP commercial laptops.
+>
+> I will ask Kyle to check it out.
+>
+>> Mark can keep me honest, but I want to say the Strix Thinkpad laptops
+>> have both PMF and vendor interface (thinkpad-acpi).
+>
+> Hm, yeah that would be interesting to hear about
+>
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Derek-J-Clark/platform-x86-Add-lenovo-wmi-drivers-Documentation/20250226-060548
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/superm1/linux.git linux-next
-patch link:    https://lore.kernel.org/r/20250225220037.16073-2-derekjohn.clark%40gmail.com
-patch subject: [PATCH v3 1/4] platform/x86: Add lenovo-wmi drivers Documentation
-reproduce: (https://download.01.org/0day-ci/archive/20250302/202503020122.t8BHxWLm-lkp@intel.com/reproduce)
+Yep, support both.
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202503020122.t8BHxWLm-lkp@intel.com/
+>>   >>
+>> >> "Power mode" is a concept, it doesn't just apply to configuring sPPT and
+>> >> fPPT.  I envisage that a vendor that actively uses PMF and their own
+>> >> interface would be changing different things by the different interfaces.
+>> >>
+>> >> For "example" PMF may reconfigure sPPT, fPPT, STT and STAPM but their
+>> >> driver may notify their EC to change a fan curve.
+>> >
+>> > No. If PMF changes these values it also needs to change the fan curve
+>> > itself via the BIOS notification. Doing otherwise would lead to
+>> > situations where users do not install the vendor driver and cook their
+>> > device.
+>>
+>> Fan curves are just that; curves.  They just control how quickly fans
+>> ramp up not whether or not they "work".
+>
+> The APU reaches a similar temperature (Tctl) across a wide TDP range,
+> so temperature cannot be used on its own to determine fan speed.
+> Manufacturers that provide different fan curves depending on the TDP
+> mode usually cap the maximum fan speed on low TDPs. So you can get
+> funny situations where the device is set to 30W, but the fan runs as
+> if its using 10W leading to thermal soaking. So it is very important
+> for those to be inline.
+>
+>> But in any case; that's a firmware issue not a platform profile design
+>> issue.
+>
+> It would be a hypothetical scenario. I do not expect such a device to exist.
+>
+>> > So I expect that when PMF controls things it controls
+>> > everything. I would expect if vendors fallback to the pmf firmware
+>> > notifications while also providing vendor software there would be some
+>> > synergy between them, such as changing which fan preset is selected by
+>> > the PMF interface.
+>> >
+>>
+>> I can't control what vendors do; it's their decision how to manage their
+>> systems.  All I can do is provide infrastructure to help.
+>
+> This was more of my intuition of how I would expect amd-pmf
+> integration to be done in Windows where one of the drivers might be
+> missing.
+>
+> Since only thinkpads are expected to do both, perhaps Mark can check
+> out how they work. I have a thinkpad that is 11th gen intel.
+>
 
-All warnings (new ones prefixed by >>):
+I'll do some checking next week (away this weekend). Mario will ping you offline for best testing to do.
 
-   Warning: Documentation/translations/ja_JP/SubmittingPatches references a file that doesn't exist: linux-2.6.12-vanilla/Documentation/dontdiff
-   Warning: Documentation/translations/zh_CN/admin-guide/README.rst references a file that doesn't exist: Documentation/dev-tools/kgdb.rst
-   Warning: Documentation/translations/zh_CN/dev-tools/gdb-kernel-debugging.rst references a file that doesn't exist: Documentation/dev-tools/gdb-kernel-debugging.rst
-   Warning: Documentation/translations/zh_TW/admin-guide/README.rst references a file that doesn't exist: Documentation/dev-tools/kgdb.rst
-   Warning: Documentation/translations/zh_TW/dev-tools/gdb-kernel-debugging.rst references a file that doesn't exist: Documentation/dev-tools/gdb-kernel-debugging.rst
->> Warning: MAINTAINERS references a file that doesn't exist: Documentation/wmi/devices/lenovo-wmi-other.rst
-   Warning: MAINTAINERS references a file that doesn't exist: Documentation/devicetree/bindings/misc/fsl,qoriq-mc.txt
-   Warning: MAINTAINERS references a file that doesn't exist: Documentation/devicetree/bindings/leds/backlight/ti,lp8864.yaml
-   Warning: lib/Kconfig.debug references a file that doesn't exist: Documentation/dev-tools/fault-injection/fault-injection.rst
-   Using alabaster theme
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+Mark
