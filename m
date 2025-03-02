@@ -1,212 +1,98 @@
-Received: from fout-a7-smtp.messagingengine.com (fout-a7-smtp.messagingengine.com [103.168.172.150])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f50.google.com (mail-lf1-f50.google.com [209.85.167.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 149981C695;
-	Sun,  2 Mar 2025 03:23:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.150
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 166031D514A;
+	Sun,  2 Mar 2025 20:53:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740885814; cv=none; b=NlK/Zn/FdvShzR6a4m06IXf2ki+3Ps3YWQ+419Z+yl0DeYzCJLOcwyDmohjXclM7LnpzlTvJgtyQLluk4T+KkYConVEzCvsIuzqZdCSWAAWQbedwsRCtcfZq+LHouLfEJnN1NL4AiyDompvXTBFAyQNi4AhRv6EU8gLgvHxjuqU=
+	t=1740948840; cv=none; b=o1YrYp66pq3RZ4s0qqgSzO0rRyhWQVFNFV80SVTh9zjbxKZxZvhyxu/1MefcjY1wrDWGGRIdQUXHZKc+rV5q2OOV51ldoAwaHK5EZTxcvLi5sexWMWMNCM15p0TkgY5eL0sElKxzD8DJuoGdc9v0OgbPIBSauOj3xcOg/3kGgyk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740885814; c=relaxed/simple;
-	bh=WPf+KF2WIzKDClC0rl7S2pBiWMZDE5SaCG/7d4ehSZM=;
-	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
-	 Subject:Content-Type; b=tt06+6RFGq3mRhyIa+4Tz1QUpJYezcO+yoSZis5Vh60RPwR/VRyDWS45A2DBOFHrjwG1dn1W1VcFAZ7+J212c7bhKrPmZ0EXjwanVZ5NJ/D7tM6YjOucDThTWT6Zh8NzGqv2w1T4AYV1zuQ2HCjRPJ4KmhwZ6wpd/CJ2wlEV6F4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=squebb.ca; spf=pass smtp.mailfrom=squebb.ca; dkim=pass (2048-bit key) header.d=squebb.ca header.i=@squebb.ca header.b=mFjvI+9Z; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=tC10bKHw; arc=none smtp.client-ip=103.168.172.150
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=squebb.ca
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=squebb.ca
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=squebb.ca header.i=@squebb.ca header.b="mFjvI+9Z";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="tC10bKHw"
-Received: from phl-compute-06.internal (phl-compute-06.phl.internal [10.202.2.46])
-	by mailfout.phl.internal (Postfix) with ESMTP id D2C3F1380EF8;
-	Sat,  1 Mar 2025 22:23:30 -0500 (EST)
-Received: from phl-imap-10 ([10.202.2.85])
-  by phl-compute-06.internal (MEProxy); Sat, 01 Mar 2025 22:23:30 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=squebb.ca; h=cc
-	:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to; s=fm2; t=1740885810;
-	 x=1740972210; bh=EXRTfR75mciVRw9h+kwh8V3AdBDrsScfn1nZm7ynIwE=; b=
-	mFjvI+9ZCIccdQRgeTPptT6mGMP6fJlsFLO2YXF30av7M8rQ4607+2PWau2QmL3g
-	2vVzkKIEa/CfmJDP4grDSValCiC06H5096nxvB4snJZlBWKRVs1oYFrJdPDQRzoM
-	bOOPRcGvUIUVswMUEDRfHBEzLxZyXzr18i0BjykYo3HQFcBIBvB6CV1Ub7JsZpTL
-	i1fxRNgnesrwfWsiqBeugCpEISRVSZjtqIOM3YfVkErXSemop7jzLjek+KRSdlpn
-	xUw/DA9Siq2s46wAHeDRYuK3NpUwqE8bQTG49OXrrx+xDj+2lGjYcbEbTU8gsqlK
-	WHOZwxFeoYgMfwg82p+1nA==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; t=1740885810; x=
-	1740972210; bh=EXRTfR75mciVRw9h+kwh8V3AdBDrsScfn1nZm7ynIwE=; b=t
-	C10bKHwRA9SSuttTEQ5i8DMhI6eD5LBZqNe+OPDKsdfkByAvh+mJDzVi/FtpTxUg
-	ncL1jFT117LdloGuTZAxzyx4jBvJxBtJjuC9SKWp6j0YRDBI7R7NgrmGqkHn94om
-	9DKdU6iWIyVvRYCljIBubRn/jtaJLTrftzk9sGMV9dgjUHWColVP4dMTfhPLDC4S
-	h7CIS9IjIhjSToyS+9A2QjQGZB6PMHY2Pd8vMIQFjb7EneljeLLxMc+C+FrvN+MK
-	3M3bSzeovPHYRiaA0F9VtWAxKStPHJGwN7vIN4GNMrcwG4knFa6CikW0UBTFa8vO
-	Eqcj8oD01iiQcAms9KaLg==
-X-ME-Sender: <xms:Mc_DZ8eAiEn6lMIMZRxqOmjnFuSNx-6tjyJs5TS6wpPPopqstsMgoA>
-    <xme:Mc_DZ-O6O4TWUrys-LicX_D61IFOgnInetd-cXlF8oBwIqx5EhdWsSWGrkbCnEpwR
-    GDBpfRxYFMKHEBVN5M>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdelheduvdcutefuodetggdotefrod
-    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpggftfghnshhusghstghrihgsvgdp
-    uffrtefokffrpgfnqfghnecuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivg
-    hnthhsucdlqddutddtmdenucfjughrpefoggffhffvvefkjghfufgtgfesthejredtredt
-    tdenucfhrhhomhepfdforghrkhcurfgvrghrshhonhdfuceomhhpvggrrhhsohhnqdhlvg
-    hnohhvohesshhquhgvsggsrdgtrgeqnecuggftrfgrthhtvghrnhephfeuvdehteeghedt
-    hedtveehuddvjeejgffgieejvdegkefhfeelheekhedvffehnecuvehluhhsthgvrhfuih
-    iivgeptdenucfrrghrrghmpehmrghilhhfrhhomhepmhhpvggrrhhsohhnqdhlvghnohhv
-    ohesshhquhgvsggsrdgtrgdpnhgspghrtghpthhtohepudeipdhmohguvgepshhmthhpoh
-    huthdprhgtphhtthhopehshhihrghmqdhsuhhnuggrrhdrshdqkhesrghmugdrtghomhdp
-    rhgtphhtthhopehmrghrihhordhlihhmohhntghivghllhhosegrmhgurdgtohhmpdhrtg
-    hpthhtoheplhhkmhhlsegrnhhthhgvrghsrdguvghvpdhrtghpthhtohepsggvnhgrthho
-    rdguvghnihhsleeisehgmhgrihhlrdgtohhmpdhrtghpthhtohepuggvrhgvkhhjohhhnh
-    drtghlrghrkhesghhmrghilhdrtghomhdprhgtphhtthhopehkuhhurhhtsgesghhmrghi
-    lhdrtghomhdprhgtphhtthhopeifpggrrhhmihhnsehgmhigrdguvgdprhgtphhtthhope
-    hrrghfrggvlheskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepshhuphgvrhhmudeskhgv
-    rhhnvghlrdhorhhg
-X-ME-Proxy: <xmx:Mc_DZ9jc-hHUDaNysPljslLlAiq_lB9WM610a9leVQXbIO5B_lST0A>
-    <xmx:Mc_DZx-EPTYawQQ4H6Xgqsx1fOezXl811108F8pWa-LbGzBOQAWieQ>
-    <xmx:Mc_DZ4vfvEcP5lGH5LDMGjKbrZp7BE8x1xMsPQ_OssygLRVaSmLcgQ>
-    <xmx:Mc_DZ4GsTFv1IHporuaPaw1QUjme83th2U5rZfaopuKEbD3RKkUznQ>
-    <xmx:Ms_DZ8PMXtWZtHEPhiGecT1QBcN-VgGqkCvNCIvIYAaF7JsMFOJ0_rkS>
-Feedback-ID: ibe194615:Fastmail
-Received: by mailuser.phl.internal (Postfix, from userid 501)
-	id CECCA3C0066; Sat,  1 Mar 2025 22:23:29 -0500 (EST)
-X-Mailer: MessagingEngine.com Webmail Interface
+	s=arc-20240116; t=1740948840; c=relaxed/simple;
+	bh=okt66jowKnr8P1gS/V0Grkb5/i69SinqpyTkWAv2GIM=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=TgZC7WdU67W8xQAGqMDO2o1UvzxGLiAu+s+2KL47LNSwXMMdA/0VLG4QiddYBMCHe53p67eqOyQ3x0p+V+Z84LbCc909DK7cD7NuDotOM/8wcQAOSnQEKaa7RZxGGtYzYic2aMHjzD8bvIcW2sXYbvvsT/gOnoa2gd40vjYq4Ro=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=joshuagrisham.com; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.167.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=joshuagrisham.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-lf1-f50.google.com with SMTP id 2adb3069b0e04-54955222959so2307614e87.3;
+        Sun, 02 Mar 2025 12:53:58 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1740948837; x=1741553637;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=vbF7SstiS81tyyQn4jYtTQz9WN4THoU5nLwkv2gXnKc=;
+        b=ucVVQ+zNBKIw6XD3O0qw6BLGi2Bugb9SZomZ52cF12pu3oDThKsQRGu/UHGUOe4RAo
+         2eES3Ca9Cek3rpO16XMFJZk8gJYvZvTPqWLzriXcMZjCTKXMgF/KH3RxF8ZTES9kOfGz
+         N5yNsw7e7mOUiDPa9qpxVeJ+HOJdew8neepQS3ohX8YVMcXKJAexiGG+AltKbs4ThOLL
+         xlJZBNQR9cwgmZAoga8o7Yyh/vPJXlGeF1IB150S6CTXqRtXJ09cmEhmrEU/X0DzGv1O
+         As26dN+5PqwFuTN/Da6mWS6mBazXLnvXxEtgNPzIni0qeR9HT5yFEMDV1wn1fAGPuOSB
+         DU2g==
+X-Forwarded-Encrypted: i=1; AJvYcCUH2V6wFjnRGRXjwCnnrki6FNIx9XGwiCfZIMDTQyHYqF6y64mS7T9OJVAAC6qK+dBL0qx/G2pdYkpCiSK1p/7PUpy4rw==@vger.kernel.org, AJvYcCVKjkAfOH2WQuvAlWeJVNoNWjz2MHzbOt3ffcu1XsfcJxUSqUDso1Z4PufObdyqPj8vuRjyKhF24WFpG8w=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz4c3VU7lD+da1tFgQJOUzGLK/rVAAXyD5BCvQYv3sS+h872uR0
+	0iY3TUNPkec/0gY2NZYDjdU9S6lzCRODhrv5SvxAiFkmsZF6y/NHezKaE1Qq
+X-Gm-Gg: ASbGncsZ93+EyubzIC/jMvG0l8VsoEjTEcbitXMj7CVbxQb5Fw9nPYa9XCAlAw4VFCU
+	uGPaY7LpLoKrdYupy1D9d/rMSoiI4uN73yiaYTvAMOYjQb2A0IVY+vmNXNSxYxo/VgkwVaZAlmr
+	LwvjFJ/FUzaHJ21noDgu5/XLyp09vKEDnUQ1HpUZx21gG8o6wtkG+pF2vpXZX8KFKGETB/YFpvJ
+	wXA38MksClgiPjsmkkSscjc7cx33pshO6X9uRDgwuNr020ixqUtyzztbRCxFynPuQGBBxkVq7VX
+	2w4ZRM2k1mkw7gpJ4dfHoOqKyeP0oR8RyCc8Y+Rf1qBB2Q8ORcpQzL62ctjLQJkwYt4sMNDjmSc
+	F74jN0vcf8Q==
+X-Google-Smtp-Source: AGHT+IE6MyS2pgjTJ+722X33JtSPDUm7iMNv7I9obQtZcC0fR0X87iN5u5+4hMSLd/9yV8eYH4jwzw==
+X-Received: by 2002:a05:6512:3e0c:b0:545:c89:2bb7 with SMTP id 2adb3069b0e04-5494c31a0dbmr4248582e87.24.1740948836771;
+        Sun, 02 Mar 2025 12:53:56 -0800 (PST)
+Received: from galaxybook.local (82-183-24-76.customers.ownit.se. [82.183.24.76])
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-5494a175b34sm945997e87.245.2025.03.02.12.53.55
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 02 Mar 2025 12:53:56 -0800 (PST)
+From: Joshua Grisham <josh@joshuagrisham.com>
+To: W_Armin@gmx.de,
+	thomas@t-8ch.de,
+	kuurtb@gmail.com,
+	ilpo.jarvinen@linux.intel.com,
+	hdegoede@redhat.com,
+	platform-driver-x86@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Cc: Joshua Grisham <josh@joshuagrisham.com>
+Subject: [PATCH] platform/x86: samsung-galaxybook: Fix block_recording not supported logic
+Date: Sun,  2 Mar 2025 21:53:50 +0100
+Message-ID: <20250302205350.32509-1-josh@joshuagrisham.com>
+X-Mailer: git-send-email 2.45.2
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Date: Sat, 01 Mar 2025 22:23:09 -0500
-From: "Mark Pearson" <mpearson-lenovo@squebb.ca>
-To: "Antheas Kapenekakis" <lkml@antheas.dev>,
- "Mario Limonciello" <superm1@kernel.org>
-Cc: "Kurt Borja" <kuurtb@gmail.com>,
- "Shyam Sundar S K" <Shyam-sundar.S-k@amd.com>,
- "Rafael J. Wysocki" <rafael@kernel.org>,
- "Hans de Goede" <hdegoede@redhat.com>,
- =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
- "Luke D . Jones" <luke@ljones.dev>,
- "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>,
- "open list" <linux-kernel@vger.kernel.org>,
- "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>,
- "Derek J . Clark" <derekjohn.clark@gmail.com>, me@kylegospodneti.ch,
- "Denis Benato" <benato.denis96@gmail.com>,
- "Limonciello, Mario" <mario.limonciello@amd.com>,
- "Armin Wolf" <W_Armin@gmx.de>
-Message-Id: <299cc6b8-a43b-4bc0-a7dd-ce3bde5f1a48@app.fastmail.com>
-In-Reply-To: 
- <CAGwozwEVDkArYZLg+pvZrh02TtGM4+6EH5GCRpjxEAwMH4xZ+A@mail.gmail.com>
-References: <20250228170155.2623386-1-superm1@kernel.org>
- <20250228170155.2623386-2-superm1@kernel.org>
- <D84F6QF8EU3D.3RUI1PKXP2DZ3@gmail.com>
- <6f56571a-3090-4323-a29d-008b916abf39@kernel.org>
- <CAGwozwGFLQxGEQ-nb+d9yrikz=fx+u48mpTYUyUtvgFD-9ypQg@mail.gmail.com>
- <09674d15-d639-4cb3-837a-9575f0028a76@kernel.org>
- <CAGwozwFm1HeLNtJNGOdQCe_poWeNNeOB=3EzizFx_p2rB-RXbQ@mail.gmail.com>
- <59634335-9365-454b-8f07-1b8f564e5f29@kernel.org>
- <CAGwozwEVDkArYZLg+pvZrh02TtGM4+6EH5GCRpjxEAwMH4xZ+A@mail.gmail.com>
-Subject: Re: [PATCH 1/3] ACPI: platform_profile: Add support for hidden choices
-Content-Type: text/plain
 Content-Transfer-Encoding: 7bit
 
+Fixes logic error when block_recording is not supported but the fw attr is
+being added anyway (reported by GitHub user bbregeault).
 
+Signed-off-by: Joshua Grisham <josh@joshuagrisham.com>
+---
+ drivers/platform/x86/samsung-galaxybook.c | 8 +++++---
+ 1 file changed, 5 insertions(+), 3 deletions(-)
 
-On Sat, Mar 1, 2025, at 11:15 AM, Antheas Kapenekakis wrote:
-> On Sat, 1 Mar 2025 at 17:04, Mario Limonciello <superm1@kernel.org> wrote:
->>
->>
->>
->> On 3/1/25 08:06, Antheas Kapenekakis wrote:
->> > On Sat, 1 Mar 2025 at 14:52, Mario Limonciello <superm1@kernel.org> wrote:
->> >>
->> >>>>> Let me know what you think!
->> >>>>
->> >>>> I don't really like that profiles can get out of sync, this is asking
->> >>>> for a non-deterministic behavior that can be difficult to diagnose
->> >>>> issues and also difficult for userspace to work with.
->> >>>
->> >>> I agree with Mario here. Imagine two drivers, one with low-power and
->> >>> one with quiet. They both begin at performance.
->> >>>
->> >>> Then, userspace software gets confused (incl. ppd) and sets firmware
->> >>> profile to low-power. The latter gets left in performance, causing
->> >>> excess drain.
->> >>>
->> >>> I do not believe the legacy interface should be deprecated. Right now,
->> >>> amd-pmf is a NOOP in most devices
->> >>
->> >> "Most" devices is not accurate.  There are a lot of devices that it does
->> >> enable.  In the gaming space right now it's often behaving as a no-op.
->> >
->> > That would be a fair description. Can you give some examples of
->> > devices that use the interface? Devices with and without vendor
->> > software.
->>
->> Off hand the Framework 13 and 16 AMD both use PMF exclusively.  So do a
->> bunch of HP commercial laptops.
->
-> I will ask Kyle to check it out.
->
->> Mark can keep me honest, but I want to say the Strix Thinkpad laptops
->> have both PMF and vendor interface (thinkpad-acpi).
->
-> Hm, yeah that would be interesting to hear about
->
+diff --git a/drivers/platform/x86/samsung-galaxybook.c b/drivers/platform/x86/samsung-galaxybook.c
+index de1ed2dc6..5878a3519 100644
+--- a/drivers/platform/x86/samsung-galaxybook.c
++++ b/drivers/platform/x86/samsung-galaxybook.c
+@@ -1100,11 +1100,13 @@ static int galaxybook_fw_attrs_init(struct samsung_galaxybook *galaxybook)
+ 	}
+ 
+ 	err = galaxybook_block_recording_init(galaxybook);
+-	if (!err)
+-		galaxybook->has_block_recording = true;
+-	else if (err != GB_NOT_SUPPORTED)
++	if (err == GB_NOT_SUPPORTED)
++		return 0;
++	else if (err)
+ 		return err;
+ 
++	galaxybook->has_block_recording = true;
++
+ 	return galaxybook_fw_attr_init(galaxybook,
+ 				       GB_ATTR_BLOCK_RECORDING,
+ 				       &block_recording_acpi_get,
+-- 
+2.45.2
 
-Yep, support both.
-
->>   >>
->> >> "Power mode" is a concept, it doesn't just apply to configuring sPPT and
->> >> fPPT.  I envisage that a vendor that actively uses PMF and their own
->> >> interface would be changing different things by the different interfaces.
->> >>
->> >> For "example" PMF may reconfigure sPPT, fPPT, STT and STAPM but their
->> >> driver may notify their EC to change a fan curve.
->> >
->> > No. If PMF changes these values it also needs to change the fan curve
->> > itself via the BIOS notification. Doing otherwise would lead to
->> > situations where users do not install the vendor driver and cook their
->> > device.
->>
->> Fan curves are just that; curves.  They just control how quickly fans
->> ramp up not whether or not they "work".
->
-> The APU reaches a similar temperature (Tctl) across a wide TDP range,
-> so temperature cannot be used on its own to determine fan speed.
-> Manufacturers that provide different fan curves depending on the TDP
-> mode usually cap the maximum fan speed on low TDPs. So you can get
-> funny situations where the device is set to 30W, but the fan runs as
-> if its using 10W leading to thermal soaking. So it is very important
-> for those to be inline.
->
->> But in any case; that's a firmware issue not a platform profile design
->> issue.
->
-> It would be a hypothetical scenario. I do not expect such a device to exist.
->
->> > So I expect that when PMF controls things it controls
->> > everything. I would expect if vendors fallback to the pmf firmware
->> > notifications while also providing vendor software there would be some
->> > synergy between them, such as changing which fan preset is selected by
->> > the PMF interface.
->> >
->>
->> I can't control what vendors do; it's their decision how to manage their
->> systems.  All I can do is provide infrastructure to help.
->
-> This was more of my intuition of how I would expect amd-pmf
-> integration to be done in Windows where one of the drivers might be
-> missing.
->
-> Since only thinkpads are expected to do both, perhaps Mark can check
-> out how they work. I have a thinkpad that is 11th gen intel.
->
-
-I'll do some checking next week (away this weekend). Mario will ping you offline for best testing to do.
-
-Mark
