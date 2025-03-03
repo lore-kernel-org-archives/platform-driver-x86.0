@@ -1,70 +1,67 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f179.google.com (mail-pl1-f179.google.com [209.85.214.179])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 94F2D212B34
-	for <platform-driver-x86@vger.kernel.org>; Mon,  3 Mar 2025 13:41:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F02CB212B17;
+	Mon,  3 Mar 2025 14:06:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741009276; cv=none; b=PlZJ9Bmosxs48enl2nWwO7JiF51uFInwTG0WKHOe9tvK14QfbW9Onb0mDP6imfmrSkl09WUrKhVIUpEUtIFVwxSicRocsjODqTz+Mey6K2PNdJGwjF0jV4GvxXeBnjyIGJJtoMgOr/DJGOQKgCzP9guCIp5eWqdK1+JDgGiQq5w=
+	t=1741010796; cv=none; b=ISNB7CdpiuPfH98wRqLL/lwgH8ScoZYsfOHq1bRitM84Sf0pGzxLuHJPC8f54MhDyUIxrXijI4cu6VLnW4jViorzj1hcXcrZ99g+Ql/1y+T+Fplv+nlV1oxSh9hPLOBR+zN/ztrWJJ7dSix+zT4418V7RghGkucklJZcO8O/RTQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741009276; c=relaxed/simple;
-	bh=aeMvAT17042BtfL/IpGfoeKyBKZPAnMUYGKpbhDJI7U=;
+	s=arc-20240116; t=1741010796; c=relaxed/simple;
+	bh=bz8e8Iu44r0gZGHQ6LaeTCBLMvE9Bd2HHe/NGbaCOa8=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Y8DWtX/TaTQsg2SjsxaNnENa/AvIz9f4tdAwEEOhlq+75qweuaKvhb/+/zo/CRPLNA6e0jMCxvBky3ZIbOeMDr7mdOEG9GnJuRCivw9CFdwW9JWefmRjHfmeorUYpk+E0mZwow6NJ5WHijT/xOAxZcLiyOnPj7/ynvMF3f6IPL8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=d/ag1vLr; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	 In-Reply-To:Content-Type; b=bBkbAHVxtLVvWc08h531ug+zgFTQj6T0hv35npnbBTTEePykjy8FU24+Ue4dXlHSG4ZPVQj2ZvKwVRYb5D0UJG9TyGUq5lkP8sprjne3lNkhjyrhRkEbjs50MYTMDH9dkYzs5N0FGu2xpMRoWFy7bWJ8HAyt/EZxOK+Lfpxf8g0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=NfQz1uTi; arc=none smtp.client-ip=209.85.214.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="d/ag1vLr"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1741009273;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=iefXvX3pMp47Dzkf3+ysKe2mkAh2HFa1RNhZSRAia6M=;
-	b=d/ag1vLrI+5V3pz8IR2okawP24rhCfbFXbIMovikwjLUmESFc3V0RJDIoe2JtKajtD8m9s
-	6SC1lLfp2t0rwVxbk8zXyGwPXtCyeygs6dXKmk+Y5ONdSseMyg5QR6FbfsAshP1pwBo2lV
-	F24xBswDpgWCm6a4UF6bs09+HybCuKk=
-Received: from mail-ed1-f71.google.com (mail-ed1-f71.google.com
- [209.85.208.71]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-635-ijrxTV48OqiW_KaNdZRNmg-1; Mon, 03 Mar 2025 08:41:07 -0500
-X-MC-Unique: ijrxTV48OqiW_KaNdZRNmg-1
-X-Mimecast-MFC-AGG-ID: ijrxTV48OqiW_KaNdZRNmg_1741009266
-Received: by mail-ed1-f71.google.com with SMTP id 4fb4d7f45d1cf-5e550e71966so956598a12.3
-        for <platform-driver-x86@vger.kernel.org>; Mon, 03 Mar 2025 05:41:06 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NfQz1uTi"
+Received: by mail-pl1-f179.google.com with SMTP id d9443c01a7336-22349dc31bcso77132315ad.3;
+        Mon, 03 Mar 2025 06:06:33 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1741010793; x=1741615593; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:sender:from:to:cc:subject:date:message-id:reply-to;
+        bh=87/tqBd5ZNtJFSIjhcqx4DE1UUf5Rca7d/rpXEcASSw=;
+        b=NfQz1uTi5+GQXBLxneL2L/j5ehhOJfFYWQJLz534uOgp4WJNILMk+TkoP+ysdtwtlz
+         Az6c2AYpn0AnZdBchtLWf9w3VKI23i8qyWckeZF7MPh2ivphI26puMua2N14bOxjlu+F
+         0rQYWWREvIjiEwpnyAAb1AbPP/FW1CoPXGLgzB7tj1rrqQY1hXjy9RlM0kN7Np5+ygK/
+         moMeGaE7aHwk7sKNiKwm/p9Qt9AV8nTV0JWWZvtWT8gn5uZ3EIfbMjlptlRB3su6k5dn
+         PzThxe66ZcdZB6TVN6o9LFhQL+O/J3v41rBXZTisTM2RfidR6R2T3a0GPIT1inVBbj5u
+         tZbA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741009266; x=1741614066;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=iefXvX3pMp47Dzkf3+ysKe2mkAh2HFa1RNhZSRAia6M=;
-        b=Dkbb0/YMx3LZA2UGsoS9BfOT1yIJwWIY8s8h3b2RfQyrXU1VXVNava+/l7snfQboej
-         iW0hHoZ+zWS/TqQZcU57tPPnTa0aSq+IU03qoPZsHD+tZ8ahW7eO/gdXi4DQjQl6JrKY
-         ZPI9wRZIjrupbwks74pgRXAmTzsLOc9IbZQEd92F9nFEPvlggObzyHW9QOr4b9bZ6fqN
-         HEQJkK2hPx/fEXbreH5OAt+r7MttJt13he3IptwHeD5rk6k9rUzR/2kUTZ3Jxi/upNhA
-         8PzHsC20IXPMb2ipsakWg/ImOcm2LR+yFgEcE5SowY2GGcuQNliJGaqvbqjd/uUsiI/9
-         jFCQ==
-X-Gm-Message-State: AOJu0YwY/odXKj5tIW+t9t2IO0bPb0hQZiJucRNrt56w9dfH2JMFC+9y
-	WLX2LdgsGm8ya4uXpziSHgw05pldp8X5utAQUBnjo/K6oyYKBQijffKUGklIBaDGQrytMbFVxZB
-	0vAJLkoHhHpo6QDt8jMScGrIxQN3WAnx+AGDP1en6Rz5zRJHZfFDHhkLoSX1n8ta4W7fqdng=
-X-Gm-Gg: ASbGnct03zAYbvUhe/gY5zkD97ewOFF/l0o7+jOQlvOcBnW9MiAp99osqRNa0PwUNGg
-	reCjqWfoVGjvWY1ynMcI3rySEEJ/QAGPMCqugBCLukTejHwOg2RDwPl8UcnrN3qy9a2jyL9UsOc
-	GW98wNctI911p/He6M+iSPtUwBrSN35rAnqKGVUNxofahctv9UODe3CEf4nQqAC+qzlrlZ+JPaC
-	oDcvWsV6D5952bcfWVEDaS2Lz6KhtoznXLuPqY8ecKZUUE9B2B8phVDrYNdwGB8AaEP2zcAmmVr
-	UcI0nENT6iEFSCtshGY=
-X-Received: by 2002:a05:6402:254d:b0:5e4:cfe8:3502 with SMTP id 4fb4d7f45d1cf-5e4d6afa314mr15430333a12.17.1741009264016;
-        Mon, 03 Mar 2025 05:41:04 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IHw+N+h2RM3Y9DCNRWclwdG5Vz8ZTSM7z6QJd5l/2loxNdR3YQEu3drealeX71uDlwNoPmkCA==
-X-Received: by 2002:a05:6402:254d:b0:5e4:cfe8:3502 with SMTP id 4fb4d7f45d1cf-5e4d6afa314mr15430311a12.17.1741009263565;
-        Mon, 03 Mar 2025 05:41:03 -0800 (PST)
-Received: from [10.40.98.122] ([78.108.130.194])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5e4c3b70112sm6735702a12.31.2025.03.03.05.41.02
+        d=1e100.net; s=20230601; t=1741010793; x=1741615593;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:sender:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=87/tqBd5ZNtJFSIjhcqx4DE1UUf5Rca7d/rpXEcASSw=;
+        b=qKPgNKxST6Fb65/S7nGb6SlNB3sd0gKwGvXJ7Kt6ijw4KrJxhBOGKpoIWWg5INs0W3
+         3WmILiTZVLsOIRiNLrUeNbTAw7Q/RZjkPTUBoEcL6gtw1+2wnK2L2D8sAS0X50I5FH5N
+         bNmChiU0sJURooAMev4UEyAIgWALiNFDQSOjAm2MNAeggcx+LkMePAsH8id8vxCyDLpW
+         tWNtOuSKAespiNm6Fm1Ts5vacj0htxWJa1/Shu+eMAdpcXcUYCqcLRrVVWCc/roMXO4f
+         liCecN17krO5uzwqPGL73d9ugqttbYivpD0w0cT+6SjLBlnIQJsjpD+TKdCziWkavSEe
+         DaKQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUJNaJDn2D+I3QJVcgVgLUIAdS8qsI9XwHKIzNJPJE6lK1a2o0autbgj66PhRYYBvpHAjHGKDjvQFdzVQ==@vger.kernel.org, AJvYcCUldrOuePgYh86Mk6a2P9uBA1sfqC+W8E5eCVEDcqIU1N1PsUh1fM8TOHJd1PjpQI6RuxSKzFYmWIc=@vger.kernel.org, AJvYcCWGQUKGuGH20aRvWzYD6/3KR3KamFdmb9c2f3gIudw3F7RrgQLjRCEDBM0aIbBMPU0HfkWpSS/kVtg3/rSoNrhYqHj6ZQ==@vger.kernel.org
+X-Gm-Message-State: AOJu0YyZN2Z/nIk0MLnoyX4JV42Rc9fRHVMMJUmmOBO9ztUtWbJ0GePQ
+	6tcPWPnc0MZx7VhigwbI0doI/Dt2OAYrlavevO8yaW12gQWG1xMe
+X-Gm-Gg: ASbGnctiGHmOsyDPDuzXeHqnc56shtbweWaI51vnTCbqXWTU2OJ5MR2ADtoffi5/m6w
+	oWII98BsMQQt4UB6QteEoD1ymZvudNrnSkaI1O2GNAo4LwAD9oozm+DtntXkZHXSsTJEXZ7gBoE
+	E9ZFU9o0qI3M9GG192OAiu7euwDc9YOY97V2ofLxTHEYUy9dXisPazkJ7WrRA/3pZ4bAPcMZZNy
+	Hxct1cswN+sSEuf1JaCTaDHuH3ZW427cQU5ctHtp7n8wpdnpb05eC8p5dRJ549xylqKk/zLt9mS
+	NN/FLQcBq8VdBGQYF4eAwFVLkOrqz9TLu+4YHgCwKtpmWiW/ETttzEehf6V3JLkJf0HwO4CzWVx
+	QX0j6400MTo5YmvvmQQ==
+X-Google-Smtp-Source: AGHT+IHYyPoIAviQ9WlZut/1R4lPJhxqJvypBSagtWuzXwkv/P+hqHZJzpslKnir4PuxhCJ88UfKHw==
+X-Received: by 2002:a17:902:cec1:b0:21f:592b:b4b6 with SMTP id d9443c01a7336-22369244244mr198361845ad.47.1741010791522;
+        Mon, 03 Mar 2025 06:06:31 -0800 (PST)
+Received: from ?IPV6:2600:1700:e321:62f0:da43:aeff:fecc:bfd5? ([2600:1700:e321:62f0:da43:aeff:fecc:bfd5])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-223505338f0sm77847815ad.248.2025.03.03.06.06.29
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 03 Mar 2025 05:41:02 -0800 (PST)
-Message-ID: <cd25d131-bead-4a38-98dc-1011c2843286@redhat.com>
-Date: Mon, 3 Mar 2025 14:41:02 +0100
+        Mon, 03 Mar 2025 06:06:30 -0800 (PST)
+Sender: Guenter Roeck <groeck7@gmail.com>
+Message-ID: <3781a4b0-e9e0-42cb-9393-570b3c8a6305@roeck-us.net>
+Date: Mon, 3 Mar 2025 06:06:28 -0800
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -72,191 +69,234 @@ List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] platform/x86: amd: Add ISP platform info
-To: Pratap Nirujogi <pratap.nirujogi@amd.com>, ilpo.jarvinen@linux.intel.com
-Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
- benjamin.chan@amd.com
-References: <20250228170238.3484860-1-pratap.nirujogi@amd.com>
-Content-Language: en-US, nl
-From: Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <20250228170238.3484860-1-pratap.nirujogi@amd.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Subject: Re: [PATCH v2 11/12] platform/x86: oxpec: Move hwmon/oxp-sensors to
+ platform/x86
+To: Antheas Kapenekakis <lkml@antheas.dev>, linux-hwmon@vger.kernel.org
+Cc: linux-doc@vger.kernel.org, linux-pm@vger.kernel.org,
+ platform-driver-x86@vger.kernel.org, Jean Delvare <jdelvare@suse.com>,
+ Jonathan Corbet <corbet@lwn.net>,
+ Joaquin Ignacio Aramendia <samsagax@gmail.com>,
+ Derek J Clark <derekjohn.clark@gmail.com>,
+ Kevin Greenberg <kdgreenberg234@protonmail.com>,
+ Joshua Tam <csinaction@pm.me>, Parth Menon <parthasarathymenon@gmail.com>,
+ Eileen <eileen@one-netbook.com>
+References: <20250222161824.172511-1-lkml@antheas.dev>
+ <20250222161824.172511-12-lkml@antheas.dev>
+Content-Language: en-US
+From: Guenter Roeck <linux@roeck-us.net>
+Autocrypt: addr=linux@roeck-us.net; keydata=
+ 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
+ mDW4+i+XlNFUPUYMrIKi9joBhu18ssf5i5Q=
+In-Reply-To: <20250222161824.172511-12-lkml@antheas.dev>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-Hi Pratap,
+On 2/22/25 08:18, Antheas Kapenekakis wrote:
+> Once upon a time, the platform EC of handheld devices only
+> controlled the fan. This is no longer the case, with the
+> EC of OneXPlayer gaining additional functionality.
+> 
+> As it will be beneficial from a complexity perspective
+> to retain this driver as a single unit, move it out
+> of hwmon, and into platform/x86.
+> 
+> While at it, add myself to the maintainer's file.
+> 
+> Signed-off-by: Antheas Kapenekakis <lkml@antheas.dev>
 
-Thank you for your patch.
+Acked-by: Guenter Roeck <linux@roeck-us.net>
 
-On 28-Feb-25 18:02, Pratap Nirujogi wrote:
-> Add ov05c i2c boardinfo and GPIO pin info for AMD ISP platform.
-> 
-> Details of the resources added:
-> 
-> - Added i2c bus number for AMD ISP platform is 99.
-> - Added GPIO 85 to allow ISP driver to enable and disable ISP access.
-> - Added GPIO 0 to allow sensor driver to enable and disable sensor module.
-> 
-> Signed-off-by: Pratap Nirujogi <pratap.nirujogi@amd.com>
+This should really have been the first patch of the series.
+
+Guenter
+
 > ---
->  drivers/platform/x86/amd/Kconfig   | 11 +++++
->  drivers/platform/x86/amd/Makefile  |  1 +
->  drivers/platform/x86/amd/amd_isp.c | 72 ++++++++++++++++++++++++++++++
->  3 files changed, 84 insertions(+)
->  create mode 100644 drivers/platform/x86/amd/amd_isp.c
+>   Documentation/hwmon/index.rst                         |  2 +-
+>   Documentation/hwmon/{oxp-sensors.rst => oxpec.rst}    |  0
+>   MAINTAINERS                                           |  7 ++++---
+>   drivers/hwmon/Kconfig                                 | 11 -----------
+>   drivers/hwmon/Makefile                                |  1 -
+>   drivers/platform/x86/Kconfig                          | 11 +++++++++++
+>   drivers/platform/x86/Makefile                         |  3 +++
+>   drivers/{hwmon/oxp-sensors.c => platform/x86/oxpec.c} | 10 ++++------
+>   8 files changed, 23 insertions(+), 22 deletions(-)
+>   rename Documentation/hwmon/{oxp-sensors.rst => oxpec.rst} (100%)
+>   rename drivers/{hwmon/oxp-sensors.c => platform/x86/oxpec.c} (98%)
 > 
-> diff --git a/drivers/platform/x86/amd/Kconfig b/drivers/platform/x86/amd/Kconfig
-> index c3e086ea64fc..4b373edd750d 100644
-> --- a/drivers/platform/x86/amd/Kconfig
-> +++ b/drivers/platform/x86/amd/Kconfig
-> @@ -32,3 +32,14 @@ config AMD_WBRF
->  
->  	  This mechanism will only be activated on platforms that advertise a
->  	  need for it.
-> +
-> +config AMD_ISP_PLATFORM
-> +	bool "AMD platform with ISP4 that supports Camera sensor device"
-> +	depends on I2C && X86_64 && AMD_ISP4
+> diff --git a/Documentation/hwmon/index.rst b/Documentation/hwmon/index.rst
+> index 874f8fd26325..dd7a54d5f281 100644
+> --- a/Documentation/hwmon/index.rst
+> +++ b/Documentation/hwmon/index.rst
+> @@ -186,7 +186,7 @@ Hardware Monitoring Kernel Drivers
+>      nzxt-kraken3
+>      nzxt-smart2
+>      occ
+> -   oxp-sensors
+> +   oxpec
+>      pc87360
+>      pc87427
+>      pcf8591
+> diff --git a/Documentation/hwmon/oxp-sensors.rst b/Documentation/hwmon/oxpec.rst
+> similarity index 100%
+> rename from Documentation/hwmon/oxp-sensors.rst
+> rename to Documentation/hwmon/oxpec.rst
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index a5e49d57c589..35db92380f99 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -17629,12 +17629,13 @@ S:	Maintained
+>   F:	drivers/mtd/nand/onenand/
+>   F:	include/linux/mtd/onenand*.h
+>   
+> -ONEXPLAYER FAN DRIVER
+> +ONEXPLAYER PLATFORM EC DRIVER
+> +M:	Antheas Kapenekakis <lkml@antheas.dev>
+>   M:	Derek John Clark <derekjohn.clark@gmail.com>
+>   M:	Joaquín Ignacio Aramendía <samsagax@gmail.com>
+> -L:	linux-hwmon@vger.kernel.org
+> +L:	platform-driver-x86@vger.kernel.org
+>   S:	Maintained
+> -F:	drivers/hwmon/oxp-sensors.c
+> +F:	drivers/platform/x86/oxpec.c
+>   
+>   ONIE TLV NVMEM LAYOUT DRIVER
+>   M:	Miquel Raynal <miquel.raynal@bootlin.com>
+> diff --git a/drivers/hwmon/Kconfig b/drivers/hwmon/Kconfig
+> index 4cbaba15d86e..09f7aed96d15 100644
+> --- a/drivers/hwmon/Kconfig
+> +++ b/drivers/hwmon/Kconfig
+> @@ -1774,17 +1774,6 @@ config SENSORS_NZXT_SMART2
+>   
+>   source "drivers/hwmon/occ/Kconfig"
+>   
+> -config SENSORS_OXP
+> -	tristate "OneXPlayer EC fan control"
+> -	depends on ACPI_EC
+> -	depends on X86
+> -	help
+> -		If you say yes here you get support for fan readings and control over
+> -		OneXPlayer handheld devices. Only OneXPlayer mini AMD handheld variant
+> -		boards are supported.
+> -
+> -		Can also be built as a module. In that case it will be called oxp-sensors.
+> -
+>   config SENSORS_PCF8591
+>   	tristate "Philips PCF8591 ADC/DAC"
+>   	depends on I2C
+> diff --git a/drivers/hwmon/Makefile b/drivers/hwmon/Makefile
+> index b7ef0f0562d3..0edb08824b17 100644
+> --- a/drivers/hwmon/Makefile
+> +++ b/drivers/hwmon/Makefile
+> @@ -181,7 +181,6 @@ obj-$(CONFIG_SENSORS_NTC_THERMISTOR)	+= ntc_thermistor.o
+>   obj-$(CONFIG_SENSORS_NZXT_KRAKEN2) += nzxt-kraken2.o
+>   obj-$(CONFIG_SENSORS_NZXT_KRAKEN3) += nzxt-kraken3.o
+>   obj-$(CONFIG_SENSORS_NZXT_SMART2) += nzxt-smart2.o
+> -obj-$(CONFIG_SENSORS_OXP) += oxp-sensors.o
+>   obj-$(CONFIG_SENSORS_PC87360)	+= pc87360.o
+>   obj-$(CONFIG_SENSORS_PC87427)	+= pc87427.o
+>   obj-$(CONFIG_SENSORS_PCF8591)	+= pcf8591.o
+> diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
+> index 0258dd879d64..4531b20c6b30 100644
+> --- a/drivers/platform/x86/Kconfig
+> +++ b/drivers/platform/x86/Kconfig
+> @@ -1186,6 +1186,17 @@ config SEL3350_PLATFORM
+>   	  To compile this driver as a module, choose M here: the module
+>   	  will be called sel3350-platform.
+>   
+> +config OXP_EC
+> +	tristate "OneXPlayer EC platform control"
+> +	depends on ACPI_EC
+> +	depends on X86
 > +	help
-> +	  For AMD platform that support Image signal processor generation 4, it
-> +	  is necessary to add platform specific camera sensor module board info
-> +	  which includes the sensor driver device id and the i2c address.
+> +		Enables support for the platform EC of OneXPlayer and AOKZOE
+> +		handheld devices. This includes fan speed, fan controls, and
+> +		disabling the default TDP behavior of the device. Due to legacy
+> +		reasons, this driver also provides hwmon functionality to Ayaneo
+> +		devices and the OrangePi Neo.
 > +
-> +	  If you have a AMD platform that support ISP4 and with a sensor
-> +	  connected to it, say Y here
-> diff --git a/drivers/platform/x86/amd/Makefile b/drivers/platform/x86/amd/Makefile
-> index 56f62fc9c97b..0d89e2d4f7e6 100644
-> --- a/drivers/platform/x86/amd/Makefile
-> +++ b/drivers/platform/x86/amd/Makefile
-> @@ -10,3 +10,4 @@ obj-$(CONFIG_AMD_PMC)		+= pmc/
->  obj-$(CONFIG_AMD_HSMP)		+= hsmp/
->  obj-$(CONFIG_AMD_PMF)		+= pmf/
->  obj-$(CONFIG_AMD_WBRF)		+= wbrf.o
-> +obj-$(CONFIG_AMD_ISP_PLATFORM)	+= amd_isp.o
-> diff --git a/drivers/platform/x86/amd/amd_isp.c b/drivers/platform/x86/amd/amd_isp.c
-> new file mode 100644
-> index 000000000000..751f209e9509
-> --- /dev/null
-> +++ b/drivers/platform/x86/amd/amd_isp.c
-> @@ -0,0 +1,72 @@
-> +/* SPDX-License-Identifier: MIT */
-> +/*
-> + * Copyright 2025 Advanced Micro Devices, Inc.
-> + *
-> + * Permission is hereby granted, free of charge, to any person obtaining a
-> + * copy of this software and associated documentation files (the "Software"),
-> + * to deal in the Software without restriction, including without limitation
-> + * the rights to use, copy, modify, merge, publish, distribute, sublicense,
-> + * and/or sell copies of the Software, and to permit persons to whom the
-> + * Software is furnished to do so, subject to the following conditions:
-> + *
-> + * The above copyright notice and this permission notice shall be included in
-> + * all copies or substantial portions of the Software.
-> + *
-> + * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-> + * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-> + * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.  IN NO EVENT SHALL
-> + * THE COPYRIGHT HOLDER(S) OR AUTHOR(S) BE LIABLE FOR ANY CLAIM, DAMAGES OR
-> + * OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,
-> + * ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
-> + * OTHER DEALINGS IN THE SOFTWARE.
-> + */
+>   endif # X86_PLATFORM_DEVICES
+>   
+>   config P2SB
+> diff --git a/drivers/platform/x86/Makefile b/drivers/platform/x86/Makefile
+> index e1b142947067..f64a191c1162 100644
+> --- a/drivers/platform/x86/Makefile
+> +++ b/drivers/platform/x86/Makefile
+> @@ -153,3 +153,6 @@ obj-$(CONFIG_WINMATE_FM07_KEYS)		+= winmate-fm07-keys.o
+>   
+>   # SEL
+>   obj-$(CONFIG_SEL3350_PLATFORM)		+= sel3350-platform.o
 > +
-> +#include <linux/init.h>
-> +#include <linux/i2c.h>
-> +#include <linux/kernel.h>
-> +#include <linux/gpio/machine.h>
-> +
-> +#define AMDISP_I2C_BUS		99
-
-I'm not a fan of using static i2c-bus numbers for this. static bus numbers are
-something of the past and we typically do not use these on x86 anymore.
-
-Using this static number + i2c_register_board_info() also requires this code
-to be builtin rather then modular which is also undesirable.
-
-For a more dynamic way of manually adding i2c-devices see:
-
-https://web.git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/drivers/platform/x86/dell/dell-lis3lv02d.c
-
-But a better question here is why instantiate the sensor i2c device
-manually at all.
-
-ACPI has a standardized way to describe I2C-clients which tyically
-is used for all I2C devices on ACPI platforms like I2C touchscreens /
-touchpads / audio-codecs / accelerometers / etc.
-I don't see why the camera sensor on AMD platforms is so special that
-it could not be described in ACPI using an ACPI child-device of the
-i2c-controller with a ACPI resource (_CRS entry) of the I2cSerialBusV2()
-type.
-
-Likewise the sensor enable GPIO should also be described in the ACPI
-table as a Gpio type resource in the same _CRS table.
-
-Can you run acpidump -o acpidump.txt on a laptop with this camera
-sensor and send me the acpidupm.txt offlist ? Please run this
-on a production hardware laptop model using production firmware.
-
-I suspect that Windows will also be using the ACPI description
-for the sensor so we really should figure out what Windows is doing
-here.
-
-As Mario mentioned we cannot just assume that the GPIOs +
-sensor address and model are valid for all laptops. Ideally we should
-be getting this information from ACPI rather then hardcoding it
-in the kernel.
-
-> +
-> +static struct gpiod_lookup_table isp_gpio_table = {
-> +	.dev_id = "amd_isp_capture",
-> +	.table = {
-> +		GPIO_LOOKUP("AMDI0030:00", 85, "enable_isp", GPIO_ACTIVE_HIGH),
-> +		{ }
-> +	},
-> +};
-
-This too really should be an Gpio() type ACPI resource on the ACPI device
-node for the ISP.
-
-How/where is this "amd_isp_capture" device created ?
-
-Regards,
-
-Hans
-
-
-> +
-> +static struct gpiod_lookup_table isp_sensor_gpio_table = {
-> +	.dev_id = "ov05c",
-> +	.table = {
-> +		GPIO_LOOKUP("amdisp-pinctrl", 0, "sensor0_enable", GPIO_ACTIVE_HIGH),
-> +		{ }
-> +	},
-> +};
-> +
-> +static struct i2c_board_info sensor_info = {
-> +	.dev_name = "ov05c",
-> +	I2C_BOARD_INFO("ov05c", 0x10),
-> +};
-> +
-> +static int __init amd_isp_init(void)
-> +{
-> +	int ret;
-> +
-> +	gpiod_add_lookup_table(&isp_gpio_table);
-> +	gpiod_add_lookup_table(&isp_sensor_gpio_table);
-> +
-> +	ret = i2c_register_board_info(AMDISP_I2C_BUS, &sensor_info, 1);
-> +	if (ret)
-> +		pr_err("%s: cannot register i2c board devices:%s",
-> +		       __func__, sensor_info.dev_name);
-> +
-> +	return ret;
-> +}
-> +
-> +arch_initcall(amd_isp_init);
-> +
-> +MODULE_AUTHOR("Benjamin Chan <benjamin.chan@amd.com>");
-> +MODULE_AUTHOR("Pratap Nirujogi <pratap.nirujogi@amd.com>");
-> +MODULE_DESCRIPTION("AMD ISP Platform parameters");
-> +MODULE_LICENSE("GPL and additional rights");
+> +# OneXPlayer
+> +obj-$(CONFIG_OXP_EC)		+= oxpec.o
+> \ No newline at end of file
+> diff --git a/drivers/hwmon/oxp-sensors.c b/drivers/platform/x86/oxpec.c
+> similarity index 98%
+> rename from drivers/hwmon/oxp-sensors.c
+> rename to drivers/platform/x86/oxpec.c
+> index b5ba863a762a..51845aae8a44 100644
+> --- a/drivers/hwmon/oxp-sensors.c
+> +++ b/drivers/platform/x86/oxpec.c
+> @@ -1,11 +1,8 @@
+>   // SPDX-License-Identifier: GPL-2.0+
+>   /*
+> - * Platform driver for OneXPlayer, AOKZOE, AYANEO, and OrangePi Handhelds
+> - * that expose fan reading and control via hwmon sysfs.
+> - *
+> - * Old OXP boards have the same DMI strings and they are told apart by
+> - * the boot cpu vendor (Intel/AMD). Of these older models only AMD is
+> - * supported.
+> + * Platform driver for OneXPlayer and AOKZOE devices. For the time being,
+> + * it also exposes fan controls for AYANEO, and OrangePi Handhelds via
+> + * hwmon sysfs.
+>    *
+>    * Fan control is provided via pwm interface in the range [0-255].
+>    * Old AMD boards use [0-100] as range in the EC, the written value is
+> @@ -16,6 +13,7 @@
+>    *
+>    * Copyright (C) 2022 Joaquín I. Aramendía <samsagax@gmail.com>
+>    * Copyright (C) 2024 Derek J. Clark <derekjohn.clark@gmail.com>
+> + * Copyright (C) 2025 Antheas Kapenekakis <lkml@antheas.dev>
+>    */
+>   
+>   #include <linux/acpi.h>
 
