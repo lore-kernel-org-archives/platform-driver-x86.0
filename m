@@ -1,279 +1,282 @@
-Received: from linux1587.grserver.gr (linux1587.grserver.gr [185.138.42.100])
+Received: from mail.tuxedocomputers.com (mail.tuxedocomputers.com [157.90.84.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 89A1C210F6A;
-	Mon,  3 Mar 2025 17:48:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.138.42.100
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C4B822135B2;
+	Mon,  3 Mar 2025 19:04:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=157.90.84.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741024099; cv=none; b=LmDh5fZmj9FHJMqxVbaTHOtfyT8Kd2GmQ/ZS/g2i+MLtdokzB+G5YLWEMdQAV8XPiwoiHXL9g/FdRy8OJ5WhTKzDiOBD3RBwvFMh+oRfaSCqeOrcdrXgGXDQZCoiZWayWCoRl+MX2aIoMzCjhN36bcHi/O2QduixrBbEj0/kvrk=
+	t=1741028701; cv=none; b=j+VBD6fG1KZmQNBPn2V2wxaTa+E+24yqHedIPp8AN1zI+mPBGrqpqyK1ThqBR2KmtPrj2qxDQHXjmTADQnzVTp/Y57u7CQxvGyK2qr1TX5GkzB/A7ShamH4FwjXUfgXcix3gnZtkTrTBM3Ig8G6karAfY7drpef1AWncZfyhIe8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741024099; c=relaxed/simple;
-	bh=iDMN4rrBceUEYXqlkKTP4RY49CeemCXZbPGm+CzxaSU=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=NaksiK/J6ArPQlLJB2XStAt2ok+FaxGWMwaV8fqPgX29yBqVj2MZfdzqAniiTW5LLZvJHtf983R0DXdwDpsxHXP3q4xV3joX72xevAGmaKrB5NjQ4WHbYeT2luuyMQHmnmyFm6am1YHxa+m9UhDkTahEtV3FHnZfElDECeKmlpk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=antheas.dev; spf=pass smtp.mailfrom=antheas.dev; dkim=pass (1024-bit key) header.d=antheas.dev header.i=@antheas.dev header.b=fR8mhTEJ; arc=none smtp.client-ip=185.138.42.100
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=antheas.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=antheas.dev
+	s=arc-20240116; t=1741028701; c=relaxed/simple;
+	bh=G/8JHaLqLPxmD3jusS29l2CkP905JdaGfKl1ipmgIvg=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=SSKA8c38UROIKc0aE0p7mYBXEo4Zt0jaZtXkHXw3UaCI17h6hxS1yvc7Kc/1X5AOXB2SVXbdrLl0ZvLMt87p1HB2qdHSn0yQz+CSocl8+SptjEtBJEIObs4tUf1zoYRM+ina7EiaOJMq054skG69vZT0dEwqwFVBYkm5WAGYDTw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=tuxedocomputers.com; spf=pass smtp.mailfrom=tuxedocomputers.com; dkim=pass (1024-bit key) header.d=tuxedocomputers.com header.i=@tuxedocomputers.com header.b=V2j29dxn; arc=none smtp.client-ip=157.90.84.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=tuxedocomputers.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tuxedocomputers.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=antheas.dev header.i=@antheas.dev header.b="fR8mhTEJ"
-Received: from mail-lj1-f177.google.com (mail-lj1-f177.google.com [209.85.208.177])
-	by linux1587.grserver.gr (Postfix) with ESMTPSA id 484E02E0952E;
-	Mon,  3 Mar 2025 19:48:03 +0200 (EET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=antheas.dev;
-	s=default; t=1741024084;
-	bh=29fX2dP5gBQuuI6ufZPXDnCycOG07kD+08hvoj337p4=;
-	h=Received:From:Subject:To;
-	b=fR8mhTEJ6cBhcdQeftnjbNiSpG07xQHt3xIapaRQECpvYjSYUdzYaji6ufkuWnI+h
-	 +KoI1D1vUcFzghM7xEMHtJHRAUs+eJFgFRCnWvmoX4DdIRWJRE6j11p/Zj1jrLwWaS
-	 +rs1vE1MTMgu+0mNZMqGHhIG7h3MvGgWdjbd3uWc=
-Authentication-Results: linux1587.grserver.gr;
-        spf=pass (sender IP is 209.85.208.177) smtp.mailfrom=lkml@antheas.dev smtp.helo=mail-lj1-f177.google.com
-Received-SPF: pass (linux1587.grserver.gr: connection is authenticated)
-Received: by mail-lj1-f177.google.com with SMTP id
- 38308e7fff4ca-30bc9cbeac1so1480741fa.1;
-        Mon, 03 Mar 2025 09:48:03 -0800 (PST)
-X-Forwarded-Encrypted: i=1;
- AJvYcCVT89V0eMzLC0NR94JU9AdgNagAFosIQxz3qO0V7EeFrv0ljcJZMgJzCiq115Gs4qIhM17V+omDEOU=@vger.kernel.org,
- AJvYcCWVYsDBK08u5jSPSIZZ+fPgI2nLaHF1DycEowMstOnfWPQA6D1MUH2KhS9Y/r+nUjB5tLnR4lKZZ9oZM/MUxsXMMpACLg==@vger.kernel.org,
- AJvYcCWvdkljjQL95mQ1Mpr1QikB1ruTAsGIie6boc9JBVoJRx84k9NALYPrvyQnoRz+UMY6fd4tWb/yVgo=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyteMHbfGC3a//fz+QlnmY7Eglx0I9DTgYkS4RpBy+MDrzthaIb
-	+vrOAuKiRKJAOr5jkei3zibxjW+3fBspKRp03zP+6qprbDGbuuJICDHaQL6GseUeHa2hTcjMhc/
-	rb9BuT9dN13tj3t+twAMLGYoqCNM=
-X-Google-Smtp-Source: 
- AGHT+IEZEd9zw1ttDmxZ7tcaRJ6KjJ2VuZRiCWUComhsmMB2kRXdYkwpwtfBc5qySPSoZvYKZvK9dueQ1j0YUkUQkKY=
-X-Received: by 2002:a2e:a9a8:0:b0:30b:c980:c5a7 with SMTP id
- 38308e7fff4ca-30bc980c98emr3691621fa.5.1741024082394; Mon, 03 Mar 2025
- 09:48:02 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=tuxedocomputers.com header.i=@tuxedocomputers.com header.b="V2j29dxn"
+Received: from wse-pc.fritz.box (pd9e59f4f.dip0.t-ipconnect.de [217.229.159.79])
+	(Authenticated sender: wse@tuxedocomputers.com)
+	by mail.tuxedocomputers.com (Postfix) with ESMTPA id 1E6BD2FC004D;
+	Mon,  3 Mar 2025 20:04:55 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=tuxedocomputers.com;
+	s=default; t=1741028695;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=tBMdKiqoGjVHhQJLFKOiYCm8fAftQOpA414Y4wTl5ik=;
+	b=V2j29dxnasiu6szjdlC0ly7dMTQ9BUBSuwu7s8P49LBdc0LMIttPjU5WP+eVaoMClfkG00
+	MmRHOiAYit9PlKAtweOY4pKXMIP6G4Tga5/aglZwln4p78R5dYI4+pIegeRLGiyUix8TNY
+	6rPZxWQC7BaEDQmbJ0VwoZoyOSsjsg0=
+Authentication-Results: mail.tuxedocomputers.com;
+	auth=pass smtp.auth=wse@tuxedocomputers.com smtp.mailfrom=wse@tuxedocomputers.com
+From: Werner Sembach <wse@tuxedocomputers.com>
+To: mario.limonciello@amd.com,
+	Hans de Goede <hdegoede@redhat.com>,
+	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	Werner Sembach <wse@tuxedocomputers.com>
+Cc: dmitry.torokhov@gmail.com,
+	linux-kernel@vger.kernel.org,
+	platform-driver-x86@vger.kernel.org
+Subject: [PATCH v2 2/2] Input: atkbd - Fix TUXEDO NB02 notebook keyboards FN-keys
+Date: Mon,  3 Mar 2025 20:04:35 +0100
+Message-ID: <20250303190442.551961-2-wse@tuxedocomputers.com>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20250303190442.551961-1-wse@tuxedocomputers.com>
+References: <20250303190442.551961-1-wse@tuxedocomputers.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250222161824.172511-1-lkml@antheas.dev>
- <20250222161824.172511-12-lkml@antheas.dev>
- <3781a4b0-e9e0-42cb-9393-570b3c8a6305@roeck-us.net>
-In-Reply-To: <3781a4b0-e9e0-42cb-9393-570b3c8a6305@roeck-us.net>
-From: Antheas Kapenekakis <lkml@antheas.dev>
-Date: Mon, 3 Mar 2025 18:47:51 +0100
-X-Gmail-Original-Message-ID: 
- <CAGwozwE8h86y6PDu+0zuhx-9XU2sA_K7RicH_G_aSOKU15M5vg@mail.gmail.com>
-X-Gm-Features: AQ5f1JojJsMNbYUm1sGa4LSU4e_So2GINpqdhHw_rI5pCjq56XSG2fnym_6Ppw4
-Message-ID: 
- <CAGwozwE8h86y6PDu+0zuhx-9XU2sA_K7RicH_G_aSOKU15M5vg@mail.gmail.com>
-Subject: Re: [PATCH v2 11/12] platform/x86: oxpec: Move hwmon/oxp-sensors to
- platform/x86
-To: Guenter Roeck <linux@roeck-us.net>
-Cc: linux-hwmon@vger.kernel.org, linux-doc@vger.kernel.org,
-	linux-pm@vger.kernel.org, platform-driver-x86@vger.kernel.org,
-	Jean Delvare <jdelvare@suse.com>, Jonathan Corbet <corbet@lwn.net>,
-	Joaquin Ignacio Aramendia <samsagax@gmail.com>,
- Derek J Clark <derekjohn.clark@gmail.com>,
-	Kevin Greenberg <kdgreenberg234@protonmail.com>,
- Joshua Tam <csinaction@pm.me>,
-	Parth Menon <parthasarathymenon@gmail.com>, Eileen <eileen@one-netbook.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-PPP-Message-ID: 
- <174102408408.24288.13177874548149470812@linux1587.grserver.gr>
-X-PPP-Vhost: antheas.dev
-X-Virus-Scanned: clamav-milter 0.103.11 at linux1587.grserver.gr
-X-Virus-Status: Clean
+Content-Transfer-Encoding: 8bit
 
-On Mon, 3 Mar 2025 at 15:07, Guenter Roeck <linux@roeck-us.net> wrote:
->
-> On 2/22/25 08:18, Antheas Kapenekakis wrote:
-> > Once upon a time, the platform EC of handheld devices only
-> > controlled the fan. This is no longer the case, with the
-> > EC of OneXPlayer gaining additional functionality.
-> >
-> > As it will be beneficial from a complexity perspective
-> > to retain this driver as a single unit, move it out
-> > of hwmon, and into platform/x86.
-> >
-> > While at it, add myself to the maintainer's file.
-> >
-> > Signed-off-by: Antheas Kapenekakis <lkml@antheas.dev>
->
-> Acked-by: Guenter Roeck <linux@roeck-us.net>
->
-> This should really have been the first patch of the series.
->
-> Guenter
+This small driver does 2 things:
 
-You are right, I will try to for the V3. Hopefully its not too hairy
-to rebase the patches.
+It remaps the touchpad toggle key from Control + Super + Hangaku/Zenkaku to
+F21 to conform with established userspace defaults. Note that the
+Hangaku/Zenkaku scancode used here is usually unused, with real
+Hangaku/Zenkaku keys using the tilde scancode.
 
-I will still keep the device additions first so they are possible to
-cherry pick to lts kernels.
+It suppresses the reserved scancode produced by pressing the FN-key on its
+own, which fixes a warning spamming the dmesg log otherwise.
 
-> > ---
-> >   Documentation/hwmon/index.rst                         |  2 +-
-> >   Documentation/hwmon/{oxp-sensors.rst =3D> oxpec.rst}    |  0
-> >   MAINTAINERS                                           |  7 ++++---
-> >   drivers/hwmon/Kconfig                                 | 11 ----------=
--
-> >   drivers/hwmon/Makefile                                |  1 -
-> >   drivers/platform/x86/Kconfig                          | 11 ++++++++++=
+Signed-off-by: Werner Sembach <wse@tuxedocomputers.com>
+---
+ MAINTAINERS                                 |  6 ++
+ drivers/platform/x86/Kconfig                |  2 +
+ drivers/platform/x86/Makefile               |  3 +
+ drivers/platform/x86/tuxedo/Kbuild          |  6 ++
+ drivers/platform/x86/tuxedo/Kconfig         |  6 ++
+ drivers/platform/x86/tuxedo/nb02/Kbuild     |  7 ++
+ drivers/platform/x86/tuxedo/nb02/Kconfig    | 15 ++++
+ drivers/platform/x86/tuxedo/nb02/platform.c | 94 +++++++++++++++++++++
+ 8 files changed, 139 insertions(+)
+ create mode 100644 drivers/platform/x86/tuxedo/Kbuild
+ create mode 100644 drivers/platform/x86/tuxedo/Kconfig
+ create mode 100644 drivers/platform/x86/tuxedo/nb02/Kbuild
+ create mode 100644 drivers/platform/x86/tuxedo/nb02/Kconfig
+ create mode 100644 drivers/platform/x86/tuxedo/nb02/platform.c
+
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 4ff26fa94895d..d3fbbcef813b0 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -24178,6 +24178,12 @@ T:	git git://git.kernel.org/pub/scm/linux/kernel/git/lenb/linux.git turbostat
+ F:	tools/power/x86/turbostat/
+ F:	tools/testing/selftests/turbostat/
+ 
++TUXEDO DRIVERS
++M:	Werner Sembach <wse@tuxedocomputers.com>
++L:	platform-driver-x86@vger.kernel.org
++S:	Supported
++F:	drivers/platform/x86/tuxedo/
 +
-> >   drivers/platform/x86/Makefile                         |  3 +++
-> >   drivers/{hwmon/oxp-sensors.c =3D> platform/x86/oxpec.c} | 10 ++++----=
---
-> >   8 files changed, 23 insertions(+), 22 deletions(-)
-> >   rename Documentation/hwmon/{oxp-sensors.rst =3D> oxpec.rst} (100%)
-> >   rename drivers/{hwmon/oxp-sensors.c =3D> platform/x86/oxpec.c} (98%)
-> >
-> > diff --git a/Documentation/hwmon/index.rst b/Documentation/hwmon/index.=
-rst
-> > index 874f8fd26325..dd7a54d5f281 100644
-> > --- a/Documentation/hwmon/index.rst
-> > +++ b/Documentation/hwmon/index.rst
-> > @@ -186,7 +186,7 @@ Hardware Monitoring Kernel Drivers
-> >      nzxt-kraken3
-> >      nzxt-smart2
-> >      occ
-> > -   oxp-sensors
-> > +   oxpec
-> >      pc87360
-> >      pc87427
-> >      pcf8591
-> > diff --git a/Documentation/hwmon/oxp-sensors.rst b/Documentation/hwmon/=
-oxpec.rst
-> > similarity index 100%
-> > rename from Documentation/hwmon/oxp-sensors.rst
-> > rename to Documentation/hwmon/oxpec.rst
-> > diff --git a/MAINTAINERS b/MAINTAINERS
-> > index a5e49d57c589..35db92380f99 100644
-> > --- a/MAINTAINERS
-> > +++ b/MAINTAINERS
-> > @@ -17629,12 +17629,13 @@ S:  Maintained
-> >   F:  drivers/mtd/nand/onenand/
-> >   F:  include/linux/mtd/onenand*.h
-> >
-> > -ONEXPLAYER FAN DRIVER
-> > +ONEXPLAYER PLATFORM EC DRIVER
-> > +M:   Antheas Kapenekakis <lkml@antheas.dev>
-> >   M:  Derek John Clark <derekjohn.clark@gmail.com>
-> >   M:  Joaqu=C3=ADn Ignacio Aramend=C3=ADa <samsagax@gmail.com>
-> > -L:   linux-hwmon@vger.kernel.org
-> > +L:   platform-driver-x86@vger.kernel.org
-> >   S:  Maintained
-> > -F:   drivers/hwmon/oxp-sensors.c
-> > +F:   drivers/platform/x86/oxpec.c
-> >
-> >   ONIE TLV NVMEM LAYOUT DRIVER
-> >   M:  Miquel Raynal <miquel.raynal@bootlin.com>
-> > diff --git a/drivers/hwmon/Kconfig b/drivers/hwmon/Kconfig
-> > index 4cbaba15d86e..09f7aed96d15 100644
-> > --- a/drivers/hwmon/Kconfig
-> > +++ b/drivers/hwmon/Kconfig
-> > @@ -1774,17 +1774,6 @@ config SENSORS_NZXT_SMART2
-> >
-> >   source "drivers/hwmon/occ/Kconfig"
-> >
-> > -config SENSORS_OXP
-> > -     tristate "OneXPlayer EC fan control"
-> > -     depends on ACPI_EC
-> > -     depends on X86
-> > -     help
-> > -             If you say yes here you get support for fan readings and =
-control over
-> > -             OneXPlayer handheld devices. Only OneXPlayer mini AMD han=
-dheld variant
-> > -             boards are supported.
-> > -
-> > -             Can also be built as a module. In that case it will be ca=
-lled oxp-sensors.
-> > -
-> >   config SENSORS_PCF8591
-> >       tristate "Philips PCF8591 ADC/DAC"
-> >       depends on I2C
-> > diff --git a/drivers/hwmon/Makefile b/drivers/hwmon/Makefile
-> > index b7ef0f0562d3..0edb08824b17 100644
-> > --- a/drivers/hwmon/Makefile
-> > +++ b/drivers/hwmon/Makefile
-> > @@ -181,7 +181,6 @@ obj-$(CONFIG_SENSORS_NTC_THERMISTOR)      +=3D ntc_=
-thermistor.o
-> >   obj-$(CONFIG_SENSORS_NZXT_KRAKEN2) +=3D nzxt-kraken2.o
-> >   obj-$(CONFIG_SENSORS_NZXT_KRAKEN3) +=3D nzxt-kraken3.o
-> >   obj-$(CONFIG_SENSORS_NZXT_SMART2) +=3D nzxt-smart2.o
-> > -obj-$(CONFIG_SENSORS_OXP) +=3D oxp-sensors.o
-> >   obj-$(CONFIG_SENSORS_PC87360)       +=3D pc87360.o
-> >   obj-$(CONFIG_SENSORS_PC87427)       +=3D pc87427.o
-> >   obj-$(CONFIG_SENSORS_PCF8591)       +=3D pcf8591.o
-> > diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfi=
-g
-> > index 0258dd879d64..4531b20c6b30 100644
-> > --- a/drivers/platform/x86/Kconfig
-> > +++ b/drivers/platform/x86/Kconfig
-> > @@ -1186,6 +1186,17 @@ config SEL3350_PLATFORM
-> >         To compile this driver as a module, choose M here: the module
-> >         will be called sel3350-platform.
-> >
-> > +config OXP_EC
-> > +     tristate "OneXPlayer EC platform control"
-> > +     depends on ACPI_EC
-> > +     depends on X86
-> > +     help
-> > +             Enables support for the platform EC of OneXPlayer and AOK=
-ZOE
-> > +             handheld devices. This includes fan speed, fan controls, =
-and
-> > +             disabling the default TDP behavior of the device. Due to =
-legacy
-> > +             reasons, this driver also provides hwmon functionality to=
- Ayaneo
-> > +             devices and the OrangePi Neo.
-> > +
-> >   endif # X86_PLATFORM_DEVICES
-> >
-> >   config P2SB
-> > diff --git a/drivers/platform/x86/Makefile b/drivers/platform/x86/Makef=
-ile
-> > index e1b142947067..f64a191c1162 100644
-> > --- a/drivers/platform/x86/Makefile
-> > +++ b/drivers/platform/x86/Makefile
-> > @@ -153,3 +153,6 @@ obj-$(CONFIG_WINMATE_FM07_KEYS)           +=3D winm=
-ate-fm07-keys.o
-> >
-> >   # SEL
-> >   obj-$(CONFIG_SEL3350_PLATFORM)              +=3D sel3350-platform.o
-> > +
-> > +# OneXPlayer
-> > +obj-$(CONFIG_OXP_EC)         +=3D oxpec.o
-> > \ No newline at end of file
-> > diff --git a/drivers/hwmon/oxp-sensors.c b/drivers/platform/x86/oxpec.c
-> > similarity index 98%
-> > rename from drivers/hwmon/oxp-sensors.c
-> > rename to drivers/platform/x86/oxpec.c
-> > index b5ba863a762a..51845aae8a44 100644
-> > --- a/drivers/hwmon/oxp-sensors.c
-> > +++ b/drivers/platform/x86/oxpec.c
-> > @@ -1,11 +1,8 @@
-> >   // SPDX-License-Identifier: GPL-2.0+
-> >   /*
-> > - * Platform driver for OneXPlayer, AOKZOE, AYANEO, and OrangePi Handhe=
-lds
-> > - * that expose fan reading and control via hwmon sysfs.
-> > - *
-> > - * Old OXP boards have the same DMI strings and they are told apart by
-> > - * the boot cpu vendor (Intel/AMD). Of these older models only AMD is
-> > - * supported.
-> > + * Platform driver for OneXPlayer and AOKZOE devices. For the time bei=
-ng,
-> > + * it also exposes fan controls for AYANEO, and OrangePi Handhelds via
-> > + * hwmon sysfs.
-> >    *
-> >    * Fan control is provided via pwm interface in the range [0-255].
-> >    * Old AMD boards use [0-100] as range in the EC, the written value i=
-s
-> > @@ -16,6 +13,7 @@
-> >    *
-> >    * Copyright (C) 2022 Joaqu=C3=ADn I. Aramend=C3=ADa <samsagax@gmail.=
-com>
-> >    * Copyright (C) 2024 Derek J. Clark <derekjohn.clark@gmail.com>
-> > + * Copyright (C) 2025 Antheas Kapenekakis <lkml@antheas.dev>
-> >    */
-> >
-> >   #include <linux/acpi.h>
->
+ TW5864 VIDEO4LINUX DRIVER
+ M:	Bluecherry Maintainers <maintainers@bluecherrydvr.com>
+ M:	Andrey Utkin <andrey.utkin@corp.bluecherry.net>
+diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
+index 0258dd879d64b..9b78a1255c08e 100644
+--- a/drivers/platform/x86/Kconfig
++++ b/drivers/platform/x86/Kconfig
+@@ -1199,3 +1199,5 @@ config P2SB
+ 	  The main purpose of this library is to unhide P2SB device in case
+ 	  firmware kept it hidden on some platforms in order to access devices
+ 	  behind it.
++
++source "drivers/platform/x86/tuxedo/Kconfig"
+diff --git a/drivers/platform/x86/Makefile b/drivers/platform/x86/Makefile
+index e1b1429470674..1562dcd7ad9a5 100644
+--- a/drivers/platform/x86/Makefile
++++ b/drivers/platform/x86/Makefile
+@@ -153,3 +153,6 @@ obj-$(CONFIG_WINMATE_FM07_KEYS)		+= winmate-fm07-keys.o
+ 
+ # SEL
+ obj-$(CONFIG_SEL3350_PLATFORM)		+= sel3350-platform.o
++
++# TUXEDO
++obj-y					+= tuxedo/
+diff --git a/drivers/platform/x86/tuxedo/Kbuild b/drivers/platform/x86/tuxedo/Kbuild
+new file mode 100644
+index 0000000000000..e9c4243d438ba
+--- /dev/null
++++ b/drivers/platform/x86/tuxedo/Kbuild
+@@ -0,0 +1,6 @@
++# SPDX-License-Identifier: GPL-2.0-or-later
++#
++# TUXEDO X86 Platform Specific Drivers
++#
++
++obj-y	+= nb02/
+diff --git a/drivers/platform/x86/tuxedo/Kconfig b/drivers/platform/x86/tuxedo/Kconfig
+new file mode 100644
+index 0000000000000..e463f92135780
+--- /dev/null
++++ b/drivers/platform/x86/tuxedo/Kconfig
+@@ -0,0 +1,6 @@
++# SPDX-License-Identifier: GPL-2.0-only
++#
++# TUXEDO X86 Platform Specific Drivers
++#
++
++source "drivers/platform/x86/tuxedo/nb02/Kconfig"
+diff --git a/drivers/platform/x86/tuxedo/nb02/Kbuild b/drivers/platform/x86/tuxedo/nb02/Kbuild
+new file mode 100644
+index 0000000000000..8624a012cd683
+--- /dev/null
++++ b/drivers/platform/x86/tuxedo/nb02/Kbuild
+@@ -0,0 +1,7 @@
++# SPDX-License-Identifier: GPL-2.0-only
++#
++# TUXEDO X86 Platform Specific Drivers
++#
++
++tuxedo_nb02_platform-y			:= platform.o
++obj-$(CONFIG_TUXEDO_NB02_PLATFORM)	+= tuxedo_nb02_platform.o
+diff --git a/drivers/platform/x86/tuxedo/nb02/Kconfig b/drivers/platform/x86/tuxedo/nb02/Kconfig
+new file mode 100644
+index 0000000000000..bed56276b9b36
+--- /dev/null
++++ b/drivers/platform/x86/tuxedo/nb02/Kconfig
+@@ -0,0 +1,15 @@
++# SPDX-License-Identifier: GPL-2.0-only
++#
++# TUXEDO X86 Platform Specific Drivers
++#
++
++menuconfig TUXEDO_NB02_PLATFORM
++	tristate "TUXEDO NB02 Platform Driver"
++	help
++	  This driver implements miscellaneous things found on TUXEDO Notebooks
++	  with board vendor NB02. For the time being this is only remapping the
++	  touchpad toggle key to something supported by most Linux distros
++	  out-of-the-box and suppressing an unsupported scancode from the
++	  FN-key.
++
++	  When compiled as a module it will be called tuxedo_nb02_platform.
+diff --git a/drivers/platform/x86/tuxedo/nb02/platform.c b/drivers/platform/x86/tuxedo/nb02/platform.c
+new file mode 100644
+index 0000000000000..68d83b9b4c2f5
+--- /dev/null
++++ b/drivers/platform/x86/tuxedo/nb02/platform.c
+@@ -0,0 +1,94 @@
++// SPDX-License-Identifier: GPL-2.0-or-later
++/*
++ * Copyright (C) 2025 Werner Sembach wse@tuxedocomputers.com
++ */
++
++#include <linux/dmi.h>
++#include <linux/i8042.h>
++#include <linux/kernel.h>
++#include <linux/module.h>
++#include <linux/serio.h>
++
++static u8 tux_nb02_touchp_toggle_seq[] = {
++	0xe0, 0x5b, // Super down
++	0x1d,       // Control down
++	0x76,       // Zenkaku/Hankaku down
++	0xf6,       // Zenkaku/Hankaku up
++	0x9d,       // Control up
++	0xe0, 0xdb  // Super up
++};
++
++static bool tux_nb02_i8042_filter(unsigned char data,
++				  unsigned char str,
++				  struct serio *port,
++				  __always_unused void *context)
++{
++	static u8 seq_pos;
++
++	if (unlikely(str & I8042_STR_AUXDATA))
++		return false;
++
++	/* Replace touchpad toggle key sequence with a singular press of the
++	 * F21-key.
++	 */
++	if (unlikely(data == tux_nb02_touchp_toggle_seq[seq_pos])) {
++		++seq_pos;
++		if (seq_pos == ARRAY_SIZE(tux_nb02_touchp_toggle_seq)) {
++			seq_pos = 0;
++			serio_interrupt(port, 0x6c, 0); // F21 down
++			serio_interrupt(port, 0xec, 0); // F21 up
++		}
++		return true;
++	}
++
++	/* Ignore bogus scancode produced by the FN-key. Reuse seq_pos as first
++	 * byte of that is just the "extended"-byte.
++	 */
++	if (unlikely(seq_pos == 1 && (data == 0x78 || data == 0xf8))) {
++		seq_pos = 0;
++		return true;
++	}
++
++	/* Replay skipped sequence bytes if it did not finish and it was not a
++	 * FN-key press.
++	 */
++	if (unlikely(seq_pos)) {
++		for (u8 i; i < seq_pos; ++i)
++			serio_interrupt(port, tux_nb02_touchp_toggle_seq[i], 0);
++		seq_pos = 0;
++	}
++
++	return false;
++}
++
++static const struct dmi_system_id tux_nb02_dmi_string_match[] __initconst = {
++	{
++		.matches = {
++			DMI_EXACT_MATCH(DMI_SYS_VENDOR, "TUXEDO"),
++			DMI_EXACT_MATCH(DMI_BOARD_VENDOR, "NB02"),
++		},
++	},
++	{ }
++};
++
++static int __init tux_nb02_plat_init(void)
++{
++	if (!dmi_check_system(tux_nb02_dmi_string_match))
++		return -ENODEV;
++
++	return i8042_install_filter(tux_nb02_i8042_filter, NULL);
++}
++
++static void __exit tux_nb02_plat_exit(void)
++{
++	i8042_remove_filter(tux_nb02_i8042_filter);
++}
++
++module_init(tux_nb02_plat_init);
++module_exit(tux_nb02_plat_exit);
++
++MODULE_ALIAS("dmi:*:svnTUXEDO:*:rvnNB02:*");
++
++MODULE_DESCRIPTION("TUXEDO NB02 Platform");
++MODULE_AUTHOR("Werner Sembach <wse@tuxedocomputers.com>");
++MODULE_LICENSE("GPL");
+-- 
+2.43.0
+
