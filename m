@@ -1,53 +1,53 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 56A4823BE;
-	Mon,  3 Mar 2025 00:08:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC24014D29B;
+	Mon,  3 Mar 2025 04:04:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740960536; cv=none; b=k7z6wBW1fBu6ZxGiXea0BdSR7dkTY8uijpKk8giQqo6mmRWHtaQUrHQVCUi6qNjGVDw3Dd84qSdDfoi6iZJOFYSXCqkVwZujxjYXJfYQzkONPsJk0JMvib+id4hNgNGht5LxO0w3/pXHOG8iKK3t40prFFC/FQO4QoA14pXUiuQ=
+	t=1740974659; cv=none; b=sOa0QuKA/GV4Jsxga0Q5TfWQ6WkRbNE0BJKxeMwky9YdHyltqdaSZda7gs5x6gOp9Qo7fRbmXXfnhUg5x2q86DYDjdn2j5jW51dwqqPFVebx33JO81yHbY4ZsLNEBG0jvcxbPTKwuslb/GwtLB1VUZh6QKM61+Glp6IrUyUCGgM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740960536; c=relaxed/simple;
-	bh=iFhsPwDQntSzhdX0WmnxmE0NteARrQ2q8k6MdRciiCI=;
+	s=arc-20240116; t=1740974659; c=relaxed/simple;
+	bh=xTmsFFTPMW7yzBZ6opQWKAOUqr75ygkyYcYdzns8jNc=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=tfjJ/bOu+uzbmtcUgtbsYOenpVk0edFU91PL1htaGNuBKf9PK7pponUxVP14DJm0QW0sxQx5HadHJ1BXEQTk5fmEtvFbLlZ0KHujTUkyeui7FPl7MmZCor9oZ+JeTeU+TemndlZtAqez9NQa+rgEEi+OM468V6G30Sta5szljGo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=DGOT6nDg; arc=none smtp.client-ip=192.198.163.11
+	 Content-Type:Content-Disposition:In-Reply-To; b=Ax8qypq/z/kgjyaUYQkz8Wis4haD+4ulSp7LRdCME0gnEQlyzgkVnlcsR4JikSzFGMfJ58EmrNQ4b+rz9s9FgjQE7ds8ya1kVg5DuSzxgycu2M6SZElGzeS0RDGjei6OY7OQwPjsdb0lmvophTJqHJ+AYmai+LQnONRA3ooDTHY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=eaD08hZJ; arc=none smtp.client-ip=198.175.65.19
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="DGOT6nDg"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="eaD08hZJ"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1740960534; x=1772496534;
+  t=1740974658; x=1772510658;
   h=date:from:to:cc:subject:message-id:references:
    mime-version:in-reply-to;
-  bh=iFhsPwDQntSzhdX0WmnxmE0NteARrQ2q8k6MdRciiCI=;
-  b=DGOT6nDgaXXhsf/0oF0h+RRchXxXzaaeuHFmy6Iq93DZuhOl+DkNzgrI
-   UGUsC0WmmLeNkn8ugEw4ac9pO8UdjKPcxI3gsfssTbahT7x/wBQlDZtbw
-   wCMJx/p7UgSyiED0x0xqST7V6xx8wslbDqJgLxKw34nJmD3Vdsgz2NDN7
-   MM7DMXuBEI/zLzloGr1lIYiZ6eTSPJ9AmThKsDOtlkUt5PI2YwFr2iqc8
-   Y6vcnDtMgJ1f5jSxZZVfOVkj0M2X20eSA4eao4ZDtEeURPC+r28BT1B9m
-   PayDbI5QuTciEA0zioxCIqOOdVrpnUK2EZ6e+7KixVm4EnV86rjvRuSnp
-   w==;
-X-CSE-ConnectionGUID: ri3BVJfeTUSNVcfH3pgHfA==
-X-CSE-MsgGUID: b+jVGD25SHCLYl7YwUMU1A==
-X-IronPort-AV: E=McAfee;i="6700,10204,11361"; a="52466970"
+  bh=xTmsFFTPMW7yzBZ6opQWKAOUqr75ygkyYcYdzns8jNc=;
+  b=eaD08hZJJv7CzvjouPfDJfyolXEb4yLzAp/NoMrZ8T4SSnjYDBovpNe5
+   ocUtqI6lwPq6RGq5xOxBfRheQ8qjRA89uabwrFXQiRw4el8hKrqd+8F0N
+   ebpEXHwRkx346TZul+aVTogT/xELmso1wfwwjptkBQpolYnnUe9G5IXv/
+   nOxp3Dhi3RcT/PWgGO3in7XqZVImYcHCjDhwJf1uew/1xyVLwGV6lOJg4
+   9hmSkXfa7Zp1Gz2zBTYDx+KPWZo5MRXu166jo1ajHLoi3RPBn/wOy8w5M
+   XRPf/wmEY+z0GjX9Wb4b3RMVAIUXZZ/FlJeKaSVhpfAGtYSsCenaPsqpQ
+   A==;
+X-CSE-ConnectionGUID: c+r2fDmuSAGnJibMQ8mfCA==
+X-CSE-MsgGUID: dm0RmKgnQqSZEOjiv/OD9Q==
+X-IronPort-AV: E=McAfee;i="6700,10204,11361"; a="41685669"
 X-IronPort-AV: E=Sophos;i="6.13,328,1732608000"; 
-   d="scan'208";a="52466970"
+   d="scan'208";a="41685669"
 Received: from fmviesa001.fm.intel.com ([10.60.135.141])
-  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Mar 2025 16:08:53 -0800
-X-CSE-ConnectionGUID: VdOYXJjmS8e5WCQAA6ES7g==
-X-CSE-MsgGUID: E2N4braMTYe1lfyfc0IiNg==
+  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Mar 2025 20:04:17 -0800
+X-CSE-ConnectionGUID: xzikrXRvS8urZUNFUpH6Og==
+X-CSE-MsgGUID: tAMCDCDwQs6CqFpdO85Eow==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
-   d="scan'208";a="148763664"
+   d="scan'208";a="148796755"
 Received: from lkp-server02.sh.intel.com (HELO 76cde6cc1f07) ([10.239.97.151])
-  by fmviesa001.fm.intel.com with ESMTP; 02 Mar 2025 16:08:47 -0800
+  by fmviesa001.fm.intel.com with ESMTP; 02 Mar 2025 20:04:12 -0800
 Received: from kbuild by 76cde6cc1f07 with local (Exim 4.96)
 	(envelope-from <lkp@intel.com>)
-	id 1totMT-000Hk2-28;
-	Mon, 03 Mar 2025 00:08:45 +0000
-Date: Mon, 3 Mar 2025 08:08:27 +0800
+	id 1tox1f-000Hv1-2t;
+	Mon, 03 Mar 2025 04:03:46 +0000
+Date: Mon, 3 Mar 2025 12:03:10 +0800
 From: kernel test robot <lkp@intel.com>
 To: "Derek J. Clark" <derekjohn.clark@gmail.com>,
 	Hans de Goede <hdegoede@redhat.com>,
@@ -64,9 +64,9 @@ Cc: oe-kbuild-all@lists.linux.dev, Armin Wolf <W_Armin@gmx.de>,
 	"Derek J . Clark" <derekjohn.clark@gmail.com>,
 	platform-driver-x86@vger.kernel.org, linux-doc@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 4/4] platform/x86: Add Lenovo Other Mode WMI Driver
-Message-ID: <202503030756.aT75o80n-lkp@intel.com>
-References: <20250225220037.16073-5-derekjohn.clark@gmail.com>
+Subject: Re: [PATCH v3 2/4] platform/x86: Add Lenovo Gamezone WMI Driver
+Message-ID: <202503031157.JXItpvLX-lkp@intel.com>
+References: <20250225220037.16073-3-derekjohn.clark@gmail.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -75,7 +75,7 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250225220037.16073-5-derekjohn.clark@gmail.com>
+In-Reply-To: <20250225220037.16073-3-derekjohn.clark@gmail.com>
 
 Hi Derek,
 
@@ -89,96 +89,46 @@ https://git-scm.com/docs/git-format-patch#_base_tree_information]
 
 url:    https://github.com/intel-lab-lkp/linux/commits/Derek-J-Clark/platform-x86-Add-lenovo-wmi-drivers-Documentation/20250226-060548
 base:   https://git.kernel.org/pub/scm/linux/kernel/git/superm1/linux.git linux-next
-patch link:    https://lore.kernel.org/r/20250225220037.16073-5-derekjohn.clark%40gmail.com
-patch subject: [PATCH v3 4/4] platform/x86: Add Lenovo Other Mode WMI Driver
-config: x86_64-randconfig-003-20250303 (https://download.01.org/0day-ci/archive/20250303/202503030756.aT75o80n-lkp@intel.com/config)
-compiler: gcc-12 (Debian 12.2.0-14) 12.2.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250303/202503030756.aT75o80n-lkp@intel.com/reproduce)
+patch link:    https://lore.kernel.org/r/20250225220037.16073-3-derekjohn.clark%40gmail.com
+patch subject: [PATCH v3 2/4] platform/x86: Add Lenovo Gamezone WMI Driver
+config: x86_64-randconfig-101-20250303 (https://download.01.org/0day-ci/archive/20250303/202503031157.JXItpvLX-lkp@intel.com/config)
+compiler: clang version 19.1.7 (https://github.com/llvm/llvm-project cd708029e0b2869e80abe31ddb175f7c35361f90)
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250303/202503031157.JXItpvLX-lkp@intel.com/reproduce)
 
 If you fix the issue in a separate patch/commit (i.e. not just a new version of
 the same patch/commit), kindly add following tags
 | Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202503030756.aT75o80n-lkp@intel.com/
+| Closes: https://lore.kernel.org/oe-kbuild-all/202503031157.JXItpvLX-lkp@intel.com/
 
 All warnings (new ones prefixed by >>):
 
    In file included from drivers/platform/x86/lenovo-wmi.c:20:
->> drivers/platform/x86/lenovo-wmi.h:21: warning: "pr_fmt" redefined
+>> drivers/platform/x86/lenovo-wmi.h:21:9: warning: 'pr_fmt' macro redefined [-Wmacro-redefined]
       21 | #define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
-         | 
-   In file included from include/asm-generic/bug.h:22,
-                    from arch/x86/include/asm/bug.h:99,
-                    from include/linux/bug.h:5,
-                    from include/linux/jump_label.h:258,
-                    from include/linux/static_key.h:1,
-                    from arch/x86/include/asm/nospec-branch.h:6,
-                    from arch/x86/include/asm/paravirt_types.h:12,
-                    from arch/x86/include/asm/ptrace.h:175,
-                    from arch/x86/include/asm/math_emu.h:5,
-                    from arch/x86/include/asm/processor.h:13,
-                    from include/linux/sched.h:13,
-                    from include/linux/ratelimit.h:6,
-                    from include/linux/dev_printk.h:16,
-                    from include/linux/device.h:15,
-                    from include/linux/wmi.h:11,
-                    from drivers/platform/x86/lenovo-wmi.c:19:
-   include/linux/printk.h:391: note: this is the location of the previous definition
+         |         ^
+   include/linux/printk.h:391:9: note: previous definition is here
      391 | #define pr_fmt(fmt) fmt
-         | 
+         |         ^
+   1 warning generated.
 --
-   In file included from drivers/platform/x86/lenovo-wmi-other.c:28:
->> drivers/platform/x86/lenovo-wmi.h:21: warning: "pr_fmt" redefined
+   In file included from drivers/platform/x86/lenovo-wmi-gamezone.c:20:
+>> drivers/platform/x86/lenovo-wmi.h:21:9: warning: 'pr_fmt' macro redefined [-Wmacro-redefined]
       21 | #define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
-         | 
-   In file included from include/asm-generic/bug.h:22,
-                    from arch/x86/include/asm/bug.h:99,
-                    from include/linux/bug.h:5,
-                    from include/linux/jump_label.h:258,
-                    from include/linux/static_key.h:1,
-                    from arch/x86/include/asm/nospec-branch.h:6,
-                    from arch/x86/include/asm/paravirt_types.h:12,
-                    from arch/x86/include/asm/ptrace.h:175,
-                    from arch/x86/include/asm/math_emu.h:5,
-                    from arch/x86/include/asm/processor.h:13,
-                    from include/linux/sched.h:13,
-                    from include/linux/ratelimit.h:6,
-                    from include/linux/dev_printk.h:16,
-                    from include/linux/device.h:15,
-                    from drivers/platform/x86/lenovo-wmi-other.c:23:
-   include/linux/printk.h:391: note: this is the location of the previous definition
+         |         ^
+   include/linux/printk.h:391:9: note: previous definition is here
      391 | #define pr_fmt(fmt) fmt
-         | 
-   In file included from include/linux/memory_hotplug.h:7,
-                    from include/linux/mmzone.h:1475,
-                    from include/linux/gfp.h:7,
-                    from include/linux/xarray.h:16,
-                    from include/linux/radix-tree.h:21,
-                    from include/linux/idr.h:15,
-                    from include/linux/kernfs.h:12,
-                    from include/linux/sysfs.h:16,
-                    from include/linux/kobject.h:20,
-                    from include/linux/energy_model.h:7,
-                    from include/linux/device.h:16:
-   drivers/platform/x86/lenovo-wmi-other.c: In function 'lenovo_wmi_om_notifier':
->> include/linux/notifier.h:188:33: warning: statement with no effect [-Wunused-value]
-     188 | #define NOTIFY_BAD              (NOTIFY_STOP_MASK|0x0002)
-         |                                 ^
-   drivers/platform/x86/lenovo-wmi-other.c:435:17: note: in expansion of macro 'NOTIFY_BAD'
-     435 |                 NOTIFY_BAD;
-         |                 ^~~~~~~~~~
-   include/linux/notifier.h:186:33: warning: statement with no effect [-Wunused-value]
-     186 | #define NOTIFY_OK               0x0001          /* Suits me */
-         |                                 ^~~~~~
-   drivers/platform/x86/lenovo-wmi-other.c:438:17: note: in expansion of macro 'NOTIFY_OK'
-     438 |                 NOTIFY_OK;
-         |                 ^~~~~~~~~
+         |         ^
+>> drivers/platform/x86/lenovo-wmi-gamezone.c:205:31: warning: unused variable 'profile' [-Wunused-variable]
+     205 |         enum platform_profile_option profile;
+         |                                      ^~~~~~~
+   2 warnings generated.
 
 
 vim +/pr_fmt +21 drivers/platform/x86/lenovo-wmi.h
 
-cff13e10214613 Derek J. Clark 2025-02-25  20  
-cff13e10214613 Derek J. Clark 2025-02-25 @21  #define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
-cff13e10214613 Derek J. Clark 2025-02-25  22  
+    20	
+  > 21	#define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
+    22	
 
 -- 
 0-DAY CI Kernel Test Service
