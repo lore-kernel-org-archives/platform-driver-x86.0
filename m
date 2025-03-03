@@ -1,135 +1,240 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
+Received: from NAM10-DM6-obe.outbound.protection.outlook.com (mail-dm6nam10on2059.outbound.protection.outlook.com [40.107.93.59])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC24014D29B;
-	Mon,  3 Mar 2025 04:04:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.19
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740974659; cv=none; b=sOa0QuKA/GV4Jsxga0Q5TfWQ6WkRbNE0BJKxeMwky9YdHyltqdaSZda7gs5x6gOp9Qo7fRbmXXfnhUg5x2q86DYDjdn2j5jW51dwqqPFVebx33JO81yHbY4ZsLNEBG0jvcxbPTKwuslb/GwtLB1VUZh6QKM61+Glp6IrUyUCGgM=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740974659; c=relaxed/simple;
-	bh=xTmsFFTPMW7yzBZ6opQWKAOUqr75ygkyYcYdzns8jNc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Ax8qypq/z/kgjyaUYQkz8Wis4haD+4ulSp7LRdCME0gnEQlyzgkVnlcsR4JikSzFGMfJ58EmrNQ4b+rz9s9FgjQE7ds8ya1kVg5DuSzxgycu2M6SZElGzeS0RDGjei6OY7OQwPjsdb0lmvophTJqHJ+AYmai+LQnONRA3ooDTHY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=eaD08hZJ; arc=none smtp.client-ip=198.175.65.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 73CC11DCB24;
+	Mon,  3 Mar 2025 05:01:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.93.59
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1740978082; cv=fail; b=fwtsrgfUnc3KrqzADuoGj/bFqLtJVOSARPw9Jgfv7GBiu/76H0UzDHrSbgFxGqpKbLVfYILtuH8+gHnNhTqwnp7lZ/8QabrCEgYX08Xup1bwwDLaMRmWQ2ny8KyrJMFkSvt6Hv5LXoAhvkpaBmgtfZxxyInH7JQRUzaVcfqONfI=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1740978082; c=relaxed/simple;
+	bh=xppFsYbm+bqlv4/n10zfTqLJGjZleNR5bXftyQZCR0c=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=c0bLNeNZmDukzcB6C4KxbeQ0meugRrIO/T/2BC1N7+L0BtavhD+MjCAhrCHcmrWnpJ1NTqdClR/UxF3nFOXdb6Vg4EFOV814nqSr9sDYnccqNqaR63iYy3fQw9dfr/Kcf/JJ+ZJnLxx5amMx2TaRs9siSEsTZ9N/x8CkhvGYaSU=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=i82f0Zgd; arc=fail smtp.client-ip=40.107.93.59
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="eaD08hZJ"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1740974658; x=1772510658;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=xTmsFFTPMW7yzBZ6opQWKAOUqr75ygkyYcYdzns8jNc=;
-  b=eaD08hZJJv7CzvjouPfDJfyolXEb4yLzAp/NoMrZ8T4SSnjYDBovpNe5
-   ocUtqI6lwPq6RGq5xOxBfRheQ8qjRA89uabwrFXQiRw4el8hKrqd+8F0N
-   ebpEXHwRkx346TZul+aVTogT/xELmso1wfwwjptkBQpolYnnUe9G5IXv/
-   nOxp3Dhi3RcT/PWgGO3in7XqZVImYcHCjDhwJf1uew/1xyVLwGV6lOJg4
-   9hmSkXfa7Zp1Gz2zBTYDx+KPWZo5MRXu166jo1ajHLoi3RPBn/wOy8w5M
-   XRPf/wmEY+z0GjX9Wb4b3RMVAIUXZZ/FlJeKaSVhpfAGtYSsCenaPsqpQ
-   A==;
-X-CSE-ConnectionGUID: c+r2fDmuSAGnJibMQ8mfCA==
-X-CSE-MsgGUID: dm0RmKgnQqSZEOjiv/OD9Q==
-X-IronPort-AV: E=McAfee;i="6700,10204,11361"; a="41685669"
-X-IronPort-AV: E=Sophos;i="6.13,328,1732608000"; 
-   d="scan'208";a="41685669"
-Received: from fmviesa001.fm.intel.com ([10.60.135.141])
-  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Mar 2025 20:04:17 -0800
-X-CSE-ConnectionGUID: xzikrXRvS8urZUNFUpH6Og==
-X-CSE-MsgGUID: tAMCDCDwQs6CqFpdO85Eow==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
-   d="scan'208";a="148796755"
-Received: from lkp-server02.sh.intel.com (HELO 76cde6cc1f07) ([10.239.97.151])
-  by fmviesa001.fm.intel.com with ESMTP; 02 Mar 2025 20:04:12 -0800
-Received: from kbuild by 76cde6cc1f07 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1tox1f-000Hv1-2t;
-	Mon, 03 Mar 2025 04:03:46 +0000
-Date: Mon, 3 Mar 2025 12:03:10 +0800
-From: kernel test robot <lkp@intel.com>
-To: "Derek J. Clark" <derekjohn.clark@gmail.com>,
-	Hans de Goede <hdegoede@redhat.com>,
-	Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Cc: oe-kbuild-all@lists.linux.dev, Armin Wolf <W_Armin@gmx.de>,
-	Jonathan Corbet <corbet@lwn.net>,
-	Mario Limonciello <superm1@kernel.org>,
-	Luke Jones <luke@ljones.dev>, Xino Ni <nijs1@lenovo.com>,
-	Zhixin Zhang <zhangzx36@lenovo.com>, Mia Shao <shaohz1@lenovo.com>,
-	Mark Pearson <mpearson-lenovo@squebb.ca>,
-	"Pierre-Loup A . Griffais" <pgriffais@valvesoftware.com>,
-	"Cody T . -H . Chiu" <codyit@gmail.com>,
-	John Martens <johnfanv2@gmail.com>,
-	"Derek J . Clark" <derekjohn.clark@gmail.com>,
-	platform-driver-x86@vger.kernel.org, linux-doc@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 2/4] platform/x86: Add Lenovo Gamezone WMI Driver
-Message-ID: <202503031157.JXItpvLX-lkp@intel.com>
-References: <20250225220037.16073-3-derekjohn.clark@gmail.com>
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="i82f0Zgd"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=E6ua7ydsp+z1tqOIWr05ULWDqHfTJF9SreyvvKSeZsMDu5jZ2gaalCN0pq8+SVsqu+Xp90Q030u1jZsRo6YjBIBLdDejwsP3d4CF4YDrhQuGizY5S46QsYS/1WGUQoxOEma0+RuJfTCyCtEBL/Hrw0YOa3T3Gso/8wJCB/oGw/yrVni2SNFFyyESOpUCTU3JHqLDL8oCG097QDD0gCYXBhOxSmlgIrObb47Px2fn1EBCx1w5XWkQWh4wFfiuHv6ikRNVB4s2FYThqZIpbUSxJIZFKutwUc/F+zY5j8qj2r2bEjRnluHB/Y3RB1OzMR2+PqZpEHmiLux9iGkuK9lNVA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=wHEpwM1SPWYlroH9WwqXgHsecPRDnFsbGxWS+V0Gd2c=;
+ b=rwh1As4Ahl3zf1lOLNiuqZWSU72X+WzqRbQ5WI7XAU1a801Ow++m7ZBhR6nnb9JP+SlXcsmyIA2h+HdbOqAyuFHCz3PFe+fhtWA9s2EY2YEYa+4xqOvZt/H65lBButyL//eM6xl0DgdcM24JblxSKH5aVdKRbk9qcBrjegH9hkgWfummIc2avVIFAp0K/htXqpXROXDD2fwL0l/q4us13c1NTeJkWEfPEyM/Tbo92UHMtm2IcgqLb8SzVEB/ptgVEbzTpAE7IYRxiiwudps5xT/nZHNHJhFo8BkGpiQTxwRdJ3tm+q5gTRlm4c4lbbiDU2zqJ2ecrOSatWFUyKwtWw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=kernel.org smtp.mailfrom=amd.com; dmarc=pass
+ (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
+ dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=wHEpwM1SPWYlroH9WwqXgHsecPRDnFsbGxWS+V0Gd2c=;
+ b=i82f0ZgdRZdoS1e1MqRj3uUsTccuIQZq9bTRNb2qBloSGvwgiVCip4j7gL8qo3Pm4LGQKnbtQITGX/KkEKQFPjh0aE05t4FOtYAsrWnVODF6tv32tLWhuvobey3zlWccJDYvrUWLeogOG7ageuzbv4sPmOXxpalT348oGyU+9jM=
+Received: from SJ0PR03CA0388.namprd03.prod.outlook.com (2603:10b6:a03:3a1::33)
+ by PH8PR12MB6913.namprd12.prod.outlook.com (2603:10b6:510:1ca::22) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8489.25; Mon, 3 Mar
+ 2025 05:01:18 +0000
+Received: from CO1PEPF000042A9.namprd03.prod.outlook.com
+ (2603:10b6:a03:3a1:cafe::30) by SJ0PR03CA0388.outlook.office365.com
+ (2603:10b6:a03:3a1::33) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.8489.26 via Frontend Transport; Mon,
+ 3 Mar 2025 05:01:18 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
+Received: from SATLEXMB04.amd.com (165.204.84.17) by
+ CO1PEPF000042A9.mail.protection.outlook.com (10.167.243.38) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.8511.15 via Frontend Transport; Mon, 3 Mar 2025 05:01:17 +0000
+Received: from maple-stxh-09.amd.com (10.180.168.240) by SATLEXMB04.amd.com
+ (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Sun, 2 Mar
+ 2025 23:01:15 -0600
+From: Pratap Nirujogi <pratap.nirujogi@amd.com>
+To: <mlimonci@amd.com>, <krzk@kernel.org>, <hdegoede@redhat.com>,
+	<ilpo.jarvinen@linux.intel.com>
+CC: <platform-driver-x86@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	<benjamin.chan@amd.com>, Pratap Nirujogi <pratap.nirujogi@amd.com>
+Subject: [PATCH v1] platform/x86: amd: Add ISP platform info
+Date: Mon, 3 Mar 2025 00:00:59 -0500
+Message-ID: <20250303050102.2298520-1-pratap.nirujogi@amd.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250225220037.16073-3-derekjohn.clark@gmail.com>
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: SATLEXMB03.amd.com (10.181.40.144) To SATLEXMB04.amd.com
+ (10.181.40.145)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: CO1PEPF000042A9:EE_|PH8PR12MB6913:EE_
+X-MS-Office365-Filtering-Correlation-Id: e9e04dc2-6c09-499e-a0f1-08dd5a106eab
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|82310400026|36860700013|1800799024|376014;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?zSf7jfjSmJfR6nsZOT/B9qdXgvsjxFpPvgagjoDnYIhzOePI8RqKCfxFWn2F?=
+ =?us-ascii?Q?4kTym9dppooCezC0nR+BY94XGF5hx8NqMwBheHeHF1T1R66dqrxDUs/ZUGfK?=
+ =?us-ascii?Q?y51WI8uDxD0YN9MKL1JgQL+8BkabpILTipngQwynsHR64VI0/pnCW97V0Tif?=
+ =?us-ascii?Q?mFdKGYGA8eM0xCPWv4vLzd8iCvJoXbS2klOjpr8h7ik9KE1I40CKDIzLk7zz?=
+ =?us-ascii?Q?fMNpzvWQ4zTzWyCnZggJ6jvT1J/wCrsC3gOjRiwg+AbqF4udG3zrnDoEmfp5?=
+ =?us-ascii?Q?o90YdQKA9Eq5P6tZWamP4i704VvIqs6BhleZlMajuVpIhf9cfCz+wELKHNVv?=
+ =?us-ascii?Q?pllqUexsFb7edyr7wimVnqI3qcFZgQubf2gF3rMdMW8rb/luwC7fBf9dGcwt?=
+ =?us-ascii?Q?w43H9gbWBL4JFT2ulO5ge5IKaOPBdbdSZBHRkiRaVtMbeEpVVFOpALXVtinX?=
+ =?us-ascii?Q?qYG/5TjF4iDQA851Vvn79cb9Qcw/+Ig8P3YfGk7ZPFRfbgXC1W6s4nPSO/Qf?=
+ =?us-ascii?Q?uI9rlV9IOWJd7x9eG+ALa9x4IplFxTnTbzTvpwe5uiXMQQXo8K2Jcx9PP3CU?=
+ =?us-ascii?Q?BqSKs5ArYQH8KBcUXSH/B6U4elJ8D3iaZfZ47zkx0lhTRZwzc1Mnh/fdt70q?=
+ =?us-ascii?Q?0dpA0q01AneelVsznFXldcYiIs3b3ESRWCaLUmhESUOW3ExuxJRMnqHwqhoh?=
+ =?us-ascii?Q?iPv8nQ3tjB0pZKCdWoSIARG4LO3ud03N8HES4LdWkL+yS51Jm0QxrEZySwq3?=
+ =?us-ascii?Q?XkbecDki2HLIhprpJ7mrdRiCr7yHfV0plf/X71OfhHKnM7aRrSkVLNQIEqgN?=
+ =?us-ascii?Q?JMQ2bl4xI2Fk3gdG6zF0qMbZGVhWIMSowXlOZD9+MXR/F1ihl0izvFlVqozx?=
+ =?us-ascii?Q?xukCgIUKzldkNfvtDm9Yu5Ei78EVnMhU9wkCP4ICStcFy2kJ3cbIJp6JqOG3?=
+ =?us-ascii?Q?NgQtMGqa8ybg+2L0Q64WU7Qy2AJFRy41S8TjvSAckHfbdBV66vnhpWy9Rwam?=
+ =?us-ascii?Q?6UdQsL3HR1bD1Rzt43jf3rTGH9wCad3RfEvsX/rEnR0V7KGsMQ6UGjRdDWo9?=
+ =?us-ascii?Q?4JSwW44+aMMmTDCdE4ql1WmKezP6yR5H/WkGC5jR/bMzFFadbZJwxEKDDo1g?=
+ =?us-ascii?Q?r+EkBk7IgpYCuP3ZhBI3fNVru0tCiKT+JzmlAByH3LFaVgVEXAFU7y4qZuB+?=
+ =?us-ascii?Q?G4hVClP952KbxJ5cQseJ2Nji590WTe13HA9YVeTXZuXTM1NdpUuCuk3Pcj3K?=
+ =?us-ascii?Q?hfzKc0FQ/YWm9l4KrNnoc+wJb+hREULfgRq0YAUK4Hdq0RghLF8tEyEF+U/n?=
+ =?us-ascii?Q?XB92zbaitk0Cel4wHbKp3VNPFDGZSXs4d9HlRw8NrUSiPJkPiiXBea0Rze+K?=
+ =?us-ascii?Q?Ufp3S6xkWuQrppdHu2B8NuuKjN3FWyUqgd8aLlCFj+fj4cRBVdgYtajqLm1M?=
+ =?us-ascii?Q?63FeUFFe4rSwDIufC7+gGo6ABHeeRPuyl/NKrcC1qXRds0g499AjRjcPoShw?=
+ =?us-ascii?Q?jhO9VmF3rdBtA/A=3D?=
+X-Forefront-Antispam-Report:
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(82310400026)(36860700013)(1800799024)(376014);DIR:OUT;SFP:1101;
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 03 Mar 2025 05:01:17.7477
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: e9e04dc2-6c09-499e-a0f1-08dd5a106eab
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	CO1PEPF000042A9.namprd03.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH8PR12MB6913
 
-Hi Derek,
+Add ov05c i2c boardinfo and GPIO pin info for AMD ISP platform.
 
-kernel test robot noticed the following build warnings:
+Details of the resources added:
 
-[auto build test WARNING on amd-pstate/linux-next]
-[also build test WARNING on amd-pstate/bleeding-edge linus/master v6.14-rc5 next-20250228]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+- Added i2c bus number for AMD ISP platform is 99.
+- Added GPIO 85 to allow ISP driver to enable and disable ISP access.
+- Added GPIO 0 to allow sensor driver to enable and disable sensor module.
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Derek-J-Clark/platform-x86-Add-lenovo-wmi-drivers-Documentation/20250226-060548
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/superm1/linux.git linux-next
-patch link:    https://lore.kernel.org/r/20250225220037.16073-3-derekjohn.clark%40gmail.com
-patch subject: [PATCH v3 2/4] platform/x86: Add Lenovo Gamezone WMI Driver
-config: x86_64-randconfig-101-20250303 (https://download.01.org/0day-ci/archive/20250303/202503031157.JXItpvLX-lkp@intel.com/config)
-compiler: clang version 19.1.7 (https://github.com/llvm/llvm-project cd708029e0b2869e80abe31ddb175f7c35361f90)
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250303/202503031157.JXItpvLX-lkp@intel.com/reproduce)
+Signed-off-by: Pratap Nirujogi <pratap.nirujogi@amd.com>
+---
+ drivers/platform/x86/amd/Kconfig   | 11 ++++++
+ drivers/platform/x86/amd/Makefile  |  1 +
+ drivers/platform/x86/amd/amd_isp.c | 63 ++++++++++++++++++++++++++++++
+ 3 files changed, 75 insertions(+)
+ create mode 100644 drivers/platform/x86/amd/amd_isp.c
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202503031157.JXItpvLX-lkp@intel.com/
-
-All warnings (new ones prefixed by >>):
-
-   In file included from drivers/platform/x86/lenovo-wmi.c:20:
->> drivers/platform/x86/lenovo-wmi.h:21:9: warning: 'pr_fmt' macro redefined [-Wmacro-redefined]
-      21 | #define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
-         |         ^
-   include/linux/printk.h:391:9: note: previous definition is here
-     391 | #define pr_fmt(fmt) fmt
-         |         ^
-   1 warning generated.
---
-   In file included from drivers/platform/x86/lenovo-wmi-gamezone.c:20:
->> drivers/platform/x86/lenovo-wmi.h:21:9: warning: 'pr_fmt' macro redefined [-Wmacro-redefined]
-      21 | #define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
-         |         ^
-   include/linux/printk.h:391:9: note: previous definition is here
-     391 | #define pr_fmt(fmt) fmt
-         |         ^
->> drivers/platform/x86/lenovo-wmi-gamezone.c:205:31: warning: unused variable 'profile' [-Wunused-variable]
-     205 |         enum platform_profile_option profile;
-         |                                      ^~~~~~~
-   2 warnings generated.
-
-
-vim +/pr_fmt +21 drivers/platform/x86/lenovo-wmi.h
-
-    20	
-  > 21	#define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
-    22	
-
+diff --git a/drivers/platform/x86/amd/Kconfig b/drivers/platform/x86/amd/Kconfig
+index c3e086ea64fc..0341270d70a6 100644
+--- a/drivers/platform/x86/amd/Kconfig
++++ b/drivers/platform/x86/amd/Kconfig
+@@ -32,3 +32,14 @@ config AMD_WBRF
+ 
+ 	  This mechanism will only be activated on platforms that advertise a
+ 	  need for it.
++
++config AMD_ISP_PLATFORM
++	bool "AMD platform with ISP4 that supports Camera sensor device"
++	depends on I2C && X86_64 && PINCTRL_AMDISP && AMD_ISP4
++	help
++	  For AMD platform that support Image signal processor generation 4, it
++	  is necessary to add platform specific camera sensor module board info
++	  which includes the sensor driver device id and the i2c address.
++
++	  If you have a AMD platform that support ISP4 and with a sensor
++	  connected to it, say Y here
+diff --git a/drivers/platform/x86/amd/Makefile b/drivers/platform/x86/amd/Makefile
+index 56f62fc9c97b..0d89e2d4f7e6 100644
+--- a/drivers/platform/x86/amd/Makefile
++++ b/drivers/platform/x86/amd/Makefile
+@@ -10,3 +10,4 @@ obj-$(CONFIG_AMD_PMC)		+= pmc/
+ obj-$(CONFIG_AMD_HSMP)		+= hsmp/
+ obj-$(CONFIG_AMD_PMF)		+= pmf/
+ obj-$(CONFIG_AMD_WBRF)		+= wbrf.o
++obj-$(CONFIG_AMD_ISP_PLATFORM)	+= amd_isp.o
+diff --git a/drivers/platform/x86/amd/amd_isp.c b/drivers/platform/x86/amd/amd_isp.c
+new file mode 100644
+index 000000000000..cb0faab4b9c3
+--- /dev/null
++++ b/drivers/platform/x86/amd/amd_isp.c
+@@ -0,0 +1,63 @@
++// SPDX-License-Identifier: GPL-2.0+
++/*
++ * AMD x86 platform driver for AMD HW platforms using ISP4
++ *
++ * Copyright 2025 Advanced Micro Devices, Inc.
++ */
++
++#include <linux/acpi.h>
++#include <linux/gpio/machine.h>
++#include <linux/init.h>
++#include <linux/i2c.h>
++#include <linux/kernel.h>
++
++#define AMDISP_I2C_BUS		99
++
++#define AMDISP_ACPI_CAM_HID     "OMNI5C10"
++
++static struct gpiod_lookup_table isp_gpio_table = {
++	.dev_id = "amd_isp_capture",
++	.table = {
++		GPIO_LOOKUP("AMDI0030:00", 85, "enable_isp", GPIO_ACTIVE_HIGH),
++		{ }
++	},
++};
++
++static struct gpiod_lookup_table isp_sensor_gpio_table = {
++	.dev_id = "ov05c",
++	.table = {
++		GPIO_LOOKUP("amdisp-pinctrl", 0, "sensor0_enable", GPIO_ACTIVE_HIGH),
++		{ }
++	},
++};
++
++static struct i2c_board_info sensor_info = {
++	.dev_name = "ov05c",
++	I2C_BOARD_INFO("ov05c", 0x10),
++};
++
++static int __init amd_isp_init(void)
++{
++	int ret;
++
++	/* check for valid platform before configuring isp4 board resources */
++	if (!acpi_dev_found(AMDISP_ACPI_CAM_HID))
++		return -ENODEV;
++
++	gpiod_add_lookup_table(&isp_gpio_table);
++	gpiod_add_lookup_table(&isp_sensor_gpio_table);
++
++	ret = i2c_register_board_info(AMDISP_I2C_BUS, &sensor_info, 1);
++	if (ret)
++		pr_err("%s: cannot register i2c board devices:%s",
++		       __func__, sensor_info.dev_name);
++
++	return ret;
++}
++
++module_init(amd_isp_init);
++
++MODULE_AUTHOR("Benjamin Chan <benjamin.chan@amd.com>");
++MODULE_AUTHOR("Pratap Nirujogi <pratap.nirujogi@amd.com>");
++MODULE_DESCRIPTION("AMD ISP4 Platform parameters");
++MODULE_LICENSE("GPL v2");
 -- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+2.43.0
+
