@@ -1,232 +1,320 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f51.google.com (mail-pj1-f51.google.com [209.85.216.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 36E8C1E505
-	for <platform-driver-x86@vger.kernel.org>; Tue,  4 Mar 2025 13:46:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 596461FDA9E;
+	Tue,  4 Mar 2025 13:53:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741096013; cv=none; b=mkVp5epOsBVqBxyZrH6dudLK+OAL97YJm9l3ny+/2zUDNsZ7uyQ3beOxxENHn0qHodfLOkl91eS2aVR9HJrFJr8hcg+FS8HAtmp42RjkhM8i3ECXqfqXQBh0MJWyTngYW/yB/LTrs/YDawAGCdZybLspnAgebxlNUjvDvI+SyG8=
+	t=1741096392; cv=none; b=YpBcyOGL0Dq1zJMhYJgKkLR80NCisP3qW6sEShw2cyGOCeNHpLkkrK7mt+yqmggdlSdTg9zUMLKxBAwinHcwlnp7V1WouHwe2/1WfOJCBkEljzASlOxhk+iehZlB1D4thqLsXp07prupl8xJWbbSA9RS8c3z9gKpTOJJSoTeVMc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741096013; c=relaxed/simple;
-	bh=TUEfAmonuQrsreF8kz8ghlc7pe2Oh3NI4HsHS8O+j4s=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=t9caKYlA8U/U5eg2bv7D0B6T7vc2JPY6184MeZBdQx2klfguJ1avz4IPA4Xo1fAwuvhQcPpEO+Q6PhJEStff8nP+U3USXphm8Qjz9CNHuCb6JE3MxTteSjKYClsL6GoN14PxbxgOiYBxhYwBYhwGAbvSN7XmfHBH0YhsyHqI5qk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=bV1GYd5B; arc=none smtp.client-ip=192.198.163.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1741096392; c=relaxed/simple;
+	bh=vSYR8sdDA9fpVrVLnZW1YgDZO2SdMWKSj9j/BO8k8og=;
+	h=Date:From:To:CC:Subject:In-Reply-To:References:Message-ID:
+	 MIME-Version:Content-Type; b=pLN1UpVBzGtsLxvinYlwHWNoDt7xHAKCWitbpd8cjzQr3vOA3ZXV9tNMkjtFP5/G4TsxpbNLFGMno9oEWlp+W14oFF+6JUEaCSFHW48OmU4tgy1hrlqJqVZYAGACYvLJIADmBsm+IlZpy3rIeVy7MyYteYF2HDSCg336jmVe164=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=IRNnieV+; arc=none smtp.client-ip=209.85.216.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="bV1GYd5B"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1741096012; x=1772632012;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=TUEfAmonuQrsreF8kz8ghlc7pe2Oh3NI4HsHS8O+j4s=;
-  b=bV1GYd5B6qGjX2UrsyQ0gj9FnWpu7jHw2v8lzzYhBU/wT4drZZ7cyDhZ
-   mNUb0O0nmPNMjiywqOet6vnCu1PhFWPy9VdcgplSnW1ifWqtvadDYBvcd
-   LFpYSMfOMuuVH/7cUNYqvaDPN0mBxK7bUhsC+qb/LyPQKm3A2OJqBN0JN
-   oEtY8OxdPK5D/+KpgGblON/tD0IptWfvJaJVrViAwupoiP6y9R3sfruMV
-   Hnlwq6zf/4VzJa7ofLbufB8MQBtse6wsFLADONUgcGREgD0C8/3Ei/frJ
-   SwUW34CImMliDyeXhbyaMJhlODkoOR/dBWUOYOFuc1KrJdSv8d5ZsPnHs
-   g==;
-X-CSE-ConnectionGUID: k91r0JJ+RG6D3BblJCRB8g==
-X-CSE-MsgGUID: eS1G+1DjTmiHrixgSSScqg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11363"; a="52657642"
-X-IronPort-AV: E=Sophos;i="6.14,220,1736841600"; 
-   d="scan'208";a="52657642"
-Received: from fmviesa008.fm.intel.com ([10.60.135.148])
-  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Mar 2025 05:46:51 -0800
-X-CSE-ConnectionGUID: ZHibUOz3TBax518dxYfaMw==
-X-CSE-MsgGUID: wjZHecEVQEewYuEj+lQNww==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.14,220,1736841600"; 
-   d="scan'208";a="118528001"
-Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.220])
-  by fmviesa008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Mar 2025 05:46:49 -0800
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Tue, 4 Mar 2025 15:46:46 +0200 (EET)
-To: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
-cc: Hans de Goede <hdegoede@redhat.com>, platform-driver-x86@vger.kernel.org, 
-    Patil.Reddy@amd.com, mario.limonciello@amd.com
-Subject: Re: [PATCH v2 2/2] platform/x86/amd/pmf: Update PMF Driver for
- Compatibility with new PMF-TA
-In-Reply-To: <20250218120625.1718196-2-Shyam-sundar.S-k@amd.com>
-Message-ID: <85237940-b9a2-0b19-44de-058a35e2089f@linux.intel.com>
-References: <20250218120625.1718196-1-Shyam-sundar.S-k@amd.com> <20250218120625.1718196-2-Shyam-sundar.S-k@amd.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IRNnieV+"
+Received: by mail-pj1-f51.google.com with SMTP id 98e67ed59e1d1-2fa8ac56891so8987809a91.2;
+        Tue, 04 Mar 2025 05:53:10 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1741096389; x=1741701189; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:references
+         :in-reply-to:user-agent:subject:cc:to:from:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=S7G7WaJIfv7aTRMF48OU/T3y/D9ykES0eI4crfxP85E=;
+        b=IRNnieV+d3GgWpJP7CSaiuVLafl7UlbdWbT/EshdJwPUbvsWQqAtaeCEPL1s+JbGO9
+         HkSHdvu9+GDyAOy4NsXen3D9gIXrUc+vkkFrU7L/sINUMvhmAXW30aIPWmF68hhu3gfo
+         bOZYQ6wv86EmXdE3fkQpk8i+1YxE7AUg0jcsM4D8SJRbVuCClUoIZ2YGu53+ioxRYh8y
+         B79qmrjgUwqXtnjjLNEiUMYSNPScgB4hD5zklqlNR0ol+iRjBu0A6/citnRy7wIELoMm
+         bcBsFx66BJw2wGXTwhr7dgNoC3PmgJPH67jlMGgy644EhX5w0fdWS64gZ2ujtX0w56Uf
+         adpw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1741096389; x=1741701189;
+        h=content-transfer-encoding:mime-version:message-id:references
+         :in-reply-to:user-agent:subject:cc:to:from:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=S7G7WaJIfv7aTRMF48OU/T3y/D9ykES0eI4crfxP85E=;
+        b=rD8ghTdiN4rofr0ejmamGqb2l0Mp1yriToMnTTzd3yInA5KanZLXnoljlGOWJWUxNH
+         Fnm6EnKzeD5RW5/xpp40IixPZeFp8xC+W9W1vb5k666MiZaEESnT48/BnPzy39lBeNIm
+         dE5YzFGleg0DIMgqqhU2VnHP+67v13b8O/PzVXyNoj7MzRFVcNeJ5G8Bx+DqVB79e/R0
+         pPVFZp+PoTAA0N+og7FAfp9JgwtGsi43FbfIIM6GvGo9NB0nDVquJEQIsSU/5RufnZLf
+         /6qyse6xwhBuyfHy/dROJwSuSyAEDdI2lLqGZDxF+UPa2DTHUqL4ej8szI40wbs0H3pr
+         7mmw==
+X-Forwarded-Encrypted: i=1; AJvYcCU2XO6Vn+wiR9GzFlhT6uH+XrKQWAEYd2yqjVaHPmt71x13dMAMCuhLZcTo5bwEJYHRteSmiFy1r9y/f8yUOFvD6TJTYw==@vger.kernel.org, AJvYcCU534vIfV3tChRLY0X1aM797TiEel0bK65izm0llavOFTfNsPQW+vLXwyAFdSDSmAXwWyKZvv557l1Wpd+B@vger.kernel.org, AJvYcCVsM0tkK8bN/9mMDm2o61k7E+dFailm2dwNuedFUH1mR69Lvm9Z7/yvlRNlR2utu9vrn5jO7N2uuLpz@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz/RzXBAfPnqNiNs/YtMGJ5OLmTSJHHI4J8bGKlHD4Au/aYIdc2
+	9a+Vhoxzzt9SfKgi8qveAwD89P9KqBivAqXvt2+udXOsh9pMCA2g
+X-Gm-Gg: ASbGncsLGRGDRyXXahtOdmyWqm2hs2URPh/eA6mEyJOgQ0nozeBpHWa5E1ilIhc4ZOC
+	n9WYomzbcoAVuB8IfXjuPCm/w5Ngefjf0LwQYx3dkSWoTaRrAOoPHnUgjnNNCN55dh4tzfRIGcA
+	aQdildW9D5X/Ly+tJHCSENHJ5GEh0Vz8yQIoyNZdFa/gHgd43TB1Jmlvp7g681ZBg0fu6+A75bB
+	G3h/4wPk6ok9oL67YTd0rG/dQzHVfpWf52ElpF5/E+Ibk/pAxQ5JyGRpAkvDsrsbfycNYmC5nxU
+	2HcFWcKHKX4a8nx5ms+IQEbkIBNL2m9jvoy9uXzBvAX1mfcwgVXqhe0VPZ9VV0FbW4yu2p8zfuH
+	MmKxVJb7cx4ws/xUQoRcFn961V3JH
+X-Google-Smtp-Source: AGHT+IE8J+Wh6ctCfgIGfvagh5SKOHkxEowX3znJ61vfw6UHeIXceQ0WHhx7umoYyIIZJj3IAUUF3w==
+X-Received: by 2002:a05:6a00:10d5:b0:736:54c9:df2c with SMTP id d2e1a72fcca58-73654c9e5damr11050807b3a.15.1741096389449;
+        Tue, 04 Mar 2025 05:53:09 -0800 (PST)
+Received: from [127.0.0.1] (108-228-232-20.lightspeed.sndgca.sbcglobal.net. [108.228.232.20])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-736290957f1sm8389380b3a.67.2025.03.04.05.53.08
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 04 Mar 2025 05:53:08 -0800 (PST)
+Date: Tue, 04 Mar 2025 05:53:07 -0800
+From: "Derek J. Clark" <derekjohn.clark@gmail.com>
+To: Antheas Kapenekakis <lkml@antheas.dev>, Kurt Borja <kuurtb@gmail.com>
+CC: Mario Limonciello <superm1@kernel.org>,
+ Shyam Sundar S K <Shyam-sundar.S-k@amd.com>,
+ "Rafael J . Wysocki" <rafael@kernel.org>,
+ Hans de Goede <hdegoede@redhat.com>,
+ =?ISO-8859-1?Q?Ilpo_J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+ "Luke D . Jones" <luke@ljones.dev>, Mark Pearson <mpearson-lenovo@squebb.ca>,
+ "open list:AMD PMF DRIVER" <platform-driver-x86@vger.kernel.org>,
+ open list <linux-kernel@vger.kernel.org>,
+ "open list:ACPI" <linux-acpi@vger.kernel.org>, me@kylegospodneti.ch,
+ Denis Benato <benato.denis96@gmail.com>,
+ Mario Limonciello <mario.limonciello@amd.com>
+Subject: =?US-ASCII?Q?Re=3A_=5BPATCH_v2_1/1=5D_ACPI=3A_platform=5Fprof?=
+ =?US-ASCII?Q?ile=3A_Treat_quiet_and_low_power_the_same?=
+User-Agent: Thunderbird for Android
+In-Reply-To: <CAGwozwHXd6frhGCOrm8_tg2=M4sHCu_JBmqodWdKUF+AuL2TNw@mail.gmail.com>
+References: <20250304064745.1073770-1-superm1@kernel.org> <20250304064745.1073770-2-superm1@kernel.org> <CAGwozwHniWGQ7qK6FYD_WK5zNjkro7-Q1nTcFPAuWDt9UQ+noA@mail.gmail.com> <23d6c735-e94f-4d43-87b0-ff119941fcac@kernel.org> <D87ILMWSRUPG.3FHTWG38N2IFJ@gmail.com> <CAGwozwHXd6frhGCOrm8_tg2=M4sHCu_JBmqodWdKUF+AuL2TNw@mail.gmail.com>
+Message-ID: <176C0445-D930-4812-890B-DA4F3221F382@gmail.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain;
+ charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, 18 Feb 2025, Shyam Sundar S K wrote:
 
-> The PMF driver allocates a shared memory buffer using
-> tee_shm_alloc_kernel_buf() for communication with the PMF-TA.
-> 
-> The latest PMF-TA version introduces new structures with OEM debug
-> information and additional policy input conditions for evaluating the
-> policy binary. Consequently, the shared memory size must be increased to
-> ensure compatibility between the PMF driver and the updated PMF-TA.
-> 
-> To do so, introduce the new PMF-TA UUID and update the PMF shared memory
-> configuration to ensure compatibility with the latest PMF-TA version.
-> Additionally, export the TA UUID.
-> 
-> These updates will result in modifications to the prototypes of
-> amd_pmf_tee_init() and amd_pmf_ta_open_session().
-> 
-> Link: https://lore.kernel.org/all/55ac865f-b1c7-fa81-51c4-d211c7963e7e@linux.intel.com/
-> Co-developed-by: Patil Rajesh Reddy <Patil.Reddy@amd.com>
-> Signed-off-by: Patil Rajesh Reddy <Patil.Reddy@amd.com>
-> Signed-off-by: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
-> ---
->  drivers/platform/x86/amd/pmf/pmf.h    |  5 ++-
->  drivers/platform/x86/amd/pmf/tee-if.c | 50 +++++++++++++++++++--------
->  2 files changed, 40 insertions(+), 15 deletions(-)
-> 
-> diff --git a/drivers/platform/x86/amd/pmf/pmf.h b/drivers/platform/x86/amd/pmf/pmf.h
-> index 41b2b91b8fdc..e6bdee68ccf3 100644
-> --- a/drivers/platform/x86/amd/pmf/pmf.h
-> +++ b/drivers/platform/x86/amd/pmf/pmf.h
-> @@ -106,9 +106,12 @@ struct cookie_header {
->  #define PMF_TA_IF_VERSION_MAJOR				1
->  #define TA_PMF_ACTION_MAX					32
->  #define TA_PMF_UNDO_MAX						8
-> -#define TA_OUTPUT_RESERVED_MEM				906
-> +#define TA_OUTPUT_RESERVED_MEM				922
->  #define MAX_OPERATION_PARAMS					4
->  
-> +#define TA_ERROR_CRYPTO_INVALID_PARAM				0x20002
-> +#define TA_ERROR_CRYPTO_BIN_TOO_LARGE				0x2000d
-> +
->  #define PMF_IF_V1		1
->  #define PMF_IF_V2		2
->  
-> diff --git a/drivers/platform/x86/amd/pmf/tee-if.c b/drivers/platform/x86/amd/pmf/tee-if.c
-> index b404764550c4..a81c661abd7e 100644
-> --- a/drivers/platform/x86/amd/pmf/tee-if.c
-> +++ b/drivers/platform/x86/amd/pmf/tee-if.c
-> @@ -27,8 +27,11 @@ module_param(pb_side_load, bool, 0444);
->  MODULE_PARM_DESC(pb_side_load, "Sideload policy binaries debug policy failures");
->  #endif
->  
-> -static const uuid_t amd_pmf_ta_uuid = UUID_INIT(0x6fd93b77, 0x3fb8, 0x524d,
-> -						0xb1, 0x2d, 0xc5, 0x29, 0xb1, 0x3d, 0x85, 0x43);
-> +static const uuid_t amd_pmf_ta_uuid[] = { UUID_INIT(0xd9b39bf2, 0x66bd, 0x4154, 0xaf, 0xb8, 0x8a,
-> +						    0xcc, 0x2b, 0x2b, 0x60, 0xd6),
-> +					  UUID_INIT(0x6fd93b77, 0x3fb8, 0x524d, 0xb1, 0x2d, 0xc5,
-> +						    0x29, 0xb1, 0x3d, 0x85, 0x43),
-> +					};
->  
->  static const char *amd_pmf_uevent_as_str(unsigned int state)
->  {
-> @@ -321,7 +324,7 @@ static int amd_pmf_start_policy_engine(struct amd_pmf_dev *dev)
->  		 */
->  		schedule_delayed_work(&dev->pb_work, msecs_to_jiffies(pb_actions_ms * 3));
->  	} else {
-> -		dev_err(dev->dev, "ta invoke cmd init failed err: %x\n", res);
-> +		dev_dbg(dev->dev, "ta invoke cmd init failed err: %x\n", res);
->  		dev->smart_pc_enabled = false;
->  		return res;
->  	}
-> @@ -390,12 +393,12 @@ static int amd_pmf_amdtee_ta_match(struct tee_ioctl_version_data *ver, const voi
->  	return ver->impl_id == TEE_IMPL_ID_AMDTEE;
->  }
->  
-> -static int amd_pmf_ta_open_session(struct tee_context *ctx, u32 *id)
-> +static int amd_pmf_ta_open_session(struct tee_context *ctx, u32 *id, int index)
->  {
->  	struct tee_ioctl_open_session_arg sess_arg = {};
->  	int rc;
->  
-> -	export_uuid(sess_arg.uuid, &amd_pmf_ta_uuid);
-> +	export_uuid(sess_arg.uuid, &amd_pmf_ta_uuid[index]);
->  	sess_arg.clnt_login = TEE_IOCTL_LOGIN_PUBLIC;
->  	sess_arg.num_params = 0;
->  
-> @@ -434,7 +437,7 @@ static int amd_pmf_register_input_device(struct amd_pmf_dev *dev)
->  	return 0;
->  }
->  
-> -static int amd_pmf_tee_init(struct amd_pmf_dev *dev)
-> +static int amd_pmf_tee_init(struct amd_pmf_dev *dev, int index)
->  {
->  	u32 size;
->  	int ret;
-> @@ -445,7 +448,7 @@ static int amd_pmf_tee_init(struct amd_pmf_dev *dev)
->  		return PTR_ERR(dev->tee_ctx);
->  	}
->  
-> -	ret = amd_pmf_ta_open_session(dev->tee_ctx, &dev->session_id);
-> +	ret = amd_pmf_ta_open_session(dev->tee_ctx, &dev->session_id, index);
->  	if (ret) {
->  		dev_err(dev->dev, "Failed to open TA session (%d)\n", ret);
->  		ret = -EINVAL;
-> @@ -489,7 +492,8 @@ static void amd_pmf_tee_deinit(struct amd_pmf_dev *dev)
->  
->  int amd_pmf_init_smart_pc(struct amd_pmf_dev *dev)
->  {
-> -	int ret;
-> +	bool status;
-> +	int ret, i;
->  
->  	ret = apmf_check_smart_pc(dev);
->  	if (ret) {
-> @@ -502,10 +506,6 @@ int amd_pmf_init_smart_pc(struct amd_pmf_dev *dev)
->  		return -ENODEV;
->  	}
->  
-> -	ret = amd_pmf_tee_init(dev);
-> -	if (ret)
-> -		return ret;
-> -
->  	INIT_DELAYED_WORK(&dev->pb_work, amd_pmf_invoke_cmd);
->  
->  	ret = amd_pmf_set_dram_addr(dev, true);
-> @@ -534,8 +534,30 @@ int amd_pmf_init_smart_pc(struct amd_pmf_dev *dev)
->  		goto error;
->  	}
->  
-> -	ret = amd_pmf_start_policy_engine(dev);
-> -	if (ret)
-> +	for (i = 0; i < ARRAY_SIZE(amd_pmf_ta_uuid); i++) {
-> +		ret = amd_pmf_tee_init(dev, i);
 
-Any reason why you just pass the uuid pointer as it seems more obvious as 
-a parameter than something as vague as "index"?
+On March 4, 2025 5:32:50 AM PST, Antheas Kapenekakis <lkml@antheas=2Edev> =
+wrote:
+>On Tue, 4 Mar 2025 at 14:28, Kurt Borja <kuurtb@gmail=2Ecom> wrote:
+>>
+>> Hi all,
+>>
+>> On Tue Mar 4, 2025 at 7:49 AM -05, Mario Limonciello wrote:
+>> >
+>> >
+>> > On 3/4/25 02:38, Antheas Kapenekakis wrote:
+>> >> On Tue, 4 Mar 2025 at 07:48, Mario Limonciello <superm1@kernel=2Eorg=
+> wrote:
+>> >>>
+>> >>> From: Mario Limonciello <mario=2Elimonciello@amd=2Ecom>
+>> >>>
+>> >>> When two drivers don't support all the same profiles the legacy int=
+erface
+>> >>> only exports the common profiles=2E
+>> >>>
+>> >>> This causes problems for cases where one driver uses low-power but =
+another
+>> >>> uses quiet because the result is that neither is exported to sysfs=
+=2E
+>> >>>
+>> >>> If one platform profile handler supports quiet and the other
+>> >>> supports low power treat them as the same for the purpose of
+>> >>> the sysfs interface=2E
+>> >>>
+>> >>> Fixes: 688834743d67 ("ACPI: platform_profile: Allow multiple handle=
+rs")
+>> >>> Reported-by: Antheas Kapenekakis <lkml@antheas=2Edev>
+>> >>> Closes: https://lore=2Ekernel=2Eorg/platform-driver-x86/e64b771e-32=
+55-42ad-9257-5b8fc6c24ac9@gmx=2Ede/T/#mc068042dd29df36c16c8af92664860fc4763=
+974b
+>> >>> Signed-off-by: Mario Limonciello <mario=2Elimonciello@amd=2Ecom>
+>> >>> ---
+>> >>>   drivers/acpi/platform_profile=2Ec | 38 ++++++++++++++++++++++++++=
+++++---
+>> >>>   1 file changed, 35 insertions(+), 3 deletions(-)
+>> >>>
+>> >>> diff --git a/drivers/acpi/platform_profile=2Ec b/drivers/acpi/platf=
+orm_profile=2Ec
+>> >>> index 2ad53cc6aae53=2E=2Ed9a7cc5891734 100644
+>> >>> --- a/drivers/acpi/platform_profile=2Ec
+>> >>> +++ b/drivers/acpi/platform_profile=2Ec
+>> >>> @@ -73,8 +73,20 @@ static int _store_class_profile(struct device *d=
+ev, void *data)
+>> >>>
+>> >>>          lockdep_assert_held(&profile_lock);
+>> >>>          handler =3D to_pprof_handler(dev);
+>> >>> -       if (!test_bit(*bit, handler->choices))
+>> >>> -               return -EOPNOTSUPP;
+>> >>> +       if (!test_bit(*bit, handler->choices)) {
+>> >>> +               switch (*bit) {
+>> >>> +               case PLATFORM_PROFILE_QUIET:
+>> >>> +                       *bit =3D PLATFORM_PROFILE_LOW_POWER;
+>> >>> +                       break;
+>> >>> +               case PLATFORM_PROFILE_LOW_POWER:
+>> >>> +                       *bit =3D PLATFORM_PROFILE_QUIET;
+>> >>> +                       break;
+>> >>> +               default:
+>> >>> +                       return -EOPNOTSUPP;
+>> >>> +               }
+>> >>> +               if (!test_bit(*bit, handler->choices))
+>> >>> +                       return -EOPNOTSUPP;
+>> >>> +       }
+>> >>>
+>> >>>          return handler->ops->profile_set(dev, *bit);
+>> >>>   }
+>> >>> @@ -252,8 +264,16 @@ static int _aggregate_choices(struct device *d=
+ev, void *data)
+>> >>>          handler =3D to_pprof_handler(dev);
+>> >>>          if (test_bit(PLATFORM_PROFILE_LAST, aggregate))
+>> >>>                  bitmap_copy(aggregate, handler->choices, PLATFORM_=
+PROFILE_LAST);
+>> >>> -       else
+>> >>> +       else {
+>> >>> +               /* treat quiet and low power the same for aggregati=
+on purposes */
+>> >>> +               if (test_bit(PLATFORM_PROFILE_QUIET, handler->choic=
+es) &&
+>> >>> +                   test_bit(PLATFORM_PROFILE_LOW_POWER, aggregate)=
+)
+>> >>> +                       set_bit(PLATFORM_PROFILE_QUIET, aggregate);
+>> >>> +               else if (test_bit(PLATFORM_PROFILE_LOW_POWER, handl=
+er->choices) &&
+>> >>> +                        test_bit(PLATFORM_PROFILE_QUIET, aggregate=
+))
+>> >>> +                       set_bit(PLATFORM_PROFILE_LOW_POWER, aggrega=
+te);
+>> >>>                  bitmap_and(aggregate, handler->choices, aggregate,=
+ PLATFORM_PROFILE_LAST);
+>> >>> +       }
+>> >>
+>> >> So you end up showing both? If that's the case, isn't it equivalent =
+to
+>> >> just make amd-pmf show both quiet and low-power?
+>> >>
+>> >> I guess it is not ideal for framework devices=2E But if asus devices=
+ end
+>> >> up showing both, then it should be ok for framework devices to show
+>> >> both=2E
+>> >>
+>> >> I like the behavior of the V1 personally=2E
+>> >
+>> > No; this doesn't cause it to show both=2E  It only causes one to show=
+ up=2E
+>> > I confirmed it with a contrived situation on my laptop that forced
+>> > multiple profile handlers that supported a mix=2E
+>> >
+>> >
+>> > # cat /sys/firmware/acpi/platform_profile*
+>> > low-power
+>> > low-power balanced performance
+>> >
+>> > # cat /sys/class/platform-profile/platform-profile-*/profile
+>> > quiet
+>> > quiet
+>> > quiet
+>> > quiet
+>> > quiet
+>> > quiet
+>> > quiet
+>> > quiet
+>> > quiet
+>> > quiet
+>> > quiet
+>> > quiet
+>> > quiet
+>> > quiet
+>> > quiet
+>> > quiet
+>> > quiet
+>> > quiet
+>> > quiet
+>> > quiet
+>> > quiet
+>> > quiet
+>> > quiet
+>> > quiet
+>> > low-power
+>> >
+>> >>
+>> >>>          return 0;
+>> >>>   }
+>> >>> @@ -305,6 +325,13 @@ static int _aggregate_profiles(struct device *=
+dev, void *data)
+>> >>>          if (err)
+>> >>>                  return err;
+>> >>>
+>> >>> +       /* treat low-power and quiet as the same */
+>> >>> +       if ((*profile =3D=3D PLATFORM_PROFILE_LOW_POWER &&
+>> >>> +            val =3D=3D PLATFORM_PROFILE_QUIET) ||
+>> >>> +           (*profile =3D=3D PLATFORM_PROFILE_QUIET &&
+>> >>> +            val =3D=3D PLATFORM_PROFILE_LOW_POWER))
+>> >>> +               *profile =3D val;
+>> >>> +
+>> >>>          if (*profile !=3D PLATFORM_PROFILE_LAST && *profile !=3D v=
+al)
+>> >>>                  *profile =3D PLATFORM_PROFILE_CUSTOM;
+>> >>>          else
+>> >>> @@ -531,6 +558,11 @@ struct device *platform_profile_register(struc=
+t device *dev, const char *name,
+>> >>>                  dev_err(dev, "Failed to register platform_profile =
+class device with empty choices\n");
+>> >>>                  return ERR_PTR(-EINVAL);
+>> >>>          }
+>> >>> +       if (test_bit(PLATFORM_PROFILE_QUIET, pprof->choices) &&
+>> >>> +           test_bit(PLATFORM_PROFILE_LOW_POWER, pprof->choices)) {
+>> >>> +               dev_err(dev, "Failed to register platform_profile c=
+lass device with both quiet and low-power\n");
+>> >>> +               return ERR_PTR(-EINVAL);
+>> >>> +       }
+>> >>
+>> >> Can you avoid failing here? It caused a lot of issues in the past (t=
+he
+>> >> WMI driver bails)=2E a dev_err should be enough=2E Since you do not =
+fail
+>> >> maybe it can be increased to dev_crit=2E
+>> >>
+>> >> There is at least one driver that implements both currently, and a f=
+ix
+>> >> would have to precede this patch=2E
+>> >
+>> > Oh, acer-wmi?  Kurt; can you please comment?  Are both simultaneous?
+>>
+>> There are a few laptops supported by alienware-wmi that definitely have
+>> both (including mine)=2E The acer-wmi and the samsung-galaxybook driver=
+s
+>> also probe for available choices dynamically, so some of those devices
+>> may be affected by this too=2E
+>>
+>> So yes, we shouldn't fail registration here=2E
+>>
+>> Anyway, I like this approach more than v1=2E What do you think about
+>> constraining this fix to the legacy interface?
+>
+>AFAIK new interface is ok and should not be modified=2E None of the
+>previous solutions touched it (well, changing quiet to low-power did)=2E
+>But I still expect the legacy interface to work the same way on 6=2E14=2E
+>
+>What happens if there is one handler that does low-power and one that
+>does quiet? Is one choice preferred? And then are writes accepted in
+>both?
+>
+>I cannot have the same device requiring low-power and quiet depending
+>on kernel version or boot=2E I do tdp controls per manufacturer=2E
+>
 
-I assume this change in general is to unbreak the case "3." from the link?
+I agree that isn't ideal, but I see no reason why you can't index the _cho=
+ices at startup to cover that in a generic way for all manufacturers=2E The=
+y present in performance order as text, specifically ensuring dynamic loadi=
+ng isn't difficult=2E=20
 
-> +		if (ret)
-> +			return ret;
-> +
-> +		ret = amd_pmf_start_policy_engine(dev);
-> +		switch (ret) {
-> +		case TA_PMF_TYPE_SUCCESS:
-> +			status = true;
-> +			break;
-> +		case TA_ERROR_CRYPTO_INVALID_PARAM:
-> +		case TA_ERROR_CRYPTO_BIN_TOO_LARGE:
-> +			amd_pmf_tee_deinit(dev);
-> +			status = false;
-> +			break;
-> +		default:
-> +			goto error;
-> +		}
-> +
-> +		if (status)
-> +			break;
-> +	}
-> +
-> +	if (!status && !pb_side_load)
->  		goto error;
->  
->  	if (pb_side_load)
-> 
+>> --
+>>  ~ Kurt
+>>
+>> >
+>> >>
+>> >>>
+>> >>>          guard(mutex)(&profile_lock);
+>> >>>
+>> >>> --
+>> >>> 2=2E43=2E0
+>> >>>
+>>
 
--- 
- i.
-
+- Derek
