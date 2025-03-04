@@ -1,347 +1,97 @@
-Received: from mail.tuxedocomputers.com (mail.tuxedocomputers.com [157.90.84.7])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 830521FA243;
-	Tue,  4 Mar 2025 20:11:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=157.90.84.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE3071C84D7;
+	Tue,  4 Mar 2025 20:56:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741119081; cv=none; b=R67iXwrdIStwBsdqdYe4DS6A1bWl8dOZzCD+mklO1xumQxkf82yF2QXenSbGRT3JrsB+SYQJIZAAE56EQgJLElxrAGP0D7+usaCktvSloslz6+Eh0ZGp1CzxE1+ynq/7ppvmYQHFdlk+KrQMrr2trXSbEI76NZAJaB3UnvY2x/c=
+	t=1741121789; cv=none; b=rej9G5eV5m7VXAPfLw2sCctAZcCyiqqBWUFTNKQSC2+UXyvASNskz+A0Uc+rjW8/2pJuLZko0y9KBfKzhBZrep1CJPfcw83JpyWQGC+XEl96erHe2gQWy+FEzgZ4qLyHStNWgr7yjcmRZuIYc5cIYyHV/vlR/HYX9TEAnvPxVlA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741119081; c=relaxed/simple;
-	bh=9qM6VxmFusoHYoDxnlU2ZG5UWZV2ifr78SsJHdsxB1s=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=B21/eD06MR+rBJcJUS3FgqO7X6AdzEMgQ2BPKs8+JHc0voAIKwm7ia8yofzN5k57b6BRujoWQeE6AQaNZ+v7h0bDbX6VHuZdqn4gObNA+adrA50DaXXPYqCiln0U9oaZ9ZKfDlYmZSJUXjAtT3ZkEz3pKI7ZZ5Z1SKM3SqFFQfU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=tuxedocomputers.com; spf=pass smtp.mailfrom=tuxedocomputers.com; dkim=pass (1024-bit key) header.d=tuxedocomputers.com header.i=@tuxedocomputers.com header.b=shox925p; arc=none smtp.client-ip=157.90.84.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=tuxedocomputers.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tuxedocomputers.com
+	s=arc-20240116; t=1741121789; c=relaxed/simple;
+	bh=1Avo1J1t/55foolZqszBHMkSIlhzUvvxah+3+Q5by1o=;
+	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=bzZxGQVURo3iMl/Ce9grxeeJAcZH6QOjZ9n94TJbdkBauNyzhfU0WZJOo08oW6ohBhcBTYxkeDONHN93j9gZ2+fnZI7L/PjyKcVHBG07zAfrmejo6EArV6JxMa4rHL5Gu2dcHWuyKDIxLurL3qaldF/H2FUBM337uHUjBNSuT1E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SXApZhyT; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=tuxedocomputers.com header.i=@tuxedocomputers.com header.b="shox925p"
-Received: from [192.168.42.27] (pd9e59f4f.dip0.t-ipconnect.de [217.229.159.79])
-	(Authenticated sender: wse@tuxedocomputers.com)
-	by mail.tuxedocomputers.com (Postfix) with ESMTPSA id E8F4F2FC0048;
-	Tue,  4 Mar 2025 21:11:07 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=tuxedocomputers.com;
-	s=default; t=1741119068;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=e6vKpt/skuoto6kFCgMYjaxlHbp9g7UWKNKIsV0nq4M=;
-	b=shox925pV2Kq5kbKUcJreeB5jMpP/uhtbpFkktsXp98WYTcWMrHK0nmrZQYLge+cL0n534
-	CXApXta+iHRlnALj43dPOkvm4WizjD7hd92GZYCwPwiCJAYb1jetJZ3geVDOfK4to4ad+P
-	RdO9uhjIWCKc6GsZTWaB7/4cy0fW0Z8=
-Authentication-Results: mail.tuxedocomputers.com;
-	auth=pass smtp.auth=wse@tuxedocomputers.com smtp.mailfrom=wse@tuxedocomputers.com
-Message-ID: <e26afe39-5c92-45d0-9a53-057df4df7bec@tuxedocomputers.com>
-Date: Tue, 4 Mar 2025 21:11:07 +0100
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SXApZhyT"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DD5BBC4CEE5;
+	Tue,  4 Mar 2025 20:56:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1741121789;
+	bh=1Avo1J1t/55foolZqszBHMkSIlhzUvvxah+3+Q5by1o=;
+	h=Date:From:To:cc:Subject:In-Reply-To:References:From;
+	b=SXApZhyTz5vv9wzRJoXczuOEVj7QwpGl+xE+oChVkj99OVOC+nKeJbb9O5J3i5AS1
+	 sh1Jl7awqRzxXB122sCCzUa5IRRTN8TFMGqClySmfEynCcjnWyKU7f99eNCZfiaCA0
+	 LjSUzbhvPwUZGEJyIBUXCbzp71o/PzSFen0jCvXPanD1jWRi5qr/GSEzPsiaiqGLMD
+	 5VPm4mFzchDw6WPATpKr9pHJKoZLBdQfM+OV2GrMEM7lUgtnyvEY0nx88ODmJWAoeD
+	 bT9/a/9FAYXj7pPQcuaYoFvc2xYLO+fWDa40ofUmbbfy2DS8vDwvvunyFBbpvFgSBl
+	 2XOYFIXGS24nQ==
+Date: Tue, 4 Mar 2025 21:56:26 +0100 (CET)
+From: Jiri Kosina <jikos@kernel.org>
+To: Luke Jones <luke@ljones.dev>
+cc: linux-kernel@vger.kernel.org, hdegoede@redhat.com, 
+    ilpo.jarvinen@linux.intel.com, platform-driver-x86@vger.kernel.org, 
+    linux-input@vger.kernel.org, bentiss@kernel.org, mario.limonciello@amd.com
+Subject: Re: [PATCH v3 0/2] hid-asus: asus-wmi: refactor Ally
+ suspend/resume
+In-Reply-To: <20250227085817.1007697-1-luke@ljones.dev>
+Message-ID: <878o9n16-33p1-orpr-q957-91ns25pp4804@xreary.bet>
+References: <20250227085817.1007697-1-luke@ljones.dev>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 2/2] Input: atkbd - Fix TUXEDO NB02 notebook keyboards
- FN-keys
-To: Mario Limonciello <mario.limonciello@amd.com>,
- Hans de Goede <hdegoede@redhat.com>,
- =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Cc: dmitry.torokhov@gmail.com, linux-kernel@vger.kernel.org,
- platform-driver-x86@vger.kernel.org
-References: <20250303190442.551961-1-wse@tuxedocomputers.com>
- <20250303190442.551961-2-wse@tuxedocomputers.com>
- <61980b3a-9eea-46aa-9b5b-074600d3273b@amd.com>
-Content-Language: en-US
-From: Werner Sembach <wse@tuxedocomputers.com>
-In-Reply-To: <61980b3a-9eea-46aa-9b5b-074600d3273b@amd.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
 
+On Thu, 27 Feb 2025, Luke Jones wrote:
 
-Am 04.03.25 um 19:53 schrieb Mario Limonciello:
-> On 3/3/2025 13:04, Werner Sembach wrote:
->> This small driver does 2 things:
->>
->> It remaps the touchpad toggle key from Control + Super + 
->> Hangaku/Zenkaku to
->> F21 to conform with established userspace defaults. Note that the
->> Hangaku/Zenkaku scancode used here is usually unused, with real
->> Hangaku/Zenkaku keys using the tilde scancode.
->>
->> It suppresses the reserved scancode produced by pressing the FN-key 
->> on its
->> own, which fixes a warning spamming the dmesg log otherwise.
->>
->> Signed-off-by: Werner Sembach <wse@tuxedocomputers.com>
->> ---
->>   MAINTAINERS                                 |  6 ++
->>   drivers/platform/x86/Kconfig                |  2 +
->>   drivers/platform/x86/Makefile               |  3 +
->>   drivers/platform/x86/tuxedo/Kbuild          |  6 ++
->>   drivers/platform/x86/tuxedo/Kconfig         |  6 ++
->>   drivers/platform/x86/tuxedo/nb02/Kbuild     |  7 ++
->>   drivers/platform/x86/tuxedo/nb02/Kconfig    | 15 ++++
->>   drivers/platform/x86/tuxedo/nb02/platform.c | 94 +++++++++++++++++++++
->>   8 files changed, 139 insertions(+)
->>   create mode 100644 drivers/platform/x86/tuxedo/Kbuild
->>   create mode 100644 drivers/platform/x86/tuxedo/Kconfig
->>   create mode 100644 drivers/platform/x86/tuxedo/nb02/Kbuild
->>   create mode 100644 drivers/platform/x86/tuxedo/nb02/Kconfig
->>   create mode 100644 drivers/platform/x86/tuxedo/nb02/platform.c
->>
->> diff --git a/MAINTAINERS b/MAINTAINERS
->> index 4ff26fa94895d..d3fbbcef813b0 100644
->> --- a/MAINTAINERS
->> +++ b/MAINTAINERS
->> @@ -24178,6 +24178,12 @@ T:    git 
->> git://git.kernel.org/pub/scm/linux/kernel/git/lenb/linux.git turbostat
->>   F:    tools/power/x86/turbostat/
->>   F:    tools/testing/selftests/turbostat/
->>   +TUXEDO DRIVERS
->> +M:    Werner Sembach <wse@tuxedocomputers.com>
->> +L:    platform-driver-x86@vger.kernel.org
->> +S:    Supported
->> +F:    drivers/platform/x86/tuxedo/
->> +
->>   TW5864 VIDEO4LINUX DRIVER
->>   M:    Bluecherry Maintainers <maintainers@bluecherrydvr.com>
->>   M:    Andrey Utkin <andrey.utkin@corp.bluecherry.net>
->> diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
->> index 0258dd879d64b..9b78a1255c08e 100644
->> --- a/drivers/platform/x86/Kconfig
->> +++ b/drivers/platform/x86/Kconfig
->> @@ -1199,3 +1199,5 @@ config P2SB
->>         The main purpose of this library is to unhide P2SB device in 
->> case
->>         firmware kept it hidden on some platforms in order to access 
->> devices
->>         behind it.
->> +
->> +source "drivers/platform/x86/tuxedo/Kconfig"
->> diff --git a/drivers/platform/x86/Makefile 
->> b/drivers/platform/x86/Makefile
->> index e1b1429470674..1562dcd7ad9a5 100644
->> --- a/drivers/platform/x86/Makefile
->> +++ b/drivers/platform/x86/Makefile
->> @@ -153,3 +153,6 @@ obj-$(CONFIG_WINMATE_FM07_KEYS)        += 
->> winmate-fm07-keys.o
->>     # SEL
->>   obj-$(CONFIG_SEL3350_PLATFORM)        += sel3350-platform.o
->> +
->> +# TUXEDO
->> +obj-y                    += tuxedo/
->> diff --git a/drivers/platform/x86/tuxedo/Kbuild 
->> b/drivers/platform/x86/tuxedo/Kbuild
->> new file mode 100644
->> index 0000000000000..e9c4243d438ba
->> --- /dev/null
->> +++ b/drivers/platform/x86/tuxedo/Kbuild
->> @@ -0,0 +1,6 @@
->> +# SPDX-License-Identifier: GPL-2.0-or-later
->> +#
->> +# TUXEDO X86 Platform Specific Drivers
->> +#
->> +
->> +obj-y    += nb02/
->> diff --git a/drivers/platform/x86/tuxedo/Kconfig 
->> b/drivers/platform/x86/tuxedo/Kconfig
->> new file mode 100644
->> index 0000000000000..e463f92135780
->> --- /dev/null
->> +++ b/drivers/platform/x86/tuxedo/Kconfig
->> @@ -0,0 +1,6 @@
->> +# SPDX-License-Identifier: GPL-2.0-only
->> +#
->> +# TUXEDO X86 Platform Specific Drivers
->> +#
->> +
->> +source "drivers/platform/x86/tuxedo/nb02/Kconfig"
->> diff --git a/drivers/platform/x86/tuxedo/nb02/Kbuild 
->> b/drivers/platform/x86/tuxedo/nb02/Kbuild
->> new file mode 100644
->> index 0000000000000..8624a012cd683
->
-> For a brand new directory isn't this structure a bit heavy handed for 
-> a single source file?
->
-> Or are you envisioning a lot more coming to this structure and just 
-> want to be ready?
+> This short series refactors the Ally suspend/resume functionality in the
+> asus-wmi driver along with adding support for ROG Ally MCU version checking.
+> 
+> The version checking is then used to toggle the use of older CSEE call hacks
+> that were initially used to combat Ally suspend/wake issues arising from the MCU
+> not clearing a particular flag on resume. ASUS have since corrected this
+> especially for Linux in newer firmware versions.
+> 
+> - hid-asus requests the MCU version and displays a warning if the version is
+>   older than the one that fixes the issue.
+> - hid-asus awill also toggle the CSEE hack off, and mcu_powersave to on if the
+> version is high enough.
+> 
+> *Note: In review it was requested by Mario that I try strsep() for parsing
+> the version. I did try this and a few variations but the result was much
+> more code due to having to check more edge cases due to the input being
+> raw bytes. In the end the cleaned up while loop proved more robust.
+> 
+> - Changelog:
+>   + V2: https://lore.kernel.org/platform-driver-x86/20250226010129.32043-1-luke@ljones.dev/T/#t
+>     - Adjust warning message to explicitly mention suspend issues
+>     - Use switch/case block to set min_version
+>       - Set min_version to 0 by default and toggle hacks off
+>   + V3
+>     - Remove noise (excess pr_info)
+>     - Use kstrtoint, not kstrtolong
+>     - Use __free(kfree) for allocated mem and drop goto + logging
+>     - Use print_hex_dump() to show failed data after pr_err in mcu_request_version()
+>     - Use pr_debug in set_ally_mcu_hack() and set_ally_mcu_powersave() plus
+>       correct the message.
+> 
+> Luke D. Jones (2):
+>   hid-asus: check ROG Ally MCU version and warn
+>   platform/x86: asus-wmi: Refactor Ally suspend/resume
+> 
+>  drivers/hid/hid-asus.c                     | 111 +++++++++++++++++-
+>  drivers/platform/x86/asus-wmi.c            | 130 ++++++++++++++-------
+>  include/linux/platform_data/x86/asus-wmi.h |  15 +++
+>  3 files changed, 215 insertions(+), 41 deletions(-)
 
-Exactly.
+Hans, are you OK taking both patches through your tree?
 
-A rewrite and upstream of all of this is (eventually) planned: 
-https://gitlab.com/tuxedocomputers/development/packages/tuxedo-drivers/-/tree/67b781fbe0498fa6acba5b926d0083e00c287011/src
+Thanks,
 
-And already in progress: 
-https://lore.kernel.org/all/20250121225510.751444-1-wse@tuxedocomputers.com/ 
-and 
-https://lore.kernel.org/all/20250205162109.222619-1-wse@tuxedocomputers.com/
+-- 
+Jiri Kosina
+SUSE Labs
 
-The folder structure I envision is:
-
-tuxedo/
-     nb01/
-     nb02/
-     nb04/
-     nb05/
-     nbxx/
-
-NB03 doesn't exist as a DMI board_vendor string on TUXEDO devices for 
-historic reasons.
-
-The different firmwares of the different board_vendor devices have very 
-little in common and so do their drivers.
-
-nbxx is for the TUXI driver, an ACPI interface we plan on eventually 
-getting on more firmwares (currently only on the nb04 devices).
-
-For nb02 there is also a WMI interface to control fans and NVIDIA cTGP 
-and stuff that I plan to implement in a separate driver, that would go 
-in the same folder.
-
->
-> Why not just d/p/x86/tuxedo?
->
-> And within there you can have exactly 3 files: nb02.c, Kconfig and 
-> Kbuild.
->
->> --- /dev/null
->> +++ b/drivers/platform/x86/tuxedo/nb02/Kbuild
->> @@ -0,0 +1,7 @@
->> +# SPDX-License-Identifier: GPL-2.0-only
->> +#
->> +# TUXEDO X86 Platform Specific Drivers
->> +#
->> +
->> +tuxedo_nb02_platform-y            := platform.o
->> +obj-$(CONFIG_TUXEDO_NB02_PLATFORM)    += tuxedo_nb02_platform.o
->> diff --git a/drivers/platform/x86/tuxedo/nb02/Kconfig 
->> b/drivers/platform/x86/tuxedo/nb02/Kconfig
->> new file mode 100644
->> index 0000000000000..bed56276b9b36
->> --- /dev/null
->> +++ b/drivers/platform/x86/tuxedo/nb02/Kconfig
->> @@ -0,0 +1,15 @@
->> +# SPDX-License-Identifier: GPL-2.0-only
->> +#
->> +# TUXEDO X86 Platform Specific Drivers
->> +#
->> +
->> +menuconfig TUXEDO_NB02_PLATFORM
->> +    tristate "TUXEDO NB02 Platform Driver"
->> +    help
->> +      This driver implements miscellaneous things found on TUXEDO 
->> Notebooks
->> +      with board vendor NB02. For the time being this is only 
->> remapping the
->> +      touchpad toggle key to something supported by most Linux distros
->> +      out-of-the-box and suppressing an unsupported scancode from the
->> +      FN-key.
->> +
->> +      When compiled as a module it will be called tuxedo_nb02_platform.
->> diff --git a/drivers/platform/x86/tuxedo/nb02/platform.c 
->> b/drivers/platform/x86/tuxedo/nb02/platform.c
->> new file mode 100644
->> index 0000000000000..68d83b9b4c2f5
->> --- /dev/null
->> +++ b/drivers/platform/x86/tuxedo/nb02/platform.c
->> @@ -0,0 +1,94 @@
->> +// SPDX-License-Identifier: GPL-2.0-or-later
->> +/*
->> + * Copyright (C) 2025 Werner Sembach wse@tuxedocomputers.com
->> + */
->> +
->> +#include <linux/dmi.h>
->> +#include <linux/i8042.h>
->> +#include <linux/kernel.h>
->> +#include <linux/module.h>
->> +#include <linux/serio.h>
->> +
->> +static u8 tux_nb02_touchp_toggle_seq[] = {
->> +    0xe0, 0x5b, // Super down
->> +    0x1d,       // Control down
->> +    0x76,       // Zenkaku/Hankaku down
->> +    0xf6,       // Zenkaku/Hankaku up
->> +    0x9d,       // Control up
->> +    0xe0, 0xdb  // Super up
->> +};
->> +
->> +static bool tux_nb02_i8042_filter(unsigned char data,
->> +                  unsigned char str,
->> +                  struct serio *port,
->> +                  __always_unused void *context)
->> +{
->> +    static u8 seq_pos;
->> +
->> +    if (unlikely(str & I8042_STR_AUXDATA))
->> +        return false;
->> +
->> +    /* Replace touchpad toggle key sequence with a singular press of 
->> the
->> +     * F21-key.
->> +     */
->> +    if (unlikely(data == tux_nb02_touchp_toggle_seq[seq_pos])) {
->> +        ++seq_pos;
->> +        if (seq_pos == ARRAY_SIZE(tux_nb02_touchp_toggle_seq)) {
->> +            seq_pos = 0;
->> +            serio_interrupt(port, 0x6c, 0); // F21 down
->> +            serio_interrupt(port, 0xec, 0); // F21 up
->> +        }
->> +        return true;
->> +    }
->> +
->> +    /* Ignore bogus scancode produced by the FN-key. Reuse seq_pos 
->> as first
->> +     * byte of that is just the "extended"-byte.
->> +     */
->> +    if (unlikely(seq_pos == 1 && (data == 0x78 || data == 0xf8))) {
->> +        seq_pos = 0;
->> +        return true;
->> +    }
->> +
->> +    /* Replay skipped sequence bytes if it did not finish and it was 
->> not a
->> +     * FN-key press.
->> +     */
->> +    if (unlikely(seq_pos)) {
->> +        for (u8 i; i < seq_pos; ++i)
->> +            serio_interrupt(port, tux_nb02_touchp_toggle_seq[i], 0);
->> +        seq_pos = 0;
->> +    }
->> +
->> +    return false;
->> +}
->> +
->> +static const struct dmi_system_id tux_nb02_dmi_string_match[] 
->> __initconst = {
->> +    {
->> +        .matches = {
->> +            DMI_EXACT_MATCH(DMI_SYS_VENDOR, "TUXEDO"),
->> +            DMI_EXACT_MATCH(DMI_BOARD_VENDOR, "NB02"),
->> +        },
->> +    },
->> +    { }
->> +};
->> +
->> +static int __init tux_nb02_plat_init(void)
->> +{
->> +    if (!dmi_check_system(tux_nb02_dmi_string_match))
->> +        return -ENODEV;
->> +
->> +    return i8042_install_filter(tux_nb02_i8042_filter, NULL);
->> +}
->> +
->> +static void __exit tux_nb02_plat_exit(void)
->> +{
->> +    i8042_remove_filter(tux_nb02_i8042_filter);
->> +}
->> +
->> +module_init(tux_nb02_plat_init);
->> +module_exit(tux_nb02_plat_exit);
->> +
->> +MODULE_ALIAS("dmi:*:svnTUXEDO:*:rvnNB02:*");
->> +
->> +MODULE_DESCRIPTION("TUXEDO NB02 Platform");
->> +MODULE_AUTHOR("Werner Sembach <wse@tuxedocomputers.com>");
->> +MODULE_LICENSE("GPL");
->
