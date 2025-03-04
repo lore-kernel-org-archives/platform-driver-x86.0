@@ -1,185 +1,282 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-vk1-f172.google.com (mail-vk1-f172.google.com [209.85.221.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C4CE8204864
-	for <platform-driver-x86@vger.kernel.org>; Tue,  4 Mar 2025 13:25:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 250A92045B3;
+	Tue,  4 Mar 2025 13:26:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741094746; cv=none; b=QQSnD5zzcNYglq00oMxf4jwAnFoh4woLyUKXXAd1VwN0ZOOrQZYzJJTXSlSrSDITSgt/3daJWmPbfECptIWqqn6OW5drtdSUrAduDIhJTBoRg97pH0gyeolqvjnyRHhP+7HYzYGhu840V2QJIrnMPorkM41YN9kG/1nixDWFHJU=
+	t=1741094820; cv=none; b=lsrpLz6znll47WEpZ7N9EPFbqh+fZDIQvyHd91eAByGKUGuX/xynJyBtUyJfL0RaU7A4vGwnppwlQTjYCE24zPPLdUge5SoxmzEXpm3O8CTMfwYqmjy6TWpUUtyebKViRqY5pCX3WjbO65FkrATzQh7S0JeB0GcF89b8gR+uB8k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741094746; c=relaxed/simple;
-	bh=wndK1zKi+3XDT2v26WQC6fPZFWjKzHJnM+7C9N8b7HI=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=o3grUHcPDegN8sjtC6whi6D1rksZLS/gfaCp9bH03QgxGWkCN+KPTnnxhfA9cqKof/BDjv2+W1HUEOqW9PL8zlrziCbTN0G22j+g+neCGVrKR08escVWycIjDeuBuGNfnMBc1tIdFfDgGBk0MQ8rZNzVaUCD61Ecs95vthxL4RU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Opwtj9GX; arc=none smtp.client-ip=198.175.65.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1741094820; c=relaxed/simple;
+	bh=Dbh0yWnJ9wNGOeGtfH9NE1eZNuNZSiESIwromLOHGNY=;
+	h=Mime-Version:Content-Type:Date:Message-Id:From:To:Cc:Subject:
+	 References:In-Reply-To; b=Sfz/4aEiJxQ27EQsVRScc2wDeN5gGs6bSAUAsefNa7bYdsinAIIH5uQiyQm+EpZImNjQ8ZOfpimHuTMd1cATDu/BDs/N28FGEShX3XA3FPd3ejZch9xK4Go2sJ7TZtOHHtAkV6MkhSUuEGbqKuRHeUOdT1FYQrP6oNn3jVvkQo4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=bHyI1SuD; arc=none smtp.client-ip=209.85.221.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Opwtj9GX"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1741094745; x=1772630745;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=wndK1zKi+3XDT2v26WQC6fPZFWjKzHJnM+7C9N8b7HI=;
-  b=Opwtj9GXoTpTIsbNwZXZ5NEa4DrxlB6ei02ZjqI3sVfNvrBQa4dlrBoZ
-   Jdq26x2aGEXuGqn4Dw5oG5HCT9A7ixqvGoaJaqL0BE/7i9siw/P/uY93U
-   XfnCxkAFZMdbW6NABE9qS6w3gjIF1EvmRt5cVxa8ntnD8wm8KBwDyODo0
-   eQ1r/vDPHJMNza7KvhhNLfjNwFgI79RpmbAg+gEM2gSupvBCGq3R77qk6
-   eRGBJ9LdkGXCdobpUujle2c27QU+uDloGYFB3ZHIp/U2R+/QguCKaIcaP
-   sIw4hiYPhcJjhUTbBYRTltJwo8kOju2vHZIXv5g//fPOIDK2K2TxkW/dz
-   g==;
-X-CSE-ConnectionGUID: Aqo2njxuTzCw+v1uCloXHg==
-X-CSE-MsgGUID: UD0MTwcmTeKa8zQkQzE7Tg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11363"; a="41868118"
-X-IronPort-AV: E=Sophos;i="6.14,331,1736841600"; 
-   d="scan'208";a="41868118"
-Received: from fmviesa009.fm.intel.com ([10.60.135.149])
-  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Mar 2025 05:25:44 -0800
-X-CSE-ConnectionGUID: GuTIJiVtTtem3GmC051zPg==
-X-CSE-MsgGUID: yMLUxs2OSi+wGrSbqD1Wmg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.14,220,1736841600"; 
-   d="scan'208";a="119055256"
-Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.220])
-  by fmviesa009-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Mar 2025 05:25:40 -0800
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Tue, 4 Mar 2025 15:25:37 +0200 (EET)
-To: Vadim Pasternak <vadimp@nvidia.com>
-cc: Hans de Goede <hdegoede@redhat.com>, michaelsh@nvidia.com, 
-    crajank@nvidia.com, fradensky@nvidia.com, oleksandrs@nvidia.com, 
-    platform-driver-x86@vger.kernel.org
-Subject: Re: [PATCH v6 2/9] platform/mellanox mlxreg-hotplug: Add support
- for new flavor of capability registers
-In-Reply-To: <20250211091912.36787-3-vadimp@nvidia.com>
-Message-ID: <ba50e0b6-dbb5-4444-e291-0259b23f64ab@linux.intel.com>
-References: <20250211091912.36787-1-vadimp@nvidia.com> <20250211091912.36787-3-vadimp@nvidia.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bHyI1SuD"
+Received: by mail-vk1-f172.google.com with SMTP id 71dfb90a1353d-52367fd5af5so1659543e0c.3;
+        Tue, 04 Mar 2025 05:26:56 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1741094816; x=1741699616; darn=vger.kernel.org;
+        h=in-reply-to:references:subject:cc:to:from:message-id:date
+         :content-transfer-encoding:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=vL3fp9Q7jjBrH7sjWaqesrfVNl8ZcjvkllY5xGeMDnY=;
+        b=bHyI1SuDnAK8zJcwJoFNk23L08bM8nwUD5zbyDkBt9LrTpm8bBNfm+DhOVZ5H5komq
+         IhIQaHVx9BtnQ/j/SbIUAJ51C9zE1tJCIwkE9A0d3XnGJr2jB260s0nwYfiD7CRPknlh
+         3FNcf/nHm7f0g1Yceoekbfqk20qkkrr4m6NCucDzea6biOq0AjJKYMQHuDZ1wFd/p3J9
+         XTs22uYSKO3v9uMOWDGm2R8D7Q3qsyt3aIimE+afMyoONlqt92CXMlvjvespsYSuxCaT
+         tQunBY8ZI606abvTAVl3YAdKYiiCyMd2kGvOcpwd66bgV4LqwAWO7ZGZYts3n6BALnTq
+         ze2w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1741094816; x=1741699616;
+        h=in-reply-to:references:subject:cc:to:from:message-id:date
+         :content-transfer-encoding:mime-version:x-gm-message-state:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=vL3fp9Q7jjBrH7sjWaqesrfVNl8ZcjvkllY5xGeMDnY=;
+        b=w0HLQ18SJfbyVCXtqxFyddtkVhYoO6BUmQ/zLHnaUoSPCfAd8IhOI7uBtY6g1u3zd5
+         YBq1BzLwvFrP1vRXk9mB1uEfyOZYfZ59WmjiNKLWuISpbfuDNYLiQkP/DUla0fX9MAA8
+         EvEBjVunqZ4UEoE96kET1b7GpqYeRCbtAquTeTwiCD7Np7i6QijzMxtGN8h8wFoLWoPK
+         3nspFq6paHT8yYLafzb6fWJnfjHcEbz1l7sybNlztanELpwOXzsm0jaMIlCV9JMoJ+Qm
+         4r6lGSvII4JuB+ztjl8tbNBcCqe37ZoqWT4S9JFUqYkC57INuC5w16qbI3jHX6gW2gcJ
+         2tuA==
+X-Forwarded-Encrypted: i=1; AJvYcCUkthwephSbJrwi56AvR21yfyZmq3f6tQCHiUw6gcEn4+TY8MthYhL2Evgkh1jr+XxkeT3u718Q2v5O@vger.kernel.org, AJvYcCWEtufZolN1Y0cyAl4Grw/aI5qjGZF4azWf0e/kv6Jy6Udup0gPE4PhXD+3KCt0DHJgEvfCN1TkVdeXYCOZ@vger.kernel.org, AJvYcCX56vKqPw1u7Cxrl9DcwcIZ4tevgRzHzyb1hEt4cE2GO90vupm2V9b4dOdfK0ipzyoFioybT17fxKNuJlwzUml13Y5fnw==@vger.kernel.org
+X-Gm-Message-State: AOJu0YyXcavQqHLh7Y+SJgp/qP49YiLhn5EWirICBpnjvseVDTpA2k80
+	0ofD1uRbmz0ypMC2NfUVMR57C6TNTenw+wL8pmcvqc+Y8nexphcC
+X-Gm-Gg: ASbGncs1JqfTcK38MC8z8bbetSXTucLKk9JwZ2QwqIfVgZtVPybqxnGCmAjAvnn0hDx
+	nYRI3TgRJ7xrxT2irOWCNrZ5J+AALXyOj83rums0AsA74xNmz8ntfxpHUffse4fB/dfzLCNl4nw
+	4dt521XTNj3HUJ7cZ0XliUvdtgZX9qhWsHW0M60XZEk4f0ZOluxmWA7eZqd81wmxlM8g8HjlQkf
+	RsXNTgjGTwc9l4mq3BzSJYRLF0vDevEoYrhqHjRgTJ30YqgH5pAm+kEbuIew6s4mqelNn2i7e24
+	iJpaYJTTmPJ+AZZCevIi5L6RjPl1H31aTSVU
+X-Google-Smtp-Source: AGHT+IGeE0DtxbZy0AS94tKp3ljhVZFbmqT5dQpu9xx62aCvOcS2kduSwj9MwYhFItAiqqWKahL88w==
+X-Received: by 2002:a05:6122:d10:b0:51f:405e:866e with SMTP id 71dfb90a1353d-5235b7e1aa7mr9063404e0c.1.1741094815809;
+        Tue, 04 Mar 2025 05:26:55 -0800 (PST)
+Received: from localhost ([2800:bf0:82:3d2:9e61:1a62:1a8c:3e62])
+        by smtp.gmail.com with ESMTPSA id 71dfb90a1353d-5234c08c5b6sm2139336e0c.36.2025.03.04.05.26.53
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 04 Mar 2025 05:26:54 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Mime-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date: Tue, 04 Mar 2025 08:26:52 -0500
+Message-Id: <D87ILMWSRUPG.3FHTWG38N2IFJ@gmail.com>
+From: "Kurt Borja" <kuurtb@gmail.com>
+To: "Mario Limonciello" <superm1@kernel.org>, "Antheas Kapenekakis"
+ <lkml@antheas.dev>
+Cc: "Shyam Sundar S K" <Shyam-sundar.S-k@amd.com>, "Rafael J . Wysocki"
+ <rafael@kernel.org>, "Hans de Goede" <hdegoede@redhat.com>,
+ =?utf-8?q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, "Luke D .
+ Jones" <luke@ljones.dev>, "Mark Pearson" <mpearson-lenovo@squebb.ca>, "open
+ list:AMD PMF DRIVER" <platform-driver-x86@vger.kernel.org>, "open list"
+ <linux-kernel@vger.kernel.org>, "open list:ACPI"
+ <linux-acpi@vger.kernel.org>, "Derek J . Clark"
+ <derekjohn.clark@gmail.com>, <me@kylegospodneti.ch>, "Denis Benato"
+ <benato.denis96@gmail.com>, "Mario Limonciello" <mario.limonciello@amd.com>
+Subject: Re: [PATCH v2 1/1] ACPI: platform_profile: Treat quiet and low
+ power the same
+X-Mailer: aerc 0.20.1-0-g2ecb8770224a
+References: <20250304064745.1073770-1-superm1@kernel.org>
+ <20250304064745.1073770-2-superm1@kernel.org>
+ <CAGwozwHniWGQ7qK6FYD_WK5zNjkro7-Q1nTcFPAuWDt9UQ+noA@mail.gmail.com>
+ <23d6c735-e94f-4d43-87b0-ff119941fcac@kernel.org>
+In-Reply-To: <23d6c735-e94f-4d43-87b0-ff119941fcac@kernel.org>
 
-On Tue, 11 Feb 2025, Vadim Pasternak wrote:
+Hi all,
 
-Hi Vadim,
+On Tue Mar 4, 2025 at 7:49 AM -05, Mario Limonciello wrote:
+>
+>
+> On 3/4/25 02:38, Antheas Kapenekakis wrote:
+>> On Tue, 4 Mar 2025 at 07:48, Mario Limonciello <superm1@kernel.org> wrot=
+e:
+>>>
+>>> From: Mario Limonciello <mario.limonciello@amd.com>
+>>>
+>>> When two drivers don't support all the same profiles the legacy interfa=
+ce
+>>> only exports the common profiles.
+>>>
+>>> This causes problems for cases where one driver uses low-power but anot=
+her
+>>> uses quiet because the result is that neither is exported to sysfs.
+>>>
+>>> If one platform profile handler supports quiet and the other
+>>> supports low power treat them as the same for the purpose of
+>>> the sysfs interface.
+>>>
+>>> Fixes: 688834743d67 ("ACPI: platform_profile: Allow multiple handlers")
+>>> Reported-by: Antheas Kapenekakis <lkml@antheas.dev>
+>>> Closes: https://lore.kernel.org/platform-driver-x86/e64b771e-3255-42ad-=
+9257-5b8fc6c24ac9@gmx.de/T/#mc068042dd29df36c16c8af92664860fc4763974b
+>>> Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
+>>> ---
+>>>   drivers/acpi/platform_profile.c | 38 ++++++++++++++++++++++++++++++--=
+-
+>>>   1 file changed, 35 insertions(+), 3 deletions(-)
+>>>
+>>> diff --git a/drivers/acpi/platform_profile.c b/drivers/acpi/platform_pr=
+ofile.c
+>>> index 2ad53cc6aae53..d9a7cc5891734 100644
+>>> --- a/drivers/acpi/platform_profile.c
+>>> +++ b/drivers/acpi/platform_profile.c
+>>> @@ -73,8 +73,20 @@ static int _store_class_profile(struct device *dev, =
+void *data)
+>>>
+>>>          lockdep_assert_held(&profile_lock);
+>>>          handler =3D to_pprof_handler(dev);
+>>> -       if (!test_bit(*bit, handler->choices))
+>>> -               return -EOPNOTSUPP;
+>>> +       if (!test_bit(*bit, handler->choices)) {
+>>> +               switch (*bit) {
+>>> +               case PLATFORM_PROFILE_QUIET:
+>>> +                       *bit =3D PLATFORM_PROFILE_LOW_POWER;
+>>> +                       break;
+>>> +               case PLATFORM_PROFILE_LOW_POWER:
+>>> +                       *bit =3D PLATFORM_PROFILE_QUIET;
+>>> +                       break;
+>>> +               default:
+>>> +                       return -EOPNOTSUPP;
+>>> +               }
+>>> +               if (!test_bit(*bit, handler->choices))
+>>> +                       return -EOPNOTSUPP;
+>>> +       }
+>>>
+>>>          return handler->ops->profile_set(dev, *bit);
+>>>   }
+>>> @@ -252,8 +264,16 @@ static int _aggregate_choices(struct device *dev, =
+void *data)
+>>>          handler =3D to_pprof_handler(dev);
+>>>          if (test_bit(PLATFORM_PROFILE_LAST, aggregate))
+>>>                  bitmap_copy(aggregate, handler->choices, PLATFORM_PROF=
+ILE_LAST);
+>>> -       else
+>>> +       else {
+>>> +               /* treat quiet and low power the same for aggregation p=
+urposes */
+>>> +               if (test_bit(PLATFORM_PROFILE_QUIET, handler->choices) =
+&&
+>>> +                   test_bit(PLATFORM_PROFILE_LOW_POWER, aggregate))
+>>> +                       set_bit(PLATFORM_PROFILE_QUIET, aggregate);
+>>> +               else if (test_bit(PLATFORM_PROFILE_LOW_POWER, handler->=
+choices) &&
+>>> +                        test_bit(PLATFORM_PROFILE_QUIET, aggregate))
+>>> +                       set_bit(PLATFORM_PROFILE_LOW_POWER, aggregate);
+>>>                  bitmap_and(aggregate, handler->choices, aggregate, PLA=
+TFORM_PROFILE_LAST);
+>>> +       }
+>>=20
+>> So you end up showing both? If that's the case, isn't it equivalent to
+>> just make amd-pmf show both quiet and low-power?
+>>=20
+>> I guess it is not ideal for framework devices. But if asus devices end
+>> up showing both, then it should be ok for framework devices to show
+>> both.
+>>=20
+>> I like the behavior of the V1 personally.
+>
+> No; this doesn't cause it to show both.  It only causes one to show up.=
+=20
+> I confirmed it with a contrived situation on my laptop that forced=20
+> multiple profile handlers that supported a mix.
+>
+>
+> # cat /sys/firmware/acpi/platform_profile*
+> low-power
+> low-power balanced performance
+>
+> # cat /sys/class/platform-profile/platform-profile-*/profile
+> quiet
+> quiet
+> quiet
+> quiet
+> quiet
+> quiet
+> quiet
+> quiet
+> quiet
+> quiet
+> quiet
+> quiet
+> quiet
+> quiet
+> quiet
+> quiet
+> quiet
+> quiet
+> quiet
+> quiet
+> quiet
+> quiet
+> quiet
+> quiet
+> low-power
+>
+>>=20
+>>>          return 0;
+>>>   }
+>>> @@ -305,6 +325,13 @@ static int _aggregate_profiles(struct device *dev,=
+ void *data)
+>>>          if (err)
+>>>                  return err;
+>>>
+>>> +       /* treat low-power and quiet as the same */
+>>> +       if ((*profile =3D=3D PLATFORM_PROFILE_LOW_POWER &&
+>>> +            val =3D=3D PLATFORM_PROFILE_QUIET) ||
+>>> +           (*profile =3D=3D PLATFORM_PROFILE_QUIET &&
+>>> +            val =3D=3D PLATFORM_PROFILE_LOW_POWER))
+>>> +               *profile =3D val;
+>>> +
+>>>          if (*profile !=3D PLATFORM_PROFILE_LAST && *profile !=3D val)
+>>>                  *profile =3D PLATFORM_PROFILE_CUSTOM;
+>>>          else
+>>> @@ -531,6 +558,11 @@ struct device *platform_profile_register(struct de=
+vice *dev, const char *name,
+>>>                  dev_err(dev, "Failed to register platform_profile clas=
+s device with empty choices\n");
+>>>                  return ERR_PTR(-EINVAL);
+>>>          }
+>>> +       if (test_bit(PLATFORM_PROFILE_QUIET, pprof->choices) &&
+>>> +           test_bit(PLATFORM_PROFILE_LOW_POWER, pprof->choices)) {
+>>> +               dev_err(dev, "Failed to register platform_profile class=
+ device with both quiet and low-power\n");
+>>> +               return ERR_PTR(-EINVAL);
+>>> +       }
+>>=20
+>> Can you avoid failing here? It caused a lot of issues in the past (the
+>> WMI driver bails). a dev_err should be enough. Since you do not fail
+>> maybe it can be increased to dev_crit.
+>>=20
+>> There is at least one driver that implements both currently, and a fix
+>> would have to precede this patch.
+>
+> Oh, acer-wmi?  Kurt; can you please comment?  Are both simultaneous?
 
-> Hotplug platform data is common across the various systems, while
-> hotplug driver should be able to configure only the instances relevant
-> to specific system.
-> 
-> For example, platform hoptplug data might contain descriptions for fan1,
+There are a few laptops supported by alienware-wmi that definitely have
+both (including mine). The acer-wmi and the samsung-galaxybook drivers
+also probe for available choices dynamically, so some of those devices
+may be affected by this too.
 
-hotplug
+So yes, we shouldn't fail registration here.
 
-> fan2, ..., fan{n}, while some systems equipped with all 'n' fans,
-> others with less. Same for power units, power controllers, ASICs and so
-> on.
-> 
-> New 'capability_mask' is introduced to allow sharing of same hoptplug
-> structure between different systems, equipped with different number of
-> hotplug devices. It contains superset mask for all systems sharing the
-> same configuration.
-> 
-> The purpose is to reduce unnecessary duplication of hoptplug structures
+Anyway, I like this approach more than v1. What do you think about
+constraining this fix to the legacy interface?
 
-hotplug
+--=20
+ ~ Kurt
 
-> between different systems - same structure is to be used for example for
-> system equipped fir for 4, 6 or 8 fans.
-> 
-> For detection of the real number of equipped devices capability
-> registers are used. These registers used to indicate presence of
-> hotplug devices. On some systems presence is porvided through the
+>
+>>=20
+>>>
+>>>          guard(mutex)(&profile_lock);
+>>>
+>>> --
+>>> 2.43.0
+>>>
 
-provided
-
-> bitmap. For some new big modular systems, these registers will provide
-> presence by counters. Use slot parameter to determine whether
-> capability register contains bitmask or counter.
-> 
-> Reviewed-by: Felix Radensky <fradensky@nvidia.com>
-> Signed-off-by: Vadim Pasternak <vadimp@nvidia.com>
-> ---
-> v5->v6
-> Revised after comments pointed out by Ilpo:
-> - Drop 'capability_bit' from structure 'mlxreg_core_data', since it is
->   not used.
-> ---
->  drivers/platform/mellanox/mlxreg-hotplug.c | 25 ++++++++++++++++++++--
->  1 file changed, 23 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/platform/mellanox/mlxreg-hotplug.c b/drivers/platform/mellanox/mlxreg-hotplug.c
-> index 0ce9fff1f7d4..93bdd20fd71a 100644
-> --- a/drivers/platform/mellanox/mlxreg-hotplug.c
-> +++ b/drivers/platform/mellanox/mlxreg-hotplug.c
-> @@ -274,6 +274,16 @@ static int mlxreg_hotplug_attr_init(struct mlxreg_hotplug_priv_data *priv)
->  			if (ret)
->  				return ret;
->  
-> +			if (!regval)
-> +				continue;
-> +
-> +			/*
-> +			 * Remove non-relevant bits: 'regval' contains bitmask of attributes or
-> +			 * number of attributtes, which should be handled. While 'capability mask'
-
-attributes
-
-> +			 * is superset mask.
-> +			 */
-> +			if (item->capability_mask)
-> +				regval = (regval & item->capability_mask);
->  			item->mask = GENMASK((regval & item->mask) - 1, 0);
-
-I still don't understand how this can be correct.
-
-As a last step, the code here is taking GENMASK(<num_of_bits>-1, 0) I 
-assume. That would mean regval has a field that is indicated by item->mask 
-that the number of bits (or "number of attributes" as mentioned in the 
-comment). Is that correct?
-
-Now, in your comment and the commit message, you also say 'regval' 
-might contain "bitmask of attributes' and you mask part of the bits away
-from what I assume is a bitmask in the newly introduced code. A bitmask, 
-however, is not something that seems directly compatible with GENMASK() 
-that inputs bit _indexes_, so how can that be passed directly into GENMASK 
-without anything to convert it into number of bits/bit index first???
-
--- 
- i.
-
->  		}
->  
-> @@ -294,7 +304,18 @@ static int mlxreg_hotplug_attr_init(struct mlxreg_hotplug_priv_data *priv)
->  				if (ret)
->  					return ret;
->  
-> -				if (!(regval & data->bit)) {
-> +				if (data->capability_mask)
-> +					regval = (regval & data->capability_mask);
-> +
-> +				/*
-> +				 * In case slot field is provided, capability register contains
-> +				 * counter, otherwise bitmask. Skip non-relevant entries if slot
-> +				 * is set and exceeds counter. Othewise validate entry by matching
-> +				 * bitmask.
-> +				 */
-> +				if (data->slot > regval)
-> +					break;
-> +				if (!(regval & data->bit) && !data->slot) {
->  					data++;
->  					continue;
->  				}
-> @@ -611,7 +632,7 @@ static int mlxreg_hotplug_set_irq(struct mlxreg_hotplug_priv_data *priv)
->  				if (ret)
->  					goto out;
->  
-> -				if (!(regval & data->bit))
-> +				if (!(regval & data->bit) && !data->slot)
->  					item->mask &= ~BIT(j);
->  			}
->  		}
-> 
