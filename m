@@ -1,124 +1,254 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from linux1587.grserver.gr (linux1587.grserver.gr [185.138.42.100])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9DB9D1FBC83;
-	Tue,  4 Mar 2025 13:05:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C0C40442C;
+	Tue,  4 Mar 2025 13:06:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.138.42.100
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741093538; cv=none; b=oCPE4N1MTF9xMQYPt0LBGAHOOP49O6hzNCE74DklCJbTcEtcEe0t731v8Qv6aHqsfTHbut+KEWZzKmaZVOCNzdlqebnwJj13Av/qN1/JSGLp7e9nY2WiB/H57JuMsqrJpk9STEwSkw3nEoNazJx8i8hl8aXC7RNNgvpNSTcmRWU=
+	t=1741093604; cv=none; b=lfPoVC4KbgPcmF8xq5ge/czp1W7+q8jpi9eK2YUhG5JPKjj9C0UsMxSRssS1Zlutvu/FkaU2OUWxzncuyI+DBMcxbOHbu3HjBoHI3R5UMyPPQgr/aG8dmmr1ueN57pP2vX90pXJee8nWbt32/zg3nwzt3sdkL3zhvJoWlwWxN3U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741093538; c=relaxed/simple;
-	bh=kId64MTN2SwW88P18+0OurZ0XEpuA7JeJv0/MwjsJj4=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=tmJdvsMgsfKn9G78Oy9b5f4WldcewzY8lj7BZicfH8j8sqLhvwsbzMvPsAbt6JvikoTz8m8857eFyB8JWaftHCecOHtGOugIuw//2PVxkwt+Yg3hme4g1euygDD4bz3+AoKngkT1AY1TkM2IofWkpd9KAGnBP4hd7Ruar9UVZrs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=DTJCMPui; arc=none smtp.client-ip=192.198.163.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1741093604; c=relaxed/simple;
+	bh=2qFKPgKeSpXTxp5Z7iZJSjbB0aua6k7j3YFcJG4fNvc=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=FQXZaTP0lgUhpRLJHSyqcR4bonqyLD7o2IxpWmZ5WzEzNgWUJrYMKr7frzorrRDGUjW3nIeqXDnrRcsdpFPXgRtBMRdU5jVAPjIEaooaHbP2+e23JW7+Pp5ITiUUy2pLY/sqGCF2LXW3/ED7AkorR6lH4o6+N0GsnkMNLFFvFIY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=antheas.dev; spf=pass smtp.mailfrom=antheas.dev; dkim=pass (1024-bit key) header.d=antheas.dev header.i=@antheas.dev header.b=sblV3Ovx; arc=none smtp.client-ip=185.138.42.100
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=antheas.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=antheas.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="DTJCMPui"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1741093536; x=1772629536;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=kId64MTN2SwW88P18+0OurZ0XEpuA7JeJv0/MwjsJj4=;
-  b=DTJCMPuipPj8i6qG95Q5UnX43JqWvowBcTfkiuj5lfZzebn6Lcujv9f7
-   MRteT0eYcmC/a76AIQ8HLxcq+ADXadE4iox8JP02sP2lPjRJjJkLOvsEX
-   HZQyq+BYDSoCi/G+0wL2VhyPf0rPNlbX6OjQUkKFs6fJ/uJK0ORd9F0fX
-   akzzaV0co8oDe2sC4M+yFooaFsihlW4SKLgGZIc2+JVLNIE09Xur5cdle
-   r9rDbMnGykUWwE9yHyDBl/4oUAsom6O6U2flgO/w2BqJvxDrk3MSjUVne
-   tBhJlSKoaI6baBr207oZ/dO6MpGXtNYb6M0a/a5M0UOlOPwHHJutwIqa9
-   A==;
-X-CSE-ConnectionGUID: FYYHDh0ZSReB0kZB5cSE7w==
-X-CSE-MsgGUID: 9DN7PhtOTMy3KL7UzqjY8w==
-X-IronPort-AV: E=McAfee;i="6700,10204,11363"; a="41187713"
-X-IronPort-AV: E=Sophos;i="6.13,331,1732608000"; 
-   d="scan'208";a="41187713"
-Received: from orviesa005.jf.intel.com ([10.64.159.145])
-  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Mar 2025 05:05:35 -0800
-X-CSE-ConnectionGUID: bmwojJy2R9y2fe7aUkBKJw==
-X-CSE-MsgGUID: LIenP46HT/eSa0i+DPjIHA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
-   d="scan'208";a="123563998"
-Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.220])
-  by orviesa005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Mar 2025 05:05:27 -0800
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Tue, 4 Mar 2025 15:05:24 +0200 (EET)
-To: Paolo Abeni <pabeni@redhat.com>
-cc: Hans de Goede <hdegoede@redhat.com>, x86@kernel.org, 
-    LKML <linux-kernel@vger.kernel.org>, Netdev <netdev@vger.kernel.org>, 
-    platform-driver-x86@vger.kernel.org, 
-    linux-stm32@st-md-mailman.stormreply.com, 
-    linux-arm-kernel@lists.infradead.org, 
-    Choong Yong Liang <yong.liang.choong@linux.intel.com>, 
-    Simon Horman <horms@kernel.org>, Jose Abreu <joabreu@synopsys.com>, 
-    Jose Abreu <Jose.Abreu@synopsys.com>, 
-    David E Box <david.e.box@linux.intel.com>, 
-    Thomas Gleixner <tglx@linutronix.de>, 
-    Rajneesh Bhardwaj <irenic.rajneesh@gmail.com>, 
-    Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
-    Dave Hansen <dave.hansen@linux.intel.com>, 
-    "H . Peter Anvin" <hpa@zytor.com>, David E Box <david.e.box@intel.com>, 
-    Andrew Lunn <andrew+netdev@lunn.ch>, 
-    "David S . Miller" <davem@davemloft.net>, 
-    Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, 
-    Heiner Kallweit <hkallweit1@gmail.com>, 
-    Maxime Coquelin <mcoquelin.stm32@gmail.com>, 
-    Richard Cochran <richardcochran@gmail.com>, 
-    Alexandre Torgue <alexandre.torgue@foss.st.com>, 
-    Jiawen Wu <jiawenwu@trustnetic.com>, 
-    Mengyuan Lou <mengyuanlou@net-swift.com>, 
-    Russell King <linux@armlinux.org.uk>, 
-    Serge Semin <fancer.lancer@gmail.com>
-Subject: Re: [PATCH net-next v9 3/6] arch: x86: add IPC mailbox accessor
- function and add SoC register access
-In-Reply-To: <48885074-b590-41e6-9794-49ec12713cce@redhat.com>
-Message-ID: <d8e04cf2-afb9-dead-f7c2-297c66969081@linux.intel.com>
-References: <20250227121522.1802832-1-yong.liang.choong@linux.intel.com> <20250227121522.1802832-4-yong.liang.choong@linux.intel.com> <48885074-b590-41e6-9794-49ec12713cce@redhat.com>
+	dkim=pass (1024-bit key) header.d=antheas.dev header.i=@antheas.dev header.b="sblV3Ovx"
+Received: from mail-lf1-f42.google.com (mail-lf1-f42.google.com [209.85.167.42])
+	by linux1587.grserver.gr (Postfix) with ESMTPSA id 602E12E09248;
+	Tue,  4 Mar 2025 15:06:33 +0200 (EET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=antheas.dev;
+	s=default; t=1741093597;
+	bh=XyB/DGaQkImLkGe99KO54A695D+1O0zvTZx7KK1o7qc=;
+	h=Received:From:Subject:To;
+	b=sblV3OvxcufcZeJwjUtftOq7C+F+2uY3VHKmUARnHm0cFo1jAzriIHTeL7krwhs43
+	 HE4vnLvcOj16PFGkpA8ba98+BqAbSA0UGr1tChhoYAQoEcP3PpHsUW2HN1vTTrxgc5
+	 h90uNi+sTVLmBPQpgQB6X9nEUmY/xY7x6alhysnw=
+Authentication-Results: linux1587.grserver.gr;
+        spf=pass (sender IP is 209.85.167.42) smtp.mailfrom=lkml@antheas.dev smtp.helo=mail-lf1-f42.google.com
+Received-SPF: pass (linux1587.grserver.gr: connection is authenticated)
+Received: by mail-lf1-f42.google.com with SMTP id
+ 2adb3069b0e04-547bcef2f96so6340823e87.1;
+        Tue, 04 Mar 2025 05:06:33 -0800 (PST)
+X-Forwarded-Encrypted: i=1;
+ AJvYcCVyVqUzGOszSzqD1klHi8pMc1fbUEwBvni9U6KpmiJlUU5E94kzqvH2AtFfUqxV73+TywHL61rPzoBIpnma2P/lVzMRgA==@vger.kernel.org,
+ AJvYcCWrHwy59lJBi0hqGoTJ8FWP7q2DVCsy4FQGd4gF5tQJXnsQDGR9Xuvkc1iwpvE1NWJgAqTl3j8g9nL9SFRQ@vger.kernel.org,
+ AJvYcCX419kcpZAvLLy6LNsfJHnfoHbQQ0u3GYaOcYyvK0fKYiOiJ+84bwOdhI46n/MstDd4vqNOL9NEvmrH@vger.kernel.org
+X-Gm-Message-State: AOJu0YwnKs3qsBZof7xMtt53oBHS+B9HmpDO+ehxpSGRWT7J+9zaopok
+	OGLSuVOXhxwdKuKJ3nIoKju6LMCSHnkUUma3xjr2GGYeP5nq52+lQoaMw+bSo2fuvVEpXOwgG3e
+	oHsGeMwrfcVuk+zstoCLFDt4Ri8c=
+X-Google-Smtp-Source: 
+ AGHT+IFJsSNNyRwEAefYPtBzSpVROivz24nz3zetzkFWa1k9sdlp2Tv3EG40u6Jg9A2pWi68fJtr3aIhUNxR4yK51pI=
+X-Received: by 2002:a05:6512:1103:b0:545:d54:2ebe with SMTP id
+ 2adb3069b0e04-5494c36c16dmr6539057e87.43.1741093592629; Tue, 04 Mar 2025
+ 05:06:32 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="8323328-97556846-1741093524=:931"
+References: <20250304064745.1073770-1-superm1@kernel.org>
+ <20250304064745.1073770-2-superm1@kernel.org>
+ <CAGwozwHniWGQ7qK6FYD_WK5zNjkro7-Q1nTcFPAuWDt9UQ+noA@mail.gmail.com>
+ <23d6c735-e94f-4d43-87b0-ff119941fcac@kernel.org>
+In-Reply-To: <23d6c735-e94f-4d43-87b0-ff119941fcac@kernel.org>
+From: Antheas Kapenekakis <lkml@antheas.dev>
+Date: Tue, 4 Mar 2025 14:06:21 +0100
+X-Gmail-Original-Message-ID: 
+ <CAGwozwE0qn_vypYHpfJY8muo=e6XuLRJ6d9Fy_LSAa5VG=sEgg@mail.gmail.com>
+X-Gm-Features: AQ5f1Jq8Nt82M34pyIU1pZ1pM_EAc5ddAiY26i3J3wjOWWxvYJzHwrbkXyW9qw8
+Message-ID: 
+ <CAGwozwE0qn_vypYHpfJY8muo=e6XuLRJ6d9Fy_LSAa5VG=sEgg@mail.gmail.com>
+Subject: Re: [PATCH v2 1/1] ACPI: platform_profile: Treat quiet and low power
+ the same
+To: Mario Limonciello <superm1@kernel.org>
+Cc: Kurt Borja <kuurtb@gmail.com>,
+ Shyam Sundar S K <Shyam-sundar.S-k@amd.com>,
+	"Rafael J . Wysocki" <rafael@kernel.org>,
+ Hans de Goede <hdegoede@redhat.com>,
+	=?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	"Luke D . Jones" <luke@ljones.dev>, Mark Pearson <mpearson-lenovo@squebb.ca>,
+	"open list:AMD PMF DRIVER" <platform-driver-x86@vger.kernel.org>,
+	open list <linux-kernel@vger.kernel.org>,
+	"open list:ACPI" <linux-acpi@vger.kernel.org>,
+ "Derek J . Clark" <derekjohn.clark@gmail.com>,
+	me@kylegospodneti.ch, Denis Benato <benato.denis96@gmail.com>,
+	Mario Limonciello <mario.limonciello@amd.com>
+Content-Type: text/plain; charset="UTF-8"
+X-PPP-Message-ID: 
+ <174109359388.10457.17049499079140763422@linux1587.grserver.gr>
+X-PPP-Vhost: antheas.dev
+X-Virus-Scanned: clamav-milter 0.103.11 at linux1587.grserver.gr
+X-Virus-Status: Clean
 
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
+On Tue, 4 Mar 2025 at 13:49, Mario Limonciello <superm1@kernel.org> wrote:
+>
+>
+>
+> On 3/4/25 02:38, Antheas Kapenekakis wrote:
+> > On Tue, 4 Mar 2025 at 07:48, Mario Limonciello <superm1@kernel.org> wrote:
+> >>
+> >> From: Mario Limonciello <mario.limonciello@amd.com>
+> >>
+> >> When two drivers don't support all the same profiles the legacy interface
+> >> only exports the common profiles.
+> >>
+> >> This causes problems for cases where one driver uses low-power but another
+> >> uses quiet because the result is that neither is exported to sysfs.
+> >>
+> >> If one platform profile handler supports quiet and the other
+> >> supports low power treat them as the same for the purpose of
+> >> the sysfs interface.
+> >>
+> >> Fixes: 688834743d67 ("ACPI: platform_profile: Allow multiple handlers")
+> >> Reported-by: Antheas Kapenekakis <lkml@antheas.dev>
+> >> Closes: https://lore.kernel.org/platform-driver-x86/e64b771e-3255-42ad-9257-5b8fc6c24ac9@gmx.de/T/#mc068042dd29df36c16c8af92664860fc4763974b
+> >> Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
+> >> ---
+> >>   drivers/acpi/platform_profile.c | 38 ++++++++++++++++++++++++++++++---
+> >>   1 file changed, 35 insertions(+), 3 deletions(-)
+> >>
+> >> diff --git a/drivers/acpi/platform_profile.c b/drivers/acpi/platform_profile.c
+> >> index 2ad53cc6aae53..d9a7cc5891734 100644
+> >> --- a/drivers/acpi/platform_profile.c
+> >> +++ b/drivers/acpi/platform_profile.c
+> >> @@ -73,8 +73,20 @@ static int _store_class_profile(struct device *dev, void *data)
+> >>
+> >>          lockdep_assert_held(&profile_lock);
+> >>          handler = to_pprof_handler(dev);
+> >> -       if (!test_bit(*bit, handler->choices))
+> >> -               return -EOPNOTSUPP;
+> >> +       if (!test_bit(*bit, handler->choices)) {
+> >> +               switch (*bit) {
+> >> +               case PLATFORM_PROFILE_QUIET:
+> >> +                       *bit = PLATFORM_PROFILE_LOW_POWER;
+> >> +                       break;
+> >> +               case PLATFORM_PROFILE_LOW_POWER:
+> >> +                       *bit = PLATFORM_PROFILE_QUIET;
+> >> +                       break;
+> >> +               default:
+> >> +                       return -EOPNOTSUPP;
+> >> +               }
+> >> +               if (!test_bit(*bit, handler->choices))
+> >> +                       return -EOPNOTSUPP;
+> >> +       }
+> >>
+> >>          return handler->ops->profile_set(dev, *bit);
+> >>   }
+> >> @@ -252,8 +264,16 @@ static int _aggregate_choices(struct device *dev, void *data)
+> >>          handler = to_pprof_handler(dev);
+> >>          if (test_bit(PLATFORM_PROFILE_LAST, aggregate))
+> >>                  bitmap_copy(aggregate, handler->choices, PLATFORM_PROFILE_LAST);
+> >> -       else
+> >> +       else {
+> >> +               /* treat quiet and low power the same for aggregation purposes */
+> >> +               if (test_bit(PLATFORM_PROFILE_QUIET, handler->choices) &&
+> >> +                   test_bit(PLATFORM_PROFILE_LOW_POWER, aggregate))
+> >> +                       set_bit(PLATFORM_PROFILE_QUIET, aggregate);
+> >> +               else if (test_bit(PLATFORM_PROFILE_LOW_POWER, handler->choices) &&
+> >> +                        test_bit(PLATFORM_PROFILE_QUIET, aggregate))
+> >> +                       set_bit(PLATFORM_PROFILE_LOW_POWER, aggregate);
+> >>                  bitmap_and(aggregate, handler->choices, aggregate, PLATFORM_PROFILE_LAST);
+> >> +       }
+> >
+> > So you end up showing both? If that's the case, isn't it equivalent to
+> > just make amd-pmf show both quiet and low-power?
+> >
+> > I guess it is not ideal for framework devices. But if asus devices end
+> > up showing both, then it should be ok for framework devices to show
+> > both.
+> >
+> > I like the behavior of the V1 personally.
+>
+> No; this doesn't cause it to show both.  It only causes one to show up.
+> I confirmed it with a contrived situation on my laptop that forced
+> multiple profile handlers that supported a mix.
 
---8323328-97556846-1741093524=:931
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+If you can somehow force it to show the same option every time with a
+tie breaker against amd-pmf it should be good enough. Still does not
+solve balanced-power so unlike V1 it is not a permanent fix. Hidden
+options was a nice tiebreaker imo.
 
-On Tue, 4 Mar 2025, Paolo Abeni wrote:
+>
+> # cat /sys/firmware/acpi/platform_profile*
+> low-power
+> low-power balanced performance
+>
+> # cat /sys/class/platform-profile/platform-profile-*/profile
+> quiet
+> quiet
+> quiet
+> quiet
+> quiet
+> quiet
+> quiet
+> quiet
+> quiet
+> quiet
+> quiet
+> quiet
+> quiet
+> quiet
+> quiet
+> quiet
+> quiet
+> quiet
+> quiet
+> quiet
+> quiet
+> quiet
+> quiet
+> quiet
+> low-power
+>
+> >
+> >>          return 0;
+> >>   }
+> >> @@ -305,6 +325,13 @@ static int _aggregate_profiles(struct device *dev, void *data)
+> >>          if (err)
+> >>                  return err;
+> >>
+> >> +       /* treat low-power and quiet as the same */
+> >> +       if ((*profile == PLATFORM_PROFILE_LOW_POWER &&
+> >> +            val == PLATFORM_PROFILE_QUIET) ||
+> >> +           (*profile == PLATFORM_PROFILE_QUIET &&
+> >> +            val == PLATFORM_PROFILE_LOW_POWER))
+> >> +               *profile = val;
+> >> +
+> >>          if (*profile != PLATFORM_PROFILE_LAST && *profile != val)
+> >>                  *profile = PLATFORM_PROFILE_CUSTOM;
+> >>          else
+> >> @@ -531,6 +558,11 @@ struct device *platform_profile_register(struct device *dev, const char *name,
+> >>                  dev_err(dev, "Failed to register platform_profile class device with empty choices\n");
+> >>                  return ERR_PTR(-EINVAL);
+> >>          }
+> >> +       if (test_bit(PLATFORM_PROFILE_QUIET, pprof->choices) &&
+> >> +           test_bit(PLATFORM_PROFILE_LOW_POWER, pprof->choices)) {
+> >> +               dev_err(dev, "Failed to register platform_profile class device with both quiet and low-power\n");
+> >> +               return ERR_PTR(-EINVAL);
+> >> +       }
+> >
+> > Can you avoid failing here? It caused a lot of issues in the past (the
+> > WMI driver bails). a dev_err should be enough. Since you do not fail
+> > maybe it can be increased to dev_crit.
+> >
+> > There is at least one driver that implements both currently, and a fix
+> > would have to precede this patch.
+>
+> Oh, acer-wmi?  Kurt; can you please comment?  Are both simultaneous?
 
-> On 2/27/25 1:15 PM, Choong Yong Liang wrote:
-> > From: "David E. Box" <david.e.box@linux.intel.com>
-> >=20
-> > - Exports intel_pmc_ipc() for host access to the PMC IPC mailbox
-> > - Enables the host to access specific SoC registers through the PMC
-> > firmware using IPC commands. This access method is necessary for
-> > registers that are not available through direct Memory-Mapped I/O (MMIO=
-),
-> > which is used for other accessible parts of the PMC.
-> >=20
-> > Signed-off-by: David E. Box <david.e.box@linux.intel.com>
-> > Signed-off-by: Chao Qin <chao.qin@intel.com>
-> > Signed-off-by: Choong Yong Liang <yong.liang.choong@linux.intel.com>
->=20
-> Hans, Ilpo, are you ok with this patch going through the netdev/net-next
-> tree?
+I do not have access to my kernel tree but when looking at it I
+remember an if block that did a set_bit on both for certain laptops in
+one of the drivers. Unsure if it was acer. But it was not ambiguous.
 
-Yes, it you can merge it through netdev trees.
-
-The function added into the header is a bit large on footprint front but=20
-there are not that many callers so I guess it's okay.
-
-Acked-by: Ilpo J=C3=A4rvinen <ilpo.jarvinen@linux.intel.com>
-
-
---=20
- i.
-
---8323328-97556846-1741093524=:931--
+> >
+> >>
+> >>          guard(mutex)(&profile_lock);
+> >>
+> >> --
+> >> 2.43.0
+> >>
+>
