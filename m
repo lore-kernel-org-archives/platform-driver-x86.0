@@ -1,611 +1,329 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
+Received: from NAM11-CO1-obe.outbound.protection.outlook.com (mail-co1nam11on2083.outbound.protection.outlook.com [40.107.220.83])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D1AEC27D773;
-	Tue,  4 Mar 2025 15:53:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.18
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741103591; cv=none; b=WAktdjpxjvNhSYcqAytHdPkmABLGS6xhvu4ypT4+0gwYYIPWF2PTIBMOMkVWxM+8MESgW6MYKTKaAT/Z40UYUAl2ybcVy8KDMBYBbd3HWYLHeoF20TIXs0uHFNqCIAeB3ULRxHDG+vJYv1QfODLsoBTk/zvhAjd6WE4jSDAHjZ0=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741103591; c=relaxed/simple;
-	bh=IWVHK7brqH+F31MSftGaVK0Otp9zxu8kw3jotDbhL4s=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=sJAVJNEi0xUxxKpfW+5hbQeNyWy7M0k5C28CU/Na+deWC2+930mGTK3XzbtMXEAIel0SExtL1OAYJB2IEq1bgdt/boOat01WBs6ffDjkmKrgeiDijVuMX151RjLD2nACzQuq/M1k8u66s7Lf2ZaQu6skivshJbZVptIrbHXnmXs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=n9uVmiJu; arc=none smtp.client-ip=192.198.163.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C8CF220E6E2
+	for <platform-driver-x86@vger.kernel.org>; Tue,  4 Mar 2025 15:57:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.220.83
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1741103835; cv=fail; b=bN2w0jGk74uQ0y7I+3KDcKxH/xv4rnwBpihocRzYhdmVZ8o0lF8BSWKIaQx+DUSwB4j8Q6Cn4o3XrTmZSYtRIXBcAfqUNPIESIl31nr5SM9WzHo2u7nPcW7lBZ9YjbmTDiOtHgpL1uoyD3/YSvkJBIBlhVoq49EnHPiph/bwByw=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1741103835; c=relaxed/simple;
+	bh=bWtPIldF98BcxvQcS8cPMTS01KgfzK4qbDsvPLI8Z3U=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=KaNvmSjHSIGRk2hXagWlUTDTuqPPpV4MvkvoZSvasI1BNT/wIrWM0k+5cH9vKekjVCBDs56R4ed3t0xxgtBaEk7Jo+0BhGIom3icN1VR0IqSoFnCjrNsY+aAQ8SwwkXI6D90G4dDoBqA76O/RArhC/knNfEK5F4Q24cXKQMzJQA=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=MhYV6g7b; arc=fail smtp.client-ip=40.107.220.83
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="n9uVmiJu"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1741103589; x=1772639589;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=IWVHK7brqH+F31MSftGaVK0Otp9zxu8kw3jotDbhL4s=;
-  b=n9uVmiJujjyhgKDvK+16nEJVsdNpIGCkwpRmsWrdGLcSwazFAfN5SVUf
-   CXsYYARzltxul9vY9DVFnVrTUwE5OPlJju1wOi9YgvyJ+vCOHkdNqh2aU
-   0dk/c+DHuN9qjPfOaZAfynNHDOeAqzPc4Rb+zZuIsaSguWkelcS0s3Jy6
-   ourMLBJLJ2V+m5IlF1Npg9xUb0s3x7kLG3Gja8UvdPKIcx5elS1bmfE+0
-   aWyae+d72qphzqDqKXkXhlU0s+mnH7SoiS7JmwEayEvigM1DswlQLiigg
-   Ligz9MIGOPVP0OgspSaiXlW+cOEqONTxKAlLoIG9Ot/2Vyz96RWiM82q1
-   w==;
-X-CSE-ConnectionGUID: BrQ2M4xwRkStakc3QeD7zA==
-X-CSE-MsgGUID: DO6KrXUCQpy35Px7vjhWbg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11363"; a="41276548"
-X-IronPort-AV: E=Sophos;i="6.14,220,1736841600"; 
-   d="scan'208";a="41276548"
-Received: from orviesa006.jf.intel.com ([10.64.159.146])
-  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Mar 2025 07:53:08 -0800
-X-CSE-ConnectionGUID: LpnK4NlwSjOx6JrdNR3wnQ==
-X-CSE-MsgGUID: u8xB5+TPQUKLU9+nbfeHjQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.14,220,1736841600"; 
-   d="scan'208";a="118405612"
-Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.220])
-  by orviesa006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Mar 2025 07:53:05 -0800
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Tue, 4 Mar 2025 17:53:01 +0200 (EET)
-To: Kurt Borja <kuurtb@gmail.com>
-cc: Armin Wolf <W_Armin@gmx.de>, platform-driver-x86@vger.kernel.org, 
-    Hans de Goede <hdegoede@redhat.com>, Dell.Client.Kernel@dell.com, 
-    LKML <linux-kernel@vger.kernel.org>, Guenter Roeck <linux@roeck-us.net>
-Subject: Re: [PATCH v2 07/10] platform/x86: alienware-wmi-wmax: Add HWMON
- support
-In-Reply-To: <20250225222500.23535-8-kuurtb@gmail.com>
-Message-ID: <a85825d5-7718-93f4-e837-849323ef4387@linux.intel.com>
-References: <20250225222500.23535-1-kuurtb@gmail.com> <20250225222500.23535-8-kuurtb@gmail.com>
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="MhYV6g7b"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=fNp/B7sy57ozip/z2CVuJRguMCVDCDDSIG8q0J8/2rQeiVUzFF/3ZyjumSwahoB8U/twYti9mh/dCZ1ytzTA1OLIjs8gQ5J3L1FsMDXCcBtrbEnlrPXWhhSyOtTEJ0zUgSlFELVNGRpx2jIUDaKC1X/gr3CYjkJtBH6GHQGDe/pR8G4Wx10uZeF0UcK81NgoQEnRZqSo21SLbdqEcnjFHw5C4Jks10hMB5GYw8bTvSo0CbB+60fH3PdlzUgdKdKdMQb00NGY/nxkGAXv8ipCBonxYR4HLqJiGhKr7rji+Eqr3QnHFp8Api+S3BtdjcE4k0+WvrDa6EQ47LELQ9YiKg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=8vIb9pnlc9UuWahQdtLEtzMB+sFbnj9e3Oxe0tQ7vqs=;
+ b=LxGmFtwvEUjRIQmI7achTFNgbWlgA/pPa/yZ/DbQ+/BlRTx+xwYoECzzHZeLu2ZXFQ1ivYbPT2P6PG3PyccypJnQ4/SyXKjazU70ytdQ8FJ27jmRkf0hf1q+F5HRw/fZ3LQ7z212c72lLbiuPen1pVP/MpB1COFyjEz7vzrKxFQk1gbBHiFU/u4wshqShK8tFB/Uja1IEJh3FE8gnC+3EACIUCB85durDLdbt8DT6Hin2XoUf+qF19qHeOOMQBdlkpkuIk5ypyiC7ABAXBZ7EP5xAepTKprkdQRjKC9lDkjQYRpu7H/4Mvq0rNJWLkqkStsaidHvxxaTi2mY7DOekg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=8vIb9pnlc9UuWahQdtLEtzMB+sFbnj9e3Oxe0tQ7vqs=;
+ b=MhYV6g7bxzQEafLnRFxxHe5JLISblq9fNQ+kdqAMf7qjW8UBxYADJol5od3fcRszf6U9o0cx5NknR5zNmUmzmKlI2MJIT4OKFaoY0gljz9MttrQCp+no/lu78hvao834zdJGwJpRH7igrdpcHWSxZZ2+j2N45DGo6vrokxLDx0I=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from BL1PR12MB5176.namprd12.prod.outlook.com (2603:10b6:208:311::19)
+ by PH7PR12MB5974.namprd12.prod.outlook.com (2603:10b6:510:1d9::19) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8489.29; Tue, 4 Mar
+ 2025 15:57:07 +0000
+Received: from BL1PR12MB5176.namprd12.prod.outlook.com
+ ([fe80::ed5b:dd2f:995a:bcf4]) by BL1PR12MB5176.namprd12.prod.outlook.com
+ ([fe80::ed5b:dd2f:995a:bcf4%3]) with mapi id 15.20.8489.028; Tue, 4 Mar 2025
+ 15:57:07 +0000
+Message-ID: <c53faa27-5e6a-4d01-b56d-cf92f4abd96b@amd.com>
+Date: Tue, 4 Mar 2025 21:26:58 +0530
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 2/2] platform/x86/amd/pmf: Update PMF Driver for
+ Compatibility with new PMF-TA
+To: =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Cc: Hans de Goede <hdegoede@redhat.com>, platform-driver-x86@vger.kernel.org,
+ Patil.Reddy@amd.com, mario.limonciello@amd.com
+References: <20250218120625.1718196-1-Shyam-sundar.S-k@amd.com>
+ <20250218120625.1718196-2-Shyam-sundar.S-k@amd.com>
+ <85237940-b9a2-0b19-44de-058a35e2089f@linux.intel.com>
+ <9e8b2f14-6454-4958-8ac9-4f8dfc8745d2@amd.com>
+ <a32a5daf-9719-ba6c-c6a1-6c2e79760b11@linux.intel.com>
+Content-Language: en-US
+From: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
+In-Reply-To: <a32a5daf-9719-ba6c-c6a1-6c2e79760b11@linux.intel.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: TPYP295CA0019.TWNP295.PROD.OUTLOOK.COM
+ (2603:1096:7d0:a::14) To BL1PR12MB5176.namprd12.prod.outlook.com
+ (2603:10b6:208:311::19)
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: BL1PR12MB5176:EE_|PH7PR12MB5974:EE_
+X-MS-Office365-Filtering-Correlation-Id: 5ba54032-87f0-4b1b-5763-08dd5b3536e6
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|366016|1800799024;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?c2wwTXloeGdzZWhLaVlyQW9wN0kvYTZSNmdBdnU5SEdkV1lUMi84T05nNEpR?=
+ =?utf-8?B?eTlMTkw4NXZSWmx0WExRNGlZc084TS94OWNuQjl6S041YnhQbVp5eWFkK0ND?=
+ =?utf-8?B?YVNnSUJydmpOVExtYThYV2xTUnUrOW5NZ2NKdDl2ZzZGY2I4ZlJ2aGhMUWlR?=
+ =?utf-8?B?WHg3Q2lMZ0lyL2ZCbTNvaFB1TFNoN1YyVTM5enpTSkIxSFpxSU5nNnczdGEx?=
+ =?utf-8?B?QjdYZXAyMC9TT1IrWmRtRXNLeHFlcG5pV0xGZGI4bzdIRTNXQnE0dE9yQlI0?=
+ =?utf-8?B?K1dnOWNQMm1GTFRDczlGc2JITTZCdnJuZVcxdmRHaWM5akN6cW03ZWZyNndZ?=
+ =?utf-8?B?Q3dzRlVRbjhBWmpXSzJVczhJbndJM0FISXhxWS9uNVpYUFIrRFpNWlErZFFs?=
+ =?utf-8?B?aHp4Wm1TVmlBTFg0Q25UZUxib05rSDg4SHVtVjdzclhrTlRWZGdpM2VUNVdM?=
+ =?utf-8?B?RUZUU2FvMDFFT2xDK1Z5QmlPdmRrZmllUUtKVkZYZkE1OFVLdE14NGxEcHpZ?=
+ =?utf-8?B?VFFqZ3ZDdXo0NzkzOGNoMjRMVjV5eDRuN1ZrczlKQ3puc0JVc1NDc0tIdUJH?=
+ =?utf-8?B?bFJCYUczekU0WmFXWFFuMWFadEk3UFJRVUNZcWYxWlBZS3dxbkdlbzIzYmlN?=
+ =?utf-8?B?WER2SHZBaHIrbGE2a2I2VXNqd3E4MXEweE54OWdoVEJWdGxQVlh6bFBaNXBs?=
+ =?utf-8?B?UEY1czFqSWN4Z0ZRNXk0T2VWTkIwbC9QM25qcVlWM1haN29mdmNDYWFCb3Z1?=
+ =?utf-8?B?eDY2S3Y3TEZtYmhJNmJ4dGtsOG9JWUF5NXBBQXdJVEJ0SGwyRFBzWnA3MnZs?=
+ =?utf-8?B?dzRqQjdSemdWdkpZTmR0WHFuSHd5M04zSUloZ1d1VmxyenVjZHEzeVJkb2NY?=
+ =?utf-8?B?MjZ6VGJUQ0ZUTFdHM085KzhiaFkyOXVKODh6bTVzdUVtTUpDSzVlZXJ3akhD?=
+ =?utf-8?B?eHA4R2FDVGpaZTNTVy8wYjJyQnd0U2NuKzZxNksySkJaQkRuVUsvNXRUd1Nm?=
+ =?utf-8?B?clQyVnRoZDVvMTNuQ3BtSnEwZEdJeW1randlVjhTMHJIcDZ5MzYvblJvMlMx?=
+ =?utf-8?B?dVdYTmRFcHoxeFY3UjVmQ25qa2ZzZXVzcHdrUEJtZXJhL2drcE1jVEVXN3kx?=
+ =?utf-8?B?ZHprOTQvTXRxSTI1R0tOS2xsRGppUm94V1BSMFVVOEUzTVJkVmhoVlQ0cG5R?=
+ =?utf-8?B?ais1ZjAyMkxaajJnc2JoY0pnZjNFVnVaWHpzbjBvbG1jOVNEWW5PQm9mQ2Rs?=
+ =?utf-8?B?NFF5YzQvR2dOSDNYLytpeFFrbGhtWnVyRG9XWnJ6d0kvV3NWZ2ovTk52RGFB?=
+ =?utf-8?B?TmRaTXIwdXRERWNMam9CWXhBZzdqdXhDZ1UwRTlON3AwaVJoUmhwakozR3E0?=
+ =?utf-8?B?dHdidnFKUUxDdGRUZlJYY0pxb3N5d01JMHZuYVgxSkpwRVQ0bmw5S1VUanRz?=
+ =?utf-8?B?SS91TFovQjFNakw2OFR6SUhzSU9hVnB3MHdGNEhsbWgxdnNUc09VcGpDampq?=
+ =?utf-8?B?ZlRpVjc4L0tJUW01RDJZS2syd2NocEE5bnFwS3JkOXNtdVo1VnEyVzUxRWF4?=
+ =?utf-8?B?SVIrSHh1eGFobW9GNVZKcXYycEhYV1VZK2pwMGF6cGtmRGF3YlNjK0VNVHBa?=
+ =?utf-8?B?NDJubDY1WE9JcS9FS3RvNVlrSW1kNlVjZ0g0T3ZScnp6b2pjNVVaRWV2V2Vj?=
+ =?utf-8?B?YmhLLzk2WkQ3NXJjWTJraUVoZHd2Sm02VDRsWnhKSExxbldCTk1TbmE3ZUEw?=
+ =?utf-8?B?eDA1dXB2a2xlY21qdEcwVzh2K0lNUDFhWGVwSE9Ha2xDRGJiYTNxSGJNamNx?=
+ =?utf-8?B?dnV5dWwwejNyZFBlNFM0V3VpdFFiWE1iRkhSbnpyWlo1UUdJc2xJb21ZanpY?=
+ =?utf-8?Q?rF1HwcMObAW3Z?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BL1PR12MB5176.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(366016)(1800799024);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?MENuZXIybnc2U3ZSMmxUSjF6ZC83NEdSWlVSK2h2NnMwTDRseS9FaGU2T1lx?=
+ =?utf-8?B?bEtJRDRhNndZY0ZGMlJQb3lGVEMzREFCOE5EanU0Y2xlT0tPRVhzaWdCNEJE?=
+ =?utf-8?B?eDE4dUdsQkhYMmhpbVJnUmpXNGp1dVpJc05qUGNNblZ3ZHpCUTZjSG9SeXBo?=
+ =?utf-8?B?cGhnMGtCcWMxajhnRVdkMkh3M0VYeUgycVZJWlVGOG1SaG5oem1PS1JrUkFV?=
+ =?utf-8?B?TVVueE85RmxlUS9XWVNSRzBma0dRM1pLamg1b0lzNk5udHZPRVpRTHBIb0F4?=
+ =?utf-8?B?S1RrbFVJV2RqcTN1TnlmV3hBaTY5UnZIU1FobFRsR0lGOFJEeXA3OEh6QmJQ?=
+ =?utf-8?B?b21wNHN1bGJaSGR6YWRrWk1LZDduSkUrS0F1c2FYRlUycEdSMmVTZEUxSE05?=
+ =?utf-8?B?OU9TYTdrd1lSeEdjdXAxWi9LWHdxTzJTYjkrZHRva0VSNTBHYk1oc28zSjZM?=
+ =?utf-8?B?OXRkdldUa0cxODl2Y21PRkVMNnBvdjZwSlg4YmFpei9Bd0IwNGNFMS9JMlVm?=
+ =?utf-8?B?ZEVJak45dFdxbjg5anBwRnFEblV0d2I0Mi94Z2U0YTAyN2wwdUlZMS9CaDV6?=
+ =?utf-8?B?QWQwbi9lT21WU2tmSnU3cVZTZWdTUFVDVUJvSVNBQUorRHNyR3FCY01iMkE3?=
+ =?utf-8?B?TnpzN0ZoWEhLaTFGNHJ6a3Rtdm1nQ055WjZqRm4xUHkyeWg4aWZCUiszcHlo?=
+ =?utf-8?B?NXJJOXBPNGVwNUx6YzRuQjJzZ3d3K0hpd0FUaVp3QjJBVzVyczI2Qm1iSHNR?=
+ =?utf-8?B?NVZRVFhsS2FNL0ltek1NRjhhSEVTT202ZkVMOUFVdU9RdUZ3RFRhMlhYK04r?=
+ =?utf-8?B?N3liZ0FGWTlRZGFsVlN2SDBTVU54UmVMWVByWXVuMjN6VmlkRVcvNHlhdzBy?=
+ =?utf-8?B?eFVSYVdlWkUxdUNKL3N5My82VGZDUUlKMEtNN2VhR0JCSlJFU090cEF2T2lE?=
+ =?utf-8?B?T0Z1QWtqZXlrWDlEa1Fwc09tQ2VVVjRDR1lQWDZXVHhIRVNXblg4akRtT25E?=
+ =?utf-8?B?YWQ4L3B3UlFQVUhFUUIyS2JXdnFlRGQ4NDI3Y3NxYWNQbnI0RC84cm9SdDVX?=
+ =?utf-8?B?cnB1cU45QVJxbXVlV09pZzN2SXF3QmJBZ1Rla0ZHc3hEZUxOMk9tYXhWVGg4?=
+ =?utf-8?B?RHNIUzFqcUtpT1lqUlYzMkFaLzZ3R3Qxekdkc0dmK1Q5VFpsaFFOV09Ob2Zo?=
+ =?utf-8?B?SFdOM2hLcVBSa0t4SHhRYm9xV3libnIrT2MybjJDd3ljdGJaeEFBbXZFcytS?=
+ =?utf-8?B?anhlWG1ncHdEN1ZWalVuaTM0RXhzOFhCQkFqb0tVakJvVDFJOU5IdFpxRkhZ?=
+ =?utf-8?B?bWo0VEtWcEZRbWdVZjc2Mmswb2o5MGV0Q05ZSlR3cDRNbkFlbGZOVzhhaEZ1?=
+ =?utf-8?B?RCszUTNEQ2tudzJicWhPT0NEVGd3dXgvdjNDZFpWK3Y4cG56QVpvQkE3MDZy?=
+ =?utf-8?B?dTU1ODVOOTh3TVlJeUZBR3kzRVZRZGxEL3pCdjdrUWdUWlV4UVk0OGNDYndQ?=
+ =?utf-8?B?RUtsRnpBejZLSlQ5M0V4V2dtRnF2WWU5WGc4RDFKd1JWd1p6QWFkWUlhT1hu?=
+ =?utf-8?B?Qm9vSk5kZ1VraVcrZWZ5T0dKSVpNd0R0bStxK2lHOTE1MWVUQURKTHZiOWJ4?=
+ =?utf-8?B?dzh1Y0x6MzQrQXdWeU5yWVZVMTRrc2dYc0QxQjU3L1p1Yko2b28yblR3N3c4?=
+ =?utf-8?B?amlMWDUwL3JDeUlMQ2xjcEJWd25Ba0RMSlM2WW1UU0ZoQm1EVXpBZ29TRnRi?=
+ =?utf-8?B?czRSUnJ6UWRpNXprSEIveFdKU24wbks1dFE3cklmbGFLOURFckVaTTBQVmhh?=
+ =?utf-8?B?TUlNTkZLQnpqb0tyUU02UHVKM3o4R0J5eFM2S0VabHhvL0tYWmExUkJES055?=
+ =?utf-8?B?dEJlRW1DZ01BTFdwQm9BU2NRUG5nbnhrWDZCaUJzTm1ubmoxeURXNktaNnNr?=
+ =?utf-8?B?OUhTYzdtcXBlYW9XUkZRUWdGOENOVXpKdkJhRnFzYTlnVktoN2dHRkpjd3Qv?=
+ =?utf-8?B?cHZZVVVvNmpDTlFneDZXUCt2ZDczNlEwdmQyNzllLy9YbGRqdE93Q2tZV1lK?=
+ =?utf-8?B?TDM3Wk5lR3F0WlhkTHJGZmEzVHJwV1FIMVpBSEZwYy9BQ25nSEwwTlFsbWw3?=
+ =?utf-8?Q?Cc6TH/x351XIE3kzhkxKjJdkR?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 5ba54032-87f0-4b1b-5763-08dd5b3536e6
+X-MS-Exchange-CrossTenant-AuthSource: BL1PR12MB5176.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 04 Mar 2025 15:57:07.2356
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 0i7iF3H6IQTYXZPcf5dvNVTdsbLVv7Vlr7Aqc4m43iFWABTgOny4LGqHqpvTmpt8neDaqiB04r9ZI0QE6c0uIA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH7PR12MB5974
 
-On Tue, 25 Feb 2025, Kurt Borja wrote:
 
-> All models with the "AWCC" WMAX device support monitoring fan speed and
-> temperature sensors. Expose this feature through the HWMON interface.
+
+On 3/4/2025 21:02, Ilpo Järvinen wrote:
+> On Tue, 4 Mar 2025, Shyam Sundar S K wrote:
+>> On 3/4/2025 19:16, Ilpo Järvinen wrote:
+>>> On Tue, 18 Feb 2025, Shyam Sundar S K wrote:
+>>>
+>>>> The PMF driver allocates a shared memory buffer using
+>>>> tee_shm_alloc_kernel_buf() for communication with the PMF-TA.
+>>>>
+>>>> The latest PMF-TA version introduces new structures with OEM debug
+>>>> information and additional policy input conditions for evaluating the
+>>>> policy binary. Consequently, the shared memory size must be increased to
+>>>> ensure compatibility between the PMF driver and the updated PMF-TA.
+>>>>
+>>>> To do so, introduce the new PMF-TA UUID and update the PMF shared memory
+>>>> configuration to ensure compatibility with the latest PMF-TA version.
+>>>> Additionally, export the TA UUID.
+>>>>
+>>>> These updates will result in modifications to the prototypes of
+>>>> amd_pmf_tee_init() and amd_pmf_ta_open_session().
+>>>>
+>>>> Link: https://lore.kernel.org/all/55ac865f-b1c7-fa81-51c4-d211c7963e7e@linux.intel.com/
+>>>> Co-developed-by: Patil Rajesh Reddy <Patil.Reddy@amd.com>
+>>>> Signed-off-by: Patil Rajesh Reddy <Patil.Reddy@amd.com>
+>>>> Signed-off-by: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
+>>>> ---
+>>>>  drivers/platform/x86/amd/pmf/pmf.h    |  5 ++-
+>>>>  drivers/platform/x86/amd/pmf/tee-if.c | 50 +++++++++++++++++++--------
+>>>>  2 files changed, 40 insertions(+), 15 deletions(-)
+>>>>
+>>>> diff --git a/drivers/platform/x86/amd/pmf/pmf.h b/drivers/platform/x86/amd/pmf/pmf.h
+>>>> index 41b2b91b8fdc..e6bdee68ccf3 100644
+>>>> --- a/drivers/platform/x86/amd/pmf/pmf.h
+>>>> +++ b/drivers/platform/x86/amd/pmf/pmf.h
+>>>> @@ -106,9 +106,12 @@ struct cookie_header {
+>>>>  #define PMF_TA_IF_VERSION_MAJOR				1
+>>>>  #define TA_PMF_ACTION_MAX					32
+>>>>  #define TA_PMF_UNDO_MAX						8
+>>>> -#define TA_OUTPUT_RESERVED_MEM				906
+>>>> +#define TA_OUTPUT_RESERVED_MEM				922
+>>>>  #define MAX_OPERATION_PARAMS					4
+>>>>  
+>>>> +#define TA_ERROR_CRYPTO_INVALID_PARAM				0x20002
+>>>> +#define TA_ERROR_CRYPTO_BIN_TOO_LARGE				0x2000d
+>>>> +
+>>>>  #define PMF_IF_V1		1
+>>>>  #define PMF_IF_V2		2
+>>>>  
+>>>> diff --git a/drivers/platform/x86/amd/pmf/tee-if.c b/drivers/platform/x86/amd/pmf/tee-if.c
+>>>> index b404764550c4..a81c661abd7e 100644
+>>>> --- a/drivers/platform/x86/amd/pmf/tee-if.c
+>>>> +++ b/drivers/platform/x86/amd/pmf/tee-if.c
+>>>> @@ -27,8 +27,11 @@ module_param(pb_side_load, bool, 0444);
+>>>>  MODULE_PARM_DESC(pb_side_load, "Sideload policy binaries debug policy failures");
+>>>>  #endif
+>>>>  
+>>>> -static const uuid_t amd_pmf_ta_uuid = UUID_INIT(0x6fd93b77, 0x3fb8, 0x524d,
+>>>> -						0xb1, 0x2d, 0xc5, 0x29, 0xb1, 0x3d, 0x85, 0x43);
+>>>> +static const uuid_t amd_pmf_ta_uuid[] = { UUID_INIT(0xd9b39bf2, 0x66bd, 0x4154, 0xaf, 0xb8, 0x8a,
+>>>> +						    0xcc, 0x2b, 0x2b, 0x60, 0xd6),
+>>>> +					  UUID_INIT(0x6fd93b77, 0x3fb8, 0x524d, 0xb1, 0x2d, 0xc5,
+>>>> +						    0x29, 0xb1, 0x3d, 0x85, 0x43),
+>>>> +					};
+>>>>  
+>>>>  static const char *amd_pmf_uevent_as_str(unsigned int state)
+>>>>  {
+>>>> @@ -321,7 +324,7 @@ static int amd_pmf_start_policy_engine(struct amd_pmf_dev *dev)
+>>>>  		 */
+>>>>  		schedule_delayed_work(&dev->pb_work, msecs_to_jiffies(pb_actions_ms * 3));
+>>>>  	} else {
+>>>> -		dev_err(dev->dev, "ta invoke cmd init failed err: %x\n", res);
+>>>> +		dev_dbg(dev->dev, "ta invoke cmd init failed err: %x\n", res);
+>>>>  		dev->smart_pc_enabled = false;
+>>>>  		return res;
+>>>>  	}
+>>>> @@ -390,12 +393,12 @@ static int amd_pmf_amdtee_ta_match(struct tee_ioctl_version_data *ver, const voi
+>>>>  	return ver->impl_id == TEE_IMPL_ID_AMDTEE;
+>>>>  }
+>>>>  
+>>>> -static int amd_pmf_ta_open_session(struct tee_context *ctx, u32 *id)
+>>>> +static int amd_pmf_ta_open_session(struct tee_context *ctx, u32 *id, int index)
+>>>>  {
+>>>>  	struct tee_ioctl_open_session_arg sess_arg = {};
+>>>>  	int rc;
+>>>>  
+>>>> -	export_uuid(sess_arg.uuid, &amd_pmf_ta_uuid);
+>>>> +	export_uuid(sess_arg.uuid, &amd_pmf_ta_uuid[index]);
+>>>>  	sess_arg.clnt_login = TEE_IOCTL_LOGIN_PUBLIC;
+>>>>  	sess_arg.num_params = 0;
+>>>>  
+>>>> @@ -434,7 +437,7 @@ static int amd_pmf_register_input_device(struct amd_pmf_dev *dev)
+>>>>  	return 0;
+>>>>  }
+>>>>  
+>>>> -static int amd_pmf_tee_init(struct amd_pmf_dev *dev)
+>>>> +static int amd_pmf_tee_init(struct amd_pmf_dev *dev, int index)
+>>>>  {
+>>>>  	u32 size;
+>>>>  	int ret;
+>>>> @@ -445,7 +448,7 @@ static int amd_pmf_tee_init(struct amd_pmf_dev *dev)
+>>>>  		return PTR_ERR(dev->tee_ctx);
+>>>>  	}
+>>>>  
+>>>> -	ret = amd_pmf_ta_open_session(dev->tee_ctx, &dev->session_id);
+>>>> +	ret = amd_pmf_ta_open_session(dev->tee_ctx, &dev->session_id, index);
+>>>>  	if (ret) {
+>>>>  		dev_err(dev->dev, "Failed to open TA session (%d)\n", ret);
+>>>>  		ret = -EINVAL;
+>>>> @@ -489,7 +492,8 @@ static void amd_pmf_tee_deinit(struct amd_pmf_dev *dev)
+>>>>  
+>>>>  int amd_pmf_init_smart_pc(struct amd_pmf_dev *dev)
+>>>>  {
+>>>> -	int ret;
+>>>> +	bool status;
+>>>> +	int ret, i;
+>>>>  
+>>>>  	ret = apmf_check_smart_pc(dev);
+>>>>  	if (ret) {
+>>>> @@ -502,10 +506,6 @@ int amd_pmf_init_smart_pc(struct amd_pmf_dev *dev)
+>>>>  		return -ENODEV;
+>>>>  	}
+>>>>  
+>>>> -	ret = amd_pmf_tee_init(dev);
+>>>> -	if (ret)
+>>>> -		return ret;
+>>>> -
+>>>>  	INIT_DELAYED_WORK(&dev->pb_work, amd_pmf_invoke_cmd);
+>>>>  
+>>>>  	ret = amd_pmf_set_dram_addr(dev, true);
+>>>> @@ -534,8 +534,30 @@ int amd_pmf_init_smart_pc(struct amd_pmf_dev *dev)
+>>>>  		goto error;
+>>>>  	}
+>>>>  
+>>>> -	ret = amd_pmf_start_policy_engine(dev);
+>>>> -	if (ret)
+>>>> +	for (i = 0; i < ARRAY_SIZE(amd_pmf_ta_uuid); i++) {
+>>>> +		ret = amd_pmf_tee_init(dev, i);
+>>>
+>>> Any reason why you just pass the uuid pointer as it seems more obvious as 
+>>> a parameter than something as vague as "index"?
+>>>
+>>
+>> The objective is to select the appropriate Trusted Application (TA)
+>> binary from the /lib/firmware/amdtee/ directory. This selection is
+>> determined by the UUIDs listed in the amd_pmf_ta_uuid[].
+>>
+>> Typically, the most recent TA version should be located at the first
+>> index, with the next most recent version at the second index, and so on.
+>>
+>> All these had to be done so that we don't end up in the version
+>> compatibility issues we had encountered last time.
 > 
-> Sensor readings are cached for 1 second before refreshing them to
-> mitigate the performance cost of calling WMI methods.
-> 
-> Cc: Guenter Roeck <linux@roeck-us.net>
-> Signed-off-by: Kurt Borja <kuurtb@gmail.com>
-> ---
->  drivers/platform/x86/dell/Kconfig             |   1 +
->  .../platform/x86/dell/alienware-wmi-wmax.c    | 403 ++++++++++++++++++
->  2 files changed, 404 insertions(+)
-> 
-> diff --git a/drivers/platform/x86/dell/Kconfig b/drivers/platform/x86/dell/Kconfig
-> index f8a0dffcaab7..85a57c01aaad 100644
-> --- a/drivers/platform/x86/dell/Kconfig
-> +++ b/drivers/platform/x86/dell/Kconfig
-> @@ -43,6 +43,7 @@ config ALIENWARE_WMI_WMAX
->  	bool "Alienware WMAX WMI device driver"
->  	default y
->  	depends on ALIENWARE_WMI
-> +	depends on HWMON
->  	select ACPI_PLATFORM_PROFILE
->  	help
->  	 Alienware WMI driver with AlienFX LED, HDMI, amplifier, deep sleep and
-> diff --git a/drivers/platform/x86/dell/alienware-wmi-wmax.c b/drivers/platform/x86/dell/alienware-wmi-wmax.c
-> index bbe87f91fcb6..818023a5b205 100644
-> --- a/drivers/platform/x86/dell/alienware-wmi-wmax.c
-> +++ b/drivers/platform/x86/dell/alienware-wmi-wmax.c
-> @@ -9,10 +9,13 @@
->  #define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
->  
->  #include <linux/bitfield.h>
-> +#include <linux/bitmap.h>
->  #include <linux/bits.h>
->  #include <linux/dmi.h>
-> +#include <linux/hwmon.h>
->  #include <linux/moduleparam.h>
->  #include <linux/platform_profile.h>
-> +#include <linux/units.h>
->  #include <linux/wmi.h>
->  #include "alienware-wmi.h"
->  
-> @@ -25,6 +28,7 @@
->  #define WMAX_METHOD_BRIGHTNESS			0x3
->  #define WMAX_METHOD_ZONE_CONTROL		0x4
->  
-> +#define AWCC_METHOD_GET_FAN_SENSORS		0x13
->  #define AWCC_METHOD_THERMAL_INFORMATION		0x14
->  #define AWCC_METHOD_THERMAL_CONTROL		0x15
->  #define AWCC_METHOD_GAME_SHIFT_STATUS		0x25
-> @@ -38,6 +42,10 @@
->  /* Arbitrary limit based on supported models */
->  #define AWCC_MAX_RES_COUNT			16
->  
-> +static bool force_hwmon;
-> +module_param_unsafe(force_hwmon, bool, 0);
-> +MODULE_PARM_DESC(force_hwmon, "Force probing for HWMON support without checking if the WMI backend is available");
-> +
->  static bool force_platform_profile;
->  module_param_unsafe(force_platform_profile, bool, 0);
->  MODULE_PARM_DESC(force_platform_profile, "Forces auto-detecting thermal profiles without checking if WMI thermal backend is available");
-> @@ -47,16 +55,19 @@ module_param_unsafe(force_gmode, bool, 0);
->  MODULE_PARM_DESC(force_gmode, "Forces G-Mode when performance profile is selected");
->  
->  struct awcc_quirks {
-> +	bool hwmon;
->  	bool pprof;
->  	bool gmode;
->  };
->  
->  static struct awcc_quirks g_series_quirks = {
-> +	.hwmon = true,
->  	.pprof = true,
->  	.gmode = true,
->  };
->  
->  static struct awcc_quirks generic_quirks = {
-> +	.hwmon = true,
->  	.pprof = true,
->  	.gmode = false,
->  };
-> @@ -154,9 +165,18 @@ static const struct dmi_system_id awcc_dmi_table[] __initconst = {
->  	},
->  };
->  
-> +enum AWCC_GET_FAN_SENSORS_OPERATIONS {
-> +	AWCC_OP_GET_TOTAL_FAN_TEMPS		= 0x01,
-> +	AWCC_OP_GET_FAN_TEMP_ID			= 0x02,
-> +};
-> +
->  enum AWCC_THERMAL_INFORMATION_OPERATIONS {
->  	AWCC_OP_GET_SYSTEM_DESCRIPTION		= 0x02,
->  	AWCC_OP_GET_RESOURCE_ID			= 0x03,
-> +	AWCC_OP_GET_TEMPERATURE			= 0x04,
-> +	AWCC_OP_GET_FAN_RPM			= 0x05,
-> +	AWCC_OP_GET_FAN_MIN_RPM			= 0x08,
-> +	AWCC_OP_GET_FAN_MAX_RPM			= 0x09,
->  	AWCC_OP_GET_CURRENT_PROFILE		= 0x0B,
->  };
->  
-> @@ -179,6 +199,12 @@ enum AWCC_SPECIAL_THERMAL_CODES {
->  	AWCC_SPECIAL_PROFILE_GMODE		= 0xAB,
->  };
->  
-> +enum AWCC_TEMP_SENSOR_TYPES {
-> +	AWCC_TEMP_SENSOR_CPU			= 0x01,
-> +	AWCC_TEMP_SENSOR_GPU			= 0x06,
-> +	AWCC_TEMP_SENSOR_LAST
-> +};
-> +
->  enum awcc_thermal_profile {
->  	AWCC_PROFILE_USTT_BALANCED,
->  	AWCC_PROFILE_USTT_BALANCED_PERFORMANCE,
-> @@ -215,6 +241,15 @@ struct wmax_u32_args {
->  	u8 arg3;
->  } __packed;
->  
-> +struct awcc_fan_data {
-> +	unsigned long *related_temps;
-> +	unsigned long *auto_channels_temp;
-> +	u32 total_temps;
-> +	u32 min_rpm;
-> +	u32 max_rpm;
-> +	u8 id;
-> +};
-> +
->  struct awcc_priv {
->  	struct wmi_device *wdev;
->  	union {
-> @@ -230,6 +265,11 @@ struct awcc_priv {
->  
->  	struct device *ppdev;
->  	u8 supported_profiles[PLATFORM_PROFILE_LAST];
-> +
-> +	struct device *hwdev;
-> +	struct awcc_fan_data **fan_data;
-> +	unsigned int temp_sensors_size;
-> +	unsigned long *temp_sensors;
->  };
->  
->  static const enum platform_profile_option awcc_mode_to_platform_profile[AWCC_PROFILE_LAST] = {
-> @@ -494,6 +534,19 @@ static int __awcc_wmi_command(struct wmi_device *wdev, u32 method_id,
->  	return 0;
->  }
->  
-> +static inline int awcc_get_fan_sensors(struct wmi_device *wdev, u8 operation,
-> +				       u8 fan_id, u8 index, u32 *out)
-> +{
-> +	struct wmax_u32_args args = {
-> +		.operation = operation,
-> +		.arg1 = fan_id,
-> +		.arg2 = index,
-> +		.arg3 = 0,
-> +	};
-> +
-> +	return __awcc_wmi_command(wdev, AWCC_METHOD_GET_FAN_SENSORS, &args, out);
-> +}
-> +
->  static inline int awcc_thermal_information(struct wmi_device *wdev, u8 operation,
->  					   u8 arg, u32 *out)
->  {
-> @@ -564,6 +617,343 @@ static inline int awcc_op_get_resource_id(struct wmi_device *wdev, u8 index, u32
->  	return __awcc_wmi_command(wdev, AWCC_METHOD_THERMAL_INFORMATION, &args, out);
->  }
->  
-> +/*
-> + * HWMON
-> + *  - Provides temperature and fan speed monitoring as well as manual fan
-> + *    control
-> + */
-> +static umode_t awcc_hwmon_is_visible(const void *drvdata, enum hwmon_sensor_types type,
-> +				     u32 attr, int channel)
-> +{
-> +	const struct awcc_priv *priv = drvdata;
-> +
-> +	switch (type) {
-> +	case hwmon_temp:
-> +		if (channel < priv->temp_count)
-> +			return 0444;
-> +
-> +		break;
+> I'm sorry, my editing messed the meaning of that comment up (I forgot to 
+> add the "not" word there). I only meant that you could pass uuid pointer instead
+> of the index.
 
-IMO, these could be written as:
-		return channel < priv->temp_count ? 0444 : 0;
+OK. I can respin, just to make sure are you expecting this?
 
-> +	case hwmon_fan:
-> +		if (channel < priv->fan_count)
-> +			return 0444;
-> +
-> +		break;
-> +	case hwmon_pwm:
-> +		if (channel < priv->fan_count)
-> +			return 0444;
-> +
-> +		break;
-> +	default:
-> +		break;
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +static int awcc_hwmon_read(struct device *dev, enum hwmon_sensor_types type,
-> +			   u32 attr, int channel, long *val)
-> +{
-> +	struct awcc_priv *priv = dev_get_drvdata(dev);
-> +	struct awcc_fan_data *fan;
-> +	u32 state;
-> +	int ret;
-> +	u8 temp;
-> +
-> +	switch (type) {
-> +	case hwmon_temp:
-> +		temp = find_nth_bit(priv->temp_sensors, U8_MAX, channel);
-> +		if (temp >= U8_MAX)
+//ret = amd_pmf_tee_init(dev, i);
+ret = amd_pmf_tee_init(dev, &amd_pmf_ta_uuid[i]);
 
-It cannot be larger than as its type is u8??
+so that I propogate the uuid to the export_guid() rather than the index?
 
-> +			return -ENXIO;
-> +
-> +		switch (attr) {
-> +		case hwmon_temp_input:
-> +			ret = awcc_thermal_information(priv->wdev, AWCC_OP_GET_TEMPERATURE,
-> +						       temp, &state);
-> +			if (ret)
-> +				return ret;
-> +
-> +			*val = state * MILLIDEGREE_PER_DEGREE;
-> +			break;
-> +		default:
-> +			return -EOPNOTSUPP;
-> +		}
-> +
-> +		break;
-> +	case hwmon_fan:
-> +		fan = priv->fan_data[channel];
-> +
-> +		switch (attr) {
-> +		case hwmon_fan_input:
-> +			ret = awcc_thermal_information(priv->wdev, AWCC_OP_GET_FAN_RPM,
-> +						       fan->id, &state);
-> +			if (ret)
-> +				return ret;
-> +
-> +			*val = state;
-> +			break;
-> +		case hwmon_fan_min:
-> +			*val = fan->min_rpm;
-> +			break;
-> +		case hwmon_fan_max:
-> +			*val = fan->max_rpm;
-> +			break;
-> +		default:
-> +			return -EOPNOTSUPP;
-> +		}
-> +
-> +		break;
-> +	case hwmon_pwm:
-> +		fan = priv->fan_data[channel];
-> +
-> +		bitmap_copy(val, fan->auto_channels_temp, BITS_PER_LONG);
-> +		break;
-> +	default:
-> +		return -EOPNOTSUPP;
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +static int awcc_hwmon_read_string(struct device *dev, enum hwmon_sensor_types type,
-> +				  u32 attr, int channel, const char **str)
-> +{
-> +	struct awcc_priv *priv = dev_get_drvdata(dev);
-> +	struct awcc_fan_data *fan;
-> +	u8 temp;
-> +
-> +	switch (type) {
-> +	case hwmon_temp:
-> +		temp = find_nth_bit(priv->temp_sensors, U8_MAX, channel);
-> +		if (temp >= U8_MAX)
-> +			return -ENXIO;
-> +
-> +		switch (temp) {
-> +		case AWCC_TEMP_SENSOR_CPU:
-> +			*str = "CPU";
-> +			break;
-> +		case AWCC_TEMP_SENSOR_GPU:
-> +			*str = "GPU";
-> +			break;
-> +		default:
-> +			*str = "Unknown";
-> +			break;
-> +		}
-> +
-> +		break;
-> +	case hwmon_fan:
-> +		fan = priv->fan_data[channel];
-> +
-> +		switch (fan->total_temps) {
-> +		case 0:
-> +			*str = "Independent Fan";
-> +			break;
-> +		case 1:
-> +			temp = find_first_bit(fan->related_temps, U8_MAX);
-> +
-> +			switch (temp) {
-> +			case AWCC_TEMP_SENSOR_CPU:
-> +				*str = "Processor Fan";
-> +				break;
-> +			case AWCC_TEMP_SENSOR_GPU:
-> +				*str = "Video Fan";
-> +				break;
-> +			default:
-> +				*str = "Unknown Fan";
-> +				break;
-> +			}
-> +
-> +			break;
-> +		default:
-> +			*str = "Shared Fan";
-> +			break;
-> +		}
-> +
-> +		break;
-> +	default:
-> +		return -EOPNOTSUPP;
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +static const struct hwmon_ops awcc_hwmon_ops = {
-> +	.is_visible = awcc_hwmon_is_visible,
-> +	.read = awcc_hwmon_read,
-> +	.read_string = awcc_hwmon_read_string,
-> +};
-> +
-> +static const struct hwmon_channel_info * const awcc_hwmon_info[] = {
-> +	HWMON_CHANNEL_INFO(temp,
-> +			   HWMON_T_LABEL | HWMON_T_INPUT,
-> +			   HWMON_T_LABEL | HWMON_T_INPUT,
-> +			   HWMON_T_LABEL | HWMON_T_INPUT,
-> +			   HWMON_T_LABEL | HWMON_T_INPUT,
-> +			   HWMON_T_LABEL | HWMON_T_INPUT,
-> +			   HWMON_T_LABEL | HWMON_T_INPUT
-> +			   ),
-> +	HWMON_CHANNEL_INFO(fan,
-> +			   HWMON_F_LABEL | HWMON_F_INPUT | HWMON_F_MIN | HWMON_F_MAX,
-> +			   HWMON_F_LABEL | HWMON_F_INPUT | HWMON_F_MIN | HWMON_F_MAX,
-> +			   HWMON_F_LABEL | HWMON_F_INPUT | HWMON_F_MIN | HWMON_F_MAX,
-> +			   HWMON_F_LABEL | HWMON_F_INPUT | HWMON_F_MIN | HWMON_F_MAX,
-> +			   HWMON_F_LABEL | HWMON_F_INPUT | HWMON_F_MIN | HWMON_F_MAX,
-> +			   HWMON_F_LABEL | HWMON_F_INPUT | HWMON_F_MIN | HWMON_F_MAX
-> +			   ),
-> +	HWMON_CHANNEL_INFO(pwm,
-> +			   HWMON_PWM_AUTO_CHANNELS_TEMP,
-> +			   HWMON_PWM_AUTO_CHANNELS_TEMP,
-> +			   HWMON_PWM_AUTO_CHANNELS_TEMP,
-> +			   HWMON_PWM_AUTO_CHANNELS_TEMP,
-> +			   HWMON_PWM_AUTO_CHANNELS_TEMP,
-> +			   HWMON_PWM_AUTO_CHANNELS_TEMP
-> +			   ),
-> +	NULL
-> +};
-> +
-> +static const struct hwmon_chip_info awcc_hwmon_chip_info = {
-> +	.ops = &awcc_hwmon_ops,
-> +	.info = awcc_hwmon_info,
-> +};
-> +
-> +static int awcc_hwmon_temps_init(struct wmi_device *wdev)
-> +{
-> +	struct awcc_priv *priv = dev_get_drvdata(&wdev->dev);
-> +	unsigned long temp_sensors[BITS_TO_LONGS(U8_MAX)];
-> +	unsigned int i, max_sensor_id = 0;
-> +	int ret;
-> +	u32 id;
-> +
-> +	for (i = 0; i < priv->temp_count; i++) {
-> +		/*
-> +		 * Temperature sensors IDs are listed after the fan IDs at
-> +		 * offset `fan_count`
-> +		 */
-> +		ret = awcc_op_get_resource_id(wdev, i + priv->fan_count, &id);
-> +		if (ret)
-> +			return ret;
-> +
-> +		id = FIELD_GET(AWCC_RESOURCE_ID_MASK, id);
-> +		if (id > max_sensor_id)
-> +			max_sensor_id = id;
-> +
-> +		ret = __test_and_set_bit(id, temp_sensors);
-> +		if (ret)
-> +			dev_warn(&wdev->dev, "Sensor ID at index %u is duplicated\n", i);
-> +	}
-> +
-> +	/*
-> +	 * We prefer to allocate the bitmap dynamically because usually temp IDs
-> +	 * are small (< 0x30) and only one UL is needed to store it, but there
-> +	 * may be unknown devices that break this rule
-> +	 */
-> +	priv->temp_sensors_size = max_sensor_id + 1;
-> +	priv->temp_sensors = devm_bitmap_zalloc(&wdev->dev, priv->temp_sensors_size,
-> +						GFP_KERNEL);
-> +	if (!priv->temp_sensors)
-> +		return -ENOMEM;
-> +
-> +	bitmap_copy(priv->temp_sensors, temp_sensors, priv->temp_sensors_size);
-> +
-> +	return 0;
-> +}
-> +
-> +static int awcc_hwmon_fans_init(struct wmi_device *wdev)
-> +{
-> +	struct awcc_priv *priv = dev_get_drvdata(&wdev->dev);
-> +	u32 id, min_rpm, max_rpm, total_fan_temps, temp_id;
-> +	unsigned long gather[BITS_TO_LONGS(U8_MAX)];
-> +	struct awcc_fan_data *fan_data;
-> +	unsigned int i, j;
-> +	int ret;
-> +
-> +	for (i = 0; i < priv->fan_count; i++) {
-> +		fan_data = devm_kzalloc(&wdev->dev, sizeof(*fan_data), GFP_KERNEL);
-> +		if (!fan_data)
-> +			return -ENOMEM;
-> +
-> +		fan_data->related_temps = devm_bitmap_zalloc(&wdev->dev,
-> +							     priv->temp_sensors_size,
-> +							     GFP_KERNEL);
-> +		if (!priv->temp_sensors)
-> +			return -ENOMEM;
-> +
-> +		fan_data->auto_channels_temp = devm_bitmap_zalloc(&wdev->dev,
-> +								  priv->temp_count,
-> +								  GFP_KERNEL);
-> +		if (!priv->temp_sensors)
-> +			return -ENOMEM;
-> +
-> +		/*
-> +		 * Fan IDs are listed first at offset 0
-> +		 */
-> +		ret = awcc_op_get_resource_id(wdev, i, &id);
-> +		if (ret)
-> +			return ret;
-> +		id = FIELD_GET(AWCC_RESOURCE_ID_MASK, id);
-> +
-> +		ret = awcc_thermal_information(wdev, AWCC_OP_GET_FAN_MIN_RPM, id,
-> +					       &min_rpm);
-> +		if (ret)
-> +			return ret;
-> +
-> +		ret = awcc_thermal_information(wdev, AWCC_OP_GET_FAN_MAX_RPM, id,
-> +					       &max_rpm);
-> +		if (ret)
-> +			return ret;
-> +
-> +		ret = awcc_get_fan_sensors(wdev, AWCC_OP_GET_TOTAL_FAN_TEMPS, id,
-> +					   0, &total_fan_temps);
-> +		if (ret)
-> +			return ret;
-> +
-> +		for (j = 0; j < total_fan_temps; j++) {
-> +			ret = awcc_get_fan_sensors(wdev, AWCC_OP_GET_FAN_TEMP_ID,
-> +						   id, j, &temp_id);
-> +			if (ret)
-> +				break;
-> +
-> +			temp_id = FIELD_GET(AWCC_RESOURCE_ID_MASK, temp_id);
-> +			if (temp_id < priv->temp_sensors_size)
-> +				__set_bit(temp_id, fan_data->related_temps);
-> +		}
-> +
-> +		fan_data->id = id;
-> +		fan_data->min_rpm = min_rpm;
-> +		fan_data->max_rpm = max_rpm;
-> +		fan_data->total_temps = total_fan_temps;
-> +		bitmap_gather(gather, fan_data->related_temps, priv->temp_sensors,
-> +			      priv->temp_sensors_size);
-> +		bitmap_copy(fan_data->auto_channels_temp, gather, priv->temp_count);
-> +		priv->fan_data[i] = fan_data;
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +static int awcc_hwmon_init(struct wmi_device *wdev)
-> +{
-> +	struct awcc_priv *priv = dev_get_drvdata(&wdev->dev);
-> +	int ret;
-> +
-> +	priv->fan_data = devm_kcalloc(&wdev->dev, priv->fan_count,
-> +				      sizeof(*priv->fan_data), GFP_KERNEL);
-> +	if (!priv->fan_data)
-> +		return -ENOMEM;
-> +
-> +	ret = awcc_hwmon_temps_init(wdev);
-> +	if (ret)
-> +		return ret;
-> +
-> +	ret = awcc_hwmon_fans_init(wdev);
-> +	if (ret)
-> +		return ret;
-> +
-> +	priv->hwdev = devm_hwmon_device_register_with_info(&wdev->dev, "alienware_wmi", priv,
-> +							   &awcc_hwmon_chip_info, NULL);
-> +
-> +	return PTR_ERR_OR_ZERO(priv->hwdev);
-> +}
-> +
->  /*
->   * Thermal Profile control
->   *  - Provides thermal profile control through the Platform Profile API
-> @@ -735,6 +1125,12 @@ static int alienware_awcc_setup(struct wmi_device *wdev)
->  	priv->wdev = wdev;
->  	dev_set_drvdata(&wdev->dev, priv);
->  
-> +	if (awcc->hwmon) {
-> +		ret = awcc_hwmon_init(wdev);
-> +		if (ret)
-> +			return ret;
-> +	}
-> +
->  	if (awcc->pprof) {
->  		ret = awcc_platform_profile_init(wdev);
->  		if (ret)
-> @@ -815,6 +1211,13 @@ int __init alienware_wmax_wmi_init(void)
->  	if (id)
->  		awcc = id->driver_data;
->  
-> +	if (force_hwmon) {
-> +		if (!awcc)
-> +			awcc = &empty_quirks;
-> +
-> +		awcc->hwmon = true;
-> +	}
-> +
->  	if (force_platform_profile) {
->  		if (!awcc)
->  			awcc = &empty_quirks;
-> 
+Thanks,
+Shyam
 
--- 
- i.
 
