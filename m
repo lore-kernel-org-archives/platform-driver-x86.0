@@ -1,332 +1,191 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.20])
+Received: from NAM10-MW2-obe.outbound.protection.outlook.com (mail-mw2nam10on2076.outbound.protection.outlook.com [40.107.94.76])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2217627BF90;
-	Tue,  4 Mar 2025 16:31:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.20
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741105875; cv=none; b=golZGGEuQ2soIciPKuiT/3CqFU0pzxhSa5I/RLqD0zl6AhTb9XpVkpW8SOFmWMQ14aAn9hzLmcBzZNZB2O/zoIY3wQKIL/pQ4nOyxj3V9uSfpctoOlvQIGh869OoAcoxx8FfrKJHqiO+/GF++9UEWsFC7ryVA3SkyhMAumUs/Ho=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741105875; c=relaxed/simple;
-	bh=/YJ9yPU9Qot21uQi+eiSh1qLYYbIQ5QG7UZGe0XhN0E=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=r57hZ/aqzHPGsstulHc2SFbWYZs3yO/Hyn8P0cpkB3g376w5M6EsgEOD1DIBZrlFde/4ql6SqIf8QoUDiw8on506PqHYdwAaDR0IzKnd5oXkZ6j4KkeycGFZlYSODlM6JBgqrDIc9355EscvNEgGyhm+ExV16AbZhsW1Vf5tpok=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=E51xbQYb; arc=none smtp.client-ip=198.175.65.20
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 563562080C0;
+	Tue,  4 Mar 2025 17:21:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.94.76
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1741108890; cv=fail; b=Zx6LLllFiDqO4JeGsK1ScAQRhD2nFt/4EztRy6nA1Dk1RiNKmNUH+hPlcZvy3IP59HtrfqlMkuxWSNI6OJ0jpC6r3sPnox8zv/nkgMlHaMOWqKVpShHzKWcdUvnOcRiO5P0zS43Of5ThFcK9e9XGnw1U6jXY8qEzN0p93kVvjck=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1741108890; c=relaxed/simple;
+	bh=RZS21/EwVz3RWaKw2AYwO/Q9ce9YYVBE/raThNkoUdY=;
+	h=Message-ID:Date:Subject:To:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=XIDcf0dX/NKcTpd/IlfyUHAb+o2qukx/nNkmXKy2k6Uf1Aa4I0uK8aTptMX8jrRa2/of84Nwhf/e5ajblKah18c+YQPPPasJXtOq8Zseys2DviA3Q8b2niBNAxMgbwoaYWkPoLfTweZOt8if5xqT8Zzl1r81zlbDOEb4/+xBSV4=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=XEsu+ODt; arc=fail smtp.client-ip=40.107.94.76
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="E51xbQYb"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1741105874; x=1772641874;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=/YJ9yPU9Qot21uQi+eiSh1qLYYbIQ5QG7UZGe0XhN0E=;
-  b=E51xbQYb9DZDoLod9sYltkDs4VxZWH0Bi+BVViPMsJnmot4UMvN9lu0L
-   riyoSgksmJQD125D8hHHWDTROCKss+zSBQ5QwXDrhPdR0krRJYsDV+Whx
-   /W21pmbdsqH+l8B4fYV8wwCbHnM9TnobhpB1DGG69tFPOHZ2bxgCuX/Jo
-   cDhgv08pO3O1ZHeHO5113jWkHX5KKfes8QDfw1lg2XfYIUxQC7lARzGN4
-   chFjy+K0D8VB2ezpDZQWwWF7R31dqLTnksMwTFnDt6KA/qy3iQPOSfrq9
-   YYCC6fAK32viOl4OYgyVZecGtQm/Ks0cKAoetmB74jxKbL5URQyB7XF6C
-   g==;
-X-CSE-ConnectionGUID: Ib266fKyQ7S++eHPqx5Tzg==
-X-CSE-MsgGUID: h1Zo8rVVR1emVVPgsK1kWQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11363"; a="41745790"
-X-IronPort-AV: E=Sophos;i="6.14,220,1736841600"; 
-   d="scan'208";a="41745790"
-Received: from orviesa003.jf.intel.com ([10.64.159.143])
-  by orvoesa112.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Mar 2025 08:31:13 -0800
-X-CSE-ConnectionGUID: U6WujrHUTP6r995x93RaWQ==
-X-CSE-MsgGUID: LeDlO4+iTVeu+Qc+YjpJDA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.14,220,1736841600"; 
-   d="scan'208";a="123349493"
-Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.220])
-  by ORVIESA003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Mar 2025 08:31:09 -0800
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Tue, 4 Mar 2025 18:31:06 +0200 (EET)
-To: Kurt Borja <kuurtb@gmail.com>
-cc: Armin Wolf <W_Armin@gmx.de>, platform-driver-x86@vger.kernel.org, 
-    Hans de Goede <hdegoede@redhat.com>, Dell.Client.Kernel@dell.com, 
-    LKML <linux-kernel@vger.kernel.org>, Guenter Roeck <linux@roeck-us.net>
-Subject: Re: [PATCH v2 07/10] platform/x86: alienware-wmi-wmax: Add HWMON
- support
-In-Reply-To: <D87MG1SMP0WA.1EXT0WKP65DQR@gmail.com>
-Message-ID: <93a4ce49-1d16-4569-8b4b-554bf26a002a@linux.intel.com>
-References: <20250225222500.23535-1-kuurtb@gmail.com> <20250225222500.23535-8-kuurtb@gmail.com> <a85825d5-7718-93f4-e837-849323ef4387@linux.intel.com> <D87MG1SMP0WA.1EXT0WKP65DQR@gmail.com>
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="XEsu+ODt"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=Yzbm54/zXwUr8MT5ifuBSAbHDN4AfpN5Is9noWU2vukjnQ4FCDvpo16U0ecqi57yBd2onuwKZs/7sa/TcvGF1tqafJJ7rRufQ1zFyHHElcONgqyW8oPPcIo28dBeOMdyrjLO21t6eubcaZdKwlmV7aEgSMpuQLf2Pps46AoRCdvmxeCQutFOG7PXwg+qodx5ZKTC1uIU2Gf2WG/SawPPNShF8zrrYr3eP7tCn6HykbxKGjiUq/D68Dig8L2dVSbP16R4U0pDkLagcsLbgNEX52hVmRL8pbaRPHLusZhXrvCNUxoWJ4qZIo2UfPILGDhYt5FVrjTPBeOTKEd2YNeNbw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=7nuqwSSXy7rWgNWx1utwah2EJnM/1tXRKTstbhXmZkY=;
+ b=lm4Rg0Z7qoepZXQfhA2Ka6fftCVMhANKINS125Dri5CtrQQKkyMpL7E/+157tU+iSNN23A75n2PhCZ/S52K5Yd3xIq3n2qNJ3gQunvhmgDsnaTUeDM3ZndRI9QCpLMsN7f0fKSX0LBnVXJVunYV1LcvPWZmWPvbkodRYtpPT6tM09oD283JsW5gZmlUl5muIbrX5EHFabdzrsHopgCxS/GtIe3OTtAS/XZ0fmiHblYj4RuFlG09Ioq5l1SarWh3Q1fDTGQzlB+fPQSBYI7pWS3hjHwneoRlK2X3n/esY52kezpAH3s3zekFfbsGrZvwb63joDJBgtxhIaBzve4Feqg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=7nuqwSSXy7rWgNWx1utwah2EJnM/1tXRKTstbhXmZkY=;
+ b=XEsu+ODtZfwn5LaDzINP5Nq8LQ/8qg6dTjKYAiBDkVoSU0YUrFrCRsC4AP7nihhb6zkhNVhNTvmgpNhHoGvkGPwVO4l00fB9NyOC0hZFETxOrWBazPNi95xadKgBA9kQ7s8+eN/LirKfl8k90GhSNS6duM03bBzsNhqlZVpyeLo=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from MN0PR12MB6101.namprd12.prod.outlook.com (2603:10b6:208:3cb::10)
+ by PH0PR12MB7472.namprd12.prod.outlook.com (2603:10b6:510:1e9::9) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8489.25; Tue, 4 Mar
+ 2025 17:21:26 +0000
+Received: from MN0PR12MB6101.namprd12.prod.outlook.com
+ ([fe80::37ee:a763:6d04:81ca]) by MN0PR12MB6101.namprd12.prod.outlook.com
+ ([fe80::37ee:a763:6d04:81ca%4]) with mapi id 15.20.8489.025; Tue, 4 Mar 2025
+ 17:21:26 +0000
+Message-ID: <6fbc6b5f-67b1-4b6d-b590-a3858d00ff96@amd.com>
+Date: Tue, 4 Mar 2025 11:21:24 -0600
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/2] platform/x86: lenovo-yoga-tab2-pro-1380-fastcharger:
+ Make symbol static
+To: =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+ Hans de Goede <hdegoede@redhat.com>, platform-driver-x86@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <20250304160639.4295-1-ilpo.jarvinen@linux.intel.com>
+Content-Language: en-US
+From: Mario Limonciello <mario.limonciello@amd.com>
+In-Reply-To: <20250304160639.4295-1-ilpo.jarvinen@linux.intel.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: SA9PR13CA0130.namprd13.prod.outlook.com
+ (2603:10b6:806:27::15) To MN0PR12MB6101.namprd12.prod.outlook.com
+ (2603:10b6:208:3cb::10)
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="8323328-1823786508-1741105866=:931"
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: MN0PR12MB6101:EE_|PH0PR12MB7472:EE_
+X-MS-Office365-Filtering-Correlation-Id: ae579a8d-b7d6-4da7-96fd-08dd5b40fe65
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|1800799024|376014|7053199007;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?aWdrYkRMbmw5MTY3T3pQRkRseVh6TThzdXZWSUQwbVdpYmNuUkhhYkpvcU8v?=
+ =?utf-8?B?QlUzbG5MeGt0Z3dwaFZFMFFJOFdNS3JQZjJoN2hvQlk0V20xSTA5cGljRkFY?=
+ =?utf-8?B?eHYrS1loQ2x5bS9valY5dzZXTk92a3hkOGtZV1UzU0lRejYwbDllSXNBVVpw?=
+ =?utf-8?B?UnYzTFZQc05zVjhobHR5UHZQdkVkb0p4WUx1aVNRbkpXQ091dkJRT2QrNVJs?=
+ =?utf-8?B?NnQvbmdqaURFcHZzSGwwSlZEbExZaWNubnU4ZGQ3akNSNS9MY21EK3pKNUtU?=
+ =?utf-8?B?d1NXNlpHWVZNRmNwQmhhbnB2b2xQTDFKREZJUHJFa3R6WmY2amFrWk1YdWRL?=
+ =?utf-8?B?cm1VdnZWa2pGY2svNWZTQ2MxNHdVelZoVTU3SU82RjZnRTFuOENybW5ISmEv?=
+ =?utf-8?B?UCtQMWkrTDJ5dTlscVpKaGo3V05tMWpDMVVQdVNBVkh5dERIMzRnbnJNTlRT?=
+ =?utf-8?B?MmMwZzdoeTBzeU9iRm8yVVJiNURDbVZjSU1Ia1MydjQyYk1TOTdZbzVGS0Nw?=
+ =?utf-8?B?Q3Z1aUcwMm9MMXNWYlpCTjNSM1Z0NHRmWTBzQnpRVmdNWUVjZ1VyL1B5RWNF?=
+ =?utf-8?B?RUt3dWtsdnBaN2cvbEV2Z290Ky8vaTBjVUFGOGxyYzNzL01PQjBBakxWcVdB?=
+ =?utf-8?B?YUlGZlUyeWZuUmJUcmxXVjlVZU03NW51b1htdVhQdDFucFRVMnlrLzBpam9D?=
+ =?utf-8?B?TW5aV0VmSTRUbEwxUFdBZndOZjF4MFZKNG9TZ3o2N29jeGpZY0x0cklyL1FE?=
+ =?utf-8?B?d2N5VHBoQmVwUEZiRS85MWViSmJOTFRTWGdIQnZlbmxDM1d2cmdCWmYzVFdj?=
+ =?utf-8?B?RDlIUlFEK1h1aEtJbWJ6aVN1dUdWYy9kUEVkMll3OHoyM2J3NmRyWStoOHAw?=
+ =?utf-8?B?ZW1IWUtNUWhiTXJFMjRtKzBiVGNjRWQyaGtsWnd3U3dPRVUyeUtiL1IrTmhj?=
+ =?utf-8?B?djdxMkJNU2x5amlKNnpsTnBUbXIwRkRydC9QcmdtdE9qUFU2L0k0eTR0N0N0?=
+ =?utf-8?B?b2FCNlZLa0owUThVeWtQZVJkRFNoNUpsdGFzNzIrNWxyQ2d4TEFpbjI1MmFu?=
+ =?utf-8?B?S3I2dTVva3JUaFdxMXcrTHdmSmREUUQvREphUkNYQkFxMkxGZFBucFF1MElw?=
+ =?utf-8?B?MExyUGtGZGpnNlNxUFk1di9PY0JOZUhpUDcrV3pOWWpZei9HVWNrWFpZV1o5?=
+ =?utf-8?B?cFN3RUg2QkJ5V3FQRkNXaDZ2aGZyMUdLSm1LdUMvSFBsRUhjbUZYaG1LVzJS?=
+ =?utf-8?B?cjE4Q1VvbGlTNi9iVHNBSDNPUytSV2RNam1JZjhQVy9TUnllWGswTFpJaERM?=
+ =?utf-8?B?UlM3eGN6MmxrcnJDemJFc3FsK3I1SE91cFpHSkUwakx5MTdxbHNXNDcrR0RZ?=
+ =?utf-8?B?NHV1dTJrZWh2V0tFM1U1cjlKV3BtaWFVS2kxNSttRWNsK24vQ2hiR3k4SUsr?=
+ =?utf-8?B?eDZ1Q2xWR3JCdnJxZ0Q0RWEzdmNtditPeWZGS3B6UllHYWgvbEl0U0ZaNzlN?=
+ =?utf-8?B?cklBcUZObmJUcEhraFJ6cUJNVFhVQk53NnFyak9jR1hXTy94NGIxMVN1Mk10?=
+ =?utf-8?B?S0NQNERwQ2lEcmpsdUE1UVZMNXRRQU9LZ051bVdBekxoT2hXakg3TUNxTVhq?=
+ =?utf-8?B?UmcxeVdiRitFc3JMdDE5R1FkaE1qRjJqdUpSTENva3I5TTM4SVJKZmdVc2Nl?=
+ =?utf-8?B?OFZ6Q2g0dFpGaFpJOFhvZU9HUVFkbWUzYndKMzNRY1YxOWo2UzQ1SThIT3lQ?=
+ =?utf-8?B?c2F6MVYxNC8xVWVBVG9PVGRtdDhoaGhIODQ3WTRvU1FVb0Q1TnJqb1RFZCtJ?=
+ =?utf-8?B?S1RaQUJtVkxUZ0NSalBocmtuaVBIUzhKUFN1aGdBbEtBQzN6Nk1ENjlhOHdw?=
+ =?utf-8?Q?tBn0O4RQcJY9p?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MN0PR12MB6101.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(376014)(7053199007);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?c3pyZ1U5L21oZXhtNGtUTXJqczlBMWtnWHB2S2p6K0lXRWhYNngxc3Y3R0t5?=
+ =?utf-8?B?alNsYlRlL3BIcnJGdFVyemlpVzlzYnJOQktwZ1I5TkhHSjdxTjdkY04wYkhx?=
+ =?utf-8?B?b1d6NkFBWXFBTDJRVVBvSFVXSkhZem5zb1U3b3poYjlZWGl2TUNsNnJPZnpQ?=
+ =?utf-8?B?SjU5RDRxV3VQZWVoV29GazVmUGxManlOY1VibHpkUkR4SlF1RW1ZRWdBbHFp?=
+ =?utf-8?B?ZFliTy95NmF5WEg3TG5waVc3UnpKRitZRDdnOHBJQjNub1pPSUh3RmNyTXZM?=
+ =?utf-8?B?VkM0dXhJVzlPcVFNc0RwZUIyaFprZlgyMFFhTHB3NktRNG5UUU1YbnY5ZnNz?=
+ =?utf-8?B?NlN1L0xoNUFrUndnUWk1QlpJZEowNVY5NmI5Si9BOWdzd0dSM3ZKNUNoUnlQ?=
+ =?utf-8?B?d3UvUUNMcFZ6UzNyVHZEbk8zYTFPQ3IrU25xaks2alFIeUVXbURVLzFpK09P?=
+ =?utf-8?B?K0RGUkJoTHMvQ3BFWGRhMFFoWDhxWlNqNEdwa2JyTTlQWHJEYWtuRGlkMkVs?=
+ =?utf-8?B?TmF4SEkzWit1ZkNMY2JLc3B5a3ZVREhZejhOaTYzaGtMbUFPa20yOXNZanF5?=
+ =?utf-8?B?RkZPYW1ETS9MbDRhVUllVVVqT3Vhc2hIL204aTZrK1YwMFNxNzJGdWVMVUNB?=
+ =?utf-8?B?VjBJa095ZndrRVZaVjMwZHVta1Q1NjZ6KzNkMkdhRWdBVkFSNkxkb0ViU2E2?=
+ =?utf-8?B?NzVnamVPdERPd09YdFNscXJiMEpKVTBQY1NRQkNZV2RYTmlZRmJZT1M0TWcz?=
+ =?utf-8?B?SVY2dkhvaW9OSjBzbkhqTzdFQmRrTjVNenBwMUtOWEtza3lBV1d2OUthY09q?=
+ =?utf-8?B?SktsYysraW1iZEVycVBGY2dhOFpjeHJocmhRdnI1R3ZVQzJPOHU2Q0NYUDRw?=
+ =?utf-8?B?WjBRR0REbXdmRWRNZm9yZ0xvMFJOMURnS2FVOFFZdlBEMzRuRUJMQ1JrcWRQ?=
+ =?utf-8?B?RVlLWGM0NE5SRW9sSjZ2QnVJOUZVRG5TWWxyTTFWV1lram04aEdUS01RSVZ4?=
+ =?utf-8?B?VUdyTkMzd1FPaFloekpDcjBHUitRTTJZNVpYT25PSFFTTms1RFFYRHBlREJ6?=
+ =?utf-8?B?QVJYQmxLaDl1aEtmblFYSW8yNWQwV3ZHYWNOVHljZWNKb2xHZUpwOEEraTBT?=
+ =?utf-8?B?elRRU3FFejl6RWYzNDRMdVVzYXlpbVpwMXlnbHBaT2pPdnplWkhvUlRNT1Rq?=
+ =?utf-8?B?OFc1TG5tcThYZTBFZnI4QVlncWRPcDVFeElaUjhMK1lSL2l2MFdoVzJxMklu?=
+ =?utf-8?B?YXQ5RVIyanB0bnk1eWpsY21vdHhLZkZCdXZSY0RZb2NDYnFGNXhNOXlMOXRY?=
+ =?utf-8?B?MWVtZzVuZE9SVXU2KzliU21HOW52MGxTYmRBamxKaGI0cTFob3lpNVJiVnJU?=
+ =?utf-8?B?YjJNRXBwa1ZYU3Zxb0ViQWRUVEZhbHM5Yld5ZVN0VGxPUy9uTlVUVEEvWk5E?=
+ =?utf-8?B?VzNMRmxVZU1Xc0RqMWJvU1FSbWNkUmdnUDVhKzdEdXpMOExQbnpNdkE2ZEZW?=
+ =?utf-8?B?b3JVZkNiaW52V0MvMFppN01aM0MvS25DQ1FIYk1QLzNoamZEM2RHcy9yTUF0?=
+ =?utf-8?B?SGFqMVg2a3FqZ3F2NXNDYmZCdUpLVlZnRXhhVjNMd3lIYzB1Qy9uTkZXanZL?=
+ =?utf-8?B?a3ZoSExpWkhSU0t2ek1NOUN0UXptTURnOFRTV3hLbG9sb0h5SmtjOWNKYzRT?=
+ =?utf-8?B?eWYrWkh1Z053VXlHckxtV2QrSnMxVlBodjRsTllOTEUwajJ5RmJVWEd4OS80?=
+ =?utf-8?B?NGtNUkFjVmhvaGoxU3ZEeDZLZjM1aVVLSlJhaWxvMEd0MkY4aTR5KzdZWXdN?=
+ =?utf-8?B?SXI1UjBQNHRTRC9tME41bVJYTVJSUTNweEhLdmVaMkYzTjBMQW1nZDBFNHdI?=
+ =?utf-8?B?UUR0N29pdk1ndmpJcjdmdDZVdjhlOFpTUDY3bGNHbXQzQ0l3Ukp5TDA5c1Fy?=
+ =?utf-8?B?cG05Tk1BaUM0eHJLdjEwNGlCSjJXYXBNMmRIbFBUOW45OEJkbjhrcVdMM1dL?=
+ =?utf-8?B?NU81MXM5dXpFeEU3MWhHUU5Ceko4dFVNTlJNRkVUZmgxNGtJczcybzNENmU3?=
+ =?utf-8?B?dG16Nzk1K2Z6OEYvZTJwd1M3eWlWeDFXM3c3cHlDWnJFK2JNOXZJVzZIUk9L?=
+ =?utf-8?Q?MKz0rAl/ex2WXVNtblGWB4BWr?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: ae579a8d-b7d6-4da7-96fd-08dd5b40fe65
+X-MS-Exchange-CrossTenant-AuthSource: MN0PR12MB6101.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 04 Mar 2025 17:21:26.2029
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: B1rVuoY8jy7WujwZ02j+KG9qZg2YZI/+jsfkIUvA/RLdyuKFJAO/mxs2vrLfk6aZ6VFYvrOLb90WTI/3T3eZLg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH0PR12MB7472
 
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
+On 3/4/2025 10:06, Ilpo Järvinen wrote:
+> Sparse reports:
+> 
+> lenovo-yoga-tab2-pro-1380-fastcharger.c:222:29: warning: symbol
+> 'yt2_1380_fc_serdev_driver' was not declared. Should it be static?
+> 
+> Fix that by making the symbol static.
+> 
+> Signed-off-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
 
---8323328-1823786508-1741105866=:931
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Fixes: b2ed33e8d486a ("platform/x86: Add 
+lenovo-yoga-tab2-pro-1380-fastcharger driver")
+Reviewed-by: Mario Limonciello <mario.limonciello@amd.com>
 
-On Tue, 4 Mar 2025, Kurt Borja wrote:
+> ---
+>   drivers/platform/x86/lenovo-yoga-tab2-pro-1380-fastcharger.c | 2 +-
+>   1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/platform/x86/lenovo-yoga-tab2-pro-1380-fastcharger.c b/drivers/platform/x86/lenovo-yoga-tab2-pro-1380-fastcharger.c
+> index a96b215cd2c5..25933cd018d1 100644
+> --- a/drivers/platform/x86/lenovo-yoga-tab2-pro-1380-fastcharger.c
+> +++ b/drivers/platform/x86/lenovo-yoga-tab2-pro-1380-fastcharger.c
+> @@ -219,7 +219,7 @@ static int yt2_1380_fc_serdev_probe(struct serdev_device *serdev)
+>   	return 0;
+>   }
+>   
+> -struct serdev_device_driver yt2_1380_fc_serdev_driver = {
+> +static struct serdev_device_driver yt2_1380_fc_serdev_driver = {
+>   	.probe = yt2_1380_fc_serdev_probe,
+>   	.driver = {
+>   		.name = KBUILD_MODNAME,
+> 
+> base-commit: 432c2adb9e2f84f81c4b218acb07a2cd3dce64a9
 
-> On Tue Mar 4, 2025 at 10:53 AM -05, Ilpo J=C3=A4rvinen wrote:
-> > On Tue, 25 Feb 2025, Kurt Borja wrote:
-> >
-> >> All models with the "AWCC" WMAX device support monitoring fan speed an=
-d
-> >> temperature sensors. Expose this feature through the HWMON interface.
-> >>=20
-> >> Sensor readings are cached for 1 second before refreshing them to
-> >> mitigate the performance cost of calling WMI methods.
-> >>=20
-> >> Cc: Guenter Roeck <linux@roeck-us.net>
-> >> Signed-off-by: Kurt Borja <kuurtb@gmail.com>
-> >> ---
-> >>  drivers/platform/x86/dell/Kconfig             |   1 +
-> >>  .../platform/x86/dell/alienware-wmi-wmax.c    | 403 +++++++++++++++++=
-+
-> >>  2 files changed, 404 insertions(+)
-> >>=20
-> >> diff --git a/drivers/platform/x86/dell/Kconfig b/drivers/platform/x86/=
-dell/Kconfig
-> >> index f8a0dffcaab7..85a57c01aaad 100644
-> >> --- a/drivers/platform/x86/dell/Kconfig
-> >> +++ b/drivers/platform/x86/dell/Kconfig
-> >> @@ -43,6 +43,7 @@ config ALIENWARE_WMI_WMAX
-> >>  =09bool "Alienware WMAX WMI device driver"
-> >>  =09default y
-> >>  =09depends on ALIENWARE_WMI
-> >> +=09depends on HWMON
-> >>  =09select ACPI_PLATFORM_PROFILE
-> >>  =09help
-> >>  =09 Alienware WMI driver with AlienFX LED, HDMI, amplifier, deep slee=
-p and
-> >> diff --git a/drivers/platform/x86/dell/alienware-wmi-wmax.c b/drivers/=
-platform/x86/dell/alienware-wmi-wmax.c
-> >> index bbe87f91fcb6..818023a5b205 100644
-> >> --- a/drivers/platform/x86/dell/alienware-wmi-wmax.c
-> >> +++ b/drivers/platform/x86/dell/alienware-wmi-wmax.c
-> >> @@ -9,10 +9,13 @@
-> >>  #define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
-> >> =20
-> >>  #include <linux/bitfield.h>
-> >> +#include <linux/bitmap.h>
-> >>  #include <linux/bits.h>
-> >>  #include <linux/dmi.h>
-> >> +#include <linux/hwmon.h>
-> >>  #include <linux/moduleparam.h>
-> >>  #include <linux/platform_profile.h>
-> >> +#include <linux/units.h>
-> >>  #include <linux/wmi.h>
-> >>  #include "alienware-wmi.h"
-> >> =20
-> >> @@ -25,6 +28,7 @@
-> >>  #define WMAX_METHOD_BRIGHTNESS=09=09=090x3
-> >>  #define WMAX_METHOD_ZONE_CONTROL=09=090x4
-> >> =20
-> >> +#define AWCC_METHOD_GET_FAN_SENSORS=09=090x13
-> >>  #define AWCC_METHOD_THERMAL_INFORMATION=09=090x14
-> >>  #define AWCC_METHOD_THERMAL_CONTROL=09=090x15
-> >>  #define AWCC_METHOD_GAME_SHIFT_STATUS=09=090x25
-> >> @@ -38,6 +42,10 @@
-> >>  /* Arbitrary limit based on supported models */
-> >>  #define AWCC_MAX_RES_COUNT=09=09=0916
-> >> =20
-> >> +static bool force_hwmon;
-> >> +module_param_unsafe(force_hwmon, bool, 0);
-> >> +MODULE_PARM_DESC(force_hwmon, "Force probing for HWMON support withou=
-t checking if the WMI backend is available");
-> >> +
-> >>  static bool force_platform_profile;
-> >>  module_param_unsafe(force_platform_profile, bool, 0);
-> >>  MODULE_PARM_DESC(force_platform_profile, "Forces auto-detecting therm=
-al profiles without checking if WMI thermal backend is available");
-> >> @@ -47,16 +55,19 @@ module_param_unsafe(force_gmode, bool, 0);
-> >>  MODULE_PARM_DESC(force_gmode, "Forces G-Mode when performance profile=
- is selected");
-> >> =20
-> >>  struct awcc_quirks {
-> >> +=09bool hwmon;
-> >>  =09bool pprof;
-> >>  =09bool gmode;
-> >>  };
-> >> =20
-> >>  static struct awcc_quirks g_series_quirks =3D {
-> >> +=09.hwmon =3D true,
-> >>  =09.pprof =3D true,
-> >>  =09.gmode =3D true,
-> >>  };
-> >> =20
-> >>  static struct awcc_quirks generic_quirks =3D {
-> >> +=09.hwmon =3D true,
-> >>  =09.pprof =3D true,
-> >>  =09.gmode =3D false,
-> >>  };
-> >> @@ -154,9 +165,18 @@ static const struct dmi_system_id awcc_dmi_table[=
-] __initconst =3D {
-> >>  =09},
-> >>  };
-> >> =20
-> >> +enum AWCC_GET_FAN_SENSORS_OPERATIONS {
-> >> +=09AWCC_OP_GET_TOTAL_FAN_TEMPS=09=09=3D 0x01,
-> >> +=09AWCC_OP_GET_FAN_TEMP_ID=09=09=09=3D 0x02,
-> >> +};
-> >> +
-> >>  enum AWCC_THERMAL_INFORMATION_OPERATIONS {
-> >>  =09AWCC_OP_GET_SYSTEM_DESCRIPTION=09=09=3D 0x02,
-> >>  =09AWCC_OP_GET_RESOURCE_ID=09=09=09=3D 0x03,
-> >> +=09AWCC_OP_GET_TEMPERATURE=09=09=09=3D 0x04,
-> >> +=09AWCC_OP_GET_FAN_RPM=09=09=09=3D 0x05,
-> >> +=09AWCC_OP_GET_FAN_MIN_RPM=09=09=09=3D 0x08,
-> >> +=09AWCC_OP_GET_FAN_MAX_RPM=09=09=09=3D 0x09,
-> >>  =09AWCC_OP_GET_CURRENT_PROFILE=09=09=3D 0x0B,
-> >>  };
-> >> =20
-> >> @@ -179,6 +199,12 @@ enum AWCC_SPECIAL_THERMAL_CODES {
-> >>  =09AWCC_SPECIAL_PROFILE_GMODE=09=09=3D 0xAB,
-> >>  };
-> >> =20
-> >> +enum AWCC_TEMP_SENSOR_TYPES {
-> >> +=09AWCC_TEMP_SENSOR_CPU=09=09=09=3D 0x01,
-> >> +=09AWCC_TEMP_SENSOR_GPU=09=09=09=3D 0x06,
-> >> +=09AWCC_TEMP_SENSOR_LAST
-> >> +};
-> >> +
-> >>  enum awcc_thermal_profile {
-> >>  =09AWCC_PROFILE_USTT_BALANCED,
-> >>  =09AWCC_PROFILE_USTT_BALANCED_PERFORMANCE,
-> >> @@ -215,6 +241,15 @@ struct wmax_u32_args {
-> >>  =09u8 arg3;
-> >>  } __packed;
-> >> =20
-> >> +struct awcc_fan_data {
-> >> +=09unsigned long *related_temps;
-> >> +=09unsigned long *auto_channels_temp;
-> >> +=09u32 total_temps;
-> >> +=09u32 min_rpm;
-> >> +=09u32 max_rpm;
-> >> +=09u8 id;
-> >> +};
-> >> +
-> >>  struct awcc_priv {
-> >>  =09struct wmi_device *wdev;
-> >>  =09union {
-> >> @@ -230,6 +265,11 @@ struct awcc_priv {
-> >> =20
-> >>  =09struct device *ppdev;
-> >>  =09u8 supported_profiles[PLATFORM_PROFILE_LAST];
-> >> +
-> >> +=09struct device *hwdev;
-> >> +=09struct awcc_fan_data **fan_data;
-> >> +=09unsigned int temp_sensors_size;
-> >> +=09unsigned long *temp_sensors;
-> >>  };
-> >> =20
-> >>  static const enum platform_profile_option awcc_mode_to_platform_profi=
-le[AWCC_PROFILE_LAST] =3D {
-> >> @@ -494,6 +534,19 @@ static int __awcc_wmi_command(struct wmi_device *=
-wdev, u32 method_id,
-> >>  =09return 0;
-> >>  }
-> >> =20
-> >> +static inline int awcc_get_fan_sensors(struct wmi_device *wdev, u8 op=
-eration,
-> >> +=09=09=09=09       u8 fan_id, u8 index, u32 *out)
-> >> +{
-> >> +=09struct wmax_u32_args args =3D {
-> >> +=09=09.operation =3D operation,
-> >> +=09=09.arg1 =3D fan_id,
-> >> +=09=09.arg2 =3D index,
-> >> +=09=09.arg3 =3D 0,
-> >> +=09};
-> >> +
-> >> +=09return __awcc_wmi_command(wdev, AWCC_METHOD_GET_FAN_SENSORS, &args=
-, out);
-> >> +}
-> >> +
-> >>  static inline int awcc_thermal_information(struct wmi_device *wdev, u=
-8 operation,
-> >>  =09=09=09=09=09   u8 arg, u32 *out)
-> >>  {
-> >> @@ -564,6 +617,343 @@ static inline int awcc_op_get_resource_id(struct=
- wmi_device *wdev, u8 index, u32
-> >>  =09return __awcc_wmi_command(wdev, AWCC_METHOD_THERMAL_INFORMATION, &=
-args, out);
-> >>  }
-> >> =20
-> >> +/*
-> >> + * HWMON
-> >> + *  - Provides temperature and fan speed monitoring as well as manual=
- fan
-> >> + *    control
-> >> + */
-> >> +static umode_t awcc_hwmon_is_visible(const void *drvdata, enum hwmon_=
-sensor_types type,
-> >> +=09=09=09=09     u32 attr, int channel)
-> >> +{
-> >> +=09const struct awcc_priv *priv =3D drvdata;
-> >> +
-> >> +=09switch (type) {
-> >> +=09case hwmon_temp:
-> >> +=09=09if (channel < priv->temp_count)
-> >> +=09=09=09return 0444;
-> >> +
-> >> +=09=09break;
-> >
-> > IMO, these could be written as:
-> > =09=09return channel < priv->temp_count ? 0444 : 0;
->=20
-> Ack.
->=20
-> >
-> >> +=09case hwmon_fan:
-> >> +=09=09if (channel < priv->fan_count)
-> >> +=09=09=09return 0444;
-> >> +
-> >> +=09=09break;
-> >> +=09case hwmon_pwm:
-> >> +=09=09if (channel < priv->fan_count)
-> >> +=09=09=09return 0444;
-> >> +
-> >> +=09=09break;
-> >> +=09default:
-> >> +=09=09break;
-> >> +=09}
-> >> +
-> >> +=09return 0;
-> >> +}
-> >> +
-> >> +static int awcc_hwmon_read(struct device *dev, enum hwmon_sensor_type=
-s type,
-> >> +=09=09=09   u32 attr, int channel, long *val)
-> >> +{
-> >> +=09struct awcc_priv *priv =3D dev_get_drvdata(dev);
-> >> +=09struct awcc_fan_data *fan;
-> >> +=09u32 state;
-> >> +=09int ret;
-> >> +=09u8 temp;
-> >> +
-> >> +=09switch (type) {
-> >> +=09case hwmon_temp:
-> >> +=09=09temp =3D find_nth_bit(priv->temp_sensors, U8_MAX, channel);
-> >> +=09=09if (temp >=3D U8_MAX)
-> >
-> > It cannot be larger than as its type is u8??
->=20
-> Thanks, I forgot to change this! U8_MAX should be replaced with
-> priv->temp_sensors_size.
-
-I recall seeing another similar line somewhere else in the file so please=
-=20
-take a look at that as well.
-
-> Thank you for reviewing this set! :)
->=20
->=20
-
---=20
- i.
-
---8323328-1823786508-1741105866=:931--
