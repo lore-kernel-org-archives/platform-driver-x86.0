@@ -1,40 +1,41 @@
-Received: from mout.gmx.net (mout.gmx.net [212.227.15.15])
+Received: from mout.gmx.net (mout.gmx.net [212.227.15.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC6254C92;
-	Wed,  5 Mar 2025 00:24:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D8BA17579;
+	Wed,  5 Mar 2025 00:29:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741134246; cv=none; b=L029BYS0BJX59WvzPC7qvHb6mFfpVgt6P4h4am0myIOJKxeoHo6Wk4TxI//4OAApabwIVxSzTmFG4hmluxJGHjY9xlxlJ3tJDEO+ud0xDPaBjyZ5NI3OiM1Lj4e6vAm+M6nRe/6MFxsUIpQWfNQNlOBSFUxFAGDEyUk45PKH2Ag=
+	t=1741134572; cv=none; b=e4HcSJzdTYbq2TsrsFudIlqu/J7Laf+7vEq+bly/c6SsMWYnoYLfVRLMs2nE4yP9m9RYfH8XdV9D45HN1HPmiFeoxB0RzVSXNkcAzzN49/dxL+sKfov5AhGbmajowWQdyDxaBdjpRunGlZJv7R05AlyZqvwpXUbfvHZS+WgVSUk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741134246; c=relaxed/simple;
-	bh=ZffagwhXynQL6/ZJWEi/SCLVfqEhgHkX95OdObrxGPo=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
-	 In-Reply-To:Content-Type; b=B1u0PqClFptZwnOIso0YI3HDQ+JZekk7UkQzjNWZciOAumOHnKeDJViH6TeL+DQ00wBdFVvI75YBTIxA0GR0b0kqnzV3u3gTdQiC0/PcbCbw5aAaTLRY6I5yToD+o1ELb6oPf/EFINJUCQmKcwTbmqMh8e3v4EiRPcRxuzFwahQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b=ntmvQCBD; arc=none smtp.client-ip=212.227.15.15
+	s=arc-20240116; t=1741134572; c=relaxed/simple;
+	bh=ll7RRmYem5Y1GrzMRxIhpfncsuiytDg1O9oFC71uxG0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=jbZ1CThF0g38TeRGdKHCKEzD//tkPCjOYkRqHRbb9txtzOJB3+fCFLTxdneZG+oxKxKObHRhl2nSpi5G61++RIDuQkyW/gjEKlY1OyBUxGBuip35507YHqEobwDVmnmHfIdzHI7l6jkwtMObjiONIMB9h8PHM6NILtYnfFWkTRU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b=FHfCmAIR; arc=none smtp.client-ip=212.227.15.18
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b="ntmvQCBD"
+	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b="FHfCmAIR"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.de;
-	s=s31663417; t=1741134242; x=1741739042; i=w_armin@gmx.de;
-	bh=bkebOTkBt0tpMwOpl8zGoATCutFsP0fWm/l3ds4ORmE=;
-	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:From:To:
-	 Cc:References:In-Reply-To:Content-Type:Content-Transfer-Encoding:
-	 cc:content-transfer-encoding:content-type:date:from:message-id:
-	 mime-version:reply-to:subject:to;
-	b=ntmvQCBDQwXUcEhV8RJ8Vg6KRt1wDS2rvldQ8erbbG8/Q9C8iyENnXn3NXsyLN/K
-	 Z1j/N5ght4UrLYhFGE9/W/OGSMFovlCTdLdBp0S46CeU92krgM71J0WhUZRwHnRv0
-	 cQspGktqGx8CCdtmEJHvkk2yZ3zQsr6Y9clVc9NJY729T2cBVMHno9AgZCef1iwgg
-	 cJQIALnf4xTWJUpNI7l/6w3SuWJ/LxUyR94865DW0Cwuw2g67kXYsFVTy3yD97B7z
-	 kPwrj9hQyw8pllIWWNXCR9+HwsmmWcrLFwsD0qfEsHIaRr9tIDRMOwptiPhjf+gzK
-	 01NuxF77Hi/0HPtr6A==
+	s=s31663417; t=1741134567; x=1741739367; i=w_armin@gmx.de;
+	bh=86aR1VeqAwIPLf53I3/MJ3n0rRnYudftjP6rX3IfOZc=;
+	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:To:
+	 References:From:In-Reply-To:Content-Type:
+	 Content-Transfer-Encoding:cc:content-transfer-encoding:
+	 content-type:date:from:message-id:mime-version:reply-to:subject:
+	 to;
+	b=FHfCmAIRKOMK8yQ9FDYTOt4cENvdDr7F0AmgrtAxywDjqLoOonMgZ6nBwN1bfpDH
+	 NOHdTf+5/7E3O+jZ2vFlKG9gDbIZ0AnzTzuy8lT5K7bnlOhdxIRWObSwwDC5ctGSl
+	 LskIVTXYVKHEs1WeCRTdt6I8AxosN+FbDbBEJntF7QoxfXCItsBQIH6x8WSbaxKay
+	 mLAr1h4qL8vAx0ogGB+efYiYH40mDWUr/zL71onTdDlF1pihsviaXl2Pcn7bCAqV6
+	 LwjopJYdKee+cNbL4frSuzdcMEf8y/QokhzBevtYdmH1Q2ExPDtjS47tqVkqsJS0j
+	 Z7rtaPYho3Q56n5PMg==
 X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
-Received: from [192.168.0.24] ([87.177.78.219]) by mail.gmx.net (mrgmx005
- [212.227.17.190]) with ESMTPSA (Nemesis) id 1N0oBr-1t1lYq3pTR-00v9yw; Wed, 05
- Mar 2025 01:24:02 +0100
-Message-ID: <f5d8b82d-c711-4611-b257-b4297f172bb1@gmx.de>
-Date: Wed, 5 Mar 2025 01:23:59 +0100
+Received: from [192.168.0.24] ([87.177.78.219]) by mail.gmx.net (mrgmx004
+ [212.227.17.190]) with ESMTPSA (Nemesis) id 1N63Ra-1tEACk3nYG-00qrhD; Wed, 05
+ Mar 2025 01:29:27 +0100
+Message-ID: <3f779992-1a3b-475b-b07b-3a4ca02f5b35@gmx.de>
+Date: Wed, 5 Mar 2025 01:29:24 +0100
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -42,74 +43,91 @@ List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC PATCH v2 0/3] platform/x86: acer-wmi: Add fan control
- support
-From: Armin Wolf <W_Armin@gmx.de>
-To: jlee@suse.com, basak.sb2006@gmail.com, rayanmargham4@gmail.com
-Cc: kuurtb@gmail.com, hdegoede@redhat.com, ilpo.jarvinen@linux.intel.com,
+Subject: Re: [PATCH v2] platform/x86: samsung-galaxybook: Fix block_recording
+ not supported logic
+To: Joshua Grisham <josh@joshuagrisham.com>, thomas@t-8ch.de,
+ kuurtb@gmail.com, ilpo.jarvinen@linux.intel.com, hdegoede@redhat.com,
  platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20250215174544.8790-1-W_Armin@gmx.de>
+References: <20250303132433.348653-1-josh@joshuagrisham.com>
 Content-Language: en-US
-In-Reply-To: <20250215174544.8790-1-W_Armin@gmx.de>
+From: Armin Wolf <W_Armin@gmx.de>
+In-Reply-To: <20250303132433.348653-1-josh@joshuagrisham.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Provags-ID: V03:K1:olaVtLE52dszs6MJvjxGkPlezg1P4YlNkVCuIGoGiVk5q4gnlZ3
- zJL0uBkpqW9gm0z6WUo3fiynl61hvPJztviqoVLut2PIJN8361QDIMVc74dtjgxSVRMF2G5
- /luz9MJ7HKTcNNEFilKybEsYMZ5MI1B/4oiaBp4rtEQDCAK1/tm3DHLHphS9ODBwy9L+H2l
- XyZ6d4sRrhb3lYnE5J8iA==
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:4fbc+RRPLpTjkPe2SlLqdjyFuK9KYbtHnM4aFnnHbkSROCchJdx
+ 1zyuZDiN2pV87sU8wsxg4Qg13eYwJdmuNWxCsK3iCckxcJ01GhuCNQkvnMQ27q6qLH7IAHA
+ rLAZalJNJlKEAqyIX3hAvmsSveizDE5hGRCHuPOHB1+FUpCrgqfiXikWswld2phFpX7vs/1
+ ke5kZrlhsrFwyECAZg9tw==
 X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:JUwDkcbxucM=;cIhnAOBIlUHnQZw656v1wlXOmVy
- 8n69MuG7BsFgfQ/SvMWC4bQ10eqbktFtnfFDAF963XI7Jx1X/EB1SHlK6rxl2aXSIzQc0Hp/Y
- 1aJlFtyWuQJQRkcbbW4/oq8Cef1Q3CfOH1ibjaaOEFLuCA16ag8y9XSKkw3MNENuir57HthUi
- ALUx+bLeI0I6gyrV+ikz9v66MLP9O7V4rmLLPoh90qNNbFYGrmuAsyDjq8EEsDkxXYa44brAp
- WB8vEVtEXbZS9qcH1w7rCBeinNs5KH9TxxIc7lFNDRmYXb4qAgvTEv4PSTiqNCQvY3Aw1TO10
- QtXatK/yELdftjgF9KqWfqYZVWkI9DmJYVDXsozr0vbuCfmIikoR3oz85Y1x8kXX/FTD+vcg2
- rM+QyftcDDbBUuhRYuJkS0Qn82AfNIv0CaZ0EBdhoTxIYLHYsa4l3U8Ifp8YY5WvZTKbsBoqs
- szUrFIUBx6ABXKn2DLukWzmwF4MDWJ1VjIgdG6nj9Nmu4VtnEfSNP4qXffblx3XFWP2mosoW/
- VeIU3A8jyYs2paWbtqaytX+DePTiDiM9plZK1S59vWSbU5hTi3m80UGv2wD87z56scfg4v3lg
- 7bcAixWgVqnxG6jGF5eYs1ZEP8D12LRd4vXyXR1td9OmlGctPpna+131PMeDEZjD7QsX8i5FE
- tvhcA0H58xFEWi8J/t36ZCtH86XM4nJCPX98HwsTImU+/ARi2wGaWixR5JKdaHLTeOBpQ4bSH
- 8B55yTaKZysx+MdPyUZUGykVLaD70swaiwXUJVqFW5he3RoGtKeVaa6rz9SAXCOeoxnr0Z6BL
- gUUJXiSNKKXd47+0wctgqMse/XucDIjkyX6QwMThyk4pls0mWPVBmZyj5v0zAqiZ6KMisibyi
- JiozlROCKWUq97CfUf0Y24s96gbeobNDhxezkvAHYqdn4XnYrODoe7Ex1hqAiDUlNgKwiIVVQ
- +pHmqSBM2MNUuQruYMNbQcOxAN6Hl9cyzC2TtI3d8/X9VLB9RI+r10hsXBy1azgV82c4/ySWd
- s4MoAoj/Piob8SjrGOGK10tQq0p8E7vRzIFyqjTNieGi96Grq79y74d98CuW3J1recCzj99bq
- vFrUPiJHY/z3TDqx6a/BUrcl0tduPAPfrthKODvfHXJjGpGnnzeHk4C6dVIhXmrBByY3kNVLF
- Wn1/5Z0KLCw5sQNuck2XmobltQawwtuMG/WXZei3fZpdzjRpI0VUWSxN0j8qvqOmn07f73oG6
- s8CdC0bshMRGsM4D1j2ITWw8cvkX+tdKF4QVxDOF+hly5cdgKQjYp8JePsdLMuABt+knLl/k8
- FJQ2Slyh4rMQ4BGTlxlatCuRI3wfrpkuLJTUJqqHuIAf5DjGqzm0NKZbv3N9M0UaZZLqSG+Zp
- F7MIzwy2XKXa3OfRMjWuzfpTM5MPUU69jIPUnbrhgPQyCBdwwAl63owBB4
+UI-OutboundReport: notjunk:1;M01:P0:oP7IkrN8iJA=;xeGJpYCYCb0hpKT3M9R3IwXwcOA
+ KaRn++YhunMpZHkLoW7+YilONW1llI2FmT/qOPq/1e8TEgib7vBxV8k8BABZ5ISda2A/fg11f
+ ImBI0KJ4/lVS3Ntiul1MJUy9NlF3tOfcdI6PZZF/wKZX76RbC+ZHynv8Hfj27gBBlPnOigDOw
+ SiSI9OIG9xtnaH5gpoM2HaecfKmU3qpPw6JB/zxhNXkrY0b5Jy9Yp8tXcnxOJcMEcoPF1H0bv
+ ZT9OMJjFsHekqz0BMAGF9/9xGKItkCisgdZ6ljp7gMomL/8H/0ewrCsFYjndOv+dTibmjH1bD
+ XA8GoPbFz8OdmBLwQzFnlhEpPEyaiwnoOnMS2+M+H8VsgKOAbyVyxFMmGSLyqmIdYrP7a1RlD
+ zClJDHssz6c/Kz4eP5lJELT/qlj8/jzMDur6BF+3D2GBs7cGXhbAJaVep5gzu1Alv56Qil/Y+
+ xksuKy9UtQuTPvDomziSiQu5zv3p24JMXn3tY4yxVQsk1uRIWGsQ3vzwtPVnnhdBHhBv8Kl5x
+ yNcqGVnAvjqAUr/AuhDo49vTY90L5InwnrH4ceNnJn9f8pjJeG0ZYL7wzTrHiiTUJ5ZtKPj4k
+ cxPjiHcoTGiJSa/DMHJa/ZmUjKz6iDH3zKieK0/NBD8WDaHNhOHUURTzg+ypz3ein7xHmgb5K
+ lPwUmFE4AhtqXLB+5XXmtiXBRoPUrmF3VVsh4Gms3UC+KpkRblrqJAzQdJ6Sq49Nmnim6MoO7
+ 0dPLA81+ADZvSfAnPfzxxbR2TU+cJwFd8VFinNgEbxQFwvctoafjSo2aAji1JSSL5XB7Mw6wy
+ CztB9W4zmAdKVobgO7zSELr8iosXNjpN8oZN2ffd3vZkJaSglSr0Ju0XSW5QEis9XIvcY6vjS
+ hWn/k1tXA+5PuztJ4j5UZzXHTe1fzW1oLBTKJM7r2+tSAsdgAdGw6Gym6ShUqB2weUI8sUWyT
+ P3Awv6RlSc46xGbZ9SkQKloNP0tvZdh++BFwIadjPxnLUxyrwtEnpDpOBbRopYTGPLXNtg88W
+ vjT3eMLyK6oeS8+COSU7PwLLSWPcMf08PmjS9MqWzc2cvFhQdIVQIGwK1u57Hwtlb1Ld9jePO
+ 6TzlgQKSmOEKIAXXAm7P5qi7XGUGcrCh1Paf1pxL8uVflatGgsCa3nqwzGXSVOWWLFrPeHszy
+ hTA3nckFH+yEfZ1TtY8Kzpfo/2ODkotEOCYgES0R4s/r19oOpSDOPDaT29UUPdSLELWPH0Pzo
+ 0JrxOKLTqrgfZynnxUluiC0+iyLi4XKsfNIGVwOuNPbmpjr3WdeGg8iFHGR3wj9yKDo9QMw36
+ p5zI886GVb4YodzZMPe8xMTD5HuWUgEibY2bm+TTO9popTxiTIkLfpsCLes0unRdTqezp2X2k
+ K6BlRzahtKf0KnFWyQY3gYBbmj2Ks2Cc55BHCet0pKBW8Vs1WnvcFmYz9n
 
-Am 15.02.25 um 18:45 schrieb Armin Wolf:
+Am 03.03.25 um 14:24 schrieb Joshua Grisham:
 
-> This experimental patch series aims to add fan control support to the
-> acer-wmi driver. The patches are compile-tested only and need to be
-> tested on real hardware to verify that they actually work.
+> Fixes logic error when block_recording is not supported but the fw attr =
+was
+> being added anyway (reported by GitHub user bbregeault).
 >
-> I CCed two users who requested support for this feature. I would be
-> very happy if both of you could test those patches and report back.
->
-> I am ready to help you both with compiling a custom linux kernel for
-> testing this series.
+> Tested myself on a Samsung Galaxy Book2 Pro (has block_recording) and by
+> bbregeault on a Galaxy Book2 Business (does not have block_recording).
 
-Any updates from the two people with Acer hardware?
+For the future you can use Tested-by tags to indicate who tested this patc=
+h.
+For now:
 
-Thanks,
-Armin Wolf
+Reviewed-by: Armin Wolf <W_Armin@gmx.de>
 
-> Changes since v2:
-> - remove duplicate include and replace hwmon_pwm_mode with
->    hwmon_pwm_enable in second patch
+> Fixes: 56f529ce4370 ("platform/x86: samsung-galaxybook: Add samsung-gala=
+xybook driver")
 >
-> Armin Wolf (3):
->    platform/x86: acer-wmi: Fix setting of fan behavior
->    platform/x86: acer-wmi: Add fan control support
->    platform/x86: acer-wmi: Enable fan control for PH16-72 and PT14-51
+> Signed-off-by: Joshua Grisham <josh@joshuagrisham.com>
 >
->   drivers/platform/x86/acer-wmi.c | 298 +++++++++++++++++++++++++++++---
->   1 file changed, 273 insertions(+), 25 deletions(-)
+> ---
+> v1->v2:
+> - Add Fixes tag with prior commit (thanks Ilpo for catching!)
+> ---
+>   drivers/platform/x86/samsung-galaxybook.c | 8 +++++---
+>   1 file changed, 5 insertions(+), 3 deletions(-)
 >
-> --
-> 2.39.5
+> diff --git a/drivers/platform/x86/samsung-galaxybook.c b/drivers/platfor=
+m/x86/samsung-galaxybook.c
+> index de1ed2dc6..5878a3519 100644
+> --- a/drivers/platform/x86/samsung-galaxybook.c
+> +++ b/drivers/platform/x86/samsung-galaxybook.c
+> @@ -1100,11 +1100,13 @@ static int galaxybook_fw_attrs_init(struct samsu=
+ng_galaxybook *galaxybook)
+>   	}
 >
+>   	err =3D galaxybook_block_recording_init(galaxybook);
+> -	if (!err)
+> -		galaxybook->has_block_recording =3D true;
+> -	else if (err !=3D GB_NOT_SUPPORTED)
+> +	if (err =3D=3D GB_NOT_SUPPORTED)
+> +		return 0;
+> +	else if (err)
+>   		return err;
 >
+> +	galaxybook->has_block_recording =3D true;
+> +
+>   	return galaxybook_fw_attr_init(galaxybook,
+>   				       GB_ATTR_BLOCK_RECORDING,
+>   				       &block_recording_acpi_get,
