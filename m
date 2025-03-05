@@ -1,242 +1,105 @@
-Received: from mout.gmx.net (mout.gmx.net [212.227.15.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f48.google.com (mail-wm1-f48.google.com [209.85.128.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C7FB81DB924;
-	Wed,  5 Mar 2025 05:30:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7966D207A01
+	for <platform-driver-x86@vger.kernel.org>; Wed,  5 Mar 2025 10:31:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741152630; cv=none; b=kXJ8skViQ0KTnaXUd0YFzkSRjScAtUAuyLyQeqrxwV08wtN/QDztoFFG0r9jQrpRCf6ZM5KjRvm73k5hdPdcNKTUf3XbzZxhBZ/+J00W6nT8uS/fvXbTIS5OKnYbzvZeJkYdypBV2vXjG8Lp+o4U4ezSG6a5YRGZ/QEHu29dmug=
+	t=1741170718; cv=none; b=SOGheYf+tkrlseuXu7r2Op3WvOtpVJxc36Uo8m1n4qBQ60nYpZDMCp0scXfI3Hp2skjcSQY81eYc/yEEzZulZZAZAk0jca+FZ1OFz3FbLDwUe2w5w8HxFO8O0O8FmlH03wwBTmsoCELzqrt/F8UHEvEsS5tQ4hCiRwrejDXq0/w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741152630; c=relaxed/simple;
-	bh=QoYw3EV2PTQQEHPlv4pDNm31tpLdrgmMIQezAA0ysFg=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=mmx0EjPBOuOwM2+fk2h+Yl0kthwUjKFQ+KlgTKJRXzp15Q5s+IXOssIkGVPRkH4HazrDoTFwkCY8CIzfal9ctFJjYKbG3aQaa/X4qqduxCSt5EBE35bQDymnOcb8zM1Sn7+JDyANiTU7vUqSrxPYEr0vKLzRC+gyvmPtlkDFGj4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b=ki0lEhz6; arc=none smtp.client-ip=212.227.15.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
+	s=arc-20240116; t=1741170718; c=relaxed/simple;
+	bh=0v6Zt/MABbD0gYMSTn3p9nKFECTkaY5R5P9eYaq23RQ=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=R9Kw/d9kTSNmMMaIu6LFCQEOsaa53/OcaNCuKG9ZpSaWhE3a1efpN33oU9rvu6SFqOWlmy1DbhHYzIJGO+xson8uwzf2noevj5A68fwEcAoHxIR7Jr0rC4TQJInHagLGHH76reb3yuStJLHjsVRuvhBHfWL2oxAbywEwHd6pUMk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=0j+YpGz/; arc=none smtp.client-ip=209.85.128.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b="ki0lEhz6"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.de;
-	s=s31663417; t=1741152624; x=1741757424; i=w_armin@gmx.de;
-	bh=qiYfmLTFay8BFeSgQBCeWuSFU5BJ2TAwpkl8owzumx8=;
-	h=X-UI-Sender-Class:From:To:Cc:Subject:Date:Message-Id:In-Reply-To:
-	 References:MIME-Version:Content-Transfer-Encoding:cc:
-	 content-transfer-encoding:content-type:date:from:message-id:
-	 mime-version:reply-to:subject:to;
-	b=ki0lEhz6AhPUIDaMOsKv6R1KZbRgcpxw+Os0jCCv/a9MW/KqLxxmbqqaPo9GrfYm
-	 rD66fkcVwPaDHk0Ba8MKy6P6pbcpC1JvKHLLKDObgJ4frPd0cjOqPDi/guN8QxvHi
-	 QIdyPiNW9+GDktBra3Mnc+cfu8ZLIH/g81Bq/T4Vlx3QQKJ3Yu3J6HjsIHAMmaN4X
-	 YZNhp+crhuArAad8Uc1zzMBlhLPGSv0eudnVTk3Oiv1GJYuRiwMr88BYIQ55miQXS
-	 r3IeZMCgXMg1cdmDxk5s+QLvgPSF7i7e8cnyO9XMRa5YxkhlLVZTJiyjc6JxPFdkO
-	 5bWUK9fhzDViFuBS3w==
-X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
-Received: from mx-amd-b650.fritz.box ([87.177.78.219]) by mail.gmx.net
- (mrgmx004 [212.227.17.190]) with ESMTPSA (Nemesis) id
- 1N17UW-1t97Yb36Wg-00vqf7; Wed, 05 Mar 2025 06:30:24 +0100
-From: Armin Wolf <W_Armin@gmx.de>
-To: hdegoede@redhat.com,
-	ilpo.jarvinen@linux.intel.com,
-	sre@kernel.org
-Cc: platform-driver-x86@vger.kernel.org,
-	linux-pm@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH 3/3] platform/x86: dell-ddv: Use the power supply extension mechanism
-Date: Wed,  5 Mar 2025 06:30:09 +0100
-Message-Id: <20250305053009.378609-4-W_Armin@gmx.de>
-X-Mailer: git-send-email 2.39.5
-In-Reply-To: <20250305053009.378609-1-W_Armin@gmx.de>
-References: <20250305053009.378609-1-W_Armin@gmx.de>
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="0j+YpGz/"
+Received: by mail-wm1-f48.google.com with SMTP id 5b1f17b1804b1-43995b907cfso42555255e9.3
+        for <platform-driver-x86@vger.kernel.org>; Wed, 05 Mar 2025 02:31:56 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1741170715; x=1741775515; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=63++Ar5Not6v1z5SwzlcGxcT0577JgrxXolq6jAwmVk=;
+        b=0j+YpGz/i8XYP9/bK0FoG19yqJqExhc60Wu+WtF90Bo4edM50LoIWjuaT4/19PCYWw
+         9EY2Bhdb8y58jz5uEYuw1XrytNp4VraHsOgsdWnOLYgPhZdekqHUC5Yt6kEiKiuoh1BB
+         sWX+BaHoaR6w2DCb2QY8lyKZ0LqehaaXnSiF7fKdQUl0Wmtv/ErP7E6Z0DacGNo5ERM+
+         miyU95+pqnowa6uqeXH2Fq3Y0WfzYg6Rk6xxArepNaT41JFPZBxX3997Tlvyh2hERUSu
+         LZqvkjghUxh09p3WQ01mGzTycHTyFBkYo3vt6Eo6QhYK1RdQ4UBQmrnqixDg1kacdYhc
+         mnLQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1741170715; x=1741775515;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=63++Ar5Not6v1z5SwzlcGxcT0577JgrxXolq6jAwmVk=;
+        b=Q2w7dIvjJGrnmxPIdBLOd2P2Hvt4gC7gWK4lBblbsMnYGOJsK24gUwKLX5xQMwmxtq
+         7utrHD6+g/wM/z43eVnTUsetruR8zmMSA/WTVWrB2k8ynaa3SJpFxLQdkDLGOs84CQTQ
+         6pDo+vCPWcCIwThEK/NFVQ7hW7RdfzKnWFEfaOia7FgVDoKRFDQtCMyDNS9O3OM07UXK
+         hoePFk0mZZbR4JqihD4WaSK4y56q2e7Mt8vCDSNYdXkLf6Th9OCO+noYJ4gQrYtAtGtu
+         1PxGpXkdggoS91d6uCS5ZZCGa8wMadB5TzLncxFjsFw8Gnf/70GeyNONornXCHqoO69d
+         HyxQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVmo/xS6bTHL/DL7yB0KPLdc+RFB/FQeAUnBeZO1H98A1EEPehgk+m1NuNgP8UlMKMm1btk+eD/enMd+Hx3TJvTc1DT@vger.kernel.org
+X-Gm-Message-State: AOJu0YxAdFC2nExve/Ojlx9TZlaogvD7CJioOODn84rcbHJnx8MEmAgY
+	XRqjAVGu91AYi2hNdS98J31/rM+4FxWUHp7vhapsOnltPYpB0amTltP+dmbdlBQ=
+X-Gm-Gg: ASbGncuQx3jy2/jVr/JGnO/M6kZ5mKYu5EzftGQf+Y06e6KpHHgzDoOA8X5+G6abwKX
+	zJYy1M6ndZIZ0GjxCMHYFoHd/OxHNRznNIyrdZ4iqSpEURJnjN4rIWqthsCaUgJvvMlhfr27N18
+	hD1ZjHHEezHIM9c7PcrFosIr/4RWt8yww82gKk4n9jMONHB6vctBbrRgfSiEtY7QrGmGUGux0mj
+	NmAUd4JKu6S/Zbesbu4DG0bss55lq6R0c2dVAJquELOrZ2hvXIZB9ZiI1uY0Ga6bQdSb6daqu1p
+	pevjpkSwXJzQnDZtCbzq9ou2a94o4P1tz5H9EgKfMqwb
+X-Google-Smtp-Source: AGHT+IGdpofHBUYsSVKjftpHMXJCFI4qS6aBIfMRcLTGvpoDFRyhuHi7RyiMHkO579i4wWEd59VXnA==
+X-Received: by 2002:a05:600c:1c95:b0:439:9b3f:2de1 with SMTP id 5b1f17b1804b1-43bd29ad100mr19311215e9.15.1741170714658;
+        Wed, 05 Mar 2025 02:31:54 -0800 (PST)
+Received: from brgl-uxlite.home ([2a01:cb1d:dc:7e00:e514:53b3:5af8:e408])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43bd4352eccsm13152975e9.27.2025.03.05.02.31.54
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 05 Mar 2025 02:31:54 -0800 (PST)
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+To: Henrique de Moraes Holschuh <hmh@hmh.eng.br>,
+	Hans de Goede <hdegoede@redhat.com>,
+	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Cc: ibm-acpi-devel@lists.sourceforge.net,
+	platform-driver-x86@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Subject: [PATCH] platform/x86: thinkpad_acpi: check the return value of devm_mutex_init()
+Date: Wed,  5 Mar 2025 11:31:46 +0100
+Message-ID: <20250305103146.53221-1-brgl@bgdev.pl>
+X-Mailer: git-send-email 2.45.2
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:Nf9M9MaBNKOuPHI5xkQ87fIO7LtPgVmw4Mw0qsu38SEo4jGdBG1
- 5rD7nJ0O+gGjQfjKiWvhA3TCzGEL9MDQ2gEBl6ciIEfLRsi0aoRPG2gh8+7piL1BIpLtWAY
- 1S4j+v7KLv5Kf95PX+V63KyCmTdsCo9TP5+ptdfjZlX3FZzBptIqZblytdwCd6IG23WqQhR
- fIwOICg+Eh7rioHv5phGw==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:8/lsEW3TzyY=;udIEPtmDdIunPZPUwal8wMeh++z
- 9a4bKnX/tlW5MxBax9pTU53oMXSjUbYU+6zJCJpwmknrGzQivskhXjYC1V5MMR3W8KUvIDFKf
- kaqY4jxxbO1hgVrRmTaHyWsEJNJFdA1W+9Ijie6tqkDhqtlOVu4hsC5Y6BuvV/Py5vLHQajiX
- ASqGwjcZl3oKc525jGwCJTpSE607pkmV0oly9pmlxhKsaKutLASstb/dH7cnXIHGcihxHeMll
- 8GP0T9uyeUXh8KKUbCuoNwInBieRBOHKHpxmTvcoESDuOFmJNZZGUF/38dnZHVXN6Tm6R5GLG
- 5eUjnV7MVCHdu9nK4ndBK7+Z3Ok6gc5P/dx6xkMjHkPlY0AAkPSDljNHpB/rSF+b/EIqNlIU6
- JNBISipy/DQ8sFEgiCNibOa9ck+s/oimLF/RI8u3Ueo228ejewZwxhU3l74tm/IKUFY5ARugg
- QmO2LTpCIVI61xysj3T0bSidT3d0CZ5CMNgfMCvo3ZBejOkpsqJgouFoDV/1j0zcmgFdT5LY9
- nvEiLLtN1SLE7m1EiOkj3oLBswT8T1QtgUagmtEVqXhTt1lc1bQfWqGjvIj9eeI+QCpwmAT1z
- 1jNWRmZsHVZn6vCJTSt2IYB27IC8lmSJOyTYMv0zfiB2rsOmQOuOxEdYIv/4O5e2MFkdXEBY9
- RGfj0HsjL5vQRJBBZjHO3o6vu1tRHu682OC403Vr98KDDiNA0jDu4QTre+cebHPdF6lIEAVrR
- UKAWFFzfSnpsYWoh/2dLtwR2ChN/uPzzHtrQfW5/xtx+gmMK4MQWsymsy4prU/eAZ9Nlf+2/l
- Sd1LQ6FnWZlBI8m1neKl6UR4hLkPCCL9Tl8lkB5D/R6uddXSdKJ1bm0ZIV9jPLXzRITeAGMtL
- ZcfsIixU8lufjIxrvlJa9sXhB5rjpqdXyXDvybLPdzohw++5H5E98/8/SqPNRXQAcdjT8hLkT
- U7JrgVC6sYwR+jbUcl79iGz3w6fJSI8nm6s4yebip+zFTvoDmKJuAwbNTLE5FdaTD/dROx72V
- XfLHNwynGKkGtvGRl8JsFeuaqYmsrdrHGL7zwT1bQnApbulOlH4bfHVqZfZpNPDKELimz2dUW
- OivKhrKFTR+nOyxLW3+AKPNpfh571iUg+cUAJG16XiKNMR1bAPDZ9MEmMHlR9SAp0b6YdelnL
- Adn4Jdy/QhflE0lt3vR8f8ldGG8l+ec4E/yy3Cn8NTXb4rtnPStWedHD1+6O0o/ufCS2YlL9y
- eaELwxszruDDGVWy3a0AzRwvoXkd7wHFiEakuEu7W3SMTzmsBomkiGGufKr/ayNqLiGTq9Q3H
- cqSzG3AdjoM2T5ZB5ymhqBOLZ9/MrOXNHjTBWzONCWqJSYZCCbOclNDyocaGFD6yXkVm21Ur5
- c/JtWhTqkB0DPysXTesjlPgyy1J1FWM2oKLdsLtfI6TaOnRh22lB5OWsu3
+Content-Transfer-Encoding: 8bit
 
-Use the power supply extension mechanism for registering the battery
-temperature properties so that they can show up in the hwmon device
-associated with the ACPI battery.
+From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
-Signed-off-by: Armin Wolf <W_Armin@gmx.de>
-=2D--
- drivers/platform/x86/dell/dell-wmi-ddv.c | 75 ++++++++++++++----------
- 1 file changed, 45 insertions(+), 30 deletions(-)
+devm_mutex_init() can fail so check its return value.
 
-diff --git a/drivers/platform/x86/dell/dell-wmi-ddv.c b/drivers/platform/x=
-86/dell/dell-wmi-ddv.c
-index 811cddab57fc..f27739da380f 100644
-=2D-- a/drivers/platform/x86/dell/dell-wmi-ddv.c
-+++ b/drivers/platform/x86/dell/dell-wmi-ddv.c
-@@ -104,7 +104,6 @@ struct dell_wmi_ddv_sensors {
+Fixes: 38b9ab80db31 ("platform/x86: thinkpad_acpi: Move subdriver initialization to tpacpi_pdriver's probe.")
+Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+---
+ drivers/platform/x86/thinkpad_acpi.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
- struct dell_wmi_ddv_data {
- 	struct acpi_battery_hook hook;
--	struct device_attribute temp_attr;
- 	struct device_attribute eppid_attr;
- 	struct dell_wmi_ddv_sensors fans;
- 	struct dell_wmi_ddv_sensors temps;
-@@ -651,26 +650,6 @@ static int dell_wmi_ddv_battery_index(struct acpi_dev=
-ice *acpi_dev, u32 *index)
- 	return kstrtou32(uid_str, 10, index);
- }
-
--static ssize_t temp_show(struct device *dev, struct device_attribute *att=
-r, char *buf)
--{
--	struct dell_wmi_ddv_data *data =3D container_of(attr, struct dell_wmi_dd=
-v_data, temp_attr);
--	u32 index, value;
--	int ret;
--
--	ret =3D dell_wmi_ddv_battery_index(to_acpi_device(dev->parent), &index);
--	if (ret < 0)
--		return ret;
--
--	ret =3D dell_wmi_ddv_query_integer(data->wdev, DELL_DDV_BATTERY_TEMPERAT=
-URE, index, &value);
--	if (ret < 0)
--		return ret;
--
--	/* Use 2732 instead of 2731.5 to avoid unnecessary rounding and to emula=
-te
--	 * the behaviour of the OEM application which seems to round down the re=
-sult.
--	 */
--	return sysfs_emit(buf, "%d\n", value - 2732);
--}
--
- static ssize_t eppid_show(struct device *dev, struct device_attribute *at=
-tr, char *buf)
+diff --git a/drivers/platform/x86/thinkpad_acpi.c b/drivers/platform/x86/thinkpad_acpi.c
+index 6128ad820ea0..d8df1405edfa 100644
+--- a/drivers/platform/x86/thinkpad_acpi.c
++++ b/drivers/platform/x86/thinkpad_acpi.c
+@@ -11849,7 +11849,9 @@ static int __init tpacpi_pdriver_probe(struct platform_device *pdev)
  {
- 	struct dell_wmi_ddv_data *data =3D container_of(attr, struct dell_wmi_dd=
-v_data, eppid_attr);
-@@ -697,6 +676,46 @@ static ssize_t eppid_show(struct device *dev, struct =
-device_attribute *attr, cha
- 	return ret;
- }
-
-+static int dell_wmi_ddv_get_property(struct power_supply *psy, const stru=
-ct power_supply_ext *ext,
-+				     void *drvdata, enum power_supply_property psp,
-+				     union power_supply_propval *val)
-+{
-+	struct dell_wmi_ddv_data *data =3D drvdata;
-+	u32 index, value;
-+	int ret;
-+
-+	ret =3D dell_wmi_ddv_battery_index(to_acpi_device(psy->dev.parent), &ind=
-ex);
-+	if (ret < 0)
+ 	int ret;
+ 
+-	devm_mutex_init(&pdev->dev, &tpacpi_inputdev_send_mutex);
++	ret = devm_mutex_init(&pdev->dev, &tpacpi_inputdev_send_mutex);
++	if (ret)
 +		return ret;
-+
-+	switch (psp) {
-+	case POWER_SUPPLY_PROP_TEMP:
-+		ret =3D dell_wmi_ddv_query_integer(data->wdev, DELL_DDV_BATTERY_TEMPERA=
-TURE, index,
-+						 &value);
-+		if (ret < 0)
-+			return ret;
-+
-+		/* Use 2732 instead of 2731.5 to avoid unnecessary rounding and to emul=
-ate
-+		 * the behaviour of the OEM application which seems to round down the r=
-esult.
-+		 */
-+		val->intval =3D value - 2732;
-+		return 0;
-+	default:
-+		return -EINVAL;
-+	}
-+}
-+
-+static const enum power_supply_property dell_wmi_ddv_properties[] =3D {
-+	POWER_SUPPLY_PROP_TEMP,
-+};
-+
-+static const struct power_supply_ext dell_wmi_ddv_extension =3D {
-+	.name =3D DRIVER_NAME,
-+	.properties =3D dell_wmi_ddv_properties,
-+	.num_properties =3D ARRAY_SIZE(dell_wmi_ddv_properties),
-+	.get_property =3D dell_wmi_ddv_get_property,
-+};
-+
- static int dell_wmi_ddv_add_battery(struct power_supply *battery, struct =
-acpi_battery_hook *hook)
- {
- 	struct dell_wmi_ddv_data *data =3D container_of(hook, struct dell_wmi_dd=
-v_data, hook);
-@@ -708,13 +727,14 @@ static int dell_wmi_ddv_add_battery(struct power_sup=
-ply *battery, struct acpi_ba
- 	if (ret < 0)
- 		return 0;
-
--	ret =3D device_create_file(&battery->dev, &data->temp_attr);
-+	ret =3D device_create_file(&battery->dev, &data->eppid_attr);
- 	if (ret < 0)
- 		return ret;
-
--	ret =3D device_create_file(&battery->dev, &data->eppid_attr);
-+	ret =3D power_supply_register_extension(battery, &dell_wmi_ddv_extension=
-, &data->wdev->dev,
-+					      data);
- 	if (ret < 0) {
--		device_remove_file(&battery->dev, &data->temp_attr);
-+		device_remove_file(&battery->dev, &data->eppid_attr);
-
- 		return ret;
- 	}
-@@ -726,8 +746,8 @@ static int dell_wmi_ddv_remove_battery(struct power_su=
-pply *battery, struct acpi
- {
- 	struct dell_wmi_ddv_data *data =3D container_of(hook, struct dell_wmi_dd=
-v_data, hook);
-
--	device_remove_file(&battery->dev, &data->temp_attr);
- 	device_remove_file(&battery->dev, &data->eppid_attr);
-+	power_supply_unregister_extension(battery, &dell_wmi_ddv_extension);
-
- 	return 0;
- }
-@@ -738,11 +758,6 @@ static int dell_wmi_ddv_battery_add(struct dell_wmi_d=
-dv_data *data)
- 	data->hook.add_battery =3D dell_wmi_ddv_add_battery;
- 	data->hook.remove_battery =3D dell_wmi_ddv_remove_battery;
-
--	sysfs_attr_init(&data->temp_attr.attr);
--	data->temp_attr.attr.name =3D "temp";
--	data->temp_attr.attr.mode =3D 0444;
--	data->temp_attr.show =3D temp_show;
--
- 	sysfs_attr_init(&data->eppid_attr.attr);
- 	data->eppid_attr.attr.name =3D "eppid";
- 	data->eppid_attr.attr.mode =3D 0444;
-=2D-
-2.39.5
+ 
+ 	tpacpi_inputdev = devm_input_allocate_device(&pdev->dev);
+ 	if (!tpacpi_inputdev)
+-- 
+2.45.2
 
