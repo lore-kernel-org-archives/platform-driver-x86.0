@@ -1,73 +1,72 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC19A1FECD1
-	for <platform-driver-x86@vger.kernel.org>; Wed,  5 Mar 2025 11:22:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E3B892356A8
+	for <platform-driver-x86@vger.kernel.org>; Wed,  5 Mar 2025 11:25:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741173756; cv=none; b=rOYTSQumhWd5AUZ0kgDaqPMun1tL2MwCLNTefgaoti25CcYQ29dTwng1iRX6gll3Uk7JoinQWzYv6crNi7pqq1sxDZZ66IhNbonmew8e/O4bXJu2oUxe76mBz1vtTOxqOgfoi8DBEsXjgZB/9v1GpRxshicCUHt78sNN7c19YMg=
+	t=1741173917; cv=none; b=GRCV/NlLmLeaQPzm+PeOJFSMcW5oBqXid7Iequ9nUE/OdMxNp0Yuknl6l/I0yHcSlMklyWdTh7gXBx1mpVtbqudzyEpxoi/Tm9VdJjxYEezdxnbl3uZHDEi8awuxHwzXRCTF5CsJic6aEA7cX+Fc19gxev2SGO8cDi/+Pnv8ni4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741173756; c=relaxed/simple;
-	bh=/+L0wAOKozUodZ9tTzm3767cEww8MplolxX07nvX9VU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=Uy0VFu3aodLbhH9glgyXK0t+muoWqn08rCZmwK/i3LGgbtsgHJn7YgFQpmKNwoA3wOe8wU7E16an4AuPs06N9wcEGyRk3JPa0LvN1OC/HgqO54M3reZExmVvOsB1KC76vSt20BYfxgkX97ngGEY5AF+GPf6R9rcRCieXTZGD7Hs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=WMSTyuZm; arc=none smtp.client-ip=170.10.133.124
+	s=arc-20240116; t=1741173917; c=relaxed/simple;
+	bh=xiH804oufxrxYJTAwlcyfD+RL0wGycJOQj1WxbEh2ww=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=D02ziitWww05phf/Uz9Lf+k33uCeNhYwrwgmcbgu5xoYMNLcCtI9ZwYctTn91lr0A/2UhN5G62Gm4llayb/4gekkOes/pQntUQWZ3tnB3iCSuxc9lHfAwt5JQG4vfLI7eIjkkZXd6xakCcDSQhT2FRx2RE7BmiYU194ee8h50cs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=HctouAZe; arc=none smtp.client-ip=170.10.129.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="WMSTyuZm"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="HctouAZe"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1741173753;
+	s=mimecast20190719; t=1741173914;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:mime-version:mime-version:content-type:content-type:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=r0gZVE/AeQPIxGT3xE3l9BJh5bFLtI7lvrK9jIYDx2s=;
-	b=WMSTyuZmkSbr49raXMQpFUJ21MH7Nr1jxB4IRUIs8jZsofUzaLj4VBpUp//bdxZ0O51Y9p
-	9PCJdUyfI/kwvZEUZ+Ddsjy3NWXlPtUvxznUns810zJr9AR7sY5eEFv+iNXhbzsaHtIQes
-	IkU1GnO/Viq586S9lsgXVloLUbHvEi0=
-Received: from mail-ej1-f70.google.com (mail-ej1-f70.google.com
- [209.85.218.70]) by relay.mimecast.com with ESMTP with STARTTLS
+	bh=TLdBM80iSu/uxRPEIQYDIE15fbxOACwJC7A0CjWSe5Y=;
+	b=HctouAZeNcJ8mNvud9224KeXaOBg4fgyI/SLXQb/rF1os6Ub8vUHQf4q9nFmNLnvORFDl8
+	+/3rbO8ozs6BrEYgt+Rz6IvLATkNu8XoNApBP0yILO3bild4+W0Fnsp2iU0aYJDz+iTNNt
+	qs6T9OpiIWhtN2uHjCeqer2R3yWpVD4=
+Received: from mail-ej1-f71.google.com (mail-ej1-f71.google.com
+ [209.85.218.71]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-460-qM5ddXZANU2jTATic74I1g-1; Wed, 05 Mar 2025 06:22:32 -0500
-X-MC-Unique: qM5ddXZANU2jTATic74I1g-1
-X-Mimecast-MFC-AGG-ID: qM5ddXZANU2jTATic74I1g_1741173751
-Received: by mail-ej1-f70.google.com with SMTP id a640c23a62f3a-ac1ea5c94adso273897966b.3
-        for <platform-driver-x86@vger.kernel.org>; Wed, 05 Mar 2025 03:22:32 -0800 (PST)
+ us-mta-621-y0FPyWlGNoiK4xg09ENdrw-1; Wed, 05 Mar 2025 06:25:08 -0500
+X-MC-Unique: y0FPyWlGNoiK4xg09ENdrw-1
+X-Mimecast-MFC-AGG-ID: y0FPyWlGNoiK4xg09ENdrw_1741173907
+Received: by mail-ej1-f71.google.com with SMTP id a640c23a62f3a-ac21ef37e38so30479766b.3
+        for <platform-driver-x86@vger.kernel.org>; Wed, 05 Mar 2025 03:25:08 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741173751; x=1741778551;
+        d=1e100.net; s=20230601; t=1741173907; x=1741778707;
         h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:to:subject:user-agent:mime-version:date:message-id
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=r0gZVE/AeQPIxGT3xE3l9BJh5bFLtI7lvrK9jIYDx2s=;
-        b=TXd82gEotfQGEQagQ2sn3xLqeEDzkuPRtdlLCTpPg7DsDlnwOhhM3jZ5kRfDWS0NBP
-         +eJK1CTuCuphG8pHC2ndX6IB9J/Z+42XV6Be9Jifa/i6n7KH31H0Of64OLYi5hYRJyTW
-         +YRsfaQ6FKJo+q/wpShjteMK9NRhuuySt5n20fteJwVFRCzFfFrItnMtekeyE3OgDKK+
-         LWHzIV2i7hqls/CIxlvEH2xwsxqGk3TPXB6ysuLJwq1ggak+iVN05alFARXaJ3yJ8Z8R
-         86nY8jJjrvlItJU53sCnWcyCyzH5S/ozgv3h5Bbi9X9WT3eXuVN+bhg0q8oEvbvmUIwi
-         ZNkA==
-X-Forwarded-Encrypted: i=1; AJvYcCXR2RdUyLeJIVklyayjxrPDpeYpenh5Rk3dBuU5iQVpMSjqUDh919iHb5T19QO/s5N9sJ6ePLAcJfKmS9q47AaReU+q@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx8X39EHJRmPdVRR6/+1ZRi4nVjB7+I+JVjAW1fp6wkH2fNZ94b
-	AU/DeVLMktwv3LUg/Nfbc5V+0dgIqGlYh6/ESmXm7xUdJgeoM2k9T1HV6cBAfOJhDrfzsvqLJFh
-	lsBlhlp7ebss6lM/AAghzt21emGo7U9VSB4dqYz7pvlz2efvUowE6lk0+vC8Lkp870kZZDLIhKf
-	WW7CE=
-X-Gm-Gg: ASbGncsvQj1YqBr93C67JoIVHC+pt/LFw9A31hcZub+IFXNrzbEHjPA15UtmXQZLfUS
-	Hopqo5uGOVmfQVTXRa32lBaVXSOUS0IM6TE1ZDVQELuqH1wrsAlA0K2PJajOKZwu2AzGhnr/B45
-	Atrnlo3OLiojod0+epuVxXBYMj3xwr3nDsFwhbfLwr+Oi+2CsQFnI0+N+IWqGDNgLHhJG1SWTCS
-	LiM+oNNpRBpRUOUfop7OlFnsR5+xi3FbzRXenSega1QvCaLvPYk/mciIHct1MFqP+5iwItN1Gy9
-	BJMuPpy4iBoxAr9ZJWfwoVBP8knTa5iK2pjquSaIwCUbczonF0qLZuVlasnAmofM2/5qfVlvEPr
-	OFcZy8xGrGVg54qu7hc1JdRv26d/1AT39nh7T5gLa8upRY9DsVPwfYlPefq0visOm6g==
-X-Received: by 2002:a17:907:c283:b0:abf:67de:2f21 with SMTP id a640c23a62f3a-ac20d9f39bamr225421666b.22.1741173750835;
-        Wed, 05 Mar 2025 03:22:30 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IEEwTypJN88Dnlriv+HlSev8Xp7KW80Pj6JYPkkT/a/MYDOAa511GjrMO140U8EH2tn8E3w1g==
-X-Received: by 2002:a17:907:c283:b0:abf:67de:2f21 with SMTP id a640c23a62f3a-ac20d9f39bamr225419766b.22.1741173750414;
-        Wed, 05 Mar 2025 03:22:30 -0800 (PST)
+        bh=TLdBM80iSu/uxRPEIQYDIE15fbxOACwJC7A0CjWSe5Y=;
+        b=kAhQF994lckyLRQdlJE/O3kLeWHNGEO3Rwm4IhoRFxWP8+K1Jk1/kFLlZVecz57yHe
+         2oX1QUxRISaeYo0J/DPy/N8Pv+qIXLC9FlvF1l7i3BfTKWvSenFQVII7kI66cN8S5XlN
+         7T4foqMJIeIuxP/ywBGJYepG44yq6g2OdDHH24tedArryuevbJbXAIZXI9Fbq17LbZWm
+         MG5LZ3KLzmOQBsuny1oNgSUqzqGtL+pB0dU+OdLjFOxtZIfMqQ2dgo75b6AVokghGePy
+         BVLeIdxV3xMYjerFxEasYQ4Ba+QUjqcE/3Y1Bv/pJfIu1D58kVB9zS2MqWbNEnuyFlOi
+         HD4w==
+X-Forwarded-Encrypted: i=1; AJvYcCVAFTPuav4Q6i7NONmvLOWcxtcn6GFqFR4aguXw90nxmzGx6BaDCo07JvZIM1An0VHgnMEfZPyFKePO9K8d6U5OVc1S@vger.kernel.org
+X-Gm-Message-State: AOJu0YxRlw1M8ZALl3YWUlnTjydCQQA7u/TwAz0h6cakgUxW2sQeMHmJ
+	7RopoCJy1jK6Euu/ISfhpXmIgXQ7xlm7236vLqu1vI9RrtqkeQMBWDPfJ4VZwY/3ehVjNTSq/KN
+	CGjpP6yoQLDaA8hceFVlv+7suHpHJpvxuFocGAu2U8NRAmzeJQ8J6DIFfDZGXn5qKLsCDgfc=
+X-Gm-Gg: ASbGncsmNrzwVCzcQ8LkkL4yyVRa7eTTJxutafFU6P+Xcqc4lRo33x9nCCzDX4ShUKy
+	8/LoMtQZBa3CU1/AIGP8Xllhbrvmhz53irYPJbIvxayyeba34f4iHvbcxFvE35t4AITecDrpavd
+	zUS64SKhTTvbMlmn8cEsQ2+2eMzu962kZGGsdys7AmhgkLM5zEJfXaDp10qui5Pgk6Z8Duh0P2h
+	i9gC91pxDDts5wSGWQQO+PxL5XZBk6SLRCKWbQrDq+yGE+dek+3TyfMV+LsS73ydK9Igz9KElXq
+	J50Q1pWCWH7acM5Jx8W9TOC8oGyCk2mGRbu4ovH5Lh4PS8ZnsN3iHgXkiz+f60yhR0gWZSjqoeu
+	Ki3CuMjk+sf3qEnYmo7XZQmbaOzHfX24bajto9FP3iCRp/bkkpnpa7iLqc5hTx7yHsg==
+X-Received: by 2002:a17:907:9451:b0:ac1:e53c:d15a with SMTP id a640c23a62f3a-ac20e1e0852mr245953966b.54.1741173907354;
+        Wed, 05 Mar 2025 03:25:07 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IHfK0GN8cel3aG2y75MwUH71YyraHg7k6K92jmUWyjDePWKPAfjLCL/CMQnQRRlkAciRT8l1w==
+X-Received: by 2002:a17:907:9451:b0:ac1:e53c:d15a with SMTP id a640c23a62f3a-ac20e1e0852mr245951066b.54.1741173906892;
+        Wed, 05 Mar 2025 03:25:06 -0800 (PST)
 Received: from ?IPV6:2001:1c00:c32:7800:5bfa:a036:83f0:f9ec? (2001-1c00-0c32-7800-5bfa-a036-83f0-f9ec.cable.dynamic.v6.ziggo.nl. [2001:1c00:c32:7800:5bfa:a036:83f0:f9ec])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-abf0c0b9956sm1131748466b.16.2025.03.05.03.22.29
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-abf53bf6621sm747600166b.41.2025.03.05.03.25.06
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 05 Mar 2025 03:22:29 -0800 (PST)
-Message-ID: <ecb132a7-40e9-4f31-9a03-4abcd6d0b1a1@redhat.com>
-Date: Wed, 5 Mar 2025 12:22:29 +0100
+        Wed, 05 Mar 2025 03:25:06 -0800 (PST)
+Message-ID: <1bee0a62-058b-482a-8eec-d45b8aca1614@redhat.com>
+Date: Wed, 5 Mar 2025 12:25:05 +0100
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -75,56 +74,93 @@ List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 2/2] platform/x86: dell-uart-backlight: Make
- dell_uart_bl_serdev_driver static
-To: =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
- platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20250304160639.4295-1-ilpo.jarvinen@linux.intel.com>
- <20250304160639.4295-2-ilpo.jarvinen@linux.intel.com>
+Subject: Re: [PATCH v2 2/2] Input: atkbd - Fix TUXEDO NB02 notebook keyboards
+ FN-keys
+To: Werner Sembach <wse@tuxedocomputers.com>, mario.limonciello@amd.com,
+ =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Cc: dmitry.torokhov@gmail.com, linux-kernel@vger.kernel.org,
+ platform-driver-x86@vger.kernel.org
+References: <20250303190442.551961-1-wse@tuxedocomputers.com>
+ <20250303190442.551961-2-wse@tuxedocomputers.com>
 Content-Language: en-US, nl
 From: Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <20250304160639.4295-2-ilpo.jarvinen@linux.intel.com>
+In-Reply-To: <20250303190442.551961-2-wse@tuxedocomputers.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 
-Hi Ilpo,
+Hi Werner,
 
-On 4-Mar-25 5:06 PM, Ilpo Järvinen wrote:
-> Sparse reports:
+On 3-Mar-25 8:04 PM, Werner Sembach wrote:
+> This small driver does 2 things:
 > 
-> dell-uart-backlight.c:328:29: warning: symbol
-> 'dell_uart_bl_serdev_driver' was not declared. Should it be static?
-> 
-> Fix it by making the symbol static.
-> 
-> Signed-off-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
+> It remaps the touchpad toggle key from Control + Super + Hangaku/Zenkaku to
+> F21 to conform with established userspace defaults. Note that the
+> Hangaku/Zenkaku scancode used here is usually unused, with real
+> Hangaku/Zenkaku keys using the tilde scancode.
 
-Thanks, patch looks good to me:
+So this control + super + scancode 0x76 sending is also seen on
+quite a few other laptops and I think we need a generic fix for this.
 
-Reviewed-by: Hans de Goede <hdegoede@redhat.com>
+I recently noticed that KDE's keyboard-shortcut settings actually has
+a  control + super + Hangaku/Zenkaku -> touchpad-toggle key binding
+in its default bindings (IIRC). But that cannot work because xkb actually
+has no mapping for evdev code 85 / KEY_ZENKAKUHANKAKU if you look in:
+
+/usr/share/X11/xkb/keycodes/evdev and then look for 93 (*) you will
+find no mapping. I think this KDE default binding may be from a long
+time ago when this did work. Or maybe KDE uses the FOO part of KEY_FOO
+as symbolic when there is no xkb mapping ?
+
+*) 85 + 8 all codes there are shifted up 8 compared to the KEY_FOO
+defines because codes 0-7 are reserved for modifier.
+
+I hit the same issue years ago on "T-boa Tbook air" laptop and
+their I fixed this by mapping Hangaku/Zenkaku -> f21 in
+/lib/udev/hwdb.d/60-keyboard.hwdb :
+
+###########################################################
+# T-bao
+###########################################################
+
+evdev:atkbd:dmi:bvn*:bvr*:bd*:svnT-bao:pnTbookair:*
+ KEYBOARD_KEY_76=f21                                    # Touchpad toggle
+
++ teaching GNOME to also accept Ctrl + Super + XF86TouchpadToggle
+as touchpad-toggle:
+
+https://gitlab.gnome.org/GNOME/gnome-settings-daemon/-/blob/master/data/org.gnome.settings-daemon.plugins.media-keys.gschema.xml.in?ref_type=heads#L577
+
+Notice that system76 has the same hwdb key mapping for their
+Pangolin 12 model which I presume also has something like e.g.
+a clevo as base model.
+
+So for now to fix the touchpad on this TUXEDO NB02 you should
+simply add a hwdb entry like the above entries.
+
+Longer term I think the right fix for the touchpad toggle for
+all laptops which do this would be to make GNOME do what KDE does
+and change the touchpad-toggle-static keybinding list which
+currently is:
+
+['XF86TouchpadToggle', '<Ctrl><Super>XF86TouchpadToggle']
+
+to:
+
+['XF86TouchpadToggle', '<Ctrl><Super>XF86TouchpadToggle', '<Ctrl><Super>"Something"']
+
+Where "Something" would then be the new mapping. Or maybe just teach
+atkbd or xkb or hwdb to map scancode 0x76 to TouchpadToggle by
+default then at least in GNOME this will work OOTB and for KDE
+a default binding of '<Ctrl><Super>XF86TouchpadToggle'] -> touchpad-toggle
+should probably be added there.
+
+> It suppresses the reserved scancode produced by pressing the FN-key on its
+> own, which fixes a warning spamming the dmesg log otherwise.
+
+Can you not also suppress this by mapping the key to "unknown" in hwdb?
 
 Regards,
 
 Hans
 
-
-
-
-> ---
->  drivers/platform/x86/dell/dell-uart-backlight.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/platform/x86/dell/dell-uart-backlight.c b/drivers/platform/x86/dell/dell-uart-backlight.c
-> index 50002ef13d5d..8f868f845350 100644
-> --- a/drivers/platform/x86/dell/dell-uart-backlight.c
-> +++ b/drivers/platform/x86/dell/dell-uart-backlight.c
-> @@ -325,7 +325,7 @@ static int dell_uart_bl_serdev_probe(struct serdev_device *serdev)
->  	return PTR_ERR_OR_ZERO(dell_bl->bl);
->  }
->  
-> -struct serdev_device_driver dell_uart_bl_serdev_driver = {
-> +static struct serdev_device_driver dell_uart_bl_serdev_driver = {
->  	.probe = dell_uart_bl_serdev_probe,
->  	.driver = {
->  		.name = KBUILD_MODNAME,
 
