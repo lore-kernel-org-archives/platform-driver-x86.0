@@ -1,71 +1,39 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail.tuxedocomputers.com (mail.tuxedocomputers.com [157.90.84.7])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E671524EF99
-	for <platform-driver-x86@vger.kernel.org>; Wed,  5 Mar 2025 15:26:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A169B24EF93;
+	Wed,  5 Mar 2025 15:41:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=157.90.84.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741188415; cv=none; b=ZAa4ncazrb1OQQeNW+VL2vqQHvVR4YBVgiJ8shxdrotCI2wC2GLezyB8FbOuoKXPKfN7nIcxVgf+h+36QURMAt0bOIK/jCirEwRdAjQYw9VZUXk3uqA8Vm3opSOiYDtAMs4EFuycKaISJV+MWbvb0duxkM13XUoT2R6un3bdeoM=
+	t=1741189287; cv=none; b=Gxqy5Lmv9Loyrf4VVxytwflP7doGPCGnieKXYr2zLoj1QPqYbqBdbDhKx0Z3Gaz7n9+sTDhc2/g5W/Om67khX9vP2BTmMr7JP/Q03IYlpHb4m6a6ciuxV0zNL37Xp0jkbJe95Kigbm85CGACukXcJt+vHrqw4/ihQIUOTLEeTMg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741188415; c=relaxed/simple;
-	bh=DQLJQEbSar6wdhkMvPdsQKCsY9/20ojKwZI2nZPlYbo=;
+	s=arc-20240116; t=1741189287; c=relaxed/simple;
+	bh=QVXzwZI8QWLrdadVm4OsCG7KScMpWF/+/XAQqckZiuk=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=pJk2Y3f4AQFJq9CquYd8XedEUVN+jZ+YlE1hcPUhV57hrv+Y9DZYI4wAq2DZF8BhMTYAPJRYL8UFi/41Z+W8ApadMuxaaU2Dy1q4udy0ZzXXBL0nflYT7kZJ4vfAoX76XJZQK78XgII6+ErcJ+HRcG9kBw5bex0SZNzimeTcwX0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=CkUXT7xh; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	 In-Reply-To:Content-Type; b=rSxhOqdd4g7aofCZWyxxY3FqMG1dwjBJmObsMU4+hsa9MCrIzURlLGUwl/iIQzyP/JjHRI01IrDQFF/SJPTMnts+N+SyUkxMcg9TjGjy8wuHOC5P5J7B6P0ytqdxfjjvTS8WFUfr2UE6hpJDbJIKwK4Rx/9cumrx/EOb7ENIr+A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=tuxedocomputers.com; spf=pass smtp.mailfrom=tuxedocomputers.com; dkim=pass (1024-bit key) header.d=tuxedocomputers.com header.i=@tuxedocomputers.com header.b=J0zzfvDz; arc=none smtp.client-ip=157.90.84.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=tuxedocomputers.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tuxedocomputers.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="CkUXT7xh"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1741188411;
+	dkim=pass (1024-bit key) header.d=tuxedocomputers.com header.i=@tuxedocomputers.com header.b="J0zzfvDz"
+Received: from [192.168.42.116] (pd9e59f4f.dip0.t-ipconnect.de [217.229.159.79])
+	(Authenticated sender: wse@tuxedocomputers.com)
+	by mail.tuxedocomputers.com (Postfix) with ESMTPSA id 1CE292FC0048;
+	Wed,  5 Mar 2025 16:41:20 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=tuxedocomputers.com;
+	s=default; t=1741189280;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=xg3WsSbbabdBza8WhjItm9qFRXZmyL+gE9D8KXi0c28=;
-	b=CkUXT7xhW63IGiJyEgaC9RGocJ2Bh6CYBmJpNS4Ac61Z5+BA0HOcvhG6l55mtWz6vxshzw
-	q7f1mdG3abv37/kmhw0BZukQWU/uRxaqkGkvMPQmm/gQKn1Tk8lXLyOSWqXv5446GcBtxw
-	+dLOsoKu0T77KFTisi2MqfX/88Q/7kA=
-Received: from mail-ed1-f70.google.com (mail-ed1-f70.google.com
- [209.85.208.70]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-168-cSl26XGyMgSt_tE0PbSaBQ-1; Wed, 05 Mar 2025 10:26:49 -0500
-X-MC-Unique: cSl26XGyMgSt_tE0PbSaBQ-1
-X-Mimecast-MFC-AGG-ID: cSl26XGyMgSt_tE0PbSaBQ_1741188408
-Received: by mail-ed1-f70.google.com with SMTP id 4fb4d7f45d1cf-5e5b65cda33so453707a12.1
-        for <platform-driver-x86@vger.kernel.org>; Wed, 05 Mar 2025 07:26:49 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741188408; x=1741793208;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=xg3WsSbbabdBza8WhjItm9qFRXZmyL+gE9D8KXi0c28=;
-        b=DVd03stmNWfB4Y/mdb1r7nk0Yw+O2hKS8/yTYlmUvbufVQvRIUH1Bk4AVaFgN/rsdQ
-         QgDUMgMskQtrCIMUx55+XQHnTiek5o2NpbVPplTpgg7959WEiBUQIC4xcdaMAEGCpNzg
-         KKg3xu0xuyuxZgVN4LiXkULh8x4mMx6TMokZdT5TqMReKJ3fy9XVjeIn1SdL37aavezW
-         1v1UDNaS7qHV5FXCoNBccXIYXOOm5I4kMmbL//+8uwmnWs8WI2ADDf1j4NV2CKQHK8CD
-         Fkm61zk2yo8n0GACZFO2ft3MsV440AL2RLiSveSlgyq30LqOcLc/wWWvvuI3pURu890m
-         2JWA==
-X-Gm-Message-State: AOJu0YxtCgm2uWVZdhxGDrIVwviAq1hEnKEzemJ1RZ05nMBAcroytxKn
-	CWi0IYv6SI25/U2BPOU/SJs6OjhJXdGXdp3m8LNECIgH2RLNgmOOPFwtU1KNoJz3FfMJQ9QAXUI
-	4ZPC7VUcaOp9QlC8GzVOKVNt54XjwIVJrZtik+qQ48CaZ728EDHYbezkiGVHHx5UpTDYXDac=
-X-Gm-Gg: ASbGncu+QSttMnLuJircXAC4Rb5lazYrYja9Ph+tkpgEY/aXw1RQXI/h+3znrRjC+1D
-	A5dS89Z3HobkcmMt4bR87+U7X2JSPtvCPshShOh2Gyq/xp6Y4cUQ+f30HnHpLBz6PWbKrxgI6Zr
-	NtHk3I6+4/rzS4di93BA35QyC1bzHbjb5w9nncb0SngxpA3TEl2KswUbvy3FpGAj9ksdpTsxVZU
-	z/jtErXZMZKjEKvYAqpH8GVg2H1DaxNoDjeqrcarOPf3KIwk1U8lGvLhcXTl3+84wJybK3Oam6I
-	y4Q5zJk4/vn4peY+nt9feSseVMh+F6fDWDL2Cvs6/9OSGJv0VroflE8NGxCoFjG+9nrdndpoSN/
-	N8sV5L3+57gnfE+GUTcsmEtI1T5rJw2JG/ZU6EnJaWE4+XnHhRWXKWhyxMytfjlk4vQ==
-X-Received: by 2002:a05:6402:d09:b0:5e5:49af:411d with SMTP id 4fb4d7f45d1cf-5e59f3e9424mr3490585a12.17.1741188407908;
-        Wed, 05 Mar 2025 07:26:47 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IF7f0okBMNauR5yQoPtz6CCt+SLIRMeLxuXvZXGEx+lVcJUM7S3PaNIKLXJXG4F4CbgUscmNw==
-X-Received: by 2002:a05:6402:d09:b0:5e5:49af:411d with SMTP id 4fb4d7f45d1cf-5e59f3e9424mr3490542a12.17.1741188407354;
-        Wed, 05 Mar 2025 07:26:47 -0800 (PST)
-Received: from ?IPV6:2001:1c00:c32:7800:5bfa:a036:83f0:f9ec? (2001-1c00-0c32-7800-5bfa-a036-83f0-f9ec.cable.dynamic.v6.ziggo.nl. [2001:1c00:c32:7800:5bfa:a036:83f0:f9ec])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5e4c3fb633bsm9754114a12.63.2025.03.05.07.26.46
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 05 Mar 2025 07:26:46 -0800 (PST)
-Message-ID: <9b8c9eb7-c8d5-4c12-9ce5-c4b4df3b4223@redhat.com>
-Date: Wed, 5 Mar 2025 16:26:46 +0100
+	bh=N6jhBJij2I0NQYatN7vveyLTqhAJA3pvmCwSTqgjABM=;
+	b=J0zzfvDztdNy1xOMu03BiXaC1w6+qiiCbs5TtGhM3Dz6kHkti9xU5L9H79iDPCHCFySqK+
+	yqpzdveeDGd87ytaU1wYNWsSjDX8w1uaa47TSi2CbsMD3CeRsOLziaaOr9UH2SaflckXmn
+	8+VUP8stD8nPpJJnIboGOi6CLdH4ZVM=
+Authentication-Results: mail.tuxedocomputers.com;
+	auth=pass smtp.auth=wse@tuxedocomputers.com smtp.mailfrom=wse@tuxedocomputers.com
+Message-ID: <e6f5234c-98ab-4a06-aa1a-59726f395ea4@tuxedocomputers.com>
+Date: Wed, 5 Mar 2025 16:41:19 +0100
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -73,214 +41,243 @@ List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] platform/x86: amd: Add ISP platform info
-To: "Nirujogi, Pratap" <pnirujog@amd.com>,
- Pratap Nirujogi <pratap.nirujogi@amd.com>, ilpo.jarvinen@linux.intel.com,
- "Limonciello, Mario" <Mario.Limonciello@amd.com>
-Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
- benjamin.chan@amd.com, bin.du@amd.com, king.li@amd.com,
- gjorgji.rosikopulos@amd.com, dominic.antony@amd.com
-References: <20250228170238.3484860-1-pratap.nirujogi@amd.com>
- <cd25d131-bead-4a38-98dc-1011c2843286@redhat.com>
- <3d57b624-7753-4a4d-9051-0a55cbdff1ec@amd.com>
-Content-Language: en-US, nl
-From: Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <3d57b624-7753-4a4d-9051-0a55cbdff1ec@amd.com>
-Content-Type: text/plain; charset=UTF-8
+Subject: Re: [PATCH v2 2/2] Input: atkbd - Fix TUXEDO NB02 notebook keyboards
+ FN-keys
+To: Hans de Goede <hdegoede@redhat.com>, mario.limonciello@amd.com,
+ =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+ Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc: linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org
+References: <20250303190442.551961-1-wse@tuxedocomputers.com>
+ <20250303190442.551961-2-wse@tuxedocomputers.com>
+ <1bee0a62-058b-482a-8eec-d45b8aca1614@redhat.com>
+ <d74c348d-474a-4871-8b94-d836e8d054e8@tuxedocomputers.com>
+ <1fbdfe7f-0f25-4de0-805c-b712663f7681@redhat.com>
+Content-Language: en-US
+From: Werner Sembach <wse@tuxedocomputers.com>
+In-Reply-To: <1fbdfe7f-0f25-4de0-805c-b712663f7681@redhat.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
 
-Hi Pratap,
+Hi Hans,
 
-On 4-Mar-25 12:14 AM, Nirujogi, Pratap wrote:
-> Hi Hans,
-> 
-> Thanks for your review. Please see the inline comments and let us know your insights.
-> 
-> Thanks,
-> Pratap
-> 
-> 
-> On 3/3/2025 8:41 AM, Hans de Goede wrote:
->> Caution: This message originated from an External Source. Use proper caution when opening attachments, clicking links, or responding.
->>
->>
->> Hi Pratap,
->>
->> Thank you for your patch.
->>
->> On 28-Feb-25 18:02, Pratap Nirujogi wrote:
->>> Add ov05c i2c boardinfo and GPIO pin info for AMD ISP platform.
+Am 05.03.25 um 15:18 schrieb Hans de Goede:
+> Hi Werner,
+>
+> On 5-Mar-25 1:07 PM, Werner Sembach wrote:
+>> Am 05.03.25 um 12:25 schrieb Hans de Goede:
+>>> Hi Werner,
 >>>
->>> Details of the resources added:
+>>> On 3-Mar-25 8:04 PM, Werner Sembach wrote:
+>>>> This small driver does 2 things:
+>>>>
+>>>> It remaps the touchpad toggle key from Control + Super + Hangaku/Zenkaku to
+>>>> F21 to conform with established userspace defaults. Note that the
+>>>> Hangaku/Zenkaku scancode used here is usually unused, with real
+>>>> Hangaku/Zenkaku keys using the tilde scancode.
+>>> So this control + super + scancode 0x76 sending is also seen on
+>>> quite a few other laptops and I think we need a generic fix for this.
 >>>
->>> - Added i2c bus number for AMD ISP platform is 99.
->>> - Added GPIO 85 to allow ISP driver to enable and disable ISP access.
->>> - Added GPIO 0 to allow sensor driver to enable and disable sensor module.
+>>> I recently noticed that KDE's keyboard-shortcut settings actually has
+>>> a  control + super + Hangaku/Zenkaku -> touchpad-toggle key binding
+>>> in its default bindings (IIRC). But that cannot work because xkb actually
+>>> has no mapping for evdev code 85 / KEY_ZENKAKUHANKAKU if you look in:
 >>>
->>> Signed-off-by: Pratap Nirujogi <pratap.nirujogi@amd.com>
->>> ---
->>>   drivers/platform/x86/amd/Kconfig   | 11 +++++
->>>   drivers/platform/x86/amd/Makefile  |  1 +
->>>   drivers/platform/x86/amd/amd_isp.c | 72 ++++++++++++++++++++++++++++++
->>>   3 files changed, 84 insertions(+)
->>>   create mode 100644 drivers/platform/x86/amd/amd_isp.c
+>>> /usr/share/X11/xkb/keycodes/evdev and then look for 93 (*) you will
+>>> find no mapping. I think this KDE default binding may be from a long
+>>> time ago when this did work. Or maybe KDE uses the FOO part of KEY_FOO
+>>> as symbolic when there is no xkb mapping ?
+>> It does not work on X11, but it does work on Wayland (there xev also sees the Zenkaku/Hankaku keypress). Don't ask me why.
+> Interesting, so in xev under Wayland you see something like this
+> on release:
+>
+>      state 0x0, keycode 38 (keysym 0x61, a), same_screen YES,
+>
+> With there actually being a keysym of "Zenkaku_Hankaku" there ?
+
+No. Sorry I got it a little bit wrong above, I didn't know it exactly anymore 
+and had to retest:
+
+
+With the keyboard shortcut deactivated, xev on wayland shows this:
+
+KeyPress event, serial 39, synthetic NO, window 0x1200001,
+     root 0x4f7, subw 0x0, time 246681, (83,3), root:(1273,701),
+     state 0x0, keycode 133 (keysym 0xffeb, Super_L), same_screen YES,
+     XLookupString gives 0 bytes:
+     XmbLookupString gives 0 bytes:
+     XFilterEvent returns: False
+
+KeyPress event, serial 39, synthetic NO, window 0x1200001,
+     root 0x4f7, subw 0x0, time 246682, (83,3), root:(1273,701),
+     state 0x40, keycode 37 (keysym 0xffe3, Control_L), same_screen YES,
+     XLookupString gives 0 bytes:
+     XmbLookupString gives 0 bytes:
+     XFilterEvent returns: False
+
+KeyPress event, serial 39, synthetic NO, window 0x1200001,
+     root 0x4f7, subw 0x0, time 246686, (83,3), root:(1273,701),
+     state 0x44, keycode 93 (keysym 0x0, NoSymbol), same_screen YES,
+     XLookupString gives 0 bytes:
+     XmbLookupString gives 0 bytes:
+     XFilterEvent returns: False
+
+KeyRelease event, serial 39, synthetic NO, window 0x1200001,
+     root 0x4f7, subw 0x0, time 246690, (83,3), root:(1273,701),
+     state 0x44, keycode 93 (keysym 0x0, NoSymbol), same_screen YES,
+     XLookupString gives 0 bytes:
+     XFilterEvent returns: False
+
+KeyRelease event, serial 39, synthetic NO, window 0x1200001,
+     root 0x4f7, subw 0x0, time 246696, (83,3), root:(1273,701),
+     state 0x44, keycode 37 (keysym 0xffe3, Control_L), same_screen YES,
+     XLookupString gives 0 bytes:
+     XFilterEvent returns: False
+
+KeyRelease event, serial 39, synthetic NO, window 0x1200001,
+     root 0x4f7, subw 0x0, time 246703, (83,3), root:(1273,701),
+     state 0x40, keycode 133 (keysym 0xffeb, Super_L), same_screen YES,
+     XLookupString gives 0 bytes:
+     XFilterEvent returns: False
+
+
+With the shortcut active, xev on wayland shows this (and the shortcut works):
+
+KeyPress event, serial 39, synthetic NO, window 0x1200001,
+     root 0x4f7, subw 0x0, time 365034, (83,3), root:(1273,701),
+     state 0x0, keycode 133 (keysym 0xffeb, Super_L), same_screen YES,
+     XLookupString gives 0 bytes:
+     XmbLookupString gives 0 bytes:
+     XFilterEvent returns: False
+
+KeyPress event, serial 39, synthetic NO, window 0x1200001,
+     root 0x4f7, subw 0x0, time 365036, (83,3), root:(1273,701),
+     state 0x40, keycode 37 (keysym 0xffe3, Control_L), same_screen YES,
+     XLookupString gives 0 bytes:
+     XmbLookupString gives 0 bytes:
+     XFilterEvent returns: False
+
+KeyRelease event, serial 39, synthetic NO, window 0x1200001,
+     root 0x4f7, subw 0x0, time 365060, (83,3), root:(1273,701),
+     state 0x44, keycode 37 (keysym 0xffe3, Control_L), same_screen YES,
+     XLookupString gives 0 bytes:
+     XFilterEvent returns: False
+
+KeyRelease event, serial 39, synthetic NO, window 0x1200001,
+     root 0x4f7, subw 0x0, time 365060, (83,3), root:(1273,701),
+     state 0x40, keycode 133 (keysym 0xffeb, Super_L), same_screen YES,
+     XLookupString gives 0 bytes:
+     XFilterEvent returns: False
+
+>
+> Because that is not working on Wayland on my laptop with the same
+> issue (after disabling the hwdb mapping) and I don't understand
+> how that could work at all given that /usr/share/X11/xkb/keycodes/evdev
+> has no mapping for EV keycode 85 (93 in that file) ?
+>
+>> Also: Other DEs don't have this binding.
+> Yes that is an issue, but see below.
+>
+>>> *) 85 + 8 all codes there are shifted up 8 compared to the KEY_FOO
+>>> defines because codes 0-7 are reserved for modifier.
 >>>
->>> diff --git a/drivers/platform/x86/amd/Kconfig b/drivers/platform/x86/amd/Kconfig
->>> index c3e086ea64fc..4b373edd750d 100644
->>> --- a/drivers/platform/x86/amd/Kconfig
->>> +++ b/drivers/platform/x86/amd/Kconfig
->>> @@ -32,3 +32,14 @@ config AMD_WBRF
+>>> I hit the same issue years ago on "T-boa Tbook air" laptop and
+>>> their I fixed this by mapping Hangaku/Zenkaku -> f21 in
+>>> /lib/udev/hwdb.d/60-keyboard.hwdb :
 >>>
->>>          This mechanism will only be activated on platforms that advertise a
->>>          need for it.
->>> +
->>> +config AMD_ISP_PLATFORM
->>> +     bool "AMD platform with ISP4 that supports Camera sensor device"
->>> +     depends on I2C && X86_64 && AMD_ISP4
->>> +     help
->>> +       For AMD platform that support Image signal processor generation 4, it
->>> +       is necessary to add platform specific camera sensor module board info
->>> +       which includes the sensor driver device id and the i2c address.
->>> +
->>> +       If you have a AMD platform that support ISP4 and with a sensor
->>> +       connected to it, say Y here
->>> diff --git a/drivers/platform/x86/amd/Makefile b/drivers/platform/x86/amd/Makefile
->>> index 56f62fc9c97b..0d89e2d4f7e6 100644
->>> --- a/drivers/platform/x86/amd/Makefile
->>> +++ b/drivers/platform/x86/amd/Makefile
->>> @@ -10,3 +10,4 @@ obj-$(CONFIG_AMD_PMC)               += pmc/
->>>   obj-$(CONFIG_AMD_HSMP)               += hsmp/
->>>   obj-$(CONFIG_AMD_PMF)                += pmf/
->>>   obj-$(CONFIG_AMD_WBRF)               += wbrf.o
->>> +obj-$(CONFIG_AMD_ISP_PLATFORM)       += amd_isp.o
->>> diff --git a/drivers/platform/x86/amd/amd_isp.c b/drivers/platform/x86/amd/amd_isp.c
->>> new file mode 100644
->>> index 000000000000..751f209e9509
->>> --- /dev/null
->>> +++ b/drivers/platform/x86/amd/amd_isp.c
->>> @@ -0,0 +1,72 @@
->>> +/* SPDX-License-Identifier: MIT */
->>> +/*
->>> + * Copyright 2025 Advanced Micro Devices, Inc.
->>> + *
->>> + * Permission is hereby granted, free of charge, to any person obtaining a
->>> + * copy of this software and associated documentation files (the "Software"),
->>> + * to deal in the Software without restriction, including without limitation
->>> + * the rights to use, copy, modify, merge, publish, distribute, sublicense,
->>> + * and/or sell copies of the Software, and to permit persons to whom the
->>> + * Software is furnished to do so, subject to the following conditions:
->>> + *
->>> + * The above copyright notice and this permission notice shall be included in
->>> + * all copies or substantial portions of the Software.
->>> + *
->>> + * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
->>> + * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
->>> + * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.  IN NO EVENT SHALL
->>> + * THE COPYRIGHT HOLDER(S) OR AUTHOR(S) BE LIABLE FOR ANY CLAIM, DAMAGES OR
->>> + * OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,
->>> + * ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
->>> + * OTHER DEALINGS IN THE SOFTWARE.
->>> + */
->>> +
->>> +#include <linux/init.h>
->>> +#include <linux/i2c.h>
->>> +#include <linux/kernel.h>
->>> +#include <linux/gpio/machine.h>
->>> +
->>> +#define AMDISP_I2C_BUS               99
+>>> ###########################################################
+>>> # T-bao
+>>> ###########################################################
+>>>
+>>> evdev:atkbd:dmi:bvn*:bvr*:bd*:svnT-bao:pnTbookair:*
+>>>    KEYBOARD_KEY_76=f21                                    # Touchpad toggle
+>>>
+>>> + teaching GNOME to also accept Ctrl + Super + XF86TouchpadToggle
+>>> as touchpad-toggle:
+>>>
+>>> https://gitlab.gnome.org/GNOME/gnome-settings-daemon/-/blob/master/data/org.gnome.settings-daemon.plugins.media-keys.gschema.xml.in?ref_type=heads#L577
+>> Yeah KDE would need a similar fix and other DEs probably too. I hoped for a generic fix that does not need adjustments in so many projects.
 >>
->> I'm not a fan of using static i2c-bus numbers for this. static bus numbers are
->> something of the past and we typically do not use these on x86 anymore.
+>> My first try was to do it on the XKB level but on Wayland the RedirectKey action is not implemented https://gitlab.freedesktop.org/xkeyboard-config/xkeyboard-config/-/merge_requests/794#note_2803713 (and probably wont be even in the future https://github.com/xkbcommon/libxkbcommon/issues/18#issuecomment-72728366) so I can't "unpress" control and super.
 >>
->> Using this static number + i2c_register_board_info() also requires this code
->> to be builtin rather then modular which is also undesirable.
->>
->> For a more dynamic way of manually adding i2c-devices see:
->>
->> https://web.git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/drivers/platform/x86/dell/dell-lis3lv02d.c
->>
->> But a better question here is why instantiate the sensor i2c device
->> manually at all.
->>
->> ACPI has a standardized way to describe I2C-clients which tyically
->> is used for all I2C devices on ACPI platforms like I2C touchscreens /
->> touchpads / audio-codecs / accelerometers / etc.
->> I don't see why the camera sensor on AMD platforms is so special that
->> it could not be described in ACPI using an ACPI child-device of the
->> i2c-controller with a ACPI resource (_CRS entry) of the I2cSerialBusV2()
->> type.
->>
->> Likewise the sensor enable GPIO should also be described in the ACPI
->> table as a Gpio type resource in the same _CRS table.
->>
-> 
-> We have to take this approach because ISP is a child to GFX PCI device in AMD HW architectures, and since it is not an independent device, its device specific configuration (gpio pin ids, i2c-bus number etc.) is not registered in ACPI.
+>> If it is a more general issue, why not fix it on a more general level in the kernel? Maybe a generic filter applyable via a command line quirk and/or a quirk list?
+> The problem is that filtering keys with modifiers like you are doing
+> here just does not work.
+>
+> Your filter is seriously messing with the timing of the keypresses
+> which can be a real issue when not actually using the toggle touchpad
+> hotkey.
+>
+> Lets say the user is playing a game and has mapped super to
+> one of the fire buttons and is using an in game weapon with
+> some sort of auto-repeat firing.
+>
+> And your seqpos variable likely is 0 when super gets pressed,
+> now the keyboard sends 0xe0, 0x5b which your filter filters
+> out, and the user keeps super pressed because they expect
+> the weapon to start firing on auto-repeat. But the super
+> press is never send until super is released or another key
+> is pressed so things don't work.
+>
+> Likewise if the DE, an app or accessibility settings want to
+> differentiate between a short and a long super press all
+> presses now become super (pun not intended) short because
+> you insert the press directly in front of the release, losing
+> any timing information about how long the key was pressed.
+>
+> This is why using an i8042 filter for filtering key-combinations
+> (and the EC emulates a key-combination here) can never work reliably.
+Ok, thought I had a clean solution, but doesn't seems so xD.
+>
+> OTOH desktop environments already allow having Ctrl+Super+something
+> keybindings for DE actions. So we can re-use the tried and trusted
+> modifier handling in the DE to deal with combi part leaving just
+> the issue of mapping PS/2 scancode 0x76 aka evdev code
+> 85 / KEY_ZENKAKUHANKAKU to something usable by the DE.
+>
+> ATM both GNOME and KDE already have support for
+> Ctrl+Super+something for touchpad-toggle except that KDE expects
+> a "Zenkaku_Hankaku" keysym where as GNOME expects "XF86TouchpadToggle"
+> arguably the GNOME solution is slightly better because Japanese
+> keyboard layouts already use/send the "Zenkaku_Hankaku" keysym
+> unrelated to touchpad-toggle use. And I don't know what happens
+> when pressing ctrl+super+Zenkaku_Hankaku while using a Japanese
+> layout.
+When I interpret the xkb-config correctly, JIS keyboards use the tilde 
+scancode/keycode for the physical zenkaku/hankaku keys, at least in the default 
+config HZTG (henkaku/zankaku toggle) is aliased to TLDE
+>
+> I think maybe we just need to patch atkbd.c at the kernel to
+> map scancode 0x76 -> KEY_TOUCHPAD_TOGGLE since normal PS/2
+> keyboards never generate 0x76, this would lose the mapping to
+> KEY_ZENKAKUHANKAKU but since /usr/share/X11/xkb/keycodes/evdev
+> does not even map KEY_ZENKAKUHANKAKU I don't think loosing that
+> mapping will do a big deal.
 
-The ISP still could and really should be an ACPI child device of
-the GFX PCI device in this case with its own _CRS for for example
-the enable ISP GPIO.
+At least from kernel side this would be a very small patch, are there any 
+objections to it?
 
->> Can you run acpidump -o acpidump.txt on a laptop with this camera
->> sensor and send me the acpidupm.txt offlist ? Please run this
->> on a production hardware laptop model using production firmware.
->>
-> 
-> Please refer the attached acpidump.txt
+If not I make a patch for it and create a KDE issue.
 
-Thanks.
+>
+> So I think that going with the evdev mapping + teaching KDE
+> that Ctrl+Super+XF86TouchpadToggle is just XF86TouchpadToggle
+> is the best way forward to solve this once and for all.
+>
+>>>> It suppresses the reserved scancode produced by pressing the FN-key on its
+>>>> own, which fixes a warning spamming the dmesg log otherwise.
+>>> Can you not also suppress this by mapping the key to "unknown" in hwdb?
+>> Maybe, I didn't try. Was convenient to just do it here since I already had the filter. Will look into it once it is decided what to do with the touchpad toggle issue.
+> Please give using hwdb for this a try.
 
-So looking at this there are ACPI devices for the sensors, which
-unfortunately lack a _CRS with an I2CSerialBusV2 resource pointing
-to the ISP childdevice as bus-controller. So that i2c-client
-instantiating would be instant.
+kk will do later
 
-+Cc Mario
+Best regards,
 
-Mario any chance that for the next (or the next-next) generation of
-AMD devices we can get the ACPI tables fixed to properly describe
-the sensors as having an I2cSerialBusV2 resource, just like how e.g.
-I2C touchpads / touchscreens have this ?  I suspect this will benefit
-Windows too. Likewise any enable GPIOs for the sensor really also
-should be proper ACPi Gpio resources in the ACPI device describing
-the sensor.
+Werner
 
-Ok, back to the current generation devices. So there is an ACPI
-device for the sensor there. This should lead to a:
-/dev/bus/platform/devices/OMNI5C10:00 device getting created
-(please check this).
-
-So this driver for adding the sensor GPIO lookup + creating
-the i2c_client should be rewritten to be a platform_driver
-binding to that device and it should be a module rather then
-being builtin using module_platform_driver():
-
-- Binding using a struct acpi_device_id table to match the ACPI HID of
-  OMNI5C10 + using MODULE_DEVICE_TABLE(acpi, table_name) for auto module
-  loading.
-  The driver_data of the acpi_device_id should point to i2c_board_info to
-  use for that HID to future proof the driver for adding support for other
-  sensor models
-
-- Loading as module means this can be loaded after the i2c adapter driver,
-  so instead of registering board-info it should use the mechanism used
-  in drivers/platform/x86/dell/dell-lis3lv02d.c combined with a unique
-  adapter name, then the module load ordering does not matter and it is
-  also unnecessary to have a magic fixed i2c bus-number of 99
-
-- probe() should copy the const i2c_board_info info from
-  acpi_device_id.driver_data and then set the fwnode so that the sensor
-  driver can e.g. get to the _PLD info to determine sensor location
-  (e.g. front vs back)
-
-- The GPIO sensor lookup for the ISP enable should be registered by
-  the ISP driver itself. Also this seems to be something which might be
-  board specific so maybe this needs DMI matching?
-
-I'm looking forward to see a new version implementing the above approach
-which would be a big improvement IMHO.
-
-Regards,
-
-Hans
-
-
+>
+> Regards,
+>
+> Hans
+>
+>
