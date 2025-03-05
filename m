@@ -1,89 +1,158 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail.tuxedocomputers.com (mail.tuxedocomputers.com [157.90.84.7])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F3C521514CC
-	for <platform-driver-x86@vger.kernel.org>; Wed,  5 Mar 2025 11:54:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C542242915;
+	Wed,  5 Mar 2025 12:07:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=157.90.84.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741175692; cv=none; b=SyS4VHjncCvuxn9kZZWbll3APkxX1z1YNObzgd1hK02gkvMR1gxGIxEEFzfPa9iCpXgSnmKvd5k7wHQWAh/IU11Z8uzUBAYNeFPquosf6l6DMByeeg2xyXDgkX0CNKfH+98tfVjTCYoaf2iO7okJN/xdrsHLsIe1dU51GoGBLAc=
+	t=1741176444; cv=none; b=thoPU/r+L8BDu45zC1mb/n4krc1scouOzbuY3HyudkUMJki7O6E2+bvJ6LERMJ3ThR8CEh86lG6kMxPTWWK6qR2xIra47b+dZzyrMZ3We0Iq/b2iqZX2MZ7AcFmxtKE3e1k5rJnIhUgkOoYdIucvY3XAxCa8zgTCS0Rug5wPJVE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741175692; c=relaxed/simple;
-	bh=4GbEz7j/9W2zKnXjng/f83W/4oeHsPC1e1hK0++np4o=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=Vo5jAOY5+Ndo12po5wD99QV8tM8ahZ9iRDmZgmMYj4vdl6Uv/pdaG3YmNhOphr7UYWZi+elaoLyhh2WPYZ7CLZlnDMv34yUbbdepAkWAS/aVnz45ZY6gMG2lZ98ZHiRsWEImiB4oWXqtaJIuvflfNdmrCGKFDVZ9DQHe1b0KHIQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=WecH9esY; arc=none smtp.client-ip=192.198.163.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1741176444; c=relaxed/simple;
+	bh=fNQFlRxVUsB/mQXiMmN1dBCOvVLzzc20XOwjCotvWb8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=m3OjBsfFQu5XgYMjsHKNAu5IakDJUgTvas/9gahEeFdBj3/WpUA+OkbVMzDkBLeURMZo9TwmBON0fO3YioEOn06+F6m+GOYfiVJNteagb40BA1Vi4oJGG287PPtLRqauBJHYy0YYihXTljt65eRgDEDugGLXYXMigFrHTwVPhFk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=tuxedocomputers.com; spf=pass smtp.mailfrom=tuxedocomputers.com; dkim=pass (1024-bit key) header.d=tuxedocomputers.com header.i=@tuxedocomputers.com header.b=CaFkGyFD; arc=none smtp.client-ip=157.90.84.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=tuxedocomputers.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tuxedocomputers.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="WecH9esY"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1741175691; x=1772711691;
-  h=from:to:cc:in-reply-to:references:subject:message-id:
-   date:mime-version:content-transfer-encoding;
-  bh=4GbEz7j/9W2zKnXjng/f83W/4oeHsPC1e1hK0++np4o=;
-  b=WecH9esYEqOhyh+kZF1kTX0ct7X+mgWHzza8oy0f3VajjTfbODa6BXUA
-   Aul75NaOIFMs8oxq9dLVjVfpdnHC5aHW0slo7xQzRkzeDoHscuVfOQ7iu
-   pFBPgG8eOHpX8klgdYqVYsAPZfwOvOqskeewJalpkYn8zoLhlKP+LlrpX
-   qnv7NzcbmCmezFbMZFfVLdxevylxrWDF0TkIlX1pYHICTiGu0Xsiz3SfF
-   11hdCy0NAqUSgNu4vrbtddXHillbxhJPgYU1wGK/kMBn/9VE9AGqB3MOs
-   uK3iRszwXrSF1h6FFRA7Kyzga2zhxe1f2XC3f0HGr9lSH39kKWC9IrhhE
-   A==;
-X-CSE-ConnectionGUID: hm6c/F9FT8OQ7FryX2D3Wg==
-X-CSE-MsgGUID: kehtjIGGQACpWmW6qD3Hlg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11363"; a="42380463"
-X-IronPort-AV: E=Sophos;i="6.14,223,1736841600"; 
-   d="scan'208";a="42380463"
-Received: from fmviesa008.fm.intel.com ([10.60.135.148])
-  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Mar 2025 03:54:51 -0800
-X-CSE-ConnectionGUID: AELHHq8iRbKRCll/oZJVvg==
-X-CSE-MsgGUID: xiPeCgIDSj2Woz6pkkTiAQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.14,223,1736841600"; 
-   d="scan'208";a="118822190"
-Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.112])
-  by fmviesa008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Mar 2025 03:54:49 -0800
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-To: hdegoede@redhat.com, Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
-Cc: platform-driver-x86@vger.kernel.org, Patil.Reddy@amd.com, 
- mario.limonciello@amd.com
-In-Reply-To: <20250305045842.4117767-1-Shyam-sundar.S-k@amd.com>
-References: <20250305045842.4117767-1-Shyam-sundar.S-k@amd.com>
-Subject: Re: [PATCH v3 1/2] platform/x86/amd/pmf: Propagate PMF-TA return
- codes
-Message-Id: <174117568382.1603.3458258416758662092.b4-ty@linux.intel.com>
-Date: Wed, 05 Mar 2025 13:54:43 +0200
+	dkim=pass (1024-bit key) header.d=tuxedocomputers.com header.i=@tuxedocomputers.com header.b="CaFkGyFD"
+Received: from [192.168.42.116] (pd9e59f4f.dip0.t-ipconnect.de [217.229.159.79])
+	(Authenticated sender: wse@tuxedocomputers.com)
+	by mail.tuxedocomputers.com (Postfix) with ESMTPSA id A02FB2FC0048;
+	Wed,  5 Mar 2025 13:07:18 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=tuxedocomputers.com;
+	s=default; t=1741176438;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=iqjf2YehbblSrh0fNr1izRi09IVA6aE1MgHJhXJgmRg=;
+	b=CaFkGyFDE9oGOv+8LohPVs2y4tECRJdnuKFCf8vuDFinliCZL9WJzdFec31sAo57WYDwq9
+	M6VR9TXQih2Lt/kwiniLOkDVG8WzIXS3nK1Jf2Fg+ujDipsKszPjpSFPtb7en3X+qJ1fZU
+	vEDq3y9a5fLiqRnHVkC/7ZT8Lw7But4=
+Authentication-Results: mail.tuxedocomputers.com;
+	auth=pass smtp.auth=wse@tuxedocomputers.com smtp.mailfrom=wse@tuxedocomputers.com
+Message-ID: <d74c348d-474a-4871-8b94-d836e8d054e8@tuxedocomputers.com>
+Date: Wed, 5 Mar 2025 13:07:18 +0100
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 2/2] Input: atkbd - Fix TUXEDO NB02 notebook keyboards
+ FN-keys
+To: Hans de Goede <hdegoede@redhat.com>, mario.limonciello@amd.com,
+ =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Cc: dmitry.torokhov@gmail.com, linux-kernel@vger.kernel.org,
+ platform-driver-x86@vger.kernel.org
+References: <20250303190442.551961-1-wse@tuxedocomputers.com>
+ <20250303190442.551961-2-wse@tuxedocomputers.com>
+ <1bee0a62-058b-482a-8eec-d45b8aca1614@redhat.com>
+Content-Language: en-US
+From: Werner Sembach <wse@tuxedocomputers.com>
+In-Reply-To: <1bee0a62-058b-482a-8eec-d45b8aca1614@redhat.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
-X-Mailer: b4 0.13.0
-
-On Wed, 05 Mar 2025 10:28:41 +0530, Shyam Sundar S K wrote:
-
-> In the amd_pmf_invoke_cmd_init() function within the PMF driver ensure
-> that the actual result from the PMF-TA is returned rather than a generic
-> EIO. This change allows for proper handling of errors originating from the
-> PMF-TA.
-> 
-> 
 
 
-Thank you for your contribution, it has been applied to my local
-review-ilpo-fixes branch. Note it will show up in the public
-platform-drivers-x86/review-ilpo-fixes branch only once I've pushed my
-local branch there, which might take a while.
+Am 05.03.25 um 12:25 schrieb Hans de Goede:
+> Hi Werner,
+>
+> On 3-Mar-25 8:04 PM, Werner Sembach wrote:
+>> This small driver does 2 things:
+>>
+>> It remaps the touchpad toggle key from Control + Super + Hangaku/Zenkaku to
+>> F21 to conform with established userspace defaults. Note that the
+>> Hangaku/Zenkaku scancode used here is usually unused, with real
+>> Hangaku/Zenkaku keys using the tilde scancode.
+> So this control + super + scancode 0x76 sending is also seen on
+> quite a few other laptops and I think we need a generic fix for this.
+>
+> I recently noticed that KDE's keyboard-shortcut settings actually has
+> a  control + super + Hangaku/Zenkaku -> touchpad-toggle key binding
+> in its default bindings (IIRC). But that cannot work because xkb actually
+> has no mapping for evdev code 85 / KEY_ZENKAKUHANKAKU if you look in:
+>
+> /usr/share/X11/xkb/keycodes/evdev and then look for 93 (*) you will
+> find no mapping. I think this KDE default binding may be from a long
+> time ago when this did work. Or maybe KDE uses the FOO part of KEY_FOO
+> as symbolic when there is no xkb mapping ?
 
-The list of commits applied:
-[1/2] platform/x86/amd/pmf: Propagate PMF-TA return codes
-      commit: 9ba93cb8212d62bccd8b41b8adb6656abf37280a
-[2/2] platform/x86/amd/pmf: Update PMF Driver for Compatibility with new PMF-TA
-      commit: 376a8c2a144397d9cf2a67d403dd64f4a7ff9104
+It does not work on X11, but it does work on Wayland (there xev also sees the 
+Zenkaku/Hankaku keypress). Don't ask me why.
 
---
- i.
+Also: Other DEs don't have this binding.
 
+>
+> *) 85 + 8 all codes there are shifted up 8 compared to the KEY_FOO
+> defines because codes 0-7 are reserved for modifier.
+>
+> I hit the same issue years ago on "T-boa Tbook air" laptop and
+> their I fixed this by mapping Hangaku/Zenkaku -> f21 in
+> /lib/udev/hwdb.d/60-keyboard.hwdb :
+>
+> ###########################################################
+> # T-bao
+> ###########################################################
+>
+> evdev:atkbd:dmi:bvn*:bvr*:bd*:svnT-bao:pnTbookair:*
+>   KEYBOARD_KEY_76=f21                                    # Touchpad toggle
+>
+> + teaching GNOME to also accept Ctrl + Super + XF86TouchpadToggle
+> as touchpad-toggle:
+>
+> https://gitlab.gnome.org/GNOME/gnome-settings-daemon/-/blob/master/data/org.gnome.settings-daemon.plugins.media-keys.gschema.xml.in?ref_type=heads#L577
+
+Yeah KDE would need a similar fix and other DEs probably too. I hoped for a 
+generic fix that does not need adjustments in so many projects.
+
+My first try was to do it on the XKB level but on Wayland the RedirectKey action 
+is not implemented 
+https://gitlab.freedesktop.org/xkeyboard-config/xkeyboard-config/-/merge_requests/794#note_2803713 
+(and probably wont be even in the future 
+https://github.com/xkbcommon/libxkbcommon/issues/18#issuecomment-72728366) so I 
+can't "unpress" control and super.
+
+If it is a more general issue, why not fix it on a more general level in the 
+kernel? Maybe a generic filter applyable via a command line quirk and/or a quirk 
+list?
+
+>
+> Notice that system76 has the same hwdb key mapping for their
+> Pangolin 12 model which I presume also has something like e.g.
+> a clevo as base model.
+>
+> So for now to fix the touchpad on this TUXEDO NB02 you should
+> simply add a hwdb entry like the above entries.
+>
+> Longer term I think the right fix for the touchpad toggle for
+> all laptops which do this would be to make GNOME do what KDE does
+> and change the touchpad-toggle-static keybinding list which
+> currently is:
+>
+> ['XF86TouchpadToggle', '<Ctrl><Super>XF86TouchpadToggle']
+>
+> to:
+>
+> ['XF86TouchpadToggle', '<Ctrl><Super>XF86TouchpadToggle', '<Ctrl><Super>"Something"']
+>
+> Where "Something" would then be the new mapping. Or maybe just teach
+> atkbd or xkb or hwdb to map scancode 0x76 to TouchpadToggle by
+> default then at least in GNOME this will work OOTB and for KDE
+> a default binding of '<Ctrl><Super>XF86TouchpadToggle'] -> touchpad-toggle
+> should probably be added there.
+>
+>> It suppresses the reserved scancode produced by pressing the FN-key on its
+>> own, which fixes a warning spamming the dmesg log otherwise.
+> Can you not also suppress this by mapping the key to "unknown" in hwdb?
+Maybe, I didn't try. Was convenient to just do it here since I already had the 
+filter. Will look into it once it is decided what to do with the touchpad toggle 
+issue.
+>
+> Regards,
+>
+> Hans
+>
+>
