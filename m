@@ -1,167 +1,286 @@
-Received: from NAM10-BN7-obe.outbound.protection.outlook.com (mail-bn7nam10on2064.outbound.protection.outlook.com [40.107.92.64])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 16E7924BBE1
-	for <platform-driver-x86@vger.kernel.org>; Wed,  5 Mar 2025 14:29:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.92.64
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741184947; cv=fail; b=GHM6fw3Mgsmlq/yUUwCp5J69nT3Tno7a44OXBMGAc7BRYd7lkzDHCzrjPbQ89zL4uDFYA8/Tnuex7yO6M0aJYc75BHXz6aQPKN9hs+a21SQE51KioS8nvHeUpTgat6oyhXnmvWeMyxZmPpaQTWtH0jfKZ4mpvrkhJ/4p1814s48=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741184947; c=relaxed/simple;
-	bh=CS9H0sQBCY2sZYAToaO3JDoJSd61+KKv9erz2X53Zu4=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=oNqWQQAmVxEb/4G+6p4uVB0fTP1WCdpLmFTQ7AdRwyRW9lDIZOFUAs5F0lbFDgwIb+V903pFgBwkvJZXuWDK/E+q/d+FstbnXEEbTxQc/NP9gFgeeT8gXDQ6JbrIEiAuO0cZU2t5V6e3MpzFWXqeL+B14Ubze/9Emyefhhb/zBo=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=Ae0/rF+4; arc=fail smtp.client-ip=40.107.92.64
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E671524EF99
+	for <platform-driver-x86@vger.kernel.org>; Wed,  5 Mar 2025 15:26:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1741188415; cv=none; b=ZAa4ncazrb1OQQeNW+VL2vqQHvVR4YBVgiJ8shxdrotCI2wC2GLezyB8FbOuoKXPKfN7nIcxVgf+h+36QURMAt0bOIK/jCirEwRdAjQYw9VZUXk3uqA8Vm3opSOiYDtAMs4EFuycKaISJV+MWbvb0duxkM13XUoT2R6un3bdeoM=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1741188415; c=relaxed/simple;
+	bh=DQLJQEbSar6wdhkMvPdsQKCsY9/20ojKwZI2nZPlYbo=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=pJk2Y3f4AQFJq9CquYd8XedEUVN+jZ+YlE1hcPUhV57hrv+Y9DZYI4wAq2DZF8BhMTYAPJRYL8UFi/41Z+W8ApadMuxaaU2Dy1q4udy0ZzXXBL0nflYT7kZJ4vfAoX76XJZQK78XgII6+ErcJ+HRcG9kBw5bex0SZNzimeTcwX0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=CkUXT7xh; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="Ae0/rF+4"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=s3Dse8YzWaogyVFkJ/j32JMejjAPz9eYrpu2KY/IUVJSiC7OqysR2J348YtQ86lgv+kOt37fIsajZ8ngrOJXpX2UDIK6HzY8U4rywouSYUN3VGZV2a49GWflZwLuUAfdhK2+L5Lg/I/Zld5ouuTbXy43CdP+ImincfiUtEZksp3JmeeqdR5EZLll/zn/Lgln8VXQSHQ/knxfSfJfOcAA6rD5G8/cHYxcEKHMQ5pQ9GD4Rwh6ubi0OTKZCFyVZ2/GhLD+ARiQF3pFDL0vuWSI32STEwZUs6ZA6l+GIwRLH72DB5mtyqUM/nDSHaXxdCJwiKd2fmLlWOe9uAINC51Pxg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=iHU4VbNoGnvMEojVeolZvZFzOuY6KwV61Vce1pyD8Uk=;
- b=FPJtpdBDKPX7qo1hVtvM4xXhEpWKZheinz9ayJ9OPE1anbpDMPxv1bUoIrzqljbYnJyT2CaIVpOBQ8i3JGCbxJK70qWmFN+HWpZ0mgIdPe+jtrgCGevohIVn99ldOdXz7zaHtpXHTu34KScz1hioH3Vg19kYum4HAZwRor2Ip3BrEsAfzst9/aStB6zF1JnTeOcI3hOiUk2FzsC9AmDVDQ82srx48pwbNFzymWPq/PPhJKczKUG3OiKOo3U1sRTHmJ9k6mQef6hi8FQ1NkaGSSsJKw2L17H0SNtqBFPMnuoVa1H0+L838dXxrhBTmQCmWXSg47j/Dd0VroqUoUnCLg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=redhat.com smtp.mailfrom=amd.com; dmarc=pass
- (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
- dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=iHU4VbNoGnvMEojVeolZvZFzOuY6KwV61Vce1pyD8Uk=;
- b=Ae0/rF+4lJ38lxfRyumhG96ii66YlQFDxLOEQbREQFh6NBE6hLWiHbq3LVS/OJa5JPwpn9jdRV2Jyu6mGRz+8SnKeXM2/D+G2zue3VxJmyM9vR2vVEIU4Aap8ww8FJh+TDj3b336T71qhg9mfW3ZigIZ88hr/xBWsmH3y4kth/M=
-Received: from SJ0PR03CA0222.namprd03.prod.outlook.com (2603:10b6:a03:39f::17)
- by PH7PR12MB5927.namprd12.prod.outlook.com (2603:10b6:510:1da::9) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8489.25; Wed, 5 Mar
- 2025 14:29:00 +0000
-Received: from SJ1PEPF000023CB.namprd02.prod.outlook.com
- (2603:10b6:a03:39f:cafe::48) by SJ0PR03CA0222.outlook.office365.com
- (2603:10b6:a03:39f::17) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.8511.16 via Frontend Transport; Wed,
- 5 Mar 2025 14:29:00 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
-Received: from SATLEXMB04.amd.com (165.204.84.17) by
- SJ1PEPF000023CB.mail.protection.outlook.com (10.167.244.5) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.8511.15 via Frontend Transport; Wed, 5 Mar 2025 14:28:59 +0000
-Received: from airavat.amd.com (10.180.168.240) by SATLEXMB04.amd.com
- (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Wed, 5 Mar
- 2025 08:28:22 -0600
-From: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
-To: <hdegoede@redhat.com>, <ilpo.jarvinen@linux.intel.com>
-CC: <Sanket.Goswami@amd.com>, <platform-driver-x86@vger.kernel.org>, "Shyam
- Sundar S K" <Shyam-sundar.S-k@amd.com>
-Subject: [PATCH v2 4/4] platform/x86/amd/pmc: Use managed APIs for mutex
-Date: Wed, 5 Mar 2025 19:56:15 +0530
-Message-ID: <20250305142615.410178-4-Shyam-sundar.S-k@amd.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20250305142615.410178-1-Shyam-sundar.S-k@amd.com>
-References: <20250305142615.410178-1-Shyam-sundar.S-k@amd.com>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="CkUXT7xh"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1741188411;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=xg3WsSbbabdBza8WhjItm9qFRXZmyL+gE9D8KXi0c28=;
+	b=CkUXT7xhW63IGiJyEgaC9RGocJ2Bh6CYBmJpNS4Ac61Z5+BA0HOcvhG6l55mtWz6vxshzw
+	q7f1mdG3abv37/kmhw0BZukQWU/uRxaqkGkvMPQmm/gQKn1Tk8lXLyOSWqXv5446GcBtxw
+	+dLOsoKu0T77KFTisi2MqfX/88Q/7kA=
+Received: from mail-ed1-f70.google.com (mail-ed1-f70.google.com
+ [209.85.208.70]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-168-cSl26XGyMgSt_tE0PbSaBQ-1; Wed, 05 Mar 2025 10:26:49 -0500
+X-MC-Unique: cSl26XGyMgSt_tE0PbSaBQ-1
+X-Mimecast-MFC-AGG-ID: cSl26XGyMgSt_tE0PbSaBQ_1741188408
+Received: by mail-ed1-f70.google.com with SMTP id 4fb4d7f45d1cf-5e5b65cda33so453707a12.1
+        for <platform-driver-x86@vger.kernel.org>; Wed, 05 Mar 2025 07:26:49 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1741188408; x=1741793208;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=xg3WsSbbabdBza8WhjItm9qFRXZmyL+gE9D8KXi0c28=;
+        b=DVd03stmNWfB4Y/mdb1r7nk0Yw+O2hKS8/yTYlmUvbufVQvRIUH1Bk4AVaFgN/rsdQ
+         QgDUMgMskQtrCIMUx55+XQHnTiek5o2NpbVPplTpgg7959WEiBUQIC4xcdaMAEGCpNzg
+         KKg3xu0xuyuxZgVN4LiXkULh8x4mMx6TMokZdT5TqMReKJ3fy9XVjeIn1SdL37aavezW
+         1v1UDNaS7qHV5FXCoNBccXIYXOOm5I4kMmbL//+8uwmnWs8WI2ADDf1j4NV2CKQHK8CD
+         Fkm61zk2yo8n0GACZFO2ft3MsV440AL2RLiSveSlgyq30LqOcLc/wWWvvuI3pURu890m
+         2JWA==
+X-Gm-Message-State: AOJu0YxtCgm2uWVZdhxGDrIVwviAq1hEnKEzemJ1RZ05nMBAcroytxKn
+	CWi0IYv6SI25/U2BPOU/SJs6OjhJXdGXdp3m8LNECIgH2RLNgmOOPFwtU1KNoJz3FfMJQ9QAXUI
+	4ZPC7VUcaOp9QlC8GzVOKVNt54XjwIVJrZtik+qQ48CaZ728EDHYbezkiGVHHx5UpTDYXDac=
+X-Gm-Gg: ASbGncu+QSttMnLuJircXAC4Rb5lazYrYja9Ph+tkpgEY/aXw1RQXI/h+3znrRjC+1D
+	A5dS89Z3HobkcmMt4bR87+U7X2JSPtvCPshShOh2Gyq/xp6Y4cUQ+f30HnHpLBz6PWbKrxgI6Zr
+	NtHk3I6+4/rzS4di93BA35QyC1bzHbjb5w9nncb0SngxpA3TEl2KswUbvy3FpGAj9ksdpTsxVZU
+	z/jtErXZMZKjEKvYAqpH8GVg2H1DaxNoDjeqrcarOPf3KIwk1U8lGvLhcXTl3+84wJybK3Oam6I
+	y4Q5zJk4/vn4peY+nt9feSseVMh+F6fDWDL2Cvs6/9OSGJv0VroflE8NGxCoFjG+9nrdndpoSN/
+	N8sV5L3+57gnfE+GUTcsmEtI1T5rJw2JG/ZU6EnJaWE4+XnHhRWXKWhyxMytfjlk4vQ==
+X-Received: by 2002:a05:6402:d09:b0:5e5:49af:411d with SMTP id 4fb4d7f45d1cf-5e59f3e9424mr3490585a12.17.1741188407908;
+        Wed, 05 Mar 2025 07:26:47 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IF7f0okBMNauR5yQoPtz6CCt+SLIRMeLxuXvZXGEx+lVcJUM7S3PaNIKLXJXG4F4CbgUscmNw==
+X-Received: by 2002:a05:6402:d09:b0:5e5:49af:411d with SMTP id 4fb4d7f45d1cf-5e59f3e9424mr3490542a12.17.1741188407354;
+        Wed, 05 Mar 2025 07:26:47 -0800 (PST)
+Received: from ?IPV6:2001:1c00:c32:7800:5bfa:a036:83f0:f9ec? (2001-1c00-0c32-7800-5bfa-a036-83f0-f9ec.cable.dynamic.v6.ziggo.nl. [2001:1c00:c32:7800:5bfa:a036:83f0:f9ec])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5e4c3fb633bsm9754114a12.63.2025.03.05.07.26.46
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 05 Mar 2025 07:26:46 -0800 (PST)
+Message-ID: <9b8c9eb7-c8d5-4c12-9ce5-c4b4df3b4223@redhat.com>
+Date: Wed, 5 Mar 2025 16:26:46 +0100
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] platform/x86: amd: Add ISP platform info
+To: "Nirujogi, Pratap" <pnirujog@amd.com>,
+ Pratap Nirujogi <pratap.nirujogi@amd.com>, ilpo.jarvinen@linux.intel.com,
+ "Limonciello, Mario" <Mario.Limonciello@amd.com>
+Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
+ benjamin.chan@amd.com, bin.du@amd.com, king.li@amd.com,
+ gjorgji.rosikopulos@amd.com, dominic.antony@amd.com
+References: <20250228170238.3484860-1-pratap.nirujogi@amd.com>
+ <cd25d131-bead-4a38-98dc-1011c2843286@redhat.com>
+ <3d57b624-7753-4a4d-9051-0a55cbdff1ec@amd.com>
+Content-Language: en-US, nl
+From: Hans de Goede <hdegoede@redhat.com>
+In-Reply-To: <3d57b624-7753-4a4d-9051-0a55cbdff1ec@amd.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: SATLEXMB03.amd.com (10.181.40.144) To SATLEXMB04.amd.com
- (10.181.40.145)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SJ1PEPF000023CB:EE_|PH7PR12MB5927:EE_
-X-MS-Office365-Filtering-Correlation-Id: ea46f2dd-3108-41de-b813-08dd5bf211fe
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|82310400026|376014|1800799024|36860700013;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?YWD6UpUr2E3uxt7xJg1JmeQVu1sY67sVx4WR2zHDtvkfBblrFkCjZNuqWFeg?=
- =?us-ascii?Q?t3UF5EbqTsYzsvWDVDUpKOSWy8K34WAkDZy0xZrLlMRMoCPmYJ2hq8ooiMhI?=
- =?us-ascii?Q?GyE+V8TskPSGE+v7pVLCQmMjwFAycv+kraR1mjWgP8ro2aUXAYDSCF6r/mDX?=
- =?us-ascii?Q?E1mC8HmjYWqMm7+DAUjDcBSLN+P2O3M+Z2E3S6WgzEKaV4nSC27IvlcML4oG?=
- =?us-ascii?Q?ivJf50CefPodG/LkI/1nyObnsufKdMG7a4Iu+qndyfii6e9rRUzJUkp1mujr?=
- =?us-ascii?Q?+K7nCLXUQQ4LEpZgEKRgeRm5y+yv0HJhQeoKXELgMQv8cjaOpaZxmVsLAg1C?=
- =?us-ascii?Q?SMH4iVyTCi6ZXL4gsXCZTsIMgT3Nk1oXJU6zdpapNI/PYSBzUHP3rF0EfcoR?=
- =?us-ascii?Q?o/gxpR+OloW6LtjuG01lZw/ovS5Kz38TRK9sQjFqZA11mXC2/rEgfNfB67yD?=
- =?us-ascii?Q?b+68xZx5tmcWdCa6WSjqhrHR73UZExbCzgRm9nzHB9c9MOdTNsLLHzv9rb9T?=
- =?us-ascii?Q?XjO2jT9m2wK6Va8Toxpujwi1jgV+T/810dg5Mp1fw2saIl9WppDfnH7fvYTE?=
- =?us-ascii?Q?C4IEiGbiq0qWrqwg/+aEDZOiIMNET8jgJIcW+Z0GFwC7eL4X/sKDc4SS+743?=
- =?us-ascii?Q?CSU8UHUWexUJ2riCdYxyGVS1yAV5RGP2lcizClSUu+uhv8y4qXJ+ghqRse0j?=
- =?us-ascii?Q?YGjit6dt/Cn29Z5HSYjxQ1qvU+oGL2i/ovT36Y+VFYy49xwavSmKyiZFQJdu?=
- =?us-ascii?Q?rqySuK9dUhDX0486pxcnwf3dg1INqzM5T0DT8E/UkyKpyosp9ziBNFxbnSqd?=
- =?us-ascii?Q?GYa94a3CBkv2zQWl5Ehb8vjBcbWwp3KbfY30JsM8w2rL4ofjUMYzxjKck0SR?=
- =?us-ascii?Q?Pm82NRCG93ikq8wPU1KSSxDzFjdJGwIVqL30IadWFlnDsUTFw1UFOFW3XGhO?=
- =?us-ascii?Q?kt01x69VfobCUH/roaaxGxKW4O9KCDt8gHk9p2AKbfFUCmLDM4BP0K/vlVwh?=
- =?us-ascii?Q?xZATllptqsaiSoNCCiIZIiO6ovClPWhH09ABTGHwS0H1jhy9fnuCl2IOXpFR?=
- =?us-ascii?Q?yta8fA6O1yAcNGoT7C8EjAsorKrd7D6zqlOJXQQgTbRPIzelpWKmfcuizdVQ?=
- =?us-ascii?Q?uV6B5vDFiaFoVCjJGK8XRZ8tGEyxzC0sRD3aQDP2dC6l4uyc1kpGzXfFfE3e?=
- =?us-ascii?Q?fLb6W0GwCD/OSxmrApNUTPDKHSVxNac8AaY2jKp6NaGexwtwqp585REXyQWO?=
- =?us-ascii?Q?ZisrWvVxBmiRxQuMYC8qjDr10BvOTcVAu3djQGqM2XY+nFyQFNe7j/on3stL?=
- =?us-ascii?Q?rK2fvyI8yEXnDTpx/ih1LYzV0OKzb1xImHsV3td3kW8jwx0bohzae1OEZOb9?=
- =?us-ascii?Q?7pizG5ebQ+PyFLEDkC+yRMfiEXByetHT8D/mQwDzQAo95N6DCvZqXBTrTcdE?=
- =?us-ascii?Q?BOns/UMbwMSoWsYchGdjaij1abrGRE6d511JA/dCHsslxfKNb+5K8Vvu7yuB?=
- =?us-ascii?Q?aciajad/ua2ggRo=3D?=
-X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(82310400026)(376014)(1800799024)(36860700013);DIR:OUT;SFP:1101;
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 05 Mar 2025 14:28:59.7035
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: ea46f2dd-3108-41de-b813-08dd5bf211fe
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	SJ1PEPF000023CB.namprd02.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH7PR12MB5927
 
-Adopt managed devm_* APIs for handling mutex creation and deletion,
-facilitating automatic resource cleanup.
+Hi Pratap,
 
-Co-developed-by: Sanket Goswami <Sanket.Goswami@amd.com>
-Signed-off-by: Sanket Goswami <Sanket.Goswami@amd.com>
-Signed-off-by: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
----
-based on mainline with tip commit 48a5eed9ad58
+On 4-Mar-25 12:14 AM, Nirujogi, Pratap wrote:
+> Hi Hans,
+> 
+> Thanks for your review. Please see the inline comments and let us know your insights.
+> 
+> Thanks,
+> Pratap
+> 
+> 
+> On 3/3/2025 8:41 AM, Hans de Goede wrote:
+>> Caution: This message originated from an External Source. Use proper caution when opening attachments, clicking links, or responding.
+>>
+>>
+>> Hi Pratap,
+>>
+>> Thank you for your patch.
+>>
+>> On 28-Feb-25 18:02, Pratap Nirujogi wrote:
+>>> Add ov05c i2c boardinfo and GPIO pin info for AMD ISP platform.
+>>>
+>>> Details of the resources added:
+>>>
+>>> - Added i2c bus number for AMD ISP platform is 99.
+>>> - Added GPIO 85 to allow ISP driver to enable and disable ISP access.
+>>> - Added GPIO 0 to allow sensor driver to enable and disable sensor module.
+>>>
+>>> Signed-off-by: Pratap Nirujogi <pratap.nirujogi@amd.com>
+>>> ---
+>>>   drivers/platform/x86/amd/Kconfig   | 11 +++++
+>>>   drivers/platform/x86/amd/Makefile  |  1 +
+>>>   drivers/platform/x86/amd/amd_isp.c | 72 ++++++++++++++++++++++++++++++
+>>>   3 files changed, 84 insertions(+)
+>>>   create mode 100644 drivers/platform/x86/amd/amd_isp.c
+>>>
+>>> diff --git a/drivers/platform/x86/amd/Kconfig b/drivers/platform/x86/amd/Kconfig
+>>> index c3e086ea64fc..4b373edd750d 100644
+>>> --- a/drivers/platform/x86/amd/Kconfig
+>>> +++ b/drivers/platform/x86/amd/Kconfig
+>>> @@ -32,3 +32,14 @@ config AMD_WBRF
+>>>
+>>>          This mechanism will only be activated on platforms that advertise a
+>>>          need for it.
+>>> +
+>>> +config AMD_ISP_PLATFORM
+>>> +     bool "AMD platform with ISP4 that supports Camera sensor device"
+>>> +     depends on I2C && X86_64 && AMD_ISP4
+>>> +     help
+>>> +       For AMD platform that support Image signal processor generation 4, it
+>>> +       is necessary to add platform specific camera sensor module board info
+>>> +       which includes the sensor driver device id and the i2c address.
+>>> +
+>>> +       If you have a AMD platform that support ISP4 and with a sensor
+>>> +       connected to it, say Y here
+>>> diff --git a/drivers/platform/x86/amd/Makefile b/drivers/platform/x86/amd/Makefile
+>>> index 56f62fc9c97b..0d89e2d4f7e6 100644
+>>> --- a/drivers/platform/x86/amd/Makefile
+>>> +++ b/drivers/platform/x86/amd/Makefile
+>>> @@ -10,3 +10,4 @@ obj-$(CONFIG_AMD_PMC)               += pmc/
+>>>   obj-$(CONFIG_AMD_HSMP)               += hsmp/
+>>>   obj-$(CONFIG_AMD_PMF)                += pmf/
+>>>   obj-$(CONFIG_AMD_WBRF)               += wbrf.o
+>>> +obj-$(CONFIG_AMD_ISP_PLATFORM)       += amd_isp.o
+>>> diff --git a/drivers/platform/x86/amd/amd_isp.c b/drivers/platform/x86/amd/amd_isp.c
+>>> new file mode 100644
+>>> index 000000000000..751f209e9509
+>>> --- /dev/null
+>>> +++ b/drivers/platform/x86/amd/amd_isp.c
+>>> @@ -0,0 +1,72 @@
+>>> +/* SPDX-License-Identifier: MIT */
+>>> +/*
+>>> + * Copyright 2025 Advanced Micro Devices, Inc.
+>>> + *
+>>> + * Permission is hereby granted, free of charge, to any person obtaining a
+>>> + * copy of this software and associated documentation files (the "Software"),
+>>> + * to deal in the Software without restriction, including without limitation
+>>> + * the rights to use, copy, modify, merge, publish, distribute, sublicense,
+>>> + * and/or sell copies of the Software, and to permit persons to whom the
+>>> + * Software is furnished to do so, subject to the following conditions:
+>>> + *
+>>> + * The above copyright notice and this permission notice shall be included in
+>>> + * all copies or substantial portions of the Software.
+>>> + *
+>>> + * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+>>> + * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+>>> + * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.  IN NO EVENT SHALL
+>>> + * THE COPYRIGHT HOLDER(S) OR AUTHOR(S) BE LIABLE FOR ANY CLAIM, DAMAGES OR
+>>> + * OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,
+>>> + * ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+>>> + * OTHER DEALINGS IN THE SOFTWARE.
+>>> + */
+>>> +
+>>> +#include <linux/init.h>
+>>> +#include <linux/i2c.h>
+>>> +#include <linux/kernel.h>
+>>> +#include <linux/gpio/machine.h>
+>>> +
+>>> +#define AMDISP_I2C_BUS               99
+>>
+>> I'm not a fan of using static i2c-bus numbers for this. static bus numbers are
+>> something of the past and we typically do not use these on x86 anymore.
+>>
+>> Using this static number + i2c_register_board_info() also requires this code
+>> to be builtin rather then modular which is also undesirable.
+>>
+>> For a more dynamic way of manually adding i2c-devices see:
+>>
+>> https://web.git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/drivers/platform/x86/dell/dell-lis3lv02d.c
+>>
+>> But a better question here is why instantiate the sensor i2c device
+>> manually at all.
+>>
+>> ACPI has a standardized way to describe I2C-clients which tyically
+>> is used for all I2C devices on ACPI platforms like I2C touchscreens /
+>> touchpads / audio-codecs / accelerometers / etc.
+>> I don't see why the camera sensor on AMD platforms is so special that
+>> it could not be described in ACPI using an ACPI child-device of the
+>> i2c-controller with a ACPI resource (_CRS entry) of the I2cSerialBusV2()
+>> type.
+>>
+>> Likewise the sensor enable GPIO should also be described in the ACPI
+>> table as a Gpio type resource in the same _CRS table.
+>>
+> 
+> We have to take this approach because ISP is a child to GFX PCI device in AMD HW architectures, and since it is not an independent device, its device specific configuration (gpio pin ids, i2c-bus number etc.) is not registered in ACPI.
 
-v2:
- - add error handling
+The ISP still could and really should be an ACPI child device of
+the GFX PCI device in this case with its own _CRS for for example
+the enable ISP GPIO.
 
- drivers/platform/x86/amd/pmc/pmc.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+>> Can you run acpidump -o acpidump.txt on a laptop with this camera
+>> sensor and send me the acpidupm.txt offlist ? Please run this
+>> on a production hardware laptop model using production firmware.
+>>
+> 
+> Please refer the attached acpidump.txt
 
-diff --git a/drivers/platform/x86/amd/pmc/pmc.c b/drivers/platform/x86/amd/pmc/pmc.c
-index 1ad3eb935404..84bc47009e5f 100644
---- a/drivers/platform/x86/amd/pmc/pmc.c
-+++ b/drivers/platform/x86/amd/pmc/pmc.c
-@@ -783,7 +783,9 @@ static int amd_pmc_probe(struct platform_device *pdev)
- 		goto err_pci_dev_put;
- 	}
- 
--	mutex_init(&dev->lock);
-+	err = devm_mutex_init(dev->dev, &dev->lock);
-+	if (err)
-+		return err;
- 
- 	/* Get num of IP blocks within the SoC */
- 	amd_pmc_get_ip_info(dev);
-@@ -822,7 +824,6 @@ static void amd_pmc_remove(struct platform_device *pdev)
- 	pci_dev_put(dev->rdev);
- 	if (IS_ENABLED(CONFIG_AMD_MP2_STB))
- 		amd_mp2_stb_deinit(dev);
--	mutex_destroy(&dev->lock);
- }
- 
- static const struct acpi_device_id amd_pmc_acpi_ids[] = {
--- 
-2.34.1
+Thanks.
+
+So looking at this there are ACPI devices for the sensors, which
+unfortunately lack a _CRS with an I2CSerialBusV2 resource pointing
+to the ISP childdevice as bus-controller. So that i2c-client
+instantiating would be instant.
+
++Cc Mario
+
+Mario any chance that for the next (or the next-next) generation of
+AMD devices we can get the ACPI tables fixed to properly describe
+the sensors as having an I2cSerialBusV2 resource, just like how e.g.
+I2C touchpads / touchscreens have this ?  I suspect this will benefit
+Windows too. Likewise any enable GPIOs for the sensor really also
+should be proper ACPi Gpio resources in the ACPI device describing
+the sensor.
+
+Ok, back to the current generation devices. So there is an ACPI
+device for the sensor there. This should lead to a:
+/dev/bus/platform/devices/OMNI5C10:00 device getting created
+(please check this).
+
+So this driver for adding the sensor GPIO lookup + creating
+the i2c_client should be rewritten to be a platform_driver
+binding to that device and it should be a module rather then
+being builtin using module_platform_driver():
+
+- Binding using a struct acpi_device_id table to match the ACPI HID of
+  OMNI5C10 + using MODULE_DEVICE_TABLE(acpi, table_name) for auto module
+  loading.
+  The driver_data of the acpi_device_id should point to i2c_board_info to
+  use for that HID to future proof the driver for adding support for other
+  sensor models
+
+- Loading as module means this can be loaded after the i2c adapter driver,
+  so instead of registering board-info it should use the mechanism used
+  in drivers/platform/x86/dell/dell-lis3lv02d.c combined with a unique
+  adapter name, then the module load ordering does not matter and it is
+  also unnecessary to have a magic fixed i2c bus-number of 99
+
+- probe() should copy the const i2c_board_info info from
+  acpi_device_id.driver_data and then set the fwnode so that the sensor
+  driver can e.g. get to the _PLD info to determine sensor location
+  (e.g. front vs back)
+
+- The GPIO sensor lookup for the ISP enable should be registered by
+  the ISP driver itself. Also this seems to be something which might be
+  board specific so maybe this needs DMI matching?
+
+I'm looking forward to see a new version implementing the above approach
+which would be a big improvement IMHO.
+
+Regards,
+
+Hans
+
 
