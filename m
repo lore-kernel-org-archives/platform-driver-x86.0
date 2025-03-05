@@ -1,154 +1,91 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C1D5E1FCF4F
-	for <platform-driver-x86@vger.kernel.org>; Wed,  5 Mar 2025 12:21:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7339D248885;
+	Wed,  5 Mar 2025 13:09:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741177302; cv=none; b=tUTjtz3hoGHwS0cp0b3kjWUnIYcIxAddAI71R6z2ti71abTbT1ZgQeNEUjCNmHG2L8W3jIEYsaBvjMdI30UcQDlfVoKykHBF/3Cd1Ru6QxhXcovQIK7TTlaHNO+PvT8HrlrM5v6TRqzgOuHiUVudWfGoY6xp9tATV7YaICcUAyM=
+	t=1741180200; cv=none; b=msn87PQe/MN5/eR1fMCeUf5uhlTbMUrxuGkc0WARlaXqTRN1Tjk8cZ1z7Y+yfRwnEg2mzmArUZgmY/cKKXeIhTeJ4ysTbkMPBhwibNZhYkIaKEXkpEBfF1KdjX6BJdjBA0oqOmDou0do4rGMBIX1NNJN+uN5pGET1nboZYn1iqA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741177302; c=relaxed/simple;
-	bh=5a90tsHT+9W1rfhprKuEo1UAJy9BySl/hFygNe+sBzg=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=jP1K/jP8kaBXpYLsaGMGz1ruISttdKiScfh3YpU95O7U2HV2DmVjFC+eK4SgtA3nrWUlH1ufcixfSRGf1aEd2tZC0YjUAp/s8IHYUgdV+12zbkDC7kIZZQlcx4+i4HLTH53g+aZT/SONwnRMk6L4txPS8hTGaCIUZUhCqdH00LA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=bzQu7ZHQ; arc=none smtp.client-ip=192.198.163.9
+	s=arc-20240116; t=1741180200; c=relaxed/simple;
+	bh=Vf2ZdakHj8hyPkcOAJYexy+b1okFyPgd9TLAqM5lZGg=;
+	h=From:To:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=UFOdDwaU6/jjP3vHK+PTMeZzbyAEWItAEOb/S1jN7OhsstnKE3qMJLO6MLmEBehMIWS+4M4qjSUpcvI7qV7juv31oG72eos8Q3U/sUOZWUJdUvD+FxjdVhacu+flYdzMKHjZyDVX5f+YdN4MCGSLdlMLbW8m+AucYtdu2RH5LmI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=bkK7CZ4V; arc=none smtp.client-ip=198.175.65.13
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="bzQu7ZHQ"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="bkK7CZ4V"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1741177301; x=1772713301;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=5a90tsHT+9W1rfhprKuEo1UAJy9BySl/hFygNe+sBzg=;
-  b=bzQu7ZHQwb7avRHH0DkfKZULJLJ8GdMVEitWu8zzJsKh3QBscd0NeRn0
-   DYlN0aPK5QumYKc+Bt0F26S2D+A3o5XVDjltPcFIXqfBswaZqXVF3D/Pj
-   1A52blpXh1G/A2RBL1QueBA7Wokdq/JJI65c/2ps6vUstMriypwZdLWHi
-   rfF8uYBWGWZyatnQ/hxccZpsc77znVZkcxVuJUn4hM2E2GPMGF2e2LIe1
-   8RjYwA1uEwCM40y9aX0DeStgCRVI7Hg9ZqhyD/2591lmL0DJ5j65JaioM
-   1t/TgBETXmF08wetsl0eQjUBSWskDjND/l9CS8mYeTAiTtV0g+znHIdeg
-   Q==;
-X-CSE-ConnectionGUID: q+OPYTzLSiuOdxcc9eDPeQ==
-X-CSE-MsgGUID: dU9aTbjCR+qgUkAkUDKdVg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11363"; a="52774009"
+  t=1741180198; x=1772716198;
+  h=from:to:in-reply-to:references:subject:message-id:date:
+   mime-version:content-transfer-encoding;
+  bh=Vf2ZdakHj8hyPkcOAJYexy+b1okFyPgd9TLAqM5lZGg=;
+  b=bkK7CZ4VbZAPSFXDiVpJMIGjKGNfidL22WiDcC8nysyUNPI5lwgCth9k
+   ixFelif0hwMC+YiJJgVQzUqufTn+xLP6KOlnO0KoPyDQKCmMsEO4LvJjz
+   XMTOAPurVU6bK25HgYmQz93p/oXtGhY1ltKixCiq8BdgdDhnCgeoPsdS9
+   rm+7ecjqqxYn0nDuzxq9cDuyTQzL6oru09FO44x6oFinnEpZhuyJtyigc
+   VbuM/4p8bRKU+mrQWRHovJ9/uO3V1pv+Rkm6bTnoYCENACbLsrBq0GbBY
+   U5moQB/Zvb66ET39Cm5qQMELvkzPWHfbCo6ZiPQDeGs7rKKDDrWDpKPSp
+   g==;
+X-CSE-ConnectionGUID: oGgdKq+fR2meXTWUVyxgbQ==
+X-CSE-MsgGUID: vQzxN3ejR0CMRPkhZ23KOA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11363"; a="53129592"
 X-IronPort-AV: E=Sophos;i="6.14,223,1736841600"; 
-   d="scan'208";a="52774009"
-Received: from orviesa005.jf.intel.com ([10.64.159.145])
-  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Mar 2025 04:21:40 -0800
-X-CSE-ConnectionGUID: HHdVOQFtToWNjmzyQdFCXw==
-X-CSE-MsgGUID: n7ecsQ4bT9+S60o70CtFIQ==
+   d="scan'208";a="53129592"
+Received: from orviesa002.jf.intel.com ([10.64.159.142])
+  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Mar 2025 05:09:57 -0800
+X-CSE-ConnectionGUID: VrLFLksOQ5qPBe3YOhgSSw==
+X-CSE-MsgGUID: 7f7hQC09TbyQ+LxpUjLU9A==
 X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
-   d="scan'208";a="123877998"
+X-IronPort-AV: E=Sophos;i="6.14,223,1736841600"; 
+   d="scan'208";a="149445396"
 Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.112])
-  by orviesa005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Mar 2025 04:21:38 -0800
+  by orviesa002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Mar 2025 05:09:56 -0800
 From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Wed, 5 Mar 2025 14:21:34 +0200 (EET)
-To: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
-cc: Hans de Goede <hdegoede@redhat.com>, Sanket.Goswami@amd.com, 
-    platform-driver-x86@vger.kernel.org
-Subject: Re: [PATCH 3/4] platform/x86/amd/pmc: Remove unnecessary line
- breaks
-In-Reply-To: <20250217081720.107719-3-Shyam-sundar.S-k@amd.com>
-Message-ID: <2e56ec65-7d74-20f4-32f0-6937184a8c48@linux.intel.com>
-References: <20250217081720.107719-1-Shyam-sundar.S-k@amd.com> <20250217081720.107719-3-Shyam-sundar.S-k@amd.com>
+To: Hans de Goede <hdegoede@redhat.com>, 
+ platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ =?utf-8?q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+In-Reply-To: <20250304160639.4295-1-ilpo.jarvinen@linux.intel.com>
+References: <20250304160639.4295-1-ilpo.jarvinen@linux.intel.com>
+Subject: Re: [PATCH 1/2] platform/x86:
+ lenovo-yoga-tab2-pro-1380-fastcharger: Make symbol static
+Message-Id: <174118019152.7167.18327410510217708022.b4-ty@linux.intel.com>
+Date: Wed, 05 Mar 2025 15:09:51 +0200
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+X-Mailer: b4 0.13.0
 
-On Mon, 17 Feb 2025, Shyam Sundar S K wrote:
+On Tue, 04 Mar 2025 18:06:38 +0200, Ilpo Järvinen wrote:
 
-> Enhance code readability by fixing line break and blank line
-> inconsistencies.
+> Sparse reports:
 > 
-> Co-developed-by: Sanket Goswami <Sanket.Goswami@amd.com>
-> Signed-off-by: Sanket Goswami <Sanket.Goswami@amd.com>
-> Signed-off-by: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
-> ---
->  drivers/platform/x86/amd/pmc/pmc.c | 7 -------
->  1 file changed, 7 deletions(-)
+> lenovo-yoga-tab2-pro-1380-fastcharger.c:222:29: warning: symbol
+> 'yt2_1380_fc_serdev_driver' was not declared. Should it be static?
 > 
-> diff --git a/drivers/platform/x86/amd/pmc/pmc.c b/drivers/platform/x86/amd/pmc/pmc.c
-> index 742920530987..d80a5b899a1d 100644
-> --- a/drivers/platform/x86/amd/pmc/pmc.c
-> +++ b/drivers/platform/x86/amd/pmc/pmc.c
-> @@ -168,7 +168,6 @@ static int get_metrics_table(struct amd_pmc_dev *pdev, struct smu_metrics *table
->  {
->  	if (!pdev->smu_virt_addr) {
->  		int ret = amd_pmc_setup_smu_logging(pdev);
-> -
->  		if (ret)
-
-This should be:
-
-		int ret;
-
-		ret = amd_pmc_setup_smu_logging(pdev);
-		if (ret)
-
-However, I'd make ret function level local since these functions are not 
-that complicated so block local variables aren't that useful.
-
-While at it, I'd also rename the variable to rc to be consistent with the 
-rest of the file.
-
->  			return ret;
->  	}
-> @@ -222,7 +221,6 @@ static ssize_t smu_fw_version_show(struct device *d, struct device_attribute *at
->  
->  	if (!dev->major) {
->  		int rc = amd_pmc_get_smu_version(dev);
-> -
->  		if (rc)
->  			return rc;
->  	}
-> @@ -236,7 +234,6 @@ static ssize_t smu_program_show(struct device *d, struct device_attribute *attr,
->  
->  	if (!dev->major) {
->  		int rc = amd_pmc_get_smu_version(dev);
-> -
->  		if (rc)
->  			return rc;
->  	}
-> @@ -704,7 +701,6 @@ static int amd_pmc_suspend_handler(struct device *dev)
->  	 */
->  	if (pdev->disable_8042_wakeup && !disable_workarounds) {
->  		int rc = amd_pmc_wa_irq1(pdev);
-> -
->  		if (rc) {
->  			dev_err(pdev->dev, "failed to adjust keyboard wakeup: %d\n", rc);
->  			return rc;
-> @@ -743,7 +739,6 @@ static int amd_pmc_probe(struct platform_device *pdev)
->  	u32 val;
->  
->  	dev->dev = &pdev->dev;
-> -
->  	rdev = pci_get_domain_bus_and_slot(0, 0, PCI_DEVFN(0, 0));
->  	if (!rdev || !pci_match_id(pmc_pci_ids, rdev)) {
->  		err = -ENODEV;
-> @@ -751,7 +746,6 @@ static int amd_pmc_probe(struct platform_device *pdev)
->  	}
->  
->  	dev->cpu_id = rdev->device;
-> -
->  	if (dev->cpu_id == AMD_CPU_ID_SP || dev->cpu_id == AMD_CPU_ID_SHP) {
->  		dev_warn_once(dev->dev, "S0i3 is not supported on this hardware\n");
->  		err = -ENODEV;
-> @@ -767,7 +761,6 @@ static int amd_pmc_probe(struct platform_device *pdev)
->  	}
->  
->  	base_addr_lo = val & AMD_PMC_BASE_ADDR_HI_MASK;
-> -
->  	err = amd_smn_read(0, AMD_PMC_BASE_ADDR_HI, &val);
->  	if (err) {
->  		dev_err(dev->dev, "error reading 0x%x\n", AMD_PMC_BASE_ADDR_HI);
+> Fix that by making the symbol static.
 > 
+> [...]
 
--- 
+
+Thank you for your contribution, it has been applied to my local
+review-ilpo-next branch. Note it will show up in the public
+platform-drivers-x86/review-ilpo-next branch only once I've pushed my
+local branch there, which might take a while.
+
+The list of commits applied:
+[1/2] platform/x86: lenovo-yoga-tab2-pro-1380-fastcharger: Make symbol static
+      commit: 886ca11a0c70efe5627a18557062e8a44370d78f
+[2/2] platform/x86: dell-uart-backlight: Make dell_uart_bl_serdev_driver static
+      commit: 4878e0b14c3e31a87ab147bd2dae443394cb5a2c
+
+--
  i.
 
