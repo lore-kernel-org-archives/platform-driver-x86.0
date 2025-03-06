@@ -1,41 +1,41 @@
 Received: from mout.gmx.net (mout.gmx.net [212.227.17.22])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 504821F4185;
-	Thu,  6 Mar 2025 22:39:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0CE7A206F22;
+	Thu,  6 Mar 2025 22:59:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.22
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741300745; cv=none; b=JwbWbuwzBqEi2VsIhRL4mVvq2egcGIsfD/3f9h6cbrPDksvpuIVVAjWs/am860nIY1VojWptfOBhP4cDS5pFGrGFQFvyEO6T6Ky7uKyNP/RbYzSJfMdMrtLQYBPopT+r9+oSo+lxju0COKYcIaGu/wsXQoUADkDQfS5E4MzbWh0=
+	t=1741301948; cv=none; b=f2Pl40ZDhbIdRBzz8vuUonnQp02Q97nHSj+tfo1GYaD0F0e7N4bHcOkGzvi/x83sxqMezexv2z2IKt/JWnWtaLCwo5/NkKr23BWzqHALA54nsf9u84MBfl3/zZBqS+WnQZKZH1rjdwEhjnreX+ZzSTis6HZfFCY0NyDpTNQ7n0Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741300745; c=relaxed/simple;
-	bh=x1Woj64CCjmZrfdWYDFCS6r2XUCd5eTejleo/ZgAa40=;
+	s=arc-20240116; t=1741301948; c=relaxed/simple;
+	bh=pSulLbtc+j9hYMi+E3gm6BJaS45EyXyHd5kIPYcyCLs=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=PZlE8l1r1TlCTMAMjfTZtwl/POcGSHX3PdLQfV/JXvLQLT9HOCYJgia+TYn8ZpaDjnnWMIv/m5CnifxqdOJREqU053+Ja29PA/KhN2KXwkwENPVpnSqlEs5iWu3aEGeGy4iIQ0TrHDA9xCDSXzhIIuiEH9iM5q2Mk9mfpFrJaZo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b=fSjdSC5s; arc=none smtp.client-ip=212.227.17.22
+	 In-Reply-To:Content-Type; b=MLa1TU34DH7dsaoPM3J8s8iZ9IWhiI02aC6h8dbOMAteitmahlXEky3MoqJrKeQZ+TkT/C2kMZlkEQVKvsQbG4saBz23phYuA+g8ERtfuaXKsHKi8wNCwkoxSgCHEvEkQ4x3cgd533h4uJBNVZW5d78EK06fo52QEf+gNqTgXBE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b=D3tKmEFK; arc=none smtp.client-ip=212.227.17.22
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b="fSjdSC5s"
+	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b="D3tKmEFK"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.de;
-	s=s31663417; t=1741300740; x=1741905540; i=w_armin@gmx.de;
-	bh=tAr+3qndrO4mbKcD+KVaVkp0ADfs8Cfpe1Qp5AXaf/U=;
+	s=s31663417; t=1741301912; x=1741906712; i=w_armin@gmx.de;
+	bh=Xe6arez3DQshWl+28R7jzGpRj7+Vuv2XpS35bGQuJkM=;
 	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:To:Cc:
 	 References:From:In-Reply-To:Content-Type:
 	 Content-Transfer-Encoding:cc:content-transfer-encoding:
 	 content-type:date:from:message-id:mime-version:reply-to:subject:
 	 to;
-	b=fSjdSC5szJ5mY6ijbylbQWq7aXdigAL6onuVPXKo2lLnvire7HLzkfHm2TRGPOAn
-	 NXScr4DzMFVxJFjSyFbjyVwz55McyvTjSbV/2Tv/zBi0o24lLij0u4YRs/642rscc
-	 ocxCHWgJrllmMy6H2MfguuR0CNZ+CB2yUBSw9eqLNPQkk2xnez6ZMQLLr5y7dcD+e
-	 HNRJD3FekHCsVnPzFAISzQ6CR0lkQEbqbazkB+WQHveCy53YHJeqq//fxzF84Z95/
-	 W8glZodXdRQUeuT0YvV3PU7cxsp6olG1jnoETp3snesM4zA2l1ApZbICgionkezUm
-	 ss7vjwbz59JYPeYoqQ==
+	b=D3tKmEFKLkU1Eo66/PUO4AEd/W21sbW1PTf55NhXCf3lf+9jPVWdBYZo/vtUAa81
+	 xXyPe/mOGnYaAp+j8zQkweFHmfULdlf+3DzHDQIQbz1HimW1FErbtwjueS6GLV2gQ
+	 2PFHzqNjbs3lHYsduQvUKEvd7lU1+ymGFnE4nlT2fHSFUdK48e7RxtOTlhrTMu5o/
+	 eMcL/MmOYjJjGD5fPvOORj0fEMaf/JQDLGQCiT96ERLCVyWMVVMso5F9KmXu9PVR8
+	 CP4bdIOUoTSJvjSsWu2Gwi9hyAnd7ChO5/3Hyvakq4hjM8efZ5Vem8ldA+GDa+Ci0
+	 mX1CxnUYesvO0d+Sxg==
 X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
 Received: from [192.168.0.69] ([87.177.78.219]) by mail.gmx.net (mrgmx104
- [212.227.17.168]) with ESMTPSA (Nemesis) id 1MyKDU-1t33Em0gPc-00x3RE; Thu, 06
- Mar 2025 23:39:00 +0100
-Message-ID: <79051f75-9217-4fd4-a515-e958a587a32b@gmx.de>
-Date: Thu, 6 Mar 2025 23:38:58 +0100
+ [212.227.17.168]) with ESMTPSA (Nemesis) id 1MOzOm-1tc6hf34I8-00Nibn; Thu, 06
+ Mar 2025 23:58:31 +0100
+Message-ID: <0261bbf5-d618-4ce3-bcbe-05f498063f19@gmx.de>
+Date: Thu, 6 Mar 2025 23:58:26 +0100
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -43,196 +43,119 @@ List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 09/10] platform/x86: alienware-wmi-wmax: Add a DebugFS
- interface
-To: Kurt Borja <kuurtb@gmail.com>,
+Subject: Re: [PATCH v3 0/4] platform/x86: Add Lenovo Gaming Series WMI Drivers
+To: "Derek J. Clark" <derekjohn.clark@gmail.com>,
+ Hans de Goede <hdegoede@redhat.com>,
  =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Cc: Hans de Goede <hdegoede@redhat.com>, platform-driver-x86@vger.kernel.org,
- Dell.Client.Kernel@dell.com, linux-kernel@vger.kernel.org
-References: <20250305-hwm-v3-0-395e7a1407e2@gmail.com>
- <20250305-hwm-v3-9-395e7a1407e2@gmail.com>
+Cc: Jonathan Corbet <corbet@lwn.net>, Mario Limonciello <superm1@kernel.org>,
+ Luke Jones <luke@ljones.dev>, Xino Ni <nijs1@lenovo.com>,
+ Zhixin Zhang <zhangzx36@lenovo.com>, Mia Shao <shaohz1@lenovo.com>,
+ Mark Pearson <mpearson-lenovo@squebb.ca>,
+ "Pierre-Loup A . Griffais" <pgriffais@valvesoftware.com>,
+ "Cody T . -H . Chiu" <codyit@gmail.com>, John Martens <johnfanv2@gmail.com>,
+ platform-driver-x86@vger.kernel.org, linux-doc@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <20250225220037.16073-1-derekjohn.clark@gmail.com>
 Content-Language: en-US
 From: Armin Wolf <W_Armin@gmx.de>
-In-Reply-To: <20250305-hwm-v3-9-395e7a1407e2@gmail.com>
+In-Reply-To: <20250225220037.16073-1-derekjohn.clark@gmail.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:eBhWsDHOvwMs0tcQ1i1j8f2n6fYJ65v+QYZroTyY4CVhymF9QYR
- Rok/e492658FCeV0M+JJFVKqj4LazWUDN/DeSw9ncFWLzh/vvoRKmK8pHjlXbJA4v/BT+tE
- B6yk5iduYpwgD1MrFapnWRlJktR23tVM/GOzFVDtvKCzBsxdHVZ9Y3ib93eiokQlYQhWK7z
- IssskdrmmQZCLuTCMAmgA==
+Content-Transfer-Encoding: 7bit
+X-Provags-ID: V03:K1:pwccptvPGX5P59AL3tKKnNk0zA9g6fM5AMJ4IjFvamgSueDNkM6
+ GqJNGh3qcKAod4mvHn1qsyeyhCXy5PJ+1jFlvgL3n38L1aEtOQCjkDDD4hhNqwWLe9WoIa4
+ TOnZIaBeieyA5xQ5B4+XplZDATliaLnTdTjia8/33j204HSvbIO447S8ovBcOZKM3bBmctD
+ IMDnUJkF/dscfAqGHjnmw==
 X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:SOsfHhcHV/U=;GuCPtiSUuD/q+C8Z76x9imLCfjV
- RpQrPFfWnrCPngbcwbNII5d+/IOq7VCZDDGGrPAltUqmpKgg8dwlLKBQD6eD31f5orodox2Kg
- PpjK6sya/yLBb8N59WCk9K93kyE2tiAR7Bmhmdl/WVowqs/keMqIwobj7Eyh69KwxGsD/G/Dd
- TuXP+M74w1YaB8WNpj2LL7fzURwK7zfPAzCSA/EnRKrROq+hDi+uyfg3L83R4H+LT651eSI1G
- rTAmY+zl4y5DaQLQ74paNQFgz94s+cCr5UDMeq0xhGoB/ik/TW08eIRIC7J/EcfCoLaPPxzyI
- mEqWrnN60tEkUN88GCF2slQkQI3crrezDasR6IDg8m4cjiFNJbMKtBBw75QTxajkGRUZaDSY1
- Bzm51NnpbWUdLKuXUG56yRRFdUZD+Qjg6JV/rmhbS/VCS54F0hO+ndG76DdoJx+avYLyVDNcD
- Gxtm0NTz9uS+42GLUZglqeP1p2VlqypeIVZGWdl6bKWcALBjGFg8twg642E76h0RkI8oZqKoS
- 4mE1147iq1FeZOem92xJ3H9zu7SJqTyO/And7z9E7okvrXZ4VlD97UaluNiClQ4++A7Kwe4R0
- sSBKC+AlLbWbVsWmcR4T12tP7rgUPpAbuFPlBSf71liOfWUz3apJGS414OgQ9RGSY5ZlQkP8b
- raxYylVNApOBf890y0UJRNX1/CNgDKTiMsAKwHk7z54bda0ZRLgfkaR1i2QuIlwr6YI5znwlQ
- +f4kbjPwoUMhO3ptagGR/LPukySnEcT9OP+3bb5PP7+CTn5jsOydxJ1nJXgV2NacqpvyrUvuw
- Ep8bdxzp+UhVvP7BusZ8xFupxO2xpIPgbTVObqrx6zTbGIh0ZqpE8OX5uI73AkLJXJ2sb+ZjH
- 0xPnxjbxrqcWyiVftIfdcPjC50VwKUW3FOdoJKHQS18nmTZKrxsEskxqInEk4Gg/MERbPVDtq
- zO9F8lvBsr3vH8gYE9YQ2r/Q3WeNcvhW8LNczlO+4uONtHLW9St8YtOISD/ZFs9XB6Z9ZTpXL
- AderqRoj0bYS8zLZ/A7dG0gJ7pXd7CmfFrzXwv54umxGrwpWxk1AiIl4064J6YX4+IxLJzF4x
- T9nJR2NXmXr/SUkrXXAwUP4fW/hW8Jn2/dTkbKvliEoeKfpBdoQh/Bud27dhXtJXZacXDOtx5
- SX6kMJaf67r8+Oy5mvjYAH5Eja/EHYKjzzjrzhlrZCE26hXpsJmCag85uO5ImaVV060miJsuD
- FcbapujZ9LIzkzZF3+dJ50l2Mew4UO+Rbpy609qEpFimlFf8oO6DAn+6rCAzkoYCb6yGTGoSy
- hRLK+Lf34ggRuaVXtnt3emsEzwqpOXmuWhxxGsNPcF3Uvh/Y+UBaL7jBLeqJMI9GD6XhuWfXN
- vB5IYSE5OncB4mZEKZvJLTpKBn+sqzXJYaV0181dCb0dIxIAhsZzlMVAXe
+UI-OutboundReport: notjunk:1;M01:P0:RPmzLe00E4o=;kHmc4lUIrO+ILYbsguusiTDP66+
+ YQtV0IxPlHbtyg/d6Z5gL1CY5fGW+JBIj9z1iVovRZltSP310PiXK7ai1A4A1taGAxRhMFjIo
+ 49RqsHD0lwyDy5eTtOGm+9kThWSniTRi42GKixGVTPKZcwp8ZtQqmtUq2AkvZwIfMZf3Q0YHA
+ ghBpVhUEo4aJSCzEBJsQzRWfho7BIDljuuRiy5X0l8uicS2p654CBV60JOTPbu1it8TwXekT+
+ 8VjdCfWBohPDCp6CV+P0kbVbMlBKflGKANMn3r4PiNwJolrl/jYBgCWR+On26c+KIYWTW8O9y
+ DyAfN9K58sNkPqbrSgCtHXKRTPybW+i/W4mosUvkzr2lMGoPInbBUPfiSfMOTU1o9Sajke/l+
+ Y+Ctr/QDcUrE594Y8x+lemjurOWJMTB1IjiLtCEeH80x9YGSE05fozlOFbvHZpPAv8CWQ2Zlz
+ PC+IqrqvIxtgAXJepxkC/75/8KRIUZneLG6+ae1KFuWxjmBSqVjyCksIJ7nw4ZIKTf3c/3f7Y
+ 496DrCke6iWVlQqFzYxbG+TVypeQ62bIoaOUxFw72Gmsx6fk/12xYKw3X4kxppNP/7kkWb8RE
+ 9xr0Ay+HKm44TyFk7sJG0p1r2lOb+G9mjwM0e/gBDcCxOYxI581oE10DmFDK9Fg73VzrMefjh
+ zw0Um97oWKqbDwDTiUfjfajL3yo2Bp3gAVrGd8KYnnAjt6sbg+aR9jzvpWCKZsySNSEDs5qv6
+ hWLBuxQ8DE6wPr+n++5U77op9qEwz2Bekzrm4jWUOYyiBPgR8oK07+wXqDhx7wtPsTPNtzUBp
+ n9sbIt7MK+Dap7jlVsLZdjDXwEdvSCj8H4WVPHPf8dzqmLWxwdGPoCCAb0OCCh9/Vm8AtykKZ
+ IWvkc3KYA/CAa2PBU4ME/JkCpffykKM7GNewSc7c0ALjYQTbSOuoAH9UI/FQNrH+o5VsvHc8A
+ uLQp3+l48eTZGIhQswvJ2Xh2LhHoWIJwgpphef+Z2/PJlFoCmV0586rcT34BeoWudwk/U7cYa
+ lClVYVy8bH2Qf/NPVjqSvJXooM87W76GoOEv70BxqWhF9pqtGvIe0d6b38SRdXxqSLxBwGGrm
+ 2UXLLCWq3JaTal4KigI393VciWrWzn7VARz6jZnqfPPCfPv7DMBtz8IR6fJoMe0MqEeQV63YH
+ BdL5zZasmJJ3TrcPlF+i30XdYooTZBGCGBV3Nsl3JLtF/wF/CpKU9e/VEIg9BB3ZHzYlZBW+i
+ QWojNXJ/fKfpCeDbcwO+RpxE5XCrLRdFvwjM5qrbFTC/8WlOVOGsV27OksVCY8uiiJ/GyG5Mt
+ k4HKCx/VFRUdNXphm9hcugrcH7CpNXq+YSo84y2zLOL0l6MRSjcBWKByKSR6O+VQ8V5KgUbCU
+ m20yqV/s5EvZ+LM87PMGxWou3h70Dg5nIIsbgSYM1wMm6Jr/6UrORfKffd
 
-Am 06.03.25 um 01:57 schrieb Kurt Borja:
+Am 25.02.25 um 22:59 schrieb Derek J. Clark:
 
-> Add a debugfs interface which exposes thermal private data.
+> Adds support for the Lenovo "Gaming Series" of laptop hardware that use
+> WMI interfaces that control various power settings. There are multiple WMI
+> interfaces that work in concert to provide getting and setting values as
+> well as validation of input. Currently only the "Gamezone", "Other
+> Mode", and "LENOVO_CAPABILITY_DATA_01" interfaces are implemented, but
+> I attempted to structure the driver so that adding the "Custom Mode",
+> "Lighting", and other data block interfaces would be trivial in a later
+> patches.
 >
-> Signed-off-by: Kurt Borja <kuurtb@gmail.com>
-> ---
->   drivers/platform/x86/dell/alienware-wmi-wmax.c | 92 ++++++++++++++++++=
-++++++++
->   1 file changed, 92 insertions(+)
+> This driver is distinct from, but should be considered a replacement for
+> this patch:
+> https://lore.kernel.org/all/20241118100503.14228-1-jonmail@163.com/
 >
-> diff --git a/drivers/platform/x86/dell/alienware-wmi-wmax.c b/drivers/pl=
-atform/x86/dell/alienware-wmi-wmax.c
-> index de4e8f177aadc9552b05cc732e41ee458b761143..23f8680a212fb9ef2a6f23aa=
-fcc2d25738ae4364 100644
-> --- a/drivers/platform/x86/dell/alienware-wmi-wmax.c
-> +++ b/drivers/platform/x86/dell/alienware-wmi-wmax.c
-> @@ -11,6 +11,7 @@
->   #include <linux/bitfield.h>
->   #include <linux/bitmap.h>
->   #include <linux/bits.h>
-> +#include <linux/debugfs.h>
->   #include <linux/dmi.h>
->   #include <linux/hwmon.h>
->   #include <linux/hwmon-sysfs.h>
-> @@ -18,6 +19,7 @@
->   #include <linux/moduleparam.h>
->   #include <linux/platform_profile.h>
->   #include <linux/pm.h>
-> +#include <linux/seq_file.h>
->   #include <linux/units.h>
->   #include <linux/wmi.h>
->   #include "alienware-wmi.h"
-> @@ -1343,6 +1345,94 @@ static int awcc_platform_profile_init(struct wmi_=
-device *wdev)
->   	return PTR_ERR_OR_ZERO(priv->ppdev);
->   }
+> This driver attempts to standardize the exposed sysfs by mirroring the
+> asus-armoury driver currently under review. As such, a lot of
+> inspiration has been drawn from that driver.
+> https://lore.kernel.org/all/20240930000046.51388-1-luke@ljones.dev/
 >
-> +/*
-> + * DebugFS
-> + */
-> +static int awcc_debugfs_system_description_read(struct seq_file *seq, v=
-oid *data)
-> +{
-> +	struct device *dev =3D seq->private;
-> +	struct awcc_priv *priv =3D dev_get_drvdata(dev);
-> +
-> +	seq_printf(seq, "0x%08x\n", priv->system_description);
-> +
-> +	return 0;
-> +}
-> +
-> +static int awcc_debugfs_hwmon_data_read(struct seq_file *seq, void *dat=
-a)
-> +{
-> +	struct device *dev =3D seq->private;
-> +	struct awcc_priv *priv =3D dev_get_drvdata(dev);
-> +	struct awcc_fan_data *fan_data;
-> +	u8 bit;
-> +
-> +	seq_printf(seq, "Number of fans: %u\n", priv->fan_count);
-> +	seq_printf(seq, "Number of temperature sensors: %u\n\n", priv->temp_co=
-unt);
-> +
-> +	for (u32 i =3D 0; i < priv->fan_count; i++) {
-> +		fan_data =3D priv->fan_data[i];
-> +
-> +		seq_printf(seq, "Fan %u:\n", i);
-> +		seq_printf(seq, "  ID: 0x%02x\n", fan_data->id);
-> +		seq_printf(seq, "  Related temperature sensors: ");
-> +		for_each_set_bit(bit, fan_data->related_temps, priv->temp_sensors_siz=
-e)
-> +			seq_printf(seq, "0x%02x ", bit);
-> +		seq_puts(seq, "\n");
-> +	}
-> +
-> +	seq_puts(seq, "\n");
-> +
-> +	seq_printf(seq, "Temperature sensor IDs:\n");
-> +	for_each_set_bit(bit, priv->temp_sensors, priv->temp_sensors_size)
-> +		seq_printf(seq, "  0x%02x\n", bit);
-> +
-> +	return 0;
-> +}
-> +
-> +static int awcc_debugfs_pprof_data_read(struct seq_file *seq, void *dat=
-a)
-> +{
-> +	struct device *dev =3D seq->private;
-> +	struct awcc_priv *priv =3D dev_get_drvdata(dev);
-> +
-> +	seq_printf(seq, "Number of thermal profiles: %u\n\n", priv->profile_co=
-unt);
-> +
-> +	for (u32 i =3D 0; i < PLATFORM_PROFILE_LAST; i++) {
-> +		if (!priv->supported_profiles[i])
-> +			continue;
-> +
-> +		seq_printf(seq, "Platform profile %u:\n", i);
-> +		seq_printf(seq, "  ID: 0x%02x\n", priv->supported_profiles[i]);
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +static void awcc_debugfs_remove(void *data)
-> +{
-> +	struct dentry *root =3D data;
-> +
-> +	debugfs_remove(root);
-> +}
-> +
-> +static void awcc_debugfs_init(struct wmi_device *wdev)
-> +{
-> +	struct dentry *root;
-> +
-> +	root =3D debugfs_create_dir("alienware-wmi", NULL);
+> The drivers have been tested by me on the Lenovo Legion Go and Legion Go
+> S.
 
-Please use a unique name for each driver instance. You can do this by comb=
-ining the
-WMI device name with the driver name.
+Sorry for taking a lot of time to respond, i was a bit preoccupied with
+university stuff. I will review this series tomorrow, so far the code
+looks promising.
 
-With that being fixed:
-Reviewed-by: Armin Wolf <W_Armin@gmx.de>
+Thanks,
+Armin Wolf
 
-> +
-> +	debugfs_create_devm_seqfile(&wdev->dev, "system_description", root,
-> +				    awcc_debugfs_system_description_read);
-> +
-> +	if (awcc->hwmon)
-> +		debugfs_create_devm_seqfile(&wdev->dev, "hwmon_data", root,
-> +					    awcc_debugfs_hwmon_data_read);
-> +
-> +	if (awcc->pprof)
-> +		debugfs_create_devm_seqfile(&wdev->dev, "pprof_data", root,
-> +					    awcc_debugfs_pprof_data_read);
-> +
-> +	devm_add_action_or_reset(&wdev->dev, awcc_debugfs_remove, root);
-> +}
-> +
->   static int alienware_awcc_setup(struct wmi_device *wdev)
->   {
->   	struct awcc_priv *priv;
-> @@ -1381,6 +1471,8 @@ static int alienware_awcc_setup(struct wmi_device =
-*wdev)
->   			return ret;
->   	}
+> v3:
+> - Added notifier chain to Gamezone and Other Mode drivers.
+> - Added component framework to lenovo-wmi-other driver with
+>    lenovo-wmi-capdata01 acting as a component.
+> - Completed all suggestions from v2.
+> - Checkpatch produces CHECK complaints about the Other Mode macros
+>    reusing some variable names. This don't appear to create the condition
+>    it highlights in my testing.
 >
-> +	awcc_debugfs_init(wdev);
-> +
->   	return 0;
->   }
+> v2:
+> https://lore.kernel.org/platform-driver-x86/20250102004854.14874-1-derekjohn.clark@gmail.com/t/#m9682cee65783ff3a9e927f2ad1f55c4cbfc37615
+> v1:
+> https://lore.kernel.org/platform-driver-x86/CAFqHKTna+kJpHLo5s4Fm1TmHcSSqSTr96JHDm0DJ0dxsZMkixA@mail.gmail.com/T/#t
 >
+> Suggested-by: Mario Limonciello <superm1@kernel.org>
+> Signed-off-by: Derek J. Clark <derekjohn.clark@gmail.com>
+> Derek J. Clark (4):
+>    platform/x86: Add lenovo-wmi drivers Documentation
+>    platform/x86: Add Lenovo Gamezone WMI Driver
+>    platform/x86: Add Lenovo Capability Data 01 WMI Driver
+>    platform/x86: Add Lenovo Other Mode WMI Driver
+>
+>   .../wmi/devices/lenovo-wmi-gamezone.rst       | 355 +++++++++++
+>   .../wmi/devices/lenovo-wmi-other-method.rst   | 142 +++++
+>   MAINTAINERS                                   |  12 +
+>   drivers/platform/x86/Kconfig                  |  35 ++
+>   drivers/platform/x86/Makefile                 |   4 +
+>   drivers/platform/x86/lenovo-wmi-capdata01.c   | 140 +++++
+>   drivers/platform/x86/lenovo-wmi-gamezone.c    | 374 ++++++++++++
+>   drivers/platform/x86/lenovo-wmi-other.c       | 549 ++++++++++++++++++
+>   drivers/platform/x86/lenovo-wmi.c             |  77 +++
+>   drivers/platform/x86/lenovo-wmi.h             |  94 +++
+>   10 files changed, 1782 insertions(+)
+>   create mode 100644 Documentation/wmi/devices/lenovo-wmi-gamezone.rst
+>   create mode 100644 Documentation/wmi/devices/lenovo-wmi-other-method.rst
+>   create mode 100644 drivers/platform/x86/lenovo-wmi-capdata01.c
+>   create mode 100644 drivers/platform/x86/lenovo-wmi-gamezone.c
+>   create mode 100644 drivers/platform/x86/lenovo-wmi-other.c
+>   create mode 100644 drivers/platform/x86/lenovo-wmi.c
+>   create mode 100644 drivers/platform/x86/lenovo-wmi.h
 >
