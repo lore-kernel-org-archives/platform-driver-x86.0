@@ -1,132 +1,153 @@
-Received: from sender4-pp-f112.zoho.com (sender4-pp-f112.zoho.com [136.143.188.112])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ua1-f53.google.com (mail-ua1-f53.google.com [209.85.222.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC967204088;
-	Wed,  5 Mar 2025 22:40:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.112
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741214416; cv=pass; b=KkVpDPFPHJaFTayv6Km7Un0VGIWcSdsQUIurGE1F2tw+ilfCe4K2TQoanC5ocW5Y8TzgFBMsFBa4q+pOxX4gjxOEnHvdtA+faLhdEUSbkRoNEX9GJMcLrs21bQ9luvA43b4MMoyey0QDsTQwBkpy3o/1XyT3KcGqSi914wR2K5g=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741214416; c=relaxed/simple;
-	bh=eKXxIE4WwPVC4+e8OqKFdghtOdRPil/d/nIxoVtTfKs=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Z6/nNVfJQGIl2yDexwqh7+c3F2fTPVq2dBDinT619iGTS2GgNI8qrkrsKR1Gfz50WyIhjnhNvcXDFQ0SWhl1tjgcMDd41G+LJk7NN7iFxms29/r14bKrA3YszQ4GkeKQpnrNQAkyAbnsuT5GqGb20sRM9LisG85LeJPwNgS54zM=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=sebastian.reichel@collabora.com header.b=hffPW94a; arc=pass smtp.client-ip=136.143.188.112
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 911F8B661;
+	Thu,  6 Mar 2025 00:58:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.53
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1741222684; cv=none; b=IDqNzuQy5kXSHOgcmd5oajrGQBWrIFvMiCZctX9H/mmImXhL02yHTphVb5xK3RM0HgT9YmKSGw31RG+DA39rSEUpVWQaYQYhhZKrZzxuZVtFP9cNoR/DHfF11TpawTmHNRLJmj4CyU7FL+0/VWzoZu/ybIdlJYwgL1nHD7/SOB8=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1741222684; c=relaxed/simple;
+	bh=eB8eSG1TbocKy0JQiONaFVGhHcWbVddkrfDnCPIjZzE=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=u73GPjIf2mZS7MJNEcHOEa4sd/usfaqxp17fKfmxNXR4yi7raw+2+0esKTaHuO/MbiKIw8jjv6tjx19CAmfaSWufN+ILfvcpimv/fauic7ei8feJt9cE+rT9lvEpG6auhs8lP8mk1/vTxY1PLkFgWeII/qv4IosnzNCUWsNwYsw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=VY5qiGSF; arc=none smtp.client-ip=209.85.222.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=collabora.com header.i=sebastian.reichel@collabora.com header.b="hffPW94a"
-ARC-Seal: i=1; a=rsa-sha256; t=1741214403; cv=none; 
-	d=zohomail.com; s=zohoarc; 
-	b=OqV/zZ1hYCyFILfo6R8GYZchY1D+2XKZFB1Eo7gUyB5diFAUW6nJkiR3vxZMHkZV8D/+YBfbloLzBvi+xSHW4rZUxbArA3NXvObPhejRrSkAuoJrSoS7sAE55LxqhXRRQFe3BguHJJ3EVRzbyQ/5DLulKk+nH02wuBDjdM/o5zI=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1741214403; h=Content-Type:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=BBsY6vbyK602yG3/GWZnTVSAcS3PfZMJ2KkShbDU/K8=; 
-	b=VxpWmFc5oHogCJOVVsWtelR9F2MhOVc0VK3BYZaLd4Uh4XUcnBcH1zaOe4tN1EhNAi8TedqF/yVMMG0a/k6HAB2zdhH9q4sbmE9esdryPCmfYJZZCQzWhpRaGZlzzpU6hymFOrqXPzc/LPfM6FA9/yftlFyc3RQBew1RnVqrQ78=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-	dkim=pass  header.i=collabora.com;
-	spf=pass  smtp.mailfrom=sebastian.reichel@collabora.com;
-	dmarc=pass header.from=<sebastian.reichel@collabora.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1741214403;
-	s=zohomail; d=collabora.com; i=sebastian.reichel@collabora.com;
-	h=Date:Date:From:From:To:To:Cc:Cc:Subject:Subject:Message-ID:References:MIME-Version:Content-Type:In-Reply-To:Message-Id:Reply-To;
-	bh=BBsY6vbyK602yG3/GWZnTVSAcS3PfZMJ2KkShbDU/K8=;
-	b=hffPW94a9o4UlYuUq9I1kr9CSwIQ680OeIJfOJmlaXq9e8Gc4jfdXdrhsIDBro7q
-	ImBV+QPnZWwl/o2++FfojNLdRgAc444cMq4/1YWKy6b9xSG79/ASG//MRUnwa1tPYA3
-	cdp3HGEY0tq7Z3R5dafVtMb7yiPbF5I1FHjYcPvc=
-Received: by mx.zohomail.com with SMTPS id 1741214401365197.1635456630188;
-	Wed, 5 Mar 2025 14:40:01 -0800 (PST)
-Received: by venus (Postfix, from userid 1000)
-	id 78D47183465; Wed, 05 Mar 2025 23:39:57 +0100 (CET)
-Date: Wed, 5 Mar 2025 23:39:57 +0100
-From: Sebastian Reichel <sebastian.reichel@collabora.com>
-To: Armin Wolf <W_Armin@gmx.de>
-Cc: hdegoede@redhat.com, ilpo.jarvinen@linux.intel.com, 
-	platform-driver-x86@vger.kernel.org, linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 0/3] platform/x86: dell-ddv: Rework battery temperature
- handling
-Message-ID: <s4xexzrsozgs7knt7yha5mdjykgctrxklpnnfsm3qj7me5hf4e@tucwr2wvdpri>
-References: <20250305053009.378609-1-W_Armin@gmx.de>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VY5qiGSF"
+Received: by mail-ua1-f53.google.com with SMTP id a1e0cc1a2514c-86911fd168dso25023241.1;
+        Wed, 05 Mar 2025 16:58:02 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1741222681; x=1741827481; darn=vger.kernel.org;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=Rt9zVJmrd0zt83NyNArDXBsWvSs/QAJzrHKpJ6L5Dqg=;
+        b=VY5qiGSF3499M3x9QKIxgpeAOgsh2aF0MiKM/Y2wj5s1vYCEaiNZ1igDF1n7BFeasc
+         HNxKs+tfX5CxA6hPerG3zQseWYsOIdNk/cSeVmT5chv0rFoDmim91HrVnKg3zrJtErWv
+         bgSwyM9jsxcO69vAA8AdDrRB/OoDUDAIDHMUouIdQ0wvM7SITIL6UIWlfEsF0+EM45Yn
+         EQAAr6jwJnaCnPk91JMY9XadMmvNg1oxZuyhmuq6PKo9vTcM9vHKPMHm/jROyfkG8F1M
+         ma32/jPEFo3yHBxwHF7gdIHIvt0SAzXDopg84Yx+bbN+ffPEZrlLIhz7WTiLpEm7+I9O
+         waqQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1741222681; x=1741827481;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=Rt9zVJmrd0zt83NyNArDXBsWvSs/QAJzrHKpJ6L5Dqg=;
+        b=WN2UquGdvD3es1Ei0dSXfXXIDJBmo/u4ceFbXyezeGYWdNMJ5ps42I8iGWOvFLPU0Q
+         WqUmqPfyeKosjMxMc1WVd3/S31ut41GsS4w+EGlHD1caR/AyRQXiko/UWpn1/UOhPny2
+         iPWQ6vTZlQem4EqUCioUlll4PeWxmXCalbNO1df7Kv0XpimOGr/8+O9xoBKx5/zEPuk8
+         3fY+i/GRU19gZpfa/EAdRPEhc7p5sSiYOfaUC2pA6Fc89CFEdrLGlvUpOOi2CjW+Z7bG
+         UMRoHQO4fn92b9LjxXPCE40x4+DyQpV2Ar7Oik59pOGjhc5ODTNOGRZBGdTEUR/5Q2Ce
+         9oiw==
+X-Forwarded-Encrypted: i=1; AJvYcCU6L4+qro5t4zgjZ4g1pYSgkDh8YkWPnAKvd9Kt1e9hv9JaJLHMSWO8xSMo1MABCRKVkFRR5WAXDQ1kqT180kLOgZMrew==@vger.kernel.org, AJvYcCWAkDrsssdiirZu5wKJMXVQONFEdepijgN5y0d8yF4Rnisrz5OIaIC8GVQJGA8tsG2yTAWeSjBo0UmpmA==@vger.kernel.org, AJvYcCWT/SKkeUjuLTPnaix3Fon5SXE/C3d81wmD7a2g8KWe9wMwke58FMd0elOILGAaDMpBAccHVqMGi0lOh+yw@vger.kernel.org
+X-Gm-Message-State: AOJu0YyZA98HPdAK2xH2rUgfhanweyI8lR4T1G4HK1OZ4Ghr68lIsD3a
+	sr0sNt99BmD4YBCJj11q2rSnKJQYxOckmWIV8i8e7BbaW+DOcYVOjNUV3HP71BQ=
+X-Gm-Gg: ASbGncun8Tnt4uufiSurjBM/kN/4WN6/E2O4hmxrnttBFWjDlK8DEQDVoWUbzneBvSV
+	GuIollFplap6V3ZAHYcSUzI10VEY4eeK7xvChcd6i+L/66tnVQ37smt7bUHJm2TlES+JqnlrsJw
+	NWXW4bvKC4iwOo8dC57D8IvTo/2vpA5WxcNwU2lSkoh3kPQEJrKAre8g6Kf+P9GNat9q5vW4AwB
+	DZ1wNTqJKfnMk0m7NSZfh0Suv0qevQE/t7woTwpu4svs6tbXAEik5W2pGKsFi8Hx+ZtidiEVXrX
+	PI2eZjvifQ15kHFMdp84FMMextb07lr6VKBTzacANnEGtg==
+X-Google-Smtp-Source: AGHT+IHytYv8KIBRewTELNDa88RTVdiOq5/z/rHHy7vmPg6TTIIRDId6zX8icmmtZFr1++JV800zmA==
+X-Received: by 2002:a05:6102:c46:b0:4c1:935a:2446 with SMTP id ada2fe7eead31-4c2e295204cmr3632016137.19.1741222681129;
+        Wed, 05 Mar 2025 16:58:01 -0800 (PST)
+Received: from [192.168.100.70] ([2800:bf0:82:3d2:9e61:1a62:1a8c:3e62])
+        by smtp.gmail.com with ESMTPSA id a1e0cc1a2514c-86d33bc0065sm25925241.4.2025.03.05.16.57.58
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 05 Mar 2025 16:58:00 -0800 (PST)
+From: Kurt Borja <kuurtb@gmail.com>
+Subject: [PATCH v3 00/10] platform/x86: alienware-wmi-wmax: HWMON support +
+ DebugFS + Improvements
+Date: Wed, 05 Mar 2025 19:56:51 -0500
+Message-Id: <20250305-hwm-v3-0-395e7a1407e2@gmail.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="rhj322g6xfycfnlo"
-Content-Disposition: inline
-In-Reply-To: <20250305053009.378609-1-W_Armin@gmx.de>
-X-Zoho-Virus-Status: 1
-X-Zoho-AV-Stamp: zmail-av-1.4.2/238.671.54
-X-ZohoMailClient: External
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIANTyyGcC/0XMwQrCMBAE0F8pezYl3bCUevI/xEPSbpqgaWTTq
+ lD67wYvHubwYGZ2KCyRC5ybHYRfscS8VJhTA2Owy8wqTtWAGkkbTSq8k/K9m4Zu0Oioh9p8Cvv
+ 4+b1cb9VeclJrELb/LSJhjdYtGjKkOnXfNlndZU42PtoxJziOL4NqQpqPAAAA
+X-Change-ID: 20250305-hwm-f7bd91902b57
+To: =?utf-8?q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, 
+ Armin Wolf <W_Armin@gmx.de>
+Cc: Kurt Borja <kuurtb@gmail.com>, Hans de Goede <hdegoede@redhat.com>, 
+ platform-driver-x86@vger.kernel.org, Dell.Client.Kernel@dell.com, 
+ linux-kernel@vger.kernel.org, Guenter Roeck <linux@roeck-us.net>, 
+ Jean Delvare <jdelvare@suse.com>, linux-hwmon@vger.kernel.org
+X-Mailer: b4 0.14.2
 
+Hi all,
 
---rhj322g6xfycfnlo
-Content-Type: text/plain; protected-headers=v1; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-Subject: Re: [PATCH 0/3] platform/x86: dell-ddv: Rework battery temperature
- handling
-MIME-Version: 1.0
+This set mainly adds hwmon and manual fan control support (patches 7-8)
+to the alienware-wmi driver, after some improvements.
 
-Hi,
+Aside from some minor changes Ilpo commented on, I added inline helpers
+for most awcc operations to make those calls more compact.
 
-On Wed, Mar 05, 2025 at 06:30:06AM +0100, Armin Wolf wrote:
-> This patch series reworks the handling of the battery temperature
-> inside the dell-wmi-ddv driver.
->=20
-> The first patch fixes an issue inside the calculation formula for
-> the temperature value that resulted in strange temperature values
-> like 29.1 degrees celcius.
->=20
-> The second patch then simplifies the battery hook handling by using
-> devm_battery_hook_register().
->=20
-> The third patch finally makes use of the new power supply extension
-> mechanism to expose the battery temperature to userspace. The
-> power supply extension mechanism also takes care that the temperature
-> shows up inside the hwmon interface of the associated battery.
->=20
-> All patches where tested on a Dell Inspiron 3505 and appear to work.
+Thank you for your feedback :)
 
-LGTM.
+---
+Changes since v2:
 
-Reviewed-by: Sebastian Reichel <sebastian.reichel@collabora.com>
+[02/10]
+  - Move BIT(8) flag comment to AWCC_RESOURCE_ID_MASK definition
 
--- Sebastian
+[03/10]
+  - Add awcc_profile_id_to_pprof()
+  - Add awcc_op_activate_profile()
+  - Dropped Armin's rev-by because the patch changed a bit
 
-> Armin Wolf (3):
->   platform/x86: dell-ddv: Fix temperature calculation
->   platform/x86: dell-ddv: Use devm_battery_hook_register
->   platform/x86: dell-ddv: Use the power supply extension mechanism
->=20
->  drivers/platform/x86/dell/dell-wmi-ddv.c | 84 +++++++++++++-----------
->  1 file changed, 46 insertions(+), 38 deletions(-)
->=20
-> --
-> 2.39.5
->=20
->=20
+[05/10]
+  - Dropped __packed attribute from system_description
 
---rhj322g6xfycfnlo
-Content-Type: application/pgp-signature; name="signature.asc"
+[07/10]
+  - Add awcc_op_get_fan_rpm()
+  - Add awcc_op_get_temperature()
+  - Use ternary conditional operator on awcc_hwmon_is_visible()
+  - Check priv->temp_sensors weight to determine hwmon_temp visibility
+  - Replace U8_MAX with priv->temp_sensors_size in find_nth_bit() calls
+  - Drop find_nth_bit() failure check due to the visibility change
+  - Cc+ Jean Delvare <jdelvare@suse.com>
+  - Cc+ linux-hwmon@vger.kernel.org
 
------BEGIN PGP SIGNATURE-----
+[08/10]
+  - Add a pwm1_enable attribute
+  - Add awcc_op_get_fan_boost()
+  - Add awcc_op_set_fan_boost()
+  - Cc+ Jean Delvare <jdelvare@suse.com>
+  - Cc+ linux-hwmon@vger.kernel.org
 
-iQIzBAABCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAmfI0p8ACgkQ2O7X88g7
-+ppbtxAAqUC1M1FObaMzK3Cv/flLvomFaEpbaYZH2x45Wc52PADtW2KmmR/Cr5r9
-mWgc6VeJjcStGiZ6pNOWe6Y2AAfM39DK6ocrlVi1e7E+ItZmr2n+CzZ02NtlmWiP
-9puWXFrEa+E9WP7uvsr1GNFt/eAC57lqkL8RdIFLMcejH5AioQkiwDGeBojspTJg
-3SQJmuM64fLKmrptwh4nibml9sIwTR3l9PiFc9xfFX3Vunbqa78a2VAgmGZigGM3
-rkHcAvrfUHmJ2j43KeI3ihxfCQ8ytpbCmrLU3mWXndcdSbwRWNIXF/rVeClo7FLk
-Qt9FbxvhLAtmEvLbtKDn+To0IRaV9z0tFczhUIx43KKd7RhJ77pax6pwH7Brnx94
-IZ1bdSm7F+iOzMLLVBiAPasykm+cYz6ZEy1OJAl4o4NATUgNbMi1SeltLF8tYH2p
-cxlXDaziHozlV1MzzD1eI1ip6Qg3/Xhe67WpLii72SWM2+L31+NtyVmIF+ZufWv9
-E9jvTFKAOX5KQTr+TXZYXj0U3uE5c6f33WnCW8gkXTvcvJ/ZX7/h5lfIwDKs76kO
-WpwiRrKx+vPPp+JWCc2Ppr1GXXF1Pq3jbDiQJKH/wr1H2rdHhEEq+STm6kJ4+2Ap
-Jzif5QIrBXTwnZnOMt+j+Cbymb5FfVN1MmBTMo7Q3AQcG7uNoBw=
-=UA8u
------END PGP SIGNATURE-----
+[10/10]
+  - Reword commit title to reflect path
 
---rhj322g6xfycfnlo--
+v2: https://lore.kernel.org/r/20250225222500.23535-1-kuurtb@gmail.com
+
+---
+Kurt Borja (10):
+      platform/x86: alienware-wmi-wmax: Rename thermal related symbols
+      platform/x86: alienware-wmi-wmax: Refactor is_awcc_thermal_mode()
+      platform/x86: alienware-wmi-wmax: Improve internal AWCC API
+      platform/x86: alienware-wmi-wmax: Modify supported_thermal_profiles[]
+      platform/x86: alienware-wmi-wmax: Improve platform profile probe
+      platform/x86: alienware-wmi-wmax: Add support for the "custom" thermal profile
+      platform/x86: alienware-wmi-wmax: Add HWMON support
+      platform/x86: alienware-wmi-wmax: Add support for manual fan control
+      platform/x86: alienware-wmi-wmax: Add a DebugFS interface
+      Documentation: wmi: Improve and update alienware-wmi documentation
+
+ Documentation/wmi/devices/alienware-wmi.rst    |  383 +++-----
+ drivers/platform/x86/dell/Kconfig              |    1 +
+ drivers/platform/x86/dell/alienware-wmi-wmax.c | 1132 ++++++++++++++++++++----
+ 3 files changed, 1098 insertions(+), 418 deletions(-)
+---
+base-commit: 5ad6d62c9b183314ec1c64a95a26636e973e736a
+change-id: 20250305-hwm-f7bd91902b57
+
+Best regards,
+-- 
+  ~ Kurt
+
