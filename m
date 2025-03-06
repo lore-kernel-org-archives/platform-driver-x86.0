@@ -1,35 +1,50 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D91B5197A8E;
-	Thu,  6 Mar 2025 03:20:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3EEDA156225;
+	Thu,  6 Mar 2025 03:44:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741231203; cv=none; b=LVfCwHTY0yPFR/GOUhh24inyn/a4Ydli/ZeYOYjiaDG8CxUZnf0oWYupuZxU7s1W780ITFuWPIkjv5obRGIkaRGDpNEbuQunX378ETiXxaD9PkI4M8ZbqWuuFFP6WT77OgjOnLUuthy4nObnG1ulyNzVa2tRWieX/NONbikP73o=
+	t=1741232659; cv=none; b=rLxv6UCd3l4pKB7d1D4VWX2pV8g8/Qp3MNuZ+gJTX+fm9Kp7UveC/V9OT43hF9EE8NhBe2HeKC/i8DxbBKcp3moi+7DYfEFUTmsOMgKa1PlD2ozsm+bbv6YbNrrJeW1S0YaX56pYW6HSJOb2fJ5A73PBl607wlgsqcIwZN2WlLw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741231203; c=relaxed/simple;
-	bh=puW1fkF16Qim9hZZEw4ModRCF3+zrl3JO6/d11Mn3Uk=;
-	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
-	 In-Reply-To:To:Cc; b=rSEky42RGB1/R6X31d7J3lpY3XkHzCaE83zyBgBRML0iHON9HVhCqMxkJbJ4MxkQo91IjoduqCjZz7hdoxo+AHDSUHQVT5+xv4kC6n2Fk0Sq1Ng4Khctob1bBpBCgOEnAGNluqDiZFXegnraeswANdDl+v53SFXJi9BzEOaiC4s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hN+i3tkh; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1741232659; c=relaxed/simple;
+	bh=zbuxOIdgJUxZ4n8mVot+kiQOUkVyHXs87OyG172qmlk=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=JKtyltKiHPm9Q3ruyOiOYPP+eQb1VSebTGqXqQNARkbsRFAoxGfdJYtyqCwOutGsOz6EFh+72AOxYabr5f1Rk8Mi14diQIkbmFFXaCV0awGAkICXaT7tY3Fv8hjEjxChhG8WQvhZZhMiIXzn6JlX5a2D7y6JYI8edmIkj2t/Hbs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RlxwznnS; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hN+i3tkh"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 506A9C4CEE9;
-	Thu,  6 Mar 2025 03:20:02 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RlxwznnS"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 386D0C4CEE4;
+	Thu,  6 Mar 2025 03:44:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1741231202;
-	bh=puW1fkF16Qim9hZZEw4ModRCF3+zrl3JO6/d11Mn3Uk=;
-	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=hN+i3tkhBsXNtUnRx9tV1K3ezT65JSWich6bKEtNqjEB16j4/AnXmyeLyJwFpcY+v
-	 mz0SizSVVZ2G0R7l7mTgBqYv4vN97mJhSRCB6D1WrF7HKK1f6fm+pxW2lFwwie+aCe
-	 aJEIFrY2Z58zuUpeiiLRTs6SOK6T0765uz+uy2YHy7BH7q0YYELaxZE7ugKGDOBS2/
-	 q73tcgEuYon/1TdOyEKwMCYht45VykkNl/LHXGmEDgazQn1Iw6S/xJWWP8xiJc2NL9
-	 90zXfea49B/wVQDkAYGenbtXLbc7XZl45eOwDsUxrtuWKNeKRaqaE7Q8ZA86eCVxs7
-	 EFzIxwEW+ZipQ==
-Received: from [10.30.226.235] (localhost [IPv6:::1])
-	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id AE2B5380CFF3;
-	Thu,  6 Mar 2025 03:20:36 +0000 (UTC)
-Content-Type: text/plain; charset="utf-8"
+	s=k20201202; t=1741232654;
+	bh=zbuxOIdgJUxZ4n8mVot+kiQOUkVyHXs87OyG172qmlk=;
+	h=From:To:Cc:Subject:Date:From;
+	b=RlxwznnSVd2HmpCdVhZNgE6a9GKYx0jLMHE0x0VqxVVV6QRAdvF8L6tbE9GL421nH
+	 7cA64wpmnv4rwWrm0jEW7Jld4heyq9LB9c5SVcTxwQITg41JjSS0BrwGxrLmJd668p
+	 yhcuTaiFWIRlqvKZygv6c1TRmgo0FKBfqLJMZGl0e0/xIrxFSZwBJQ8MRUdaaAMNIi
+	 1TKJ1KU8Hf+f1GvllMW4KVxwObyTU+4rjzrQub2Bwd21+WT6gTSPMz5L27joxJzgtp
+	 NAd9ptyWZ57454ja9cvV8HKWccbh2FI8cTXZu7RZEeseR6m1/Our8n+bwnG85eACcL
+	 V8hUVUtl+tZZg==
+From: Mario Limonciello <superm1@kernel.org>
+To: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>,
+	"Rafael J . Wysocki" <rafael@kernel.org>,
+	Hans de Goede <hdegoede@redhat.com>,
+	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	"Luke D . Jones" <luke@ljones.dev>,
+	Mark Pearson <mpearson-lenovo@squebb.ca>
+Cc: platform-driver-x86@vger.kernel.org (open list:AMD PMF DRIVER),
+	linux-kernel@vger.kernel.org (open list),
+	linux-acpi@vger.kernel.org (open list:ACPI),
+	"Derek J . Clark" <derekjohn.clark@gmail.com>,
+	Antheas Kapenekakis <lkml@antheas.dev>,
+	me@kylegospodneti.ch,
+	Denis Benato <benato.denis96@gmail.com>,
+	Mario Limonciello <mario.limonciello@amd.com>,
+	Yijun Shen <Yijun.Shen@dell.com>
+Subject: [PATCH] platform/x86/amd: pmf: Fix missing hidden options for Smart PC
+Date: Wed,  5 Mar 2025 21:44:02 -0600
+Message-ID: <20250306034402.50478-1-superm1@kernel.org>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -37,63 +52,43 @@ List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH net-next v9 0/6] Enable SGMII and 2500BASEX interface mode
- switching for Intel platforms
-From: patchwork-bot+netdevbpf@kernel.org
-Message-Id: 
- <174123123550.1112346.5967919465567432247.git-patchwork-notify@kernel.org>
-Date: Thu, 06 Mar 2025 03:20:35 +0000
-References: <20250227121522.1802832-1-yong.liang.choong@linux.intel.com>
-In-Reply-To: <20250227121522.1802832-1-yong.liang.choong@linux.intel.com>
-To: Choong Yong Liang <yong.liang.choong@linux.intel.com>
-Cc: horms@kernel.org, joabreu@synopsys.com, Jose.Abreu@synopsys.com,
- david.e.box@linux.intel.com, tglx@linutronix.de, mingo@redhat.com,
- bp@alien8.de, dave.hansen@linux.intel.com, hpa@zytor.com,
- irenic.rajneesh@gmail.com, david.e.box@intel.com, andrew+netdev@lunn.ch,
- davem@davemloft.net, edumazet@google.com, kuba@kernel.org, pabeni@redhat.com,
- mcoquelin.stm32@gmail.com, alexandre.torgue@foss.st.com,
- jiawenwu@trustnetic.com, mengyuanlou@net-swift.com, hkallweit1@gmail.com,
- linux@armlinux.org.uk, hdegoede@redhat.com, ilpo.jarvinen@linux.intel.com,
- richardcochran@gmail.com, fancer.lancer@gmail.com, x86@kernel.org,
- linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
- platform-driver-x86@vger.kernel.org,
- linux-stm32@st-md-mailman.stormreply.com,
- linux-arm-kernel@lists.infradead.org
 
-Hello:
+From: Mario Limonciello <mario.limonciello@amd.com>
 
-This series was applied to netdev/net-next.git (main)
-by Jakub Kicinski <kuba@kernel.org>:
+amd_pmf_get_slider_info() checks the current profile to report correct
+value to the TA inputs.  If hidden options are in use then the wrong
+values will be reported to TA.
 
-On Thu, 27 Feb 2025 20:15:16 +0800 you wrote:
-> During the interface mode change, the 'phylink_major_config' function will
-> be triggered in phylink. The modification of the following functions will
-> support the switching between SGMII and 2500BASE-X interface modes for
-> the Intel platform:
-> 
-> - xpcs_switch_interface_mode: Re-initiates clause 37 auto-negotiation for
->   the SGMII interface mode to perform auto-negotiation.
-> - mac_finish: Configures the SerDes according to the interface mode.
-> 
-> [...]
+Add the two compat options PLATFORM_PROFILE_BALANCED_PERFORMANCE and
+PLATFORM_PROFILE_QUIET for this use.
 
-Here is the summary with links:
-  - [net-next,v9,1/6] net: phylink: use pl->link_interface in phylink_expects_phy()
-    https://git.kernel.org/netdev/net-next/c/b63263555eaa
-  - [net-next,v9,2/6] net: pcs: xpcs: re-initiate clause 37 Auto-negotiation
-    https://git.kernel.org/netdev/net-next/c/065d3cef99a1
-  - [net-next,v9,3/6] arch: x86: add IPC mailbox accessor function and add SoC register access
-    https://git.kernel.org/netdev/net-next/c/7e2f7e25f6ff
-  - [net-next,v9,4/6] net: stmmac: configure SerDes on mac_finish
-    https://git.kernel.org/netdev/net-next/c/e654cfc718d4
-  - [net-next,v9,5/6] net: stmmac: configure SerDes according to the interface mode
-    https://git.kernel.org/netdev/net-next/c/a42f6b3f1cc1
-  - [net-next,v9,6/6] net: stmmac: interface switching support for ADL-N platform
-    https://git.kernel.org/netdev/net-next/c/7598ef621a43
+Reported-by: Yijun Shen <Yijun.Shen@dell.com>
+Fixes: 9a43102daf64d ("platform/x86/amd: pmf: Add balanced-performance to hidden choices")
+Fixes: 44e94fece5170 ("platform/x86/amd: pmf: Add 'quiet' to hidden choices")
+Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
+---
+ drivers/platform/x86/amd/pmf/spc.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-You are awesome, thank you!
+diff --git a/drivers/platform/x86/amd/pmf/spc.c b/drivers/platform/x86/amd/pmf/spc.c
+index f34f3130c3307..1d90f9382024b 100644
+--- a/drivers/platform/x86/amd/pmf/spc.c
++++ b/drivers/platform/x86/amd/pmf/spc.c
+@@ -219,12 +219,14 @@ static int amd_pmf_get_slider_info(struct amd_pmf_dev *dev, struct ta_pmf_enact_
+ 
+ 	switch (dev->current_profile) {
+ 	case PLATFORM_PROFILE_PERFORMANCE:
++	case PLATFORM_PROFILE_BALANCED_PERFORMANCE:
+ 		val = TA_BEST_PERFORMANCE;
+ 		break;
+ 	case PLATFORM_PROFILE_BALANCED:
+ 		val = TA_BETTER_PERFORMANCE;
+ 		break;
+ 	case PLATFORM_PROFILE_LOW_POWER:
++	case PLATFORM_PROFILE_QUIET:
+ 		val = TA_BEST_BATTERY;
+ 		break;
+ 	default:
 -- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/patchwork/pwbot.html
-
+2.43.0
 
