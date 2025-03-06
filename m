@@ -1,203 +1,216 @@
-Received: from mail.tuxedocomputers.com (mail.tuxedocomputers.com [157.90.84.7])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.15])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6C48B20297F;
-	Thu,  6 Mar 2025 18:07:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=157.90.84.7
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741284459; cv=none; b=nMtwcQXWV1tCQJ7xQrD4B/zoJV1bg4WpWfrTO6L5J/80St+jnca/J+ylhJQtJU31a+7RlFY/gKc0fYDsG8xHSpcqgWGNCivYikNBMS7Ym65/ZeElGFiGZiGQSQt+y7b4l6VjrJM7mKy0nxnUds97KpPcokmpebOlbZBm1mffME0=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741284459; c=relaxed/simple;
-	bh=WxCDxKvwx05OVHtKOWOTU0JzbKbZ3P3yo+m77c/gUhU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=uJzxjar4itZr/+VeOAZh2SMaEHmDVjjF+QImqYSiDiEwG4gjkfkkP9kg4VoVV3XiR0B08xBdEUw+KnJ9OJx5Kylig+CPtQThEQqu5oDOwSSoCe2zx4sudaEKSzJGYw43448dqyXYKn6tEob83f8uIhAPpTbad+vk360BYzCRFfM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=tuxedocomputers.com; spf=pass smtp.mailfrom=tuxedocomputers.com; dkim=pass (1024-bit key) header.d=tuxedocomputers.com header.i=@tuxedocomputers.com header.b=lPLkfXB9; arc=none smtp.client-ip=157.90.84.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=tuxedocomputers.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tuxedocomputers.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D2C98B667
+	for <platform-driver-x86@vger.kernel.org>; Thu,  6 Mar 2025 18:49:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=192.198.163.15
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1741286984; cv=fail; b=QnfH07cEI7I9SczYx/S7RikbfrzJ+T81QPRqdIwTqPdQpnXlTYnHpF1bIQ0c3Sdf1VUuGRmcup8gvcSbZAWGs+NygRZUPxZ+XmW85VJPI2iUnvLt6YNNYatmJKN5Z1Nnhpoe9VeCyoIi7Cn8ADl7X/S5lIxFjKdR/NvuwQ+Y48g=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1741286984; c=relaxed/simple;
+	bh=9SiiDg7iSj6t25Sx0trfe3IsboPnrileDDofu40Kl5Y=;
+	h=From:To:CC:Subject:Date:Message-ID:Content-Type:MIME-Version; b=uyaX2y4PaYTbJP5KuonssiGuI1FDvVd2rbrThAeX48KfOaVXYLC8DM3s9KRFqAobFnbgKzh06GaJW0Aq6AWQ/Wrwmpog8jZ8CcA9Z7/4AxHtWGQtwwhXe5O80boDlZUe/Wqtae/WuAZ4juE3uHRnaF6gdQ5J8ime5Rd8CeQITKs=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=eMnnDo4L; arc=fail smtp.client-ip=192.198.163.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=tuxedocomputers.com header.i=@tuxedocomputers.com header.b="lPLkfXB9"
-Received: from [192.168.42.116] (pd9e59f4f.dip0.t-ipconnect.de [217.229.159.79])
-	(Authenticated sender: wse@tuxedocomputers.com)
-	by mail.tuxedocomputers.com (Postfix) with ESMTPSA id 3F85E2FC0048;
-	Thu,  6 Mar 2025 19:07:33 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=tuxedocomputers.com;
-	s=default; t=1741284453;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=+YruPu9v9sIT76G5kplZf/CfyxeIhZe1CYjCLArFoMg=;
-	b=lPLkfXB9aF+kbYknYQb/JoynUTjRXRAQbj68R5BoBgoncGI5T/KJUiXh9VRmNwB1WizwAN
-	b2Ksfq9UAvvuDrAMlvbbEgsmpAh3BJFG09IyZK9um5m2FcjaVrzEKKc1CBRsxCB+wFET87
-	uQO03ER+nXf9IG1TnN3WA1xnW/muRhY=
-Authentication-Results: mail.tuxedocomputers.com;
-	auth=pass smtp.auth=wse@tuxedocomputers.com smtp.mailfrom=wse@tuxedocomputers.com
-Message-ID: <0a468a3f-41cb-4fee-b583-6b9debabb01c@tuxedocomputers.com>
-Date: Thu, 6 Mar 2025 19:07:33 +0100
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="eMnnDo4L"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1741286982; x=1772822982;
+  h=from:to:cc:subject:date:message-id:content-id:
+   content-transfer-encoding:mime-version;
+  bh=9SiiDg7iSj6t25Sx0trfe3IsboPnrileDDofu40Kl5Y=;
+  b=eMnnDo4LpP0qn6WaVm+2DEO9AoYIWl8MtBbwHKwmSDpMEhE5hDyHcs+9
+   br8DK5MksGlTdC5PMY1UGamGz8f8rEqjcUDPqVD5UjiPRmWdH7ga3bz3f
+   thz2DHMrvSY2eznXLgZAjSw8MLVU5b51xOI3cXLr6H6sHUCQnUKMvC+YN
+   c5KGQM2hu8TtoWRlCKCi6y1oAtVdTYDva+VUWenoIjXQizx+Yca4y9e09
+   v8a1tj7x/HmqWXp6+hifB3qdOQtjozpKxoD93NRtv+pFrjDB8C7gGGciT
+   TQWCNOQxeBqImprxCvzFXicpb4gxPMwENaa46JAuYw1+hrDiMvUASDk4j
+   A==;
+X-CSE-ConnectionGUID: /9npGKzEQFy/CQ7GPRS4+A==
+X-CSE-MsgGUID: Lr65EsL8Q6CIe1pPs2GlCA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11365"; a="42457222"
+X-IronPort-AV: E=Sophos;i="6.14,226,1736841600"; 
+   d="scan'208";a="42457222"
+Received: from orviesa005.jf.intel.com ([10.64.159.145])
+  by fmvoesa109.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Mar 2025 10:49:40 -0800
+X-CSE-ConnectionGUID: 1otI7dtMTLCjWfom6qKuHQ==
+X-CSE-MsgGUID: lIbj0bnDSg6PyFqhE/yLyA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
+   d="scan'208";a="124318100"
+Received: from orsmsx902.amr.corp.intel.com ([10.22.229.24])
+  by orviesa005.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Mar 2025 10:49:40 -0800
+Received: from orsmsx603.amr.corp.intel.com (10.22.229.16) by
+ ORSMSX902.amr.corp.intel.com (10.22.229.24) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.2.1544.14; Thu, 6 Mar 2025 10:49:39 -0800
+Received: from orsedg603.ED.cps.intel.com (10.7.248.4) by
+ orsmsx603.amr.corp.intel.com (10.22.229.16) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.44 via Frontend Transport; Thu, 6 Mar 2025 10:49:39 -0800
+Received: from NAM10-MW2-obe.outbound.protection.outlook.com (104.47.55.42) by
+ edgegateway.intel.com (134.134.137.100) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.44; Thu, 6 Mar 2025 10:49:39 -0800
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=XXiNZNl913N3Cy99oAKgQ9ZYx4558c7I7dZwnvP11ZAyqtc9CZ0kQoKBsaK6+EzyFixzQ4BpLcsfwRZhT9anIiMmcOIXpyiZ1t9wdiayyiL7ioN0jSuOf3S894qD6raVEoURYc5BnynQDuBzzDfX16rJVdAvF2KWysxHc3bpbU9H04/K8KUE0Zeg/mC9Il4vXldzipX2/RJHLGWoBnnhrVeE2akw5qUPnZnGckc+BL2s1cHShwe706k+o8pwwY68JoP6yiMpblDOK+gf5Foj3PxASUYlciyXM8yjt3M4TflOxfiSwZb+Zbbs7qvVM8AFvspVPg+HYuh9L3KYpJYcdw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=9SiiDg7iSj6t25Sx0trfe3IsboPnrileDDofu40Kl5Y=;
+ b=laW8LKnoUUzMVcyP7pgmuBfM8YxLLawMswz71YZ5iAUTkdz0Y+ae/Z9yCfK6cL5wUHpyl+XHyvOYd6MdYeXE5Bie3MKLjRW6MqVZkCQYHpMrWmFh2iVhG+kvGLQiqiRUqsoBTp8t8GTo749RW4CnHwjlleIyjHxuS3bZfuyhBiKjyL9CM01fLoOoUnXl5Rq2LgW3BZcbYbi1q4WGMz/PZClLLhKvYmwnGLLH2r6MzNwrGv0RtyWJpR44ehEvr1IFmbNg/N67cpNuPsHhzdYtsaHQRr6WgICkEzTDEjrBvnKicKdzbSXakbx6QEHLwbPCvENsXRRZxztIrxuSJw1Khg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Received: from DM8PR11MB5592.namprd11.prod.outlook.com (2603:10b6:8:35::6) by
+ CY8PR11MB7340.namprd11.prod.outlook.com (2603:10b6:930:84::13) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.8511.17; Thu, 6 Mar 2025 18:49:10 +0000
+Received: from DM8PR11MB5592.namprd11.prod.outlook.com
+ ([fe80::eaaf:292e:8706:bdfe]) by DM8PR11MB5592.namprd11.prod.outlook.com
+ ([fe80::eaaf:292e:8706:bdfe%4]) with mapi id 15.20.8511.017; Thu, 6 Mar 2025
+ 18:49:09 +0000
+From: "Pandruvada, Srinivas" <srinivas.pandruvada@intel.com>
+To: "hdegoede@redhat.com" <hdegoede@redhat.com>,
+	"ilpo.jarvinen@linux.intel.com" <ilpo.jarvinen@linux.intel.com>
+CC: "srinivas.pandruvada@linux.intel.com"
+	<srinivas.pandruvada@linux.intel.com>, "platform-driver-x86@vger.kernel.org"
+	<platform-driver-x86@vger.kernel.org>
+Subject: [GIT PULL]: tools/power/x86/intel-speed-select pull request for
+ 6.15-rc1
+Thread-Topic: [GIT PULL]: tools/power/x86/intel-speed-select pull request for
+ 6.15-rc1
+Thread-Index: AQHbjshymbntyLHZhkuZ4tF+/qHnjQ==
+Date: Thu, 6 Mar 2025 18:49:09 +0000
+Message-ID: <e884b4d403a650139080366b4b9f7c9d4be78efd.camel@intel.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+user-agent: Evolution 3.52.4 (3.52.4-2.fc40) 
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: DM8PR11MB5592:EE_|CY8PR11MB7340:EE_
+x-ms-office365-filtering-correlation-id: f0dbfcd1-3fc5-4287-8899-08dd5cdf948a
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;ARA:13230040|1800799024|366016|376014|38070700018;
+x-microsoft-antispam-message-info: =?utf-8?B?dHAzTXQzc0h4Z0RHNWUzZCsxVHRHMW11c0I1UlR6U1MzSmZVNmMvQ255bUpl?=
+ =?utf-8?B?bkJ5QlRmaDMvL3NGSVE2S1Jyd2hnTXozUDFhWWpienEwZ3Y3eWp2ZUdkOEpD?=
+ =?utf-8?B?MDNFb0crV3VEaUhTS3BBc0xhVSs1R3o0LzF1cGF5bEN2eloxcW1DQ3NyUm4v?=
+ =?utf-8?B?NjRmbk1ZaSt5WDBHYkROVGNON3dTL212NkxBREU5VTJUdlZJem5SZ0MzbDZy?=
+ =?utf-8?B?b09RZlBqMTZScXBwTS9kV01VamRHc2ZLZTZUdlJsZFhWeWY2WDMwSy9DdnFD?=
+ =?utf-8?B?blFsU1ZPYVF2VmllUzd1ODNGNG8xbDVHdVZBMVMyYUdUL3dLclZnRzRPMTJI?=
+ =?utf-8?B?S1VNY25RcDFRMUJ1UHVsRnRmNDBQclBJZTRTa0x5WC9aaVNCekdrS1E3citz?=
+ =?utf-8?B?dHpKNmE1TXJ3NS9MZ3FUa1VwRDlKQkNHbWZzeERTN3ovKzhpY1hScnN1L2FS?=
+ =?utf-8?B?WkRRdTNKZ2V4ajVxMmJ6QTlsbVhlL1VkZmtYRG5PYkM2Y0x2TFBVb3pzQzRn?=
+ =?utf-8?B?ck9kVThFM2Z1eXZnTjV6cndjem9UMlVDald5K2VtOVR6Z1RIbjFDWnV0dkY3?=
+ =?utf-8?B?L1JKSmhvL0RkZ09SRC9EUW8wT2l1cjExSVlpS2hjVmJUM0RLQXRqVHFURVJF?=
+ =?utf-8?B?Z01KbjQyVzFHTW5PcmZwT1kxSVBleTRVUy9ETUFLZ1RXWEl3TFJkWEVJVWhp?=
+ =?utf-8?B?d2NxSGxYWUtQbnYxa3ZOLzdQRjJnR1lXRU5MM1ZnS2VyN2llOTVoZCsxWHhs?=
+ =?utf-8?B?U0xXRThoK3IwUm9xM3NrOExsU0RwV01iMlkyVGg5STI3ektaZENWSHBzWTBV?=
+ =?utf-8?B?aUI1cVJRMndxZlpSSzE2Zm1EbDRZSTk1dUNLU3k3eUZBd2lkMDVtOFJ6VFor?=
+ =?utf-8?B?Z0R6b0kzbTFUU3Z2S0pNUVk0L3VSTnczdTlKcWlPTUg2RllkQkt0YWx1eENt?=
+ =?utf-8?B?RTlFRkNZeDQya1BlYzBTdDVaSWtodCtGM3ZqalZQanJsODhKajBmN1B3a1dD?=
+ =?utf-8?B?RWtOazdIdzVpdTlyRUQySXo5cFh6VWZJeitmclptSVVxY0Exd09Nd1Z3Q3V3?=
+ =?utf-8?B?Ylo3b0IzMklpOE1oSUEwM2VkWUFuOVppeUxDUldRU1NQU09NUjE1ME9tZUVk?=
+ =?utf-8?B?R0h0bllYWlpObEJIbjZRUEFvYm9sOEZRQ0lXTUgzOGt5ZHRJQUVIc3RDY2ps?=
+ =?utf-8?B?T2VxcDd4R0xqTS9Ua3pKbGhJbVlGaTJsRlJLQjdkSExJaFFOMWFCRjdRSkd6?=
+ =?utf-8?B?MDVFdEh4c0RZaU5ENlNrWmRBWHV1d2dtdllYWlBDdDN1b2M2ZG8wOFNhOFBK?=
+ =?utf-8?B?UERQNTczdmNVbmhqcCtyc1RySHZUbUJMQkJiekM2VGg4SC9jMWpNSnRpby8z?=
+ =?utf-8?B?M1k3SmFoYjA4a2EvUlE1ZkNwWFZRL2Z5N2VLV1RNOEZkQnNBR1labkdFOHJo?=
+ =?utf-8?B?VEF6VUROTWtWb3MwdWdzZis1bU11c05NdjNNeVFDaHZBWGV3c1dhV3JZdEEw?=
+ =?utf-8?B?WW1qajRLSW9TWlU1ZVRUbzVnSDc0bDZYdlh3TSt3UGd1NWk0dUwyelFMWWVE?=
+ =?utf-8?B?WWxjNUVNVnEyZy9veWJDcXc4YzNqVVcza254SUhSd1d3UDZkcWlIcHZic0R4?=
+ =?utf-8?B?OUxrVTdvak1IV0UxZHo1OXJxS2piYUtyc2p6cStOR01vcnFJNGQ3MU9QUnlP?=
+ =?utf-8?B?M1ZFdzZJY3hUQytCTitYOTFUYk45bU1DRGJFOTdiNnIyZHl0MzRuUWtBTjZz?=
+ =?utf-8?B?ZDBxYVRNU1FCaXkrUlVGczZaZWhsRGkrNVRGTlVmS1ZQdXh3UE9sbUlUZEhG?=
+ =?utf-8?B?YWhYb09vamdWNTZvd0JFYUQvb0s4cU8xRUlDdmI1ZFJXNW5ScUxWUzluaTlN?=
+ =?utf-8?B?VkdWdy9PWVFNeWgyNTRuUmRnU3Ezb28rMXpnTThETUo2dUE9PQ==?=
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM8PR11MB5592.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(376014)(38070700018);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0: =?utf-8?B?dmxGTWlDTU5ORGE4aytBeFIvblVlQlNkTlcwSHQrNE1kT1lWUEo4WnAyb2pR?=
+ =?utf-8?B?SFN1VlAzS0twVGJRM0FCakhrNVFQRVpSZnd5cHNZV1hmWFFneUFzNjhtYnJM?=
+ =?utf-8?B?R2V3TnhMR0tDQk51d0dGSTg2cDZPSXYvY1JLK0wxbU54UEJzUmhLOWkyK01i?=
+ =?utf-8?B?bW8vZGJ1NWRMekl0c3N1NzA3R0dHLzFmS2pXaFlZbk9CbzRkdGlmeWF2bXkr?=
+ =?utf-8?B?eHFNUjdwMEVCSWZPeDM3amJKTjdnUjVNblZ1K2h4TTVrd2xKWGp0bldVSUdI?=
+ =?utf-8?B?c3FzTzRXZFRtNzNWaTlDZFNVblBXbGVKc0ZwRWZFemhQRm9EK1N6ZTFDV0FT?=
+ =?utf-8?B?TWVobnpMekw4U2FVM0ZpQ1dkYXU1ZkRhTmF2ZXVrUGhIS3VVZDVLazFxak4y?=
+ =?utf-8?B?MHp1QjVJdGk1bDh5aFF6QklKYlE3Sk1zT1NlRktvMWRLVEdxNld3NlNLRlB4?=
+ =?utf-8?B?Mkd2MWRJWjlOc0RBdTRnUndsN0NYaGgrYXNBZXQ4YmtCRklBVzhzZk12dUpE?=
+ =?utf-8?B?MVVHMWRnaVJMc3BCZXdUZGdEM3UyQ040VUNTeTNrMDNRN2ZXOE5xa2E3SWor?=
+ =?utf-8?B?VHRKTmJpQlU3ZVVRMEI1RmNDZGlwMCs5eUdGSi9zaCt0ZjBLdWIrQ1dzb0FH?=
+ =?utf-8?B?aVJzUHFRSjFPNDU2UmRER002bm9PeXBHNnExN05EWi8vdjJuUDBKVmRPMFha?=
+ =?utf-8?B?VUV6NUZSK2pGei9xOU4rNjh3NTNjVEMyNU1KRkh3bDdMWWV1ejZTS0FDb2lK?=
+ =?utf-8?B?K0Ztb1FhSExEU29VM21QSGRPWGZIV09Hb2Q3eU9xTm5qOXJUa2hJeHZqd29a?=
+ =?utf-8?B?KzZMeFlWTkN2VG5CaDlXNFVYelFYc2I4akt0MVdsZU1pTGN4aVQvejlSMDJV?=
+ =?utf-8?B?MG81QnRIMjBFVUwyOVZzbHBiRGpRMGtCUGIyd3kzdTVYTFJrRnkyMWVWblZX?=
+ =?utf-8?B?S2wxUEdsQkl5R1ZWekNYNFlMTWRCKy9PRFNPcEpEejU0bFRyOHBKZkF1K2Fv?=
+ =?utf-8?B?ei9RRFRQWE1LMFR1Q2o1Rzd1bWNUM3IxdkJHSWZrYjZ0V3Z2VkY4cTg1QXND?=
+ =?utf-8?B?eTFZUEc1MktFVXR0WlkvencyMTZNbnc4STAzZTJxUndDM3hJbHR0cENrWlFE?=
+ =?utf-8?B?N0JNYVV6ZUtCdFpERmRyQ0JBU3pxYzZ6RzZMSmZicTJZZnNobGJ1NjJscnFw?=
+ =?utf-8?B?eUpuaC9TRWF6T25yemcyS2YvcGx3cGZEbjZPU2ovVVAxdW1Rc1B5ckxLSXhC?=
+ =?utf-8?B?akxRREUrT25YVHZ0L2NVaWcrb1ZwRURobWc1V3k0VXlaZThHNVdPdkIxb1RD?=
+ =?utf-8?B?L2dteFh0NVplZGJza1drQzdQQ3pSKzNaQ3c0SUE0SGJCbHRzT041YU5PMUdl?=
+ =?utf-8?B?TDhrZGxiQ1dtSjJxRGx0RDRPN3lWcTNYeGtZM2E5UnNQTFJKSmFjc1FLemww?=
+ =?utf-8?B?ZVZqMi9jTXZSZXUxQll0SUhDeDRWMlhieFlHbVlNVFN4Z3Q4WjJ6UW9abzFI?=
+ =?utf-8?B?T3haOFdlelJJd1AwVloyT0hDTmdLMitJVTB3TUNWVXBxalA0Y2d0Z3pFTTJZ?=
+ =?utf-8?B?TWxBY3BnMlRNMW8rTGZ1MUpEY1gyZ2xwRzlhajNPTUx6cWRENWFvbWRVOW5h?=
+ =?utf-8?B?VStvRDhEU0x1ZHB5dXRHcmRPak1PTFVHcEt0YVJDamhUMkMwZHFTT0tMaXF0?=
+ =?utf-8?B?UzZaSTM4L0lVOVlRZ1VaOHN2Ym1oMTB3K2s5TkJRY0VucG9xQndScnVtbVVq?=
+ =?utf-8?B?R0NLT3FXNHJKUlkxR2dJMkpPNktLZzlEVFBHQXN5bkhCWDRDR3h5dUd5NjJF?=
+ =?utf-8?B?WXp0SlE0alBETldOUUhPdFFiQXRtU0hUdHUreHdOSFQ3K2QwcGkzcjRZMW1Z?=
+ =?utf-8?B?YThtSVlmaHFDN0pkYWFFSnNWOEpqUUFYRmM4eHI1NXZmNmhhTXZoYUYvdHFF?=
+ =?utf-8?B?ME0wcG5wU2xWWC9JdGI2MFFhOHpwQzNneG44V0VpM3dOL1BzdkpqMEoxNGRz?=
+ =?utf-8?B?YzFTK29XRkw2VEdSQjJQSzJFdGxML3ZhN09RSmJDVFZrbW5Ha3AzY0FOOG1D?=
+ =?utf-8?B?bnJSOWl4aEsra3B4QkhYVzJ1ZEtIY21tWWdXdXE0dDVoNzNlQUlzZmdQMzg0?=
+ =?utf-8?B?TjR2SEJOV3JGVjA3YnBnUGUveVgvbXQrcnQyNVhOL2J3WFVKdGFDR3Nmb3ZO?=
+ =?utf-8?Q?bhTyz+8r9RT7gBexXr722QU=3D?=
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <364BC3E576332047AFDFA371EB96A6C6@namprd11.prod.outlook.com>
+Content-Transfer-Encoding: base64
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 2/2] Input: atkbd - Fix TUXEDO NB02 notebook keyboards
- FN-keys
-To: Hans de Goede <hdegoede@redhat.com>, mario.limonciello@amd.com,
- =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Cc: dmitry.torokhov@gmail.com, linux-kernel@vger.kernel.org,
- platform-driver-x86@vger.kernel.org
-References: <20250303190442.551961-1-wse@tuxedocomputers.com>
- <20250303190442.551961-2-wse@tuxedocomputers.com>
- <1bee0a62-058b-482a-8eec-d45b8aca1614@redhat.com>
- <d74c348d-474a-4871-8b94-d836e8d054e8@tuxedocomputers.com>
- <1fbdfe7f-0f25-4de0-805c-b712663f7681@redhat.com>
-Content-Language: en-US
-From: Werner Sembach <wse@tuxedocomputers.com>
-In-Reply-To: <1fbdfe7f-0f25-4de0-805c-b712663f7681@redhat.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: DM8PR11MB5592.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: f0dbfcd1-3fc5-4287-8899-08dd5cdf948a
+X-MS-Exchange-CrossTenant-originalarrivaltime: 06 Mar 2025 18:49:09.5917
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: 9iJuJjBWdi4hFng0qBEJGCIzR03EWSlWlqPd0pvc0AUdkZn3h+QKirdWLcve5s4jVS9wKtaqUP9pFQ+lGzWLR3gtitTEmZKsSzyiQZjUrXs=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY8PR11MB7340
+X-OriginatorOrg: intel.com
 
-Hi Hans,
-
-Am 05.03.25 um 15:18 schrieb Hans de Goede:
-> Hi Werner,
->
-> On 5-Mar-25 1:07 PM, Werner Sembach wrote:
->> Am 05.03.25 um 12:25 schrieb Hans de Goede:
->>> Hi Werner,
->>>
->>> On 3-Mar-25 8:04 PM, Werner Sembach wrote:
->>>> This small driver does 2 things:
->>>>
->>>> It remaps the touchpad toggle key from Control + Super + Hangaku/Zenkaku to
->>>> F21 to conform with established userspace defaults. Note that the
->>>> Hangaku/Zenkaku scancode used here is usually unused, with real
->>>> Hangaku/Zenkaku keys using the tilde scancode.
->>> So this control + super + scancode 0x76 sending is also seen on
->>> quite a few other laptops and I think we need a generic fix for this.
->>>
->>> I recently noticed that KDE's keyboard-shortcut settings actually has
->>> a  control + super + Hangaku/Zenkaku -> touchpad-toggle key binding
->>> in its default bindings (IIRC). But that cannot work because xkb actually
->>> has no mapping for evdev code 85 / KEY_ZENKAKUHANKAKU if you look in:
->>>
->>> /usr/share/X11/xkb/keycodes/evdev and then look for 93 (*) you will
->>> find no mapping. I think this KDE default binding may be from a long
->>> time ago when this did work. Or maybe KDE uses the FOO part of KEY_FOO
->>> as symbolic when there is no xkb mapping ?
->> It does not work on X11, but it does work on Wayland (there xev also sees the Zenkaku/Hankaku keypress). Don't ask me why.
-> Interesting, so in xev under Wayland you see something like this
-> on release:
->
->      state 0x0, keycode 38 (keysym 0x61, a), same_screen YES,
->
-> With there actually being a keysym of "Zenkaku_Hankaku" there ?
->
-> Because that is not working on Wayland on my laptop with the same
-> issue (after disabling the hwdb mapping) and I don't understand
-> how that could work at all given that /usr/share/X11/xkb/keycodes/evdev
-> has no mapping for EV keycode 85 (93 in that file) ?
->
->> Also: Other DEs don't have this binding.
-> Yes that is an issue, but see below.
->
->>> *) 85 + 8 all codes there are shifted up 8 compared to the KEY_FOO
->>> defines because codes 0-7 are reserved for modifier.
->>>
->>> I hit the same issue years ago on "T-boa Tbook air" laptop and
->>> their I fixed this by mapping Hangaku/Zenkaku -> f21 in
->>> /lib/udev/hwdb.d/60-keyboard.hwdb :
->>>
->>> ###########################################################
->>> # T-bao
->>> ###########################################################
->>>
->>> evdev:atkbd:dmi:bvn*:bvr*:bd*:svnT-bao:pnTbookair:*
->>>    KEYBOARD_KEY_76=f21                                    # Touchpad toggle
->>>
->>> + teaching GNOME to also accept Ctrl + Super + XF86TouchpadToggle
->>> as touchpad-toggle:
->>>
->>> https://gitlab.gnome.org/GNOME/gnome-settings-daemon/-/blob/master/data/org.gnome.settings-daemon.plugins.media-keys.gschema.xml.in?ref_type=heads#L577
->> Yeah KDE would need a similar fix and other DEs probably too. I hoped for a generic fix that does not need adjustments in so many projects.
->>
->> My first try was to do it on the XKB level but on Wayland the RedirectKey action is not implemented https://gitlab.freedesktop.org/xkeyboard-config/xkeyboard-config/-/merge_requests/794#note_2803713 (and probably wont be even in the future https://github.com/xkbcommon/libxkbcommon/issues/18#issuecomment-72728366) so I can't "unpress" control and super.
->>
->> If it is a more general issue, why not fix it on a more general level in the kernel? Maybe a generic filter applyable via a command line quirk and/or a quirk list?
-> The problem is that filtering keys with modifiers like you are doing
-> here just does not work.
->
-> Your filter is seriously messing with the timing of the keypresses
-> which can be a real issue when not actually using the toggle touchpad
-> hotkey.
->
-> Lets say the user is playing a game and has mapped super to
-> one of the fire buttons and is using an in game weapon with
-> some sort of auto-repeat firing.
->
-> And your seqpos variable likely is 0 when super gets pressed,
-> now the keyboard sends 0xe0, 0x5b which your filter filters
-> out, and the user keeps super pressed because they expect
-> the weapon to start firing on auto-repeat. But the super
-> press is never send until super is released or another key
-> is pressed so things don't work.
->
-> Likewise if the DE, an app or accessibility settings want to
-> differentiate between a short and a long super press all
-> presses now become super (pun not intended) short because
-> you insert the press directly in front of the release, losing
-> any timing information about how long the key was pressed.
->
-> This is why using an i8042 filter for filtering key-combinations
-> (and the EC emulates a key-combination here) can never work reliably.
-
-I just had an idea how this filter could work without running into these issues:
-
-Still listen to the whole key sequence and just suppress the 0x76 and 0xf6. Then 
-after the sequence has finished issue a F21 keypress.
-
-Would this fly?
-
-Best regards,
-
-Werner
-
->
-> OTOH desktop environments already allow having Ctrl+Super+something
-> keybindings for DE actions. So we can re-use the tried and trusted
-> modifier handling in the DE to deal with combi part leaving just
-> the issue of mapping PS/2 scancode 0x76 aka evdev code
-> 85 / KEY_ZENKAKUHANKAKU to something usable by the DE.
->
-> ATM both GNOME and KDE already have support for
-> Ctrl+Super+something for touchpad-toggle except that KDE expects
-> a "Zenkaku_Hankaku" keysym where as GNOME expects "XF86TouchpadToggle"
-> arguably the GNOME solution is slightly better because Japanese
-> keyboard layouts already use/send the "Zenkaku_Hankaku" keysym
-> unrelated to touchpad-toggle use. And I don't know what happens
-> when pressing ctrl+super+Zenkaku_Hankaku while using a Japanese
-> layout.
->
-> I think maybe we just need to patch atkbd.c at the kernel to
-> map scancode 0x76 -> KEY_TOUCHPAD_TOGGLE since normal PS/2
-> keyboards never generate 0x76, this would lose the mapping to
-> KEY_ZENKAKUHANKAKU but since /usr/share/X11/xkb/keycodes/evdev
-> does not even map KEY_ZENKAKUHANKAKU I don't think loosing that
-> mapping will do a big deal.
->
-> So I think that going with the evdev mapping + teaching KDE
-> that Ctrl+Super+XF86TouchpadToggle is just XF86TouchpadToggle
-> is the best way forward to solve this once and for all.
->
->>>> It suppresses the reserved scancode produced by pressing the FN-key on its
->>>> own, which fixes a warning spamming the dmesg log otherwise.
->>> Can you not also suppress this by mapping the key to "unknown" in hwdb?
->> Maybe, I didn't try. Was convenient to just do it here since I already had the filter. Will look into it once it is decided what to do with the touchpad toggle issue.
-> Please give using hwdb for this a try.
->
-> Regards,
->
-> Hans
->
->
+SGkgSGFucyBhbmQgSWxwbywNCg0KVGhpcyBwdWxsIHJlcXVlc3QgaXMgYmFzZWQgb24NCmh0dHBz
+Oi8va2VybmVsLmdvb2dsZXNvdXJjZS5jb20vcHViL3NjbS9saW51eC9rZXJuZWwvZ2l0L3BkeDg2
+L3BsYXRmb3JtLWRyaXZlcnMteDg2DQpyZXZpZXctaGFucw0KDQpUaGlzIHB1bGwgaGFzIGZpeCBm
+b3IgZGlzcGxheSBvZiBkaWUgSURzIGluIGEgc2luZ2xlL211bHRpLWRpZSBzeXN0ZW0NCmFmdGVy
+DQp0aGUgY2hhbmdlcyBmb3IgZGllX2lkIHN5c2ZzIGZyb20ga2VybmVsIHZlcnNpb24gNi45Lg0K
+DQpUaGUgZm9sbG93aW5nIGNoYW5nZXMgc2luY2UgY29tbWl0DQplNTdlYWJlMmZiMDQ0OTUwZTZm
+ZmRmZTAxODAzODk1MDQzZGVjMGI3Og0KDQogIHBsYXRmb3JtL3g4NjogdGhpbmtwYWRfYWNwaTog
+Y2hlY2sgdGhlIHJldHVybiB2YWx1ZSBvZg0KZGV2bV9tdXRleF9pbml0KCkgKDIwMjUtMDMtMDUg
+MTQ6MTQ6MTAgKzAyMDApDQoNCmFyZSBhdmFpbGFibGUgaW4gdGhlIEdpdCByZXBvc2l0b3J5IGF0
+Og0KDQogIGh0dHBzOi8vZ2l0aHViLmNvbS9zcGFuZHJ1dmFkYS9saW51eC1rZXJuZWwuZ2l0IGlu
+dGVsLXNzdA0KDQpmb3IgeW91IHRvIGZldGNoIGNoYW5nZXMgdXAgdG8NCjVjZjIzN2ZjNDY0NWFm
+MGFhYmQwNTRhMTYxODRjOWVjZDUzZGIwMTA6DQoNCiAgdG9vbHMvcG93ZXIveDg2L2ludGVsLXNw
+ZWVkLXNlbGVjdDogdjEuMjIgcmVsZWFzZSAoMjAyNS0wMy0wNg0KMTA6MTg6MzEgLTA4MDApDQoN
+Ci0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
+LS0tLS0tLS0NClNyaW5pdmFzIFBhbmRydXZhZGEgKDQpOg0KICAgICAgdG9vbHMvcG93ZXIveDg2
+L2ludGVsLXNwZWVkLXNlbGVjdDogUHJldmVudCBpbmNyZWFzaW5nDQpNQVhfRElFX1BFUl9QQUNL
+QUdFDQogICAgICB0b29scy9wb3dlci94ODYvaW50ZWwtc3BlZWQtc2VsZWN0OiBGaXggdGhlIGNv
+bmRpdGlvbiB0byBjaGVjaw0KbXVsdGkgZGllIHN5c3RlbQ0KICAgICAgdG9vbHMvcG93ZXIveDg2
+L2ludGVsLXNwZWVkLXNlbGVjdDogRGllIElEIGZvciBJTyBkaWVzDQogICAgICB0b29scy9wb3dl
+ci94ODYvaW50ZWwtc3BlZWQtc2VsZWN0OiB2MS4yMiByZWxlYXNlDQoNCiB0b29scy9wb3dlci94
+ODYvaW50ZWwtc3BlZWQtc2VsZWN0L2lzc3QtY29uZmlnLmMgIHwgMjINCisrKysrKysrKysrKysr
+Ky0tLS0tLS0NCiB0b29scy9wb3dlci94ODYvaW50ZWwtc3BlZWQtc2VsZWN0L2lzc3QtZGlzcGxh
+eS5jIHwgMTEgKysrKysrKysrLS0NCiAyIGZpbGVzIGNoYW5nZWQsIDI0IGluc2VydGlvbnMoKyks
+IDkgZGVsZXRpb25zKC0pDQoNClRoYW5rcywNClNyaW5pdmFzDQo=
