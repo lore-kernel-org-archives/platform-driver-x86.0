@@ -1,149 +1,113 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 015F320CCD3;
-	Fri,  7 Mar 2025 10:00:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2EEF619CC05
+	for <platform-driver-x86@vger.kernel.org>; Fri,  7 Mar 2025 10:07:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.8
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741341616; cv=none; b=CggCDNyyn/aVEx5rjRv2rB5cW8JJf3bDSiWTRItUUfoIkdtQC6BhtvGkRz+oAFjnlYNnIzS+9dNz7/3xuEA3ExaEeM0DusQjhgosXHDsPKjNQtt7YqrohoPJ87cY0025HGZ9iWIylf4YFKWwUHUNNC326N7rSosTjSy+fjC24U0=
+	t=1741342032; cv=none; b=is5LgnYiYfDav/fn5zMTxSdskzRGOwdq5BKgbH/bnhgHgSg+Q+bbUsBoKSmqxi5miTd2iUXLZ2xC+Vu+j/j2YsNl2d2lSyb911rB9tx4CNdlwxadeyMEBjl/NDrG37Qnu3AGy9nVPuz72kV3eccXf5MRhdGuPB1BgT2NfoalCTo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741341616; c=relaxed/simple;
-	bh=mOFf7JEY2xGc/lYu7abXxp5IEcE/c+c1U8ngnx9z+Bs=;
-	h=From:To:Cc:Date:Subject:Message-ID:MIME-Version:Content-Type; b=BnRr3pQZiUYrxyit0NJGtSUyaKBY2kkidtp+NFn3BhYvDi13nJuLonWHbjCKEq4Knwc4dxBqki6uJTWQhEyOGnqqqqKdMuuEItp/Rqs6bc2/tO9kUcF9VTLqXcPHOb3NSRpnaa+XG5+pzs8iqAanWWZv3AmHuh3RsUDTYMAcNIQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=T+Z6jvjV; arc=none smtp.client-ip=198.175.65.14
+	s=arc-20240116; t=1741342032; c=relaxed/simple;
+	bh=tyUaV1l0D54ZNMIx/leDwl/oQ0f2CW/d76wpxO4jZ/k=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=UtxKbAe8aMthVHgBShxL90SW2H0jVeMuKKL1/LpdrTj5GglMe4zrtCN2GBVdaQGNestWtxxULbpRXTnFMt8NYBG2JLBK6p0CWO59nmgUCDrJUy/XdMAHRdbkcZpJmGt3PD2DMwsOwLdcCj0M7cbi8dGV1JSxq/yQb9iN25MhOdE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=NE3SJppv; arc=none smtp.client-ip=192.198.163.8
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="T+Z6jvjV"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="NE3SJppv"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1741341615; x=1772877615;
-  h=from:to:cc:date:subject:message-id:mime-version:
-   content-transfer-encoding;
-  bh=mOFf7JEY2xGc/lYu7abXxp5IEcE/c+c1U8ngnx9z+Bs=;
-  b=T+Z6jvjVdAh5tcK4i/u0WJqMbZ9yJ1irssypIix0/rX9vWI/gEfW5bdA
-   KbCK1OSuARLjdYH7XhMikGvXMTTvlkkT1c1Q71mOwdSN8MMUhj34HsyK4
-   xS8I0mZPFJ54vR0dfYs4Xgr/5/zN7HHXb/DyjXV7xw52pTUESlhCvRoLK
-   GyYHYhED1JojpruCBMidCVKB9+GOcX/peRjdqluNWohrAsqBrRRKY38X5
-   ewas1DGq+sMazwVLyp7KXiSS5h+zntMJxvGr9ufuDO+MXljvSsoAYMZ+M
-   SsQywmLRkrYYgmZYDrNWQpQvfMaYpKgNmYPCsdyZ+aXMf8NSoHldoLnpy
-   w==;
-X-CSE-ConnectionGUID: mlFbde8ATBGUkcdcNzIONg==
-X-CSE-MsgGUID: zweZwJxjQ3W1bo4YTs/jHw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11365"; a="46163495"
+  t=1741342031; x=1772878031;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=tyUaV1l0D54ZNMIx/leDwl/oQ0f2CW/d76wpxO4jZ/k=;
+  b=NE3SJppvxmvFI1QNANNtPYyhPmdf1u4jVZDwGZ5l+fkHEkH6IG1FcDAy
+   5HXI7t5vkZysEJrlXRyBZ+rVFgYHnuSYwUBQKPBV1FCcYzW54N+1H2mQU
+   uuCpTthZRdO1kKDEcBjj12/0ZGkrbI6u5NbDG984qm9g8Pix0/SE6HMlJ
+   e2GiXdo8Mkx77zVZ5vK3ATaE1TPfR30dbnFiGwVbQSo9SbhAvENQ1lvWf
+   rivEZPtbyOMLZAbfIXo9yig3Ra5xIrnLE6erphW7tkYztouIeCBPJdV5t
+   fLAIItmSV6/uidyVBmx8JCX4TIha9nP4AsuJk7r1sq5VaPWmd8KcrIYyQ
+   Q==;
+X-CSE-ConnectionGUID: FXkDT92QSgWA/w5YnLOkSw==
+X-CSE-MsgGUID: 3F2kilarTAqQYeWCQeS1pA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11365"; a="59943625"
 X-IronPort-AV: E=Sophos;i="6.14,228,1736841600"; 
-   d="scan'208";a="46163495"
-Received: from fmviesa004.fm.intel.com ([10.60.135.144])
-  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Mar 2025 02:00:15 -0800
-X-CSE-ConnectionGUID: X6LSaZ3tTBGqh2x4tXsqpw==
-X-CSE-MsgGUID: Te3pCXqERG2YBqfFWtS5kg==
+   d="scan'208";a="59943625"
+Received: from fmviesa009.fm.intel.com ([10.60.135.149])
+  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Mar 2025 02:07:10 -0800
+X-CSE-ConnectionGUID: jTZGmQDESeahNrjaHoxrKw==
+X-CSE-MsgGUID: QDQAkJZsTuW7KVsVmnd7Ew==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.14,228,1736841600"; 
-   d="scan'208";a="124374586"
+   d="scan'208";a="119971120"
 Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.120])
-  by fmviesa004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Mar 2025 02:00:12 -0800
+  by fmviesa009-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Mar 2025 02:07:09 -0800
 From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: LKML <linux-kernel@vger.kernel.org>, PDx86 <platform-driver-x86@vger.kernel.org>, Hans de Goede <hdegoede@redhat.com>, Andy Shevchenko <andy@kernel.org>
-Date: Fri, 07 Mar 2025 11:58:21 +0200
-Subject: [GIT PULL] platform-drivers-x86 for v6.14-4
-Message-ID: <pdx86-pr-20250307115821-1780710253@linux.intel.com>
+Date: Fri, 7 Mar 2025 12:07:04 +0200 (EET)
+To: "Pandruvada, Srinivas" <srinivas.pandruvada@intel.com>
+cc: "hdegoede@redhat.com" <hdegoede@redhat.com>, 
+    "srinivas.pandruvada@linux.intel.com" <srinivas.pandruvada@linux.intel.com>, 
+    "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>
+Subject: Re: [GIT PULL]: tools/power/x86/intel-speed-select pull request for
+ 6.15-rc1
+In-Reply-To: <e884b4d403a650139080366b4b9f7c9d4be78efd.camel@intel.com>
+Message-ID: <44a4b1e7-4c85-f17f-49de-db760de1bc5f@linux.intel.com>
+References: <e884b4d403a650139080366b4b9f7c9d4be78efd.camel@intel.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
 
-Hi Linus,
+On Thu, 6 Mar 2025, Pandruvada, Srinivas wrote:
 
-Here is a platform-drivers-x86 fixes PR for v6.14.
+> Hi Hans and Ilpo,
+> 
+> This pull request is based on
+> https://kernel.googlesource.com/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86
+> review-hans
+> 
+> This pull has fix for display of die IDs in a single/multi-die system
+> after
+> the changes for die_id sysfs from kernel version 6.9.
+> 
+> The following changes since commit
+> e57eabe2fb044950e6ffdfe01803895043dec0b7:
+> 
+>   platform/x86: thinkpad_acpi: check the return value of
+> devm_mutex_init() (2025-03-05 14:14:10 +0200)
+> 
+> are available in the Git repository at:
+> 
+>   https://github.com/spandruvada/linux-kernel.git intel-sst
+> 
+> for you to fetch changes up to
+> 5cf237fc4645af0aabd054a16184c9ecd53db010:
+> 
+>   tools/power/x86/intel-speed-select: v1.22 release (2025-03-06
+> 10:18:31 -0800)
+> 
+> ----------------------------------------------------------------
+> Srinivas Pandruvada (4):
+>       tools/power/x86/intel-speed-select: Prevent increasing
+> MAX_DIE_PER_PACKAGE
+>       tools/power/x86/intel-speed-select: Fix the condition to check
+> multi die system
+>       tools/power/x86/intel-speed-select: Die ID for IO dies
+>       tools/power/x86/intel-speed-select: v1.22 release
 
-Fixes and new HW support:
+Hi Srinivas,
 
- - amd/pmf:
+Did this end up falling through cracks or did you come into second 
+thoughts about it:
 
-     - Initialize 'cb_mutex'
+https://patchwork.kernel.org/project/platform-driver-x86/patch/20250129033932.2576077-1-raj.khem@gmail.com/
 
-     - Support for new version of PMF-TA
+?
 
- - intel-hid: Fix volume buttons on Microsoft Surface Go 4 tablet
+-- 
+ i.
 
- - intel/vsec: Add Diamond Rapids support
-
- - thinkpad_acpi: Add battery quirk for ThinkPad X131e
-
-Regards, i.
-
-
-The following changes since commit b3e127dacad60a384c92baafdc74f1508bf7dd47:
-
-  platform/x86: thinkpad_acpi: Fix registration of tpacpi platform driver (2025-02-12 13:49:37 +0200)
-
-are available in the Git repository at:
-
-  https://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git tags/platform-drivers-x86-v6.14-4
-
-for you to fetch changes up to 376a8c2a144397d9cf2a67d403dd64f4a7ff9104:
-
-  platform/x86/amd/pmf: Update PMF Driver for Compatibility with new PMF-TA (2025-03-05 13:33:42 +0200)
-
-----------------------------------------------------------------
-platform-drivers-x86 for v6.14-4
-
-Fixes and new HW support:
-
- - amd/pmf:
-
-     - Initialize 'cb_mutex'
-
-     - Support for new version of PMF-TA
-
- - intel-hid: Fix volume buttons on Microsoft Surface Go 4 tablet
-
- - intel/vsec: Add Diamond Rapids support
-
- - thinkpad_acpi: Add battery quirk for ThinkPad X131e
-
-The following is an automated shortlog grouped by driver:
-
-amd/pmf:
- -  Initialize and clean up `cb_mutex`
- -  Propagate PMF-TA return codes
- -  Update PMF Driver for Compatibility with new PMF-TA
-
-intel-hid:
- -  fix volume buttons on Microsoft Surface Go 4 tablet
-
-intel/vsec:
- -  Add Diamond Rapids support
-
-thinkpad_acpi:
- -  Add battery quirk for ThinkPad X131e
-
-----------------------------------------------------------------
-David E. Box (1):
-      platform/x86/intel/vsec: Add Diamond Rapids support
-
-Dmitry Panchenko (1):
-      platform/x86: intel-hid: fix volume buttons on Microsoft Surface Go 4 tablet
-
-Mario Limonciello (1):
-      platform/x86/amd/pmf: Initialize and clean up `cb_mutex`
-
-Mingcong Bai (1):
-      platform/x86: thinkpad_acpi: Add battery quirk for ThinkPad X131e
-
-Shyam Sundar S K (2):
-      platform/x86/amd/pmf: Propagate PMF-TA return codes
-      platform/x86/amd/pmf: Update PMF Driver for Compatibility with new PMF-TA
-
- drivers/platform/x86/amd/pmf/core.c   |  2 ++
- drivers/platform/x86/amd/pmf/pmf.h    |  5 +++-
- drivers/platform/x86/amd/pmf/tee-if.c | 52 +++++++++++++++++++++++++----------
- drivers/platform/x86/intel/hid.c      |  7 +++++
- drivers/platform/x86/intel/vsec.c     |  7 +++++
- drivers/platform/x86/thinkpad_acpi.c  |  1 +
- 6 files changed, 58 insertions(+), 16 deletions(-)
