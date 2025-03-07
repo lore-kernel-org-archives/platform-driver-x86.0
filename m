@@ -1,174 +1,149 @@
 Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA26C1474A9;
-	Fri,  7 Mar 2025 05:28:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 015F320CCD3;
+	Fri,  7 Mar 2025 10:00:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741325340; cv=none; b=Wsl31VKqkFqWjgtbUmLo1pdNTqjDVq7BbhwJWP6SUJ2h/rSvRHXRsoMtF/QTA95Zo74V2kX/l9rW+jSa/BGERYndZ7HtpP+WeRS+7+BCM4qBYKWsWTO6QRRULIDug1g2yvsLkG8u8VD3HshOEHKsH7T+bjlJzk7PuyfadYN9CB4=
+	t=1741341616; cv=none; b=CggCDNyyn/aVEx5rjRv2rB5cW8JJf3bDSiWTRItUUfoIkdtQC6BhtvGkRz+oAFjnlYNnIzS+9dNz7/3xuEA3ExaEeM0DusQjhgosXHDsPKjNQtt7YqrohoPJ87cY0025HGZ9iWIylf4YFKWwUHUNNC326N7rSosTjSy+fjC24U0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741325340; c=relaxed/simple;
-	bh=E2Y/GlpLCkl4xHcskn4WALbBs9h6FoTrMIP+94YBi9M=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=QtcOyFxHfxh8kkwLQYIIEKMEb9//A7jTNNPNP4GUAzOEkI0xqKfhke9tGrfFfOeU2pA0sAxARMnoUBcRXfuQ63dMBEtmqfp54aqZsyGLIbUhZ31bDlW/o02I8yZlZqbmEINK589Oo20B/uVQHFOjD6DhLsgxoWbtsky0oy09iDc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=iFnWZVL8; arc=none smtp.client-ip=198.175.65.14
+	s=arc-20240116; t=1741341616; c=relaxed/simple;
+	bh=mOFf7JEY2xGc/lYu7abXxp5IEcE/c+c1U8ngnx9z+Bs=;
+	h=From:To:Cc:Date:Subject:Message-ID:MIME-Version:Content-Type; b=BnRr3pQZiUYrxyit0NJGtSUyaKBY2kkidtp+NFn3BhYvDi13nJuLonWHbjCKEq4Knwc4dxBqki6uJTWQhEyOGnqqqqKdMuuEItp/Rqs6bc2/tO9kUcF9VTLqXcPHOb3NSRpnaa+XG5+pzs8iqAanWWZv3AmHuh3RsUDTYMAcNIQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=T+Z6jvjV; arc=none smtp.client-ip=198.175.65.14
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="iFnWZVL8"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="T+Z6jvjV"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1741325339; x=1772861339;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=E2Y/GlpLCkl4xHcskn4WALbBs9h6FoTrMIP+94YBi9M=;
-  b=iFnWZVL81DmSExEK3uCbWwDBqjMJlVGdPFTWrFpR7GsWRx7wTLoK/Y1a
-   NbS4ZL3yVKub6KPWb+QVtpQEEhergeHr6fhwrUgJs30ZWes+RbXXmk/cD
-   BT/bwO53A0kKeNvwHBIIKCVUKTiPPeMdx2ojPAJSfilEXA3XT1CEGB16a
-   HpeM55PCrsdAfUvfkRdd0xNVQvM+OrYa2/2sMkvxzjzjCschIUqhyolhr
-   L4g6l6BHzl5qxSDRsps65WLqd/h0kuf/VurSps8iOFwuEPxS48lTR3sM5
-   YYILdfwbxtmfj5jUPyttzdBGp6A0HnXVuDqqiQaILKOjYsbASrtEFQ1ZR
-   A==;
-X-CSE-ConnectionGUID: CacmsbaOR3O2TuB02K8KoQ==
-X-CSE-MsgGUID: qe48wI+ASjyVVjngUuOOcw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11365"; a="46142865"
+  t=1741341615; x=1772877615;
+  h=from:to:cc:date:subject:message-id:mime-version:
+   content-transfer-encoding;
+  bh=mOFf7JEY2xGc/lYu7abXxp5IEcE/c+c1U8ngnx9z+Bs=;
+  b=T+Z6jvjVdAh5tcK4i/u0WJqMbZ9yJ1irssypIix0/rX9vWI/gEfW5bdA
+   KbCK1OSuARLjdYH7XhMikGvXMTTvlkkT1c1Q71mOwdSN8MMUhj34HsyK4
+   xS8I0mZPFJ54vR0dfYs4Xgr/5/zN7HHXb/DyjXV7xw52pTUESlhCvRoLK
+   GyYHYhED1JojpruCBMidCVKB9+GOcX/peRjdqluNWohrAsqBrRRKY38X5
+   ewas1DGq+sMazwVLyp7KXiSS5h+zntMJxvGr9ufuDO+MXljvSsoAYMZ+M
+   SsQywmLRkrYYgmZYDrNWQpQvfMaYpKgNmYPCsdyZ+aXMf8NSoHldoLnpy
+   w==;
+X-CSE-ConnectionGUID: mlFbde8ATBGUkcdcNzIONg==
+X-CSE-MsgGUID: zweZwJxjQ3W1bo4YTs/jHw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11365"; a="46163495"
 X-IronPort-AV: E=Sophos;i="6.14,228,1736841600"; 
-   d="scan'208";a="46142865"
-Received: from orviesa004.jf.intel.com ([10.64.159.144])
-  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Mar 2025 21:28:57 -0800
-X-CSE-ConnectionGUID: Gav6l5ujTTC3cGO4QrwZ5w==
-X-CSE-MsgGUID: +DtmNiMrS1qMuYKKWLnO6A==
+   d="scan'208";a="46163495"
+Received: from fmviesa004.fm.intel.com ([10.60.135.144])
+  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Mar 2025 02:00:15 -0800
+X-CSE-ConnectionGUID: X6LSaZ3tTBGqh2x4tXsqpw==
+X-CSE-MsgGUID: Te3pCXqERG2YBqfFWtS5kg==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.14,228,1736841600"; 
-   d="scan'208";a="124261411"
-Received: from choongyo-mobl.gar.corp.intel.com (HELO [10.247.53.67]) ([10.247.53.67])
-  by orviesa004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Mar 2025 21:28:49 -0800
-Message-ID: <19b78790-d4d3-45db-9b1f-fbe40f8ed795@linux.intel.com>
-Date: Fri, 7 Mar 2025 13:28:46 +0800
+   d="scan'208";a="124374586"
+Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.120])
+  by fmviesa004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Mar 2025 02:00:12 -0800
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: LKML <linux-kernel@vger.kernel.org>, PDx86 <platform-driver-x86@vger.kernel.org>, Hans de Goede <hdegoede@redhat.com>, Andy Shevchenko <andy@kernel.org>
+Date: Fri, 07 Mar 2025 11:58:21 +0200
+Subject: [GIT PULL] platform-drivers-x86 for v6.14-4
+Message-ID: <pdx86-pr-20250307115821-1780710253@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH net-next v9 5/6] net: stmmac: configure SerDes according
- to the interface mode
-To: david.e.box@linux.intel.com, Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc: Simon Horman <horms@kernel.org>, Jose Abreu <joabreu@synopsys.com>,
- Jose Abreu <Jose.Abreu@synopsys.com>, Thomas Gleixner <tglx@linutronix.de>,
- Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
- Dave Hansen <dave.hansen@linux.intel.com>, "H . Peter Anvin"
- <hpa@zytor.com>, Rajneesh Bhardwaj <irenic.rajneesh@gmail.com>,
- David E Box <david.e.box@intel.com>, Andrew Lunn <andrew+netdev@lunn.ch>,
- "David S . Miller" <davem@davemloft.net>, Eric Dumazet
- <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
- Paolo Abeni <pabeni@redhat.com>, Maxime Coquelin
- <mcoquelin.stm32@gmail.com>, Alexandre Torgue
- <alexandre.torgue@foss.st.com>, Jiawen Wu <jiawenwu@trustnetic.com>,
- Mengyuan Lou <mengyuanlou@net-swift.com>,
- Heiner Kallweit <hkallweit1@gmail.com>, Russell King
- <linux@armlinux.org.uk>, Hans de Goede <hdegoede@redhat.com>,
- =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
- Richard Cochran <richardcochran@gmail.com>,
- Serge Semin <fancer.lancer@gmail.com>, x86@kernel.org,
- linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
- platform-driver-x86@vger.kernel.org,
- linux-stm32@st-md-mailman.stormreply.com,
- linux-arm-kernel@lists.infradead.org
-References: <20250227121522.1802832-1-yong.liang.choong@linux.intel.com>
- <20250227121522.1802832-6-yong.liang.choong@linux.intel.com>
- <Z8lLm9Ze9VAx3cE_@surfacebook.localdomain>
- <601c88fb-8ec8-4866-a45d-f28dea6d9625@linux.intel.com>
- <CAHp75VeOKbAsvSuf5+VQnGFmUcN92TNnR2eF1+70h3PjaMdMqA@mail.gmail.com>
- <d7c0094e-7fd3-4113-8d00-91b7a83ffd1f@linux.intel.com>
- <257769403908de3ac6271059e1febee88654fbdc.camel@linux.intel.com>
-Content-Language: en-US
-From: Choong Yong Liang <yong.liang.choong@linux.intel.com>
-In-Reply-To: <257769403908de3ac6271059e1febee88654fbdc.camel@linux.intel.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
+Hi Linus,
+
+Here is a platform-drivers-x86 fixes PR for v6.14.
+
+Fixes and new HW support:
+
+ - amd/pmf:
+
+     - Initialize 'cb_mutex'
+
+     - Support for new version of PMF-TA
+
+ - intel-hid: Fix volume buttons on Microsoft Surface Go 4 tablet
+
+ - intel/vsec: Add Diamond Rapids support
+
+ - thinkpad_acpi: Add battery quirk for ThinkPad X131e
+
+Regards, i.
 
 
-On 7/3/2025 4:52 am, David E. Box wrote:
-> On Thu, 2025-03-06 at 20:56 +0800, Choong Yong Liang wrote:
->>
->>
->> On 6/3/2025 5:05 pm, Andy Shevchenko wrote:
->>> On Thu, Mar 6, 2025 at 10:39 AM Choong Yong Liang
->>> <yong.liang.choong@linux.intel.com> wrote:
->>>> On 6/3/2025 3:15 pm, Andy Shevchenko wrote:
->>>>> Thu, Feb 27, 2025 at 08:15:21PM +0800, Choong Yong Liang kirjoitti:
->>> ...
->>>
->>>>>> config DWMAC_INTEL
->>>>>>        default X86
->>>>>>        depends on X86 && STMMAC_ETH && PCI
->>>>>>        depends on COMMON_CLK
->>>>>> +    depends on ACPI
->>>>> Stray and unexplained change. Please, fix it. We don't need the
->>>>> dependencies
->>>>> which are not realised in the compile time.
->>>> The dependency on ACPI is necessary because the intel_pmc_ipc.h header
->>>> relies on ACPI functionality to interact with the Intel PMC.
->>> So, that header has to be fixed as ACPI here is really unneeded
->>> dependency for the cases when somebody (for whatever reasons) want to
->>> build a kernel without ACPI support but with the driver enabled for
->>> let's say PCI device.
->>>
->>>
->>> -- With Best Regards, Andy Shevchenko
->>
->> Hi Andy,
->>
->> Thank you for your feedback, Andy.
->> I appreciate your insights regarding the ACPI dependency.
->> The intel_pmc_ipc.h header is under the ownership of David E Box, who
->> focuses on the platform code, while my focus is on the netdev.
->>
->> Hi David,
->>
->> if you could kindly look into making the ACPI dependency optional in the
->> intel_pmc_ipc.h header, it would be greatly appreciated.
->> I am more than willing to provide any support necessary to ensure a smooth
->> resolution.
-> 
-> Choong you only need put the function under a #if CONFIG_ACPI block and provide
-> an alternative that returns an error when the code is not build. Like this,
-> 
-> #if CONFIG_ACPI
-> static inline int intel_pmc_ipc(struct pmc_ipc_cmd *ipc_cmd, struct pmc_ipc_rbuf
-> *rbuf)
-> {
->     ...
-> }
-> #else
-> static inline int intel_pmc_ipc(struct pmc_ipc_cmd *ipc_cmd, struct pmc_ipc_rbuf
-> *rbuf) { return -ENODEV; }
-> #endif
-> 
-> David
-> 
->>
->> This patch series has already been accepted, but we recognize the
->> importance of addressing this issue in the next patch series for upstream.
->> Our goal is to ensure that the driver can be compiled and function
->> correctly in both ACPI and non-ACPI environments.
->>
->> Thank you both for your understanding and collaboration.
-> 
-> 
-Hi Andy and David,
+The following changes since commit b3e127dacad60a384c92baafdc74f1508bf7dd47:
 
-Thank you for the feedback.
+  platform/x86: thinkpad_acpi: Fix registration of tpacpi platform driver (2025-02-12 13:49:37 +0200)
 
-The current ACPI dependency for the config DWMAC_INTEL is necessary, but I 
-agree on making it optional.
+are available in the Git repository at:
 
-Implementing the suggestion from David using the "#if CONFIG_ACPI" approach 
-would address your concern about users who need to build a kernel without 
-ACPI support.
+  https://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git tags/platform-drivers-x86-v6.14-4
 
-If you are okay with this approach, then I will submit the solution for 
-upstream.
+for you to fetch changes up to 376a8c2a144397d9cf2a67d403dd64f4a7ff9104:
+
+  platform/x86/amd/pmf: Update PMF Driver for Compatibility with new PMF-TA (2025-03-05 13:33:42 +0200)
+
+----------------------------------------------------------------
+platform-drivers-x86 for v6.14-4
+
+Fixes and new HW support:
+
+ - amd/pmf:
+
+     - Initialize 'cb_mutex'
+
+     - Support for new version of PMF-TA
+
+ - intel-hid: Fix volume buttons on Microsoft Surface Go 4 tablet
+
+ - intel/vsec: Add Diamond Rapids support
+
+ - thinkpad_acpi: Add battery quirk for ThinkPad X131e
+
+The following is an automated shortlog grouped by driver:
+
+amd/pmf:
+ -  Initialize and clean up `cb_mutex`
+ -  Propagate PMF-TA return codes
+ -  Update PMF Driver for Compatibility with new PMF-TA
+
+intel-hid:
+ -  fix volume buttons on Microsoft Surface Go 4 tablet
+
+intel/vsec:
+ -  Add Diamond Rapids support
+
+thinkpad_acpi:
+ -  Add battery quirk for ThinkPad X131e
+
+----------------------------------------------------------------
+David E. Box (1):
+      platform/x86/intel/vsec: Add Diamond Rapids support
+
+Dmitry Panchenko (1):
+      platform/x86: intel-hid: fix volume buttons on Microsoft Surface Go 4 tablet
+
+Mario Limonciello (1):
+      platform/x86/amd/pmf: Initialize and clean up `cb_mutex`
+
+Mingcong Bai (1):
+      platform/x86: thinkpad_acpi: Add battery quirk for ThinkPad X131e
+
+Shyam Sundar S K (2):
+      platform/x86/amd/pmf: Propagate PMF-TA return codes
+      platform/x86/amd/pmf: Update PMF Driver for Compatibility with new PMF-TA
+
+ drivers/platform/x86/amd/pmf/core.c   |  2 ++
+ drivers/platform/x86/amd/pmf/pmf.h    |  5 +++-
+ drivers/platform/x86/amd/pmf/tee-if.c | 52 +++++++++++++++++++++++++----------
+ drivers/platform/x86/intel/hid.c      |  7 +++++
+ drivers/platform/x86/intel/vsec.c     |  7 +++++
+ drivers/platform/x86/thinkpad_acpi.c  |  1 +
+ 6 files changed, 58 insertions(+), 16 deletions(-)
