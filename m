@@ -1,181 +1,167 @@
-Received: from mail-yw1-f173.google.com (mail-yw1-f173.google.com [209.85.128.173])
+Received: from mail-ua1-f47.google.com (mail-ua1-f47.google.com [209.85.222.47])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 891D117A313;
-	Sat,  8 Mar 2025 04:55:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E8A91F94A;
+	Sat,  8 Mar 2025 20:23:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741409702; cv=none; b=Sp5MebhPGTURGRf/r/QB9zNgRiCpKy/IEddZRrTyvsfJ3uWIIayhDlfASt9pxoN1yuvh12ATDAg6R+KwrmVafOzc14rsTK0KedY+au635ozOdEvWnzvnKgXK+Hpb5tBtkasbApU0Ac5ODE27fQV1UGUXQzPQ9nEc0cPsRxzt25I=
+	t=1741465428; cv=none; b=BbSqyaT+3Pt9tHBm/dsogmIAccwmRBROU9huA0phcSvwhUqaHaRM+Y7GpdzFN9VzoXnggMwXq2t7j5P08G+bC76caYEXUb1ekcxPnhN8cJuAZktpnbUva/FQXc1vFfcxVDng6f2nu2vUfDzGZZyogN6/M+Vx2REG/Xyw5YdOxtc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741409702; c=relaxed/simple;
-	bh=79eWymJ/dJNrOsnciOWzUUy1t7U9wwQ0z8U24msUpgo=;
-	h=Mime-Version:Content-Type:Date:Message-Id:From:To:Cc:Subject:
-	 References:In-Reply-To; b=G4WWiFdaxuDKemG7f4Mg0lglbgBw0P65iVe+LNBZB8X3usnSxmZs1aUJS1H2ttEfNfFzqdJCEmwT1dP1swB48CusQClbZUu6BRG9Xr36akJLFp/I/fzxfu31S1yrplCfjSD5M/yh0R2EXaiEvT7w5RmTB/MJYQJjxMVQhKt6uXM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ZUMDQ70U; arc=none smtp.client-ip=209.85.128.173
+	s=arc-20240116; t=1741465428; c=relaxed/simple;
+	bh=Q6nV3nKrSCi9BXAz+2u8J5JAul6UeQw2Mc95FgxICWs=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=iQ0G5o2EiZ1X1KB7c75CsIYAp3Z3ATt2I41e8IVjYmkwBKvfqHFW/XOhGpkpn+OvjeZHoIh/flg/+u1JsZyN8Nj0caim7dlAv6S9QV25f00cWVUSI0aHzqT9hLt2n8sxLVcskM8Dlk/q5h61luBPQZ4k6HhAe6Nd061fEy1s9XM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=SKzelMbM; arc=none smtp.client-ip=209.85.222.47
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZUMDQ70U"
-Received: by mail-yw1-f173.google.com with SMTP id 00721157ae682-6fb2a0e4125so17990857b3.1;
-        Fri, 07 Mar 2025 20:55:00 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SKzelMbM"
+Received: by mail-ua1-f47.google.com with SMTP id a1e0cc1a2514c-86714f41f5bso1244919241.3;
+        Sat, 08 Mar 2025 12:23:46 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1741409699; x=1742014499; darn=vger.kernel.org;
-        h=in-reply-to:references:subject:cc:to:from:message-id:date
-         :content-transfer-encoding:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=79eWymJ/dJNrOsnciOWzUUy1t7U9wwQ0z8U24msUpgo=;
-        b=ZUMDQ70UQ61UP+l+YbWPJF8g2FWWkDZL9f7dY/s+tc7QrP/iKZ5ivn/SqFhn2yVkhJ
-         kI9qkyk9MuQOguZyg8CPYHOXoQ5uOJYJZnao7hQIPukxKr/xT/Ftf9GDYZnb2jNmZZ9O
-         Xrd/6yuT3l4yUTHmb0ltO/qQL/k0VpWjuJxhOl24h7minjFjW9C6btI39oThR0D7pNMZ
-         obK3IhveR+TO/JS/Lup67c0jzy9S3OrKa2wjdmiKmDQfBYV96cBsCpGvw+s9XyLpxBUq
-         LqwFUr4Nq+Qd49t9pxwurZHwytFf9zTLJ/VpkBUd21aRf2bmLb67TRRzSwJHfrcuXJ3f
-         Hnww==
+        d=gmail.com; s=20230601; t=1741465425; x=1742070225; darn=vger.kernel.org;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=lDQFGNKi7NrYGCpzczTIm99TkghXnnRgAC/HEvbOf98=;
+        b=SKzelMbM3OriaDSf0opl+ZCPHMN5q8Wn5Xe9re8N5IQ9L8eMq/gzSqFawzc3XtnfM7
+         3TOF+G1ywvo4sU1hI9Jy4YPUfGXYBKPRBJCNYxxP7q8l0iYjWc3kwzucHCLP3J0ZErLs
+         j+2WjNdczUIDl4zQtZoyLzmGNe7qQGbYvX+KNVzQgBAsir4s9YORIknCUagxFOogat2q
+         YQClkudDgUVofpiEGwzS+c8+H9R5QflftWJ69kHxIviLiFB2ghvRcCnlHzWERPTHJ52u
+         xX9LYfZcRNdLcRFzVKjff2zYGBQU5fk/8TycqlRZrOP5T1KRLoBi9dOKTcnuYqVspSGE
+         HMmg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741409699; x=1742014499;
-        h=in-reply-to:references:subject:cc:to:from:message-id:date
-         :content-transfer-encoding:mime-version:x-gm-message-state:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=79eWymJ/dJNrOsnciOWzUUy1t7U9wwQ0z8U24msUpgo=;
-        b=B++YN7hPKGZA1ZLNrr/H+A6gPkbplqne4J/L+kbMHrZ2bMFvKnc9W9sQ6twuoPI5DW
-         3NiF+M6BLQQJ9WcZl8W1xCpbYWwX8qFT350Q4ba9Fm/6GpeCniJNk7ibf7LOStIrQULU
-         LGaHnLI8nbp2pJVrZPgQGBxxalncxehPsIzu5plIwg+cbzcrp1toueCGDJhnjGSnn6vs
-         J/F003a7Z8TvoiJ3w07VMQgiKb3uzdQKKqNvRIqS/XT5uIztzqGYRca0oOYabJRAsFwH
-         tmfoT68D5XHMVf0IiZk4jTSwnQcLwJUWCsxD1kHEImCHkfLWA5zWWxQGUP2SQnaq4jPU
-         9RLQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVen+/D2oi5mWReCrveve7HL4eSuC9MU3eA8v/qI4r2AwUenrSr7JRKxy8Wtplungdz3Ios3T0N9K28N9T2@vger.kernel.org, AJvYcCVfG3U8waBp8dPaRxyX1kYEEB83JzNBX9yQ7uS2f5HQ3pxbrNvSfHb+g/ioxsTaXGZuSdnDoRsZWrmGcw==@vger.kernel.org, AJvYcCXhls7iChZ0Zz6Njki0/nGclyiJplLAjFzqbJ6qTWV9yIkEwVBYy8nVJThCSFokkrhjvd5E9C1XZb2uQTPLQK594a6dHw==@vger.kernel.org
-X-Gm-Message-State: AOJu0YzsyU82ckOSBRh9XrFXeVMCKxfE6dPjdVoW3W9baU+lAOIdpCFd
-	Y0PgSBcPHelcD+fvFX+SByoh2LW0YuLcSosa9CyiVzLnd4ILV1Tr
-X-Gm-Gg: ASbGncsD4hy95G7YYVsOqbz74PQW3uFYsxLHg4zLgitdt+O9VwD7ymkwhCLXJtYO8Ho
-	i0OgvxOQnU9RjW0ZLi2VcRjCiVOUx/YD/I09T2powOhyernV1Bbkx5CRMx8+dleJMAqmiEk4OId
-	D0ep/Xre1OtAxmR3jSThILjzWPRiHiOq8DZjT12Vh3qRfWKKb1ZoSQJbRKniTNyxDf4ClND7uSO
-	rPqqeD1Y+4eNP3JksRipjm1eYryOMeAARoDjex8e6LTUbSywfW8JU2nFOfGqJN2gONEKKE4npWG
-	AvwB+EO9SjxMv35d7a2GXaCnbw5349GlScDwp3KCrXtcPOc=
-X-Google-Smtp-Source: AGHT+IHqmQr8ufHJU7mJvjQTEpig38FM22E1OhqXdH/0lA7fBKukKwvf6tzl3LD1WvgacVEosW13lg==
-X-Received: by 2002:a05:690c:300f:b0:6fe:bf9d:f6de with SMTP id 00721157ae682-6febf9e0392mr59139037b3.0.1741409699282;
-        Fri, 07 Mar 2025 20:54:59 -0800 (PST)
-Received: from localhost ([2800:bf0:82:3d2:9e61:1a62:1a8c:3e62])
-        by smtp.gmail.com with ESMTPSA id 00721157ae682-6fed2a528f2sm1553507b3.62.2025.03.07.20.54.56
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 07 Mar 2025 20:54:58 -0800 (PST)
+        d=1e100.net; s=20230601; t=1741465425; x=1742070225;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=lDQFGNKi7NrYGCpzczTIm99TkghXnnRgAC/HEvbOf98=;
+        b=Xtx7sN2zDS6xjguOGjT+kyDjRGo5GiaAIiDkfOsI2TIk7ngItCMpnNVlhXP7+Pt/4i
+         6Jo60vI6qbu85FvCU/MhLyh++dcJ0Vlx2daT4hsk+jrm1a2mpY9xEg0YdcBy/rmGOoDz
+         SqZq1qiYH4hQ45+geXpshWpuBa1jZ43HKqybK4NDibRugUonYO8WjSLZthwHtU8hpIUq
+         DDJlrftt/UN3LMrrEFYMSMNSHIirf9+UamVD+QOrkbqI69/iCSZsINwp+sQnNGe2UDZJ
+         z6OquuNFWyL67i+o/g/bY10nDOcVygw3pJDSrAnOLmF/dmTBJCT4gRUllJI41xDW5qbV
+         wvBA==
+X-Forwarded-Encrypted: i=1; AJvYcCVbRbM24OT7H7kNcVcrV8vd8GPuCAxDZvjYcdirJ5oaaOxp2LM84uiACHXkIDNSdNDXO/2x0KSKSGwzHQ==@vger.kernel.org, AJvYcCWFeImLUZW+ZoXgtfnfJ5jza5AaoiD1oTBXm9MeVJ5GCZ1pGTxKB7QC4E7NS3NQSKNTJ4ekUffqi+qj/6igF3sL05pz6A==@vger.kernel.org, AJvYcCWssRIiKvx2OxPWJ1ZTU+ynix/zh7T93lE5qPDKe94MMSU/6itu7mbVX2a+zorM/Plbp8VGPY2Bv8qTWOZB@vger.kernel.org
+X-Gm-Message-State: AOJu0YyiojbKOW8D9sWmJZiksD9v8/xC/soPbo6/6SWqZvu+u7+FAk2I
+	OTjv5E7BVWMFPwRwm0RBQFSXt/eibbfXl3cdCT8+jPuKaVUAxcBq
+X-Gm-Gg: ASbGnctsDVSeP/hTgsWusmAS7LmGxvfjVAE5J4LJWA9IvF6ICkEhAVNHbyLqS6OIl3P
+	nfbhqPmv9pzMQTtvPs/3n5tv3DWySTMSK4pUixSXTViF3nTGHmQfwYvitCuNodx9jaaOmRAN6mY
+	oLfuwL3lCNqTlqESwfpGDvyTxnRcmJqsJJiSp58RoKpH3erJPn9PtTJVxaEWRGtxulxCisiSFys
+	C1W7J0hh8MiaNO1aTktbFhddxSQUIZ1KtY9WiDvivnd0MnzC6rAGx2t7jbAsi6KHOVajDLFq0v1
+	7lGBpvgFbF7jBGdh40Q0/vUVc6u93vMV+LXJhv/zal1raQ==
+X-Google-Smtp-Source: AGHT+IHSOMQVHgz4mDmX4zUz+H9UhEPWeA+l17Ai1uROYsCtqmkvHcpK0j2VgmZc5nkc4j/CIC47xw==
+X-Received: by 2002:a05:6102:15a0:b0:4af:fca2:1b7 with SMTP id ada2fe7eead31-4c30a6038camr5354717137.14.1741465425039;
+        Sat, 08 Mar 2025 12:23:45 -0800 (PST)
+Received: from [192.168.100.70] ([2800:bf0:82:3d2:9e61:1a62:1a8c:3e62])
+        by smtp.gmail.com with ESMTPSA id ada2fe7eead31-4c2fb452a47sm1281061137.8.2025.03.08.12.23.42
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 08 Mar 2025 12:23:44 -0800 (PST)
+From: Kurt Borja <kuurtb@gmail.com>
+Subject: [PATCH v4 00/12] platform/x86: alienware-wmi-wmax: HWMON support +
+ DebugFS + Improvements
+Date: Sat, 08 Mar 2025 15:23:12 -0500
+Message-Id: <20250308-hwm-v4-0-afa1342828f5@gmail.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Fri, 07 Mar 2025 23:54:55 -0500
-Message-Id: <D8AM7U5UNBX5.XYJUL18HC2M5@gmail.com>
-From: "Kurt Borja" <kuurtb@gmail.com>
-To: "Guenter Roeck" <linux@roeck-us.net>, "Armin Wolf" <W_Armin@gmx.de>,
- =?utf-8?q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Cc: "Hans de Goede" <hdegoede@redhat.com>,
- <platform-driver-x86@vger.kernel.org>, <Dell.Client.Kernel@dell.com>,
- <linux-kernel@vger.kernel.org>, "Jean Delvare" <jdelvare@suse.com>,
- <linux-hwmon@vger.kernel.org>
-Subject: Re: [PATCH v3 07/10] platform/x86: alienware-wmi-wmax: Add HWMON
- support
-X-Mailer: aerc 0.20.1-0-g2ecb8770224a
-References: <20250305-hwm-v3-0-395e7a1407e2@gmail.com>
- <20250305-hwm-v3-7-395e7a1407e2@gmail.com>
- <a375d474-5349-4662-8ce8-4f8f55349901@gmx.de>
- <D89M2ZQJEH45.1HKFFX5ESXRSJ@gmail.com>
- <7fbf0553-e6b3-4964-9210-8cd720ae9c9e@gmx.de>
- <7c850374-8caa-430d-b114-1aaa944bbc89@roeck-us.net>
-In-Reply-To: <7c850374-8caa-430d-b114-1aaa944bbc89@roeck-us.net>
+MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIADCnzGcC/1WOQQ6CMBBFr0K6dkiZ0jS48h6GRYGBNlpqWkAN4
+ e4WNupiFi/5//1ZWaRgKbJztrJAi43WjwnKU8Zao8eBwHaJGXKUXHAJ5umgV01XFRXHRiqWko9
+ AvX0dlmuduA/ewWQC6W8XUWI6znMUUkgo4DbPYWoug9P2nrfe7SZj4+TD+3hnEbvvf3kRwEFUk
+ pQuSq4If+r1tm0fMofM09AAAAA=
+X-Change-ID: 20250305-hwm-f7bd91902b57
+To: =?utf-8?q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, 
+ Armin Wolf <W_Armin@gmx.de>
+Cc: Kurt Borja <kuurtb@gmail.com>, Hans de Goede <hdegoede@redhat.com>, 
+ platform-driver-x86@vger.kernel.org, Dell.Client.Kernel@dell.com, 
+ linux-kernel@vger.kernel.org, Guenter Roeck <linux@roeck-us.net>, 
+ Jean Delvare <jdelvare@suse.com>, linux-hwmon@vger.kernel.org, 
+ Bagas Sanjaya <bagasdotme@gmail.com>
+X-Mailer: b4 0.14.2
 
-On Fri Mar 7, 2025 at 6:59 PM -05, Guenter Roeck wrote:
-> On 3/7/25 13:09, Armin Wolf wrote:
->> Am 07.03.25 um 01:35 schrieb Kurt Borja:
-> ...
->>>>> +static const struct hwmon_ops awcc_hwmon_ops =3D {
->>>>> +=C2=A0=C2=A0=C2=A0 .is_visible =3D awcc_hwmon_is_visible,
->>>>> +=C2=A0=C2=A0=C2=A0 .read =3D awcc_hwmon_read,
->>>>> +=C2=A0=C2=A0=C2=A0 .read_string =3D awcc_hwmon_read_string,
->>>>> +};
->>>>> +
->>>>> +static const struct hwmon_channel_info * const awcc_hwmon_info[] =3D=
- {
->>>>> +=C2=A0=C2=A0=C2=A0 HWMON_CHANNEL_INFO(temp,
->>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0 HWMON_T_LABEL | HWMON_T_INPUT,
->>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0 HWMON_T_LABEL | HWMON_T_INPUT,
->>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0 HWMON_T_LABEL | HWMON_T_INPUT,
->>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0 HWMON_T_LABEL | HWMON_T_INPUT,
->>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0 HWMON_T_LABEL | HWMON_T_INPUT,
->>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0 HWMON_T_LABEL | HWMON_T_INPUT
->>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0 ),
->>>>> +=C2=A0=C2=A0=C2=A0 HWMON_CHANNEL_INFO(fan,
->>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0 HWMON_F_LABEL | HWMON_F_INPUT | HWMON_F_MIN | HWMON_F_MA=
-X,
->>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0 HWMON_F_LABEL | HWMON_F_INPUT | HWMON_F_MIN | HWMON_F_MA=
-X,
->>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0 HWMON_F_LABEL | HWMON_F_INPUT | HWMON_F_MIN | HWMON_F_MA=
-X,
->>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0 HWMON_F_LABEL | HWMON_F_INPUT | HWMON_F_MIN | HWMON_F_MA=
-X,
->>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0 HWMON_F_LABEL | HWMON_F_INPUT | HWMON_F_MIN | HWMON_F_MA=
-X,
->>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0 HWMON_F_LABEL | HWMON_F_INPUT | HWMON_F_MIN | HWMON_F_MA=
-X
->>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0 ),
->>>>> +=C2=A0=C2=A0=C2=A0 HWMON_CHANNEL_INFO(pwm,
->>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0 HWMON_PWM_AUTO_CHANNELS_TEMP,
->>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0 HWMON_PWM_AUTO_CHANNELS_TEMP,
->>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0 HWMON_PWM_AUTO_CHANNELS_TEMP,
->>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0 HWMON_PWM_AUTO_CHANNELS_TEMP,
->>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0 HWMON_PWM_AUTO_CHANNELS_TEMP,
->>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0 HWMON_PWM_AUTO_CHANNELS_TEMP
->>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0 ),
->>>> Since the number of fans and temperature sensors is only known at runt=
-ime creating awcc_hwmon_info
->>>> would make sense.
->>> IIRC Guenter asked another dev to add more CHANNEL_INFO entries instead
->>> of doing that? I might be wrong tho.
->>>
->>> I'm fine either way.
->>>
->> If Guenter is fine with your current approach then you can keep it.
->>=20
->
-> In drivers/hwmon, I prefer static descriptions such as the above and usin=
-g
-> the is_visible() function to determine if sensor attributes should actual=
-ly
-> be created. However, as I have mentioned several times, I do not comment =
-on style
-> questions like this (or, for that matter, non-standard sysfs attributes) =
-outside
-> drivers/hwmon, so you can do or request whatever you like.
->
-> Guenter
+Hi all,
 
-Thank you for clarifying!
+This set mainly adds hwmon and manual fan control support (patches 7-8)
+to the alienware-wmi driver, after some improvements.
 
-If there are no objections, then I prefer to keep it this way. With the
-few extra HWMON_CHANNEL_INFO entries.
+I have a question for anyone that may know how to solve it. In version 2
+of these series the kernel test robot found a build error
 
---=20
+	https://lore.kernel.org/platform-driver-x86/202503051819.bQ9P70Og-lkp@intel.com/
+
+I think this happened because
+
+	CONFIG_ALIENWARE_WMI=y
+
+while
+
+	CONFIG_ACPI_PLATFORM_PROFILE=m
+	CONFIG_HWMON=m
+
+How should I Kconfig to avoid this?
+
+Thank you for your feedback :)
+
+---
+Changes in v4:
+
+[03/12]
+  - Dropped awcc_profile_id_to_pprof because it's no longer used for
+    pwm*_enable attributes
+
+[07/12]
+  - Dropped pwm*_enable visibility
+  - Dropped fan_data->related_temps
+  - Allocate fan_data->auto_channels_temp statically
+  - Allocate priv->temp_sensors statically
+  - Determine and allocate fan label while probing
+
+[08/12]
+  - Dropped pwm*_enable attributes because it's incompatible with
+    current ABI
+  - Renamed pwm*_boost attributes to fan*_boost
+  - Added dev_err logs to awcc_hwmon_suspend/resume
+
+[11/12]
+  - Introduced laptop documentation
+
+[12/12]
+  - Introduced ABI documentation
+
+Link to v3: https://lore.kernel.org/r/20250305-hwm-v3-0-395e7a1407e2@gmail.com
+
+---
+Kurt Borja (12):
+      platform/x86: alienware-wmi-wmax: Rename thermal related symbols
+      platform/x86: alienware-wmi-wmax: Refactor is_awcc_thermal_mode()
+      platform/x86: alienware-wmi-wmax: Improve internal AWCC API
+      platform/x86: alienware-wmi-wmax: Modify supported_thermal_profiles[]
+      platform/x86: alienware-wmi-wmax: Improve platform profile probe
+      platform/x86: alienware-wmi-wmax: Add support for the "custom" thermal profile
+      platform/x86: alienware-wmi-wmax: Add HWMON support
+      platform/x86: alienware-wmi-wmax: Add support for manual fan control
+      platform/x86: alienware-wmi-wmax: Add a DebugFS interface
+      Documentation: wmi: Improve and update alienware-wmi documentation
+      Documentation: admin-guide: laptops: Add documentation for alienware-wmi
+      Documentation: ABI: Add sysfs platform and debugfs ABI documentation for alienware-wmi
+
+ Documentation/ABI/testing/debugfs-alienware-wmi    |   44 +
+ .../ABI/testing/sysfs-platform-alienware-wmi       |   14 +
+ .../admin-guide/laptops/alienware-wmi.rst          |  128 +++
+ Documentation/admin-guide/laptops/index.rst        |    1 +
+ Documentation/wmi/devices/alienware-wmi.rst        |  383 +++-----
+ MAINTAINERS                                        |    3 +
+ drivers/platform/x86/dell/Kconfig                  |    1 +
+ drivers/platform/x86/dell/alienware-wmi-wmax.c     | 1023 +++++++++++++++++---
+ 8 files changed, 1187 insertions(+), 410 deletions(-)
+---
+base-commit: e57eabe2fb044950e6ffdfe01803895043dec0b7
+change-id: 20250305-hwm-f7bd91902b57
+
+Best regards,
+-- 
  ~ Kurt
 
