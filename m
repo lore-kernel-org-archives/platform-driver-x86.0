@@ -1,134 +1,143 @@
-Received: from mail-yw1-f180.google.com (mail-yw1-f180.google.com [209.85.128.180])
+Received: from linux1587.grserver.gr (linux1587.grserver.gr [185.138.42.100])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D901B1552FD;
-	Sun,  9 Mar 2025 05:13:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D9CED74C08;
+	Sun,  9 Mar 2025 11:21:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.138.42.100
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741497238; cv=none; b=pewzLeYhbS8lCgABTT3GFRG9gMWyUc6tvxYvoUhWSlVytEZuYEocxzBbu+ZriPkyf1TH0wrvCHIp0xIH4QQS4XLL0KM0Ir/AHpBTB//ZYS1bSlgVtTb27kYuh72aC1neoRBn9W1VammURHpU5LcUUc6MpbZh4HO5xGV+4U++E+s=
+	t=1741519290; cv=none; b=K6LGR90FXSj2xeBvG310VuF9K7m/+mmd2Ar+F2H0T2kFqNz5p2hE+a3DtxbnrQ/Og+Pr4NkmwXLeAeDaEaq3gr6KRW4ea4TvYcIZPjEv8ujI+VK4lbLRq8mVZCPpXorPkPCC0Y7O2wFR2kXeMGEVYzz/d6jCLP7VxV5GAOoYKk4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741497238; c=relaxed/simple;
-	bh=s4dWCCcW1SUcdWfAao3aZ2riD6vvtcWPAEIb9+C06P0=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=GeqzGt8JMmRC+NwBmO4za9LnUC1YD5m6/k1F+xWykaMPzNHEZGw9rcxqRpb9JDDVz7z8uAPCylpzH98hD6DLXHCLF8I9R2vwnOacflAmU6UpXMP0LD9ONtqggBjDqjeXXg51ihoBlZIWJmCjtZojQlwEGEL9O2UzFTPcKggkReY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=U4a68J8c; arc=none smtp.client-ip=209.85.128.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1741519290; c=relaxed/simple;
+	bh=D3tYI8iTJ7QZIlhKuN2+ClrGTuzJa2U2KPsn5/wV2js=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=eBFE+hAd9J8H+9KM6Ugvl1OH/+QcVVPXra4uBvscu3zOl3gX/9apqBu8eYHYwawXBI+i5rnGdPg/w+4oLB7J9Yc7vTcViZ4lUn1n+TOyiUfG5d7bAdAld29JfVRHfzzV5uDanAG+2hEEjX/rFJBBFvGkiFFk+pqi1yH04esK/ko=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=antheas.dev; spf=pass smtp.mailfrom=antheas.dev; dkim=pass (1024-bit key) header.d=antheas.dev header.i=@antheas.dev header.b=PrlYaP84; arc=none smtp.client-ip=185.138.42.100
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=antheas.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=antheas.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="U4a68J8c"
-Received: by mail-yw1-f180.google.com with SMTP id 00721157ae682-6fb2a0e4125so21872017b3.1;
-        Sat, 08 Mar 2025 21:13:56 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1741497236; x=1742102036; darn=vger.kernel.org;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=7AMD6B4K+2sdmmck6S5/MfQ988ecaOuF1ddzeVodgi0=;
-        b=U4a68J8capQqRCL3d5iN8oxqov0Lp9rPTbWQ459PFWCup+G1VJGzjH42xsJx/cwiUE
-         AGNchlWovt+MB/tM2BtD4CA9pZZX0GsYtW/aa48qrCIH57/5okj55fPavXVyOM7oDNLN
-         BIJo2PLERd6UTRFeFg5usRdJVN7zwT39AqQkxJoF5HPwYDxjllo48k+HnTNB+OzcQ2sO
-         cIhkdAXqTuq/mHlaj2omr0fS6oe4d9s1TEvGIjKWfbf/wu6RQXHTTroHMO8jcztV8A6J
-         3luDPCPUPOLs/d6SHEOIuJ7K4kkQkmMoQJl9jomo5PUBFDkYWPOzNMd0tvcZTNvsf1IG
-         lOeQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741497236; x=1742102036;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=7AMD6B4K+2sdmmck6S5/MfQ988ecaOuF1ddzeVodgi0=;
-        b=lgtZyQhgDVJuoZkp2iE9yU/FjwkNNLJADdpIgY36e/kzo4cs+GaXyh/pIpmCKYhKHX
-         Tq3cStPzqPJ6hcfiBAOTb9j9nZKfWm370chEQkNR7yy5mBT7f350s9akj9QXcaOg1rVx
-         W1+GfeTmZLmTHK7fx7/ItbODwlWtsX9fMmJQEygTMHMO8wLT6wNO4sdlvKfMACM+IqOy
-         c7+VF9GXkuQc5Ab/u1D0+0CqjF7355qIFF2MfhNGMOtKP+3ywmM4a7xS6ph8tDqpLDzb
-         Tj2JGm3hZHjLeQ94+igWVWZ3PqwwwoUyVP9NIgoJK3ldA9U3MwQDHhqEJ1oP7F7U7szG
-         Vftg==
-X-Forwarded-Encrypted: i=1; AJvYcCUFpSFTh+NdJdvL/zD4Cl8NPuwbjpLgy7owbcggff8aiBggO0QMOInqR/5F1j2pFebfB0H83c+5Mdrp0Lo=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzymOg5zv2X67Zzu25GSDuonYP3OCZ5ML/5oLJLdxv2ZB4aCXSy
-	O5hmUlKpbhC1viG7uI/FuHpr5mmmEESJeRv/bbDLSufgB4lnkN0E
-X-Gm-Gg: ASbGncsO2N9DQG5hi8chaQPXCKEJdl88aavkyKl+4F2+e4ozdEGOGKg1J8L25DQFAm+
-	aokWQtCa89lGYv3UnfPr3ZkFEWTL7jNjlbkz6LSuhYN+QPwvIlfzlkeOg/q9ge5fHWAXdR7owEp
-	Pe2nW4uQYqywrVccN3f0VNoSUg2ftmROQmSWrBZCsFMCf+IN4ghG1in6MLq7cd2FmSXv4mDHYwp
-	Vv1uXnB0Xok5vXxrEH1VOiDIAmGgtsgkwxFoKQcir9qSQf5J86xdPQEPNePquwGyA3UZI9Iv12s
-	3RXL+IJyfB/R28y1Nc6A98xg4vi+qmYbZzzPVmZUQf2PJg==
-X-Google-Smtp-Source: AGHT+IGGJ9meGRfI1w2PfT8lSxiRVjEztsUkAxWNS6zKiL9ZJRgJmfytJgNET5f4eEMonpRR9ItkGg==
-X-Received: by 2002:a05:690c:700d:b0:6f9:97f7:a5c3 with SMTP id 00721157ae682-6febf319c11mr133526167b3.18.1741497235669;
-        Sat, 08 Mar 2025 21:13:55 -0800 (PST)
-Received: from [192.168.100.70] ([2800:bf0:82:3d2:9e61:1a62:1a8c:3e62])
-        by smtp.gmail.com with ESMTPSA id 00721157ae682-6feb2a1bfc5sm15232747b3.24.2025.03.08.21.13.53
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 08 Mar 2025 21:13:54 -0800 (PST)
-From: Kurt Borja <kuurtb@gmail.com>
-Date: Sun, 09 Mar 2025 00:13:41 -0500
-Subject: [PATCH RFC v2 2/2] platform/x86: alienware-wmi-wmax: Check for
- AWCC support using _UID
+	dkim=pass (1024-bit key) header.d=antheas.dev header.i=@antheas.dev header.b="PrlYaP84"
+Received: from localhost.localdomain (unknown [IPv6:2a05:f6c2:511b:0:8d8a:5967:d692:ea4e])
+	by linux1587.grserver.gr (Postfix) with ESMTPSA id 917972E037CC;
+	Sun,  9 Mar 2025 13:21:16 +0200 (EET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=antheas.dev;
+	s=default; t=1741519278;
+	bh=w3CdKrkESq2tKARZR2k9fTv2YfnbpHvzaojVRo6xY4o=; h=From:To:Subject;
+	b=PrlYaP849T8sA/19KRFS4qOb2ocBEyujLhtlFvgAECkj6400RHpoxQjM72ukJzDDC
+	 FiiHqZ/SkXghZgVmAqOuJZICRlEh1T/+c2dn9e1e2rxjDLf1EWr+YbuVwHjNrFKk7W
+	 hbXi/r3JQR02UnmsGXfoQiZgbIiW8pm7Ir8DD8hM=
+Authentication-Results: linux1587.grserver.gr;
+	spf=pass (sender IP is 2a05:f6c2:511b:0:8d8a:5967:d692:ea4e) smtp.mailfrom=lkml@antheas.dev smtp.helo=localhost.localdomain
+Received-SPF: pass (linux1587.grserver.gr: connection is authenticated)
+From: Antheas Kapenekakis <lkml@antheas.dev>
+To: platform-driver-x86@vger.kernel.org
+Cc: linux-hwmon@vger.kernel.org,
+	linux-doc@vger.kernel.org,
+	linux-pm@vger.kernel.org,
+	Guenter Roeck <linux@roeck-us.net>,
+	Jean Delvare <jdelvare@suse.com>,
+	Jonathan Corbet <corbet@lwn.net>,
+	Joaquin Ignacio Aramendia <samsagax@gmail.com>,
+	Derek J Clark <derekjohn.clark@gmail.com>,
+	Kevin Greenberg <kdgreenberg234@protonmail.com>,
+	Joshua Tam <csinaction@pm.me>,
+	Parth Menon <parthasarathymenon@gmail.com>,
+	Eileen <eileen@one-netbook.com>,
+	Antheas Kapenekakis <lkml@antheas.dev>
+Subject: [PATCH v3 00/12] hwmon: (oxpsensors) Add devices, features,
+ fix ABI and move to platform/x86
+Date: Sun,  9 Mar 2025 12:21:01 +0100
+Message-ID: <20250309112114.1177361-1-lkml@antheas.dev>
+X-Mailer: git-send-email 2.48.1
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250309-awcc-uid-v2-2-5338c6380b2f@gmail.com>
-References: <20250309-awcc-uid-v2-0-5338c6380b2f@gmail.com>
-In-Reply-To: <20250309-awcc-uid-v2-0-5338c6380b2f@gmail.com>
-To: Armin Wolf <W_Armin@gmx.de>, Hans de Goede <hdegoede@redhat.com>, 
- =?utf-8?q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, 
- Dell.Client.Kernel@dell.com, Kurt Borja <kuurtb@gmail.com>
-X-Mailer: b4 0.14.2
+Content-Transfer-Encoding: 8bit
+X-PPP-Message-ID: 
+ <174151927785.28547.2924708597399637820@linux1587.grserver.gr>
+X-PPP-Vhost: antheas.dev
+X-Virus-Scanned: clamav-milter 0.103.11 at linux1587.grserver.gr
+X-Virus-Status: Clean
 
-The WMAX _UID of all devices that support the AWCC interface is "AWCC".
-This includes the following devices which were manually verified by
-reading their ACPI tables:
+This four part series updates the oxpsensors module to bring it in line
+with its Windows OneXPlayer counterpart. First, it adds support for all
+2024, 2025 OneXPlayer handhelds and their special variants. Then, it moves
+the module to platform/x86 to allow for including more EC features.
 
-  - Dell G16 7630
-  - Dell G5 5505 SE
-  - Alienware m16 R1
-  - Alienware m17 R5 AMD
-  - Alienware x15 R2
-  - Alienware 17 R5
-  - Alienware Aurora R12
-  - Alienware Aurora Ryzen Edition
+Then, it adds the new charge limiting and bypass features that were first
+introduced in the X1 and retrofit to older OneXFly variants and for
+controlling the turbo led found in the X1 models. For Bypass, it adds a new
+charge_behaviour variant called inhibit-charge-s0.
 
-And possibly many more, if not all devices with this interface.
+Finally, it performs a minor refactor by moving around switch statements
+into their own functions, in order to allow for fixing the pwm1_enable ABI
+in the final patch. Currently, pwm1_enable sets the fan to auto with the
+value 0 and allows manual control with the value 1. This patch makes it
+so 0 sets the fan to full speed, 1 sets the fan to manual control, and
+2 sets the fan to auto. This requires both setting enable and the fan
+speed when the enable sysfs is written to as 0, hence the refactor.
 
-Add a check for "AWCC" _UID in wmax_wmi_probe() as a last resort test
-for support.
+As this is a minor ABI break and there is userspace software relying
+on this previous behavior, the last patch also changes the /name of the
+hwmon endpoint to "oxp_ec" from "oxpec" (mirroring WMI module conventions)
+such that userspace software that relied on the previous behavior can be
+retrofit to the new kernel while enabling correct functionality on old
+and new kernels. Failing that, software that is not updated will just
+stop controlling the fans, ensuring no malignant behavior.
 
-Signed-off-by: Kurt Borja <kuurtb@gmail.com>
----
- drivers/platform/x86/dell/alienware-wmi-wmax.c | 15 +++++++++------
- 1 file changed, 9 insertions(+), 6 deletions(-)
+Changes since V2:
+    - Add ack by Guenter, move platform move patch to be third (not first
+      to allow for device support backport to lts kernels)
+    - Rework patch text, especially in the refactor patches as per Derek
+    - Change bypass to use charge_behaviour instead of charge_type, as that
+      ABI supports capability detection and is more appropriate
+    - Move battery attach to probe instead of init
+    - Fix bug where reading tt_led would instead use the turbo register
 
-diff --git a/drivers/platform/x86/dell/alienware-wmi-wmax.c b/drivers/platform/x86/dell/alienware-wmi-wmax.c
-index 46d11b200820cdbaa841fc97e33b339fca42104e..1a81373a9d5937b4ff5511ad2061b6dc6e40b810 100644
---- a/drivers/platform/x86/dell/alienware-wmi-wmax.c
-+++ b/drivers/platform/x86/dell/alienware-wmi-wmax.c
-@@ -1420,14 +1420,17 @@ static int wmax_wmi_probe(struct wmi_device *wdev, const void *context)
- 			.upd_brightness = wmax_wmi_update_brightness,
- 		},
- 	};
--	int ret;
-+	char *uid;
- 
--	if (awcc)
--		ret = alienware_awcc_setup(wdev);
--	else
--		ret = alienware_alienfx_setup(&pdata);
-+	if (!awcc) {
-+		uid = wmidev_get_acpi_device_uid(wdev);
-+		if (!uid || strncmp(uid, "AWCC", 4))
-+			return alienware_alienfx_setup(&pdata);
- 
--	return ret;
-+		awcc = &generic_quirks;
-+	}
-+
-+	return alienware_awcc_setup(wdev);
- }
- 
- static int wmax_wmi_suspend(struct device *dev)
+Changes since V1:
+    - Add X1 Pro, F1 Pro variants
+    - Fix minor typo in initial patches
+    - Convert oxp-sensors into a platform driver, as it is no longer
+      considered a hwmon driver.
+    - Add sysfs documentation and myself to the MAINTAINERS file
+    - Update documentation to state that this is the OneXPlayer/AOKZOE
+      platform driver, and that support for Ayaneo/OPI is provided until
+      they gain their own platform driver.
+
+Antheas Kapenekakis (12):
+  hwmon: (oxp-sensors) Distinguish the X1 variants
+  hwmon: (oxp-sensors) Add all OneXFly variants
+  platform/x86: oxpec: Move hwmon/oxp-sensors to platform/x86
+  ABI: testing: add tt_toggle and tt_led entries
+  power: supply: add inhibit-charge-s0 to charge_behaviour
+  platform/x86: oxpec: Add charge threshold and behaviour to OneXPlayer
+  platform/x86: oxpec: Rename ec group to tt_toggle
+  platform/x86: oxpec: Add turbo led support to X1 devices
+  platform/x86: oxpec: Move pwm_enable read to its own function
+  platform/x86: oxpec: Move pwm value read/write to separate functions
+  platform/x86: oxpec: Move fan speed read to separate function
+  platform/x86: oxpec: Adhere to sysfs-class-hwmon and enable pwm on 2
+
+ Documentation/ABI/testing/sysfs-class-power   |  11 +-
+ Documentation/ABI/testing/sysfs-platform-oxp  |  29 +
+ Documentation/hwmon/index.rst                 |   2 +-
+ Documentation/hwmon/oxp-sensors.rst           |  89 ---
+ Documentation/hwmon/oxpec.rst                 |  67 ++
+ MAINTAINERS                                   |   7 +-
+ drivers/hwmon/Kconfig                         |  11 -
+ drivers/hwmon/Makefile                        |   1 -
+ drivers/platform/x86/Kconfig                  |  11 +
+ drivers/platform/x86/Makefile                 |   3 +
+ .../oxp-sensors.c => platform/x86/oxpec.c}    | 675 ++++++++++++++----
+ drivers/power/supply/power_supply_sysfs.c     |   1 +
+ drivers/power/supply/test_power.c             |   1 +
+ include/linux/power_supply.h                  |   1 +
+ 14 files changed, 664 insertions(+), 245 deletions(-)
+ create mode 100644 Documentation/ABI/testing/sysfs-platform-oxp
+ delete mode 100644 Documentation/hwmon/oxp-sensors.rst
+ create mode 100644 Documentation/hwmon/oxpec.rst
+ rename drivers/{hwmon/oxp-sensors.c => platform/x86/oxpec.c} (51%)
 
 -- 
 2.48.1
