@@ -1,66 +1,65 @@
-Received: from mail-yb1-f177.google.com (mail-yb1-f177.google.com [209.85.219.177])
+Received: from mail-yw1-f173.google.com (mail-yw1-f173.google.com [209.85.128.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 50081204C0E;
-	Sat,  8 Mar 2025 22:05:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 78C94347B4;
+	Sun,  9 Mar 2025 05:13:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741471545; cv=none; b=cPv/BJnIFPyCWdYciL3Ur4mhFFV/s1zyoUKnWHraqVssOus+49C582A28FUNN9p138AOfqrkqSGW04DQxmDn5Kn/fyTlTBJOlhyMWgbJ0wtxI/p/CTa266l6czPFS9ceaGjVx9Q6jOuLbxblvlOniyb8BdIirQBySABkdEcMG8U=
+	t=1741497234; cv=none; b=rAYlKpBQJnIsSqI676E8PiB6JtvbfgYdMMZ7A8ZdtW0usRJTXpeP2wbjzWaywyzNlkHqchoxIQXLvO2LbkFfDjp1AuLqfARuig/rTYHgNgWKU5N2nJ3mCAGvuQ3aaMvuzmQJiNdW3ouwhFxEIIeLN9eaug75RYooEOfWrAQ5ULI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741471545; c=relaxed/simple;
-	bh=91KDpFnobQlqpXIUPvBSTVqo5BspmzSEeNNLTweH/yw=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=WmhsgoDwVU8gtR7kWOMI2YeWd9mKLeco2/p1x4eH4OSIBz778TCe6R5GwFrE/MVPoJnQmwMfsFsIQAmrBCczRZ10bNglQ9pZBEIkMdtEOYnMXnWtPwX3hmDWgO3tOVVGpEHtoiwr7qXG1Jz/QOBddN0MLRc3fDNQgLOifEsJBCc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=gX1oKnki; arc=none smtp.client-ip=209.85.219.177
+	s=arc-20240116; t=1741497234; c=relaxed/simple;
+	bh=P+vZtA3HhV5tsZzaez4Fwli02DW+nObRXpoeW+8tkBM=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=LCtOtfEPKwzEgQnMVadXWS05mBIeOUU4EZpqR+Nmc5XGVb/mS1690bplOJ3H4tTnLRBtidge1siYRPkGPNc49P4totpsxno3fzUsOm4jW4bnJfIS8+sUnZUOVwq1GITMnFkDizq7dkzhhh+GjCNc+H7XjEGsu1HLs0k5Ke4P6VM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Ebt6D/eF; arc=none smtp.client-ip=209.85.128.173
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gX1oKnki"
-Received: by mail-yb1-f177.google.com with SMTP id 3f1490d57ef6-e549be93d5eso2676988276.1;
-        Sat, 08 Mar 2025 14:05:43 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ebt6D/eF"
+Received: by mail-yw1-f173.google.com with SMTP id 00721157ae682-6f47ed1f40dso24222127b3.1;
+        Sat, 08 Mar 2025 21:13:52 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1741471542; x=1742076342; darn=vger.kernel.org;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=fe5HwiRfeSGS1igHNPHt1KQo9bVNCbcmOjjly6dFFsc=;
-        b=gX1oKnkixB6Cb4nm9wdyN9LxdwwqL+bRDfI3DNu5P98lJhw9NKo7gJM8Blk7jAImzP
-         OKQ14f5HHoUjVKzk/935sa/fpIQCXeaNFGTTj5ua9z4EdpNw14AjnygGNhiOfaRQb7Sn
-         KEImqP9wgLQPaSpmL1zbcKW8uVz3sSkJgmhhD10U4PdBTljt/wzWzgPjKa41FkTkUz1R
-         ZOxQWuEbn0wOBhUxCFFjmtpiPXGcTiCn4dSpgd6MtD5G46RXQha2I5lkKQB3ehD3JgLU
-         CaCjdE6kRNZYPBvIiX4CfrrPxPdsbMyyjOSXI4BGP/o1v0iUKg/Nt7FaOUSU1Bc/3Xdz
-         Suxg==
+        d=gmail.com; s=20230601; t=1741497231; x=1742102031; darn=vger.kernel.org;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=CK1cxf14FFn9JPBzBDVf0xP/aDOa6U25KDBn97pLSso=;
+        b=Ebt6D/eF2PhmAF+/jntqnEdPf81Qx0rwatDjnH/qGWHOnHy/fKHIoxv5kWw48ffCdu
+         25u7o7ytiua/EDeTr7yqRLl0eu80059Ve7wK6z8galBnsLyR5M7EZhynHKa+/9u7kSU/
+         3MbIOXNoARuhOjuThgbhmsyRSZuHceBtHaqkgmCtLlIjLi4kvUCt6bGUkYpgafb9YpfL
+         6KkJm1UiX1c0p/B7yvl0xr484q9DNMG2ecSv23tP6mxQy1hGwUQXCo5Rpf+GONhotA1V
+         pKMsLw+6lfXftc2Hu59QRie+hGFCA0SzLuTaNWZQu4akgs5Q5kHl4xro6m7bufO1O6UC
+         YjeA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741471542; x=1742076342;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=fe5HwiRfeSGS1igHNPHt1KQo9bVNCbcmOjjly6dFFsc=;
-        b=PfVxNdnPEGByEGAKkH6BwbR72A44rtwQN7Yn4miq1ZpVpXOh99XxYLUY/a2EFH+Z2q
-         L+RHWj9djsteDLiadgmwoBlqV+LiLomapvctsGuBrIzgUWi3l6GfcSci4Ije801Zzlwv
-         agMV69HsWuFIuMqqR/UhSCq6jx43/anYGBTydqpQhIjd31YGNaY8wRpKOzkh8ViKP8MR
-         D4IPOuti6c5oWk+GpChVWNcdH8eK+7rJ+Y0ZDh8H/SgwZy7B9eeIXXxl1kok9JOIOALS
-         3YLnpc4whVjKSW05Y0aHFmvb+kKXFsLOiyuBG17FTMgoGWpVOsn9VBZNY2td2vq2TXV3
-         dHAw==
-X-Forwarded-Encrypted: i=1; AJvYcCW1NKAeSvEBrXUA1JvsLxT0faBsQklSuBHfquKmi9dhKKYgVUieFh2/GwlTxsr396b/yKffFHu6vgB5jO4=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxVogk/1Oh/ktkosLQSoaAQGbzX5xyfFqJyMhegNRhR7yulX89j
-	bTkAB44BuVufPcnp3+eFxDa7ROcZzJL1GQ3c9pvERPfVOVcoC+b8IHojHJVO
-X-Gm-Gg: ASbGncsKeKyXuF6aD94ua2JmtTqlobSzB+63GaoRTzh1o1DMvT5AgMicLZlp0z+bn+C
-	LsSeMVKHz3GB7vrzxG0GWHwtI9sD0jTcsH3iE8rxwAyKsoB/1am60bA4lZsVKnoyQvLzvzbG0gH
-	D2dVwEeFAHrlIA/qXEfvgbjP0kcu47AA1cA+mKdiBKjJkfkL6ugLZ6bb0iAEeqcsoGeQAVX1SOG
-	0e/ifOK8AhBAZjfY5ZCUvwwuXGTYqarO/x0nW+bIF+U7rZ+b2zapN/mxDLPUcXWoo/95O4lBAE1
-	+jUoZ7Og67ok5FJ4wtL0KfjnE9gtfmMBylwq82uMHbdBMw==
-X-Google-Smtp-Source: AGHT+IEhBa/6/Dctzsb/SCt1oQzGs2l4fal8a6FwOUTsEF6X+R/4eH3+flf9JSVAFlwuOQj8tpHRCw==
-X-Received: by 2002:a05:6902:2291:b0:e5b:12b4:d67 with SMTP id 3f1490d57ef6-e635c136520mr11040934276.11.1741471542147;
-        Sat, 08 Mar 2025 14:05:42 -0800 (PST)
+        d=1e100.net; s=20230601; t=1741497231; x=1742102031;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=CK1cxf14FFn9JPBzBDVf0xP/aDOa6U25KDBn97pLSso=;
+        b=C3bYZSRnKQ/jkd6hQ1cO84k6tUQQr06Kw6y9N3HOyOrZdoqAndF9e1C21FRmwP7xEw
+         OjXE+APxWyCIdK4vaL5ZbDL0c+q4zYaoO1UvWcsHwVWxIOWQtmCk5U2ZmIZ6VZ4VarQx
+         BP67u5Wejm85VAbCcr5AkcuQUni4VabD4qunHbz0wdidum6Yo7Pntm+LtmE++5SQbH0f
+         wR5DHaR9HVqewYQ95QZ/y29E9Dzh10Dp+Nk3MsPqyexUN+rOI4eILvDsBfb8ef33aVmO
+         fN6uO5RythXIuo+ffDOBGvbyH+eTjWXY8f/UI7Hj81QdUpusmSpMBM6ipi3rpjNbrvSm
+         Kkmg==
+X-Forwarded-Encrypted: i=1; AJvYcCXAQlh9djUxyiTVV4AoIWvbAgV6hwv+hhl3lemUKntippX94rh0xNCleTEvc25+RIPpD/xEjAf2YCTvyAQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyOB98NorTsBU4zXZnSpbHBX+TWbOyM3+SPhG87diLMNJFQRkNq
+	doUKW/lXIZCa1Fha0PitPRaPVwGoQVsZ3QizajLOboqCPHYP+Rrs
+X-Gm-Gg: ASbGncvvcCA2QR1wLxFtZEmQ6N+MFUWi8XvKtz2lKuHNubSEGlA0gP322fTffUGZc9J
+	8OTjTMU11Wb9GIC0lLWOMLskBLM7nLpdnWyu0JMtAB0RInphTM3ANwawTzmf/0y7qYyrPul3Wcg
+	EAQX+cRb2mOPKaYkhleHfL7oiyLV4zZwUvxeit5AB0Q8rQcazHpCKCyBJys1cFQFyli63zeqpzA
+	mm4VyJt56mzLjQ6b4twe3PX7Au9cxnVl4vib4GR4jQxGRCHfqe5o/orUTF7VqLWW0+BaQVGb3h/
+	NZs+mkZBw9kvnpJK99B4TBGWNKGHv1/JB3R4OH47RCtSGQ==
+X-Google-Smtp-Source: AGHT+IFchlBvxUpvbNSRW7QGcdcS/9kltouLO1RXp76mD1YDjdyaSWUTZtC+t7/W80lWexuKkq9lTg==
+X-Received: by 2002:a05:690c:7207:b0:6f6:d405:7010 with SMTP id 00721157ae682-6febf39bb73mr126654507b3.29.1741497231247;
+        Sat, 08 Mar 2025 21:13:51 -0800 (PST)
 Received: from [192.168.100.70] ([2800:bf0:82:3d2:9e61:1a62:1a8c:3e62])
-        by smtp.gmail.com with ESMTPSA id 3f1490d57ef6-e634b8e8ef6sm1524824276.36.2025.03.08.14.05.40
+        by smtp.gmail.com with ESMTPSA id 00721157ae682-6feb2a1bfc5sm15232747b3.24.2025.03.08.21.13.48
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 08 Mar 2025 14:05:41 -0800 (PST)
+        Sat, 08 Mar 2025 21:13:50 -0800 (PST)
 From: Kurt Borja <kuurtb@gmail.com>
-Date: Sat, 08 Mar 2025 17:05:29 -0500
-Subject: [PATCH RFC 2/2] platform/x86: alienware-wmi-wmax: Check for AWCC
- support using _UID
+Subject: [PATCH RFC v2 0/2] platform/x86: alienware-wmi-wmax: Extend
+ support to many devices
+Date: Sun, 09 Mar 2025 00:13:39 -0500
+Message-Id: <20250309-awcc-uid-v2-0-5338c6380b2f@gmail.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -69,53 +68,81 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250308-awcc-uid-v1-2-6360892d8b95@gmail.com>
-References: <20250308-awcc-uid-v1-0-6360892d8b95@gmail.com>
-In-Reply-To: <20250308-awcc-uid-v1-0-6360892d8b95@gmail.com>
+X-B4-Tracking: v=1; b=H4sIAIMjzWcC/2WPy07DMBBFfyXyGqOJE7+yQkLiA9iiLvwYNyM1D
+ dhpCqry75gUsWF5Z0bnzL2xgpmwsKG5sYwrFZrPNYiHhoXRnY/IKdbMBAgJHRjuriHwC0WuMID
+ yXkgtIqvn7xkTfe6oN/b68swO92HGj0vFLr+bP2qV3JmSj9eJJ+2jbS0IL/Ww9j9E7wryME8TL
+ UODUqPzKJKHvrcSUKUUE0JroDM1912sD3m9a0cqy5y/9lZru3v/F1hbDlx1CowV0Xgrn46To9N
+ jNbLDtm3fbRky7BwBAAA=
+X-Change-ID: 20250308-awcc-uid-6ec06bb2572d
 To: Armin Wolf <W_Armin@gmx.de>, Hans de Goede <hdegoede@redhat.com>, 
  =?utf-8?q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
 Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, 
  Dell.Client.Kernel@dell.com, Kurt Borja <kuurtb@gmail.com>
 X-Mailer: b4 0.14.2
 
-The WMAX _UID of all devices that support the AWCC is "AWCC". This
-includes the following devices which were manually by reading their ACPI
-tables:
+Hi all,
 
-  - Dell G16 7630
-  - Dell G5 5505 SE
-  - Alienware m16 R1
-  - Alienware m17 R5 AMD
-  - Alienware x15 R2
-  - Alienware 17 R5
-  - Alienware Aurora R12
-  - Alienware Aurora Ryzen Edition
+After a few months of searching for acpidumps of elegible laptops, I
+came to the conclusion that if I continue this way, many devices will
+never get support for this interface. This is due to very few users
+uploading acpidumps of their machines or contacting me of that matter.
 
-And possibly many more, if not all devices with this interface.
+With this patchset, hopefully all (or almost all) elegible devices will
+get support.
 
-Add a check for "AWCC" _UID in wmax_wmi_probe() as a last resort test
-for support.
+I'm submitting this as an RFC because I'm extending the WMI API and also
+extending support to many unknown laptops models.
+
+This depends on
+
+	platform/x86: alienware-wmi-wmax: HWMON support + DebugFS + Improvements 
+
+series, because I made a few generalizations there that work even for
+Alienware desktops.
+
+I sent a v2 right away because I made some silly mistakes. Sorry for the
+noise.
 
 Signed-off-by: Kurt Borja <kuurtb@gmail.com>
 ---
- drivers/platform/x86/dell/alienware-wmi-wmax.c | 3 +++
- 1 file changed, 3 insertions(+)
+Changes in v2:
 
-diff --git a/drivers/platform/x86/dell/alienware-wmi-wmax.c b/drivers/platform/x86/dell/alienware-wmi-wmax.c
-index 46d11b200820cdbaa841fc97e33b339fca42104e..529041f419165aa896a5ce49f889e29901d5b80e 100644
---- a/drivers/platform/x86/dell/alienware-wmi-wmax.c
-+++ b/drivers/platform/x86/dell/alienware-wmi-wmax.c
-@@ -1422,6 +1422,9 @@ static int wmax_wmi_probe(struct wmi_device *wdev, const void *context)
- 	};
- 	int ret;
- 
-+	if (!awcc && !strncmp(wmidev_get_acpi_device_uid(wdev), "AWCC", 4))
-+		awcc = &generic_quirks;
-+
- 	if (awcc)
- 		ret = alienware_awcc_setup(wdev);
- 	else
+[1/2]
+  - Add kernel-doc to wmidev_get_acpi_device_uid()
 
+[2/2]
+  - Reworked logic a bit to include a check for !uid before calling
+    strncmp()
+
+Link to v1: https://lore.kernel.org/r/20250308-awcc-uid-v1-0-6360892d8b95@gmail.com
+
+---
+Kurt Borja (2):
+      platform/x86: wmi: Add wmidev_get_acpi_device_uid()
+      platform/x86: alienware-wmi-wmax: Check for AWCC support using _UID
+
+ drivers/platform/x86/dell/alienware-wmi-wmax.c | 15 +++++++++------
+ drivers/platform/x86/wmi.c                     | 20 +++++++++++++++++---
+ include/linux/wmi.h                            |  2 ++
+ 3 files changed, 28 insertions(+), 9 deletions(-)
+---
+base-commit: e57eabe2fb044950e6ffdfe01803895043dec0b7
+change-id: 20250308-awcc-uid-6ec06bb2572d
+prerequisite-change-id: 20250305-hwm-f7bd91902b57:v4
+prerequisite-patch-id: 06ff44ce0c6f9bce77eb61a08f358240f1485914
+prerequisite-patch-id: d270ae9f1f681a6b6b9685cc13802e8baba0105f
+prerequisite-patch-id: 5f744ce03af74a23560118b761ac6529a7c9b172
+prerequisite-patch-id: 22c6c5256aee2c17bcd710ec1493b1abccd414cf
+prerequisite-patch-id: 75191e2094746de3c12fdd885885d18b2239af89
+prerequisite-patch-id: 9f26a3b64824b4f175bbea47c8c9a59fd67f3316
+prerequisite-patch-id: 4ff2263e236230e1f96703265d135f0b90390ebd
+prerequisite-patch-id: b8844283f8bb46c05ba2e9d7b901bdedfd941731
+prerequisite-patch-id: c5122bcce8e7330cdbb18c5d43e321ce69116272
+prerequisite-patch-id: ed78dcf947e19652f175d124ade13c08eb3950cc
+prerequisite-patch-id: d46a626481e1c49bdd91f6add36f4d6b89edde3e
+prerequisite-patch-id: e68a77ec73be34006d5dd754592285e44ffc7f68
+
+Best regards,
 -- 
-2.48.1
+ ~ Kurt
 
