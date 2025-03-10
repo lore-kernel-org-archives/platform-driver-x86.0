@@ -1,122 +1,133 @@
-Received: from mail-wm1-f51.google.com (mail-wm1-f51.google.com [209.85.128.51])
+Received: from mail-vk1-f180.google.com (mail-vk1-f180.google.com [209.85.221.180])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E328022D4D4
-	for <platform-driver-x86@vger.kernel.org>; Mon, 10 Mar 2025 14:52:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A1F8622A4EF;
+	Mon, 10 Mar 2025 14:58:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741618330; cv=none; b=qqGyGyZfsDSap6+7GJj1vKr/Yak+3KF5RV5+RMLFlVgY8LAiwhiI9+u5rmkla52wvB/P2zxN/2uOSTfmFunqbeC3qynntymZJUASM5FKo6fKOhH5DO0rNWYJjzwspfOG+VEYRHsk8rJn3sEHJRHR1ddpSlmXcRyZWPqpfkmyEhQ=
+	t=1741618683; cv=none; b=bH5dmlWzJ6c7pnDQeaZvTkc8DLXYaU8A6sk+ai47fjeBym0bHueGn71UuwDT7vdzP051kS6rEkwmy3639Ibdp9+EocIUYw+XlcnZQ1SQYhxw2rBSKwXEPL4u5gcnIFWELNewbmZ7zT5bLxdc1SXgy+QLXDWZqCnGuxnhXECPBWs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741618330; c=relaxed/simple;
-	bh=La8fa582+cudZWU7EBZb+kiU11zXIyrob0PJV2PXjfg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=bZ6Rt04nlaGxwV2HoSNcm/0/zEOM7EJ2lrTvDcSqKDCU5BNvEAHYuQ/44Ym1BPdtkhOaFavt+S70cVucHkboz20n4MnsmcubAG3bNZZuYaqQVNmThQR5529tdr0VP1cHNa1cn1pyAYmorKVRyL9LD6nzm1X3flwIezfDWzLARs0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=KFd9FhJa; arc=none smtp.client-ip=209.85.128.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1741618683; c=relaxed/simple;
+	bh=nKeMJqcXOybsOCtgidoWKKriWWEU+V6EOHzym+y4Rww=;
+	h=Mime-Version:Content-Type:Date:Message-Id:Cc:Subject:From:To:
+	 References:In-Reply-To; b=DI5NRNNiSyI5apSHMrY/SRGypHvlx01noBVhKU6HFxvX8Tyd03jqeXaE1tEInuYQKAhCCdIBW/G73IzHiSmWO/ycT06Ddzvjst1JPQsr5WhfSqVwzKFtu0IwvhBQN9NXAYbEOmTZNEx51xLOikoPSjT6io4P/cXNV7wel1qsBaY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=j0zYmuTP; arc=none smtp.client-ip=209.85.221.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="KFd9FhJa"
-Received: by mail-wm1-f51.google.com with SMTP id 5b1f17b1804b1-4393dc02b78so25444435e9.3
-        for <platform-driver-x86@vger.kernel.org>; Mon, 10 Mar 2025 07:52:08 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="j0zYmuTP"
+Received: by mail-vk1-f180.google.com with SMTP id 71dfb90a1353d-523eb86b31aso1118864e0c.0;
+        Mon, 10 Mar 2025 07:58:01 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1741618327; x=1742223127; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=oJhmOti6S9aSxHFcfgWlRYy87Ur6fs4aWozpDuFk45g=;
-        b=KFd9FhJapk9LSPrTSWPYVYrj9OPaxtDOWFbamAr2nAK3v58lTN7B1G/K5ZL/s6+++r
-         Ej66R0z7uvendhA6TlVMinoHfN91/7IQfe36jmXtlxy62nz44IqciyX6wdOLXT0dIOkj
-         59kDKpM7uYwhvFNKmFd/4qv8kevkUtZq1xhGXaNMZYvmvyIUHd6mBTJYdkyBo//EDdEX
-         7dS41EdawFpgPDo7Av8GqU1gbK2iqC+O6YjxlXVpZDkUP1SBBZ94U+beNZx9e5ngdl3T
-         R4PA32rtAdERI02fVx4CEnQYQr+qhb5QgFIwheqvM/c1Sek1g0esxv+hXFD6Aal95DQS
-         9hmg==
+        d=gmail.com; s=20230601; t=1741618680; x=1742223480; darn=vger.kernel.org;
+        h=in-reply-to:references:to:from:subject:cc:message-id:date
+         :content-transfer-encoding:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=xrdG1fpL5CikYynfNpId4ukhi3X0kK30B2xjj7IytkY=;
+        b=j0zYmuTPA7YB/7EwdNN8EXYtfOGUCAhBvk6VPeI5+43BmyZKhiO53U96xS34hQwPcP
+         KqkDJ5PifJSUvAIn3TGlsG5wljKwhXRXTe+Oj16FKqaY1OG3q0jkBKGxRxTV5COY9soq
+         FhwkQSousFprxy7uMyTqG0RY7Con0PCac/r8cLy3zXcDl/zhG5paSaFgf6Dn6zlIsaPv
+         bPjrju4M+fp3UCvzawkF4HdJN34sc/JGxcPttugw8r6a9Au2xtHqmy+75sZPFl+EixCs
+         1mv+f0UcOlUILtPWZsXHjFPFk9LaLuv71YUP9JsFyRcv+7S/QSyXbJwrKiMzOTvXMShK
+         Xr1g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741618327; x=1742223127;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=oJhmOti6S9aSxHFcfgWlRYy87Ur6fs4aWozpDuFk45g=;
-        b=LrYakS5SUBBnfSx9Rnq907Ew7jEL81NDheMV6TZauJXIBZdtTnvl/IeZzDhOPTZA3y
-         z9L1zTtMCgl6FXZLKhHRSK54yw3Eox29k9dnmJjU9lW6B98RlanqgpzAKOA53wCtRzr+
-         WNmJjE7xK+BRYpxErknjxJHCQa/dKuxNeiBC0RPOkf/wAifbG/qvLtToCo0tkFKM/IDT
-         TYl5gdIp9TKvEBQodR4gGGjHboyriSJQpOEHV8+fzTHRKo/Ojvkt4Hr+1F/niLcGDZyW
-         99hob7CZzcZqymx1JWHeuOmBfWtRHxnn/zuLviT9+zsF8KaAFnDYx7q4d89vGfPunfVp
-         qowg==
-X-Forwarded-Encrypted: i=1; AJvYcCWroS9LNrhg3RisaU4tZEOmpwYps4M8J/Zftat1wuDFxmbeL3JFcwQLQIWhJVBn3MTUGTAwiT3OTdGdmPX7feFNNUu8@vger.kernel.org
-X-Gm-Message-State: AOJu0YxakRKx7P7meKeUp3BgJcHzdC2Od6BVy9JzXvcfC72WsQWfS3r2
-	YpNZ6PMVVbFgpQqlGFKEFvLe+vqJIgoWbVZJ42lhrpHVnvy4UqBTwOTRSqwV/4w=
-X-Gm-Gg: ASbGncueFj9y4CRPiA9Fbw5osEvfl0TwSxUL7TIosqQQUMc/mf06LPQssDnZoHY56ns
-	ILADlubp3QxvxrFlYCYL2wBSZQHaiyOfzk/1TXDQjWNnolK4uLmum8Fwu490TIT0ijWpLB2UiEB
-	Jb20AQ1muhAYzM0ViCWSoAqrwkpbcXtdb2FT6+tCZHyTEF2PikgH6IKvn1cDJGJl528caD32gKm
-	rKgkeqgx/c08mHLknc3ZYMIy/AGqL8Oqf0h4jveK0VWuJEX3T1zWLFe3TFa2tO+KMxXS1f7PKfS
-	Rjg54TkQCGuM80GJObpviR8QI3/KpX+9SyQvNlH4P+DnTSfdiw==
-X-Google-Smtp-Source: AGHT+IEWXxlykPP+DK6XBhySTuz9TVLUo/1Ocj0YrcVL3sXXqxgbc5YK7TpnRor10s4o+P6MhNGnfg==
-X-Received: by 2002:a05:600c:1c2a:b0:43b:c95f:fd9 with SMTP id 5b1f17b1804b1-43c5a5e9074mr106986775e9.5.1741618327226;
-        Mon, 10 Mar 2025 07:52:07 -0700 (PDT)
-Received: from localhost ([196.207.164.177])
-        by smtp.gmail.com with UTF8SMTPSA id 5b1f17b1804b1-43cef25f075sm63882915e9.28.2025.03.10.07.52.06
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 10 Mar 2025 07:52:06 -0700 (PDT)
-Date: Mon, 10 Mar 2025 17:52:03 +0300
-From: Dan Carpenter <dan.carpenter@linaro.org>
-To: Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Cc: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>,
-	Hans de Goede <hdegoede@redhat.com>,
-	Patil Rajesh Reddy <Patil.Reddy@amd.com>,
-	Mario Limonciello <mario.limonciello@amd.com>,
-	platform-driver-x86@vger.kernel.org,
-	LKML <linux-kernel@vger.kernel.org>,
-	kernel-janitors@vger.kernel.org
-Subject: Re: [PATCH] platform/x86/amd/pmf: fix cleanup in
- amd_pmf_init_smart_pc()
-Message-ID: <4a14c0a5-d6f8-4df9-b947-a0d3c3ef02b3@stanley.mountain>
-References: <43ad5358-f5b2-4cfc-85b4-e7ab8c7cf329@stanley.mountain>
- <32c6c456-94f0-f077-040c-09f67d60953a@linux.intel.com>
+        d=1e100.net; s=20230601; t=1741618680; x=1742223480;
+        h=in-reply-to:references:to:from:subject:cc:message-id:date
+         :content-transfer-encoding:mime-version:x-gm-message-state:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=xrdG1fpL5CikYynfNpId4ukhi3X0kK30B2xjj7IytkY=;
+        b=CEJwLfTQE7iHJJTTL4gWWZ9YEWt6bgRNgbCDlwnRYKm9xpmwXeTEf+O8eLI6i/iiYK
+         yvKfX0L5cXtpysvW01H8RNXhiF3uf5SxMs7n+ToTLNTtK81ccD1wAwtogkQgzxW4LmQV
+         hE3M/DkKcsu6syGE6D/h71Xrg1CZSiYoLSytEbubB6Aic6Nnem2zhhU101m8N8HyBNkY
+         5XISmhO6xk2upxcXJqfkbhGo0rb1THtkbDMeoIHW7MfC6PigCjmeGg0eKe8nJ1Xr08d6
+         UUNw96S+SroP2YJTVVklxrO7oXmJBgA/H6DdNkElydrW3dzD28T+rbMc44ETIkiBX5JF
+         ARWw==
+X-Forwarded-Encrypted: i=1; AJvYcCVGNu2QH0mpOamgMtSfai4QJPBmRDbtViOa4G6wcDUQEjdlqUe3OXnmDqRI7ZTcfCQU9Bqq/7Ob+Z2iA3dCt4edIZ5Btw==@vger.kernel.org, AJvYcCXNjdh9w4OfZk3xXlwphKZBZhF7ab72Sy9KGUKPMdBn9pQpVmVve+1PQshieldAGmwza9L3Uhl4gA35wyM=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy6pGt2LQb3eGmPstQJuZDu93bZnRPG6FKnpfZQ2Wx3g+cLwUjZ
+	A5+xOtM3xtkSFUBx8ywOLy3Q4ZQxLKTyO913St6zOaKCI105odOW36H7YTuq
+X-Gm-Gg: ASbGncv6tVi2TSssQjMZ9d+1xlWVH61Q93/oDnMD+4840Uiai9XbWth0SGJfEbWMS1t
+	GpEkA1hNO7a8agvXyvL4zoDdytzxeMnONbeYhidhkdcY2HHyg2kcWWZ8T04GFU7kzA0G0sMCQCN
+	QQn6OP7/cWTQ7CBfQ3Aqbor4KNSMVPtFGjsW3xPvuMEOq4+ROw2a7iaLfDSDaKb6/2OYlK0uUNq
+	1ELYXpgG1jq32j0+HhKjyO9I79A3iPwlMVBWz1hqUqWakgeOTMEw55lJO1ZhP2s3oC15ySeA+Zx
+	z7YnW1An4e+fg2GvPvhvgmZd3z5yWOQQ4V6d
+X-Google-Smtp-Source: AGHT+IHUDZIuIbHcr33yulbymoIlv7q2VlkrSuz2EsmPrJWcWsAcy1tmH7sM08Qnglzp4x9fp1DZ5g==
+X-Received: by 2002:a05:6122:3191:b0:520:61ee:c815 with SMTP id 71dfb90a1353d-523e4188194mr7105607e0c.10.1741618680357;
+        Mon, 10 Mar 2025 07:58:00 -0700 (PDT)
+Received: from localhost ([2800:bf0:82:3d2:9e61:1a62:1a8c:3e62])
+        by smtp.gmail.com with ESMTPSA id 71dfb90a1353d-523d8ac3266sm1490598e0c.15.2025.03.10.07.57.58
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 10 Mar 2025 07:57:59 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <32c6c456-94f0-f077-040c-09f67d60953a@linux.intel.com>
+Mime-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date: Mon, 10 Mar 2025 09:57:57 -0500
+Message-Id: <D8COAMZV0RBJ.1C66Q3AVETTD8@gmail.com>
+Cc: "Hans de Goede" <hdegoede@redhat.com>,
+ <platform-driver-x86@vger.kernel.org>, "LKML"
+ <linux-kernel@vger.kernel.org>, "kernel test robot" <lkp@intel.com>
+Subject: Re: [PATCH] platform/x86: dell: Fix ALIENWARE_WMI dependencies
+From: "Kurt Borja" <kuurtb@gmail.com>
+To: =?utf-8?q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+X-Mailer: aerc 0.20.1-0-g2ecb8770224a
+References: <20250309-dell-kconfig-fix-v1-1-38a2308d0ac6@gmail.com>
+ <8d219429-b13f-2610-960e-58851d53696f@linux.intel.com>
+In-Reply-To: <8d219429-b13f-2610-960e-58851d53696f@linux.intel.com>
 
-On Mon, Mar 10, 2025 at 02:43:51PM +0200, Ilpo Järvinen wrote:
-> On Mon, 10 Mar 2025, Dan Carpenter wrote:
-> 
-> > There are a couple problems in this code:
-> > 
-> > First, if amd_pmf_tee_init() fails then the function returns directly
-> > instead of cleaning up.  We cannot simply do a "goto error;" because
-> > that would lead to a double free.  I have re-written this code to
-> > use an unwind ladder to free the allocations.
-> 
-> Thanks Dan,
-> 
-> Could you please amend this with the information of what is getting 
-> double freed, it took considerable amount of time for me to figure out.
-> I assume it's ->fw_shm_pool ?
-> 
+Hi Ilpo,
 
-Yes, that's it.  Sure, I can re-write that.
+On Mon Mar 10, 2025 at 9:29 AM -05, Ilpo J=C3=A4rvinen wrote:
+> On Sun, 9 Mar 2025, Kurt Borja wrote:
+>
+>> If ACPI_PLATFORM_PROFILE is selected by ALIENWARE_WMI_WMAX, the former
+>> is forced to be at least =3Dm, because the latter is a bool.
+>>=20
+>> This allows the following config:
+>>=20
+>> 	CONFIG_ALIENWARE_WMI=3Dy
+>> 	CONFIG_ACPI_PLATFORM_PROFILE=3Dm
+>
+> Hi,
+>
+> selecting from =3Dy should not result in =3Dm for the other symbol. This =
+is=20
+> a bug in Kconfig infrastructure.
+>
+> I ran across this a few years back and even had a test case to prove the=
+=20
+> select bug but back then the original problem eventually was solved in a=
+=20
+> different way which no longer hit the problem. I never could figure out
+> how to fix the kconfig logic though without breaking something and it=20
+> ended up into low priority bin and never got solved.
+>
+> Sadly, it seems I've lost the test case patch that exhibits the bug=20
+> somewhere... I'll try to look for it from my archived files.
 
-> > Second, if amd_pmf_start_policy_engine() fails on every iteration though
-> > the loop then the code calls amd_pmf_tee_deinit() twice which is also a
-> > double free.  Call amd_pmf_tee_deinit() inside the loop for each failed
-> > iteration.  Also on that path the error codes are not necessarily
-> > negative kernel error codes.  Set the error code to -EINVAL.
-> 
-> Maybe I should start to consistently reject any attempt to use 
-> cleanup/deinit helper functions instead of a proper rollback. It 
-> seems a pattern that is very prone to errors like this.
+That's funny.
 
-I do not like deinit functions.  They are so hard to review.  But I
-detected this bug because of a Smatch warning:
+I thought this was a Kconfig quirk, that resulted from the following
+hierarchy:
 
-drivers/platform/x86/amd/pmf/tee-if.c:540 amd_pmf_init_smart_pc() warn: missing unwind goto?
+Type		0	1	2
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D =3D=3D=3D=3D=3D=3D=3D =3D=3D=
+=3D=3D=3D=3D=3D =3D=3D=3D=3D=3D=3D=3D
+Bool		n	y
+Tristate	n	m	y
 
-regards,
-dan carpenter
+So a <bool> selecting the <tristate> would force it to be at least =3Dm.
 
+The same thing happens with depend, where a dependecy would be fulfilled
+for a <bool> if a <tristate> was at least =3Dm. That's why in the kernel
+robot report the linking error was also due to the HWMON dependency.
+
+Anyway, this patch could serve as a workaround if you feel it's
+necessary. I'm going to put the HWMON dependecy in the ALIENWARE_WMI
+symbol for my other series.
+
+--=20
+ ~ Kurt
