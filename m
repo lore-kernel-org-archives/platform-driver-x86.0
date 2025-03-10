@@ -1,131 +1,190 @@
-Received: from mail-yb1-f178.google.com (mail-yb1-f178.google.com [209.85.219.178])
+Received: from mail-wm1-f49.google.com (mail-wm1-f49.google.com [209.85.128.49])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 92D5F632;
-	Sun,  9 Mar 2025 16:34:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 05455846C
+	for <platform-driver-x86@vger.kernel.org>; Mon, 10 Mar 2025 10:52:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741538080; cv=none; b=qvL4jV1l0eg8po9ts/uguuMrYmPUStx/ijc9WDVz9+7RADGvQ53Tp7nl6uyv0KNN8WMKpRhlbO5bWu/hKyXunEANL37fJs6usbdU6WhASmI4zts+UIZ6A0Pu9/l5ppJAtv0J9pHSSb7jl/TBWQFaZvt9PsJ6LO8WIMmQlkDK21M=
+	t=1741603923; cv=none; b=L7U946mtaYu/mXEDpRL37YKRe3269ZVzF2TvAY1rCQVraaUqyXF74qTyLpLjGJ+oul43lgVFml6x1GoEaBO/luDncl8PIzeg6U0vRfzZOLn24313MbjF8/8luJ7utk+FKAFWliRN9Td7pXzyfVEyf4Er/PKj+aaAvhupZASHpqY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741538080; c=relaxed/simple;
-	bh=xpllkjNVrgJ0iZIu22DmxPVlFUpujDzfh1xh9rScFXk=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=LnYhfEFash+gjYqnE70Pcy3wDZtsLXr8dCa9UHJFj5G7ZISrjIR/MbGFvAFQUVIp4nXLBhLnzq/rfHQsOHy1HOAQf8OxH0vlXiKvrX/yMthY/pie8z2jU9dcG/zGyddNnXfXETIIQPdPG1NX/WuWO13A6AxDJL6l11sh7ZEShX4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=lX+nXnqx; arc=none smtp.client-ip=209.85.219.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1741603923; c=relaxed/simple;
+	bh=8pFmW2yF7XeBHwGWpBOIVO3bVuCA2uTCoDSKVDixUQ4=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=EALnCc6Qo1oLc0fPxElLt+TeXZOzvEoma32OzPVK3yNLmGkjlxoUt5x6I6CqxE3pOpVBeWoROkj1tQPqr9bPtGNYq5Kf9yiQYpoe1cmegCA+SSjwrRf3xFT4ktMgO4kEYSjUKpA5vsuHcnYt9XJuEbmEe3FaNPLemYXyDuG4DAk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=yJhUanvB; arc=none smtp.client-ip=209.85.128.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lX+nXnqx"
-Received: by mail-yb1-f178.google.com with SMTP id 3f1490d57ef6-e549be93d5eso2998242276.1;
-        Sun, 09 Mar 2025 09:34:38 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="yJhUanvB"
+Received: by mail-wm1-f49.google.com with SMTP id 5b1f17b1804b1-4394a823036so34145855e9.0
+        for <platform-driver-x86@vger.kernel.org>; Mon, 10 Mar 2025 03:52:01 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1741538077; x=1742142877; darn=vger.kernel.org;
-        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
-         :date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=Fz4EbdwAmmH+Q5PNAQemsQ3FNp00gePnRgO4RO5D6xg=;
-        b=lX+nXnqxI6EopeuoVX/sBK0g+Q9ZXcaT5NseMV8Qrv90aE4NCm7+ZHYjyC2QjBS2sJ
-         EDXqECCIHWv+d5IvuMS7lhlgZ+9vMOoa1Vmure166yeW2fLRSYgVUzzkCrqduKwp9AzV
-         Quz5SylrZDE8Re+JTBQz2RnV9LHfs+JG5o1KGAMWJhblPtIOArAAdmRhoBl7a1OJQhz9
-         DBgI8VtJYVyrwY7upc8A09T2vuX9UQryrqehOoF1aPa41XbBzRgx4ytCy0ycChFOwRca
-         GfxYSbDtonEG0FuaSLJmxPbK7F0TFMurCYz3o/6fCVlN/bQRv9DBqz5VHu5cB5UcD9KW
-         K8tw==
+        d=linaro.org; s=google; t=1741603920; x=1742208720; darn=vger.kernel.org;
+        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=oRaYsvVFrqrTjWbVoLzSGid2k7c2/yuWbrvy6P2VIxo=;
+        b=yJhUanvBwPoRt/h2J7vQjHB4pn0Y8MkOwza7TUr08zWjsZSGX51/pXwgo4wxqVp+iw
+         0YrjbJeVENhg3FuMpVSFBENnWeq4/eKkL2EKY6V6FQZtzGyxciZISKizq267RQzuCBUZ
+         6J0Q949WXQxDxhayMaCxWgH+5JbIvdLFvratTq3H7ZtaA6qGnjy8Uejr5nUypboH6ryk
+         Y9MqoASeMZiavmeX53rBJ6FfJP185C+fw/x9qqPINjsy79IIzd1AdmqhzaXDseIjXHe0
+         bTto9+tziiSCw0IlGvt1mLkxyATSRBCK0CzpDDTOZp7DPEdqF4qCCyt0g3GWA9oqeD1p
+         L5HA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741538077; x=1742142877;
-        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
-         :date:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=Fz4EbdwAmmH+Q5PNAQemsQ3FNp00gePnRgO4RO5D6xg=;
-        b=aLbe8lO1krs5JasFDM8t2V9s67RsBblyNax6QtBWpHGu+7J/Tg0zrp2OSTBw0dZUtV
-         3rxzKq/2Fe8b5kYod1Etc34sxRf0DHuwBwYJc7AS4WEjPMcRypZbdmTcxCIKHrjFR2Qs
-         5M7awzK43wjtA5ecf0CxYN2oTdBVyk9xh//xQPpeP4wFaK+1CLfOkesnhDlD8TK6mOsX
-         d6EhxnxnDL+vE7VbJNG1zKt0SQYhB89LKP2+Q3Vuh6on0Vm8dwdMRMRaeazBzYPMit6E
-         O+C989C8Un3QaHbwaEw+sJagJYsM2f+2Nbm1oJCZxdV/YKV4alKlINX0aiOVRgJezFQG
-         mANw==
-X-Forwarded-Encrypted: i=1; AJvYcCUPjajuXAbmb+LS5LJ+/7Zyr22fGSP7f5sw/PBZ0szM48LNXrjqOeTzp0YaSO5HgGnBUTXv76EuygfbHEQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yya43FGIUt+fledsNtbxAJlzC79/9g9CiDoLfvTJntEZGmmJvT9
-	L4hHms+mSu7NJQA/C70rUEuesDx/99FLBYTaQd9R6uNx5wSwy89K
-X-Gm-Gg: ASbGncvTFXNvtiFsGSGurPXTohEnFkfDxVF+ZWpmfVKUA8wSv9kY7YnjAPHRdGu5N/+
-	HH6//1arT5oUPPQ5bOyo1WDbeCQLdYJoQgkFXVBxXZUpJ0BPfjWCH4KQSmtGcSt91P4j5lqnpZ2
-	PR6q1HcAesYRXAQcvkBED0qOv6uXz4g3zS/SnlZ7vXrPUiMWdivselWxhUMN1nGI1kQa42N3ZBM
-	gB7imofXrGcxKfXEeO9hypcJe/xSFtcyNGb8WQ7Mq+RAdsJzgoHrRVDXMVzqpJ/CgEfXKNNENln
-	QExV/Kr5jMl4yUaFtROVx4BvXDglCXSiyRAzhY0mJ069fg==
-X-Google-Smtp-Source: AGHT+IGT83w25Qpcuu0mcy9mL718T06iGF91r/pIkU8OkPtpl59MUlGAPtjUuG6wwqOIcsC+qTfuog==
-X-Received: by 2002:a05:690c:3706:b0:6fe:b88e:4d82 with SMTP id 00721157ae682-6febf3c011emr129998527b3.28.1741538077388;
-        Sun, 09 Mar 2025 09:34:37 -0700 (PDT)
-Received: from [192.168.100.70] ([2800:bf0:82:3d2:9e61:1a62:1a8c:3e62])
-        by smtp.gmail.com with ESMTPSA id 00721157ae682-6feb2c2e86bsm16988037b3.79.2025.03.09.09.34.35
+        d=1e100.net; s=20230601; t=1741603920; x=1742208720;
+        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=oRaYsvVFrqrTjWbVoLzSGid2k7c2/yuWbrvy6P2VIxo=;
+        b=sKaYlr+xgc2+CgB54J9aCrmyWWRLQ+9RSZ95CNJO7CVUt3ny2tBunU/jTcpqklKkam
+         /k6ijCW5HemDmsPi3ch2hERtdCz4nbZJfAKerPuQyarVjFoc7pGVzfCawjxLeplrTV/n
+         C4uVAnf+cF7Lgsk0rYD94U5NzsUXmSqOdsH0A3OxDrgyjFYiLkWghJi5At3ezJpisl+Q
+         rmlK4hLg28Y68rPAqfWR+QEf8/FGB0FQhx7vxWHULoyg87tFOUTQHyPRrx+BvLfIgIu4
+         oLeq7mrc9fPW6maDpKKEa/FOR47EwB8WCM1ypGx4ziJHz27YMwc1fKly0GwV8H4Zdl/N
+         QCrQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUanCXElbcfru8Sj71UP7/oJbv5sENfUHiDxaqWzhYJZE8iknjFz3c7t/+8mtG8s/L9Mhl1hYTobna6mTtxkBCNDUd9@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxo9LAq03vXObEeIflqTellRbgrEmcoMNjUbQ0kaN1VC2HnSy+O
+	e3h7DadZjyyJwc/sX7bO00OeBfTjNbaR1zjnViPNBnGGix5tnjbmYZS7Vpuq8WY=
+X-Gm-Gg: ASbGnctCclAkf37uLMjm+m2PO3Vy48M6qm+ai65wal0YsD3UdMW4xOTikZRt2cIwBca
+	KsXaAma4j8xpqCM3s/axq8kbgTuW7SVBQ+790wP0Le4KDHml8xEP1CKZrwLkq25mM8Lz6rapWUU
+	aEF8/yyyBKB8MqJXVjHYF3EceXm2aDdM8Wva3EHwgfREAW/oKq/v9iNNwf8mbJ2kv79g0akYQ2F
+	A9PI5wLEnV3W5/z7HqXralI9OJ/9gLbgSccD2ti9lPl5If8VbBDb9XsdQL+Z7UcSH3QsPCz4uwI
+	6zvojTjn1hfSjl4aAH5hRvFxUPblmfAklHUMvbboLlFv8oqquQ==
+X-Google-Smtp-Source: AGHT+IGMN8eK8zmMhyTnMEO8hcxY2G1+yaEB1GlPZwSy0jRn7v/TP69/lWg+VAd4stSNCOgX1BzcIQ==
+X-Received: by 2002:a05:600c:1d08:b0:43c:f184:2e16 with SMTP id 5b1f17b1804b1-43cf184310dmr30775335e9.5.1741603920329;
+        Mon, 10 Mar 2025 03:52:00 -0700 (PDT)
+Received: from localhost ([196.207.164.177])
+        by smtp.gmail.com with UTF8SMTPSA id 5b1f17b1804b1-43ceed32e64sm59063525e9.5.2025.03.10.03.51.58
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 09 Mar 2025 09:34:36 -0700 (PDT)
-From: Kurt Borja <kuurtb@gmail.com>
-Date: Sun, 09 Mar 2025 11:33:52 -0500
-Subject: [PATCH] platform/x86: dell: Fix ALIENWARE_WMI dependencies
+        Mon, 10 Mar 2025 03:51:59 -0700 (PDT)
+Date: Mon, 10 Mar 2025 13:51:56 +0300
+From: Dan Carpenter <dan.carpenter@linaro.org>
+To: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
+Cc: Hans de Goede <hdegoede@redhat.com>,
+	Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	Patil Rajesh Reddy <Patil.Reddy@amd.com>,
+	Mario Limonciello <mario.limonciello@amd.com>,
+	platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
+	kernel-janitors@vger.kernel.org
+Subject: [PATCH] platform/x86/amd/pmf: fix cleanup in amd_pmf_init_smart_pc()
+Message-ID: <43ad5358-f5b2-4cfc-85b4-e7ab8c7cf329@stanley.mountain>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250309-dell-kconfig-fix-v1-1-38a2308d0ac6@gmail.com>
-X-B4-Tracking: v=1; b=H4sIAO/CzWcC/6tWKk4tykwtVrJSqFYqSi3LLM7MzwNyDHUUlJIzE
- vPSU3UzU4B8JSMDI1MDYwNL3ZTUnBzd7OT8vLTMdN20zApdkxTjlMRUEEpKUwJqKyhKBQqDjYy
- Ora0FAKmWyxdiAAAA
-X-Change-ID: 20250309-dell-kconfig-fix-4d3daedaedbf
-To: Hans de Goede <hdegoede@redhat.com>, 
- =?utf-8?q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, 
- kernel test robot <lkp@intel.com>, Kurt Borja <kuurtb@gmail.com>
-X-Mailer: b4 0.14.2
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+X-Mailer: git-send-email haha only kidding
 
-If ACPI_PLATFORM_PROFILE is selected by ALIENWARE_WMI_WMAX, the former
-is forced to be at least =m, because the latter is a bool.
+There are a couple problems in this code:
 
-This allows the following config:
+First, if amd_pmf_tee_init() fails then the function returns directly
+instead of cleaning up.  We cannot simply do a "goto error;" because
+that would lead to a double free.  I have re-written this code to
+use an unwind ladder to free the allocations.
 
-	CONFIG_ALIENWARE_WMI=y
-	CONFIG_ACPI_PLATFORM_PROFILE=m
+Second, if amd_pmf_start_policy_engine() fails on every iteration though
+the loop then the code calls amd_pmf_tee_deinit() twice which is also a
+double free.  Call amd_pmf_tee_deinit() inside the loop for each failed
+iteration.  Also on that path the error codes are not necessarily
+negative kernel error codes.  Set the error code to -EINVAL.
 
-which causes a linking error, because ALIENWARE_WMI_WMAX is only used to
-conditionally link alienware-wmi-wmax.c to the alienware-wmi kernel
-object, which might not be a module.
-
-Move the ACPI_PLATFORM_PROFILE reverse dependency to ALIENWARE_WMI to
-fix this issue.
-
-Reported-by: kernel test robot <lkp@intel.com>
-Closes: https://lore.kernel.org/oe-kbuild-all/202503051819.bQ9P70Og-lkp@intel.com/
-Fixes: b1b8fcf6e677 ("platform/x86: Update alienware-wmi config entries")
-Signed-off-by: Kurt Borja <kuurtb@gmail.com>
+Fixes: 376a8c2a1443 ("platform/x86/amd/pmf: Update PMF Driver for Compatibility with new PMF-TA")
+Signed-off-by: Dan Carpenter <dan.carpenter@linaro.org>
 ---
- drivers/platform/x86/dell/Kconfig | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/platform/x86/amd/pmf/tee-if.c | 36 +++++++++++++++++++--------
+ 1 file changed, 25 insertions(+), 11 deletions(-)
 
-diff --git a/drivers/platform/x86/dell/Kconfig b/drivers/platform/x86/dell/Kconfig
-index f8a0dffcaab7c3b423472c5b9093011334a698c8..87c2ceb12d48d610c85fa739abbc4f0d88e33ec8 100644
---- a/drivers/platform/x86/dell/Kconfig
-+++ b/drivers/platform/x86/dell/Kconfig
-@@ -22,6 +22,7 @@ config ALIENWARE_WMI
- 	depends on DMI
- 	depends on LEDS_CLASS
- 	depends on NEW_LEDS
-+	select ACPI_PLATFORM_PROFILE
- 	help
- 	 This is a driver for controlling Alienware WMI driven features.
+diff --git a/drivers/platform/x86/amd/pmf/tee-if.c b/drivers/platform/x86/amd/pmf/tee-if.c
+index ceaff1ebb7b9..a1e43873a07b 100644
+--- a/drivers/platform/x86/amd/pmf/tee-if.c
++++ b/drivers/platform/x86/amd/pmf/tee-if.c
+@@ -510,18 +510,18 @@ int amd_pmf_init_smart_pc(struct amd_pmf_dev *dev)
  
-@@ -43,7 +44,6 @@ config ALIENWARE_WMI_WMAX
- 	bool "Alienware WMAX WMI device driver"
- 	default y
- 	depends on ALIENWARE_WMI
--	select ACPI_PLATFORM_PROFILE
- 	help
- 	 Alienware WMI driver with AlienFX LED, HDMI, amplifier, deep sleep and
- 	 AWCC thermal control capabilities.
-
----
-base-commit: e57eabe2fb044950e6ffdfe01803895043dec0b7
-change-id: 20250309-dell-kconfig-fix-4d3daedaedbf
-
-Best regards,
+ 	ret = amd_pmf_set_dram_addr(dev, true);
+ 	if (ret)
+-		goto error;
++		goto err_cancel_work;
+ 
+ 	dev->policy_base = devm_ioremap_resource(dev->dev, dev->res);
+ 	if (IS_ERR(dev->policy_base)) {
+ 		ret = PTR_ERR(dev->policy_base);
+-		goto error;
++		goto err_free_dram_buf;
+ 	}
+ 
+ 	dev->policy_buf = kzalloc(dev->policy_sz, GFP_KERNEL);
+ 	if (!dev->policy_buf) {
+ 		ret = -ENOMEM;
+-		goto error;
++		goto err_free_dram_buf;
+ 	}
+ 
+ 	memcpy_fromio(dev->policy_buf, dev->policy_base, dev->policy_sz);
+@@ -531,13 +531,13 @@ int amd_pmf_init_smart_pc(struct amd_pmf_dev *dev)
+ 	dev->prev_data = kzalloc(sizeof(*dev->prev_data), GFP_KERNEL);
+ 	if (!dev->prev_data) {
+ 		ret = -ENOMEM;
+-		goto error;
++		goto err_free_policy;
+ 	}
+ 
+ 	for (i = 0; i < ARRAY_SIZE(amd_pmf_ta_uuid); i++) {
+ 		ret = amd_pmf_tee_init(dev, &amd_pmf_ta_uuid[i]);
+ 		if (ret)
+-			return ret;
++			goto err_free_prev_data;
+ 
+ 		ret = amd_pmf_start_policy_engine(dev);
+ 		switch (ret) {
+@@ -550,27 +550,41 @@ int amd_pmf_init_smart_pc(struct amd_pmf_dev *dev)
+ 			status = false;
+ 			break;
+ 		default:
+-			goto error;
++			ret = -EINVAL;
++			amd_pmf_tee_deinit(dev);
++			goto err_free_prev_data;
+ 		}
+ 
+ 		if (status)
+ 			break;
+ 	}
+ 
+-	if (!status && !pb_side_load)
+-		goto error;
++	if (!status && !pb_side_load) {
++		ret = -EINVAL;
++		goto err_free_prev_data;
++	}
+ 
+ 	if (pb_side_load)
+ 		amd_pmf_open_pb(dev, dev->dbgfs_dir);
+ 
+ 	ret = amd_pmf_register_input_device(dev);
+ 	if (ret)
+-		goto error;
++		goto err_pmf_remove_pb;
+ 
+ 	return 0;
+ 
+-error:
+-	amd_pmf_deinit_smart_pc(dev);
++err_pmf_remove_pb:
++	if (pb_side_load && dev->esbin)
++		amd_pmf_remove_pb(dev);
++	amd_pmf_tee_deinit(dev);
++err_free_prev_data:
++	kfree(dev->prev_data);
++err_free_policy:
++	kfree(dev->policy_buf);
++err_free_dram_buf:
++	kfree(dev->buf);
++err_cancel_work:
++	cancel_delayed_work_sync(&dev->pb_work);
+ 
+ 	return ret;
+ }
 -- 
- ~ Kurt
+2.47.2
 
