@@ -1,133 +1,238 @@
-Received: from mail-vk1-f180.google.com (mail-vk1-f180.google.com [209.85.221.180])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A1F8622A4EF;
-	Mon, 10 Mar 2025 14:58:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B5BBD236447;
+	Mon, 10 Mar 2025 16:46:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741618683; cv=none; b=bH5dmlWzJ6c7pnDQeaZvTkc8DLXYaU8A6sk+ai47fjeBym0bHueGn71UuwDT7vdzP051kS6rEkwmy3639Ibdp9+EocIUYw+XlcnZQ1SQYhxw2rBSKwXEPL4u5gcnIFWELNewbmZ7zT5bLxdc1SXgy+QLXDWZqCnGuxnhXECPBWs=
+	t=1741625191; cv=none; b=ZJtOS39TOnhR/pWE6STRTx1SCT3RI1pAZWmj0F9VKACarxHF88SK0LDIHFtIqYiyms22fiXkyQQjLCpoIC1afoDLUx7ZcWgL2YbGhjii1qFn4Htt4KnalxvqastpstMGwTVw5r3wKClQPuNRuphQ7xDizcpQoMtdj2JiAlto00M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741618683; c=relaxed/simple;
-	bh=nKeMJqcXOybsOCtgidoWKKriWWEU+V6EOHzym+y4Rww=;
-	h=Mime-Version:Content-Type:Date:Message-Id:Cc:Subject:From:To:
-	 References:In-Reply-To; b=DI5NRNNiSyI5apSHMrY/SRGypHvlx01noBVhKU6HFxvX8Tyd03jqeXaE1tEInuYQKAhCCdIBW/G73IzHiSmWO/ycT06Ddzvjst1JPQsr5WhfSqVwzKFtu0IwvhBQN9NXAYbEOmTZNEx51xLOikoPSjT6io4P/cXNV7wel1qsBaY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=j0zYmuTP; arc=none smtp.client-ip=209.85.221.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1741625191; c=relaxed/simple;
+	bh=cz3uWPrm1wmLuYD60kksYE9PVAxln5zZPGeWh9tRU1w=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=B5NfnI/DJpMNWSXaM7mm2X1yD1YfSKUITi3fpgDR50hJHDCOBkJdN8f5f74Gt5E5sJ1igNZ68Yv4GmT0jV5YvJpN6EnUCLr51SFmnhjzbJkfSx1B3u0M7Gy6jN1+GUMgOsxfGX6NVUQ3CtQgKu62h5SQv6BlusNNHKc9rxCJ48Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=AI4JO5DI; arc=none smtp.client-ip=198.175.65.21
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="j0zYmuTP"
-Received: by mail-vk1-f180.google.com with SMTP id 71dfb90a1353d-523eb86b31aso1118864e0c.0;
-        Mon, 10 Mar 2025 07:58:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1741618680; x=1742223480; darn=vger.kernel.org;
-        h=in-reply-to:references:to:from:subject:cc:message-id:date
-         :content-transfer-encoding:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=xrdG1fpL5CikYynfNpId4ukhi3X0kK30B2xjj7IytkY=;
-        b=j0zYmuTPA7YB/7EwdNN8EXYtfOGUCAhBvk6VPeI5+43BmyZKhiO53U96xS34hQwPcP
-         KqkDJ5PifJSUvAIn3TGlsG5wljKwhXRXTe+Oj16FKqaY1OG3q0jkBKGxRxTV5COY9soq
-         FhwkQSousFprxy7uMyTqG0RY7Con0PCac/r8cLy3zXcDl/zhG5paSaFgf6Dn6zlIsaPv
-         bPjrju4M+fp3UCvzawkF4HdJN34sc/JGxcPttugw8r6a9Au2xtHqmy+75sZPFl+EixCs
-         1mv+f0UcOlUILtPWZsXHjFPFk9LaLuv71YUP9JsFyRcv+7S/QSyXbJwrKiMzOTvXMShK
-         Xr1g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741618680; x=1742223480;
-        h=in-reply-to:references:to:from:subject:cc:message-id:date
-         :content-transfer-encoding:mime-version:x-gm-message-state:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=xrdG1fpL5CikYynfNpId4ukhi3X0kK30B2xjj7IytkY=;
-        b=CEJwLfTQE7iHJJTTL4gWWZ9YEWt6bgRNgbCDlwnRYKm9xpmwXeTEf+O8eLI6i/iiYK
-         yvKfX0L5cXtpysvW01H8RNXhiF3uf5SxMs7n+ToTLNTtK81ccD1wAwtogkQgzxW4LmQV
-         hE3M/DkKcsu6syGE6D/h71Xrg1CZSiYoLSytEbubB6Aic6Nnem2zhhU101m8N8HyBNkY
-         5XISmhO6xk2upxcXJqfkbhGo0rb1THtkbDMeoIHW7MfC6PigCjmeGg0eKe8nJ1Xr08d6
-         UUNw96S+SroP2YJTVVklxrO7oXmJBgA/H6DdNkElydrW3dzD28T+rbMc44ETIkiBX5JF
-         ARWw==
-X-Forwarded-Encrypted: i=1; AJvYcCVGNu2QH0mpOamgMtSfai4QJPBmRDbtViOa4G6wcDUQEjdlqUe3OXnmDqRI7ZTcfCQU9Bqq/7Ob+Z2iA3dCt4edIZ5Btw==@vger.kernel.org, AJvYcCXNjdh9w4OfZk3xXlwphKZBZhF7ab72Sy9KGUKPMdBn9pQpVmVve+1PQshieldAGmwza9L3Uhl4gA35wyM=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy6pGt2LQb3eGmPstQJuZDu93bZnRPG6FKnpfZQ2Wx3g+cLwUjZ
-	A5+xOtM3xtkSFUBx8ywOLy3Q4ZQxLKTyO913St6zOaKCI105odOW36H7YTuq
-X-Gm-Gg: ASbGncv6tVi2TSssQjMZ9d+1xlWVH61Q93/oDnMD+4840Uiai9XbWth0SGJfEbWMS1t
-	GpEkA1hNO7a8agvXyvL4zoDdytzxeMnONbeYhidhkdcY2HHyg2kcWWZ8T04GFU7kzA0G0sMCQCN
-	QQn6OP7/cWTQ7CBfQ3Aqbor4KNSMVPtFGjsW3xPvuMEOq4+ROw2a7iaLfDSDaKb6/2OYlK0uUNq
-	1ELYXpgG1jq32j0+HhKjyO9I79A3iPwlMVBWz1hqUqWakgeOTMEw55lJO1ZhP2s3oC15ySeA+Zx
-	z7YnW1An4e+fg2GvPvhvgmZd3z5yWOQQ4V6d
-X-Google-Smtp-Source: AGHT+IHUDZIuIbHcr33yulbymoIlv7q2VlkrSuz2EsmPrJWcWsAcy1tmH7sM08Qnglzp4x9fp1DZ5g==
-X-Received: by 2002:a05:6122:3191:b0:520:61ee:c815 with SMTP id 71dfb90a1353d-523e4188194mr7105607e0c.10.1741618680357;
-        Mon, 10 Mar 2025 07:58:00 -0700 (PDT)
-Received: from localhost ([2800:bf0:82:3d2:9e61:1a62:1a8c:3e62])
-        by smtp.gmail.com with ESMTPSA id 71dfb90a1353d-523d8ac3266sm1490598e0c.15.2025.03.10.07.57.58
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 10 Mar 2025 07:57:59 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="AI4JO5DI"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1741625190; x=1773161190;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version:content-id;
+  bh=cz3uWPrm1wmLuYD60kksYE9PVAxln5zZPGeWh9tRU1w=;
+  b=AI4JO5DI4exMPGcBMo/BNqaIup/As9ldelRwSP6KEZeIoedfna7RHr+y
+   t7G0j4e859SSninXeevudL6jgxqbz7aamFnCpyIaXXdJTK04akIz94oAA
+   5m9uE5fOsQRnHvLeCdCgdtewjFhFpHZZ8WzLX57Y4eK/TcQmsFCVFwUwb
+   JLwb9/WKv472W0lSOFP2gmUEbZGQpgdDGzj5nCDTWI++/boqoz8nm8N+q
+   tnfZ4h7VxGczh7b2KUb5/j4PsMaGbFJgBrRJEJ05qwBNHRzC5XCThf9xB
+   Jt6uSomifYHZqQeOB1BR+mZN4swq5IrSzNwpffYLSxRPRAL6qMebYrdMT
+   Q==;
+X-CSE-ConnectionGUID: c5+fxlGnT3+ix9X8E6p04A==
+X-CSE-MsgGUID: AtAdX1QOR8a4+xQX9h7W8A==
+X-IronPort-AV: E=McAfee;i="6700,10204,11369"; a="42539667"
+X-IronPort-AV: E=Sophos;i="6.14,236,1736841600"; 
+   d="scan'208";a="42539667"
+Received: from orviesa007.jf.intel.com ([10.64.159.147])
+  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Mar 2025 09:46:29 -0700
+X-CSE-ConnectionGUID: Gs02udYMTlawYTPW+hFG4Q==
+X-CSE-MsgGUID: ijK+4ak5ROSsuxaULMezMA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.14,236,1736841600"; 
+   d="scan'208";a="120566188"
+Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.59])
+  by orviesa007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Mar 2025 09:46:27 -0700
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Mon, 10 Mar 2025 18:46:23 +0200 (EET)
+To: Kurt Borja <kuurtb@gmail.com>, Masahiro Yamada <masahiroy@kernel.org>, 
+    linux-kbuild@vger.kernel.org
+cc: Hans de Goede <hdegoede@redhat.com>, platform-driver-x86@vger.kernel.org, 
+    LKML <linux-kernel@vger.kernel.org>, kernel test robot <lkp@intel.com>
+Subject: Re: [PATCH] platform/x86: dell: Fix ALIENWARE_WMI dependencies
+In-Reply-To: <D8COAMZV0RBJ.1C66Q3AVETTD8@gmail.com>
+Message-ID: <078669ca-1995-3403-2f86-6c4554623125@linux.intel.com>
+References: <20250309-dell-kconfig-fix-v1-1-38a2308d0ac6@gmail.com> <8d219429-b13f-2610-960e-58851d53696f@linux.intel.com> <D8COAMZV0RBJ.1C66Q3AVETTD8@gmail.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Mon, 10 Mar 2025 09:57:57 -0500
-Message-Id: <D8COAMZV0RBJ.1C66Q3AVETTD8@gmail.com>
-Cc: "Hans de Goede" <hdegoede@redhat.com>,
- <platform-driver-x86@vger.kernel.org>, "LKML"
- <linux-kernel@vger.kernel.org>, "kernel test robot" <lkp@intel.com>
-Subject: Re: [PATCH] platform/x86: dell: Fix ALIENWARE_WMI dependencies
-From: "Kurt Borja" <kuurtb@gmail.com>
-To: =?utf-8?q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-X-Mailer: aerc 0.20.1-0-g2ecb8770224a
-References: <20250309-dell-kconfig-fix-v1-1-38a2308d0ac6@gmail.com>
- <8d219429-b13f-2610-960e-58851d53696f@linux.intel.com>
-In-Reply-To: <8d219429-b13f-2610-960e-58851d53696f@linux.intel.com>
+MIME-Version: 1.0
+Content-Type: multipart/mixed; BOUNDARY="8323328-719778145-1741622711=:931"
+Content-ID: <883eccab-95ef-a39c-760c-668fa29b92d1@linux.intel.com>
 
-Hi Ilpo,
+  This message is in MIME format.  The first part should be readable text,
+  while the remaining parts are likely unreadable without MIME-aware tools.
 
-On Mon Mar 10, 2025 at 9:29 AM -05, Ilpo J=C3=A4rvinen wrote:
-> On Sun, 9 Mar 2025, Kurt Borja wrote:
->
->> If ACPI_PLATFORM_PROFILE is selected by ALIENWARE_WMI_WMAX, the former
->> is forced to be at least =3Dm, because the latter is a bool.
->>=20
->> This allows the following config:
->>=20
->> 	CONFIG_ALIENWARE_WMI=3Dy
->> 	CONFIG_ACPI_PLATFORM_PROFILE=3Dm
->
-> Hi,
->
-> selecting from =3Dy should not result in =3Dm for the other symbol. This =
-is=20
-> a bug in Kconfig infrastructure.
->
-> I ran across this a few years back and even had a test case to prove the=
+--8323328-719778145-1741622711=:931
+Content-Type: text/plain; CHARSET=ISO-8859-15
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-ID: <21ff1675-6148-9a62-8efb-1caf842f1a0c@linux.intel.com>
+
+Hi Kbuild/config people,
+
+Could you please take a look at this select problem.
+
+I attempted to solve this kconfig select logic problem a few years back=20
+but IIRC, my solution leaked memory or had some other problem I could not=
 =20
-> select bug but back then the original problem eventually was solved in a=
+find solution to (and now the code has changed enough I couldn't even get=
 =20
-> different way which no longer hit the problem. I never could figure out
-> how to fix the kconfig logic though without breaking something and it=20
-> ended up into low priority bin and never got solved.
->
-> Sadly, it seems I've lost the test case patch that exhibits the bug=20
-> somewhere... I'll try to look for it from my archived files.
+my buggy solution easily forward-ported so I just dropped the solution and=
+=20
+left just the test case into the patch).
 
-That's funny.
+As the Kconfig problem back then got resolved through other means, I never=
+=20
+mentioned this back then but seems the same problem likely happens here
+in some other form (bool selecting tristate that ends up getting only =3Dm)=
+=2E
 
-I thought this was a Kconfig quirk, that resulted from the following
-hierarchy:
+On Mon, 10 Mar 2025, Kurt Borja wrote:
+> On Mon Mar 10, 2025 at 9:29 AM -05, Ilpo J=E4rvinen wrote:
+> > On Sun, 9 Mar 2025, Kurt Borja wrote:
+> >
+> >> If ACPI_PLATFORM_PROFILE is selected by ALIENWARE_WMI_WMAX, the former
+> >> is forced to be at least =3Dm, because the latter is a bool.
+> >>=20
+> >> This allows the following config:
+> >>=20
+> >> =09CONFIG_ALIENWARE_WMI=3Dy
+> >> =09CONFIG_ACPI_PLATFORM_PROFILE=3Dm
+> >
+> > Hi,
+> >
+> > selecting from =3Dy should not result in =3Dm for the other symbol. Thi=
+s is=20
+> > a bug in Kconfig infrastructure.
+> >
+> > I ran across this a few years back and even had a test case to prove th=
+e=20
+> > select bug but back then the original problem eventually was solved in =
+a=20
+> > different way which no longer hit the problem. I never could figure out
+> > how to fix the kconfig logic though without breaking something and it=
+=20
+> > ended up into low priority bin and never got solved.
+> >
+> > Sadly, it seems I've lost the test case patch that exhibits the bug=20
+> > somewhere... I'll try to look for it from my archived files.
+>=20
+> That's funny.
+>=20
+> I thought this was a Kconfig quirk, that resulted from the following
+> hierarchy:
+>=20
+> Type=09=090=091=092
+> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D =3D=3D=3D=3D=3D=3D=3D =3D=
+=3D=3D=3D=3D=3D=3D =3D=3D=3D=3D=3D=3D=3D
+> Bool=09=09n=09y
 
-Type		0	1	2
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D =3D=3D=3D=3D=3D=3D=3D =3D=3D=
-=3D=3D=3D=3D=3D =3D=3D=3D=3D=3D=3D=3D
-Bool		n	y
-Tristate	n	m	y
+I think y should be 2 in both cases so select should cause the selected=20
+symbol to becomes =3Dy but there's a logic problem deep in select logic in=
+=20
+the kconfig code.
 
-So a <bool> selecting the <tristate> would force it to be at least =3Dm.
+I've attached the multi-select based reproducer test case. make=20
+testconfig runs kconfig selftests and results in CONFIG_A3=3Dm despite=20
+CONFIG_C3=3Dy selecting it.
 
-The same thing happens with depend, where a dependecy would be fulfilled
-for a <bool> if a <tristate> was at least =3Dm. That's why in the kernel
-robot report the linking error was also due to the HWMON dependency.
+Please do not apply the test case before the problem is fixed.
 
-Anyway, this patch could serve as a workaround if you feel it's
-necessary. I'm going to put the HWMON dependecy in the ALIENWARE_WMI
-symbol for my other series.
+> Tristate=09n=09m=09y
+>=20
+> So a <bool> selecting the <tristate> would force it to be at least =3Dm.
+>=20
+> The same thing happens with depend, where a dependecy would be fulfilled
+> for a <bool> if a <tristate> was at least =3Dm. That's why in the kernel
+> robot report the linking error was also due to the HWMON dependency.
+>=20
+> Anyway, this patch could serve as a workaround if you feel it's
+> necessary. I'm going to put the HWMON dependecy in the ALIENWARE_WMI
+> symbol for my other series.
+>=20
+>=20
 
 --=20
- ~ Kurt
+ i.
+--8323328-719778145-1741622711=:931
+Content-Type: text/x-diff; name=select_bug.patch
+Content-Transfer-Encoding: BASE64
+Content-ID: <09a16eda-c26d-f137-ce39-d230c7cd4d77@linux.intel.com>
+Content-Description: 
+Content-Disposition: attachment; filename=select_bug.patch
+
+RnJvbTogSWxwbyBKw6RydmluZW4gPGlscG8uamFydmluZW5AbGludXguaW50
+ZWwuY29tPg0KU3ViamVjdDogW1BBVENIXSBrY29uZmlnOiBUZXN0IHRoYXQg
+dGhlIGxhcmdlc3Qgb2Ygc2VsZWN0cyBpcyB0YWtlbg0KDQpETyBOT1QgQVBQ
+TFkgV0lUSE9VVCBGSVhJTkcgS0NPTkZJRyBDT0RFIEZJUlNUISEhDQoNCldp
+dGggZHVhbCBzZWxlY3QsIHRoZSBsYXJnZXN0IHNlbGVjdGlvbiBzaG91bGQg
+YmUgdGFrZW4uIFRlc3Qgd2l0aA0KaW5kZXBlZGVudCBzZWxlY3RvcnMgYW5k
+IG9uZXMgd2hpY2ggZGVwZW5kcyBvbiBlYWNoIG90aGVyLg0KDQpTaWduZWQt
+b2ZmLWJ5OiBJbHBvIErDpHJ2aW5lbiA8aWxwby5qYXJ2aW5lbkBsaW51eC5p
+bnRlbC5jb20+DQoNCi0tLQ0KIHNjcmlwdHMva2NvbmZpZy90ZXN0cy9kdWFs
+X3NlbGVjdC9LY29uZmlnICAgICAgICAgfCA0MCArKysrKysrKysrKysrKysr
+KysrKysrKw0KIHNjcmlwdHMva2NvbmZpZy90ZXN0cy9kdWFsX3NlbGVjdC9f
+X2luaXRfXy5weSAgICAgfCAgOCArKysrKw0KIHNjcmlwdHMva2NvbmZpZy90
+ZXN0cy9kdWFsX3NlbGVjdC9kZWZjb25maWcgICAgICAgfCAgNyArKysrDQog
+c2NyaXB0cy9rY29uZmlnL3Rlc3RzL2R1YWxfc2VsZWN0L2V4cGVjdGVkX2Nv
+bmZpZyB8IDEwICsrKysrKw0KIDQgZmlsZXMgY2hhbmdlZCwgNjUgaW5zZXJ0
+aW9ucygrKQ0KIGNyZWF0ZSBtb2RlIDEwMDY0NCBzY3JpcHRzL2tjb25maWcv
+dGVzdHMvZHVhbF9zZWxlY3QvS2NvbmZpZw0KIGNyZWF0ZSBtb2RlIDEwMDY0
+NCBzY3JpcHRzL2tjb25maWcvdGVzdHMvZHVhbF9zZWxlY3QvX19pbml0X18u
+cHkNCiBjcmVhdGUgbW9kZSAxMDA2NDQgc2NyaXB0cy9rY29uZmlnL3Rlc3Rz
+L2R1YWxfc2VsZWN0L2RlZmNvbmZpZw0KIGNyZWF0ZSBtb2RlIDEwMDY0NCBz
+Y3JpcHRzL2tjb25maWcvdGVzdHMvZHVhbF9zZWxlY3QvZXhwZWN0ZWRfY29u
+ZmlnDQoNCmRpZmYgLS1naXQgYS9zY3JpcHRzL2tjb25maWcvdGVzdHMvZHVh
+bF9zZWxlY3QvS2NvbmZpZyBiL3NjcmlwdHMva2NvbmZpZy90ZXN0cy9kdWFs
+X3NlbGVjdC9LY29uZmlnDQpuZXcgZmlsZSBtb2RlIDEwMDY0NA0KaW5kZXgg
+MDAwMDAwMDAwMDAwLi43NzZkZGM0ZThiZjkNCi0tLSAvZGV2L251bGwNCisr
+KyBiL3NjcmlwdHMva2NvbmZpZy90ZXN0cy9kdWFsX3NlbGVjdC9LY29uZmln
+DQpAQCAtMCwwICsxLDQwIEBADQorIyBTUERYLUxpY2Vuc2UtSWRlbnRpZmll
+cjogR1BMLTIuMA0KKw0KK2NvbmZpZyBNT0RVTEVTDQorCWJvb2wgIkVuYWJs
+ZSBsb2FkYWJsZSBtb2R1bGUgc3VwcG9ydCINCisJbW9kdWxlcw0KKwlkZWZh
+dWx0IHkNCisNCitjb25maWcgQTENCisJdHJpc3RhdGUgIkExIg0KKyMgaW5k
+ZXBlZGVuZGVudCB0cmlzdGF0ZSBzZWxlY3RzIHRyaXN0YXRlDQorY29uZmln
+IEIxDQorCXRyaXN0YXRlICJCMSINCisJc2VsZWN0IEExDQorIyBib29sIHNl
+bGVjdHMgbGliDQorY29uZmlnIEMxDQorCWJvb2wgIkMxIg0KKwlzZWxlY3Qg
+QTENCisNCitjb25maWcgQTINCisJdHJpc3RhdGUgIkEyIg0KK2NvbmZpZyBC
+Mg0KKwl0cmlzdGF0ZSAiQjIiDQorCXNlbGVjdCBBMg0KKyMgdHJpc3RhdGUg
+ZGVwZW5kcyBvbiB0cmlzdGF0ZSBhbmQgc2VsZWN0cyB0cmlzdGF0ZQ0KK2Nv
+bmZpZyBDMg0KKwl0cmlzdGF0ZSAiQzIiDQorCWRlcGVuZHMgb24gQjINCisJ
+c2VsZWN0IEEyDQorDQorDQorY29uZmlnIEEzDQorCXRyaXN0YXRlICJBMyIN
+Citjb25maWcgQjMNCisJdHJpc3RhdGUgIkIzIg0KKwlzZWxlY3QgQTMNCisj
+IGJvb2wgZGVwZW5kcyBvbiB0cmlzdGF0ZSBhbmQgc2VsZWN0cyB0cmlzdGF0
+ZQ0KK2NvbmZpZyBDMw0KKwlib29sICJDMyINCisJZGVwZW5kcyBvbiBCMw0K
+KwlzZWxlY3QgQTMNCmRpZmYgLS1naXQgYS9zY3JpcHRzL2tjb25maWcvdGVz
+dHMvZHVhbF9zZWxlY3QvX19pbml0X18ucHkgYi9zY3JpcHRzL2tjb25maWcv
+dGVzdHMvZHVhbF9zZWxlY3QvX19pbml0X18ucHkNCm5ldyBmaWxlIG1vZGUg
+MTAwNjQ0DQppbmRleCAwMDAwMDAwMDAwMDAuLjYxM2Q4MDEwMTRlOA0KLS0t
+IC9kZXYvbnVsbA0KKysrIGIvc2NyaXB0cy9rY29uZmlnL3Rlc3RzL2R1YWxf
+c2VsZWN0L19faW5pdF9fLnB5DQpAQCAtMCwwICsxLDggQEANCisjIFNQRFgt
+TGljZW5zZS1JZGVudGlmaWVyOiBHUEwtMi4wDQorIiIiDQorVGVzdCBkdWFs
+IHNlbGVjdCBzaG91bGQgc2VsZWN0IHRoZSBsYXJnZXN0IHNlbGVjdGlvbi4N
+CisiIiINCisNCitkZWYgdGVzdChjb25mKToNCisgICAgYXNzZXJ0IGNvbmYu
+ZGVmY29uZmlnKCdkZWZjb25maWcnKSA9PSAwDQorICAgIGFzc2VydCBjb25m
+LmNvbmZpZ19jb250YWlucygnZXhwZWN0ZWRfY29uZmlnJykNCmRpZmYgLS1n
+aXQgYS9zY3JpcHRzL2tjb25maWcvdGVzdHMvZHVhbF9zZWxlY3QvZGVmY29u
+ZmlnIGIvc2NyaXB0cy9rY29uZmlnL3Rlc3RzL2R1YWxfc2VsZWN0L2RlZmNv
+bmZpZw0KbmV3IGZpbGUgbW9kZSAxMDA2NDQNCmluZGV4IDAwMDAwMDAwMDAw
+MC4uZmEwNDc1ZmE3NGFiDQotLS0gL2Rldi9udWxsDQorKysgYi9zY3JpcHRz
+L2tjb25maWcvdGVzdHMvZHVhbF9zZWxlY3QvZGVmY29uZmlnDQpAQCAtMCww
+ICsxLDcgQEANCitDT05GSUdfTU9EVUxFUz15DQorQ09ORklHX0IxPW0NCitD
+T05GSUdfQzE9eQ0KK0NPTkZJR19CMj15DQorQ09ORklHX0MyPW0NCitDT05G
+SUdfQjM9bQ0KK0NPTkZJR19DMz15DQpkaWZmIC0tZ2l0IGEvc2NyaXB0cy9r
+Y29uZmlnL3Rlc3RzL2R1YWxfc2VsZWN0L2V4cGVjdGVkX2NvbmZpZyBiL3Nj
+cmlwdHMva2NvbmZpZy90ZXN0cy9kdWFsX3NlbGVjdC9leHBlY3RlZF9jb25m
+aWcNCm5ldyBmaWxlIG1vZGUgMTAwNjQ0DQppbmRleCAwMDAwMDAwMDAwMDAu
+LjFjMDYzNTZkOGIxYw0KLS0tIC9kZXYvbnVsbA0KKysrIGIvc2NyaXB0cy9r
+Y29uZmlnL3Rlc3RzL2R1YWxfc2VsZWN0L2V4cGVjdGVkX2NvbmZpZw0KQEAg
+LTAsMCArMSwxMCBAQA0KK0NPTkZJR19NT0RVTEVTPXkNCitDT05GSUdfQTE9
+eQ0KK0NPTkZJR19CMT1tDQorQ09ORklHX0MxPXkNCitDT05GSUdfQTI9eQ0K
+K0NPTkZJR19CMj15DQorQ09ORklHX0MyPW0NCitDT05GSUdfQTM9eQ0KK0NP
+TkZJR19CMz1tDQorQ09ORklHX0MzPXkNCg0KLS0gDQp0ZzogKDgwZTU0ZTg0
+OTExYS4uKSBrY29uZmlnL2R1YWwtc2VsZWN0LWNhc2UgKGRlcGVuZHMgb246
+IG1hc3RlcikNCg==
+
+--8323328-719778145-1741622711=:931--
