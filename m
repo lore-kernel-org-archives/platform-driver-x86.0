@@ -1,219 +1,114 @@
-Received: from NAM12-MW2-obe.outbound.protection.outlook.com (mail-mw2nam12on2065.outbound.protection.outlook.com [40.107.244.65])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 556C2226865;
-	Tue, 11 Mar 2025 08:52:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.244.65
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741683135; cv=fail; b=P8IPfYE0AUUpJJ7pMKj66WsmkVFYq0REdGGKK/tVipOEfdngLkmoP0VA3uFSH2S3y1rNGRe974FAMdBOhpc9+Vir43tqwj6pGXvQK2UZDG2toJehJCvik1+MQahHdXlUVs4uhQ8B6HJwu0PvvzANPoeLKbkCqEGEyEbVCifxHFY=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741683135; c=relaxed/simple;
-	bh=eU2Rzhpi9U9ttSXj3PKZzQorir4eFWz0Q4ciBjFVU5Y=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=f76Nz4hc13RuGvpRc6uxdF6eIUyreVQ6xqzxX2tCtEH7lycXIliJZzuSV2u9ti+YpnLfV5LnShVGl+AYzZByQIf9GpbntB44BrOQX2iRu32gJkSxMzZL22tUOt2ZKGMMIutUAOQ5xGuWcSqpp0l8ciVzpMcMxaztkSWObEUnnNE=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=Wau/oR09; arc=fail smtp.client-ip=40.107.244.65
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3273722D4FE;
+	Tue, 11 Mar 2025 14:10:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.14
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1741702226; cv=none; b=d0UAJoOeL09rxak+4NxRRWARC8J+DX8D9aI2h/WhLj7SS23LVOyz7SCu+nLTnPHA5NBO6iqm9V79Fm73DDuk3P4K7jtVlvPJqd1olId0D7TsT1R0ADsHRi0DXv3MJhyTRdDq39VvAotNSm5mHNObVEjA5Zomp3xe9jQP6zngi84=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1741702226; c=relaxed/simple;
+	bh=6DCHttFxpQlt5JlaplZgiIIP2FjcwsLNjEAL1Va9+u4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=LNmcoIXEc+k2ekDpAkjeWtVlrSNBMGbLEpnA0U6fMQzd2Qu5RVTVQrrnSBcywM85ahzPV3vBWRdoYHwTKF0ljtTyPphMLLpU7eyjgphWdJ17OwkdZ6DeDo1q3E3LE0S15JJ0k29w7fi8b2I7/1wE7VImqFkiz9FNUR97C64wQLQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=JoThZfxt; arc=none smtp.client-ip=198.175.65.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="Wau/oR09"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=iysc71xyLHmcY7lwBhyEYlyAXuZMf/FrcOxblU18L/ZJain5I2XTdKV7gCt9wcAR6y5IxxHVqX/d60LxpWQs2ZyZ26mSYuW9amrBADbeHCHI+2lLrk3H8+XMjUSoMl0gRTTSI1ClbaqXO3jffst/4a3vL01db2ABfUG+M4FhkVNxkCit7Bj59Lp4mNzcMRZ7Y9zTqE8O7x720aVyGGA3U+zoGABluFWNJi40yNoP8xN+mXVwCQWDIj9pvSDkNTtHOoo6uSmNO70VPq73ioTsIlyhjT04HPXW0o4TJGQEZMvXdW/BL5uUA+9Czym4ylh+o8Nx8UMQil8fnpnkbszBEQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=ZdRGSdjGfJkV/g4hrWDBRqlf4eMXpz3/aGQSpHr398o=;
- b=WlitRqstQasJ76UpKhURr7leNCGHpiN77w8Up1H4JIxsVvhLIWariQEdTkojHFKqjghzuGFyp/UNeKc+kgbUKSw/YfDgkFZBylJwZJMdFnqshdnyIj90JkBaM6zUImmKTFLQEgTAQs3La3EMc4XT31if1wCbbk6dHzRujn16XJML8hKdH5KEhIa8edM6hDIr+jOY1BHZMpO791dJNm2XgVDtVNY8YiBAZwZQld6SyjVQMG5ynBs+ytOTIDaThdGU2HxxEyCL4qvcBxJ0w1RjAtB063YOvWPYRNNDPzJFcaovr6v1sxy//1CNSYnErFouI9T8Htc4AUC/VRWBScDVDg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=ZdRGSdjGfJkV/g4hrWDBRqlf4eMXpz3/aGQSpHr398o=;
- b=Wau/oR095Pn0F8JOLpUmqGFz2n8HTk+K3jWsJhKKykHPF+GBUbJKUvmhz8QT4zJLiEYQ4Vkc0G3yCq84mX/mm747bvYfr5b23UT2WY7TGVA9RR9/ttNm+x09SS+YYzWDQKIDG3se6cbWzvHoVsqv9afax0xhlRJIYi+60usWDbA=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from BL1PR12MB5176.namprd12.prod.outlook.com (2603:10b6:208:311::19)
- by DS7PR12MB5768.namprd12.prod.outlook.com (2603:10b6:8:77::18) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8511.27; Tue, 11 Mar
- 2025 08:52:10 +0000
-Received: from BL1PR12MB5176.namprd12.prod.outlook.com
- ([fe80::ed5b:dd2f:995a:bcf4]) by BL1PR12MB5176.namprd12.prod.outlook.com
- ([fe80::ed5b:dd2f:995a:bcf4%3]) with mapi id 15.20.8511.026; Tue, 11 Mar 2025
- 08:52:10 +0000
-Message-ID: <a8592497-5204-47da-9801-a254b0852fe2@amd.com>
-Date: Tue, 11 Mar 2025 14:22:02 +0530
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] platform/x86/amd/pmf: fix cleanup in
- amd_pmf_init_smart_pc()
-To: Dan Carpenter <dan.carpenter@linaro.org>,
- =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Cc: Hans de Goede <hdegoede@redhat.com>,
- Patil Rajesh Reddy <Patil.Reddy@amd.com>,
- Mario Limonciello <mario.limonciello@amd.com>,
- platform-driver-x86@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
- kernel-janitors@vger.kernel.org
-References: <43ad5358-f5b2-4cfc-85b4-e7ab8c7cf329@stanley.mountain>
- <32c6c456-94f0-f077-040c-09f67d60953a@linux.intel.com>
- <4a14c0a5-d6f8-4df9-b947-a0d3c3ef02b3@stanley.mountain>
-Content-Language: en-US
-From: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
-In-Reply-To: <4a14c0a5-d6f8-4df9-b947-a0d3c3ef02b3@stanley.mountain>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: SG2PR01CA0166.apcprd01.prod.exchangelabs.com
- (2603:1096:4:28::22) To BL1PR12MB5176.namprd12.prod.outlook.com
- (2603:10b6:208:311::19)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="JoThZfxt"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1741702224; x=1773238224;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=6DCHttFxpQlt5JlaplZgiIIP2FjcwsLNjEAL1Va9+u4=;
+  b=JoThZfxtWpBAhqz35ynvdytlBWUKooygdqA1ehBNKiETJA+kgNPGWIeO
+   ALgbTMzxebN3BTl69J4/6+3neK/vHj7zeGBmmlkgCr9E10oJSN2uhIA2K
+   SVgGkPzVwCAzhip4Ked4lXJSDKPS50PKNqpfk347WXw6BzDe0oqw9705i
+   fO2yCukYgtwF/2iMM9hFEB9qlCmijD4IBox0iUtWHDegWXmD9yKmp0b0s
+   HeV06IEFT/qHP+6GvCNdrwx8DxziNukDOiAcxF2ORRPB8qIMEzsQMl9nE
+   4o9c+W6JfNwVi6gAOYgoA4j1PlP7UEPH4PscLKERtAqHm7nYKOxFuNf/B
+   Q==;
+X-CSE-ConnectionGUID: f9SNI9vLSNWZFUfLp49hyQ==
+X-CSE-MsgGUID: HkPR4dGQSpSrfRWpx/EYwA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11370"; a="46523319"
+X-IronPort-AV: E=Sophos;i="6.14,239,1736841600"; 
+   d="scan'208";a="46523319"
+Received: from orviesa001.jf.intel.com ([10.64.159.141])
+  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Mar 2025 07:10:03 -0700
+X-CSE-ConnectionGUID: lwwV97C/Q1Ck5Ar/zlHaNQ==
+X-CSE-MsgGUID: ERKY/U9aQg6zkJ8ybsZURA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.14,239,1736841600"; 
+   d="scan'208";a="157534140"
+Received: from lkp-server02.sh.intel.com (HELO a4747d147074) ([10.239.97.151])
+  by orviesa001.jf.intel.com with ESMTP; 11 Mar 2025 07:10:00 -0700
+Received: from kbuild by a4747d147074 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1ts0Iv-0006hg-0j;
+	Tue, 11 Mar 2025 14:09:57 +0000
+Date: Tue, 11 Mar 2025 22:09:18 +0800
+From: kernel test robot <lkp@intel.com>
+To: Antheas Kapenekakis <lkml@antheas.dev>,
+	platform-driver-x86@vger.kernel.org
+Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
+	linux-hwmon@vger.kernel.org, linux-doc@vger.kernel.org,
+	linux-pm@vger.kernel.org, Guenter Roeck <linux@roeck-us.net>,
+	Jean Delvare <jdelvare@suse.com>, Jonathan Corbet <corbet@lwn.net>,
+	Joaquin Ignacio Aramendia <samsagax@gmail.com>,
+	Derek J Clark <derekjohn.clark@gmail.com>,
+	Kevin Greenberg <kdgreenberg234@protonmail.com>,
+	Joshua Tam <csinaction@pm.me>,
+	Parth Menon <parthasarathymenon@gmail.com>,
+	Eileen <eileen@one-netbook.com>,
+	Antheas Kapenekakis <lkml@antheas.dev>
+Subject: Re: [PATCH v3 06/12] platform/x86: oxpec: Add charge threshold and
+ behaviour to OneXPlayer
+Message-ID: <202503112130.dl6b3XVs-lkp@intel.com>
+References: <20250309112114.1177361-7-lkml@antheas.dev>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: BL1PR12MB5176:EE_|DS7PR12MB5768:EE_
-X-MS-Office365-Filtering-Correlation-Id: d22a26d5-657b-41fa-6a31-08dd607a0244
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|366016|1800799024;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?SmszeGlVd2QwN3hJdDdJSTd2UTV2OFJHay96WStNYUNSUXJzRXpnajRuRHNt?=
- =?utf-8?B?bGJHNXg0ODlFb2RPYzlNSDVmYjl4RnpUekNKeU9lSmVTM1ROempzRjFjUTFT?=
- =?utf-8?B?TXkxZHQ5SFp3YmFLUVRoNUJoRmdreUpqTDMxcHZkbnBOSjczN2RzdmZ0VXli?=
- =?utf-8?B?c1AxQnNaSUJObmYyZEc0RU5jb3lnYzRNV0t1WThTQmFxRFpoaTkvZzhhbDhU?=
- =?utf-8?B?TVArNy9oSFkxRkFuY0FIRG5mODVMN0Z0SlZ2RmNpemdSMFNoWFBuTGtDVC9U?=
- =?utf-8?B?dGV2ejlTNFd2SXZmN2JGcmRLYkg4UVp1RDhiYzVnd2VXdDZSUlhlY2RaUVRN?=
- =?utf-8?B?bFdlczJwYlN3UDZ4RXp3RkhlNE9XbHgwMVFxTThUWTRtRE9SOVowbEF3Q3I3?=
- =?utf-8?B?cnlUZ3RrVmJVRDlPaXBkSlpRSjdEbE5YVlBGZlFhRklPWWcvYncrWmovaHpI?=
- =?utf-8?B?aTNSL1lKbzVjRURCanlrSGIxeFFzczhCMjFHRVZSZU9yaTUzMExvMFZhUzdo?=
- =?utf-8?B?UEJDc2VDZzZmOE95akhjb3ArV3EreWFqbXZOZWwza0YySXFtcTJKQjQxN3J4?=
- =?utf-8?B?V2JOcFdHc09wd1RWbyswQ21CRWJqQnJQdjJOSTBIdi9iYWpGd3pieFZjTjJB?=
- =?utf-8?B?L0tCZlZ2bUMzbS9Rb2U1SXJRd01seWhaU2pwb2JSY0FEQmo1eG5HV1g5MGdW?=
- =?utf-8?B?UWhoaC9zeFcyQjh0R3lrNE5uMnN3QVB0T252VDF4SysrWUhHTk1MU0RZRUxC?=
- =?utf-8?B?aXE3L0hVY0cyemJtTGpkYmp3ZHdNSUxPNldYVTZ4M2FISk1YMDB4aHhvVGxa?=
- =?utf-8?B?QXdYaVBNQjVxMHZjZ0luQmJVcmV1ZWhLMXNQdGlYRERSSEJZK2wvd1hTMDda?=
- =?utf-8?B?OFByTXIwTWpWYmZyc2ZvVnFtSmNHdUVpM3c0bEkrRTVGbDRFZnFFU2RRSmV3?=
- =?utf-8?B?bjlEY09OeEt1TlhuRXc0cFJ5RXdMVHFERm1FanlIYmV6Wm5qZFJRNjBiMHI0?=
- =?utf-8?B?TzJ6U1pZamw0c25JdFhGdDF2WkRMR251aXNpVlhUckZPWkJ5S2p3blE1OEFj?=
- =?utf-8?B?cVpCOG5XNWE2dDZXVXo2SS9xbDl5YUcyRUcwTEtJSDVzUG9YY2FrYW5kVVJx?=
- =?utf-8?B?SEpzdVluREcyZFVDdWpCbnpZLzQ0azVGSUYzcUFISlM0UzVDcURJMVI4dlNR?=
- =?utf-8?B?eG9yRXdEWjFoMXZ1c21TbW8vbHFRR0g4d3prMmpvMmF1U1VlVDQxOUtJN0tY?=
- =?utf-8?B?clhqbndnbTAzL3RrZUtEYTlPUnFKMS9USFBxR0xlbFFPVktMNDhFSU9qNGo2?=
- =?utf-8?B?dWxsdHg1Y3BuTzJ0RklvU0F4ZEFuSTEyVlA2ZUkzYWV0b0RZWENubjBTSFIz?=
- =?utf-8?B?MlBLTk1ueURXMUNRSStyV3hoZHptQ0o2TmpVQXBQQ2lheU1kK2NtWDBIR0xZ?=
- =?utf-8?B?M2pHQ0N5V2ZDSnA3KzI5bTQ3ekVvd0NqQ2IxZW9xcmx6OTBSQjdnVEhpaFhE?=
- =?utf-8?B?YncvZzdpYUdDVDRKQ0EvM2tYNlIzS25JVTlFb2hIRHVMb2ZkTWh5UFNSZy9M?=
- =?utf-8?B?Z0c3S1JJYUZLdWdaVEI4TE5DdUExMmQrNEwwUjk5TVpSUDErRm1GWGV3TW1l?=
- =?utf-8?B?bEhsV2lkakpIUGQ0YWFEUm1BOHZ0MTg3TGkrSUNIckx3SGY2cHZ1U1M5S3FO?=
- =?utf-8?B?TWcyYWwreU1tQlIwWUZ2RGJ1eXZzR3ZxTVFUV2U1ZFkvTnc1bnhtcTlYazdl?=
- =?utf-8?B?MW1xZUpmVHBsdXpiL20wSjBUZE1LblE5R1hieVo3bzBSNk12Y2IrdHJLdHA3?=
- =?utf-8?B?ZWNBeDk3eHdVeWowVlJSZWU2ekxjOWpFZGc0dGFhYTZJaEgrRHIrT291NHVP?=
- =?utf-8?Q?F/RxT/xv/ZVbr?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BL1PR12MB5176.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(366016)(1800799024);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?REd0UTM0RFJyK2xXZXhGbXJWancxazRXWnB6TFk5N3BtVVlRK0d2cElaT1M5?=
- =?utf-8?B?K3dxcmh1N0lROC9MemQyS3Z3VzhSRjdYd1dJU2Q2bjNuRkFrRXFLZ2FhM3E0?=
- =?utf-8?B?UzI5WU5wRG9Ga2lKSVowVmtlZUpyN1lJN3Z0NndZaHZHZEUvZjNoQ0F1OUJY?=
- =?utf-8?B?bTJXdy9PbkFzVUNHTGRjT1ZkbzhBN043VnJPNTFQeHhPUUZJL1BIa3czNW8v?=
- =?utf-8?B?NDZPanN2S1AxM2F0N2ZpM2JBY21OZHNxSUQ5ZnRkdDRUc25GMmxKdVkzSDZy?=
- =?utf-8?B?ZDRGaE5FaG1sV2pZWGZUbWZpL3ZiZGZGa25OazRSMkU1Q2oyN05vRkJDMTVJ?=
- =?utf-8?B?SzZKT05hR1YyazNYbUFyemNhZENzUGNMYnlZU0ZveTdvMWNwQklRSklSRTJh?=
- =?utf-8?B?a2dEdng4M2VHK3NNalNzNFMwSytvU295NDlCOFlaVzgzWnR3djE3OS9sQUkw?=
- =?utf-8?B?aDAwQUhMK3lzOVJMdG00ZkdYMWJhSlFWcytrbjg0TGNFZi9XR1FKeFgwY3M5?=
- =?utf-8?B?akZLUWczUndtdlkxRzFvOVpVbVZ0WXdMbWkyd2tza2NJdGxZSW9DcTNVeTZq?=
- =?utf-8?B?ZnYvRWJ4UFVkTDh2ejJTQWdTQWZaODRSd0p3U1Z5STl6Mm1maVhYZzFDQkZR?=
- =?utf-8?B?Yk5lYXgwSmRKWkJjei9ndTNFNEh2UUJ0RE55aStxOWJxU1F2OEhKenBkZFRm?=
- =?utf-8?B?aUFLQ01taThwMDhZdk1MdXAxZ3pMWm5odExIZm1BR3pMYk5ldWRCS05PSmlB?=
- =?utf-8?B?M1A5NzFtSVJCanh1a3RraUwvNDZPdmp2OTNuR1VsTUxBQ2RxQmIwTTlzUnFL?=
- =?utf-8?B?eDlNajE2QUFsRVZmQ2UxOUhLVUpzb29qT25MLytkMS91cW5tNmFERjcvM0xm?=
- =?utf-8?B?NG5DdmJYaWIrT1FxeTdsekZzSTR4R0NCcXIzN2tTbGtBS3hMbTdBcGJaaE54?=
- =?utf-8?B?NFFYZmhjZ2FIczkwQUhzTVY4b2hpVE1WMXdqbm9pRFQ4K1hSeW16SnZkM3gy?=
- =?utf-8?B?Z1F4TUFOYkRaa1BKQ2tCTjR4L3RCUitCdnN2NVhWY3czUXZ4R1pUellncUxn?=
- =?utf-8?B?aG1KNjVGdUtqQVFjNVVSM2QyUUhLMUNuRFQvRkRwZFZRcVUxV1ozRmsyQ0RE?=
- =?utf-8?B?VXE1TDM5OGpXNEZKTzhBYWpHU1BNYlVKTklPakYrb2huM2xWZUQ2YjJjM0dy?=
- =?utf-8?B?YXY4dUs1a3JsT2t6NWtEc0toeEVEaWVxU3pHWW1qNXp4SERvLzVnWDlyRjRw?=
- =?utf-8?B?K2QxazBpMU8reWgyVnhzR1J6N1F5THFEQ0FOV0lJTGdGRkZRa0NyTWloMDZi?=
- =?utf-8?B?bWlwdmJMUWNURTRqWlZxR0xXSy9GSkswckUyS2VTUnA3MlFnd2pXR1RVSmJ1?=
- =?utf-8?B?dDJpWjlLNnlOQzJNakdLbUtQYWZCY2FYNklyUGxiUHc4aDZiSW9ZT1pNaUlF?=
- =?utf-8?B?cVpzdlB1SllUOFVZVmVpd2NwcnRsNFZMazU0dU5maXYvOHByLzBkalZxQXJ6?=
- =?utf-8?B?YlRseGVjcXJqSExuSTRINnIxNVNPZU9XRE5yV0tKdGNXN2N3QVNvQjBKNEcz?=
- =?utf-8?B?Qk8vRDNxcy92dU80UTBkWVBwUmdyc0Uvd0liWjhtQTBGS25RMVFhc1FEVVA3?=
- =?utf-8?B?OUdXUDRjSDREZ0Y4UThnV2EwZ2tka0hxa1kzaE83UWxxKzJuWCtCL0RCVytZ?=
- =?utf-8?B?MUNMWFhxNWJrZVowM1pKZXUyeU4xRi8zTTloby8vcjBXZzRVeHU5bzZRUXV5?=
- =?utf-8?B?UTRZV1MvcFR0K1pjOXdiY2lmOUdsaWxuSkNzaCtTR0d2UmJ3VlBDaWVsajdO?=
- =?utf-8?B?aDJXcWY0dld5UjBONHVrS2tUWEFuWHBMTTJCblkxTHNDTjVtdE9ab3A3b0k4?=
- =?utf-8?B?RHNNU3VLSEJhRzlkMUtmQm9BNnJNcExhNGpYc3YrMSs0QVEvUkQxTCtVMEk4?=
- =?utf-8?B?RmRCRFhIMlJSWE51T242TUdwdjNSZVB0cXJ4QWF5dkZtQ1VaanB0eklkOStn?=
- =?utf-8?B?WkF1UElXZ0oxV1NnaVBjaENML0FhNzUwMWhZVldtTGgyTkViVTUzR3V0d0ds?=
- =?utf-8?B?Z09Dem1DQUtsaWE3dnFZWFBjTnZqQlhBeFRZWFA3R2gzWm16d1VTcGpwSk9w?=
- =?utf-8?Q?zqTqeL+NGIYbkR6X1rzb+Ld3W?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: d22a26d5-657b-41fa-6a31-08dd607a0244
-X-MS-Exchange-CrossTenant-AuthSource: BL1PR12MB5176.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 11 Mar 2025 08:52:10.0655
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: MBrk9e1vqIs1iUetnhP2lTdsEBiwX2SrjXSCPVFUMoZy3wUJIv7l+rN0EOEiZHOMK1YUmue2Ri9BIzWPjEo61Q==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS7PR12MB5768
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250309112114.1177361-7-lkml@antheas.dev>
 
-Hi Dan,
+Hi Antheas,
 
-On 3/10/2025 20:22, Dan Carpenter wrote:
-> On Mon, Mar 10, 2025 at 02:43:51PM +0200, Ilpo Järvinen wrote:
->> On Mon, 10 Mar 2025, Dan Carpenter wrote:
->>
->>> There are a couple problems in this code:
->>>
->>> First, if amd_pmf_tee_init() fails then the function returns directly
->>> instead of cleaning up.  We cannot simply do a "goto error;" because
->>> that would lead to a double free.  I have re-written this code to
->>> use an unwind ladder to free the allocations.
->>
->> Thanks Dan,
->>
->> Could you please amend this with the information of what is getting 
->> double freed, it took considerable amount of time for me to figure out.
->> I assume it's ->fw_shm_pool ?
->>
-> 
-> Yes, that's it.  Sure, I can re-write that.
-> 
->>> Second, if amd_pmf_start_policy_engine() fails on every iteration though
->>> the loop then the code calls amd_pmf_tee_deinit() twice which is also a
->>> double free.  Call amd_pmf_tee_deinit() inside the loop for each failed
->>> iteration.  Also on that path the error codes are not necessarily
->>> negative kernel error codes.  Set the error code to -EINVAL.
->>
->> Maybe I should start to consistently reject any attempt to use 
->> cleanup/deinit helper functions instead of a proper rollback. It 
->> seems a pattern that is very prone to errors like this.
-> 
-> I do not like deinit functions.  They are so hard to review.  But I
-> detected this bug because of a Smatch warning:
-> 
-> drivers/platform/x86/amd/pmf/tee-if.c:540 amd_pmf_init_smart_pc() warn: missing unwind goto?
+kernel test robot noticed the following build errors:
 
-Thank you for the fix. We have a CI that runs sparse/smatch/coverity
-to catch all these issues and unfortunately this was not caught by the
-CI system.
+[auto build test ERROR on groeck-staging/hwmon-next]
+[also build test ERROR on sre-power-supply/for-next amd-pstate/linux-next amd-pstate/bleeding-edge rafael-pm/linux-next rafael-pm/bleeding-edge linus/master v6.14-rc6 next-20250307]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
 
-But, I can confirm that Smatch is triggering this.
+url:    https://github.com/intel-lab-lkp/linux/commits/Antheas-Kapenekakis/hwmon-oxp-sensors-Distinguish-the-X1-variants/20250309-192300
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/groeck/linux-staging.git hwmon-next
+patch link:    https://lore.kernel.org/r/20250309112114.1177361-7-lkml%40antheas.dev
+patch subject: [PATCH v3 06/12] platform/x86: oxpec: Add charge threshold and behaviour to OneXPlayer
+config: x86_64-randconfig-074-20250311 (https://download.01.org/0day-ci/archive/20250311/202503112130.dl6b3XVs-lkp@intel.com/config)
+compiler: clang version 19.1.7 (https://github.com/llvm/llvm-project cd708029e0b2869e80abe31ddb175f7c35361f90)
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250311/202503112130.dl6b3XVs-lkp@intel.com/reproduce)
 
-drivers/platform/x86/amd/pmf/tee-if.c
-  CHECK   scripts/mod/empty.c
-  CALL    scripts/checksyscalls.sh
-  DESCEND objtool
-  INSTALL libsubcmd_headers
-  CC [M]  drivers/platform/x86/amd/pmf/tee-if.o
-  CHECK   drivers/platform/x86/amd/pmf/tee-if.c
-drivers/platform/x86/amd/pmf/tee-if.c:540 amd_pmf_init_smart_pc()
-warn: missing unwind goto?
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202503112130.dl6b3XVs-lkp@intel.com/
 
-Thanks,
-Shyam
+All errors (new ones prefixed by >>):
 
+>> ld.lld: error: undefined symbol: battery_hook_register
+   >>> referenced by oxpec.c:927 (drivers/platform/x86/oxpec.c:927)
+   >>>               vmlinux.o:(oxp_platform_probe)
+--
+>> ld.lld: error: undefined symbol: battery_hook_unregister
+   >>> referenced by oxpec.c:935 (drivers/platform/x86/oxpec.c:935)
+   >>>               vmlinux.o:(oxp_platform_remove)
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
