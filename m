@@ -1,60 +1,40 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from linux1587.grserver.gr (linux1587.grserver.gr [185.138.42.100])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3273722D4FE;
-	Tue, 11 Mar 2025 14:10:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0B612260A31;
+	Tue, 11 Mar 2025 16:54:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.138.42.100
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741702226; cv=none; b=d0UAJoOeL09rxak+4NxRRWARC8J+DX8D9aI2h/WhLj7SS23LVOyz7SCu+nLTnPHA5NBO6iqm9V79Fm73DDuk3P4K7jtVlvPJqd1olId0D7TsT1R0ADsHRi0DXv3MJhyTRdDq39VvAotNSm5mHNObVEjA5Zomp3xe9jQP6zngi84=
+	t=1741712057; cv=none; b=uae96Roxy1XIYlDF+Tch4rB+Y9/9OdF2BGik1ZpCr/u7ATF69yclkd6+sttRM0fwmqeEQ7DAtXe+f+EbKNB9nYyJhuLbQfat6qajolm6TZkr7QPXguogJPvYtR3hGCJ7T5suCo97D4NBZgTiuMsAEcARm/mWbZ4co6nrtSFM1uQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741702226; c=relaxed/simple;
-	bh=6DCHttFxpQlt5JlaplZgiIIP2FjcwsLNjEAL1Va9+u4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=LNmcoIXEc+k2ekDpAkjeWtVlrSNBMGbLEpnA0U6fMQzd2Qu5RVTVQrrnSBcywM85ahzPV3vBWRdoYHwTKF0ljtTyPphMLLpU7eyjgphWdJ17OwkdZ6DeDo1q3E3LE0S15JJ0k29w7fi8b2I7/1wE7VImqFkiz9FNUR97C64wQLQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=JoThZfxt; arc=none smtp.client-ip=198.175.65.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1741712057; c=relaxed/simple;
+	bh=OLhH3xiSAL/rkpNWquUg/aDJp95af/QwAWciRYGuo/8=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=gL2CI+hQfEX8hH4T9lswy2VzST6Z/7c2GGii09nyMjy14EPKt87PJbZ39Chr4zXGPXeIUCd3dA2LxQWsKtGOPsazVQkrnlSCbiBVHvOMujJUwWKzZW32TBZfie/Q1HPSTfF/BUjhTo1q9NoYIyrOh7cuUmn1vdQ0nqxSARctFwk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=antheas.dev; spf=pass smtp.mailfrom=antheas.dev; dkim=pass (1024-bit key) header.d=antheas.dev header.i=@antheas.dev header.b=gpdGqYWE; arc=none smtp.client-ip=185.138.42.100
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=antheas.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=antheas.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="JoThZfxt"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1741702224; x=1773238224;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=6DCHttFxpQlt5JlaplZgiIIP2FjcwsLNjEAL1Va9+u4=;
-  b=JoThZfxtWpBAhqz35ynvdytlBWUKooygdqA1ehBNKiETJA+kgNPGWIeO
-   ALgbTMzxebN3BTl69J4/6+3neK/vHj7zeGBmmlkgCr9E10oJSN2uhIA2K
-   SVgGkPzVwCAzhip4Ked4lXJSDKPS50PKNqpfk347WXw6BzDe0oqw9705i
-   fO2yCukYgtwF/2iMM9hFEB9qlCmijD4IBox0iUtWHDegWXmD9yKmp0b0s
-   HeV06IEFT/qHP+6GvCNdrwx8DxziNukDOiAcxF2ORRPB8qIMEzsQMl9nE
-   4o9c+W6JfNwVi6gAOYgoA4j1PlP7UEPH4PscLKERtAqHm7nYKOxFuNf/B
-   Q==;
-X-CSE-ConnectionGUID: f9SNI9vLSNWZFUfLp49hyQ==
-X-CSE-MsgGUID: HkPR4dGQSpSrfRWpx/EYwA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11370"; a="46523319"
-X-IronPort-AV: E=Sophos;i="6.14,239,1736841600"; 
-   d="scan'208";a="46523319"
-Received: from orviesa001.jf.intel.com ([10.64.159.141])
-  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Mar 2025 07:10:03 -0700
-X-CSE-ConnectionGUID: lwwV97C/Q1Ck5Ar/zlHaNQ==
-X-CSE-MsgGUID: ERKY/U9aQg6zkJ8ybsZURA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.14,239,1736841600"; 
-   d="scan'208";a="157534140"
-Received: from lkp-server02.sh.intel.com (HELO a4747d147074) ([10.239.97.151])
-  by orviesa001.jf.intel.com with ESMTP; 11 Mar 2025 07:10:00 -0700
-Received: from kbuild by a4747d147074 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1ts0Iv-0006hg-0j;
-	Tue, 11 Mar 2025 14:09:57 +0000
-Date: Tue, 11 Mar 2025 22:09:18 +0800
-From: kernel test robot <lkp@intel.com>
-To: Antheas Kapenekakis <lkml@antheas.dev>,
-	platform-driver-x86@vger.kernel.org
-Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
-	linux-hwmon@vger.kernel.org, linux-doc@vger.kernel.org,
-	linux-pm@vger.kernel.org, Guenter Roeck <linux@roeck-us.net>,
-	Jean Delvare <jdelvare@suse.com>, Jonathan Corbet <corbet@lwn.net>,
+	dkim=pass (1024-bit key) header.d=antheas.dev header.i=@antheas.dev header.b="gpdGqYWE"
+Received: from localhost.localdomain (unknown [IPv6:2a05:f6c2:511b:0:cbc0:999f:73ad:33bd])
+	by linux1587.grserver.gr (Postfix) with ESMTPSA id D886D2E0921E;
+	Tue, 11 Mar 2025 18:54:08 +0200 (EET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=antheas.dev;
+	s=default; t=1741712050;
+	bh=ZGjignOcnGXR3a6KSIIWZHK2G3IOjftu2PGdE87sJ9g=; h=From:To:Subject;
+	b=gpdGqYWEFOHaOussQpDuqkvQjlEf3v0PiInwlIIl0zfVJAjJuk9hQxBNO/+SfA+21
+	 Yx+13xYtP41rbEi2O8An47lulcWJeMQJFw4ubVw0whA+uvSd2yOAvChqgzPYapyzue
+	 8EN5cfz4MXJA+AJ/DlNsLK0mGn2elhTKjwyfrlpA=
+Authentication-Results: linux1587.grserver.gr;
+	spf=pass (sender IP is 2a05:f6c2:511b:0:cbc0:999f:73ad:33bd) smtp.mailfrom=lkml@antheas.dev smtp.helo=localhost.localdomain
+Received-SPF: pass (linux1587.grserver.gr: connection is authenticated)
+From: Antheas Kapenekakis <lkml@antheas.dev>
+To: platform-driver-x86@vger.kernel.org
+Cc: linux-hwmon@vger.kernel.org,
+	linux-doc@vger.kernel.org,
+	linux-pm@vger.kernel.org,
+	Guenter Roeck <linux@roeck-us.net>,
+	Jean Delvare <jdelvare@suse.com>,
+	Jonathan Corbet <corbet@lwn.net>,
 	Joaquin Ignacio Aramendia <samsagax@gmail.com>,
 	Derek J Clark <derekjohn.clark@gmail.com>,
 	Kevin Greenberg <kdgreenberg234@protonmail.com>,
@@ -62,53 +42,112 @@ Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
 	Parth Menon <parthasarathymenon@gmail.com>,
 	Eileen <eileen@one-netbook.com>,
 	Antheas Kapenekakis <lkml@antheas.dev>
-Subject: Re: [PATCH v3 06/12] platform/x86: oxpec: Add charge threshold and
- behaviour to OneXPlayer
-Message-ID: <202503112130.dl6b3XVs-lkp@intel.com>
-References: <20250309112114.1177361-7-lkml@antheas.dev>
+Subject: [PATCH v4 00/13] hwmon: (oxpsensors) Add devices, features,
+ fix ABI and move to platform/x86
+Date: Tue, 11 Mar 2025 17:53:52 +0100
+Message-ID: <20250311165406.331046-1-lkml@antheas.dev>
+X-Mailer: git-send-email 2.48.1
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250309112114.1177361-7-lkml@antheas.dev>
+Content-Transfer-Encoding: 8bit
+X-PPP-Message-ID: 
+ <174171205016.18908.1582214644762940085@linux1587.grserver.gr>
+X-PPP-Vhost: antheas.dev
+X-Virus-Scanned: clamav-milter 0.103.11 at linux1587.grserver.gr
+X-Virus-Status: Clean
 
-Hi Antheas,
+This four part series updates the oxpsensors module to bring it in line
+with its Windows OneXPlayer counterpart. First, it adds support for all
+2024, 2025 OneXPlayer handhelds and their special variants. Then, it moves
+the module to platform/x86 to allow for including more EC features.
 
-kernel test robot noticed the following build errors:
+Then, it adds the new charge limiting and bypass features that were first
+introduced in the X1 and retrofit to older OneXFly variants and for
+controlling the turbo led found in the X1 models. For Bypass, it adds a new
+charge_behaviour variant called inhibit-charge-s0.
 
-[auto build test ERROR on groeck-staging/hwmon-next]
-[also build test ERROR on sre-power-supply/for-next amd-pstate/linux-next amd-pstate/bleeding-edge rafael-pm/linux-next rafael-pm/bleeding-edge linus/master v6.14-rc6 next-20250307]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+Finally, it performs a minor refactor by moving around switch statements
+into their own functions, in order to allow for fixing the pwm1_enable ABI
+in the final patch. Currently, pwm1_enable sets the fan to auto with the
+value 0 and allows manual control with the value 1. This patch makes it
+so 0 sets the fan to full speed, 1 sets the fan to manual control, and
+2 sets the fan to auto. This requires both setting enable and the fan
+speed when the enable sysfs is written to as 0, hence the refactor.
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Antheas-Kapenekakis/hwmon-oxp-sensors-Distinguish-the-X1-variants/20250309-192300
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/groeck/linux-staging.git hwmon-next
-patch link:    https://lore.kernel.org/r/20250309112114.1177361-7-lkml%40antheas.dev
-patch subject: [PATCH v3 06/12] platform/x86: oxpec: Add charge threshold and behaviour to OneXPlayer
-config: x86_64-randconfig-074-20250311 (https://download.01.org/0day-ci/archive/20250311/202503112130.dl6b3XVs-lkp@intel.com/config)
-compiler: clang version 19.1.7 (https://github.com/llvm/llvm-project cd708029e0b2869e80abe31ddb175f7c35361f90)
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250311/202503112130.dl6b3XVs-lkp@intel.com/reproduce)
+As this is a minor ABI break and there is userspace software relying
+on this previous behavior, the last patch also changes the /name of the
+hwmon endpoint to "oxp_ec" from "oxpec" (mirroring WMI module conventions)
+such that userspace software that relied on the previous behavior can be
+retrofit to the new kernel while enabling correct functionality on old
+and new kernels. Failing that, software that is not updated will just
+stop controlling the fans, ensuring no malignant behavior.
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202503112130.dl6b3XVs-lkp@intel.com/
+Changes since V3:
+    - Fix nits by Derek
+    - Remove the hwmon documentation as it is not required for platform
+      drivers (suggested by Guenter)
+    - Add ACPI_BATTERY and HWMON depends to Kconfig
+      (reported by kernel robot)
+    - Homogenize driver into following reverse xmas convention
 
-All errors (new ones prefixed by >>):
+Changes since V2:
+    - Add ack by Guenter, move platform move patch to be third (not first
+      to allow for device support backport to lts kernels)
+    - Rework patch text, especially in the refactor patches as per Derek
+    - Change bypass to use charge_behaviour instead of charge_type, as that
+      ABI supports capability detection and is more appropriate
+    - Move battery attach to probe instead of init
+    - Fix bug where reading tt_led would instead use the turbo register
 
->> ld.lld: error: undefined symbol: battery_hook_register
-   >>> referenced by oxpec.c:927 (drivers/platform/x86/oxpec.c:927)
-   >>>               vmlinux.o:(oxp_platform_probe)
---
->> ld.lld: error: undefined symbol: battery_hook_unregister
-   >>> referenced by oxpec.c:935 (drivers/platform/x86/oxpec.c:935)
-   >>>               vmlinux.o:(oxp_platform_remove)
+Changes since V1:
+    - Add X1 Pro, F1 Pro variants
+    - Fix minor typo in initial patches
+    - Convert oxp-sensors into a platform driver, as it is no longer
+      considered a hwmon driver.
+    - Add sysfs documentation and myself to the MAINTAINERS file
+    - Update documentation to state that this is the OneXPlayer/AOKZOE
+      platform driver, and that support for Ayaneo/OPI is provided until
+      they gain their own platform driver.
 
+Antheas Kapenekakis (13):
+  hwmon: (oxp-sensors) Distinguish the X1 variants
+  hwmon: (oxp-sensors) Add all OneXFly variants
+  platform/x86: oxpec: Move hwmon/oxp-sensors to platform/x86
+  ABI: testing: add tt_toggle and tt_led entries
+  power: supply: add inhibit-charge-s0 to charge_behaviour
+  platform/x86: oxpec: Add charge threshold and behaviour to OneXPlayer
+  platform/x86: oxpec: Rename ec group to tt_toggle
+  platform/x86: oxpec: Add turbo led support to X1 devices
+  platform/x86: oxpec: Move pwm_enable read to its own function
+  platform/x86: oxpec: Move pwm value read/write to separate functions
+  platform/x86: oxpec: Move fan speed read to separate function
+  platform/x86: oxpec: Adhere to sysfs-class-hwmon and enable pwm on 2
+  platform/x86: oxpec: Follow reverse xmas convention for tt_toggle
+
+ Documentation/ABI/testing/sysfs-class-power   |  11 +-
+ Documentation/ABI/testing/sysfs-platform-oxp  |  26 +
+ Documentation/hwmon/index.rst                 |   2 +-
+ Documentation/hwmon/oxp-sensors.rst           |  89 ---
+ MAINTAINERS                                   |   7 +-
+ drivers/hwmon/Kconfig                         |  11 -
+ drivers/hwmon/Makefile                        |   1 -
+ drivers/platform/x86/Kconfig                  |  13 +
+ drivers/platform/x86/Makefile                 |   3 +
+ .../oxp-sensors.c => platform/x86/oxpec.c}    | 683 ++++++++++++++----
+ drivers/power/supply/power_supply_sysfs.c     |   1 +
+ drivers/power/supply/test_power.c             |   1 +
+ include/linux/power_supply.h                  |   1 +
+ 13 files changed, 600 insertions(+), 249 deletions(-)
+ create mode 100644 Documentation/ABI/testing/sysfs-platform-oxp
+ delete mode 100644 Documentation/hwmon/oxp-sensors.rst
+ rename drivers/{hwmon/oxp-sensors.c => platform/x86/oxpec.c} (51%)
+
+
+base-commit: 4d872d51bc9d7b899c1f61534e3dbde72613f627
 -- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+2.48.1
+
