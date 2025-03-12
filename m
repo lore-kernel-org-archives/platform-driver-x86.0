@@ -1,117 +1,140 @@
-Received: from mail-yb1-f170.google.com (mail-yb1-f170.google.com [209.85.219.170])
+Received: from mail-ej1-f48.google.com (mail-ej1-f48.google.com [209.85.218.48])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 58704F9D6;
-	Wed, 12 Mar 2025 05:27:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B50508632E;
+	Wed, 12 Mar 2025 07:55:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741757231; cv=none; b=mbY9e1zo4vHytikpkPmYC9riexF352qG5RAzczsLm/lxWVo4ZNhfYcsnbtT/9TjTp6gzi7H/SArI4yHZ3XBp+qfskkgbwHrIjLNnuCnz8G/1tkp3YoR7Lq4VMsV+ANTVL7UpmCiQMFqVjlesY9DJZH3+6A1VRrUd39Nqm50Tf98=
+	t=1741766132; cv=none; b=pAV4q4EpjAcLzoh+6hcgdsuFtkQJ2aV8vy9cHfvuZBmrD6aa7s4PQfg86GyfhX6BNfDy0x0XascVClbPpTTwuDzjTIBvTI6HNW7V3osEyg4g0EbMSvWBkTXkEjWhdARpC0HiVOXeFhlr5XJvlzykoBDelrGGNIK5mKmxU7lbGbA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741757231; c=relaxed/simple;
-	bh=7PfWVt83t4RAdiuW2wGWh7jy60sciymYdt/FZ7Oe1n8=;
-	h=Mime-Version:Content-Type:Date:Message-Id:Cc:Subject:From:To:
-	 References:In-Reply-To; b=OKUjNaqQsjKhDUqQnGsVWTHWofG3UzzOy0dueX8/wJXOtCe6Nl/l1nE4KZmG3HsaYYsd/efO3w90h4Z1UH+WRTuxE1ZewJA0UKXE1X3aezFT5TO83kEyPTr918VjbD9IcgdyI9GNMvHNzRY7vOHu0cU8WeqiArwM8hAvNEibGWg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=XfB6RdKb; arc=none smtp.client-ip=209.85.219.170
+	s=arc-20240116; t=1741766132; c=relaxed/simple;
+	bh=A7opc6of0uvyt+izwCispQoBCudbTP6hdCXEIYMX7iE=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=dh1jY5lCq/xDzAE/p15ohpzROW8c1HHDIbWhQ0jxJ4zPBzmcpu6UcHLY39Pi1G5+QpMqYr4HBnZulqL1hBDnN2RN4K23Gno2MZ1n/fkq+nkN3f2U5JB07M0msnMsh5ZcoLOzbOwB8PBOsqUudgaqN4sa8ZC9NuNIeQh9nV5p1tQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=BVNtmS5K; arc=none smtp.client-ip=209.85.218.48
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XfB6RdKb"
-Received: by mail-yb1-f170.google.com with SMTP id 3f1490d57ef6-e609cff9927so4238450276.3;
-        Tue, 11 Mar 2025 22:27:10 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BVNtmS5K"
+Received: by mail-ej1-f48.google.com with SMTP id a640c23a62f3a-ac2bdea5a38so253696666b.0;
+        Wed, 12 Mar 2025 00:55:30 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1741757229; x=1742362029; darn=vger.kernel.org;
-        h=in-reply-to:references:to:from:subject:cc:message-id:date
-         :content-transfer-encoding:mime-version:from:to:cc:subject:date
+        d=gmail.com; s=20230601; t=1741766129; x=1742370929; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=7PfWVt83t4RAdiuW2wGWh7jy60sciymYdt/FZ7Oe1n8=;
-        b=XfB6RdKbOF0JwKPTj3c68NLAvh7e9uZ17NiuATkGscuH6+Oo8TTi3TjFh2ihrP1Xsq
-         naqqnB4ZJ4SVrzF1/6tJB2pp1tl/w57k+gcFh3lr/ml0BGozMw48XxgCz1/MIGD8YVGN
-         JAcFsXinr3ZhWEB/P/VvtkiHZA9Y9sJTd3ApmpHJCZpaZOlKMZod6OlgSZfDqRqnJv3i
-         xSjTusy6UBxN9EfC6PUk48ehl2iGWyw8ARqtjlmOe2iBuq1ID+QoxbrHDuMpsidusZdT
-         kYcIQ0kU39xF8LU4XVNN6dNNP+tHul4wBDGu+R0E9olUr80s8YclQgEO64BoeShoxKcr
-         3dJg==
+        bh=mj5UzkJh+c6n0dhgXeheHxyYgb3hNGKyADmZDMM90gE=;
+        b=BVNtmS5KIynnRURUBq3v9AvQJTNI5iZEJlnolv0u5Rgz737sVhvMf5ptlN3apXcHUM
+         vf5IhNvMSALX1AKHHyUjm8mJk4I7sonPh99Y8DLrDA5dvnh4oU32r9dT1raO9OfGl0w4
+         SqI+eQWBqOnkmsGWui+r0e7yhsCd1Dc2hEW+EbTFFl1JD9kKPx1h2P/5V0j1inejibG1
+         PCv7oWT6i6xvRe28hjyKijrc3iYgkKb1hWO7A+FWh3X71FUj6n43kgLaBYBXpK91b5Jt
+         zpMQK/+uWESLF86AWJUGQcoDTKDPgJtv2bU3bsSBAEwqYV8parLgiCFvSYYO14bEOBMf
+         ckYQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741757229; x=1742362029;
-        h=in-reply-to:references:to:from:subject:cc:message-id:date
-         :content-transfer-encoding:mime-version:x-gm-message-state:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=7PfWVt83t4RAdiuW2wGWh7jy60sciymYdt/FZ7Oe1n8=;
-        b=kWlEa2MceLNdl2ktjq1aBd8j4aJs3wmzo0ZJyMkGAgFtkOLq4s9H5BgSIE1v+zFNxi
-         b0ZEM8nhWMk2pVfJ3mW484OvVZZgX8BRlTXwHjCn9mv35VNxQnh7uvX1wULLge1Z48mV
-         +niZBu8pcY9Z7sfZ5OG6SmQeGw+mtF0A+Ya6vdALXqi3u/edQSJC/G7YZRXayDQeE1Vs
-         6SS/tV9VsMmfb5bb5ZN53JHukIlIe8ofKujGVQD+X6uvp0Y7hhQ/LzuJ/axm4kUrpyxS
-         /kFeO+3YiCXrB1IghGNK2cD+Desl5GN29W7z7Mu9BxquSJgT+W13+fkaqYtv6iT4bO4e
-         75Jw==
-X-Forwarded-Encrypted: i=1; AJvYcCVPD/+CGKQCCoHd09tFyUBQ6deTaLx721a/w+7YvR7MwR2cklwbtoG0TkKjf0gLjebicB8NU+Cs8Sgk3EA=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyXkdUwgR7Ala+8xqzDQScPz+Q/q+y9WwYzALTZ4tWCMiNyeZzq
-	uDHhdEZrL5VvbUwi0lWHBNewvl3y1V3oSOuhNM80D/XeYO5dm4QPuYHtrbAG
-X-Gm-Gg: ASbGncsbs4P0cZwDka9lkXoOS1ETxldVorHSTu3pMmYgIu+Hr+xBH6gqtVVILss4tfV
-	BHF2ICjsezDu7r0b7uHs6sW+21CDpp2j6zPVycu+sdw6i/kMcFlsmFFSgHweuWr3kDH3SFNe8XW
-	owDVZiueAx/sx7PdvlrtcbsU3c6ajcxQTWt6eKm42CWpWLMRu+Yc5xBIzBsEfEVus6r9S+bUVA6
-	aCeVBDgso7X8HooRS0E14ifJFtD71xRk9vrG4hJtKOy7img6WtZe57h/Fw0npMwtFkDJ8BcRNZG
-	FGLUSBKZLu9AFLhc0aAwp4e7SKt8mxZGWtA1
-X-Google-Smtp-Source: AGHT+IGKhwON3/Zgqxdc/kOEUQgtrGhgd6v4ae9bjTlOHb4zQxlZDDDcYZTdDZ9t/lUbT6tdpWlRKw==
-X-Received: by 2002:a05:6902:a91:b0:e60:a93f:2a86 with SMTP id 3f1490d57ef6-e635c1f4d33mr27926704276.42.1741757229230;
-        Tue, 11 Mar 2025 22:27:09 -0700 (PDT)
-Received: from localhost ([2800:bf0:82:3d2:9e61:1a62:1a8c:3e62])
-        by smtp.gmail.com with ESMTPSA id 3f1490d57ef6-e634b8ff7a6sm3037442276.57.2025.03.11.22.27.07
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 11 Mar 2025 22:27:08 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1741766129; x=1742370929;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=mj5UzkJh+c6n0dhgXeheHxyYgb3hNGKyADmZDMM90gE=;
+        b=NKV1KtzgQltHDcSNehuNa/Zc5i/8aNYnCFU8YfavtNbG+eEnJQCIAfP8X9s8I4A5Ac
+         Ix+7wdKcFIxdfTld4mTFOXE5uU+32kSiReDYCgnQhgE3YRvtlPUFb6Cr5ziJelEZGmr7
+         X0V1p9x1wGhFIs8jSfdRH/9jaRMZJJj4wzwCfro4UGQaoHiz5RDZZYuj9MrZYy0nP1LY
+         5nntUuDlzlChbDrAh2WP6rcSQUSYR4KJFETq2SRp23FDok+JuB/JG0ad71HCr8agVC15
+         7GvB8RDA1W8z6e4Tvpi1+bjpe32k3EIdqohNZWcyWcgoD8YyANROQrahxUnNeFS1abJU
+         pB7Q==
+X-Forwarded-Encrypted: i=1; AJvYcCWMMn0FOVp5xWyiObh6E6xEvLw/YpnOrqrxtKaVTQYI5GgoyaL9MX8mMlvaO/FriMh/Sxc+rfoIKqjGXfUqsTVwoHbCTA==@vger.kernel.org, AJvYcCWeOMX0BROyJPMg4yv0wcBqY8/2WRhpu8OxCDIw9IyWzmq8GBOjFfPMQnEc20CXTzCXYaIptUS3Ew/Hb1A=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxZZBxnME7PeBpWEcCX2KIEvPBc5AIifwod0QwkmwPo1/1a/XbK
+	WxnuJdzlA8gLYE6+ZfQa62t98PSK2+TQjl/XIXfJ5b5/S4XwoV8jAaeLfQ9a/llT6Fa8l+SR+pG
+	o1uLnckmWFxZXJVdKXikmLYXIdvg=
+X-Gm-Gg: ASbGncvYUwOOR2fZCi9c6DcSHgCVCsls5Rx+0PHC7M1+WS5LtgLHDGhGo3yypm2RSPg
+	B2Yuq/vvwakvcm3JNLSKotAJuURZR0LGcFpu3vX68vRpnrXgzqsIy43QbVSzF0rzfmcdsaxL4bf
+	3Ucl9I1C939x87MrQI4qY0O6+MxHfO98kPoia7
+X-Google-Smtp-Source: AGHT+IFhp5zEhDkcFcQBIOSZdBpn4+YesT8GbKRiTezSrgqkTSjZOnYdhkWp0KghWLO9P7lGlADU5MOm4lRfmUGj1bE=
+X-Received: by 2002:a17:906:b20a:b0:ac2:84db:5916 with SMTP id
+ a640c23a62f3a-ac284db5ff9mr1700286066b.31.1741766128669; Wed, 12 Mar 2025
+ 00:55:28 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
+MIME-Version: 1.0
+References: <20250312022955.1418234-1-yong.liang.choong@linux.intel.com>
+In-Reply-To: <20250312022955.1418234-1-yong.liang.choong@linux.intel.com>
+From: Andy Shevchenko <andy.shevchenko@gmail.com>
+Date: Wed, 12 Mar 2025 09:54:52 +0200
+X-Gm-Features: AQ5f1Jq8etvGVZ1GnV5dG3EvZtajo350JiovFCO5GqzSraOmAbSAeAQsTgx6c6I
+Message-ID: <CAHp75VekTbp++4yw4yDhtB96K+C0w1uHiVih5x-jO+TWRLiPmw@mail.gmail.com>
+Subject: Re: [PATCH v1] platform/x86: intel_pmc_ipc: add option to build
+ without ACPI
+To: Choong Yong Liang <yong.liang.choong@linux.intel.com>
+Cc: Hans de Goede <hdegoede@redhat.com>, =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, 
+	David E Box <david.e.box@linux.intel.com>, platform-driver-x86@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Wed, 12 Mar 2025 00:27:06 -0500
-Message-Id: <D8E1ENUHLP10.2BBUD2EP7MRGZ@gmail.com>
-Cc: <platform-driver-x86@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
- <Dell.Client.Kernel@dell.com>
-Subject: Re: [PATCH RFC v2 1/2] platform/x86: wmi: Add
- wmidev_get_acpi_device_uid()
-From: "Kurt Borja" <kuurtb@gmail.com>
-To: "Armin Wolf" <W_Armin@gmx.de>, "Hans de Goede" <hdegoede@redhat.com>,
- =?utf-8?q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-X-Mailer: aerc 0.20.1-0-g2ecb8770224a
-References: <20250309-awcc-uid-v2-0-5338c6380b2f@gmail.com>
- <20250309-awcc-uid-v2-1-5338c6380b2f@gmail.com>
- <9c172560-65ee-4468-93f7-ea5c11fe033f@gmx.de>
-In-Reply-To: <9c172560-65ee-4468-93f7-ea5c11fe033f@gmx.de>
 
-On Tue Mar 11, 2025 at 2:21 PM -05, Armin Wolf wrote:
-> Am 09.03.25 um 06:13 schrieb Kurt Borja:
+On Wed, Mar 12, 2025 at 4:30=E2=80=AFAM Choong Yong Liang
+<yong.liang.choong@linux.intel.com> wrote:
+
+Thank you, my comments below.
+
+> This patch introduces a configuration option that allows users to
+
+s/This patch introduces/Introduce/
+
+> build the intel_pmc_ipc driver without ACPI support. This is useful
+> for systems where ACPI is not available or desired.
 >
->> Add a non-deprecated version of wmi_get_acpi_device_uid().
->
-> Hi,
->
-> i can understand you motivation behind this patch, but this is IMHO the w=
-rong approach.
-> Nothing guarantees us that a given ACPI _UID value will reliably signal t=
-he presence of
-> WMI methods now or in the future. Because of this i am against this patch=
-.
+> Based on the discussion from the patch: https://patchwork.kernel.org/
+> project/netdevbpf/patch/20250227121522.1802832-6-
+> yong.liang.choong@linux.intel.com/#26280764, it was necessary to
+> provide this option to accommodate specific use cases.
 
-Yes, in the end it is a leap of faith.
+Make it a Link tag, like
 
-I think that it's not very risky as AFAIK AWCC didn't even exist when
-devices used the legacy RGB interface. Also as Mario mentioned, only a
-handful of devices supported the legacy interface, compared to the large
-amount of systems with the AWCC one.
+"...from the patch [1], it was..."
 
-But of course, there is always a possibility of regressions for some
-unknown edge case.
 
->
-> The correct way would be to use the BMOF data to check for missing WMI me=
-thods. I did
-> some work on that which i will announce soon.
+Link: https://.... [1]
 
-Anyways, this is very cool and indeed the correct approach. Hopefully
-I'll be able to help a bit, as I spent some time studying Pali's
-decoder.
+
+> Signed-off-by: David E. Box <david.e.box@linux.intel.com>
+> Signed-off-by: Choong Yong Liang <yong.liang.choong@linux.intel.com>
+
+This is wrong as either it's a wrong tag (SoB --> Suggested-by?), or
+missing Co-developed-by, or wrong order (but in that case David should
+have sent the patch).
+
+...
+
+> +#if CONFIG_ACPI
+
+Better to have #ifdef, but see below
+
+>  static inline int intel_pmc_ipc(struct pmc_ipc_cmd *ipc_cmd, struct pmc_=
+ipc_rbuf *rbuf)
+>  {
+
+>  }
+> +#else
+> +static inline int intel_pmc_ipc(struct pmc_ipc_cmd *ipc_cmd, struct pmc_=
+ipc_rbuf *rbuf)
+> +{ return -ENODEV; }
+> +#endif /* CONFIG_ACPI */
+
+Since it's already static inline, it might be more natural to have
+this inside the function. The current is usually used for the C impl.
++ static inline stub, like
+
+#ifdef FOO
+int foo(...);
+#else
+static inline int foo(...) { return ... }
+#endif
+
+But I'm not insisting, it's up to the PDx86 maintainers.
 
 --=20
- ~ Kurt
+With Best Regards,
+Andy Shevchenko
