@@ -1,101 +1,140 @@
-Received: from mail-wr1-f54.google.com (mail-wr1-f54.google.com [209.85.221.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D16123278D
-	for <platform-driver-x86@vger.kernel.org>; Wed, 12 Mar 2025 08:32:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BBE4E22E412;
+	Wed, 12 Mar 2025 11:23:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741768324; cv=none; b=jYusStQp1/oqhB8875//Owxniqt/m2Z1TeOdI3I0eno8RF1PHXOaF6A90LJKDvG64VTUeijxqj+oQ2aiGrVj7KkZdeenLqb3BzfSL53in5kLOBJPvhCHBCo7mJJpXGCXaQnrmWCOEh62xJ5dMBdgtIRsThnQD2Z7BF+QboyOsYU=
+	t=1741778637; cv=none; b=S2K2pvq0tZeAIPKDKVVTkxKqKZEAeOU8oluljlh6eTUxEg4z+ungmzGGsk7hKEp4RWLQcOjqxOIAzbTM0DUEzGdKmJwY9oer31D0UzFBA3hJiNwEaBU0GupBF/NVprjMzwcy2brZjEsBgWVa4eNuee7SD0fOE03vaxuvr3k84As=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741768324; c=relaxed/simple;
-	bh=womKgPEIT9EPwHvn/d7tEBavuKDefTq2w7cv1JqJo10=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=bmqNUag/8lCYDkr7XozoISIj9Y9cny4CExJjdOsQOWsK5ZYz+RMxt1DeO5zxiVaqO/TxjcyaPM0RaYzxKzchUKKZBciN7WfxnuRg0LLOv2a8UYr6xPrbhkzyNRtsLFFLtYjV3LG17oaXyh7L7QVmIHnlBZRpziwcZTOnz5w364A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=Le1U6ds3; arc=none smtp.client-ip=209.85.221.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1741778637; c=relaxed/simple;
+	bh=nkXn2uiDrymeGsZPI5IKOX7wacIgBnNg9h/570TJwIA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=FogOm9vveFHXc3RZI/xHjyCcVg45/f95dehO8Ny6RN4A/Tf8Jln4Frm4eeNavaQEwmRyxX4fjX9nS+XrO3uOtcg5X/Cm0SSRA2E5PF9s8GH4U1j1EOZZ18kss7w9HUQWIduG6c3yP2+9gJmFQeNTmdlH2YUrPEdbP7K2W87SEFE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=D8QK1xHf; arc=none smtp.client-ip=192.198.163.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Le1U6ds3"
-Received: by mail-wr1-f54.google.com with SMTP id ffacd0b85a97d-38a25d4b9d4so3483572f8f.0
-        for <platform-driver-x86@vger.kernel.org>; Wed, 12 Mar 2025 01:32:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1741768320; x=1742373120; darn=vger.kernel.org;
-        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=ZEv6giHm6T/LYVWvdNBEPXKv/Lj/EjidI+nVqaZEF3I=;
-        b=Le1U6ds3OByim1KX+KsYcBV0nC8IrhcoiAmLnIj6dgUvE7kggJMijxcohvAWLFXhd6
-         y5YzDrOdNeoiESvnoBmg3IXnSH4hIV/92b8M82ypcMaMiUTxmIEfSl5HWs2pFgGUdKcd
-         W50BWXEH87p+vUxWS+VrAUxM5WS2/soN6WhVEvkIVINYqWZdxjpGdSwesWtxbbEZVw+J
-         BFpeCDub8VTPgAk6EQviwICPpMh0/shkp9TC0qkunb/nWXhswapJ/DYShlbYKPHOyU7X
-         9ysfBqd8ZUCw5WRfyfpd23XiCcae4pze6SmsaQZKwqbdywrVKuCHbJ1/cu0e6zaxk3W1
-         nfEg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741768320; x=1742373120;
-        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=ZEv6giHm6T/LYVWvdNBEPXKv/Lj/EjidI+nVqaZEF3I=;
-        b=KrjWJ/hOy7ZDTkTeg3c836tvA6S+Ax5HYh24yw3j62fPRz1Gm0DAguhaU8lDui23U3
-         fYv/mri9sb4D/NgoNsT0AKXyOzKgawii5Ymem23lzhi9w+vTZvj24QZqsJ8o0oUVM/3H
-         QenQRzNm+uEK/VERD3Lhst6pTMptY18xCOH68DybXjPVtDCYUjgItTybdCfVsGjYoMY4
-         8IRqY3ZS5QNXeJBrvE2J4ZKm7SgFNwEu3i+BKlK/GWbbF9aXvwdvtoYwbtRbE6KoQZuy
-         yPrOqnRHE19xPF2wMQ9heZ98RS7fhV5keshelu8/tSRXTuL30ZRE02KCQ/hF7TuYxddd
-         0ULA==
-X-Forwarded-Encrypted: i=1; AJvYcCWc30l69e2rMXYzp+wPzFCIrztlYkP6hmkQz98ePIGXzxtMypoWqaPmudDbap/5PfZE6My9QHK1g4ar5RwbjIZcz/eF@vger.kernel.org
-X-Gm-Message-State: AOJu0YyC1JSKA6hf77xQah+J/iVOQTZ5MAnTDrA8vlM0gVSML+cV49BO
-	E0lxEg2gCw1R2J1Z4WiGvYP2yVvi6QGWRmykow8/EeypjKm7RJb5Q/KEz/jcRFs=
-X-Gm-Gg: ASbGncsvV4M4bQAp/H13ghkvX9Nwrx3ij71SAovB5437rJv45bXEDm3rYwXKWp7nU/9
-	4y3FMv64od+2ClLY9XAvnu2EId45YnQr3DXFIPwBvKpzOmhiBB+gpbg9/jj7JJyRa+bsLvnFtkC
-	HI8SZu+bFKb0qC8oh40leYSiX1RjcohepluamJ/jM507UZBYFVst9iX+5OvTGRxAy/0QqGnmMCQ
-	cloMiDivhz4nFAHDwFd6eTsvEbJbtdmOSHaBP0KOpNVD/a17dTgBxwGnm9ZE+ecw2ac7NNN1to+
-	cb3hap55wsFQv28CUdlM/Rw3R909+qaAnYjbBaTaHSKUsQqGpg==
-X-Google-Smtp-Source: AGHT+IEKC0UilnD8jhLQLusELnZkfDUTC5jmF/RjVLX0yHm2cONnPd8ZMZIZ6muxPlcdhALj4OaMng==
-X-Received: by 2002:a05:6000:1fa9:b0:390:fc83:a070 with SMTP id ffacd0b85a97d-39132b64eadmr18012730f8f.0.1741768320619;
-        Wed, 12 Mar 2025 01:32:00 -0700 (PDT)
-Received: from localhost ([196.207.164.177])
-        by smtp.gmail.com with UTF8SMTPSA id ffacd0b85a97d-3912c103035sm20021324f8f.88.2025.03.12.01.31.59
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 12 Mar 2025 01:32:00 -0700 (PDT)
-Date: Wed, 12 Mar 2025 11:31:57 +0300
-From: Dan Carpenter <dan.carpenter@linaro.org>
-To: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
-Cc: Hans de Goede <hdegoede@redhat.com>,
-	Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	Sanket Goswami <Sanket.Goswami@amd.com>,
-	platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
-	kernel-janitors@vger.kernel.org
-Subject: [PATCH next] platform/x86/amd/pmc: fix leak in probe()
-Message-ID: <65e2fffb-a1cb-4297-b725-661d6b790a05@stanley.mountain>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="D8QK1xHf"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1741778636; x=1773314636;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=nkXn2uiDrymeGsZPI5IKOX7wacIgBnNg9h/570TJwIA=;
+  b=D8QK1xHfz0dldAc/fQj4Wpzwik4IF1HmAh/XFDCWgMVkwS6DVHvtkF7O
+   Wg3XCMPn7ZjRbynQBMI5+OBTGobqOfD7CNokqx//mB6jorVfYZWNZamWr
+   RFZAUGKt6OVKq9DmBpD43QgOoavGHshJJ/X578G9XWhIdMeVinc/IrO1F
+   38qOdbpudGwRdYnE/csJ5MjC1N9IuCBMtbJblV89Q0TJnRX38R/ESfi3m
+   90lUVnMN+SeVhsH+NTDg+HV6cZUQ3c7Rf6P1RvxeJBzVuhCrMdmZebcr0
+   mHeyNe4U48fYkE/nZH4H06vthzA7psDT4kCiCJ2aAbgQMLCM0WRHboBKr
+   g==;
+X-CSE-ConnectionGUID: GxZbpK13T8GvVdTJZbBxHg==
+X-CSE-MsgGUID: gRSN4oQFTEu0mptPe4Iz/w==
+X-IronPort-AV: E=McAfee;i="6700,10204,11370"; a="42726459"
+X-IronPort-AV: E=Sophos;i="6.14,241,1736841600"; 
+   d="scan'208";a="42726459"
+Received: from fmviesa006.fm.intel.com ([10.60.135.146])
+  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Mar 2025 04:23:54 -0700
+X-CSE-ConnectionGUID: X7T83XnzRM+w7UpJqjmQJw==
+X-CSE-MsgGUID: Z7yurOyPSfe34ZD3+u0/jw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.14,241,1736841600"; 
+   d="scan'208";a="120424246"
+Received: from choongyo-mobl.gar.corp.intel.com (HELO [10.247.21.123]) ([10.247.21.123])
+  by fmviesa006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Mar 2025 04:23:53 -0700
+Message-ID: <dbac683e-ab8d-440f-8013-f0ff2287a5ff@linux.intel.com>
+Date: Wed, 12 Mar 2025 19:23:49 +0800
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-X-Mailer: git-send-email haha only kidding
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v1] platform/x86: intel_pmc_ipc: add option to build
+ without ACPI
+To: Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc: Hans de Goede <hdegoede@redhat.com>,
+ =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+ David E Box <david.e.box@linux.intel.com>,
+ platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20250312022955.1418234-1-yong.liang.choong@linux.intel.com>
+ <CAHp75VekTbp++4yw4yDhtB96K+C0w1uHiVih5x-jO+TWRLiPmw@mail.gmail.com>
+Content-Language: en-US
+From: Choong Yong Liang <yong.liang.choong@linux.intel.com>
+In-Reply-To: <CAHp75VekTbp++4yw4yDhtB96K+C0w1uHiVih5x-jO+TWRLiPmw@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-Call pci_dev_put(rdev) before returning.
 
-Fixes: 6ad1b2dc0f2a ("platform/x86/amd/pmc: Use managed APIs for mutex")
-Signed-off-by: Dan Carpenter <dan.carpenter@linaro.org>
----
- drivers/platform/x86/amd/pmc/pmc.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/platform/x86/amd/pmc/pmc.c b/drivers/platform/x86/amd/pmc/pmc.c
-index 84bc47009e5f..d789d6cab794 100644
---- a/drivers/platform/x86/amd/pmc/pmc.c
-+++ b/drivers/platform/x86/amd/pmc/pmc.c
-@@ -785,7 +785,7 @@ static int amd_pmc_probe(struct platform_device *pdev)
- 
- 	err = devm_mutex_init(dev->dev, &dev->lock);
- 	if (err)
--		return err;
-+		goto err_pci_dev_put;
- 
- 	/* Get num of IP blocks within the SoC */
- 	amd_pmc_get_ip_info(dev);
--- 
-2.47.2
+On 12/3/2025 3:54 pm, Andy Shevchenko wrote:
+> On Wed, Mar 12, 2025 at 4:30 AM Choong Yong Liang
+> <yong.liang.choong@linux.intel.com> wrote:
+> 
+> Thank you, my comments below.
+> 
+>> This patch introduces a configuration option that allows users to
+> 
+> s/This patch introduces/Introduce/
+> 
+>> build the intel_pmc_ipc driver without ACPI support. This is useful
+>> for systems where ACPI is not available or desired.
+>>
+>> Based on the discussion from the patch: https://patchwork.kernel.org/
+>> project/netdevbpf/patch/20250227121522.1802832-6-
+>> yong.liang.choong@linux.intel.com/#26280764, it was necessary to
+>> provide this option to accommodate specific use cases.
+> 
+> Make it a Link tag, like
+> 
+> "...from the patch [1], it was..."
+> 
+> 
+> Link: https://.... [1]
+> 
+> 
+Hi Andy,
 
+Thank you for your detailed feedback and suggestions. I'll make the 
+necessary adjustments to the patch based on your comments above.
+
+>> Signed-off-by: David E. Box <david.e.box@linux.intel.com>
+>> Signed-off-by: Choong Yong Liang <yong.liang.choong@linux.intel.com>
+> 
+> This is wrong as either it's a wrong tag (SoB --> Suggested-by?), or
+> missing Co-developed-by, or wrong order (but in that case David should
+> have sent the patch).
+> 
+I believe the sequence is still correct, as the solution was provided by 
+David, and he should be the main author. I'm just the submitter, so my 
+sign-off should be placed last.
+> ...
+> 
+>> +#if CONFIG_ACPI
+> 
+> Better to have #ifdef, but see below
+> 
+>>   static inline int intel_pmc_ipc(struct pmc_ipc_cmd *ipc_cmd, struct pmc_ipc_rbuf *rbuf)
+>>   {
+> 
+>>   }
+>> +#else
+>> +static inline int intel_pmc_ipc(struct pmc_ipc_cmd *ipc_cmd, struct pmc_ipc_rbuf *rbuf)
+>> +{ return -ENODEV; }
+>> +#endif /* CONFIG_ACPI */
+> 
+> Since it's already static inline, it might be more natural to have
+> this inside the function. The current is usually used for the C impl.
+> + static inline stub, like
+> 
+> #ifdef FOO
+> int foo(...);
+> #else
+> static inline int foo(...) { return ... }
+> #endif
+> 
+> But I'm not insisting, it's up to the PDx86 maintainers.
+> 
+Sure, let's wait for more feedback.
