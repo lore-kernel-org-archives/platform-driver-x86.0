@@ -1,178 +1,117 @@
-Received: from mail-yw1-f180.google.com (mail-yw1-f180.google.com [209.85.128.180])
+Received: from mail-yb1-f170.google.com (mail-yb1-f170.google.com [209.85.219.170])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E7A591EC018;
-	Wed, 12 Mar 2025 05:12:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 58704F9D6;
+	Wed, 12 Mar 2025 05:27:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741756347; cv=none; b=b6OPhveUPCV4XChJLIyo8BjUDRl41HCdnOwnv9vo01yz/V07hA5cNcoKUMRkZ1UrFqB5tAGFNPozB7AETrnXxqTmPBIqUoeiMSsW6MjlbQQMOSaOtdXHIqWEvROt8RPtCnWOWiUlr3h9+eiWOgDj9AmguepyFxtNA7nn+pAVphw=
+	t=1741757231; cv=none; b=mbY9e1zo4vHytikpkPmYC9riexF352qG5RAzczsLm/lxWVo4ZNhfYcsnbtT/9TjTp6gzi7H/SArI4yHZ3XBp+qfskkgbwHrIjLNnuCnz8G/1tkp3YoR7Lq4VMsV+ANTVL7UpmCiQMFqVjlesY9DJZH3+6A1VRrUd39Nqm50Tf98=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741756347; c=relaxed/simple;
-	bh=+UVctgMLCQI2qtTmv9h2RN5EXbGlaQr/uLpLO/ItiII=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=c7lZ440eDGxmcEjwv0gpbSpIJHJxvJ56HX1V3sOjyNsYP9qwjS8DH6gXUy+RfdGi7Y25+IjVr2jSQs76PgekqmcYpNp1c+7mbk4KLqGdRzlr69QzrY6Z0tdM2zhMJLAF12sKx3uZ2aHEulXG87gl/qjRKFbpVtX2+IREcoVl/ZM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=RHZQ6yHK; arc=none smtp.client-ip=209.85.128.180
+	s=arc-20240116; t=1741757231; c=relaxed/simple;
+	bh=7PfWVt83t4RAdiuW2wGWh7jy60sciymYdt/FZ7Oe1n8=;
+	h=Mime-Version:Content-Type:Date:Message-Id:Cc:Subject:From:To:
+	 References:In-Reply-To; b=OKUjNaqQsjKhDUqQnGsVWTHWofG3UzzOy0dueX8/wJXOtCe6Nl/l1nE4KZmG3HsaYYsd/efO3w90h4Z1UH+WRTuxE1ZewJA0UKXE1X3aezFT5TO83kEyPTr918VjbD9IcgdyI9GNMvHNzRY7vOHu0cU8WeqiArwM8hAvNEibGWg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=XfB6RdKb; arc=none smtp.client-ip=209.85.219.170
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RHZQ6yHK"
-Received: by mail-yw1-f180.google.com with SMTP id 00721157ae682-6feb0742878so59700497b3.2;
-        Tue, 11 Mar 2025 22:12:25 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XfB6RdKb"
+Received: by mail-yb1-f170.google.com with SMTP id 3f1490d57ef6-e609cff9927so4238450276.3;
+        Tue, 11 Mar 2025 22:27:10 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1741756344; x=1742361144; darn=vger.kernel.org;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=08INWI3mX8Qq+o80JMhCH1odycnPWIStSqHUAbKsMI8=;
-        b=RHZQ6yHKSB0kQK60MemsEh9bW4KRBjV0sAa2oGlj3yq2v3XWoy1noTSI1YUDQbA5wB
-         EHFxC99EAvUjuFDStP4/q9GAhSuiZRolKk0auNIhaCdb6aiisjs2pAj22WJ7vv7djdTS
-         AK2YiHBAvlz8S+Gyr2R7YUWdg7giC4h0m5OcqIewDYL1ltWRh5FtaN/CGBuEZjtUoxqR
-         PBeocIYswU37HQ28hMnnKbL4e0I23wuuM8XkIC12rcV9q0YMNdHMwPG6I3OmgO+vJ/NM
-         mxtECSmrbE3MsfbABnXlcrfw8id26A+ZW0CHPVIh/aICTTICi20z27/1ob0PeHGhsLW3
-         K7/w==
+        d=gmail.com; s=20230601; t=1741757229; x=1742362029; darn=vger.kernel.org;
+        h=in-reply-to:references:to:from:subject:cc:message-id:date
+         :content-transfer-encoding:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=7PfWVt83t4RAdiuW2wGWh7jy60sciymYdt/FZ7Oe1n8=;
+        b=XfB6RdKbOF0JwKPTj3c68NLAvh7e9uZ17NiuATkGscuH6+Oo8TTi3TjFh2ihrP1Xsq
+         naqqnB4ZJ4SVrzF1/6tJB2pp1tl/w57k+gcFh3lr/ml0BGozMw48XxgCz1/MIGD8YVGN
+         JAcFsXinr3ZhWEB/P/VvtkiHZA9Y9sJTd3ApmpHJCZpaZOlKMZod6OlgSZfDqRqnJv3i
+         xSjTusy6UBxN9EfC6PUk48ehl2iGWyw8ARqtjlmOe2iBuq1ID+QoxbrHDuMpsidusZdT
+         kYcIQ0kU39xF8LU4XVNN6dNNP+tHul4wBDGu+R0E9olUr80s8YclQgEO64BoeShoxKcr
+         3dJg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741756344; x=1742361144;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=08INWI3mX8Qq+o80JMhCH1odycnPWIStSqHUAbKsMI8=;
-        b=AhGaqXe51kMq5eLMZiCEQ0uGdRWu3+G3HkBIH4pC4J7n6Ru9xvDDhlrSMazocExi9u
-         3SWu6Q8mFLFC6yHWNUawYlOy4H3CsfbIcrNTgWIMNoR1ks8nbCTKBW0AHghQDEeq0H1+
-         aTjcqBw5IPTNNtS8LoBa3xcqy1/3MBh3t4lk2FH2EL6L1Mz6Y2CiqfIRlqrDRBtLZoHM
-         ugiQXO7Lx2qqlGTFCgbkdIOXpq2HjtBs1fIfpWzr593Myns2Z5bKihEOU2Kw9L6dr6vW
-         G7T3UhEVMlaKCSTx+CkGz6B4t/0mixbQYsH/Ot9cJmB6qlXd79KM6EqlTODXQgxUpm3M
-         G/Yg==
-X-Forwarded-Encrypted: i=1; AJvYcCWzGGI2+2h4KtZS63BMJ/gbnRueEYy8Mb4jCmpvthZy8DEanUV3i1Iwj4Q4HOSCIrDG6ogcIHeABDiaoeobfLlYZt4p+Q==@vger.kernel.org, AJvYcCX9EOH3SJ0w5QEwVxkRQVky7dPWS5V0W3W2i09NkY3G+4SZVh/LTL0LdFFz1bFGqgR1dERcV71R27kp7Ac=@vger.kernel.org
-X-Gm-Message-State: AOJu0YylbJoKC6NpA+q9gMdoOac4qEYexHauBHF4u+4g7TMMH3RtgXkm
-	owNi7/1guQL4TcUNWhVheUTgstWkP1VZiGbBaoMa0+FBgEh9NUHHqSw5rXvG
-X-Gm-Gg: ASbGncszOL/0d1TURbV6uQMAfjXVu/jsyqa+9L01evOCDbkv+LA2gJsMbjxV1uxmXSf
-	QkE1NCbT4LWZhfHk9mRV86tIdNTmjucA+Bz2X2nkVgxY+NpZYoXze7URNZQ3yb8nWbnmtLUatCg
-	EMQ5MWD8/6xi56X1Dc8QHrQW7Vq9jiHPPkiu8mQ+fjMmgDw/n/l+FHrFln92ZRiCYSuPiXj79kS
-	52o8hBo2dZHJuRxk5DwxzYc+Bhs1DGwxb4mS1/UXfvF8nuRGyJZ2jgP1Po2fEXubPkHalIrMHDf
-	9M1n7dAFszx7E1OoWMjKOtCX1y9iq1Chy4LccshqTfgy3w==
-X-Google-Smtp-Source: AGHT+IFQ4JC8nq0hoD0bARgCw1bOg9w9D4MdkvqMH7tvMGdNG3W/XyzBLq+BSedGaBrQQJv8sc3pHw==
-X-Received: by 2002:a05:690c:4807:b0:6fe:af14:57f6 with SMTP id 00721157ae682-6febf2a3050mr269605847b3.5.1741756344545;
-        Tue, 11 Mar 2025 22:12:24 -0700 (PDT)
-Received: from [192.168.100.70] ([2800:bf0:82:3d2:9e61:1a62:1a8c:3e62])
-        by smtp.gmail.com with ESMTPSA id 00721157ae682-6feb2c46defsm29811287b3.105.2025.03.11.22.12.23
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 11 Mar 2025 22:12:24 -0700 (PDT)
-From: Kurt Borja <kuurtb@gmail.com>
-Date: Wed, 12 Mar 2025 00:11:25 -0500
-Subject: [PATCH v5 12/12] Documentation: ABI: Add sysfs platform and
- debugfs ABI documentation for alienware-wmi
+        d=1e100.net; s=20230601; t=1741757229; x=1742362029;
+        h=in-reply-to:references:to:from:subject:cc:message-id:date
+         :content-transfer-encoding:mime-version:x-gm-message-state:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=7PfWVt83t4RAdiuW2wGWh7jy60sciymYdt/FZ7Oe1n8=;
+        b=kWlEa2MceLNdl2ktjq1aBd8j4aJs3wmzo0ZJyMkGAgFtkOLq4s9H5BgSIE1v+zFNxi
+         b0ZEM8nhWMk2pVfJ3mW484OvVZZgX8BRlTXwHjCn9mv35VNxQnh7uvX1wULLge1Z48mV
+         +niZBu8pcY9Z7sfZ5OG6SmQeGw+mtF0A+Ya6vdALXqi3u/edQSJC/G7YZRXayDQeE1Vs
+         6SS/tV9VsMmfb5bb5ZN53JHukIlIe8ofKujGVQD+X6uvp0Y7hhQ/LzuJ/axm4kUrpyxS
+         /kFeO+3YiCXrB1IghGNK2cD+Desl5GN29W7z7Mu9BxquSJgT+W13+fkaqYtv6iT4bO4e
+         75Jw==
+X-Forwarded-Encrypted: i=1; AJvYcCVPD/+CGKQCCoHd09tFyUBQ6deTaLx721a/w+7YvR7MwR2cklwbtoG0TkKjf0gLjebicB8NU+Cs8Sgk3EA=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyXkdUwgR7Ala+8xqzDQScPz+Q/q+y9WwYzALTZ4tWCMiNyeZzq
+	uDHhdEZrL5VvbUwi0lWHBNewvl3y1V3oSOuhNM80D/XeYO5dm4QPuYHtrbAG
+X-Gm-Gg: ASbGncsbs4P0cZwDka9lkXoOS1ETxldVorHSTu3pMmYgIu+Hr+xBH6gqtVVILss4tfV
+	BHF2ICjsezDu7r0b7uHs6sW+21CDpp2j6zPVycu+sdw6i/kMcFlsmFFSgHweuWr3kDH3SFNe8XW
+	owDVZiueAx/sx7PdvlrtcbsU3c6ajcxQTWt6eKm42CWpWLMRu+Yc5xBIzBsEfEVus6r9S+bUVA6
+	aCeVBDgso7X8HooRS0E14ifJFtD71xRk9vrG4hJtKOy7img6WtZe57h/Fw0npMwtFkDJ8BcRNZG
+	FGLUSBKZLu9AFLhc0aAwp4e7SKt8mxZGWtA1
+X-Google-Smtp-Source: AGHT+IGKhwON3/Zgqxdc/kOEUQgtrGhgd6v4ae9bjTlOHb4zQxlZDDDcYZTdDZ9t/lUbT6tdpWlRKw==
+X-Received: by 2002:a05:6902:a91:b0:e60:a93f:2a86 with SMTP id 3f1490d57ef6-e635c1f4d33mr27926704276.42.1741757229230;
+        Tue, 11 Mar 2025 22:27:09 -0700 (PDT)
+Received: from localhost ([2800:bf0:82:3d2:9e61:1a62:1a8c:3e62])
+        by smtp.gmail.com with ESMTPSA id 3f1490d57ef6-e634b8ff7a6sm3037442276.57.2025.03.11.22.27.07
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 11 Mar 2025 22:27:08 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250312-hwm-v5-12-deb15ff8f3c6@gmail.com>
-References: <20250312-hwm-v5-0-deb15ff8f3c6@gmail.com>
-In-Reply-To: <20250312-hwm-v5-0-deb15ff8f3c6@gmail.com>
-To: =?utf-8?q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, 
- Armin Wolf <W_Armin@gmx.de>
-Cc: Kurt Borja <kuurtb@gmail.com>, Hans de Goede <hdegoede@redhat.com>, 
- platform-driver-x86@vger.kernel.org, Dell.Client.Kernel@dell.com, 
- linux-kernel@vger.kernel.org
-X-Mailer: b4 0.14.2
+Mime-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date: Wed, 12 Mar 2025 00:27:06 -0500
+Message-Id: <D8E1ENUHLP10.2BBUD2EP7MRGZ@gmail.com>
+Cc: <platform-driver-x86@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+ <Dell.Client.Kernel@dell.com>
+Subject: Re: [PATCH RFC v2 1/2] platform/x86: wmi: Add
+ wmidev_get_acpi_device_uid()
+From: "Kurt Borja" <kuurtb@gmail.com>
+To: "Armin Wolf" <W_Armin@gmx.de>, "Hans de Goede" <hdegoede@redhat.com>,
+ =?utf-8?q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+X-Mailer: aerc 0.20.1-0-g2ecb8770224a
+References: <20250309-awcc-uid-v2-0-5338c6380b2f@gmail.com>
+ <20250309-awcc-uid-v2-1-5338c6380b2f@gmail.com>
+ <9c172560-65ee-4468-93f7-ea5c11fe033f@gmx.de>
+In-Reply-To: <9c172560-65ee-4468-93f7-ea5c11fe033f@gmx.de>
 
-Add ABI description for the alienware-wmi driver.
+On Tue Mar 11, 2025 at 2:21 PM -05, Armin Wolf wrote:
+> Am 09.03.25 um 06:13 schrieb Kurt Borja:
+>
+>> Add a non-deprecated version of wmi_get_acpi_device_uid().
+>
+> Hi,
+>
+> i can understand you motivation behind this patch, but this is IMHO the w=
+rong approach.
+> Nothing guarantees us that a given ACPI _UID value will reliably signal t=
+he presence of
+> WMI methods now or in the future. Because of this i am against this patch=
+.
 
-Reviewed-by: Armin Wolf <W_Armin@gmx.de>
-Signed-off-by: Kurt Borja <kuurtb@gmail.com>
----
- Documentation/ABI/testing/debugfs-alienware-wmi    | 44 ++++++++++++++++++++++
- .../ABI/testing/sysfs-platform-alienware-wmi       | 14 +++++++
- MAINTAINERS                                        |  2 +
- 3 files changed, 60 insertions(+)
+Yes, in the end it is a leap of faith.
 
-diff --git a/Documentation/ABI/testing/debugfs-alienware-wmi b/Documentation/ABI/testing/debugfs-alienware-wmi
-new file mode 100644
-index 0000000000000000000000000000000000000000..48cfd4d0b002efd7b68d9c1d3aa91a3a05f49db5
---- /dev/null
-+++ b/Documentation/ABI/testing/debugfs-alienware-wmi
-@@ -0,0 +1,44 @@
-+What:		/sys/kernel/debug/alienware-wmi-<wmi_device_name>/system_description
-+Date:		March 2025
-+KernelVersion:	6.15
-+Contact:	Kurt Borja <kuurtb@gmail.com>
-+Description:
-+		This file exposes the raw ``system_description`` number reported
-+		by the WMAX device.
-+
-+		Only present on devices with the AWCC interface.
-+
-+		See Documentation/admin-guide/laptops/alienware-wmi.rst for
-+		details.
-+
-+		RO
-+
-+What:		/sys/kernel/debug/alienware-wmi-<wmi_device_name>/hwmon_data
-+Date:		March 2025
-+KernelVersion:	6.15
-+Contact:	Kurt Borja <kuurtb@gmail.com>
-+Description:
-+		This file exposes HWMON private data.
-+
-+		Includes fan sensor count, temperature sensor count, internal
-+		fan IDs and internal temp IDs.
-+
-+		See Documentation/admin-guide/laptops/alienware-wmi.rst for
-+		details.
-+
-+		RO
-+
-+What:		/sys/kernel/debug/alienware-wmi-<wmi_device_name>/pprof_data
-+Date:		March 2025
-+KernelVersion:	6.15
-+Contact:	Kurt Borja <kuurtb@gmail.com>
-+Description:
-+		This file exposes Platform Profile private data.
-+
-+		Includes internal mapping to platform profiles and thermal
-+		profile IDs.
-+
-+		See Documentation/admin-guide/laptops/alienware-wmi.rst for
-+		details.
-+
-+		RO
-diff --git a/Documentation/ABI/testing/sysfs-platform-alienware-wmi b/Documentation/ABI/testing/sysfs-platform-alienware-wmi
-new file mode 100644
-index 0000000000000000000000000000000000000000..4877b3745f4e5b503376d375bf48464250328ce2
---- /dev/null
-+++ b/Documentation/ABI/testing/sysfs-platform-alienware-wmi
-@@ -0,0 +1,14 @@
-+What:		/sys/class/hwmon/hwmonX/fanY_boost
-+Date:		March 2025
-+KernelVersion:	6.15
-+Contact:	Kurt Borja <kuurtb@gmail.com>
-+Description:
-+		This file exposes fan boost control for Dell gaming laptops with
-+		the AWCC WMI interface.
-+
-+		See Documentation/admin-guide/laptops/alienware-wmi.rst for
-+		details.
-+
-+		Integer value in the range 0 to 255
-+
-+		RW
-diff --git a/MAINTAINERS b/MAINTAINERS
-index c609bc321b8dc3ab0e8d92b04e42483be8cc171c..faa377126bda0b9c848760495dc893982f3a4c3a 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -796,6 +796,8 @@ M:	Kurt Borja <kuurtb@gmail.com>
- L:	platform-driver-x86@vger.kernel.org
- L:	Dell.Client.Kernel@dell.com
- S:	Maintained
-+F:	Documentation/ABI/testing/debugfs-alienware-wmi
-+F:	Documentation/ABI/testing/sysfs-platform-alienware-wmi
- F:	Documentation/admin-guide/laptops/alienware-wmi.rst
- F:	Documentation/wmi/devices/alienware-wmi.rst
- F:	drivers/platform/x86/dell/alienware-wmi*
+I think that it's not very risky as AFAIK AWCC didn't even exist when
+devices used the legacy RGB interface. Also as Mario mentioned, only a
+handful of devices supported the legacy interface, compared to the large
+amount of systems with the AWCC one.
 
--- 
-2.48.1
+But of course, there is always a possibility of regressions for some
+unknown edge case.
 
+>
+> The correct way would be to use the BMOF data to check for missing WMI me=
+thods. I did
+> some work on that which i will announce soon.
+
+Anyways, this is very cool and indeed the correct approach. Hopefully
+I'll be able to help a bit, as I spent some time studying Pali's
+decoder.
+
+--=20
+ ~ Kurt
