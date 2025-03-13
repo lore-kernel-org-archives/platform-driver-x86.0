@@ -1,104 +1,163 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4BF02265CAF;
-	Thu, 13 Mar 2025 10:23:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 48AD3266590;
+	Thu, 13 Mar 2025 12:57:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741861435; cv=none; b=GuLnO8kFWnFzM0fiYfyh5idbATBykKk+WGeifoSqtslSKtS3lX4PkvqyyNmkSzGbvqqO28PMePlpbBb/vZNr21SP+1y6oGAiyElWmoMsEq5ljEO13NwEk71QMzF/AKQIfA65AfKplFRnrtNNyB24/3OWaupRMpkhdK+7ARnTFnA=
+	t=1741870671; cv=none; b=OP679ktn34Z1h8dSnNR9b/uDiLbXOYxDPhv4fnUfE/FK7bHSTWJdEnppylRwREZFl1Fbec5SbBtxj+zCODHQiEJ0YygUm/v1v4v9DO5fchW1ClZnJlI6yQwQwQzYQYC3ZNjaMaCjA0Qo0vaGTyQ4USk2d+L2azgibXJsS/iNiBs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741861435; c=relaxed/simple;
-	bh=ZQtNwbAkNNsl8udTvZE9qtF99bHC259EAPIcckU+49I=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=M3yHPp6JpJJV++En8UKq5M4X6Rs4j2jTAyWh8WKk7aEJSxzrsUep5p4sLDHpEXTSSk55ndreY/VbIfFSw0gvX9d6H8V/LNGS65LX0Ljl+URksclju1jb+ZRclVjTJFG3+mneQaXBjNImrQEaQthyAW5e4lnu2ayGe1mqp4Mzuz0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=dNMS/hVR; arc=none smtp.client-ip=198.175.65.21
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1741870671; c=relaxed/simple;
+	bh=GXSrNVtULo+0+7K7FBMVP5WHNDAwiHeua2HaRBE75FU=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=LuEVMV/gOBxnV9FbV0df8k7o8vCMyMAm7orpzsh1a5C677HorPsvvEN0RSJFSdtWrNlRIeFfHbD0Jk/GM4CGDWcQn6lRCCV+olf5xqDKwpqWtkN7TXne+/JY3dAB9q24M4JuzECFFLItrnvdApX08UA1D5KYynxB65jbbBAzI10=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=NEGqvYJF; arc=none smtp.client-ip=192.198.163.9
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="dNMS/hVR"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="NEGqvYJF"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1741861435; x=1773397435;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=ZQtNwbAkNNsl8udTvZE9qtF99bHC259EAPIcckU+49I=;
-  b=dNMS/hVRO6M5bujSSzN8Q8gxnBy/s63jQw5X4OtPMR4ipqRhM+4+0LiS
-   YWEvzN0KWu3PzEaXFqc1Qv7fzXEC29LOJn4k0V3q68XGjczGUIj/mJW4f
-   HvdREq50oCohTAZdVWUNTYlhIKF9Mn90k8msN3rZvR1eJW3FfZYNtxRaW
-   DgFDKl51iXQeyxEd0rbLIHGyh2jczy1/dOoEw2+gMR7M2wh4Uwreg5kxb
-   MSPQRG2mwOA6K/T3juxO9mYED1rUeR+YmtEhbDLA6og7ZSqRuaFCq9ATz
-   Budb2XC5aAQLtv6RAu1XkyiYAl+Bfl+vIlhHiHM6AqM8hCelrOhxWSMRL
+  t=1741870670; x=1773406670;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=GXSrNVtULo+0+7K7FBMVP5WHNDAwiHeua2HaRBE75FU=;
+  b=NEGqvYJFuOIunpqE6iwdJKiJMI6g2Mdk9RQ7KJ8T2dnvOgSYBnInzf9V
+   HPo1f+RzfNL5scfROqhVZH6aBJN9vSfyOO2MXH85dJolOPlhd9VXXn0Vu
+   ZAZ5zIBKE0RbUUUg1Rg/pd7dOni9aelqk7Q1hVEs4cvEwH5OCEkk/h3AQ
+   IKUOITK/BgBQZlls/Pzvgz8MrM2bZzmWEsG7ERCT6lURTH+POYRGiuSZN
+   yHXTsUrvR8g3Vg6QEcUUXXhXPMEJKYycG5C2tpjX1OGZh7LHTsBce2a6w
+   6/+VrEau7P4Bkx7ld4jNR8aHDoLZGvVSpX2JFx4INUFv2a4EYW1OnGUQ1
    A==;
-X-CSE-ConnectionGUID: VXQIVsXfRdCqUjvXhsa1CA==
-X-CSE-MsgGUID: Fk7+yJtMTL2oOoAOA4MAFQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11371"; a="42876732"
+X-CSE-ConnectionGUID: SD1MYQWdTIuIU9dgRUxopQ==
+X-CSE-MsgGUID: GU3uGnT+S32N0NHQC4LXQg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11372"; a="53620994"
 X-IronPort-AV: E=Sophos;i="6.14,244,1736841600"; 
-   d="scan'208";a="42876732"
-Received: from fmviesa001.fm.intel.com ([10.60.135.141])
-  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Mar 2025 03:23:54 -0700
-X-CSE-ConnectionGUID: b9SeeQFFQzK2+zUVwwtadg==
-X-CSE-MsgGUID: AdmzUk5XSoCTpleSuNLcew==
+   d="scan'208";a="53620994"
+Received: from orviesa006.jf.intel.com ([10.64.159.146])
+  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Mar 2025 05:57:49 -0700
+X-CSE-ConnectionGUID: +WOJN2tWSdq6J7BX0EKXCw==
+X-CSE-MsgGUID: oSCUU8f6RmSQdHJ35qKP5Q==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.14,244,1736841600"; 
-   d="scan'208";a="151865467"
-Received: from lkp-server02.sh.intel.com (HELO a4747d147074) ([10.239.97.151])
-  by fmviesa001.fm.intel.com with ESMTP; 13 Mar 2025 03:23:51 -0700
-Received: from kbuild by a4747d147074 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1tsfjA-0009Jk-1k;
-	Thu, 13 Mar 2025 10:23:48 +0000
-Date: Thu, 13 Mar 2025 18:23:12 +0800
-From: kernel test robot <lkp@intel.com>
-To: Kurt Borja <kuurtb@gmail.com>,
-	Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	Armin Wolf <W_Armin@gmx.de>
-Cc: oe-kbuild-all@lists.linux.dev, Kurt Borja <kuurtb@gmail.com>,
-	Hans de Goede <hdegoede@redhat.com>,
-	platform-driver-x86@vger.kernel.org, Dell.Client.Kernel@dell.com,
-	linux-kernel@vger.kernel.org, Guenter Roeck <linux@roeck-us.net>,
-	Jean Delvare <jdelvare@suse.com>, linux-hwmon@vger.kernel.org
-Subject: Re: [PATCH v5 08/12] platform/x86: alienware-wmi-wmax: Add support
- for manual fan control
-Message-ID: <202503131819.lgRZtPus-lkp@intel.com>
-References: <20250312-hwm-v5-8-deb15ff8f3c6@gmail.com>
+   d="scan'208";a="120940794"
+Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.195])
+  by orviesa006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Mar 2025 05:57:44 -0700
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Thu, 13 Mar 2025 14:57:40 +0200 (EET)
+To: Mario Limonciello <superm1@kernel.org>
+cc: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>, 
+    "Rafael J . Wysocki" <rafael@kernel.org>, 
+    Hans de Goede <hdegoede@redhat.com>, "Luke D . Jones" <luke@ljones.dev>, 
+    Mark Pearson <mpearson-lenovo@squebb.ca>, 
+    "open list:AMD PMF DRIVER" <platform-driver-x86@vger.kernel.org>, 
+    open list <linux-kernel@vger.kernel.org>, 
+    "open list:ACPI" <linux-acpi@vger.kernel.org>, 
+    "Derek J . Clark" <derekjohn.clark@gmail.com>, 
+    Antheas Kapenekakis <lkml@antheas.dev>, me@kylegospodneti.ch, 
+    Denis Benato <benato.denis96@gmail.com>, 
+    Mario Limonciello <mario.limonciello@amd.com>, 
+    Yijun Shen <Yijun.Shen@dell.com>
+Subject: Re: [PATCH] platform/x86/amd: pmf: Fix missing hidden options for
+ Smart PC
+In-Reply-To: <88e95b2f-3ffa-4876-a83b-38d25ac9cbc2@kernel.org>
+Message-ID: <f29edbaa-90d8-10ce-76c6-4c786b90cd9b@linux.intel.com>
+References: <20250306034402.50478-1-superm1@kernel.org> <50adcc9d-241d-19b6-7b03-2e91ef7d017b@linux.intel.com> <88e95b2f-3ffa-4876-a83b-38d25ac9cbc2@kernel.org>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250312-hwm-v5-8-deb15ff8f3c6@gmail.com>
+Content-Type: multipart/mixed; boundary="8323328-1089346082-1741870660=:1742"
 
-Hi Kurt,
+  This message is in MIME format.  The first part should be readable text,
+  while the remaining parts are likely unreadable without MIME-aware tools.
 
-kernel test robot noticed the following build warnings:
+--8323328-1089346082-1741870660=:1742
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 
-[auto build test WARNING on f895f2493098b862f1ada0568aba278e49bf05b4]
+On Wed, 12 Mar 2025, Mario Limonciello wrote:
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Kurt-Borja/platform-x86-alienware-wmi-wmax-Rename-thermal-related-symbols/20250312-131534
-base:   f895f2493098b862f1ada0568aba278e49bf05b4
-patch link:    https://lore.kernel.org/r/20250312-hwm-v5-8-deb15ff8f3c6%40gmail.com
-patch subject: [PATCH v5 08/12] platform/x86: alienware-wmi-wmax: Add support for manual fan control
-config: x86_64-randconfig-122-20250313 (https://download.01.org/0day-ci/archive/20250313/202503131819.lgRZtPus-lkp@intel.com/config)
-compiler: gcc-12 (Debian 12.2.0-14) 12.2.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250313/202503131819.lgRZtPus-lkp@intel.com/reproduce)
+>=20
+>=20
+> On 3/10/25 12:19, Ilpo J=C3=A4rvinen wrote:
+> > On Wed, 5 Mar 2025, Mario Limonciello wrote:
+> >=20
+> > > From: Mario Limonciello <mario.limonciello@amd.com>
+> > >=20
+> > > amd_pmf_get_slider_info() checks the current profile to report correc=
+t
+> > > value to the TA inputs.  If hidden options are in use then the wrong
+> > > values will be reported to TA.
+> > >=20
+> > > Add the two compat options PLATFORM_PROFILE_BALANCED_PERFORMANCE and
+> > > PLATFORM_PROFILE_QUIET for this use.
+> > >=20
+> > > Reported-by: Yijun Shen <Yijun.Shen@dell.com>
+> > > Fixes: 9a43102daf64d ("platform/x86/amd: pmf: Add balanced-performanc=
+e to
+> > > hidden choices")
+> > > Fixes: 44e94fece5170 ("platform/x86/amd: pmf: Add 'quiet' to hidden
+> > > choices")
+> > > Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
+> > > ---
+> > >   drivers/platform/x86/amd/pmf/spc.c | 2 ++
+> > >   1 file changed, 2 insertions(+)
+> > >=20
+> > > diff --git a/drivers/platform/x86/amd/pmf/spc.c
+> > > b/drivers/platform/x86/amd/pmf/spc.c
+> > > index f34f3130c3307..1d90f9382024b 100644
+> > > --- a/drivers/platform/x86/amd/pmf/spc.c
+> > > +++ b/drivers/platform/x86/amd/pmf/spc.c
+> > > @@ -219,12 +219,14 @@ static int amd_pmf_get_slider_info(struct
+> > > amd_pmf_dev *dev, struct ta_pmf_enact_
+> > >     =09switch (dev->current_profile) {
+> > >   =09case PLATFORM_PROFILE_PERFORMANCE:
+> > > +=09case PLATFORM_PROFILE_BALANCED_PERFORMANCE:
+> > >   =09=09val =3D TA_BEST_PERFORMANCE;
+> > >   =09=09break;
+> > >   =09case PLATFORM_PROFILE_BALANCED:
+> > >   =09=09val =3D TA_BETTER_PERFORMANCE;
+> > >   =09=09break;
+> > >   =09case PLATFORM_PROFILE_LOW_POWER:
+> > > +=09case PLATFORM_PROFILE_QUIET:
+> > >   =09=09val =3D TA_BEST_BATTERY;
+> > >   =09=09break;
+> > >   =09default:
+> >=20
+> > Hi Mario,
+> >=20
+> > Just for me to be sure what I'm supposed to do with all these patches
+> > related to this platform profile legacy handling... :-)
+> >=20
+> > So this fix is necessary in addition to the 3 patches that got already
+> > merged through Rafaels tree?
+> >=20
+> > What about this patch from Luke:
+> >=20
+> > https://patchwork.kernel.org/project/platform-driver-x86/patch/20250224=
+223551.16918-1-luke@ljones.dev/
+> >=20
+> > Is that also needed?
+> >=20
+> > Thanks in advance.
+> >=20
+>=20
+> Yes; this was another finding that Yijun discovered missing as part of te=
+sting
+> Rafael's tree.  It can go through your tree or Rafael's.  It doesn't real=
+ly
+> matter.
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202503131819.lgRZtPus-lkp@intel.com/
+I took this into fixes branch.
 
-sparse warnings: (new ones prefixed by >>)
->> drivers/platform/x86/dell/alienware-wmi-wmax.c:1359:1: sparse: sparse: symbol 'wmax_wmi_pm_ops' was not declared. Should it be static?
+> Luke's patch isn't needed anymore.
 
-vim +/wmax_wmi_pm_ops +1359 drivers/platform/x86/dell/alienware-wmi-wmax.c
+Okay, thanks.
 
-  1358	
-> 1359	DEFINE_SIMPLE_DEV_PM_OPS(wmax_wmi_pm_ops, wmax_wmi_suspend, wmax_wmi_resume);
-  1360	
+--=20
+ i.
 
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+--8323328-1089346082-1741870660=:1742--
