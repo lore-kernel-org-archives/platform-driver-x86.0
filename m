@@ -1,107 +1,133 @@
-Received: from mail-qv1-f42.google.com (mail-qv1-f42.google.com [209.85.219.42])
+Received: from mail-vk1-f174.google.com (mail-vk1-f174.google.com [209.85.221.174])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 99DAD13B280;
-	Thu, 13 Mar 2025 16:28:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 54EAB189915;
+	Thu, 13 Mar 2025 18:21:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741883316; cv=none; b=FlIKGC49NxVtR2uvY2zRjDuP7i4m4QERJunRut6ELS2NqXAha2MUct8Kk84EYSE9ecAm8881XdjclZwzMR5hilIuM19z2Trg0lhu+cOFh4f8uYmerH8x5eZwMu3kE2ERj4N7qxK7WM1ZV/tPMNkkgCYqnw4RwM9HqF5sDjlb+gc=
+	t=1741890113; cv=none; b=SuWVmnHGDbvG8CgS2hzFr18jZ84qgYF9tUgjWng7PC18GN320KcwCjODTVNcPpb65q+5eDDEyin/hgGbq231yJpx5CbM3PQP6yfKFZGvGslJekGZfSy7Lu8/9Niu02va8mcYSgR/dcy7WdilVKKE74Alq+cpT4Cp68RcVbRmQUE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741883316; c=relaxed/simple;
-	bh=tXHlN/vZaT3vrheBggtmIQEZ2sR6fVrJjqBtDYhsxyI=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=rD18LuB2L+e8ux+SspyP9jtX7CJxcldkRBvToE0f3kessmHQ2Q/IIjOxdOQQ0LVCx68fzVPt12T8lat75Si+NBDf0N68rdGYjwMpdyF3hLjon2xtnQOm3kTWFXqb0trWKPNUxSIwcqwdPjue8TD+02FD5bABzShoZ/pGsQ/PKg8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=a62nGLGB; arc=none smtp.client-ip=209.85.219.42
+	s=arc-20240116; t=1741890113; c=relaxed/simple;
+	bh=yQ6Bs1SB0w+9fA5SYKYGHNWa/kfL1De3qp5h3FSgzlM=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=OZvjEwL+myGch327SCl4HFXGvH48m2YVGyC7fKohdbECnE4gaf9xdMujAxs+0z0IPmIuxH9iWuoYR4R4Oktg5vNg9yxz0PChytY+rfbLzM3E8LTLgaUhQ7QaaV5mTcjPT0R5/+y/qVpOY0hgbN1AaavrGd5trnJuFEKmveQjz3w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=WpIC1ypV; arc=none smtp.client-ip=209.85.221.174
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="a62nGLGB"
-Received: by mail-qv1-f42.google.com with SMTP id 6a1803df08f44-6e241443e8dso2144196d6.0;
-        Thu, 13 Mar 2025 09:28:34 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WpIC1ypV"
+Received: by mail-vk1-f174.google.com with SMTP id 71dfb90a1353d-523effaf7ecso622105e0c.3;
+        Thu, 13 Mar 2025 11:21:51 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1741883313; x=1742488113; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=F+rzi9Cs1mysyZu/RVktFl1DJomxhH9G8QJ0f6e3ElM=;
-        b=a62nGLGBP4/PFQl8/5dW5JV+G+zEIR4GsQsRq4omnf3KPS6VHcBDuGHdxvY+XaG4cv
-         Gx5zwDrnTh2lAHS0RhVU9bSZAueKs2tjz5InLXYy9jwaUEtLmTN1W6ah979pKou/umjA
-         SYQBO2U41r7vAbVeExhrjMydH9c4v5iDlCuSNg905VJGB/Q0YmjcQPwCLzI92ldhkVhs
-         KDHJxFilMffgRjzBdtZx/M/P/LGjelL5n53sT0R/gSkJYth9CaHmYPtmdoQPPtAu0Yxp
-         okjB/1sBuYmm/yw0A+8T2wBbDeGq85Q+CCLhBDOXBHUgT7wY3G/Jnw5YOR3WJStR4xQO
-         E8Zg==
+        d=gmail.com; s=20230601; t=1741890111; x=1742494911; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=CpXrFA/1Gved3JSNXjbX8H6OLkoXNJ2jAdYSQvp3qEo=;
+        b=WpIC1ypVM14sGeroesZyYcmTTnyWFng1Wj/qIEOokv4e6OEWLd/k18Za0OT4mtgDFQ
+         mylVUBu95iFl4RbbesOjnVKlI6IsrnNqExJeYs6SeZHd2sdMFfLCu5JfjV4f9ObHQO1J
+         RMPme4/9J2UB8iQhSEGgVTWRN5HAyNS7W0XYxtsiJb/5CTfauXxugsrqkQdOx7gkfj5d
+         cI/rEvNWmSs0QoLa2GHZQCq93MwJFX4BLyR17uNb2VuxCpCcl0LyZr87/0rgg9bBeJgd
+         sWO+IgXSPZNJqd1Mr0dN6uSq761RLO+QLEEcWQ0XBbBGvtnMz1vrLww9+oeLu+2SOjFv
+         3FQg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741883313; x=1742488113;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=F+rzi9Cs1mysyZu/RVktFl1DJomxhH9G8QJ0f6e3ElM=;
-        b=tvHBchzEZHb+qFnhnxhZNrmhy4MhHipDMuWAwhY9a8kcndLZzzcBIMmjnrvA/yRIoA
-         2Kz9ccvMvsWlP7gZrUYFTh7/8igGG7DMda1UhLosBhUaT7z+tweNwuXNq/te1aHn0gaq
-         qd8uSe4lyNpVYtT3kE8GsOTCK9z6Y6WYLWYxpKpp4vnVtLmX3fiXYaeZJijTGI+TTZwC
-         zCH4CxgV0kecxfm7yyp0YTgyxMsTnH1OPkzJh+H0IWKvUEq1Imp7CWn4LIQpZjR4QhMO
-         XvW24NoaVmtHcvMHxSFro/x9gJyfXdBJPvYAvA97mYrl1EfC1Wb5718fAwvxXIOoAdHS
-         VUfw==
-X-Forwarded-Encrypted: i=1; AJvYcCVKpQSG8DmXqIcmKuGRc/FINr9BrgJmT2Vs6bY8ipMtASLsDJPm2E82MeTOyP7BEyqHUa+072FrjSnB5EU=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyaMkgyeMszOAEz5euMyeVTGZxIgwtkNDkMM6o2/2tm9yAVMGlc
-	IvnBudtuECwws+FbkAXdks4dVRzyiRfBFp6EVGoxBO5b17vXHANZIHxE
-X-Gm-Gg: ASbGncvfUXV4IkdDKdF15AaeSa3WBKAV2tibvNCoDQik54BQN0MhuzByntpzM1IubUg
-	pbGjdhSpMG5nlmvhfVA7ncFchVrHAt1RCGXuL9HAXZm2xNg0lRgqhhLttNUt0wLiiMRzLd6STVM
-	41ilefjuQzq1vPlLfEjyqeoAKslR2DQEY/KKhCGP5lWcoXFwycSzvWcBND4r6UieabPfeIWBVi+
-	j7PMYeNSiHxxDm+BHEpSLk846lgkxKFCW1m+iMPZg/aC7yWyLKQc4SXX+3dO3zFD2SxsP+ib6aH
-	S1R080MJyfE+N8lq5pVaDbwIoZ18/2kaEC1+LNkZBw==
-X-Google-Smtp-Source: AGHT+IGC+14nXQfNX07ccYgxn4C7VYfVsX63xsHWJGYDCFdwepARsok0fgZ4rWNamxi+RO+7wfyN1w==
-X-Received: by 2002:a05:622a:5e8a:b0:472:2122:5a43 with SMTP id d75a77b69052e-476665885eamr112495941cf.1.1741883311524;
-        Thu, 13 Mar 2025 09:28:31 -0700 (PDT)
-Received: from ise-alpha.. ([2620:0:e00:550a:642:1aff:fee8:511b])
-        by smtp.gmail.com with ESMTPSA id d75a77b69052e-476bb66070esm10969721cf.39.2025.03.13.09.28.30
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 13 Mar 2025 09:28:30 -0700 (PDT)
-From: Chenyuan Yang <chenyuan0y@gmail.com>
-To: W_Armin@gmx.de,
-	hdegoede@redhat.com,
-	ilpo.jarvinen@linux.intel.com
-Cc: platform-driver-x86@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Chenyuan Yang <chenyuan0y@gmail.com>
-Subject: [PATCH] platform/x86: wmi: Add Null check for device
-Date: Thu, 13 Mar 2025 11:28:20 -0500
-Message-Id: <20250313162820.3688298-1-chenyuan0y@gmail.com>
-X-Mailer: git-send-email 2.34.1
+        d=1e100.net; s=20230601; t=1741890111; x=1742494911;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=CpXrFA/1Gved3JSNXjbX8H6OLkoXNJ2jAdYSQvp3qEo=;
+        b=nivRHW0nf/DGEh9YMP7RzJj/lCIwP62vvGm/7ltoNBcWhgGaH2G+FFdotBAE/vGlrC
+         mQ/lCatYbWEfUjD8uyymPzMyYkF2jzflolGiBpa4CRC1P7Sy0FaUOsRWuhWd7t1mwx4q
+         VeAmrFX5VKX8tqBLbM+z811S93c/CuI29koz9TC6cbIWT/wljnOixd0MqDQ4aSm4r2MO
+         +p/thWjOldZmVaMSkw70oWLm9oq/kBgW8FaR9UkFDEnHrFg22y/1KDn5ZCBlbX2791B5
+         lqSw4JedM82N8bfJri+jPrJQauz+/rsCIaUml+HmOHhQoJxbcjqQGd/A86h4D1oxcQS/
+         1MYg==
+X-Forwarded-Encrypted: i=1; AJvYcCUpnJ0pP5/MIUTAgP450N0PpTapzA1cGlFnNYkMCUhLP9ne74yH0lTbGKV8cdDvFUJn7voE1LG1YFOzbEwyJorGcPSw5w==@vger.kernel.org, AJvYcCXgowbWgDHn9MI501WgqjcJvezYVWu1SQ6YLa+3wLm0Pc8eykzGlRrsO0IPWorO49AiPPre06CSp6aTJZo=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzld+SA66r/aeRZx/fM3zDtVyT8jAaFyQZIstvX/Vq29f9/Sjrb
+	SIS1Wic4AMHKpJJhVzk4mjA7DfO/PfVfsG7KHb4dB/eS+01BhhuVmSIWzOZR3USYJlf1mCI+B/r
+	4/5dUPYNBdC1olydwp9z2WfBPz3Y=
+X-Gm-Gg: ASbGncv+DRZF41dnMVsndKuJzYaf8LCkdiNy0y6ECysPfdHPG4oXcXW+At3nm8fqPSp
+	078yLOahYub2/XBatkTbTNVaBnxc6HyLUuRlEShHklc8zcWhFW+UXb4+17dTJvlGwUdpTvTfUm2
+	+c3KI1DTFXjGEF+Xn73KJZt59lzA==
+X-Google-Smtp-Source: AGHT+IEm/ParAiCN54ez1970jPWefA5VdlEPNN417j613Rj0hovapLVapcRYbA0lDsOD9TSgceh57CoMG4qtOk+/0rk=
+X-Received: by 2002:a05:6122:3703:b0:51f:3eee:89f2 with SMTP id
+ 71dfb90a1353d-5244612c257mr2180745e0c.2.1741890111066; Thu, 13 Mar 2025
+ 11:21:51 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <f5d8b82d-c711-4611-b257-b4297f172bb1@gmx.de> <637B90F3-58C6-43B6-9822-5314C62138C6@gmail.com>
+ <eaeaef7a-570e-4738-a420-4d5f61adf0bf@gmx.de>
+In-Reply-To: <eaeaef7a-570e-4738-a420-4d5f61adf0bf@gmx.de>
+From: Rayan Margham <rayanmargham4@gmail.com>
+Date: Thu, 13 Mar 2025 18:21:37 +0000
+X-Gm-Features: AQ5f1JowL-n001-0hx5K-AlM8Jv-vjUEka4UA5suUJiIQcGpEqBKiNka1t7I6ls
+Message-ID: <CACzB==4QC+khEpw99ekp-DK=jzMebroCw5PeXmgS9GsHmPYfSw@mail.gmail.com>
+Subject: Re: [RFC PATCH v2 0/3] platform/x86: acer-wmi: Add fan control support
+To: Armin Wolf <W_Armin@gmx.de>
+Cc: jlee@suse.com, basak.sb2006@gmail.com, kuurtb@gmail.com, 
+	hdegoede@redhat.com, ilpo.jarvinen@linux.intel.com, 
+	platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Not all devices have an ACPI companion fwnode, so device might be NULL.
-This is similar to the commit cd2fd6eab480
-("platform/x86: int3472: Check for adev == NULL").
+Could i have the deb package, I can try to install it.
 
-Add a check for device not being set and return -ENODEV in that case to
-avoid a possible NULL pointer deref in parse_wdg().
-
-Note, acpi_wmi_probe() under the same file has such a check.
-
-Signed-off-by: Chenyuan Yang <chenyuan0y@gmail.com>
+On Tue, Mar 11, 2025 at 9:53=E2=80=AFPM Armin Wolf <W_Armin@gmx.de> wrote:
+>
+> Am 09.03.25 um 13:51 schrieb Rayan Margham:
+>
+> > I=E2=80=99m so sorry I=E2=80=99ve been in a mental health unit for the =
+past month, are you still working on the driver I would love to test anythi=
+ng you provide me now
+> >
+> > Bestest regards
+> > Rayan Margham
+>
+> Oh my, i wish you all the best for recovery.
+>
+> Can you compile the current -rc kernel with this patch series applied? If=
+ no then i can give you a .deb package containing the kernel and the
+> modified acer-wmi driver.
+>
+> Thanks,
+> Armin Wolf
+>
+> >> On 5 Mar 2025, at 00:24, Armin Wolf <W_Armin@gmx.de> wrote:
+> >>
+> >> =EF=BB=BFAm 15.02.25 um 18:45 schrieb Armin Wolf:
+> >>
+> >>> This experimental patch series aims to add fan control support to the
+> >>> acer-wmi driver. The patches are compile-tested only and need to be
+> >>> tested on real hardware to verify that they actually work.
+> >>>
+> >>> I CCed two users who requested support for this feature. I would be
+> >>> very happy if both of you could test those patches and report back.
+> >>>
+> >>> I am ready to help you both with compiling a custom linux kernel for
+> >>> testing this series.
+> >> Any updates from the two people with Acer hardware?
+> >>
+> >> Thanks,
+> >> Armin Wolf
+> >>
+> >>> Changes since v2:
+> >>> - remove duplicate include and replace hwmon_pwm_mode with
+> >>>    hwmon_pwm_enable in second patch
+> >>>
+> >>> Armin Wolf (3):
+> >>>    platform/x86: acer-wmi: Fix setting of fan behavior
+> >>>    platform/x86: acer-wmi: Add fan control support
+> >>>    platform/x86: acer-wmi: Enable fan control for PH16-72 and PT14-51
+> >>>
+> >>>   drivers/platform/x86/acer-wmi.c | 298 +++++++++++++++++++++++++++++=
 ---
- drivers/platform/x86/wmi.c | 3 +++
- 1 file changed, 3 insertions(+)
-
-diff --git a/drivers/platform/x86/wmi.c b/drivers/platform/x86/wmi.c
-index 646370bd6b03..54e697838c1e 100644
---- a/drivers/platform/x86/wmi.c
-+++ b/drivers/platform/x86/wmi.c
-@@ -1091,6 +1091,9 @@ static int parse_wdg(struct device *wmi_bus_dev, struct platform_device *pdev)
- 	u32 i, total;
- 	int retval;
- 
-+	if (!device)
-+		return -ENODEV;
-+
- 	status = acpi_evaluate_object(device->handle, "_WDG", NULL, &out);
- 	if (ACPI_FAILURE(status))
- 		return -ENXIO;
--- 
-2.34.1
-
+> >>>   1 file changed, 273 insertions(+), 25 deletions(-)
+> >>>
+> >>> --
+> >>> 2.39.5
+> >>>
+> >>>
