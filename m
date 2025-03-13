@@ -1,116 +1,113 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7EB00262D1C;
-	Thu, 13 Mar 2025 08:55:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 07D332627E8;
+	Thu, 13 Mar 2025 08:59:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741856149; cv=none; b=f+3mO8IHvwkcD921Y+LTD7ATN0WLcWEWufeeMIZyikFLZtuFEHMRyorMy3Zv8JQC3YVjT7Cl/rlaEW7RGK765b28NNdwm3ELQMy46QHhMYZuyVPnt9C6crzqC+ccQK+e2NoQ7p0mYotFMpZqrsfTfPwy5WAJhXbsqu0BhwXbdag=
+	t=1741856380; cv=none; b=aqgoU+zi8siWTVTqJRrhsPT9fCOlfphCAizC54wnip6DFQqS6lzPKKLx9WtbbzBaoxwK/8sMX5pyoJZZK1f6R0h+rCCyr8pIMUQlQxnqsWQaWWponuTzmn1ZSZvR4CaaTY+cIVH7JBuERlPvOEPY/XBUFAFhEVmfHQB8XFvT4Eg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741856149; c=relaxed/simple;
-	bh=TWVmCd9sRlFWNOJvA/h/A4jXKCn/9mMzGzNHPLXP+1k=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=los0roy5MMZhnfT2mIxPtcQeAqtqQ91kqUzC+WwxP/sUDXHuv0/V2Hv9muYDxxKyGbeNpaksWDqW+B3q9DHWGcHdTcLd2issJpCbJcROZTYwv+06oemx89oIDpWYn3vSgYs9KsSWXTiEXiZLNnajSnGnUveWZNXVaHG8pHRsq5g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=WRfBU0Ax; arc=none smtp.client-ip=198.175.65.15
+	s=arc-20240116; t=1741856380; c=relaxed/simple;
+	bh=i4tUZd9erZBD5LlwfVkopEm5j1Y60T1nD7KX1mvmhCs=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=LR8DOeKVExIG20zedFmOEgjtRiscgFibFX/M0ks3k1+Nn7sAC6Af2M3EGXoFh+UV9EGvQNw8Y3X19MC17FoMzjqsfuyJ4/fjjTrrp6tNCROoM99WTSz4Q4+5Ub0leU4oNICFtOHovSg4Olz8qkI/WFHrtqRRQs7zPIWR++Hu4wg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Zoqv8Tho; arc=none smtp.client-ip=198.175.65.17
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="WRfBU0Ax"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Zoqv8Tho"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1741856148; x=1773392148;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=TWVmCd9sRlFWNOJvA/h/A4jXKCn/9mMzGzNHPLXP+1k=;
-  b=WRfBU0Ax5bAWYNMKQLKUG6HrpE3CmTjiZ03of/cgYyvGzkdITFeBs4t/
-   eg/xpnoF0WJe20aQqJPbjzBf4ncfLK/RgkPar4+fXKpKAHd2WgZgN7KFP
-   TTorg3JeLXaSgi9p5HGgcGMpKvjTBeIf78Y5nFqmCsyHCTzHzLC83bzHw
-   Bwd+men9jxCABxxaBPtzNFueom2Jt51G0qa0znUNWQYakdJtSd+AvNINA
-   bsnCs4WpeNtVl+IJzavfjlFnl2Sm6OdATkPuHOmkCN9AcGEyHtn6YIJUc
-   n/Wnzqit/DPB/10tKkTEMGpHCLZfID8wCkHWo8QQZLYP7TjeB6/cBl8/r
-   Q==;
-X-CSE-ConnectionGUID: ooSg8m3DS+yJMMsn7ZvqGw==
-X-CSE-MsgGUID: zRab3DTLQ6+Dmp1UG2AAvg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11371"; a="46614470"
+  t=1741856379; x=1773392379;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=i4tUZd9erZBD5LlwfVkopEm5j1Y60T1nD7KX1mvmhCs=;
+  b=Zoqv8ThomRLXw7zPTmVyUXsptOJiG3AQTG5A2B/+ZUQaeMFoVQZO5kHb
+   I6fFQQRkxZGGCE87ed6hw7EYi0VMe1iGCEsBbtuhkYq4LVh0HrkcLOnme
+   dKZVUbwiRLcBjAT8d3mJ9Qd9O9zzMNAscz7gNhJ3zh3aALxqsWzwx1pj+
+   cWFGrstCww+bfmVCkjAxd+0KH1Y6Lb93ZVm6Ubi0UPfa30COVUBGg0WyU
+   wVzHfNCgCEsjw5RZ4hOtCfK0WCYPXQRKYF0ZiiMmIDQNjukeMCwr5bUOP
+   zSzWWX/WqHYDP7isP+6gCiGRght7VNs1+WuPt1FB20cAfn4qTKvm319MJ
+   A==;
+X-CSE-ConnectionGUID: 4B/3InGARiWyVtzK76PfgA==
+X-CSE-MsgGUID: wQAFC65RTeiPxPLxUkpQ/g==
+X-IronPort-AV: E=McAfee;i="6700,10204,11371"; a="42992278"
 X-IronPort-AV: E=Sophos;i="6.14,244,1736841600"; 
-   d="scan'208";a="46614470"
-Received: from fmviesa006.fm.intel.com ([10.60.135.146])
-  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Mar 2025 01:55:47 -0700
-X-CSE-ConnectionGUID: FgaI41hzTSSUUxLvpp8RKQ==
-X-CSE-MsgGUID: CmCKwnOfTOuPDcdafuHmwA==
+   d="scan'208";a="42992278"
+Received: from orviesa007.jf.intel.com ([10.64.159.147])
+  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Mar 2025 01:59:38 -0700
+X-CSE-ConnectionGUID: N5ctUkCQQzWvq5uci93o+A==
+X-CSE-MsgGUID: mf+xTRd3QPyW53E7a5R3Mg==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.14,244,1736841600"; 
-   d="scan'208";a="120691590"
-Received: from yongliang-ubuntu20-ilbpg12.png.intel.com ([10.88.227.39])
-  by fmviesa006.fm.intel.com with ESMTP; 13 Mar 2025 01:55:45 -0700
-From: Choong Yong Liang <yong.liang.choong@linux.intel.com>
-To: Hans de Goede <hdegoede@redhat.com>,
-	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	David E Box <david.e.box@linux.intel.com>,
-	Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc: platform-driver-x86@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v2] platform/x86: intel_pmc_ipc: add option to build without ACPI
-Date: Thu, 13 Mar 2025 16:55:26 +0800
-Message-Id: <20250313085526.1439092-1-yong.liang.choong@linux.intel.com>
-X-Mailer: git-send-email 2.34.1
+   d="scan'208";a="121384004"
+Received: from choongyo-mobl.gar.corp.intel.com (HELO [10.247.100.100]) ([10.247.100.100])
+  by orviesa007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Mar 2025 01:59:27 -0700
+Message-ID: <21d10c76-6f8b-4050-aa7d-59b12b3c5e85@linux.intel.com>
+Date: Thu, 13 Mar 2025 16:59:21 +0800
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v1] platform/x86: intel_pmc_ipc: add option to build
+ without ACPI
+To: Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc: Hans de Goede <hdegoede@redhat.com>,
+ =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+ David E Box <david.e.box@linux.intel.com>,
+ platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20250312022955.1418234-1-yong.liang.choong@linux.intel.com>
+ <CAHp75VekTbp++4yw4yDhtB96K+C0w1uHiVih5x-jO+TWRLiPmw@mail.gmail.com>
+ <dbac683e-ab8d-440f-8013-f0ff2287a5ff@linux.intel.com>
+ <CAHp75VeLhHh_xhxUb5fsk71ck_m9SGUeXjH8taq+JYjEpHdk2Q@mail.gmail.com>
+Content-Language: en-US
+From: Choong Yong Liang <yong.liang.choong@linux.intel.com>
+In-Reply-To: <CAHp75VeLhHh_xhxUb5fsk71ck_m9SGUeXjH8taq+JYjEpHdk2Q@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
 
+
+
+On 12/3/2025 10:00 pm, Andy Shevchenko wrote:
+> On Wed, Mar 12, 2025 at 1:23 PM Choong Yong Liang
+> <yong.liang.choong@linux.intel.com> wrote:
+>> On 12/3/2025 3:54 pm, Andy Shevchenko wrote:
+>>> On Wed, Mar 12, 2025 at 4:30 AM Choong Yong Liang
+>>> <yong.liang.choong@linux.intel.com> wrote:
+> 
+> ...
+> 
+>> Thank you for your detailed feedback and suggestions. I'll make the
+>> necessary adjustments to the patch based on your comments above.
+>>
+>>>> Signed-off-by: David E. Box <david.e.box@linux.intel.com>
+>>>> Signed-off-by: Choong Yong Liang <yong.liang.choong@linux.intel.com>
+>>>
+>>> This is wrong as either it's a wrong tag (SoB --> Suggested-by?), or
+>>> missing Co-developed-by, or wrong order (but in that case David should
+>>> have sent the patch).
+>>>
+>> I believe the sequence is still correct, as the solution was provided by
+>> David, and he should be the main author. I'm just the submitter, so my
+>> sign-off should be placed last.
+> 
+> You are the submitter *and* the author in this case. As I said, that
+> SoB chain is wrong in its current form.
+> 
+Hi Andy,
+
+I believe this time I have correctly attributed the authorship by following 
+the guide from:
+https://docs.kernel.org/process/submitting-patches.html#when-to-use-acked-by-cc-and-co-developed-by
+---
 From: David E. Box <david.e.box@linux.intel.com>
 
-Introduce a configuration option that allows users to build the
-intel_pmc_ipc driver without ACPI support. This is useful for
-systems where ACPI is not available or desired.
-
-Based on the discussion from the patch [1], it was necessary to
-provide this option to accommodate specific use cases.
-
-Link: https://patchwork.kernel.org/project/netdevbpf/patch/20250227121522.1802832-6-yong.liang.choong@linux.intel.com/#26280764 [1]
+<changelog>
 
 Signed-off-by: David E. Box <david.e.box@linux.intel.com>
 Co-developed-by: Choong Yong Liang <yong.liang.choong@linux.intel.com>
 Signed-off-by: Choong Yong Liang <yong.liang.choong@linux.intel.com>
-
 ---
-v2 Changes:
-- Updated the patch description based on the comment
-- Update the author correctly
-- Used "#ifdef" instead of "#if" for CONFIG_ACPI
-- Placed "#ifdef" inside the function
-
-v1: https://patchwork.kernel.org/project/platform-driver-x86/patch/20250312022955.1418234-1-yong.liang.choong@linux.intel.com/
----
----
- include/linux/platform_data/x86/intel_pmc_ipc.h | 4 ++++
- 1 file changed, 4 insertions(+)
-
-diff --git a/include/linux/platform_data/x86/intel_pmc_ipc.h b/include/linux/platform_data/x86/intel_pmc_ipc.h
-index 6e603a8c075f..1d34435b7001 100644
---- a/include/linux/platform_data/x86/intel_pmc_ipc.h
-+++ b/include/linux/platform_data/x86/intel_pmc_ipc.h
-@@ -36,6 +36,7 @@ struct pmc_ipc_rbuf {
-  */
- static inline int intel_pmc_ipc(struct pmc_ipc_cmd *ipc_cmd, struct pmc_ipc_rbuf *rbuf)
- {
-+#ifdef CONFIG_ACPI
- 	struct acpi_buffer buffer = { ACPI_ALLOCATE_BUFFER, NULL };
- 	union acpi_object params[PMC_IPCS_PARAM_COUNT] = {
- 		{.type = ACPI_TYPE_INTEGER,},
-@@ -89,6 +90,9 @@ static inline int intel_pmc_ipc(struct pmc_ipc_cmd *ipc_cmd, struct pmc_ipc_rbuf
- 	}
- 
- 	return 0;
-+#else
-+	return -ENODEV;
-+#endif /* CONFIG_ACPI */
- }
- 
- #endif /* INTEL_PMC_IPC_H */
--- 
-2.34.1
-
