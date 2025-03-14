@@ -1,138 +1,135 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f50.google.com (mail-pj1-f50.google.com [209.85.216.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4CF7A1FF7B7;
-	Fri, 14 Mar 2025 14:38:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D8F42036FF;
+	Fri, 14 Mar 2025 16:29:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741963102; cv=none; b=fhOX3pQiQC/e2heqMUsuhESQw5soorN1ktuN2wsHii18PZmRBhQ0Myw+/4BMCvVDsbvrGGkvFtBnf6uQnSi5FPP57ZpTF5+/uKjEJE21ocbs8nvA9Neh7k5ldw8pYdH6TphGEeyfiY4V8JT8MDJVSRTalJuyHTjfhk0JW4VPedE=
+	t=1741969755; cv=none; b=UgNRIZzc0xsxIfdi03hrhO3G78UbeqwTcbCThuCMR0Xx9qBRH3T1A9ke80JWXH3g48PFeYpNjsf/4+qsY0/B26BGzwjIE21kvf97mqglVmbAXdPymiTixPBWkqiqzoDpl4DXD0z+WA2RXy3MP5Ng5c+Iza8tbcw5zCgjsJCILuk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741963102; c=relaxed/simple;
-	bh=7Xy5Hrkgm3Yk0S+DRubh13I7X1BUmB6WJ7puEzumslM=;
-	h=From:To:Cc:Date:Subject:Message-ID:MIME-Version:Content-Type; b=GemspcLS+JBiALPfAcRTJkziSo2O6TfGssheN8F6vs6Nm4G0v5W5uj1ntZ3Gz7KkS0mSU8FWpifxjths2tLmQRF5yDAlYOJ8alDj7eBBmNmVSU1txPSkh+SGre07MyeV/QWG16FoQ6zXjX2gB4f9Oq79RF6YAsy8OdmbWeAiCuI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=fJS9ch9R; arc=none smtp.client-ip=198.175.65.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1741969755; c=relaxed/simple;
+	bh=bu0+6A28/pA/UbpaYwkpo2/XRA69E2bGKPU381eGsao=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=RlCsk8DAmoMM9MyzOIKcJ9cPBCkNE4HBkZEwps1CWzzlDCrGLJ6Pk8qWrnFkh852TfGe4m6Ja21ALgibaWpjbuAE0NF73agEq3fq4lcjd3yJE/0BDOoAHDacWqxSz93WEzfOzIJdfisDaNvic5AtIFCgmfbTvE7IoXGICLynQVc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=P33hj0AP; arc=none smtp.client-ip=209.85.216.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="fJS9ch9R"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1741963101; x=1773499101;
-  h=from:to:cc:date:subject:message-id:mime-version:
-   content-transfer-encoding;
-  bh=7Xy5Hrkgm3Yk0S+DRubh13I7X1BUmB6WJ7puEzumslM=;
-  b=fJS9ch9RYKC2LT1QTq6uDLvUZc/aJfqHbU1Eq1zl2WF8zWEbO/drP9cx
-   6QJ/BBqHWMmZB+NJ6j9+r8jUWa+syyP6aBa9QdEjjJ8dzsQ/XqWEfu8eW
-   SE4uqvuuzMrOTwHyR4CWw7R23daiqQjQmZPPwm0J82DL43g/afx035ed6
-   paIsA36i+z6VHWcd0y80sXv/oYotAZOE7+VOP0/fk617/VGjFF3U5nJiW
-   4V9Vers436qADSsF/2SZOqKV/UnCmuoAvSWWbAvhuI6fdOKuZ4COzrBt2
-   3QjmSL2LwlezDmfzZPpE64mS4PDdIzZjbwg3pwhcyfao0YmyBAcDg1wC3
-   g==;
-X-CSE-ConnectionGUID: Rj6teqEuRQ2cM7+kWMx9kA==
-X-CSE-MsgGUID: UHzFvp0+QD+s+9/oEo5mCw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11373"; a="42980508"
-X-IronPort-AV: E=Sophos;i="6.14,246,1736841600"; 
-   d="scan'208";a="42980508"
-Received: from orviesa001.jf.intel.com ([10.64.159.141])
-  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Mar 2025 07:38:20 -0700
-X-CSE-ConnectionGUID: QXKqHijXRziQIz0eVCl4Yw==
-X-CSE-MsgGUID: gWbHpttISvivz6SwXBTeZA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.14,246,1736841600"; 
-   d="scan'208";a="158451756"
-Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.56])
-  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Mar 2025 07:38:18 -0700
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: LKML <linux-kernel@vger.kernel.org>, PDx86 <platform-driver-x86@vger.kernel.org>, Hans de Goede <hdegoede@redhat.com>, Andy Shevchenko <andy@kernel.org>
-Date: Fri, 14 Mar 2025 16:27:43 +0200
-Subject: [GIT PULL] platform-drivers-x86 for v6.14-5
-Message-ID: <pdx86-pr-20250314162743-238386141@linux.intel.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="P33hj0AP"
+Received: by mail-pj1-f50.google.com with SMTP id 98e67ed59e1d1-301317939a0so534698a91.2;
+        Fri, 14 Mar 2025 09:29:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1741969753; x=1742574553; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=rNW8VpIhZt224I3dMj5F5IETEZjdTxNG9TiOVkUl7fk=;
+        b=P33hj0APRQXQcElwUANVDMVqEKk37VVHOiq500iPBNx4UuGzgOYGczP4Jw7QaZ2gBt
+         UX8yCcgGq+BFH8BErBbHuJpW++AZQQIjtjQoJT7RDtLoepYButnTWAQWIhAVdoQX8Iqw
+         7tZkIC/Dx/m44SkIg9KLQ62AYfkfJKGkcKqFyYaS6KOVDZTMm7E7vlWXzV4t+q6MS1QV
+         ljJerlN4Jn9KrxWZzvaAjgxiW96cnk+EuExMeLpprkg/mPjbtv3Ocb6KdksXqvxSOXSQ
+         lValNR+aiYp1EmEW1humXz19ueuU191tEsTLjMdKrbyh2OW3PUcJXQ7C1ObOIeVwtZ+z
+         Ug5g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1741969753; x=1742574553;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=rNW8VpIhZt224I3dMj5F5IETEZjdTxNG9TiOVkUl7fk=;
+        b=D2L8kG8tN6dFh5PFT0DVW3EqzQ7STBVfNVTSguzHf4GNTo9oLhtKv8USb7wIYFsIZU
+         BNAft8C3bILqJaG1kP/fdG+vwZGJx6a3dkhYW7vKCq28qUkcw8u6fmGbibgB9FsAkjTi
+         9peRUIefDmS/1hYg+11ynoGhlaa4wL61OAi3Let28PJrmwQmNvOaBmfVSduo1e/rbNsY
+         Yd1br2iye0Htk0oJ+l1Ot53X5IsxKn1XtFJXChxxQTzV3nmQWECCaju4xlfbI200zQ5i
+         4SUjtQeFLhK3CXlJM3Cp5X6gW6+gFFk5F+qmo+1ToW7yi9nfnS+cvEAq5YlWIOzTqL4i
+         Oo6g==
+X-Forwarded-Encrypted: i=1; AJvYcCWjnaJwZwf53vh8w/FloBvLmY0gvMisSzeNFxiQWucFMzjQh+ijanxTB8qG4yl42yGUQrTHerkfS9v502JhsOCxQlKWrQ==@vger.kernel.org, AJvYcCX+iS5iUFZX5nuNqqEtxp8yYFUJqQr0mJPKQDEm6NOy/8GlMmfgFw5nO3NvVeuOAmI5VqqCKMLjDqs97xQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwmJjn7SOcYg364UHcbqNpyn9tMpmzr24xUSgTB8R5xVfOGyJCO
+	bEvbVqxcMBQIzJjwXeeJqM1sVObNC6NYXyvm7SHEZNbydKu2BjCALuIaITVvlRpK9vWq44pCsrM
+	G6Rthd7Bkij00fAnIyB7u/hewusFQ
+X-Gm-Gg: ASbGncuTxEiGLSvIuQkuUine/AjaRz4EHQY0I+aeM2cZ5IXa5RTzjcj/6eTJfcgSCZr
+	Ofkc17UlbAQjk7N9ZWyrq1KeP1eHevxWS5Z1kSWXWMGVh1p1qIGfrqFqLoOgTUCczlxWL997hrF
+	OBEg5SRQCk8c01tD0Ud0YJQ50VmxM=
+X-Google-Smtp-Source: AGHT+IFYNmu8UeUSFLCAa8ypOmZfPXpGQdsV494sv84pNqAeC8StFvEgKaMYQrATH8tfcYnnhaHHwIuS5gvE1NvjkO8=
+X-Received: by 2002:a17:90b:4a50:b0:2ff:5540:bb48 with SMTP id
+ 98e67ed59e1d1-30151d9d643mr1640899a91.8.1741969752748; Fri, 14 Mar 2025
+ 09:29:12 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+References: <20250313162820.3688298-1-chenyuan0y@gmail.com> <ff53debd-05bd-3a7f-89a5-2110b8103fad@linux.intel.com>
+In-Reply-To: <ff53debd-05bd-3a7f-89a5-2110b8103fad@linux.intel.com>
+From: Chenyuan Yang <chenyuan0y@gmail.com>
+Date: Fri, 14 Mar 2025 11:29:01 -0500
+X-Gm-Features: AQ5f1Jq8sL_qcRD6zYheJPuJdvZ6kD57OPruc-df_JLd6b_zi3G_FCm-XGfb6tM
+Message-ID: <CALGdzuoWo+sT5ShVRpY6Q0R=5GOBvbOY10hyvUeT8DL9vsSj3w@mail.gmail.com>
+Subject: Re: [PATCH] platform/x86: wmi: Add Null check for device
+To: =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Cc: W_Armin@gmx.de, Hans de Goede <hdegoede@redhat.com>, 
+	platform-driver-x86@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi Linus,
+Hi Ilpo,
 
-Here is a platform-drivers-x86 fixes PR for v6.14. The diff is a bit
-larger than I'd prefer at this point due to unwinding the amd/pmf
-driver's error handling properly instead of calling a deinit function
-that was a can full of worms.
+Thanks for pointing this out.
+This was found by our static analyzer.
+Sorry that the checker didn't make further reasoning.
 
-
-Fixes and new HW support:
-
- - amd/pmf:
-
-    - Fix error handling in amd_pmf_init_smart_pc()
-
-    - Fix missing hidden options for Smart PC
-
- - surface: aggregator_registry: Add Support for Surface Pro 11
-
-Regards, i.
+-Chenyuan
 
 
-The following changes since commit 376a8c2a144397d9cf2a67d403dd64f4a7ff9104:
-
-  platform/x86/amd/pmf: Update PMF Driver for Compatibility with new PMF-TA (2025-03-05 13:33:42 +0200)
-
-are available in the Git repository at:
-
-  https://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git tags/platform-drivers-x86-v6.14-5
-
-for you to fetch changes up to 03fc0a2dc9f8c292fad8a1bcfb6d1f0dec1824be:
-
-  MAINTAINERS: Update Ike Panhc's email address (2025-03-14 16:03:45 +0200)
-
-----------------------------------------------------------------
-platform-drivers-x86 for v6.14-5
-
-Fixes and new HW support:
-
- - amd/pmf:
-
-    - Fix error handling in amd_pmf_init_smart_pc()
-
-    - Fix missing hidden options for Smart PC
-
- - surface: aggregator_registry: Add Support for Surface Pro 11
-
-The following is an automated shortlog grouped by driver:
-
-amd/pmf:
- -  fix cleanup in amd_pmf_init_smart_pc()
-
-amd: pmf:
- -  Fix missing hidden options for Smart PC
-
-MAINTAINERS:
- -  Update Ike Panhc's email address
-
-surface: aggregator_registry:
- -  Add Support for Surface Pro 11
-
-----------------------------------------------------------------
-Dan Carpenter (1):
-      platform/x86/amd/pmf: fix cleanup in amd_pmf_init_smart_pc()
-
-Ike Panhc (1):
-      MAINTAINERS: Update Ike Panhc's email address
-
-Lukas Hetzenecker (1):
-      platform/surface: aggregator_registry: Add Support for Surface Pro 11
-
-Mario Limonciello (1):
-      platform/x86/amd: pmf: Fix missing hidden options for Smart PC
-
- .mailmap                                           |  1 +
- MAINTAINERS                                        |  2 +-
- .../platform/surface/surface_aggregator_registry.c |  5 ++-
- drivers/platform/x86/amd/pmf/spc.c                 |  2 ++
- drivers/platform/x86/amd/pmf/tee-if.c              | 36 +++++++++++++++-------
- 5 files changed, 33 insertions(+), 13 deletions(-)
+On Fri, Mar 14, 2025 at 6:41=E2=80=AFAM Ilpo J=C3=A4rvinen
+<ilpo.jarvinen@linux.intel.com> wrote:
+>
+> On Thu, 13 Mar 2025, Chenyuan Yang wrote:
+>
+> Hi,
+>
+> Could you please be consistent in style and write "NULL" also in the
+> shortlog in the subject.
+>
+> > Not all devices have an ACPI companion fwnode, so device might be NULL.
+> > This is similar to the commit cd2fd6eab480
+> > ("platform/x86: int3472: Check for adev =3D=3D NULL").
+>
+> Please fold the paragraph normally.
+>
+> > Add a check for device not being set and return -ENODEV in that case to
+> > avoid a possible NULL pointer deref in parse_wdg().
+> >
+> > Note, acpi_wmi_probe() under the same file has such a check.
+>
+> Hmm, is this a bogus fix, as parse_wdg() is only called from
+> acpi_wmi_probe() so how can ACPI companion turn NULL in between??
+>
+> How was this problem found??
+>
+> > Signed-off-by: Chenyuan Yang <chenyuan0y@gmail.com>
+> > ---
+> >  drivers/platform/x86/wmi.c | 3 +++
+> >  1 file changed, 3 insertions(+)
+> >
+> > diff --git a/drivers/platform/x86/wmi.c b/drivers/platform/x86/wmi.c
+> > index 646370bd6b03..54e697838c1e 100644
+> > --- a/drivers/platform/x86/wmi.c
+> > +++ b/drivers/platform/x86/wmi.c
+> > @@ -1091,6 +1091,9 @@ static int parse_wdg(struct device *wmi_bus_dev, =
+struct platform_device *pdev)
+> >       u32 i, total;
+> >       int retval;
+> >
+> > +     if (!device)
+> > +             return -ENODEV;
+> > +
+> >       status =3D acpi_evaluate_object(device->handle, "_WDG", NULL, &ou=
+t);
+> >       if (ACPI_FAILURE(status))
+> >               return -ENXIO;
+> >
+>
+> --
+>  i.
+>
