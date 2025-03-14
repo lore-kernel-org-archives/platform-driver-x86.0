@@ -1,82 +1,138 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD3F61BC3C;
-	Fri, 14 Mar 2025 14:07:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4CF7A1FF7B7;
+	Fri, 14 Mar 2025 14:38:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741961236; cv=none; b=PnbrKRSA6eqytPENl/w8GJpcCLdme9RPrZU044u8GsC49FEdb/L2FqCZvnC9ODjD+vmuIv8Y92F1aRK4YjBZ+1F/Grlevt6Br2Sto9d96iEOs/yBBaki6lp5NIYdgsA5LsBNxUaEv24049sQhi8/k2zf0eWkchg6O3F8d55Y6sI=
+	t=1741963102; cv=none; b=fhOX3pQiQC/e2heqMUsuhESQw5soorN1ktuN2wsHii18PZmRBhQ0Myw+/4BMCvVDsbvrGGkvFtBnf6uQnSi5FPP57ZpTF5+/uKjEJE21ocbs8nvA9Neh7k5ldw8pYdH6TphGEeyfiY4V8JT8MDJVSRTalJuyHTjfhk0JW4VPedE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741961236; c=relaxed/simple;
-	bh=rhUA3z8BXwjy0zlJdSes9rJ3iMj7HZR+0wHVZCshF1g=;
-	h=From:To:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=E0QuUUCNEGUkVena2IE3Cwh/TpZZS0EV6+Mx03ZEGXxQOiA5DRXj2yCFGY0NkN+GfTHUKgK1gdMfff1HGiLzaWn7rnMO/eP9KGZmbv76p3AmEfPFSycIJFs0I0XkU/ARdczFDqCv6/MztdhgaYBzF8++HYQmXn8mZEfLg0azehE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=QwzxfG0f; arc=none smtp.client-ip=192.198.163.18
+	s=arc-20240116; t=1741963102; c=relaxed/simple;
+	bh=7Xy5Hrkgm3Yk0S+DRubh13I7X1BUmB6WJ7puEzumslM=;
+	h=From:To:Cc:Date:Subject:Message-ID:MIME-Version:Content-Type; b=GemspcLS+JBiALPfAcRTJkziSo2O6TfGssheN8F6vs6Nm4G0v5W5uj1ntZ3Gz7KkS0mSU8FWpifxjths2tLmQRF5yDAlYOJ8alDj7eBBmNmVSU1txPSkh+SGre07MyeV/QWG16FoQ6zXjX2gB4f9Oq79RF6YAsy8OdmbWeAiCuI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=fJS9ch9R; arc=none smtp.client-ip=198.175.65.19
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="QwzxfG0f"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="fJS9ch9R"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1741961234; x=1773497234;
-  h=from:to:in-reply-to:references:subject:message-id:date:
-   mime-version:content-transfer-encoding;
-  bh=rhUA3z8BXwjy0zlJdSes9rJ3iMj7HZR+0wHVZCshF1g=;
-  b=QwzxfG0f5ki3oZPhzllxskOtO7AHAkyUCoCFc20LoAkt60JPxNudgVYd
-   BJBVrXkXladybKdJWp2N6QwBZ3bMAswfERa7YEEFtRtPJzvFkaDHKQ3/f
-   G8WT/ePVuG7jf5W2goj7VEAEzO4J1rWz3VCFXGNZkPv8F3cT2U60io7I3
-   ssQDUfsM2IPOZyU3/weBScALtikrRe5f6BbyvwK0P3YirQJrCwDWr3g9n
-   oLQEC/lfB7bUY7lmMTH8JPopHUp0aED3Fn2PYiJ+MYZCmsCd5YfZrACi+
-   reLdzaliKR1UNC+r40kKjgcm9Zbix4vVfVsRxIsA/zLCPkFbYdnv1hYm5
-   w==;
-X-CSE-ConnectionGUID: k9iZli4/Qtm5lb9TzXkSGw==
-X-CSE-MsgGUID: PocxXGoKSnyYaHObSiin8w==
-X-IronPort-AV: E=McAfee;i="6700,10204,11373"; a="42362268"
+  t=1741963101; x=1773499101;
+  h=from:to:cc:date:subject:message-id:mime-version:
+   content-transfer-encoding;
+  bh=7Xy5Hrkgm3Yk0S+DRubh13I7X1BUmB6WJ7puEzumslM=;
+  b=fJS9ch9RYKC2LT1QTq6uDLvUZc/aJfqHbU1Eq1zl2WF8zWEbO/drP9cx
+   6QJ/BBqHWMmZB+NJ6j9+r8jUWa+syyP6aBa9QdEjjJ8dzsQ/XqWEfu8eW
+   SE4uqvuuzMrOTwHyR4CWw7R23daiqQjQmZPPwm0J82DL43g/afx035ed6
+   paIsA36i+z6VHWcd0y80sXv/oYotAZOE7+VOP0/fk617/VGjFF3U5nJiW
+   4V9Vers436qADSsF/2SZOqKV/UnCmuoAvSWWbAvhuI6fdOKuZ4COzrBt2
+   3QjmSL2LwlezDmfzZPpE64mS4PDdIzZjbwg3pwhcyfao0YmyBAcDg1wC3
+   g==;
+X-CSE-ConnectionGUID: Rj6teqEuRQ2cM7+kWMx9kA==
+X-CSE-MsgGUID: UHzFvp0+QD+s+9/oEo5mCw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11373"; a="42980508"
 X-IronPort-AV: E=Sophos;i="6.14,246,1736841600"; 
-   d="scan'208";a="42362268"
-Received: from orviesa010.jf.intel.com ([10.64.159.150])
-  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Mar 2025 07:07:14 -0700
-X-CSE-ConnectionGUID: wiGGv2RDQlSaof953JrqPQ==
-X-CSE-MsgGUID: 6/rBsFksRwaEeIda6wHFgw==
+   d="scan'208";a="42980508"
+Received: from orviesa001.jf.intel.com ([10.64.159.141])
+  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Mar 2025 07:38:20 -0700
+X-CSE-ConnectionGUID: QXKqHijXRziQIz0eVCl4Yw==
+X-CSE-MsgGUID: gWbHpttISvivz6SwXBTeZA==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.14,246,1736841600"; 
-   d="scan'208";a="121251168"
+   d="scan'208";a="158451756"
 Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.56])
-  by orviesa010-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Mar 2025 07:07:12 -0700
+  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Mar 2025 07:38:18 -0700
 From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-To: linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org, 
- Hans de Goede <hdegoede@redhat.com>, Ike Panhc <ikepanhc@gmail.com>
-In-Reply-To: <20250314045732.389973-1-ike.pan@canonical.com>
-References: <20250314045732.389973-1-ike.pan@canonical.com>
-Subject: Re: [PATCH] MAINTAINERS: Update Ike Panhc's email address
-Message-Id: <174196122708.2469.1417521291075836840.b4-ty@linux.intel.com>
-Date: Fri, 14 Mar 2025 16:07:07 +0200
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: LKML <linux-kernel@vger.kernel.org>, PDx86 <platform-driver-x86@vger.kernel.org>, Hans de Goede <hdegoede@redhat.com>, Andy Shevchenko <andy@kernel.org>
+Date: Fri, 14 Mar 2025 16:27:43 +0200
+Subject: [GIT PULL] platform-drivers-x86 for v6.14-5
+Message-ID: <pdx86-pr-20250314162743-238386141@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Mailer: b4 0.13.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Fri, 14 Mar 2025 12:57:32 +0800, Ike Panhc wrote:
+Hi Linus,
 
-> I am no longer at Canonical and update with my personal email address.
-> 
-> 
+Here is a platform-drivers-x86 fixes PR for v6.14. The diff is a bit
+larger than I'd prefer at this point due to unwinding the amd/pmf
+driver's error handling properly instead of calling a deinit function
+that was a can full of worms.
 
 
-Thank you for your contribution, it has been applied to my local
-fixes branch. Note it will show up in the public
-platform-drivers-x86/fixes branch only once I've pushed my
-local branch there, which might take a while.
+Fixes and new HW support:
 
-The list of commits applied:
-[1/1] MAINTAINERS: Update Ike Panhc's email address
-      commit: 03fc0a2dc9f8c292fad8a1bcfb6d1f0dec1824be
+ - amd/pmf:
 
---
- i.
+    - Fix error handling in amd_pmf_init_smart_pc()
 
+    - Fix missing hidden options for Smart PC
+
+ - surface: aggregator_registry: Add Support for Surface Pro 11
+
+Regards, i.
+
+
+The following changes since commit 376a8c2a144397d9cf2a67d403dd64f4a7ff9104:
+
+  platform/x86/amd/pmf: Update PMF Driver for Compatibility with new PMF-TA (2025-03-05 13:33:42 +0200)
+
+are available in the Git repository at:
+
+  https://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git tags/platform-drivers-x86-v6.14-5
+
+for you to fetch changes up to 03fc0a2dc9f8c292fad8a1bcfb6d1f0dec1824be:
+
+  MAINTAINERS: Update Ike Panhc's email address (2025-03-14 16:03:45 +0200)
+
+----------------------------------------------------------------
+platform-drivers-x86 for v6.14-5
+
+Fixes and new HW support:
+
+ - amd/pmf:
+
+    - Fix error handling in amd_pmf_init_smart_pc()
+
+    - Fix missing hidden options for Smart PC
+
+ - surface: aggregator_registry: Add Support for Surface Pro 11
+
+The following is an automated shortlog grouped by driver:
+
+amd/pmf:
+ -  fix cleanup in amd_pmf_init_smart_pc()
+
+amd: pmf:
+ -  Fix missing hidden options for Smart PC
+
+MAINTAINERS:
+ -  Update Ike Panhc's email address
+
+surface: aggregator_registry:
+ -  Add Support for Surface Pro 11
+
+----------------------------------------------------------------
+Dan Carpenter (1):
+      platform/x86/amd/pmf: fix cleanup in amd_pmf_init_smart_pc()
+
+Ike Panhc (1):
+      MAINTAINERS: Update Ike Panhc's email address
+
+Lukas Hetzenecker (1):
+      platform/surface: aggregator_registry: Add Support for Surface Pro 11
+
+Mario Limonciello (1):
+      platform/x86/amd: pmf: Fix missing hidden options for Smart PC
+
+ .mailmap                                           |  1 +
+ MAINTAINERS                                        |  2 +-
+ .../platform/surface/surface_aggregator_registry.c |  5 ++-
+ drivers/platform/x86/amd/pmf/spc.c                 |  2 ++
+ drivers/platform/x86/amd/pmf/tee-if.c              | 36 +++++++++++++++-------
+ 5 files changed, 33 insertions(+), 13 deletions(-)
