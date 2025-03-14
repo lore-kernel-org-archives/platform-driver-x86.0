@@ -1,107 +1,169 @@
-Received: from mail-oo1-f50.google.com (mail-oo1-f50.google.com [209.85.161.50])
+Received: from mail.tuxedocomputers.com (mail.tuxedocomputers.com [157.90.84.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0482C201246;
-	Fri, 14 Mar 2025 12:28:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 24C841CD3F;
+	Fri, 14 Mar 2025 12:39:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=157.90.84.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741955319; cv=none; b=sM8pbQzDTGJTZrBJdfzJ/oEsS4ZVd0Zx4ir8apd2fb1y7+Vh4jUs342vzbtJCfjcwRp+Umg2JdpD/+JMbsvysA3qGGQcF/1HYZhwHnew/MoZa1p31l6CTJvLMs1PSLKzvHIEaM0C3cH73nm91NcHzxaMMsjnvPk5dC9k0Mtru8g=
+	t=1741955957; cv=none; b=OnMotUg8QS7pNbYh4+v8PvxN1MxqD2jZHxoo7FIjZZcLTcWLTzyfeF3PsZexYPxItFOvnJIUpzcBuce1ooWapIsjkKqx6Wv7ZkaNep4SPBjTtpxVLa8hoRhShwie5dmTqoEbKggQ255YHu1fhNV4HmoUpnijEIxgYHpfKrzw3+4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741955319; c=relaxed/simple;
-	bh=klMC5/G+XXKWK1/4aNII/hB//YRrPjWupxCwKflvsZc=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=UAdQDr9gujlYP7sGCrWlhU6B9XZsZhJXT0NB0dFzdCVu1amkEwyIhOoBTLD4azNREqCAlUDxlUMlwOzdS0x+WjLK1L1NOS9sjvW50jFT7noI+6Qn/tvYF90UCx8bnYh/KIf53iqRpgLLa25C3qWwbeDPc5TMMjTXPp/notSDKP4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=DcRiIABm; arc=none smtp.client-ip=209.85.161.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1741955957; c=relaxed/simple;
+	bh=4jl3e9EHT+yhIQb6PgOP5J44alp/hc+GJm+3YkCowcs=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=SEdOu7+A2R1hR+k9rfbzzc5KywNY1XWnUiBlckBbsOJsdsNX2OmKzkknc5k+AoJLHey+gQAoTXbJYAhRmxOgoLpxdlpcSefzPXZ33UcC6xFS2WbJyt9VLxWj1Qy0Fe011AZqN6UQTdeG6OeuWVkqSIRZAT49AFoiw7qXa47JGnY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=tuxedocomputers.com; spf=pass smtp.mailfrom=tuxedocomputers.com; dkim=pass (1024-bit key) header.d=tuxedocomputers.com header.i=@tuxedocomputers.com header.b=QXiEtGKH; arc=none smtp.client-ip=157.90.84.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=tuxedocomputers.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tuxedocomputers.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DcRiIABm"
-Received: by mail-oo1-f50.google.com with SMTP id 006d021491bc7-5fd0adce179so882853eaf.2;
-        Fri, 14 Mar 2025 05:28:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1741955317; x=1742560117; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=KlJlsNrADwfk/WswqbOtJdzenxkh/DAhh8ltAuIyzso=;
-        b=DcRiIABmBv4eYxfwyfCAl45RtMJFevOM41UVtHcN0ms5S4hiw5AwXgXPvLo/pqLBQP
-         9oSHjImjIEJIUBZyewYKSBESXgMWOOoOF06QVu4qXtr2cIvNFxtxZ+IR3Y++WhOqV9BL
-         jh7OBLcyYt/Y/unWj4xIZ3guEPaeBus7w7pqLi7XnkHziBNfGX81H6QkRiDi/+z7DBtg
-         Hen2sfiZAi6Gvi2Z2DzC5bAGSCPmhp/Qxh6F94Rd/pfqtIa6rvB/pKBAqaYOhluLqZG6
-         mHcK6bZgyrr3vk1w/dl/bIHxiKtM4bSoj54kvjvUkzjh08CSLEnSkNXJquVu/5wv5mlx
-         kP/w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741955317; x=1742560117;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=KlJlsNrADwfk/WswqbOtJdzenxkh/DAhh8ltAuIyzso=;
-        b=I1E5njbghUlelimOgzNZ8a7DizzGJ3C3vX+Z5wt6OsVJkK+a5RrUIE3buxEo2CSCv8
-         n8haH63Wb83A45cRaJqhni3ojPUbH25PoAukyIPf5loR4sjigRKJOq/Kk6fGD5M85tL1
-         vWTVRPB8RWrTkSV+Wv9mm13CiGN84HM39+PlZJ4jbAfZlOGA+tZx220BkeqAKPtiwrn7
-         tiKsfgvw6ME+2LYLg7iRd98ikIvVu51i6YqHZ0Ko7AdgHrd0if3RqYKMbzSusKDy21my
-         DeDFFh/EM1VpulUDhbiWnpmX+7FQhnL0yLCaVy6N67Gh8dvrrIiybHzgBTBAdnt0rgwV
-         gPrQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXTRfutDTgrUxpm7U5QT2OV8JawfPch1mz8MpN21BxYSgLdb5BczZOyT5NjdPDKJRiud+sAL57QdqxqCC4=@vger.kernel.org, AJvYcCXiY+bDoeRK21T8e4Cc9K33FnE8hkeodhXjUA0mhN5K0p4FjTt9nPc1B/0GVBPRDafe1yb3BJIzqRdpOKDIw82DEzV8SA==@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx/qTgtYEfZEOnNYYu4gQDH8WZJoe8/BaFM/XKMfq7QRi+6QQHd
-	ybf0pAb3MsMCRL3q08gUiNo9d6a7yNaacj/7sK1Bl2d3Pjg572ewnm/DE4XhX+o9EFcKNpvxdbj
-	PFgnwkGSTgUWVlGNL/nOUwNyraek=
-X-Gm-Gg: ASbGncujaFL1ajCplzCp0fUjJau4wqcYVhF/hrnE24Jatrrk1CFZMbaMG06L7kxkARF
-	nfpQZsCaEps4H6ISdMDHVIQTckrFwX2JcJrMwhO4Ze4cS0VsJ6v0AjXrcCxy1bpLgz8HtVtfQSl
-	6unejB6F+fPt0DDVYwYZpSCf0lWDvT50rdbFzeIuPu3mrGZSgss7qhPla/bnPP
-X-Google-Smtp-Source: AGHT+IHii+40cEpqtFlvTurXoBG+9FfqAiGsJIzzx2PLkMDkg6GfMo6DOeNGhNO06/Gu6CgK57oRdIbLgFz+7Ep5nzg=
-X-Received: by 2002:a05:6820:1e0b:b0:601:ce76:c46a with SMTP id
- 006d021491bc7-601e44426a4mr1063308eaf.0.1741955315435; Fri, 14 Mar 2025
- 05:28:35 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=tuxedocomputers.com header.i=@tuxedocomputers.com header.b="QXiEtGKH"
+Received: from [192.168.42.116] (p5b164989.dip0.t-ipconnect.de [91.22.73.137])
+	(Authenticated sender: wse@tuxedocomputers.com)
+	by mail.tuxedocomputers.com (Postfix) with ESMTPSA id E0AD82FC0189;
+	Fri, 14 Mar 2025 13:39:10 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=tuxedocomputers.com;
+	s=default; t=1741955951;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=wNCQYv/yky3scAkSjC2rOHmTyqBkGE8fEXeEwUML4KQ=;
+	b=QXiEtGKH+Yzi+OeV8OYHflVBcX9j0Xsi5voUGDCLKn8867hdSOqJv1Zn3RL0zFv6S7P7qB
+	1fc8gkwnBOHMx7QcMEH55u3cblrQgDZg0L9RDWsPfWjdLDUW5rpf9SjuPlKpd1mAaDtNxP
+	pW00cIDwQ0N3EmBZ6J/JlypE5lbb0XY=
+Authentication-Results: mail.tuxedocomputers.com;
+	auth=pass smtp.auth=wse@tuxedocomputers.com smtp.mailfrom=wse@tuxedocomputers.com
+Message-ID: <49ceb1f4-93b1-47ed-a87b-b936fee1b371@tuxedocomputers.com>
+Date: Fri, 14 Mar 2025 13:39:10 +0100
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250313151744.34010-1-gasper.nemgar@gmail.com>
- <4f1d9817-60b1-433d-b7a8-f37057e0980a@canonical.com> <f581c3d25a270801de35b7d0380cbd13c4c4a131.camel@irl.hu>
-In-Reply-To: <f581c3d25a270801de35b7d0380cbd13c4c4a131.camel@irl.hu>
-From: =?UTF-8?Q?Ga=C5=A1per_Nemgar?= <gasper.nemgar@gmail.com>
-Date: Fri, 14 Mar 2025 13:28:09 +0100
-X-Gm-Features: AQ5f1Jq3_ssz15EqUKb5dhebvDtIJUaFBwLS6ptmObQw_gA2Eg16SPz_MgyicFY
-Message-ID: <CAKi4K-j-j_SdKOAvxSWeQ9qPN-tMVicQ_nbKkNDvm8rEsY_N3g@mail.gmail.com>
-Subject: Re: [PATCH] Fixed ideapad-laptop driver to support Yoga 9 2 in 1
- 14imh9 unknown keys
-To: Gergo Koteles <soyer@irl.hu>
-Cc: Ike Panhc <ike.pan@canonical.com>, linux-kernel@vger.kernel.org, 
-	"platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2] platform/x86/tuxedo: Implement TUXEDO TUXI ACPI TFAN
+ via hwmon
+To: =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Cc: Hans de Goede <hdegoede@redhat.com>, Jean Delvare <jdelvare@suse.com>,
+ Guenter Roeck <linux@roeck-us.net>, LKML <linux-kernel@vger.kernel.org>,
+ platform-driver-x86@vger.kernel.org, linux-hwmon@vger.kernel.org
+References: <20250306132639.642369-1-wse@tuxedocomputers.com>
+ <70633701-31d2-c2ab-f4f4-043dd186f485@linux.intel.com>
+ <75556900-5fe3-4083-b81b-240994e4f8e0@tuxedocomputers.com>
+ <4344644a-582b-aee6-7eef-8afd3c0ee16f@linux.intel.com>
+Content-Language: en-US
+From: Werner Sembach <wse@tuxedocomputers.com>
+In-Reply-To: <4344644a-582b-aee6-7eef-8afd3c0ee16f@linux.intel.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-Hello,
-This specific laptop has one star with s in the middle which is
-already handled by the driver and is assigned to key favourites.
-There is another button with only a star, I think it is ok to assign
-it to KEY_PROG1.
+Sorry, resend, mail client did html message by accident
 
-Thanks, Ga=C5=A1per
+Hi Ilpo,
+
+Am 14.03.25 um 11:05 schrieb Ilpo Järvinen:
+
+[snip]
+>>>> +#define TUXI_MAX_FAN_COUNT 16           /* If this is increased, new
+>>>> lines must
+>>>> +					 * be added to hwmcinfo below.
+>>>> +					 */
+>>> Please use static_assert() to actually enforce what the comment says.
+>> I actually struggle to come up with how to do this for the array length
+>> because of the macro and the pointer
+>>
+>> `static_assert(TUXI_MAX_FAN_COUNT <= ARRAY_SIZE(hwmcinfo[0]->config));`
+>> doesn't work
+> Oh, I see. Yeah, there isn't way to get it to work in C.
+
+ok
+
+[snip]
+
+>>> Add linux/limits.h include.
+>> ack
+>>
+>> It is included in kernel.h, so I read from this that kernel.h should not be
+>> used but the parts of it directly?
+> kernel.h used to contain way too much of random things. Some people are
+> slowly working towards splitting that up.
+>
+> So we try to include what is used directly, not rely on includes through
+> some other include, and especially not through kernel.h.
+ok
+>>>> +			S32_MAX : (retval - TUXI_FW_TEMP_OFFSET) * 100;
+>>> Is the math wrong, as you do retval - TUXI_FW_TEMP_OFFSET before
+>>> multiplying?
+>> No, retval is in 10th of °K (but the last number is always 0) so is
+>> TUXI_FW_TEMP_OFFSET which is there to convert it to 10th of °C, the * 100 is
+>> then to bring it in line with hwmon wanting to output milli degrees
+> So is result of S32_MAX correct when retval is 21474837?
+>
+> (21474837-2730)*100
+> 2147210700
+> 2^31-1
+> 2147483647
+>
+> 2147210700 would have been representable but the upper bound is
+> still applied (the value might be large enough to not have practical
+> significance but to me the code looks still illogical why it applies the
+> bound prematurely).
+Yeah my though was: this check is only here to catch the firmware doing some 
+crazy stuff and sending highly unrealistic values, so gifting a small bit of the 
+available range away doesn't matter
+> I see you already sent another version, it would have been prudent to wait
+> a bit longer as you contested some of the comments so you could have seen
+> my replies before sending the next version.
+I'm sorry. I just wanted to show that I'm iterating as I wait for the reply if 
+the design with the periodic safeguard is acceptable. If that's gets rejected 
+this driver must be rewritten anyway.
+>>> Shouldn't it be like this:
+>>>
+>>> 		retval -= TUXI_FW_TEMP_OFFSET;
+>>> 		*val = min(retval * 100, (unsigned long long)S32_MAX);
+>> As retval is unsigned this would not work with (theoretical) negative °C.
+> So your code relies on implicit type conversion in this: (retval -
+> TUXI_FW_TEMP_OFFSET) ?
+
+I can add an explicit cast, np.
+
+[snip]
+
+>>>> +	}
+>>>> +	if (temp >= temp_high)
+>>>> +		ret = i;
+> Now that I reread things, is this also incorrect, as "i" is at the
+> terminator entry at this point?
+
+Yes that's intentional, the 3 entries in the array open up 4 ranges:
+
+lower then 1st entry i=0, between 1st and 2nd entry i=1, 2nd and 3rd i=2, higher 
+then 3rd i=3 (the value that terminates the for loop)
+
+[snip]
+
+>>>> +
+>>>> +		temp = retval > S32_MAX / 100 ?
+>>>> +			S32_MAX : (retval - TUXI_FW_TEMP_OFFSET) * 100;
+>>> Same math issue comment as above.
+>>>
+>>> Why is the read+conversion code duplicated into two places?
+>> because here it is with special error handling and didn't thought about an own
+>> function for a defacto 2 liner
+> A function that does read+conversion would be 6-8 lines with the error
+> handling.
+
+I can add it.
+
+[snip]
+
+Thanks for the code review again.
 
 
-On Fri, 14 Mar 2025 at 12:52, Gergo Koteles <soyer@irl.hu> wrote:
->
-> Hi Ga=C5=A1per,
->
-> On 3/13/25 23:17, Ga=C5=A1per Nemgar wrote:
-> >       /* Specific to some newer models */
-> >       { KE_KEY,       0x3e | IDEAPAD_WMI_KEY, { KEY_MICMUTE } },
-> >       { KE_KEY,       0x3f | IDEAPAD_WMI_KEY, { KEY_RFKILL } },
-> > +     /*Star- (User Asignable Key)*/
->
-> Asignable -> Assignable?
-> Could you please add a space before/after the body of the comment?
->
-> > +     { KE_KEY,       0x44 | IDEAPAD_WMI_KEY, { KEY_PROG1 } },
->
-> Other Ideapads map this star key to KEY_FAVORITES, for consistency I
-> think it would be better if this one mapped there too.
->
-> Thanks,
-> Gergo
->
->
+Last but not least: As already mentioned, I still wonder if the design with the 
+periodic safeguard is ok or not or?
+
+Best regards,
+
+Werner
+
