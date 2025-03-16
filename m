@@ -1,210 +1,154 @@
-Received: from linux1587.grserver.gr (linux1587.grserver.gr [185.138.42.100])
+Received: from mail-pl1-f180.google.com (mail-pl1-f180.google.com [209.85.214.180])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6CD2D39ACC;
-	Sun, 16 Mar 2025 17:03:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.138.42.100
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C5D8928E3F;
+	Sun, 16 Mar 2025 22:32:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742144630; cv=none; b=VvjszPDoMzbTYtAok/jMTwHIww0mNWQc6bdXQncaORAEPez8eNl7z5jskf8ahOg/XZtoLVhRGkNSyUy9u1dZQW/0xxNiLVIbvf5dFWXwnJB544QuB7mb0kkyFz949OOk/ol46//Kmv4tJcMv/pSe1pHEYrRMCo10QFlkUL5mYPE=
+	t=1742164325; cv=none; b=Z9D35x9NTJgIwmgCnMMCEEhL/sUGXfZVWtgyehOsoGXfUEqqTMbC5qvOXJdfL7ZqoohQif9fMesYDJZf7e/zNr7HBt6S3CNnKNowUHphVCYpTY/GcdOqiV1Pa8gWOAHJUEgGhl1mqiMIVJjBTeDG2YGp0oJTRziKXZ5j4vANZZM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742144630; c=relaxed/simple;
-	bh=JCOen0Yjc5kuRPMnNops9FUQayFyNuqmzNJgEPw1MLk=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=W3brXY9YLNHiqAEaqeiTnxVBnRqlWdSS/lr/7ngAhWwO0PA0eIl+r4noM4ik9pocJEyxmhbzvhTm0U+xpPW5zy63kqFE9GMIRzxlICvKRJ5c+4l+d+55laAXX2keSMuefa0ZsC4glLq5Ge2Jh2k66BZNU00Finn4oGVz5f6JztI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=antheas.dev; spf=pass smtp.mailfrom=antheas.dev; dkim=pass (1024-bit key) header.d=antheas.dev header.i=@antheas.dev header.b=aUeQiB1C; arc=none smtp.client-ip=185.138.42.100
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=antheas.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=antheas.dev
+	s=arc-20240116; t=1742164325; c=relaxed/simple;
+	bh=++/L030K8s8P3l7kowTlhCo+8k2FfPs905r1ovqDuq0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=fgKQ4DWpDJz50jDDbqZMtCCax3hDb/IcECAOwTUvNIaqZI4zHvAlSVJTDx0WJoe/dq8UQxEI1zhoX44UULeRsVmn7BtwGGlD6WuS0wVAcmjpqVFNvkCQIvP9Y2ATCyus6zKbVyocR6aTm4Ege0yYjghpYNiEkRccCCsAe8xFxvc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=IhUySBNv; arc=none smtp.client-ip=209.85.214.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=antheas.dev header.i=@antheas.dev header.b="aUeQiB1C"
-Received: from mail-lj1-f176.google.com (mail-lj1-f176.google.com [209.85.208.176])
-	by linux1587.grserver.gr (Postfix) with ESMTPSA id 2D7D52E096C5;
-	Sun, 16 Mar 2025 19:03:45 +0200 (EET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=antheas.dev;
-	s=default; t=1742144626;
-	bh=sjK/AJ290GlZDlkgrocRCDS9ISArx/Rj8lTyTCDoaGI=;
-	h=Received:From:Subject:To;
-	b=aUeQiB1Cf0HgT5Y+o6UHc9/V7rbL8CBzPti1vLvuVm54Dm04OiujeKvFAdBsmx0N+
-	 2TWsamgcn0OjoHRAqTOULI2Eye8mP3xsTNiyn0WjnxcPM/FSloJR38ROdVnvPxQ3z/
-	 Yjos6Ca/V1+FwQ5hflMA6k6oaz4ukPjkOvnNBNtQ=
-Authentication-Results: linux1587.grserver.gr;
-        spf=pass (sender IP is 209.85.208.176) smtp.mailfrom=lkml@antheas.dev smtp.helo=mail-lj1-f176.google.com
-Received-SPF: pass (linux1587.grserver.gr: connection is authenticated)
-Received: by mail-lj1-f176.google.com with SMTP id
- 38308e7fff4ca-30613802a59so40869061fa.0;
-        Sun, 16 Mar 2025 10:03:45 -0700 (PDT)
-X-Forwarded-Encrypted: i=1;
- AJvYcCVe74/nu3C39nP6s7TzM7p4RQeHdwoedF5H7VK1mC9YCXRny5D7V1MH4NgT3qvlqHvraCBVxwU+GhpK5nRMRHpkFiJLOQ==@vger.kernel.org,
- AJvYcCXDW7JVogKDqEE1otaYdF2UXzkroa1hDGTdvInuVyuR52qCapCDDa0+/Nue0HblWxiRo00ttHg0IgM=@vger.kernel.org,
- AJvYcCXFpSQf5ksXkI8VOp2fnqw96hLlOx4d+jabbfLyL9pCMZj9xuw4X082QxiEfhiaGJTGGNjT4ks3pDt/2sk=@vger.kernel.org,
- AJvYcCXLkTmhrN9TcjUeyQ8TsHAqu3mdB9um7NP/SjII4hZYGD2MtLUi6sXbONghVKgStTyze2SaCrMxUbw=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxiclaA/nMBAKWI8lYFnf5jPNeBIiwr9kZBhuEZTBi0ToSWfmIb
-	/OQHWPpngKyuN/Ir0yfqO1rJ2JmxkWf+aoLWWm+G46kAkbxJgWLtwnDkJzVuqyI3AOcGRfwne09
-	oeujnbMTS+Q8PPzwPsVl6gLWYfpc=
-X-Google-Smtp-Source: 
- AGHT+IEQrS36+R1Z6waDCCkqZ3F0JC1xg5qDDC+IhufOMzf2Nqwfk+L31MbLJc/KuBqzVUSJoN8NoInwuaEzu1DXoP8=
-X-Received: by 2002:a2e:bea2:0:b0:30c:7a7:e85a with SMTP id
- 38308e7fff4ca-30c4a8769f1mr44483331fa.21.1742144624203; Sun, 16 Mar 2025
- 10:03:44 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IhUySBNv"
+Received: by mail-pl1-f180.google.com with SMTP id d9443c01a7336-22423adf751so57518875ad.2;
+        Sun, 16 Mar 2025 15:32:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1742164323; x=1742769123; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:sender:from:to:cc:subject:date:message-id:reply-to;
+        bh=xDy5g6sAXqWbdTcRppEhu8nA7CsEHIQ+vuUJcDxSUkE=;
+        b=IhUySBNvcVMMRllVlRUNcH5w63m49PYc0Wiiubb/pxM28Kpg8KK/EYeNwS0umy5NC+
+         YIr7nnOjoQsTMxalm96zqQVSSjaR0MX8uLA480+rnuEu/DdTeZEdmLVFhFPwb9nll+tW
+         EXfD7LCzWKjIzHNv4mrDW2oTCv7n5sO1bXmvE23kKESR20FF2OmMKDBIL+fy/CexBLpq
+         GdZxNrwUnHvdmpc4Q4DKxvyD/KN2YZ+bkVDgMefL0w3+qdUk+GdryqaBaU2YLmRPybdy
+         UssZeo1eF7fVrGqp9wDiBC/5DXhiaDwYhUFt9jFHAfThe+LrAaomapVFuVdqXC5ArjwQ
+         Ut0g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1742164323; x=1742769123;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:sender:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=xDy5g6sAXqWbdTcRppEhu8nA7CsEHIQ+vuUJcDxSUkE=;
+        b=akTmkwLOvuJxXDRPVnKL0ruX1EpIniP1AtgMqu64Me2TKQY71ePwuSEMNy7Rnmv8jh
+         TYn7SnJl3Ofllfx0gSgmwdL0Y9ceFHjWCOGPIJe42nHnKLhEjDFyv/iH+WEqxpFBhdXQ
+         EblFuca2gFTbVPsnDRG8jqCNwqclDT5xnI+KWT8nrkymVSjsQwRzt9ZJwtye5PIwXMem
+         0+NOj6VrQUc/pfUSueHJ3vnjHKBf0k/lcgjVVh/TKydjlvVuB+hbt11aHVS/s15d9Jns
+         Wb5KJxdnnpgT7dYOH5aq4I+VKpSrKO8rAmxMnUtPPWGeirh2AdgcrdSuQAGzquNimFIZ
+         6ong==
+X-Forwarded-Encrypted: i=1; AJvYcCW/HfOdIby5uvM+2ocO+UBALkIwlfN0F45byE2fLrA7C+cxeOf/qlGS9IEFC/TmZhjmoQtkr0XGLcw=@vger.kernel.org, AJvYcCWkE8g215NPy9WYnF1WM4vtH4n+4rpsmwOm6isbVR2gyCaNthFl4XKu+bDpgc862tcuq+e+dOv4oSI=@vger.kernel.org, AJvYcCWqUJrV1y19Ubix7ERE2yTvP5ZzS5OIFsPlwsovomjGu5n5Bh/aDbTAW+9ZrYjMsU0McGpwSbBvplO8iug=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwagsM/Qa1vU9CT5d81gVQ6OlKCGGapIvCtfxAVywwXjwG4Fy4r
+	MGL/VmZGij689LMNHwZbMSH5ULIL5RekXFR57RI+SsseQgHlO4Oi
+X-Gm-Gg: ASbGncsSkY+TyGjIMDHI06sfJrJtgSIHhUjomjyLSxOd0onS8a2t09OZEiKGEViJEdS
+	BV4MNagBrqDSOFkcIIXqdRKrOE99d92Ji/3IX3hq4Xh2myKRwopUYiea/f0vDxWeIRk7jPRBCSg
+	wGgQVfM5k/Q8pNUfR6KqCKNWYabtxIXKXnGGxpcFrtBlapgdurA7nlD7+cqwuQn7NuQGvi1bAmU
+	wjFZNOz5Pnu/Zkg/CZir9DTdHgydWZ6B7eipjwVcoa0beTs8+mjnm7IClh1sQYnhjnIy//pbOOg
+	LSVr24F8v1Qk59j0VctzJRwftntWVfvGAEqGj1Xv6OzQCiFkvTx4mJLhAHd9qqgk62VZlfMSNTd
+	+8uUrlPGwXKXgtSA7ug==
+X-Google-Smtp-Source: AGHT+IEqRt02ambKckmFRQG0yplW4q06JLtDcJkJvcclCMybrxenPBYBU2JHaU8uGGgxgwaaxoGu3Q==
+X-Received: by 2002:a17:902:ccc6:b0:224:255b:c934 with SMTP id d9443c01a7336-225e0b2750dmr119155495ad.51.1742164322934;
+        Sun, 16 Mar 2025 15:32:02 -0700 (PDT)
+Received: from ?IPV6:2600:1700:e321:62f0:da43:aeff:fecc:bfd5? ([2600:1700:e321:62f0:da43:aeff:fecc:bfd5])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-225c6bd5c03sm61867465ad.249.2025.03.16.15.32.01
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sun, 16 Mar 2025 15:32:02 -0700 (PDT)
+Sender: Guenter Roeck <groeck7@gmail.com>
+Message-ID: <9c20483c-dfe1-48b5-89da-680597d54791@roeck-us.net>
+Date: Sun, 16 Mar 2025 15:32:01 -0700
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 05/13] power: supply: add inhibit-charge-s0 to
+ charge_behaviour
+To: Antheas Kapenekakis <lkml@antheas.dev>
+Cc: platform-driver-x86@vger.kernel.org, linux-hwmon@vger.kernel.org,
+ linux-doc@vger.kernel.org, linux-pm@vger.kernel.org,
+ Jean Delvare <jdelvare@suse.com>, Jonathan Corbet <corbet@lwn.net>,
+ Joaquin Ignacio Aramendia <samsagax@gmail.com>,
+ Derek J Clark <derekjohn.clark@gmail.com>,
+ Kevin Greenberg <kdgreenberg234@protonmail.com>,
+ Joshua Tam <csinaction@pm.me>, Parth Menon <parthasarathymenon@gmail.com>,
+ Eileen <eileen@one-netbook.com>
 References: <20250311165406.331046-1-lkml@antheas.dev>
  <20250311165406.331046-6-lkml@antheas.dev>
  <CAGwozwELmp7v_46wmo_bbORWMEeA-NWRjXeRML4Jd=p=huLNaw@mail.gmail.com>
  <0aec1406-00cd-44ee-959f-48b646d3dad3@roeck-us.net>
  <CAGwozwHEoTb4uC=aoSXV2AMFjpZ_7+pDbMS1c_zs_QGAzC_qdA@mail.gmail.com>
- <CAFqHKTmYE+TYT9kpJXXoG0eZ36kJqrAfwQ397_7ssaYYsgh9KA@mail.gmail.com>
-In-Reply-To: 
- <CAFqHKTmYE+TYT9kpJXXoG0eZ36kJqrAfwQ397_7ssaYYsgh9KA@mail.gmail.com>
-From: Antheas Kapenekakis <lkml@antheas.dev>
-Date: Sun, 16 Mar 2025 18:03:32 +0100
-X-Gmail-Original-Message-ID: 
- <CAGwozwH5+5X1eBLnAT7G5Gd3mwptNvRF=U6sTggyT90Kdg2a1g@mail.gmail.com>
-X-Gm-Features: AQ5f1Jo5LUTySlK9F6ulBP2WnbiGVV-tpL8LEeNIgrb2Hb3KUtOl9m4vjLUQlOc
-Message-ID: 
- <CAGwozwH5+5X1eBLnAT7G5Gd3mwptNvRF=U6sTggyT90Kdg2a1g@mail.gmail.com>
-Subject: Re: [PATCH v4 05/13] power: supply: add inhibit-charge-s0 to
- charge_behaviour
-To: Derek John Clark <derekjohn.clark@gmail.com>
-Cc: Guenter Roeck <linux@roeck-us.net>,
-	"open list:AMD PMF DRIVER" <platform-driver-x86@vger.kernel.org>,
- linux-hwmon@vger.kernel.org,
-	linux-doc@vger.kernel.org, linux-pm@vger.kernel.org,
-	Jean Delvare <jdelvare@suse.com>, Jonathan Corbet <corbet@lwn.net>,
-	Joaquin Ignacio Aramendia <samsagax@gmail.com>,
- Kevin Greenberg <kdgreenberg234@protonmail.com>,
-	Joshua Tam <csinaction@pm.me>, Parth Menon <parthasarathymenon@gmail.com>,
-	Eileen <eileen@one-netbook.com>, Hans de Goede <hdegoede@redhat.com>,
-	Armin Wolf <W_Armin@gmx.de>, ij@kernel.org,
-	"Limonciello, Mario" <Mario.Limonciello@amd.com>
-Content-Type: text/plain; charset="UTF-8"
-X-PPP-Message-ID: 
- <174214462569.8468.10420902998555077563@linux1587.grserver.gr>
-X-PPP-Vhost: antheas.dev
-X-Virus-Scanned: clamav-milter 0.103.11 at linux1587.grserver.gr
-X-Virus-Status: Clean
+Content-Language: en-US
+From: Guenter Roeck <linux@roeck-us.net>
+Autocrypt: addr=linux@roeck-us.net; keydata=
+ xsFNBE6H1WcBEACu6jIcw5kZ5dGeJ7E7B2uweQR/4FGxH10/H1O1+ApmcQ9i87XdZQiB9cpN
+ RYHA7RCEK2dh6dDccykQk3bC90xXMPg+O3R+C/SkwcnUak1UZaeK/SwQbq/t0tkMzYDRxfJ7
+ nyFiKxUehbNF3r9qlJgPqONwX5vJy4/GvDHdddSCxV41P/ejsZ8PykxyJs98UWhF54tGRWFl
+ 7i1xvaDB9lN5WTLRKSO7wICuLiSz5WZHXMkyF4d+/O5ll7yz/o/JxK5vO/sduYDIlFTvBZDh
+ gzaEtNf5tQjsjG4io8E0Yq0ViobLkS2RTNZT8ICq/Jmvl0SpbHRvYwa2DhNsK0YjHFQBB0FX
+ IdhdUEzNefcNcYvqigJpdICoP2e4yJSyflHFO4dr0OrdnGLe1Zi/8Xo/2+M1dSSEt196rXaC
+ kwu2KgIgmkRBb3cp2vIBBIIowU8W3qC1+w+RdMUrZxKGWJ3juwcgveJlzMpMZNyM1jobSXZ0
+ VHGMNJ3MwXlrEFPXaYJgibcg6brM6wGfX/LBvc/haWw4yO24lT5eitm4UBdIy9pKkKmHHh7s
+ jfZJkB5fWKVdoCv/omy6UyH6ykLOPFugl+hVL2Prf8xrXuZe1CMS7ID9Lc8FaL1ROIN/W8Vk
+ BIsJMaWOhks//7d92Uf3EArDlDShwR2+D+AMon8NULuLBHiEUQARAQABzTJHdWVudGVyIFJv
+ ZWNrIChMaW51eCBhY2NvdW50KSA8bGludXhAcm9lY2stdXMubmV0PsLBgQQTAQIAKwIbAwYL
+ CQgHAwIGFQgCCQoLBBYCAwECHgECF4ACGQEFAlVcphcFCRmg06EACgkQyx8mb86fmYFg0RAA
+ nzXJzuPkLJaOmSIzPAqqnutACchT/meCOgMEpS5oLf6xn5ySZkl23OxuhpMZTVX+49c9pvBx
+ hpvl5bCWFu5qC1jC2eWRYU+aZZE4sxMaAGeWenQJsiG9lP8wkfCJP3ockNu0ZXXAXwIbY1O1
+ c+l11zQkZw89zNgWgKobKzrDMBFOYtAh0pAInZ9TSn7oA4Ctejouo5wUugmk8MrDtUVXmEA9
+ 7f9fgKYSwl/H7dfKKsS1bDOpyJlqhEAH94BHJdK/b1tzwJCFAXFhMlmlbYEk8kWjcxQgDWMu
+ GAthQzSuAyhqyZwFcOlMCNbAcTSQawSo3B9yM9mHJne5RrAbVz4TWLnEaX8gA5xK3uCNCeyI
+ sqYuzA4OzcMwnnTASvzsGZoYHTFP3DQwf2nzxD6yBGCfwNGIYfS0i8YN8XcBgEcDFMWpOQhT
+ Pu3HeztMnF3HXrc0t7e5rDW9zCh3k2PA6D2NV4fews9KDFhLlTfCVzf0PS1dRVVWM+4jVl6l
+ HRIAgWp+2/f8dx5vPc4Ycp4IsZN0l1h9uT7qm1KTwz+sSl1zOqKD/BpfGNZfLRRxrXthvvY8
+ BltcuZ4+PGFTcRkMytUbMDFMF9Cjd2W9dXD35PEtvj8wnEyzIos8bbgtLrGTv/SYhmPpahJA
+ l8hPhYvmAvpOmusUUyB30StsHIU2LLccUPPOwU0ETofVZwEQALlLbQeBDTDbwQYrj0gbx3bq
+ 7kpKABxN2MqeuqGr02DpS9883d/t7ontxasXoEz2GTioevvRmllJlPQERVxM8gQoNg22twF7
+ pB/zsrIjxkE9heE4wYfN1AyzT+AxgYN6f8hVQ7Nrc9XgZZe+8IkuW/Nf64KzNJXnSH4u6nJM
+ J2+Dt274YoFcXR1nG76Q259mKwzbCukKbd6piL+VsT/qBrLhZe9Ivbjq5WMdkQKnP7gYKCAi
+ pNVJC4enWfivZsYupMd9qn7Uv/oCZDYoBTdMSBUblaLMwlcjnPpOYK5rfHvC4opxl+P/Vzyz
+ 6WC2TLkPtKvYvXmdsI6rnEI4Uucg0Au/Ulg7aqqKhzGPIbVaL+U0Wk82nz6hz+WP2ggTrY1w
+ ZlPlRt8WM9w6WfLf2j+PuGklj37m+KvaOEfLsF1v464dSpy1tQVHhhp8LFTxh/6RWkRIR2uF
+ I4v3Xu/k5D0LhaZHpQ4C+xKsQxpTGuYh2tnRaRL14YMW1dlI3HfeB2gj7Yc8XdHh9vkpPyuT
+ nY/ZsFbnvBtiw7GchKKri2gDhRb2QNNDyBnQn5mRFw7CyuFclAksOdV/sdpQnYlYcRQWOUGY
+ HhQ5eqTRZjm9z+qQe/T0HQpmiPTqQcIaG/edgKVTUjITfA7AJMKLQHgp04Vylb+G6jocnQQX
+ JqvvP09whbqrABEBAAHCwWUEGAECAA8CGwwFAlVcpi8FCRmg08MACgkQyx8mb86fmYHNRQ/+
+ J0OZsBYP4leJvQF8lx9zif+v4ZY/6C9tTcUv/KNAE5leyrD4IKbnV4PnbrVhjq861it/zRQW
+ cFpWQszZyWRwNPWUUz7ejmm9lAwPbr8xWT4qMSA43VKQ7ZCeTQJ4TC8kjqtcbw41SjkjrcTG
+ wF52zFO4bOWyovVAPncvV9eGA/vtnd3xEZXQiSt91kBSqK28yjxAqK/c3G6i7IX2rg6pzgqh
+ hiH3/1qM2M/LSuqAv0Rwrt/k+pZXE+B4Ud42hwmMr0TfhNxG+X7YKvjKC+SjPjqp0CaztQ0H
+ nsDLSLElVROxCd9m8CAUuHplgmR3seYCOrT4jriMFBtKNPtj2EE4DNV4s7k0Zy+6iRQ8G8ng
+ QjsSqYJx8iAR8JRB7Gm2rQOMv8lSRdjva++GT0VLXtHULdlzg8VjDnFZ3lfz5PWEOeIMk7Rj
+ trjv82EZtrhLuLjHRCaG50OOm0hwPSk1J64R8O3HjSLdertmw7eyAYOo4RuWJguYMg5DRnBk
+ WkRwrSuCn7UG+qVWZeKEsFKFOkynOs3pVbcbq1pxbhk3TRWCGRU5JolI4ohy/7JV1TVbjiDI
+ HP/aVnm6NC8of26P40Pg8EdAhajZnHHjA7FrJXsy3cyIGqvg9os4rNkUWmrCfLLsZDHD8FnU
+ mDW4+i+XlNFUPUYMrIKi9joBhu18ssf5i5Q=
+In-Reply-To: <CAGwozwHEoTb4uC=aoSXV2AMFjpZ_7+pDbMS1c_zs_QGAzC_qdA@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Sun, 16 Mar 2025 at 17:50, Derek John Clark
-<derekjohn.clark@gmail.com> wrote:
->
->
->
-> On Sun, Mar 16, 2025, 09:47 Antheas Kapenekakis <lkml@antheas.dev> wrote:
+On 3/16/25 09:46, Antheas Kapenekakis wrote:
+[ ... ]
+>>> Do I need to cc anyone extra?
+>>>
 >>
->> On Sun, 16 Mar 2025 at 14:56, Guenter Roeck <linux@roeck-us.net> wrote:
->> >
->> > On 3/16/25 04:40, Antheas Kapenekakis wrote:
->> > > On Tue, 11 Mar 2025 at 17:54, Antheas Kapenekakis <lkml@antheas.dev> wrote:
->> > >>
->> > >> OneXPlayer devices have a charge bypass feature
->> > >> that allows the user to select between it being
->> > >> active always or only when the device is on.
->> > >>
->> > >> Therefore, add attribute inhibit-charge-s0 to
->> > >> charge_behaviour to allow the user to select
->> > >> that bypass should only be on when the device is
->> > >> in the s0 state.
->> > >>
->> > >> Reviewed-by: Derek J. Clark <derekjohn.clark@gmail.com>
->> > >> Signed-off-by: Antheas Kapenekakis <lkml@antheas.dev>
->> > >> ---
->> > >>   Documentation/ABI/testing/sysfs-class-power | 11 ++++++-----
->> > >>   drivers/power/supply/power_supply_sysfs.c   |  1 +
->> > >>   drivers/power/supply/test_power.c           |  1 +
->> > >>   include/linux/power_supply.h                |  1 +
->> > >>   4 files changed, 9 insertions(+), 5 deletions(-)
->> > >>
->> > >> diff --git a/Documentation/ABI/testing/sysfs-class-power b/Documentation/ABI/testing/sysfs-class-power
->> > >> index 2a5c1a09a28f..4a187ca11f92 100644
->> > >> --- a/Documentation/ABI/testing/sysfs-class-power
->> > >> +++ b/Documentation/ABI/testing/sysfs-class-power
->> > >> @@ -508,11 +508,12 @@ Description:
->> > >>                  Access: Read, Write
->> > >>
->> > >>                  Valid values:
->> > >> -                       ================ ====================================
->> > >> -                       auto:            Charge normally, respect thresholds
->> > >> -                       inhibit-charge:  Do not charge while AC is attached
->> > >> -                       force-discharge: Force discharge while AC is attached
->> > >> -                       ================ ====================================
->> > >> +                       ================== =====================================
->> > >> +                       auto:              Charge normally, respect thresholds
->> > >> +                       inhibit-charge:    Do not charge while AC is attached
->> > >> +                       inhibit-charge-s0: same as inhibit-charge but only in S0
->> > >> +                       force-discharge:   Force discharge while AC is attached
->> > >> +                       ================== =====================================
->> > >>
->> > >>   What:          /sys/class/power_supply/<supply_name>/technology
->> > >>   Date:          May 2007
->> > >> diff --git a/drivers/power/supply/power_supply_sysfs.c b/drivers/power/supply/power_supply_sysfs.c
->> > >> index edb058c19c9c..1a98fc26ce96 100644
->> > >> --- a/drivers/power/supply/power_supply_sysfs.c
->> > >> +++ b/drivers/power/supply/power_supply_sysfs.c
->> > >> @@ -140,6 +140,7 @@ static const char * const POWER_SUPPLY_SCOPE_TEXT[] = {
->> > >>   static const char * const POWER_SUPPLY_CHARGE_BEHAVIOUR_TEXT[] = {
->> > >>          [POWER_SUPPLY_CHARGE_BEHAVIOUR_AUTO]            = "auto",
->> > >>          [POWER_SUPPLY_CHARGE_BEHAVIOUR_INHIBIT_CHARGE]  = "inhibit-charge",
->> > >> +       [POWER_SUPPLY_CHARGE_BEHAVIOUR_INHIBIT_CHARGE_S0]       = "inhibit-charge-s0",
->> > >>          [POWER_SUPPLY_CHARGE_BEHAVIOUR_FORCE_DISCHARGE] = "force-discharge",
->> > >>   };
->> > >>
->> > >> diff --git a/drivers/power/supply/test_power.c b/drivers/power/supply/test_power.c
->> > >> index 2a975a110f48..4bc5ab84a9d6 100644
->> > >> --- a/drivers/power/supply/test_power.c
->> > >> +++ b/drivers/power/supply/test_power.c
->> > >> @@ -214,6 +214,7 @@ static const struct power_supply_desc test_power_desc[] = {
->> > >>                  .property_is_writeable = test_power_battery_property_is_writeable,
->> > >>                  .charge_behaviours = BIT(POWER_SUPPLY_CHARGE_BEHAVIOUR_AUTO)
->> > >>                                     | BIT(POWER_SUPPLY_CHARGE_BEHAVIOUR_INHIBIT_CHARGE)
->> > >> +                                  | BIT(POWER_SUPPLY_CHARGE_BEHAVIOUR_INHIBIT_CHARGE_S0)
->> > >>                                     | BIT(POWER_SUPPLY_CHARGE_BEHAVIOUR_FORCE_DISCHARGE),
->> > >>          },
->> > >>          [TEST_USB] = {
->> > >> diff --git a/include/linux/power_supply.h b/include/linux/power_supply.h
->> > >> index 6ed53b292162..b1ca5e148759 100644
->> > >> --- a/include/linux/power_supply.h
->> > >> +++ b/include/linux/power_supply.h
->> > >> @@ -212,6 +212,7 @@ enum power_supply_usb_type {
->> > >>   enum power_supply_charge_behaviour {
->> > >>          POWER_SUPPLY_CHARGE_BEHAVIOUR_AUTO = 0,
->> > >>          POWER_SUPPLY_CHARGE_BEHAVIOUR_INHIBIT_CHARGE,
->> > >> +       POWER_SUPPLY_CHARGE_BEHAVIOUR_INHIBIT_CHARGE_S0,
->> > >>          POWER_SUPPLY_CHARGE_BEHAVIOUR_FORCE_DISCHARGE,
->> > >>   };
->> > >>
->> > >> --
->> > >> 2.48.1
->> > >>
->> > >
->> > > Hi Guenter,
->> > > I think I need an ack here, and then someone from platform-x86 to
->> > > triage the series.
->> > >
->> > > Do I need to cc anyone extra?
->> > >
->> >
->> > You need to cc the maintainers of affected subsystems. Copying the mailing
->> > list is insufficient.
->> >
->> > Guenter
->> >
+>> You need to cc the maintainers of affected subsystems. Copying the mailing
+>> list is insufficient.
 >>
->> Can you tell me who to cc from platform-x86 and linux-pm?
+>> Guenter
 >>
->> Is it Armin and Rafael?
->
->
-> Hans, Ilpo, Armin, and Mario
->
-> - Derek
+> 
+> Can you tell me who to cc from platform-x86 and linux-pm?
+> 
 
-Sure. Full series on [1].
+Just use scripts/get_maintainer.pl.
 
-Antheas
+Guenter
 
-btw, your reply was non-text.
-
-[1] https://lore.kernel.org/all/20250311165406.331046-1-lkml@antheas.dev/
