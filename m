@@ -1,138 +1,162 @@
-Received: from mout.gmx.net (mout.gmx.net [212.227.15.15])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f170.google.com (mail-pl1-f170.google.com [209.85.214.170])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BFA2F28E8;
-	Mon, 17 Mar 2025 00:32:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 30D47440C;
+	Mon, 17 Mar 2025 06:33:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742171574; cv=none; b=ugW+ES0KmivyQ/y3UPLRT1hhw54lhsV2CwwskEQ04MIDQJpVCB06mFVq1qMazrPU9iHStYqAIlbZfOyHH8ywolVEmx4I66NzqxuX3H468r7U/AVIknURGv6bSz7gCuQGHP1tbAttLmKjBT33lcphSd4gm1SBG8/kIhsRv5GEqqY=
+	t=1742193240; cv=none; b=PJlGpda+d78JYUTMkZooMgSYlINAkUmkpPKSA/VnFb7NVaRCWQxoJ37TxUzxI/Lt44GLtUZbxruuVcqjtpPMMzoxTWWxYyyMCuCZStTy9/tq7u37jNn7kQuD+tLaeom7BgIROj5PDccm+NN3IRCcE51kSwqM6ojH4Eag+UFiZVk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742171574; c=relaxed/simple;
-	bh=QQDMyVh4kQpQFqsjt8N5eOvDUFTlUT+SPE80T3yTzmg=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=QAAmsUCKzenO4Mxp26S3f4cVvHPklQqmVJFgr19WXHfN3ZBuebCt/IX7hiGzI6q6Dhzn8V+aPhgW9fnwZDLVNp7dd1VD1LeRSZ5LE68CfICYuHXeHdn+wXF16g28S3FO+PSMVuRQclPUkJ8U7E95wLpu+4zP2rnlojmNzI0e26E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b=kHfMTX99; arc=none smtp.client-ip=212.227.15.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
+	s=arc-20240116; t=1742193240; c=relaxed/simple;
+	bh=wYw1uh9zfWcBXAdw8nD2Ekouog7ewxgVXH1hcRKpKzY=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=hHm1b4ugMIapWyWk8ft1h4hSs+Y6E7hHpePNlOFpObtwPzHfhQMT2K50IKz0IVskPzJfdNZ9nK74TP0VMLboOT/5q0vyOd41vD2v/52NOJ9WG+6TmK80ESI5BTTNsIRUQY83U6PhEUmbWRT2U9rtzqVzBbHRgrL+8Zl9HrO0aeo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ngW7mwQo; arc=none smtp.client-ip=209.85.214.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b="kHfMTX99"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.de;
-	s=s31663417; t=1742171556; x=1742776356; i=w_armin@gmx.de;
-	bh=kZV/eTa1oGW7T91zcA0XwhxZyzT/0rIgzmxiw5LjRqI=;
-	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:To:Cc:
-	 References:From:In-Reply-To:Content-Type:
-	 Content-Transfer-Encoding:cc:content-transfer-encoding:
-	 content-type:date:from:message-id:mime-version:reply-to:subject:
-	 to;
-	b=kHfMTX991Dj87Rdj6+K0YUo0fw37rHxt3w3xpgHWm1G0rWduaAh6gRWk8Rb7a6WV
-	 NXKJHtiDIDZWdvJSaY2OjhBT0aRrmbik/lQ9k4cxmiaHVBpkbohNk0Agn3wCfbPzC
-	 R1M+lSAexIX39U8VkRYEhBWRvMI3/lftmwnYhUDZhd7MBTwmqQ6Zfym3IMWmxVAQ2
-	 WyrJUOuliLQY4GmdWTsSzQmHQuuLRgjrkTTLdTR0QHrTPkEOEfngUcB3gnH5D/cY+
-	 pxduFpPFHyLccx+Ly5bJOf/56KYBzJ6qbCGymf4w7QJG+kgAYnlLmIbRJrSOLYYDQ
-	 WW4ked8BepdydzugFA==
-X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
-Received: from [192.168.0.69] ([87.177.78.219]) by mail.gmx.net (mrgmx005
- [212.227.17.190]) with ESMTPSA (Nemesis) id 1MIdeR-1twyXZ1mIX-00B28U; Mon, 17
- Mar 2025 01:32:36 +0100
-Message-ID: <4d3e34c8-d7b4-4bec-9276-17a1fa473f19@gmx.de>
-Date: Mon, 17 Mar 2025 01:32:33 +0100
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ngW7mwQo"
+Received: by mail-pl1-f170.google.com with SMTP id d9443c01a7336-223594b3c6dso77631195ad.2;
+        Sun, 16 Mar 2025 23:33:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1742193237; x=1742798037; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=di3S0+LuekJWKwlJTMRfcHb5hngKcTJb2WX7dDJf3+8=;
+        b=ngW7mwQo1ts+DAB0vOEwQWeJyOikkPmtjblrEKcNplTLX34khYRzmWMwe3ltBvdM+V
+         7Qzfz3BU9bYO5+EuMiPQ1IT6KrpDVBouCLKsojpTDWZs+Vld1ixSEwB97NoxLeYSiZvb
+         wYpatq24jt8n7ak17vScfBMegu4WH1NyfTE667c39F/IEkop5iMD6pd9wuCZPVYGJzes
+         FGY8gm+40xYjr2RL0EBBJFeGecLUb4L13uDlkcLcIUm1zLNYi001NBlOGVnjMDoLu8I8
+         r3P/sT2qs0pgnZwsoRv2qQiWQQGWrKyZx/4hUedzLgP8AtiiHrPoDBSgg1ynB1YjkGgm
+         lQNg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1742193237; x=1742798037;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=di3S0+LuekJWKwlJTMRfcHb5hngKcTJb2WX7dDJf3+8=;
+        b=N9dfxytPphT23r03sinG2lO0vpQcR2JKPVlt40+kRIInwJtBhcWY2+Bv12mb70lJaL
+         6+RQ+i1AiTnJAvpeSxCISOgccD4Ml5jPB1kksl9y3or4mNpSA3KoRRv2bCDYHLxx2B0r
+         qFuKkdbJINW05rJkctlw48f5vqR/HHAMfa709ztmCUBYnDs8y8zrfDlAMRg+7LvG0qAw
+         iieRSOVC5jaqWCW0yByC/+ujYqqLnkK3Bxy8jzOKDM6oromO9vJuFSfmMdYVwff/Nl2n
+         35ZjEtYjIj0hc5GGhsH9WuPOaTF55iwbNP4mzS/R3GxbMwoI31ZsHwXIr53nIZYocozm
+         clIg==
+X-Forwarded-Encrypted: i=1; AJvYcCUcWlSkp6+JLHKrbfc+3csiKFsrI1H0wBkicrfFdChtWY/6Cspt++SccbtqGMHNl1v2xtBQGiT6QmpuxeL3KeDhwvQJYg==@vger.kernel.org, AJvYcCXcuYQtBQrEcr7bnbxZhxxTp7WJHT98EUrvjt5jpkYfR5GbvoNFzgG0A1EZ70+BcJez5mvseT0ZCHI=@vger.kernel.org, AJvYcCXqGIS/Do7xpj5FSMYIc4J3AOTHY1MRRE+sxT0oJkZsT/5gclsMIaqJXIID1hSdDl47TTuvI0qbVbdvfSDN@vger.kernel.org
+X-Gm-Message-State: AOJu0YywjCG2cqZx8isrDhAvA+1fAZ4fNn8nqzgTCVBz/iDcZLfoeUyN
+	1id5jhkQ+8ChSb+VGv9HCqXiQVPxVkVvpzs7A/dcYSPzO2V8IuCd
+X-Gm-Gg: ASbGncsRuX+3LKDV0ipmgCHJtQIpJYbAvhzn5pYPaIxTnAXAv5xOg0aFv+LZhq222/V
+	VwNKbvca0zLDfvwzXIzZutaY6HsEpSxwC/xgPWRtMt7fBVMJwOVEA/H1Y0vEaS4Oj9mh7hSHFry
+	XMAysJWYSZb9rnpySKbQja7NF74fwX28/xSoz/cn0bh4sVF17N2ZpeRD1UO5tj1yCV68m5c8TuW
+	tRVPa+DK+kJFOhHjydbg/tOZiM7/yXDKzt1IC+tNC2/YBFT6iiMUBtxc2r6ARXesZLy80rEIJI7
+	TIpNomzLCidWcIa6Oz0zMw+Ow0OowiO1ICbDrv8QOiZs5+0Pya1Loh7NEadeD/u4xp1DZWeGUzK
+	sYlvwzFX60vn7ZnSL55piDatXwDyA0P6vtZY5RRTHuF4=
+X-Google-Smtp-Source: AGHT+IH1X5sDD8u2//7Y+nkzwhr5lAU0ZPraEg7yAKiomLEysCfNzF3qllGrQr4Q9+ggjvpFqMOE2g==
+X-Received: by 2002:a17:903:3d0c:b0:223:5241:f5ca with SMTP id d9443c01a7336-225e0a62b11mr131840735ad.20.1742193237251;
+        Sun, 16 Mar 2025 23:33:57 -0700 (PDT)
+Received: from localhost.localdomain (108-228-232-20.lightspeed.sndgca.sbcglobal.net. [108.228.232.20])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-30153afee51sm5186555a91.28.2025.03.16.23.33.55
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 16 Mar 2025 23:33:56 -0700 (PDT)
+From: "Derek J. Clark" <derekjohn.clark@gmail.com>
+To: Hans de Goede <hdegoede@redhat.com>,
+	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Cc: Armin Wolf <W_Armin@gmx.de>,
+	Jonathan Corbet <corbet@lwn.net>,
+	Mario Limonciello <superm1@kernel.org>,
+	Luke Jones <luke@ljones.dev>,
+	Xino Ni <nijs1@lenovo.com>,
+	Zhixin Zhang <zhangzx36@lenovo.com>,
+	Mia Shao <shaohz1@lenovo.com>,
+	Mark Pearson <mpearson-lenovo@squebb.ca>,
+	"Pierre-Loup A . Griffais" <pgriffais@valvesoftware.com>,
+	"Cody T . -H . Chiu" <codyit@gmail.com>,
+	John Martens <johnfanv2@gmail.com>,
+	"Derek J . Clark" <derekjohn.clark@gmail.com>,
+	platform-driver-x86@vger.kernel.org,
+	linux-doc@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v4 0/6] platform/x86: Add Lenovo Gaming Series WMI Drivers
+Date: Sun, 16 Mar 2025 23:33:27 -0700
+Message-ID: <20250317063337.352966-1-derekjohn.clark@gmail.com>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v6 00/12] platform/x86: alienware-wmi-wmax: HWMON support
- + DebugFS + Improvements
-To: Kurt Borja <kuurtb@gmail.com>,
- =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Cc: Hans de Goede <hdegoede@redhat.com>, platform-driver-x86@vger.kernel.org,
- Dell.Client.Kernel@dell.com, linux-kernel@vger.kernel.org,
- Guenter Roeck <linux@roeck-us.net>, Jean Delvare <jdelvare@suse.com>,
- linux-hwmon@vger.kernel.org, Bagas Sanjaya <bagasdotme@gmail.com>
-References: <20250313-hwm-v6-0-17b57f787d77@gmail.com>
-Content-Language: en-US
-From: Armin Wolf <W_Armin@gmx.de>
-In-Reply-To: <20250313-hwm-v6-0-17b57f787d77@gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Provags-ID: V03:K1:N7nB1OMRH91WYFmZneoQI+GvdVntlL+X2Lo1yB01YOO099e+2Bj
- sU4+u4CN/bSo1jfarlJ0n+dDy/8IopT/KTvHPxoI637LX9tla8lL6Zq9to/BlogVbXZrbOu
- xAZHTyyHR/eLqPG8sndHWDqcoRx6/s8u2J8K3CyNKAm0RPT9OC1wVTNA5/BssIabYBzt46g
- kq0Jq6yPKhXOotOTvhe2w==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:+Y6/nnzBrM4=;1jaNZxUneP6eTFLxmShzEpD1fy6
- 1Am2gMbixDzA6PXZ/3saz33ufwbT3eLxRjmlX0qRzh8r0RDbr46INH87zoypUXqJrxh0I8iuV
- S6xFPJgybm6nz/RX6SVCUWqDDHD3/ZRtF7UyeunpH1nh2/NFLj9ag3y03D9k42aFp1nsO3+VI
- 3b9attBSnB8uijK+cDb3d1V4b+Vg9Be9Kq67HtHJyESe5TwdNQf9tR8YODhDTmJYLq2HSRvDS
- bEXLyL5DIVnej8Wz+Yc0OT8uCQs9Fr0XqTW3gYWNLmZ6/B85JhGRGa64E9Crh5y6bMlqm+CVU
- GYED9m1SSIznCAymDx/WFKonfwdZswMFntBrqDcNxakeyVf2PDQJf8L0P7pQDSj8eGiZ9LIZF
- JtK/Gj2/aXBXIZspezFr7awuAAcRNSXrs8xJKyBa+5+UXDF1JaQcNDpcX+NwcBdQtof/bPwEc
- dUmyBXCCWE/4gAbf6c9Xz81PutvHT2RvgJuMt12r0xCr2WYfZGDcql+r6xGzvFqgjn8jGexVd
- 36KTlDDZGiKpDhZtXzVTb5b6xacpwXQ1fMPzGNPF5nBok+3WJREe3PYxTjunt9trTV5RST+Ww
- Pqw/7Kol/3dqqXsVf0k23TGjpmRA6GiEdpCyZEb2JplWI8qJUipaTdPp7Eq44JcUmErmfbwcp
- dJSs30inicbDOMH3t/x+nu2SMrqzO/iv8p5168tqncriOH7eFTMeTNQJRdUgY1uq274ZpLUyF
- CDDPRmlTJifjoqZRe62dVJO3NOdITnmUwmTyRdJEhIIej4M/B07IDxPg4+v6CGQ5800tKrJh8
- DL9MCdlvipUsPmX5tm//ynzOLlZKrA5vtQg1HhN1piCAvIO9WcWQu+G/ARNKqZagv8Z2hzURt
- yFhNKj2Nvl3oF4GvYNT49zDYWvDBAn+FDwYXNNT5PD0kd0MlwfFufEYNauI38ZNshdCXWj7a8
- FtjKMp4Y9aa4AnNYj93PzxW9LloI37Q4bZHP9WvqVd4p+Dt1CfPuH/Ktwsmc5+PcTS71XHFOb
- R2H/we3V/+qFKwULHoFRgO7qiHD/IpA5CoPgB4l6dHlCqkg0V5qeLcACUihsbYKT0bie0kWZJ
- 9gQPIF6QGJO5jwY186gqDb2NvQrzldm5fN4LSG5993nJB6NbkOweLcoWsHqeAmBQDloEWDqGP
- ySWyRmdAABUHzV/IZrjF2gSQJZ6jWrxGTE89rWPOc8WlJa2pBYWlYDgoUpw1VSaGpq2scoSS2
- 8Aua0Lm9keonJMBS5hVmlMXD4t3AQRq4V4zuXW/RbqmnrYIqYrT4gR+uHZXGw3VFfWZ/Wj1GY
- /MJmwAv6+6SdZjMDrpIdYoSriXK5o5UgTO7EOU+K36O4kEe9IlMpybMGTzp58D6J0tiTbtSJl
- lHXgoiTXuVxvAarDAKHXsSZCsBK9G39UrXhcd+XvQG/bc99GJPyaAN+UhEtM11TEMuvORiqHm
- 6sEmRwZF9LE4FeSK+VeYAFSN2gXk=
+Content-Transfer-Encoding: 8bit
 
-Am 13.03.25 um 15:29 schrieb Kurt Borja:
+Adds support for the Lenovo "Gaming Series" of laptop hardware that use
+WMI interfaces that control various power settings. There are multiple WMI
+interfaces that work in concert to provide getting and setting values as
+well as validation of input. Currently only the "Gamezone", "Other
+Mode", and "LENOVO_CAPABILITY_DATA_01" interfaces are implemented, but
+I attempted to structure the driver so that adding the "Custom Mode",
+"Lighting", and other data block interfaces would be trivial in a later
+patches.
 
-> Hi all,
->
-> This set mainly adds hwmon and manual fan control support (patches 7-8)
-> to the alienware-wmi driver, after some improvements.
->
-> Thank you for your feedback :)
+This driver is distinct from, but should be considered a replacement for
+this patch:
+https://lore.kernel.org/all/20241118100503.14228-1-jonmail@163.com/
 
- From my perspective the whole series is ready for inclusion into the mainline kernel.
+This driver attempts to standardize the exposed sysfs by mirroring the
+asus-armoury driver currently under review. As such, a lot of
+inspiration has been drawn from that driver.
+https://lore.kernel.org/platform-driver-x86/20250316230724.100165-1-luke@ljones.dev/
 
-Thanks,
-Armin Wolf
+The drivers have been tested by me on the Lenovo Legion Go and Legion Go
+S.
 
-> ---
-> Changes in v6:
->
-> [08/12]
->    - Define dev_pm_ops statically (kernel test robot)
->
-> Link to v5: https://lore.kernel.org/r/20250312-hwm-v5-0-deb15ff8f3c6@gmail.com
->
-> ---
-> Kurt Borja (12):
->        platform/x86: alienware-wmi-wmax: Rename thermal related symbols
->        platform/x86: alienware-wmi-wmax: Refactor is_awcc_thermal_mode()
->        platform/x86: alienware-wmi-wmax: Improve internal AWCC API
->        platform/x86: alienware-wmi-wmax: Modify supported_thermal_profiles[]
->        platform/x86: alienware-wmi-wmax: Improve platform profile probe
->        platform/x86: alienware-wmi-wmax: Add support for the "custom" thermal profile
->        platform/x86: alienware-wmi-wmax: Add HWMON support
->        platform/x86: alienware-wmi-wmax: Add support for manual fan control
->        platform/x86: alienware-wmi-wmax: Add a DebugFS interface
->        Documentation: wmi: Improve and update alienware-wmi documentation
->        Documentation: admin-guide: laptops: Add documentation for alienware-wmi
->        Documentation: ABI: Add sysfs platform and debugfs ABI documentation for alienware-wmi
->
->   Documentation/ABI/testing/debugfs-alienware-wmi    |   44 +
->   .../ABI/testing/sysfs-platform-alienware-wmi       |   14 +
->   .../admin-guide/laptops/alienware-wmi.rst          |  128 +++
->   Documentation/admin-guide/laptops/index.rst        |    1 +
->   Documentation/wmi/devices/alienware-wmi.rst        |  383 +++-----
->   MAINTAINERS                                        |    3 +
->   drivers/platform/x86/dell/Kconfig                  |    1 +
->   drivers/platform/x86/dell/alienware-wmi-wmax.c     | 1023 +++++++++++++++++---
->   8 files changed, 1187 insertions(+), 410 deletions(-)
-> ---
-> base-commit: f895f2493098b862f1ada0568aba278e49bf05b4
-> change-id: 20250305-hwm-f7bd91902b57
->
-> Best regards,
+Suggested-by: Mario Limonciello <superm1@kernel.org>
+Signed-off-by: Derek J. Clark <derekjohn.clark@gmail.com>
+--- 
+v4:
+ - Added lenovo-wmi-events driver
+ - Added headers for every driver
+ - Fixes requested from v3 review
+v3:
+https://lore.kernel.org/platform-driver-x86/20250225220037.16073-1-derekjohn.clark@gmail.com/
+v2:
+https://lore.kernel.org/platform-driver-x86/20250102004854.14874-1-derekjohn.clark@gmail.com/
+v1:
+https://lore.kernel.org/platform-driver-x86/20241217230645.15027-1-derekjohn.clark@gmail.com/
+Derek J. Clark (6):
+  platform/x86: Add lenovo-wmi-* driver Documentation
+  platform/x86: Add lenovo-wmi-helpers
+  platform/x86: Add Lenovo WMI Events Driver
+  platform/x86: Add Lenovo Capability Data 01 WMI Driver
+  platform/x86: Add Lenovo Other Mode WMI Driver
+  platform/x86: Add Lenovo Gamezone WMI Driver
+
+ .../wmi/devices/lenovo-wmi-gamezone.rst       | 203 ++++++
+ .../wmi/devices/lenovo-wmi-other-method.rst   | 108 +++
+ MAINTAINERS                                   |  17 +
+ drivers/platform/x86/Kconfig                  |  40 ++
+ drivers/platform/x86/Makefile                 |   5 +
+ drivers/platform/x86/lenovo-wmi-capdata01.c   | 136 ++++
+ drivers/platform/x86/lenovo-wmi-capdata01.h   |  29 +
+ drivers/platform/x86/lenovo-wmi-events.c      | 132 ++++
+ drivers/platform/x86/lenovo-wmi-events.h      |  21 +
+ drivers/platform/x86/lenovo-wmi-gamezone.c    | 380 +++++++++++
+ drivers/platform/x86/lenovo-wmi-gamezone.h    |  18 +
+ drivers/platform/x86/lenovo-wmi-helpers.c     |  64 ++
+ drivers/platform/x86/lenovo-wmi-helpers.h     |  24 +
+ drivers/platform/x86/lenovo-wmi-other.c       | 626 ++++++++++++++++++
+ drivers/platform/x86/lenovo-wmi-other.h       |  19 +
+ 15 files changed, 1822 insertions(+)
+ create mode 100644 Documentation/wmi/devices/lenovo-wmi-gamezone.rst
+ create mode 100644 Documentation/wmi/devices/lenovo-wmi-other-method.rst
+ create mode 100644 drivers/platform/x86/lenovo-wmi-capdata01.c
+ create mode 100644 drivers/platform/x86/lenovo-wmi-capdata01.h
+ create mode 100644 drivers/platform/x86/lenovo-wmi-events.c
+ create mode 100644 drivers/platform/x86/lenovo-wmi-events.h
+ create mode 100644 drivers/platform/x86/lenovo-wmi-gamezone.c
+ create mode 100644 drivers/platform/x86/lenovo-wmi-gamezone.h
+ create mode 100644 drivers/platform/x86/lenovo-wmi-helpers.c
+ create mode 100644 drivers/platform/x86/lenovo-wmi-helpers.h
+ create mode 100644 drivers/platform/x86/lenovo-wmi-other.c
+ create mode 100644 drivers/platform/x86/lenovo-wmi-other.h
+
+-- 
+2.49.0
+
