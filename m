@@ -1,72 +1,70 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C6AFB238D22
-	for <platform-driver-x86@vger.kernel.org>; Mon, 17 Mar 2025 12:11:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9711223370B
+	for <platform-driver-x86@vger.kernel.org>; Mon, 17 Mar 2025 12:17:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742213521; cv=none; b=F49Jg5srMDrGCFLb3F/jjDgGkMBqUtXGjH+FTaSyAW08DknYh81Jv7EJWEkc0ZasfUbPYlMk7vsmkTazR2jEMJFMpoxd7bY/cY9BXMEELW/zesugu2OM9oqgyL62LxsyZSnQq5dsskKZ350DGZfJlSgsqUrXXHrbB9Z/0SP44ls=
+	t=1742213862; cv=none; b=UBsphuU33q+4LopKzM8K1sMS1DM3F6cv3yc3YgwUfMVAtUg/zKQo4qtnfcc9fqN5jDwkffoimr+JvbW5AtfoliBMxywfdD8HoOwlkzMj72TvBEfpZPzpRNQ0PdDVEmmVDEmXVDUDKG/EYOYtpTkhblZH5IOeK3Ii+jLawjtALQ4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742213521; c=relaxed/simple;
-	bh=jj7q41qpMlLqrHVAuqRVsU+SI7d292ZMUc1Spl7aocc=;
+	s=arc-20240116; t=1742213862; c=relaxed/simple;
+	bh=3Ae0R2whHgk5YCE3sDscO9JGMTxEcvaeefpUXn112CE=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=eRc4NJm4AKcW2S/cKmy+RcDK3wP8BZYgesMMbnlweYqNunjnMLJSOerL5HbZsULMbKdfGUWc2llgMoark9yPmPpOcwnwk/Qjcr0IzLlSxbx2LT5AlHZGWCU/I2ocxmbO4U7bjvy2cmuFmBeQBCoUIznCve1r1m5Q3ADtqNZjGqo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=cSK9eBTo; arc=none smtp.client-ip=170.10.129.124
+	 In-Reply-To:Content-Type; b=oPOjG3U14njJazkvrUxdoDp16rCrw6AtDSO+3L0IS9nAQ7jbOoOZzURnl0AeTOCAloiIef9kKt34g8S427pKM0R+x/zMWVmdzBuAYiCCugeDmdYaoBpH6RPFhW77F5Q6e2/28CRjDdH2z6iptRZPYKlRNY/z8xfa6Lt6qujxEPs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=iakimvOw; arc=none smtp.client-ip=170.10.133.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="cSK9eBTo"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="iakimvOw"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1742213518;
+	s=mimecast20190719; t=1742213859;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=h2fSQoXwaoSpq21VyKem5Q8rm+cvDaD43gnaYL7G73k=;
-	b=cSK9eBTotw6OOpklLxKpXQV3f+lhwE211hwfTNDZZiM3m3l6p16xPqpZK/ceZggr1AJ4xT
-	QjXyJ2oPwQW+CMCDRnWVZYJqBlOg+E4RN91Gk6/XkVULTFl5CdR0Tl69DJQTBBZ+seaqN6
-	MJ4uGjLOKDYd027Qfs/8qlva7bGwgRI=
-Received: from mail-ej1-f70.google.com (mail-ej1-f70.google.com
- [209.85.218.70]) by relay.mimecast.com with ESMTP with STARTTLS
+	bh=B8OHh+hlUOhWWOuLdymqvwjTRJjGBPoWrkx5o9GuUXg=;
+	b=iakimvOwtETVa9hPFg5dk1AFEOjZ9YO2ADvNuPO+uDt5bHgGogBjOMwBclAq2ALfiyU5sd
+	7TyuFdw0dJrYf2Du8Pyj9gVsKkcmvDscvHym3D/pF6Pm2a9mhTkS+Et8c4Oolknh6GHdcs
+	yZxGeHbwoYymaolp5mawjppARbMBcm8=
+Received: from mail-ed1-f70.google.com (mail-ed1-f70.google.com
+ [209.85.208.70]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-531-MPGZKN48OxS_1SK-Qi1DdA-1; Mon, 17 Mar 2025 08:11:57 -0400
-X-MC-Unique: MPGZKN48OxS_1SK-Qi1DdA-1
-X-Mimecast-MFC-AGG-ID: MPGZKN48OxS_1SK-Qi1DdA_1742213516
-Received: by mail-ej1-f70.google.com with SMTP id a640c23a62f3a-abf7171eaf2so538673266b.1
-        for <platform-driver-x86@vger.kernel.org>; Mon, 17 Mar 2025 05:11:57 -0700 (PDT)
+ us-mta-10-Vdfe2JvZPXaJHKZBTrTIIw-1; Mon, 17 Mar 2025 08:17:37 -0400
+X-MC-Unique: Vdfe2JvZPXaJHKZBTrTIIw-1
+X-Mimecast-MFC-AGG-ID: Vdfe2JvZPXaJHKZBTrTIIw_1742213856
+Received: by mail-ed1-f70.google.com with SMTP id 4fb4d7f45d1cf-5e67df8c373so4644415a12.0
+        for <platform-driver-x86@vger.kernel.org>; Mon, 17 Mar 2025 05:17:37 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1742213516; x=1742818316;
+        d=1e100.net; s=20230601; t=1742213856; x=1742818656;
         h=content-transfer-encoding:in-reply-to:from:content-language
          :references:cc:to:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=h2fSQoXwaoSpq21VyKem5Q8rm+cvDaD43gnaYL7G73k=;
-        b=kln4Q6Fn1V6ZmgyUGLWOfY19a9rVs2Ydeehc3/ustUE2x26v2kOAjEhv4KVNEny3ah
-         MkEe0hq4n9oYVxqWcIGCOXFOdRNQ3xz0Z8ND5kAyNpViyoT2tqf7rPfEomBa5NG7awL9
-         /jU7RC5+KVGfHaDWlNj7x+HqlwXi2v43SP/z1xNFXCNNlq6xl0J6GmAmap3H/BU4zIb4
-         5/kScolpS79tyq3/ILOwSk3WNdt+oJVONynD1Dwo3UyqvbOVKCKONgZPwR+5+y4KrJay
-         ZipXP56YnDzWHB5u6fnt7Sx8ma+s3iyjJHp9okfpl0syuW1/xWOUvOASGSCi0onbk//q
-         M7iw==
-X-Forwarded-Encrypted: i=1; AJvYcCW0yqw+cDxslfjvnzW4WMx4tIQ3vbfVhoZTcmI6/bLYIH2ot8/zYicMCawqzMzR43WHYde3bJ3yBQu35thqzpoynS9i@vger.kernel.org
-X-Gm-Message-State: AOJu0YwKrRudcSpQA+H2xZAKTS7XY1lQahq4JoF3bH/G/+eLoR8rS/7B
-	ZmBxi2a7xwzdMovMFdhRe5SO4r41h6hOWcF7CbbqxJaGznx6a36qlyOIVUeT52GSDy4dzMkbWRh
-	yZ7u24oDjqXPDFXtdieeXa/DeL5peICCb4IIfr1tcqFUfC6Oit2eus8+QGW7YyZvYsNq84lSTOH
-	mDuCEPfg==
-X-Gm-Gg: ASbGncs9eM9JZQ33hqOugzSVZDXKlS85WGtQs2EOMpRUDpy1hr4ejztF5+nx0p+ElBn
-	kubE8nrsEvn+AiDsUUd6gXer9CAyxu8jChpjxrtnraSHvUUpizEf8zk1nelunOSpzKSVhvtDJ/Y
-	1J3Us60Bg2Nh8drGixZqIqYBBdSshV89GxvGrwitroX1zmxSJa4TV8doHhQwM2wImMcmsq/IlJ3
-	SD44dn5f9wDbW8K3jZcwiVNXh1w1rdZkbNseJlIgh+cLZbBFyWVe7IBf2nJHpgedSKeEudidFnP
-	4LFefex+3usdLlxw6u4=
-X-Received: by 2002:a17:907:2dac:b0:ac2:7a3b:31ef with SMTP id a640c23a62f3a-ac33037158bmr1516674166b.41.1742213515736;
-        Mon, 17 Mar 2025 05:11:55 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IGsQN7zs1Tcc87224L1PYevYiC9okyVtGcGh0azH/f11J0jGroAui+n8ZIcS6PDp18yoZO7zg==
-X-Received: by 2002:a17:907:2dac:b0:ac2:7a3b:31ef with SMTP id a640c23a62f3a-ac33037158bmr1516665966b.41.1742213515155;
-        Mon, 17 Mar 2025 05:11:55 -0700 (PDT)
+        bh=B8OHh+hlUOhWWOuLdymqvwjTRJjGBPoWrkx5o9GuUXg=;
+        b=JIh4e29/A+YnKqo7XBiCozDFYDzIzqPLhlj7gSra/sG7nagF6jMrq6WlQVjnhjfEHY
+         lFcqaORf4A3EvUn/IlIzpnyYVzlsE3t61a4gowsiMKDlhYSLCxfSrupUZocdcriOPFfE
+         MMDQ1hRSbh9e5sH8E54wMvyQBiJYGm2Y63ted6GxJwhcSfjzMV1ekUyZWIoVzbn0pJ0r
+         CrCqycyuCAwclBVW7E1Wq+PhW8+ZPFWDIPSgl6z/7syQupiz8j6k2w3wMPi1icsE6PuC
+         ndCPxvPe/07AfChukmaY2EhwKyLeyeSFpu6mZURbIWoZNwoZlmxSDRJuPdAgBMQmO7iD
+         rAzA==
+X-Gm-Message-State: AOJu0YzjzIajyupnMCIXEZuZ8zCJddtCQVkQ1qT4wQgHtk00DHuf4iEM
+	24lHfA0dGaEYXYyKtnaEADaMzrD3WUztil3jMjC2zhxT13HKUwJkD13Oq0ofxCbiQscGz10FHa9
+	kfHjdYy0z9gnzLeZwRurR++VzlceXIAr7tVoeqdq+gl5uUG3TonCNpUA28dgHZ5wOQuyC+J4=
+X-Gm-Gg: ASbGncubfA3W3PWtR05iETo3O7LOTCPqrgeajdIdcdcoR2jH25YUDdUE5MXOgN8rlRG
+	KZ0KljpEBLPc95h9/kBvsufXiSXrIDb2wPIDj/vfXop2k2JXH0+GosNdmytnNafnQ0u+JcrxELg
+	Wzoo2EtbG4C9BH1CNpEw/tAmsGL6kbPtreQkJ8qZEh2ZCOlFLfZ/vuCoeCNCc03rEtSGmhOA3/H
+	llSU4wL9h5tm8cwTFL1QY5SGlVQrWeUh1k2tZybam6oM2D+PCgGwbBhfeedBbBlo4UaUoI2qqu5
+	fmFqLNKq7nGDgbDE/MY=
+X-Received: by 2002:a05:6402:5253:b0:5db:f5e9:6745 with SMTP id 4fb4d7f45d1cf-5e89c05c6e3mr13125330a12.0.1742213855826;
+        Mon, 17 Mar 2025 05:17:35 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IGedLlclkbwF6k+l5x0k8ZtpO4H3s8DmKtMvBvtWUpIlRsQmOTHZSk8li8Z31c6QTvvC/fj5g==
+X-Received: by 2002:a05:6402:5253:b0:5db:f5e9:6745 with SMTP id 4fb4d7f45d1cf-5e89c05c6e3mr13125302a12.0.1742213855427;
+        Mon, 17 Mar 2025 05:17:35 -0700 (PDT)
 Received: from [10.40.98.122] ([78.108.130.194])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ac314a47f0bsm650741666b.157.2025.03.17.05.11.54
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5e81692e5cbsm5798935a12.6.2025.03.17.05.17.33
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 17 Mar 2025 05:11:54 -0700 (PDT)
-Message-ID: <c273bc96-a517-4028-a67f-229a6fa9673e@redhat.com>
-Date: Mon, 17 Mar 2025 13:11:53 +0100
+        Mon, 17 Mar 2025 05:17:34 -0700 (PDT)
+Message-ID: <dd2eb968-91a3-46f1-bf43-edcf4ca8a9d0@redhat.com>
+Date: Mon, 17 Mar 2025 13:17:33 +0100
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -74,287 +72,147 @@ List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v5 1/1] Input: atkbd - Fix TUXEDO NB02 notebook keyboards
- touchpad toggle key
-To: Werner Sembach <wse@tuxedocomputers.com>, ilpo.jarvinen@linux.intel.com
-Cc: linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org
-References: <20250313140458.621438-1-wse@tuxedocomputers.com>
- <20250313140458.621438-2-wse@tuxedocomputers.com>
+Subject: Re: [PATCH v4 05/13] power: supply: add inhibit-charge-s0 to
+ charge_behaviour
+To: Antheas Kapenekakis <lkml@antheas.dev>, Guenter Roeck <linux@roeck-us.net>
+Cc: platform-driver-x86@vger.kernel.org, linux-hwmon@vger.kernel.org,
+ linux-doc@vger.kernel.org, linux-pm@vger.kernel.org,
+ Jean Delvare <jdelvare@suse.com>, Jonathan Corbet <corbet@lwn.net>,
+ Joaquin Ignacio Aramendia <samsagax@gmail.com>,
+ Derek J Clark <derekjohn.clark@gmail.com>,
+ Kevin Greenberg <kdgreenberg234@protonmail.com>,
+ Joshua Tam <csinaction@pm.me>, Parth Menon <parthasarathymenon@gmail.com>,
+ Eileen <eileen@one-netbook.com>
+References: <20250311165406.331046-1-lkml@antheas.dev>
+ <20250311165406.331046-6-lkml@antheas.dev>
+ <CAGwozwELmp7v_46wmo_bbORWMEeA-NWRjXeRML4Jd=p=huLNaw@mail.gmail.com>
+ <0aec1406-00cd-44ee-959f-48b646d3dad3@roeck-us.net>
+ <CAGwozwHEoTb4uC=aoSXV2AMFjpZ_7+pDbMS1c_zs_QGAzC_qdA@mail.gmail.com>
 Content-Language: en-US, nl
 From: Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <20250313140458.621438-2-wse@tuxedocomputers.com>
+In-Reply-To: <CAGwozwHEoTb4uC=aoSXV2AMFjpZ_7+pDbMS1c_zs_QGAzC_qdA@mail.gmail.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-Hi Werner,
+Hi Antheas,
 
-On 13-Mar-25 15:03, Werner Sembach wrote:
-> The TUXEDO NB02 notebook keyboards touchpad toggle key sends the PS/2
-> scancode sequence:
-> 0xe0, 0x5b, // Super down
-> 0x1d,       // Control down
-> 0x76,       // KEY_ZENKAKUHANKAKU down
-> 0xf6,       // KEY_ZENKAKUHANKAKU up
-> 0x9d,       // Control up
-> 0xe0, 0xdb  // Super up
+Thanks you for your work on this.
+
+On 16-Mar-25 17:46, Antheas Kapenekakis wrote:
+> On Sun, 16 Mar 2025 at 14:56, Guenter Roeck <linux@roeck-us.net> wrote:
+>>
+>> On 3/16/25 04:40, Antheas Kapenekakis wrote:
+>>> On Tue, 11 Mar 2025 at 17:54, Antheas Kapenekakis <lkml@antheas.dev> wrote:
+>>>>
+>>>> OneXPlayer devices have a charge bypass feature
+>>>> that allows the user to select between it being
+>>>> active always or only when the device is on.
+>>>>
+>>>> Therefore, add attribute inhibit-charge-s0 to
+>>>> charge_behaviour to allow the user to select
+>>>> that bypass should only be on when the device is
+>>>> in the s0 state.
+>>>>
+>>>> Reviewed-by: Derek J. Clark <derekjohn.clark@gmail.com>
+>>>> Signed-off-by: Antheas Kapenekakis <lkml@antheas.dev>
+>>>> ---
+>>>>   Documentation/ABI/testing/sysfs-class-power | 11 ++++++-----
+>>>>   drivers/power/supply/power_supply_sysfs.c   |  1 +
+>>>>   drivers/power/supply/test_power.c           |  1 +
+>>>>   include/linux/power_supply.h                |  1 +
+>>>>   4 files changed, 9 insertions(+), 5 deletions(-)
+>>>>
+>>>> diff --git a/Documentation/ABI/testing/sysfs-class-power b/Documentation/ABI/testing/sysfs-class-power
+>>>> index 2a5c1a09a28f..4a187ca11f92 100644
+>>>> --- a/Documentation/ABI/testing/sysfs-class-power
+>>>> +++ b/Documentation/ABI/testing/sysfs-class-power
+>>>> @@ -508,11 +508,12 @@ Description:
+>>>>                  Access: Read, Write
+>>>>
+>>>>                  Valid values:
+>>>> -                       ================ ====================================
+>>>> -                       auto:            Charge normally, respect thresholds
+>>>> -                       inhibit-charge:  Do not charge while AC is attached
+>>>> -                       force-discharge: Force discharge while AC is attached
+>>>> -                       ================ ====================================
+>>>> +                       ================== =====================================
+>>>> +                       auto:              Charge normally, respect thresholds
+>>>> +                       inhibit-charge:    Do not charge while AC is attached
+>>>> +                       inhibit-charge-s0: same as inhibit-charge but only in S0
+>>>> +                       force-discharge:   Force discharge while AC is attached
+>>>> +                       ================== =====================================
+>>>>
+>>>>   What:          /sys/class/power_supply/<supply_name>/technology
+>>>>   Date:          May 2007
+>>>> diff --git a/drivers/power/supply/power_supply_sysfs.c b/drivers/power/supply/power_supply_sysfs.c
+>>>> index edb058c19c9c..1a98fc26ce96 100644
+>>>> --- a/drivers/power/supply/power_supply_sysfs.c
+>>>> +++ b/drivers/power/supply/power_supply_sysfs.c
+>>>> @@ -140,6 +140,7 @@ static const char * const POWER_SUPPLY_SCOPE_TEXT[] = {
+>>>>   static const char * const POWER_SUPPLY_CHARGE_BEHAVIOUR_TEXT[] = {
+>>>>          [POWER_SUPPLY_CHARGE_BEHAVIOUR_AUTO]            = "auto",
+>>>>          [POWER_SUPPLY_CHARGE_BEHAVIOUR_INHIBIT_CHARGE]  = "inhibit-charge",
+>>>> +       [POWER_SUPPLY_CHARGE_BEHAVIOUR_INHIBIT_CHARGE_S0]       = "inhibit-charge-s0",
+>>>>          [POWER_SUPPLY_CHARGE_BEHAVIOUR_FORCE_DISCHARGE] = "force-discharge",
+>>>>   };
+>>>>
+>>>> diff --git a/drivers/power/supply/test_power.c b/drivers/power/supply/test_power.c
+>>>> index 2a975a110f48..4bc5ab84a9d6 100644
+>>>> --- a/drivers/power/supply/test_power.c
+>>>> +++ b/drivers/power/supply/test_power.c
+>>>> @@ -214,6 +214,7 @@ static const struct power_supply_desc test_power_desc[] = {
+>>>>                  .property_is_writeable = test_power_battery_property_is_writeable,
+>>>>                  .charge_behaviours = BIT(POWER_SUPPLY_CHARGE_BEHAVIOUR_AUTO)
+>>>>                                     | BIT(POWER_SUPPLY_CHARGE_BEHAVIOUR_INHIBIT_CHARGE)
+>>>> +                                  | BIT(POWER_SUPPLY_CHARGE_BEHAVIOUR_INHIBIT_CHARGE_S0)
+>>>>                                     | BIT(POWER_SUPPLY_CHARGE_BEHAVIOUR_FORCE_DISCHARGE),
+>>>>          },
+>>>>          [TEST_USB] = {
+>>>> diff --git a/include/linux/power_supply.h b/include/linux/power_supply.h
+>>>> index 6ed53b292162..b1ca5e148759 100644
+>>>> --- a/include/linux/power_supply.h
+>>>> +++ b/include/linux/power_supply.h
+>>>> @@ -212,6 +212,7 @@ enum power_supply_usb_type {
+>>>>   enum power_supply_charge_behaviour {
+>>>>          POWER_SUPPLY_CHARGE_BEHAVIOUR_AUTO = 0,
+>>>>          POWER_SUPPLY_CHARGE_BEHAVIOUR_INHIBIT_CHARGE,
+>>>> +       POWER_SUPPLY_CHARGE_BEHAVIOUR_INHIBIT_CHARGE_S0,
+>>>>          POWER_SUPPLY_CHARGE_BEHAVIOUR_FORCE_DISCHARGE,
+>>>>   };
+>>>>
+>>>> --
+>>>> 2.48.1
+>>>>
+>>>
+>>> Hi Guenter,
+>>> I think I need an ack here, and then someone from platform-x86 to
+>>> triage the series.
+>>>
+>>> Do I need to cc anyone extra?
+>>>
+>>
+>> You need to cc the maintainers of affected subsystems. Copying the mailing
+>> list is insufficient.
+>>
+>> Guenter
+>>
 > 
-> This driver listens to the Control + Super + Hangaku/Zenkaku key sequence
-> to suppresses the Hangaku/Zenkaku keypress and sends a F21 keypress
-> afterwards to conform with established userspace defaults. Note that the
-> Hangaku/Zenkaku scancode used here is usually unused, with real
-> Hangaku/Zenkaku keys using the tilde scancode.
-> 
-> Signed-off-by: Werner Sembach <wse@tuxedocomputers.com>
+> Can you tell me who to cc from platform-x86 and linux-pm?
 
-I'm still not a fan of this approach. Your patch to atkbd.c to
-map scancode 0x5f to F24 + a xkeyboard-config change to add:
+Sebastian Reichel <sre@kernel.org> (maintainer:POWER SUPPLY CLASS/SUBSYSTEM and DRIVERS)
+linux-pm@vger.kernel.org (open list:POWER SUPPLY CLASS/SUBSYSTEM and DRIVERS)
+linux-kernel@vger.kernel.org (open list)
 
-    key <FK24> { [ F24		]	};
+And something which the tools will not tell you, since charge_behaviour support
+was added by Thomas Thomas should be added to the Cc too:
 
-to /usr/share/X11/xkb/symbols/fujitsu_vndr/inet
+Thomas Weißschuh <linux@weissschuh.net>
 
-+ teach KDE and GNOME that Ctrl + Super + F24 = touchpad-toggle
-
-should work nicely and renders the whole need for this patch obsolete.
+Note I also have some generic remarks about this patch, I'll do a top-level
+reply to the patch for those.
 
 Regards,
 
 Hans
 
-
-
-
-> ---
->  MAINTAINERS                                 |   6 ++
->  drivers/platform/x86/Kconfig                |   2 +
->  drivers/platform/x86/Makefile               |   3 +
->  drivers/platform/x86/tuxedo/Kbuild          |   8 ++
->  drivers/platform/x86/tuxedo/Kconfig         |   8 ++
->  drivers/platform/x86/tuxedo/nb02/Kbuild     |   9 ++
->  drivers/platform/x86/tuxedo/nb02/Kconfig    |  17 ++++
->  drivers/platform/x86/tuxedo/nb02/platform.c | 107 ++++++++++++++++++++
->  8 files changed, 160 insertions(+)
->  create mode 100644 drivers/platform/x86/tuxedo/Kbuild
->  create mode 100644 drivers/platform/x86/tuxedo/Kconfig
->  create mode 100644 drivers/platform/x86/tuxedo/nb02/Kbuild
->  create mode 100644 drivers/platform/x86/tuxedo/nb02/Kconfig
->  create mode 100644 drivers/platform/x86/tuxedo/nb02/platform.c
-> 
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index 8e0736dc2ee0e..7139c32e96dc7 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -24190,6 +24190,12 @@ T:	git git://git.kernel.org/pub/scm/linux/kernel/git/lenb/linux.git turbostat
->  F:	tools/power/x86/turbostat/
->  F:	tools/testing/selftests/turbostat/
->  
-> +TUXEDO DRIVERS
-> +M:	Werner Sembach <wse@tuxedocomputers.com>
-> +L:	platform-driver-x86@vger.kernel.org
-> +S:	Supported
-> +F:	drivers/platform/x86/tuxedo/
-> +
->  TW5864 VIDEO4LINUX DRIVER
->  M:	Bluecherry Maintainers <maintainers@bluecherrydvr.com>
->  M:	Andrey Utkin <andrey.utkin@corp.bluecherry.net>
-> diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
-> index 0258dd879d64b..9b78a1255c08e 100644
-> --- a/drivers/platform/x86/Kconfig
-> +++ b/drivers/platform/x86/Kconfig
-> @@ -1199,3 +1199,5 @@ config P2SB
->  	  The main purpose of this library is to unhide P2SB device in case
->  	  firmware kept it hidden on some platforms in order to access devices
->  	  behind it.
-> +
-> +source "drivers/platform/x86/tuxedo/Kconfig"
-> diff --git a/drivers/platform/x86/Makefile b/drivers/platform/x86/Makefile
-> index e1b1429470674..1562dcd7ad9a5 100644
-> --- a/drivers/platform/x86/Makefile
-> +++ b/drivers/platform/x86/Makefile
-> @@ -153,3 +153,6 @@ obj-$(CONFIG_WINMATE_FM07_KEYS)		+= winmate-fm07-keys.o
->  
->  # SEL
->  obj-$(CONFIG_SEL3350_PLATFORM)		+= sel3350-platform.o
-> +
-> +# TUXEDO
-> +obj-y					+= tuxedo/
-> diff --git a/drivers/platform/x86/tuxedo/Kbuild b/drivers/platform/x86/tuxedo/Kbuild
-> new file mode 100644
-> index 0000000000000..1c79b80744d1b
-> --- /dev/null
-> +++ b/drivers/platform/x86/tuxedo/Kbuild
-> @@ -0,0 +1,8 @@
-> +# SPDX-License-Identifier: GPL-2.0-or-later
-> +#
-> +# Copyright (C) 2025 Werner Sembach wse@tuxedocomputers.com
-> +#
-> +# TUXEDO X86 Platform Specific Drivers
-> +#
-> +
-> +obj-y	+= nb02/
-> diff --git a/drivers/platform/x86/tuxedo/Kconfig b/drivers/platform/x86/tuxedo/Kconfig
-> new file mode 100644
-> index 0000000000000..13b484999e333
-> --- /dev/null
-> +++ b/drivers/platform/x86/tuxedo/Kconfig
-> @@ -0,0 +1,8 @@
-> +# SPDX-License-Identifier: GPL-2.0-or-later
-> +#
-> +# Copyright (C) 2025 Werner Sembach wse@tuxedocomputers.com
-> +#
-> +# TUXEDO X86 Platform Specific Drivers
-> +#
-> +
-> +source "drivers/platform/x86/tuxedo/nb02/Kconfig"
-> diff --git a/drivers/platform/x86/tuxedo/nb02/Kbuild b/drivers/platform/x86/tuxedo/nb02/Kbuild
-> new file mode 100644
-> index 0000000000000..f56629c8b9dd8
-> --- /dev/null
-> +++ b/drivers/platform/x86/tuxedo/nb02/Kbuild
-> @@ -0,0 +1,9 @@
-> +# SPDX-License-Identifier: GPL-2.0-or-later
-> +#
-> +# Copyright (C) 2025 Werner Sembach wse@tuxedocomputers.com
-> +#
-> +# TUXEDO X86 Platform Specific Drivers
-> +#
-> +
-> +tuxedo_nb02_platform-y			:= platform.o
-> +obj-$(CONFIG_TUXEDO_NB02_PLATFORM)	+= tuxedo_nb02_platform.o
-> diff --git a/drivers/platform/x86/tuxedo/nb02/Kconfig b/drivers/platform/x86/tuxedo/nb02/Kconfig
-> new file mode 100644
-> index 0000000000000..38cd60c9d4f03
-> --- /dev/null
-> +++ b/drivers/platform/x86/tuxedo/nb02/Kconfig
-> @@ -0,0 +1,17 @@
-> +# SPDX-License-Identifier: GPL-2.0-or-later
-> +#
-> +# Copyright (C) 2025 Werner Sembach wse@tuxedocomputers.com
-> +#
-> +# TUXEDO X86 Platform Specific Drivers
-> +#
-> +
-> +menuconfig TUXEDO_NB02_PLATFORM
-> +	tristate "TUXEDO NB02 Platform Driver"
-> +	help
-> +	  This driver implements miscellaneous things found on TUXEDO Notebooks
-> +	  with board vendor NB02. For the time being this is only remapping the
-> +	  touchpad toggle key to something supported by most Linux distros
-> +	  out-of-the-box and suppressing an unsupported scancode from the
-> +	  FN-key.
-> +
-> +	  When compiled as a module it will be called tuxedo_nb02_platform.
-> diff --git a/drivers/platform/x86/tuxedo/nb02/platform.c b/drivers/platform/x86/tuxedo/nb02/platform.c
-> new file mode 100644
-> index 0000000000000..da67a91a4a129
-> --- /dev/null
-> +++ b/drivers/platform/x86/tuxedo/nb02/platform.c
-> @@ -0,0 +1,107 @@
-> +// SPDX-License-Identifier: GPL-2.0-or-later
-> +/*
-> + * Copyright (C) 2025 Werner Sembach wse@tuxedocomputers.com
-> + */
-> +
-> +#include <linux/cleanup.h>
-> +#include <linux/container_of.h>
-> +#include <linux/dmi.h>
-> +#include <linux/i8042.h>
-> +#include <linux/input.h>
-> +#include <linux/kernel.h>
-> +#include <linux/module.h>
-> +#include <linux/serio.h>
-> +
-> +struct input_dev *idev;
-> +
-> +static void tux_nb02_f21(struct work_struct *work __always_unused)
-> +{
-> +	input_report_key(idev, KEY_F21, 1);
-> +	input_report_key(idev, KEY_F21, 0);
-> +	input_sync(idev);
-> +}
-> +DECLARE_WORK(tux_nb02_f21_work, tux_nb02_f21);
-> +
-> +static const u8 tux_nb02_touchp_toggle_seq[] = {
-> +	0xe0, 0x5b, // Super down
-> +	0x1d,       // Control down
-> +	0x76,       // KEY_ZENKAKUHANKAKU down
-> +	0xf6,       // KEY_ZENKAKUHANKAKU up
-> +	0x9d,       // Control up
-> +	0xe0, 0xdb  // Super up
-> +};
-> +
-> +static bool tux_nb02_i8042_filter(unsigned char data,
-> +				  unsigned char str,
-> +				  struct serio *port __always_unused,
-> +				  void *context __always_unused)
-> +{
-> +	static u8 seq_pos;
-> +
-> +	if (unlikely(str & I8042_STR_AUXDATA))
-> +		return false;
-> +
-> +	if (unlikely(data == tux_nb02_touchp_toggle_seq[seq_pos])) {
-> +		++seq_pos;
-> +		if (unlikely(data == 0x76 || data == 0xf6)) {
-> +			return true;
-> +		} else if (unlikely(seq_pos == ARRAY_SIZE(tux_nb02_touchp_toggle_seq))) {
-> +			schedule_work(&tux_nb02_f21_work);
-> +			seq_pos = 0;
-> +		}
-> +		return false;
-> +	}
-> +
-> +	seq_pos = 0;
-> +	return false;
-> +}
-> +
-> +static const struct dmi_system_id tux_nb02_dmi_string_match[] __initconst = {
-> +	{
-> +		.matches = {
-> +			DMI_EXACT_MATCH(DMI_SYS_VENDOR, "TUXEDO"),
-> +			DMI_EXACT_MATCH(DMI_BOARD_VENDOR, "NB02"),
-> +		},
-> +	},
-> +	{ }
-> +};
-> +MODULE_DEVICE_TABLE(dmi, tux_nb02_dmi_string_match);
-> +
-> +static int __init tux_nb02_plat_init(void)
-> +{
-> +	int ret;
-> +
-> +	if (!dmi_check_system(tux_nb02_dmi_string_match))
-> +		return -ENODEV;
-> +
-> +	idev = input_allocate_device();
-> +	if (!idev)
-> +		return -ENOMEM;
-> +
-> +	idev->name = "TUXEDO NB02 Platform Keyboard";
-> +	set_bit(EV_KEY, idev->evbit);
-> +	set_bit(KEY_F21, idev->keybit);
-> +
-> +	ret = input_register_device(idev);
-> +	if (ret) {
-> +		input_free_device(idev);
-> +		return ret;
-> +	}
-> +
-> +	i8042_install_filter(tux_nb02_i8042_filter, NULL);
-> +
-> +	return 0;
-> +}
-> +
-> +static void __exit tux_nb02_plat_exit(void)
-> +{
-> +	i8042_remove_filter(tux_nb02_i8042_filter);
-> +	input_unregister_device(idev);
-> +}
-> +
-> +module_init(tux_nb02_plat_init);
-> +module_exit(tux_nb02_plat_exit);
-> +
-> +MODULE_DESCRIPTION("Keyboard fix for TUXEDO NB02 devices");
-> +MODULE_AUTHOR("Werner Sembach <wse@tuxedocomputers.com>");
-> +MODULE_LICENSE("GPL");
 
