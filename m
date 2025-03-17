@@ -1,413 +1,221 @@
-Received: from linux1587.grserver.gr (linux1587.grserver.gr [185.138.42.100])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5DEC723BF9B;
-	Mon, 17 Mar 2025 12:40:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.138.42.100
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0D10323CF08
+	for <platform-driver-x86@vger.kernel.org>; Mon, 17 Mar 2025 13:31:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742215241; cv=none; b=Rbbrv4sRpMcKOlvEv2wD6IXs3gFLL1doUXja3hXAfzCPl828MWiO6fX5sAyEM20LUVyZaf/KT2V9gWvcGC4dKJ8+tDqbnJEgurMURjgk76vk3/i4kF5jDgn7/WBmSExHq54S1ppLqY64j5OPmOvET+Cn/P6tiPHym59SYImwXag=
+	t=1742218282; cv=none; b=dvNHuuInZDRnXnGsjOxKYne+9mL+j0mr1bfARex7WyExOTIpSQaqDKXO5h0Om1TRTHxEZSooyUfS0Fwtr4qB7+87Jxv0XyMWjzP3rvOVM2ohc5vVtWi6YgrilC+JqnP7ICgN+kwcK5Jj1IR0sYIFiOV3U95fpfvbUHBLMQ4AJis=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742215241; c=relaxed/simple;
-	bh=/ifvT0YHmAWaf7XWBlS5HTeD5nCccJPLy98iwqOOtig=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=MvebkXbWmLHs5Pq7nA0g1pOCIQ6qyTLlffVPLGZAnvbIRGwF2rm3U4nuWQTRPEh6FrYxWOmgytf3hsU1OAVs6lx9TVWwGSYyx+KbQMBIOY1O6mwJ80N/0JLai9B9sK5WOUtLtaTeQcYUNr9zuEq/q7aIXTn4LOokgH/LBjJszA4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=antheas.dev; spf=pass smtp.mailfrom=antheas.dev; dkim=pass (1024-bit key) header.d=antheas.dev header.i=@antheas.dev header.b=RCSb2mHy; arc=none smtp.client-ip=185.138.42.100
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=antheas.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=antheas.dev
+	s=arc-20240116; t=1742218282; c=relaxed/simple;
+	bh=GYJVMbQZ7uiqaYWMnpndV0P0ZAxM8Qmrf0bBSZB8jWQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Sv907YsB3ZbU3H7pBg0wyyfqbrBPlCqKD32znfRAmyCwZx0c0JvRaETNb+c8ulUQZlGIjXV6CaxaxfkWdsUgz4Sztv5b2/Xfqk5nYcP2zT8UETB7f6Q9m98NIvymwKrAU0itKymucngXBCyPIhtkTpFS1xcvhpxfBy9W1oUAdjY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=KBlVch1d; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=antheas.dev header.i=@antheas.dev header.b="RCSb2mHy"
-Received: from mail-lj1-f182.google.com (mail-lj1-f182.google.com [209.85.208.182])
-	by linux1587.grserver.gr (Postfix) with ESMTPSA id 242C12E08D3A;
-	Mon, 17 Mar 2025 14:40:35 +0200 (EET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=antheas.dev;
-	s=default; t=1742215237;
-	bh=GvjbsrqhYXCl+fJq6B8Vfrvfs0PX7hF3K3MuqJf3WhI=;
-	h=Received:From:Subject:To;
-	b=RCSb2mHy7F/kd+ax1qAjHNv5sgjlK7KJ9m+jP3CorsRjKk6Dd7RPQ+pNag8E5rjLk
-	 N5/7ItqOWDY+hvRQNCQ/Z+YhDt0L7dqw1ijgqCz9sJhOMl8Wt/hRamQWWOMfMeM+8a
-	 68AdSNSq04dQM/qO5O8xwlCInIPo51bDtYf1B63U=
-Authentication-Results: linux1587.grserver.gr;
-        spf=pass (sender IP is 209.85.208.182) smtp.mailfrom=lkml@antheas.dev smtp.helo=mail-lj1-f182.google.com
-Received-SPF: pass (linux1587.grserver.gr: connection is authenticated)
-Received: by mail-lj1-f182.google.com with SMTP id
- 38308e7fff4ca-30bee1cb370so48255231fa.1;
-        Mon, 17 Mar 2025 05:40:35 -0700 (PDT)
-X-Forwarded-Encrypted: i=1;
- AJvYcCUUCs/mIzhxCejXUNwCTbo+rEPH8fN9DLp1AANPdAO6yWIQU8b2WBETJGixVHFBqlofmHhuxtbFQ7NG+s4=@vger.kernel.org,
- AJvYcCVwZKV+1xIIzPmyDKJbY4ZkC0n9X8CoFphV0G4VQBDoRV/dtixIF5Wc7JubYC8y7JIIY7VnuAVXpZU=@vger.kernel.org,
- AJvYcCXexYAWXPKtcTcbNPtd2YSagoETDLCyspa3l8cxCd2+OXl9lKtY90tq0f3imq6ZqtgVCrotIAqWtMQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywg6av/aOhIn6VFxDlvb9KZBBsmAXcd2RlT3tBQS6cpt1pdTxul
-	3cPG56oEw9tuSPpsQpgWEHJ+7Op33xX8NVL1MuT7ycck6LCf/YHYZm3iYVIF/vqC7Jt+Vl9BPUj
-	wxEsw5UgKoouejiotZ4j+FIVha1I=
-X-Google-Smtp-Source: 
- AGHT+IGMR2djrUaFm4OR/AaOYmGUiiSOp6nN5pKnWDKGhArBTloCJmKfaznMHhz3ADypwLk2MJxkeGR/MMxiHPwOf10=
-X-Received: by 2002:a05:651c:503:b0:30b:ee44:b692 with SMTP id
- 38308e7fff4ca-30c4a8f4dd4mr58176431fa.33.1742215234440; Mon, 17 Mar 2025
- 05:40:34 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="KBlVch1d"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1742218279;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=XicbyQCxRSNC4G7MmnFYTtssAxXR5/Ky4MMYhuVTNrE=;
+	b=KBlVch1dpCvYPPQ4h5VOb6Il7uv5bc5c0o6oGMfDBo0wh7Kb6nwKLW8PBLRvoX/6RZ2LQ2
+	+TIoe6tvT8ZOA9OUq1QqkCANy/MBD7DXLC+bLabjAIDv+kE0bsWSQ7uWOmtYXgzMBt00sv
+	y/x26Oa1kbE6v3zJ0cbGXMf+01p0RB8=
+Received: from mail-ej1-f71.google.com (mail-ej1-f71.google.com
+ [209.85.218.71]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-113-wVcr3DPbPcKt0-0k8VpNnw-1; Mon, 17 Mar 2025 09:31:18 -0400
+X-MC-Unique: wVcr3DPbPcKt0-0k8VpNnw-1
+X-Mimecast-MFC-AGG-ID: wVcr3DPbPcKt0-0k8VpNnw_1742218277
+Received: by mail-ej1-f71.google.com with SMTP id a640c23a62f3a-abb9b2831b7so580240766b.1
+        for <platform-driver-x86@vger.kernel.org>; Mon, 17 Mar 2025 06:31:18 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1742218277; x=1742823077;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=XicbyQCxRSNC4G7MmnFYTtssAxXR5/Ky4MMYhuVTNrE=;
+        b=b4mcTHNA4UzHNEhqgvetYZIMxpczhJF7BsZ9zXkvnr93mw3MIyyw6w2tkPAnK1gSN+
+         SGGrCbwahQlD2cZQgg/rsiECzl2RU7d6OoYXLlqGsCh0m6ItHLpQOc8k6Fu9s3MlcPoD
+         H70WxRTELVVo/iCvEIeshv2qWvBGf7uxVd1Sn7ePuLaT3z2F+YBdQiSu4LezkTmxPdXI
+         Hv7Yj9Ohli5awX5FJoR9F+6hO7ZQ+/S2EGacX+deBO8wZHo4RaHr4GbaGntBifQ7Ofhy
+         isAEl6mh6CiS6nuDKhUXppJE2D/Wul3MSbTJKwx3JHbhy+cDQfdPXYPZcIOaf2x2NLh3
+         y3cA==
+X-Gm-Message-State: AOJu0YygdVcrr3G6ZFwa+hecXATl7BlAwOgYkmRDqIAHOIn4LiBZFx79
+	qcro+B0Xb9KSazh9l1crUSahymb/v7ztac7C9SCxaPDCK2U2V4KnkZziakEKNVF3jSPwL0KpENE
+	e7T7UQwMAhzu5mMGYGVo/j1iQ0IW1A2MQjjjEdA+l05l2xTlsdHDHgmzFePd6gPY7DS6oqeQ=
+X-Gm-Gg: ASbGncvKeayUDC9ZVZ5JuGCUZER31YaEhwKPvPGPaCKkCYYhHZOQh39GzwiaXzwOXl7
+	eJZvXxrNULebB5tUKYBvERMILT7vuR+EPKp0Xeg6oOxYkDRpfcnK2FggJ3a9f8y09WAclVO+jbu
+	EhcAqxjBQFZC1aNZOAHhlh6BNRAv4EE/PuXIIYVfka8QTpxLvdq131+TboouMtoaETylLRi0/OW
+	FA5EhIREqka/r4QjKoc7Gl1RKsdCXXlQ0oTKJy/xJJsTdqa2Oj6MLRPUnQh0J869T0h2eWWwVm+
+	plL4iM2uX/NdbkVa7Uo=
+X-Received: by 2002:a05:6402:13c7:b0:5db:e88c:914f with SMTP id 4fb4d7f45d1cf-5e8b02242c4mr11890271a12.4.1742218277322;
+        Mon, 17 Mar 2025 06:31:17 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IHhZiaJYx30uK3+q9vUUtAFQDkx1k1IDJZJR9UYxtCzYRPH7G5wkGZMkjI62F2gMmOFEuwo9g==
+X-Received: by 2002:a05:6402:13c7:b0:5db:e88c:914f with SMTP id 4fb4d7f45d1cf-5e8b02242c4mr11890206a12.4.1742218276779;
+        Mon, 17 Mar 2025 06:31:16 -0700 (PDT)
+Received: from [10.40.98.122] ([78.108.130.194])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5e8169b1602sm6056505a12.42.2025.03.17.06.31.15
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 17 Mar 2025 06:31:16 -0700 (PDT)
+Message-ID: <82e27f38-f951-4e6f-babd-81890d590a04@redhat.com>
+Date: Mon, 17 Mar 2025 14:31:15 +0100
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250311165406.331046-1-lkml@antheas.dev>
- <20250311165406.331046-7-lkml@antheas.dev>
- <c7a198b5-bebb-498b-9e77-17b467f4dc48@redhat.com>
-In-Reply-To: <c7a198b5-bebb-498b-9e77-17b467f4dc48@redhat.com>
-From: Antheas Kapenekakis <lkml@antheas.dev>
-Date: Mon, 17 Mar 2025 13:40:23 +0100
-X-Gmail-Original-Message-ID: 
- <CAGwozwH3Hev7oZP-q6z8Q8iv3XpnrMvN1AzDx7Nsq0bmei+bng@mail.gmail.com>
-X-Gm-Features: AQ5f1Jr92O07Ma23OFxBek5VHTKvouZczp3nhbmXFN7sYLxzh5rKvE2OPnyvb4Q
-Message-ID: 
- <CAGwozwH3Hev7oZP-q6z8Q8iv3XpnrMvN1AzDx7Nsq0bmei+bng@mail.gmail.com>
-Subject: Re: [PATCH v4 06/13] platform/x86: oxpec: Add charge threshold and
- behaviour to OneXPlayer
-To: Hans de Goede <hdegoede@redhat.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 05/13] power: supply: add inhibit-charge-s0 to
+ charge_behaviour
+To: Antheas Kapenekakis <lkml@antheas.dev>
 Cc: platform-driver-x86@vger.kernel.org, linux-hwmon@vger.kernel.org,
-	linux-doc@vger.kernel.org, linux-pm@vger.kernel.org,
-	Guenter Roeck <linux@roeck-us.net>, Jean Delvare <jdelvare@suse.com>,
+ linux-doc@vger.kernel.org, linux-pm@vger.kernel.org,
+ Guenter Roeck <linux@roeck-us.net>, Jean Delvare <jdelvare@suse.com>,
  Jonathan Corbet <corbet@lwn.net>,
-	Joaquin Ignacio Aramendia <samsagax@gmail.com>,
+ Joaquin Ignacio Aramendia <samsagax@gmail.com>,
  Derek J Clark <derekjohn.clark@gmail.com>,
-	Kevin Greenberg <kdgreenberg234@protonmail.com>,
- Joshua Tam <csinaction@pm.me>,
-	Parth Menon <parthasarathymenon@gmail.com>, Eileen <eileen@one-netbook.com>
-Content-Type: text/plain; charset="UTF-8"
-X-PPP-Message-ID: 
- <174221523563.32285.13355826910338874268@linux1587.grserver.gr>
-X-PPP-Vhost: antheas.dev
-X-Virus-Scanned: clamav-milter 0.103.11 at linux1587.grserver.gr
-X-Virus-Status: Clean
+ Kevin Greenberg <kdgreenberg234@protonmail.com>,
+ Joshua Tam <csinaction@pm.me>, Parth Menon <parthasarathymenon@gmail.com>,
+ Eileen <eileen@one-netbook.com>
+References: <20250311165406.331046-1-lkml@antheas.dev>
+ <20250311165406.331046-6-lkml@antheas.dev>
+ <b1ac8a33-06ed-482a-b5f6-ca88eb3802a1@redhat.com>
+ <CAGwozwGESTw2DJsqr3uAhEymXxH4O5EXDw6O91i8CzCT0=yC1Q@mail.gmail.com>
+Content-Language: en-US, nl
+From: Hans de Goede <hdegoede@redhat.com>
+In-Reply-To: <CAGwozwGESTw2DJsqr3uAhEymXxH4O5EXDw6O91i8CzCT0=yC1Q@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Mon, 17 Mar 2025 at 13:33, Hans de Goede <hdegoede@redhat.com> wrote:
->
-> Hi,
->
-> On 11-Mar-25 17:53, Antheas Kapenekakis wrote:
-> > With the X1 (AMD), OneXPlayer added a charge limit and charge bypass to
-> > their devices. Charge limit allows for choosing an arbitrary battery
-> > charge setpoint in percentages. Charge bypass allows to instruct the
-> > device to stop charging either when it is in s0 or always.
->
-> Again please don't use the word bypass, use inhibit instead.
->
-> > This feature was then extended for the F1Pro as well. OneXPlayer also
-> > released BIOS updates for the X1 Mini, X1 (Intel), and F1 devices that
-> > add support for this feature. Therefore, enable it for all F1 and
-> > X1 devices.
-> >
-> > Add both of these under the standard sysfs battery endpoints for them,
-> > by looking for the battery. OneXPlayer devices have a single battery.
-> >
-> > Signed-off-by: Antheas Kapenekakis <lkml@antheas.dev>
-> > ---
-> >  drivers/platform/x86/Kconfig |   1 +
-> >  drivers/platform/x86/oxpec.c | 217 +++++++++++++++++++++++++++++++++++
-> >  2 files changed, 218 insertions(+)
-> >
-> > diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
-> > index 82cfc76bc5c9..f4d993658c01 100644
-> > --- a/drivers/platform/x86/Kconfig
-> > +++ b/drivers/platform/x86/Kconfig
-> > @@ -1189,6 +1189,7 @@ config SEL3350_PLATFORM
-> >  config OXP_EC
-> >       tristate "OneXPlayer EC platform control"
-> >       depends on ACPI_EC
-> > +     depends on ACPI_BATTERY
-> >       depends on HWMON
-> >       depends on X86
-> >       help
-> > diff --git a/drivers/platform/x86/oxpec.c b/drivers/platform/x86/oxpec.c
-> > index dc3a0871809c..d73a10598d8f 100644
-> > --- a/drivers/platform/x86/oxpec.c
-> > +++ b/drivers/platform/x86/oxpec.c
-> > @@ -24,6 +24,7 @@
-> >  #include <linux/module.h>
-> >  #include <linux/platform_device.h>
-> >  #include <linux/processor.h>
-> > +#include <acpi/battery.h>
-> >
-> >  /* Handle ACPI lock mechanism */
-> >  static u32 oxp_mutex;
-> > @@ -87,6 +88,24 @@ static enum oxp_board board;
-> >
-> >  #define OXP_TURBO_RETURN_VAL           0x00 /* Common return val */
-> >
-> > +/* Battery bypass settings */
-> > +#define EC_CHARGE_CONTROL_BEHAVIOURS_X1      (BIT(POWER_SUPPLY_CHARGE_BEHAVIOUR_AUTO)             | \
-> > +                                      BIT(POWER_SUPPLY_CHARGE_BEHAVIOUR_INHIBIT_CHARGE)    | \
-> > +                                      BIT(POWER_SUPPLY_CHARGE_BEHAVIOUR_INHIBIT_CHARGE_S0))
-> > +
-> > +#define OXP_X1_CHARGE_LIMIT_REG      0xA3 /* X1 charge limit (%) */
-> > +#define OXP_X1_CHARGE_BYPASS_REG     0xA4 /* X1 bypass charging */
-> > +
-> > +#define OXP_X1_CHARGE_BYPASS_MASK_S0 0x01
->
-> Again avoid the word BYPASS please, if OneXPlayer are calling this bypass in their
-> own documentation maybe add a note here when defining the registers that OneXPlayer
-> calls this bypass and then use inhibit from there on.
+Hi,
 
-Sure, I can do that.
+On 17-Mar-25 13:38, Antheas Kapenekakis wrote:
+> On Mon, 17 Mar 2025 at 13:27, Hans de Goede <hdegoede@redhat.com> wrote:
+>>
+>> Hi Antheas,
+>>
+>> On 11-Mar-25 17:53, Antheas Kapenekakis wrote:
+>>> OneXPlayer devices have a charge bypass
+>>
+>> The term "charge bypass" is typically used for the case where the
+>> external charger gets directly connected to the battery cells,
+>> bypassing the charge-IC inside the device, in making
+>> the external charger directly responsible for battery/charge
+>> management.
+>>
+>> Yet you name the feature inhibit charge, so I guess it simply
+>> disables charging of the battery rather then doing an actual
+>> chaerger-IC bypass ?
+>>
+>> Assuming I have this correct, please stop using the term
+>> charge-bypass as that has a specific (different) meaning.
+> 
+> Unfortunately, this is how the feature is called in Windows. On both
+> OneXPlayer and Ayaneo. Manufacturers are centralizing around that
+> term.
 
-> > +/*
-> > + * Cannot control S3, S5 individually.
-> > + * X1 Mask is 0x0A, OneXFly F1Pro is just 0x02
-> > + * but the extra bit on the X1 does nothing.
-> > + */
-> > +#define OXP_X1_CHARGE_BYPASS_MASK_S3S5 0x02
->
-> Ok, so suspend is treated as off, but that is for S3 suspend, what about
-> s2idle, or does this hw not do s2idle ?
+Ok, so I just did a quick duckduckgo for this and it looks like
+you are right.
 
-I will change it to OFF. Sorry, s3 is a typo it should be S4.
+> Under the hood, it should be bypassing the charger circuitry, but it
+> is not obvious during use.
 
-> > +#define OXP_X1_CHARGE_BYPASS_MASK_ALWAYS (OXP_X1_CHARGE_BYPASS_MASK_S0 | \
-> > +     OXP_X1_CHARGE_BYPASS_MASK_S3S5)
-> > +
-> >  static const struct dmi_system_id dmi_table[] = {
-> >       {
-> >               .matches = {
-> > @@ -434,6 +453,194 @@ static ssize_t tt_toggle_show(struct device *dev,
-> >
-> >  static DEVICE_ATTR_RW(tt_toggle);
-> >
-> > +/* Callbacks for charge behaviour attributes */
-> > +static bool charge_behaviour_supported(void)
-> > +{
-> > +     switch (board) {
-> > +     case oxp_x1:
-> > +     case oxp_fly:
-> > +             return 1;
-> > +     default:
-> > +             break;
-> > +     }
-> > +     return 0;
-> > +}
-> > +
-> > +static ssize_t charge_behaviour_store(struct device *dev,
-> > +                            struct device_attribute *attr, const char *buf,
-> > +                            size_t count)
-> > +{
-> > +     unsigned int available;
-> > +     long val, s0, always;
-> > +     int ret;
-> > +     u8 reg;
-> > +
-> > +     switch (board) {
-> > +     case oxp_x1:
-> > +     case oxp_fly:
-> > +             s0 = OXP_X1_CHARGE_BYPASS_MASK_S0;
-> > +             always = OXP_X1_CHARGE_BYPASS_MASK_ALWAYS;
-> > +             reg = OXP_X1_CHARGE_BYPASS_REG;
-> > +             available = EC_CHARGE_CONTROL_BEHAVIOURS_X1;
-> > +             break;
->
-> Since these are always the same this does not seem useful, please
-> use the defines directly below.
+Ack reading up on this it seems the idea is not to connect the external
+charger directly to the battery to allow fast-charging without
+the charge-IC inside the device adding heat, which is the traditional
+bypass mode.
 
-Ack
+Instead the whole battery + charging-IC are cut out of the circuit
+(so bypassed) and the charger is now directly powering the device
+without the battery acting as a buffer if the power-draw superseeds
+what the external charger can deliver.
 
-> > +     default:
-> > +             return -EINVAL;
-> > +     }
-> > +
-> > +     ret = power_supply_charge_behaviour_parse(available, buf);
-> > +     if (ret < 0)
-> > +             return ret;
-> > +
-> > +     switch (ret) {
-> > +     case POWER_SUPPLY_CHARGE_BEHAVIOUR_AUTO:
-> > +             val = 0;
-> > +             break;
-> > +     case POWER_SUPPLY_CHARGE_BEHAVIOUR_INHIBIT_CHARGE_S0:
-> > +             val = s0;
-> > +             break;
-> > +     case POWER_SUPPLY_CHARGE_BEHAVIOUR_INHIBIT_CHARGE:
-> > +             val = always;
-> > +             break;
-> > +     default:
-> > +             return -EINVAL;
-> > +     }
-> > +
-> > +     ret = write_to_ec(reg, val);
-> > +     if (ret)
-> > +             return ret;
-> > +
-> > +     return count;
-> > +}
-> > +
-> > +static ssize_t charge_behaviour_show(struct device *dev,
-> > +                           struct device_attribute *attr, char *buf)
-> > +{
-> > +     long val, s0, always, sel;
-> > +     unsigned int available;
-> > +     int ret;
-> > +     u8 reg;
-> > +
-> > +     switch (board) {
-> > +     case oxp_x1:
-> > +     case oxp_fly:
-> > +             s0 = OXP_X1_CHARGE_BYPASS_MASK_S0;
-> > +             always = OXP_X1_CHARGE_BYPASS_MASK_ALWAYS;
-> > +             reg = OXP_X1_CHARGE_BYPASS_REG;
-> > +             available = EC_CHARGE_CONTROL_BEHAVIOURS_X1;
-> > +             break;
-> > +     default:
-> > +             return -EINVAL;
-> > +     }
-> > +
-> > +     ret = read_from_ec(reg, 1, &val);
-> > +     if (ret)
-> > +             return ret;
-> > +
-> > +     if ((val & always) == always)
-> > +             sel = POWER_SUPPLY_CHARGE_BEHAVIOUR_INHIBIT_CHARGE;
-> > +     else if ((val & s0) == s0)
-> > +             sel = POWER_SUPPLY_CHARGE_BEHAVIOUR_INHIBIT_CHARGE_S0;
-> > +     else
-> > +             sel = POWER_SUPPLY_CHARGE_BEHAVIOUR_AUTO;
-> > +
-> > +     return power_supply_charge_behaviour_show(dev, available, sel, buf);
-> > +}
-> > +
-> > +static DEVICE_ATTR_RW(charge_behaviour);
-> > +
-> > +static ssize_t charge_control_end_threshold_store(struct device *dev,
-> > +                            struct device_attribute *attr, const char *buf,
-> > +                            size_t count)
-> > +{
-> > +     u64 val, reg;
-> > +     int ret;
-> > +
-> > +     ret = kstrtou64(buf, 10, &val);
-> > +     if (ret)
-> > +             return ret;
-> > +
-> > +     if (val > 100)
-> > +             return -EINVAL;
-> > +
-> > +     switch (board) {
-> > +     case oxp_x1:
-> > +     case oxp_fly:
-> > +             reg = OXP_X1_CHARGE_LIMIT_REG;
-> > +             break;
-> > +     default:
-> > +             return -EINVAL;
-> > +     }
-> > +
-> > +     ret = write_to_ec(reg, val);
-> > +     if (ret)
-> > +             return ret;
-> > +
-> > +     return count;
-> > +}
-> > +
-> > +static ssize_t charge_control_end_threshold_show(struct device *dev,
-> > +                           struct device_attribute *attr, char *buf)
-> > +{
-> > +     long val;
-> > +     int ret;
-> > +     u8 reg;
-> > +
-> > +     switch (board) {
-> > +     case oxp_x1:
-> > +     case oxp_fly:
-> > +             reg = OXP_X1_CHARGE_LIMIT_REG;
-> > +             break;
-> > +     default:
-> > +             return -EINVAL;
-> > +     }
-> > +
-> > +     ret = read_from_ec(reg, 1, &val);
-> > +     if (ret)
-> > +             return ret;
-> > +
-> > +     return sysfs_emit(buf, "%ld\n", val);
-> > +}
-> > +
-> > +static DEVICE_ATTR_RW(charge_control_end_threshold);
-> > +
-> > +static int oxp_battery_add(struct power_supply *battery, struct acpi_battery_hook *hook)
-> > +{
-> > +     /* OneXPlayer devices only have one battery. */
-> > +     if (strcmp(battery->desc->name, "BAT0") != 0 &&
-> > +         strcmp(battery->desc->name, "BAT1") != 0 &&
-> > +         strcmp(battery->desc->name, "BATC") != 0 &&
-> > +         strcmp(battery->desc->name, "BATT") != 0)
-> > +             return -ENODEV;
-> > +
-> > +     if (device_create_file(&battery->dev,
-> > +         &dev_attr_charge_control_end_threshold))
-> > +             return -ENODEV;
-> > +
-> > +     if (device_create_file(&battery->dev,
-> > +         &dev_attr_charge_behaviour)) {
-> > +             device_remove_file(&battery->dev,
-> > +                             &dev_attr_charge_control_end_threshold);
-> > +             return -ENODEV;
-> > +     }
-> > +
-> > +     return 0;
-> > +}
-> > +
-> > +static int oxp_battery_remove(struct power_supply *battery, struct acpi_battery_hook *hook)
-> > +{
-> > +     device_remove_file(&battery->dev,
-> > +                        &dev_attr_charge_control_end_threshold);
-> > +     device_remove_file(&battery->dev,
-> > +                        &dev_attr_charge_behaviour);
-> > +     return 0;
-> > +}
-> > +
-> > +static struct acpi_battery_hook battery_hook = {
-> > +     .add_battery = oxp_battery_add,
-> > +     .remove_battery = oxp_battery_remove,
-> > +     .name = "OneXPlayer Battery",
-> > +};
-> > +
->
-> Since this is new code it should use the new power-supply extension support instead
-> of the old battery_hook mechanism:
->
-> https://web.git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=6037802bbae892f3ad0c7b4c4faee39b967e32b0
->
+> The user behavior mirrors `inhibit-charge`,
+> as the battery just stops charging, so the endpoint is appropriate.
 
-Ack
+Hmm this new bypass mode indeed does seem to mirror inhibit charge
+from a user pov, but it does more. It reminds me of the battery disconnect
+option which some charge-ICs have which just puts the battery FET in
+high impedance mode effectively disconnecting the battery. Now that
+feature is intended for long term storage of devices with a builtin
+battery and it typically also immediately powers off the device ...
 
->
-> >  /* PWM enable/disable functions */
-> >  static int oxp_pwm_enable(void)
-> >  {
-> > @@ -716,15 +923,25 @@ static int oxp_platform_probe(struct platform_device *pdev)
-> >       hwdev = devm_hwmon_device_register_with_info(dev, "oxpec", NULL,
-> >                                                    &oxp_ec_chip_info, NULL);
-> >
-> > +     if (charge_behaviour_supported())
-> > +             battery_hook_register(&battery_hook);
-> > +
-> >       return PTR_ERR_OR_ZERO(hwdev);
-> >  }
-> >
-> > +static void oxp_platform_remove(struct platform_device *device)
-> > +{
-> > +     if (charge_behaviour_supported())
-> > +             battery_hook_unregister(&battery_hook);
-> > +}
-> > +
-> >  static struct platform_driver oxp_platform_driver = {
-> >       .driver = {
-> >               .name = "oxp-platform",
-> >               .dev_groups = oxp_ec_groups,
-> >       },
-> >       .probe = oxp_platform_probe,
-> > +     .remove = oxp_platform_remove,
-> >  };
-> >
-> >  static struct platform_device *oxp_platform_device;
->
-> Regards,
->
-> Hans
->
->
+Still I wonder if it would make sense to add a new "disconnect"
+charge_behaviour or charge_types enum value for this ?
+
+
+
+
+<snip>
+
+>>> diff --git a/Documentation/ABI/testing/sysfs-class-power b/Documentation/ABI/testing/sysfs-class-power
+>>> index 2a5c1a09a28f..4a187ca11f92 100644
+>>> --- a/Documentation/ABI/testing/sysfs-class-power
+>>> +++ b/Documentation/ABI/testing/sysfs-class-power
+>>> @@ -508,11 +508,12 @@ Description:
+>>>               Access: Read, Write
+>>>
+>>>               Valid values:
+>>> -                     ================ ====================================
+>>> -                     auto:            Charge normally, respect thresholds
+>>> -                     inhibit-charge:  Do not charge while AC is attached
+>>> -                     force-discharge: Force discharge while AC is attached
+>>> -                     ================ ====================================
+>>> +                     ================== =====================================
+>>> +                     auto:              Charge normally, respect thresholds
+>>> +                     inhibit-charge:    Do not charge while AC is attached
+>>> +                     inhibit-charge-s0: same as inhibit-charge but only in S0
+>>
+>> Only in S0 suggests that charging gets disabled when the device is on / in-use,
+>> I guess this is intended to avoid generating extra heat while the device is on?
+>>
+>> What about when the device is suspended, should the battery charge then ?
+>>
+>> On x86 we've 2 sorts of suspends S3, and the current name suggests that the
+>> device will charge (no inhibit) then. But modern hw almost always uses
+>> s0i3 / suspend to idle suspend and the name suggests charging would then
+>> still be inhibited?
+>>
+>> Also s0 is an ACPI specific term, so basically 2 remarks here:
+>>
+>> 1. The name should probably be "inhibit-charge-when-on" since the power_supply
+>>    calls is platform agnositic and "S0" is not.
+> 
+> I tried to be minimal. If we want to make the name longer, I vote for
+> "inhibit-charge-awake". I can spin a v5 with that.
+> 
+> The device does not charge while asleep. Only when it is off.
+
+Is suspend awake though ? 
+
+>> 2. We need to clearly define what happens when the device is suspended and then
+>>    make sure that the driver matches this (e.g. if we want to *not* inhibit during
+>>    suspend we may need to turn this feature off during suspend).
+> 
+> This is handled by the device when it comes to OneXPlayer. No driver
+> changes are needed.
+
+Well you say no charging is done when suspended, the question also is what
+behavior do we want here?  I'm fine with the default behaviour, but a case
+could be made that charging while suspended might be desirable (dependent on
+the use case) in which case we would need to disable the inhibit when
+suspending to get the desired behavior.
+
+Also what if other firmware interfaces with a bypass^W inhibit option work
+differently and do charge during suspend ?
+
+It is important that we clearly define the expected behavior now so that
+future devices can be made to behave the same.
+
+Regards,
+
+Hans
+
+
