@@ -1,214 +1,373 @@
-Received: from NAM12-MW2-obe.outbound.protection.outlook.com (mail-mw2nam12on2061.outbound.protection.outlook.com [40.107.244.61])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 26FAF14900F;
-	Mon, 17 Mar 2025 21:58:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.244.61
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742248723; cv=fail; b=GQ3d4IVWSs/olCO0bPYBn1NcX6UB5tl6TeOWj87zFA+5Llshw4KPiEfNMfoo5yL6E9tgz4GADbR4sGnsYTHOL+4AmgJxIGQ45abIYtt3jLzEP3XFfdlzYr3Slw4N23eIQ+DsYdSKbIvJrjQLnYMXgm3VcKs0La24gtvu8s+Vd18=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742248723; c=relaxed/simple;
-	bh=cnjZq0tSlVulpM6717KdvmFpgWZNRm6eHQSRSR97Ebg=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=MMtkRbeZOBNNC2fna5Dqi7JfzAEQXjkFRHOIuDop5aZdXbqiQj0wwKOcLfb2MxIh4a1VUhTLjMPUKFaOf25V9URhtjuW56phTCffGytWne8R/6P/vKoP3cm1gzUnl0b+8gpoa7TqMEF0TBljESFqjKIdnOKNCZzlX156SGnUzmk=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=0Lo+O13M; arc=fail smtp.client-ip=40.107.244.61
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B92001FFC55
+	for <platform-driver-x86@vger.kernel.org>; Mon, 17 Mar 2025 22:28:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1742250492; cv=none; b=NVNQrlM5sU64EkdHdTSJ7cMNEqeCbEtaIeJkXLUNxf6/737Ve1Nk8rD51OPyDgeYMkgwXRfbyE9WmL9b3Zv3KncO+l2SCyjF1BlCkQhwSP/vgGEKRf/yCyiqXIesmuEdkAJO7AOAXAQPYNWjEmqakewEb1aVzvDcen+Ik/8TCl0=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1742250492; c=relaxed/simple;
+	bh=ou0YO3E2F3tdNihnm4RXMTn7Yh8Z4EGu4+dqDWq0tQM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=sGa4TE7UAVXZBIvP0t/ogUb0NvhCltDgBX0pIY4F33shlU9T6a41PPsDhMkPEz7fJeGU9RmmpC+2j6PTxRO3xfIp9gS/oC8naC7ubFz9UWhVJtd1p+oJXQcFDtwAgiFQH8EVXW0+BfYFZhju6/bdfCpCBz0JbSxHwEj9596wUh4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=IbL5OsIY; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="0Lo+O13M"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=idUaAsIs+8w0bFNYi3H8fDO3VboG0bzAvXW3JhPkNiAC8MN0tzV7dc9FHuZsU1VxFlZC3w4jc4mmjkk/V6xRqWxU9Bxm+mn7MuQvnKxMIzWjTGa2HybmbDt3AEQZqSokttJwZdyx3Md4VNlXLUu/YYOR9p1jhTA85NftMAHsCTtbhQn3pcBsA33+PDpfAmRnsCyf7NMxPEACauOjsZ3MgFZb2Ornhw/RKjzOEZkQyTx5QNlRO/bYJ0WuRvJf61+s/9JYsskwC0Paha/TtUouS7jiUC0rRxtJa6ljFtZqtKaLLpMw+zBDzphsH6PAAuEehvWC9KZWGK1cC/sWulvCNw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=wbRvtCmLIMn+KWTxjiuHRf2JzHhP4YXm5mUgUBg29EE=;
- b=Zu0qeKh1xopmv+FT+y6uM9yXvdXmesXLtd3B8Y3EXm0D72lUIrmw4wbepFKsxLDjfZ2mqTd+cjk+6tsrCyvFEvkpcKWxiM6syMu9Dsp8k4WEthbz1NbWsBfmAGfGX11MiDQ8EuuCT2vI7p36UuDw15lz5onm3yIquCxhyZWz8JqofdIyAxjBeygXtHDSYEdkUCrLc5GgVN0cpf7aLWQe5/AETtjS95cbsIDAwjE0s+EU8PS1j7GuONKpvnIIzf6fenDdkVIerVneeBVUaUBAl5EJSO/UPSjXK2XteQuNYV7xKL3VTWNfO4oZWNn7S0QKaFInAArxJg8rTt8YWaOQaQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=wbRvtCmLIMn+KWTxjiuHRf2JzHhP4YXm5mUgUBg29EE=;
- b=0Lo+O13Miv/7Rha61/ULMBloQFCaJ+bbbYDrcSNUsipcYajfskej6iirveZ8xsDfeDyMGeQxaagUPiCzalPBu7WqlYtQVyd/hZGQay8orzPmiYViPSldacKe/vZBVnnBbXozMilCifjWkp37rBYl1OK6lznN3QiJQop0QkVEOR4=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from MN0PR12MB6101.namprd12.prod.outlook.com (2603:10b6:208:3cb::10)
- by MW5PR12MB5683.namprd12.prod.outlook.com (2603:10b6:303:1a0::10) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8511.27; Mon, 17 Mar
- 2025 21:58:39 +0000
-Received: from MN0PR12MB6101.namprd12.prod.outlook.com
- ([fe80::37ee:a763:6d04:81ca]) by MN0PR12MB6101.namprd12.prod.outlook.com
- ([fe80::37ee:a763:6d04:81ca%4]) with mapi id 15.20.8534.031; Mon, 17 Mar 2025
- 21:58:39 +0000
-Message-ID: <aa0a6b0b-7c2b-4a3e-bc47-81c59e776068@amd.com>
-Date: Mon, 17 Mar 2025 16:58:36 -0500
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v5 04/13] ABI: testing: add tt_toggle and tt_led entries
-To: Antheas Kapenekakis <lkml@antheas.dev>,
- platform-driver-x86@vger.kernel.org
-Cc: linux-hwmon@vger.kernel.org, linux-doc@vger.kernel.org,
- linux-pm@vger.kernel.org, Guenter Roeck <linux@roeck-us.net>,
- Jean Delvare <jdelvare@suse.com>, Jonathan Corbet <corbet@lwn.net>,
- Joaquin Ignacio Aramendia <samsagax@gmail.com>,
- Derek J Clark <derekjohn.clark@gmail.com>,
- Kevin Greenberg <kdgreenberg234@protonmail.com>,
- Joshua Tam <csinaction@pm.me>, Parth Menon <parthasarathymenon@gmail.com>,
- Eileen <eileen@one-netbook.com>, linux-kernel@vger.kernel.org,
- sre@kernel.org, linux@weissschuh.net
-References: <20250317155349.1236188-1-lkml@antheas.dev>
- <20250317155349.1236188-5-lkml@antheas.dev>
-Content-Language: en-US
-From: Mario Limonciello <mario.limonciello@amd.com>
-In-Reply-To: <20250317155349.1236188-5-lkml@antheas.dev>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: SN6PR08CA0022.namprd08.prod.outlook.com
- (2603:10b6:805:66::35) To MN0PR12MB6101.namprd12.prod.outlook.com
- (2603:10b6:208:3cb::10)
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="IbL5OsIY"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1742250489;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=XtS0xC6d6/Z4dPQaNbjh8+f87r9fcJOvc836eiaJ0L4=;
+	b=IbL5OsIYdo5+2xGroNV1w3wKixsuVh7qULr3/XJCtBM1+PsJqa1EM5YoOawz5N8vLCI1wE
+	jgekUAEsNilzFBjCbj6LlDdCvoD6ldY7uyas6BT22AkTIEsEaqAe0ebAtHUSP/WLouze4b
+	gVlvw6gBnV3dXBkfLsPSB08ztSQdtr0=
+Received: from mail-ej1-f69.google.com (mail-ej1-f69.google.com
+ [209.85.218.69]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-379-kZIBtcYqOy6R4cWHa-ZGZw-1; Mon, 17 Mar 2025 18:28:08 -0400
+X-MC-Unique: kZIBtcYqOy6R4cWHa-ZGZw-1
+X-Mimecast-MFC-AGG-ID: kZIBtcYqOy6R4cWHa-ZGZw_1742250487
+Received: by mail-ej1-f69.google.com with SMTP id a640c23a62f3a-ac218738618so424580066b.2
+        for <platform-driver-x86@vger.kernel.org>; Mon, 17 Mar 2025 15:28:08 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1742250487; x=1742855287;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=XtS0xC6d6/Z4dPQaNbjh8+f87r9fcJOvc836eiaJ0L4=;
+        b=s8FYr1Zx9DpUwYiX0n8kpHvImQreSKnU5m5uSEtBj0vyypJzHDNs6f25/T0que9CyZ
+         iW0j+fi/8Si86BqbMdyrLvM23K8GjK7dyYbfre1elTnm4swjFviEaqnOZCgeAvtXK2Dx
+         hWowVRpYaT1rvDprYXtwqlOuVWo5HavC1JrraqxmYkmxYDA6vTiURWPmSjuLrNDciUAm
+         wZNk64kRKUZQvHGGPfYRcZpf2rcyWv2nHwtnBkJngHHKIG5PF33PXCKTPvpgSrnsxV1/
+         Nl2kuids1jl7nXu3CHKlcwiyvuuWaVcQYo4FfqmbGvAWDzDjXTSed5HI5/Y9MmH5xP3G
+         VvpQ==
+X-Forwarded-Encrypted: i=1; AJvYcCU/bWUoeJ6DxswQ83oG6jsmsTVEuWWi+Ek4W9vaNyB+Cy3nj3AMlhE1gBgZl5Dr0MNY78xGie3vXFx0HdqupRvaSW3h@vger.kernel.org
+X-Gm-Message-State: AOJu0YzIkJ1aUtah4H+rUmVB/79uRAnxb1aawKbOLlHKC6kysyJzkDHP
+	69zsk7g1aSAQofcZwWWgjJObwy5VUK1GeRTR7YIZMcqpWHlLdHDV3qd8B4COrwYrflpeJiXdZMe
+	Fo/+XMrcLz//TEhrHjHadg7CI894FuKnfwxXalVH7TM5sqfmy3Y/YPolQSBcQHydaBVTrWxIx6q
+	ExVuo=
+X-Gm-Gg: ASbGnctirJ8aH3Ff6OIy9t2wyODDQbUFa6VWwqYZbFWJSwG2mIzaO1UFz5W+jQVbkE7
+	vAOLXU2lr/xkON70cbp3wdjF3BizfORgb250nnolG+zdq/nXEGHxGl0Vwk6T/cPchShhJqSxXiw
+	nn/uhodSBSWsYZcT5gaOp3wwa0UGaWEoGlvKiCnWxGESPuckA1dBLMTZifC7i1QliiFUcDeAnr5
+	hOQ8CYVpvkQendUXjToMrryJjL61M+PB05JJx5jrYP1RlgJpJjwiSfnf9+pcVBo8CEEZGGs6Vy0
+	t83H9lcrhMd84GIYJz1vtnzy8qyNamCMmgMu/TnBXSj6DtzaMwaH05FDyXE/+kbWf8rylpXdJOs
+	Z1l6QJ28cJcGmp86hbFumHeOYXm/u1JDAf1v1/NsZIQcFETUjiU0G1YVplaX2AI0ccA==
+X-Received: by 2002:a17:907:9712:b0:aae:e52f:3d36 with SMTP id a640c23a62f3a-ac3301e4c08mr1438041066b.6.1742250486628;
+        Mon, 17 Mar 2025 15:28:06 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IEqJ8U/higgo2eF6WadzMagacQ2HWoOJcqFuMZG4IVWuf1AAB4/n+i1EFhPopxyoEMn1+C3fQ==
+X-Received: by 2002:a17:907:9712:b0:aae:e52f:3d36 with SMTP id a640c23a62f3a-ac3301e4c08mr1438038966b.6.1742250486150;
+        Mon, 17 Mar 2025 15:28:06 -0700 (PDT)
+Received: from ?IPV6:2001:1c00:c32:7800:5bfa:a036:83f0:f9ec? (2001-1c00-0c32-7800-5bfa-a036-83f0-f9ec.cable.dynamic.v6.ziggo.nl. [2001:1c00:c32:7800:5bfa:a036:83f0:f9ec])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ac3146aec15sm731010166b.34.2025.03.17.15.28.05
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 17 Mar 2025 15:28:05 -0700 (PDT)
+Message-ID: <a72199cb-8726-4221-8b79-f86216304ee8@redhat.com>
+Date: Mon, 17 Mar 2025 23:28:04 +0100
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: MN0PR12MB6101:EE_|MW5PR12MB5683:EE_
-X-MS-Office365-Filtering-Correlation-Id: ce1f66dc-24ae-450a-a4fb-08dd659ee026
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|7416014|1800799024|376014|366016|7053199007;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?Ty9HWStKTWo5eXZIVENIYkxLWGpYemdIOU5BMnVoNjF3Lzd3Vk5wSWo0cXdP?=
- =?utf-8?B?WVVCZzNoOGVkT2VHSFNaSmQ5S1JqUmRoWVc5RWNoZFl2ODVaNngwY3p1dWVJ?=
- =?utf-8?B?KyswWjhwS2E4TlhwUTFRbTEwMWFQK1ZFRkFuR2dvUWZyRkFMcHNWTFhGa3Zp?=
- =?utf-8?B?UExGVWhOOWd6R2VXaE5ML1hEUFVVNVNGQTZFWW9HeVFpQXZRejhSSlBjdUE0?=
- =?utf-8?B?Q21xYjFNcmVka0pGUCtlNWJCUXZ3b3puUUFUOUl4WjBBY1lWY0hhcTJoTUVZ?=
- =?utf-8?B?aEloTnM1cEpxQ1VIWGV4UVA0dEhUZEZmeDliSU1VL3ZFN1Ftb0EyYUFBa2tl?=
- =?utf-8?B?VkVBMk1ZNDJzbmhYRnJSSDE3b0svU2Z0RHBtdnlKTWplY05TUHVvRkVJQnZO?=
- =?utf-8?B?dHdDZElGOThVUkdib3VNZ2ZWSXJBaTZvTW9taVZVWE1PazlHa0hoYlhGUEt2?=
- =?utf-8?B?NUgyekpLTEdIVHZwMHBtekt4YTkzMjVxaU1BY21xaGFNQnZRZVdjRWlkNHdF?=
- =?utf-8?B?SlF3VUhuL2JsL2x6NWc2MGlKdzJJbGl2K1NKZUVXQm1iWGE1eWdHTWhGQzdu?=
- =?utf-8?B?cHhDc2ZMTDhEUG5TemFxRFJLbk9IZXJQS09sSXRIOXU5ZVo3bkFrNDJZemYr?=
- =?utf-8?B?ZkVOQm5CSDV2dUFPeXEvbmNwdHRuQll1VElPbmlBb3RwSVA5Y1pRNHo1QVN2?=
- =?utf-8?B?S2p0eWtqdkZ5K2xBZXB6K2FyR2tQV1J3QWxqR1Z4MGxNSkQ3SXc4NSs4dk51?=
- =?utf-8?B?Z25lWFJRUXhrU0J0L0ZZWGdyZGlvaUtnVDRjVXZKQzRjOXBKbnJnVHJlNGFs?=
- =?utf-8?B?RzJuSldFdFdnOEtuc3NtbGg5cXFWWnNITlp4eFBudEcvT3VwOGhQUU5ad3Bm?=
- =?utf-8?B?TmxkTXdvUU5XTjF6aXBZa081N0hRcGJwS1k5SnBtV0Y2YkNBM1FyNWo0dmhQ?=
- =?utf-8?B?UVlVeVduNSt3S2V6N2ZidkdrMFBzOVVDTmhWNlFBNWs0OVhFbGJxVG9XUVRh?=
- =?utf-8?B?Q1BHVUxmdlVDMkNZaDA3Vk9rbjg1TGsrSGZVUjBBWnpkTFF1bWdES3A4bld4?=
- =?utf-8?B?R2srVUV4aE4vcEt1bkFndEZKUTJrbU9NUWtOR0lNbjQvQnBCRFRVS21UTHJ3?=
- =?utf-8?B?RDlOOGxlQUxxT3lLeVBzQzdoQ2ZVMjN0R094SlpPa0ZSbVYrLzh0aDBLWG5E?=
- =?utf-8?B?RkhRa3ZCNWQwN2pzbEhETnFnVE1zSWo1emFoc0FqdU1IbXZMMk5XM2tyYXlT?=
- =?utf-8?B?SWhwKzcvbW1IUTFOVnp6cEVlUU9kWVF2Z1NVbDBXdTZjYlVpK0t3TVFJeE5Q?=
- =?utf-8?B?dklmdnVDdmNZeVBzNGdZMGRSQnhvZW8zNTZZUkk4WWJTN210TDNsMUtTNWFQ?=
- =?utf-8?B?QVBlSFUrelU1dDRvSWNLS3UvTVFuOWlzS2NLdnNyTjFlNVIvZkJVdDNPV2p0?=
- =?utf-8?B?WklOVGJleTN2Z1pTSm1LaHdCeFNYWW1KTmlGTllGV2tNMmNFZWE4MENCMUFk?=
- =?utf-8?B?emU5UytvRmFLU1lvU1U3QzdvTXB0TDU4TWFtelk2OUtXVkVYakNmWmdSRlhS?=
- =?utf-8?B?WUUzZHcxR21yeWpCQk41U3hiOEI1ZTJEL3BkMSswR1Z1VzZGVjk2Vk8yR0Y0?=
- =?utf-8?B?V2p6U2Focm1ISW5IWTlPeldsNkRObER6RkVXT3lmZmRNMHYzbGd4UXU0OFJ1?=
- =?utf-8?B?V2NCTUcyTGRCcDFkck5yWC9zdGV6dUlJbUJuMEdjbjU1Q28zWThVOWdUSXNH?=
- =?utf-8?B?b3FZZldGa2YzR0QxK1JxaVNNMWh5dFQ1WG8wUWpXRVljNkVLTHhXVW4vaUJs?=
- =?utf-8?B?UkxMZEFlcjF0SU11T2FmdWtQditKRmVkS090aWs2Uy9qOHZWdDNNRmpiY1RW?=
- =?utf-8?Q?pct/O8kolXvPv?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MN0PR12MB6101.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(7416014)(1800799024)(376014)(366016)(7053199007);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?Q1hhaGRySzkvbEYyZkdBakl6aW9lYmoydWxXL2Q2YXdING1GSXpkRkw1VW5Z?=
- =?utf-8?B?clQ4bWNPSWg3OHQrWnprMlViUE9wVW1OUTRES3dYMUxDZFByUCtzL05LMFAz?=
- =?utf-8?B?RXUyNzZoc05zdGszQ05WbDFnSGNUNjN4WkxxcFEvV09FVDdsL3dld3BCSHdx?=
- =?utf-8?B?QjVOcnRodzI4K2F3NVZHZlBFOXQyaEhTQTRUN3pDQkQvMHVOVjl1bE9XcHJt?=
- =?utf-8?B?UlVaNHpwQlBLU3ZOaW9pNVVsQzZlUmNQK2hZemp1eS9adHZKVTQyZlFGMjRI?=
- =?utf-8?B?c3diRGl0WnRhaDZwK1ZiZEpxK29UbHNNYzBJbE96YytOcHJwMWVrRGxGVHNS?=
- =?utf-8?B?WklNMzkyWTlkdjZsbHNMRVJyYUlXREJ5S2l4UlR4VUNGTThveEFHaEtKRkFX?=
- =?utf-8?B?YW1acmozZkVQRktDSnpCRGVINHBzRjlHUUlWZTZFQ0RKaDdZTlB4ekV4dUtl?=
- =?utf-8?B?cEI0bkhiYXVrYmpCZk9RNStFZTdMODhZYWdYZXlRaFB5dUoxK3NBM2poemxp?=
- =?utf-8?B?NGF0S1ZzRjk5UkJLTXR3NEorVlc0NlVURGp2cEFSdjdEWTZzZ0xaOWpNdFZz?=
- =?utf-8?B?UVBCT055a0hRSlRhcko5Qyt4dW1uTU5QbWJ1cHYyK1VlSXlLZ0xJZzQ2VGVU?=
- =?utf-8?B?QTdsYm1naEI5RVFVWEUxRWgvdkVFNzRMZDlaakJmd3gvVHM5dU1qaDkxWnZN?=
- =?utf-8?B?czdEYkU1REFteEdCL25IUTNtSE1FMDZjZk9XcVVEMkxHdW1mbmhYcVRHU2hZ?=
- =?utf-8?B?Ymd1amNtVnNtS2VVdVV2am1Dbk5OUklGZnRLZWhVdHBENW5vTXduRWVQR294?=
- =?utf-8?B?YktvejBQemxYdFQxL1pySEVaWnhuVlZCVWN4eS8yb3lFNzM4TklVTFdtajA1?=
- =?utf-8?B?MnhjOTJLa2NVNE4rMEw2N2d2cFNpa2hOcmh0Qk53QzY2cjRSWW9BVnZxS1Y3?=
- =?utf-8?B?bjNzVzJZS2p1RS9ENWc1K2U1RGxOMkluSGIvTHFnQ1NBZkhZdWFPRUwrZXRr?=
- =?utf-8?B?WTBub3F2bnJhYW5ydUJxM2ZKZXFRc0JJS0ljbHVnUHovcnFrRXRacTVLSlVl?=
- =?utf-8?B?eERlblEyckxXNEZPTmw4R05qRnlmWTNVUXhhSnpIc2pxWTNWeFJVSEJqbkQ0?=
- =?utf-8?B?cllhYW5CYldvQ2VEM3pCODZpM0lkRkNwK2hxdUlLR1N3Z25lT2E4cE16eEtj?=
- =?utf-8?B?OERJcU9nM3JOdWwxTVdnK29Jb3NyQ0pEWWRnWTlncVlQcHVsTkw5djlpVDFL?=
- =?utf-8?B?a3M4YXlaQmtoeURWcmpJZnh3QWdHd0JhVGVLdXFGcHBDUEFLMzFwUWNHUmVx?=
- =?utf-8?B?cVY4Y0JLSEFmN2tRakowemthMlRXaytrQUIvUmgxU1k3Uk9JVVFRRy9JM01P?=
- =?utf-8?B?UEJjcnoyck5EVTlTVU4xOVZsTXlvVUQyOW54QTVCRVgyRjNVdVNUVlhIZ3Qz?=
- =?utf-8?B?RFJpSmdBaHFOVzNVNUorajhndzJibDFqbTBiNzUzVTd5cVVpWGVlMXNNWGFn?=
- =?utf-8?B?YXEyU0RtWXdWZVNuWVFjRWkvblh5ditVVkRXdW1UWmNPVXNQTHJoeTFuSFFu?=
- =?utf-8?B?RWdWLy9JbTB1c25CTVBpZXUrbGZmY3IvcmZuVGd5bjZQREg1b3doeE9nYlRM?=
- =?utf-8?B?S0NYQVl0T3o1dXk1L2RSZUt6UWRTWmJRak1lUW9CQWpMOG9oKzU2RHh4VUlT?=
- =?utf-8?B?cWZFNnAxbkdkMXh0YURrZGs4akV1OTVkN0RrSDVNSVdkcWRrMk9KMjdCMlc0?=
- =?utf-8?B?Y0NESUJKakVEZkhBNFo0azhmem50ZWt2YmNiWWk3Q3orU0M1SkEwSis3ZEMw?=
- =?utf-8?B?cHNkR1VVUHFCQzVtNERyOU9ISCs3VkV3d3BodG5EWmRrUDYwU3g2dnduZmI4?=
- =?utf-8?B?blAyV2lvZUt1K3lLUmQ1djRaVjRlQUpYb1hRdit2UWZ3cWNUMlFiSGNmMEFB?=
- =?utf-8?B?c2ZlR1FrVVZNL1hnUFBNUXhkSERZNkJNbWNEQm41bG5tTGxhVFdCdmlGWXZH?=
- =?utf-8?B?VFhvQXJzTFl1TE1Cb2FGNDVraU1FVG92dXdJRWYxTmlWL2JnUVVFRGVGcSsv?=
- =?utf-8?B?M3ZyS0ZudUNhT3ZJU3FwQ2tZaml1d3c2QTJYejZkY0Vac2lCQlhtOUZJbHRJ?=
- =?utf-8?Q?tcOH4JjYyQX3uL6aTkiaSDoNy?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: ce1f66dc-24ae-450a-a4fb-08dd659ee026
-X-MS-Exchange-CrossTenant-AuthSource: MN0PR12MB6101.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 17 Mar 2025 21:58:39.7745
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: HVNbJnjyrMV158LgKNGpn+hs6nBJT1nHtf+m9RQMZediq8DQ2EMvCP80yt/9RBBuWlf5uY8wA02816vuMfyHpg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW5PR12MB5683
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v5 1/1] Input: atkbd - Fix TUXEDO NB02 notebook keyboards
+ touchpad toggle key
+To: Werner Sembach <wse@tuxedocomputers.com>, ilpo.jarvinen@linux.intel.com
+Cc: linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org
+References: <20250313140458.621438-1-wse@tuxedocomputers.com>
+ <20250313140458.621438-2-wse@tuxedocomputers.com>
+ <c273bc96-a517-4028-a67f-229a6fa9673e@redhat.com>
+ <680b8108-9479-4d9e-9892-7b4a475d2a57@tuxedocomputers.com>
+Content-Language: en-US, nl
+From: Hans de Goede <hdegoede@redhat.com>
+In-Reply-To: <680b8108-9479-4d9e-9892-7b4a475d2a57@tuxedocomputers.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On 3/17/2025 10:53, Antheas Kapenekakis wrote:
-> When tt_toggle was introduced, it was not added to the platform sysfs.
-> Add it, then add documentation for tt_led.
+Hi
+
+On 17-Mar-25 5:52 PM, Werner Sembach wrote:
+> Hi,
 > 
-
-Ideally I think this commit should split into two and there should be a 
-fixes tag for the commit when tt_toggle was introduced.
-
-
-> Signed-off-by: Antheas Kapenekakis <lkml@antheas.dev>
-> ---
->   Documentation/ABI/testing/sysfs-platform-oxp | 26 ++++++++++++++++++++
->   1 file changed, 26 insertions(+)
->   create mode 100644 Documentation/ABI/testing/sysfs-platform-oxp
+> Am 17.03.25 um 13:11 schrieb Hans de Goede:
+>> Hi Werner,
+>>
+>> On 13-Mar-25 15:03, Werner Sembach wrote:
+>>> The TUXEDO NB02 notebook keyboards touchpad toggle key sends the PS/2
+>>> scancode sequence:
+>>> 0xe0, 0x5b, // Super down
+>>> 0x1d,       // Control down
+>>> 0x76,       // KEY_ZENKAKUHANKAKU down
+>>> 0xf6,       // KEY_ZENKAKUHANKAKU up
+>>> 0x9d,       // Control up
+>>> 0xe0, 0xdb  // Super up
+>>>
+>>> This driver listens to the Control + Super + Hangaku/Zenkaku key sequence
+>>> to suppresses the Hangaku/Zenkaku keypress and sends a F21 keypress
+>>> afterwards to conform with established userspace defaults. Note that the
+>>> Hangaku/Zenkaku scancode used here is usually unused, with real
+>>> Hangaku/Zenkaku keys using the tilde scancode.
+>>>
+>>> Signed-off-by: Werner Sembach <wse@tuxedocomputers.com>
+>> I'm still not a fan of this approach. Your patch to atkbd.c to
+>> map scancode 0x5f to F24 + a xkeyboard-config change to add:
+>>
+>>      key <FK24> { [ F24        ]    };
+>>
+>> to /usr/share/X11/xkb/symbols/fujitsu_vndr/inet
+>>
+>> + teach KDE and GNOME that Ctrl + Super + F24 = touchpad-toggle
+>>
+>> should work nicely and renders the whole need for this patch obsolete.
 > 
-> diff --git a/Documentation/ABI/testing/sysfs-platform-oxp b/Documentation/ABI/testing/sysfs-platform-oxp
-> new file mode 100644
-> index 0000000000000..776b7dee3d595
-> --- /dev/null
-> +++ b/Documentation/ABI/testing/sysfs-platform-oxp
-> @@ -0,0 +1,26 @@
-> +What:		/sys/devices/platform/<platform>/tt_toggle
-> +Date:		Jun 2023
-> +KernelVersion:	6.5
-> +Contact:	"Antheas Kapenekakis" <lkml@antheas.dev>
-> +Description:
-> +		Takeover TDP controls from the device. OneXPlayer devices have a
-> +		turbo button that can be used to switch between two TDP modes
-> +		(usually 15W and 25W). By setting this attribute to 1, this
-> +		functionality is disabled, handing TDP control over to (Windows)
-> +		userspace software and the Turbo button turns into a keyboard
-> +		shortcut over the AT keyboard of the device. In addition,
-> +		using this setting is a prerequisite for PWM control for most
-> +		newer models (otherwise it NOOPs).
-> +
-> +What:		/sys/devices/platform/<platform>/tt_led
-> +Date:		Feb 2025
-> +KernelVersion:	6.15
-> +Contact:	"Antheas Kapenekakis" <lkml@antheas.dev>
-> +Description:
-> +		Some OneXPlayer devices (e.g., X1 series) feature a little LED
-> +		nested in the Turbo button. This LED is illuminated when the
-> +		device is in the higher TDP mode (e.g., 25W). Once tt_toggle
-> +		is engaged, this LED is left dangling to its last state. This
-> +		attribute allows userspace to control the LED state manually
-> +		(either with 1 or 0). Only a subset of devices contain this LED.
-> +
+> Ok, but see my suggestion of doing it in xkeyboard-config only in the other mail-thread: [PATCH v2 2/2] Input: atkbd - Correctly map F13 - F24
+
+Yes I just notices that, as I mentioned in the other thread,
+the xkeyboard-config only fix sounds like a good fix to me.
+
+Regards,
+
+Hans
+
+
+
+
+
+>>> ---
+>>>   MAINTAINERS                                 |   6 ++
+>>>   drivers/platform/x86/Kconfig                |   2 +
+>>>   drivers/platform/x86/Makefile               |   3 +
+>>>   drivers/platform/x86/tuxedo/Kbuild          |   8 ++
+>>>   drivers/platform/x86/tuxedo/Kconfig         |   8 ++
+>>>   drivers/platform/x86/tuxedo/nb02/Kbuild     |   9 ++
+>>>   drivers/platform/x86/tuxedo/nb02/Kconfig    |  17 ++++
+>>>   drivers/platform/x86/tuxedo/nb02/platform.c | 107 ++++++++++++++++++++
+>>>   8 files changed, 160 insertions(+)
+>>>   create mode 100644 drivers/platform/x86/tuxedo/Kbuild
+>>>   create mode 100644 drivers/platform/x86/tuxedo/Kconfig
+>>>   create mode 100644 drivers/platform/x86/tuxedo/nb02/Kbuild
+>>>   create mode 100644 drivers/platform/x86/tuxedo/nb02/Kconfig
+>>>   create mode 100644 drivers/platform/x86/tuxedo/nb02/platform.c
+>>>
+>>> diff --git a/MAINTAINERS b/MAINTAINERS
+>>> index 8e0736dc2ee0e..7139c32e96dc7 100644
+>>> --- a/MAINTAINERS
+>>> +++ b/MAINTAINERS
+>>> @@ -24190,6 +24190,12 @@ T:    git git://git.kernel.org/pub/scm/linux/kernel/git/lenb/linux.git turbostat
+>>>   F:    tools/power/x86/turbostat/
+>>>   F:    tools/testing/selftests/turbostat/
+>>>   +TUXEDO DRIVERS
+>>> +M:    Werner Sembach <wse@tuxedocomputers.com>
+>>> +L:    platform-driver-x86@vger.kernel.org
+>>> +S:    Supported
+>>> +F:    drivers/platform/x86/tuxedo/
+>>> +
+>>>   TW5864 VIDEO4LINUX DRIVER
+>>>   M:    Bluecherry Maintainers <maintainers@bluecherrydvr.com>
+>>>   M:    Andrey Utkin <andrey.utkin@corp.bluecherry.net>
+>>> diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
+>>> index 0258dd879d64b..9b78a1255c08e 100644
+>>> --- a/drivers/platform/x86/Kconfig
+>>> +++ b/drivers/platform/x86/Kconfig
+>>> @@ -1199,3 +1199,5 @@ config P2SB
+>>>         The main purpose of this library is to unhide P2SB device in case
+>>>         firmware kept it hidden on some platforms in order to access devices
+>>>         behind it.
+>>> +
+>>> +source "drivers/platform/x86/tuxedo/Kconfig"
+>>> diff --git a/drivers/platform/x86/Makefile b/drivers/platform/x86/Makefile
+>>> index e1b1429470674..1562dcd7ad9a5 100644
+>>> --- a/drivers/platform/x86/Makefile
+>>> +++ b/drivers/platform/x86/Makefile
+>>> @@ -153,3 +153,6 @@ obj-$(CONFIG_WINMATE_FM07_KEYS)        += winmate-fm07-keys.o
+>>>     # SEL
+>>>   obj-$(CONFIG_SEL3350_PLATFORM)        += sel3350-platform.o
+>>> +
+>>> +# TUXEDO
+>>> +obj-y                    += tuxedo/
+>>> diff --git a/drivers/platform/x86/tuxedo/Kbuild b/drivers/platform/x86/tuxedo/Kbuild
+>>> new file mode 100644
+>>> index 0000000000000..1c79b80744d1b
+>>> --- /dev/null
+>>> +++ b/drivers/platform/x86/tuxedo/Kbuild
+>>> @@ -0,0 +1,8 @@
+>>> +# SPDX-License-Identifier: GPL-2.0-or-later
+>>> +#
+>>> +# Copyright (C) 2025 Werner Sembach wse@tuxedocomputers.com
+>>> +#
+>>> +# TUXEDO X86 Platform Specific Drivers
+>>> +#
+>>> +
+>>> +obj-y    += nb02/
+>>> diff --git a/drivers/platform/x86/tuxedo/Kconfig b/drivers/platform/x86/tuxedo/Kconfig
+>>> new file mode 100644
+>>> index 0000000000000..13b484999e333
+>>> --- /dev/null
+>>> +++ b/drivers/platform/x86/tuxedo/Kconfig
+>>> @@ -0,0 +1,8 @@
+>>> +# SPDX-License-Identifier: GPL-2.0-or-later
+>>> +#
+>>> +# Copyright (C) 2025 Werner Sembach wse@tuxedocomputers.com
+>>> +#
+>>> +# TUXEDO X86 Platform Specific Drivers
+>>> +#
+>>> +
+>>> +source "drivers/platform/x86/tuxedo/nb02/Kconfig"
+>>> diff --git a/drivers/platform/x86/tuxedo/nb02/Kbuild b/drivers/platform/x86/tuxedo/nb02/Kbuild
+>>> new file mode 100644
+>>> index 0000000000000..f56629c8b9dd8
+>>> --- /dev/null
+>>> +++ b/drivers/platform/x86/tuxedo/nb02/Kbuild
+>>> @@ -0,0 +1,9 @@
+>>> +# SPDX-License-Identifier: GPL-2.0-or-later
+>>> +#
+>>> +# Copyright (C) 2025 Werner Sembach wse@tuxedocomputers.com
+>>> +#
+>>> +# TUXEDO X86 Platform Specific Drivers
+>>> +#
+>>> +
+>>> +tuxedo_nb02_platform-y            := platform.o
+>>> +obj-$(CONFIG_TUXEDO_NB02_PLATFORM)    += tuxedo_nb02_platform.o
+>>> diff --git a/drivers/platform/x86/tuxedo/nb02/Kconfig b/drivers/platform/x86/tuxedo/nb02/Kconfig
+>>> new file mode 100644
+>>> index 0000000000000..38cd60c9d4f03
+>>> --- /dev/null
+>>> +++ b/drivers/platform/x86/tuxedo/nb02/Kconfig
+>>> @@ -0,0 +1,17 @@
+>>> +# SPDX-License-Identifier: GPL-2.0-or-later
+>>> +#
+>>> +# Copyright (C) 2025 Werner Sembach wse@tuxedocomputers.com
+>>> +#
+>>> +# TUXEDO X86 Platform Specific Drivers
+>>> +#
+>>> +
+>>> +menuconfig TUXEDO_NB02_PLATFORM
+>>> +    tristate "TUXEDO NB02 Platform Driver"
+>>> +    help
+>>> +      This driver implements miscellaneous things found on TUXEDO Notebooks
+>>> +      with board vendor NB02. For the time being this is only remapping the
+>>> +      touchpad toggle key to something supported by most Linux distros
+>>> +      out-of-the-box and suppressing an unsupported scancode from the
+>>> +      FN-key.
+>>> +
+>>> +      When compiled as a module it will be called tuxedo_nb02_platform.
+>>> diff --git a/drivers/platform/x86/tuxedo/nb02/platform.c b/drivers/platform/x86/tuxedo/nb02/platform.c
+>>> new file mode 100644
+>>> index 0000000000000..da67a91a4a129
+>>> --- /dev/null
+>>> +++ b/drivers/platform/x86/tuxedo/nb02/platform.c
+>>> @@ -0,0 +1,107 @@
+>>> +// SPDX-License-Identifier: GPL-2.0-or-later
+>>> +/*
+>>> + * Copyright (C) 2025 Werner Sembach wse@tuxedocomputers.com
+>>> + */
+>>> +
+>>> +#include <linux/cleanup.h>
+>>> +#include <linux/container_of.h>
+>>> +#include <linux/dmi.h>
+>>> +#include <linux/i8042.h>
+>>> +#include <linux/input.h>
+>>> +#include <linux/kernel.h>
+>>> +#include <linux/module.h>
+>>> +#include <linux/serio.h>
+>>> +
+>>> +struct input_dev *idev;
+>>> +
+>>> +static void tux_nb02_f21(struct work_struct *work __always_unused)
+>>> +{
+>>> +    input_report_key(idev, KEY_F21, 1);
+>>> +    input_report_key(idev, KEY_F21, 0);
+>>> +    input_sync(idev);
+>>> +}
+>>> +DECLARE_WORK(tux_nb02_f21_work, tux_nb02_f21);
+>>> +
+>>> +static const u8 tux_nb02_touchp_toggle_seq[] = {
+>>> +    0xe0, 0x5b, // Super down
+>>> +    0x1d,       // Control down
+>>> +    0x76,       // KEY_ZENKAKUHANKAKU down
+>>> +    0xf6,       // KEY_ZENKAKUHANKAKU up
+>>> +    0x9d,       // Control up
+>>> +    0xe0, 0xdb  // Super up
+>>> +};
+>>> +
+>>> +static bool tux_nb02_i8042_filter(unsigned char data,
+>>> +                  unsigned char str,
+>>> +                  struct serio *port __always_unused,
+>>> +                  void *context __always_unused)
+>>> +{
+>>> +    static u8 seq_pos;
+>>> +
+>>> +    if (unlikely(str & I8042_STR_AUXDATA))
+>>> +        return false;
+>>> +
+>>> +    if (unlikely(data == tux_nb02_touchp_toggle_seq[seq_pos])) {
+>>> +        ++seq_pos;
+>>> +        if (unlikely(data == 0x76 || data == 0xf6)) {
+>>> +            return true;
+>>> +        } else if (unlikely(seq_pos == ARRAY_SIZE(tux_nb02_touchp_toggle_seq))) {
+>>> +            schedule_work(&tux_nb02_f21_work);
+>>> +            seq_pos = 0;
+>>> +        }
+>>> +        return false;
+>>> +    }
+>>> +
+>>> +    seq_pos = 0;
+>>> +    return false;
+>>> +}
+>>> +
+>>> +static const struct dmi_system_id tux_nb02_dmi_string_match[] __initconst = {
+>>> +    {
+>>> +        .matches = {
+>>> +            DMI_EXACT_MATCH(DMI_SYS_VENDOR, "TUXEDO"),
+>>> +            DMI_EXACT_MATCH(DMI_BOARD_VENDOR, "NB02"),
+>>> +        },
+>>> +    },
+>>> +    { }
+>>> +};
+>>> +MODULE_DEVICE_TABLE(dmi, tux_nb02_dmi_string_match);
+>>> +
+>>> +static int __init tux_nb02_plat_init(void)
+>>> +{
+>>> +    int ret;
+>>> +
+>>> +    if (!dmi_check_system(tux_nb02_dmi_string_match))
+>>> +        return -ENODEV;
+>>> +
+>>> +    idev = input_allocate_device();
+>>> +    if (!idev)
+>>> +        return -ENOMEM;
+>>> +
+>>> +    idev->name = "TUXEDO NB02 Platform Keyboard";
+>>> +    set_bit(EV_KEY, idev->evbit);
+>>> +    set_bit(KEY_F21, idev->keybit);
+>>> +
+>>> +    ret = input_register_device(idev);
+>>> +    if (ret) {
+>>> +        input_free_device(idev);
+>>> +        return ret;
+>>> +    }
+>>> +
+>>> +    i8042_install_filter(tux_nb02_i8042_filter, NULL);
+>>> +
+>>> +    return 0;
+>>> +}
+>>> +
+>>> +static void __exit tux_nb02_plat_exit(void)
+>>> +{
+>>> +    i8042_remove_filter(tux_nb02_i8042_filter);
+>>> +    input_unregister_device(idev);
+>>> +}
+>>> +
+>>> +module_init(tux_nb02_plat_init);
+>>> +module_exit(tux_nb02_plat_exit);
+>>> +
+>>> +MODULE_DESCRIPTION("Keyboard fix for TUXEDO NB02 devices");
+>>> +MODULE_AUTHOR("Werner Sembach <wse@tuxedocomputers.com>");
+>>> +MODULE_LICENSE("GPL");
+> 
 
