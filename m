@@ -1,41 +1,41 @@
-Received: from mout.gmx.net (mout.gmx.net [212.227.15.19])
+Received: from mout.gmx.net (mout.gmx.net [212.227.15.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA5E3C2E0;
-	Mon, 17 Mar 2025 00:18:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BFA2F28E8;
+	Mon, 17 Mar 2025 00:32:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742170740; cv=none; b=sHg8DCZWm66r2veQ2jjS9zbZns6cErjBFu8LXmGyahxXr0d17G/NkWUaXKhKa/zMh6hpBTaa7RnZ7E4BlcWxyb6R5XjjvUYSfkSORCJcNeZz7DUrMl87f11jYGaAGv/URybmMxzzlqrZZbv1t10T5lad02WKPxEqK5eM6V65t6I=
+	t=1742171574; cv=none; b=ugW+ES0KmivyQ/y3UPLRT1hhw54lhsV2CwwskEQ04MIDQJpVCB06mFVq1qMazrPU9iHStYqAIlbZfOyHH8ywolVEmx4I66NzqxuX3H468r7U/AVIknURGv6bSz7gCuQGHP1tbAttLmKjBT33lcphSd4gm1SBG8/kIhsRv5GEqqY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742170740; c=relaxed/simple;
-	bh=hbpPhso1wVwmnKgxYXI3aP8Aky9+xH/tEaNE+s5b2v4=;
+	s=arc-20240116; t=1742171574; c=relaxed/simple;
+	bh=QQDMyVh4kQpQFqsjt8N5eOvDUFTlUT+SPE80T3yTzmg=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=o6ySRvA3su7rzwB01+uOg8fRKRqQYMHBFiQJivTQm4vmuz92yl/QF9nhw/9oserWYeR9PE35fbLgGdY//ZUJu0Hp5fllqPsZvD7zja6HgfSejw2XbjvUONRzYAOvG22/U6bg6zjasGw2g543k+4tkBELesQmzeMv97fvHhbWRzQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b=oBs63bR6; arc=none smtp.client-ip=212.227.15.19
+	 In-Reply-To:Content-Type; b=QAAmsUCKzenO4Mxp26S3f4cVvHPklQqmVJFgr19WXHfN3ZBuebCt/IX7hiGzI6q6Dhzn8V+aPhgW9fnwZDLVNp7dd1VD1LeRSZ5LE68CfICYuHXeHdn+wXF16g28S3FO+PSMVuRQclPUkJ8U7E95wLpu+4zP2rnlojmNzI0e26E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b=kHfMTX99; arc=none smtp.client-ip=212.227.15.15
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b="oBs63bR6"
+	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b="kHfMTX99"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.de;
-	s=s31663417; t=1742170729; x=1742775529; i=w_armin@gmx.de;
-	bh=13079H0FVo1jR9XznP83rieuugxrmdQU/sLlv3uJayA=;
+	s=s31663417; t=1742171556; x=1742776356; i=w_armin@gmx.de;
+	bh=kZV/eTa1oGW7T91zcA0XwhxZyzT/0rIgzmxiw5LjRqI=;
 	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:To:Cc:
 	 References:From:In-Reply-To:Content-Type:
 	 Content-Transfer-Encoding:cc:content-transfer-encoding:
 	 content-type:date:from:message-id:mime-version:reply-to:subject:
 	 to;
-	b=oBs63bR6sYyhxujt7jpRQnWFVxVx1wyMf1B87tmXahx3AQdaskU0bwp8TW1QsszH
-	 5j5t22zyxXoTsRTFl61HXoQCDSizyRLOby165KrITHcPEMmPpjp+avRnQOMB/ZKPR
-	 x5eG5GWJSvQna6dWEabCx3PzVStNshhWvJr5aIMjgiNYWJe4kgBg/ooO8tiz/eGx9
-	 1N/UBZL0RN715Nf7ceG3kREHinWW+8OnY248V/SX3YGAWuiAaIHR5rTUJApl7IVk+
-	 spOGVyJfezP9Y/ioFXV7t8URrEhMXMPpL2j8PgBzyloFmcAVVwZL9efp1RupGg5lo
-	 ewJY/cT7uUilyKBF7A==
+	b=kHfMTX991Dj87Rdj6+K0YUo0fw37rHxt3w3xpgHWm1G0rWduaAh6gRWk8Rb7a6WV
+	 NXKJHtiDIDZWdvJSaY2OjhBT0aRrmbik/lQ9k4cxmiaHVBpkbohNk0Agn3wCfbPzC
+	 R1M+lSAexIX39U8VkRYEhBWRvMI3/lftmwnYhUDZhd7MBTwmqQ6Zfym3IMWmxVAQ2
+	 WyrJUOuliLQY4GmdWTsSzQmHQuuLRgjrkTTLdTR0QHrTPkEOEfngUcB3gnH5D/cY+
+	 pxduFpPFHyLccx+Ly5bJOf/56KYBzJ6qbCGymf4w7QJG+kgAYnlLmIbRJrSOLYYDQ
+	 WW4ked8BepdydzugFA==
 X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
-Received: from [192.168.0.69] ([87.177.78.219]) by mail.gmx.net (mrgmx004
- [212.227.17.190]) with ESMTPSA (Nemesis) id 1Mz9Yv-1sy29b3tbP-00tBzo; Mon, 17
- Mar 2025 01:18:49 +0100
-Message-ID: <4ed90f54-bf42-4372-951a-b33f457ffa22@gmx.de>
-Date: Mon, 17 Mar 2025 01:18:47 +0100
+Received: from [192.168.0.69] ([87.177.78.219]) by mail.gmx.net (mrgmx005
+ [212.227.17.190]) with ESMTPSA (Nemesis) id 1MIdeR-1twyXZ1mIX-00B28U; Mon, 17
+ Mar 2025 01:32:36 +0100
+Message-ID: <4d3e34c8-d7b4-4bec-9276-17a1fa473f19@gmx.de>
+Date: Mon, 17 Mar 2025 01:32:33 +0100
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -43,114 +43,96 @@ List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC PATCH v2 0/3] platform/x86: acer-wmi: Add fan control
- support
-To: Rayan Margham <rayanmargham4@gmail.com>
-Cc: jlee@suse.com, basak.sb2006@gmail.com, kuurtb@gmail.com,
- hdegoede@redhat.com, ilpo.jarvinen@linux.intel.com,
- platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <f5d8b82d-c711-4611-b257-b4297f172bb1@gmx.de>
- <637B90F3-58C6-43B6-9822-5314C62138C6@gmail.com>
- <eaeaef7a-570e-4738-a420-4d5f61adf0bf@gmx.de>
- <CACzB==4QC+khEpw99ekp-DK=jzMebroCw5PeXmgS9GsHmPYfSw@mail.gmail.com>
+Subject: Re: [PATCH v6 00/12] platform/x86: alienware-wmi-wmax: HWMON support
+ + DebugFS + Improvements
+To: Kurt Borja <kuurtb@gmail.com>,
+ =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Cc: Hans de Goede <hdegoede@redhat.com>, platform-driver-x86@vger.kernel.org,
+ Dell.Client.Kernel@dell.com, linux-kernel@vger.kernel.org,
+ Guenter Roeck <linux@roeck-us.net>, Jean Delvare <jdelvare@suse.com>,
+ linux-hwmon@vger.kernel.org, Bagas Sanjaya <bagasdotme@gmail.com>
+References: <20250313-hwm-v6-0-17b57f787d77@gmail.com>
 Content-Language: en-US
 From: Armin Wolf <W_Armin@gmx.de>
-In-Reply-To: <CACzB==4QC+khEpw99ekp-DK=jzMebroCw5PeXmgS9GsHmPYfSw@mail.gmail.com>
+In-Reply-To: <20250313-hwm-v6-0-17b57f787d77@gmail.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:yrqxPUBbGL5Y4qzC2qISsk4prvqguZ7fGFNPZ5hUtetOilDCPBx
- Kw1HCz3wrTxxPifGWa3/hEK77V4m/n01yUpdfSHtq3zAXzMdNhT9xiouiawPGX3CjpjIyM4
- YTLmrq9IiwHMGHhTfHzcS60UluwIoRP7WABgupYYRJqTkVFEj9inKeKSU2AD+pX1qurTzQK
- bZmVwWG8EmZ8RBO/29P/w==
+Content-Transfer-Encoding: 7bit
+X-Provags-ID: V03:K1:N7nB1OMRH91WYFmZneoQI+GvdVntlL+X2Lo1yB01YOO099e+2Bj
+ sU4+u4CN/bSo1jfarlJ0n+dDy/8IopT/KTvHPxoI637LX9tla8lL6Zq9to/BlogVbXZrbOu
+ xAZHTyyHR/eLqPG8sndHWDqcoRx6/s8u2J8K3CyNKAm0RPT9OC1wVTNA5/BssIabYBzt46g
+ kq0Jq6yPKhXOotOTvhe2w==
 X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:1XTNh/yEvhM=;umEM4e9pLCW6rRmu83ygWzbmr9t
- K7ZA1bMSABoQsztegHd3KtGei9sEnYZ4zWos904SBH5KpfTIJaOKqmWdgqh/nuBRX3r1PdBHN
- rnCNc9iP57GvT8j/jYbDogAZVBRA70hceZ36LIRKNHUZCHMmG9pKDZyKB8lcrD0uNTN4v+JLQ
- RaLB5JmOHvm+3JIdNnV5wzF2S6fRIwWBEhkraMcJU7gAXCVxz1aHqHvXBKkGsHEvUo3wBHesI
- +rSi2IISBxjxtHWUOyDMVHgH6ygJbBYpBVB5/fsISG+4yBi0OnGgf5b3N8iMd22IgI2L+0s3Q
- ExHRLDfqZ5Qht06S16Xrn5cCz4f53j9lPoPCSvQh3oCBTQYYeMX6Xi9pzsKPrRocQEa7b6JNl
- hN5hyo0QnMZFWTSoGNmfL82tSE+wZAhq2v9IR+FJ/wYm0T/Tnz+UvGzx/RXLSeeDvIEVw5DZ2
- x2K9AeVEpPGfHv4MK6lQ7FGJtAgzzzHVcHHUw7DaMcLMP6JO4Mha7t4cFMm2TjlolzxdF0uid
- TPmUhoXEtvZ5Ms+Zgts4mwACY12RNvmViPICUy0sCm9WVUk+kTUoz0wXZLcujmGGamFvegNyr
- XFYkeQm7OrSvMCOo4We4HG+sjBY6xvKBc2Qs6iRa+enQjGIU3MW43B/MIF66017hQqQlnSkGP
- yg+zmKkVD6D1d6mIewY5sToNrNnjX/WQazpwffOKpVBuFrbWLcMoQvaYXSX52Qkz+2rPCUYel
- oJBhDU8/D8atvKMKWP7zTcJLfGOeXRf9fELDIrCZRxrzrEai8/npuU6cbgArWx1KmvUCWSY/N
- hHzagLuoE8TASVveErV8uju9wh0cs6xny5+E5ZrMone1vcEFmAhh7rE7Lxbw0G7wqeB672hUs
- 5hPeTh7LBBfnlmE5YZVKCeVeQemYxl3NVgTCHwPP2ss6sHUF8cOb0OmtmeyvUj/yZ3NkMlHNp
- G75eCNcIi45X3Kbi2skGOYJeF4GUJ3cYp7QApsgoWnfkUO/yoORfAf2LRF06q33Ny/5egxM5U
- SixqNm0imhgJjvSFrFCN+XlNoQ8t/RI8FIihvOWMRsl3ttKOu2oKKBkP6wIf+ZGiKlTg6MU4a
- Ew1nqL/AxYtEfWxpNhRodIGhoe80rE2NxwhAD1AgShYYswrhRGAG0qKv2aK3tlcjUgyMUkl5t
- 1zC7lSu923OpeUOGICTL879p0RhaLFlRcrsEJln26kGmnSEE98Iqhh2cxg9aqqGuF0Vgu1v6U
- HNU0iP/eAzB7W5SIeA2rs56qyDGseb/UngKjpn08nzsGILlhRnpm4jXKMmahjCm+tck1hcagk
- 0U++AyeosYEcPXLjXCXrEvaj8mZLwiJC/QO7Jkr8Ngx8F7m1JzSP+AMz1zJeotx+iFgw6WbfI
- qWZK7oPYu9tmicN9Oj1FB18prH0+FsW5R8slJf1W96Ud7WOBASqypej6IwTohpbewC2IzX5Yg
- LNmB7sXv6aPjKMxPP5p/3eJNUjKY=
+UI-OutboundReport: notjunk:1;M01:P0:+Y6/nnzBrM4=;1jaNZxUneP6eTFLxmShzEpD1fy6
+ 1Am2gMbixDzA6PXZ/3saz33ufwbT3eLxRjmlX0qRzh8r0RDbr46INH87zoypUXqJrxh0I8iuV
+ S6xFPJgybm6nz/RX6SVCUWqDDHD3/ZRtF7UyeunpH1nh2/NFLj9ag3y03D9k42aFp1nsO3+VI
+ 3b9attBSnB8uijK+cDb3d1V4b+Vg9Be9Kq67HtHJyESe5TwdNQf9tR8YODhDTmJYLq2HSRvDS
+ bEXLyL5DIVnej8Wz+Yc0OT8uCQs9Fr0XqTW3gYWNLmZ6/B85JhGRGa64E9Crh5y6bMlqm+CVU
+ GYED9m1SSIznCAymDx/WFKonfwdZswMFntBrqDcNxakeyVf2PDQJf8L0P7pQDSj8eGiZ9LIZF
+ JtK/Gj2/aXBXIZspezFr7awuAAcRNSXrs8xJKyBa+5+UXDF1JaQcNDpcX+NwcBdQtof/bPwEc
+ dUmyBXCCWE/4gAbf6c9Xz81PutvHT2RvgJuMt12r0xCr2WYfZGDcql+r6xGzvFqgjn8jGexVd
+ 36KTlDDZGiKpDhZtXzVTb5b6xacpwXQ1fMPzGNPF5nBok+3WJREe3PYxTjunt9trTV5RST+Ww
+ Pqw/7Kol/3dqqXsVf0k23TGjpmRA6GiEdpCyZEb2JplWI8qJUipaTdPp7Eq44JcUmErmfbwcp
+ dJSs30inicbDOMH3t/x+nu2SMrqzO/iv8p5168tqncriOH7eFTMeTNQJRdUgY1uq274ZpLUyF
+ CDDPRmlTJifjoqZRe62dVJO3NOdITnmUwmTyRdJEhIIej4M/B07IDxPg4+v6CGQ5800tKrJh8
+ DL9MCdlvipUsPmX5tm//ynzOLlZKrA5vtQg1HhN1piCAvIO9WcWQu+G/ARNKqZagv8Z2hzURt
+ yFhNKj2Nvl3oF4GvYNT49zDYWvDBAn+FDwYXNNT5PD0kd0MlwfFufEYNauI38ZNshdCXWj7a8
+ FtjKMp4Y9aa4AnNYj93PzxW9LloI37Q4bZHP9WvqVd4p+Dt1CfPuH/Ktwsmc5+PcTS71XHFOb
+ R2H/we3V/+qFKwULHoFRgO7qiHD/IpA5CoPgB4l6dHlCqkg0V5qeLcACUihsbYKT0bie0kWZJ
+ 9gQPIF6QGJO5jwY186gqDb2NvQrzldm5fN4LSG5993nJB6NbkOweLcoWsHqeAmBQDloEWDqGP
+ ySWyRmdAABUHzV/IZrjF2gSQJZ6jWrxGTE89rWPOc8WlJa2pBYWlYDgoUpw1VSaGpq2scoSS2
+ 8Aua0Lm9keonJMBS5hVmlMXD4t3AQRq4V4zuXW/RbqmnrYIqYrT4gR+uHZXGw3VFfWZ/Wj1GY
+ /MJmwAv6+6SdZjMDrpIdYoSriXK5o5UgTO7EOU+K36O4kEe9IlMpybMGTzp58D6J0tiTbtSJl
+ lHXgoiTXuVxvAarDAKHXsSZCsBK9G39UrXhcd+XvQG/bc99GJPyaAN+UhEtM11TEMuvORiqHm
+ 6sEmRwZF9LE4FeSK+VeYAFSN2gXk=
 
-Am 13.03.25 um 19:21 schrieb Rayan Margham:
+Am 13.03.25 um 15:29 schrieb Kurt Borja:
 
-> Could i have the deb package, I can try to install it.
+> Hi all,
+>
+> This set mainly adds hwmon and manual fan control support (patches 7-8)
+> to the alienware-wmi driver, after some improvements.
+>
+> Thank you for your feedback :)
 
-Alright, the .deb files for both the kernel image and the kernel headers a=
-re available here:
-
-	https://nextcloud.thetwins.xyz/s/oatc9DaW5XtiP9E
+ From my perspective the whole series is ready for inclusion into the mainline kernel.
 
 Thanks,
 Armin Wolf
 
-> On Tue, Mar 11, 2025 at 9:53=E2=80=AFPM Armin Wolf <W_Armin@gmx.de> wrot=
-e:
->> Am 09.03.25 um 13:51 schrieb Rayan Margham:
->>
->>> I=E2=80=99m so sorry I=E2=80=99ve been in a mental health unit for the=
- past month, are you still working on the driver I would love to test anyt=
-hing you provide me now
->>>
->>> Bestest regards
->>> Rayan Margham
->> Oh my, i wish you all the best for recovery.
->>
->> Can you compile the current -rc kernel with this patch series applied? =
-If no then i can give you a .deb package containing the kernel and the
->> modified acer-wmi driver.
->>
->> Thanks,
->> Armin Wolf
->>
->>>> On 5 Mar 2025, at 00:24, Armin Wolf <W_Armin@gmx.de> wrote:
->>>>
->>>> =EF=BB=BFAm 15.02.25 um 18:45 schrieb Armin Wolf:
->>>>
->>>>> This experimental patch series aims to add fan control support to th=
-e
->>>>> acer-wmi driver. The patches are compile-tested only and need to be
->>>>> tested on real hardware to verify that they actually work.
->>>>>
->>>>> I CCed two users who requested support for this feature. I would be
->>>>> very happy if both of you could test those patches and report back.
->>>>>
->>>>> I am ready to help you both with compiling a custom linux kernel for
->>>>> testing this series.
->>>> Any updates from the two people with Acer hardware?
->>>>
->>>> Thanks,
->>>> Armin Wolf
->>>>
->>>>> Changes since v2:
->>>>> - remove duplicate include and replace hwmon_pwm_mode with
->>>>>     hwmon_pwm_enable in second patch
->>>>>
->>>>> Armin Wolf (3):
->>>>>     platform/x86: acer-wmi: Fix setting of fan behavior
->>>>>     platform/x86: acer-wmi: Add fan control support
->>>>>     platform/x86: acer-wmi: Enable fan control for PH16-72 and PT14-=
-51
->>>>>
->>>>>    drivers/platform/x86/acer-wmi.c | 298 +++++++++++++++++++++++++++=
-++---
->>>>>    1 file changed, 273 insertions(+), 25 deletions(-)
->>>>>
->>>>> --
->>>>> 2.39.5
->>>>>
->>>>>
+> ---
+> Changes in v6:
+>
+> [08/12]
+>    - Define dev_pm_ops statically (kernel test robot)
+>
+> Link to v5: https://lore.kernel.org/r/20250312-hwm-v5-0-deb15ff8f3c6@gmail.com
+>
+> ---
+> Kurt Borja (12):
+>        platform/x86: alienware-wmi-wmax: Rename thermal related symbols
+>        platform/x86: alienware-wmi-wmax: Refactor is_awcc_thermal_mode()
+>        platform/x86: alienware-wmi-wmax: Improve internal AWCC API
+>        platform/x86: alienware-wmi-wmax: Modify supported_thermal_profiles[]
+>        platform/x86: alienware-wmi-wmax: Improve platform profile probe
+>        platform/x86: alienware-wmi-wmax: Add support for the "custom" thermal profile
+>        platform/x86: alienware-wmi-wmax: Add HWMON support
+>        platform/x86: alienware-wmi-wmax: Add support for manual fan control
+>        platform/x86: alienware-wmi-wmax: Add a DebugFS interface
+>        Documentation: wmi: Improve and update alienware-wmi documentation
+>        Documentation: admin-guide: laptops: Add documentation for alienware-wmi
+>        Documentation: ABI: Add sysfs platform and debugfs ABI documentation for alienware-wmi
+>
+>   Documentation/ABI/testing/debugfs-alienware-wmi    |   44 +
+>   .../ABI/testing/sysfs-platform-alienware-wmi       |   14 +
+>   .../admin-guide/laptops/alienware-wmi.rst          |  128 +++
+>   Documentation/admin-guide/laptops/index.rst        |    1 +
+>   Documentation/wmi/devices/alienware-wmi.rst        |  383 +++-----
+>   MAINTAINERS                                        |    3 +
+>   drivers/platform/x86/dell/Kconfig                  |    1 +
+>   drivers/platform/x86/dell/alienware-wmi-wmax.c     | 1023 +++++++++++++++++---
+>   8 files changed, 1187 insertions(+), 410 deletions(-)
+> ---
+> base-commit: f895f2493098b862f1ada0568aba278e49bf05b4
+> change-id: 20250305-hwm-f7bd91902b57
+>
+> Best regards,
