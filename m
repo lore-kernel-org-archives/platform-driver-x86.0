@@ -1,594 +1,349 @@
-Received: from mail-pl1-f169.google.com (mail-pl1-f169.google.com [209.85.214.169])
+Received: from mail-oo1-f48.google.com (mail-oo1-f48.google.com [209.85.161.48])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 56E3A24A067;
-	Mon, 17 Mar 2025 14:43:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 843FF230BEB;
+	Mon, 17 Mar 2025 15:20:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742222625; cv=none; b=fPahezG9UcM/0iE04bFGA0DgR/5qDTlSOIy4wT0wc2Kg7SOnIWoyPwXp94LEmBo+NIcopzlinezi1ZPex4K/I7mZEIqrPimgolcZPdjIa2f/JFinWNdoJWaZWPYdSgsqopitSPbSWcLYV8vsBdmW+HY8PR5c4cQwb+3wC7wVW5M=
+	t=1742224835; cv=none; b=nX33R7Z/wil6a5IRm6w8Og4x1hOHgAT/vEwWcf3ATSkhgRLiczVQ7lvBgemtnr3QCQbAmISTfz/XKmonwAtdkJAf+/aFZrKmUjUGXL67TTJAgaZcDBB/CrGiayNlufT3YCunVtaKpHbEnIYPWe2dQpJwSsoqbsS7bccfeh3N9m8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742222625; c=relaxed/simple;
-	bh=scHLMfjQeuz4T/HjBN4ZhUPoxcuhT+g/H5n+Ru0zf5A=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=d7BGxveBwhfTaNNiWIk58Xiw3/ggTzL3Fg5+6LyZaJuw4r5Dyy6hbVeOVTOghQ/u+r+roF+xELot2RM2OWtr1PcxuNYYSKZ662xXYxJgMgb9BYMzy/Vn2cNq+mxplDzPWfdFeNg5g7aIf4GunvYHlf+R77wUXsIjGmFgHA2e1zo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=YIHzBPPs; arc=none smtp.client-ip=209.85.214.169
+	s=arc-20240116; t=1742224835; c=relaxed/simple;
+	bh=XfqaR4rLMmJg0up8v9GiocrjVSDMO9H4FuLaMgbIav0=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=HDH8If9GXxBc79Rv96d1lXVqvEhoHZyHL23MPVwdgzyu6ukTKBqcj7FKVW3hs+A9LZ5gWCeZBv1yfGuEYyF+3uVfIfO3wYckWsLnc4btH2XLohcgbRyQgmsIg75posmO926jRM+1Um67bddTHKefPyN6+4JeXBCyAruw9q76iGQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=eE8lNC0h; arc=none smtp.client-ip=209.85.161.48
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YIHzBPPs"
-Received: by mail-pl1-f169.google.com with SMTP id d9443c01a7336-226185948ffso17891635ad.0;
-        Mon, 17 Mar 2025 07:43:43 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eE8lNC0h"
+Received: by mail-oo1-f48.google.com with SMTP id 006d021491bc7-5fcef5dc742so966124eaf.1;
+        Mon, 17 Mar 2025 08:20:33 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1742222622; x=1742827422; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+        d=gmail.com; s=20230601; t=1742224832; x=1742829632; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=x6WrkgLRJl8lUocm1cnTSBp25XPoazkPi4ONuRt/VwE=;
-        b=YIHzBPPsxdPYMv9dGnQVm+tTL86BxRVD2VUVPiTaidqn3U0QTUsppy3BDoFoNoZBzc
-         A1XJ6SpBTWp8kJJvdJwh87WiJ9NIAJW0E56ReR2nyJRZTSLL1fUbfNq08AtGH++4HPYQ
-         dmIf0uduCe8ytzc6MKjtY5xZLYzDqAe9XZMUgHw+3T0Ff4SvBgAgQcuxR7pjuhgIARLs
-         1Mv7oOYDE8YOjqcZ32yftiEazhe4iMsvDixjFleLTiNKTn18UL7IolgOQuBEAzx7899M
-         m7Ql07FMvxhRgnqn77XZFjAoNNDP3rhYVZl8+z4ra+/CRqcu6AnCT2Cn7dt1kLTXd59P
-         WP2Q==
+        bh=0bV+oVvQ1hBLUJw/fm0rVg4LsDbUI9KBKsLORHjrq2g=;
+        b=eE8lNC0hzhmzQugcqnda9+YIWdpStMxn5Nmm0gnxFqnHfRnDGp3zfj6dvT7tBmnBC5
+         kCKWjyhc6y6Oml4xk3Uprm2ZLsSDLyBi+R1B1Kxk74soBuLQExeOdyuH1iM3YVtxwRI/
+         0VrxhOGSBkmi1O2k+HkWMprvGUilmOB2MBgLSoTs8aeMlxLZFJPOVd34ncQHVkEVhgVv
+         NT74iIx1CP+DW30ebZMkXVVJO15Lh8sMgsxfR8svFfJLQhy/3++2BSwl5fHYvktM5hm7
+         bFnSJuQlxoHchbxmfdKlELTvGttxdOpxIDhwMaXKrRzlTLe4RdVKqW71fluY7dFLhwQL
+         F+Ww==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1742222622; x=1742827422;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+        d=1e100.net; s=20230601; t=1742224832; x=1742829632;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=x6WrkgLRJl8lUocm1cnTSBp25XPoazkPi4ONuRt/VwE=;
-        b=i1Hyb2Zkqh5FoGXFuCO4DYjR6SGYa+F4CIQOQECtilwjUVG/vwxoXFRUs61/7AyY+5
-         u6vSDU1y7dSJRhbu83PgOEeDFS6c6lf4DlOSDAYUIIrEJ0EHB3q1+ydKPty+Ch7tbPhj
-         L/a/8H4wm7pDrk3URE1eEDqvjg4ppo2CdJnEyAQPhhoWoB5OAISnpYE75MQTb/1FJaaV
-         Y8okEEOS5LT7vgUq2kXr4Zxzk6CEokWl60jubV48syVjQuZ2sHNkZHR6EXOKCTvPo+nT
-         qiDOZXoRZttnFzS/5jhjOOP+wZ6jLPHca1lybK2AAyRLhYC6mkxAexw8lRNptyno2sJp
-         nCcQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUorX1MXSYm31AJkHwjT6VcS+/J0kzUqRiux6CEyR94FrcQ8R+6bmnJ/jUNkPUo6STXdHjNaiwEwVUKiseZd3fWshwwgg==@vger.kernel.org, AJvYcCVHdDFkD5CQVrzdeKgAlV3odWamEBCG7Q97Zqyw1SeTZBBHqLWAfxufaxv1vqnyYY+yF4MPQLue6bs=@vger.kernel.org, AJvYcCXhXfCcOBoKIIsjN2VmPc2ZLFwnKfejVKcEK6+Ec0k5SH+4UjQ3tBcAi4GEc9vtGMC439PRyipIelOnj0kf@vger.kernel.org
-X-Gm-Message-State: AOJu0YyeEDmMMNkKeWKvyYk9HJrM6fO52p6X/nFoztYrimas1O49SVLI
-	6oEVfyv5QKPtArKkMK1kfXMaqITVYLn15Ig01jDXX6whB5cjhOoK
-X-Gm-Gg: ASbGncsn9d7PEZ5UV8izPsSvaHAy4MBVqY6JrKtV/3/AeQCK8kF96MEaqP1y6Oix9n6
-	1HhFp0Z+tw98LOr1EwPTVo21LF2DxlA6JCQ8go96sTr/+Cfnob6QcS3LP9zCEDdkxDz0wQBs59a
-	3lFC4D705Vt2sEr6wwX7gqUTz1WdloWYw3euqWSLXzSckayqTnZKIFkWSjx5uCUSnTBUriaP0MD
-	T62GSRBT1UkHoh5Agcjuly69zw6oS0ch7sgJ9oFT/8+G4aab5n0NbigA3TBodOZg/YAE0uPso3k
-	Doya+ntG2MRfimi6Nk2zaT6QbMl8M/VqA9W3U6s=
-X-Google-Smtp-Source: AGHT+IEt2swsYFQ3UDo6ekskZIpIP0dcGd4awRHhU6m3zQ4EmD8sRFrW6MpWYqYyNNMdpSjEBQYNNA==
-X-Received: by 2002:a05:6a00:2e25:b0:730:9801:d3e2 with SMTP id d2e1a72fcca58-7372238e7d9mr17866516b3a.8.1742222622460;
-        Mon, 17 Mar 2025 07:43:42 -0700 (PDT)
-Received: from terminus.lan1 ([2605:59c8:3484:ea20::914])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-73711694e34sm7906797b3a.140.2025.03.17.07.43.40
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 17 Mar 2025 07:43:42 -0700 (PDT)
-From: "Derek J. Clark" <derekjohn.clark@gmail.com>
-To: Hans de Goede <hdegoede@redhat.com>,
-	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Cc: Armin Wolf <W_Armin@gmx.de>,
-	Jonathan Corbet <corbet@lwn.net>,
-	Mario Limonciello <superm1@kernel.org>,
-	Luke Jones <luke@ljones.dev>,
-	Xino Ni <nijs1@lenovo.com>,
-	Zhixin Zhang <zhangzx36@lenovo.com>,
-	Mia Shao <shaohz1@lenovo.com>,
-	Mark Pearson <mpearson-lenovo@squebb.ca>,
-	"Pierre-Loup A . Griffais" <pgriffais@valvesoftware.com>,
-	"Cody T . -H . Chiu" <codyit@gmail.com>,
-	John Martens <johnfanv2@gmail.com>,
-	"Derek J . Clark" <derekjohn.clark@gmail.com>,
-	platform-driver-x86@vger.kernel.org,
-	linux-doc@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v4 6/6 RESEND] platform/x86: Add Lenovo Gamezone WMI Driver
-Date: Mon, 17 Mar 2025 07:43:26 -0700
-Message-ID: <20250317144326.5850-7-derekjohn.clark@gmail.com>
-X-Mailer: git-send-email 2.49.0
-In-Reply-To: <20250317144326.5850-1-derekjohn.clark@gmail.com>
-References: <20250317144326.5850-1-derekjohn.clark@gmail.com>
+        bh=0bV+oVvQ1hBLUJw/fm0rVg4LsDbUI9KBKsLORHjrq2g=;
+        b=nJZt1+TjrozB+yFnJ5sceaDEQOmB9UkAGuqcW1c1CdU1MPjj5bkam0f21lT6EiCXpC
+         4e2khZda/+LHmhWOb5ABGiah3ZuAX2Aw2quYZQ8cPdKrAj27/twIR1SsIgatoaIynXRX
+         40EwtOAV9WJCRsjitELUAtVhRH66Fo5PkNFpwQ/VnrmfQV5Y4Q59G6yrSdEiTL6Q9bw8
+         tmf02EOMvBatQjgLMoXc/7sEfAuRXYzIUjbBKbrDdNSQ63b0ACm6bIwxGDd0GeCgFDBc
+         5ntpubG1faUPfIRzmOnjPPZsLUCpHEGKyAKuCrN4E20MOWChwjNiYCgN4mrVQz7aCu63
+         I+hA==
+X-Forwarded-Encrypted: i=1; AJvYcCVdMw1lkvYfuGyf/EycDM4qobAAS6y/qtycbxQQqW1aK0ywHfF9ttp09XG3nOloOkyswM7rnDLQm0VHn1E=@vger.kernel.org, AJvYcCXaYRsECQyTnY6JeXpY0efyh9FPQbfscFktsoqgczlHC/4M58ZpTXAYANpj7GD3N06Lwks/nEkgYljdQp+GLZ9glVht2g==@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx/XftEpmP6oyNZKyRYElWUR7Ae/LlD97YELMgYLBo06/f9S8X6
+	sJKwLuU4Aqyr7Z8relL1e7KtCRHwwlNTsV76GODvSfD7gS8zdhUoQWKiGwwssKly1FK798ede1n
+	9uIMYnbVkZZVurIjvB71eVEzibDEoQh56p8w=
+X-Gm-Gg: ASbGncvGZAvAXK8sP0pJnI22h6oEikC9AVQJval9+wQR92gzQMFd7LpmIIa5Nml2z6J
+	pdkdc2KEV0fPSk/b0NaqgOv+APSiNjMiQb3qV131HEEoqHKdqmlaecZhsGaiAjQiqyzgEPEsm0u
+	J/DYXXH5ipzFavs8CsgOybP0lmnusuuzjYup8rHThfrJ+jV0r+tgcSypy3Sw==
+X-Google-Smtp-Source: AGHT+IH+S4XFi28gHGaMmeysqGWxl2iKRrtSLSEJMicA1DDHNUaljAuU7XuFwjXjeqVbjNrLs0Zn0OrBFYUEQy1rpZU=
+X-Received: by 2002:a05:6820:1b8c:b0:601:b582:3a7a with SMTP id
+ 006d021491bc7-6020e038a4fmr116453eaf.4.1742224832322; Mon, 17 Mar 2025
+ 08:20:32 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20250313151744.34010-1-gasper.nemgar@gmail.com>
+ <4970c2cd-9637-460a-8e85-bc44f7b0a550@redhat.com> <CAKi4K-hFHy4_F+fQghFNNR8cnkojPcE0uXQWsf5+5dbqjXGs0g@mail.gmail.com>
+ <a6c79155-daac-4c2a-9b91-5c8480dc14b1@redhat.com> <b168d04e-0a71-45a5-898f-31555ce306fb@gmail.com>
+In-Reply-To: <b168d04e-0a71-45a5-898f-31555ce306fb@gmail.com>
+From: =?UTF-8?Q?Ga=C5=A1per_Nemgar?= <gasper.nemgar@gmail.com>
+Date: Mon, 17 Mar 2025 16:20:10 +0100
+X-Gm-Features: AQ5f1Jr1Wtjce7kIwJp9gygGmxnSHt2KzLVR0unUdkqWaEiZ9ryfs0M4BuvzRHY
+Message-ID: <CAKi4K-gea7pS76=68C21KLV_YHk-K_jJ+CEKexz=+JuuZr9Yyg@mail.gmail.com>
+Subject: Re: [PATCH] Fixed ideapad-laptop driver to support Yoga 9 2 in 1
+ 14imh9 unknown keys
+To: "Peter F. Patel-Schneider" <pfpschneider@gmail.com>
+Cc: Hans de Goede <hdegoede@redhat.com>, ike.pan@canonical.com, 
+	linux-kernel@vger.kernel.org, 
+	"platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Adds lenovo-wmi-gamezone driver which provides the Lenovo Gamezone WMI
-interface that comes on Lenovo "Gaming Series" hardware. Provides ACPI
-platform profiles over WMI.
+Thank you for the suggested ideas, I have found the document myself
+and planned to implement this, currently i am occupied with my college
+exams and will resume working on the patch as soon as possible. About
+the Performance Meter (just below Delete) what you are talking about
+doesn't affect this laptop, from my research only the function
+`ideapad_wmi_notify` is called when that key is pressed,
+`ideapad_acpi_notify` and then `ideapad_check_special_buttons` isn't.
+Another thing, when the `platform_profile_cycle()` is called it
+doesn't affect anything on the system except
+/sys/firmware/acpi/platform_profile, is this intended and gnome just
+doesn't handle it or is there something wrong.
+I also tried to make the mic mute LED to start working but was unable
+to, do you have any ideas as to how I would achieve this. I have
+dumped the acpi tables and examined them and I don't think there is a
+way through that. I will research other ways when I have the time, but
+do you have any ideas in the meantime?
+Thanks a lot
 
-Signed-off-by: Derek J. Clark <derekjohn.clark@gmail.com>
----
-v4:
-- Add notifier blocks for the Events and Other Mode drivers.
-- Remove notifier block chain head and all reference to Thermal Mode
-  Event GUID.
-- Add header for Gamezone specific structs and functions.
-- Various fixes from review.
-v3:
-- Use notifier chain to report platform profile changes to any
-  subscribed drivers.
-- Adds THERMAL_MODE_EVENT GUID and .notify function to trigger notifier
-  chain.
-- Adds support for Extreme Mode profile on supported hardware, as well
-  as a DMI quirk table for some devices that report extreme mode version
-  support but so not have it fully implemented.
-- Update to include recent changes to platform-profile.
-v2:
-- Use devm_kmalloc to ensure driver can be instanced, remove global
-  reference.
-- Ensure reverse Christmas tree for all variable declarations.
-- Remove extra whitespace.
-- Use guard(mutex) in all mutex instances, global mutex.
-- Use pr_fmt instead of adding the driver name to each pr_err.
-- Remove noisy pr_info usage.
-- Rename gamezone_wmi to lenovo_wmi_gz_priv and gz_wmi to priv.
-- Remove GZ_WMI symbol exporting.
----
- MAINTAINERS                                |   2 +
- drivers/platform/x86/Kconfig               |  13 +
- drivers/platform/x86/Makefile              |   1 +
- drivers/platform/x86/lenovo-wmi-gamezone.c | 380 +++++++++++++++++++++
- drivers/platform/x86/lenovo-wmi-gamezone.h |  18 +
- 5 files changed, 414 insertions(+)
- create mode 100644 drivers/platform/x86/lenovo-wmi-gamezone.c
- create mode 100644 drivers/platform/x86/lenovo-wmi-gamezone.h
-
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 87daee6075ad..0416afd997a0 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -13168,6 +13168,8 @@ F:	drivers/platform/x86/lenovo-wmi-capdata01.c
- F:	drivers/platform/x86/lenovo-wmi-capdata01.h
- F:	drivers/platform/x86/lenovo-wmi-events.c
- F:	drivers/platform/x86/lenovo-wmi-events.h
-+F:	drivers/platform/x86/lenovo-wmi-gamezone.c
-+F:	drivers/platform/x86/lenovo-wmi-gamezone.h
- F:	drivers/platform/x86/lenovo-wmi-helpers.c
- F:	drivers/platform/x86/lenovo-wmi-helpers.h
- F:	drivers/platform/x86/lenovo-wmi-other.c
-diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
-index fc47604e37f7..ecf3246c8fda 100644
---- a/drivers/platform/x86/Kconfig
-+++ b/drivers/platform/x86/Kconfig
-@@ -467,6 +467,19 @@ config LENOVO_WMI_HELPERS
- 	tristate
- 	depends on ACPI_WMI
- 
-+config LENOVO_WMI_GAMEZONE
-+	tristate "Lenovo GameZone WMI Driver"
-+	depends on ACPI_WMI
-+	select ACPI_PLATFORM_PROFILE
-+	select LENOVO_WMI_EVENTS
-+	select LENOVO_WMI_HELPERS
-+	help
-+	  Say Y here if you have a WMI aware Lenovo Legion device and would like to use the
-+	  platform-profile firmware interface to manage power usage.
-+
-+	  To compile this driver as a module, choose M here: the module will
-+	  be called lenovo-wmi-gamezone.
-+
- config LENOVO_WMI_DATA01
- 	tristate
- 	depends on ACPI_WMI
-diff --git a/drivers/platform/x86/Makefile b/drivers/platform/x86/Makefile
-index c6ce3c8594b1..f3e64926a96b 100644
---- a/drivers/platform/x86/Makefile
-+++ b/drivers/platform/x86/Makefile
-@@ -71,6 +71,7 @@ obj-$(CONFIG_YT2_1380)		+= lenovo-yoga-tab2-pro-1380-fastcharger.o
- obj-$(CONFIG_LENOVO_WMI_CAMERA)	+= lenovo-wmi-camera.o
- obj-$(CONFIG_LENOVO_WMI_DATA01)	+= lenovo-wmi-capdata01.o
- obj-$(CONFIG_LENOVO_WMI_EVENTS)	+= lenovo-wmi-events.o
-+obj-$(CONFIG_LENOVO_WMI_GAMEZONE)	+= lenovo-wmi-gamezone.o
- obj-$(CONFIG_LENOVO_WMI_HELPERS)	+= lenovo-wmi-helpers.o
- obj-$(CONFIG_LENOVO_WMI_TUNING)	+= lenovo-wmi-other.o
- 
-diff --git a/drivers/platform/x86/lenovo-wmi-gamezone.c b/drivers/platform/x86/lenovo-wmi-gamezone.c
-new file mode 100644
-index 000000000000..9d453a836227
---- /dev/null
-+++ b/drivers/platform/x86/lenovo-wmi-gamezone.c
-@@ -0,0 +1,380 @@
-+// SPDX-License-Identifier: GPL-2.0-or-later
-+/*
-+ * Lenovo GameZone WMI interface driver. The GameZone WMI interface provides
-+ * platform profile and fan curve settings for devices that fall under the
-+ * "Gaming Series" of Lenovo Legion devices.
-+ *
-+ * Copyright(C) 2025 Derek J. Clark <derekjohn.clark@gmail.com>
-+ */
-+
-+#include <linux/dmi.h>
-+#include <linux/list.h>
-+#include <linux/notifier.h>
-+#include <linux/platform_profile.h>
-+#include <linux/types.h>
-+#include <linux/wmi.h>
-+
-+#include "lenovo-wmi-events.h"
-+#include "lenovo-wmi-gamezone.h"
-+#include "lenovo-wmi-helpers.h"
-+#include "lenovo-wmi-other.h"
-+
-+/* Interface GUIDs */
-+#define LENOVO_GAMEZONE_GUID "887B54E3-DDDC-4B2C-8B88-68A26A8835D0"
-+
-+/* Method IDs */
-+#define WMI_METHOD_ID_SMARTFAN_SUPP 43 /* IsSupportSmartFan */
-+#define WMI_METHOD_ID_SMARTFAN_SET 44 /* SetSmartFanMode */
-+#define WMI_METHOD_ID_SMARTFAN_GET 45 /* GetSmartFanMode */
-+
-+static BLOCKING_NOTIFIER_HEAD(gz_chain_head);
-+
-+struct lwmi_event_priv {
-+	enum thermal_mode current_mode;
-+	struct wmi_device *wdev;
-+	bool extreme_supported;
-+	struct device *ppdev; /*platform profile device */
-+	struct notifier_block event_nb;
-+	struct notifier_block mode_nb;
-+};
-+
-+struct quirk_entry {
-+	bool extreme_supported;
-+};
-+
-+static struct quirk_entry quirk_no_extreme_bug = {
-+	.extreme_supported = false,
-+};
-+
-+/* Notifier Methods */
-+/*
-+ * lwmi_gz_mode_call() - Call method for lenovo-wmi-other notifier
-+ * block call chain. For THERMAL_MODE_EVENT, returns current_mode
-+ *
-+ * @nb: The notifier_block registered to lenovo-wmi-other
-+ * @cmd: The event triggered by lenovo-wmi-other
-+ * @data: The data to be returned by the event.
-+ *
-+ * Returns: notifier_block status.
-+ */
-+static int lwmi_gz_mode_call(struct notifier_block *nb, unsigned long cmd,
-+			     void *data)
-+{
-+	struct lwmi_event_priv *priv;
-+
-+	priv = container_of(nb, struct lwmi_event_priv, mode_nb);
-+	if (!priv)
-+		return NOTIFY_BAD;
-+
-+	switch (cmd) {
-+	case THERMAL_MODE_EVENT:
-+		*(enum thermal_mode *)data = priv->current_mode;
-+		break;
-+	default:
-+		return NOTIFY_DONE;
-+	}
-+
-+	return NOTIFY_OK;
-+}
-+
-+/*
-+ * lwmi_gz_event_call() - Call method for lenovo-wmi-events notifier
-+ * block call chain. For THERMAL_MODE_EVENT, sets current_mode and
-+ * notifies platform_profile of a change.
-+ *
-+ * @nb: The notifier_block registered to lenovo-wmi-events
-+ * @cmd: The event triggered by lenovo-wmi-events
-+ * @data: The data to be updated by the event.
-+ *
-+ * Returns: notifier_block status.
-+ */
-+static int lwmi_gz_event_call(struct notifier_block *nb, unsigned long cmd,
-+			      void *data)
-+{
-+	struct lwmi_event_priv *priv;
-+
-+	priv = container_of(nb, struct lwmi_event_priv, event_nb);
-+	if (!priv)
-+		return NOTIFY_BAD;
-+
-+	switch (cmd) {
-+	case THERMAL_MODE_EVENT:
-+		priv->current_mode = *((enum thermal_mode *)data);
-+		platform_profile_notify(&priv->wdev->dev);
-+		break;
-+	default:
-+		return NOTIFY_DONE;
-+	}
-+
-+	return NOTIFY_OK;
-+}
-+
-+/* Platform Profile Methods & Setup */
-+/*
-+ * lwmi_gz_platform_profile_supported() - Gets the version of the WMI
-+ * interface to determine the support level.
-+ *
-+ * @wdev: The Gamezone WMI device.
-+ * @supported: Pointer to return the support level with.
-+ *
-+ * Returns: 0, or an error.
-+ */
-+static int lwmi_gz_platform_profile_supported(struct wmi_device *wdev,
-+					      int *supported)
-+{
-+	return lwmi_dev_evaluate_method(wdev, 0x0, WMI_METHOD_ID_SMARTFAN_SUPP,
-+					0, 0, supported);
-+}
-+
-+/*
-+ * lwmi_gz_thermal_mode_get() - Gets the currently set thermal mode from
-+ * the Gamezone WMI interface.
-+ *
-+ * @wdev: The Gamezone WMI device.
-+ * @mode: Pointer to return the thermal mode with.
-+ *
-+ * Returns: 0, or an error.
-+ */
-+static int lwmi_gz_thermal_mode_get(struct wmi_device *wdev,
-+				    enum thermal_mode *mode)
-+{
-+	return lwmi_dev_evaluate_method(wdev, 0x0, WMI_METHOD_ID_SMARTFAN_GET,
-+					0, 0, mode);
-+}
-+
-+static int lwmi_gz_profile_get(struct device *dev,
-+			       enum platform_profile_option *profile)
-+{
-+	struct lwmi_event_priv *priv = dev_get_drvdata(dev);
-+	enum thermal_mode mode;
-+	int ret;
-+
-+	ret = lwmi_gz_thermal_mode_get(priv->wdev, &mode);
-+	if (ret)
-+		return ret;
-+
-+	switch (mode) {
-+	case SMARTFAN_MODE_QUIET:
-+		*profile = PLATFORM_PROFILE_LOW_POWER;
-+		break;
-+	case SMARTFAN_MODE_BALANCED:
-+		*profile = PLATFORM_PROFILE_BALANCED;
-+		break;
-+	case SMARTFAN_MODE_PERFORMANCE:
-+		if (priv->extreme_supported) {
-+			*profile = PLATFORM_PROFILE_BALANCED_PERFORMANCE;
-+			break;
-+		}
-+		*profile = PLATFORM_PROFILE_PERFORMANCE;
-+		break;
-+	case SMARTFAN_MODE_EXTREME:
-+		*profile = PLATFORM_PROFILE_PERFORMANCE;
-+		break;
-+	case SMARTFAN_MODE_CUSTOM:
-+		*profile = PLATFORM_PROFILE_CUSTOM;
-+		break;
-+	default:
-+		return -EINVAL;
-+	}
-+
-+	priv->current_mode = mode;
-+
-+	return 0;
-+}
-+
-+static int lwmi_gz_profile_set(struct device *dev,
-+			       enum platform_profile_option profile)
-+{
-+	struct lwmi_event_priv *priv = dev_get_drvdata(dev);
-+	struct wmi_method_args_32 args;
-+	enum thermal_mode mode;
-+	int ret;
-+
-+	switch (profile) {
-+	case PLATFORM_PROFILE_LOW_POWER:
-+		mode = SMARTFAN_MODE_QUIET;
-+		break;
-+	case PLATFORM_PROFILE_BALANCED:
-+		mode = SMARTFAN_MODE_BALANCED;
-+		break;
-+	case PLATFORM_PROFILE_BALANCED_PERFORMANCE:
-+		mode = SMARTFAN_MODE_PERFORMANCE;
-+		break;
-+	case PLATFORM_PROFILE_PERFORMANCE:
-+		if (priv->extreme_supported) {
-+			mode = SMARTFAN_MODE_EXTREME;
-+			break;
-+		}
-+		mode = SMARTFAN_MODE_PERFORMANCE;
-+		break;
-+	case PLATFORM_PROFILE_CUSTOM:
-+		mode = SMARTFAN_MODE_CUSTOM;
-+		break;
-+	default:
-+		return -EOPNOTSUPP;
-+	}
-+
-+	args.arg0 = mode;
-+
-+	ret = lwmi_dev_evaluate_method(priv->wdev, 0x0,
-+				       WMI_METHOD_ID_SMARTFAN_SET,
-+				       (unsigned char *)&args, sizeof(args),
-+				       NULL);
-+	if (ret)
-+		return ret;
-+
-+	priv->current_mode = mode;
-+
-+	return 0;
-+}
-+
-+static const struct dmi_system_id fwbug_list[] = {
-+	{
-+		.ident = "Legion Go 8APU1",
-+		.matches = {
-+			DMI_MATCH(DMI_SYS_VENDOR, "LENOVO"),
-+			DMI_MATCH(DMI_PRODUCT_VERSION, "Legion Go 8APU1"),
-+		},
-+		.driver_data = &quirk_no_extreme_bug,
-+	},
-+	{
-+		.ident = "Legion Go S 8ARP1",
-+		.matches = {
-+			DMI_MATCH(DMI_SYS_VENDOR, "LENOVO"),
-+			DMI_MATCH(DMI_PRODUCT_VERSION, "Legion Go S 8ARP1"),
-+		},
-+		.driver_data = &quirk_no_extreme_bug,
-+	},
-+	{
-+		.ident = "Legion Go S 8APU1",
-+		.matches = {
-+			DMI_MATCH(DMI_SYS_VENDOR, "LENOVO"),
-+			DMI_MATCH(DMI_PRODUCT_VERSION, "Legion Go S 8APU1"),
-+		},
-+		.driver_data = &quirk_no_extreme_bug,
-+	},
-+	{},
-+
-+};
-+
-+/*
-+ * extreme_supported() - Evaluate if a device supports extreme thermal mode.
-+ * For devices that have a profile_support_ver of 6 or greater a DMI check
-+ * is done. Some devices report a version that supports extreme mode but
-+ * have an incomplete entry in the BIOS. To ensure this cannot be set, they
-+ * are quirked to prevent assignment.
-+ *
-+ * @profile_support_ver: Version of WMI interface provided by
-+ * lwmi_gz_platform_profile_supported.
-+ *
-+ * Returns: bool
-+ */
-+static bool extreme_supported(int profile_support_ver)
-+{
-+	const struct dmi_system_id *dmi_id;
-+	struct quirk_entry *quirks;
-+
-+	if (profile_support_ver < 6)
-+		return false;
-+
-+	dmi_id = dmi_first_match(fwbug_list);
-+	if (!dmi_id)
-+		return true;
-+
-+	quirks = dmi_id->driver_data;
-+	return quirks->extreme_supported;
-+}
-+
-+static int lwmi_platform_profile_probe(void *drvdata, unsigned long *choices)
-+{
-+	struct lwmi_event_priv *priv = drvdata;
-+	int profile_support_ver;
-+	int ret;
-+
-+	ret = lwmi_gz_platform_profile_supported(priv->wdev,
-+						 &profile_support_ver);
-+	if (ret)
-+		return ret;
-+
-+	if (profile_support_ver < 1)
-+		return -ENODEV;
-+
-+	priv->extreme_supported = extreme_supported(profile_support_ver);
-+
-+	set_bit(PLATFORM_PROFILE_LOW_POWER, choices);
-+	set_bit(PLATFORM_PROFILE_BALANCED, choices);
-+	set_bit(PLATFORM_PROFILE_PERFORMANCE, choices);
-+	set_bit(PLATFORM_PROFILE_CUSTOM, choices);
-+
-+	if (priv->extreme_supported)
-+		set_bit(PLATFORM_PROFILE_BALANCED_PERFORMANCE, choices);
-+
-+	return 0;
-+}
-+
-+static const struct platform_profile_ops lwmi_gz_platform_profile_ops = {
-+	.probe = lwmi_platform_profile_probe,
-+	.profile_get = lwmi_gz_profile_get,
-+	.profile_set = lwmi_gz_profile_set,
-+};
-+
-+/* Driver Methods */
-+static int lwmi_gz_probe(struct wmi_device *wdev, const void *context)
-+{
-+	struct lwmi_event_priv *priv;
-+	int ret;
-+
-+	priv = devm_kzalloc(&wdev->dev, sizeof(*priv), GFP_KERNEL);
-+	if (!priv)
-+		return -ENOMEM;
-+
-+	priv->event_nb.notifier_call = lwmi_gz_event_call;
-+	ret = devm_lwmi_events_register_notifier(&wdev->dev, &priv->event_nb);
-+	if (ret)
-+		return ret;
-+
-+	priv->mode_nb.notifier_call = lwmi_gz_mode_call;
-+	ret = devm_lwmi_om_register_notifier(&wdev->dev, &priv->mode_nb);
-+	if (ret)
-+		return ret;
-+
-+	priv->wdev = wdev;
-+	dev_set_drvdata(&wdev->dev, priv);
-+
-+	priv->ppdev = platform_profile_register(&wdev->dev,
-+						"lenovo-wmi-gamezone", priv,
-+						&lwmi_gz_platform_profile_ops);
-+
-+	if (IS_ERR(priv->ppdev))
-+		return -ENODEV;
-+
-+	ret = lwmi_gz_thermal_mode_get(wdev, &priv->current_mode);
-+	if (ret)
-+		return ret;
-+
-+	return 0;
-+}
-+
-+static const struct wmi_device_id lwmi_gz_id_table[] = { { LENOVO_GAMEZONE_GUID,
-+							   NULL },
-+							 {} };
-+
-+static struct wmi_driver lwmi_gz_driver = {
-+	.driver = {
-+		.name = "lenovo_wmi_gamezone",
-+		.probe_type = PROBE_PREFER_ASYNCHRONOUS,
-+	},
-+	.id_table = lwmi_gz_id_table,
-+	.probe = lwmi_gz_probe,
-+	.no_singleton = true,
-+};
-+
-+module_wmi_driver(lwmi_gz_driver);
-+
-+MODULE_IMPORT_NS("LENOVO_WMI_EVENTS");
-+MODULE_IMPORT_NS("LENOVO_WMI_HELPERS");
-+MODULE_IMPORT_NS("LENOVO_WMI_OTHER");
-+MODULE_DEVICE_TABLE(wmi, lwmi_gz_id_table);
-+MODULE_AUTHOR("Derek J. Clark <derekjohn.clark@gmail.com>");
-+MODULE_DESCRIPTION("Lenovo GameZone WMI Driver");
-+MODULE_LICENSE("GPL");
-diff --git a/drivers/platform/x86/lenovo-wmi-gamezone.h b/drivers/platform/x86/lenovo-wmi-gamezone.h
-new file mode 100644
-index 000000000000..ac536803160b
---- /dev/null
-+++ b/drivers/platform/x86/lenovo-wmi-gamezone.h
-@@ -0,0 +1,18 @@
-+/* SPDX-License-Identifier: GPL-2.0-or-later
-+ *
-+ * Copyright(C) 2025 Derek J. Clark <derekjohn.clark@gmail.com>
-+ *
-+ */
-+
-+#ifndef _LENOVO_WMI_GAMEZONE_H_
-+#define _LENOVO_WMI_GAMEZONE_H_
-+
-+enum thermal_mode {
-+	SMARTFAN_MODE_QUIET = 0x01,
-+	SMARTFAN_MODE_BALANCED = 0x02,
-+	SMARTFAN_MODE_PERFORMANCE = 0x03,
-+	SMARTFAN_MODE_EXTREME = 0xE0, /* Ver 6+ */
-+	SMARTFAN_MODE_CUSTOM = 0xFF,
-+};
-+
-+#endif /* !_LENOVO_WMI_GAMEZONE_H_ */
--- 
-2.49.0
-
+On Mon, 17 Mar 2025 at 15:08, Peter F. Patel-Schneider
+<pfpschneider@gmail.com> wrote:
+>
+> On 3/16/25 4:41 AM, Hans de Goede wrote:
+> > Hi Ga=C5=A1per,
+> >
+> > On 14-Mar-25 12:35 PM, Ga=C5=A1per Nemgar wrote:
+> >> Thanks for the feedback,
+> >>
+> >> I will go over your notes here and explain things.
+> >> The Eye button on windows triggeres "Eye Care mode" https://download.l=
+enovo.com/consumer/mobiles_pub/yoga_9i_2-in-1_14_9_ug_en.pdf#page=3D50 <htt=
+ps://download.lenovo.com/consumer/mobiles_pub/yoga_9i_2-in-1_14_9_ug_en.pdf=
+#page=3D50>,  does linux have a keycode as something like this, i didn't fo=
+und any, should we jus assign it to one of the programmable keys?
+> >
+> > Yes that sounds like the best solution.
+> >
+> >> I will handle the performance as you have suggested, thanks
+> >
+> > You're welcome.
+> >
+> >> The shift + prtSc i have made a mistake here, i meant the Fn + prtSc.
+> >> Just PrtSc is handled by a different device ("AT Translated Set 2 keyb=
+oard") and is not managed by this module. evtest told me it sends SysRq cod=
+e which is intended and it triggers the selective screenshot.
+> >
+> > Right, e.g. GNOME does not really differentiate between sysrq/printscre=
+en
+> > and KEY_SELECTIVE_SCREENSHOT and always uses the dialog instead of maki=
+ng
+> > printscreen directly take a full screen screenshot. Still making this
+> > the Fn + printscreen comboe send KEY_SELECTIVE_SCREENSHOT is the right =
+thing
+> > todo and is also done on other laptop models with the same icon.
+> >
+> >> If I assign the Fn + PrtSc to KEY_SELECTIVE_SCREENSHOT the evtest show=
+s
+> > me it triggers code 634 and code name is "?". Is this correct behaviour=
+?
+> >
+> > This just means that your evtest is a bit old and does not know about
+> > KEY_SELECTIVE_SCREENSHOT yet.
+> >
+> > Regards,
+> >
+> > Hans
+>
+> I have this laptop and did some digging to find out which keys use WMI, h=
+ow
+> they are described by Lenovo, what they do now, and a suggestion for what=
+ to
+> do with them if different.  I think that this is a comprehensive list.
+> The descriptions are from the User Guide Yoga 9i 2-in-1 (14=E2=80=B3, 9) =
+from Lenovo.
+>
+> Key: Microphone Mute (Fn+F4)
+> WMI Code: 0x3e
+> Described as: p43 Enables/Disables the microphone.
+> Status: Already handled in ideapad_laptop
+> Key: KEY_MICMUTE 248
+>
+> Key: Airplane Mode (Fn+F8)
+> WMI Code: 0x3f
+> Described as: p43 Enables/Disables airplane mode
+> Status: Already handled in ideapad_laptop
+> Key: KEY_RFKILL 247
+>
+> Key: Star with S inside (right of F12)
+> WMI code: 0x1
+> Described as: p27&43 Displays the Lenovo Smart Key quick launch panel.
+> Status: Already handled in ideapad_laptop
+> Key: KEY_FAVORITES 0x16c
+>
+> Key: Snip (Fn+PrtSrc)
+> WMI Code: 0x2d
+> Described as: p43 Opens the Snipping tool.
+> Status: Proposed patch uses KEY_PROG3.
+> Suggestion: KEY_CUT 137
+> Note: If the snipping tool does a selective screenshot then the
+> KEY_SELECTIVE_SCREENSHOT would be better.
+>
+> Key: Performance Meter (just below Delete)
+> WMI Code: 0x3d
+> Described as: p44 Switches the computer=E2=80=99s active operation mode.
+> Suggestion: KEY_PROG4 203
+> Rationale: There already is a mapping from a thermal management button to
+> KEY_PROG4 in ideapad_laptop.
+> Note: I think that it is better to not hardwire keys.
+>
+> Key: Speaker with gear (just below Perf key)
+> WMI Code: 0x12
+> Described as: p44 Switches the computer=E2=80=99s active audio mode.
+> Status: Already handled in indeapad_laptop
+> Key: KEY_PROG2 149
+>
+> Key: Eye (just below Speaker with gear key)
+> WMI code: 0x45
+> Desribed as: p44 Turns on/off the Eye Care mode.
+> Status:  Proposed patch uses KEY_DISPLAYTOGGLE.
+> Suggestion: KEY_BRIGHTNESS_CYCLE 243
+> Rationale: This KEY_DISPLAYTOGGLE appears to be for switching screens, no=
+t
+> adjusting brightness/color.
+>
+> Key: Star (just below Eye key)
+> WMI code: 0x44
+> Described as: p44 Opens a custom (user-defined) app.
+> Status: In proposed patch
+> Key: KEY_PROG1 148
+>
+> Key: Fn+Esc
+> WMI code: 0x2 or 0x3
+> Described as: p20 Switch F<n> hotkey behaviour.
+> Status: Explicitly ignored in ideapad_laptop, as the switching is done in=
+ the
+> device
+>
+> Key: Fn+spce
+> Described as: p43 Adjusts the keyboard backlight. (Done in device.)
+> WMI code: 0x41
+> Status: The code is not mentioned in ideadpad_laptop. The backlight is
+> adjusted by the device.
+> Suggestion:  Document with an explicit ignore.
+>
+> Key: Fn+M
+> Described as: p21 Enable/disable the touchpad.
+> WMI code: 0x29
+> Suggestion: KEY_TOUCHPAD_TOGGLE 0x212
+>
+> Key: Fn+N
+> Described as: p21 Shows device information.
+> WMI code: 0x2a
+> Suggestion: KEY_ROOT_MENU 0x26a
+> Note: There doesn't seem to be a really good match for this.
+>
+> Key: Fn+Q
+> Described as: p21&32 Switch among different performance modes.
+> WMI code: 0x3d
+> Suggestion: KEY_PROG4 203
+> Rationale: Same as Perf key
+>
+> Key: Fn+R
+> Described as: p21&32 Change the display refresh rate.
+> WMI code: 0x10
+> Status: Already in ideapad_laptop.
+> Key: KEY_REFRESH_RATE_TOGGLE 0x232
+>
+> peter
+>
+>
+> >
+> >
+> >> On Fri, 14 Mar 2025 at 10:34, Hans de Goede <hdegoede@redhat.com <mail=
+to:hdegoede@redhat.com>> wrote:
+> >>
+> >>      Hi Ga=C5=A1per,
+> >>
+> >>      Thank you for your patch.
+> >>
+> >>      First if all a few generic notes:
+> >>
+> >>      1. When sending out v2 of the patch please add
+> >>         platform-driver-x86@vger.kernel.org <mailto:platform-driver-x8=
+6@vger.kernel.org> to the Cc
+> >>
+> >>      2. The patch subject (first line of commit message) should have
+> >>         a prefix describing the subsystem + driver, e.g. use:
+> >>         "platform/x86: ideapad-laptop: Add a few new keymap entries"
+> >>
+> >>      3. Your patch is missing a signed-off-by, see:
+> >>      https://www.kernel.org/doc/html/latest/process/submitting-patches=
+.html#sign-your-work-the-developer-s-certificate-of-origin <https://www.ker=
+nel.org/doc/html/latest/process/submitting-patches.html#sign-your-work-the-=
+developer-s-certificate-of-origin>
+> >>
+> >>      4. Your commit message / patch should also have a body, e.g.
+> >>         the entirety of the commit message could look something like t=
+his:
+> >>
+> >>      -- begin --
+> >>      platform/x86: ideapad-laptop: Add a few new keymap entries
+> >>
+> >>      The Yoga 9 2 in 1 14imh9 introduces 4 new hotkeys which are not
+> >>      yet in ideapad_keymap[], add entries to map these keys.
+> >>
+> >>      Signed-off-by: Ga=C5=A1per Nemgar <your-email-here>
+> >>      -- end --
+> >>
+> >>      A few more specific remarks below based on looking at
+> >>      this picture of the keyboard:
+> >>
+> >>      https://ardes.bg/uploads/original/lenovo-yoga-9-2-in-1-14-g9-5501=
+78.jpg <https://ardes.bg/uploads/original/lenovo-yoga-9-2-in-1-14-g9-550178=
+.jpg>
+> >>
+> >>      On 13-Mar-25 4:17 PM, Ga=C5=A1per Nemgar wrote:
+> >>      > diff --git a/drivers/platform/x86/ideapad-laptop.c b/drivers/pl=
+atform/x86/ideapad-laptop.c
+> >>      > index 30bd366d7..af124aafe 100644
+> >>      > --- a/drivers/platform/x86/ideapad-laptop.c
+> >>      > +++ b/drivers/platform/x86/ideapad-laptop.c
+> >>      > @@ -1308,6 +1308,14 @@ static const struct key_entry ideapad_ke=
+ymap[] =3D {
+> >>      >       /* Specific to some newer models */
+> >>      >       { KE_KEY,       0x3e | IDEAPAD_WMI_KEY, { KEY_MICMUTE } }=
+,
+> >>      >       { KE_KEY,       0x3f | IDEAPAD_WMI_KEY, { KEY_RFKILL } },
+> >>      > +     /*Star- (User Asignable Key)*/
+> >>      > +     { KE_KEY,       0x44 | IDEAPAD_WMI_KEY, { KEY_PROG1 } },
+> >>
+> >>      Ack.
+> >>
+> >>      > +     /*Eye*/
+> >>      > +     { KE_KEY,       0x45 | IDEAPAD_WMI_KEY, { KEY_DISPLAYTOGG=
+LE } },
+> >>
+> >>      It looks like the laptop already does display-toggle as Fn-F7 alt=
+hough
+> >>      it like sends super + P for this (AKA meta + P).
+> >>
+> >>      So mapping this to KEY_DISPLAYTOGGLE seems wrong, what does this
+> >>      do under Windows?
+> >>
+> >>      Maybe KEY_ZOOM ?
+> >>
+> >>      > +     /*Performance*/
+> >>      > +     { KE_KEY,       0x3d | IDEAPAD_WMI_KEY, { KEY_SPORT } },
+> >>
+> >>      I think that instead of mapping this it should be handled special=
+ly
+> >>      and call platform_profile_cycle() instead of sending a key-press
+> >>      to userspace
+> >>
+> >>      > +     /*shift + prtsc*/
+> >>      > +     { KE_KEY,       0x2d | IDEAPAD_WMI_KEY, { KEY_PROG3 } },
+> >>
+> >>      Looking a the symbol on the keyboard this should send
+> >>      KEY_SELECTIVE_SCREENSHOT
+> >>
+> >>      >
+> >>      >       { KE_END },
+> >>      >  };
+> >>      >
+> >>
+> >>      Regards,
+> >>
+> >>      Hans
+> >>
+> >>
+> >
+> >
+>
