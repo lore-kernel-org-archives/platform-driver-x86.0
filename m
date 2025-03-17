@@ -1,70 +1,65 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qk1-f174.google.com (mail-qk1-f174.google.com [209.85.222.174])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2360978F43
-	for <platform-driver-x86@vger.kernel.org>; Mon, 17 Mar 2025 14:04:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C59C8238145;
+	Mon, 17 Mar 2025 14:08:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742220244; cv=none; b=ZNQ8cskJ7TXc4v3as8a46YlHQUIKaoWUJKx7t7/7KWpMK0hf94B1RQRl0feogIcTxi+qTpqbFBD9dFRu5q2LB/gz7xFDjSAZyW8W/6RF61PVnUsGXdtiyOb5dKFeLPIS2nQ0DHYj8V2WqrJAbjIl0UeGNbpnz2sxb85jah7FfqA=
+	t=1742220516; cv=none; b=AT2ZyRl4nsNHWZdieR6lHRiiZnGHo/oZVttuSN3eKgFJQ8j2MO+VGOJssYZGAP3+AqcuSGUqqbsg2dGstG2T9WNhhD8UUYmPYb89G5cpyFwMgdD6c60xjiK/z6ZQcFbwafexYaYWPLbnetVxbCf6BgeF/CkzGehIpUrNkNPe5ek=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742220244; c=relaxed/simple;
-	bh=iBF0gJlnP188yvkLa6tZpOjI1ZaFED9P9+keeH/VW0I=;
+	s=arc-20240116; t=1742220516; c=relaxed/simple;
+	bh=Np5uytKyQZ21ba3CZhWmHX/Emp8BKXuWxxwD9ZvNZz8=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=WWoing2l6eN6F0/mx9rNGWoMnQSYqSfP6g0sjcvZMkei5b9QIvoLT0XIatqfwJF9JeVE/zciR60k4zy8bZGR7J2FO5zvPskf4Af2u1wu0Rqfce4hoiC3N6o5dNEWxCCtgIpfQtMTy4ZC0JKz2r09sA2TTWx2cqo4jksYAaevMvs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=MOYR3PFI; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	 In-Reply-To:Content-Type; b=gkrCaC3z/0hlNY+YJzFCgfTQUtWczzI3YOhje6r7bbMerCmfOHHngXL8YpSH4NKpPRpAiuiWBLQsxND3chyJ4VMqK5b0g7C6X2vFRfbPTjUV3mnuz7MHIbiRlawGC8G7ZveE6LJnWw7U52tpfm20ScEuLPCqnhFZFu//AXR0MO0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Vl2j3HhO; arc=none smtp.client-ip=209.85.222.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="MOYR3PFI"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1742220241;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=219eUn+jdPFzVfDH/DzPCIrl9FP/mjzb8qSFJuWYfr8=;
-	b=MOYR3PFIdnGQpsz7o06+6o9i6OE1AoNyiICYIQWi031vsxeeNwDogJi1zJ8n+rJkaQApTf
-	bwwzcOOPMCaHUK7zMWOHLuYuVd6q2z5efQVbeDeHZ8f6VV9WJb9t50MiXFQFeZU26PhyJj
-	WBLbmOx0yT0a1oaVwCsF9bDErqVPT4Q=
-Received: from mail-ej1-f70.google.com (mail-ej1-f70.google.com
- [209.85.218.70]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-626-Spj6vqsMNeWxzknqnuY8gQ-1; Mon, 17 Mar 2025 10:04:00 -0400
-X-MC-Unique: Spj6vqsMNeWxzknqnuY8gQ-1
-X-Mimecast-MFC-AGG-ID: Spj6vqsMNeWxzknqnuY8gQ_1742220239
-Received: by mail-ej1-f70.google.com with SMTP id a640c23a62f3a-ac287f284f8so320457566b.0
-        for <platform-driver-x86@vger.kernel.org>; Mon, 17 Mar 2025 07:04:00 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Vl2j3HhO"
+Received: by mail-qk1-f174.google.com with SMTP id af79cd13be357-7c54c52d8easo600826085a.0;
+        Mon, 17 Mar 2025 07:08:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1742220513; x=1742825313; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=Q96W2jfHCK5Qr5KiWedCs8F/77XCrh3uMVyQi4bZggo=;
+        b=Vl2j3HhO3wmADHEDQGKKxdCnouyJAsXAasIUBmhB2bLgI9BUUZ91ttDugn0pS452W8
+         zKtFhHXidCQ7jqP3vkJJV0a81hM4iAitdMFI8/XBVc37zEZsnPGeMNUp+p9xLHj19lgK
+         YRVV8EgBYyW+Rb5ykGAMtku1OOrKCaW2jIZTwqZ+sTa3fruhvkS6Ef16rODQ0/vg+Lra
+         /3amCK5i/AoWL2HRWIlIc6fiY1ISvd/ENNLl2ADKVixXMMVOK2MrNFHcpFZ4hZ1mMWUJ
+         RYqEYtWOrpxmXJWwHI/TtzrA0G5d3Dv8zQfJYIsKyfMOe2JAPqEMEZ4WmW8tfOMPB9DY
+         z7vQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1742220239; x=1742825039;
+        d=1e100.net; s=20230601; t=1742220513; x=1742825313;
         h=content-transfer-encoding:in-reply-to:from:content-language
          :references:cc:to:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=219eUn+jdPFzVfDH/DzPCIrl9FP/mjzb8qSFJuWYfr8=;
-        b=Br5NjmcYiEHWtSXRFhb3eWwGDwgXL99HgvmiOZQmMJTbpcTIXtSvnY2GyBkJmcnMzr
-         AkyoxrN5ve1Fm+9+SXmB7ANTgeyZ9KRvCtaPjApzNZ4ZfoKW5iFCZMAp24I/1HoY4fWn
-         jx4i3u+Kgcf6guwGn1z8xZb9VTmuMlJusG84/dvRCw5mTwzjYkRfrMVqWffdmVCwQpXF
-         NTyN9leKglyDVqxnh5ehC3o5dIQ6jOa9g3fBTb59q1We0G7qjitRxzdEEIpYXh8wfqIf
-         WnTj1QRmtHGzKZCTQkiypel622mZlHTTRkKh/PS+zM6sEHAehgyj4+FLoi9ZyKXnq/TK
-         YOqQ==
-X-Gm-Message-State: AOJu0YxPU+yN4EfN10kHbQZZClhS+kNHycD0M+G5dfbSIMkeL2/Xb4mX
-	KC+RKivfXjUzjR+UEUyln/QHtA/VM+RbCoYem0vtB1IxTVoW4V1rSgxckdGDng9FLWyUwiFfzg+
-	G/RRneVBxEVVHtn1wrCnuEa9lNrBNGqVsnGg/EU7ugb6pJ/rs8p8UU89QfZK0BFxyX8MIqA4=
-X-Gm-Gg: ASbGnctbwC39MhFHSmJAb7I6kyMLnluEqUR5JVw1oL0+MJrg5uh6TjB0LC+yq7iJfvo
-	ElU2B4lRW5ml/1pF3qHWeSN0bRMgK03LO3bdeT3kVyEWu/l/QsCEb22XFGp8H7wjLRG8IzLF03B
-	Iv7mrCo6qJzGbsUV0lUA7QHt416i17pcWjygJjdsp3iML5FoGv5+Fhup4JJZ4Cvb6VgLVymMM3L
-	ndQG9rpwG1tM71STvgsRbITOZSSbDDXANY0ghUN2xBQVNqE99jXohhy51wyFr8hA0SXMg2HqaDe
-	2EUm9QCKQOVTJh8zhIk=
-X-Received: by 2002:a17:907:2d11:b0:ac3:5d65:1a51 with SMTP id a640c23a62f3a-ac35d652194mr612734166b.51.1742220238795;
-        Mon, 17 Mar 2025 07:03:58 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IFVQzV/ejrIoUV6KC1aN0EHkZFXEcDCo3O9h3d+ggUaCT5M+U2JvVwpN2tUakc2NOqiW5ihEg==
-X-Received: by 2002:a17:907:2d11:b0:ac3:5d65:1a51 with SMTP id a640c23a62f3a-ac35d652194mr612726466b.51.1742220238243;
-        Mon, 17 Mar 2025 07:03:58 -0700 (PDT)
-Received: from [10.40.98.122] ([78.108.130.194])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ac3149d0df9sm682160066b.99.2025.03.17.07.03.57
+        bh=Q96W2jfHCK5Qr5KiWedCs8F/77XCrh3uMVyQi4bZggo=;
+        b=myc77ZfiMBXvtfZnHsfLcPYhWKR00QlJYbDrJzTLjW04FlGW/8xb5dymlOEjXi5G2m
+         Zr3P7u2i1PYcD3JzuGjMrj6N0zzleTvdybyWFQyXtynNhHMgbkTrZQajlGVMuJX3hfP7
+         5iR3n3qQABhSDYE0PfpH36IZVmzH8AsSzn60r99Ownm0CXEOFzeZK0+Su+FDT+oSi2qi
+         Fj11tC+Xzd4zpDlDKphpX70U74nPUAQz+kHcm5vynpah4jP03bt05VGzXOR+nbC5XWPv
+         7JtZrHI9YiyIu1VpzNqtH0QYZ6Zcq00AG8h8jOSwo29gw5TsJcAA81DiNuKzdKIh5QHy
+         7y4w==
+X-Forwarded-Encrypted: i=1; AJvYcCV0W29Oj2M10/gHKCC/zkhbhzsyvq3IorooTv40k2Uy0PCFAGeqPXmoM3vmkWuAEdEyqlOtIfooxagXAsE=@vger.kernel.org, AJvYcCVQTdMZCApHSAiO/crG9WEgHGdTjEDP84RvJs2OZYrWT50l8Wq+v42vlQx/Yw2/glhEtcaqqLLQkwaUox23n+lG5q3mPw==@vger.kernel.org
+X-Gm-Message-State: AOJu0YzSgBoxK3oTuc2jRqW2TLHqWEEOQybiUVByeIr8ShGVekljCZht
+	bKlx0hlhCp03S7b4HHzf3PQbjWkSUtFWz5KlXogRUqA2vwmv5nvH
+X-Gm-Gg: ASbGncuOgmH5sshwOayYNh58kp0RGi2PqMoOiYYBrE90hlRnNdGYb0pYBcSVXsgba6I
+	7FS6zAPZaxof2T8qwPdmO7YBEIPVmtOuufInvBtaCv60Zh18PI0L8V2dZ4ZLdx+kgDcJHvYpfYt
+	iV5UzasVm3HoH/YrH/kj6IuilR+fMKHjK5M3FizfX1XtfCzaiNQ5iJKzdQiaUP/+cPU0Ga6j11f
+	PmqJc0DgpujCuJWKw2uFPU7/GX5HPRldn9VAkgs29o8s8E8mIEzBXOEXEemN52DzKkjZt1PaaMb
+	CUofs9ufRZPL+z6L0oBdrh/yu0W+OFpLs6qVRZ/oOloILNjUhrBuTzcrfZDRgnUYzerjNM9+nfG
+	MK+E0iQ4nmheGeNDqLoA=
+X-Google-Smtp-Source: AGHT+IGZKgwpoejG3SM+CP6jC9h3f7UhxL82yIvjfLTWcl3249ON9XkMGaVRAxc6qmBLltHqfklCVw==
+X-Received: by 2002:a05:620a:385d:b0:7c5:93d4:766a with SMTP id af79cd13be357-7c593d4766fmr203323385a.3.1742220513472;
+        Mon, 17 Mar 2025 07:08:33 -0700 (PDT)
+Received: from [192.168.1.187] (pool-96-234-60-2.nwrknj.fios.verizon.net. [96.234.60.2])
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-7c573d6fb39sm587699385a.85.2025.03.17.07.08.32
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 17 Mar 2025 07:03:57 -0700 (PDT)
-Message-ID: <1291b9af-28f0-4727-b913-67827c1861c3@redhat.com>
-Date: Mon, 17 Mar 2025 15:03:56 +0100
+        Mon, 17 Mar 2025 07:08:33 -0700 (PDT)
+Message-ID: <b168d04e-0a71-45a5-898f-31555ce306fb@gmail.com>
+Date: Mon, 17 Mar 2025 10:08:32 -0400
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -72,184 +67,239 @@ List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 05/13] power: supply: add inhibit-charge-s0 to
- charge_behaviour
-To: Antheas Kapenekakis <lkml@antheas.dev>
-Cc: platform-driver-x86@vger.kernel.org, linux-hwmon@vger.kernel.org,
- linux-doc@vger.kernel.org, linux-pm@vger.kernel.org,
- Guenter Roeck <linux@roeck-us.net>, Jean Delvare <jdelvare@suse.com>,
- Jonathan Corbet <corbet@lwn.net>,
- Joaquin Ignacio Aramendia <samsagax@gmail.com>,
- Derek J Clark <derekjohn.clark@gmail.com>,
- Kevin Greenberg <kdgreenberg234@protonmail.com>,
- Joshua Tam <csinaction@pm.me>, Parth Menon <parthasarathymenon@gmail.com>,
- Eileen <eileen@one-netbook.com>
-References: <20250311165406.331046-1-lkml@antheas.dev>
- <20250311165406.331046-6-lkml@antheas.dev>
- <b1ac8a33-06ed-482a-b5f6-ca88eb3802a1@redhat.com>
- <CAGwozwGESTw2DJsqr3uAhEymXxH4O5EXDw6O91i8CzCT0=yC1Q@mail.gmail.com>
- <82e27f38-f951-4e6f-babd-81890d590a04@redhat.com>
- <CAGwozwFCOqhyNTZPfq2nmDoAYwzrUGoDGWzvqmJf8zK2_5Hk6A@mail.gmail.com>
-Content-Language: en-US, nl
-From: Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <CAGwozwFCOqhyNTZPfq2nmDoAYwzrUGoDGWzvqmJf8zK2_5Hk6A@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Subject: Re: [PATCH] Fixed ideapad-laptop driver to support Yoga 9 2 in 1
+ 14imh9 unknown keys
+To: Hans de Goede <hdegoede@redhat.com>,
+ =?UTF-8?Q?Ga=C5=A1per_Nemgar?= <gasper.nemgar@gmail.com>
+Cc: ike.pan@canonical.com, linux-kernel@vger.kernel.org,
+ "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>
+References: <20250313151744.34010-1-gasper.nemgar@gmail.com>
+ <4970c2cd-9637-460a-8e85-bc44f7b0a550@redhat.com>
+ <CAKi4K-hFHy4_F+fQghFNNR8cnkojPcE0uXQWsf5+5dbqjXGs0g@mail.gmail.com>
+ <a6c79155-daac-4c2a-9b91-5c8480dc14b1@redhat.com>
+Content-Language: en-CA
+From: "Peter F. Patel-Schneider" <pfpschneider@gmail.com>
+In-Reply-To: <a6c79155-daac-4c2a-9b91-5c8480dc14b1@redhat.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-Hi,
+On 3/16/25 4:41 AM, Hans de Goede wrote:
+> Hi Gašper,
+> 
+> On 14-Mar-25 12:35 PM, Gašper Nemgar wrote:
+>> Thanks for the feedback,
+>>
+>> I will go over your notes here and explain things.
+>> The Eye button on windows triggeres "Eye Care mode" https://download.lenovo.com/consumer/mobiles_pub/yoga_9i_2-in-1_14_9_ug_en.pdf#page=50 <https://download.lenovo.com/consumer/mobiles_pub/yoga_9i_2-in-1_14_9_ug_en.pdf#page=50>,  does linux have a keycode as something like this, i didn't found any, should we jus assign it to one of the programmable keys?
+> 
+> Yes that sounds like the best solution.
+> 
+>> I will handle the performance as you have suggested, thanks
+> 
+> You're welcome.
+> 
+>> The shift + prtSc i have made a mistake here, i meant the Fn + prtSc.
+>> Just PrtSc is handled by a different device ("AT Translated Set 2 keyboard") and is not managed by this module. evtest told me it sends SysRq code which is intended and it triggers the selective screenshot.
+> 
+> Right, e.g. GNOME does not really differentiate between sysrq/printscreen
+> and KEY_SELECTIVE_SCREENSHOT and always uses the dialog instead of making
+> printscreen directly take a full screen screenshot. Still making this
+> the Fn + printscreen comboe send KEY_SELECTIVE_SCREENSHOT is the right thing
+> todo and is also done on other laptop models with the same icon.
+> 
+>> If I assign the Fn + PrtSc to KEY_SELECTIVE_SCREENSHOT the evtest shows
+> me it triggers code 634 and code name is "?". Is this correct behaviour?
+> 
+> This just means that your evtest is a bit old and does not know about
+> KEY_SELECTIVE_SCREENSHOT yet.
+> 
+> Regards,
+> 
+> Hans
 
-On 17-Mar-25 14:50, Antheas Kapenekakis wrote:
-> On Mon, 17 Mar 2025 at 14:31, Hans de Goede <hdegoede@redhat.com> wrote:
+I have this laptop and did some digging to find out which keys use WMI, how 
+they are described by Lenovo, what they do now, and a suggestion for what to 
+do with them if different.  I think that this is a comprehensive list.
+The descriptions are from the User Guide Yoga 9i 2-in-1 (14″, 9) from Lenovo.
+
+Key: Microphone Mute (Fn+F4)
+WMI Code: 0x3e
+Described as: p43 Enables/Disables the microphone.
+Status: Already handled in ideapad_laptop
+Key: KEY_MICMUTE 248
+
+Key: Airplane Mode (Fn+F8)
+WMI Code: 0x3f
+Described as: p43 Enables/Disables airplane mode
+Status: Already handled in ideapad_laptop
+Key: KEY_RFKILL 247
+
+Key: Star with S inside (right of F12)
+WMI code: 0x1
+Described as: p27&43 Displays the Lenovo Smart Key quick launch panel.
+Status: Already handled in ideapad_laptop
+Key: KEY_FAVORITES 0x16c
+
+Key: Snip (Fn+PrtSrc)
+WMI Code: 0x2d
+Described as: p43 Opens the Snipping tool.
+Status: Proposed patch uses KEY_PROG3.
+Suggestion: KEY_CUT 137
+Note: If the snipping tool does a selective screenshot then the 
+KEY_SELECTIVE_SCREENSHOT would be better.
+
+Key: Performance Meter (just below Delete)
+WMI Code: 0x3d
+Described as: p44 Switches the computer’s active operation mode.
+Suggestion: KEY_PROG4 203
+Rationale: There already is a mapping from a thermal management button to 
+KEY_PROG4 in ideapad_laptop.
+Note: I think that it is better to not hardwire keys.
+
+Key: Speaker with gear (just below Perf key)
+WMI Code: 0x12
+Described as: p44 Switches the computer’s active audio mode.
+Status: Already handled in indeapad_laptop
+Key: KEY_PROG2 149
+
+Key: Eye (just below Speaker with gear key)
+WMI code: 0x45
+Desribed as: p44 Turns on/off the Eye Care mode.
+Status:  Proposed patch uses KEY_DISPLAYTOGGLE.
+Suggestion: KEY_BRIGHTNESS_CYCLE 243
+Rationale: This KEY_DISPLAYTOGGLE appears to be for switching screens, not 
+adjusting brightness/color.
+
+Key: Star (just below Eye key)
+WMI code: 0x44
+Described as: p44 Opens a custom (user-defined) app.
+Status: In proposed patch
+Key: KEY_PROG1 148
+
+Key: Fn+Esc
+WMI code: 0x2 or 0x3
+Described as: p20 Switch F<n> hotkey behaviour.
+Status: Explicitly ignored in ideapad_laptop, as the switching is done in the 
+device
+
+Key: Fn+spce
+Described as: p43 Adjusts the keyboard backlight. (Done in device.)
+WMI code: 0x41
+Status: The code is not mentioned in ideadpad_laptop. The backlight is 
+adjusted by the device.
+Suggestion:  Document with an explicit ignore.
+
+Key: Fn+M
+Described as: p21 Enable/disable the touchpad.
+WMI code: 0x29
+Suggestion: KEY_TOUCHPAD_TOGGLE 0x212
+
+Key: Fn+N
+Described as: p21 Shows device information.
+WMI code: 0x2a
+Suggestion: KEY_ROOT_MENU 0x26a
+Note: There doesn't seem to be a really good match for this.
+
+Key: Fn+Q
+Described as: p21&32 Switch among different performance modes.
+WMI code: 0x3d
+Suggestion: KEY_PROG4 203
+Rationale: Same as Perf key
+
+Key: Fn+R
+Described as: p21&32 Change the display refresh rate.
+WMI code: 0x10
+Status: Already in ideapad_laptop.
+Key: KEY_REFRESH_RATE_TOGGLE 0x232
+
+peter
+
+
+> 
+> 
+>> On Fri, 14 Mar 2025 at 10:34, Hans de Goede <hdegoede@redhat.com <mailto:hdegoede@redhat.com>> wrote:
 >>
->> Hi,
+>>      Hi Gašper,
 >>
->> On 17-Mar-25 13:38, Antheas Kapenekakis wrote:
->>> On Mon, 17 Mar 2025 at 13:27, Hans de Goede <hdegoede@redhat.com> wrote:
->>>>
->>>> Hi Antheas,
->>>>
->>>> On 11-Mar-25 17:53, Antheas Kapenekakis wrote:
->>>>> OneXPlayer devices have a charge bypass
->>>>
->>>> The term "charge bypass" is typically used for the case where the
->>>> external charger gets directly connected to the battery cells,
->>>> bypassing the charge-IC inside the device, in making
->>>> the external charger directly responsible for battery/charge
->>>> management.
->>>>
->>>> Yet you name the feature inhibit charge, so I guess it simply
->>>> disables charging of the battery rather then doing an actual
->>>> chaerger-IC bypass ?
->>>>
->>>> Assuming I have this correct, please stop using the term
->>>> charge-bypass as that has a specific (different) meaning.
->>>
->>> Unfortunately, this is how the feature is called in Windows. On both
->>> OneXPlayer and Ayaneo. Manufacturers are centralizing around that
->>> term.
+>>      Thank you for your patch.
 >>
->> Ok, so I just did a quick duckduckgo for this and it looks like
->> you are right.
+>>      First if all a few generic notes:
 >>
->>> Under the hood, it should be bypassing the charger circuitry, but it
->>> is not obvious during use.
+>>      1. When sending out v2 of the patch please add
+>>         platform-driver-x86@vger.kernel.org <mailto:platform-driver-x86@vger.kernel.org> to the Cc
 >>
->> Ack reading up on this it seems the idea is not to connect the external
->> charger directly to the battery to allow fast-charging without
->> the charge-IC inside the device adding heat, which is the traditional
->> bypass mode.
+>>      2. The patch subject (first line of commit message) should have
+>>         a prefix describing the subsystem + driver, e.g. use:
+>>         "platform/x86: ideapad-laptop: Add a few new keymap entries"
 >>
->> Instead the whole battery + charging-IC are cut out of the circuit
->> (so bypassed) and the charger is now directly powering the device
->> without the battery acting as a buffer if the power-draw superseeds
->> what the external charger can deliver.
+>>      3. Your patch is missing a signed-off-by, see:
+>>      https://www.kernel.org/doc/html/latest/process/submitting-patches.html#sign-your-work-the-developer-s-certificate-of-origin <https://www.kernel.org/doc/html/latest/process/submitting-patches.html#sign-your-work-the-developer-s-certificate-of-origin>
 >>
->>> The user behavior mirrors `inhibit-charge`,
->>> as the battery just stops charging, so the endpoint is appropriate.
+>>      4. Your commit message / patch should also have a body, e.g.
+>>         the entirety of the commit message could look something like this:
 >>
->> Hmm this new bypass mode indeed does seem to mirror inhibit charge
->> from a user pov, but it does more. It reminds me of the battery disconnect
->> option which some charge-ICs have which just puts the battery FET in
->> high impedance mode effectively disconnecting the battery. Now that
->> feature is intended for long term storage of devices with a builtin
->> battery and it typically also immediately powers off the device ...
+>>      -- begin --
+>>      platform/x86: ideapad-laptop: Add a few new keymap entries
 >>
->> Still I wonder if it would make sense to add a new "disconnect"
->> charge_behaviour or charge_types enum value for this ?
+>>      The Yoga 9 2 in 1 14imh9 introduces 4 new hotkeys which are not
+>>      yet in ideapad_keymap[], add entries to map these keys.
+>>
+>>      Signed-off-by: Gašper Nemgar <your-email-here>
+>>      -- end --
+>>
+>>      A few more specific remarks below based on looking at
+>>      this picture of the keyboard:
+>>
+>>      https://ardes.bg/uploads/original/lenovo-yoga-9-2-in-1-14-g9-550178.jpg <https://ardes.bg/uploads/original/lenovo-yoga-9-2-in-1-14-g9-550178.jpg>
+>>
+>>      On 13-Mar-25 4:17 PM, Gašper Nemgar wrote:
+>>      > diff --git a/drivers/platform/x86/ideapad-laptop.c b/drivers/platform/x86/ideapad-laptop.c
+>>      > index 30bd366d7..af124aafe 100644
+>>      > --- a/drivers/platform/x86/ideapad-laptop.c
+>>      > +++ b/drivers/platform/x86/ideapad-laptop.c
+>>      > @@ -1308,6 +1308,14 @@ static const struct key_entry ideapad_keymap[] = {
+>>      >       /* Specific to some newer models */
+>>      >       { KE_KEY,       0x3e | IDEAPAD_WMI_KEY, { KEY_MICMUTE } },
+>>      >       { KE_KEY,       0x3f | IDEAPAD_WMI_KEY, { KEY_RFKILL } },
+>>      > +     /*Star- (User Asignable Key)*/
+>>      > +     { KE_KEY,       0x44 | IDEAPAD_WMI_KEY, { KEY_PROG1 } },
+>>
+>>      Ack.
+>>
+>>      > +     /*Eye*/
+>>      > +     { KE_KEY,       0x45 | IDEAPAD_WMI_KEY, { KEY_DISPLAYTOGGLE } },
+>>
+>>      It looks like the laptop already does display-toggle as Fn-F7 although
+>>      it like sends super + P for this (AKA meta + P).
+>>
+>>      So mapping this to KEY_DISPLAYTOGGLE seems wrong, what does this
+>>      do under Windows?
+>>
+>>      Maybe KEY_ZOOM ?
+>>
+>>      > +     /*Performance*/
+>>      > +     { KE_KEY,       0x3d | IDEAPAD_WMI_KEY, { KEY_SPORT } },
+>>
+>>      I think that instead of mapping this it should be handled specially
+>>      and call platform_profile_cycle() instead of sending a key-press
+>>      to userspace
+>>
+>>      > +     /*shift + prtsc*/
+>>      > +     { KE_KEY,       0x2d | IDEAPAD_WMI_KEY, { KEY_PROG3 } },
+>>
+>>      Looking a the symbol on the keyboard this should send
+>>      KEY_SELECTIVE_SCREENSHOT
+>>
+>>      >
+>>      >       { KE_END },
+>>      >  };
+>>      >
+>>
+>>      Regards,
+>>
+>>      Hans
+>>
 >>
 > 
-> The battery is not disconnected. It still provides backup. Unplugging
-> the charger does not turn off the device. So it is more murky.
 > 
-> From a userspace perspective it is inhibit-charge 1-1.
-
-Ok, lets go with inhibit then.
-
->> <snip>
->>
->>>>> diff --git a/Documentation/ABI/testing/sysfs-class-power b/Documentation/ABI/testing/sysfs-class-power
->>>>> index 2a5c1a09a28f..4a187ca11f92 100644
->>>>> --- a/Documentation/ABI/testing/sysfs-class-power
->>>>> +++ b/Documentation/ABI/testing/sysfs-class-power
->>>>> @@ -508,11 +508,12 @@ Description:
->>>>>               Access: Read, Write
->>>>>
->>>>>               Valid values:
->>>>> -                     ================ ====================================
->>>>> -                     auto:            Charge normally, respect thresholds
->>>>> -                     inhibit-charge:  Do not charge while AC is attached
->>>>> -                     force-discharge: Force discharge while AC is attached
->>>>> -                     ================ ====================================
->>>>> +                     ================== =====================================
->>>>> +                     auto:              Charge normally, respect thresholds
->>>>> +                     inhibit-charge:    Do not charge while AC is attached
->>>>> +                     inhibit-charge-s0: same as inhibit-charge but only in S0
->>>>
->>>> Only in S0 suggests that charging gets disabled when the device is on / in-use,
->>>> I guess this is intended to avoid generating extra heat while the device is on?
->>>>
->>>> What about when the device is suspended, should the battery charge then ?
->>>>
->>>> On x86 we've 2 sorts of suspends S3, and the current name suggests that the
->>>> device will charge (no inhibit) then. But modern hw almost always uses
->>>> s0i3 / suspend to idle suspend and the name suggests charging would then
->>>> still be inhibited?
->>>>
->>>> Also s0 is an ACPI specific term, so basically 2 remarks here:
->>>>
->>>> 1. The name should probably be "inhibit-charge-when-on" since the power_supply
->>>>    calls is platform agnositic and "S0" is not.
->>>
->>> I tried to be minimal. If we want to make the name longer, I vote for
->>> "inhibit-charge-awake". I can spin a v5 with that.
->>>
->>> The device does not charge while asleep. Only when it is off.
->>
->> Is suspend awake though ?
-> 
-> Sorry I mispoke. When inhibit-charge-awake, the device only charges
-> while in s0i0. When inhibit-charge, it never charges. This includes
-> s0i3, S4, and S5. The devices that support this only support modern
-> standby.
-> 
-> I just verified this.
-
-Ok that sounds good / sane, it likely just disables charging while in s0i0
-to avoid generating extra heat while in s0i0, so inhibit-charge-awake sounds
-good to me.
-
-
-> 
->>>> 2. We need to clearly define what happens when the device is suspended and then
->>>>    make sure that the driver matches this (e.g. if we want to *not* inhibit during
->>>>    suspend we may need to turn this feature off during suspend).
->>>
->>> This is handled by the device when it comes to OneXPlayer. No driver
->>> changes are needed.
->>
->> Well you say no charging is done when suspended, the question also is what
->> behavior do we want here?  I'm fine with the default behaviour, but a case
->> could be made that charging while suspended might be desirable (dependent on
->> the use case) in which case we would need to disable the inhibit when
->> suspending to get the desired behavior.
->>
->> Also what if other firmware interfaces with a bypass^W inhibit option work
->> differently and do charge during suspend ?
->>
->> It is important that we clearly define the expected behavior now so that
->> future devices can be made to behave the same.
-> 
-> Sorry I mispoke. Charging happens under modern standby under -awake.
-> 
-> So -awake would mean awake (s0i0) here.
-> 
-> If other devices charge during sleep and awake, another option could be added.
-
-ack, as mentioned above inhibit-charge-awake sounds good to me,
-thank you for clarifying.
-
-Regards,
-
-Hans
-
 
