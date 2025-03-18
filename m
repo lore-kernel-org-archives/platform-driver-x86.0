@@ -1,1008 +1,434 @@
-Received: from NAM12-MW2-obe.outbound.protection.outlook.com (mail-mw2nam12on2066.outbound.protection.outlook.com [40.107.244.66])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9605D4A0F;
-	Tue, 18 Mar 2025 03:47:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.244.66
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742269668; cv=fail; b=e/n84U0MrRPVrLg2uSrYSQE3Q3rCWo3hXJN/a2/9uRJJ8gOlTN5ONF76Oo0U4UxumxTK/BCbbVZYdgv0z0J816mXTtHWFiwcS28hLI/P7iozN8pOxYdqApWvT11eTZQ3ha54Lcv2LwS5rmxvHBXqsGsSVELdl2Hl8/Z0TMx8OEw=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742269668; c=relaxed/simple;
-	bh=lJiKcRbNRzpZcz/Fj/EbD52J+z0Hk5G9/9AS+box9Es=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=TNLaXAXKcc+4xZxsLIT5zG/pC7Yu2ErKAiZoWdP/Kkbp+5fmCt7MjzAS+syNy5Piu75iHQKGUjtLRFNj/NzjZMbXCDl12MSCZmLV1E6h8VjrJU4VNUU8x8+7Py+ygPN2AkBqd8ZqXOxmZ6E1cGxbnMQrmPk/G7MbpwV3fuOc6YY=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=nth12hSN; arc=fail smtp.client-ip=40.107.244.66
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6BA8F3FC3;
+	Tue, 18 Mar 2025 04:24:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1742271887; cv=none; b=gZVmqzjTyVAPSLNsssTfBCnCfX8fuYqUzVGsCFQm3AnFUNtX7w9PGsRgB2TJoiHIMkyP19iVhQXWX6uSfpaTswDNKWCfiigkWFyJBu2pC7Mtc+efRRZ8B914u6uUzjuvkRTqVTmP9nKLm03qJtwszrZQ0biVggnKJOUGuGYE0ac=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1742271887; c=relaxed/simple;
+	bh=4pS1hkPq5ZS5kgwrfqk33CaIxXaiXOIDvoKUlkP8oqw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=b3SPq/7MV87RSJpnaY+iUVcUDVOUy6e6QO+umL9bzWYNGkQmr0IZWA+b95bhhAPFfanPEQTe1/6ueIizohaRL0BCKm/zGiZgo+DBQP7lYYkJkQ2IiK5O3gKqa4ajwlqn8BObwyOUJW78y3qWikOlz3VP8x4qW1kTtXmqo4W0MyY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KfhJ2/qP; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="nth12hSN"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=cqECAGxaVuKVKCtv6rluaWBLp6OyikQgDHc4EfpsjGDBD9XCVEymVjCHhHQYEdMY//ESdWgi08dOyVR7h6tgs81j6yNPfn3web2IvvGLMwI5INUYsMG+Ge519IZlrakQTVd1qTMzknGi8sGr/EfvKEGW04bEnQOsrYi3ozcLoHi2e7GsAMSKQa+2YJtHBtFikGy9C0hfBC/9sCs8FdklBypfbQcM0SMhPFFvnxtWl7Q/oXS6jUBjw+iaxOrjIwEaI1gih2mkY/kJ5twl7mpuWEmhvcQv/t/RdxXN7iue5K1LaVzk+mIhE1+oIc+YBQzMf2knGXCJ093SJar06j30KA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=/pv2nGEpvJP2WV8BoWFD2WbLP3TaLGsdfSlqoy7OirQ=;
- b=CKRxMvOLII9Hq6cX2pxyMke3HYHxIsSuN6wvnLUBqm6SdS2aIxhrPKVIvuTp+zlPYSE1+/KejXaRwdt5ksnEj7HMwRDPqA4smlmRMwGtaTvcP60t7hxSv5R8w7F2+AvC6cGVcC56douQtF5ov2LUA9cWEQKxodAyX/EpE9CYk9HBeH2EhZ6P077LuUnN5ALjY8bQ2Z+vo+fsYI1B5HiQdbOzUOHna1uhfves+47gsYvYrcd/QvsSU5X6qKTAmxh3AVNubDCa2s51iD6fTEiBLLuA32C34R7pNTyFlG0euf05rS6O3pkQXevMy37VmeSJ4fu1nD5wBj36OYOTieyaIQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=/pv2nGEpvJP2WV8BoWFD2WbLP3TaLGsdfSlqoy7OirQ=;
- b=nth12hSNHhZ758ZH7M4WEvW7P/S7R4Zvx5rcc17V1fRd1+wXd7kkoClKo6ont0hOdzeqRGSUqKiAgxLycm0bDoiCMIokthSN97MwjJUINj+Hh5AYbkmHWje5tgEJ+28vbPuwvURimpNwjnvfpj95vWhXhEzM2eqGb2L5HuQEt8s=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from MN0PR12MB6101.namprd12.prod.outlook.com (2603:10b6:208:3cb::10)
- by CY3PR12MB9680.namprd12.prod.outlook.com (2603:10b6:930:100::10) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8534.33; Tue, 18 Mar
- 2025 03:47:43 +0000
-Received: from MN0PR12MB6101.namprd12.prod.outlook.com
- ([fe80::37ee:a763:6d04:81ca]) by MN0PR12MB6101.namprd12.prod.outlook.com
- ([fe80::37ee:a763:6d04:81ca%4]) with mapi id 15.20.8534.031; Tue, 18 Mar 2025
- 03:47:43 +0000
-Message-ID: <1cf0ffc7-5146-451b-ac79-3acba7edb1cd@amd.com>
-Date: Mon, 17 Mar 2025 22:47:42 -0500
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v7 2/8] platform/x86: asus-armoury: move existing tunings
- to asus-armoury module
-To: Luke Jones <luke@ljones.dev>, linux-kernel@vger.kernel.org
-Cc: hdegoede@redhat.com, ilpo.jarvinen@linux.intel.com,
- platform-driver-x86@vger.kernel.org
-References: <20250316230724.100165-1-luke@ljones.dev>
- <20250316230724.100165-3-luke@ljones.dev>
-Content-Language: en-US
-From: Mario Limonciello <mario.limonciello@amd.com>
-In-Reply-To: <20250316230724.100165-3-luke@ljones.dev>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: SN1PR12CA0073.namprd12.prod.outlook.com
- (2603:10b6:802:20::44) To MN0PR12MB6101.namprd12.prod.outlook.com
- (2603:10b6:208:3cb::10)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KfhJ2/qP"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4A058C4CEEA;
+	Tue, 18 Mar 2025 04:24:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1742271886;
+	bh=4pS1hkPq5ZS5kgwrfqk33CaIxXaiXOIDvoKUlkP8oqw=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=KfhJ2/qPApmR9k/Y5+0L3Wol8YGb+81AcLTnu1wz1zLMfFwUFmiIYmK1pEDwwWelU
+	 /eMpvzRe6zcotKwmCqgH7XjPHExy3HPiO6yTnYe+Mhj5qNFSnF9v3btwUzeyJEk9UX
+	 EzSK0JUUxQImII1AcOsrM42UJY0/LxpKc4J9Of9yq63WT99BjnxokTnNH1FuA6ByS9
+	 eLXWnxJjoexCavkqTnkJoFpqnUJ0ClFVyj8MH5oIN7lxeUalBDfZz1Y3s04LnNjxGh
+	 3rydysPmOBx34FXAGdxZ1+FrEQZBazQhOJV2ZeJ71fgawRniY1eFMFeh5D6OwXkDUd
+	 YjcXqpv3+Ti2Q==
+Message-ID: <02ab35ee-7a79-4ffb-9e4b-360450457f3a@kernel.org>
+Date: Mon, 17 Mar 2025 23:24:42 -0500
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: MN0PR12MB6101:EE_|CY3PR12MB9680:EE_
-X-MS-Office365-Filtering-Correlation-Id: 5735a367-25ab-4b5f-3f34-08dd65cfa3ba
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|366016|376014|7053199007;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?d3BjM0NSTEJURkpZN0F5Z2M3ZkZsRExZODJmUVdPbktpN1VMTGVBZDBVcThB?=
- =?utf-8?B?VnVMSzVyRnJPM1htditFSzdwSHRXS00vWnhIQ2JXVHNoNERUSWhFaUdFVTQ3?=
- =?utf-8?B?cUFnckJZOFRJM3hRVjNFRUd6OWQ5M2c4VDk2SmxqM1NBNzRPd0kveDBEcTNz?=
- =?utf-8?B?TGF4VVYycjk0VHVPcW5vckdTS0ppQXJWSXNCK1FXSWpOWUJubkcwN2lzTjVq?=
- =?utf-8?B?dS9lRnROVExoaXNhbWFXTzdnTGRGNy92clE0eWgxckdSSCtNK2FMRWx5VDZX?=
- =?utf-8?B?UDJ4azk3cEtycDV2cFlKajd4RmhBUDhLeFNiaEI0VVg4OGtpSjVGdG5zY1hy?=
- =?utf-8?B?UmxIellGcTdlZzF1M2NxamZJOFA5Y3FKVGVVeUVyeDBJR1VZVFBPTVgzcThv?=
- =?utf-8?B?WEVkVDgwQnJTejdJUjhneVRzcFJrM05MS29PMkxheXl1ZlFKNDh5WHo1NlFB?=
- =?utf-8?B?U09DME51TlYyMEsyL3A3TEhHUmFmbkozU3dPY1VzY1ByVXZTSHg5ZU1VNnRo?=
- =?utf-8?B?RHVucGtBOTkycjVMK0QwYWNqYmpWdnFLa0xUZnNFcjI2N0pNNFY2d1JhZ09C?=
- =?utf-8?B?amt5WnhlWDg5a1dEbTVrR0UxaWxQT0t4QWs3cWtQRkJxTFAwMVRXaEMvSXkz?=
- =?utf-8?B?Tk1RTDE3aENiWmVWYUZUM2lFZGNYZ05BQnI3UmtNV2dJQWM2VG1US01qOXFS?=
- =?utf-8?B?ZTM5TTRVYnNGVDE0NXBTRWxkS1dyaTQvVkkrM2pJYjBxUVl2WjYxenVBcHVx?=
- =?utf-8?B?ZE9NNHRqdURvbnZ6UVRDVW5rNGZLT3Q3MkZvYk1teGdydjZpcDVlNkRWejNO?=
- =?utf-8?B?eHp6REdEWEc1RlpIbWJMNWJNaFhUdUI1RS82cFAraVo5MHo3Tmt2MnBXdVlX?=
- =?utf-8?B?SnVOdm5waDJsd3luQmlmMEI4cDU1R3RNek0vTWswKzFpNFR6eDZLNTN4VVJj?=
- =?utf-8?B?TXBpbXJVYjlKemtGVUU0SSs1bzUwVG03RlJhYWJaRk84bmJnODg1U2g3bUc4?=
- =?utf-8?B?OWp5SGFPUWxzZXU0Z2hiMFRYY29UVlQwL1VDM3AralNuSHBzNlRQdGVlVEcx?=
- =?utf-8?B?cFhwNlBXdFdsdldnczdSLytCVTVYbGdTVjVrd2tnbUNQYzNwYW1jMFJsNUd6?=
- =?utf-8?B?elFJd2wwdmRUY3BTVkFKMVkyekQ5M0Z0Rk9TR2ZpOGFjVUV3dXRlTjNaekdL?=
- =?utf-8?B?MGs5UXhXSDBlajZnVzJNRnduUlA5aXhBMlNIN1lOamM4cUR4YVNmcXVFcURO?=
- =?utf-8?B?OFVOZmtXOEdUR3Y2K1JQZTBKTGdkT2FkYi9sRnV1aGtOZ1dsYkZtTmtYSEtB?=
- =?utf-8?B?UWpvQ2kyMkdKMmYxSlh5dTBQcjBXS0ZPMEc2N3N2T01ZMjliem5ub3VqT3J2?=
- =?utf-8?B?RURxREt3eFpVcThFcmN4Y0wxbnp1M0ZCUlJrdnRvTmp1OGx0MkZxMXNFdEtt?=
- =?utf-8?B?WU5rN2l2MlVNTXNKNi9vOU9VaGJMdHc4d01kNFU3a1NwTkpJaS9sbWdBY1B2?=
- =?utf-8?B?WEFKc2N6aFgzbzY5bzNFa1ppRVNwWWZsVFlERjlyVFR1NnZWaTdWRnpNaW5I?=
- =?utf-8?B?VElOdmYzbzRTUDdhVTVuRUV5TlVtWGdpeGRRaDUwTGhZaGtIZ0ZHK3ZieUda?=
- =?utf-8?B?QW1GUk4veThvd3hqTzVmMzY5Zm9RR3hYZ2s1Wm9pK0NNaEpCRGFwb1owMXNY?=
- =?utf-8?B?MVFweDY5MzBTbStHd1cwS0lXVXZ6MVZIQS91ZTl4aHJPZG1DNXdIeG5ITmRI?=
- =?utf-8?B?WUoyWi9MM05tWDZyV3QyMzI0MFc0N0ZzazJ1VUZHdWQ1bmZVSDl1Tjd2NGFY?=
- =?utf-8?B?T3pndVlrQkl2cjIwLysreXBtQTlQbERiWEpCaFlqS0lDdDhFRW10cmNWcHZr?=
- =?utf-8?Q?lH76l4GoDzxNF?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MN0PR12MB6101.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(376014)(7053199007);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?WWVoK2NBenFoekpXYTNlNEJ6SXNuRGFXT0tSbXFjRUVzT0czZWd0dlEwVCtJ?=
- =?utf-8?B?a3hnQ0t4V1N2VjBtL2NWYXRSaS9KUEdYKzRrWTZ2S3ErcEY1YnRwVUx3MHRG?=
- =?utf-8?B?L2FMQ3g2RkFjS3FyYUtBTVhyNVBxZnEzbEM4SFZXeldScVJvU2tsY1lGUllv?=
- =?utf-8?B?TDVIb01heEY0SGpvTGxFZmcweEU4QTRnZ2ZDWlZiTVk1SmpqMGdmQWIvUzRX?=
- =?utf-8?B?a2FoTmJSLzhyMW8rRWtBdG9EaXIwR0c3cDM0RHd3SElCQ296Vjl6ZERsUUtS?=
- =?utf-8?B?eDdFRkxjN0M3b2lIRVdPUjQ2WjBOQnBVOWR2cTR6K1dkTkJGcFpjN3lVSTd2?=
- =?utf-8?B?Sms3Vmc2VFZMSDc4SFcza3NIV3RkYWRmcjBRcEhIdjU0RFc2YjYxMEd3YlBi?=
- =?utf-8?B?QWJKUjVTZjRzRTk2NlhmdFY2dWpveXZHRzVWREFNcmJMUFFDeXZzZUJob0h1?=
- =?utf-8?B?ZEpScTJNeW5aMTVjVXB4ZUtmQmpuVzkrN0x0REsrTFBucWtKeTFqT29Ud2pa?=
- =?utf-8?B?MUkrb1gyYlFNTk1TQXhvYjBhVjZEdFljZnNBK2tVNkdWdGxBSjhDRElGdUtY?=
- =?utf-8?B?N0M4RE5xdWV6dWQxM0VsV0l1SEZWRkZxUk5reGNSZ0pqRWlYMWdiUDNUYUlM?=
- =?utf-8?B?SUdVbG11cUR6RFRRV2paSWNIejhQdGlteHArZzd4RlNYcFh5ZWRiYTBrYS9x?=
- =?utf-8?B?OXRZOUtTMDl4dGlValVFTlBiQURNRjhxa1gxYjF1WHpZRFZNc2tBaXRWYWlD?=
- =?utf-8?B?cXhpWkE5MlpFSGlpQzBMN0xZcDUzVDBvbzE5OUxBZG5SYlk1a0tic1JyV2lE?=
- =?utf-8?B?YllrL2x2c2ZXK0xaVGQ3U3hNSXB2eDdTUWIxR0R5T0ZCaGw2WGcycDk0OGw5?=
- =?utf-8?B?TzBISkpSVENDOGVOVzl0eXdFbkpuZm9BOHltQUJDS3U3Rnc1alU1L2U5bTJR?=
- =?utf-8?B?SGZ5aTBvTS9lVGRkWGRINjJwU3VzalhxaUVaR29panBPL3g3b2FBWkZ0QVlm?=
- =?utf-8?B?YUQvUXN6Z2xld0ppVG9ydTBQWGtuTVFlczhKZGhianBadG9FMDREQ0c3SUVn?=
- =?utf-8?B?OUhBN1M5NUp5WVZDdWcxNXNYYjhlWVdHZU9iaGRMV3lXOFFVT0I0V2ZaSE9J?=
- =?utf-8?B?ZzJjSWtiSmFERWIrUTlJcm8wWU8rTmY4aitTbks5VlpOOUh0SitMeVVzeXZD?=
- =?utf-8?B?cVROeVdianRmc2NlMDlFcVZOcVVCQUIrMDlvN1NiWkl6eEtyRyt1a1hWZ3NU?=
- =?utf-8?B?OU5ZTk1QVy81TlkwQ3QxUGhZSzFoQ3k0UGZmQWtmR2NDd2NtbXFpYzJnZURJ?=
- =?utf-8?B?bVBkckNEOVl2US80eXdkeU80eVZWdWZZV1dya3lGTW5uQVE4eGdTVlJqcHRi?=
- =?utf-8?B?Q0U4K2Q5UnA3RCtOenNqZzQ0bkMrbDZ6aStnT3FnVHYxZ0hvRVRlUWZhU3NQ?=
- =?utf-8?B?RE95UmZzK2ZEcHVyNXVQLzVQd2xvWGc4ZHUyNlpWQnlWR1NpckM1bm81S0k2?=
- =?utf-8?B?ZHQxZFFJUzE2OGlUNXNWanRFMjhMWWV0dkFNUG9EL1ltRUNQcENvUUdBRVQr?=
- =?utf-8?B?Qk5KcEdsWW9aT2lkRXlEYjFYL2U4eGU1blVteEZjY3pqTUdHUndWSlRYc3N4?=
- =?utf-8?B?dEZRUy82cm5JTGpoZ0FVREtHbWg4a204UTVHelA4Y3J2NmRjOFd3UVVpL1ov?=
- =?utf-8?B?alhzOXk1MHVTVnZxZmIzem8yRjd6UmREcVZHSjcvTXdpbzZ3S05zTkxCcFlt?=
- =?utf-8?B?VTRQblU2OXppMXlJU2lOODVXNFpUN280RzlSQmw1T2lLLytzMzlFZHRnYWlB?=
- =?utf-8?B?RjFaLy80ckNSY2dFSllQZkRUSjNxelpXTlRrL3VnLzdkaTJsNFphblQwOEth?=
- =?utf-8?B?b1JTSWRWUThRVWhtNUk5MzMvVThlRis3YUxwTFNlVWtzS1RVMmxrNHhOL2Jp?=
- =?utf-8?B?Z3g2b2lpcTkvNFpsYXhDMW5scXZDc1RyTElFNllGK0pMZU8ySHB6UDBVNVI2?=
- =?utf-8?B?YUo2MEZtT0JNcVVMQlRySXlNV0ZvZGFpWXp3YXZyK1pRUTF6cXVhUzNuVU0v?=
- =?utf-8?B?SmE2b2YxajBoODZpWk03TmYrMDljUGhiVHNOTnIxeEtsbHBYZFFPK1U4VFBT?=
- =?utf-8?Q?OK8gRmopixuYhqyR3UJDqAd5e?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 5735a367-25ab-4b5f-3f34-08dd65cfa3ba
-X-MS-Exchange-CrossTenant-AuthSource: MN0PR12MB6101.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 18 Mar 2025 03:47:43.7822
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: DThl/t+ya+QoYkOm21gaHnNdBYKlC9xoiPqzQJg41wsqL2XxhPC05j/uTset1Q0vB5Sbh3kr6dH1VxWpIA+sNQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY3PR12MB9680
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 1/6 RESEND] platform/x86: Add lenovo-wmi-* driver
+ Documentation
+To: "Derek J. Clark" <derekjohn.clark@gmail.com>,
+ Hans de Goede <hdegoede@redhat.com>,
+ =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Cc: Armin Wolf <W_Armin@gmx.de>, Jonathan Corbet <corbet@lwn.net>,
+ Luke Jones <luke@ljones.dev>, Xino Ni <nijs1@lenovo.com>,
+ Zhixin Zhang <zhangzx36@lenovo.com>, Mia Shao <shaohz1@lenovo.com>,
+ Mark Pearson <mpearson-lenovo@squebb.ca>,
+ "Pierre-Loup A . Griffais" <pgriffais@valvesoftware.com>,
+ "Cody T . -H . Chiu" <codyit@gmail.com>, John Martens <johnfanv2@gmail.com>,
+ platform-driver-x86@vger.kernel.org, linux-doc@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <20250317144326.5850-1-derekjohn.clark@gmail.com>
+ <20250317144326.5850-2-derekjohn.clark@gmail.com>
+Content-Language: en-US
+From: Mario Limonciello <superm1@kernel.org>
+In-Reply-To: <20250317144326.5850-2-derekjohn.clark@gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On 3/16/2025 18:07, Luke Jones wrote:
-> From: "Luke D. Jones" <luke@ljones.dev>
-> 
-> The fw_attributes_class provides a much cleaner interface to all of the
-> attributes introduced to asus-wmi. This patch moves all of these extra
-> attributes over to fw_attributes_class, and shifts the bulk of these
-> definitions to a new kernel module to reduce the clutter of asus-wmi
-> with the intention of deprecating the asus-wmi attributes in future.
-> 
-> The work applies only to WMI methods which don't have a clearly defined
-> place within the sysfs and as a result ended up lumped together in
-> /sys/devices/platform/asus-nb-wmi/ with no standard API.
-> 
-> Where possible the fw attrs now implement defaults, min, max, scalar,
-> choices, etc. As en example dgpu_disable becomes:
-> 
-> /sys/class/firmware-attributes/asus-armoury/attributes/dgpu_disable/
-> ├── current_value
-> ├── display_name
-> ├── possible_values
-> └── type
-> 
-> as do other attributes.
-> 
-> Signed-off-by: Luke D. Jones <luke@ljones.dev>
 
-Very minor comments in line.  You can add this to next version.
+
+On 3/17/25 09:43, Derek J. Clark wrote:
+> Adds documentation for new lenovo-wmi drivers.
+> 
+> Signed-off-by: Derek J. Clark <derekjohn.clark@gmail.com>
 
 Reviewed-by: Mario Limonciello <mario.limonciello@amd.com>
 
 > ---
->   drivers/platform/x86/Kconfig               |  12 +
->   drivers/platform/x86/Makefile              |   1 +
->   drivers/platform/x86/asus-armoury.c        | 545 +++++++++++++++++++++
->   drivers/platform/x86/asus-armoury.h        | 165 +++++++
->   drivers/platform/x86/asus-wmi.c            |   4 -
->   include/linux/platform_data/x86/asus-wmi.h |   3 +
->   6 files changed, 726 insertions(+), 4 deletions(-)
->   create mode 100644 drivers/platform/x86/asus-armoury.c
->   create mode 100644 drivers/platform/x86/asus-armoury.h
+> v4:
+>   - Fixed MOF formatting issues.
+>   - Fixed spelling mistakes.
+>   - Updated description of balanced-performance profile for Gamezone.
+>   - Updated description of thermal mode event GUID for Gamezone.
+> v3:
+> - Split documentation into multiple files, one for each parent
+>    driver for the Gamezone and Other Mode WMI interfaces.
+> - Add MOF data for all parent and child interfaces.
+> - Remove lenovo-wmi-camera.c driver from v2 documentation.
+> v2:
+> - Update description of Custom Profile to include the need to manually
+>    set it.
+> - Remove all references to Legion hardware.
+> - Add section for lenovo-wmi-camera.c driver as it follows the same
+>    naming convention.
+> ---
+>   .../wmi/devices/lenovo-wmi-gamezone.rst       | 203 ++++++++++++++++++
+>   .../wmi/devices/lenovo-wmi-other-method.rst   | 108 ++++++++++
+>   MAINTAINERS                                   |   7 +
+>   3 files changed, 318 insertions(+)
+>   create mode 100644 Documentation/wmi/devices/lenovo-wmi-gamezone.rst
+>   create mode 100644 Documentation/wmi/devices/lenovo-wmi-other-method.rst
 > 
-> diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
-> index 0258dd879d64..294364cc7478 100644
-> --- a/drivers/platform/x86/Kconfig
-> +++ b/drivers/platform/x86/Kconfig
-> @@ -267,6 +267,18 @@ config ASUS_WIRELESS
->   	  If you choose to compile this driver as a module the module will be
->   	  called asus-wireless.
->   
-> +config ASUS_ARMOURY
-> +	tristate "ASUS Armoury driver"
-> +	depends on ASUS_WMI
-> +	select FW_ATTR_CLASS
-> +	help
-> +	  Say Y here if you have a WMI aware Asus machine and would like to use the
-> +	  firmware_attributes API to control various settings typically exposed in
-> +	  the ASUS Armoury Crate application available on Windows.
-> +
-> +	  To compile this driver as a module, choose M here: the module will
-> +	  be called asus-armoury.
-> +
->   config ASUS_WMI
->   	tristate "ASUS WMI Driver"
->   	depends on ACPI_WMI
-> diff --git a/drivers/platform/x86/Makefile b/drivers/platform/x86/Makefile
-> index e1b142947067..fe3e7e7dede8 100644
-> --- a/drivers/platform/x86/Makefile
-> +++ b/drivers/platform/x86/Makefile
-> @@ -32,6 +32,7 @@ obj-$(CONFIG_APPLE_GMUX)	+= apple-gmux.o
->   # ASUS
->   obj-$(CONFIG_ASUS_LAPTOP)	+= asus-laptop.o
->   obj-$(CONFIG_ASUS_WIRELESS)	+= asus-wireless.o
-> +obj-$(CONFIG_ASUS_ARMOURY)	+= asus-armoury.o
->   obj-$(CONFIG_ASUS_WMI)		+= asus-wmi.o
->   obj-$(CONFIG_ASUS_NB_WMI)	+= asus-nb-wmi.o
->   obj-$(CONFIG_ASUS_TF103C_DOCK)	+= asus-tf103c-dock.o
-> diff --git a/drivers/platform/x86/asus-armoury.c b/drivers/platform/x86/asus-armoury.c
+> diff --git a/Documentation/wmi/devices/lenovo-wmi-gamezone.rst b/Documentation/wmi/devices/lenovo-wmi-gamezone.rst
 > new file mode 100644
-> index 000000000000..46102cd0c00d
+> index 000000000000..bde63dde285d
 > --- /dev/null
-> +++ b/drivers/platform/x86/asus-armoury.c
-> @@ -0,0 +1,545 @@
-> +// SPDX-License-Identifier: GPL-2.0-or-later
-> +/*
-> + * Asus Armoury (WMI) attributes driver. This driver uses the fw_attributes
-> + * class to expose the various WMI functions that many gaming and some
-> + * non-gaming ASUS laptops have available.
-> + * These typically don't fit anywhere else in the sysfs such as under LED class,
-> + * hwmon or other, and are set in Windows using the ASUS Armoury Crate tool.
-> + *
-> + * Copyright(C) 2024 Luke Jones <luke@ljones.dev>
-> + */
-> +
-> +#include "linux/cleanup.h"
-
-Shouldn't this be <linux/cleanup.h>?
-
-> +#include <linux/bitfield.h>
-> +#include <linux/device.h>
-> +#include <linux/dmi.h>
-> +#include <linux/errno.h>
-> +#include <linux/fs.h>
-> +#include <linux/kernel.h>
-> +#include <linux/kmod.h>
-> +#include <linux/kobject.h>
-> +#include <linux/module.h>
-> +#include <linux/mutex.h>
-> +#include <linux/platform_data/x86/asus-wmi.h>
-> +#include <linux/types.h>
-> +#include <linux/acpi.h>
-
-Alphabetical order?
-
-> +
-> +#include "asus-armoury.h"
-> +#include "firmware_attributes_class.h"
-> +
-> +#define ASUS_NB_WMI_EVENT_GUID "0B3CBB35-E3C2-45ED-91C2-4C5A6D195D1C"
-> +
-> +#define ASUS_MINI_LED_MODE_MASK   0x03
-> +/* Standard modes for devices with only on/off */
-> +#define ASUS_MINI_LED_OFF         0x00
-> +#define ASUS_MINI_LED_ON          0x01
-> +/* Like "on" but the effect is more vibrant or brighter */
-> +#define ASUS_MINI_LED_STRONG_MODE 0x02
-> +/* New modes for devices with 3 mini-led mode types */
-> +#define ASUS_MINI_LED_2024_WEAK   0x00
-> +#define ASUS_MINI_LED_2024_STRONG 0x01
-> +#define ASUS_MINI_LED_2024_OFF    0x02
-> +
-> +static struct asus_armoury_priv {
-> +	struct device *fw_attr_dev;
-> +	struct kset *fw_attr_kset;
-> +
-> +	u32 mini_led_dev_id;
-> +	u32 gpu_mux_dev_id;
-> +} asus_armoury;
-> +
-> +struct fw_attrs_group {
-> +	bool pending_reboot;
-> +};
-> +
-> +static struct fw_attrs_group fw_attrs = {
-> +	.pending_reboot = false,
-> +};
-> +
-> +struct asus_attr_group {
-> +	const struct attribute_group *attr_group;
-> +	u32 wmi_devid;
-> +};
-> +
-> +static bool asus_wmi_is_present(u32 dev_id)
-> +{
-> +	u32 retval;
-> +	int status;
-> +
-> +	status = asus_wmi_evaluate_method(ASUS_WMI_METHODID_DSTS, dev_id, 0, &retval);
-> +	pr_debug("%s called (0x%08x), retval: 0x%08x\n", __func__, dev_id, retval);
-> +
-> +	return status == 0 && (retval & ASUS_WMI_DSTS_PRESENCE_BIT);
-> +}
-> +
-> +static void asus_set_reboot_and_signal_event(void)
-> +{
-> +	fw_attrs.pending_reboot = true;
-> +	kobject_uevent(&asus_armoury.fw_attr_dev->kobj, KOBJ_CHANGE);
-> +}
-> +
-> +static ssize_t pending_reboot_show(struct kobject *kobj, struct kobj_attribute *attr, char *buf)
-> +{
-> +	return sysfs_emit(buf, "%d\n", fw_attrs.pending_reboot);
-> +}
-> +
-> +static struct kobj_attribute pending_reboot = __ATTR_RO(pending_reboot);
-> +
-> +static bool asus_bios_requires_reboot(struct kobj_attribute *attr)
-> +{
-> +	return !strcmp(attr->attr.name, "gpu_mux_mode");
-> +}
-> +
-> +static int armoury_wmi_set_devstate(struct kobj_attribute *attr, u32 value, u32 wmi_dev)
-> +{
-> +	u32 result;
-> +	int err;
-> +
-> +	err = asus_wmi_set_devstate(wmi_dev, value, &result);
-> +	if (err) {
-> +		pr_err("Failed to set %s: %d\n", attr->attr.name, err);
-> +		return err;
-> +	}
-> +	/*
-> +	 * !1 is usually considered a fail by ASUS, but some WMI methods do use > 1
-> +	 * to return a status code or similar.
-> +	 */
-> +	if (result < 1) {
-> +		pr_err("Failed to set %s: (result): 0x%x\n", attr->attr.name, result);
-> +		return -EIO;
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +/**
-> + * attr_int_store() - Send an int to wmi method, checks if within min/max exclusive.
-> + * @kobj: Pointer to the driver object.
-> + * @attr: Pointer to the attribute calling this function.
-> + * @buf: The buffer to read from, this is parsed to `int` type.
-> + * @count: Required by sysfs attribute macros, pass in from the callee attr.
-> + * @min: Minimum accepted value. Below this returns -EINVAL.
-> + * @max: Maximum accepted value. Above this returns -EINVAL.
-> + * @store_value: Pointer to where the parsed value should be stored.
-> + * @wmi_dev: The WMI function ID to use.
-> + *
-> + * This function is intended to be generic so it can be called from any "_store"
-> + * attribute which works only with integers. The integer to be sent to the WMI method
-> + * is range checked and an error returned if out of range.
-> + *
-> + * If the value is valid and WMI is success, then the sysfs attribute is notified
-> + * and if asus_bios_requires_reboot() is true then reboot attribute is also notified.
-> + *
-> + * Returns: Either count, or an error.
-> + */
-> +static ssize_t attr_uint_store(struct kobject *kobj, struct kobj_attribute *attr, const char *buf,
-> +			      size_t count, u32 min, u32 max, u32 *store_value, u32 wmi_dev)
-> +{
-> +	u32 value;
-> +	int err;
-> +
-> +	err = kstrtouint(buf, 10, &value);
-> +	if (err)
-> +		return err;
-> +
-> +	if (value < min || value > max)
-> +		return -EINVAL;
-> +
-> +	err = armoury_wmi_set_devstate(attr, value, wmi_dev);
-> +	if (err)
-> +		return err;
-> +
-> +	if (store_value != NULL)
-> +		*store_value = value;
-> +	sysfs_notify(kobj, NULL, attr->attr.name);
-> +
-> +	if (asus_bios_requires_reboot(attr))
-> +		asus_set_reboot_and_signal_event();
-> +
-> +	return count;
-> +}
-> +
-> +static ssize_t enum_type_show(struct kobject *kobj, struct kobj_attribute *attr,
-> +			      char *buf)
-> +{
-> +	return sysfs_emit(buf, "enumeration\n");
-> +}
-> +
-> +/* Mini-LED mode **************************************************************/
-> +static ssize_t mini_led_mode_current_value_show(struct kobject *kobj,
-> +						struct kobj_attribute *attr, char *buf)
-> +{
-> +	u32 value;
-> +	int err;
-> +
-> +	err = asus_wmi_get_devstate_dsts(asus_armoury.mini_led_dev_id, &value);
-> +	if (err)
-> +		return err;
-> +
-> +	value &= ASUS_MINI_LED_MODE_MASK;
-> +
-> +	/*
-> +	 * Remap the mode values to match previous generation mini-LED. The last gen
-> +	 * WMI 0 == off, while on this version WMI 2 == off (flipped).
-> +	 */
-> +	if (asus_armoury.mini_led_dev_id == ASUS_WMI_DEVID_MINI_LED_MODE2) {
-> +		switch (value) {
-> +		case ASUS_MINI_LED_2024_WEAK:
-> +			value = ASUS_MINI_LED_ON;
-> +			break;
-> +		case ASUS_MINI_LED_2024_STRONG:
-> +			value = ASUS_MINI_LED_STRONG_MODE;
-> +			break;
-> +		case ASUS_MINI_LED_2024_OFF:
-> +			value = ASUS_MINI_LED_OFF;
-> +			break;
-> +		}
-> +	}
-> +
-> +	return sysfs_emit(buf, "%u\n", value);
-> +}
-> +
-> +static ssize_t mini_led_mode_current_value_store(struct kobject *kobj,
-> +						 struct kobj_attribute *attr,
-> +						const char *buf, size_t count)
-> +{
-> +	u32 mode;
-> +	int err;
-> +
-> +	err = kstrtou32(buf, 10, &mode);
-> +	if (err)
-> +		return err;
-> +
-> +	if (asus_armoury.mini_led_dev_id == ASUS_WMI_DEVID_MINI_LED_MODE &&
-> +	    mode > ASUS_MINI_LED_ON)
-> +		return -EINVAL;
-> +	if (asus_armoury.mini_led_dev_id == ASUS_WMI_DEVID_MINI_LED_MODE2 &&
-> +	    mode > ASUS_MINI_LED_STRONG_MODE)
-> +		return -EINVAL;
-> +
-> +	/*
-> +	 * Remap the mode values so expected behaviour is the same as the last
-> +	 * generation of mini-LED with 0 == off, 1 == on.
-> +	 */
-> +	if (asus_armoury.mini_led_dev_id == ASUS_WMI_DEVID_MINI_LED_MODE2) {
-> +		switch (mode) {
-> +		case ASUS_MINI_LED_OFF:
-> +			mode = ASUS_MINI_LED_2024_OFF;
-> +			break;
-> +		case ASUS_MINI_LED_ON:
-> +			mode = ASUS_MINI_LED_2024_WEAK;
-> +			break;
-> +		case ASUS_MINI_LED_STRONG_MODE:
-> +			mode = ASUS_MINI_LED_2024_STRONG;
-> +			break;
-> +		}
-> +	}
-> +
-> +	err = armoury_wmi_set_devstate(attr, mode, asus_armoury.mini_led_dev_id);
-> +	if (err)
-> +		return err;
-> +
-> +	sysfs_notify(kobj, NULL, attr->attr.name);
-> +
-> +	return count;
-> +}
-> +
-> +static ssize_t mini_led_mode_possible_values_show(struct kobject *kobj,
-> +						  struct kobj_attribute *attr, char *buf)
-> +{
-> +	switch (asus_armoury.mini_led_dev_id) {
-> +	case ASUS_WMI_DEVID_MINI_LED_MODE:
-> +		return sysfs_emit(buf, "0;1\n");
-> +	case ASUS_WMI_DEVID_MINI_LED_MODE2:
-> +		return sysfs_emit(buf, "0;1;2\n");
-> +	}
-> +
-> +	return sysfs_emit(buf, "0\n");
-> +}
-> +
-> +ATTR_GROUP_ENUM_CUSTOM(mini_led_mode, "mini_led_mode", "Set the mini-LED backlight mode");
-> +
-> +static ssize_t gpu_mux_mode_current_value_store(struct kobject *kobj,
-> +						struct kobj_attribute *attr, const char *buf,
-> +						size_t count)
-> +{
-> +	int result, err;
-> +	u32 optimus;
-> +
-> +	err = kstrtou32(buf, 10, &optimus);
-> +	if (err)
-> +		return err;
-> +
-> +	if (optimus > 1)
-> +		return -EINVAL;
-> +
-> +	if (asus_wmi_is_present(ASUS_WMI_DEVID_DGPU)) {
-> +		err = asus_wmi_get_devstate_dsts(ASUS_WMI_DEVID_DGPU, &result);
-> +		if (err)
-> +			return err;
-> +		if (result && !optimus) {
-> +			pr_warn("Can not switch MUX to dGPU mode when dGPU is disabled: %02X %02X\n",
-> +				result, optimus);
-> +			return -ENODEV;
-> +		}
-> +	}
-> +
-> +	if (asus_wmi_is_present(ASUS_WMI_DEVID_EGPU)) {
-> +		err = asus_wmi_get_devstate_dsts(ASUS_WMI_DEVID_EGPU, &result);
-> +		if (err)
-> +			return err;
-> +		if (result && !optimus) {
-> +			pr_warn("Can not switch MUX to dGPU mode when eGPU is enabled\n");
-> +			return -ENODEV;
-> +		}
-> +	}
-> +
-> +	err = armoury_wmi_set_devstate(attr, optimus, asus_armoury.gpu_mux_dev_id);
-> +	if (err)
-> +		return err;
-> +
-> +	sysfs_notify(kobj, NULL, attr->attr.name);
-> +	asus_set_reboot_and_signal_event();
-> +
-> +	return count;
-> +}
-> +WMI_SHOW_INT(gpu_mux_mode_current_value, "%d\n", asus_armoury.gpu_mux_dev_id);
-> +ATTR_GROUP_BOOL_CUSTOM(gpu_mux_mode, "gpu_mux_mode", "Set the GPU display MUX mode");
-> +
-> +/*
-> + * A user may be required to store the value twice, typical store first, then
-> + * rescan PCI bus to activate power, then store a second time to save correctly.
-> + */
-> +static ssize_t dgpu_disable_current_value_store(struct kobject *kobj,
-> +						struct kobj_attribute *attr, const char *buf,
-> +						size_t count)
-> +{
-> +	int result, err;
-> +	u32 disable;
-> +
-> +	err = kstrtou32(buf, 10, &disable);
-> +	if (err)
-> +		return err;
-> +
-> +	if (disable > 1)
-> +		return -EINVAL;
-> +
-> +	if (asus_armoury.gpu_mux_dev_id) {
-> +		err = asus_wmi_get_devstate_dsts(asus_armoury.gpu_mux_dev_id, &result);
-> +		if (err)
-> +			return err;
-> +		if (!result && disable) {
-> +			pr_warn("Can not disable dGPU when the MUX is in dGPU mode\n");
-> +			return -ENODEV;
-> +		}
-> +	}
-> +
-> +	err = armoury_wmi_set_devstate(attr, disable, ASUS_WMI_DEVID_DGPU);
-> +	if (err)
-> +		return err;
-> +
-> +	sysfs_notify(kobj, NULL, attr->attr.name);
-> +
-> +	return count;
-> +}
-> +WMI_SHOW_INT(dgpu_disable_current_value, "%d\n", ASUS_WMI_DEVID_DGPU);
-> +ATTR_GROUP_BOOL_CUSTOM(dgpu_disable, "dgpu_disable", "Disable the dGPU");
-> +
-> +/* The ACPI call to enable the eGPU also disables the internal dGPU */
-> +static ssize_t egpu_enable_current_value_store(struct kobject *kobj, struct kobj_attribute *attr,
-> +					       const char *buf, size_t count)
-> +{
-> +	int result, err;
-> +	u32 enable;
-> +
-> +	err = kstrtou32(buf, 10, &enable);
-> +	if (err)
-> +		return err;
-> +
-> +	if (enable > 1)
-> +		return -EINVAL;
-> +
-> +	err = asus_wmi_get_devstate_dsts(ASUS_WMI_DEVID_EGPU_CONNECTED, &result);
-> +	if (err) {
-> +		pr_warn("Failed to get eGPU connection status: %d\n", err);
-> +		return err;
-> +	}
-> +
-> +	if (asus_armoury.gpu_mux_dev_id) {
-> +		err = asus_wmi_get_devstate_dsts(asus_armoury.gpu_mux_dev_id, &result);
-> +		if (err) {
-> +			pr_warn("Failed to get GPU MUX status: %d\n", result);
-> +			return result;
-> +		}
-> +		if (!result && enable) {
-> +			pr_warn("Can not enable eGPU when the MUX is in dGPU mode\n");
-> +			return -ENODEV;
-> +		}
-> +	}
-> +
-> +	err = armoury_wmi_set_devstate(attr, enable, ASUS_WMI_DEVID_EGPU);
-> +	if (err)
-> +		return err;
-> +
-> +	sysfs_notify(kobj, NULL, attr->attr.name);
-> +
-> +	return count;
-> +}
-> +WMI_SHOW_INT(egpu_enable_current_value, "%d\n", ASUS_WMI_DEVID_EGPU);
-> +ATTR_GROUP_BOOL_CUSTOM(egpu_enable, "egpu_enable", "Enable the eGPU (also disables dGPU)");
-> +
-> +/* Simple attribute creation */
-> +ATTR_GROUP_ENUM_INT_RO(charge_mode, "charge_mode", ASUS_WMI_DEVID_CHARGE_MODE, "0;1;2",
-> +		       "Show the current mode of charging");
-> +
-> +ATTR_GROUP_BOOL_RW(boot_sound, "boot_sound", ASUS_WMI_DEVID_BOOT_SOUND,
-> +		   "Set the boot POST sound");
-> +ATTR_GROUP_BOOL_RW(mcu_powersave, "mcu_powersave", ASUS_WMI_DEVID_MCU_POWERSAVE,
-> +		   "Set MCU powersaving mode");
-> +ATTR_GROUP_BOOL_RW(panel_od, "panel_overdrive", ASUS_WMI_DEVID_PANEL_OD,
-> +		   "Set the panel refresh overdrive");
-> +ATTR_GROUP_BOOL_RO(egpu_connected, "egpu_connected", ASUS_WMI_DEVID_EGPU_CONNECTED,
-> +		   "Show the eGPU connection status");
-> +
-> +/* If an attribute does not require any special case handling add it here */
-> +static const struct asus_attr_group armoury_attr_groups[] = {
-> +	{ &egpu_connected_attr_group, ASUS_WMI_DEVID_EGPU_CONNECTED },
-> +	{ &egpu_enable_attr_group, ASUS_WMI_DEVID_EGPU },
-> +	{ &dgpu_disable_attr_group, ASUS_WMI_DEVID_DGPU },
-> +
-> +	{ &charge_mode_attr_group, ASUS_WMI_DEVID_CHARGE_MODE },
-> +	{ &boot_sound_attr_group, ASUS_WMI_DEVID_BOOT_SOUND },
-> +	{ &mcu_powersave_attr_group, ASUS_WMI_DEVID_MCU_POWERSAVE },
-> +	{ &panel_od_attr_group, ASUS_WMI_DEVID_PANEL_OD },
-> +};
-> +
-> +static int asus_fw_attr_add(void)
-> +{
-> +	int err, i;
-> +
-> +	asus_armoury.fw_attr_dev = device_create(&firmware_attributes_class, NULL, MKDEV(0, 0),
-> +						NULL, "%s", DRIVER_NAME);
-> +	if (IS_ERR(asus_armoury.fw_attr_dev)) {
-> +		err = PTR_ERR(asus_armoury.fw_attr_dev);
-> +		goto fail_class_get;
-> +	}
-> +
-> +	asus_armoury.fw_attr_kset = kset_create_and_add("attributes", NULL,
-> +						&asus_armoury.fw_attr_dev->kobj);
-> +	if (!asus_armoury.fw_attr_kset) {
-> +		err = -ENOMEM;
-> +		goto err_destroy_classdev;
-> +	}
-> +
-> +	err = sysfs_create_file(&asus_armoury.fw_attr_kset->kobj, &pending_reboot.attr);
-> +	if (err) {
-> +		pr_err("Failed to create sysfs level attributes\n");
-> +		goto err_destroy_kset;
-> +	}
-> +
-> +	asus_armoury.mini_led_dev_id = 0;
-> +	if (asus_wmi_is_present(ASUS_WMI_DEVID_MINI_LED_MODE))
-> +		asus_armoury.mini_led_dev_id = ASUS_WMI_DEVID_MINI_LED_MODE;
-> +	else if (asus_wmi_is_present(ASUS_WMI_DEVID_MINI_LED_MODE2))
-> +		asus_armoury.mini_led_dev_id = ASUS_WMI_DEVID_MINI_LED_MODE2;
-> +
-> +	if (asus_armoury.mini_led_dev_id) {
-> +		err = sysfs_create_group(&asus_armoury.fw_attr_kset->kobj,
-> +					 &mini_led_mode_attr_group);
-> +		if (err) {
-> +			pr_err("Failed to create sysfs-group for mini_led\n");
-> +			goto err_remove_file;
-> +		}
-> +	}
-> +
-> +	asus_armoury.gpu_mux_dev_id = 0;
-> +	if (asus_wmi_is_present(ASUS_WMI_DEVID_GPU_MUX))
-> +		asus_armoury.gpu_mux_dev_id = ASUS_WMI_DEVID_GPU_MUX;
-> +	else if (asus_wmi_is_present(ASUS_WMI_DEVID_GPU_MUX_VIVO))
-> +		asus_armoury.gpu_mux_dev_id = ASUS_WMI_DEVID_GPU_MUX_VIVO;
-> +
-> +	if (asus_armoury.gpu_mux_dev_id) {
-> +		err = sysfs_create_group(&asus_armoury.fw_attr_kset->kobj,
-> +					 &gpu_mux_mode_attr_group);
-> +		if (err) {
-> +			pr_err("Failed to create sysfs-group for gpu_mux\n");
-> +			goto err_remove_mini_led_group;
-> +		}
-> +	}
-> +
-> +	for (i = 0; i < ARRAY_SIZE(armoury_attr_groups); i++) {
-> +		if (!asus_wmi_is_present(armoury_attr_groups[i].wmi_devid))
-> +			continue;
-> +
-> +		err = sysfs_create_group(&asus_armoury.fw_attr_kset->kobj,
-> +					 armoury_attr_groups[i].attr_group);
-> +		if (err) {
-> +			pr_err("Failed to create sysfs-group for %s\n",
-> +			       armoury_attr_groups[i].attr_group->name);
-> +			goto err_remove_groups;
-> +		}
-> +	}
-> +
-> +	return 0;
-> +
-> +err_remove_groups:
-> +	while (--i >= 0) {
-> +		if (asus_wmi_is_present(armoury_attr_groups[i].wmi_devid))
-> +			sysfs_remove_group(&asus_armoury.fw_attr_kset->kobj,
-> +					   armoury_attr_groups[i].attr_group);
-> +	}
-> +	if (asus_armoury.gpu_mux_dev_id)
-> +		sysfs_remove_group(&asus_armoury.fw_attr_kset->kobj, &gpu_mux_mode_attr_group);
-> +err_remove_mini_led_group:
-> +	if (asus_armoury.mini_led_dev_id)
-> +		sysfs_remove_group(&asus_armoury.fw_attr_kset->kobj, &mini_led_mode_attr_group);
-> +err_remove_file:
-> +	sysfs_remove_file(&asus_armoury.fw_attr_kset->kobj, &pending_reboot.attr);
-> +err_destroy_kset:
-> +	kset_unregister(asus_armoury.fw_attr_kset);
-> +err_destroy_classdev:
-> +fail_class_get:
-> +	device_destroy(&firmware_attributes_class, MKDEV(0, 0));
-> +	return err;
-> +}
-> +
-> +/* Init / exit ****************************************************************/
-> +
-> +static int __init asus_fw_init(void)
-> +{
-> +	char *wmi_uid;
-> +	int err;
-> +
-> +	wmi_uid = wmi_get_acpi_device_uid(ASUS_WMI_MGMT_GUID);
-> +	if (!wmi_uid)
-> +		return -ENODEV;
-> +
-> +	/*
-> +	 * if equal to "ASUSWMI" then it's DCTS that can't be used for this
-> +	 * driver, DSTS is required.
-> +	 */
-> +	if (!strcmp(wmi_uid, ASUS_ACPI_UID_ASUSWMI))
-> +		return -ENODEV;
-> +
-> +	err = asus_fw_attr_add();
-> +	if (err)
-> +		return err;
-> +
-> +	return 0;
-
-If no plans to change asus_fw_init() in later patches this can just be
-
-return asus_fw_attr_add();
-
-and drop the err variable.
-
-If planning to change asus_fw_init() this is fine as is.
-
-> +}
-> +
-> +static void __exit asus_fw_exit(void)
-> +{
-> +	sysfs_remove_file(&asus_armoury.fw_attr_kset->kobj, &pending_reboot.attr);
-> +	kset_unregister(asus_armoury.fw_attr_kset);
-> +	device_destroy(&firmware_attributes_class, MKDEV(0, 0));
-> +}
-> +
-> +module_init(asus_fw_init);
-> +module_exit(asus_fw_exit);
-> +
-> +MODULE_IMPORT_NS("ASUS_WMI");
-> +MODULE_AUTHOR("Luke Jones <luke@ljones.dev>");
-> +MODULE_DESCRIPTION("ASUS BIOS Configuration Driver");
-> +MODULE_LICENSE("GPL");
-> +MODULE_ALIAS("wmi:" ASUS_NB_WMI_EVENT_GUID);
-> diff --git a/drivers/platform/x86/asus-armoury.h b/drivers/platform/x86/asus-armoury.h
+> +++ b/Documentation/wmi/devices/lenovo-wmi-gamezone.rst
+> @@ -0,0 +1,203 @@
+> +.. SPDX-License-Identifier: GPL-2.0-or-later
+> +==========================================================
+> +Lenovo WMI Interface Gamezone Driver (lenovo-wmi-gamezone)
+> +==========================================================
+> +
+> +Introduction
+> +============
+> +The Lenovo WMI gamezone interface is broken up into multiple GUIDs,
+> +The priamry "Gamezone" GUID provides advanced features such as fan
+> +profiles and overclocking. It is paired with multiple event GUIDs
+> +and data block GUIDs that provide context for the various methods.
+> +
+> +Gamezone Data
+> +-------------
+> +
+> +WMI GUID "887B54E3-DDDC-4B2C-8B88-68A26A8835D0"
+> +~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+> +
+> +The Gamezone Data WMI interface provides platform-profile and fan curve
+> +settings for devices that fall under the "Gaming Series" of Lenovo devices.
+> +It uses a notifier chain to inform other Lenovo WMI interface drivers of the
+> +current platform profile when it changes.
+> +
+> +The following platform profiles are supported:
+> + - low-power
+> + - balanced
+> + - balanced-performance*
+> + - performance
+> + - custom
+> +
+> +Balanced-Performance
+> +~~~~~~~~~~~~~~~~~~~~
+> +Some newer Lenovo "Gaming Series" laptops have an "Extreme Mode" profile
+> +enabled in their BIOS. For these devices, the performance platform profile
+> +will correspond to the BIOS Extreme Mode, while the balanced-performance
+> +platform profile will correspond to the BIOS Performance mode. For legacy
+> +devices, the performance platform profile will correspond with the BIOS
+> +Performance mode. For some newer devices the "Extreme Mode" profile is
+> +incomplete in the BIOS and setting it will cause undefined behavior. A
+> +BIOS bug quirk table is provided to ensure these devices cannot set
+> +"Extreme Mode" from the driver.
+> +
+> +Custom Profile
+> +~~~~~~~~~~~~~~
+> +The custom profile represents a hardware mode on Lenovo devices that enables
+> +user modifications to Package Power Tracking (PPT) and fan curve settings.
+> +When an attribute exposed by the Other Mode WMI interface is to be modified,
+> +the Gamezone driver must first be switched to the "custom" profile manually,
+> +or the setting will have no effect. If another profile is set from the list
+> +of supported profiles, the BIOS will override any user PPT settings when
+> +switching to that profile.
+> +
+> +Gamezone Thermal Mode Event
+> +---------------------------
+> +
+> +WMI GUID "D320289E-8FEA-41E0-86F9-911D83151B5F"
+> +~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+> +
+> +The Gamezone Thermal Mode Event interface notifies the system when the platform
+> +profile has changed, either through the hardware event (Fn+Q for laptops or
+> +Legion + Y for Go Series), or through the Gamezone WMI interface. This event is
+> +implemented in the Lenovo WMI Events driver (lenovo-wmi-events).
+> +
+> +
+> +WMI interface description
+> +=========================
+> +
+> +The WMI interface description can be decoded from the embedded binary MOF (bmof)
+> +data using the `bmfdec <https://github.com/pali/bmfdec>`_ utility:
+> +
+> +::
+> +
+> +  [WMI, Dynamic, Provider("WmiProv"), Locale("MS\\0x409"), Description("LENOVO_GAMEZONE_DATA class"), guid("{887B54E3-DDDC-4B2C-8B88-68A26A8835D0}")]
+> +  class LENOVO_GAMEZONE_DATA {
+> +  	[key, read] string InstanceName;
+> +  	[read] boolean Active;
+> +
+> +    [WmiMethodId(4), Implemented, Description("Is SupportGpu OverClock")] void IsSupportGpuOC([out, Description("Is SupportGpu OverClock")] uint32 Data);
+> +    [WmiMethodId(11), Implemented, Description("Get AslCode Version")] void GetVersion ([out, Description("AslCode version")] UINT32 Data);
+> +    [WmiMethodId(12), Implemented, Description("Fan cooling capability")] void IsSupportFanCooling([out, Description("Fan cooling capability")] UINT32 Data);
+> +    [WmiMethodId(13), Implemented, Description("Set Fan cooling on/off")] void SetFanCooling ([in, Description("Set Fan cooling on/off")] UINT32 Data);
+> +    [WmiMethodId(14), Implemented, Description("cpu oc capability")] void IsSupportCpuOC ([out, Description("cpu oc capability")] UINT32 Data);
+> +    [WmiMethodId(15), Implemented, Description("bios has overclock capability")] void IsBIOSSupportOC ([out, Description("bios has overclock capability")] UINT32 Data);
+> +    [WmiMethodId(16), Implemented, Description("enable or disable overclock in bios")] void SetBIOSOC ([in, Description("enable or disable overclock in bios")] UINT32 Data);
+> +    [WmiMethodId(18), Implemented, Description("Get CPU temperature")] void GetCPUTemp ([out, Description("Get CPU temperature")] UINT32 Data);
+> +    [WmiMethodId(19), Implemented, Description("Get GPU temperature")] void GetGPUTemp ([out, Description("Get GPU temperature")] UINT32 Data);
+> +    [WmiMethodId(20), Implemented, Description("Get Fan cooling on/off status")] void GetFanCoolingStatus ([out, Description("Get Fan cooling on/off status")] UINT32 Data);
+> +    [WmiMethodId(21), Implemented, Description("EC support disable windows key capability")] void IsSupportDisableWinKey ([out, Description("EC support disable windows key capability")] UINT32 Data);
+> +    [WmiMethodId(22), Implemented, Description("Set windows key disable/enable")] void SetWinKeyStatus ([in, Description("Set windows key disable/enable")] UINT32 Data);
+> +    [WmiMethodId(23), Implemented, Description("Get windows key disable/enable status")] void GetWinKeyStatus ([out, Description("Get windows key disable/enable status")] UINT32 Data);
+> +    [WmiMethodId(24), Implemented, Description("EC support disable touchpad capability")] void IsSupportDisableTP ([out, Description("EC support disable touchpad capability")] UINT32 Data);
+> +    [WmiMethodId(25), Implemented, Description("Set touchpad disable/enable")] void SetTPStatus ([in, Description("Set touchpad disable/enable")] UINT32 Data);
+> +    [WmiMethodId(26), Implemented, Description("Get touchpad disable/enable status")] void GetTPStatus ([out, Description("Get touchpad disable/enable status")] UINT32 Data);
+> +    [WmiMethodId(30), Implemented, Description("Get Keyboard feature list")] void GetKeyboardfeaturelist ([out, Description("Get Keyboard feature list")] UINT32 Data);
+> +    [WmiMethodId(31), Implemented, Description("Get Memory OC Information")] void GetMemoryOCInfo ([out, Description("Get Memory OC Information")] UINT32 Data);
+> +    [WmiMethodId(32), Implemented, Description("Water Cooling feature capability")] void IsSupportWaterCooling ([out, Description("Water Cooling feature capability")] UINT32 Data);
+> +    [WmiMethodId(33), Implemented, Description("Set Water Cooling status")] void SetWaterCoolingStatus ([in, Description("Set Water Cooling status")] UINT32 Data);
+> +    [WmiMethodId(34), Implemented, Description("Get Water Cooling status")] void GetWaterCoolingStatus ([out, Description("Get Water Cooling status")] UINT32 Data);
+> +    [WmiMethodId(35), Implemented, Description("Lighting feature capability")] void IsSupportLightingFeature ([out, Description("Lighting feature capability")] UINT32 Data);
+> +    [WmiMethodId(36), Implemented, Description("Set keyboard light off or on to max")] void SetKeyboardLight ([in, Description("keyboard light off or on switch")] UINT32 Data);
+> +    [WmiMethodId(37), Implemented, Description("Get keyboard light on/off status")] void GetKeyboardLight ([out, Description("Get keyboard light on/off status")] UINT32 Data);
+> +    [WmiMethodId(38), Implemented, Description("Get Macrokey scan code")] void GetMacrokeyScancode ([in, Description("Macrokey index")] UINT32 idx, [out, Description("Scan code")] UINT32 scancode);
+> +    [WmiMethodId(39), Implemented, Description("Get Macrokey count")] void GetMacrokeyCount ([out, Description("Macrokey count")] UINT32 Data);
+> +    [WmiMethodId(40), Implemented, Description("Support G-Sync feature")] void IsSupportGSync ([out, Description("Support G-Sync feature")] UINT32 Data);
+> +    [WmiMethodId(41), Implemented, Description("Get G-Sync Status")] void GetGSyncStatus ([out, Description("Get G-Sync Status")] UINT32 Data);
+> +    [WmiMethodId(42), Implemented, Description("Set G-Sync Status")] void SetGSyncStatus ([in, Description("Set G-Sync Status")] UINT32 Data);
+> +    [WmiMethodId(43), Implemented, Description("Support Smart Fan feature")] void IsSupportSmartFan ([out, Description("Support Smart Fan feature")] UINT32 Data);
+> +    [WmiMethodId(44), Implemented, Description("Set Smart Fan Mode")] void SetSmartFanMode ([in, Description("Set Smart Fan Mode")] UINT32 Data);
+> +    [WmiMethodId(45), Implemented, Description("Get Smart Fan Mode")] void GetSmartFanMode ([out, Description("Get Smart Fan Mode")] UINT32 Data);
+> +    [WmiMethodId(46), Implemented, Description("Get Smart Fan Setting Mode")] void GetSmartFanSetting ([out, Description("Get Smart Setting Mode")] UINT32 Data);
+> +    [WmiMethodId(47), Implemented, Description("Get Power Charge Mode")] void GetPowerChargeMode ([out, Description("Get Power Charge Mode")] UINT32 Data);
+> +    [WmiMethodId(48), Implemented, Description("Get Gaming Product Info")] void GetProductInfo ([out, Description("Get Gaming Product Info")] UINT32 Data);
+> +    [WmiMethodId(49), Implemented, Description("Over Drive feature capability")] void IsSupportOD ([out, Description("Over Drive feature capability")] UINT32 Data);
+> +    [WmiMethodId(50), Implemented, Description("Get Over Drive status")] void GetODStatus ([out, Description("Get Over Drive status")] UINT32 Data);
+> +    [WmiMethodId(51), Implemented, Description("Set Over Drive status")] void SetODStatus ([in, Description("Set Over Drive status")] UINT32 Data);
+> +    [WmiMethodId(52), Implemented, Description("Set Light Control Owner")] void SetLightControlOwner ([in, Description("Set Light Control Owner")] UINT32 Data);
+> +    [WmiMethodId(53), Implemented, Description("Set DDS Control Owner")] void SetDDSControlOwner ([in, Description("Set DDS Control Owner")] UINT32 Data);
+> +    [WmiMethodId(54), Implemented, Description("Get the flag of restore OC value")] void IsRestoreOCValue ([in, Description("Clean this flag")] UINT32 idx, [out, Description("Restore oc value flag")] UINT32 Data);
+> +    [WmiMethodId(55), Implemented, Description("Get Real Thremal Mode")] void GetThermalMode ([out, Description("Real Thremal Mode")] UINT32 Data);
+> +    [WmiMethodId(56), Implemented, Description("Get the OC switch status in BIOS")] void GetBIOSOCMode ([out, Description("OC Mode")] UINT32 Data);
+> +    [WmiMethodId(59), Implemented, Description("Get hardware info support version")] void GetHardwareInfoSupportVersion ([out, Description("version")] UINT32 Data);
+> +    [WmiMethodId(60), Implemented, Description("Get Cpu core 0 max frequency")] void GetCpuFrequency ([out, Description("frequency")] UINT32 Data);
+> +    [WmiMethodId(62), Implemented, Description("Check the Adapter type fit for OC")] void IsACFitForOC ([out, Description("AC check result")] UINT32 Data);
+> +    [WmiMethodId(63), Implemented, Description("Is support IGPU mode")] void IsSupportIGPUMode ([out, Description("IGPU modes")] UINT32 Data);
+> +    [WmiMethodId(64), Implemented, Description("Get IGPU Mode Status")] void GetIGPUModeStatus([out, Description("IGPU Mode Status")] UINT32 Data);
+> +    [WmiMethodId(65), Implemented, Description("Set IGPU Mode")] void SetIGPUModeStatus([in, Description("IGPU Mode")] UINT32 mode, [out, Description("return code")] UINT32 Data);
+> +    [WmiMethodId(66), Implemented, Description("Notify DGPU Status")] void NotifyDGPUStatus([in, Description("DGPU status")] UINT32 status, [out, Description("return code")] UINT32 Data);
+> +    [WmiMethodId(67), Implemented, Description("Is changed Y log")] void IsChangedYLog([out, Description("Is changed Y Log")] UINT32 Data);
+> +    [WmiMethodId(68), Implemented, Description("Get DGPU Hardwawre ID")] void GetDGPUHWId([out, Description("Get DGPU Hardware ID")] string Data);
+> +  };
+> +
+> +  [WMI, Dynamic, Provider("WmiProv"), Locale("MS\\0x409"), Description("Definition of CPU OC parameter list"), guid("{B7F3CA0A-ACDC-42D2-9217-77C6C628FBD2}")]
+> +  class LENOVO_GAMEZONE_CPU_OC_DATA {
+> +    [key, read] string InstanceName;
+> +    [read] boolean Active;
+> +
+> +    [WmiDataId(1), read, Description("OC tune id.")] uint32 Tuneid;
+> +    [WmiDataId(2), read, Description("Default value.")] uint32 DefaultValue;
+> +    [WmiDataId(3), read, Description("OC Value.")] uint32 OCValue;
+> +    [WmiDataId(4), read, Description("Min Value.")] uint32 MinValue;
+> +    [WmiDataId(5), read, Description("Max Value.")] uint32 MaxValue;
+> +    [WmiDataId(6), read, Description("Scale Value.")] uint32 ScaleValue;
+> +    [WmiDataId(7), read, Description("OC Order id.")] uint32 OCOrderid;
+> +    [WmiDataId(8), read, Description("NON-OC Order id.")] uint32 NOCOrderid;
+> +    [WmiDataId(9), read, Description("Delay time in ms.")] uint32 Interval;
+> +  };
+> +
+> +  [WMI, Dynamic, Provider("WmiProv"), Locale("MS\\0x409"), Description("Definition of GPU OC parameter list"), guid("{887B54E2-DDDC-4B2C-8B88-68A26A8835D0}")]
+> +  class LENOVO_GAMEZONE_GPU_OC_DATA {
+> +    [key, read] string InstanceName;
+> +    [read] boolean Active;
+> +
+> +    [WmiDataId(1), read, Description("P-State ID.")] uint32 PStateID;
+> +    [WmiDataId(2), read, Description("CLOCK ID.")] uint32 ClockID;
+> +    [WmiDataId(3), read, Description("Default value.")] uint32 defaultvalue;
+> +    [WmiDataId(4), read, Description("OC Offset freqency.")] uint32 OCOffsetFreq;
+> +    [WmiDataId(5), read, Description("OC Min offset value.")] uint32 OCMinOffset;
+> +    [WmiDataId(6), read, Description("OC Max offset value.")] uint32 OCMaxOffset;
+> +    [WmiDataId(7), read, Description("OC Offset Scale.")] uint32 OCOffsetScale;
+> +    [WmiDataId(8), read, Description("OC Order id.")] uint32 OCOrderid;
+> +    [WmiDataId(9), read, Description("NON-OC Order id.")] uint32 NOCOrderid;
+> +  };
+> +
+> +  [WMI, Dynamic, Provider("WmiProv"), Locale("MS\\0x409"), Description("Fancooling finish event"), guid("{BC72A435-E8C1-4275-B3E2-D8B8074ABA59}")]
+> +  class LENOVO_GAMEZONE_FAN_COOLING_EVENT: WMIEvent {
+> +    [key, read] string InstanceName;
+> +    [read] boolean Active;
+> +
+> +    [WmiDataId(1), read, Description("Fancooling clean finish event")] uint32 EventId;
+> +  };
+> +
+> +  [WMI, Dynamic, Provider("WmiProv"), Locale("MS\\0x409"), Description("Smart Fan mode change event"), guid("{D320289E-8FEA-41E0-86F9-611D83151B5F}")]
+> +  class LENOVO_GAMEZONE_SMART_FAN_MODE_EVENT: WMIEvent {
+> +    [key, read] string InstanceName;
+> +    [read] boolean Active;
+> +
+> +    [WmiDataId(1), read, Description("Smart Fan Mode change event")] uint32 mode;
+> +    [WmiDataId(2), read, Description("version of FN+Q")] uint32 version;
+> +  };
+> +
+> +  [WMI, Dynamic, Provider("WmiProv"), Locale("MS\\0x409"), Description("Smart Fan setting mode change event"), guid("{D320289E-8FEA-41E1-86F9-611D83151B5F}")]
+> +  class LENOVO_GAMEZONE_SMART_FAN_SETTING_EVENT: WMIEvent {
+> +    [key, read] string InstanceName;
+> +    [read] boolean Active;
+> +
+> +    [WmiDataId(1), read, Description("Smart Fan Setting mode change event")] uint32 mode;
+> +  };
+> +
+> +  [WMI, Dynamic, Provider("WmiProv"), Locale("MS\\0x409"), Description("POWER CHARGE MODE Change EVENT"), guid("{D320289E-8FEA-41E0-86F9-711D83151B5F}")]
+> +  class LENOVO_GAMEZONE_POWER_CHARGE_MODE_EVENT: WMIEvent {
+> +    [key, read] string InstanceName;
+> +    [read] boolean Active;
+> +
+> +    [WmiDataId(1), read, Description("POWER CHARGE MODE Change EVENT")] uint32 mode;
+> +  };
+> +
+> +  [WMI, Dynamic, Provider("WmiProv"), Locale("MS\\0x409"), Description("Thermal Mode Real Mode change event"), guid("{D320289E-8FEA-41E0-86F9-911D83151B5F}")]
+> +  class LENOVO_GAMEZONE_THERMAL_MODE_EVENT: WMIEvent {
+> +    [key, read] string InstanceName;
+> +    [read] boolean Active;
+> +
+> +    [WmiDataId(1), read, Description("Thermal Mode Real Mode")] uint32 mode;
+> +  };
+> diff --git a/Documentation/wmi/devices/lenovo-wmi-other-method.rst b/Documentation/wmi/devices/lenovo-wmi-other-method.rst
 > new file mode 100644
-> index 000000000000..42c8171e5d8a
+> index 000000000000..b48832726311
 > --- /dev/null
-> +++ b/drivers/platform/x86/asus-armoury.h
-> @@ -0,0 +1,165 @@
-> +/* SPDX-License-Identifier: GPL-2.0
-> + *
-> + * Definitions for kernel modules using asus-armoury driver
-> + *
-> + *  Copyright (c) 2024 Luke Jones <luke@ljones.dev>
-> + */
+> +++ b/Documentation/wmi/devices/lenovo-wmi-other-method.rst
+> @@ -0,0 +1,108 @@
+> +.. SPDX-License-Identifier: GPL-2.0-or-later
+> +===========================================================
+> +Lenovo WMI Interface Other Mode Driver (lenovo-wmi-other)
+> +===========================================================
 > +
-> +#ifndef _ASUS_ARMOURY_H_
-> +#define _ASUS_ARMOURY_H_
-> +
-> +#include <linux/types.h>
-> +#include <linux/platform_device.h>
-> +
-> +#define DRIVER_NAME "asus-armoury"
-> +
-> +#define __ASUS_ATTR_RO(_func, _name)					\
-> +	{								\
-> +		.attr = { .name = __stringify(_name), .mode = 0444 },	\
-> +		.show = _func##_##_name##_show,				\
-> +	}
-> +
-> +#define __ASUS_ATTR_RO_AS(_name, _show)					\
-> +	{								\
-> +		.attr = { .name = __stringify(_name), .mode = 0444 },	\
-> +		.show = _show,						\
-> +	}
-> +
-> +#define __ASUS_ATTR_RW(_func, _name) \
-> +	__ATTR(_name, 0644, _func##_##_name##_show, _func##_##_name##_store)
-> +
-> +#define __WMI_STORE_INT(_attr, _min, _max, _wmi)			\
-> +	static ssize_t _attr##_store(struct kobject *kobj,		\
-> +				     struct kobj_attribute *attr,	\
-> +				     const char *buf, size_t count)	\
-> +	{								\
-> +		return attr_uint_store(kobj, attr, buf, count, _min,	\
-> +					_max, NULL, _wmi);		\
-> +	}
-> +
-> +#define WMI_SHOW_INT(_attr, _fmt, _wmi)						\
-> +	static ssize_t _attr##_show(struct kobject *kobj,			\
-> +				    struct kobj_attribute *attr, char *buf)	\
-> +	{									\
-> +		u32 result;							\
-> +		int err;							\
-> +										\
-> +		err = asus_wmi_get_devstate_dsts(_wmi, &result);		\
-> +		if (err)							\
-> +			return err;						\
-> +		return sysfs_emit(buf, _fmt,					\
-> +				  result & ~ASUS_WMI_DSTS_PRESENCE_BIT);	\
-> +	}
-> +
-> +/* Create functions and attributes for use in other macros or on their own */
-> +
-> +/* Shows a formatted static variable */
-> +#define __ATTR_SHOW_FMT(_prop, _attrname, _fmt, _val)				\
-> +	static ssize_t _attrname##_##_prop##_show(				\
-> +		struct kobject *kobj, struct kobj_attribute *attr, char *buf)	\
-> +	{									\
-> +		return sysfs_emit(buf, _fmt, _val);				\
-> +	}									\
-> +	static struct kobj_attribute attr_##_attrname##_##_prop =		\
-> +		__ASUS_ATTR_RO(_attrname, _prop)
+> +Introduction
+> +============
+> +Lenovo WMI Other Mode interface is broken up into multiple GUIDs,
+> +The primary Other Mode interface provides advanced power tuning features
+> +such as Package Power Tracking (PPT). It is paired with multiple data block
+> +GUIDs that provide context for the various methods.
 > +
 > +
-> +#define __ATTR_RO_INT_GROUP_ENUM(_attrname, _wmi, _fsname, _possible, _dispname)\
-> +	WMI_SHOW_INT(_attrname##_current_value, "%d\n", _wmi);			\
-> +	static struct kobj_attribute attr_##_attrname##_current_value =		\
-> +		__ASUS_ATTR_RO(_attrname, current_value);			\
-> +	__ATTR_SHOW_FMT(display_name, _attrname, "%s\n", _dispname);		\
-> +	__ATTR_SHOW_FMT(possible_values, _attrname, "%s\n", _possible);		\
-> +	static struct kobj_attribute attr_##_attrname##_type =			\
-> +		__ASUS_ATTR_RO_AS(type, enum_type_show);			\
-> +	static struct attribute *_attrname##_attrs[] = {			\
-> +		&attr_##_attrname##_current_value.attr,				\
-> +		&attr_##_attrname##_display_name.attr,				\
-> +		&attr_##_attrname##_possible_values.attr,			\
-> +		&attr_##_attrname##_type.attr,					\
-> +		NULL								\
-> +	};									\
-> +	static const struct attribute_group _attrname##_attr_group = {		\
-> +		.name = _fsname, .attrs = _attrname##_attrs			\
-> +	}
+> +Other Mode
+> +----------
 > +
-> +#define __ATTR_RW_INT_GROUP_ENUM(_attrname, _minv, _maxv, _wmi, _fsname,\
-> +				 _possible, _dispname)			\
-> +	__WMI_STORE_INT(_attrname##_current_value, _minv, _maxv, _wmi);	\
-> +	WMI_SHOW_INT(_attrname##_current_value, "%d\n", _wmi);		\
-> +	static struct kobj_attribute attr_##_attrname##_current_value =	\
-> +		__ASUS_ATTR_RW(_attrname, current_value);		\
-> +	__ATTR_SHOW_FMT(display_name, _attrname, "%s\n", _dispname);	\
-> +	__ATTR_SHOW_FMT(possible_values, _attrname, "%s\n", _possible);	\
-> +	static struct kobj_attribute attr_##_attrname##_type =		\
-> +		__ASUS_ATTR_RO_AS(type, enum_type_show);		\
-> +	static struct attribute *_attrname##_attrs[] = {		\
-> +		&attr_##_attrname##_current_value.attr,			\
-> +		&attr_##_attrname##_display_name.attr,			\
-> +		&attr_##_attrname##_possible_values.attr,		\
-> +		&attr_##_attrname##_type.attr,				\
-> +		NULL							\
-> +	};								\
-> +	static const struct attribute_group _attrname##_attr_group = {	\
-> +		.name = _fsname, .attrs = _attrname##_attrs		\
-> +	}
+> +WMI GUID "DC2A8805-3A8C-41BA-A6F7-092E0089CD3B"
+> +~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 > +
-> +/* Boolean style enumeration, base macro. Requires adding show/store */
-> +#define __ATTR_GROUP_ENUM(_attrname, _fsname, _possible, _dispname)	\
-> +	__ATTR_SHOW_FMT(display_name, _attrname, "%s\n", _dispname);	\
-> +	__ATTR_SHOW_FMT(possible_values, _attrname, "%s\n", _possible);	\
-> +	static struct kobj_attribute attr_##_attrname##_type =		\
-> +		__ASUS_ATTR_RO_AS(type, enum_type_show);		\
-> +	static struct attribute *_attrname##_attrs[] = {		\
-> +		&attr_##_attrname##_current_value.attr,			\
-> +		&attr_##_attrname##_display_name.attr,			\
-> +		&attr_##_attrname##_possible_values.attr,		\
-> +		&attr_##_attrname##_type.attr,				\
-> +		NULL							\
-> +	};								\
-> +	static const struct attribute_group _attrname##_attr_group = {	\
-> +		.name = _fsname, .attrs = _attrname##_attrs		\
-> +	}
+> +The Other Mode WMI interface uses the firmware_attributes class to expose
+> +various WMI attributes provided by the interface in the sysfs. This enables
+> +CPU and GPU power limit tuning as well as various other attributes for
+> +devices that fall under the "Gaming Series" of Lenovo devices. Each
+> +attribute exposed by the Other Mode interface has corresponding
+> +capability data blocks which allow the driver to probe details about the
+> +attribute. Each attribute has multiple pages, one for each of the platform
+> +profiles managed by the Gamezone interface. Attributes are exposed in sysfs
+> +under the following path:
 > +
-> +#define ATTR_GROUP_BOOL_RO(_attrname, _fsname, _wmi, _dispname)	\
-> +	__ATTR_RO_INT_GROUP_ENUM(_attrname, _wmi, _fsname, "0;1", _dispname)
+> +::
+> +/sys/class/firmware-attributes/lenovo-wmi-other/attributes/<attribute>/
+> +
+> +LENOVO_CAPABILITY_DATA_01
+> +-------------------------
+> +
+> +WMI GUID "7A8F5407-CB67-4D6E-B547-39B3BE018154"
+> +~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+> +
+> +The LENOVO_CAPABILITY_DATA_01 interface provides information on various
+> +power limits of integrated CPU and GPU components.
+> +
+> +Each attribute has the following properties:
+> + - current_value
+> + - default_value
+> + - display_name
+> + - max_value
+> + - min_value
+> + - scalar_increment
+> + - type
+> +
+> +The following attributes are implemented:
+> + - ppt_pl1_spl: Platform Profile Tracking Sustained Power Limit
+> + - ppt_pl2_sppt: Platform Profile Tracking Slow Package Power Tracking
+> + - ppt_pl3_fppt: Platform Profile Tracking Fast Package Power Tracking
 > +
 > +
-> +#define ATTR_GROUP_BOOL_RW(_attrname, _fsname, _wmi, _dispname)	\
-> +	__ATTR_RW_INT_GROUP_ENUM(_attrname, 0, 1, _wmi, _fsname, "0;1", _dispname)
+> +WMI interface description
+> +=========================
 > +
-> +#define ATTR_GROUP_ENUM_INT_RO(_attrname, _fsname, _wmi, _possible, _dispname)	\
-> +	__ATTR_RO_INT_GROUP_ENUM(_attrname, _wmi, _fsname, _possible, _dispname)
+> +The WMI interface description can be decoded from the embedded binary MOF (bmof)
+> +data using the `bmfdec <https://github.com/pali/bmfdec>`_ utility:
 > +
-> +/*
-> + * Requires <name>_current_value_show(), <name>_current_value_show()
-> + */
-> +#define ATTR_GROUP_BOOL_CUSTOM(_attrname, _fsname, _dispname)		\
-> +	static struct kobj_attribute attr_##_attrname##_current_value =	\
-> +		__ASUS_ATTR_RW(_attrname, current_value);		\
-> +	__ATTR_GROUP_ENUM(_attrname, _fsname, "0;1", _dispname)
+> +::
 > +
-> +/*
-> + * Requires <name>_current_value_show(), <name>_current_value_show()
-> + * and <name>_possible_values_show()
-> + */
-> +#define ATTR_GROUP_ENUM_CUSTOM(_attrname, _fsname, _dispname)			\
-> +	__ATTR_SHOW_FMT(display_name, _attrname, "%s\n", _dispname);		\
-> +	static struct kobj_attribute attr_##_attrname##_current_value =		\
-> +		__ASUS_ATTR_RW(_attrname, current_value);			\
-> +	static struct kobj_attribute attr_##_attrname##_possible_values =	\
-> +		__ASUS_ATTR_RO(_attrname, possible_values);			\
-> +	static struct kobj_attribute attr_##_attrname##_type =			\
-> +		__ASUS_ATTR_RO_AS(type, enum_type_show);			\
-> +	static struct attribute *_attrname##_attrs[] = {			\
-> +		&attr_##_attrname##_current_value.attr,				\
-> +		&attr_##_attrname##_display_name.attr,				\
-> +		&attr_##_attrname##_possible_values.attr,			\
-> +		&attr_##_attrname##_type.attr,					\
-> +		NULL								\
-> +	};									\
-> +	static const struct attribute_group _attrname##_attr_group = {		\
-> +		.name = _fsname, .attrs = _attrname##_attrs			\
-> +	}
+> +  [WMI, Dynamic, Provider("WmiProv"), Locale("MS\\0x409"), Description("LENOVO_OTHER_METHOD class"), guid("{dc2a8805-3a8c-41ba-a6f7-092e0089cd3b}")]
+> +  class LENOVO_OTHER_METHOD {
+> +    [key, read] string InstanceName;
+> +    [read] boolean Active;
 > +
-> +#endif /* _ASUS_ARMOURY_H_ */
-> diff --git a/drivers/platform/x86/asus-wmi.c b/drivers/platform/x86/asus-wmi.c
-> index 2784b8e6514e..e2ac3f20760a 100644
-> --- a/drivers/platform/x86/asus-wmi.c
-> +++ b/drivers/platform/x86/asus-wmi.c
-> @@ -55,8 +55,6 @@ module_param(fnlock_default, bool, 0444);
->   #define to_asus_wmi_driver(pdrv)					\
->   	(container_of((pdrv), struct asus_wmi_driver, platform_driver))
+> +    [WmiMethodId(17), Implemented, Description("Get Feature Value ")] void GetFeatureValue([in] uint32 IDs, [out] uint32 value);
+> +    [WmiMethodId(18), Implemented, Description("Set Feature Value ")] void SetFeatureValue([in] uint32 IDs, [in] uint32 value);
+> +    [WmiMethodId(19), Implemented, Description("Get Data By Command ")] void GetDataByCommand([in] uint32 IDs, [in] uint32 Command, [out] uint32 DataSize, [out, WmiSizeIs("DataSize")] uint32 Data[]);
+> +    [WmiMethodId(99), Implemented, Description("Get Data By Package for TAC")] void GetDataByPackage([in, Max(40)] uint8 Input[], [out] uint32 DataSize, [out, WmiSizeIs("DataSize")] uint8 Data[]);
+> +  };
+> +
+> +  [WMI, Dynamic, Provider("WmiProv"), Locale("MS\\0x409"), Description("LENOVO CAPABILITY DATA 00"), guid("{362a3afe-3d96-4665-8530-96dad5bb300e}")]
+> +  class LENOVO_CAPABILITY_DATA_00 {
+> +    [key, read] string InstanceName;
+> +    [read] boolean Active;
+> +
+> +    [WmiDataId(1), read, Description(" IDs.")] uint32 IDs;
+> +    [WmiDataId(2), read, Description("Capability.")] uint32 Capability;
+> +    [WmiDataId(3), read, Description("Capability Default Value.")] uint32 DefaultValue;
+> +  };
+> +
+> +  [WMI, Dynamic, Provider("WmiProv"), Locale("MS\\0x409"), Description("LENOVO CAPABILITY DATA 01"), guid("{7a8f5407-cb67-4d6e-b547-39b3be018154}")]
+> +  class LENOVO_CAPABILITY_DATA_01 {
+> +    [key, read] string InstanceName;
+> +    [read] boolean Active;
+> +
+> +    [WmiDataId(1), read, Description(" IDs.")] uint32 IDs;
+> +    [WmiDataId(2), read, Description("Capability.")] uint32 Capability;
+> +    [WmiDataId(3), read, Description("Default Value.")] uint32 DefaultValue;
+> +    [WmiDataId(4), read, Description("Step.")] uint32 Step;
+> +    [WmiDataId(5), read, Description("Minimum Value.")] uint32 MinValue;
+> +    [WmiDataId(6), read, Description("Maximum Value.")] uint32 MaxValue;
+> +  };
+> +
+> +  [WMI, Dynamic, Provider("WmiProv"), Locale("MS\\0x409"), Description("LENOVO CAPABILITY DATA 02"), guid("{bbf1f790-6c2f-422b-bc8c-4e7369c7f6ab}")]
+> +  class LENOVO_CAPABILITY_DATA_02 {
+> +    [key, read] string InstanceName;
+> +    [read] boolean Active;
+> +
+> +    [WmiDataId(1), read, Description(" IDs.")] uint32 IDs;
+> +    [WmiDataId(2), read, Description("Capability.")] uint32 Capability;
+> +    [WmiDataId(3), read, Description("Data Size.")] uint32 DataSize;
+> +    [WmiDataId(4), read, Description("Default Value"), WmiSizeIs("DataSize")] uint8 DefaultValue[];
+> +  };
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index 1afd30d00aec..675f4b26426d 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -13158,6 +13158,13 @@ S:	Maintained
+>   W:	http://legousb.sourceforge.net/
+>   F:	drivers/usb/misc/legousbtower.c
 >   
-> -#define ASUS_WMI_MGMT_GUID	"97845ED0-4E6D-11DE-8A39-0800200C9A66"
-> -
->   #define NOTIFY_BRNUP_MIN		0x11
->   #define NOTIFY_BRNUP_MAX		0x1f
->   #define NOTIFY_BRNDOWN_MIN		0x20
-> @@ -105,8 +103,6 @@ module_param(fnlock_default, bool, 0444);
->   #define USB_INTEL_XUSB2PR		0xD0
->   #define PCI_DEVICE_ID_INTEL_LYNXPOINT_LP_XHCI	0x9c31
->   
-> -#define ASUS_ACPI_UID_ASUSWMI		"ASUSWMI"
-> -
->   #define WMI_EVENT_MASK			0xFFFF
->   
->   #define FAN_CURVE_POINTS		8
-> diff --git a/include/linux/platform_data/x86/asus-wmi.h b/include/linux/platform_data/x86/asus-wmi.h
-> index 96ff25b2b51b..4574e30c53fc 100644
-> --- a/include/linux/platform_data/x86/asus-wmi.h
-> +++ b/include/linux/platform_data/x86/asus-wmi.h
-> @@ -6,6 +6,9 @@
->   #include <linux/types.h>
->   #include <linux/dmi.h>
->   
-> +#define ASUS_WMI_MGMT_GUID	"97845ED0-4E6D-11DE-8A39-0800200C9A66"
-> +#define ASUS_ACPI_UID_ASUSWMI	"ASUSWMI"
+> +LENOVO WMI DRIVERS
+> +M:	Derek J. Clark <derekjohn.clark@gmail.com>
+> +L:	platform-driver-x86@vger.kernel.org
+> +S:	Maintained
+> +F:	Documentation/wmi/devices/lenovo-wmi-gamezone.rst
+> +F:	Documentation/wmi/devices/lenovo-wmi-other.rst
 > +
->   /* WMI Methods */
->   #define ASUS_WMI_METHODID_SPEC	        0x43455053 /* BIOS SPECification */
->   #define ASUS_WMI_METHODID_SFBD		0x44424653 /* Set First Boot Device */
+>   LENOVO WMI HOTKEY UTILITIES DRIVER
+>   M:	Jackie Dong <xy-jackie@139.com>
+>   L:	platform-driver-x86@vger.kernel.org
 
