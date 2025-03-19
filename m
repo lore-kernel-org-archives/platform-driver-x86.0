@@ -1,61 +1,48 @@
 Received: from linux1587.grserver.gr (linux1587.grserver.gr [185.138.42.100])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8FB1621A45A;
-	Wed, 19 Mar 2025 18:11:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 093F0211715;
+	Wed, 19 Mar 2025 19:13:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.138.42.100
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742407914; cv=none; b=ARjE7o7ij2DSxhkdJwOn3zNfMxdP4U5ViVgLYyNW+4Gab/PCO8ttN84fAQD5pdeiGaQlyrt88vYtJUk4zoHh5NkHrjqF8gJ/aeil+pOS0f2pLzmQ1S4ExQQNcxSGVl7XH+B5JGVHFLUX4XTfWGJBImyAB2DtIvsxB7+NEdtJRAc=
+	t=1742411609; cv=none; b=MtLb0TE9XwDtktu8q8H3TF1djJelJzjAIbGwOCP4DEuEtbOj1ogbzeWo4uxLbf54lsDEmrCuIqrTlH9ZPaM+aT7iJ1olEynK/InedBPv5PKRICznd7zmmHW3jyM74Zt77Ta0Pmdtdr6fJpWTyIK8zxY8aXkNaUWMA/rlkCrqtY0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742407914; c=relaxed/simple;
-	bh=2JmBtFbxKKQjNhgOlVG8wfl7nFBIR0TxMAgRZRCiFxc=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=JHQasTViOVYje1jfehlHmqdMH4MVyTXEppuCSX0McYT+fpggdlE0v78aA7TKYzgp+f6tFpYySYboPcEWASY5Tc16OElhtKcr6uRq4V4kPIVzTxZoNG+ADsa8obVhqpyWlrWPC+nYE0WdV43ljX7w6OrUBEZchlCVH2NOGqijQMY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=antheas.dev; spf=pass smtp.mailfrom=antheas.dev; dkim=pass (1024-bit key) header.d=antheas.dev header.i=@antheas.dev header.b=jlmSt5j0; arc=none smtp.client-ip=185.138.42.100
+	s=arc-20240116; t=1742411609; c=relaxed/simple;
+	bh=vSvZxZ0NwBGmwepE94KBT72M3Ac8sdqVeI1o403IOgY=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=qOYvfuqJWWIy9mcEMxxJ1QtSH9XqDafuJDSySxxto4iciBAcyXM/CjqEFoIz4giGp5hl4gIL6/F27OgfGXy2HrBwdrf6tqqW9Hl7m4wEo9Hdta0AmU2gBVzKHK2fxzSRnTHWCTeTYzv8aHnojEBMxOcu11/L/YdYKa5/XrrqUc4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=antheas.dev; spf=pass smtp.mailfrom=antheas.dev; dkim=pass (1024-bit key) header.d=antheas.dev header.i=@antheas.dev header.b=NJoS2zjn; arc=none smtp.client-ip=185.138.42.100
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=antheas.dev
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=antheas.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=antheas.dev header.i=@antheas.dev header.b="jlmSt5j0"
+	dkim=pass (1024-bit key) header.d=antheas.dev header.i=@antheas.dev header.b="NJoS2zjn"
 Received: from localhost.localdomain (unknown [IPv6:2a05:f6c2:511b:0:cbc0:999f:73ad:33bd])
-	by linux1587.grserver.gr (Postfix) with ESMTPSA id 3F57A2E095DB;
-	Wed, 19 Mar 2025 20:11:48 +0200 (EET)
+	by linux1587.grserver.gr (Postfix) with ESMTPSA id 442D42E029B7;
+	Wed, 19 Mar 2025 21:13:22 +0200 (EET)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=antheas.dev;
-	s=default; t=1742407910;
-	bh=dWLKrg1FIdgXcQO7bjik/WuI88OIFzXpgBzRQ4lKa5w=; h=From:To:Subject;
-	b=jlmSt5j0vQ/1DK57GxGESfdBensyYHh5Ns87Mhp5EjY8ZqhIr9eVFSwOBQrDfroDQ
-	 TMDHBKW9acXQyHZmtSUDWMJmxCR7psDmkA+4Yf/je2KcgqmsgPympehYqZxwvDsrbO
-	 8FlVROYYObpXNASx6p5IhuCU9wZ5XZP1tmHzHgiw=
+	s=default; t=1742411603;
+	bh=ZCfvDS6gXGAxsTeXHoTWtoXKbmrBvPEnxWQeAGaa6is=; h=From:To:Subject;
+	b=NJoS2zjnObAFoTSqMo9oJDAbnM9VBMuOQsoToOBh+EiDViY2Tu56dm9goK7ZakUhF
+	 3SeOcaY9gnGSWR0FECZ4nMr5ewuEBBChVfKDHURvY1FF0gSXSHjPfTzt6eHNgKi6b6
+	 UdV59TQaeqPb7hB6LPjBnlSIHGW9fWbmHpoDhPcw=
 Authentication-Results: linux1587.grserver.gr;
 	spf=pass (sender IP is 2a05:f6c2:511b:0:cbc0:999f:73ad:33bd) smtp.mailfrom=lkml@antheas.dev smtp.helo=localhost.localdomain
 Received-SPF: pass (linux1587.grserver.gr: connection is authenticated)
 From: Antheas Kapenekakis <lkml@antheas.dev>
-To: platform-driver-x86@vger.kernel.org
-Cc: linux-hwmon@vger.kernel.org,
-	linux-doc@vger.kernel.org,
-	linux-pm@vger.kernel.org,
-	Guenter Roeck <linux@roeck-us.net>,
-	Jean Delvare <jdelvare@suse.com>,
-	Jonathan Corbet <corbet@lwn.net>,
-	Joaquin Ignacio Aramendia <samsagax@gmail.com>,
-	Derek J Clark <derekjohn.clark@gmail.com>,
-	Kevin Greenberg <kdgreenberg234@protonmail.com>,
-	Joshua Tam <csinaction@pm.me>,
-	Parth Menon <parthasarathymenon@gmail.com>,
-	Eileen <eileen@one-netbook.com>,
-	linux-kernel@vger.kernel.org,
-	sre@kernel.org,
-	linux@weissschuh.net,
-	ilpo.jarvinen@linux.intel.com,
-	hdegoede@redhat.com,
-	mario.limonciello@amd.com,
+To: platform-driver-x86@vger.kernel.org,
+	linux-input@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org,
+	Jiri Kosina <jikos@kernel.org>,
+	Benjamin Tissoires <bentiss@kernel.org>,
+	Corentin Chary <corentin.chary@gmail.com>,
+	"Luke D . Jones" <luke@ljones.dev>,
+	Hans de Goede <hdegoede@redhat.com>,
+	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
 	Antheas Kapenekakis <lkml@antheas.dev>
-Subject: [PATCH v7 14/14] platform/x86: oxpec: Add charge threshold and
- behaviour to OneXPlayer
-Date: Wed, 19 Mar 2025 19:10:41 +0100
-Message-ID: <20250319181044.392235-15-lkml@antheas.dev>
+Subject: [PATCH 00/11] HID: asus: hid-asus and asus-wmi backlight unification,
+ Z13 QOL improvements
+Date: Wed, 19 Mar 2025 20:13:08 +0100
+Message-ID: <20250319191320.10092-1-lkml@antheas.dev>
 X-Mailer: git-send-email 2.48.1
-In-Reply-To: <20250319181044.392235-1-lkml@antheas.dev>
-References: <20250319181044.392235-1-lkml@antheas.dev>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -64,240 +51,100 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-PPP-Message-ID: 
- <174240790985.3578.1398837508702229341@linux1587.grserver.gr>
+ <174241160339.7553.16834624348433775118@linux1587.grserver.gr>
 X-PPP-Vhost: antheas.dev
 X-Virus-Scanned: clamav-milter 0.103.11 at linux1587.grserver.gr
 X-Virus-Status: Clean
 
-With the X1 (AMD), OneXPlayer added a charge limit and charge inhibit
-feature to their devices. Charge limit allows for choosing an arbitrary
-battery charge setpoint in percentages. Charge ihibit allows to instruct
-the device to stop charging either when it is awake or always.
+This is a three part series that does the following: first, it cleans up
+the hid-asus driver initialization, preventing excess renames and dmesg
+errors on ROG devices. Then, it adds support for the Z13 2025 keyboard,
+by fixing its keyboard to not be stuck in BIOS mode and enabling its fan
+key. Finally, the bigger piece of this series is the unification of the
+backlight controls between hid-asus and asus-wmi.
 
-This feature was then extended for the F1Pro as well. OneXPlayer also
-released BIOS updates for the X1 Mini, X1 (Intel), and F1 devices that
-add support for this feature. Therefore, enable it for all F1 and
-X1 devices.
+This requires some context. First, some ROG devices expose both WMI and
+HID controls for RGB. In addition, some ROG devices (such as the Z13)
+have two AURA devices where both have backlight controls (lightbar and
+keyboard). Under Windows, Armoury Crate exposes a single brightness control
+for all Aura devices.
 
-Signed-off-by: Antheas Kapenekakis <lkml@antheas.dev>
----
- drivers/platform/x86/Kconfig |   1 +
- drivers/platform/x86/oxpec.c | 160 ++++++++++++++++++++++++++++++++++-
- 2 files changed, 157 insertions(+), 4 deletions(-)
+However, currently in the linux kernel this is not the case, with asus-wmi
+and hid-asus relying on a quirk system to figure out which should control
+the backlight. But what about the other one? There might be silent
+regressions such as part of the RGB of the device not responding properly.
 
-diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
-index 82cfc76bc5c9f..f4d993658c01f 100644
---- a/drivers/platform/x86/Kconfig
-+++ b/drivers/platform/x86/Kconfig
-@@ -1189,6 +1189,7 @@ config SEL3350_PLATFORM
- config OXP_EC
- 	tristate "OneXPlayer EC platform control"
- 	depends on ACPI_EC
-+	depends on ACPI_BATTERY
- 	depends on HWMON
- 	depends on X86
- 	help
-diff --git a/drivers/platform/x86/oxpec.c b/drivers/platform/x86/oxpec.c
-index 2e4c7e6188f08..3c445932fccbb 100644
---- a/drivers/platform/x86/oxpec.c
-+++ b/drivers/platform/x86/oxpec.c
-@@ -24,6 +24,7 @@
- #include <linux/module.h>
- #include <linux/platform_device.h>
- #include <linux/processor.h>
-+#include <acpi/battery.h>
- 
- /* Handle ACPI lock mechanism */
- static u32 oxp_mutex;
-@@ -60,6 +61,7 @@ enum oxp_board {
- };
- 
- static enum oxp_board board;
-+static struct device *oxp_dev;
- 
- /* Fan reading and PWM */
- #define OXP_SENSOR_FAN_REG             0x76 /* Fan reading is 2 registers long */
-@@ -93,6 +95,23 @@ static enum oxp_board board;
- #define OXP_X1_TURBO_LED_OFF           0x01
- #define OXP_X1_TURBO_LED_ON            0x02
- 
-+/* Battery extension settings */
-+#define EC_CHARGE_CONTROL_BEHAVIOURS	(BIT(POWER_SUPPLY_CHARGE_BEHAVIOUR_AUTO)             | \
-+					 BIT(POWER_SUPPLY_CHARGE_BEHAVIOUR_INHIBIT_CHARGE)    | \
-+					 BIT(POWER_SUPPLY_CHARGE_BEHAVIOUR_INHIBIT_CHARGE_AWAKE))
-+
-+#define OXP_X1_CHARGE_LIMIT_REG      0xA3 /* X1 charge limit (%) */
-+#define OXP_X1_CHARGE_INHIBIT_REG     0xA4 /* X1 bypass charging */
-+
-+#define OXP_X1_CHARGE_INHIBIT_MASK_AWAKE 0x01
-+/*
-+ * X1 Mask is 0x0A, OneXFly F1Pro is just 0x02
-+ * but the extra bit on the X1 does nothing.
-+ */
-+#define OXP_X1_CHARGE_INHIBIT_MASK_OFF 0x02
-+#define OXP_X1_CHARGE_INHIBIT_MASK_ALWAYS (OXP_X1_CHARGE_INHIBIT_MASK_AWAKE | \
-+	OXP_X1_CHARGE_INHIBIT_MASK_OFF)
-+
- static const struct dmi_system_id dmi_table[] = {
- 	{
- 		.matches = {
-@@ -507,6 +526,129 @@ static ssize_t tt_led_show(struct device *dev,
- 
- static DEVICE_ATTR_RW(tt_led);
- 
-+/* Callbacks for charge behaviour attributes */
-+static bool oxp_psy_ext_supported(void)
-+{
-+	switch (board) {
-+	case oxp_x1:
-+	case oxp_fly:
-+		return true;
-+	default:
-+		break;
-+	}
-+	return false;
-+}
-+
-+static int oxp_psy_ext_get_prop(struct power_supply *psy,
-+				       const struct power_supply_ext *ext,
-+				       void *data,
-+				       enum power_supply_property psp,
-+				       union power_supply_propval *val)
-+{
-+	long raw_val;
-+	int ret;
-+
-+	switch (psp) {
-+	case POWER_SUPPLY_PROP_CHARGE_CONTROL_END_THRESHOLD:
-+		ret = read_from_ec(OXP_X1_CHARGE_LIMIT_REG, 1, &raw_val);
-+		if (ret)
-+			return ret;
-+		if (raw_val > 100)
-+			return -EINVAL;
-+		val->intval = raw_val;
-+		return 0;
-+	case POWER_SUPPLY_PROP_CHARGE_BEHAVIOUR:
-+		ret = read_from_ec(OXP_X1_CHARGE_INHIBIT_REG, 1, &raw_val);
-+		if (ret)
-+			return ret;
-+		if ((raw_val & OXP_X1_CHARGE_INHIBIT_MASK_ALWAYS) ==
-+		    OXP_X1_CHARGE_INHIBIT_MASK_ALWAYS)
-+			val->intval = POWER_SUPPLY_CHARGE_BEHAVIOUR_INHIBIT_CHARGE;
-+		else if ((raw_val & OXP_X1_CHARGE_INHIBIT_MASK_AWAKE) ==
-+			 OXP_X1_CHARGE_INHIBIT_MASK_AWAKE)
-+			val->intval = POWER_SUPPLY_CHARGE_BEHAVIOUR_INHIBIT_CHARGE_AWAKE;
-+		else
-+			val->intval = POWER_SUPPLY_CHARGE_BEHAVIOUR_AUTO;
-+		return 0;
-+	default:
-+		return -EINVAL;
-+	}
-+}
-+
-+static int oxp_psy_ext_set_prop(struct power_supply *psy,
-+				       const struct power_supply_ext *ext,
-+				       void *data,
-+				       enum power_supply_property psp,
-+				       const union power_supply_propval *val)
-+{
-+	long raw_val;
-+
-+	switch (psp) {
-+	case POWER_SUPPLY_PROP_CHARGE_CONTROL_END_THRESHOLD:
-+		if (val->intval > 100)
-+			return -EINVAL;
-+		return write_to_ec(OXP_X1_CHARGE_LIMIT_REG, val->intval);
-+	case POWER_SUPPLY_PROP_CHARGE_BEHAVIOUR:
-+		switch (val->intval) {
-+		case POWER_SUPPLY_CHARGE_BEHAVIOUR_AUTO:
-+			raw_val = 0;
-+			break;
-+		case POWER_SUPPLY_CHARGE_BEHAVIOUR_INHIBIT_CHARGE_AWAKE:
-+			raw_val = OXP_X1_CHARGE_INHIBIT_MASK_AWAKE;
-+			break;
-+		case POWER_SUPPLY_CHARGE_BEHAVIOUR_INHIBIT_CHARGE:
-+			raw_val = OXP_X1_CHARGE_INHIBIT_MASK_ALWAYS;
-+			break;
-+		default:
-+			return -EINVAL;
-+		}
-+
-+		return write_to_ec(OXP_X1_CHARGE_INHIBIT_REG, raw_val);
-+	default:
-+		return -EINVAL;
-+	}
-+}
-+
-+static int oxp_psy_prop_is_writeable(struct power_supply *psy,
-+					    const struct power_supply_ext *ext,
-+					    void *data,
-+					    enum power_supply_property psp)
-+{
-+	return true;
-+}
-+
-+static const enum power_supply_property oxp_psy_ext_props[] = {
-+	POWER_SUPPLY_PROP_CHARGE_BEHAVIOUR,
-+	POWER_SUPPLY_PROP_CHARGE_CONTROL_END_THRESHOLD,
-+};
-+
-+struct power_supply_ext oxp_psy_ext = {
-+	.name			= "oxp-charge-control",
-+	.properties		= oxp_psy_ext_props,
-+	.num_properties		= ARRAY_SIZE(oxp_psy_ext_props),
-+	.charge_behaviours	= EC_CHARGE_CONTROL_BEHAVIOURS,
-+	.get_property		= oxp_psy_ext_get_prop,
-+	.set_property		= oxp_psy_ext_set_prop,
-+	.property_is_writeable	= oxp_psy_prop_is_writeable,
-+};
-+
-+static int oxp_add_battery(struct power_supply *battery, struct acpi_battery_hook *hook)
-+{
-+	return power_supply_register_extension(battery, &oxp_psy_ext, oxp_dev, NULL);
-+}
-+
-+static int oxp_remove_battery(struct power_supply *battery, struct acpi_battery_hook *hook)
-+{
-+	power_supply_unregister_extension(battery, &oxp_psy_ext);
-+	return 0;
-+}
-+
-+static struct acpi_battery_hook battery_hook = {
-+	.add_battery	= oxp_add_battery,
-+	.remove_battery	= oxp_remove_battery,
-+	.name		= "OneXPlayer Battery",
-+};
-+
- /* PWM enable/disable functions */
- static int oxp_pwm_enable(void)
- {
-@@ -845,12 +987,22 @@ static const struct hwmon_chip_info oxp_ec_chip_info = {
- static int oxp_platform_probe(struct platform_device *pdev)
- {
- 	struct device *dev = &pdev->dev;
--	struct device *hwdev;
-+	int ret;
-+
-+	oxp_dev = dev;
-+	ret = PTR_ERR_OR_ZERO(devm_hwmon_device_register_with_info(
-+		dev, "oxp_ec", NULL, &oxp_ec_chip_info, NULL));
- 
--	hwdev = devm_hwmon_device_register_with_info(dev, "oxpec", NULL,
--						     &oxp_ec_chip_info, NULL);
-+	if (ret)
-+		return ret;
- 
--	return PTR_ERR_OR_ZERO(hwdev);
-+	if (oxp_psy_ext_supported()) {
-+		ret = devm_battery_hook_register(dev, &battery_hook);
-+		if (ret)
-+			return ret;
-+	}
-+
-+	return 0;
- }
- 
- static struct platform_driver oxp_platform_driver = {
+In the Z13, this is the case, with a race condition causing the lightbar
+to control the asus::kbd_backlight device most of the time, with the
+keyboard being renamed to asus::kbd_backlight_1 and not doing anything
+under KDE controls.
+
+Here, we should note that most backlight handlers are hardcoded to check
+for backlight once, and for one backlight, during boot, so any other
+solution would require a large rewrite of userspace.
+
+Even when brightness controls are fixed, we still have the problem of the
+backlight key being on/off when controlled by KDE and 0/33/66/100 when
+the device has a WMI keyboard. Ideally, we would like the 0/33/66/100 to
+be done under hid as well, regardless of whether the backlight of the
+device is controlled by WMI or HID.
+
+Therefore, this is what the third part of this series does. It sets up
+asus-wmi to expose accepting listeners for the asus::kbd_backlight device
+and being the one that sets it up. Then, it makes hid-asus devices
+register a listener there, so that all of them are controlled by
+asus::kbd_backlight. Finally, it adds an event handler for keyboard keys,
+so that HID led controls are handled by the kernel instead of userspace.
+This way, even when userspace is not active the key works, and we get the
+desired behavior of 0/33/66/100 across all Aura devices (currently, that
+is keyboards, and embedded devices such as lightbars). This results
+removing the quirk system as well, eliminating a point of failure.
+
+I tested this on an Asus Z13 2025, and testing by other devices would be
+appreciated for sure. This series is designed to be transparent to
+userspace behavior-wise compared previous kernels, with all existing
+laptops either having the same behavior or being better.
+
+The Z13 keyboard folio RGB controls work beautifully, with KDE led
+notifications working and doing 0/33/66/100 as expected. This also happens
+with hotplugging, as the lightbar is always available and keeps the
+endpoint alive from boot, even if the folio is not connected (a quirk
+can be added later if there is a device where this is not the case).
+
+The first two parts of the series can also be merged independently of the
+third part, so we can iterate on that more. Perhaps there is a better way
+to handle this cohesion,
+
+Oh, by the way Luke, I developed this series with a variant of
+your Armoury series merged, and only switched to 6.14-v7 for this
+submission. You will be happy to know that there are no conflicts :)
+(at least with that version from ~January). Also, please factcheck
+my initialization sequence is correct in the 0x5d and 0x5e devices
+you added when you made that refactor last year. Are those handshakes
+needed?
+
+Antheas Kapenekakis (11):
+  HID: asus: refactor init sequence per spec
+  HID: asus: cleanup keyboard backlight check
+  HID: asus: prevent binding to all HID devices on ROG
+  HID: asus: rename keyboard3 to Z13_FOLIO
+  HID: asus: add Asus Z13 2025 Fan key
+  HID: asus: introduce small delay on Asus Z13 RGB init
+  platform/x86: asus-wmi: Add support for multiple kbd RGB handlers
+  HID: asus: listen to the asus-wmi brightness device instead of
+    creating one
+  platform/x86: asus-wmi: remove unused keyboard backlight quirk
+  platform/x86: asus-wmi: add keyboard brightness event handler
+  HID: asus: add support for the asus-wmi brightness handler
+
+ drivers/hid/hid-asus.c                     | 220 ++++++++++++---------
+ drivers/hid/hid-ids.h                      |   2 +-
+ drivers/platform/x86/asus-wmi.c            | 137 +++++++++++--
+ include/linux/platform_data/x86/asus-wmi.h |  66 +++----
+ 4 files changed, 279 insertions(+), 146 deletions(-)
+
+
+base-commit: 4701f33a10702d5fc577c32434eb62adde0a1ae1
 -- 
 2.48.1
 
