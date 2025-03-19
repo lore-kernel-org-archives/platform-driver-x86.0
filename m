@@ -1,1634 +1,881 @@
-Received: from fhigh-b4-smtp.messagingengine.com (fhigh-b4-smtp.messagingengine.com [202.12.124.155])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9DE4C2500BC;
-	Wed, 19 Mar 2025 06:59:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.155
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C4EF1EEE6;
+	Wed, 19 Mar 2025 09:30:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742367560; cv=none; b=NTYD6ZedxXUKcNpkwH4WP1bs17L9aQNfDdWY71YlYBXQ8hFpkmO33XHW0KaykqNT3Hp/PhXowWHVgVqmN4UhBtRFLrCNI+BOaUMWim8+I08552LB9nwRi9jl+vwacPHrToYVcDK4BrZdztzWSvoA60TbeoTgIQDVQJ9u6TOF798=
+	t=1742376638; cv=none; b=e1pZnfdbyvuC7ZC/ZSb7FkiBNg0VVurF2man+HiDb++W9aRLzia3biottSeWZuyt74n5xznNevj4Uvj7WoYzeWBqeauBAIw72YB/KlsO+YSWgR5STQ+rK2PNDqPRJioJivJbzecxoawPDYhVOF5YopsIsW/TrAetBFDmCv7JIQU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742367560; c=relaxed/simple;
-	bh=La5b/RIKd0Fy6rboPeLTzGrGCNWMsjPX1sFt9mZnZJY=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=lygOpQO/yZwqZApt3MortMXx90qCBfRt1oU048Uw2bQUqUVlQPr954KzdYGILUFES/1GBXNGPWwEM8Y9nFbFJVRlZVaz2WsR2xu/oSo9yV1vYFDOmisFuFYgoJrGUh8IsGiXOLY1n+TkgosQwtJlR0Q6nEYuGxsxFzPlJf2S/CQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ljones.dev; spf=none smtp.mailfrom=ljones.dev; dkim=pass (2048-bit key) header.d=ljones.dev header.i=@ljones.dev header.b=RNbeHo9v; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=G0oSPTR5; arc=none smtp.client-ip=202.12.124.155
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ljones.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=ljones.dev
+	s=arc-20240116; t=1742376638; c=relaxed/simple;
+	bh=kIAOhvTDwNJUqqsksoBZcEdbt37vq7mpC+KqsAhXVn4=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=gAPM5b2rGGykHS4xKYa0k5J82RSD86uzfjzA+/EOkiE6y4zYO81xoU/3250SnIFvaD1QlnFtlj5RdXZcXWne8BzVbDYX7+Sw7E5vYe+egK3n134FaS3LrIiA87TVYaILob0Nrs6QwcOGhx6PqUnyrI6T9aqh+ZDOli2m7wj9XpY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JHFpFquv; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ljones.dev header.i=@ljones.dev header.b="RNbeHo9v";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="G0oSPTR5"
-Received: from phl-compute-13.internal (phl-compute-13.phl.internal [10.202.2.53])
-	by mailfhigh.stl.internal (Postfix) with ESMTP id 9703725401E0;
-	Wed, 19 Mar 2025 02:59:16 -0400 (EDT)
-Received: from phl-mailfrontend-02 ([10.202.2.163])
-  by phl-compute-13.internal (MEProxy); Wed, 19 Mar 2025 02:59:16 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ljones.dev; h=cc
-	:cc:content-transfer-encoding:content-type:date:date:from:from
-	:in-reply-to:in-reply-to:message-id:mime-version:references
-	:reply-to:subject:subject:to:to; s=fm3; t=1742367556; x=
-	1742453956; bh=8g716C0xmK/Kr0plusDVuTFWsU1T9gwNGH7f9/RL7d4=; b=R
-	NbeHo9vXi+kELjQVJ7liPqLzyPo5KGv1cS2Myg8DEtISoWZJtspOYbC0ws6DrJLI
-	DaBld6rlgR9YP55o0OkOS7ylpSS7TzH8GFbNgBOMtyRqHnGLRjV3zZJpZ1ens1G+
-	tHQ5IFC2eoXUk6nvOO9IellN1gq5eXt89lQpyoiRAT540KPp6vdVim8+qxv0M/AF
-	xxQv7sMksUd96HyXps/D1BGtKFxV1sMXoYQBUYiukf7YInm0fz39a5TVqHsvFHOx
-	DFKdMBwVYVLjDwSc6Pc3/g8ajfH8zJrcOvNcXNrFani9HTy8QzQMwRwfSqJt79V/
-	Wj5yjmNRH+Grhi7XYVdnw==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:date:date:feedback-id:feedback-id:from:from
-	:in-reply-to:in-reply-to:message-id:mime-version:references
-	:reply-to:subject:subject:to:to:x-me-proxy:x-me-sender
-	:x-me-sender:x-sasl-enc; s=fm1; t=1742367556; x=1742453956; bh=8
-	g716C0xmK/Kr0plusDVuTFWsU1T9gwNGH7f9/RL7d4=; b=G0oSPTR5IIaBRhW+W
-	AYWQ989Lalar0eBTDsh1oTwnzrKsXWt6+e3usMQZHGg7C445sSkG/7F+LB9vH8RH
-	ADuEVraD9N4V+jSVQwJxV1enXl/7Sfn+BOmGLSItRyU57HK/Tkg6lvZaf5rBmTi7
-	i1b2fRsqltjnjswBUS3Wyr2YPXL2QPbPL/0nnsi8VKGDXJOS57VU39rwnrY8An+Y
-	4cjP+WATvTubKzlidHW8mgxXH1CmAQPfISuOQDjsIsMf77Pbu88ic/4F2InK45F4
-	IaRzG0dQiQg0944gAd5GGcv3kDDRHSwbP4ml3YatdjW4zbzQAupS35NT7oNAb5EU
-	ocD7w==
-X-ME-Sender: <xms:RGvaZ6VU6FHG-sgxlO4XSf8Y3ts_l6qq1ozR0hwm5u-4n8UD0W_dVA>
-    <xme:RGvaZ2lkCgINWZFj6D6fcWFg10U8PVfYVk9_oo-B5ardGyiKCmXHlRXAnY3joyZHn
-    AseVaQOJHa0R2j-lsw>
-X-ME-Received: <xmr:RGvaZ-Zuz8oC67IgX3_KTZ89-eTHS_bXD3B4-1hLK90uJzdSluzPVXDLmZZskIoCGd_DoujZ5aDHBKwBtA>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddugeegieejucetufdoteggodetrf
-    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggv
-    pdfurfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucesvcftvggtihhpih
-    gvnhhtshculddquddttddmnecujfgurhephffvvefufffkofgjfhgggfestdekredtredt
-    tdenucfhrhhomhepnfhukhgvucflohhnvghsuceolhhukhgvsehljhhonhgvshdruggvvh
-    eqnecuggftrfgrthhtvghrnhepueeuleeffeeihfelhffhheelfeffgeetuefhheevkeet
-    uedugfetfeetlefhieejnecuvehluhhsthgvrhfuihiivgepudenucfrrghrrghmpehmrg
-    hilhhfrhhomheplhhukhgvsehljhhonhgvshdruggvvhdpnhgspghrtghpthhtohepiedp
-    mhhouggvpehsmhhtphhouhhtpdhrtghpthhtoheplhhinhhugidqkhgvrhhnvghlsehvgh
-    gvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtohephhguvghgohgvuggvsehrvgguhhgr
-    thdrtghomhdprhgtphhtthhopehilhhpohdrjhgrrhhvihhnvghnsehlihhnuhigrdhinh
-    htvghlrdgtohhmpdhrtghpthhtohepphhlrghtfhhorhhmqdgurhhivhgvrhdqgiekiees
-    vhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehmrghrihhordhlihhmohhntg
-    hivghllhhosegrmhgurdgtohhmpdhrtghpthhtoheplhhukhgvsehljhhonhgvshdruggv
-    vh
-X-ME-Proxy: <xmx:RGvaZxVI4Kw2b2E92nOLCkJm63cPfvaVLhpu9Cfud9bP6SvlJXUFJA>
-    <xmx:RGvaZ0lT4QG0fBUK4cEEYrmVVP_HZiUZv4NwiQsPBYgCidNnTqTaCQ>
-    <xmx:RGvaZ2eo9tMPvd_-OhCkPKDQhOqmBrsAUN4DS8M1Gt2WL27jLeO9Dg>
-    <xmx:RGvaZ2HP4962UY-ZbDvOd4kCooHz8XSIgVJNLYR1NNzqRjdCMFlDgA>
-    <xmx:RGvaZztNrqcLnVgpAKNABIIlqCeVHy6KfgrmhrsUhqrmlSiNf58iEZLw>
-Feedback-ID: i5ec1447f:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Wed,
- 19 Mar 2025 02:59:12 -0400 (EDT)
-From: Luke Jones <luke@ljones.dev>
-To: linux-kernel@vger.kernel.org
-Cc: hdegoede@redhat.com,
-	ilpo.jarvinen@linux.intel.com,
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JHFpFquv"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DCC5BC4CEE9;
+	Wed, 19 Mar 2025 09:29:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1742376638;
+	bh=kIAOhvTDwNJUqqsksoBZcEdbt37vq7mpC+KqsAhXVn4=;
+	h=From:To:Cc:Subject:Date:From;
+	b=JHFpFquv/U6v4vkowPwaMXcGCfItYIAsWV00Ih7EbBLTrDnNHDkqgRUa5ZcdR6PPT
+	 GE73t7IHMHaA5apvRNwpbDEvupLn5GEAROfwG8bfOC3cWm4r+wAQpSmx/nSdIOfft3
+	 g6zWFgTwbkIm1pTwp9PFGCWv+F/37wpisUTihZ018rrKSrTzndRRSods8QhjPWc0h0
+	 Dz0blnLWWjitFHWBcwSlPWcVj9l1cqhOjMZjmHLHersV3cpNGEMv4hjcn3IBGUGMpD
+	 Uwpffo6LtYQoMnAAzDkwZWIhy/r5yBypbyXxtoG2EVI7F+M9Ak3ZkA195gONZahMqe
+	 3dXetUJTXAo6w==
+From: "Jiri Slaby (SUSE)" <jirislaby@kernel.org>
+To: tglx@linutronix.de
+Cc: maz@kernel.org,
+	linux-kernel@vger.kernel.org,
+	"Jiri Slaby (SUSE)" <jirislaby@kernel.org>,
+	Aaro Koskinen <aaro.koskinen@iki.fi>,
+	Abhinav Kumar <quic_abhinavk@quicinc.com>,
+	Albert Ou <aou@eecs.berkeley.edu>,
+	Alexandre Belloni <alexandre.belloni@bootlin.com>,
+	Alexandre Ghiti <alex@ghiti.fr>,
+	Alexandre Torgue <alexandre.torgue@foss.st.com>,
+	Alex Deucher <alexander.deucher@amd.com>,
+	Alex Shi <alexs@kernel.org>,
+	Alim Akhtar <alim.akhtar@samsung.com>,
+	=?UTF-8?q?Alvin=20=C5=A0ipraga?= <alsi@bang-olufsen.dk>,
+	Alyssa Rosenzweig <alyssa@rosenzweig.io>,
+	amd-gfx@lists.freedesktop.org,
+	Amit Kucheria <amitk@kernel.org>,
+	Anatolij Gustschin <agust@denx.de>,
+	Andi Shyti <andi.shyti@kernel.org>,
+	=?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber@suse.de>,
+	Andreas Kemnade <andreas@kemnade.info>,
+	Andrew Jeffery <andrew@codeconstruct.com.au>,
+	Andrew Lunn <andrew@lunn.ch>,
+	Andy Shevchenko <andy@kernel.org>,
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+	Antoine Tenart <atenart@kernel.org>,
+	Anton Ivanov <anton.ivanov@cambridgegreys.com>,
+	Anup Patel <anup@brainfault.org>,
+	Arnd Bergmann <arnd@arndb.de>,
+	asahi@lists.linux.dev,
+	Bartosz Golaszewski <brgl@bgdev.pl>,
+	Baruch Siach <baruch@tkos.co.il>,
+	Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+	Bharat Kumar Gogada <bharat.kumar.gogada@amd.com>,
+	Bjorn Andersson <andersson@kernel.org>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Borislav Petkov <bp@alien8.de>,
+	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
+	Claudiu Beznea <claudiu.beznea@tuxon.dev>,
+	Corentin Chary <corentin.chary@gmail.com>,
+	Daire McNamara <daire.mcnamara@microchip.com>,
+	Daniel Golle <daniel@makrotopia.org>,
+	Daniel Lezcano <daniel.lezcano@linaro.org>,
+	Daniel Mack <daniel@zonque.org>,
+	Daniel Palmer <daniel@thingy.jp>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	David Airlie <airlied@gmail.com>,
+	"David S. Miller" <davem@davemloft.net>,
+	DENG Qingfang <dqfext@gmail.com>,
+	Dinh Nguyen <dinguyen@kernel.org>,
+	Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
+	Dongliang Mu <dzm91@hust.edu.cn>,
+	Doug Berger <opendmb@gmail.com>,
+	dri-devel@lists.freedesktop.org,
+	Eddie James <eajames@linux.ibm.com>,
+	Eric Dumazet <edumazet@google.com>,
+	Fabio Estevam <festevam@gmail.com>,
+	Florian Fainelli <florian.fainelli@broadcom.com>,
+	Geoff Levand <geoff@infradead.org>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Gregory Clement <gregory.clement@bootlin.com>,
+	Guo Ren <guoren@kernel.org>,
+	Hans de Goede <hdegoede@redhat.com>,
+	Haojian Zhuang <haojian.zhuang@gmail.com>,
+	Haojian Zhuang <haojian.zhuang@linaro.org>,
+	Heiko Stuebner <heiko@sntech.de>,
+	Herve Codina <herve.codina@bootlin.com>,
+	Hou Zhiqiang <Zhiqiang.Hou@nxp.com>,
+	"H. Peter Anvin" <hpa@zytor.com>,
+	Huacai Chen <chenhuacai@kernel.org>,
+	Changhuang Liang <changhuang.liang@starfivetech.com>,
+	Chen-Yu Tsai <wens@csie.org>,
+	"Chester A. Unal" <chester.a.unal@arinc9.com>,
+	=?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
+	Christophe Leroy <christophe.leroy@csgroup.eu>,
+	Chris Zankel <chris@zankel.net>,
+	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	Imre Kaloz <kaloz@openwrt.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	James Morse <james.morse@arm.com>,
+	Janne Grunau <j@jannau.net>,
+	Janusz Krzysztofik <jmkrzyszt@gmail.com>,
+	Jaroslav Kysela <perex@perex.cz>,
+	Jassi Brar <jassisinghbrar@gmail.com>,
+	Jernej Skrabec <jernej.skrabec@gmail.com>,
+	Jerome Brunet <jbrunet@baylibre.com>,
+	Jianjun Wang <jianjun.wang@mediatek.com>,
+	Jiawen Wu <jiawenwu@trustnetic.com>,
+	Jiaxun Yang <jiaxun.yang@flygoat.com>,
+	Jim Quinlan <jim2101024@gmail.com>,
+	Jingoo Han <jingoohan1@gmail.com>,
+	Joel Stanley <joel@jms.id.au>,
+	Johannes Berg <johannes@sipsolutions.net>,
+	John Crispin <john@phrozen.org>,
+	John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>,
+	Jonas Bonn <jonas@southpole.se>,
+	Jonathan Cameron <jic23@kernel.org>,
+	Jonathan Corbet <corbet@lwn.net>,
+	Jonathan Hunter <jonathanh@nvidia.com>,
+	=?UTF-8?q?Jonathan=20Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>,
+	Joyce Ooi <joyce.ooi@intel.com>,
+	Karthikeyan Mitran <m.karthikeyan@mobiveil.co.in>,
+	Keerthy <j-keerthy@ti.com>,
+	Kevin Hilman <khilman@baylibre.com>,
+	Konrad Dybcio <konradybcio@kernel.org>,
+	Krzysztof Kozlowski <krzk@kernel.org>,
+	=?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
+	Kunihiko Hayashi <hayashi.kunihiko@socionext.com>,
+	Lakshmi Sowjanya D <lakshmi.sowjanya.d@intel.com>,
+	Lars-Peter Clausen <lars@metafoo.de>,
+	Lee Jones <lee@kernel.org>,
+	Liam Girdwood <lgirdwood@gmail.com>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Linus Walleij <linusw@kernel.org>,
+	linux-amlogic@lists.infradead.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-arm-msm@vger.kernel.org,
+	linux-doc@vger.kernel.org,
+	linux-edac@vger.kernel.org,
+	linux-gpio@vger.kernel.org,
+	linux-iio@vger.kernel.org,
+	linux-i2c@vger.kernel.org,
+	linux-mediatek@lists.infradead.org,
+	linux-mips@vger.kernel.org,
+	linux-omap@vger.kernel.org,
+	linux-pci@vger.kernel.org,
+	linuxppc-dev@lists.ozlabs.org,
+	linux-remoteproc@vger.kernel.org,
+	linux-riscv@lists.infradead.org,
+	linux-rpi-kernel@lists.infradead.org,
+	linux-sh@vger.kernel.org,
+	linux-snps-arc@lists.infradead.org,
+	linux-sound@vger.kernel.org,
+	linux-stm32@st-md-mailman.stormreply.com,
+	linux-um@lists.infradead.org,
+	linux-wireless@vger.kernel.org,
+	loongarch@lists.linux.dev,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Ludovic Desroches <ludovic.desroches@microchip.com>,
+	Lukasz Luba <lukasz.luba@arm.com>,
+	"Luke D. Jones" <luke@ljones.dev>,
+	Madhavan Srinivasan <maddy@linux.ibm.com>,
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+	=?UTF-8?q?Marek=20Beh=C3=BAn?= <kabel@kernel.org>,
+	Marijn Suijten <marijn.suijten@somainline.org>,
+	Mark Brown <broonie@kernel.org>,
+	Mark-PK Tsai <mark-pk.tsai@mediatek.com>,
+	Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Mathieu Poirier <mathieu.poirier@linaro.org>,
+	Matthias Brugger <matthias.bgg@gmail.com>,
+	Mauro Carvalho Chehab <mchehab@kernel.org>,
+	Max Filippov <jcmvbkbc@gmail.com>,
+	Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+	Mengyuan Lou <mengyuanlou@net-swift.com>,
+	Michael Buesch <m@bues.ch>,
+	Michael Ellerman <mpe@ellerman.id.au>,
+	Michal Simek <michal.simek@amd.com>,
+	Miodrag Dinic <miodrag.dinic@mips.com>,
+	Naveen N Rao <naveen@kernel.org>,
+	Neil Armstrong <neil.armstrong@linaro.org>,
+	netdev@vger.kernel.org,
+	Nicolas Ferre <nicolas.ferre@microchip.com>,
+	Nicolas Saenz Julienne <nsaenz@kernel.org>,
+	Nicholas Piggin <npiggin@gmail.com>,
+	Nikhil Agarwal <nikhil.agarwal@amd.com>,
+	Nipun Gupta <nipun.gupta@amd.com>,
+	Nishanth Menon <nm@ti.com>,
+	=?UTF-8?q?Pali=20Roh=C3=A1r?= <pali@kernel.org>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Paolo Abeni <pabeni@redhat.com>,
+	Paul Cercueil <paul@crapouillou.net>,
+	Paul Walmsley <paul.walmsley@sifive.com>,
+	Pengutronix Kernel Team <kernel@pengutronix.de>,
+	Peter Rosin <peda@axentia.se>,
+	Philipp Zabel <p.zabel@pengutronix.de>,
+	Piotr Wojtaszczyk <piotr.wojtaszczyk@timesys.com>,
 	platform-driver-x86@vger.kernel.org,
-	mario.limonciello@amd.com,
-	"Luke D. Jones" <luke@ljones.dev>
-Subject: [PATCH v8 8/8] platform/x86: asus-armoury: add ppt_* and nv_* tuning knobs
-Date: Wed, 19 Mar 2025 19:58:27 +1300
-Message-ID: <20250319065827.53478-9-luke@ljones.dev>
+	Prasad Kumpatla <quic_pkumpatl@quicinc.com>,
+	Qiang Zhao <qiang.zhao@nxp.com>,
+	Qin Jian <qinjian@cqplus1.com>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Randy Dunlap <rdunlap@infradead.org>,
+	Ray Jui <rjui@broadcom.com>,
+	Rengarajan Sundararajan <Rengarajan.S@microchip.com>,
+	Richard Cochran <richardcochran@gmail.com>,
+	Richard Weinberger <richard@nod.at>,
+	Rich Felker <dalias@libc.org>,
+	Rob Clark <robdclark@gmail.com>,
+	Robert Jarzmik <robert.jarzmik@free.fr>,
+	Robert Richter <rric@kernel.org>,
+	Rob Herring <robh@kernel.org>,
+	Roger Quadros <rogerq@kernel.org>,
+	Russell King <linux@armlinux.org.uk>,
+	Ryan Chen <ryan_chen@aspeedtech.com>,
+	Ryder Lee <ryder.lee@mediatek.com>,
+	Samuel Holland <samuel@sholland.org>,
+	Santosh Shilimkar <ssantosh@kernel.org>,
+	Sascha Hauer <s.hauer@pengutronix.de>,
+	Scott Branden <sbranden@broadcom.com>,
+	Scott Wood <oss@buserror.net>,
+	Sean Paul <sean@poorly.run>,
+	Sean Wang <sean.wang@kernel.org>,
+	Sean Wang <sean.wang@mediatek.com>,
+	Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
+	Sergio Paracuellos <sergio.paracuellos@gmail.com>,
+	Shawn Guo <shawnguo@kernel.org>,
+	Shawn Lin <shawn.lin@rock-chips.com>,
+	Siddharth Vadapalli <s-vadapalli@ti.com>,
+	Simona Vetter <simona@ffwll.ch>,
+	Stafford Horne <shorne@gmail.com>,
+	Stefan Kristiansson <stefan.kristiansson@saunalahti.fi>,
+	Stephen Boyd <sboyd@kernel.org>,
+	Sven Peter <sven@svenpeter.dev>,
+	Takashi Iwai <tiwai@suse.com>,
+	Talel Shenhar <talel@amazon.com>,
+	Tero Kristo <kristo@kernel.org>,
+	Thangaraj Samynathan <Thangaraj.S@microchip.com>,
+	Thara Gopinath <thara.gopinath@gmail.com>,
+	Thierry Reding <thierry.reding@gmail.com>,
+	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+	Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+	Toan Le <toan@os.amperecomputing.com>,
+	Tony Lindgren <tony@atomide.com>,
+	Tony Luck <tony.luck@intel.com>,
+	UNGLinuxDriver@microchip.com,
+	=?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <ukleinek@kernel.org>,
+	Vignesh Raghavendra <vigneshr@ti.com>,
+	Vineet Gupta <vgupta@kernel.org>,
+	Vladimir Oltean <olteanv@gmail.com>,
+	Vladimir Zapolskiy <vz@mleia.com>,
+	WANG Xuerui <kernel@xen0n.name>,
+	Woojung Huh <woojung.huh@microchip.com>,
+	x86@kernel.org,
+	Yanteng Si <si.yanteng@linux.dev>,
+	Yoshinori Sato <ysato@users.sourceforge.jp>,
+	Zhang Rui <rui.zhang@intel.com>
+Subject: [PATCH v2 00/57] irqdomain: Cleanups and Documentation
+Date: Wed, 19 Mar 2025 10:28:53 +0100
+Message-ID: <20250319092951.37667-1-jirislaby@kernel.org>
 X-Mailer: git-send-email 2.49.0
-In-Reply-To: <20250319065827.53478-1-luke@ljones.dev>
-References: <20250319065827.53478-1-luke@ljones.dev>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-From: "Luke D. Jones" <luke@ljones.dev>
+Hi,
 
-Adds the ppt_* and nv_* tuning knobs that are available via WMI methods
-and adds proper min/max levels plus defaults.
+tl;dr if patches are agreed upon, I ask subsys maintainers to take the
+respective ones via their trees (as they are split per subsys), so that
+the IRQ tree can take only the rest. That would minimize churn/conflicts
+during merges.
 
-The min/max are defined by ASUS and typically gained by looking at what
-they allow in the ASUS Armoury Crate application - ASUS does not share
-the values outside of this. It could also be possible to gain the AMD
-values by use of ryzenadj and testing for the minimum stable value.
+===
 
-The general rule of thumb for adding to the match table is that if the
-model range has a single CPU used throughout, then the DMI match can
-omit the last letter of the model number as this is the GPU model.
+While I was reading through the irqdomain code and headers, I found some
+naming and documentation hard to follow or incomplete. Especially the
+naming of _add/_create/_instantiate functions.
 
-If a min or max value is not provided it is assumed that the particular
-setting is not supported. for example ppt_pl2_sppt_min/max is not set.
-If a <ppt_setting>_def is not set then the default is assumed to be
-<ppt_setting>_max
+I tried to come up with a better state with this patchset:
+* only irq _domain_ (not host),
+* only irq_domain_create*() functions, all taking fwnode uniformly,
 
-It is assumed that at least AC settings are available so that the
-firmware attributes will be created - if no DC table is available
-and power is on DC, then reading the attributes is -ENODEV.
+Finally, all the irqdomain stuff is now plugged (and generated) into
+Documentation. So that everyone can walk through it at
+https://www.kernel.org/doc/ (once applied, of course).
 
-Signed-off-by: Luke D. Jones <luke@ljones.dev>
----
- drivers/platform/x86/asus-armoury.c        |  299 +++++-
- drivers/platform/x86/asus-armoury.h        | 1087 +++++++++++++++++++-
- include/linux/platform_data/x86/asus-wmi.h |    3 +
- 3 files changed, 1382 insertions(+), 7 deletions(-)
+Changelog
+---------
+[v2]
+- 'extern' removal patch dropped (already merged into tip),
+- some new patches added,
+- only _create*() functions preserved, all _add*() are removed,
+  as per <87wme3m4a9.ffs@tglx>.
 
-diff --git a/drivers/platform/x86/asus-armoury.c b/drivers/platform/x86/asus-armoury.c
-index 802c304e2ebc..84abc92bd365 100644
---- a/drivers/platform/x86/asus-armoury.c
-+++ b/drivers/platform/x86/asus-armoury.c
-@@ -21,6 +21,7 @@
- #include <linux/module.h>
- #include <linux/mutex.h>
- #include <linux/platform_data/x86/asus-wmi.h>
-+#include <linux/power_supply.h>
- #include <linux/types.h>
- 
- #include "asus-armoury.h"
-@@ -39,6 +40,17 @@
- #define ASUS_MINI_LED_2024_STRONG 0x01
- #define ASUS_MINI_LED_2024_OFF    0x02
- 
-+/* Power tunable attribute name defines */
-+#define ATTR_PPT_PL1_SPL        "ppt_pl1_spl"
-+#define ATTR_PPT_PL2_SPPT       "ppt_pl2_sppt"
-+#define ATTR_PPT_PL3_FPPT       "ppt_pl3_fppt"
-+#define ATTR_PPT_APU_SPPT       "ppt_apu_sppt"
-+#define ATTR_PPT_PLATFORM_SPPT  "ppt_platform_sppt"
-+#define ATTR_NV_DYNAMIC_BOOST   "nv_dynamic_boost"
-+#define ATTR_NV_TEMP_TARGET     "nv_temp_target"
-+#define ATTR_NV_BASE_TGP        "nv_base_tgp"
-+#define ATTR_NV_TGP             "nv_tgp"
-+
- #define ASUS_POWER_CORE_MASK GENMASK(15, 8)
- #define ASUS_PERF_CORE_MASK GENMASK(7, 0)
- 
-@@ -67,11 +79,26 @@ struct cpu_cores {
- 	u32 max_power_cores;
- };
- 
-+struct rog_tunables {
-+	const struct power_limits *power_limits;
-+	u32 ppt_pl1_spl; // cpu
-+	u32 ppt_pl2_sppt; // cpu
-+	u32 ppt_pl3_fppt; // cpu
-+	u32 ppt_apu_sppt; // plat
-+	u32 ppt_platform_sppt; // plat
-+
-+	u32 nv_dynamic_boost;
-+	u32 nv_temp_target;
-+	u32 nv_tgp;
-+};
-+
- static struct asus_armoury_priv {
- 	struct device *fw_attr_dev;
- 	struct kset *fw_attr_kset;
- 
- 	struct cpu_cores *cpu_cores;
-+	/* Index 0 for DC, 1 for AC */
-+	struct rog_tunables *rog_tunables[2];
- 	u32 mini_led_dev_id;
- 	u32 gpu_mux_dev_id;
- 	/*
-@@ -740,7 +767,34 @@ static ssize_t cores_efficiency_current_value_store(struct kobject *kobj,
- ATTR_GROUP_CORES_RW(cores_efficiency, "cores_efficiency",
- 		    "Set the max available efficiency cores");
- 
-+/* Define helper to access the current power mode tunable values */
-+static inline struct rog_tunables *get_current_tunables(void)
-+{
-+	return asus_armoury
-+		.rog_tunables[power_supply_is_system_supplied() ? 1 : 0];
-+}
-+
- /* Simple attribute creation */
-+ATTR_GROUP_ROG_TUNABLE(ppt_pl1_spl, ATTR_PPT_PL1_SPL, ASUS_WMI_DEVID_PPT_PL1_SPL,
-+		       "Set the CPU slow package limit");
-+ATTR_GROUP_ROG_TUNABLE(ppt_pl2_sppt, ATTR_PPT_PL2_SPPT, ASUS_WMI_DEVID_PPT_PL2_SPPT,
-+		       "Set the CPU fast package limit");
-+ATTR_GROUP_ROG_TUNABLE(ppt_pl3_fppt, ATTR_PPT_PL3_FPPT, ASUS_WMI_DEVID_PPT_FPPT,
-+		       "Set the CPU fastest package limit");
-+ATTR_GROUP_ROG_TUNABLE(ppt_apu_sppt, ATTR_PPT_APU_SPPT, ASUS_WMI_DEVID_PPT_APU_SPPT,
-+		       "Set the APU package limit");
-+ATTR_GROUP_ROG_TUNABLE(ppt_platform_sppt, ATTR_PPT_PLATFORM_SPPT, ASUS_WMI_DEVID_PPT_PLAT_SPPT,
-+		       "Set the platform package limit");
-+ATTR_GROUP_ROG_TUNABLE(nv_dynamic_boost, ATTR_NV_DYNAMIC_BOOST, ASUS_WMI_DEVID_NV_DYN_BOOST,
-+		       "Set the Nvidia dynamic boost limit");
-+ATTR_GROUP_ROG_TUNABLE(nv_temp_target, ATTR_NV_TEMP_TARGET, ASUS_WMI_DEVID_NV_THERM_TARGET,
-+		       "Set the Nvidia max thermal limit");
-+ATTR_GROUP_ROG_TUNABLE(nv_tgp, "nv_tgp", ASUS_WMI_DEVID_DGPU_SET_TGP,
-+		       "Set the additional TGP on top of the base TGP");
-+ATTR_GROUP_INT_VALUE_ONLY_RO(nv_base_tgp, ATTR_NV_BASE_TGP, ASUS_WMI_DEVID_DGPU_BASE_TGP,
-+			     "Read the base TGP value");
-+
-+
- ATTR_GROUP_ENUM_INT_RO(charge_mode, "charge_mode", ASUS_WMI_DEVID_CHARGE_MODE, "0;1;2",
- 		       "Show the current mode of charging");
- 
-@@ -767,6 +821,16 @@ static const struct asus_attr_group armoury_attr_groups[] = {
- 	{ &cores_efficiency_attr_group, ASUS_WMI_DEVID_CORES_MAX },
- 	{ &cores_performance_attr_group, ASUS_WMI_DEVID_CORES_MAX },
- 
-+	{ &ppt_pl1_spl_attr_group, ASUS_WMI_DEVID_PPT_PL1_SPL },
-+	{ &ppt_pl2_sppt_attr_group, ASUS_WMI_DEVID_PPT_PL2_SPPT },
-+	{ &ppt_pl3_fppt_attr_group, ASUS_WMI_DEVID_PPT_FPPT },
-+	{ &ppt_apu_sppt_attr_group, ASUS_WMI_DEVID_PPT_APU_SPPT },
-+	{ &ppt_platform_sppt_attr_group, ASUS_WMI_DEVID_PPT_PLAT_SPPT },
-+	{ &nv_dynamic_boost_attr_group, ASUS_WMI_DEVID_NV_DYN_BOOST },
-+	{ &nv_temp_target_attr_group, ASUS_WMI_DEVID_NV_THERM_TARGET },
-+	{ &nv_base_tgp_attr_group, ASUS_WMI_DEVID_DGPU_BASE_TGP },
-+	{ &nv_tgp_attr_group, ASUS_WMI_DEVID_DGPU_SET_TGP },
-+
- 	{ &charge_mode_attr_group, ASUS_WMI_DEVID_CHARGE_MODE },
- 	{ &boot_sound_attr_group, ASUS_WMI_DEVID_BOOT_SOUND },
- 	{ &mcu_powersave_attr_group, ASUS_WMI_DEVID_MCU_POWERSAVE },
-@@ -774,8 +838,75 @@ static const struct asus_attr_group armoury_attr_groups[] = {
- 	{ &panel_hd_mode_attr_group, ASUS_WMI_DEVID_PANEL_HD },
- };
- 
-+/**
-+ * is_power_tunable_attr - Determines if an attribute is a power-related tunable
-+ * @name: The name of the attribute to check
-+ *
-+ * This function checks if the given attribute name is related to power tuning.
-+ *
-+ * Return: true if the attribute is a power-related tunable, false otherwise
-+ */
-+static bool is_power_tunable_attr(const char *name)
-+{
-+	static const char * const power_tunable_attrs[] = {
-+		ATTR_PPT_PL1_SPL,	ATTR_PPT_PL2_SPPT,
-+		ATTR_PPT_PL3_FPPT,	ATTR_PPT_APU_SPPT,
-+		ATTR_PPT_PLATFORM_SPPT, ATTR_NV_DYNAMIC_BOOST,
-+		ATTR_NV_TEMP_TARGET,	ATTR_NV_BASE_TGP,
-+		ATTR_NV_TGP
-+	};
-+
-+	for (int i = 0; i < ARRAY_SIZE(power_tunable_attrs); i++) {
-+		if (!strcmp(name, power_tunable_attrs[i]))
-+			return true;
-+	}
-+
-+	return false;
-+}
-+
-+/**
-+ * has_valid_limit - Checks if a power-related attribute has a valid limit value
-+ * @name: The name of the attribute to check
-+ * @limits: Pointer to the power_limits structure containing limit values
-+ *
-+ * This function checks if a power-related attribute has a valid limit value.
-+ * It returns false if limits is NULL or if the corresponding limit value is zero.
-+ *
-+ * Return: true if the attribute has a valid limit value, false otherwise
-+ */
-+static bool has_valid_limit(const char *name, const struct power_limits *limits)
-+{
-+	u32 limit_value = 0;
-+
-+	if (!limits)
-+		return false;
-+
-+	if (!strcmp(name, ATTR_PPT_PL1_SPL))
-+		limit_value = limits->ppt_pl1_spl_max;
-+	else if (!strcmp(name, ATTR_PPT_PL2_SPPT))
-+		limit_value = limits->ppt_pl2_sppt_max;
-+	else if (!strcmp(name, ATTR_PPT_PL3_FPPT))
-+		limit_value = limits->ppt_pl3_fppt_max;
-+	else if (!strcmp(name, ATTR_PPT_APU_SPPT))
-+		limit_value = limits->ppt_apu_sppt_max;
-+	else if (!strcmp(name, ATTR_PPT_PLATFORM_SPPT))
-+		limit_value = limits->ppt_platform_sppt_max;
-+	else if (!strcmp(name, ATTR_NV_DYNAMIC_BOOST))
-+		limit_value = limits->nv_dynamic_boost_max;
-+	else if (!strcmp(name, ATTR_NV_TEMP_TARGET))
-+		limit_value = limits->nv_temp_target_max;
-+	else if (!strcmp(name, ATTR_NV_BASE_TGP) ||
-+		 !strcmp(name, ATTR_NV_TGP))
-+		limit_value = limits->nv_tgp_max;
-+
-+	return limit_value > 0;
-+}
-+
- static int asus_fw_attr_add(void)
- {
-+	const struct power_limits *limits;
-+	bool should_create;
-+	const char *name;
- 	int err, i;
- 
- 	asus_armoury.fw_attr_dev = device_create(&firmware_attributes_class, NULL, MKDEV(0, 0),
-@@ -832,12 +963,33 @@ static int asus_fw_attr_add(void)
- 		if (!asus_wmi_is_present(armoury_attr_groups[i].wmi_devid))
- 			continue;
- 
--		err = sysfs_create_group(&asus_armoury.fw_attr_kset->kobj,
--					 armoury_attr_groups[i].attr_group);
--		if (err) {
--			pr_err("Failed to create sysfs-group for %s\n",
--			       armoury_attr_groups[i].attr_group->name);
--			goto err_remove_groups;
-+		/* Always create by default, unless PPT is not present */
-+		should_create = true;
-+		name = armoury_attr_groups[i].attr_group->name;
-+
-+		/* Check if this is a power-related tunable requiring limits */
-+		if (asus_armoury.rog_tunables[1] && asus_armoury.rog_tunables[1]->power_limits &&
-+			is_power_tunable_attr(name)) {
-+			limits = asus_armoury.rog_tunables[1]->power_limits;
-+			/* Check only AC, if DC is not present then AC won't be either */
-+			should_create = has_valid_limit(name, limits);
-+			if (!should_create) {
-+				pr_debug(
-+					"Missing max value on %s for tunable: %s\n",
-+					dmi_get_system_info(DMI_BOARD_NAME),
-+					name);
-+			}
-+		}
-+
-+		if (should_create) {
-+			err = sysfs_create_group(
-+				&asus_armoury.fw_attr_kset->kobj,
-+				armoury_attr_groups[i].attr_group);
-+			if (err) {
-+				pr_err("Failed to create sysfs-group for %s\n",
-+				       armoury_attr_groups[i].attr_group->name);
-+				goto err_remove_groups;
-+			}
- 		}
- 	}
- 
-@@ -866,6 +1018,135 @@ static int asus_fw_attr_add(void)
- 
- /* Init / exit ****************************************************************/
- 
-+/* Set up the min/max and defaults for ROG tunables */
-+static void init_rog_tunables(void)
-+{
-+	const struct power_limits *ac_limits, *dc_limits;
-+	const struct power_data *power_data;
-+	const struct dmi_system_id *dmi_id;
-+	bool ac_initialized = false, dc_initialized = false;
-+
-+	/* Match the system against the power_limits table */
-+	dmi_id = dmi_first_match(power_limits);
-+	if (!dmi_id) {
-+		pr_warn("No matching power limits found for this system\n");
-+		return;
-+	}
-+
-+	/* Get the power data for this system */
-+	power_data = dmi_id->driver_data;
-+	if (!power_data) {
-+		pr_info("No power data available for this system\n");
-+		return;
-+	}
-+
-+	/* Initialize AC power tunables */
-+	ac_limits = power_data->ac_data;
-+	if (ac_limits) {
-+		asus_armoury.rog_tunables[1] =
-+			kzalloc(sizeof(struct rog_tunables), GFP_KERNEL);
-+		if (!asus_armoury.rog_tunables[1])
-+			goto err_nomem;
-+
-+		asus_armoury.rog_tunables[1]->power_limits = ac_limits;
-+
-+		/* Set initial AC values */
-+		asus_armoury.rog_tunables[1]->ppt_pl1_spl =
-+			ac_limits->ppt_pl1_spl_def ?
-+				ac_limits->ppt_pl1_spl_def :
-+				ac_limits->ppt_pl1_spl_max;
-+
-+		asus_armoury.rog_tunables[1]->ppt_pl2_sppt =
-+			ac_limits->ppt_pl2_sppt_def ?
-+				ac_limits->ppt_pl2_sppt_def :
-+				ac_limits->ppt_pl2_sppt_max;
-+
-+		asus_armoury.rog_tunables[1]->ppt_pl3_fppt =
-+			ac_limits->ppt_pl3_fppt_def ?
-+				ac_limits->ppt_pl3_fppt_def :
-+				ac_limits->ppt_pl3_fppt_max;
-+
-+		asus_armoury.rog_tunables[1]->ppt_apu_sppt =
-+			ac_limits->ppt_apu_sppt_def ?
-+				ac_limits->ppt_apu_sppt_def :
-+				ac_limits->ppt_apu_sppt_max;
-+
-+		asus_armoury.rog_tunables[1]->ppt_platform_sppt =
-+			ac_limits->ppt_platform_sppt_def ?
-+				ac_limits->ppt_platform_sppt_def :
-+				ac_limits->ppt_platform_sppt_max;
-+
-+		asus_armoury.rog_tunables[1]->nv_dynamic_boost =
-+			ac_limits->nv_dynamic_boost_max;
-+		asus_armoury.rog_tunables[1]->nv_temp_target =
-+			ac_limits->nv_temp_target_max;
-+		asus_armoury.rog_tunables[1]->nv_tgp = ac_limits->nv_tgp_max;
-+
-+		ac_initialized = true;
-+		pr_debug("AC power limits initialized for %s\n", dmi_id->matches[0].substr);
-+	}
-+
-+	/* Initialize DC power tunables */
-+	dc_limits = power_data->dc_data;
-+	if (dc_limits) {
-+		asus_armoury.rog_tunables[0] =
-+			kzalloc(sizeof(struct rog_tunables), GFP_KERNEL);
-+		if (!asus_armoury.rog_tunables[0]) {
-+			if (ac_initialized)
-+				kfree(asus_armoury.rog_tunables[1]);
-+			goto err_nomem;
-+		}
-+
-+		asus_armoury.rog_tunables[0]->power_limits = dc_limits;
-+
-+		/* Set initial DC values */
-+		asus_armoury.rog_tunables[0]->ppt_pl1_spl =
-+			dc_limits->ppt_pl1_spl_def ?
-+				dc_limits->ppt_pl1_spl_def :
-+				dc_limits->ppt_pl1_spl_max;
-+
-+		asus_armoury.rog_tunables[0]->ppt_pl2_sppt =
-+			dc_limits->ppt_pl2_sppt_def ?
-+				dc_limits->ppt_pl2_sppt_def :
-+				dc_limits->ppt_pl2_sppt_max;
-+
-+		asus_armoury.rog_tunables[0]->ppt_pl3_fppt =
-+			dc_limits->ppt_pl3_fppt_def ?
-+				dc_limits->ppt_pl3_fppt_def :
-+				dc_limits->ppt_pl3_fppt_max;
-+
-+		asus_armoury.rog_tunables[0]->ppt_apu_sppt =
-+			dc_limits->ppt_apu_sppt_def ?
-+				dc_limits->ppt_apu_sppt_def :
-+				dc_limits->ppt_apu_sppt_max;
-+
-+		asus_armoury.rog_tunables[0]->ppt_platform_sppt =
-+			dc_limits->ppt_platform_sppt_def ?
-+				dc_limits->ppt_platform_sppt_def :
-+				dc_limits->ppt_platform_sppt_max;
-+
-+		asus_armoury.rog_tunables[0]->nv_dynamic_boost =
-+			dc_limits->nv_dynamic_boost_max;
-+		asus_armoury.rog_tunables[0]->nv_temp_target =
-+			dc_limits->nv_temp_target_max;
-+		asus_armoury.rog_tunables[0]->nv_tgp = dc_limits->nv_tgp_max;
-+
-+		dc_initialized = true;
-+		pr_debug("DC power limits initialized for %s\n", dmi_id->matches[0].substr);
-+	}
-+
-+	if (!ac_initialized)
-+		pr_debug("No AC PPT limits defined\n");
-+
-+	if (!dc_initialized)
-+		pr_debug("No DC PPT limits defined\n");
-+
-+	return;
-+
-+err_nomem:
-+	pr_err("Failed to allocate memory for tunables\n");
-+}
-+
- static int __init asus_fw_init(void)
- {
- 	char *wmi_uid;
-@@ -895,6 +1176,9 @@ static int __init asus_fw_init(void)
- 		}
- 	}
- 
-+	init_rog_tunables();
-+
-+	/* Must always be last step to ensure data is available */
- 	return asus_fw_attr_add();
- }
- 
-@@ -903,6 +1187,9 @@ static void __exit asus_fw_exit(void)
- 	sysfs_remove_file(&asus_armoury.fw_attr_kset->kobj, &pending_reboot.attr);
- 	kset_unregister(asus_armoury.fw_attr_kset);
- 	device_destroy(&firmware_attributes_class, MKDEV(0, 0));
-+
-+	kfree(asus_armoury.rog_tunables[0]);
-+	kfree(asus_armoury.rog_tunables[1]);
- }
- 
- module_init(asus_fw_init);
-diff --git a/drivers/platform/x86/asus-armoury.h b/drivers/platform/x86/asus-armoury.h
-index 584a75df113d..438768ea14cc 100644
---- a/drivers/platform/x86/asus-armoury.h
-+++ b/drivers/platform/x86/asus-armoury.h
-@@ -8,6 +8,7 @@
- #ifndef _ASUS_ARMOURY_H_
- #define _ASUS_ARMOURY_H_
- 
-+#include <linux/dmi.h>
- #include <linux/types.h>
- #include <linux/platform_device.h>
- 
-@@ -63,7 +64,6 @@
- 	static struct kobj_attribute attr_##_attrname##_##_prop =		\
- 		__ASUS_ATTR_RO(_attrname, _prop)
- 
--
- #define __ATTR_RO_INT_GROUP_ENUM(_attrname, _wmi, _fsname, _possible, _dispname)\
- 	WMI_SHOW_INT(_attrname##_current_value, "%d\n", _wmi);			\
- 	static struct kobj_attribute attr_##_attrname##_current_value =		\
-@@ -190,4 +190,1089 @@
- 		.name = _fsname, .attrs = _attrname##_attrs		\
- 	}
- 
-+#define ATTR_GROUP_INT_VALUE_ONLY_RO(_attrname, _fsname, _wmi, _dispname)	\
-+	WMI_SHOW_INT(_attrname##_current_value, "%d\n", _wmi);			\
-+	static struct kobj_attribute attr_##_attrname##_current_value =		\
-+		__ASUS_ATTR_RO(_attrname, current_value);			\
-+	__ATTR_SHOW_FMT(display_name, _attrname, "%s\n", _dispname);		\
-+	static struct kobj_attribute attr_##_attrname##_type =			\
-+		__ASUS_ATTR_RO_AS(type, int_type_show);				\
-+	static struct attribute *_attrname##_attrs[] = {			\
-+		&attr_##_attrname##_current_value.attr,				\
-+		&attr_##_attrname##_display_name.attr,				\
-+		&attr_##_attrname##_type.attr, NULL				\
-+	};									\
-+	static const struct attribute_group _attrname##_attr_group = {		\
-+		.name = _fsname, .attrs = _attrname##_attrs			\
-+	}
-+
-+/*
-+ * ROG PPT attributes need a little different in setup as they
-+ * require rog_tunables members.
-+ */
-+
-+#define __ROG_TUNABLE_SHOW(_prop, _attrname, _val)				\
-+	static ssize_t _attrname##_##_prop##_show(				\
-+		struct kobject *kobj, struct kobj_attribute *attr, char *buf)	\
-+	{									\
-+		struct rog_tunables *tunables = get_current_tunables();		\
-+										\
-+		if (!tunables || !tunables->power_limits)			\
-+			return -ENODEV;						\
-+										\
-+		return sysfs_emit(buf, "%d\n", tunables->power_limits->_val);	\
-+	}									\
-+	static struct kobj_attribute attr_##_attrname##_##_prop =		\
-+		__ASUS_ATTR_RO(_attrname, _prop)
-+
-+#define __ROG_TUNABLE_SHOW_DEFAULT(_attrname)					\
-+	static ssize_t _attrname##_default_value_show(				\
-+		struct kobject *kobj, struct kobj_attribute *attr, char *buf)	\
-+	{									\
-+		struct rog_tunables *tunables = get_current_tunables();		\
-+										\
-+		if (!tunables || !tunables->power_limits)			\
-+			return -ENODEV;						\
-+										\
-+		return sysfs_emit(						\
-+			buf, "%d\n",						\
-+			tunables->power_limits->_attrname##_def ?		\
-+				tunables->power_limits->_attrname##_def :	\
-+				tunables->power_limits->_attrname##_max);	\
-+	}									\
-+	static struct kobj_attribute attr_##_attrname##_default_value =		\
-+		__ASUS_ATTR_RO(_attrname, default_value)
-+
-+#define __ROG_TUNABLE_RW(_attr, _wmi)						\
-+	static ssize_t _attr##_current_value_store(				\
-+		struct kobject *kobj, struct kobj_attribute *attr,		\
-+		const char *buf, size_t count)					\
-+	{									\
-+		struct rog_tunables *tunables = get_current_tunables();		\
-+										\
-+		if (!tunables || !tunables->power_limits)			\
-+			return -ENODEV;						\
-+										\
-+		return attr_uint_store(kobj, attr, buf, count,			\
-+				       tunables->power_limits->_attr##_min,	\
-+				       tunables->power_limits->_attr##_max,	\
-+				       &tunables->_attr, _wmi);			\
-+	}									\
-+	static ssize_t _attr##_current_value_show(				\
-+		struct kobject *kobj, struct kobj_attribute *attr, char *buf)	\
-+	{									\
-+		struct rog_tunables *tunables = get_current_tunables();		\
-+										\
-+		if (!tunables)							\
-+			return -ENODEV;						\
-+										\
-+		return sysfs_emit(buf, "%u\n", tunables->_attr);		\
-+	}									\
-+	static struct kobj_attribute attr_##_attr##_current_value =		\
-+		__ASUS_ATTR_RW(_attr, current_value)
-+
-+#define ATTR_GROUP_ROG_TUNABLE(_attrname, _fsname, _wmi, _dispname)	\
-+	__ROG_TUNABLE_RW(_attrname, _wmi);				\
-+	__ROG_TUNABLE_SHOW_DEFAULT(_attrname);				\
-+	__ROG_TUNABLE_SHOW(min_value, _attrname, _attrname##_min);	\
-+	__ROG_TUNABLE_SHOW(max_value, _attrname, _attrname##_max);	\
-+	__ATTR_SHOW_FMT(scalar_increment, _attrname, "%d\n", 1);	\
-+	__ATTR_SHOW_FMT(display_name, _attrname, "%s\n", _dispname);	\
-+	static struct kobj_attribute attr_##_attrname##_type =		\
-+		__ASUS_ATTR_RO_AS(type, int_type_show);			\
-+	static struct attribute *_attrname##_attrs[] = {		\
-+		&attr_##_attrname##_current_value.attr,			\
-+		&attr_##_attrname##_default_value.attr,			\
-+		&attr_##_attrname##_min_value.attr,			\
-+		&attr_##_attrname##_max_value.attr,			\
-+		&attr_##_attrname##_scalar_increment.attr,		\
-+		&attr_##_attrname##_display_name.attr,			\
-+		&attr_##_attrname##_type.attr,				\
-+		NULL							\
-+	};								\
-+	static const struct attribute_group _attrname##_attr_group = {	\
-+		.name = _fsname, .attrs = _attrname##_attrs		\
-+	}
-+
-+/* Default is always the maximum value unless *_def is specified */
-+struct power_limits {
-+	u8 ppt_pl1_spl_min;
-+	u8 ppt_pl1_spl_def;
-+	u8 ppt_pl1_spl_max;
-+	u8 ppt_pl2_sppt_min;
-+	u8 ppt_pl2_sppt_def;
-+	u8 ppt_pl2_sppt_max;
-+	u8 ppt_pl3_fppt_min;
-+	u8 ppt_pl3_fppt_def;
-+	u8 ppt_pl3_fppt_max;
-+	u8 ppt_apu_sppt_min;
-+	u8 ppt_apu_sppt_def;
-+	u8 ppt_apu_sppt_max;
-+	u8 ppt_platform_sppt_min;
-+	u8 ppt_platform_sppt_def;
-+	u8 ppt_platform_sppt_max;
-+	/* Nvidia GPU specific, default is always max */
-+	u8 nv_dynamic_boost_def; // unused. exists for macro
-+	u8 nv_dynamic_boost_min;
-+	u8 nv_dynamic_boost_max;
-+	u8 nv_temp_target_def; // unused. exists for macro
-+	u8 nv_temp_target_min;
-+	u8 nv_temp_target_max;
-+	u8 nv_tgp_def; // unused. exists for macro
-+	u8 nv_tgp_min;
-+	u8 nv_tgp_max;
-+};
-+
-+struct power_data {
-+		const struct power_limits *ac_data;
-+		const struct power_limits *dc_data;
-+		bool requires_fan_curve;
-+};
-+
-+/*
-+ * For each avilable attribute there must be a min and a max.
-+ * _def is not required and will be assumed to be default == max if missing.
-+ */
-+static const struct dmi_system_id power_limits[] = {
-+	{
-+		.matches = {
-+			DMI_MATCH(DMI_BOARD_NAME, "FA401W"),
-+		},
-+		.driver_data = &(struct power_data) {
-+			.ac_data = &(struct power_limits) {
-+				.ppt_pl1_spl_min = 15,
-+				.ppt_pl1_spl_max = 80,
-+				.ppt_pl2_sppt_min = 35,
-+				.ppt_pl2_sppt_max = 80,
-+				.ppt_pl3_fppt_min = 35,
-+				.ppt_pl3_fppt_max = 80,
-+				.nv_dynamic_boost_min = 5,
-+				.nv_dynamic_boost_max = 25,
-+				.nv_temp_target_min = 75,
-+				.nv_temp_target_max = 87,
-+				.nv_tgp_min = 55,
-+				.nv_tgp_max = 75,
-+			},
-+			.dc_data = &(struct power_limits) {
-+				.ppt_pl1_spl_min = 25,
-+				.ppt_pl1_spl_max = 30,
-+				.ppt_pl2_sppt_min = 31,
-+				.ppt_pl2_sppt_max = 44,
-+				.ppt_pl3_fppt_min = 45,
-+				.ppt_pl3_fppt_max = 65,
-+				.nv_temp_target_min = 75,
-+				.nv_temp_target_max = 87,
-+			},
-+		},
-+	},
-+	{
-+		.matches = {
-+			DMI_MATCH(DMI_BOARD_NAME, "FA507N"),
-+		},
-+		.driver_data = &(struct power_data) {
-+			.ac_data = &(struct power_limits) {
-+				.ppt_pl1_spl_min = 15,
-+				.ppt_pl1_spl_max = 80,
-+				.ppt_pl2_sppt_min = 35,
-+				.ppt_pl2_sppt_max = 80,
-+				.ppt_pl3_fppt_min = 35,
-+				.ppt_pl3_fppt_max = 80,
-+				.nv_dynamic_boost_min = 5,
-+				.nv_dynamic_boost_max = 25,
-+				.nv_temp_target_min = 75,
-+				.nv_temp_target_max = 87,
-+			},
-+			.dc_data = &(struct power_limits) {
-+				.ppt_pl1_spl_min = 15,
-+				.ppt_pl1_spl_def = 45,
-+				.ppt_pl1_spl_max = 65,
-+				.ppt_pl2_sppt_min = 35,
-+				.ppt_pl2_sppt_def = 54,
-+				.ppt_pl2_sppt_max = 65,
-+				.ppt_pl3_fppt_min = 35,
-+				.ppt_pl3_fppt_max = 65,
-+				.nv_temp_target_min = 75,
-+				.nv_temp_target_max = 87,
-+			}
-+		},
-+	},
-+	{
-+		.matches = {
-+			DMI_MATCH(DMI_BOARD_NAME, "FA507R"),
-+		},
-+		.driver_data = &(struct power_data) {
-+			.ac_data = &(struct power_limits) {
-+				.ppt_pl1_spl_min = 15,
-+				.ppt_pl1_spl_max = 80,
-+				.ppt_pl2_sppt_min = 25,
-+				.ppt_pl2_sppt_max = 80,
-+				.ppt_pl3_fppt_min = 35,
-+				.ppt_pl3_fppt_max = 80
-+			},
-+			.dc_data = NULL
-+		},
-+	},
-+	{
-+		.matches = {
-+			DMI_MATCH(DMI_BOARD_NAME, "FA507X"),
-+		},
-+		.driver_data = &(struct power_data) {
-+			.ac_data = &(struct power_limits) {
-+				.ppt_pl1_spl_min = 15,
-+				.ppt_pl1_spl_max = 80,
-+				.ppt_pl2_sppt_min = 35,
-+				.ppt_pl2_sppt_max = 80,
-+				.ppt_pl3_fppt_min = 35,
-+				.ppt_pl3_fppt_max = 80,
-+				.nv_dynamic_boost_min = 5,
-+				.nv_dynamic_boost_max = 20,
-+				.nv_temp_target_min = 75,
-+				.nv_temp_target_max = 87,
-+				.nv_tgp_min = 55,
-+				.nv_tgp_max = 85,
-+			},
-+			.dc_data = &(struct power_limits) {
-+				.ppt_pl1_spl_min = 15,
-+				.ppt_pl1_spl_def = 45,
-+				.ppt_pl1_spl_max = 65,
-+				.ppt_pl2_sppt_min = 35,
-+				.ppt_pl2_sppt_def = 54,
-+				.ppt_pl2_sppt_max = 65,
-+				.ppt_pl3_fppt_min = 35,
-+				.ppt_pl3_fppt_max = 65,
-+				.nv_temp_target_min = 75,
-+				.nv_temp_target_max = 87,
-+			}
-+		},
-+	},
-+	{
-+		.matches = {
-+			DMI_MATCH(DMI_BOARD_NAME, "FA507Z"),
-+		},
-+		.driver_data = &(struct power_data) {
-+			.ac_data = &(struct power_limits) {
-+				.ppt_pl1_spl_min = 28,
-+				.ppt_pl1_spl_max = 65,
-+				.ppt_pl2_sppt_min = 28,
-+				.ppt_pl2_sppt_max = 105,
-+				.nv_dynamic_boost_min = 5,
-+				.nv_dynamic_boost_max = 15,
-+				.nv_temp_target_min = 75,
-+				.nv_temp_target_max = 87,
-+				.nv_tgp_min = 55,
-+				.nv_tgp_max = 85,
-+			},
-+			.dc_data = &(struct power_limits) {
-+				.ppt_pl1_spl_min = 25,
-+				.ppt_pl1_spl_max = 45,
-+				.ppt_pl2_sppt_min = 35,
-+				.ppt_pl2_sppt_max = 60,
-+				.nv_temp_target_min = 75,
-+				.nv_temp_target_max = 87,
-+			}
-+		},
-+	},
-+	{
-+		.matches = {
-+			DMI_MATCH(DMI_BOARD_NAME, "FA607P"),
-+		},
-+		.driver_data = &(struct power_data) {
-+			.ac_data = &(struct power_limits) {
-+				.ppt_pl1_spl_min = 30,
-+				.ppt_pl1_spl_def = 100,
-+				.ppt_pl1_spl_max = 135,
-+				.ppt_pl2_sppt_min = 30,
-+				.ppt_pl2_sppt_def = 115,
-+				.ppt_pl2_sppt_max = 135,
-+				.ppt_pl3_fppt_min = 30,
-+				.ppt_pl3_fppt_max = 135,
-+				.nv_dynamic_boost_min = 5,
-+				.nv_dynamic_boost_max = 25,
-+				.nv_temp_target_min = 75,
-+				.nv_temp_target_max = 87,
-+				.nv_tgp_min = 55,
-+				.nv_tgp_max = 115,
-+			},
-+			.dc_data = &(struct power_limits) {
-+				.ppt_pl1_spl_min = 25,
-+				.ppt_pl1_spl_def = 45,
-+				.ppt_pl1_spl_max = 80,
-+				.ppt_pl2_sppt_min = 25,
-+				.ppt_pl2_sppt_def = 60,
-+				.ppt_pl2_sppt_max = 80,
-+				.ppt_pl3_fppt_min = 25,
-+				.ppt_pl3_fppt_max = 80,
-+				.nv_temp_target_min = 75,
-+				.nv_temp_target_max = 87,
-+			}
-+		},
-+	},
-+	{
-+		.matches = {
-+			DMI_MATCH(DMI_BOARD_NAME, "FA617NS"),
-+		},
-+		.driver_data = &(struct power_data) {
-+			.ac_data = &(struct power_limits) {
-+				.ppt_apu_sppt_min = 15,
-+				.ppt_apu_sppt_max = 80,
-+				.ppt_platform_sppt_min = 30,
-+				.ppt_platform_sppt_max = 120
-+			},
-+			.dc_data = &(struct power_limits) {
-+				.ppt_apu_sppt_min = 25,
-+				.ppt_apu_sppt_max = 35,
-+				.ppt_platform_sppt_min = 45,
-+				.ppt_platform_sppt_max = 100
-+			}
-+		},
-+	},
-+	{
-+		.matches = {
-+			DMI_MATCH(DMI_BOARD_NAME, "FA617NT"),
-+		},
-+		.driver_data = &(struct power_data) {
-+			.ac_data = &(struct power_limits) {
-+				.ppt_apu_sppt_min = 15,
-+				.ppt_apu_sppt_max = 80,
-+				.ppt_platform_sppt_min = 30,
-+				.ppt_platform_sppt_max = 115
-+			},
-+			.dc_data = &(struct power_limits) {
-+				.ppt_apu_sppt_min = 15,
-+				.ppt_apu_sppt_max = 45,
-+				.ppt_platform_sppt_min = 30,
-+				.ppt_platform_sppt_max = 50
-+			}
-+		},
-+	},
-+	{
-+		.matches = {
-+			DMI_MATCH(DMI_BOARD_NAME, "FA617XS"),
-+		},
-+		.driver_data = &(struct power_data) {
-+			.ac_data = &(struct power_limits) {
-+				.ppt_apu_sppt_min = 15,
-+				.ppt_apu_sppt_max = 80,
-+				.ppt_platform_sppt_min = 30,
-+				.ppt_platform_sppt_max = 120,
-+				.nv_temp_target_min = 75,
-+				.nv_temp_target_max = 87,
-+			},
-+			.dc_data = &(struct power_limits) {
-+				.ppt_apu_sppt_min = 25,
-+				.ppt_apu_sppt_max = 35,
-+				.ppt_platform_sppt_min = 45,
-+				.ppt_platform_sppt_max = 100,
-+				.nv_temp_target_min = 75,
-+				.nv_temp_target_max = 87,
-+			}
-+		},
-+	},
-+	{
-+		.matches = {
-+			DMI_MATCH(DMI_BOARD_NAME, "FX507Z"),
-+		},
-+		.driver_data = &(struct power_data) {
-+			.ac_data = &(struct power_limits) {
-+				.ppt_pl1_spl_min = 28,
-+				.ppt_pl1_spl_max = 90,
-+				.ppt_pl2_sppt_min = 28,
-+				.ppt_pl2_sppt_max = 135,
-+				.nv_dynamic_boost_min = 5,
-+				.nv_dynamic_boost_max = 15,
-+			},
-+			.dc_data = &(struct power_limits) {
-+				.ppt_pl1_spl_min = 25,
-+				.ppt_pl1_spl_max = 45,
-+				.ppt_pl2_sppt_min = 35,
-+				.ppt_pl2_sppt_max = 60,
-+			},
-+			.requires_fan_curve = true,
-+		},
-+	},
-+	{
-+		.matches = {
-+			DMI_MATCH(DMI_BOARD_NAME, "GA401Q"),
-+		},
-+		.driver_data = &(struct power_data) {
-+			.ac_data = &(struct power_limits) {
-+				.ppt_pl1_spl_min = 15,
-+				.ppt_pl1_spl_max = 80,
-+				.ppt_pl2_sppt_min = 15,
-+				.ppt_pl2_sppt_max = 80,
-+			},
-+			.dc_data = NULL
-+		},
-+	},
-+	{
-+		.matches = {
-+			// This model is full AMD. No Nvidia dGPU.
-+			DMI_MATCH(DMI_BOARD_NAME, "GA402R"),
-+		},
-+		.driver_data = &(struct power_data) {
-+			.ac_data = &(struct power_limits) {
-+				.ppt_apu_sppt_min = 15,
-+				.ppt_apu_sppt_max = 80,
-+				.ppt_platform_sppt_min = 30,
-+				.ppt_platform_sppt_max = 115,
-+			},
-+			.dc_data = &(struct power_limits) {
-+				.ppt_apu_sppt_min = 25,
-+				.ppt_apu_sppt_def = 30,
-+				.ppt_apu_sppt_max = 45,
-+				.ppt_platform_sppt_min = 40,
-+				.ppt_platform_sppt_max = 60,
-+			}
-+		},
-+	},
-+	{
-+		.matches = {
-+			DMI_MATCH(DMI_BOARD_NAME, "GA402X"),
-+		},
-+		.driver_data = &(struct power_data) {
-+			.ac_data = &(struct power_limits) {
-+				.ppt_pl1_spl_min = 15,
-+				.ppt_pl1_spl_def = 35,
-+				.ppt_pl1_spl_max = 80,
-+				.ppt_pl2_sppt_min = 25,
-+				.ppt_pl2_sppt_def = 65,
-+				.ppt_pl2_sppt_max = 80,
-+				.ppt_pl3_fppt_min = 35,
-+				.ppt_pl3_fppt_max = 80,
-+				.nv_temp_target_min = 75,
-+				.nv_temp_target_max = 87,
-+			},
-+			.dc_data = &(struct power_limits) {
-+				.ppt_pl1_spl_min = 15,
-+				.ppt_pl1_spl_max = 35,
-+				.ppt_pl2_sppt_min = 25,
-+				.ppt_pl2_sppt_max = 35,
-+				.ppt_pl3_fppt_min = 35,
-+				.ppt_pl3_fppt_max = 65,
-+				.nv_temp_target_min = 75,
-+				.nv_temp_target_max = 87,
-+			},
-+			.requires_fan_curve = true,
-+		},
-+	},
-+	{
-+		.matches = {
-+			DMI_MATCH(DMI_BOARD_NAME, "GA403U"),
-+		},
-+		.driver_data = &(struct power_data) {
-+			.ac_data = &(struct power_limits) {
-+				.ppt_pl1_spl_min = 15,
-+				.ppt_pl1_spl_max = 80,
-+				.ppt_pl2_sppt_min = 25,
-+				.ppt_pl2_sppt_max = 80,
-+				.ppt_pl3_fppt_min = 35,
-+				.ppt_pl3_fppt_max = 80,
-+				.nv_dynamic_boost_min = 5,
-+				.nv_dynamic_boost_max = 25,
-+				.nv_temp_target_min = 75,
-+				.nv_temp_target_max = 87,
-+				.nv_tgp_min = 55,
-+				.nv_tgp_max = 65,
-+			},
-+			.dc_data = &(struct power_limits) {
-+				.ppt_pl1_spl_min = 15,
-+				.ppt_pl1_spl_max = 35,
-+				.ppt_pl2_sppt_min = 25,
-+				.ppt_pl2_sppt_max = 35,
-+				.ppt_pl3_fppt_min = 35,
-+				.ppt_pl3_fppt_max = 65,
-+				.nv_temp_target_min = 75,
-+				.nv_temp_target_max = 87,
-+			},
-+			.requires_fan_curve = true,
-+		},
-+	},
-+	{
-+		.matches = {
-+			DMI_MATCH(DMI_BOARD_NAME, "GA503R"),
-+		},
-+		.driver_data = &(struct power_data) {
-+			.ac_data = &(struct power_limits) {
-+				.ppt_pl1_spl_min = 15,
-+				.ppt_pl1_spl_def = 35,
-+				.ppt_pl1_spl_max = 80,
-+				.ppt_pl2_sppt_min = 35,
-+				.ppt_pl2_sppt_def = 65,
-+				.ppt_pl2_sppt_max = 80,
-+				.ppt_pl3_fppt_min = 35,
-+				.ppt_pl3_fppt_max = 80,
-+				.nv_dynamic_boost_min = 5,
-+				.nv_dynamic_boost_max = 20,
-+				.nv_temp_target_min = 75,
-+				.nv_temp_target_max = 87,
-+			},
-+			.dc_data = &(struct power_limits) {
-+				.ppt_pl1_spl_min = 15,
-+				.ppt_pl1_spl_def = 25,
-+				.ppt_pl1_spl_max = 65,
-+				.ppt_pl2_sppt_min = 35,
-+				.ppt_pl2_sppt_def = 54,
-+				.ppt_pl2_sppt_max = 60,
-+				.ppt_pl3_fppt_min = 35,
-+				.ppt_pl3_fppt_max = 65
-+			}
-+		},
-+	},
-+	{
-+		.matches = {
-+			DMI_MATCH(DMI_BOARD_NAME, "GA605W"),
-+		},
-+		.driver_data = &(struct power_data) {
-+			.ac_data = &(struct power_limits) {
-+				.ppt_pl1_spl_min = 15,
-+				.ppt_pl1_spl_max = 80,
-+				.ppt_pl2_sppt_min = 35,
-+				.ppt_pl2_sppt_max = 80,
-+				.ppt_pl3_fppt_min = 35,
-+				.ppt_pl3_fppt_max = 80,
-+				.nv_dynamic_boost_min = 5,
-+				.nv_dynamic_boost_max = 20,
-+				.nv_temp_target_min = 75,
-+				.nv_temp_target_max = 87,
-+				.nv_tgp_min = 55,
-+				.nv_tgp_max = 85,
-+			},
-+			.dc_data = &(struct power_limits) {
-+				.ppt_pl1_spl_min = 25,
-+				.ppt_pl1_spl_max = 35,
-+				.ppt_pl2_sppt_min = 31,
-+				.ppt_pl2_sppt_max = 44,
-+				.ppt_pl3_fppt_min = 45,
-+				.ppt_pl3_fppt_max = 65,
-+				.nv_temp_target_min = 75,
-+				.nv_temp_target_max = 87,
-+			},
-+			.requires_fan_curve = true,
-+		},
-+	},
-+	{
-+		.matches = {
-+			DMI_MATCH(DMI_BOARD_NAME, "GU603Z"),
-+		},
-+		.driver_data = &(struct power_data) {
-+			.ac_data = &(struct power_limits) {
-+				.ppt_pl1_spl_min = 25,
-+				.ppt_pl1_spl_max = 60,
-+				.ppt_pl2_sppt_min = 25,
-+				.ppt_pl2_sppt_max = 135,
-+				/* Only allowed in AC mode */
-+				.nv_dynamic_boost_min = 5,
-+				.nv_dynamic_boost_max = 20,
-+				.nv_temp_target_min = 75,
-+				.nv_temp_target_max = 87,
-+			},
-+			.dc_data = &(struct power_limits) {
-+				.ppt_pl1_spl_min = 25,
-+				.ppt_pl1_spl_max = 40,
-+				.ppt_pl2_sppt_min = 25,
-+				.ppt_pl2_sppt_max = 40,
-+				.nv_temp_target_min = 75,
-+				.nv_temp_target_max = 87,
-+			}
-+		},
-+	},
-+	{
-+		.matches = {
-+			DMI_MATCH(DMI_BOARD_NAME, "GU604V"),
-+		},
-+		.driver_data = &(struct power_data) {
-+			.ac_data = &(struct power_limits) {
-+				.ppt_pl1_spl_min = 65,
-+				.ppt_pl1_spl_max = 120,
-+				.ppt_pl2_sppt_min = 65,
-+				.ppt_pl2_sppt_max = 150,
-+				/* Only allowed in AC mode */
-+				.nv_dynamic_boost_min = 5,
-+				.nv_dynamic_boost_max = 25,
-+				.nv_temp_target_min = 75,
-+				.nv_temp_target_max = 87,
-+			},
-+			.dc_data = &(struct power_limits) {
-+				.ppt_pl1_spl_min = 25,
-+				.ppt_pl1_spl_max = 40,
-+				.ppt_pl2_sppt_min = 35,
-+				.ppt_pl2_sppt_def = 40,
-+				.ppt_pl2_sppt_max = 60,
-+				.nv_temp_target_min = 75,
-+				.nv_temp_target_max = 87,
-+			}
-+		},
-+	},
-+	{
-+		.matches = {
-+			DMI_MATCH(DMI_BOARD_NAME, "GU605M"),
-+		},
-+		.driver_data = &(struct power_data) {
-+			.ac_data = &(struct power_limits) {
-+				.ppt_pl1_spl_min = 28,
-+				.ppt_pl1_spl_max = 90,
-+				.ppt_pl2_sppt_min = 28,
-+				.ppt_pl2_sppt_max = 135,
-+				.nv_dynamic_boost_min = 5,
-+				.nv_dynamic_boost_max = 20,
-+				.nv_temp_target_min = 75,
-+				.nv_temp_target_max = 87,
-+			},
-+			.dc_data = &(struct power_limits) {
-+				.ppt_pl1_spl_min = 25,
-+				.ppt_pl1_spl_max = 35,
-+				.ppt_pl2_sppt_min = 38,
-+				.ppt_pl2_sppt_max = 53,
-+				.nv_temp_target_min = 75,
-+				.nv_temp_target_max = 87,
-+			},
-+			.requires_fan_curve = true,
-+		},
-+	},
-+	{
-+		.matches = {
-+			DMI_MATCH(DMI_BOARD_NAME, "GV301Q"),
-+		},
-+		.driver_data = &(struct power_data) {
-+			.ac_data = &(struct power_limits) {
-+				.ppt_pl1_spl_min = 15,
-+				.ppt_pl1_spl_max = 45,
-+				.ppt_pl2_sppt_min = 65,
-+				.ppt_pl2_sppt_max = 80,
-+			},
-+			.dc_data = NULL
-+		},
-+	},
-+	{
-+		.matches = {
-+			DMI_MATCH(DMI_BOARD_NAME, "GV301R"),
-+		},
-+		.driver_data = &(struct power_data) {
-+			.ac_data = &(struct power_limits) {
-+				.ppt_pl1_spl_min = 15,
-+				.ppt_pl1_spl_max = 45,
-+				.ppt_pl2_sppt_min = 25,
-+				.ppt_pl2_sppt_max = 54,
-+				.ppt_pl3_fppt_min = 35,
-+				.ppt_pl3_fppt_max = 65,
-+				.nv_temp_target_min = 75,
-+				.nv_temp_target_max = 87,
-+			},
-+			.dc_data = &(struct power_limits) {
-+				.ppt_pl1_spl_min = 15,
-+				.ppt_pl1_spl_max = 35,
-+				.ppt_pl2_sppt_min = 25,
-+				.ppt_pl2_sppt_max = 35,
-+				.ppt_pl3_fppt_min = 35,
-+				.ppt_pl3_fppt_max = 65,
-+				.nv_temp_target_min = 75,
-+				.nv_temp_target_max = 87,
-+			}
-+		},
-+	},
-+	{
-+		.matches = {
-+			DMI_MATCH(DMI_BOARD_NAME, "GV601R"),
-+		},
-+		.driver_data = &(struct power_data) {
-+			.ac_data = &(struct power_limits) {
-+				.ppt_pl1_spl_min = 15,
-+				.ppt_pl1_spl_def = 35,
-+				.ppt_pl1_spl_max = 90,
-+				.ppt_pl2_sppt_min = 35,
-+				.ppt_pl2_sppt_def = 54,
-+				.ppt_pl2_sppt_max = 100,
-+				.ppt_pl3_fppt_min = 35,
-+				.ppt_pl3_fppt_def = 80,
-+				.ppt_pl3_fppt_max = 125,
-+				.nv_dynamic_boost_min = 5,
-+				.nv_dynamic_boost_max = 25,
-+				.nv_temp_target_min = 75,
-+				.nv_temp_target_max = 87,
-+			},
-+			.dc_data = &(struct power_limits) {
-+				.ppt_pl1_spl_min = 15,
-+				.ppt_pl1_spl_def = 28,
-+				.ppt_pl1_spl_max = 65,
-+				.ppt_pl2_sppt_min = 35,
-+				.ppt_pl2_sppt_def = 54,
-+				.ppt_pl2_sppt_def = 40,
-+				.ppt_pl2_sppt_max = 60,
-+				.ppt_pl3_fppt_min = 35,
-+				.ppt_pl3_fppt_def = 80,
-+				.ppt_pl3_fppt_max = 65,
-+				.nv_temp_target_min = 75,
-+				.nv_temp_target_max = 87,
-+			}
-+		},
-+	},
-+	{
-+		.matches = {
-+			DMI_MATCH(DMI_BOARD_NAME, "GV601V"),
-+		},
-+		.driver_data = &(struct power_data) {
-+			.ac_data = &(struct power_limits) {
-+				.ppt_pl1_spl_min = 28,
-+				.ppt_pl1_spl_def = 100,
-+				.ppt_pl1_spl_max = 110,
-+				.ppt_pl2_sppt_min = 28,
-+				.ppt_pl2_sppt_max = 135,
-+				.nv_dynamic_boost_min = 5,
-+				.nv_dynamic_boost_max = 20,
-+				.nv_temp_target_min = 75,
-+				.nv_temp_target_max = 87,
-+			},
-+			.dc_data = &(struct power_limits) {
-+				.ppt_pl1_spl_min = 25,
-+				.ppt_pl1_spl_max = 40,
-+				.ppt_pl2_sppt_min = 35,
-+				.ppt_pl2_sppt_def = 40,
-+				.ppt_pl2_sppt_max = 60,
-+				.nv_temp_target_min = 75,
-+				.nv_temp_target_max = 87,
-+			}
-+		},
-+	},
-+	{
-+		.matches = {
-+			DMI_MATCH(DMI_BOARD_NAME, "GX650P"),
-+		},
-+		.driver_data = &(struct power_data) {
-+			.ac_data = &(struct power_limits) {
-+				.ppt_pl1_spl_min = 15,
-+				.ppt_pl1_spl_def = 110,
-+				.ppt_pl1_spl_max = 130,
-+				.ppt_pl2_sppt_min = 35,
-+				.ppt_pl2_sppt_def = 125,
-+				.ppt_pl2_sppt_max = 130,
-+				.ppt_pl3_fppt_min = 35,
-+				.ppt_pl3_fppt_def = 125,
-+				.ppt_pl3_fppt_max = 135,
-+				.nv_dynamic_boost_min = 5,
-+				.nv_dynamic_boost_max = 25,
-+				.nv_temp_target_min = 75,
-+				.nv_temp_target_max = 87,
-+			},
-+			.dc_data = &(struct power_limits) {
-+				.ppt_pl1_spl_min = 15,
-+				.ppt_pl1_spl_def = 25,
-+				.ppt_pl1_spl_max = 65,
-+				.ppt_pl2_sppt_min = 35,
-+				.ppt_pl2_sppt_def = 35,
-+				.ppt_pl2_sppt_max = 65,
-+				.ppt_pl3_fppt_min = 35,
-+				.ppt_pl3_fppt_def = 42,
-+				.ppt_pl3_fppt_max = 65,
-+				.nv_temp_target_min = 75,
-+				.nv_temp_target_max = 87,
-+			}
-+		},
-+	},
-+	{
-+		.matches = {
-+			DMI_MATCH(DMI_BOARD_NAME, "G513I"),
-+		},
-+		.driver_data = &(struct power_data) {
-+			.ac_data = &(struct power_limits) {
-+				/* Yes this laptop is very limited */
-+				.ppt_pl1_spl_min = 15,
-+				.ppt_pl1_spl_max = 80,
-+				.ppt_pl2_sppt_min = 15,
-+				.ppt_pl2_sppt_max = 80,
-+			},
-+			.dc_data = NULL,
-+			.requires_fan_curve = true,
-+		},
-+	},
-+	{
-+		.matches = {
-+			DMI_MATCH(DMI_BOARD_NAME, "G513QM"),
-+		},
-+		.driver_data = &(struct power_data) {
-+			.ac_data = &(struct power_limits) {
-+				/* Yes this laptop is very limited */
-+				.ppt_pl1_spl_min = 15,
-+				.ppt_pl1_spl_max = 100,
-+				.ppt_pl2_sppt_min = 15,
-+				.ppt_pl2_sppt_max = 190,
-+			},
-+			.dc_data = NULL,
-+			.requires_fan_curve = true,
-+		},
-+	},
-+	{
-+		.matches = {
-+			DMI_MATCH(DMI_BOARD_NAME, "G513R"),
-+		},
-+		.driver_data = &(struct power_data) {
-+			.ac_data = &(struct power_limits) {
-+				.ppt_pl1_spl_min = 35,
-+				.ppt_pl1_spl_max = 90,
-+				.ppt_pl2_sppt_min = 54,
-+				.ppt_pl2_sppt_max = 100,
-+				.ppt_pl3_fppt_min = 54,
-+				.ppt_pl3_fppt_max = 125,
-+				.nv_dynamic_boost_min = 5,
-+				.nv_dynamic_boost_max = 25,
-+				.nv_temp_target_min = 75,
-+				.nv_temp_target_max = 87,
-+			},
-+			.dc_data = &(struct power_limits) {
-+				.ppt_pl1_spl_min = 28,
-+				.ppt_pl1_spl_max = 50,
-+				.ppt_pl2_sppt_min = 28,
-+				.ppt_pl2_sppt_max = 50,
-+				.ppt_pl3_fppt_min = 28,
-+				.ppt_pl3_fppt_max = 65,
-+				.nv_temp_target_min = 75,
-+				.nv_temp_target_max = 87,
-+			},
-+			.requires_fan_curve = true,
-+		},
-+	},
-+	{
-+		.matches = {
-+			DMI_MATCH(DMI_BOARD_NAME, "G614J"),
-+		},
-+		.driver_data = &(struct power_data) {
-+			.ac_data = &(struct power_limits) {
-+				.ppt_pl1_spl_min = 28,
-+				.ppt_pl1_spl_max = 140,
-+				.ppt_pl2_sppt_min = 28,
-+				.ppt_pl2_sppt_max = 175,
-+				.nv_temp_target_min = 75,
-+				.nv_temp_target_max = 87,
-+				.nv_dynamic_boost_min = 5,
-+				.nv_dynamic_boost_max = 25,
-+			},
-+			.dc_data = &(struct power_limits) {
-+				.ppt_pl1_spl_min = 25,
-+				.ppt_pl1_spl_max = 55,
-+				.ppt_pl2_sppt_min = 25,
-+				.ppt_pl2_sppt_max = 70,
-+				.nv_temp_target_min = 75,
-+				.nv_temp_target_max = 87,
-+			},
-+			.requires_fan_curve = true,
-+		},
-+	},
-+	{
-+		.matches = {
-+			DMI_MATCH(DMI_BOARD_NAME, "G634J"),
-+		},
-+		.driver_data = &(struct power_data) {
-+			.ac_data = &(struct power_limits) {
-+				.ppt_pl1_spl_min = 28,
-+				.ppt_pl1_spl_max = 140,
-+				.ppt_pl2_sppt_min = 28,
-+				.ppt_pl2_sppt_max = 175,
-+				.nv_temp_target_min = 75,
-+				.nv_temp_target_max = 87,
-+				.nv_dynamic_boost_min = 5,
-+				.nv_dynamic_boost_max = 25,
-+			},
-+			.dc_data = &(struct power_limits) {
-+				.ppt_pl1_spl_min = 25,
-+				.ppt_pl1_spl_max = 55,
-+				.ppt_pl2_sppt_min = 25,
-+				.ppt_pl2_sppt_max = 70,
-+				.nv_temp_target_min = 75,
-+				.nv_temp_target_max = 87,
-+			},
-+			.requires_fan_curve = true,
-+		},
-+	},
-+	{
-+		.matches = {
-+			DMI_MATCH(DMI_BOARD_NAME, "G733C"),
-+		},
-+		.driver_data = &(struct power_data) {
-+			.ac_data = &(struct power_limits) {
-+				.ppt_pl1_spl_min = 28,
-+				.ppt_pl1_spl_max = 170,
-+				.ppt_pl2_sppt_min = 28,
-+				.ppt_pl2_sppt_max = 175,
-+				.nv_temp_target_min = 75,
-+				.nv_temp_target_max = 87,
-+				.nv_dynamic_boost_min = 5,
-+				.nv_dynamic_boost_max = 25,
-+			},
-+			.dc_data = &(struct power_limits) {
-+				.ppt_pl1_spl_min = 28,
-+				.ppt_pl1_spl_max = 35,
-+				.ppt_pl2_sppt_min = 28,
-+				.ppt_pl2_sppt_max = 35,
-+				.nv_temp_target_min = 75,
-+				.nv_temp_target_max = 87,
-+			},
-+			.requires_fan_curve = true,
-+		},
-+	},
-+	{
-+		.matches = {
-+			DMI_MATCH(DMI_BOARD_NAME, "G733P"),
-+		},
-+		.driver_data = &(struct power_data) {
-+			.ac_data = &(struct power_limits) {
-+				.ppt_pl1_spl_min = 30,
-+				.ppt_pl1_spl_def = 100,
-+				.ppt_pl1_spl_max = 130,
-+				.ppt_pl2_sppt_min = 65,
-+				.ppt_pl2_sppt_def = 125,
-+				.ppt_pl2_sppt_max = 130,
-+				.ppt_pl3_fppt_min = 65,
-+				.ppt_pl3_fppt_def = 125,
-+				.ppt_pl3_fppt_max = 130,
-+				.nv_temp_target_min = 75,
-+				.nv_temp_target_max = 87,
-+				.nv_dynamic_boost_min = 5,
-+				.nv_dynamic_boost_max = 25,
-+			},
-+			.dc_data = &(struct power_limits) {
-+				.ppt_pl1_spl_min = 25,
-+				.ppt_pl1_spl_max = 65,
-+				.ppt_pl2_sppt_min = 25,
-+				.ppt_pl2_sppt_max = 65,
-+				.ppt_pl3_fppt_min = 35,
-+				.ppt_pl3_fppt_max = 75,
-+				.nv_temp_target_min = 75,
-+				.nv_temp_target_max = 87,
-+			},
-+			.requires_fan_curve = true,
-+		},
-+	},
-+	{
-+		.matches = {
-+			DMI_MATCH(DMI_BOARD_NAME, "G814J"),
-+		},
-+		.driver_data = &(struct power_data) {
-+			.ac_data = &(struct power_limits) {
-+				.ppt_pl1_spl_min = 28,
-+				.ppt_pl1_spl_max = 140,
-+				.ppt_pl2_sppt_min = 28,
-+				.ppt_pl2_sppt_max = 140,
-+				.nv_dynamic_boost_min = 5,
-+				.nv_dynamic_boost_max = 25,
-+			},
-+			.dc_data = &(struct power_limits) {
-+				.ppt_pl1_spl_min = 25,
-+				.ppt_pl1_spl_max = 55,
-+				.ppt_pl2_sppt_min = 25,
-+				.ppt_pl2_sppt_max = 70,
-+			},
-+			.requires_fan_curve = true,
-+		},
-+	},
-+	{
-+		.matches = {
-+			DMI_MATCH(DMI_BOARD_NAME, "G834J"),
-+		},
-+		.driver_data = &(struct power_data) {
-+			.ac_data = &(struct power_limits) {
-+				.ppt_pl1_spl_min = 28,
-+				.ppt_pl1_spl_max = 140,
-+				.ppt_pl2_sppt_min = 28,
-+				.ppt_pl2_sppt_max = 175,
-+				.nv_dynamic_boost_min = 5,
-+				.nv_dynamic_boost_max = 25,
-+				.nv_temp_target_min = 75,
-+				.nv_temp_target_max = 87,
-+			},
-+			.dc_data = &(struct power_limits) {
-+				.ppt_pl1_spl_min = 25,
-+				.ppt_pl1_spl_max = 55,
-+				.ppt_pl2_sppt_min = 25,
-+				.ppt_pl2_sppt_max = 70,
-+				.nv_temp_target_min = 75,
-+				.nv_temp_target_max = 87,
-+			},
-+			.requires_fan_curve = true,
-+		},
-+	},
-+	{
-+		.matches = {
-+			DMI_MATCH(DMI_BOARD_NAME, "H7606W"),
-+		},
-+		.driver_data = &(struct power_data) {
-+			.ac_data = &(struct power_limits) {
-+				.ppt_pl1_spl_min = 15,
-+				.ppt_pl1_spl_max = 80,
-+				.ppt_pl2_sppt_min = 35,
-+				.ppt_pl2_sppt_max = 80,
-+				.ppt_pl3_fppt_min = 35,
-+				.ppt_pl3_fppt_max = 80,
-+				.nv_dynamic_boost_min = 5,
-+				.nv_dynamic_boost_max = 20,
-+				.nv_temp_target_min = 75,
-+				.nv_temp_target_max = 87,
-+				.nv_tgp_min = 55,
-+				.nv_tgp_max = 85,
-+			},
-+			.dc_data = &(struct power_limits) {
-+				.ppt_pl1_spl_min = 25,
-+				.ppt_pl1_spl_max = 35,
-+				.ppt_pl2_sppt_min = 31,
-+				.ppt_pl2_sppt_max = 44,
-+				.ppt_pl3_fppt_min = 45,
-+				.ppt_pl3_fppt_max = 65,
-+				.nv_temp_target_min = 75,
-+				.nv_temp_target_max = 87,
-+			}
-+		},
-+	},
-+	{
-+		.matches = {
-+			DMI_MATCH(DMI_BOARD_NAME, "RC71"),
-+		},
-+		.driver_data = &(struct power_data) {
-+			.ac_data = &(struct power_limits) {
-+				.ppt_pl1_spl_min = 7,
-+				.ppt_pl1_spl_max = 30,
-+				.ppt_pl2_sppt_min = 15,
-+				.ppt_pl2_sppt_max = 43,
-+				.ppt_pl3_fppt_min = 15,
-+				.ppt_pl3_fppt_max = 53
-+			},
-+			.dc_data = &(struct power_limits) {
-+				.ppt_pl1_spl_min = 7,
-+				.ppt_pl1_spl_def = 15,
-+				.ppt_pl1_spl_max = 25,
-+				.ppt_pl2_sppt_min = 15,
-+				.ppt_pl2_sppt_def = 20,
-+				.ppt_pl2_sppt_max = 30,
-+				.ppt_pl3_fppt_min = 15,
-+				.ppt_pl3_fppt_def = 25,
-+				.ppt_pl3_fppt_max = 35
-+			}
-+		},
-+	},
-+	{
-+		.matches = {
-+			DMI_MATCH(DMI_BOARD_NAME, "RC72"),
-+		},
-+		.driver_data = &(struct power_data) {
-+			.ac_data = &(struct power_limits) {
-+				.ppt_pl1_spl_min = 7,
-+				.ppt_pl1_spl_max = 30,
-+				.ppt_pl2_sppt_min = 15,
-+				.ppt_pl2_sppt_max = 43,
-+				.ppt_pl3_fppt_min = 15,
-+				.ppt_pl3_fppt_max = 53
-+			},
-+			.dc_data = &(struct power_limits) {
-+				.ppt_pl1_spl_min = 7,
-+				.ppt_pl1_spl_def = 17,
-+				.ppt_pl1_spl_max = 25,
-+				.ppt_pl2_sppt_min = 15,
-+				.ppt_pl2_sppt_def = 24,
-+				.ppt_pl2_sppt_max = 30,
-+				.ppt_pl3_fppt_min = 15,
-+				.ppt_pl3_fppt_def = 30,
-+				.ppt_pl3_fppt_max = 35
-+			}
-+		},
-+	},
-+	{}
-+};
-+
- #endif /* _ASUS_ARMOURY_H_ */
-diff --git a/include/linux/platform_data/x86/asus-wmi.h b/include/linux/platform_data/x86/asus-wmi.h
-index 92fea0710ada..bf53592e2a2f 100644
---- a/include/linux/platform_data/x86/asus-wmi.h
-+++ b/include/linux/platform_data/x86/asus-wmi.h
-@@ -145,6 +145,9 @@
- 
- #define ASUS_WMI_DEVID_APU_MEM		0x000600C1
- 
-+#define ASUS_WMI_DEVID_DGPU_BASE_TGP	0x00120099
-+#define ASUS_WMI_DEVID_DGPU_SET_TGP	0x00120098
-+
- /* gpu mux switch, 0 = dGPU, 1 = Optimus */
- #define ASUS_WMI_DEVID_GPU_MUX		0x00090016
- #define ASUS_WMI_DEVID_GPU_MUX_VIVO	0x00090026
+Cc: Aaro Koskinen <aaro.koskinen@iki.fi>
+Cc: Abhinav Kumar <quic_abhinavk@quicinc.com>
+Cc: Albert Ou <aou@eecs.berkeley.edu>
+Cc: Alexandre Belloni <alexandre.belloni@bootlin.com>
+Cc: Alexandre Ghiti <alex@ghiti.fr>
+Cc: Alexandre Torgue <alexandre.torgue@foss.st.com>
+Cc: Alex Deucher <alexander.deucher@amd.com>
+Cc: Alex Shi <alexs@kernel.org>
+Cc: Alim Akhtar <alim.akhtar@samsung.com>
+Cc: "Alvin Šipraga" <alsi@bang-olufsen.dk>
+Cc: Alyssa Rosenzweig <alyssa@rosenzweig.io>
+Cc: amd-gfx@lists.freedesktop.org
+Cc: Amit Kucheria <amitk@kernel.org>
+Cc: Anatolij Gustschin <agust@denx.de>
+Cc: Andi Shyti <andi.shyti@kernel.org>
+Cc: "Andreas Färber" <afaerber@suse.de>
+Cc: Andreas Kemnade <andreas@kemnade.info>
+Cc: Andrew Jeffery <andrew@codeconstruct.com.au>
+Cc: Andrew Lunn <andrew@lunn.ch>
+Cc: Andy Shevchenko <andy@kernel.org>
+Cc: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+Cc: Antoine Tenart <atenart@kernel.org>
+Cc: Anton Ivanov <anton.ivanov@cambridgegreys.com>
+Cc: Anup Patel <anup@brainfault.org>
+Cc: Arnd Bergmann <arnd@arndb.de>
+Cc: asahi@lists.linux.dev
+Cc: Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: Baruch Siach <baruch@tkos.co.il>
+Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>
+Cc: Bharat Kumar Gogada <bharat.kumar.gogada@amd.com>
+Cc: Bjorn Andersson <andersson@kernel.org>
+Cc: Bjorn Helgaas <bhelgaas@google.com>
+Cc: Borislav Petkov <bp@alien8.de>
+Cc: Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>
+Cc: Claudiu Beznea <claudiu.beznea@tuxon.dev>
+Cc: Corentin Chary <corentin.chary@gmail.com>
+Cc: Daire McNamara <daire.mcnamara@microchip.com>
+Cc: Daniel Golle <daniel@makrotopia.org>
+Cc: Daniel Lezcano <daniel.lezcano@linaro.org>
+Cc: Daniel Mack <daniel@zonque.org>
+Cc: Daniel Palmer <daniel@thingy.jp>
+Cc: Dave Hansen <dave.hansen@linux.intel.com>
+Cc: David Airlie <airlied@gmail.com>
+Cc: "David S. Miller" <davem@davemloft.net>
+Cc: DENG Qingfang <dqfext@gmail.com>
+Cc: Dinh Nguyen <dinguyen@kernel.org>
+Cc: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+Cc: Dongliang Mu <dzm91@hust.edu.cn>
+Cc: Doug Berger <opendmb@gmail.com>
+Cc: dri-devel@lists.freedesktop.org
+Cc: Eddie James <eajames@linux.ibm.com>
+Cc: Eric Dumazet <edumazet@google.com>
+Cc: Fabio Estevam <festevam@gmail.com>
+Cc: Florian Fainelli <florian.fainelli@broadcom.com>
+Cc: Geoff Levand <geoff@infradead.org>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Gregory Clement <gregory.clement@bootlin.com>
+Cc: Guo Ren <guoren@kernel.org>
+Cc: Hans de Goede <hdegoede@redhat.com>
+Cc: Haojian Zhuang <haojian.zhuang@gmail.com>
+Cc: Haojian Zhuang <haojian.zhuang@linaro.org>
+Cc: Heiko Stuebner <heiko@sntech.de>
+Cc: Herve Codina <herve.codina@bootlin.com>
+Cc: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
+Cc: "H. Peter Anvin" <hpa@zytor.com>
+Cc: Huacai Chen <chenhuacai@kernel.org>
+Cc: Changhuang Liang <changhuang.liang@starfivetech.com>
+Cc: Chen-Yu Tsai <wens@csie.org>
+Cc: "Chester A. Unal" <chester.a.unal@arinc9.com>
+Cc: "Christian König" <christian.koenig@amd.com>
+Cc: Christophe Leroy <christophe.leroy@csgroup.eu>
+Cc: Chris Zankel <chris@zankel.net>
+Cc: "Ilpo Järvinen" <ilpo.jarvinen@linux.intel.com>
+Cc: Imre Kaloz <kaloz@openwrt.org>
+Cc: Ingo Molnar <mingo@redhat.com>
+Cc: Jakub Kicinski <kuba@kernel.org>
+Cc: James Morse <james.morse@arm.com>
+Cc: Janne Grunau <j@jannau.net>
+Cc: Janusz Krzysztofik <jmkrzyszt@gmail.com>
+Cc: Jaroslav Kysela <perex@perex.cz>
+Cc: Jassi Brar <jassisinghbrar@gmail.com>
+Cc: Jernej Skrabec <jernej.skrabec@gmail.com>
+Cc: Jerome Brunet <jbrunet@baylibre.com>
+Cc: Jianjun Wang <jianjun.wang@mediatek.com>
+Cc: Jiawen Wu <jiawenwu@trustnetic.com>
+Cc: Jiaxun Yang <jiaxun.yang@flygoat.com>
+Cc: Jim Quinlan <jim2101024@gmail.com>
+Cc: Jingoo Han <jingoohan1@gmail.com>
+Cc: Joel Stanley <joel@jms.id.au>
+Cc: Johannes Berg <johannes@sipsolutions.net>
+Cc: John Crispin <john@phrozen.org>
+Cc: John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>
+Cc: Jonas Bonn <jonas@southpole.se>
+Cc: Jonathan Cameron <jic23@kernel.org>
+Cc: Jonathan Corbet <corbet@lwn.net>
+Cc: Jonathan Hunter <jonathanh@nvidia.com>
+Cc: "Jonathan Neuschäfer" <j.neuschaefer@gmx.net>
+Cc: Joyce Ooi <joyce.ooi@intel.com>
+Cc: Karthikeyan Mitran <m.karthikeyan@mobiveil.co.in>
+Cc: Keerthy <j-keerthy@ti.com>
+Cc: Kevin Hilman <khilman@baylibre.com>
+Cc: Konrad Dybcio <konradybcio@kernel.org>
+Cc: Krzysztof Kozlowski <krzk@kernel.org>
+Cc: "Krzysztof Wilczyński" <kw@linux.com>
+Cc: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
+Cc: Lakshmi Sowjanya D <lakshmi.sowjanya.d@intel.com>
+Cc: Lars-Peter Clausen <lars@metafoo.de>
+Cc: Lee Jones <lee@kernel.org>
+Cc: Liam Girdwood <lgirdwood@gmail.com>
+Cc: Linus Walleij <linus.walleij@linaro.org>
+Cc: Linus Walleij <linusw@kernel.org>
+Cc: linux-amlogic@lists.infradead.org
+Cc: linux-arm-kernel@lists.infradead.org
+Cc: linux-arm-msm@vger.kernel.org
+Cc: linux-doc@vger.kernel.org
+Cc: linux-edac@vger.kernel.org
+Cc: linux-gpio@vger.kernel.org
+Cc: linux-iio@vger.kernel.org
+Cc: linux-i2c@vger.kernel.org
+Cc: linux-mediatek@lists.infradead.org
+Cc: linux-mips@vger.kernel.org
+Cc: linux-omap@vger.kernel.org
+Cc: linux-pci@vger.kernel.org
+Cc: linuxppc-dev@lists.ozlabs.org
+Cc: linux-remoteproc@vger.kernel.org
+Cc: linux-riscv@lists.infradead.org
+Cc: linux-rpi-kernel@lists.infradead.org
+Cc: linux-sh@vger.kernel.org
+Cc: linux-snps-arc@lists.infradead.org
+Cc: linux-sound@vger.kernel.org
+Cc: linux-stm32@st-md-mailman.stormreply.com
+Cc: linux-um@lists.infradead.org
+Cc: linux-wireless@vger.kernel.org
+Cc: loongarch@lists.linux.dev
+Cc: Lorenzo Pieralisi <lpieralisi@kernel.org>
+Cc: Ludovic Desroches <ludovic.desroches@microchip.com>
+Cc: Lukasz Luba <lukasz.luba@arm.com>
+Cc: "Luke D. Jones" <luke@ljones.dev>
+Cc: Madhavan Srinivasan <maddy@linux.ibm.com>
+Cc: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Cc: Marc Zyngier <maz@kernel.org>
+Cc: "Marek Behún" <kabel@kernel.org>
+Cc: Marijn Suijten <marijn.suijten@somainline.org>
+Cc: Mark Brown <broonie@kernel.org>
+Cc: Mark-PK Tsai <mark-pk.tsai@mediatek.com>
+Cc: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>
+Cc: Mathieu Poirier <mathieu.poirier@linaro.org>
+Cc: Matthias Brugger <matthias.bgg@gmail.com>
+Cc: Mauro Carvalho Chehab <mchehab@kernel.org>
+Cc: Max Filippov <jcmvbkbc@gmail.com>
+Cc: Maxime Coquelin <mcoquelin.stm32@gmail.com>
+Cc: Mengyuan Lou <mengyuanlou@net-swift.com>
+Cc: Michael Buesch <m@bues.ch>
+Cc: Michael Ellerman <mpe@ellerman.id.au>
+Cc: Michal Simek <michal.simek@amd.com>
+Cc: Miodrag Dinic <miodrag.dinic@mips.com>
+Cc: Naveen N Rao <naveen@kernel.org>
+Cc: Neil Armstrong <neil.armstrong@linaro.org>
+Cc: netdev@vger.kernel.org
+Cc: Nicolas Ferre <nicolas.ferre@microchip.com>
+Cc: Nicolas Saenz Julienne <nsaenz@kernel.org>
+Cc: Nicholas Piggin <npiggin@gmail.com>
+Cc: Nikhil Agarwal <nikhil.agarwal@amd.com>
+Cc: Nipun Gupta <nipun.gupta@amd.com>
+Cc: Nishanth Menon <nm@ti.com>
+Cc: "Pali Rohár" <pali@kernel.org>
+Cc: Palmer Dabbelt <palmer@dabbelt.com>
+Cc: Paolo Abeni <pabeni@redhat.com>
+Cc: Paul Cercueil <paul@crapouillou.net>
+Cc: Paul Walmsley <paul.walmsley@sifive.com>
+Cc: Pengutronix Kernel Team <kernel@pengutronix.de>
+Cc: Peter Rosin <peda@axentia.se>
+Cc: Philipp Zabel <p.zabel@pengutronix.de>
+Cc: Piotr Wojtaszczyk <piotr.wojtaszczyk@timesys.com>
+Cc: platform-driver-x86@vger.kernel.org
+Cc: Prasad Kumpatla <quic_pkumpatl@quicinc.com>
+Cc: Qiang Zhao <qiang.zhao@nxp.com>
+Cc: Qin Jian <qinjian@cqplus1.com>
+Cc: "Rafael J. Wysocki" <rafael@kernel.org>
+Cc: Randy Dunlap <rdunlap@infradead.org>
+Cc: Ray Jui <rjui@broadcom.com>
+Cc: Rengarajan Sundararajan <Rengarajan.S@microchip.com>
+Cc: Richard Cochran <richardcochran@gmail.com>
+Cc: Richard Weinberger <richard@nod.at>
+Cc: Rich Felker <dalias@libc.org>
+Cc: Rob Clark <robdclark@gmail.com>
+Cc: Robert Jarzmik <robert.jarzmik@free.fr>
+Cc: Robert Richter <rric@kernel.org>
+Cc: Rob Herring <robh@kernel.org>
+Cc: Roger Quadros <rogerq@kernel.org>
+Cc: Russell King <linux@armlinux.org.uk>
+Cc: Ryan Chen <ryan_chen@aspeedtech.com>
+Cc: Ryder Lee <ryder.lee@mediatek.com>
+Cc: Samuel Holland <samuel@sholland.org>
+Cc: Santosh Shilimkar <ssantosh@kernel.org>
+Cc: Sascha Hauer <s.hauer@pengutronix.de>
+Cc: Scott Branden <sbranden@broadcom.com>
+Cc: Scott Wood <oss@buserror.net>
+Cc: Sean Paul <sean@poorly.run>
+Cc: Sean Wang <sean.wang@kernel.org>
+Cc: Sean Wang <sean.wang@mediatek.com>
+Cc: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+Cc: Sergio Paracuellos <sergio.paracuellos@gmail.com>
+Cc: Shawn Guo <shawnguo@kernel.org>
+Cc: Shawn Lin <shawn.lin@rock-chips.com>
+Cc: Siddharth Vadapalli <s-vadapalli@ti.com>
+Cc: Simona Vetter <simona@ffwll.ch>
+Cc: Stafford Horne <shorne@gmail.com>
+Cc: Stefan Kristiansson <stefan.kristiansson@saunalahti.fi>
+Cc: Stephen Boyd <sboyd@kernel.org>
+Cc: Sven Peter <sven@svenpeter.dev>
+Cc: Takashi Iwai <tiwai@suse.com>
+Cc: Talel Shenhar <talel@amazon.com>
+Cc: Tero Kristo <kristo@kernel.org>
+Cc: Thangaraj Samynathan <Thangaraj.S@microchip.com>
+Cc: Thara Gopinath <thara.gopinath@gmail.com>
+Cc: Thierry Reding <thierry.reding@gmail.com>
+Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Thomas Petazzoni <thomas.petazzoni@bootlin.com>
+Cc: Toan Le <toan@os.amperecomputing.com>
+Cc: Tony Lindgren <tony@atomide.com>
+Cc: Tony Luck <tony.luck@intel.com>
+Cc: UNGLinuxDriver@microchip.com
+Cc: "Uwe Kleine-König" <ukleinek@kernel.org>
+Cc: Vignesh Raghavendra <vigneshr@ti.com>
+Cc: Vineet Gupta <vgupta@kernel.org>
+Cc: Vladimir Oltean <olteanv@gmail.com>
+Cc: Vladimir Zapolskiy <vz@mleia.com>
+Cc: WANG Xuerui <kernel@xen0n.name>
+Cc: Woojung Huh <woojung.huh@microchip.com>
+Cc: x86@kernel.org
+Cc: Yanteng Si <si.yanteng@linux.dev>
+Cc: Yoshinori Sato <ysato@users.sourceforge.jp>
+Cc: Zhang Rui <rui.zhang@intel.com>
+
+Jiri Slaby (SUSE) (57):
+  irqdomain: um: use irq_domain_create_linear() helper
+  irqdomain: Rename irq_set_default_host() to irq_set_default_domain()
+  irqdomain: Rename irq_get_default_host() to irq_get_default_domain()
+  irqdomain.h: Stop using 'host' for domain
+  irqdomain: cdx: Switch to of_fwnode_handle()
+  irqdomain: irqchip: Switch to of_fwnode_handle()
+  irqdomain: pci: Switch to of_fwnode_handle()
+  irqdomain: ppc: Switch to of_fwnode_handle()
+  irqdomain: remoteproc: Switch to of_fwnode_handle()
+  irqdomain: x86: Switch to of_fwnode_handle()
+  irqdomain: Drop of_node_to_fwnode()
+  irqdomain: Make irq_domain_create_hierarchy() an inline
+  irqdomain: arc: Switch to irq_domain_create_linear()
+  irqdomain: arm: Switch to irq_domain_create_*()
+  irqdomain: bus: Switch to irq_domain_create_simple()
+  irqdomain: edac: Switch to irq_domain_create_linear()
+  irqdomain: gpio: Switch to irq_domain_create_*()
+  irqdomain: gpu: Switch to irq_domain_create_linear()
+  irqdomain: i2c: Switch to irq_domain_create_linear()
+  irqdomain: iio: Switch to irq_domain_create_simple()
+  irqdomain: irqchip: Switch to irq_domain_create_*()
+  irqdomain: mailbox: Switch to irq_domain_create_tree()
+  irqdomain: memory: Switch to irq_domain_create_linear()
+  irqdomain: mfd: Switch to irq_domain_create_*()
+  irqdomain: mips: Switch to irq_domain_create_*()
+  irqdomain: misc: Switch to irq_domain_create_simple()
+  irqdomain: net: Switch to irq_domain_create_*()
+  irqdomain: nios2: Switch to irq_domain_create_linear()
+  irqdomain: pci: Switch to irq_domain_create_linear()
+  irqdomain: pinctrl: Switch to irq_domain_create_*()
+  irqdomain: platform/x86: Switch to irq_domain_create_linear()
+  irqdomain: ppc: Switch to irq_domain_create_*()
+  irqdomain: sh: Switch to irq_domain_create_*()
+  irqdomain: soc: Switch to irq_domain_create_*()
+  irqdomain: sound: Switch to irq_domain_create_linear()
+  irqdomain: spmi: Switch to irq_domain_create_tree()
+  irqdomain: ssb: Switch to irq_domain_create_linear()
+  irqdomain: thermal: Switch to irq_domain_create_linear()
+  irqdomain: ppc: Switch irq_domain_add_nomap() to use fwnode
+  irqdomain: Drop irq_domain_add_*() functions
+  irqdomain: ppc: Switch to irq_find_mapping()
+  irqdomain: sh: Switch to irq_find_mapping()
+  irqdomain: gpio: Switch to irq_find_mapping()
+  irqdomain: gpu: Switch to irq_find_mapping()
+  irqdomain: i2c: Switch to irq_find_mapping()
+  irqdomain: irqchip: Switch to irq_find_mapping()
+  irqdomain: pinctrl: Switch to irq_find_mapping()
+  irqdomain: soc: Switch to irq_find_mapping()
+  irqdomain: Drop irq_linear_revmap()
+  irqdomain: Use irq_domain_instantiate() retvals as initializers
+  irqdomain: Make struct irq_domain_info variables const
+  irqdomain.h: Improve kernel-docs of functions
+  docs: irq/concepts: Add commas and reflow
+  docs: irq/concepts: Minor improvements
+  docs: irq-domain.rst: Simple improvements
+  docs: irqdomain: Update
+  irqdomain.c: Fix kernel-doc and add it to Documentation
+
+ Documentation/core-api/genericirq.rst         |   2 -
+ Documentation/core-api/irq/concepts.rst       |  27 +--
+ Documentation/core-api/irq/irq-domain.rst     | 202 +++++++++--------
+ .../zh_CN/core-api/irq/irq-domain.rst         |   8 +-
+ arch/arc/kernel/intc-arcv2.c                  |   4 +-
+ arch/arc/kernel/intc-compact.c                |   7 +-
+ arch/arc/kernel/mcip.c                        |   3 +-
+ arch/arm/common/sa1111.c                      |   6 +-
+ arch/arm/mach-exynos/suspend.c                |   5 +-
+ arch/arm/mach-imx/avic.c                      |   4 +-
+ arch/arm/mach-imx/gpc.c                       |   5 +-
+ arch/arm/mach-imx/tzic.c                      |   4 +-
+ arch/arm/mach-omap1/irq.c                     |   3 +-
+ arch/arm/mach-omap2/omap-wakeupgen.c          |   5 +-
+ arch/arm/mach-pxa/irq.c                       |   7 +-
+ arch/arm/plat-orion/gpio.c                    |  12 +-
+ arch/mips/ath25/ar2315.c                      |   4 +-
+ arch/mips/ath25/ar5312.c                      |   4 +-
+ arch/mips/cavium-octeon/octeon-irq.c          |  31 +--
+ arch/mips/lantiq/irq.c                        |   2 +-
+ arch/mips/pci/pci-ar2315.c                    |   4 +-
+ arch/mips/pci/pci-rt3883.c                    |   7 +-
+ arch/mips/pci/pci-xtalk-bridge.c              |   2 +-
+ arch/mips/ralink/irq.c                        |   2 +-
+ arch/mips/sgi-ip27/ip27-irq.c                 |   2 +-
+ arch/mips/sgi-ip30/ip30-irq.c                 |   2 +-
+ arch/nios2/kernel/irq.c                       |   5 +-
+ arch/powerpc/kvm/book3s_hv.c                  |   2 +-
+ arch/powerpc/kvm/book3s_xive.c                |   2 +-
+ arch/powerpc/platforms/44x/uic.c              |   9 +-
+ .../powerpc/platforms/512x/mpc5121_ads_cpld.c |   3 +-
+ arch/powerpc/platforms/52xx/media5200.c       |   2 +-
+ arch/powerpc/platforms/52xx/mpc52xx_gpt.c     |   6 +-
+ arch/powerpc/platforms/52xx/mpc52xx_pic.c     |   6 +-
+ .../platforms/85xx/socrates_fpga_pic.c        |   4 +-
+ arch/powerpc/platforms/8xx/cpm1-ic.c          |   5 +-
+ arch/powerpc/platforms/8xx/pic.c              |   5 +-
+ arch/powerpc/platforms/amigaone/setup.c       |   2 +-
+ arch/powerpc/platforms/chrp/setup.c           |   2 +-
+ .../platforms/embedded6xx/flipper-pic.c       |   9 +-
+ arch/powerpc/platforms/embedded6xx/hlwd-pic.c |   7 +-
+ arch/powerpc/platforms/pasemi/setup.c         |   2 +-
+ arch/powerpc/platforms/powermac/pic.c         |   9 +-
+ arch/powerpc/platforms/powermac/smp.c         |   2 +-
+ arch/powerpc/platforms/powernv/opal-irqchip.c |   3 +-
+ arch/powerpc/platforms/powernv/pci-ioda.c     |   4 +-
+ arch/powerpc/platforms/ps3/interrupt.c        |   4 +-
+ arch/powerpc/platforms/pseries/msi.c          |   4 +-
+ arch/powerpc/sysdev/cpm2_pic.c                |   5 +-
+ arch/powerpc/sysdev/ehv_pic.c                 |   9 +-
+ arch/powerpc/sysdev/fsl_msi.c                 |   2 +-
+ arch/powerpc/sysdev/ge/ge_pic.c               |   7 +-
+ arch/powerpc/sysdev/i8259.c                   |   4 +-
+ arch/powerpc/sysdev/ipic.c                    |   9 +-
+ arch/powerpc/sysdev/mpic.c                    |  12 +-
+ arch/powerpc/sysdev/tsi108_pci.c              |   4 +-
+ arch/powerpc/sysdev/xics/xics-common.c        |   2 +-
+ arch/powerpc/sysdev/xive/common.c             |   4 +-
+ arch/sh/boards/mach-se/7343/irq.c             |   7 +-
+ arch/sh/boards/mach-se/7722/irq.c             |   4 +-
+ arch/sh/boards/mach-x3proto/gpio.c            |   2 +-
+ arch/um/drivers/virt-pci.c                    |  15 +-
+ arch/x86/kernel/apic/io_apic.c                |   2 +-
+ arch/x86/kernel/apic/vector.c                 |   2 +-
+ drivers/bus/moxtet.c                          |   6 +-
+ drivers/cdx/cdx_msi.c                         |   4 +-
+ drivers/edac/altera_edac.c                    |   4 +-
+ drivers/gpio/gpio-brcmstb.c                   |   2 +-
+ drivers/gpio/gpio-davinci.c                   |   5 +-
+ drivers/gpio/gpio-em.c                        |   5 +-
+ drivers/gpio/gpio-grgpio.c                    |   2 +-
+ drivers/gpio/gpio-idt3243x.c                  |   2 +-
+ drivers/gpio/gpio-lpc18xx.c                   |   8 +-
+ drivers/gpio/gpio-mvebu.c                     |   2 +-
+ drivers/gpio/gpio-mxc.c                       |   2 +-
+ drivers/gpio/gpio-mxs.c                       |   4 +-
+ drivers/gpio/gpio-pxa.c                       |   6 +-
+ drivers/gpio/gpio-rockchip.c                  |   2 +-
+ drivers/gpio/gpio-sa1100.c                    |   2 +-
+ drivers/gpio/gpio-sodaville.c                 |   2 +-
+ drivers/gpio/gpio-tb10x.c                     |   2 +-
+ drivers/gpio/gpio-twl4030.c                   |   5 +-
+ drivers/gpu/drm/amd/amdgpu/amdgpu_irq.c       |   4 +-
+ drivers/gpu/drm/msm/msm_mdss.c                |   2 +-
+ drivers/gpu/ipu-v3/ipu-common.c               |   8 +-
+ drivers/i2c/busses/i2c-cht-wc.c               |   2 +-
+ drivers/i2c/muxes/i2c-mux-pca954x.c           |   8 +-
+ drivers/iio/adc/stm32-adc-core.c              |   7 +-
+ drivers/irqchip/exynos-combiner.c             |   2 +-
+ drivers/irqchip/irq-al-fic.c                  |   2 +-
+ drivers/irqchip/irq-alpine-msi.c              |   7 +-
+ drivers/irqchip/irq-apple-aic.c               |   4 +-
+ drivers/irqchip/irq-armada-370-xp.c           |  18 +-
+ drivers/irqchip/irq-aspeed-i2c-ic.c           |   2 +-
+ drivers/irqchip/irq-aspeed-intc.c             |   2 +-
+ drivers/irqchip/irq-aspeed-scu-ic.c           |   2 +-
+ drivers/irqchip/irq-aspeed-vic.c              |   4 +-
+ drivers/irqchip/irq-ath79-misc.c              |   4 +-
+ drivers/irqchip/irq-atmel-aic-common.c        |   2 +-
+ drivers/irqchip/irq-bcm2712-mip.c             |   4 +-
+ drivers/irqchip/irq-bcm2835.c                 |   2 +-
+ drivers/irqchip/irq-bcm2836.c                 |   2 +-
+ drivers/irqchip/irq-bcm6345-l1.c              |   2 +-
+ drivers/irqchip/irq-bcm7038-l1.c              |   2 +-
+ drivers/irqchip/irq-bcm7120-l2.c              |   2 +-
+ drivers/irqchip/irq-brcmstb-l2.c              |   2 +-
+ drivers/irqchip/irq-clps711x.c                |   6 +-
+ drivers/irqchip/irq-crossbar.c                |   6 +-
+ drivers/irqchip/irq-csky-apb-intc.c           |   2 +-
+ drivers/irqchip/irq-csky-mpintc.c             |   2 +-
+ drivers/irqchip/irq-davinci-cp-intc.c         |   6 +-
+ drivers/irqchip/irq-digicolor.c               |   2 +-
+ drivers/irqchip/irq-dw-apb-ictl.c             |   2 +-
+ drivers/irqchip/irq-ftintc010.c               |   5 +-
+ drivers/irqchip/irq-gic-v3-its-fsl-mc-msi.c   |   2 +-
+ drivers/irqchip/irq-gic-v3.c                  |   4 +-
+ drivers/irqchip/irq-goldfish-pic.c            |   7 +-
+ drivers/irqchip/irq-hip04.c                   |   6 +-
+ drivers/irqchip/irq-i8259.c                   |   4 +-
+ drivers/irqchip/irq-idt3243x.c                |   2 +-
+ drivers/irqchip/irq-imgpdc.c                  |   2 +-
+ drivers/irqchip/irq-imx-gpcv2.c               |   6 +-
+ drivers/irqchip/irq-imx-intmux.c              |   2 +-
+ drivers/irqchip/irq-imx-irqsteer.c            |   2 +-
+ drivers/irqchip/irq-ingenic-tcu.c             |   4 +-
+ drivers/irqchip/irq-ingenic.c                 |   4 +-
+ drivers/irqchip/irq-ixp4xx.c                  |   2 +-
+ drivers/irqchip/irq-jcore-aic.c               |   5 +-
+ drivers/irqchip/irq-keystone.c                |   4 +-
+ drivers/irqchip/irq-lan966x-oic.c             |   2 +-
+ drivers/irqchip/irq-loongarch-cpu.c           |   2 +-
+ drivers/irqchip/irq-loongson-eiointc.c        |   2 +-
+ drivers/irqchip/irq-loongson-htvec.c          |   2 +-
+ drivers/irqchip/irq-loongson-liointc.c        |   2 +-
+ drivers/irqchip/irq-loongson-pch-msi.c        |   2 +-
+ drivers/irqchip/irq-loongson-pch-pic.c        |   2 +-
+ drivers/irqchip/irq-lpc32xx.c                 |   4 +-
+ drivers/irqchip/irq-ls-extirq.c               |   4 +-
+ drivers/irqchip/irq-ls-scfg-msi.c             |  10 +-
+ drivers/irqchip/irq-ls1x.c                    |   4 +-
+ drivers/irqchip/irq-mchp-eic.c                |   5 +-
+ drivers/irqchip/irq-meson-gpio.c              |   2 +-
+ drivers/irqchip/irq-mips-cpu.c                |  13 +-
+ drivers/irqchip/irq-mips-gic.c                |  15 +-
+ drivers/irqchip/irq-mmp.c                     |  12 +-
+ drivers/irqchip/irq-mscc-ocelot.c             |   4 +-
+ drivers/irqchip/irq-mst-intc.c                |   4 +-
+ drivers/irqchip/irq-mtk-cirq.c                |   5 +-
+ drivers/irqchip/irq-mtk-sysirq.c              |   4 +-
+ drivers/irqchip/irq-mvebu-gicp.c              |   2 +-
+ drivers/irqchip/irq-mvebu-odmi.c              |   2 +-
+ drivers/irqchip/irq-mvebu-pic.c               |   4 +-
+ drivers/irqchip/irq-mvebu-sei.c               |   6 +-
+ drivers/irqchip/irq-mxs.c                     |   4 +-
+ drivers/irqchip/irq-nvic.c                    |   2 +-
+ drivers/irqchip/irq-omap-intc.c               |   4 +-
+ drivers/irqchip/irq-or1k-pic.c                |   4 +-
+ drivers/irqchip/irq-orion.c                   |   6 +-
+ drivers/irqchip/irq-owl-sirq.c                |   4 +-
+ drivers/irqchip/irq-pic32-evic.c              |   8 +-
+ drivers/irqchip/irq-pruss-intc.c              |   4 +-
+ drivers/irqchip/irq-qcom-mpm.c                |   2 +-
+ drivers/irqchip/irq-realtek-rtl.c             |   2 +-
+ drivers/irqchip/irq-renesas-intc-irqpin.c     |   6 +-
+ drivers/irqchip/irq-renesas-irqc.c            |   4 +-
+ drivers/irqchip/irq-renesas-rza1.c            |   6 +-
+ drivers/irqchip/irq-renesas-rzg2l.c           |   6 +-
+ drivers/irqchip/irq-renesas-rzv2h.c           |   5 +-
+ drivers/irqchip/irq-riscv-intc.c              |   2 +-
+ drivers/irqchip/irq-sa11x0.c                  |   2 +-
+ drivers/irqchip/irq-sni-exiu.c                |   6 +-
+ drivers/irqchip/irq-sp7021-intc.c             |   4 +-
+ drivers/irqchip/irq-starfive-jh8100-intc.c    |   4 +-
+ drivers/irqchip/irq-stm32-exti.c              |   4 +-
+ drivers/irqchip/irq-stm32mp-exti.c            |   9 +-
+ drivers/irqchip/irq-sun4i.c                   |   2 +-
+ drivers/irqchip/irq-sun6i-r.c                 |   4 +-
+ drivers/irqchip/irq-sunxi-nmi.c               |   2 +-
+ drivers/irqchip/irq-tb10x.c                   |   8 +-
+ drivers/irqchip/irq-tegra.c                   |   5 +-
+ drivers/irqchip/irq-ti-sci-inta.c             |  10 +-
+ drivers/irqchip/irq-ti-sci-intr.c             |   7 +-
+ drivers/irqchip/irq-ts4800.c                  |   2 +-
+ drivers/irqchip/irq-uniphier-aidet.c          |   2 +-
+ drivers/irqchip/irq-versatile-fpga.c          |   4 +-
+ drivers/irqchip/irq-vf610-mscm-ir.c           |   6 +-
+ drivers/irqchip/irq-vic.c                     |   5 +-
+ drivers/irqchip/irq-vt8500.c                  |   2 +-
+ drivers/irqchip/irq-wpcm450-aic.c             |   2 +-
+ drivers/irqchip/irq-xilinx-intc.c             |   6 +-
+ drivers/irqchip/irq-xtensa-mx.c               |   7 +-
+ drivers/irqchip/irq-xtensa-pic.c              |   8 +-
+ drivers/irqchip/irq-zevio.c                   |   4 +-
+ drivers/irqchip/spear-shirq.c                 |   2 +-
+ drivers/mailbox/qcom-ipcc.c                   |   4 +-
+ drivers/memory/omap-gpmc.c                    |   6 +-
+ drivers/mfd/88pm860x-core.c                   |   4 +-
+ drivers/mfd/ab8500-core.c                     |   6 +-
+ drivers/mfd/arizona-irq.c                     |   3 +-
+ drivers/mfd/db8500-prcmu.c                    |   6 +-
+ drivers/mfd/fsl-imx25-tsadc.c                 |   5 +-
+ drivers/mfd/lp8788-irq.c                      |   2 +-
+ drivers/mfd/max8925-core.c                    |   4 +-
+ drivers/mfd/max8997-irq.c                     |   4 +-
+ drivers/mfd/max8998-irq.c                     |   2 +-
+ drivers/mfd/mt6358-irq.c                      |   6 +-
+ drivers/mfd/mt6397-irq.c                      |   6 +-
+ drivers/mfd/qcom-pm8xxx.c                     |   6 +-
+ drivers/mfd/stmfx.c                           |   2 +-
+ drivers/mfd/stmpe.c                           |   4 +-
+ drivers/mfd/tc3589x.c                         |   6 +-
+ drivers/mfd/tps65217.c                        |   2 +-
+ drivers/mfd/tps6586x.c                        |   2 +-
+ drivers/mfd/twl4030-irq.c                     |   4 +-
+ drivers/mfd/twl6030-irq.c                     |   5 +-
+ drivers/mfd/wm831x-irq.c                      |  15 +-
+ drivers/mfd/wm8994-irq.c                      |   4 +-
+ drivers/misc/hi6421v600-irq.c                 |   5 +-
+ drivers/net/dsa/microchip/ksz_common.c        |   5 +-
+ drivers/net/dsa/microchip/ksz_ptp.c           |   4 +-
+ drivers/net/dsa/mv88e6xxx/chip.c              |   2 +-
+ drivers/net/dsa/mv88e6xxx/global2.c           |   6 +-
+ drivers/net/dsa/qca/ar9331.c                  |   4 +-
+ drivers/net/dsa/realtek/rtl8365mb.c           |   4 +-
+ drivers/net/dsa/realtek/rtl8366rb.c           |   6 +-
+ .../net/ethernet/wangxun/txgbe/txgbe_irq.c    |   6 +-
+ drivers/net/usb/lan78xx.c                     |   9 +-
+ drivers/pci/controller/dwc/pci-dra7xx.c       |   4 +-
+ drivers/pci/controller/dwc/pci-keystone.c     |   2 +-
+ .../pci/controller/dwc/pcie-designware-host.c |   2 +-
+ drivers/pci/controller/dwc/pcie-dw-rockchip.c |   4 +-
+ drivers/pci/controller/dwc/pcie-uniphier.c    |   2 +-
+ .../controller/mobiveil/pcie-mobiveil-host.c  |  11 +-
+ drivers/pci/controller/pci-aardvark.c         |  14 +-
+ drivers/pci/controller/pci-ftpci100.c         |   4 +-
+ drivers/pci/controller/pci-mvebu.c            |   6 +-
+ drivers/pci/controller/pci-xgene-msi.c        |   5 +-
+ drivers/pci/controller/pcie-altera-msi.c      |   4 +-
+ drivers/pci/controller/pcie-altera.c          |   2 +-
+ drivers/pci/controller/pcie-brcmstb.c         |   4 +-
+ drivers/pci/controller/pcie-iproc-msi.c       |   6 +-
+ drivers/pci/controller/pcie-mediatek-gen3.c   |   9 +-
+ drivers/pci/controller/pcie-mediatek.c        |   6 +-
+ drivers/pci/controller/pcie-rockchip-host.c   |   4 +-
+ drivers/pci/controller/pcie-xilinx-cpm.c      |  10 +-
+ drivers/pci/controller/pcie-xilinx-dma-pl.c   |  14 +-
+ drivers/pci/controller/pcie-xilinx-nwl.c      |  11 +-
+ drivers/pci/controller/pcie-xilinx.c          |   5 +-
+ drivers/pci/controller/plda/pcie-plda-host.c  |  16 +-
+ drivers/pinctrl/mediatek/mtk-eint.c           |   5 +-
+ drivers/pinctrl/pinctrl-at91-pio4.c           |   2 +-
+ drivers/pinctrl/pinctrl-keembay.c             |   2 +-
+ drivers/pinctrl/pinctrl-single.c              |   9 +-
+ drivers/pinctrl/sunxi/pinctrl-sunxi.c         |   7 +-
+ drivers/platform/x86/asus-tf103c-dock.c       |   2 +-
+ drivers/remoteproc/pru_rproc.c                |   2 +-
+ drivers/sh/intc/irqdomain.c                   |   5 +-
+ drivers/soc/dove/pmu.c                        |   4 +-
+ drivers/soc/fsl/qe/qe_ic.c                    |   8 +-
+ drivers/soc/qcom/smp2p.c                      |   2 +-
+ drivers/soc/qcom/smsm.c                       |   2 +-
+ drivers/soc/tegra/pmc.c                       |   5 +-
+ drivers/spmi/spmi-pmic-arb.c                  |   2 +-
+ drivers/ssb/driver_gpio.c                     |   8 +-
+ drivers/thermal/qcom/lmh.c                    |   3 +-
+ drivers/thermal/tegra/soctherm.c              |   2 +-
+ include/linux/gpio/driver.h                   |   5 +-
+ include/linux/irqdomain.h                     | 211 ++++++++----------
+ kernel/irq/irqdomain.c                        |  88 +-------
+ sound/soc/codecs/wcd937x.c                    |   2 +-
+ sound/soc/codecs/wcd938x.c                    |   2 +-
+ sound/soc/codecs/wcd939x.c                    |   2 +-
+ 272 files changed, 838 insertions(+), 945 deletions(-)
+
 -- 
 2.49.0
 
