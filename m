@@ -1,248 +1,268 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5BBCF14B08A;
-	Thu, 20 Mar 2025 15:18:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3DBDB17591;
+	Thu, 20 Mar 2025 16:41:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742483937; cv=none; b=OMRJ94PgOp+SNGi6FwFDwH7e0smL2GYZNvHn/GdwtWsM95NdwPtSjzDgMkW7TWf561ejRlZ+EFCq0SfzMPE9SzS4X+xqCXPYUyqXZSnvIJjnjOc8j5Jb85MSk5BPWSZ2BvpoV3yCxVFjOGNW6PB3PLdDsMMdF102CN/dUsUlPTk=
+	t=1742488878; cv=none; b=BYfST17J7jhOhhPz2B/7XUg/ZtBxlGQprLmznXWWwOYaTgzqkQMVFn+86P/Las6R0vfVHgpzoj/KGHN8Ogb7L4yljd/ZF20GdWKtaRumxbA4KPowV3n7dOaoJWpkN4CtLKkyuxTnt3P/9A+FphOwENTlBqWWtbyqNRpAqhkopgo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742483937; c=relaxed/simple;
-	bh=1Z6H2iLvH3rXMt19HL+9taZFJeo/GqQ1pEgfLHm/VO8=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=ffiktKpYT0dnPb3VPhH6Sm1TN4G5d03h4CC18XgEdoplTGPtyEJXlXWskCd4aM4oBLny5hi/h9dDFcytLmXEJkgiu1VOJn0kVQPipu07hdvDFxYBTAd3BmVzoZA+CiSNSCKBMxLq796yUehzDn7kYiiW7KkRpEnOx2XOvNpfd0s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jtAZa04N; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1742488878; c=relaxed/simple;
+	bh=qIRZ0qTaew+CUAIPbfZmaL9vAfGx/qP1dB6OlqhWKXA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=gdlUX1jLWrUqp3dYKHe9VbDzADYcFYz9YAMy8MYx7X2+AUbDe6bTqXKoEzkP2IGSuOA9XbCB2e19fDxRDN0+TykgQ558qEVwK5WMbL4fSiCr6LTGWAvKEvwR3zzz9hceZYmWG6Q0NicEzM6Vkyk5uILkAldPl8aiJAFsYUZvhms=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KxDa0VAR; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jtAZa04N"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8A232C4CEDD;
-	Thu, 20 Mar 2025 15:18:10 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KxDa0VAR"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9246CC4CEDD;
+	Thu, 20 Mar 2025 16:41:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1742483936;
-	bh=1Z6H2iLvH3rXMt19HL+9taZFJeo/GqQ1pEgfLHm/VO8=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
-	b=jtAZa04NkVALEmArILtqhgvGWzNrqybg3hrSGdZZ2VVAFhkXh1nT4jpUcZ4Kc2DDn
-	 0A6i4ERYcuiCeprXqYIMy4u4kiFrkwJYEeYsWv+53EA4mBSJ6BqBYD7yzk5jl0BW7F
-	 3K+uSeS65G8FFh9VmSyWsSaODa9u59R3cNyzrD/bWKcMoby2y3/LjyBnzNkYD+iJSL
-	 9QHQkLG/EQ0PXCuzUmTG72RV9mKDT4ZRjt1NiAC6yuM4pg17khef1prwdyUg+6q41R
-	 XwbECsZNkZ4re5+LVruYEIZ107+IH+Jq6zDSLtPqFFjlA4zbkDNY4cbCQwK98Zoq0c
-	 4mfWfzYas3b3w==
-From: Mark Brown <broonie@kernel.org>
-To: tglx@linutronix.de, "Jiri Slaby (SUSE)" <jirislaby@kernel.org>
-Cc: maz@kernel.org, linux-kernel@vger.kernel.org, 
- Aaro Koskinen <aaro.koskinen@iki.fi>, 
- Abhinav Kumar <quic_abhinavk@quicinc.com>, 
- Albert Ou <aou@eecs.berkeley.edu>, 
- Alexandre Belloni <alexandre.belloni@bootlin.com>, 
- Alexandre Ghiti <alex@ghiti.fr>, 
- Alexandre Torgue <alexandre.torgue@foss.st.com>, 
- Alex Deucher <alexander.deucher@amd.com>, Alex Shi <alexs@kernel.org>, 
- Alim Akhtar <alim.akhtar@samsung.com>, 
- =?utf-8?q?Alvin_=C5=A0ipraga?= <alsi@bang-olufsen.dk>, 
- Alyssa Rosenzweig <alyssa@rosenzweig.io>, amd-gfx@lists.freedesktop.org, 
- Amit Kucheria <amitk@kernel.org>, Anatolij Gustschin <agust@denx.de>, 
- Andi Shyti <andi.shyti@kernel.org>, 
- =?utf-8?q?Andreas_F=C3=A4rber?= <afaerber@suse.de>, 
- Andreas Kemnade <andreas@kemnade.info>, 
- Andrew Jeffery <andrew@codeconstruct.com.au>, Andrew Lunn <andrew@lunn.ch>, 
- Andy Shevchenko <andy@kernel.org>, 
- AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, 
- Antoine Tenart <atenart@kernel.org>, 
- Anton Ivanov <anton.ivanov@cambridgegreys.com>, 
- Anup Patel <anup@brainfault.org>, Arnd Bergmann <arnd@arndb.de>, 
- asahi@lists.linux.dev, Bartosz Golaszewski <brgl@bgdev.pl>, 
- Baruch Siach <baruch@tkos.co.il>, 
- Benjamin Herrenschmidt <benh@kernel.crashing.org>, 
- Bharat Kumar Gogada <bharat.kumar.gogada@amd.com>, 
- Bjorn Andersson <andersson@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, 
- Borislav Petkov <bp@alien8.de>, 
- Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>, 
- Claudiu Beznea <claudiu.beznea@tuxon.dev>, 
- Corentin Chary <corentin.chary@gmail.com>, 
- Daire McNamara <daire.mcnamara@microchip.com>, 
- Daniel Golle <daniel@makrotopia.org>, 
- Daniel Lezcano <daniel.lezcano@linaro.org>, Daniel Mack <daniel@zonque.org>, 
- Daniel Palmer <daniel@thingy.jp>, Dave Hansen <dave.hansen@linux.intel.com>, 
- David Airlie <airlied@gmail.com>, "David S. Miller" <davem@davemloft.net>, 
- DENG Qingfang <dqfext@gmail.com>, Dinh Nguyen <dinguyen@kernel.org>, 
- Dmitry Baryshkov <dmitry.baryshkov@linaro.org>, 
- Dongliang Mu <dzm91@hust.edu.cn>, Doug Berger <opendmb@gmail.com>, 
- dri-devel@lists.freedesktop.org, Eddie James <eajames@linux.ibm.com>, 
- Eric Dumazet <edumazet@google.com>, Fabio Estevam <festevam@gmail.com>, 
- Florian Fainelli <florian.fainelli@broadcom.com>, 
- Geoff Levand <geoff@infradead.org>, 
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
- Gregory Clement <gregory.clement@bootlin.com>, Guo Ren <guoren@kernel.org>, 
- Hans de Goede <hdegoede@redhat.com>, 
- Haojian Zhuang <haojian.zhuang@gmail.com>, 
- Haojian Zhuang <haojian.zhuang@linaro.org>, 
- Heiko Stuebner <heiko@sntech.de>, Herve Codina <herve.codina@bootlin.com>, 
- Hou Zhiqiang <Zhiqiang.Hou@nxp.com>, "H. Peter Anvin" <hpa@zytor.com>, 
- Huacai Chen <chenhuacai@kernel.org>, 
- Changhuang Liang <changhuang.liang@starfivetech.com>, 
- Chen-Yu Tsai <wens@csie.org>, "Chester A. Unal" <chester.a.unal@arinc9.com>, 
- =?utf-8?q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>, 
- Christophe Leroy <christophe.leroy@csgroup.eu>, 
- Chris Zankel <chris@zankel.net>, 
- =?utf-8?q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, 
- Imre Kaloz <kaloz@openwrt.org>, Ingo Molnar <mingo@redhat.com>, 
- Jakub Kicinski <kuba@kernel.org>, James Morse <james.morse@arm.com>, 
- Janne Grunau <j@jannau.net>, Janusz Krzysztofik <jmkrzyszt@gmail.com>, 
- Jaroslav Kysela <perex@perex.cz>, Jassi Brar <jassisinghbrar@gmail.com>, 
- Jernej Skrabec <jernej.skrabec@gmail.com>, 
- Jerome Brunet <jbrunet@baylibre.com>, 
- Jianjun Wang <jianjun.wang@mediatek.com>, 
- Jiawen Wu <jiawenwu@trustnetic.com>, Jiaxun Yang <jiaxun.yang@flygoat.com>, 
- Jim Quinlan <jim2101024@gmail.com>, Jingoo Han <jingoohan1@gmail.com>, 
- Joel Stanley <joel@jms.id.au>, Johannes Berg <johannes@sipsolutions.net>, 
- John Crispin <john@phrozen.org>, 
- John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>, 
- Jonas Bonn <jonas@southpole.se>, Jonathan Cameron <jic23@kernel.org>, 
- Jonathan Corbet <corbet@lwn.net>, Jonathan Hunter <jonathanh@nvidia.com>, 
- =?utf-8?q?Jonathan_Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>, 
- Joyce Ooi <joyce.ooi@intel.com>, 
- Karthikeyan Mitran <m.karthikeyan@mobiveil.co.in>, 
- Keerthy <j-keerthy@ti.com>, Kevin Hilman <khilman@baylibre.com>, 
- Konrad Dybcio <konradybcio@kernel.org>, 
- Krzysztof Kozlowski <krzk@kernel.org>, 
- =?utf-8?q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>, 
- Kunihiko Hayashi <hayashi.kunihiko@socionext.com>, 
- Lakshmi Sowjanya D <lakshmi.sowjanya.d@intel.com>, 
- Lars-Peter Clausen <lars@metafoo.de>, Lee Jones <lee@kernel.org>, 
- Liam Girdwood <lgirdwood@gmail.com>, 
- Linus Walleij <linus.walleij@linaro.org>, Linus Walleij <linusw@kernel.org>, 
- linux-amlogic@lists.infradead.org, linux-arm-kernel@lists.infradead.org, 
- linux-arm-msm@vger.kernel.org, linux-doc@vger.kernel.org, 
- linux-edac@vger.kernel.org, linux-gpio@vger.kernel.org, 
- linux-iio@vger.kernel.org, linux-i2c@vger.kernel.org, 
- linux-mediatek@lists.infradead.org, linux-mips@vger.kernel.org, 
- linux-omap@vger.kernel.org, linux-pci@vger.kernel.org, 
- linuxppc-dev@lists.ozlabs.org, linux-remoteproc@vger.kernel.org, 
- linux-riscv@lists.infradead.org, linux-rpi-kernel@lists.infradead.org, 
- linux-sh@vger.kernel.org, linux-snps-arc@lists.infradead.org, 
- linux-sound@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com, 
- linux-um@lists.infradead.org, linux-wireless@vger.kernel.org, 
- loongarch@lists.linux.dev, Lorenzo Pieralisi <lpieralisi@kernel.org>, 
- Ludovic Desroches <ludovic.desroches@microchip.com>, 
- Lukasz Luba <lukasz.luba@arm.com>, "Luke D. Jones" <luke@ljones.dev>, 
- Madhavan Srinivasan <maddy@linux.ibm.com>, 
- Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, 
- =?utf-8?q?Marek_Beh=C3=BAn?= <kabel@kernel.org>, 
- Marijn Suijten <marijn.suijten@somainline.org>, 
- Mark-PK Tsai <mark-pk.tsai@mediatek.com>, 
- Martin Blumenstingl <martin.blumenstingl@googlemail.com>, 
- Masami Hiramatsu <mhiramat@kernel.org>, 
- Mathieu Poirier <mathieu.poirier@linaro.org>, 
- Matthias Brugger <matthias.bgg@gmail.com>, 
- Mauro Carvalho Chehab <mchehab@kernel.org>, 
- Max Filippov <jcmvbkbc@gmail.com>, 
- Maxime Coquelin <mcoquelin.stm32@gmail.com>, 
- Mengyuan Lou <mengyuanlou@net-swift.com>, Michael Buesch <m@bues.ch>, 
- Michael Ellerman <mpe@ellerman.id.au>, Michal Simek <michal.simek@amd.com>, 
- Miodrag Dinic <miodrag.dinic@mips.com>, Naveen N Rao <naveen@kernel.org>, 
- Neil Armstrong <neil.armstrong@linaro.org>, netdev@vger.kernel.org, 
- Nicolas Ferre <nicolas.ferre@microchip.com>, 
- Nicolas Saenz Julienne <nsaenz@kernel.org>, 
- Nicholas Piggin <npiggin@gmail.com>, 
- Nikhil Agarwal <nikhil.agarwal@amd.com>, Nipun Gupta <nipun.gupta@amd.com>, 
- Nishanth Menon <nm@ti.com>, =?utf-8?q?Pali_Roh=C3=A1r?= <pali@kernel.org>, 
- Palmer Dabbelt <palmer@dabbelt.com>, Paolo Abeni <pabeni@redhat.com>, 
- Paul Cercueil <paul@crapouillou.net>, 
- Paul Walmsley <paul.walmsley@sifive.com>, 
- Pengutronix Kernel Team <kernel@pengutronix.de>, 
- Peter Rosin <peda@axentia.se>, Philipp Zabel <p.zabel@pengutronix.de>, 
- Piotr Wojtaszczyk <piotr.wojtaszczyk@timesys.com>, 
- platform-driver-x86@vger.kernel.org, 
- Prasad Kumpatla <quic_pkumpatl@quicinc.com>, 
- Qiang Zhao <qiang.zhao@nxp.com>, Qin Jian <qinjian@cqplus1.com>, 
- "Rafael J. Wysocki" <rafael@kernel.org>, 
- Randy Dunlap <rdunlap@infradead.org>, Ray Jui <rjui@broadcom.com>, 
- Rengarajan Sundararajan <Rengarajan.S@microchip.com>, 
- Richard Cochran <richardcochran@gmail.com>, 
- Richard Weinberger <richard@nod.at>, Rich Felker <dalias@libc.org>, 
- Rob Clark <robdclark@gmail.com>, Robert Jarzmik <robert.jarzmik@free.fr>, 
- Robert Richter <rric@kernel.org>, Rob Herring <robh@kernel.org>, 
- Roger Quadros <rogerq@kernel.org>, Russell King <linux@armlinux.org.uk>, 
- Ryan Chen <ryan_chen@aspeedtech.com>, Ryder Lee <ryder.lee@mediatek.com>, 
- Samuel Holland <samuel@sholland.org>, 
- Santosh Shilimkar <ssantosh@kernel.org>, 
- Sascha Hauer <s.hauer@pengutronix.de>, 
- Scott Branden <sbranden@broadcom.com>, Scott Wood <oss@buserror.net>, 
- Sean Paul <sean@poorly.run>, Sean Wang <sean.wang@kernel.org>, 
- Sean Wang <sean.wang@mediatek.com>, 
- Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, 
- Sergio Paracuellos <sergio.paracuellos@gmail.com>, 
- Shawn Guo <shawnguo@kernel.org>, Shawn Lin <shawn.lin@rock-chips.com>, 
- Siddharth Vadapalli <s-vadapalli@ti.com>, Simona Vetter <simona@ffwll.ch>, 
- Stafford Horne <shorne@gmail.com>, 
- Stefan Kristiansson <stefan.kristiansson@saunalahti.fi>, 
- Stephen Boyd <sboyd@kernel.org>, Sven Peter <sven@svenpeter.dev>, 
- Takashi Iwai <tiwai@suse.com>, Talel Shenhar <talel@amazon.com>, 
- Tero Kristo <kristo@kernel.org>, 
- Thangaraj Samynathan <Thangaraj.S@microchip.com>, 
- Thara Gopinath <thara.gopinath@gmail.com>, 
- Thierry Reding <thierry.reding@gmail.com>, 
- Thomas Bogendoerfer <tsbogend@alpha.franken.de>, 
- Thomas Petazzoni <thomas.petazzoni@bootlin.com>, 
- Toan Le <toan@os.amperecomputing.com>, Tony Lindgren <tony@atomide.com>, 
- Tony Luck <tony.luck@intel.com>, UNGLinuxDriver@microchip.com, 
- =?utf-8?q?Uwe_Kleine-K=C3=B6nig?= <ukleinek@kernel.org>, 
- Vignesh Raghavendra <vigneshr@ti.com>, Vineet Gupta <vgupta@kernel.org>, 
- Vladimir Oltean <olteanv@gmail.com>, Vladimir Zapolskiy <vz@mleia.com>, 
- WANG Xuerui <kernel@xen0n.name>, Woojung Huh <woojung.huh@microchip.com>, 
- x86@kernel.org, Yanteng Si <si.yanteng@linux.dev>, 
- Yoshinori Sato <ysato@users.sourceforge.jp>, 
- Zhang Rui <rui.zhang@intel.com>
-In-Reply-To: <20250319092951.37667-1-jirislaby@kernel.org>
-References: <20250319092951.37667-1-jirislaby@kernel.org>
-Subject: Re: (subset) [PATCH v2 00/57] irqdomain: Cleanups and
- Documentation
-Message-Id: <174248389026.68765.4225899402848645156.b4-ty@kernel.org>
-Date: Thu, 20 Mar 2025 15:18:10 +0000
+	s=k20201202; t=1742488878;
+	bh=qIRZ0qTaew+CUAIPbfZmaL9vAfGx/qP1dB6OlqhWKXA=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=KxDa0VAREDHlo/i49o7eH+gMgXcP2OWzKC3DCY1PUe1aqv0dNm+bOXD34vcLbznoF
+	 5D9OuTuPBEzNTsJ5/NVTjDYhixAnWxkUd6m35rsD1rILA6fMbseDpoRKrQne5Ab9/0
+	 Dot/HUbqdcuJ4cnDwHShHkXsc8QSa7iEa6Ajm95K/jOadvrvRYBZXxq2w5TmmVKEZx
+	 Z+sB2Idb+qFosvdAaLEo1CSd3/zHoyyZUbvtkkR/ym7yk1qe/XHU6px9ee84ldE2d/
+	 Xvx3i/9F+g1N++CqYYNIeedCDRfKJZkoyxU4fEWHrJVYtIaVsprFwXeguNrl9OB5EA
+	 YFcLrElnuzqOA==
+Message-ID: <a2e33d66-22ee-475b-817b-b52c6890859c@kernel.org>
+Date: Thu, 20 Mar 2025 11:41:15 -0500
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Mailer: b4 0.15-dev-1b0d6
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v8 01/13] Documentation: x86: Add AMD Hardware Feedback
+ Interface documentation
+To: =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Cc: Hans de Goede <hdegoede@redhat.com>,
+ Mario Limonciello <mario.limonciello@amd.com>,
+ Perry Yuan <perry.yuan@amd.com>, Thomas Gleixner <tglx@linutronix.de>,
+ Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+ Dave Hansen <dave.hansen@linux.intel.com>,
+ "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
+ "H . Peter Anvin" <hpa@zytor.com>, Jonathan Corbet <corbet@lwn.net>,
+ Huang Rui <ray.huang@amd.com>, "Gautham R . Shenoy"
+ <gautham.shenoy@amd.com>, "Rafael J . Wysocki" <rafael@kernel.org>,
+ Viresh Kumar <viresh.kumar@linaro.org>,
+ "open list:AMD HETERO CORE HARDWARE FEEDBACK DRIVER"
+ <platform-driver-x86@vger.kernel.org>,
+ "open list:X86 ARCHITECTURE (32-BIT AND 64-BIT)"
+ <linux-kernel@vger.kernel.org>,
+ "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
+ "open list:AMD PSTATE DRIVER" <linux-pm@vger.kernel.org>,
+ Bagas Sanjaya <bagasdotme@gmail.com>
+References: <20250218190822.1039982-1-superm1@kernel.org>
+ <20250218190822.1039982-2-superm1@kernel.org>
+ <127a93b0-647f-bb0c-2bf4-649fc4d1f25e@linux.intel.com>
+Content-Language: en-US
+From: Mario Limonciello <superm1@kernel.org>
+In-Reply-To: <127a93b0-647f-bb0c-2bf4-649fc4d1f25e@linux.intel.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On Wed, 19 Mar 2025 10:28:53 +0100, Jiri Slaby (SUSE) wrote:
-> tl;dr if patches are agreed upon, I ask subsys maintainers to take the
-> respective ones via their trees (as they are split per subsys), so that
-> the IRQ tree can take only the rest. That would minimize churn/conflicts
-> during merges.
+On 3/19/2025 09:01, Ilpo Järvinen wrote:
+> On Tue, 18 Feb 2025, Mario Limonciello wrote:
 > 
-> ===
+>> From: Perry Yuan <Perry.Yuan@amd.com>
+>>
+>> Introduce a new documentation file, `amd_hfi.rst`, which delves into the
+>> implementation details of the AMD Hardware Feedback Interface and its
+>> associated driver, `amd_hfi`. This documentation describes how the
+>> driver provides hint to the OS scheduling which depends on the capability
+>> of core performance and efficiency ranking data.
+>>
+>> This documentation describes
+>> * The design of the driver
+>> * How the driver provides hints to the OS scheduling
+>> * How the driver interfaces with the kernel for efficiency ranking data.
+>>
+>> Reviewed-by: Bagas Sanjaya <bagasdotme@gmail.com>
+>> Signed-off-by: Perry Yuan <Perry.Yuan@amd.com>
+>> Reviewed-by: Mario Limonciello <mario.limonciello@amd.com>
+>> Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
+>> ---
+>>   Documentation/arch/x86/amd-hfi.rst | 127 +++++++++++++++++++++++++++++
+>>   Documentation/arch/x86/index.rst   |   1 +
+>>   2 files changed, 128 insertions(+)
+>>   create mode 100644 Documentation/arch/x86/amd-hfi.rst
+>>
+>> diff --git a/Documentation/arch/x86/amd-hfi.rst b/Documentation/arch/x86/amd-hfi.rst
+>> new file mode 100644
+>> index 0000000000000..5d204688470e3
+>> --- /dev/null
+>> +++ b/Documentation/arch/x86/amd-hfi.rst
+>> @@ -0,0 +1,127 @@
+>> +.. SPDX-License-Identifier: GPL-2.0
+>> +
+>> +======================================================================
+>> +Hardware Feedback Interface For Hetero Core Scheduling On AMD Platform
+>> +======================================================================
+>> +
+>> +:Copyright: 2024 Advanced Micro Devices, Inc. All Rights Reserved.
+>> +
+>> +:Author: Perry Yuan <perry.yuan@amd.com>
+>> +:Author: Mario Limonciello <mario.limonciello@amd.com>
+>> +
+>> +Overview
+>> +--------
+>> +
+>> +AMD Heterogeneous Core implementations are comprised of more than one
+>> +architectural class and CPUs are comprised of cores of various efficiency and
+>> +power capabilities: performance-oriented *classic cores* and power-efficient
+>> +*dense cores*. As such, power management strategies must be designed to
+>> +accommodate the complexities introduced by incorporating different core types.
+>> +Heterogeneous systems can also extend to more than two architectural classes as
+>> +well. The purpose of the scheduling feedback mechanism is to provide
+>> +information to the operating system scheduler in real time such that the
+>> +scheduler can direct threads to the optimal core.
+>> +
+>> +The goal of AMD's heterogeneous architecture is to attain power benefit by sending
+>> +background thread to the dense cores while sending high priority threads to the classic
+>> +cores. From a performance perspective, sending background threads to dense cores can free
+>> +up power headroom and allow the classic cores to optimally service demanding threads.
+>> +Furthermore, the area optimized nature of the dense cores allows for an increasing
+>> +number of physical cores. This improved core density will have positive multithreaded
+>> +performance impact.
 > 
-> [...]
+> Hi Mario,
+> 
+> Please fold these paragraphs to 80 characters so that they're easier to
+> read as textfiles (the table can obviously exceed that but there should be
+> no reason for the text paragraphs to have excessively long lines).
+> 
+> My apologies for taking so long to get to review this series. 
 
-Applied to
+No problem.  Thanks for looking.  I'll get a new version ready to put 
+out after the next merge window.
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git for-next
+> Most of my
+> comments are quite minor but there's also 1-2 things that seem more
+> important. It seemed to me that there is some disconnetion between the
+> promises made in the Kconfig description and what is provided by the patch
+> series.
 
-Thanks!
+Some of the series was pared down to go in multiple parts to make it 
+easier to review with follow ups for the dynamic stuff planned for the 
+next iteration.
 
-[35/57] irqdomain: sound: Switch to irq_domain_create_linear()
-        commit: 83eddf0116b09186f909bc643f2093f266f204ea
+You see some artifacts of that comments and Kconfig.  I figured it was 
+better to leave as is for those given they get to the intent, but I can 
+change if you think it's better to adjust them when the next part lands 
+instead.
 
-All being well this means that it will be integrated into the linux-next
-tree (usually sometime in the next 24 hours) and sent to Linus during
-the next merge window (or sooner if it is a bug fix), however if
-problems are discovered then the patch may be dropped or reverted.
-
-You may get further e-mails resulting from automated or manual testing
-and review of the tree, please engage with people reporting problems and
-send followup patches addressing any issues that are reported if needed.
-
-If any updates are required or you are submitting further changes they
-should be sent as incremental updates against current git, existing
-patches will not be replaced.
-
-Please add any relevant lists and maintainers to the CCs when replying
-to this mail.
-
-Thanks,
-Mark
+> 
+> --
+>   i.
+> 
+>> +
+>> +AMD Heterogeneous Core Driver
+>> +-----------------------------
+>> +
+>> +The ``amd_hfi`` driver delivers the operating system a performance and energy efficiency
+>> +capability data for each CPU in the system. The scheduler can use the ranking data
+>> +from the HFI driver to make task placement decisions.
+>> +
+>> +Thread Classification and Ranking Table Interaction
+>> +----------------------------------------------------
+>> +
+>> +The thread classification is used to select into a ranking table that describes
+>> +an efficiency and performance ranking for each classification.
+>> +
+>> +Threads are classified during runtime into enumerated classes. The classes represent
+>> +thread performance/power characteristics that may benefit from special scheduling behaviors.
+>> +The below table depicts an example of thread classification and a preference where a given thread
+>> +should be scheduled based on its thread class. The real time thread classification is consumed
+>> +by the operating system and is used to inform the scheduler of where the thread should be placed.
+>> +
+>> +Thread Classification Example Table
+>> +^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+>> ++----------+----------------+-------------------------------+---------------------+---------+
+>> +| class ID | Classification | Preferred scheduling behavior | Preemption priority | Counter |
+>> ++----------+----------------+-------------------------------+---------------------+---------+
+>> +| 0        | Default        | Performant                    | Highest             |         |
+>> ++----------+----------------+-------------------------------+---------------------+---------+
+>> +| 1        | Non-scalable   | Efficient                     | Lowest              | PMCx1A1 |
+>> ++----------+----------------+-------------------------------+---------------------+---------+
+>> +| 2        | I/O bound      | Efficient                     | Lowest              | PMCx044 |
+>> ++----------+----------------+-------------------------------+---------------------+---------+
+>> +
+>> +Thread classification is performed by the hardware each time that the thread is switched out.
+>> +Threads that don't meet any hardware specified criteria will be classified as "default".
+>> +
+>> +AMD Hardware Feedback Interface
+>> +--------------------------------
+>> +
+>> +The Hardware Feedback Interface provides to the operating system information
+>> +about the performance and energy efficiency of each CPU in the system. Each
+>> +capability is given as a unit-less quantity in the range [0-255]. A higher
+>> +performance value indicates higher performance capability, and a higher
+>> +efficiency value indicates more efficiency. Energy efficiency and performance
+>> +are reported in separate capabilities in the shared memory based ranking table.
+>> +
+>> +These capabilities may change at runtime as a result of changes in the
+>> +operating conditions of the system or the action of external factors.
+>> +Power Management FW is responsible for detecting events that would require
+>> +a reordering of the performance and efficiency ranking. Table updates would
+>> +happen relatively infrequently and occur on the time scale of seconds or more.
+>> +
+>> +The following events trigger a table update:
+>> +    * Thermal Stress Events
+>> +    * Silent Compute
+>> +    * Extreme Low Battery Scenarios
+>> +
+>> +The kernel or a userspace policy daemon can use these capabilities to modify
+>> +task placement decisions. For instance, if either the performance or energy
+>> +capabilities of a given logical processor becomes zero, it is an indication that
+>> +the hardware recommends to the operating system to not schedule any tasks on
+>> +that processor for performance or energy efficiency reasons, respectively.
+>> +
+>> +Implementation details for Linux
+>> +--------------------------------
+>> +
+>> +The implementation of threads scheduling consists of the following steps:
+>> +
+>> +1. A thread is spawned and scheduled to the ideal core using the default
+>> +   heterogeneous scheduling policy.
+>> +2. The processor profiles thread execution and assigns an enumerated classification ID.
+>> +   This classification is communicated to the OS via logical processor scope MSR.
+>> +3. During the thread context switch out the operating system consumes the workload(WL)
+>> +   classification which resides in a logical processor scope MSR.
+>> +4. The OS triggers the hardware to clear its history by writing to an MSR,
+>> +   after consuming the WL classification and before switching in the new thread.
+>> +5. If due to the classification, ranking table, and processor availability,
+>> +   the thread is not on its ideal processor, the OS will then consider scheduling
+>> +   the thread on its ideal processor (if available).
+>> +
+>> +Ranking Table
+>> +-------------
+>> +The ranking table is a shared memory region that is used to communicate the
+>> +performance and energy efficiency capabilities of each CPU in the system.
+>> +
+>> +The ranking table design includes rankings for each APIC ID in the system and
+>> +rankings both for performance and efficiency for each workload classification.
+>> +
+>> +.. kernel-doc:: drivers/platform/x86/amd/hfi/hfi.c
+>> +   :doc: amd_shmem_info
+>> +
+>> +Ranking Table update
+>> +---------------------------
+>> +The power management firmware issues an platform interrupt after updating the ranking
+>> +table and is ready for the operating system to consume it. CPUs receive such interrupt
+>> +and read new ranking table from shared memory which PCCT table has provided, then
+>> +``amd_hfi`` driver parse the new table to provide new consume data for scheduling decisions.
+>> diff --git a/Documentation/arch/x86/index.rst b/Documentation/arch/x86/index.rst
+>> index 8ac64d7de4dc9..56f2923f52597 100644
+>> --- a/Documentation/arch/x86/index.rst
+>> +++ b/Documentation/arch/x86/index.rst
+>> @@ -43,3 +43,4 @@ x86-specific Documentation
+>>      features
+>>      elf_auxvec
+>>      xstate
+>> +   amd-hfi
+>>
+> 
 
