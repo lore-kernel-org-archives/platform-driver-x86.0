@@ -1,406 +1,236 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f178.google.com (mail-pl1-f178.google.com [209.85.214.178])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CDDEC19DF98;
-	Thu, 20 Mar 2025 16:46:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 74033223336;
+	Thu, 20 Mar 2025 17:33:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742489207; cv=none; b=N6QqlefMNANt7roI7epvXMm9YwaGazdFtHZfwWhKFYvOEQWg71yoL39wcCynNTmLl5FhftfcijzEDbjchdQmKr+dIqr3i/JC/sli1YJ2M1Sr05cuu0b0k784nA6g8UcaozRggjPjXt9QBS5CDHOaDcqBlvOUqQIkWhuEz7BJfH0=
+	t=1742492016; cv=none; b=rmOxZhqCSx5pAnywomHUAtwhcPlz5C6cewthEWLHAw5hhVSjC5L9CLDzlbK0uLCGFuyxpQxXjzM5XTMbHR5DkDydcaba2ej6sod69RlNncaVtzpjxrmSWu1StJdi+uZzXig/Jg2rhj9cEoB4qoBg3vAQijV8YnDjBrfec5PGes8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742489207; c=relaxed/simple;
-	bh=8PzccMNrJT5W8W7N7Yc4hGCXeynPoeHzA1FX/c6gIjE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ZnFicenqpwjk99wYbSxfQdM47/k6WrF9d+UGHpfLdwqEE759IApEMFoHIgpPc3dBp5Mvey3huCSc+nIzh70mTUQDAtxGT7JKoGXAT/+FN7n53hlier/w2PACFcq7DHwaHCriKDk59gRZV9jgBO1pJWPBBEcEfdyJslf4s60SMYg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dizFEInD; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1742492016; c=relaxed/simple;
+	bh=PagMdvtg5KTGSUdqloqmzmN+2CHEwsXpUsFu5h9EYiI=;
+	h=Date:From:To:CC:Subject:In-Reply-To:References:Message-ID:
+	 MIME-Version:Content-Type; b=Z5vNSuh1b4zbUo+oWLnkWQ3BkXhXeQK15PMvvq8TDEiRv5Vr2Ok844+qVghiUzX7/jIZi//1VWoGPVYx/qSuLK7EGakaWCwDiLTEbRdBO9kem6zFYVoAfwY7g0+WAJ0o0ocr1JICGO22OKaKomTYKUqXflprwxRGzgrKxqsdjcY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Ml6rbWjd; arc=none smtp.client-ip=209.85.214.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dizFEInD"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9C461C4CEDD;
-	Thu, 20 Mar 2025 16:46:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1742489207;
-	bh=8PzccMNrJT5W8W7N7Yc4hGCXeynPoeHzA1FX/c6gIjE=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=dizFEInDR/7AXa1hkGS5nkOJUqZ9O3fAVaDVd/TKU1TdEDC3ZQSZBPdrsxGNVlbgd
-	 KxS26QNR6nTK3WwKfr9xBecSQq04Z/cTKML5TeVrW5d76Agce+6DLOSKrQqvZGzzfd
-	 nSSMEa1eH+oV4H94FlefCPdwdCALF/Nf1/IS2ssgq8jfJdpYBFEvthr1E3vQc1RxWw
-	 3Us6NaiRUhic6I4NE5ss2+PHQx9ujtEAT/5eptE0HWVxGynPZxR7CC/Maq9a3npYfu
-	 ajQ4Dwt+of3XqYNRyMTCWAmtcP/k/0pfG4gZ5czOcHGD1DY6iKzwco7qjdTk9LlIwN
-	 yChsoK5zgYtdg==
-Message-ID: <1b54afae-cb86-4022-b9f5-e5c1fc075be8@kernel.org>
-Date: Thu, 20 Mar 2025 11:46:44 -0500
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ml6rbWjd"
+Received: by mail-pl1-f178.google.com with SMTP id d9443c01a7336-2254e0b4b79so31240085ad.2;
+        Thu, 20 Mar 2025 10:33:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1742492014; x=1743096814; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:references
+         :in-reply-to:user-agent:subject:cc:to:from:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=4IA8tCZYJI9t5hg42P7F7sSH+jw28GDy2AHdYlBsWo8=;
+        b=Ml6rbWjdJb5NdddaIH506HJo9aBC64newd8LOaV80FMb6o0IrOwKpooimpvL8y/l5q
+         /mx4AD06tgD+a0Xn6Dk7epw30Zzh5c3hexTRUdMKcOOGxGVtfVMlFt1RhIZ6k55tEEdw
+         mL/CfPvsyZQlHAqoq9aSl3puU2cajYPLEBPyovLwnG1i8N/nFOQ1Q6LLlxZBjqJdcbyD
+         dOjznhziZJVzsRyAnY9daP8f0EzxVj+xfAfepcOycbSbf/t+jHioDZQpyQ8517m1GMdr
+         in7/tKNr6NaDsgfoYfcS3OizfU0rdd59fnHKNfSXI1QMrWBOlnQgtmlaRekSzNn2qaMk
+         r0kQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1742492014; x=1743096814;
+        h=content-transfer-encoding:mime-version:message-id:references
+         :in-reply-to:user-agent:subject:cc:to:from:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=4IA8tCZYJI9t5hg42P7F7sSH+jw28GDy2AHdYlBsWo8=;
+        b=ggOLRRHQ58jWQoQslz1b25+78shZx4jg1uxLwb1djG7fd+QhegRlIRVHWJidPG5whd
+         E3HppSLna6Zu199JMeimf796xSArqh6mm3ff7woneTd3EQr8jiI7RR0FjQ0aL/p9rMuB
+         1lYRxtNjW80IOJejNTHaZzU0YvVzOzZuYg8qgoxxo6j79+dnsnFhR9trbA14s0c8eosf
+         wsBQ54r81cGP4O+pYjl/Hns7FzuY6QbsP8g5l1oWw/O1S4sLlzPPTTMWoy9UeqpKpQzB
+         w1WYYhBxd3ymb+J4qOYktJSo2/z+hz1qhAV2KVAEGe+Dq44hMDEep3GhHGGrnaF5J/J+
+         AKYQ==
+X-Forwarded-Encrypted: i=1; AJvYcCU2YFMRA2zf9uexQnYVMRoHd7iTfUKtC6U9GGwLwwi1GfNaNTlDs8F9F+aNLezXZav7VXPytLtB81A=@vger.kernel.org, AJvYcCUFjhZNJ4D1mZwDi1vJWpUBAYIQxOWYNe3abBL5lNrgz1JR99kxGsnY/MLlqTJgspCbAx6QZVy78OsFva/D@vger.kernel.org, AJvYcCVFzrOeJhoHsMwCX13b09+7lmlt0zrQzviIe5nC8kIXToz/fb66qAlDk2qZMZcWEgjDQbuHVu2uqms=@vger.kernel.org, AJvYcCVg35dQ23TeIXlkhy07B+X25B28c4NSK/j9gxtdH66X2To9+Rq5hlhqZn2PAW7Z3OyHW/lljttfd7yg9IRn6m8//eYIew==@vger.kernel.org
+X-Gm-Message-State: AOJu0YyVabTqt2zWsIwAj8Yx0kdZnGZw17zZRVlaesSFA1PjRdMCnNbu
+	VXAxJWUgsgPex+49OqY+gk3FwBZsnh4qCHdu54sRFHeoY4YMnhUj
+X-Gm-Gg: ASbGncs5ygA7sCFgoP/SbA+yCmVTGwPOQYtn+/oj+MAqrBr04KIoX3w/GHRsLcE6QEF
+	qoht/ayo7zE5UAv914uUHBeStigoarIXwk+XCAXcv7QViNHONbr1AYoNfGA9+h5blhIWNL9uxdN
+	HRuqx/RigPuXeHPTSui5DMXOIRi1LT8oq9PSoyA8Qg3Y7aE1S/V5f47g040WmVmUiVQXRZttmQy
+	Ua8oKTTtgwj6h/s7ywomC04crycslHlhFctqKEOv7AKbBu1YrJGKegbkl1Ig+k19fDTcMqJKQyB
+	q2OYFVo9nu5AF1PtC3gVyjcCFKsJEmvYqLZqHtQojiIV5eO7oqe7Lg==
+X-Google-Smtp-Source: AGHT+IFthf2CpWZEJwnTLLJ3fvyLbU3lQKkDNvBnaDnU0oy5qNCojO0XZ/7VGrr1w5tBksnrck+Yhg==
+X-Received: by 2002:a17:902:e74c:b0:224:76f:9e45 with SMTP id d9443c01a7336-22780d7fd37mr3693615ad.21.1742492013424;
+        Thu, 20 Mar 2025 10:33:33 -0700 (PDT)
+Received: from ?IPv6:::1? ([2607:fb91:1bec:5896:ac39:c338:6b1e:14b4])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22780f459fbsm598185ad.78.2025.03.20.10.33.32
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 20 Mar 2025 10:33:33 -0700 (PDT)
+Date: Thu, 20 Mar 2025 07:33:28 -1000
+From: "Derek J. Clark" <derekjohn.clark@gmail.com>
+To: Antheas Kapenekakis <lkml@antheas.dev>, platform-driver-x86@vger.kernel.org
+CC: linux-hwmon@vger.kernel.org, linux-doc@vger.kernel.org,
+ linux-pm@vger.kernel.org, Guenter Roeck <linux@roeck-us.net>,
+ Jean Delvare <jdelvare@suse.com>, Jonathan Corbet <corbet@lwn.net>,
+ Joaquin Ignacio Aramendia <samsagax@gmail.com>,
+ Kevin Greenberg <kdgreenberg234@protonmail.com>,
+ Joshua Tam <csinaction@pm.me>, Parth Menon <parthasarathymenon@gmail.com>,
+ Eileen <eileen@one-netbook.com>, linux-kernel@vger.kernel.org,
+ sre@kernel.org, linux@weissschuh.net, ilpo.jarvinen@linux.intel.com,
+ hdegoede@redhat.com, mario.limonciello@amd.com
+Subject: =?US-ASCII?Q?Re=3A_=5BPATCH_v6_00/14=5D_hwmon=3A_=28oxpsensors=29_Add_dev?=
+ =?US-ASCII?Q?ices=2C_features=2C_fix_ABI_and_move_to_platform/x86?=
+User-Agent: Thunderbird for Android
+In-Reply-To: <20250319175512.27059-1-lkml@antheas.dev>
+References: <20250319175512.27059-1-lkml@antheas.dev>
+Message-ID: <41DE9E62-7BE6-4E65-BCFF-98DB243BB527@gmail.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v8 04/13] platform/x86: hfi: Introduce AMD Hardware
- Feedback Interface Driver
-To: =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Cc: Hans de Goede <hdegoede@redhat.com>,
- Mario Limonciello <mario.limonciello@amd.com>,
- Perry Yuan <perry.yuan@amd.com>, Thomas Gleixner <tglx@linutronix.de>,
- Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
- Dave Hansen <dave.hansen@linux.intel.com>,
- "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
- "H . Peter Anvin" <hpa@zytor.com>, Jonathan Corbet <corbet@lwn.net>,
- Huang Rui <ray.huang@amd.com>, "Gautham R . Shenoy"
- <gautham.shenoy@amd.com>, "Rafael J . Wysocki" <rafael@kernel.org>,
- Viresh Kumar <viresh.kumar@linaro.org>,
- "open list:AMD HETERO CORE HARDWARE FEEDBACK DRIVER"
- <platform-driver-x86@vger.kernel.org>,
- "open list:X86 ARCHITECTURE (32-BIT AND 64-BIT)"
- <linux-kernel@vger.kernel.org>,
- "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
- "open list:AMD PSTATE DRIVER" <linux-pm@vger.kernel.org>,
- Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
-References: <20250218190822.1039982-1-superm1@kernel.org>
- <20250218190822.1039982-5-superm1@kernel.org>
- <f90d49d6-e031-4722-b63f-26931eae1aa5@linux.intel.com>
-Content-Language: en-US
-From: Mario Limonciello <superm1@kernel.org>
-In-Reply-To: <f90d49d6-e031-4722-b63f-26931eae1aa5@linux.intel.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain;
+ charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-On 3/19/2025 09:03, Ilpo Järvinen wrote:
-> On Tue, 18 Feb 2025, Mario Limonciello wrote:
-> 
->> From: Perry Yuan <Perry.Yuan@amd.com>
->>
->> The AMD Heterogeneous core design and Hardware Feedback Interface (HFI)
->> provide behavioral classification and a dynamically updated ranking table
->> for the scheduler to use when choosing cores for tasks.
->>
->> There are two CPU core types defined: `Classic Core` and `Dense Core`.
->> "Classic" cores are the standard performance cores, while "Dense" cores
->> are optimized for area and efficiency.
->>
->> Heterogeneous compute refers to CPU implementations that are comprised
->> of more than one architectural class, each with two capabilities. This
->> means each CPU reports two separate capabilities: "perf" and "eff".
->>
->> Each capability lists all core ranking numbers between 0 and 255, where
->> a higher number represents a higher capability.
->>
->> Heterogeneous systems can also extend to more than two architectural
->> classes.
->>
->> The purpose of the scheduling feedback mechanism is to provide information
->> to the operating system scheduler in real time, allowing the scheduler to
->> direct threads to the optimal core during task scheduling.
->>
->> All core ranking data are provided by the PMFW via a shared memory ranking
->> table, which the driver reads and uses to update core capabilities to the
->> scheduler. When the hardware updates the table, it generates a platform
->> interrupt to notify the OS to read the new ranking table.
->>
->> Link: https://bugzilla.kernel.org/show_bug.cgi?id=206537
->> Reviewed-by: Gautham R. Shenoy <gautham.shenoy@amd.com>
->> Reviewed-by: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
->> Signed-off-by: Perry Yuan <perry.yuan@amd.com>
->> Co-developed-by: Mario Limonciello <mario.limonciello@amd.com>
->> Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
->> ---
->> v8:
->>   * s,devm_kzalloc,devm_kcalloc,
->>   * fold newlines from patch 5 into this patch
->>   * Drop ->cpu member, push to later patch
->>   * s,for_each_present_cpu,for_each_possible_cpu,
->> v7:
->>   * Adjust Kconfig to 80 characters
->> ---
->>   drivers/platform/x86/amd/Kconfig      |   1 +
->>   drivers/platform/x86/amd/Makefile     |   1 +
->>   drivers/platform/x86/amd/hfi/Kconfig  |  20 ++++
->>   drivers/platform/x86/amd/hfi/Makefile |   7 ++
->>   drivers/platform/x86/amd/hfi/hfi.c    | 162 ++++++++++++++++++++++++++
->>   5 files changed, 191 insertions(+)
->>   create mode 100644 drivers/platform/x86/amd/hfi/Kconfig
->>   create mode 100644 drivers/platform/x86/amd/hfi/Makefile
->>   create mode 100644 drivers/platform/x86/amd/hfi/hfi.c
->>
->> diff --git a/drivers/platform/x86/amd/Kconfig b/drivers/platform/x86/amd/Kconfig
->> index c3e086ea64fc6..589d61ebf726b 100644
->> --- a/drivers/platform/x86/amd/Kconfig
->> +++ b/drivers/platform/x86/amd/Kconfig
->> @@ -6,6 +6,7 @@
->>   source "drivers/platform/x86/amd/hsmp/Kconfig"
->>   source "drivers/platform/x86/amd/pmf/Kconfig"
->>   source "drivers/platform/x86/amd/pmc/Kconfig"
->> +source "drivers/platform/x86/amd/hfi/Kconfig"
->>   
->>   config AMD_3D_VCACHE
->>   	tristate "AMD 3D V-Cache Performance Optimizer Driver"
->> diff --git a/drivers/platform/x86/amd/Makefile b/drivers/platform/x86/amd/Makefile
->> index 56f62fc9c97b4..c50e93c3334cf 100644
->> --- a/drivers/platform/x86/amd/Makefile
->> +++ b/drivers/platform/x86/amd/Makefile
->> @@ -10,3 +10,4 @@ obj-$(CONFIG_AMD_PMC)		+= pmc/
->>   obj-$(CONFIG_AMD_HSMP)		+= hsmp/
->>   obj-$(CONFIG_AMD_PMF)		+= pmf/
->>   obj-$(CONFIG_AMD_WBRF)		+= wbrf.o
->> +obj-$(CONFIG_AMD_HFI)		+= hfi/
->> diff --git a/drivers/platform/x86/amd/hfi/Kconfig b/drivers/platform/x86/amd/hfi/Kconfig
->> new file mode 100644
->> index 0000000000000..532939eb08a6a
->> --- /dev/null
->> +++ b/drivers/platform/x86/amd/hfi/Kconfig
->> @@ -0,0 +1,20 @@
->> +# SPDX-License-Identifier: GPL-2.0-only
->> +#
->> +# AMD Hardware Feedback Interface Driver
->> +#
->> +
->> +config AMD_HFI
->> +	bool "AMD Hetero Core Hardware Feedback Driver"
->> +	depends on ACPI
->> +	depends on CPU_SUP_AMD
->> +	help
->> +	 Select this option to enable the AMD Heterogeneous Core Hardware
->> +	 Feedback Interface. If selected, hardware provides runtime thread
->> +	 classification guidance to the operating system on the performance and
->> +	 energy efficiency capabilities of each heterogeneous CPU core. These
->> +	 capabilities may vary due to the inherent differences in the core types
->> +	 and can also change as a result of variations in the operating
->> +	 conditions of the system such as power and thermal limits. If selected,
-> 
-> This says the capabilities can change but metadata is only read and scores
-> updated during probe?
-> 
->> +	 the kernel relays updates in heterogeneous CPUs' capabilities to
->> +	 userspace, allowing for more optimal task scheduling and resource
->> +	 allocation, leveraging the diverse set of cores available.
-> 
-> How are the capabilities communicated to userspace as mentioned here? I'm
-> asking this because I only noted debugfs interface, and that commit
-> claimed the debug fs interface was to troubleshoot scheduler issues.
 
-This is one of those cases that the split into multiple parts shows. 
-Thinking through I feel it makes more sense to adjust for now and then 
-we can change it again on the next part.
 
-> 
->> diff --git a/drivers/platform/x86/amd/hfi/Makefile b/drivers/platform/x86/amd/hfi/Makefile
->> new file mode 100644
->> index 0000000000000..672c6ac106e95
->> --- /dev/null
->> +++ b/drivers/platform/x86/amd/hfi/Makefile
->> @@ -0,0 +1,7 @@
->> +# SPDX-License-Identifier: GPL-2.0
->> +#
->> +# AMD Hardware Feedback Interface Driver
->> +#
->> +
->> +obj-$(CONFIG_AMD_HFI) += amd_hfi.o
->> +amd_hfi-objs := hfi.o
->> diff --git a/drivers/platform/x86/amd/hfi/hfi.c b/drivers/platform/x86/amd/hfi/hfi.c
->> new file mode 100644
->> index 0000000000000..426f7e520b76c
->> --- /dev/null
->> +++ b/drivers/platform/x86/amd/hfi/hfi.c
->> @@ -0,0 +1,162 @@
->> +// SPDX-License-Identifier: GPL-2.0-or-later
->> +/*
->> + * AMD Hardware Feedback Interface Driver
->> + *
->> + * Copyright (C) 2024 Advanced Micro Devices, Inc. All Rights Reserved.
-> 
-> 2025 ?
+On March 19, 2025 7:54:55 AM HST, Antheas Kapenekakis <lkml@antheas=2Edev>=
+ wrote:
+>This four part series updates the oxpsensors module to bring it in line
+>with its Windows OneXPlayer counterpart=2E First, it adds support for all
+>2024, 2025 OneXPlayer handhelds and their special variants=2E Then, it mo=
+ves
+>the module to platform/x86 to allow for including more EC features=2E
+>
+>Then, it adds the new charge limiting and bypass features that were first
+>introduced in the X1 and retrofit to older OneXFly variants and for
+>controlling the turbo led found in the X1 models=2E For Bypass, it adds a=
+ new
+>charge_behaviour variant called inhibit-charge-s0=2E
+>
+>Finally, it performs a minor refactor by moving around switch statements
+>into their own functions, in order to allow for fixing the pwm1_enable AB=
+I
+>in the final patch=2E Currently, pwm1_enable sets the fan to auto with th=
+e
+>value 0 and allows manual control with the value 1=2E This patch makes it
+>so 0 sets the fan to full speed, 1 sets the fan to manual control, and
+>2 sets the fan to auto=2E This requires both setting enable and the fan
+>speed when the enable sysfs is written to as 0, hence the refactor=2E
+>
+>As this is a minor ABI break and there is userspace software relying
+>on this previous behavior, the last patch also changes the /name of the
+>hwmon endpoint to "oxp_ec" from "oxpec" (mirroring WMI module conventions=
+)
+>such that userspace software that relied on the previous behavior can be
+>retrofit to the new kernel while enabling correct functionality on old
+>and new kernels=2E Failing that, software that is not updated will just
+>stop controlling the fans, ensuring no malignant behavior=2E
+>
+>---
+>V5: https://lore=2Ekernel=2Eorg/all/20250317155349=2E1236188-1-lkml@anthe=
+as=2Edev/
+>V4: https://lore=2Ekernel=2Eorg/all/20250311165406=2E331046-1-lkml@anthea=
+s=2Edev/
+>V3: https://lore=2Ekernel=2Eorg/all/20250309112114=2E1177361-1-lkml@anthe=
+as=2Edev/
+>
+>Changes since V5:
+>    - Separate doc entries with Fixes as by Mario
+>    - Add sysfs file name to subject as per Thomas
+>    - Make tt_led and tt_turbo const as per Thomas
+>    - Align a couple of structs as per Thomas
+>    - Remove excess battery check as per Thomas
+>    - For Thomas: devices without a BIOS update battery control is a NOOP
+>      OXP is a boutique manufacturer for now, so gathering information
+>      about old devices to add BIOS checks is not practical unfortunately
 
-Ack.
+Antheas,
+This sort of begs the question on how this feature was tested on those dev=
+ices? That question includes whether or not it is really a no-op in unsuppo=
+rted BIOS=2E My old contacts at OXP are no longer employed there, are you i=
+n contact with anyone at OXP currently that can potentially provide the dat=
+a?
 
-Heh, earlier versions started in 2024!
+I'm still of the opinion that the attribute should be explicitly enabled o=
+nly on a known supported BIOS=2E  IMO there is a general assumption that a =
+driver exposed attribute fd will work and having a no-op will confuse users=
+ and lead to spurious bug reports=2E We shouldn't be exposing a no-op in th=
+e sysfs for a driver if we can avoid it=2E If we add the BIOS checks we can=
+ also print to dmesg if a BIOS is too low a version so they will know why i=
+t isn't there=2E
 
-> 
->> + *
->> + * Authors: Perry Yuan <Perry.Yuan@amd.com>
->> + *          Mario Limonciello <mario.limonciello@amd.com>
->> + */
->> +
->> +#define pr_fmt(fmt)  "amd-hfi: " fmt
->> +
->> +#include <linux/acpi.h>
->> +#include <linux/cpu.h>
->> +#include <linux/cpumask.h>
->> +#include <linux/gfp.h>
->> +#include <linux/init.h>
->> +#include <linux/io.h>
->> +#include <linux/kernel.h>
->> +#include <linux/module.h>
->> +#include <linux/mutex.h>
->> +#include <linux/platform_device.h>
->> +#include <linux/smp.h>
->> +
->> +#define AMD_HFI_DRIVER		"amd_hfi"
->> +
->> +#define AMD_HETERO_CPUID_27	0x80000027
->> +
->> +static struct platform_device *device;
->> +
->> +struct amd_hfi_data {
->> +	const char	*name;
->> +	struct device	*dev;
->> +	struct mutex	lock;
-> 
-> Please mention what this protects.
+That being said, it does seem likely low risk, so I'm not nacking the feat=
+ure as is if the subsystem maintainers are okay with it=2E=20
 
-As a comment at the end like this, right?
+- Derek
 
-struct mutex lock; /* lock the foo */
-
-> 
->> +};
->> +
->> +struct amd_hfi_classes {
->> +	u32	perf;
->> +	u32	eff;
->> +};
->> +
->> +/**
->> + * struct amd_hfi_cpuinfo - HFI workload class info per CPU
->> + * @cpu:		cpu index
->> + * @class_index:	workload class ID index
->> + * @nr_class:		max number of workload class supported
->> + * @amd_hfi_classes:	current cpu workload class ranking data
->> + *
->> + * Parameters of a logical processor linked with hardware feedback class
-> 
-> missing .
-
-Ack
-
-> 
->> + */
->> +struct amd_hfi_cpuinfo {
->> +	int		cpu;
->> +	s16		class_index;
->> +	u8		nr_class;
->> +	struct amd_hfi_classes	*amd_hfi_classes;
->> +};
->> +
->> +static DEFINE_PER_CPU(struct amd_hfi_cpuinfo, amd_hfi_cpuinfo) = {.class_index = -1};
->> +
->> +static int amd_hfi_alloc_class_data(struct platform_device *pdev)
->> +{
->> +	struct amd_hfi_cpuinfo *hfi_cpuinfo;
->> +	struct device *dev = &pdev->dev;
->> +	int idx;
->> +	int nr_class_id;
->> +
->> +	nr_class_id = cpuid_eax(AMD_HETERO_CPUID_27);
->> +	if (nr_class_id < 0 || nr_class_id > 255) {
-> 
-> Is the signed type correct for this?
-> 
->> +		dev_err(dev, "failed to get number of supported classes: %d\n",
->> +			nr_class_id);
-> 
-> I'd reword the error message as the number of classes was just too
-> large / outside the allowed range.
-
-OK.
-
-> 
->> +		return -EINVAL;
->> +	}
->> +
->> +	for_each_possible_cpu(idx) {
->> +		struct amd_hfi_classes *classes;
->> +
->> +		classes = devm_kcalloc(dev,
->> +				       nr_class_id,
->> +				       sizeof(struct amd_hfi_classes),
->> +				       GFP_KERNEL);
->> +		if (!classes)
->> +			return -ENOMEM;
->> +		hfi_cpuinfo = per_cpu_ptr(&amd_hfi_cpuinfo, idx);
->> +		hfi_cpuinfo->amd_hfi_classes = classes;
->> +		hfi_cpuinfo->nr_class = nr_class_id;
->> +	}
->> +
->> +	return 0;
->> +}
->> +
->> +static const struct acpi_device_id amd_hfi_platform_match[] = {
->> +	{"AMDI0104", 0},
->> +	{ }
->> +};
->> +MODULE_DEVICE_TABLE(acpi, amd_hfi_platform_match);
->> +
->> +static int amd_hfi_probe(struct platform_device *pdev)
->> +{
->> +	struct amd_hfi_data *amd_hfi_data;
->> +	int ret;
->> +
->> +	if (!acpi_match_device(amd_hfi_platform_match, &pdev->dev))
->> +		return -ENODEV;
->> +
->> +	amd_hfi_data = devm_kzalloc(&pdev->dev, sizeof(*amd_hfi_data), GFP_KERNEL);
->> +	if (!amd_hfi_data)
->> +		return -ENOMEM;
->> +
->> +	amd_hfi_data->dev = &pdev->dev;
->> +	ret = devm_mutex_init(&pdev->dev, &amd_hfi_data->lock);
->> +	if (ret)
->> +		return ret;
->> +	platform_set_drvdata(pdev, amd_hfi_data);
->> +
->> +	ret = amd_hfi_alloc_class_data(pdev);
->> +	if (ret)
->> +		return ret;
->> +
->> +	return 0;
->> +}
->> +
->> +static struct platform_driver amd_hfi_driver = {
->> +	.driver = {
->> +		.name = AMD_HFI_DRIVER,
->> +		.owner = THIS_MODULE,
->> +		.acpi_match_table = ACPI_PTR(amd_hfi_platform_match),
->> +	},
->> +	.probe = amd_hfi_probe,
->> +};
->> +
->> +static int __init amd_hfi_init(void)
->> +{
->> +	int ret;
->> +
->> +	if (acpi_disabled ||
->> +	    !cpu_feature_enabled(X86_FEATURE_AMD_HETEROGENEOUS_CORES) ||
->> +	    !cpu_feature_enabled(X86_FEATURE_AMD_WORKLOAD_CLASS))
->> +		return -ENODEV;
->> +
->> +	device = platform_device_register_simple(AMD_HFI_DRIVER, -1, NULL, 0);
->> +	if (IS_ERR(device)) {
->> +		pr_err("unable to register HFI platform device\n");
->> +		return PTR_ERR(device);
->> +	}
->> +
->> +	ret = platform_driver_register(&amd_hfi_driver);
->> +	if (ret)
->> +		pr_err("failed to register HFI driver\n");
->> +
->> +	return ret;
->> +}
->> +
->> +static __exit void amd_hfi_exit(void)
->> +{
->> +	platform_device_unregister(device);
->> +	platform_driver_unregister(&amd_hfi_driver);
-> 
-> Why are these not in the opposite order than in init?
-
-Oversight.  Will fix it.
-
-> 
->> +}
->> +module_init(amd_hfi_init);
->> +module_exit(amd_hfi_exit);
->> +
->> +MODULE_LICENSE("GPL");
->> +MODULE_DESCRIPTION("AMD Hardware Feedback Interface Driver");
->>
-> 
-
+>Changes since V4:
+>    - Fix nits by Hans
+>    - change inhibit-charge-s0 to inhibit-charge-awake
+>    - use devm_battery_hook_register and power_supply_unregister_extensio=
+n
+>      (based on cros driver)
+>    - move charge behavior patches to the end to make the rest of the ser=
+ies
+>      easier to merge
+>    - CC platform-x86 and power maintainers
+>
+>Changes since V3:
+>    - Fix nits by Derek
+>    - Remove the hwmon documentation as it is not required for platform
+>      drivers (suggested by Guenter)
+>    - Add ACPI_BATTERY and HWMON depends to Kconfig
+>      (reported by kernel robot)
+>    - Homogenize driver into following reverse xmas convention
+>
+>Changes since V2:
+>    - Add ack by Guenter, move platform move patch to be third (not first
+>      to allow for device support backport to lts kernels)
+>    - Rework patch text, especially in the refactor patches as per Derek
+>    - Change bypass to use charge_behaviour instead of charge_type, as th=
+at
+>      ABI supports capability detection and is more appropriate
+>    - Move battery attach to probe instead of init
+>    - Fix bug where reading tt_led would instead use the turbo register
+>
+>Changes since V1:
+>    - Add X1 Pro, F1 Pro variants
+>    - Fix minor typo in initial patches
+>    - Convert oxp-sensors into a platform driver, as it is no longer
+>      considered a hwmon driver=2E
+>    - Add sysfs documentation and myself to the MAINTAINERS file
+>    - Update documentation to state that this is the OneXPlayer/AOKZOE
+>      platform driver, and that support for Ayaneo/OPI is provided until
+>      they gain their own platform driver=2E
+>
+>Antheas Kapenekakis (14):
+>  hwmon: (oxp-sensors) Distinguish the X1 variants
+>  hwmon: (oxp-sensors) Add all OneXFly variants
+>  platform/x86: oxpec: Move hwmon/oxp-sensors to platform/x86
+>  ABI: testing: sysfs-class-oxp: add missing documentation
+>  ABI: testing: sysfs-class-oxp: add tt_led attribute documentation
+>  platform/x86: oxpec: Rename ec group to tt_toggle
+>  platform/x86: oxpec: Add turbo led support to X1 devices
+>  platform/x86: oxpec: Move pwm_enable read to its own function
+>  platform/x86: oxpec: Move pwm value read/write to separate functions
+>  platform/x86: oxpec: Move fan speed read to separate function
+>  platform/x86: oxpec: Adhere to sysfs-class-hwmon and enable pwm on 2
+>  platform/x86: oxpec: Follow reverse xmas convention for tt_toggle
+>  power: supply: add inhibit-charge-awake to charge_behaviour
+>  platform/x86: oxpec: Add charge threshold and behaviour to OneXPlayer
+>
+> Documentation/ABI/testing/sysfs-class-power   |  11 +-
+> Documentation/ABI/testing/sysfs-platform-oxp  |  25 +
+> Documentation/hwmon/index=2Erst                 |   2 +-
+> Documentation/hwmon/oxp-sensors=2Erst           |  89 ---
+> MAINTAINERS                                   |   7 +-
+> drivers/hwmon/Kconfig                         |  11 -
+> drivers/hwmon/Makefile                        |   1 -
+> drivers/platform/x86/Kconfig                  |  13 +
+> drivers/platform/x86/Makefile                 |   3 +
+> =2E=2E=2E/oxp-sensors=2Ec =3D> platform/x86/oxpec=2Ec}    | 624 ++++++++=
+++++++----
+> drivers/power/supply/power_supply_sysfs=2Ec     |   7 +-
+> drivers/power/supply/test_power=2Ec             |   1 +
+> include/linux/power_supply=2Eh                  |   1 +
+> 13 files changed, 540 insertions(+), 255 deletions(-)
+> create mode 100644 Documentation/ABI/testing/sysfs-platform-oxp
+> delete mode 100644 Documentation/hwmon/oxp-sensors=2Erst
+> rename drivers/{hwmon/oxp-sensors=2Ec =3D> platform/x86/oxpec=2Ec} (52%)
+>
+>
+>base-commit: 4701f33a10702d5fc577c32434eb62adde0a1ae1
