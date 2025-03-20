@@ -1,258 +1,358 @@
-Received: from linux1587.grserver.gr (linux1587.grserver.gr [185.138.42.100])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from fhigh-a6-smtp.messagingengine.com (fhigh-a6-smtp.messagingengine.com [103.168.172.157])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 598A81D9A50;
-	Thu, 20 Mar 2025 18:01:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.138.42.100
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C6A261EB195;
+	Thu, 20 Mar 2025 21:01:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.157
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742493714; cv=none; b=o9zg2C1kt0SJ0heftdv2BBSTCXEB81Hn9ZB2eCgp0nfUeEBkGeQOfCbfFml0+rOcXDWa5H0VKEaUvQ0hymi6Zbk81EBVGt34nK2ZKi1gSauUqJrucwlKgtP+Qdw/B67U9iPnUA8zbGcNO4Z5IpPrPPdj/n8nVF8+15iO/K4A0WI=
+	t=1742504497; cv=none; b=KIVut68lior+TKJNWdX4mFMSuq/y9TYlKId7RoRbNWQS0ufGDCPyrVJllZfHNN7GezTBXG8Uk5r9XuTz4eWFZCaKSptygENN3BB7w3XFSkkhWxsHdk5blTM0kEO7BeNZBGN0HTx+REQpDM1aYAj9lEouv2EIbL9yhth58IjAhpU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742493714; c=relaxed/simple;
-	bh=ri4iePpKdHJZbPjuAz2uuFnkK1A0W4w0YFmS0f70L9c=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=lgn5Y3nyVnkKFP7X48P3Vo1XPD3qWpemZt3w7m2QjSngyRKBzQQdWrR4Zcjt+OdGGac3d1791eIchNCajFpYoEWRXH5UBI3i5EDYPTlrIjeJ+MXMiOx4kAxXOMWcP23A9JsisfzffseF8jGwtHWkv5PXRZyA+3YpapAnb8h2g7g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=antheas.dev; spf=pass smtp.mailfrom=antheas.dev; dkim=pass (1024-bit key) header.d=antheas.dev header.i=@antheas.dev header.b=Ioeb1umN; arc=none smtp.client-ip=185.138.42.100
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=antheas.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=antheas.dev
+	s=arc-20240116; t=1742504497; c=relaxed/simple;
+	bh=K68jqFO45gDXfCxOZwtxizVg9vHIfBc8k64J/D9+qFQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=D4OFsy7E5VAzZ2414awT07tx3J0dCO2PJhhzCwOM1C0HFxsu3INuLN/NTwwVzjHbe6Fib6r4LPdMhyxQyvUhZZ1IwVSQtnK/KIjYjlYNkeXMZE8W9XqBowK+2lE4G0yZapf0BNxNosbYcdsM1uZ1R7y4Dfdv62sjdlyBv9If7H4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ljones.dev; spf=none smtp.mailfrom=ljones.dev; dkim=pass (2048-bit key) header.d=ljones.dev header.i=@ljones.dev header.b=u5muMKQQ; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=CSsz58+R; arc=none smtp.client-ip=103.168.172.157
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ljones.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=ljones.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=antheas.dev header.i=@antheas.dev header.b="Ioeb1umN"
-Received: from mail-lf1-f42.google.com (mail-lf1-f42.google.com [209.85.167.42])
-	by linux1587.grserver.gr (Postfix) with ESMTPSA id D72852E09430;
-	Thu, 20 Mar 2025 20:01:40 +0200 (EET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=antheas.dev;
-	s=default; t=1742493701;
-	bh=bfcDkCq066rbtoTdEqNCoKT/INV1aOtvGSYxQcLPl5g=;
-	h=Received:From:Subject:To;
-	b=Ioeb1umNACm1DpUB0pnCUIi5e8b4t2gYxDU81cW2p8BJmz65RlVXMtKLj3vLtv5px
-	 lgDm5JroMKdwbJZW21W31+hriZWtWY1WVzqtses1VfCADi3jSrA9VteFLtZQznyCAj
-	 Flw0ynpxAWjkTB/33q8wMuVs8S5UtHoevIH4wTz0=
-Authentication-Results: linux1587.grserver.gr;
-        spf=pass (sender IP is 209.85.167.42) smtp.mailfrom=lkml@antheas.dev smtp.helo=mail-lf1-f42.google.com
-Received-SPF: pass (linux1587.grserver.gr: connection is authenticated)
-Received: by mail-lf1-f42.google.com with SMTP id
- 2adb3069b0e04-549b159c84cso1309219e87.3;
-        Thu, 20 Mar 2025 11:01:40 -0700 (PDT)
-X-Forwarded-Encrypted: i=1;
- AJvYcCU5UkZGfXEEnWPYMC2s9CAka8p4U7/SiXMkazatTTrU5y80jrQTu14yQN09IcWQNtfYQKtW+5ubEKME22y5@vger.kernel.org,
- AJvYcCU6pVPo7tuZUlnH9hfn/swBFxkeN0ycrd+/X/TV1BD2MmkGh3vvgL644R3pRSro+dGn5K17+4IohyWNo5A=@vger.kernel.org,
- AJvYcCUNHWR0LVEYoyFkDh2epeESjrWJCHOBNDzZMu7d/IXv3g4XPRZGJ9heuBwXST3jXyVZmj9iPHHQT40=@vger.kernel.org,
- AJvYcCVOpmtnn6zkG9b5QADAmN8uH5xsI8sX2yjpx9VDVoSDl3QonNS4wBJaMkSBT2x347sRRNEkfEh+RVs=@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywj1RHVsA444HQO1BYbbC0K4Eb8TiPERAomgLftWI//fCSxvd4j
-	q3VHJGTfpEm1FAzXPZvd3qZ2kW5mkla05hpvuTGnnnHD+E4DMWWCxN2zJBh+y3Z6lScdSso5wfA
-	UjtfUqDI/8OuET062VflQYtka6OU=
-X-Google-Smtp-Source: 
- AGHT+IGfhvfuOiB+DEb6uOTl9EpxtzHoqw+6Gezd8dTghpF9jNKTgiZmVV/+1AlX1dPtpovYPwKYj9IP3xGz+Cdgws0=
-X-Received: by 2002:a05:6512:1254:b0:549:8924:2212 with SMTP id
- 2adb3069b0e04-54ad64865bemr99041e87.17.1742493700020; Thu, 20 Mar 2025
- 11:01:40 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=ljones.dev header.i=@ljones.dev header.b="u5muMKQQ";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="CSsz58+R"
+Received: from phl-compute-12.internal (phl-compute-12.phl.internal [10.202.2.52])
+	by mailfhigh.phl.internal (Postfix) with ESMTP id 8FBDD1140177;
+	Thu, 20 Mar 2025 17:01:33 -0400 (EDT)
+Received: from phl-mailfrontend-02 ([10.202.2.163])
+  by phl-compute-12.internal (MEProxy); Thu, 20 Mar 2025 17:01:33 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ljones.dev; h=cc
+	:cc:content-transfer-encoding:content-type:content-type:date
+	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to; s=fm3; t=1742504493;
+	 x=1742590893; bh=8c5ZkuDL9kYMx7KIbvTkHRAJDAkoupBL0KPSMh3uCAs=; b=
+	u5muMKQQeVch/tg4iGQ7LrJHfMp+8iPYu9+8IZfnYMG5K8fUS7LWt7MOEBkvNC8N
+	rqxGMUrMyfAyDcMbwY46MzkbthUKNg/ATene1rullLf6b0NqpQBv2z6G5c+holKq
+	zmsX1TwkFaCIOVhk8EfES1ZqxMv2AiTc5u0ZbCnLvovfgU93fS/GdAteUZrKQ1ae
+	XksdurA23fpTysRrJinurY8EqgFDbV/MgOVENEytTvJBMsUEycXT8j2M0COjY9he
+	M/osOCD+MjAO+ZadeagoErjFtQppLyrshhtwG9g6Ja1N+W25Mb+85/LS9DzYmh0t
+	v2oo6CR/LoDqYhNLGrMT8w==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:content-type:date:date:feedback-id:feedback-id
+	:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to:x-me-proxy
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; t=1742504493; x=
+	1742590893; bh=8c5ZkuDL9kYMx7KIbvTkHRAJDAkoupBL0KPSMh3uCAs=; b=C
+	Ssz58+RjV3pC0jXEhsmxQx0LSQWVFO9aoIUKknzRzeV6GYOD0xo/WojSxX3qjApL
+	VSWydijxGCGTiOTHHncsH+Z1hiNOr11djO62xGchIRv4fsTEc7wr5ocPNvqu9sVo
+	7jjWUL4HdBqvJwOqLYvZ60VA9eRnHLC102WG5RtDN27lWyyA+v8cschccIA/A9Xe
+	fk4WcQ4LDTAYNituR3Ab4SO7MbEKz0RLLJp8rDzZjSHzz7vKv63w0lrg8ovgQ0KR
+	RcUUFIfGC+F6+LNRx8VtVQ0ycHnXX1wRVNHDSV5T/MT66cvGKuoONo8qpkZ3Ymfs
+	qGmC7WDvW+8wznny4gteA==
+X-ME-Sender: <xms:LILcZ_X0JPw_98Dcx27zp1CuJTQcXKh5lFJADVxxl4vN4V8m1NKYXQ>
+    <xme:LILcZ3mGoh8ZEH4TUBwzdfWxZFxM7mV_FPNEyHBPQkmoXjxNbjhiesPYKwaQip8rC
+    hPtWFrU7e-ZSig8XZg>
+X-ME-Received: <xmr:LILcZ7ZP8FnYrDfzI964rd_UGniQoc85YysYDGT2tL2-RYEKVIHMivQuNiPC5ncStfmrxEBr>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddugeelvdefucetufdoteggodetrf
+    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggv
+    pdfurfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucesvcftvggtihhpih
+    gvnhhtshculddquddttddmnecujfgurhepkfffgggfuffvvehfhfgjtgfgsehtjeertddt
+    vdejnecuhfhrohhmpedfnfhukhgvucffrdculfhonhgvshdfuceolhhukhgvsehljhhonh
+    gvshdruggvvheqnecuggftrfgrthhtvghrnhepffevhedtuedvtefgveejgffhfffhleev
+    vddtleffffetueekhfdutdeuvefhleejnecuffhomhgrihhnpehgihhthhhusgdrtghomh
+    dptghonhhsthdrphihnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghi
+    lhhfrhhomheplhhukhgvsehljhhonhgvshdruggvvhdpnhgspghrtghpthhtohepledpmh
+    houggvpehsmhhtphhouhhtpdhrtghpthhtoheplhhkmhhlsegrnhhthhgvrghsrdguvghv
+    pdhrtghpthhtohepphhlrghtfhhorhhmqdgurhhivhgvrhdqgiekieesvhhgvghrrdhkvg
+    hrnhgvlhdrohhrghdprhgtphhtthhopehlihhnuhigqdhinhhpuhhtsehvghgvrhdrkhgv
+    rhhnvghlrdhorhhgpdhrtghpthhtoheplhhinhhugidqkhgvrhhnvghlsehvghgvrhdrkh
+    gvrhhnvghlrdhorhhgpdhrtghpthhtohepjhhikhhosheskhgvrhhnvghlrdhorhhgpdhr
+    tghpthhtohepsggvnhhtihhssheskhgvrhhnvghlrdhorhhgpdhrtghpthhtoheptghorh
+    gvnhhtihhnrdgthhgrrhihsehgmhgrihhlrdgtohhmpdhrtghpthhtohephhguvghgohgv
+    uggvsehrvgguhhgrthdrtghomhdprhgtphhtthhopehilhhpohdrjhgrrhhvihhnvghnse
+    hlihhnuhigrdhinhhtvghlrdgtohhm
+X-ME-Proxy: <xmx:LILcZ6Xgmsej8lupXRv3rwoAKvRCWWxVntU8IHVauQPRECRKwI077A>
+    <xmx:LILcZ5moJY3H2i0v4D4EL6L_XLIzz1n7O3M_IE1nbHr_n-L4Nbvmnw>
+    <xmx:LILcZ3fbdIrepACPLUgICejHDPxIggAL1J2PNL0kY7ZwUcrrg6oNTQ>
+    <xmx:LILcZzHtP-dS92BPM-TK1enPzcj1Q9bp2jiaO_HAGVHZ1-JW5DA9fw>
+    <xmx:LYLcZ76RykwJ5hn6v7iAYGusMOTwWRPMCO60yZ0VMtbaIMKFL68MLdGO>
+Feedback-ID: i5ec1447f:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Thu,
+ 20 Mar 2025 17:01:28 -0400 (EDT)
+Message-ID: <11dc0b16-84a3-4eee-9e38-7db0db8b4d5e@ljones.dev>
+Date: Fri, 21 Mar 2025 10:01:25 +1300
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250319175512.27059-1-lkml@antheas.dev>
- <41DE9E62-7BE6-4E65-BCFF-98DB243BB527@gmail.com>
-In-Reply-To: <41DE9E62-7BE6-4E65-BCFF-98DB243BB527@gmail.com>
-From: Antheas Kapenekakis <lkml@antheas.dev>
-Date: Thu, 20 Mar 2025 19:01:28 +0100
-X-Gmail-Original-Message-ID: 
- <CAGwozwGXW_H1TdLNiYGctTpMpXBEYLtgdn-dcn9zP+LSpnYUew@mail.gmail.com>
-X-Gm-Features: AQ5f1JoKC-br4Ylipx4s-aD-wtdmaefte9GBB96ByJ_g9JolJcvjF51P1NHYNlo
-Message-ID: 
- <CAGwozwGXW_H1TdLNiYGctTpMpXBEYLtgdn-dcn9zP+LSpnYUew@mail.gmail.com>
-Subject: Re: [PATCH v6 00/14] hwmon: (oxpsensors) Add devices, features, fix
- ABI and move to platform/x86
-To: "Derek J. Clark" <derekjohn.clark@gmail.com>
-Cc: platform-driver-x86@vger.kernel.org, linux-hwmon@vger.kernel.org,
-	linux-doc@vger.kernel.org, linux-pm@vger.kernel.org,
-	Guenter Roeck <linux@roeck-us.net>, Jean Delvare <jdelvare@suse.com>,
- Jonathan Corbet <corbet@lwn.net>,
-	Joaquin Ignacio Aramendia <samsagax@gmail.com>,
- Kevin Greenberg <kdgreenberg234@protonmail.com>,
-	Joshua Tam <csinaction@pm.me>, Parth Menon <parthasarathymenon@gmail.com>,
-	Eileen <eileen@one-netbook.com>, linux-kernel@vger.kernel.org,
- sre@kernel.org,
-	linux@weissschuh.net, ilpo.jarvinen@linux.intel.com, hdegoede@redhat.com,
-	mario.limonciello@amd.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-PPP-Message-ID: 
- <174249370148.7628.2782718619305504685@linux1587.grserver.gr>
-X-PPP-Vhost: antheas.dev
-X-Virus-Scanned: clamav-milter 0.103.11 at linux1587.grserver.gr
-X-Virus-Status: Clean
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 01/11] HID: asus: refactor init sequence per spec
+To: Antheas Kapenekakis <lkml@antheas.dev>
+Cc: platform-driver-x86@vger.kernel.org, linux-input@vger.kernel.org,
+ linux-kernel@vger.kernel.org, Jiri Kosina <jikos@kernel.org>,
+ Benjamin Tissoires <bentiss@kernel.org>,
+ Corentin Chary <corentin.chary@gmail.com>,
+ Hans de Goede <hdegoede@redhat.com>,
+ =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+References: <20250319191320.10092-1-lkml@antheas.dev>
+ <20250319191320.10092-2-lkml@antheas.dev>
+ <567b2056-8687-4f92-b4d2-7f289321275e@ljones.dev>
+ <CAGwozwGB69__pYzeTOmKnJrx1M8X4mgnDeRXE-dyFy9p495sBQ@mail.gmail.com>
+Content-Language: en-US
+From: "Luke D. Jones" <luke@ljones.dev>
+In-Reply-To: <CAGwozwGB69__pYzeTOmKnJrx1M8X4mgnDeRXE-dyFy9p495sBQ@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Thu, 20 Mar 2025 at 18:33, Derek J. Clark <derekjohn.clark@gmail.com> wr=
-ote:
->
->
->
-> On March 19, 2025 7:54:55 AM HST, Antheas Kapenekakis <lkml@antheas.dev> =
-wrote:
-> >This four part series updates the oxpsensors module to bring it in line
-> >with its Windows OneXPlayer counterpart. First, it adds support for all
-> >2024, 2025 OneXPlayer handhelds and their special variants. Then, it mov=
-es
-> >the module to platform/x86 to allow for including more EC features.
-> >
-> >Then, it adds the new charge limiting and bypass features that were firs=
-t
-> >introduced in the X1 and retrofit to older OneXFly variants and for
-> >controlling the turbo led found in the X1 models. For Bypass, it adds a =
-new
-> >charge_behaviour variant called inhibit-charge-s0.
-> >
-> >Finally, it performs a minor refactor by moving around switch statements
-> >into their own functions, in order to allow for fixing the pwm1_enable A=
-BI
-> >in the final patch. Currently, pwm1_enable sets the fan to auto with the
-> >value 0 and allows manual control with the value 1. This patch makes it
-> >so 0 sets the fan to full speed, 1 sets the fan to manual control, and
-> >2 sets the fan to auto. This requires both setting enable and the fan
-> >speed when the enable sysfs is written to as 0, hence the refactor.
-> >
-> >As this is a minor ABI break and there is userspace software relying
-> >on this previous behavior, the last patch also changes the /name of the
-> >hwmon endpoint to "oxp_ec" from "oxpec" (mirroring WMI module convention=
-s)
-> >such that userspace software that relied on the previous behavior can be
-> >retrofit to the new kernel while enabling correct functionality on old
-> >and new kernels. Failing that, software that is not updated will just
-> >stop controlling the fans, ensuring no malignant behavior.
-> >
-> >---
-> >V5: https://lore.kernel.org/all/20250317155349.1236188-1-lkml@antheas.de=
-v/
-> >V4: https://lore.kernel.org/all/20250311165406.331046-1-lkml@antheas.dev=
-/
-> >V3: https://lore.kernel.org/all/20250309112114.1177361-1-lkml@antheas.de=
-v/
-> >
-> >Changes since V5:
-> >    - Separate doc entries with Fixes as by Mario
-> >    - Add sysfs file name to subject as per Thomas
-> >    - Make tt_led and tt_turbo const as per Thomas
-> >    - Align a couple of structs as per Thomas
-> >    - Remove excess battery check as per Thomas
-> >    - For Thomas: devices without a BIOS update battery control is a NOO=
-P
-> >      OXP is a boutique manufacturer for now, so gathering information
-> >      about old devices to add BIOS checks is not practical unfortunatel=
-y
->
-> Antheas,
-> This sort of begs the question on how this feature was tested on those de=
-vices? That question includes whether or not it is really a no-op in unsupp=
-orted BIOS. My old contacts at OXP are no longer employed there, are you in=
- contact with anyone at OXP currently that can potentially provide the data=
-?
->
-> I'm still of the opinion that the attribute should be explicitly enabled =
-only on a known supported BIOS.  IMO there is a general assumption that a d=
-river exposed attribute fd will work and having a no-op will confuse users =
-and lead to spurious bug reports. We shouldn't be exposing a no-op in the s=
-ysfs for a driver if we can avoid it. If we add the BIOS checks we can also=
- print to dmesg if a BIOS is too low a version so they will know why it isn=
-'t there.
->
-> That being said, it does seem likely low risk, so I'm not nacking the fea=
-ture as is if the subsystem maintainers are okay with it.
->
-> - Derek
+On 20/03/25 22:50, Antheas Kapenekakis wrote:
+> On Thu, 20 Mar 2025 at 08:19, Luke D. Jones <luke@ljones.dev> wrote:
+>>
+>>
+>> On 20/03/25 08:13, Antheas Kapenekakis wrote:
+>>> Currently, asus_kbd_init() uses a reverse engineered init sequence
+>>> from Windows, which contains the handshakes from multiple programs.
+>>> Keep the main one, which is 0x5a (meant for drivers).
+>>
+>> 0x5A is also used for Ally setup commands, used from userspace in
+>> Windows. Only a nit but I don't think stating it's only for drivers is
+>> accurate but then again asus kind of blurs the line a bit.
+> 
+> ROG devices contain a HID USB endpoint that exposes multiple
+> applications. On my Z13, that is 4 hiddev devices.
+> 
+> However, we only care about two. Those are:
+> 
+> Application / Report ID:
+> 0xff310076 / 0x5a meant for Asus drivers
+> 0xff310079 / 0x5d meant for Asus applications
 
-Hi Derek,
-I have tested this patch series on an X1 (AMD) personally. I also have
-multiple people that have tested it on an F1 Pro, X1 Intel, and an X1
-Mini. And I am pretty sure that at least 1 or 2 people have tested on
-an older BIOS too without an ill effect.
+I'm curious how you determined that. From what I've seen asus are 
+consistent until they're not - typically it's when they have a weird 
+device like the Slash or Anime. The slash on the G16 uses the same MCU 
+and endpoint as the keyboard, but with a new report ID, while the slash 
+on a G14 is a separate MCU (or at least device exposed by MCU) with own 
+endpoints and hid report.
 
-The older F1s are a bit of a question mark. The BIOS update for those
-came out around Xmas and I do not have that many users with them.
-However, they act identically to the new ones when it comes to the EC
-and the controller, so I do not think that is that big of an issue.
-Also, no one has asked yet about it not working on those devices. And
-they ask about a lot of things. Yanking charging support from those
-will just hurt those users unnecessarily as they will get it later.
+It's not important here yet, I'm just trying to add context and provide 
+some extra information for you.
 
-Eileen is from OneXPlayer and is cc'd in this series.
+> Both require the same handshake when they start. Well, in theory. But
+> as you say in some of the Anime stuff requires it in practice too.
 
-Antheas
+Yeah as above, the G14 slash needs it, so does the older Anime dispaly. 
+But the G16 slash being on the same MCU doesn't. In any case those 
+gadgets are being handled in userspace just fine regardless of the 
+driver state. Still, not really relevant here and I'm just adding context.
 
-> >Changes since V4:
-> >    - Fix nits by Hans
-> >    - change inhibit-charge-s0 to inhibit-charge-awake
-> >    - use devm_battery_hook_register and power_supply_unregister_extensi=
-on
-> >      (based on cros driver)
-> >    - move charge behavior patches to the end to make the rest of the se=
-ries
-> >      easier to merge
-> >    - CC platform-x86 and power maintainers
-> >
-> >Changes since V3:
-> >    - Fix nits by Derek
-> >    - Remove the hwmon documentation as it is not required for platform
-> >      drivers (suggested by Guenter)
-> >    - Add ACPI_BATTERY and HWMON depends to Kconfig
-> >      (reported by kernel robot)
-> >    - Homogenize driver into following reverse xmas convention
-> >
-> >Changes since V2:
-> >    - Add ack by Guenter, move platform move patch to be third (not firs=
-t
-> >      to allow for device support backport to lts kernels)
-> >    - Rework patch text, especially in the refactor patches as per Derek
-> >    - Change bypass to use charge_behaviour instead of charge_type, as t=
-hat
-> >      ABI supports capability detection and is more appropriate
-> >    - Move battery attach to probe instead of init
-> >    - Fix bug where reading tt_led would instead use the turbo register
-> >
-> >Changes since V1:
-> >    - Add X1 Pro, F1 Pro variants
-> >    - Fix minor typo in initial patches
-> >    - Convert oxp-sensors into a platform driver, as it is no longer
-> >      considered a hwmon driver.
-> >    - Add sysfs documentation and myself to the MAINTAINERS file
-> >    - Update documentation to state that this is the OneXPlayer/AOKZOE
-> >      platform driver, and that support for Ayaneo/OPI is provided until
-> >      they gain their own platform driver.
-> >
-> >Antheas Kapenekakis (14):
-> >  hwmon: (oxp-sensors) Distinguish the X1 variants
-> >  hwmon: (oxp-sensors) Add all OneXFly variants
-> >  platform/x86: oxpec: Move hwmon/oxp-sensors to platform/x86
-> >  ABI: testing: sysfs-class-oxp: add missing documentation
-> >  ABI: testing: sysfs-class-oxp: add tt_led attribute documentation
-> >  platform/x86: oxpec: Rename ec group to tt_toggle
-> >  platform/x86: oxpec: Add turbo led support to X1 devices
-> >  platform/x86: oxpec: Move pwm_enable read to its own function
-> >  platform/x86: oxpec: Move pwm value read/write to separate functions
-> >  platform/x86: oxpec: Move fan speed read to separate function
-> >  platform/x86: oxpec: Adhere to sysfs-class-hwmon and enable pwm on 2
-> >  platform/x86: oxpec: Follow reverse xmas convention for tt_toggle
-> >  power: supply: add inhibit-charge-awake to charge_behaviour
-> >  platform/x86: oxpec: Add charge threshold and behaviour to OneXPlayer
-> >
-> > Documentation/ABI/testing/sysfs-class-power   |  11 +-
-> > Documentation/ABI/testing/sysfs-platform-oxp  |  25 +
-> > Documentation/hwmon/index.rst                 |   2 +-
-> > Documentation/hwmon/oxp-sensors.rst           |  89 ---
-> > MAINTAINERS                                   |   7 +-
-> > drivers/hwmon/Kconfig                         |  11 -
-> > drivers/hwmon/Makefile                        |   1 -
-> > drivers/platform/x86/Kconfig                  |  13 +
-> > drivers/platform/x86/Makefile                 |   3 +
-> > .../oxp-sensors.c =3D> platform/x86/oxpec.c}    | 624 ++++++++++++++---=
--
-> > drivers/power/supply/power_supply_sysfs.c     |   7 +-
-> > drivers/power/supply/test_power.c             |   1 +
-> > include/linux/power_supply.h                  |   1 +
-> > 13 files changed, 540 insertions(+), 255 deletions(-)
-> > create mode 100644 Documentation/ABI/testing/sysfs-platform-oxp
-> > delete mode 100644 Documentation/hwmon/oxp-sensors.rst
-> > rename drivers/{hwmon/oxp-sensors.c =3D> platform/x86/oxpec.c} (52%)
-> >
-> >
-> >base-commit: 4701f33a10702d5fc577c32434eb62adde0a1ae1
+> The handshake is set_report 0x5X + "Asus...", then get_report with the
+> same ID which should return the asus string.
+> 
+> In hiddraw, they appear under the same endpoint, both on the Ally and
+> the Z13. But in hiddev (with hid-asus disabled or with this series),
+> they appear as separate.
+> 
+> I cannot comment on the Aura protocol, because I don't know, but for
+> the basic sticky RGB mode that supports set and apply, they _should_
+> behave identically. I use 0x5d in my userspace software for everything
+> now [1]. Previously, I used 0x5a but I am not a driver.
+> 
+> They do behave identically on the Ally X and the Z13 2025 though.
+
+It is something I do have to test, and I'll add your v2 to kernels to 
+get some feedback from my discord group too. I know for sure that there 
+were some laptops that didn't accept 0x5D for brightness - I'm sorry I'm 
+so vague on this part, I really don't remember the details and I lost 
+notes so it will need to be tested.
+
+> I do not know about 0x5e. Perhaps Asus made a special endpoint for
+> their Anime creation app.
+
+It is only for that yes.
+
+Cheers,
+Luke.
+
+>>> In addition, perform a get_response and check if the response is the
+>>> same. To avoid regressions, print an error if the response does not
+>>> match instead of rejecting device.
+>>>
+>>> Signed-off-by: Antheas Kapenekakis <lkml@antheas.dev>
+>>> ---
+>>>    drivers/hid/hid-asus.c | 82 +++++++++++++++++++++++-------------------
+>>>    1 file changed, 46 insertions(+), 36 deletions(-)
+>>>
+>>> diff --git a/drivers/hid/hid-asus.c b/drivers/hid/hid-asus.c
+>>> index 46e3e42f9eb5f..aa4a481dc4f27 100644
+>>> --- a/drivers/hid/hid-asus.c
+>>> +++ b/drivers/hid/hid-asus.c
+>>> @@ -48,7 +48,7 @@ MODULE_DESCRIPTION("Asus HID Keyboard and TouchPad");
+>>>    #define FEATURE_REPORT_ID 0x0d
+>>>    #define INPUT_REPORT_ID 0x5d
+>>>    #define FEATURE_KBD_REPORT_ID 0x5a
+>>> -#define FEATURE_KBD_REPORT_SIZE 16
+>>> +#define FEATURE_KBD_REPORT_SIZE 64
+>>>    #define FEATURE_KBD_LED_REPORT_ID1 0x5d
+>>>    #define FEATURE_KBD_LED_REPORT_ID2 0x5e
+>>>
+>>> @@ -386,16 +386,43 @@ static int asus_kbd_set_report(struct hid_device *hdev, const u8 *buf, size_t bu
+>>>        return ret;
+>>>    }
+>>>
+>>> -static int asus_kbd_init(struct hid_device *hdev, u8 report_id)
+>>> +static int asus_kbd_init(struct hid_device *hdev)
+>>>    {
+>>> -     const u8 buf[] = { report_id, 0x41, 0x53, 0x55, 0x53, 0x20, 0x54,
+>>> -                  0x65, 0x63, 0x68, 0x2e, 0x49, 0x6e, 0x63, 0x2e, 0x00 };
+>>> +     /*
+>>> +      * Asus handshake identifying us as a driver (0x5A)
+>>> +      * 0x5A then ASCII for "ASUS Tech.Inc."
+>>> +      * 0x5D is for userspace Windows applications.
+>>
+>> 0x5D is the report ID used for commands such as RGB modes. Probably
+>> don't need to mention it here, and only where it is used.
+> 
+> Yep, see above. Not required for basic RGB. Maybe it is for Aura, but
+> I'd leave that to userspace.
+> 
+>>> +      * The handshake is first sent as a set_report, then retrieved
+>>> +      * from a get_report to verify the response.
+>>> +      */
+>>> +     const u8 buf[] = { FEATURE_KBD_REPORT_ID, 0x41, 0x53, 0x55, 0x53, 0x20,
+>>> +             0x54, 0x65, 0x63, 0x68, 0x2e, 0x49, 0x6e, 0x63, 0x2e, 0x00 };
+>>> +     u8 *readbuf;
+>>>        int ret;
+>>>
+>>>        ret = asus_kbd_set_report(hdev, buf, sizeof(buf));
+>>> -     if (ret < 0)
+>>> -             hid_err(hdev, "Asus failed to send init command: %d\n", ret);
+>>> +     if (ret < 0) {
+>>> +             hid_err(hdev, "Asus failed to send handshake: %d\n", ret);
+>>> +             return ret;
+>>> +     }
+>>>
+>>> +     readbuf = kzalloc(FEATURE_KBD_REPORT_SIZE, GFP_KERNEL);
+>>> +     if (!readbuf)
+>>> +             return -ENOMEM;
+>>> +
+>>> +     ret = hid_hw_raw_request(hdev, FEATURE_KBD_REPORT_ID, readbuf,
+>>> +                              FEATURE_KBD_REPORT_SIZE, HID_FEATURE_REPORT,
+>>> +                              HID_REQ_GET_REPORT);
+>>> +     if (ret < 0) {
+>>> +             hid_err(hdev, "Asus failed to receive handshake ack: %d\n", ret);
+>>> +     } else if (memcmp(readbuf, buf, sizeof(buf)) != 0) {
+>>> +             hid_err(hdev, "Asus handshake returned invalid response: %*ph\n",
+>>> +                     FEATURE_KBD_REPORT_SIZE, readbuf);
+>>> +             // Do not return error if handshake is wrong to avoid regressions
+>>
+>> I'll have to test this on the oldest model I have. Hopefully it's a
+>> non-issue and this can return error instead.
+>>
+>> Side-note: I notice you're using a msleep to try and work around an
+>> issue in a later patch - it might be worth trying replacing that with a
+>> retry/count loop with an inner of small msleep + a call to this init,
+>> see if it still responds to this during that critical period.
+> 
+> The call did not fail. I was thinking it was because the device needs
+> some time to warm up (it happens with certain devices).
+> 
+> Turns out it was hid-multitouch not attaching.
+> 
+>>> +     }
+>>> +
+>>> +     kfree(readbuf);
+>>>        return ret;
+>>>    }
+>>>
+>>> @@ -540,42 +567,25 @@ static int asus_kbd_register_leds(struct hid_device *hdev)
+>>>        unsigned char kbd_func;
+>>>        int ret;
+>>>
+>>> -     if (drvdata->quirks & QUIRK_ROG_NKEY_KEYBOARD) {
+>>> -             /* Initialize keyboard */
+>>> -             ret = asus_kbd_init(hdev, FEATURE_KBD_REPORT_ID);
+>>> -             if (ret < 0)
+>>> -                     return ret;
+>>> -
+>>> -             /* The LED endpoint is initialised in two HID */
+>>> -             ret = asus_kbd_init(hdev, FEATURE_KBD_LED_REPORT_ID1);
+>>> -             if (ret < 0)
+>>> -                     return ret;
+>>> -
+>>> -             ret = asus_kbd_init(hdev, FEATURE_KBD_LED_REPORT_ID2);
+>>> -             if (ret < 0)
+>>> -                     return ret;
+>>
+>> Ah, I recall now. Some devices like the Slash or AniMe Matrix required
+>> the 0x5E and 0x5D report ID (device dependent) however these are
+>> currently being done via userspace due to not being HID devices.
+>>
+>> There *are* some older laptops still in use that require init on 0x5E or
+>> 0x5D for RGB to be usable, from memory. It's been over 5 years so I'll
+>> pull out the laptop I have with 0x1866 PID MCU and see if that is
+>> actually true and not just my imagination.
+> 
+> Hopefully you handshake with these devices over userspace, so they
+> will not be affected.
+> 
+>>> +     ret = asus_kbd_init(hdev);
+>>> +     if (ret < 0)
+>>> +             return ret;
+>>>
+>>> -             if (dmi_match(DMI_PRODUCT_FAMILY, "ProArt P16")) {
+>>> -                     ret = asus_kbd_disable_oobe(hdev);
+>>> -                     if (ret < 0)
+>>> -                             return ret;
+>>> -             }
+>>> -     } else {
+>>> -             /* Initialize keyboard */
+>>> -             ret = asus_kbd_init(hdev, FEATURE_KBD_REPORT_ID);
+>>> -             if (ret < 0)
+>>> -                     return ret;
+>>> +     /* Get keyboard functions */
+>>> +     ret = asus_kbd_get_functions(hdev, &kbd_func, FEATURE_KBD_REPORT_ID);
+>>> +     if (ret < 0)
+>>> +             return ret;
+>>>
+>>> -             /* Get keyboard functions */
+>>> -             ret = asus_kbd_get_functions(hdev, &kbd_func, FEATURE_KBD_REPORT_ID);
+>>> +     if (dmi_match(DMI_PRODUCT_FAMILY, "ProArt P16")) {
+>>> +             ret = asus_kbd_disable_oobe(hdev);
+>>>                if (ret < 0)
+>>>                        return ret;
+>>> -
+>>> -             /* Check for backlight support */
+>>> -             if (!(kbd_func & SUPPORT_KBD_BACKLIGHT))
+>>> -                     return -ENODEV;
+>>>        }
+>>>
+>>> +     /* Check for backlight support */
+>>> +     if (!(kbd_func & SUPPORT_KBD_BACKLIGHT))
+>>> +             return -ENODEV;
+>>> +
+>>>        drvdata->kbd_backlight = devm_kzalloc(&hdev->dev,
+>>>                                              sizeof(struct asus_kbd_leds),
+>>>                                              GFP_KERNEL);
+>>
+>> I've left only small comments on a few patches for now. I'll review in
+>> full after I get testing done on a variety of devices whcih I'm aiming
+>> for this weekend. Overall impression so far is everything looks good and
+>> this is a nice improvement. Thank you for taking the time to implement it.
+>>
+>> Cheers,
+>> Luke.
+> 
+> I'll try to have V2 out today. I finished it yesterday and fixed all
+> the lockups and the hid-multitouch issue. Just needs a good
+> lookthrough.
+> 
+> Perhaps I will also do a small multi-intensity endpoint that works
+> with KDE and only applies the colors when asked. This way our programs
+> are not affected and normal laptop users get basic RGB OOTB.
+> 
+> If I do that, I will make the quirk for the Ally in a separate patch,
+> so that you can nack it if you'd rather introduce RGB support with
+> your driver, so that it does not need to be reverted.
+> 
+> Antheas
+> 
+> [1] https://github.com/hhd-dev/hhd/blob/d3bbd7fa25fe9a4838896a2c5cfda460abe48dc6/src/hhd/device/rog_ally/const.py#L5-L8
+
