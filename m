@@ -1,48 +1,48 @@
 Received: from linux1587.grserver.gr (linux1587.grserver.gr [185.138.42.100])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 78EC01487E9;
-	Thu, 20 Mar 2025 08:30:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 81ED42222CD;
+	Thu, 20 Mar 2025 09:51:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.138.42.100
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742459423; cv=none; b=rLyaI5H0DLRiff431x/M7+wNad0oKVNOmHjXhHcu3qBnQeA1LZQnpo+3O1ht4jR6P8f2uDkJCb5+nSIwdjA4K0Wl7fxs0do+eoKLN+mOwUHv28YMr26oQ/rH3Os6wijwOKUhqrwC6Ia8Ib8zh7ojrqDr1EHsIiHkQEXAXurYrNk=
+	t=1742464267; cv=none; b=ZvVfbhxVu/GUzQn1glN8en4MGNkaXKhiqeMs49tUOgyN6odvRYCkpRW+K2Du+Albs/+8HP40F0whpPuO7f6qj1xW0R/+1Shwegtlo4XWHoEw7Jxr3mpiJofMwyYzvuKaLZ1cu3HpQtSEpTMAjVZOTP6iTeei+Wff16toeJOtpno=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742459423; c=relaxed/simple;
-	bh=lM8uEMqGloIIhxK8we3YSOHTRitLpbY76DwJKVqm0E8=;
+	s=arc-20240116; t=1742464267; c=relaxed/simple;
+	bh=V5pdiDmIiaTInS4DzWKdY2WwroRMhueqxusiSOWo+b0=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=i+kxfVzV2pn5vg91Ek8xAFRILwqpAIydaqEDkIUMEkxgHOS0aVJJVJPr2cbJqGUEpX9FphhIR3CXvrJ4T5Pxf4xKlrkfcgyWtiicTrSc83OpVEp+B087edQLwoVlVrk1hWTqu0XlNX+Dhd/tO3S9PPOvJwW6tX5GGWMzKGvHvTs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=antheas.dev; spf=pass smtp.mailfrom=antheas.dev; dkim=pass (1024-bit key) header.d=antheas.dev header.i=@antheas.dev header.b=OJs07coR; arc=none smtp.client-ip=185.138.42.100
+	 To:Cc:Content-Type; b=FRP0ol8/yZFoCcUg6YPCyJP1sVtaNXkIw/B0KP7Imsv9aOPoflYjJnvhe6VnQs4tQPlfAxf4c/TG04GfxRuXW7F8C/+GsfqkyGd70dA8uf2yBSff0U8F1p+MZ9v09jnOtYdAiBftMu3znAsxGELR13rEvHhMdo/KmMmyVCZGTTE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=antheas.dev; spf=pass smtp.mailfrom=antheas.dev; dkim=pass (1024-bit key) header.d=antheas.dev header.i=@antheas.dev header.b=GqCvCWpW; arc=none smtp.client-ip=185.138.42.100
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=antheas.dev
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=antheas.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=antheas.dev header.i=@antheas.dev header.b="OJs07coR"
-Received: from mail-lj1-f169.google.com (mail-lj1-f169.google.com [209.85.208.169])
-	by linux1587.grserver.gr (Postfix) with ESMTPSA id 9F4992E08704;
-	Thu, 20 Mar 2025 10:30:18 +0200 (EET)
+	dkim=pass (1024-bit key) header.d=antheas.dev header.i=@antheas.dev header.b="GqCvCWpW"
+Received: from mail-lj1-f174.google.com (mail-lj1-f174.google.com [209.85.208.174])
+	by linux1587.grserver.gr (Postfix) with ESMTPSA id 02E192E088E2;
+	Thu, 20 Mar 2025 11:50:58 +0200 (EET)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=antheas.dev;
-	s=default; t=1742459419;
-	bh=ziUOA57vt7GRj6E5P8yVSLpiyhos2lGfmA35dWw4RKQ=;
+	s=default; t=1742464259;
+	bh=F64ph2xi8UAAfC5J+KyB7cwoJd/pe10eALeTB2Q/Gws=;
 	h=Received:From:Subject:To;
-	b=OJs07coRP0qkVVQWNT+V/uyICgTESo9ryX6o8hzD48IwSJBTfwTKXyhJbRe6PgUL6
-	 OzJRZJ16TbAdMISN0p7vzZ9of+t16BvrzgqzFlGpD6CVgiroqya/h4kAPML9bKyJjV
-	 isDIGLDHCeX7xKZ9sq1v796pTLUGHUrtDE70cvj8=
+	b=GqCvCWpWKvd11syYBC/ADzx3y+MbBLnBS1yGdmx9hD8Et0+hjJWziGx7qSwxGXaDh
+	 QziKiAaHZKDdlmjAV8VULKNT19vFvC9N1LmG30lGgAu1i+LN4d+WpGBhA2PVzE4kAe
+	 Pl0+j6MBH6qbchGBXVMRRG7U/x009M99KTsAE0Ww=
 Authentication-Results: linux1587.grserver.gr;
-        spf=pass (sender IP is 209.85.208.169) smtp.mailfrom=lkml@antheas.dev smtp.helo=mail-lj1-f169.google.com
+        spf=pass (sender IP is 209.85.208.174) smtp.mailfrom=lkml@antheas.dev smtp.helo=mail-lj1-f174.google.com
 Received-SPF: pass (linux1587.grserver.gr: connection is authenticated)
-Received: by mail-lj1-f169.google.com with SMTP id
- 38308e7fff4ca-307c13298eeso6138621fa.0;
-        Thu, 20 Mar 2025 01:30:18 -0700 (PDT)
+Received: by mail-lj1-f174.google.com with SMTP id
+ 38308e7fff4ca-30bfd4d4c63so6320651fa.2;
+        Thu, 20 Mar 2025 02:50:58 -0700 (PDT)
 X-Forwarded-Encrypted: i=1;
- AJvYcCVMPS17GIVeRw8VdBAfbjzRwT8te04H0sjaC7051Q4Zbp4BjJr5SAH/0J9ZDMj1mnBwDgxy2t1BwI/lrw==@vger.kernel.org,
- AJvYcCXTpMetBctO0T4jCGdEO4NCaef1QQBtzsR7Vou38mgWCPUnjrxweRhPq1I4FLgJteX69yVO/tDnmyLcHuDC@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy4EjdUbK+aQbt68CZNzqTlkbzzp12D5L/Llpvo1eUTgE0fNtUa
-	3mm3ylRsxeKq1Adiz20fdDmlDMEq2ng1feOkFjSp20qAmMZnzEztgP3o0t5SHimuIdRxPdXNABt
-	Op5Bn9076KRXUkVdst1wXe7E25to=
+ AJvYcCVt/d/cdyJe9rcjFWs4Fo+Yg8xWA9SOfPZGLakHYeg+Y2ZQsBHi7n94+79fv/g2qRYMTI6hfS/dh1CVGA==@vger.kernel.org,
+ AJvYcCW6hw+KUMX1I96yRFgdt4eEfdd7rkCkJSwxcaJKc9XTVXfwBmUZVV8nV5C1bqA/P6/0S/o1c/qcGLgnBJyb@vger.kernel.org
+X-Gm-Message-State: AOJu0YyBK0n2uFI37ipdI1r78wQIliiXWcNv/oLUR276VhdzR66Epxsn
+	uVUSG6klREbfSvoDvQqHSonH3X0ZzpxZGubaYGw00uxZgRrrcBXMDnW8iYl8sTxqARsb3D6NVNw
+	zRfCpViM3vIwnCFIQtwoZqh2XKaw=
 X-Google-Smtp-Source: 
- AGHT+IG09r4aPlZS9FtR6xYfWQ819/Rg9PKjIpTRksh0LUYjkf/MLyEpy6CnX91Ix7+RKHE2FaX+3aOiS9tE6pQnZFc=
-X-Received: by 2002:a05:651c:547:b0:308:ee65:7f44 with SMTP id
- 38308e7fff4ca-30d72789e95mr8912211fa.8.1742459417875; Thu, 20 Mar 2025
- 01:30:17 -0700 (PDT)
+ AGHT+IGhE9bp10SF3Gq0RdQyK+lzDrA5IHwYnQHSQIYNAhsRYq8ZylmbEznKRJjlmshyTR6XHjqIzN3eeoiQ48/joE8=
+X-Received: by 2002:a05:6512:2344:b0:549:916b:f6eb with SMTP id
+ 2adb3069b0e04-54acb1a387emr1886642e87.1.1742464258231; Thu, 20 Mar 2025
+ 02:50:58 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -50,18 +50,17 @@ List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 References: <20250319191320.10092-1-lkml@antheas.dev>
- <20250319191320.10092-7-lkml@antheas.dev>
- <51c78ba6-9518-4259-85da-d761b031df7f@ljones.dev>
-In-Reply-To: <51c78ba6-9518-4259-85da-d761b031df7f@ljones.dev>
+ <20250319191320.10092-2-lkml@antheas.dev>
+ <567b2056-8687-4f92-b4d2-7f289321275e@ljones.dev>
+In-Reply-To: <567b2056-8687-4f92-b4d2-7f289321275e@ljones.dev>
 From: Antheas Kapenekakis <lkml@antheas.dev>
-Date: Thu, 20 Mar 2025 09:30:06 +0100
+Date: Thu, 20 Mar 2025 10:50:46 +0100
 X-Gmail-Original-Message-ID: 
- <CAGwozwGsB4UjsHa=CWT2zzbpHx5yPEOtTA9RmVqR1jqMB4_C6Q@mail.gmail.com>
-X-Gm-Features: AQ5f1JouLn7odMmdLAzBP_cRIF3KVlpUpTATrLGK3AEzwIsAOS-pTxSfQUzL9PY
+ <CAGwozwGB69__pYzeTOmKnJrx1M8X4mgnDeRXE-dyFy9p495sBQ@mail.gmail.com>
+X-Gm-Features: AQ5f1Jr_Sh1-0LXBCSN2rSlO5DGocWbkIr-wRaP_jF8FR5LwpCnSxuXLEqu6skU
 Message-ID: 
- <CAGwozwGsB4UjsHa=CWT2zzbpHx5yPEOtTA9RmVqR1jqMB4_C6Q@mail.gmail.com>
-Subject: Re: [PATCH 06/11] HID: asus: introduce small delay on Asus Z13 RGB
- init
+ <CAGwozwGB69__pYzeTOmKnJrx1M8X4mgnDeRXE-dyFy9p495sBQ@mail.gmail.com>
+Subject: Re: [PATCH 01/11] HID: asus: refactor init sequence per spec
 To: "Luke D. Jones" <luke@ljones.dev>
 Cc: platform-driver-x86@vger.kernel.org, linux-input@vger.kernel.org,
 	linux-kernel@vger.kernel.org, Jiri Kosina <jikos@kernel.org>,
@@ -71,51 +70,233 @@ Cc: platform-driver-x86@vger.kernel.org, linux-input@vger.kernel.org,
  =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
 Content-Type: text/plain; charset="UTF-8"
 X-PPP-Message-ID: 
- <174245941904.26145.17944018537723476768@linux1587.grserver.gr>
+ <174246425947.4164.12178216220255030923@linux1587.grserver.gr>
 X-PPP-Vhost: antheas.dev
 X-Virus-Scanned: clamav-milter 0.103.11 at linux1587.grserver.gr
 X-Virus-Status: Clean
 
-On Thu, 20 Mar 2025 at 08:12, Luke D. Jones <luke@ljones.dev> wrote:
+On Thu, 20 Mar 2025 at 08:19, Luke D. Jones <luke@ljones.dev> wrote:
+>
 >
 > On 20/03/25 08:13, Antheas Kapenekakis wrote:
-> > The folio keyboard of the Z13 can get stuck in its BIOS mode, where the
-> > touchpad behaves like a mouse and the keyboard start button is not
-> > reliable if we perform the initialization too quickly. This mostly
-> > happens during boot, and can be verified to be caused by hid-asus
-> > through simple blacklisting. A small delay fixes it.
+> > Currently, asus_kbd_init() uses a reverse engineered init sequence
+> > from Windows, which contains the handshakes from multiple programs.
+> > Keep the main one, which is 0x5a (meant for drivers).
+>
+> 0x5A is also used for Ally setup commands, used from userspace in
+> Windows. Only a nit but I don't think stating it's only for drivers is
+> accurate but then again asus kind of blurs the line a bit.
+
+ROG devices contain a HID USB endpoint that exposes multiple
+applications. On my Z13, that is 4 hiddev devices.
+
+However, we only care about two. Those are:
+
+Application / Report ID:
+0xff310076 / 0x5a meant for Asus drivers
+0xff310079 / 0x5d meant for Asus applications
+
+Both require the same handshake when they start. Well, in theory. But
+as you say in some of the Anime stuff requires it in practice too.
+
+The handshake is set_report 0x5X + "Asus...", then get_report with the
+same ID which should return the asus string.
+
+In hiddraw, they appear under the same endpoint, both on the Ally and
+the Z13. But in hiddev (with hid-asus disabled or with this series),
+they appear as separate.
+
+I cannot comment on the Aura protocol, because I don't know, but for
+the basic sticky RGB mode that supports set and apply, they _should_
+behave identically. I use 0x5d in my userspace software for everything
+now [1]. Previously, I used 0x5a but I am not a driver.
+
+They do behave identically on the Ally X and the Z13 2025 though.
+
+I do not know about 0x5e. Perhaps Asus made a special endpoint for
+their Anime creation app.
+
+> > In addition, perform a get_response and check if the response is the
+> > same. To avoid regressions, print an error if the response does not
+> > match instead of rejecting device.
 > >
 > > Signed-off-by: Antheas Kapenekakis <lkml@antheas.dev>
 > > ---
-> >   drivers/hid/hid-asus.c | 4 ++++
-> >   1 file changed, 4 insertions(+)
+> >   drivers/hid/hid-asus.c | 82 +++++++++++++++++++++++-------------------
+> >   1 file changed, 46 insertions(+), 36 deletions(-)
 > >
 > > diff --git a/drivers/hid/hid-asus.c b/drivers/hid/hid-asus.c
-> > index 85ae75478b796..5b75ee83ae290 100644
+> > index 46e3e42f9eb5f..aa4a481dc4f27 100644
 > > --- a/drivers/hid/hid-asus.c
 > > +++ b/drivers/hid/hid-asus.c
-> > @@ -571,6 +571,10 @@ static int asus_kbd_register_leds(struct hid_device *hdev)
+> > @@ -48,7 +48,7 @@ MODULE_DESCRIPTION("Asus HID Keyboard and TouchPad");
+> >   #define FEATURE_REPORT_ID 0x0d
+> >   #define INPUT_REPORT_ID 0x5d
+> >   #define FEATURE_KBD_REPORT_ID 0x5a
+> > -#define FEATURE_KBD_REPORT_SIZE 16
+> > +#define FEATURE_KBD_REPORT_SIZE 64
+> >   #define FEATURE_KBD_LED_REPORT_ID1 0x5d
+> >   #define FEATURE_KBD_LED_REPORT_ID2 0x5e
+> >
+> > @@ -386,16 +386,43 @@ static int asus_kbd_set_report(struct hid_device *hdev, const u8 *buf, size_t bu
+> >       return ret;
+> >   }
+> >
+> > -static int asus_kbd_init(struct hid_device *hdev, u8 report_id)
+> > +static int asus_kbd_init(struct hid_device *hdev)
+> >   {
+> > -     const u8 buf[] = { report_id, 0x41, 0x53, 0x55, 0x53, 0x20, 0x54,
+> > -                  0x65, 0x63, 0x68, 0x2e, 0x49, 0x6e, 0x63, 0x2e, 0x00 };
+> > +     /*
+> > +      * Asus handshake identifying us as a driver (0x5A)
+> > +      * 0x5A then ASCII for "ASUS Tech.Inc."
+> > +      * 0x5D is for userspace Windows applications.
+>
+> 0x5D is the report ID used for commands such as RGB modes. Probably
+> don't need to mention it here, and only where it is used.
+
+Yep, see above. Not required for basic RGB. Maybe it is for Aura, but
+I'd leave that to userspace.
+
+> > +      * The handshake is first sent as a set_report, then retrieved
+> > +      * from a get_report to verify the response.
+> > +      */
+> > +     const u8 buf[] = { FEATURE_KBD_REPORT_ID, 0x41, 0x53, 0x55, 0x53, 0x20,
+> > +             0x54, 0x65, 0x63, 0x68, 0x2e, 0x49, 0x6e, 0x63, 0x2e, 0x00 };
+> > +     u8 *readbuf;
+> >       int ret;
+> >
+> >       ret = asus_kbd_set_report(hdev, buf, sizeof(buf));
+> > -     if (ret < 0)
+> > -             hid_err(hdev, "Asus failed to send init command: %d\n", ret);
+> > +     if (ret < 0) {
+> > +             hid_err(hdev, "Asus failed to send handshake: %d\n", ret);
+> > +             return ret;
+> > +     }
+> >
+> > +     readbuf = kzalloc(FEATURE_KBD_REPORT_SIZE, GFP_KERNEL);
+> > +     if (!readbuf)
+> > +             return -ENOMEM;
+> > +
+> > +     ret = hid_hw_raw_request(hdev, FEATURE_KBD_REPORT_ID, readbuf,
+> > +                              FEATURE_KBD_REPORT_SIZE, HID_FEATURE_REPORT,
+> > +                              HID_REQ_GET_REPORT);
+> > +     if (ret < 0) {
+> > +             hid_err(hdev, "Asus failed to receive handshake ack: %d\n", ret);
+> > +     } else if (memcmp(readbuf, buf, sizeof(buf)) != 0) {
+> > +             hid_err(hdev, "Asus handshake returned invalid response: %*ph\n",
+> > +                     FEATURE_KBD_REPORT_SIZE, readbuf);
+> > +             // Do not return error if handshake is wrong to avoid regressions
+>
+> I'll have to test this on the oldest model I have. Hopefully it's a
+> non-issue and this can return error instead.
+>
+> Side-note: I notice you're using a msleep to try and work around an
+> issue in a later patch - it might be worth trying replacing that with a
+> retry/count loop with an inner of small msleep + a call to this init,
+> see if it still responds to this during that critical period.
+
+The call did not fail. I was thinking it was because the device needs
+some time to warm up (it happens with certain devices).
+
+Turns out it was hid-multitouch not attaching.
+
+> > +     }
+> > +
+> > +     kfree(readbuf);
+> >       return ret;
+> >   }
+> >
+> > @@ -540,42 +567,25 @@ static int asus_kbd_register_leds(struct hid_device *hdev)
 > >       unsigned char kbd_func;
 > >       int ret;
 > >
-> > +     /* Wait a bit before init to prevent locking the keyboard */
-> > +     if (dmi_match(DMI_PRODUCT_FAMILY, "ROG Flow Z13"))
-> > +             msleep(500);
-> > +
-> >       ret = asus_kbd_init(hdev);
-> >       if (ret < 0)
-> >               return ret;
+> > -     if (drvdata->quirks & QUIRK_ROG_NKEY_KEYBOARD) {
+> > -             /* Initialize keyboard */
+> > -             ret = asus_kbd_init(hdev, FEATURE_KBD_REPORT_ID);
+> > -             if (ret < 0)
+> > -                     return ret;
+> > -
+> > -             /* The LED endpoint is initialised in two HID */
+> > -             ret = asus_kbd_init(hdev, FEATURE_KBD_LED_REPORT_ID1);
+> > -             if (ret < 0)
+> > -                     return ret;
+> > -
+> > -             ret = asus_kbd_init(hdev, FEATURE_KBD_LED_REPORT_ID2);
+> > -             if (ret < 0)
+> > -                     return ret;
 >
-> See my comment on patch 1 about trying a loop with the init
-> request/response as a hopeful way to test readiness.
+> Ah, I recall now. Some devices like the Slash or AniMe Matrix required
+> the 0x5E and 0x5D report ID (device dependent) however these are
+> currently being done via userspace due to not being HID devices.
+>
+> There *are* some older laptops still in use that require init on 0x5E or
+> 0x5D for RGB to be usable, from memory. It's been over 5 years so I'll
+> pull out the laptop I have with 0x1866 PID MCU and see if that is
+> actually true and not just my imagination.
+
+Hopefully you handshake with these devices over userspace, so they
+will not be affected.
+
+> > +     ret = asus_kbd_init(hdev);
+> > +     if (ret < 0)
+> > +             return ret;
+> >
+> > -             if (dmi_match(DMI_PRODUCT_FAMILY, "ProArt P16")) {
+> > -                     ret = asus_kbd_disable_oobe(hdev);
+> > -                     if (ret < 0)
+> > -                             return ret;
+> > -             }
+> > -     } else {
+> > -             /* Initialize keyboard */
+> > -             ret = asus_kbd_init(hdev, FEATURE_KBD_REPORT_ID);
+> > -             if (ret < 0)
+> > -                     return ret;
+> > +     /* Get keyboard functions */
+> > +     ret = asus_kbd_get_functions(hdev, &kbd_func, FEATURE_KBD_REPORT_ID);
+> > +     if (ret < 0)
+> > +             return ret;
+> >
+> > -             /* Get keyboard functions */
+> > -             ret = asus_kbd_get_functions(hdev, &kbd_func, FEATURE_KBD_REPORT_ID);
+> > +     if (dmi_match(DMI_PRODUCT_FAMILY, "ProArt P16")) {
+> > +             ret = asus_kbd_disable_oobe(hdev);
+> >               if (ret < 0)
+> >                       return ret;
+> > -
+> > -             /* Check for backlight support */
+> > -             if (!(kbd_func & SUPPORT_KBD_BACKLIGHT))
+> > -                     return -ENODEV;
+> >       }
+> >
+> > +     /* Check for backlight support */
+> > +     if (!(kbd_func & SUPPORT_KBD_BACKLIGHT))
+> > +             return -ENODEV;
+> > +
+> >       drvdata->kbd_backlight = devm_kzalloc(&hdev->dev,
+> >                                             sizeof(struct asus_kbd_leds),
+> >                                             GFP_KERNEL);
+>
+> I've left only small comments on a few patches for now. I'll review in
+> full after I get testing done on a variety of devices whcih I'm aiming
+> for this weekend. Overall impression so far is everything looks good and
+> this is a nice improvement. Thank you for taking the time to implement it.
 >
 > Cheers,
 > Luke.
 
-Turns out there isn't an init problem. I have removed this patch from V2.
+I'll try to have V2 out today. I finished it yesterday and fixed all
+the lockups and the hid-multitouch issue. Just needs a good
+lookthrough.
 
-It was hid-asus taking control of the touchpad from hid-multitouch. So
-adding HID_GROUP_GENERIC fixes this. I replaced it with that and
-squashed the rename patch alongside it.
+Perhaps I will also do a small multi-intensity endpoint that works
+with KDE and only applies the colors when asked. This way our programs
+are not affected and normal laptop users get basic RGB OOTB.
+
+If I do that, I will make the quirk for the Ally in a separate patch,
+so that you can nack it if you'd rather introduce RGB support with
+your driver, so that it does not need to be reverted.
 
 Antheas
+
+[1] https://github.com/hhd-dev/hhd/blob/d3bbd7fa25fe9a4838896a2c5cfda460abe48dc6/src/hhd/device/rog_ally/const.py#L5-L8
