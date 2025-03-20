@@ -1,196 +1,120 @@
-Received: from NAM11-CO1-obe.outbound.protection.outlook.com (mail-co1nam11on2075.outbound.protection.outlook.com [40.107.220.75])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from linux1587.grserver.gr (linux1587.grserver.gr [185.138.42.100])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 151AD22A1F1;
-	Thu, 20 Mar 2025 21:46:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.220.75
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742507180; cv=fail; b=kSUvwUOaGI6Git8XolvgQ6FAJUHPKQaoqJYyISCLtMpsKcFY/gkxs9vaJgr6d3sZz4P3n63dTJ6hvEkkKVY0xuxO0rblZBDmqoSz7UoVp68+Lj2S91ydoIRg+PBn6sKWG9QmtTKdUVaEvLQejOiAQQcPgpYNTMi58+bpDmnhBfA=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742507180; c=relaxed/simple;
-	bh=k1zpudFlRRy5AErHv1BwBk6rRrlfNlpVde+HofJgiww=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=ht+rooZf/K+wBUu6chQN/2y/Wu/Fb7mopM+NvPY45x+RO3OBxF8OG0F8QmtgANc9zGol/ABSgpuJCLvjV1Sgd766+iZ6TsgXslgwT2edPOpBFgnMl0Gal8LvtxSCUnsTD1wlfUdRVhEvgRNjjA2V6jnXJwVQc60NKyagJmNcsp8=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=Q2/XNyZf; arc=fail smtp.client-ip=40.107.220.75
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F7C921C9ED;
+	Thu, 20 Mar 2025 22:09:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.138.42.100
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1742508576; cv=none; b=OSC4z7wYnXZ8h77gKLJm00saOJRjMUulAuoxYQJSaY4Soz2gS2gJrbr2xJBynYHba4wUNQUhDaLcc8PmH+VZoWXVKxLXTM4ucqlZYFj4YhyM6CFlRG/lpyK//E8f84K8ild2XBAZaSoUJlfC0cXyDEy/aKUnwSAW/qj3fI8R+wg=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1742508576; c=relaxed/simple;
+	bh=qUg9FB5PSg7H9HF9FT27I11Qt2WWnUoF7orL4MtlwZk=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=m3d4D6pejbUp60PiCVvwt4v3Dw943Bs6O1BhSNz0WGif2dibqevsFIGVmZ6FrHjs6t7wiY4w44faIWaipmTuirMDrC2oe13HxKlTRXv8Vhc7EkAqGIyfeFcK+yQCDSiHAAckxB6Rwum0oTnB2SMckXEwqfFcW0pI2UTJWkvMQYY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=antheas.dev; spf=pass smtp.mailfrom=antheas.dev; dkim=pass (1024-bit key) header.d=antheas.dev header.i=@antheas.dev header.b=dnEaE1MZ; arc=none smtp.client-ip=185.138.42.100
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=antheas.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=antheas.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="Q2/XNyZf"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=gmbMrl0o7au0AzWa0Zl2rEozDO7mra+Iv0Nc6OqlKmrKc/reMnfIDtZgHmhSKDLy95u7RhYybv1PWoCUP896qZnXq94iMhspzi23DwYR4NHhrj3sOhi2EmiqE1Q/70U0lfdKisZzRx2M8agCud8TsBnwxRn2tkyyxOqD79AoejEY1SxdAsegbnzscTbIZRiudHmmihziSv/UM6+yviZH3Z3gU/YhOVXROzgL0DN5sdM0HDbOs7ydo6GKBKAOAEiHca+MNSOa0ua/hco3zTV+Z9TCw/pFn3b0DKklk+8WamxZe91pyVdwMPN9+2o2N5SABmnZ6PcvjUdZdRMIpgbroA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=IhRwWkR1USp5++bNSwfD03w8OFFI+KV/toY7h+an+qc=;
- b=cjFt3QD8dI3Wl6Tg4ul7KqTm7TOJzGkxCtqXQua0JuP16s2gOUikN/80MV/gBCUH/AStJ7qM80Agn2TvGAvOhWBy/YmaBE1vai2lXTAjOHf+SGC1dIY7UhSZuezKZvxbt2mM66lkoH/e+Pk1p08OGVrZhZGI16o7goMlPSZe91o/utqoFyiavtpsu4paonkUlJcIpNmc8mMRmaydHBgK3A6eaR9B4raCEIommrbJYkrEadL4fgfHv205yXu5jvlRKyYkPjjdDFduEtDBRB5uD3vt9S6HsSOXRtbObvWQbdyddC170Gqn2V4E8eLUeiKn+A2Fn6IGaqLenjhlDJsNxQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=IhRwWkR1USp5++bNSwfD03w8OFFI+KV/toY7h+an+qc=;
- b=Q2/XNyZfmH5WpKr40UIFreX8bLdFpnvlwIOCupg+B1yCGZEqeEF1qHUj6iLt2ntMhOm3ETx0zOU+xKO6sMAOWzjqgDVNsRjbjIr3C9GidmM78qvxAr7g7KuGJRP0WCc7P3zUw46XLoBcaZJ3BcrZmXus7GUZeNKKdBqVi1l1cmU=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from MN0PR12MB6101.namprd12.prod.outlook.com (2603:10b6:208:3cb::10)
- by SJ2PR12MB8689.namprd12.prod.outlook.com (2603:10b6:a03:53d::22) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8534.33; Thu, 20 Mar
- 2025 21:46:15 +0000
-Received: from MN0PR12MB6101.namprd12.prod.outlook.com
- ([fe80::37ee:a763:6d04:81ca]) by MN0PR12MB6101.namprd12.prod.outlook.com
- ([fe80::37ee:a763:6d04:81ca%4]) with mapi id 15.20.8534.034; Thu, 20 Mar 2025
- 21:46:14 +0000
-Message-ID: <c7cbd33f-ec02-48f1-89f3-64182c19d89c@amd.com>
-Date: Thu, 20 Mar 2025 16:46:13 -0500
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v8 6/8] platform/x86: asus-armoury: add screen
- auto-brightness toggle
-To: Luke Jones <luke@ljones.dev>, linux-kernel@vger.kernel.org
-Cc: hdegoede@redhat.com, ilpo.jarvinen@linux.intel.com,
- platform-driver-x86@vger.kernel.org
-References: <20250319065827.53478-1-luke@ljones.dev>
- <20250319065827.53478-7-luke@ljones.dev>
-Content-Language: en-US
-From: Mario Limonciello <mario.limonciello@amd.com>
-In-Reply-To: <20250319065827.53478-7-luke@ljones.dev>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: SN4PR0501CA0066.namprd05.prod.outlook.com
- (2603:10b6:803:41::43) To MN0PR12MB6101.namprd12.prod.outlook.com
- (2603:10b6:208:3cb::10)
+	dkim=pass (1024-bit key) header.d=antheas.dev header.i=@antheas.dev header.b="dnEaE1MZ"
+Received: from localhost.localdomain (unknown [IPv6:2a05:f6c2:511b:0:cbc0:999f:73ad:33bd])
+	by linux1587.grserver.gr (Postfix) with ESMTPSA id 92B002E095F7;
+	Fri, 21 Mar 2025 00:09:29 +0200 (EET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=antheas.dev;
+	s=default; t=1742508570;
+	bh=9sCw3kO8QxFQGuwLUqfE8xRfH2x0O6VUE3oIVzD+wmo=; h=From:To:Subject;
+	b=dnEaE1MZsLwstLhkdSpqdRoSVPDv0VR4eVyeARKwQc3T7IiIP1ACb3iHfre6jo46B
+	 8CyTDv3L8F2OAkx6538xCWA3rOFneVtabNXTj5O7N2WI/oyJTIr+rxa6O8fv0KVyg3
+	 2NnOXXVSJY2R5M4GBecPuI+g4mL6yqCnBlENeJmU=
+Authentication-Results: linux1587.grserver.gr;
+	spf=pass (sender IP is 2a05:f6c2:511b:0:cbc0:999f:73ad:33bd) smtp.mailfrom=lkml@antheas.dev smtp.helo=localhost.localdomain
+Received-SPF: pass (linux1587.grserver.gr: connection is authenticated)
+From: Antheas Kapenekakis <lkml@antheas.dev>
+To: platform-driver-x86@vger.kernel.org,
+	linux-input@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org,
+	Jiri Kosina <jikos@kernel.org>,
+	Benjamin Tissoires <bentiss@kernel.org>,
+	Corentin Chary <corentin.chary@gmail.com>,
+	"Luke D . Jones" <luke@ljones.dev>,
+	Hans de Goede <hdegoede@redhat.com>,
+	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	Antheas Kapenekakis <lkml@antheas.dev>
+Subject: [PATCH 00/11] HID: Asus: Add RGB Support to Asus Z13, Ally,
+ unify backlight asus-wmi, and Z13 QOL
+Date: Thu, 20 Mar 2025 23:09:13 +0100
+Message-ID: <20250320220924.5023-1-lkml@antheas.dev>
+X-Mailer: git-send-email 2.48.1
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: MN0PR12MB6101:EE_|SJ2PR12MB8689:EE_
-X-MS-Office365-Filtering-Correlation-Id: 394385dc-35c8-4932-6ab8-08dd67f8a36e
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|1800799024|376014|7053199007;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?eUx1M2xEVkQ2U0VPTjA4U3dDb2Z6OGxrTFJWMVZxRGpmZE5zOW9UYkp2aUww?=
- =?utf-8?B?NGZ4d3lhOC9VbjJsWDdHeWpudkI3cmt3KzNJSmVLSEhkWUk3eFJUb2lxSVFh?=
- =?utf-8?B?SURYazJRV0ZMS1dqWkU3K3AwcUlwREowWFJNZlczMTRTWWgyd3BVd3g1OVZR?=
- =?utf-8?B?SkNzWnU0YXkvMDdqQUVaME9FTTBsYWErZXpKbnpCSW4rWFk4Y1l3Ujg4ZTJw?=
- =?utf-8?B?enZRQXl4QjlkNzlLYlh0L3M5NkVpR0hVeUZSTFdnc05YNUdKYkQrNUxneTBL?=
- =?utf-8?B?dnBEWUtHaFV2K1lNVlg5RXg5QXZkQXRSU1N2Z1BuUXhTMmlkQzF0VGZXTXhF?=
- =?utf-8?B?V3hwbzVBMzEwdXduNnlWK21kNjZQNnVnZDYraitCaUs3VzdUYXVvajBuUmRn?=
- =?utf-8?B?UHF1NStONjQyYXVQKzV6cENveTFvTjhyYjRBNEtlMGdRODdtUmpHSnVWcFR3?=
- =?utf-8?B?aS9pb1d5Rm1qNzJyWEdPSSsrK08xUmFlYXI3MjYzTCtOSTUwMEZFdklhc0lj?=
- =?utf-8?B?T2l6NEdJalB0M1JwNEdYL21WSFlkdC9BcGt4NGlCUnFwOWdOaVR3WGtwckx1?=
- =?utf-8?B?STYxa3JSQWJML3FuWXZoT2FYVWljcVRCRVpIMmZNdTM2RVdaMHRBTE9vdk5F?=
- =?utf-8?B?Y0RNTlExcVN4SkxidDFnV0J4RS9TOURGTi92TkhyY1NYVGpldFVRa1JMMkV3?=
- =?utf-8?B?MjFObjBYTTdDSE1tSHhLWXEwalp6RWRRZ0hFL0JOM3N1MXoySEd5MFhENkZB?=
- =?utf-8?B?eDZHQUxnNVY5cFFKbUZtMEdlc2VQTVlMVTlWUlVJVzJTenlQNzFGN2tCVzNj?=
- =?utf-8?B?T0lEbE11L0pIcDBiWGNuSWg2RVpiejg0bTZFY21sTWVvYWIraTYyanA5T21a?=
- =?utf-8?B?ZmxCbjljU3pEbGdkU0hGc3RQUDZEdk94R0hlaTUvc0ZhVERHbGw5QW40clp1?=
- =?utf-8?B?R095UE42R2IvZW5uUDhETUZWenVmMGJQV2xodldpVVhXRWZLOGRWN2VjZWxl?=
- =?utf-8?B?eFlUdllnMkNMeXVTNTl2bUhiMVVmK2gvZFZlUUpsWkJNRk1LL3ZPMUpCL1hy?=
- =?utf-8?B?eEl3REMzaXBkZ01tUmFmWU10di9ZSGp5VlJLV1RPeXY0RDhIbmFzVUo4TXNy?=
- =?utf-8?B?T1NQcS8xc0xnTVp4MmN0ZUcyOWxocjFjTTJVVHczdHpiUEtRdlFPVkgxQjlm?=
- =?utf-8?B?Zm5waGVtSzVSZWZYSWQvZjV5cWo4aVJEdExOTU5kWTVGWW12aVZBWnBYNW05?=
- =?utf-8?B?RGljSU9GcWVqclBGQ2d2djZwNHVuZnRpZjlQMndhcnRHN2d2UkFGQ2FrbFRR?=
- =?utf-8?B?ZS9yZXpkaEIySWlsNzNtdkRodnYxWFpnUW5UVkZ2TmdOREtsTGZkem1USG1O?=
- =?utf-8?B?aW9Oem80MmlOUGFnUDhKalIyN29wTjkrS1FNSlUwQk5OaThHeXNtRlJVZXNz?=
- =?utf-8?B?MGg5UEhGMHE2TisyWjB0bnhNUjRlK29ZQlBvM2J6YXdnOFljekdnZFFWMjhz?=
- =?utf-8?B?RytPazB6WmU2TTZ1eU5DVXlrNWJOOHNqL3IvT002K2prT2Q3VDZhaUJnL2xa?=
- =?utf-8?B?dFN1TE1xZTV0U29aZ0h0NUFhcDdtM3laTkZiekxXOTlHNExmNStTczcxWkFn?=
- =?utf-8?B?aVJEcjB0OXRwT1A4MnBXekFTOWsvbkhlbmRMMWFVaXNVNGR4K0J3VTRBZWNp?=
- =?utf-8?B?WStwTEZLekJFWEVhWVBRM0FZZUFaVDJuRGdLdXhYRTJEUVpsaWFnYmpSL3R5?=
- =?utf-8?B?MFVsbjdqZVFXR2RXRE8veXdYQmMyNnU5OG1Bbno3TXFVMnlyZ2pZSU1tby9p?=
- =?utf-8?B?aEpaRkZzK0ZsVmRxbXMzTmhoOEF4TjROdS85QnVFV2lZZjlsU0YreFRvS1R2?=
- =?utf-8?Q?i1FCj9FkMJ/yg?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MN0PR12MB6101.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(376014)(7053199007);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?MlZMT0l4VmJXRW41MDBsVHNya3IzSmR4MlFCTHlvbG9SKzFERFBKT0VLQVVH?=
- =?utf-8?B?NzkvZjltZmJnaThpTU5sUVpvUklxMWlOVE51czYvZ1hGbUJJQ0MwWDRxNnZT?=
- =?utf-8?B?NGJLUVBJTjhCM2NpcG9GQkN2ZjlwMVNXUVNzNHRlT2pEQjZWVmUvLysxV05n?=
- =?utf-8?B?bGNKd1I5R1FuTTY1aDZDL0pEaWN4eHdZZFl0MVdMUFY3T1MyOE9aWWRlQkRs?=
- =?utf-8?B?YkFIekVra0p5aGo0NzZtNkYwVkk5clEwUnQ5dkduMTNEWDNJNFdCSysxTTBq?=
- =?utf-8?B?UXlMMUoxdjhqazk1Tmd5MzRkZU9HUTV0Q09rY2lTcDZsTXlDdFBwYXNMeVRp?=
- =?utf-8?B?WDZXWlBvM04yUmtOT1hiakkwMlpGQzArU3lsMUtXNnlqNUNBTW9hTkFHdkNl?=
- =?utf-8?B?ZHZ2NkEzRkR3eGVRd0JiNktQM01EZzFxMjF5UytNRXlxOEJGcWZPVnZYRnhZ?=
- =?utf-8?B?QnNVMW9BcSt2WlZ4OXBod1d2Qy9rNFRsOWpVZXF5Z2JCdGUyL3FJdHNOZ3N2?=
- =?utf-8?B?K3hQK3ZmTlVpQ2xXS05CRFBuUU5HMHExVnRkSSt6dXkxcWcyQjc4SVcrMUpn?=
- =?utf-8?B?K3ZvSmtaZGdMZ3hJaVQ1WWtBSktQQUY3b0NTTTQyQ01DRlJwTDdlSEhmbjlP?=
- =?utf-8?B?SnJOczI1S00vMUNKTGM1ZkwyY3RJMWs1M2NySDhJeDVEeEs4bFNKYnNKRHhE?=
- =?utf-8?B?SDNjUkRpZk5YUzFNbUNBMlUzWDZZeFB4VXZ0OVhxUWpxYTBId2J6ZlR0bUNJ?=
- =?utf-8?B?Y3pTMXVDNzNLZGhLMFlXTElXSGZ1a1Y5RURZdHRzVHpvR1dKUkJlQTErYi9H?=
- =?utf-8?B?cTNVbTdERzhsanpSVmltSERpNVdGQ0J3Uzl1TlBDdmZmMENoT0M2MW16SUJ4?=
- =?utf-8?B?TjZ5cE1IRExKTldiRlg1UCtTT1FERVMxM09qdEpvWWo0bnkxYlJYaGVzZVIx?=
- =?utf-8?B?VDhKN3k3VVhwWUJWeVJ4RnAwYlFhcGVwQ0dLZjh2MC82OXpDUm9FTVBHaVFq?=
- =?utf-8?B?RWIzUDRhbURVWkxvNEpYSXo5ZkovWDc1WFFEUHQzSVJ3aWQyNzl1U1hYd1R5?=
- =?utf-8?B?UXJDTzhiNVJQZU9PTkhKTTBvYXUvczFtcHN6Wjk0aE1NVkJNL2NNdHpPZ2h1?=
- =?utf-8?B?b0l0ZG8rVXI2ZmJhRlJHMUFuUWxweFdqYW5rZjQwUDJLRWhwNHBhVE5ZeENa?=
- =?utf-8?B?dzBzbFpEMXVmYVBpTzNPYk12SG5WclJYR25TVDBZRVVQZWdUd2x4dUVKSGVj?=
- =?utf-8?B?aU5wZzk5YXZNYVFsempPS0xVQ1BmYzFtRTJYaG9nZmo5YW1pSHlpZk96WHBz?=
- =?utf-8?B?aHpzbGI5b0R3TUxoVTRjTjBrb0Z4V3FkWlJHZTQ3WHRJVWg2dGlXdHltajR3?=
- =?utf-8?B?VVVZRFNUWXBKSVJERFE3aGt3ZDF4V0lWclMwNElKa3dFcC9uVitpSnZZWk9o?=
- =?utf-8?B?dG05WEVpczY0Ylg2cHFWR2dpNFhyV0o2b1oyTGljUkdrL0JjckdRaFd3WldF?=
- =?utf-8?B?R0FqdkV2Zk95Yk1STWJxbGNld1M3aUo0Y292QmtjbTltM2Z2NlJiZUQ5MTlq?=
- =?utf-8?B?aXo1dWxYREw2bElTR2ZsSnpucDRzWWJZaFVVZEFSdDQzWGZFeU82QTRMbVBM?=
- =?utf-8?B?dWdoSFIzZTJDcGx5cklxdHgwbGIxQ2ZLUk1uR0k0b0xvdUpsdGp3OVZ6K0Vx?=
- =?utf-8?B?aXZOUUtWaC9MdkFZQ0ZQMEJJWGRzdWNHR0pLUEdHb1p4b3pha1BvbkxzYWFG?=
- =?utf-8?B?VHBuT3l2RVhZbEFpeVpsejIyeUpFbm5wT1NFNldOR2xkZUp1VXc4L3lRRnkv?=
- =?utf-8?B?Y1VRQ29wZGo4WXJPclY2ckpTYnR3bW54TWNZQkVtSldGM3YrU3lQb1hUYmg2?=
- =?utf-8?B?ZHhyZUlUQjFWemZvQmVjUC90SzlobGh2MXhrZEQwMFBlOEltSis2WktrWGpv?=
- =?utf-8?B?cXFEZEY1b215MnVsVFhiK01aVGlTODJwNGVVeHIrOU9Ta3NaUVpMRHRTYXRs?=
- =?utf-8?B?YnpUQXp1dDVWMmc0czkwWUxUajBUUmdKbHpGUTcrSEZIWHpXYWFTS1N5Q2Zs?=
- =?utf-8?B?VitST25kWlNMUTY5cmxmNzRZcENmbjhLQ09BaE80WFBnbHpRbEtXNExOZUxK?=
- =?utf-8?Q?8dZYuL6HdaCque7N5/mhQ293K?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 394385dc-35c8-4932-6ab8-08dd67f8a36e
-X-MS-Exchange-CrossTenant-AuthSource: MN0PR12MB6101.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 20 Mar 2025 21:46:14.9266
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: UE/cWTQ4SwsAqf+czvoV5pKel0IBF9jn1JTGVCZFTggtRg02K7exZouxuXaVV1b/KuiRzZNoDpPXdexsyJKQXQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ2PR12MB8689
+Content-Transfer-Encoding: 8bit
+X-PPP-Message-ID: 
+ <174250857064.25255.14540520970626565870@linux1587.grserver.gr>
+X-PPP-Vhost: antheas.dev
+X-Virus-Scanned: clamav-milter 0.103.11 at linux1587.grserver.gr
+X-Virus-Status: Clean
 
-On 3/19/2025 01:58, Luke Jones wrote:
-> Add screen_auto_brightness toggle supported on some laptops.
-> 
-> Signed-off-by: Luke D. Jones <luke@ljones.dev>
-Reviewed-by: Mario Limonciello <mario.limonciello@amd.com>
+This is a three part series which does the following:
+  - Clean init sequence, fix the keyboard of the Z13 (touchpad,fan button)
+  - Unifies backlight handling to happen under asus-wmi so that all Aura
+    devices have synced brightness controls and the backlight button works
+    properly when it is on a USB laptop keyboard instead of one w/ WMI.
+  - Adds RGB support to hid-asus, solid colors only, and for the ROG Ally
+    units and the Asus Z13 2025 first.
 
-> ---
->   drivers/platform/x86/asus-armoury.c        | 3 +++
->   include/linux/platform_data/x86/asus-wmi.h | 1 +
->   2 files changed, 4 insertions(+)
-> 
-> diff --git a/drivers/platform/x86/asus-armoury.c b/drivers/platform/x86/asus-armoury.c
-> index b36e19b9d2bf..802c304e2ebc 100644
-> --- a/drivers/platform/x86/asus-armoury.c
-> +++ b/drivers/platform/x86/asus-armoury.c
-> @@ -752,6 +752,9 @@ ATTR_GROUP_BOOL_RW(panel_od, "panel_overdrive", ASUS_WMI_DEVID_PANEL_OD,
->   		   "Set the panel refresh overdrive");
->   ATTR_GROUP_BOOL_RW(panel_hd_mode, "panel_hd_mode", ASUS_WMI_DEVID_PANEL_HD,
->   		   "Set the panel HD mode to UHD<0> or FHD<1>");
-> +ATTR_GROUP_BOOL_RW(screen_auto_brightness, "screen_auto_brightness",
-> +		   ASUS_WMI_DEVID_SCREEN_AUTO_BRIGHTNESS,
-> +		   "Set the panel brightness to Off<0> or On<1>");
->   ATTR_GROUP_BOOL_RO(egpu_connected, "egpu_connected", ASUS_WMI_DEVID_EGPU_CONNECTED,
->   		   "Show the eGPU connection status");
->   
-> diff --git a/include/linux/platform_data/x86/asus-wmi.h b/include/linux/platform_data/x86/asus-wmi.h
-> index e735f35b423c..92fea0710ada 100644
-> --- a/include/linux/platform_data/x86/asus-wmi.h
-> +++ b/include/linux/platform_data/x86/asus-wmi.h
-> @@ -83,6 +83,7 @@
->   #define ASUS_WMI_DEVID_LID_FLIP_ROG	0x00060077
->   #define ASUS_WMI_DEVID_MINI_LED_MODE	0x0005001E
->   #define ASUS_WMI_DEVID_MINI_LED_MODE2	0x0005002E
-> +#define ASUS_WMI_DEVID_SCREEN_AUTO_BRIGHTNESS	0x0005002A
->   
->   /* Storage */
->   #define ASUS_WMI_DEVID_CARDREADER	0x00080013
+For context, see cover letter of V1.
+
+The last two patches are still a bit experimental, the rest is getting to
+be pretty stable by now. I will test my Ally in the weekend. Also, I am
+not a fan of the asus-0003:0B05:1A30.0001-led name, so suggestions would
+be appreciated.
+
+---
+V1: https://lore.kernel.org/all/20250319191320.10092-1-lkml@antheas.dev/
+
+Changes since V1:
+  - Add basic RGB support on hid-asus, (Z13/Ally) tested in KDE/Z13
+  - Fix ifdef else having an invalid signature (reported by kernel robot)
+  - Restore input arguments to init and keyboard function so they can
+    be re-used for RGB controls.
+  - Remove Z13 delay (it did not work to fix the touchpad) and replace it
+    with a HID_GROUP_GENERIC quirk to allow hid-multitouch to load. Squash
+    keyboard rename into it.
+  - Unregister brightness listener before removing work queue to avoid
+    a race condition causing corruption
+  - Remove spurious mutex unlock in asus_brt_event
+  - Place mutex lock in kbd_led_set after LED_UNREGISTERING check to avoid
+    relocking the mutex and causing a deadlock when unregistering leds
+  - Add extra check during unregistering to avoid calling unregister when
+    no led device is registered.
+  - Temporarily HID_QUIRK_INPUT_PER_APP from the ROG endpoint as it causes
+    the driver to create 4 RGB handlers per device. I also suspect some
+    extra events sneak through (KDE had the @@@@@@).
+
+Antheas Kapenekakis (11):
+  HID: asus: refactor init sequence per spec
+  HID: asus: prevent binding to all HID devices on ROG
+  HID: asus: add Asus Z13 2025 Fan key
+  HID: Asus: add Z13 folio to generic group for multitouch to work
+  platform/x86: asus-wmi: Add support for multiple kbd RGB handlers
+  HID: asus: listen to the asus-wmi brightness device instead of
+    creating one
+  platform/x86: asus-wmi: remove unused keyboard backlight quirk
+  platform/x86: asus-wmi: add keyboard brightness event handler
+  HID: asus: add support for the asus-wmi brightness handler
+  HID: asus: add basic RGB support
+  HID: asus: add RGB support to the ROG Ally units
+
+ drivers/hid/hid-asus.c                     | 342 ++++++++++++++++-----
+ drivers/hid/hid-ids.h                      |   2 +-
+ drivers/platform/x86/asus-wmi.c            | 138 ++++++++-
+ include/linux/platform_data/x86/asus-wmi.h |  67 ++--
+ 4 files changed, 411 insertions(+), 138 deletions(-)
+
+
+base-commit: 4701f33a10702d5fc577c32434eb62adde0a1ae1
+-- 
+2.48.1
 
