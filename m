@@ -1,87 +1,76 @@
-Received: from linux1587.grserver.gr (linux1587.grserver.gr [185.138.42.100])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 86FF422D78F;
-	Thu, 20 Mar 2025 22:09:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.138.42.100
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DE5F1B664;
+	Thu, 20 Mar 2025 22:42:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742508593; cv=none; b=ILvMEUc61BuJP748kJFwyOf52q/K17i1FTDqNuF+cYdERnsDruLDDxx5OG48Z1zy1Q6XiYi1CUWBAguWI2k5sX04oDKAxiO5xx3w3JFRu3jaoaXItS1raaxboV5ikL5WwuXFBqs51osWiJsVWlIztu5iFb0oZx6gY4FzQRoW2Oo=
+	t=1742510581; cv=none; b=cBB/1rRxKjsiJ6bMXv3QxeJE2smBIj0U5Xums8dsuct1FbJu1Vp1PLSoX2HX9s6EHGk01qzExBfexIxRQIwaeYTbLTFJFgKOPp0JZ6F1+dyWUGxsI3IcqCHro9trMKp3/niZCoAsP0lEJfpK4l/RuooMY6l2JRsB37mKGC0+ycE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742508593; c=relaxed/simple;
-	bh=7/2JFSR4zJ4SPxD4xXv49X3v2uGAhaM8bENTpkFtEz0=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=eLBb6ncCdcc8QOc2CzhOk+PxvDLMAlwjoSmhZ+rsBc9wrBtgt6db/IBjh4XIUHNRmSudPn04nbX4yh/wR8jgSRnePFKOPugbJOf4oI0zQfN6u6HDFIiPxkymHt7nbTvz6NDvXjBD/Z3ymYem8Rw9vony9PA8QuuiJ5nVyyR8+4g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=antheas.dev; spf=pass smtp.mailfrom=antheas.dev; dkim=pass (1024-bit key) header.d=antheas.dev header.i=@antheas.dev header.b=YVDWKalC; arc=none smtp.client-ip=185.138.42.100
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=antheas.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=antheas.dev
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=antheas.dev header.i=@antheas.dev header.b="YVDWKalC"
-Received: from localhost.localdomain (unknown [IPv6:2a05:f6c2:511b:0:cbc0:999f:73ad:33bd])
-	by linux1587.grserver.gr (Postfix) with ESMTPSA id 2ECC92E09730;
-	Fri, 21 Mar 2025 00:09:48 +0200 (EET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=antheas.dev;
-	s=default; t=1742508589;
-	bh=esTMu4OEu1aEzzdqqoWSJs3L2nJEmlgFz6s+BqjABi0=; h=From:To:Subject;
-	b=YVDWKalC7HGnRBAagNCb2DKhQWdvGoIfVPQUI3ZsCbPeKS505MZ0bvCdTQIMjTqDI
-	 xxhgMZHIDwUSJuh/o850oQ14eCcPnknwLfYHbtdg6odTww+p6y1C0aY1DYA/RAk7HA
-	 KPXhmjTdguQXpZnOyrYz2Y6Jg4FZ9yXF0A2fPQ4c=
-Authentication-Results: linux1587.grserver.gr;
-	spf=pass (sender IP is 2a05:f6c2:511b:0:cbc0:999f:73ad:33bd) smtp.mailfrom=lkml@antheas.dev smtp.helo=localhost.localdomain
-Received-SPF: pass (linux1587.grserver.gr: connection is authenticated)
-From: Antheas Kapenekakis <lkml@antheas.dev>
-To: platform-driver-x86@vger.kernel.org,
-	linux-input@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org,
-	Jiri Kosina <jikos@kernel.org>,
-	Benjamin Tissoires <bentiss@kernel.org>,
-	Corentin Chary <corentin.chary@gmail.com>,
-	"Luke D . Jones" <luke@ljones.dev>,
-	Hans de Goede <hdegoede@redhat.com>,
-	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	Antheas Kapenekakis <lkml@antheas.dev>
-Subject: [PATCH 11/11] HID: asus: add RGB support to the ROG Ally units
-Date: Thu, 20 Mar 2025 23:09:24 +0100
-Message-ID: <20250320220924.5023-12-lkml@antheas.dev>
-X-Mailer: git-send-email 2.48.1
-In-Reply-To: <20250320220924.5023-1-lkml@antheas.dev>
-References: <20250320220924.5023-1-lkml@antheas.dev>
+	s=arc-20240116; t=1742510581; c=relaxed/simple;
+	bh=9HnISz5Xm24XDuQV6I5n9bGkpRqy9DBw/a8/hH26MVg=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=fTgNLvVoYrLJiiJLDxjkB2OQhFBej0hSCvUlam0UdnDzJhRC1a0cY4sREwa55vnAr0mlj2VYPa231C55bNz2CFTGZsUvgWBQnWOklIjoKIU4fXnCAvbpQKs2mtPnE+7Zj1gAK2jXPPyBDbHbmCxrPriaAzdejN91KzljP0mvjDI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id BFE30113E;
+	Thu, 20 Mar 2025 15:43:05 -0700 (PDT)
+Received: from [10.57.15.35] (unknown [10.57.15.35])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id AA8193F673;
+	Thu, 20 Mar 2025 15:42:52 -0700 (PDT)
+Message-ID: <6332a08a-8c80-41e8-b36a-96f358f4ea2c@arm.com>
+Date: Thu, 20 Mar 2025 22:42:47 +0000
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-PPP-Message-ID: 
- <174250858921.27283.14758763861585580672@linux1587.grserver.gr>
-X-PPP-Vhost: antheas.dev
-X-Virus-Scanned: clamav-milter 0.103.11 at linux1587.grserver.gr
-X-Virus-Status: Clean
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v8 00/13] Add support for AMD hardware feedback interface
+To: Mario Limonciello <superm1@kernel.org>,
+ Hans de Goede <hdegoede@redhat.com>,
+ =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Cc: Mario Limonciello <mario.limonciello@amd.com>,
+ Perry Yuan <perry.yuan@amd.com>, Thomas Gleixner <tglx@linutronix.de>,
+ Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+ Dave Hansen <dave.hansen@linux.intel.com>,
+ "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
+ "H . Peter Anvin" <hpa@zytor.com>, Jonathan Corbet <corbet@lwn.net>,
+ Huang Rui <ray.huang@amd.com>, "Gautham R . Shenoy"
+ <gautham.shenoy@amd.com>, "Rafael J . Wysocki" <rafael@kernel.org>,
+ Viresh Kumar <viresh.kumar@linaro.org>,
+ "open list:AMD HETERO CORE HARDWARE FEEDBACK DRIVER"
+ <platform-driver-x86@vger.kernel.org>,
+ "open list:X86 ARCHITECTURE (32-BIT AND 64-BIT)"
+ <linux-kernel@vger.kernel.org>,
+ "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
+ "open list:AMD PSTATE DRIVER" <linux-pm@vger.kernel.org>
+References: <20250218190822.1039982-1-superm1@kernel.org>
+Content-Language: en-US
+From: Christian Loehle <christian.loehle@arm.com>
+In-Reply-To: <20250218190822.1039982-1-superm1@kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Apply the RGB quirk to the QOG Ally units to enable basic RGB support.
+On 2/18/25 19:08, Mario Limonciello wrote:
+> From: Mario Limonciello <mario.limonciello@amd.com>
+> 
+> The AMD Heterogeneous core design and Hardware Feedback Interface (HFI)
+> provide behavioral classification and a dynamically updated ranking table
+> for the scheduler to use when choosing cores for tasks.
+> 
+> Threads are classified during runtime into enumerated classes.
+> Currently, the driver supports 3 classes (0 through 2). These classes
+> represent thread performance/power characteristics that may benefit from
+> special scheduling behaviors. The real-time thread classification is
+> consumed by the operating system and is used to inform the scheduler of
+> where the thread should be placed for optimal performance or energy efficiency.
+> 
+> The thread classification helps to select CPU from a ranking table that describes
+> an efficiency and performance ranking for each classification from two dimensions.
 
-Signed-off-by: Antheas Kapenekakis <lkml@antheas.dev>
----
- drivers/hid/hid-asus.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/hid/hid-asus.c b/drivers/hid/hid-asus.c
-index 5e87923b35520..589b32b508bbf 100644
---- a/drivers/hid/hid-asus.c
-+++ b/drivers/hid/hid-asus.c
-@@ -1449,10 +1449,10 @@ static const struct hid_device_id asus_devices[] = {
- 	  QUIRK_USE_KBD_BACKLIGHT | QUIRK_ROG_NKEY_KEYBOARD | QUIRK_ROG_NKEY_RGB },
- 	{ HID_USB_DEVICE(USB_VENDOR_ID_ASUSTEK,
- 	    USB_DEVICE_ID_ASUSTEK_ROG_NKEY_ALLY),
--	  QUIRK_USE_KBD_BACKLIGHT | QUIRK_ROG_NKEY_KEYBOARD },
-+	  QUIRK_USE_KBD_BACKLIGHT | QUIRK_ROG_NKEY_KEYBOARD | QUIRK_ROG_NKEY_RGB },
- 	{ HID_USB_DEVICE(USB_VENDOR_ID_ASUSTEK,
- 	    USB_DEVICE_ID_ASUSTEK_ROG_NKEY_ALLY_X),
--	  QUIRK_USE_KBD_BACKLIGHT | QUIRK_ROG_NKEY_KEYBOARD },
-+	  QUIRK_USE_KBD_BACKLIGHT | QUIRK_ROG_NKEY_KEYBOARD | QUIRK_ROG_NKEY_RGB },
- 	{ HID_USB_DEVICE(USB_VENDOR_ID_ASUSTEK,
- 	    USB_DEVICE_ID_ASUSTEK_ROG_CLAYMORE_II_KEYBOARD),
- 	  QUIRK_ROG_CLAYMORE_II_KEYBOARD },
--- 
-2.48.1
+Where is that happening in the series? (Using the per-thread classification
+for task placement.)
+Am I missing something?
 
