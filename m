@@ -1,227 +1,163 @@
-Received: from mail-pl1-f171.google.com (mail-pl1-f171.google.com [209.85.214.171])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E67021D8E07;
-	Fri, 21 Mar 2025 17:16:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 560AF1DE884
+	for <platform-driver-x86@vger.kernel.org>; Fri, 21 Mar 2025 17:20:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742577415; cv=none; b=M0PjbBFbFz///KG9imD33Tv3BO/KfQMvry5hpIFqmtp4mKnJ5sL7EACXgKc8mvpyQ2ukgoWx82ZsKei9KvJxFduroklvC5zFsvJ7tgYvMM9+OdzmA+DRBjEgC1HNTBIuudjMS46JqnB1i+RcfkLzSubrkcJ8enbCX0VF6+OIqSg=
+	t=1742577627; cv=none; b=Q4Aaspcbx4++r2CiHu+8L4bLoi7e8k2r/DdLcqwjV8TgHDkhaJjyU61OcyF1lsQenDvZ8aGnjFCumMyeuV7yPDdvFGoi4JdCzdgwMPCLvs+NJc62dgWe84TYsj7OBMQBpGdpSiiS9jHzUmkaK5sHE1W4gb1eVKQRQF0+4UG3CHs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742577415; c=relaxed/simple;
-	bh=mhyr1Efzto/6WdPtZi0/MX9Rx1suko3LmuAnegYGxDI=;
-	h=Date:From:To:CC:Subject:In-Reply-To:References:Message-ID:
-	 MIME-Version:Content-Type; b=NPnM0HEbXhyy7QbOK/JEH9gX3ajuAjphGUGLQYLxQpma6Rp2mMVrpYf3gQJMA+FjggJPf+XgGYyID/kUH1W+COuOEDFk5wsCjsKhyf+7yX6EPULnzesdDFBTOJ0YNALnEU5hnv/B207zkzg1K0JReg31oEyrxmhKSIX/AHbWMw4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ArgHnKYI; arc=none smtp.client-ip=209.85.214.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1742577627; c=relaxed/simple;
+	bh=83Dg5Q+2cOCQ9QElSSy06IMv7z2N6Z+ih6hnQ2aMYgA=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=ObVnihPExHAwSYKDkywBIDYm7HtTvxi590He0EASW2OGucvU7olxlbPJ7E5eI8x3c/0bsVqd+kx9N8EaV403wWqok/DXsk+6HBcWyrnK7YB2AOVCyuE/uJDeDXgXQblM/281YZO6wegp3Ljt7jjEuY8ABwQaWIKP7ZWBY9PUfg8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=XHKBeDTt; arc=none smtp.client-ip=192.198.163.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ArgHnKYI"
-Received: by mail-pl1-f171.google.com with SMTP id d9443c01a7336-22409077c06so25560505ad.1;
-        Fri, 21 Mar 2025 10:16:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1742577413; x=1743182213; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:references
-         :in-reply-to:user-agent:subject:cc:to:from:date:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=8i//BDa5v0dvJDkEA2fd7PHT9jRJc1TXdcY6VlZ8X1s=;
-        b=ArgHnKYIVTeGvwWoWklV2N6unCxiGEUcy6rTQEKVtL3dLUCbKuU+SKWsGH05x56Dfh
-         X4d4ujZybzkgi7Bvf7zJ0BbkfD0hBMBN7EivXotFMA4Wkj6fEMXgvF+1iZImvBtmJc/z
-         gNS+V/rxB4RsfBIHTHrIj0stxkZUqLowD084r4n+7Xsscg9U5tqBoQbNBmQgWN7tBHuh
-         VN0ZcwZw57Fq8+BkNdyaEmdm4RZCvdMiCDvbvlNaZ/R+sn5ft5r23dh6rtvKGnGMdDHJ
-         G2hS1ZjCzAElmjEHYsNTmyHNhLCPsR/uuYKIAXHUfmQdPf/1Y/ehpm4qDrgRlcVOGaP9
-         fgoA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1742577413; x=1743182213;
-        h=content-transfer-encoding:mime-version:message-id:references
-         :in-reply-to:user-agent:subject:cc:to:from:date:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=8i//BDa5v0dvJDkEA2fd7PHT9jRJc1TXdcY6VlZ8X1s=;
-        b=vO6Epo/oVeoPHlFm+MIpxNHYGOemqt51TJNRqYPZhcztJGVdiUXVtjE1cvWVzAUhoi
-         NW3SVGT49axtQzJ0qsm1kD7BXq/gh+z6YrSXR2rhe20VtAXpFdZ/DBtM4MjLDR945STx
-         ujOgBp0SHeT8JzD04bxcRJ29JZixEYa/2qu9xC1cYusC1NosFwZXMuP96LZsZFGWLarC
-         vV+j10LEayyVOwMZeNmW7S69Lm2BGvuKeKrFgLfPhkK8jWY7NQxdMMa8DKwc4jnVYIps
-         DbNqG3xW6wg6EL8WdURxtG1qaQAPoplFvvtjq9PEO5lJ+XF4Ty5VyLuoQVdhBPNB+Qyj
-         xTqg==
-X-Forwarded-Encrypted: i=1; AJvYcCUPxJGaucHqdZylTbKPGoq5vN7DjUJ6rKjVvSdnCfEX42p0xGN0taWoBLKLonuY0kVsqPxEunSA/BU=@vger.kernel.org, AJvYcCV1cBttheE8wXo6ZTKIbq91yKkHSKw0WyyNW0hN7qhau57o2/KQTjbtcGJTgH7S39dXEUKBYdcXAOU=@vger.kernel.org, AJvYcCWQPTMcULDbk2mW035Md0UKFzBNKpb4lermOpxH0F6/WX3sZfoTymdx1UDp1P6KLnIT/7jphGgDC14LDbpELU0wHbgzqA==@vger.kernel.org, AJvYcCWWFx5eXW4lHQtFzOJuqzrs7zldjgRQj58cWkdgQeH53mDVYKm7bt+268nQmc7sGIJycqYNyC37T4CnG995@vger.kernel.org
-X-Gm-Message-State: AOJu0YzQ9dNgYDCJ1fpF/sbMrB85SXmXGseH/NnOESjBwwbIJC2akI+Q
-	hNLavZNV0bsnjlNGKnOiU2eoPb8ZN8n4u2wuYZYCkGFAJujHkq0l
-X-Gm-Gg: ASbGncvSHMA6NbRdkdIe5naQa3VngMvUPbf1qjtftzaWxqoAIJfGhOUiRlteggJBMOv
-	TiZT54gtdvCiS0LYBxayHAv7oNxjebMpvWvdAIj1PeH19Osfz7foG5dztJLlJI05vlfySBH3bV4
-	gjs9hYSYE2Ecox9aEA6BFSMlC6BYpDq2nOKfRbPq+YYtsSC2P2TJVCkNqMm8bJCta+uMwn+Ar/x
-	JPV27pdfDTFwFwSslRtxxMfP5OUO/N9iz0vvUIqvlJCE2S7xkSfpeowbyLi96+GpxmxSc1jJZ1Z
-	K/dlP2loiCL/gTJkq3uOoMjx5HvOWa0SP9ZuMDZniGZHiMIAF0i4oDC3Hok=
-X-Google-Smtp-Source: AGHT+IH+1PKeHYLQOfk2UsR/Gh4n8yHVe1Xpnr1hVL7En1XlYgMolzB55S7fjiy3RV/oTo2BMebukA==
-X-Received: by 2002:a17:902:cec8:b0:223:668d:eba9 with SMTP id d9443c01a7336-22780c5587bmr84105385ad.10.1742577412847;
-        Fri, 21 Mar 2025 10:16:52 -0700 (PDT)
-Received: from [127.0.0.1] ([172.102.8.48])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-227811d9f1bsm19695945ad.166.2025.03.21.10.16.51
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 21 Mar 2025 10:16:52 -0700 (PDT)
-Date: Fri, 21 Mar 2025 07:16:50 -1000
-From: "Derek J. Clark" <derekjohn.clark@gmail.com>
-To: Antheas Kapenekakis <lkml@antheas.dev>, platform-driver-x86@vger.kernel.org
-CC: linux-hwmon@vger.kernel.org, linux-doc@vger.kernel.org,
- linux-pm@vger.kernel.org, Guenter Roeck <linux@roeck-us.net>,
- Jean Delvare <jdelvare@suse.com>, Jonathan Corbet <corbet@lwn.net>,
- Joaquin Ignacio Aramendia <samsagax@gmail.com>,
- Kevin Greenberg <kdgreenberg234@protonmail.com>,
- Joshua Tam <csinaction@pm.me>, Parth Menon <parthasarathymenon@gmail.com>,
- Eileen <eileen@one-netbook.com>, linux-kernel@vger.kernel.org,
- sre@kernel.org, linux@weissschuh.net, ilpo.jarvinen@linux.intel.com,
- hdegoede@redhat.com, mario.limonciello@amd.com
-Subject: =?US-ASCII?Q?Re=3A_=5BPATCH_v7_00/14=5D_hwmon=3A_=28oxpsensors=29_Add_dev?=
- =?US-ASCII?Q?ices=2C_features=2C_fix_ABI_and_move_to_platform/x86?=
-User-Agent: Thunderbird for Android
-In-Reply-To: <20250319181044.392235-1-lkml@antheas.dev>
-References: <20250319181044.392235-1-lkml@antheas.dev>
-Message-ID: <2798B14C-C8A4-4976-AF40-22A1E0FFB0FC@gmail.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="XHKBeDTt"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1742577627; x=1774113627;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=83Dg5Q+2cOCQ9QElSSy06IMv7z2N6Z+ih6hnQ2aMYgA=;
+  b=XHKBeDTtpWZFFcR12L0NyL1ko0XLWhR5Lr6aLvFP8J5EHKkRIJnTwCUy
+   aNuE38eZrUBwhU45SCNRNukrwyDYhLjG0+v2nEXyiC/K+0La9csOWvkou
+   EHd9XowYMlxmPsVFR5h0GTm5FUfGyWOHvq3iMIDK79AtsPVZsohGsYfon
+   htEzX1vHrzM5gBtfO2Gk+xqnFz4i/SSifhLGTAdp2bcvbA6q6VzcaRyHO
+   w+/4Q2aIgqmqY0J7BgXsSXeP3FNCuyEm4ZaLPt1BdaQh/oAtw3E/ZlYmO
+   HAOwD6doZuR6KBeyU8+DEYFAR4RDgidrCOv+N9idjBPiPlFOPI6y1iq5b
+   A==;
+X-CSE-ConnectionGUID: r/cp+KR9QHeL5ipX4rCDUg==
+X-CSE-MsgGUID: IriSHWA2SryzGlXIRtGl2A==
+X-IronPort-AV: E=McAfee;i="6700,10204,11380"; a="31443165"
+X-IronPort-AV: E=Sophos;i="6.14,265,1736841600"; 
+   d="scan'208";a="31443165"
+Received: from orviesa010.jf.intel.com ([10.64.159.150])
+  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Mar 2025 10:20:26 -0700
+X-CSE-ConnectionGUID: 8IDjPd70S8usCOSF6IBSBg==
+X-CSE-MsgGUID: pWAolr2vT8CV9Ssj4qjP8Q==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.14,265,1736841600"; 
+   d="scan'208";a="123423189"
+Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.112])
+  by orviesa010-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Mar 2025 10:20:24 -0700
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Fri, 21 Mar 2025 19:20:20 +0200 (EET)
+To: Kevin Stravers <kevin@stravers.net>
+cc: luke@ljones.dev, platform-driver-x86@vger.kernel.org, 
+    corentin.chary@gmail.com
+Subject: Re: [PATCHv2] platform/x86: asus-wmi: Add quirk for ASUS Vivobook
+ S14
+In-Reply-To: <a22c2077-4f74-4972-be2b-f60b67f67bab@stravers.net>
+Message-ID: <e125a6d3-78ca-bf85-434e-e81d23bdff3a@linux.intel.com>
+References: <a22c2077-4f74-4972-be2b-f60b67f67bab@stravers.net>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=US-ASCII
 
+On Fri, 21 Mar 2025, Kevin Stravers wrote:
 
+> From 9af8ba6cfd6305d7696d6cfc8eedb12405cb572f Mon Sep 17 00:00:00 2001
+> From: Kevin Robert Stravers <kevin@stravers.net>
+> Date: Mon, 17 Mar 2025 20:41:44 -0400
+> Subject: [PATCH] platform/x86: asus-wmi: Add quirk for ASUS Vivobook S14
+> 
+> The ASUS Vivobook S14 will have wifi disabled on boot as well as
+> resumption from suspend if the asus-wmi driver invokes rfkill functions.
+> 
+> This patch disables asus-wmi's rfkill usage to prevent the wifi card
+> from being software disabled.
+> ---
+>  drivers/platform/x86/asus-nb-wmi.c | 13 +++++++++++++
+>  drivers/platform/x86/asus-wmi.c    |  5 +++++
+>  2 files changed, 18 insertions(+)
+> 
+> diff --git a/drivers/platform/x86/asus-nb-wmi.c
+> b/drivers/platform/x86/asus-nb-wmi.c
+> index 3f8b2a324efd..1e6fb9308560 100644
+> --- a/drivers/platform/x86/asus-nb-wmi.c
+> +++ b/drivers/platform/x86/asus-nb-wmi.c
+> @@ -150,6 +150,10 @@ static struct quirk_entry quirk_asus_zenbook_duo_kbd = {
 
-On March 19, 2025 8:10:27 AM HST, Antheas Kapenekakis <lkml@antheas=2Edev>=
- wrote:
->This four part series updates the oxpsensors module to bring it in line
->with its Windows OneXPlayer counterpart=2E First, it adds support for all
->2024, 2025 OneXPlayer handhelds and their special variants=2E Then, it mo=
-ves
->the module to platform/x86 to allow for including more EC features=2E
->
->Then, it adds the new charge limiting and bypass features that were first
->introduced in the X1 and retrofit to older OneXFly variants and for
->controlling the turbo led found in the X1 models=2E For Bypass, it adds a=
- new
->charge_behaviour variant called inhibit-charge-s0=2E
->
->Finally, it performs a minor refactor by moving around switch statements
->into their own functions, in order to allow for fixing the pwm1_enable AB=
-I
->in the final patch=2E Currently, pwm1_enable sets the fan to auto with th=
-e
->value 0 and allows manual control with the value 1=2E This patch makes it
->so 0 sets the fan to full speed, 1 sets the fan to manual control, and
->2 sets the fan to auto=2E This requires both setting enable and the fan
->speed when the enable sysfs is written to as 0, hence the refactor=2E
->
->As this is a minor ABI break and there is userspace software relying
->on this previous behavior, the last patch also changes the /name of the
->hwmon endpoint to "oxp_ec" from "oxpec" (mirroring WMI module conventions=
-)
->such that userspace software that relied on the previous behavior can be
->retrofit to the new kernel while enabling correct functionality on old
->and new kernels=2E Failing that, software that is not updated will just
->stop controlling the fans, ensuring no malignant behavior=2E
->
->---
->V6: NA
->V5: https://lore=2Ekernel=2Eorg/all/20250317155349=2E1236188-1-lkml@anthe=
-as=2Edev/
->V4: https://lore=2Ekernel=2Eorg/all/20250311165406=2E331046-1-lkml@anthea=
-s=2Edev/
->V3: https://lore=2Ekernel=2Eorg/all/20250309112114=2E1177361-1-lkml@anthe=
-as=2Edev/
->
->Changes since V6:
->    - Fix compile error due to extra const=2E My bad on that one, did a
->      double check on a device too=2E
->
+When I try various means to have this as file, this line is turned into 
+this:
 
-For the remainder of the series without my tag:
-Reviewed-by: Derek J=2E Clark <derekjohn=2Eclark@gmail=2Ecom>
+@@ -150,6 +150,10 @@ static struct quirk_entry 
+quirk_asus_zenbook_duo_kbd = {
 
->Changes since V5:
->    - Separate doc entries with Fixes as by Mario
->    - Add sysfs file name to subject as per Thomas
->    - Make tt_led and tt_turbo const as per Thomas
->    - Align a couple of structs as per Thomas
->    - Remove excess battery check as per Thomas
->    - For Thomas: devices without a BIOS update battery control is a NOOP
->      OXP is a boutique manufacturer for now, so gathering information
->      about old devices to add BIOS checks is not practical unfortunately
->
->Changes since V4:
->    - Fix nits by Hans
->    - change inhibit-charge-s0 to inhibit-charge-awake
->    - use devm_battery_hook_register and power_supply_unregister_extensio=
-n
->      (based on cros driver)
->    - move charge behavior patches to the end to make the rest of the ser=
-ies
->      easier to merge
->    - CC platform-x86 and power maintainers
->
->Changes since V3:
->    - Fix nits by Derek
->    - Remove the hwmon documentation as it is not required for platform
->      drivers (suggested by Guenter)
->    - Add ACPI_BATTERY and HWMON depends to Kconfig
->      (reported by kernel robot)
->    - Homogenize driver into following reverse xmas convention
->
->Changes since V2:
->    - Add ack by Guenter, move platform move patch to be third (not first
->      to allow for device support backport to lts kernels)
->    - Rework patch text, especially in the refactor patches as per Derek
->    - Change bypass to use charge_behaviour instead of charge_type, as th=
-at
->      ABI supports capability detection and is more appropriate
->    - Move battery attach to probe instead of init
->    - Fix bug where reading tt_led would instead use the turbo register
->
->Changes since V1:
->    - Add X1 Pro, F1 Pro variants
->    - Fix minor typo in initial patches
->    - Convert oxp-sensors into a platform driver, as it is no longer
->      considered a hwmon driver=2E
->    - Add sysfs documentation and myself to the MAINTAINERS file
->    - Update documentation to state that this is the OneXPlayer/AOKZOE
->      platform driver, and that support for Ayaneo/OPI is provided until
->      they gain their own platform driver=2E
->
->Antheas Kapenekakis (14):
->  hwmon: (oxp-sensors) Distinguish the X1 variants
->  hwmon: (oxp-sensors) Add all OneXFly variants
->  platform/x86: oxpec: Move hwmon/oxp-sensors to platform/x86
->  ABI: testing: sysfs-class-oxp: add missing documentation
->  ABI: testing: sysfs-class-oxp: add tt_led attribute documentation
->  platform/x86: oxpec: Rename ec group to tt_toggle
->  platform/x86: oxpec: Add turbo led support to X1 devices
->  platform/x86: oxpec: Move pwm_enable read to its own function
->  platform/x86: oxpec: Move pwm value read/write to separate functions
->  platform/x86: oxpec: Move fan speed read to separate function
->  platform/x86: oxpec: Adhere to sysfs-class-hwmon and enable pwm on 2
->  platform/x86: oxpec: Follow reverse xmas convention for tt_toggle
->  power: supply: add inhibit-charge-awake to charge_behaviour
->  platform/x86: oxpec: Add charge threshold and behaviour to OneXPlayer
->
-> Documentation/ABI/testing/sysfs-class-power   |  11 +-
-> Documentation/ABI/testing/sysfs-platform-oxp  |  25 +
-> Documentation/hwmon/index=2Erst                 |   2 +-
-> Documentation/hwmon/oxp-sensors=2Erst           |  89 ---
-> MAINTAINERS                                   |   7 +-
-> drivers/hwmon/Kconfig                         |  11 -
-> drivers/hwmon/Makefile                        |   1 -
-> drivers/platform/x86/Kconfig                  |  13 +
-> drivers/platform/x86/Makefile                 |   3 +
-> =2E=2E=2E/oxp-sensors=2Ec =3D> platform/x86/oxpec=2Ec}    | 624 ++++++++=
-++++++----
-> drivers/power/supply/power_supply_sysfs=2Ec     |   7 +-
-> drivers/power/supply/test_power=2Ec             |   1 +
-> include/linux/power_supply=2Eh                  |   1 +
-> 13 files changed, 540 insertions(+), 255 deletions(-)
-> create mode 100644 Documentation/ABI/testing/sysfs-platform-oxp
-> delete mode 100644 Documentation/hwmon/oxp-sensors=2Erst
-> rename drivers/{hwmon/oxp-sensors=2Ec =3D> platform/x86/oxpec=2Ec} (52%)
->
->
->base-commit: 4701f33a10702d5fc577c32434eb62adde0a1ae1
+And it obviously results in failure_:
 
-- Derek
+$ patch -p1 --dry-run < 0001
+checking file drivers/platform/x86/asus-nb-wmi.c
+patch: **** malformed patch at line 35: quirk_asus_zenbook_duo_kbd = {
+
+And if I try to manually fix that, all hunks still fail to apply so I 
+think there more wrong with the diff.
+
+Did you try to use git am after mailing the patch to yourself? Please do 
+that if you didn't because it might otherwise take many round-trips to 
+correct the problems.
+
+It might be easier to use git send-email to send patch out as it 
+shouldn't mangle the patch in any way.
+
+-- 
+ i.
+
+>  	.ignore_key_wlan = true,
+>  };
+> 
+> +static struct quirk_entry quirk_asus_vivobook_s14 = {
+> +	.skip_rfkill = true,
+> +};
+> +
+>  static int dmi_matched(const struct dmi_system_id *dmi)
+>  {
+>  	pr_info("Identified laptop model '%s'\n", dmi->ident);
+> @@ -530,6 +534,15 @@ static const struct dmi_system_id asus_quirks[] = {
+>  		},
+>  		.driver_data = &quirk_asus_zenbook_duo_kbd,
+>  	},
+> +	{
+> +		.callback = dmi_matched,
+> +		.ident = "ASUS VivoBook S14",
+> +		.matches = {
+> +			DMI_MATCH(DMI_SYS_VENDOR, "ASUSTeK COMPUTER INC."),
+> +			DMI_MATCH(DMI_PRODUCT_NAME, "S5406SA"),
+> +		},
+> +		.driver_data = &quirk_asus_vivobook_s14,
+> +	},
+>  	{},
+>  };
+> 
+> diff --git a/drivers/platform/x86/asus-wmi.c b/drivers/platform/x86/asus-wmi.c
+> index 38ef778e8c19..42e58a28c3e2 100644
+> --- a/drivers/platform/x86/asus-wmi.c
+> +++ b/drivers/platform/x86/asus-wmi.c
+> @@ -2138,6 +2138,8 @@ static int asus_new_rfkill(struct asus_wmi *asus,
+> 
+>  static void asus_wmi_rfkill_exit(struct asus_wmi *asus)
+>  {
+> +	if (asus->driver->quirks->skip_rfkill)
+> +		return;
+>  	if (asus->driver->wlan_ctrl_by_user && ashs_present())
+>  		return;
+> 
+> @@ -2188,6 +2190,9 @@ static void asus_wmi_rfkill_exit(struct asus_wmi *asus)
+> 
+>  static int asus_wmi_rfkill_init(struct asus_wmi *asus)
+>  {
+> +	if (asus->driver->quirks->skip_rfkill)
+> +		return 0;
+> +
+>  	int result = 0;
+> 
+>  	mutex_init(&asus->hotplug_lock);
+> 
+
