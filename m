@@ -1,127 +1,141 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 405D01E8350;
-	Fri, 21 Mar 2025 15:51:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 331401DE4C2;
+	Fri, 21 Mar 2025 16:06:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742572313; cv=none; b=bgzXwYHZitsJHEmU18jWwIkC7yPsG2pVeOTZ3Dy1hkUaP/CL2gZm6fDKIUfVhT9m/5sT8y3vfMKlkI19O5wiZTjZSyh6tBGq/LyKwVp7MCmLVYCH9rfFEghUB9/FXSi40AlqDeBGe+r5xJzeC+xVs/oOZ63Jb22maZYqsulkzV8=
+	t=1742573186; cv=none; b=gEnUNae3wa4xi6f2ces2Q61CkdgJfoBVGrp8eaJ07S9AmZeEBlffta5pnP0YnUfio8TVYtzenehObOREp8JWk5GUcKuTjDKXnD83sslP/EeCBK4EX2Rmf88aT1oerMHfb4iF92GOJrhOW3i49wsrgjSeZLFY69ddisAKj+nIN4E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742572313; c=relaxed/simple;
-	bh=0Cm6pafO2L0gqrWabYSVxmX7EwBuZJkktwdG17E7o00=;
+	s=arc-20240116; t=1742573186; c=relaxed/simple;
+	bh=WgBVYTr0URRl3zJspKTAryBSC/YiYErKzgv7WS4Rg/s=;
 	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=BibQWg81ZYbjhmAPGTWudwTu/OxU599FwN3wOcT7olHvDkTv6GY1ExuS1+bhNFkCRfFHx209xF6+/dIMvLa2nxZ+OwFSjy9W2mJrot+yZPdeJ0S0IPE/K4oA7QOTmPlR1JfogYT0AxHa8c6Q6WPBBxzKmgClFwAhF7X+g03lGI8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=HVN5Edjg; arc=none smtp.client-ip=198.175.65.10
+	 MIME-Version:Content-Type; b=fJoKGR3W3Q57YTby4gOkViWWAZYQGgRP4WXCGkwxoW+qEM2Rmq1yRYL39BRFUe+ENF1cwAmveTDwcwGla6fcZOfrUPwSbuLA/z+sBYL/NW8AAS4AMucvLZ8iG6BOUJPwdcwyUMywYtLi/9JPlxZNX7EHjQT8Mq/1ejneVX5+MJw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=NvGalA/i; arc=none smtp.client-ip=192.198.163.17
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="HVN5Edjg"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="NvGalA/i"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1742572313; x=1774108313;
+  t=1742573184; x=1774109184;
   h=from:date:to:cc:subject:in-reply-to:message-id:
    references:mime-version;
-  bh=0Cm6pafO2L0gqrWabYSVxmX7EwBuZJkktwdG17E7o00=;
-  b=HVN5EdjgvpiWRqkYknhbm5P6/Su6b9iun6liLnE3o/1zaHQ65foC64Aj
-   jHILjvgAwIvTB4zsB1kE9RyaB7hSqhXRDitqiaPB43ynticAUoIETKmbs
-   G8V2xbdVR/oW3zmIB5StrGz9WZsPcdcFsDgV864dlgnOx0Zxfr1LiIgie
-   a31q7fkBjxb70lms9Kh3O116vnUXkI/or/6v7Udlt8330AjzEoql4TENA
-   B9DI8RDBv57CI0qlSwA91NwulzsRa7ibV0xiAMI5XIl9dR8mqlnDU2aDW
-   iXKqLLs2kbCNHjkshs4OU2eBk9lntHUq62Lw/3zeNsq/etLvQO9yMyuLK
-   Q==;
-X-CSE-ConnectionGUID: ywLEa+0KRGCqQqaR6ODH+w==
-X-CSE-MsgGUID: KyArbh0GQqqkaktWbKIm5g==
-X-IronPort-AV: E=McAfee;i="6700,10204,11380"; a="61237020"
+  bh=WgBVYTr0URRl3zJspKTAryBSC/YiYErKzgv7WS4Rg/s=;
+  b=NvGalA/ikOrL5oPJYs+QnTxjGygBeYWWOIvfFHc3OkbJX2AwHpopTwqS
+   OrJ7JGqvsLvcwKeP1prZM7mVJTOfER54Pu75l/Fxr9j8e/jK3wFjwN7qC
+   SK/5ji+VMYsX0/5AhSQhmE9n8DiGMEF7b+LjyblXx5blGM0B6v0DiKpB9
+   7qQZ9t3oQhCYinN742ZwcgN+X4JUGCey/94l/s0aWmz+DeK3rMLdvIdAr
+   VOz0V9xhnp8gPVoJI15e8EZBeavaDkLOepeFPGKjHBbFPdNQ3UOf5upEx
+   k4Kt0Ju3dJwZMJUlGC8aC6kaTxjBeWUEXBcxhuhtx35JSY0kXfzmt0vxz
+   A==;
+X-CSE-ConnectionGUID: uCVdhp/3So2cYbOJXCtPug==
+X-CSE-MsgGUID: onEv0mKKQBKLcJNtxbhz7A==
+X-IronPort-AV: E=McAfee;i="6700,10204,11380"; a="43726622"
 X-IronPort-AV: E=Sophos;i="6.14,264,1736841600"; 
-   d="scan'208";a="61237020"
-Received: from orviesa008.jf.intel.com ([10.64.159.148])
-  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Mar 2025 08:51:52 -0700
-X-CSE-ConnectionGUID: AXGlNay9REyTkdbSY0/yhQ==
-X-CSE-MsgGUID: IWIRh66rQzqjZ9X+76XWyw==
+   d="scan'208";a="43726622"
+Received: from fmviesa007.fm.intel.com ([10.60.135.147])
+  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Mar 2025 09:06:23 -0700
+X-CSE-ConnectionGUID: g7UgcbV4QTih6n+cWYD8tQ==
+X-CSE-MsgGUID: 1EcrVXRMQNGo+fC3Vk/4zw==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.14,264,1736841600"; 
-   d="scan'208";a="124384210"
+   d="scan'208";a="123417648"
 Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.112])
-  by orviesa008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Mar 2025 08:51:49 -0700
+  by fmviesa007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Mar 2025 09:06:06 -0700
 From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Fri, 21 Mar 2025 17:51:45 +0200 (EET)
-To: "Jiri Slaby (SUSE)" <jirislaby@kernel.org>
-cc: tglx@linutronix.de, maz@kernel.org, LKML <linux-kernel@vger.kernel.org>, 
+Date: Fri, 21 Mar 2025 18:06:02 +0200 (EET)
+To: Easwar Hariharan <eahariha@linux.microsoft.com>, 
+    Andrew Morton <akpm@linux-foundation.org>
+cc: Yaron Avizrat <yaron.avizrat@intel.com>, Oded Gabbay <ogabbay@kernel.org>, 
+    Julia Lawall <Julia.Lawall@inria.fr>, 
+    Nicolas Palix <nicolas.palix@imag.fr>, 
+    James Smart <james.smart@broadcom.com>, 
+    Dick Kennedy <dick.kennedy@broadcom.com>, 
+    "James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>, 
+    "Martin K. Petersen" <martin.petersen@oracle.com>, 
+    Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, 
+    Chris Mason <clm@fb.com>, Josef Bacik <josef@toxicpanda.com>, 
+    David Sterba <dsterba@suse.com>, Ilya Dryomov <idryomov@gmail.com>, 
+    Dongsheng Yang <dongsheng.yang@easystack.cn>, Jens Axboe <axboe@kernel.dk>, 
+    Xiubo Li <xiubli@redhat.com>, Damien Le Moal <dlemoal@kernel.org>, 
+    Niklas Cassel <cassel@kernel.org>, Carlos Maiolino <cem@kernel.org>, 
+    "Darrick J. Wong" <djwong@kernel.org>, Sebastian Reichel <sre@kernel.org>, 
+    Keith Busch <kbusch@kernel.org>, Christoph Hellwig <hch@lst.de>, 
+    Sagi Grimberg <sagi@grimberg.me>, Frank Li <Frank.Li@nxp.com>, 
+    Mark Brown <broonie@kernel.org>, Shawn Guo <shawnguo@kernel.org>, 
+    Sascha Hauer <s.hauer@pengutronix.de>, 
+    Pengutronix Kernel Team <kernel@pengutronix.de>, 
+    Fabio Estevam <festevam@gmail.com>, 
+    Shyam Sundar S K <Shyam-sundar.S-k@amd.com>, 
     Hans de Goede <hdegoede@redhat.com>, 
-    Corentin Chary <corentin.chary@gmail.com>, 
-    "Luke D. Jones" <luke@ljones.dev>, platform-driver-x86@vger.kernel.org
-Subject: Re: [PATCH v2 31/57] irqdomain: platform/x86: Switch to
- irq_domain_create_linear()
-In-Reply-To: <20250319092951.37667-32-jirislaby@kernel.org>
-Message-ID: <d623f8d9-d772-6418-a420-019472742ffa@linux.intel.com>
-References: <20250319092951.37667-1-jirislaby@kernel.org> <20250319092951.37667-32-jirislaby@kernel.org>
+    Henrique de Moraes Holschuh <hmh@hmh.eng.br>, 
+    Selvin Xavier <selvin.xavier@broadcom.com>, 
+    Kalesh AP <kalesh-anakkur.purayil@broadcom.com>, 
+    Jason Gunthorpe <jgg@ziepe.ca>, Leon Romanovsky <leon@kernel.org>, 
+    cocci@inria.fr, LKML <linux-kernel@vger.kernel.org>, 
+    linux-scsi@vger.kernel.org, dri-devel@lists.freedesktop.org, 
+    linux-sound@vger.kernel.org, linux-btrfs@vger.kernel.org, 
+    ceph-devel@vger.kernel.org, linux-block@vger.kernel.org, 
+    linux-ide@vger.kernel.org, linux-xfs@vger.kernel.org, 
+    linux-pm@vger.kernel.org, linux-nvme@lists.infradead.org, 
+    linux-spi@vger.kernel.org, imx@lists.linux.dev, 
+    linux-arm-kernel@lists.infradead.org, platform-driver-x86@vger.kernel.org, 
+    ibm-acpi-devel@lists.sourceforge.net, linux-rdma@vger.kernel.org
+Subject: Re: [PATCH v3 15/16] platform/x86: thinkpad_acpi: convert timeouts
+ to secs_to_jiffies()
+In-Reply-To: <20250225-converge-secs-to-jiffies-part-two-v3-15-a43967e36c88@linux.microsoft.com>
+Message-ID: <9e761e10-eb4d-0a34-79b5-ef4507f002c5@linux.intel.com>
+References: <20250225-converge-secs-to-jiffies-part-two-v3-0-a43967e36c88@linux.microsoft.com> <20250225-converge-secs-to-jiffies-part-two-v3-15-a43967e36c88@linux.microsoft.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="8323328-823517355-1742572305=:931"
+Content-Type: text/plain; charset=US-ASCII
 
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
+On Tue, 25 Feb 2025, Easwar Hariharan wrote:
 
---8323328-823517355-1742572305=:931
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+> Commit b35108a51cf7 ("jiffies: Define secs_to_jiffies()") introduced
+> secs_to_jiffies().  As the value here is a multiple of 1000, use
+> secs_to_jiffies() instead of msecs_to_jiffies() to avoid the multiplication
+> 
+> This is converted using scripts/coccinelle/misc/secs_to_jiffies.cocci with
+> the following Coccinelle rules:
+> 
+> @depends on patch@
+> expression E;
+> @@
+> 
+> -msecs_to_jiffies
+> +secs_to_jiffies
+> (E
+> - * \( 1000 \| MSEC_PER_SEC \)
+> )
+> 
+> Signed-off-by: Easwar Hariharan <eahariha@linux.microsoft.com>
 
-On Wed, 19 Mar 2025, Jiri Slaby (SUSE) wrote:
-
-> irq_domain_add_linear() is going away as being obsolete now. Switch to
-> the preferred irq_domain_create_linear(). That differs in the first
-> parameter: It takes more generic struct fwnode_handle instead of struct
-> device_node. Therefore, of_fwnode_handle() is added around the
-> parameter.
->=20
-> Note some of the users can likely use dev->fwnode directly instead of
-> indirect of_fwnode_handle(dev->of_node). But dev->fwnode is not
-> guaranteed to be set for all, so this has to be investigated on case to
-> case basis (by people who can actually test with the HW).
->=20
-> Signed-off-by: Jiri Slaby (SUSE) <jirislaby@kernel.org>
-> Cc: Hans de Goede <hdegoede@redhat.com>
-> Cc: Corentin Chary <corentin.chary@gmail.com>
-> Cc: "Luke D. Jones" <luke@ljones.dev>
-> Cc: "Ilpo J=C3=A4rvinen" <ilpo.jarvinen@linux.intel.com>
-> Cc: platform-driver-x86@vger.kernel.org
-
-I've applied this now to review-ilpo-next, but I had to remove lots of=20
-unnecessary details from the commit message as here the first arg is NULL.
-
-I'd also prefer to not have long is of Ccs before --- line for changes=20
-like this (more understandable if it's some problem/fix related=20
-submission). Wouldn't they work also if Cc: lines are put below ---=20
-or is it that the tools fail to preserve that at some point?
+Applied to the review-ilpo-next branch.
 
 > ---
->  drivers/platform/x86/asus-tf103c-dock.c | 2 +-
+>  drivers/platform/x86/thinkpad_acpi.c | 2 +-
 >  1 file changed, 1 insertion(+), 1 deletion(-)
->=20
-> diff --git a/drivers/platform/x86/asus-tf103c-dock.c b/drivers/platform/x=
-86/asus-tf103c-dock.c
-> index ca4670d0dc67..f09a3fc6524a 100644
-> --- a/drivers/platform/x86/asus-tf103c-dock.c
-> +++ b/drivers/platform/x86/asus-tf103c-dock.c
-> @@ -856,7 +856,7 @@ static int tf103c_dock_probe(struct i2c_client *clien=
-t)
->  =09/* 5. Setup irqchip for touchpad IRQ pass-through */
->  =09dock->tp_irqchip.name =3D KBUILD_MODNAME;
-> =20
-> -=09dock->tp_irq_domain =3D irq_domain_add_linear(NULL, 1, &irq_domain_si=
-mple_ops, NULL);
-> +=09dock->tp_irq_domain =3D irq_domain_create_linear(NULL, 1, &irq_domain=
-_simple_ops, NULL);
->  =09if (!dock->tp_irq_domain)
->  =09=09return -ENOMEM;
-> =20
->=20
+> 
+> diff --git a/drivers/platform/x86/thinkpad_acpi.c b/drivers/platform/x86/thinkpad_acpi.c
+> index ab1cade5ef231e9a9a520bc0cca82384c911a331..d269e791f7fbc2a8ccf96f28cb476beccb57c9a7 100644
+> --- a/drivers/platform/x86/thinkpad_acpi.c
+> +++ b/drivers/platform/x86/thinkpad_acpi.c
+> @@ -8512,7 +8512,7 @@ static void fan_watchdog_reset(void)
+>  	if (fan_watchdog_maxinterval > 0 &&
+>  	    tpacpi_lifecycle != TPACPI_LIFE_EXITING)
+>  		mod_delayed_work(tpacpi_wq, &fan_watchdog_task,
+> -			msecs_to_jiffies(fan_watchdog_maxinterval * 1000));
+> +			secs_to_jiffies(fan_watchdog_maxinterval));
+>  	else
+>  		cancel_delayed_work(&fan_watchdog_task);
+>  }
 
---=20
+-- 
  i.
 
---8323328-823517355-1742572305=:931--
