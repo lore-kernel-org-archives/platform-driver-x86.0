@@ -1,142 +1,119 @@
-Received: from fhigh-b8-smtp.messagingengine.com (fhigh-b8-smtp.messagingengine.com [202.12.124.159])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f45.google.com (mail-wm1-f45.google.com [209.85.128.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 089471C174A;
-	Fri, 21 Mar 2025 03:53:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.159
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E0FE71EEA47;
+	Fri, 21 Mar 2025 08:30:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742529198; cv=none; b=vB+kpuOAk/FPUZwtdfCo70//AzXtrxk/vE03+U8J3q1AX/4zWXXlMDy2l3Jr0BVLz5pRGLELpZIK/ylWWnOLMPmokbmj16stTBh8XP5qckl3C+CEBuJYWwDtz2LNocnQzIySSshYPr6MQkKUU01SsY10La1V4dL3Oa3ucTmQqR8=
+	t=1742545822; cv=none; b=PsrU/8OKYk3dl4AQBCXVUqaUCjnGtLr4dE5r92je+PHAYgCd/aNkkU0IpOgptyfFL70LhKEgbjgLRq71YdQqLyFajY1yOz5kiT1xjIHy0cPEVHQQBA3VFSrvDcxvQ5mCG098HS9QWrox7DtwlfOsM01Rz/lA/I71gny+fxOL4a4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742529198; c=relaxed/simple;
-	bh=SQlt7AhlA6qQPrX8gVT4a1V9Gt0nSuQz+v/P7nwD5VE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=aKcQOd3BGv/jkIidKUB0C/q5cBPE23mcwofc0/VBq57aFkOYJgwUhkKFNxBdNW2k2D0ccv9gzBLwmnpG3IV7M7u3pc8ytTzVSiGUyUB5138t7USFJCIRRw3uduhsYmEi5IqN81yYnIOBDc0eij39w4x+g4b7G1wz3gVyibVJtwk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ljones.dev; spf=none smtp.mailfrom=ljones.dev; dkim=pass (2048-bit key) header.d=ljones.dev header.i=@ljones.dev header.b=omAVj2jc; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=vTTPjHLQ; arc=none smtp.client-ip=202.12.124.159
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ljones.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=ljones.dev
+	s=arc-20240116; t=1742545822; c=relaxed/simple;
+	bh=20ntTnSxBTYlOfH3SOzTPYFdSiJFquWr9w7esxYqKeQ=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=b8rTvLm+9WFKADoAHcP0M8vTMTfcDPIX3wCGX0LjLU/oM1yh/n0xnYlZ1Aq3sNHFlYY48L0XRwViZBswT7FNXBSvgSifVgo7MaeXjdi8jWHdVrwo3p735TBhiyAoIps4gwvT3p46qlglDyAGFOK1IlY4zVYjVd6jfyIfySDm3Xk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=eY0PUfwh; arc=none smtp.client-ip=209.85.128.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ljones.dev header.i=@ljones.dev header.b="omAVj2jc";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="vTTPjHLQ"
-Received: from phl-compute-10.internal (phl-compute-10.phl.internal [10.202.2.50])
-	by mailfhigh.stl.internal (Postfix) with ESMTP id 1AC762540233;
-	Thu, 20 Mar 2025 23:53:16 -0400 (EDT)
-Received: from phl-mailfrontend-02 ([10.202.2.163])
-  by phl-compute-10.internal (MEProxy); Thu, 20 Mar 2025 23:53:16 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ljones.dev; h=cc
-	:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to; s=fm3; t=1742529195;
-	 x=1742615595; bh=oJ+EIORAkhjV2/v0y4i6dgMaTxdZf5VPggfiUOahtTg=; b=
-	omAVj2jcaNbsOXyOoYc36JaVuo/FNd18idEs1i+F8dg7RbFWMkrkJVtcWGSnzMkd
-	uyVRRcp54HDawvZom+C4SsR0AO9/ACTDd3jmqCn6J/u3Ia/CkJ8vcbgq8Om2JcYQ
-	5KOmvAN5EKv1S3yxLkhEp8oQips24cLp5BlV9pIBc5igUDkp0fZgqciCz7FHtR5J
-	d4oqvuIOvizlkX2sAymNj0zRmL8LLUN6v+8hS/iCo5X3Z/NO4h1Nu7ns4pLVDqqq
-	2HBtwyx16mAcHhP5EbP1BwjOrXkkF79pAtbbDTL9wzfqf0271t0DbzebOgL1ppK4
-	1H1GThsgPQXOz3zQBbPRqQ==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; t=1742529195; x=
-	1742615595; bh=oJ+EIORAkhjV2/v0y4i6dgMaTxdZf5VPggfiUOahtTg=; b=v
-	TTPjHLQmVDSRIEeH+FaGjaXsEL88svc3CjdSs3wJirU2VCqZiGyD9Tbu6lI90g3C
-	Ce3eSMM7ALFOoil4XCO5cGK/NOiFdqKpVlWSQEg7iK2EqPs7W8U6cDkETbeOFCsJ
-	m24eKotUdj/ZcrdqrX/DzRqABCdyU0aWwYW49t0TtPSidCpmW8YOROmE9y3FSNt+
-	SGzWXOJBXpHrE6HIhwvRORxL370TeWMsUKchOqfg5DFaB7PXrCugTny+1LwrQte/
-	JXH9LJH1QxtAlyC9jeHfB53T0iWzDdC7zpDvShM0f6RnmmxlmeVqyDfYyen3gqdx
-	cGd6X8eud7M9l0rc+IpUQ==
-X-ME-Sender: <xms:q-LcZ6ExU-PV4Zb68Uy_ps8A6tHJJ2XbEv6mwpgHyaY29jrUa36KwQ>
-    <xme:q-LcZ7XjZC-hktbDUiVaqQoMwcs8BPnga9bKfHpmACE27PKVcJtrJHiZ8VU1CpvzH
-    -xwrj67HSfcytf-Uak>
-X-ME-Received: <xmr:q-LcZ0LqxarqweRka98NnXvyYQ_tB-PraJ_9zpNfVbDi_5ogH7HtcYIo-9Zg63bG85mg6PvQ>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdduhedttdeiucetufdoteggodetrf
-    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggv
-    pdfurfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucenucfjughrpefkff
-    ggfgfuvfevfhfhjggtgfesthejredttddvjeenucfhrhhomhepfdfnuhhkvgcuffdrucfl
-    ohhnvghsfdcuoehluhhkvgeslhhjohhnvghsrdguvghvqeenucggtffrrghtthgvrhhnpe
-    evudeuvedttefgheefleeivddvhfdtiefhtdekjeduvdegiedvtdekffegkeeuffenucev
-    lhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpehluhhkvgeslh
-    hjohhnvghsrdguvghvpdhnsggprhgtphhtthhopeelpdhmohguvgepshhmthhpohhuthdp
-    rhgtphhtthhopehlihhnuhigqdhkvghrnhgvlhesvhhgvghrrdhkvghrnhgvlhdrohhrgh
-    dprhgtphhtthhopehhuggvghhovgguvgesrhgvughhrghtrdgtohhmpdhrtghpthhtohep
-    ihhlphhordhjrghrvhhinhgvnheslhhinhhugidrihhnthgvlhdrtghomhdprhgtphhtth
-    hopehplhgrthhfohhrmhdqughrihhvvghrqdigkeeisehvghgvrhdrkhgvrhhnvghlrdho
-    rhhgpdhrtghpthhtoheplhhinhhugidqihhnphhuthesvhhgvghrrdhkvghrnhgvlhdroh
-    hrghdprhgtphhtthhopegsvghnthhishhssehkvghrnhgvlhdrohhrghdprhgtphhtthho
-    pehjihhkohhssehkvghrnhgvlhdrohhrghdprhgtphhtthhopehmrghrihhordhlihhmoh
-    hntghivghllhhosegrmhgurdgtohhmpdhrtghpthhtoheplhhkmhhlsegrnhhthhgvrghs
-    rdguvghv
-X-ME-Proxy: <xmx:q-LcZ0F2d_yyvfQ2E0bygU9Jv1NTFaM_QDvkT1u1xkByjSP4Ni2PEQ>
-    <xmx:q-LcZwWES3ErBo1XSzlQOzSLDqasGDoDZxu1dq1nsywXojR9OyW2iQ>
-    <xmx:q-LcZ3NQRqHsAz3mlQhp4vU9J60nNHvVKU0BUAnec32h4lRxGHQRGw>
-    <xmx:q-LcZ30k2S1l5fir0mZAT142HELi6FAHZpFod4LeYbiIDxusHNySBA>
-    <xmx:q-LcZ0rnqwU3p-1dmDLvWk1veyPt6-H57eAfYdYSjsKZycuKZKNdZmzf>
-Feedback-ID: i5ec1447f:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Thu,
- 20 Mar 2025 23:53:11 -0400 (EDT)
-Message-ID: <91535a14-430d-42ea-9e1e-1d5b6bc562f3@ljones.dev>
-Date: Fri, 21 Mar 2025 16:53:08 +1300
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eY0PUfwh"
+Received: by mail-wm1-f45.google.com with SMTP id 5b1f17b1804b1-43d0782d787so11907055e9.0;
+        Fri, 21 Mar 2025 01:30:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1742545819; x=1743150619; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=oOx84blwgw6z93U5khVjxGdj11xiT8ylUeWTTvHcXRw=;
+        b=eY0PUfwhSsVbXgOEKltYZwhObn9XZ2j14cj9cM/eN5Fj4P35ttix0dRLwD1YT0ukEU
+         W1qN/leibv6H6ZMReKgsQ8SHLYmk+/0bvMOBAGBvp2wj0E5WPwZ/gGaMUDcHrLoTgOMM
+         GsuD3GBN3Ty4gQ79ESxP4ggRcbjmsiNJvYYVqpovO4DhVV9RRTAbQfCP3HUv01NyRK/i
+         zLnTXKssjoin/9BSfVL+5FAXJrV+f24S2VdAH8rHkP+CytzsvnGOLTCReSRJ0LhSZhf1
+         efx6Caz57hXS2cTP8VUP5NRolkzNQlqZOexKU+RAB2RcvOAxwhtyAeTKzm5bWMdjj/id
+         QPRQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1742545819; x=1743150619;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=oOx84blwgw6z93U5khVjxGdj11xiT8ylUeWTTvHcXRw=;
+        b=fTc2iSooS9+D137drYs6w+Cx4642a4x/ERKsQbJVb2i0iRFPqpiltxOn4gkeW5fZj3
+         vWANoAJYIYAyAD8vmYLrlpkGPU7MoJeWCAN4TLexXdyf6G+PpRVoktJPF/IrpqQh+BK9
+         2lbJQTc1ha2/LXm9ieBaWFFqLp7n4rvy5qL/qDvFpPPrVwHkUX7BEpbGt4hIo5t8RPGx
+         PkEXs3N3rKHRns8g34UjMg7J6/kfjfzDm//1LmAwFWxQfm7/dcjeudSW6oH3AbUHrMhL
+         5bngwezWNMhFDnJvFwnzO8KYH726ARfILQgersbBdtRiyu+Mk9lLk772ahUPVWShfld6
+         c0Ig==
+X-Forwarded-Encrypted: i=1; AJvYcCVguGNcJ+ztqG2lzVYlt84Q4QVYiZIhlHqDfHHD2O0h7nk/A69bMqNmlvfVh+xeRF3LAmg51SGo6sFvO1o=@vger.kernel.org, AJvYcCWeF/0JkNkGU1PDNOHJx8GyjIVmDZ2VBYvmZ1XDK6klwczG+LfbifO0WoZLbw/W5WGDtlTHvMaXlmn806ZIePcdisb0qg==@vger.kernel.org
+X-Gm-Message-State: AOJu0YwEk8pEiOL+rsqq6gSrkVNvwa+OOCDTGFXHkK3jQptNwpA9UbwD
+	E1D9Yuy4v4onrm7uY2cF57G90Tar4+tNY8ipJu4mcs3ot+mdTkTH
+X-Gm-Gg: ASbGncvBThn1FnMfguTZMOqNdF4SuTtcvTWwQEZQFboRJhahYhXvllb0au+sJOsNj/9
+	r+x7BflWap++kIoRRUQi3LtT0ZjZXNEsp7X5rl8kFL4Y2ARkf5dz9PheHbFit9JQDnOIOrYZrWq
+	1YlxMjFLBBcPLAiA8E4rPnJC+K1Wdkva3DQ8Wq/pgOT5SpRbM/99IUbsRJMmwqC+VHCFNbH3Ch7
+	U49C9/hi+aUn2SKIPI1FMZ/TbwjYqVq9yhCcsm0mTI8irNOBi8K1WdpM8uoLqk92wvSi4ERP74t
+	Z1Qsqs9rX4Bmw95BJhl66WptWZHEuzbPL0h8xg15deqTDP95aK9N4HEAawPVHb4k4XA=
+X-Google-Smtp-Source: AGHT+IGJGgiklQ70AszSCwdy1jPoQz1gmo25oFygNnJ/kYaXl7f5SlHjGxjVDYPc43ottyzUVYjj8Q==
+X-Received: by 2002:a05:600c:1d92:b0:43c:fdbe:4398 with SMTP id 5b1f17b1804b1-43d509e3881mr18748495e9.6.1742545818824;
+        Fri, 21 Mar 2025 01:30:18 -0700 (PDT)
+Received: from pop-os.fri1.uni-lj.si ([2001:1470:fffd:32ff:2811:7660:dd13:7df9])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43d4fceb780sm20343215e9.4.2025.03.21.01.30.16
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 21 Mar 2025 01:30:18 -0700 (PDT)
+From: =?UTF-8?q?Ga=C5=A1per=20Nemgar?= <gasper.nemgar@gmail.com>
+To: ikepanhc@gmail.com
+Cc: hdegoede@redhat.com,
+	ilpo.jarvinen@linux.intel.com,
+	linux-kernel@vger.kernel.org,
+	platform-driver-x86@vger.kernel.org,
+	=?UTF-8?q?Ga=C5=A1per=20Nemgar?= <gasper.nemgar@gmail.com>
+Subject: [PATCH] Added support for a some new buttons in ideapad-laptop driver Added entries to unsuported wmi codes in ideapad_keymap[] and one check in wmi_nofify in order to get wmi code 0x13d to trigger platform_profile_cycle
+Date: Fri, 21 Mar 2025 09:30:03 +0100
+Message-Id: <20250321083003.84661-1-gasper.nemgar@gmail.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 0/2] hid-asus: asus-wmi: refactor Ally suspend/resume
-To: linux-kernel@vger.kernel.org
-Cc: hdegoede@redhat.com, ilpo.jarvinen@linux.intel.com,
- platform-driver-x86@vger.kernel.org, linux-input@vger.kernel.org,
- bentiss@kernel.org, jikos@kernel.org, mario.limonciello@amd.com,
- lkml@antheas.dev
-References: <20250321035106.26752-1-luke@ljones.dev>
-Content-Language: en-NZ
-From: "Luke D. Jones" <luke@ljones.dev>
-In-Reply-To: <20250321035106.26752-1-luke@ljones.dev>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On 21/03/25 16:51, Luke Jones wrote:
-> This short series refactors the Ally suspend/resume functionality in the
-> asus-wmi driver along with adding support for ROG Ally MCU version checking.
-> 
-> The version checking is then used to toggle the use of older CSEE call hacks
-> that were initially used to combat Ally suspend/wake issues arising from the MCU
-> not clearing a particular flag on resume. ASUS have since corrected this
-> especially for Linux in newer firmware versions.
-> 
-> - hid-asus requests the MCU version and displays a warning if the version is
->    older than the one that fixes the issue.
-> - hid-asus awill also toggle the CSEE hack off, and mcu_powersave to on if the
-> version is high enough.
+Signed-off-by: Gašper Nemgar <gasper.nemgar@gmail.com>"
+---
+ drivers/platform/x86/ideapad-laptop.c | 16 ++++++++++++++++
+ 1 file changed, 16 insertions(+)
 
-It is *strongly* preferred to remove the hack completely, but this may 
-take some time after this series lands for it to be viable without 
-regressing users.
-
-I thought I had added to above to cover-letter but did not, sorry all.
-
-The aim is to remove the hack at some stage this year.
-
-> - Changelog:
->    + V2:
->      - Adjust warning message to explicitly mention suspend issues
->      - Use switch/case block to set min_version
->        - Set min_version to 0 by default and toggle hacks off
->    + V3:
->      - Fix errors picked up by test bot: incorrect return in the else block
->        of `#if IS_REACHABLE(CONFIG_ASUS_WMI)`:
->        - set_ally_mcu_hack()
->        - set_ally_mcu_powersave()
-> 
-> Luke D. Jones (2):
->    hid-asus: check ROG Ally MCU version and warn
->    platform/x86: asus-wmi: Refactor Ally suspend/resume
-> 
->   drivers/hid/hid-asus.c                     | 111 +++++++++++++++++-
->   drivers/platform/x86/asus-wmi.c            | 130 ++++++++++++++-------
->   include/linux/platform_data/x86/asus-wmi.h |  13 +++
->   3 files changed, 213 insertions(+), 41 deletions(-)
-> 
+diff --git a/drivers/platform/x86/ideapad-laptop.c b/drivers/platform/x86/ideapad-laptop.c
+index 30bd366d7..a03377d87 100644
+--- a/drivers/platform/x86/ideapad-laptop.c
++++ b/drivers/platform/x86/ideapad-laptop.c
+@@ -1308,6 +1308,16 @@ static const struct key_entry ideapad_keymap[] = {
+ 	/* Specific to some newer models */
+ 	{ KE_KEY,	0x3e | IDEAPAD_WMI_KEY, { KEY_MICMUTE } },
+ 	{ KE_KEY,	0x3f | IDEAPAD_WMI_KEY, { KEY_RFKILL } },
++	/* Star- (User Asignable Key) */
++	{ KE_KEY,	0x44 | IDEAPAD_WMI_KEY, { KEY_PROG1 } },
++	/* Eye */
++	{ KE_KEY,	0x45 | IDEAPAD_WMI_KEY, { KEY_BRIGHTNESS_CYCLE } },
++	/* Performance toggle also Fn+Q */
++	{ KE_KEY,	0x3d | IDEAPAD_WMI_KEY, { KEY_PROG4 } },
++	/* shift + prtsc */
++	{ KE_KEY,   0x2d | IDEAPAD_WMI_KEY, { KEY_CUT } },
++	{ KE_KEY,   0x29 | IDEAPAD_WMI_KEY, { KEY_TOUCHPAD_TOGGLE } },
++	{ KE_KEY,   0x2a | IDEAPAD_WMI_KEY, { KEY_ROOT_MENU } },
+ 
+ 	{ KE_END },
+ };
+@@ -2093,6 +2103,12 @@ static void ideapad_wmi_notify(struct wmi_device *wdev, union acpi_object *data)
+ 
+ 		dev_dbg(&wdev->dev, "WMI fn-key event: 0x%llx\n",
+ 			data->integer.value);
++				
++		/* performance button triggered by  ...  */
++		if ((data->integer.value | IDEAPAD_WMI_KEY) == 0x13d ) {
++			platform_profile_cycle();
++			break;
++		}
+ 
+ 		/* 0x02 FnLock, 0x03 Esc */
+ 		if (data->integer.value == 0x02 || data->integer.value == 0x03)
+-- 
+2.34.1
 
