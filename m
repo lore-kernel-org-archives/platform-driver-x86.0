@@ -1,93 +1,58 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E185422A4EA;
-	Fri, 21 Mar 2025 16:09:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.8
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D67013B59B
+	for <platform-driver-x86@vger.kernel.org>; Fri, 21 Mar 2025 16:44:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742573390; cv=none; b=I9StbMDukHYd/6DrdUlGnxZwARh3RFDXz2RxzLsCbj/3YfqpZAIkOrkmaku/a7h2fbMLoGk6mcmSSZPttiSXCGBO4ntOmNVnRLa+54r60clDj6oG32UQsuJcABSj5iGllhhChx7fHjrWKL4dETdQ2wOeLDgUCu7j22VcnlRid8s=
+	t=1742575441; cv=none; b=OjDtYRnsTEB7MKTYyVsaXU7TNIiyDbEKED9D55UzTXIHETJdscEGwHch5nrYeNrJAkoTwHW8EpE9Q7NEcgbeuql7RBx0IeYu+uALp4NYtUF6VgS+HRu5W1KTC6pNZXO7/MEUTx09iHBDOqT0IkVrvRcKhsvZ7sTf6Cj522TLqN0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742573390; c=relaxed/simple;
-	bh=aDAlamYyZ4jkLWyWBaRa75vEGUzN9zvUrX/xuDuvQhE=;
+	s=arc-20240116; t=1742575441; c=relaxed/simple;
+	bh=mBNOjliTUtjnuGtop7U7hLVU8u35OkOuf+IpFz73DD8=;
 	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=W8GSzjFGkTawitgT+C3LIx/prfaouzw2I9HtJAEFRJyYUrydiAVX2KPqMpw614wRo92tIm444HvTqEltO+7sutpTrjx09TjNHUw3jCp6B+2NIxiE0zc8qHyguky0+Oo1UZuVLSvxPWP/jmhrrNfbnvcuhES4QMUis+qMGb9xcRA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=KD1uX7gP; arc=none smtp.client-ip=192.198.163.8
+	 MIME-Version:Content-Type; b=hrgMqTxeckVPKGlrZtekdAaJ/J44yTaAWExYD0A9HtIeseXPmUn+lEm7+UBYNzlrmWOalph4NkYENB3pfEV9k7LIcSZa6ptm8BAm/5r3LqRnTz7uCCCCMtFfJKCawXEbhqQmVGi/QPGDF1jePEyDiwCp27685G40VC32wAAN9wk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=mn3wfJcG; arc=none smtp.client-ip=198.175.65.21
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="KD1uX7gP"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="mn3wfJcG"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1742573390; x=1774109390;
+  t=1742575440; x=1774111440;
   h=from:date:to:cc:subject:in-reply-to:message-id:
    references:mime-version;
-  bh=aDAlamYyZ4jkLWyWBaRa75vEGUzN9zvUrX/xuDuvQhE=;
-  b=KD1uX7gP/LojJ727AwyAAyD0Nif/BSbN6jJiNHdeu/UGg7KOcOSrIayc
-   zib/pyedUdNPJ4gkTR8fD+esqiAblSHVsozPQfuaLHTdPbRxCF5v7uaWS
-   yMtSEWBAwysHpJPOtpgiKebJjf20UbffOFIPsV5FpUflgzXTFxqWy7l7r
-   H8ubMuMdMU6XS2ACvFM1Kamh45nczZD2ix4bS85icbG+Xtyz2+MqMEftg
-   nJcEJyaCFejn3YlHhic51frQvzNhQ2fHxP+fIu8ir8UDtRroTGy+VNX6W
-   AkZ8ajr1b+0kxXohXJ2Ncd607RBSDXS2ns4ll1OnKQA/AKzLpYk5Xl3ir
-   g==;
-X-CSE-ConnectionGUID: 1QYfAh+lSPyiBhy4jKntNg==
-X-CSE-MsgGUID: D0Sr5P9LT/CIeSc9ezn13w==
-X-IronPort-AV: E=McAfee;i="6700,10204,11380"; a="61366675"
-X-IronPort-AV: E=Sophos;i="6.14,264,1736841600"; 
-   d="scan'208";a="61366675"
-Received: from orviesa008.jf.intel.com ([10.64.159.148])
-  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Mar 2025 09:08:47 -0700
-X-CSE-ConnectionGUID: s+SzOXF7TAiwIAcfG0mbgQ==
-X-CSE-MsgGUID: 6hxEBaxKRL6vcWoyAx4wig==
+  bh=mBNOjliTUtjnuGtop7U7hLVU8u35OkOuf+IpFz73DD8=;
+  b=mn3wfJcGoabPpCFy53l7vcPNlWhL1caNUBrhmhT4XCsNg0eDx+7z45/n
+   Qgrq96mYUAncTsZJb8cAr4RkTktipaGkWHHsWOdhSyR9OFjJA2Oc3qCaG
+   AWOu6gDRXZ8s3dUgK7j8ABfNt6+/aHlbSh+rv65WfblH2nlB1yUwWW7Sr
+   Son02LkyrhmAvqON+AXy6Rbbg8b6b5rcWqKvX7wD6SMRJXCEluQDasVW5
+   FDojqzaPR4Kjzb1Ed2SWDO6FSBqvDhibvspCZA1H/kvIjza2k0UFDX/Vp
+   E30er9KHEMpawqnuUl6Co+SMJg/Gi1zZDGa/hsJFunpr0aHiPVEl8LNXt
+   Q==;
+X-CSE-ConnectionGUID: HU6Yy2mnQTmSMu00n4BuQw==
+X-CSE-MsgGUID: naB9DmgqToG+Kg3l9yoCjw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11380"; a="43774569"
+X-IronPort-AV: E=Sophos;i="6.14,265,1736841600"; 
+   d="scan'208";a="43774569"
+Received: from orviesa009.jf.intel.com ([10.64.159.149])
+  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Mar 2025 09:44:00 -0700
+X-CSE-ConnectionGUID: jrahvE7kT8e6Rkd80KF7sA==
+X-CSE-MsgGUID: CHqEeBuIQyCtDAZm0VV41Q==
 X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.14,264,1736841600"; 
-   d="scan'208";a="124388577"
+X-IronPort-AV: E=Sophos;i="6.14,265,1736841600"; 
+   d="scan'208";a="123156308"
 Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.112])
-  by orviesa008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Mar 2025 09:08:30 -0700
+  by orviesa009-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Mar 2025 09:43:58 -0700
 From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Fri, 21 Mar 2025 18:08:26 +0200 (EET)
-To: Easwar Hariharan <eahariha@linux.microsoft.com>, 
-    Andrew Morton <akpm@linux-foundation.org>
-cc: Yaron Avizrat <yaron.avizrat@intel.com>, Oded Gabbay <ogabbay@kernel.org>, 
-    Julia Lawall <Julia.Lawall@inria.fr>, 
-    Nicolas Palix <nicolas.palix@imag.fr>, 
-    James Smart <james.smart@broadcom.com>, 
-    Dick Kennedy <dick.kennedy@broadcom.com>, 
-    "James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>, 
-    "Martin K. Petersen" <martin.petersen@oracle.com>, 
-    Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, 
-    Chris Mason <clm@fb.com>, Josef Bacik <josef@toxicpanda.com>, 
-    David Sterba <dsterba@suse.com>, Ilya Dryomov <idryomov@gmail.com>, 
-    Dongsheng Yang <dongsheng.yang@easystack.cn>, Jens Axboe <axboe@kernel.dk>, 
-    Xiubo Li <xiubli@redhat.com>, Damien Le Moal <dlemoal@kernel.org>, 
-    Niklas Cassel <cassel@kernel.org>, Carlos Maiolino <cem@kernel.org>, 
-    "Darrick J. Wong" <djwong@kernel.org>, Sebastian Reichel <sre@kernel.org>, 
-    Keith Busch <kbusch@kernel.org>, Christoph Hellwig <hch@lst.de>, 
-    Sagi Grimberg <sagi@grimberg.me>, Frank Li <Frank.Li@nxp.com>, 
-    Mark Brown <broonie@kernel.org>, Shawn Guo <shawnguo@kernel.org>, 
-    Sascha Hauer <s.hauer@pengutronix.de>, 
-    Pengutronix Kernel Team <kernel@pengutronix.de>, 
-    Fabio Estevam <festevam@gmail.com>, 
-    Shyam Sundar S K <Shyam-sundar.S-k@amd.com>, 
-    Hans de Goede <hdegoede@redhat.com>, 
-    =?ISO-8859-15?Q?Ilpo_J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>, 
-    Henrique de Moraes Holschuh <hmh@hmh.eng.br>, 
-    Selvin Xavier <selvin.xavier@broadcom.com>, 
-    Kalesh AP <kalesh-anakkur.purayil@broadcom.com>, 
-    Jason Gunthorpe <jgg@ziepe.ca>, Leon Romanovsky <leon@kernel.org>, 
-    cocci@inria.fr, LKML <linux-kernel@vger.kernel.org>, 
-    linux-scsi@vger.kernel.org, dri-devel@lists.freedesktop.org, 
-    linux-sound@vger.kernel.org, linux-btrfs@vger.kernel.org, 
-    ceph-devel@vger.kernel.org, linux-block@vger.kernel.org, 
-    linux-ide@vger.kernel.org, linux-xfs@vger.kernel.org, 
-    linux-pm@vger.kernel.org, linux-nvme@lists.infradead.org, 
-    linux-spi@vger.kernel.org, imx@lists.linux.dev, 
-    linux-arm-kernel@lists.infradead.org, platform-driver-x86@vger.kernel.org, 
-    ibm-acpi-devel@lists.sourceforge.net, linux-rdma@vger.kernel.org
-Subject: Re: [PATCH v3 14/16] platform/x86/amd/pmf: convert timeouts to
- secs_to_jiffies()
-In-Reply-To: <20250225-converge-secs-to-jiffies-part-two-v3-14-a43967e36c88@linux.microsoft.com>
-Message-ID: <1252f601-97fd-f199-c339-5bd4ea8060dc@linux.intel.com>
-References: <20250225-converge-secs-to-jiffies-part-two-v3-0-a43967e36c88@linux.microsoft.com> <20250225-converge-secs-to-jiffies-part-two-v3-14-a43967e36c88@linux.microsoft.com>
+Date: Fri, 21 Mar 2025 18:43:54 +0200 (EET)
+To: Kevin Stravers <kevin@stravers.net>
+cc: corentin.chary@gmail.com, luke@ljones.dev, 
+    platform-driver-x86@vger.kernel.org
+Subject: Re: [PATCH] platform/x86: asus-wmi: Add quirk for ASUS Vivobook
+ S14
+In-Reply-To: <a7bf6573-0d8c-4464-8841-df5df537249e@stravers.net>
+Message-ID: <28094cb8-084d-3aa1-12f5-96aa9b0aa31c@linux.intel.com>
+References: <fe59465c-3dfc-4d91-baca-ffbc3d4ff138@stravers.net> <1d0863e0-eba2-d8b8-f13a-40ce37aed03d@linux.intel.com> <a7bf6573-0d8c-4464-8841-df5df537249e@stravers.net>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -96,49 +61,85 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 
-On Tue, 25 Feb 2025, Easwar Hariharan wrote:
+On Fri, 21 Mar 2025, Kevin Stravers wrote:
 
-> Commit b35108a51cf7 ("jiffies: Define secs_to_jiffies()") introduced
-> secs_to_jiffies().  As the value here is a multiple of 1000, use
-> secs_to_jiffies() instead of msecs_to_jiffies() to avoid the multiplication
 > 
-> This is converted using scripts/coccinelle/misc/secs_to_jiffies.cocci with
-> the following Coccinelle rules:
-> 
-> @depends on patch@
-> expression E;
-> @@
-> 
-> -msecs_to_jiffies
-> +secs_to_jiffies
-> (E
-> - * \( 1000 \| MSEC_PER_SEC \)
-> )
-> 
-> Signed-off-by: Easwar Hariharan <eahariha@linux.microsoft.com>
+> Sorry about that, the email client formatted tabs as spaces. This should be the corre
+> ct patch.
 
-Applied to the review-ilpo-next branch.
+Hi,
 
+This now has other issues. It had some html in that comment above and 
+please resend not as a reply to any thread but in own thread.
+
+> >From 9af8ba6cfd6305d7696d6cfc8eedb12405cb572f Mon Sep 17 00:00:00 2001
+> From: Kevin Robert Stravers <kevin@stravers.net>
+> Date: Mon, 17 Mar 2025 20:41:44 -0400
+> Subject: [PATCH] platform/x86: asus-wmi: Add quirk for ASUS Vivobook S14
+> 
+> The ASUS Vivobook S14 will have wifi disabled on boot as well as
+> resumption from suspend if the asus-wmi driver invokes rfkill functions.
+> 
+> This patch disables asus-wmi's rfkill usage to prevent the wifi card
+> from being software disabled.
 > ---
->  drivers/platform/x86/amd/pmf/acpi.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+>  drivers/platform/x86/asus-nb-wmi.c | 13 +++++++++++++
+>  drivers/platform/x86/asus-wmi.c    |  5 +++++
+>  2 files changed, 18 insertions(+)
 > 
-> diff --git a/drivers/platform/x86/amd/pmf/acpi.c b/drivers/platform/x86/amd/pmf/acpi.c
-> index dd5780a1d06e1dc979fcff5bafd6729bc4937eab..f75f7ecd8cd91c9d55abc38ce6e46eed7fe69fc0 100644
-> --- a/drivers/platform/x86/amd/pmf/acpi.c
-> +++ b/drivers/platform/x86/amd/pmf/acpi.c
-> @@ -220,7 +220,7 @@ static void apmf_sbios_heartbeat_notify(struct work_struct *work)
->  	if (!info)
+> diff --git a/drivers/platform/x86/asus-nb-wmi.c b/drivers/platform/x86/asus-nb-wmi.c
+> index 3f8b2a324efd..1e6fb9308560 100644
+> --- a/drivers/platform/x86/asus-nb-wmi.c
+> +++ b/drivers/platform/x86/asus-nb-wmi.c
+> @@ -150,6 +150,10 @@ static struct quirk_entry quirk_asus_zenbook_duo_kbd = {
+>  	.ignore_key_wlan = true,
+>  };
+>  
+> +static struct quirk_entry quirk_asus_vivobook_s14 = {
+> +	.skip_rfkill = true,
+> +};
+> +
+>  static int dmi_matched(const struct dmi_system_id *dmi)
+>  {
+>  	pr_info("Identified laptop model '%s'\n", dmi->ident);
+> @@ -530,6 +534,15 @@ static const struct dmi_system_id asus_quirks[] = {
+>  		},
+>  		.driver_data = &quirk_asus_zenbook_duo_kbd,
+>  	},
+> +	{
+> +		.callback = dmi_matched,
+> +		.ident = "ASUS VivoBook S14",
+> +		.matches = {
+> +			DMI_MATCH(DMI_SYS_VENDOR, "ASUSTeK COMPUTER INC."),
+> +			DMI_MATCH(DMI_PRODUCT_NAME, "S5406SA"),
+> +		},
+> +		.driver_data = &quirk_asus_vivobook_s14,
+> +	},
+>  	{},
+>  };
+>  
+> diff --git a/drivers/platform/x86/asus-wmi.c b/drivers/platform/x86/asus-wmi.c
+> index 38ef778e8c19..42e58a28c3e2 100644
+> --- a/drivers/platform/x86/asus-wmi.c
+> +++ b/drivers/platform/x86/asus-wmi.c
+> @@ -2138,6 +2138,8 @@ static int asus_new_rfkill(struct asus_wmi *asus,
+>  
+>  static void asus_wmi_rfkill_exit(struct asus_wmi *asus)
+>  {
+> +	if (asus->driver->quirks->skip_rfkill)
+> +		return;
+>  	if (asus->driver->wlan_ctrl_by_user && ashs_present())
 >  		return;
 >  
-> -	schedule_delayed_work(&dev->heart_beat, msecs_to_jiffies(dev->hb_interval * 1000));
-> +	schedule_delayed_work(&dev->heart_beat, secs_to_jiffies(dev->hb_interval));
->  	kfree(info);
->  }
+> @@ -2188,6 +2190,9 @@ static void asus_wmi_rfkill_exit(struct asus_wmi *asus)
 >  
+>  static int asus_wmi_rfkill_init(struct asus_wmi *asus)
+>  {
+> +	if (asus->driver->quirks->skip_rfkill)
+> +		return 0;
+> +
+>  	int result = 0;
+>  
+>  	mutex_init(&asus->hotplug_lock);
 > 
-> 
-
--- 
- i.
 
