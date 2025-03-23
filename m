@@ -1,160 +1,406 @@
-Received: from mail-qk1-f176.google.com (mail-qk1-f176.google.com [209.85.222.176])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from fout-a7-smtp.messagingengine.com (fout-a7-smtp.messagingengine.com [103.168.172.150])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9425828691;
-	Sun, 23 Mar 2025 02:59:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2EF811FFC68;
+	Sun, 23 Mar 2025 06:21:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.150
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742698786; cv=none; b=Ric8qOXCPyQ6vGT/waxUD1TUFKR1jdpKvXOLNZ8Fx+HXYY5edJW3n1ktwPxm3rXjRto+c6Ro6xxKWpPh9kQc+J8UNohiVA6Qtpn0V+sJufar/FZlBSsWtdt0do+LHDv9wmxbStuPbSzrslB0VdMA+vwm8AegdFu8pOt9HYRhF4k=
+	t=1742710897; cv=none; b=KeHNMjMJvASuG0JuVMlySRzD8WvAVMGdaigp+xJOxRv6BBlz+IC9plVadbsox2HbZMnKgksVOBwesD58HPJ6a2+ig0pTFMIJNIvsHy43IzXDypD+3AbI7W1q5p7UXbaL0kGSwjZ1fwoICtR5EZMGUMOBL/kg7NDCRXOfoUaSpPo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742698786; c=relaxed/simple;
-	bh=9BtaeiQjKgDpAE1AwouiFw+6IA/C4KaLsTyZY7gdYAo=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=l+13hVYflzUTQrThHAcf2kIGHG9KEBq/4h71p+5tW6PNAlxBuuCG2TXWR3GJGndISK+T728+NswDBjAy8u2oezYVOfL3XUWMv9qunap7Lg8l+muWyOvioX1OhpNdV6+yYi59tIWJeJTkch6VdpQ3qQt400/4k8oxPh69CoG+WhQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=c+AEOHca; arc=none smtp.client-ip=209.85.222.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1742710897; c=relaxed/simple;
+	bh=L76nD2k+kWcdIPaJeM7XftElz3AXDHzkh238FN468A8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=ZFuart6tsR50ecvovjd+i3II+l9njlhLzYV74nFKCur+MWZpA3E5MOWZe8EFTtkNQ1Hj72ZUYeb1dFlAOnUX1JOHsJ/+ZG7p/LF55IHRcAVC86XMPPDOlCPS6X4WqIk7kY8328n7J2EbEziMkgO8AV/9wPaSHeZfmOstPCJYUlM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ljones.dev; spf=none smtp.mailfrom=ljones.dev; dkim=pass (2048-bit key) header.d=ljones.dev header.i=@ljones.dev header.b=wqd72IU6; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=DukTkJiY; arc=none smtp.client-ip=103.168.172.150
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ljones.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=ljones.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="c+AEOHca"
-Received: by mail-qk1-f176.google.com with SMTP id af79cd13be357-7c5ba363f1aso329903985a.0;
-        Sat, 22 Mar 2025 19:59:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1742698783; x=1743303583; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=alDYSXZgOpXws3wZPrNZiq8p2H6lHODtdwt0xCwEuHg=;
-        b=c+AEOHcaYq1Qtl4daA8cdO00VVzll+82XGKhgMT6hHAnISt1ArSRB718DTdswzKP58
-         +uHmYzgAfDQi1wJTdquUPkIQDxLcCNMwwn/8jQPW70KHm2UGjCVgTn1VNIx+zX5yTzFb
-         yy/f4tjlrRO3tdq/f2JkimIdt9eGx3FE0zMGBxkAH2L5VZxYPo7hXyI7Y1jXWJCaz5dX
-         e/eYLEsY9jI8y3CVgJKadKb4EUbdUVWuineoBC6KcPa3StWghV/nL/L2Tg1By4ssdF+D
-         IMj+vBQ2SPrbMc2Ec0AjbBsEg4sgDUhARAWxFvqR8AuAoFFIUeQoW/LNqLgVgePZ9mO3
-         ylnQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1742698783; x=1743303583;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=alDYSXZgOpXws3wZPrNZiq8p2H6lHODtdwt0xCwEuHg=;
-        b=THpOSfOJRJYw8hgK+KYu+qZ9s+5MvKhLQo9wClH6W71hNbxOx2ngfZ6kzG4hByXh5k
-         CzdUMko7hw+hT9wjffgm8NWgz91TfaY5B2mM7ZPXLLw1E3J5Om8+9BIuOfEPiYmTUZsg
-         iFa0OTmWTPGLeM34Jf1kZ9p+zL4VtCm4xH5J0D2PeolX8tIeS1RNwKHW1Bo0GOilXZXI
-         bV2FuNl1GvwcJCJqVIyoT41gU//T+Hy2AHXMsSsD0k92hNDL515HTVuMB91tGffiBtl3
-         l6CAaprAc3kwvQ3aFkNSnNhdBkmWpzCuMzkzKCVGnZUzJAXotNn8lrGNxGOMcYo59UWu
-         vdIA==
-X-Forwarded-Encrypted: i=1; AJvYcCU15i5Rk7dgoV7/8z3yBw1fbCGXwOImqYnBA9Z9qYwTvzhw1aH5Amv8SXmwRhfywFx8/QHl8ljaKJ/lg9qAVlg9FBH71w==@vger.kernel.org, AJvYcCUL7JOgLC9sHSp1Ie5Q+aOJ1iH0LQPEW9m5WA1Rrg7LrcN8Lt/6WMtscErMUGkMkzHZJ/rLZ5KrVnbXk1U=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxzeDFDgDmJ2LctGHekKA4RGCdmCMUyFEzgMublIzVjHzjWrZTv
-	c4x5mADfbPW1AH8Y/PayiHt8q2fDz4K31ZmOnuurGvFZCHoi07PW
-X-Gm-Gg: ASbGncubLtvzxQomu3rase/Q6JYjAoPDRlKElQh0HJ8gpY0L0htdQ1+qjYcqtR1CLdd
-	0afd5adIZZxTyJBXdgv1MrpDuma9Qsmp32PVFeF1mMRqQEBCFHcd2QNO7gJi20u1q6Y6PUSbyp9
-	ThBsC+Gj/1ilTYdLO8QZ55gJZ8TgPQYuOG38HAAcJM3K7aC7VMjq3FrE4e5xNaR5mcTvzRtAMCy
-	kyTkF0mn/fsSfMLNdYjhUDN2T5MjaS2ZfyXkvXOvHGCMa0M+lPdyo5XYw5JXIHBBcSBJH6uMX8o
-	95A7B2zzMvdk4P3cMikMwzWpoFCXICFcAJ2RzOkKmeMtUSkLdGPGnFQmMHd1dQ9sikSEIuvCCUK
-	Dqg94UU6ylFRxP+dKtFsCAFyoLJFyQw==
-X-Google-Smtp-Source: AGHT+IE2oMk31LVZrSN2YrexYmcS3QStHLUvupI6DVGE5JYw2i3VW7ou4ghFmTV7R/0M9m/R1yKfBw==
-X-Received: by 2002:a05:620a:2485:b0:7c5:3e76:bcd7 with SMTP id af79cd13be357-7c5ba1dee3dmr1348443885a.37.1742698783386;
-        Sat, 22 Mar 2025 19:59:43 -0700 (PDT)
-Received: from localhost.localdomain (pat-199-212-65-136.resnet.yorku.ca. [199.212.65.136])
-        by smtp.gmail.com with ESMTPSA id af79cd13be357-7c5b92d6b09sm319804185a.46.2025.03.22.19.59.42
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 22 Mar 2025 19:59:42 -0700 (PDT)
-From: Seyediman Seyedarab <imandevel@gmail.com>
-X-Google-Original-From: Seyediman Seyedarab <ImanDevel@gmail.com>
-To: hmh@hmh.eng.br,
-	hdegoede@redhat.com,
-	ilpo.jarvinen@linux.intel.com
-Cc: ibm-acpi-devel@lists.sourceforge.net,
-	platform-driver-x86@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Seyediman Seyedarab <ImanDevel@gmail.com>,
-	Eduard Christian Dumitrescu <eduard.c.dumitrescu@gmail.com>,
-	Vlastimil Holer <vlastimil.holer@gmail.com>,
-	crok <crok.bic@gmail.com>,
-	Alireza Elikahi <scr0lll0ck1s4b0v3h0m3k3y@gmail.com>
-Subject: [PATCH] platform/x86: thinkpad_acpi: disable ACPI fan access for T495* and E560
-Date: Sat, 22 Mar 2025 23:01:19 -0400
-Message-ID: <20250323030119.17485-1-ImanDevel@gmail.com>
-X-Mailer: git-send-email 2.48.1
+	dkim=pass (2048-bit key) header.d=ljones.dev header.i=@ljones.dev header.b="wqd72IU6";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="DukTkJiY"
+Received: from phl-compute-04.internal (phl-compute-04.phl.internal [10.202.2.44])
+	by mailfout.phl.internal (Postfix) with ESMTP id 0E64713826E5;
+	Sun, 23 Mar 2025 02:21:33 -0400 (EDT)
+Received: from phl-mailfrontend-02 ([10.202.2.163])
+  by phl-compute-04.internal (MEProxy); Sun, 23 Mar 2025 02:21:33 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ljones.dev; h=cc
+	:cc:content-transfer-encoding:content-type:content-type:date
+	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to; s=fm3; t=1742710893;
+	 x=1742797293; bh=jALoMhYy/CVvOs/MhMfF9ikQ4gqPNxjt1CTvNyeXOmg=; b=
+	wqd72IU6r3ioaN3kaxwCOwN3z/LmDuO6T40ILo9ujm2kgxxqxpsadRBVo2Kl/Gvk
+	Sykp6SXnE1EoFvn+YZDBsXwvXF9CPHqhsVQEvgnrwfRh4SXsIK9IDf9Y3URHP5ef
+	3YdDW8C2/NAW5FiD9PPFHfQXXybg98+EyyznYfoa3i3DIoHE9BgDFfR5AMjp554b
+	bqwP1GqE72X1LfmcJktvdYwfQlbsfQ+cfDKh8hcMQiDHLgmCkMfNQTM/Sd21Kl/S
+	jkoZjsNwo7jKXAzEB60qhkYmCxIIKyT9rU/9Ikq780nZjVPmrQ8THjpuM/PZg8cg
+	RGhsiOFu963zj2vyJD3kcA==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:content-type:date:date:feedback-id:feedback-id
+	:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to:x-me-proxy
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; t=1742710893; x=
+	1742797293; bh=jALoMhYy/CVvOs/MhMfF9ikQ4gqPNxjt1CTvNyeXOmg=; b=D
+	ukTkJiYPJOM7MunB9sWgNskohFT+JREXqCTJuo6IUpjhNqQ+s2QwFK9s2c+KmzsP
+	eOZW99NKbMhcmjaLzAStYEkGVkebhbYf0bDEg1Q6EdMzOqW5x8rmydWHI4X1ZlHH
+	HjcsH2MAFv0KS7Ipb4y+316dDiAP5Hmxx6QyPLfqGT1jVT7oW+JKjZcQuuRkHpTE
+	aH+upDzSbRYS90pqQvXY6KaLtSsi9Y/0F0pWAne9YX3qIFCDTB2SXUZSsu+AwmFF
+	qcox2SjrAATjORkIxdVQ2Qg9DPkA2a1dKMtw6biIf1t0XWsboBSR77PqaQvT47mN
+	pccIL7k94fx/nFwWpVg8w==
+X-ME-Sender: <xms:bKjfZ_Bt-_4Ugtc3Tdxuc2xvHFL4BraAs8uogkDmGyuUtMItixkovw>
+    <xme:bKjfZ1iLCTdevHNf0vXls5C3h4dyka59Y7kRDjJ_f95rXvfVwEYk3_LhXh6rgIl6D
+    6jSEN1zpiMXQvsYd_A>
+X-ME-Received: <xmr:bKjfZ6m8wb4u6lqgwHgud7IolbIoOEjsKFj8rem-9hiYMTD0fAzRRnB0RCu3do0M8VPCabQV>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdduheeiuddvucetufdoteggodetrf
+    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggv
+    pdfurfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucesvcftvggtihhpih
+    gvnhhtshculddquddttddmnecujfgurhepkfffgggfuffvvehfhfgjtgfgsehtjeertddt
+    vdejnecuhfhrohhmpedfnfhukhgvucffrdculfhonhgvshdfuceolhhukhgvsehljhhonh
+    gvshdruggvvheqnecuggftrfgrthhtvghrnhepjeelteffieehueduvddvjeejgfekjeeh
+    heevkeeiieejvdfhfeeluefggedvfeefnecuffhomhgrihhnpehlvggupggtuggvvhdrnh
+    grmhgvnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomhep
+    lhhukhgvsehljhhonhgvshdruggvvhdpnhgspghrtghpthhtohepledpmhhouggvpehsmh
+    htphhouhhtpdhrtghpthhtoheplhhkmhhlsegrnhhthhgvrghsrdguvghvpdhrtghpthht
+    ohepphhlrghtfhhorhhmqdgurhhivhgvrhdqgiekieesvhhgvghrrdhkvghrnhgvlhdroh
+    hrghdprhgtphhtthhopehlihhnuhigqdhinhhpuhhtsehvghgvrhdrkhgvrhhnvghlrdho
+    rhhgpdhrtghpthhtoheplhhinhhugidqkhgvrhhnvghlsehvghgvrhdrkhgvrhhnvghlrd
+    horhhgpdhrtghpthhtohepjhhikhhosheskhgvrhhnvghlrdhorhhgpdhrtghpthhtohep
+    sggvnhhtihhssheskhgvrhhnvghlrdhorhhgpdhrtghpthhtoheptghorhgvnhhtihhnrd
+    gthhgrrhihsehgmhgrihhlrdgtohhmpdhrtghpthhtohephhguvghgohgvuggvsehrvggu
+    hhgrthdrtghomhdprhgtphhtthhopehilhhpohdrjhgrrhhvihhnvghnsehlihhnuhigrd
+    hinhhtvghlrdgtohhm
+X-ME-Proxy: <xmx:bKjfZxyWrAYxaP6crK8zZBHSiKSJh-9NOQkd-eHUqGm334tA7LAsuQ>
+    <xmx:bKjfZ0TWbMxO6dcFzLmWXA1w8GP1MaSc19MjAp78WOWKbhUavG0AfA>
+    <xmx:bKjfZ0bvbtKBvgvl-1K0nTnXmOBE3zMjQUl1W4eHmYS4JrPCFWqTzw>
+    <xmx:bKjfZ1RWWv-iEznL77k37AynBtIPMaNEvYhqvuXJPnJWGCBo5XcD6Q>
+    <xmx:bajfZ3Eh7Qbhlg3ccZ51-g15V-xHCI_F5QbHD0ZhCqXuQa0RSIq4AL05>
+Feedback-ID: i5ec1447f:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Sun,
+ 23 Mar 2025 02:21:28 -0400 (EDT)
+Message-ID: <391f7530-51aa-4bb6-871e-b365802b99db@ljones.dev>
+Date: Sun, 23 Mar 2025 19:21:26 +1300
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 09/10] HID: asus: add basic RGB support
+To: Antheas Kapenekakis <lkml@antheas.dev>,
+ platform-driver-x86@vger.kernel.org, linux-input@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org, Jiri Kosina <jikos@kernel.org>,
+ Benjamin Tissoires <bentiss@kernel.org>,
+ Corentin Chary <corentin.chary@gmail.com>,
+ Hans de Goede <hdegoede@redhat.com>,
+ =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+References: <20250322102804.418000-1-lkml@antheas.dev>
+ <20250322102804.418000-10-lkml@antheas.dev>
+Content-Language: en-US
+From: "Luke D. Jones" <luke@ljones.dev>
+In-Reply-To: <20250322102804.418000-10-lkml@antheas.dev>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-The bug was introduced in commit 57d0557dfa49 ("platform/x86:
-thinkpad_acpi: Add Thinkpad Edge E531 fan support") which adds a new
-fan control method via the FANG and FANW ACPI methods.
+On 22/03/25 23:28, Antheas Kapenekakis wrote:
+> Adds basic RGB support to hid-asus through multi-index. The interface
+> works quite well, but has not gone through much stability testing.
+> Applied on demand, if userspace does not touch the RGB sysfs, not
+> even initialization is done. Ensuring compatibility with existing
+> userspace programs.
+> 
+> Signed-off-by: Antheas Kapenekakis <lkml@antheas.dev>
+> ---
+>   drivers/hid/hid-asus.c | 169 +++++++++++++++++++++++++++++++++++++----
+>   1 file changed, 155 insertions(+), 14 deletions(-)
+> 
+> diff --git a/drivers/hid/hid-asus.c b/drivers/hid/hid-asus.c
+> index 905453a4eb5b7..9d8ccfde5912e 100644
+> --- a/drivers/hid/hid-asus.c
+> +++ b/drivers/hid/hid-asus.c
+> @@ -30,6 +30,7 @@
+>   #include <linux/input/mt.h>
+>   #include <linux/usb.h> /* For to_usb_interface for T100 touchpad intf check */
+>   #include <linux/power_supply.h>
+> +#include <linux/led-class-multicolor.h>
+>   #include <linux/leds.h>
+>   
+>   #include "hid-ids.h"
+> @@ -85,6 +86,7 @@ MODULE_DESCRIPTION("Asus HID Keyboard and TouchPad");
+>   #define QUIRK_ROG_NKEY_KEYBOARD		BIT(11)
+>   #define QUIRK_ROG_CLAYMORE_II_KEYBOARD BIT(12)
+>   #define QUIRK_HANDLE_GENERIC		BIT(13)
+> +#define QUIRK_ROG_NKEY_RGB		BIT(14)
+>   
+>   #define I2C_KEYBOARD_QUIRKS			(QUIRK_FIX_NOTEBOOK_REPORT | \
+>   						 QUIRK_NO_INIT_REPORTS | \
+> @@ -97,9 +99,15 @@ MODULE_DESCRIPTION("Asus HID Keyboard and TouchPad");
+>   
+>   struct asus_kbd_leds {
+>   	struct asus_hid_listener listener;
+> +	struct led_classdev_mc mc_led;
+> +	struct mc_subled subled_info[3];
+>   	struct hid_device *hdev;
+>   	struct work_struct work;
+>   	unsigned int brightness;
+> +	uint8_t rgb_colors[3];
+> +	bool rgb_init;
+> +	bool rgb_set;
+> +	bool rgb_registered;
+>   	spinlock_t lock;
+>   	bool removed;
+>   };
+> @@ -504,23 +512,67 @@ static void asus_schedule_work(struct asus_kbd_leds *led)
+>   	spin_unlock_irqrestore(&led->lock, flags);
+>   }
+>   
+> -static void asus_kbd_backlight_set(struct asus_hid_listener *listener,
+> +static void do_asus_kbd_backlight_set(struct asus_kbd_leds *led, int brightness)
+> +{
+> +	unsigned long flags;
+> +
+> +	spin_lock_irqsave(&led->lock, flags);
+> +	led->brightness = brightness;
+> +	spin_unlock_irqrestore(&led->lock, flags);
+> +
+> +	asus_schedule_work(led);
+> +}
+> +
+> +static void asus_kbd_listener_set(struct asus_hid_listener *listener,
+>   				   int brightness)
+>   {
+>   	struct asus_kbd_leds *led = container_of(listener, struct asus_kbd_leds,
+>   						 listener);
+> +	do_asus_kbd_backlight_set(led, brightness);
+> +	if (led->rgb_registered) {
+> +		led->mc_led.led_cdev.brightness = brightness;
+> +		led_classdev_notify_brightness_hw_changed(&led->mc_led.led_cdev,
+> +							  brightness);
+> +	}
+> +}
+> +
+> +static void asus_kbd_brightness_set(struct led_classdev *led_cdev,
+> +				    enum led_brightness brightness)
+> +{
+> +	struct led_classdev_mc *mc_cdev = lcdev_to_mccdev(led_cdev);
+> +	struct asus_kbd_leds *led = container_of(mc_cdev, struct asus_kbd_leds,
+> +						 mc_led);
+>   	unsigned long flags;
+>   
+>   	spin_lock_irqsave(&led->lock, flags);
+> -	led->brightness = brightness;
+> +	led->rgb_colors[0] = mc_cdev->subled_info[0].intensity;
+> +	led->rgb_colors[1] = mc_cdev->subled_info[1].intensity;
+> +	led->rgb_colors[2] = mc_cdev->subled_info[2].intensity;
+> +	led->rgb_set = true;
+>   	spin_unlock_irqrestore(&led->lock, flags);
+>   
+> -	asus_schedule_work(led);
+> +	do_asus_kbd_backlight_set(led, brightness);
+> +}
+> +
+> +static enum led_brightness asus_kbd_brightness_get(struct led_classdev *led_cdev)
+> +{
+> +	struct led_classdev_mc *mc_led;
+> +	struct asus_kbd_leds *led;
+> +	enum led_brightness brightness;
+> +	unsigned long flags;
+> +
+> +	mc_led = lcdev_to_mccdev(led_cdev);
+> +	led = container_of(mc_led, struct asus_kbd_leds, mc_led);
+> +
+> +	spin_lock_irqsave(&led->lock, flags);
+> +	brightness = led->brightness;
+> +	spin_unlock_irqrestore(&led->lock, flags);
+> +
+> +	return brightness;
+>   }
+>   
+> -static void asus_kbd_backlight_work(struct work_struct *work)
+> +static void asus_kbd_backlight_work(struct asus_kbd_leds *led)
+>   {
+> -	struct asus_kbd_leds *led = container_of(work, struct asus_kbd_leds, work);
+>   	u8 buf[] = { FEATURE_KBD_REPORT_ID, 0xba, 0xc5, 0xc4, 0x00 };
+>   	int ret;
+>   	unsigned long flags;
+> @@ -534,10 +586,69 @@ static void asus_kbd_backlight_work(struct work_struct *work)
+>   		hid_err(led->hdev, "Asus failed to set keyboard backlight: %d\n", ret);
+>   }
+>   
+> +static void asus_kbd_rgb_work(struct asus_kbd_leds *led)
+> +{
+> +	u8 rgb_buf[][7] = {
+> +		{ FEATURE_KBD_LED_REPORT_ID1, 0xB3 }, /* set mode */
+> +		{ FEATURE_KBD_LED_REPORT_ID1, 0xB5 }, /* apply mode */
+> +		{ FEATURE_KBD_LED_REPORT_ID1, 0xB4 }, /* save to mem */
+> +	};
+> +	unsigned long flags;
+> +	uint8_t colors[3];
+> +	bool rgb_init, rgb_set;
+> +	int ret;
+> +
+> +	spin_lock_irqsave(&led->lock, flags);
+> +	rgb_init = led->rgb_init;
+> +	rgb_set = led->rgb_set;
+> +	led->rgb_set = false;
+> +	colors[0] = led->rgb_colors[0];
+> +	colors[1] = led->rgb_colors[1];
+> +	colors[2] = led->rgb_colors[2];
+> +	spin_unlock_irqrestore(&led->lock, flags);
+> +
+> +	if (!rgb_set)
+> +		return;
+> +
+> +	if (rgb_init) {
+> +		ret = asus_kbd_init(led->hdev, FEATURE_KBD_LED_REPORT_ID1);
+> +		if (ret < 0) {
+> +			hid_err(led->hdev, "Asus failed to init RGB: %d\n", ret);
+> +			return;
+> +		}
+> +		spin_lock_irqsave(&led->lock, flags);
+> +		led->rgb_init = false;
+> +		spin_unlock_irqrestore(&led->lock, flags);
+> +	}
+> +
+> +	/* Protocol is: 54b3 zone (0=all) mode (0=solid) RGB */
+> +	rgb_buf[0][4] = colors[0];
+> +	rgb_buf[0][5] = colors[1];
+> +	rgb_buf[0][6] = colors[2];
+> +
+> +	for (size_t i = 0; i < ARRAY_SIZE(rgb_buf); i++) {
+> +		ret = asus_kbd_set_report(led->hdev, rgb_buf[i], sizeof(rgb_buf[i]));
+> +		if (ret < 0) {
+> +			hid_err(led->hdev, "Asus failed to set RGB: %d\n", ret);
+> +			return;
+> +		}
+> +	}
+> +}
+> +
+> +static void asus_kbd_work(struct work_struct *work)
+> +{
+> +	struct asus_kbd_leds *led = container_of(work, struct asus_kbd_leds,
+> +						 work);
+> +	asus_kbd_backlight_work(led);
+> +	asus_kbd_rgb_work(led);
+> +}
+> +
+>   static int asus_kbd_register_leds(struct hid_device *hdev)
+>   {
+>   	struct asus_drvdata *drvdata = hid_get_drvdata(hdev);
+>   	unsigned char kbd_func;
+> +	struct asus_kbd_leds *leds;
+> +	bool no_led;
+>   	int ret;
+>   
+>   	ret = asus_kbd_init(hdev, FEATURE_KBD_REPORT_ID);
+> @@ -565,21 +676,51 @@ static int asus_kbd_register_leds(struct hid_device *hdev)
+>   	if (!drvdata->kbd_backlight)
+>   		return -ENOMEM;
+>   
+> -	drvdata->kbd_backlight->removed = false;
+> -	drvdata->kbd_backlight->brightness = 0;
+> -	drvdata->kbd_backlight->hdev = hdev;
+> -	drvdata->kbd_backlight->listener.brightness_set = asus_kbd_backlight_set;
+> -	INIT_WORK(&drvdata->kbd_backlight->work, asus_kbd_backlight_work);
+> +	leds = drvdata->kbd_backlight;
+> +	leds->removed = false;
+> +	leds->brightness = 3;
+> +	leds->hdev = hdev;
+> +	leds->listener.brightness_set = asus_kbd_listener_set;
+> +
+> +	leds->rgb_colors[0] = 0;
+> +	leds->rgb_colors[1] = 0;
+> +	leds->rgb_colors[2] = 0;
+> +	leds->rgb_init = true;
+> +	leds->rgb_set = false;
+> +	leds->mc_led.led_cdev.name = devm_kasprintf(&hdev->dev, GFP_KERNEL,
+> +					"asus-%s-led",
+> +					strlen(hdev->uniq) ?
+> +					hdev->uniq : dev_name(&hdev->dev));
+> +	leds->mc_led.led_cdev.flags = LED_BRIGHT_HW_CHANGED;
+> +	leds->mc_led.led_cdev.max_brightness = 3,
+> +	leds->mc_led.led_cdev.brightness_set = asus_kbd_brightness_set,
+> +	leds->mc_led.led_cdev.brightness_get = asus_kbd_brightness_get,
+> +	leds->mc_led.subled_info = leds->subled_info,
+> +	leds->mc_led.num_colors = ARRAY_SIZE(leds->subled_info),
+> +	leds->subled_info[0].color_index = LED_COLOR_ID_RED;
+> +	leds->subled_info[1].color_index = LED_COLOR_ID_GREEN;
+> +	leds->subled_info[2].color_index = LED_COLOR_ID_BLUE;
+> +
+> +	INIT_WORK(&drvdata->kbd_backlight->work, asus_kbd_work);
+>   	spin_lock_init(&drvdata->kbd_backlight->lock);
+>   
+>   	ret = asus_hid_register_listener(&drvdata->kbd_backlight->listener);
+> +	no_led = !!ret;
+> +
+> +	if (drvdata->quirks & QUIRK_ROG_NKEY_RGB) {
+> +		ret = devm_led_classdev_multicolor_register(
+> +			&hdev->dev, &leds->mc_led);
+> +		if (!ret)
+> +			leds->rgb_registered = true;
+> +		no_led &= !!ret;
+> +	}
+>   
+> -	if (ret < 0) {
+> +	if (no_led) {
+>   		/* No need to have this still around */
+>   		devm_kfree(&hdev->dev, drvdata->kbd_backlight);
+>   	}
+>   
+> -	return ret;
+> +	return no_led ? -ENODEV : 0;
+>   }
+>   
+>   /*
+> @@ -1289,7 +1430,7 @@ static const struct hid_device_id asus_devices[] = {
+>   	  QUIRK_USE_KBD_BACKLIGHT | QUIRK_ROG_NKEY_KEYBOARD },
+>   	{ HID_USB_DEVICE(USB_VENDOR_ID_ASUSTEK,
+>   	    USB_DEVICE_ID_ASUSTEK_ROG_Z13_LIGHTBAR),
+> -	  QUIRK_USE_KBD_BACKLIGHT | QUIRK_ROG_NKEY_KEYBOARD },
+> +	  QUIRK_USE_KBD_BACKLIGHT | QUIRK_ROG_NKEY_KEYBOARD | QUIRK_ROG_NKEY_RGB },
+>   	{ HID_USB_DEVICE(USB_VENDOR_ID_ASUSTEK,
+>   	    USB_DEVICE_ID_ASUSTEK_ROG_NKEY_ALLY),
+>   	  QUIRK_USE_KBD_BACKLIGHT | QUIRK_ROG_NKEY_KEYBOARD },
+> @@ -1318,7 +1459,7 @@ static const struct hid_device_id asus_devices[] = {
+>   	 */
+>   	{ HID_DEVICE(BUS_USB, HID_GROUP_GENERIC,
+>   		USB_VENDOR_ID_ASUSTEK, USB_DEVICE_ID_ASUSTEK_ROG_Z13_FOLIO),
+> -	  QUIRK_USE_KBD_BACKLIGHT | QUIRK_ROG_NKEY_KEYBOARD },
+> +	  QUIRK_USE_KBD_BACKLIGHT | QUIRK_ROG_NKEY_KEYBOARD | QUIRK_ROG_NKEY_RGB },
+>   	{ HID_DEVICE(BUS_USB, HID_GROUP_GENERIC,
+>   		USB_VENDOR_ID_ASUSTEK, USB_DEVICE_ID_ASUSTEK_T101HA_KEYBOARD) },
+>   	{ }
 
-T945, T495s, and E560 laptops have the FANG+FANW ACPI methods (therefore
-fang_handle and fanw_handle are not NULL) but they do not actually work,
-which results in the dreaded "No such device or address" error. Fan access
-and control is restored after forcing the legacy non-ACPI fan control
-method by setting both fang_handle and fanw_handle to NULL.
+Tested as working on 0x1866 and 0x19B6 PID devices. No code review.
 
-The DSDT table code for the FANG+FANW methods doesn't seem to do anything
-special regarding the fan being secondary.
+They have a path of `/sys/class/leds/asus-0003:0B05:19B6.0001-led`, was 
+this intentional? I was under the impression that you would have added 
+the mcled to the base `asus::kbd_backlight`.. Apologies if the answer is 
+in code, I've only tested for now, not much time for full review but I 
+do have some questions/opinons:
 
-This patch adds a quirk for T495, T495s, and E560 to make them avoid the
-FANG/FANW methods.
+I *think* the majority of ROG are RGB, but now I regret not actually 
+tracking this so I hope ASUS come back to me with some kind of query we 
+can ask the MCU for this info.
 
+Because I think the majority are RGB I'm coming around to saying yes to 
+this patch but with caveats:
 
-Original-patch-by: Eduard Christian Dumitrescu <eduard.c.dumitrescu@gmail.com>
-Co-authored-by: Seyediman Seyedarab <ImanDevel@gmail.com>
-Reported-by: Vlastimil Holer <vlastimil.holer@gmail.com>
-Closes: https://bugzilla.kernel.org/show_bug.cgi?id=219643
-Tested-by: crok <crok.bic@gmail.com>
-Tested-by: Alireza Elikahi <scr0lll0ck1s4b0v3h0m3k3y@gmail.com>
-Signed-off-by: Seyediman Seyedarab <ImanDevel@gmail.com>
----
-The main patch was proposed on Bugzilla, but I couldn't reach the
-original author (Eduard Christian Dumitrescu) to help him fix it
-and resend it, so I submitted it on his behalf.
+1. mcled added to the base led
+2. `asus:rgb:kbd_backlight` name if RGB, `asus:white:kbd_backlight` if 
+white only, `asus::kbd_backlight` if unknown
+3. a quirk system to label an MCU as white only (since the bulk are RGB)
 
-Kindest Regards,
-Seyediman
+If you only do 1 + 2, or even just 1 I'm happy with that. I can take 
+care of either 3, or 2 + 3. The last one just means I'll have to spend 
+some time looking up specs or writing a crawler to find data.
 
- drivers/platform/x86/thinkpad_acpi.c | 14 ++++++++++++++
- 1 file changed, 14 insertions(+)
+I will try to review the code in the next days, but if you change it 
+based on the above I'll hold off until then.
 
-diff --git a/drivers/platform/x86/thinkpad_acpi.c b/drivers/platform/x86/thinkpad_acpi.c
-index d8df1405edfa..365cd7e452a4 100644
---- a/drivers/platform/x86/thinkpad_acpi.c
-+++ b/drivers/platform/x86/thinkpad_acpi.c
-@@ -8793,6 +8793,7 @@ static const struct attribute_group fan_driver_attr_group = {
- #define TPACPI_FAN_NS		0x0010		/* For EC with non-Standard register addresses */
- #define TPACPI_FAN_DECRPM	0x0020		/* For ECFW's with RPM in register as decimal */
- #define TPACPI_FAN_TPR		0x0040		/* Fan speed is in Ticks Per Revolution */
-+#define TPACPI_FAN_NOACPI	0x0080		/* Don't use ACPI methods even if detected */
- 
- static const struct tpacpi_quirk fan_quirk_table[] __initconst = {
- 	TPACPI_QEC_IBM('1', 'Y', TPACPI_FAN_Q1),
-@@ -8823,6 +8824,9 @@ static const struct tpacpi_quirk fan_quirk_table[] __initconst = {
- 	TPACPI_Q_LNV3('N', '1', 'O', TPACPI_FAN_NOFAN),	/* X1 Tablet (2nd gen) */
- 	TPACPI_Q_LNV3('R', '0', 'Q', TPACPI_FAN_DECRPM),/* L480 */
- 	TPACPI_Q_LNV('8', 'F', TPACPI_FAN_TPR),		/* ThinkPad x120e */
-+	TPACPI_Q_LNV3('R', '0', '0', TPACPI_FAN_NOACPI),/* E560 */
-+	TPACPI_Q_LNV3('R', '1', '2', TPACPI_FAN_NOACPI),/* T495 */
-+	TPACPI_Q_LNV3('R', '1', '3', TPACPI_FAN_NOACPI),/* T495s  */
- };
- 
- static int __init fan_init(struct ibm_init_struct *iibm)
-@@ -8874,6 +8878,16 @@ static int __init fan_init(struct ibm_init_struct *iibm)
- 		tp_features.fan_ctrl_status_undef = 1;
- 	}
- 
-+	if (quirks & TPACPI_FAN_NOACPI) {
-+		/* E560, T495, T495s */
-+		pr_info("Ignoring buggy ACPI fan access method\n");
-+		gfan_handle = NULL;
-+		sfan_handle = NULL;
-+		fang_handle = NULL;
-+		fanw_handle = NULL;
-+		fans_handle = NULL;
-+	}
-+
- 	if (gfan_handle) {
- 		/* 570, 600e/x, 770e, 770x */
- 		fan_status_access_mode = TPACPI_FAN_RD_ACPI_GFAN;
--- 
-2.48.1
+Cheers,
+Luke.
 
+P.S: on almost all white-only LED devices I've encountered the RED 
+channel works for white intensity (green and blue do nothing). So even 
+if we decide to blanket enable RGB for 0x1866 and 0x19B6 it won't cause 
+issues beyond the naming and API facing.
