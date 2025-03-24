@@ -1,127 +1,229 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from linux1587.grserver.gr (linux1587.grserver.gr [185.138.42.100])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E1BAC1C8613;
-	Mon, 24 Mar 2025 20:54:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D8641E3762;
+	Mon, 24 Mar 2025 21:02:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.138.42.100
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742849696; cv=none; b=Ho7vVGCr/dxIdGMHgUFZZwxE/69by0iOZLL8jXl6ipY7bRWtMdQEzU8AsXFPvNZhbGzy7ycxdHIUU7DB1mqN9AQzV6ocLsc345mTYsV2OafrSu7odIFk21RR01ac8QVX0mZaN+gcV3ef2bvNn/fG8V6MbxoJGa6ydOVWDq3Az8s=
+	t=1742850132; cv=none; b=a8Cdwo36h4bwd0y0Wp085cnlZ6buUOggtY3A4a5BR3y893RXS92xl/4uuln9Z2ZZ0gf7Hi4b2+t5oGjytMIETsl9sK4dYCQQPHNFIHxlgh3gLyjkGhY9u1qunpHEdsyHNZy5aokpyt1PJBimyX8Uc2dmc18UkGStNi7/8YjI8KA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742849696; c=relaxed/simple;
-	bh=Ih3dm7Ri0bjLLtlXwUEcgqHbaGBSlGEP0HDK6EZifIc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=fymaCqjZm5sZHeuXZHr/gNq11phCZs35JfciXU2D4vQW7pF5H/oCb7GRnYdG6wonxO1R+IzWZ8Xu9YGAdtefxqsbUWsiyFv9gGU7BjS9fbVdqwN4ZGy65SKrh/LTMOJgklIlsrDnIlGhMHG4nUGrTCYIjBEeK4Xpp7hafLdWyhM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=SAEuEXtJ; arc=none smtp.client-ip=192.198.163.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1742850132; c=relaxed/simple;
+	bh=H/Y3NmzdKKzvRN929LX+yUdAUn+O07TRj6qCPSEDLDM=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=tarwrDQ9oOXOsgR1kavj2K1s9po2NqO54vPpntC9vb7DXcGitE05EpP5Y/JGABYKQe/zFLiWjOum9j7HM4IpTio/S8QCkDFXns+2JfYirlahJdG5vW/dN1l8PdRlOu36nc2T/VO0MQnonsmoO3xsX9whx1HVlqzzgIAa6Y+3w4M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=antheas.dev; spf=pass smtp.mailfrom=antheas.dev; dkim=pass (1024-bit key) header.d=antheas.dev header.i=@antheas.dev header.b=shkY+AgI; arc=none smtp.client-ip=185.138.42.100
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=antheas.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=antheas.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="SAEuEXtJ"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1742849694; x=1774385694;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=Ih3dm7Ri0bjLLtlXwUEcgqHbaGBSlGEP0HDK6EZifIc=;
-  b=SAEuEXtJ+PP4rnaToDDQ5xCzUyy7sK4I1atJCPkxzU4eeYIM75kZD+I5
-   Q3pbW79lWQMFtTuIyzRzb7NxflmLKtNve3rH7fOYzcghdrKSQtIr6MM34
-   gu5zKo74+dmQCJeHo12pluf30PLTGzLDHBGPdDgeK02/joVbQlLy7ag/u
-   PKzQVp6H3tOwS0HMLD/3ZoZZZRrS1iUcA9lEjFxocWM+u0Kp3/Tw69Wbm
-   0reOHhHLzARpu+jySUH90lVH3PIVecFsgn77ljfmZS9Xc/XICD+Qx/5Jc
-   OgMEhd9DShPu1hvh2CCITiXTZTcFJOBV/QgpZfeXaBeFCtdFhmpIyv2SE
-   w==;
-X-CSE-ConnectionGUID: yS8gWklDQgWgKzlxZUFOAw==
-X-CSE-MsgGUID: JY/TDvcXR2yKYBVEyLLRCg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11383"; a="43234423"
-X-IronPort-AV: E=Sophos;i="6.14,272,1736841600"; 
-   d="scan'208";a="43234423"
-Received: from orviesa006.jf.intel.com ([10.64.159.146])
-  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Mar 2025 13:54:52 -0700
-X-CSE-ConnectionGUID: Zmeu89P2QuSLb8C/HFnKng==
-X-CSE-MsgGUID: UofD0F5QTGu80NmV8o/snw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.14,272,1736841600"; 
-   d="scan'208";a="124186393"
-Received: from xpardee-mobl.amr.corp.intel.com (HELO [10.124.17.122]) ([10.124.17.122])
-  by orviesa006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Mar 2025 13:54:52 -0700
-Message-ID: <1405ee5c-de05-4f67-a747-98412e4b0017@linux.intel.com>
-Date: Mon, 24 Mar 2025 13:54:38 -0700
+	dkim=pass (1024-bit key) header.d=antheas.dev header.i=@antheas.dev header.b="shkY+AgI"
+Received: from localhost.localdomain (unknown [IPv6:2a05:f6c2:511b:0:cbc0:999f:73ad:33bd])
+	by linux1587.grserver.gr (Postfix) with ESMTPSA id 63D752E09D75;
+	Mon, 24 Mar 2025 23:02:05 +0200 (EET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=antheas.dev;
+	s=default; t=1742850126;
+	bh=0XK3YQnxiL3OEcNEf4aKgNDNIEWkM7EnJOdDjVojKBc=; h=From:To:Subject;
+	b=shkY+AgI9oPUqOsl43/I9ADydaxX5Iv5auPyaBE2VgNch8QiUNaDd9gW6zQuTKhWc
+	 2sJoo7IdS2EJ8gU+jLEY/P2LP8DV7GvbAQU8TWVqYO96K2FHSKuMW8vAvvC/krPlfm
+	 0R9AnKeQt9GpAXgubko+bsAdbfjHY5PVSod49btM=
+Authentication-Results: linux1587.grserver.gr;
+	spf=pass (sender IP is 2a05:f6c2:511b:0:cbc0:999f:73ad:33bd) smtp.mailfrom=lkml@antheas.dev smtp.helo=localhost.localdomain
+Received-SPF: pass (linux1587.grserver.gr: connection is authenticated)
+From: Antheas Kapenekakis <lkml@antheas.dev>
+To: platform-driver-x86@vger.kernel.org,
+	linux-input@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org,
+	Jiri Kosina <jikos@kernel.org>,
+	Benjamin Tissoires <bentiss@kernel.org>,
+	Corentin Chary <corentin.chary@gmail.com>,
+	"Luke D . Jones" <luke@ljones.dev>,
+	Hans de Goede <hdegoede@redhat.com>,
+	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	Antheas Kapenekakis <lkml@antheas.dev>
+Subject: [PATCH v4 02/11] HID: asus: prevent binding to all HID devices on ROG
+Date: Mon, 24 Mar 2025 22:01:42 +0100
+Message-ID: <20250324210151.6042-3-lkml@antheas.dev>
+X-Mailer: git-send-email 2.49.0
+In-Reply-To: <20250324210151.6042-1-lkml@antheas.dev>
+References: <20250324210151.6042-1-lkml@antheas.dev>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] platform/x86: intel/pmc: Fix iounmap call for valid
- addresses
-To: =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Cc: irenic.rajneesh@gmail.com, david.e.box@linux.intel.com,
- Hans de Goede <hdegoede@redhat.com>, platform-driver-x86@vger.kernel.org,
- LKML <linux-kernel@vger.kernel.org>, linux-pm@vger.kernel.org
-References: <20250319224410.788273-1-xi.pardee@linux.intel.com>
- <66c1a0f1-7d7a-da07-e80f-027964c503b8@linux.intel.com>
-Content-Language: en-US
-From: Xi Pardee <xi.pardee@linux.intel.com>
-In-Reply-To: <66c1a0f1-7d7a-da07-e80f-027964c503b8@linux.intel.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
+X-PPP-Message-ID: 
+ <174285012667.22876.17082709125197395445@linux1587.grserver.gr>
+X-PPP-Vhost: antheas.dev
+X-Virus-Scanned: clamav-milter 0.103.11 at linux1587.grserver.gr
+X-Virus-Status: Clean
 
+ROG keyboards are HID compliant and only care about the endpoint that
+produces vendor events (e.g., fan mode) and has the keyboard backlight.
 
-On 3/21/2025 7:49 AM, Ilpo Järvinen wrote:
-> On Wed, 19 Mar 2025, Xi Pardee wrote:
->
->> pmc_core_clean_structure() is called when generic_core_init() fails.
->> generic_core_init() could fail before ioremap() is called to get
->> a valid regbase for pmc structure. The current code does not check
->> regbase before calling iounmap(). Add a check to fix it.
-> Hi,
->
-> The approach that calls the same "full cleanup" function as deinit uses
-> when init function fails midway is very error prone as once again is
-> demonstrated. Is this the only error handling problem? Are you 100% sure?
->
-> Think about it, init is x% (<100%) done when it fails, then it calls a
-> function that tries to undo 100%. One needs to add lots of special logic
-> to handle 0-100% rollback into that cleanup function. The init function,
-> on the other hand, knows exactly where it was so it can rollback just what
-> is needed and not even try to rollback for more.
->
-> It's also very inconsistent to rollback ssram_pcidev in this file as ssram
-> code was moved into core_ssram so I think the ssram deinit should be moved
-> there too.
->
-> I think these init functions should be converted to do proper rollback
-> within the init function(s) to avoid very hard to track error handling.
-> I tried to check the error handling now in the pmc driver and after I
-> would have needed to jump between the files, I gave up.
+Therefore, handle all of the endpoints of ROG keyboards as compliant,
+by adding HID_QUIRK_INPUT_PER_APP and, for devices other than the vendor
+one, by adding QUIRK_HANDLE_GENERIC to stop mutating them.
 
-Hi,
+Due to HID_QUIRK_INPUT_PER_APP, rgb register is moved into probe, as
+the input_* functions are called multiple times (4 for the Z13).
 
-Thanks for the comments! Will move the error handing code for init 
-function to init function in next cycle.
+Reviewed-by: Luke D. Jones <luke@ljones.dev>
+Signed-off-by: Antheas Kapenekakis <lkml@antheas.dev>
+---
+ drivers/hid/hid-asus.c | 69 ++++++++++++++++++++++++++++++++----------
+ 1 file changed, 53 insertions(+), 16 deletions(-)
 
-I will send out a new version to separate SSRAM device handling code to 
-a new PCI driver and remove ssram_pcidev field from pmcdev in next cycle.
+diff --git a/drivers/hid/hid-asus.c b/drivers/hid/hid-asus.c
+index 8d4df1b6f143b..96461321c191c 100644
+--- a/drivers/hid/hid-asus.c
++++ b/drivers/hid/hid-asus.c
+@@ -84,6 +84,7 @@ MODULE_DESCRIPTION("Asus HID Keyboard and TouchPad");
+ #define QUIRK_MEDION_E1239T		BIT(10)
+ #define QUIRK_ROG_NKEY_KEYBOARD		BIT(11)
+ #define QUIRK_ROG_CLAYMORE_II_KEYBOARD BIT(12)
++#define QUIRK_HANDLE_GENERIC		BIT(13)
+ 
+ #define I2C_KEYBOARD_QUIRKS			(QUIRK_FIX_NOTEBOOK_REPORT | \
+ 						 QUIRK_NO_INIT_REPORTS | \
+@@ -120,7 +121,6 @@ struct asus_drvdata {
+ 	struct input_dev *tp_kbd_input;
+ 	struct asus_kbd_leds *kbd_backlight;
+ 	const struct asus_touchpad_info *tp;
+-	bool enable_backlight;
+ 	struct power_supply *battery;
+ 	struct power_supply_desc battery_desc;
+ 	int battery_capacity;
+@@ -326,6 +326,10 @@ static int asus_raw_event(struct hid_device *hdev,
+ {
+ 	struct asus_drvdata *drvdata = hid_get_drvdata(hdev);
+ 
++	if (drvdata->quirks & QUIRK_HANDLE_GENERIC)
++		/* NOOP on generic HID devices to avoid side effects. */
++		return 0;
++
+ 	if (drvdata->battery && data[0] == BATTERY_REPORT_ID)
+ 		return asus_report_battery(drvdata, data, size);
+ 
+@@ -774,6 +778,10 @@ static int asus_input_configured(struct hid_device *hdev, struct hid_input *hi)
+ 	struct input_dev *input = hi->input;
+ 	struct asus_drvdata *drvdata = hid_get_drvdata(hdev);
+ 
++	if (drvdata->quirks & QUIRK_HANDLE_GENERIC)
++		/* NOOP on generic HID devices to avoid side effects. */
++		return 0;
++
+ 	/* T100CHI uses MULTI_INPUT, bind the touchpad to the mouse hid_input */
+ 	if (drvdata->quirks & QUIRK_T100CHI &&
+ 	    hi->report->id != T100CHI_MOUSE_REPORT_ID)
+@@ -827,11 +835,6 @@ static int asus_input_configured(struct hid_device *hdev, struct hid_input *hi)
+ 
+ 	drvdata->input = input;
+ 
+-	if (drvdata->enable_backlight &&
+-	    !asus_kbd_wmi_led_control_present(hdev) &&
+-	    asus_kbd_register_leds(hdev))
+-		hid_warn(hdev, "Failed to initialize backlight.\n");
+-
+ 	return 0;
+ }
+ 
+@@ -851,6 +854,10 @@ static int asus_input_mapping(struct hid_device *hdev,
+ 		return -1;
+ 	}
+ 
++	if (drvdata->quirks & QUIRK_HANDLE_GENERIC)
++		/* NOOP on generic HID devices to avoid side effects. */
++		return 0;
++
+ 	/*
+ 	 * Ignore a bunch of bogus collections in the T100CHI descriptor.
+ 	 * This avoids a bunch of non-functional hid_input devices getting
+@@ -901,15 +908,6 @@ static int asus_input_mapping(struct hid_device *hdev,
+ 			return -1;
+ 		}
+ 
+-		/*
+-		 * Check and enable backlight only on devices with UsagePage ==
+-		 * 0xff31 to avoid initializing the keyboard firmware multiple
+-		 * times on devices with multiple HID descriptors but same
+-		 * PID/VID.
+-		 */
+-		if (drvdata->quirks & QUIRK_USE_KBD_BACKLIGHT)
+-			drvdata->enable_backlight = true;
+-
+ 		set_bit(EV_REP, hi->input->evbit);
+ 		return 1;
+ 	}
+@@ -1026,8 +1024,10 @@ static int __maybe_unused asus_reset_resume(struct hid_device *hdev)
+ 
+ static int asus_probe(struct hid_device *hdev, const struct hid_device_id *id)
+ {
+-	int ret;
++	struct hid_report_enum *rep_enum;
+ 	struct asus_drvdata *drvdata;
++	struct hid_report *rep;
++	int ret, is_vendor = 0;
+ 
+ 	drvdata = devm_kzalloc(&hdev->dev, sizeof(*drvdata), GFP_KERNEL);
+ 	if (drvdata == NULL) {
+@@ -1111,12 +1111,45 @@ static int asus_probe(struct hid_device *hdev, const struct hid_device_id *id)
+ 		return ret;
+ 	}
+ 
++	/*
++	 * Check for the vendor interface (0xff31) to init the RGB.
++	 * and handle generic devices properly.
++	 */
++	rep_enum = &hdev->report_enum[HID_INPUT_REPORT];
++	list_for_each_entry(rep, &rep_enum->report_list, list) {
++		if ((rep->application & HID_USAGE_PAGE) == 0xff310000)
++			is_vendor = true;
++	}
++
++	/*
++	 * For ROG keyboards, make them hid compliant by
++	 * creating one input per application. For interfaces other than
++	 * the vendor one, disable hid-asus handlers.
++	 */
++	if (drvdata->quirks & QUIRK_ROG_NKEY_KEYBOARD) {
++		if (!is_vendor)
++			drvdata->quirks |= QUIRK_HANDLE_GENERIC;
++		hdev->quirks |= HID_QUIRK_INPUT_PER_APP;
++	}
++
+ 	ret = hid_hw_start(hdev, HID_CONNECT_DEFAULT);
+ 	if (ret) {
+ 		hid_err(hdev, "Asus hw start failed: %d\n", ret);
+ 		return ret;
+ 	}
+ 
++	if (is_vendor && (drvdata->quirks & QUIRK_USE_KBD_BACKLIGHT) &&
++	    !asus_kbd_wmi_led_control_present(hdev) &&
++	    asus_kbd_register_leds(hdev))
++		hid_warn(hdev, "Failed to initialize backlight.\n");
++
++	/*
++	 * For ROG keyboards, skip rename for consistency and
++	 * ->input check as some devices do not have inputs.
++	 */
++	if (drvdata->quirks & QUIRK_ROG_NKEY_KEYBOARD)
++		return 0;
++
+ 	if (!drvdata->input) {
+ 		hid_err(hdev, "Asus input not registered\n");
+ 		ret = -ENOMEM;
+@@ -1167,6 +1200,10 @@ static const __u8 *asus_report_fixup(struct hid_device *hdev, __u8 *rdesc,
+ {
+ 	struct asus_drvdata *drvdata = hid_get_drvdata(hdev);
+ 
++	if (drvdata->quirks & QUIRK_HANDLE_GENERIC)
++		/* NOOP on generic HID devices to avoid side effects. */
++		return rdesc;
++
+ 	if (drvdata->quirks & QUIRK_FIX_NOTEBOOK_REPORT &&
+ 			*rsize >= 56 && rdesc[54] == 0x25 && rdesc[55] == 0x65) {
+ 		hid_info(hdev, "Fixing up Asus notebook report descriptor\n");
+-- 
+2.49.0
 
-
-Thanks!
-
-Xi
-
->> Fixes: 1b8c7b843c00 ("platform/x86:intel/pmc: Discover PMC devices")
->> Signed-off-by: Xi Pardee <xi.pardee@linux.intel.com>
->> ---
->>   drivers/platform/x86/intel/pmc/core.c | 2 +-
->>   1 file changed, 1 insertion(+), 1 deletion(-)
->>
->> diff --git a/drivers/platform/x86/intel/pmc/core.c b/drivers/platform/x86/intel/pmc/core.c
->> index 7a1d11f2914f..de5fc06232e5 100644
->> --- a/drivers/platform/x86/intel/pmc/core.c
->> +++ b/drivers/platform/x86/intel/pmc/core.c
->> @@ -1471,7 +1471,7 @@ static void pmc_core_clean_structure(struct platform_device *pdev)
->>   	for (i = 0; i < ARRAY_SIZE(pmcdev->pmcs); ++i) {
->>   		struct pmc *pmc = pmcdev->pmcs[i];
->>   
->> -		if (pmc)
->> +		if (pmc && pmc->regbase)
->>   			iounmap(pmc->regbase);
