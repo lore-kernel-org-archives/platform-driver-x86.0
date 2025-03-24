@@ -1,99 +1,185 @@
-Received: from mail-qt1-f173.google.com (mail-qt1-f173.google.com [209.85.160.173])
+Received: from mail-oa1-f50.google.com (mail-oa1-f50.google.com [209.85.160.50])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A6511953A2;
-	Mon, 24 Mar 2025 12:52:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 64212FC0A;
+	Mon, 24 Mar 2025 13:48:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742820770; cv=none; b=a+aq/KvDYnrtwYsQPSeEvqTiDpwJQIBLNtD8VfGzt0klcQLQWmVySqhNe2weAvC5Ag2chds70/eQF952gZLn1xVVUOcb9cqsENwCrS/mcm/CSyuxNFYVDR8FO/o+RKrd1aSajcrk5C/6QtMidPu+r13D6YI2qmyhb1yL9J8n5Tg=
+	t=1742824092; cv=none; b=EcbUVI9xnvI/CNhWW+7/Fzvl2o7qry7No5CFBt1qXXXToSDjtbkvkOVPcU1VDJlZS5Zq3o4QB3NjBlxPojqgTGNBWLXrnwpbcIoiAoPQ7MbatIpAi3wg98aLM/eS+RFJ5SX0PDIoZdLwvT9CF722tvUOOgPADsI6NFQwpZVmLOg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742820770; c=relaxed/simple;
-	bh=l0GeOJz16oW6SGdnb06/aK2t7USSqgz1qqgSmbO45sM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=L1XJeTZ1ChdQuTrAd3aoD538hjMQClLHdxNuG24qPzoygQOvR0fp91BXedTsbMq9gWWdXG68R/XzzkBuSi5clNaey1QvyScwGoSVUTv41gAbEiPnlI6+Is5zU1AOlG9x9MXi1hLADRf+LK3ZIt73Moc8ANv1jtz6nmCEVPYEVqg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=mH3BhXIR; arc=none smtp.client-ip=209.85.160.173
+	s=arc-20240116; t=1742824092; c=relaxed/simple;
+	bh=xlJYEsG/YxZpSX5fkvrHQUPL6adkhPa0PcpWMKkszuE=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=BY3vazZwKRFGukLi7ArFmIjlw+nuF0Ok+95XsY7SFVl/rpjzphflsQaT7fkyQr3VYgWtU7D8W7LAkefrbj6zn+wzHXq03lj+YsBUXQawnOi76CCmpVt/OW0Vm1BjvH69atr1Q3QrRYglfL5WH8Uv3wZubiRLZr7VQEUZ8zwM8Nw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ORr2+tuV; arc=none smtp.client-ip=209.85.160.50
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mH3BhXIR"
-Received: by mail-qt1-f173.google.com with SMTP id d75a77b69052e-476977848c4so43697601cf.1;
-        Mon, 24 Mar 2025 05:52:49 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ORr2+tuV"
+Received: by mail-oa1-f50.google.com with SMTP id 586e51a60fabf-2c1c4e364c8so1490933fac.1;
+        Mon, 24 Mar 2025 06:48:10 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1742820768; x=1743425568; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=vme9H9wmsAwxUfbsVKtvTuLGOlzu2k2VT8Gp2wTq77Q=;
-        b=mH3BhXIRtl1QPfnx97v36SLpDxHOTcYsM0cZOGnQgweIXyRsyY5UHRFLLK0hrXPb8q
-         2/Em/SdL83o49UHoYkO+YAsXTRWrfXUEMtrUp+r8lU09AOMnX6APC8uG9MMwPPvhWIus
-         pS70mn5A5KNaZFZWTSephL9wUWxovKIPsPzhXr1Y5e28MNk5AHhbevTOWsrCBnabO4Yr
-         lYdZ2m2iq7jCdGjm9dNBBiQOTd3gBHGa5G+1rI3oD3sdMeMBazXXXDwRLVXF9By/8WUE
-         6gLWbdaFYRIDvMZtqzGs6GuLT4/ul6uqsleVCi1fcFLEbokiPXXZZ+dKOyNnI6B5Zmht
-         +KcQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1742820768; x=1743425568;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+        d=gmail.com; s=20230601; t=1742824089; x=1743428889; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=vme9H9wmsAwxUfbsVKtvTuLGOlzu2k2VT8Gp2wTq77Q=;
-        b=wzKAY9wePM7WCFz1gVLsg4gGRTZjGgt09UBTlkNI3RqH1loscXOsvDxoV8x385Qmym
-         g92ah6VN8LSINLR79vDv0bq845Z9CSrE84M4cYvOyJg84+MaDjr++cv1hZ29gTClLeYt
-         hRbpkX07jUTsJJW4vi96c9T+hakGkQGytpjojvUpgJQxuMKwLHc64Uz4mScdA//MG4OH
-         OjqVSPUEk32xNExfqmgL7Wr5HvZkbUmboPI4O4UyOVSTf+k1Tw1UNEtplsUbdHZlZRfZ
-         mmgx/1T+v6QSZzbaB+vTYqdq2Ph036/O+dPU1pJeTqwYEVAjYuvzB2VsZljo9mxBJVvo
-         uOkQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWWZsH4tH4bdBdv5QIdDMUKDrI3KrL5MzOk/9Y3cfbgZrrVoGk5mY+3dte2gBlIMddjWydDB60CWXx/1LvgcNQknS1CRw==@vger.kernel.org, AJvYcCXJqZx5joocfEbtJ+E9GUWlgvDDPIJSL60oOPTA98qdKZGQpiGbAg/BWEySQUpZBXgX19fLQufm@vger.kernel.org, AJvYcCXr7e0/gm3/eAz4dBhbF7gCfab3+arHFmM3iw35oARlVNCrIDmR2uRuY9x2+Tk9ot7ltLYL4bPwZyRHQF4=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz6zk6l2psQaNp8QN9V41B3IwO4LguLR9OnaFtzpkr2do2GAFK6
-	8+kjTg4MuLvaxPxRkPzbDfGbnVho1mmlxEqwBCJP0g3dS5HiwuT+
-X-Gm-Gg: ASbGncs4aDVm0zBtyMVEbhszUEKqccwzVMy9Ri53xgPnXXvUdaH4HBSwSTQ7v+kwRJC
-	PLPpVutDBtOOF1dKzCGP/vx48NhK6B3YC8RkuPZHbXE5SnXyjdbXBmsAeLcee/y8h+H97eca7XU
-	1FmzAVhA81XqSIJhHmdWMMivokFlV6G3hausVL7cvIfJr19is20b8q4DgWNCUGT/i/5uCuYgOAr
-	fHnLycsFlmF3IjiV1c1zu5mqwcajsfmMHoZqcVn3nFMuOAKHqbKFp1UiralNsZR5p6aEqn7Xmhn
-	/aze6Ids0k3wDObrpVKL7rRHGtVS7bEraLhgZ65l1eQA/st7BQhVnkr8ajuQstZE3CmCO2HrirD
-	C
-X-Google-Smtp-Source: AGHT+IFBjEOy7vbR53CK0B/QWpq+o5gZGcznEE5+haT6GVIZen5thERBPa5VSCwyNKU9DrTsad2dHw==
-X-Received: by 2002:a05:620a:4556:b0:7c5:61b2:b95 with SMTP id af79cd13be357-7c5ba1840a2mr1757424785a.30.1742820768120;
-        Mon, 24 Mar 2025 05:52:48 -0700 (PDT)
-Received: from localhost (pat-199-212-65-32.resnet.yorku.ca. [199.212.65.32])
-        by smtp.gmail.com with UTF8SMTPSA id af79cd13be357-7c5b9348358sm507353785a.71.2025.03.24.05.52.47
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 24 Mar 2025 05:52:47 -0700 (PDT)
-Date: Mon, 24 Mar 2025 08:54:21 -0400
-From: Seyediman Seyedarab <imandevel@gmail.com>
-To: Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>
-Cc: hmh@hmh.eng.br, Hans de Goede <hdegoede@redhat.com>, 
-	ibm-acpi-devel@lists.sourceforge.net, platform-driver-x86@vger.kernel.org, 
-	LKML <linux-kernel@vger.kernel.org>, stable@vger.kernel.org, 
-	Vlastimil Holer <vlastimil.holer@gmail.com>, crok <crok.bic@gmail.com>, 
-	Alireza Elikahi <scr0lll0ck1s4b0v3h0m3k3y@gmail.com>, Eduard Christian Dumitrescu <eduard.c.dumitrescu@gmail.com>
-Subject: Re: [PATCH v2] platform/x86: thinkpad_acpi: disable ACPI fan access
- for T495* and E560
-Message-ID: <euxpp6zdhlpg3eutc3omspt2exmsyulo5ytbpbqwxovzcy6xey@fuuhsp2agtrx>
-References: <20250324012911.68343-1-ImanDevel@gmail.com>
- <f4567e02-8478-682f-0947-765ef9258ab5@linux.intel.com>
+        bh=P8qRncFe1dnLfI3S8hPEYswLDq6RLhZSuYf8HCQ7pgs=;
+        b=ORr2+tuVkLB8r5wa5nxva/NujK1qGWKYT+ghk9CjaXYTJbMBMzaIN8K2PrKoqKwaev
+         o2a3fDbmcAoymHVCazcTGZnYEUJLdGvDVESFHY0xDAwdKCGYoRhIMvW3y/9eMSjmkhLh
+         gBHuXvgZz7x5fecuUxCV455JkXQ72f/sl7hahCKDDBJOe4LZrYuzRgdFkG12SE8wUE4B
+         Zd8/yCxgP0CIOs7Cr6Yov7k4HL+2RFqESxKJZUghl6hD+4Ww2OIbCO8YrVwl2erUG6pr
+         ml0yQAnMvynAhxiR5pUWX9v9Per3ulA/UoOiAncHhSoohZ3PBd/FsMPrMu3M1oaQXFDt
+         cg4w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1742824089; x=1743428889;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=P8qRncFe1dnLfI3S8hPEYswLDq6RLhZSuYf8HCQ7pgs=;
+        b=O3w4Yu4c3rWVTkwrNEx1HCLu03gwufTBBAMB6cTTtiumpuiLCAvlPEicrpDBI58v7m
+         MRL0bBWj9nOIEcuyIM0UJv+fKNZcUmmTperoFJRDA+QsqKFXrrxCtR1S3lKQ7Ego3fxV
+         Edee9iyj6dO4yCRy7ZG5wwCXEtoS8bv6rgl34/+QW2H7sgNTfadRkevm/zeT5xHJT3Vq
+         C7irsrgkc83NMMC94MHcEvWi4SMdVl43f3w3nQgRZpQGLkJQ4e+1XU5ZWGRI6ysFnL0A
+         LQSsdE0dtlYumh3d+i5jRyrsp1kgEFO99HeO1oVcc39Tv4F8DpB3ay3mndzBh8UXAtMW
+         mPSQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUIGbsue72rsiuwYNAVx6q7XNtJXiJ76NYulF71phCdSSy74r4zwIZwVZB0jS7C/RYkLIH44tQZsOEd//Y=@vger.kernel.org, AJvYcCXngYWDj64pf+v0nSUUDn+F8UVvcNTCtiDu0Y2O3zNwnI2l8sjlulZVtv9sVz0Z7aeNaUn/P650DhTmmhBJOsSuhkPjgw==@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw+Fkdh8fLUfz0Vybw5y1EWqS4tls5cjZWcjZtVcvh7YOXH3VQz
+	4irPs2Upqv6/QussHAg9cJQMefgJIOl8StpCOKAJ9ORfi5z39PzBtb2eHiq5qeuDV4039KPa56l
+	sQsyHSF7Ep+8/XO/O+xo4kfihQc0=
+X-Gm-Gg: ASbGncu1QBDnfn8tT41GiuLe1Eu8uwjn91bRtyijucsGBdkNcW9T573Hbr1A2HCKwtH
+	Bug1nKpVkUKF+oeceMrEmMLerbZfINdqEvw3wYSMIgdYrj0rhvBubNofCe/VI26Oo4R5HSArzr2
+	XjT2D4xaAC1P0Y5CQbiG+wYMFdh/EX/pCidPmq5A==
+X-Google-Smtp-Source: AGHT+IFIZFQN+bdrDeNdd5pkzb/e6pLvUv+qITaW+VrDqM52pDdwBLl2nhWweBesXNrc1E9qJUYut0xwTq4ZknWRNiA=
+X-Received: by 2002:a05:6871:2309:b0:2b1:db0e:e22d with SMTP id
+ 586e51a60fabf-2c7606453fdmr11163028fac.0.1742824089067; Mon, 24 Mar 2025
+ 06:48:09 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <f4567e02-8478-682f-0947-765ef9258ab5@linux.intel.com>
+References: <20250321083003.84661-1-gasper.nemgar@gmail.com>
+ <ce934c71-2220-c8f9-ff3a-5633360a8935@linux.intel.com> <CAKi4K-jVGw58nbxdWKizaNJRzPc3izE9ipZUOwUq=v-hAAjd8w@mail.gmail.com>
+ <35969669-48b6-469e-9cd2-26929fb33e5f@redhat.com>
+In-Reply-To: <35969669-48b6-469e-9cd2-26929fb33e5f@redhat.com>
+From: =?UTF-8?Q?Ga=C5=A1per_Nemgar?= <gasper.nemgar@gmail.com>
+Date: Mon, 24 Mar 2025 14:47:42 +0100
+X-Gm-Features: AQ5f1Jq7Tdh_8RKZ9lznJjZOQ1vjW2CzTC94xLd-UFf7LVANbU2QzwIpbmHANDE
+Message-ID: <CAKi4K-i809rcJqZTiRejG6c5Vu7OeFMEri42jBgOOpagcx-bWA@mail.gmail.com>
+Subject: Re: [PATCH] Added support for a some new buttons in ideapad-laptop
+ driver Added entries to unsuported wmi codes in ideapad_keymap[] and one
+ check in wmi_nofify in order to get wmi code 0x13d to trigger platform_profile_cycle
+To: Hans de Goede <hdegoede@redhat.com>
+Cc: =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, 
+	ikepanhc@gmail.com, LKML <linux-kernel@vger.kernel.org>, 
+	platform-driver-x86@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
 Hi,
-Thank you for your response.
+noted. About the performance button, under windows id does toggle the
+performance mode, I would much rather have a assignable key, but will
+bind it to platform_profile_cycle().
+Thanks,
+Ga=C5=A1per
 
-> > Tested-by: crok <crok.bic@gmail.com>
-> > Tested-by: Alireza Elikahi <scr0lll0ck1s4b0v3h0m3k3y@gmail.com>
-> 
-> Did these two person either give you those Tested-by tags or gave 
-> you green light to add theirs Tested-by tags? I don't see the tags given 
-> in the bugzilla entry. If they didn't yet, please ask if they're fine with 
-> you adding their Tested-by tags.
-Alireza Elikahi gave me the green light to add his Tested-by tag
-after testing on the E560. I haven't reached out to crok yet, but
-I'll send PATCH v3 as soon as I hear back from them and get their
-permission.
-
-Kindest Regards,
-Seyediman
+On Mon, 24 Mar 2025 at 13:23, Hans de Goede <hdegoede@redhat.com> wrote:
+>
+> Hi,
+>
+> On 21-Mar-25 15:47, Ga=C5=A1per Nemgar wrote:
+> > Hello, yes I have noticed it messed up the title and will change it,
+>
+>
+> > I just have a question about the performance button aka WMI code 0x13d,=
+ is it smart to hardwire it into platorm_profile_cycle() or is it better to=
+ leave it as KEY_PROG4 keycode. Thanks
+>
+> That depends on what the key does under Windows, if it cycles through per=
+formance
+> settings under Windows then calling platorm_profile_cycle() is the right =
+thing to do.
+>
+> If it opens some sort of performance settings dialog / Windows then a fre=
+e KEY_PROG#
+> would be better.
+>
+> Regards,
+>
+> Hans
+>
+>
+>
+> >
+> >
+> > On Fri, 21 Mar 2025 at 15:17, Ilpo J=C3=A4rvinen <ilpo.jarvinen@linux.i=
+ntel.com <mailto:ilpo.jarvinen@linux.intel.com>> wrote:
+> >
+> >     On Fri, 21 Mar 2025, Ga=C5=A1per Nemgar wrote:
+> >
+> >     Hi Gasper,
+> >
+> >     Thanks for the patch. I think the changelog text got messed up duri=
+ng send
+> >     as it should here, not in the subject.
+> >
+> >     Also please change "Added support" to "Add support", add the correc=
+t
+> >     prefix into the shortlog (the line in Subject), and add parenthesis=
+ after
+> >     functions in the description.
+> >
+> >     --
+> >      i.
+> >
+> >     > Signed-off-by: Ga=C5=A1per Nemgar <gasper.nemgar@gmail.com <mailt=
+o:gasper.nemgar@gmail.com>>"
+> >     > ---
+> >     >  drivers/platform/x86/ideapad-laptop.c | 16 ++++++++++++++++
+> >     >  1 file changed, 16 insertions(+)
+> >     >
+> >     > diff --git a/drivers/platform/x86/ideapad-laptop.c b/drivers/plat=
+form/x86/ideapad-laptop.c
+> >     > index 30bd366d7..a03377d87 100644
+> >     > --- a/drivers/platform/x86/ideapad-laptop.c
+> >     > +++ b/drivers/platform/x86/ideapad-laptop.c
+> >     > @@ -1308,6 +1308,16 @@ static const struct key_entry ideapad_keym=
+ap[] =3D {
+> >     >       /* Specific to some newer models */
+> >     >       { KE_KEY,       0x3e | IDEAPAD_WMI_KEY, { KEY_MICMUTE } },
+> >     >       { KE_KEY,       0x3f | IDEAPAD_WMI_KEY, { KEY_RFKILL } },
+> >     > +     /* Star- (User Asignable Key) */
+> >     > +     { KE_KEY,       0x44 | IDEAPAD_WMI_KEY, { KEY_PROG1 } },
+> >     > +     /* Eye */
+> >     > +     { KE_KEY,       0x45 | IDEAPAD_WMI_KEY, { KEY_BRIGHTNESS_CY=
+CLE } },
+> >     > +     /* Performance toggle also Fn+Q */
+> >     > +     { KE_KEY,       0x3d | IDEAPAD_WMI_KEY, { KEY_PROG4 } },
+> >     > +     /* shift + prtsc */
+> >     > +     { KE_KEY,   0x2d | IDEAPAD_WMI_KEY, { KEY_CUT } },
+> >     > +     { KE_KEY,   0x29 | IDEAPAD_WMI_KEY, { KEY_TOUCHPAD_TOGGLE }=
+ },
+> >     > +     { KE_KEY,   0x2a | IDEAPAD_WMI_KEY, { KEY_ROOT_MENU } },
+> >     >
+> >     >       { KE_END },
+> >     >  };
+> >     > @@ -2093,6 +2103,12 @@ static void ideapad_wmi_notify(struct wmi_=
+device *wdev, union acpi_object *data)
+> >     >
+> >     >               dev_dbg(&wdev->dev, "WMI fn-key event: 0x%llx\n",
+> >     >                       data->integer.value);
+> >     > +
+> >     > +             /* performance button triggered by  ...  */
+> >     > +             if ((data->integer.value | IDEAPAD_WMI_KEY) =3D=3D =
+0x13d ) {
+> >     > +                     platform_profile_cycle();
+> >     > +                     break;
+> >     > +             }
+> >     >
+> >     >               /* 0x02 FnLock, 0x03 Esc */
+> >     >               if (data->integer.value =3D=3D 0x02 || data->intege=
+r.value =3D=3D 0x03)
+> >     >
+> >
+>
