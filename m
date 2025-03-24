@@ -1,165 +1,169 @@
-Received: from mail-qk1-f181.google.com (mail-qk1-f181.google.com [209.85.222.181])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from fout-a3-smtp.messagingengine.com (fout-a3-smtp.messagingengine.com [103.168.172.146])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C2BD2E3386;
-	Mon, 24 Mar 2025 01:28:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E47CA367;
+	Mon, 24 Mar 2025 01:41:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.146
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742779720; cv=none; b=WRlzA32mgBG2CNxfWzJvkfsto+Cw5PJsaVG5vTq9MvFsxHIMxVpDSRyM6EVNI8EdfYVBc158Tw+03+lZcrHMHPIf8+mdhXZTzpwGmhOngHVsPTMuf98sFu+XdPX6iuUbhg2k0Zg6NWWLDV2JZ2qfISm7gt/prqfOkaadZgsMEgE=
+	t=1742780510; cv=none; b=YBediygmzKi4c0kZHlYLz+Dj0WlO7x5M2Jegr1XiNVfehuLvmQevsU6JgnHZhuxR9J+XJtUFHslGEMzB8JOVYRZ4qTZ9DwIjd8Btmp4NH/rmC+eygMLQQwgamtroPvRyIKPAsnygRbOnIomTzFulLWbH+avFQVnkiXZT/6RmBLI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742779720; c=relaxed/simple;
-	bh=zl1uo13BNwoUbqVeza6eeYjMNp9ZX9eFVZuNCiIEkJs=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Iqxi9Tz0MIGNTnRzmhjdndM2blF3iPn3/SWcEzrS8YvUriOO95fGFBoz6rVY6Eq+/QWdEmefZX0st/O5GLgQ6z0neMb3bMXSuppjM1XcsWYVYsZogTT2uYSGMiZsWHvAAx+MYOf6QF2yUJV3jgRxrgxrqDDtDetiTeSHMYWzVJ8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Kk8cTPbV; arc=none smtp.client-ip=209.85.222.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1742780510; c=relaxed/simple;
+	bh=hNUA8ajXEF3jCVz2tTKvjz2TXG3YLE3+en1hSJz4f5c=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=AiDnKnmaCWceOZnB0/je19HvzNHiTv2LJTDyARU0MlxE+brI278pGmR56W7Ky5cxIOJU4GTeXQoNzTOdEKiAruDn+/WgT3Pi8RjSgk1OjxIyIIlJPNwoFZnA9EQrLQDTgq+wIW63ctbLhH3jeVfSCMx50JOjByeDCYkQT51xCOg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ljones.dev; spf=none smtp.mailfrom=ljones.dev; dkim=pass (2048-bit key) header.d=ljones.dev header.i=@ljones.dev header.b=uiqNJSNo; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=u+L0V146; arc=none smtp.client-ip=103.168.172.146
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ljones.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=ljones.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Kk8cTPbV"
-Received: by mail-qk1-f181.google.com with SMTP id af79cd13be357-7c0e135e953so407699885a.2;
-        Sun, 23 Mar 2025 18:28:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1742779718; x=1743384518; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=ZAX3pOyUJIm0P+4HIZbRycp3jrlF0/5qEeunqKwtosk=;
-        b=Kk8cTPbVI+YByFJtOfNj90vF+8XkUmTSl/96Fa+qeCoWLVj6YU2w9vdBlzer7M0Sgm
-         Amzx7JtbnzPuG9Og0SB1PaPZjxhK3pZd4CQW5xWb0yoB67XlbxnnMC/qz1A6prD8/vVL
-         y42eASFDIoavIDDwMCYf9D7ykHBudLnJIICNufJq5xFlvSQf12UCQtKWHKGI2pJRGU+4
-         EKgA99wadf/MaVKSzZn7izrvq3DJ3TfA/zLHrew4VP5FKZcOGMobKMCGK7qs+ST22NmW
-         I549QujCcN3vQyHR1OV0JoZBfsr5zTQWU9sgXv3Uto4j0sp3a6q+Po7ypjsFr6lzbdRH
-         OnXA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1742779718; x=1743384518;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=ZAX3pOyUJIm0P+4HIZbRycp3jrlF0/5qEeunqKwtosk=;
-        b=pB0rrbTPV/IV6p+IUNtrWic3pZ4AeAkFIe0Qyv1LRbT0ZsOF+0XLFMfdH4kTxoPH4x
-         DuWpBL/0twlD3adFdH51I21a59ng0m/YW3io9dxXc5g4PIL71sc+zVz+LDjWIq0ivviF
-         qaqmiX/OwXDV9gh2g6igvJKefqcIxoBSeLotsonV4cA4XRpDNhsV+nq7Vuv9UkZDXie2
-         TFLOsJKTDS+fc6+rDmZ76LLnERR9VlJNuAIGzxengAA7nkDhPIkp1Tk2wI2rL+bva8SE
-         MhenM7gVSauFp6+qyjC1J+Y5R8hvJwhmyvRDx/9WicIv0fKa8lmaEJ8hpz+S0rWsbjnj
-         3SgQ==
-X-Forwarded-Encrypted: i=1; AJvYcCU/VzPb36qrz8dq2bUNd5HM7qm6Sw/enelIdH6lGIDN9tJkQFZJPmcd/pZ1D51ABX2NSrJTSV5HonKELqLSmJzsHtj5kg==@vger.kernel.org, AJvYcCXQqSsmI6hGDyflp5eIWlMeK0eg+p7/UscrOa96LUHtTu0z57SO7qLxv6WM5UfStGovU8hwMngZ@vger.kernel.org, AJvYcCXrHETMKhpkrIBwcuY2tE7UAsnYs/TwXn0PJS4wwJaoFizn8kHTvO9rOdYHjVlTgwOe35V8yGEEHl2LDws=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyK3y8dzCcRwknPpbpl74fgPXugF1HPhs5cRPcUmphnFUJQHVKs
-	NmryVBQ/foYSxzI9daREuwX/pM5FoUzCxs27+a6/RZ81+Nni2dTw
-X-Gm-Gg: ASbGnctxsEdGh8hjHMLNDrYU5HvdeTdwJRTEluPxIYvJ4IgtcNw5EkSyvF6sa485/7o
-	7Osl4pWTp4xqLHyt2VDqs/78qmrS8zcfGMgBk6yu0ZyXXQFKNW/NJQ2rGWcJ8QF3dpBCvDPmEj7
-	KwkaWztK51QScolKc7Q4gc6ukN2xQ2TC+fjJ8146jSYAWl+zjp+WmUQiy1YOia0CDJqluD1gr2w
-	SdXfR3t8QC94MIN64C8ycpig148bDURxDNZk11QWPayNwMnLjCNqfCqovgbkI1u0OnBu7XqDSSz
-	39cY1vKUFxMacaY5XkDdvZaZgG2DgeT43tL1tGLC7rv8GmpU0wEw3SGyUb1Kgk2rVweu/pV3uN7
-	vKHePbfNMACr8wnBH
-X-Google-Smtp-Source: AGHT+IGwG5eh3S+TrFNbHnxQrv5/7+azus75LhM16CP2UKvOVeh8+DlJYDdvd+W55eF7BLAjJ3mgZQ==
-X-Received: by 2002:a05:620a:4496:b0:7c5:a536:91e5 with SMTP id af79cd13be357-7c5ba166b0cmr1613207185a.20.1742779718011;
-        Sun, 23 Mar 2025 18:28:38 -0700 (PDT)
-Received: from localhost.localdomain (pat-199-212-65-32.resnet.yorku.ca. [199.212.65.32])
-        by smtp.gmail.com with ESMTPSA id af79cd13be357-7c5b92ec648sm431841685a.61.2025.03.23.18.28.36
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 23 Mar 2025 18:28:37 -0700 (PDT)
-From: Seyediman Seyedarab <imandevel@gmail.com>
-X-Google-Original-From: Seyediman Seyedarab <ImanDevel@gmail.com>
-To: hmh@hmh.eng.br,
-	hdegoede@redhat.com,
-	ilpo.jarvinen@linux.intel.com
-Cc: ibm-acpi-devel@lists.sourceforge.net,
-	platform-driver-x86@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Seyediman Seyedarab <ImanDevel@gmail.com>,
-	stable@vger.kernel.org,
-	Vlastimil Holer <vlastimil.holer@gmail.com>,
-	crok <crok.bic@gmail.com>,
-	Alireza Elikahi <scr0lll0ck1s4b0v3h0m3k3y@gmail.com>,
-	Eduard Christian Dumitrescu <eduard.c.dumitrescu@gmail.com>
-Subject: [PATCH v2] platform/x86: thinkpad_acpi: disable ACPI fan access for T495* and E560
-Date: Sun, 23 Mar 2025 21:29:11 -0400
-Message-ID: <20250324012911.68343-1-ImanDevel@gmail.com>
-X-Mailer: git-send-email 2.48.1
+	dkim=pass (2048-bit key) header.d=ljones.dev header.i=@ljones.dev header.b="uiqNJSNo";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="u+L0V146"
+Received: from phl-compute-13.internal (phl-compute-13.phl.internal [10.202.2.53])
+	by mailfout.phl.internal (Postfix) with ESMTP id E26971381100;
+	Sun, 23 Mar 2025 21:41:46 -0400 (EDT)
+Received: from phl-mailfrontend-02 ([10.202.2.163])
+  by phl-compute-13.internal (MEProxy); Sun, 23 Mar 2025 21:41:46 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ljones.dev; h=cc
+	:cc:content-transfer-encoding:content-type:content-type:date
+	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to; s=fm3; t=1742780506;
+	 x=1742866906; bh=scMdHBPZ6vxqc2HSxuk39OMIToy9t5zqjIDcVZ1lF1c=; b=
+	uiqNJSNoUVxEQ26bQqgtsqkglWBs6asc25pHEWjBIsmsqG+eKYUOZsyl4Itz7HES
+	iYP8SKoJfsXOMronyCH3YdO57kLMXIWn5WxDSA/GLoAhSE1P253dYOfFSv2XkSYv
+	aKs3DMmAXf9fQlRcx6xQQfQ0afanFjLx/FhV4Kw0DdqO3xaCqJxQrKF40Div5hx6
+	7197YVa4YfxRHuCTdhcty+qBlgmnOMkKGYoOd0YLdIjIHIVaQnhFLoAZYFzSf5+V
+	FC4Yx9q2mjDiYQibY/RPwuZetzdj4bbIP4S2NzO47TFu0SHU1bpECZKBEC2wD2Ln
+	fUOZd2UBr2Qb8xPcCX0bFA==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:content-type:date:date:feedback-id:feedback-id
+	:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to:x-me-proxy
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; t=1742780506; x=
+	1742866906; bh=scMdHBPZ6vxqc2HSxuk39OMIToy9t5zqjIDcVZ1lF1c=; b=u
+	+L0V146T5Szv+t/x0gfIf1AvZOdBzudx649nTh7S0+frElwKYmHpdkEAoVog0SuW
+	eePtyagIeh3iZc1mJ33q+kKOT+vBMSLMSlLwO4pAwqOjyTjHaOaXWQbXn7QQ0EG6
+	1L1WTnKTb//0N2HP85rDfriDcNdsKgIMLCBFGFQ7Enz9C4fxTKTOFYm+zyAK4z+o
+	EqkMnyddDMNvLFSi0lrvI4YfGffGzBj7DAgkdcl3VXzGio7gmINUvh0gTIN3JCuH
+	EUhFPrfR715yt71X7kDiCDIj48/AWTdkC1SP0LrGSS/XPVxphhDGGzRPvkgM/HN3
+	5CHbEnojivxqtmdbK/2aQ==
+X-ME-Sender: <xms:WbjgZyXIqyfUn-3bKDlELZ_VkcF_CHQ9ArfOpxVMa0qqp3dThfWWFw>
+    <xme:WbjgZ-mRBxqFgAayvnxhO775GyfGMQbLMuJ0PCoxQfGRoYrhbXNeIf4o9WtFAvf7X
+    Y8gybxuBzsP8kuEMoY>
+X-ME-Received: <xmr:WbjgZ2bOfGrJSfm4s8Yp9hfZgU7A0t0oZCZllH0EbMm1Y_hhATZKvL6Q1XzFKQSZkuXPsTkB>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdduheekgeejucetufdoteggodetrf
+    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggv
+    pdfurfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucenucfjughrpefkff
+    ggfgfuvfevfhfhjggtgfesthejredttddvjeenucfhrhhomhepfdfnuhhkvgcuffdrucfl
+    ohhnvghsfdcuoehluhhkvgeslhhjohhnvghsrdguvghvqeenucggtffrrghtthgvrhhnpe
+    eigeekveevffelfedtieegudfhkeefudeuleduhfehfffhtdekhfekffefteduvdenucff
+    ohhmrghinhepkhgvrhhnvghlrdhorhhgnecuvehluhhsthgvrhfuihiivgeptdenucfrrg
+    hrrghmpehmrghilhhfrhhomheplhhukhgvsehljhhonhgvshdruggvvhdpnhgspghrtghp
+    thhtohepledpmhhouggvpehsmhhtphhouhhtpdhrtghpthhtoheplhhkmhhlsegrnhhthh
+    gvrghsrdguvghvpdhrtghpthhtoheplhhinhhugidqkhgvrhhnvghlsehvghgvrhdrkhgv
+    rhhnvghlrdhorhhgpdhrtghpthhtohephhguvghgohgvuggvsehrvgguhhgrthdrtghomh
+    dprhgtphhtthhopehilhhpohdrjhgrrhhvihhnvghnsehlihhnuhigrdhinhhtvghlrdgt
+    ohhmpdhrtghpthhtohepphhlrghtfhhorhhmqdgurhhivhgvrhdqgiekieesvhhgvghrrd
+    hkvghrnhgvlhdrohhrghdprhgtphhtthhopehlihhnuhigqdhinhhpuhhtsehvghgvrhdr
+    khgvrhhnvghlrdhorhhgpdhrtghpthhtohepsggvnhhtihhssheskhgvrhhnvghlrdhorh
+    hgpdhrtghpthhtohepjhhikhhosheskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepmhgr
+    rhhiohdrlhhimhhonhgtihgvlhhlohesrghmugdrtghomh
+X-ME-Proxy: <xmx:WbjgZ5XxfndmstQ103gs6YipU6cAU12Hep3KmJVWnE-nu7i-H5Uawg>
+    <xmx:WbjgZ8l-uBVlQQmj5P-1VISDwa4saDe4CNLLP4fsjgT938F_eCjCZA>
+    <xmx:WbjgZ-ctqbHDngBg8qFslnJiJh9QtabtaH0Q1VDSHpt9M8IocP9LZA>
+    <xmx:WbjgZ-Gm17nv31L2GwxgZcSxYYoUWwjlNEG9cAg0RCBFH2b-d2ZVVA>
+    <xmx:WrjgZ24cNAHX91OS066CezgpYMOk4ZQDze_pQCBLe1htB_itbE98K1hh>
+Feedback-ID: i5ec1447f:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Sun,
+ 23 Mar 2025 21:41:42 -0400 (EDT)
+Message-ID: <deeb4946-dd66-4a82-a8f0-5e8b1751899e@ljones.dev>
+Date: Mon, 24 Mar 2025 14:41:40 +1300
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 0/2] hid-asus: asus-wmi: refactor Ally suspend/resume
+To: Antheas Kapenekakis <lkml@antheas.dev>
+Cc: linux-kernel@vger.kernel.org, hdegoede@redhat.com,
+ ilpo.jarvinen@linux.intel.com, platform-driver-x86@vger.kernel.org,
+ linux-input@vger.kernel.org, bentiss@kernel.org, jikos@kernel.org,
+ mario.limonciello@amd.com
+References: <20250323023421.78012-1-luke@ljones.dev>
+ <CAGwozwE4oXmFMRO5jZJC4d11TstTqSC8ZUZ1CCkZMWYZKTKF_w@mail.gmail.com>
+Content-Language: en-US
+From: "Luke D. Jones" <luke@ljones.dev>
+In-Reply-To: <CAGwozwE4oXmFMRO5jZJC4d11TstTqSC8ZUZ1CCkZMWYZKTKF_w@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-From: Eduard Christian Dumitrescu <eduard.c.dumitrescu@gmail.com>
+On 24/03/25 00:41, Antheas Kapenekakis wrote:
+> On Sun, 23 Mar 2025 at 03:34, Luke Jones <luke@ljones.dev> wrote:
+>>
+>> This short series refactors the Ally suspend/resume functionality in the
+>> asus-wmi driver along with adding support for ROG Ally MCU version checking.
+>>
+>> The version checking is then used to toggle the use of older CSEE call hacks
+>> that were initially used to combat Ally suspend/wake issues arising from the MCU
+>> not clearing a particular flag on resume. ASUS have since corrected this
+>> especially for Linux in newer firmware versions.
+>>
+>> - hid-asus requests the MCU version and displays a warning if the version is
+>>    older than the one that fixes the issue.
+>> - hid-asus awill also toggle the CSEE hack off, and mcu_powersave to on if the
+>> version is high enough.
+>>
+>> *Note: In review it was requested by Mario that I try strsep() for parsing
+>> the version. I did try this and a few variations but the result was much
+>> more code due to having to check more edge cases due to the input being
+>> raw bytes. In the end the cleaned up while loop proved more robust.
+>>
+>> - Changelog:
+>>    + V2: https://lore.kernel.org/platform-driver-x86/20250226010129.32043-1-luke@ljones.dev/T/#t
+>>      - Adjust warning message to explicitly mention suspend issues
+> 
+> How did the testing go with this one, especially with mcu_powersave 0?
 
-The bug was introduced in commit 57d0557dfa49 ("platform/x86:
-thinkpad_acpi: Add Thinkpad Edge E531 fan support") which adds a new
-fan control method via the FANG and FANW ACPI methods.
+Appears to be good. Checked a few reboots with powersave off - it is 
+setting on as I expect every time. Did modules unload/load also. And 
+tested with it set off after boot plus suspend resumes.
 
-T945, T495s, and E560 laptops have the FANG+FANW ACPI methods (therefore
-fang_handle and fanw_handle are not NULL) but they do not actually work,
-which results in the dreaded "No such device or address" error. Fan access
-and control is restored after forcing the legacy non-ACPI fan control
-method by setting both fang_handle and fanw_handle to NULL.
+Very much hope this is the end of that particular saga, and with 
+bazzites help we can hopefully get everyone on November MCU FW or later, 
+then finally remove the hack completely this year.
 
-The DSDT table code for the FANG+FANW methods doesn't seem to do anything
-special regarding the fan being secondary.
+A small side note - I expect ASUS to fully reuse the X hardware, or at 
+least the bios/acpi/mcu-fw for that new windows handheld they've doing, 
+so fingers crossed that they actually do, and there will be nomore 
+suspend issues with current kernels plus this patch.
 
-This patch adds a quirk for T495, T495s, and E560 to make them avoid the
-FANG/FANW methods.
+Cheers,
+Luke.
 
-Cc: stable@vger.kernel.org
-Fixes: 57d0557dfa49 ("platform/x86: thinkpad_acpi: Add Thinkpad Edge E531 fan support")
-Reported-by: Vlastimil Holer <vlastimil.holer@gmail.com>
-Closes: https://bugzilla.kernel.org/show_bug.cgi?id=219643
-Tested-by: crok <crok.bic@gmail.com>
-Tested-by: Alireza Elikahi <scr0lll0ck1s4b0v3h0m3k3y@gmail.com>
-Signed-off-by: Eduard Christian Dumitrescu <eduard.c.dumitrescu@gmail.com>
-Co-developed-by: Seyediman Seyedarab <ImanDevel@gmail.com>
-Signed-off-by: Seyediman Seyedarab <ImanDevel@gmail.com>
----
-Changes in v2:
-- Added the From: tag for the original author
-- Replaced the Co-authored-by tag with Co-developed-by
-- Cc'd stable@vger.kernel.org
-- Removed the extra space inside the comment
-- Dropped nullification of sfan/gfan_handle, as it's unrelated to
-  the current fix
-
-Kindest Regards,
-Seyediman
-
- drivers/platform/x86/thinkpad_acpi.c | 11 +++++++++++
- 1 file changed, 11 insertions(+)
-
-diff --git a/drivers/platform/x86/thinkpad_acpi.c b/drivers/platform/x86/thinkpad_acpi.c
-index d8df1405edfa..27fd67a2f2d1 100644
---- a/drivers/platform/x86/thinkpad_acpi.c
-+++ b/drivers/platform/x86/thinkpad_acpi.c
-@@ -8793,6 +8793,7 @@ static const struct attribute_group fan_driver_attr_group = {
- #define TPACPI_FAN_NS		0x0010		/* For EC with non-Standard register addresses */
- #define TPACPI_FAN_DECRPM	0x0020		/* For ECFW's with RPM in register as decimal */
- #define TPACPI_FAN_TPR		0x0040		/* Fan speed is in Ticks Per Revolution */
-+#define TPACPI_FAN_NOACPI	0x0080		/* Don't use ACPI methods even if detected */
- 
- static const struct tpacpi_quirk fan_quirk_table[] __initconst = {
- 	TPACPI_QEC_IBM('1', 'Y', TPACPI_FAN_Q1),
-@@ -8823,6 +8824,9 @@ static const struct tpacpi_quirk fan_quirk_table[] __initconst = {
- 	TPACPI_Q_LNV3('N', '1', 'O', TPACPI_FAN_NOFAN),	/* X1 Tablet (2nd gen) */
- 	TPACPI_Q_LNV3('R', '0', 'Q', TPACPI_FAN_DECRPM),/* L480 */
- 	TPACPI_Q_LNV('8', 'F', TPACPI_FAN_TPR),		/* ThinkPad x120e */
-+	TPACPI_Q_LNV3('R', '0', '0', TPACPI_FAN_NOACPI),/* E560 */
-+	TPACPI_Q_LNV3('R', '1', '2', TPACPI_FAN_NOACPI),/* T495 */
-+	TPACPI_Q_LNV3('R', '1', '3', TPACPI_FAN_NOACPI),/* T495s */
- };
- 
- static int __init fan_init(struct ibm_init_struct *iibm)
-@@ -8874,6 +8878,13 @@ static int __init fan_init(struct ibm_init_struct *iibm)
- 		tp_features.fan_ctrl_status_undef = 1;
- 	}
- 
-+	if (quirks & TPACPI_FAN_NOACPI) {
-+		/* E560, T495, T495s */
-+		pr_info("Ignoring buggy ACPI fan access method\n");
-+		fang_handle = NULL;
-+		fanw_handle = NULL;
-+	}
-+
- 	if (gfan_handle) {
- 		/* 570, 600e/x, 770e, 770x */
- 		fan_status_access_mode = TPACPI_FAN_RD_ACPI_GFAN;
--- 
-2.48.1
+>>      - Use switch/case block to set min_version
+>>        - Set min_version to 0 by default and toggle hacks off
+>>    + V3
+>>      - Remove noise (excess pr_info)
+>>      - Use kstrtoint, not kstrtolong
+>>      - Use __free(kfree) for allocated mem and drop goto + logging
+>>      - Use print_hex_dump() to show failed data after pr_err in mcu_request_version()
+>>      - Use pr_debug in set_ally_mcu_hack() and set_ally_mcu_powersave() plus
+>>        correct the message.
+>>    + V4
+>>      - Change use_ally_mcu_hack var to enum to track init state and
+>>        prevent a race condition
+>>
+>> Luke D. Jones (2):
+>>    hid-asus: check ROG Ally MCU version and warn
+>>    platform/x86: asus-wmi: Refactor Ally suspend/resume
+>>
+>>   drivers/hid/hid-asus.c                     | 111 ++++++++++++++++-
+>>   drivers/platform/x86/asus-wmi.c            | 133 +++++++++++++++------
+>>   include/linux/platform_data/x86/asus-wmi.h |  19 +++
+>>   3 files changed, 222 insertions(+), 41 deletions(-)
+>>
+>> --
+>> 2.49.0
+>>
 
