@@ -1,192 +1,160 @@
-Received: from linux1587.grserver.gr (linux1587.grserver.gr [185.138.42.100])
+Received: from mail-qv1-f48.google.com (mail-qv1-f48.google.com [209.85.219.48])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4532F2628C;
-	Mon, 24 Mar 2025 14:46:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.138.42.100
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E5EB3262803;
+	Mon, 24 Mar 2025 15:23:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742827579; cv=none; b=tDgq9LvEeU3tWGYi4XydM0T53S/eFAEY3XN18uArcF4soZcHz17bFirflTz4S71g0hjX5Xl/ljsY8KaM4AgBPK/3TD2KLof2t7Yf+hQ+TE+j1OR31+YiS5KzCdk/UKGPfLFscMUYJLP+DX4yu2wtAhvBUXUenK2zxIoiLmdBK1A=
+	t=1742829790; cv=none; b=LHN7mVK0N+j2yPvnw+nxH7wYR7eBEEDPOrPvx9TzFuSOs9paJ8XErARGdJvbeAnrDpnAPl/Rzewgvs/MGTx6JD/hIMdTAGJE4viGQz7wjMXv4xVGWi9F+3jvJgG3LJAn82dfmaYWJfjYXXE2C0bZfVxesnavy/cXXiNbTVaZCx8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742827579; c=relaxed/simple;
-	bh=ToTpe1LYw9DyodZumYyKXOyXesV7edGmIPf4l5abzO8=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=VoMUIIpaPNlxuJVtmykE02M7IZp2BMGsPjXFTAra6u1IV74UJeluP7upbaDA0h6EySHUrLj+D69IkFONxLgS8DU7/k51VHZ7xhYDSnMZGS7vpDBmfAL9Bq5BXqiZI0hbCYORzCCTWnidrGrCNJEBE/GiSSIllvz3Yt/Rasqg/mg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=antheas.dev; spf=pass smtp.mailfrom=antheas.dev; dkim=pass (1024-bit key) header.d=antheas.dev header.i=@antheas.dev header.b=aXDT7Evh; arc=none smtp.client-ip=185.138.42.100
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=antheas.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=antheas.dev
+	s=arc-20240116; t=1742829790; c=relaxed/simple;
+	bh=Y+VRdVpwOlC73AoQoXEyIDCA/Ok0ui6Sh1G1sOPmJxE=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=K3zyOfkX+3mJcPDy/1qy4z/dnw6v6iOk1qZKLOkgvwXOfhoek1eYApztkk0Y7+JxxM9HDxB4nSpQt2nfql9685r+9Zqn2sTdMsLQJcnHEK22w83AoUT6Gs0dgc05PEhDLZmPSLApewDwydTpX+JD2zVqAnm6U5ngc0rirTBYjHo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=cSsxW11M; arc=none smtp.client-ip=209.85.219.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=antheas.dev header.i=@antheas.dev header.b="aXDT7Evh"
-Received: from mail-lj1-f180.google.com (mail-lj1-f180.google.com [209.85.208.180])
-	by linux1587.grserver.gr (Postfix) with ESMTPSA id 2C5602E00F59;
-	Mon, 24 Mar 2025 16:46:12 +0200 (EET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=antheas.dev;
-	s=default; t=1742827572;
-	bh=u9IU7+meIOr371mEdgZ5pCKYmQvhV+O9kkQwA6cXgqA=;
-	h=Received:From:Subject:To;
-	b=aXDT7EvhoBhi9UTolqPDg5rsjBJ+DZI4EQ5ISBXalkRv8YGsjtaLeIsLG3Xgj4t0y
-	 PW8/4pYPLXvTAkG+DQem9s4JIm7zdUELXrUF1cAvRkifqHQTHJocaxu5daFlWlsuNH
-	 j3i+8TdomIyWts4cxV841AmWxotBzILkwwEJd0ZA=
-Authentication-Results: linux1587.grserver.gr;
-        spf=pass (sender IP is 209.85.208.180) smtp.mailfrom=lkml@antheas.dev smtp.helo=mail-lj1-f180.google.com
-Received-SPF: pass (linux1587.grserver.gr: connection is authenticated)
-Received: by mail-lj1-f180.google.com with SMTP id
- 38308e7fff4ca-30bfed67e08so50912141fa.2;
-        Mon, 24 Mar 2025 07:46:12 -0700 (PDT)
-X-Forwarded-Encrypted: i=1;
- AJvYcCVA0K5oVvecOL+kwZXbriEbUYxObINbZTCHNjlsmx8jfh2hevSj4ac7jzoUKZOE+2pgZq96R+8MZc7XcQ==@vger.kernel.org,
- AJvYcCXIs2Mfpsmv86jBUj2Wl3YpRLOnATl5poH1a/1rKj6fwnOaD/ACUnRCABcQMOWYdBhKZRH0XkXV6rA+JmIp9qN13Y1BVA==@vger.kernel.org
-X-Gm-Message-State: AOJu0YwuNp28w6D5ZpDU+WosvsoQIJuW5Brh0K1dYPDF3TIJzRSBa5uU
-	4UlnY9GkKBbH4hciMVXnPmlS+9ckcTt2fi6kLP6Dh+BlzjA6tSvph+vSLdFdgQ1hahY3ofjvbXG
-	V90nl6xWM7U9HzITRIZWdrJiwK5Y=
-X-Google-Smtp-Source: 
- AGHT+IG1p8/DmYpOK8sy9cB93Dxy5t2DVU+b7G1nWVZeFTjaZ7IkdowFc9dZ5907eE+CcbMg5YGyY6jhIAa8bcUpKrQ=
-X-Received: by 2002:a2e:8612:0:b0:30b:e440:dbdb with SMTP id
- 38308e7fff4ca-30d7e31c966mr46041311fa.37.1742827571490; Mon, 24 Mar 2025
- 07:46:11 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cSsxW11M"
+Received: by mail-qv1-f48.google.com with SMTP id 6a1803df08f44-6e90b8d4686so38974266d6.2;
+        Mon, 24 Mar 2025 08:23:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1742829788; x=1743434588; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=aq+e0nVBUfZDGO12W2xzeQN6WR8rPyJfLm4xkEeaFh4=;
+        b=cSsxW11MRmxGF7AChIhsLfOJc9LsdsA6K5brTSgw4t8JgGPNeaJqQMpniVZSh5/yYV
+         CKzKdi5XXBC3Awfw8cbkwDQ28zX9IYvf51EUwSpcSthZJZsv92R7bvYqmodPMytJwPRt
+         yYEJoYseimrzUMXKJoyfR7rrZkSMe5nTAd6mhao+b0NWlpzxcvvJkWiQYBmjS/5AJIKJ
+         dVcVwR/vnoYwglE087ZYErtyIXrhXroAGwof+jgj7TIyb96rxFM0OmAhoLR9NOBZhSZ0
+         kNcK73ENtExLYUlm7V4MpOMS5IpknXvt2WL7Eiky87B/B346jehImk6t0G6cX64Ry/rz
+         44Yw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1742829788; x=1743434588;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=aq+e0nVBUfZDGO12W2xzeQN6WR8rPyJfLm4xkEeaFh4=;
+        b=IAuWqsZO8yd6LUh23m7JoTChfQ7ato+BWsYl2PVsWhMoQnJNNnhiZerRIK5CRrajqr
+         qMABTVEvddKhvtcPGQzhT5DWU00s8IlBzDc/M2xoTw5FO3/6qys/+qz/kcPdvDb4gkVB
+         I73hLQ3zvh1VRSdJxX3RYUld1SnfBKQh1ibCjrBAbNZK5F+miHikJHKkpvyOFK0fxHJw
+         7TvVsQ9B/NLX5qrSJl6IqBhIcHmIr8zsF/ijGQe1tM0otezOFJB3b/7Zdx23OTs2Jgcm
+         0ICSXud76eEovwkGBHhDKDEU2/TofQGY8OXXaJ6BHeloDybWtH2rYO0p+siJtaJimqhP
+         VD1w==
+X-Forwarded-Encrypted: i=1; AJvYcCUN72hVKj/d4sIcb6/1Em3MoSqJT+MvnJrdcN5NLtP5rh4Qsbnh/CqGjZlSkf0HcAK3N/pn3f0cmmbuUQq5stnoIK2NOw==@vger.kernel.org, AJvYcCUeGlMFIShZC7npXOQgA3lIrnaORrh9CnfZguJk7nRBWvT3poDTgrhX+UrKpQ+JdeQCxSirxZvq@vger.kernel.org, AJvYcCXxE/Hj3JbWb9LHrIttmuAcDDrDzrFj5E0IXOWIPgjNcXYjKnysYVrbDqU1o84uCcboeF9Y1HHqrcRk6Jc=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyXH4Elro8baQ53bclVJqieVUcRkceF3KPboAE0H4L612oO5utU
+	LQ/KSDU0ymjmP7gKFBWDjlaoHoLx+LWlRt2Nt5LHI89UZ+r6BjpiPK4qlIQR
+X-Gm-Gg: ASbGncv8lLrkRXVteQt6Qu1laJMAUDD3mqKgjNxqF29IsVX0OsvkmwoFgSleaKszOPN
+	J/09mtdjy/+vdm1HF8LOUnrM6mZ/mypVacxhcxVoxx15DQE4rvfs5STJz1SvgZ37OAWuzn+gfcX
+	GLU9HvuSx59JHZ40SQSK9DDW+hFC604anrFjvgmTh+YFKYK1IjRTdQdz6eGfoq92PyzGRnUsHhp
+	qXOgpATnGjJoWok4tMtXLrxAVbcHvVfnmN/eVIQk1BjjB5Pj0q0MmgjrjNLKWKcFf0mV0vhM4t2
+	xhCsj1/TnLbIOrLiumXR621Dv6KvVaLaT3vT3dVE6TcsXQ3vBesUjIZ9zyU3jXHh1xY0FAv9/Ea
+	p9APp94LLFjDLKNq+
+X-Google-Smtp-Source: AGHT+IFQuygfgUW9Jk9gPam5XKOoHmIVZjqt+AxtwMSiNCDBATW+TtjWKumzOzDQl3cfAPFVoP8ZGQ==
+X-Received: by 2002:a05:6214:2504:b0:6e8:ea29:fdd1 with SMTP id 6a1803df08f44-6eb3f27ef5emr198766886d6.3.1742829787510;
+        Mon, 24 Mar 2025 08:23:07 -0700 (PDT)
+Received: from localhost.localdomain (pat-199-212-65-32.resnet.yorku.ca. [199.212.65.32])
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6eb3ef1f5b5sm45582896d6.35.2025.03.24.08.23.06
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 24 Mar 2025 08:23:07 -0700 (PDT)
+From: Seyediman Seyedarab <imandevel@gmail.com>
+X-Google-Original-From: Seyediman Seyedarab <ImanDevel@gmail.com>
+To: hmh@hmh.eng.br,
+	hdegoede@redhat.com,
+	ilpo.jarvinen@linux.intel.com
+Cc: ibm-acpi-devel@lists.sourceforge.net,
+	platform-driver-x86@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Seyediman Seyedarab <ImanDevel@gmail.com>,
+	Vlastimil Holer <vlastimil.holer@gmail.com>,
+	stable@vger.kernel.org,
+	Alireza Elikahi <scr0lll0ck1s4b0v3h0m3k3y@gmail.com>,
+	Kurt Borja <kuurtb@gmail.com>,
+	Eduard Christian Dumitrescu <eduard.c.dumitrescu@gmail.com>
+Subject: [PATCH v3] platform/x86: thinkpad_acpi: disable ACPI fan access for T495* and E560
+Date: Mon, 24 Mar 2025 11:24:42 -0400
+Message-ID: <20250324152442.106113-1-ImanDevel@gmail.com>
+X-Mailer: git-send-email 2.48.1
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250323023421.78012-1-luke@ljones.dev>
- <CAGwozwE4oXmFMRO5jZJC4d11TstTqSC8ZUZ1CCkZMWYZKTKF_w@mail.gmail.com>
- <deeb4946-dd66-4a82-a8f0-5e8b1751899e@ljones.dev>
- <CAGwozwGPVJznyX4Vp5vNfb1JOP7AGoZV3vOkRwT_W=_0g+gkJQ@mail.gmail.com>
- <41bf9d87-be11-4814-bc3e-c6c9297e0cc4@ljones.dev>
-In-Reply-To: <41bf9d87-be11-4814-bc3e-c6c9297e0cc4@ljones.dev>
-From: Antheas Kapenekakis <lkml@antheas.dev>
-Date: Mon, 24 Mar 2025 15:46:00 +0100
-X-Gmail-Original-Message-ID: 
- <CAGwozwGE0vVUEn=1pCakhcMZP8oT=9jzrYMNYM8RvBvE9Wq0WQ@mail.gmail.com>
-X-Gm-Features: AQ5f1Jr4NC78r4qNNNTLJDqqS3v7268tJEAEM67O7hxcO8RLWmmyIYj8P_JJigU
-Message-ID: 
- <CAGwozwGE0vVUEn=1pCakhcMZP8oT=9jzrYMNYM8RvBvE9Wq0WQ@mail.gmail.com>
-Subject: Re: [PATCH v4 0/2] hid-asus: asus-wmi: refactor Ally suspend/resume
-To: "Luke D. Jones" <luke@ljones.dev>
-Cc: linux-kernel@vger.kernel.org, hdegoede@redhat.com,
-	ilpo.jarvinen@linux.intel.com, platform-driver-x86@vger.kernel.org,
-	linux-input@vger.kernel.org, bentiss@kernel.org, jikos@kernel.org,
-	mario.limonciello@amd.com
-Content-Type: text/plain; charset="UTF-8"
-X-PPP-Message-ID: 
- <174282757277.17451.1073231361952910226@linux1587.grserver.gr>
-X-PPP-Vhost: antheas.dev
-X-Virus-Scanned: clamav-milter 0.103.11 at linux1587.grserver.gr
-X-Virus-Status: Clean
+Content-Transfer-Encoding: 8bit
 
-On Mon, 24 Mar 2025 at 11:34, Luke D. Jones <luke@ljones.dev> wrote:
->
-> On 24/03/25 21:11, Antheas Kapenekakis wrote:
-> > On Mon, 24 Mar 2025 at 02:41, Luke D. Jones <luke@ljones.dev> wrote:
-> >>
-> >> On 24/03/25 00:41, Antheas Kapenekakis wrote:
-> >>> On Sun, 23 Mar 2025 at 03:34, Luke Jones <luke@ljones.dev> wrote:
-> >>>>
-> >>>> This short series refactors the Ally suspend/resume functionality in the
-> >>>> asus-wmi driver along with adding support for ROG Ally MCU version checking.
-> >>>>
-> >>>> The version checking is then used to toggle the use of older CSEE call hacks
-> >>>> that were initially used to combat Ally suspend/wake issues arising from the MCU
-> >>>> not clearing a particular flag on resume. ASUS have since corrected this
-> >>>> especially for Linux in newer firmware versions.
-> >>>>
-> >>>> - hid-asus requests the MCU version and displays a warning if the version is
-> >>>>     older than the one that fixes the issue.
-> >>>> - hid-asus awill also toggle the CSEE hack off, and mcu_powersave to on if the
-> >>>> version is high enough.
-> >>>>
-> >>>> *Note: In review it was requested by Mario that I try strsep() for parsing
-> >>>> the version. I did try this and a few variations but the result was much
-> >>>> more code due to having to check more edge cases due to the input being
-> >>>> raw bytes. In the end the cleaned up while loop proved more robust.
-> >>>>
-> >>>> - Changelog:
-> >>>>     + V2: https://lore.kernel.org/platform-driver-x86/20250226010129.32043-1-luke@ljones.dev/T/#t
-> >>>>       - Adjust warning message to explicitly mention suspend issues
-> >>>
-> >>> How did the testing go with this one, especially with mcu_powersave 0?
-> >>
-> >> Appears to be good. Checked a few reboots with powersave off - it is
-> >> setting on as I expect every time. Did modules unload/load also. And
-> >> tested with it set off after boot plus suspend resumes.
-> >
-> > Did you test suspends with mcu_powersave to 0 and rgb on? I had a few
-> > issues you can reference the previous version for and I want to see if
-> > you have them.
-> >
-> > Even with powersave set to 1, the RGB does not fade anymore without the quirk
->
-> Yes I tested every scenario I could think of. I don't think the fade is
-> something to worry about
+From: Eduard Christian Dumitrescu <eduard.c.dumitrescu@gmail.com>
 
-From my testing, I got it to flash random colors and not disconnect
-properly, so if you really want to remove it, you should make sure to
-test the version that disables the quirk properly first.
+T495, T495s, and E560 laptops have the FANG+FANW ACPI methods (therefore
+fang_handle and fanw_handle are not NULL) but they do not actually work,
+which results in a "No such device or address" error. The DSDT table code
+for the FANG+FANW methods doesn't seem to do anything special regarding
+the fan being secondary. Fan access and control is restored after forcing
+the legacy non-ACPI fan control method by setting both fang_handle and
+fanw_handle to NULL. The bug was introduced in commit 57d0557dfa49
+("platform/x86: thinkpad_acpi: Add Thinkpad Edge E531 fan support"),
+which added a new fan control method via the FANG+FANW ACPI methods.
 
-> seems like it happening at all previously was
-> just due to suspend being held up for a bit longer and now that the hack
+Add a quirk for T495, T495s, and E560 to avoid the FANG+FANW methods.
 
-Yes, because Windows does not enter s0i3 instantly, so some devices,
-like the Ally units, like the Go S, rely on that for different
-purposes. 500ms is perfectly fine for both, and since it happens
-during suspend and not resume, provided that the screen has been
-turned off, it is transparent. (The Go S gets an APU hang due to very
-aggressive TDP tuning; a delay after the sleep entry call and
-userspace suspend lets the VRMs cool off a bit)
+Reported-by: Vlastimil Holer <vlastimil.holer@gmail.com>
+Fixes: 57d0557dfa49 ("platform/x86: thinkpad_acpi: Add Thinkpad Edge E531 fan support")
+Closes: https://bugzilla.kernel.org/show_bug.cgi?id=219643
+Cc: stable@vger.kernel.org
+Tested-by: Alireza Elikahi <scr0lll0ck1s4b0v3h0m3k3y@gmail.com>
+Reviewed-by: Kurt Borja <kuurtb@gmail.com>
+Signed-off-by: Eduard Christian Dumitrescu <eduard.c.dumitrescu@gmail.com>
+Co-developed-by: Seyediman Seyedarab <ImanDevel@gmail.com>
+Signed-off-by: Seyediman Seyedarab <ImanDevel@gmail.com>
+---
+Changes in v3:
+- Reordered paragraphs in the changelog and made minor adjusments
+- Reorded tags
+- Added Kurt Borja as a reviewer
+- Removed Tested-by: crok <crok.bic@gmail.com> as crok didn't test
+  the patch
 
-> is disabled for new FW, it relies fully on Linux suspend (async?
-> Honestly it's never been fully clear how async it really is).
+Kindest Regards,
+Seyediman
 
-The call is at the wrong place unfortunately. That's about it
+ drivers/platform/x86/thinkpad_acpi.c | 11 +++++++++++
+ 1 file changed, 11 insertions(+)
 
-> I'd rather the faster suspend/resume. And so far I've heard no
-> complaints (although my userbase is smaller than bazzites).
+diff --git a/drivers/platform/x86/thinkpad_acpi.c b/drivers/platform/x86/thinkpad_acpi.c
+index d8df1405edfa..27fd67a2f2d1 100644
+--- a/drivers/platform/x86/thinkpad_acpi.c
++++ b/drivers/platform/x86/thinkpad_acpi.c
+@@ -8793,6 +8793,7 @@ static const struct attribute_group fan_driver_attr_group = {
+ #define TPACPI_FAN_NS		0x0010		/* For EC with non-Standard register addresses */
+ #define TPACPI_FAN_DECRPM	0x0020		/* For ECFW's with RPM in register as decimal */
+ #define TPACPI_FAN_TPR		0x0040		/* Fan speed is in Ticks Per Revolution */
++#define TPACPI_FAN_NOACPI	0x0080		/* Don't use ACPI methods even if detected */
+ 
+ static const struct tpacpi_quirk fan_quirk_table[] __initconst = {
+ 	TPACPI_QEC_IBM('1', 'Y', TPACPI_FAN_Q1),
+@@ -8823,6 +8824,9 @@ static const struct tpacpi_quirk fan_quirk_table[] __initconst = {
+ 	TPACPI_Q_LNV3('N', '1', 'O', TPACPI_FAN_NOFAN),	/* X1 Tablet (2nd gen) */
+ 	TPACPI_Q_LNV3('R', '0', 'Q', TPACPI_FAN_DECRPM),/* L480 */
+ 	TPACPI_Q_LNV('8', 'F', TPACPI_FAN_TPR),		/* ThinkPad x120e */
++	TPACPI_Q_LNV3('R', '0', '0', TPACPI_FAN_NOACPI),/* E560 */
++	TPACPI_Q_LNV3('R', '1', '2', TPACPI_FAN_NOACPI),/* T495 */
++	TPACPI_Q_LNV3('R', '1', '3', TPACPI_FAN_NOACPI),/* T495s */
+ };
+ 
+ static int __init fan_init(struct ibm_init_struct *iibm)
+@@ -8874,6 +8878,13 @@ static int __init fan_init(struct ibm_init_struct *iibm)
+ 		tp_features.fan_ctrl_status_undef = 1;
+ 	}
+ 
++	if (quirks & TPACPI_FAN_NOACPI) {
++		/* E560, T495, T495s */
++		pr_info("Ignoring buggy ACPI fan access method\n");
++		fang_handle = NULL;
++		fanw_handle = NULL;
++	}
++
+ 	if (gfan_handle) {
+ 		/* 570, 600e/x, 770e, 770x */
+ 		fan_status_access_mode = TPACPI_FAN_RD_ACPI_GFAN;
+-- 
+2.48.1
 
-Have you deployed the V4 though? Because the behavior with the quirk
-is fine. WIthout, it is soso.
-
-> Cheers,
-> Luke.
->
-> > Antheas
-> >
-> >> Very much hope this is the end of that particular saga, and with
-> >> bazzites help we can hopefully get everyone on November MCU FW or later,
-> >> then finally remove the hack completely this year.
-> >>
-> >> A small side note - I expect ASUS to fully reuse the X hardware, or at
-> >> least the bios/acpi/mcu-fw for that new windows handheld they've doing,
-> >> so fingers crossed that they actually do, and there will be nomore
-> >> suspend issues with current kernels plus this patch.
-> >>
-> >> Cheers,
-> >> Luke.
-> >>
-> >>>>       - Use switch/case block to set min_version
-> >>>>         - Set min_version to 0 by default and toggle hacks off
-> >>>>     + V3
-> >>>>       - Remove noise (excess pr_info)
-> >>>>       - Use kstrtoint, not kstrtolong
-> >>>>       - Use __free(kfree) for allocated mem and drop goto + logging
-> >>>>       - Use print_hex_dump() to show failed data after pr_err in mcu_request_version()
-> >>>>       - Use pr_debug in set_ally_mcu_hack() and set_ally_mcu_powersave() plus
-> >>>>         correct the message.
-> >>>>     + V4
-> >>>>       - Change use_ally_mcu_hack var to enum to track init state and
-> >>>>         prevent a race condition
-> >>>>
-> >>>> Luke D. Jones (2):
-> >>>>     hid-asus: check ROG Ally MCU version and warn
-> >>>>     platform/x86: asus-wmi: Refactor Ally suspend/resume
-> >>>>
-> >>>>    drivers/hid/hid-asus.c                     | 111 ++++++++++++++++-
-> >>>>    drivers/platform/x86/asus-wmi.c            | 133 +++++++++++++++------
-> >>>>    include/linux/platform_data/x86/asus-wmi.h |  19 +++
-> >>>>    3 files changed, 222 insertions(+), 41 deletions(-)
-> >>>>
-> >>>> --
-> >>>> 2.49.0
-> >>>>
-> >>
->
