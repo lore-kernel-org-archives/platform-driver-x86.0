@@ -1,93 +1,99 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qt1-f173.google.com (mail-qt1-f173.google.com [209.85.160.173])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 25D81802
-	for <platform-driver-x86@vger.kernel.org>; Mon, 24 Mar 2025 12:51:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A6511953A2;
+	Mon, 24 Mar 2025 12:52:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742820670; cv=none; b=K47azfYp+yiAg9HxjEOBqfFo+IeBnqQvPIsWccGcvz/xsMJBwPvPLIjQcE7JBqt5YiLNXXnwZPr+cwREH5V8G1FRedHnMikWp+ez01BrbSSuO09dkuUfW0VGs9zdEvtjQqk4OfQQ/Rm7lxQ1qt4uAzvUszWNjRPgUu8OYKgG/z4=
+	t=1742820770; cv=none; b=a+aq/KvDYnrtwYsQPSeEvqTiDpwJQIBLNtD8VfGzt0klcQLQWmVySqhNe2weAvC5Ag2chds70/eQF952gZLn1xVVUOcb9cqsENwCrS/mcm/CSyuxNFYVDR8FO/o+RKrd1aSajcrk5C/6QtMidPu+r13D6YI2qmyhb1yL9J8n5Tg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742820670; c=relaxed/simple;
-	bh=CMIkr3Iu3NnPSzF9rH7WJRFSWObAbxCpYFtYRivtXCI=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=WoKqE10WMItE5/DF0Fq2PcvlQOkkW+/4BnHTAXWapCzJSUtGzLxFeJV3TS2mFZiTqDvsaKaON/2OYS+mVDCway+RfUA3VpPKKroI8OiqElWdd2Ai7Pe9L70QNB2ya/+54BadrDjAgjx2RRm1fH99jlYju8SqW4yIyWyYvmuRnyA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=YDX1Zoy7; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1742820770; c=relaxed/simple;
+	bh=l0GeOJz16oW6SGdnb06/aK2t7USSqgz1qqgSmbO45sM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=L1XJeTZ1ChdQuTrAd3aoD538hjMQClLHdxNuG24qPzoygQOvR0fp91BXedTsbMq9gWWdXG68R/XzzkBuSi5clNaey1QvyScwGoSVUTv41gAbEiPnlI6+Is5zU1AOlG9x9MXi1hLADRf+LK3ZIt73Moc8ANv1jtz6nmCEVPYEVqg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=mH3BhXIR; arc=none smtp.client-ip=209.85.160.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="YDX1Zoy7"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1742820667;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=Hv9vtfaJTSuyYXXbr17OxMEjZMqEkRmCXZ0wqLg5SVw=;
-	b=YDX1Zoy7znQ0m5F25PJBiu2ITtYGAcPDZFenxAOme763qW2iUNKuUm+/Q+MDsZ2/GTyVaG
-	asFoe8jsI3tZQ9L48dfYGoJqdhNp9hXa3Kr5blz89ljCOcujaxTyBjgCPEM7iy8rYbaLH9
-	9mktgtlfPSvnnDuYXQrI8qxrXQozoNE=
-Received: from mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-74-d8vMzQQmNYCR9O1ZywwG8A-1; Mon,
- 24 Mar 2025 08:51:04 -0400
-X-MC-Unique: d8vMzQQmNYCR9O1ZywwG8A-1
-X-Mimecast-MFC-AGG-ID: d8vMzQQmNYCR9O1ZywwG8A_1742820663
-Received: from mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.111])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 867DC180AF4C;
-	Mon, 24 Mar 2025 12:51:03 +0000 (UTC)
-Received: from x1.redhat.com (unknown [10.44.33.69])
-	by mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 088511801752;
-	Mon, 24 Mar 2025 12:50:59 +0000 (UTC)
-From: Hans de Goede <hdegoede@redhat.com>
-To: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Cc: Hans de Goede <hdegoede@redhat.com>,
-	platform-driver-x86@vger.kernel.org,
-	kernel test robot <lkp@intel.com>
-Subject: [PATCH] platform/x86: x86-android-tablets: Add select POWER_SUPPLY to Kconfig
-Date: Mon, 24 Mar 2025 13:50:52 +0100
-Message-ID: <20250324125052.374369-1-hdegoede@redhat.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mH3BhXIR"
+Received: by mail-qt1-f173.google.com with SMTP id d75a77b69052e-476977848c4so43697601cf.1;
+        Mon, 24 Mar 2025 05:52:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1742820768; x=1743425568; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=vme9H9wmsAwxUfbsVKtvTuLGOlzu2k2VT8Gp2wTq77Q=;
+        b=mH3BhXIRtl1QPfnx97v36SLpDxHOTcYsM0cZOGnQgweIXyRsyY5UHRFLLK0hrXPb8q
+         2/Em/SdL83o49UHoYkO+YAsXTRWrfXUEMtrUp+r8lU09AOMnX6APC8uG9MMwPPvhWIus
+         pS70mn5A5KNaZFZWTSephL9wUWxovKIPsPzhXr1Y5e28MNk5AHhbevTOWsrCBnabO4Yr
+         lYdZ2m2iq7jCdGjm9dNBBiQOTd3gBHGa5G+1rI3oD3sdMeMBazXXXDwRLVXF9By/8WUE
+         6gLWbdaFYRIDvMZtqzGs6GuLT4/ul6uqsleVCi1fcFLEbokiPXXZZ+dKOyNnI6B5Zmht
+         +KcQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1742820768; x=1743425568;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=vme9H9wmsAwxUfbsVKtvTuLGOlzu2k2VT8Gp2wTq77Q=;
+        b=wzKAY9wePM7WCFz1gVLsg4gGRTZjGgt09UBTlkNI3RqH1loscXOsvDxoV8x385Qmym
+         g92ah6VN8LSINLR79vDv0bq845Z9CSrE84M4cYvOyJg84+MaDjr++cv1hZ29gTClLeYt
+         hRbpkX07jUTsJJW4vi96c9T+hakGkQGytpjojvUpgJQxuMKwLHc64Uz4mScdA//MG4OH
+         OjqVSPUEk32xNExfqmgL7Wr5HvZkbUmboPI4O4UyOVSTf+k1Tw1UNEtplsUbdHZlZRfZ
+         mmgx/1T+v6QSZzbaB+vTYqdq2Ph036/O+dPU1pJeTqwYEVAjYuvzB2VsZljo9mxBJVvo
+         uOkQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWWZsH4tH4bdBdv5QIdDMUKDrI3KrL5MzOk/9Y3cfbgZrrVoGk5mY+3dte2gBlIMddjWydDB60CWXx/1LvgcNQknS1CRw==@vger.kernel.org, AJvYcCXJqZx5joocfEbtJ+E9GUWlgvDDPIJSL60oOPTA98qdKZGQpiGbAg/BWEySQUpZBXgX19fLQufm@vger.kernel.org, AJvYcCXr7e0/gm3/eAz4dBhbF7gCfab3+arHFmM3iw35oARlVNCrIDmR2uRuY9x2+Tk9ot7ltLYL4bPwZyRHQF4=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz6zk6l2psQaNp8QN9V41B3IwO4LguLR9OnaFtzpkr2do2GAFK6
+	8+kjTg4MuLvaxPxRkPzbDfGbnVho1mmlxEqwBCJP0g3dS5HiwuT+
+X-Gm-Gg: ASbGncs4aDVm0zBtyMVEbhszUEKqccwzVMy9Ri53xgPnXXvUdaH4HBSwSTQ7v+kwRJC
+	PLPpVutDBtOOF1dKzCGP/vx48NhK6B3YC8RkuPZHbXE5SnXyjdbXBmsAeLcee/y8h+H97eca7XU
+	1FmzAVhA81XqSIJhHmdWMMivokFlV6G3hausVL7cvIfJr19is20b8q4DgWNCUGT/i/5uCuYgOAr
+	fHnLycsFlmF3IjiV1c1zu5mqwcajsfmMHoZqcVn3nFMuOAKHqbKFp1UiralNsZR5p6aEqn7Xmhn
+	/aze6Ids0k3wDObrpVKL7rRHGtVS7bEraLhgZ65l1eQA/st7BQhVnkr8ajuQstZE3CmCO2HrirD
+	C
+X-Google-Smtp-Source: AGHT+IFBjEOy7vbR53CK0B/QWpq+o5gZGcznEE5+haT6GVIZen5thERBPa5VSCwyNKU9DrTsad2dHw==
+X-Received: by 2002:a05:620a:4556:b0:7c5:61b2:b95 with SMTP id af79cd13be357-7c5ba1840a2mr1757424785a.30.1742820768120;
+        Mon, 24 Mar 2025 05:52:48 -0700 (PDT)
+Received: from localhost (pat-199-212-65-32.resnet.yorku.ca. [199.212.65.32])
+        by smtp.gmail.com with UTF8SMTPSA id af79cd13be357-7c5b9348358sm507353785a.71.2025.03.24.05.52.47
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 24 Mar 2025 05:52:47 -0700 (PDT)
+Date: Mon, 24 Mar 2025 08:54:21 -0400
+From: Seyediman Seyedarab <imandevel@gmail.com>
+To: Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>
+Cc: hmh@hmh.eng.br, Hans de Goede <hdegoede@redhat.com>, 
+	ibm-acpi-devel@lists.sourceforge.net, platform-driver-x86@vger.kernel.org, 
+	LKML <linux-kernel@vger.kernel.org>, stable@vger.kernel.org, 
+	Vlastimil Holer <vlastimil.holer@gmail.com>, crok <crok.bic@gmail.com>, 
+	Alireza Elikahi <scr0lll0ck1s4b0v3h0m3k3y@gmail.com>, Eduard Christian Dumitrescu <eduard.c.dumitrescu@gmail.com>
+Subject: Re: [PATCH v2] platform/x86: thinkpad_acpi: disable ACPI fan access
+ for T495* and E560
+Message-ID: <euxpp6zdhlpg3eutc3omspt2exmsyulo5ytbpbqwxovzcy6xey@fuuhsp2agtrx>
+References: <20250324012911.68343-1-ImanDevel@gmail.com>
+ <f4567e02-8478-682f-0947-765ef9258ab5@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.111
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <f4567e02-8478-682f-0947-765ef9258ab5@linux.intel.com>
 
-Commit c78dd25138d1 ("platform/x86: x86-android-tablets: Add Vexia EDU
-ATLA 10 EC battery driver"), adds power_supply class registering to
-the x86-android-tablets code.
+Hi,
+Thank you for your response.
 
-Add "select POWER_SUPPLY" to the Kconfig entry to avoid these errors:
+> > Tested-by: crok <crok.bic@gmail.com>
+> > Tested-by: Alireza Elikahi <scr0lll0ck1s4b0v3h0m3k3y@gmail.com>
+> 
+> Did these two person either give you those Tested-by tags or gave 
+> you green light to add theirs Tested-by tags? I don't see the tags given 
+> in the bugzilla entry. If they didn't yet, please ask if they're fine with 
+> you adding their Tested-by tags.
+Alireza Elikahi gave me the green light to add his Tested-by tag
+after testing on the E560. I haven't reached out to crok yet, but
+I'll send PATCH v3 as soon as I hear back from them and get their
+permission.
 
-ERROR: modpost: "power_supply_get_drvdata" [drivers/platform/x86/x86-android-tablets/vexia_atla10_ec.ko] undefined!
-ERROR: modpost: "power_supply_changed" [drivers/platform/x86/x86-android-tablets/vexia_atla10_ec.ko] undefined!
-ERROR: modpost: "devm_power_supply_register" [drivers/platform/x86/x86-android-tablets/vexia_atla10_ec.ko] undefined!
-
-When POWER_SUPPLY support is not enabled.
-
-Reported-by: kernel test robot <lkp@intel.com>
-Closes: https://lore.kernel.org/oe-kbuild-all/202503231159.ga9eWMVO-lkp@intel.com/
-Signed-off-by: Hans de Goede <hdegoede@redhat.com>
----
- drivers/platform/x86/x86-android-tablets/Kconfig | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/drivers/platform/x86/x86-android-tablets/Kconfig b/drivers/platform/x86/x86-android-tablets/Kconfig
-index a67bddc43007..193da15ee01c 100644
---- a/drivers/platform/x86/x86-android-tablets/Kconfig
-+++ b/drivers/platform/x86/x86-android-tablets/Kconfig
-@@ -10,6 +10,7 @@ config X86_ANDROID_TABLETS
- 	depends on ACPI && EFI && PCI
- 	select NEW_LEDS
- 	select LEDS_CLASS
-+	select POWER_SUPPLY
- 	help
- 	  X86 tablets which ship with Android as (part of) the factory image
- 	  typically have various problems with their DSDTs. The factory kernels
--- 
-2.49.0
-
+Kindest Regards,
+Seyediman
