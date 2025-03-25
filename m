@@ -1,217 +1,253 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A160261FFE
-	for <platform-driver-x86@vger.kernel.org>; Tue, 25 Mar 2025 16:15:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E778B1922FA;
+	Tue, 25 Mar 2025 16:24:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742919322; cv=none; b=FlagBq/kZIz4zOYc8pqrroiP3LxQLsVSGbx0VBTIuDr8EsVhEICHW9G/KAMf7ifET5AYDZZqWEScf78Hlch7o6UBWMn6adl5mrkPGm1TcJXNZ5o5Nej6d0qt1KQDklL6Kio4AligaKIEvVBwuSk+pbgXhK7iZwS42tovkdObMZk=
+	t=1742919877; cv=none; b=lrepVTWwuiQonQswwDJe00hE4yJd8L1I9D5RfK8lxyStblmgqsFd0D8nmV7R6/08gDO9dwq3kZq+pkUNwRng7L/K7Ki/waLH6/pwsD9wuE1JKsJA1CWTYk2QdmbfBCh40k/NI9QSPZK/1QqQuijHyTEvSJQFzlEIdenqiz/h80g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742919322; c=relaxed/simple;
-	bh=SxDiAaAMzmXiNThNF4EyR/pyrVxK3p3l0b1u3Jbd+E4=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=SC7nNtowTF6STYTaBw2oa5yMdRDbc1xDuJTZuKjlw6V1SKGafXG1/mcziElalS6EQzywPJwRFnDolt29lWDNWdSxftC9BLlI7UV28uLnN9CJwAl+5GFri0l/k3tZVbIe5lbyjj5Eb767yCUtSZFKswGMJ02pcFdLuB2D4zXJ68A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=dItDER1t; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1742919877; c=relaxed/simple;
+	bh=VukOGOtUlzZWpnsmi5rnmoaNAqhpZwHs73q9WhAm618=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=UkTs/EsiM4JHpiaj77mO0ifpuwKmTQ99tWCpbitk3Hcqly1VV2C3kDw3g0bASaMMS3n2Xz1lwOuNxVN5eOh535BIBRLY/Xo+7PkHrLhxJO7LmNHsnpW5ZBsGuFiA8Gw1Y+N/EQ95D/FoXXYSbkW+7+mDWiIR9fMV4q/s8KVx7B0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Pr7idbwk; arc=none smtp.client-ip=192.198.163.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="dItDER1t"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1742919319;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=j0xzOEd+drn9e60PT1zNNoKj4qQiQBrzWzIpiu7Pjd0=;
-	b=dItDER1ttHvmysx24jw5qhD+64GLXt4UoX6+2gc6Y3R0j17DQ4q/CnVoHozLNKAaOSocmc
-	URLmkMUlIgqbdi318BqX13qgIhG4A2wFY9dHPUELYnZqN6wJ5vd+/aO6itBM7qo/wMNhl0
-	5SfNhNII5Msb7OcdjiDac/k/vY6eqNs=
-Received: from mx-prod-mc-04.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-6-g3srJmQWNsiTW4HN5sAD4w-1; Tue,
- 25 Mar 2025 12:14:35 -0400
-X-MC-Unique: g3srJmQWNsiTW4HN5sAD4w-1
-X-Mimecast-MFC-AGG-ID: g3srJmQWNsiTW4HN5sAD4w_1742919273
-Received: from mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.93])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 5325418C4470;
-	Tue, 25 Mar 2025 16:14:09 +0000 (UTC)
-Received: from localhost.localdomain (unknown [10.44.32.136])
-	by mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 32E94180A803;
-	Tue, 25 Mar 2025 16:14:05 +0000 (UTC)
-From: Hans de Goede <hdegoede@redhat.com>
-To: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	Andy Shevchenko <andy@kernel.org>
-Cc: Hans de Goede <hdegoede@redhat.com>,
-	Dan Scally <djrscally@gmail.com>,
-	Alan Stern <stern@rowland.harvard.edu>,
-	Sakari Ailus <sakari.ailus@linux.intel.com>,
-	Hao Yao <hao.yao@intel.com>,
-	Bingbu Cao <bingbu.cao@intel.com>,
-	platform-driver-x86@vger.kernel.org,
-	linux-media@vger.kernel.org
-Subject: [PATCH 5/8] platform/x86: int3472: Make regulator supply name configurable
-Date: Tue, 25 Mar 2025 17:13:37 +0100
-Message-ID: <20250325161340.342192-6-hdegoede@redhat.com>
-In-Reply-To: <20250325161340.342192-1-hdegoede@redhat.com>
-References: <20250325161340.342192-1-hdegoede@redhat.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Pr7idbwk"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1742919876; x=1774455876;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=VukOGOtUlzZWpnsmi5rnmoaNAqhpZwHs73q9WhAm618=;
+  b=Pr7idbwkwEwHJzorjAd3N7r6wXtBXW0idJrHgTZUX1/Nu8roZ/xK5jRN
+   +ocrJyPUN3E+ELIHouUEf8KQ7osfkjISuu6iM1K0gNV8DpmhKcNG47qWk
+   cvRNFR5S2TRf4J+OBy1+gZMVAOBwZqSlGx4WehXcf9GughAPFIlELw/a3
+   palVZRc22TG0CFqOqkuT7dWELhps+EpoGRHW3oC5t3ienM22WpobZxzf8
+   7g8GkcpQJxpD+HxfDvPJmfc7HoW3lLI5JvAGhDT8O6VY1fisFsrFMZUOd
+   nISYuDrGGKMonlov1rWA6ZeJWrgJvfKCkN7HCGo1sSnHwF81j1BvkCqxl
+   A==;
+X-CSE-ConnectionGUID: PDZXwcD0Qs+MfOai37/BGQ==
+X-CSE-MsgGUID: sFMeiycxSm2DHr3XKP3FVA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11384"; a="69538399"
+X-IronPort-AV: E=Sophos;i="6.14,275,1736841600"; 
+   d="scan'208";a="69538399"
+Received: from orviesa006.jf.intel.com ([10.64.159.146])
+  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Mar 2025 09:24:34 -0700
+X-CSE-ConnectionGUID: ljwZjIKoRFq5h0YESWwopw==
+X-CSE-MsgGUID: cJfoW89JSYGCpK9Lqhk5yQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.14,275,1736841600"; 
+   d="scan'208";a="124463536"
+Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.158])
+  by orviesa006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Mar 2025 09:24:30 -0700
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Tue, 25 Mar 2025 18:24:27 +0200 (EET)
+To: Antheas Kapenekakis <lkml@antheas.dev>
+cc: platform-driver-x86@vger.kernel.org, linux-input@vger.kernel.org, 
+    LKML <linux-kernel@vger.kernel.org>, Jiri Kosina <jikos@kernel.org>, 
+    Benjamin Tissoires <bentiss@kernel.org>, 
+    Corentin Chary <corentin.chary@gmail.com>, 
+    "Luke D . Jones" <luke@ljones.dev>, Hans de Goede <hdegoede@redhat.com>
+Subject: Re: [PATCH v4 02/11] HID: asus: prevent binding to all HID devices
+ on ROG
+In-Reply-To: <20250324210151.6042-3-lkml@antheas.dev>
+Message-ID: <bf0d12f4-f3ea-6a79-d155-b1e3abc3a156@linux.intel.com>
+References: <20250324210151.6042-1-lkml@antheas.dev> <20250324210151.6042-3-lkml@antheas.dev>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.93
+Content-Type: text/plain; charset=US-ASCII
 
-This is a preparation patch for registering multiple regulators, which
-requires a different supply-name for each regulator. Make supply-name
-a parameter to skl_int3472_register_regulator() and use con-id to set it
-so that the existing int3472_gpio_map remapping can be used with it.
+On Mon, 24 Mar 2025, Antheas Kapenekakis wrote:
 
-Since supply-name now is a parameter, drop the fixed
-skl_int3472_regulator_map_supplies[] array and instead add lower- +
-upper-case mappings of the passed in supply-name to the regulator.
+> ROG keyboards are HID compliant and only care about the endpoint that
+> produces vendor events (e.g., fan mode) and has the keyboard backlight.
+> 
+> Therefore, handle all of the endpoints of ROG keyboards as compliant,
+> by adding HID_QUIRK_INPUT_PER_APP and, for devices other than the vendor
+> one, by adding QUIRK_HANDLE_GENERIC to stop mutating them.
+> 
+> Due to HID_QUIRK_INPUT_PER_APP, rgb register is moved into probe, as
+> the input_* functions are called multiple times (4 for the Z13).
+> 
+> Reviewed-by: Luke D. Jones <luke@ljones.dev>
+> Signed-off-by: Antheas Kapenekakis <lkml@antheas.dev>
+> ---
+>  drivers/hid/hid-asus.c | 69 ++++++++++++++++++++++++++++++++----------
+>  1 file changed, 53 insertions(+), 16 deletions(-)
+> 
+> diff --git a/drivers/hid/hid-asus.c b/drivers/hid/hid-asus.c
+> index 8d4df1b6f143b..96461321c191c 100644
+> --- a/drivers/hid/hid-asus.c
+> +++ b/drivers/hid/hid-asus.c
+> @@ -84,6 +84,7 @@ MODULE_DESCRIPTION("Asus HID Keyboard and TouchPad");
+>  #define QUIRK_MEDION_E1239T		BIT(10)
+>  #define QUIRK_ROG_NKEY_KEYBOARD		BIT(11)
+>  #define QUIRK_ROG_CLAYMORE_II_KEYBOARD BIT(12)
+> +#define QUIRK_HANDLE_GENERIC		BIT(13)
+>  
+>  #define I2C_KEYBOARD_QUIRKS			(QUIRK_FIX_NOTEBOOK_REPORT | \
+>  						 QUIRK_NO_INIT_REPORTS | \
+> @@ -120,7 +121,6 @@ struct asus_drvdata {
+>  	struct input_dev *tp_kbd_input;
+>  	struct asus_kbd_leds *kbd_backlight;
+>  	const struct asus_touchpad_info *tp;
+> -	bool enable_backlight;
+>  	struct power_supply *battery;
+>  	struct power_supply_desc battery_desc;
+>  	int battery_capacity;
+> @@ -326,6 +326,10 @@ static int asus_raw_event(struct hid_device *hdev,
+>  {
+>  	struct asus_drvdata *drvdata = hid_get_drvdata(hdev);
+>  
+> +	if (drvdata->quirks & QUIRK_HANDLE_GENERIC)
+> +		/* NOOP on generic HID devices to avoid side effects. */
+> +		return 0;
+> +
+>  	if (drvdata->battery && data[0] == BATTERY_REPORT_ID)
+>  		return asus_report_battery(drvdata, data, size);
+>  
+> @@ -774,6 +778,10 @@ static int asus_input_configured(struct hid_device *hdev, struct hid_input *hi)
+>  	struct input_dev *input = hi->input;
+>  	struct asus_drvdata *drvdata = hid_get_drvdata(hdev);
+>  
+> +	if (drvdata->quirks & QUIRK_HANDLE_GENERIC)
+> +		/* NOOP on generic HID devices to avoid side effects. */
+> +		return 0;
 
-Signed-off-by: Hans de Goede <hdegoede@redhat.com>
----
- .../x86/intel/int3472/clk_and_regulator.c     | 47 ++++++++-----------
- drivers/platform/x86/intel/int3472/common.h   |  6 ++-
- drivers/platform/x86/intel/int3472/discrete.c |  4 +-
- 3 files changed, 26 insertions(+), 31 deletions(-)
+You'd need braces for multiline indented constructs like this, however, I 
+think that comment can appear before the if line which wouldn't require 
+braces. The same applies to many cases below.
 
-diff --git a/drivers/platform/x86/intel/int3472/clk_and_regulator.c b/drivers/platform/x86/intel/int3472/clk_and_regulator.c
-index 374a99dea7d1..459dbb2cd68a 100644
---- a/drivers/platform/x86/intel/int3472/clk_and_regulator.c
-+++ b/drivers/platform/x86/intel/int3472/clk_and_regulator.c
-@@ -185,42 +185,34 @@ void skl_int3472_unregister_clock(struct int3472_discrete_device *int3472)
- 	clk_unregister(int3472->clock.clk);
- }
- 
--/*
-- * The INT3472 device is going to be the only supplier of a regulator for
-- * the sensor device. But unlike the clk framework the regulator framework
-- * does not allow matching by consumer-device-name only.
-- *
-- * Ideally all sensor drivers would use "avdd" as supply-id. But for drivers
-- * where this cannot be changed because another supply-id is already used in
-- * e.g. DeviceTree files an alias for the other supply-id can be added here.
-- *
-- * Do not forget to update GPIO_REGULATOR_SUPPLY_MAP_COUNT when changing this.
-- */
--static const char * const skl_int3472_regulator_map_supplies[] = {
--	"avdd",
--	"AVDD",
--};
--
--static_assert(ARRAY_SIZE(skl_int3472_regulator_map_supplies) ==
--	      GPIO_REGULATOR_SUPPLY_MAP_COUNT);
--
- int skl_int3472_register_regulator(struct int3472_discrete_device *int3472,
- 				   struct gpio_desc *gpio,
-+				   const char *supply_name,
- 				   const char *second_sensor)
- {
- 	struct regulator_init_data init_data = { };
-+	struct int3472_gpio_regulator *regulator;
- 	struct regulator_config cfg = { };
- 	int i, j;
- 
--	for (i = 0, j = 0; i < ARRAY_SIZE(skl_int3472_regulator_map_supplies); i++) {
--		int3472->regulator.supply_map[j].supply = skl_int3472_regulator_map_supplies[i];
--		int3472->regulator.supply_map[j].dev_name = int3472->sensor_name;
-+	if (strlen(supply_name) >= GPIO_SUPPPLY_NAME_LENGTH) {
-+		dev_err(int3472->dev, "supply-name '%s' length too long\n", supply_name);
-+		return -EOVERFLOW;
-+	}
-+
-+	regulator = &int3472->regulator;
-+	string_upper(regulator->supply_name_upper, supply_name);
-+
-+	for (i = 0, j = 0; i < GPIO_REGULATOR_SUPPLY_MAP_COUNT; i++) {
-+		const char *supply = i ? regulator->supply_name_upper : supply_name;
-+
-+		regulator->supply_map[j].supply = supply;
-+		regulator->supply_map[j].dev_name = int3472->sensor_name;
- 		j++;
- 
- 		if (second_sensor) {
--			int3472->regulator.supply_map[j].supply =
--				skl_int3472_regulator_map_supplies[i];
--			int3472->regulator.supply_map[j].dev_name = second_sensor;
-+			regulator->supply_map[j].supply = supply;
-+			regulator->supply_map[j].dev_name = second_sensor;
- 			j++;
- 		}
- 	}
-@@ -229,9 +221,8 @@ int skl_int3472_register_regulator(struct int3472_discrete_device *int3472,
- 	init_data.consumer_supplies = int3472->regulator.supply_map;
- 	init_data.num_consumer_supplies = j;
- 
--	snprintf(int3472->regulator.regulator_name,
--		 sizeof(int3472->regulator.regulator_name), "%s-regulator",
--		 acpi_dev_name(int3472->adev));
-+	snprintf(regulator->regulator_name, sizeof(regulator->regulator_name), "%s-%s",
-+		 acpi_dev_name(int3472->adev), supply_name);
- 
- 	int3472->regulator.rdesc = INT3472_REGULATOR(
- 						int3472->regulator.regulator_name,
-diff --git a/drivers/platform/x86/intel/int3472/common.h b/drivers/platform/x86/intel/int3472/common.h
-index 3728f3864a84..b0638c29d847 100644
---- a/drivers/platform/x86/intel/int3472/common.h
-+++ b/drivers/platform/x86/intel/int3472/common.h
-@@ -26,7 +26,9 @@
- #define INT3472_PDEV_MAX_NAME_LEN				23
- #define INT3472_MAX_SENSOR_GPIOS				3
- 
--#define GPIO_REGULATOR_NAME_LENGTH				21
-+#define GPIO_SUPPPLY_NAME_LENGTH				5
-+#define GPIO_REGULATOR_NAME_LENGTH				(12 + GPIO_SUPPPLY_NAME_LENGTH)
-+/* lower- + upper-case mapping */
- #define GPIO_REGULATOR_SUPPLY_MAP_COUNT				2
- 
- #define INT3472_LED_MAX_NAME_LEN				32
-@@ -85,6 +87,7 @@ struct int3472_discrete_device {
- 	struct int3472_gpio_regulator {
- 		/* SUPPLY_MAP_COUNT * 2 to make room for second sensor mappings */
- 		struct regulator_consumer_supply supply_map[GPIO_REGULATOR_SUPPLY_MAP_COUNT * 2];
-+		char supply_name_upper[GPIO_SUPPPLY_NAME_LENGTH];
- 		char regulator_name[GPIO_REGULATOR_NAME_LENGTH];
- 		struct regulator_dev *rdev;
- 		struct regulator_desc rdesc;
-@@ -129,6 +132,7 @@ void skl_int3472_unregister_clock(struct int3472_discrete_device *int3472);
- 
- int skl_int3472_register_regulator(struct int3472_discrete_device *int3472,
- 				   struct gpio_desc *gpio,
-+				   const char *supply_name,
- 				   const char *second_sensor);
- void skl_int3472_unregister_regulator(struct int3472_discrete_device *int3472);
- 
-diff --git a/drivers/platform/x86/intel/int3472/discrete.c b/drivers/platform/x86/intel/int3472/discrete.c
-index cbf39459bdf0..f6dae82739e5 100644
---- a/drivers/platform/x86/intel/int3472/discrete.c
-+++ b/drivers/platform/x86/intel/int3472/discrete.c
-@@ -188,7 +188,7 @@ static void int3472_get_con_id_and_polarity(struct acpi_device *adev, u8 *type,
- 		*gpio_flags = GPIO_ACTIVE_HIGH;
- 		break;
- 	case INT3472_GPIO_TYPE_POWER_ENABLE:
--		*con_id = "power-enable";
-+		*con_id = "avdd";
- 		*gpio_flags = GPIO_ACTIVE_HIGH;
- 		break;
- 	default:
-@@ -311,7 +311,7 @@ static int skl_int3472_handle_gpio_resources(struct acpi_resource *ares,
- 
- 			break;
- 		case INT3472_GPIO_TYPE_POWER_ENABLE:
--			ret = skl_int3472_register_regulator(int3472, gpio,
-+			ret = skl_int3472_register_regulator(int3472, gpio, con_id,
- 							     int3472->quirks.avdd_second_sensor);
- 			if (ret)
- 				err_msg = "Failed to map regulator to sensor\n";
+> +
+>  	/* T100CHI uses MULTI_INPUT, bind the touchpad to the mouse hid_input */
+>  	if (drvdata->quirks & QUIRK_T100CHI &&
+>  	    hi->report->id != T100CHI_MOUSE_REPORT_ID)
+> @@ -827,11 +835,6 @@ static int asus_input_configured(struct hid_device *hdev, struct hid_input *hi)
+>  
+>  	drvdata->input = input;
+>  
+> -	if (drvdata->enable_backlight &&
+> -	    !asus_kbd_wmi_led_control_present(hdev) &&
+> -	    asus_kbd_register_leds(hdev))
+> -		hid_warn(hdev, "Failed to initialize backlight.\n");
+> -
+>  	return 0;
+>  }
+>  
+> @@ -851,6 +854,10 @@ static int asus_input_mapping(struct hid_device *hdev,
+>  		return -1;
+>  	}
+>  
+> +	if (drvdata->quirks & QUIRK_HANDLE_GENERIC)
+> +		/* NOOP on generic HID devices to avoid side effects. */
+> +		return 0;
+> +
+>  	/*
+>  	 * Ignore a bunch of bogus collections in the T100CHI descriptor.
+>  	 * This avoids a bunch of non-functional hid_input devices getting
+> @@ -901,15 +908,6 @@ static int asus_input_mapping(struct hid_device *hdev,
+>  			return -1;
+>  		}
+>  
+> -		/*
+> -		 * Check and enable backlight only on devices with UsagePage ==
+> -		 * 0xff31 to avoid initializing the keyboard firmware multiple
+> -		 * times on devices with multiple HID descriptors but same
+> -		 * PID/VID.
+> -		 */
+> -		if (drvdata->quirks & QUIRK_USE_KBD_BACKLIGHT)
+> -			drvdata->enable_backlight = true;
+> -
+>  		set_bit(EV_REP, hi->input->evbit);
+>  		return 1;
+>  	}
+> @@ -1026,8 +1024,10 @@ static int __maybe_unused asus_reset_resume(struct hid_device *hdev)
+>  
+>  static int asus_probe(struct hid_device *hdev, const struct hid_device_id *id)
+>  {
+> -	int ret;
+> +	struct hid_report_enum *rep_enum;
+>  	struct asus_drvdata *drvdata;
+> +	struct hid_report *rep;
+> +	int ret, is_vendor = 0;
+>  
+>  	drvdata = devm_kzalloc(&hdev->dev, sizeof(*drvdata), GFP_KERNEL);
+>  	if (drvdata == NULL) {
+> @@ -1111,12 +1111,45 @@ static int asus_probe(struct hid_device *hdev, const struct hid_device_id *id)
+>  		return ret;
+>  	}
+>  
+> +	/*
+> +	 * Check for the vendor interface (0xff31) to init the RGB.
+
+The next line seems to be continuation, is . extra?
+
+> +	 * and handle generic devices properly.
+> +	 */
+> +	rep_enum = &hdev->report_enum[HID_INPUT_REPORT];
+> +	list_for_each_entry(rep, &rep_enum->report_list, list) {
+> +		if ((rep->application & HID_USAGE_PAGE) == 0xff310000)
+
+Use a named define for the literal?
+
+> +			is_vendor = true;
+> +	}
+> +
+> +	/*
+> +	 * For ROG keyboards, make them hid compliant by
+> +	 * creating one input per application. For interfaces other than
+> +	 * the vendor one, disable hid-asus handlers.
+> +	 */
+> +	if (drvdata->quirks & QUIRK_ROG_NKEY_KEYBOARD) {
+> +		if (!is_vendor)
+> +			drvdata->quirks |= QUIRK_HANDLE_GENERIC;
+> +		hdev->quirks |= HID_QUIRK_INPUT_PER_APP;
+> +	}
+> +
+>  	ret = hid_hw_start(hdev, HID_CONNECT_DEFAULT);
+>  	if (ret) {
+>  		hid_err(hdev, "Asus hw start failed: %d\n", ret);
+>  		return ret;
+>  	}
+>  
+> +	if (is_vendor && (drvdata->quirks & QUIRK_USE_KBD_BACKLIGHT) &&
+> +	    !asus_kbd_wmi_led_control_present(hdev) &&
+> +	    asus_kbd_register_leds(hdev))
+> +		hid_warn(hdev, "Failed to initialize backlight.\n");
+> +
+> +	/*
+> +	 * For ROG keyboards, skip rename for consistency and
+> +	 * ->input check as some devices do not have inputs.
+
+Please reflow to 80 chars.
+
+> +	 */
+> +	if (drvdata->quirks & QUIRK_ROG_NKEY_KEYBOARD)
+> +		return 0;
+> +
+>  	if (!drvdata->input) {
+>  		hid_err(hdev, "Asus input not registered\n");
+>  		ret = -ENOMEM;
+> @@ -1167,6 +1200,10 @@ static const __u8 *asus_report_fixup(struct hid_device *hdev, __u8 *rdesc,
+>  {
+>  	struct asus_drvdata *drvdata = hid_get_drvdata(hdev);
+>  
+> +	if (drvdata->quirks & QUIRK_HANDLE_GENERIC)
+> +		/* NOOP on generic HID devices to avoid side effects. */
+> +		return rdesc;
+> +
+>  	if (drvdata->quirks & QUIRK_FIX_NOTEBOOK_REPORT &&
+>  			*rsize >= 56 && rdesc[54] == 0x25 && rdesc[55] == 0x65) {
+>  		hid_info(hdev, "Fixing up Asus notebook report descriptor\n");
+> 
+
 -- 
-2.49.0
+ i.
 
