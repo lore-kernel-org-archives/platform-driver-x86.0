@@ -1,145 +1,147 @@
-Received: from mail-pl1-f169.google.com (mail-pl1-f169.google.com [209.85.214.169])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 508D61EB9F4;
-	Tue, 25 Mar 2025 20:14:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C6D4213D531
+	for <platform-driver-x86@vger.kernel.org>; Tue, 25 Mar 2025 21:04:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742933693; cv=none; b=VKQP4oyXUNKeUIay/un26LPSinKdZDE8NISqIfee9gcTcfEf4TKCYM3pnlOU/MJbqG98DSJjfkGz626XHTYQkyF8u1MPEHCKB8mZ2CVe+Hnf0DRTUiFf7/kc6S2zepFpGOmNnw92YX6EhMXgHxJRL1eEIMihFzho03MAA3RErt4=
+	t=1742936680; cv=none; b=Dkc3aMlYIhv/o3SBHH3VSgqeQ6tIKJ09nNLDLn2AATW+oCBxbm8/IRfNJI3yjZI98YXTOv0np4qirQUdUM5w/3016KWcmxrRh622U8+2Ym/8a3EisNgZ8MR2meEZghIoKeOWLjDa1LV/uyWWmshqmbW7hHGSdwBM32vorHVtLBw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742933693; c=relaxed/simple;
-	bh=1wmk2PFPiV4WoTPGZqqAvcvR0KTYNxn6noPKr2YRJtM=;
-	h=Mime-Version:Content-Type:Date:Message-Id:Cc:Subject:From:To:
-	 References:In-Reply-To; b=epqes41cGcdhXyh0d9tOpuZb9RgMejmWh32LgfvVTrFeJpvhR3D+ujECVLEazhRncHlolCGPthDghnNS9+vpyzF1jY9e5RmREHIuG52zCDom1OKuMKu94oWrL/UJ2QxjEeZCllzlwVX2YGWxGdkU9ZBjQbgCjmi8tsJz/DlAm/U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=VlXX0U2b; arc=none smtp.client-ip=209.85.214.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1742936680; c=relaxed/simple;
+	bh=keVbsTJOF7ubghM5ZrvsBugE9BhrTlLWC4ZPcSXIE5I=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=hBS8fO8sAASxdJaYoTeXq5NXVKfEXgnXNYJ58SRNWQD/exFOA2qK3m9drqC48BS+U1vP44UzvDth16jYcYeGPxwem3nrJbBxPsZ8ptq31n1jHGqo+b6+sobcm2oMPLbHfs1OP1eQKy+knhBm6pB9O18k8sU7U210BtS5FrAs4FY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=RXKKTyS5; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VlXX0U2b"
-Received: by mail-pl1-f169.google.com with SMTP id d9443c01a7336-22398e09e39so125847565ad.3;
-        Tue, 25 Mar 2025 13:14:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1742933691; x=1743538491; darn=vger.kernel.org;
-        h=in-reply-to:references:to:from:subject:cc:message-id:date
-         :content-transfer-encoding:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=4HBinAcb/wy6AurK5zBu8Umuiu3SbLvkoHxzpLsX8Io=;
-        b=VlXX0U2blaonST9KZt/rU2exrNANZF7nklZ/l/nUFXMIDxRsB7x7gGAveGQ6vwCsxh
-         gNzeanZqK0r5WAvU0dMyCsMTZsRbJABflCxJXuWRAJcEfESVv/Or44GHTbvTtOacDxR/
-         Bv1gaOzNWli2ytEyDIMxF1p8tMWNUz0+9USzYTXzbnjUqajg9t5rpcHQU7Ui1jMsH+9i
-         P30Z+IN1A5wvwk72ff9iZ/OBCGKQUXarPaFzXDgszDKJ1fm2lBna1Lydl7ZYlu/VPbjG
-         vSX5v8PZ3S/7oQzGRICvlxP66BcrK9n4zwkHy+CnGWToik1X3hKCvYijrPpl7B2UkoAn
-         NJuA==
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="RXKKTyS5"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1742936677;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=YX9+5TJa3aFyECisjUvQJ9pK06+jOiiefk/aSBjisBs=;
+	b=RXKKTyS5rGVgRUCO8eq7aq0ApcgrEgCELzJlGhtBb1UtfnBONrpAs1ehj50JvxjMbOT/RW
+	u5irtrPCBjAiR8Yf+f0UVczbO2K512gKUcOrUq9SNguRXJM+dH+0TjPTgytIzMoscihtae
+	HIquAyZU2VIYC4S54trsIGLEtfY8/4s=
+Received: from mail-ej1-f71.google.com (mail-ej1-f71.google.com
+ [209.85.218.71]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-613-ewkREAUyN92Ql8XGAvsLmw-1; Tue, 25 Mar 2025 17:04:27 -0400
+X-MC-Unique: ewkREAUyN92Ql8XGAvsLmw-1
+X-Mimecast-MFC-AGG-ID: ewkREAUyN92Ql8XGAvsLmw_1742936665
+Received: by mail-ej1-f71.google.com with SMTP id a640c23a62f3a-ac25852291cso534039166b.2
+        for <platform-driver-x86@vger.kernel.org>; Tue, 25 Mar 2025 14:04:27 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1742933691; x=1743538491;
-        h=in-reply-to:references:to:from:subject:cc:message-id:date
-         :content-transfer-encoding:mime-version:x-gm-message-state:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=4HBinAcb/wy6AurK5zBu8Umuiu3SbLvkoHxzpLsX8Io=;
-        b=MiYi3DMkHPldSrVpP3HASOas4uwMhI9tBt9GrjhVlz1NhSy9I15QVkM9Azy2N1mBCh
-         YBBtzu+xfUlJ8+Yy1Vlts0QRAnLL2Jth2FFZUmJ1vk4VVpcZGtilC28l0FBQ1Ofx5IXo
-         JY3SP5QzPSVSVsKZF6L7xbmokJwifhvQqIxYv5begobkFhG6Xi6qRa8BwugYY0zV3gyg
-         gqRWrs3pSFv4ZyKOOXR/CQn+cW7ZhdquoDDEdEKbrAtGhaTHDwTQAk8ZLZriL6PHnykw
-         EmQbJ/2DDze3LMTeJmo5uiOXInV/qjUpstu+YBl7ztaQ1TtM4h8wI2VaTGOpFp/NtgoB
-         6mFA==
-X-Forwarded-Encrypted: i=1; AJvYcCVBlgzyXgttNrBLqJCN0tHZtyID1BEnQJdqgG8uf9Gn+KHTe8BfRUu2tRYdlFEUGkkV1UmBNcLIM8idQc635XGyKfZV3Q==@vger.kernel.org, AJvYcCVMOUVXT4wkgIDRgrN6W/M0k0jYTBdG/u6gPP7aYamewMmCfHGpJPXVDo/mxgQ+kWI3sQeHLlypOiEF+A==@vger.kernel.org, AJvYcCXbHEfreTgfLWJRKVbzeHiMbwJWs+yYkkVYX+4wIqyRgPKYAZgS99zrBahoZnj334zzNdYzdHo1yxDuXo95@vger.kernel.org
-X-Gm-Message-State: AOJu0YwGWaS0LGawWI02EfcbNflj4JWPYUbxWhAlC8srwj3gtAsnvNoK
-	5OWBO1seQ/0Ao/4JqTxu+sa5XXCdjtp8nwXAr2dYfYWG0x8XCnfo
-X-Gm-Gg: ASbGncti0Joek+rLrXcCkIQ4DQybu6uzJi0VqsqHYCMQCfrc4Kp8UlVpdcygNcw8eRE
-	o1p/cxlZVbIIVu9D42YEDoFP2F9JV8Tf5WAw4hvCaoPeL7JJm8cecOcNsJgsS8nWxx6GVBz/Htw
-	zCks9c2fsoQ889Q35LIHMMdgqSqSxRJa+cWGZdG2HqknzDWocntnYgT1jc4kSvMOm4xQhGEnEnU
-	EATfnf9kDT2F1yawv63BeSsS+MLC54Vgp0unTFuYIenVPCP/GBW28g2EUKnVKpi4BI0MS0hHDz/
-	VJygmFRGP/LNHBWs/th5pi7Ufzu7zYWBHlhQBA==
-X-Google-Smtp-Source: AGHT+IEgMGKpQRJiJRgzad2YRv9qQgfGpZKXa1T2ITvhZX2hPnZNiJStXAeTyMF06nQh3Hi9EEk8QQ==
-X-Received: by 2002:a17:902:f644:b0:224:26f2:97d7 with SMTP id d9443c01a7336-22780c54385mr233841995ad.8.1742933691248;
-        Tue, 25 Mar 2025 13:14:51 -0700 (PDT)
-Received: from localhost ([181.91.133.137])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-227811f4383sm94312165ad.229.2025.03.25.13.14.48
+        d=1e100.net; s=20230601; t=1742936665; x=1743541465;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=YX9+5TJa3aFyECisjUvQJ9pK06+jOiiefk/aSBjisBs=;
+        b=NGc6E3cn2/WhS6CaqBfqBBoMuQnIf1xXOldif36huUqtblWQCupcJbw7ZHIWzuX+cg
+         glk2pAYVL85rqmeTm3w0NxHwrnmrLIz9JqwVvVWcIjH/4Mjbp2D7dIpmzhcYTmACaA77
+         Pc7tV/wrwfp7ELpJI6x4CvGFtvjsNGqZXzxNRKFMgokiInDamTiAdr4x2gOAhELma2TR
+         RgnTlXJYqycjDq3rd1HYHlU7xzK+OyjljlW7BcKPfb3k/A24CwGkprCS21dq605aiWe+
+         wpVfE5SjiUQw+NaTE6PwkefnOwwkZNCAn+8JuocFejNQkivJdCctLNR4b9w7HMuQ7xmA
+         4o+Q==
+X-Forwarded-Encrypted: i=1; AJvYcCXtgxiMMX5OxShsrR0jNayHEGWoqpOF07bStCiyphsglTm4ctPVjHkjQjVUKS2lq0kIa5Tpr82kjPcuchrJkN2d+TUz@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy11YnMTIUnYkYQUqNYsVbBuM8u3zsZUfksL0dArT95XAEQpqDl
+	KcwdHbpmFIS2vI+xYvCtjOjldCTB+xmULF7SqceoHUk1np1uTAoFKGy3iN+TBDgKovPqB3dUATU
+	NycSHO2eLMss3ysVPkLbryKSD/hI0K2VmD/poCy0p9yiWElWcRsvXlr+e5zZC8gYcIVw+8Po=
+X-Gm-Gg: ASbGncvN55BWoLmUom8uCkaLw7p9vp4bFtlUkkA/t2JLV9sDk0dn0xtWTbcBtzfsGVm
+	khc1N0Xox6WQSFhzorE9Ylxv3lMK7gDfyz0cqEum72T54cvq/LyttV35eUeC110DvO/u281uFtU
+	e84HGEu14wPwJsHNkkLvDg0jvJ73FzosycaUz9zKxKBG6unjVdmCarIHRntfwfqg6KQcR46pz6j
+	SMHyf0mpymyQJ6795pdHaW0PDGAmFROPxOaZxdWyMI5AQxCkW8Ebthe6pBLGfKyqvFu7B47pgvQ
+	ogl5OFxJhHL+NB4l50e6XKddCRQ/oflak/1xPuuLSar4t59Lqgdt3CvL3543Wp0pW+fpXzKz/fZ
+	O6dBNSsqXBhDeH+Xjx+jWSHyepBhSBOa8z8gIzsE6k0dmtJ01sBX9b/v0ZYYF2bjWZw==
+X-Received: by 2002:a17:907:3da8:b0:ac6:dd50:9b4a with SMTP id a640c23a62f3a-ac6dd50aebcmr167139266b.36.1742936664985;
+        Tue, 25 Mar 2025 14:04:24 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IHkV+xIkJby2CElAH30eWhtOutYugGc6B3bmd260qi9iCx5X6ruUwc9hNTizU6OPfevb4c/TA==
+X-Received: by 2002:a17:907:3da8:b0:ac6:dd50:9b4a with SMTP id a640c23a62f3a-ac6dd50aebcmr167136066b.36.1742936664498;
+        Tue, 25 Mar 2025 14:04:24 -0700 (PDT)
+Received: from ?IPV6:2001:1c00:c32:7800:5bfa:a036:83f0:f9ec? (2001-1c00-0c32-7800-5bfa-a036-83f0-f9ec.cable.dynamic.v6.ziggo.nl. [2001:1c00:c32:7800:5bfa:a036:83f0:f9ec])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ac3efd47e9dsm898606166b.167.2025.03.25.14.04.23
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 25 Mar 2025 13:14:50 -0700 (PDT)
+        Tue, 25 Mar 2025 14:04:23 -0700 (PDT)
+Message-ID: <4acb0029-9e94-48ab-be62-206ae22e4ad5@redhat.com>
+Date: Tue, 25 Mar 2025 22:04:23 +0100
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: x86_android_tablets kernel module fails to load on Lenovo
+ Yogatab3 YT3-90L
+To: Agoston Lorincz <pipacsba@gmail.com>, platform-driver-x86@vger.kernel.org
+References: <CAMEzqD+DNXrAvUOHviB2O2bjtcbmo3xH=kunKr4nubuMLbb_0A@mail.gmail.com>
+Content-Language: en-US, nl
+From: Hans de Goede <hdegoede@redhat.com>
+In-Reply-To: <CAMEzqD+DNXrAvUOHviB2O2bjtcbmo3xH=kunKr4nubuMLbb_0A@mail.gmail.com>
 Content-Type: text/plain; charset=UTF-8
-Date: Tue, 25 Mar 2025 17:14:46 -0300
-Message-Id: <D8PMFDWIJJUB.196935MS2OZ7J@gmail.com>
-Cc: "Hans de Goede" <hdegoede@redhat.com>,
- <platform-driver-x86@vger.kernel.org>, <Dell.Client.Kernel@dell.com>,
- <linux-kernel@vger.kernel.org>, "Guenter Roeck" <linux@roeck-us.net>, "Jean
- Delvare" <jdelvare@suse.com>, <linux-hwmon@vger.kernel.org>, "Bagas
- Sanjaya" <bagasdotme@gmail.com>
-Subject: Re: [PATCH v6 00/12] platform/x86: alienware-wmi-wmax: HWMON
- support + DebugFS + Improvements
-From: "Kurt Borja" <kuurtb@gmail.com>
-To: "Kurt Borja" <kuurtb@gmail.com>, =?utf-8?q?Ilpo_J=C3=A4rvinen?=
- <ilpo.jarvinen@linux.intel.com>, "Armin Wolf" <W_Armin@gmx.de>
-X-Mailer: aerc 0.20.1-0-g2ecb8770224a
-References: <20250313-hwm-v6-0-17b57f787d77@gmail.com>
-In-Reply-To: <20250313-hwm-v6-0-17b57f787d77@gmail.com>
+Content-Transfer-Encoding: 8bit
 
-On Thu Mar 13, 2025 at 11:29 AM -03, Kurt Borja wrote:
-> Hi all,
->
-> This set mainly adds hwmon and manual fan control support (patches 7-8)
-> to the alienware-wmi driver, after some improvements.
->
-> Thank you for your feedback :)
->
-> ---
-> Changes in v6:
->
-> [08/12]
->   - Define dev_pm_ops statically (kernel test robot)
->
-> Link to v5: https://lore.kernel.org/r/20250312-hwm-v5-0-deb15ff8f3c6@gmai=
-l.com
->
-> ---
-> Kurt Borja (12):
->       platform/x86: alienware-wmi-wmax: Rename thermal related symbols
->       platform/x86: alienware-wmi-wmax: Refactor is_awcc_thermal_mode()
->       platform/x86: alienware-wmi-wmax: Improve internal AWCC API
->       platform/x86: alienware-wmi-wmax: Modify supported_thermal_profiles=
-[]
->       platform/x86: alienware-wmi-wmax: Improve platform profile probe
->       platform/x86: alienware-wmi-wmax: Add support for the "custom" ther=
-mal profile
->       platform/x86: alienware-wmi-wmax: Add HWMON support
->       platform/x86: alienware-wmi-wmax: Add support for manual fan contro=
-l
->       platform/x86: alienware-wmi-wmax: Add a DebugFS interface
->       Documentation: wmi: Improve and update alienware-wmi documentation
->       Documentation: admin-guide: laptops: Add documentation for alienwar=
-e-wmi
->       Documentation: ABI: Add sysfs platform and debugfs ABI documentatio=
-n for alienware-wmi
->
->  Documentation/ABI/testing/debugfs-alienware-wmi    |   44 +
->  .../ABI/testing/sysfs-platform-alienware-wmi       |   14 +
->  .../admin-guide/laptops/alienware-wmi.rst          |  128 +++
->  Documentation/admin-guide/laptops/index.rst        |    1 +
->  Documentation/wmi/devices/alienware-wmi.rst        |  383 +++-----
->  MAINTAINERS                                        |    3 +
->  drivers/platform/x86/dell/Kconfig                  |    1 +
->  drivers/platform/x86/dell/alienware-wmi-wmax.c     | 1023 ++++++++++++++=
-+++---
->  8 files changed, 1187 insertions(+), 410 deletions(-)
-> ---
-> base-commit: f895f2493098b862f1ada0568aba278e49bf05b4
-> change-id: 20250305-hwm-f7bd91902b57
->
-> Best regards,
+Hi Ágoston,
 
-Hi Ilpo,
+On 18-Mar-25 2:13 PM, Agoston Lorincz wrote:
+> Hello!
+> 
+> I face the following problem: x86_android_tablets kernel module fails
+> to load on Lenovo Yogatab3 YT3-90L
+>> [   17.853705] x86_android_tablets: error -16 getting GPIO INT33FF:01 5
+>> [   17.859623] x86_android_tablets x86_android_tablets: probe with driver
+>> x86_android_tablets failed with error -16
+> Steps to Reproduce:  compile and boot into kernel 6.14-rc5 (from
+> tarball) Lenovo Yogatab3 YT3-90L. Ubuntu 24.04 is used as an
+> environment. Kernel is compiled on target.
+> 
+> Actual Results: e.g. the batteries are not recognized
+> 
+> Build Date & Hardware:
+>   OS: Ubuntu 24.04.2 LTS x86_64
+>   Host: CHERRYVIEW D1 PLATFORM Blade3-10A-001
+>   Kernel: 6.14.0-rc5
+> 
+> Additional Builds and Platforms: last checked working using kernel
+> 6.6.30 (I have not tried on later 6.6.x  kernels, but already not
+> working - same results- on 6.7.10) - here the Ubuntu mainline compiles
+> were used and installed from .deb files.
+> 
+> Additional Information: some additional logs on
+> https://bugs.launchpad.net/ubuntu/+source/linux/+bug/2062120
 
-Is there still a chance for this to go into v6.15? or are you planning
-to review it on the next cycle?
+First of all cool to hear that someone is actually using my work to
+make Linux work on X86 tablets which shipped with Android as factory
+OS. Dealing with all the brokenness of the ACPI tables on these
+devices has become a bit of a hobby of mine, so I'm glad to see this
+is actually being used by others.
 
-Thank you either way!
+About your problem, at first I could not reproduce this, but after
+looking at the ACPI tables I've managed to come up with a reproducer
+and a fix. I'll send out the fix right after this email (with you
+in the Cc), adding that on top of e.g. 6.14.0 should fix things.
 
---=20
- ~ Kurt
+The root cause is that depending on the secureboot signature on
+EFI\BOOT\BOOTX86.EFI the Lenovo Yoga Tab 3 UEFI will switch its
+OSID ACPI variable between 1 (Windows) and 4 (Android(GMIN))
+and the problem you are hitting happens with OSID == 1.
+
+I've always replaced /boot/efi/EFI/BOOT/BOOTX86.EFI with
+the original Android OS loader.efi because I dual-boot with
+the original Android OS and that needs OSID=4 to work.
+
+I assume that Ubuntu, like Fedora installs the secureboot
+shim used to allow booting on Windows machines with secureboot
+enabled as EFI\BOOT\BOOTX86.EFI, which will trigger the EFI-
+firmware on the yt3-x90 to set OSID=1 causing the issue you
+are seeing. Replacing /boot/efi/EFI/BOOT/BOOTX86.EFI with
+shimx64.efi reproduces your issue for me.
+
+Regards,
+
+Hans
+
+
