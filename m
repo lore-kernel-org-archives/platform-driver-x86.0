@@ -1,86 +1,171 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1A3A2256C71;
-	Tue, 25 Mar 2025 12:11:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E1BE425C6E2
+	for <platform-driver-x86@vger.kernel.org>; Tue, 25 Mar 2025 16:14:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742904698; cv=none; b=S+YkQ1vkw4G12KFbR91+XFLURUuv/GikRGWPrhiqDAoEFqgymn8GiKWwrcj6Oi+T2Uhx2PooJ8n0pUgi1Jb5Z7uF35LkfMX2ojjoTHJ9fDTqlhHYndwu5GY/AmM697OsAxt/Wc39hrmwZW/1ZWYMLiUcU8sO+VwYh8Nuf08b5UY=
+	t=1742919243; cv=none; b=N0jYzibSZvYZdk1tSVOBc0Z4jZCDJmJtiwBvZUjJH/xpuDd0/CVG3wSqr1mYxvIOBIJd+yxqGtcfwXT1MPJ060Z5IS8BnKQRBFkca+aKkaCnUQ8pJYbnxTgwEi6vjy61y0w29VjdvSudLItW9RPkVqjShaItBGDDZ04IYHL5sZo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742904698; c=relaxed/simple;
-	bh=wstB9AYDKQp+WL9io6XrHHPxJMW99imT4RaGNLRLzAw=;
-	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=LVxCoTbcf8AQQj1GwKO059isVU4cjnHtqlGS+UKk0kYSyufKR7MibtbPNTuh5P1p8mpEzz2chGfM6kYLc8nWD9+VMPeFYOc6whkhtl9iFMg7H6RxGKb0quPitj0VMzsZici494XWbyH8K6mR7gGvjgAFmB1AJUBeOKDDkuHz/B4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZZd3WC2h; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1742919243; c=relaxed/simple;
+	bh=k+HLpllO8OvHjE7fsyflYX5Rblwty6u1ZL05HLuLcOA=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=Gr/FeQgLO2B8ta1v5jlzWoWLgsw5rCvWJnrncXHvJb3wOl6zSofoF41TEUpBXW6zA+13KowDE5GLwicxeO2gjCR6rrII2XRA/p90r3jEP8QIJ3BWYvVf/BR8Xr/5LUGL8YSokDa24NTRNDAYNK5KOUw+COc6BmnMUXPiLMqM4AQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=M2CbKMN/; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZZd3WC2h"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 71F22C4CEE4;
-	Tue, 25 Mar 2025 12:11:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1742904697;
-	bh=wstB9AYDKQp+WL9io6XrHHPxJMW99imT4RaGNLRLzAw=;
-	h=Date:From:To:cc:Subject:In-Reply-To:References:From;
-	b=ZZd3WC2hM36Sa5eiVCCAac6uxEfggZwWvCxBl/y5L12DHUSG8mjwm8K/2vc0HngpM
-	 djJsfHWqZc+YBqK/g7u4lSduKC80M/Vus7xObeB57HceX7H7p3HhVBaoe7LnXKl/Gh
-	 /IsGfWan8RRotnMErichDAKCWJeOAoQSLzH63OsMIb/eQ6J0oeNDxHRuEyGoYov4sU
-	 kk80yK8rFqCbn0kIws9ZFdY+PEUTmCbHYqd5dGbbsDqsDcngaBuscck4xiSYccSk87
-	 EA921+7RPd4aC3qo31uZGqNUM7cxVMQnpj/Znt1mc/1AJQH6LVn/XDKzgLkDfsDKk3
-	 9oEuOt1Kt+j9Q==
-Date: Tue, 25 Mar 2025 13:11:34 +0100 (CET)
-From: Jiri Kosina <jikos@kernel.org>
-To: Antheas Kapenekakis <lkml@antheas.dev>
-cc: kernel test robot <lkp@intel.com>, platform-driver-x86@vger.kernel.org, 
-    linux-input@vger.kernel.org, oe-kbuild-all@lists.linux.dev, 
-    linux-kernel@vger.kernel.org, Benjamin Tissoires <bentiss@kernel.org>, 
-    Corentin Chary <corentin.chary@gmail.com>, 
-    "Luke D . Jones" <luke@ljones.dev>, Hans de Goede <hdegoede@redhat.com>, 
-    =?ISO-8859-15?Q?Ilpo_J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Subject: Re: [PATCH v4 09/11] HID: asus: add basic RGB support
-In-Reply-To: <CAGwozwFnu+eQv+qe3XyfcNEjwjFoH23K0ixssEp7m=5Xnh4nhQ@mail.gmail.com>
-Message-ID: <p1q83s69-8850-8008-o9qq-son994s5q5oo@xreary.bet>
-References: <20250324210151.6042-10-lkml@antheas.dev> <202503251316.lPXAIXIV-lkp@intel.com> <CAGwozwFnu+eQv+qe3XyfcNEjwjFoH23K0ixssEp7m=5Xnh4nhQ@mail.gmail.com>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="M2CbKMN/"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1742919240;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=et5Rh9pm5XvYqJB+08XCF+9N9H8OANUvzqjOWuv8NAM=;
+	b=M2CbKMN/3CprIYptcEHQGebjw5pK9QeSEK+b9sX3GUBh33Qfih7K7g8TZkXk1e3GkRqImJ
+	2voVIZdGy4VQHlEBow5gkW9npeW+9rymnpdyo7H/wGuRDOxI7/ggdF9PeB2guK7GlJg/5l
+	RgCL0pSruVGAfGa+zMGqNsxlS3xqN0E=
+Received: from mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-685-5PZtpQk9OpS9q7q17DmHaw-1; Tue,
+ 25 Mar 2025 12:13:56 -0400
+X-MC-Unique: 5PZtpQk9OpS9q7q17DmHaw-1
+X-Mimecast-MFC-AGG-ID: 5PZtpQk9OpS9q7q17DmHaw_1742919234
+Received: from mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.93])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 4D803196EB97;
+	Tue, 25 Mar 2025 16:13:54 +0000 (UTC)
+Received: from localhost.localdomain (unknown [10.44.32.136])
+	by mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id E6BAD180B48D;
+	Tue, 25 Mar 2025 16:13:50 +0000 (UTC)
+From: Hans de Goede <hdegoede@redhat.com>
+To: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	Andy Shevchenko <andy@kernel.org>
+Cc: Hans de Goede <hdegoede@redhat.com>,
+	Dan Scally <djrscally@gmail.com>,
+	Alan Stern <stern@rowland.harvard.edu>,
+	Sakari Ailus <sakari.ailus@linux.intel.com>,
+	Hao Yao <hao.yao@intel.com>,
+	Bingbu Cao <bingbu.cao@intel.com>,
+	platform-driver-x86@vger.kernel.org,
+	linux-media@vger.kernel.org
+Subject: [PATCH 1/8] platform/x86: int3472: Add skl_int3472_register_clock() helper
+Date: Tue, 25 Mar 2025 17:13:33 +0100
+Message-ID: <20250325161340.342192-2-hdegoede@redhat.com>
+In-Reply-To: <20250325161340.342192-1-hdegoede@redhat.com>
+References: <20250325161340.342192-1-hdegoede@redhat.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.93
 
-On Tue, 25 Mar 2025, Antheas Kapenekakis wrote:
+skl_int3472_register_dsm_clock() and skl_int3472_register_gpio_clock() are
+80% the same code. Factor out the common code into a new
+skl_int3472_register_clock() helper.
 
-> > [auto build test ERROR on 38fec10eb60d687e30c8c6b5420d86e8149f7557]
-> >
-> > url:    https://github.com/intel-lab-lkp/linux/commits/Antheas-Kapenekakis/HID-asus-refactor-init-sequence-per-spec/20250325-051852
-> > base:   38fec10eb60d687e30c8c6b5420d86e8149f7557
-> > patch link:    https://lore.kernel.org/r/20250324210151.6042-10-lkml%40antheas.dev
-> > patch subject: [PATCH v4 09/11] HID: asus: add basic RGB support
-> > config: riscv-randconfig-002-20250325 (https://download.01.org/0day-ci/archive/20250325/202503251316.lPXAIXIV-lkp@intel.com/config)
-> > compiler: riscv64-linux-gcc (GCC) 14.2.0
-> > reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250325/202503251316.lPXAIXIV-lkp@intel.com/reproduce)
-> >
-> > If you fix the issue in a separate patch/commit (i.e. not just a new version of
-> > the same patch/commit), kindly add following tags
-> > | Reported-by: kernel test robot <lkp@intel.com>
-> > | Closes: https://lore.kernel.org/oe-kbuild-all/202503251316.lPXAIXIV-lkp@intel.com/
-> >
-> > All errors (new ones prefixed by >>):
-> >
-> >    riscv64-linux-ld: drivers/hid/hid-asus.o: in function `asus_kbd_register_leds':
-> > >> drivers/hid/hid-asus.c:676:(.text+0x23f8): undefined reference to `devm_led_classdev_multicolor_register_ext'
-> >
-> 
-> Since I have been getting this error by test robot often, what is the
-> canonical way to check that KConfig is correct before sending patches?
-> 
-> I will try to fix the KConfig and send it later today
+Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+---
+ .../x86/intel/int3472/clk_and_regulator.c     | 57 +++++--------------
+ 1 file changed, 13 insertions(+), 44 deletions(-)
 
-You either need to add driver's dependency on LEDS_CLASS_MULTICOLOR, or 
-ifdef those parts out in case it's not set.
-
-Thanks,
-
+diff --git a/drivers/platform/x86/intel/int3472/clk_and_regulator.c b/drivers/platform/x86/intel/int3472/clk_and_regulator.c
+index 16e36ac0a7b4..837990af24fe 100644
+--- a/drivers/platform/x86/intel/int3472/clk_and_regulator.c
++++ b/drivers/platform/x86/intel/int3472/clk_and_regulator.c
+@@ -118,7 +118,7 @@ static const struct clk_ops skl_int3472_clock_ops = {
+ 	.recalc_rate = skl_int3472_clk_recalc_rate,
+ };
+ 
+-int skl_int3472_register_dsm_clock(struct int3472_discrete_device *int3472)
++static int skl_int3472_register_clock(struct int3472_discrete_device *int3472)
+ {
+ 	struct acpi_device *adev = int3472->adev;
+ 	struct clk_init_data init = {
+@@ -127,12 +127,6 @@ int skl_int3472_register_dsm_clock(struct int3472_discrete_device *int3472)
+ 	};
+ 	int ret;
+ 
+-	if (int3472->clock.cl)
+-		return 0; /* A GPIO controlled clk has already been registered */
+-
+-	if (!acpi_check_dsm(adev->handle, &img_clk_guid, 0, BIT(1)))
+-		return 0; /* DSM clock control is not available */
+-
+ 	init.name = kasprintf(GFP_KERNEL, "%s-clk", acpi_dev_name(adev));
+ 	if (!init.name)
+ 		return -ENOMEM;
+@@ -161,51 +155,26 @@ int skl_int3472_register_dsm_clock(struct int3472_discrete_device *int3472)
+ 	return ret;
+ }
+ 
++int skl_int3472_register_dsm_clock(struct int3472_discrete_device *int3472)
++{
++	if (int3472->clock.cl)
++		return 0; /* A GPIO controlled clk has already been registered */
++
++	if (!acpi_check_dsm(int3472->adev->handle, &img_clk_guid, 0, BIT(1)))
++		return 0; /* DSM clock control is not available */
++
++	return skl_int3472_register_clock(int3472);
++}
++
+ int skl_int3472_register_gpio_clock(struct int3472_discrete_device *int3472,
+ 				    struct gpio_desc *gpio)
+ {
+-	struct clk_init_data init = {
+-		.ops = &skl_int3472_clock_ops,
+-		.flags = CLK_GET_RATE_NOCACHE,
+-	};
+-	int ret;
+-
+ 	if (int3472->clock.cl)
+ 		return -EBUSY;
+ 
+ 	int3472->clock.ena_gpio = gpio;
+ 
+-	init.name = kasprintf(GFP_KERNEL, "%s-clk",
+-			      acpi_dev_name(int3472->adev));
+-	if (!init.name)
+-		return -ENOMEM;
+-
+-	int3472->clock.frequency = skl_int3472_get_clk_frequency(int3472);
+-
+-	int3472->clock.clk_hw.init = &init;
+-	int3472->clock.clk = clk_register(&int3472->adev->dev,
+-					  &int3472->clock.clk_hw);
+-	if (IS_ERR(int3472->clock.clk)) {
+-		ret = PTR_ERR(int3472->clock.clk);
+-		goto out_free_init_name;
+-	}
+-
+-	int3472->clock.cl = clkdev_create(int3472->clock.clk, NULL,
+-					  int3472->sensor_name);
+-	if (!int3472->clock.cl) {
+-		ret = -ENOMEM;
+-		goto err_unregister_clk;
+-	}
+-
+-	kfree(init.name);
+-	return 0;
+-
+-err_unregister_clk:
+-	clk_unregister(int3472->clock.clk);
+-out_free_init_name:
+-	kfree(init.name);
+-
+-	return ret;
++	return skl_int3472_register_clock(int3472);
+ }
+ 
+ void skl_int3472_unregister_clock(struct int3472_discrete_device *int3472)
 -- 
-Jiri Kosina
-SUSE Labs
+2.49.0
 
