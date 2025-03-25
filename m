@@ -1,186 +1,260 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 99D8C20E6F7;
-	Tue, 25 Mar 2025 06:33:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
+Received: from pegase2.c-s.fr (pegase2.c-s.fr [93.17.235.10])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0F72A20E6F7;
+	Tue, 25 Mar 2025 07:20:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=93.17.235.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742884441; cv=none; b=X57/qS+IVdO55e5aKjAJZPawPQH1n/oZTXJy3NCfpcAttIcqykQ6tUaR8kTyjUvhED+LE9Xu4XXOucAZvbBe3BeDIA/3GRXqSocNgFg2hL42Nx3I50xkpQSe7x+twj793MMfwpScbWX5AhSqy2kNBNrTaTLqH01WVMc/I7DC884=
+	t=1742887218; cv=none; b=TCDt+GUDqUBxtXlejW5IVxw9IcgkICQKaEgaiDt/fzaOhPQyDodOWmlkmsQ4aWJISN9nkkNA1Pt5IgYktYs29RjJLjOJyAFfvMrCwMcfZi9aUUqsYH0VdYo7rqCuo1+mN6J51JG4hvLpsEtPkoHrz9byDnuqvy5J+aN46Mol1Uc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742884441; c=relaxed/simple;
-	bh=9AmwvCBDzu9WR28vFl38+N6gLo043YVCwgjR3QF7otA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=brE0dxJ1iN4bR/nnGaJp9ICI0rm3t0kNGjMWQDLEjyxaS28VpfcmdxU9EVPoxw0VW6IngLDJoICI2zmkK9Goj1SW5JmkadtQpQeTXDmFIxR4uTc6u86rCfPxX2v9dAD5/PoEPbeg0GgOA6K6doGA52d076cEeLqlIeixe/zm0vA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Y+8EcVa0; arc=none smtp.client-ip=198.175.65.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Y+8EcVa0"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1742884440; x=1774420440;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=9AmwvCBDzu9WR28vFl38+N6gLo043YVCwgjR3QF7otA=;
-  b=Y+8EcVa0c1DQrR2rjhjy8DalE96WtHPRsbTLUga7Xsgx0L+VPxZtmUcw
-   CFzT5dkEhsbg0jY61MRKTOBvnlrKqLDdGcWgLIYgk9uI2Y57BKPa3dQ0k
-   np5IM9Ko2tdIBOAnBMy+W+jxl2XOQTJ7bZFilCr+7jLqf9uXs4x3GSuED
-   lnJ0ru2KL7rsAwsCswSD3LyqCGxNdXP0aSkvKKGuD429/sNhtOoV36t/m
-   MwhUzLr8+QaAe1HHU2l1X8LyABZhtPzN9I0aAxV9piVcWH0+BIOiBCMeU
-   Ww7oCKNKSK4yQr2XknAzHq0y50II16daJQYWWSGNWazAfwyrZRKA+RTvd
-   A==;
-X-CSE-ConnectionGUID: Crz3J1YFTt2R9qPFACewig==
-X-CSE-MsgGUID: 71W1CB4hSr2ZPufpapFZ/Q==
-X-IronPort-AV: E=McAfee;i="6700,10204,11383"; a="66573555"
-X-IronPort-AV: E=Sophos;i="6.14,274,1736841600"; 
-   d="scan'208";a="66573555"
-Received: from fmviesa005.fm.intel.com ([10.60.135.145])
-  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Mar 2025 23:33:59 -0700
-X-CSE-ConnectionGUID: 8Gs8zqMHSFSCR7zT/HNatQ==
-X-CSE-MsgGUID: Mk8E2JI+SpinTRZMRkHy+A==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.14,274,1736841600"; 
-   d="scan'208";a="128959997"
-Received: from lkp-server02.sh.intel.com (HELO e98e3655d6d2) ([10.239.97.151])
-  by fmviesa005.fm.intel.com with ESMTP; 24 Mar 2025 23:33:56 -0700
-Received: from kbuild by e98e3655d6d2 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1twxrA-0004Ae-0t;
-	Tue, 25 Mar 2025 06:33:49 +0000
-Date: Tue, 25 Mar 2025 14:32:36 +0800
-From: kernel test robot <lkp@intel.com>
-To: Antheas Kapenekakis <lkml@antheas.dev>,
-	platform-driver-x86@vger.kernel.org, linux-input@vger.kernel.org
-Cc: oe-kbuild-all@lists.linux.dev, linux-kernel@vger.kernel.org,
-	Jiri Kosina <jikos@kernel.org>,
-	Benjamin Tissoires <bentiss@kernel.org>,
-	Corentin Chary <corentin.chary@gmail.com>,
-	"Luke D . Jones" <luke@ljones.dev>,
-	Hans de Goede <hdegoede@redhat.com>,
-	Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	Antheas Kapenekakis <lkml@antheas.dev>
-Subject: Re: [PATCH v4 09/11] HID: asus: add basic RGB support
-Message-ID: <202503251316.lPXAIXIV-lkp@intel.com>
-References: <20250324210151.6042-10-lkml@antheas.dev>
+	s=arc-20240116; t=1742887218; c=relaxed/simple;
+	bh=7yAN5DWEseLPhSuJtJplgqzsW8Fn2NnOCRGJNmY+TWE=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=bJtNdqIm+UZrzoVtz/WLlfsOnT59+cPNPgkgOpG+OY1d0tz6PJscs274wNO6CJZZaOkD63wIwhVaspagEZUGjjOtT7dcLCpROIH3p8Wx2oiRaBT4AdT5qcmMI03ZxwbPQ7+I0/fd2WCRazI/nr3jagIBGer1fNgPQAqBB9YwyJE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=csgroup.eu; spf=pass smtp.mailfrom=csgroup.eu; arc=none smtp.client-ip=93.17.235.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=csgroup.eu
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=csgroup.eu
+Received: from localhost (mailhub3.si.c-s.fr [172.26.127.67])
+	by localhost (Postfix) with ESMTP id 4ZMLXZ26Lwz9sSV;
+	Tue, 25 Mar 2025 08:05:18 +0100 (CET)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from pegase2.c-s.fr ([172.26.127.65])
+	by localhost (pegase2.c-s.fr [127.0.0.1]) (amavisd-new, port 10024)
+	with ESMTP id RFFIDcgfzoK7; Tue, 25 Mar 2025 08:05:18 +0100 (CET)
+Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
+	by pegase2.c-s.fr (Postfix) with ESMTP id 4ZMLXY2g73z9sSS;
+	Tue, 25 Mar 2025 08:05:17 +0100 (CET)
+Received: from localhost (localhost [127.0.0.1])
+	by messagerie.si.c-s.fr (Postfix) with ESMTP id DA00C8B766;
+	Tue, 25 Mar 2025 08:05:16 +0100 (CET)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from messagerie.si.c-s.fr ([127.0.0.1])
+	by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
+	with ESMTP id FEOhRsdEs3K2; Tue, 25 Mar 2025 08:05:16 +0100 (CET)
+Received: from PO20335.IDSI0.si.c-s.fr (unknown [192.168.235.99])
+	by messagerie.si.c-s.fr (Postfix) with ESMTP id 285238B763;
+	Tue, 25 Mar 2025 08:05:15 +0100 (CET)
+Received: from PO20335.IDSI0.si.c-s.fr (localhost [127.0.0.1])
+	by PO20335.IDSI0.si.c-s.fr (8.18.1/8.17.1) with ESMTPS id 52P756MK009381
+	(version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NOT);
+	Tue, 25 Mar 2025 08:05:07 +0100
+Received: (from chleroy@localhost)
+	by PO20335.IDSI0.si.c-s.fr (8.18.1/8.18.1/Submit) id 52P742SQ009337;
+	Tue, 25 Mar 2025 08:04:02 +0100
+X-Authentication-Warning: PO20335.IDSI0.si.c-s.fr: chleroy set sender to christophe.leroy@csgroup.eu using -f
+From: Christophe Leroy <christophe.leroy@csgroup.eu>
+To: tglx@linutronix.de, "Jiri Slaby (SUSE)" <jirislaby@kernel.org>
+Cc: Christophe Leroy <christophe.leroy@csgroup.eu>, maz@kernel.org,
+        linux-kernel@vger.kernel.org, Aaro Koskinen <aaro.koskinen@iki.fi>,
+        Abhinav Kumar <quic_abhinavk@quicinc.com>,
+        Albert Ou <aou@eecs.berkeley.edu>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Alexandre Ghiti <alex@ghiti.fr>,
+        Alexandre Torgue <alexandre.torgue@foss.st.com>,
+        Alex Deucher <alexander.deucher@amd.com>, Alex Shi <alexs@kernel.org>,
+        Alim Akhtar <alim.akhtar@samsung.com>,
+        =?UTF-8?q?Alvin=20=C5=A0ipraga?= <alsi@bang-olufsen.dk>,
+        Alyssa Rosenzweig <alyssa@rosenzweig.io>,
+        amd-gfx@lists.freedesktop.org, Amit Kucheria <amitk@kernel.org>,
+        Anatolij Gustschin <agust@denx.de>, Andi Shyti <andi.shyti@kernel.org>,
+        =?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber@suse.de>,
+        Andreas Kemnade <andreas@kemnade.info>,
+        Andrew Jeffery <andrew@codeconstruct.com.au>,
+        Andrew Lunn <andrew@lunn.ch>, Andy Shevchenko <andy@kernel.org>,
+        AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+        Antoine Tenart <atenart@kernel.org>,
+        Anton Ivanov <anton.ivanov@cambridgegreys.com>,
+        Anup Patel <anup@brainfault.org>, Arnd Bergmann <arnd@arndb.de>,
+        asahi@lists.linux.dev, Bartosz Golaszewski <brgl@bgdev.pl>,
+        Baruch Siach <baruch@tkos.co.il>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Bharat Kumar Gogada <bharat.kumar.gogada@amd.com>,
+        Bjorn Andersson <andersson@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>, Borislav Petkov <bp@alien8.de>,
+        Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
+        Claudiu Beznea <claudiu.beznea@tuxon.dev>,
+        Corentin Chary <corentin.chary@gmail.com>,
+        Daire McNamara <daire.mcnamara@microchip.com>,
+        Daniel Golle <daniel@makrotopia.org>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Daniel Mack <daniel@zonque.org>, Daniel Palmer <daniel@thingy.jp>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        David Airlie <airlied@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        DENG Qingfang <dqfext@gmail.com>, Dinh Nguyen <dinguyen@kernel.org>,
+        Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
+        Dongliang Mu <dzm91@hust.edu.cn>, Doug Berger <opendmb@gmail.com>,
+        dri-devel@lists.freedesktop.org, Eddie James <eajames@linux.ibm.com>,
+        Eric Dumazet <edumazet@google.com>, Fabio Estevam <festevam@gmail.com>,
+        Florian Fainelli <florian.fainelli@broadcom.com>,
+        Geoff Levand <geoff@infradead.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Gregory Clement <gregory.clement@bootlin.com>,
+        Guo Ren <guoren@kernel.org>, Hans de Goede <hdegoede@redhat.com>,
+        Haojian Zhuang <haojian.zhuang@gmail.com>,
+        Haojian Zhuang <haojian.zhuang@linaro.org>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Herve Codina <herve.codina@bootlin.com>,
+        Hou Zhiqiang <Zhiqiang.Hou@nxp.com>, "H. Peter Anvin" <hpa@zytor.com>,
+        Huacai Chen <chenhuacai@kernel.org>,
+        Changhuang Liang <changhuang.liang@starfivetech.com>,
+        Chen-Yu Tsai <wens@csie.org>,
+        "Chester A. Unal" <chester.a.unal@arinc9.com>,
+        =?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
+        Chris Zankel <chris@zankel.net>,
+        =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+        Imre Kaloz <kaloz@openwrt.org>, Ingo Molnar <mingo@redhat.com>,
+        Jakub Kicinski <kuba@kernel.org>, James Morse <james.morse@arm.com>,
+        Janne Grunau <j@jannau.net>, Janusz Krzysztofik <jmkrzyszt@gmail.com>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Jassi Brar <jassisinghbrar@gmail.com>,
+        Jernej Skrabec <jernej.skrabec@gmail.com>,
+        Jerome Brunet <jbrunet@baylibre.com>,
+        Jianjun Wang <jianjun.wang@mediatek.com>,
+        Jiawen Wu <jiawenwu@trustnetic.com>,
+        Jiaxun Yang <jiaxun.yang@flygoat.com>,
+        Jim Quinlan <jim2101024@gmail.com>, Jingoo Han <jingoohan1@gmail.com>,
+        Joel Stanley <joel@jms.id.au>,
+        Johannes Berg <johannes@sipsolutions.net>,
+        John Crispin <john@phrozen.org>,
+        John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>,
+        Jonas Bonn <jonas@southpole.se>, Jonathan Cameron <jic23@kernel.org>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        =?UTF-8?q?Jonathan=20Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>,
+        Joyce Ooi <joyce.ooi@intel.com>,
+        Karthikeyan Mitran <m.karthikeyan@mobiveil.co.in>,
+        Keerthy <j-keerthy@ti.com>, Kevin Hilman <khilman@baylibre.com>,
+        Konrad Dybcio <konradybcio@kernel.org>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        =?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
+        Kunihiko Hayashi <hayashi.kunihiko@socionext.com>,
+        Lakshmi Sowjanya D <lakshmi.sowjanya.d@intel.com>,
+        Lars-Peter Clausen <lars@metafoo.de>, Lee Jones <lee@kernel.org>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Linus Walleij <linusw@kernel.org>, linux-amlogic@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, linux-arm-msm@vger.kernel.org,
+        linux-doc@vger.kernel.org, linux-edac@vger.kernel.org,
+        linux-gpio@vger.kernel.org, linux-iio@vger.kernel.org,
+        linux-i2c@vger.kernel.org, linux-mediatek@lists.infradead.org,
+        linux-mips@vger.kernel.org, linux-omap@vger.kernel.org,
+        linux-pci@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        linux-remoteproc@vger.kernel.org, linux-riscv@lists.infradead.org,
+        linux-rpi-kernel@lists.infradead.org, linux-sh@vger.kernel.org,
+        linux-snps-arc@lists.infradead.org, linux-sound@vger.kernel.org,
+        linux-stm32@st-md-mailman.stormreply.com, linux-um@lists.infradead.org,
+        linux-wireless@vger.kernel.org, loongarch@lists.linux.dev,
+        Lorenzo Pieralisi <lpieralisi@kernel.org>,
+        Ludovic Desroches <ludovic.desroches@microchip.com>,
+        Lukasz Luba <lukasz.luba@arm.com>, "Luke D. Jones" <luke@ljones.dev>,
+        Madhavan Srinivasan <maddy@linux.ibm.com>,
+        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+        =?UTF-8?q?Marek=20Beh=C3=BAn?= <kabel@kernel.org>,
+        Marijn Suijten <marijn.suijten@somainline.org>,
+        Mark Brown <broonie@kernel.org>,
+        Mark-PK Tsai <mark-pk.tsai@mediatek.com>,
+        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Max Filippov <jcmvbkbc@gmail.com>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Mengyuan Lou <mengyuanlou@net-swift.com>, Michael Buesch <m@bues.ch>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Michal Simek <michal.simek@amd.com>,
+        Miodrag Dinic <miodrag.dinic@mips.com>,
+        Naveen N Rao <naveen@kernel.org>,
+        Neil Armstrong <neil.armstrong@linaro.org>, netdev@vger.kernel.org,
+        Nicolas Ferre <nicolas.ferre@microchip.com>,
+        Nicolas Saenz Julienne <nsaenz@kernel.org>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        Nikhil Agarwal <nikhil.agarwal@amd.com>,
+        Nipun Gupta <nipun.gupta@amd.com>, Nishanth Menon <nm@ti.com>,
+        =?UTF-8?q?Pali=20Roh=C3=A1r?= <pali@kernel.org>,
+        Palmer Dabbelt <palmer@dabbelt.com>, Paolo Abeni <pabeni@redhat.com>,
+        Paul Cercueil <paul@crapouillou.net>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Peter Rosin <peda@axentia.se>, Philipp Zabel <p.zabel@pengutronix.de>,
+        Piotr Wojtaszczyk <piotr.wojtaszczyk@timesys.com>,
+        platform-driver-x86@vger.kernel.org,
+        Prasad Kumpatla <quic_pkumpatl@quicinc.com>,
+        Qiang Zhao <qiang.zhao@nxp.com>, Qin Jian <qinjian@cqplus1.com>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Randy Dunlap <rdunlap@infradead.org>, Ray Jui <rjui@broadcom.com>,
+        Rengarajan Sundararajan <Rengarajan.S@microchip.com>,
+        Richard Cochran <richardcochran@gmail.com>,
+        Richard Weinberger <richard@nod.at>, Rich Felker <dalias@libc.org>,
+        Rob Clark <robdclark@gmail.com>,
+        Robert Jarzmik <robert.jarzmik@free.fr>,
+        Robert Richter <rric@kernel.org>, Rob Herring <robh@kernel.org>,
+        Roger Quadros <rogerq@kernel.org>,
+        Russell King <linux@armlinux.org.uk>,
+        Ryan Chen <ryan_chen@aspeedtech.com>,
+        Ryder Lee <ryder.lee@mediatek.com>,
+        Samuel Holland <samuel@sholland.org>,
+        Santosh Shilimkar <ssantosh@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Scott Branden <sbranden@broadcom.com>, Scott Wood <oss@buserror.net>,
+        Sean Paul <sean@poorly.run>, Sean Wang <sean.wang@kernel.org>,
+        Sean Wang <sean.wang@mediatek.com>,
+        Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
+        Sergio Paracuellos <sergio.paracuellos@gmail.com>,
+        Shawn Guo <shawnguo@kernel.org>, Shawn Lin <shawn.lin@rock-chips.com>,
+        Siddharth Vadapalli <s-vadapalli@ti.com>,
+        Simona Vetter <simona@ffwll.ch>, Stafford Horne <shorne@gmail.com>,
+        Stefan Kristiansson <stefan.kristiansson@saunalahti.fi>,
+        Stephen Boyd <sboyd@kernel.org>, Sven Peter <sven@svenpeter.dev>,
+        Takashi Iwai <tiwai@suse.com>, Talel Shenhar <talel@amazon.com>,
+        Tero Kristo <kristo@kernel.org>,
+        Thangaraj Samynathan <Thangaraj.S@microchip.com>,
+        Thara Gopinath <thara.gopinath@gmail.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        Toan Le <toan@os.amperecomputing.com>,
+        Tony Lindgren <tony@atomide.com>, Tony Luck <tony.luck@intel.com>,
+        UNGLinuxDriver@microchip.com,
+        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <ukleinek@kernel.org>,
+        Vignesh Raghavendra <vigneshr@ti.com>,
+        Vineet Gupta <vgupta@kernel.org>, Vladimir Oltean <olteanv@gmail.com>,
+        Vladimir Zapolskiy <vz@mleia.com>, WANG Xuerui <kernel@xen0n.name>,
+        Woojung Huh <woojung.huh@microchip.com>, x86@kernel.org,
+        Yanteng Si <si.yanteng@linux.dev>,
+        Yoshinori Sato <ysato@users.osdn.me>, Zhang Rui <rui.zhang@intel.com>
+Subject: Re: (subset) [PATCH v2 00/57] irqdomain: Cleanups and Documentation
+Date: Tue, 25 Mar 2025 08:03:28 +0100
+Message-ID: <174288553816.2234438.13558299160543301187.b4-ty@csgroup.eu>
+X-Mailer: git-send-email 2.47.0
+In-Reply-To: <20250319092951.37667-1-jirislaby@kernel.org>
+References: <20250319092951.37667-1-jirislaby@kernel.org>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250324210151.6042-10-lkml@antheas.dev>
-
-Hi Antheas,
-
-kernel test robot noticed the following build errors:
-
-[auto build test ERROR on 38fec10eb60d687e30c8c6b5420d86e8149f7557]
-
-url:    https://github.com/intel-lab-lkp/linux/commits/Antheas-Kapenekakis/HID-asus-refactor-init-sequence-per-spec/20250325-051852
-base:   38fec10eb60d687e30c8c6b5420d86e8149f7557
-patch link:    https://lore.kernel.org/r/20250324210151.6042-10-lkml%40antheas.dev
-patch subject: [PATCH v4 09/11] HID: asus: add basic RGB support
-config: riscv-randconfig-002-20250325 (https://download.01.org/0day-ci/archive/20250325/202503251316.lPXAIXIV-lkp@intel.com/config)
-compiler: riscv64-linux-gcc (GCC) 14.2.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250325/202503251316.lPXAIXIV-lkp@intel.com/reproduce)
-
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202503251316.lPXAIXIV-lkp@intel.com/
-
-All errors (new ones prefixed by >>):
-
-   riscv64-linux-ld: drivers/hid/hid-asus.o: in function `asus_kbd_register_leds':
->> drivers/hid/hid-asus.c:676:(.text+0x23f8): undefined reference to `devm_led_classdev_multicolor_register_ext'
+Content-Type: text/plain; charset="utf-8"
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1742886214; l=533; i=christophe.leroy@csgroup.eu; s=20211009; h=from:subject:message-id; bh=EKh0/GewaFERhfnFRfKBg2j5NzMhdBBECdrA+NV/qUk=; b=vA70hw72XKaj1SXthnl6PXh4i9Z2K3Egqlb0PIRXfpHV2vrVCLTo/AG4L7b0hc2x3UCZ6Qx3v FOB4ERwauOeBecqk7A7PBvaW/237URvW4CKvgDK24Wh/OVU59RY4zZO
+X-Developer-Key: i=christophe.leroy@csgroup.eu; a=ed25519; pk=HIzTzUj91asvincQGOFx6+ZF5AoUuP9GdOtQChs7Mm0=
+Content-Transfer-Encoding: 8bit
 
 
-vim +676 drivers/hid/hid-asus.c
+On Wed, 19 Mar 2025 10:28:53 +0100, Jiri Slaby (SUSE) wrote:
+> tl;dr if patches are agreed upon, I ask subsys maintainers to take the
+> respective ones via their trees (as they are split per subsys), so that
+> the IRQ tree can take only the rest. That would minimize churn/conflicts
+> during merges.
+> 
+> ===
+> 
+> [...]
 
-312a522531f6e5 Antheas Kapenekakis 2025-03-24  645  
-af22a610bc3850 Carlo Caione        2017-04-06  646  static int asus_kbd_register_leds(struct hid_device *hdev)
-af22a610bc3850 Carlo Caione        2017-04-06  647  {
-af22a610bc3850 Carlo Caione        2017-04-06  648  	struct asus_drvdata *drvdata = hid_get_drvdata(hdev);
-af22a610bc3850 Carlo Caione        2017-04-06  649  	unsigned char kbd_func;
-312a522531f6e5 Antheas Kapenekakis 2025-03-24  650  	struct asus_kbd_leds *leds;
-312a522531f6e5 Antheas Kapenekakis 2025-03-24  651  	bool no_led;
-af22a610bc3850 Carlo Caione        2017-04-06  652  	int ret;
-af22a610bc3850 Carlo Caione        2017-04-06  653  
-2c82a7b20f7b7a Luke D. Jones       2024-04-16  654  	ret = asus_kbd_init(hdev, FEATURE_KBD_REPORT_ID);
-2c82a7b20f7b7a Luke D. Jones       2024-04-16  655  	if (ret < 0)
-2c82a7b20f7b7a Luke D. Jones       2024-04-16  656  		return ret;
-2c82a7b20f7b7a Luke D. Jones       2024-04-16  657  
-3ebfeb18b44e01 Antheas Kapenekakis 2025-03-24  658  	/* Get keyboard functions */
-3ebfeb18b44e01 Antheas Kapenekakis 2025-03-24  659  	ret = asus_kbd_get_functions(hdev, &kbd_func, FEATURE_KBD_REPORT_ID);
-b92b80246e0626 Luke D Jones        2020-10-27  660  	if (ret < 0)
-b92b80246e0626 Luke D Jones        2020-10-27  661  		return ret;
-53078a736fbc60 Luke D. Jones       2025-01-11  662  
-53078a736fbc60 Luke D. Jones       2025-01-11  663  	if (dmi_match(DMI_PRODUCT_FAMILY, "ProArt P16")) {
-53078a736fbc60 Luke D. Jones       2025-01-11  664  		ret = asus_kbd_disable_oobe(hdev);
-53078a736fbc60 Luke D. Jones       2025-01-11  665  		if (ret < 0)
-53078a736fbc60 Luke D. Jones       2025-01-11  666  			return ret;
-53078a736fbc60 Luke D. Jones       2025-01-11  667  	}
-af22a610bc3850 Carlo Caione        2017-04-06  668  
-af22a610bc3850 Carlo Caione        2017-04-06  669  	/* Check for backlight support */
-af22a610bc3850 Carlo Caione        2017-04-06  670  	if (!(kbd_func & SUPPORT_KBD_BACKLIGHT))
-af22a610bc3850 Carlo Caione        2017-04-06  671  		return -ENODEV;
-af22a610bc3850 Carlo Caione        2017-04-06  672  
-af22a610bc3850 Carlo Caione        2017-04-06  673  	drvdata->kbd_backlight = devm_kzalloc(&hdev->dev,
-af22a610bc3850 Carlo Caione        2017-04-06  674  					      sizeof(struct asus_kbd_leds),
-af22a610bc3850 Carlo Caione        2017-04-06  675  					      GFP_KERNEL);
-af22a610bc3850 Carlo Caione        2017-04-06 @676  	if (!drvdata->kbd_backlight)
-af22a610bc3850 Carlo Caione        2017-04-06  677  		return -ENOMEM;
-af22a610bc3850 Carlo Caione        2017-04-06  678  
-312a522531f6e5 Antheas Kapenekakis 2025-03-24  679  	leds = drvdata->kbd_backlight;
-312a522531f6e5 Antheas Kapenekakis 2025-03-24  680  	leds->removed = false;
-312a522531f6e5 Antheas Kapenekakis 2025-03-24  681  	leds->brightness = 3;
-312a522531f6e5 Antheas Kapenekakis 2025-03-24  682  	leds->hdev = hdev;
-312a522531f6e5 Antheas Kapenekakis 2025-03-24  683  	leds->listener.brightness_set = asus_kbd_listener_set;
-312a522531f6e5 Antheas Kapenekakis 2025-03-24  684  
-312a522531f6e5 Antheas Kapenekakis 2025-03-24  685  	leds->rgb_colors[0] = 0;
-312a522531f6e5 Antheas Kapenekakis 2025-03-24  686  	leds->rgb_colors[1] = 0;
-312a522531f6e5 Antheas Kapenekakis 2025-03-24  687  	leds->rgb_colors[2] = 0;
-312a522531f6e5 Antheas Kapenekakis 2025-03-24  688  	leds->rgb_init = true;
-312a522531f6e5 Antheas Kapenekakis 2025-03-24  689  	leds->rgb_set = false;
-312a522531f6e5 Antheas Kapenekakis 2025-03-24  690  	leds->mc_led.led_cdev.name = devm_kasprintf(&hdev->dev, GFP_KERNEL,
-312a522531f6e5 Antheas Kapenekakis 2025-03-24  691  					"asus-%s:rgb:peripheral",
-312a522531f6e5 Antheas Kapenekakis 2025-03-24  692  					strlen(hdev->uniq) ?
-312a522531f6e5 Antheas Kapenekakis 2025-03-24  693  					hdev->uniq : dev_name(&hdev->dev));
-312a522531f6e5 Antheas Kapenekakis 2025-03-24  694  	leds->mc_led.led_cdev.flags = LED_BRIGHT_HW_CHANGED;
-312a522531f6e5 Antheas Kapenekakis 2025-03-24  695  	leds->mc_led.led_cdev.max_brightness = 3,
-312a522531f6e5 Antheas Kapenekakis 2025-03-24  696  	leds->mc_led.led_cdev.brightness_set = asus_kbd_brightness_set,
-312a522531f6e5 Antheas Kapenekakis 2025-03-24  697  	leds->mc_led.led_cdev.brightness_get = asus_kbd_brightness_get,
-312a522531f6e5 Antheas Kapenekakis 2025-03-24  698  	leds->mc_led.subled_info = leds->subled_info,
-312a522531f6e5 Antheas Kapenekakis 2025-03-24  699  	leds->mc_led.num_colors = ARRAY_SIZE(leds->subled_info),
-312a522531f6e5 Antheas Kapenekakis 2025-03-24  700  	leds->subled_info[0].color_index = LED_COLOR_ID_RED;
-312a522531f6e5 Antheas Kapenekakis 2025-03-24  701  	leds->subled_info[1].color_index = LED_COLOR_ID_GREEN;
-312a522531f6e5 Antheas Kapenekakis 2025-03-24  702  	leds->subled_info[2].color_index = LED_COLOR_ID_BLUE;
-312a522531f6e5 Antheas Kapenekakis 2025-03-24  703  
-312a522531f6e5 Antheas Kapenekakis 2025-03-24  704  	INIT_WORK(&drvdata->kbd_backlight->work, asus_kbd_work);
-315c537068a13f Pietro Borrello     2023-02-12  705  	spin_lock_init(&drvdata->kbd_backlight->lock);
-af22a610bc3850 Carlo Caione        2017-04-06  706  
-d37db2009c913c Antheas Kapenekakis 2025-03-24  707  	ret = asus_hid_register_listener(&drvdata->kbd_backlight->listener);
-312a522531f6e5 Antheas Kapenekakis 2025-03-24  708  	no_led = !!ret;
-d37db2009c913c Antheas Kapenekakis 2025-03-24  709  
-312a522531f6e5 Antheas Kapenekakis 2025-03-24  710  	if (drvdata->quirks & QUIRK_ROG_NKEY_RGB) {
-312a522531f6e5 Antheas Kapenekakis 2025-03-24  711  		ret = devm_led_classdev_multicolor_register(
-312a522531f6e5 Antheas Kapenekakis 2025-03-24  712  			&hdev->dev, &leds->mc_led);
-312a522531f6e5 Antheas Kapenekakis 2025-03-24  713  		if (!ret)
-312a522531f6e5 Antheas Kapenekakis 2025-03-24  714  			leds->rgb_registered = true;
-312a522531f6e5 Antheas Kapenekakis 2025-03-24  715  		no_led &= !!ret;
-312a522531f6e5 Antheas Kapenekakis 2025-03-24  716  	}
-312a522531f6e5 Antheas Kapenekakis 2025-03-24  717  
-312a522531f6e5 Antheas Kapenekakis 2025-03-24  718  	if (no_led) {
-af22a610bc3850 Carlo Caione        2017-04-06  719  		/* No need to have this still around */
-af22a610bc3850 Carlo Caione        2017-04-06  720  		devm_kfree(&hdev->dev, drvdata->kbd_backlight);
-af22a610bc3850 Carlo Caione        2017-04-06  721  	}
-af22a610bc3850 Carlo Caione        2017-04-06  722  
-312a522531f6e5 Antheas Kapenekakis 2025-03-24  723  	return no_led ? -ENODEV : 0;
-af22a610bc3850 Carlo Caione        2017-04-06  724  }
-af22a610bc3850 Carlo Caione        2017-04-06  725  
+Applied, thanks!
 
+[48/57] irqdomain: soc: Switch to irq_find_mapping()
+        commit: a70a3a6322131632cc6cf71e9d2fa6409a029fd7
+
+Best regards,
 -- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+Christophe Leroy <christophe.leroy@csgroup.eu>
