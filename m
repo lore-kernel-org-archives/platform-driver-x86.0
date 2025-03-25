@@ -1,59 +1,44 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 74A5C2E337C;
-	Tue, 25 Mar 2025 11:18:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1A3A2256C71;
+	Tue, 25 Mar 2025 12:11:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742901496; cv=none; b=JfKOEliJ27jGtc+HayQNxw7Yv5EVDnC0YXSVwyfhN8XHTA2AS/+DxdRvtqFVqrZpmXtt2RUXrGxrygAghRBxBQmVvh3KwcHL1LzNHn4CGx6wBHPvFLyOi++LuY1n1/XJMQkXb+TPbSKB50rFeyGWmUPSLUsyPAKLeXkGdK6ymNk=
+	t=1742904698; cv=none; b=S+YkQ1vkw4G12KFbR91+XFLURUuv/GikRGWPrhiqDAoEFqgymn8GiKWwrcj6Oi+T2Uhx2PooJ8n0pUgi1Jb5Z7uF35LkfMX2ojjoTHJ9fDTqlhHYndwu5GY/AmM697OsAxt/Wc39hrmwZW/1ZWYMLiUcU8sO+VwYh8Nuf08b5UY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742901496; c=relaxed/simple;
-	bh=YKEx+3kZIuqatXHZs92dkeyJl2HsuW8fMwoN685s2eM=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=W/Wd0gT5lJv42ebPoitQAQqk/7QlAFRrWmmihdWgOkDKZu47dhZQb7QoEyf+8D7EXHH4Hl6j2/1LGAtB+jg8hHg0Q7SWk0WKzsMMhWDLSaIx4zRoA+Ip1Pqq4TbH/8aac/Fnucm00I1E0f3uGulD2k3S6x6vAjdBQ64y/4+EJVc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=NBgiS/uH; arc=none smtp.client-ip=198.175.65.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1742904698; c=relaxed/simple;
+	bh=wstB9AYDKQp+WL9io6XrHHPxJMW99imT4RaGNLRLzAw=;
+	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=LVxCoTbcf8AQQj1GwKO059isVU4cjnHtqlGS+UKk0kYSyufKR7MibtbPNTuh5P1p8mpEzz2chGfM6kYLc8nWD9+VMPeFYOc6whkhtl9iFMg7H6RxGKb0quPitj0VMzsZici494XWbyH8K6mR7gGvjgAFmB1AJUBeOKDDkuHz/B4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZZd3WC2h; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="NBgiS/uH"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1742901495; x=1774437495;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=YKEx+3kZIuqatXHZs92dkeyJl2HsuW8fMwoN685s2eM=;
-  b=NBgiS/uHfWGA1UQXzMRjaVTxN3Cgs7+DWwX8i6OeFKGmpBvsjgIQSp/H
-   O5VCLiQRXmFWv47aG8OVryUxwWFal9EFUp7OG2Ij+FY7Q/UzuJBB/mr0D
-   XTV6EhErUxOENFATrwoihtzXZnWVcbSAQpcL8pRosgPdPaeT/QN/XVdf4
-   E3lyZLDcOBrlsNEoNVImZHp4GMLRkL1LJyrKe8TWLmEnUAXxn0QrxUGsI
-   dkZDxQrnUdOtMon8N3xxgGeZge0uiEU/SJ88KpwsxjykCF73UriMxtUiU
-   48FUIwZeHWv2OlrgKzwmZNQpQEfyLyovWWKXdf+jnFq4wRedi+4gZegz1
-   w==;
-X-CSE-ConnectionGUID: mfGZA3zaTHeEGYztOec0pg==
-X-CSE-MsgGUID: xdSb7O34TDisk3Z6Bfyg2A==
-X-IronPort-AV: E=McAfee;i="6700,10204,11383"; a="61533507"
-X-IronPort-AV: E=Sophos;i="6.14,274,1736841600"; 
-   d="scan'208";a="61533507"
-Received: from orviesa003.jf.intel.com ([10.64.159.143])
-  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Mar 2025 04:18:14 -0700
-X-CSE-ConnectionGUID: ETlaG+zjShyFflCXccd3gQ==
-X-CSE-MsgGUID: GG82ann7Qt2dq55Y88P8Ug==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.14,274,1736841600"; 
-   d="scan'208";a="129175108"
-Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.158])
-  by ORVIESA003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Mar 2025 04:18:12 -0700
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Tue, 25 Mar 2025 13:18:08 +0200 (EET)
-To: Denis Arefev <arefev@swemel.ru>
-cc: Corentin Chary <corentin.chary@gmail.com>, 
-    "Luke D. Jones" <luke@ljones.dev>, Hans de Goede <hdegoede@redhat.com>, 
-    platform-driver-x86@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>, 
-    lvc-project@linuxtesting.org, stable@vger.kernel.org
-Subject: Re: [PATCH] asus-laptop: Fix an uninitialized variable
-In-Reply-To: <20250325095739.20310-1-arefev@swemel.ru>
-Message-ID: <88f06d15-0f98-2f24-7e68-eefb6434f108@linux.intel.com>
-References: <20250325095739.20310-1-arefev@swemel.ru>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZZd3WC2h"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 71F22C4CEE4;
+	Tue, 25 Mar 2025 12:11:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1742904697;
+	bh=wstB9AYDKQp+WL9io6XrHHPxJMW99imT4RaGNLRLzAw=;
+	h=Date:From:To:cc:Subject:In-Reply-To:References:From;
+	b=ZZd3WC2hM36Sa5eiVCCAac6uxEfggZwWvCxBl/y5L12DHUSG8mjwm8K/2vc0HngpM
+	 djJsfHWqZc+YBqK/g7u4lSduKC80M/Vus7xObeB57HceX7H7p3HhVBaoe7LnXKl/Gh
+	 /IsGfWan8RRotnMErichDAKCWJeOAoQSLzH63OsMIb/eQ6J0oeNDxHRuEyGoYov4sU
+	 kk80yK8rFqCbn0kIws9ZFdY+PEUTmCbHYqd5dGbbsDqsDcngaBuscck4xiSYccSk87
+	 EA921+7RPd4aC3qo31uZGqNUM7cxVMQnpj/Znt1mc/1AJQH6LVn/XDKzgLkDfsDKk3
+	 9oEuOt1Kt+j9Q==
+Date: Tue, 25 Mar 2025 13:11:34 +0100 (CET)
+From: Jiri Kosina <jikos@kernel.org>
+To: Antheas Kapenekakis <lkml@antheas.dev>
+cc: kernel test robot <lkp@intel.com>, platform-driver-x86@vger.kernel.org, 
+    linux-input@vger.kernel.org, oe-kbuild-all@lists.linux.dev, 
+    linux-kernel@vger.kernel.org, Benjamin Tissoires <bentiss@kernel.org>, 
+    Corentin Chary <corentin.chary@gmail.com>, 
+    "Luke D . Jones" <luke@ljones.dev>, Hans de Goede <hdegoede@redhat.com>, 
+    =?ISO-8859-15?Q?Ilpo_J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Subject: Re: [PATCH v4 09/11] HID: asus: add basic RGB support
+In-Reply-To: <CAGwozwFnu+eQv+qe3XyfcNEjwjFoH23K0ixssEp7m=5Xnh4nhQ@mail.gmail.com>
+Message-ID: <p1q83s69-8850-8008-o9qq-son994s5q5oo@xreary.bet>
+References: <20250324210151.6042-10-lkml@antheas.dev> <202503251316.lPXAIXIV-lkp@intel.com> <CAGwozwFnu+eQv+qe3XyfcNEjwjFoH23K0ixssEp7m=5Xnh4nhQ@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -62,37 +47,40 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 
-On Tue, 25 Mar 2025, Denis Arefev wrote:
+On Tue, 25 Mar 2025, Antheas Kapenekakis wrote:
 
-> The value returned by the acpi_evaluate_integer() function is not
-> checked, but the result is not always successful, so an uninitialized
-> 'val' variable may be used in calculations.
+> > [auto build test ERROR on 38fec10eb60d687e30c8c6b5420d86e8149f7557]
+> >
+> > url:    https://github.com/intel-lab-lkp/linux/commits/Antheas-Kapenekakis/HID-asus-refactor-init-sequence-per-spec/20250325-051852
+> > base:   38fec10eb60d687e30c8c6b5420d86e8149f7557
+> > patch link:    https://lore.kernel.org/r/20250324210151.6042-10-lkml%40antheas.dev
+> > patch subject: [PATCH v4 09/11] HID: asus: add basic RGB support
+> > config: riscv-randconfig-002-20250325 (https://download.01.org/0day-ci/archive/20250325/202503251316.lPXAIXIV-lkp@intel.com/config)
+> > compiler: riscv64-linux-gcc (GCC) 14.2.0
+> > reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250325/202503251316.lPXAIXIV-lkp@intel.com/reproduce)
+> >
+> > If you fix the issue in a separate patch/commit (i.e. not just a new version of
+> > the same patch/commit), kindly add following tags
+> > | Reported-by: kernel test robot <lkp@intel.com>
+> > | Closes: https://lore.kernel.org/oe-kbuild-all/202503251316.lPXAIXIV-lkp@intel.com/
+> >
+> > All errors (new ones prefixed by >>):
+> >
+> >    riscv64-linux-ld: drivers/hid/hid-asus.o: in function `asus_kbd_register_leds':
+> > >> drivers/hid/hid-asus.c:676:(.text+0x23f8): undefined reference to `devm_led_classdev_multicolor_register_ext'
+> >
 > 
-> Found by Linux Verification Center (linuxtesting.org) with SVACE.
+> Since I have been getting this error by test robot often, what is the
+> canonical way to check that KConfig is correct before sending patches?
 > 
-> Fixes: b23910c2194e ("asus-laptop: Pegatron Lucid accelerometer")
-> Cc: stable@vger.kernel.org 
-> Signed-off-by: Denis Arefev <arefev@swemel.ru>
-> ---
->  drivers/platform/x86/asus-laptop.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/platform/x86/asus-laptop.c b/drivers/platform/x86/asus-laptop.c
-> index d460dd194f19..b74b7d0eb6c2 100644
-> --- a/drivers/platform/x86/asus-laptop.c
-> +++ b/drivers/platform/x86/asus-laptop.c
-> @@ -427,7 +427,7 @@ static int asus_pega_lucid_set(struct asus_laptop *asus, int unit, bool enable)
->  static int pega_acc_axis(struct asus_laptop *asus, int curr, char *method)
->  {
->  	int i, delta;
-> -	unsigned long long val;
-> +	unsigned long long val = PEGA_ACC_CLAMP;
->  	for (i = 0; i < PEGA_ACC_RETRIES; i++) {
->  		acpi_evaluate_integer(asus->handle, method, NULL, &val);
+> I will try to fix the KConfig and send it later today
 
-Shouldn't you handle the error from acpi_evaluate_integer() properly 
-instead?
+You either need to add driver's dependency on LEDS_CLASS_MULTICOLOR, or 
+ifdef those parts out in case it's not set.
+
+Thanks,
 
 -- 
- i.
+Jiri Kosina
+SUSE Labs
 
