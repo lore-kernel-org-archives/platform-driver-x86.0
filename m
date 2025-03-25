@@ -1,47 +1,47 @@
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7DC3025BAA9
-	for <platform-driver-x86@vger.kernel.org>; Tue, 25 Mar 2025 16:14:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 98AA725C6E2
+	for <platform-driver-x86@vger.kernel.org>; Tue, 25 Mar 2025 16:14:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742919274; cv=none; b=bhGaeR1yVDsIC+zsIX3uO7bDD/d3f+ra5wzQvUZbFqZ//QlXD8+8jWQkFiTtKb3pABCTVa1mysWJwwdOCO7vANC4vvrn+TgNkAKnmB3EWureZsDLPlSTLb+wu5p1UjasW/1BpusgwrdYMVablMmRbld81pVh0ggZc2A2dG0OgkY=
+	t=1742919278; cv=none; b=JkNbnJPk+Rv0MKspxfa5oQeUuyRsimZ73hnrTYlLSwqMwoanyZLd1/m/OzV63ZyVNM5E0rpUr6Odi1am5e3R5EfXQ7fLP8Osj3qLMh4VIIHEjntsTqx8Dej9xGmDguVvJ9iIkhMwUypBUm0k6z4V6jreKuXPuXPl90q1u+lJICU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742919274; c=relaxed/simple;
-	bh=EXNvGL9W3hlORRCLLqf5hUVaFECrdG9DfvPp4lc8QWQ=;
+	s=arc-20240116; t=1742919278; c=relaxed/simple;
+	bh=gsMlnd38Psc3SaI9GEpL2QYV7gDlfVkONvSXqzgv8lU=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=pxbt5xX3+c7XgxTAY0lsOype1OV79z907se4Bsj4hhJZAbjGje4VGu+tL+JX8h214SKVDnInYOZcbp5Vn1Uon4qvYf8NwivHuhCCQBeUtTznywMOlWaji8KwyuLwqY+ClWmegrf2cIXzxreLq+i8RWI+n0xSC3M7KNjEazM/0EQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=cLXUx6W3; arc=none smtp.client-ip=170.10.133.124
+	 MIME-Version; b=WGV2D/sSmA7RaU0cPuyFQkRmbYgaQFa8auEgFIH9wOcmF5HLbNmUNf1ZTIaTAs7jUcKSIeUWxsqmfJ9lzYpSpJz4D7O/GwJul9SQfd+N0ksvKYB6700jdcBaAj0XfI2B2Np74XH/KxV3R6/ww5nk0LQWh5M78bN95ksZvV6p5pI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=LrD9+Fas; arc=none smtp.client-ip=170.10.133.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="cLXUx6W3"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="LrD9+Fas"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1742919271;
+	s=mimecast20190719; t=1742919275;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=I+2Viq8mPpP05ayntw0T/qjHI1rdPcvXdZKMDnwEtCk=;
-	b=cLXUx6W3yIomdKSkeYvrwrZ6RbJYNmWOms03+aTJcfOrAf51i8cgOGgncJLIjsuDpKxZRs
-	YmFqiK2azZbK+qx2PNw2MUaWb/GU+ATS7UKquJbddIcjcE1I9sRpXFkJE+TLMFn9VRLIuZ
-	C9upsccCzR42nox5UH2Ijy5GXxyQ2cs=
-Received: from mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
+	bh=HnRLG9xVvPIADBKT198ZOyHaoYN/0FEtBZPtkKvLk5A=;
+	b=LrD9+FasptYG/HBqeTmbX8i24+9fQX9Y99ooLBwbYHWyzfNt7UY4Tesom5wJuQ74f3T0b1
+	esg+DlDOCyN/X6sgmrD/JxUoDodZkco1DOZuC2SIj5uA6vh8qJJ4N9QQt9RxvcRE8N9/jl
+	wKt8SWCGm8yif7QZrfYqJeEK1+pwsPM=
+Received: from mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
  relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-498-LIVamCC4P1unJidp0zmAKg-1; Tue,
- 25 Mar 2025 12:14:26 -0400
-X-MC-Unique: LIVamCC4P1unJidp0zmAKg-1
-X-Mimecast-MFC-AGG-ID: LIVamCC4P1unJidp0zmAKg_1742919265
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-642-GlI1KpqfOAGeAHexR1Xpuw-1; Tue,
+ 25 Mar 2025 12:14:32 -0400
+X-MC-Unique: GlI1KpqfOAGeAHexR1Xpuw-1
+X-Mimecast-MFC-AGG-ID: GlI1KpqfOAGeAHexR1Xpuw_1742919270
 Received: from mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.93])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id ACE851828B7F;
-	Tue, 25 Mar 2025 16:14:05 +0000 (UTC)
+	by mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id F1DC518BAF5D;
+	Tue, 25 Mar 2025 16:14:12 +0000 (UTC)
 Received: from localhost.localdomain (unknown [10.44.32.136])
-	by mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 7C9E9180A803;
-	Tue, 25 Mar 2025 16:14:02 +0000 (UTC)
+	by mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id CB2D7180B48D;
+	Tue, 25 Mar 2025 16:14:09 +0000 (UTC)
 From: Hans de Goede <hdegoede@redhat.com>
 To: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
 	Andy Shevchenko <andy@kernel.org>
@@ -53,9 +53,9 @@ Cc: Hans de Goede <hdegoede@redhat.com>,
 	Bingbu Cao <bingbu.cao@intel.com>,
 	platform-driver-x86@vger.kernel.org,
 	linux-media@vger.kernel.org
-Subject: [PATCH 4/8] platform/x86: int3472: Rework AVDD second sensor quirk handling
-Date: Tue, 25 Mar 2025 17:13:36 +0100
-Message-ID: <20250325161340.342192-5-hdegoede@redhat.com>
+Subject: [PATCH 6/8] platform/x86: int3472: Prepare for registering more then 1 GPIO regulator
+Date: Tue, 25 Mar 2025 17:13:38 +0100
+Message-ID: <20250325161340.342192-7-hdegoede@redhat.com>
 In-Reply-To: <20250325161340.342192-1-hdegoede@redhat.com>
 References: <20250325161340.342192-1-hdegoede@redhat.com>
 Precedence: bulk
@@ -67,219 +67,128 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.93
 
-Rework the discrete quirk handling to use a quirks struct which is
-pointed to by a dmi_system_id table, rather then having a dmi_system_id
-table per type of quirk.
-
-This is a preparation patch for adding support for multiple regulators,
-where not all regulators might be shared between sensors.
+Prepare the discrete code for registering more then 1 GPIO regulator.
 
 Signed-off-by: Hans de Goede <hdegoede@redhat.com>
 ---
- drivers/platform/x86/intel/int3472/Makefile   |  3 +-
- .../x86/intel/int3472/clk_and_regulator.c     | 28 ++-----------------
- drivers/platform/x86/intel/int3472/common.h   | 13 ++++++++-
- drivers/platform/x86/intel/int3472/discrete.c | 13 ++++++++-
- .../x86/intel/int3472/discrete_quirks.c       | 22 +++++++++++++++
- 5 files changed, 50 insertions(+), 29 deletions(-)
- create mode 100644 drivers/platform/x86/intel/int3472/discrete_quirks.c
+ .../x86/intel/int3472/clk_and_regulator.c     | 26 ++++++++++++-------
+ drivers/platform/x86/intel/int3472/common.h   | 20 ++++++++------
+ 2 files changed, 28 insertions(+), 18 deletions(-)
 
-diff --git a/drivers/platform/x86/intel/int3472/Makefile b/drivers/platform/x86/intel/int3472/Makefile
-index a8aba07bf1dc..103661e6685d 100644
---- a/drivers/platform/x86/intel/int3472/Makefile
-+++ b/drivers/platform/x86/intel/int3472/Makefile
-@@ -1,7 +1,8 @@
- obj-$(CONFIG_INTEL_SKL_INT3472)		+= intel_skl_int3472_discrete.o \
- 					   intel_skl_int3472_tps68470.o \
- 					   intel_skl_int3472_common.o
--intel_skl_int3472_discrete-y		:= discrete.o clk_and_regulator.o led.o
-+intel_skl_int3472_discrete-y		:= discrete.o discrete_quirks.o \
-+					   clk_and_regulator.o led.o
- intel_skl_int3472_tps68470-y		:= tps68470.o tps68470_board_data.o
- 
- intel_skl_int3472_common-y		+= common.o
 diff --git a/drivers/platform/x86/intel/int3472/clk_and_regulator.c b/drivers/platform/x86/intel/int3472/clk_and_regulator.c
-index 5f6c66215f63..374a99dea7d1 100644
+index 459dbb2cd68a..93033ced8633 100644
 --- a/drivers/platform/x86/intel/int3472/clk_and_regulator.c
 +++ b/drivers/platform/x86/intel/int3472/clk_and_regulator.c
-@@ -5,7 +5,6 @@
- #include <linux/clkdev.h>
- #include <linux/clk-provider.h>
- #include <linux/device.h>
--#include <linux/dmi.h>
- #include <linux/gpio/consumer.h>
- #include <linux/regulator/driver.h>
- #include <linux/slab.h>
-@@ -205,37 +204,14 @@ static const char * const skl_int3472_regulator_map_supplies[] = {
- static_assert(ARRAY_SIZE(skl_int3472_regulator_map_supplies) ==
- 	      GPIO_REGULATOR_SUPPLY_MAP_COUNT);
- 
--/*
-- * On some models there is a single GPIO regulator which is shared between
-- * sensors and only listed in the ACPI resources of one sensor.
-- * This DMI table contains the name of the second sensor. This is used to add
-- * entries for the second sensor to the supply_map.
-- */
--static const struct dmi_system_id skl_int3472_regulator_second_sensor[] = {
--	{
--		/* Lenovo Miix 510-12IKB */
--		.matches = {
--			DMI_MATCH(DMI_SYS_VENDOR, "LENOVO"),
--			DMI_MATCH(DMI_PRODUCT_VERSION, "MIIX 510-12IKB"),
--		},
--		.driver_data = "i2c-OVTI2680:00",
--	},
--	{ }
--};
--
- int skl_int3472_register_regulator(struct int3472_discrete_device *int3472,
--				   struct gpio_desc *gpio)
-+				   struct gpio_desc *gpio,
-+				   const char *second_sensor)
- {
- 	struct regulator_init_data init_data = { };
+@@ -195,12 +195,17 @@ int skl_int3472_register_regulator(struct int3472_discrete_device *int3472,
  	struct regulator_config cfg = { };
--	const char *second_sensor = NULL;
--	const struct dmi_system_id *id;
  	int i, j;
  
--	id = dmi_first_match(skl_int3472_regulator_second_sensor);
--	if (id)
--		second_sensor = id->driver_data;
--
- 	for (i = 0, j = 0; i < ARRAY_SIZE(skl_int3472_regulator_map_supplies); i++) {
- 		int3472->regulator.supply_map[j].supply = skl_int3472_regulator_map_supplies[i];
- 		int3472->regulator.supply_map[j].dev_name = int3472->sensor_name;
++	if (int3472->n_regulators >= INT3472_MAX_REGULATORS) {
++		dev_err(int3472->dev, "Too many regulators mapped\n");
++		return -EINVAL;
++	}
++
+ 	if (strlen(supply_name) >= GPIO_SUPPPLY_NAME_LENGTH) {
+ 		dev_err(int3472->dev, "supply-name '%s' length too long\n", supply_name);
+ 		return -EOVERFLOW;
+ 	}
+ 
+-	regulator = &int3472->regulator;
++	regulator = &int3472->regulators[int3472->n_regulators];
+ 	string_upper(regulator->supply_name_upper, supply_name);
+ 
+ 	for (i = 0, j = 0; i < GPIO_REGULATOR_SUPPLY_MAP_COUNT; i++) {
+@@ -218,28 +223,29 @@ int skl_int3472_register_regulator(struct int3472_discrete_device *int3472,
+ 	}
+ 
+ 	init_data.constraints.valid_ops_mask = REGULATOR_CHANGE_STATUS;
+-	init_data.consumer_supplies = int3472->regulator.supply_map;
++	init_data.consumer_supplies = regulator->supply_map;
+ 	init_data.num_consumer_supplies = j;
+ 
+ 	snprintf(regulator->regulator_name, sizeof(regulator->regulator_name), "%s-%s",
+ 		 acpi_dev_name(int3472->adev), supply_name);
+ 
+-	int3472->regulator.rdesc = INT3472_REGULATOR(
+-						int3472->regulator.regulator_name,
+-						&int3472_gpio_regulator_ops);
++	regulator->rdesc = INT3472_REGULATOR(regulator->regulator_name,
++					     &int3472_gpio_regulator_ops);
+ 
+ 	cfg.dev = &int3472->adev->dev;
+ 	cfg.init_data = &init_data;
+ 	cfg.ena_gpiod = gpio;
+ 
+-	int3472->regulator.rdev = regulator_register(int3472->dev,
+-						     &int3472->regulator.rdesc,
+-						     &cfg);
++	regulator->rdev = regulator_register(int3472->dev, &regulator->rdesc, &cfg);
++	if (IS_ERR(regulator->rdev))
++		return PTR_ERR(regulator->rdev);
+ 
+-	return PTR_ERR_OR_ZERO(int3472->regulator.rdev);
++	int3472->n_regulators++;
++	return 0;
+ }
+ 
+ void skl_int3472_unregister_regulator(struct int3472_discrete_device *int3472)
+ {
+-	regulator_unregister(int3472->regulator.rdev);
++	for (int i = 0; i < int3472->n_regulators; i++)
++		regulator_unregister(int3472->regulators[i].rdev);
+ }
 diff --git a/drivers/platform/x86/intel/int3472/common.h b/drivers/platform/x86/intel/int3472/common.h
-index e0fa34be8a07..3728f3864a84 100644
+index b0638c29d847..9f995028137b 100644
 --- a/drivers/platform/x86/intel/int3472/common.h
 +++ b/drivers/platform/x86/intel/int3472/common.h
-@@ -48,6 +48,7 @@
- 	container_of(clk, struct int3472_discrete_device, clock)
+@@ -25,6 +25,7 @@
  
- struct acpi_device;
-+struct dmi_system_id;
- struct i2c_client;
- struct platform_device;
+ #define INT3472_PDEV_MAX_NAME_LEN				23
+ #define INT3472_MAX_SENSOR_GPIOS				3
++#define INT3472_MAX_REGULATORS					3
  
-@@ -68,6 +69,11 @@ struct int3472_cldb {
- 	u8 reserved2[17];
+ #define GPIO_SUPPPLY_NAME_LENGTH				5
+ #define GPIO_REGULATOR_NAME_LENGTH				(12 + GPIO_SUPPPLY_NAME_LENGTH)
+@@ -76,6 +77,15 @@ struct int3472_discrete_quirks {
+ 	const char *avdd_second_sensor;
  };
  
-+struct int3472_discrete_quirks {
-+	/* For models where AVDD GPIO is shared between sensors */
-+	const char *avdd_second_sensor;
++struct int3472_gpio_regulator {
++	/* SUPPLY_MAP_COUNT * 2 to make room for second sensor mappings */
++	struct regulator_consumer_supply supply_map[GPIO_REGULATOR_SUPPLY_MAP_COUNT * 2];
++	char supply_name_upper[GPIO_SUPPPLY_NAME_LENGTH];
++	char regulator_name[GPIO_REGULATOR_NAME_LENGTH];
++	struct regulator_dev *rdev;
++	struct regulator_desc rdesc;
 +};
 +
  struct int3472_discrete_device {
  	struct acpi_device *adev;
  	struct device *dev;
-@@ -100,11 +106,15 @@ struct int3472_discrete_device {
- 		struct gpio_desc *gpio;
- 	} pled;
+@@ -84,14 +94,7 @@ struct int3472_discrete_device {
  
-+	struct int3472_discrete_quirks quirks;
-+
+ 	const struct int3472_sensor_config *sensor_config;
+ 
+-	struct int3472_gpio_regulator {
+-		/* SUPPLY_MAP_COUNT * 2 to make room for second sensor mappings */
+-		struct regulator_consumer_supply supply_map[GPIO_REGULATOR_SUPPLY_MAP_COUNT * 2];
+-		char supply_name_upper[GPIO_SUPPPLY_NAME_LENGTH];
+-		char regulator_name[GPIO_REGULATOR_NAME_LENGTH];
+-		struct regulator_dev *rdev;
+-		struct regulator_desc rdesc;
+-	} regulator;
++	struct int3472_gpio_regulator regulators[INT3472_MAX_REGULATORS];
+ 
+ 	struct int3472_clock {
+ 		struct clk *clk;
+@@ -113,6 +116,7 @@ struct int3472_discrete_device {
+ 
  	unsigned int ngpios; /* how many GPIOs have we seen */
  	unsigned int n_sensor_gpios; /* how many have we mapped to sensor */
++	unsigned int n_regulators; /* how many have we mapped to a regulator */
  	struct gpiod_lookup_table gpios;
  };
  
-+extern const struct dmi_system_id skl_int3472_discrete_quirks[];
-+
- union acpi_object *skl_int3472_get_acpi_buffer(struct acpi_device *adev,
- 					       char *id);
- int skl_int3472_fill_cldb(struct acpi_device *adev, struct int3472_cldb *cldb);
-@@ -118,7 +128,8 @@ int skl_int3472_register_dsm_clock(struct int3472_discrete_device *int3472);
- void skl_int3472_unregister_clock(struct int3472_discrete_device *int3472);
- 
- int skl_int3472_register_regulator(struct int3472_discrete_device *int3472,
--				   struct gpio_desc *gpio);
-+				   struct gpio_desc *gpio,
-+				   const char *second_sensor);
- void skl_int3472_unregister_regulator(struct int3472_discrete_device *int3472);
- 
- int skl_int3472_register_pled(struct int3472_discrete_device *int3472, struct gpio_desc *gpio);
-diff --git a/drivers/platform/x86/intel/int3472/discrete.c b/drivers/platform/x86/intel/int3472/discrete.c
-index 30ff8f3ea1f5..cbf39459bdf0 100644
---- a/drivers/platform/x86/intel/int3472/discrete.c
-+++ b/drivers/platform/x86/intel/int3472/discrete.c
-@@ -5,6 +5,7 @@
- #include <linux/array_size.h>
- #include <linux/bitfield.h>
- #include <linux/device.h>
-+#include <linux/dmi.h>
- #include <linux/gpio/consumer.h>
- #include <linux/gpio/machine.h>
- #include <linux/i2c.h>
-@@ -310,7 +311,8 @@ static int skl_int3472_handle_gpio_resources(struct acpi_resource *ares,
- 
- 			break;
- 		case INT3472_GPIO_TYPE_POWER_ENABLE:
--			ret = skl_int3472_register_regulator(int3472, gpio);
-+			ret = skl_int3472_register_regulator(int3472, gpio,
-+							     int3472->quirks.avdd_second_sensor);
- 			if (ret)
- 				err_msg = "Failed to map regulator to sensor\n";
- 
-@@ -378,13 +380,19 @@ static void skl_int3472_discrete_remove(struct platform_device *pdev)
- static int skl_int3472_discrete_probe(struct platform_device *pdev)
- {
- 	struct acpi_device *adev = ACPI_COMPANION(&pdev->dev);
-+	const struct int3472_discrete_quirks *quirks = NULL;
- 	struct int3472_discrete_device *int3472;
-+	const struct dmi_system_id *id;
- 	struct int3472_cldb cldb;
- 	int ret;
- 
- 	if (!adev)
- 		return -ENODEV;
- 
-+	id = dmi_first_match(skl_int3472_discrete_quirks);
-+	if (id)
-+		quirks = id->driver_data;
-+
- 	ret = skl_int3472_fill_cldb(adev, &cldb);
- 	if (ret) {
- 		dev_err(&pdev->dev, "Couldn't fill CLDB structure\n");
-@@ -408,6 +416,9 @@ static int skl_int3472_discrete_probe(struct platform_device *pdev)
- 	platform_set_drvdata(pdev, int3472);
- 	int3472->clock.imgclk_index = cldb.clock_source;
- 
-+	if (quirks)
-+		int3472->quirks = *quirks;
-+
- 	ret = skl_int3472_get_sensor_adev_and_name(&pdev->dev, &int3472->sensor,
- 						   &int3472->sensor_name);
- 	if (ret)
-diff --git a/drivers/platform/x86/intel/int3472/discrete_quirks.c b/drivers/platform/x86/intel/int3472/discrete_quirks.c
-new file mode 100644
-index 000000000000..bf88863803b2
---- /dev/null
-+++ b/drivers/platform/x86/intel/int3472/discrete_quirks.c
-@@ -0,0 +1,22 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/* Author: Hans de Goede <hansg@kernel.org> */
-+
-+#include <linux/dmi.h>
-+
-+#include "common.h"
-+
-+static const struct int3472_discrete_quirks lenovo_miix_510_quirks = {
-+	.avdd_second_sensor = "i2c-OVTI2680:00",
-+};
-+
-+const struct dmi_system_id skl_int3472_discrete_quirks[] = {
-+	{
-+		/* Lenovo Miix 510-12IKB */
-+		.matches = {
-+			DMI_MATCH(DMI_SYS_VENDOR, "LENOVO"),
-+			DMI_MATCH(DMI_PRODUCT_VERSION, "MIIX 510-12IKB"),
-+		},
-+		.driver_data = (void *)&lenovo_miix_510_quirks,
-+	},
-+	{ }
-+};
 -- 
 2.49.0
 
