@@ -1,104 +1,132 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4043413D531
-	for <platform-driver-x86@vger.kernel.org>; Tue, 25 Mar 2025 21:05:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1AC4627456;
+	Wed, 26 Mar 2025 08:34:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742936708; cv=none; b=OPlvrlPQ7taDUZq7RDhtK376N4CgZZ/Vj6LxJt3/QnqgXgZsrT7d1akJxMpHAjBL1Vk5+bARKEGAvPof9ndkz3mIE3xsc2c2kWcSH3B3MZ6mprKHNlGoWl0vBuyhPOmcXWzzzfAlKy+/z21Q94aRYIgw8Gi3HgVDSL1wpMKmojs=
+	t=1742978079; cv=none; b=Aczy8Sd66zxRGzF1j9tC0w2HrWBok81AXUkgYxpyCH9NWlMU/mzJ7V+T96djIAVHXmUK8ZA1CUSuqnDdu2OJ2GCHc3cqUMaC75q98CsRv6yoSJMzw2YOCo46uW4COZ0tTjA2ZOtLhVAQLY1nk7+SDsicqUYc24ErjbvU+gNLHe0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742936708; c=relaxed/simple;
-	bh=RRzKB9jKRXaAw68uR4HOI6psfkepueaqKVYwROP88CM=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=hkQEAB3WMZwxrmV+KcFZ69R+HmT0euwV9DbF82PuB8rtESoBE8P1QvheITi5t+fbML+gE7J3/s/NYW5JJN2vZZQz3u1ZC0/fIC32CxACg1X6hMAX6KqqHa121IrVsJzO3PgPVQwt5ztMX10U5x3pDDSphFPtZ3wnyPY4hNWsivY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=aE3Qr2yX; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1742978079; c=relaxed/simple;
+	bh=bkhkkKj1iQT0oznuEUVs6r33PjMcPaUhIBCY6liySwg=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=hx4f6PcVRP+uUPOxdhYRM8yTAK5Opg16wlT9A6B0kdZXEM4NGXjlEqDItSRCInHzLry8PUAuIPGQw5Y4POCb8KF96eYz0VqKnPDPngRKo5/iiJWiyJOmHbb+/S9sKqPqP6VnC3Gkex0OdtiLHqNVh2dnuM4IEIpwPUhww+nzyTs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=TOerlC4s; arc=none smtp.client-ip=198.175.65.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="aE3Qr2yX"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1742936705;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=nYPo0x0dKf9DX0OrvIOCSnF7qUC8RxKeg8hu98cG3ik=;
-	b=aE3Qr2yXwXPCmtEPqLN0C1Pk6oY0Rr2qWTx9d7WyVCZcx/VbIP/URJ+RulvDnqCnqnYiwR
-	IcCm64QVllGFd0rICVp/PaVlciOPGFMzdceey21Oryaeh15AzxF+jlwUDBKv+8ontilCxY
-	lp6HO27wzToCm7m9RN+YjNE/peASXRU=
-Received: from mx-prod-mc-04.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-490-Huqs8eapPTuqutx2gJdm9g-1; Tue,
- 25 Mar 2025 17:05:03 -0400
-X-MC-Unique: Huqs8eapPTuqutx2gJdm9g-1
-X-Mimecast-MFC-AGG-ID: Huqs8eapPTuqutx2gJdm9g_1742936702
-Received: from mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.111])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 055D4190308B;
-	Tue, 25 Mar 2025 21:05:02 +0000 (UTC)
-Received: from localhost.localdomain (unknown [10.44.32.136])
-	by mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id B67B11800944;
-	Tue, 25 Mar 2025 21:04:59 +0000 (UTC)
-From: Hans de Goede <hdegoede@redhat.com>
-To: "Rafael J . Wysocki" <rafael@kernel.org>
-Cc: Hans de Goede <hdegoede@redhat.com>,
-	linux-acpi@vger.kernel.org,
-	platform-driver-x86@vger.kernel.org,
-	Agoston Lorincz <pipacsba@gmail.com>,
-	stable@kernel.org
-Subject: [PATCH] ACPI: x86: Extend Lenovo Yoga Tab 3 quirk with skip GPIO event-handlers
-Date: Tue, 25 Mar 2025 22:04:50 +0100
-Message-ID: <20250325210450.358506-1-hdegoede@redhat.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="TOerlC4s"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1742978078; x=1774514078;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=bkhkkKj1iQT0oznuEUVs6r33PjMcPaUhIBCY6liySwg=;
+  b=TOerlC4soBMiWf4cfrdJAS6Hy6Edn6BTvurZlvKdm6CSMpyjJFAoVBfm
+   hrO5eYQ/iusKMxW9EQb8IuMUdggdmcYKUOnVbdiLuKWulQ7Z3GVVnrjS7
+   xplYPz5QCy6cSKFO4iglAGAqOqFl09Pt45IEVfwJ6teYF1gkCy+CXAz79
+   PeNPl5UKFUFcSKpWMsJVLtMw7sRx+z3su2yisqL0TS8QcrIRnw905S3nF
+   WPKmPWJMxOS9WE1cu4Ub7/dh1zgsiKsDI6igkjSuUwx1pk0juX4tFGD9O
+   g5zdEz/LATpwewhAaaNIpLY0/TAdCQWKA0pCpqnYQpKc6omCqJJ3PkewE
+   Q==;
+X-CSE-ConnectionGUID: S9ipb0foQ7ih7bk39BcuMA==
+X-CSE-MsgGUID: LBQdsrfoTk6OuaMq4nKLUg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11384"; a="55247840"
+X-IronPort-AV: E=Sophos;i="6.14,277,1736841600"; 
+   d="scan'208";a="55247840"
+Received: from fmviesa010.fm.intel.com ([10.60.135.150])
+  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Mar 2025 01:34:37 -0700
+X-CSE-ConnectionGUID: wFj1v1HuSd+vQVTm9p85DQ==
+X-CSE-MsgGUID: jVnvW0VBQvqHfjRwA1kMVA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.14,277,1736841600"; 
+   d="scan'208";a="125153299"
+Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.5])
+  by fmviesa010-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Mar 2025 01:34:34 -0700
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Wed, 26 Mar 2025 10:34:30 +0200 (EET)
+To: Kurt Borja <kuurtb@gmail.com>
+cc: Armin Wolf <W_Armin@gmx.de>, Hans de Goede <hdegoede@redhat.com>, 
+    platform-driver-x86@vger.kernel.org, Dell.Client.Kernel@dell.com, 
+    LKML <linux-kernel@vger.kernel.org>, Guenter Roeck <linux@roeck-us.net>, 
+    Jean Delvare <jdelvare@suse.com>, linux-hwmon@vger.kernel.org, 
+    Bagas Sanjaya <bagasdotme@gmail.com>
+Subject: Re: [PATCH v6 00/12] platform/x86: alienware-wmi-wmax: HWMON support
+ + DebugFS + Improvements
+In-Reply-To: <D8PMFDWIJJUB.196935MS2OZ7J@gmail.com>
+Message-ID: <32a05292-aaa0-15f0-8bdf-dae645b452f3@linux.intel.com>
+References: <20250313-hwm-v6-0-17b57f787d77@gmail.com> <D8PMFDWIJJUB.196935MS2OZ7J@gmail.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.111
+Content-Type: text/plain; charset=US-ASCII
 
-Depending on the secureboot signature on EFI\BOOT\BOOTX86.EFI the
-Lenovo Yoga Tab 3 UEFI will switch its OSID ACPI variable between
-1 (Windows) and 4 (Android(GMIN)).
+On Tue, 25 Mar 2025, Kurt Borja wrote:
+> On Thu Mar 13, 2025 at 11:29 AM -03, Kurt Borja wrote:
+> > Hi all,
+> >
+> > This set mainly adds hwmon and manual fan control support (patches 7-8)
+> > to the alienware-wmi driver, after some improvements.
+> >
+> > Thank you for your feedback :)
+> >
+> > ---
+> > Changes in v6:
+> >
+> > [08/12]
+> >   - Define dev_pm_ops statically (kernel test robot)
+> >
+> > Link to v5: https://lore.kernel.org/r/20250312-hwm-v5-0-deb15ff8f3c6@gmail.com
+> >
+> > ---
+> > Kurt Borja (12):
+> >       platform/x86: alienware-wmi-wmax: Rename thermal related symbols
+> >       platform/x86: alienware-wmi-wmax: Refactor is_awcc_thermal_mode()
+> >       platform/x86: alienware-wmi-wmax: Improve internal AWCC API
+> >       platform/x86: alienware-wmi-wmax: Modify supported_thermal_profiles[]
+> >       platform/x86: alienware-wmi-wmax: Improve platform profile probe
+> >       platform/x86: alienware-wmi-wmax: Add support for the "custom" thermal profile
+> >       platform/x86: alienware-wmi-wmax: Add HWMON support
+> >       platform/x86: alienware-wmi-wmax: Add support for manual fan control
+> >       platform/x86: alienware-wmi-wmax: Add a DebugFS interface
+> >       Documentation: wmi: Improve and update alienware-wmi documentation
+> >       Documentation: admin-guide: laptops: Add documentation for alienware-wmi
+> >       Documentation: ABI: Add sysfs platform and debugfs ABI documentation for alienware-wmi
+> >
+> >  Documentation/ABI/testing/debugfs-alienware-wmi    |   44 +
+> >  .../ABI/testing/sysfs-platform-alienware-wmi       |   14 +
+> >  .../admin-guide/laptops/alienware-wmi.rst          |  128 +++
+> >  Documentation/admin-guide/laptops/index.rst        |    1 +
+> >  Documentation/wmi/devices/alienware-wmi.rst        |  383 +++-----
+> >  MAINTAINERS                                        |    3 +
+> >  drivers/platform/x86/dell/Kconfig                  |    1 +
+> >  drivers/platform/x86/dell/alienware-wmi-wmax.c     | 1023 +++++++++++++++++---
+> >  8 files changed, 1187 insertions(+), 410 deletions(-)
+> > ---
+> > base-commit: f895f2493098b862f1ada0568aba278e49bf05b4
+> > change-id: 20250305-hwm-f7bd91902b57
+> >
+> > Best regards,
+> 
+> Hi Ilpo,
+> 
+> Is there still a chance for this to go into v6.15? or are you planning
+> to review it on the next cycle?
 
-In Windows mode a GPIO event handler gets installed for GPO1 pin 5,
-causing Linux' x86-android-tables code which deals with the general
-brokenness of this device's ACPI tables to fail to probe with:
+Hi,
 
-[   17.853705] x86_android_tablets: error -16 getting GPIO INT33FF:01 5
-[   17.859623] x86_android_tablets x86_android_tablets: probe with driver
+I'm almost there to make the main PR for 6.15 from what's in for-next 
+currently, so no, this won't be part of it.
 
-which renders sound, the touchscreen, charging-management,
-battery-monitoring and more non functional.
+In general, I don't usually take large series after -rc6 timeframe to give 
+time for things to settle and problems to be brought to surface.
+Especially if the series is interfacing with other subsystems which is 
+prone to lack of select/depends on clauses, etc. so more likely to break 
+the build than changes that seem immune to the .config variations.
 
-Add ACPI_QUIRK_SKIP_GPIO_EVENT_HANDLERS to the existing quirks for this
-device to fix this.
-
-Reported-by: Agoston Lorincz <pipacsba@gmail.com>
-Closes: https://lore.kernel.org/platform-driver-x86/CAMEzqD+DNXrAvUOHviB2O2bjtcbmo3xH=kunKr4nubuMLbb_0A@mail.gmail.com/
-Cc: stable@kernel.org
-Fixes: fe820db35275 ("ACPI: x86: Add skip i2c clients quirk for Lenovo Yoga Tab 3 Pro (YT3-X90F)")
-Signed-off-by: Hans de Goede <hdegoede@redhat.com>
----
- drivers/acpi/x86/utils.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/acpi/x86/utils.c b/drivers/acpi/x86/utils.c
-index 068c1612660b..4ee30c2897a2 100644
---- a/drivers/acpi/x86/utils.c
-+++ b/drivers/acpi/x86/utils.c
-@@ -374,7 +374,8 @@ static const struct dmi_system_id acpi_quirk_skip_dmi_ids[] = {
- 			DMI_MATCH(DMI_PRODUCT_VERSION, "Blade3-10A-001"),
- 		},
- 		.driver_data = (void *)(ACPI_QUIRK_SKIP_I2C_CLIENTS |
--					ACPI_QUIRK_SKIP_ACPI_AC_AND_BATTERY),
-+					ACPI_QUIRK_SKIP_ACPI_AC_AND_BATTERY |
-+					ACPI_QUIRK_SKIP_GPIO_EVENT_HANDLERS),
- 	},
- 	{
- 		/* Medion Lifetab S10346 */
 -- 
-2.49.0
+ i.
 
