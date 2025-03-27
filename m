@@ -1,82 +1,110 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A478A18A6DB;
-	Thu, 27 Mar 2025 19:22:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0715B1C7018;
+	Thu, 27 Mar 2025 19:43:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743103367; cv=none; b=njYMl+TSUruuPMJX/u0aGhoKQOvKwQKhKVZWBoLzNb1t8HiEhlJvhakw5bS4lAoTFO1mYShLrhFzl0fQH8rynklpfU+b8hilNbu2MLHMGUSvzN7CWbq/1rq21N0GAsN1ozj5+sCYvWdoODauT00reaD5epnt/6jG09uV7BREWVw=
+	t=1743104617; cv=none; b=MaBxbwe8m2VRUZxPsH3AVZ0goX2imVM78yFNX+iRSo9fqNxu9vrjjvzVotf/SnyykhCu7VOORTo5IPHR1Ow4r4od2M8FLDTWKTMezsrvVVq/hpUp8/XaRYdPi/AYDUSDFnAWnbB32O6NByV8BgCOu0bEI+V1fJqvpUik1zhPgWk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743103367; c=relaxed/simple;
-	bh=smuSGIXztfQYxyH8Y5Sk7qyvwSwq0n+h91dnWyBHq2w=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=PR0eOrgkC0FB7U0nyCP43/XemmlIdDpCOb2fmQ2fOGEjSK82cXEzwgX6e7Ji2g9qkef2dmOo3hum8NxUZt352AGmjTBH0pdRIQXqLgdBGH7B9ikGi1CCK9PCtzz5tQkD78txhnsCi1s2UZCVSm2m5iYebdvDWbV4lO19/lJO9kw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Lih8NNv6; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1743104617; c=relaxed/simple;
+	bh=bn0cSNoEHNeCGEyc626Th6UVfiYf02iZNx4lymmxA+Y=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=NtjuiNm8o2a/cwnQvFKERmNeVjtgPN6mUn3oqdoT13VB7ZB63htZ0tB+8IwKgY6wL0fY9NRPi71W7b5FQDPs/8En36gvB4DKwnNca45a6weQ2jylEd/OpPb8gW4GFjYtJhGKqlxJEKdtgy+I8mQNYmgiAPPysiahUHRyxYVg54g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=R7gfPWsV; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Lih8NNv6"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7FB4EC4CEE5;
-	Thu, 27 Mar 2025 19:22:46 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="R7gfPWsV"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 87FCEC4CEEF;
+	Thu, 27 Mar 2025 19:43:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743103367;
-	bh=smuSGIXztfQYxyH8Y5Sk7qyvwSwq0n+h91dnWyBHq2w=;
-	h=Date:From:To:Cc:Subject:From;
-	b=Lih8NNv69HYmujcsnIMDFYGMEdtP5h/YrEsXtvTR6claOrnsyUB878QQuUg/0LXjB
-	 NDAJFtNA28MASuWZ7Ijs2zIemfmDEl5uWp0dmj87hxeTq6R2JX3nSVmfF5dAiG9VvP
-	 OQxSoVP4euI4njWxXQtaoMAJLqPTZlq4H+6C31EZwrkLtU++20QKnbEPEKZbHG1Ccf
-	 bsv2amrO2M4ozG/+KRwZQg/qEmVsDtsV9mL56CkN0Kc+ZKEb7yzVgU1gmq3G4oq4Hi
-	 twcYjPQa2lkiLCnNw0EGO+vWdXGwA4Op6MV5JCCM6zOZSvvq5kT+SBle2uuw3HWt+F
-	 9RtCmgrZKRQ1g==
-Date: Thu, 27 Mar 2025 13:22:44 -0600
-From: "Gustavo A. R. Silva" <gustavoars@kernel.org>
-To: Mattia Dongili <malattia@linux.it>, Hans de Goede <hdegoede@redhat.com>,
-	Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	linux-hardening@vger.kernel.org
-Subject: [PATCH][next] platform/x86: Avoid -Wflex-array-member-not-at-end
- warning
-Message-ID: <Z-WlhL_tAP11M02G@kspp>
+	s=k20201202; t=1743104616;
+	bh=bn0cSNoEHNeCGEyc626Th6UVfiYf02iZNx4lymmxA+Y=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=R7gfPWsVHwwYnRLnpXDXQ8LFXDODpaYaC0FwKFurGWHUoKcOJB1RYB20vqYyzKPqL
+	 /w08Qib+fAnwhwyVi8XlvWHFjFark5KLGSGynB3QBgF16EJoYolTjlI9ppMwgs7TVc
+	 +CyqOabZNAWNOOpz8swUC97a+iKjqy4kAgGD4viCwZ9oInuOlu/jrmTisY8NC+cvtF
+	 sAlv9m8wWCBXky7LSvcXC96SigHdAhMkh9GLDzYvlYuCUQ+om5RxMpdK3sUfXxlWeD
+	 CUgaFXc5qm89R+Stmn0lZvUN4KO0N4uPiQnG0eKNCVYc3JT3e/gM+Amcuf/jEg8hzp
+	 hrhs0NpgtPnPw==
+Received: by mail-ot1-f41.google.com with SMTP id 46e09a7af769-72c47631b4cso895912a34.1;
+        Thu, 27 Mar 2025 12:43:36 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCXrtJJ4mbF1XlZpDncIG1kWSn2Fn1imkKE5XeFbYE1HC9VO8VYKPqpNdw3AuWr6HEZT16qdtRb9lWqAwNeCszldWJ2pqg==@vger.kernel.org, AJvYcCXy48n21VpU93Laed0CGlj3UoVfE9+tLvgIbP90iHwZ1TlhsbsBEI/1WSnq6TwT5H02oQhoy1UB0+wh@vger.kernel.org
+X-Gm-Message-State: AOJu0YxMQC8M3yR5MMNx1ktWqZSabArLJ5941IszFB4t72nc4OA8ZS7c
+	twawuMunW0S04Itcs77jm/cABySWJsWSEU5L21+9hITlJghn13OGyIuFgAsqbMTCanBvQQAWUey
+	yuBaV5CSfMsGlD8vBME39LMpSSoU=
+X-Google-Smtp-Source: AGHT+IHct5/4hpIN9EwE1NAKFukxmxO2Wefqx/BiOgbhS7RN7kT0XZRIyQMkU8sdG9NYFoSVgmBsAxUSUCaHgs5dpPk=
+X-Received: by 2002:a05:6870:c993:b0:29e:69a9:8311 with SMTP id
+ 586e51a60fabf-2c848228d57mr3189462fac.36.1743104615822; Thu, 27 Mar 2025
+ 12:43:35 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+References: <20250325210450.358506-1-hdegoede@redhat.com>
+In-Reply-To: <20250325210450.358506-1-hdegoede@redhat.com>
+From: "Rafael J. Wysocki" <rafael@kernel.org>
+Date: Thu, 27 Mar 2025 20:43:24 +0100
+X-Gmail-Original-Message-ID: <CAJZ5v0gk4EvViCS1bN966681LJ-cR+Fz9D2nZs18ha-Pbe56pw@mail.gmail.com>
+X-Gm-Features: AQ5f1Jrwt0GxvdK_UEGnYUaWFBpPxhsXKC-7xdmgxz5_oDM09oI75h0eLAh1QoE
+Message-ID: <CAJZ5v0gk4EvViCS1bN966681LJ-cR+Fz9D2nZs18ha-Pbe56pw@mail.gmail.com>
+Subject: Re: [PATCH] ACPI: x86: Extend Lenovo Yoga Tab 3 quirk with skip GPIO event-handlers
+To: Hans de Goede <hdegoede@redhat.com>
+Cc: "Rafael J . Wysocki" <rafael@kernel.org>, linux-acpi@vger.kernel.org, 
+	platform-driver-x86@vger.kernel.org, Agoston Lorincz <pipacsba@gmail.com>, stable@kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
--Wflex-array-member-not-at-end was introduced in GCC-14, and we are
-getting ready to enable it, globally.
+On Tue, Mar 25, 2025 at 10:05=E2=80=AFPM Hans de Goede <hdegoede@redhat.com=
+> wrote:
+>
+> Depending on the secureboot signature on EFI\BOOT\BOOTX86.EFI the
+> Lenovo Yoga Tab 3 UEFI will switch its OSID ACPI variable between
+> 1 (Windows) and 4 (Android(GMIN)).
+>
+> In Windows mode a GPIO event handler gets installed for GPO1 pin 5,
+> causing Linux' x86-android-tables code which deals with the general
+> brokenness of this device's ACPI tables to fail to probe with:
+>
+> [   17.853705] x86_android_tablets: error -16 getting GPIO INT33FF:01 5
+> [   17.859623] x86_android_tablets x86_android_tablets: probe with driver
+>
+> which renders sound, the touchscreen, charging-management,
+> battery-monitoring and more non functional.
+>
+> Add ACPI_QUIRK_SKIP_GPIO_EVENT_HANDLERS to the existing quirks for this
+> device to fix this.
+>
+> Reported-by: Agoston Lorincz <pipacsba@gmail.com>
+> Closes: https://lore.kernel.org/platform-driver-x86/CAMEzqD+DNXrAvUOHviB2=
+O2bjtcbmo3xH=3DkunKr4nubuMLbb_0A@mail.gmail.com/
+> Cc: stable@kernel.org
+> Fixes: fe820db35275 ("ACPI: x86: Add skip i2c clients quirk for Lenovo Yo=
+ga Tab 3 Pro (YT3-X90F)")
+> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+> ---
+>  drivers/acpi/x86/utils.c | 3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
+>
+> diff --git a/drivers/acpi/x86/utils.c b/drivers/acpi/x86/utils.c
+> index 068c1612660b..4ee30c2897a2 100644
+> --- a/drivers/acpi/x86/utils.c
+> +++ b/drivers/acpi/x86/utils.c
+> @@ -374,7 +374,8 @@ static const struct dmi_system_id acpi_quirk_skip_dmi=
+_ids[] =3D {
+>                         DMI_MATCH(DMI_PRODUCT_VERSION, "Blade3-10A-001"),
+>                 },
+>                 .driver_data =3D (void *)(ACPI_QUIRK_SKIP_I2C_CLIENTS |
+> -                                       ACPI_QUIRK_SKIP_ACPI_AC_AND_BATTE=
+RY),
+> +                                       ACPI_QUIRK_SKIP_ACPI_AC_AND_BATTE=
+RY |
+> +                                       ACPI_QUIRK_SKIP_GPIO_EVENT_HANDLE=
+RS),
+>         },
+>         {
+>                 /* Medion Lifetab S10346 */
+> --
 
-Move the conflicting declaration to the end of the structure. Notice
-that `struct acpi_resource_irq` is a flexible structure --a structure
-that contains a flexible-array member.
-
-Fix the following warning:
-
-drivers/platform/x86/sony-laptop.c:3330:41: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
-
-Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
----
- drivers/platform/x86/sony-laptop.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/platform/x86/sony-laptop.c b/drivers/platform/x86/sony-laptop.c
-index 3197aaa69da7..9cd6d4a10ddb 100644
---- a/drivers/platform/x86/sony-laptop.c
-+++ b/drivers/platform/x86/sony-laptop.c
-@@ -3327,8 +3327,10 @@ struct sony_pic_ioport {
- };
- 
- struct sony_pic_irq {
--	struct acpi_resource_irq	irq;
- 	struct list_head		list;
-+
-+	/* Must be last --ends in a flexible-array member. */
-+	struct acpi_resource_irq	irq;
- };
- 
- struct sonypi_eventtypes {
--- 
-2.43.0
-
+Applied as 6.15-rc material, thanks!
