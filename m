@@ -1,609 +1,901 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E7496282E1
-	for <platform-driver-x86@vger.kernel.org>; Thu, 27 Mar 2025 13:19:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A58F3322B;
+	Thu, 27 Mar 2025 13:49:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743081583; cv=none; b=HaeB38HSQbRAluJ4OcBj6Hr0X9A/5lDDklFYSAsrXzrPLXb5p7JD9QnkXbTXf/i0x1UN50nG5m52keJ2YX8puxpWSufAJuQf71yQsusbEQSUbtjOQt42QU9MWoUDflBB1Q9sbMlROmz/sqddrX/ogoxigE8me7UAx9NCwpjH8ko=
+	t=1743083389; cv=none; b=nnirDcbAsXsx0OVpkpgJm4nDC3/U5ZRAycWZBd6zlerlzpR3HPdZpKxt8KFn0bnBx7/yj1PIgRb/Psg8E8sNPEL/pZldxlDtIyu4ruAIR1QquYHg+1h+26HnMyNw5u7Q6Ct7bk8qwFICS5xxEcqpYq0CZen9EQVuIRyWQZP3sPo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743081583; c=relaxed/simple;
-	bh=cAyz5A0uv0OYvydZYpSkTVdZ2jlEeIzYd17Bu8aDCZQ=;
+	s=arc-20240116; t=1743083389; c=relaxed/simple;
+	bh=M7YbC52bx99dL86EFjxRXP2vj7AuzkNbzryXeA5QU70=;
 	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=jbkMrGf7J4lbIDGTWT1Qfiu7UMf5gDCUaZDiy3pdtc9EveqmJbv5MnP90GXL8sKLM8nOcWzXbrGUhCg2VNSJfiS2jFBDiJQhFMApCxYTkNdL3SpiEG+JUI2bi3xkgLFZw+DgGCchbSyzxYI5QFCrSn0/kqGhg3r3bmMi3lIllWI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=dhViZvZ0; arc=none smtp.client-ip=198.175.65.17
+	 MIME-Version:Content-Type; b=D0gGs1vKuM39tn27gfiM44IqezMQKP98MEf77nfFmUFwkOSiAjhvhNTmEelEwwhuDuX3THAw3ImXX473towgaRxNrNhZ7RtJtIv6DIjc1nmrpurWRm5H8sVMnMR3kr8u/LdpHp5tAJFp3pWY2KGVBnQhGffP+mhIUrGea7YdR88=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=VqlCT/xf; arc=none smtp.client-ip=192.198.163.17
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="dhViZvZ0"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="VqlCT/xf"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1743081582; x=1774617582;
+  t=1743083387; x=1774619387;
   h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version:content-id;
-  bh=cAyz5A0uv0OYvydZYpSkTVdZ2jlEeIzYd17Bu8aDCZQ=;
-  b=dhViZvZ0u88W3fq59pZKDeRnxkVRG4hqLeD2tm8urcNZYLlHFwQ86SXM
-   G/NB1aHxrZoAyVBwq3GsPHM3l1wKjzeOJjNSVuYFpPsTfcdWrOKbMAPxd
-   1SHFYCZcDnLngTSdmFYdnliBrrVwIaM5wxwRLwwOxHiTY2DRlBAAtmtTK
-   T1sFDopWpRWOe4jdPNS0m5TZHKiUJv5KToJWP7To7EilVy2uMhcEvqp08
-   c4WR6dbLRsukYLv//rU/Iw+O0gC1e8rUlluk/47MATyvRxMHMaB4vbbXZ
-   eyWu4RRG5vKDvgi36rS4ur8maW94FCCj/bRYbdB0O3YZ/juexF+9W/6Di
-   A==;
-X-CSE-ConnectionGUID: pCq7A3FHTE2rKoXJAPnFow==
-X-CSE-MsgGUID: A48QcPC4RTyg+X9tCcB1JQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11385"; a="44428392"
+   references:mime-version;
+  bh=M7YbC52bx99dL86EFjxRXP2vj7AuzkNbzryXeA5QU70=;
+  b=VqlCT/xfQc7KUBozWfhri4/uIvA/p7aD2XPdYuHufraxXQd1BUcMWQHY
+   IL2fX3awg7z4lGkeQ3BVnwqiNW0+mIUaKexNGTSKD/LtcX9lEzCbJKg64
+   +/gXrXrECa1qyehkoGiwXCxA2lW/LtkiUNAxG1D5k4cLLPNDbBmdJaPL6
+   eS5GRIegJ8uB5LgzsJDT802HYmkms9fF+wLIneLhCteMpq0kpgQPQkq6D
+   TN1AGU5iUMYuJ9SH9W/4crrvWZ5Kdwa3epX4upHQK1S37CLSKFOEPxoHq
+   KinO2b7Z+9WnRglxDKqNkD7lEv3LPYCzN3YvJVubnQVa6ygvQCrA933c3
+   g==;
+X-CSE-ConnectionGUID: JCqkNEQ3Q1WFEhMeoqJA5g==
+X-CSE-MsgGUID: 5qmOZ7bmS3mIa2jCSD526g==
+X-IronPort-AV: E=McAfee;i="6700,10204,11385"; a="44289430"
 X-IronPort-AV: E=Sophos;i="6.14,280,1736841600"; 
-   d="scan'208";a="44428392"
-Received: from fmviesa008.fm.intel.com ([10.60.135.148])
-  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Mar 2025 06:19:40 -0700
-X-CSE-ConnectionGUID: hSIZ8CODTGOuVggw/pnliw==
-X-CSE-MsgGUID: SZKZpXfpQSqSyACY3x0CdA==
+   d="scan'208";a="44289430"
+Received: from orviesa001.jf.intel.com ([10.64.159.141])
+  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Mar 2025 06:49:46 -0700
+X-CSE-ConnectionGUID: Qv0MfOb6TWeMrl2GX/m7SA==
+X-CSE-MsgGUID: xXMGp8pxTPGlufwcwOzs0w==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.14,280,1736841600"; 
-   d="scan'208";a="125356125"
+   d="scan'208";a="162377377"
 Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.180])
-  by fmviesa008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Mar 2025 06:19:38 -0700
+  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Mar 2025 06:49:37 -0700
 From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Thu, 27 Mar 2025 15:19:34 +0200 (EET)
-To: =?ISO-8859-2?Q?Micha=B3_Kope=E6?= <michal.kopec@3mdeb.com>
-cc: Hans de Goede <hdegoede@redhat.com>, platform-driver-x86@vger.kernel.org, 
-    piotr.krol@3mdeb.com, maciej.pijanowski@3mdeb.com
-Subject: Re: [PATCH 1/1] platform/x86: Introduce dasharo-acpi platform
- driver
-In-Reply-To: <20250327113634.314746-2-michal.kopec@3mdeb.com>
-Message-ID: <0d56dbf3-1ca7-ecc5-fe21-4cad6113ab36@linux.intel.com>
-References: <20250327113634.314746-1-michal.kopec@3mdeb.com> <20250327113634.314746-2-michal.kopec@3mdeb.com>
+Date: Thu, 27 Mar 2025 15:49:33 +0200 (EET)
+To: "Derek J. Clark" <derekjohn.clark@gmail.com>
+cc: Hans de Goede <hdegoede@redhat.com>, Armin Wolf <W_Armin@gmx.de>, 
+    Jonathan Corbet <corbet@lwn.net>, Mario Limonciello <superm1@kernel.org>, 
+    Luke Jones <luke@ljones.dev>, Xino Ni <nijs1@lenovo.com>, 
+    Zhixin Zhang <zhangzx36@lenovo.com>, Mia Shao <shaohz1@lenovo.com>, 
+    Mark Pearson <mpearson-lenovo@squebb.ca>, 
+    "Pierre-Loup A . Griffais" <pgriffais@valvesoftware.com>, 
+    "Cody T . -H . Chiu" <codyit@gmail.com>, 
+    John Martens <johnfanv2@gmail.com>, platform-driver-x86@vger.kernel.org, 
+    linux-doc@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v4 5/6 RESEND] platform/x86: Add Lenovo Other Mode WMI
+ Driver
+In-Reply-To: <20250317144326.5850-6-derekjohn.clark@gmail.com>
+Message-ID: <86ccabd2-44e9-d654-d4f2-0f175e9a9e31@linux.intel.com>
+References: <20250317144326.5850-1-derekjohn.clark@gmail.com> <20250317144326.5850-6-derekjohn.clark@gmail.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; BOUNDARY="8323328-1772403479-1743081274=:927"
-Content-ID: <cddfb2ba-69aa-137f-b76a-5aaa8601964b@linux.intel.com>
+Content-Type: text/plain; charset=US-ASCII
 
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
+On Mon, 17 Mar 2025, Derek J. Clark wrote:
 
---8323328-1772403479-1743081274=:927
-Content-Type: text/plain; CHARSET=ISO-8859-2
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Content-ID: <ffb798ad-19ab-584f-cf43-6648a01bf66e@linux.intel.com>
-
-On Thu, 27 Mar 2025, Micha=B3 Kope=E6 wrote:
-
-> Introduce a driver for devices running Dasharo firmware. The driver
-> supports thermal monitoring using a new ACPI interface in Dasharo. The
-> initial version supports monitoring fan speeds, fan PWM duty cycles and
-> system temperatures as well as determining which specific interfaces are
-> implemented by firmware.
->=20
-> It has been tested on a NovaCustom laptop running pre-release Dasharo
-> firmware, which implements fan and thermal monitoring for the CPU and
-> the discrete GPU, if present.
->=20
-> Signed-off-by: Micha=B3 Kope=E6 <michal.kopec@3mdeb.com>
+> Adds lenovo-wmi-other driver which provides the Lenovo "Other Mode" WMI
+> interface that comes on some Lenovo "Gaming Series" hardware. Provides a
+> firmware-attributes class which enables the use of tunable knobs for SPL,
+> SPPT, and FPPT.
+> 
+> Signed-off-by: Derek J. Clark <derekjohn.clark@gmail.com>
 > ---
->  drivers/platform/x86/Kconfig        |  10 +
->  drivers/platform/x86/Makefile       |   3 +
->  drivers/platform/x86/dasharo-acpi.c | 399 ++++++++++++++++++++++++++++
->  3 files changed, 412 insertions(+)
->  create mode 100644 drivers/platform/x86/dasharo-acpi.c
->=20
+> v4:
+> - Treat Other Mode as a notifier chain head, use the notifier chain to
+>   get the current mode from Gamezone.
+> - Add header file for Other Mode specific structs and finctions.
+> - Use component master bind to cache the capdata01 array locally.
+> - Drop all reference to external driver private data structs.
+> - Various fixes from review.
+> v3:
+> - Add notifier block and store result for getting the Gamezone interface
+>   profile changes.
+> - Add driver as master component of capdata01 driver.
+> - Use FIELD_PREP where appropriate.
+> - Move macros and associated functions out of lemovo-wmi.h that are only
+>   used by this driver.
+> v2:
+> - Use devm_kmalloc to ensure driver can be instanced, remove global
+>   reference.
+> - Ensure reverse Christmas tree for all variable declarations.
+> - Remove extra whitespace.
+> - Use guard(mutex) in all mutex instances, global mutex.
+> - Use pr_fmt instead of adding the driver name to each pr_err.
+> - Remove noisy pr_info usage.
+> - Rename other_method_wmi to lenovo_wmi_om_priv and om_wmi to priv.
+> - Use list to get the lenovo_wmi_om_priv instance in some macro
+>   called functions as the data provided by the macros that use it
+>   doesn't pass a member of the struct for use in container_of.
+> - Do not rely on GameZone interface to grab the current fan mode.
+> ---
+>  MAINTAINERS                             |   2 +
+>  drivers/platform/x86/Kconfig            |  15 +
+>  drivers/platform/x86/Makefile           |   1 +
+>  drivers/platform/x86/lenovo-wmi-other.c | 626 ++++++++++++++++++++++++
+>  drivers/platform/x86/lenovo-wmi-other.h |  19 +
+>  5 files changed, 663 insertions(+)
+>  create mode 100644 drivers/platform/x86/lenovo-wmi-other.c
+>  create mode 100644 drivers/platform/x86/lenovo-wmi-other.h
+> 
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index 56ead241a053..87daee6075ad 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -13170,6 +13170,8 @@ F:	drivers/platform/x86/lenovo-wmi-events.c
+>  F:	drivers/platform/x86/lenovo-wmi-events.h
+>  F:	drivers/platform/x86/lenovo-wmi-helpers.c
+>  F:	drivers/platform/x86/lenovo-wmi-helpers.h
+> +F:	drivers/platform/x86/lenovo-wmi-other.c
+> +F:	drivers/platform/x86/lenovo-wmi-other.h
+>  
+>  LENOVO WMI HOTKEY UTILITIES DRIVER
+>  M:	Jackie Dong <xy-jackie@139.com>
 > diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
-> index 0258dd879d64..8168c5274a08 100644
+> index 64663667f0cb..fc47604e37f7 100644
 > --- a/drivers/platform/x86/Kconfig
 > +++ b/drivers/platform/x86/Kconfig
-> @@ -1060,6 +1060,16 @@ config LENOVO_WMI_CAMERA
->  =09  To compile this driver as a module, choose M here: the module
->  =09  will be called lenovo-wmi-camera.
-> =20
-> +config DASHARO_ACPI
-> +=09tristate "Dasharo ACPI Platform Driver"
-> +=09depends on ACPI
-> +=09depends on HWMON
-> +=09help
-> +=09  This driver provides HWMON support for devices running Dasharo
-> +=09  firmware.
+> @@ -471,6 +471,21 @@ config LENOVO_WMI_DATA01
+>  	tristate
+>  	depends on ACPI_WMI
+>  
+> +config LENOVO_WMI_TUNING
+> +	tristate "Lenovo Other Mode WMI Driver"
+> +	depends on ACPI_WMI
+> +	select FW_ATTR_CLASS
+> +	select LENOVO_WMI_DATA01
+> +	select LENOVO_WMI_EVENTS
+> +	select LENOVO_WMI_HELPERS
+> +	help
+> +	  Say Y here if you have a WMI aware Lenovo Legion device and would like to use the
+> +	  firmware_attributes API to control various tunable settings typically exposed by
+> +	  Lenovo software in Windows.
 > +
-> +=09  If you have a device with Dasharo firmware, choose Y or M here.
+> +	  To compile this driver as a module, choose M here: the module will
+> +	  be called lenovo-wmi-other.
 > +
->  source "drivers/platform/x86/x86-android-tablets/Kconfig"
-> =20
->  config FW_ATTR_CLASS
-> diff --git a/drivers/platform/x86/Makefile b/drivers/platform/x86/Makefil=
-e
-> index e1b142947067..3ca53ae01d93 100644
+>  config IDEAPAD_LAPTOP
+>  	tristate "Lenovo IdeaPad Laptop Extras"
+>  	depends on ACPI
+> diff --git a/drivers/platform/x86/Makefile b/drivers/platform/x86/Makefile
+> index 7a35c77221b7..c6ce3c8594b1 100644
 > --- a/drivers/platform/x86/Makefile
 > +++ b/drivers/platform/x86/Makefile
-> @@ -110,6 +110,9 @@ obj-$(CONFIG_ACPI_TOSHIBA)=09+=3D toshiba_acpi.o
->  # Inspur
->  obj-$(CONFIG_INSPUR_PLATFORM_PROFILE)=09+=3D inspur_platform_profile.o
-> =20
-> +# Dasharo
-> +obj-$(CONFIG_DASHARO_ACPI)=09+=3D dasharo-acpi.o
-> +
->  # Laptop drivers
->  obj-$(CONFIG_ACPI_CMPC)=09=09+=3D classmate-laptop.o
->  obj-$(CONFIG_COMPAL_LAPTOP)=09+=3D compal-laptop.o
-> diff --git a/drivers/platform/x86/dasharo-acpi.c b/drivers/platform/x86/d=
-asharo-acpi.c
+> @@ -72,6 +72,7 @@ obj-$(CONFIG_LENOVO_WMI_CAMERA)	+= lenovo-wmi-camera.o
+>  obj-$(CONFIG_LENOVO_WMI_DATA01)	+= lenovo-wmi-capdata01.o
+>  obj-$(CONFIG_LENOVO_WMI_EVENTS)	+= lenovo-wmi-events.o
+>  obj-$(CONFIG_LENOVO_WMI_HELPERS)	+= lenovo-wmi-helpers.o
+> +obj-$(CONFIG_LENOVO_WMI_TUNING)	+= lenovo-wmi-other.o
+>  
+>  # Intel
+>  obj-y				+= intel/
+> diff --git a/drivers/platform/x86/lenovo-wmi-other.c b/drivers/platform/x86/lenovo-wmi-other.c
 > new file mode 100644
-> index 000000000000..0f3bdf6bd463
+> index 000000000000..b517e45338e0
 > --- /dev/null
-> +++ b/drivers/platform/x86/dasharo-acpi.c
-> @@ -0,0 +1,399 @@
-> +// SPDX-License-Identifier: GPL-2.0+
+> +++ b/drivers/platform/x86/lenovo-wmi-other.c
+> @@ -0,0 +1,626 @@
+> +// SPDX-License-Identifier: GPL-2.0-or-later
 > +/*
-> + * Dasharo ACPI Driver
-> + *
-> + * Copyright (C) 2025 3mdeb Sp. z o.o.
-> + *
-> + * This program is free software; you can redistribute it and/or modify
-> + * it under the terms of the GNU General Public License version 2 as
-> + * published by the Free Software Foundation.
+> + * Lenovo Other Mode WMI interface driver. This driver uses the fw_attributes
 
-SPDX header covers the licensing already so please drop the license text.
+Again, put a summary on own line as mentioned for the other files.
 
+> + * class to expose the various WMI functions provided by the "Other Mode" WMI
+> + * interface. This enables CPU and GPU power limit as well as various other
+> + * attributes for devices that fall under the "Gaming Series" of Lenovo laptop
+> + * devices. Each attribute exposed by the "Other Mode"" interface has a
+> + * corresponding LENOVO_CAPABILITY_DATA_01 struct that allows the driver to
+> + * probe details about the attribute such as set/get support, step, min, max,
+> + * and default value. Each attibute has multiple pages, one for each of the
+> + * fan profiles managed by the Gamezone interface.
+> + *
+> + * These attributes typically don't fit anywhere else in the sysfs and are set
+> + * in Windows using one of Lenovo's multiple user applications.
+> + *
+> + * Copyright(C) 2025 Derek J. Clark <derekjohn.clark@gmail.com>
 > + */
 > +
-> +#include <linux/acpi.h>
-> +#include <linux/hwmon.h>
-> +#include <linux/hwmon-sysfs.h>
-> +#include <linux/init.h>
-> +#include <linux/kernel.h>
-> +#include <linux/module.h>
-> +#include <linux/sysfs.h>
+> +#define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
+> +
+> +#include <linux/bitfield.h>
+> +#include <linux/cleanup.h>
+> +#include <linux/component.h>
+> +#include <linux/container_of.h>
+> +#include <linux/device.h>
+> +#include <linux/gfp_types.h>
+> +#include <linux/idr.h>
+> +#include <linux/kobject.h>
+> +#include <linux/notifier.h>
+> +#include <linux/platform_profile.h>
 > +#include <linux/types.h>
+> +#include <linux/wmi.h>
 > +
-> +enum dasharo_feature {
-> +=09DASHARO_FEATURE_TEMPERATURE =3D 0,
-> +=09DASHARO_FEATURE_FAN_PWM,
-> +=09DASHARO_FEATURE_FAN_TACH,
-> +=09DASHARO_FEATURE_FAN_POINTS,
-> +=09DASHARO_FEATURE_MAX,
+> +#include "lenovo-wmi-capdata01.h"
+> +#include "lenovo-wmi-events.h"
+> +#include "lenovo-wmi-gamezone.h"
+> +#include "lenovo-wmi-helpers.h"
+> +#include "lenovo-wmi-other.h"
+> +#include "firmware_attributes_class.h"
+> +
+> +/* Interface GUIDs */
+> +#define LENOVO_OTHER_METHOD_GUID "DC2A8805-3A8C-41BA-A6F7-092E0089CD3B"
+> +
+> +/* Device IDs */
+> +#define WMI_DEVICE_ID_CPU 0x01
+
+Two comments above add no value and can be dropped.
+
+> +
+> +/* WMI_DEVICE_ID_CPU feature IDs */
+> +#define WMI_FEATURE_ID_CPU_SPPT 0x01 /* Short Term Power Limit */
+> +#define WMI_FEATURE_ID_CPU_FPPT 0x03 /* Long Term Power Limit */
+> +#define WMI_FEATURE_ID_CPU_SPL 0x02 /* Peak Power Limit */
+> +
+> +/* Type IDs*/
+
+This is missing space but it doesn't IMO add any value, so just drop it.
+
+> +#define WMI_TYPE_ID_NONE 0x00
+> +
+> +/* Method IDs */
+> +#define WMI_FEATURE_VALUE_GET 17 /* Other Mode Getter */
+> +#define WMI_FEATURE_VALUE_SET 18 /* Other Mode Setter */
+> +
+> +/* Attribute ID bitmasks */
+
+Neither of two comments for the defines seem to provide much value.
+
+> +#define ATTR_DEV_ID_MASK GENMASK(31, 24)
+> +#define ATTR_FEAT_ID_MASK GENMASK(23, 16)
+> +#define ATTR_MODE_ID_MASK GENMASK(15, 8)
+> +#define ATTR_TYPE_ID_MASK GENMASK(7, 0)
+
+Please align the GENMASK()s
+
+> +static BLOCKING_NOTIFIER_HEAD(om_chain_head);
+> +
+> +enum attribute_property {
+> +	DEFAULT_VAL,
+> +	MAX_VAL,
+> +	MIN_VAL,
+> +	STEP_VAL,
+> +	SUPPORTED,
 > +};
 > +
-> +enum dasharo_temperature {
-> +=09DASHARO_TEMPERATURE_CPU_PACKAGE =3D 0,
-> +=09DASHARO_TEMPERATURE_CPU_CORE,
-> +=09DASHARO_TEMPERATURE_GPU,
-> +=09DASHARO_TEMPERATURE_BOARD,
-> +=09DASHARO_TEMPERATURE_CHASSIS,
-> +=09DASHARO_TEMPERATURE_MAX,
+> +struct lwmi_om_priv {
+> +	struct blocking_notifier_head nhead;
+> +	struct component_master_ops *ops;
+> +	struct cd01_list cd01_list;
+> +	struct device *fw_attr_dev;
+> +	struct kset *fw_attr_kset;
+> +	struct notifier_block nb;
+> +	struct wmi_device *wdev;
+> +	struct ida ida;
+> +	int ida_id;
 > +};
 > +
-> +enum dasharo_fan {
-> +=09DASHARO_FAN_CPU =3D 0,
-> +=09DASHARO_FAN_GPU,
-> +=09DASHARO_FAN_CHASSIS,
-> +=09DASHARO_FAN_MAX,
+> +/* Tunable attribute that uses LENOVO_CAPABILITY_DATA_01 */
+> +struct tunable_attr_01 {
+> +	u32 type_id;
+> +	u32 device_id;
+> +	u32 feature_id;
+> +	u32 store_value;
+> +	struct device *dev;
+> +	struct capdata01 *capdata;
 > +};
 > +
-> +static char *dasharo_temp_group_name[DASHARO_TEMPERATURE_MAX] =3D {
-> +=09[DASHARO_TEMPERATURE_CPU_PACKAGE] =3D "CPU Package",
-> +=09[DASHARO_TEMPERATURE_CPU_CORE] =3D "CPU Core",
-> +=09[DASHARO_TEMPERATURE_GPU] =3D "GPU",
-> +=09[DASHARO_TEMPERATURE_BOARD] =3D "Board",
-> +=09[DASHARO_TEMPERATURE_CHASSIS] =3D "Chassis",
+> +/* Tunable Attributes */
+> +struct tunable_attr_01 ppt_pl1_spl = { .device_id = WMI_DEVICE_ID_CPU,
+> +				       .feature_id = WMI_FEATURE_ID_CPU_SPL,
+> +				       .type_id = WMI_TYPE_ID_NONE };
+> +struct tunable_attr_01 ppt_pl2_sppt = { .device_id = WMI_DEVICE_ID_CPU,
+> +					.feature_id = WMI_FEATURE_ID_CPU_SPPT,
+> +					.type_id = WMI_TYPE_ID_NONE };
+> +struct tunable_attr_01 ppt_pl3_fppt = { .device_id = WMI_DEVICE_ID_CPU,
+> +					.feature_id = WMI_FEATURE_ID_CPU_FPPT,
+> +					.type_id = WMI_TYPE_ID_NONE };
+> +
+> +struct capdata01_attr_group {
+> +	const struct attribute_group *attr_group;
+> +	struct tunable_attr_01 *tunable_attr;
 > +};
 > +
-> +static char *dasharo_fan_group_name[DASHARO_FAN_MAX] =3D {
-> +=09[DASHARO_FAN_CPU] =3D "CPU",
-> +=09[DASHARO_FAN_GPU] =3D "GPU",
-> +=09[DASHARO_FAN_CHASSIS] =3D "Chassis",
-> +};
+> +#define FW_ATTR_FOLDER "lenovo-wmi-other"
+
+Please add prefix and move to the top where the other defines are.
+
 > +
-> +#define MAX_CAP_NAME_LEN 16
-> +
-> +struct dasharo_capability {
-> +=09int cap;
-> +=09int index;
-> +=09char name[MAX_CAP_NAME_LEN];
-> +};
-> +
-> +#define MAX_CAPS_PER_FEAT 24
-> +
-> +struct dasharo_data {
-> +=09struct acpi_device *acpi_dev;
-> +=09int sensors_count;
-> +=09int fan_tachs_count;
-> +=09int fan_pwms_count;
-> +=09struct dasharo_capability sensors[MAX_CAPS_PER_FEAT];
-> +=09struct dasharo_capability fan_tachs[MAX_CAPS_PER_FEAT];
-> +=09struct dasharo_capability fan_pwms[MAX_CAPS_PER_FEAT];
-> +=09struct device *hwmon;
-> +};
-> +
-> +static int dasharo_get_feature_cap_count(struct dasharo_data *data, int =
-feat, int cap)
+> +/* Notifier Methods */
+> +int lwmi_om_register_notifier(struct notifier_block *nb)
 > +{
-> +=09union acpi_object obj[2];
-> +=09struct acpi_object_list obj_list;
-> +=09acpi_handle handle;
-> +=09acpi_status status;
-> +=09unsigned long long ret =3D 0;
-
-I think it's bad idea to make "ret" unsigned as people expect it to be=20
-int (or ssize_t) so please use some other name.
-
-Please also try to order the variables to reverse-xmas tree order=20
-(longest line first). If there are internal dependencies, you may violate=
-=20
-the ordering in that case.
-
-> +=09obj[0].type =3D ACPI_TYPE_INTEGER;
-> +=09obj[0].integer.value =3D feat;
-> +=09obj[1].type =3D ACPI_TYPE_INTEGER;
-> +=09obj[1].integer.value =3D cap;
-> +=09obj_list.count =3D 2;
-> +=09obj_list.pointer =3D &obj[0];
+> +	return blocking_notifier_chain_register(&om_chain_head, nb);
+> +}
+> +EXPORT_SYMBOL_NS_GPL(lwmi_om_register_notifier, "LENOVO_WMI_OTHER");
 > +
-> +=09handle =3D acpi_device_handle(data->acpi_dev);
-> +=09status =3D acpi_evaluate_integer(handle, "GFCP", &obj_list, &ret);
-> +=09if (ACPI_SUCCESS(status))
-> +=09=09return ret;
-> +=09return -ENODEV;
-
-Please reverse the logic so that error handling occurs first.
-
+> +int lwmi_om_unregister_notifier(struct notifier_block *nb)
+> +{
+> +	return blocking_notifier_chain_unregister(&om_chain_head, nb);
+> +}
+> +EXPORT_SYMBOL_NS_GPL(lwmi_om_unregister_notifier, "LENOVO_WMI_OTHER");
+> +
+> +static void devm_lwmi_om_unregister_notifier(void *data)
+> +{
+> +	struct notifier_block *nb = data;
+> +
+> +	lwmi_om_unregister_notifier(nb);
 > +}
 > +
-> +static int dasharo_read_value_by_cap_idx(struct dasharo_data *data, char=
- *method, int cap, int index, long *value)
+> +int devm_lwmi_om_register_notifier(struct device *dev,
+> +				   struct notifier_block *nb)
+
+I'd just put this on a single line.
+
 > +{
-> +=09union acpi_object obj[2];
-> +=09struct acpi_object_list obj_list;
-> +=09acpi_handle handle;
-> +=09acpi_status status;
-> +=09unsigned long long ret =3D 0;
+> +	int ret;
 > +
-> +=09obj[0].type =3D ACPI_TYPE_INTEGER;
-> +=09obj[0].integer.value =3D cap;
-> +=09obj[1].type =3D ACPI_TYPE_INTEGER;
-> +=09obj[1].integer.value =3D index;
-> +=09obj_list.count =3D 2;
-> +=09obj_list.pointer =3D &obj[0];
+> +	ret = lwmi_om_register_notifier(nb);
+> +	if (ret < 0)
+> +		return ret;
 > +
-> +=09handle =3D acpi_device_handle(data->acpi_dev);
-> +=09status =3D acpi_evaluate_integer(handle, method, &obj_list, &ret);
-> +=09if (ACPI_SUCCESS(status)) {
-> +=09=09*value =3D ret;
-> +=09=09return ret;
-> +=09}
-> +=09return -ENODEV;
-> +}
-> +
-> +static int dasharo_hwmon_read(struct device *dev, enum hwmon_sensor_type=
-s type,
-> +=09=09=09      u32 attr, int channel, long *val)
-> +{
-> +=09struct dasharo_data *data =3D dev_get_drvdata(dev);
-> +=09int ret =3D 0;
-> +=09long value;
-> +
-> +=09if (type =3D=3D hwmon_temp) {
-> +=09=09if (attr =3D=3D hwmon_temp_input) {
-> +=09=09=09ret =3D dasharo_read_value_by_cap_idx(data,
-> +=09=09=09=09=09=09=09    "GTMP",
-> +=09=09=09=09=09=09=09    data->sensors[channel].cap,
-> +=09=09=09=09=09=09=09    data->sensors[channel].index,
-> +=09=09=09=09=09=09=09    &value);
-> +
-> +=09=09=09if (ret > 0)
-> +=09=09=09=09*val =3D value * 1000;
-> +=09=09}
-> +=09} else if (type =3D=3D hwmon_fan) {
-> +=09=09if (attr =3D=3D hwmon_fan_input) {
-> +=09=09=09ret =3D dasharo_read_value_by_cap_idx(data,
-> +=09=09=09=09=09=09=09    "GFTH",
-> +=09=09=09=09=09=09=09    data->fan_tachs[channel].cap,
-> +=09=09=09=09=09=09=09    data->fan_tachs[channel].index,
-> +=09=09=09=09=09=09=09    &value);
-> +
-> +=09=09=09if (ret > 0)
-> +=09=09=09=09*val =3D value;
-> +=09=09}
-> +=09} else if (type =3D=3D hwmon_pwm) {
-> +=09=09if (attr =3D=3D hwmon_pwm_input) {
-> +=09=09=09ret =3D dasharo_read_value_by_cap_idx(data,
-> +=09=09=09=09=09=09=09    "GFDC",
-> +=09=09=09=09=09=09=09    data->fan_tachs[channel].cap,
-> +=09=09=09=09=09=09=09    data->fan_tachs[channel].index,
-> +=09=09=09=09=09=09=09    &value);
-> +
-> +=09=09=09if (ret > 0)
-> +=09=09=09=09*val =3D value;
-> +=09=09}
-> +=09}
+> +	return devm_add_action_or_reset(dev, devm_lwmi_om_unregister_notifier,
+> +					nb);
 
-Convert to switch/case.
-
-> +
-> +=09return ret;
-
-This is probably wrong, should you really return positive values from this=
-=20
-function??
+80 chars isn't a hard rule so this and a few other ones could be put 
+to a single line.
 
 > +}
+> +EXPORT_SYMBOL_NS_GPL(devm_lwmi_om_register_notifier, "LENOVO_WMI_OTHER");
 > +
-> +static int dasharo_hwmon_read_string(struct device *dev, enum hwmon_sens=
-or_types type,
-> +=09=09=09=09     u32 attr, int channel, const char **str)
+> +static int lwmi_om_notifier_call(enum thermal_mode *mode)
 > +{
-> +=09struct dasharo_data *data =3D dev_get_drvdata(dev);
+> +	int ret;
 > +
-> +=09if (channel < data->sensors_count && type =3D=3D hwmon_temp && attr =
-=3D=3D hwmon_temp_label) {
-> +=09=09*str =3D data->sensors[channel].name;
-> +=09=09return 0;
-> +=09} else if (channel < data->fan_tachs_count && type =3D=3D hwmon_fan &=
-& attr =3D=3D hwmon_fan_label) {
-> +=09=09*str =3D data->fan_tachs[channel].name;
-> +=09=09return 0;
-> +=09}
+> +	ret = blocking_notifier_call_chain(&om_chain_head, THERMAL_MODE_EVENT,
+> +					   mode);
 
-Please make a switch/case out of type.
+To one line?
 
 > +
-> +=09return -EOPNOTSUPP;
+
+Please don't leave empty line between the func call and it's error 
+handling.
+
+> +	if (ret != NOTIFY_OK)
+> +		return -EINVAL;
+> +
+> +	if (*mode < SMARTFAN_MODE_QUIET || *mode > SMARTFAN_MODE_CUSTOM)
+> +		return -EINVAL;
+> +
+> +	return 0;
 > +}
 > +
-> +static umode_t dasharo_hwmon_is_visible(const void *drvdata, enum hwmon_=
-sensor_types type,
-> +=09=09=09=09=09u32 attr, int channel)
+> +/* Attribute Methods */
+> +/*
+> + * int_type_show() - Emit the data type for an integer attribute
+> + * @kobj: Pointer to the driver object.
+> + * @kobj_attribute: Pointer to the attribute calling this function.
+> + * @buf: The buffer to write to.
+> + *
+> + * Returns: Number of characters written to buf.
+
+Return:
+
+> + */
+> +static ssize_t int_type_show(struct kobject *kobj, struct kobj_attribute *kattr,
+> +			     char *buf)
 > +{
-> +=09const struct dasharo_data *data =3D drvdata;
-> +
-> +=09if (channel < data->sensors_count && type =3D=3D hwmon_temp)
-> +=09=09return 0444;
-> +
-> +=09if (channel < data->fan_pwms_count && type =3D=3D hwmon_pwm)
-> +=09=09return 0444;
-> +
-> +=09if (channel < data->fan_tachs_count && type =3D=3D hwmon_fan)
-> +=09=09return 0444;
-
-Please make switch/case from type.
-
-> +
-> +=09return 0;
+> +	return sysfs_emit(buf, "integer\n");
 > +}
-> +static const struct hwmon_ops dasharo_hwmon_ops =3D {
-> +=09.is_visible =3D dasharo_hwmon_is_visible,
-> +=09.read_string =3D dasharo_hwmon_read_string,
-> +=09.read =3D dasharo_hwmon_read,
+> +
+> +/*
+> + * attr_capdata01_get - Get the data of the specified attribute
+> + * from lwmi_om->cd01.
+
+"from lwmi_om->cd01" sounds a bit cryptic.
+
+> + * @tunable_attr: The attribute to be populated.
+> + *
+> + * Returns: Either a pointer to capability data, or NULL.
+
+Return:
+
+> + */
+> +static struct capdata01 *
+> +attr_capdata01_get_data(struct lwmi_om_priv *priv,
+> +			struct tunable_attr_01 *tunable_attr,
+> +			enum thermal_mode mode)
+> +{
+> +	u32 attribute_id =
+> +		FIELD_PREP(ATTR_DEV_ID_MASK, tunable_attr->device_id) |
+> +		FIELD_PREP(ATTR_FEAT_ID_MASK, tunable_attr->feature_id) |
+> +		FIELD_PREP(ATTR_MODE_ID_MASK, mode) |
+> +		FIELD_PREP(ATTR_TYPE_ID_MASK, tunable_attr->type_id);
+> +	int idx;
+> +
+> +	for (idx = 0; idx < priv->cd01_list.count; idx++) {
+> +		if (!priv->cd01_list.data[idx])
+> +			continue;
+> +
+> +		if (priv->cd01_list.data[idx]->id != attribute_id)
+> +			continue;
+> +		return priv->cd01_list.data[idx];
+> +	}
+> +	return NULL;
+> +}
+> +
+> +/**
+> + * attr_capdata01_show() - Get the value of the specified attribute property
+> + * from LENOVO_CAPABILITY_DATA_01.
+> + * @kobj: Pointer to the driver object.
+> + * @kobj_attribute: Pointer to the attribute calling this function.
+> + * @buf: The buffer to write to.
+> + * @tunable_attr: The attribute to be read.
+> + * @prop: The property of this attribute to be read.
+> + *
+> + * This function is intended to be generic so it can be called from any "_show"
+> + * attribute which works only with integers.
+> + *
+> + * If the WMI is success, then the sysfs attribute is notified.
+> + *
+> + * Returns: Either number of characters written to buf, or an error.
+> + */
+> +static ssize_t attr_capdata01_show(struct kobject *kobj,
+> +				   struct kobj_attribute *kattr, char *buf,
+> +				   struct tunable_attr_01 *tunable_attr,
+> +				   enum attribute_property prop)
+> +{
+> +	struct lwmi_om_priv *priv = dev_get_drvdata(tunable_attr->dev);
+> +	struct capdata01 *capdata;
+> +	int value;
+> +
+> +	if (!priv)
+> +		return -ENODEV;
+> +
+> +	capdata = attr_capdata01_get_data(priv, tunable_attr,
+> +					  SMARTFAN_MODE_CUSTOM);
+> +
+> +	if (!capdata)
+> +		return -ENODEV;
+> +
+> +	switch (prop) {
+> +	case DEFAULT_VAL:
+> +		value = capdata->default_value;
+> +		break;
+> +	case MAX_VAL:
+> +		value = capdata->max_value;
+> +		break;
+> +	case MIN_VAL:
+> +		value = capdata->min_value;
+> +		break;
+> +	case STEP_VAL:
+> +		value = capdata->step;
+> +		break;
+> +	default:
+> +		return -EINVAL;
+> +	}
+> +	return sysfs_emit(buf, "%d\n", value);
+> +}
+> +
+> +/* Simple attribute creation */
+> +
+> +/*
+> + * att_current_value_store() - Set the current value of the given attribute
+> + * @kobj: Pointer to the driver object.
+> + * @kobj_attribute: Pointer to the attribute calling this function.
+> + * @buf: The buffer to read from, this is parsed to `int` type.
+> + * @count: Required by sysfs attribute macros, pass in from the callee attr.
+> + * @tunable_attr: The attribute to be stored.
+> + *
+> + * This function is intended to be generic so it can be called from any
+> + * attribute's "current_value_store" which works only with integers. The
+> + * integer to be sent to the WMI method is range checked and an error returned
+> + * if out of range.
+> + *
+> + * If the value is valid and WMI is success, then the sysfs attribute is
+> + * notified.
+> + *
+> + * Returns: Either count, or an error.
+> + */
+> +static ssize_t attr_current_value_store(struct kobject *kobj,
+> +					struct kobj_attribute *kattr,
+> +					const char *buf, size_t count,
+> +					struct tunable_attr_01 *tunable_attr)
+> +{
+> +	struct lwmi_om_priv *priv = dev_get_drvdata(tunable_attr->dev);
+> +	struct wmi_method_args_32 args;
+> +	struct capdata01 *capdata;
+> +	enum thermal_mode mode;
+> +	u32 attribute_id;
+> +	u32 value;
+> +	int err;
+> +
+> +	if (!priv)
+> +		return -ENODEV;
+> +
+> +	err = lwmi_om_notifier_call(&mode);
+> +	if (err)
+> +		return err;
+> +
+> +	if (mode != SMARTFAN_MODE_CUSTOM)
+> +		return -EINVAL;
+> +
+> +	capdata = attr_capdata01_get_data(priv, tunable_attr, mode);
+> +
+> +	if (!capdata)
+> +		return -ENODEV;
+> +
+> +	attribute_id = FIELD_PREP(ATTR_DEV_ID_MASK, tunable_attr->device_id) |
+> +		       FIELD_PREP(ATTR_FEAT_ID_MASK, tunable_attr->feature_id) |
+> +		       FIELD_PREP(ATTR_MODE_ID_MASK, mode) |
+> +		       FIELD_PREP(ATTR_TYPE_ID_MASK, tunable_attr->type_id);
+> +
+> +	err = kstrtouint(buf, 10, &value);
+> +	if (err)
+> +		return err;
+> +
+> +	if (value < capdata->min_value || value > capdata->max_value)
+> +		return -EINVAL;
+> +
+> +	args.arg0 = attribute_id;
+> +	args.arg1 = value;
+> +
+> +	err = lwmi_dev_evaluate_method(priv->wdev, 0x0, WMI_FEATURE_VALUE_SET,
+> +				       (unsigned char *)&args, sizeof(args),
+> +				       NULL);
+> +
+> +	if (err)
+> +		return err;
+> +
+> +	tunable_attr->store_value = value;
+> +	return count;
 > +};
 > +
-> +// Max 24 capabilities per feature
-> +static const struct hwmon_channel_info * const dasharo_hwmon_info[] =3D =
-{
-> +=09HWMON_CHANNEL_INFO(fan,
-> +=09=09HWMON_F_INPUT | HWMON_F_LABEL,
-> +=09=09HWMON_F_INPUT | HWMON_F_LABEL,
-> +=09=09HWMON_F_INPUT | HWMON_F_LABEL,
-> +=09=09HWMON_F_INPUT | HWMON_F_LABEL,
-> +=09=09HWMON_F_INPUT | HWMON_F_LABEL,
-> +=09=09HWMON_F_INPUT | HWMON_F_LABEL,
-> +=09=09HWMON_F_INPUT | HWMON_F_LABEL,
-> +=09=09HWMON_F_INPUT | HWMON_F_LABEL,
-> +=09=09HWMON_F_INPUT | HWMON_F_LABEL,
-> +=09=09HWMON_F_INPUT | HWMON_F_LABEL,
-> +=09=09HWMON_F_INPUT | HWMON_F_LABEL,
-> +=09=09HWMON_F_INPUT | HWMON_F_LABEL,
-> +=09=09HWMON_F_INPUT | HWMON_F_LABEL,
-> +=09=09HWMON_F_INPUT | HWMON_F_LABEL,
-> +=09=09HWMON_F_INPUT | HWMON_F_LABEL,
-> +=09=09HWMON_F_INPUT | HWMON_F_LABEL,
-> +=09=09HWMON_F_INPUT | HWMON_F_LABEL,
-> +=09=09HWMON_F_INPUT | HWMON_F_LABEL,
-> +=09=09HWMON_F_INPUT | HWMON_F_LABEL,
-> +=09=09HWMON_F_INPUT | HWMON_F_LABEL,
-> +=09=09HWMON_F_INPUT | HWMON_F_LABEL,
-> +=09=09HWMON_F_INPUT | HWMON_F_LABEL,
-> +=09=09HWMON_F_INPUT | HWMON_F_LABEL,
-> +=09=09HWMON_F_INPUT | HWMON_F_LABEL),
-> +=09HWMON_CHANNEL_INFO(temp,
-> +=09=09HWMON_T_INPUT | HWMON_T_LABEL,
-> +=09=09HWMON_T_INPUT | HWMON_T_LABEL,
-> +=09=09HWMON_T_INPUT | HWMON_T_LABEL,
-> +=09=09HWMON_T_INPUT | HWMON_T_LABEL,
-> +=09=09HWMON_T_INPUT | HWMON_T_LABEL,
-> +=09=09HWMON_T_INPUT | HWMON_T_LABEL,
-> +=09=09HWMON_T_INPUT | HWMON_T_LABEL,
-> +=09=09HWMON_T_INPUT | HWMON_T_LABEL,
-> +=09=09HWMON_T_INPUT | HWMON_T_LABEL,
-> +=09=09HWMON_T_INPUT | HWMON_T_LABEL,
-> +=09=09HWMON_T_INPUT | HWMON_T_LABEL,
-> +=09=09HWMON_T_INPUT | HWMON_T_LABEL,
-> +=09=09HWMON_T_INPUT | HWMON_T_LABEL,
-> +=09=09HWMON_T_INPUT | HWMON_T_LABEL,
-> +=09=09HWMON_T_INPUT | HWMON_T_LABEL,
-> +=09=09HWMON_T_INPUT | HWMON_T_LABEL,
-> +=09=09HWMON_T_INPUT | HWMON_T_LABEL,
-> +=09=09HWMON_T_INPUT | HWMON_T_LABEL,
-> +=09=09HWMON_T_INPUT | HWMON_T_LABEL,
-> +=09=09HWMON_T_INPUT | HWMON_T_LABEL,
-> +=09=09HWMON_T_INPUT | HWMON_T_LABEL,
-> +=09=09HWMON_T_INPUT | HWMON_T_LABEL,
-> +=09=09HWMON_T_INPUT | HWMON_T_LABEL,
-> +=09=09HWMON_T_INPUT | HWMON_T_LABEL),
-> +=09HWMON_CHANNEL_INFO(pwm,
-> +=09=09HWMON_PWM_INPUT,
-> +=09=09HWMON_PWM_INPUT,
-> +=09=09HWMON_PWM_INPUT,
-> +=09=09HWMON_PWM_INPUT,
-> +=09=09HWMON_PWM_INPUT,
-> +=09=09HWMON_PWM_INPUT,
-> +=09=09HWMON_PWM_INPUT,
-> +=09=09HWMON_PWM_INPUT,
-> +=09=09HWMON_PWM_INPUT,
-> +=09=09HWMON_PWM_INPUT,
-> +=09=09HWMON_PWM_INPUT,
-> +=09=09HWMON_PWM_INPUT,
-> +=09=09HWMON_PWM_INPUT,
-> +=09=09HWMON_PWM_INPUT,
-> +=09=09HWMON_PWM_INPUT,
-> +=09=09HWMON_PWM_INPUT,
-> +=09=09HWMON_PWM_INPUT,
-> +=09=09HWMON_PWM_INPUT,
-> +=09=09HWMON_PWM_INPUT,
-> +=09=09HWMON_PWM_INPUT,
-> +=09=09HWMON_PWM_INPUT,
-> +=09=09HWMON_PWM_INPUT,
-> +=09=09HWMON_PWM_INPUT,
-> +=09=09HWMON_PWM_INPUT),
-> +=09NULL
+> +/*
+> + * attr_current_value_show() - Get the current value of the given attribute
+> + * @kobj: Pointer to the driver object.
+> + * @kobj_attribute: Pointer to the attribute calling this function.
+> + * @buf: The buffer to write to.
+> + * @tunable_attr: The attribute to be read.
+> + *
+> + * This function is intended to be generic so it can be called from any "_show"
+> + * attribute which works only with integers.
+> + *
+> + * If the WMI is success, then the sysfs attribute is notified.
+> + *
+> + * Returns: Either number of characters written to buf, or an error.
+> + */
+> +static ssize_t attr_current_value_show(struct kobject *kobj,
+> +				       struct kobj_attribute *kattr, char *buf,
+> +				       struct tunable_attr_01 *tunable_attr)
+> +{
+> +	struct lwmi_om_priv *priv = dev_get_drvdata(tunable_attr->dev);
+> +	struct wmi_method_args_32 args;
+> +	enum thermal_mode mode;
+> +	u32 attribute_id;
+> +	int retval;
+> +	int err;
+> +
+> +	if (!priv)
+> +		return -ENODEV;
+> +
+> +	err = lwmi_om_notifier_call(&mode);
+> +	if (err)
+> +		return err;
+> +
+> +	attribute_id = FIELD_PREP(ATTR_DEV_ID_MASK, tunable_attr->device_id) |
+> +		       FIELD_PREP(ATTR_FEAT_ID_MASK, tunable_attr->feature_id) |
+> +		       FIELD_PREP(ATTR_MODE_ID_MASK, mode) |
+> +		       FIELD_PREP(ATTR_TYPE_ID_MASK, tunable_attr->type_id);
+> +
+> +	args.arg0 = attribute_id;
+> +
+> +	err = lwmi_dev_evaluate_method(priv->wdev, 0x0, WMI_FEATURE_VALUE_GET,
+> +				       (unsigned char *)&args, sizeof(args),
+> +				       &retval);
+> +
+> +	if (err)
+> +		return err;
+> +
+> +	return sysfs_emit(buf, "%d\n", retval);
+> +}
+> +
+> +/* Attribute macros */
+> +#define __LL_ATTR_RO(_func, _name)                                    \
+> +	{                                                             \
+> +		.attr = { .name = __stringify(_name), .mode = 0444 }, \
+> +		.show = _func##_##_name##_show,                       \
+> +	}
+> +
+> +#define __LL_ATTR_RO_AS(_name, _show)                                 \
+> +	{                                                             \
+> +		.attr = { .name = __stringify(_name), .mode = 0444 }, \
+> +		.show = _show,                                        \
+> +	}
+> +
+> +#define __LL_ATTR_RW(_func, _name) \
+> +	__ATTR(_name, 0644, _func##_##_name##_show, _func##_##_name##_store)
+> +
+> +/* Shows a formatted static variable */
+> +#define __ATTR_SHOW_FMT(_prop, _attrname, _fmt, _val)                          \
+> +	static ssize_t _attrname##_##_prop##_show(                             \
+> +		struct kobject *kobj, struct kobj_attribute *kattr, char *buf) \
+> +	{                                                                      \
+> +		return sysfs_emit(buf, _fmt, _val);                            \
+> +	}                                                                      \
+> +	static struct kobj_attribute attr_##_attrname##_##_prop =              \
+> +		__LL_ATTR_RO(_attrname, _prop)
+> +
+> +/* Attribute current value read/write */
+> +#define __LL_TUNABLE_CURRENT_VALUE_CAP01(_attrname)                            \
+> +	static ssize_t _attrname##_current_value_store(                        \
+> +		struct kobject *kobj, struct kobj_attribute *kattr,            \
+> +		const char *buf, size_t count)                                 \
+> +	{                                                                      \
+> +		return attr_current_value_store(kobj, kattr, buf, count,       \
+> +						&_attrname);                   \
+> +	}                                                                      \
+> +	static ssize_t _attrname##_current_value_show(                         \
+> +		struct kobject *kobj, struct kobj_attribute *kattr, char *buf) \
+> +	{                                                                      \
+> +		return attr_current_value_show(kobj, kattr, buf, &_attrname);  \
+> +	}                                                                      \
+> +	static struct kobj_attribute attr_##_attrname##_current_value =        \
+> +		__LL_ATTR_RW(_attrname, current_value)
+> +
+> +/* Attribute property read only */
+> +#define __LL_TUNABLE_RO_CAP01(_prop, _attrname, _prop_type)                    \
+> +	static ssize_t _attrname##_##_prop##_show(                             \
+> +		struct kobject *kobj, struct kobj_attribute *kattr, char *buf) \
+> +	{                                                                      \
+> +		return attr_capdata01_show(kobj, kattr, buf, &_attrname,       \
+> +					   _prop_type);                        \
+> +	}                                                                      \
+> +	static struct kobj_attribute attr_##_attrname##_##_prop =              \
+> +		__LL_ATTR_RO(_attrname, _prop)
+> +
+> +#define ATTR_GROUP_LL_TUNABLE_CAP01(_attrname, _fsname, _dispname)     \
+> +	__LL_TUNABLE_CURRENT_VALUE_CAP01(_attrname);                   \
+> +	__LL_TUNABLE_RO_CAP01(default_value, _attrname, DEFAULT_VAL);  \
+> +	__ATTR_SHOW_FMT(display_name, _attrname, "%s\n", _dispname);   \
+> +	__LL_TUNABLE_RO_CAP01(max_value, _attrname, MAX_VAL);          \
+> +	__LL_TUNABLE_RO_CAP01(min_value, _attrname, MIN_VAL);          \
+> +	__LL_TUNABLE_RO_CAP01(scalar_increment, _attrname, STEP_VAL);  \
+> +	static struct kobj_attribute attr_##_attrname##_type =         \
+> +		__LL_ATTR_RO_AS(type, int_type_show);                  \
+> +	static struct attribute *_attrname##_attrs[] = {               \
+> +		&attr_##_attrname##_current_value.attr,                \
+> +		&attr_##_attrname##_default_value.attr,                \
+> +		&attr_##_attrname##_display_name.attr,                 \
+> +		&attr_##_attrname##_max_value.attr,                    \
+> +		&attr_##_attrname##_min_value.attr,                    \
+> +		&attr_##_attrname##_scalar_increment.attr,             \
+> +		&attr_##_attrname##_type.attr,                         \
+> +		NULL,                                                  \
+> +	};                                                             \
+> +	static const struct attribute_group _attrname##_attr_group = { \
+> +		.name = _fsname, .attrs = _attrname##_attrs            \
+> +	}
+> +
+> +ATTR_GROUP_LL_TUNABLE_CAP01(ppt_pl1_spl, "ppt_pl1_spl",
+> +			    "Set the CPU sustained power limit");
+> +ATTR_GROUP_LL_TUNABLE_CAP01(ppt_pl2_sppt, "ppt_pl2_sppt",
+> +			    "Set the CPU slow package power tracking limit");
+> +ATTR_GROUP_LL_TUNABLE_CAP01(ppt_pl3_fppt, "ppt_pl3_fppt",
+> +			    "Set the CPU fast package power tracking limit");
+> +
+> +static struct capdata01_attr_group capdata01_attr_groups[] = {
+> +	{ &ppt_pl1_spl_attr_group, &ppt_pl1_spl },
+> +	{ &ppt_pl2_sppt_attr_group, &ppt_pl2_sppt },
+> +	{ &ppt_pl3_fppt_attr_group, &ppt_pl3_fppt },
+> +	{},
 > +};
 > +
-> +static const struct hwmon_chip_info dasharo_hwmon_chip_info =3D {
-> +=09.ops =3D &dasharo_hwmon_ops,
-> +=09.info =3D dasharo_hwmon_info,
+> +/*
+> + * lwmi_om_fw_attr_add() - Registers all capdata01_attr_groups[] attributes as
+> + * firmware_attributes_class members.
+
+Why this cannot simply be:
+
+Register all firmware_attributes_class members
+
+?
+
+> + * @priv: The Other Mode driver data.
+
+IMO, if you want to go to specific details such as mentioning the variable 
+name you can add the description here and write the longer explanation 
+(but in this case I'm not sure if it's worth the effort really).
+
+> + * Returns: Either 0, or an error.
+
+Return:
+
+> + */
+> +static int lwmi_om_fw_attr_add(struct lwmi_om_priv *priv)
+> +{
+> +	int err, i;
+> +
+> +	ida_init(&priv->ida);
+> +	priv->ida_id = ida_alloc(&priv->ida, GFP_KERNEL);
+> +	if (priv->ida_id < 0)
+> +		return priv->ida_id;
+> +
+> +	priv->fw_attr_dev = device_create(&firmware_attributes_class, NULL,
+> +					  MKDEV(0, 0), NULL, "%s",
+> +					  FW_ATTR_FOLDER);
+> +	if (IS_ERR(priv->fw_attr_dev)) {
+> +		err = PTR_ERR(priv->fw_attr_dev);
+> +		return err;
+
+Leaks the allocated ida?
+
+> +	}
+> +
+> +	priv->fw_attr_kset = kset_create_and_add("attributes", NULL,
+> +						 &priv->fw_attr_dev->kobj);
+> +	if (!priv->fw_attr_kset) {
+> +		err = -ENOMEM;
+> +		goto err_destroy_classdev;
+> +	}
+> +
+> +	for (i = 0; i < ARRAY_SIZE(capdata01_attr_groups) - 1; i++) {
+
+Change i to unsigned when used in loops like this.
+
+> +		err = sysfs_create_group(&priv->fw_attr_kset->kobj,
+> +					 capdata01_attr_groups[i].attr_group);
+> +		if (err) {
+> +			pr_debug("Failed to create sysfs-group for %s: %d\n",
+> +				 capdata01_attr_groups[i].attr_group->name,
+> +				 err);
+> +			goto err_remove_groups;
+> +		}
+> +		capdata01_attr_groups[i].tunable_attr->dev = &priv->wdev->dev;
+> +	}
+> +	return 0;
+> +
+> +err_remove_groups:
+> +	ida_free(&priv->ida, priv->ida_id);
+> +	while (i-- >= 0) {
+
+>= 0 is not necessary.
+
+> +		sysfs_remove_group(&priv->fw_attr_kset->kobj,
+> +				   capdata01_attr_groups[i].attr_group);
+> +	}
+> +	kset_unregister(priv->fw_attr_kset);
+> +
+> +err_destroy_classdev:
+> +	device_unregister(priv->fw_attr_dev);
+> +	return err;
+> +}
+> +
+> +/*
+> + * lwmi_om_fw_attr_remove() - Unregisters all capdata01_attr_groups[] attributes as
+> + * firmware_attributes_class members.
+> + * @priv: The Other Mode driver data.
+> + *
+> + */
+> +static void lwmi_om_fw_attr_remove(struct lwmi_om_priv *priv)
+> +{
+> +	int size = ARRAY_SIZE(capdata01_attr_groups);
+
+unsigned int i = ARRAY_SIZE(capdata01_attr_groups) - 1;
+
+> +
+> +	while (--size >= 0) {
+
+while (i--) {
+
+> +		sysfs_remove_group(&priv->fw_attr_kset->kobj,
+> +				   capdata01_attr_groups[size].attr_group);
+> +	}
+> +	kset_unregister(priv->fw_attr_kset);
+> +	device_unregister(priv->fw_attr_dev);
+> +}
+> +
+> +static int lwmi_om_master_bind(struct device *dev)
+> +{
+> +	struct lwmi_om_priv *priv = dev_get_drvdata(dev);
+> +	int ret;
+> +
+> +	ret = component_bind_all(dev, &priv->cd01_list);
+> +	if (ret)
+> +		return ret;
+> +
+> +	return lwmi_om_fw_attr_add(priv);
+> +}
+> +
+> +static void lwmi_om_master_unbind(struct device *dev)
+> +{
+> +	component_unbind_all(dev, NULL);
+> +}
+> +
+> +static const struct component_master_ops lwmi_om_master_ops = {
+> +	.bind = lwmi_om_master_bind,
+> +	.unbind = lwmi_om_master_unbind,
 > +};
 > +
-> +static void dasharo_fill_sensors(struct dasharo_data *data)
+> +static int lwmi_other_probe(struct wmi_device *wdev, const void *context)
 > +{
-> +=09int group =3D 0;
-> +=09int count =3D 0;
+> +	struct component_match *master_match = NULL;
+> +	struct lwmi_om_priv *priv;
 > +
-> +=09while (group < DASHARO_TEMPERATURE_MAX) {
-
-Convert to for loop.
-
-> +=09=09count =3D dasharo_get_feature_cap_count(data, DASHARO_FEATURE_TEMP=
-ERATURE, group);
+> +	priv = devm_kzalloc(&wdev->dev, sizeof(*priv), GFP_KERNEL);
+> +	if (!priv)
+> +		return -ENOMEM;
 > +
-> +=09=09for (int i =3D 0; i < count && data->sensors_count < MAX_CAPS_PER_=
-FEAT; ++i) {
-
-Use unsigned type for i.
-
-> +=09=09=09data->sensors[data->sensors_count].cap =3D group;
-> +=09=09=09data->sensors[data->sensors_count].index =3D i;
-
-Please add a local variable for data->sensors[data->sensors_count].
-
-> +=09=09=09snprintf(data->sensors[data->sensors_count].name, MAX_CAP_NAME_=
-LEN, "%s %d", dasharo_temp_group_name[group], i);
-
-Even if you don't use the return value, please use scnprintf().
-
-> +=09=09=09data->sensors_count++;
-> +=09=09}
+> +	priv->wdev = wdev;
+> +	dev_set_drvdata(&wdev->dev, priv);
 > +
-> +=09=09group++;
-> +=09}
+> +	component_match_add(&wdev->dev, &master_match, lwmi_cd01_match, NULL);
+> +	if (IS_ERR(master_match))
+> +		return PTR_ERR(master_match);
+> +
+> +	return component_master_add_with_match(&wdev->dev, &lwmi_om_master_ops,
+> +					       master_match);
 > +}
 > +
-> +static void dasharo_fill_fan_tachs(struct dasharo_data *data)
+> +static void lwmi_other_remove(struct wmi_device *wdev)
 > +{
-> +=09int group =3D 0;
-> +=09int count =3D 0;
+> +	struct lwmi_om_priv *priv = dev_get_drvdata(&wdev->dev);
 > +
-> +=09while (group < DASHARO_FAN_MAX) {
-> +=09=09count =3D dasharo_get_feature_cap_count(data, DASHARO_FEATURE_FAN_=
-TACH, group);
-> +
-> +=09=09for (int i =3D 0; i < count && data->fan_tachs_count < MAX_CAPS_PE=
-R_FEAT; ++i) {
-> +=09=09=09data->fan_tachs[data->fan_tachs_count].cap =3D group;
-> +=09=09=09data->fan_tachs[data->fan_tachs_count].index =3D i;
-> +=09=09=09snprintf(data->fan_tachs[data->fan_tachs_count].name, MAX_CAP_N=
-AME_LEN, "%s %d", dasharo_fan_group_name[group], i);
-> +=09=09=09data->fan_tachs_count++;
-> +=09=09}
-> +
-> +=09=09group++;
-> +=09}
-
-Ditto.
-
+> +	component_master_del(&wdev->dev, &lwmi_om_master_ops);
+> +	lwmi_om_fw_attr_remove(priv);
+> +	ida_free(&priv->ida, priv->ida_id);
 > +}
 > +
-> +static void dasharo_fill_fan_pwms(struct dasharo_data *data)
-> +{
-> +=09int group =3D 0;
-> +=09int count =3D 0;
-> +
-> +=09while (group < DASHARO_FAN_MAX) {
-> +=09=09count =3D dasharo_get_feature_cap_count(data, DASHARO_FEATURE_FAN_=
-PWM, group);
-> +
-> +=09=09for (int i =3D 0; i < count && data->fan_pwms_count < MAX_CAPS_PER=
-_FEAT; ++i) {
-> +=09=09=09data->fan_pwms[data->fan_pwms_count].cap =3D group;
-> +=09=09=09data->fan_pwms[data->fan_pwms_count].index =3D i;
-> +=09=09=09snprintf(data->fan_pwms[data->fan_pwms_count].name, MAX_CAP_NAM=
-E_LEN, "%s %d", dasharo_fan_group_name[group], i);
-> +=09=09=09data->fan_pwms_count++;
-> +=09=09}
-> +
-> +=09=09group++;
-> +=09}
-
-Hmm, is all the code duplication really necessary or could a helper be=20
-created with parameters to cover the variations?
-
-> +}
-> +
-> +static int dasharo_add(struct acpi_device *acpi_dev)
-> +{
-> +=09struct dasharo_data *data;
-> +
-> +=09data =3D devm_kzalloc(&acpi_dev->dev, sizeof(*data), GFP_KERNEL);
-> +=09if (!data)
-> +=09=09return -ENOMEM;
-> +=09acpi_dev->driver_data =3D data;
-> +=09data->acpi_dev =3D acpi_dev;
-> +
-> +=09pr_info("Dasharo driver loading\n");
-
-Please keep the "ok" path silent.
-
-> +
-> +=09dasharo_fill_sensors(data);
-> +=09dasharo_fill_fan_tachs(data);
-> +=09dasharo_fill_fan_pwms(data);
-> +
-> +=09data->hwmon =3D devm_hwmon_device_register_with_info(&acpi_dev->dev,
-> +=09=09"dasharo_acpi", data, &dasharo_hwmon_chip_info, NULL);
-> +
-> +=09return 0;
-> +}
-> +
-> +static void dasharo_remove(struct acpi_device *acpi_dev)
-> +{
-> +=09struct dasharo_data *data =3D acpi_driver_data(acpi_dev);
-> +
-> +=09hwmon_device_unregister(data->hwmon);
-> +}
-> +
-> +static const struct acpi_device_id device_ids[] =3D {
-> +=09{"DSHR0001", 0},
-> +=09{"", 0},
-
-{ } is enough for the terminator entry, also note the lack of ,.
-
+> +static const struct wmi_device_id lwmi_other_id_table[] = {
+> +	{ LENOVO_OTHER_METHOD_GUID, NULL },
+> +	{}
 > +};
-> +MODULE_DEVICE_TABLE(acpi, device_ids);
 > +
-> +static struct acpi_driver dasharo_driver =3D {
-> +=09.name =3D "Dasharo ACPI Driver",
-> +=09.class =3D "Dasharo",
-> +=09.ids =3D device_ids,
-> +=09.ops =3D {
-> +=09=09.add =3D dasharo_add,
-> +=09=09.remove =3D dasharo_remove,
-> +=09},
+> +static struct wmi_driver lwmi_other_driver = {
+> +	.driver = {
+> +		.name = "lenovo_wmi_other",
+> +		.probe_type = PROBE_PREFER_ASYNCHRONOUS,
+> +	},
+> +	.id_table = lwmi_other_id_table,
+> +	.probe = lwmi_other_probe,
+> +	.remove = lwmi_other_remove,
+> +	.no_singleton = true,
 > +};
-> +module_acpi_driver(dasharo_driver);
 > +
-> +MODULE_DESCRIPTION("Dasharo ACPI Driver");
-> +MODULE_AUTHOR("Micha=B3 Kope=E6 <michal.kopec@3mdeb.com>");
+> +module_wmi_driver(lwmi_other_driver);
+> +
+> +MODULE_IMPORT_NS("LENOVO_WMI_CD01");
+> +MODULE_IMPORT_NS("LENOVO_WMI_HELPERS");
+> +MODULE_DEVICE_TABLE(wmi, lwmi_other_id_table);
+> +MODULE_AUTHOR("Derek J. Clark <derekjohn.clark@gmail.com>");
+> +MODULE_DESCRIPTION("Lenovo Other Mode WMI Driver");
 > +MODULE_LICENSE("GPL");
->=20
+> diff --git a/drivers/platform/x86/lenovo-wmi-other.h b/drivers/platform/x86/lenovo-wmi-other.h
+> new file mode 100644
+> index 000000000000..9fba35ef1137
+> --- /dev/null
+> +++ b/drivers/platform/x86/lenovo-wmi-other.h
+> @@ -0,0 +1,19 @@
+> +/* SPDX-License-Identifier: GPL-2.0-or-later
+> + *
+> + * Copyright(C) 2025 Derek J. Clark <derekjohn.clark@gmail.com>
+> + *
+> + */
+> +
+> +#ifndef _LENOVO_WMI_OTHER_H_
+> +#define _LENOVO_WMI_OTHER_H_
+> +
+> +#include <linux/device.h>
+> +#include <linux/notifier.h>
+> +#include <linux/types.h>
 
---=20
+Replace with struct forward declarations.
+
+> +
+> +int lwmi_om_register_notifier(struct notifier_block *nb);
+> +int lwmi_om_unregister_notifier(struct notifier_block *nb);
+> +int devm_lwmi_om_register_notifier(struct device *dev,
+> +				   struct notifier_block *nb);
+> +
+> +#endif /* !_LENOVO_WMI_H_ */
+> 
+
+-- 
  i.
---8323328-1772403479-1743081274=:927--
+
