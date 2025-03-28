@@ -1,503 +1,351 @@
-Received: from 3.mo560.mail-out.ovh.net (3.mo560.mail-out.ovh.net [46.105.58.226])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 864D73C0C
-	for <platform-driver-x86@vger.kernel.org>; Fri, 28 Mar 2025 15:19:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.105.58.226
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E88DB46426;
+	Fri, 28 Mar 2025 16:15:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743175175; cv=none; b=aqbM4mGwvfxBlX70FIG1QIZkQkJQNiaFfnSR3/aXsQc9mYHTngElqhIgtPHg3GWFOv2xmNexJyfNHHiE7jQfCxHetLqUnGifgP6e0KdrdEUbyBgGilxlqB4gC7lf8fvcLT9/sC0NS/r7WIe3XAT/BB1C/mpmY0bKmObe8Zv/Dz8=
+	t=1743178552; cv=none; b=YXY6GvAUn4FbSegDbicBeFhhWF9IYYGKkhasdOu9DY1TBPGmGCjadD3WicTQZ45s6nubpoxsvvQx5IOgRJDylKIM8xuK2eadOPoL04bL5WruEhC/lHeaxs+AjSCI0adTYMRXFT5In1vv7qGkbhEbZ86VbhutkmGGOzUB2yllnDE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743175175; c=relaxed/simple;
-	bh=6WNBYpioIX45O8cijG6qLbcm/eeZtfte6/dHFaUIAn4=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=urqoNn6CXmLMwI+kzu+u/HTQ3o1jZBGwLTJWawDjywaQZtXcNG8ynBJdkwBxpUoXfd2HoMQGa3rFqZrrt0VR4O5vBYfdfBpiyNQWBSgpFyKIzB+qkuqqHityDJWNY2Sr3H+h6aeTk1lA3E8CdowPx/EX1gOnXSMOsXTpr3rXHIA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=3mdeb.com; spf=pass smtp.mailfrom=3mdeb.com; dkim=pass (2048-bit key) header.d=3mdeb.com header.i=@3mdeb.com header.b=b0+trDOw; arc=none smtp.client-ip=46.105.58.226
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=3mdeb.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=3mdeb.com
+	s=arc-20240116; t=1743178552; c=relaxed/simple;
+	bh=uKxa3Yq2HcQS7C0/hj9FSfADyVJrr2UQ2qpySno2zt8=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=JVip/Xw+xCLtKAhmbSicNaQnJpfu4roGcEEbvTt5cFyKldZupyWb2r/ep8k3YdGMlykmnZ1GDAB8iNQ0Ud8PuSrDWAqfZYRLPhlNtFiJy91b8Bn+wj9OAIfL1bSNvih/S0udeisUsh73E9XWjDnFBWuhO2O9aQQgWwJF35mxQuA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=a4RyW7bV; arc=none smtp.client-ip=192.198.163.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=3mdeb.com header.i=@3mdeb.com header.b="b0+trDOw"
-Received: from director10.ghost.mail-out.ovh.net (unknown [10.108.9.29])
-	by mo560.mail-out.ovh.net (Postfix) with ESMTP id 4ZPMh46cqRz1dWN
-	for <platform-driver-x86@vger.kernel.org>; Fri, 28 Mar 2025 14:03:48 +0000 (UTC)
-Received: from ghost-submission-5b5ff79f4f-9qz8d (unknown [10.110.168.82])
-	by director10.ghost.mail-out.ovh.net (Postfix) with ESMTPS id 23E561FEDE;
-	Fri, 28 Mar 2025 14:03:48 +0000 (UTC)
-Received: from 3mdeb.com ([37.59.142.105])
-	by ghost-submission-5b5ff79f4f-9qz8d with ESMTPSA
-	id 7mNJBEOs5mcCDQEAdUo8nA:T2
-	(envelope-from <michal.kopec@3mdeb.com>); Fri, 28 Mar 2025 14:03:48 +0000
-Authentication-Results:garm.ovh; auth=pass (GARM-105G006f1ddc791-1976-4e1a-b622-eb8d90c25da3,
-                    A89BE30734CE273C0743E56753A14E38265E1AE9) smtp.auth=michal.kopec@3mdeb.com
-X-OVh-ClientIp:213.192.77.249
-From: =?UTF-8?q?Micha=C5=82=20Kope=C4=87?= <michal.kopec@3mdeb.com>
-To: hdegoede@redhat.com,
-	ilpo.jarvinen@linux.intel.com,
-	tomasz.pakula.oficjalny@gmail.com
-Cc: platform-driver-x86@vger.kernel.org,
-	piotr.krol@3mdeb.com,
-	maciej.pijanowski@3mdeb.com,
-	michal.kopec@3mdeb.com
-Subject: [PATCH v3 1/1] platform/x86: Introduce dasharo-acpi platform driver
-Date: Fri, 28 Mar 2025 15:03:44 +0100
-Message-ID: <20250328140344.1304995-2-michal.kopec@3mdeb.com>
-X-Mailer: git-send-email 2.49.0
-In-Reply-To: <20250328140344.1304995-1-michal.kopec@3mdeb.com>
-References: <20250328140344.1304995-1-michal.kopec@3mdeb.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="a4RyW7bV"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1743178551; x=1774714551;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=uKxa3Yq2HcQS7C0/hj9FSfADyVJrr2UQ2qpySno2zt8=;
+  b=a4RyW7bVCAE8lo/+f3JFRck0D2BXsVmy+p0P7hqhNwkpZ0/Y1iaDZJ1i
+   Yo4yViqM5G/n22fF/C2++nub75cmrIJWs9l9EfPK21/JNoiV/K/qS5JQR
+   i9SClOVvgciT0CLZx/d0MTVhGMvTtbXOB4D1c9YzMamPImThImt5am/Vv
+   JZnJbAvp36mauY7lDsIlQVANnSW1zRfNruE2WADReTsTjDEJBs/KaKmwz
+   5sPrOk3gPC6WBazXFVoklyvrFoNscXf5GxTdvvYVahgV8ayn+yXiM93Hw
+   Ixsb9Y1V0bVGmKJF0QB1ZTGhoZFNW14CNipToCw72KqQAfJQZaTjz4gvK
+   Q==;
+X-CSE-ConnectionGUID: RE41Gir1Rv+JMNgwoSESsw==
+X-CSE-MsgGUID: NeWQQq6fSfycwFDlVxaKkw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11387"; a="55922142"
+X-IronPort-AV: E=Sophos;i="6.14,283,1736841600"; 
+   d="scan'208";a="55922142"
+Received: from fmviesa009.fm.intel.com ([10.60.135.149])
+  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Mar 2025 09:15:50 -0700
+X-CSE-ConnectionGUID: MXTHKgVASh2cu/DsXOGhtQ==
+X-CSE-MsgGUID: MR5cI2iXT2KH3p6sB6YU+Q==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.14,283,1736841600"; 
+   d="scan'208";a="126302624"
+Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.43])
+  by fmviesa009-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Mar 2025 09:15:46 -0700
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Fri, 28 Mar 2025 18:15:43 +0200 (EET)
+To: Kurt Borja <kuurtb@gmail.com>
+cc: Armin Wolf <W_Armin@gmx.de>, Hans de Goede <hdegoede@redhat.com>, 
+    platform-driver-x86@vger.kernel.org, Dell.Client.Kernel@dell.com, 
+    LKML <linux-kernel@vger.kernel.org>, Guenter Roeck <linux@roeck-us.net>, 
+    Jean Delvare <jdelvare@suse.com>, linux-hwmon@vger.kernel.org
+Subject: Re: [PATCH v6 08/12] platform/x86: alienware-wmi-wmax: Add support
+ for manual fan control
+In-Reply-To: <20250313-hwm-v6-8-17b57f787d77@gmail.com>
+Message-ID: <d1e2acaa-7f9b-acda-5fd2-6ea0bd56170e@linux.intel.com>
+References: <20250313-hwm-v6-0-17b57f787d77@gmail.com> <20250313-hwm-v6-8-17b57f787d77@gmail.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-X-Ovh-Tracer-Id: 12413046476812913933
-X-VR-SPAMSTATE: OK
-X-VR-SPAMSCORE: 0
-X-VR-SPAMCAUSE: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddujedugeelucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuqfggjfdpvefjgfevmfevgfenuceurghilhhouhhtmecuhedttdenucenucfjughrpefhvfevufffkffojghfgggtgfesthekredtredtjeenucfhrhhomhepofhitghhrghlucfmohhpvggtuceomhhitghhrghlrdhkohhpvggtseefmhguvggsrdgtohhmqeenucggtffrrghtthgvrhhnpefhgeehveejkeevkeetheeuveeiuedvieekgffgheelfefhkeduheeiudekhfefhfenucfkphepuddvjedrtddrtddruddpvddufedrudelvddrjeejrddvgeelpdefjedrheelrddugedvrddutdehnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepuddvjedrtddrtddruddpmhgrihhlfhhrohhmpehmihgthhgrlhdrkhhophgvtgesfehmuggvsgdrtghomhdpnhgspghrtghpthhtohepuddprhgtphhtthhopehplhgrthhfohhrmhdqughrihhvvghrqdigkeeisehvghgvrhdrkhgvrhhnvghlrdhorhhgpdfovfetjfhoshhtpehmohehiedtmgdpmhhouggvpehsmhhtphhouhht
-DKIM-Signature: a=rsa-sha256; bh=v0IW836w176WEC4ppK/OELufSXYnD3wvSwWhL7oHcXs=;
- c=relaxed/relaxed; d=3mdeb.com; h=From; s=ovhmo3617313-selector1;
- t=1743170629; v=1;
- b=b0+trDOwt1fAQ4deW2l4+r4PEDJs35MM1lAhR1tWFT8QtpIoy0G73nU79pxs/o5aFjHeyRpF
- okWbf1IAV058WOuelj6cPtunRXAqVVWYVKZj7LJR8uj+ZGm6d0SeCFSQTOSvY89Tw5UtaD6VeMH
- V5SpNRG4m7suPHCLXXrQy5z6cJWZvRojIwddebEVr5MzS0U88ENbsgv9CTQjFA5H6WjB49imT2w
- o8iBPN3iyuDmTUEg58e+bQ4nlw8WFOt+icGRaTiQk45L8zXICKOC1MdHn9vxdWt42Dbz440pyRw
- 4BXclNSwlF8SRJRH0itlrLwsxQfWzF+Z/5R+FndumpBjQ==
+Content-Type: text/plain; charset=US-ASCII
 
-Introduce a driver for devices running Dasharo firmware. The driver
-supports thermal monitoring using a new ACPI interface in Dasharo. The
-initial version supports monitoring fan speeds, fan PWM duty cycles and
-system temperatures as well as determining which specific interfaces are
-implemented by firmware.
+On Thu, 13 Mar 2025, Kurt Borja wrote:
 
-It has been tested on a NovaCustom laptop running pre-release Dasharo
-firmware, which implements fan and thermal monitoring for the CPU and
-the discrete GPU, if present.
+> All models with the "AWCC" WMAX device support a way of manually
+> controlling fans.
+> 
+> The PWM duty cycle of a fan can't be controlled directly. Instead the
+> AWCC interface let's us tune a fan `boost` value, which has the
+> following empirically discovered, aproximate behavior over the PWM
 
-Signed-off-by: Michał Kopeć <michal.kopec@3mdeb.com>
----
- drivers/platform/x86/Kconfig        |  10 +
- drivers/platform/x86/Makefile       |   3 +
- drivers/platform/x86/dasharo-acpi.c | 375 ++++++++++++++++++++++++++++
- 3 files changed, 388 insertions(+)
- create mode 100644 drivers/platform/x86/dasharo-acpi.c
+approximate
 
-diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
-index 0258dd879d64..8168c5274a08 100644
---- a/drivers/platform/x86/Kconfig
-+++ b/drivers/platform/x86/Kconfig
-@@ -1060,6 +1060,16 @@ config LENOVO_WMI_CAMERA
- 	  To compile this driver as a module, choose M here: the module
- 	  will be called lenovo-wmi-camera.
- 
-+config DASHARO_ACPI
-+	tristate "Dasharo ACPI Platform Driver"
-+	depends on ACPI
-+	depends on HWMON
-+	help
-+	  This driver provides HWMON support for devices running Dasharo
-+	  firmware.
-+
-+	  If you have a device with Dasharo firmware, choose Y or M here.
-+
- source "drivers/platform/x86/x86-android-tablets/Kconfig"
- 
- config FW_ATTR_CLASS
-diff --git a/drivers/platform/x86/Makefile b/drivers/platform/x86/Makefile
-index e1b142947067..3ca53ae01d93 100644
---- a/drivers/platform/x86/Makefile
-+++ b/drivers/platform/x86/Makefile
-@@ -110,6 +110,9 @@ obj-$(CONFIG_ACPI_TOSHIBA)	+= toshiba_acpi.o
- # Inspur
- obj-$(CONFIG_INSPUR_PLATFORM_PROFILE)	+= inspur_platform_profile.o
- 
-+# Dasharo
-+obj-$(CONFIG_DASHARO_ACPI)	+= dasharo-acpi.o
-+
- # Laptop drivers
- obj-$(CONFIG_ACPI_CMPC)		+= classmate-laptop.o
- obj-$(CONFIG_COMPAL_LAPTOP)	+= compal-laptop.o
-diff --git a/drivers/platform/x86/dasharo-acpi.c b/drivers/platform/x86/dasharo-acpi.c
-new file mode 100644
-index 000000000000..a18e2ea52117
---- /dev/null
-+++ b/drivers/platform/x86/dasharo-acpi.c
-@@ -0,0 +1,375 @@
-+// SPDX-License-Identifier: GPL-2.0+
-+/*
-+ * Dasharo ACPI Driver
-+ */
-+
-+#include <linux/acpi.h>
-+#include <linux/hwmon.h>
-+#include <linux/hwmon-sysfs.h>
-+#include <linux/init.h>
-+#include <linux/kernel.h>
-+#include <linux/module.h>
-+#include <linux/sysfs.h>
-+#include <linux/types.h>
-+
-+enum dasharo_feature {
-+	DASHARO_FEATURE_TEMPERATURE = 0,
-+	DASHARO_FEATURE_FAN_PWM,
-+	DASHARO_FEATURE_FAN_TACH,
-+	DASHARO_FEATURE_MAX,
-+};
-+
-+enum dasharo_temperature {
-+	DASHARO_TEMPERATURE_CPU_PACKAGE = 0,
-+	DASHARO_TEMPERATURE_CPU_CORE,
-+	DASHARO_TEMPERATURE_GPU,
-+	DASHARO_TEMPERATURE_BOARD,
-+	DASHARO_TEMPERATURE_CHASSIS,
-+	DASHARO_TEMPERATURE_MAX,
-+};
-+
-+enum dasharo_fan {
-+	DASHARO_FAN_CPU = 0,
-+	DASHARO_FAN_GPU,
-+	DASHARO_FAN_CHASSIS,
-+	DASHARO_FAN_MAX,
-+};
-+
-+#define MAX_GROUPS_PER_FEAT 8
-+
-+static char *dasharo_group_names[DASHARO_FEATURE_MAX][MAX_GROUPS_PER_FEAT] = {
-+	[DASHARO_FEATURE_TEMPERATURE] = {
-+		[DASHARO_TEMPERATURE_CPU_PACKAGE] = "CPU Package",
-+		[DASHARO_TEMPERATURE_CPU_CORE] = "CPU Core",
-+		[DASHARO_TEMPERATURE_GPU] = "GPU",
-+		[DASHARO_TEMPERATURE_BOARD] = "Board",
-+		[DASHARO_TEMPERATURE_CHASSIS] = "Chassis",
-+	},
-+	[DASHARO_FEATURE_FAN_PWM] = {
-+		[DASHARO_FAN_CPU] = "CPU",
-+		[DASHARO_FAN_GPU] = "GPU",
-+		[DASHARO_FAN_CHASSIS] = "Chassis",
-+	},
-+	[DASHARO_FEATURE_FAN_TACH] = {
-+		[DASHARO_FAN_CPU] = "CPU",
-+		[DASHARO_FAN_GPU] = "GPU",
-+		[DASHARO_FAN_CHASSIS] = "Chassis",
-+	},
-+};
-+
-+#define MAX_CAP_NAME_LEN 16
-+
-+struct dasharo_capability {
-+	int cap;
-+	int index;
-+	char name[MAX_CAP_NAME_LEN];
-+};
-+
-+#define MAX_CAPS_PER_FEAT 24
-+
-+struct dasharo_data {
-+	struct acpi_device *acpi_dev;
-+	int cap_counts[DASHARO_FEATURE_MAX];
-+	struct dasharo_capability capabilities[DASHARO_FEATURE_MAX][MAX_CAPS_PER_FEAT];
-+	struct device *hwmon;
-+};
-+
-+static int dasharo_get_feature_cap_count(struct dasharo_data *data, int feat, int cap)
-+{
-+	struct acpi_object_list obj_list;
-+	unsigned long long count = 0;
-+	union acpi_object obj[2];
-+	acpi_handle handle;
-+	acpi_status status;
-+
-+	obj[0].type = ACPI_TYPE_INTEGER;
-+	obj[0].integer.value = feat;
-+	obj[1].type = ACPI_TYPE_INTEGER;
-+	obj[1].integer.value = cap;
-+	obj_list.count = 2;
-+	obj_list.pointer = &obj[0];
-+
-+	handle = acpi_device_handle(data->acpi_dev);
-+	status = acpi_evaluate_integer(handle, "GFCP", &obj_list, &count);
-+	if (!ACPI_SUCCESS(status))
-+		return -ENODEV;
-+
-+	return count;
-+}
-+
-+static int dasharo_read_channel(struct dasharo_data *data, char *method, int feat, int channel, long *value)
-+{
-+	struct acpi_object_list obj_list;
-+	unsigned long long val = 0;
-+	union acpi_object obj[2];
-+	acpi_handle handle;
-+	acpi_status status;
-+
-+	obj[0].type = ACPI_TYPE_INTEGER;
-+	obj[0].integer.value = data->capabilities[feat][channel].cap;
-+	obj[1].type = ACPI_TYPE_INTEGER;
-+	obj[1].integer.value = data->capabilities[feat][channel].index;
-+	obj_list.count = 2;
-+	obj_list.pointer = &obj[0];
-+
-+	handle = acpi_device_handle(data->acpi_dev);
-+	status = acpi_evaluate_integer(handle, method, &obj_list, &val);
-+	if (!ACPI_SUCCESS(status))
-+		return -ENODEV;
-+
-+	*value = val;
-+	return val;
-+}
-+
-+static int dasharo_hwmon_read(struct device *dev, enum hwmon_sensor_types type,
-+			      u32 attr, int channel, long *val)
-+{
-+	struct dasharo_data *data = dev_get_drvdata(dev);
-+	int ret = 0;
-+	long value;
-+
-+	switch (type) {
-+	case hwmon_temp:
-+		if (attr == hwmon_temp_input) {
-+			ret = dasharo_read_channel(data,
-+				"GTMP",
-+				DASHARO_FEATURE_TEMPERATURE,
-+				channel,
-+				&value);
-+
-+			if (ret > 0)
-+				*val = value * 1000;
-+		}
-+		break;
-+	case hwmon_fan:
-+		if (attr == hwmon_fan_input) {
-+			ret = dasharo_read_channel(data,
-+				"GFTH",
-+				DASHARO_FEATURE_FAN_TACH,
-+				channel,
-+				&value);
-+
-+			if (ret > 0)
-+				*val = value;
-+		}
-+		break;
-+	case hwmon_pwm:
-+		if (attr == hwmon_pwm_input) {
-+			ret = dasharo_read_channel(data,
-+				"GFDC",
-+				DASHARO_FEATURE_FAN_PWM,
-+				channel,
-+				&value);
-+
-+			if (ret > 0)
-+				*val = value;
-+		}
-+		break;
-+	default:
-+		break;
-+	}
-+
-+	return 0;
-+}
-+
-+static int dasharo_hwmon_read_string(struct device *dev, enum hwmon_sensor_types type,
-+				     u32 attr, int channel, const char **str)
-+{
-+	struct dasharo_data *data = dev_get_drvdata(dev);
-+
-+	switch (type) {
-+	case hwmon_temp:
-+		if (attr == hwmon_temp_label && channel < data->cap_counts[DASHARO_FEATURE_TEMPERATURE])
-+		*str = data->capabilities[DASHARO_FEATURE_TEMPERATURE][channel].name;
-+		break;
-+	case hwmon_fan:
-+		if (attr == hwmon_fan_label && channel < data->cap_counts[DASHARO_FEATURE_FAN_TACH])
-+		*str = data->capabilities[DASHARO_FEATURE_FAN_TACH][channel].name;
-+		break;
-+	default:
-+		return -EOPNOTSUPP;
-+	}
-+
-+	return 0;
-+}
-+
-+static umode_t dasharo_hwmon_is_visible(const void *drvdata, enum hwmon_sensor_types type,
-+					u32 attr, int channel)
-+{
-+	const struct dasharo_data *data = drvdata;
-+
-+	switch (type) {
-+	case hwmon_temp:
-+		if (channel < data->cap_counts[DASHARO_FEATURE_TEMPERATURE])
-+			return 0444;
-+		break;
-+	case hwmon_pwm:
-+		if (channel < data->cap_counts[DASHARO_FEATURE_FAN_PWM])
-+			return 0444;
-+		break;
-+	case hwmon_fan:
-+		if (channel < data->cap_counts[DASHARO_FEATURE_FAN_TACH])
-+			return 0444;
-+		break;
-+	default:
-+		break;
-+	}
-+
-+	return 0;
-+}
-+static const struct hwmon_ops dasharo_hwmon_ops = {
-+	.is_visible = dasharo_hwmon_is_visible,
-+	.read_string = dasharo_hwmon_read_string,
-+	.read = dasharo_hwmon_read,
-+};
-+
-+// Max 24 capabilities per feature
-+static const struct hwmon_channel_info * const dasharo_hwmon_info[] = {
-+	HWMON_CHANNEL_INFO(fan,
-+		HWMON_F_INPUT | HWMON_F_LABEL,
-+		HWMON_F_INPUT | HWMON_F_LABEL,
-+		HWMON_F_INPUT | HWMON_F_LABEL,
-+		HWMON_F_INPUT | HWMON_F_LABEL,
-+		HWMON_F_INPUT | HWMON_F_LABEL,
-+		HWMON_F_INPUT | HWMON_F_LABEL,
-+		HWMON_F_INPUT | HWMON_F_LABEL,
-+		HWMON_F_INPUT | HWMON_F_LABEL,
-+		HWMON_F_INPUT | HWMON_F_LABEL,
-+		HWMON_F_INPUT | HWMON_F_LABEL,
-+		HWMON_F_INPUT | HWMON_F_LABEL,
-+		HWMON_F_INPUT | HWMON_F_LABEL,
-+		HWMON_F_INPUT | HWMON_F_LABEL,
-+		HWMON_F_INPUT | HWMON_F_LABEL,
-+		HWMON_F_INPUT | HWMON_F_LABEL,
-+		HWMON_F_INPUT | HWMON_F_LABEL,
-+		HWMON_F_INPUT | HWMON_F_LABEL,
-+		HWMON_F_INPUT | HWMON_F_LABEL,
-+		HWMON_F_INPUT | HWMON_F_LABEL,
-+		HWMON_F_INPUT | HWMON_F_LABEL,
-+		HWMON_F_INPUT | HWMON_F_LABEL,
-+		HWMON_F_INPUT | HWMON_F_LABEL,
-+		HWMON_F_INPUT | HWMON_F_LABEL,
-+		HWMON_F_INPUT | HWMON_F_LABEL),
-+	HWMON_CHANNEL_INFO(temp,
-+		HWMON_T_INPUT | HWMON_T_LABEL,
-+		HWMON_T_INPUT | HWMON_T_LABEL,
-+		HWMON_T_INPUT | HWMON_T_LABEL,
-+		HWMON_T_INPUT | HWMON_T_LABEL,
-+		HWMON_T_INPUT | HWMON_T_LABEL,
-+		HWMON_T_INPUT | HWMON_T_LABEL,
-+		HWMON_T_INPUT | HWMON_T_LABEL,
-+		HWMON_T_INPUT | HWMON_T_LABEL,
-+		HWMON_T_INPUT | HWMON_T_LABEL,
-+		HWMON_T_INPUT | HWMON_T_LABEL,
-+		HWMON_T_INPUT | HWMON_T_LABEL,
-+		HWMON_T_INPUT | HWMON_T_LABEL,
-+		HWMON_T_INPUT | HWMON_T_LABEL,
-+		HWMON_T_INPUT | HWMON_T_LABEL,
-+		HWMON_T_INPUT | HWMON_T_LABEL,
-+		HWMON_T_INPUT | HWMON_T_LABEL,
-+		HWMON_T_INPUT | HWMON_T_LABEL,
-+		HWMON_T_INPUT | HWMON_T_LABEL,
-+		HWMON_T_INPUT | HWMON_T_LABEL,
-+		HWMON_T_INPUT | HWMON_T_LABEL,
-+		HWMON_T_INPUT | HWMON_T_LABEL,
-+		HWMON_T_INPUT | HWMON_T_LABEL,
-+		HWMON_T_INPUT | HWMON_T_LABEL,
-+		HWMON_T_INPUT | HWMON_T_LABEL),
-+	HWMON_CHANNEL_INFO(pwm,
-+		HWMON_PWM_INPUT,
-+		HWMON_PWM_INPUT,
-+		HWMON_PWM_INPUT,
-+		HWMON_PWM_INPUT,
-+		HWMON_PWM_INPUT,
-+		HWMON_PWM_INPUT,
-+		HWMON_PWM_INPUT,
-+		HWMON_PWM_INPUT,
-+		HWMON_PWM_INPUT,
-+		HWMON_PWM_INPUT,
-+		HWMON_PWM_INPUT,
-+		HWMON_PWM_INPUT,
-+		HWMON_PWM_INPUT,
-+		HWMON_PWM_INPUT,
-+		HWMON_PWM_INPUT,
-+		HWMON_PWM_INPUT,
-+		HWMON_PWM_INPUT,
-+		HWMON_PWM_INPUT,
-+		HWMON_PWM_INPUT,
-+		HWMON_PWM_INPUT,
-+		HWMON_PWM_INPUT,
-+		HWMON_PWM_INPUT,
-+		HWMON_PWM_INPUT,
-+		HWMON_PWM_INPUT),
-+	NULL
-+};
-+
-+static const struct hwmon_chip_info dasharo_hwmon_chip_info = {
-+	.ops = &dasharo_hwmon_ops,
-+	.info = dasharo_hwmon_info,
-+};
-+
-+static void dasharo_fill_feature_caps(struct dasharo_data *data, int feat)
-+{
-+	int cap_count = 0;
-+	int count = 0;
-+
-+	for (int group = 0; group < MAX_GROUPS_PER_FEAT; ++group) {
-+		count = dasharo_get_feature_cap_count(data, feat, group);
-+
-+		for (unsigned int i = 0; i < count && cap_count < MAX_CAPS_PER_FEAT; ++i) {
-+			data->capabilities[feat][cap_count].cap = group;
-+			data->capabilities[feat][cap_count].index = i;
-+			scnprintf(data->capabilities[feat][cap_count].name, MAX_CAP_NAME_LEN, "%s %d", dasharo_group_names[feat][group], i);
-+			cap_count++;
-+		}
-+	}
-+	data->cap_counts[feat] = cap_count;
-+}
-+
-+static int dasharo_add(struct acpi_device *acpi_dev)
-+{
-+	struct dasharo_data *data;
-+
-+	data = devm_kzalloc(&acpi_dev->dev, sizeof(*data), GFP_KERNEL);
-+	if (!data)
-+		return -ENOMEM;
-+	acpi_dev->driver_data = data;
-+	data->acpi_dev = acpi_dev;
-+
-+	for (unsigned int i = 0; i < DASHARO_FEATURE_MAX; ++i) {
-+		dasharo_fill_feature_caps(data, i);
-+	}
-+
-+	data->hwmon = devm_hwmon_device_register_with_info(&acpi_dev->dev,
-+		"dasharo_acpi", data, &dasharo_hwmon_chip_info, NULL);
-+
-+	return 0;
-+}
-+
-+static void dasharo_remove(struct acpi_device *acpi_dev)
-+{
-+	struct dasharo_data *data = acpi_driver_data(acpi_dev);
-+
-+	hwmon_device_unregister(data->hwmon);
-+}
-+
-+static const struct acpi_device_id device_ids[] = {
-+	{"DSHR0001", 0},
-+	{}
-+};
-+MODULE_DEVICE_TABLE(acpi, device_ids);
-+
-+static struct acpi_driver dasharo_driver = {
-+	.name = "Dasharo ACPI Driver",
-+	.class = "Dasharo",
-+	.ids = device_ids,
-+	.ops = {
-+		.add = dasharo_add,
-+		.remove = dasharo_remove,
-+	},
-+};
-+module_acpi_driver(dasharo_driver);
-+
-+MODULE_DESCRIPTION("Dasharo ACPI Driver");
-+MODULE_AUTHOR("Michał Kopeć <michal.kopec@3mdeb.com>");
-+MODULE_LICENSE("GPL");
+> value:
+> 
+> 	pwm = pwm_base + (fan_boost / 255) * (pwm_max - pwm_base)
+> 
+> Where the pwm_base is the locked PWM value controlled by the FW and
+> fan_boost is a value between 0 and 255.
+> 
+> Expose this fan_boost knob as a custom HWMON attribute.
+> 
+> Cc: Guenter Roeck <linux@roeck-us.net>
+> Cc: Jean Delvare <jdelvare@suse.com>
+> Cc: linux-hwmon@vger.kernel.org
+> Reviewed-by: Armin Wolf <W_Armin@gmx.de>
+> Signed-off-by: Kurt Borja <kuurtb@gmail.com>
+> ---
+>  drivers/platform/x86/dell/alienware-wmi-wmax.c | 174 ++++++++++++++++++++++++-
+>  1 file changed, 172 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/platform/x86/dell/alienware-wmi-wmax.c b/drivers/platform/x86/dell/alienware-wmi-wmax.c
+> index 0c30ffb6091a15d81f4dc959dfd28417249d3dda..823b579260555085ef6ac793b806738a756bb9da 100644
+> --- a/drivers/platform/x86/dell/alienware-wmi-wmax.c
+> +++ b/drivers/platform/x86/dell/alienware-wmi-wmax.c
+> @@ -13,8 +13,12 @@
+>  #include <linux/bits.h>
+>  #include <linux/dmi.h>
+>  #include <linux/hwmon.h>
+> +#include <linux/hwmon-sysfs.h>
+> +#include <linux/kstrtox.h>
+> +#include <linux/minmax.h>
+>  #include <linux/moduleparam.h>
+>  #include <linux/platform_profile.h>
+> +#include <linux/pm.h>
+>  #include <linux/units.h>
+>  #include <linux/wmi.h>
+>  #include "alienware-wmi.h"
+> @@ -181,10 +185,12 @@ enum AWCC_THERMAL_INFORMATION_OPERATIONS {
+>  	AWCC_OP_GET_FAN_MIN_RPM			= 0x08,
+>  	AWCC_OP_GET_FAN_MAX_RPM			= 0x09,
+>  	AWCC_OP_GET_CURRENT_PROFILE		= 0x0B,
+> +	AWCC_OP_GET_FAN_BOOST			= 0x0C,
+>  };
+>  
+>  enum AWCC_THERMAL_CONTROL_OPERATIONS {
+>  	AWCC_OP_ACTIVATE_PROFILE		= 0x01,
+> +	AWCC_OP_SET_FAN_BOOST			= 0x02,
+>  };
+>  
+>  enum AWCC_GAME_SHIFT_STATUS_OPERATIONS {
+> @@ -248,6 +254,7 @@ struct awcc_fan_data {
+>  	const char *label;
+>  	u32 min_rpm;
+>  	u32 max_rpm;
+> +	u8 suspend_cache;
+>  	u8 id;
+>  };
+>  
+> @@ -628,6 +635,18 @@ static inline int awcc_op_get_temperature(struct wmi_device *wdev, u8 temp_id, u
+>  	return __awcc_wmi_command(wdev, AWCC_METHOD_THERMAL_INFORMATION, &args, out);
+>  }
+>  
+> +static inline int awcc_op_get_fan_boost(struct wmi_device *wdev, u8 fan_id, u32 *out)
+> +{
+> +	struct wmax_u32_args args = {
+> +		.operation = AWCC_OP_GET_FAN_BOOST,
+> +		.arg1 = fan_id,
+> +		.arg2 = 0,
+> +		.arg3 = 0,
+> +	};
+> +
+> +	return __awcc_wmi_command(wdev, AWCC_METHOD_THERMAL_INFORMATION, &args, out);
+> +}
+> +
+>  static inline int awcc_op_get_current_profile(struct wmi_device *wdev, u32 *out)
+>  {
+>  	struct wmax_u32_args args = {
+> @@ -653,6 +672,19 @@ static inline int awcc_op_activate_profile(struct wmi_device *wdev, u8 profile)
+>  	return __awcc_wmi_command(wdev, AWCC_METHOD_THERMAL_CONTROL, &args, &out);
+>  }
+>  
+> +static inline int awcc_op_set_fan_boost(struct wmi_device *wdev, u8 fan_id, u8 boost)
+> +{
+> +	struct wmax_u32_args args = {
+> +		.operation = AWCC_OP_SET_FAN_BOOST,
+> +		.arg1 = fan_id,
+> +		.arg2 = boost,
+> +		.arg3 = 0,
+> +	};
+> +	u32 out;
+> +
+> +	return __awcc_wmi_command(wdev, AWCC_METHOD_THERMAL_CONTROL, &args, &out);
+> +}
+> +
+>  /*
+>   * HWMON
+>   *  - Provides temperature and fan speed monitoring as well as manual fan
+> @@ -817,6 +849,81 @@ static const struct hwmon_chip_info awcc_hwmon_chip_info = {
+>  	.info = awcc_hwmon_info,
+>  };
+>  
+> +static ssize_t fan_boost_show(struct device *dev, struct device_attribute *attr,
+> +			      char *buf)
+> +{
+> +	struct awcc_priv *priv = dev_get_drvdata(dev);
+> +	int index = to_sensor_dev_attr(attr)->index;
+> +	struct awcc_fan_data *fan = priv->fan_data[index];
+> +	u32 boost;
+> +	int ret;
+> +
+> +	ret = awcc_op_get_fan_boost(priv->wdev, fan->id, &boost);
+> +	if (ret)
+> +		return ret;
+> +
+> +	return sysfs_emit(buf, "%u\n", boost);
+> +}
+> +
+> +static ssize_t fan_boost_store(struct device *dev, struct device_attribute *attr,
+> +			       const char *buf, size_t count)
+> +{
+> +	struct awcc_priv *priv = dev_get_drvdata(dev);
+> +	int index = to_sensor_dev_attr(attr)->index;
+> +	struct awcc_fan_data *fan = priv->fan_data[index];
+> +	unsigned long val;
+> +	int ret;
+> +
+> +	ret = kstrtoul(buf, 0, &val);
+> +	if (ret)
+> +		return ret;
+> +
+> +	ret = awcc_op_set_fan_boost(priv->wdev, fan->id, clamp_val(val, 0, 255));
+> +
+> +	return ret ? ret : count;
+> +}
+> +
+> +static SENSOR_DEVICE_ATTR_RW(fan1_boost, fan_boost, 0);
+> +static SENSOR_DEVICE_ATTR_RW(fan2_boost, fan_boost, 1);
+> +static SENSOR_DEVICE_ATTR_RW(fan3_boost, fan_boost, 2);
+> +static SENSOR_DEVICE_ATTR_RW(fan4_boost, fan_boost, 3);
+> +static SENSOR_DEVICE_ATTR_RW(fan5_boost, fan_boost, 4);
+> +static SENSOR_DEVICE_ATTR_RW(fan6_boost, fan_boost, 5);
+> +
+> +static umode_t fan_boost_attr_visible(struct kobject *kobj, struct attribute *attr, int n)
+> +{
+> +	struct awcc_priv *priv = dev_get_drvdata(kobj_to_dev(kobj));
+> +
+> +	return n < priv->fan_count ? attr->mode : 0;
+> +}
+> +
+> +static bool fan_boost_group_visible(struct kobject *kobj)
+> +{
+> +	return true;
+> +}
+> +
+> +DEFINE_SYSFS_GROUP_VISIBLE(fan_boost);
+> +
+> +static struct attribute *fan_boost_attrs[] = {
+> +	&sensor_dev_attr_fan1_boost.dev_attr.attr,
+> +	&sensor_dev_attr_fan2_boost.dev_attr.attr,
+> +	&sensor_dev_attr_fan3_boost.dev_attr.attr,
+> +	&sensor_dev_attr_fan4_boost.dev_attr.attr,
+> +	&sensor_dev_attr_fan5_boost.dev_attr.attr,
+> +	&sensor_dev_attr_fan6_boost.dev_attr.attr,
+> +	NULL
+> +};
+> +
+> +static const struct attribute_group fan_boost_group = {
+> +	.attrs = fan_boost_attrs,
+> +	.is_visible = SYSFS_GROUP_VISIBLE(fan_boost),
+> +};
+> +
+> +static const struct attribute_group *awcc_hwmon_groups[] = {
+> +	&fan_boost_group,
+> +	NULL
+> +};
+> +
+>  static int awcc_hwmon_temps_init(struct wmi_device *wdev)
+>  {
+>  	struct awcc_priv *priv = dev_get_drvdata(&wdev->dev);
+> @@ -954,12 +1061,56 @@ static int awcc_hwmon_init(struct wmi_device *wdev)
+>  	if (ret)
+>  		return ret;
+>  
+> -	priv->hwdev = devm_hwmon_device_register_with_info(&wdev->dev, "alienware_wmi", priv,
+> -							   &awcc_hwmon_chip_info, NULL);
+> +	priv->hwdev = devm_hwmon_device_register_with_info(&wdev->dev, "alienware_wmi",
+> +							   priv, &awcc_hwmon_chip_info,
+> +							   awcc_hwmon_groups);
+>  
+>  	return PTR_ERR_OR_ZERO(priv->hwdev);
+>  }
+>  
+> +static void awcc_hwmon_suspend(struct device *dev)
+> +{
+> +	struct awcc_priv *priv = dev_get_drvdata(dev);
+> +	struct awcc_fan_data *fan;
+> +	unsigned int i;
+> +	u32 boost;
+> +	int ret;
+> +
+> +	for (i = 0; i < priv->fan_count; i++) {
+> +		fan = priv->fan_data[i];
+> +
+> +		ret = awcc_thermal_information(priv->wdev, AWCC_OP_GET_FAN_BOOST,
+> +					       fan->id, &boost);
+> +		if (ret)
+> +			dev_err(dev, "Failed to store Fan %u boost while suspending\n", i);
+> +
+> +		fan->suspend_cache = ret ? 0 : clamp_val(boost, 0, 255);
+> +
+> +		awcc_op_set_fan_boost(priv->wdev, fan->id, 0);
+> +		if (ret)
+> +			dev_err(dev, "Failed to set Fan %u boost to 0 while suspending\n", i);
+> +	}
+> +}
+> +
+> +static void awcc_hwmon_resume(struct device *dev)
+> +{
+> +	struct awcc_priv *priv = dev_get_drvdata(dev);
+> +	struct awcc_fan_data *fan;
+> +	unsigned int i;
+> +	int ret;
+> +
+> +	for (i = 0; i < priv->fan_count; i++) {
+> +		fan = priv->fan_data[i];
+> +
+> +		if (!fan->suspend_cache)
+> +			continue;
+> +
+> +		ret = awcc_op_set_fan_boost(priv->wdev, fan->id, fan->suspend_cache);
+> +		if (ret)
+> +			dev_err(dev, "Failed to restore Fan %u boost while resuming\n", i);
+> +	}
+> +}
+> +
+>  /*
+>   * Thermal Profile control
+>   *  - Provides thermal profile control through the Platform Profile API
+> @@ -1189,6 +1340,24 @@ static int wmax_wmi_probe(struct wmi_device *wdev, const void *context)
+>  	return ret;
+>  }
+>  
+> +static int wmax_wmi_suspend(struct device *dev)
+> +{
+> +	if (awcc->hwmon)
+> +		awcc_hwmon_suspend(dev);
+> +
+> +	return 0;
+> +}
+> +
+> +static int wmax_wmi_resume(struct device *dev)
+> +{
+> +	if (awcc->hwmon)
+> +		awcc_hwmon_resume(dev);
+> +
+> +	return 0;
+> +}
+> +
+> +static DEFINE_SIMPLE_DEV_PM_OPS(wmax_wmi_pm_ops, wmax_wmi_suspend, wmax_wmi_resume);
+> +
+>  static const struct wmi_device_id alienware_wmax_device_id_table[] = {
+>  	{ WMAX_CONTROL_GUID, NULL },
+>  	{ },
+> @@ -1199,6 +1368,7 @@ static struct wmi_driver alienware_wmax_wmi_driver = {
+>  	.driver = {
+>  		.name = "alienware-wmi-wmax",
+>  		.probe_type = PROBE_PREFER_ASYNCHRONOUS,
+> +		.pm = pm_sleep_ptr(&wmax_wmi_pm_ops),
+>  	},
+>  	.id_table = alienware_wmax_device_id_table,
+>  	.probe = wmax_wmi_probe,
+> 
+> 
+
 -- 
-2.49.0
+ i.
 
