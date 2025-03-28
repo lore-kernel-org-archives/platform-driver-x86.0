@@ -1,148 +1,132 @@
-Received: from mail-wr1-f46.google.com (mail-wr1-f46.google.com [209.85.221.46])
+Received: from mail-wm1-f53.google.com (mail-wm1-f53.google.com [209.85.128.53])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0CE4C214205
-	for <platform-driver-x86@vger.kernel.org>; Fri, 28 Mar 2025 11:12:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6769A13AA53;
+	Fri, 28 Mar 2025 11:51:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743160378; cv=none; b=ZIkjTM8tEOU3cUm6JIczVAF3t8YMCULHogCp2AI87tu6coalDb7s/km4glU6jD4Xa/Fdcwv8auzbgIWYHIpd6JWHCeLbSw15EhOtU6xXDQLQGVsrCsudFqhkOCv3cj4Dt64xqXzzPEXM4E1KKzZq4cAIttHIIV+Qxd6zHt8u/QU=
+	t=1743162680; cv=none; b=tpjZrlnhXvFmw+nToWVnRwgSchLKvnbcSGuK6iXXQwSsbY38uM9TNdw61R1spbKRjYbPXdPoDu3oXflPkUyLHbP5+UOeu1VbKh8cjE1SSEh1GdnDAGl5E2jZRq5Y5gK2gFYHUCAUJy8Eciumo3kUEnK/7iLkNbIdIt2KqqKD9Co=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743160378; c=relaxed/simple;
-	bh=hDvAV5mWAdzmYGGYZfq1LG8gMAxyhrotH/qCV3fjxSo=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=peTG/jlrmnoCzDiydmZw+qqa15pQNQZKj+/hJO9Ab5qv+rLUbKjFw1K0ysJRz98P+zQ58aEBR0KtkqSCf4MX54QFnL8Sh4RBnPTpt9GO4LxFFvy+GZ2iIi5a0jH1yROqd6gfhP3KvHzIiWfHvlFxsYrMxLqKJaX0hn7YRMn5ANU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=fmmWpyOR; arc=none smtp.client-ip=209.85.221.46
+	s=arc-20240116; t=1743162680; c=relaxed/simple;
+	bh=Jpb9L7tOB+WcLXwy+TL2Qj9jqcDnE6O6sSnbX1/QNZw=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=L4jvauoU3lM3SQaPuNx55yP9duSDLuERiHcX2WutfJsyLxXVsWCekkb9d9aRx/5iAeXVxGBMnJ/hhrZO8SRiYR1MXg3SMqoDLpXG+MgGtI/EN+RBQKVdmatTFqRJmKPVt3xahySFU13NXAHXsGGd4ELceWYuRTTZStX5yOSYoZg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=fWSqNsIG; arc=none smtp.client-ip=209.85.128.53
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fmmWpyOR"
-Received: by mail-wr1-f46.google.com with SMTP id ffacd0b85a97d-391295490c8so87160f8f.3
-        for <platform-driver-x86@vger.kernel.org>; Fri, 28 Mar 2025 04:12:56 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fWSqNsIG"
+Received: by mail-wm1-f53.google.com with SMTP id 5b1f17b1804b1-43cf848528aso17636785e9.2;
+        Fri, 28 Mar 2025 04:51:18 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1743160375; x=1743765175; darn=vger.kernel.org;
-        h=mime-version:user-agent:content-transfer-encoding
-         :disposition-notification-to:references:in-reply-to:date:cc:to:from
-         :subject:message-id:from:to:cc:subject:date:message-id:reply-to;
-        bh=FHmRRo5YG9grcLfAAfi6oAyWJ6O5ab7mtAwpi55RZ18=;
-        b=fmmWpyORF4QIoHhnY3xtGodOuoQXuZvtTGEQ7VaJTuHcKKB27EvmYhnL4E7VOyJlyD
-         dVxBidDS/oI7BD2l8Y9QrcQwRM3wCFn+mKTGssvrRy5a4GMn6fUmlQTVhcWZwMrynk/U
-         z4lgYRn0WRLl9l/3wDDYGdJDaPr1W2aTau9u0ihQaMnm1GxzheSDdb0mH7o+QK3yLy6V
-         Mz8UZ7US86j8e3CBcTmYqRjtZQyx4+PRwxYc7CKNcmrOfxdb+XH7PLlo3a/z2SKDPEx0
-         tFd4qp3b3QBGUdd5+i4wZ/1IJVFlbll8/DfrCoSulWW4g1PsjwjURiSTpbPXeE6KJxsf
-         A/Iw==
+        d=gmail.com; s=20230601; t=1743162677; x=1743767477; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=efsfHNeHy2QYHH3O5LuUBe1aW9V2YVJUeXBo4AvS1/o=;
+        b=fWSqNsIGtiK+OB/L04uQ/C4J2jtGpehspzlSfaSETB5xbePVzpNYe4sD43VpZLflc5
+         RVAU/7Q4QHsAoLzg7N790+y6Jxd97o26XW8V2QfTzDETotCRD/SWEt+PEyECHLavqXRZ
+         4Klxk3o0Ju7TE4cGhjCD6dplYIyMJf2On+f7c1xHZJPFfqiIPIRT9W71z7iOioxDax/9
+         pd9X/9TxW15JfCKFbhjoEOvqxkWRvrFLlGTzrThNpy5C6OkMrAlyi7fz0kv6bIZjZRvx
+         b1EIwyPZwRKBcMA+Ge8KjX4srtYDHTh/28YT7+SrZj9dgft0JVZiWLQEYnOEyKHZs60J
+         wY4w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743160375; x=1743765175;
-        h=mime-version:user-agent:content-transfer-encoding
-         :disposition-notification-to:references:in-reply-to:date:cc:to:from
-         :subject:message-id:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=FHmRRo5YG9grcLfAAfi6oAyWJ6O5ab7mtAwpi55RZ18=;
-        b=Ua2jmMyveoHqPolWhEysZ+U0Ef294l0iHQiRfgHMlZ4C8zhon+v6VwSjyUuoMBjkLJ
-         qX9Zv+LtHOTyqRuRfX49RdMaXDPZDMuKMxNdZHt64LT14n+Z4Arq6PCDzC/IwBVK6eWz
-         XvBvOwsxiUzWmyJUP29tftUPppmq8cZDiIOvPLJWesnRr7mP58Q/h0EuQJEDZhfEXXDs
-         rmc4FyCgKHoAl3kDpqnYSEAMWHTEz/mrQn24sgfIE4pBw6TM2B+XyCmTzBrLupO3x0Y3
-         jY1CUcPj789S8fH5PoRNgk4sVNUTFiKjbCpXq+EsEKrpwZKj6BT379N0PhVFxnr1C9E1
-         GUFA==
-X-Gm-Message-State: AOJu0Yx4V3lWKg7AXZUUP0L6Osiyfc9sTSZuXn4Bho17KMHaKW4EntcL
-	ljicbp66gsad7/i6Tkqi8Mmh4tjAEYBBtIYRaTriq834G7YunDMN
-X-Gm-Gg: ASbGncurxU6wG6I6y3fHlAbr1nPU7X/F8xkFR6XtEmaGQgSf1LKMW4CIyaCm6bmB8BR
-	x0mOKTzC4jNNeAaQUe53aAX7cErvT3IG/2pcEk6DUKDAIxPltMBzZ7/HBafhchRJh+b0W+abshF
-	t24LiMpZe0QpS0tMDCFSz1WL4TeNEkb7n9FTx6CT6DjebEC9t0UqOWhB9Rocuk6J/YH0imwtFEy
-	yORG0VjSUEaPJlta3wGtu8GHKbNvuPJmSSlEXHNLMaSA7AjUCxm4/vvUCdUTXAK50fMKTeYuJTy
-	BUOkzNmOMhC0Un3WfghDZbJ+xCHSL1P+8ruPvSH90c49w90V1oOOJnZasmbu70EDIkY90E13z8j
-	nJ+kE2CAsGIzSxosxrMgKGQ==
-X-Google-Smtp-Source: AGHT+IErgzYWLdiJ/Z483qzQmu6KMDB0kzsC9i08cdYHuOJis++LcTbQAxFoXMhYPuIZU/V3kATe4A==
-X-Received: by 2002:a5d:64e9:0:b0:391:cd7:82f2 with SMTP id ffacd0b85a97d-39ad2aecc7amr2132880f8f.6.1743160374985;
-        Fri, 28 Mar 2025 04:12:54 -0700 (PDT)
-Received: from [192.168.1.239] (89-64-31-184.dynamic.chello.pl. [89.64.31.184])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-39c0b663860sm2308499f8f.39.2025.03.28.04.12.54
+        d=1e100.net; s=20230601; t=1743162677; x=1743767477;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=efsfHNeHy2QYHH3O5LuUBe1aW9V2YVJUeXBo4AvS1/o=;
+        b=lSQ7raQR+ROVF05aLI3TmgCfuJbjz/dsnziwwnB2TfBfZkijB34siSwWN543qfH+2d
+         O8Lu4tdiknJWtgMUjR6Z76Qp3M6BOyxjGmd4Ys4YoIBNSHAbIgj1NT0eCoAXI1pHNDyK
+         5SBTgcgeUChBxQgL1pVmbdK3sYavtC9GJS1g0VAW/4SF97qMxh8pAvx3UwgtqzgWcZGd
+         4EkxgCsEAxVWO0TNs+mJJqicc8IbuE1Lgp6A9LR5DrujNYud7tBaMiF+K/TgdhO+YZ7l
+         6AbHH7w8Md/3a/lRF5euHVMq7a8uoHvfPeBwlYlNqLeBkyss7tDPCGLbbCw/fn1zYRkH
+         KaXQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUDq2j2wFHcV3GT5YXadp4OJo12Q9rJ/xhf/hE87Sti8xp7AUHq4f4cAL/PlSnE+VgVQ6L7EVeBapHOs3U=@vger.kernel.org, AJvYcCUSbxXPMdw3UpNuj/VqvoNVqBuKX20YM+xd+UsrzyzUMYst1hS/PEEvH1N82RthnUzPJN7e00DCqhZP9SL9n0g1hID+7A==@vger.kernel.org
+X-Gm-Message-State: AOJu0YzP2ayZ33QuRo2DWQzFimNhfXPdVhVd8KLQjmqacT2JjR51AZHF
+	yci6e3Ay3vT3yFN9+iLQDzNv/DjG42Is5EI4JOTewGXPFz2caz4F
+X-Gm-Gg: ASbGncsleqfr+fIEJeaWBmNd7YLKhO8kleK+fEI3jcur4fa8FT6NzKyAkIeCtT1A59Q
+	2dJryLL2UJEG5GBmaqxKJIv8FIcOWqjrrUnzrxs1r79269OPQKdTn0gzO3+jv+WRX2gxlaKokSy
+	dus+KueFzNtCCYEjwJHEMH249Q2V0O5lKtAcAyuzAePIcaJU+rHfh1mjAcJFig3lSyuUgolqncq
+	yNXLvZxc/WdCjTEIiYQtF/abHflz7xT5NW46A1LKZFvXZLLpfYZ7tn2N8vaXGyNkiItg0A9j7xN
+	RAj+rjxznks3KLR0mSucbm4h3Yyjjr1fCH4VT0gHKll+g+ajNQ2y0hMIiHYtvWG53R4=
+X-Google-Smtp-Source: AGHT+IGPGtJIB0r5ChZXDEaqFUPgP1kOPnRpZzpoBsSqtuL8H2qxGtHtjLcOIt14R/M/RhXYn88hMg==
+X-Received: by 2002:a05:600c:4751:b0:43c:fc04:6d35 with SMTP id 5b1f17b1804b1-43d84f5a96bmr64687605e9.4.1743162676378;
+        Fri, 28 Mar 2025 04:51:16 -0700 (PDT)
+Received: from pop-os.fri1.uni-lj.si ([2001:1470:fffd:32ff:201c:d449:8385:aa8a])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43d8fbc1889sm25000675e9.16.2025.03.28.04.51.15
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 28 Mar 2025 04:12:54 -0700 (PDT)
-Message-ID: <67bbc55b6e55ed62e275ab1796cabf2060553d73.camel@gmail.com>
-Subject: Re: [PATCH v2 1/1] platform/x86: Introduce dasharo-acpi platform
- driver
-From: Tomasz =?UTF-8?Q?Paku=C5=82a?= <tomasz.pakula.oficjalny@gmail.com>
-To: =?UTF-8?Q?Micha=C5=82_Kope=C4=87?= <michal.kopec@3mdeb.com>, 
-	hdegoede@redhat.com, ilpo.jarvinen@linux.intel.com
-Cc: platform-driver-x86@vger.kernel.org, piotr.krol@3mdeb.com, 
-	maciej.pijanowski@3mdeb.com
-Date: Fri, 28 Mar 2025 12:12:52 +0100
-In-Reply-To: <20250327162113.571940-2-michal.kopec@3mdeb.com>
-References: <20250327162113.571940-1-michal.kopec@3mdeb.com>
-	 <20250327162113.571940-2-michal.kopec@3mdeb.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.56.0 
+        Fri, 28 Mar 2025 04:51:15 -0700 (PDT)
+From: =?UTF-8?q?Ga=C5=A1per=20Nemgar?= <gasper.nemgar@gmail.com>
+To: ikepanhc@gmail.com
+Cc: hdegoede@redhat.com,
+	ilpo.jarvinen@linux.intel.com,
+	linux-kernel@vger.kernel.org,
+	platform-driver-x86@vger.kernel.org,
+	=?UTF-8?q?Ga=C5=A1per=20Nemgar?= <gasper.nemgar@gmail.com>
+Subject: [PATCH v3] platform/x86: ideapad-laptop: added support for some new buttons
+Date: Fri, 28 Mar 2025 12:51:07 +0100
+Message-Id: <20250328115107.110619-1-gasper.nemgar@gmail.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Thu, 2025-03-27 at 17:21 +0100, Micha=C5=82 Kope=C4=87 wrote:
->=20
-> +
-> +static int dasharo_hwmon_read(struct device *dev, enum hwmon_sensor_type=
-s type,
-> +			      u32 attr, int channel, long *val)
-> +{
-> +	struct dasharo_data *data =3D dev_get_drvdata(dev);
-> +	int ret =3D 0;
-> +	long value;
-> +
-> +	switch (type) {
-> +	case hwmon_temp:
-> +		if (attr =3D=3D hwmon_temp_input) {
-> +			ret =3D dasharo_read_value_by_cap_idx(data,
-> +				"GTMP",
-> +				data->capabilities[DASHARO_FEATURE_TEMPERATURE][channel].cap,
-> +				data->capabilities[DASHARO_FEATURE_TEMPERATURE][channel].index,
-> +				&value);
-> +
-> +			if (ret > 0)
-> +				*val =3D value * 1000;
-> +		}
-> +		break;
+Added entries to unsuported wmi codes in ideapad_keymap[]
+and one check in wmi_nofify in order to get wmi code 0x13d to trigger platform_profile_cycle
 
-I think itwould be better if you could extract cap and index inside the
-function itself as you're already passing the whole data struct. You
-could replace these two arguments by just passing channel.
+Signed-off-by: Gašper Nemgar <gasper.nemgar@gmail.com>"
+---
+Changes in v3:
+ - Minor changes
+Changes in v2:
+ - Added more codes that trigger with key combos (Fn+N, Fn+M, ...)
+ - Added performence toggle in wmi_notify()
+Changes in v1:
+ - Added codes for buttons on laptop(performance, star, ...)
+---
+ drivers/platform/x86/ideapad-laptop.c | 18 ++++++++++++++++++
+ 1 file changed, 18 insertions(+)
 
-> +	case hwmon_fan:
-> +		if (attr =3D=3D hwmon_fan_input) {
-> +			ret =3D dasharo_read_value_by_cap_idx(data,
-> +				"GFTH",
-> +				data->capabilities[DASHARO_FEATURE_FAN_TACH][channel].cap,
-> +				data->capabilities[DASHARO_FEATURE_FAN_TACH][channel].index,
-> +				&value);
-> +
-> +			if (ret > 0)
-> +				*val =3D value;
-> +		}
-> +		break;
-> +	case hwmon_pwm:
-> +		if (attr =3D=3D hwmon_pwm_input) {
-> +			ret =3D dasharo_read_value_by_cap_idx(data,
-> +				"GFDC",
-> +				data->capabilities[DASHARO_FEATURE_FAN_PWM][channel].cap,
-> +				data->capabilities[DASHARO_FEATURE_FAN_PWM][channel].index,
-> +				&value);
-> +
-> +			if (ret > 0)
-> +				*val =3D value;
-> +		}
-> +		break;
-> +	default:
-> +		break;
-> +	}
-> +
-> +	return 0;
-> +}
-> +
+diff --git a/drivers/platform/x86/ideapad-laptop.c b/drivers/platform/x86/ideapad-laptop.c
+index 17a09b778..8f8764554 100644
+--- a/drivers/platform/x86/ideapad-laptop.c
++++ b/drivers/platform/x86/ideapad-laptop.c
+@@ -1294,6 +1294,16 @@ static const struct key_entry ideapad_keymap[] = {
+ 	/* Specific to some newer models */
+ 	{ KE_KEY,	0x3e | IDEAPAD_WMI_KEY, { KEY_MICMUTE } },
+ 	{ KE_KEY,	0x3f | IDEAPAD_WMI_KEY, { KEY_RFKILL } },
++	/* Star- (User Asignable Key) */
++	{ KE_KEY,	0x44 | IDEAPAD_WMI_KEY, { KEY_PROG1 } },
++	/* Eye */
++	{ KE_KEY,	0x45 | IDEAPAD_WMI_KEY, { KEY_PROG3 } },
++	/* Performance toggle also Fn+Q, handled inside ideapad_wmi_notify() */
++	{ KE_KEY,	0x3d | IDEAPAD_WMI_KEY, { KEY_PROG4 } },
++	/* shift + prtsc */
++	{ KE_KEY,   0x2d | IDEAPAD_WMI_KEY, { KEY_CUT } },
++	{ KE_KEY,   0x29 | IDEAPAD_WMI_KEY, { KEY_TOUCHPAD_TOGGLE } },
++	{ KE_KEY,   0x2a | IDEAPAD_WMI_KEY, { KEY_ROOT_MENU } },
+ 
+ 	{ KE_END },
+ };
+@@ -2080,6 +2090,14 @@ static void ideapad_wmi_notify(struct wmi_device *wdev, union acpi_object *data)
+ 		dev_dbg(&wdev->dev, "WMI fn-key event: 0x%llx\n",
+ 			data->integer.value);
+ 
++		/* performance button triggered by 0x3d  */
++		if (data->integer.value == 0x3d) {
++			if (priv->dytc) {
++				platform_profile_cycle();
++				break;
++			}
++		}
++
+ 		/* 0x02 FnLock, 0x03 Esc */
+ 		if (data->integer.value == 0x02 || data->integer.value == 0x03)
+ 			ideapad_fn_lock_led_notify(priv, data->integer.value == 0x02);
+-- 
+2.34.1
 
-I think that's the only thing that stood out to me. Apart from that I
-think you should add yourself to MAINTAINERS as well. My guess is 3mdeb
-is planning on actually supporting this driver long-term? :)
-
-Tomasz
