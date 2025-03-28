@@ -1,59 +1,59 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 78D3E1C9B62;
-	Fri, 28 Mar 2025 16:18:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A5BE0C2F2;
+	Fri, 28 Mar 2025 16:22:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743178707; cv=none; b=F59vm5+Z0EfUMNCD2k/lcRPdMbjlToJBVrw6sPdq4GClRLsxYVK+bUBwuFJAlZ+iSau870LYGlY6G4n4/XdTHF0JMqiY07VxOGiR/oJWnhCBSn0zN/IjtkRaIEq974+y+EP4CGvJAlmjYBZ6ppzU67pr9PumdOiia0defHMy0CM=
+	t=1743178979; cv=none; b=Ss7fr+iMq7UrqChkxDfaHAK7XLz3HNu/pI6aCNUw7YYV517Fb/VwsoXFsvo1LQV2E9iauNXd23qBuG9a29EybXFgIf+s9xVa89gpiGVeqtbEAAvQYpG4PoAYJBszHlqhfJKgZ4h+9UkkN0YDOrbX/+HA16yuIaHfnr1grK2+sHU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743178707; c=relaxed/simple;
-	bh=pLTKHD3ngohPgzIXmaLBRC4/WKu4wHLBTdpsSwKx6Ok=;
+	s=arc-20240116; t=1743178979; c=relaxed/simple;
+	bh=Ef5PBwKT4P+oC4XdvM7k/alPCz0kN/qqknbPORNtAZg=;
 	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=pcq6PFL5Igrjh5SAu24SrgLAhNsicdpiNKDvhX3Kz/+XrWTJj3DUA1vorxidYFu+Mzab+61OH7J0oyynX6c08qDvlonALUmmEg1odgygOo5NRoFXnSmJ0D7VmnGRi2oKgUB6QiHxpQRX5b6aHWx6RbYbDNMKHPgAt7K+FaGTj0A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=akkpTSIj; arc=none smtp.client-ip=192.198.163.11
+	 MIME-Version:Content-Type; b=B3IAZCcLFa9bCHGQ+7Xi+6SLgzorKmreAq+ZcRUTjkTdxGVYjGghD3BUTXCRSp53Bh6xXmRN09MtwLLlYGoemB+OhUhXsi34o50N6iOsja9v8UNCef4XggSOTpTqO4bkWS/LWlkoj31NFSUchmXXvtJHAlRpTE3rDNa36qq8yNM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=k11RaNE9; arc=none smtp.client-ip=192.198.163.14
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="akkpTSIj"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="k11RaNE9"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1743178706; x=1774714706;
+  t=1743178978; x=1774714978;
   h=from:date:to:cc:subject:in-reply-to:message-id:
    references:mime-version;
-  bh=pLTKHD3ngohPgzIXmaLBRC4/WKu4wHLBTdpsSwKx6Ok=;
-  b=akkpTSIj6PPCAa/0377EufLTnrCm4zon04DiKrhEjN4NssK8Cm/tE/s4
-   IWbzJHW+nTrM7uEUmRPVElCmpXZyHHmkTIj40xaMljzt/mpfgFaowpYZc
-   y8KmoTSBs+scQ7fYFmzd9tD1U/AKDJAWrK1FsM6ZTeM2nds/68dp1wm88
-   M8UEbvhLMmvLInQBWBUj0oppa1s/5ItFFwlAkzNV1tvBvdLC5BOKcCePF
-   n9RemAsMUb6XyKlkv6NL9iaXDDrbeX2MW30c5ZSf0bcC6kDJkqc4BTPi5
-   7A3yBs/Mp21ywFLN5wanYdm7Insup4IPCTxoHiuNJrrQbN2oS1NoRR6a+
-   Q==;
-X-CSE-ConnectionGUID: hs4xIvlITRKcuH5saoG19g==
-X-CSE-MsgGUID: OPY0yV3GT7SpFT83/fPLsQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11387"; a="55208000"
+  bh=Ef5PBwKT4P+oC4XdvM7k/alPCz0kN/qqknbPORNtAZg=;
+  b=k11RaNE9FdzSwyBXbAMk+dKBIg4G+RrQedS7loJJVVZvI7BzmH151f3M
+   VvRpfqk4TmSnLe1GyZKsjtA/4rk4sqLZdqFlpwZsw3jpac6DYfI/oJllh
+   TB2Ykl/dsLO9xQggkVC6RFK6eERXxklhFPLs1exI0g22Z0CJ/peYFjI0z
+   jbVkZ1BM03NXR0Jh8iGZhsuUIZBNq+hO/TMA/yLqnqvqUMdF4Z53/SLIF
+   DapjAiGRpRSdpgzZVMAYXWwUwAAdaBOuXSoZMvTUIIHBWQEGSC8TlzV3x
+   KtIwQr4YQQHtpW1nxeOrNNIt/nDXzcGN0rzLPVLcLXeCimokuFUj2+iiS
+   g==;
+X-CSE-ConnectionGUID: VBs6lPClSJO7gTg6R8/1Eg==
+X-CSE-MsgGUID: BaiV7YcsSHWrnJNeoZY+Cw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11387"; a="44729264"
 X-IronPort-AV: E=Sophos;i="6.14,283,1736841600"; 
-   d="scan'208";a="55208000"
-Received: from fmviesa003.fm.intel.com ([10.60.135.143])
-  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Mar 2025 09:18:25 -0700
-X-CSE-ConnectionGUID: ttme5oBuS9KxO8XuYgom9g==
-X-CSE-MsgGUID: C72/lOYRQPGRp/g/t90X+A==
+   d="scan'208";a="44729264"
+Received: from orviesa010.jf.intel.com ([10.64.159.150])
+  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Mar 2025 09:22:56 -0700
+X-CSE-ConnectionGUID: iGboJiWaTOm3ySUxyixaRw==
+X-CSE-MsgGUID: 81RXJ6tgQZGs921wgMeNUg==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.14,283,1736841600"; 
-   d="scan'208";a="129625691"
+   d="scan'208";a="125382635"
 Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.43])
-  by fmviesa003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Mar 2025 09:18:22 -0700
+  by orviesa010-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Mar 2025 09:22:54 -0700
 From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Fri, 28 Mar 2025 18:18:19 +0200 (EET)
+Date: Fri, 28 Mar 2025 18:22:50 +0200 (EET)
 To: Kurt Borja <kuurtb@gmail.com>
 cc: Armin Wolf <W_Armin@gmx.de>, Hans de Goede <hdegoede@redhat.com>, 
     platform-driver-x86@vger.kernel.org, Dell.Client.Kernel@dell.com, 
     LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v6 09/12] platform/x86: alienware-wmi-wmax: Add a DebugFS
- interface
-In-Reply-To: <20250313-hwm-v6-9-17b57f787d77@gmail.com>
-Message-ID: <09fb8477-9b41-ceb2-4f0c-bc6477a5874f@linux.intel.com>
-References: <20250313-hwm-v6-0-17b57f787d77@gmail.com> <20250313-hwm-v6-9-17b57f787d77@gmail.com>
+Subject: Re: [PATCH v6 11/12] Documentation: admin-guide: laptops: Add
+ documentation for alienware-wmi
+In-Reply-To: <20250313-hwm-v6-11-17b57f787d77@gmail.com>
+Message-ID: <0d6f1ec1-be44-4362-c574-064dd446873d@linux.intel.com>
+References: <20250313-hwm-v6-0-17b57f787d77@gmail.com> <20250313-hwm-v6-11-17b57f787d77@gmail.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -64,143 +64,182 @@ Content-Type: text/plain; charset=US-ASCII
 
 On Thu, 13 Mar 2025, Kurt Borja wrote:
 
-> Add a debugfs interface which exposes thermal private data.
+> Add driver admin-guide documentation for the alienware-wmi driver.
 > 
 > Reviewed-by: Armin Wolf <W_Armin@gmx.de>
 > Signed-off-by: Kurt Borja <kuurtb@gmail.com>
 > ---
->  drivers/platform/x86/dell/alienware-wmi-wmax.c | 90 ++++++++++++++++++++++++++
->  1 file changed, 90 insertions(+)
+>  .../admin-guide/laptops/alienware-wmi.rst          | 128 +++++++++++++++++++++
+>  Documentation/admin-guide/laptops/index.rst        |   1 +
+>  MAINTAINERS                                        |   1 +
+>  3 files changed, 130 insertions(+)
 > 
-> diff --git a/drivers/platform/x86/dell/alienware-wmi-wmax.c b/drivers/platform/x86/dell/alienware-wmi-wmax.c
-> index 823b579260555085ef6ac793b806738a756bb9da..472e6289fec5be0db0a5cb8e76718b750fa558b5 100644
-> --- a/drivers/platform/x86/dell/alienware-wmi-wmax.c
-> +++ b/drivers/platform/x86/dell/alienware-wmi-wmax.c
-> @@ -11,6 +11,7 @@
->  #include <linux/bitfield.h>
->  #include <linux/bitmap.h>
->  #include <linux/bits.h>
-> +#include <linux/debugfs.h>
->  #include <linux/dmi.h>
->  #include <linux/hwmon.h>
->  #include <linux/hwmon-sysfs.h>
-> @@ -19,6 +20,7 @@
->  #include <linux/moduleparam.h>
->  #include <linux/platform_profile.h>
->  #include <linux/pm.h>
-> +#include <linux/seq_file.h>
->  #include <linux/units.h>
->  #include <linux/wmi.h>
->  #include "alienware-wmi.h"
-> @@ -1252,6 +1254,92 @@ static int awcc_platform_profile_init(struct wmi_device *wdev)
->  	return PTR_ERR_OR_ZERO(priv->ppdev);
->  }
->  
-> +/*
-> + * DebugFS
-> + */
-> +static int awcc_debugfs_system_description_read(struct seq_file *seq, void *data)
-> +{
-> +	struct device *dev = seq->private;
-> +	struct awcc_priv *priv = dev_get_drvdata(dev);
+> diff --git a/Documentation/admin-guide/laptops/alienware-wmi.rst b/Documentation/admin-guide/laptops/alienware-wmi.rst
+> new file mode 100644
+> index 0000000000000000000000000000000000000000..fe7dec73706f8ec85040dc1cbaec38ffda70b563
+> --- /dev/null
+> +++ b/Documentation/admin-guide/laptops/alienware-wmi.rst
+> @@ -0,0 +1,128 @@
+> +.. SPDX-License-Identifier: GPL-2.0-or-later
 > +
-> +	seq_printf(seq, "0x%08x\n", priv->system_description);
+> +====================
+> +Alienware WMI Driver
+> +====================
 > +
-> +	return 0;
-> +}
+> +Kurt Borja <kuurtb@gmail.com>
 > +
-> +static int awcc_debugfs_hwmon_data_read(struct seq_file *seq, void *data)
-> +{
-> +	struct device *dev = seq->private;
-> +	struct awcc_priv *priv = dev_get_drvdata(dev);
-> +	const struct awcc_fan_data *fan;
-> +	unsigned int bit;
+> +This is a driver for the "WMAX" WMI device, which is found in most Dell gaming
+> +laptops and controls various special features.
 > +
-> +	seq_printf(seq, "Number of fans: %u\n", priv->fan_count);
-> +	seq_printf(seq, "Number of temperature sensors: %u\n\n", priv->temp_count);
+> +Before the launch of M-Series laptops (~2018), the "WMAX" device controlled
+> +basic RGB lighting, deep sleep mode, HDMI mode and amplifier status.
 > +
-> +	for (u32 i = 0; i < priv->fan_count; i++) {
-> +		fan = priv->fan_data[i];
-> +
-> +		seq_printf(seq, "Fan %u:\n", i);
-> +		seq_printf(seq, "  ID: 0x%02x\n", fan->id);
-> +		seq_printf(seq, "  Related temperature sensors bitmap: %lu\n",
-> +			   fan->auto_channels_temp);
-> +	}
-> +
-> +	seq_puts(seq, "\nTemperature sensor IDs:\n");
-> +	for_each_set_bit(bit, priv->temp_sensors, AWCC_ID_BITMAP_SIZE)
-> +		seq_printf(seq, "  0x%02x\n", bit);
-> +
-> +	return 0;
-> +}
-> +
-> +static int awcc_debugfs_pprof_data_read(struct seq_file *seq, void *data)
-> +{
-> +	struct device *dev = seq->private;
-> +	struct awcc_priv *priv = dev_get_drvdata(dev);
-> +
-> +	seq_printf(seq, "Number of thermal profiles: %u\n\n", priv->profile_count);
-> +
-> +	for (u32 i = 0; i < PLATFORM_PROFILE_LAST; i++) {
-> +		if (!priv->supported_profiles[i])
-> +			continue;
-> +
-> +		seq_printf(seq, "Platform profile %u:\n", i);
-> +		seq_printf(seq, "  ID: 0x%02x\n", priv->supported_profiles[i]);
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +static void awcc_debugfs_remove(void *data)
-> +{
-> +	struct dentry *root = data;
-> +
-> +	debugfs_remove(root);
-> +}
-> +
-> +static void awcc_debugfs_init(struct wmi_device *wdev)
-> +{
-> +	struct dentry *root;
-> +	char name[64];
-> +
-> +	scnprintf(name, ARRAY_SIZE(name), "%s-%s", "alienware-wmi", dev_name(&wdev->dev));
+> +Later, this device was completely repurpused. Now it mostly deals with thermal
 
-You'd need to add include for ARRAY_SIZE() but can't you just use 
-sizeof()?
+repurposed
 
-> +	root = debugfs_create_dir(name, NULL);
+> +profiles, sensor monitoring and overclocking. This interface is named "AWCC" and
+> +is known to be used by the AWCC OEM application to control these features.
 > +
-> +	debugfs_create_devm_seqfile(&wdev->dev, "system_description", root,
-> +				    awcc_debugfs_system_description_read);
+> +The alienware-wmi driver controls both interfaces.
 > +
-> +	if (awcc->hwmon)
-> +		debugfs_create_devm_seqfile(&wdev->dev, "hwmon_data", root,
-> +					    awcc_debugfs_hwmon_data_read);
+> +AWCC Interface
+> +==============
 > +
-> +	if (awcc->pprof)
-> +		debugfs_create_devm_seqfile(&wdev->dev, "pprof_data", root,
-> +					    awcc_debugfs_pprof_data_read);
+> +WMI device documentation: Documentation/wmi/devices/alienware-wmi.rst
 > +
-> +	devm_add_action_or_reset(&wdev->dev, awcc_debugfs_remove, root);
-> +}
+> +Supported devices
+> +-----------------
 > +
->  static int alienware_awcc_setup(struct wmi_device *wdev)
->  {
->  	struct awcc_priv *priv;
-> @@ -1290,6 +1378,8 @@ static int alienware_awcc_setup(struct wmi_device *wdev)
->  			return ret;
->  	}
->  
-> +	awcc_debugfs_init(wdev);
+> +- Alienware M-Series laptops
+> +- Alienware X-Series laptops
+> +- Alienware Aurora Desktops
+> +- Dell G-Series laptops
 > +
->  	return 0;
->  }
->  
-> 
-> 
+> +If you believe your device supports the AWCC interface and you don't have any of
+> +the features described in this document, try the following alienware-wmi module
+> +parameters:
+> +
+> +- ``force_platform_profile=1``: Forces probing for platform profile support
+> +- ``force_hwmon=1``: Forces probing for HWMON support
+> +
+> +If the module loads successfully with these parameters, consider submitting a
+> +patch adding your model to the ``awcc_dmi_table`` located in
+> +``drivers/platform/x86/dell/alienware-wmi-wmax.c`` or contacting the maintainer
+> +for further guidance.
+> +
+> +Status
+> +------
+> +
+> +The following features are currently supported:
+> +
+> +- :ref:`Platform Profile <platform-profile>`:
+> +
+> +  - Thermal profile control
+> +
+> +  - G-Mode toggling
+> +
+> +- :ref:`HWMON <hwmon>`:
+> +
+> +  - Sensor monitoring
+> +
+> +  - Manual fan control
+> +
+> +.. _platform-profile:
+> +
+> +Platform Profile
+> +----------------
+> +
+> +The AWCC interface exposes various firmware defined thermal profiles. We expose
+
+Please don't use "We".
 
 -- 
  i.
 
+> +these profiles to user-space through the Platform Profile class interface.
+> +Refer to
+> +:ref:`sysfs-class-platform-profile <abi_file_testing_sysfs_class_platform_profile>`
+> +for more information.
+> +
+> +The name of the platform-profile class device exported by this driver is
+> +"alienware-wmi" and it's path can be found with:
+> +
+> +::
+> +
+> + grep -l "alienware-wmi" /sys/class/platform-profile/platform-profile-*/name | sed 's|/[^/]*$||'
+> +
+> +If the device supports G-Mode, it is also toggled when selecting the
+> +``performance`` profile.
+> +
+> +.. note::
+> +   You may set the ``force_gmode`` module parameter to always try to toggle this
+> +   feature, without checking if your model supports it.
+> +
+> +.. _hwmon:
+> +
+> +HWMON
+> +-----
+> +
+> +The AWCC interface also supports sensor monitoring and manual fan control. Both
+> +of these features are exposed to user-space through the HWMON interface.
+> +
+> +The name of the hwmon class device exported by this driver is "alienware_wmi"
+> +and it's path can be found with:
+> +
+> +::
+> +
+> + grep -l "alienware_wmi" /sys/class/hwmon/hwmon*/name | sed 's|/[^/]*$||'
+> +
+> +Sensor monitoring is done through the standard HWMON interface. Refer to
+> +:ref:`sysfs-class-hwmon <abi_file_testing_sysfs_class_hwmon>` for more
+> +information.
+> +
+> +Manual fan control on the other hand, is not exposed directly by the AWCC
+> +interface. Instead it let's us control a fan `boost` value. This `boost` value
+> +has the following aproximate behavior over the fan pwm:
+> +
+> +::
+> +
+> + pwm = pwm_base + (fan_boost / 255) * (pwm_max - pwm_base)
+> +
+> +Due to the above behavior, we expose the fan `boost` control to user-space
+> +through the following, custom hwmon sysfs attribute:
+> +
+> +=============================== ======= =======================================
+> +Name				Perm	Description
+> +=============================== ======= =======================================
+> +fan[1-4]_boost			RW	Fan boost value.
+> +
+> +					Integer value between 0 and 255
+> +=============================== ======= =======================================
+> +
+> +.. note::
+> +   In some devices, manual fan control only works reliably if the ``custom``
+> +   platform profile is selected.
+> diff --git a/Documentation/admin-guide/laptops/index.rst b/Documentation/admin-guide/laptops/index.rst
+> index e71c8984c23e43ca7cd6373b88803354dff6bc60..db842b629303c1bcf02646204d51938f9bd4043e 100644
+> --- a/Documentation/admin-guide/laptops/index.rst
+> +++ b/Documentation/admin-guide/laptops/index.rst
+> @@ -7,6 +7,7 @@ Laptop Drivers
+>  .. toctree::
+>     :maxdepth: 1
+>  
+> +   alienware-wmi
+>     asus-laptop
+>     disk-shock-protection
+>     laptop-mode
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index 1afd30d00aecf9a48f8c71e156affd5f329539bd..c609bc321b8dc3ab0e8d92b04e42483be8cc171c 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -796,6 +796,7 @@ M:	Kurt Borja <kuurtb@gmail.com>
+>  L:	platform-driver-x86@vger.kernel.org
+>  L:	Dell.Client.Kernel@dell.com
+>  S:	Maintained
+> +F:	Documentation/admin-guide/laptops/alienware-wmi.rst
+>  F:	Documentation/wmi/devices/alienware-wmi.rst
+>  F:	drivers/platform/x86/dell/alienware-wmi*
+>  
+> 
+> 
